@@ -2,6 +2,10 @@
 // 動けなければ入れ替わる・しばらくして戻る。pushable:false は動かない。歩き回る NPC は逃げ場を 2 マス未満にしない
 // （周りの通れるマスが 3 つ以上ある所にしか入らない）。話すときは一行の方を向く。
 //   R.Field.npc(id) → {move(path, {speed}), face(dir), act(pose), hide(), show(), setPos(x, y)}（どれも Promise）
+//   立っている人の小さな動き（オーナーの依頼 2026-09-27）: 立ち止まった人は息をする（layers.js が 1 px 上下、人ごとに位相と速さ）。
+//   動かない人（move:'still' か move なし）は 3〜8 秒ごとに隣の向きをちらっと見て 1〜2 秒で戻る（n.glance = 見た目の向きだけ。
+//   n.dir は変えないので、話す・イベントの向きはそのまま）。見回さない人: def.fixedDir、門番・見張り（id / look に guard・gate・watch）、
+//   向いた先が台（店の台の向こうの人）、イベントが face() で向きを決めた人、イベント中・話している間
 //   仲間をイベントで出す（フィールドは主人公だけ、trail.js）: R.Field.partyShow(id | ids | 'all', {near, at, dir, ms, wait, stay}) /
 //   partyHide(id | ids | 'all', {ms, wait}) / partyShown() → ids。出した人は一時の NPC（id = 仲間の id）なので ev.npc(id) で動かせる。
 //   イベントが終わると（stay で出した人を除き）R.Events が partyHide('all') を呼ぶ。マップに入り直すと消える
@@ -91,8 +95,10 @@
         if (n.waiters.length) { const w = n.waiters.splice(0); for (const r of w) r(); }
       }
       if (n.pose && now >= n.pose.until) n.pose = null;
+      if (n.glance && (!calm || n.talking || n.script || n.mv || n.pose || now >= n.glance.until)) n.glance = null;
       if (n.mv || n.script || n.talking || !n.vis || !calm) continue;
       const d = n.def;
+      if (!n.returnAt && lookAround(n, now)) continue;
       // 押されてよけた人は、しばらくして元の場所へ戻る
       if (n.returnAt && now >= n.returnAt) {
         if (n.x === n.home.x && n.y === n.home.y) { n.returnAt = 0; if (d.move === 'still' || !d.move) n.dir = n.home.dir; continue; }
@@ -129,6 +135,36 @@
     }
   };
 
+  // ---------------------------------------------------------------- 見回す（動かない人）
+  const SIDE = { s: ['e', 'w'], n: ['e', 'w'], e: ['n', 's'], w: ['n', 's'] };
+  const FIXED_RE = /guard|gate|watch|sentry/;
+  function still(d) { return !d.move || d.move === 'still'; }
+  /** 見回さない人か（一度だけ調べて覚える） */
+  function fixedDir(n) {
+    if (n.fixedDir != null) return n.fixedDir;
+    const d = n.def;
+    let f = d.fixedDir === true || !!n.party;
+    if (!f && d.fixedDir !== false) {
+      f = FIXED_RE.test(String(d.id || '')) || FIXED_RE.test(String(d.look || ''));
+      const v = DIRS[n.home.dir || n.dir];
+      if (!f && v && F._objBlocks && S.map) { try { f = !!F._objBlocks(S.map, n.home.x + v[0], n.home.y + v[1], n.lv || 0); } catch (e) { /* */ } }   // 店の台の向こう
+    }
+    return (n.fixedDir = f);
+  }
+  /** 見回しの番（見ている間・待つ間は true = この後の歩き回りをしない） */
+  function lookAround(n, now) {
+    const d = n.def;
+    if (!still(d) || n.faced || fixedDir(n) || n.x !== n.home.x || n.y !== n.home.y) return false;
+    if (n.glance) return true;
+    if (n.glanceAt == null) { n.glanceAt = now + 3000 + n.rng.int(0, 5000); return false; }
+    if (now < n.glanceAt) return false;
+    const opts = SIDE[n.dir] || SIDE.s;
+    n.glance = { dir: opts[n.rng.int(0, 1)], until: now + 1000 + n.rng.int(0, 1000) };
+    n.glanceAt = n.glance.until + 3000 + n.rng.int(0, 5000);
+    return true;
+  }
+  F._npcFixedDir = fixedDir;
+
   /** 一行が押し続けた: よける（→ 'dodge'）か入れ替わる（→ 'swap'）か動かない（→ null） */
   F._pushNpc = function (n, dx, dy) {
     if (!n || n.def.pushable === false || n.script || n.talking || n.mv) { try { R.Audio.sfx('bump'); } catch (e) { /* */ } return null; }
@@ -148,6 +184,7 @@
     const back = n.dir;
     n.dir = OPP[S.dir] || n.dir;
     n.talking = true;
+    n.glance = null;
     const done = () => { n.talking = false; if (!n.def.move || n.def.move === 'still') n.dir = back; F.hud.refresh(); };
     let p;
     try { p = R.Events.talk(S.map, n.def); } catch (e) { done(); throw e; }
@@ -176,7 +213,7 @@
           }
         } finally { n.script--; }
       },
-      async face(dir) { if (DIRS[dir]) n.dir = dir; },
+      async face(dir) { if (DIRS[dir]) { n.dir = dir; n.faced = true; n.glance = null; } },   // イベントが向きを決めた人は見回さない
       async act(pose, o) { const ms = (o && o.ms) || 700; n.pose = { name: pose, until: R.Engine.time + ms }; await R.wait(ms); },
       async hide() { n.hidden = true; F._npcVis(); },
       async show() { n.hidden = false; F._npcVis(); },

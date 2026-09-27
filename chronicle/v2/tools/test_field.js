@@ -135,6 +135,25 @@ async function main() {
   R.UIK.Message.say = sayOrig;
   delete R.DB.events.__party_say; delete R.DB.events.__party_stay;
 
+  section('立っている人の小さな動き（見回す・息）');
+  await enter('field_lab', 2, 12, 's');
+  const lp = S.npcById.lab_push, lr = S.npcById.lab_rock;
+  let glanced = false, glanceDirs = new Set(), rockGl = false;
+  for (let t = 0; t < 12000; t += 100) { adv(100); await flush(); if (lp.glance) { glanced = true; glanceDirs.add(lp.glance.dir); } if (lr.glance) rockGl = true; }
+  ok('a still NPC looks around now and then (side directions only)', glanced && [...glanceDirs].every((d) => d === 'e' || d === 'w'), [...glanceDirs]);
+  ok('… its logical dir stays (only the drawn dir changes)', lp.dir === 's');
+  ok('a guard look (npc_guard_*) never looks around (auto fixedDir)', !rockGl && R.Field._npcFixedDir(lr) === true);
+  await R.Field.npc('lab_push').face('n');
+  let gl2 = false;
+  for (let t = 0; t < 10000; t += 100) { adv(100); await flush(); if (lp.glance) gl2 = true; }
+  ok('after an event face()s the NPC, it keeps that facing', !gl2 && lp.dir === 'n');
+  lp.faced = false; lp.dir = 's';
+  R.Field.lock('event');
+  let gl3 = false;
+  for (let t = 0; t < 10000; t += 100) { adv(100); await flush(); if (lp.glance) gl3 = true; }
+  R.Field.unlock('event');
+  ok('no looking around while the field is locked (events / talk)', !gl3);
+
   section('隊列のなぞり（設定 fieldParty = 後ろに並ぶ）');
   R.Settings.set('fieldParty', true);
   await enter('field_lab', 2, 10, 'e');

@@ -46,19 +46,19 @@
     "checks": {
      "ok": true,
      "why": "",
-     "head_scale": 1.025,
+     "head_scale": 1.0,
      "head": [
-      84.4,
-      60.8
+      83.7,
+      66.5
      ],
-     "height": 79,
-     "rescaled": 1.096,
-     "copy": 0.12,
+     "height": 72,
+     "rescaled": null,
+     "copy": 0.18,
      "shift": [
       0,
       -1
      ],
-     "err": 28.2
+     "err": 26.8
     }
    },
    {

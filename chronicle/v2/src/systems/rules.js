@@ -139,7 +139,7 @@
     ENC_ITEM: { repel: { pct: -100, steps: 100, weakOnly: true }, lure: { pct: 100, steps: 100 }, weakMargin: 3 },
     PREEMPT: 1 / 16, PREEMPT_RATIO: [0.5, 2],
     ESCAPE: { base: 0.55, step: 0.12, agi: 0.5, min: 0.25, max: 0.95 },
-    AFTER: { mpPct: 0.12 },
+    AFTER: { mpPct: 0, mpByProf: [[80, 0.15], [60, 0.10], [40, 0.05]] },   // 勝ったあとの MP は基本戻らない。一番高い熟練度が高い人だけ少し戻る（持ち主の決まり 2026-09-27）
     INN: [10, 16, 24, 32, 42, 54, 66, 80, 96, 112],
     // §4.10.2〜4.10.5 金色・レア・鋼（経験値は無い。A30）
     GOLDEN: { rate: 1 / 40, hp: 2, stat: 1.2, gold: 5, lvShow: 2 },
@@ -543,6 +543,14 @@
     /** 段階 → その段階の最初の点 */
     profPtsOf(rank) { return K.PROF_PTS[clamp(rank | 0, 1, 100)]; },
     rankOf(c, kind, id) { return Rules.profRank(Rules.prof(c, kind, id)); },
+    /** 勝ったあとに戻る MP の割合: 武器・属性の熟練度のうち一番高い段階で決まる（K.AFTER.mpByProf） */
+    afterWinMpPct(c) {
+      const A = K.AFTER || {};
+      let top = 0;
+      for (const t of [c && c.wprof, c && c.eprof]) if (t) for (const v of Object.values(t)) top = Math.max(top, Rules.profRank(v));
+      for (const [r, pct] of (A.mpByProf || [])) if (top >= r) return pct;
+      return A.mpPct || 0;
+    },
     /** 行動の熟練度の段階: 術 → 属性の段階の平均、技・攻撃 → 今の武器の系統（素手・道具は null） */
     profPowerRank(c, action) {
       if (!c) return null;

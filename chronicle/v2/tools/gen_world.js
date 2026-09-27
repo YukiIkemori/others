@@ -318,7 +318,7 @@ S(98, 110, '港町ファロス');
 //   絵は岩の上の紅白の塔で 6.5 マスの高さ。敷地より上は人より上に描く（塔の裏を歩ける）。
 //   灯室の灯り（props_light.js の kind 'beacon'）: lit の条件（灯台のページ食らいを倒した後）で強く灯って光がめぐる。それまでは弱い残り火。
 B('w_lighthouse', 105, 122, 3, 3, { roof: 'slate', mat: 'stone', wall: 3, windows: 0, small: false, lit: 'prologue_boss', door: { x: 106, y: 124, to: { map: 'lighthouse_1', spawn: 'entrance' } } });
-for (let y = 118; y <= 121; y++) for (let x = 104; x <= 108; x++) if ('Th'.includes(get(x, y))) set(x, y, ',');   // 塔の上の半分に木が重ならない
+for (let y = 118; y <= 124; y++) for (let x = 104; x <= 108; x++) if ('Th'.includes(get(x, y))) set(x, y, ',');   // 塔と塔の上の半分に木が重ならない（敷地の下の木のマスも消す）
 spawns.lighthouse = { x: 106, y: 126, dir: 'n' };
 S(104, 127, 'ファロス灯台');
 // 古井戸（下り口）

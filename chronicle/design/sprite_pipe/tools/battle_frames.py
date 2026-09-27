@@ -561,8 +561,11 @@ def normalise(job, raw_path, p, lay):
             # smaller pixels) is coarse but unbiased: take the head estimate nearest to it
             mp = float(np.mean(drawn_pitch_f(raw.crop(cbox)))) / key_pitch
             m = min((mg, mr, mi), key=lambda v: abs(v - mp))
-            if abs(mp - 1) < 0.08:        # drawn at (about) the key cells' pitch: the model kept the size
+            if abs(mp - 1) < 0.12:        # drawn at (about) the key cells' pitch: the model kept the size
                 m = 1.0
+            ov = job.st().get('scale', {}).get(str(i + 1))
+            if ov:                          # set by hand after review (tools/battle_frames.py scale)
+                m = float(ov)
             gscale = m
             job.log('  frame %d size: guide %.3f idle %.3f idle/corr %.3f pitch %.3f -> %.3f' % (i + 1, mg, mr, mi, mp, m))
             if abs(m - 1) > 0.03 and 0.6 < m < 1.4:
@@ -948,6 +951,11 @@ def main():
     s.add_argument('--out', required=True)
     s.add_argument('--scale', type=int, default=3)
     sub.add_parser('count')
+    s = sub.add_parser('scale', help='set the drawn size of a new frame by hand (1 = as drawn; 0.8 = drawn 20%% small)')
+    s.add_argument('look')
+    s.add_argument('action', choices=list(PLANS))
+    s.add_argument('slot', type=int)
+    s.add_argument('m', type=float)
     s = sub.add_parser('drop', help='leave frames (slot numbers) out of the anim after review')
     s.add_argument('look')
     s.add_argument('action', choices=list(PLANS))
@@ -965,6 +973,11 @@ def main():
         sp = os.path.join(STORE, o.look, 'state.json')
         stt = json.load(open(sp))
         stt[o.action]['drop'] = o.slots
+        json.dump(stt, open(sp, 'w'), indent=1, ensure_ascii=False)
+    elif o.cmd == 'scale':
+        sp = os.path.join(STORE, o.look, 'state.json')
+        stt = json.load(open(sp))
+        stt[o.action].setdefault('scale', {})[str(o.slot)] = o.m
         json.dump(stt, open(sp, 'w'), indent=1, ensure_ascii=False)
     elif o.cmd == 'count':
         print(images_used())

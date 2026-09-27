@@ -47,6 +47,10 @@
       moss: mat({ keys: ['#142410', '#2a4a18', '#4a7424', '#7ca03a', '#b4cc5c'], n: 6, tex: 2.5, tsx: 0.8, tsy: 0.8 }),
       water: mat({ keys: ['#0e2a3a', '#1c4a5e', '#2e6e84', '#5aa0b4', '#a8dce4'], n: 6, spec: 1, specPow: 20 }),
       spring: mat({ keys: ['#1a5a6a', '#3a9ab0', '#7ad4e0', '#c8f4f4', '#f4ffff'], n: 5, flat: true, glow: '#a0f4f0' }),
+      // 女神の像（回復の場所）の石: 灰色の石・白い石（苔むす）・砂岩
+      idolGrey: mat({ keys: ['#26283a', '#454a64', '#6a7290', '#98a2bc', '#c8d0e2', '#eef0f8'], n: 7, tex: 1.2, tsx: 0.5, tsy: 0.8 }),
+      idolPale: mat({ keys: ['#34302c', '#5a5448', '#86806e', '#b4ac96', '#dcd4bc', '#f6f0dc'], n: 7, tex: 1.2, tsx: 0.5, tsy: 0.8 }),
+      idolSand: mat({ keys: ['#4a2a14', '#7a4a22', '#a87434', '#d09c50', '#ecc47c', '#fce6b0'], n: 7, tex: 1.2, tsx: 0.5, tsy: 0.8 }),
       glowW: mat({ keys: ['#c05a10', '#ff9a30', '#ffd070', '#fff4c8'], n: 4, flat: true, glow: '#ffd070' }),
       glowC: mat({ keys: ['#1a6a7a', '#40c0d0', '#a0f4f0', '#f0ffff'], n: 4, flat: true, glow: '#a0f4f0' }),
       glowOff: mat({ keys: ['#1a1a22', '#2c2c38', '#40404e', '#565666'], n: 4, flat: true }),
@@ -129,6 +133,20 @@
       B.cap(0, -8, 0, -26, 4.5, 3.6, m.stone, 0.2); B.ell(0, -28, 8, 3.4, m.stone, 0.25, { bulge: 0.4 }); B.ell(0, -29, 6, 2.2, m.spring, 0.3, { bulge: 0.1 });
       B.ell(0, -31 - (k % 2), 1.6, 2.4, m.spring, 0.35);
       return { light: [0, -24], cyan: true, big: true };
+    },
+    /** 女神の像（dungeon の回復の場所。描いた絵 goddess / goddess_v1 / goddess_v2 が無いときの形）。o.v: 0 灰色の石・1 苔むした白い石・2 砂岩 */
+    goddess(B, o) {
+      const m = mats(), v = (o.v | 0) % 3, st = [m.idolGrey, m.idolPale, m.idolSand][v];
+      B.ell(0, -8, 26, 12, st, 0, { bulge: 0.5 }); B.ell(0, -13, 23, 10, st, 0.05, { bulge: 0.3 });
+      B.ell(0, -12, 13, 5, m.water, 0.1, { bulge: 0.15 }); B.ell(0, -12.5, 8, 2.6, m.spring, 0.11, { bulge: 0.1 });
+      if (v === 1) { B.ell(-18, -10, 6, 3, m.moss, 0.12, { bulge: 0.5 }); B.ell(16, -14, 5, 2.4, m.moss, 0.12, { bulge: 0.5 }); }
+      if (v === 2) B.rect(-24, -9, 48, 2.4, m.teal, 0.12);
+      // 衣の像（台の奥に立つ）
+      B.poly([[-10, -20], [10, -20], [6, -52], [-6, -52]], st, 0.02, { bevel: 2.5, ny: -0.2 });
+      B.ell(0, -58, 6, 7, st, 0.03, { bulge: 0.7 }); B.ell(0, -56, 3.4, 3.8, st, 0.04, { bulge: 0.4, shadeOff: 1 });
+      B.poly([[-7, -46], [7, -46], [4, -40], [-4, -40]], st, 0.05, { bevel: 1.2 });
+      B.poly([[-2.4, -48], [2.4, -48], [2, -42], [-2, -42]], m.glowW, 0.3, { bevel: 0.2 }); B.poly([[-2.8, -48], [2.8, -48], [0, -50.5]], m.gold, 0.31, { bevel: 0.6 });
+      return { light: [0, -45], big: true };
     },
     brazier(B, o, f) {
       const m = mats(), on = f !== 'off', k = (+String(f).replace(/\D/g, '') || 0);
@@ -220,6 +238,7 @@
     rope_bridge: { overChars: true }, leaves_over: { overChars: true },
     chest: { solid: true, frames: ['closed', 'open', 'rare_closed', 'rare_open'], glow: 'sparkle', light: L('chest', 34) },
     spring: { solid: true, light: L('spring', 150), glow: true, footprint: [2, 2], frames: ['f0', 'f1', 'f2', 'f3'] },
+    goddess: { solid: true, light: L('lamp', 150), glow: true, footprint: [2, 2] },
     brazier: { solid: true, frames: ['off', 'on'], light: L('fire', 'fire') }, waylamp: { solid: true, frames: ['off', 'on'], light: L('lamp', 'lampR') },
     switch: { soft: true, frames: ['off', 'on'] }, songstone: { solid: true, glow: true, light: L('crystal', 48) }, talestone: { solid: true, shadow: 'blob' }, footprint: { soft: true, glow: true },
     beacon: { light: L('fire', 220), glow: true }, stairs_up: {}, stairs_down: {}, door: {},

@@ -45,7 +45,7 @@
       const lw = tall ? b.w : Math.min(b.w, u(900));
       const lh = R.Field.townmap.legendHeight(m.id, lw);
       const area = { x: b.x + u(8), y: b.y + u(60), w: b.w - u(16), h: b.h - u(60) - lh - u(tall ? 70 : 18) };
-      const r = R.Field.townmap.draw(g, area, m.id) || area;
+      const r = R.Field.townmap.draw(g, area, m.id, { top: tall }) || area;
       R.Field.townmap.legend(g, { x: b.x + (b.w - lw) / 2, y: Math.min(r.y + r.h + u(14), b.y + b.h - lh - u(tall ? 56 : 4)), w: lw, h: lh }, m.id);
       S.prompts(g, this.promptList());
     },

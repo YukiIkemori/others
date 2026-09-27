@@ -206,7 +206,9 @@
           occ.add(o.x + ',' + o.y);
           break;
         case 'spring':
-          dyn.push({ key: 'hd:prop:spring', x: fx, y: fy, sortY: fy, frame: 'f0', lv, opts: optsS({ amb: ambHex }, s), id: o.id, type: 'spring' });
+          // ダンジョンの中は女神の像（R.MapUtil.springLook）。石の変化はテーマから（灰色の石・苔むした白い石・砂岩）
+          if (R.MapUtil.springLook(map, o) === 'goddess') dyn.push({ key: 'hd:prop:goddess', x: fx, y: fy, sortY: fy, frame: 'default', lv, opts: optsS({ amb: ambHex, v: R.MapUtil.goddessVariant(map, o) }, s), id: o.id, type: 'spring' });
+          else dyn.push({ key: 'hd:prop:spring', x: fx, y: fy, sortY: fy, frame: 'f0', lv, opts: optsS({ amb: ambHex }, s), id: o.id, type: 'spring' });
           for (let j = 0; j < 2; j++) for (let i = 0; i < 2; i++) occ.add((o.x + i) + ',' + (o.y + j));
           break;
         case 'brazier': case 'waylamp': case 'switch': {

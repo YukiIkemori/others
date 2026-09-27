@@ -269,7 +269,7 @@
         if (res !== 'win' && res !== 'escape') continue;
         const st = Rules().stats(c);
         c.hp = st.maxHp;
-        if (res === 'win') c.mp = Math.min(st.maxMp, (c.mp || 0) + Math.ceil(st.maxMp * A.mpPct));
+        if (res === 'win') { const pct = Rules().afterWinMpPct ? Rules().afterWinMpPct(c) : A.mpPct; if (pct > 0) c.mp = Math.min(st.maxMp, (c.mp || 0) + Math.ceil(st.maxMp * pct)); }
       }
     },
 

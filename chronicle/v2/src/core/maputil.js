@@ -225,6 +225,21 @@
       return null;
     },
     invalidate(mapId) { if (mapId) delete cache[mapId]; else for (const k of Object.keys(cache)) delete cache[k]; },
+    /**
+     * 回復の場所（type 'spring'）の見た目: 'goddess'（女神の像）| 'water'（泉）。
+     * 持ち主の決まり（2026-09）:「泉がいきなりあるのは違和感」→ ダンジョンの中は女神の像。町・宿場・井戸・オアシスなど本当に水のある所は泉のまま。
+     * o.look で個別に決められる。データ・当たり・R.Game.springs・check_springs は type 'spring' のまま。
+     */
+    springLook(map, o) {
+      if (o && (o.look === 'goddess' || o.look === 'water')) return o.look;
+      return map && map.kind === 'dungeon' ? 'goddess' : 'water';
+    },
+    /** 女神の像の石の変化: 0 灰色の石（灯台・洞窟）・1 苔むした白い石（千年樹・森）・2 砂岩（王墓・砂漠） */
+    goddessVariant(map, o) {
+      if (o && o.variant != null) return o.variant | 0;
+      const th = (map && map.theme) || '';
+      return /tree|forest|marsh/.test(th) ? 1 : /tomb|desert/.test(th) ? 2 : 0;
+    },
     footprint,
   });
 })(window.RPG);

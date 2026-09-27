@@ -137,13 +137,15 @@ async function main() {
   const finishWin = async () => { for (let i = 0; i < 300 && !(await B.ev(p, '!!window.__r')); i++) { if (await B.ev(p, `!!(${D} && ${D}.next)`)) await B.press(p, 'a'); else await p.waitForTimeout(150); } return !!(await B.ev(p, '!!window.__r')); };
   await B.ev(p, "RPG.Settings.set('battleSpeed', 3); RPG.Battle.repeatMemory().on = false; 0");
   await B.ev(p, start({ demo: 'normal', mons: [['x', 1]] }));
-  ok('round 2 offers repeat', await B.pressUntil(p, 'a', `${D} && ${D}.phase==='input' && ${D}.partyOpts.includes('repeat') && ${D}.ui && ${D}.ui.o && ${D}.ui.o.rows.some((r) => r.key === 'fight')`, 80));
+  await B.ev(p, 'if (RPG.Game.battle && RPG.Game.battle.cursor) RPG.Game.battle.cursor._party = 0; 0');
+  const round2 = `${D} && ${D}.phase==='input' && ${D}.partyOpts.includes('repeat') && ${D}.ui && ${D}.ui.o && ${D}.ui.o.rows.some((r) => r.key === 'fight')`;
+  ok('round 2 offers repeat', await (async () => { for (let i = 0; i < 200; i++) { if (await B.ev(p, round2)) return true; if (await B.ev(p, `!!(${D} && ${D}.ui && ${D}.phase==='input')`)) await B.press(p, 'a'); else await p.waitForTimeout(120); } return false; })());
   await B.press(p, 'l');
-  ok('L turns repeat on and it is remembered', await B.waitFor(p, `${D}.B.repeatOn && RPG.Battle.repeatMemory().on`, 3000));
+  ok('L turns repeat on and it is remembered', await B.waitFor(p, `!!${D} && ${D}.B.repeatOn && RPG.Battle.repeatMemory().on`, 3000));
   ok('battle ends (confirm)', await finishWin());
   ok('last commands remembered for the next battle', await B.ev(p, '!!RPG.Battle.repeatMemory().cmds'));
   await B.ev(p, start({ demo: 'normal', mons: [['x', 1]] }));
-  ok('next normal battle: repeat is on from the first turn (no input)', await B.waitFor(p, `${D} && ${D}.B && ${D}.B.repeatOn && ${D}.repeatCarried`, 20000) && await B.waitFor(p, `${D}.phase==='play'`, 20000));
+  ok('next normal battle: repeat is on from the first turn (no input)', await B.waitFor(p, `${D} && ${D}.B && ${D}.B.repeatOn && ${D}.repeatCarried`, 20000) && await B.waitFor(p, `!!${D} && ${D}.phase==='play'`, 20000));
   ok('prompts show 「リピート中：[B]でやめる」 from the first turn', await B.ev(p, `RPG.Battle.prompts(${D}).repeatOn`));
   ok('battle ends', await finishWin());
   await B.ev(p, start({ demo: 'boss_pageeater', boss: true, autoInput: true, mons: [['x', 1]] }));
@@ -154,9 +156,9 @@ async function main() {
   ok('rare battle ends', await finishWin());
   await B.ev(p, start({ demo: 'normal', mons: [['x', 1]] }));
   ok('the following normal battle resumes repeat', await B.waitFor(p, `${D} && ${D}.B && ${D}.B.repeatOn && ${D}.repeatCarried`, 20000));
-  await B.waitFor(p, `${D}.phase==='play'`, 20000);
+  await B.waitFor(p, `!!${D} && ${D}.phase==='play'`, 20000);
   await B.press(p, 'b');
-  ok('B stops repeat and the memory turns off', await B.waitFor(p, `!${D}.B.repeatOn && !RPG.Battle.repeatMemory().on`, 3000));
+  ok('B stops repeat and the memory turns off', await B.waitFor(p, `!!${D} && !${D}.B.repeatOn && !RPG.Battle.repeatMemory().on`, 3000));
   await B.ev(p, `${D}.finish({ result: 'escape', rewards: null }); 0`);   // A の連打はリピートをまた選ぶので、ここでは閉じるだけ
   ok('battle closed', await B.waitFor(p, 'window.__r', 10000));
   await B.ev(p, start({ demo: 'normal', mons: [['x', 1]] }));

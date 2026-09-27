@@ -1,7 +1,7 @@
 // FIELD — 小地図（MODERN_UI §5.9・§6.2、dungeon.png。E11・E12）
 //   ダンジョンの右上（手がかりの札の下）。X で 小地図 → 大きな地図（drawBig、画面の中ほど）→ 出さない（設定 fieldMap、hud.js）。
 //   歩いた所の周り（4 マス）が埋まる。見つけた泉（青緑）・開けていない宝箱（金）・階段（白）の印、
-//   一行の向きの矢印。下に「泉 宝箱 階段」の凡例。埋まった所はマップごとに覚える（このセッションの間。R.Game には持たない）。
+//   一行の向きの矢印。下に「泉（ダンジョンでは女神の像） 宝箱 階段」の凡例。埋まった所はマップごとに覚える（このセッションの間。R.Game には持たない）。
 //   地図の画像は 1 マス 1 px の小さなキャンバスに、見えた所だけ足していく（毎フレームは drawImage と印だけ）。
 (function (R) {
   'use strict';
@@ -121,10 +121,15 @@
   }
   /** 凡例（泉・宝箱・階段） */
   function legend(g, x, y, z) {
-    const U = R.UIK.u, T = R.UIK.T;
-    R.UIK.text(g, '泉', x + U(2 * z), y, { size: U(10 * z), color: '#8fe8f0', shadow: true });
-    R.UIK.text(g, '宝箱', x + U(28 * z), y, { size: U(10 * z), color: T.color.gold, shadow: true });
-    R.UIK.text(g, '階段', x + U(64 * z), y, { size: U(10 * z), color: T.color.text2, shadow: true });
+    const U = R.UIK.u, T = R.UIK.T, m = S.map;
+    // 回復の場所の名前: ダンジョンの中は女神の像（R.MapUtil.springLook）、町・井戸・オアシスは泉
+    const heal = m && (m.objects || []).some((o) => o.type === 'spring' && R.MapUtil.springLook(m, o) === 'goddess') ? '女神の像' : '泉';
+    const size = U(10 * z), gap = U(12 * z);
+    let cx = x + U(2 * z);
+    for (const [t, color] of [[heal, '#8fe8f0'], ['宝箱', T.color.gold], ['階段', T.color.text2]]) {
+      R.UIK.text(g, t, cx, y, { size, color, shadow: true });
+      cx += (R.UIK.measure ? R.UIK.measure(t, { size }) : size * t.length) + gap;
+    }
   }
   function dia(g, x, y, r, col) {
     g.beginPath(); g.moveTo(x, y - r); g.lineTo(x + r, y); g.lineTo(x, y + r); g.lineTo(x - r, y); g.closePath();

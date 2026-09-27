@@ -245,7 +245,7 @@
   };
 
   // ---------------------------------------------------------------- 出現（歩数）
-  /** 出現しない所: 泉の周り 3 マス、ともした道しるべの灯籠の周り 5 マス（E21） */
+  /** 出現しない所: 泉（女神の像）の周り 3 マス、ともした道しるべの灯籠の周り 5 マス（E21） */
   F.safeAt = function (x, y) {
     const m = S.map, G = R.Game;
     for (const o of m.objects || []) {
@@ -325,7 +325,7 @@
     let label = '調べる';
     const G = R.Game;
     if (o.type === 'chest') { if (G && (G.chests[S.map.id] || []).includes(o.id)) return null; label = '開ける'; }
-    else if (o.type === 'spring') label = '泉で休む';
+    else if (o.type === 'spring') label = R.MapUtil.springLook(S.map, o) === 'goddess' ? '女神の像に祈る' : '泉で休む';
     else if (o.type === 'sign') label = '読む';
     else if (o.type === 'brazier') { if (G && (G.lit[S.map.id] || []).includes(o.id)) return null; label = '火をともす'; }
     else if (o.type === 'waylamp') { if (G && G.lamps[o.id]) return null; }
@@ -381,10 +381,16 @@
     const L = (G.springs[m.id] = G.springs[m.id] || []);
     if (!L.includes(o.id)) L.push(o.id);
     try { R.Audio.sfx('spring'); } catch (e) { /* */ }
-    F.flash('#8fe8f0', 420);
-    F.hud.toast('泉の水で元気になった', { icon: 'spring' });
+    const goddess = R.MapUtil.springLook(m, o) === 'goddess';   // ダンジョンの中は女神の像（持ち主の決まり 2026-09）
+    F.flash(goddess ? '#ffe8b8' : '#8fe8f0', 420);
     F.hud.refresh();
     R.emit('spring:use', { map: m.id, id: o.id });
+    if (!goddess) { F.hud.toast('泉の水で元気になった', { icon: 'spring' }); return; }
+    // 女神の像: 祈りの文（画面下の窓）を読んでから、回復の知らせ（全快そのものは上で済んでいる）
+    F._run(async () => {
+      await R.UIK.Message.say({ text: '女神の像に祈りをささげた。\n……体に力が満ちていく。', face: false });
+      F.hud.toast('女神の像の加護で HP・MP が回復した', { icon: 'spring' });
+    });
   };
   F._brazier = function (o) {
     const G = R.Game, m = S.map;

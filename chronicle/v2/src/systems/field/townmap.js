@@ -19,7 +19,7 @@
   const ORDER = ['weapon', 'armor', 'item', 'special', 'shop', 'map', 'inn', 'tavern', 'church', 'save', 'guild', 'record', 'records', 'hall'];
 
   function nameOf(s) {
-    if (s.kind === 'guild' && /ギルド|組合/.test(s.name || '')) return 'ギルド';
+    if (s.kind === 'guild') return /詰所/.test(s.name || '') ? '詰所' : 'ギルド';
     return NAME[s.kind] || s.name || '店';
   }
   /** 地図の施設の一覧（看板と同じ。wayfind.js が無ければ空） */
@@ -107,7 +107,7 @@
     if (!m) return null;
     const U = R.UIK.u;
     const s = Math.min(area.w / m.w, area.h / m.h);
-    const w = m.w * s, h = m.h * s, x = area.x + (area.w - w) / 2, y = area.y + (area.h - h) / 2;
+    const w = m.w * s, h = m.h * s, x = area.x + (area.w - w) / 2, y = o.top ? area.y + U(8) : area.y + (area.h - h) / 2;   // o.top: 縦持ちは上に寄せる
     const rect = { x, y, w, h };
     g.save();
     R.UIK.rr(g, x - U(6), y - U(6), w + U(12), h + U(12), U(10)); g.fillStyle = 'rgba(10,11,20,0.85)'; g.fill();
@@ -127,19 +127,19 @@
     // 施設（建物の戸口・外の売り手）
     const r = Math.max(U(9), Math.min(U(14), s * 0.9));
     for (const sg of I.signs) plate(g, sg.kind, x + (sg.x + 0.5) * s, y + (sg.y + (sg.npc ? 0.5 : -0.2)) * s, r);
-    // 一行
-    const here = S.map && S.map.id === m.id ? { x: S.x, y: S.y, dir: S.dir } : null;
-    if (here) {
-      const px = x + (here.x + 0.5) * s, py = y + (here.y + 0.5) * s;
-      R.UIK.glow(g, px, py, U(18), [143, 214, 216], 0.55 + 0.2 * Math.sin((R.Engine.time || 0) / 400));
-      arrow(g, px, py, ANG[here.dir] || 0, Math.max(1.3, U(1.5)));
-    }
     // 出口の札は最後（印の上）。地図の内側へ寄せる
     for (const e of I.exits) {
       if (!e.label) continue;
       const cx = x + (e.x + e.w / 2) * s, cy = y + (e.y + e.h / 2) * s;
       const off = U(20), d = { n: [0, off], s: [0, -off], e: [-off * 2.4, 0], w: [off * 2.4, 0] }[e.dir] || [0, 0];
       tag(g, e.label, cx + d[0], cy + d[1], fs, rect);
+    }
+    // 一行（いちばん上。出口の札に隠れない）
+    const here = S.map && S.map.id === m.id ? { x: S.x, y: S.y, dir: S.dir } : null;
+    if (here) {
+      const px = x + (here.x + 0.5) * s, py = y + (here.y + 0.5) * s;
+      R.UIK.glow(g, px, py, U(22), [143, 214, 216], 0.8 + 0.2 * Math.sin((R.Engine.time || 0) / 400));
+      arrow(g, px, py, ANG[here.dir] || 0, Math.max(1.8, U(1.7)));
     }
     return rect;
   };

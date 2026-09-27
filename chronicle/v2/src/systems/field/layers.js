@@ -22,6 +22,10 @@
   // 昔の速さ（json に fps の無い 3 コマの歩き・4 コマの走り・仮の絵）: 1 コマ 130 ms、ダッシュ 85 ms
   const LEG_WALK_FPS = 1000 / 130, LEG_RUN_FPS = 1000 / 85;
   const NPC_STEP_MS = 320;   // npc.js の STEP_MS（NPC の歩の足の運びの基準）
+  // 息: 周期 2.6〜3.8 秒、位相は id から（人ごとにずれる）。reduceMotion はフレームごとに 1 回だけ読む
+  const REDUCE = { on: false };
+  function idleOf(n) { const h = R.U.hash(String(n.id || n.look || 'x')); return { ph: h % 4000, w: (2 * Math.PI) / (2600 + ((h >> 12) % 1200)) }; }
+  const u1 = (t) => (t / 32) * (F._charScale ? F._charScale() / 1.15 : 1);   // 原画の 1 px（広さの設定で拡大）
   const pool = [];
   let used = 0;
   const OPTS = {};
@@ -102,7 +106,8 @@
       } else if (o.type === 'brazier') {
         if (lit.includes(o.id)) add(cx, cy, 104, 'rgba(255,170,96,1)', 0.85, cy - t * 0.7, '#ffd9a0', 7);
       } else if (o.type === 'spring') {
-        add((o.x + 1) * t, (o.y + 1.2) * t, 132, 'rgba(120,220,236,1)', 0.75, (o.y + 0.7) * t, '#d8fbff', 9);
+        if (R.MapUtil.springLook(m, o) === 'goddess') add((o.x + 1) * t, (o.y + 1.2) * t, 132, 'rgba(255,226,176,1)', 0.75, (o.y - 1) * t, '#fff0c8', 9);   // 女神の像の手のランタン
+        else add((o.x + 1) * t, (o.y + 1.2) * t, 132, 'rgba(120,220,236,1)', 0.75, (o.y + 0.7) * t, '#d8fbff', 9);
       } else if (o.type === 'waylamp') {
         if (G.lamps && G.lamps[o.id]) add(cx, cy, 112, 'rgba(255,196,120,1)', 0.8, cy - t * 1.2, '#ffe6b8', 6);
       } else if (o.type === 'building' && o.lamp && o.door) {
@@ -136,6 +141,7 @@
     const m = S.map;
     if (!m) { R.Gfx.clear(); return; }
     F._trailCheck();
+    REDUCE.on = !!R.Settings.get('reduceMotion');
     F.chunks.sync();
     F._cam(cam);
     const t = cam.t, cx = cam.cx, cy = cam.cy, cs = ((R.Terrain && R.Terrain.CHUNK) || 8) * t;
@@ -270,7 +276,10 @@
       if (n.mv) { k = Math.min(1, (tm - n.mv.t0) / n.mv.ms); px = n.mv.fx + (n.mv.tx - n.mv.fx) * k; py = n.mv.fy + (n.mv.ty - n.mv.fy) * k; }
       const al = n.fade && F._npcAlpha ? F._npcAlpha(n) : 1;
       if (al <= 0.01) return;
-      drawChar(g, n.look, Math.round((px + 0.5) * t - cx), Math.round((py + 1) * t - cy - t * 0.1), n.dir, !!n.mv, false, false, n.pose && n.pose.name, (n.odo || 0) + k, NPC_STEP_MS, al);
+      // 立ち止まった人の息（1 px、人ごとの位相と速さ。動きを減らす設定では出さない）
+      const id = n.idle || (n.idle = idleOf(n));
+      const bob = !n.mv && !n.pose && !REDUCE.on ? (Math.sin((tm + id.ph) * id.w) > 0.35 ? Math.max(1, Math.round(u1(t))) : 0) : 0;
+      drawChar(g, n.look, Math.round((px + 0.5) * t - cx), Math.round((py + 1) * t - cy - t * 0.1) - bob, (n.glance && n.glance.dir) || n.dir, !!n.mv, false, false, n.pose && n.pose.name, (n.odo || 0) + k, NPC_STEP_MS, al, id.ph);
       return;
     }
     if (e.kind === 'prop') {
@@ -298,7 +307,7 @@
    * 人を 1 人描く。dist = 歩いた道のり（マス。歩き・走りのコマを道のりで進める。null なら時間で）、
    * gaitMs = その人の 1 マスの基準の時間（fps から 1 マスあたりのコマ数を出す）、alpha = 濃さ（イベントで出る仲間のフェード）
    */
-  function drawChar(g, look, x, y, dir, moving, dash, lantern, pose, dist, gaitMs, alpha) {
+  function drawChar(g, look, x, y, dir, moving, dash, lantern, pose, dist, gaitMs, alpha, tOff) {
     const t = cam.t, u = t / 32;
     const fade = alpha != null && alpha < 1;
     if (fade) { g.save(); g.globalAlpha = Math.max(0, alpha); }
@@ -309,7 +318,7 @@
     if (R.Hd.has(key)) {
       const sh = R.Hd.get(key, charOpts(lantern));
       if (sh) {
-        const fr = sh.frames[pickFrame(sh, dir, moving, dash, pose, dist, gaitMs)] || sh.frames[0];
+        const fr = sh.frames[pickFrame(sh, dir, moving, dash, pose, dist, gaitMs, tOff)] || sh.frames[0];
         R.Hd.draw(g, fr, x, y, { flip: dir === 'w' && !sh.poses.stand_w });
         if (fade) g.restore();
         return;
@@ -319,22 +328,24 @@
     if (fade) g.restore();
   }
   /** シートのどのコマか。歩き・走りは道のり、待ち・演技は時間 */
-  function pickFrame(sh, dir, moving, dash, pose, dist, gaitMs) {
+  function pickFrame(sh, dir, moving, dash, pose, dist, gaitMs, tOff) {
     const Ps = sh.poses;
     let name = null;
     if (pose && Ps[pose]) name = pose;
     else if (moving) name = dash && Ps[RUN[dir]] ? RUN[dir] : Ps[WALK[dir]] ? WALK[dir] : null;
     else if (Ps[IDLE[dir]] && Ps[IDLE[dir]].length > 1) name = IDLE[dir];
+    else if (Ps[STAND[dir]] && Ps[STAND[dir]].length > 1) name = STAND[dir];   // 何コマもある立ち（待ちの絵）
     const P = name ? Ps[name] : Ps[STAND[dir]] || Ps.stand_s || [0];
     if (P.length < 2) return P[0];
     const gait = !!name && (name === WALK[dir] || name === RUN[dir]);
-    const fps = (sh.fps && (gait || name === IDLE[dir]) && sh.fps[name]) || (dash && gait ? LEG_RUN_FPS : LEG_WALK_FPS);
+    const rest = name === IDLE[dir] || name === STAND[dir];
+    const fps = (sh.fps && (gait || rest) && sh.fps[name]) || (rest ? 4 : dash && gait ? LEG_RUN_FPS : LEG_WALK_FPS);
     if (gait && dist != null) {
       const st = sh.stride && sh.stride[name];
       const perTile = st ? P.length / st : (fps * (gaitMs || F.WALK_MS)) / 1000;
       return P[(Math.floor(dist * perTile + 1) % P.length + P.length) % P.length];   // +1: 歩き出しの最初のコマは足を出したところ
     }
-    return P[Math.floor((R.Engine.time * fps) / 1000) % P.length];
+    return P[Math.floor(((R.Engine.time + (rest ? tOff || 0 : 0)) * fps) / 1000) % P.length];   // 待ちの絵は人ごとに位相をずらす
   }
   F._pickFrame = pickFrame;
   /** 仮の人形（dev だけ）: 頭・体・足。先頭はランタンを持つ */
@@ -413,10 +424,10 @@
   }
 
   // ---------------------------------------------------------------- 物（仮の地面の間の簡単な形）
-  function hdProp(g, id, frame, x, y) {
+  function hdProp(g, id, frame, x, y, opts) {
     const key = 'hd:prop:' + id;
     if (!R.Hd.has(key)) return false;
-    const sh = R.Hd.get(key);
+    const sh = opts ? R.Hd.get(key, opts) : R.Hd.get(key);
     if (!sh) return false;   // 焼けるまでは簡単な形で
     const P = (frame && sh.poses[frame]) || [0];
     R.Hd.draw(g, sh.frames[P[0]] || sh.frames[0], x, y);
@@ -444,6 +455,18 @@
       }
       case 'spring': {
         const sx = o.x * t - cx + t, sy = (o.y + 2) * t - cy - 6 * u;
+        if (R.MapUtil.springLook(m, o) === 'goddess') {
+          // 女神の像（ダンジョンの回復の場所）: 丸い台と水盤、衣の像、手のランタン
+          if (hdProp(g, 'goddess', null, sx, sy, u !== 1 ? { v: R.MapUtil.goddessVariant(m, o), s: u } : { v: R.MapUtil.goddessVariant(m, o) })) return;
+          const a = 0.6 + 0.25 * Math.sin(tm / 400);
+          g.fillStyle = `rgba(255,236,190,${(a * 0.3).toFixed(3)})`; g.beginPath(); g.ellipse(sx, sy - 8 * u, 30 * u, 13 * u, 0, 0, 7); g.fill();
+          R.Gfx.roundRect(sx - 24 * u, sy - 20 * u, 48 * u, 18 * u, 8 * u, '#8a88a0', '#2a2840', 1.2);
+          R.Gfx.roundRect(sx - 12 * u, sy - 15 * u, 24 * u, 7 * u, 4 * u, '#58c8dc', null);
+          R.Gfx.roundRect(sx - 8 * u, sy - 76 * u, 16 * u, 58 * u, 7 * u, '#b4b0c4', '#2a2840', 1.2);
+          g.fillStyle = '#d8d4e4'; g.beginPath(); g.ellipse(sx, sy - 80 * u, 7 * u, 8 * u, 0, 0, 7); g.fill();
+          g.fillStyle = `rgba(255,226,150,${a.toFixed(3)})`; g.fillRect(sx - 3 * u, sy - 62 * u, 6 * u, 7 * u);
+          return;
+        }
         if (hdProp(g, 'spring', null, sx, sy)) return;
         g.fillStyle = 'rgba(120,230,240,0.18)'; g.beginPath(); g.ellipse(sx, sy - 8 * u, 30 * u, 13 * u, 0, 0, 7); g.fill();
         R.Gfx.roundRect(sx - 22 * u, sy - 20 * u, 44 * u, 18 * u, 8 * u, '#6c6a86', '#2a2840', 1.2);

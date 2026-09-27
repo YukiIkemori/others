@@ -88,21 +88,21 @@
     "kind": "new",
     "src": null,
     "checks": {
-     "ok": false,
-     "why": "head scale 1.100",
-     "head_scale": 1.1,
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
      "head": [
-      99.4,
-      61.3
+      99.1,
+      64.2
      ],
-     "height": 87,
-     "rescaled": 1.067,
-     "copy": 0.07,
+     "height": 81,
+     "rescaled": null,
+     "copy": 0.1,
      "shift": [
       0,
-      0
+      1
      ],
-     "err": 36.7
+     "err": 36.9
     }
    },
    {
@@ -112,7 +112,7 @@
     "checks": {
      "ok": true,
      "why": "",
-     "head_scale": 0.975,
+     "head_scale": 1.0,
      "head": [
       99.4,
       63.3

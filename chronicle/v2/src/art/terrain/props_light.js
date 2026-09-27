@@ -66,7 +66,7 @@
             } else if (e.kind === 'beacon') {
               // 灯台の灯室: 岬を照らす大きな光だまり・灯室の芯・回る光の帯（R.Light.glow の beam）。灯る前は小さく息づく残り火
               if (lit) {
-                L(ex, by + 8 * s, 230, S.lampColor, 1.2, 'pool', 'beacon', o.id);
+                L(ex, by + 8 * s, 210, S.lampColor, 0.95, 'pool', 'beacon', o.id);
                 L(ex, ey + 30 * s, 60, '#ffe2a8', 0.9, 'point', 'beacon', o.id);
                 G(ex, ey, { r: 64 * s, core: 7 * s, halo: 64 * s, color: '#ffe2a8', k: 0.95, type: 'beacon', beam: { len: 420 * s, period: 9000, width: 0.12, squash: 0.5, k: 0.7 } });
               } else {
@@ -86,6 +86,18 @@
           if (!stt.open) { L(fx, fy - 6 * s, 36, S.windowColor, 0.7, 'pool', 'chest', o.id); G(fx + 7 * s, fy - 19 * s, { r: 16 * s, core: 2 * s, halo: 16 * s, color: '#fff0c0', k: 0.7, type: 'sparkle' }); }
           break;
         case 'spring':
+          if (R.MapUtil.springLook(map, o) === 'goddess') {
+            // 女神の像: 手の小さなランタン（描いた絵の light32 = 足もとから 90 px 上）の淡い金の光と、水盤のほのかな青。夜でも遠くから見つかる
+            L(fx, fy - 4 * s, 150, '#ffe2b0', 1.2, 'pool', 'spring', o.id);
+            L(fx, fy - 14 * s, 46, S.crystalColor, 0.6, 'pool', 'spring', o.id);
+            L(fx, fy - 90 * s, 30, '#fff0c8', 0.8, 'point', 'spring', o.id);
+            G(fx, fy - 90 * s, { r: 30 * s, core: 4 * s, halo: 30 * s, color: '#ffe6b0', k: 0.9, type: 'lamp' });
+            G(fx, fy - 70 * s, { r: 56 * s, core: 1 * s, halo: 56 * s, color: '#fff2d8', k: 0.35, pulse: 2600, type: 'spring' });
+            G(fx, fy - 15 * s, { r: 20 * s, core: 3 * s, halo: 20 * s, color: '#a0f0ff', k: 0.5, type: 'spring' });
+            // 像のまわりの光の粒（絵の粒の上で、ゆっくり瞬く）
+            for (const [dx, dy, p] of [[-21, -96, 1900], [22, -104, 2300], [-24, -62, 2700], [21, -70, 2100]]) G(fx + dx * s, fy + dy * s, { r: 7 * s, core: 1.2 * s, halo: 7 * s, color: '#ffe8b8', k: 0.8, pulse: p, type: 'sparkle' });
+            break;
+          }
           L(fx, fy - 4 * s, 150, S.crystalColor, 1.25, 'pool', 'spring', o.id);
           G(fx, fy - 24 * s, { r: 40 * s, core: 6 * s, halo: 40 * s, color: '#a0f0ff', k: 0.8, type: 'spring' });
           break;

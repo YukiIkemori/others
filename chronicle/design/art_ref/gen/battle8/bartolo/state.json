@@ -112,19 +112,19 @@
     "checks": {
      "ok": true,
      "why": "",
-     "head_scale": 1.025,
+     "head_scale": 1.0,
      "head": [
-      84.8,
-      61.3
+      85.2,
+      63.7
      ],
-     "height": 91,
-     "rescaled": 1.051,
-     "copy": 0.1,
+     "height": 86,
+     "rescaled": null,
+     "copy": 0.16,
      "shift": [
       0,
-      6
+      7
      ],
-     "err": 30.4
+     "err": 29.8
     }
    },
    {
@@ -134,19 +134,19 @@
     "checks": {
      "ok": true,
      "why": "",
-     "head_scale": 1.025,
+     "head_scale": 1.0,
      "head": [
-      84.8,
-      61.3
+      85.2,
+      64.7
      ],
-     "height": 90,
-     "rescaled": 1.051,
-     "copy": 0.11,
+     "height": 86,
+     "rescaled": null,
+     "copy": 0.18,
      "shift": [
       0,
-      6
+      7
      ],
-     "err": 33.9
+     "err": 33.1
     }
    }
   ],
@@ -560,21 +560,21 @@
     "kind": "new",
     "src": null,
     "checks": {
-     "ok": false,
-     "why": "head scale 0.850",
-     "head_scale": 0.85,
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
      "head": [
-      82.2,
-      54.7
+      81.7,
+      58.2
      ],
-     "height": 63,
-     "rescaled": 1.067,
+     "height": 59,
+     "rescaled": null,
      "copy": 0.04,
      "shift": [
-      12,
-      6
+      11,
+      7
      ],
-     "err": 32.2
+     "err": 32.3
     }
    },
    {
@@ -584,19 +584,19 @@
     "checks": {
      "ok": true,
      "why": "",
-     "head_scale": 0.975,
+     "head_scale": 1.0,
      "head": [
-      82.2,
-      49.7
+      81.7,
+      53.2
      ],
-     "height": 68,
-     "rescaled": 1.067,
-     "copy": 0.13,
+     "height": 64,
+     "rescaled": null,
+     "copy": 0.08,
      "shift": [
-      10,
+      9,
       6
      ],
-     "err": 18.1
+     "err": 24.0
     }
    }
   ],

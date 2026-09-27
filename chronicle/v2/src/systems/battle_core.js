@@ -1897,7 +1897,7 @@
         c.status = {};
         if ((result === 'win' || result === 'escape') && c.hp > 0) {
           c.hp = p.mhp;
-          if (result === 'win') c.mp = Math.min(p.mmp, c.mp + Math.ceil(p.mmp * A.mpPct));
+          if (result === 'win') { const pct = R.Rules.afterWinMpPct ? R.Rules.afterWinMpPct(c) : A.mpPct; if (pct > 0) c.mp = Math.min(p.mmp, c.mp + Math.ceil(p.mmp * pct)); }
         }
         c.hp = clamp(c.hp, 0, p.mhp); c.mp = clamp(c.mp, 0, p.mmp);
       }

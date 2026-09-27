@@ -1,0 +1,46 @@
+{
+ "id": "goddess_v1",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   42,
+   93
+  ],
+  "32": [
+   56,
+   124
+  ],
+  "40": [
+   70,
+   155
+  ]
+ },
+ "feet": {
+  "24": [
+   21,
+   92
+  ],
+  "32": [
+   28,
+   122
+  ],
+  "40": [
+   35,
+   152
+  ]
+ },
+ "files": {
+  "24": "goddess_v1@24.png",
+  "32": "goddess_v1@32.png",
+  "40": "goddess_v1@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/goddess_a.png",
+ "light32": [
+  0,
+  -90
+ ]
+}
