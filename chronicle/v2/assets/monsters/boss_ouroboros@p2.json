@@ -1,0 +1,51 @@
+{
+ "sprite": "boss_ouroboros",
+ "id": "b_ouroboros",
+ "name": "円環竜オウロボラ",
+ "sheet": 69,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 220,
+ "h": 162,
+ "anchor": [
+  110,
+  161
+ ],
+ "points": {
+  "head": [
+   181,
+   29
+  ],
+  "center": [
+   100,
+   84
+  ],
+  "fx": [
+   125,
+   67
+  ],
+  "top": [
+   169,
+   13
+  ],
+  "body": [
+   99,
+   84,
+   86,
+   64
+  ]
+ },
+ "facing": "right",
+ "long": 220,
+ "core_long": null,
+ "target": {
+  "w": 220,
+  "h": 150,
+  "long": 220
+ },
+ "colors": 48,
+ "pitch": 5.895,
+ "pose": "p2"
+}

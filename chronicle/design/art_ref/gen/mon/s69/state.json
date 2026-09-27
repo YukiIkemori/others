@@ -24,5 +24,55 @@
    "long": 220
   }
  },
- "notes": []
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s69_tele_a1.png",
+   "prompt": "the wind-up pose: the ring dragon tightens its ring and raises its head higher above the ring, jaws still clamped on the tail, eyes glaring. Same size and position."
+  },
+  {
+   "pose": "p2",
+   "file": "mon_s69_p2_a1.png",
+   "prompt": "its second form: the ring is coming undone — the tail has slipped out of the dragon's mouth, the jaws open, the ring broken open on the right side. Same size and position. Keep the inside of the ring empty magenta."
+  },
+  {
+   "pose": "tele",
+   "file": "mon_s69_tele_a2.png",
+   "prompt": "the wind-up pose: the ring dragon's head rises a little above the ring with its jaws still clamped on its tail, the small back wings raised, the golden clock-face eye glaring. IMPORTANT: keep the monster EXACTLY as large as in the attached image — the same overall width and height in pixels, the same scale of every body part; do NOT shrink or zoom out."
+  },
+  {
+   "pose": "p2",
+   "file": "mon_s69_p2_a2.png",
+   "prompt": "its second form: the ring is breaking open — the dragon's jaws have released its tail: the tail tip now hangs free BELOW the open mouth, leaving a clear gap in the ring at the front right; the scales along the ring look cracked. Keep the inside of the ring empty magenta. IMPORTANT: keep the monster EXACTLY as large as in the attached image — the same overall width and height in pixels, the same scale of every body part; do NOT shrink or zoom out."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s69_tele_a2.png",
+  "p2": "mon_s69_p2_a2.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    1,
+    -2
+   ],
+   "overlap": 17290,
+   "size": [
+    219,
+    164
+   ]
+  },
+  "p2": {
+   "offset": [
+    0,
+    0
+   ],
+   "overlap": 17739,
+   "size": [
+    220,
+    162
+   ]
+  }
+ }
 }

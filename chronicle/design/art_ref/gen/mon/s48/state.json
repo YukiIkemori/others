@@ -35,22 +35,27 @@
    "pose": "p2",
    "file": "mon_s48_p2_a1.png",
    "prompt": "its second form: the lava has cooled and hardened — the whole body is dull black and dark grey basalt rock, the cracks are dark dull red instead of bright orange, the heart in the chest dim dark red. Same size, same pose, same position."
+  },
+  {
+   "pose": "tele",
+   "file": "mon_s48_tele_a2.png",
+   "prompt": "the wind-up pose: the lava beast rears its head up and roars, front claws raised a little, body in the same place. IMPORTANT: keep the monster EXACTLY as large as in the attached image — the same overall width and height in pixels, the same scale of every body part; do NOT shrink or zoom out."
   }
  ],
  "posesUse": {
-  "tele": "mon_s48_tele_a1.png",
+  "tele": "mon_s48_tele_a2.png",
   "p2": "mon_s48_p2_a1.png"
  },
  "poseNorm": {
   "tele": {
    "offset": [
-    18,
-    -18
+    2,
+    -14
    ],
-   "overlap": 10675,
+   "overlap": 14885,
    "size": [
-    190,
-    158
+    216,
+    151
    ]
   },
   "p2": {

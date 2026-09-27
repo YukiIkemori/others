@@ -40,22 +40,26 @@
    "pose": "tele",
    "file": "mon_s18_tele_a2.png",
    "prompt": "the wind-up pose: the mummy king raises the sceptre high above its head with its right arm. IMPORTANT: keep the figure EXACTLY the same size as in the attached image (same crown height, same body width, same bottom tip position) — do not shrink it."
+  },
+  {
+   "pose": "tele",
+   "file": "mon_s18_tele_a3.png",
+   "prompt": "the sceptre is lifted up high above the crown by its right hand; everything else unchanged. IMPORTANT: keep the monster EXACTLY as large as in the attached image — the same overall width and height in pixels, the same scale of every body part; do NOT shrink or zoom out."
   }
  ],
  "posesUse": {
-  "tele": "mon_s18_tele_a2.png",
   "p2": "mon_s18_p2_a1.png"
  },
  "poseNorm": {
   "tele": {
    "offset": [
-    10,
+    9,
     -12
    ],
-   "overlap": 9430,
+   "overlap": 10357,
    "size": [
-    134,
-    232
+    131,
+    229
    ]
   },
   "p2": {
@@ -69,5 +73,6 @@
     221
    ]
   }
- }
+ },
+ "notes_tele": "3 tele edits shrank the king; tele is the engine crouch transform"
 }
