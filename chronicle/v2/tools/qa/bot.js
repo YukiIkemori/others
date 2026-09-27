@@ -53,7 +53,7 @@
       const boss = !!s.boss || !!(s.troop && R.DB.troops[s.troop] && R.DB.troops[s.troop].boss);
       const map = R.Field.pos.map;
       const L = B.loseNext;
-      const lose = !!L && (L.zako ? !boss && !s.troop && (!L.map || map.indexOf(L.map) === 0) : L.boss ? boss : true);
+      const lose = !!L && (L.zako ? !boss && !s.troop && (!L.map || map.indexOf(L.map) === 0) : L.troop ? s.troop === L.troop : L.boss ? boss : true);
       B.cur = { troop: s.troop || null, zone: s.zone || null, boss, map, gold: G() ? G().gold : 0, rounds: 0, lose, f: B.frames, t0: now() };
       if (lose) note('lose mode: ' + (s.troop || s.zone));
     });
@@ -369,7 +369,7 @@
     const s = S();
     if (!s || !s.map) return;
     const f = F();
-    if (R.Events.busy() || f._locked() || s.entering || s.arriving || R.Engine.fade.a > 0.01) { B.idle = 0; return; }
+    if (R.Events.busy() || f._locked() || s.entering || s.arriving || R.Engine.fade.a > 0.01) { B.idle = 0; B.lastBusy = B.frames; return; }
     // 目標
     const g = curGoal();
     if (!g) { B.done = true; return; }
@@ -377,7 +377,7 @@
       B.goalId = g.id; B.plan = null; B.tries = 0; B.stuck = 0; B.blocked = {};
       g.t0 = B.frames;
       note('goal ' + g.id);
-      if (g.lose) B.loseNext = { boss: true };
+      if (g.lose) B.loseNext = { troop: g.lose };
       if (g.wipeTo) B.wipeTo = g.wipeTo;
     }
     if (B.frames - g.t0 > (g.maxFrames || 60000)) { fail('goal ' + g.id + ' timed out'); return; }
@@ -493,6 +493,7 @@
     const want = place.ref;
     const ok = fr && ((fr.kind === 'npc' && want && fr.npc && (fr.npc.id === want.id || fr.npc.def === want)) || (fr.kind === 'obj' && fr.obj === want));
     if (B.actAt && B.frames - B.actAt < 30) return;   // 押した後はイベントが始まるのを待つ
+    if (B.frames - (B.lastBusy || -1e9) < 60) return;   // イベントの後は少し待つ（宿の後のティアの場面など、後から走る物に譲る）
     if (ok || (fr && B.atEnd > 20)) {
       if (tap('a')) {
         B.actAt = B.frames;

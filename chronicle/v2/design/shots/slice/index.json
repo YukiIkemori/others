@@ -1,6 +1,28 @@
 {
- "date": "2026-09-27T03:26:58.130Z",
+ "date": "2026-09-27T04:12:32.888Z",
  "shots": [
+  {
+   "name": "notify",
+   "label": "通知（宝箱・隠し通路・泉）",
+   "size": "wide",
+   "file": "notify_wide.png",
+   "page": "dev.html?fixture=content_p_lighthouse_2",
+   "ok": true,
+   "errors": [],
+   "stubs": [],
+   "top": "field"
+  },
+  {
+   "name": "notify",
+   "label": "通知（宝箱・隠し通路・泉）",
+   "size": "phone",
+   "file": "notify_phone.png",
+   "page": "dev.html?fixture=content_p_lighthouse_2",
+   "ok": true,
+   "errors": [],
+   "stubs": [],
+   "top": "field"
+  },
   {
    "name": "talk",
    "label": "会話（記録院のロウェル）",
@@ -66,6 +88,28 @@
    "errors": [],
    "stubs": [],
    "top": "screen:skills"
+  },
+  {
+   "name": "chronicle_leads",
+   "label": "手がかり帳（タブ）",
+   "size": "wide",
+   "file": "chronicle_leads_wide.png",
+   "page": "dev.html?fixture=content_f_fern_plaza",
+   "ok": true,
+   "errors": [],
+   "stubs": [],
+   "top": "screen:chronicle"
+  },
+  {
+   "name": "chronicle_leads",
+   "label": "手がかり帳（タブ）",
+   "size": "phone",
+   "file": "chronicle_leads_phone.png",
+   "page": "dev.html?fixture=content_f_fern_plaza",
+   "ok": true,
+   "errors": [],
+   "stubs": [],
+   "top": "screen:chronicle"
   },
   {
    "name": "song",

@@ -78,7 +78,7 @@
       await E.narr(ev, '……シャリ、シャリ……。\n紙をかみ切るような音がする。');
       await E.narr(ev, '冷えきった灯の火皿のそばで、\n白い紙の化け物が、\n何かを食べている……！');
       try { R.Field.shake(8, 500); R.Audio.sfx('roar'); } catch (e) { /* */ }
-      const r = await ev.battle('tr_b_pageeater');
+      const r = await ev.battle('tr_b_pageeater', { boss: true });
       if (r !== 'win') return;
       await E.narr(ev, 'ページ食らいの体から、\n白い紙切れが舞い上がった。');
       try { R.Audio.sfx('page'); R.Field.flash('#ffffff', 200); } catch (e) { /* */ }

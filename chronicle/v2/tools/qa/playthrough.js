@@ -43,7 +43,7 @@ function prologue(o) {
     { id: 'grind_prologue', grind: 24, optional: true },
     { id: 'fine_lh', ev: 'lighthouse_3_fine', done: 'prologue_fine', optional: true },
     { id: 'spring_lh', spring: ['lighthouse_3'], optional: true, noHeal: true },
-    Object.assign({ id: 'boss_pageeater', ev: 'lighthouse_3_boss', done: 'prologue_boss' }, o.loseBoss ? { lose: true, wipeTo: 'retry' } : {}),
+    Object.assign({ id: 'boss_pageeater', ev: 'lighthouse_3_boss', done: 'prologue_boss' }, o.loseBoss ? { lose: 'tr_b_pageeater', wipeTo: 'retry' } : {}),
     { id: 'departure', ev: 'pharos_departure', done: 'prologue_done' },
     { id: 'shop_pharos_arms', ev: 'pharos_smithy', shop: true, optional: true },
     { id: 'shop_pharos_items', ev: 'pharos_shopkeeper', shop: true, optional: true },
@@ -86,9 +86,9 @@ function forest(o) {
     { id: 'elder_fine', ev: 'elder_fine', done: 'forest_fine', optional: true },
     { id: 'grind_elder', grind: 85, optional: true },
     { id: 'spring_elder', spring: ['elder_2'], optional: true, noHeal: true },
-    Object.assign({ id: 'boss_rooteater', ev: 'elder_boss', done: 'cleared_r_forest' }, o.loseBoss ? { lose: true, wipeTo: 'retry' } : {}),
+    Object.assign({ id: 'boss_rooteater', ev: 'elder_boss', done: 'cleared_r_forest' }, o.loseBoss ? { lose: 'tr_b_rooteater', wipeTo: 'retry' } : {}),
     { id: 'unique', ev: 'fern_after', done: 'forest_unique_given' },
-    { id: 't1', ev: 'fern_inn_keeper', done: 'story_t1', maxTries: 3 },
+    { id: 't1', ev: 'fern_inn_keeper', done: 'story_t1', maxTries: 12 },
   );
   return g;
 }
