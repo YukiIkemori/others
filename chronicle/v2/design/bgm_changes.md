@@ -2,7 +2,7 @@
 
 - 作ったもの: `chronicle/assets/bgm/<id>.ogg` + `<id>.json`（ループ点 `loopStart/loopEnd`、`omen` だけ `loop:false`）。どれも Ogg Vorbis 96 kbps・−18 LUFS（`omen` は −17）、ループの継ぎ目にクロスフェードを焼き込み済み。前の版は `chronicle/design/bgm/prev/` にある（聞き比べ: `chronicle/design/story_audio_preview.html`）。
 - 生成の元: `chronicle/design/bgm/prompts_v2.json`（BGM 生成ツールを prompts_v2.json で実行）。`prompts.json`（v1 の 32 曲の一覧）は変えていない。
-- 継ぎ目の聞き取り（聞く係のモデルが 2 回聞いた平均、10 = 気づかない）と、スペクトルの似かた。
+- 継ぎ目の聞き取り（聞き取りの係が 2 回聞いた平均、10 = 気づかない）と、スペクトルの似かた。
 
 ## 1. 同じ id のまま作り直した曲（v2/src の変更は要らない）
 

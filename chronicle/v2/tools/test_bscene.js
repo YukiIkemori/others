@@ -30,8 +30,10 @@ R.W = 960; R.H = 540; R.layout = 'wide'; R.uiScale = 1; R.safe = { l: 0, t: 0, r
 let L = _.layout.compute();
 const party = [0, 1, 2, 3].map((i) => ({ uid: 'p' + i, row: i < 2 ? 'front' : 'back' }));
 const ps = _.layout.partySpots(L, party);
-ok('16:9 party spots are the MODERN_UI §2.3 values', ps.p0.x === 575 && ps.p0.y === 338 && ps.p1.x === 616 && ps.p2.x === 668 && ps.p3.x === 726, ps);
-ok('back row is a step behind (x larger)', ps.p2.x > ps.p0.x && ps.p3.x > ps.p1.x);
+ok('16:9 party spots go top to bottom in party order (cards order)', ps.p0.y < ps.p1.y && ps.p1.y < ps.p2.y && ps.p2.y < ps.p3.y && ps.p0.x === _.layout.PARTY.wide.x0 && ps.p0.y === _.layout.PARTY.wide.y0, ps);
+ok('back row is a step to the right of the front row line', (() => { const P = _.layout.PARTY.wide; const fx = (y) => P.x0 + (y - P.y0) * P.slope; return Math.abs(ps.p0.x - fx(ps.p0.y)) <= 1 && ps.p2.x - fx(ps.p2.y) >= 80 && ps.p3.x - fx(ps.p3.y) >= 80; })(), ps);
+{ const mix = [{ uid: 'a', row: 'back' }, { uid: 'b', row: 'front' }, { uid: 'c', row: 'back' }, { uid: 'd', row: 'front' }]; const ms = _.layout.partySpots(L, mix);
+  ok('mixed rows keep the party order top to bottom (order screen swap)', ms.a.y < ms.b.y && ms.b.y < ms.c.y && ms.c.y < ms.d.y && ms.a.x > ms.b.x - 1, ms); }
 const foes = Array.from({ length: 8 }, (x, i) => ({ uid: 'e' + i, size: i === 0 ? 'l' : 's' }));
 const es = _.layout.enemySpots(L, foes);
 ok('enemies inside x 40〜420, y 320〜470', Object.values(es).every((p) => p.x >= 40 && p.x <= 420 && p.y >= 320 && p.y <= 470), es);
@@ -109,6 +111,8 @@ section('人の札は隊列の順（前列・後列で分けない。2026-09-27 
   G.party = want.slice();
   const rows = { hagen: 'front', hero: 'back', sylvain: 'back', noela: 'front' };
   for (const id of want) G.chars[id].row = rows[id];
+  // 持ち主の手順: 酒場で選んだ直後に 並びと隊列（order.js）で入れ替える → R.Party.setOrder・setRow
+  if (want.length === 4) { R.Party.setOrder([want[1], want[0], want[3], want[2]]); R.Party.setRow(want[2], 'front'); }
   R.W = 960; R.H = 540; R.layout = 'wide'; R.uiScale = 1; R.safe = { l: 0, t: 0, r: 0, b: 0 };
   const err = console.error; console.error = () => {};
   R.Battle.start({ troop: 'tr_stub' });
@@ -117,6 +121,7 @@ section('人の札は隊列の順（前列・後列で分けない。2026-09-27 
   const st = R.Battle.debug();
   const cards = st ? st.partyUnits().map((u) => u.id) : null;
   ok('cards follow the party order even with mixed rows (hagen front, hero back, sylvain back, noela front)', st && JSON.stringify(cards) === JSON.stringify(R.Party.members().map((c) => c.id)), { cards, members: R.Party.members().map((c) => c.id + ':' + c.row) });
+  ok('sprites stand top to bottom in the same order as the cards (order screen → battle)', st && (() => { const ys = st.partyUnits().map((u) => st.actor(u.uid).y); return ys.every((y, i) => i === 0 || y > ys[i - 1]); })(), st && st.partyUnits().map((u) => u.id + '@' + st.actor(u.uid).x + ',' + st.actor(u.uid).y));
   ok('one card rect per member, top to bottom in that order', st && _.hud.partyRects(st).every((r, i, a) => i === 0 || r.y > a[i - 1].y) && _.hud.partyRects(st).length === cards.length);
   const pp = st && R.Battle.prompts(st);
   ok('bottom-right prompts carry the speed 「速さ：通常」 (no separate chip)', pp && pp.list.some((p) => p.btn === 'r' && p.label === '速さ：' + R.Battle.speedLabel(R.Settings.get('battleSpeed'))), pp && pp.list);

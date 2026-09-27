@@ -44,14 +44,25 @@
 
   function big(u) { return u.boss || u.size === 'l' || u.size === 'boss'; }
 
-  /** 味方の足もと（隊列の前・後で一歩の差） */
+  /**
+   * 味方の足もと（2026-09-27 の持ち主の報告「並びを変えた後の戦闘で位置と札の順が合わない」）:
+   * 上から下へ隊列の順（R.Party の並び＝右上の札と同じ順）に並べ、前列・後列は横の一歩（後列は右へ）で分ける。
+   * 以前は前列・後列ごとに場所を取っていたので、前・前・後・後 の並びでも見た目は 前→後→前→後 の順になっていた。
+   * units は隊列の順で渡す（scene.js の place が st.partyUnits() の順にする）。
+   */
+  const PARTY = {
+    wide: { y0: 332, y1: 448, x0: 578, slope: 0.62, back: 88 },
+    tall: { y0: 396, y1: 500, x0: 330, slope: 0.35, back: 76 },
+  };
+  Lay.PARTY = PARTY;
   Lay.partySpots = function (L, units) {
-    const T = L.T, out = {};
-    let f = 0, b = 0;
-    for (const u of units) {
-      const p = u.row === 'back' ? T.back[b++ % 4] : T.front[f++ % 4];
-      out[u.uid] = { x: p[0] + L.ox, y: p[1] + L.oy };
-    }
+    const P = L.tall ? PARTY.tall : PARTY.wide, out = {};
+    const n = units.length;
+    units.forEach((u, i) => {
+      const y = n <= 1 ? (P.y0 + P.y1) / 2 : P.y0 + (P.y1 - P.y0) * (Math.min(n, 4) === n ? i / (n - 1) : i / 3);
+      const x = P.x0 + (y - P.y0) * P.slope + (u.row === 'back' ? P.back : 0);
+      out[u.uid] = { x: Math.round(x) + L.ox, y: Math.round(y) + L.oy };
+    });
     return out;
   };
 

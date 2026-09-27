@@ -98,7 +98,9 @@
   /** 配置（最初と画面の大きさが変わったとき） */
   function place(st) {
     st.L = _.layout.compute();
-    const party = st.actors.filter((a) => a.side === 'party');
+    // 味方は隊列の順（人の札と同じ）で場所を取る
+    const pord = st.partyUnits().map((u) => u.uid);
+    const party = st.actors.filter((a) => a.side === 'party').sort((a, b) => pord.indexOf(a.uid) - pord.indexOf(b.uid));
     const foes = st.actors.filter((a) => a.side === 'enemy');
     const ps = _.layout.partySpots(st.L, party.map((a) => st.unit(a.uid) || a));
     const es = _.layout.enemySpots(st.L, foes.map((a) => st.unit(a.uid) || a));

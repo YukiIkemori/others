@@ -64,6 +64,23 @@ async function openScreen(p, id, params) {
   return B.waitFor(p, `${TOP}==='screen:${id}'`, 3000);
 }
 const result = (p) => B.ev(p, 'window.__r');
+// 一番上の画面が閉じる動きの途中でない（札も閉じかけでない）
+const SETTLED = `(() => { const v = (RPG.Engine.top() || {}).view; return !v || (!v.closing && !(v.modal && v.modal.ending)); })()`;
+/** B で id の画面まで戻る。閉じる動き（140 ms、ゲームの時間）の間は B を押し足さない。
+ *  B.pressUntil は 1 回ごとに 290 ms しか待たないので、重い機械では動きが終わる前に次の B を押してしまう。
+ *  その B は閉じた画面が外れた後の下の画面（ハブ）に届き、ハブも閉じてしまう（top が field になって list が無い）。
+ *  2 回押せば 2 枚戻るのはゲームとして正しい（ゲームの不具合ではない）。テストのほうで動きが終わるのを待つ。 */
+async function backTo(p, id, max) {
+  for (let i = 0; i < (max || 4); i++) {
+    await B.waitFor(p, SETTLED, 3000);
+    const before = await B.ev(p, TOP);
+    if (before === id) return true;
+    await B.press(p, 'b');
+    await B.waitFor(p, `${TOP}!==${JSON.stringify(before)} || !${SETTLED}`, 1500);   // B が届いたのを見てから
+  }
+  await B.waitFor(p, SETTLED, 3000);
+  return (await B.ev(p, TOP)) === id;
+}
 
 (async () => {
   const S = await B.start();
@@ -105,8 +122,8 @@ const result = (p) => B.ev(p, 'window.__r');
     ok('save card: place/chapter/faces, no Lv', card && typeof card.chapter === 'number' && card.faces.length === 4 && !('lv' in card), card);
     await B.press(p, 'up'); await B.press(p, 'a');
     ok('overwrite asks first (modal)', await B.waitFor(p, `!!RPG.Engine.top().view.modal`, 1500));
-    await B.press(p, 'b'); await p.waitForTimeout(250);
-    await B.pressUntil(p, 'b', `${TOP}==='screen:menu'`, 4);
+    await B.press(p, 'b'); await B.waitFor(p, `!RPG.Engine.top().view.modal`, 3000);
+    ok('save → B → hub', await backTo(p, 'screen:menu', 4), await B.ev(p, TOP));
     // ハブ: → で人の札 → A で強さ → R で次の人 → B
     await B.pressUntil(p, 'up', `RPG.Engine.top().list.index===0`, 12);
     await B.press(p, 'right'); await B.press(p, 'a');
@@ -116,7 +133,7 @@ const result = (p) => B.ev(p, 'window.__r');
     ok('status: R → next member', (await B.ev(p, 'RPG.Engine.top().view.ci')) === (ci0 + 1) % 4);
     await B.press(p, 'l');
     ok('status: L → back', (await B.ev(p, 'RPG.Engine.top().view.ci')) === ci0);
-    await B.pressUntil(p, 'b', `${TOP}==='screen:menu'`, 3);
+    ok('status → B → hub', await backTo(p, 'screen:menu', 3), await B.ev(p, TOP));
     // 満タン（X）
     const hp0 = await B.ev(p, 'RPG.Game.chars.viola.hp');
     await B.press(p, 'x');

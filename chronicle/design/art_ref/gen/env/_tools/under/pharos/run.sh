@@ -4,4 +4,4 @@
 cd "$(dirname "$0")"
 export SHIFT='[[785,30,988,268,13,0],[1462,140,1660,300,-7,0],[362,800,570,940,10,0],[938,572,1012,656,7,0],[1066,700,1142,784,7,0],[1386,928,1462,1004,8,0]]'
 export RAILS='[[1292,1418,412],[1372,1586,812]]'
-python3 process.py gen2.png out2 && python3 doorsheet.py out2/pharos@32.png doors_fix.png
+python3 process.py ../../../under/pharos_gen2_raw.png out2 && python3 doorsheet.py out2/pharos@32.png doors_fix.png
