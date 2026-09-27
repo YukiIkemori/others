@@ -281,11 +281,15 @@
       if (pj && !pj.done) R.Hd.schedule(pj, 130);
     } catch (e) { console.error('[field] prewarm', e); }
     const v = CK.view(view), A = all();
+    // 暗転の中なので、見える範囲は仮の地面（fb）を出さずに焼き切る（遅い端末でも 1 枚 60 ms で切ると、明るさの違う四角が
+    // チャンクの境に残って見えた。QA world_wide）。全体の上限だけ置く
+    const T_END = now() + 1500;
     for (let cy = v.y0; cy <= v.y1; cy++) for (let cx = v.x0; cx <= v.x1; cx++) {
       let e = A.get(cy * KEYW + cx);
-      if (e && e.ready) continue;                 // 先に焼いてあった（CK.preload）
+      if (e && e.ready && !e.fb) continue;        // 先に焼いてあった（CK.preload）
       if (!e) e = request(cx, cy, null);
-      finishNow(e, e.job, 60);
+      if (e.ready && e.fb) { const j = e.next || e.job; if (j && !j.done) finishNow(e, j, Math.max(60, T_END - now())); continue; }
+      finishNow(e, e.job, Math.max(60, T_END - now()));
     }
     S.stat.prewarmMs = now() - t0;
     CK.sync();
