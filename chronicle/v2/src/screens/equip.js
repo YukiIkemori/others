@@ -235,7 +235,9 @@
       // 縦持ちの候補は、下の「ほかの仲間」に 1 人 u(36) の行が残る分だけ（2〜6 行）。小さな画面は比べる行を 3 つにして詳しい所を低く
       const nOthers = Math.max(1, S.party().length - 1);
       const candRows = (dpH) => Math.floor((b.y + b.h - sp.y - u(56) - u(12) - dpH - u(12) - (u(46) + nOthers * u(36))) / this.clist.rowPx());
-      const dpCandH = [u(300), u(270), u(240)].find((h) => candRows(h) >= 2) || u(240);   // 比べる行 4・3・2
+      // 詳しい所の高さと比べる行の数: 4 行 → 3 行 → 2 行 → 2 行で説明なし（説明は入る時だけ描く）
+      const tier = [[u(300), 4], [u(270), 3], [u(240), 2], [u(210), 2]].find(([h]) => candRows(h) >= 2) || [u(210), 2];
+      const dpCandH = tier[0];
       const cRows = Math.max(2, Math.min(6, candRows(dpCandH)));
       const cp = tall ? { x: b.x, y: sp.y, w: b.w, h: this.mode === 'cand' ? u(56) + Math.min(cRows, this.clist.rows.length) * this.clist.rowPx() : sp.h } :{ x: midX, y: b.y, w: mw, h: b.h * 0.64 };
       if (showSlots) drawSlots();
@@ -297,7 +299,7 @@
         // 行の数は詳しい所の高さに入るだけ（説明 1 行の分を残す）
         const all = S.statDiff(c, s, focusId || null), same = !all.some((r) => r.d);
         const fit = Math.floor((dp.y + dp.h - u(12) - u(28) - (same ? u(30) : 0) - y) / u(30));
-        const rows = all.slice(0, Math.max(1, Math.min(tall ? Math.round((dpCandH - u(180)) / u(30)) : 5, fit)));
+        const rows = all.slice(0, Math.max(1, Math.min(tall ? tier[1] : 5, fit)));
         if (same) { R.UIK.text(g, '変わらない', dp.x + u(22), y, { size: u(15), color: C.same }); y += u(30); }
         // 列は右から測って置く: 増減（いちばん広い物の幅）→ 後の値 → → → 前の値。狭い画面でも数字が重ならない
         const rx = dp.x + dp.w - u(22);
