@@ -5,7 +5,7 @@
 //   ファロス  pharos_home1〜6（ph_house1〜6）
 //   フェルン  fern_home1〜3（fern_b_house1〜3）・fern_shed（fern_b_shed）
 //   ユラ      yura_home_elder・yura_home1〜4（yura_b_elder・yura_b_h1〜h4）
-// どれも K.room（上 2 行が壁、下の中ほどに 2 マスの戸口）。spawn は door（戸口の内側）だけ。
+// どれも K.room（上 2 行が壁、下の中ほどに 1 マスの戸口）。spawn は door（戸口の真上 = 内側）だけ。
 // 部屋の広さは外の建物に合わせた小さな部屋（幅 8〜10）。家具は K.furnish の文字の絵（床の行 y = 2 から、wall = 上の壁に掛ける物）。
 // 家ごとに並べ方を変える（同じ部屋を作らない）。灯り: 卓の燭台・かまど・暖炉・燭台・壁の燭台・ランタン。
 (function (R) {
@@ -23,13 +23,13 @@
       if (o.plank) K.rect(g, 1, 2, w - 2, h - 3, 'p');
       for (const r of o.stone || []) K.rect(g, r[0], r[1], r[2], r[3], 'k');
       for (const r of o.rugs || []) K.rect(g, r[0], r[1], r[2], r[3], 'c');
-      K.put(g, door.x, door.y, 'd'); K.put(g, door.x + 1, door.y, 'd');
+      K.put(g, door.x, door.y, 'd');   // 戸口は 1 マス（外の扉の絵も 1 マス）
       K.def(id, {
         name: o.name, kind: 'interior', region: o.region, location: o.location,
         legend: K.ROOM_LEGEND(o.wallMat || 'wall_wood', o.floorMat || 'wood_floor'), rows: g, outside: o.wallMat || 'wall_wood',
         objects: K.furnish(o.floor, o.wall).concat(o.extra || []), npcs: o.npcs || [],
         spawns: { door: { x: door.x, y: door.y - 1, dir: 'n' } },
-        exits: [{ x: door.x, y: door.y, w: 2, h: 1, to: { map: o.town, spawn: o.back } }],
+        exits: [{ x: door.x, y: door.y, w: 1, h: 1, to: { map: o.town, spawn: o.back } }],
         light: { ambient: o.ambient || '#7c5e4e', k: 0.82, mood: 'interior' }, bgm: o.bgm,
         meta: { sub: o.sub || '', minimap: false },
         optional: o.optional || undefined,

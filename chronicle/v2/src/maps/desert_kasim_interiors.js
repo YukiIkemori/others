@@ -1,5 +1,5 @@
 // CONTENT（砂漠）: カシムの屋内 8 つ（WORLD_REDESIGN §5.5）: 宿「泉の星亭」・酒場「砂時計」・道具屋・地図屋・占いの天幕・隊商ギルド・
-//   王墓の番アブルの家・井戸掘りの親方の家。どれも K.room（上 2 行が壁の立ち上がり、下の中ほどに 2 マスの戸口）。壁は日干しれんが、床は砂岩と敷物。
+//   王墓の番アブルの家・井戸掘りの親方の家。どれも K.room（上 2 行が壁の立ち上がり、下の中ほどに 1 マスの戸口）。壁は日干しれんが、床は砂岩と敷物。
 (function (R) {
   'use strict';
   R.onData(function () {
@@ -14,7 +14,7 @@
         rows: g, outside: 'wall_sandstone',
         objects: o.objects || [], npcs: o.npcs || [],
         spawns: Object.assign({ door: { x: door.x, y: h - 2, dir: 'n' } }, o.spawns || {}),
-        exits: [{ x: door.x, y: h - 1, w: 2, h: 1, to: { map: 'kasim', spawn: o.back } }],
+        exits: [{ x: door.x, y: h - 1, w: 1, h: 1, to: { map: 'kasim', spawn: o.back } }],
         triggers: o.triggers || [],
         light: Object.assign({}, DK.LIGHT_ROOM, o.light || {}),
         bgm: o.bgm || 'kasim',

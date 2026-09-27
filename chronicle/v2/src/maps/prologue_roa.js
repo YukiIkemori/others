@@ -73,7 +73,8 @@
         ...PS('flower_pot', [[9, 10], [15, 10], [29, 10], [36, 10]]),   // 戸の前は空ける
         P('well', 30, 13),
         // 畑のまわり
-        ...PS('fence', [[4, 12], [5, 12], [6, 12], [7, 12], [8, 12], [9, 12], [10, 12], [11, 12], [12, 13], [12, 14], [12, 16], [12, 17], [12, 18]]),
+        ...PS('fence', [[4, 12], [5, 12], [6, 12], [7, 12], [8, 12], [9, 12], [10, 12], [11, 12], [12, 13], [12, 14], [12, 16], [12, 17], [12, 18],
+          [4, 13], [4, 14], [4, 15], [4, 16], [4, 17], [9, 18], [10, 18], [11, 18]]),   // 西と南の柵（描いた下絵の柵に合わせる。入口は東の (12,15) と南の (5..8,18)）
         P('hay', 3, 17), P('hay', 3, 16), P('planter', 13, 19), P('stump', 10, 20), P('sack', 9, 19),
         // 池のまわり
         ...PS('rock_small', [[35, 19], [39, 21]]), P('log', 36, 17), P('mushroom_glow', 38, 18), P('firefly', 36, 21), P('firefly', 39, 19),
@@ -150,7 +151,7 @@
         name: 'ベルナの家', kind: 'interior', region: 'prologue', location: 'roa',
         legend: K.ROOM_LEGEND('wall_wood', 'wood_floor'), rows: g, outside: 'wall_wood', objects, npcs,
         spawns: { bed: { x: 3, y: 4, dir: 's' }, door: { x: door.x, y: door.y - 1, dir: 'n' } },
-        exits: [{ x: door.x, y: door.y, w: 2, h: 1, to: { map: 'roa', spawn: 'house' } }],
+        exits: [{ x: door.x, y: door.y, w: 1, h: 1, to: { map: 'roa', spawn: 'house' } }],
         light: { ambient: '#8a6a58', k: 0.85, mood: 'interior' }, bgm: 'home',
         meta: { sub: '語り部の家', minimap: false },
       });

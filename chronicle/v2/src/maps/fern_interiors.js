@@ -1,5 +1,5 @@
 // CONTENT-F: フェルンの屋内 6 つ（V2_PLAN §3.2）: 宿「木漏れ日亭」・道具屋・リタの歌の家・捜索隊の詰所・きこり頭ゴードの家・ピムの家
-//   どれも K.room（上 2 行が壁の立ち上がり、下の中ほどに 2 マスの戸口）。戸口のマスが出口（フェルンの戸の前へ）。
+//   どれも K.room（上 2 行が壁の立ち上がり、下の中ほどに 1 マスの戸口）。戸口のマスが出口（フェルンの戸の前へ）。
 //   外の建物に合わせた小さめの部屋に、家具を文字の絵（R.ContentP.kit.furnish）で詰めて置く。
 (function (R) {
   'use strict';
@@ -19,7 +19,7 @@
         rows: g, outside: o.wall || 'wall_wood',
         objects: o.objects || [], npcs: o.npcs || [],
         spawns: Object.assign({ door: { x: door.x, y: h - 2, dir: 'n' } }, o.spawns || {}),
-        exits: [{ x: door.x, y: h - 1, w: 2, h: 1, to: { map: 'fern', spawn: o.back } }],
+        exits: [{ x: door.x, y: h - 1, w: 1, h: 1, to: { map: 'fern', spawn: o.back } }],
         triggers: o.triggers || [],
         light: Object.assign({}, LIGHT, o.light || {}),
         bgm: o.bgm || 'village',

@@ -153,7 +153,7 @@
           K.npc('rumor_merchant', 'npc_traveler', 13, 9, { name: '旅の商人', dir: 'w', talk: 'pass_inn_rumor_merchant', reward: 'lead' }),
         ],
         spawns: { door: { x: r.door.x, y: 10, dir: 'n' } },
-        exits: [{ x: r.door.x, y: 11, w: 2, h: 1, to: { map: 'pass_inn', spawn: 'inn' } }],
+        exits: [{ x: r.door.x, y: 11, w: 1, h: 1, to: { map: 'pass_inn', spawn: 'inn' } }],
         triggers: [], light: S.ROOM_LIGHT, bgm: 'tavern', meta: { minimap: false },
       });
     }

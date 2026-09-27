@@ -8,9 +8,96 @@
 // 対象: check_reach.js と同じ縦切りのマップ（砂漠と雪は --all のときだけ）の、行き先のある物（建物の戸口・扉・階段・出口）。
 // cond が今の状態（フィクスチャ）で偽の物は数えるだけ。道は FIELD の当たり（R.Field._canEnter・人）でページの中で引き、押すのは keyboard。
 // 書き出し: v2/design/qa/check_doors.json
+//
+// 戸口の形（node だけ。先に必ず動かす。--layout ならここだけ = check_all の速い版）。オーナーの報告
+// 「家の出入り口が 2 マスだから、扉は 1 マスなのに、出入りできる判定のエリアと出てきた時の立ち位置とかがずれておかしい」の再発を止める。
+// 町の建物の戸口（building の door.to）ごとに:
+//  1 外の戸口で移るのは door のマスだけ（左右のマスは移らない）。行き先の屋内から町へ戻る出口は 1 マス（w×h = 1）。
+//  2 描いた建物の絵（v2/assets/env/*/bld/<id>.json の door32、描く点 = 敷地の左下からの px、32 px = 1 マス）があれば、
+//    扉の絵の中心の下のマスが door のマス（下絵のマップは meta に doors32 [{x, y}]（マップの px）があれば同じく）。
+//  3 屋内から出て着くマス（町の spawn）は door の真下（door.y + 1）・下向き・歩ける・出入り口のマスでない（すぐまた移らない）・動かない人がいない。
+//  4 屋内に着くマス（door.to.spawn）は屋内の出口のマスの真上・上向き・歩ける・出入り口でない。出口のマスの左右は壁（戸口の隙間 = 1 マス）。
 'use strict';
 const fs = require('fs');
 const path = require('path');
+
+// ---------------------------------------------------------------- 戸口の形（node）
+function layoutCheck(all, only) {
+  const { ok, section, done } = require('../lib/testkit');
+  const R = require('../lib/load')({ quiet: true });
+  const F = R.Field;
+  R.State.newGame({ hero: { type: 'fighter', sex: 'm', name: 'テスト' }, seed: 1 });
+  const ENV = path.join(path.resolve(__dirname, '..', '..'), 'assets', 'env');
+  const artMeta = {};
+  for (const th of fs.readdirSync(ENV)) {
+    const dir = path.join(ENV, th, 'bld');
+    if (!fs.existsSync(dir)) continue;
+    for (const f of fs.readdirSync(dir)) if (/\.json$/.test(f)) { try { artMeta[f.slice(0, -5)] = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')); } catch (e) { /* */ } }
+  }
+  const underMeta = (key) => { const [th, , name] = String(key || '').split('/'); const f = path.join(ENV, th || '', 'under', (name || '') + '.json'); try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch (e) { return null; } };
+  const isOther = (id, m) => /^(desert_|snow_)/.test(id) || /desert|snow/.test(m.region || '') || /desert|snow/.test(m.theme || '');
+  const inR = (x, y, e) => x >= e.x && y >= e.y && x < e.x + (e.w || 1) && y < e.y + (e.h || 1);
+  const stillNpcAt = (m, x, y) => (m.npcs || []).find((n) => n.x === x && n.y === y && (!n.move || n.move === 'still') && n.cond == null);
+  let doors = 0;
+  section('戸口の形（外の戸口 1 マス・描いた扉・出て着くマス・中に着くマス）');
+  for (const id of Object.keys(R.DB.maps).sort()) {
+    const m = R.DB.maps[id];
+    if (/^(stub_|field_|t_)/.test(id) || (!all && isOther(id, m)) || (only && !only.includes(id))) continue;
+    const under = m.art && m.art.image ? underMeta(m.art.image) : null;
+    for (const b of m.objects || []) {
+      if (b.type !== 'building' || !b.door || !b.door.to) continue;
+      doors++;
+      const d = b.door, lv = b.lv || 0, name = `${id} ${b.id} (${d.x},${d.y}) → ${d.to.map}`;
+      // 1 外の戸口の幅 = 1
+      const side = [-1, 1].filter((s) => F._warpAt(m, d.x + s, d.y, lv)).map((s) => d.x + s);
+      ok(`${name}: 移るのは戸口の 1 マスだけ`, F._warpAt(m, d.x, d.y, lv) && !side.length, { side });
+      // 2 描いた扉の位置
+      const j = artMeta[b.id] || (b.art && artMeta[b.art]);
+      if (j && j.door32) {
+        const tx = b.x + Math.floor(j.door32.x / 32);
+        ok(`${name}: 描いた扉（${j.door32.x}px → x ${tx}）の下のマス`, tx === d.x, { painted: tx, data: d.x });
+      }
+      const pd = under && Array.isArray(under.doors32) && under.doors32.find((p) => Math.floor(p.x / 32) >= b.x && Math.floor(p.x / 32) < b.x + (b.w || 1) && Math.abs(Math.floor(p.y / 32) - d.y) <= 1);
+      if (pd) ok(`${name}: 下絵の扉（${pd.x},${pd.y}px）の下のマス`, Math.floor(pd.x / 32) === d.x, { painted: Math.floor(pd.x / 32), data: d.x });
+      // 3・4 屋内
+      const inn = R.DB.maps[d.to.map];
+      if (!ok(`${name}: 行き先の屋内がある`, !!inn)) continue;
+      const back = (inn.exits || []).filter((e) => e.to && e.to.map === id);
+      for (const e of back) {
+        ok(`${name}: 屋内の出口 ${e.x},${e.y} は 1 マス`, (e.w || 1) * (e.h || 1) === 1, { w: e.w, h: e.h });
+        const sp = R.MapUtil.spawn(m, e.to.spawn);
+        const bad = [];
+        if (sp.x !== d.x || sp.y !== d.y + 1) bad.push(`at ${sp.x},${sp.y} (want ${d.x},${d.y + 1})`);
+        if (sp.dir !== 's') bad.push('dir ' + sp.dir);
+        if (!F._walkable(m, sp.x, sp.y, null, lv)) bad.push('not walkable');
+        if (F._warpAt(m, sp.x, sp.y, lv)) bad.push('re-warps');
+        if (stillNpcAt(m, sp.x, sp.y)) bad.push('npc ' + stillNpcAt(m, sp.x, sp.y).id);
+        ok(`${name}: 出て着くマス（${e.to.spawn}）は戸口の真下・下向き・歩ける・移らない`, !bad.length, bad);
+        // 出口の隙間は 1 マス（左右は壁）
+        const gapSide = [-1, 1].filter((s) => F.passable(inn, e.x + s, e.y, null, 0));
+        ok(`${name}: 屋内の戸口の隙間（${e.x},${e.y}）は 1 マス`, !gapSide.length, { open: gapSide.map((s) => e.x + s) });
+      }
+      ok(`${name}: 屋内に町へ戻る出口がある`, back.length > 0);
+      const ia = R.MapUtil.spawn(inn, d.to.spawn), bad = [];
+      const under1 = back.find((e) => inR(ia.x, ia.y + 1, e));
+      if (!under1) bad.push(`no exit below ${ia.x},${ia.y}`);
+      if (ia.dir !== 'n') bad.push('dir ' + ia.dir);
+      if (!F._walkable(inn, ia.x, ia.y, null, 0)) bad.push('not walkable');
+      if (F._warpAt(inn, ia.x, ia.y, 0)) bad.push('re-warps');
+      if (stillNpcAt(inn, ia.x, ia.y)) bad.push('npc ' + stillNpcAt(inn, ia.x, ia.y).id);
+      ok(`${name}: 中に着くマス（${d.to.spawn} ${ia.x},${ia.y}）は出口の真上・上向き・歩ける・移らない`, !bad.length, bad);
+    }
+  }
+  console.log(`\n町の建物の戸口 ${doors}`);
+  return done('check_doors --layout');
+}
+
+const LAYOUT_ONLY = process.argv.includes('--layout');
+{
+  const a = process.argv.slice(2), i = a.indexOf('--map');
+  const r = layoutCheck(a.includes('--all'), i >= 0 ? a[i + 1].split(',') : null);
+  if (LAYOUT_ONLY) process.exit(r.fail ? 1 : 0);
+}
 const B = require('../lib/browser');
 
 const V2 = path.resolve(__dirname, '..', '..');
@@ -205,7 +292,6 @@ async function worker(S, jobs, results, shots) {
   const P0 = await B.open(S, 'dev.html?fixture=' + FIXTURE, { size: [960, 540], timeout: 60000 });
   await P0.page.evaluate(PAGE_LIB);
   const all = await P0.page.evaluate(([a, o]) => window.__doors.list(a, o), [ALL, ONLY ? ONLY.split(',') : null]);
-  await P0.close();
   // 人の絵: 縦切りのマップの人が、どれも原画（v2/assets/sprites）で描かれる（手で描く仮の型のままの人がいない）
   const looks = await P0.page.evaluate(([a, o]) => {
     const R = window.RPG, SP = R.Art.cast.sprites, out = [];
@@ -222,6 +308,7 @@ async function worker(S, jobs, results, shots) {
     }
     return out;
   }, [ALL, ONLY ? ONLY.split(',') : null]);
+  await P0.close();   // 人の絵を調べた後で閉じる（前は閉じたページで調べていた）
   const badLooks = looks.filter((l) => !l.ok);
   for (const l of badLooks) console.log(`FAIL  人の絵 ${l.map}.${l.npc}: ${l.look} → ${l.art} に原画が無い（手で描く仮の絵のまま）`);
   console.log(`人の絵: ${looks.length - badLooks.length}/${looks.length} が原画（町の人の仮の型は地方の原画の型へ: ${looks.filter((l) => l.look !== l.art).length} 人）`);

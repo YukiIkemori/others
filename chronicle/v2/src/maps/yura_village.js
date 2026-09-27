@@ -88,7 +88,7 @@
         K.npc('yura_guest', 'npc_yura_folk_4', 8, 5, { name: '泊まり客', dir: 'w', talk: [L('ここに来た日のことは、\nよく覚えているの。\n……自分の名前のほかは。')], reward: null }),
       ],
       spawns: { door: { x: room.door.x, y: 7, dir: 'n' } },
-      exits: [{ x: room.door.x, y: 8, w: 2, h: 1, to: { map: 'yura', spawn: 'inn' } }],
+      exits: [{ x: room.door.x, y: 8, w: 1, h: 1, to: { map: 'yura', spawn: 'inn' } }],
       triggers: [],
       light: { ambient: '#6e6282', k: 0.8, mood: 'interior' },
       bgm: 'sorrow',

@@ -110,7 +110,7 @@
       return ok;
     },
     remove(slot) { rawDel('slot_' + slot); },
-    /** 'map'|'battle'|'inn'|'boss'。左下に 2.4 秒の通知（R.UIK.toast） */
+    /** 'map'|'battle'|'inn'|'boss'。右上に 2.4 秒の通知（R.UIK.toast。会話の窓が開いている間は出さない） */
     autosave(reason) {
       const ok = Save.save('auto');
       if (ok) {

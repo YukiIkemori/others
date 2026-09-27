@@ -84,7 +84,7 @@
         K.npc('bard', 'npc_bard', 14, 7, { name: '旅の楽士', dir: 'w', talk: 'sandedge_bard', reward: 'news' }),
       ],
       spawns: { door: { x: door.x, y: 10, dir: 'n' } },
-      exits: [{ x: door.x, y: 11, w: 2, h: 1, to: { map: 'sandedge', spawn: 'inn' } }],
+      exits: [{ x: door.x, y: 11, w: 1, h: 1, to: { map: 'sandedge', spawn: 'inn' } }],
       triggers: [], light: DK.LIGHT_ROOM, bgm: 'kasim', meta: { minimap: false },
     });
   });

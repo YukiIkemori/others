@@ -127,8 +127,8 @@
 
   // ---------------------------------------------------------------- 屋内の型（壁・床・戸口）
   /**
-   * 屋内の箱: w×h、上の 2 行は壁（立ち上がり）、左右と下は壁、下の中ほどに戸口（2 マス）。→ {g, door:{x, y}}
-   * 戸口のマスは 'd'（床と同じ素材）。出口の範囲は戸口の 2 マス
+   * 屋内の箱: w×h、上の 2 行は壁（立ち上がり）、左右と下は壁、下の中ほどに戸口（1 マス。外の絵の扉も 1 マス）。→ {g, door:{x, y, w: 1}}
+   * 戸口のマスは 'd'（床と同じ素材）。出口の範囲は戸口の 1 マス、着くのはその真上
    */
   K.room = function (w, h, o) {
     o = o || {};
@@ -137,8 +137,8 @@
     K.vline(g, 0, 0, h - 1, 'W'); K.vline(g, w - 1, 0, h - 1, 'W');
     K.hline(g, 0, w - 1, h - 1, 'W');
     const dx = o.doorX != null ? o.doorX : Math.floor(w / 2) - 1;
-    K.put(g, dx, h - 1, 'd'); K.put(g, dx + 1, h - 1, 'd');
-    return { g, door: { x: dx, y: h - 1 } };
+    K.put(g, dx, h - 1, 'd');
+    return { g, door: { x: dx, y: h - 1, w: 1 } };
   };
   K.ROOM_LEGEND = function (wall, floor) {
     return {

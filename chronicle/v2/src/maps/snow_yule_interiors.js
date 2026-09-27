@@ -1,7 +1,7 @@
 // ユールの屋内 11（V2_PLAN §2.6.1、WORLD_REDESIGN §5.6、STORY_BIBLE §7.3）:
 //   大かまどの集会所（祭の広間・夜数えの板・語り部のイングリッド）・宿「雪あかり亭」・道具屋・武具屋・村長ヨルンの家・火守りの家（ソーニャ）・
 //   ブレンダの家（火を盗んだ子ども）・狩人オラフの家（狼と猟師）・釣り小屋（トーレ）・子どもの秘密基地・ノルデン分室の空き家（村はずれ）
-//   どれも R.ContentF.kit.room（上 2 行が壁の立ち上がり、下の中ほどに 2 マスの戸口）。戸口のマスが出口（ユールの戸の前へ）。
+//   どれも R.ContentF.kit.room（上 2 行が壁の立ち上がり、下の中ほどに 1 マスの戸口）。戸口のマスが出口（ユールの戸の前へ）。
 (function (R) {
   'use strict';
   R.onData(function () {
@@ -16,7 +16,7 @@
         legend: S.ROOM(), rows: g, outside: 'wall_wood',
         objects: o.objects || [], npcs: o.npcs || [],
         spawns: Object.assign({ door: { x: door.x, y: h - 2, dir: 'n' } }, o.spawns || {}),
-        exits: [{ x: door.x, y: h - 1, w: 2, h: 1, to: { map: 'yule', spawn: o.back } }],
+        exits: [{ x: door.x, y: h - 1, w: 1, h: 1, to: { map: 'yule', spawn: o.back } }],
         triggers: o.triggers || [],
         light: Object.assign({}, S.ROOM_LIGHT, o.light || {}),
         bgm: o.bgm || 'yule',

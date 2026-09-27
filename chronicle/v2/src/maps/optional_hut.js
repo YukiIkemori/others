@@ -24,7 +24,7 @@
       ]),
       npcs: [],
       spawns: { door: { x: door.x, y: door.y - 1, dir: 'n' } },
-      exits: [{ x: door.x, y: door.y, w: 2, h: 1, to: { map: 'world', spawn: 'hut' } }],
+      exits: [{ x: door.x, y: door.y, w: 1, h: 1, to: { map: 'world', spawn: 'hut' } }],
       triggers: [{ id: 'arrive', on: 'enter', event: 'hut_arrive', once: true }],
       light: { ambient: '#7a6c90', k: 0.7, mood: 'interior' },
       bgm: 'village',

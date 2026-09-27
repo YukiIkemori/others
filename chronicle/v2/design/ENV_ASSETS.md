@@ -16,7 +16,7 @@ Sources for the look: BRIEF A16 / A23 to A25 / A32 / A33, `design/build/STYLE_RE
 | **Buildings are one painted sprite per map building id** (`def.id`), generated from a layout guide with the exact footprint, roof/wall split, door and windows. There are also three generic buildings per region (`def.art`). | The door is painted exactly where the map's door tile is, so walking into the door works without any data change. The sprite anchor is the bottom-left of the footprint, the same as the code building. |
 | **Building emission layer** (`<id>_emit@<t>.png`): the lit window pixels only. | After the light map, TERRAIN draws this layer over the chunk, so the painted windows glow and the synthetic pane is not drawn. Window lights (pools) still come from `emit32` rectangles. |
 | **Battle backgrounds are full painted night scenes.** The source is 3840×2160, pixelised to 960×540, plus a phone crop at 540×643 for the portrait battlefield (top 55 %). They are split into `back` (sky and far, drawn unlit), `ground` (below the horizon, 12 px feather), an optional `front` (foreground overlay) and `post` (glow from luminous colours, drawn with `lighter`). | BSCENE multiplies ground and front by the light map. `K.envLayers` therefore divides those layers by the mood's ambient, so the multiply gives back the painted night colours away from the lantern and a warm, bright pool near it. No BSCENE change is needed. |
-| Where tiles did not generate reliably | Not needed so far: all ground materials tiled cleanly after wrap-quilting. Painted per-map underlays were not used. |
+| **Painted per-map underlay** (`map.art`, §7) | Used for Roa (2026-09-27): the owner found the tile-built village too plain, so the whole village is one painted image. The tile path stays as the fallback. |
 
 ## 2. Files
 
@@ -27,6 +27,7 @@ v2/assets/env/
   common/props/<id>@24|32|40.png + <id>.json       props (frames side by side), variants <id>_v<n>
   harbor/props/…                                   harbour props (barrel crate sack bench lamp_post well stall board net bollard rowboat flower_pot, ship)
   <theme>/bld/<buildingId>@24|32|40.png, <buildingId>_emit@…png, <buildingId>.json
+  <theme>/under/<map>@24|32|40.png, <map>_over@…, <map>_emit@…, <map>.json   painted map underlay (§7)
   <region>/mat|props|bld/…                         other regions (desert snow marsh isles mine ash star) — unique material ids, generic buildings <region>_house_s|shop_m|hall_l
   bbg/<id>/back.png ground.png front.png post.png (+ _tall variants), <id>.json
 design/art_ref/gen/env/                            raw generations (+ .gen.json with the exact prompt), guides, tools
@@ -120,3 +121,27 @@ See §6.
 - **bbg** (12, each back/ground/front/post + _tall): ash, cave, coast, desert, forest, isles, marsh, mine, snow, star, tower, tree
 
 Raw generations: `design/art_ref/gen/env/{mat,props,bld,bbg}/` (197 images, each with a `.gen.json` that records the prompt). Before/after screenshots: `v2/design/shots/env/`.
+
+## 7. Painted map underlay (`map.art`, wired 2026-09-27, first map: Roa)
+
+A whole map can be one painted image instead of tiles + building sprites. Map data:
+
+```js
+art: { image: 'hill_village/under/roa', overlay: 'hill_village/under/roa_over', emit: 'hill_village/under/roa_emit', painted: ['fence'] }
+```
+
+- **image** (`<map>@t.png`, map px = tiles × t, 1 art px = 1 logical px at t 32): replaces the ground, rises, water edges, buildings, tile trees, ground decor and the prop ids in `painted`. `chunks.js` copies the same rectangle into each chunk's `base`.
+- **overlay** (`<map>_over@t.png`, RGBA): drawn into `over`, above people and above the props' upper halves (tree canopy that hangs over the walkable row north of a tree mass, roof eaves). A chunk with no overlay pixels gets no `over` canvas.
+- **emit** (`<map>_emit@t.png`, RGBA): the lit window panes, drawn after the light map like a building `_emit` layer. `<map>.json` `windows32` gives one window light and glow per pane (the building sprites' window lights are not used for that map).
+- Everything else still comes from the map data: collision, doors, NPCs, chests, lamps and other props (drawn as sprites with their lights), zones, lamp and door lights, fireflies, the light map. Without the image (node, a load failure, `art` removed) the map bakes from tiles as before.
+- `T.Env.under(key, tile)` reads `RPG_MEDIA.env['<theme>/under/<name>@<tile>']`; a missing tile size scales @32 (nearest).
+
+### Making one (tools in `design/art_ref/gen/env/_tools/under/`)
+1. Dump the map and a reference render: `node fullmap.js <map> before` (writes `before_data.json`, albedo and lit renders).
+2. `guide.py`: colour-coded layout guide at tile 32 (ground types, paths, water, cliff, tree masses, building roof/wall split, black door marks on the exact door tiles, window marks, solid fence lines).
+3. `mkjob.py` + `gen_env.py`: one generation at 2× (Roa: 2816×2304, quality high) with only the guide attached. Attaching the old render as a second image made the model copy its door positions; leave it out. Tell it to leave props (lamps, barrels, benches, wells, signs, chests) out: they stay sprites from the data.
+4. Check it: `check.py` (painting + guide + collision grid), `mismatch.py` (cells where painted canopy and the tree cells disagree), `doorsheet.py` / `wallsheet.py` (zoomed door crops on the tile grid).
+5. `process.py` (see `run4.sh`): optional west-forest shear, **door surgery** (slides each building sideways so its painted door is centred on the door tile; Roa needed −21…+16 px on 5 houses), box-downscale to 1×, window emit detection (warm panes inside wall bands), canopy overlay (colour likelihood canopy vs meadow in the band north of tree cells, kept only where connected to the tree mass), writes @24/@32/@40 and the json.
+6. Any painted solid that is not in the data gets a collider in the data (Roa: the garden's west and south fence), then `check_reach` and `check_doors`.
+
+Roa result: 5 generations (1 lost to a path bug, 3 tries, 1 chosen). The raw chosen image and the guide are in `design/art_ref/gen/env/under/`.

@@ -117,7 +117,7 @@
         ],
         npcs: [K.npc('wellkeeper', 'npc_desert_old_f', 6, 6, { name: '井戸守りのばあさま', dir: 's', talk: 'desert_wellroom_keeper', reward: 'news' })],
         spawns: { road: { x: door.x, y: 10, dir: 'n' } },
-        exits: [{ x: door.x, y: 11, w: 2, h: 1, to: { map: 'world', spawn: 'wellroom' } }],
+        exits: [{ x: door.x, y: 11, w: 1, h: 1, to: { map: 'world', spawn: 'wellroom' } }],
         triggers: [], light: DK.LIGHT_ROOM, bgm: 'caravan', meta: { minimap: false },
       });
     }

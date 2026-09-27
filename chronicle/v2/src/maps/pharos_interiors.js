@@ -21,7 +21,7 @@
         name, kind: 'interior', region: 'prologue', location: 'pharos',
         legend: K.ROOM_LEGEND(o && o.wall, o && o.floor), rows: g, outside: (o && o.wall) || 'wall_wood',
         spawns: { door: { x: door.x, y: door.y - 1, dir: 'n' } },
-        exits: [{ x: door.x, y: door.y, w: 2, h: 1, to: { map: 'pharos', spawn: back } }],
+        exits: [{ x: door.x, y: door.y, w: 1, h: 1, to: { map: 'pharos', spawn: back } }],
         light: LIGHT, bgm: 'town', meta: { minimap: false },
       }, o && o.map));
     }
