@@ -30,10 +30,16 @@
    "pose": "tele",
    "file": "mon_s31_tele_a1.png",
    "prompt": "the wind-up pose: the hooded mist witch rises taller and spreads both misty arms wide, the round mouth below opening wider showing the needle teeth. Same size."
+  },
+  {
+   "pose": "p2",
+   "file": "mon_s31_p2_a1.png",
+   "prompt": "its second form: the mist has thinned, the hooded upper body is smaller and ragged, and the huge round mouth with rings of needle teeth is now wide open and much more visible, a dark red throat inside. Same size and position."
   }
  ],
  "posesUse": {
-  "tele": "mon_s31_tele_a1.png"
+  "tele": "mon_s31_tele_a1.png",
+  "p2": "mon_s31_p2_a1.png"
  },
  "poseNorm": {
   "tele": {
@@ -45,6 +51,17 @@
    "size": [
     168,
     235
+   ]
+  },
+  "p2": {
+   "offset": [
+    2,
+    3
+   ],
+   "overlap": 19821,
+   "size": [
+    159,
+    208
    ]
   }
  }
