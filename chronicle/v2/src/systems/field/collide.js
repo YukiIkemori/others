@@ -41,6 +41,10 @@
   }
 
   /** 物の当たり（lv ごと）。建物は扉のマスだけ通れる（行き先の無い戸口は鍵の掛かった戸 = 通れない）。戸口のマスに置いた物は当たらない */
+  // 町（kind 'town'）の外の小物は道をふさがない（持ち主 2026-09-27「移動障害になるような小物は極力置かないで…ストレス過ぎる」）。
+  //   街灯・井戸・屋台・看板・柵・木などの目印は今までどおり当たる。家の中（別のマップ）の家具も今までどおり
+  const TOWN_CLUTTER = { barrel: 1, crate: 1, planter: 1, stump: 1, log: 1, hay: 1, bollard: 1, firewood: 1, cart_barrels: 1, clay_jars: 1, snow_barrel: 1, hay_sled: 1, rock: 1, snow_rock: 1, log_moss: 1, bush: 1, tomb_urn: 1 };
+  F.townClutter = TOWN_CLUTTER;
   function objBlocks(map, x, y, lv) {
     const bd = doorBuildingAt(map, x, y, lv || 0);
     if (bd) return !bd.door.to;
@@ -57,6 +61,7 @@
       if (o.type === 'switch') { if (o.look === 'lever') return true; continue; }
       if (o.type === 'prop') {
         const meta = (R.DB.props && R.DB.props[o.id]) || {};
+        if (map.kind === 'town' && TOWN_CLUTTER[o.id]) continue;
         if (meta.solid && !meta.soft && !o.soft) return true;
       }
     }
