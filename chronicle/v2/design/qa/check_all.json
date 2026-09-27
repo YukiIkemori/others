@@ -1,215 +1,218 @@
 {
- "date": "2026-09-27T11:22:37.670Z",
+ "date": "2026-09-27T13:04:51.758Z",
  "browser": false,
  "full": false,
  "results": [
   {
    "name": "build",
    "code": 0,
-   "ms": 7945,
-   "summary": "[build] media (external): 27 BGM (slice), 416 voice, 0 portraits, 239 sprite sheets, 1233 env images, 11 title images, 120.2 MB  [7851 ms]"
+   "ms": 1234,
+   "summary": "[build] media (external): 31 BGM (slice), 416 voice, 0 portraits, 239 sprite sheets, 1233 env images, 11 title images, 123.2 MB  [682 ms]"
   },
   {
    "name": "test_core",
    "code": 0,
-   "ms": 779,
+   "ms": 1023,
    "summary": "77/77 passed"
   },
   {
    "name": "test_core_contract",
    "code": 0,
-   "ms": 809,
+   "ms": 925,
    "summary": "test_core_contract: 51/51 passed"
   },
   {
    "name": "test_render",
    "code": 0,
-   "ms": 822,
+   "ms": 950,
    "summary": "test_render: 145/145 passed"
   },
   {
    "name": "test_uik",
    "code": 0,
-   "ms": 806,
+   "ms": 1072,
    "summary": "test_uik: 37/37 passed"
   },
   {
    "name": "test_cast",
    "code": 0,
-   "ms": 683,
+   "ms": 1081,
    "summary": "test_cast: 865/865 passed"
   },
   {
    "name": "test_beast",
    "code": 0,
-   "ms": 627,
+   "ms": 825,
    "summary": "test_beast: 94/94 passed"
   },
   {
    "name": "test_terrain",
-   "code": 1,
-   "ms": 7412,
-   "summary": "test_terrain: 75/76 passed",
-   "tail": "pass  R.emit('terrain:dirty', {map, chunks})\npass  takeDirty で受け取って空になる\npass  燭台（光が隣へ届く）はそのチャンクと届く範囲のチャンク\npass  chunkOf\n\n== 仕事の形（node では焼かない）\npass  bakeChunk → K.bakeJob（kind chunk、まだ done でない）\npass  prewarm → K.bakeJob\n\ntest_terrain: 75/76 passed\nfailed:\n  全物に hd:prop の登録"
+   "code": 0,
+   "ms": 8570,
+   "summary": "test_terrain: 76/76 passed"
   },
   {
    "name": "test_field",
    "code": 0,
-   "ms": 1463,
+   "ms": 2676,
    "summary": "test_field: 102/102 passed"
   },
   {
    "name": "test_events",
    "code": 0,
-   "ms": 860,
+   "ms": 1185,
    "summary": "test_events: 164/164 passed"
   },
   {
    "name": "test_rules",
    "code": 1,
-   "ms": 726,
+   "ms": 1044,
    "summary": "test_rules: 186/187 passed",
    "tail": "pass  p_super has items at every tier\npass  no pool holds a steal-only item\n\n== fieldUse・new items (MENUS 50, CONTENT-F 64)\npass  fieldUse heal: hp up, {changed, lines}\npass  fieldUse revive: back on its feet\npass  fieldUse on a full char: no change\npass  ac_climb_shoes: acc, normal, K.item\n\ntest_rules: 186/187 passed\nfailed:\n  36 steal-only items, super, stealOnly, no quirk"
   },
   {
    "name": "test_battle",
    "code": 0,
-   "ms": 6418,
+   "ms": 7361,
    "summary": "test_battle: 125/125 passed"
   },
   {
    "name": "test_bscene",
    "code": 0,
-   "ms": 639,
+   "ms": 766,
    "summary": "test_bscene: 47/47 passed"
   },
   {
    "name": "test_screens",
    "code": 0,
-   "ms": 673,
+   "ms": 873,
    "summary": "test_screens: 396/396 passed"
   },
   {
    "name": "test_content_p",
    "code": 1,
-   "ms": 5002,
-   "summary": "test_content_p: 490/515 passed",
-   "tail": "  world: イベント desert_mirage_empty がある\n  world: イベント desert_temple_sand がある\n  world: イベント desert_beacon がある\n  world: イベント desert_beacon がある\n  world: イベント desert_beacon がある\n  world: イベント desert_dig がある\n  world: イベント desert_dig がある\n  world: イベント desert_dig がある\n  location rocks → desert_rocks.mouth\n  location temple → desert_temple_1.entrance\n  location mirage → desert_mirage.road\n  world: 全部に着く（8443 マス）"
+   "ms": 19486,
+   "summary": "test_content_p: 518/519 passed",
+   "tail": "pass  潮風亭の噂: 1 回ごとに次の噂（森 → 休み小屋）\npass  依頼 q_pharos_lamp: 2 つの灯籠をともして礼\npass  依頼 q_pharos_well: 巣を見つけて解決\npass  依頼 q_pharos_delivery: 包みを受け取る\npass  風鳴りの丘: 風の鈴\npass  {hero} が名前に置き換わる\npass  T1: 手紙 → 少女（v_fine_t1_01・02）→ 余白の一行\npass  T1 は 1 回だけ\n\ntest_content_p: 518/519 passed\nfailed:\n  world: 全部に着く（8419 マス）"
   },
   {
    "name": "test_content_f",
    "code": 0,
-   "ms": 2240,
-   "summary": "CONTENT-F: 645/645 passed"
+   "ms": 7516,
+   "summary": "CONTENT-F: 646/646 passed"
+  },
+  {
+   "name": "test_content_desert",
+   "code": 0,
+   "ms": 160351,
+   "summary": "test_content_desert: 34/34 passed"
   },
   {
    "name": "validate",
    "code": 1,
-   "ms": 817,
-   "summary": "validate: 54/57 passed",
-   "tail": "pass  盗み専用 30〜40 品（37）\npass  grade super・src steal・quirk なし\npass  1 品は 1 体の魔物の drops.steal だけ\npass  ほかの枠・宝箱の表・店・宝箱・イベントの報酬に無い\npass  率: 通常 32・レア 16・ボス 16（A31 ⑥・リードの決定 5）\npass  R.DB.stealSources が魔物の drops.steal と同じ\n\nvalidate: 54/57 passed\nfailed:\n  縦切りのマップ 70 枚の参照（素材・物・見た目・イベント・行き先・出現表・BGM・背景）\n  場所・手がかり・地方の参照\n  置き場所の決まり（ワールドに宝箱なし・隠し通路はダンジョン・宝箱は床の上で重なる物の下でない・泉は床の 2×2）"
+   "ms": 1181,
+   "summary": "validate: 52/57 passed",
+   "tail": "pass  1 品は 1 体の魔物の drops.steal だけ\npass  ほかの枠・宝箱の表・店・宝箱・イベントの報酬に無い\npass  率: 通常 32・レア 16・ボス 16（A31 ⑥・リードの決定 5）\npass  R.DB.stealSources が魔物の drops.steal と同じ\n\nvalidate: 52/57 passed\nfailed:\n  R.loadErrors 0\n  縦切りのマップ 97 枚の参照（素材・物・見た目・イベント・行き先・出現表・BGM・背景）\n  場所・手がかり・地方の参照\n  イベントの参照（meta と本文の ev.lead・letter・shop・battle・call・item・warp）\n  §3.2 の必須のマップ 28 枚がそろう"
   },
   {
    "name": "progress",
    "code": 1,
-   "ms": 94547,
-   "summary": "progress: 18/20 passed",
-   "tail": "\n== 4. 閉じた道（cond つきの出入り口）\nFAIL  cond つきの出入り口は、筋のどこかで通れるようになる  [\"world exit 40,142 → desert_mirage cond \\\"desert_night\\\"\",\"world stairs 58,158 → desert_temple_1 cond {\\\"any\\\":[\\\"cleared_r_desert\\\",{\\\"var\\\":\\\"desert_nights\\\",\\\"gte\\\":3}]}\"]\n\n== 5. 縦切りの閉じ方（DB.config.slice）\npass  DB.config.slice = true\npass  slice の閉じ方 3 か所: 見える物で埋め、番人か看板がそばにいる\n\nprogress: 18/20 passed\nfailed:\n  縦切りのマップ 70 枚すべてに入れる\n  cond つきの出入り口は、筋のどこかで通れるようになる"
+   "ms": 502511,
+   "summary": "progress: 18/31 passed",
+   "tail": "  pim=send fawn=heal: story_t1 に着く\n  pim=send fawn=leave: clearRegion('r_forest') に着く\n  pim=send fawn=leave: story_t1 に着く\n  pim=take fawn=heal: clearRegion('r_forest') に着く\n  pim=take fawn=heal: story_t1 に着く\n  pim=take fawn=leave: clearRegion('r_forest') に着く\n  pim=take fawn=leave: story_t1 に着く\n  pim=send fawn=heal: 隠し通路と寄り道なしで clearRegion と story_t1\n  pim=send fawn=leave: 隠し通路と寄り道なしで clearRegion と story_t1\n  pim=take fawn=heal: 隠し通路と寄り道なしで clearRegion と story_t1\n  pim=take fawn=leave: 隠し通路と寄り道なしで clearRegion と story_t1\n  縦切りのマップ 97 枚すべてに入れる"
   },
   {
    "name": "check_text",
-   "code": 1,
-   "ms": 1312,
-   "summary": "check_text: 29 error(s), 1 warning(s) in 7412 Japanese strings of 275 files — T3 15, T4 12, T1 1, T2 1",
-   "tail": "ERROR T4 src/events/desert_00_common.js:78 DQ-style word spacing (half-width space between Japanese words): 宝の地図 その6\nERROR T4 src/events/desert_00_common.js:81 DQ-style word spacing (half-width space between Japanese words): 王の間の壁に、紙の繊維と墨の跡。⏎「記録院 写 第八十二号」。⏎王の名が…\nERROR T4 src/events/desert_00_common.js:87 DQ-style word spacing (half-width space between Japanese words): 王の間の石板に、紙の繊維と墨の跡。⏎札が一枚、砂に落ちていた。⏎「記録院…\nERROR T3 src/events/desert_00_common.js:120 '窪' is not 常用漢字 nor in STYLE_JA §2: 砂嵐の窪地を、星を頼りに抜けた。\nERROR T3 src/maps/desert_camps.js:73 '窪' is not 常用漢字 nor in STYLE_JA §2: 野営地「星の石」⏎――北は砂嵐の窪地\nERROR T4 src/maps/desert_hawks.js:56 DQ-style word spacing (half-width space between Japanese words): ――ここより 砂の鷹の巣⏎名のある者は 帰れ\nERROR T1 src/maps/desert_hawks.js:60 '盗賊の' in a string (STYLE_JA §7.1): 盗賊の店\nERROR T2 src/maps/desert_kasim_interiors.js:49 '酒場の主人' (§7.3): 酒場の主人\nERROR T3 src/maps/world.js:483 '窪' is not 常用漢字 nor in STYLE_JA §2: 砂嵐の窪地⏎――風のやまない近道。\nERROR T3 src/maps/world.js:684 '壺' is not 常用漢字 nor in STYLE_JA §2: ラクダは、油の壺を背に⏎のんびり砂をかんでいる。\n\ncheck_text: 29 error(s), 1 warning(s) in 7412 Japanese strings of 275 files — T3 15, T4 12, T1 1, T2 1"
+   "code": 0,
+   "ms": 2907,
+   "summary": "check_text: 0 error(s), 1 warning(s) in 8150 Japanese strings of 283 files — none"
   },
   {
    "name": "check_voice",
    "code": 0,
-   "ms": 113,
+   "ms": 928,
    "summary": "check_voice: 199/199 passed"
   },
   {
    "name": "check_leads",
-   "code": 1,
-   "ms": 570,
-   "summary": "check_leads: 32/34 passed",
-   "tail": "FAIL  done・hideWhen の旗が筋のどこかで立つ  [\"l_desert_caravan: desert_camp3_done\",\"l_desert_hawks: desert_hawk_met\",\"l_desert_sundial: lo_time_desert\",\"q_kasim_anklet: desert_anklet_done\",\"q_kasim_dig: desert_dig_done\",\"q_kasim_camel: desert_camel_done\",\"q_kasim_beacons: desert_beacons_done\",\"q_kasim_salt: desert_salt_done\"]\npass  §3.5 の手がかりがそろう\n\n== 3. 森の目印（解決で外れる）\npass  森の地方の手がかりは、森の解決の後に done か hideWhen が真（目印が外れる）\npass  R.Leads: 解決した地方の目印は外れる（目印 1 → 0）\npass  R.Leads: 解決の後の l_forest_board は done\n\ncheck_leads: 32/34 passed\nfailed:\n  すべての手がかりが、どこかのイベントで渡される\n  done・hideWhen の旗が筋のどこかで立つ"
+   "code": 0,
+   "ms": 1518,
+   "summary": "check_leads: 34/34 passed"
   },
   {
    "name": "check_springs",
-   "code": 0,
-   "ms": 98654,
-   "summary": "check_springs: 17/17 passed"
+   "code": 1,
+   "ms": 838943,
+   "summary": "check_springs: 30/31 passed",
+   "tail": "== 5. 泉の周り 3 マスは出現なし（FIELD の safeAt）\npass  泉の周り 3 マス（2240 マス）で safeAt = 'spring'、5 マス先は違う\npass  出現の判定の前に safeAt を見る（FIELD の _encounterStep）\n\n== 6. 見つけた泉の印（地図・小さな地図）\npass  泉を使うと R.Game.springs[map] に id が残る\npass  小さな地図が泉の印を描く（springs を読む）\n    地図の画面: ワールドの一枚絵だけ（階の地図は無いので、泉の印は小さな地図だけ）\n\ncheck_springs: 30/31 passed\nfailed:\n  hawks: 道のり 43 歩の 40〜60% に泉（desert_hawks_1_s1 0%、desert_hawks_1_s2 40%、desert_hawks_2_s1 72%）"
   },
   {
    "name": "check_density",
    "code": 1,
-   "ms": 1288,
-   "summary": "check_density: 37/39 passed",
-   "tail": "pass  yule_night: いちばん少ない画面も 12 以上（17）\npass  yule_night: 通りの中央（5 マス）に硬い物が無い\n\n== yura\npass  yura: 1 画面の飾りの中央値 25〜40（3 画面: 最小 29・中央 35・最大 38）\npass  yura: いちばん少ない画面も 12 以上（29）\npass  yura: 通りの中央（0 マス）に硬い物が無い\n\ncheck_density: 37/39 passed\nfailed:\n  desert_camp1: 1 画面の飾りの中央値 25〜40（2 画面: 最小 20・中央 23・最大 23）\n  desert_camp2: 1 画面の飾りの中央値 25〜40（2 画面: 最小 19・中央 22・最大 22）"
+   "ms": 5734,
+   "summary": "check_density: 38/39 passed",
+   "tail": "pass  yule_night: 1 画面の飾りの中央値 25〜40（54 画面: 最小 17・中央 26・最大 41）\npass  yule_night: いちばん少ない画面も 12 以上（17）\npass  yule_night: 通りの中央（5 マス）に硬い物が無い\n\n== yura\npass  yura: 1 画面の飾りの中央値 25〜40（3 画面: 最小 29・中央 35・最大 38）\npass  yura: いちばん少ない画面も 12 以上（29）\npass  yura: 通りの中央（0 マス）に硬い物が無い\n\ncheck_density: 38/39 passed\nfailed:\n  desert_mirage: 1 画面の飾りの中央値 25〜40（6 画面: 最小 32・中央 50・最大 54）"
   },
   {
    "name": "check_world",
-   "code": 1,
-   "ms": 15997,
-   "summary": "check_world: 5/7 passed",
-   "tail": "== 3. 縦切りの閉じ方\nFAIL  縦切りの範囲の外（雪原・山地・砂漠）へ出られない  [[44,139,0],[60,139,0],[37,154,0],[27,160,0],[16,143,0]]\npass  峠の番人 3 人（北・東・南）\n\n== 4. フィールドに宝箱・隠し通路なし（A27）\npass  ワールドに宝箱 0\npass  ワールドに隠し通路 0\n\ncheck_world: 5/7 passed\nfailed:\n  歩ける 8470 マスのうち、画面 1 枚に目印の無いマス 0（26 {\"dune_sand\":11,\"sand\":15}）\n  縦切りの範囲の外（雪原・山地・砂漠）へ出られない"
+   "code": 0,
+   "ms": 36971,
+   "summary": "check_world: 7/7 passed"
   },
   {
    "name": "check_chests",
    "code": 2,
-   "ms": 7928,
-   "summary": "pass  縦切りの宝箱 116 個: 床の上・重なる物の下でない・id が一つ・中身あり",
-   "tail": "FAIL  desert_hawks_2.desert_hawks_2_c3: 床の上・重なる物なし・id が一つ・中身あり  {\"floor\":false,\"over\":[],\"dup\":false}\nFAIL  desert_rocks.desert_rocks_c3: 床の上・重なる物なし・id が一つ・中身あり  {\"floor\":false,\"over\":[],\"dup\":false}\npass  world: ワールドに宝箱 0（A27）\npass  縦切りの宝箱 116 個: 床の上・重なる物の下でない・id が一つ・中身あり\n\n== 焼いた床との明るさの差（ブラウザ）\npage.evaluate: TypeError: Cannot read properties of null (reading 'width')\n    at stat (eval at evaluate (:290:30), <anonymous>:4:88)\n    at eval (eval at evaluate (:290:30), <anonymous>:28:20)\n    at UtilityScript.evaluate (<anonymous>:292:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at /home/user/others/chronicle/v2/tools/qa/check_chests.js:43:30"
+   "ms": 20714,
+   "summary": "pass  縦切りの宝箱 125 個: 床の上・重なる物の下でない・id が一つ・中身あり",
+   "tail": "== データ\npass  world: ワールドに宝箱 0（A27）\npass  縦切りの宝箱 125 個: 床の上・重なる物の下でない・id が一つ・中身あり\n\n== 焼いた床との明るさの差（ブラウザ）\npage.waitForFunction: Timeout 15000ms exceeded.\n    at Object.open (/home/user/others/chronicle/v2/tools/lib/browser.js:51:11)\n    at async /home/user/others/chronicle/v2/tools/qa/check_chests.js:41:13 {\n  name: 'TimeoutError'\n}"
   },
   {
    "name": "check_secrets",
    "code": 0,
-   "ms": 10499,
+   "ms": 22816,
    "summary": "check_secrets: 42/42 passed"
   },
   {
    "name": "check_stubs",
-   "code": 0,
-   "ms": 15927,
-   "summary": "check_stubs: 13/13 passed"
+   "code": 2,
+   "ms": 22508,
+   "summary": "pass  始まりの場所は本物（roa_house の roa_house_intro）",
+   "tail": "== 1. node: 埋まった仮の関数\npass  仮の実装で埋まった名前空間の関数 0\n    仮のデータ（id が stub_、使わない物）: DB.materials: stub_grass,stub_road,stub_tree,stub_water ／ DB.maps: stub_road ／ DB.events: stub_guard_talk ／ DB.troops: tr_stub ／ DB.monsters: stub_slime ／ DB.encounters: z_stub ／ DB.locations: stub_road\npass  縦切りのデータ・イベントが stub_ の id を参照しない\npass  始まりの場所は本物（roa_house の roa_house_intro）\n\n== 2. ブラウザ: 起動 → はじめから → ロアの里\npage.waitForFunction: Timeout 15000ms exceeded.\n    at Object.open (/home/user/others/chronicle/v2/tools/lib/browser.js:51:11)\n    at async /home/user/others/chronicle/v2/tools/qa/check_stubs.js:38:15 {\n  name: 'TimeoutError'\n}"
   },
   {
    "name": "sim_zones",
    "code": 0,
-   "ms": 28620,
-   "summary": "all zones: HP loss 8.7%, rounds 3.12 pass"
+   "ms": 146438,
+   "summary": "all zones: HP loss 9.0%, rounds 2.98 pass"
   },
   {
    "name": "sim_zones --segments",
    "code": 0,
-   "ms": 62691,
-   "summary": "segments: 13/13 pass"
+   "ms": 782575,
+   "summary": "segments: 28/28 pass"
   },
   {
    "name": "sim_bosses",
-   "code": 1,
-   "ms": 119198,
-   "summary": "tr_b_sandking            15      15       90    76    9.7   0.42  pass",
-   "tail": "tr_b_moth                 1      18       94    76    6.9   0.28  pass\ntr_b_rooteater            0      17       99    83    9.8   0.06  pass\ntr_b_hawkchief            1      56       94    38   12.3   0.45  FAIL repeat 56 > 30; diff 38 < 50; rounds 12.3 ∉ 5–8\ntr_b_sandworm             0      16       99    84   13.1   0.08  FAIL rounds 13.1 ∉ 5–8\ntr_b_sandking            15      15       90    76    9.7   0.42  pass\ntr_b_hawkchief@1          0      47       99    52   12.3   0.14  FAIL repeat 47 > 30; rounds 12.3 ∉ 5–8\ntr_b_sandworm@1           0      89      100    11   10.6   0.04  FAIL repeat 89 > 30; diff 11 < 50; rounds 10.6 ∉ 5–8\ntr_b_sandking@1           7      73       98    25    9.2   0.07  FAIL repeat 73 > 30; diff 25 < 50\ntr_b_hawkchief@3          0      24       99    75   11.8   0.15  FAIL rounds 11.8 ∉ 5–8\ntr_b_sandworm@3           0      23      100    77   12.7   0.05  FAIL rounds 12.7 ∉ 5–8\ntr_b_sandking@3           1      44       94    49   13.1   0.12  FAIL repeat 44 > 30; diff 49 < 50; rounds 13.1 ∉ 8–12\ntr_b_hawkhold@3           0       1       98    97   14.3   0.21  FAIL rounds 14.3 ∉ 5–9"
+   "code": 0,
+   "ms": 800300,
+   "summary": "tr_b_frost_admiral@6      0       0      100   100   12.2   0.03  pass"
   },
   {
    "name": "sim_growth",
    "code": 0,
-   "ms": 3852,
+   "ms": 12468,
    "summary": "sim_growth: 8/8 passed (runs 20, seed 1)"
   },
   {
    "name": "sim_glimmer",
    "code": 0,
-   "ms": 82392,
+   "ms": 119850,
    "summary": "NOTE (above/below the estimate) slice scope near the V2_PLAN §3.9 estimate (glimmered techs lv1–3 ≈ 20: 28 + starters 8, max lv 3; spells step 1–2 ≈ 12: 18)"
   },
   {
    "name": "sim_loot",
    "code": 0,
-   "ms": 9276,
+   "ms": 10430,
    "summary": "H5 倒しても落ちない: 30000 体、盗み専用のドロップ 0  pass"
   }
  ]

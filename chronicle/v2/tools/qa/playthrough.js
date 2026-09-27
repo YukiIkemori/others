@@ -151,7 +151,7 @@ function snow(o) {
     { id: 'tale_hunter', ev: tale.hunter, done: 'snow_tale_hunter' },
     { id: 'tale_fire_child', ev: tale.fire_child, done: 'snow_tale_fire_child' },
   ];
-  if (o.ice) g.push({ id: 'saw', ev: 'yule_fisher', done: 'snow_saw' }, { id: 'pond_ice', ev: 'yule_pond_ice', done: 'snow_ice_done', maxTries: 20 });
+  if (o.ice) g.push({ id: 'saw', ev: 'yule_fisher', done: 'snow_saw' }, { id: 'pond_ice', ev: 'yule_pond', done: 'snow_ice_done', maxTries: 20 });
   g.push(
     { id: 'log1', ev: 'snow_woods_log', at: [8, 24], done: 'snow_log_1' },
     { id: 'grind_snow', grind: o.grind || 20, optional: true },
