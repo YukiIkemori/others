@@ -115,7 +115,7 @@
   async function intro(st) {
     st.phase = 'intro';
     const reduce = _.trans.reduce();
-    const boss = !!st.info.boss;
+    const boss = !!(st.info.boss || st.info.heavy || st.actors.some((a) => a.side === 'enemy' && a.boss));
     const foes = st.actors.filter((a) => a.side === 'enemy');
     const party = st.actors.filter((a) => a.side === 'party');
     for (const a of foes) { const v = st.vis[a.uid]; v.appear = 0; if (!reduce) v.dy = a.boss ? 26 : 14; }
@@ -531,13 +531,15 @@
     return new Promise((resolve) => {
       const troop = setup.troop && R.DB.troops ? R.DB.troops[setup.troop] : null;
       const boss = !!(setup.boss || (troop && troop.boss));
+      // 入る移り・始まりの演出だけの「ボスらしさ」（編成に boss が無くても、ボスの曲の編成は重い移りにする）
+      const heavy = boss || !!(troop && troop.bgm && /boss/.test(troop.bgm)) || /boss/.test(setup.bgm || '');
       if (boss) R.Save.autosave('boss');   // ボスの直前（§3.13）。戦闘の場面を積む前に
       R.Save.checkpoint('battle', { setup, seed: R.Game ? R.Game.seed : 0 });
       R.emit('battle:start', { setup });
       const bgm = setup.bgm || (troop && troop.bgm) || (boss ? 'boss' : 'battle');
       R.Audio.pushBgm(bgm);
       const prevLayout = R.Input.layoutName;
-      const st = newState(setup, { boss, bgm, troop });
+      const st = newState(setup, { boss, heavy, bgm, troop });
       let fin = false;
       st.finish = async (res) => {
         if (fin) return; fin = true;
@@ -583,7 +585,7 @@
         });
       };
       let covered = null;
-      try { covered = _.trans.cover({ boss }); } catch (e) { console.error('[battle trans]', e); covered = null; }
+      try { covered = _.trans.cover({ boss: heavy }); } catch (e) { console.error('[battle trans]', e); covered = null; }
       if (covered) covered.then(go, go); else go();
     });
   };
