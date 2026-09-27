@@ -39,7 +39,7 @@
       '############..............###############~~~~~~~~~~bb~~####~~~~~',
       '###############ee########################~~~~~~~~~~..........#~~',
       '#############...................#########~~~~~~~~~~...........#~',
-      '###..........ccccccc............########~~~~~~~~~~#...........#~',
+      '####.........ccccccc............########~~~~~~~~~~#...........#~',
       '#####.......ccccccccc.....###...###########~~~~~~~#...........#~',
       '####.......ccccccccccc.....##...###########~~~~~~~#...........#~',
       '####........ccccccccc......##.............bbbbbbbbb..........##~',
@@ -50,7 +50,7 @@
       '###ppppppppppppppppppppppppppppppppppppppppp~~~~~~~~~~~pp~~~~~~~',
       '###ppppppppppppppppppppppppppppppppppppppppppppppppppppppppp~~~~',
       '~~~ppppppppppppppppppppppppppppppppppppppppppppppppppppppppp~~~~',
-      '~~~ppppppppppppp~~~~~~~~~ppppppppppppppppppppppppppppppppppp~~~~',
+      '~~~ppppppppppppp~~~~~~pppppppppppppppppppppppppppppppppppppp~~~~',
       '~~~pppppppp~~~~~~~~~~~ppp~~~pppppppppppp~~~~~~pp~~~~~~~~~~~~~~~~',
       '~~~~~~~~~pp~~~~~~~~~~~ppp~~~ppppp~pp~~~~~~~~~~pp~~~~~~~~~~~~~~~~',
       '~~~~~~~~~pp~~~~~~~~~~~ppp~~~ppppp~pp~~~~~~~~~~pp~~~~~~~~~~~~~~~~',
@@ -103,10 +103,10 @@
     const objects = buildings.concat([
       // ---------------------------------------------------------------- 門の踊り場と高い棚
       // 街灯は壁・崖の際。戸口の真下・門・石段の口には立てない（v2/tools/qa/check_lamps.js）
-      ...PS('lamp_post', [[12, 11], [25, 7], [7, 16], [22, 18], [36, 13], [10, 21], [22, 23], [28, 20], [38, 25], [10, 29], [20, 29], [37, 29], [46, 11], [52, 20]]),
+      ...PS('lamp_post', []),
       ...PS('flower_pot', [[4, 9], [8, 9], [20, 7], [27, 7]]), P('barrel', 10, 9), P('sack', 11, 12), P('crate', 16, 12),
       P('rock_small', 8, 13), P('hay', 3, 13),
-      P('bench', 32, 7), P('planter', 24, 6), P('crate', 16, 7), P('barrel', 30, 7),
+      P('bench', 32, 7), P('planter', 24, 6), P('crate', 16, 7),
       ...PS('lantern', [[23, 8], [34, 12], [9, 12]]),
       // 東の段（北の岩柱への吊り橋）
       P('table', 36, 11), P('chair', 35, 11), P('chair', 37, 11), P('barrel', 38, 13), P('net', 30, 13),
@@ -117,10 +117,10 @@
       P('stall', 13, 21), P('stall', 20, 25), P('board', 11, 22), P('board', 21, 21),
       ...PS('bench', [[17, 21], [14, 25]]),
       P('crate', 21, 24), P('barrel', 12, 21), P('sack', 19, 26),
-      ...PS('net', [[3, 21], [25, 22], [9, 26]]),
+      ...PS('net', [[25, 22], [9, 26]]),
       P('barrel', 26, 21), P('crate', 27, 21), P('flower_pot', 31, 21), P('hay', 24, 26),
       // 船首の台
-      P('barrel', 40, 24), P('crate', 41, 25), P('net', 37, 26), P('lantern', 36, 25),
+      P('barrel', 40, 26), P('crate', 33, 26), P('net', 37, 26), P('lantern', 36, 25),
       // ---------------------------------------------------------------- 下の段（遊歩道）
       ...PS('bollard', [[4, 32], [14, 32], [20, 32], [27, 31], [37, 32], [43, 32], [52, 32], [59, 31]]),
       P('net', 17, 29), P('net', 33, 29), P('crate', 25, 29), P('crate', 26, 29), P('barrel', 27, 29), P('barrel', 3, 29), P('sack', 4, 29),
@@ -138,7 +138,7 @@
       // ---------------------------------------------------------------- 調べる物・看板・宝箱
       K.sign(3, 9, '港町ファロス\n西へ出れば、半島の街道。'),
       K.sign(48, 30, '造船所\n小舟の修理、承ります。'),
-      K.sign(26, 41, '定期船の桟橋\n「しばらく欠航いたします。」'),
+      K.sign(27, 41, '定期船の桟橋\n「しばらく欠航いたします。」'),
       K.exam(11, 22, 'pharos_oilboard'),       // 油の相場の札（STORY_BIBLE §10.2 lo_pharos_oilboard）
       K.exam(21, 21, 'pharos_board'),          // 町の掲示板（依頼と張り紙）
       K.exam(61, 21, 'pharos_tract'),          // 静夜会の刷り物（lo_silent_tract）。上の crate
@@ -181,6 +181,9 @@
       triggers: [{ id: 'arrival', on: 'enter', event: 'pharos_arrival' }],
       light: { ambient: '#5c5aa0', k: 0.45, mood: 'town_night' }, bgm: 'town',
       meta: { sub: '潮風と灯台の町', chestsInfo: true },
+      // 町ぜんたいを 1 枚に描いた下絵（v2/assets/env/harbor/under/pharos*、design/ENV_ASSETS.md §7）。地面・崖・建物・橋・桟橋はこの絵、
+      // 当たり・戸口・人・灯り・ほかの物は上のデータのまま。over = 吊り橋の手前の綱（人より上）。絵が無ければマスから焼く
+      art: { image: 'harbor/under/pharos', overlay: 'harbor/under/pharos_over', emit: 'harbor/under/pharos_emit', painted: [] },
     });
   });
 })(window.RPG);

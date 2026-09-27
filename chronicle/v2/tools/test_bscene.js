@@ -100,4 +100,26 @@ ok('proficiency names only (剣・火)', _.result.profName('sword') === '剣' &&
 const src = ['scene', 'hud', 'command', 'result', 'gameover', 'playback'].map((f) => require('fs').readFileSync(path.join(__dirname, '..', 'src', 'systems', 'battle', f + '.js'), 'utf8')).join('\n').replace(/^\s*\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '');
 ok('no forbidden words shown (Lv・経験値・オート戦闘・WP)', !/['"`][^'"`]*(Lv|経験値|次のレベル|オート戦闘|WP)[^'"`]*['"`]/.test(src));
 
-done('test_bscene');
+section('人の札は隊列の順（前列・後列で分けない。2026-09-27 の持ち主の報告）');
+(async () => {
+  R.State.newGame({ hero: { type: 'warrior', sex: 'm', name: 'アルン' }, seed: 3 });
+  for (const id of ['hagen', 'sylvain', 'noela']) { try { R.Party.join(id); } catch (e) { /* 仲間が無いデータ */ } }
+  const G = R.Game;
+  const want = ['hagen', 'hero', 'sylvain', 'noela'].filter((id) => G.chars[id]);
+  G.party = want.slice();
+  const rows = { hagen: 'front', hero: 'back', sylvain: 'back', noela: 'front' };
+  for (const id of want) G.chars[id].row = rows[id];
+  R.W = 960; R.H = 540; R.layout = 'wide'; R.uiScale = 1; R.safe = { l: 0, t: 0, r: 0, b: 0 };
+  const err = console.error; console.error = () => {};
+  R.Battle.start({ troop: 'tr_stub' });
+  for (let i = 0; i < 200 && !(R.Battle.debug() && R.Battle.debug().phase === 'input'); i++) { R.Engine.advance(50); await new Promise((r) => setImmediate(r)); }
+  console.error = err;
+  const st = R.Battle.debug();
+  const cards = st ? st.partyUnits().map((u) => u.id) : null;
+  ok('cards follow the party order even with mixed rows (hagen front, hero back, sylvain back, noela front)', st && JSON.stringify(cards) === JSON.stringify(R.Party.members().map((c) => c.id)), { cards, members: R.Party.members().map((c) => c.id + ':' + c.row) });
+  ok('one card rect per member, top to bottom in that order', st && _.hud.partyRects(st).every((r, i, a) => i === 0 || r.y > a[i - 1].y) && _.hud.partyRects(st).length === cards.length);
+  const pp = st && R.Battle.prompts(st);
+  ok('bottom-right prompts carry the speed 「速さ：通常」 (no separate chip)', pp && pp.list.some((p) => p.btn === 'r' && p.label === '速さ：' + R.Battle.speedLabel(R.Settings.get('battleSpeed'))), pp && pp.list);
+  if (st) { st.B.setRepeat(true); const p2 = R.Battle.prompts(st); ok('repeat running → 「リピート中：[B]でやめる」 in the prompts', p2.repeatOn && p2.list[0].btn === 'b' && p2.list[0].label === 'でやめる', p2.list); st.B.setRepeat(false); }
+  done('test_bscene');
+})();

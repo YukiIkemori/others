@@ -1,5 +1,5 @@
 // CONTENT-P: 序章 P1・P2 とロアの里の人々（V2_PLAN §3.3、STORY_BIBLE §9.1 P1・P2、§3.4・§3.5・§10.2 の 1〜3）
-//   roa_house_intro  P1（DB.config.start.event）: 暗転のキャプション 3 枚（1 枚目の後に守り歌、v_fine_song_01）→ 消灯の刻の窓明かりで「おはよう」（v_berna_prologue_01〜04）→ ev.createHero()
+//   roa_house_intro  P1（DB.config.start.event）: 暗転のキャプション 3 枚（1 枚目の後に守り歌。v_fine_opening_01〜03・v_fine_song_01）→ 消灯の刻の窓明かりで「おはよう」（v_berna_prologue_01〜04）→ ev.createHero()
 //   roa_berna        P2: 白紙・灯台の火（細りはじめて三晩、きのう消えた）・潮風亭で仲間を → 傷薬 3 と 50 G。序章の後は近況とただの宿
 //   roa_lectern      書見台: 語り部の名簿（lo_roa_register）と「手がかり帳の使い方」の短い本
 //   roa_seat         朝の席（lo_roa_seat）   roa_shelf  本棚   roa_stone  語り石（lo_roa_stone）   roa_hall  語り石の間
@@ -12,6 +12,9 @@
   const X = () => R.ContentP.ev;
 
   // ------------------------------------------------------------ P1 目覚め（消灯の刻の窓明かり）
+  // 冒頭のボイス（幕の上のフィーネ 4 本 → ベルナ 5 本）。幕の前に先読みする
+  const INTRO_VOICES = ['v_fine_opening_01', 'v_fine_song_01', 'v_fine_opening_02', 'v_fine_opening_03',
+    'v_berna_prologue_01', 'v_berna_prologue_02', 'v_berna_prologue_03', 'v_berna_intro_01', 'v_berna_prologue_04'];
   D.roa_house_intro = {
     meta: { needs: [], gives: ['flag:prologue_start', 'hero'] },
     run: async (ev) => {
@@ -21,11 +24,13 @@
       const curtain = { id: 'cp_curtain', opaque: false, a: 1, enter() {}, exit() {}, update() {}, draw(g) { g.globalAlpha = this.a; g.fillStyle = '#070812'; g.fillRect(0, 0, R.W, R.H); g.globalAlpha = 1; } };
       R.Engine.push(curtain);
       try {
-        await ev.caption('……ねえ、聞こえる？', { ms: 2600 });
+        // 冒頭のボイスを先読み（まとめた版は初めの声で束を読む。読み終わりか 2.5 秒の早い方まで、幕のまま待つ）
+        try { if (R.Audio && R.Audio.preloadVoice) await Promise.race([R.Audio.preloadVoice(INTRO_VOICES), R.wait(2500)]); } catch (e) { /* 声が無くても進む */ }
+        await ev.caption('……ねえ、聞こえる？', { ms: 2600, voice: 'v_fine_opening_01' });
         // 灯台の守り歌（オーナー 2026-09-27「メインだから声を」）: 幕の上でフィーネが子守歌のように。声の終わりまで待つ
         await ev.caption('♪　海の果てまで、灯よ届け\n帰る舟に、道を照らせ', { ms: 4200, voice: 'v_fine_song_01' });
-        await ev.caption('これは、忘れられかけた物語。', { ms: 2600 });
-        await ev.caption('そして、それを語り直した、\nひとりの語り部の物語。', { ms: 3400 });
+        await ev.caption('これは、忘れられかけた物語。', { ms: 2600, voice: 'v_fine_opening_02' });
+        await ev.caption('そして、それを語り直した、\nひとりの語り部の物語。', { ms: 3400, voice: 'v_fine_opening_03' });
         await ev.wait(300);
         const t0 = R.Engine.time;
         if (R.Engine.running) await R.until(() => { curtain.a = Math.max(0, 1 - (R.Engine.time - t0) / 1200); return curtain.a <= 0; });
@@ -38,7 +43,7 @@
       let h = null;
       for (let i = 0; i < 5 && !h; i++) h = await ev.createHero();
       if (!h && !(R.Game.chars && R.Game.chars.hero)) R.State.setHero({ type: 'warrior', sex: 'm', name: 'アルン', fav: 'sword' });
-      await E.say(ev, 'berna', '{hero}。……うん、いい名前だ。', { face: 'berna:smile' });
+      await E.say(ev, 'berna', '{hero}。……うん、いい名前だ。', { voice: 'v_berna_intro_01', face: 'berna:smile' });   // 声は名前を読まない（「……うん、いい名前だ。」）
       await ev.say('berna', '支度ができたら、\nわたしの書見台までおいで。\n話しておきたいことがあるんだ。', { voice: 'v_berna_prologue_04', face: 'berna:neutral' });
       await ev.npc('berna').move([[12, 5]]);
       await ev.npc('berna').face('s');
@@ -59,8 +64,8 @@
     'ただし、ひとりで行っちゃ\nだめだよ。ファロスの酒場\n「潮風亭」で、仲間を探しなさい。',
     'それから、これを持って\nお行き。',
   ];
-  // P2 のボイス（design/voice_story_map.json。{hero} の入る P2[7] は声なし）
-  const P2_VOICE = ['v_berna_p2_01', 'v_berna_p2_02', 'v_berna_p2_03', 'v_berna_p2_04', 'v_berna_p2_05', 'v_berna_p2_06', 'v_berna_p2_07', null, 'v_berna_p2_08', 'v_berna_p2_09'];
+  // P2 のボイス（design/voice_story_map.json。{hero} の入る P2[7] は名前を読まない v_berna_p2_10）
+  const P2_VOICE = ['v_berna_p2_01', 'v_berna_p2_02', 'v_berna_p2_03', 'v_berna_p2_04', 'v_berna_p2_05', 'v_berna_p2_06', 'v_berna_p2_07', 'v_berna_p2_10', 'v_berna_p2_08', 'v_berna_p2_09'];   // p2_10 は名前を読まない（「行っておくれ。……」）
   D.roa_berna = {
     meta: { needs: ['flag:prologue_start'], gives: ['flag:prologue_berna', 'item:i_salve', 'gold'] },
     run: async (ev, ctx) => {

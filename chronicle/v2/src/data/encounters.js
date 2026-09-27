@@ -895,7 +895,8 @@
       { w: 3, mons: [['seabird_2', 1, 1], ['seabird_1', 1, 2]] },
       { w: 3, mons: [['crab_2', 1, 1], ['rat_1', 2, 2]] },
     ] },
-    z_lighthouse: { region: 'prologue', tier: 0, lv: [4, 6], bg: 'tower', groups: [
+    // steps 35（既定のダンジョン 22 → 1 歩の率 約 −37%）: 最初のダンジョンで出すぎ（オーナー 2026-09-27「敵が出る確率結構高い」）。組の中身はそのまま
+    z_lighthouse: { region: 'prologue', tier: 0, lv: [4, 6], bg: 'tower', steps: 35, groups: [
       { w: 9, mons: [['bat_1', 3, 4]] },
       { w: 8, mons: [['rat_1', 3, 4]] },
       { w: 7, mons: [['jelly_1', 3, 4]] },

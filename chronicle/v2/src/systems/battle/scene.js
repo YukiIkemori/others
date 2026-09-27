@@ -65,7 +65,15 @@
     st.unit = (uid) => (st.B ? st.B.units.find((u) => u.uid === uid) : null) || st.extra[uid] || null;
     st.extra = {};
     st.actor = (uid) => st.actors.find((a) => a.uid === uid) || null;
-    st.partyUnits = () => (st.B ? st.B.units.filter((u) => u.side === 'party') : []);
+    // 味方は隊列の順（R.Party.members() / setup.members）に並べる。人の札・顔・勝利の札はこの順（前列・後列で分けない。2026-09-27）
+    st.partyUnits = () => {
+      if (!st.B) return [];
+      const us = st.B.units.filter((u) => u.side === 'party');
+      const ord = st.partyOrder || [];
+      if (!ord.length) return us;
+      const at = (u) => { const i = ord.indexOf(String(u.id)); return i < 0 ? 99 + us.indexOf(u) : i; };
+      return us.slice().sort((a, b) => at(a) - at(b));
+    };
     st.enemyUnits = () => st.actors.filter((a) => a.side === 'enemy').map((a) => st.unit(a.uid)).filter(Boolean);
     st.aliveEnemies = () => st.actors.filter((a) => a.side === 'enemy' && st.vis[a.uid] && st.vis[a.uid].alive && !(st.vis[a.uid].gone >= 1));
     /** 戦闘の時計で待つ（戦闘の速さに従う） */
@@ -101,6 +109,10 @@
   function initCore(st) {
     const setup = st.retry ? Object.assign({}, st.setup, { retry: st.retry }) : st.setup;
     st.B = makeCore(setup);
+    try {
+      const ids = setup.members && setup.members.length ? setup.members : (R.Party && R.Party.members ? R.Party.members().map((c) => c.id) : []);
+      st.partyOrder = (ids || []).map(String);
+    } catch (e) { st.partyOrder = []; }
     st.actors = []; st.vis = {}; st.extra = {}; st.pops = []; st.fxs = [];
     st.collected = { gains: [], grow: [], prof: [], glimmers: [] };
     st.tele = null; st.card = null; st.banner = null; st.dim = 0; st.result = null; st.over = null;

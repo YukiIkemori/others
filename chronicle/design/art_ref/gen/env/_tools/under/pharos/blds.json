@@ -13,146 +13,146 @@
   ]
  },
  {
-  "id": "ph_record",
+  "id": "ph_house2",
   "kind": "cave",
   "x": 11,
-  "y": 4,
-  "w": 6,
+  "y": 6,
+  "w": 5,
   "h": 5,
   "wall": 3,
   "door": [
-   14,
-   8
+   13,
+   10
   ]
  },
  {
   "id": "ph_house1",
   "kind": "cave",
   "x": 19,
-  "y": 4,
+  "y": 2,
   "w": 5,
   "h": 5,
   "wall": 3,
   "door": [
    21,
-   8
+   6
   ]
  },
  {
-  "id": "ph_smith",
-  "kind": "cave",
+  "id": "ph_record",
+  "kind": "tower",
   "x": 25,
-  "y": 4,
-  "w": 7,
-  "h": 5,
-  "wall": 3,
-  "door": [
-   28,
-   8
-  ]
- },
- {
-  "id": "ph_house2",
-  "kind": "cave",
-  "x": 33,
-  "y": 4,
-  "w": 5,
-  "h": 5,
-  "wall": 3,
-  "door": [
-   35,
-   8
-  ]
- },
- {
-  "id": "ph_tavern",
-  "kind": "hull",
-  "x": 3,
-  "y": 17,
-  "w": 10,
+  "y": 2,
+  "w": 6,
   "h": 6,
   "wall": 3,
   "door": [
-   8,
-   22
-  ]
- },
- {
-  "id": "ph_shop",
-  "kind": "hull",
-  "x": 33,
-  "y": 17,
-  "w": 5,
-  "h": 5,
-  "wall": 2,
-  "door": [
-   35,
-   21
-  ]
- },
- {
-  "id": "ph_house4",
-  "kind": "hull",
-  "x": 38,
-  "y": 17,
-  "w": 5,
-  "h": 4,
-  "wall": 2,
-  "door": [
-   40,
-   20
-  ]
- },
- {
-  "id": "ph_house5",
-  "kind": "cave",
-  "x": 3,
-  "y": 25,
-  "w": 6,
-  "h": 4,
-  "wall": 2,
-  "door": [
-   6,
-   28
-  ]
- },
- {
-  "id": "ph_house6",
-  "kind": "cave",
-  "x": 38,
-  "y": 25,
-  "w": 5,
-  "h": 4,
-  "wall": 2,
-  "door": [
-   40,
-   28
+   28,
+   7
   ]
  },
  {
   "id": "ph_house3",
   "kind": "cave",
   "x": 47,
-  "y": 3,
+  "y": 4,
   "w": 6,
   "h": 5,
   "wall": 3,
   "door": [
    49,
-   7
+   8
+  ]
+ },
+ {
+  "id": "ph_house5",
+  "kind": "cave",
+  "x": 12,
+  "y": 25,
+  "w": 6,
+  "h": 4,
+  "wall": 2,
+  "door": [
+   15,
+   28
+  ]
+ },
+ {
+  "id": "ph_tavern",
+  "kind": "galleon",
+  "x": 19,
+  "y": 12,
+  "w": 10,
+  "h": 5,
+  "wall": 2,
+  "door": [
+   24,
+   16
+  ]
+ },
+ {
+  "id": "ph_smith",
+  "kind": "galleon",
+  "x": 27,
+  "y": 15,
+  "w": 7,
+  "h": 5,
+  "wall": 2,
+  "door": [
+   30,
+   19
+  ]
+ },
+ {
+  "id": "ph_shop",
+  "kind": "galleon",
+  "x": 32,
+  "y": 19,
+  "w": 5,
+  "h": 5,
+  "wall": 2,
+  "door": [
+   34,
+   23
+  ]
+ },
+ {
+  "id": "ph_house4",
+  "kind": "hull",
+  "x": 4,
+  "y": 20,
+  "w": 5,
+  "h": 4,
+  "wall": 2,
+  "door": [
+   6,
+   23
+  ]
+ },
+ {
+  "id": "ph_house6",
+  "kind": "hull",
+  "x": 28,
+  "y": 32,
+  "w": 5,
+  "h": 4,
+  "wall": 2,
+  "door": [
+   30,
+   35
   ]
  },
  {
   "id": "ph_shipyard",
   "kind": "yard",
-  "x": 45,
-  "y": 24,
+  "x": 42,
+  "y": 26,
   "w": 6,
   "h": 5,
   "wall": 2,
   "door": [
-   47,
-   28
+   44,
+   30
   ]
  }
 ]

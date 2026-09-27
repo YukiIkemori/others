@@ -461,7 +461,8 @@
     innate: { name: 'お守り', desc: 'レアのアイテムを落としやすくなる', mods: { rarePct: 10 } },
     startEquip: { weapon1: 'w_staff_novice', body: 'bd_hemp_robe', head: 'hd_wool_hood' },
     startTechs: ['t_staff_mind'],
-    startSpells: ['s_light_1'],
+    // 光 S なのに回復（ひだまり）だけだと、光を伸ばす機会が少ない（オーナー 2026-09-27）。光の攻めの術のいちばん下の段（1 段は回復なので 2 段の光の矢）も持たせる
+    startSpells: ['s_light_1', 's_light_2'],
     profile: '泉の社に仕える見習いの巫女。\n光の術と槍で、みんなを支える。\nちょっとだけ、おっちょこちょい。',
     joinLine: '泉の神さまのお告げです！\n{hero}さんの旅を助けなさいって。',
     leaveLine: 'はい！　お祈りして待ってますね。',

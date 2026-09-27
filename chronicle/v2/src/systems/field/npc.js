@@ -23,7 +23,7 @@
     S.npcs = (m.npcs || []).map((d) => ({
       def: d, id: d.id, look: artLook(d.look, m), x: d.x, y: d.y, lv: d.lv || 0, dir: d.dir || 's', home: { x: d.x, y: d.y, dir: d.dir || 's' },
       mv: null, vis: true, hidden: false, script: 0, talking: false, nextAt: R.Engine.time + 600 + (R.U.hash(d.id) % 1800), returnAt: 0,
-      route: 0, pose: null, rng: R.rng(m.id + ':' + d.id), isNew: false, waiters: [],
+      route: 0, stuck: 0, pose: null, rng: R.rng(m.id + ':' + d.id), isNew: false, waiters: [],
     }));
     S.npcById = {};
     for (const n of S.npcs) S.npcById[n.id] = n;
@@ -110,12 +110,16 @@
       } else if (d.move && typeof d.move === 'object' && Array.isArray(d.move.route) && d.move.route.length) {
         const r = d.move.route;
         const wp = r[n.route % r.length];
-        if (n.x === wp[0] && n.y === wp[1]) { n.route++; n.nextAt = now + (d.move.wait || 1200); continue; }
+        if (n.x === wp[0] && n.y === wp[1]) { n.route++; n.stuck = 0; n.nextAt = now + (d.move.wait || 1200); continue; }
         const dx = Math.sign(wp[0] - n.x), dy = Math.sign(wp[1] - n.y);
         const ms = STEP_MS / (d.move.speed || 1);   // speed: 1 = 歩く、2 前後 = 走る（子ども）
-        if (dx && freeWalk(n, n.x + dx, n.y)) stepTo(n, n.x + dx, n.y, ms);
-        else if (dy && freeWalk(n, n.x, n.y + dy)) stepTo(n, n.x, n.y + dy, ms);
-        else n.nextAt = now + 600;
+        if (dx && freeWalk(n, n.x + dx, n.y)) { stepTo(n, n.x + dx, n.y, ms); n.stuck = 0; }
+        else if (dy && freeWalk(n, n.x, n.y + dy)) { stepTo(n, n.x, n.y + dy, ms); n.stuck = 0; }
+        else {
+          // ふさがれた（一行・隊列・ほかの人）: しばらく待って、それでも通れなければ次の点へ向かう（道の途中で固まらない）
+          n.nextAt = now + 600;
+          if (++n.stuck >= 5) { n.stuck = 0; n.route++; }
+        }
       } else n.nextAt = now + 5000;
     }
   };

@@ -55,8 +55,8 @@
     K.rect(g, 19, 10, 5, 2, 'T'); K.rect(g, 26, 10, 8, 2, 'T'); K.rect(g, 19, 14, 5, 2, 'T'); K.rect(g, 26, 14, 8, 2, 'T');     // 橋の下の木立
     K.rect(g, 2, 43, 8, 2, '='); K.rect(g, 10, 43, 1, 3, 'R'); K.rect(g, 2, 45, 8, 1, 'R'); K.rect(g, 6, 45, 2, 1, ':');         // T3 の足場
     // 門の根のアーチ（北と南。道の 4 マスだけ開く）
-    K.rect(g, 25, 2, 3, 4, 'R'); K.rect(g, 32, 2, 3, 4, 'R');
-    K.rect(g, 24, 49, 4, 5, 'R'); K.rect(g, 32, 49, 4, 5, 'R');
+    K.rect(g, 25, 2, 3, 4, 'R'); K.rect(g, 32, 2, 3, 6, 'R');
+    K.rect(g, 24, 47, 4, 7, 'R'); K.rect(g, 32, 47, 4, 7, 'R');
     // 広場（歌の碑のまわりの丸い石の輪）
     K.blob(g, 34, 30, 5, 4, 'e', 'fplz');
     K.blob(g, 34, 30, 4, 3, 'c', 'fplz2');
@@ -68,7 +68,7 @@
     P([[33, 34], [35, 37], [34, 41], [31, 44], [29, 47], [29, 55]]);                                       // 広場 → 南の門
     P([[23, 16], [16, 16], [11, 15], [8, 15], [5, 16], [4, 18]]);                                          // 北の道 → T1 のはしご → 莢の家
     P([[9, 16], [9, 20]]); P([[9, 25], [6, 26], [3, 29], [3, 34], [6, 35], [9, 36], [12, 37], [16, 37], [19, 34], [23, 34], [29, 33]]);   // 西の橋 → 大うろの木の三つの戸口 → 広場
-    P([[26, 17], [33, 16], [38, 16], [44, 16], [49, 17], [53, 18]]);                                       // 小川の北の道（T2 のはしご・ゴード）
+    P([[26, 17], [31, 18], [37, 17], [42, 16], [46, 17], [50, 18], [53, 18]]);                                       // 小川の北の道（T2 のはしご・ゴード）
     P([[53, 10], [49, 11], [48, 14], [48, 17]]);                                                            // リタの家 → 小川の北の道
     P([[47, 23], [48, 26], [46, 29], [39, 30]]);                                                            // 東の橋 → きのこの家 → 広場
     P([[35, 38], [39, 41], [44, 44], [48, 46]]);                                                            // 南の道 → きのこの家 → 伐り跡の原
@@ -85,15 +85,16 @@
     K.blob(g, 19, 50, 2, 1, 'T', 'fgr5', '.,');
     K.blob(g, 27, 39, 2, 2, 'T', 'fgr6', '.,');
     K.blob(g, 48, 38, 2, 1, 'T', 'fgr7', '.,');
+    K.rect(g, 41, 32, 7, 4, 'T'); K.rect(g, 50, 27, 3, 3, 'T');   // 描いた茂み
 
     // ---------------------------------------------------------------- 建物（戸口は敷地のいちばん下の行の 1 マス。前のマスへ出る）
     const O = [];
     const B = (id, x, y, w, h, o) => Object.assign({ type: 'building', id, x, y, w, h, wall: 2, roof: 'moss', mat: 'bark', windows: 2 }, o || {});
     const D = (x, y, map) => ({ x, y, to: { map, spawn: 'door' } });
     // 大うろの木の三つのこぶ（それぞれの戸口と看板）
-    O.push(B('fern_u_inn', 11, 32, 6, 4, { door: D(14, 35, 'fern_inn'), sign: 'inn', lamp: true, windows: 2 }));
-    O.push(B('fern_u_shop', 19, 29, 4, 4, { door: D(21, 32, 'fern_shop'), sign: 'item', lamp: true, windows: 1 }));
-    O.push(B('fern_u_search', 5, 30, 4, 4, { door: D(7, 33, 'fern_search'), sign: 'guild', lamp: true, windows: 1 }));
+    O.push(B('fern_u_inn', 11, 32, 6, 4, { door: D(15, 35, 'fern_inn'), sign: 'inn', lamp: true, windows: 2 }));
+    O.push(B('fern_u_shop', 19, 30, 4, 4, { door: D(22, 33, 'fern_shop'), sign: 'item', lamp: true, windows: 1 }));
+    O.push(B('fern_u_search', 6, 30, 4, 4, { door: D(8, 33, 'fern_search'), sign: 'guild', lamp: true, windows: 1 }));
     // 切り株の家（きこり頭ゴード）
     O.push(B('fern_u_gord', 50, 12, 6, 5, { door: D(53, 16, 'fern_gord'), lamp: true, roof: 'thatch', mat: 'log' }));
     // いちばん高い木の根もとの花のつぼみの家（リタの歌の家）
@@ -101,9 +102,9 @@
     // ひょうたんの家（ピム）
     O.push(B('fern_u_pim', 14, 40, 5, 4, { door: D(16, 43, 'fern_pim_home'), roof: 'thatch', mat: 'plaster' }));
     // 家の中（fern_home1〜3・fern_shed）は homes_slice.js
-    O.push(B('fern_u_house1', 39, 37, 5, 4, { door: D(41, 40, 'fern_home1'), roof: 'shingle', mat: 'plaster' }));   // きのこの家（紫）
+    O.push(B('fern_u_house1', 39, 37, 5, 4, { door: D(40, 40, 'fern_home1'), roof: 'shingle', mat: 'plaster' }));   // きのこの家（紫）
     O.push(B('fern_u_house2', 2, 16, 4, 3, { wall: 1, door: D(4, 18, 'fern_home2'), windows: 1, small: true }));     // どんぐりの家
-    O.push(B('fern_u_house3', 44, 24, 5, 4, { door: D(46, 27, 'fern_home3'), roof: 'slate', mat: 'plaster' }));    // きのこの家（青緑）
+    O.push(B('fern_u_house3', 44, 24, 5, 4, { door: D(45, 27, 'fern_home3'), roof: 'slate', mat: 'plaster' }));    // きのこの家（青緑）
     O.push(B('fern_u_shed', 20, 38, 4, 3, { wall: 1, windows: 0, small: true, door: D(22, 40, 'fern_shed') }));   // どんぐりの物置
 
     // 足場の下（lv 0）: つり橋の、北の道の両脇のマスは地面の人が入らない（絵の根。下絵に描く物 = painted）
@@ -111,41 +112,40 @@
     // 足場の灯り（蛍の籠）
     for (const [x, y] of [[5, 11], [18, 11], [12, 13], [34, 11], [46, 11], [38, 13], [2, 43], [9, 44]]) O.push(K.prop('lantern', x, y, { lv: 1 }));
     // 町の宝箱 2（見える所だけ。1 つは北西の足場の上）
-    O.push(K.chest('fern_c1', 6, 12, { lv: 1, pool: 'p_T' }), K.chest('fern_c2', 51, 29, { item: 'i_revive', n: 1 }));
+    O.push(K.chest('fern_c1', 6, 12, { lv: 1, pool: 'p_T' }), K.chest('fern_c2', 54, 31, { item: 'i_revive', n: 1 }));
 
     // 広場: 掲示板・行商・ベンチ・蛍の籠
-    O.push(K.prop('board', 30, 27), K.exam(31, 27, 'fern_board'));
+    O.push(K.prop('board', 31, 26), K.exam(32, 26, 'fern_board'));
     O.push(K.prop('stall', 37, 27), K.prop('crate', 39, 28), K.prop('sack', 39, 29));
     O.push(K.prop('bench', 30, 32), K.prop('bench', 38, 32), K.prop('well', 31, 34));
     O.push(K.prop('songstone', 34, 30, { variant: 0 }), K.exam(35, 30, 'fern_monument'));            // 千年樹の歌の碑
     O.push(K.prop('lantern', 32, 29), K.prop('lantern', 36, 31), K.prop('flower_pot', 29, 30), K.prop('planter', 37, 34), K.prop('bench', 34, 35), K.prop('crate', 38, 26));
     O.push(K.sign(32, 36, '森の村フェルン\n――歌は森の道しるべ'));
-    O.push(K.sign(27, 47, '↑ フェルン　↓ 森の道'));
+    O.push(K.sign(23, 46, '↑ フェルン　↓ 森の道'));
     O.push(K.sign(31, 6, '↑ 迷いの森\n（捜索隊の許しなく入るべからず）'));
     // 蛍の籠（灯り）: 門・道・橋・広場のまわり
     for (const [x, y] of [[28, 7], [31, 5], [23, 9], [26, 16], [22, 19], [26, 25], [29, 26], [39, 33], [30, 35], [36, 38], [33, 42], [28, 44],
-      [31, 48], [27, 50], [8, 20], [11, 24], [46, 19], [49, 23], [2, 36], [10, 38], [18, 36], [24, 36], [13, 45], [20, 42], [43, 42], [50, 10], [55, 17], [45, 30]]) O.push(K.prop('lantern', x, y));
+      [37, 46], [23, 48], [8, 20], [11, 24], [46, 19], [49, 23], [2, 36], [11, 39], [18, 36], [24, 36], [13, 45], [20, 42], [43, 42], [50, 10], [55, 17], [45, 30]]) O.push(K.prop('lantern', x, y));
     // 光るきのこ（灯り）
-    for (const [x, y] of [[20, 26], [27, 29], [14, 38], [7, 36], [45, 45], [4, 47], [42, 18], [15, 18], [20, 17], [52, 26], [36, 51], [23, 47],
-      [2, 30], [24, 30], [40, 34], [54, 45], [33, 7], [21, 8], [4, 9], [49, 9], [35, 45], [12, 26]]) O.push(K.prop('mushroom_glow', x, y, { variant: (x + y) % 4 }));
-    // 薬草園の柵
-    for (const [x, y] of [[2, 49], [2, 50], [2, 51], [12, 49], [12, 50], [12, 51], [3, 48], [4, 48], [5, 48], [9, 48], [10, 48], [11, 48]]) O.push(K.prop('fence', x, y));
+    for (const [x, y] of [[19, 25], [27, 29], [14, 38], [7, 36], [45, 45], [4, 47], [42, 18], [15, 18], [20, 17], [52, 26], [36, 51], [23, 47],
+      [2, 30], [24, 30], [40, 34], [54, 45], [30, 9], [21, 8], [4, 9], [49, 9], [35, 45], [11, 25]]) O.push(K.prop('mushroom_glow', x, y, { variant: (x + y) % 4 }));
+    // 薬草園（石の縁は下絵）のまわり
     O.push(K.prop('planter', 13, 48), K.prop('flower_pot', 13, 52), K.prop('sack', 3, 47));
     // 伐り跡の原: 切り株（痛みを書いたあと、苗が植わる）
     for (const [x, y] of [[46, 46], [49, 45], [52, 46], [45, 49], [48, 49], [51, 49], [53, 48], [47, 51]]) O.push(K.prop('stump', x, y, { variant: (x + y) % 4 }));
     for (const [x, y] of [[47, 47], [50, 48], [46, 50], [52, 50], [49, 51]]) O.push(K.prop('bush', x, y, { cond: { choice: 'ch_forest_write', is: 'pain' }, variant: 1 }));
     O.push(K.exam(50, 47, 'fern_cutover'));
     // 家まわりの小物（固めて置き、道の真ん中は空ける）
-    O.push(K.prop('barrel', 17, 36), K.prop('barrel', 18, 36), K.prop('crate', 10, 35), K.prop('log', 56, 16), K.prop('log', 56, 15), K.prop('stump', 49, 15));
-    O.push(K.prop('hay', 23, 32), K.prop('crate', 23, 31), K.prop('flower_pot', 4, 34), K.prop('sack', 11, 34), K.prop('barrel', 49, 27), K.prop('crate', 43, 27));
+    O.push(K.prop('barrel', 16, 36), K.prop('barrel', 17, 36), K.prop('crate', 10, 35), K.prop('log', 56, 16), K.prop('log', 56, 15), K.prop('stump', 49, 15));
+    O.push(K.prop('hay', 24, 32), K.prop('crate', 24, 31), K.prop('flower_pot', 4, 34), K.prop('sack', 15, 36), K.prop('barrel', 49, 27), K.prop('crate', 43, 27));
     O.push(K.prop('flower_pot', 50, 9), K.prop('flower_pot', 56, 9), K.prop('planter', 13, 43), K.prop('barrel', 38, 40), K.prop('crate', 44, 40));
-    O.push(K.prop('log', 24, 40), K.prop('stump', 25, 41), K.prop('rock', 43, 51), K.prop('rock_small', 16, 51), K.prop('tent', 56, 21));
-    O.push(K.prop('barrel', 6, 19), K.prop('crate', 6, 18), K.prop('sack', 27, 5), K.prop('flower_pot', 33, 6), K.prop('crate', 19, 43), K.prop('barrel', 44, 23));
+    O.push(K.prop('log', 24, 40), K.prop('stump', 25, 41), K.prop('rock', 43, 51), K.prop('rock_small', 16, 51), K.prop('tent', 55, 23));
+    O.push(K.prop('barrel', 6, 19), K.prop('crate', 6, 18), K.prop('sack', 24, 6), K.prop('flower_pot', 31, 7), K.prop('crate', 19, 43), K.prop('barrel', 44, 23));
     O.push(K.prop('hay', 37, 41), K.prop('crate', 49, 31), K.prop('barrel', 50, 31), K.prop('flower_pot', 11, 42), K.prop('sack', 19, 40), K.prop('log', 45, 36));
-    O.push(K.prop('flower_pot', 17, 33), K.prop('planter', 9, 34), K.prop('rock_small', 16, 26), K.prop('rock_small', 42, 35), K.prop('stump', 14, 48), K.prop('rock_small', 24, 48));
+    O.push(K.prop('flower_pot', 18, 34), K.prop('planter', 9, 34), K.prop('rock_small', 22, 25), K.prop('rock_small', 47, 31), K.prop('stump', 14, 48), K.prop('rock_small', 22, 48));
     // 蛍と、地面の小さな飾り
-    for (const [x, y] of [[14, 19], [40, 19], [27, 31], [21, 37], [44, 34], [48, 42], [8, 47], [37, 49], [22, 50], [53, 23], [17, 13], [44, 8], [3, 21], [56, 26]]) O.push(K.prop('firefly', x, y));
-    for (const [x, y] of [[20, 24], [33, 24], [44, 21], [12, 17], [51, 20], [4, 38], [18, 49], [26, 38], [42, 43], [55, 36], [37, 38], [29, 24], [40, 23]]) O.push(K.prop('rock_small', x, y, { variant: (x + y) % 4 }));
+    for (const [x, y] of [[14, 19], [40, 19], [27, 31], [21, 37], [48, 33], [48, 42], [8, 47], [37, 49], [22, 50], [53, 23], [17, 13], [46, 7], [3, 21], [54, 27]]) O.push(K.prop('firefly', x, y));
+    for (const [x, y] of [[20, 24], [33, 24], [41, 23], [12, 17], [52, 23], [11, 40], [18, 49], [25, 37], [42, 43], [55, 36], [37, 38], [29, 24], [40, 23]]) O.push(K.prop('rock_small', x, y, { variant: (x + y) % 4 }));
 
     // ---------------------------------------------------------------- 人
     const L = K.L;
@@ -157,7 +157,7 @@
       K.npc('peddler', 'npc_merchant_2', 37, 28, { name: '行商人', title: '広場の行商', dir: 's', talk: 'fern_peddler', reward: null, pushable: false }),
       K.npc('herbalist', 'npc_old_f_1', 6, 50, { name: '薬草園のばあさま', dir: 'e', talk: 'fern_herbalist', reward: 'side' }),
       K.npc('postmaster', 'npc_woman_3', 27, 36, { name: 'ニナ', title: '村の手紙番', dir: 's', talk: 'fern_postmaster', reward: 'side' }),
-      K.npc('lampkeeper', 'npc_old_m_2', 29, 18, { name: '灯籠番のじいさま', dir: 'w', talk: 'fern_lampkeeper', reward: 'side' }),
+      K.npc('lampkeeper', 'npc_old_m_2', 27, 19, { name: '灯籠番のじいさま', dir: 'w', talk: 'fern_lampkeeper', reward: 'side' }),
       K.npc('hunter', 'npc_woodcutter_3', 42, 31, { name: '狩人のオルト', dir: 'w', talk: 'fern_hunter', reward: 'boss' }),
       K.npc('kid', 'npc_child_2', 38, 36, { name: '村の子', dir: 'n', talk: 'fern_kid', reward: 'hint' }),
       K.npc('traveler', 'npc_merchant_1', 26, 32, { name: '旅の商人', dir: 'w', talk: 'fern_traveler', reward: 'lead' }),
@@ -174,7 +174,7 @@
       // 空気だけ（4 人まで）
       K.npc('dog', 'ani_dog', 32, 45, { name: '犬', dir: 'w', move: 'wander', talk: [L('ワン！　ワンワン！')], reward: null }),
       K.npc('hen', 'ani_hen', 9, 50, { name: 'にわとり', dir: 's', move: 'wander', talk: [L('コッコッ。')], reward: null }),
-      K.npc('singer', 'npc_bard_1', 36, 18, { name: '吟遊詩人', dir: 's', talk: [L('千年樹の歌？\n……おれも探しているんだ。\n吟遊詩人の名折れだよ。'), L('cleared_r_forest', 'リタの歌を聞いたかい？\nあれこそ、この森の歌さ。\n吟遊詩人も、かなわないよ。')], reward: null }),
+      K.npc('singer', 'npc_bard_1', 34, 20, { name: '吟遊詩人', dir: 's', talk: [L('千年樹の歌？\n……おれも探しているんだ。\n吟遊詩人の名折れだよ。'), L('cleared_r_forest', 'リタの歌を聞いたかい？\nあれこそ、この森の歌さ。\n吟遊詩人も、かなわないよ。')], reward: null }),
     ];
 
     // 人の立つマスと、その前後左右には飾りを置かない（話しかけられるように）
@@ -198,14 +198,14 @@
         gate_s: { x: 29, y: 52, dir: 'n' },
         gate_n: { x: 29, y: 3, dir: 's' },
         plaza: { x: 33, y: 35, dir: 'n' },
-        inn: { x: 14, y: 36, dir: 's' },
-        shop: { x: 21, y: 33, dir: 's' },
+        inn: { x: 15, y: 36, dir: 's' },
+        shop: { x: 22, y: 34, dir: 's' },
         gord: { x: 53, y: 17, dir: 's' },
-        search: { x: 7, y: 34, dir: 's' },
+        search: { x: 8, y: 34, dir: 's' },
         rita: { x: 53, y: 10, dir: 's' },
         pim_home: { x: 16, y: 44, dir: 's' },
-        house1: { x: 41, y: 41, dir: 's' },
-        house2_door: { x: 4, y: 19, dir: 's' }, house3_door: { x: 46, y: 28, dir: 's' }, shed_door: { x: 22, y: 41, dir: 's' },
+        house1: { x: 40, y: 41, dir: 's' },
+        house2_door: { x: 4, y: 19, dir: 's' }, house3_door: { x: 45, y: 28, dir: 's' }, shed_door: { x: 22, y: 41, dir: 's' },
         deck: { x: 12, y: 12, dir: 'e', lv: 1 },
         east: { x: 46, y: 45, dir: 'e' },
       },

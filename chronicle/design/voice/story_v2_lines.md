@@ -63,6 +63,8 @@
 | `v_berna_home_01` | story | `roa_berna` after prologue pick (default) | おかえり。年代記は、<br>ちゃんと書いているかい？ | welcoming someone home, teasing a little |
 | `v_berna_home_02` | story | `roa_berna` after prologue pick cleared_r_forest | 森の灯が戻ったそうだね。<br>語り石の文字が、ほんの少し<br>読めるようになった気がするよ。 | proud and moved, quietly happy |
 | `v_berna_home_03` | story | `roa_berna` stay morning (E.stay o.morning) | よく眠れたかい？<br>……さあ、いってらっしゃい。 | soft morning voice, gentle send-off |
+| `v_berna_intro_01` | story | `roa_house_intro` E.say after ev.createHero (the name shows first; the voice skips {hero}) | ……うん、いい名前だ。 | after hearing the new apprentice's name: a short, clear, affirmative nod-word うん (yes — not a hesitant hmm), then warm fond approval like a grandmother, a small smile in the voice |
+| `v_berna_p2_10` | story | `roa_berna` P2[7] (the name shows first; the voice skips {hero}) | 行っておくれ。<br>語り部の見習いとしての、<br>最初の仕事だよ。 | sending her apprentice off on the first real job: gentle but firm, proud and a little moved, unhurried |
 
 ## フィーネ
 
@@ -70,9 +72,9 @@
 |---|---|---|---|---|
 | `v_fine_forest_02` | story | `elder_fine` say 2 (after v_fine_forest_01) | ……気をつけて。 | barely above a whisper, sincere, as she turns to go |
 | `v_fine_windhill_01` | story | `windhill_notes` say (grey-cloaked girl) | ……風も、歌を覚えているのね。 | wistful and faintly amused, like talking to herself on a windy hill |
-| `v_fine_opening_01` | optional | `roa_house_intro` caption 1 (ev.caption: no voice option yet) | ……ねえ、聞こえる？ | the opening of the game over black: an intimate whisper to the player, a voice from very far away |
-| `v_fine_opening_02` | optional | `roa_house_intro` caption 2 | これは、忘れられかけた物語。 | soft storyteller's narration, slow |
-| `v_fine_opening_03` | optional | `roa_house_intro` caption 3 | そして、それを語り直した、<br>ひとりの語り部の物語。 | narration, a quiet warmth and hope on the last words |
+| `v_fine_opening_01` | story | `roa_house_intro` caption 1 (ev.caption voice; owner 2026-09-27) | ……ねえ、聞こえる？ | the opening of the game over black: an intimate whisper to the player, a voice from very far away |
+| `v_fine_opening_02` | story | `roa_house_intro` caption 2 | これは、忘れられかけた物語。 | soft storyteller's narration, slow |
+| `v_fine_opening_03` | story | `roa_house_intro` caption 3 | そして、それを語り直した、<br>ひとりの語り部の物語。 | narration, a quiet warmth and hope on the last words |
 | `v_fine_song_01` | story | `roa_house_intro` caption after 「……ねえ、聞こえる？」 (the lighthouse song over black; ev.caption voice) | ♪　海の果てまで、灯よ届け<br>帰る舟に、道を照らせ | the very start of the game, over black: she softly sings-speaks the old lighthouse lullaby like someone rocking a cradle, very slow, a gentle rise and fall on each phrase, a long tender pause between the two lines, warm and hushed; a plain chanted folk lullaby, not a performed song |
 | `v_fine_song_02` | story | `lighthouse_3_boss` caption after the Page Eater (the song comes back on the paper; ev.caption voice) | ♪　海の果てまで、灯よ届け<br>帰る舟に、道を照らせ | the lost words slowly reappear on a slip of paper and she reads the lighthouse song back to life as a lullaby: slow chant-like cadence, soft wonder and quiet relief, each phrase lingering and fading, hushed like singing a child to sleep; not a performed song |
 

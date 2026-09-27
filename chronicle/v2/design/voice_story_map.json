@@ -3,8 +3,8 @@
   "Voice id → where it plays in the v2 slice (written by chronicle/tools/story_voice.js; do not edit by hand).",
   "story / optional: add `voice: '<id>'` to the options of the ev.say / E.say that shows `text` (file, event, key; `line` = where the text was on 2026-09-27).",
   "  For a say with a list of pages, pass `voice: [id1, id2]` (one id per page). For a line inside a list such as P2 in prologue_roa.js, pass the id of that entry to its E.say.",
-  "  optional = the design says \"no voice\" there (opening captions; windhill: STORY_BIBLE says no voice).",
-  "  captions: ev.caption(text, {ms, voice: '<id>'}) plays the voice with the caption and waits for its end (UIK caption, 2026-09-27; the lighthouse song v_fine_song_01・02).",
+  "  optional = the design says \"no voice\" there (none at the moment: the opening captions are voiced since 2026-09-27, owner request).",
+  "  captions: ev.caption(text, {ms, voice: '<id>'}) plays the voice with the caption and waits for its end (UIK caption, 2026-09-27; the opening v_fine_opening_01〜03 and the lighthouse song v_fine_song_01・02).",
   "bark: a 1–2 s greeting played when the player opens the talk: R.Audio.playVoice(id) at the start of the talk event (or a `bark` field on the map NPC read by the field talk code). Suggested: only the first talk per visit to a map, never over a voiced line.",
   "Text rule: the voiced text must stay exactly as it is; if the polish pass changes one of these texts, drop the voice from that say (node chronicle/tools/story_voice.js --check lists them)."
  ],
@@ -165,7 +165,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "P2[0]",
-   "line": 51,
+   "line": 56,
    "text": "そうそう、大事な話があるんだ。",
    "audio": "assets/voice/v_berna_p2_01.ogg"
   },
@@ -175,7 +175,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "P2[1]",
-   "line": 52,
+   "line": 57,
    "text": "近ごろ、あちこちで\n伝承が消えていくんだよ。",
    "audio": "assets/voice/v_berna_p2_02.ogg"
   },
@@ -185,7 +185,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "P2[2]",
-   "line": 53,
+   "line": 58,
    "text": "歌の続きが出てこない。\n祭りの由来が分からない。\nそんな話ばかりさ。",
    "audio": "assets/voice/v_berna_p2_03.ogg"
   },
@@ -195,7 +195,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "P2[3]",
-   "line": 54,
+   "line": 59,
    "text": "わたしたち語り部は、それを\n『白紙』と呼んでいる。",
    "audio": "assets/voice/v_berna_p2_04.ogg"
   },
@@ -205,7 +205,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "P2[4]",
-   "line": 55,
+   "line": 60,
    "text": "里の語り石の文字も、\n半分が白く抜けてしまった。",
    "audio": "assets/voice/v_berna_p2_05.ogg"
   },
@@ -215,7 +215,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "P2[5]",
-   "line": 56,
+   "line": 61,
    "text": "それにね、港町ファロスの\n灯台の火が、細りはじめて三晩。\nきのう、とうとう消えたそうだ。",
    "audio": "assets/voice/v_berna_p2_06.ogg"
   },
@@ -225,7 +225,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "P2[6]",
-   "line": 57,
+   "line": 62,
    "text": "あの灯台には、守り歌という\n古い伝承があってね。\nそれも、白紙になりかけている。",
    "audio": "assets/voice/v_berna_p2_07.ogg"
   },
@@ -235,7 +235,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "P2[8]",
-   "line": 59,
+   "line": 64,
    "text": "ただし、ひとりで行っちゃ\nだめだよ。ファロスの酒場\n「潮風亭」で、仲間を探しなさい。",
    "audio": "assets/voice/v_berna_p2_08.ogg"
   },
@@ -245,7 +245,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "P2[9]",
-   "line": 60,
+   "line": 65,
    "text": "それから、これを持って\nお行き。",
    "audio": "assets/voice/v_berna_p2_09.ogg"
   },
@@ -255,7 +255,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_seat",
    "key": "say (berna_desk)",
-   "line": 127,
+   "line": 132,
    "text": "昔からの習わしさ。\n誰の席かは……忘れちまったよ。",
    "audio": "assets/voice/v_berna_seat_01.ogg"
   },
@@ -285,7 +285,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "after prologue pick (default)",
-   "line": 86,
+   "line": 91,
    "text": "おかえり。年代記は、\nちゃんと書いているかい？",
    "audio": "assets/voice/v_berna_home_01.ogg"
   },
@@ -295,7 +295,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "after prologue pick cleared_r_forest",
-   "line": 85,
+   "line": 90,
    "text": "森の灯が戻ったそうだね。\n語り石の文字が、ほんの少し\n読めるようになった気がするよ。",
    "audio": "assets/voice/v_berna_home_02.ogg"
   },
@@ -305,7 +305,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "stay morning (E.stay o.morning)",
-   "line": 89,
+   "line": 94,
    "text": "よく眠れたかい？\n……さあ、いってらっしゃい。",
    "audio": "assets/voice/v_berna_home_03.ogg"
   },
@@ -331,31 +331,31 @@
   },
   "v_fine_opening_01": {
    "speaker": "fine",
-   "kind": "optional",
+   "kind": "story",
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_house_intro",
-   "key": "caption 1 (ev.caption: no voice option yet)",
-   "line": 24,
+   "key": "caption 1 (ev.caption voice; owner 2026-09-27)",
+   "line": 29,
    "text": "……ねえ、聞こえる？",
    "audio": "assets/voice/v_fine_opening_01.ogg"
   },
   "v_fine_opening_02": {
    "speaker": "fine",
-   "kind": "optional",
+   "kind": "story",
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_house_intro",
    "key": "caption 2",
-   "line": 27,
+   "line": 32,
    "text": "これは、忘れられかけた物語。",
    "audio": "assets/voice/v_fine_opening_02.ogg"
   },
   "v_fine_opening_03": {
    "speaker": "fine",
-   "kind": "optional",
+   "kind": "story",
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_house_intro",
    "key": "caption 3",
-   "line": 28,
+   "line": 33,
    "text": "そして、それを語り直した、\nひとりの語り部の物語。",
    "audio": "assets/voice/v_fine_opening_03.ogg"
   },
@@ -495,7 +495,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_house_intro",
    "key": "caption after 「……ねえ、聞こえる？」 (the lighthouse song over black; ev.caption voice)",
-   "line": 26,
+   "line": 31,
    "text": "♪　海の果てまで、灯よ届け\n帰る舟に、道を照らせ",
    "audio": "assets/voice/v_fine_song_01.ogg"
   },
@@ -505,9 +505,29 @@
    "file": "v2/src/events/prologue_lighthouse.js",
    "event": "lighthouse_3_boss",
    "key": "caption after the Page Eater (the song comes back on the paper; ev.caption voice)",
-   "line": 104,
+   "line": 113,
    "text": "♪　海の果てまで、灯よ届け\n帰る舟に、道を照らせ",
    "audio": "assets/voice/v_fine_song_02.ogg"
+  },
+  "v_berna_intro_01": {
+   "speaker": "berna",
+   "kind": "story",
+   "file": "v2/src/events/prologue_roa.js",
+   "event": "roa_house_intro",
+   "key": "E.say after ev.createHero (the name shows first; the voice skips {hero})",
+   "line": 46,
+   "text": "……うん、いい名前だ。",
+   "audio": "assets/voice/v_berna_intro_01.ogg"
+  },
+  "v_berna_p2_10": {
+   "speaker": "berna",
+   "kind": "story",
+   "file": "v2/src/events/prologue_roa.js",
+   "event": "roa_berna",
+   "key": "P2[7] (the name shows first; the voice skips {hero})",
+   "line": 63,
+   "text": "行っておくれ。\n語り部の見習いとしての、\n最初の仕事だよ。",
+   "audio": "assets/voice/v_berna_p2_10.ogg"
   }
  }
 }

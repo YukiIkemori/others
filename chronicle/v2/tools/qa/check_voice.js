@@ -112,6 +112,21 @@ section('灯台の守り歌（v_fine_song_01・02）');
   const chr = fs.readFileSync(path.join(V2, 'src', 'screens', 'chronicle.js'), 'utf8');
   ok('年代記の章で書き写した歌を聞き直せる（A）', /songsOf\(/.test(chr) && /playSong\(/.test(chr));
 }
+// 2026-09-27: 冒頭（オーナー「最初の一言にも声を」）。幕の上のフィーネ 3 本と守り歌、ベルナの「……うん、いい名前だ。」、P2[7]。幕の前に先読みする
+section('冒頭のボイス（roa_house_intro・roa_berna）');
+{
+  const src = fs.readFileSync(path.join(V2, 'src', 'events', 'prologue_roa.js'), 'utf8');
+  const caps = [['v_fine_opening_01', '……ねえ、聞こえる？'], ['v_fine_opening_02', 'これは、忘れられかけた物語。'], ['v_fine_opening_03', 'そして、それを語り直した、\\nひとりの語り部の物語。']];
+  for (const [id, t] of caps) ok(`${id}: 幕のキャプション「${t.replace(/\\n/g, '')}」に声`, new RegExp(`ev\\.caption\\('${t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}', \\{ ms: \\d+, voice: '${id}' \\}\\)`).test(src));
+  ok('v_berna_intro_01: 名前の後の「……うん、いい名前だ。」に声', /'\{hero\}。……うん、いい名前だ。', \{ voice: 'v_berna_intro_01'/.test(src));
+  ok('v_berna_p2_10: P2[7]（名前の入る行）に声', /P2_VOICE = \[[^\]]*'v_berna_p2_07', 'v_berna_p2_10', 'v_berna_p2_08'/.test(src));
+  const m = /const INTRO_VOICES = \[([^\]]*)\]/.exec(src), pre = m ? [...m[1].matchAll(/'(v_[a-z0-9_]+)'/g)].map((x) => x[1]) : [];
+  const intro = [...src.slice(src.indexOf('D.roa_house_intro'), src.indexOf('D.roa_berna')).matchAll(/voice: '(v_[a-z0-9_]+)'/g)].map((x) => x[1]);
+  ok('冒頭のボイスをすべて先読みする（INTRO_VOICES・R.Audio.preloadVoice）', intro.length >= 9 && intro.every((id) => pre.includes(id)) && /R\.Audio\.preloadVoice\(INTRO_VOICES\)/.test(src), intro.filter((id) => !pre.includes(id)));
+  for (const id of intro) ok(`${id}: 音のファイルがある`, fs.existsSync(path.join(CHRON, 'assets', 'voice', id + '.ogg')));
+  const au = fs.readFileSync(path.join(V2, 'src', 'core', 'audio.js'), 'utf8');
+  ok('R.Audio.preloadVoice がある', /preloadVoice\(ids\) \{/.test(au));
+}
 section('戦闘の主人公の声（A20）');
 {
   const bs = fs.readdirSync(path.join(V2, 'src', 'systems', 'battle')).map((f) => fs.readFileSync(path.join(V2, 'src', 'systems', 'battle', f), 'utf8')).join('\n');

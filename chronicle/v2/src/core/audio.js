@@ -44,6 +44,7 @@
 //   playBGM/pushBGM/popBGM(id) play assets/bgm/<id>.* instead of the synth track when listed (decoded on
 //   first use, looped between loopStart/loopEnd s; decode failure → synth). Jingles stay synthesised.
 //   R.Audio.playVoice(id) → handle|null, stopVoice(handle?) — own bus (Settings.voiceVolume), BGM −9 dB
+//   R.Audio.preloadVoice(ids) → Promise — fetch + decode voice lines ahead (the opening; packed voice/pack_NN.ogg).
 //   while a line plays. setVolumes(bgm, sfx, voice).
 //   R.Audio.battleVoiceId(id) — any battle clip by id (no duck, replaces only the previous battle voice).
 //   R.Audio.battleVoice(kind[, gender]) — the hero's battle shout v_hero_<m|f>_<kind>_<n> (random clip, no duck;
@@ -1433,6 +1434,19 @@
       try { h = A.playVoice(id); } catch (e) { h = null; }
       if (!h) return Promise.resolve();
       return R.until ? R.until(() => h.stopped) : Promise.resolve();
+    },
+    /** 先読み（2026-09-27）: これから鳴らすボイスを読んで解いておく → 読み終わり（無い・失敗も）で解決。エラーにしない。
+     *  まとめた版（voice/pack_NN.ogg）は初めのボイスで 2.5 MB の束を読むので、先読みしないと冒頭の声が送りに間に合わない。
+     *  音がまだ起きていない（ctx なし）ときは束・ファイルの読み込みだけ温める */
+    preloadVoice(ids) {
+      const list = (Array.isArray(ids) ? ids : [ids]).filter((id) => mediaEntry('voice', id));
+      return Promise.all(list.map((id) => {
+        try {
+          const c = ctx ? loadBuffer('voice', id) : null;
+          if (c) return c.state === 'loading' ? c.p : c;
+          return R.Media && R.Media.bytes ? R.Media.bytes('voice', id).catch(() => null) : null;
+        } catch (e) { return null; }
+      })).then(() => undefined, () => undefined);
     },
     /** is there a recorded file for this id? kind 'bgm' | 'voice' */
     hasFile(kind, id) { return !!mediaEntry(kind, id); },

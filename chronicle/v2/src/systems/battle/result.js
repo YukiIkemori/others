@@ -179,7 +179,7 @@
     const k = R.uiScale || 1, L = st.L;
     if (L.tall) {
       const top = L.stageH * 0.5;
-      return { k, tall: true, band: { x: 0, y: top, w: R.W, h: R.H - top }, x0: 20 * k, y0: Math.max(top + 16 * k, L.stageH - 60 * k), lw: R.W - 40 * k, rx: 20 * k, rw: R.W - 40 * k, bottom: R.H - (R.safe.b || 0) - 84 * k };
+      return { k, tall: true, band: { x: 0, y: top, w: R.W, h: R.H - top }, x0: 20 * k, y0: Math.max(top + 16 * k, L.stageH - 60 * k), lw: R.W - 40 * k, rx: 20 * k, rw: R.W - 40 * k, bottom: R.H - (R.safe.b || 0) - 58 * k };
     }
     const x0 = (R.safe.l || 0) + 40 * k, lw = 250 * k, rx = x0 + lw + 30 * k, rw = Math.min(330 * k, R.W * 0.62 - (rx - 0));
     return { k, tall: false, band: { x: 0, y: 0, w: rx + rw + 40 * k, h: R.H }, x0, y0: 30 * k, lw, rx, rw: Math.max(240 * k, rw), bottom: R.H - (R.safe.b || 0) - 50 * k };
@@ -198,7 +198,7 @@
     }
     const chipLines = chips.length ? line + 1 : 0;
     const learned = (m && m.learned) || [];
-    const h = 36 * k + chipLines * 25 * k + learned.length * 34 * k + 6 * k;
+    const h = 34 * k + chipLines * 24 * k + learned.length * 34 * k + 3 * k;
     return { u, m, grow, chips, chipLines, learned, h };
   }
   /** 札の組み立て（描く前に大きさを決める）→ {G, items:{shown, more}, pages:[[block]]} */
@@ -216,7 +216,7 @@
     for (const m of orphan) if (m.learned.length) blocks.push({ u: null, m, grow: null, chips: [], chipLines: 0, learned: m.learned, h: m.learned.length * 34 * k + 4 * k });
     const GR = { super: 0, rare: 1 };
     const drops = d.drops.slice().sort((a, b) => (GR[a.grade] != null ? GR[a.grade] : 2) - (GR[b.grade] != null ? GR[b.grade] : 2));
-    const headH = 58 * k, goldH = 32 * k, itemH = 30 * k, itemHead = drops.length ? 20 * k : 0, memHead = 20 * k;
+    const headH = 58 * k, goldH = G.tall ? 0 : 32 * k, itemH = 30 * k, itemHead = drops.length ? 20 * k : 0, memHead = 20 * k;
     const memTotal = blocks.reduce((s, b) => s + b.h, 0);
     let maxItems, pages;
     if (!G.tall) {
@@ -281,8 +281,8 @@
       }
     }
     const ck = k * 0.82;
-    for (const c of b.chips) if (P && P.drawChipAt) P.drawChipAt(g, c.up, c.x - (b.u ? 0 : 0), y + 36 * k + c.line * 25 * k, ck);
-    let ly = y + 36 * k + b.chipLines * 25 * k;
+    for (const c of b.chips) if (P && P.drawChipAt) P.drawChipAt(g, c.up, c.x, y + 34 * k + c.line * 24 * k, ck);
+    let ly = y + 34 * k + b.chipLines * 24 * k;
     for (const l of b.learned) { if (P && P.drawLearn) P.drawLearn(g, b.m, l, x, ly, w, t, k, 44 * k); ly += 34 * k; }
   }
 
@@ -314,12 +314,14 @@
     y += 58 * k;
     const memTop = G.tall ? null : y;
     if (page === 0) {
+      // ゴールド（縦持ちは見出しの右に並べて 1 行を詰める）
+      const gy = G.tall ? y - 50 * k : y, gw = G.tall ? fullW - (lay.pages.length > 1 ? 50 * k : 0) : G.lw;
       row(() => {
-        Kt.icon(g, 'coin', x0, y, 18 * k, Kt.COL.text2);
-        Kt.text(g, 'ゴールド', x0 + 28 * k, y + 1 * k, { size: 13 * k, color: Kt.COL.text2, raw: true, shadow: true });
-        Kt.text(g, '+' + d.gold.toLocaleString('en-US') + ' G', x0 + G.lw, y - 2 * k, { size: 18 * k, weight: 700, color: Kt.COL.gold, align: 'right', raw: true, shadow: true });
+        Kt.icon(g, 'coin', x0 + (G.tall ? gw - 190 * k : 0), gy, 18 * k, Kt.COL.text2);
+        Kt.text(g, 'ゴールド', x0 + (G.tall ? gw - 162 * k : 28 * k), gy + 1 * k, { size: 13 * k, color: Kt.COL.text2, raw: true, shadow: true });
+        Kt.text(g, '+' + d.gold.toLocaleString('en-US') + ' G', x0 + gw, gy - 2 * k, { size: 18 * k, weight: 700, color: Kt.COL.gold, align: 'right', raw: true, shadow: true });
       });
-      y += 32 * k;
+      if (!G.tall) y += 32 * k;
       if (d.drops.length) {
         row(() => Kt.text(g, '手に入れた物', x0, y, { size: 11.5 * k, weight: 700, color: Kt.COL.text3, raw: true, track: 2 }));
         y += 20 * k;
@@ -346,7 +348,7 @@
     }
     g.restore();
     // 決定で進む（点滅する ▼）
-    if (G.tall) Rs.drawNext(g, st, R.W - 28 * k, R.H - (R.safe.b || 0) - 70 * k);
+    if (G.tall) Rs.drawNext(g, st, R.W / 2, R.H - (R.safe.b || 0) - 30 * k);
     else Rs.drawNext(g, st, G.rx + G.rw - 4 * k, R.H - (R.safe.b || 0) - 40 * k);
   };
 

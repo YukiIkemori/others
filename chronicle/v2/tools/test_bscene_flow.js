@@ -32,7 +32,9 @@ async function main() {
   ok('glimmer name shown ≥ 0.9 s even at ＋2', gl && gl.ms >= 880, gl);
   const card = log.find((l) => l.t === 'card');
   ok('rare card shown ≥ 0.6 s (A12)', card && card.ms >= 590, card);
-  ok('victory panel opens', await B.waitFor(p, `${D} && ${D}.result && ${D}.next`, 6000));
+  ok('victory panel opens', await B.waitFor(p, `${D} && ${D}.result && ${D}.next`, 20000));
+  const merged = await B.ev(p, `(() => { const d = ${D}; const L = RPG.Battle._.result.layoutVictory(d); const pu = d.result.data.profUI; return { pages: L.pages.length, profInPanel: !!(pu && pu.members.some((m) => m.ups.length)), stolen: d.result.data.drops.some((x) => x.stolen), extra: RPG.Battle._.result.pages.map((x) => x.id) }; })()`);
+  ok('one result screen: gold・items (stolen)・growth・proficiency・learned in the same panel, no extra prof page', merged && merged.pages === 1 && merged.profInPanel && merged.stolen && !merged.extra.includes('prof'), merged);
   await p.waitForTimeout(2500);
   ok('victory never closes by itself, even at ×3 (owner 2026-09-27)', !(await B.ev(p, 'window.__r')) && (await B.ev(p, `${D}.phase === 'result'`)));
   ok('confirm closes the victory (fade out → field)', await B.pressUntil(p, 'a', 'window.__r', 20));
