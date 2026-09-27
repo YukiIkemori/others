@@ -1,219 +1,79 @@
 {
- "date": "2026-09-27T13:04:51.758Z",
+ "date": "2026-09-27T13:28:38.104Z",
  "browser": false,
  "full": false,
  "results": [
   {
    "name": "build",
    "code": 0,
-   "ms": 1234,
-   "summary": "[build] media (external): 31 BGM (slice), 416 voice, 0 portraits, 239 sprite sheets, 1233 env images, 11 title images, 123.2 MB  [682 ms]"
-  },
-  {
-   "name": "test_core",
-   "code": 0,
-   "ms": 1023,
-   "summary": "77/77 passed"
-  },
-  {
-   "name": "test_core_contract",
-   "code": 0,
-   "ms": 925,
-   "summary": "test_core_contract: 51/51 passed"
-  },
-  {
-   "name": "test_render",
-   "code": 0,
-   "ms": 950,
-   "summary": "test_render: 145/145 passed"
-  },
-  {
-   "name": "test_uik",
-   "code": 0,
-   "ms": 1072,
-   "summary": "test_uik: 37/37 passed"
-  },
-  {
-   "name": "test_cast",
-   "code": 0,
-   "ms": 1081,
-   "summary": "test_cast: 865/865 passed"
-  },
-  {
-   "name": "test_beast",
-   "code": 0,
-   "ms": 825,
-   "summary": "test_beast: 94/94 passed"
-  },
-  {
-   "name": "test_terrain",
-   "code": 0,
-   "ms": 8570,
-   "summary": "test_terrain: 76/76 passed"
-  },
-  {
-   "name": "test_field",
-   "code": 0,
-   "ms": 2676,
-   "summary": "test_field: 102/102 passed"
-  },
-  {
-   "name": "test_events",
-   "code": 0,
-   "ms": 1185,
-   "summary": "test_events: 164/164 passed"
+   "ms": 931,
+   "summary": "[build] media (external): 31 BGM (slice), 416 voice, 0 portraits, 239 sprite sheets, 1233 env images, 11 title images, 123.2 MB  [782 ms]"
   },
   {
    "name": "test_rules",
-   "code": 1,
-   "ms": 1044,
-   "summary": "test_rules: 186/187 passed",
-   "tail": "pass  p_super has items at every tier\npass  no pool holds a steal-only item\n\n== fieldUse・new items (MENUS 50, CONTENT-F 64)\npass  fieldUse heal: hp up, {changed, lines}\npass  fieldUse revive: back on its feet\npass  fieldUse on a full char: no change\npass  ac_climb_shoes: acc, normal, K.item\n\ntest_rules: 186/187 passed\nfailed:\n  36 steal-only items, super, stealOnly, no quirk"
-  },
-  {
-   "name": "test_battle",
    "code": 0,
-   "ms": 7361,
-   "summary": "test_battle: 125/125 passed"
-  },
-  {
-   "name": "test_bscene",
-   "code": 0,
-   "ms": 766,
-   "summary": "test_bscene: 47/47 passed"
-  },
-  {
-   "name": "test_screens",
-   "code": 0,
-   "ms": 873,
-   "summary": "test_screens: 396/396 passed"
+   "ms": 1640,
+   "summary": "test_rules: 187/187 passed"
   },
   {
    "name": "test_content_p",
-   "code": 1,
-   "ms": 19486,
-   "summary": "test_content_p: 518/519 passed",
-   "tail": "pass  潮風亭の噂: 1 回ごとに次の噂（森 → 休み小屋）\npass  依頼 q_pharos_lamp: 2 つの灯籠をともして礼\npass  依頼 q_pharos_well: 巣を見つけて解決\npass  依頼 q_pharos_delivery: 包みを受け取る\npass  風鳴りの丘: 風の鈴\npass  {hero} が名前に置き換わる\npass  T1: 手紙 → 少女（v_fine_t1_01・02）→ 余白の一行\npass  T1 は 1 回だけ\n\ntest_content_p: 518/519 passed\nfailed:\n  world: 全部に着く（8419 マス）"
-  },
-  {
-   "name": "test_content_f",
    "code": 0,
-   "ms": 7516,
-   "summary": "CONTENT-F: 646/646 passed"
+   "ms": 23458,
+   "summary": "test_content_p: 544/544 passed"
   },
   {
    "name": "test_content_desert",
    "code": 0,
-   "ms": 160351,
+   "ms": 151253,
    "summary": "test_content_desert: 34/34 passed"
   },
   {
    "name": "validate",
-   "code": 1,
-   "ms": 1181,
-   "summary": "validate: 52/57 passed",
-   "tail": "pass  1 品は 1 体の魔物の drops.steal だけ\npass  ほかの枠・宝箱の表・店・宝箱・イベントの報酬に無い\npass  率: 通常 32・レア 16・ボス 16（A31 ⑥・リードの決定 5）\npass  R.DB.stealSources が魔物の drops.steal と同じ\n\nvalidate: 52/57 passed\nfailed:\n  R.loadErrors 0\n  縦切りのマップ 97 枚の参照（素材・物・見た目・イベント・行き先・出現表・BGM・背景）\n  場所・手がかり・地方の参照\n  イベントの参照（meta と本文の ev.lead・letter・shop・battle・call・item・warp）\n  §3.2 の必須のマップ 28 枚がそろう"
+   "code": 0,
+   "ms": 1556,
+   "summary": "validate: 57/57 passed"
   },
   {
    "name": "progress",
-   "code": 1,
-   "ms": 502511,
-   "summary": "progress: 18/31 passed",
-   "tail": "  pim=send fawn=heal: story_t1 に着く\n  pim=send fawn=leave: clearRegion('r_forest') に着く\n  pim=send fawn=leave: story_t1 に着く\n  pim=take fawn=heal: clearRegion('r_forest') に着く\n  pim=take fawn=heal: story_t1 に着く\n  pim=take fawn=leave: clearRegion('r_forest') に着く\n  pim=take fawn=leave: story_t1 に着く\n  pim=send fawn=heal: 隠し通路と寄り道なしで clearRegion と story_t1\n  pim=send fawn=leave: 隠し通路と寄り道なしで clearRegion と story_t1\n  pim=take fawn=heal: 隠し通路と寄り道なしで clearRegion と story_t1\n  pim=take fawn=leave: 隠し通路と寄り道なしで clearRegion と story_t1\n  縦切りのマップ 97 枚すべてに入れる"
+   "code": 0,
+   "ms": 504982,
+   "summary": "progress: 31/31 passed"
   },
   {
    "name": "check_text",
    "code": 0,
-   "ms": 2907,
-   "summary": "check_text: 0 error(s), 1 warning(s) in 8150 Japanese strings of 283 files — none"
-  },
-  {
-   "name": "check_voice",
-   "code": 0,
-   "ms": 928,
-   "summary": "check_voice: 199/199 passed"
+   "ms": 2194,
+   "summary": "check_text: 0 error(s), 1 warning(s) in 8149 Japanese strings of 283 files — none"
   },
   {
    "name": "check_leads",
    "code": 0,
-   "ms": 1518,
+   "ms": 1093,
    "summary": "check_leads: 34/34 passed"
   },
   {
    "name": "check_springs",
-   "code": 1,
-   "ms": 838943,
-   "summary": "check_springs: 30/31 passed",
-   "tail": "== 5. 泉の周り 3 マスは出現なし（FIELD の safeAt）\npass  泉の周り 3 マス（2240 マス）で safeAt = 'spring'、5 マス先は違う\npass  出現の判定の前に safeAt を見る（FIELD の _encounterStep）\n\n== 6. 見つけた泉の印（地図・小さな地図）\npass  泉を使うと R.Game.springs[map] に id が残る\npass  小さな地図が泉の印を描く（springs を読む）\n    地図の画面: ワールドの一枚絵だけ（階の地図は無いので、泉の印は小さな地図だけ）\n\ncheck_springs: 30/31 passed\nfailed:\n  hawks: 道のり 43 歩の 40〜60% に泉（desert_hawks_1_s1 0%、desert_hawks_1_s2 40%、desert_hawks_2_s1 72%）"
+   "code": 0,
+   "ms": 554631,
+   "summary": "check_springs: 31/31 passed"
   },
   {
    "name": "check_density",
-   "code": 1,
-   "ms": 5734,
-   "summary": "check_density: 38/39 passed",
-   "tail": "pass  yule_night: 1 画面の飾りの中央値 25〜40（54 画面: 最小 17・中央 26・最大 41）\npass  yule_night: いちばん少ない画面も 12 以上（17）\npass  yule_night: 通りの中央（5 マス）に硬い物が無い\n\n== yura\npass  yura: 1 画面の飾りの中央値 25〜40（3 画面: 最小 29・中央 35・最大 38）\npass  yura: いちばん少ない画面も 12 以上（29）\npass  yura: 通りの中央（0 マス）に硬い物が無い\n\ncheck_density: 38/39 passed\nfailed:\n  desert_mirage: 1 画面の飾りの中央値 25〜40（6 画面: 最小 32・中央 50・最大 54）"
-  },
-  {
-   "name": "check_world",
    "code": 0,
-   "ms": 36971,
-   "summary": "check_world: 7/7 passed"
+   "ms": 1777,
+   "summary": "check_density: 39/39 passed"
   },
   {
    "name": "check_chests",
-   "code": 2,
-   "ms": 20714,
-   "summary": "pass  縦切りの宝箱 125 個: 床の上・重なる物の下でない・id が一つ・中身あり",
-   "tail": "== データ\npass  world: ワールドに宝箱 0（A27）\npass  縦切りの宝箱 125 個: 床の上・重なる物の下でない・id が一つ・中身あり\n\n== 焼いた床との明るさの差（ブラウザ）\npage.waitForFunction: Timeout 15000ms exceeded.\n    at Object.open (/home/user/others/chronicle/v2/tools/lib/browser.js:51:11)\n    at async /home/user/others/chronicle/v2/tools/qa/check_chests.js:41:13 {\n  name: 'TimeoutError'\n}"
-  },
-  {
-   "name": "check_secrets",
    "code": 0,
-   "ms": 22816,
-   "summary": "check_secrets: 42/42 passed"
+   "ms": 21036,
+   "summary": "check_chests: 4/4 passed"
   },
   {
    "name": "check_stubs",
-   "code": 2,
-   "ms": 22508,
-   "summary": "pass  始まりの場所は本物（roa_house の roa_house_intro）",
-   "tail": "== 1. node: 埋まった仮の関数\npass  仮の実装で埋まった名前空間の関数 0\n    仮のデータ（id が stub_、使わない物）: DB.materials: stub_grass,stub_road,stub_tree,stub_water ／ DB.maps: stub_road ／ DB.events: stub_guard_talk ／ DB.troops: tr_stub ／ DB.monsters: stub_slime ／ DB.encounters: z_stub ／ DB.locations: stub_road\npass  縦切りのデータ・イベントが stub_ の id を参照しない\npass  始まりの場所は本物（roa_house の roa_house_intro）\n\n== 2. ブラウザ: 起動 → はじめから → ロアの里\npage.waitForFunction: Timeout 15000ms exceeded.\n    at Object.open (/home/user/others/chronicle/v2/tools/lib/browser.js:51:11)\n    at async /home/user/others/chronicle/v2/tools/qa/check_stubs.js:38:15 {\n  name: 'TimeoutError'\n}"
-  },
-  {
-   "name": "sim_zones",
    "code": 0,
-   "ms": 146438,
-   "summary": "all zones: HP loss 9.0%, rounds 2.98 pass"
-  },
-  {
-   "name": "sim_zones --segments",
-   "code": 0,
-   "ms": 782575,
-   "summary": "segments: 28/28 pass"
-  },
-  {
-   "name": "sim_bosses",
-   "code": 0,
-   "ms": 800300,
-   "summary": "tr_b_frost_admiral@6      0       0      100   100   12.2   0.03  pass"
-  },
-  {
-   "name": "sim_growth",
-   "code": 0,
-   "ms": 12468,
-   "summary": "sim_growth: 8/8 passed (runs 20, seed 1)"
-  },
-  {
-   "name": "sim_glimmer",
-   "code": 0,
-   "ms": 119850,
-   "summary": "NOTE (above/below the estimate) slice scope near the V2_PLAN §3.9 estimate (glimmered techs lv1–3 ≈ 20: 28 + starters 8, max lv 3; spells step 1–2 ≈ 12: 18)"
-  },
-  {
-   "name": "sim_loot",
-   "code": 0,
-   "ms": 10430,
-   "summary": "H5 倒しても落ちない: 30000 体、盗み専用のドロップ 0  pass"
+   "ms": 28385,
+   "summary": "check_stubs: 16/16 passed"
   }
  ]
 }
