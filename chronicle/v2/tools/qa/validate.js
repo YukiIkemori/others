@@ -317,7 +317,11 @@ section('7. ドロップの枠（STATS_REWORK §10.1）');
   ok(`rare の枠は系統の最後の段だけ（縦切りの 22 体を除き ${rareN} 体、${(100 * rareN / rest.length).toFixed(0)}%、目安 25%）`, rareNotLast.length === 0 && rareN / rest.length <= 0.32, list(rareNotLast));
   const demoNo = [...DEMO].filter((id) => D.monsters[id] && !(D.monsters[id].drops && D.monsters[id].drops.rare));
   const demoItems = [...DEMO].map((id) => D.monsters[id] && D.monsters[id].drops && D.monsters[id].drops.rare && D.monsters[id].drops.rare.item).filter(Boolean);
-  ok(`縦切りの 22 体すべてがレア枠（品はみな違う: ${new Set(demoItems).size}）`, demoNo.length === 0 && new Set(demoItems).size === demoItems.length, list(demoNo));
+  // 2 回目（オーナー 2026-09-27「普通の雑魚は多くはレアっつっても消耗品でいいよ」）: 3 分の 2 以上が消耗品、装備は当たりの 5〜7 体。
+  // 消耗品は重なってよい。装備のレアは 1 体 1 品
+  const demoGear = demoItems.filter((id) => D.items[id] && D.items[id].slot !== 'use');
+  ok(`縦切りの 22 体すべてがレア枠（消耗品 ${demoItems.length - demoGear.length}・装備 ${demoGear.length}、装備はみな違う）`,
+    demoNo.length === 0 && demoItems.length - demoGear.length >= 15 && demoGear.length >= 5 && demoGear.length <= 7 && new Set(demoGear).size === demoGear.length, list(demoNo));
   const superBad = normal.filter(([id, m]) => m.drops && m.drops.super && !last5.has(id) && !/^(book_3|paper_4)$/.test(id)).map((x) => x[0]);
   ok(`super の枠は 5 段の系統の最後など（${superN} 体、${(100 * superN / normal.length).toFixed(0)}%、目安 9%）`, superBad.length === 0 && superN / normal.length <= 0.15, list(superBad));
 }

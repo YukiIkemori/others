@@ -508,7 +508,8 @@ section('slice rare drops: grade rare reaches the result (★ and the rare jingl
   const rw = eng.computeRewards();
   R.Mon.setRng(R.Mon.mkRng('after-rare'));
   const rare = rw.drops.find((d) => d.slot === 'rare');
-  ok('jelly_1 rare slot drops ac_r1_int with grade rare', !!rare && rare.item === 'ac_r1_int' && rare.grade === 'rare', rw.drops);
+  // a consumable rare (owner 2026-09-27: 「普通の雑魚は多くはレアっつっても消耗品でいいよ」) is still shown as rare (★ and jingle)
+  ok('jelly_1 rare slot drops i_ether2 with grade rare', !!rare && rare.item === 'i_ether2' && rare.grade === 'rare', rw.drops);
   // src/systems/battle/result.js: any drop of grade rare/super → R.Audio.jingle('rare' | 'superrare')
   ok('the rare / superrare jingles exist (R.DB.music)', !!(DB.music && DB.music.rare && DB.music.rare.jingle && DB.music.superrare));
 }

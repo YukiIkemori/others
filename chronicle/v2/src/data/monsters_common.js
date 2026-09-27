@@ -312,13 +312,16 @@
   if (R.DB.monsters.jelly_1 && R.DB.monsters.jelly_1.phys) R.DB.monsters.jelly_1.phys.blunt = 0.75;
   // 縦切りのレア枠を戻す（オーナー 2026-09-27「レアがめっきり減ったねえ……。楽しみがちょっとないかも」）。
   // STATS_REWORK §10.1 の「レア枠は系統の最後の段だけ」で縦切りの 11 系統の段 1〜2 がレア 0 になっていた → 段 1〜2 の全部に
-  // T1 の帯のレア（店の T0〜T1 より強いか、店に無い効果）を 1 体 1 品。率は段 1 が K.DROP の既定 32、たまに混ざる段 2 は 16（枠ごと。既定は変えない）。
+  // レアは店の T0〜T1 より強いか、店に無い品（装備は T1 の帯のレア）。率は段 1 が K.DROP の既定 32、たまに混ざる段 2 は 16（枠ごと。既定は変えない）。
   // 盗み専用は約 3 分の 1 の 7 体（率 32、items_steal.js の T2 の 7 品）。
   // 見込み（sim_loot の H7）: 縦切り 1 周でレアのドロップ 最短の道 約 3 回〜自動の通し（R1、迷い・やり直し込み）約 12 回、ふつうの 1 周で 5〜7 回。
   // 森の系統は monsters_forest.js、オオカミは monsters_snow.js
+  // 2 回目（オーナー 2026-09-27「普通の敵さ、全員が装備じゃなくていいからね、装備溢れちゃうし。普通の雑魚は多くはレアっつっても消耗品でいいよ」）:
+  // 22 体のうち 16 体は消耗品（縦切りの店 T0〜T1 に無い・より強い品。同じ品が別の魔物と重なってもよい）、装備は当たりの 6 体だけ
+  // （段 2 の武器 5 ＋ 浜ガニの甲羅盾）。外した装備のレアは宝箱 p_rare に戻る（pools.js は魔物が落とす品だけを外す）
   const DEMO_RARE = {
-    jelly_1: 'ac_r1_int', jelly_2: 'w_bow_r1', rat_1: 'ft_rat_sandal', rat_2: 'hn_r1_dex', seabird_1: 'hd_r1_dex', seabird_2: 'w_sword_r1',
-    crab_1: 'sh_crab_shell', crab_2: 'w_sword_coral', bat_1: 'ac_bat_fang', bat_2: 'w_greatsword_r1m',
+    jelly_1: 'i_ether2', jelly_2: 'w_bow_r1', rat_1: 'i_bomb', rat_2: 'i_phoenix', seabird_1: 'i_horn', seabird_2: 'i_lifedew',
+    crab_1: 'sh_crab_shell', crab_2: 'w_sword_coral', bat_1: 'i_elixir', bat_2: 'i_grace',
   };
   const DEMO_STEAL = { rat_1: 'ac_st_rat_pouch', crab_1: 'hd_st_beach_crab', seabird_2: 'ft_st_storm_gull' };
   for (const [id, item] of Object.entries(DEMO_RARE)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { rare: { item, rate: /_2$/.test(id) ? 16 : 32 } });

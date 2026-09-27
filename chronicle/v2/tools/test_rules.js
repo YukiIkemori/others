@@ -417,7 +417,13 @@ section('§10.1 drop slots and chest pools (A30)');
   // the ~25 % rule of §10.1 is counted over the rest
   const DEMO = new Set(['jelly', 'rat', 'seabird', 'crab', 'bat', 'bee', 'mushroom', 'plant', 'fairy', 'wolf', 'treant'].flatMap((l) => [l + '_1', l + '_2']));
   const mobs = Object.entries(DB.monsters).filter(([id, m]) => !/^(b_|rm_)/.test(id) && !(m.flags || []).includes('boss') && !(m.flags || []).includes('rare') && !DEMO.has(id));
-  ok('slice stage 1–2 monsters (22) all have a rare slot, each a different item', [...DEMO].every((id) => DB.monsters[id].drops.rare) && new Set([...DEMO].map((id) => DB.monsters[id].drops.rare.item)).size === 22);
+  // rework (owner 2026-09-27: 「普通の敵さ、全員が装備じゃなくていいからね、装備溢れちゃうし。普通の雑魚は多くはレアっつっても消耗品でいいよ」):
+  // ≥ 2/3 consumables (repeats allowed), gear only on 5–7 jackpot monsters, and those gear rares are distinct
+  const demoRare = [...DEMO].map((id) => DB.monsters[id].drops.rare && DB.monsters[id].drops.rare.item);
+  const demoGear = demoRare.filter((id) => id && DB.items[id] && DB.items[id].slot !== 'use');
+  ok('slice stage 1–2 monsters (22) all have a rare slot: ≥ 15 consumables, 5–7 distinct gear', demoRare.every(Boolean) && demoRare.length - demoGear.length >= 15 && demoGear.length >= 5 && demoGear.length <= 7 && new Set(demoGear).size === demoGear.length, { gear: demoGear });
+  const inPool = new Set(); for (const p of Object.values(DB.pools)) for (const t of p.tiers) for (const e of t) if (e.item) inPool.add(e.item);
+  ok('gear rares no slice monster drops any more are back in p_rare', ['ft_rat_sandal', 'ac_bat_fang', 'hd_mushroom_cap', 'w_bow_leaf', 'bd_marsh_coat', 'hd_star_hood', 'hn_mole_claw'].every((id) => DB.pools.p_rare.tiers[1].some((e) => e.item === id)));
   const rs = mobs.filter(([, m]) => m.drops && m.drops.rare).length / mobs.length, ss = mobs.filter(([, m]) => m.drops && m.drops.super).length / mobs.length;
   ok('rare slots on about 25% of normal monsters, super about 9%', rs >= 0.2 && rs <= 0.3 && ss >= 0.06 && ss <= 0.12, { rs, ss });
   const T = require('./port/trim_10_1.json');
