@@ -149,6 +149,7 @@
     const r = await ev.battle('tr_b_sandking', { boss: true });
     ev.mapBgm();
     if (r !== 'win') return;
+    await ev.npc('hazal_king').hide();   // 王の霊（cond: desert_king）は、崩れ落ちる語りの後で浮かび上がらせる
     ev.setFlag('desert_king');
     const named = ev.flag('desert_named');
     if (named) {
@@ -156,6 +157,7 @@
     } else {
       await ev.say(null, '砂の王は膝をつき、\n包帯の下から砂がこぼれ落ちた。');
     }
+    await ev.appear('hazal_king', { ms: 700 });
     await ev.say('npc_hazal', '……わが名を……だれか……。', HAZAL);
     ev.sfx('quill');
     if (X().glyphs(ev) >= 3 || named) await ev.say(null, '{hero}は、年代記を開いて\n王の名を書いた。\n「ハザル」と。');

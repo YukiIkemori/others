@@ -1,7 +1,7 @@
 // FIELD — NPC（V2_PLAN §2.5.9、A3）: 立ち・歩き回り（wander、radius で広さ）・決まった道（route、{route, wait, speed}）、押し続けると 1 歩よける・
 // 動けなければ入れ替わる・しばらくして戻る。pushable:false は動かない。歩き回る NPC は逃げ場を 2 マス未満にしない
 // （周りの通れるマスが 3 つ以上ある所にしか入らない）。話すときは一行の方を向く。
-//   R.Field.npc(id) → {move(path, {speed}), face(dir), act(pose), hide(), show(), setPos(x, y)}（どれも Promise）
+//   R.Field.npc(id) → {move(path, {speed}), face(dir), act(pose), hide(), show(), appear({ms, from, speed, dir}), leave({steps, path, ms}), setPos(x, y)}（どれも Promise）
 //   立っている人の小さな動き（オーナーの依頼 2026-09-27）: 立ち止まった人は息をする（layers.js が 1 px 上下、人ごとに位相と速さ）。
 //   動かない人（move:'still' か move なし）は 3〜8 秒ごとに隣の向きをちらっと見て 1〜2 秒で戻る（n.glance = 見た目の向きだけ。
 //   n.dir は変えないので、話す・イベントの向きはそのまま）。見回さない人: def.fixedDir、門番・見張り（id / look に guard・gate・watch）、
@@ -37,8 +37,17 @@
     S.partyShown = [];
     F._npcVis();
   };
+  // cond（地図の条件）が、地図を見ている間に偽 → 真になった人は、パッと出さずに薄く浮かび上がる（APPEAR_MS）。
+  // 地図に入ったとき（_initNpcs・入る途中）と、hide/show で出し入れした人は今までどおりすぐ
+  const APPEAR_MS = 400;
   F._npcVis = function () {
-    for (const n of S.npcs || []) n.vis = !n.hidden && (!n.def.cond || R.State.check(n.def.cond));
+    for (const n of S.npcs || []) {
+      const ok = !n.def.cond || R.State.check(n.def.cond);
+      const was = n.vis;
+      n.vis = !n.hidden && ok;
+      if (n.vis && !was && n.condOk === false && !S.entering && !n.party) { fadeOf(n, 1, APPEAR_MS); n.fade.from = 0; n.fadeDone = null; }
+      n.condOk = ok;
+    }
   };
 
   /** 人（一行・隊列・NPC）のいるマス */
@@ -191,7 +200,7 @@
     Promise.resolve(p).then(done, (e) => { done(); console.error(e); });
   };
 
-  const DUMMY = { move: async () => {}, face: async () => {}, act: async () => {}, hide: async () => {}, show: async () => {}, setPos: async () => {} };
+  const DUMMY = { move: async () => {}, face: async () => {}, act: async () => {}, hide: async () => {}, show: async () => {}, appear: async () => {}, leave: async () => {}, setPos: async () => {} };
   F.npc = function (id) {
     const n = S.npcById && S.npcById[id];
     if (!n) { R.warn('Field.npc: no npc ' + id + ' on ' + (S.map && S.map.id)); return DUMMY; }
@@ -216,7 +225,38 @@
       async face(dir) { if (DIRS[dir]) { n.dir = dir; n.faced = true; n.glance = null; } },   // イベントが向きを決めた人は見回さない
       async act(pose, o) { const ms = (o && o.ms) || 700; n.pose = { name: pose, until: R.Engine.time + ms }; await R.wait(ms); },
       async hide() { n.hidden = true; F._npcVis(); },
-      async show() { n.hidden = false; n.fade = null; F._npcVis(); },
+      async show() { n.hidden = false; n.fade = null; n.fadeDone = null; F._npcVis(); },
+      /**
+       * 現れる（leave の逆）: 出して、濃さ 0 から o.ms（既定 400）かけて浮かび上がる。
+       * o.from = [x, y] なら先にそこへ置き、今の所（home）まで歩きながら浮かび上がる。o.speed = 歩く速さ
+       */
+      async appear(o) {
+        o = o || {};
+        n.script++;
+        try {
+          await idle();
+          const home = { x: n.x, y: n.y, dir: n.dir };
+          if (Array.isArray(o.from)) { n.mv = null; n.x = o.from[0]; n.y = o.from[1]; }
+          n.hidden = false;
+          F._npcVis();
+          const ms = STEP_MS / (o.speed || 1);
+          const steps = Math.abs(home.x - n.x) + Math.abs(home.y - n.y);
+          const fadeMs = o.ms || (steps ? Math.max(400, ms * steps * 0.8) : 400);
+          fadeOf(n, 1, fadeMs);
+          n.fade.from = 0; n.fadeDone = null;
+          const t0 = R.Engine.time;
+          while (n.x !== home.x || n.y !== home.y) {
+            const dx = Math.sign(home.x - n.x), dy = Math.sign(home.y - n.y);
+            stepTo(n, n.x + (dx || 0), n.y + (dx ? 0 : dy), ms);
+            await idle();
+          }
+          if (steps) { n.dir = o.dir || home.dir; n.faced = true; n.glance = null; }
+          else if (o.dir && DIRS[o.dir]) { n.dir = o.dir; n.faced = true; n.glance = null; }
+          const left = fadeMs - (R.Engine.time - t0);
+          if (left > 0) await R.wait(left + 20);
+        } finally { n.script--; }
+        n.fade = null; n.fadeDone = null;
+      },
       /**
        * 立ち去る（持ち主 2026-09-27: 話が終わってパッと消さない）: 背を向けて数歩歩き、歩きながら薄れて消える。
        * o.path があればその道を歩く。無ければ主人公から離れる向きへ歩ける所を o.steps（既定 3）マスまで。o.ms = 薄れる時間

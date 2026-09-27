@@ -6,8 +6,11 @@
 // 1. 筋の閉包: 始まり（DB.config.start）から、地図の上で届くイベントを meta.needs がそろった順に「走らせ」（meta.gives を当てる）、
 //    何も増えなくなるまで回す。ピム（送る／連れる）× 小鹿（手当て／そっと）の 4 通りで、どれも clearRegion('r_forest') と story_t1 に着く。
 // 2. 必須の物: 同じ閉包を「隠し通路を通らない・寄り道のマップ（optional）に入らない・依頼（q_*）と小さな遊びを走らせない」で回しても着く。
-// 3. 全マップの到達: 縦切りのマップすべてに、どこかの時点で入れる。
-// 4. 閉じた道: cond つきの出口・扉・階段が、閉包のどこかの時点で通れる（通れないまま終わる物の一覧）。
+// 3. 全マップの到達: 縦切りの錠（DB.config.slice）を外した全体の筋で、マップすべてにどこかの時点で入れる。
+//    3b. 縦切りの範囲: 錠をかけたまま（本物の config）の筋は、峠の番人（guard_south / guard_north）で止まり、
+//        砂漠・雪原（SLICE_OUT）のマップには入らず、それ以外のマップにはすべて入れる。
+// 4. 閉じた道: cond つきの出口・扉・階段が、（錠を外した）閉包のどこかの時点で通れる（通れないまま終わる物の一覧）。
+//    2b・2c・3・4 は tools/lib/routes.js と同じく、同じ R の中だけ slice を外して回し、終わったら元へ戻す（restore）。
 // 5. 縦切りの閉じ方（DB.config.slice）: {slice:true} の tilePatches は見える物（崖崩れ・岩）で埋め、3 マス以内に番人（cond {slice:true}）がいる。
 //    見えない壁（歩ける素材のまま solid・素材の無い legend）は 0。
 'use strict';
@@ -18,6 +21,13 @@ const { ok, section, done } = require('../lib/testkit');
 const argv = process.argv.slice(2);
 const VERBOSE = argv.includes('--verbose');
 let R = null, M = null;
+/** 縦切り（slice）では峠の番人の先にある地方（3b） */
+const SLICE_OUT = ['r_desert', 'r_snow'];
+let SLICE0 = null;
+/** 縦切りの錠を外す（同じ R の中だけ。本物の config のファイルは変えない） */
+function sliceOff() { if (SLICE0 === null) SLICE0 = !!(R.DB.config && R.DB.config.slice); if (R.DB.config) R.DB.config.slice = false; R.MapUtil.invalidate(); }
+/** sliceOff で外した錠を元へ */
+function restore() { if (SLICE0 !== null && R.DB.config) R.DB.config.slice = SLICE0; SLICE0 = null; R.MapUtil.invalidate(); }
 /** R を渡すと、その R で閉包を回す（check_springs・sim_zones --segments が同じ R で使う） */
 function init(r) { R = r || require('../lib/load')({ quiet: true }); M = require('../lib/maps').create(R); return { R, M }; }
 const K = (x, y, lv) => x + ',' + y + ',' + (lv || 0);
@@ -208,43 +218,60 @@ function main() {
     const tag = `pim=${v.ch_forest_pim} fawn=${v.ch_forest_fawn}`;
     ok(`${tag}: 隠し通路と寄り道なしで clearRegion と story_t1`, r.cleared && r.t1, { cleared: r.cleared, t1: r.t1, last: r.trace.slice(-6) });
   }
-  // 縦切りの後に作った地方: 雪原（regions の slice の錠が外れていれば）。昔話の選び方 3 通り（寄り道ありを 1 本・なしを 2 本）
-  if (R.DB.regions.r_snow && !R.DB.regions.r_snow.slice) {
-    section('2b. 雪原の閉包（clearRegion(\'r_snow\')）');
-    for (const [tale, restricted] of [['dragon', false], ['hunter', true], ['fire_child', true]]) {
-      const r = closure({ variant: Object.assign({}, variants[0], { ch_snow_tale: tale, ch_snow_write: 'pain' }), restricted });
-      ok(`昔話=${tale}${restricted ? '（隠し通路・寄り道・依頼なし）' : ''}: 籠城 → 夜明け → 峰 → clearRegion('r_snow')`, !!(r.flags.snow_siege_done && r.flags.snow_dawn && r.flags.cleared_r_snow), { siege: !!r.flags.snow_siege_done, dawn: !!r.flags.snow_dawn, cleared: !!r.flags.cleared_r_snow });
+  // ここから 2b・2c・3・4 は全体の筋: 縦切りの錠を外して回す（終わったら restore）
+  sliceOff();
+  let open = null;
+  try {
+    // 縦切りの後に作った地方: 雪原（regions の slice の錠が外れていれば）。昔話の選び方 3 通り（寄り道ありを 1 本・なしを 2 本）
+    if (R.DB.regions.r_snow && !R.DB.regions.r_snow.slice) {
+      section('2b. 雪原の閉包（clearRegion(\'r_snow\')）');
+      for (const [tale, restricted] of [['dragon', false], ['hunter', true], ['fire_child', true]]) {
+        const r = closure({ variant: Object.assign({}, variants[0], { ch_snow_tale: tale, ch_snow_write: 'pain' }), restricted });
+        ok(`昔話=${tale}${restricted ? '（隠し通路・寄り道・依頼なし）' : ''}: 籠城 → 夜明け → 峰 → clearRegion('r_snow')`, !!(r.flags.snow_siege_done && r.flags.snow_dawn && r.flags.cleared_r_snow), { siege: !!r.flags.snow_siege_done, dawn: !!r.flags.snow_dawn, cleared: !!r.flags.cleared_r_snow });
+      }
     }
-  }
-  // 砂漠（regions の slice の錠が外れていれば）: 鷹団 3 通り × 近道／遠回り、寄り道あり／なし
-  if (R.DB.regions.r_desert && !R.DB.regions.r_desert.slice) {
-    section('2c. 砂漠の閉包（clearRegion(\'r_desert\')）');
-    for (const hawk of ['fight', 'water', 'pay']) for (const route of ['short', 'long']) for (const restricted of [false, true]) {
-      if (restricted && hawk !== 'water') continue;
-      const r = closure({ variant: Object.assign({}, variants[0], { ch_desert_hawk: hawk, ch_desert_route: route, ch_desert_write: 'pain' }), restricted });
-      ok(`鷹団=${hawk} 道=${route}${restricted ? '（隠し通路・寄り道・依頼なし）' : ''}: 隊商 → 王墓 → 砂の王 → clearRegion('r_desert')`,
-        !!(r.flags.desert_camp3_done && r.flags.desert_worm && r.flags.desert_king && r.flags.cleared_r_desert && r.flags.desert_finale_done),
-        { camp3: !!r.flags.desert_camp3_done, worm: !!r.flags.desert_worm, king: !!r.flags.desert_king, cleared: !!r.flags.cleared_r_desert });
+    // 砂漠（regions の slice の錠が外れていれば）: 鷹団 3 通り × 近道／遠回り、寄り道あり／なし
+    if (R.DB.regions.r_desert && !R.DB.regions.r_desert.slice) {
+      section('2c. 砂漠の閉包（clearRegion(\'r_desert\')）');
+      for (const hawk of ['fight', 'water', 'pay']) for (const route of ['short', 'long']) for (const restricted of [false, true]) {
+        if (restricted && hawk !== 'water') continue;
+        const r = closure({ variant: Object.assign({}, variants[0], { ch_desert_hawk: hawk, ch_desert_route: route, ch_desert_write: 'pain' }), restricted });
+        ok(`鷹団=${hawk} 道=${route}${restricted ? '（隠し通路・寄り道・依頼なし）' : ''}: 隊商 → 王墓 → 砂の王 → clearRegion('r_desert')`,
+          !!(r.flags.desert_camp3_done && r.flags.desert_worm && r.flags.desert_king && r.flags.cleared_r_desert && r.flags.desert_finale_done),
+          { camp3: !!r.flags.desert_camp3_done, worm: !!r.flags.desert_worm, king: !!r.flags.desert_king, cleared: !!r.flags.cleared_r_desert });
+      }
     }
-  }
-  section('3. 全マップの到達');
-  const maps = M.sliceMaps();
-  const miss = maps.filter((m) => !full.visited.has(m));
-  ok(`縦切りのマップ ${maps.length} 枚すべてに入れる`, miss.length === 0, miss);
-  report.unreached = miss;
-  section('4. 閉じた道（cond つきの出入り口）');
-  const never = [];
-  for (const mid of maps) {
-    if (!full.visited.has(mid)) continue;
-    for (const p of M.portals(mid, { all: true })) {
-      if (p.cond == null) continue;
-      if (!full.portalsOpen.has(mid + ':' + p.x + ',' + p.y)) never.push(`${mid} ${p.kind} ${p.x},${p.y} → ${p.to.map} cond ${JSON.stringify(p.cond)}`);
+    section('3. 全マップの到達（縦切りの錠を外した全体の筋）');
+    open = closure({ variant: Object.assign({}, variants[0], { ch_snow_tale: 'dragon', ch_snow_write: 'pain', ch_desert_hawk: 'water', ch_desert_route: 'long', ch_desert_write: 'pain' }) });
+    const maps = M.sliceMaps();
+    const miss = maps.filter((m) => !open.visited.has(m));
+    ok(`マップ ${maps.length} 枚すべてに入れる`, miss.length === 0, miss);
+    report.unreached = miss;
+    section('4. 閉じた道（cond つきの出入り口）');
+    const never = [];
+    for (const mid of maps) {
+      if (!open.visited.has(mid)) continue;
+      for (const p of M.portals(mid, { all: true })) {
+        if (p.cond == null) continue;
+        if (!open.portalsOpen.has(mid + ':' + p.x + ',' + p.y)) never.push(`${mid} ${p.kind} ${p.x},${p.y} → ${p.to.map} cond ${JSON.stringify(p.cond)}`);
+      }
     }
-  }
-  // 縦切りで閉じたままにする物（slice）は除く
-  const neverReal = never.filter((s) => !/"slice":true/.test(s));
-  ok('cond つきの出入り口は、筋のどこかで通れるようになる', neverReal.length === 0, neverReal);
-  report.neverOpen = neverReal;
+    // 縦切りで閉じたままにする物（slice）は除く
+    const neverReal = never.filter((s) => !/"slice":true/.test(s));
+    ok('cond つきの出入り口は、筋のどこかで通れるようになる', neverReal.length === 0, neverReal);
+    report.neverOpen = neverReal;
+  } finally { restore(); }
+  section('3b. 縦切りの範囲（slice のまま: 峠の番人で止まる）');
+  ok('restore で DB.config.slice が戻る', R.DB.config.slice === true);
+  const demo = M.sliceMaps();
+  const outReached = demo.filter((m) => full.visited.has(m) && SLICE_OUT.includes(R.DB.maps[m].region));
+  const inMissed = demo.filter((m) => !full.visited.has(m) && !SLICE_OUT.includes(R.DB.maps[m].region));
+  ok(`縦切りの筋は ${SLICE_OUT.join('・')} のマップに入らない`, outReached.length === 0, outReached);
+  ok('縦切りの範囲のマップにはすべて入れる', inMissed.length === 0, inMissed);
+  const world = R.DB.maps.world;
+  const guards = ['guard_south', 'guard_north'].map((id) => (world && world.npcs || []).find((n) => n.id === id));
+  ok('峠の番人（guard_south / guard_north）が縦切りのときだけ立つ（cond {slice:true}）', guards.every((g) => g && g.cond && g.cond.slice === true && R.State.check(g.cond)));
+  report.demo = { outReached, inMissed };
   section('5. 縦切りの閉じ方（DB.config.slice）');
   ok('DB.config.slice = true', R.DB.config.slice === true);
   const sc = sliceClosure();
@@ -258,5 +285,5 @@ function main() {
   }
   done('progress');
 }
-module.exports = { init, closure: (o) => { if (!R) init(); return closure(o); }, reachAll };
+module.exports = { init, closure: (o) => { if (!R) init(); return closure(o); }, reachAll, SLICE_OUT };
 if (require.main === module) main();

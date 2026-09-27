@@ -135,6 +135,57 @@ async function main() {
   R.UIK.Message.say = sayOrig;
   delete R.DB.events.__party_say; delete R.DB.events.__party_stay;
 
+  section('現れる（npc.appear / ev.appear / cond で出る人は浮かび上がる）');
+  const labDef = R.DB.maps.field_lab;
+  const labNpcs0 = labDef.npcs;
+  labDef.npcs = labNpcs0.concat([
+    { id: 'lab_ghost', look: 'npc_man_1', x: 10, y: 6, dir: 's', move: 'still', pushable: false, cond: 'lab_ghost_on', talk: { lines: [{ text: '……' }] } },
+    { id: 'lab_walker', look: 'npc_man_1', x: 16, y: 7, dir: 's', move: 'still', pushable: false, talk: { lines: [{ text: '……' }] } },
+  ]);
+  delete R.Game.flags.lab_ghost_on;
+  await enter('field_lab', 4, 10, 'e');
+  const gh = S.npcById.lab_ghost;
+  ok('cond false on load → not shown, no fade', gh && !gh.vis && !gh.fade);
+  R.Game.flags.lab_ghost_on = true; R.emit('flag', { id: 'lab_ghost_on', v: true });
+  ok('cond turns true on the map → fades in from 0', gh.vis && gh.fade && R.Field._npcAlpha(gh) === 0, gh.fade);
+  await settle(200);
+  const mid = R.Field._npcAlpha(gh);
+  ok('… half way through the fade', mid > 0.2 && mid < 0.8, mid);
+  await settle(300);
+  ok('… fully visible at alpha 1 after ~400 ms', gh.vis && !gh.fade && R.Field._npcAlpha(gh) === 1);
+  await enter('field_lab', 4, 10, 'e');
+  ok('entering with the cond already true → shown at once (no fade on load)', S.npcById.lab_ghost.vis && !S.npcById.lab_ghost.fade);
+  // appear(): 隠した人を出す
+  const wk2 = S.npcById.lab_walker;
+  await R.Field.npc('lab_walker').hide();
+  ok('hide() → not visible', !wk2.vis);
+  let apDone = false;
+  R.Field.npc('lab_walker').appear({ ms: 400 }).then(() => { apDone = true; });
+  await flush();
+  ok('appear() un-hides and starts at alpha 0', wk2.vis && !wk2.hidden && R.Field._npcAlpha(wk2) === 0);
+  await settle(200);
+  ok('… fading in', R.Field._npcAlpha(wk2) > 0 && R.Field._npcAlpha(wk2) < 1 && !apDone, R.Field._npcAlpha(wk2));
+  await settle(400);
+  ok('… done: visible at alpha 1, same tile', apDone && wk2.vis && !wk2.fade && R.Field._npcAlpha(wk2) === 1 && same([wk2.x, wk2.y], [16, 7]));
+  // appear({from}): そこから今の所へ歩きながら浮かび上がる
+  await R.Field.npc('lab_walker').hide();
+  apDone = false;
+  R.Field.npc('lab_walker').appear({ from: [19, 7] }).then(() => { apDone = true; });
+  await flush();
+  ok('appear({from}) starts at from, alpha 0', same([wk2.x, wk2.y], [19, 7]) || (wk2.mv && wk2.mv.fx === 19 && wk2.mv.fy === 7), [wk2.x, wk2.y]);
+  await settle(500);
+  ok('… walking home while fading in', !apDone && R.Field._npcAlpha(wk2) > 0 && R.Field._npcAlpha(wk2) < 1, R.Field._npcAlpha(wk2));
+  await settle(1200);
+  ok('… arrives at its tile at alpha 1', apDone && same([wk2.x, wk2.y], [16, 7]) && !wk2.fade && R.Field._npcAlpha(wk2) === 1 && wk2.vis, [wk2.x, wk2.y]);
+  // ev.appear（ids 配列）
+  await R.Field.npc('lab_walker').hide(); await R.Field.npc('lab_ghost').hide();
+  R.DB.events.__appear = { run: async (ev) => { await ev.appear(['lab_walker', 'lab_ghost'], { ms: 300 }); } };
+  await drive(R.Events.run('__appear', {}), 1500);
+  ok('ev.appear(ids) brings both back at alpha 1', ['lab_walker', 'lab_ghost'].every((id) => S.npcById[id].vis && R.Field._npcAlpha(S.npcById[id]) === 1));
+  delete R.DB.events.__appear;
+  labDef.npcs = labNpcs0;
+  delete R.Game.flags.lab_ghost_on;
+
   section('立っている人の小さな動き（見回す・息）');
   await enter('field_lab', 2, 12, 's');
   const lp = S.npcById.lab_push, lr = S.npcById.lab_rock;

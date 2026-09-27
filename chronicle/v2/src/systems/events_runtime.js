@@ -265,6 +265,19 @@
         }));
         guard();
       },
+      /** 現れる（leave の逆。薄く浮かび上がる）。ids は 1 人か配列。o = {ms, from: [x, y], speed, dir, stagger} */
+      async appear(ids, o) {
+        guard();
+        const list = [].concat(ids).filter(Boolean);
+        const st = (o && o.stagger) != null ? o.stagger : 140;
+        const self = this;
+        await Promise.all(list.map(async (id, i) => {
+          if (i && st) await self.wait(i * st);
+          const h = self.npc(id);
+          await (h.appear ? h.appear(o) : h.show());
+        }));
+        guard();
+      },
       async partyShow(id, o) { guard(); if (!fieldOn()) return []; const r = await R.Field.partyShow(id, o || {}); guard(); return r; },
       async partyHide(id, o) { guard(); if (!fieldOn()) return []; const r = await R.Field.partyHide(id, o || {}); guard(); return r; },
       guest(look) { guard(); R.Field.setGuest(look ? { id: look, look } : null); },
