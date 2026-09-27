@@ -37,7 +37,7 @@ sys.path.insert(0, TOOLS)
 import bodyscale  # noqa: E402
 import gen_api  # noqa: E402
 import pixlib as P  # noqa: E402
-from gen_sheets import key_mask, components, sample_dots, style_block  # noqa: E402
+from gen_sheets import key_mask, components, sample_dots, style_block, best_phase, profile  # noqa: E402
 
 PIPE = os.path.dirname(TOOLS)
 DESIGN = os.path.dirname(PIPE)
@@ -190,13 +190,14 @@ def base_sheet(look):
     a = np.asarray(Image.open(pp).convert('RGBA')).copy()
     ours = tuple(PREFIX.values())
     m['frames'] = [f for f in m['frames'] if not f['id'].startswith(ours)]
-    for k in ANIM.values():
-        m['anims'].pop(k, None)
+    for k in list(m['anims']):
+        if k in ANIM.values() or k.startswith('attack8'):
+            m['anims'].pop(k, None)
     for k in list(m.get('poses', {})):
-        if k.startswith(ours) or k in ('anim_' + v for v in ANIM.values()):
+        if k.startswith(ours) or k in ('anim_' + v for v in ANIM.values()) or k.startswith('anim_attack8'):
             m['poses'].pop(k)
     for k in list(m.get('fps', {})):
-        if k in ('anim_' + v for v in ANIM.values()):
+        if k in ('anim_' + v for v in ANIM.values()) or k.startswith('anim_attack8'):
             m['fps'].pop(k)
     hmax = max(f['y'] + f['h'] for f in m['frames'])
     return a[:hmax], m
@@ -272,7 +273,7 @@ class Job:
         L = max(-k['ox'] for k in keeps.values())
         R = max(k['ox'] + k['img'].shape[1] for k in keeps.values())
         T = max(-k['oy'] for k in keeps.values())
-        mx = 18
+        mx = 28
         HX = int(max(L, 40) + mx)
         W = int(HX + max(R, 40) + mx)
         G = int(T + 12)           # feet line (the row just below the feet)
@@ -422,6 +423,7 @@ def cmd_norm(o):
     lay = job.layout()
     st = job.st()
     att = st['attempts'][-1] if not o.raw else next(a for a in st['attempts'] if a['raw'].endswith(os.path.basename(o.raw)))
+    lay.update(att['lay'])          # the layout the raw was made with
     normalise(job, os.path.join(job.dir, att['raw']), att['pitch'], lay)
 
 
@@ -518,14 +520,38 @@ def normalise(job, raw_path, p, lay):
         a = P.remap(dots, pal)
         a = P.cleanup(a, pal, passes=1)
         a = clean_parts(a)
-        cell = np.zeros((H, W, 4), np.uint8)
         dx, dy = int(gx0 - x0), int(gy0 - y0)
+        pf = job.plan.get('prefill', {}).get(i + 1)
+        gscale = rescale = None
+        if pf:
+            # size vs its guide (the key frame it was redrawn from): the model tends to draw new poses smaller.
+            # Too small / big -> sample the raw again on a finer / coarser lattice (the raw is 8x the art pixel)
+            gref = bodyscale.head_crop(lay['keeps'][pf]['img'])
+            m = bodyscale.match(trim(a)[0], gref, rots=(0, -12, 12))[0]
+            gscale = m
+            if abs(m - 1) > 0.03 and 0.6 < m < 1.4:
+                qx, qy = sx * m, sy * m
+                crop = raw.crop(box)
+                phx, phy = best_phase(profile(crop, 0), qx, 0.25), best_phase(profile(crop, 1), qy, 0.25)
+                bx0, by0 = box[0] + phx - qx, box[1] + phy - qy
+                nx = int(np.ceil((box[2] - bx0) / qx))
+                ny = int(np.ceil((box[3] - by0) / qy))
+                pbox = (int(round(bx0)), int(round(by0)), int(round(bx0 + nx * qx)), int(round(by0 + ny * qy)))
+                b = lattice_sample(raw, mask, pbox, nx, ny)
+                b = P.cleanup(P.remap(b, pal), pal, passes=1)
+                b = clean_parts(b)
+                w0, h0 = a.shape[1], a.shape[0]
+                dx = int(round(dx + (w0 - b.shape[1]) / 2.0))
+                dy = int(dy + h0 - b.shape[0])
+                a = b
+                rescale = 1.0 / m
+                gscale = bodyscale.match(trim(a)[0], gref, rots=(0, -12, 12))[0]
+        cell = np.zeros((H, W, 4), np.uint8)
         h, w = a.shape[:2]
         # paste with clipping
         cx0, cy0 = max(0, dx), max(0, dy)
         cx1, cy1 = min(W, dx + w), min(H, dy + h)
         cell[cy0:cy1, cx0:cx1] = a[cy0 - dy:cy1 - dy, cx0 - dx:cx1 - dx]
-        pf = job.plan.get('prefill', {}).get(i + 1)
         pre = None
         if pf:
             k = lay['keeps'][pf]
@@ -533,7 +559,7 @@ def normalise(job, raw_path, p, lay):
             px = int(round(lay['HX'] + k['ox']))
             py = lay['G'] + k['oy']
             pre[py:py + k['img'].shape[0], px:px + k['img'].shape[1]] = k['img']
-        frames.append(dict(slot=i + 1, kind='new', img=cell, pre=pre))
+        frames.append(dict(slot=i + 1, kind='new', img=cell, pre=pre, gscale=gscale, rescale=rescale))
     register(job, lay, frames)
     # save
     for f in frames:
@@ -559,7 +585,7 @@ def lattice_sample(raw, mask, box, nx, ny):
         for i in range(nx):
             x0, x1 = int(round(i * W / nx)), int(round((i + 1) * W / nx))
             m = mk[y0:y1, x0:x1]
-            if m.size == 0 or m.mean() < 0.5:
+            if m.size == 0 or m.mean() < 0.4:
                 continue
             iy0, iy1 = y0 + (y1 - y0) // 4, y1 - (y1 - y0) // 4
             ix0, ix1 = x0 + (x1 - x0) // 4, x1 - (x1 - x0) // 4
@@ -616,9 +642,9 @@ def register(job, lay, frames):
         nb = [hs[j] for j in (prev, nxt) if j is not None]
         if not nb:
             continue
-        lo, hi = min(nb) - 4, max(nb) + 4
+        # the key frames are registered on one head x (HX); a new frame keeps at most +-2 px of its drawn lean
         hx = hs[i]
-        tgt = min(max(hx, lo), hi)
+        tgt = min(max(hx, lay['HX'] - 2), lay['HX'] + 2)
         sh = int(round(tgt - hx))
         if sh:
             f['img'] = np.roll(f['img'], sh, axis=1)
@@ -631,7 +657,7 @@ def register(job, lay, frames):
             f['checks'] = dict(ok=False, why='empty')
             continue
         hx, hy, s, err = f['head']
-        rel = s / s0
+        rel = f['gscale'] if f.get('gscale') is not None else s / s0
         ys = np.where(f['img'][..., 3].any(1))[0]
         xs = np.where(f['img'][..., 3].any(0))[0]
         why = []
@@ -650,7 +676,7 @@ def register(job, lay, frames):
             if sim > 0.75:
                 why.append('still a copy of the guide (%.2f)' % sim)
         f['checks'] = dict(ok=not why, why=', '.join(why), head_scale=round(rel, 3), head=[round(hx, 1), round(hy, 1)],
-                           height=int(ys.max() - ys.min() + 1), copy=None if sim is None else round(sim, 2), shift=[f.get('dx', 0), f.get('dy', 0)], err=round(err, 1))
+                           height=int(ys.max() - ys.min() + 1), rescaled=f.get('rescale') and round(f['rescale'], 3), copy=None if sim is None else round(sim, 2), shift=[f.get('dx', 0), f.get('dy', 0)], err=round(err, 1))
 
 
 def report(job, frames):
@@ -713,7 +739,10 @@ def cmd_apply(o):
         if action == 'attack':
             ent['weapon'] = info['weaponType']
             ent['fx_at'] = 'front'
-        m['anims'][ANIM[action]] = ent
+        # attack: attack8_<drawn weapon> — the engine plays it as its pose for that weapon (slash / smash / thrust / shoot)
+        # only while the drawn weapon is equipped (another weapon = the bare body + weapon image, not these frames)
+        name = 'attack8_' + info['weaponType'] if action == 'attack' else ANIM[action]
+        m['anims'][name] = ent
         y += lay['H']
     pp, jp = v2_paths(look)
     Image.fromarray(sheet).save(pp, optimize=True)
@@ -735,11 +764,13 @@ def load_anim(look, action):
     pp, jp = v2_paths(look)
     m = json.load(open(jp))
     a = np.asarray(Image.open(pp).convert('RGBA'))
-    an = m['anims'].get(ANIM[action])
+    an = m['anims'].get(ANIM[action]) or next((v for k, v in m['anims'].items() if action == 'attack' and k.startswith('attack8')), None)
     if not an:
         return None
     F = {f['id']: f for f in m['frames']}
     out = []
+    global an_
+    an_ = an
     for fid, ms in zip(an['frames'], an['ms']):
         f = F[fid]
         out.append((a[f['y']:f['y'] + f['h'], f['x']:f['x'] + f['w']], f['anchor'], ms, fid))
@@ -773,7 +804,7 @@ def cmd_preview(o):
         frames = [put(ia, idle['anchor'])] + [put(img, anc) for img, anc, ms, fid in seq]
         durs = [400] + [ms for _, _, ms, _ in seq]
         if action == 'victory':
-            lf = m['anims'][ANIM[action]].get('loop_from', 0)
+            lf = an_.get('loop_from', 0)
             loop = seq[lf:]
             for _ in range(2):
                 frames += [put(img, anc) for img, anc, ms, fid in loop]

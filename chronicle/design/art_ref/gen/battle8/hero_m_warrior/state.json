@@ -58,6 +58,7 @@
       23.5
      ],
      "height": 64,
+     "rescaled": null,
      "copy": null,
      "shift": [
       0,
@@ -71,20 +72,21 @@
     "kind": "new",
     "src": null,
     "checks": {
-     "ok": false,
-     "why": "head scale 0.837",
-     "head_scale": 0.837,
+     "ok": true,
+     "why": "",
+     "head_scale": 0.975,
      "head": [
-      53.9,
-      33.6
+      55.7,
+      25.2
      ],
-     "height": 58,
-     "copy": 0.08,
+     "height": 70,
+     "rescaled": 1.194,
+     "copy": 0.06,
      "shift": [
-      3,
+      6,
       0
      ],
-     "err": 27.2
+     "err": 26.3
     }
    },
    {
@@ -100,6 +102,7 @@
       31.9
      ],
      "height": 64,
+     "rescaled": null,
      "copy": null,
      "shift": [
       0,
@@ -113,20 +116,21 @@
     "kind": "new",
     "src": null,
     "checks": {
-     "ok": false,
-     "why": "head scale 0.750",
-     "head_scale": 0.75,
+     "ok": true,
+     "why": "",
+     "head_scale": 0.975,
      "head": [
-      54.8,
-      35.6
+      55.9,
+      25.6
      ],
-     "height": 57,
-     "copy": 0.07,
+     "height": 67,
+     "rescaled": 1.231,
+     "copy": 0.05,
      "shift": [
-      0,
-      10
+      3,
+      9
      ],
-     "err": 38.4
+     "err": 36.5
     }
    },
    {
@@ -134,20 +138,21 @@
     "kind": "new",
     "src": null,
     "checks": {
-     "ok": false,
-     "why": "head scale 0.737",
-     "head_scale": 0.737,
+     "ok": true,
+     "why": "",
+     "head_scale": 0.975,
      "head": [
-      53.6,
-      38.5
+      56.0,
+      29.6
      ],
-     "height": 46,
-     "copy": 0.07,
+     "height": 57,
+     "rescaled": 1.25,
+     "copy": 0.08,
      "shift": [
-      0,
+      2,
       9
      ],
-     "err": 26.9
+     "err": 26.1
     }
    },
    {
@@ -163,6 +168,7 @@
       24.4
      ],
      "height": 64,
+     "rescaled": null,
      "copy": null,
      "shift": [
       0,
@@ -177,19 +183,20 @@
     "src": null,
     "checks": {
      "ok": false,
-     "why": "head scale 0.787",
-     "head_scale": 0.787,
+     "why": "head scale 0.963",
+     "head_scale": 0.963,
      "head": [
-      52.2,
-      38.1
+      55.8,
+      28.2
      ],
-     "height": 47,
-     "copy": 0.07,
+     "height": 60,
+     "rescaled": 1.29,
+     "copy": 0.09,
      "shift": [
-      0,
-      13
+      5,
+      14
      ],
-     "err": 25.1
+     "err": 25.9
     }
    },
    {
@@ -197,20 +204,21 @@
     "kind": "new",
     "src": null,
     "checks": {
-     "ok": false,
-     "why": "head scale 0.800",
-     "head_scale": 0.8,
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
      "head": [
-      51.4,
-      31.2
+      55.9,
+      22.6
      ],
-     "height": 54,
-     "copy": 0.07,
+     "height": 63,
+     "rescaled": 1.25,
+     "copy": 0.09,
      "shift": [
-      0,
-      12
+      6,
+      13
      ],
-     "err": 22.0
+     "err": 43.4
     }
    },
    {
@@ -226,6 +234,7 @@
       23.5
      ],
      "height": 64,
+     "rescaled": null,
      "copy": null,
      "shift": [
       0,
