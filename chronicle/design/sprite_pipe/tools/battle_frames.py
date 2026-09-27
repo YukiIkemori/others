@@ -769,6 +769,25 @@ def cmd_apply(o):
         for f in st['frames']:
             pth = os.path.join(sdir, action, '%02d.png' % f['slot'])
             imgs[f['slot']] = np.asarray(Image.open(pth).convert('RGBA'))
+        drop = set(st.get('drop', []))
+        if drop:   # frames judged bad on review: left out, their time goes to the frame before
+            an0 = plan['anim']
+            sl2, ms2 = [], []
+            for sl, ms in zip(an0['slots'], an0['ms']):
+                if sl in drop:
+                    if ms2:
+                        ms2[-1] += ms
+                    continue
+                sl2.append(sl)
+                ms2.append(ms)
+            an2 = dict(an0, slots=sl2, ms=ms2)
+            for k in ('hit', 'release', 'loop_from'):
+                if k in an0:
+                    tgt = an0['slots'][an0[k]]
+                    while tgt in drop:
+                        tgt += 1
+                    an2[k] = sl2.index(tgt) if tgt in sl2 else min(an0[k], len(sl2) - 1)
+            plan = dict(plan, anim=an2)
         used = []
         for sl in plan['anim']['slots']:
             if sl not in used:
@@ -929,6 +948,10 @@ def main():
     s.add_argument('--out', required=True)
     s.add_argument('--scale', type=int, default=3)
     sub.add_parser('count')
+    s = sub.add_parser('drop', help='leave frames (slot numbers) out of the anim after review')
+    s.add_argument('look')
+    s.add_argument('action', choices=list(PLANS))
+    s.add_argument('slots', type=lambda t: [int(x) for x in t.split(',')] if t else [])
     o = ap.parse_args()
     if o.cmd == 'gen':
         cmd_gen(o)
@@ -938,6 +961,11 @@ def main():
         cmd_apply(o)
     elif o.cmd == 'preview':
         cmd_preview(o)
+    elif o.cmd == 'drop':
+        sp = os.path.join(STORE, o.look, 'state.json')
+        stt = json.load(open(sp))
+        stt[o.action]['drop'] = o.slots
+        json.dump(stt, open(sp, 'w'), indent=1, ensure_ascii=False)
     elif o.cmd == 'count':
         print(images_used())
 

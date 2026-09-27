@@ -1,0 +1,3 @@
+19:37:24 bartolo cast attempt 1: generating 3264x2016 (pitch 8, quality high)
+19:37:24 bartolo attack attempt 1: generating 3440x2096 (pitch 8, quality high)
+19:37:34 bartolo victory attempt 1: generating 3264x1568 (pitch 8, quality high)
