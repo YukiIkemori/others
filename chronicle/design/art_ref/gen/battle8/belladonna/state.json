@@ -1,0 +1,611 @@
+{
+ "victory": {
+  "attempts": [
+   {
+    "raw": "raw/victory_a1.png",
+    "pitch": 8,
+    "lay": {
+     "HX": 68,
+     "G": 98,
+     "W": 136,
+     "H": 101
+    },
+    "quality": "high",
+    "extra": "",
+    "t": "2026-09-27T20:03:12",
+    "secs": 70.4
+   }
+  ],
+  "frames": [
+   {
+    "slot": 1,
+    "kind": "keep",
+    "src": "idle_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      84.0,
+      63.5
+     ],
+     "height": 72,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 0.0
+    }
+   },
+   {
+    "slot": 2,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      86.3,
+      62.7
+     ],
+     "height": 85,
+     "rescaled": null,
+     "copy": 0.15,
+     "shift": [
+      0,
+      -2
+     ],
+     "err": 18.5
+    }
+   },
+   {
+    "slot": 3,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      84.5,
+      62.8
+     ],
+     "height": 97,
+     "rescaled": null,
+     "copy": 0.41,
+     "shift": [
+      0,
+      -2
+     ],
+     "err": 29.1
+    }
+   },
+   {
+    "slot": 4,
+    "kind": "keep",
+    "src": "victory_a",
+    "checks": {
+     "ok": false,
+     "why": "head scale 1.037",
+     "head_scale": 1.037,
+     "head": [
+      83.8,
+      64.0
+     ],
+     "height": 87,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 28.3
+    }
+   },
+   {
+    "slot": 5,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      85.5,
+      61.8
+     ],
+     "height": 93,
+     "rescaled": null,
+     "copy": 0.2,
+     "shift": [
+      0,
+      -2
+     ],
+     "err": 31.1
+    }
+   },
+   {
+    "slot": 6,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      83.7,
+      62.3
+     ],
+     "height": 93,
+     "rescaled": null,
+     "copy": 0.33,
+     "shift": [
+      0,
+      -2
+     ],
+     "err": 30.9
+    }
+   }
+  ],
+  "lay": {
+   "HX": 84,
+   "G": 122,
+   "W": 168,
+   "H": 125
+  },
+  "from_raw": "raw/victory_a1.png"
+ },
+ "attack": {
+  "attempts": [
+   {
+    "raw": "raw/attack_a1.png",
+    "pitch": 8,
+    "lay": {
+     "HX": 79,
+     "G": 84,
+     "W": 147,
+     "H": 87
+    },
+    "quality": "high",
+    "extra": "",
+    "t": "2026-09-27T20:03:17",
+    "secs": 88.2
+   }
+  ],
+  "frames": [
+   {
+    "slot": 1,
+    "kind": "keep",
+    "src": "idle_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      95.0,
+      49.5
+     ],
+     "height": 72,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 0.0
+    }
+   },
+   {
+    "slot": 2,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      95.0,
+      49.5
+     ],
+     "height": 72,
+     "rescaled": null,
+     "copy": 0.22,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 32.1
+    }
+   },
+   {
+    "slot": 3,
+    "kind": "keep",
+    "src": "windup",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 0.975,
+     "head": [
+      95.5,
+      48.2
+     ],
+     "height": 73,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 26.1
+    }
+   },
+   {
+    "slot": 4,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      97.5,
+      48.2
+     ],
+     "height": 73,
+     "rescaled": null,
+     "copy": 0.16,
+     "shift": [
+      -1,
+      0
+     ],
+     "err": 25.7
+    }
+   },
+   {
+    "slot": 5,
+    "kind": "keep",
+    "src": "thrust_ready",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.012,
+     "head": [
+      95.3,
+      48.7
+     ],
+     "height": 73,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 26.2
+    }
+   },
+   {
+    "slot": 6,
+    "kind": "keep",
+    "src": "thrust",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 0.975,
+     "head": [
+      95.5,
+      48.2
+     ],
+     "height": 73,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 25.0
+    }
+   },
+   {
+    "slot": 7,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      95.5,
+      48.2
+     ],
+     "height": 73,
+     "rescaled": null,
+     "copy": 0.49,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 25.5
+    }
+   },
+   {
+    "slot": 8,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      95.0,
+      49.5
+     ],
+     "height": 72,
+     "rescaled": null,
+     "copy": 0.61,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 9.4
+    }
+   },
+   {
+    "slot": 9,
+    "kind": "keep",
+    "src": "idle_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      95.0,
+      49.5
+     ],
+     "height": 72,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 0.0
+    }
+   }
+  ],
+  "lay": {
+   "HX": 95,
+   "G": 108,
+   "W": 179,
+   "H": 111
+  },
+  "from_raw": "raw/attack_a1.png"
+ },
+ "cast": {
+  "attempts": [
+   {
+    "raw": "raw/cast_a1.png",
+    "pitch": 8,
+    "lay": {
+     "HX": 71,
+     "G": 84,
+     "W": 139,
+     "H": 87
+    },
+    "quality": "high",
+    "extra": "",
+    "t": "2026-09-27T20:03:29",
+    "secs": 89.4
+   }
+  ],
+  "frames": [
+   {
+    "slot": 1,
+    "kind": "keep",
+    "src": "idle_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      87.0,
+      49.5
+     ],
+     "height": 72,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 0.0
+    }
+   },
+   {
+    "slot": 2,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      86.0,
+      55.5
+     ],
+     "height": 66,
+     "rescaled": null,
+     "copy": 0.12,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 19.9
+    }
+   },
+   {
+    "slot": 3,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      87.5,
+      53.2
+     ],
+     "height": 68,
+     "rescaled": null,
+     "copy": 0.12,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 23.3
+    }
+   },
+   {
+    "slot": 4,
+    "kind": "keep",
+    "src": "cast_b",
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.962",
+     "head_scale": 0.962,
+     "head": [
+      87.2,
+      53.0
+     ],
+     "height": 73,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 27.8
+    }
+   },
+   {
+    "slot": 5,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      88.7,
+      51.7
+     ],
+     "height": 76,
+     "rescaled": null,
+     "copy": 0.16,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 31.6
+    }
+   },
+   {
+    "slot": 6,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      85.5,
+      56.2
+     ],
+     "height": 65,
+     "rescaled": null,
+     "copy": 0.09,
+     "shift": [
+      5,
+      0
+     ],
+     "err": 28.0
+    }
+   },
+   {
+    "slot": 7,
+    "kind": "keep",
+    "src": "cast_a",
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.962",
+     "head_scale": 0.962,
+     "head": [
+      87.2,
+      49.0
+     ],
+     "height": 72,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 24.9
+    }
+   },
+   {
+    "slot": 8,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      85.2,
+      53.0
+     ],
+     "height": 68,
+     "rescaled": null,
+     "copy": 0.11,
+     "shift": [
+      3,
+      0
+     ],
+     "err": 30.2
+    }
+   },
+   {
+    "slot": 9,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      89.0,
+      49.5
+     ],
+     "height": 72,
+     "rescaled": null,
+     "copy": 0.16,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 17.6
+    }
+   }
+  ],
+  "lay": {
+   "HX": 87,
+   "G": 108,
+   "W": 171,
+   "H": 111
+  },
+  "from_raw": "raw/cast_a1.png"
+ }
+}
