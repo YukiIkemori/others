@@ -1,0 +1,42 @@
+{
+ "id": "rail",
+ "kind": "props",
+ "theme": "mine",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   33,
+   18
+  ],
+  "32": [
+   44,
+   24
+  ],
+  "40": [
+   55,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   16,
+   17
+  ],
+  "32": [
+   22,
+   23
+  ],
+  "40": [
+   28,
+   29
+  ]
+ },
+ "files": {
+  "24": "rail@24.png",
+  "32": "rail@32.png",
+  "40": "rail@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/mine_a.png"
+}

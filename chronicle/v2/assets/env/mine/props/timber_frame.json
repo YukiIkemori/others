@@ -1,0 +1,42 @@
+{
+ "id": "timber_frame",
+ "kind": "props",
+ "theme": "mine",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   46,
+   33
+  ],
+  "32": [
+   61,
+   44
+  ],
+  "40": [
+   76,
+   55
+  ]
+ },
+ "feet": {
+  "24": [
+   23,
+   32
+  ],
+  "32": [
+   30,
+   43
+  ],
+  "40": [
+   38,
+   54
+  ]
+ },
+ "files": {
+  "24": "timber_frame@24.png",
+  "32": "timber_frame@32.png",
+  "40": "timber_frame@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/mine_a.png"
+}

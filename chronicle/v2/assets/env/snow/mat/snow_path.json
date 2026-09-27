@@ -1,0 +1,18 @@
+{
+ "id": "snow_path",
+ "kind": "material",
+ "theme": "snow",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "snow_path@32.png",
+  "24": "snow_path@24.png",
+  "40": "snow_path@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/snow/snow_path.png",
+ "native_px": 7.0,
+ "colours": 40
+}

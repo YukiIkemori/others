@@ -1,0 +1,55 @@
+{
+ "id": "npc_night_guard",
+ "look": "npc_night_guard",
+ "name": "夜番の守衛",
+ "tier": "C",
+ "kind": "person",
+ "region": "star",
+ "group": "star_4",
+ "slot": "A",
+ "heightDots": {
+  "field": 49
+ },
+ "measureH": {
+  "field": 49
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#3A4050",
+ "mainHue": 225,
+ "mainName": "紺鼠",
+ "lantern": true,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_night_guard_1",
+  "npc_night_guard_2",
+  "npc_night_guard_3",
+  "npc_night_guard_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_night_guard_s1.png"
+ },
+ "pair_file": "npc_grp_star_4.png",
+ "proportion": {
+  "1": {
+   "neck": 0.3469387755102041,
+   "head_w": 0.40816326530612246,
+   "shoulder": 0.3520408163265306,
+   "neck_clear": 0.6015037593984962
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

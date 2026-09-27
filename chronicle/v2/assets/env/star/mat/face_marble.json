@@ -1,0 +1,23 @@
+{
+ "id": "face_marble",
+ "style": "marble",
+ "kind": "face",
+ "theme": "star",
+ "files": {
+  "32": "face_marble@32.png",
+  "24": "face_marble@24.png",
+  "40": "face_marble@40.png"
+ },
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "height": {
+  "24": 96,
+  "32": 128,
+  "40": 160
+ },
+ "foot32": 10,
+ "src": "design/art_ref/gen/env/mat/star/face_marble.png"
+}

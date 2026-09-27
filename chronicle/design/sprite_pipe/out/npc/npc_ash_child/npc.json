@@ -1,0 +1,55 @@
+{
+ "id": "npc_ash_child",
+ "look": "npc_ash_child",
+ "name": "火口の町の子ども",
+ "tier": "C",
+ "kind": "person",
+ "region": "ash",
+ "group": "ash_3",
+ "slot": "A",
+ "heightDots": {
+  "field": 36
+ },
+ "measureH": {
+  "field": 36
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#D07A3A",
+ "mainHue": 25,
+ "mainName": "橙",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_ash_child_1",
+  "npc_ash_child_2",
+  "npc_ash_child_3",
+  "npc_ash_child_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_ash_child_s1.png"
+ },
+ "pair_file": "npc_grp_ash_3.png",
+ "proportion": {
+  "1": {
+   "neck": 0.3888888888888889,
+   "head_w": 0.3888888888888889,
+   "shoulder": 0.4097222222222222,
+   "neck_clear": 0.6
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

@@ -20,3 +20,18 @@
 01:32:32   |   シート1 歩き: OK  ani_fawn_s1.png  ドット 8.00px → 描かれた格子のまま（32.0 ドット）
 01:32:32 sheet 1: 0 redo lines
 02:36:29 pipeline: sheets.py ../art_ref/gen/npc/grp_animal_2 --npc ani_hen --out out/npc/ani_hen
+02:36:56   |   - 向きの見本（configs/refs/ani_hen）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:36:56   | 
+02:36:56   | ■ シートの状態
+02:36:56   |   シート1 歩き: OK  ani_hen_s1.png  ドット 8.00px → 描かれた格子のまま（12.0 ドット）
+02:36:56   | 
+02:36:56   | packed field 57x68 | palette 49 + face 0
+02:36:56 pipeline: sheets.py ../art_ref/gen/npc/grp_animal_2 --npc ani_fawn --out out/npc/ani_fawn
+02:37:37   |   - 向きの見本（configs/refs/ani_fawn）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:37:37   | 
+02:37:37   | ■ シートの状態
+02:37:37   |   シート1 歩き: OK  ani_fawn_s1.png  ドット 8.00px → 描かれた格子のまま（32.0 ドット）
+02:37:37   | 
+02:37:37   | packed field 129x148 | palette 51 + face 0
+02:37:38 to_v2 ani_hen: ani_hen → /home/user/others/chronicle/v2/assets/sprites/ani_hen |   field: 12 frames
+02:37:40 to_v2 ani_fawn: ani_fawn → /home/user/others/chronicle/v2/assets/sprites/ani_fawn |   field: 12 frames

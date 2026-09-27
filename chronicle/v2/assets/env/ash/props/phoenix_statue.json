@@ -1,0 +1,42 @@
+{
+ "id": "phoenix_statue",
+ "kind": "props",
+ "theme": "ash",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   23,
+   33
+  ],
+  "32": [
+   31,
+   44
+  ],
+  "40": [
+   39,
+   55
+  ]
+ },
+ "feet": {
+  "24": [
+   12,
+   32
+  ],
+  "32": [
+   16,
+   43
+  ],
+  "40": [
+   19,
+   54
+  ]
+ },
+ "files": {
+  "24": "phoenix_statue@24.png",
+  "32": "phoenix_statue@32.png",
+  "40": "phoenix_statue@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/ash_a.png"
+}

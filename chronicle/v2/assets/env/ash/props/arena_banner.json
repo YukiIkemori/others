@@ -1,0 +1,42 @@
+{
+ "id": "arena_banner",
+ "kind": "props",
+ "theme": "ash",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   14,
+   33
+  ],
+  "32": [
+   18,
+   44
+  ],
+  "40": [
+   22,
+   55
+  ]
+ },
+ "feet": {
+  "24": [
+   7,
+   32
+  ],
+  "32": [
+   9,
+   43
+  ],
+  "40": [
+   11,
+   54
+  ]
+ },
+ "files": {
+  "24": "arena_banner@24.png",
+  "32": "arena_banner@32.png",
+  "40": "arena_banner@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/ash_a.png"
+}

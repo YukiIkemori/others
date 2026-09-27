@@ -1,0 +1,42 @@
+{
+ "id": "hook_lamp",
+ "kind": "props",
+ "theme": "mine",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   22,
+   33
+  ],
+  "32": [
+   29,
+   44
+  ],
+  "40": [
+   36,
+   55
+  ]
+ },
+ "feet": {
+  "24": [
+   11,
+   32
+  ],
+  "32": [
+   14,
+   43
+  ],
+  "40": [
+   18,
+   54
+  ]
+ },
+ "files": {
+  "24": "hook_lamp@24.png",
+  "32": "hook_lamp@32.png",
+  "40": "hook_lamp@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/mine_a.png"
+}

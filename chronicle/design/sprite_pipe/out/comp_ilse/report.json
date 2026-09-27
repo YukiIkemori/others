@@ -1,0 +1,1107 @@
+{
+ "char": "ilse",
+ "companion": "ilse",
+ "npc": null,
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/companion/ilse",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/ilse/comp_ilse_s1.png",
+   "size": [
+    3584,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x4",
+    "logical_cell": [
+     112,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 544.0,
+   "native_height_at_period": 68.0,
+   "scale_note": "描かれた格子のまま（68.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "ref_front": {
+     "size": [
+      42,
+      68
+     ],
+     "box": [
+      264,
+      152,
+      632,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_34": {
+     "size": [
+      42,
+      67
+     ],
+     "box": [
+      1160,
+      160,
+      1528,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_side_left": {
+     "size": [
+      40,
+      68
+     ],
+     "box": [
+      2064,
+      152,
+      2416,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_back": {
+     "size": [
+      41,
+      68
+     ],
+     "box": [
+      2952,
+      152,
+      3312,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_idle_left": {
+     "size": [
+      57,
+      63
+     ],
+     "box": [
+      200,
+      960,
+      688,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_face": {
+     "size": [
+      65,
+      82
+     ],
+     "box": [
+      1064,
+      808,
+      1616,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_palette": {
+     "size": [
+      72,
+      34
+     ],
+     "box": [
+      1936,
+      1000,
+      2544,
+      1304
+     ],
+     "air": 0,
+     "blur": 0.0
+    }
+   }
+  },
+  "2": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/ilse/comp_ilse_s2.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 400.0,
+   "native_height_at_period": 50.0,
+   "scale_note": "描かれた格子のまま（50.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      26,
+      49
+     ],
+     "box": [
+      200,
+      72,
+      440,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.38
+    },
+    "walk_down_1": {
+     "size": [
+      24,
+      50
+     ],
+     "box": [
+      848,
+      64,
+      1072,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.53,
+     "scale": 1.0
+    },
+    "walk_down_2": {
+     "size": [
+      24,
+      50
+     ],
+     "box": [
+      1488,
+      64,
+      1712,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.15,
+     "scale": 1.0
+    },
+    "walk_up_0": {
+     "size": [
+      30,
+      50
+     ],
+     "box": [
+      184,
+      576,
+      456,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.09,
+     "scale": 0.909
+    },
+    "walk_up_1": {
+     "size": [
+      28,
+      51
+     ],
+     "box": [
+      832,
+      568,
+      1088,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.27,
+     "scale": 0.909
+    },
+    "walk_up_2": {
+     "size": [
+      28,
+      52
+     ],
+     "box": [
+      1472,
+      560,
+      1728,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.08,
+     "scale": 0.909
+    },
+    "walk_left_0": {
+     "size": [
+      22,
+      49
+     ],
+     "box": [
+      216,
+      1096,
+      424,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.27,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.77
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      24,
+      49
+     ],
+     "box": [
+      848,
+      1096,
+      1072,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.013
+    },
+    "walk_left_2": {
+     "size": [
+      25,
+      49
+     ],
+     "box": [
+      1480,
+      1096,
+      1712,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.013
+    },
+    "walk_right_0": {
+     "size": [
+      23,
+      51
+     ],
+     "box": [
+      208,
+      1592,
+      424,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      24,
+      51
+     ],
+     "box": [
+      848,
+      1592,
+      1072,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.078
+    },
+    "walk_right_2": {
+     "size": [
+      25,
+      51
+     ],
+     "box": [
+      1480,
+      1592,
+      1712,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.039
+    }
+   }
+  },
+  "3": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/ilse/comp_ilse_s3.png",
+   "size": [
+    4160,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x5",
+    "logical_cell": [
+     104,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 544.0,
+   "native_height_at_period": 68.0,
+   "scale_note": "描かれた格子のまま（68.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "idle_a": {
+     "size": [
+      62,
+      68
+     ],
+     "box": [
+      152,
+      152,
+      680,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.42,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.52
+     }
+    },
+    "idle_b": {
+     "size": [
+      60,
+      68
+     ],
+     "box": [
+      992,
+      152,
+      1504,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.41,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.51
+     },
+     "scale": 1.019
+    },
+    "step": {
+     "size": [
+      65,
+      68
+     ],
+     "box": [
+      1800,
+      152,
+      2352,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.61,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.71
+     }
+    },
+    "guard": {
+     "size": [
+      73,
+      67
+     ],
+     "box": [
+      2600,
+      160,
+      3216,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.36,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.46
+     },
+     "scale": 1.013
+    },
+    "hit": {
+     "size": [
+      68,
+      68
+     ],
+     "box": [
+      3456,
+      152,
+      4032,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.55,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": -0.35
+     },
+     "scale": 0.994
+    },
+    "weak": {
+     "size": [
+      59,
+      57
+     ],
+     "box": [
+      160,
+      1008,
+      664,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.34,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.44
+     },
+     "scale": 1.038
+    },
+    "ko": {
+     "size": [
+      85,
+      36
+     ],
+     "box": [
+      888,
+      1176,
+      1600,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "victory_a": {
+     "size": [
+      53,
+      84
+     ],
+     "box": [
+      1848,
+      792,
+      2304,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.95,
+     "facing_cues": {
+      "head": -0.17,
+      "upper": -0.78
+     },
+     "scale": 1.038
+    },
+    "victory_b": {
+     "size": [
+      57,
+      68
+     ],
+     "box": [
+      2664,
+      920,
+      3152,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 0.987
+    },
+    "glimmer": {
+     "size": [
+      57,
+      72
+     ],
+     "box": [
+      3496,
+      888,
+      3984,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.74,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.84
+     },
+     "scale": 1.038
+    }
+   }
+  },
+  "4": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/ilse/comp_ilse_s4.png",
+   "size": [
+    4480,
+    1920
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "3x5",
+    "logical_cell": [
+     112,
+     80
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 544.0,
+   "native_height_at_period": 68.0,
+   "scale_note": "描かれた格子のまま（68.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "windup": {
+     "size": [
+      46,
+      67
+     ],
+     "box": [
+      248,
+      56,
+      648,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.6,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.7
+     },
+     "scale": 0.962
+    },
+    "slash": {
+     "size": [
+      75,
+      73
+     ],
+     "box": [
+      1024,
+      8,
+      1656,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.52,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.62
+     },
+     "scale": 1.0
+    },
+    "thrust_ready": {
+     "size": [
+      73,
+      70
+     ],
+     "box": [
+      1928,
+      32,
+      2544,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.12,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.22
+     }
+    },
+    "thrust": {
+     "size": [
+      90,
+      70
+     ],
+     "box": [
+      2760,
+      32,
+      3512,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.05,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.15
+     },
+     "scale": 1.0
+    },
+    "charge": {
+     "size": [
+      84,
+      51
+     ],
+     "box": [
+      3680,
+      184,
+      4384,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.42,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.52
+     },
+     "scale": 1.0
+    },
+    "smash": {
+     "size": [
+      47,
+      75
+     ],
+     "box": [
+      240,
+      632,
+      648,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.07,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.17
+     },
+     "scale": 0.968
+    },
+    "cast_a": {
+     "size": [
+      78,
+      67
+     ],
+     "box": [
+      1016,
+      696,
+      1672,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.31,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.41
+     },
+     "scale": 0.981
+    },
+    "cast_b": {
+     "size": [
+      63,
+      64
+     ],
+     "box": [
+      1968,
+      720,
+      2504,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.93,
+     "facing_cues": {
+      "head": -0.78,
+      "upper": -0.15
+     },
+     "scale": 0.968
+    },
+    "item": {
+     "size": [
+      46,
+      68
+     ],
+     "box": [
+      2936,
+      688,
+      3336,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.57,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.67
+     },
+     "scale": 0.987
+    },
+    "evade": {
+     "size": [
+      63,
+      67
+     ],
+     "box": [
+      3760,
+      696,
+      4296,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.16,
+     "facing_cues": {
+      "head": 0.14,
+      "upper": 0.02
+     },
+     "scale": 0.981
+    },
+    "bare_idle": {
+     "size": [
+      44,
+      68
+     ],
+     "box": [
+      256,
+      1328,
+      640,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.71,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.81
+     }
+    },
+    "bare_windup": {
+     "size": [
+      48,
+      69
+     ],
+     "box": [
+      1136,
+      1320,
+      1552,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.91,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.01
+     },
+     "scale": 1.0
+    },
+    "bare_slash": {
+     "size": [
+      55,
+      68
+     ],
+     "box": [
+      2000,
+      1328,
+      2472,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.6,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.7
+     },
+     "scale": 1.0
+    },
+    "bare_thrust": {
+     "size": [
+      61,
+      68
+     ],
+     "box": [
+      2872,
+      1328,
+      3392,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.47,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.57
+     },
+     "scale": 0.981
+    },
+    "bare_cast": {
+     "size": [
+      57,
+      69
+     ],
+     "box": [
+      3784,
+      1320,
+      4272,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.46,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.56
+     },
+     "scale": 1.0
+    }
+   }
+  },
+  "5": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/ilse/comp_ilse_s5.png",
+   "size": [
+    3072,
+    768
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "1x4",
+    "logical_cell": [
+     96,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 656.0,
+   "native_height_at_period": 82.0,
+   "scale_note": "描かれた格子のまま（82.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "face_neutral": {
+     "size": [
+      65,
+      82
+     ],
+     "box": [
+      104,
+      64,
+      656,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_smile": {
+     "size": [
+      65,
+      82
+     ],
+     "box": [
+      872,
+      64,
+      1424,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_surprise": {
+     "size": [
+      65,
+      82
+     ],
+     "box": [
+      1640,
+      64,
+      2192,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_pain": {
+     "size": [
+      65,
+      82
+     ],
+     "box": [
+      2408,
+      64,
+      2960,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "ground",
+   "msg": "2 行目の足元の高さが最大 24 ドットずれている。足元で揃えた",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート1 の 7 番（配色見本） の足元の影を消した",
+   "slot": "ref_palette",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "design_refs",
+   "msg": "設定画から向きの見本 6 枚と配色（52 色）を取った。<out>/refs に保存（承認後は tools/refs.py ilse <out> で configs/refs に）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "check",
+   "code": "facing_unsure",
+   "msg": "シート3 の 8 番（勝利A） の向きがはっきりしない（点数 -0.9）",
+   "slot": "victory_a",
+   "ask": null,
+   "data": {
+    "cues": {
+     "head": -0.17,
+     "upper": -0.78
+    }
+   }
+  },
+  {
+   "sheet": 4,
+   "level": "check",
+   "code": "facing_unsure",
+   "msg": "シート4 の 8 番（術の詠唱B） の向きがはっきりしない（点数 -0.9）",
+   "slot": "cast_b",
+   "ask": null,
+   "data": {
+    "cues": {
+     "head": -0.78,
+     "upper": -0.15
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,55 @@
+{
+ "id": "npc_marsh_man",
+ "look": "npc_marsh_man",
+ "name": "水辺の町の男",
+ "tier": "C",
+ "kind": "person",
+ "region": "marsh",
+ "group": "marsh_1",
+ "slot": "A",
+ "heightDots": {
+  "field": 48
+ },
+ "measureH": {
+  "field": 48
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#5A6A58",
+ "mainHue": 110,
+ "mainName": "灰緑",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_marsh_man_1",
+  "npc_marsh_man_2",
+  "npc_marsh_man_3",
+  "npc_marsh_man_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_marsh_man_s1.png"
+ },
+ "pair_file": "npc_grp_marsh_1.png",
+ "proportion": {
+  "1": {
+   "neck": 0.3541666666666667,
+   "head_w": 0.5104166666666666,
+   "shoulder": 0.390625,
+   "neck_clear": 0.5917508417508417
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

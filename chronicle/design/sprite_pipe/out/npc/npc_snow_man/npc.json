@@ -1,0 +1,55 @@
+{
+ "id": "npc_snow_man",
+ "look": "npc_snow_man",
+ "name": "猟師の男",
+ "tier": "C",
+ "kind": "person",
+ "region": "snow",
+ "group": "snow_1",
+ "slot": "A",
+ "heightDots": {
+  "field": 49
+ },
+ "measureH": {
+  "field": 49
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#2F5A48",
+ "mainHue": 160,
+ "mainName": "松葉色",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_snow_man_1",
+  "npc_snow_man_2",
+  "npc_snow_man_3",
+  "npc_snow_man_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_snow_man_s1.png"
+ },
+ "pair_file": "npc_grp_snow_1.png",
+ "proportion": {
+  "1": {
+   "neck": 0.3877551020408163,
+   "head_w": 0.5204081632653061,
+   "shoulder": 0.4846938775510204,
+   "neck_clear": 0.770979020979021
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

@@ -1,0 +1,42 @@
+{
+ "id": "tool_crate",
+ "kind": "props",
+ "theme": "mine",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   21,
+   18
+  ],
+  "32": [
+   28,
+   24
+  ],
+  "40": [
+   35,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   10,
+   17
+  ],
+  "32": [
+   14,
+   23
+  ],
+  "40": [
+   18,
+   29
+  ]
+ },
+ "files": {
+  "24": "tool_crate@24.png",
+  "32": "tool_crate@32.png",
+  "40": "tool_crate@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/mine_a.png"
+}

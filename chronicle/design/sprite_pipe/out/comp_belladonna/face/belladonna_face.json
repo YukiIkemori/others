@@ -1,0 +1,165 @@
+{
+ "character": "belladonna",
+ "set": "face",
+ "image": "belladonna_face.png",
+ "cell": [
+  75,
+  84
+ ],
+ "anchor": [
+  37,
+  81
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "face_neutral": {
+   "x": 0,
+   "y": 0,
+   "w": 75,
+   "h": 84,
+   "anchor": [
+    37,
+    81
+   ],
+   "points": {
+    "head": [
+     30,
+     2
+    ],
+    "center": [
+     38,
+     46
+    ],
+    "front": [
+     2,
+     80
+    ]
+   }
+  },
+  "face_smile": {
+   "x": 75,
+   "y": 0,
+   "w": 75,
+   "h": 84,
+   "anchor": [
+    37,
+    81
+   ],
+   "points": {
+    "head": [
+     30,
+     2
+    ],
+    "center": [
+     38,
+     46
+    ],
+    "front": [
+     2,
+     80
+    ]
+   }
+  },
+  "face_surprise": {
+   "x": 150,
+   "y": 0,
+   "w": 75,
+   "h": 84,
+   "anchor": [
+    37,
+    81
+   ],
+   "points": {
+    "head": [
+     30,
+     2
+    ],
+    "center": [
+     38,
+     46
+    ],
+    "front": [
+     2,
+     80
+    ]
+   }
+  },
+  "face_pain": {
+   "x": 225,
+   "y": 0,
+   "w": 75,
+   "h": 84,
+   "anchor": [
+    37,
+    81
+   ],
+   "points": {
+    "head": [
+     30,
+     2
+    ],
+    "center": [
+     38,
+     45
+    ],
+    "front": [
+     2,
+     79
+    ]
+   }
+  }
+ },
+ "anims": {},
+ "palette": [
+  "#110d08",
+  "#16180c",
+  "#796e64",
+  "#7c321e",
+  "#281b11",
+  "#3c2513",
+  "#453423",
+  "#513119",
+  "#653c1e",
+  "#604a30",
+  "#7a4823",
+  "#765834",
+  "#915528",
+  "#976736",
+  "#8e6b41",
+  "#ab632e",
+  "#8e7960",
+  "#ab7d4a",
+  "#a58759",
+  "#cb7823",
+  "#c88144",
+  "#c4955b",
+  "#b69f7e",
+  "#c0a06b",
+  "#e79a18",
+  "#e7a762",
+  "#ddaf6f",
+  "#e6bf7f",
+  "#fac880",
+  "#f6d593",
+  "#e9d8bb",
+  "#202415",
+  "#2a2c0f",
+  "#2b3622",
+  "#3b3c12",
+  "#3d4a2f",
+  "#4d4e17",
+  "#5d5d1a",
+  "#6e6e1e",
+  "#757645",
+  "#618533",
+  "#807e22",
+  "#8d8b24",
+  "#9b9827",
+  "#a7a329",
+  "#88ae32",
+  "#378db6",
+  "#7aaec6"
+ ],
+ "facing": "slightly right",
+ "target_height": 80
+}

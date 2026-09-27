@@ -1,0 +1,55 @@
+{
+ "id": "npc_star_woman",
+ "look": "npc_star_woman",
+ "name": "城壁の町の女",
+ "tier": "C",
+ "kind": "person",
+ "region": "star",
+ "group": "star_1",
+ "slot": "B",
+ "heightDots": {
+  "field": 46
+ },
+ "measureH": {
+  "field": 46
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#5A6A80",
+ "mainHue": 210,
+ "mainName": "灰青",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_star_woman_1",
+  "npc_star_woman_2",
+  "npc_star_woman_3",
+  "npc_star_woman_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_star_woman_s1.png"
+ },
+ "pair_file": "npc_grp_star_1.png",
+ "proportion": {
+  "1": {
+   "neck": 0.391304347826087,
+   "head_w": 0.43478260869565216,
+   "shoulder": 0.32065217391304346,
+   "neck_clear": 0.5263157894736842
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

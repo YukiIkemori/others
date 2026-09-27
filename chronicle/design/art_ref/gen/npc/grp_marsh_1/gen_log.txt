@@ -19,3 +19,19 @@
 02:02:58   | ■ シートの状態
 02:02:58   |   シート1 歩き: 要作り直し  npc_marsh_woman_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
 02:02:58 sheet 1: 0 redo lines
+02:48:33 pipeline: sheets.py ../art_ref/gen/npc/grp_marsh_1 --npc npc_marsh_man --out out/npc/npc_marsh_man
+02:49:15   |   - 向きの見本（configs/refs/npc_marsh_man）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:49:15   | 
+02:49:15   | ■ シートの状態
+02:49:15   |   シート1 歩き: 確認あり  npc_marsh_man_s1.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+02:49:15   | 
+02:49:15   | packed field 102x216 | palette 51 + face 0
+02:49:15 pipeline: sheets.py ../art_ref/gen/npc/grp_marsh_1 --npc npc_marsh_woman --out out/npc/npc_marsh_woman
+02:49:47   |   「水辺の町の女（npc_marsh_woman）のシート1の3番（下向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 81%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+02:49:47   | 
+02:49:47   | ■ シートの状態
+02:49:47   |   シート1 歩き: 要作り直し  npc_marsh_woman_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+02:49:47   | 
+02:49:47   | packed field 111x236 | palette 52 + face 0
+02:49:49 to_v2 npc_marsh_man: npc_marsh_man → /home/user/others/chronicle/v2/assets/sprites/npc_marsh_man |   field: 12 frames
+02:49:50 to_v2 npc_marsh_woman: npc_marsh_woman → /home/user/others/chronicle/v2/assets/sprites/npc_marsh_woman |   field: 12 frames

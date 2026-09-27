@@ -19,3 +19,19 @@
 02:23:02   | ■ シートの状態
 02:23:02   |   シート1 歩き: 確認あり  npc_ash_bookie_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
 02:23:02 sheet 1: 0 redo lines
+02:39:54 pipeline: sheets.py ../art_ref/gen/npc/grp_ash_4 --npc npc_ash_acolyte --out out/npc/npc_ash_acolyte
+02:41:42   |   - 向きの見本（configs/refs/npc_ash_acolyte）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:41:42   | 
+02:41:42   | ■ シートの状態
+02:41:42   |   シート1 歩き: 確認あり  npc_ash_acolyte_s1.png  ドット 8.00px → 描かれた格子のまま（45.5 ドット）
+02:41:42   | 
+02:41:42   | packed field 108x208 | palette 52 + face 0
+02:41:42 pipeline: sheets.py ../art_ref/gen/npc/grp_ash_4 --npc npc_ash_bookie --out out/npc/npc_ash_bookie
+02:43:44   |   - 向きの見本（configs/refs/npc_ash_bookie）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:43:44   | 
+02:43:44   | ■ シートの状態
+02:43:44   |   シート1 歩き: 確認あり  npc_ash_bookie_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
+02:43:44   | 
+02:43:44   | packed field 138x212 | palette 52 + face 0
+02:43:51 to_v2 npc_ash_acolyte: npc_ash_acolyte → /home/user/others/chronicle/v2/assets/sprites/npc_ash_acolyte |   field: 12 frames
+02:43:53 to_v2 npc_ash_bookie: npc_ash_bookie → /home/user/others/chronicle/v2/assets/sprites/npc_ash_bookie |   field: 12 frames

@@ -1,0 +1,42 @@
+{
+ "id": "tool_rack",
+ "kind": "props",
+ "theme": "mine",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   23,
+   18
+  ],
+  "32": [
+   31,
+   24
+  ],
+  "40": [
+   39,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   12,
+   17
+  ],
+  "32": [
+   16,
+   23
+  ],
+  "40": [
+   19,
+   29
+  ]
+ },
+ "files": {
+  "24": "tool_rack@24.png",
+  "32": "tool_rack@32.png",
+  "40": "tool_rack@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/mine_a.png"
+}

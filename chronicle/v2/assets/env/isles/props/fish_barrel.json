@@ -1,0 +1,42 @@
+{
+ "id": "fish_barrel",
+ "kind": "props",
+ "theme": "isles",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   15,
+   18
+  ],
+  "32": [
+   20,
+   24
+  ],
+  "40": [
+   25,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   17
+  ],
+  "32": [
+   10,
+   23
+  ],
+  "40": [
+   12,
+   29
+  ]
+ },
+ "files": {
+  "24": "fish_barrel@24.png",
+  "32": "fish_barrel@32.png",
+  "40": "fish_barrel@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/isles_a.png"
+}

@@ -1,0 +1,42 @@
+{
+ "id": "star_banner",
+ "kind": "props",
+ "theme": "star",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   19,
+   33
+  ],
+  "32": [
+   25,
+   44
+  ],
+  "40": [
+   31,
+   55
+  ]
+ },
+ "feet": {
+  "24": [
+   9,
+   32
+  ],
+  "32": [
+   12,
+   43
+  ],
+  "40": [
+   16,
+   54
+  ]
+ },
+ "files": {
+  "24": "star_banner@24.png",
+  "32": "star_banner@32.png",
+  "40": "star_banner@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/star_a.png"
+}

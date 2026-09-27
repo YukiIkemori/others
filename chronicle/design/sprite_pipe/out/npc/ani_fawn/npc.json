@@ -1,0 +1,45 @@
+{
+ "id": "ani_fawn",
+ "look": "ani_fawn",
+ "name": "花角の小鹿",
+ "tier": "C",
+ "kind": "animal",
+ "region": "forest",
+ "group": "animal_2",
+ "slot": "B",
+ "heightDots": {
+  "field": 30
+ },
+ "measureH": {
+  "field": 30
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#B08A5A",
+ "mainHue": 30,
+ "mainName": "淡い茶",
+ "lantern": false,
+ "recolor": false,
+ "recolorSets": 1,
+ "variants": [
+  "ani_fawn"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "ani_fawn_s1.png"
+ },
+ "pair_file": "npc_grp_animal_2.png",
+ "proportion": {},
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

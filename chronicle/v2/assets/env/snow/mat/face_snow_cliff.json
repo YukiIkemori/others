@@ -1,0 +1,23 @@
+{
+ "id": "face_snow_cliff",
+ "style": "snow_cliff",
+ "kind": "face",
+ "theme": "snow",
+ "files": {
+  "32": "face_snow_cliff@32.png",
+  "24": "face_snow_cliff@24.png",
+  "40": "face_snow_cliff@40.png"
+ },
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "height": {
+  "24": 96,
+  "32": 128,
+  "40": 160
+ },
+ "foot32": 10,
+ "src": "design/art_ref/gen/env/mat/snow/face_snow_cliff.png"
+}

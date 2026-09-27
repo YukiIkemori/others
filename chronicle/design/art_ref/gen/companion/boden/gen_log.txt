@@ -5,3 +5,20 @@
 02:36:49   pitch in raw image: 7.21 px per art pixel (upright median 346 px / 48)
 02:36:51 sheet 2 -> art_ref/gen/companion/boden/comp_boden_s2.png (12 poses)
 02:36:53 sheet 3 attempt 1: generating 3648x1344 (pitch 7, quality medium, 2 refs)
+02:39:43   pitch in raw image: 6.57 px per art pixel (upright median 414 px / 63)
+02:39:45 sheet 3 -> art_ref/gen/companion/boden/comp_boden_s3.png (10 poses)
+02:39:46 sheet 4 attempt 1: generating 3360x1440 (pitch 6, quality medium, 2 refs)
+02:42:27   pitch in raw image: 5.70 px per art pixel (upright median 359 px / 63)
+02:42:34 sheet 4 -> art_ref/gen/companion/boden/comp_boden_s4.png (15 poses)
+02:42:38 sheet 5 attempt 1: generating 1536x1536 (pitch 8, quality medium, 2 refs)
+02:45:18   pitch in raw image: 7.66 px per art pixel (upright median 613 px / 80)
+02:45:19 sheet 5 -> art_ref/gen/companion/boden/comp_boden_s5.png (4 poses)
+02:45:19 pipeline: sheets.py ../art_ref/gen/companion/boden --companion boden --out out/comp_boden --check
+02:51:37   | ■ シートの状態
+02:51:37   |   シート1 設定画: OK  comp_boden_s1.png  ドット 8.00px → 描かれた格子のまま（63.0 ドット）
+02:51:37   |   シート2 フィールドの歩き: OK  comp_boden_s2.png  ドット 8.00px → 描かれた格子のまま（47.5 ドット）
+02:51:37   |   シート3 戦闘の基本ポーズ: 確認あり  comp_boden_s3.png  ドット 8.00px → 描かれた格子のまま（63.5 ドット）
+02:51:37   |   シート4 戦闘の行動ポーズ＋武器なし版: 確認あり  comp_boden_s4.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+02:51:37   |   シート5 顔の表情: OK  comp_boden_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+02:51:37 no redo lines left
+02:51:37 pipeline: sheets.py ../art_ref/gen/companion/boden --companion boden --out out/comp_boden

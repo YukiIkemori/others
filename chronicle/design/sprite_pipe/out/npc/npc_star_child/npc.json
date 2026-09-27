@@ -1,0 +1,55 @@
+{
+ "id": "npc_star_child",
+ "look": "npc_star_child",
+ "name": "城壁の町の子ども",
+ "tier": "C",
+ "kind": "person",
+ "region": "star",
+ "group": "star_3",
+ "slot": "A",
+ "heightDots": {
+  "field": 36
+ },
+ "measureH": {
+  "field": 36
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#3A6A6A",
+ "mainHue": 180,
+ "mainName": "深い青緑",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_star_child_1",
+  "npc_star_child_2",
+  "npc_star_child_3",
+  "npc_star_child_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_star_child_s1.png"
+ },
+ "pair_file": "npc_grp_star_3.png",
+ "proportion": {
+  "1": {
+   "neck": 0.4166666666666667,
+   "head_w": 0.5,
+   "shoulder": 0.4166666666666667,
+   "neck_clear": 0.542483660130719
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

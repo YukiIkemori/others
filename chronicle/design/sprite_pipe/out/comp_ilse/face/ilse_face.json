@@ -1,0 +1,165 @@
+{
+ "character": "ilse",
+ "set": "face",
+ "image": "ilse_face.png",
+ "cell": [
+  69,
+  86
+ ],
+ "anchor": [
+  34,
+  83
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "face_neutral": {
+   "x": 0,
+   "y": 0,
+   "w": 69,
+   "h": 86,
+   "anchor": [
+    34,
+    83
+   ],
+   "points": {
+    "head": [
+     37,
+     2
+    ],
+    "center": [
+     34,
+     48
+    ],
+    "front": [
+     2,
+     80
+    ]
+   }
+  },
+  "face_smile": {
+   "x": 69,
+   "y": 0,
+   "w": 69,
+   "h": 86,
+   "anchor": [
+    34,
+    83
+   ],
+   "points": {
+    "head": [
+     37,
+     2
+    ],
+    "center": [
+     34,
+     48
+    ],
+    "front": [
+     2,
+     80
+    ]
+   }
+  },
+  "face_surprise": {
+   "x": 138,
+   "y": 0,
+   "w": 69,
+   "h": 86,
+   "anchor": [
+    34,
+    83
+   ],
+   "points": {
+    "head": [
+     37,
+     2
+    ],
+    "center": [
+     34,
+     48
+    ],
+    "front": [
+     2,
+     80
+    ]
+   }
+  },
+  "face_pain": {
+   "x": 207,
+   "y": 0,
+   "w": 69,
+   "h": 86,
+   "anchor": [
+    34,
+    83
+   ],
+   "points": {
+    "head": [
+     37,
+     2
+    ],
+    "center": [
+     34,
+     48
+    ],
+    "front": [
+     2,
+     80
+    ]
+   }
+  }
+ },
+ "anims": {},
+ "palette": [
+  "#100c14",
+  "#2d232d",
+  "#67544e",
+  "#998993",
+  "#b09d95",
+  "#d1c2b9",
+  "#f0e4d5",
+  "#291712",
+  "#3f2210",
+  "#573015",
+  "#49372f",
+  "#663a16",
+  "#7c481b",
+  "#77512e",
+  "#85501c",
+  "#955c20",
+  "#82664e",
+  "#a56820",
+  "#87746a",
+  "#9c7044",
+  "#a47230",
+  "#b86b2f",
+  "#b87826",
+  "#c68429",
+  "#ab9179",
+  "#c8933d",
+  "#d59230",
+  "#c49861",
+  "#da904c",
+  "#e4a138",
+  "#dca745",
+  "#d1b38d",
+  "#ebae42",
+  "#eaad69",
+  "#f2bb4f",
+  "#f0c288",
+  "#f8c85d",
+  "#fcd46d",
+  "#fcdaa8",
+  "#fcdd8e",
+  "#151226",
+  "#201c3a",
+  "#29234f",
+  "#342b64",
+  "#362c6c",
+  "#52456b",
+  "#716478",
+  "#4e4150"
+ ],
+ "facing": "slightly right",
+ "target_height": 80
+}

@@ -19,3 +19,19 @@
 02:16:43   | ■ シートの状態
 02:16:43   |   シート1 歩き: 確認あり  npc_ash_old_f_s1.png  ドット 8.00px → 描かれた格子のまま（43.0 ドット）
 02:16:43 sheet 1: 0 redo lines
+02:52:57 pipeline: sheets.py ../art_ref/gen/npc/grp_ash_2 --npc npc_ash_old_m --out out/npc/npc_ash_old_m
+02:53:39   |   - 向きの見本（configs/refs/npc_ash_old_m）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:53:39   | 
+02:53:39   | ■ シートの状態
+02:53:39   |   シート1 歩き: 確認あり  npc_ash_old_m_s1.png  ドット 8.00px → 描かれた格子のまま（45.0 ドット）
+02:53:39   | 
+02:53:39   | packed field 99x196 | palette 52 + face 0
+02:53:39 pipeline: sheets.py ../art_ref/gen/npc/grp_ash_2 --npc npc_ash_old_f --out out/npc/npc_ash_old_f
+02:54:15   |   - 向きの見本（configs/refs/npc_ash_old_f）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:54:15   | 
+02:54:15   | ■ シートの状態
+02:54:15   |   シート1 歩き: 確認あり  npc_ash_old_f_s1.png  ドット 8.00px → 描かれた格子のまま（43.0 ドット）
+02:54:15   | 
+02:54:15   | packed field 102x192 | palette 52 + face 0
+02:54:16 to_v2 npc_ash_old_m: npc_ash_old_m → /home/user/others/chronicle/v2/assets/sprites/npc_ash_old_m |   field: 12 frames
+02:54:20 to_v2 npc_ash_old_f: npc_ash_old_f → /home/user/others/chronicle/v2/assets/sprites/npc_ash_old_f |   field: 12 frames

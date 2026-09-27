@@ -1,0 +1,55 @@
+{
+ "id": "npc_miner",
+ "look": "npc_miner",
+ "name": "鉱夫",
+ "tier": "C",
+ "kind": "person",
+ "region": "mine",
+ "group": "mine_1",
+ "slot": "A",
+ "heightDots": {
+  "field": 48
+ },
+ "measureH": {
+  "field": 48
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#4E5058",
+ "mainHue": 225,
+ "mainName": "煤の灰",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_miner_1",
+  "npc_miner_2",
+  "npc_miner_3",
+  "npc_miner_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_miner_s1.png"
+ },
+ "pair_file": "npc_grp_mine_1.png",
+ "proportion": {
+  "1": {
+   "neck": 0.22916666666666666,
+   "head_w": 0.5625,
+   "shoulder": 0.46875,
+   "neck_clear": 0.7089947089947091
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

@@ -1,0 +1,42 @@
+{
+ "id": "book_stack",
+ "kind": "props",
+ "theme": "star",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   20,
+   18
+  ],
+  "32": [
+   26,
+   24
+  ],
+  "40": [
+   32,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   10,
+   17
+  ],
+  "32": [
+   13,
+   23
+  ],
+  "40": [
+   16,
+   29
+  ]
+ },
+ "files": {
+  "24": "book_stack@24.png",
+  "32": "book_stack@32.png",
+  "40": "book_stack@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/star_a.png"
+}

@@ -1,0 +1,42 @@
+{
+ "id": "ore_blue",
+ "kind": "props",
+ "theme": "mine",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   27,
+   18
+  ],
+  "32": [
+   36,
+   24
+  ],
+  "40": [
+   45,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   14,
+   17
+  ],
+  "32": [
+   18,
+   23
+  ],
+  "40": [
+   22,
+   29
+  ]
+ },
+ "files": {
+  "24": "ore_blue@24.png",
+  "32": "ore_blue@32.png",
+  "40": "ore_blue@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/mine_a.png"
+}

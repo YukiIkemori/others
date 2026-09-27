@@ -1,0 +1,55 @@
+{
+ "id": "npc_lampwarden",
+ "look": "npc_lampwarden",
+ "name": "灯籠守",
+ "tier": "C",
+ "kind": "person",
+ "region": "marsh",
+ "group": "marsh_3",
+ "slot": "B",
+ "heightDots": {
+  "field": 48
+ },
+ "measureH": {
+  "field": 48
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#5A6A7A",
+ "mainHue": 210,
+ "mainName": "霧の灰青",
+ "lantern": true,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_lampwarden_1",
+  "npc_lampwarden_2",
+  "npc_lampwarden_3",
+  "npc_lampwarden_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_lampwarden_s1.png"
+ },
+ "pair_file": "npc_grp_marsh_3.png",
+ "proportion": {
+  "1": {
+   "neck": 0.3125,
+   "head_w": 0.53125,
+   "shoulder": 0.4166666666666667,
+   "neck_clear": 0.5925925925925926
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

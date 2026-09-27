@@ -19,3 +19,19 @@
 02:21:54   | ■ シートの状態
 02:21:54   |   シート1 歩き: 確認あり  npc_star_woman_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
 02:21:54 sheet 1: 0 redo lines
+02:43:53 pipeline: sheets.py ../art_ref/gen/npc/grp_star_1 --npc npc_star_man --out out/npc/npc_star_man
+02:44:58   |   - 向きの見本（configs/refs/npc_star_man）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:44:58   | 
+02:44:58   | ■ シートの状態
+02:44:58   |   シート1 歩き: 確認あり  npc_star_man_s1.png  ドット 8.00px → 描かれた格子のまま（47.5 ドット）
+02:44:58   | 
+02:44:58   | packed field 102x208 | palette 51 + face 0
+02:44:58 pipeline: sheets.py ../art_ref/gen/npc/grp_star_1 --npc npc_star_woman --out out/npc/npc_star_woman
+02:46:03   |   - 向きの見本（configs/refs/npc_star_woman）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:46:03   | 
+02:46:03   | ■ シートの状態
+02:46:03   |   シート1 歩き: 確認あり  npc_star_woman_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+02:46:03   | 
+02:46:03   | packed field 93x208 | palette 52 + face 0
+02:46:06 to_v2 npc_star_man: npc_star_man → /home/user/others/chronicle/v2/assets/sprites/npc_star_man |   field: 12 frames
+02:46:09 to_v2 npc_star_woman: npc_star_woman → /home/user/others/chronicle/v2/assets/sprites/npc_star_woman |   field: 12 frames

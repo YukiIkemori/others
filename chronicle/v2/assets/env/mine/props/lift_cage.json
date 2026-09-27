@@ -1,0 +1,42 @@
+{
+ "id": "lift_cage",
+ "kind": "props",
+ "theme": "mine",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   26,
+   33
+  ],
+  "32": [
+   35,
+   44
+  ],
+  "40": [
+   44,
+   55
+  ]
+ },
+ "feet": {
+  "24": [
+   13,
+   32
+  ],
+  "32": [
+   18,
+   43
+  ],
+  "40": [
+   22,
+   54
+  ]
+ },
+ "files": {
+  "24": "lift_cage@24.png",
+  "32": "lift_cage@32.png",
+  "40": "lift_cage@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/mine_a.png"
+}

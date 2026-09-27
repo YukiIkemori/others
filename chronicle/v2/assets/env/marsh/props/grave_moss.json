@@ -1,0 +1,42 @@
+{
+ "id": "grave_moss",
+ "kind": "props",
+ "theme": "marsh",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   16,
+   18
+  ],
+  "32": [
+   22,
+   24
+  ],
+  "40": [
+   28,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   17
+  ],
+  "32": [
+   11,
+   23
+  ],
+  "40": [
+   14,
+   29
+  ]
+ },
+ "files": {
+  "24": "grave_moss@24.png",
+  "32": "grave_moss@32.png",
+  "40": "grave_moss@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/marsh_a.png"
+}

@@ -1,0 +1,42 @@
+{
+ "id": "net_frame",
+ "kind": "props",
+ "theme": "isles",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   45,
+   33
+  ],
+  "32": [
+   60,
+   44
+  ],
+  "40": [
+   75,
+   55
+  ]
+ },
+ "feet": {
+  "24": [
+   22,
+   32
+  ],
+  "32": [
+   30,
+   43
+  ],
+  "40": [
+   38,
+   54
+  ]
+ },
+ "files": {
+  "24": "net_frame@24.png",
+  "32": "net_frame@32.png",
+  "40": "net_frame@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/isles_a.png"
+}

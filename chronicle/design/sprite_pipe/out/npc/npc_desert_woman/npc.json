@@ -1,0 +1,55 @@
+{
+ "id": "npc_desert_woman",
+ "look": "npc_desert_woman",
+ "name": "市場の女",
+ "tier": "C",
+ "kind": "person",
+ "region": "desert",
+ "group": "desert_1",
+ "slot": "B",
+ "heightDots": {
+  "field": 46
+ },
+ "measureH": {
+  "field": 46
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#2E4470",
+ "mainHue": 222,
+ "mainName": "藍",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_desert_woman_1",
+  "npc_desert_woman_2",
+  "npc_desert_woman_3",
+  "npc_desert_woman_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_desert_woman_s1.png"
+ },
+ "pair_file": "npc_grp_desert_1.png",
+ "proportion": {
+  "1": {
+   "neck": 0.30434782608695654,
+   "head_w": 0.391304347826087,
+   "shoulder": 0.3532608695652174,
+   "neck_clear": 0.8006535947712419
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

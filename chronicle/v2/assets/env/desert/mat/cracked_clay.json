@@ -1,0 +1,18 @@
+{
+ "id": "cracked_clay",
+ "kind": "material",
+ "theme": "desert",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "cracked_clay@32.png",
+  "24": "cracked_clay@24.png",
+  "40": "cracked_clay@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/desert/cracked_clay.png",
+ "native_px": 9.06,
+ "colours": 40
+}

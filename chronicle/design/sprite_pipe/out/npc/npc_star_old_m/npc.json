@@ -1,0 +1,55 @@
+{
+ "id": "npc_star_old_m",
+ "look": "npc_star_old_m",
+ "name": "老学者",
+ "tier": "C",
+ "kind": "person",
+ "region": "star",
+ "group": "star_2",
+ "slot": "A",
+ "heightDots": {
+  "field": 45
+ },
+ "measureH": {
+  "field": 45
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#2E3238",
+ "mainHue": 220,
+ "mainName": "墨色",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_star_old_m_1",
+  "npc_star_old_m_2",
+  "npc_star_old_m_3",
+  "npc_star_old_m_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_star_old_m_s1.png"
+ },
+ "pair_file": "npc_grp_star_2.png",
+ "proportion": {
+  "1": {
+   "neck": 0.37777777777777777,
+   "head_w": 0.4444444444444444,
+   "shoulder": 0.3944444444444445,
+   "neck_clear": 0.6833333333333333
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

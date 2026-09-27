@@ -1,0 +1,18 @@
+{
+ "id": "mine_floor",
+ "kind": "material",
+ "theme": "mine",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "mine_floor@32.png",
+  "24": "mine_floor@24.png",
+  "40": "mine_floor@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/mine/mine_floor.png",
+ "native_px": 7.0,
+ "colours": 40
+}

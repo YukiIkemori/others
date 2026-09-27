@@ -1,0 +1,42 @@
+{
+ "id": "swamp_tree",
+ "kind": "props",
+ "theme": "marsh",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   43,
+   50
+  ],
+  "32": [
+   57,
+   66
+  ],
+  "40": [
+   71,
+   82
+  ]
+ },
+ "feet": {
+  "24": [
+   21,
+   49
+  ],
+  "32": [
+   28,
+   65
+  ],
+  "40": [
+   36,
+   81
+  ]
+ },
+ "files": {
+  "24": "swamp_tree@24.png",
+  "32": "swamp_tree@32.png",
+  "40": "swamp_tree@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/marsh_a.png"
+}

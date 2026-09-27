@@ -1,0 +1,18 @@
+{
+ "id": "ore_rock",
+ "kind": "material",
+ "theme": "mine",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "ore_rock@32.png",
+  "24": "ore_rock@24.png",
+  "40": "ore_rock@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/mine/ore_rock.png",
+ "native_px": 7.0,
+ "colours": 40
+}

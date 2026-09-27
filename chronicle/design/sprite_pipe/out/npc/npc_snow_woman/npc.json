@@ -1,0 +1,55 @@
+{
+ "id": "npc_snow_woman",
+ "look": "npc_snow_woman",
+ "name": "雪の村の女",
+ "tier": "C",
+ "kind": "person",
+ "region": "snow",
+ "group": "snow_1",
+ "slot": "B",
+ "heightDots": {
+  "field": 46
+ },
+ "measureH": {
+  "field": 46
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#C89A3A",
+ "mainHue": 42,
+ "mainName": "山吹",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_snow_woman_1",
+  "npc_snow_woman_2",
+  "npc_snow_woman_3",
+  "npc_snow_woman_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_snow_woman_s1.png"
+ },
+ "pair_file": "npc_grp_snow_1.png",
+ "proportion": {
+  "1": {
+   "neck": 0.40217391304347827,
+   "head_w": 0.46739130434782605,
+   "shoulder": 0.42934782608695654,
+   "neck_clear": 0.7445652173913043
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

@@ -1,0 +1,572 @@
+{
+ "character": "npc_desert_old_m",
+ "set": "field",
+ "look": "npc_desert_old_m",
+ "source": "out/npc/npc_desert_old_m/field",
+ "cell": [
+  40,
+  50
+ ],
+ "anchor": [
+  20,
+  47
+ ],
+ "frames": [
+  {
+   "id": "walk_down_0",
+   "x": 0,
+   "y": 0,
+   "w": 40,
+   "h": 50,
+   "anchor": [
+    20,
+    47
+   ],
+   "points": {
+    "head": [
+     22,
+     3
+    ],
+    "center": [
+     21,
+     27
+    ],
+    "front": [
+     6,
+     21
+    ]
+   }
+  },
+  {
+   "id": "walk_down_1",
+   "x": 40,
+   "y": 0,
+   "w": 40,
+   "h": 50,
+   "anchor": [
+    20,
+    47
+   ],
+   "points": {
+    "head": [
+     22,
+     3
+    ],
+    "center": [
+     21,
+     27
+    ],
+    "front": [
+     6,
+     21
+    ]
+   }
+  },
+  {
+   "id": "walk_down_2",
+   "x": 80,
+   "y": 0,
+   "w": 40,
+   "h": 50,
+   "anchor": [
+    20,
+    47
+   ],
+   "points": {
+    "head": [
+     22,
+     3
+    ],
+    "center": [
+     20,
+     26
+    ],
+    "front": [
+     6,
+     21
+    ]
+   }
+  },
+  {
+   "id": "walk_up_0",
+   "x": 0,
+   "y": 50,
+   "w": 40,
+   "h": 50,
+   "anchor": [
+    20,
+    47
+   ],
+   "points": {
+    "head": [
+     18,
+     4
+    ],
+    "center": [
+     19,
+     27
+    ],
+    "front": [
+     4,
+     30
+    ]
+   }
+  },
+  {
+   "id": "walk_up_1",
+   "x": 40,
+   "y": 50,
+   "w": 40,
+   "h": 50,
+   "anchor": [
+    20,
+    47
+   ],
+   "points": {
+    "head": [
+     18,
+     4
+    ],
+    "center": [
+     19,
+     27
+    ],
+    "front": [
+     4,
+     30
+    ]
+   }
+  },
+  {
+   "id": "walk_up_2",
+   "x": 80,
+   "y": 50,
+   "w": 40,
+   "h": 50,
+   "anchor": [
+    20,
+    47
+   ],
+   "points": {
+    "head": [
+     18,
+     4
+    ],
+    "center": [
+     19,
+     27
+    ],
+    "front": [
+     4,
+     30
+    ]
+   }
+  },
+  {
+   "id": "walk_left_0",
+   "x": 0,
+   "y": 100,
+   "w": 40,
+   "h": 50,
+   "anchor": [
+    20,
+    47
+   ],
+   "points": {
+    "head": [
+     17,
+     2
+    ],
+    "center": [
+     18,
+     26
+    ],
+    "front": [
+     2,
+     20
+    ]
+   }
+  },
+  {
+   "id": "walk_left_1",
+   "x": 40,
+   "y": 100,
+   "w": 40,
+   "h": 50,
+   "anchor": [
+    20,
+    47
+   ],
+   "points": {
+    "head": [
+     17,
+     3
+    ],
+    "center": [
+     20,
+     27
+    ],
+    "front": [
+     4,
+     22
+    ]
+   }
+  },
+  {
+   "id": "walk_left_2",
+   "x": 80,
+   "y": 100,
+   "w": 40,
+   "h": 50,
+   "anchor": [
+    20,
+    47
+   ],
+   "points": {
+    "head": [
+     17,
+     3
+    ],
+    "center": [
+     19,
+     27
+    ],
+    "front": [
+     4,
+     23
+    ]
+   }
+  },
+  {
+   "id": "walk_right_0",
+   "x": 0,
+   "y": 150,
+   "w": 40,
+   "h": 50,
+   "anchor": [
+    20,
+    47
+   ],
+   "points": {
+    "head": [
+     23,
+     3
+    ],
+    "center": [
+     21,
+     27
+    ],
+    "front": [
+     6,
+     35
+    ]
+   }
+  },
+  {
+   "id": "walk_right_1",
+   "x": 40,
+   "y": 150,
+   "w": 40,
+   "h": 50,
+   "anchor": [
+    20,
+    47
+   ],
+   "points": {
+    "head": [
+     23,
+     3
+    ],
+    "center": [
+     20,
+     27
+    ],
+    "front": [
+     4,
+     39
+    ]
+   }
+  },
+  {
+   "id": "walk_right_2",
+   "x": 80,
+   "y": 150,
+   "w": 40,
+   "h": 50,
+   "anchor": [
+    20,
+    47
+   ],
+   "points": {
+    "head": [
+     23,
+     3
+    ],
+    "center": [
+     20,
+     27
+    ],
+    "front": [
+     4,
+     40
+    ]
+   }
+  }
+ ],
+ "poses": {
+  "walk_down_0": [
+   0
+  ],
+  "walk_down_1": [
+   1
+  ],
+  "walk_down_2": [
+   2
+  ],
+  "walk_up_0": [
+   3
+  ],
+  "walk_up_1": [
+   4
+  ],
+  "walk_up_2": [
+   5
+  ],
+  "walk_left_0": [
+   6
+  ],
+  "walk_left_1": [
+   7
+  ],
+  "walk_left_2": [
+   8
+  ],
+  "walk_right_0": [
+   9
+  ],
+  "walk_right_1": [
+   10
+  ],
+  "walk_right_2": [
+   11
+  ],
+  "anim_walk_down": [
+   0,
+   1,
+   0,
+   2
+  ],
+  "anim_stand_down": [
+   0
+  ],
+  "anim_walk_up": [
+   3,
+   4,
+   3,
+   5
+  ],
+  "anim_stand_up": [
+   3
+  ],
+  "anim_walk_left": [
+   6,
+   7,
+   6,
+   8
+  ],
+  "anim_stand_left": [
+   6
+  ],
+  "anim_walk_right": [
+   9,
+   10,
+   9,
+   11
+  ],
+  "anim_stand_right": [
+   9
+  ]
+ },
+ "fps": {
+  "anim_walk_down": 6.25,
+  "anim_stand_down": 8.0,
+  "anim_walk_up": 6.25,
+  "anim_stand_up": 8.0,
+  "anim_walk_left": 6.25,
+  "anim_stand_left": 8.0,
+  "anim_walk_right": 6.25,
+  "anim_stand_right": 8.0
+ },
+ "anims": {
+  "walk_down": {
+   "frames": [
+    "walk_down_0",
+    "walk_down_1",
+    "walk_down_0",
+    "walk_down_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_down": {
+   "frames": [
+    "walk_down_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_up": {
+   "frames": [
+    "walk_up_0",
+    "walk_up_1",
+    "walk_up_0",
+    "walk_up_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_up": {
+   "frames": [
+    "walk_up_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_left": {
+   "frames": [
+    "walk_left_0",
+    "walk_left_1",
+    "walk_left_0",
+    "walk_left_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_left": {
+   "frames": [
+    "walk_left_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_right": {
+   "frames": [
+    "walk_right_0",
+    "walk_right_1",
+    "walk_right_0",
+    "walk_right_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_right": {
+   "frames": [
+    "walk_right_0"
+   ],
+   "ms": [
+    0
+   ]
+  }
+ },
+ "facing": null,
+ "target_height": 45,
+ "directions": [
+  "down",
+  "up",
+  "left",
+  "right"
+ ],
+ "palette": [
+  "#10030c",
+  "#0c0706",
+  "#1e0d0d",
+  "#1c1510",
+  "#2d231a",
+  "#272b30",
+  "#41464b",
+  "#301114",
+  "#54291e",
+  "#27170e",
+  "#331d10",
+  "#43220f",
+  "#422917",
+  "#3d2f23",
+  "#532b13",
+  "#54341c",
+  "#4e3926",
+  "#633418",
+  "#504233",
+  "#623d21",
+  "#70391a",
+  "#5d432d",
+  "#6b3d1b",
+  "#724826",
+  "#7a4520",
+  "#6e4b30",
+  "#65513c",
+  "#884a22",
+  "#715539",
+  "#7f522b",
+  "#8b592e",
+  "#805f3e",
+  "#975629",
+  "#7b654a",
+  "#8f6f4b",
+  "#ac632d",
+  "#a96935",
+  "#8d7458",
+  "#a07f57",
+  "#be7439",
+  "#a48b6c",
+  "#b19169",
+  "#d78c4a",
+  "#c09f75",
+  "#baa181",
+  "#cdae84",
+  "#c6b195",
+  "#dbbe93",
+  "#dbc8ac",
+  "#e9cfa6",
+  "#eedfc7",
+  "#1a0114"
+ ],
+ "lantern_drawn": false,
+ "npc": {
+  "tier": "C",
+  "lantern": false,
+  "spirit": false,
+  "recolor": true,
+  "mainHex": "#6A5040",
+  "recolorSets": 4,
+  "variants": [
+   "npc_desert_old_m_1",
+   "npc_desert_old_m_2",
+   "npc_desert_old_m_3",
+   "npc_desert_old_m_4"
+  ],
+  "kind": "person"
+ }
+}

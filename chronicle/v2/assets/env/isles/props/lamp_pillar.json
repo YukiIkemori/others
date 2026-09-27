@@ -1,0 +1,42 @@
+{
+ "id": "lamp_pillar",
+ "kind": "props",
+ "theme": "isles",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   16,
+   33
+  ],
+  "32": [
+   22,
+   44
+  ],
+  "40": [
+   28,
+   55
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   32
+  ],
+  "32": [
+   11,
+   43
+  ],
+  "40": [
+   14,
+   54
+  ]
+ },
+ "files": {
+  "24": "lamp_pillar@24.png",
+  "32": "lamp_pillar@32.png",
+  "40": "lamp_pillar@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/isles_a.png"
+}

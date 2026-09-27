@@ -1,0 +1,55 @@
+{
+ "id": "npc_ash_woman",
+ "look": "npc_ash_woman",
+ "name": "火口の町の女",
+ "tier": "C",
+ "kind": "person",
+ "region": "ash",
+ "group": "ash_1",
+ "slot": "B",
+ "heightDots": {
+  "field": 46
+ },
+ "measureH": {
+  "field": 46
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#C8662A",
+ "mainHue": 25,
+ "mainName": "橙の刺繍と灰",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_ash_woman_1",
+  "npc_ash_woman_2",
+  "npc_ash_woman_3",
+  "npc_ash_woman_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_ash_woman_s1.png"
+ },
+ "pair_file": "npc_grp_ash_1.png",
+ "proportion": {
+  "1": {
+   "neck": 0.3586956521739131,
+   "head_w": 0.3695652173913043,
+   "shoulder": 0.2934782608695652,
+   "neck_clear": 0.5626598465473146
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

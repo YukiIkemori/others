@@ -1,0 +1,42 @@
+{
+ "id": "hot_spring",
+ "kind": "props",
+ "theme": "ash",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   22,
+   18
+  ],
+  "32": [
+   29,
+   24
+  ],
+  "40": [
+   36,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   11,
+   17
+  ],
+  "32": [
+   14,
+   23
+  ],
+  "40": [
+   18,
+   29
+  ]
+ },
+ "files": {
+  "24": "hot_spring@24.png",
+  "32": "hot_spring@32.png",
+  "40": "hot_spring@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/ash_a.png"
+}

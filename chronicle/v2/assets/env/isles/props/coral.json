@@ -1,0 +1,42 @@
+{
+ "id": "coral",
+ "kind": "props",
+ "theme": "isles",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   21,
+   18
+  ],
+  "32": [
+   28,
+   24
+  ],
+  "40": [
+   35,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   10,
+   17
+  ],
+  "32": [
+   14,
+   23
+  ],
+  "40": [
+   18,
+   29
+  ]
+ },
+ "files": {
+  "24": "coral@24.png",
+  "32": "coral@32.png",
+  "40": "coral@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/isles_a.png"
+}

@@ -1,0 +1,55 @@
+{
+ "id": "npc_marsh_child",
+ "look": "npc_marsh_child",
+ "name": "水辺の子ども",
+ "tier": "C",
+ "kind": "person",
+ "region": "marsh",
+ "group": "marsh_3",
+ "slot": "A",
+ "heightDots": {
+  "field": 36
+ },
+ "measureH": {
+  "field": 36
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#6A8060",
+ "mainHue": 110,
+ "mainName": "灰緑",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_marsh_child_1",
+  "npc_marsh_child_2",
+  "npc_marsh_child_3",
+  "npc_marsh_child_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_marsh_child_s1.png"
+ },
+ "pair_file": "npc_grp_marsh_3.png",
+ "proportion": {
+  "1": {
+   "neck": 0.3333333333333333,
+   "head_w": 0.4166666666666667,
+   "shoulder": 0.39583333333333337,
+   "neck_clear": 0.7142857142857143
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

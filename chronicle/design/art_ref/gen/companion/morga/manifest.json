@@ -76,5 +76,383 @@
     ]
    }
   ]
+ },
+ {
+  "sheet": 2,
+  "file": "comp_morga_s2.png",
+  "layout": "4x3",
+  "logical_cell": [
+   80,
+   64
+  ],
+  "image_px": [
+   1920,
+   2048
+  ],
+  "frames": [
+   {
+    "id": "walk_down_0",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     34,
+     48
+    ]
+   },
+   {
+    "id": "walk_down_1",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     34,
+     48
+    ]
+   },
+   {
+    "id": "walk_down_2",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     33,
+     47
+    ]
+   },
+   {
+    "id": "walk_up_0",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     32,
+     47
+    ]
+   },
+   {
+    "id": "walk_up_1",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     31,
+     48
+    ]
+   },
+   {
+    "id": "walk_up_2",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     31,
+     47
+    ]
+   },
+   {
+    "id": "walk_left_0",
+    "row": 3,
+    "column": 1,
+    "logical_bbox": [
+     25,
+     45
+    ]
+   },
+   {
+    "id": "walk_left_1",
+    "row": 3,
+    "column": 2,
+    "logical_bbox": [
+     25,
+     45
+    ]
+   },
+   {
+    "id": "walk_left_2",
+    "row": 3,
+    "column": 3,
+    "logical_bbox": [
+     27,
+     45
+    ]
+   },
+   {
+    "id": "walk_right_0",
+    "row": 4,
+    "column": 1,
+    "logical_bbox": [
+     25,
+     45
+    ]
+   },
+   {
+    "id": "walk_right_1",
+    "row": 4,
+    "column": 2,
+    "logical_bbox": [
+     25,
+     45
+    ]
+   },
+   {
+    "id": "walk_right_2",
+    "row": 4,
+    "column": 3,
+    "logical_bbox": [
+     27,
+     45
+    ]
+   }
+  ]
+ },
+ {
+  "sheet": 3,
+  "file": "comp_morga_s3.png",
+  "layout": "2x5",
+  "logical_cell": [
+   104,
+   96
+  ],
+  "image_px": [
+   4160,
+   1536
+  ],
+  "frames": [
+   {
+    "id": "idle_a",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     38,
+     62
+    ]
+   },
+   {
+    "id": "idle_b",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     38,
+     62
+    ]
+   },
+   {
+    "id": "step",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     57,
+     57
+    ]
+   },
+   {
+    "id": "guard",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     70,
+     56
+    ]
+   },
+   {
+    "id": "hit",
+    "row": 1,
+    "column": 5,
+    "logical_bbox": [
+     50,
+     54
+    ]
+   },
+   {
+    "id": "weak",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     52,
+     55
+    ]
+   },
+   {
+    "id": "ko",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     80,
+     34
+    ]
+   },
+   {
+    "id": "victory_a",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     45,
+     75
+    ]
+   },
+   {
+    "id": "victory_b",
+    "row": 2,
+    "column": 4,
+    "logical_bbox": [
+     49,
+     60
+    ]
+   },
+   {
+    "id": "glimmer",
+    "row": 2,
+    "column": 5,
+    "logical_bbox": [
+     51,
+     58
+    ]
+   }
+  ]
+ },
+ {
+  "sheet": 4,
+  "file": "comp_morga_s4.png",
+  "layout": "3x5",
+  "logical_cell": [
+   112,
+   80
+  ],
+  "image_px": [
+   4480,
+   1920
+  ],
+  "frames": [
+   {
+    "id": "windup",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     50,
+     69
+    ]
+   },
+   {
+    "id": "slash",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     71,
+     61
+    ]
+   },
+   {
+    "id": "thrust_ready",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     67,
+     60
+    ]
+   },
+   {
+    "id": "thrust",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     89,
+     61
+    ]
+   },
+   {
+    "id": "charge",
+    "row": 1,
+    "column": 5,
+    "logical_bbox": [
+     65,
+     46
+    ]
+   },
+   {
+    "id": "smash",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     52,
+     79
+    ]
+   },
+   {
+    "id": "cast_a",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     57,
+     63
+    ]
+   },
+   {
+    "id": "cast_b",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     49,
+     64
+    ]
+   },
+   {
+    "id": "item",
+    "row": 2,
+    "column": 4,
+    "logical_bbox": [
+     52,
+     62
+    ]
+   },
+   {
+    "id": "evade",
+    "row": 2,
+    "column": 5,
+    "logical_bbox": [
+     57,
+     62
+    ]
+   },
+   {
+    "id": "bare_idle",
+    "row": 3,
+    "column": 1,
+    "logical_bbox": [
+     45,
+     62
+    ]
+   },
+   {
+    "id": "bare_windup",
+    "row": 3,
+    "column": 2,
+    "logical_bbox": [
+     48,
+     62
+    ]
+   },
+   {
+    "id": "bare_slash",
+    "row": 3,
+    "column": 3,
+    "logical_bbox": [
+     56,
+     61
+    ]
+   },
+   {
+    "id": "bare_thrust",
+    "row": 3,
+    "column": 4,
+    "logical_bbox": [
+     60,
+     61
+    ]
+   },
+   {
+    "id": "bare_cast",
+    "row": 3,
+    "column": 5,
+    "logical_bbox": [
+     56,
+     61
+    ]
+   }
+  ]
  }
 ]

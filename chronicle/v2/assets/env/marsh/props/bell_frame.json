@@ -1,0 +1,42 @@
+{
+ "id": "bell_frame",
+ "kind": "props",
+ "theme": "marsh",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   32,
+   33
+  ],
+  "32": [
+   42,
+   44
+  ],
+  "40": [
+   52,
+   55
+  ]
+ },
+ "feet": {
+  "24": [
+   16,
+   32
+  ],
+  "32": [
+   21,
+   43
+  ],
+  "40": [
+   26,
+   54
+  ]
+ },
+ "files": {
+  "24": "bell_frame@24.png",
+  "32": "bell_frame@32.png",
+  "40": "bell_frame@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/marsh_a.png"
+}

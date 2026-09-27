@@ -1,0 +1,572 @@
+{
+ "character": "npc_lampwarden",
+ "set": "field",
+ "look": "npc_lampwarden",
+ "source": "out/npc/npc_lampwarden/field",
+ "cell": [
+  49,
+  53
+ ],
+ "anchor": [
+  23,
+  50
+ ],
+ "frames": [
+  {
+   "id": "walk_down_0",
+   "x": 0,
+   "y": 0,
+   "w": 49,
+   "h": 53,
+   "anchor": [
+    23,
+    50
+   ],
+   "points": {
+    "head": [
+     25,
+     2
+    ],
+    "center": [
+     25,
+     26
+    ],
+    "front": [
+     3,
+     33
+    ]
+   }
+  },
+  {
+   "id": "walk_down_1",
+   "x": 49,
+   "y": 0,
+   "w": 49,
+   "h": 53,
+   "anchor": [
+    23,
+    50
+   ],
+   "points": {
+    "head": [
+     25,
+     2
+    ],
+    "center": [
+     25,
+     26
+    ],
+    "front": [
+     3,
+     33
+    ]
+   }
+  },
+  {
+   "id": "walk_down_2",
+   "x": 98,
+   "y": 0,
+   "w": 49,
+   "h": 53,
+   "anchor": [
+    23,
+    50
+   ],
+   "points": {
+    "head": [
+     25,
+     2
+    ],
+    "center": [
+     25,
+     26
+    ],
+    "front": [
+     3,
+     33
+    ]
+   }
+  },
+  {
+   "id": "walk_up_0",
+   "x": 0,
+   "y": 53,
+   "w": 49,
+   "h": 53,
+   "anchor": [
+    23,
+    50
+   ],
+   "points": {
+    "head": [
+     22,
+     3
+    ],
+    "center": [
+     21,
+     26
+    ],
+    "front": [
+     2,
+     9
+    ]
+   }
+  },
+  {
+   "id": "walk_up_1",
+   "x": 49,
+   "y": 53,
+   "w": 49,
+   "h": 53,
+   "anchor": [
+    23,
+    50
+   ],
+   "points": {
+    "head": [
+     22,
+     3
+    ],
+    "center": [
+     21,
+     26
+    ],
+    "front": [
+     2,
+     15
+    ]
+   }
+  },
+  {
+   "id": "walk_up_2",
+   "x": 98,
+   "y": 53,
+   "w": 49,
+   "h": 53,
+   "anchor": [
+    23,
+    50
+   ],
+   "points": {
+    "head": [
+     22,
+     3
+    ],
+    "center": [
+     21,
+     26
+    ],
+    "front": [
+     2,
+     15
+    ]
+   }
+  },
+  {
+   "id": "walk_left_0",
+   "x": 0,
+   "y": 106,
+   "w": 49,
+   "h": 53,
+   "anchor": [
+    23,
+    50
+   ],
+   "points": {
+    "head": [
+     22,
+     8
+    ],
+    "center": [
+     24,
+     29
+    ],
+    "front": [
+     5,
+     35
+    ]
+   }
+  },
+  {
+   "id": "walk_left_1",
+   "x": 49,
+   "y": 106,
+   "w": 49,
+   "h": 53,
+   "anchor": [
+    23,
+    50
+   ],
+   "points": {
+    "head": [
+     22,
+     8
+    ],
+    "center": [
+     24,
+     29
+    ],
+    "front": [
+     5,
+     35
+    ]
+   }
+  },
+  {
+   "id": "walk_left_2",
+   "x": 98,
+   "y": 106,
+   "w": 49,
+   "h": 53,
+   "anchor": [
+    23,
+    50
+   ],
+   "points": {
+    "head": [
+     22,
+     8
+    ],
+    "center": [
+     24,
+     29
+    ],
+    "front": [
+     5,
+     35
+    ]
+   }
+  },
+  {
+   "id": "walk_right_0",
+   "x": 0,
+   "y": 159,
+   "w": 49,
+   "h": 53,
+   "anchor": [
+    23,
+    50
+   ],
+   "points": {
+    "head": [
+     25,
+     7
+    ],
+    "center": [
+     23,
+     29
+    ],
+    "front": [
+     7,
+     20
+    ]
+   }
+  },
+  {
+   "id": "walk_right_1",
+   "x": 49,
+   "y": 159,
+   "w": 49,
+   "h": 53,
+   "anchor": [
+    23,
+    50
+   ],
+   "points": {
+    "head": [
+     25,
+     7
+    ],
+    "center": [
+     23,
+     29
+    ],
+    "front": [
+     7,
+     20
+    ]
+   }
+  },
+  {
+   "id": "walk_right_2",
+   "x": 98,
+   "y": 159,
+   "w": 49,
+   "h": 53,
+   "anchor": [
+    23,
+    50
+   ],
+   "points": {
+    "head": [
+     25,
+     7
+    ],
+    "center": [
+     23,
+     29
+    ],
+    "front": [
+     7,
+     20
+    ]
+   }
+  }
+ ],
+ "poses": {
+  "walk_down_0": [
+   0
+  ],
+  "walk_down_1": [
+   1
+  ],
+  "walk_down_2": [
+   2
+  ],
+  "walk_up_0": [
+   3
+  ],
+  "walk_up_1": [
+   4
+  ],
+  "walk_up_2": [
+   5
+  ],
+  "walk_left_0": [
+   6
+  ],
+  "walk_left_1": [
+   7
+  ],
+  "walk_left_2": [
+   8
+  ],
+  "walk_right_0": [
+   9
+  ],
+  "walk_right_1": [
+   10
+  ],
+  "walk_right_2": [
+   11
+  ],
+  "anim_walk_down": [
+   0,
+   1,
+   0,
+   2
+  ],
+  "anim_stand_down": [
+   0
+  ],
+  "anim_walk_up": [
+   3,
+   4,
+   3,
+   5
+  ],
+  "anim_stand_up": [
+   3
+  ],
+  "anim_walk_left": [
+   6,
+   7,
+   6,
+   8
+  ],
+  "anim_stand_left": [
+   6
+  ],
+  "anim_walk_right": [
+   9,
+   10,
+   9,
+   11
+  ],
+  "anim_stand_right": [
+   9
+  ]
+ },
+ "fps": {
+  "anim_walk_down": 6.25,
+  "anim_stand_down": 8.0,
+  "anim_walk_up": 6.25,
+  "anim_stand_up": 8.0,
+  "anim_walk_left": 6.25,
+  "anim_stand_left": 8.0,
+  "anim_walk_right": 6.25,
+  "anim_stand_right": 8.0
+ },
+ "anims": {
+  "walk_down": {
+   "frames": [
+    "walk_down_0",
+    "walk_down_1",
+    "walk_down_0",
+    "walk_down_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_down": {
+   "frames": [
+    "walk_down_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_up": {
+   "frames": [
+    "walk_up_0",
+    "walk_up_1",
+    "walk_up_0",
+    "walk_up_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_up": {
+   "frames": [
+    "walk_up_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_left": {
+   "frames": [
+    "walk_left_0",
+    "walk_left_1",
+    "walk_left_0",
+    "walk_left_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_left": {
+   "frames": [
+    "walk_left_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_right": {
+   "frames": [
+    "walk_right_0",
+    "walk_right_1",
+    "walk_right_0",
+    "walk_right_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_right": {
+   "frames": [
+    "walk_right_0"
+   ],
+   "ms": [
+    0
+   ]
+  }
+ },
+ "facing": null,
+ "target_height": 48,
+ "directions": [
+  "down",
+  "up",
+  "left",
+  "right"
+ ],
+ "palette": [
+  "#0c070b",
+  "#140710",
+  "#1b0f0d",
+  "#19191a",
+  "#271a14",
+  "#241e28",
+  "#252526",
+  "#2e3031",
+  "#363a3d",
+  "#3f4548",
+  "#474e51",
+  "#4f575a",
+  "#565f62",
+  "#5e686b",
+  "#667073",
+  "#717b7c",
+  "#7f8989",
+  "#231011",
+  "#300f18",
+  "#321b16",
+  "#43221e",
+  "#5a3327",
+  "#63353d",
+  "#79384e",
+  "#754536",
+  "#905964",
+  "#b9847d",
+  "#36251b",
+  "#452a1d",
+  "#503221",
+  "#5d3a26",
+  "#594332",
+  "#6b442c",
+  "#67523f",
+  "#7b4e33",
+  "#775229",
+  "#8a5a3b",
+  "#945c43",
+  "#8d6a52",
+  "#996641",
+  "#867862",
+  "#a87431",
+  "#b0724d",
+  "#a8764d",
+  "#c28b5e",
+  "#bd997d",
+  "#d09c45",
+  "#d99d6c",
+  "#edb88a",
+  "#f5cea2",
+  "#200f1c",
+  "#491f2f"
+ ],
+ "lantern_drawn": true,
+ "npc": {
+  "tier": "C",
+  "lantern": true,
+  "spirit": false,
+  "recolor": true,
+  "mainHex": "#5A6A7A",
+  "recolorSets": 4,
+  "variants": [
+   "npc_lampwarden_1",
+   "npc_lampwarden_2",
+   "npc_lampwarden_3",
+   "npc_lampwarden_4"
+  ],
+  "kind": "person"
+ }
+}

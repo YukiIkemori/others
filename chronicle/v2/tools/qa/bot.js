@@ -391,8 +391,9 @@
     if (B.grind && !g.task && (s.map.zones || []).length && s.map.kind !== 'town' && s.map.kind !== 'interior') {
       if (!B.grindAt || (s.x === B.grindAt.x && s.y === B.grindAt.y) || (B.grindT = (B.grindT || 0) + 1) > 400) {
         B.grindT = 0;
-        const res = M.bfs(s.map, [{ x: s.x, y: s.y, lv: s.lv || 0 }], { maxDist: 10 });
-        const cand = [...res.dist.entries()].filter(([k, d]) => d >= 5).map(([k]) => k.split(',').map(Number)).filter(([x, y]) => M.zoneAt(s.map, x, y));
+        const res = M.bfs(s.map, [{ x: s.x, y: s.y, lv: s.lv || 0 }], { maxDist: 30 });
+        const cand = [...res.dist.entries()].filter(([k, d]) => d >= 5 && d <= (B.grindFar ? 30 : 12)).map(([k]) => k.split(',').map(Number)).filter(([x, y]) => M.zoneAt(s.map, x, y));
+        B.grindFar = !cand.length;
         B.grindAt = cand.length ? { x: cand[(B.frames * 7) % cand.length][0], y: cand[(B.frames * 7) % cand.length][1], lv: cand[(B.frames * 7) % cand.length][2] } : null;
         B.plan = null;
       }
@@ -411,6 +412,7 @@
         dirTo(n0.x - s.x, n0.y - s.y);
         return;
       }
+      if (g.grind != null) return;   // 次のフレームで広く探す
     }
     // HP が少ない: 近くの泉（ダンジョン）
     if (!g.noHeal && s.map.kind === 'dungeon' && partyHp() < 0.35 && !B.healing && (B.frames - (B.springAt || -1e9)) > 600) {

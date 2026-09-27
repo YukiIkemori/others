@@ -1,0 +1,55 @@
+{
+ "id": "npc_fortune",
+ "look": "npc_fortune",
+ "name": "占い師",
+ "tier": "C",
+ "kind": "person",
+ "region": "desert",
+ "group": "desert_4",
+ "slot": "B",
+ "heightDots": {
+  "field": 44
+ },
+ "measureH": {
+  "field": 44
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#26305A",
+ "mainHue": 230,
+ "mainName": "深い藍",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_fortune_1",
+  "npc_fortune_2",
+  "npc_fortune_3",
+  "npc_fortune_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_fortune_s1.png"
+ },
+ "pair_file": "npc_grp_desert_4.png",
+ "proportion": {
+  "1": {
+   "neck": 0.20454545454545453,
+   "head_w": 0.45454545454545453,
+   "shoulder": 0.4602272727272727,
+   "neck_clear": 0.9761904761904762
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

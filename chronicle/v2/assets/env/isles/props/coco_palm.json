@@ -1,0 +1,42 @@
+{
+ "id": "coco_palm",
+ "kind": "props",
+ "theme": "isles",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   45,
+   50
+  ],
+  "32": [
+   60,
+   66
+  ],
+  "40": [
+   75,
+   82
+  ]
+ },
+ "feet": {
+  "24": [
+   22,
+   49
+  ],
+  "32": [
+   30,
+   65
+  ],
+  "40": [
+   38,
+   81
+  ]
+ },
+ "files": {
+  "24": "coco_palm@24.png",
+  "32": "coco_palm@32.png",
+  "40": "coco_palm@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/isles_a.png"
+}

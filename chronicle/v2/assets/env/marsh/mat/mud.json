@@ -1,0 +1,18 @@
+{
+ "id": "mud",
+ "kind": "material",
+ "theme": "marsh",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "mud@32.png",
+  "24": "mud@24.png",
+  "40": "mud@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/marsh/mud.png",
+ "native_px": 7.0,
+ "colours": 40
+}

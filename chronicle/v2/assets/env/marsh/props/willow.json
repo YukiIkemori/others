@@ -1,0 +1,42 @@
+{
+ "id": "willow",
+ "kind": "props",
+ "theme": "marsh",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   46,
+   50
+  ],
+  "32": [
+   61,
+   66
+  ],
+  "40": [
+   76,
+   82
+  ]
+ },
+ "feet": {
+  "24": [
+   23,
+   49
+  ],
+  "32": [
+   30,
+   65
+  ],
+  "40": [
+   38,
+   81
+  ]
+ },
+ "files": {
+  "24": "willow@24.png",
+  "32": "willow@32.png",
+  "40": "willow@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/marsh_a.png"
+}

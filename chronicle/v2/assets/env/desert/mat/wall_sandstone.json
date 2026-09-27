@@ -1,0 +1,18 @@
+{
+ "id": "wall_sandstone",
+ "kind": "material",
+ "theme": "desert",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "wall_sandstone@32.png",
+  "24": "wall_sandstone@24.png",
+  "40": "wall_sandstone@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/desert/wall_sandstone.png",
+ "native_px": 7.86,
+ "colours": 40
+}

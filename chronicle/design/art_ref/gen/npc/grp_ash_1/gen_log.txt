@@ -19,3 +19,19 @@
 02:18:06   | ■ シートの状態
 02:18:06   |   シート1 歩き: 要作り直し  npc_ash_woman_s1.png  ドット 8.00px → 描かれた格子のまま（45.0 ドット）
 02:18:06 sheet 1: 0 redo lines
+02:50:44 pipeline: sheets.py ../art_ref/gen/npc/grp_ash_1 --npc npc_ash_man --out out/npc/npc_ash_man
+02:51:47   |   - 向きの見本（configs/refs/npc_ash_man）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:51:47   | 
+02:51:47   | ■ シートの状態
+02:51:47   |   シート1 歩き: 確認あり  npc_ash_man_s1.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+02:51:47   | 
+02:51:47   | packed field 117x216 | palette 52 + face 0
+02:51:47 pipeline: sheets.py ../art_ref/gen/npc/grp_ash_1 --npc npc_ash_woman --out out/npc/npc_ash_woman
+02:52:38   |   「火口の町の女（npc_ash_woman）のシート1の12番（右向き・後ろの足）だけ大きく描かれている（頭の大きさがほかのポーズの約 133%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+02:52:38   | 
+02:52:38   | ■ シートの状態
+02:52:38   |   シート1 歩き: 要作り直し  npc_ash_woman_s1.png  ドット 8.00px → 描かれた格子のまま（45.0 ドット）
+02:52:38   | 
+02:52:38   | packed field 105x268 | palette 52 + face 0
+02:52:44 to_v2 npc_ash_man: npc_ash_man → /home/user/others/chronicle/v2/assets/sprites/npc_ash_man |   field: 12 frames
+02:52:57 to_v2 npc_ash_woman: npc_ash_woman → /home/user/others/chronicle/v2/assets/sprites/npc_ash_woman |   field: 12 frames

@@ -1,0 +1,55 @@
+{
+ "id": "npc_caravan",
+ "look": "npc_caravan",
+ "name": "隊商の人",
+ "tier": "C",
+ "kind": "person",
+ "region": "desert",
+ "group": "desert_3",
+ "slot": "B",
+ "heightDots": {
+  "field": 49
+ },
+ "measureH": {
+  "field": 49
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#7A6A54",
+ "mainHue": 35,
+ "mainName": "灰茶",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_caravan_1",
+  "npc_caravan_2",
+  "npc_caravan_3",
+  "npc_caravan_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_caravan_s1.png"
+ },
+ "pair_file": "npc_grp_desert_3.png",
+ "proportion": {
+  "1": {
+   "neck": 0.30612244897959184,
+   "head_w": 0.5102040816326531,
+   "shoulder": 0.4489795918367347,
+   "neck_clear": 0.8205128205128205
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

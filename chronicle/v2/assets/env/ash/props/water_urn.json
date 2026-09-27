@@ -1,0 +1,42 @@
+{
+ "id": "water_urn",
+ "kind": "props",
+ "theme": "ash",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   15,
+   18
+  ],
+  "32": [
+   20,
+   24
+  ],
+  "40": [
+   25,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   17
+  ],
+  "32": [
+   10,
+   23
+  ],
+  "40": [
+   12,
+   29
+  ]
+ },
+ "files": {
+  "24": "water_urn@24.png",
+  "32": "water_urn@32.png",
+  "40": "water_urn@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/ash_a.png"
+}

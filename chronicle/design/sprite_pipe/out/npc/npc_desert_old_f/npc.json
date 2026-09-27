@@ -1,0 +1,55 @@
+{
+ "id": "npc_desert_old_f",
+ "look": "npc_desert_old_f",
+ "name": "砂漠の老婆",
+ "tier": "C",
+ "kind": "person",
+ "region": "desert",
+ "group": "desert_2",
+ "slot": "B",
+ "heightDots": {
+  "field": 43
+ },
+ "measureH": {
+  "field": 43
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#3E3A36",
+ "mainHue": 30,
+ "mainName": "黒灰",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_desert_old_f_1",
+  "npc_desert_old_f_2",
+  "npc_desert_old_f_3",
+  "npc_desert_old_f_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_desert_old_f_s1.png"
+ },
+ "pair_file": "npc_grp_desert_2.png",
+ "proportion": {
+  "1": {
+   "neck": 0.2674418604651163,
+   "head_w": 0.4534883720930233,
+   "shoulder": 0.46511627906976744,
+   "neck_clear": 0.9486842105263158
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

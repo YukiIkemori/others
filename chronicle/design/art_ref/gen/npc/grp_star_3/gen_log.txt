@@ -19,3 +19,19 @@
 02:27:54   | ■ シートの状態
 02:27:54   |   シート1 歩き: 確認あり  npc_student_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
 02:27:54 sheet 1: 0 redo lines
+02:48:34 pipeline: sheets.py ../art_ref/gen/npc/grp_star_3 --npc npc_star_child --out out/npc/npc_star_child
+02:49:53   |   - 向きの見本（configs/refs/npc_star_child）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:49:53   | 
+02:49:53   | ■ シートの状態
+02:49:53   |   シート1 歩き: 確認あり  npc_star_child_s1.png  ドット 8.00px → 描かれた格子のまま（36.0 ドット）
+02:49:53   | 
+02:49:53   | packed field 78x164 | palette 52 + face 0
+02:49:53 pipeline: sheets.py ../art_ref/gen/npc/grp_star_3 --npc npc_student --out out/npc/npc_student
+02:50:59   |   - 向きの見本（configs/refs/npc_student）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:50:59   | 
+02:50:59   | ■ シートの状態
+02:50:59   |   シート1 歩き: 確認あり  npc_student_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
+02:50:59   | 
+02:50:59   | packed field 102x212 | palette 52 + face 0
+02:51:01 to_v2 npc_star_child: npc_star_child → /home/user/others/chronicle/v2/assets/sprites/npc_star_child |   field: 12 frames
+02:51:03 to_v2 npc_student: npc_student → /home/user/others/chronicle/v2/assets/sprites/npc_student |   field: 12 frames

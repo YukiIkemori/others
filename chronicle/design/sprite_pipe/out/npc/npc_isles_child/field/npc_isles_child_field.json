@@ -1,0 +1,475 @@
+{
+ "character": "npc_isles_child",
+ "set": "field",
+ "image": "npc_isles_child_field.png",
+ "cell": [
+  27,
+  40
+ ],
+ "anchor": [
+  14,
+  37
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "walk_down_0": {
+   "x": 0,
+   "y": 0,
+   "w": 27,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     14,
+     2
+    ],
+    "center": [
+     14,
+     19
+    ],
+    "front": [
+     5,
+     25
+    ]
+   }
+  },
+  "walk_down_1": {
+   "x": 27,
+   "y": 0,
+   "w": 27,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     14,
+     2
+    ],
+    "center": [
+     14,
+     18
+    ],
+    "front": [
+     5,
+     7
+    ]
+   }
+  },
+  "walk_down_2": {
+   "x": 54,
+   "y": 0,
+   "w": 27,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     14,
+     2
+    ],
+    "center": [
+     14,
+     19
+    ],
+    "front": [
+     4,
+     25
+    ]
+   }
+  },
+  "walk_up_0": {
+   "x": 0,
+   "y": 40,
+   "w": 27,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     14,
+     2
+    ],
+    "center": [
+     14,
+     19
+    ],
+    "front": [
+     5,
+     25
+    ]
+   }
+  },
+  "walk_up_1": {
+   "x": 27,
+   "y": 40,
+   "w": 27,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     14,
+     2
+    ],
+    "center": [
+     14,
+     19
+    ],
+    "front": [
+     4,
+     25
+    ]
+   }
+  },
+  "walk_up_2": {
+   "x": 54,
+   "y": 40,
+   "w": 27,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     14,
+     2
+    ],
+    "center": [
+     14,
+     19
+    ],
+    "front": [
+     4,
+     25
+    ]
+   }
+  },
+  "walk_left_0": {
+   "x": 0,
+   "y": 80,
+   "w": 27,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     14,
+     2
+    ],
+    "center": [
+     15,
+     19
+    ],
+    "front": [
+     6,
+     6
+    ]
+   }
+  },
+  "walk_left_1": {
+   "x": 27,
+   "y": 80,
+   "w": 27,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     14,
+     2
+    ],
+    "center": [
+     15,
+     20
+    ],
+    "front": [
+     6,
+     7
+    ]
+   }
+  },
+  "walk_left_2": {
+   "x": 54,
+   "y": 80,
+   "w": 27,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     14,
+     2
+    ],
+    "center": [
+     15,
+     20
+    ],
+    "front": [
+     6,
+     6
+    ]
+   }
+  },
+  "walk_right_0": {
+   "x": 0,
+   "y": 120,
+   "w": 27,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     14,
+     3
+    ],
+    "center": [
+     14,
+     20
+    ],
+    "front": [
+     6,
+     8
+    ]
+   }
+  },
+  "walk_right_1": {
+   "x": 27,
+   "y": 120,
+   "w": 27,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     14,
+     3
+    ],
+    "center": [
+     12,
+     20
+    ],
+    "front": [
+     2,
+     25
+    ]
+   }
+  },
+  "walk_right_2": {
+   "x": 54,
+   "y": 120,
+   "w": 27,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     14,
+     3
+    ],
+    "center": [
+     13,
+     20
+    ],
+    "front": [
+     4,
+     25
+    ]
+   }
+  }
+ },
+ "anims": {
+  "walk_down": {
+   "frames": [
+    "walk_down_0",
+    "walk_down_1",
+    "walk_down_0",
+    "walk_down_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_down": {
+   "frames": [
+    "walk_down_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_up": {
+   "frames": [
+    "walk_up_0",
+    "walk_up_1",
+    "walk_up_0",
+    "walk_up_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_up": {
+   "frames": [
+    "walk_up_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_left": {
+   "frames": [
+    "walk_left_0",
+    "walk_left_1",
+    "walk_left_0",
+    "walk_left_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_left": {
+   "frames": [
+    "walk_left_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_right": {
+   "frames": [
+    "walk_right_0",
+    "walk_right_1",
+    "walk_right_0",
+    "walk_right_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_right": {
+   "frames": [
+    "walk_right_0"
+   ],
+   "ms": [
+    0
+   ]
+  }
+ },
+ "palette": [
+  "#0d0709",
+  "#140610",
+  "#1c1517",
+  "#282120",
+  "#322a28",
+  "#3d3632",
+  "#463f3b",
+  "#645b58",
+  "#79736e",
+  "#6c7680",
+  "#7c8897",
+  "#948c84",
+  "#899ba7",
+  "#afa69b",
+  "#aab4b6",
+  "#c5beb3",
+  "#d6cec1",
+  "#e4ded1",
+  "#f3edde",
+  "#2d1814",
+  "#40281f",
+  "#5f3422",
+  "#573b2b",
+  "#7d482c",
+  "#7a533a",
+  "#9d5330",
+  "#94633f",
+  "#a6683d",
+  "#977c65",
+  "#a67a53",
+  "#bb7140",
+  "#be7f50",
+  "#d5854a",
+  "#d8955b",
+  "#d29a65",
+  "#caa286",
+  "#e49c59",
+  "#edac6b",
+  "#eab377",
+  "#fac079",
+  "#f8c787",
+  "#f6d5ac",
+  "#4a5a69",
+  "#547087",
+  "#6887a3",
+  "#769db8",
+  "#8cb4d3",
+  "#98c4e1",
+  "#a9d2ea",
+  "#313a4a",
+  "#200b19",
+  "#2e1529"
+ ],
+ "directions": [
+  "down",
+  "up",
+  "left",
+  "right"
+ ],
+ "target_height": 36,
+ "lantern_drawn": false,
+ "npc": {
+  "tier": "C",
+  "lantern": false,
+  "spirit": false,
+  "recolor": true,
+  "mainHex": "#E4E8EA",
+  "recolorSets": 4,
+  "variants": [
+   "npc_isles_child_1",
+   "npc_isles_child_2",
+   "npc_isles_child_3",
+   "npc_isles_child_4"
+  ],
+  "kind": "person"
+ }
+}

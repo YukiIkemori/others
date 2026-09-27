@@ -19,3 +19,19 @@
 02:08:11   | ■ シートの状態
 02:08:11   |   シート1 歩き: 確認あり  npc_isles_woman_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
 02:08:11 sheet 1: 0 redo lines
+02:51:21 pipeline: sheets.py ../art_ref/gen/npc/grp_isles_1 --npc npc_isles_man --out out/npc/npc_isles_man
+02:51:50   |   - 向きの見本（configs/refs/npc_isles_man）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:51:50   | 
+02:51:50   | ■ シートの状態
+02:51:50   |   シート1 歩き: 確認あり  npc_isles_man_s1.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+02:51:50   | 
+02:51:50   | packed field 111x212 | palette 52 + face 0
+02:51:50 pipeline: sheets.py ../art_ref/gen/npc/grp_isles_1 --npc npc_isles_woman --out out/npc/npc_isles_woman
+02:52:16   |   - 向きの見本（configs/refs/npc_isles_woman）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:52:16   | 
+02:52:16   | ■ シートの状態
+02:52:16   |   シート1 歩き: 確認あり  npc_isles_woman_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+02:52:16   | 
+02:52:16   | packed field 93x204 | palette 52 + face 0
+02:52:17 to_v2 npc_isles_man: npc_isles_man → /home/user/others/chronicle/v2/assets/sprites/npc_isles_man |   field: 12 frames
+02:52:19 to_v2 npc_isles_woman: npc_isles_woman → /home/user/others/chronicle/v2/assets/sprites/npc_isles_woman |   field: 12 frames

@@ -1,0 +1,55 @@
+{
+ "id": "npc_isles_child",
+ "look": "npc_isles_child",
+ "name": "諸島の子ども",
+ "tier": "C",
+ "kind": "person",
+ "region": "isles",
+ "group": "isles_3",
+ "slot": "A",
+ "heightDots": {
+  "field": 36
+ },
+ "measureH": {
+  "field": 36
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#E4E8EA",
+ "mainHue": 205,
+ "mainName": "白",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_isles_child_1",
+  "npc_isles_child_2",
+  "npc_isles_child_3",
+  "npc_isles_child_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_isles_child_s1.png"
+ },
+ "pair_file": "npc_grp_isles_3.png",
+ "proportion": {
+  "1": {
+   "neck": 0.3888888888888889,
+   "head_w": 0.4722222222222222,
+   "shoulder": 0.3680555555555556,
+   "neck_clear": 0.5294117647058824
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

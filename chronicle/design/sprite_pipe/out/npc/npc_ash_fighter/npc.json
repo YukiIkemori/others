@@ -1,0 +1,55 @@
+{
+ "id": "npc_ash_fighter",
+ "look": "npc_ash_fighter",
+ "name": "一族の闘士",
+ "tier": "C",
+ "kind": "person",
+ "region": "ash",
+ "group": "ash_3",
+ "slot": "B",
+ "heightDots": {
+  "field": 50
+ },
+ "measureH": {
+  "field": 50
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#3E3230",
+ "mainHue": 20,
+ "mainName": "黒と銅",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_ash_fighter_1",
+  "npc_ash_fighter_2",
+  "npc_ash_fighter_3",
+  "npc_ash_fighter_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_ash_fighter_s1.png"
+ },
+ "pair_file": "npc_grp_ash_3.png",
+ "proportion": {
+  "1": {
+   "neck": 0.34,
+   "head_w": 0.36,
+   "shoulder": 0.375,
+   "neck_clear": 0.6666666666666666
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

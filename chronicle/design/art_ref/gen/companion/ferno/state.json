@@ -364,7 +364,12 @@
     "ko is 117x38 art px, larger than its cell 104x96 (clipped)"
    ],
    "pitch": 5.692,
-   "from_raw": "raw/s3_a1.png"
+   "from_raw": "raw/s3_a1.png",
+   "edit_rounds": 1,
+   "fixed_slots": [
+    "glimmer",
+    "victory_a"
+   ]
   },
   "4": {
    "attempts": [
@@ -538,7 +543,18 @@
     "bare_cast is 69x79 art px, larger than its cell 112x80 (clipped)"
    ],
    "pitch": 4.91,
-   "from_raw": "raw/s4_a1.png"
+   "from_raw": "raw/s4_a1.png",
+   "cell": [
+    112,
+    88
+   ],
+   "edit_rounds": 1,
+   "fixed_slots": [
+    "bare_cast",
+    "bare_idle",
+    "bare_slash",
+    "smash"
+   ]
   },
   "5": {
    "attempts": [

@@ -1,0 +1,18 @@
+{
+ "id": "glow_sea",
+ "kind": "material",
+ "theme": "isles",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "glow_sea@32.png",
+  "24": "glow_sea@24.png",
+  "40": "glow_sea@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/isles/glow_sea.png",
+ "native_px": 11.2,
+ "colours": 40
+}

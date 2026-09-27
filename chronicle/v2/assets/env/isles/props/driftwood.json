@@ -1,0 +1,42 @@
+{
+ "id": "driftwood",
+ "kind": "props",
+ "theme": "isles",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   37,
+   18
+  ],
+  "32": [
+   49,
+   24
+  ],
+  "40": [
+   61,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   18,
+   17
+  ],
+  "32": [
+   24,
+   23
+  ],
+  "40": [
+   31,
+   29
+  ]
+ },
+ "files": {
+  "24": "driftwood@24.png",
+  "32": "driftwood@32.png",
+  "40": "driftwood@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/isles_a.png"
+}

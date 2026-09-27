@@ -1,0 +1,42 @@
+{
+ "id": "globe",
+ "kind": "props",
+ "theme": "star",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   11,
+   18
+  ],
+  "32": [
+   15,
+   24
+  ],
+  "40": [
+   19,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   6,
+   17
+  ],
+  "32": [
+   8,
+   23
+  ],
+  "40": [
+   9,
+   29
+  ]
+ },
+ "files": {
+  "24": "globe@24.png",
+  "32": "globe@32.png",
+  "40": "globe@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/star_a.png"
+}

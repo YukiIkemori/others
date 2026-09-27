@@ -1,0 +1,572 @@
+{
+ "character": "npc_snow_child",
+ "set": "field",
+ "look": "npc_snow_child",
+ "source": "out/npc/npc_snow_child/field",
+ "cell": [
+  30,
+  40
+ ],
+ "anchor": [
+  14,
+  37
+ ],
+ "frames": [
+  {
+   "id": "walk_down_0",
+   "x": 0,
+   "y": 0,
+   "w": 30,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     14,
+     2
+    ],
+    "center": [
+     14,
+     20
+    ],
+    "front": [
+     3,
+     25
+    ]
+   }
+  },
+  {
+   "id": "walk_down_1",
+   "x": 30,
+   "y": 0,
+   "w": 30,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     14,
+     2
+    ],
+    "center": [
+     14,
+     19
+    ],
+    "front": [
+     3,
+     25
+    ]
+   }
+  },
+  {
+   "id": "walk_down_2",
+   "x": 60,
+   "y": 0,
+   "w": 30,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     14,
+     2
+    ],
+    "center": [
+     15,
+     19
+    ],
+    "front": [
+     3,
+     24
+    ]
+   }
+  },
+  {
+   "id": "walk_up_0",
+   "x": 0,
+   "y": 40,
+   "w": 30,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     14,
+     2
+    ],
+    "center": [
+     14,
+     20
+    ],
+    "front": [
+     3,
+     24
+    ]
+   }
+  },
+  {
+   "id": "walk_up_1",
+   "x": 30,
+   "y": 40,
+   "w": 30,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     14,
+     3
+    ],
+    "center": [
+     14,
+     20
+    ],
+    "front": [
+     2,
+     23
+    ]
+   }
+  },
+  {
+   "id": "walk_up_2",
+   "x": 60,
+   "y": 40,
+   "w": 30,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     14,
+     2
+    ],
+    "center": [
+     14,
+     20
+    ],
+    "front": [
+     2,
+     23
+    ]
+   }
+  },
+  {
+   "id": "walk_left_0",
+   "x": 0,
+   "y": 80,
+   "w": 30,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     15,
+     3
+    ],
+    "center": [
+     15,
+     19
+    ],
+    "front": [
+     6,
+     8
+    ]
+   }
+  },
+  {
+   "id": "walk_left_1",
+   "x": 30,
+   "y": 80,
+   "w": 30,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     15,
+     2
+    ],
+    "center": [
+     15,
+     19
+    ],
+    "front": [
+     6,
+     7
+    ]
+   }
+  },
+  {
+   "id": "walk_left_2",
+   "x": 60,
+   "y": 80,
+   "w": 30,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     14,
+     2
+    ],
+    "center": [
+     15,
+     19
+    ],
+    "front": [
+     5,
+     7
+    ]
+   }
+  },
+  {
+   "id": "walk_right_0",
+   "x": 0,
+   "y": 120,
+   "w": 30,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     13,
+     2
+    ],
+    "center": [
+     13,
+     19
+    ],
+    "front": [
+     5,
+     8
+    ]
+   }
+  },
+  {
+   "id": "walk_right_1",
+   "x": 30,
+   "y": 120,
+   "w": 30,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     13,
+     2
+    ],
+    "center": [
+     13,
+     19
+    ],
+    "front": [
+     5,
+     8
+    ]
+   }
+  },
+  {
+   "id": "walk_right_2",
+   "x": 60,
+   "y": 120,
+   "w": 30,
+   "h": 40,
+   "anchor": [
+    14,
+    37
+   ],
+   "points": {
+    "head": [
+     13,
+     2
+    ],
+    "center": [
+     12,
+     19
+    ],
+    "front": [
+     4,
+     9
+    ]
+   }
+  }
+ ],
+ "poses": {
+  "walk_down_0": [
+   0
+  ],
+  "walk_down_1": [
+   1
+  ],
+  "walk_down_2": [
+   2
+  ],
+  "walk_up_0": [
+   3
+  ],
+  "walk_up_1": [
+   4
+  ],
+  "walk_up_2": [
+   5
+  ],
+  "walk_left_0": [
+   6
+  ],
+  "walk_left_1": [
+   7
+  ],
+  "walk_left_2": [
+   8
+  ],
+  "walk_right_0": [
+   9
+  ],
+  "walk_right_1": [
+   10
+  ],
+  "walk_right_2": [
+   11
+  ],
+  "anim_walk_down": [
+   0,
+   1,
+   0,
+   2
+  ],
+  "anim_stand_down": [
+   0
+  ],
+  "anim_walk_up": [
+   3,
+   4,
+   3,
+   5
+  ],
+  "anim_stand_up": [
+   3
+  ],
+  "anim_walk_left": [
+   6,
+   7,
+   6,
+   8
+  ],
+  "anim_stand_left": [
+   6
+  ],
+  "anim_walk_right": [
+   9,
+   10,
+   9,
+   11
+  ],
+  "anim_stand_right": [
+   9
+  ]
+ },
+ "fps": {
+  "anim_walk_down": 6.25,
+  "anim_stand_down": 8.0,
+  "anim_walk_up": 6.25,
+  "anim_stand_up": 8.0,
+  "anim_walk_left": 6.25,
+  "anim_stand_left": 8.0,
+  "anim_walk_right": 6.25,
+  "anim_stand_right": 8.0
+ },
+ "anims": {
+  "walk_down": {
+   "frames": [
+    "walk_down_0",
+    "walk_down_1",
+    "walk_down_0",
+    "walk_down_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_down": {
+   "frames": [
+    "walk_down_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_up": {
+   "frames": [
+    "walk_up_0",
+    "walk_up_1",
+    "walk_up_0",
+    "walk_up_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_up": {
+   "frames": [
+    "walk_up_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_left": {
+   "frames": [
+    "walk_left_0",
+    "walk_left_1",
+    "walk_left_0",
+    "walk_left_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_left": {
+   "frames": [
+    "walk_left_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_right": {
+   "frames": [
+    "walk_right_0",
+    "walk_right_1",
+    "walk_right_0",
+    "walk_right_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_right": {
+   "frames": [
+    "walk_right_0"
+   ],
+   "ms": [
+    0
+   ]
+  }
+ },
+ "facing": null,
+ "target_height": 36,
+ "directions": [
+  "down",
+  "up",
+  "left",
+  "right"
+ ],
+ "palette": [
+  "#110a0c",
+  "#140815",
+  "#241c17",
+  "#362920",
+  "#2f3339",
+  "#584f4f",
+  "#4b5463",
+  "#7f7066",
+  "#2f1818",
+  "#461b0d",
+  "#583d39",
+  "#392011",
+  "#60220c",
+  "#4d3b2c",
+  "#5d4027",
+  "#6a3a1c",
+  "#7b3014",
+  "#8e3616",
+  "#665240",
+  "#86512b",
+  "#7b583c",
+  "#a54118",
+  "#77614b",
+  "#7f642c",
+  "#9f552a",
+  "#b94d1f",
+  "#a2632d",
+  "#8b745a",
+  "#967353",
+  "#a37042",
+  "#a47b39",
+  "#c8772d",
+  "#a2886a",
+  "#bd823b",
+  "#be834d",
+  "#b88b62",
+  "#b29776",
+  "#dc882b",
+  "#d59d43",
+  "#c1a886",
+  "#d0b691",
+  "#efb476",
+  "#e0c8a3",
+  "#f8d29d",
+  "#f0dbb6",
+  "#292f1d",
+  "#364226",
+  "#46572f",
+  "#615726",
+  "#586b38",
+  "#1e2337",
+  "#324465"
+ ],
+ "lantern_drawn": false,
+ "npc": {
+  "tier": "C",
+  "lantern": false,
+  "spirit": false,
+  "recolor": true,
+  "mainHex": "#B85A36",
+  "recolorSets": 4,
+  "variants": [
+   "npc_snow_child_1",
+   "npc_snow_child_2",
+   "npc_snow_child_3",
+   "npc_snow_child_4"
+  ],
+  "kind": "person"
+ }
+}

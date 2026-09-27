@@ -1,0 +1,42 @@
+{
+ "id": "wisp_lamp",
+ "kind": "props",
+ "theme": "marsh",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   18,
+   33
+  ],
+  "32": [
+   24,
+   44
+  ],
+  "40": [
+   30,
+   55
+  ]
+ },
+ "feet": {
+  "24": [
+   9,
+   32
+  ],
+  "32": [
+   12,
+   43
+  ],
+  "40": [
+   15,
+   54
+  ]
+ },
+ "files": {
+  "24": "wisp_lamp@24.png",
+  "32": "wisp_lamp@32.png",
+  "40": "wisp_lamp@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/marsh_a.png"
+}

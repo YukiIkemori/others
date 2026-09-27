@@ -1,0 +1,42 @@
+{
+ "id": "mud_boat",
+ "kind": "props",
+ "theme": "marsh",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   25,
+   18
+  ],
+  "32": [
+   33,
+   24
+  ],
+  "40": [
+   41,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   12,
+   17
+  ],
+  "32": [
+   16,
+   23
+  ],
+  "40": [
+   21,
+   29
+  ]
+ },
+ "files": {
+  "24": "mud_boat@24.png",
+  "32": "mud_boat@32.png",
+  "40": "mud_boat@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/marsh_a.png"
+}

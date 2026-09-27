@@ -1,0 +1,1079 @@
+{
+ "char": "belladonna",
+ "companion": "belladonna",
+ "npc": null,
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/companion/belladonna",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/belladonna/comp_belladonna_s1.png",
+   "size": [
+    3584,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x4",
+    "logical_cell": [
+     112,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 576.0,
+   "native_height_at_period": 72.0,
+   "scale_note": "描かれた格子のまま（72.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "ref_front": {
+     "size": [
+      53,
+      72
+     ],
+     "box": [
+      216,
+      128,
+      672,
+      736
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_34": {
+     "size": [
+      54,
+      73
+     ],
+     "box": [
+      1112,
+      120,
+      1576,
+      736
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_side_left": {
+     "size": [
+      42,
+      71
+     ],
+     "box": [
+      2056,
+      136,
+      2424,
+      736
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_back": {
+     "size": [
+      59,
+      72
+     ],
+     "box": [
+      2880,
+      128,
+      3384,
+      736
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_idle_left": {
+     "size": [
+      68,
+      72
+     ],
+     "box": [
+      160,
+      896,
+      736,
+      1504
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_face": {
+     "size": [
+      77,
+      84
+     ],
+     "box": [
+      1016,
+      800,
+      1664,
+      1504
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_palette": {
+     "size": [
+      63,
+      30
+     ],
+     "box": [
+      1968,
+      1016,
+      2504,
+      1288
+     ],
+     "air": 0,
+     "blur": 0.0
+    }
+   }
+  },
+  "2": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/belladonna/comp_belladonna_s2.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 432.0,
+   "native_height_at_period": 54.0,
+   "scale_note": "描かれた格子のまま（54.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      37,
+      54
+     ],
+     "box": [
+      152,
+      32,
+      480,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.17
+    },
+    "walk_down_1": {
+     "size": [
+      37,
+      54
+     ],
+     "box": [
+      792,
+      32,
+      1120,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.06,
+     "scale": 1.037
+    },
+    "walk_down_2": {
+     "size": [
+      37,
+      55
+     ],
+     "box": [
+      1432,
+      24,
+      1760,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.77,
+     "scale": 1.0
+    },
+    "walk_up_0": {
+     "size": [
+      36,
+      53
+     ],
+     "box": [
+      160,
+      552,
+      480,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.17,
+     "scale": 0.912
+    },
+    "walk_up_1": {
+     "size": [
+      36,
+      53
+     ],
+     "box": [
+      800,
+      552,
+      1120,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.12,
+     "scale": 0.937
+    },
+    "walk_up_2": {
+     "size": [
+      36,
+      54
+     ],
+     "box": [
+      1440,
+      544,
+      1760,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.16,
+     "scale": 0.912
+    },
+    "walk_left_0": {
+     "size": [
+      31,
+      54
+     ],
+     "box": [
+      176,
+      1056,
+      456,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      35,
+      54
+     ],
+     "box": [
+      800,
+      1056,
+      1112,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.025
+    },
+    "walk_left_2": {
+     "size": [
+      31,
+      54
+     ],
+     "box": [
+      1456,
+      1056,
+      1736,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_right_0": {
+     "size": [
+      31,
+      55
+     ],
+     "box": [
+      176,
+      1560,
+      456,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      38,
+      54
+     ],
+     "box": [
+      792,
+      1568,
+      1128,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.025
+    },
+    "walk_right_2": {
+     "size": [
+      35,
+      54
+     ],
+     "box": [
+      1440,
+      1568,
+      1752,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    }
+   }
+  },
+  "3": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/belladonna/comp_belladonna_s3.png",
+   "size": [
+    4160,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x5",
+    "logical_cell": [
+     104,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 576.0,
+   "native_height_at_period": 72.0,
+   "scale_note": "描かれた格子のまま（72.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "idle_a": {
+     "size": [
+      57,
+      72
+     ],
+     "box": [
+      168,
+      128,
+      656,
+      736
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.98,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.08
+     }
+    },
+    "idle_b": {
+     "size": [
+      58,
+      72
+     ],
+     "box": [
+      1000,
+      128,
+      1496,
+      736
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.94,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.04
+     },
+     "scale": 1.022
+    },
+    "step": {
+     "size": [
+      58,
+      70
+     ],
+     "box": [
+      1832,
+      144,
+      2328,
+      736
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.06,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.16
+     }
+    },
+    "guard": {
+     "size": [
+      63,
+      73
+     ],
+     "box": [
+      2640,
+      120,
+      3176,
+      736
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.23,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.33
+     },
+     "scale": 1.041
+    },
+    "hit": {
+     "size": [
+      70,
+      72
+     ],
+     "box": [
+      3448,
+      128,
+      4040,
+      736
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.55,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.65
+     },
+     "scale": 0.984
+    },
+    "weak": {
+     "size": [
+      58,
+      64
+     ],
+     "box": [
+      168,
+      960,
+      664,
+      1504
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.73,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.83
+     },
+     "scale": 1.035
+    },
+    "ko": {
+     "size": [
+      92,
+      37
+     ],
+     "box": [
+      864,
+      1176,
+      1632,
+      1504
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "victory_a": {
+     "size": [
+      57,
+      87
+     ],
+     "box": [
+      1832,
+      776,
+      2320,
+      1504
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.54,
+     "facing_cues": {
+      "head": 0.25,
+      "upper": 0.29
+     },
+     "scale": 1.022
+    },
+    "victory_b": {
+     "size": [
+      58,
+      71
+     ],
+     "box": [
+      2664,
+      904,
+      3160,
+      1504
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 1.016
+    },
+    "glimmer": {
+     "size": [
+      58,
+      72
+     ],
+     "box": [
+      3496,
+      896,
+      3992,
+      1504
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.99,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.09
+     },
+     "scale": 1.028
+    }
+   }
+  },
+  "4": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/belladonna/comp_belladonna_s4.png",
+   "size": [
+    4480,
+    1920
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "3x5",
+    "logical_cell": [
+     112,
+     80
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 576.0,
+   "native_height_at_period": 72.0,
+   "scale_note": "描かれた格子のまま（72.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "windup": {
+     "size": [
+      58,
+      73
+     ],
+     "box": [
+      200,
+      8,
+      696,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.34,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.44
+     },
+     "scale": 1.009
+    },
+    "slash": {
+     "size": [
+      62,
+      73
+     ],
+     "box": [
+      1080,
+      8,
+      1608,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.26,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.36
+     },
+     "scale": 1.022
+    },
+    "thrust_ready": {
+     "size": [
+      62,
+      73
+     ],
+     "box": [
+      1976,
+      8,
+      2504,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.26,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.36
+     }
+    },
+    "thrust": {
+     "size": [
+      84,
+      73
+     ],
+     "box": [
+      2784,
+      8,
+      3488,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.21,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.31
+     },
+     "scale": 0.997
+    },
+    "charge": {
+     "size": [
+      72,
+      52
+     ],
+     "box": [
+      3728,
+      176,
+      4336,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.59,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.69
+     },
+     "scale": 0.959
+    },
+    "smash": {
+     "size": [
+      59,
+      80
+     ],
+     "box": [
+      192,
+      624,
+      696,
+      1296
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.1,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.2
+     },
+     "scale": 0.972
+    },
+    "cast_a": {
+     "size": [
+      68,
+      72
+     ],
+     "box": [
+      1056,
+      656,
+      1632,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.35,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.45
+     },
+     "scale": 0.991
+    },
+    "cast_b": {
+     "size": [
+      62,
+      73
+     ],
+     "box": [
+      1976,
+      648,
+      2504,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.83,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.93
+     },
+     "scale": 0.978
+    },
+    "item": {
+     "size": [
+      62,
+      72
+     ],
+     "box": [
+      2872,
+      656,
+      3400,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.74,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.84
+     },
+     "scale": 0.984
+    },
+    "evade": {
+     "size": [
+      52,
+      73
+     ],
+     "box": [
+      3808,
+      648,
+      4256,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.99,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.09
+     },
+     "scale": 0.984
+    },
+    "bare_idle": {
+     "size": [
+      55,
+      72
+     ],
+     "box": [
+      208,
+      1296,
+      680,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.04,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.14
+     }
+    },
+    "bare_windup": {
+     "size": [
+      59,
+      72
+     ],
+     "box": [
+      1088,
+      1296,
+      1592,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.83,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.93
+     },
+     "scale": 0.997
+    },
+    "bare_slash": {
+     "size": [
+      66,
+      72
+     ],
+     "box": [
+      1960,
+      1296,
+      2520,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.23,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.33
+     },
+     "scale": 1.003
+    },
+    "bare_thrust": {
+     "size": [
+      75,
+      72
+     ],
+     "box": [
+      2816,
+      1296,
+      3448,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.64,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.74
+     },
+     "scale": 1.003
+    },
+    "bare_cast": {
+     "size": [
+      64,
+      72
+     ],
+     "box": [
+      3760,
+      1296,
+      4304,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.62,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.72
+     },
+     "scale": 0.991
+    }
+   }
+  },
+  "5": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/belladonna/comp_belladonna_s5.png",
+   "size": [
+    3072,
+    768
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "1x4",
+    "logical_cell": [
+     96,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 640.0,
+   "native_height_at_period": 80.0,
+   "scale_note": "描かれた格子のまま（80.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "face_neutral": {
+     "size": [
+      71,
+      80
+     ],
+     "box": [
+      80,
+      80,
+      680,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_smile": {
+     "size": [
+      71,
+      80
+     ],
+     "box": [
+      848,
+      80,
+      1448,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_surprise": {
+     "size": [
+      71,
+      80
+     ],
+     "box": [
+      1616,
+      80,
+      2216,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_pain": {
+     "size": [
+      71,
+      79
+     ],
+     "box": [
+      2384,
+      88,
+      2984,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "ground",
+   "msg": "2 行目の足元の高さが最大 27 ドットずれている。足元で揃えた",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート1 の 7 番（配色見本） の足元の影を消した",
+   "slot": "ref_palette",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "design_refs",
+   "msg": "設定画から向きの見本 6 枚と配色（52 色）を取った。<out>/refs に保存（承認後は tools/refs.py belladonna <out> で configs/refs に）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  }
+ ]
+}

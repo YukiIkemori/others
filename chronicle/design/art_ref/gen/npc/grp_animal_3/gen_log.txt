@@ -55,3 +55,19 @@
 01:48:13   | ■ シートの状態
 01:48:13   |   シート1 歩き: 要作り直し  ani_sheep_s1.png  ドット 8.00px → 描かれた格子のまま（20.0 ドット）
 01:48:13 sheet 1: 1 redo lines: シート1 の 4 番（上向き・立ち） の身長が 24 ドット（ほかは 20）
+02:44:10 pipeline: sheets.py ../art_ref/gen/npc/grp_animal_3 --npc ani_camel --out out/npc/ani_camel
+02:44:46   |   - 向きの見本（configs/refs/ani_camel）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:44:46   | 
+02:44:46   | ■ シートの状態
+02:44:46   |   シート1 歩き: 確認あり  ani_camel_s1.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+02:44:46   | 
+02:44:46   | packed field 243x228 | palette 52 + face 0
+02:44:46 pipeline: sheets.py ../art_ref/gen/npc/grp_animal_3 --npc ani_sheep --out out/npc/ani_sheep
+02:45:03   |   「ひつじ（ani_sheep）のシート1の4番（上向き・立ち）だけ大きさが違う。ほかのポーズと同じ身長にして、同じ条件で描き直して」
+02:45:03   | 
+02:45:03   | ■ シートの状態
+02:45:03   |   シート1 歩き: 要作り直し  ani_sheep_s1.png  ドット 8.00px → 描かれた格子のまま（20.0 ドット）
+02:45:03   | 
+02:45:03   | packed field 96x112 | palette 46 + face 0
+02:45:04 to_v2 ani_camel: ani_camel → /home/user/others/chronicle/v2/assets/sprites/ani_camel |   field: 12 frames
+02:45:06 to_v2 ani_sheep: ani_sheep → /home/user/others/chronicle/v2/assets/sprites/ani_sheep |   field: 12 frames

@@ -19,3 +19,19 @@
 02:24:33   | ■ シートの状態
 02:24:33   |   シート1 歩き: 確認あり  npc_star_old_f_s1.png  ドット 8.00px → 描かれた格子のまま（42.5 ドット）
 02:24:33 sheet 1: 0 redo lines
+02:46:09 pipeline: sheets.py ../art_ref/gen/npc/grp_star_2 --npc npc_star_old_m --out out/npc/npc_star_old_m
+02:47:19   |   「老学者（npc_star_old_m）のシート1の5番（上向き・右足前）だけ大きく描かれている（頭の大きさがほかのポーズの約 120%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+02:47:19   | 
+02:47:19   | ■ シートの状態
+02:47:19   |   シート1 歩き: 要作り直し  npc_star_old_m_s1.png  ドット 8.00px → 描かれた格子のまま（45.0 ドット）
+02:47:19   | 
+02:47:19   | packed field 96x204 | palette 52 + face 0
+02:47:19 pipeline: sheets.py ../art_ref/gen/npc/grp_star_2 --npc npc_star_old_f --out out/npc/npc_star_old_f
+02:48:29   |   - 向きの見本（configs/refs/npc_star_old_f）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:48:29   | 
+02:48:29   | ■ シートの状態
+02:48:29   |   シート1 歩き: 確認あり  npc_star_old_f_s1.png  ドット 8.00px → 描かれた格子のまま（42.5 ドット）
+02:48:29   | 
+02:48:29   | packed field 96x196 | palette 52 + face 0
+02:48:32 to_v2 npc_star_old_m: npc_star_old_m → /home/user/others/chronicle/v2/assets/sprites/npc_star_old_m |   field: 12 frames
+02:48:34 to_v2 npc_star_old_f: npc_star_old_f → /home/user/others/chronicle/v2/assets/sprites/npc_star_old_f |   field: 12 frames

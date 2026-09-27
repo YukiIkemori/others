@@ -1,0 +1,42 @@
+{
+ "id": "lily_pads",
+ "kind": "props",
+ "theme": "marsh",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   21,
+   18
+  ],
+  "32": [
+   28,
+   24
+  ],
+  "40": [
+   35,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   10,
+   17
+  ],
+  "32": [
+   14,
+   23
+  ],
+  "40": [
+   18,
+   29
+  ]
+ },
+ "files": {
+  "24": "lily_pads@24.png",
+  "32": "lily_pads@32.png",
+  "40": "lily_pads@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/marsh_a.png"
+}

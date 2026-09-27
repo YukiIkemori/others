@@ -19,3 +19,19 @@
 01:42:56   | ■ シートの状態
 01:42:56   |   シート1 歩き: OK  npc_fortune_s1.png  ドット 8.00px → 描かれた格子のまま（43.5 ドット）
 01:42:56 sheet 1: 0 redo lines
+02:42:37 pipeline: sheets.py ../art_ref/gen/npc/grp_desert_4 --npc npc_hawk --out out/npc/npc_hawk
+02:43:26   |   - 向きの見本（configs/refs/npc_hawk）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:43:26   | 
+02:43:26   | ■ シートの状態
+02:43:26   |   シート1 歩き: 確認あり  npc_hawk_s1.png  ドット 8.00px → 描かれた格子のまま（50.5 ドット）
+02:43:26   | 
+02:43:26   | packed field 120x224 | palette 52 + face 0
+02:43:26 pipeline: sheets.py ../art_ref/gen/npc/grp_desert_4 --npc npc_fortune --out out/npc/npc_fortune
+02:44:08   |   - 向きの見本（configs/refs/npc_fortune）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:44:08   | 
+02:44:08   | ■ シートの状態
+02:44:08   |   シート1 歩き: OK  npc_fortune_s1.png  ドット 8.00px → 描かれた格子のまま（43.5 ドット）
+02:44:08   | 
+02:44:08   | packed field 141x196 | palette 52 + face 0
+02:44:09 to_v2 npc_hawk: npc_hawk → /home/user/others/chronicle/v2/assets/sprites/npc_hawk |   field: 12 frames
+02:44:10 to_v2 npc_fortune: npc_fortune → /home/user/others/chronicle/v2/assets/sprites/npc_fortune |   field: 12 frames

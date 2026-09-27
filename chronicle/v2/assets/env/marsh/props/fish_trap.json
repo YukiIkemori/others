@@ -1,0 +1,42 @@
+{
+ "id": "fish_trap",
+ "kind": "props",
+ "theme": "marsh",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   16,
+   18
+  ],
+  "32": [
+   21,
+   24
+  ],
+  "40": [
+   26,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   17
+  ],
+  "32": [
+   10,
+   23
+  ],
+  "40": [
+   13,
+   29
+  ]
+ },
+ "files": {
+  "24": "fish_trap@24.png",
+  "32": "fish_trap@32.png",
+  "40": "fish_trap@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/marsh_a.png"
+}

@@ -1,0 +1,18 @@
+{
+ "id": "coral_sand",
+ "kind": "material",
+ "theme": "isles",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "coral_sand@32.png",
+  "24": "coral_sand@24.png",
+  "40": "coral_sand@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/isles/coral_sand.png",
+ "native_px": 8.22,
+ "colours": 40
+}

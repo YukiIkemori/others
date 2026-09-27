@@ -1,0 +1,42 @@
+{
+ "id": "iron_gate",
+ "kind": "props",
+ "theme": "star",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   40,
+   33
+  ],
+  "32": [
+   53,
+   44
+  ],
+  "40": [
+   66,
+   55
+  ]
+ },
+ "feet": {
+  "24": [
+   20,
+   32
+  ],
+  "32": [
+   26,
+   43
+  ],
+  "40": [
+   33,
+   54
+  ]
+ },
+ "files": {
+  "24": "iron_gate@24.png",
+  "32": "iron_gate@32.png",
+  "40": "iron_gate@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/star_a.png"
+}

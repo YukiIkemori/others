@@ -1,0 +1,42 @@
+{
+ "id": "scholar_statue",
+ "kind": "props",
+ "theme": "star",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   17,
+   33
+  ],
+  "32": [
+   23,
+   44
+  ],
+  "40": [
+   29,
+   55
+  ]
+ },
+ "feet": {
+  "24": [
+   9,
+   32
+  ],
+  "32": [
+   12,
+   43
+  ],
+  "40": [
+   14,
+   54
+  ]
+ },
+ "files": {
+  "24": "scholar_statue@24.png",
+  "32": "scholar_statue@32.png",
+  "40": "scholar_statue@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/star_a.png"
+}

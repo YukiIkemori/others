@@ -1,0 +1,55 @@
+{
+ "id": "npc_star_man",
+ "look": "npc_star_man",
+ "name": "城壁の町の男",
+ "tier": "C",
+ "kind": "person",
+ "region": "star",
+ "group": "star_1",
+ "slot": "A",
+ "heightDots": {
+  "field": 48
+ },
+ "measureH": {
+  "field": 48
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#2E5A5A",
+ "mainHue": 180,
+ "mainName": "深い青緑",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_star_man_1",
+  "npc_star_man_2",
+  "npc_star_man_3",
+  "npc_star_man_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_star_man_s1.png"
+ },
+ "pair_file": "npc_grp_star_1.png",
+ "proportion": {
+  "1": {
+   "neck": 0.3541666666666667,
+   "head_w": 0.4166666666666667,
+   "shoulder": 0.3333333333333333,
+   "neck_clear": 0.5381578947368422
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

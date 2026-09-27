@@ -19,3 +19,19 @@
 02:27:26   | ■ シートの状態
 02:27:26   |   シート1 歩き: 確認あり  npc_shepherd_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
 02:27:26 sheet 1: 0 redo lines
+02:51:03 pipeline: sheets.py ../art_ref/gen/npc/grp_star_4 --npc npc_night_guard --out out/npc/npc_night_guard
+02:52:09   |   - 向きの見本（configs/refs/npc_night_guard）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:52:09   | 
+02:52:09   | ■ シートの状態
+02:52:09   |   シート1 歩き: 確認あり  npc_night_guard_s1.png  ドット 8.00px → 描かれた格子のまま（49.0 ドット）
+02:52:09   | 
+02:52:09   | packed field 114x220 | palette 52 + face 0
+02:52:09 pipeline: sheets.py ../art_ref/gen/npc/grp_star_4 --npc npc_shepherd --out out/npc/npc_shepherd
+02:53:07   |   - 向きの見本（configs/refs/npc_shepherd）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:53:07   | 
+02:53:07   | ■ シートの状態
+02:53:07   |   シート1 歩き: 確認あり  npc_shepherd_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+02:53:07   | 
+02:53:07   | packed field 114x204 | palette 52 + face 0
+02:53:08 to_v2 npc_night_guard: npc_night_guard → /home/user/others/chronicle/v2/assets/sprites/npc_night_guard |   field: 12 frames
+02:53:10 to_v2 npc_shepherd: npc_shepherd → /home/user/others/chronicle/v2/assets/sprites/npc_shepherd |   field: 12 frames

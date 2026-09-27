@@ -1,0 +1,42 @@
+{
+ "id": "steam_vent",
+ "kind": "props",
+ "theme": "ash",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   12,
+   18
+  ],
+  "32": [
+   16,
+   24
+  ],
+  "40": [
+   20,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   6,
+   17
+  ],
+  "32": [
+   8,
+   23
+  ],
+  "40": [
+   10,
+   29
+  ]
+ },
+ "files": {
+  "24": "steam_vent@24.png",
+  "32": "steam_vent@32.png",
+  "40": "steam_vent@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/ash_a.png"
+}

@@ -15,3 +15,17 @@
 02:34:56   pitch in raw image: 8.30 px per art pixel (upright median 664 px / 80)
 02:34:56 sheet 5 -> art_ref/gen/companion/belladonna/comp_belladonna_s5.png (4 poses)
 02:34:56 pipeline: sheets.py ../art_ref/gen/companion/belladonna --companion belladonna --out out/comp_belladonna --check
+02:44:55   | ■ シートの状態
+02:44:55   |   シート1 設定画: OK  comp_belladonna_s1.png  ドット 8.00px → 描かれた格子のまま（72.0 ドット）
+02:44:55   |   シート2 フィールドの歩き: OK  comp_belladonna_s2.png  ドット 8.00px → 描かれた格子のまま（54.0 ドット）
+02:44:55   |   シート3 戦闘の基本ポーズ: OK  comp_belladonna_s3.png  ドット 8.00px → 描かれた格子のまま（72.0 ドット）
+02:44:55   |   シート4 戦闘の行動ポーズ＋武器なし版: OK  comp_belladonna_s4.png  ドット 8.00px → 描かれた格子のまま（72.0 ドット）
+02:44:55   |   シート5 顔の表情: OK  comp_belladonna_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+02:44:55 no redo lines left
+02:44:55 pipeline: sheets.py ../art_ref/gen/companion/belladonna --companion belladonna --out out/comp_belladonna
+02:52:57   |   シート2 フィールドの歩き: OK  comp_belladonna_s2.png  ドット 8.00px → 描かれた格子のまま（54.0 ドット）
+02:52:57   |   シート3 戦闘の基本ポーズ: OK  comp_belladonna_s3.png  ドット 8.00px → 描かれた格子のまま（72.0 ドット）
+02:52:57   |   シート4 戦闘の行動ポーズ＋武器なし版: OK  comp_belladonna_s4.png  ドット 8.00px → 描かれた格子のまま（72.0 ドット）
+02:52:57   |   シート5 顔の表情: OK  comp_belladonna_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+02:52:57   | 
+02:52:57   | packed field 147x236, battle 520x364, battle_bare 405x77, face 300x84 | palette 52 + face 48

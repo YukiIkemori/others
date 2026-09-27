@@ -1,0 +1,55 @@
+{
+ "id": "npc_biblia_child",
+ "look": "npc_biblia_child",
+ "name": "白い町の子ども",
+ "tier": "C",
+ "kind": "person",
+ "region": "finale",
+ "group": "biblia_2",
+ "slot": "B",
+ "heightDots": {
+  "field": 36
+ },
+ "measureH": {
+  "field": 36
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#C8C4BC",
+ "mainHue": 40,
+ "mainName": "淡い灰",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_biblia_child_1",
+  "npc_biblia_child_2",
+  "npc_biblia_child_3",
+  "npc_biblia_child_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_biblia_child_s1.png"
+ },
+ "pair_file": "npc_grp_biblia_2.png",
+ "proportion": {
+  "1": {
+   "neck": 0.4166666666666667,
+   "head_w": 0.4722222222222222,
+   "shoulder": 0.4861111111111111,
+   "neck_clear": 0.5718954248366013
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

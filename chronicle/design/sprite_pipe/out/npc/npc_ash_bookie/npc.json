@@ -1,0 +1,55 @@
+{
+ "id": "npc_ash_bookie",
+ "look": "npc_ash_bookie",
+ "name": "賭けの胴元",
+ "tier": "C",
+ "kind": "person",
+ "region": "ash",
+ "group": "ash_4",
+ "slot": "B",
+ "heightDots": {
+  "field": 47
+ },
+ "measureH": {
+  "field": 47
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#C89A3A",
+ "mainHue": 42,
+ "mainName": "山吹の縞",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_ash_bookie_1",
+  "npc_ash_bookie_2",
+  "npc_ash_bookie_3",
+  "npc_ash_bookie_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_ash_bookie_s1.png"
+ },
+ "pair_file": "npc_grp_ash_4.png",
+ "proportion": {
+  "1": {
+   "neck": 0.2127659574468085,
+   "head_w": 0.4148936170212766,
+   "shoulder": 0.46808510638297873,
+   "neck_clear": 0.975
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

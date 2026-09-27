@@ -41,3 +41,18 @@
 02:09:35   |   シート1 歩き: 確認あり  npc_marsh_old_f_s1.png  ドット 8.00px → 描かれた格子のまま（43.0 ドット）
 02:09:35 sheet 1: 0 redo lines
 02:36:27 pipeline: sheets.py ../art_ref/gen/npc/grp_marsh_2 --npc npc_marsh_old_m --out out/npc/npc_marsh_old_m
+02:38:07   |   - 向きの見本（configs/refs/npc_marsh_old_m）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:38:07   | 
+02:38:07   | ■ シートの状態
+02:38:07   |   シート1 歩き: 確認あり  npc_marsh_old_m_s1.png  ドット 8.00px → 描かれた格子のまま（45.0 ドット）
+02:38:07   | 
+02:38:07   | packed field 120x200 | palette 52 + face 0
+02:38:07 pipeline: sheets.py ../art_ref/gen/npc/grp_marsh_2 --npc npc_marsh_old_f --out out/npc/npc_marsh_old_f
+02:39:39   |   - 向きの見本（configs/refs/npc_marsh_old_f）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:39:39   | 
+02:39:39   | ■ シートの状態
+02:39:39   |   シート1 歩き: 確認あり  npc_marsh_old_f_s1.png  ドット 8.00px → 描かれた格子のまま（43.0 ドット）
+02:39:39   | 
+02:39:39   | packed field 102x188 | palette 49 + face 0
+02:39:46 to_v2 npc_marsh_old_m: npc_marsh_old_m → /home/user/others/chronicle/v2/assets/sprites/npc_marsh_old_m |   field: 12 frames
+02:39:49 to_v2 npc_marsh_old_f: npc_marsh_old_f → /home/user/others/chronicle/v2/assets/sprites/npc_marsh_old_f |   field: 12 frames

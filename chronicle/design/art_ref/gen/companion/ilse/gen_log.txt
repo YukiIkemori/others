@@ -1,3 +1,30 @@
 01:15:57 sheet 1 attempt 1: generating 3584x1536 (pitch 8, quality medium, 1 refs)
 01:16:41   pitch in raw image: 8.17 px per art pixel (upright median 539 px / 66)
 01:16:45 sheet 1 -> art_ref/gen/companion/ilse/comp_ilse_s1.png (7 poses)
+02:37:10 sheet 2 attempt 1: generating 1920x2048 (pitch 8, quality medium, 2 refs)
+02:39:36   pitch in raw image: 8.18 px per art pixel (upright median 401 px / 49)
+02:39:37 sheet 2 -> art_ref/gen/companion/ilse/comp_ilse_s2.png (12 poses)
+02:39:40 sheet 3 attempt 1: generating 3648x1344 (pitch 7, quality medium, 2 refs)
+02:41:25   pitch in raw image: 6.80 px per art pixel (upright median 449 px / 66)
+02:41:27 sheet 3 -> art_ref/gen/companion/ilse/comp_ilse_s3.png (10 poses)
+02:41:28 sheet 4 attempt 1: generating 3360x1440 (pitch 6, quality medium, 2 refs)
+02:43:14   pitch in raw image: 5.83 px per art pixel (upright median 385 px / 66)
+02:43:19 sheet 4 -> art_ref/gen/companion/ilse/comp_ilse_s4.png (15 poses)
+02:43:19 sheet 5 attempt 1: generating 1536x1536 (pitch 8, quality medium, 2 refs)
+02:45:13   pitch in raw image: 8.50 px per art pixel (upright median 680 px / 80)
+02:45:14 sheet 5 -> art_ref/gen/companion/ilse/comp_ilse_s5.png (4 poses)
+02:45:14 pipeline: sheets.py ../art_ref/gen/companion/ilse --companion ilse --out out/comp_ilse --check
+02:48:14   | ■ シートの状態
+02:48:14   |   シート1 設定画: OK  comp_ilse_s1.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+02:48:14   |   シート2 フィールドの歩き: OK  comp_ilse_s2.png  ドット 8.00px → 描かれた格子のまま（50.0 ドット）
+02:48:14   |   シート3 戦闘の基本ポーズ: 確認あり  comp_ilse_s3.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+02:48:14   |   シート4 戦闘の行動ポーズ＋武器なし版: 確認あり  comp_ilse_s4.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+02:48:14   |   シート5 顔の表情: OK  comp_ilse_s5.png  ドット 8.00px → 描かれた格子のまま（82.0 ドット）
+02:48:14 no redo lines left
+02:48:14 pipeline: sheets.py ../art_ref/gen/companion/ilse --companion ilse --out out/comp_ilse
+02:52:08   |   シート2 フィールドの歩き: OK  comp_ilse_s2.png  ドット 8.00px → 描かれた格子のまま（50.0 ドット）
+02:52:08   |   シート3 戦闘の基本ポーズ: 確認あり  comp_ilse_s3.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+02:52:08   |   シート4 戦闘の行動ポーズ＋武器なし版: 確認あり  comp_ilse_s4.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+02:52:08   |   シート5 顔の表情: OK  comp_ilse_s5.png  ドット 8.00px → 描かれた格子のまま（82.0 ドット）
+02:52:08   | 
+02:52:08   | packed field 108x224, battle 640x352, battle_bare 365x74, face 276x86 | palette 52 + face 48

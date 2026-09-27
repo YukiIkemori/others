@@ -1,0 +1,55 @@
+{
+ "id": "npc_ash_old_m",
+ "look": "npc_ash_old_m",
+ "name": "火口の町の老人",
+ "tier": "C",
+ "kind": "person",
+ "region": "ash",
+ "group": "ash_2",
+ "slot": "A",
+ "heightDots": {
+  "field": 45
+ },
+ "measureH": {
+  "field": 45
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#3A3432",
+ "mainHue": 20,
+ "mainName": "黒",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_ash_old_m_1",
+  "npc_ash_old_m_2",
+  "npc_ash_old_m_3",
+  "npc_ash_old_m_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_ash_old_m_s1.png"
+ },
+ "pair_file": "npc_grp_ash_2.png",
+ "proportion": {
+  "1": {
+   "neck": 0.28888888888888886,
+   "head_w": 0.35555555555555557,
+   "shoulder": 0.3555555555555555,
+   "neck_clear": 0.75
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "id": "npc_snow_child",
+ "look": "npc_snow_child",
+ "name": "雪の村の子ども",
+ "tier": "C",
+ "kind": "person",
+ "region": "snow",
+ "group": "snow_3",
+ "slot": "A",
+ "heightDots": {
+  "field": 36
+ },
+ "measureH": {
+  "field": 36
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#B85A36",
+ "mainHue": 20,
+ "mainName": "茜",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_snow_child_1",
+  "npc_snow_child_2",
+  "npc_snow_child_3",
+  "npc_snow_child_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_snow_child_s1.png"
+ },
+ "pair_file": "npc_grp_snow_3.png",
+ "proportion": {
+  "1": {
+   "neck": 0.4444444444444444,
+   "head_w": 0.5277777777777778,
+   "shoulder": 0.45833333333333337,
+   "neck_clear": 0.8166666666666667
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

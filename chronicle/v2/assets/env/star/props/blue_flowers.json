@@ -1,0 +1,42 @@
+{
+ "id": "blue_flowers",
+ "kind": "props",
+ "theme": "star",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   13,
+   18
+  ],
+  "32": [
+   17,
+   24
+  ],
+  "40": [
+   21,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   6,
+   17
+  ],
+  "32": [
+   8,
+   23
+  ],
+  "40": [
+   11,
+   29
+  ]
+ },
+ "files": {
+  "24": "blue_flowers@24.png",
+  "32": "blue_flowers@32.png",
+  "40": "blue_flowers@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/star_a.png"
+}

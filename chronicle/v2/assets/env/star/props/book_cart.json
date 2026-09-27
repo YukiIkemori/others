@@ -1,0 +1,42 @@
+{
+ "id": "book_cart",
+ "kind": "props",
+ "theme": "star",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   22,
+   18
+  ],
+  "32": [
+   30,
+   24
+  ],
+  "40": [
+   38,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   11,
+   17
+  ],
+  "32": [
+   15,
+   23
+  ],
+  "40": [
+   19,
+   29
+  ]
+ },
+ "files": {
+  "24": "book_cart@24.png",
+  "32": "book_cart@32.png",
+  "40": "book_cart@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/star_a.png"
+}

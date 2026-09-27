@@ -1,0 +1,42 @@
+{
+ "id": "star_lamp",
+ "kind": "props",
+ "theme": "star",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   10,
+   33
+  ],
+  "32": [
+   14,
+   44
+  ],
+  "40": [
+   18,
+   55
+  ]
+ },
+ "feet": {
+  "24": [
+   5,
+   32
+  ],
+  "32": [
+   7,
+   43
+  ],
+  "40": [
+   9,
+   54
+  ]
+ },
+ "files": {
+  "24": "star_lamp@24.png",
+  "32": "star_lamp@32.png",
+  "40": "star_lamp@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/star_a.png"
+}

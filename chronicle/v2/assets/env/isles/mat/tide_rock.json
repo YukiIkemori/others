@@ -1,0 +1,18 @@
+{
+ "id": "tide_rock",
+ "kind": "material",
+ "theme": "isles",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "tide_rock@32.png",
+  "24": "tide_rock@24.png",
+  "40": "tide_rock@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/isles/tide_rock.png",
+ "native_px": 7.0,
+ "colours": 40
+}

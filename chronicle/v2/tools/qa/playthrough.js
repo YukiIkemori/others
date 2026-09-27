@@ -119,14 +119,16 @@ function routeDef(id) {
 // ================================================================ 1 本
 async function runRoute(S, id, o) {
   const route = routeDef(id);
-  const P = await Bw.open(S, 'index.html', { phone: o.phone, size: o.phone ? null : [960, 540], timeout: 30000 });
+  let P = null;
+  for (let k = 0; k < 3 && !P; k++) { try { P = await Bw.open(S, 'index.html', { phone: o.phone, size: o.phone ? null : [960, 540], timeout: 180000 }); } catch (e) { console.log(`[${id}] open failed (${k + 1}): ${String(e).slice(0, 120)}`); } }
+  if (!P) return { route: id, ok: false, checks: {}, status: { fail: 'page did not boot' }, errors: [] };
   const page = P.page;
   const t0 = Date.now();
   const res = { route: id, phone: !!o.phone, ok: false, checks: {}, errors: P.errors, started: new Date().toISOString() };
   try {
     await page.addScriptTag({ content: fs.readFileSync(path.join(V2, 'tools', 'lib', 'maps.js'), 'utf8') });
     await page.addScriptTag({ content: fs.readFileSync(path.join(__dirname, 'bot.js'), 'utf8') });
-    await page.waitForFunction("RPG.Engine.top() && RPG.Engine.top().id === 'screen:title'", null, { timeout: 30000 });
+    await page.waitForFunction("RPG.Engine.top() && RPG.Engine.top().id === 'screen:title'", null, { timeout: 180000 });
     await page.evaluate((r) => window.__bot.setup(r), route);
     const maxMs = (+o.maxMin || 90) * 60000;
     let st = null, lastGoal = null, lastLog = 0;
@@ -136,6 +138,7 @@ async function runRoute(S, id, o) {
         lastGoal = st.goal; lastLog = Date.now();
         console.log(`[${id}] ${((Date.now() - t0) / 1000).toFixed(0)}s goal=${st.goal} top=${st.top} ${st.pos || ''} steps=${st.steps} battles=${st.battles} gold=${st.gold} hp=${st.hp}${st.round != null ? ' round=' + st.round : ''} f=${st.frames}`);
       }
+      try { fs.writeFileSync(path.join(OUT, `${id}${o.phone ? '_phone' : ''}.live.log`), (await page.evaluate(() => window.__bot.log.slice(-60).map((l) => l.f + ' ' + l.msg).join('\n'))) + '\n'); } catch (e) { /* */ }
       if (st.engineError && !res.engineError) { res.engineError = st.engineError; console.log(`[${id}] ENGINE ERROR ${st.engineError}`); }
       if (st.done || st.fail) break;
       if (Date.now() - t0 > maxMs) { st.fail = 'wall-clock limit ' + o.maxMin + ' min'; break; }
@@ -227,7 +230,8 @@ async function main() {
   const S = await Bw.start({ dist: arg('--dist', undefined) });
   const results = [];
   const queue = ids.slice();
-  await Promise.all(Array.from({ length: Math.min(jobs, ids.length) }, async () => {
+  await Promise.all(Array.from({ length: Math.min(jobs, ids.length) }, async (_, w) => {
+    await new Promise((r) => setTimeout(r, w * 20000));   // 起動を少しずらす
     while (queue.length) {
       const id = queue.shift();
       const r = await runRoute(S, id, o);

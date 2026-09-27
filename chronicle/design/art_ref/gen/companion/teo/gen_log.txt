@@ -2,3 +2,34 @@
 01:15:34   pitch in raw image: 8.40 px per art pixel (upright median 571 px / 68)
 01:15:39 sheet 1 -> art_ref/gen/companion/teo/comp_teo_s1.png (7 poses)
 02:33:37 sheet 2 attempt 1: generating 1920x2048 (pitch 8, quality medium, 2 refs)
+02:36:59   pitch in raw image: 7.31 px per art pixel (upright median 373 px / 51)
+02:37:01 sheet 2 -> art_ref/gen/companion/teo/comp_teo_s2.png (12 poses)
+02:37:03 sheet 3 attempt 1: generating 3648x1344 (pitch 7, quality medium, 2 refs)
+02:39:50   pitch in raw image: 6.40 px per art pixel (upright median 435 px / 68)
+02:39:54 sheet 3 -> art_ref/gen/companion/teo/comp_teo_s3.png (10 poses)
+02:39:55 sheet 4 attempt 1: generating 3360x1440 (pitch 6, quality medium, 2 refs)
+02:42:40   pitch in raw image: 5.49 px per art pixel (upright median 373 px / 68)
+02:42:44   note: smash is 53x81 art px, larger than its cell 112x80 (clipped)
+02:42:44 sheet 4 -> art_ref/gen/companion/teo/comp_teo_s4.png (15 poses)
+02:42:45 sheet 5 attempt 1: generating 1536x1536 (pitch 8, quality medium, 2 refs)
+02:45:25   pitch in raw image: 7.92 px per art pixel (upright median 634 px / 80)
+02:45:26 sheet 5 -> art_ref/gen/companion/teo/comp_teo_s5.png (4 poses)
+02:45:26 pipeline: sheets.py ../art_ref/gen/companion/teo --companion teo --out out/comp_teo --check
+02:52:16   | ■ シートの状態
+02:52:16   |   シート1 設定画: OK  comp_teo_s1.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+02:52:16   |   シート2 フィールドの歩き: 確認あり  comp_teo_s2.png  ドット 8.00px → 描かれた格子のまま（50.0 ドット）
+02:52:16   |   シート3 戦闘の基本ポーズ: 要作り直し  comp_teo_s3.png  ドット 8.00px → 描かれた格子のまま（67.5 ドット）
+02:52:16   |   シート4 戦闘の行動ポーズ＋武器なし版: 要作り直し  comp_teo_s4.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+02:52:16   |   シート5 顔の表情: OK  comp_teo_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+02:52:16   size check hit: 0.90 of the hero's same pose (relative to idle_a)
+02:52:16   sheet 3 hit: size redo line ignored (same size as the hero's pose) -> overrides scale_ok
+02:52:17   size check weak: 1.09 of the hero's same pose (relative to idle_a)
+02:52:17   sheet 3 weak: size redo line ignored (same size as the hero's pose) -> overrides scale_ok
+02:52:17   size check victory_a: 0.92 of the hero's same pose (relative to idle_a)
+02:52:17   sheet 3 victory_a: size redo line ignored (same size as the hero's pose) -> overrides scale_ok
+02:52:18   size check glimmer: 0.97 of the hero's same pose (relative to idle_a)
+02:52:18   sheet 3 glimmer: size redo line ignored (same size as the hero's pose) -> overrides scale_ok
+02:52:19   size check smash: 0.99 of the hero's same pose (relative to cast_a)
+02:52:19   sheet 4 smash: size redo line ignored (same size as the hero's pose) -> overrides scale_ok
+02:52:19 no redo lines left
+02:52:19 pipeline: sheets.py ../art_ref/gen/companion/teo --companion teo --out out/comp_teo

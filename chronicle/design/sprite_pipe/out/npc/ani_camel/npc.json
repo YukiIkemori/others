@@ -1,0 +1,45 @@
+{
+ "id": "ani_camel",
+ "look": "ani_camel",
+ "name": "ラクダ",
+ "tier": "C",
+ "kind": "animal",
+ "region": "desert",
+ "group": "animal_3",
+ "slot": "A",
+ "heightDots": {
+  "field": 52
+ },
+ "measureH": {
+  "field": 52
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#B89868",
+ "mainHue": 35,
+ "mainName": "砂色",
+ "lantern": false,
+ "recolor": false,
+ "recolorSets": 1,
+ "variants": [
+  "ani_camel"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "ani_camel_s1.png"
+ },
+ "pair_file": "npc_grp_animal_3.png",
+ "proportion": {},
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

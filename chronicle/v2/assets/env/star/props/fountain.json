@@ -1,0 +1,42 @@
+{
+ "id": "fountain",
+ "kind": "props",
+ "theme": "star",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   34,
+   33
+  ],
+  "32": [
+   46,
+   44
+  ],
+  "40": [
+   58,
+   55
+  ]
+ },
+ "feet": {
+  "24": [
+   17,
+   32
+  ],
+  "32": [
+   23,
+   43
+  ],
+  "40": [
+   29,
+   54
+  ]
+ },
+ "files": {
+  "24": "fountain@24.png",
+  "32": "fountain@32.png",
+  "40": "fountain@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/star_a.png"
+}

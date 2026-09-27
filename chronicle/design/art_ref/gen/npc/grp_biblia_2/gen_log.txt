@@ -19,3 +19,19 @@
 02:31:15   | ■ シートの状態
 02:31:15   |   シート1 歩き: 確認あり  npc_biblia_child_s1.png  ドット 8.00px → 描かれた格子のまま（36.0 ドット）
 02:31:15 sheet 1: 0 redo lines
+02:54:28 pipeline: sheets.py ../art_ref/gen/npc/grp_biblia_2 --npc npc_biblia_old --out out/npc/npc_biblia_old
+02:55:07   |   - 向きの見本（configs/refs/npc_biblia_old）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:55:07   | 
+02:55:07   | ■ シートの状態
+02:55:07   |   シート1 歩き: 確認あり  npc_biblia_old_s1.png  ドット 8.00px → 描かれた格子のまま（44.0 ドット）
+02:55:07   | 
+02:55:07   | packed field 102x212 | palette 52 + face 0
+02:55:07 pipeline: sheets.py ../art_ref/gen/npc/grp_biblia_2 --npc npc_biblia_child --out out/npc/npc_biblia_child
+02:55:40   |   - 向きの見本（configs/refs/npc_biblia_child）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:55:40   | 
+02:55:40   | ■ シートの状態
+02:55:40   |   シート1 歩き: 確認あり  npc_biblia_child_s1.png  ドット 8.00px → 描かれた格子のまま（36.0 ドット）
+02:55:40   | 
+02:55:40   | packed field 99x168 | palette 52 + face 0
+02:55:42 to_v2 npc_biblia_old: npc_biblia_old → /home/user/others/chronicle/v2/assets/sprites/npc_biblia_old |   field: 12 frames
+02:55:43 to_v2 npc_biblia_child: npc_biblia_child → /home/user/others/chronicle/v2/assets/sprites/npc_biblia_child |   field: 12 frames

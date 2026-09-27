@@ -1,0 +1,42 @@
+{
+ "id": "topiary",
+ "kind": "props",
+ "theme": "star",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   16,
+   33
+  ],
+  "32": [
+   21,
+   44
+  ],
+  "40": [
+   26,
+   55
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   32
+  ],
+  "32": [
+   10,
+   43
+  ],
+  "40": [
+   13,
+   54
+  ]
+ },
+ "files": {
+  "24": "topiary@24.png",
+  "32": "topiary@32.png",
+  "40": "topiary@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/star_a.png"
+}

@@ -19,3 +19,19 @@
 01:50:21   | ■ シートの状態
 01:50:21   |   シート1 歩き: 確認あり  npc_snow_woman_s1.png  ドット 8.00px → 描かれた格子のまま（45.5 ドット）
 01:50:21 sheet 1: 0 redo lines
+02:45:06 pipeline: sheets.py ../art_ref/gen/npc/grp_snow_1 --npc npc_snow_man --out out/npc/npc_snow_man
+02:45:40   |   - 向きの見本（configs/refs/npc_snow_man）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:45:40   | 
+02:45:40   | ■ シートの状態
+02:45:40   |   シート1 歩き: 確認あり  npc_snow_man_s1.png  ドット 8.00px → 描かれた格子のまま（49.0 ドット）
+02:45:40   | 
+02:45:40   | packed field 126x220 | palette 52 + face 0
+02:45:40 pipeline: sheets.py ../art_ref/gen/npc/grp_snow_1 --npc npc_snow_woman --out out/npc/npc_snow_woman
+02:46:14   |   - 向きの見本（configs/refs/npc_snow_woman）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:46:14   | 
+02:46:14   | ■ シートの状態
+02:46:14   |   シート1 歩き: 確認あり  npc_snow_woman_s1.png  ドット 8.00px → 描かれた格子のまま（45.5 ドット）
+02:46:14   | 
+02:46:14   | packed field 114x204 | palette 52 + face 0
+02:46:16 to_v2 npc_snow_man: npc_snow_man → /home/user/others/chronicle/v2/assets/sprites/npc_snow_man |   field: 12 frames
+02:46:17 to_v2 npc_snow_woman: npc_snow_woman → /home/user/others/chronicle/v2/assets/sprites/npc_snow_woman |   field: 12 frames

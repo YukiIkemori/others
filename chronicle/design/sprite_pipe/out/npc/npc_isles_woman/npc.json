@@ -1,0 +1,55 @@
+{
+ "id": "npc_isles_woman",
+ "look": "npc_isles_woman",
+ "name": "港の女",
+ "tier": "C",
+ "kind": "person",
+ "region": "isles",
+ "group": "isles_1",
+ "slot": "B",
+ "heightDots": {
+  "field": 46
+ },
+ "measureH": {
+  "field": 46
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#E8ECEE",
+ "mainHue": 205,
+ "mainName": "白と青",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_isles_woman_1",
+  "npc_isles_woman_2",
+  "npc_isles_woman_3",
+  "npc_isles_woman_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_isles_woman_s1.png"
+ },
+ "pair_file": "npc_grp_isles_1.png",
+ "proportion": {
+  "1": {
+   "neck": 0.41304347826086957,
+   "head_w": 0.4782608695652174,
+   "shoulder": 0.32608695652173914,
+   "neck_clear": 0.42193675889328064
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

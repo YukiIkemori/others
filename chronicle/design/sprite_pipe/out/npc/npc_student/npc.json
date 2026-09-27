@@ -1,0 +1,55 @@
+{
+ "id": "npc_student",
+ "look": "npc_student",
+ "name": "学生",
+ "tier": "C",
+ "kind": "person",
+ "region": "star",
+ "group": "star_3",
+ "slot": "B",
+ "heightDots": {
+  "field": 47
+ },
+ "measureH": {
+  "field": 47
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#4E6078",
+ "mainHue": 215,
+ "mainName": "灰青",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_student_1",
+  "npc_student_2",
+  "npc_student_3",
+  "npc_student_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_student_s1.png"
+ },
+ "pair_file": "npc_grp_star_3.png",
+ "proportion": {
+  "1": {
+   "neck": 0.40425531914893614,
+   "head_w": 0.4787234042553191,
+   "shoulder": 0.3829787234042553,
+   "neck_clear": 0.4782608695652174
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

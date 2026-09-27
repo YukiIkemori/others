@@ -1,0 +1,42 @@
+{
+ "id": "crooked_sign",
+ "kind": "props",
+ "theme": "marsh",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   12,
+   18
+  ],
+  "32": [
+   16,
+   24
+  ],
+  "40": [
+   20,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   6,
+   17
+  ],
+  "32": [
+   8,
+   23
+  ],
+  "40": [
+   10,
+   29
+  ]
+ },
+ "files": {
+  "24": "crooked_sign@24.png",
+  "32": "crooked_sign@32.png",
+  "40": "crooked_sign@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/marsh_a.png"
+}

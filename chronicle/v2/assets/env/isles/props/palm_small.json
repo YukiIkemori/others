@@ -1,0 +1,42 @@
+{
+ "id": "palm_small",
+ "kind": "props",
+ "theme": "isles",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   49,
+   50
+  ],
+  "32": [
+   65,
+   66
+  ],
+  "40": [
+   81,
+   82
+  ]
+ },
+ "feet": {
+  "24": [
+   24,
+   49
+  ],
+  "32": [
+   32,
+   65
+  ],
+  "40": [
+   41,
+   81
+  ]
+ },
+ "files": {
+  "24": "palm_small@24.png",
+  "32": "palm_small@32.png",
+  "40": "palm_small@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/isles_a.png"
+}

@@ -1,0 +1,23 @@
+{
+ "id": "face_mud_bank",
+ "style": "mud_bank",
+ "kind": "face",
+ "theme": "marsh",
+ "files": {
+  "32": "face_mud_bank@32.png",
+  "24": "face_mud_bank@24.png",
+  "40": "face_mud_bank@40.png"
+ },
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "height": {
+  "24": 96,
+  "32": 128,
+  "40": 160
+ },
+ "foot32": 10,
+ "src": "design/art_ref/gen/env/mat/marsh/face_mud_bank.png"
+}

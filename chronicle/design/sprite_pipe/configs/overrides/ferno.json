@@ -1,0 +1,10 @@
+{
+ "scale_ok": [
+  "hit",
+  "victory_b",
+  "glimmer",
+  "bare_idle",
+  "weak"
+ ],
+ "_note": "scale_ok: poses whose head-size scale alarm was a false alarm (same size as the hero's pose)"
+}

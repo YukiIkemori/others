@@ -1,0 +1,461 @@
+{
+ "character": "belladonna",
+ "set": "field",
+ "image": "belladonna_field.png",
+ "cell": [
+  49,
+  59
+ ],
+ "anchor": [
+  24,
+  56
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "walk_down_0": {
+   "x": 0,
+   "y": 0,
+   "w": 49,
+   "h": 59,
+   "anchor": [
+    24,
+    56
+   ],
+   "points": {
+    "head": [
+     24,
+     3
+    ],
+    "center": [
+     27,
+     29
+    ],
+    "front": [
+     10,
+     36
+    ]
+   }
+  },
+  "walk_down_1": {
+   "x": 49,
+   "y": 0,
+   "w": 49,
+   "h": 59,
+   "anchor": [
+    24,
+    56
+   ],
+   "points": {
+    "head": [
+     24,
+     3
+    ],
+    "center": [
+     27,
+     27
+    ],
+    "front": [
+     10,
+     34
+    ]
+   }
+  },
+  "walk_down_2": {
+   "x": 98,
+   "y": 0,
+   "w": 49,
+   "h": 59,
+   "anchor": [
+    24,
+    56
+   ],
+   "points": {
+    "head": [
+     24,
+     2
+    ],
+    "center": [
+     27,
+     27
+    ],
+    "front": [
+     10,
+     35
+    ]
+   }
+  },
+  "walk_up_0": {
+   "x": 0,
+   "y": 59,
+   "w": 49,
+   "h": 59,
+   "anchor": [
+    24,
+    56
+   ],
+   "points": {
+    "head": [
+     23,
+     4
+    ],
+    "center": [
+     22,
+     30
+    ],
+    "front": [
+     3,
+     33
+    ]
+   }
+  },
+  "walk_up_1": {
+   "x": 49,
+   "y": 59,
+   "w": 49,
+   "h": 59,
+   "anchor": [
+    24,
+    56
+   ],
+   "points": {
+    "head": [
+     22,
+     4
+    ],
+    "center": [
+     21,
+     29
+    ],
+    "front": [
+     2,
+     29
+    ]
+   }
+  },
+  "walk_up_2": {
+   "x": 98,
+   "y": 59,
+   "w": 49,
+   "h": 59,
+   "anchor": [
+    24,
+    56
+   ],
+   "points": {
+    "head": [
+     23,
+     3
+    ],
+    "center": [
+     21,
+     28
+    ],
+    "front": [
+     3,
+     32
+    ]
+   }
+  },
+  "walk_left_0": {
+   "x": 0,
+   "y": 118,
+   "w": 49,
+   "h": 59,
+   "anchor": [
+    24,
+    56
+   ],
+   "points": {
+    "head": [
+     24,
+     3
+    ],
+    "center": [
+     27,
+     28
+    ],
+    "front": [
+     14,
+     10
+    ]
+   }
+  },
+  "walk_left_1": {
+   "x": 49,
+   "y": 118,
+   "w": 49,
+   "h": 59,
+   "anchor": [
+    24,
+    56
+   ],
+   "points": {
+    "head": [
+     24,
+     3
+    ],
+    "center": [
+     27,
+     29
+    ],
+    "front": [
+     11,
+     52
+    ]
+   }
+  },
+  "walk_left_2": {
+   "x": 98,
+   "y": 118,
+   "w": 49,
+   "h": 59,
+   "anchor": [
+    24,
+    56
+   ],
+   "points": {
+    "head": [
+     24,
+     3
+    ],
+    "center": [
+     28,
+     29
+    ],
+    "front": [
+     14,
+     11
+    ]
+   }
+  },
+  "walk_right_0": {
+   "x": 0,
+   "y": 177,
+   "w": 49,
+   "h": 59,
+   "anchor": [
+    24,
+    56
+   ],
+   "points": {
+    "head": [
+     25,
+     2
+    ],
+    "center": [
+     22,
+     28
+    ],
+    "front": [
+     5,
+     31
+    ]
+   }
+  },
+  "walk_right_1": {
+   "x": 49,
+   "y": 177,
+   "w": 49,
+   "h": 59,
+   "anchor": [
+    24,
+    56
+   ],
+   "points": {
+    "head": [
+     26,
+     3
+    ],
+    "center": [
+     22,
+     29
+    ],
+    "front": [
+     3,
+     30
+    ]
+   }
+  },
+  "walk_right_2": {
+   "x": 98,
+   "y": 177,
+   "w": 49,
+   "h": 59,
+   "anchor": [
+    24,
+    56
+   ],
+   "points": {
+    "head": [
+     25,
+     3
+    ],
+    "center": [
+     22,
+     29
+    ],
+    "front": [
+     4,
+     31
+    ]
+   }
+  }
+ },
+ "anims": {
+  "walk_down": {
+   "frames": [
+    "walk_down_0",
+    "walk_down_1",
+    "walk_down_0",
+    "walk_down_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_down": {
+   "frames": [
+    "walk_down_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_up": {
+   "frames": [
+    "walk_up_0",
+    "walk_up_1",
+    "walk_up_0",
+    "walk_up_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_up": {
+   "frames": [
+    "walk_up_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_left": {
+   "frames": [
+    "walk_left_0",
+    "walk_left_1",
+    "walk_left_0",
+    "walk_left_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_left": {
+   "frames": [
+    "walk_left_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_right": {
+   "frames": [
+    "walk_right_0",
+    "walk_right_1",
+    "walk_right_0",
+    "walk_right_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_right": {
+   "frames": [
+    "walk_right_0"
+   ],
+   "ms": [
+    0
+   ]
+  }
+ },
+ "palette": [
+  "#0f0907",
+  "#190711",
+  "#1a180d",
+  "#24160e",
+  "#463b37",
+  "#36191e",
+  "#312214",
+  "#3b2113",
+  "#462e1a",
+  "#56321b",
+  "#573e25",
+  "#684224",
+  "#754324",
+  "#725738",
+  "#80542d",
+  "#8f5129",
+  "#9a6436",
+  "#8b6c45",
+  "#946c23",
+  "#b2652b",
+  "#928473",
+  "#a68153",
+  "#b67b45",
+  "#d08125",
+  "#d4924c",
+  "#bc9b69",
+  "#d0a166",
+  "#dbb67b",
+  "#ecb56a",
+  "#d2c6b3",
+  "#efcd8f",
+  "#f9d283",
+  "#262615",
+  "#323012",
+  "#424016",
+  "#3e412b",
+  "#52511a",
+  "#655e49",
+  "#63611e",
+  "#727122",
+  "#808024",
+  "#93912a",
+  "#979756",
+  "#989c28",
+  "#a7a22f",
+  "#aead2e",
+  "#bcb44e",
+  "#beba34",
+  "#d4cb5c",
+  "#e3db81",
+  "#f7e0a1",
+  "#5484a9"
+ ],
+ "directions": [
+  "down",
+  "up",
+  "left",
+  "right"
+ ],
+ "target_height": 46,
+ "lantern_drawn": false,
+ "lantern_note": "no lantern drawn: the engine adds it when this companion leads"
+}

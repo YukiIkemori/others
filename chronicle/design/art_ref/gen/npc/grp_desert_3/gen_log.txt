@@ -40,3 +40,19 @@
 01:40:57   | ■ シートの状態
 01:40:57   |   シート1 歩き: 確認あり  npc_caravan_s1.png  ドット 8.00px → 描かれた格子のまま（47.5 ドット）
 01:40:57 sheet 1: 0 redo lines
+02:41:03 pipeline: sheets.py ../art_ref/gen/npc/grp_desert_3 --npc npc_desert_child --out out/npc/npc_desert_child
+02:41:40   |   - 向きの見本（configs/refs/npc_desert_child）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:41:40   | 
+02:41:40   | ■ シートの状態
+02:41:40   |   シート1 歩き: 確認あり  npc_desert_child_s1.png  ドット 8.00px → 描かれた格子のまま（36.0 ドット）
+02:41:40   | 
+02:41:40   | packed field 75x164 | palette 52 + face 0
+02:41:40 pipeline: sheets.py ../art_ref/gen/npc/grp_desert_3 --npc npc_caravan --out out/npc/npc_caravan
+02:42:34   |   - 向きの見本（configs/refs/npc_caravan）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:42:34   | 
+02:42:34   | ■ シートの状態
+02:42:34   |   シート1 歩き: 確認あり  npc_caravan_s1.png  ドット 8.00px → 描かれた格子のまま（47.5 ドット）
+02:42:34   | 
+02:42:34   | packed field 120x224 | palette 52 + face 0
+02:42:36 to_v2 npc_desert_child: npc_desert_child → /home/user/others/chronicle/v2/assets/sprites/npc_desert_child |   field: 12 frames
+02:42:37 to_v2 npc_caravan: npc_caravan → /home/user/others/chronicle/v2/assets/sprites/npc_caravan |   field: 12 frames

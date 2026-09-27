@@ -1,0 +1,42 @@
+{
+ "id": "orrery",
+ "kind": "props",
+ "theme": "star",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   30,
+   33
+  ],
+  "32": [
+   40,
+   44
+  ],
+  "40": [
+   50,
+   55
+  ]
+ },
+ "feet": {
+  "24": [
+   15,
+   32
+  ],
+  "32": [
+   20,
+   43
+  ],
+  "40": [
+   25,
+   54
+  ]
+ },
+ "files": {
+  "24": "orrery@24.png",
+  "32": "orrery@32.png",
+  "40": "orrery@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/star_a.png"
+}

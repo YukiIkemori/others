@@ -1,0 +1,42 @@
+{
+ "id": "board_steps",
+ "kind": "props",
+ "theme": "marsh",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   14,
+   18
+  ],
+  "32": [
+   18,
+   24
+  ],
+  "40": [
+   22,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   7,
+   17
+  ],
+  "32": [
+   9,
+   23
+  ],
+  "40": [
+   11,
+   29
+  ]
+ },
+ "files": {
+  "24": "board_steps@24.png",
+  "32": "board_steps@32.png",
+  "40": "board_steps@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/marsh_a.png"
+}

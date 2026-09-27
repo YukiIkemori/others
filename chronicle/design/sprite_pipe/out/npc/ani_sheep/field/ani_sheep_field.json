@@ -1,0 +1,466 @@
+{
+ "character": "ani_sheep",
+ "set": "field",
+ "image": "ani_sheep_field.png",
+ "cell": [
+  32,
+  28
+ ],
+ "anchor": [
+  16,
+  25
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "walk_down_0": {
+   "x": 0,
+   "y": 0,
+   "w": 32,
+   "h": 28,
+   "anchor": [
+    16,
+    25
+   ],
+   "points": {
+    "head": [
+     16,
+     5
+    ],
+    "center": [
+     16,
+     15
+    ],
+    "front": [
+     8,
+     12
+    ]
+   }
+  },
+  "walk_down_1": {
+   "x": 32,
+   "y": 0,
+   "w": 32,
+   "h": 28,
+   "anchor": [
+    16,
+    25
+   ],
+   "points": {
+    "head": [
+     17,
+     6
+    ],
+    "center": [
+     17,
+     15
+    ],
+    "front": [
+     9,
+     13
+    ]
+   }
+  },
+  "walk_down_2": {
+   "x": 64,
+   "y": 0,
+   "w": 32,
+   "h": 28,
+   "anchor": [
+    16,
+    25
+   ],
+   "points": {
+    "head": [
+     17,
+     6
+    ],
+    "center": [
+     16,
+     15
+    ],
+    "front": [
+     9,
+     13
+    ]
+   }
+  },
+  "walk_up_0": {
+   "x": 0,
+   "y": 28,
+   "w": 32,
+   "h": 28,
+   "anchor": [
+    16,
+    25
+   ],
+   "points": {
+    "head": [
+     16,
+     2
+    ],
+    "center": [
+     16,
+     13
+    ],
+    "front": [
+     9,
+     8
+    ]
+   }
+  },
+  "walk_up_1": {
+   "x": 32,
+   "y": 28,
+   "w": 32,
+   "h": 28,
+   "anchor": [
+    16,
+    25
+   ],
+   "points": {
+    "head": [
+     16,
+     4
+    ],
+    "center": [
+     16,
+     14
+    ],
+    "front": [
+     9,
+     9
+    ]
+   }
+  },
+  "walk_up_2": {
+   "x": 64,
+   "y": 28,
+   "w": 32,
+   "h": 28,
+   "anchor": [
+    16,
+    25
+   ],
+   "points": {
+    "head": [
+     16,
+     4
+    ],
+    "center": [
+     16,
+     14
+    ],
+    "front": [
+     9,
+     9
+    ]
+   }
+  },
+  "walk_left_0": {
+   "x": 0,
+   "y": 56,
+   "w": 32,
+   "h": 28,
+   "anchor": [
+    16,
+    25
+   ],
+   "points": {
+    "head": [
+     9,
+     5
+    ],
+    "center": [
+     14,
+     14
+    ],
+    "front": [
+     2,
+     11
+    ]
+   }
+  },
+  "walk_left_1": {
+   "x": 32,
+   "y": 56,
+   "w": 32,
+   "h": 28,
+   "anchor": [
+    16,
+    25
+   ],
+   "points": {
+    "head": [
+     11,
+     7
+    ],
+    "center": [
+     15,
+     16
+    ],
+    "front": [
+     3,
+     12
+    ]
+   }
+  },
+  "walk_left_2": {
+   "x": 64,
+   "y": 56,
+   "w": 32,
+   "h": 28,
+   "anchor": [
+    16,
+    25
+   ],
+   "points": {
+    "head": [
+     11,
+     7
+    ],
+    "center": [
+     15,
+     16
+    ],
+    "front": [
+     3,
+     13
+    ]
+   }
+  },
+  "walk_right_0": {
+   "x": 0,
+   "y": 84,
+   "w": 32,
+   "h": 28,
+   "anchor": [
+    16,
+    25
+   ],
+   "points": {
+    "head": [
+     22,
+     7
+    ],
+    "center": [
+     18,
+     16
+    ],
+    "front": [
+     7,
+     14
+    ]
+   }
+  },
+  "walk_right_1": {
+   "x": 32,
+   "y": 84,
+   "w": 32,
+   "h": 28,
+   "anchor": [
+    16,
+    25
+   ],
+   "points": {
+    "head": [
+     22,
+     6
+    ],
+    "center": [
+     17,
+     15
+    ],
+    "front": [
+     6,
+     14
+    ]
+   }
+  },
+  "walk_right_2": {
+   "x": 64,
+   "y": 84,
+   "w": 32,
+   "h": 28,
+   "anchor": [
+    16,
+    25
+   ],
+   "points": {
+    "head": [
+     22,
+     6
+    ],
+    "center": [
+     17,
+     15
+    ],
+    "front": [
+     6,
+     13
+    ]
+   }
+  }
+ },
+ "anims": {
+  "walk_down": {
+   "frames": [
+    "walk_down_0",
+    "walk_down_1",
+    "walk_down_0",
+    "walk_down_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_down": {
+   "frames": [
+    "walk_down_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_up": {
+   "frames": [
+    "walk_up_0",
+    "walk_up_1",
+    "walk_up_0",
+    "walk_up_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_up": {
+   "frames": [
+    "walk_up_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_left": {
+   "frames": [
+    "walk_left_0",
+    "walk_left_1",
+    "walk_left_0",
+    "walk_left_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_left": {
+   "frames": [
+    "walk_left_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_right": {
+   "frames": [
+    "walk_right_0",
+    "walk_right_1",
+    "walk_right_0",
+    "walk_right_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_right": {
+   "frames": [
+    "walk_right_0"
+   ],
+   "ms": [
+    0
+   ]
+  }
+ },
+ "palette": [
+  "#0e070b",
+  "#1c0d16",
+  "#181211",
+  "#251718",
+  "#251e19",
+  "#2e211e",
+  "#372b24",
+  "#4a3e34",
+  "#65544d",
+  "#72635a",
+  "#fefce9",
+  "#382428",
+  "#4a3334",
+  "#614843",
+  "#846b66",
+  "#47372a",
+  "#524032",
+  "#574a3c",
+  "#5b4a33",
+  "#5d493a",
+  "#685240",
+  "#6a5b4a",
+  "#715c4a",
+  "#775e47",
+  "#766652",
+  "#856e58",
+  "#8d6e55",
+  "#80735f",
+  "#957f68",
+  "#948670",
+  "#a48f76",
+  "#b09c80",
+  "#afa08b",
+  "#bcaa8b",
+  "#c8b195",
+  "#cfba9f",
+  "#d2be9c",
+  "#d4c6a8",
+  "#e1d2b4",
+  "#e5d3af",
+  "#ecddbc",
+  "#f4e7c6",
+  "#fcf6d9",
+  "#2b1620",
+  "#440c39",
+  "#96607a"
+ ],
+ "directions": [
+  "down",
+  "up",
+  "left",
+  "right"
+ ],
+ "target_height": 22,
+ "lantern_drawn": false,
+ "npc": {
+  "tier": "C",
+  "lantern": false,
+  "spirit": false,
+  "recolor": false,
+  "mainHex": "#E4DED0",
+  "recolorSets": 1,
+  "variants": [
+   "ani_sheep"
+  ],
+  "kind": "animal"
+ }
+}

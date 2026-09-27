@@ -1,0 +1,42 @@
+{
+ "id": "volcanic_rocks",
+ "kind": "props",
+ "theme": "ash",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   24,
+   18
+  ],
+  "32": [
+   32,
+   24
+  ],
+  "40": [
+   40,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   12,
+   17
+  ],
+  "32": [
+   16,
+   23
+  ],
+  "40": [
+   20,
+   29
+  ]
+ },
+ "files": {
+  "24": "volcanic_rocks@24.png",
+  "32": "volcanic_rocks@32.png",
+  "40": "volcanic_rocks@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/ash_a.png"
+}

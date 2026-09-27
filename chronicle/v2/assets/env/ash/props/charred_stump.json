@@ -1,0 +1,42 @@
+{
+ "id": "charred_stump",
+ "kind": "props",
+ "theme": "ash",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   22,
+   18
+  ],
+  "32": [
+   30,
+   24
+  ],
+  "40": [
+   38,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   11,
+   17
+  ],
+  "32": [
+   15,
+   23
+  ],
+  "40": [
+   19,
+   29
+  ]
+ },
+ "files": {
+  "24": "charred_stump@24.png",
+  "32": "charred_stump@32.png",
+  "40": "charred_stump@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/ash_a.png"
+}

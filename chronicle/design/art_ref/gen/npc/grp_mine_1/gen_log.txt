@@ -19,3 +19,19 @@
 02:12:46   | ■ シートの状態
 02:12:46   |   シート1 歩き: 確認あり  npc_mine_woman_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
 02:12:46 sheet 1: 0 redo lines
+02:43:07 pipeline: sheets.py ../art_ref/gen/npc/grp_mine_1 --npc npc_miner --out out/npc/npc_miner
+02:44:45   |   - 向きの見本（configs/refs/npc_miner）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:44:45   | 
+02:44:45   | ■ シートの状態
+02:44:45   |   シート1 歩き: 確認あり  npc_miner_s1.png  ドット 8.00px → 描かれた格子のまま（47.5 ドット）
+02:44:45   | 
+02:44:45   | packed field 117x212 | palette 52 + face 0
+02:44:45 pipeline: sheets.py ../art_ref/gen/npc/grp_mine_1 --npc npc_mine_woman --out out/npc/npc_mine_woman
+02:45:59   |   - 向きの見本（configs/refs/npc_mine_woman）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:45:59   | 
+02:45:59   | ■ シートの状態
+02:45:59   |   シート1 歩き: 確認あり  npc_mine_woman_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+02:45:59   | 
+02:45:59   | packed field 96x200 | palette 52 + face 0
+02:46:01 to_v2 npc_miner: npc_miner → /home/user/others/chronicle/v2/assets/sprites/npc_miner |   field: 12 frames
+02:46:04 to_v2 npc_mine_woman: npc_mine_woman → /home/user/others/chronicle/v2/assets/sprites/npc_mine_woman |   field: 12 frames

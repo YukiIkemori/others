@@ -1,0 +1,23 @@
+{
+ "id": "face_white_wall",
+ "style": "white_wall",
+ "kind": "face",
+ "theme": "isles",
+ "files": {
+  "32": "face_white_wall@32.png",
+  "24": "face_white_wall@24.png",
+  "40": "face_white_wall@40.png"
+ },
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "height": {
+  "24": 96,
+  "32": 128,
+  "40": 160
+ },
+ "foot32": 10,
+ "src": "design/art_ref/gen/env/mat/isles/face_white_wall.png"
+}

@@ -1,0 +1,42 @@
+{
+ "id": "rope_post",
+ "kind": "props",
+ "theme": "ash",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   25,
+   18
+  ],
+  "32": [
+   33,
+   24
+  ],
+  "40": [
+   41,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   12,
+   17
+  ],
+  "32": [
+   16,
+   23
+  ],
+  "40": [
+   21,
+   29
+  ]
+ },
+ "files": {
+  "24": "rope_post@24.png",
+  "32": "rope_post@32.png",
+  "40": "rope_post@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/ash_a.png"
+}

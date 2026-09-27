@@ -1,0 +1,42 @@
+{
+ "id": "forge",
+ "kind": "props",
+ "theme": "mine",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   28,
+   33
+  ],
+  "32": [
+   38,
+   44
+  ],
+  "40": [
+   48,
+   55
+  ]
+ },
+ "feet": {
+  "24": [
+   14,
+   32
+  ],
+  "32": [
+   19,
+   43
+  ],
+  "40": [
+   24,
+   54
+  ]
+ },
+ "files": {
+  "24": "forge@24.png",
+  "32": "forge@32.png",
+  "40": "forge@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/mine_a.png"
+}

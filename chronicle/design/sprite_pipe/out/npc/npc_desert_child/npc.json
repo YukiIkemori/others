@@ -1,0 +1,55 @@
+{
+ "id": "npc_desert_child",
+ "look": "npc_desert_child",
+ "name": "砂漠の子ども",
+ "tier": "C",
+ "kind": "person",
+ "region": "desert",
+ "group": "desert_3",
+ "slot": "A",
+ "heightDots": {
+  "field": 36
+ },
+ "measureH": {
+  "field": 36
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#D0BC94",
+ "mainHue": 40,
+ "mainName": "砂色",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_desert_child_1",
+  "npc_desert_child_2",
+  "npc_desert_child_3",
+  "npc_desert_child_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_desert_child_s1.png"
+ },
+ "pair_file": "npc_grp_desert_3.png",
+ "proportion": {
+  "1": {
+   "neck": 0.4444444444444444,
+   "head_w": 0.4722222222222222,
+   "shoulder": 0.4375,
+   "neck_clear": 0.5555555555555556
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

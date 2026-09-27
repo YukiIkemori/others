@@ -1,0 +1,42 @@
+{
+ "id": "bellows",
+ "kind": "props",
+ "theme": "mine",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   24,
+   18
+  ],
+  "32": [
+   32,
+   24
+  ],
+  "40": [
+   40,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   12,
+   17
+  ],
+  "32": [
+   16,
+   23
+  ],
+  "40": [
+   20,
+   29
+  ]
+ },
+ "files": {
+  "24": "bellows@24.png",
+  "32": "bellows@32.png",
+  "40": "bellows@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/mine_a.png"
+}
