@@ -1,8 +1,8 @@
 // CONTENT（砂漠）: 隊商路の野営地 3 つ（WORLD_REDESIGN §4.2 の流れ 2・3、STORY_BIBLE §7.2）。どれも 30×22 の小さな場所（戦闘なし）。
-//   desert_camp1 野営地「岩の井戸」: 岩に囲まれた井戸と、名の削れた戦没者の碑（lo_war_desert）。焚き火の場面で砂の鷹団が来る
-//   desert_camp2 野営地「星の石」: 星を刻んだ立ち石と、記録官が置き去りにした鞍袋（くべられなかった手紙）。砂嵐の選択（近道・遠回り）
+//   desert_camp1 野営地「岩の井戸」: 岩に囲まれた井戸と、名の削れた戦没者の碑（lo_war_desert）。たき火の場面で砂の鷹団が来る
+//   desert_camp2 野営地「星の石」: 星を刻んだ立ち石と、記録官が置き去りにしたくら袋（くべられなかった手紙）。砂嵐の選択（近道・遠回り）
 //   desert_camp3 王墓のオアシス: 古い泉（回復の泉）と王墓の入口。隊はここで待つ（ここから先は一行だけ）
-//   入ると隊と一緒なら焚き火の場面（desert_campN_scene、once は旗で）。隊と一緒でなければ静かな野営の跡。
+//   入ると隊と一緒ならたき火の場面（desert_campN_scene、once は旗で）。隊と一緒でなければ静かな野営の跡。
 (function (R) {
   'use strict';
   R.onData(function () {
@@ -43,6 +43,7 @@
       O.push(K.prop('bones', 7, 11), K.prop('thorn_bush', 23, 10), K.prop('cactus', 8, 14), K.prop('sand_mound', 18, 4), K.prop('rock_small', 13, 5), K.prop('desert_palm', 16, 6));
       O.push(K.prop('lantern', 12, 10), K.prop('lantern', 18, 13), K.prop('copper_brazier', 14, 17), K.prop('copper_brazier', 16, 17));
       O.push(K.sign(17, 18, '野営地「岩の井戸」\n――隊商路の最初の夜'));
+      O.push(K.prop('sand_mound', 4, 13), K.prop('rock_small', 26, 12), K.prop('thorn_bush', 12, 17), K.prop('clay_jars', 21, 16), K.prop('sack', 8, 15), K.prop('cactus', 27, 19), K.prop('bones', 3, 19), K.prop('rock_small', 10, 4));
       const N = caravan('c1', ['desert_caravan_on', 'desert_camp1_done', '!desert_camp2_done'], { zx: 14, zy: 10, ax: 13, ay: 12, bx: 17, by: 12, c1x: 22, c1y: 14, c2x: 8, c2y: 12 })
         .concat([
           K.npc('rashid_fire', 'npc_rashid', 16, 10, { name: 'ラシード', title: '砂の鷹団の頭', dir: 'w', talk: 'desert_rashid_fire', reward: 'hint', cond: ['desert_hawk_met', '!desert_camp2_done', { not: { choice: 'ch_desert_hawk', is: 'fight' } }] }),
@@ -66,11 +67,12 @@
       const O = [];
       camp(O, 13, 12);
       O.push(K.prop('obelisk', 18, 7), K.exam(18, 8, 'desert_camp2_stone'));
-      O.push(K.prop('sack', 23, 12), K.exam(23, 13, 'desert_camp2_saddlebag'));           // 記録官の鞍袋（くべられなかった手紙）
+      O.push(K.prop('sack', 23, 12), K.exam(23, 13, 'desert_camp2_saddlebag'));           // 記録官のくら袋（くべられなかった手紙）
       O.push(K.prop('tent', 8, 10), K.prop('tent', 19, 13), K.prop('cart_barrels', 9, 15), K.prop('clay_jars', 17, 15), K.prop('crate', 10, 15));
       O.push(K.prop('bones', 6, 13), K.prop('sand_mound', 21, 4), K.prop('thorn_bush', 7, 7), K.prop('cactus', 24, 10), K.prop('rock_small', 12, 4), K.prop('desert_palm', 11, 6, { variant: 1 }));
       O.push(K.prop('lantern', 15, 10), K.prop('lantern', 11, 14), K.prop('copper_brazier', 14, 17), K.prop('copper_brazier', 16, 17));
-      O.push(K.sign(17, 18, '野営地「星の石」\n――北は砂嵐の窪地'));
+      O.push(K.sign(17, 18, '野営地「星の石」\n――北は砂嵐のくぼ地'));
+      O.push(K.prop('sand_mound', 4, 16), K.prop('rock_small', 27, 14), K.prop('thorn_bush', 11, 18), K.prop('sack', 16, 16), K.prop('cactus', 3, 10), K.prop('bones', 26, 19), K.prop('rock_small', 8, 4), K.prop('clay_jars', 20, 11));
       const N = caravan('c2', ['desert_caravan_on', 'desert_camp2_done', '!desert_camp3_done'], { zx: 12, zy: 11, ax: 11, ay: 13, bx: 15, by: 13, c1x: 21, c1y: 15, c2x: 7, c2y: 12 })
         .concat([K.npc('camp2_star', 'npc_desert_child', 20, 9, { name: '星読みの子', dir: 'w', talk: 'desert_camp2_child', reward: 'hint', cond: '!desert_caravan_on' })]);
       K.def('desert_camp2', {
@@ -96,7 +98,7 @@
       K.path(g, [[15, 22], [15, 17], [21, 17], [21, 8]], 'd', 1, 'sukg');
       const O = [];
       camp(O, 17, 14);
-      O.push(K.stairs(21, 3, { map: 'desert_tomb_1', spawn: 'entrance' }, { id: 'desert_camp3_tomb' }));
+      O.push(K.stairs(21, 3, { map: 'desert_tomb_1', spawn: 'entrance' }, { id: 'desert_camp3_tomb', cond: 'desert_camp3_done' }), K.exam(21, 3, 'desert_tomb_sealed', { cond: '!desert_camp3_done' }));
       O.push(K.prop('obelisk', 19, 6), K.prop('obelisk', 24, 6), K.prop('tomb_urn', 20, 8), K.prop('tomb_urn', 23, 8));
       O.push(K.spring('desert_camp3_s1', 7, 15));             // 古い泉のほとりの湧き水（回復の泉）
       O.push(K.exam(13, 11, 'desert_camp3_oldspring'));

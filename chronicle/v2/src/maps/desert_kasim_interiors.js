@@ -22,7 +22,7 @@
       });
     }
 
-    // 宿「泉の星亭」18×12（泊まると「消灯の刻まで休む」も選べる＝蜃気楼の市）
+    // 宿「泉の星亭」18×12（泊まると「消灯の刻まで休む」も選べる＝しんきろうの市）
     interior('kasim_inn', '宿「泉の星亭」', 18, 12, {
       back: 'inn', carpet: [[5, 6, 7, 3], [12, 2, 4, 2]],
       objects: [
@@ -46,7 +46,7 @@
         K.exam(9, 2, 'kasim_tavern_poster'),
       ],
       npcs: [
-        K.npc('tavern_master', 'npc_desert_man', 3, 2, { name: '酒場の主人', dir: 's', talk: 'kasim_tavern_master', pushable: false, reward: null }),
+        K.npc('tavern_master', 'npc_desert_man', 3, 2, { name: '酒場のマスター', dir: 's', talk: 'kasim_tavern_master', pushable: false, reward: null }),
         K.npc('rumor_a', 'npc_desert_woman', 8, 7, { name: 'うわさ好きの女', dir: 'n', talk: 'kasim_rumor_a', reward: 'lead' }),
         K.npc('rumor_b', 'npc_bard', 13, 5, { name: '吟遊詩人', dir: 'w', talk: 'kasim_rumor_b', reward: 'lead' }),
         K.npc('rumor_c', 'npc_merchant_1', 12, 9, { name: '旅の商人', dir: 'n', talk: 'kasim_rumor_c', reward: 'lead' }),

@@ -1,6 +1,6 @@
 // BATTLE（砂漠）: ザハラ砂漠のボスと考えどころ（WORLD_REDESIGN §4.10・§4.11・E18、V2_PLAN §2.6.5）。
 //   砂の鷹団の頭 b_hawk_chief（中ボス、野営地 1 で戦う選択とアジトの奥）: 弓兵 b_hawk_bow がいるあいだは「かばわれて」刃も術も
-//     ほとんど届かない → 弓兵を先に。弓兵が全員倒れると守りが解ける（special desert_guard_down）。頭の予告「砂を巻き上げる」→ 砂塵の舞（全体）→ 守る。
+//     ほとんど届かない → 弓兵を先に。弓兵が全員倒れると守りが解ける（special desert_guard_down）。頭の予告「砂を巻き上げる」→ 砂けむりの舞（全体）→ 守る。
 //   砂もぐり b_sandworm（中ボス、王墓 2 階）: 身を沈める予告 → 次の手番に砂にもぐる（刃と打撃はほとんど効かず、突き・土はそのまま）→
 //     その次に砂中の一撃（全体）。予告の手番に土で打つと砂が固まって、もぐれない（cancel）。もぐっている間に土で打つと引きずり出す。
 //   名なき砂の王 b_sandking（地方ボス、王墓 3 階の王の間）: 日の玉・月の玉を呼ぶ → 玉がある間、玉と同じ属性（日＝火・光、月＝水・闇）を
@@ -24,14 +24,14 @@
   const MOBS = {
     desert_hawk_blade: {
       name: '鷹団の曲刀使い', sprite: 'desert_hawk_blade', size: 'm', lv: 8, race: 'humanoid', flags: [],
-      s: { hp: 1.1, atk: 1.15, agi: 1.1 }, elem: {}, phys: {}, statusRes: {},
+      s: { hp: 1.35, atk: 1.1, agi: 1.1 }, elem: {}, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_slash', w: 2 }, { id: 'e_double', w: 1 }],
       drops: { normal: { item: 'i_potion', rate: 8 } },
       desc: '黒い布で顔をおおった\n砂の鷹団の団員。曲刀が速い。',
     },
     desert_hawk_bow: {
       name: '鷹団の弓使い', sprite: 'desert_hawk_bow', size: 'm', lv: 8, race: 'humanoid', flags: [],
-      s: { hp: 0.9, atk: 1.1, agi: 1.2 }, elem: {}, phys: {}, statusRes: {},
+      s: { hp: 1.1, atk: 1.05, agi: 1.2 }, elem: {}, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_arrow', w: 4 }],
       drops: { normal: { item: 'i_antidote', rate: 8 } },
       desc: '岩の上から矢を射かける\n砂の鷹団の見張り。',
@@ -47,12 +47,12 @@
       // 弓兵に守られている間の倍率（desert_guard_down で elemBase・physBase＝ふだんの値に戻す）
       elem: ALL(0.2), phys: { slash: 0.2, blunt: 0.2, pierce: 0.2 }, elemBase: {}, physBase: {}, guarded: true, statusRes: { sleep: 0.5 },
       actions: A([['attack', 3], ['eb_hawk_cut', 2], ['eb_hawk_dust', SCHED, { every: [3, 1] }], ['eb_hawk_rally', SCHED, { flag: 'hawk_guard_down', once: true }]]),
-      s: { hp: 1.5 },
+      s: { hp: 1.15 },
       drops: MID('i_ether'),
       desc: '砂の鷹団の頭。もとは日輪同盟の兵。\n手下の弓に守られて戦う。',
     },
     b_hawk_bow: {
-      name: '鷹団の弓兵', sprite: 'desert_hawk_bow', artKind: 'mon', bossType: 'add', addOf: 'b_hawk_chief', lv: 8, hpShare: 1.6, actsPerTurn: 1, size: 's',
+      name: '鷹団の弓兵', sprite: 'desert_hawk_bow', artKind: 'mon', bossType: 'add', addOf: 'b_hawk_chief', lv: 8, hpShare: 1.0, actsPerTurn: 1, size: 's',
       race: 'humanoid', flags: ['boss'], eva: 10, elem: {}, phys: {}, statusRes: {},
       actions: A([['e_arrow', 3], ['eb_hawk_volley', 1]]),
       onDeath: 'desert_guard_down',
@@ -108,8 +108,8 @@
     // 鷹団の頭
     eb_hawk_cut: { name: '鷹の爪', kind: 'enemy', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.5, kind: 'slash' }], fx: 'slash2', msg: '{user}は曲刀を低く走らせた！' },
     eb_hawk_dust: { name: '砂を巻き上げる', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は足で砂をすくい上げた！',
-      telegraph: { text: 'ラシードが砂を巻き上げている……。', pose: 'tele', tint: '#e8cf98', next: 'eb_hawk_storm', guard: 'defend' } },
-    eb_hawk_storm: { name: '砂塵の舞', kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'phys', power: 4.0, kind: 'slash', sure: true }, { type: 'status', status: 'blind', chance: 0.3 }], fx: 'slash2', msg: '砂けむりの中から、曲刀が四方へ走った！' },
+      telegraph: { text: 'ラシードが砂を巻き上げている……。', pose: 'tele', tint: '#e8cf98', next: 'eb_hawk_storm', guard: 'defend', lethal: true } },
+    eb_hawk_storm: { name: '砂けむりの舞', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.95, guardPct: 0.12, kind: 'slash' }, { type: 'status', status: 'blind', chance: 0.3 }], fx: 'slash2', msg: '砂けむりの中から、曲刀が四方へ走った！' },
     eb_hawk_rally: { name: 'ひとり立つ', kind: 'enemy', target: 'self', effects: [{ type: 'buff', stat: 'atk', stages: 1 }], fx: 'buff', msg: '{user}は曲刀を構え直した。「……最後は、おれ一人か」' },
     eb_hawk_volley: { name: '一斉射ち', kind: 'enemy', target: 'random', effects: [{ type: 'damage', formula: 'phys', power: 0.6, hits: 2, kind: 'pierce' }], fx: 'arrow', msg: '{user}は続けざまに矢を放った！' },
     // 砂もぐり
@@ -117,9 +117,9 @@
       telegraph: { text: '砂もぐりが砂に身を沈めはじめた……。', pose: 'tele', tint: '#d8b878', next: 'eb_worm_sink', guard: 'element:earth',
         cancel: { element: 'earth', msg: '土の力が足もとの砂を固めた！\n砂もぐりは、もぐれない！' } } },
     eb_worm_sink: { name: '砂にもぐる', kind: 'enemy', target: 'self', effects: [{ type: 'special', id: 'desert_worm_sink' }], fx: 'earth', msg: '{user}は砂の中へ消えた！',
-      telegraph: { text: '砂の下で、何かが這いまわっている……。', pose: 'idle', tint: '#b89868', next: 'eb_worm_burst', guard: 'defend',
+      telegraph: { text: '砂の下で、何かがはいまわっている……。', pose: 'idle', tint: '#b89868', next: 'eb_worm_burst', guard: 'defend', lethal: true,
         cancel: { element: 'earth', msg: '土の力が、砂の中の砂もぐりを\n引きずり出した！' } } },
-    eb_worm_burst: { name: '砂中の一撃', kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'phys', power: 3.6, sure: true }, { type: 'special', id: 'desert_worm_surface' }], fx: 'strike3', msg: '足もとの砂が裂け、{user}が飛び出した！' },
+    eb_worm_burst: { name: '砂中の一撃', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.6, guardPct: 0.12, kind: 'blunt' }, { type: 'special', id: 'desert_worm_surface' }], fx: 'strike3', msg: '足もとの砂が裂け、{user}が飛び出した！' },
     eb_worm_surface: { name: '顔を出す', kind: 'enemy', target: 'self', effects: [{ type: 'special', id: 'desert_worm_surface' }], fx: 'earth', msg: '{user}が、砂の上に顔を出した。' },
     // 名なき砂の王
     eb_king_sun: { name: '日の玉', kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_sun_orb', n: 1, max: 5 }, { type: 'special', id: 'desert_orb_absorb', orb: 'sun' }], fx: 'fire2',
@@ -127,9 +127,9 @@
     eb_king_moon: { name: '月の玉', kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_moon_orb', n: 1, max: 5 }, { type: 'special', id: 'desert_orb_absorb', orb: 'moon' }], fx: 'water2',
       msg: '{user}の杖に、月の光が集まった！\n王の体を、光の膜が包む……。' },
     eb_king_raise: { name: '杖を掲げる', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は砂の杖を高く掲げた……。',
-      telegraph: { text: '王が杖を掲げた。砂が空へ昇っていく……。', pose: 'tele', tint: '#f0d890', next: 'eb_king_judgment', guard: 'defend',
+      telegraph: { text: '王が杖を掲げた。砂が空へ昇っていく……。', pose: 'tele', tint: '#f0d890', next: 'eb_king_judgment', guard: 'defend', lethal: true,
         cancel: { element: 'fire', msg: '炎が杖の砂を焼き固めた！\n砂の滝は、降ってこない。' } } },
-    eb_king_judgment: { name: '砂の審判', kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'magic', power: 3.0, element: 'earth', sure: true }, { type: 'status', status: 'blind', chance: 0.35 }], fx: 'earth2',
+    eb_king_judgment: { name: '砂の審判', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.65, guardPct: 0.15, kind: 'earth', element: 'earth' }, { type: 'status', status: 'blind', chance: 0.35 }], fx: 'earth2',
       msg: '空から、砂の滝が降りそそいだ！' },
     eb_orb_flare: { name: '日輪の炎', kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'magic', power: 1.0, element: 'fire' }], fx: 'fire2', msg: '{user}が燃え上がった！' },
     eb_orb_moonlight: { name: '月の癒やし', kind: 'enemy', target: 'ally_other', effects: [{ type: 'heal', pct: 0.1 }], fx: 'heal', msg: '{user}の冷たい光が、王の傷をふさいだ。' },
@@ -140,6 +140,12 @@
     const BC = (R.BattleCore = R.BattleCore || {});
     const SP = (BC.specials = BC.specials || {});
     const saveBase = (d) => { if (!d.elemBase) { d.elemBase = Object.assign({}, d.elem || {}); d.physBase = Object.assign({}, d.phys || {}); } };
+    // 予告の大技（砂けむりの舞・砂中の一撃・砂の審判）: 最大 HP の割合で削る。守った人は guardPct だけ（予告を読んで守れば耐えられる）
+    SP.desert_sweep = function* (eng, u, t, eff) {
+      if (!t || !t.alive || !t.isParty) return;
+      const p = t.defending ? (eff.guardPct != null ? eff.guardPct : 0.15) : (eff.pct != null ? eff.pct : 0.6);
+      yield* eng.hit(u, t, { dmg: Math.max(1, Math.round(t.mhp * p)) }, { kind: eff.kind || 'phys', element: eff.element || null });
+    };
     // 鷹団の弓兵が倒れた: 残りの弓兵がいなければ頭の守りが解ける
     SP.desert_guard_down = function* (eng, u) {
       const left = eng.mons.filter((m) => m !== u && m.alive && m.d.onDeath === 'desert_guard_down');
@@ -232,6 +238,10 @@
     // アジトが敵の砦になったときの奥の戦い（弓兵が 3 人）
     tr_b_hawkhold: boss([['b_hawk_bow', 1], ['b_hawk_chief', 1], ['b_hawk_bow', 2]], { scale: 'tier', lvOff: 2, bg: 'cave', bgm: 'boss' }),
     // 隊が襲われた（ワールドの隊商路の決まった所。雑魚の組、逃げられない）
+    // 砂に沈んだ神殿の奥殿の番（寄り道。日輪の杖の手前）: 黄金の守護像の兄弟たち
+    tr_desert_sun_guard: boss([['@golem', 1], ['@mummy', 2]], { scale: 'tier', lvOff: 2, bg: 'cave', bgm: 'boss2' }),
+    // 王墓 1 階の隠し部屋の金剛トカゲ（ティアごとに 1 度。盗みでしか取れない品のため）
+    tr_desert_lizard_hole: { mons: [['rm_diamond_lizard', 1]], scale: 'tier', lvOff: 0, bg: 'cave', bgm: 'rarebattle' },
     tr_desert_ambush: { mons: [['@scorpion', 2], ['@snake', 1]], scale: 'tier', lvOff: 0, bg: 'desert', bgm: 'battle', noEscape: true },
     tr_desert_ambush2: { mons: [['@cactus', 2], ['@sandworm', 1]], scale: 'tier', lvOff: 0, bg: 'desert', bgm: 'battle', noEscape: true },
     tr_desert_ambush3: { mons: [['@snake', 2], ['@scorpion', 2]], scale: 'tier', lvOff: 1, bg: 'desert', bgm: 'battle', noEscape: true },

@@ -139,7 +139,7 @@ module.exports = function desert(A) {
   // 近道の砂嵐の入口（選んだあとか、解決のあと開く）と、古い野営跡（desert_oldcamp）
   const shortOpen = { any: [{ choice: 'ch_desert_route', is: 'short' }, 'cleared_r_desert'] };
   tilePatches.push({ cond: { not: shortOpen }, rect: [21, 156, 3, 1], rows: ['XXX'] });
-  S(24, 157, '砂嵐の窪地\n――風のやまない近道。');
+  S(24, 157, '砂嵐のくぼ地\n――風のやまない近道。');
   exits.push({ x: 27, y: 150, w: 1, h: 1, to: { map: 'desert_oldcamp', spawn: 'road' } });
   set(27, 150, 'd'); set(26, 150, 'd'); set(25, 150, 'd'); set(24, 150, 'd'); set(23, 150, 'd'); P('tent', 28, 149); P('bones', 28, 151);
   spawns.oldcamp = { x: 26, y: 150, dir: 'w' };
@@ -186,7 +186,7 @@ module.exports = function desert(A) {
   npcs.push({ id: 'pilgrim', look: 'npc_desert_old_f', name: '夜明け待ちの巡礼', x: 41, y: 131, dir: 's', move: 'still', talk: 'desert_world_pilgrim', reward: 'news', key: 'world_pilgrim' });
   npcs.push({ id: 'oil_caravan', look: 'npc_oil_carrier', name: '油運び', x: 75, y: 139, dir: 'w', move: 'still', talk: 'desert_world_oil', reward: 'hint', key: 'world_oil_caravan' });
   P('cart_barrels', 76, 138);
-  npcs.push({ id: 'oil_camel', look: 'ani_camel', name: 'ラクダ', x: 77, y: 139, dir: 'w', move: 'still', talk: { lines: [{ text: 'ラクダは、油の壺を背に\nのんびり砂をかんでいる。' }] }, reward: null });
+  npcs.push({ id: 'oil_camel', look: 'ani_camel', name: 'ラクダ', x: 77, y: 139, dir: 'w', move: 'still', talk: { lines: [{ text: 'ラクダは、油のつぼを背に\nのんびり砂をかんでいる。' }] }, reward: null });
   // 隊が襲われる（隊と一緒のとき、道の上で 1 度ずつ。§4.2 の流れ 1）
   const amb = (n, x, y, w, h, extra) => triggers.push({ id: 'desert_ambush_' + n + (extra || ''), x, y, w, h, on: 'step', event: 'desert_ambush_' + n,
     cond: ['desert_caravan_on', '!desert_ambush_' + n + '_done'] });
@@ -220,6 +220,8 @@ module.exports = function desert(A) {
     else if (r < 0.03) P('bones', x, y);
     else if (r < 0.034) P('rock_small', x, y);
   }
+  // 南東の砂丘の遊牧の天幕（景色の目印。灰の尾根の手前の空白を埋める）
+  P('tent', 84, 155); P('bones', 86, 156); P('clay_jars', 83, 156);
   // 小さなオアシス（景色の目印）
   for (const [x, y] of [[65, 146], [30, 131], [80, 156]]) {
     set(x, y, 'w'); set(x + 1, y, 'w');
@@ -243,7 +245,7 @@ module.exports = function desert(A) {
   // ---------------------------------------------------------------- 5. 地名
   areas.unshift(
     { rect: [44, 131, 16, 15], name: 'カシムのまわり', sub: 'オアシスの町の外' },
-    { rect: [18, 146, 13, 10], name: '砂嵐の窪地', sub: '隊商路の近道' },
+    { rect: [18, 146, 13, 10], name: '砂嵐のくぼ地', sub: '隊商路の近道' },
     { rect: [8, 118, 88, 49], name: 'ザハラ砂漠', sub: '名を売った王の砂漠' },
   );
   return { box: { x0: X0, y0: 118, x1: 93, y1: Y1 } };

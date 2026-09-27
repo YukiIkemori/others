@@ -1,0 +1,40 @@
+{
+ "desc": "CONTENT（砂漠）: 砂の王墓 1 階",
+ "hero": {
+  "type": "warrior",
+  "sex": "m",
+  "name": "アルン",
+  "fav": "sword"
+ },
+ "party": [
+  "hero",
+  "bartolo",
+  "marta",
+  "sylvain"
+ ],
+ "reserve": [],
+ "tier": 1,
+ "gl": "auto",
+ "prof": "auto",
+ "flags": {
+  "prologue_done": true,
+  "forest_start": true,
+  "cleared_r_forest": true,
+  "story_t1": true,
+  "desert_arrived": true,
+  "desert_camp3_done": true
+ },
+ "vars": {},
+ "items": {
+  "i_potion": 4,
+  "i_ether": 2,
+  "i_revive": 2,
+  "i_stone_earth": 4
+ },
+ "gold": 1200,
+ "leads": [],
+ "map": {
+  "id": "desert_tomb_1",
+  "spawn": "entrance"
+ }
+}

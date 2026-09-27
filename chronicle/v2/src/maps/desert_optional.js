@@ -1,5 +1,5 @@
 // CONTENT（砂漠）: 砂漠の寄り道の小さな場所（WORLD_REDESIGN §2.7 #8・#9、§4.2 の近道／遠回り）。
-//   desert_mirage    蜃気楼の市（#8）: 消灯の刻のあいだだけワールドに灯りの列と入口が出る（宿で「消灯の刻まで休む」＝旗 desert_night）。
+//   desert_mirage    しんきろうの市（#8）: 消灯の刻のあいだだけワールドに灯りの列と入口が出る（宿で「消灯の刻まで休む」＝旗 desert_night）。
 //                    入ると、その晩の市は一度きり（desert_night を下ろす）。一品物をティアで入れ替わる 3 品売る。戦闘なし。
 //   desert_rocks     金剛トカゲの岩場（#9）: レア魔物の巣（z_desert_rocks、rareEncounters の率が高い）。泉 1・宝箱 3。
 //   desert_oldcamp   古い野営跡（近道を選んだとき。砂嵐の中の岩陰）: 宝箱 3・泉（雨水だめ）・前の隊商の書き付け。
@@ -11,7 +11,7 @@
     const L = K.L;
     const deco = (O, list) => { for (const [id, x, y, v] of list) O.push(K.prop(id, x, y, v != null ? { variant: v } : undefined)); };
 
-    // ================================================================ 蜃気楼の市（36×26）
+    // ================================================================ しんきろうの市（36×26）
     {
       const W = 36, H = 26;
       const g = K.grid(W, H, 'u');
@@ -38,7 +38,7 @@
         K.npc('m_camel', 'ani_camel', 30, 15, { name: 'ラクダの影', dir: 'w', talk: [L('ラクダの影は、手をのばすと\n砂の粒になって揺れた。')], reward: null }),
       ];
       K.def('desert_mirage', {
-        name: '蜃気楼の市', kind: 'town', optional: true, region: 'r_desert', location: 'mirage', theme: 'desert',
+        name: 'しんきろうの市', kind: 'town', optional: true, region: 'r_desert', location: 'mirage', theme: 'desert',
         legend: DK.LEGEND(), rows: g, outside: 'dune_sand', objects: O, npcs: N,
         spawns: { road: { x: 18, y: 23, dir: 'n' } },
         exits: [{ x: 17, y: 25, w: 3, h: 1, to: { map: 'world', spawn: 'mirage' } }],
@@ -57,8 +57,8 @@
       for (const [x, y, rx, ry, sd] of [[16, 12, 2, 2, 'a'], [9, 18, 2, 2, 'b'], [25, 9, 2, 2, 'c'], [20, 21, 1, 1, 'd'], [13, 6, 1, 1, 'e']]) K.blob(g, x, y, rx, ry, 'm', 'rkm' + sd, 's');
       K.rect(g, 16, 24, 3, 4, 'd');
       const O = [];
-      O.push(K.spring('desert_rocks_s1', 5, 14));
-      O.push(K.chest('desert_rocks_c1', 22, 6, { pool: 'p_T' }), K.chest('desert_rocks_c2', 5, 19, { item: 'i_stone_earth', n: 3 }), K.chest('desert_rocks_c3', 29, 20, { pool: 'p_rare' }));
+      O.push(K.spring('desert_rocks_s1', 19, 14));
+      O.push(K.chest('desert_rocks_c1', 22, 6, { pool: 'p_T' }), K.chest('desert_rocks_c2', 5, 19, { item: 'i_stone_earth', n: 3 }), K.chest('desert_rocks_c3', 29, 19, { pool: 'p_rare' }));
       O.push(K.sign(19, 24, '金剛トカゲの岩場\n――岩が動いても、驚かぬこと。'));
       O.push(K.exam(12, 21, 'desert_rocks_scales'));
       deco(O, [['rock_small', 7, 7], ['rock_small', 22, 13], ['rock_small', 12, 16], ['bones', 20, 6], ['bones', 8, 23], ['cactus', 28, 13], ['thorn_bush', 5, 9],

@@ -1,0 +1,43 @@
+{
+ "desc": "CONTENT（砂漠）: 野営地「岩の井戸」（隊と一緒、鷹団と話した後）",
+ "hero": {
+  "type": "warrior",
+  "sex": "m",
+  "name": "アルン",
+  "fav": "sword"
+ },
+ "party": [
+  "hero",
+  "bartolo",
+  "marta",
+  "sylvain"
+ ],
+ "reserve": [],
+ "tier": 1,
+ "gl": "auto",
+ "prof": "auto",
+ "flags": {
+  "prologue_done": true,
+  "forest_start": true,
+  "cleared_r_forest": true,
+  "story_t1": true,
+  "desert_arrived": true,
+  "desert_zaid_met": true,
+  "desert_caravan_on": true,
+  "desert_camp1_done": true,
+  "desert_hawk_met": true
+ },
+ "vars": {},
+ "items": {
+  "i_potion": 4,
+  "i_ether": 2,
+  "i_revive": 2,
+  "i_stone_earth": 4
+ },
+ "gold": 1200,
+ "leads": [],
+ "map": {
+  "id": "desert_camp1",
+  "spawn": "fire"
+ }
+}

@@ -17,7 +17,7 @@
   X.SONG_FULL = '♪　砂の海に　水を招いた王よ\n♪　その名はハザル　日輪の友\n♪　夕べの祈りに　とこしえに';
   // ザイードの星の歌（野営地ごとに 1 つ）
   X.STARS = [
-    '♪　北の釘星　動かぬ星よ\n♪　迷う隊商の　杭となれ',
+    '♪　北のくぎ星　動かぬ星よ\n♪　迷う隊商の　くいとなれ',
     '♪　七つの泉星　ひしゃくを傾け\n♪　夜のしずくを　砂にまけ',
     '♪　地の果ての　白む星よ\n♪　……祖母は　「夜明けの星」と呼んだ',
   ];
@@ -63,28 +63,28 @@
   lead('q_kasim_anklet', { kind: 'side', title: '踊り子の足鈴', text: 'ナディアが銀の足鈴を失くした。\n市場の子どもが拾ったらしいが、\nただでは返してくれないようだ。', from: '踊り子ナディア', place: 'kasim', done: 'desert_anklet_done' });
   lead('q_kasim_dig', { kind: 'side', title: '井戸掘りの手伝い', text: '井戸掘りの親方オマルが、町の外の\n砂地を三か所掘ってほしいという。\n水脈の当たりを探す。', from: '井戸掘りの親方', place: 'kasim', done: 'desert_dig_done' });
   lead('q_kasim_camel', { kind: 'side', title: '迷子のラクダ', text: 'ギルドのラクダが一頭、\n砂丘へ迷い出た。南東の砂丘で\n見たという話がある。', from: '隊商ギルドの帳場', place: 'kasim', dir: '南東', done: 'desert_camel_done' });
-  lead('q_kasim_beacons', { kind: 'side', title: '隊商路の烽火', text: '隊商路の烽火台が三つ消えている。\n黒い泉の油を運べば、\nまた火がともるという。', from: '灯守組合のタデオ', place: 'kasim', dir: '西', done: 'desert_beacons_done' });
+  lead('q_kasim_beacons', { kind: 'side', title: '隊商路ののろし', text: '隊商路ののろし台が三つ消えている。\n黒い泉の油を運べば、\nまた火がともるという。', from: '灯守組合のタデオ', place: 'kasim', dir: '西', done: 'desert_beacons_done' });
   lead('q_kasim_salt', { kind: 'side', title: '塩の包みを宿場へ', text: '塩売りのカリムから、宿場「砂の縁」\nの行商人ロッタへ塩の包みを\n届けてほしいと頼まれた。', from: '塩売りのカリム', place: 'sandedge', dir: '北', done: 'desert_salt_done' });
   lead('q_kasim_maps', { kind: 'side', title: '地図屋の宝の地図', text: '地図屋のヤズが、古い宝の地図を\n売っている。灯が戻るたびに、\n読める地図が増えるらしい。', from: '地図屋のヤズ', place: 'kasim', hideWhen: false });
   // 寄り道のうわさ（rumor）
-  lead('l_opt_sandedge', { kind: 'rumor', title: '街道のまん中の宿', text: '森と砂漠と灰の街道のまん中に、\n宿場「砂の縁」がある。\n泉の水が甘いという。', from: 'カシムの旅の商人', place: 'sandedge', dir: '北', done: { visited: 'sandedge' } });
-  lead('l_opt_mirage', { kind: 'rumor', title: '蜃気楼の市', text: '消灯の刻にだけ、砂の真ん中に\n灯りの列と市のにぎわいが\n揺れるという。', from: 'カシムの占い師', place: 'kasim', dir: '南西', done: { visited: 'desert_mirage' } });
+  lead('l_opt_sandedge', { kind: 'rumor', title: '街道のまん中の宿', text: '森と砂漠と灰の街道のまん中に、\n宿場「砂の縁」がある。\n泉の水が甘いという。', from: 'カシムの宿の泊まり客', place: 'sandedge', dir: '北', done: { visited: 'sandedge' } });
+  lead('l_opt_mirage', { kind: 'rumor', title: 'しんきろうの市', text: '消灯の刻にだけ、砂の真ん中に\n灯りの列と市のにぎわいが\n揺れるという。', from: 'カシムの宿のおかみ', place: 'kasim', dir: '南西', done: { visited: 'desert_mirage' } });
   lead('l_opt_temple', { kind: 'rumor', title: '沈んだ柱の浜', text: '南の浜の砂から、見たことのない\n柱の先が出ている。満月の晩、\n柱が増えるという。', from: '日焼けした男', place: 'kasim', dir: '南', done: { visited: 'desert_temple_1' } });
   lead('l_opt_rocks', { kind: 'rumor', title: '動く岩', text: '北の岩場で、岩が動いた、と\n隊商が言う。うろこが虹色に\n光っていたとか。', from: 'カシムの酒場', place: 'rocks', dir: '北', done: { visited: 'desert_rocks' } });
   lead('l_opt_hawknest', { kind: 'rumor', title: '岩の台地の鷹の笛', text: '町の西の岩の台地から、夜ごと\n鷹の笛が聞こえる。\n砂の鷹のねぐらかもしれない。', from: 'カシムの門番', place: 'hawks', dir: '西', done: { visited: 'desert_hawks_1' } });
   // 宝の地図（地方をまたぐ。行き先はまだ語られていない土地の中＝slice:'locked'。WORLD §2.8）
-  lead('l_tmap_3', { kind: 'map', title: '宝の地図 その3', text: '灰の荒野の、折れた剣の碑。\n下の段の封じの扉の奥に、\n羽ペンの紋の宝があるという。', from: '宝の地図 その3', region: 'r_ash', dir: '南東', slice: 'locked' });
-  lead('l_tmap_5', { kind: 'map', title: '宝の地図 その5', text: '西の外洋の霧、百の帆柱の立つ\n船の墓場。三本目の帆柱の船の\n船倉に、封じの扉。', from: '宝の地図 その5', region: 'world', dir: '西の海', slice: 'locked' });
-  lead('l_tmap_6', { kind: 'map', title: '宝の地図 その6', text: 'にじんで読めない地図。\n星のかけらがあれば\n読めるという。', from: '宝の地図 その6', region: 'world', dir: '？', slice: 'locked' });
+  lead('l_tmap_3', { kind: 'map', title: '宝の地図・その3', text: '灰の荒野の、折れた剣の碑。\n下の段の封じの扉の奥に、\n羽ペンの紋の宝があるという。', from: '宝の地図・その3', region: 'r_ash', dir: '南東', slice: 'locked' });
+  lead('l_tmap_5', { kind: 'map', title: '宝の地図・その5', text: '西の外洋の霧、百の帆柱の立つ\n船の墓場。三本目の帆柱の船の\n船倉に、封じの扉。', from: '宝の地図・その5', region: 'world', dir: '西の海', slice: 'locked' });
+  lead('l_tmap_6', { kind: 'map', title: '宝の地図・その6', text: 'にじんで読めない地図。\n星のかけらがあれば\n読めるという。', from: '宝の地図・その6', region: 'world', dir: '？', slice: 'locked' });
   // 本筋（main）: 記録院の物証（拓本の跡）と、名を呼んだ夜の余白（STORY_BIBLE §7.2 の 3）
   R.def('leads', 'l_main_recorder_desert', { kind: 'main', region: 'world', title: '拓本の跡', from: '王墓の王の間', place: 'tomb',
-    text: '王の間の壁に、紙の繊維と墨の跡。\n「記録院 写 第八十二号」。\n王の名が石から消えたのは、写された後。' });
+    text: '王の間の壁に、紙の繊維と墨の跡。\n「記録院の写し・第八十二号」。\n王の名が石から消えたのは、写された後。' });
   R.def('leads', 'l_main_margin_named', { kind: 'main', region: 'world', title: '名を呼んだ夜', from: '手がかり帳の余白',
     text: '名を呼ばれて、王は眠れた。\n……名は、眠りのためにも\nあるのかもしれない。' });
 
   // ---------------------------------------------------------------- 読み物（STORY_BIBLE §10.2 の 13〜15 ほか）
   const lore = (id, o) => R.def('lore', id, Object.assign({ region: 'r_desert' }, o));
-  lore('lo_ev_desert', { title: '拓本の跡', kind: 'main', must: true, text: '王の間の石板に、紙の繊維と墨の跡。\n札が一枚、砂に落ちていた。\n「記録院 写 第八十二号」' });
+  lore('lo_ev_desert', { title: '拓本の跡', kind: 'main', must: true, text: '王の間の石板に、紙の繊維と墨の跡。\n札が一枚、砂に落ちていた。\n「記録院の写し・第八十二号」' });
   lore('lo_time_desert', { title: '砂に埋もれた日時計', kind: 'main', must: true, text: '影の刻みの溝に、二十年分の砂。\nギルドの帳面の「日の出の祈り」の欄は、\n光暦二九二年の冬で終わっている。' });
   lore('lo_war_desert', { title: '名の削れた碑', kind: 'region', must: false, text: '岩の井戸の、日輪同盟の戦没者の碑。\n名は風に削られて、一つも読めない。\n碑の裏に「日輪は王の火なり」。' });
   lore('lo_desert_spring_letters', { title: '泉の底の古い文字', kind: 'region', must: false, text: '枯れた泉の底の石に、古い字。\n「……の火を、泉に預く。\n名を呼ぶかぎり、火は消えず」' });
@@ -117,7 +117,7 @@
       { cond: { choice: 'ch_desert_hawk', is: 'fight' }, text: '岩の井戸では、砂の鷹と剣を交えた。' },
       { cond: { choice: 'ch_desert_hawk', is: 'water' }, text: '岩の井戸では、砂の鷹と水を分け合った。' },
       { cond: { choice: 'ch_desert_hawk', is: 'pay' }, text: '岩の井戸では、砂の鷹に通行料を払った。' },
-      { cond: { choice: 'ch_desert_route', is: 'short' }, text: '砂嵐の窪地を、星を頼りに抜けた。' },
+      { cond: { choice: 'ch_desert_route', is: 'short' }, text: '砂嵐のくぼ地を、星を頼りに抜けた。' },
       { cond: { choice: 'ch_desert_route', is: 'long' }, text: '嵐を避け、西の浜を遠回りした。' },
       { cond: 'desert_named', text: '王の間で、見習いは戦いの中で王の名を呼んだ。' },
       { cond: { choice: 'ch_desert_write', is: 'legend' }, text: '砂の鷹と呼ばれる盗賊が隊を襲い、\n王はその名を取り戻した。' },

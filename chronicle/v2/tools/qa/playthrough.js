@@ -99,6 +99,42 @@ const CH = (pim, fawn, write) => [
   { re: '泊まっていく|泊まる', pick: '泊まる' },
   { re: '斧で払う', pick: '斧' }, { re: '呼び笛', pick: '吹く' },
 ];
+// 砂漠（desert_*.js）: 状態のフィクスチャ（ティア 1・3、森の解決の後、ワールドの砂漠の北）から、カシム → 隊商の護衛 → 王墓 → clearRegion('r_desert')
+function desert(o) {
+  o = o || {};
+  const glyph = (k, map) => ({ id: 'glyph_' + k, ev: 'desert_tomb_glyph', map, doneJs: `!!(G().items.k_desert_glyph_${k})`, optional: true });
+  return [
+    { id: 'kasim', ev: 'kasim_arrival', done: 'desert_arrived' },
+    { id: 'shop_kasim_arms', ev: 'kasim_arms', shop: true, optional: true },
+    { id: 'shop_kasim_items', ev: 'kasim_shop_keeper', shop: true, optional: true },
+    { id: 'fara', ev: 'kasim_fara', done: 'desert_fara_met', optional: true },
+    { id: 'nadia', ev: 'kasim_nadia', done: 'desert_nadia_met', optional: true },
+    { id: 'abul', ev: 'kasim_abul', done: 'desert_abul_met', optional: true },
+    { id: 'zaid', ev: 'kasim_zaid', done: 'desert_caravan_on' },
+    { id: 'camp1', ev: 'desert_camp1_scene', done: 'desert_camp1_done' },
+    { id: 'camp2', ev: 'desert_camp2_scene', done: 'desert_camp2_done' },
+    { id: 'camp3', ev: 'desert_camp3_scene', done: 'desert_camp3_done' },
+    { id: 'abul_oasis', ev: 'desert_abul_oasis', done: 'desert_abul_gift', optional: true },
+    { id: 'plate_w', ev: 'desert_tomb_plate_w', done: 'desert_t1_sw_w' },
+    { id: 'plate_e', ev: 'desert_tomb_plate_e', done: 'desert_t1_sw_e' },
+    glyph('ha', 'desert_tomb_1'),
+    { id: 'grind_tomb', grind: o.grind || 30, optional: true },
+    glyph('za', 'desert_tomb_2'),
+    { id: 'spring_t2', spring: ['desert_tomb_2'], optional: true, noHeal: true },
+    { id: 'worm', ev: 'desert_tomb_worm', done: 'desert_worm' },
+    glyph('ru', 'desert_tomb_3'),
+    { id: 'spring_t3', spring: ['desert_tomb_3'], optional: true, noHeal: true },
+    { id: 'king', ev: 'desert_tomb_king', done: 'cleared_r_desert' },
+    { id: 'reward', ev: 'desert_after', done: 'desert_reward_given' },
+  ];
+}
+const CHD = (hawk, route, write) => [
+  { re: '隊商と出発', pick: '出発する' },
+  { re: '砂の鷹団にどうする', pick: { fight: '戦う', water: '水を分ける', pay: 'お金を払う' }[hawk] },
+  { re: 'どちらの道', pick: route === 'short' ? '近道' : '遠回り' },
+  { re: '年代記に ?何を', pick: write === 'pain' ? '日継ぎ' : '砂の盗賊' },
+  { re: '引き受ける', pick: 'やめておく' },
+];
 const ROUTES = {
   R1: { hero: { type: 'warrior', sex: 'm' }, party: ['bartolo', 'marta', 'sylvain'], pim: 'send', fawn: 'heal', write: 'pain',
     goals: () => prologue({ loseBoss: true }).concat(forest({ order: ['hans', 'ben', 'roy', 'pim'], strict: true })), estimate: true },
@@ -110,9 +146,13 @@ const ROUTES = {
     goals: () => prologue().concat(forest({ order: ['roy', 'hans', 'pim', 'ben'], loseBoss: true })) },
   R5: { hero: { type: 'wanderer', sex: 'f' }, party: ['rouga', 'noela', 'ilse'], pim: 'send', fawn: 'heal', write: 'oath',
     goals: () => prologue({ r5: true }).concat(forest({ order: ['hans', 'roy', 'ben', 'pim'], r5: true })) },
+  // 砂漠: 状態のフィクスチャから（主人公 戦士 ＋ バルトロ・マルタ・シルヴァン）。D1 = ティア 1・水を分ける・遠回り・盗賊と書く、D3 = ティア 3・戦う・近道・痛み
+  D1: { fixture: 'content_d_route_t1', tier: 1, hero: { type: 'warrior', sex: 'm' }, party: ['bartolo', 'marta', 'sylvain'], hawk: 'water', route: 'long', write: 'legend', goals: () => desert() },
+  D3: { fixture: 'content_d_route_t3', tier: 3, hero: { type: 'warrior', sex: 'm' }, party: ['bartolo', 'marta', 'sylvain'], hawk: 'fight', route: 'short', write: 'pain', goals: () => desert() },
 };
 function routeDef(id) {
   const r = ROUTES[id];
+  if (r.fixture) return { id, fixture: r.fixture, hero: r.hero, party: r.party, settings: SETTINGS, choices: CHD(r.hawk, r.route, r.write), goals: r.goals(), expect: { hawk: r.hawk, route: r.route, write: r.write, tier: r.tier } };
   return { id, hero: r.hero, party: r.party, settings: SETTINGS, choices: CH(r.pim, r.fawn, r.write), goals: r.goals(), expect: { pim: r.pim, fawn: r.fawn, write: r.write } };
 }
 
@@ -120,7 +160,7 @@ function routeDef(id) {
 async function runRoute(S, id, o) {
   const route = routeDef(id);
   let P = null;
-  for (let k = 0; k < 3 && !P; k++) { try { P = await Bw.open(S, 'index.html', { phone: o.phone, size: o.phone ? null : [960, 540], timeout: 180000 }); } catch (e) { console.log(`[${id}] open failed (${k + 1}): ${String(e).slice(0, 120)}`); } }
+  for (let k = 0; k < 3 && !P; k++) { try { P = await Bw.open(S, route.fixture ? 'dev.html?fixture=' + route.fixture : 'index.html', { phone: o.phone, size: o.phone ? null : [960, 540], timeout: 180000 }); } catch (e) { console.log(`[${id}] open failed (${k + 1}): ${String(e).slice(0, 120)}`); } }
   if (!P) return { route: id, ok: false, checks: {}, status: { fail: 'page did not boot' }, errors: [] };
   const page = P.page;
   const t0 = Date.now();
@@ -128,7 +168,8 @@ async function runRoute(S, id, o) {
   try {
     await page.addScriptTag({ content: fs.readFileSync(path.join(V2, 'tools', 'lib', 'maps.js'), 'utf8') });
     await page.addScriptTag({ content: fs.readFileSync(path.join(__dirname, 'bot.js'), 'utf8') });
-    await page.waitForFunction("RPG.Engine.top() && RPG.Engine.top().id === 'screen:title'", null, { timeout: 180000 });
+    if (route.fixture) await page.waitForFunction("RPG.Engine.top() && RPG.Engine.top().id === 'field' && RPG.Engine.fade.a < 0.02", null, { timeout: 180000 });
+    else await page.waitForFunction("RPG.Engine.top() && RPG.Engine.top().id === 'screen:title'", null, { timeout: 180000 });
     await page.evaluate((r) => window.__bot.setup(r), route);
     const maxMs = (+o.maxMin || 90) * 60000;
     let st = null, lastGoal = null, lastLog = 0;
@@ -170,6 +211,31 @@ async function runRoute(S, id, o) {
     }, route.expect);
     res.final = fin;
     const C = res.checks;
+    if (route.fixture) {
+      const d = await page.evaluate(() => {
+        const R = window.RPG, G = R.Game;
+        const pins = Object.entries(G.leads || {}).filter(([k, v]) => (R.DB.leads[k] || {}).region === 'r_desert' && v && v.pin).map(([k]) => k);
+        return { cleared: !!(G.cleared && G.cleared.r_desert), tier: G.tier, choices: Object.assign({}, G.choices), chronicle: R.DB.chronicle.r_desert ? R.DB.chronicle.r_desert.text : '', pins,
+          reward: !!(G.items.ac_tale_desert || R.Party.members().some((c) => Object.values(c.equip || {}).includes('ac_tale_desert'))), named: !!G.flags.desert_named };
+      });
+      const e = route.expect;
+      C.clearedDesert = d.cleared;
+      C.tierUp = d.tier === e.tier + 1;
+      C.invariants = fin.inv.ok;
+      C.desertPinsCleared = d.pins.length === 0;
+      C.choices = d.choices.ch_desert_hawk === e.hawk && d.choices.ch_desert_route === e.route && d.choices.ch_desert_write === e.write;
+      const HW = { fight: '剣を交えた', water: '水を分け合った', pay: '通行料' }, WR = { legend: '盗賊が隊を襲い', pain: '王の火のために' };
+      C.chronicleText = d.chronicle.includes(HW[e.hawk]) && d.chronicle.includes(WR[e.write]) && d.chronicle.includes(e.route === 'short' ? '砂嵐のくぼ地' : '西の浜');
+      C.sealFromAbul = d.reward;
+      C.stubs0 = fin.stubs.length === 0;
+      C.loadErrors0 = fin.loadErrors.length === 0;
+      C.consoleErrors0 = P.errors.length === 0;
+      C.noEngineError = !res.engineError;
+      res.desert = d;
+      res.estimate = estimateDesert(fin);
+      res.ok = !st.fail && Object.values(C).every(Boolean);
+      return res;
+    }
     const e = route.expect;
     const want = { R1: 'pain', R2: 'oath', R3: 'pain', R4: 'oath', R5: 'oath' }[id];
     C.reachedT1 = !!(fin.cleared && fin.t1);
@@ -205,6 +271,16 @@ async function runRoute(S, id, o) {
     await P.close();
   }
   return res;
+}
+
+/** 砂漠の時間の見積もり（§3.16 の 11 と同じ係数。フィクスチャの始まり → 砂漠の解決） */
+function estimateDesert(fin) {
+  const K = { step: 0.25, battle: 40, bossRound: 12, char: 0.08, op: 1 };
+  const bs = fin.stats.battles;
+  const zako = bs.filter((x) => !x.boss).length, bossR = bs.filter((x) => x.boss).reduce((s, x) => s + (x.rounds || 0), 0);
+  const ops = fin.stats.screenOps + fin.stats.choices;
+  const sec = fin.steps * K.step + zako * K.battle + bossR * K.bossRound + fin.stats.chars * K.char + ops * K.op;
+  return { K, steps: fin.steps, zako, bosses: bs.filter((x) => x.boss).map((x) => `${x.troop}:${x.rounds}r`), chars: fin.stats.chars, ops, hours: +(sec / 3600).toFixed(2), target: [2.5, 3.5] };
 }
 
 /** §3.16 の 11: 歩数 × 0.25 秒 ＋ 戦闘数 × 40 秒（ボスは rounds × 12 秒）＋ 字数 × 0.08 秒 ＋ 操作 1 回 1 秒 */

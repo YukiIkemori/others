@@ -1,0 +1,9 @@
+{
+ "scene": "battle",
+ "desc": "CONTENT（砂漠）: 砂漠の雑魚（zw_desert）",
+ "state": "content_d_battle",
+ "setup": {
+  "zone": "zw_desert",
+  "seed": "shot-desert"
+ }
+}

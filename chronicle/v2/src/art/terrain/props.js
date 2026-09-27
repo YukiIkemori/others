@@ -256,6 +256,13 @@
     return { r, color, k, kind: spec.kind };
   };
 
+  // 雪原の描いた物（v2/assets/env/snow/props）: 画像にしかない物を先に登録する（node の検査でも R.DB.props・hd:prop がそろう）
+  for (const id of ['firewood', 'frozen_well', 'hay_sled', 'ice_crystal', 'ice_hole', 'sled', 'snow_bank', 'snow_barrel', 'snow_fence', 'snow_fir', 'snow_lamp', 'snow_rock', 'snow_sign', 'stove_pipe']) {
+    if (DRAW[id]) continue;
+    if (!META[id]) META[id] = id === 'ice_hole' ? { soft: true } : { solid: true, shadow: id === 'snow_fir' ? 'long' : 'blob' };
+    DRAW[id] = function () { return null; };
+    DRAW[id].envOnly = true;
+  }
   for (const id of Object.keys(DRAW)) {
     if (/^dec_/.test(id)) continue;
     const meta = META[id] || {};

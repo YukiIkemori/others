@@ -48,7 +48,8 @@ for (const id of MY_EVENTS) {
 const MY_LEADS = ['l_main_rumors', 'l_main_recorder_forest', 'l_main_margin_1', 'l_rumor_forest', 'l_rumor_snow', 'l_rumor_desert', 'l_rumor_marsh', 'l_rumor_isles',
   'l_rumor_mine', 'l_rumor_ash', 'l_rumor_star', 'l_opt_well', 'l_opt_windhill', 'q_pharos_well', 'q_pharos_lamp', 'q_pharos_delivery'];
 for (const id of MY_LEADS) { const l = R.DB.leads[id]; ok(`lead ${id}`, !!l && R.Contract.check('lead', l).ok, l && R.Contract.check('lead', l).errors); if (l) ok(`lead ${id} の見出し 14 字まで`, [...l.title].length <= 14, l.title); }
-ok('森以外の噂は slice:locked', ['snow', 'desert', 'marsh', 'isles', 'mine', 'ash', 'star'].every((k) => R.DB.leads['l_rumor_' + k].slice === 'locked'));
+// 縦切りの後に作った地方（regions の slice の錠が外れた地方）の噂は錠なし
+ok('森以外の噂は slice:locked', ['snow', 'desert', 'marsh', 'isles', 'mine', 'ash', 'star'].every((k) => R.DB.leads['l_rumor_' + k].slice === 'locked' || !R.DB.regions['r_' + k].slice));
 for (const [id, l] of Object.entries(R.DB.locations)) { if (/^stub/.test(id)) continue; const c = R.Contract.check('location', l); ok(`location ${id}`, c.ok, c.errors); }
 ok('letter berna_t1', R.Contract.check('letter', R.DB.letters.berna_t1).ok);
 for (const f of fs.readdirSync(path.join(V2, 'tools', 'fixtures', 'states')).filter((f) => /^content_p_/.test(f))) {

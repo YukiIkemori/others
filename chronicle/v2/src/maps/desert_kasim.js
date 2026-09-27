@@ -121,7 +121,7 @@
       K.npc('woman_mid', 'npc_desert_woman', 24, 26, { name: '水売りの女', dir: 'e', talk: 'kasim_water_woman', reward: 'item' }),
       K.npc('hawk_friend', 'npc_desert_man', 15, 26, { name: '日焼けした男', dir: 'e', talk: 'kasim_hawk_friend', reward: 'hint' }),
       K.npc('rashid_memorial', 'npc_rashid', 43, 25, { name: 'ラシード', title: '砂の鷹団の頭', dir: 'n', talk: 'kasim_rashid_memorial', reward: 'news', cond: ['cleared_r_desert', { choice: 'ch_desert_write', is: 'pain' }] }),
-      K.npc('yura_returnee', 'npc_yura_woman', 34, 30, { name: 'ライラ', title: '藍染め職人', dir: 's', talk: 'kasim_yura_dyer', reward: 'item', cond: 'yura_dyer_home' }),
+      K.npc('yura_returnee', 'npc_yura_woman', 34, 30, { name: 'ライラ', title: '藍染め職人', dir: 's', talk: 'kasim_yura_dyer', reward: 'side' }),
       K.npc('pilgrim_kid', 'npc_desert_child', 38, 28, { name: '泉で遊ぶ子', dir: 'w', move: 'wander', talk: 'kasim_kid', reward: 'hint' }),
       // 空気だけ（4 人まで）
       K.npc('camel_1', 'ani_camel', 51, 27, { name: 'ラクダ', dir: 'w', talk: [L('ラクダは、つまらなそうに\n砂をかんでいる。')], reward: null }),

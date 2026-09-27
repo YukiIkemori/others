@@ -4,7 +4,7 @@
 //                              'i' 氷・'T' 雪のもみ・'c' 石畳・'p' 板・'~' 水・'r' 土の道）
 //   R.Snow.kit.house/shop/hall(id, x, y, o)   描いた雪の家（汎用の 3 つ: 5×4・6×5・8×6）。戸口は足もとの真ん中の列
 //   R.Snow.kit.B(id, x, y, w, h, o)   そのほかの大きさ（コードで描く丸太の家）
-//   雪原の描いた物（v2/assets/env/snow/props）の id を R.DB.props に置く（node の検査。絵は起動のときに env.js が登録する）。
+//   雪原の描いた物（v2/assets/env/snow/props）の id は art/terrain/props.js が先に登録する。無いときだけここで R.DB.props に置く。
 (function (R) {
   'use strict';
   const S = (R.Snow = R.Snow || {});

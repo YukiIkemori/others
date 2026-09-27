@@ -4,7 +4,7 @@
 //   zw_desert           原野（砂丘・枯れ川）
 //   zw_desert_road      街道（率 0.3、WORLD_REDESIGN §2.2）
 //   zw_desert_caravan   隊商と一緒のとき（率 1.4。WORLD §4.2 の「出現がやや多い」）
-//   zw_desert_storm     砂嵐の窪地（近道。率 1.5、金剛トカゲが出やすい）
+//   zw_desert_storm     砂嵐のくぼ地（近道。率 1.5、金剛トカゲが出やすい）
 //   z_desert_tomb       王墓 1〜2 階・井戸の小部屋・古い野営跡
 //   z_desert_tomb_deep  王墓 3 階（王の間の前）
 //   z_desert_hawks      鷹団のアジト（敵のとき）
@@ -40,7 +40,7 @@
       G(8, [['@scorpion', 2, 3]]),
       G(7, [['@sandworm', 1, 1], ['@snake', 1, 1]]),
       G(7, [['@cactus', 2, 3]]),
-      G(6, [['@snake', 2, 3]]),
+      G(6, [['@snake', 2, 2]]),
     ] },
     z_desert_tomb: { region: 'r_desert', tier: 'dyn', lvOff: 1, bg: 'cave', groups: [
       G(9, [['@mummy', 2, 3]]),
@@ -70,14 +70,14 @@
       G(5, [['@sandworm', 1, 1], ['@scorpion', 1, 1]]),
     ] },
     z_desert_temple: { region: 'r_desert', tier: 'dyn', lvOff: 2, bg: 'cave', groups: [
-      G(9, [['@mummy', 2, 3]]),
-      G(7, [['@scorpion', 2, 3]]),
+      G(9, [['@mummy', 2, 2]]),
+      G(7, [['@scorpion', 2, 2]]),
       G(6, [['@mummy', 1, 2], ['@snake', 1, 2]]),
       G(4, [['@sandworm', 1, 1], ['@mummy', 1, 2]]),
       G(1.5, [['@mimic', 1, 1]], { solo: true }),
     ] },
   });
-  // レア魔物（金剛トカゲの巣は岩場と砂嵐の窪地、黄金の守護像は王墓の奥と沈んだ神殿）
+  // レア魔物（金剛トカゲの巣は岩場と砂嵐のくぼ地、黄金の守護像は王墓の奥と沈んだ神殿）
   Object.assign(R.DB.rareEncounters, {
     zw_desert: { mon: 'rm_diamond_lizard', rate: 80 },
     zw_desert_road: { mon: 'rm_diamond_lizard', rate: 120 },

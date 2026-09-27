@@ -1,0 +1,45 @@
+{
+ "desc": "CONTENT（砂漠）: 王墓のオアシス（隊が待つ）",
+ "hero": {
+  "type": "warrior",
+  "sex": "m",
+  "name": "アルン",
+  "fav": "sword"
+ },
+ "party": [
+  "hero",
+  "bartolo",
+  "marta",
+  "sylvain"
+ ],
+ "reserve": [],
+ "tier": 1,
+ "gl": "auto",
+ "prof": "auto",
+ "flags": {
+  "prologue_done": true,
+  "forest_start": true,
+  "cleared_r_forest": true,
+  "story_t1": true,
+  "desert_arrived": true,
+  "desert_zaid_met": true,
+  "desert_camp1_done": true,
+  "desert_camp2_done": true,
+  "desert_camp3_done": true,
+  "desert_abul_came": true,
+  "desert_hawk_met": true
+ },
+ "vars": {},
+ "items": {
+  "i_potion": 4,
+  "i_ether": 2,
+  "i_revive": 2,
+  "i_stone_earth": 4
+ },
+ "gold": 1200,
+ "leads": [],
+ "map": {
+  "id": "desert_camp3",
+  "spawn": "fire"
+ }
+}

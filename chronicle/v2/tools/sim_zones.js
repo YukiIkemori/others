@@ -23,6 +23,16 @@ const ZONES = {
   zw_forest: { tier: 0, kind: 'party', members: STD },
   z_verda: { tier: 0, kind: 'party', members: STD },
   z_elder: { tier: 0, kind: 'mid', members: STD },
+  // 砂漠（encounters_desert.js。どの地方も好きな順なので、2 番目の地方として T1 で見る。神殿は解決の後 = T2）
+  zw_desert: { tier: 1, kind: 'party', members: STD },
+  zw_desert_road: { tier: 1, kind: 'party', members: STD },
+  zw_desert_caravan: { tier: 1, kind: 'party', members: STD },
+  zw_desert_storm: { tier: 1, kind: 'party', members: STD },
+  z_desert_tomb: { tier: 1, kind: 'party', members: STD },
+  z_desert_tomb_deep: { tier: 1, kind: 'mid', members: STD },
+  z_desert_hawks: { tier: 1, kind: 'party', members: STD },
+  z_desert_rocks: { tier: 1, kind: 'party', members: STD },
+  z_desert_temple: { tier: 2, kind: 'mid', members: STD },
 };
 const TARGET = { win: 99.5, roundsLo: 2.5, roundsHi: 3.5, hpLo: 8, hpHi: 12, hpZoneLo: 5, hpZoneHi: 15, p95: 20, down: 3, wipe: 0.1 };
 

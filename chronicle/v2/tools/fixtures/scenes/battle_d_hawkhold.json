@@ -1,0 +1,10 @@
+{
+ "scene": "battle",
+ "desc": "CONTENT（砂漠）: アジトの頭（敵のとき）",
+ "state": "content_d_battle",
+ "setup": {
+  "troop": "tr_b_hawkhold",
+  "boss": true,
+  "seed": "shot-hold"
+ }
+}

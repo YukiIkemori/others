@@ -14,6 +14,15 @@ const DUNGEONS = [
   { id: 'elder', start: { map: 'elder_1', spawn: 'south' }, goal: { map: 'elder_2', ev: 'elder_boss' },
     unset: ['forest_boss', 'cleared_r_forest', 'forest_finale_done', 'forest_fine'], bosses: [['elder_2', 'elder_boss']] },
   { id: 'well', start: { map: 'well', spawn: 'entrance' }, goal: { map: 'well', far: true }, unset: [], bosses: [] },
+  // 砂漠（desert_*.js）: 王墓（流砂は砂もぐりの後の形・封じの扉は開いた形で道を引く）・沈んだ神殿・鷹団のアジト・岩場・古い野営跡
+  { id: 'tomb', start: { map: 'desert_tomb_1', spawn: 'entrance' }, goal: { map: 'desert_tomb_3', ev: 'desert_tomb_king' },
+    unset: ['desert_king', 'cleared_r_desert', 'desert_finale_done'], bosses: [['desert_tomb_3', 'desert_tomb_king'], ['desert_tomb_2', 'desert_tomb_worm']] },
+  { id: 'temple', start: { map: 'desert_temple_1', spawn: 'entrance' }, goal: { map: 'desert_temple_2', ev: 'desert_temple_guard' },
+    unset: ['desert_temple_guard'], bosses: [['desert_temple_2', 'desert_temple_guard']] },
+  { id: 'hawks', start: { map: 'desert_hawks_1', spawn: 'mouth' }, goal: { map: 'desert_hawks_2', ev: 'desert_hawks_boss' },
+    unset: ['desert_hawkhold_done'], bosses: [['desert_hawks_2', 'desert_hawks_boss']] },
+  { id: 'rocks', start: { map: 'desert_rocks', spawn: 'mouth' }, goal: { map: 'desert_rocks', far: true }, unset: [], bosses: [] },
+  { id: 'oldcamp', start: { map: 'desert_oldcamp', spawn: 'road' }, goal: { map: 'desert_oldcamp', far: true }, unset: [], bosses: [] },
 ];
 
 function prepare(R, d) {
@@ -23,6 +32,7 @@ function prepare(R, d) {
   const G = R.Game;
   for (const f of d.unset || []) delete G.flags[f];
   if ((d.unset || []).includes('cleared_r_forest')) { delete G.cleared.r_forest; G.tier = 0; }
+  if ((d.unset || []).includes('cleared_r_desert')) delete G.cleared.r_desert;
   Object.assign(G.vars, d.vars || {});
   R.MapUtil.invalidate();
   return G;

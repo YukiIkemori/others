@@ -70,7 +70,7 @@
       O.push(hall, inn, items, arms, jorn, sonja, eldA, eldB, marga, hunter, branch, fish);
       if (night) for (const b of O) if (b.door && b.door.to) delete b.door.to;   // 籠城の夜は家に入らない（守り手は外）
       // 子どもの秘密基地の戸（雪の土手の入口）
-      O.push({ type: 'door', x: 38, y: 40, to: { map: 'yule_base', spawn: 'door' }, cond: night ? false : 'snow_base_open' });
+      if (!night) O.push({ type: 'door', x: 38, y: 40, to: { map: 'yule_base', spawn: 'door' }, cond: 'snow_base_open' });
 
       // ---------------------------------------------------------------- 広場の大かまど・祭の飾り
       O.push({ type: 'brazier', id: 'yule_hearth', x: 27, y: 27, on: true });

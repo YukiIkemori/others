@@ -1,0 +1,41 @@
+{
+ "desc": "CONTENT（砂漠）: 通しの遊び D3: ティア 3、ワールドの砂漠の北（砂の縁の前）",
+ "hero": {
+  "type": "warrior",
+  "sex": "m",
+  "name": "アルン",
+  "fav": "sword"
+ },
+ "party": [
+  "hero",
+  "bartolo",
+  "marta",
+  "sylvain"
+ ],
+ "reserve": [],
+ "tier": 3,
+ "gl": "auto",
+ "prof": "auto",
+ "flags": {
+  "prologue_done": true,
+  "forest_start": true,
+  "cleared_r_forest": true,
+  "story_t1": true,
+  "cleared_r_snow": true,
+  "story_t2": true,
+  "story_t3": true
+ },
+ "vars": {},
+ "items": {
+  "i_potion": 4,
+  "i_ether": 2,
+  "i_revive": 2,
+  "i_stone_earth": 4
+ },
+ "gold": 4000,
+ "leads": [],
+ "map": {
+  "id": "world",
+  "spawn": "sandedge"
+ }
+}

@@ -38,6 +38,8 @@ const SLICE_BGM = ['title', 'home', 'town', 'tavern', 'overworld', 'tower', 'bat
   'shrine', 'cave', 'sorrow', 'legend', 'tension', 'lostwood', 'eldertree', 'dawn', 'omen', 'fine_theme'];
 // 雪原（snow_*.js、design/bgm_changes.md の雪原の節）: 峰の曲・幽霊船の曲と、新しい 3 曲（ユールの村・大火祭・籠城）
 SLICE_BGM.push('ice', 'ghost', 'yule', 'bonfire', 'siege');
+// 砂漠（desert_*.js、design/notes/audio.md）: 王墓の曲と、新しい 3 曲（カシムの市場・砂漠のワールド・隊商の夜）
+SLICE_BGM.push('kasim', 'desert', 'caravan', 'pyramid');
 const EXPRS = ['neutral', 'smile', 'sad', 'angry', 'surprise'];
 const MEDIA_EXT = { bgm: ['ogg', 'm4a', 'mp3', 'wav'], voice: ['ogg', 'm4a', 'mp3', 'wav'], portraits: ['webp', 'png', 'jpg'] };
 const MIME = { ogg: 'audio/ogg', m4a: 'audio/mp4', mp3: 'audio/mpeg', wav: 'audio/wav', webp: 'image/webp', png: 'image/png', jpg: 'image/jpeg' };

@@ -1,0 +1,10 @@
+{
+ "scene": "battle",
+ "desc": "CONTENT（砂漠）: 名なき砂の王（ボス）",
+ "state": "content_d_battle",
+ "setup": {
+  "troop": "tr_b_sandking",
+  "boss": true,
+  "seed": "shot-king"
+ }
+}

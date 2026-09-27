@@ -1,0 +1,10 @@
+{
+ "scene": "battle",
+ "desc": "CONTENT（砂漠）: 鷹団の頭ラシードと弓兵（中ボス）",
+ "state": "content_d_battle",
+ "setup": {
+  "troop": "tr_b_hawkchief",
+  "boss": true,
+  "seed": "shot-hawk"
+ }
+}

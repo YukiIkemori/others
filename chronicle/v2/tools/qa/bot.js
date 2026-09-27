@@ -324,7 +324,7 @@
     }
     if (g.go) return [{ map: g.go.map, kind: 'cell', ref: g.go }];
     if (!g.ev) return [];
-    return M.eventPlaces(g.ev);
+    return M.eventPlaces(g.ev).filter((p) => !g.map || p.map === g.map);   // g.map: 同じイベントが幾つもの階にあるとき（砂漠の墓守の像）
   }
   function goalCells(g) {
     const places = placesFor(g);

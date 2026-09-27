@@ -4,7 +4,7 @@
 //   desert_hawks_2（36×28）「頭の広間」: 泉の小部屋 → 頭の広間（ラシード）。
 //   野営地 1 の選択 ch_desert_hawk で変わる（どれも同じ品 u_hawk_gloves にたどり着く）:
 //     fight → 敵の砦: 鷹団の出現（z_desert_hawks）、頭の広間で頭との再戦 tr_b_hawkhold → 鷹の手袋
-//     water → 味方: 団員が迎え、盗賊の店（ふつうの値）、頭が宝の地図 その3 と鷹の手袋をくれる
+//     water → 味方: 団員が迎え、盗賊の店（ふつうの値）、頭が宝の地図・その3 と鷹の手袋をくれる
 //     pay   → 中立: 入れるが店は高い（shop_hawks の priceMul 1.5）。手袋は頭から買う
 //   年代記に「日継ぎの戦の生き残り」と書いて（ch_desert_write = pain）味方なら、頭の広間に碑が立つ。
 (function (R) {
@@ -44,20 +44,20 @@
       K.rect(g, 38, 9, 2, 2, 'w');                      // 水がめの池（盗んだ水）
       const O = [];
       O.push(K.stairs(21, 3, { map: 'desert_hawks_2', spawn: 'top' }, { id: 'desert_hawks_1_down' }));
-      O.push(K.spring('desert_hawks_1_s1', 15, 29));
+      O.push(K.spring('desert_hawks_1_s1', 15, 29), K.spring('desert_hawks_1_s2', 17, 14));
       O.push(K.chest('desert_hawks_1_c1', 38, 25, { pool: 'p_T' }), K.chest('desert_hawks_1_c2', 5, 26, { item: 'i_smoke', n: 2 }),
-        K.chest('desert_hawks_1_c3', 36, 16, { pool: 'p_T' }), K.chest('desert_hawks_1_c4', 5, 10, { gold: 180 }), K.chest('desert_hawks_1_c5', 25, 8, { pool: 'p_rare' }));
+        K.chest('desert_hawks_1_c3', 36, 16, { pool: 'p_T' }), K.chest('desert_hawks_1_c4', 5, 10, { gold: 180 }), K.chest('desert_hawks_1_c5', 24, 9, { pool: 'p_rare' }));
       O.push(K.exam(33, 9, 'desert_hawks_water'), K.exam(4, 16, 'desert_hawks_bunks'));
       deco(O, [['tent', 7, 11], ['tent', 11, 17], ['firewood', 10, 13], ['sack', 13, 9], ['crate', 4, 13], ['weapon_rack', 6, 9], ['bones', 12, 18],
         ['clay_jars', 31, 8], ['clay_jars', 37, 8], ['cart_barrels', 31, 15], ['crate', 38, 14], ['sack', 33, 17], ['barrel', 39, 12],
         ['broken_pillar', 16, 26], ['bones', 27, 31], ['sand_mound', 24, 32], ['thorn_bush', 18, 33], ['rock_small', 27, 27], ['clay_jars', 17, 11], ['weapon_rack', 24, 10],
         ['bones', 6, 29], ['sand_mound', 38, 28]]);
       for (const [x, y] of [[18, 28], [25, 28], [18, 10], [25, 14], [8, 16], [34, 15], [22, 7], [37, 27], [8, 29]]) O.push(K.prop('torch', x, y));
-      O.push(K.sign(23, 33, '――ここより 砂の鷹の巣\n名のある者は 帰れ'));
+      O.push(K.sign(23, 33, '――ここより砂の鷹の巣\n名のある者は帰れ'));
       const N = [
         K.npc('sentry', 'npc_hawk', 21, 24, { name: '見張りの男', dir: 's', talk: 'desert_hawks_sentry', pushable: false, reward: 'hint', cond: '!desert_hawk_met' }),
         K.npc('hawk_door', 'npc_hawk', 23, 27, { name: '鷹団の見張り', dir: 'w', talk: 'desert_hawks_member', reward: 'news', cond: FRIEND }),
-        K.npc('hawk_shop', 'npc_hawk', 10, 12, { name: '鷹団の闇市', title: '盗賊の店', dir: 's', talk: 'desert_hawks_shop', pushable: false, reward: 'discount', cond: FRIEND }),
+        K.npc('hawk_shop', 'npc_hawk', 10, 12, { name: '鷹団の闇市', title: '闇市', dir: 's', talk: 'desert_hawks_shop', pushable: false, reward: 'discount', cond: FRIEND }),
         K.npc('hawk_cook', 'npc_desert_woman', 12, 16, { name: '鷹団の炊き手', dir: 'w', talk: 'desert_hawks_member', reward: 'news', cond: FRIEND }),
         K.npc('hawk_old', 'npc_desert_old_m', 34, 13, { name: '年寄りの鷹', dir: 's', talk: 'desert_hawks_old', reward: 'news', cond: FRIEND }),
       ];
@@ -87,7 +87,7 @@
       const O = [];
       O.push(K.stairs(17, 25, { map: 'desert_hawks_1', spawn: 'down' }, { id: 'desert_hawks_2_up', look: 'up' }));
       O.push(K.spring('desert_hawks_2_s1', 6, 20));
-      O.push(K.chest('desert_hawks_2_c1', 31, 21, { pool: 'p_T' }), K.chest('desert_hawks_2_c2', 9, 23, { item: 'i_ether', n: 2 }), K.chest('desert_hawks_2_c3', 27, 5, { pool: 'p_rare' }));
+      O.push(K.chest('desert_hawks_2_c1', 31, 21, { pool: 'p_T' }), K.chest('desert_hawks_2_c2', 9, 23, { item: 'i_ether', n: 2 }), K.chest('desert_hawks_2_c3', 26, 6, { pool: 'p_rare' }));
       O.push(K.prop('obelisk', 11, 5, { cond: [FRIEND[0], FRIEND[1], { choice: 'ch_desert_write', is: 'pain' }] }), K.exam(11, 6, 'desert_hawks_memorial', { cond: [FRIEND[0], FRIEND[1], { choice: 'ch_desert_write', is: 'pain' }] }));
       O.push(K.exam(24, 4, 'desert_hawks_map_table'));
       deco(O, [['carpet_rack', 13, 3], ['carpet_rack', 23, 3], ['clay_jars', 10, 8], ['clay_jars', 26, 9], ['weapon_rack', 8, 10], ['weapon_rack', 28, 7],

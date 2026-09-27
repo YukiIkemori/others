@@ -1,0 +1,10 @@
+{
+ "scene": "battle",
+ "desc": "CONTENT（砂漠）: 砂もぐり（中ボス）",
+ "state": "content_d_battle",
+ "setup": {
+  "troop": "tr_b_sandworm",
+  "boss": true,
+  "seed": "shot-worm"
+ }
+}

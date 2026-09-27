@@ -582,7 +582,7 @@
       if (!m.reserved) continue;
       const src = ACT(m.reserved.from);
       const T = src && src.telegraph;
-      out.push({ m, guard: (T && T.guard) || 'defend', next: m.reserved.id, cancel: m.reserved.cancel });
+      out.push({ m, guard: (T && T.guard) || 'defend', next: m.reserved.id, cancel: m.reserved.cancel, lethal: !!(T && T.lethal) });
     }
     return out;
   }
@@ -603,6 +603,7 @@
         const a = ACT(t.next);
         const hits = (g === 'defend' || (g === 'back' && eng.effRow(u) === 'front'));
         if (!hits || !a) continue;
+        if (t.lethal) return true;   // 砂漠: 守らなければ最大 HP の大半を削る予告（最大 HP 割合の special。見込みのダメージでは測れない）
         const d = eng.expectDamage(t.m, a, u);
         if (u.hp <= d * 1.25) return true;
       }

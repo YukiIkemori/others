@@ -27,7 +27,7 @@ function reachAll(start, o) {
   o = o || {};
   const out = new Map();
   const seenNode = new Set();
-  const q = [start];
+  const q = [start].concat(o.extra || []);
   const secretBlock = (map) => (x, y) => { const c = R.MapUtil.cell(map, x, y); return !!(c && c.secret); };
   while (q.length) {
     const n = q.shift();
@@ -106,11 +106,14 @@ function closure(o) {
   const ran = new Set();
   const trace = [];
   if (s.event) { applyGives(s.event, variant, trace, 0); ran.add(s.event); }
+  // イベントの warp（meta.warp）で着く所も、そこから歩ける始まりに足す（出口の無い夜の村・野営地など）
+  const extra = [];
+  const addWarp = (id) => { const w = R.DB.events[id] && R.DB.events[id].meta && R.DB.events[id].meta.warp; const d = w && M.dest({ map: w.to || w.map, spawn: w.spawn, x: w.x, y: w.y }); if (d && R.DB.maps[d.map]) extra.push({ map: d.map, x: d.x, y: d.y, lv: d.lv }); };
   const visited = new Set();
   const portalsOpen = new Set();
   const optionalEv = (id) => /^(q_|mini_)/.test(id) || /_quest|_herb|_acorn|_song_|_letters|_fireflies|_delivery|_lamp/.test(id);
   for (let iter = 0; iter < 60; iter++) {
-    const reach = reachAll(start, { noSecrets: o.restricted, noOptional: o.restricted });
+    const reach = reachAll(start, { noSecrets: o.restricted, noOptional: o.restricted, extra });
     for (const [m, set] of reach) if (set.size) visited.add(m);
     for (const mid of M.sliceMaps()) for (const p of M.portals(mid, { all: true })) if (p.cond != null && M.portals(mid).some((q) => q.x === p.x && q.y === p.y)) portalsOpen.add(mid + ':' + p.x + ',' + p.y);
     let changed = false;
@@ -124,9 +127,22 @@ function closure(o) {
       const pl = places.find((p) => (!o.restricted || !(R.DB.maps[p.map] || {}).optional) && placeReachable(reach, p));
       if (!pl) continue;
       ran.add(id);
+      if (ev.meta && ev.meta.warp) { addWarp(id); changed = true; }
       if (!((ev.meta && ev.meta.gives) || []).length && !((ev.meta && ev.meta.calls) || []).length) continue;
       applyGives(id, variant, trace, 0);
       changed = true;
+    }
+    // 話しかけ直し: 走らせたイベントが呼ぶ（meta.calls）イベントの needs が後でそろったら、それも走らせる（村長にもう一度話す、など）
+    for (const id of [...ran]) {
+      for (const c of (R.DB.events[id] && R.DB.events[id].meta && R.DB.events[id].meta.calls) || []) {
+        if (ran.has(c) || !R.DB.events[c] || !needsOk(R.DB.events[c]) || !(R.DB.events[c].meta && R.DB.events[c].meta.needs || []).length) continue;
+        if (o.restricted && optionalEv(c)) continue;
+        ran.add(c);
+        applyGives(c, variant, trace, 0);
+        const walk = (e, d) => { addWarp(e); if (d < 6) for (const cc of (R.DB.events[e] && R.DB.events[e].meta && R.DB.events[e].meta.calls) || []) if (needsOk(R.DB.events[cc] || {})) walk(cc, d + 1); };
+        walk(c, 0);
+        changed = true;
+      }
     }
     // T1: 宿か町に入ったとき（E17）
     if (G.cleared.r_forest && !G.flags.story_t1 && R.DB.events.story_t1 && reach.has('fern')) { applyGives('story_t1', variant, trace, 0); ran.add('story_t1'); changed = true; }
@@ -191,6 +207,25 @@ function main() {
     const r = closure({ variant: v, restricted: true });
     const tag = `pim=${v.ch_forest_pim} fawn=${v.ch_forest_fawn}`;
     ok(`${tag}: 隠し通路と寄り道なしで clearRegion と story_t1`, r.cleared && r.t1, { cleared: r.cleared, t1: r.t1, last: r.trace.slice(-6) });
+  }
+  // 縦切りの後に作った地方: 雪原（regions の slice の錠が外れていれば）。昔話の選び方 3 通り（寄り道ありを 1 本・なしを 2 本）
+  if (R.DB.regions.r_snow && !R.DB.regions.r_snow.slice) {
+    section('2b. 雪原の閉包（clearRegion(\'r_snow\')）');
+    for (const [tale, restricted] of [['dragon', false], ['hunter', true], ['fire_child', true]]) {
+      const r = closure({ variant: Object.assign({}, variants[0], { ch_snow_tale: tale, ch_snow_write: 'pain' }), restricted });
+      ok(`昔話=${tale}${restricted ? '（隠し通路・寄り道・依頼なし）' : ''}: 籠城 → 夜明け → 峰 → clearRegion('r_snow')`, !!(r.flags.snow_siege_done && r.flags.snow_dawn && r.flags.cleared_r_snow), { siege: !!r.flags.snow_siege_done, dawn: !!r.flags.snow_dawn, cleared: !!r.flags.cleared_r_snow });
+    }
+  }
+  // 砂漠（regions の slice の錠が外れていれば）: 鷹団 3 通り × 近道／遠回り、寄り道あり／なし
+  if (R.DB.regions.r_desert && !R.DB.regions.r_desert.slice) {
+    section('2c. 砂漠の閉包（clearRegion(\'r_desert\')）');
+    for (const hawk of ['fight', 'water', 'pay']) for (const route of ['short', 'long']) for (const restricted of [false, true]) {
+      if (restricted && hawk !== 'water') continue;
+      const r = closure({ variant: Object.assign({}, variants[0], { ch_desert_hawk: hawk, ch_desert_route: route, ch_desert_write: 'pain' }), restricted });
+      ok(`鷹団=${hawk} 道=${route}${restricted ? '（隠し通路・寄り道・依頼なし）' : ''}: 隊商 → 王墓 → 砂の王 → clearRegion('r_desert')`,
+        !!(r.flags.desert_camp3_done && r.flags.desert_worm && r.flags.desert_king && r.flags.cleared_r_desert && r.flags.desert_finale_done),
+        { camp3: !!r.flags.desert_camp3_done, worm: !!r.flags.desert_worm, king: !!r.flags.desert_king, cleared: !!r.flags.cleared_r_desert });
+    }
   }
   section('3. 全マップの到達');
   const maps = M.sliceMaps();

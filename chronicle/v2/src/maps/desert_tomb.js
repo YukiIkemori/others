@@ -41,7 +41,8 @@
       O.push(K.stairs(28, 7, { map: 'desert_tomb_2', spawn: 'top' }, { id: 'desert_tomb_1_down' }));
       O.push({ type: 'switch', id: 'desert_tomb_1_sw_w', x: 9, y: 9, flag: 'desert_t1_sw_w', look: 'plate', color: 'gold' });
       O.push({ type: 'switch', id: 'desert_tomb_1_sw_e', x: 46, y: 9, flag: 'desert_t1_sw_e', look: 'plate', color: 'gold' });
-      O.push(K.prop('switch', 26, 20, { cond: '!desert_t1_door' }), K.exam(28, 21, 'desert_tomb_door'));
+      const DOOR = { all: ['desert_t1_sw_w', 'desert_t1_sw_e'] };
+      O.push(K.prop('switch', 26, 20, { cond: { not: DOOR } }), K.exam(28, 21, 'desert_tomb_door', { cond: { not: DOOR } }));
       O.push(K.spring('desert_tomb_1_s1', 31, 36));
       O.push(K.prop('obelisk', 5, 40), K.exam(5, 41, 'desert_tomb_glyph', { glyph: 'ha' }));                    // 墓守の像「ハ」
       O.push(K.exam(21, 29, 'desert_tomb_lizard'));                                                               // 隠し部屋の金剛トカゲ
@@ -60,8 +61,10 @@
         npcs: [K.npc('tomb_ghost', 'npc_desert_old_m', 32, 40, { name: '墓の番の影', dir: 'w', talk: 'desert_tomb_ghost', reward: 'hint', cond: '!cleared_r_desert' })],
         spawns: { entrance: { x: 28, y: 44, dir: 'n' }, down: { x: 28, y: 9, dir: 's' } },
         exits: [],
-        triggers: [{ id: 'arrive', on: 'enter', event: 'desert_tomb_arrive', once: true }],
-        tilePatches: [{ cond: 'desert_t1_door', rect: [27, 19, 3, 2], rows: ['...', '...'] }],
+        triggers: [{ id: 'arrive', on: 'enter', event: 'desert_tomb_arrive', once: true },
+          { id: 'plate_w', x: 9, y: 9, w: 1, h: 1, on: 'step', event: 'desert_tomb_plate_w', cond: '!desert_t1_sw_w' },
+          { id: 'plate_e', x: 46, y: 9, w: 1, h: 1, on: 'step', event: 'desert_tomb_plate_e', cond: '!desert_t1_sw_e' }],
+        tilePatches: [{ cond: { all: ['desert_t1_sw_w', 'desert_t1_sw_e'] }, rect: [27, 19, 3, 2], rows: ['...', '...'] }],
         zones: [{ rect: null, zone: 'z_desert_tomb' }],
         light: DK.LIGHT_TOMB, dark: false, bgm: 'pyramid', bbg: 'cave',
         meta: { chestsInfo: true, floor: '1 階', sub: '墓守の回廊' },

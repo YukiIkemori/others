@@ -32,7 +32,7 @@
       text: '北の雪の村ユールは、大火祭の支度で\n大忙し。ただ、今年は冬至の火が\n細いという。', done: 'cleared_r_snow',
     },
     l_rumor_desert: {
-      title: '隊商の護衛', kind: 'rumor', region: 'r_desert', from: '潮風亭の旅の商人', dir: '南西', slice: 'locked',
+      title: '隊商の護衛', kind: 'rumor', region: 'r_desert', from: '潮風亭の旅の商人', place: 'kasim', dir: '南西',
       text: '南の砂漠のカシムでは、隊商が出られず\n品が届かない。護衛を探している\nという話だ。', done: 'cleared_r_desert',
     },
     l_rumor_marsh: {

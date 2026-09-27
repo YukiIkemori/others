@@ -29,6 +29,7 @@ const SLICE_BGM = ['title', 'home', 'town', 'tavern', 'overworld', 'tower', 'bat
 const BBG = ['coast', 'tower', 'forest', 'tree', 'cave'];
 // 縦切りの後に作った地方（slice の錠が外れた地方）の BGM・背景
 SLICE_BGM.push('ice', 'ghost', 'yule', 'bonfire', 'siege'); BBG.push('snow');
+SLICE_BGM.push('kasim', 'desert', 'caravan', 'pyramid'); BBG.push('desert');   // 砂漠（desert_*.js）
 const maps = M.sliceMaps();
 const EV_SRC = fs.readdirSync(path.join(V2, 'src', 'events')).map((f) => fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8')).join('\n');
 
