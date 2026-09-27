@@ -1,512 +1,351 @@
 {
- "date": "2026-09-27T16:12:58.300Z",
+ "date": "2026-09-27T16:49:54.975Z",
  "fixture": "content_p_pharos",
  "walked": [
   {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_inn",
-   "at": "pharos_inn",
-   "to": "pharos_inn",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    11
-   ],
-   "ms": 32890
-  },
-  {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_tavern",
-   "at": "pharos_tavern",
-   "to": "pharos_tavern",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    18,
-    11
-   ],
-   "ms": 27463
-  },
-  {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_shop",
-   "at": "pharos_shop",
-   "to": "pharos_shop",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    27,
-    12
-   ],
-   "ms": 21619
-  },
-  {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_house1",
-   "at": "pharos_home1",
-   "to": "pharos_home1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    34,
-    12
-   ],
-   "ms": 18653
-  },
-  {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_house2",
-   "at": "pharos_home2",
-   "to": "pharos_home2",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    40,
-    12
-   ],
-   "ms": 17837
-  },
-  {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_record",
-   "at": "pharos_record",
-   "to": "pharos_record",
+   "map": "fern_shop",
+   "kind": "exit",
+   "id": "4,8",
+   "at": "fern",
+   "to": "fern",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
     4,
-    19
+    4
    ],
-   "ms": 16782
+   "ms": 31184
   },
   {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_smith",
-   "at": "pharos_smith",
-   "to": "pharos_smith",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    12,
-    19
-   ],
-   "ms": 15328
-  },
-  {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_house3",
-   "at": "pharos_home3",
-   "to": "pharos_home3",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    36,
-    19
-   ],
-   "ms": 17778
-  },
-  {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_house4",
-   "at": "pharos_home4",
-   "to": "pharos_home4",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    28
-   ],
-   "ms": 18230
-  },
-  {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_house5",
-   "at": "pharos_home5",
-   "to": "pharos_home5",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    13,
-    28
-   ],
-   "ms": 15998
-  },
-  {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_house6",
-   "at": "pharos_home6",
-   "to": "pharos_home6",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    38,
-    28
-   ],
-   "ms": 22504
-  },
-  {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_shipyard",
-   "at": "pharos_shipyard",
-   "to": "pharos_shipyard",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    47,
-    25
-   ],
-   "ms": 22831
-  },
-  {
-   "map": "pharos",
+   "map": "hut",
    "kind": "exit",
-   "id": "0,18",
+   "id": "5,8",
    "at": "world",
    "to": "world",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    4,
-    18
+    5,
+    4
    ],
-   "ms": 21823
+   "ms": 33245
   },
   {
-   "map": "roa",
+   "map": "yura",
    "kind": "door",
-   "id": "roa_h1",
-   "at": "roa_home1",
-   "to": "roa_home1",
+   "id": "yura_b_inn",
+   "at": "yura_inn",
+   "to": "yura_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    14,
+    9
+   ],
+   "ms": 55360
+  },
+  {
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_b_elder",
+   "at": "yura_home_elder",
+   "to": "yura_home_elder",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
     5,
-    11
+    16
    ],
-   "ms": 22227
+   "ms": 18039
   },
   {
-   "map": "roa",
+   "map": "yura",
    "kind": "door",
-   "id": "roa_h2",
-   "at": "roa_home2",
-   "to": "roa_home2",
+   "id": "yura_b_h1",
+   "at": "yura_home1",
+   "to": "yura_home1",
    "ok": true,
-   "steps": 6,
+   "steps": 4,
    "why": null,
    "start": [
-    14,
-    13
+    23,
+    10
    ],
-   "ms": 25296
+   "ms": 13454
   },
   {
-   "map": "roa",
+   "map": "yura",
    "kind": "door",
-   "id": "roa_hall",
-   "at": "roa_hall_in",
-   "to": "roa_hall_in",
+   "id": "yura_b_h2",
+   "at": "yura_home2",
+   "to": "yura_home2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    18
+   ],
+   "ms": 15239
+  },
+  {
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_b_h3",
+   "at": "yura_home3",
+   "to": "yura_home3",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
     21,
-    13
-   ],
-   "ms": 18346
-  },
-  {
-   "map": "roa",
-   "kind": "door",
-   "id": "roa_h3",
-   "at": "roa_home3",
-   "to": "roa_home3",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    29,
-    12
-   ],
-   "ms": 16129
-  },
-  {
-   "map": "roa",
-   "kind": "door",
-   "id": "roa_h4",
-   "at": "roa_home4",
-   "to": "roa_home4",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    36,
-    12
-   ],
-   "ms": 14303
-  },
-  {
-   "map": "roa",
-   "kind": "door",
-   "id": "roa_h5",
-   "at": "roa_home5",
-   "to": "roa_home5",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
     25
    ],
-   "ms": 13704
+   "ms": 13522
   },
   {
-   "map": "roa",
+   "map": "yura",
    "kind": "door",
-   "id": "roa_h6",
-   "at": "roa_home6",
-   "to": "roa_home6",
+   "id": "yura_b_h4",
+   "at": "yura_home4",
+   "to": "yura_home4",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    30,
-    21
+    7,
+    25
    ],
-   "ms": 16354
+   "ms": 13729
   },
   {
-   "map": "roa",
-   "kind": "door",
-   "id": "roa_berna",
-   "at": "roa_house",
-   "to": "roa_house",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    17,
-    31
-   ],
-   "ms": 18250
-  },
-  {
-   "map": "roa",
+   "map": "yura",
    "kind": "exit",
-   "id": "43,15",
+   "id": "14,27",
    "at": "world",
    "to": "world",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    39,
-    15
+    14,
+    23
    ],
-   "ms": 21267
+   "ms": 17625
+  },
+  {
+   "map": "yura_home1",
+   "kind": "exit",
+   "id": "3,6",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    2,
+    3
+   ],
+   "ms": 13995
+  },
+  {
+   "map": "yura_home2",
+   "kind": "exit",
+   "id": "3,7",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    2,
+    4
+   ],
+   "ms": 14376
+  },
+  {
+   "map": "yura_home3",
+   "kind": "exit",
+   "id": "3,6",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    3
+   ],
+   "ms": 13330
+  },
+  {
+   "map": "yura_home4",
+   "kind": "exit",
+   "id": "4,7",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    3
+   ],
+   "ms": 11248
+  },
+  {
+   "map": "yura_home_elder",
+   "kind": "exit",
+   "id": "4,7",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    4
+   ],
+   "ms": 13048
+  },
+  {
+   "map": "yura_inn",
+   "kind": "exit",
+   "id": "4,8",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    4
+   ],
+   "ms": 11879
   }
  ],
  "looks": [
   {
-   "map": "pharos",
-   "npc": "otto",
-   "look": "otto",
-   "art": "otto",
+   "map": "fern_shop",
+   "npc": "shop_keeper",
+   "look": "npc_merchant_3",
+   "art": "npc_traveler_3",
    "ok": true
   },
   {
-   "map": "pharos",
-   "npc": "gateguard",
-   "look": "npc_guard_1",
-   "art": "npc_pen_guard_1",
+   "map": "yura",
+   "npc": "yura_elder",
+   "look": "npc_yura_elder",
+   "art": "npc_yura_elder",
    "ok": true
   },
   {
-   "map": "pharos",
-   "npc": "well_child",
-   "look": "npc_child_2",
-   "art": "npc_pen_child_2",
+   "map": "yura",
+   "npc": "yura_miller",
+   "look": "npc_yura_folk_2",
+   "art": "npc_yura_man_2",
    "ok": true
   },
   {
-   "map": "pharos",
-   "npc": "tadeo",
-   "look": "npc_tadeo",
-   "art": "npc_tadeo",
+   "map": "yura",
+   "npc": "yura_nanny",
+   "look": "npc_yura_folk_1",
+   "art": "npc_yura_woman_1",
    "ok": true
   },
   {
-   "map": "pharos",
-   "npc": "fishwife",
-   "look": "npc_woman_3",
-   "art": "npc_pen_woman_3",
+   "map": "yura",
+   "npc": "yura_grave",
+   "look": "npc_yura_folk_3",
+   "art": "npc_yura_woman_3",
    "ok": true
   },
   {
-   "map": "pharos",
-   "npc": "old_sailor",
-   "look": "npc_sailor_2",
-   "art": "npc_pen_sailor_2",
+   "map": "yura",
+   "npc": "yura_lamp",
+   "look": "npc_yura_folk_4",
+   "art": "npc_yura_man_4",
    "ok": true
   },
   {
-   "map": "pharos",
-   "npc": "ship_sailor",
-   "look": "npc_sailor_1",
-   "art": "npc_pen_sailor_1",
+   "map": "yura",
+   "npc": "yura_seller",
+   "look": "npc_yura_folk_1",
+   "art": "npc_yura_woman_1",
    "ok": true
   },
   {
-   "map": "pharos",
-   "npc": "plaza_woman",
-   "look": "npc_woman_1",
-   "art": "npc_pen_woman_1",
-   "ok": true
-  },
-  {
-   "map": "pharos",
-   "npc": "bench_old",
-   "look": "npc_old_m_2",
-   "art": "npc_pen_old_m_2",
-   "ok": true
-  },
-  {
-   "map": "pharos",
-   "npc": "merchant",
-   "look": "npc_merchant_1",
-   "art": "npc_pen_keeper_1",
-   "ok": true
-  },
-  {
-   "map": "pharos",
-   "npc": "yena",
-   "look": "npc_yena",
-   "art": "npc_yena",
-   "ok": true
-  },
-  {
-   "map": "pharos",
-   "npc": "kid_pier",
+   "map": "yura",
+   "npc": "yura_child",
    "look": "npc_child_4",
-   "art": "npc_pen_child_4",
+   "art": "npc_forest_child_4",
    "ok": true
   },
   {
-   "map": "pharos",
-   "npc": "dog",
-   "look": "ani_dog",
-   "art": "ani_dog",
-   "ok": true
-  },
-  {
-   "map": "pharos",
-   "npc": "berna",
-   "look": "berna",
-   "art": "berna",
-   "ok": true
-  },
-  {
-   "map": "pharos",
-   "npc": "cheer_a",
-   "look": "npc_man_1",
-   "art": "npc_pen_man_1",
-   "ok": true
-  },
-  {
-   "map": "pharos",
-   "npc": "cheer_b",
-   "look": "npc_woman_1",
-   "art": "npc_pen_woman_1",
-   "ok": true
-  },
-  {
-   "map": "roa",
-   "npc": "gatewoman",
-   "look": "npc_woman_2",
-   "art": "npc_pen_woman_2",
-   "ok": true
-  },
-  {
-   "map": "roa",
-   "npc": "gatewoman2",
-   "look": "npc_woman_2",
-   "art": "npc_pen_woman_2",
-   "ok": true
-  },
-  {
-   "map": "roa",
-   "npc": "child_a",
-   "look": "npc_child_1",
-   "art": "npc_pen_child_1",
-   "ok": true
-  },
-  {
-   "map": "roa",
-   "npc": "child_b",
-   "look": "npc_child_3",
-   "art": "npc_pen_child_3",
-   "ok": true
-  },
-  {
-   "map": "roa",
-   "npc": "elder",
-   "look": "npc_old_m_1",
-   "art": "npc_pen_old_m_1",
-   "ok": true
-  },
-  {
-   "map": "roa",
-   "npc": "farmer",
-   "look": "npc_man_2",
-   "art": "npc_pen_man_2",
-   "ok": true
-  },
-  {
-   "map": "roa",
-   "npc": "weaver",
-   "look": "npc_old_f_1",
-   "art": "npc_pen_old_f_1",
-   "ok": true
-  },
-  {
-   "map": "roa",
-   "npc": "youth",
-   "look": "npc_man_1",
-   "art": "npc_pen_man_1",
-   "ok": true
-  },
-  {
-   "map": "roa",
-   "npc": "cat",
+   "map": "yura",
+   "npc": "yura_cat",
    "look": "ani_cat",
    "art": "ani_cat",
+   "ok": true
+  },
+  {
+   "map": "yura",
+   "npc": "laila_mother",
+   "look": "npc_old_f_2",
+   "art": "npc_yura_woman_2",
+   "ok": true
+  },
+  {
+   "map": "yura_home1",
+   "npc": "long",
+   "look": "npc_yura_folk_1",
+   "art": "npc_yura_woman_1",
+   "ok": true
+  },
+  {
+   "map": "yura_home2",
+   "npc": "uncalled",
+   "look": "npc_yura_folk_3",
+   "art": "npc_yura_woman_3",
+   "ok": true
+  },
+  {
+   "map": "yura_home3",
+   "npc": "dreamer",
+   "look": "npc_yura_folk_4",
+   "art": "npc_yura_man_4",
+   "ok": true
+  },
+  {
+   "map": "yura_home4",
+   "npc": "namekid",
+   "look": "npc_child_3",
+   "art": "npc_forest_child_3",
+   "ok": true
+  },
+  {
+   "map": "yura_home_elder",
+   "npc": "aide",
+   "look": "npc_yura_folk_2",
+   "art": "npc_yura_man_2",
+   "ok": true
+  },
+  {
+   "map": "yura_inn",
+   "npc": "yura_innkeeper",
+   "look": "npc_yura_folk_3",
+   "art": "npc_yura_woman_3",
+   "ok": true
+  },
+  {
+   "map": "yura_inn",
+   "npc": "yura_guest",
+   "look": "npc_yura_folk_4",
+   "art": "npc_yura_man_4",
    "ok": true
   }
  ],

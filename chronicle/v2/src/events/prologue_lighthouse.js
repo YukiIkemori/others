@@ -28,7 +28,7 @@
       ev.sfx('unlock');
       await ev.wait(450);
       ev.setFlag('prologue_lh_door');
-      await E.narr(ev, 'ガチャリ……。\n灯台の鍵で 扉を開けた！');
+      await E.narr(ev, 'ガチャリ……。\n灯台の鍵で、扉を開けた！');
     },
   };
 
