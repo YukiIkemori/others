@@ -216,7 +216,7 @@ def brighten(theme, pid, k):
 if what in ('props', 'all') and (not flt or flt in 'dungeon_a'):
     brighten('common', 'chest', 1.22)
 
-BBG_H = {'coast': 0.40, 'tower': 0.42, 'forest': 0.58, 'tree': 0.46, 'cave': 0.55, 'desert': 0.5, 'snow': 0.5, 'marsh': 0.5, 'isles': 0.5, 'mine': 0.5, 'ash': 0.5, 'star': 0.5}
+BBG_H = {'coast': 0.40, 'tower': 0.42, 'forest': 0.58, 'tree': 0.46, 'cave': 0.55, 'desert': 0.45, 'snow': 0.5, 'marsh': 0.44, 'isles': 0.47, 'mine': 0.47, 'ash': 0.42, 'star': 0.47}
 def do_bbg():
     import warnings; warnings.filterwarnings('ignore')
     for b, h in BBG_H.items():

@@ -1,0 +1,42 @@
+{
+ "id": "tomb_urn",
+ "kind": "props",
+ "theme": "desert",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   11,
+   18
+  ],
+  "32": [
+   15,
+   24
+  ],
+  "40": [
+   19,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   6,
+   17
+  ],
+  "32": [
+   8,
+   23
+  ],
+  "40": [
+   9,
+   29
+  ]
+ },
+ "files": {
+  "24": "tomb_urn@24.png",
+  "32": "tomb_urn@32.png",
+  "40": "tomb_urn@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/desert_a.png"
+}

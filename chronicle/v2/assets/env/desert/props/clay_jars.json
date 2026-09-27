@@ -1,0 +1,42 @@
+{
+ "id": "clay_jars",
+ "kind": "props",
+ "theme": "desert",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   22,
+   18
+  ],
+  "32": [
+   29,
+   24
+  ],
+  "40": [
+   36,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   11,
+   17
+  ],
+  "32": [
+   14,
+   23
+  ],
+  "40": [
+   18,
+   29
+  ]
+ },
+ "files": {
+  "24": "clay_jars@24.png",
+  "32": "clay_jars@32.png",
+  "40": "clay_jars@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/desert_a.png"
+}

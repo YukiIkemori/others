@@ -1,0 +1,42 @@
+{
+ "id": "sand_mound",
+ "kind": "props",
+ "theme": "desert",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   39,
+   18
+  ],
+  "32": [
+   52,
+   24
+  ],
+  "40": [
+   65,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   20,
+   17
+  ],
+  "32": [
+   26,
+   23
+  ],
+  "40": [
+   32,
+   29
+  ]
+ },
+ "files": {
+  "24": "sand_mound@24.png",
+  "32": "sand_mound@32.png",
+  "40": "sand_mound@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/desert_a.png"
+}

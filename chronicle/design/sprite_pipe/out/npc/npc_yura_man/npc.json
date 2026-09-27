@@ -1,0 +1,55 @@
+{
+ "id": "npc_yura_man",
+ "look": "npc_yura_man",
+ "name": "ユラの男",
+ "tier": "C",
+ "kind": "person",
+ "region": "forest",
+ "group": "yura_1",
+ "slot": "A",
+ "heightDots": {
+  "field": 47
+ },
+ "measureH": {
+  "field": 47
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#6A5E4C",
+ "mainHue": 40,
+ "mainName": "灰茶",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_yura_man_1",
+  "npc_yura_man_2",
+  "npc_yura_man_3",
+  "npc_yura_man_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_yura_man_s1.png"
+ },
+ "pair_file": "npc_grp_yura_1.png",
+ "proportion": {
+  "1": {
+   "neck": 0.3829787234042553,
+   "head_w": 0.40425531914893614,
+   "shoulder": 0.35106382978723405,
+   "neck_clear": 0.6921052631578948
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

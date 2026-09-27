@@ -19,3 +19,11 @@
 01:30:19   | ■ シートの状態
 01:30:19   |   シート1 歩き: 確認あり  npc_yura_woman_s1.png  ドット 8.00px → 描かれた格子のまま（45.0 ドット）
 01:30:19 sheet 1: 0 redo lines
+02:35:05 pipeline: sheets.py ../art_ref/gen/npc/grp_yura_1 --npc npc_yura_man --out out/npc/npc_yura_man
+02:35:51   |   - 向きの見本（configs/refs/npc_yura_man）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:35:51   | 
+02:35:51   | ■ シートの状態
+02:35:51   |   シート1 歩き: 確認あり  npc_yura_man_s1.png  ドット 8.00px → 描かれた格子のまま（46.5 ドット）
+02:35:51   | 
+02:35:51   | packed field 102x204 | palette 51 + face 0
+02:35:51 pipeline: sheets.py ../art_ref/gen/npc/grp_yura_1 --npc npc_yura_woman --out out/npc/npc_yura_woman

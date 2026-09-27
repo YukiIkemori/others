@@ -1,0 +1,42 @@
+{
+ "id": "broken_pillar",
+ "kind": "props",
+ "theme": "desert",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   38,
+   33
+  ],
+  "32": [
+   51,
+   44
+  ],
+  "40": [
+   64,
+   55
+  ]
+ },
+ "feet": {
+  "24": [
+   19,
+   32
+  ],
+  "32": [
+   26,
+   43
+  ],
+  "40": [
+   32,
+   54
+  ]
+ },
+ "files": {
+  "24": "broken_pillar@24.png",
+  "32": "broken_pillar@32.png",
+  "40": "broken_pillar@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/desert_a.png"
+}

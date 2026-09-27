@@ -1,0 +1,42 @@
+{
+ "id": "copper_brazier",
+ "kind": "props",
+ "theme": "desert",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   14,
+   18
+  ],
+  "32": [
+   19,
+   24
+  ],
+  "40": [
+   24,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   7,
+   17
+  ],
+  "32": [
+   10,
+   23
+  ],
+  "40": [
+   12,
+   29
+  ]
+ },
+ "files": {
+  "24": "copper_brazier@24.png",
+  "32": "copper_brazier@32.png",
+  "40": "copper_brazier@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/desert_a.png"
+}

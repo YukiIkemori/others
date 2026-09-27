@@ -1,0 +1,42 @@
+{
+ "id": "obelisk",
+ "kind": "props",
+ "theme": "desert",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   23,
+   33
+  ],
+  "32": [
+   31,
+   44
+  ],
+  "40": [
+   39,
+   55
+  ]
+ },
+ "feet": {
+  "24": [
+   12,
+   32
+  ],
+  "32": [
+   16,
+   43
+  ],
+  "40": [
+   19,
+   54
+  ]
+ },
+ "files": {
+  "24": "obelisk@24.png",
+  "32": "obelisk@32.png",
+  "40": "obelisk@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/desert_a.png"
+}

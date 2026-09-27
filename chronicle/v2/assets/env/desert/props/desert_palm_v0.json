@@ -1,0 +1,42 @@
+{
+ "id": "desert_palm_v0",
+ "kind": "props",
+ "theme": "desert",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   41,
+   50
+  ],
+  "32": [
+   55,
+   66
+  ],
+  "40": [
+   69,
+   82
+  ]
+ },
+ "feet": {
+  "24": [
+   21,
+   49
+  ],
+  "32": [
+   28,
+   65
+  ],
+  "40": [
+   34,
+   81
+  ]
+ },
+ "files": {
+  "24": "desert_palm_v0@24.png",
+  "32": "desert_palm_v0@32.png",
+  "40": "desert_palm_v0@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/desert_a.png"
+}

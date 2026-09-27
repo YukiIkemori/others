@@ -24,3 +24,9 @@
 02:30:54   sheet 3 hit: size redo line ignored (same size as the hero's pose) -> overrides scale_ok
 02:30:54 no redo lines left
 02:30:54 pipeline: sheets.py ../art_ref/gen/companion/zafira --companion zafira --out out/comp_zafira
+02:35:50   |   シート2 フィールドの歩き: 確認あり  comp_zafira_s2.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+02:35:50   |   シート3 戦闘の基本ポーズ: OK  comp_zafira_s3.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+02:35:50   |   シート4 戦闘の行動ポーズ＋武器なし版: OK  comp_zafira_s4.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+02:35:50   |   シート5 顔の表情: OK  comp_zafira_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+02:35:50   | 
+02:35:50   | packed field 120x220, battle 545x336, battle_bare 385x69, face 308x84 | palette 52 + face 47

@@ -539,6 +539,76 @@
    ],
    "pitch": 4.91,
    "from_raw": "raw/s4_a1.png"
+  },
+  "5": {
+   "attempts": [
+    {
+     "raw": "raw/s5_a1.png",
+     "quality": "medium",
+     "t": "2026-09-27T02:35:08"
+    }
+   ],
+   "usage": [
+    {
+     "image_gen": {
+      "input_tokens": 3386,
+      "input_tokens_details": {
+       "image_tokens": 2996,
+       "text_tokens": 390
+      },
+      "output_tokens": 2511,
+      "output_tokens_details": {
+       "image_tokens": 2511,
+       "text_tokens": 0
+      },
+      "total_tokens": 5897
+     },
+     "web_search": {
+      "num_requests": 0
+     }
+    }
+   ],
+   "frames": {
+    "face_neutral": {
+     "row": 1,
+     "column": 1,
+     "logical_bbox": [
+      73,
+      80
+     ],
+     "air": 0
+    },
+    "face_smile": {
+     "row": 1,
+     "column": 2,
+     "logical_bbox": [
+      73,
+      80
+     ],
+     "air": 0
+    },
+    "face_surprise": {
+     "row": 1,
+     "column": 3,
+     "logical_bbox": [
+      73,
+      80
+     ],
+     "air": 0
+    },
+    "face_pain": {
+     "row": 1,
+     "column": 4,
+     "logical_bbox": [
+      73,
+      80
+     ],
+     "air": 0
+    }
+   },
+   "notes": [],
+   "pitch": 8.137,
+   "from_raw": "raw/s5_a1.png"
   }
  }
 }

@@ -1,0 +1,42 @@
+{
+ "id": "bones",
+ "kind": "props",
+ "theme": "desert",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   42,
+   18
+  ],
+  "32": [
+   56,
+   24
+  ],
+  "40": [
+   70,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   21,
+   17
+  ],
+  "32": [
+   28,
+   23
+  ],
+  "40": [
+   35,
+   29
+  ]
+ },
+ "files": {
+  "24": "bones@24.png",
+  "32": "bones@32.png",
+  "40": "bones@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/desert_a.png"
+}

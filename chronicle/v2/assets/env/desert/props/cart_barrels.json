@@ -1,0 +1,42 @@
+{
+ "id": "cart_barrels",
+ "kind": "props",
+ "theme": "desert",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   24,
+   18
+  ],
+  "32": [
+   32,
+   24
+  ],
+  "40": [
+   40,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   12,
+   17
+  ],
+  "32": [
+   16,
+   23
+  ],
+  "40": [
+   20,
+   29
+  ]
+ },
+ "files": {
+  "24": "cart_barrels@24.png",
+  "32": "cart_barrels@32.png",
+  "40": "cart_barrels@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/desert_a.png"
+}

@@ -17,3 +17,6 @@
 02:31:55   note: bare_cast is 69x79 art px, larger than its cell 112x80 (clipped)
 02:31:55 sheet 4 -> art_ref/gen/companion/ferno/comp_ferno_s4.png (15 poses)
 02:32:00 sheet 5 attempt 1: generating 1536x1536 (pitch 8, quality medium, 2 refs)
+02:35:13   pitch in raw image: 8.14 px per art pixel (upright median 651 px / 80)
+02:35:15 sheet 5 -> art_ref/gen/companion/ferno/comp_ferno_s5.png (4 poses)
+02:35:15 pipeline: sheets.py ../art_ref/gen/companion/ferno --companion ferno --out out/comp_ferno --check
