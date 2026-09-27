@@ -1,0 +1,232 @@
+{
+ "attack": {
+  "attempts": [
+   {
+    "raw": "raw/attack_a1.png",
+    "pitch": 8,
+    "lay": {
+     "HX": 58,
+     "G": 75,
+     "W": 118,
+     "H": 78
+    },
+    "quality": "high",
+    "extra": "",
+    "t": "2026-09-27T19:13:34",
+    "secs": 86.7
+   },
+   {
+    "raw": "raw/attack_a2.png",
+    "pitch": 8,
+    "lay": {
+     "HX": 58,
+     "G": 75,
+     "W": 118,
+     "H": 78
+    },
+    "quality": "high",
+    "extra": "",
+    "t": "2026-09-27T19:16:21",
+    "secs": 93.6
+   }
+  ],
+  "frames": [
+   {
+    "slot": 1,
+    "kind": "keep",
+    "src": "idle_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      58.0,
+      23.5
+     ],
+     "height": 64,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 0.0
+    }
+   },
+   {
+    "slot": 2,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.862",
+     "head_scale": 0.862,
+     "head": [
+      54.2,
+      31.9
+     ],
+     "height": 60,
+     "copy": 0.09,
+     "shift": [
+      2,
+      1
+     ],
+     "err": 32.8
+    }
+   },
+   {
+    "slot": 3,
+    "kind": "keep",
+    "src": "windup",
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.862",
+     "head_scale": 0.862,
+     "head": [
+      58.2,
+      31.9
+     ],
+     "height": 64,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 35.6
+    }
+   },
+   {
+    "slot": 4,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.800",
+     "head_scale": 0.8,
+     "head": [
+      57.4,
+      36.2
+     ],
+     "height": 59,
+     "copy": 0.05,
+     "shift": [
+      0,
+      5
+     ],
+     "err": 37.8
+    }
+   },
+   {
+    "slot": 5,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.837",
+     "head_scale": 0.837,
+     "head": [
+      54.9,
+      38.6
+     ],
+     "height": 47,
+     "copy": 0.05,
+     "shift": [
+      0,
+      5
+     ],
+     "err": 31.5
+    }
+   },
+   {
+    "slot": 6,
+    "kind": "keep",
+    "src": "slash",
+    "checks": {
+     "ok": false,
+     "why": "head scale 1.075",
+     "head_scale": 1.075,
+     "head": [
+      58.0,
+      24.4
+     ],
+     "height": 64,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 28.1
+    }
+   },
+   {
+    "slot": 7,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 0.975,
+     "head": [
+      61.7,
+      33.2
+     ],
+     "height": 55,
+     "copy": 0.08,
+     "shift": [
+      0,
+      5
+     ],
+     "err": 30.9
+    }
+   },
+   {
+    "slot": 8,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      58.0,
+      23.5
+     ],
+     "height": 64,
+     "copy": 0.65,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 7.6
+    }
+   },
+   {
+    "slot": 9,
+    "kind": "keep",
+    "src": "idle_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      58.0,
+      23.5
+     ],
+     "height": 64,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 0.0
+    }
+   }
+  ],
+  "lay": {
+   "HX": 58,
+   "G": 75,
+   "W": 118,
+   "H": 78
+  },
+  "from_raw": "raw/attack_a2.png"
+ }
+}

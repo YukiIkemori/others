@@ -1,0 +1,22 @@
+19:12:06 hero_m_warrior attack attempt 1: generating 2832x1872 (pitch 8, quality high)
+19:13:35 calibrated pitch 7.98 / 8.00 px (requested 8), offset -0.7, 2.7
+19:13:37   attack frame 1 keep  {"ok": false, "why": "feet 1", "head_scale": 1.0, "head": [58.0, 23.5], "height": 64, "shift": [0, 0], "err": 0.0}
+19:13:37   attack frame 2 new   {"ok": false, "why": "head scale 0.925", "head_scale": 0.925, "head": [54.0, 28.6], "height": 57, "shift": [10, -1], "err": 25.2}
+19:13:37   attack frame 3 keep  {"ok": false, "why": "head scale 0.862, feet 1", "head_scale": 0.862, "head": [58.2, 31.9], "height": 64, "shift": [0, 0], "err": 35.6}
+19:13:37   attack frame 4 new   {"ok": false, "why": "head scale 0.800", "head_scale": 0.8, "head": [55.4, 34.2], "height": 59, "shift": [0, 1], "err": 30.5}
+19:13:37   attack frame 5 new   {"ok": false, "why": "head scale 0.887", "head_scale": 0.887, "head": [51.5, 34.2], "height": 51, "shift": [4, 0], "err": 28.3}
+19:13:37   attack frame 6 keep  {"ok": false, "why": "head scale 1.075, feet 1", "head_scale": 1.075, "head": [58.0, 24.4], "height": 64, "shift": [0, 0], "err": 28.1}
+19:13:37   attack frame 7 new   {"ok": false, "why": "head scale 0.800", "head_scale": 0.8, "head": [55.4, 44.2], "height": 40, "shift": [0, 11], "err": 26.3}
+19:13:37   attack frame 8 new   {"ok": false, "why": "head scale 0.800", "head_scale": 0.8, "head": [52.4, 33.2], "height": 51, "shift": [0, 11], "err": 16.2}
+19:13:37   attack frame 9 keep  {"ok": false, "why": "feet 1", "head_scale": 1.0, "head": [58.0, 23.5], "height": 64, "shift": [0, 0], "err": 0.0}
+19:14:46 hero_m_warrior attack attempt 2: generating 2832x1872 (pitch 8, quality high)
+19:16:22 calibrated pitch 7.99 / 8.00 px (requested 8), offset 0.1, 1.0
+19:16:24   attack frame 1 keep  {"ok": true, "why": "", "head_scale": 1.0, "head": [58.0, 23.5], "height": 64, "copy": null, "shift": [0, 0], "err": 0.0}
+19:16:24   attack frame 2 new   {"ok": false, "why": "head scale 0.862", "head_scale": 0.862, "head": [54.2, 31.9], "height": 60, "copy": 0.09, "shift": [2, 1], "err": 32.8}
+19:16:24   attack frame 3 keep  {"ok": false, "why": "head scale 0.862", "head_scale": 0.862, "head": [58.2, 31.9], "height": 64, "copy": null, "shift": [0, 0], "err": 35.6}
+19:16:24   attack frame 4 new   {"ok": false, "why": "head scale 0.800", "head_scale": 0.8, "head": [57.4, 36.2], "height": 59, "copy": 0.05, "shift": [0, 5], "err": 37.8}
+19:16:24   attack frame 5 new   {"ok": false, "why": "head scale 0.837", "head_scale": 0.837, "head": [54.9, 38.6], "height": 47, "copy": 0.05, "shift": [0, 5], "err": 31.5}
+19:16:24   attack frame 6 keep  {"ok": false, "why": "head scale 1.075", "head_scale": 1.075, "head": [58.0, 24.4], "height": 64, "copy": null, "shift": [0, 0], "err": 28.1}
+19:16:24   attack frame 7 new   {"ok": true, "why": "", "head_scale": 0.975, "head": [61.7, 33.2], "height": 55, "copy": 0.08, "shift": [0, 5], "err": 30.9}
+19:16:24   attack frame 8 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [58.0, 23.5], "height": 64, "copy": 0.65, "shift": [0, 0], "err": 7.6}
+19:16:24   attack frame 9 keep  {"ok": true, "why": "", "head_scale": 1.0, "head": [58.0, 23.5], "height": 64, "copy": null, "shift": [0, 0], "err": 0.0}

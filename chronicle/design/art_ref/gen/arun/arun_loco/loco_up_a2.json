@@ -1,0 +1,215 @@
+{
+ "raw": "raw/loco_up_a2.png",
+ "pitch": 7.854166666666667,
+ "frames": {
+  "walk_up_0": {
+   "row": 1,
+   "column": 1,
+   "logical_bbox": [
+    31,
+    52
+   ],
+   "air": 0
+  },
+  "walk_up_1": {
+   "row": 1,
+   "column": 2,
+   "logical_bbox": [
+    30,
+    49
+   ],
+   "air": 0
+  },
+  "walk_up_2": {
+   "row": 1,
+   "column": 3,
+   "logical_bbox": [
+    31,
+    49
+   ],
+   "air": 0
+  },
+  "walk_up_3": {
+   "row": 1,
+   "column": 4,
+   "logical_bbox": [
+    30,
+    49
+   ],
+   "air": 0
+  },
+  "walk_up_4": {
+   "row": 2,
+   "column": 1,
+   "logical_bbox": [
+    31,
+    51
+   ],
+   "air": 0
+  },
+  "walk_up_5": {
+   "row": 2,
+   "column": 2,
+   "logical_bbox": [
+    31,
+    50
+   ],
+   "air": 0
+  },
+  "walk_up_6": {
+   "row": 2,
+   "column": 3,
+   "logical_bbox": [
+    31,
+    49
+   ],
+   "air": 0
+  },
+  "walk_up_7": {
+   "row": 2,
+   "column": 4,
+   "logical_bbox": [
+    30,
+    50
+   ],
+   "air": 0
+  },
+  "run_up_0": {
+   "row": 3,
+   "column": 1,
+   "logical_bbox": [
+    34,
+    44
+   ],
+   "air": 0
+  },
+  "run_up_2": {
+   "row": 3,
+   "column": 3,
+   "logical_bbox": [
+    34,
+    42
+   ],
+   "air": 4
+  },
+  "run_up_3": {
+   "row": 3,
+   "column": 4,
+   "logical_bbox": [
+    33,
+    45
+   ],
+   "air": 1
+  },
+  "run_up_1": {
+   "row": 3,
+   "column": 2,
+   "logical_bbox": [
+    34,
+    45
+   ],
+   "air": 0
+  },
+  "run_up_7": {
+   "row": 4,
+   "column": 4,
+   "logical_bbox": [
+    35,
+    43
+   ],
+   "air": 7
+  },
+  "run_up_4": {
+   "row": 4,
+   "column": 1,
+   "logical_bbox": [
+    35,
+    45
+   ],
+   "air": 0
+  },
+  "run_up_5": {
+   "row": 4,
+   "column": 2,
+   "logical_bbox": [
+    35,
+    48
+   ],
+   "air": 0
+  },
+  "run_up_6": {
+   "row": 4,
+   "column": 3,
+   "logical_bbox": [
+    33,
+    43
+   ],
+   "air": 4
+  }
+ },
+ "notes": [],
+ "spec": {
+  "n": 0,
+  "file": "loco_up.png",
+  "layout": "loco",
+  "rows": 4,
+  "cols": 4,
+  "cell": [
+   64,
+   64
+  ],
+  "ids": [
+   [
+    "walk_up_0",
+    "walk_up_1",
+    "walk_up_2",
+    "walk_up_3"
+   ],
+   [
+    "walk_up_4",
+    "walk_up_5",
+    "walk_up_6",
+    "walk_up_7"
+   ],
+   [
+    "run_up_0",
+    "run_up_1",
+    "run_up_2",
+    "run_up_3"
+   ],
+   [
+    "run_up_4",
+    "run_up_5",
+    "run_up_6",
+    "run_up_7"
+   ]
+  ],
+  "target": 48,
+  "stand": [
+   "walk_up_0",
+   "walk_up_1",
+   "walk_up_2",
+   "walk_up_3",
+   "walk_up_4",
+   "walk_up_5",
+   "walk_up_6",
+   "walk_up_7"
+  ],
+  "air": [
+   "run_up_3",
+   "run_up_7",
+   "run_up_2",
+   "run_up_6"
+  ],
+  "face": [
+   "up",
+   "up",
+   "up",
+   "up"
+  ],
+  "gen_grid": [
+   4,
+   4
+  ]
+ }
+}

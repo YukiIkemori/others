@@ -238,7 +238,7 @@
     const v = st.vis[a.uid] || {};
     if (v.gone >= 1 || v.hidden) return;
     const t = R.Engine.time;
-    const rm = !!R.Settings.get('reduceMotion');
+    const rm = !!R.Settings.get('reduceMotion') || Bt.smooth === false;   // Bt.smooth = false は比べる用（柔らかくする描き方を切る）
     let pose = v.pose || 'idle';
     if (a.side === 'party' && pose === 'idle' && v.alive && v.maxHp > 0 && v.hp / v.maxHp < 0.25) pose = 'weak';
     if (a.side === 'party' && !v.alive && pose !== 'ko' && pose !== 'hit') pose = 'ko';
