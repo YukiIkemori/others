@@ -402,7 +402,7 @@
   },
   // 縦切りの盗み専用 7（BATTLE、2026-09-27。オーナー「レアがめっきり減ったねえ……」）: 縦切りの 11 系統の段 1〜2 の約 3 分の 1 に drops.steal（率 32）。
   // T2（縦切りのレアの帯 T1 の 1 つ上）。効果はどれも今ある mods の組み合わせ
-  ac_st_rat_pouch: { name: '野ネズミの隠し袋', slot: 'acc', grade: 'super', tier: 2, src: 'steal', stealOnly: true, mods: { goldPct: 15, dropPct: 10 }, abil: { agi: 1 }, icon: 'ring' },
+  ac_st_rat_pouch: { name: '野ネズミの隠し袋', slot: 'acc', grade: 'super', tier: 2, src: 'steal', stealOnly: true, mods: { goldPct: 15 }, abil: { agi: 1 }   /* ドロップ率アップは中盤以降（持ち主 2026-09-27） */, icon: 'ring' },
   hd_st_beach_crab: { name: '浜ガニの甲の兜', slot: 'head', grade: 'super', tier: 2, src: 'steal', stealOnly: true, weight: 'heavy', mods: { def: 4, elemResist: { water: 0.5 } }, icon: 'helm' },
   ft_st_storm_gull: { name: '嵐カモメの羽靴', slot: 'feet', grade: 'super', tier: 2, src: 'steal', stealOnly: true, weight: 'light', mods: { spd: 10, eva: 5 }, icon: 'boots' },   // 先制アップは体験版では出さない（持ち主 2026-09-27）
   ac_st_royal_jelly: { name: '女王の蜜のしずく', slot: 'acc', grade: 'super', tier: 2, src: 'steal', stealOnly: true, mods: { regen: 1 }, abil: { mnd: 1 }, icon: 'ring' },

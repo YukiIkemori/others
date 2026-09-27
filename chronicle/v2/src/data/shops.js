@@ -40,7 +40,7 @@
       items: gear(WEAPON_LINES, 0).concat(gear(WEAPON_LINES, 1)), tier: { 1: gear(WEAPON_LINES, 1).concat(gear(WEAPON_LINES, 2)) } },
     // 隠れ里ユラ（ティアで入れ替わる珍しいアクセサリ 3 品）
     shop_yura: { name: 'ユラの店', kind: 'special', keepOld: false, sell: true,
-      items: ['ac_flee', 'ac_quiet', 'ac_sachet'], tier: { 1: ['ac_loupe', 'ac_sachet', 'ac_flee'],   // 先制（ac_watch）・レア率（ac_clover）は中盤以降（持ち主 2026-09-27）
+      items: ['ac_flee', 'ac_quiet', 'ac_sachet'], tier: { 1: ['ac_sachet', 'ac_flee', 'ac_quiet'],   // 先制（ac_watch）・レア率（ac_clover）・ドロップ率（ac_loupe）は中盤以降（持ち主 2026-09-27）
       2: ['ac_purse', 'ac_float', 'ac_quickhand'] } },
   });
 })(window.RPG);
