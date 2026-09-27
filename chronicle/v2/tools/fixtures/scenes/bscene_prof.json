@@ -1,0 +1,6 @@
+{
+  "scene": "battle",
+  "desc": "BSCENE: 熟練度の見本（戦闘の中の「剣+1」と、勝利の後の「熟練度」の札。3 人が上がり、1 人が新技を覚える。demo.js の prof）",
+  "state": "core_stub_road",
+  "setup": { "demo": "prof", "mons": [["stub_slime", 1]], "bg": "night", "boss": false, "autoInput": true }
+}

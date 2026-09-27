@@ -1,6 +1,6 @@
 // MENUS: 強さ（MODERN_UI §6.7、A14・A15・A17・A22・A30）。ハブの人の札を選ぶと開く。L/R で人を替える。
 //   左: 大きな顔、名前・肩書き・前/後、得意な武器・属性の名前（文字の段は出さない）。
-//   右: HP/MP 現在/最大、能力値 6 つ（0〜25、棒）、熟練（系統と属性の名前と段 1〜100。補正の数字は出さない）、今の装備。
+//   右: HP/MP 現在/最大、能力値 6 つ（0〜25、棒）、熟練（系統と属性の名前と段 1〜100。補正の数字は出さない。前に見た後に上がった物は ▲n）、今の装備。
 //   出さない物: Lv・経験値・次のレベル・計算値（攻撃力など）・特性・役割・紹介文。
 (function (R) {
   'use strict';
@@ -20,6 +20,16 @@
       if (I.repeat('right')) { this.ci = (this.ci + 1) % S.party().length; R.UIK.sfx('cursor'); return; }
       if (I.repeat('left')) { this.ci = (this.ci + S.party().length - 1) % S.party().length; R.UIK.sfx('cursor'); return; }
       if (I.pressed('b') || I.pressed('a')) { R.UIK.sfx('cancel'); this.close(undefined); }
+    },
+    /** 熟練度の ▲: 初めてこの人を見たとき R.Game.profNew[人] を写して消す（開いている間は ▲ を出したまま。次に開けば消えている） */
+    profSeen(c) {
+      const seen = (this.seenProf = this.seenProf || {});
+      if (!(c.id in seen)) {
+        const G = R.Game, m = G && G.profNew && G.profNew[c.id];
+        seen[c.id] = m ? Object.assign({}, m) : null;
+        if (m) delete G.profNew[c.id];
+      }
+      return seen[c.id];
     },
     draw(g) {
       const b = S.box(), C = T().color, tall = S.tall();
@@ -66,13 +76,23 @@
       S.label(g, '熟練', px, y); y += u(28);
       const Rl = R.Rules;
       const items = [];
-      for (const w of Rl.WTYPES || []) items.push({ name: S.wname(w), icon: w, r: Rl.rankOf(c, 'w', w) });
-      for (const e of Rl.ELEMENTS || []) items.push({ name: S.ename(e), icon: S.elemIcon(e), r: Rl.rankOf(c, 'e', e), el: true });
+      for (const w of Rl.WTYPES || []) items.push({ key: w, name: S.wname(w), icon: w, r: Rl.rankOf(c, 'w', w) });
+      for (const e of Rl.ELEMENTS || []) items.push({ key: e, name: S.ename(e), icon: S.elemIcon(e), r: Rl.rankOf(c, 'e', e), el: true });
+      const nw = this.profSeen(c);
       const cols = tall ? 2 : 3, cw = (pw - u(18) * (cols - 1)) / cols;
       items.forEach((it, i) => {
         const xx = px + (i % cols) * (cw + u(18)), yy = y + Math.floor(i / cols) * u(28);
         R.UIK.icon(g, it.icon, xx, yy, u(15), it.el ? C.teal : C.text2);
         R.UIK.text(g, it.name, xx + u(22), yy, { size: u(13.5), color: C.text });
+        // 前に見た後に上がった物: ▲ と上がった段の数（この画面を開いたら消える＝R.Game.profNew）
+        const up = nw && nw[it.key] != null ? (it.r || 1) - nw[it.key] : 0;
+        if (up > 0) {
+          const bx = xx + u(22) + R.UIK.measure(it.name, { size: u(13.5) }) + u(6), s2 = '▲' + up, bw = R.UIK.measure(s2, { size: u(10.5), weight: 700 }) + u(10);
+          g.save(); g.beginPath();
+          if (g.roundRect) g.roundRect(bx, yy + u(1), bw, u(16), u(8)); else g.rect(bx, yy + u(1), bw, u(16));
+          g.fillStyle = 'rgba(40,90,40,0.85)'; g.fill(); g.strokeStyle = 'rgba(142,224,138,0.8)'; g.lineWidth = 1; g.stroke(); g.restore();
+          R.UIK.text(g, s2, bx + bw / 2, yy + u(2.5), { size: u(10.5), weight: 700, color: '#c8f7c0', align: 'center' });
+        }
         R.UIK.text(g, String(it.r || 1), xx + cw * 0.6, yy - u(1), { size: u(15), weight: 700, color: C.text, align: 'right' });
         R.UIK.gauge(g, { x: xx + cw * 0.64, y: yy + u(7), w: cw * 0.36, h: u(2) }, it.r || 1, 100, it.el ? ['#3a8a8c', '#8fd6d8'] : ['#8a6a2a', '#f0cf7c']);
       });

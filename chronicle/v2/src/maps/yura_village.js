@@ -69,25 +69,28 @@
       meta: { sub: '名を置いてきた者の里' },
     });
 
-    // ---------------------------------------------------------------- ユラの宿 12×10
-    const room = K.room(12, 10, {});
-    K.rect(room.g, 4, 5, 4, 2, 'c');
+    // ---------------------------------------------------------------- ユラの宿 11×9（家具は文字の絵 R.ContentP.kit.furnish）
+    const room = K.room(11, 9, {});
+    K.rect(room.g, 3, 5, 3, 2, 'c');
     K.def('yura_inn', {
       name: 'ユラの宿', kind: 'interior', optional: true, region: 'r_forest', location: 'yura',
       legend: K.ROOM_LEGEND('wall_moss', 'wood_floor'),
       rows: room.g, outside: 'wall_moss',
-      objects: [
-        K.prop('counter', 2, 3), K.prop('counter', 3, 3), K.prop('bed', 8, 2), K.prop('bed', 10, 2), K.prop('bed', 10, 5),
-        K.prop('table', 5, 6), K.prop('chair', 4, 6), K.prop('stove', 1, 6), K.prop('lantern', 6, 3), K.prop('flower_pot', 1, 2),
-      ],
+      objects: R.ContentP.kit.furnish([
+        'JK..C.B.B',
+        '.........',
+        'N-n......',
+        '....cTc..',
+        'P.......b',
+        'pk......x'], '..yc...w.'),
       npcs: [
-        K.npc('yura_innkeeper', 'npc_yura_folk_3', 2, 2, { name: '宿番', dir: 's', talk: 'yura_inn_keeper', pushable: false }),
-        K.npc('yura_guest', 'npc_yura_folk_4', 8, 7, { name: '泊まり客', dir: 'w', talk: [L('ここに来た日のことは、\nよく覚えているの。\n……自分の名前のほかは。')], reward: null }),
+        K.npc('yura_innkeeper', 'npc_yura_folk_3', 2, 3, { name: '宿番', dir: 's', talk: 'yura_inn_keeper', pushable: false }),
+        K.npc('yura_guest', 'npc_yura_folk_4', 8, 5, { name: '泊まり客', dir: 'w', talk: [L('ここに来た日のことは、\nよく覚えているの。\n……自分の名前のほかは。')], reward: null }),
       ],
-      spawns: { door: { x: room.door.x, y: 8, dir: 'n' } },
-      exits: [{ x: room.door.x, y: 9, w: 2, h: 1, to: { map: 'yura', spawn: 'inn' } }],
+      spawns: { door: { x: room.door.x, y: 7, dir: 'n' } },
+      exits: [{ x: room.door.x, y: 8, w: 2, h: 1, to: { map: 'yura', spawn: 'inn' } }],
       triggers: [],
-      light: { ambient: '#8a7a9a', k: 0.8, mood: 'interior' },
+      light: { ambient: '#6e6282', k: 0.8, mood: 'interior' },
       bgm: 'sorrow',
       meta: { minimap: false },
     });

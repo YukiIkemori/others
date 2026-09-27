@@ -134,6 +134,9 @@
         P('table', 7, 6), P('table', 8, 6),                 // 食卓
         P('chair', 6, 6), P('chair', 7, 7), P('chair', 8, 7), P('chair', 9, 6),   // 9,6 = 東向きの空いた席（朝の席）
         P('lantern', 13, 7), P('flower_pot', 1 + 1, 9), P('crate', 13, 9), P('planter', 3, 7),
+        // 飾りと灯り（屋内の見直し。ベルナの歩く 5 の行と書見台・席・棚のマスは空けたまま）
+        P('cupboard', 4, 2), P('basket_veg', 7, 2), P('shelf_jars', 8, 2), P('candelabra', 13, 2), P('house_plant', 14, 5), P('spinning_wheel', 1, 7),
+        P('wall_window', 3, 1), P('wall_herbs', 7, 1), P('wall_painting', 12, 1), P('wall_sconce', 1, 1), P('wall_window', 14, 1),
         K.exam(12, 4, 'roa_lectern'),
         K.exam(9, 6, 'roa_seat'),
         K.exam(10, 2, 'roa_shelf'),

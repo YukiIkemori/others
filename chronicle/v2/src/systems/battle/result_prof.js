@@ -3,7 +3,8 @@
 //     閃いた技・術は その人の行の下に「✦ アルンは 新技『○○』を覚えた！」を光らせて 1 行ずつ。入らなければ頁を分け、頁ごとに決定を待つ。
 //   - 戦闘の中: 段階が上がったら その人の頭の上に小さく「剣+1」（止めない。playback.js の H.prof から pop）。
 //   - 強さの画面の ▲: B.finish が note() で R.Game.profNew[人の id][系統か属性] = 上がる前の段階 を覚える（status.js が見たら消す）。
-// result.js・playback.js・battle_core.js からは 1 行ずつ呼ぶだけ（ほかの担当が同時に直しているため、描く物はこのファイルに置く）。
+// 勝利の後の札は result.js の Rs.addPage（id 'prof'）で足す。playback.js・battle_core.js からは 1 行ずつ呼ぶだけ
+// （ほかの担当が同時に直しているため、描く物はこのファイルに置く）。result.js の後に読む（ファイル名の順）。
 (function (R) {
   'use strict';
   const Bt = (R.Battle = R.Battle || {});
@@ -123,7 +124,15 @@
     _.play.pop(st, uid, `${PU.name(key)}+${n}`, kindOf(key, e.kind) === 'e' ? 'profE' : 'prof');
   };
 
-  // ---------------------------------------------------------------- 頁（勝利の札の後）
+  // ---------------------------------------------------------------- 頁（勝利の札の後。Rs.addPage）
+  if (_.result && _.result.addPage) {
+    _.result.addPage({
+      id: 'prof', order: 10,
+      when(st, data, rewards) { st.profData = PU.gather(st, rewards); return PU.has(st.profData); },
+      run(st) { return PU.show(st, st.profData); },
+    });
+  }
+
   function geom(st) {
     const k = R.uiScale || 1, L = st.L || {};
     if (L.tall) {

@@ -1,0 +1,6 @@
+{
+  "scene": "battle",
+  "desc": "BSCENE: 熟練度の札が 1 頁に入らないとき（4 人・14 項目・覚えた技と術 3 つ → 頁を分ける。demo.js の prof_many）",
+  "state": "core_stub_road",
+  "setup": { "demo": "prof_many", "mons": [["stub_slime", 1]], "bg": "night", "boss": false, "autoInput": true }
+}

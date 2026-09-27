@@ -75,6 +75,8 @@
     miss: { fill: ['#c8c4bc', '#9a958c'], stroke: 'rgba(20,20,26,0.9)', size: 18 },
     label: { fill: ['#ecc97c', '#ecc97c'], stroke: 'rgba(40,22,6,0.9)', size: 12 },
     status: { fill: ['#e6d0ff', '#c6a0f0'], stroke: 'rgba(30,14,40,0.9)', size: 14 },
+    prof: { fill: ['#fff4d0', '#ecc97c'], stroke: 'rgba(40,22,6,0.95)', size: 15 },     // 熟練度（系統）「剣+1」
+    profE: { fill: ['#e8fbff', '#8fd6d8'], stroke: 'rgba(6,26,34,0.95)', size: 15 },    // 熟練度（属性）「火+1」
   };
   P.drawPops = function (g, st) {
     const k = R.uiScale || 1, reduce = R.Settings.get('reduceMotion');
@@ -469,7 +471,7 @@
     }
   };
   H.grow = async (st, e) => { st.collected.grow.push(e); };
-  H.prof = async (st, e) => { st.collected.prof.push(e); };
+  H.prof = async (st, e) => { st.collected.prof.push(e); if (_.profUI) _.profUI.pop(st, e); };   // 頭の上に「剣+1」（止めない。result_prof.js）
   H.msg = async (st, e) => {
     // ボスの段階の切り替え（BEAST の原画に第 2 の姿 idle_p2… があれば actors.js がそれを使う）
     if (e.phase && e.uid != null && st.vis[e.uid]) { const v = st.vis[e.uid]; v.phase = (v.phase || 1) + 1; v.flash = 1; }

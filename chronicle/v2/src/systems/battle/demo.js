@@ -1,7 +1,7 @@
 // BSCENE: 見本の戦闘（台本の「戦闘の 1 回」。本物の R.BattleCore の代わり）。スクショ（§4.4 の BSCENE の行）とテスト用。
 //   R.Battle.start({demo: '<名前>', ...}) で使う（場面のフィクスチャ tools/fixtures/scenes/bscene_*.json）。
 //   形は契約の battle（OBJ_API.battle）と出来事の列（BATTLE_EVENTS）どおり。R.Game は書き換えない（finish は何もしない）。
-// 名前: normal glimmer spell tele steal victory wipe all hurt backrow boss_pageeater boss_moth boss_rooteater boss_wolflord
+// 名前: normal glimmer spell tele steal victory wipe all hurt backrow prof prof_many boss_pageeater boss_moth boss_rooteater boss_wolflord
 (function (R) {
   'use strict';
   const Bt = (R.Battle = R.Battle || {});
@@ -95,6 +95,8 @@
       },
       rewards() {
         const r = { gold: 380, drops: [{ item: 'mt_wolf_pelt', grade: 'normal', n: 2 }, { item: 'i_potion', grade: 'normal' }, { item: 'dg_frost_fang', grade: 'rare' }], grow: [{ c: P(0).id, hp: 12, mp: 3 }, { c: P(2).id, hp: 9, mp: 4 }], prof: [{ c: P(0).id, key: 'sword' }, { c: P(2).id, key: 'bow' }, { c: P(3).id, key: 'fire' }], glimmers: name === 'glimmer' || name === 'all' ? [{ id: 'demo_sword_1', name: '雷光突き' }] : [] };
+        // 熟練度の札の見本（result_prof.js）: 段階の前後つき（本物の B.rewards と同じ形 {c, key, kind, rank, from}）と、誰が閃いたか
+        if (name === 'prof' || name === 'prof_many') { r.prof = D.PROF_UPS(P, name); r.glimmers = D.PROF_GLIM(P, name); }
         return r;
       },
       finish() { if (finished) return finished.r; finished = { r: over === 'win' ? B.rewards() : null }; return finished.r; },
@@ -175,10 +177,31 @@
         s.ev.push({ t: 'gain', item: 'mt_wolf_pelt', grade: 'normal' }, { t: 'grow', c: s.P(0).id, hp: 12, mp: 3 }, { t: 'prof', c: s.P(0).id, key: 'sword' });
       }
     },
+    // 熟練度の見本: 攻撃・術のたびに頭の上に「剣+1」、勝った後に「熟練度」の札（prof_many は頁が分かれる数）
+    prof(s) {
+      const ups = D.PROF_UPS(s.P, 'prof');
+      const pop = (i) => { for (const u of ups) if (u.c === s.P(i).id) s.ev.push({ t: 'prof', c: u.c, key: u.key, uid: s.P(i).uid, kind: u.kind, rank: u.rank, from: u.from }); };
+      s.act(s.P(0), 'attack', 'attack', '攻撃', [s.e0()]); s.dmg(s.e0(), 64); pop(0);
+      s.act(s.P(2), 'skill', 'demo_bow_0', '狙い撃ち', [s.e0()]); s.dmg(s.e0(), 88); pop(2);
+      s.act(s.P(3), 'spell', 'demo_sp_0', 'ファイア', [s.e0()]); s.dmg(s.e0(), 72, { kind: 'fire' }); pop(3);
+      if (s.round >= 2) { for (const e of s.E()) s.dmg(e, 999); }
+    },
+    prof_many(s) { for (const e of s.E()) s.dmg(e, 999); },
     hurt(s) { D.scripts.normal(s); },
     backrow(s) { D.scripts.normal(s); },
     many(s) { D.scripts.normal(s); },
   };
   for (const b of Object.keys(BOSSES)) D.scripts[b] = function (s) { const bo = s.units.find((u) => u.boss); s.act(s.P(0), 'attack', 'attack', '攻撃', [bo]); s.dmg(bo, 150); if (s.round >= 2) for (const e of s.E()) s.dmg(e, 9999); };
+  D.PROF_UPS = function (P, name) {
+    const u = (i, key, kind, from, rank) => ({ c: P(i).id, key, kind, from, rank });
+    const out = [u(0, 'sword', 'w', 12, 13), u(2, 'bow', 'w', 8, 9), u(3, 'fire', 'e', 15, 16), u(3, 'wind', 'e', 9, 11), u(3, 'staff', 'w', 20, 21)];
+    if (name === 'prof_many') out.push(u(0, 'light', 'e', 4, 5), u(0, 'greatsword', 'w', 2, 3), u(1, 'dagger', 'w', 17, 18), u(1, 'dark', 'e', 6, 7), u(1, 'wind', 'e', 3, 4), u(2, 'earth', 'e', 11, 12), u(2, 'water', 'e', 5, 6), u(3, 'light', 'e', 22, 23), u(3, 'dark', 'e', 7, 8));
+    return out;
+  };
+  D.PROF_GLIM = function (P, name) {
+    const out = [{ c: P(0).id, kind: 'tech', id: 'demo_sword_1', name: '雷光突き' }];
+    if (name === 'prof_many') out.push({ c: P(3).id, kind: 'spell', id: 'demo_sp_x', name: 'ファイアウィンド' }, { c: P(1).id, kind: 'tech', id: 'demo_dagger_x', name: '影縫い' });
+    return out;
+  };
   D.NAMES = Object.keys(D.scripts);
 })(window.RPG);

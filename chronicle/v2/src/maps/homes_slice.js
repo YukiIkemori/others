@@ -59,7 +59,7 @@
         'cT...xg',
         's......',
         'k.....b'],
-      rugs: [[2, 3, 3, 2]], stone: [[4, 3, 2, 1]],
+      rugs: [[2, 3, 3, 2]],
       npcs: [npc('woodman', 'npc_man_3', 4, 4, ['薪は十分に割ってある。\n今夜も冷えるからな。'], { name: '里の木こり' })] }));
     // おばあさんの家（9×8）: 糸車・本棚・暖炉・絵
     home('roa_home3', Object.assign({}, ROA, { name: '里の家', back: 'h3_door', w: 9, h: 8,

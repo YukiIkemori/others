@@ -128,7 +128,7 @@
     },
     // §4.10 落とし物・盗み（§7.3 盗み専用の枠）
     DROP: { rate: { normal: 8, rare: 32, super: 256 }, cap: { normal: 0.75, rare: 0.5, super: 0.125 }, modCap: 150, golden: { normal: 2, rare: 8, super: 8 } },
-    STEAL: { base: 0.35, agiDiv: 200, min: 0.1, max: 0.8, boss: 0.5, rareMul: 4, rareCap: 0.5, autoRare: 0.5,
+    STEAL: { base: 0.35, agiDiv: 200, min: 0.1, max: 0.8, boss: 0.5, rareMul: 4, rareCap: 0.5, autoRare: 0.5, autoMul: 0.4, autoPerBattle: 1,
       only: { cap: 0.5, autoMul: 0.5, golden: 2 }, rate: { mob: 32, rare: 16, boss: 16 } },
     // §3.3.16 効果の合計の上限（exp → grow。§9.4）
     MODCAP: { party: 150, partyMin: -100, preempt: 30, grow: 30, growMin: -100, glim: 40, glimMin: -100, prof: 50, profMin: -100, cost: -50, encounter: 50, autoSteal: 100 },

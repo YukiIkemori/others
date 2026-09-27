@@ -187,7 +187,8 @@
     // 縦の余白の見積もり（16:9・横持ち）: 下の文（閃き・熟練）の上までに 手に入れた物 → 仲間 が収まるように、
     // 品の行を減らし（レア・超レアを先に、残りは「ほか N 品」）、それでも足りなければ仲間の行を詰める
     const units = st.partyUnits();
-    const nLines = (d.glim.length ? 1 : 0) + (d.prof.length ? 1 : 0);
+    const own = Rs.pages.some((p) => p.id === 'prof');   // 熟練・閃きは次の札（result_prof.js。誰の何がいくつ）
+    const nLines = own ? 0 : (d.glim.length ? 1 : 0) + (d.prof.length ? 1 : 0);
     let rh = (L.tall ? 42 : 40) * k;
     let maxRows = L.tall ? 4 : 6;
     if (!L.tall) {
@@ -259,8 +260,8 @@
     });
     y += units.length * rh + 8 * k;
     const lines = [];
-    if (d.glim.length) lines.push(['閃いた技：' + d.glim.join('・'), Kt.COL.gold]);
-    if (d.prof.length) lines.push(['熟練が上がった：' + d.prof.join('・'), Kt.COL.text3]);
+    if (d.glim.length && !own) lines.push(['閃いた技：' + d.glim.join('・'), Kt.COL.gold]);
+    if (d.prof.length && !own) lines.push(['熟練が上がった：' + d.prof.join('・'), Kt.COL.text3]);
     lines.forEach(([s, c], j) => row(() => Kt.text(g, Kt.fit(s, colW + 180 * k, { size: 11.5 * k }), x0, (L.tall ? y : R.H - (R.safe.b || 0) - 40 * k - (lines.length - 1 - j) * 18 * k) + (L.tall ? j * 18 * k : 0), { size: 11.5 * k, color: c, raw: true, shadow: true })));
     // 決定で進む（点滅する ▼。札の右下）
     if (L.tall) Rs.drawNext(g, st, R.W - 28 * k, R.H - (R.safe.b || 0) - 70 * k);

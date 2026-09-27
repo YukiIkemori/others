@@ -392,7 +392,7 @@
       this.result = null;
       this.surprise = null;
       this.killed = [];
-      this.stolen = [];
+      this.stolen = []; this.autoStolen = {};
       this.gains = [];       // 盗んだ品（B.finish が R.State.gain で入れる）
       this.goldLost = 0;     // 魔物に盗まれたお金
       this.gold0 = o.gold || 0;
@@ -1699,12 +1699,17 @@
       if (!r || !this.canCarry(r.pick.item, r.pick.n)) { yield* fail(this); return; }
       yield* this.takeStolen(u, t, r.pick, r.only);
     }
-    /** ついでに盗む（autoSteal）: 当たった攻撃で 盗みの率 × autoSteal/100、レア枠と盗み専用は率が半分。何も取れなければ黙る */
+    /** ついでに盗む（autoSteal）: 当たった攻撃で 盗みの率 × autoSteal/100 × autoMul、1 人 1 戦闘 autoPerBattle 回まで。レア枠と盗み専用は率が半分。何も取れなければ黙る */
     *autoSteal(u, t) {
       if (!this.canSteal(t)) return;
-      if (!chance(this.stealChance(u, t) * Math.min(100, u.mods.autoSteal) / 100)) return;
+      const S = K('STEAL'), cap = S.autoPerBattle == null ? Infinity : S.autoPerBattle;
+      this.autoStolen = this.autoStolen || {};
+      const key = (u.c && u.c.id) || u.id || u.name;
+      if ((this.autoStolen[key] || 0) >= cap) return;
+      if (!chance(this.stealChance(u, t) * Math.min(100, u.mods.autoSteal) / 100 * (S.autoMul == null ? 1 : S.autoMul))) return;
       const r = this.pickOnSuccess(u, t, true);
       if (!r || !this.canCarry(r.pick.item, r.pick.n)) return;
+      this.autoStolen[key] = (this.autoStolen[key] || 0) + 1;
       yield* this.takeStolen(u, t, r.pick, r.only);
     }
     /** 調べる（Lv は出さない。STATS_REWORK §9.4） */
