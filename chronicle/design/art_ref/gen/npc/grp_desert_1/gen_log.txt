@@ -5,3 +5,17 @@
 01:33:23   pitch in raw image: 5.02 px per art pixel (upright median 231 px / 46)
 01:33:28 sheet 1 -> art_ref/gen/npc/grp_desert_1/npc_grp_desert_1.png (24 poses)
 01:33:28 pipeline: sheets.py ../art_ref/gen/npc/grp_desert_1 --npc npc_desert_man --out out/npc/npc_desert_man --check
+01:34:11   |   - シート1: npc_grp_desert_1.png の左半分（人物A）を使う
+01:34:11   |   - シート1: 頭身の比（歩き12コマの中央値、体 48 ドットあたり）: 首 0.31（アルン 0.29）・頭の幅 0.40（0.43）・肩 0.35（0.40）
+01:34:11   |   - 向きの見本（configs/refs/npc_desert_man）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:34:11   | 
+01:34:11   | ■ シートの状態
+01:34:11   |   シート1 歩き: OK  npc_desert_man_s1.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+01:34:11 pipeline: sheets.py ../art_ref/gen/npc/grp_desert_1 --npc npc_desert_woman --out out/npc/npc_desert_woman --check
+01:34:29   | 
+01:34:29   | ■ 画像 AI にそのまま送れる文
+01:34:29   |   「市場の女（npc_desert_woman）のシート1の3番（下向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 77%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:34:29   | 
+01:34:29   | ■ シートの状態
+01:34:29   |   シート1 歩き: 要作り直し  npc_desert_woman_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+01:34:29 sheet 1: 0 redo lines

@@ -100,3 +100,9 @@
 01:28:07   size check glimmer: 0.84 of the hero's same pose (relative to idle_a)
 01:28:07 redo lines left but no edit rounds left for them: 3
 01:28:07 pipeline: sheets.py ../art_ref/gen/companion/hagen --companion hagen --out out/comp_hagen
+01:33:55   |   シート2 フィールドの歩き: OK  comp_hagen_s2.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
+01:33:55   |   シート3 戦闘の基本ポーズ: 要作り直し  comp_hagen_s3.png  ドット 8.00px → 描かれた格子のまま（64.5 ドット）
+01:33:55   |   シート4 戦闘の行動ポーズ＋武器なし版: 確認あり  comp_hagen_s4.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:33:55   |   シート5 顔の表情: OK  comp_hagen_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+01:33:55   | 
+01:33:55   | packed field 120x224, battle 770x392, battle_bare 420x75, face 332x84 | palette 52 + face 48

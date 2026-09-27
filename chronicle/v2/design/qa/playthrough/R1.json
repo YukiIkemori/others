@@ -10,38 +10,40 @@
   "chronicleText": false,
   "uniqueFromLast": false,
   "hero": true,
-  "party": false,
+  "party": true,
   "stubs0": true,
   "loadErrors0": true,
   "consoleErrors0": true,
   "noEngineError": true,
   "noDev": true,
   "rescueOrder": true,
-  "wipeRetryPageeater": false
+  "wipeRetryPageeater": true
  },
  "errors": [],
- "started": "2026-09-27T00:34:50.868Z",
+ "started": "2026-09-27T01:25:28.932Z",
  "status": {
-  "frames": 858,
-  "time": 28804,
-  "goal": "party",
+  "frames": 13388,
+  "time": 446467,
+  "goal": "boss_pageeater",
   "done": false,
-  "fail": "bot error: TypeError: Cannot read properties of null (reading 'e_0')\n    at onBattle (<anonymous>:200:48)\n    at decide (<anonymous>:416:33)\n    at B.run (<anonymous>:468:13)\n    at async <anonymous>:316:30",
+  "fail": "lost 7 times in a row to tr_b_pageeater",
   "top": "battle",
-  "pos": "world 87,96",
-  "steps": 100,
-  "gold": 53,
-  "battles": 0,
-  "wipes": 0,
+  "pos": "lighthouse_3 10,10",
+  "steps": 418,
+  "gold": 131,
+  "battles": 7,
+  "wipes": 1,
+  "round": 21,
+  "hp": 0,
   "engineError": null
  },
  "final": {
   "inv": {
    "top": "battle",
    "locks": [
-    "battle"
+    "event"
    ],
-   "busy": false,
+   "busy": true,
    "fade": 0,
    "input": true,
    "msg": false,
@@ -67,39 +69,144 @@
    "name": "アルン"
   },
   "party": [
-   "hero"
+   "hero",
+   "bartolo",
+   "marta",
+   "sylvain"
   ],
   "stubs": [],
   "loadErrors": [],
-  "playMs": 28399.999999999683,
-  "steps": 100,
-  "gold": 53,
+  "playMs": 180166.66666667332,
+  "steps": 418,
+  "gold": 131,
   "stats": {
    "tops": {
     "screen:title": 6,
     "caption": 54,
     "cp_curtain": 45,
-    "field": 590,
-    "message": 36,
+    "field": 2233,
+    "message": 83,
     "screen:charcreate": 15,
-    "battle": 113
+    "battle": 10918,
+    "screen:partySelect": 34
    },
-   "taps": 80,
-   "screenOps": 10,
+   "taps": 1631,
+   "screenOps": 27,
    "choices": 0,
-   "chars": 563,
+   "chars": 1301,
    "captions": 3,
-   "battles": [],
-   "wipes": [],
-   "talks": 19,
-   "plans": 10,
-   "planMs": 1158.9999999925494,
+   "battles": [
+    {
+     "troop": null,
+     "zone": "zw_prologue",
+     "boss": false,
+     "map": "world",
+     "gold": 50,
+     "rounds": 1,
+     "lose": false,
+     "f": 767,
+     "t0": 25799.999999999778,
+     "result": "win",
+     "ms": 2133.3333333332557
+    },
+    {
+     "troop": null,
+     "zone": "zw_peninsula",
+     "boss": false,
+     "map": "world",
+     "gold": 53,
+     "rounds": 2,
+     "lose": false,
+     "f": 1728,
+     "t0": 57833.33333333468,
+     "result": "win",
+     "ms": 8433.333333333794
+    },
+    {
+     "troop": "tr_tutorial",
+     "zone": null,
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 68,
+     "rounds": 3,
+     "lose": false,
+     "f": 2076,
+     "t0": 69400.00000000135,
+     "result": "win",
+     "ms": 8866.666666665376
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 72,
+     "rounds": 3,
+     "lose": false,
+     "f": 2443,
+     "t0": 81666.66666666623,
+     "result": "win",
+     "ms": 13499.999999998035
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 87,
+     "rounds": 3,
+     "lose": false,
+     "f": 2915,
+     "t0": 97399.99999999728,
+     "result": "win",
+     "ms": 14433.333333331233
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_2",
+     "gold": 107,
+     "rounds": 4,
+     "lose": false,
+     "f": 3417,
+     "t0": 114133.33333332818,
+     "result": "win",
+     "ms": 15966.666666664343
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_2",
+     "gold": 123,
+     "rounds": 2,
+     "lose": false,
+     "f": 4268,
+     "t0": 142499.9999999957,
+     "result": "win",
+     "ms": 7000.000000002037
+    }
+   ],
+   "wipes": [
+    {
+     "battle": "tr_b_pageeater",
+     "map": "lighthouse_3",
+     "to": "retry",
+     "gold": 131,
+     "round": 15,
+     "f": 5731
+    }
+   ],
+   "talks": 45,
+   "plans": 35,
+   "planMs": 10231.20000000298,
    "forced": []
   },
   "phaseAt": {
    "start": {
     "f": 0,
-    "t": 204.00000000596037,
+    "t": 200,
     "steps": 0,
     "chars": 0,
     "ops": 0,
@@ -110,48 +217,178 @@
   "log": [
    {
     "f": 232,
-    "t": 7937,
+    "t": 7933,
     "msg": "goal berna"
    },
    {
     "f": 263,
-    "t": 8971,
+    "t": 8967,
     "msg": "act berna at roa_house 11,5"
    },
    {
     "f": 265,
-    "t": 9037,
+    "t": 9033,
     "msg": "act berna at roa_house 11,5"
    },
    {
     "f": 267,
-    "t": 9104,
+    "t": 9100,
     "msg": "act berna at roa_house 11,5"
    },
    {
     "f": 269,
-    "t": 9171,
+    "t": 9167,
     "msg": "act berna at roa_house 11,5"
    },
    {
     "f": 294,
-    "t": 10004,
+    "t": 10000,
     "msg": "goal farmer"
    },
    {
     "f": 550,
-    "t": 18537,
+    "t": 18533,
     "msg": "act farmer at roa 8,14"
    },
    {
     "f": 553,
-    "t": 18637,
+    "t": 18633,
     "msg": "goal party"
    },
    {
-    "f": 858,
-    "t": 28804,
-    "msg": "FAIL bot error: TypeError: Cannot read properties of null (reading 'e_0')\n    at onBattle (<anonymous>:200:48)\n    at decide (<anonymous>:416:33)\n    at B.run (<anonymous>:468:13)\n    at async <anonymous>:316:30"
+    "f": 1057,
+    "t": 35433,
+    "msg": "act party at pharos_tavern 4,6"
+   },
+   {
+    "f": 1059,
+    "t": 35500,
+    "msg": "act party at pharos_tavern 4,6"
+   },
+   {
+    "f": 1061,
+    "t": 35567,
+    "msg": "act party at pharos_tavern 4,6"
+   },
+   {
+    "f": 1063,
+    "t": 35633,
+    "msg": "act party at pharos_tavern 4,6"
+   },
+   {
+    "f": 1106,
+    "t": 37067,
+    "msg": "goal rowell"
+   },
+   {
+    "f": 1275,
+    "t": 42700,
+    "msg": "act rowell at pharos_record 7,6"
+   },
+   {
+    "f": 1277,
+    "t": 42767,
+    "msg": "act rowell at pharos_record 7,6"
+   },
+   {
+    "f": 1279,
+    "t": 42833,
+    "msg": "act rowell at pharos_record 7,6"
+   },
+   {
+    "f": 1281,
+    "t": 42900,
+    "msg": "act rowell at pharos_record 7,6"
+   },
+   {
+    "f": 1288,
+    "t": 43133,
+    "msg": "goal otto"
+   },
+   {
+    "f": 1462,
+    "t": 48933,
+    "msg": "act otto at pharos 25,34"
+   },
+   {
+    "f": 1464,
+    "t": 49000,
+    "msg": "act otto at pharos 25,34"
+   },
+   {
+    "f": 1466,
+    "t": 49067,
+    "msg": "act otto at pharos 25,34"
+   },
+   {
+    "f": 1468,
+    "t": 49133,
+    "msg": "act otto at pharos 25,34"
+   },
+   {
+    "f": 1485,
+    "t": 49700,
+    "msg": "goal tutorial"
+   },
+   {
+    "f": 2388,
+    "t": 79800,
+    "msg": "goal fine_lh"
+   },
+   {
+    "f": 4541,
+    "t": 151567,
+    "msg": "goal spring_lh"
+   },
+   {
+    "f": 4548,
+    "t": 151800,
+    "msg": "act spring_lh at lighthouse_3 9,15"
+   },
+   {
+    "f": 4549,
+    "t": 151833,
+    "msg": "goal boss_pageeater"
+   },
+   {
+    "f": 5731,
+    "t": 191233,
+    "msg": "gameover → retry"
+   },
+   {
+    "f": 6943,
+    "t": 231633,
+    "msg": "lost again (2) tr_b_pageeater"
+   },
+   {
+    "f": 8142,
+    "t": 271600,
+    "msg": "lost again (3) tr_b_pageeater"
+   },
+   {
+    "f": 9633,
+    "t": 321300,
+    "msg": "lost again (4) tr_b_pageeater"
+   },
+   {
+    "f": 11092,
+    "t": 369933,
+    "msg": "lost again (5) tr_b_pageeater"
+   },
+   {
+    "f": 12555,
+    "t": 418700,
+    "msg": "lost again (6) tr_b_pageeater"
+   },
+   {
+    "f": 13387,
+    "t": 446433,
+    "msg": "lost again (7) tr_b_pageeater"
+   },
+   {
+    "f": 13387,
+    "t": 446433,
+    "msg": "FAIL lost 7 times in a row to tr_b_pageeater"
    }
   ],
   "dev": false
@@ -177,5 +414,5 @@
    ]
   }
  },
- "wallSec": 22
+ "wallSec": 505
 }

@@ -2,3 +2,11 @@
 01:32:57   pitch in raw image: 5.98 px per art pixel (upright median 299 px / 50)
 01:32:59 sheet 1 -> art_ref/gen/npc/helga/npc_helga_s1.png (16 poses)
 01:32:59 pipeline: sheets.py ../art_ref/gen/npc/helga --npc helga --out out/npc/npc_helga --check
+01:34:11   |   「ヘルガ（npc_helga）のシート1の14番（右向き・前の足）だけ大きく描かれている（頭の大きさがほかのポーズの約 138%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:34:11   |   「ヘルガ（npc_helga）のシート1の15番（右向き・後ろの足）だけ大きく描かれている（頭の大きさがほかのポーズの約 130%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:34:11   |   「ヘルガ（npc_helga）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の高さ 82%・頭の幅 88%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して」
+01:34:11   | 
+01:34:11   | ■ シートの状態
+01:34:11   |   シート1 歩き＋演技4: 要作り直し  npc_helga_s1.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
+01:34:11 sheet 1: 1 redo lines: 頭がアルンより小さい（頭の高さ 82%・頭の幅 88%）。頭身が高すぎる
+01:34:11 sheet 1 attempt 2: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs) + notes

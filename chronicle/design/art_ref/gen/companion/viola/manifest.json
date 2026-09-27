@@ -199,5 +199,110 @@
     ]
    }
   ]
+ },
+ {
+  "sheet": 3,
+  "file": "comp_viola_s3.png",
+  "layout": "2x5",
+  "logical_cell": [
+   104,
+   96
+  ],
+  "image_px": [
+   4160,
+   1536
+  ],
+  "frames": [
+   {
+    "id": "idle_a",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     58,
+     69
+    ]
+   },
+   {
+    "id": "idle_b",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     57,
+     69
+    ]
+   },
+   {
+    "id": "step",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     67,
+     68
+    ]
+   },
+   {
+    "id": "guard",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     79,
+     69
+    ]
+   },
+   {
+    "id": "hit",
+    "row": 1,
+    "column": 5,
+    "logical_bbox": [
+     64,
+     68
+    ]
+   },
+   {
+    "id": "weak",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     62,
+     57
+    ]
+   },
+   {
+    "id": "ko",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     95,
+     37
+    ]
+   },
+   {
+    "id": "victory_a",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     47,
+     86
+    ]
+   },
+   {
+    "id": "victory_b",
+    "row": 2,
+    "column": 4,
+    "logical_bbox": [
+     57,
+     68
+    ]
+   },
+   {
+    "id": "glimmer",
+    "row": 2,
+    "column": 5,
+    "logical_bbox": [
+     59,
+     66
+    ]
+   }
+  ]
  }
 ]

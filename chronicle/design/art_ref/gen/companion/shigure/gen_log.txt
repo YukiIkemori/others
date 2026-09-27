@@ -5,3 +5,7 @@
 01:32:15   pitch in raw image: 7.24 px per art pixel (upright median 391 px / 54)
 01:32:17 sheet 2 -> art_ref/gen/companion/shigure/comp_shigure_s2.png (12 poses)
 01:32:18 sheet 3 attempt 1: generating 3648x1344 (pitch 7, quality medium, 2 refs)
+01:34:51   pitch in raw image: 6.11 px per art pixel (upright median 440 px / 72)
+01:34:51   note: ko is 109x38 art px, larger than its cell 104x96 (clipped)
+01:34:51 sheet 3 -> art_ref/gen/companion/shigure/comp_shigure_s3.png (10 poses)
+01:34:52 sheet 4 attempt 1: generating 3360x1440 (pitch 6, quality medium, 2 refs)

@@ -5,7 +5,7 @@
  "folder": "/home/user/others/chronicle/design/art_ref/gen/companion/bartolo",
  "sheets": {
   "1": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/bartolo/comp_bartolo_s1.png",
+   "file": "../art_ref/gen/companion/bartolo/comp_bartolo_s1.png",
    "size": [
     3584,
     1536
@@ -137,7 +137,7 @@
    }
   },
   "2": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/bartolo/comp_bartolo_s2.png",
+   "file": "../art_ref/gen/companion/bartolo/comp_bartolo_s2.png",
    "size": [
     1920,
     2048
@@ -384,7 +384,7 @@
    }
   },
   "3": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/bartolo/comp_bartolo_s3.png",
+   "file": "../art_ref/gen/companion/bartolo/comp_bartolo_s3.png",
    "size": [
     4160,
     1536
@@ -452,7 +452,7 @@
       "head": 0.9,
       "upper": 0.27
      },
-     "scale": 0.907
+     "scale": 0.919
     },
     "step": {
      "size": [
@@ -467,10 +467,10 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.34,
+     "facing_score": 1.39,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.44
+      "upper": 0.49
      }
     },
     "guard": {
@@ -486,12 +486,12 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.76,
+     "facing_score": 0.72,
      "facing_cues": {
       "head": 0.9,
-      "upper": -0.14
+      "upper": -0.18
      },
-     "scale": 1.022
+     "scale": 1.036
     },
     "hit": {
      "size": [
@@ -506,12 +506,12 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": -0.72,
+     "facing_score": -0.68,
      "facing_cues": {
       "head": -0.9,
-      "upper": 0.18
+      "upper": 0.22
      },
-     "scale": 0.958
+     "scale": 0.971
     },
     "weak": {
      "size": [
@@ -526,12 +526,12 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.07,
+     "facing_score": 1.11,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.17
+      "upper": 0.21
      },
-     "scale": 1.048
+     "scale": 1.061
     },
     "ko": {
      "size": [
@@ -560,12 +560,12 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.95,
+     "facing_score": 0.93,
      "facing_cues": {
       "head": 0.75,
-      "upper": 0.2
+      "upper": 0.18
      },
-     "scale": 0.907
+     "scale": 0.919
     },
     "victory_b": {
      "size": [
@@ -580,7 +580,7 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "scale": 0.958
+     "scale": 0.971
     },
     "glimmer": {
      "size": [
@@ -595,20 +595,20 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.27,
+     "facing_score": 1.28,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.37
+      "upper": 0.38
      },
-     "scale": 0.933
+     "scale": 0.945
     }
    }
   },
   "4": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/bartolo/comp_bartolo_s4.png",
+   "file": "../art_ref/gen/companion/bartolo/comp_bartolo_s4.png",
    "size": [
     4480,
-    2112
+    1920
    ],
    "key": {
     "border_magenta": 1.0,
@@ -624,7 +624,7 @@
     "layout": "3x5",
     "logical_cell": [
      112,
-     88
+     80
     ],
     "dot": 8.0
    },
@@ -638,23 +638,26 @@
    "sprites": {
     "windup": {
      "size": [
-      84,
-      76
+      63,
+      73
      ],
      "box": [
-      96,
-      48,
-      800,
-      688
+      176,
+      0,
+      712,
+      624
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.19,
+     "facing_score": 0.39,
      "facing_cues": {
-      "head": 0.53,
-      "upper": -0.34
+      "head": 0.54,
+      "upper": -0.14
      },
-     "scale": 1.003
+     "scale": 0.634,
+     "fixed": [
+      "rescaled 1.58"
+     ]
     },
     "slash": {
      "size": [
@@ -663,18 +666,18 @@
      ],
      "box": [
       976,
-      88,
+      24,
       1704,
-      688
+      624
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.42,
+     "facing_score": 1.45,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.52
+      "upper": 0.55
      },
-     "scale": 1.067
+     "scale": 1.081
     },
     "thrust_ready": {
      "size": [
@@ -683,16 +686,16 @@
      ],
      "box": [
       1800,
-      104,
+      40,
       2680,
-      688
+      624
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.54,
+     "facing_score": 0.49,
      "facing_cues": {
       "head": 0.9,
-      "upper": -0.36
+      "upper": -0.41
      }
     },
     "thrust": {
@@ -702,18 +705,18 @@
      ],
      "box": [
       2688,
-      104,
+      40,
       3584,
-      688
+      624
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.46,
+     "facing_score": 0.42,
      "facing_cues": {
       "head": 0.9,
-      "upper": -0.44
+      "upper": -0.48
      },
-     "scale": 1.048
+     "scale": 1.061
     },
     "charge": {
      "size": [
@@ -722,18 +725,18 @@
      ],
      "box": [
       3712,
-      256,
+      192,
       4344,
-      688
+      624
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.98,
+     "facing_score": 1.03,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.08
+      "upper": 0.13
      },
-     "scale": 0.997
+     "scale": 1.01
     },
     "smash": {
      "size": [
@@ -742,18 +745,18 @@
      ],
      "box": [
       216,
-      752,
+      624,
       680,
-      1424
+      1296
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.76,
+     "facing_score": 0.79,
      "facing_cues": {
-      "head": 0.57,
-      "upper": 0.19
+      "head": 0.59,
+      "upper": 0.2
      },
-     "scale": 0.958
+     "scale": 0.971
     },
     "cast_a": {
      "size": [
@@ -762,18 +765,18 @@
      ],
      "box": [
       1072,
-      800,
+      672,
       1616,
-      1392
+      1264
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.96,
+     "facing_score": 0.92,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.06
+      "upper": 0.02
      },
-     "scale": 1.035
+     "scale": 1.049
     },
     "cast_b": {
      "size": [
@@ -782,18 +785,18 @@
      ],
      "box": [
       2000,
-      808,
+      680,
       2480,
-      1392
+      1264
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.33,
+     "facing_score": 0.36,
      "facing_cues": {
-      "head": 0.1,
-      "upper": 0.23
+      "head": 0.12,
+      "upper": 0.24
      },
-     "scale": 0.958
+     "scale": 0.971
     },
     "item": {
      "size": [
@@ -802,9 +805,9 @@
      ],
      "box": [
       2904,
-      824,
+      696,
       3360,
-      1392
+      1264
      ],
      "air": 0,
      "blur": 0.0,
@@ -813,7 +816,7 @@
       "head": 0.9,
       "upper": 0.35
      },
-     "scale": 0.978
+     "scale": 0.99
     },
     "evade": {
      "size": [
@@ -822,18 +825,18 @@
      ],
      "box": [
       3760,
-      808,
+      680,
       4304,
-      1392
+      1264
      ],
      "air": 0,
      "blur": 0.0,
      "facing_score": -0.43,
      "facing_cues": {
-      "head": -0.28,
-      "upper": -0.15
+      "head": -0.29,
+      "upper": -0.14
      },
-     "scale": 0.914
+     "scale": 0.926
     },
     "bare_idle": {
      "size": [
@@ -842,16 +845,16 @@
      ],
      "box": [
       224,
-      1496,
+      1304,
       672,
-      2096
+      1904
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.3,
+     "facing_score": 1.35,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.4
+      "upper": 0.45
      }
     },
     "bare_windup": {
@@ -861,18 +864,18 @@
      ],
      "box": [
       1088,
-      1512,
+      1320,
       1592,
-      2096
+      1904
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.21,
+     "facing_score": 0.25,
      "facing_cues": {
       "head": 0.15,
-      "upper": 0.07
+      "upper": 0.09
      },
-     "scale": 1.022
+     "scale": 1.036
     },
     "bare_slash": {
      "size": [
@@ -881,18 +884,18 @@
      ],
      "box": [
       1944,
-      1512,
+      1320,
       2528,
-      2096
+      1904
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.12,
+     "facing_score": 1.16,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.22
+      "upper": 0.26
      },
-     "scale": 1.022
+     "scale": 1.036
     },
     "bare_thrust": {
      "size": [
@@ -901,18 +904,18 @@
      ],
      "box": [
       2824,
-      1512,
+      1320,
       3440,
-      2096
+      1904
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.11,
+     "facing_score": 1.1,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.21
+      "upper": 0.2
      },
-     "scale": 1.035
+     "scale": 1.049
     },
     "bare_cast": {
      "size": [
@@ -921,23 +924,23 @@
      ],
      "box": [
       3728,
-      1504,
+      1312,
       4328,
-      2096
+      1904
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.14,
+     "facing_score": 1.13,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.24
+      "upper": 0.23
      },
-     "scale": 1.035
+     "scale": 1.049
     }
    }
   },
   "5": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/bartolo/comp_bartolo_s5.png",
+   "file": "../art_ref/gen/companion/bartolo/comp_bartolo_s5.png",
    "size": [
     3072,
     768
@@ -1160,15 +1163,6 @@
    "sheet": 4,
    "level": "auto",
    "code": "shadow",
-   "msg": "シート4 の 1 番（振りかぶり） の足元の影を消した",
-   "slot": "windup",
-   "ask": null,
-   "data": {}
-  },
-  {
-   "sheet": 4,
-   "level": "auto",
-   "code": "shadow",
    "msg": "シート4 の 2 番（振り抜き） の足元の影を消した",
    "slot": "slash",
    "ask": null,
@@ -1202,8 +1196,26 @@
    "data": {
     "cues": {
      "head": -0.9,
-     "upper": 0.18
+     "upper": 0.22
     }
+   }
+  },
+  {
+   "sheet": 4,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート4 の 1 番（振りかぶり） がほかのポーズより小さく描かれている（頭の大きさで約 63%）。仮に 158% に拡大縮小して使う",
+   "slot": "windup",
+   "ask": "仲間バルトロ（bartolo）のシート4の1番（振りかぶり）だけ小さく描かれている（頭の大きさがほかのポーズの約 63%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.6343042071197408,
+    "per_ref": [
+     1.0250000000000004,
+     0.6624999999999999,
+     0.5624999999999998,
+     0.55
+    ],
+    "group_median": 0.9656250000000002
    }
   }
  ]

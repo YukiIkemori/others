@@ -4,55 +4,55 @@
    "to": "walk_down_0",
    "dx": 0,
    "dy": 0,
-   "fit": 1.116
+   "fit": 1.093
   },
   "walk_down_2": {
    "to": "walk_down_0",
    "dx": 1,
    "dy": 0,
-   "fit": 0.978
+   "fit": 0.965
   },
   "walk_up_1": {
    "to": "walk_up_0",
    "dx": -1,
    "dy": 0,
-   "fit": 0.97
+   "fit": 0.955
   },
   "walk_up_2": {
    "to": "walk_up_0",
-   "dx": 0,
+   "dx": -1,
    "dy": 0,
-   "fit": 0.975
+   "fit": 0.961
   },
   "walk_left_1": {
    "to": "walk_left_0",
    "dx": -2,
    "dy": 0,
-   "fit": 1.145
+   "fit": 1.107
   },
   "walk_left_2": {
    "to": "walk_left_0",
    "dx": -2,
    "dy": 0,
-   "fit": 1.082
+   "fit": 1.061
   },
   "walk_right_1": {
    "to": "walk_right_0",
    "dx": -1,
    "dy": 0,
-   "fit": 1.167
+   "fit": 1.135
   },
   "walk_right_2": {
    "to": "walk_right_0",
    "dx": 0,
    "dy": 0,
-   "fit": 0.986
+   "fit": 0.98
   },
   "idle_b": {
    "to": "idle_a",
    "dx": 0,
    "dy": 0,
-   "fit": 1.065
+   "fit": 1.045
   },
   "face_smile": {
    "to": "face_neutral",
@@ -76,17 +76,17 @@
  "attach": {
   "bare_idle": {
    "grip": [
-    18,
-    30
+    13,
+    47
    ],
    "tip": [
-    42,
-    46
+    43,
+    29
    ],
-   "angle": 35.1,
-   "length": 36,
-   "weapon_px": 297,
-   "fit": 0.787,
+   "angle": -30.2,
+   "length": 41,
+   "weapon_px": 416,
+   "fit": 0.781,
    "method": "diff"
   },
   "bare_cast": {
@@ -98,10 +98,10 @@
     22,
     30
    ],
-   "angle": 168.4,
+   "angle": 168.6,
    "length": 35,
    "blade": 26.9,
-   "fit": 0.887,
+   "fit": 0.878,
    "method": "blade"
   },
   "bare_windup": {

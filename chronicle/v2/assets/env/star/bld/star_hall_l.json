@@ -1,0 +1,116 @@
+{
+ "id": "star_hall_l",
+ "kind": "building",
+ "theme": "star",
+ "footprint": [
+  8,
+  6
+ ],
+ "wall": 3,
+ "files": {
+  "24": "star_hall_l@24.png",
+  "32": "star_hall_l@32.png",
+  "40": "star_hall_l@40.png"
+ },
+ "emitFiles": {
+  "24": "star_hall_l_emit@24.png",
+  "32": "star_hall_l_emit@32.png",
+  "40": "star_hall_l_emit@40.png"
+ },
+ "size": {
+  "24": [
+   204,
+   168
+  ],
+  "32": [
+   272,
+   224
+  ],
+  "40": [
+   340,
+   280
+  ]
+ },
+ "anchor32": [
+  8,
+  224
+ ],
+ "door32": {
+  "x": 144.0,
+  "y": 0,
+  "w": 22,
+  "h": 32
+ },
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 38,
+   "y": -76,
+   "w": 9,
+   "h": 16
+  },
+  {
+   "kind": "win",
+   "x": 94,
+   "y": -76,
+   "w": 9,
+   "h": 16
+  },
+  {
+   "kind": "win",
+   "x": 149,
+   "y": -76,
+   "w": 10,
+   "h": 16
+  },
+  {
+   "kind": "win",
+   "x": 209,
+   "y": -76,
+   "w": 9,
+   "h": 16
+  },
+  {
+   "kind": "win",
+   "x": 38,
+   "y": -35,
+   "w": 9,
+   "h": 16
+  },
+  {
+   "kind": "win",
+   "x": 94,
+   "y": -35,
+   "w": 9,
+   "h": 16
+  },
+  {
+   "kind": "win",
+   "x": 209,
+   "y": -35,
+   "w": 9,
+   "h": 16
+  }
+ ],
+ "roof32": [
+  -6,
+  -196,
+  262,
+  -90
+ ],
+ "wallTop32": -96,
+ "src": "design/art_ref/gen/env/bld/star/star_hall_l.png",
+ "def_": {
+  "id": "star_hall_l",
+  "x": 0,
+  "y": 0,
+  "w": 8,
+  "h": 6,
+  "wall": 3,
+  "door": {
+   "x": 4,
+   "y": 5
+  },
+  "windows": 3
+ }
+}

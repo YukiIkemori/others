@@ -1,0 +1,11 @@
+{
+ "out": "/home/user/others/chronicle/design/art_ref/gen/env/bbg/ash_front.png",
+ "tag": "env_bbgfront_ash",
+ "size": "1920x1088",
+ "quality": "high",
+ "background": "transparent",
+ "prompt": "A FOREGROUND OVERLAY layer for a side-on JRPG battle background (16:9), 2D pixel art: only close-up foreground elements hugging the bottom edge and the two bottom corners, silhouetted dark against the night (deep violet-blue, slight rim of moonlight on top edges): obsidian shards, basalt rocks and glowing cinders. They cover at most the bottom 18% in the centre and rise to about 35% of the height in the left and right corners. Everything else is fully transparent (the middle and top of the image are empty). No characters, no text. Crisp square pixels (4x4 image px each).",
+ "refs": [],
+ "revised_prompt": "Create a 16:9 RGBA image asset: a FOREGROUND OVERLAY for a side-on JRPG battle background. True transparent alpha everywhere except close-up foreground terrain hugging the bottom edge and bottom-left and bottom-right corners. Hard-edged 2D pixel art, crisp square pixels in a strict 4x4 output-pixel grid, no antialiasing or soft edges. Silhouetted dark deep violet-blue volcanic obsidian shards and chunky basalt rocks with sparse tiny glowing orange-red cinders nestled among them. Sparse subtle cool moonlight rim highlights only on upward-facing rock edges. Foreground silhouette reaches no higher than 18% of image height across the central region, climbing locally up to about 35% in the far left and right corners; organic jagged stepped pixel silhouette, keep middle/top entirely EMPTY TRANSPARENT, NOT night-colored. Do not draw sky, scenery, ground above specified bounds, characters, UI, letters, or text. Transparency is essential: retain transparent background including above jagged terrain.",
+ "model": "gpt-6-sol"
+}
