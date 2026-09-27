@@ -1,296 +1,206 @@
 {
- "date": "2026-09-27T05:45:12.519Z",
- "browser": true,
+ "date": "2026-09-27T06:30:47.975Z",
+ "browser": false,
  "full": false,
  "results": [
   {
    "name": "build",
    "code": 0,
-   "ms": 626,
-   "summary": "[build] media (external): 17 BGM (slice), 416 voice, 0 portraits, 239 sprite sheets, 1233 env images, 83.6 MB  [545 ms]"
+   "ms": 547,
+   "summary": "[build] media (external): 17 BGM (slice), 416 voice, 0 portraits, 239 sprite sheets, 1233 env images, 83.6 MB  [469 ms]"
   },
   {
    "name": "test_core",
    "code": 1,
-   "ms": 525,
+   "ms": 530,
    "summary": "76/77 passed  (1 FAILED)",
    "tail": "pass  battle object names\npass  units shape\npass  battle runs to an end with valid events\npass  rewards shape\npass  ev names (§2.5.10)\npass  fixtures: 1 state + 2 scenes, valid\npass  core first 6 in order\npass  main.js last, dev before it\npass  index order has no dev files\nFAIL  no API keys / model identifiers in v2 sources  [\"/home/user/others/chronicle/v2/design/bgm_changes.md\"]\n\n76/77 passed  (1 FAILED)"
   },
   {
    "name": "test_core_contract",
    "code": 0,
-   "ms": 599,
+   "ms": 588,
    "summary": "test_core_contract: 51/51 passed"
   },
   {
    "name": "test_render",
-   "code": 1,
-   "ms": 626,
-   "summary": "test_render: 144/145 passed",
-   "tail": "\n== draw\npass  draw rounds and puts (ox, oy) on the point\npass  flip mirrors around the point\npass  alpha restored after draw\npass  draw a Sheet picks frame i\npass  draw(null) is a no-op\npass  frameAt walks the pose by time\n\ntest_render: 144/145 passed\nfailed:\n  Sky 0 and 1 both deep night (within 5%)"
+   "code": 0,
+   "ms": 629,
+   "summary": "test_render: 145/145 passed"
   },
   {
    "name": "test_uik",
    "code": 0,
-   "ms": 523,
+   "ms": 543,
    "summary": "test_uik: 37/37 passed"
   },
   {
    "name": "test_cast",
    "code": 0,
-   "ms": 460,
+   "ms": 464,
    "summary": "test_cast: 865/865 passed"
   },
   {
    "name": "test_beast",
    "code": 0,
-   "ms": 397,
+   "ms": 406,
    "summary": "test_beast: 93/93 passed"
   },
   {
    "name": "test_terrain",
    "code": 0,
-   "ms": 7361,
+   "ms": 7403,
    "summary": "test_terrain: 76/76 passed"
   },
   {
    "name": "test_field",
    "code": 0,
-   "ms": 1243,
+   "ms": 1236,
    "summary": "test_field: 102/102 passed"
   },
   {
    "name": "test_events",
    "code": 0,
-   "ms": 686,
+   "ms": 617,
    "summary": "test_events: 164/164 passed"
   },
   {
    "name": "test_rules",
    "code": 0,
-   "ms": 493,
+   "ms": 460,
    "summary": "test_rules: 187/187 passed"
   },
   {
    "name": "test_battle",
    "code": 0,
-   "ms": 5617,
+   "ms": 5490,
    "summary": "test_battle: 125/125 passed"
   },
   {
    "name": "test_bscene",
    "code": 0,
-   "ms": 508,
+   "ms": 416,
    "summary": "test_bscene: 47/47 passed"
   },
   {
    "name": "test_screens",
    "code": 0,
-   "ms": 459,
+   "ms": 462,
    "summary": "test_screens: 396/396 passed"
   },
   {
    "name": "test_content_p",
    "code": 0,
-   "ms": 2233,
-   "summary": "test_content_p: 418/418 passed"
+   "ms": 2238,
+   "summary": "test_content_p: 419/419 passed"
   },
   {
    "name": "test_content_f",
    "code": 0,
-   "ms": 2037,
+   "ms": 2045,
    "summary": "CONTENT-F: 645/645 passed"
   },
   {
    "name": "validate",
    "code": 0,
-   "ms": 520,
+   "ms": 638,
    "summary": "validate: 57/57 passed"
   },
   {
    "name": "progress",
    "code": 0,
-   "ms": 30983,
+   "ms": 29851,
    "summary": "progress: 20/20 passed"
   },
   {
    "name": "check_text",
-   "code": 1,
-   "ms": 981,
-   "summary": "check_text: 1 error(s), 1 warning(s) in 6120 Japanese strings of 242 files — T3 1",
-   "tail": "ERROR T3 src/art/cast/looks_sprite.js:59 '樵' is not 常用漢字 nor in STYLE_JA §2: 樵\n\ncheck_text: 1 error(s), 1 warning(s) in 6120 Japanese strings of 242 files — T3 1"
+   "code": 0,
+   "ms": 979,
+   "summary": "check_text: 0 error(s), 1 warning(s) in 6120 Japanese strings of 242 files — none"
   },
   {
    "name": "check_voice",
    "code": 0,
-   "ms": 73,
+   "ms": 80,
    "summary": "check_voice: 71/71 passed"
   },
   {
    "name": "check_leads",
    "code": 0,
-   "ms": 373,
+   "ms": 429,
    "summary": "check_leads: 24/24 passed"
   },
   {
    "name": "check_springs",
    "code": 0,
-   "ms": 32008,
+   "ms": 30841,
    "summary": "check_springs: 17/17 passed"
   },
   {
    "name": "check_density",
    "code": 0,
-   "ms": 575,
+   "ms": 442,
    "summary": "check_density: 12/12 passed"
   },
   {
    "name": "check_world",
    "code": 0,
-   "ms": 5006,
+   "ms": 4894,
    "summary": "check_world: 7/7 passed"
   },
   {
    "name": "check_chests",
-   "code": 1,
-   "ms": 5208,
-   "summary": "check_chests: 3/5 passed",
-   "tail": "pass  world: ワールドに宝箱 0（A27）\npass  縦切りの宝箱 43 個: 床の上・重なる物の下でない・id が一つ・中身あり\n\n== 焼いた床との明るさの差（ブラウザ）\nFAIL  fern_rita.fern_rita_c1: 明るさの差 0.009（箱 0.369・床 0.36）・色の差 0.145  {\"map\":\"fern_rita\",\"id\":\"fern_rita_c1\",\"pose\":\"closed\",\"chest\":0.369,\"floor\":0.36,\"diff\":0.009,\"color\":0.145}\nFAIL  43 個の宝箱すべてで 床との明るさの差 ≧ 0.08 か色の差 ≧ 0.15（明るさの差がいちばん小さい verda_1.verda_1_c4 -0.057／色 0.312）\npass  ページのエラー 0\n\ncheck_chests: 3/5 passed\nfailed:\n  fern_rita.fern_rita_c1: 明るさの差 0.009（箱 0.369・床 0.36）・色の差 0.145\n  43 個の宝箱すべてで 床との明るさの差 ≧ 0.08 か色の差 ≧ 0.15（明るさの差がいちばん小さい verda_1.verda_1_c4 -0.057／色 0.312）"
+   "code": 0,
+   "ms": 5305,
+   "summary": "check_chests: 4/4 passed"
   },
   {
    "name": "check_secrets",
    "code": 0,
-   "ms": 6355,
+   "ms": 6514,
    "summary": "check_secrets: 32/32 passed"
   },
   {
    "name": "check_stubs",
    "code": 0,
-   "ms": 11045,
+   "ms": 10854,
    "summary": "check_stubs: 13/13 passed"
   },
   {
    "name": "sim_zones",
    "code": 0,
-   "ms": 23223,
+   "ms": 23611,
    "summary": "all zones: HP loss 8.7%, rounds 3.12 pass"
   },
   {
    "name": "sim_zones --segments",
    "code": 0,
-   "ms": 24490,
-   "summary": "segments: 12/12 pass"
+   "ms": 24488,
+   "summary": "segments: 13/13 pass"
   },
   {
    "name": "sim_bosses",
    "code": 0,
-   "ms": 31946,
+   "ms": 31664,
    "summary": "tr_b_rooteater            0      17       99    83    9.8   0.06  pass"
   },
   {
    "name": "sim_growth",
    "code": 0,
-   "ms": 3015,
+   "ms": 3194,
    "summary": "sim_growth: 8/8 passed (runs 20, seed 1)"
   },
   {
    "name": "sim_glimmer",
    "code": 0,
-   "ms": 82791,
+   "ms": 78433,
    "summary": "NOTE (above/below the estimate) slice scope near the V2_PLAN §3.9 estimate (glimmered techs lv1–3 ≈ 20: 28 + starters 8, max lv 3; spells step 1–2 ≈ 12: 18)"
   },
   {
    "name": "sim_loot",
    "code": 0,
-   "ms": 9153,
+   "ms": 8198,
    "summary": "H5 倒しても落ちない: 30000 体、盗み専用のドロップ 0  pass"
-  },
-  {
-   "name": "test_core_flow",
-   "code": 0,
-   "ms": 104556,
-   "summary": "55/55 passed"
-  },
-  {
-   "name": "test_core_wipe",
-   "code": 0,
-   "ms": 8036,
-   "summary": "test_core_wipe: 11/11 passed"
-  },
-  {
-   "name": "test_render_browser",
-   "code": 0,
-   "ms": 13946,
-   "summary": "test_render_browser: 36/36 passed"
-  },
-  {
-   "name": "test_uik_browser",
-   "code": 0,
-   "ms": 32198,
-   "summary": "test_uik_browser: 56/56 passed"
-  },
-  {
-   "name": "test_cast_browser",
-   "code": 1,
-   "ms": 17147,
-   "summary": "test_cast_browser: 35/36 passed",
-   "tail": " \"budget\": {\n  \"desk\": 25,\n  \"phone\": 100\n }\n}\npass  原画の人（アルン）は予算の中（12 コマあたり ≤ desk）\npass  仮の絵は予算の 4 倍まで（原画に替われば消える。open に書く）\npass  ページのエラー 0\n\ntest_cast_browser: 35/36 passed\nfailed:\n  仮の顔の 5 つの表情がすべて違う画素"
-  },
-  {
-   "name": "test_beast_browser",
-   "code": 0,
-   "ms": 11876,
-   "summary": "test_beast_browser: 427/427 passed"
-  },
-  {
-   "name": "test_terrain_browser",
-   "code": 1,
-   "ms": 13465,
-   "summary": "test_terrain_browser: 45/47 passed",
-   "tail": "  CPU ×1: chunk median 3.00 ms  p90 5.50  max 15.80  | step median 2.30  p99 4.50  max 14.00\npass  CPU ×1: チャンク 1 つの焼き時間の中央値 3.00 ms ≦ 予算の 2 倍 8 ms（G1 の関門）\nFAIL  Job.step(3) の 99% が 3 ms 以内（4.50 ms。performance.now の刻み 0.1 ms を含めて ≦ 3.3）  {\"slow\":[[\"tt_hill\",1,1,0,9,3.5],[\"tt_hill\",2,1,0,8,3.2],[\"tt_hill\",3,1,0,9,3.2],[\"tt_hill\",0,2,0,9,3.4]],\"chunkMed\":3,\"chunkP90\":5.5,\"chunkMax\":15.800000011920929,\"stepMed\":2.2999999970197678,\"stepP99\":4.5,\"stepMax\":14,\"prewarm\":{\"tt_harbor\":0.29999999701976776,\"tt_treetop\":0.5,\"tt_moss\":0.6000000089406967,\"tt_forest\":0.5,\"tt_tree\":3.199999988079071,\"tt_lighthouse\":2.5999999940395355,\"tt_cave\":0,\nFAIL  Job.step(3) の最長 14.00 ms ≦ 5 ms（共有の機械の揺れを含む）  {\"slow\":[[\"tt_hill\",1,1,0,9,3.5],[\"tt_hill\",2,1,0,8,3.2],[\"tt_hill\",3,1,0,9,3.2],[\"tt_hill\",0,2,0,9,3.4]],\"chunkMed\":3,\"chunkP90\":5.5,\"chunkMax\":15.800000011920929,\"stepMed\":2.2999999970197678,\"stepP99\":4.5,\"stepMax\":14,\"prewarm\":{\"tt_harbor\":0.29999999701976776,\"tt_treetop\":0.5,\"tt_moss\":0.6000000089406967,\"tt_forest\":0.5,\"tt_tree\":3.199999988079071,\"tt_lighthouse\":2.5999999940395355,\"tt_cave\":0,\npass  コンソールのエラー・外への通信なし\n\nPERF {\"lum\":{\"harbor\":0.205,\"treetop\":0.152,\"moss_village\":0.156,\"forest_dungeon\":0.141,\"tree_inside\":0.138,\"lighthouse\":0.163,\"cave\":0.168,\"world\":0.186,\"hill_village\":0.17},\"perf\":{\"cpu1\":{\"slow\":[[\"tt_hill\",1,1,0,9,3.5],[\"tt_hill\",2,1,0,8,3.2],[\"tt_hill\",3,1,0,9,3.2],[\"tt_hill\",0,2,0,9,3.4]],\"chunkMed\":3,\"chunkP90\":5.5,\"chunkMax\":15.800000011920929,\"stepMed\":2.2999999970197678,\"stepP99\":4.5,\"stepMax\":14,\"prewarm\":{\"tt_harbor\":0.29999999701976776,\"tt_treetop\":0.5,\"tt_moss\":0.6000000089406967,\"tt_forest\":0.5,\"tt_tree\":3.199999988079071,\"tt_lighthouse\":2.5999999940395355,\"tt_cave\":0,\"tt_world\":0.5,\"tt_hill\":0.29999999701976776},\"attempt\":0}}}\n\ntest_terrain_browser: 45/47 passed\nfailed:\n  Job.step(3) の 99% が 3 ms 以内（4.50 ms。performance.now の刻み 0.1 ms を含めて ≦ 3.3）\n  Job.step(3) の最長 14.00 ms ≦ 5 ms（共有の機械の揺れを含む）"
-  },
-  {
-   "name": "test_field_browser",
-   "code": 0,
-   "ms": 91976,
-   "summary": "test_field_browser: 17/17 passed"
-  },
-  {
-   "name": "test_field_slice",
-   "code": 0,
-   "ms": 344329,
-   "summary": "test_field_slice: 148/148 passed"
-  },
-  {
-   "name": "test_events_browser",
-   "code": 0,
-   "ms": 145780,
-   "summary": "test_events_browser: 28/28 passed"
-  },
-  {
-   "name": "test_bscene_flow",
-   "code": 0,
-   "ms": 74160,
-   "summary": "test_bscene_flow: 47/47 passed"
-  },
-  {
-   "name": "test_screens_browser",
-   "code": 0,
-   "ms": 204041,
-   "summary": "test_screens_browser: 151/151 passed"
-  },
-  {
-   "name": "check_ui",
-   "code": 0,
-   "ms": 402868,
-   "summary": "check_ui: 426/426 passed"
-  },
-  {
-   "name": "measure_night",
-   "code": 1,
-   "ms": 54062,
-   "summary": "measure_night: 51/56 passed",
-   "tail": "    world            0.134  (42 チャンク、.12 未満 12)\n    yura             0.159  (14 チャンク、.12 未満 0)\n    yura_inn         0.201  (3 チャンク、.12 未満 0)\npass  チャンクの平均輝度 .12 未満のマップ 0（なし）\n\nmeasure_night: 51/56 passed\nfailed:\n  町（フェルン）: 明るい 95% 分位 0.306 ∈ .35〜.60\n  町（フェルン）: 輝度 > .75 の画素 1.0% ∈ 1〜7%\n  洞窟（古井戸）: 平均輝度 0.127 ∈ .14〜.22\n  洞窟（古井戸）: 明るい 95% 分位 0.303 ∈ .35〜.60\n  洞窟（古井戸）: 輝度 > .75 の画素 0.5% ∈ 1〜7%"
   }
  ]
 }
