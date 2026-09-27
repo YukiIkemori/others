@@ -1,642 +1,178 @@
 {
- "date": "2026-09-27T17:49:23.611Z",
+ "date": "2026-09-27T17:51:43.603Z",
  "fixture": "content_p_pharos",
  "walked": [
   {
-   "map": "verda_1",
-   "kind": "exit",
-   "id": "28,0",
-   "at": "verda_2",
-   "to": "verda_2",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    29,
-    4
-   ],
-   "ms": 11654
-  },
-  {
-   "map": "verda_1",
-   "kind": "exit",
-   "id": "28,51",
-   "at": "fern",
-   "to": "fern",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    28,
-    47
-   ],
-   "ms": 13909
-  },
-  {
-   "map": "verda_1",
-   "kind": "exit",
-   "id": "11,20",
-   "at": "verda_1",
-   "to": "verda_1",
-   "ok": true,
-   "steps": 5,
-   "start": [
-    11,
-    24
-   ],
-   "ms": 9882
-  },
-  {
-   "map": "world",
+   "map": "yura",
    "kind": "door",
-   "id": "w_lighthouse",
-   "at": "lighthouse_1",
-   "to": "lighthouse_1",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
-    106,
-    128
-   ],
-   "ms": 3879
-  },
-  {
-   "map": "world",
-   "kind": "stairs",
-   "id": "",
-   "at": "well",
-   "to": "well",
+   "id": "yura_hut_inn",
+   "at": "yura_inn",
+   "to": "yura_inn",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    77,
-    83
+    4,
+    19
    ],
-   "ms": 5823
+   "ms": 7160
   },
   {
-   "map": "world",
+   "map": "yura",
    "kind": "door",
-   "id": "w_hut",
-   "at": "hut",
-   "to": "hut",
+   "id": "yura_hut_elder",
+   "at": "yura_home_elder",
+   "to": "yura_home_elder",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    68,
-    65
-   ],
-   "ms": 6689
-  },
-  {
-   "map": "world",
-   "kind": "door",
-   "id": "w_sandedge",
-   "at": "sandedge",
-   "to": "sandedge",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
-    36,
-    130
-   ],
-   "ms": 6242
-  },
-  {
-   "map": "world",
-   "kind": "stairs",
-   "id": "",
-   "at": "snow_woods",
-   "to": "snow_woods",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
-    64,
-    41
-   ],
-   "ms": 6518
-  },
-  {
-   "map": "world",
-   "kind": "stairs",
-   "id": "",
-   "at": "peak_1",
-   "to": "peak_1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    60,
-    15
-   ],
-   "ms": 7346
-  },
-  {
-   "map": "world",
-   "kind": "stairs",
-   "id": "",
-   "at": "icicle_1",
-   "to": "icicle_1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    22,
-    31
-   ],
-   "ms": 6672
-  },
-  {
-   "map": "world",
-   "kind": "stairs",
-   "id": "",
-   "at": "aurora",
-   "to": "aurora",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    22,
+    13,
     10
    ],
-   "ms": 4012
+   "ms": 2178
   },
   {
-   "map": "world",
-   "kind": "stairs",
-   "id": "",
-   "at": "frost_ship_1",
-   "to": "frost_ship_1",
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_hut_h1",
+   "at": "yura_home1",
+   "to": "yura_home1",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    41,
-    10
+    19,
+    20
    ],
-   "ms": 5710
+   "ms": 2247
   },
   {
-   "map": "world",
-   "kind": "exit",
-   "id": "82,91",
-   "at": "roa",
-   "to": "roa",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    82,
-    87
-   ],
-   "ms": 3832
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "100,108",
-   "at": "pharos",
-   "to": "pharos",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    100,
-    104
-   ],
-   "ms": 3463
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "44,81",
-   "at": "fern",
-   "to": "fern",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    44,
-    85
-   ],
-   "ms": 3632
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "26,59",
-   "at": "yura",
-   "to": "yura",
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_hut_h2",
+   "at": "yura_home2",
+   "to": "yura_home2",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
     26,
-    63
+    22
    ],
-   "ms": 6084
+   "ms": 2088
   },
   {
-   "map": "world",
-   "kind": "exit",
-   "id": "46,138",
-   "at": "kasim",
-   "to": "kasim",
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_hut_h3",
+   "at": "yura_home3",
+   "to": "yura_home3",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    45,
-    135
+    19,
+    25
    ],
-   "ms": 6581
+   "ms": 2082
   },
   {
-   "map": "world",
-   "kind": "exit",
-   "id": "58,138",
-   "at": "kasim",
-   "to": "kasim",
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_hut_h4",
+   "at": "yura_home4",
+   "to": "yura_home4",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    55,
-    137
+    7,
+    25
    ],
-   "ms": 3250
+   "ms": 1907
   },
   {
-   "map": "world",
+   "map": "yura",
    "kind": "exit",
-   "id": "37,152",
-   "at": "desert_camp1",
-   "to": "desert_camp1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    37,
-    156
-   ],
-   "ms": 5388
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "27,158",
-   "at": "desert_camp2",
-   "to": "desert_camp2",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    26,
-    161
-   ],
-   "ms": 4869
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "16,141",
-   "at": "desert_camp3",
-   "to": "desert_camp3",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    16,
-    145
-   ],
-   "ms": 4124
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "27,150",
-   "at": "desert_oldcamp",
-   "to": "desert_oldcamp",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    27,
-    154
-   ],
-   "ms": 4151
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "13,151",
-   "at": "desert_wellroom",
-   "to": "desert_wellroom",
+   "id": "14,27",
+   "at": "world",
+   "to": "world",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
     14,
-    148
+    23
    ],
-   "ms": 2853
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "28,141",
-   "at": "desert_hawks_1",
-   "to": "desert_hawks_1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    27,
-    144
-   ],
-   "ms": 3257
-  },
-  {
-   "map": "verda_1",
-   "kind": "exit",
-   "id": "40,28",
-   "at": [
-    40,
-    28
-   ],
-   "to": "verda_1",
-   "ok": false,
-   "steps": 2,
-   "why": "timeout 90 s",
-   "start": [
-    43,
-    27
-   ],
-   "ms": 119781
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "57,125",
-   "at": "desert_rocks",
-   "to": "desert_rocks",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    57,
-    129
-   ],
-   "ms": 3438
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "54,27",
-   "at": "yule",
-   "to": "yule",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    55,
-    30
-   ],
-   "ms": 5856
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "49,21",
-   "at": "yule",
-   "to": "yule",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    49,
-    17
-   ],
-   "ms": 2756
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "84,32",
-   "at": "pass_inn",
-   "to": "pass_inn",
-   "ok": true,
-   "steps": 2,
-   "why": null,
-   "start": [
-    84,
-    36
-   ],
-   "ms": 3976
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "44,27",
-   "at": [
-    44,
-    27
-   ],
-   "to": "yule",
-   "ok": false,
-   "steps": 1,
-   "why": "timeout 90 s",
-   "start": [
-    44,
-    31
-   ],
-   "ms": 179722
+   "ms": 2351
   }
  ],
  "looks": [
   {
-   "map": "verda_1",
-   "npc": "ben",
-   "look": "npc_ben",
-   "art": "npc_ben",
+   "map": "yura",
+   "npc": "yura_elder",
+   "look": "npc_yura_elder",
+   "art": "npc_yura_elder",
    "ok": true
   },
   {
-   "map": "verda_1",
-   "npc": "camp_hans",
-   "look": "npc_hans",
-   "art": "npc_hans",
+   "map": "yura",
+   "npc": "yura_miller",
+   "look": "npc_yura_folk_2",
+   "art": "npc_yura_man_2",
    "ok": true
   },
   {
-   "map": "verda_1",
-   "npc": "camp_ben",
-   "look": "npc_ben",
-   "art": "npc_ben",
+   "map": "yura",
+   "npc": "yura_nanny",
+   "look": "npc_yura_folk_1",
+   "art": "npc_yura_woman_1",
    "ok": true
   },
   {
-   "map": "verda_1",
-   "npc": "camp_roy",
-   "look": "npc_roy",
-   "art": "npc_roy",
+   "map": "yura",
+   "npc": "yura_grave",
+   "look": "npc_yura_folk_3",
+   "art": "npc_yura_woman_3",
    "ok": true
   },
   {
-   "map": "verda_1",
-   "npc": "camp_pim",
-   "look": "npc_pim",
-   "art": "npc_pim",
+   "map": "yura",
+   "npc": "yura_lamp",
+   "look": "npc_yura_folk_4",
+   "art": "npc_yura_man_4",
    "ok": true
   },
   {
-   "map": "verda_1",
-   "npc": "fawn_after",
-   "look": "ani_fawn",
-   "art": "ani_fawn",
+   "map": "yura",
+   "npc": "yura_seller",
+   "look": "npc_yura_folk_1",
+   "art": "npc_yura_woman_1",
    "ok": true
   },
   {
-   "map": "world",
-   "npc": "bridge_guard",
-   "look": "npc_guard_2",
-   "art": "npc_pen_guard_2",
+   "map": "yura",
+   "npc": "yura_child",
+   "look": "npc_child_4",
+   "art": "npc_forest_child_4",
    "ok": true
   },
   {
-   "map": "world",
-   "npc": "guard_east",
-   "look": "npc_guard_1",
-   "art": "npc_pen_guard_1",
+   "map": "yura",
+   "npc": "yura_cat",
+   "look": "ani_cat",
+   "art": "ani_cat",
    "ok": true
   },
   {
-   "map": "world",
-   "npc": "guard_north",
-   "look": "npc_guard_1",
-   "art": "npc_pen_guard_1",
-   "ok": true
-  },
-  {
-   "map": "world",
-   "npc": "guard_south",
-   "look": "npc_guard_1",
-   "art": "npc_pen_guard_1",
-   "ok": true
-  },
-  {
-   "map": "world",
-   "npc": "traveler_plains",
-   "look": "npc_merchant_2",
-   "art": "npc_pen_keeper_2",
-   "ok": true
-  },
-  {
-   "map": "world",
-   "npc": "woodcutter_road",
-   "look": "npc_woodcutter_1",
-   "art": "npc_woodcutter",
-   "ok": true
-  },
-  {
-   "map": "world",
-   "npc": "shepherd",
-   "look": "npc_old_m_2",
-   "art": "npc_pen_old_m_2",
-   "ok": true
-  },
-  {
-   "map": "world",
-   "npc": "lost_camel",
-   "look": "ani_camel",
-   "art": "ani_camel",
-   "ok": true
-  },
-  {
-   "map": "world",
-   "npc": "pilgrim",
-   "look": "npc_desert_old_f",
-   "art": "npc_desert_old_f",
-   "ok": true
-  },
-  {
-   "map": "world",
-   "npc": "oil_caravan",
-   "look": "npc_oil_carrier",
-   "art": "npc_oil_carrier",
-   "ok": true
-  },
-  {
-   "map": "world",
-   "npc": "oil_camel",
-   "look": "ani_camel",
-   "art": "ani_camel",
-   "ok": true
-  },
-  {
-   "map": "world",
-   "npc": "guard_ash",
-   "look": "npc_guard_1",
-   "art": "npc_pen_guard_1",
-   "ok": true
-  },
-  {
-   "map": "world",
-   "npc": "snow_trapper",
-   "look": "npc_snow_man",
-   "art": "npc_snow_man",
-   "ok": true
-  },
-  {
-   "map": "world",
-   "npc": "snow_pilgrim",
-   "look": "npc_snow_old_m",
-   "art": "npc_snow_old_m",
-   "ok": true
-  },
-  {
-   "map": "world",
-   "npc": "snow_scout",
-   "look": "npc_snow_watch",
-   "art": "npc_snow_watch",
-   "ok": true
-  },
-  {
-   "map": "world",
-   "npc": "guard_snow_east",
-   "look": "npc_guard_1",
-   "art": "npc_pen_guard_1",
+   "map": "yura",
+   "npc": "laila_mother",
+   "look": "npc_old_f_2",
+   "art": "npc_yura_woman_2",
    "ok": true
   }
  ],
- "skipped": [
-  {
-   "map": "world",
-   "kind": "stairs",
-   "id": "",
-   "to": "desert_temple_1",
-   "cond": {
-    "any": [
-     "cleared_r_desert",
-     {
-      "var": "desert_nights",
-      "gte": 3
-     }
-    ]
-   }
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "40,142",
-   "to": "desert_mirage",
-   "cond": "desert_night"
-  }
- ],
+ "skipped": [],
  "errors": []
 }
