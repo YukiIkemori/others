@@ -36,7 +36,7 @@
       this.list.render = (gg, row, rect, f) => {
         const sz = u(16), cy = rect.y + (rect.h - sz) / 2 - u(1);
         R.UIK.icon(gg, row.w.kind === 'town' ? 'inn' : 'door', rect.x + u(16), cy, sz, row.disabled ? C.disabled : f ? C.gold : C.text2);
-        R.UIK.text(gg, row.label, rect.x + u(44), cy, { size: sz, weight: f ? 700 : 500, color: row.disabled ? C.disabled : f ? C.goldHi : C.text, maxW: rect.w * 0.55 });
+        R.UIK.text(gg, row.label, rect.x + u(44), cy, { size: sz, weight: f ? 700 : 500, color: row.disabled ? (f ? C.text2 : C.disabled) : f ? C.goldHi : C.text, maxW: rect.w * 0.55 });
         R.UIK.text(gg, row.disabled ? 'いまいる所' : S.regionName(row.w.region), rect.x + rect.w - u(14), cy + u(2), { size: u(12.5), color: C.text3, align: 'right' });
       };
       this.list.draw(g, { x: p.x + u(10), y: p.y + u(12), w: p.w - u(20), h: p.h - u(24) });

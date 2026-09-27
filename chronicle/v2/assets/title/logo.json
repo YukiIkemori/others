@@ -1,0 +1,27 @@
+{
+ "id": "title_logo",
+ "file": "logo.png",
+ "size": [
+  1478,
+  806
+ ],
+ "background": "transparent",
+ "text": {
+  "title": "ルミナス・クロニクル",
+  "subtitle": "〜八つの灯火〜",
+  "latin": "LUMINOUS CHRONICLE"
+ },
+ "checked": "every character verified by eye at full size: title (10 chars incl. ・) and LUMINOUS CHRONICLE are the generated lettering; the subtitle was re-set in Shippori Mincho B1 ExtraBold (Google Fonts, OFL) because the generated 八 had an extra stroke",
+ "anchor": {
+  "subtitle_center": [
+   0.5,
+   0.86
+  ],
+  "lantern_emblem": [
+   0.497,
+   0.26
+  ]
+ },
+ "motif": "hanging brass lantern with eight warm flames = the eight great flames",
+ "fallback": "if the image fails to load, draw the old text logo (R.TITLE with the gold gradient, Cinzel for the latin line)"
+}

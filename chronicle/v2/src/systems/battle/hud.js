@@ -8,7 +8,7 @@
 
   // ---------------------------------------------------------------- kit（UIK が無い・途中のときの代わり）
   const COL = {
-    text: '#f6f0e3', text2: '#d2c9b6', text3: '#ada493', disabled: '#948d80', gold: '#ecc97c', goldHi: '#fff1c8', goldLo: '#b98f47',
+    text: '#f6f0e3', text2: '#d2c9b6', text3: '#bbb29f', disabled: '#a39b8b', gold: '#ecc97c', goldHi: '#fff1c8', goldLo: '#b98f47',
     teal: '#8fd6d8', hp: ['#5f9e5a', '#a9dc8e'], hpMid: ['#b98f47', '#ecc97c'], hpLow: ['#b8453a', '#f08a6c'], mp: ['#3d6aa6', '#92bdf0'],
     rare: '#86c8ff', superRare: '#ffb65e', front: '#f2c28a', back: '#a9d2f2', up: '#8ee08a', down: '#f47e6c',
   };
@@ -255,7 +255,7 @@
       const vy = L.tall ? r.y + 34 * k : r.y + 19 * k;
       const numSize = (L.tall ? 15 : 16.5) * k;
       const block = (bx, lab, cur, max, kind, ghost) => {
-        K.text(g, lab, bx, vy + numSize - 10 * k, { size: 9.5 * k, weight: 700, color: COL.text2, raw: true, shadow: true });
+        K.text(g, lab, bx, vy + numSize - 10 * k, { size: 9.5 * k, weight: 700, color: COL.text, raw: true, shadow: true });
         K.frac(g, cur, max, bx + bw - 2 * k, vy, numSize, kind === 'hp' && low ? COL.hpLow[1] : kind === 'hp' && !v.alive ? COL.disabled : COL.text);
         K.gauge(g, { x: bx, y: vy + numSize + 3 * k, w: bw - 2 * k, h: L.tall ? 3 : 1.5 }, cur, max, kind, { ghost });
       };

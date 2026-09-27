@@ -141,11 +141,12 @@
     // 右上に「戻る」（ひとつ前の人へ。縦持ちはボタン表示を出さないので、ここで見せる）
     w.backRect = null;
     if (who && w.o.cancel !== false) {
-      const bs = Math.max(13 * k, R.minFont || 0), bw = Kt.measure('戻る', { size: bs, weight: 700 }) + 28 * k, bh = Math.max(bs + 14 * k, R.minTouch || 0);
-      const br = { x: R.W - pad - bw, y: L.cmdY + 10 * k - bh, w: bw, h: bh };
-      Kt.box(g, br, { a: 0.6, r: 10 * k, edge: 'rgba(240,228,200,0.3)' });
+      const bs = Math.max(12 * k, R.minFont || 0), bw = Kt.measure('戻る', { size: bs, weight: 700 }) + 30 * k, bh = 22 * k;
+      const br = { x: R.W - pad - bw, y: L.cmdY - 4 * k, w: bw, h: bh };
+      Kt.box(g, br, { a: 0.5, r: 8 * k, edge: 'rgba(240,228,200,0.35)' });
       Kt.text(g, '戻る', br.x + br.w / 2, br.y + (bh - bs) / 2, { size: bs, weight: 700, align: 'center', color: Kt.COL.text, raw: true });
-      w.backRect = br;
+      const hh = Math.max(bh, R.minTouch || 0);
+      w.backRect = { x: br.x - 6 * k, y: br.y + bh - hh, w: bw + 12 * k, h: hh };
     }
     w.rects = [];
     rows.forEach((row, i) => {
@@ -175,6 +176,17 @@
     const r = { x: pad, y: top, w: R.W - pad * 2, h: 30 * k + vis * rowH + 8 * k };
     Kt.box(g, r, { a: 0.72, r: 12 * k, edge: 'rgba(240,228,200,0.2)' });
     Kt.text(g, title, r.x + 14 * k, r.y + 9 * k, { size: 13 * k, weight: 700, color: Kt.COL.gold, raw: true });
+    // 右上に「戻る」（縦持ちはボタン表示を出さないので、押せる札で）
+    w.backRect = null;
+    if (w.o.cancel !== false) {
+      // 見た目は見出しの行の右の小さな札、押せる所は上下へ広げて 44 CSS px 以上
+      const bs = Math.max(12 * k, R.minFont || 0), bw = Kt.measure('戻る', { size: bs, weight: 700 }) + 30 * k, bh = 24 * k;
+      const br = { x: r.x + r.w - bw - 8 * k, y: r.y + 4 * k, w: bw, h: bh };
+      Kt.box(g, br, { a: 0.5, r: 8 * k, edge: 'rgba(240,228,200,0.35)' });
+      Kt.text(g, '戻る', br.x + br.w / 2, br.y + (bh - bs) / 2, { size: bs, weight: 700, align: 'center', color: Kt.COL.text, raw: true });
+      const hh = Math.max(bh, R.minTouch || 0);
+      w.backRect = { x: br.x - 6 * k, y: br.y + bh - hh, w: bw + 12 * k, h: hh };   // 上へ広げる（下の行に掛からない）
+    }
     w.rects = [];
     for (let j = 0; j < vis; j++) {
       const i = w.top + j, row = rows[i], ry = r.y + 30 * k + j * rowH, f = i === w.sel;

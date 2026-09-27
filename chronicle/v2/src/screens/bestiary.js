@@ -53,8 +53,8 @@
       this.list.render = (gg, row, rect, f) => {
         const bk = book(row.value), m = R.DB.monsters[row.value], known = bk && bk.seen;
         const sz = u(14.5), cy = rect.y + (rect.h - sz) / 2 - u(1);
-        R.UIK.text(gg, String(row.no).padStart(3, '0'), rect.x + u(14), cy + u(1), { size: u(12), color: C.text3 });
-        R.UIK.text(gg, known ? m.name : '？？？', rect.x + u(56), cy, { size: sz, weight: f ? 700 : 500, color: known ? (f ? C.goldHi : C.text) : C.disabled, maxW: rect.w - u(110) });
+        R.UIK.text(gg, String(row.no).padStart(3, '0'), rect.x + u(14), cy + u(1), { size: u(12), color: f ? C.text2 : C.text3 });   // 選んだ行の明るい地の上は一段明るく（コントラスト 4.5）
+        R.UIK.text(gg, known ? m.name : '？？？', rect.x + u(56), cy, { size: sz, weight: f ? 700 : 500, color: known ? (f ? C.goldHi : C.text) : f ? C.text2 : C.disabled, maxW: rect.w - u(110) });
         if (bk && bk.kills) R.UIK.text(gg, String(bk.kills), rect.x + rect.w - u(14), cy + u(1), { size: u(12.5), color: C.text3, align: 'right' });
       };
       this.list.draw(g, { x: lp.x + u(8), y: lp.y + u(60), w: lp.w - u(16), h: lp.h - u(70) });

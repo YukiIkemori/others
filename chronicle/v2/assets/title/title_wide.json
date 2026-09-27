@@ -1,0 +1,140 @@
+{
+ "id": "title_wide",
+ "size": [
+  1920,
+  1080
+ ],
+ "aspect": "16:9",
+ "style": "Painted key art: digital oil painting, realistic proportions, deep indigo night vs warm amber lamplight (generated with the OpenAI image_generation tool; raw files and prompts in chronicle/design/art_ref/gen/title/raw/, gitignored).",
+ "flat": "key_wide.png",
+ "layers": [
+  {
+   "order": 0,
+   "id": "sky",
+   "file": "wide_0_sky.png",
+   "opaque": true,
+   "parallax": 0.15,
+   "note": "full hero-free plate (sky + land + crag); the base that fills any gap the upper layers leave when they shift"
+  },
+  {
+   "order": 1,
+   "id": "land",
+   "file": "wide_1_land.png",
+   "parallax": 0.4,
+   "note": "valley, sea, mountains and the eight beacons; alpha ramps in from y 0.30 to 0.44"
+  },
+  {
+   "order": 2,
+   "id": "crag",
+   "file": "wide_2_crag.png",
+   "parallax": 1.0,
+   "note": "rock ledge + grass the hero stands on (bottom right)"
+  },
+  {
+   "order": 3,
+   "id": "hero",
+   "file": "wide_3_hero.png",
+   "parallax": 1.0,
+   "note": "Arun + lantern; must move with the crag (same parallax) so his boots stay planted"
+  }
+ ],
+ "parallax_px_at_1": 14,
+ "focal": {
+  "face": [
+   0.727,
+   0.213
+  ],
+  "lantern": [
+   0.636,
+   0.235
+  ]
+ },
+ "lantern": [
+  0.636,
+  0.235
+ ],
+ "hero_bbox": [
+  0.617,
+  0.088,
+  0.999,
+  0.844
+ ],
+ "beacons": [
+  [
+   0.155,
+   0.629
+  ],
+  [
+   0.283,
+   0.79
+  ],
+  [
+   0.371,
+   0.588
+  ],
+  [
+   0.448,
+   0.569
+  ],
+  [
+   0.539,
+   0.437
+  ],
+  [
+   0.579,
+   0.677
+  ],
+  [
+   0.631,
+   0.545
+  ],
+  [
+   0.964,
+   0.606
+  ]
+ ],
+ "beacon_names": [
+  "coast lighthouse",
+  "lowland shrine",
+  "giant tree",
+  "marsh bell tower",
+  "snow summit",
+  "desert town",
+  "mountain forge",
+  "far star tower"
+ ],
+ "volcano": [
+  0.886,
+  0.45
+ ],
+ "logo_safe": {
+  "x": 0.05,
+  "y": 0.06,
+  "w": 0.4,
+  "h": 0.39,
+  "anchor": "top-left",
+  "note": "logo.png scaled to w; quiet dark sky"
+ },
+ "menu_safe": {
+  "x": 0.075,
+  "y": 0.655,
+  "w": 0.2,
+  "h": 0.25,
+  "anchor": "top-left",
+  "note": "3-4 rows at rowH 64 px (1920 wide); darken with the left vignette"
+ },
+ "continue_card_safe": {
+  "x": 0.3,
+  "y": 0.655,
+  "w": 0.18,
+  "h": 0.14
+ },
+ "keep_clear": [
+  [
+   0.6,
+   0.05,
+   0.4,
+   0.8
+  ]
+ ]
+}

@@ -169,7 +169,7 @@
         this.slist.render = (gg, row, rect, f) => {
           const s = row.value, id = c.equip[s], it = S.item(id), blk = this.blocked(c, s), sz = u(15.5);
           const cy = rect.y + (rect.h - sz) / 2 - u(1);
-          R.UIK.text(gg, N[s] || s, rect.x + u(14), cy + u(2), { size: u(12.5), color: C.text3 });
+          R.UIK.text(gg, N[s] || s, rect.x + u(14), cy + u(2), { size: u(12.5), color: f ? C.text2 : C.text3 });
           const x0 = rect.x + u(74);
           if (blk) { R.UIK.icon(gg, 'shield', x0, cy, sz * 1.1, C.disabled); R.UIK.text(gg, '両手持ち', x0 + sz * 1.1 + u(9), cy, { size: sz, color: C.disabled }); }
           else if (it) S.itemLabel(gg, id, x0, cy, { focused: f, size: sz, maxW: rect.w - u(80) });
@@ -281,7 +281,7 @@
           });
         });
       }
-      S.prompts(g, this.mode === 'cand' ? [{ btn: 'a', label: '付ける' }, { btn: 'b', label: '戻る' }, { btn: 'y', label: '詳しく' }] : [{ btn: 'a', label: '選ぶ' }, { btn: 'b', label: '戻る' }, { btn: 'x', label: 'いちばん強く' }, { btn: 'r', label: '次の仲間' }]);
+      S.prompts(g, this.mode === 'cand' ? [{ btn: 'a', label: '付ける' }, { btn: 'b', label: '戻る' }, { btn: 'y', label: '詳しく' }] : (S.tall() ? [{ btn: 'a', label: '選ぶ' }, { btn: 'b', label: '戻る' }, { btn: 'r', label: '次の仲間' }] : [{ btn: 'a', label: '選ぶ' }, { btn: 'b', label: '戻る' }, { btn: 'x', label: 'いちばん強く' }, { btn: 'r', label: '次の仲間' }]));
     },
   });
 })(window.RPG);

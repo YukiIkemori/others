@@ -99,7 +99,7 @@
       // 送りの菱形
       const t = (R.Engine.time % 1200) / 1200;
       R.UIK.diamond(g, x + w - u(40), y + h - u(34) + Math.sin(t * Math.PI * 2) * u(1.5), u(5), '#a8672a');
-      R.UIK.prompts(g, [{ btn: 'a', label: '閉じる' }], { x: x + w - u(58), y: y + h - u(34), align: 'right' }, { color: ink2, shadow: false });
+      R.UIK.prompts(g, [{ btn: 'a', label: '閉じる' }], { x: x + w - u(58), y: y + h - u(34), align: 'right' }, { color: ink, shadow: false });
     },
   });
 })(window.RPG);
