@@ -258,7 +258,7 @@
     const tm = R.Engine.time;
     if (e.kind === 'lead') {
       F._vis(vis);
-      const G = R.Game, c = G && G.chars[G.party[0]];
+      const G = R.Game, c = G && G.chars[F.leadId()];
       const dash = !!(S.mv && S.mv.dash);
       drawChar(g, c ? c.look : 'hero', Math.round((vis.px + 0.5) * t - cx), Math.round((vis.py + 1) * t - cy - t * 0.1), S.dir, !!S.mv, dash, true, null, F._gaitDist(), dash ? F.DASH_MS : F.WALK_MS, 1);
       return;

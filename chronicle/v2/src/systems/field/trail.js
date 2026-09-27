@@ -11,10 +11,18 @@
 
   /** 仲間を後ろに並べるか（設定 fieldParty。既定は主人公だけ） */
   F.partyTrail = function () { try { return !!(R.Settings && R.Settings.get('fieldParty')); } catch (e) { return false; } };
-  /** 並べる仲間の id（先頭を除く）。既定では空 */
-  function members() {
+  /** フィールドで先頭に立つ人の id。隊列の順に関係なく主人公（持ち主 2026-09-27「どんな隊列でも主人公」）。主人公がいなければ隊列の先頭 */
+  F.leadId = function () {
     const G = R.Game;
-    return F.partyTrail() && G && G.party ? G.party.slice(1).filter((id) => G.chars && G.chars[id]) : [];
+    if (!G) return null;
+    const h = G.hero || 'hero';
+    if (G.chars && G.chars[h]) return h;
+    return G.party && G.party[0];
+  };
+  /** 並べる仲間の id（先頭の主人公を除く）。既定では空 */
+  function members() {
+    const G = R.Game, lead = F.leadId();
+    return F.partyTrail() && G && G.party ? G.party.filter((id) => id !== lead && G.chars && G.chars[id]) : [];
   }
   function wanted() {
     const G = R.Game;

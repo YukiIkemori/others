@@ -228,13 +228,13 @@
   function partyIds(id) {
     const G = R.Game;
     if (!G) return [];
-    if (id === 'all' || id == null) return (G.party || []).slice(1);
+    if (id === 'all' || id == null) return (G.party || []).filter((q) => q !== F.leadId());
     return [].concat(id).filter(Boolean);
   }
   /** 一行の人（party・reserve）で、主人公でない */
   F._isMember = function (id) {
     const G = R.Game;
-    if (!G || !id || !G.chars || !G.chars[id] || id === G.party[0] || id === G.hero) return false;
+    if (!G || !id || !G.chars || !G.chars[id] || id === F.leadId() || id === G.hero) return false;
     return (G.party || []).includes(id) || (G.reserve || []).includes(id);
   };
   /** (cx, cy) の近くで仲間が立てるマス。後ろ（向きの反対）→ 横 → 斜め後ろ → 前の順 */
@@ -271,7 +271,7 @@
     const ms = o.ms == null ? FADE_MS : o.ms;
     for (const pid of ids) {
       const G = R.Game, c = G.chars && G.chars[pid];
-      if (!c || pid === G.party[0]) continue;
+      if (!c || pid === F.leadId()) continue;
       const ex = S.npcById && S.npcById[pid];
       if (ex && !ex.party) { if (ex.hidden) { ex.hidden = false; F._npcVis(); } shown.push(pid); continue; }   // 地図の NPC がその人
       if (ex && ex.party) {   // もう出ている（消えかけなら戻す）
