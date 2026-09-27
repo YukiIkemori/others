@@ -30,10 +30,16 @@
    "pose": "tele",
    "file": "mon_s68_tele_a1.png",
    "prompt": "the wind-up pose: the demon lord echo raises the winged orb staff high and spreads the bat-wing cape wide. Same size and position."
+  },
+  {
+   "pose": "p2",
+   "file": "mon_s68_p2_a1.png",
+   "prompt": "its second form: the echo wavers — its outline more ragged and faded, the cape torn into strips, the crown cracked, only the cold gold eyes still vivid. Same size, pose and position."
   }
  ],
  "posesUse": {
-  "tele": "mon_s68_tele_a1.png"
+  "tele": "mon_s68_tele_a1.png",
+  "p2": "mon_s68_p2_a1.png"
  },
  "poseNorm": {
   "tele": {
@@ -45,6 +51,17 @@
    "size": [
     170,
     245
+   ]
+  },
+  "p2": {
+   "offset": [
+    1,
+    0
+   ],
+   "overlap": 19917,
+   "size": [
+    157,
+    227
    ]
   }
  }

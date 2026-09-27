@@ -1,0 +1,51 @@
+{
+ "sprite": "b_valzard_echo",
+ "id": "b_valzard_echo",
+ "name": "魔王の残影",
+ "sheet": 68,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 157,
+ "h": 227,
+ "anchor": [
+  83,
+  223
+ ],
+ "points": {
+  "head": [
+   115,
+   87
+  ],
+  "center": [
+   70,
+   121
+  ],
+  "fx": [
+   84,
+   110
+  ],
+  "top": [
+   88,
+   25
+  ],
+  "body": [
+   70,
+   118,
+   40,
+   69
+  ]
+ },
+ "facing": "right",
+ "long": 227,
+ "core_long": null,
+ "target": {
+  "w": 150,
+  "h": 220,
+  "long": 220
+ },
+ "colors": 48,
+ "pitch": 5.905,
+ "pose": "p2"
+}
