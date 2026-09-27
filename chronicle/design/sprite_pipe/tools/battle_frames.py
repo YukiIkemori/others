@@ -526,7 +526,15 @@ def normalise(job, raw_path, p, lay):
         rx0, rx1 = ox + sx * (x0 + 1), ox + sx * (x0 + W - 1)
         ry0, ry1 = oy + sy * y0, oy + sy * (y0 + H)
         cbox = (int(rx0), int(max(0, ry0)), int(rx1), int(min(raw.size[1], ry1)))
-        parts = components(mask.crop(cbox), f=4, min_area_px=int(4 * s * s))
+        # search a wider box (a weapon may cross the cell border) but keep only parts centred in this cell
+        ext = int(14 * s)
+        wbox = (max(0, cbox[0] - ext), max(0, cbox[1] - ext), min(raw.size[0], cbox[2] + ext), min(raw.size[1], cbox[3] + ext))
+        parts = components(mask.crop(wbox), f=4, min_area_px=int(4 * s * s))
+        for q in parts:
+            b = q['box']
+            q['box'] = (b[0] + wbox[0] - cbox[0], b[1] + wbox[1] - cbox[1], b[2] + wbox[0] - cbox[0], b[3] + wbox[1] - cbox[1])
+        cw_, ch_ = cbox[2] - cbox[0], cbox[3] - cbox[1]
+        parts = [q for q in parts if 0 <= (q['box'][0] + q['box'][2]) / 2 < cw_ and 0 <= (q['box'][1] + q['box'][3]) / 2 < ch_]
         if not parts:
             job.log('frame %d: nothing drawn' % (i + 1))
             frames.append(dict(slot=i + 1, kind='new', img=None))
@@ -605,6 +613,7 @@ def normalise(job, raw_path, p, lay):
     for f in frames:
         if f['img'] is not None:
             Image.fromarray(f['img']).save(os.path.join(job.out, '%02d.png' % f['slot']))
+    apply_smooth(job.dir, job.action, job.st())
     st = job.st()
     st['frames'] = [dict(slot=f['slot'], kind=f['kind'], src=f.get('src'), checks=f.get('checks')) for f in frames]
     st['lay'] = olay
@@ -633,6 +642,29 @@ def drawn_pitch_f(crop, lo=3.0, hi=11.0):
             if best is None or c>best[0]: best=(c,L)
         res.append(best[1])
     return res
+
+
+def apply_smooth(sdir, action, st, only=None):
+    for e in st.get('smooth', []):
+        if only is not None and e['slot'] != only:
+            continue
+        pth = os.path.join(sdir, action, '%02d.png' % e['slot'])
+        a = np.asarray(Image.open(pth).convert('RGBA')).copy()
+        x0, y0, x1, y1 = e['box']
+        src = a.copy()
+        r = e.get('r', 3)
+        for y in range(y0, y1):
+            for x in range(x0, x1):
+                if src[y, x, 3] == 0:
+                    continue
+                if e['axis'] == 'h':
+                    line = src[y, max(x0, x - r):min(x1, x + r + 1)]
+                else:
+                    line = src[max(y0, y - r):min(y1, y + r + 1), x]
+                line = line[line[:, 3] > 0]
+                keys, cnt = np.unique(line[:, :3], axis=0, return_counts=True)
+                a[y, x, :3] = keys[cnt.argmax()]
+        Image.fromarray(a).save(pth)
 
 
 def lattice_sample(raw, mask, box, nx, ny):
@@ -956,6 +988,13 @@ def main():
     s.add_argument('action', choices=list(PLANS))
     s.add_argument('slot', type=int)
     s.add_argument('m', type=float)
+    s = sub.add_parser('smooth', help='directional mode filter in a box (x0,y0,x1,y1 in the frame png) to clean a blade')
+    s.add_argument('look')
+    s.add_argument('action', choices=list(PLANS))
+    s.add_argument('slot', type=int)
+    s.add_argument('box', type=lambda t: [int(x) for x in t.split(',')])
+    s.add_argument('--axis', default='h', choices=['h', 'v'])
+    s.add_argument('--r', type=int, default=3)
     s = sub.add_parser('drop', help='leave frames (slot numbers) out of the anim after review')
     s.add_argument('look')
     s.add_argument('action', choices=list(PLANS))
@@ -979,6 +1018,14 @@ def main():
         stt = json.load(open(sp))
         stt[o.action].setdefault('scale', {})[str(o.slot)] = o.m
         json.dump(stt, open(sp, 'w'), indent=1, ensure_ascii=False)
+    elif o.cmd == 'smooth':
+        # repaint: directional mode filter inside a box of a normalised frame (a straight blade / shaft drawn with
+        # speckle). Recorded in state.json so a later norm re-applies it.
+        sp = os.path.join(STORE, o.look, 'state.json')
+        stt = json.load(open(sp))
+        stt[o.action].setdefault('smooth', []).append(dict(slot=o.slot, box=o.box, axis=o.axis, r=o.r))
+        json.dump(stt, open(sp, 'w'), indent=1, ensure_ascii=False)
+        apply_smooth(os.path.join(STORE, o.look), o.action, stt[o.action], only=o.slot)
     elif o.cmd == 'count':
         print(images_used())
 

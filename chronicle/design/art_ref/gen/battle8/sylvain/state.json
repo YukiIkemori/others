@@ -124,7 +124,7 @@
       0,
       1
      ],
-     "err": 26.8
+     "err": 26.3
     }
    },
    {
@@ -141,12 +141,12 @@
      ],
      "height": 91,
      "rescaled": null,
-     "copy": 0.29,
+     "copy": 0.3,
      "shift": [
       0,
       1
      ],
-     "err": 26.7
+     "err": 26.9
     }
    }
   ],
@@ -251,8 +251,8 @@
      "why": "",
      "head_scale": 1.0,
      "head": [
-      97.7,
-      52.9
+      97.2,
+      53.2
      ],
      "height": 79,
      "rescaled": null,
@@ -591,12 +591,12 @@
      ],
      "height": 74,
      "rescaled": null,
-     "copy": 0.22,
+     "copy": 0.21,
      "shift": [
       0,
       0
      ],
-     "err": 13.9
+     "err": 14.1
     }
    }
   ],

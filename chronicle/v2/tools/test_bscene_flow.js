@@ -54,8 +54,8 @@ async function main() {
   ok('battle waits for input', await B.waitFor(p, `${D} && ${D}.phase==='input' && ${D}.ui`, 20000));
   ok('speed label 「▶ 通常」', (await B.ev(p, 'RPG.Battle.speedText(RPG.Settings.get("battleSpeed"))')) === '▶ 通常');
   const seen2 = [];
-  for (let i = 0; i < 3; i++) { await B.press(p, 'r'); seen2.push(await B.ev(p, 'RPG.Settings.get("battleSpeed")')); }
-  ok('R cycles 通常 → ＋1 → ＋2 → 通常', seen2.join() === '2,3,1', seen2);
+  for (let i = 0; i < 4; i++) { await B.press(p, 'r'); seen2.push(await B.ev(p, 'RPG.Settings.get("battleSpeed")')); }
+  ok('R cycles 通常 → ＋1 → ＋2 → ＋4 → 通常', seen2.join() === '2,3,5,1', seen2);
   await B.press(p, 'r');
   ok('A is not a fast-forward any more (clock runs at the set speed only)', await B.ev(p, `${D}.mul() === 2`));
   ok('the chosen speed is saved in settings (localStorage)', await B.ev(p, "(() => { try { return JSON.stringify(localStorage).includes('battleSpeed'); } catch (e) { return true; } })()"));

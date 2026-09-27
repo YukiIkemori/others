@@ -136,3 +136,16 @@
 19:57:51   cast frame 7 keep  {"ok": true, "why": "", "head_scale": 1.025, "head": [83.8, 49.3], "height": 70, "rescaled": null, "copy": null, "shift": [0, 0], "err": 30.2}
 19:57:51   cast frame 8 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [81.7, 58.2], "height": 59, "rescaled": null, "copy": 0.04, "shift": [11, 7], "err": 32.3}
 19:57:51   cast frame 9 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [81.7, 53.2], "height": 64, "rescaled": null, "copy": 0.08, "shift": [9, 6], "err": 24.0}
+20:13:34 calibrated pitch 7.97 / 7.79 px (requested 8), offset -6.5, -10.4
+20:13:36 drawn pitch of the key cells 8.00
+20:13:39 calibrated pitch 7.98 / 8.00 px (requested 8), offset 1.2, 1.1
+20:13:41 drawn pitch of the key cells 8.00
+20:13:45   frame 2 size: guide 0.600 idle 0.600 idle/corr 0.600 pitch 1.000 -> 1.000
+20:13:47 calibrated pitch 7.97 / 7.98 px (requested 8), offset 1.7, 3.9
+20:13:50   frame 2 size: guide 1.000 idle 1.000 idle/corr 1.000 pitch 1.000 -> 1.000
+20:13:50 drawn pitch of the key cells 8.00
+20:13:54   frame 4 size: guide 0.975 idle 1.025 idle/corr 1.000 pitch 1.000 -> 1.000
+20:13:57   frame 3 size: guide 0.938 idle 1.000 idle/corr 0.976 pitch 1.000 -> 1.000
+20:13:59   frame 2 size: guide 0.975 idle 0.975 idle/corr 0.975 pitch 1.000 -> 1.000
+20:14:01   frame 5 size: guide 0.850 idle 0.975 idle/corr 0.918 pitch 1.000 -> 1.000
+20:14:01   frame 5 size: guide 0.963 idle 0.938 idle/corr 0.915 pitch 1.000 -> 1.000

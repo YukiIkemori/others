@@ -436,7 +436,7 @@
     growth: { hp: 'B', mp: 'S' },
     apt: { w: { sword: 'C', greatsword: 'B', dagger: 'B', bow: 'B', staff: 'A' }, e: { fire: 'C', water: 'S', wind: 'B', earth: 'B', light: 'A', dark: 'D' } },
     innate: { name: '手当て上手', desc: '使う回復の道具がよく効く', mods: { itemPct: 25 } },
-    startEquip: { weapon1: 'w_staff_novice', shield: 'sh_primer', body: 'bd_hemp_robe', head: 'hd_wool_hood' },
+    startEquip: { weapon1: 'w_staff_prayer_0', shield: 'sh_primer', body: 'bd_hemp_robe', head: 'hd_wool_hood' },
     startTechs: ['t_staff_mind'],
     startSpells: ['s_light_1', 's_water_1'],
     profile: '港町で診療所を開いていた町医者。\n水と光の術で、けがも病も治す。\n無茶をする患者には、とても厳しい。',
@@ -459,7 +459,7 @@
     growth: { hp: 'C', mp: 'A' },
     apt: { w: { sword: 'B', greatsword: 'B', dagger: 'B', bow: 'A', staff: 'B' }, e: { fire: 'C', water: 'B', wind: 'B', earth: 'A', light: 'S', dark: 'D' } },
     innate: { name: 'お守り', desc: 'レアのアイテムを落としやすくなる', mods: { rarePct: 10 } },
-    startEquip: { weapon1: 'w_staff_novice', body: 'bd_hemp_robe', head: 'hd_wool_hood' },
+    startEquip: { weapon1: 'w_staff_prayer_0', body: 'bd_hemp_robe', head: 'hd_wool_hood' },
     startTechs: ['t_staff_mind'],
     // 光 S なのに回復（ひだまり）だけだと、光を伸ばす機会が少ない（オーナー 2026-09-27）。光の攻めの術のいちばん下の段（1 段は回復なので 2 段の光の矢）も持たせる
     startSpells: ['s_light_1', 's_light_2'],

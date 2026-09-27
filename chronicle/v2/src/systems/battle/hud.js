@@ -311,7 +311,7 @@
    * R（縦持ちは札のタップ）で 通常 → ＋1 → ＋2 → 通常。変えた直後は少し光る。→ 幅
    */
   function speedChip(g, x, y, sp, size, pre) {
-    const n = sp === 3 ? 3 : sp === 2 ? 2 : 1, label = (pre || '') + Bt.speedLabel(sp);
+    const n = Bt.speedArrows(sp), label = (pre || '') + Bt.speedLabel(sp);
     const h = size + K.u(9), padX = K.u(8), tw = size * 0.62, gap = size * 0.08;
     const iw = n * tw + (n - 1) * gap + K.u(5);
     const w = K.measure(label, { size, weight: 700 }) + padX * 2 + iw;

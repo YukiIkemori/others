@@ -68,16 +68,22 @@
     if (c) Bt.repeatMemory().cmds = c;
   }
 
-  function speed() { const s = +R.Settings.get('battleSpeed'); return s === 2 || s === 3 ? s : 1; }
+  // 速さの段（倍率）: 通常 ×1・＋1 ×2・＋2 ×3・＋4 ×5（持ち主 2026-09-27「＋4 も」）
+  const SPEEDS = [1, 2, 3, 5];
+  const norm = (s) => (SPEEDS.includes(+s) ? +s : 1);
+  function speed() { return norm(R.Settings.get('battleSpeed')); }
   /**
-   * 戦闘の速さ（2026-09-27 の持ち主の決まり）: 1 つのボタン（R・縦持ちは札のタップ）で 通常 → ＋1 → ＋2 → 通常。
-   * 設定 battleSpeed（1 | 2 | 3）に書くので、次の戦闘も読み込み直した後も同じ速さ。A の押しっぱなしの早送りは無くした（A は決定）。
+   * 戦闘の速さ（2026-09-27 の持ち主の決まり）: 1 つのボタン（R・縦持ちは札のタップ）で 通常 → ＋1 → ＋2 → ＋4 → 通常。
+   * 設定 battleSpeed（1 | 2 | 3 | 5）に書くので、次の戦闘も読み込み直した後も同じ速さ。A の押しっぱなしの早送りは無くした（A は決定）。
    */
-  Bt.SPEED_LABEL = { 1: '通常', 2: '＋1', 3: '＋2' };
-  Bt.speedLabel = (s) => Bt.SPEED_LABEL[s === 2 || s === 3 ? s : 1];
-  Bt.speedText = (s) => '▶'.repeat(s === 2 || s === 3 ? s : 1) + ' ' + Bt.speedLabel(s);
+  Bt.SPEED_LABEL = { 1: '通常', 2: '＋1', 3: '＋2', 5: '＋4' };
+  Bt.SPEEDS = SPEEDS;
+  /** 札の ▶ の数（通常 1・＋1 2・＋2 3・＋4 4） */
+  Bt.speedArrows = (s) => SPEEDS.indexOf(norm(s)) + 1;
+  Bt.speedLabel = (s) => Bt.SPEED_LABEL[norm(s)];
+  Bt.speedText = (s) => '▶'.repeat(Bt.speedArrows(s)) + ' ' + Bt.speedLabel(s);
   Bt.cycleSpeed = function () {
-    const s = speed(), n = s === 1 ? 2 : s === 2 ? 3 : 1;
+    const s = speed(), n = SPEEDS[(SPEEDS.indexOf(s) + 1) % SPEEDS.length];
     R.Settings.set('battleSpeed', n);
     try { if (R.Audio.sfx) R.Audio.sfx('cursor'); } catch (e) { /* ignore */ }
     if (current) current.speedFx = R.Engine.time;

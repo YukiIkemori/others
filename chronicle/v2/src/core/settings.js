@@ -32,7 +32,7 @@
   const VOL = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const CHOICES = {
     textSpeed: ['slow', 'normal', 'fast', 'instant'],
-    battleSpeed: [1, 2, 3],
+    battleSpeed: [1, 2, 3, 5],
     alwaysDash: [false, true],
     cursorMemory: [true, false],
     fieldZoom: ['near', 'normal', 'far'],

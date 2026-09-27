@@ -13,7 +13,7 @@
   const TABS = [
     { label: '遊び方', items: [
       { key: 'textSpeed', name: '文字の速さ', names: { slow: 'ゆっくり', normal: 'ふつう', fast: '速い', instant: '一瞬' }, desc: '会話の文字が出る速さ。' },
-      { key: 'battleSpeed', name: '戦闘の速さ', names: { 1: '通常', 2: '＋1', 3: '＋2' }, desc: '戦闘の演出の速さ。戦闘中もRボタンで「通常→＋1→＋2」と切り替えられ、次の戦闘も同じ速さで始まる。' },
+      { key: 'battleSpeed', name: '戦闘の速さ', names: { 1: '通常', 2: '＋1', 3: '＋2', 5: '＋4' }, desc: '戦闘の演出の速さ。戦闘中もRボタンで「通常→＋1→＋2→＋4」と切り替えられ、次の戦闘も同じ速さで始まる。' },
       { key: 'alwaysDash', name: '常にダッシュ', names: ONOFF, desc: 'オンにすると、B を押している間だけ歩く。' },
       { key: 'cursorMemory', name: 'カーソル記憶', names: { true: 'する', false: 'しない' }, desc: '戦闘で、前に選んだ行動と相手を覚えておく。' },
       { key: 'fieldZoom', name: 'フィールドの広さ', names: { near: 'ちかい', normal: 'ふつう', far: 'ひろい' }, desc: 'フィールドを映す広さ。' },
