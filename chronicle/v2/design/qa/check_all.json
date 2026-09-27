@@ -1,222 +1,231 @@
 {
- "date": "2026-09-27T17:01:31.523Z",
+ "date": "2026-09-27T17:17:46.738Z",
  "browser": false,
  "full": false,
  "results": [
   {
    "name": "build",
    "code": 0,
-   "ms": 10733,
-   "summary": "[build] media (external): 31 BGM (slice), 416 voice, 0 portraits, 239 sprite sheets, 1314 env images, 11 title images, 130.9 MB  [10053 ms]"
+   "ms": 9621,
+   "summary": "[build] media (external): 31 BGM (slice), 416 voice, 0 portraits, 239 sprite sheets, 1314 env images, 11 title images, 130.9 MB  [8317 ms]"
   },
   {
    "name": "test_core",
    "code": 1,
-   "ms": 11726,
+   "ms": 14156,
    "summary": "76/77 passed  (1 FAILED)",
    "tail": "pass  battle object names\npass  units shape\npass  battle runs to an end with valid events\npass  rewards shape\npass  ev names (§2.5.10)\npass  fixtures: 1 state + 2 scenes, valid\npass  core first 6 in order\npass  main.js last, dev before it\npass  index order has no dev files\nFAIL  no API keys / model identifiers in v2 sources  [\"/home/user/others/chronicle/v2/design/bgm_changes.md\"]\n\n76/77 passed  (1 FAILED)"
   },
   {
    "name": "test_core_contract",
    "code": 0,
-   "ms": 13443,
+   "ms": 14102,
    "summary": "test_core_contract: 51/51 passed"
   },
   {
    "name": "test_render",
    "code": 1,
-   "ms": 12385,
+   "ms": 14029,
    "summary": "test_render: 144/145 passed",
-   "tail": "\n== draw\npass  draw rounds and puts (ox, oy) on the point\npass  flip mirrors around the point\npass  alpha restored after draw\npass  draw a Sheet picks frame i\npass  draw(null) is a no-op\npass  frameAt walks the pose by time\n\ntest_render: 144/145 passed\nfailed:\n  real clock: median pump 10.91 ms ≤ 3"
+   "tail": "\n== draw\npass  draw rounds and puts (ox, oy) on the point\npass  flip mirrors around the point\npass  alpha restored after draw\npass  draw a Sheet picks frame i\npass  draw(null) is a no-op\npass  frameAt walks the pose by time\n\ntest_render: 144/145 passed\nfailed:\n  real clock: median pump 21.61 ms ≤ 3"
   },
   {
    "name": "test_uik",
    "code": 0,
-   "ms": 12375,
+   "ms": 12660,
    "summary": "test_uik: 37/37 passed"
   },
   {
    "name": "test_cast",
    "code": 0,
-   "ms": 9706,
+   "ms": 10962,
    "summary": "test_cast: 865/865 passed"
   },
   {
    "name": "test_beast",
    "code": 0,
-   "ms": 10497,
+   "ms": 7299,
    "summary": "test_beast: 94/94 passed"
   },
   {
    "name": "test_terrain",
    "code": 0,
-   "ms": 64012,
+   "ms": 54456,
    "summary": "test_terrain: 76/76 passed"
   },
   {
    "name": "test_field",
    "code": 0,
-   "ms": 26359,
+   "ms": 23072,
    "summary": "test_field: 102/102 passed"
   },
   {
    "name": "test_events",
    "code": 0,
-   "ms": 19390,
+   "ms": 20720,
    "summary": "test_events: 164/164 passed"
   },
   {
    "name": "test_rules",
    "code": 0,
-   "ms": 16260,
+   "ms": 11739,
    "summary": "test_rules: 199/199 passed"
   },
   {
    "name": "test_battle",
    "code": 0,
-   "ms": 59972,
+   "ms": 62408,
    "summary": "test_battle: 125/125 passed"
   },
   {
    "name": "test_bscene",
    "code": 0,
-   "ms": 15706,
+   "ms": 11489,
    "summary": "test_bscene: 49/49 passed"
   },
   {
    "name": "test_screens",
-   "code": 0,
-   "ms": 12882,
-   "summary": "test_screens: 396/396 passed"
+   "code": 1,
+   "ms": 10428,
+   "summary": "test_screens: 395/396 passed",
+   "tail": "pass  menus_skills.json is K.fixtureScene and opens a known screen\npass  menus_status.json is K.fixtureScene and opens a known screen\npass  menus_tavern.json is K.fixtureScene and opens a known screen\npass  menus_tip.json is K.fixtureScene and opens a known screen\npass  menus_title.json is K.fixtureScene and opens a known screen\npass  menus_warp.json is K.fixtureScene and opens a known screen\npass  a scene fixture for every screen\npass  menus_party is K.fixtureState\n\ntest_screens: 395/396 passed\nfailed:\n  shop.js: no ctx.filter / setTimeout"
   },
   {
    "name": "test_content_p",
-   "code": 0,
-   "ms": 144066,
-   "summary": "test_content_p: 544/544 passed"
+   "code": 1,
+   "ms": 148123,
+   "summary": "test_content_p: 542/544 passed",
+   "tail": "pass  依頼 q_pharos_lamp: 2 つの灯籠をともして礼\npass  依頼 q_pharos_well: 巣を見つけて解決\npass  依頼 q_pharos_delivery: 包みを受け取る\npass  風鳴りの丘: 風の鈴\npass  {hero} が名前に置き換わる\npass  T1: 手紙 → 少女（v_fine_t1_01・02）→ 余白の一行\npass  T1 は 1 回だけ\n\ntest_content_p: 542/544 passed\nfailed:\n  lighthouse_1: 泉 1 つ以上\n  well: 泉 1 つ以上"
   },
   {
    "name": "test_content_f",
-   "code": 0,
-   "ms": 87821,
-   "summary": "CONTENT-F: 655/655 passed"
+   "code": 1,
+   "ms": 80867,
+   "summary": "CONTENT-F: 652/655 passed",
+   "tail": "pass  yura_gravekeeper: meta の書き方\npass  yura_lampkeeper: meta の書き方\npass  yura_child: meta の書き方\npass  yura_seller: meta の書き方\npass  yura_inn_keeper: meta の書き方\npass  yura_stone: meta の書き方\n\nCONTENT-F: 652/655 passed\nfailed:\n  verda_1: 泉が 1 つ以上\n  verda_2: 泉が 1 つ以上\n  elder_1: 泉が 1 つ以上"
   },
   {
    "name": "test_content_desert",
    "code": 0,
-   "ms": 1553194,
+   "ms": 1671287,
    "summary": "test_content_desert: 34/34 passed"
   },
   {
    "name": "validate",
    "code": 0,
-   "ms": 12325,
+   "ms": 12659,
    "summary": "validate: 57/57 passed"
   },
   {
    "name": "progress",
    "code": 0,
-   "ms": 3057682,
+   "ms": 3206293,
    "summary": "progress: 31/31 passed"
   },
   {
    "name": "check_text",
    "code": 1,
-   "ms": 17908,
-   "summary": "check_text: 7 error(s), 1 warning(s) in 8091 Japanese strings of 287 files — T3 1, T4 3, T2 2, T1 1",
-   "tail": "ERROR T3 src/events/desert_tomb.js:108 '這' is not 常用漢字 nor in STYLE_JA §2: もらった水のおかげで、⏎這ってでも帰れそうだ。⏎……この恩は、忘れねえ。\nERROR T4 src/events/prologue_lighthouse.js:31 DQ-style word spacing (half-width space between Japanese words): ガチャリ……。⏎灯台の鍵で 扉を開けた！\nERROR T4 src/screens/settings.js:16 DQ-style word spacing (half-width space between Japanese words): 戦闘の演出の速さ。戦闘中も R で 通常 → ＋1 → ＋2 と切り替え…\nERROR T2 src/screens/shop.js:309 '並び替え' (§7.3): 並び替え\nERROR T2 src/screens/shop.js:312 '並び替え' (§7.3): 並び替え\nERROR T4 src/screens/shop.js:474 DQ-style word spacing (half-width space between Japanese words): ←→ 1 つ ・ ↑↓ 10 ずつ\nERROR T1 src/systems/battle/demo.js:203 '影縫い' in a string (STYLE_JA §7.1): 影縫い\n\ncheck_text: 7 error(s), 1 warning(s) in 8091 Japanese strings of 287 files — T3 1, T4 3, T2 2, T1 1"
+   "ms": 17759,
+   "summary": "check_text: 7 error(s), 1 warning(s) in 8093 Japanese strings of 288 files — T3 1, T4 3, T2 2, T1 1",
+   "tail": "ERROR T3 src/events/desert_tomb.js:108 '這' is not 常用漢字 nor in STYLE_JA §2: もらった水のおかげで、⏎這ってでも帰れそうだ。⏎……この恩は、忘れねえ。\nERROR T4 src/events/prologue_lighthouse.js:31 DQ-style word spacing (half-width space between Japanese words): ガチャリ……。⏎灯台の鍵で 扉を開けた！\nERROR T4 src/screens/settings.js:16 DQ-style word spacing (half-width space between Japanese words): 戦闘の演出の速さ。戦闘中も R で 通常 → ＋1 → ＋2 と切り替え…\nERROR T2 src/screens/shop.js:309 '並び替え' (§7.3): 並び替え\nERROR T2 src/screens/shop.js:312 '並び替え' (§7.3): 並び替え\nERROR T4 src/screens/shop.js:474 DQ-style word spacing (half-width space between Japanese words): ←→ 1 つ ・ ↑↓ 10 ずつ\nERROR T1 src/systems/battle/demo.js:203 '影縫い' in a string (STYLE_JA §7.1): 影縫い\n\ncheck_text: 7 error(s), 1 warning(s) in 8093 Japanese strings of 288 files — T3 1, T4 3, T2 2, T1 1"
   },
   {
    "name": "check_voice",
    "code": 0,
-   "ms": 1588,
+   "ms": 2255,
    "summary": "check_voice: 216/216 passed"
   },
   {
    "name": "check_leads",
    "code": 0,
-   "ms": 9311,
+   "ms": 10434,
    "summary": "check_leads: 34/34 passed"
   },
   {
    "name": "check_springs",
    "code": 0,
-   "ms": 572941,
+   "ms": 851988,
    "summary": "check_springs: 35/35 passed"
   },
   {
    "name": "check_density",
    "code": 0,
-   "ms": 21469,
+   "ms": 24141,
    "summary": "check_density: 39/39 passed"
   },
   {
    "name": "check_world",
    "code": 0,
-   "ms": 286099,
+   "ms": 439761,
    "summary": "check_world: 7/7 passed"
   },
   {
    "name": "check_chests",
    "code": 2,
-   "ms": 50793,
+   "ms": 59660,
    "summary": "pass  縦切りの宝箱 127 個: 床の上・重なる物の下でない・id が一つ・中身あり",
    "tail": "== データ\npass  world: ワールドに宝箱 0（A27）\npass  縦切りの宝箱 127 個: 床の上・重なる物の下でない・id が一つ・中身あり\n\n== 焼いた床との明るさの差（ブラウザ）\npage.waitForFunction: Timeout 15000ms exceeded.\n    at Object.open (/home/user/others/chronicle/v2/tools/lib/browser.js:51:11)\n    at async /home/user/others/chronicle/v2/tools/qa/check_chests.js:41:13 {\n  name: 'TimeoutError'\n}"
   },
   {
    "name": "check_secrets",
    "code": 2,
-   "ms": 52173,
+   "ms": 63012,
    "summary": "pass  well 通路 2,26: 見つけた後は先の宝箱 1 個の隣に歩いて届く",
    "tail": "pass  well 通路 2,26: 見つけた後（通路の 1 マス）は先の部屋が出る\npass  well 通路 2,26: 通路のひと続きは 1 マスで全部開く\npass  well 通路 2,26: 見つけた後は先の部屋が小地図に載る\npass  well 通路 2,26: 見つけた後は通路に歩いて入れる\npass  well 通路 2,26: 見つけた後は先の宝箱 1 個の隣に歩いて届く\n\n== 見つける前は周りの壁と同じ画素（ブラウザ）\npage.waitForFunction: Timeout 15000ms exceeded.\n    at Object.open (/home/user/others/chronicle/v2/tools/lib/browser.js:51:11)\n    at async /home/user/others/chronicle/v2/tools/qa/check_secrets.js:157:13 {\n  name: 'TimeoutError'\n}"
   },
   {
    "name": "check_stubs",
    "code": 2,
-   "ms": 50895,
+   "ms": 59397,
    "summary": "pass  始まりの場所は本物（roa_house の roa_house_intro）",
    "tail": "== 1. node: 埋まった仮の関数\npass  仮の実装で埋まった名前空間の関数 0\n    仮のデータ（id が stub_、使わない物）: DB.materials: stub_grass,stub_road,stub_tree,stub_water ／ DB.maps: stub_road ／ DB.events: stub_guard_talk ／ DB.troops: tr_stub ／ DB.monsters: stub_slime ／ DB.encounters: z_stub ／ DB.locations: stub_road\npass  縦切りのデータ・イベントが stub_ の id を参照しない\npass  始まりの場所は本物（roa_house の roa_house_intro）\n\n== 2. ブラウザ: 起動 → はじめから → ロアの里\npage.waitForFunction: Timeout 15000ms exceeded.\n    at Object.open (/home/user/others/chronicle/v2/tools/lib/browser.js:51:11)\n    at async /home/user/others/chronicle/v2/tools/qa/check_stubs.js:38:15 {\n  name: 'TimeoutError'\n}"
   },
   {
    "name": "check_reach",
    "code": 0,
-   "ms": 75161,
+   "ms": 71449,
    "summary": "check_reach: 1/1 passed"
+  },
+  {
+   "name": "check_stairs",
+   "code": 0,
+   "ms": 22770,
+   "summary": "check_stairs: 234/234 passed"
   },
   {
    "name": "sim_zones",
    "code": 0,
-   "ms": 1533850,
+   "ms": 756266,
    "summary": "all zones: HP loss 9.0%, rounds 2.98 pass"
   },
   {
    "name": "sim_zones --segments",
    "code": 0,
-   "ms": 2589029,
+   "ms": 3573255,
    "summary": "segments: 12/12 pass"
   },
   {
    "name": "sim_bosses",
    "code": 0,
-   "ms": 2908278,
+   "ms": 3922388,
    "summary": "tr_b_frost_admiral@6      0       0      100   100   12.2   0.03  pass"
   },
   {
    "name": "sim_growth",
    "code": 0,
-   "ms": 106297,
+   "ms": 100229,
    "summary": "sim_growth: 8/8 passed (runs 20, seed 1)"
   },
   {
    "name": "sim_glimmer",
    "code": 0,
-   "ms": 1728642,
+   "ms": 828479,
    "summary": "NOTE (above/below the estimate) slice scope near the V2_PLAN §3.9 estimate (glimmered techs lv1–3 ≈ 20: 28 + starters 8, max lv 3; spells step 1–2 ≈ 12: 18)"
   },
   {
    "name": "sim_loot",
    "code": 0,
-   "ms": 75287,
+   "ms": 153846,
    "summary": "H5 倒しても落ちない: 30000 体、盗み専用のドロップ 0  pass"
   }
  ]
