@@ -1,0 +1,923 @@
+{
+ "character": "arun",
+ "set": "battle",
+ "image": "arun_battle.png",
+ "cell": [
+  130,
+  87
+ ],
+ "anchor": [
+  68,
+  84
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "idle_a": {
+   "x": 0,
+   "y": 0,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     61,
+     21
+    ],
+    "center": [
+     64,
+     55
+    ],
+    "front": [
+     30,
+     77
+    ]
+   }
+  },
+  "idle_b": {
+   "x": 130,
+   "y": 0,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     59,
+     22
+    ],
+    "center": [
+     63,
+     56
+    ],
+    "front": [
+     31,
+     78
+    ]
+   }
+  },
+  "step": {
+   "x": 260,
+   "y": 0,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     77,
+     23
+    ],
+    "center": [
+     86,
+     55
+    ],
+    "front": [
+     50,
+     81
+    ]
+   }
+  },
+  "guard": {
+   "x": 390,
+   "y": 0,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     66,
+     21
+    ],
+    "center": [
+     68,
+     53
+    ],
+    "front": [
+     22,
+     45
+    ]
+   }
+  },
+  "hit": {
+   "x": 520,
+   "y": 0,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     45,
+     23
+    ],
+    "center": [
+     58,
+     54
+    ],
+    "front": [
+     29,
+     81
+    ]
+   }
+  },
+  "weak": {
+   "x": 0,
+   "y": 87,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     51,
+     32
+    ],
+    "center": [
+     60,
+     61
+    ],
+    "front": [
+     31,
+     50
+    ]
+   }
+  },
+  "ko": {
+   "x": 130,
+   "y": 87,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     83,
+     49
+    ],
+    "center": [
+     69,
+     69
+    ],
+    "front": [
+     20,
+     75
+    ]
+   }
+  },
+  "victory_a": {
+   "x": 260,
+   "y": 87,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     44,
+     2
+    ],
+    "center": [
+     67,
+     49
+    ],
+    "front": [
+     42,
+     3
+    ]
+   }
+  },
+  "victory_b": {
+   "x": 390,
+   "y": 87,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     64,
+     20
+    ],
+    "center": [
+     66,
+     55
+    ],
+    "front": [
+     35,
+     79
+    ]
+   }
+  },
+  "glimmer": {
+   "x": 520,
+   "y": 87,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     63,
+     19
+    ],
+    "center": [
+     65,
+     55
+    ],
+    "front": [
+     33,
+     79
+    ]
+   }
+  },
+  "windup": {
+   "x": 0,
+   "y": 174,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     87,
+     21
+    ],
+    "center": [
+     67,
+     54
+    ],
+    "front": [
+     43,
+     36
+    ]
+   }
+  },
+  "slash": {
+   "x": 130,
+   "y": 174,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     84,
+     21
+    ],
+    "center": [
+     92,
+     54
+    ],
+    "front": [
+     53,
+     82
+    ]
+   }
+  },
+  "thrust_ready": {
+   "x": 260,
+   "y": 174,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     61,
+     21
+    ],
+    "center": [
+     65,
+     53
+    ],
+    "front": [
+     21,
+     45
+    ]
+   }
+  },
+  "thrust": {
+   "x": 390,
+   "y": 174,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     53,
+     22
+    ],
+    "center": [
+     59,
+     53
+    ],
+    "front": [
+     2,
+     45
+    ]
+   }
+  },
+  "charge": {
+   "x": 520,
+   "y": 174,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     59,
+     41
+    ],
+    "center": [
+     67,
+     64
+    ],
+    "front": [
+     40,
+     51
+    ]
+   }
+  },
+  "smash": {
+   "x": 0,
+   "y": 261,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     63,
+     10
+    ],
+    "center": [
+     60,
+     48
+    ],
+    "front": [
+     36,
+     32
+    ]
+   }
+  },
+  "cast_a": {
+   "x": 130,
+   "y": 261,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     67,
+     21
+    ],
+    "center": [
+     70,
+     53
+    ],
+    "front": [
+     35,
+     44
+    ]
+   }
+  },
+  "cast_b": {
+   "x": 260,
+   "y": 261,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     51,
+     21
+    ],
+    "center": [
+     72,
+     54
+    ],
+    "front": [
+     46,
+     28
+    ]
+   }
+  },
+  "item": {
+   "x": 390,
+   "y": 261,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     71,
+     21
+    ],
+    "center": [
+     70,
+     52
+    ],
+    "front": [
+     43,
+     33
+    ]
+   }
+  },
+  "evade": {
+   "x": 520,
+   "y": 261,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     64,
+     21
+    ],
+    "center": [
+     71,
+     49
+    ],
+    "front": [
+     40,
+     61
+    ]
+   }
+  },
+  "flee": {
+   "x": 0,
+   "y": 348,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     85,
+     21
+    ],
+    "center": [
+     75,
+     51
+    ],
+    "front": [
+     44,
+     42
+    ]
+   }
+  },
+  "sleep": {
+   "x": 130,
+   "y": 348,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     60,
+     21
+    ],
+    "center": [
+     66,
+     54
+    ],
+    "front": [
+     45,
+     33
+    ]
+   }
+  },
+  "confuse": {
+   "x": 260,
+   "y": 348,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     71,
+     21
+    ],
+    "center": [
+     73,
+     53
+    ],
+    "front": [
+     45,
+     48
+    ]
+   }
+  },
+  "cover": {
+   "x": 390,
+   "y": 348,
+   "w": 130,
+   "h": 87,
+   "anchor": [
+    68,
+    84
+   ],
+   "points": {
+    "head": [
+     58,
+     21
+    ],
+    "center": [
+     67,
+     52
+    ],
+    "front": [
+     26,
+     44
+    ]
+   }
+  }
+ },
+ "anims": {
+  "idle": {
+   "frames": [
+    "idle_a",
+    "idle_b"
+   ],
+   "ms": [
+    520,
+    520
+   ],
+   "loop": true
+  },
+  "attack_sword": {
+   "keys": [
+    {
+     "frame": "step",
+     "ms": 140,
+     "dx": -24,
+     "ease": "out"
+    },
+    {
+     "frame": "windup",
+     "ms": 110,
+     "dx": -24,
+     "hit": false,
+     "fx_at": "front"
+    },
+    {
+     "frame": "slash",
+     "ms": 220,
+     "dx": -24,
+     "hit": true,
+     "fx_at": "front"
+    },
+    {
+     "frame": "idle_a",
+     "ms": 200,
+     "dx": 0,
+     "ease": "in_out"
+    }
+   ]
+  },
+  "attack_thrust": {
+   "keys": [
+    {
+     "frame": "step",
+     "ms": 140,
+     "dx": -24,
+     "ease": "out"
+    },
+    {
+     "frame": "thrust_ready",
+     "ms": 110,
+     "dx": -24,
+     "hit": false,
+     "fx_at": "front"
+    },
+    {
+     "frame": "thrust",
+     "ms": 220,
+     "dx": -24,
+     "hit": true,
+     "fx_at": "front"
+    },
+    {
+     "frame": "idle_a",
+     "ms": 200,
+     "dx": 0,
+     "ease": "in_out"
+    }
+   ]
+  },
+  "attack_smash": {
+   "keys": [
+    {
+     "frame": "step",
+     "ms": 140,
+     "dx": -24,
+     "ease": "out"
+    },
+    {
+     "frame": "charge",
+     "ms": 110,
+     "dx": -24,
+     "hit": false,
+     "fx_at": "front"
+    },
+    {
+     "frame": "smash",
+     "ms": 220,
+     "dx": -24,
+     "hit": true,
+     "fx_at": "front"
+    },
+    {
+     "frame": "idle_a",
+     "ms": 200,
+     "dx": 0,
+     "ease": "in_out"
+    }
+   ]
+  },
+  "cast": {
+   "keys": [
+    {
+     "frame": "cast_a",
+     "ms": 110,
+     "dx": 0,
+     "hit": false,
+     "fx_at": "front"
+    },
+    {
+     "frame": "cast_b",
+     "ms": 220,
+     "dx": 0,
+     "hit": false,
+     "fx_at": "front"
+    }
+   ]
+  },
+  "victory": {
+   "keys": [
+    {
+     "frame": "victory_a",
+     "ms": 110,
+     "dx": 0,
+     "hit": false,
+     "fx_at": "front"
+    },
+    {
+     "frame": "victory_b",
+     "ms": 220,
+     "dx": 0,
+     "hit": false,
+     "fx_at": "front"
+    }
+   ]
+  },
+  "hurt": {
+   "keys": [
+    {
+     "frame": "hit",
+     "ms": 80,
+     "dx": 6,
+     "ease": "out"
+    },
+    {
+     "frame": "hit",
+     "ms": 240,
+     "dx": 6
+    },
+    {
+     "frame": "idle_a",
+     "ms": 200,
+     "dx": 0,
+     "ease": "in_out"
+    }
+   ]
+  },
+  "ko_fall": {
+   "keys": [
+    {
+     "frame": "hit",
+     "ms": 160,
+     "dx": 6
+    },
+    {
+     "frame": "weak",
+     "ms": 320,
+     "dx": 6
+    },
+    {
+     "frame": "ko",
+     "ms": 900,
+     "dx": 6
+    }
+   ]
+  },
+  "guard": {
+   "frames": [
+    "guard"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "hit": {
+   "frames": [
+    "hit"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "weak": {
+   "frames": [
+    "weak"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "ko": {
+   "frames": [
+    "ko"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "glimmer": {
+   "frames": [
+    "glimmer"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "item": {
+   "frames": [
+    "item"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "evade": {
+   "frames": [
+    "evade"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "flee": {
+   "frames": [
+    "flee"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "sleep": {
+   "frames": [
+    "sleep"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "confuse": {
+   "frames": [
+    "confuse"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "cover": {
+   "frames": [
+    "cover"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "step": {
+   "frames": [
+    "step"
+   ],
+   "ms": [
+    0
+   ]
+  }
+ },
+ "palette": [
+  "#100908",
+  "#1b0910",
+  "#231711",
+  "#2e251f",
+  "#443d35",
+  "#64584d",
+  "#f1e9db",
+  "#2f0f18",
+  "#301513",
+  "#451817",
+  "#5c211e",
+  "#712621",
+  "#882e27",
+  "#9f302b",
+  "#a74133",
+  "#b73f34",
+  "#cf4639",
+  "#ce5741",
+  "#352116",
+  "#462818",
+  "#443023",
+  "#572d1c",
+  "#553b2a",
+  "#613d23",
+  "#6d3b23",
+  "#684c37",
+  "#764c2b",
+  "#894d2c",
+  "#7e6047",
+  "#8e6037",
+  "#a06136",
+  "#946e52",
+  "#8c7c6a",
+  "#9b7c5c",
+  "#ae7a47",
+  "#c57946",
+  "#ae8b6a",
+  "#ca9240",
+  "#e38631",
+  "#c09d77",
+  "#b2a593",
+  "#d69c64",
+  "#cdad8a",
+  "#eab83f",
+  "#dec096",
+  "#eebc82",
+  "#e2caac",
+  "#f4d26e",
+  "#f5d7a8",
+  "#f6e6c3",
+  "#69a1c7",
+  "#0d509e"
+ ],
+ "facing": "left",
+ "target_height": 64
+}

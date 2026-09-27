@@ -2,7 +2,7 @@
 // A11 の調整済み）を写し、場所ごとに lvOff・率・戦闘背景 'snow' を変える。レア魔物は rare_encounters と同じ形で足す。
 //   zw_snow        雪原の原野（ワールド）           zw_snow_road  雪原の街道（率 0.3）
 //   z_snow_woods   雪の林（薪集め。ダンジョンより軽い）  z_snow_peak   白竜の峰
-//   z_snow_icicle  つららの回廊（寄り道、+1）         z_snow_floe   北の流氷原（オーロラの崖・氷に閉じた帆船）
+//   z_snow_icicle  つららの回廊（寄り道。強めの一行 mid で見る）         z_snow_floe   北の流氷原（オーロラの崖・氷に閉じた帆船）
 (function (R) {
   'use strict';
   const E = R.DB.encounters;
@@ -13,13 +13,15 @@
     for (const g of z.groups) if (g.mons.some((m) => m[0] === '@yeti')) { g.w = g.w / 2; for (const m of g.mons) if (m[0] !== '@yeti') m[2] = Math.min(m[2], 2); }
     return z;
   };
+  // 雪ん子（frostling）の群れは 4 匹だと重い（p95 が 20% を超える）ので、雪原の表では 3 匹まで（sim_zones で合わせた）
+  for (const z of [W, P]) if (z) for (const g of z.groups) for (const m of g.mons) if (m[0] === '@frostling') m[2] = Math.min(m[2], g.mons.length > 1 ? 1 : 3);
   if (W) W.bg = 'snow';
   if (P) P.bg = 'snow';
   Object.assign(E, {
     zw_snow_road: clone(W, { rate: 0.3, bg: 'snow' }),
     z_snow_woods: clone(W, { lvOff: 0, bg: 'snow' }),
     z_snow_peak: lessYeti(clone(P, { lvOff: 0, bg: 'snow' })),
-    z_snow_icicle: lessYeti(clone(P, { lvOff: 1, bg: 'snow' })),
+    z_snow_icicle: lessYeti(clone(P, { lvOff: 0, bg: 'snow' })),
     z_snow_floe: clone(W, { lvOff: 0, bg: 'snow' }),
   });
   // 籠城の門の戦い（troops_snow.js）と同じ地方の印

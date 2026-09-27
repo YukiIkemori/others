@@ -1,0 +1,55 @@
+{
+ "desc": "CONTENT（雪原）: ワールドの北の流氷原（解決の後）",
+ "hero": {
+  "type": "warrior",
+  "sex": "m",
+  "name": "アルン",
+  "fav": "sword"
+ },
+ "party": [
+  "hero",
+  "bartolo",
+  "marta",
+  "sylvain"
+ ],
+ "reserve": [],
+ "tier": 1,
+ "gl": "auto",
+ "prof": "auto",
+ "flags": {
+  "prologue_done": true,
+  "forest_start": true,
+  "cleared_r_forest": true,
+  "story_t1": true,
+  "snow_start": true,
+  "snow_jorn_talked": true,
+  "snow_logs_done": true,
+  "snow_ice_done": true,
+  "snow_tales_done": true,
+  "snow_festival_lit": true,
+  "snow_siege_done": true,
+  "snow_dawn": true,
+  "snow_giant": true,
+  "snow_ice_1": true,
+  "snow_ice_2": true,
+  "snow_ice_3": true,
+  "snow_neve": true,
+  "snow_finale_done": true,
+  "snow_day2": true,
+  "cleared_r_snow": true,
+  "snow_base_open": true
+ },
+ "vars": {},
+ "items": {
+  "i_potion": 4,
+  "i_ether": 2,
+  "i_revive": 2,
+  "i_firepot": 3
+ },
+ "gold": 1500,
+ "leads": [],
+ "map": {
+  "id": "world",
+  "spawn": "floe"
+ }
+}

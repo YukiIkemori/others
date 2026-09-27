@@ -2,3 +2,31 @@
 12:00:48   pitch in raw image: 8.56 px per art pixel (upright median 685 px / 80)
 12:00:48 sheet 9 -> art_ref/gen/arun/arun_v4/arun_sheet_09.png
 12:01:01 sheet 1 attempt 1: restyle edit arun_sheet_01.png (1920x2048, quality medium, 4 refs)
+12:02:00   pitch in raw image: 7.94 px per art pixel (upright median 381 px / 48)
+12:02:00 sheet 1 -> art_ref/gen/arun/arun_v4/arun_sheet_01.png
+12:02:01 sheet 2 attempt 1: restyle edit arun_sheet_02.png (2560x2048, quality medium, 4 refs)
+12:02:55   pitch in raw image: 7.83 px per art pixel (upright median 376 px / 48)
+12:02:56 sheet 2 -> art_ref/gen/arun/arun_v4/arun_sheet_02.png
+12:03:44 sheet 1 attempt 2: restyle edit arun_sheet_01.png (1920x2048, quality medium, 4 refs)
+12:04:38   pitch in raw image: 8.17 px per art pixel (upright median 392 px / 48)
+12:04:39 sheet 1 -> art_ref/gen/arun/arun_v4/arun_sheet_01.png
+12:05:13 sheet 1 attempt 3: restyle edit arun_sheet_01.png (1920x2048, quality medium, 3 refs)
+12:06:10   pitch in raw image: 7.77 px per art pixel (upright median 373 px / 48)
+12:06:11 sheet 1 -> art_ref/gen/arun/arun_v4/arun_sheet_01.png
+12:07:15 sheet 9 attempt 2: restyle edit arun_sheet_09.png (3072x1536, quality medium, 3 refs)
+12:08:00   pitch in raw image: 8.80 px per art pixel (upright median 704 px / 80)
+12:08:01 sheet 9 -> art_ref/gen/arun/arun_v4/arun_sheet_09.png
+12:08:21 sheet 2 attempt 2: restyle edit arun_sheet_02.png (2560x2048, quality medium, 3 refs)
+12:09:12   pitch in raw image: 7.52 px per art pixel (upright median 361 px / 48)
+12:09:13 sheet 2 -> art_ref/gen/arun/arun_v4/arun_sheet_02.png
+12:12:52 sheet 3 attempt 1: restyle edit arun_sheet_03.png (3072x1536, quality medium, 3 refs)
+12:13:41   pitch in raw image: 7.50 px per art pixel (upright median 360 px / 48)
+12:13:42 sheet 3 -> art_ref/gen/arun/arun_v4/arun_sheet_03.png
+12:13:43 sheet 4 attempt 1: restyle edit arun_sheet_04.png (2816x1024, quality medium, 3 refs)
+12:14:19   pitch in raw image: 7.38 px per art pixel (upright median 354 px / 48)
+12:14:19 sheet 4 -> art_ref/gen/arun/arun_v4/arun_sheet_04.png
+12:17:37 v4 fix: {4: [{'sheet': 4, 'code': 'height', 'slot': 'act_up_call', 'msg': 'シート4 の 3 番（上向き・手を挙げる） の身長が 57 ドット（ほかは 49）', 'ask': 'シート4の3番（上向き・手を挙げる）だけ大きさが違う。ほかのポーズと同じ身長にして、同じ条件で描き直して', 'data': {}}, {'sheet': 4, 'code': 'facing', 'slot': 'act_left_surprise', 'msg': 'シート4 の 6 番（左向き・驚く） が右を向いている（左向きのはず。点数 -2.4）', 'ask': 'シート4の6番（左向き・驚く）が右を向いている。左向きにして、同じ条件で描き直して', 'data': {'score': -2.394421462438599, 'cues': {'head': -1.5, 'upper': -1.7, 'scarf': 0.81}}}]}
+12:17:38 sheet 4 fix1: edit act_up_call,act_left_surprise (window rows 1-2 cols 1-4, 2816x1024, pitch 8, quality medium)
+12:18:12   calibrated pitch 7.90 px (requested 8; 6 reference poses)
+12:18:12   pasted: act_up_call 26x48, act_left_surprise 32x54
+12:18:12 pipeline: sheets.py ../art_ref/gen/arun/arun_v4 --char arun --out out/arun_v4 --check

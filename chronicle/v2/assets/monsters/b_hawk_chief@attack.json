@@ -5,46 +5,47 @@
  "size": "B",
  "kind": "boss",
  "fly": false,
- "w": 34,
- "h": 53,
+ "w": 68,
+ "h": 106,
  "anchor": [
-  17,
-  52
+  34,
+  104
  ],
  "points": {
   "head": [
-   19,
-   3
+   38,
+   6
   ],
   "center": [
-   17,
-   26
+   34,
+   52
   ],
   "fx": [
-   19,
-   22
+   38,
+   44
   ],
   "top": [
-   17,
+   34,
    0
   ],
   "body": [
-   17,
-   28,
-   11,
-   17
+   34,
+   56,
+   22,
+   34
   ]
  },
  "facing": "right",
- "long": 53,
+ "long": 106,
  "core_long": null,
  "target": {
-  "w": 34,
-  "h": 53,
-  "long": 53
+  "w": 68,
+  "h": 106,
+  "long": 106
  },
  "colors": 48,
  "pitch": 8,
  "note": "derived from the field sprite (v2/assets/sprites) by the desert content agent",
- "pose": "attack"
+ "pose": "attack",
+ "scaled2x": true
 }

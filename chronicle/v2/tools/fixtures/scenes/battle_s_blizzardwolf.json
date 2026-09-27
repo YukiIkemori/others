@@ -1,0 +1,10 @@
+{
+ "scene": "battle",
+ "desc": "CONTENT（雪原）: 吹雪の大狼（籠城の最後の波。守らなかった門 1 つ）",
+ "state": "content_s_battle",
+ "setup": {
+  "troop": "tr_b_blizzardwolf_1",
+  "boss": true,
+  "seed": "shot-blizzardwolf"
+ }
+}

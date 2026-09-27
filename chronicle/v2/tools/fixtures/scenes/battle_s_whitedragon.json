@@ -1,0 +1,10 @@
+{
+ "scene": "battle",
+ "desc": "CONTENT（雪原）: 白竜ネーヴェ（地方ボス）",
+ "state": "content_s_battle",
+ "setup": {
+  "troop": "tr_b_whitedragon",
+  "boss": true,
+  "seed": "shot-whitedragon"
+ }
+}

@@ -1,0 +1,284 @@
+{
+ "sheets": {
+  "1": {
+   "attempts": [
+    {
+     "raw": "raw/s1b_a1.png",
+     "quality": "medium",
+     "t": "2026-09-27T12:10:43"
+    }
+   ],
+   "frames": {
+    "walk_down_2": {
+     "row": 1,
+     "column": 3,
+     "logical_bbox": [
+      29,
+      51
+     ],
+     "air": 0
+    },
+    "walk_down_0": {
+     "row": 1,
+     "column": 1,
+     "logical_bbox": [
+      29,
+      50
+     ],
+     "air": 0
+    },
+    "walk_down_1": {
+     "row": 1,
+     "column": 2,
+     "logical_bbox": [
+      28,
+      50
+     ],
+     "air": 0
+    },
+    "walk_up_1": {
+     "row": 2,
+     "column": 2,
+     "logical_bbox": [
+      29,
+      50
+     ],
+     "air": 0
+    },
+    "walk_up_2": {
+     "row": 2,
+     "column": 3,
+     "logical_bbox": [
+      29,
+      50
+     ],
+     "air": 0
+    },
+    "walk_up_0": {
+     "row": 2,
+     "column": 1,
+     "logical_bbox": [
+      29,
+      49
+     ],
+     "air": 0
+    },
+    "walk_left_0": {
+     "row": 3,
+     "column": 1,
+     "logical_bbox": [
+      27,
+      48
+     ],
+     "air": 0
+    },
+    "walk_left_2": {
+     "row": 3,
+     "column": 3,
+     "logical_bbox": [
+      29,
+      48
+     ],
+     "air": 0
+    },
+    "walk_left_1": {
+     "row": 3,
+     "column": 2,
+     "logical_bbox": [
+      28,
+      47
+     ],
+     "air": 0
+    },
+    "walk_right_0": {
+     "row": 4,
+     "column": 1,
+     "logical_bbox": [
+      29,
+      48
+     ],
+     "air": 0
+    },
+    "walk_right_1": {
+     "row": 4,
+     "column": 2,
+     "logical_bbox": [
+      31,
+      47
+     ],
+     "air": 0
+    },
+    "walk_right_2": {
+     "row": 4,
+     "column": 3,
+     "logical_bbox": [
+      31,
+      47
+     ],
+     "air": 0
+    }
+   },
+   "notes": [],
+   "pitch": 8.042,
+   "from_raw": "raw/s1b_a1.png"
+  },
+  "2": {
+   "attempts": [
+    {
+     "raw": "raw/s2b_a1.png",
+     "quality": "medium",
+     "t": "2026-09-27T12:11:26"
+    }
+   ],
+   "frames": {
+    "run_down_3": {
+     "row": 1,
+     "column": 4,
+     "logical_bbox": [
+      39,
+      51
+     ],
+     "air": 2
+    },
+    "run_down_2": {
+     "row": 1,
+     "column": 3,
+     "logical_bbox": [
+      37,
+      51
+     ],
+     "air": 0
+    },
+    "run_down_0": {
+     "row": 1,
+     "column": 1,
+     "logical_bbox": [
+      37,
+      50
+     ],
+     "air": 0
+    },
+    "run_down_1": {
+     "row": 1,
+     "column": 2,
+     "logical_bbox": [
+      36,
+      49
+     ],
+     "air": 1
+    },
+    "run_up_3": {
+     "row": 2,
+     "column": 4,
+     "logical_bbox": [
+      34,
+      49
+     ],
+     "air": 3
+    },
+    "run_up_0": {
+     "row": 2,
+     "column": 1,
+     "logical_bbox": [
+      35,
+      51
+     ],
+     "air": 0
+    },
+    "run_up_1": {
+     "row": 2,
+     "column": 2,
+     "logical_bbox": [
+      36,
+      51
+     ],
+     "air": 0
+    },
+    "run_up_2": {
+     "row": 2,
+     "column": 3,
+     "logical_bbox": [
+      34,
+      51
+     ],
+     "air": 0
+    },
+    "run_left_1": {
+     "row": 3,
+     "column": 2,
+     "logical_bbox": [
+      39,
+      48
+     ],
+     "air": 3
+    },
+    "run_left_3": {
+     "row": 3,
+     "column": 4,
+     "logical_bbox": [
+      34,
+      48
+     ],
+     "air": 1
+    },
+    "run_left_0": {
+     "row": 3,
+     "column": 1,
+     "logical_bbox": [
+      35,
+      48
+     ],
+     "air": 0
+    },
+    "run_left_2": {
+     "row": 3,
+     "column": 3,
+     "logical_bbox": [
+      37,
+      48
+     ],
+     "air": 0
+    },
+    "run_right_0": {
+     "row": 4,
+     "column": 1,
+     "logical_bbox": [
+      34,
+      49
+     ],
+     "air": 0
+    },
+    "run_right_1": {
+     "row": 4,
+     "column": 2,
+     "logical_bbox": [
+      34,
+      49
+     ],
+     "air": 0
+    },
+    "run_right_2": {
+     "row": 4,
+     "column": 3,
+     "logical_bbox": [
+      36,
+      49
+     ],
+     "air": 0
+    },
+    "run_right_3": {
+     "row": 4,
+     "column": 4,
+     "logical_bbox": [
+      35,
+      47
+     ],
+     "air": 1
+    }
+   },
+   "notes": [],
+   "pitch": 7.938,
+   "from_raw": "raw/s2b_a1.png"
+  }
+ }
+}

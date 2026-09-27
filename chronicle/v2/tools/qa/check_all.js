@@ -26,6 +26,7 @@ const STEPS = [
   // 各担当の node のテスト
   ...['test_core', 'test_core_contract', 'test_render', 'test_uik', 'test_cast', 'test_beast', 'test_terrain', 'test_field', 'test_events', 'test_rules', 'test_battle',
     'test_bscene', 'test_screens', 'test_content_p', 'test_content_f'].map((t) => [t, [T(t + '.js')]]),
+  ['test_content_desert', [T('test_content_desert.js')]],   // 砂漠
   // QA の検査
   ['validate', [T('qa/validate.js')]],
   ['progress', [T('qa/progress.js')]],
@@ -50,6 +51,7 @@ if (BROWSER) {
   STEPS.push(
     ...['test_core_flow', 'test_core_wipe', 'test_render_browser', 'test_uik_browser', 'test_cast_browser', 'test_beast_browser', 'test_terrain_browser',
       'test_field_browser', 'test_field_slice', 'test_events_browser', 'test_bscene_flow', 'test_screens_browser'].map((t) => [t, [T(t + '.js')], { browser: true }]),
+    ['test_desert_doors_browser', [T('test_desert_doors_browser.js')], { browser: true }],   // 砂漠の戸口・出口・階段を本物の入力で
     ['check_ui', [T('qa/check_ui.js')], { browser: true }],
     ['measure_night', [T('qa/measure_night.js'), '--json'], { browser: true }],
   );

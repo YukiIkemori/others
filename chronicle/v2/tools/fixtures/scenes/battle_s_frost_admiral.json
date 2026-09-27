@@ -1,0 +1,10 @@
+{
+ "scene": "battle",
+ "desc": "CONTENT（雪原）: 氷の船団長（隠しボス）",
+ "state": "content_s_battle",
+ "setup": {
+  "troop": "tr_b_frost_admiral",
+  "boss": true,
+  "seed": "shot-frost_admiral"
+ }
+}

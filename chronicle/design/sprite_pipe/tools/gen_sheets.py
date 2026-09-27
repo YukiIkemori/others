@@ -1394,11 +1394,11 @@ def cmd_arun_alt(a):
 
 RESTYLE_EN = {
     1: ('field WALK sheet: 4 rows (1 = facing the viewer, 2 = back view, 3 = facing LEFT, 4 = facing RIGHT) x 3 frames (stand, one foot '
-        'forward, the other foot forward). He carries a small brass LANTERN in his LEFT hand in every frame, exactly where image 1 has it; '
+        'forward, the other foot forward). He carries a small brass LANTERN in his LEFT hand in every frame, exactly where the hero\'s current sheet has it; '
         'the sword stays sheathed at the hip'),
     2: ('field RUN sheet: 4 rows (1 = facing the viewer, 2 = back view, 3 = facing LEFT, 4 = facing RIGHT) x 4 frames (right foot lands, '
         'both feet off the ground, left foot lands, both feet off the ground). He carries a small brass LANTERN in his LEFT hand in every '
-        'frame, exactly where image 1 has it; the sword stays sheathed at the hip'),
+        'frame, exactly where the hero\'s current sheet has it; the sword stays sheathed at the hip'),
     3: ('field ACTING sheet, every figure facing the viewer: row 1 nodding, surprised, head tilted thinking, bowing; row 2 kneeling on one '
         'knee, sitting on the ground, raising a hand and calling out, looking around to the side; row 3 lying on the ground, drawing the '
         'sword ready, hand on chest (resolve), head down (dejected). No lantern in this sheet'),
@@ -1469,17 +1469,34 @@ def cmd_arun_restyle(a):
             continue
         src = load_rgb(os.path.join(src_dir, spec['file']))
         W, H = src.size
+        base_img = None
+        if a.base:        # companion-based: edit a companion's finished sheet of the same layout into the hero
+            base_img = load_rgb(a.base)
+            if base_img.size != (W, H):
+                raise SystemExit('--base must be %dx%d' % (W, H))
         refs = restyle_refs(n)
-        imgs = [src] + [r[0] for r in refs]
-        desc = ['Image 1 = THE SHEET TO EDIT (the hero, current version, drawn in an older, cruder style).']
+        if base_img is not None:
+            refs = refs[1:] if a.no_old else [(src, 'LAYOUT AND POSE REFERENCE: the hero\'s current sheet of this layout (older, cruder rendering — do NOT copy its '
+                          'rendering). Take from it the hero\'s look, where the lantern is held%s and how each pose reads.'
+                     % ('' if n in (1, 2) else ' (none here)'))] + refs[1:]
+            imgs = [base_img] + [r[0] for r in refs]
+            desc = ['Image 1 = THE SHEET TO EDIT: a finished sheet of ANOTHER character (a companion) in exactly the rendering, pixel size, '
+                    'figure size, proportions, cell positions and facing the hero must have.']
+        else:
+            imgs = [src] + [r[0] for r in refs]
+            desc = ['Image 1 = THE SHEET TO EDIT (the hero, current version, drawn in an older, cruder style).']
         desc += ['Image %d = %s' % (i + 2, r[1]) for i, r in enumerate(refs)]
+        what = ('REPAINT EVERY FIGURE of image 1 INTO THE HERO ARUN: keep image 1\'s rendering quality, pixel size, cell positions, poses, '
+                'facing, feet lines and body proportions exactly; replace the character (hair, face, clothes, colours, accessories) by the hero '
+                'as the IDENTITY and CONCEPT images show him. None of the companion\'s look may remain. ' if base_img is not None else
+                'REPAINT EVERY FIGURE COMPLETELY in the rendering style of image 2, so the hero looks like he belongs to the same set as those '
+                'companions and as his new battle sprites (image 3). ')
         lines = [style_block(), '',
-                 'TASK: EDIT image 1, a pixel-art sprite sheet of the hero Arun (a young travelling swordsman): %s. Every art pixel is '
+                 'TASK: EDIT image 1 into a pixel-art sprite sheet of the hero Arun (a young travelling swordsman): %s. Every art pixel is '
                  'exactly 8x8 image px. Output the same %dx%d canvas, flat #FF00FF background.' % (RESTYLE_EN[n], W, H),
                  '', 'ATTACHED IMAGES:'] + desc + [
                  '',
-                 'REPAINT EVERY FIGURE COMPLETELY in the rendering style of image 2, so the hero looks like he belongs to the same set as those '
-                 'companions and as his new battle sprites (image 3). Clean, readable pixel clusters; a clear face with large readable eyes; '
+                 what + 'Clean, readable pixel clusters; a clear face with large readable eyes; '
                  'hair as a few chunky locks with light/mid/dark bands and a glossy highlight (not many thin noisy strands); cloth in big 2-3 '
                  'shade planes; the same brightness and contrast as the companions (not darker, not muddier, no speckle noise).',
                  'KEEP EXACTLY, figure by figure: the cell position, the pose, the facing, the feet line, the pixel size and the figure size '
@@ -1491,7 +1508,7 @@ def cmd_arun_restyle(a):
                  ]
         if n in (1, 2):
             lines.append('LANTERN: a small brass lantern with a warm glowing flame held in his LEFT hand in every frame (on the image-right side '
-                         'in the row facing the viewer, image-left in the back-view row, in front of him in the side rows) — exactly where image 1 '
+                         'in the row facing the viewer, image-left in the back-view row, in front of him in the side rows) — exactly where the hero\'s current sheet '
                          'has it. The other hand is empty and swings with the step.')
         if n == 9:
             lines.append('Frame the busts like the companions\' portraits in image 2: head and shoulders, the face large and clear, eyes about the '
@@ -1632,6 +1649,8 @@ def main():
     s.add_argument('--job', default='arun_v4', help='gen/arun/<job>: where the sheets go')
     s.add_argument('--out', default='', help='out/<out>: run the pipeline at the end')
     s.add_argument('--extra', default='')
+    s.add_argument('--no-old', action='store_true', help='with --base: do not attach his old sheet (the model copies its rendering)')
+    s.add_argument('--base', default='', help='a companion sheet of the same canvas to repaint into the hero (instead of his own sheet)')
     s = sub.add_parser('prompt')
     s.add_argument('kind', choices=['companion'])
     s.add_argument('id')

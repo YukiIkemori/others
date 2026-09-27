@@ -25,6 +25,32 @@
     return lv;
   }
 
+  /** (S.x+dx, S.y+dy) が行き先のあるマス（戸口・扉・階段・出口）か */
+  function warpNext(dx, dy) { return !!(F._warpAt && F._warpAt(S.map, S.x + dx, S.y + dy, S.lv || 0)); }
+  /** 押した先が建物の（戸口でない）壁で、その建物の戸口が押す向きと直角に 1 マス隣 → 横へずれる [sx, sy] | null */
+  function doorAssist(dx, dy) {
+    const m = S.map, nx = S.x + dx, ny = S.y + dy, lv = S.lv || 0;
+    const list = R.MapUtil.objectsAt(m, nx, ny, lv);
+    for (let i = 0; i < list.length; i++) {
+      const o = list[i], d = o.door;
+      if (o.type !== 'building' || !d || !d.to) continue;
+      for (const s of [-1, 1]) {
+        const sx = dy ? s : 0, sy = dx ? s : 0;
+        if (d.x === nx + sx && d.y === ny + sy && canGo(sx, sy) >= 0) return [sx, sy];
+      }
+    }
+    return null;
+  }
+  /** 行き先の無い戸口（鍵の掛かった戸）を押した: 一言（1.5 秒に 1 回） */
+  function lockedBump(dx, dy) {
+    const b = F._doorAt && F._doorAt(S.map, S.x + dx, S.y + dy, S.lv || 0);
+    if (!b || b.door.to) return;
+    const now = R.Engine.time;
+    if (S.lockedAt && now - S.lockedAt < 1500) return;
+    S.lockedAt = now;
+    F.hud.toast(b.door.locked || '戸には鍵がかかっている', { icon: 'search', anchor: 'bl' });
+  }
+
   /** 1 歩を始める。→ true（動いた） */
   F._step = function (dx, dy, dash) {
     const prevDir = S.dir;
@@ -32,14 +58,24 @@
     if (S.dir !== prevDir && R.Game && R.Game.pos) R.Game.pos.dir = S.dir;
     let go = null;
     if (dx && dy) {
-      // 斜めは両隣の軸も通れるときだけ。だめなら空いた軸へ滑る（A7）
-      if (canGo(dx, dy) >= 0 && canGo(dx, 0) >= 0 && canGo(0, dy) >= 0) go = [dx, dy];
+      // 斜めは両隣の軸も通れるときだけ。だめなら空いた軸へ滑る（A7）。片方の軸の先が戸口・出口なら、そちらを先に（斜めに押しても戸に入れる）
+      const wx = warpNext(dx, 0), wy = warpNext(0, dy);
+      if (canGo(dx, dy) >= 0 && canGo(dx, 0) >= 0 && canGo(0, dy) >= 0 && !wx && !wy) go = [dx, dy];
+      else if (wy && canGo(0, dy) >= 0) go = [0, dy];
+      else if (wx && canGo(dx, 0) >= 0) go = [dx, 0];
+      else if (canGo(dx, dy) >= 0 && canGo(dx, 0) >= 0 && canGo(0, dy) >= 0) go = [dx, dy];
       else if (canGo(dx, 0) >= 0) go = [dx, 0];
       else if (canGo(0, dy) >= 0) go = [0, dy];
       if (go) S.dir = R.U.dirOf(go[0], go[1], S.dir);
     } else {
       const r = canGo(dx, dy);
       if (r >= 0) go = [dx, dy];
+      else if (r === -1) {
+        // 戸口の寄せ: 建物の壁を押していて、戸口がすぐ横（1 マス）なら、戸口の前へ 1 歩ずれる（押し続ければそのまま入る）
+        const side = doorAssist(dx, dy);
+        if (side) { go = side; S.push = null; }
+        else lockedBump(dx, dy);
+      }
       else if (r === -2) {
         // NPC を押す: 押し続けると よける／入れ替わる（A3）
         const n = F._npcAt(S.x + dx, S.y + dy, F._lvAfter(S.map, S.x, S.y, S.x + dx, S.y + dy, S.lv));

@@ -1,0 +1,312 @@
+{
+ "character": "arun",
+ "set": "battle_bare",
+ "image": "arun_battle_bare.png",
+ "cell": [
+  81,
+  74
+ ],
+ "anchor": [
+  42,
+  66
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "bare_idle": {
+   "x": 0,
+   "y": 0,
+   "w": 81,
+   "h": 74,
+   "anchor": [
+    42,
+    66
+   ],
+   "points": {
+    "head": [
+     36,
+     2
+    ],
+    "center": [
+     40,
+     36
+    ],
+    "front": [
+     16,
+     43
+    ],
+    "grip": [
+     28,
+     39
+    ],
+    "tip": [
+     5,
+     61
+    ]
+   }
+  },
+  "bare_windup": {
+   "x": 81,
+   "y": 0,
+   "w": 81,
+   "h": 74,
+   "anchor": [
+    42,
+    66
+   ],
+   "points": {
+    "head": [
+     33,
+     8
+    ],
+    "center": [
+     41,
+     39
+    ],
+    "front": [
+     15,
+     68
+    ],
+    "grip": [
+     61,
+     21
+    ],
+    "tip": [
+     87,
+     -16
+    ]
+   }
+  },
+  "bare_slash": {
+   "x": 162,
+   "y": 0,
+   "w": 81,
+   "h": 74,
+   "anchor": [
+    42,
+    66
+   ],
+   "points": {
+    "head": [
+     35,
+     2
+    ],
+    "center": [
+     44,
+     33
+    ],
+    "front": [
+     16,
+     39
+    ],
+    "grip": [
+     21,
+     39
+    ],
+    "tip": [
+     -16,
+     65
+    ]
+   }
+  },
+  "bare_thrust": {
+   "x": 243,
+   "y": 0,
+   "w": 81,
+   "h": 74,
+   "anchor": [
+    42,
+    66
+   ],
+   "points": {
+    "head": [
+     31,
+     3
+    ],
+    "center": [
+     37,
+     34
+    ],
+    "front": [
+     2,
+     25
+    ],
+    "grip": [
+     12,
+     28
+    ],
+    "tip": [
+     -23,
+     27
+    ]
+   }
+  },
+  "bare_cast": {
+   "x": 324,
+   "y": 0,
+   "w": 81,
+   "h": 74,
+   "anchor": [
+    42,
+    66
+   ],
+   "points": {
+    "head": [
+     41,
+     2
+    ],
+    "center": [
+     44,
+     34
+    ],
+    "front": [
+     12,
+     22
+    ],
+    "grip": [
+     57,
+     36
+    ],
+    "tip": [
+     66,
+     52
+    ]
+   }
+  }
+ },
+ "anims": {},
+ "palette": [
+  "#100908",
+  "#1b0910",
+  "#231711",
+  "#2e251f",
+  "#443d35",
+  "#64584d",
+  "#f1e9db",
+  "#2f0f18",
+  "#301513",
+  "#451817",
+  "#5c211e",
+  "#712621",
+  "#882e27",
+  "#9f302b",
+  "#a74133",
+  "#b73f34",
+  "#cf4639",
+  "#ce5741",
+  "#352116",
+  "#462818",
+  "#443023",
+  "#572d1c",
+  "#553b2a",
+  "#613d23",
+  "#6d3b23",
+  "#684c37",
+  "#764c2b",
+  "#894d2c",
+  "#7e6047",
+  "#8e6037",
+  "#a06136",
+  "#946e52",
+  "#8c7c6a",
+  "#9b7c5c",
+  "#ae7a47",
+  "#c57946",
+  "#ae8b6a",
+  "#ca9240",
+  "#e38631",
+  "#c09d77",
+  "#b2a593",
+  "#d69c64",
+  "#cdad8a",
+  "#eab83f",
+  "#dec096",
+  "#eebc82",
+  "#e2caac",
+  "#f4d26e",
+  "#f5d7a8",
+  "#f6e6c3",
+  "#69a1c7",
+  "#0d509e"
+ ],
+ "facing": "left",
+ "attach": {
+  "bare_idle": {
+   "grip": [
+    12,
+    37
+   ],
+   "tip": [
+    -11,
+    59
+   ],
+   "angle": 135.7,
+   "length": 33,
+   "blade": 22.2,
+   "fit": 1.022,
+   "method": "blade"
+  },
+  "bare_windup": {
+   "grip": [
+    46,
+    13
+   ],
+   "tip": [
+    72,
+    -24
+   ],
+   "angle": -55,
+   "length": 37,
+   "blade": 26.3,
+   "fit": 0.687,
+   "method": "blade",
+   "manual": true
+  },
+  "bare_slash": {
+   "grip": [
+    5,
+    37
+   ],
+   "tip": [
+    -32,
+    63
+   ],
+   "angle": 145,
+   "length": 38,
+   "blade": 27.1,
+   "fit": 0.22,
+   "method": "blade",
+   "manual": true
+  },
+  "bare_thrust": {
+   "grip": [
+    10,
+    25
+   ],
+   "tip": [
+    -25,
+    24
+   ],
+   "angle": -178.4,
+   "length": 36,
+   "blade": 25.0,
+   "fit": 0.873,
+   "method": "blade"
+  },
+  "bare_cast": {
+   "grip": [
+    45,
+    34
+   ],
+   "tip": [
+    54,
+    50
+   ],
+   "angle": 62.0,
+   "length": 22,
+   "weapon_px": 94,
+   "fit": 0.918,
+   "method": "diff"
+  }
+ },
+ "attach_note": "draw a weapon on a bare pose: rotate the weapon image (as drawn on sheet 7, tip to the left) about its grip by (attach.angle - 180) degrees and put its grip on points.grip. Angles in image coords (0 = +x, 90 = +y, 180 = pointing left); positive = clockwise on screen."
+}

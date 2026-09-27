@@ -5,45 +5,46 @@
  "size": "M",
  "kind": "mob",
  "fly": false,
- "w": 26,
- "h": 50,
+ "w": 52,
+ "h": 100,
  "anchor": [
-  13,
-  49
+  26,
+  98
  ],
  "points": {
   "head": [
-   15,
-   3
+   30,
+   6
   ],
   "center": [
-   13,
-   25
+   26,
+   50
   ],
   "fx": [
-   15,
-   21
+   30,
+   42
   ],
   "top": [
-   13,
+   26,
    0
   ],
   "body": [
-   13,
-   27,
-   8,
-   16
+   26,
+   54,
+   16,
+   32
   ]
  },
  "facing": "right",
- "long": 50,
+ "long": 100,
  "core_long": null,
  "target": {
-  "w": 26,
-  "h": 50,
-  "long": 50
+  "w": 52,
+  "h": 100,
+  "long": 100
  },
  "colors": 48,
  "pitch": 8,
- "note": "derived from the field sprite (v2/assets/sprites) by the desert content agent"
+ "note": "derived from the field sprite (v2/assets/sprites) by the desert content agent",
+ "scaled2x": true
 }

@@ -1,0 +1,10 @@
+{
+ "scene": "battle",
+ "desc": "CONTENT（雪原）: 氷壁の巨人（峰の中ボス）",
+ "state": "content_s_battle",
+ "setup": {
+  "troop": "tr_b_icegiant",
+  "boss": true,
+  "seed": "shot-icegiant"
+ }
+}

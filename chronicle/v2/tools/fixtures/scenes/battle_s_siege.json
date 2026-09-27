@@ -1,0 +1,10 @@
+{
+ "scene": "battle",
+ "desc": "CONTENT（雪原）: 籠城の門の戦い（2 波目）",
+ "state": "content_s_battle",
+ "setup": {
+  "troop": "tr_siege_2a",
+  "boss": false,
+  "seed": "shot-siege"
+ }
+}
