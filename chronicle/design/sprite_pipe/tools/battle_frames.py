@@ -250,7 +250,12 @@ class Job:
         return self.state.setdefault(self.action, {'attempts': []})
 
     def save(self):
-        json.dump(self.state, open(self.sp, 'w'), indent=1, ensure_ascii=False)
+        # merge: other actions of the same look may run in parallel
+        cur = json.load(open(self.sp)) if os.path.exists(self.sp) else {}
+        cur[self.action] = self.state.get(self.action, {})
+        tmp = self.sp + '.%d' % os.getpid()
+        json.dump(cur, open(tmp, 'w'), indent=1, ensure_ascii=False)
+        os.replace(tmp, self.sp)
 
     def log(self, msg):
         line = time.strftime('%H:%M:%S ') + msg
@@ -483,15 +488,18 @@ def normalise(job, raw_path, p, lay):
     job.log('calibrated pitch %.2f / %.2f px (requested %d), offset %.1f, %.1f' % (sx, sy, p, ox, oy))
     pal = np.array([[int(h[1:3], 16), int(h[3:5], 16), int(h[5:7], 16)] for h in job.m['palette']], np.uint8)
     frames = []
+    PX, PT = 16, 24          # output cells: padding around the gen cell (upscaled poses may grow past it)
+    olay = dict(HX=lay['HX'] + PX, G=lay['G'] + PT, W=lay['W'] + 2 * PX, H=lay['H'] + PT)
+    OW, OH = olay['W'], olay['H']
     for i, (kind, v) in enumerate(job.plan['slots']):
         x0, y0 = rects[i]
         W, H = lay['W'], lay['H']
         if kind == 'keep':
             k = lay['keeps'][v]
-            cell = np.zeros((H, W, 4), np.uint8)
+            cell = np.zeros((OH, OW, 4), np.uint8)
             img = k['img']
-            px = int(round(lay['HX'] + k['ox']))
-            py = lay['G'] + k['oy']
+            px = int(round(olay['HX'] + k['ox']))
+            py = olay['G'] + k['oy']
             h, w = img.shape[:2]
             cell[py:py + h, px:px + w] = img
             frames.append(dict(slot=i + 1, kind='keep', src=v, img=cell))
@@ -546,28 +554,29 @@ def normalise(job, raw_path, p, lay):
                 a = b
                 rescale = 1.0 / m
                 gscale = bodyscale.match(trim(a)[0], gref, rots=(0, -12, 12))[0]
-        cell = np.zeros((H, W, 4), np.uint8)
+        cell = np.zeros((OH, OW, 4), np.uint8)
         h, w = a.shape[:2]
+        dx, dy = dx + PX, dy + PT
         # paste with clipping
         cx0, cy0 = max(0, dx), max(0, dy)
-        cx1, cy1 = min(W, dx + w), min(H, dy + h)
+        cx1, cy1 = min(OW, dx + w), min(OH, dy + h)
         cell[cy0:cy1, cx0:cx1] = a[cy0 - dy:cy1 - dy, cx0 - dx:cx1 - dx]
         pre = None
         if pf:
             k = lay['keeps'][pf]
-            pre = np.zeros((H, W, 4), np.uint8)
-            px = int(round(lay['HX'] + k['ox']))
-            py = lay['G'] + k['oy']
+            pre = np.zeros((OH, OW, 4), np.uint8)
+            px = int(round(olay['HX'] + k['ox']))
+            py = olay['G'] + k['oy']
             pre[py:py + k['img'].shape[0], px:px + k['img'].shape[1]] = k['img']
         frames.append(dict(slot=i + 1, kind='new', img=cell, pre=pre, gscale=gscale, rescale=rescale))
-    register(job, lay, frames)
+    register(job, olay, frames)
     # save
     for f in frames:
         if f['img'] is not None:
             Image.fromarray(f['img']).save(os.path.join(job.out, '%02d.png' % f['slot']))
     st = job.st()
     st['frames'] = [dict(slot=f['slot'], kind=f['kind'], src=f.get('src'), checks=f.get('checks')) for f in frames]
-    st['lay'] = dict(HX=lay['HX'], G=lay['G'], W=lay['W'], H=lay['H'])
+    st['lay'] = olay
     st['from_raw'] = os.path.relpath(raw_path, job.dir)
     job.save()
     report(job, frames)
