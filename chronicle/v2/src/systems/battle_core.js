@@ -1258,6 +1258,7 @@
           if (mt.flag) this.flags[mt.flag] = true;
           yield { t: 'buff', u: tgt, stat: 'def', d: d0, stage: to };
           if (mt.msg) yield this.m(mt.msg.replace(/\{user\}/g, tgt.name));
+          if (mt.clear) yield* this.clearStatus(tgt, mt.clear, true);
         }
       }
       if (info.drain && att.alive && dealt > 0) yield* this.restore(att, Math.round(dealt * info.drain), 'hp', 'drain');

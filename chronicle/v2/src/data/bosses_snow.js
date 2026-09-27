@@ -17,7 +17,7 @@
     // 吹雪の大狼
     eb_bw_howl: { name: '吹雪の遠吠え', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は天を仰ぎ、長く遠吠えした……！',
       telegraph: { text: '大狼のまわりに、吹雪が渦を巻きはじめた……。', pose: 'tele', tint: '#d8e4ff', next: 'eb_bw_storm', guard: 'defend' } },
-    eb_bw_storm: { name: '吹雪の牙', kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'phys', power: 6.4, element: 'water', sure: true }, { type: 'status', status: 'freeze', chance: 0.1 }], fx: 'breath_ice', msg: '吹雪をまとった牙が、一行を次々に襲った！' },
+    eb_bw_storm: { name: '吹雪の牙', kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'phys', power: 6.0, element: 'water', sure: true }, { type: 'status', status: 'freeze', chance: 0.1 }], fx: 'breath_ice', msg: '吹雪をまとった牙が、一行を次々に襲った！' },
     eb_bw_bite: { name: '大狼の牙', kind: 'enemy', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.35 }], fx: 'bite2', msg: '{user}は低くうなって飛びかかった！' },
     eb_bw_call_1: { name: '群れを呼ぶ', kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_siegewolf', n: 1, max: 4 }], fx: 'song', msg: '守りの手薄な門から、\n狼が駆けつけた！' },
     eb_bw_call_2: { name: '群れを呼ぶ', kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_siegewolf', n: 2, max: 5 }], fx: 'song', msg: '守りの手薄な門から、\n狼の群れが駆けつけた！' },
@@ -25,7 +25,7 @@
     eb_frost_glow: { name: '白い光', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は胸の前で両腕を組んだ。',
       telegraph: { text: '巨人の体が、白く光りはじめた……。', pose: 'tele', tint: '#e8f4ff', next: 'eb_ice_armor', guard: 'element:fire',
         cancel: { element: 'fire', msg: '炎が、張りかけた氷を溶かした！' } } },
-    eb_ice_armor: { name: '氷の鎧', kind: 'enemy', target: 'self', effects: [{ type: 'buff', stat: 'def', stages: 4 }, { type: 'buff', stat: 'mdef', stages: 2 }, { type: 'heal', pct: 0.35 }], fx: 'buff', msg: '{user}の体が、分厚い氷の鎧に覆われた！\n傷も氷でふさがっていく……。' },
+    eb_ice_armor: { name: '氷の鎧', kind: 'enemy', target: 'self', effects: [{ type: 'buff', stat: 'def', stages: 4 }, { type: 'buff', stat: 'mdef', stages: 2 }, { type: 'heal', pct: 0.1 }, { type: 'status', status: 'regen' }], fx: 'buff', msg: '{user}の体が、分厚い氷の鎧に覆われた！\n傷も氷でふさがっていく……。' },
     // 白竜ネーヴェ
     eb_dragon_inhale: { name: '深く息を吸う', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は首を高くもたげた。',
       telegraph: { text: 'ネーヴェが、深く息を吸いこんでいる……。', pose: 'tele', tint: '#dff0ff', next: 'eb_dragon_whiteout', guard: 'defend' } },
@@ -46,7 +46,7 @@
     name: '吹雪の大狼', sprite: 'boss_wolflord', bossType: 'mid', lv: 9, actsPerTurn: 1, size: 'l',
     race: 'beast', affinity: 'water', flags: ['boss'], eva: 10,
     elem: { fire: 1.5, water: 0.25, earth: 1.25 }, phys: {}, statusRes: { sleep: 0.25, freeze: 1 },
-    s: { hp: 1.2, atk: 0.9, mag: 0.9 },
+    s: { hp: 1.15, atk: 0.9, mag: 0.9 },
     leader: { msg: '大狼が倒れると、狼の群れは\n吹雪の中へ散り散りに逃げていった！' },
     drops: MID('i_ether'),
     desc: '吹雪にまぎれて村を囲む狼の群れの頭。\n遠吠えひとつで吹雪を呼ぶ。',
@@ -66,7 +66,7 @@
   const G = L.b_icegiant;
   if (G) {
     G.actions = A([['attack', 3], ['eb_ice_hammer', 2], ['eb_avalanche_drop', 2], ['eb_frost_glow', 200, { every: [2, 1] }], ['eb_frost_exhale', 1]]);
-    G.melt = { element: 'fire', to: -2, msg: '炎が氷の鎧を砕いた！\n巨人の体がむき出しになった！' };
+    G.melt = { element: 'fire', to: -2, clear: 'regen', msg: '炎が氷の鎧を砕いた！\n巨人の体がむき出しになった！' };
     G.s = { hp: 1.15, atk: 1.6, mag: 1.6 };
     G.desc = '白竜の峰の中腹を守る氷の巨人。\n氷の鎧を張るが、火に弱い。';
   }
