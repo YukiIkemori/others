@@ -658,9 +658,17 @@ def comp_prompt(c, spec, p, W, H, refs_desc, extra=''):
                 'saturated colour. Head shape: %s. Signature item: %s. Proportions exactly like the hero\'s sheets: about 2.7 heads tall, big head, '
                 'NOT realistic tall proportions.' % (c.get('mainHex'), c.get('mainHue', 0), c.get('value', ''), c.get('headShape'), c.get('signature')))
     if spec['layout'] != 'face4':
-        hh = int(round(0.37 * tgt))
-        key_look += (' HEAD SIZE: the head (top of hair to chin) is about %d art px (%d image px) tall and about as wide as the shoulders, exactly '
-                     'like the template figures; chunky readable clusters, never finer detail than one %d px art pixel.' % (hh, hh * p, p))
+        body = c['heightDots']['field' if spec['layout'] == 'walk' else 'battle']
+        hh = int(round(body / 2.7))
+        key_look += (' HEAD SIZE: the head (top of hair to chin, not counting a hat) is about %d art px (%d image px) tall and about as wide as the '
+                     'shoulders, exactly like the template figures; chunky readable clusters, never finer detail than one %d px art pixel.' % (hh, hh * p, p))
+        key_look += (' BUILD (the owner\'s rule for every character): CHUNKY, not slim — 2.6-2.8 heads tall, big head, broad shoulders about as wide '
+                     'as the head, thick short arms and legs, big hands and big boots, a low centre of gravity; the legs are only about one third of the '
+                     'body height. The figure must look as big and as heavy on screen as the hero in the template (same head size and bulk); only the '
+                     'overall height differs by the numbers above. Even a slender or elderly personality is drawn with these chunky proportions.')
+        if spec['layout'] in ('battle_base', 'battle_action_bare', 'design'):
+            key_look += (' In the standing poses (idle A/B, step, glimmer, casting, item, turnaround) the weapon is held LOW or level — never raised '
+                         'above the head — so the top of the head (or hat) is the top of the figure.')
     head = ('You are the pixel artist of a 2D RPG. Draw ONE sprite sheet: companion %s (%s), %s.\n' % (c['name'], c['id'], GEN_SHEET_JA[spec['n']]))
     txt = [style_block(), '', head,
            'ATTACHED IMAGES:', refs_desc, '',

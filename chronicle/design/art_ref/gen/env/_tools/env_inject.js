@@ -56,26 +56,48 @@
         }
       }
     }
-    // ---- props: redefine hd:prop:<id> from the strip (frames side by side). opts.s = tile/32 picks the size, opts.amb multiplies like bakeProp
+    // ---- props: redefine hd:prop:<id> from the strip (frames side by side). opts.s = tile/32 picks the size, opts.amb multiplies like bakeProp.
+    //      Variants: files <base>_v<n> (and <base> itself as v0) are chosen by opts.v; trees with opts.leaf === 'moss' use tree_moss_v*.
+    const strips = {};
+    async function stripOf(id) {
+      if (strips[id]) return strips[id];
+      const j = pick(man.props, id); if (!j) return null;
+      const s = { j, img: {} };
+      for (const t of [24, 32, 40]) if (j.files[t]) s.img[t] = await loadImg(url(j, t));
+      return (strips[id] = s);
+    }
+    const groups = {};
     for (const id of man.propIds) {
-      const j = pick(man.props, id); if (!j) continue;
-      const strips = {};
-      for (const t of [24, 32, 40]) if (j.files[t]) strips[t] = await loadImg(url(j, t));
-      R.Hd.redef('hd:prop:' + id, (op) => {
+      const m = /^(.*)_v(\d+)$/.exec(id);
+      const base = m ? m[1] : id, v = m ? +m[2] : 0;
+      (groups[base] = groups[base] || [])[v] = id;
+    }
+    const ALIAS = { tree_giant: 'tree_giant', pine: 'pine', tree: 'tree', bush: 'bush', roots: 'roots', rock: 'rock', dec_tuft: 'dec_tuft' };
+    for (const base of Object.keys(groups)) {
+      const ids = groups[base].filter(Boolean);
+      for (const id of ids) await stripOf(id);
+      if (groups.tree_moss && base === 'tree') for (const id of groups.tree_moss.filter(Boolean)) await stripOf(id);
+      if (!R.Hd.has('hd:prop:' + base) && !ALIAS[base]) { /* new prop id: define anyway so content can use it */ }
+      R.Hd.redef('hd:prop:' + base, (op) => {
         op = op || {};
-        const t = Math.round((op.s || 1) * 32), img = strips[t] || strips[32], cw = j.cell[t] ? j.cell[t][0] : j.cell[32][0], ch = img.height;
+        let list = ids;
+        if (base === 'tree' && op.leaf === 'moss' && groups.tree_moss) list = groups.tree_moss.filter(Boolean);
+        const id = list[((op.v | 0) % list.length + list.length) % list.length];
+        const st = strips[id], j = st.j;
+        const t = Math.round((op.s || 1) * 32), img = st.img[t] || st.img[32], cw = (j.cell[t] || j.cell[32])[0], ch = img.height;
         const feet = j.feet[t] || j.feet[32];
         const frames = [], poses = {};
         j.frames.forEach((f, i) => {
           let c = canvasOf(img, i * cw, 0, cw, ch);
           if (op.amb) c = mulCanvas(c, ambMul(op.amb));
+          if (base === 'tree' && op.leaf === 'dk' && !op.amb) c = mulCanvas(c, [0.8, 0.86, 0.9]);
           frames.push({ c, ox: feet[0], oy: feet[1] }); poses[f] = [i];
         });
         if (!poses.default) poses.default = [0];
-        if (j.poses) Object.assign(poses, j.poses);
+        if (j.frames.indexOf('on') >= 0) poses.on = [j.frames.indexOf('on')];
         const lt = j.light32 ? [j.light32[0] * t / 32, j.light32[1] * t / 32] : null;
-        return { frames, poses, fps: j.fps || {}, anchors: { feet: [0, 0], light: lt }, w: cw, h: ch, meta: Object.assign({ id }, R.DB.props[id] || {}, { emit: lt ? { light: lt } : null }) };
-      }, R.DB.props[id] || {});
+        return { frames, poses, fps: {}, anchors: { feet: [0, 0], light: lt }, w: cw, h: ch, meta: Object.assign({ id: base }, R.DB.props[base] || {}, { emit: lt ? { light: lt } : null }) };
+      }, R.DB.props[base] || {});
     }
     // ---- buildings: T.building(def) keeps its key; the key is redefined from the painted facade (same anchor: bottom-left of the footprint)
     if (!T.__origBuilding) T.__origBuilding = T.building;

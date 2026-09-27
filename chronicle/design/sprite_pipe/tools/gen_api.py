@@ -107,7 +107,10 @@ def generate(prompt, images=(), size='1536x1024', quality='medium', background='
             'tool_choice': {'type': 'image_generation'}}
     data = json.dumps(body).encode()
     last = None
-    for attempt in range(retries + 1):
+    rate_waits = 0
+    attempt = 0
+    while attempt <= retries:
+        attempt += 1
         t0 = time.time()
         req = urllib.request.Request(URL, data=data, method='POST',
                                      headers={'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json'})
@@ -120,6 +123,15 @@ def generate(prompt, images=(), size='1536x1024', quality='medium', background='
             _log(dict(t=time.strftime('%Y-%m-%dT%H:%M:%S'), tag=tag, images=0, error=last, settings=tool))
             if e.code in (400, 401, 403, 404) or 'insufficient_quota' in msg or 'credit_balance' in msg:
                 raise GenError(last)
+            if e.code == 429 and rate_waits < 8:      # shared key: back off and try again (not counted as an attempt)
+                rate_waits += 1
+                ra = e.headers.get('retry-after') if e.headers else None
+                try:
+                    wait = max(float(ra), 5.0) if ra else 0
+                except ValueError:
+                    wait = 0
+                time.sleep(wait or min(300, 20 * 2 ** (rate_waits - 1)))
+                continue
             time.sleep(5 * (attempt + 1))
             continue
         except Exception as e:           # network: retry
