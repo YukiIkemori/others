@@ -224,7 +224,7 @@
     const it = R.DB.items[best];
     const cat = it.slot === 'weapon' ? 'weapon' : ['shield', 'head', 'body', 'hands', 'feet', 'acc'].includes(it.slot) ? 'armor' : 'item';
     if (v.tabKey && v.tabKey() !== cat) { tap('r'); return; }
-    if (!list.rows.some((r) => r.value === best)) { if (v.filter) tap('start'); else tap('b'); return; }
+    if (!list.rows.some((r) => r.value === best)) { if (v.onlyUsable) tap('start'); else tap('b'); return; }
     if (list.rows[list.index] && list.rows[list.index].value === best) note('buy ' + best + ' (' + gold + ' G)');
     selectRow(list, (r) => r.value === best);
   }

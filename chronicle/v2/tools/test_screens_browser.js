@@ -211,7 +211,7 @@ const result = (p) => B.ev(p, 'window.__r');
     ok('shop: arms shop tabs = 武器・防具・売る', JSON.stringify(await B.ev(p, `${V}.tabs.map((t) => t.key)`)) === JSON.stringify(['weapon', 'armor', 'sell']));
     const nAll = await B.ev(p, 'RPG.Engine.top().list.rows.length');
     await B.press(p, 'start');
-    ok('shop: START → only gear someone in the party can equip', (await B.ev(p, `${V}.filter`)) && (await B.ev(p, `RPG.Engine.top().list.rows.every((r) => RPG.Party.members().some((c) => RPG.Rules.canEquip(c, r.value, RPG.Rules.defaultSlot(c, r.value))))`)) && (await B.ev(p, 'RPG.Engine.top().list.rows.length')) <= nAll);
+    ok('shop: START → only gear someone in the party can equip', (await B.ev(p, `${V}.onlyUsable`)) && (await B.ev(p, `RPG.Engine.top().list.rows.every((r) => RPG.Party.members().some((c) => RPG.Rules.canEquip(c, r.value, RPG.Rules.defaultSlot(c, r.value))))`)) && (await B.ev(p, 'RPG.Engine.top().list.rows.length')) <= nAll);
     await B.press(p, 'start');
     await B.press(p, 'a');
     ok('shop: buying gear asks 今すぐ装備する？', await B.waitFor(p, `!!${V}.modal && ${V}.modal.o.title === '今すぐ装備する？'`, 1500));

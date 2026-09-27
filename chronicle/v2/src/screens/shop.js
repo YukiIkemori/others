@@ -10,7 +10,7 @@
 //     「今すぐ装備する？」（一行の全員。付けられない人は選べない。いちばん上がる人にカーソル）。品を入れるのは R.State.gain（1 か所）。
 //   売る: 2 つ以上持っていれば数を選ぶ札。めずらしい品は確かめる。
 //   タッチ・マウス: まだ選んでいない行を押すと選ぶだけ、選んでいる行をもう一度押すと買う／売る（うっかり買わない）。
-//   テスト・QA の手がかり: this.tabs [{key, label}]・this.tab・this.tabKey()・this.list・this.qtyPick {id, mode, n, max}・this.sortMode・this.filter
+//   テスト・QA の手がかり: this.tabs [{key, label}]・this.tab・this.tabKey()・this.list・this.qtyPick {id, mode, n, max}・this.sortMode・this.onlyUsable
 (function (R) {
   'use strict';
   const S = (R.Screens = R.Screens || {});
@@ -21,7 +21,7 @@
   const MAX = 99;
   const TABS = [{ key: 'weapon', label: '武器' }, { key: 'armor', label: '防具' }, { key: 'item', label: '道具' }, { key: 'sell', label: '売る' }];
   const SORTS = ['種類順', '値段順', '強さ順'];
-  const pref = { sort: 0, filter: false };   // 並びとしぼり込みは店を出ても覚えておく（遊んでいる間だけ）
+  const pref = { sort: 0, onlyUsable: false };   // 並びとしぼり込みは店を出ても覚えておく（遊んでいる間だけ）
 
   const catOf = (it) => (!it ? 'item' : it.slot === 'weapon' ? 'weapon' : EQUIP.includes(it.slot) ? 'armor' : 'item');
   const isEquip = (id) => { const it = S.item(id); return !!(it && EQUIP.includes(it.slot)); };
@@ -82,7 +82,7 @@
       const want = p.tab || (this.shop.kind === 'item' ? 'item' : this.shop.kind === 'weapon' ? 'weapon' : null);
       this.tab = Math.max(0, this.tabs.findIndex((t) => t.key === want));
       this.sortMode = pref.sort;
-      this.filter = pref.filter;
+      this.onlyUsable = pref.onlyUsable;
       this.qtyPick = null;
       this.hot = {};
       this.busy = false;
@@ -112,7 +112,7 @@
         ids.sort((a, b) => cat(a) - cat(b) || (S.item(a).sort || 0) - (S.item(b).sort || 0));
       } else {
         ids = this.stock.filter((id) => catOf(S.item(id)) === key);
-        if (this.filter && (key === 'weapon' || key === 'armor')) ids = ids.filter(canAny);
+        if (this.onlyUsable && (key === 'weapon' || key === 'armor')) ids = ids.filter(canAny);
       }
       const at = new Map(ids.map((id, i) => [id, i]));
       if (this.sortMode === 1) ids.sort((a, b) => (key === 'sell' ? R.Rules.sellPrice(b) - R.Rules.sellPrice(a) : this.price(a) - this.price(b)) || at.get(a) - at.get(b));
@@ -213,8 +213,8 @@
         this.sortMode = pref.sort = (this.sortMode + 1) % SORTS.length;
         R.UIK.sfx('cursor'); this.refresh(true); return;
       }
-      if (this.canFilter() && (I.pressed('start') || S.clicked(this.hot.filter))) {
-        this.filter = pref.filter = !this.filter;
+      if (this.canFilter() && (I.pressed('start') || S.clicked(this.hot.narrow))) {
+        this.onlyUsable = pref.onlyUsable = !this.onlyUsable;
         R.UIK.sfx('cursor'); this.refresh(true); return;
       }
       this._prevIndex = this.list.index;
@@ -293,7 +293,7 @@
       this.list.render = (gg, row, rect, f) => this.drawRow(gg, row, rect, f, sell);
       this.list.draw(g, { x: lp.x + u(8), y: lp.y + barH, w: lp.w - u(16), h: lp.h - barH - u(8) });
       if (!this.list.rows.length) {
-        const msg = sell ? '売れる物を持っていない。' : this.filter && this.canFilter() ? '一行の誰も付けられる品がない。' : '並んでいる品がない。';
+        const msg = sell ? '売れる物を持っていない。' : this.onlyUsable && this.canFilter() ? '一行の誰も付けられる品がない。' : '並んでいる品がない。';
         R.UIK.text(g, msg, lp.x + u(22), lp.y + barH + u(10), { size: u(14.5), color: C.text3, maxW: lp.w - u(44) });
       }
       // 詳しい所
@@ -323,7 +323,7 @@
       this.hot.sort = { x: x - u(6), y: y - u(8), w: w1 + u(12), h: h + u(16) };
       x += w1 + u(16);
       if (this.canFilter()) {
-        const on = this.filter;
+        const on = this.onlyUsable;
         const fLabel = on ? '装備できる物だけ' : '全部の品';
         const fw = chipW(fLabel, sz);
         const gx = x;
@@ -331,7 +331,7 @@
         if (x + gw2 + fw <= lp.x + lp.w - u(12)) {
           x += gw2;
           const w2 = R.UIK.chip(g, x, y, fLabel, on ? { kind: 'gold', size: sz } : { kind: 'plain', size: sz, color: C.text2 });
-          this.hot.filter = { x: x - u(6), y: y - u(8), w: w2 + u(12), h: h + u(16) };
+          this.hot.narrow = { x: x - u(6), y: y - u(8), w: w2 + u(12), h: h + u(16) };
         }
       }
     },
