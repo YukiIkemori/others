@@ -131,6 +131,7 @@ def generate(prompt, images=(), size='1536x1024', quality='medium', background='
                 except ValueError:
                     wait = 0
                 time.sleep(wait or min(300, 20 * 2 ** (rate_waits - 1)))
+                attempt -= 1
                 continue
             time.sleep(5 * (attempt + 1))
             continue

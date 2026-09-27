@@ -62,3 +62,6 @@
 00:12:00   | 
 00:12:00   | packed field 96x212, battle 585x348, battle_bare 350x69, face 332x84 | palette 52 + face 48
 00:16:35 sheet 3 attempt 4: generating 3648x1344 (pitch 7, quality medium, 3 refs)
+00:23:47 sheet 1 attempt 3: generating 3584x1536 (pitch 8, quality medium, 2 refs)
+00:24:40   pitch in raw image: 9.83 px per art pixel (upright median 629 px / 64)
+00:24:40 sheet 1 -> art_ref/gen/companion/selma/comp_selma_s1.png (7 poses)

@@ -31,7 +31,7 @@
   window.__envInstall = async function (man, o) {
     o = o || {};
     const base = man.base || '/__env/', tiles = o.tiles || [32];
-    const pick = (tab, id) => { const th = o.theme; return (tab[th + '/' + id]) || tab['common/' + id] || null; };
+    const pick = (tab, id) => { const th = o.theme; if (tab[th + '/' + id]) return tab[th + '/' + id]; if (tab['common/' + id]) return tab['common/' + id]; const k = Object.keys(tab).find((k) => k.endsWith('/' + id)); return k ? tab[k] : null; };
     const url = (j, t) => base + j.theme + '/' + j.kind_dir + '/' + j.files[t];
     // ---- materials: fill the engine's material sheet (T._sheet → {S, px, done}) with the image (period may be 256, not 4 tiles)
     for (const id of man.matIds) {
