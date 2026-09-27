@@ -66,7 +66,7 @@
       for (const [x, y] of [[24, 36], [32, 44], [27, 25], [29, 30], [21, 12], [35, 12], [10, 25], [46, 25], [5, 8], [50, 8], [4, 42]]) O.push(K.prop('torch', x, y));
       K.def('desert_tomb_1', {
         name: '砂の王墓', kind: 'dungeon', region: 'r_desert', location: 'tomb', theme: 'tomb',
-        legend: DK.TOMB_LEGEND({ G: { mat: 'wall_sandstone', solid: true, rise: 2, name: 'seal_door' } }),
+        legend: DK.TOMB_LEGEND({ G: { mat: 'wall_sandstone', solid: true, rise: 2, name: 'seal_door' }, O: { mat: 'wall_sandstone', solid: true, rise: 2, name: 'seal_door_open' } }),
         rows: g, outside: 'wall_sandstone', objects: O,
         npcs: [K.npc('tomb_ghost', 'npc_desert_old_m', 32, 40, { name: '墓の番の影', dir: 'w', talk: 'desert_tomb_ghost', reward: 'hint', cond: '!cleared_r_desert' })],
         spawns: Object.assign({ entrance: { x: 28, y: 44, dir: 'n' }, down: { x: 28, y: 9, dir: 's' } }, SEAL),
@@ -74,7 +74,8 @@
         triggers: [{ id: 'arrive', on: 'enter', event: 'desert_tomb_arrive', once: true },
           { id: 'plate_w', x: 9, y: 9, w: 1, h: 1, on: 'step', event: 'desert_tomb_plate_w', cond: '!desert_t1_sw_w' },
           { id: 'plate_e', x: 46, y: 9, w: 1, h: 1, on: 'step', event: 'desert_tomb_plate_e', cond: '!desert_t1_sw_e' }],
-        tilePatches: [],   // 封じの扉は壁に穴を開けずに扉の物で通す（上の SEAL）
+        // 封じの扉は壁に穴を開けずに扉の物で通す（上の SEAL）。開いたら同じ見た目の 'O' に替える（扉のまわりのチャンクを焼き直し、金の印を消す）
+        tilePatches: [{ cond: DOOR, rect: [27, 19, 3, 2], rows: ['OOO', 'OOO'] }],
         zones: [{ rect: null, zone: 'z_desert_tomb' }],
         light: DK.LIGHT_TOMB, dark: false, bgm: 'pyramid', bbg: 'cave',
         meta: { chestsInfo: true, floor: '1 階', sub: '墓守の回廊' },

@@ -53,7 +53,7 @@
       for (const [x, y] of [[20, 5], [27, 5], [7, 21], [40, 21], [19, 33], [29, 33], [33, 5], [12, 5]]) O.push(K.prop('torch', x, y));
       K.def('desert_temple_1', {
         name: '砂に沈んだ神殿', kind: 'dungeon', optional: true, region: 'r_desert', location: 'temple', theme: 'tomb',
-        legend: DK.TOMB_LEGEND({ G: { mat: 'wall_sandstone', solid: true, rise: 2, name: 'seal_door' } }),
+        legend: DK.TOMB_LEGEND({ G: { mat: 'wall_sandstone', solid: true, rise: 2, name: 'seal_door' }, O: { mat: 'wall_sandstone', solid: true, rise: 2, name: 'seal_door_open' } }),
         rows: g, outside: 'wall_sandstone', objects: O, npcs: [],
         spawns: Object.assign({ entrance: { x: 24, y: 5, dir: 's' }, down: { x: 24, y: 33, dir: 'n' } }, SEAL),
         exits: [],
@@ -61,7 +61,8 @@
           { id: 'plate_1', x: 3, y: 21, w: 1, h: 1, on: 'step', event: 'desert_temple_plate_1', cond: '!desert_tp_disc_1' },
           { id: 'plate_2', x: 44, y: 22, w: 1, h: 1, on: 'step', event: 'desert_temple_plate_2', cond: '!desert_tp_disc_2' },
           { id: 'plate_3', x: 10, y: 5, w: 1, h: 1, on: 'step', event: 'desert_temple_plate_3', cond: '!desert_tp_disc_3' }],
-        tilePatches: [],   // 奥の扉は壁に穴を開けずに扉の物で通す（上の SEAL）
+        // 奥の扉は壁に穴を開けずに扉の物で通す（上の SEAL）。開いたら同じ見た目の 'O' に替える（扉のまわりのチャンクを焼き直し、金の印を消す）
+        tilePatches: [{ cond: { all: DISCS }, rect: [21, 30, 6, 2], rows: ['OOOOOO', 'OOOOOO'] }],
         zones: [{ rect: null, zone: 'z_desert_temple' }],
         light: DK.LIGHT_TOMB, dark: false, bgm: 'pyramid', bbg: 'cave',
         meta: { chestsInfo: true, floor: '1 階', sub: '柱の間' },

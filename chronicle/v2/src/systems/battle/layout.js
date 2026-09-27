@@ -11,7 +11,7 @@
     back: [[668, 361], [726, 425], [700, 392], [742, 350]],
     // 敵の足もと（x 40〜420、y 320〜460）: 味方に近い列から
     foes: [[300, 395], [165, 342], [190, 452], [330, 470], [330, 330], [60, 395], [55, 468], [60, 330]],
-    boss: [215, 452], bossAdds: [[380, 368], [392, 468], [70, 360], [70, 470]],
+    boss: [235, 410], bossAdds: [[380, 368], [392, 468], [70, 360], [70, 470]],
     lantern: [505, 385], horizon: 236,
   };
   // 縦持ち（540 幅。戦場は上の 0〜stageH）。見本 battle_tall.png の値を論理 px にした物
@@ -19,7 +19,7 @@
     front: [[330, 402], [352, 462], [340, 432], [322, 488]],
     back: [[410, 424], [440, 490], [425, 455], [452, 400]],
     foes: [[190, 438], [85, 400], [100, 505], [205, 515], [210, 385], [30, 452], [35, 520], [35, 385]],
-    boss: [140, 500], bossAdds: [[245, 420], [250, 520], [40, 410], [40, 525]],
+    boss: [122, 462], bossAdds: [[245, 420], [250, 520], [40, 410], [40, 525]],
     lantern: [268, 450], horizon: 250,
   };
 
@@ -55,13 +55,13 @@
     return out;
   };
 
-  /** 敵の足もと。大きい物（ボス・size l）を先に良い場所へ */
+  /** 敵の足もと。大きい物（ボス・size l）を先に良い場所へ。ボスは敵側の真ん中（2 体以上は真ん中から左右に並べる） */
   Lay.enemySpots = function (L, units) {
     const T = L.T, out = {};
     const bosses = units.filter((u) => u.boss);
     const rest = units.filter((u) => !u.boss).slice().sort((a, b) => (big(b) ? 1 : 0) - (big(a) ? 1 : 0));
     if (bosses.length) {
-      bosses.forEach((u, i) => { out[u.uid] = { x: T.boss[0] + L.ox - i * 60, y: T.boss[1] + L.oy - i * 20 }; });
+      bosses.forEach((u, i) => { const d = i - (bosses.length - 1) / 2; out[u.uid] = { x: T.boss[0] + L.ox + d * 120, y: T.boss[1] + L.oy + Math.abs(d) * 20 }; });
       rest.forEach((u, i) => { const p = T.bossAdds[i % T.bossAdds.length]; out[u.uid] = { x: p[0] + L.ox, y: p[1] + L.oy + Math.floor(i / 4) * 6 }; });
       return out;
     }

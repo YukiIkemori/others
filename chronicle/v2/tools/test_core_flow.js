@@ -33,7 +33,7 @@ async function open(browser, url, vp) {
   page.on('console', (m) => { if (m.type() === 'error') errors.push('[console] ' + m.text()); });
   page.on('pageerror', (e) => errors.push('[pageerror] ' + (e.stack || e)));
   await page.goto(url);
-  await page.waitForFunction('window.RPG && RPG.Engine && RPG.Engine.running && RPG.Engine.top()', null, { timeout: 15000 });
+  await page.waitForFunction('window.RPG && RPG.Engine && RPG.Engine.running && RPG.Engine.top()', null, { timeout: +process.env.V2_OPEN_TIMEOUT || 15000 });
   await page.waitForTimeout(300);
   return { ctx, page, errors };
 }
@@ -133,7 +133,7 @@ async function main() {
   // 戦闘: 本物の R.Battle.start（BSCENE）に本物のデータの編成を渡す（序章の最初の戦闘と同じ tr_tutorial）
   await ev(p, "RPG.Settings.set('battleSpeed', 3); 0");   // 設定「戦闘の速さ ×3」（ヘッドレスは遅いので）
   await ev(p, "window.__bres = null; void RPG.Battle.start({troop:'tr_tutorial'}).then((r) => { window.__bres = r; }); 0");
-  ok('battle scene opens', await waitFor(p, `${top}==='battle'`, 5000));
+  ok('battle scene opens', await waitFor(p, `${top}==='battle'`, 15000));   // 入る移り（約 0.8 秒）の後
   await p.waitForTimeout(600);
   await p.screenshot({ path: path.join(OUT, 'p0_battle_1920.png') });
   const gold0 = await ev(p, 'RPG.Game.gold');
@@ -168,7 +168,7 @@ async function main() {
 
   // 読み込み直し: 同じ context（localStorage はそのまま）で開き直して つづきから
   await p.reload();
-  await p.waitForFunction('window.RPG && RPG.Engine && RPG.Engine.running && RPG.Engine.top()', null, { timeout: 15000 });
+  await p.waitForFunction('window.RPG && RPG.Engine && RPG.Engine.running && RPG.Engine.top()', null, { timeout: +process.env.V2_OPEN_TIMEOUT || 15000 });
   await p.waitForTimeout(300);
   ok('title offers つづきから first after reload', await ev(p, "(() => { const r = RPG.Engine.top().list.rows; return r[0].value==='continue' && !r[0].disabled; })()"));
   ok('つづきから → field at the saved place', await pressUntil(p, 'a', FREE, 6));

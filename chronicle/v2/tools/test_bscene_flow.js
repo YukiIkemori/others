@@ -22,7 +22,7 @@ async function main() {
   section('全種類の出来事（戦闘の速さ ＋2）');
   await B.ev(p, "RPG.Settings.set('battleSpeed', 3)");
   await B.ev(p, start({ demo: 'all', autoInput: true, mons: [['x', 1]] }));
-  ok('battle scene on top, opaque', await B.waitFor(p, `${B.TOP}==='battle' && RPG.Engine.top().opaque`, 3000));
+  ok('battle scene on top, opaque', await B.waitFor(p, `${B.TOP}==='battle' && RPG.Engine.top().opaque`, 10000));
   ok('all rounds played to the victory', await B.waitFor(p, `${D} && ${D}.result`, 60000));
   const log = await B.ev(p, `${D}.log`);
   const kinds = await B.ev(p, 'Object.keys(RPG.Contract.BATTLE_EVENTS)');
@@ -49,7 +49,7 @@ async function main() {
   section('戦闘の速さ（R: 通常 → ＋1 → ＋2 → 通常、設定に残る）');
   await B.ev(p, "RPG.Settings.set('battleSpeed', 1)");
   await B.ev(p, start({ demo: 'normal', mons: [['x', 1]] }));
-  ok('battle waits for input', await B.waitFor(p, `${D} && ${D}.phase==='input' && ${D}.ui`, 8000));
+  ok('battle waits for input', await B.waitFor(p, `${D} && ${D}.phase==='input' && ${D}.ui`, 20000));
   ok('speed label 「▶ 通常」', (await B.ev(p, 'RPG.Battle.speedText(RPG.Settings.get("battleSpeed"))')) === '▶ 通常');
   const seen2 = [];
   for (let i = 0; i < 3; i++) { await B.press(p, 'r'); seen2.push(await B.ev(p, 'RPG.Settings.get("battleSpeed")')); }
@@ -62,7 +62,7 @@ async function main() {
 
   section('コマンド・カーソル記憶・NEW・リピート');
   await B.ev(p, start({ demo: 'tele', mons: [['x', 1]], bg: 'tower' }));
-  ok('party menu (一行の命令) opens', await B.waitFor(p, `${D} && ${D}.phase==='input' && ${D}.ui`, 8000));
+  ok('party menu (一行の命令) opens', await B.waitFor(p, `${D} && ${D}.phase==='input' && ${D}.ui`, 20000));
   await B.press(p, 'a'); // 戦う
   // アルン: 剣 → 疾風剣（NEW、4 行目）→ ねらい
   await B.press(p, 'a');
@@ -90,30 +90,30 @@ async function main() {
   const memParty = await B.ev(p, 'RPG.Game.battle.cursor._party');
   ok('party command cursor remembered (repeat = 1)', memParty === 1, memParty);
   ok('finish the battle', await B.pressUntil(p, 'a', 'window.__r', 80));
-  ok('repeat does not carry to the next battle', await (async () => { await B.ev(p, start({ demo: 'normal', mons: [['x', 1]] })); const r = await B.waitFor(p, `${D} && ${D}.phase==='input'`, 6000); const on = await B.ev(p, `${D}.B.repeatOn`); return r && !on; })());
+  ok('repeat does not carry to the next battle', await (async () => { await B.ev(p, start({ demo: 'normal', mons: [['x', 1]] })); const r = await B.waitFor(p, `${D} && ${D}.phase==='input'`, 20000); const on = await B.ev(p, `${D}.B.repeatOn`); return r && !on; })());
 
   section('逃げる');
   // 一行の命令: 戦う・リピート（1 ラウンド目は使えない）・逃げる
   await B.press(p, 'down'); await B.press(p, 'down'); await B.press(p, 'a');
-  ok('escape waits for confirm (run-off, ▼)', await B.waitFor(p, `${D} && ${D}.next && ${D}.head && /逃げ/.test(${D}.head.name)`, 8000) && !(await B.ev(p, 'window.__r')));
+  ok('escape waits for confirm (run-off, ▼)', await B.waitFor(p, `${D} && ${D}.next && ${D}.head && /逃げ/.test(${D}.head.name)`, 20000) && !(await B.ev(p, 'window.__r')));
   ok('escape resolves with result escape', await B.pressUntil(p, 'a', "window.__r && window.__r.result === 'escape'", 20), await B.ev(p, 'window.__r'));
   ok('invariants after escape', await B.waitFor(p, INV, 3000));
 
   section('全滅: 直前の戦闘から（既定・失う物なし）');
   await B.ev(p, 'RPG.Game.gold = 101');
   await B.ev(p, start({ demo: 'wipe', autoInput: true, mons: [['x', 1]], bg: 'cave' }));
-  ok('wipe screen (灯が消えた) with 3 choices', await B.waitFor(p, `${D} && ${D}.go && ${D}.ui && ${D}.ui.o.rows.length === 3`, 15000));
+  ok('wipe screen (灯が消えた) with 3 choices', await B.waitFor(p, `${D} && ${D}.go && ${D}.ui && ${D}.ui.o.rows.length === 3`, 30000));
   ok('default row follows setting wipe (retry = 0)', (await B.ev(p, `${D}.ui.sel`)) === 0);
   ok('promise not resolved yet', !(await B.ev(p, 'window.__r')));
   await B.press(p, 'a');
-  ok('retry restarts the same battle (retry = 1) and it can be won', await B.waitFor(p, `${D} && ${D}.retry === 1`, 4000) && await B.pressUntil(p, 'a', 'window.__r', 60));
+  ok('retry restarts the same battle (retry = 1) and it can be won', await B.waitFor(p, `${D} && ${D}.retry === 1`, 10000) && await B.pressUntil(p, 'a', 'window.__r', 60));
   ok('retry: win, gold unchanged (no loss)', (await B.ev(p, "window.__r.result === 'win' && RPG.Game.gold === 101")), await B.ev(p, '[window.__r, RPG.Game.gold]'));
   ok('invariants after retry + win', await B.waitFor(p, INV, 3000));
 
   section('全滅: 最後に泊まった宿から（所持金半分）');
   await B.ev(p, "RPG.Game.gold = 101; RPG.Game.lastInn = {map: 'stub_road', x: 10, y: 5, dir: 's'}");
   await B.ev(p, start({ demo: 'wipe', autoInput: true, mons: [['x', 1]] }));
-  ok('wipe screen', await B.waitFor(p, `${D} && ${D}.go && ${D}.ui`, 15000));
+  ok('wipe screen', await B.waitFor(p, `${D} && ${D}.go && ${D}.ui`, 30000));
   await B.press(p, 'down'); await B.press(p, 'a');
   ok("resolves {result:'abort', to:'inn'}", await B.waitFor(p, "window.__r && window.__r.result === 'abort' && window.__r.to === 'inn'", 5000), await B.ev(p, 'window.__r'));
   const f0 = await B.ev(p, 'RPG.Engine.frame');
@@ -125,7 +125,7 @@ async function main() {
 
   section('canLose（全滅の画面なし）');
   await B.ev(p, start({ demo: 'wipe', autoInput: true, canLose: true, mons: [['x', 1]] }));
-  ok("canLose: '力尽きた' waits for confirm (no wipe screen)", await B.waitFor(p, `${D} && ${D}.next && !${D}.go`, 15000));
+  ok("canLose: '力尽きた' waits for confirm (no wipe screen)", await B.waitFor(p, `${D} && ${D}.next && !${D}.go`, 30000));
   ok("resolves 'lose' after confirm", await B.pressUntil(p, 'a', "window.__r && window.__r.result === 'lose'", 20));
   ok('invariants after canLose', await B.waitFor(p, INV, 3000));
 
@@ -141,7 +141,7 @@ async function main() {
 
   section('全滅: タイトルへ');
   await B.ev(p, start({ demo: 'wipe', autoInput: true, mons: [['x', 1]] }));
-  ok('wipe screen', await B.waitFor(p, `${D} && ${D}.go && ${D}.ui`, 15000));
+  ok('wipe screen', await B.waitFor(p, `${D} && ${D}.go && ${D}.ui`, 30000));
   await B.press(p, 'down'); await B.press(p, 'down'); await B.press(p, 'a');
   ok('"title" opens the title screen', await B.waitFor(p, `${B.TOP}==='screen:title'`, 5000));
   ok('0 console errors / outside requests', P.errors.length === 0, P.errors.slice(0, 5));

@@ -31,7 +31,7 @@
   };
   E.itemName = function (id) { const it = R.DB.items && R.DB.items[id]; return (it && it.name) || id; };
   E.give = async function (ev, id, n, o) {
-    const r = ev.item(id, n == null ? 1 : n) || { item: id, n: n || 1 };
+    const r = ev.item(id, n == null ? 1 : n, { silent: true }) || { item: id, n: n || 1 };
     const name = (r && r.name) || E.itemName(id);
     const cnt = (n || 1) > 1 ? ' ×' + n : '';
     const key = /^k_/.test(id);

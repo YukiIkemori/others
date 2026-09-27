@@ -1,97 +1,206 @@
 {
- "date": "2026-09-27T13:13:44.729Z",
+ "date": "2026-09-27T14:47:28.430Z",
  "fixture": "content_p_pharos",
  "walked": [
   {
-   "map": "verda_1",
-   "kind": "exit",
-   "id": "40,28",
-   "at": [
-    40,
-    28
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h1",
+   "at": "roa_home1",
+   "to": "roa_home1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    11
    ],
-   "to": "verda_1",
-   "ok": false,
-   "why": "Cannot access 'moved' before initialization",
-   "ms": 9445
+   "ms": 27554
   },
   {
-   "map": "verda_1",
-   "kind": "exit",
-   "id": "28,51",
-   "at": [
-    28,
-    51
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h2",
+   "at": "roa_home2",
+   "to": "roa_home2",
+   "ok": true,
+   "steps": 6,
+   "why": null,
+   "start": [
+    14,
+    13
    ],
-   "to": "fern",
-   "ok": false,
-   "why": "moved is not a function",
-   "ms": 12424
+   "ms": 26832
   },
   {
-   "map": "verda_1",
-   "kind": "exit",
-   "id": "11,20",
-   "at": [
-    11,
-    20
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_hall",
+   "at": "roa_hall_in",
+   "to": "roa_hall_in",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    21,
+    13
    ],
-   "to": "verda_1",
-   "ok": false,
-   "why": "Cannot access 'moved' before initialization",
-   "ms": 1845
+   "ms": 23078
   },
   {
-   "map": "verda_1",
-   "kind": "exit",
-   "id": "28,0",
-   "at": [
-    28,
-    0
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h3",
+   "at": "roa_home3",
+   "to": "roa_home3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    29,
+    12
    ],
-   "to": "verda_2",
-   "ok": false,
-   "why": "moved is not a function",
-   "ms": 14499
+   "ms": 21780
   },
   {
-   "map": "verda_2",
-   "kind": "exit",
-   "id": "28,0",
-   "at": [
-    28,
-    0
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h4",
+   "at": "roa_home4",
+   "to": "roa_home4",
+   "ok": true,
+   "steps": 2,
+   "why": null,
+   "start": [
+    36,
+    12
    ],
-   "to": "elder_1",
-   "ok": false,
-   "why": "moved is not a function",
-   "ms": 12594
+   "ms": 10279
   },
   {
-   "map": "verda_2",
-   "kind": "exit",
-   "id": "28,51",
-   "at": [
-    28,
-    51
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h5",
+   "at": "roa_home5",
+   "to": "roa_home5",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    25
    ],
-   "to": "verda_1",
-   "ok": false,
-   "why": "moved is not a function",
-   "ms": 14199
+   "ms": 13535
   },
   {
-   "map": "verda_2",
-   "kind": "exit",
-   "id": "20,32",
-   "at": [
-    20,
-    32
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h6",
+   "at": "roa_home6",
+   "to": "roa_home6",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    30,
+    21
    ],
-   "to": "verda_2",
-   "ok": false,
-   "why": "Cannot access 'moved' before initialization",
-   "ms": 11581
+   "ms": 14590
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_berna",
+   "at": "roa_house",
+   "to": "roa_house",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    17,
+    31
+   ],
+   "ms": 11927
+  },
+  {
+   "map": "roa",
+   "kind": "exit",
+   "id": "43,15",
+   "at": "world",
+   "to": "world",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    39,
+    15
+   ],
+   "ms": 31023
+  }
+ ],
+ "looks": [
+  {
+   "map": "roa",
+   "npc": "gatewoman",
+   "look": "npc_woman_2",
+   "art": "npc_pen_woman_2",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "gatewoman2",
+   "look": "npc_woman_2",
+   "art": "npc_pen_woman_2",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "child_a",
+   "look": "npc_child_1",
+   "art": "npc_pen_child_1",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "child_b",
+   "look": "npc_child_3",
+   "art": "npc_pen_child_3",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "elder",
+   "look": "npc_old_m_1",
+   "art": "npc_pen_old_m_1",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "farmer",
+   "look": "npc_man_2",
+   "art": "npc_pen_man_2",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "weaver",
+   "look": "npc_old_f_1",
+   "art": "npc_pen_old_f_1",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "youth",
+   "look": "npc_man_1",
+   "art": "npc_pen_man_1",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "cat",
+   "look": "ani_cat",
+   "art": "ani_cat",
+   "ok": true
   }
  ],
  "skipped": [],
