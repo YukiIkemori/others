@@ -278,12 +278,14 @@ function scanMonsters(root) {
   }
   return out;
 }
+/** 中身で比べて写す（大きさと時刻だけだと、同じ大きさで時刻の古い新しい絵（cp -p で戻した等）を写し損ねる）。→ 中身の sha1 の先頭 10 字 */
 function copyIfChanged(src, dst) {
-  try {
-    const a = fs.statSync(src), b = fs.existsSync(dst) && fs.statSync(dst);
-    if (b && a.size === b.size && a.mtimeMs <= b.mtimeMs) return;
-  } catch (e) { /* 写す */ }
-  fs.copyFileSync(src, dst);
+  const a = fs.readFileSync(src);
+  const h = crypto.createHash('sha1').update(a).digest('hex').slice(0, 10);
+  let same = false;
+  try { same = fs.existsSync(dst) && fs.statSync(dst).size === a.length && fs.readFileSync(dst).equals(a); } catch (e) { same = false; }
+  if (!same) fs.writeFileSync(dst, a);
+  return h;
 }
 /** → {script, embeds, bytes}。mode 'external' は outDir/<kind>/ に写して相対 URL、'embed' は埋め込み、'none' は空 */
 function mediaTable(media, mode, outDir) {
@@ -312,14 +314,15 @@ function mediaTable(media, mode, outDir) {
         embeds.push(`<script type="application/octet-stream" id="${ref}" data-type="${MIME[e.ext]}">${buf.toString('base64')}</script>`);
         url = '#' + ref;
       } else if (mode === 'external') {
-        copyIfChanged(e.file, path.join(extDir, base(e)));
+        // ?v=<中身の hash>: 名前が同じで中身が変わった絵（原画の描き直し）を、ブラウザの HTTP キャッシュの古い物で出さない
+        const h = copyIfChanged(e.file, path.join(extDir, base(e)));
         bytes += fs.statSync(e.file).size;
-        url = kind + '/' + base(e);
+        url = kind + '/' + base(e) + '?v=' + h;
         // タイトルの絵は webp が読めないときの png も写す（--single には入れない。TITLE_ART §2）
-        if (kind === 'title' && e.png) { copyIfChanged(e.png, path.join(extDir, e.id + '.png')); bytes += fs.statSync(e.png).size; }
+        if (kind === 'title' && e.png) { e.pngV = copyIfChanged(e.png, path.join(extDir, e.id + '.png')); bytes += fs.statSync(e.png).size; }
       } else continue;
       table[kind][e.id] = kind === 'bgm' ? Object.assign({ url }, e.meta) : kind === 'sprites' || kind === 'env' || kind === 'monsters' ? { url, meta: e.meta }
-        : kind === 'title' ? (mode === 'external' && e.png ? { url, png: kind + '/' + e.id + '.png' } : { url }) : url;
+        : kind === 'title' ? (mode === 'external' && e.png ? { url, png: kind + '/' + e.id + '.png' + (e.pngV ? '?v=' + e.pngV : '') } : { url }) : url;
     }
   }
   if (mode !== 'none' && media.titleMeta) table.titleMeta = media.titleMeta;

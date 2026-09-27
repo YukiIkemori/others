@@ -14,6 +14,7 @@ dist（node v2/tools/build.js の外置きの版）から、次の形の写し�
 切り出し・範囲の読み方は src/core/media.js（image() と bytes()）。
 """
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -29,6 +30,18 @@ MAX_TEXT = 16 * 1000 * 1000
 MAX_BIN = 15 * 1000 * 1000
 VERSION_FILES = 511
 VERSION_BYTES = 256 * 1000 * 1000
+
+
+def bare(url):
+    """'sprites/x.png?v=abc' → 'sprites/x.png'（build.js の ?v=<hash> を外してファイルを読む）"""
+    return url.split('?', 1)[0]
+
+
+def hashed_name(path_rel, data):
+    """'sprites/atlas_00.webp' → 'sprites/atlas_00.<sha1 10 字>.webp'（中身で名前を変える: 公開し直しても古いキャッシュの絵が出ない）"""
+    h = hashlib.sha1(data).hexdigest()[:10]
+    root, ext = os.path.splitext(path_rel)
+    return f'{root}.{h}{ext}'
 
 
 def shelf_pack(items, page):
@@ -57,19 +70,22 @@ def pack_images(kind, table, dist, out, page):
     os.makedirs(os.path.join(out, kind), exist_ok=True)
     imgs = {}
     for k, e in table.items():
-        im = Image.open(os.path.join(dist, e['url']))
+        im = Image.open(os.path.join(dist, bare(e['url'])))
         im.load()
         imgs[k] = im.convert('RGBA')
     pages = shelf_pack([(k, im.width, im.height) for k, im in imgs.items()], page)
-    new = {}
+    new, names = {}, []
     for i, pg in enumerate(pages):
         pw = max(x + w for _, x, _, w, _ in pg)
         ph = max(y + h for _, _, y, _, h in pg)
         sheet = Image.new('RGBA', (pw, ph), (0, 0, 0, 0))
         for k, x, y, w, h in pg:
             sheet.paste(imgs[k], (x, y))
-        name = f'{kind}/atlas_{i:02d}.webp'
-        sheet.save(os.path.join(out, name), 'WEBP', lossless=True, exact=True, quality=100, method=4)
+        tmp = os.path.join(out, f'{kind}/atlas_{i:02d}.tmp.webp')
+        sheet.save(tmp, 'WEBP', lossless=True, exact=True, quality=100, method=4)
+        name = hashed_name(f'{kind}/atlas_{i:02d}.webp', open(tmp, 'rb').read())
+        os.replace(tmp, os.path.join(out, name))
+        names.append(name)
         for k, x, y, w, h in pg:
             e = dict(table[k])
             e['url'] = name
@@ -77,7 +93,7 @@ def pack_images(kind, table, dist, out, page):
             new[k] = e
     # 切り出しが元の画像と 1 画素も違わないこと（exact: 透明な画素の色も残す）
     for i in range(len(pages)):
-        sheet = Image.open(os.path.join(out, f'{kind}/atlas_{i:02d}.webp')).convert('RGBA')
+        sheet = Image.open(os.path.join(out, names[i])).convert('RGBA')
         for k, x, y, w, h in pages[i]:
             a = sheet.crop((x, y, x + w, y + h))
             b = imgs[k]
@@ -96,7 +112,7 @@ def pack_voice(table, dist, out, chunk):
         nonlocal n, buf
         if not buf:
             return
-        name = f'voice/pack_{n:02d}.ogg'
+        name = hashed_name(f'voice/pack_{n:02d}.ogg', bytes(buf))
         with open(os.path.join(out, name), 'wb') as f:
             f.write(buf)
         for k, off, ln in parts:
@@ -107,7 +123,7 @@ def pack_voice(table, dist, out, chunk):
 
     for k in sorted(table):
         url = table[k] if isinstance(table[k], str) else table[k]['url']
-        data = open(os.path.join(dist, url), 'rb').read()
+        data = open(os.path.join(dist, bare(url)), 'rb').read()
         if not data.startswith(b'OggS'):
             raise SystemExit(f'voice {k}: not an Ogg file ({url})')
         if buf and len(buf) + len(data) > chunk:
@@ -142,6 +158,7 @@ def main():
         for k, e in t.items():
             urls = [e] if isinstance(e, str) else [e['url']] + ([e['png']] if isinstance(e, dict) and e.get('png') else [])
             for u in urls:
+                u = bare(u)   # 表の url の ?v=<hash> はそのまま残す（HTTP キャッシュの鍵）
                 os.makedirs(os.path.join(out, os.path.dirname(u)), exist_ok=True)
                 shutil.copyfile(os.path.join(dist, u), os.path.join(out, u))
     counts = {}
