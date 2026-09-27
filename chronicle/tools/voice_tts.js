@@ -68,6 +68,14 @@ function allLines(C) {
       }
     }
   }
+  // v2 slice story lines + town greeting barks (design/voice/story_v2_lines.csv, tools/story_voice.js)
+  {
+    const SV = require('./story_voice');
+    for (const s of SV.loadLines()) {
+      const text = SV.plain(s.text);
+      out.push({ id: s.id, speaker: s.speaker, story2: s.kind, text, direction: s.direction, scene: s.kind === 'bark' ? 'bark' : s.event, est: SV.estimate(text) });
+    }
+  }
   if (C.battle) {
     const BV = require('./battle_voice');
     const shoutKinds = C.battle.shoutKinds || ['attack', 'hurt'];
@@ -102,7 +110,8 @@ function buildPrompt(C, line) {
     'Language: natural, native Tokyo-standard Japanese, performed by a professional anime/game voice actor. Pauses at "……" and "――". Do not read these notes aloud; say only the transcript.',
   ].filter(Boolean).join('\n');
   const said = (C.readings || {})[line.id] || spoken(line.text); // kana reading for words the model misreads
-  return `# AUDIO PROFILE: ${sp.profile}\n## SCENE: ${line.scene === 'battle' ? 'In the middle of a fantasy RPG battle.' : 'A story scene of a Japanese fantasy RPG.'}\n## DIRECTOR'S NOTES\n${notes}\n## TRANSCRIPT\n${said}`;
+  const scene = line.scene === 'battle' ? 'In the middle of a fantasy RPG battle.' : line.scene === 'bark' ? 'A townsperson greets the player as a conversation opens, in a Japanese fantasy RPG set in an endless lamplit night. One short natural greeting.' : 'A story scene of a Japanese fantasy RPG.';
+  return `# AUDIO PROFILE: ${sp.profile}\n## SCENE: ${scene}\n## DIRECTOR'S NOTES\n${notes}\n## TRANSCRIPT\n${said}`;
 }
 function requestBody(C, line) {
   const sp = speakerOf(C, line);
@@ -224,6 +233,7 @@ async function main(argv, E) {
   if (argv.includes('--no-hero')) lines = lines.filter((l) => !l.hero);
   if (argv.includes('--battle')) lines = lines.filter((l) => l.battle || l.hero);
   if (argv.includes('--no-battle')) lines = lines.filter((l) => !l.battle);
+  if (argv.includes('--story2')) lines = lines.filter((l) => l.story2);
   if (arg('--char')) { const want = arg('--char').split(','); lines = lines.filter((l) => want.includes(l.battle)); }
   if (arg('--only')) { const want = arg('--only').split(','); lines = lines.filter((l) => want.includes(l.id)); }
   if (arg('--speaker')) { const want = arg('--speaker').split(','); lines = lines.filter((l) => want.includes(l.speaker)); }

@@ -174,9 +174,10 @@
     const m = S.map;
     if (!m) return;
     const amb = R.Terrain.ambient(m, R.Tier.get()) || {};
-    const md = R.Hd.mood(amb.mood || (m.light && m.light.mood) || 'night') || {};
+    const md = R.Hd.mood(amb.mood || (m.light && m.light.mood) || 'night', R.Tier.get()) || {};   // ティアの段で周辺減光も弱く
     S.amb = amb;
-    S.postO = { vignette: md.vignette != null ? md.vignette : 0.35, bloom: md.bloom != null ? md.bloom : 0.2, grade: md.grade || null, mood: amb.mood };
+    const lv = m.light && m.light.vignette;   // map.light.vignette = その地図だけの周辺減光（町の端が暗い地図）
+    S.postO = { vignette: lv != null ? lv : md.vignette != null ? md.vignette : 0.35, bloom: md.bloom != null ? md.bloom : 0.2, grade: md.grade || null, mood: amb.mood };
   };
 
   /** 道しるべの灯籠（E21）: lit の条件が真になったら R.Game.lamps[id] = true と 'lamp:lit' */

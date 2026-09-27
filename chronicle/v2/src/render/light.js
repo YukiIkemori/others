@@ -92,7 +92,7 @@
     const [h0, h1] = S.ambientHue || [250, 295];
     v = rgb.map((x) => Math.round(x));
     if (shift && d > 0 && h >= 195 && h < h0) {
-      const nh = h + (h0 - h) * shift, sat = Math.min(1, (d / mx) * (S.ambientSat || 1));
+      const nh = h + (h0 + (S.ambientHuePad || 0) - h) * shift, sat = Math.min(1, (d / mx) * (S.ambientSat || 1));
       const V = mx, C = V * sat, X = C * (1 - Math.abs(((nh / 60) % 2) - 1)), m0 = V - C;
       const seg = Math.floor(nh / 60) % 6;
       const t = [[C, X, 0], [X, C, 0], [0, C, X], [0, X, C], [X, 0, C], [C, 0, X]][seg];
@@ -144,7 +144,7 @@
       const sy = kind === 'point' ? 1 : kind === 'window' ? 0.5 : kind === 'wide' ? 0.45 : sq;
       const sx = kind === 'wide' ? 1.5 : 1;
       const c = rgbOf(li.color || st().lampColor || '#ffc27a').map((v) => Math.round(v + (255 - v) * white));
-      list.push({ li, r, sx, sy, col: `rgb(${c[0]},${c[1]},${c[2]})`, k: Math.max(0, li.k != null ? li.k : 0.85) });
+      list.push({ li, r, sx, sy, col: `rgb(${c[0]},${c[1]},${c[2]})`, k: Math.max(0, (li.k != null ? li.k : 0.85) * (isMap ? 1 : o.poolK || mood.poolK || 1)) });
     }
     // ① 光だまりの中は環境光から灯りの色へ寄せる（重なっても白く飛ばない。暖色が残る）
     x.globalCompositeOperation = 'source-over';
@@ -194,10 +194,10 @@
       ctx.beginPath(); ctx.rect(rx, ry, rw, rh); ctx.clip();
       for (const li of o.lights) {
         if (li.kind === 'window') continue;
-        const r = (li.r || 60) * poolMul * 0.55;
+        const r = (li.r || 60) * poolMul * 0.55 * (mood.spillR || 1);
         if (li.x + r < rx || li.x - r > rx + rw || li.y + r < ry || li.y - r > ry + rh) continue;
         const sy = li.kind === 'point' ? 1 : li.kind === 'wide' ? 0.45 : sq, sx = li.kind === 'wide' ? 1.5 : 1;
-        ctx.globalAlpha = Math.min(1, spill * (li.k != null ? li.k : 0.85));
+        ctx.globalAlpha = Math.min(1, spill * (li.k != null ? li.k : 0.85) * (o.poolK || mood.poolK || 1));
         ctx.drawImage(sprite('pool', li.color || st().lampColor || '#ffc27a'), li.x - r * sx, li.y - r * sy, r * 2 * sx, r * 2 * sy);
       }
     }

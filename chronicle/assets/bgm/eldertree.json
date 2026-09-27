@@ -1,0 +1,31 @@
+{
+  "loopStart": 25.403,
+  "loopEnd": 85.409,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. The game's world lives in an endless night lit by lanterns, lamps and great beacon fires; the score is gentle and melancholic, with warmth and a quiet, stubborn hope. Inside a thousand-year-old tree whose roots are being gnawed away: ancient, reverent and a little sorrowful, the slow heartbeat of the old tree spirit, glowing moss and roots. A dungeon theme with gentle forward motion, a noble cello melody answered by the flute. Tempo 84 BPM, 6/8 time, key of D dorian. Instrumentation: harp and hammered dulcimer ostinato, solo cello and wooden flute, soft wordless choir pad (no words), frame drum heartbeat, low contrabass, glockenspiel glints. Form: dulcimer ostinato intro; cello theme; flute answer over the choir pad; a darker middle with the heartbeat drum and low strings; cello and flute together; back to the ostinato. Duration: 120 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+    "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]\n[[C4]]\n[[E5]]",
+    "generated": "2026-09-27T04:47:22.244Z",
+    "rawSeconds": 123.4,
+    "takes": 2
+  },
+  "analysis": {
+    "loudnessLUFS": -18,
+    "truePeakDb": -5.8,
+    "gainDb": -5.7,
+    "peakLimited": false,
+    "loopScore": 0.562,
+    "seamListen": {
+      "seam_smooth": 8,
+      "problem": "sudden instrument change"
+    },
+    "seamCorr": 0.366,
+    "xfade": 0.6,
+    "medianDb": -22.5,
+    "longestSilence": 0,
+    "seamLevelDiffDb": 0.1,
+    "seamJump": 0.01,
+    "maxStep": 0.0343
+  }
+}

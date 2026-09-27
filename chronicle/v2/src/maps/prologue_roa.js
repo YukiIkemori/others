@@ -109,7 +109,7 @@
           { id: 'gate', x: 39, y: 15, w: 1, h: 1, on: 'step', event: 'roa_gate', cond: '!prologue_berna' },
           { id: 'enter', on: 'enter', event: 'roa_enter' },
         ],
-        light: { ambient: '#5c5aa0', k: 0.45, mood: 'town_night' }, bgm: 'home',
+        light: { ambient: '#5c5aa0', k: 0.45, mood: 'town_night', vignette: 0.66 }, bgm: 'home',
         meta: { sub: '語り部の里', chestsInfo: true },
       });
     })();

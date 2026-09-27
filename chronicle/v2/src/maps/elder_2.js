@@ -72,7 +72,7 @@
       ],
       oneway: [{ x: 38, y: 26, dir: 'w' }, { x: 38, y: 27, dir: 'w' }, { x: 18, y: 30, dir: 'w' }, { x: 18, y: 31, dir: 'w' }],
       zones: [{ rect: [0, 0, 52, 36], zone: 'z_elder' }],
-      light: { ambient: '#56668a', k: 0.55, mood: 'tree' },
+      light: { ambient: '#5e6e96', k: 0.57, mood: 'tree' },
       dark: false,
       bgm: 'shrine', bbg: 'tree',
       meta: { chestsInfo: true, floor: '2 階', sub: '根の間' },

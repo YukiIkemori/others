@@ -40,7 +40,7 @@
     c = Hd.RZ.canvas(w, h);
     const x = c.getContext('2d');
     const liftA = Math.min(0.2, (lift[0] + lift[1] + lift[2]) / 3 / 120);
-    const dark = [8, 6, 22];
+    const dark = [5, 2, 15];   // 四隅の藍（黒にしない。暗部の色相 250〜295° の側）
     const stop = (a, col) => {
       const A = 1 - (1 - a) * b;
       if (A <= 0.0005) return 'rgba(0,0,0,0)';

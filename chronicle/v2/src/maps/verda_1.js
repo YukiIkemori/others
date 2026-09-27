@@ -133,7 +133,7 @@
       ],
       oneway: [{ x: 18, y: 12, dir: 'w' }, { x: 18, y: 13, dir: 'w' }],
       zones: [{ rect: null, zone: 'z_verda' }],
-      light: { ambient: '#4c5890', k: 0.5, mood: 'forest_night' },
+      light: { ambient: '#5460a0', k: 0.52, mood: 'forest_night' },
       dark: false,
       bgm: 'forest', bbg: 'forest',
       meta: { chestsInfo: true, floor: '1 階', sub: '蛍だまりの森' },

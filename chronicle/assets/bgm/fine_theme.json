@@ -1,0 +1,31 @@
+{
+  "loopStart": 14.211,
+  "loopEnd": 78.145,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. The game's world lives in an endless night lit by lanterns, lamps and great beacon fires; the score is gentle and melancholic, with warmth and a quiet, stubborn hope. The theme of a mysterious girl in a grey cloak who appears and vanishes like a figure from an old book: ethereal, tender and ancient, a little lonely, gently fading like a lamp's afterglow. Very quiet and intimate so dialogue sits on top of it. Tempo 66 BPM, 4/4 time, key of E minor. Instrumentation: solo celesta and harp, a soft solo violin, sustained string harmonics, a quiet low piano, faint chimes. Form: celesta and harp motif; violin melody; harmonics and piano bridge; motif returns softly. Duration: 90 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+    "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]",
+    "generated": "2026-09-27T04:55:06.778Z",
+    "rawSeconds": 89.6,
+    "takes": 2
+  },
+  "analysis": {
+    "loudnessLUFS": -18,
+    "truePeakDb": -6.4,
+    "gainDb": -6.4,
+    "peakLimited": false,
+    "loopScore": 0.491,
+    "seamListen": {
+      "seam_smooth": 9.5,
+      "problem": "none"
+    },
+    "seamCorr": 0.181,
+    "xfade": 0.6,
+    "medianDb": -21.9,
+    "longestSilence": 0.7,
+    "seamLevelDiffDb": 0,
+    "seamJump": 0.0021,
+    "maxStep": 0.0087
+  }
+}

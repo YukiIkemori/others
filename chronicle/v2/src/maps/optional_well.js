@@ -56,7 +56,7 @@
       spawns: { entrance: { x: 18, y: 4, dir: 's' } },
       triggers: [{ id: 'nest', x: 22, y: 21, w: 3, h: 5, on: 'step', event: 'well_nest', once: true }],
       zones: [{ rect: null, zone: 'z_well' }],
-      light: { ambient: '#4c4a78', k: 0.62, mood: 'cave' }, bgm: 'cave', bbg: 'cave',
+      light: { ambient: '#5e5890', k: 0.66, mood: 'cave' }, bgm: 'cave', bbg: 'cave',
       meta: { chestsInfo: true, floor: '地下', sub: '寄り道' },
     });
   });

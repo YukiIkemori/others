@@ -15,6 +15,7 @@
 //            --out <dir> (default assets/bgm)  --raw <dir> (raw take cache, default $TMPDIR/lyria_raw)
 //            --listen (a Gemini model listens to the 3 best loop seams of every take and picks the smoothest)
 //            --reuse (use cached raw takes that exist, generate only the missing ones)
+//            --min-loop <s> (shortest loop the search may pick; per track: prompts entry `min_loop`)
 //
 // With no credentials it prints the setup steps below and exits 0 (nothing is written).
 //
@@ -508,7 +509,7 @@ async function processTake(t, take, o) {
   if (!o.noLoop) {
     // candidates best-first by the signal score; with --listen each is heard twice (the model is noisy)
     // and the first with an average seam rating ≥ 6/10 wins, else the best-rated one
-    const cands = findLoop(channels, rate, { all: o.listen ? 3 : 1 }) || [];
+    const cands = findLoop(channels, rate, { all: o.listen ? 3 : 1, minLoop: t.min_loop || o.minLoop || 0 }) || [];
     loop = null;
     for (const c of cands) {
       const b = bakeLoop(channels, rate, c.start, c.end, o.xfade);
@@ -558,7 +559,7 @@ async function main(argv, E) {
   fs.mkdirSync(rawDir, { recursive: true });
   const takes = Math.max(1, +arg('--takes', 1));
   const log = (s) => console.log(s);
-  const o = { xfade: +arg('--xfade', 0.6), lufs: +arg('--lufs', -18), kbps: +arg('--kbps', 96), noLoop: argv.includes('--no-loop'), listen: argv.includes('--listen'), log };
+  const o = { xfade: +arg('--xfade', 0.6), lufs: +arg('--lufs', -18), kbps: +arg('--kbps', 96), noLoop: argv.includes('--no-loop'), listen: argv.includes('--listen'), minLoop: +arg('--min-loop', 0), log };
   let fails = 0;
   for (const t of tracks) {
     const exists = ['ogg', 'm4a', 'mp3', 'wav'].find((e) => fs.existsSync(path.join(outDir, t.id + '.' + e)));

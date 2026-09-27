@@ -130,7 +130,7 @@
       ],
       oneway: [{ x: 40, y: 15, dir: 'w' }, { x: 40, y: 16, dir: 'w' }],
       zones: [{ rect: null, zone: 'z_verda' }],
-      light: { ambient: '#48548a', k: 0.5, mood: 'forest_night' },
+      light: { ambient: '#505c98', k: 0.52, mood: 'forest_night' },
       // 奥の広場は歌の灯が消えかけた暗がり（E6）。解決のあとは明るい
       dark: [{ rect: [21, 8, 19, 14], cond: '!cleared_r_forest' }],
       bgm: 'forest', bbg: 'forest',

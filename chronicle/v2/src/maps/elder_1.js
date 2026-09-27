@@ -85,7 +85,7 @@
         { cond: 'forest_sw1', rect: [26, 33, 2, 1], rows: ['rr'] },
       ],
       zones: [{ rect: null, zone: 'z_elder' }],
-      light: { ambient: '#5a6c8a', k: 0.55, mood: 'tree' },
+      light: { ambient: '#60709a', k: 0.57, mood: 'tree' },
       dark: false,
       bgm: 'shrine', bbg: 'tree',
       meta: { chestsInfo: true, floor: '1 階', sub: '幹の中のらせん' },

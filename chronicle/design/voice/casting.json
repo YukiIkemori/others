@@ -5,7 +5,8 @@
   "profile/style go into the prompt (English); lines[<id>] is the per-line acting direction; fx is a post effect of tools/voice_tts.js (FX table: pitch / echo).",
   "hero: the silent protagonist only has short battle voices, one set per gender (R.State.hero().gender m/f): v_hero_<g>_<kind>_<n>, played by R.Audio.battleVoice(kind).",
   "Hero voices: the male hero uses the custom voice Signature Voice (median F0 ≈ 139 Hz). Both custom voices read as adult male, so the female hero was recast (2026-09-26) to the prebuilt ja-jp-assistant-4 (female, 22, Tokyo; auditioned against ja-jp-training-6 / ja-jp-commercial-6): median F0 of her 12 clips ≈ 309 Hz vs 216 Hz for the male set (calm lines ≈ 180–210 Hz vs ≈ 124 Hz).",
-  "readings[<id>]: what the TTS is asked to say instead of the script text, for words it misreads (the check still compares with the script)."
+  "readings[<id>]: what the TTS is asked to say instead of the script text, for words it misreads (the check still compares with the script).",
+  "v2 slice (2026-09-27): otto + town barks (tadeo, fishwife, gateguard, master, gord, hanna, rita, pim). Their lines are design/voice/story_v2_lines.csv (tools/story_voice.js), not voice_script.js; bark:true = a 1–2 s greeting played when a talk opens."
  ],
  "model": "gemini-3.8-flash-tts",
  "speakers": {
@@ -134,6 +135,79 @@
    "profile": "The Celestial Sentinel, an ancient star-orrery automaton speaking in broken mechanical syllables.",
    "style": "flat, monotone, robotic, evenly spaced syllables",
    "fx": "sentinel"
+  },
+  "otto": {
+   "voice": "ja-jp-csagent-7",
+   "type": "prebuilt",
+   "profile": "Otto, the old lighthouse keeper of the harbour town Pharos, about 70: broad-shouldered, short white beard, skin weathered by the sea wind. Warm, gruff and grandfatherly; speaks old-man Japanese (…じゃ, …のう).",
+   "style": "elderly male voice, warm and a little gravelly, unhurried; a seaman's gruff kindness; sounds about seventy",
+   "fx": null,
+   "pitch": 0.94
+  },
+  "tadeo": {
+   "voice": "ja-jp-assistant-12",
+   "type": "prebuilt",
+   "profile": "Tadeo, a man in his forties, an oil seller of the lamp-keepers' guild in the harbour town; practical, dry, decent.",
+   "style": "adult male voice, brisk and practical, friendly in a businesslike way",
+   "fx": null,
+   "bark": true
+  },
+  "fishwife": {
+   "voice": "ja-jp-podcaster-6",
+   "type": "prebuilt",
+   "profile": "A fisherman's wife of the harbour town, about forty; brisk, cheerful and generous.",
+   "style": "adult female voice, brisk and warm, down-to-earth",
+   "fx": null,
+   "bark": true
+  },
+  "gateguard": {
+   "voice": "ja-jp-concierge-8",
+   "type": "prebuilt",
+   "profile": "The gate guard of the harbour town, a man in his thirties; polite, a little formal, dutiful.",
+   "style": "adult male voice, polite and upright",
+   "fx": null,
+   "bark": true
+  },
+  "master": {
+   "voice": "ja-jp-csagent-3",
+   "type": "prebuilt",
+   "profile": "The master of the harbour tavern 'Shiokaze-tei', a man around forty who has seen many adventurers; easygoing and welcoming.",
+   "style": "relaxed, warm adult male voice of a tavern keeper",
+   "fx": null,
+   "bark": true
+  },
+  "gord": {
+   "voice": "ja-jp-advisor-6",
+   "type": "prebuilt",
+   "profile": "Gord, the woodcutter chief of the forest village Fern, in his forties, Pim's father; gruff, strong, worn out by worry.",
+   "style": "gruff, deep adult male voice of a woodsman, plain-spoken",
+   "fx": null,
+   "bark": true
+  },
+  "hanna": {
+   "voice": "ja-jp-csagent-4",
+   "type": "prebuilt",
+   "profile": "Hanna, an old woman in her seventies in the forest village Fern who married in from the storytellers' village long ago; kind and gentle.",
+   "style": "gentle elderly female voice, soft and kind",
+   "fx": null,
+   "bark": true
+  },
+  "rita": {
+   "voice": "ja-jp-tutor-3",
+   "type": "prebuilt",
+   "profile": "Rita, about twenty, the singer of the forest village Fern who lives in a treetop house; clear-voiced, earnest, a little shy.",
+   "style": "clear, bright young female voice, gentle and earnest",
+   "fx": null,
+   "bark": true
+  },
+  "pim": {
+   "voice": "ja-jp-csagent-2",
+   "type": "prebuilt",
+   "profile": "Pim, a ten-year-old boy of the forest village Fern, the woodcutter's son; lively, brave, wants to become a storyteller. Performed by a female voice actress, as is usual for boys in anime.",
+   "style": "energetic boyish child voice (a young boy of ten), bright and quick",
+   "fx": null,
+   "pitch": 1.06,
+   "bark": true
   }
  },
  "hero": {

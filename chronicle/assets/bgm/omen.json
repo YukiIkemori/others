@@ -1,0 +1,22 @@
+{
+  "loopStart": 0,
+  "loopEnd": 10.4,
+  "loop": false,
+  "source": {
+    "provider": "gemini",
+    "prompt": "A short one-shot musical sting for a fantasy role-playing game, about eight seconds long: the moment a monstrous boss is heard gnawing in the dark before it appears. A deep low drum hit with a soft gong, a dissonant low string cluster that swells and rises, a high tremolo violin note and a brief muted brass stab, then the sound rings out and stops. Ominous but not a jump scare, orchestral, high quality. Instrumental only: no vocals, no spoken words. Duration: 8 seconds.",
+    "sections": "[[A0]]\n[[B1]]",
+    "generated": "2026-09-27T04:43:37.705Z",
+    "cut": [
+      0,
+      10.4
+    ],
+    "fadeOut": 1.9
+  },
+  "analysis": {
+    "loudnessLUFS": -17,
+    "truePeakDb": -1.8,
+    "gainDb": -1.9,
+    "oneShot": true
+  }
+}

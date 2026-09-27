@@ -7,6 +7,8 @@
 //   vignette  四隅の暗さ（四隅は中央の 1 − vignette 倍）   bloom = ブルームの強さ、thr = しきい
 //   key/rim/rimC/rimK/mul   RZ.render の light（人物・魔物を焼くときの主光とリム。R.Hd.RZ.render(B, {light: mood.rz})）
 //   moon      月の当たる面（屋根・高い所の上面）に足す色      lamp / lantern = 灯り・ランタンの色と強さ
+//   spillR    光だまりの中心へ足す加算（spill）の半径の倍率
+//   poolK     光だまりの強さの倍率（R.Light.compose の灯りの k に掛ける。暗い地面の場面で灯りの芯を明るく）
 //   actorLift 人物を背景より少し持ち上げる割合（夜に縁が消えないように、STYLE_REFERENCE §5.6）
 //   target    STYLE_REFERENCE §9 の夜の目標値（hd_sheet.js --area render が測って比べる）
 (function (R) {
@@ -29,23 +31,23 @@
   // 値は MODERN_UI の見本（town / field / dungeon / battle の out/*.png）の環境光と色調から始め、hd_sheet.js --area render の測定で合わせた
   const TABLE = {
     // 街道・ワールド・戦闘の夜（月の青紫）
-    night: m({ ambient: 'rgb(116,104,196)', grade: { sh: [10, -4, 20], hi: [16, 6, -10], lift: 4, sat: 1.02, con: 1.06 }, vignette: 0.55, bloom: 0.55 }),
+    night: m({ ambient: 'rgb(116,104,196)', grade: { sh: [28, -6, 40], hi: [16, 6, -10], lift: 4, sat: 1.02, con: 1.06 }, vignette: 0.7, bloom: 0.6 }),
     // 夜の町（灯りの島。見本 town.png の rgb(92,90,160)）
-    town_night: m({ ambient: 'rgb(106,88,170)', grade: { sh: [14, -4, 16], hi: [16, 6, -10], lift: 0, sat: 1.05, con: 1.08 }, vignette: 0.66, bloom: 0.6, thr: 0.62 }),
+    town_night: m({ ambient: 'rgb(106,88,170)', grade: { sh: [6, -4, 10], hi: [16, 6, -10], lift: 0, sat: 1.05, con: 1.08 }, vignette: 0.75, bloom: 0.65, thr: 0.6 }),
     // 家・宿・酒場の中（暖炉とランプの暖色、窓の外は青）
     interior: m({ ambient: 'rgb(150,116,122)', lightDir: [0.2, -1], shadow: 'rgba(34,14,24,0.4)', grade: { sh: [12, 0, 14], hi: [18, 8, -8], lift: 4, sat: 1.0, con: 1.05 }, vignette: 0.5, bloom: 0.45, thr: 0.64, rz: RZ_WARM, target: Object.assign({}, NIGHT_TARGET, { lum: [0.16, 0.28], darkHue: [260, 340] }) }),
     // 夜の森（蛍とこけの緑、月は木々で細る）
-    forest_night: m({ ambient: 'rgb(88,104,158)', shadow: 'rgba(8,16,30,0.45)', grade: { sh: [4, 2, 20], hi: [10, 14, -6], lift: 4, sat: 1.04, con: 1.06 }, vignette: 0.62, bloom: 0.55, lamp: { color: '#ffd07a', k: 0.8 }, target: DUNGEON_TARGET }),
+    forest_night: m({ ambient: 'rgb(88,104,158)', shadow: 'rgba(8,16,30,0.45)', grade: { sh: [22, -4, 34], hi: [10, 14, -6], lift: 4, sat: 1.04, con: 1.06 }, vignette: 0.78, poolK: 1.3, spillR: 1.15, bloom: 0.62, lamp: { color: '#ffd07a', k: 0.8 }, target: DUNGEON_TARGET }),
     // 暗がりの階（ランタンの輪の中だけ見える。E6）
     dark: m({ ambient: 'rgb(54,48,104)', shadow: 'rgba(6,4,20,0.5)', grade: { sh: [8, -2, 22], hi: [18, 8, -8], lift: 3, sat: 1.02, con: 1.08 }, vignette: 0.72, bloom: 0.6, thr: 0.58, actorLift: 0.15, target: Object.assign({}, DUNGEON_TARGET, { lum: [0.08, 0.18] }) }),
     // 千年樹の中（光るこけの青緑）
-    tree: m({ ambient: 'rgb(96,120,146)', lightDir: [0, -1], shadow: 'rgba(8,20,28,0.42)', grade: { sh: [2, 8, 18], hi: [12, 16, -4], lift: 4, sat: 1.04, con: 1.05 }, vignette: 0.62, bloom: 0.62, thr: 0.58, lamp: { color: '#c8ffb0', k: 0.75 }, target: DUNGEON_TARGET }),
+    tree: m({ ambient: 'rgb(96,120,146)', lightDir: [0, -1], shadow: 'rgba(8,20,28,0.42)', grade: { sh: [6, 4, 20], hi: [12, 16, -4], lift: 4, sat: 1.04, con: 1.05 }, vignette: 0.72, bloom: 0.62, thr: 0.58, lamp: { color: '#c8ffb0', k: 0.75 }, target: DUNGEON_TARGET }),
     // 灯台の中（石と松明）
-    tower: m({ ambient: 'rgb(108,98,172)', lightDir: [0.3, -1], grade: { sh: [10, -2, 20], hi: [18, 8, -8], lift: 4, sat: 1.02, con: 1.06 }, vignette: 0.64, bloom: 0.55, target: DUNGEON_TARGET }),
+    tower: m({ ambient: 'rgb(108,98,172)', lightDir: [0.3, -1], grade: { sh: [10, -2, 20], hi: [18, 8, -8], lift: 4, sat: 1.02, con: 1.06 }, vignette: 0.74, bloom: 0.6, target: DUNGEON_TARGET }),
     // 洞窟（結晶と松明、光だまりは 1.35 倍。見本 dungeon.png の rgb(138,120,200) に周辺を強く）
-    cave: m({ ambient: 'rgb(122,106,188)', lightDir: [0, -1], shadow: 'rgba(10,6,28,0.45)', grade: { sh: [10, -4, 22], hi: [14, 8, -6], lift: 3, sat: 1.04, con: 1.08 }, vignette: 0.7, bloom: 0.62, thr: 0.58, poolMul: 1.35, target: DUNGEON_TARGET }),
+    cave: m({ ambient: 'rgb(122,106,188)', lightDir: [0, -1], shadow: 'rgba(10,6,28,0.45)', grade: { sh: [10, -4, 22], hi: [14, 8, -6], lift: 3, sat: 1.04, con: 1.08 }, vignette: 0.9, bloom: 0.66, thr: 0.58, poolMul: 1.35, poolK: 1.15, target: DUNGEON_TARGET }),
     // 海辺・港の外（夜光の海、青みの強い月）
-    coast: m({ ambient: 'rgb(94,102,178)', lightDir: [-0.7, -0.7], grade: { sh: [6, 0, 22], hi: [16, 8, -8], lift: 4, sat: 1.04, con: 1.06 }, vignette: 0.55, bloom: 0.58 }),
+    coast: m({ ambient: 'rgb(94,102,178)', lightDir: [-0.7, -0.7], grade: { sh: [8, -2, 22], hi: [16, 8, -8], lift: 4, sat: 1.04, con: 1.06 }, vignette: 0.62, bloom: 0.6 }),
   };
   Hd.MOOD_TABLE = TABLE;
 
