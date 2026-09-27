@@ -16,6 +16,7 @@
       if (!kind || kind === 'attack' || kind === 'skill') kind = R.DB.items[id] ? 'item' : R.DB.techs[id] ? 'tech' : R.DB.spells[id] ? 'spell' : R.DB.monsters[id] ? 'mon' : 'item';
       this.kind = kind;
       this.d = kind === 'item' ? R.DB.items[id] : kind === 'tech' ? R.DB.techs[id] : kind === 'spell' ? R.DB.spells[id] : R.DB.monsters[id];
+      this.from = kind === 'tech' && p.c && S.derivedFromName ? S.derivedFromName(p.c, id) : null;   // 派生技（技・術の画面から）
     },
     update() {
       const I = R.Input;
@@ -37,7 +38,7 @@
         for (const k of RAW) if (d[k]) stats.push([N[k] || k, d[k]]);
         for (const k of Object.keys(d.stats || {})) if (d.stats[k]) stats.push([N[k] || k, (d.stats[k] > 0 ? '+' : '') + d.stats[k]]);
       } else if (d && (this.kind === 'tech' || this.kind === 'spell')) {
-        sub = this.kind === 'tech' ? S.wname(d.wtype) + 'の技' : (d.elements || []).map(S.ename).join('・') + 'の術';
+        sub = this.kind === 'tech' ? S.wname(d.wtype) + 'の技' + (this.from ? '・' + this.from + 'から派生' : '') : (d.elements || []).map(S.ename).join('・') + 'の術';
         stats.push(['MP', d.mp || 0], ['範囲', S.rangeName(d) || '―']);
       } else if (d && this.kind === 'mon') sub = '魔物';
       const dl = R.UIK.wrap(desc, pw, { size: u(15) });

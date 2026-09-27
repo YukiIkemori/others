@@ -2,6 +2,7 @@
 //   人は L/R。覚えた技（武器の系統ごと）と術（属性ごと）だけを出す（覚えていない物・技の書は出さない、A15）。
 //   行は名前と M n（MP 0 は青緑）、閃いたばかりの物に NEW（R.Game.seenSkill）。右: 説明 1〜2 行と範囲（ひとり／みんな）。
 //   フィールドで使える術は A で相手を選んで唱える。今の武器の系統でない技は「◯を持つと使える」。
+//   派生で覚えた技（c.derived）は説明の札に「〇〇から派生」（design/BACKLOG「派生技の閃き」）。
 (function (R) {
   'use strict';
   const S = (R.Screens = R.Screens || {});
@@ -12,6 +13,8 @@
   const RANGE = { enemy: '敵ひとり', enemies: '敵みんな', ally: '味方ひとり', allies: '味方みんな', self: '自分', ally_dead: '倒れた味方ひとり', party: '味方みんな', all: 'みんな' };
 
   S.rangeName = (a) => RANGE[(a && (a.target || (a.use && a.use.target))) || ''] || '';
+  /** 派生で覚えた技の元の技の名前（R.Glimmer.derivedFrom。派生でなければ null） */
+  S.derivedFromName = (c, id) => { const f = R.Glimmer && R.Glimmer.derivedFrom ? R.Glimmer.derivedFrom(c, id) : null; return f ? ((act(f) || {}).name || null) : null; };
   S.isNew = (c, id) => { const s = R.Game && R.Game.seenSkill; return !!(c && s && !(s[c.id] && s[c.id][id])); };
 
   S.def('skills', {
@@ -21,7 +24,7 @@
       this.list = new R.UIK.List({ rows: [], rowH: 34 });
       this.list.onSelect = (row) => this.pick(row);
       this.list.onCancel = () => { this.markSeen(); this.close(undefined); };
-      this.list.onDetail = (row) => { if (row) S.detail({ kind: row.kind, id: row.value }); };
+      this.list.onDetail = (row) => { if (row) S.detail({ kind: row.kind, id: row.value, c: this.char() }); };
       this.seen = {};
       this.refresh();
       this.tgt = null;
@@ -120,6 +123,8 @@
         for (const l of R.UIK.wrap(String(a.desc || '').replace(/\n/g, ''), dp.w - u(40), { size: u(14.5) }).slice(0, 2)) { R.UIK.text(g, l, dp.x + u(20), yy, { size: u(14.5), color: C.text }); yy += u(24); }
         let cx = dp.x + u(20);
         cx += R.UIK.chip(g, cx, yy + u(4), S.rangeName(a) || '―', { kind: 'plain', size: 11 }) + u(8);
+        const from = row.kind === 'tech' ? S.derivedFromName(c, row.value) : null;
+        if (from) cx += R.UIK.chip(g, cx, yy + u(4), from + 'から派生', { kind: 'plain', size: 11, color: C.gold }) + u(8);
         if (row.kind === 'tech' && a.wtype !== wt) R.UIK.chip(g, cx, yy + u(4), S.wname(a.wtype) + 'を持つと使える', { kind: 'plain', size: 11, color: C.text3 });
         else if (S.fieldUsable(a)) R.UIK.chip(g, cx, yy + u(4), 'フィールドで使える', { kind: 'teal', size: 11, icon: 'heal' });
       }
