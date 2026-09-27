@@ -377,8 +377,8 @@
     if (dustCol[mood]) return dustCol[mood];
     let amb = [116, 104, 196];
     try { const md = R.Hd.mood(mood); if (md && md.ambient && R.Hd._rgb) amb = R.Hd._rgb(md.ambient); } catch (e) { /* 既定 */ }
-    const base = [206, 190, 164], warm = [255, 214, 160];
-    const out = base.map((v, i) => Math.round(Math.min(255, v * (Math.min(1, (amb[i] / 255) * 1.6) * 0.5 + (warm[i] / 255) * 0.5))));
+    const base = [236, 224, 200], warm = [255, 218, 170];
+    const out = base.map((v, i) => Math.round(Math.min(255, 1.12 * v * (Math.min(1, (amb[i] / 255) * 1.6) * 0.5 + (warm[i] / 255) * 0.5))));
     return (dustCol[mood] = out.join(','));
   }
   /** 土ぼこりを出す。(x, y) = マス（足もと）、(dx, dy) = 走る向き（粒は後ろへ散る） */
@@ -406,7 +406,7 @@
       const s = (now - p.t0) / 1000, ease = 1 - a * 0.5;
       const x = (p.x + p.vx * s * ease) * t - cx, y = (p.y + p.vy * s * ease) * t - cy;
       const r = p.r * u * (1 + a * 1.4);
-      g.fillStyle = `rgba(${col},${(0.58 * (1 - a) * (1 - a * 0.5)).toFixed(3)})`;
+      g.fillStyle = `rgba(${col},${(0.7 * (1 - a) * (1 - a * 0.4)).toFixed(3)})`;
       g.beginPath(); g.ellipse(x, y, r, r * 0.7, 0, 0, Math.PI * 2); g.fill();
     }
     L.length = w;

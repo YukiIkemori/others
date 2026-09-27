@@ -160,6 +160,8 @@
       await ev.caption('――朝の鐘が、港に鳴りわたった。', { ms: 2800 });
       await E.say(ev, 'cheer_a', '灯台に火が戻ったぞ！\nゆうべ、岬が真っ白に\n光ったんだ！');
       await ev.npc('berna').move([[7, 11], [6, 11]]);
+      // 旅立ちの朝: 仲間も主人公のそばに並ぶ（ベルナが来た後に。フィールドは主人公だけ。イベントが終われば消える）
+      if (ev.partyShow) await ev.partyShow('all', { near: 'hero' });
       await E.say(ev, 'berna', '夜通し歩いてきたよ。\n……よくやったね、{hero}。', { face: 'berna:smile' });
       await ev.say('berna', 'これは、あなたの年代記だよ。\n語り部はみんな、自分の\n年代記を持って旅に出るんだ。', { voice: 'v_berna_lute_01', face: 'berna:smile' });
       await E.give(ev, 'k_chronicle', 1, { say: true });
