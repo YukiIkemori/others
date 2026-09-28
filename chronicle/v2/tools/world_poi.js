@@ -257,7 +257,12 @@ module.exports = Object.assign(function worldPoi(A) {
         if (Math.max(Math.abs(i), Math.abs(j)) !== r) continue;
         if (free(x + i - 1, y + j, 3, 2, 1)) { spot = [x + i - 1, y + j]; break; }
       }
-      if (!spot) continue;
+      if (!spot) {
+        // 木立を置く空きが無い所（流氷・沼の板の道）: 当たりの無い灯り（lantern）を 1 つ（目印。道の上でもふさがない）
+        if (occ.has(x + ',' + y) || tcore[y * W + x] === 0) continue;
+        objects.push({ type: 'prop', id: 'lantern', x, y }); addOcc(x, y, 1, 1); mk[y * W + x] = 3; prefix(); added++; nFill++;
+        continue;
+      }
       const bio = biome(spot[0] + 1, spot[1]), ch = GROVE[bio] || 'T';
       if (!LEGEND[ch]) continue;
       for (let j = 0; j < 2; j++) for (let i = 0; i < 3; i++) {
