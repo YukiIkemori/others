@@ -1,0 +1,44 @@
+{
+ "id": "board__harbor",
+ "kind": "props",
+ "theme": "harbor",
+ "set": "harbor",
+ "base": "board",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   29,
+   31
+  ],
+  "32": [
+   37,
+   41
+  ],
+  "40": [
+   45,
+   51
+  ]
+ },
+ "feet": {
+  "24": [
+   12,
+   27
+  ],
+  "32": [
+   16,
+   37
+  ],
+  "40": [
+   19,
+   47
+  ]
+ },
+ "files": {
+  "24": "board__harbor@24.png",
+  "32": "board__harbor@32.png",
+  "40": "board__harbor@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_harbor.png"
+}

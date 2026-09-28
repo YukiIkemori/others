@@ -1,0 +1,44 @@
+{
+ "id": "crate__harbor",
+ "kind": "props",
+ "theme": "harbor",
+ "set": "harbor",
+ "base": "crate",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   19,
+   21
+  ],
+  "32": [
+   24,
+   27
+  ],
+  "40": [
+   29,
+   33
+  ]
+ },
+ "feet": {
+  "24": [
+   6,
+   17
+  ],
+  "32": [
+   8,
+   23
+  ],
+  "40": [
+   10,
+   29
+  ]
+ },
+ "files": {
+  "24": "crate__harbor@24.png",
+  "32": "crate__harbor@32.png",
+  "40": "crate__harbor@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_harbor.png"
+}

@@ -1,0 +1,44 @@
+{
+ "id": "stall__harbor",
+ "kind": "props",
+ "theme": "harbor",
+ "set": "harbor",
+ "base": "stall",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   37,
+   40
+  ],
+  "32": [
+   49,
+   52
+  ],
+  "40": [
+   61,
+   64
+  ]
+ },
+ "feet": {
+  "24": [
+   16,
+   36
+  ],
+  "32": [
+   20,
+   48
+  ],
+  "40": [
+   26,
+   60
+  ]
+ },
+ "files": {
+  "24": "stall__harbor@24.png",
+  "32": "stall__harbor@32.png",
+  "40": "stall__harbor@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_harbor.png"
+}

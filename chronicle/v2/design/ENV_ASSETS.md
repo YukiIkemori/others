@@ -320,3 +320,27 @@ Add the maps to `dump.js`, then run the pipeline: `node dump.js` → `python3 mk
 
 | Map | Windows | Painted in | Still sprites (all ids) | …of which decorative |
 |---|---|---|---|---|
+| roa | 3 | 18 | 24 | 10 (a ring of 6 small stones and 1 bench the model erased, 1 flower pot, 1 ghosted barrel reverted, 1 stone) |
+| pharos | 5 | 48 | 40 | 4 (next to an exam target, or in a window below 3 props) |
+| fern | 5 | 52 | 71 | 5 |
+| yura | 1 | 8 | 27 | 5 (2 reeds, 2 graves, 1 reed next to the stone) |
+| well | 1 | 11 | 19 | 1 |
+| lighthouse_1 | 2 | 45 | 13 | 2 |
+| lighthouse_2 | 1 | 22 | 23 | 2 (+6 on the bricked store room's live cells) |
+| lighthouse_3 | 1 | 7 | 9 | 0 |
+| elder_1 / elder_2 | 0 | 0 | 28 / 24 | 6 / 3 small stones (not worth a call) |
+| verda_1 | 3 | 14 | 27 | 5 (the camp tent, sack and crate were erased by the model, so they stay sprites) |
+| verda_2 | 3 | 14 | 19 | 0 (the giant tree is now painted) |
+
+"Still sprites" counts every drawn prop except fireflies and ids already in `art.painted` (Roa fences, Fern roots). Total: **239 props painted in**, 25 window edits.
+
+Themed sheets, one each: harbor (lamp_post, lantern, board, stall, signboard, flower_pot, barrel, crate, bollard), village (lamp_post with a hanging lantern, lantern, signboard, mushroom_glow), forest (lantern, mushroom_glow, board, signboard, stall, reeds), cave (crystal, mushroom_glow, stairs_up, grave, signboard), lighthouse (lantern, lamp_post, stairs_up, stairs_down, crate, barrel, sack, table, signboard), wood (mushroom_glow, crystal, lantern, stump, log, rock_small, signboard).
+
+API: 31 successful calls (25 windows + 6 sheets; the log counts 35 images because some sheet calls returned 2). The proxy dropped many long sheet requests (`RemoteDisconnected`, 28 retries), and those do not appear in the spend log. If this happens again, run the sheets with `GEN_PAR=1`.
+
+Raw edits and sheets: `design/art_ref/gen/env/propfix/`, each with `.gen.json`. Plan and results: `_tools/propfix/plan.json`, `applied.json`. The untouched paintings for `revert.py` are in `_tools/propfix/work/orig/` (69 MB; delete once the owner has approved).
+
+Not done yet:
+- chests, doors, the lighthouse beacon, braziers, torches (frames), ships and songstones keep their old sprites;
+- the town interiors are tile-built (no painting), so A does not apply to them;
+- desert, snow, marsh and ash, which follow the same method.

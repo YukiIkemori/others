@@ -1,0 +1,48 @@
+{
+ "id": "lantern__harbor",
+ "kind": "props",
+ "theme": "harbor",
+ "set": "harbor",
+ "base": "lantern",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   11,
+   18
+  ],
+  "32": [
+   13,
+   23
+  ],
+  "40": [
+   15,
+   28
+  ]
+ },
+ "feet": {
+  "24": [
+   4,
+   14
+  ],
+  "32": [
+   4,
+   19
+  ],
+  "40": [
+   6,
+   24
+  ]
+ },
+ "files": {
+  "24": "lantern__harbor@24.png",
+  "32": "lantern__harbor@32.png",
+  "40": "lantern__harbor@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_harbor.png",
+ "light32": [
+  0,
+  -9
+ ]
+}

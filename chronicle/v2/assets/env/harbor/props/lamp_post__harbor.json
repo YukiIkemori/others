@@ -1,0 +1,48 @@
+{
+ "id": "lamp_post__harbor",
+ "kind": "props",
+ "theme": "harbor",
+ "set": "harbor",
+ "base": "lamp_post",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   12,
+   49
+  ],
+  "32": [
+   15,
+   65
+  ],
+  "40": [
+   18,
+   81
+  ]
+ },
+ "feet": {
+  "24": [
+   4,
+   45
+  ],
+  "32": [
+   5,
+   61
+  ],
+  "40": [
+   7,
+   77
+  ]
+ },
+ "files": {
+  "24": "lamp_post__harbor@24.png",
+  "32": "lamp_post__harbor@32.png",
+  "40": "lamp_post__harbor@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_harbor.png",
+ "light32": [
+  1,
+  -52
+ ]
+}

@@ -1,0 +1,44 @@
+{
+ "id": "signboard__harbor",
+ "kind": "props",
+ "theme": "harbor",
+ "set": "harbor",
+ "base": "signboard",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   18,
+   25
+  ],
+  "32": [
+   23,
+   33
+  ],
+  "40": [
+   28,
+   41
+  ]
+ },
+ "feet": {
+  "24": [
+   6,
+   21
+  ],
+  "32": [
+   8,
+   29
+  ],
+  "40": [
+   11,
+   37
+  ]
+ },
+ "files": {
+  "24": "signboard__harbor@24.png",
+  "32": "signboard__harbor@32.png",
+  "40": "signboard__harbor@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_harbor.png"
+}

@@ -1,0 +1,44 @@
+{
+ "id": "flower_pot__harbor",
+ "kind": "props",
+ "theme": "harbor",
+ "set": "harbor",
+ "base": "flower_pot",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   13,
+   18
+  ],
+  "32": [
+   17,
+   23
+  ],
+  "40": [
+   21,
+   28
+  ]
+ },
+ "feet": {
+  "24": [
+   4,
+   14
+  ],
+  "32": [
+   6,
+   19
+  ],
+  "40": [
+   8,
+   24
+  ]
+ },
+ "files": {
+  "24": "flower_pot__harbor@24.png",
+  "32": "flower_pot__harbor@32.png",
+  "40": "flower_pot__harbor@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_harbor.png"
+}
