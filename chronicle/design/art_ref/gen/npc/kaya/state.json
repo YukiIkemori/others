@@ -326,6 +326,13 @@
      "kind": "full",
      "extra": "",
      "t": "2026-09-28T21:29:14"
+    },
+    {
+     "raw": "raw/s3_a2.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "- The head and face must be exactly the SAME SIZE as the template's head (the face fills the same area as the hero's face in image 1). In the last attempt the head came out too small because the tall hair took the height.\n- Keep the flame-shaped updo but make it compact and lower (only a small flame knot on top), so the bust keeps the template's big head, face centred like the template.",
+     "t": "2026-09-28T21:53:23"
     }
    ],
    "frames": {
@@ -333,8 +340,8 @@
      "row": 1,
      "column": 1,
      "logical_bbox": [
-      54,
-      80
+      65,
+      81
      ],
      "air": 0
     },
@@ -342,7 +349,7 @@
      "row": 1,
      "column": 2,
      "logical_bbox": [
-      54,
+      65,
       81
      ],
      "air": 0
@@ -351,8 +358,8 @@
      "row": 1,
      "column": 3,
      "logical_bbox": [
-      54,
-      80
+      65,
+      81
      ],
      "air": 0
     },
@@ -360,7 +367,7 @@
      "row": 2,
      "column": 1,
      "logical_bbox": [
-      54,
+      65,
       81
      ],
      "air": 0
@@ -369,7 +376,7 @@
      "row": 2,
      "column": 2,
      "logical_bbox": [
-      54,
+      65,
       81
      ],
      "air": 0
@@ -378,15 +385,15 @@
      "row": 2,
      "column": 3,
      "logical_bbox": [
-      54,
+      65,
       81
      ],
      "air": 0
     }
    },
    "notes": [],
-   "pitch": 6.487,
-   "from_raw": "raw/s3_a1.png"
+   "pitch": 6.2,
+   "from_raw": "raw/s3_a2.png"
   }
  }
 }

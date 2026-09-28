@@ -176,8 +176,8 @@
     "row": 1,
     "column": 1,
     "logical_bbox": [
-     54,
-     80
+     65,
+     81
     ]
    },
    {
@@ -185,7 +185,7 @@
     "row": 1,
     "column": 2,
     "logical_bbox": [
-     54,
+     65,
      81
     ]
    },
@@ -194,8 +194,8 @@
     "row": 1,
     "column": 3,
     "logical_bbox": [
-     54,
-     80
+     65,
+     81
     ]
    },
    {
@@ -203,7 +203,7 @@
     "row": 2,
     "column": 1,
     "logical_bbox": [
-     54,
+     65,
      81
     ]
    },
@@ -212,7 +212,7 @@
     "row": 2,
     "column": 2,
     "logical_bbox": [
-     54,
+     65,
      81
     ]
    },
@@ -221,7 +221,7 @@
     "row": 2,
     "column": 3,
     "logical_bbox": [
-     54,
+     65,
      81
     ]
    }

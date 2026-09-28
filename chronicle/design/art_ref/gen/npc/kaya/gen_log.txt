@@ -28,3 +28,6 @@
 21:37:05   | 
 21:37:05   | packed field 140x228, face 174x170 | palette 52 + face 48
 21:37:06 to_v2 npc_kaya: npc_kaya → /home/user/others/chronicle/v2/assets/sprites/npc_kaya |   field: 16 frames |   face: 6 frames
+21:52:13 sheet 3 attempt 2: edit of the Arun template 1728x1152 (pitch 6, quality medium, 3 refs) + notes
+21:53:23   pitch in raw image: 6.20 px per art pixel (upright median 496 px / 80)
+21:53:24 sheet 3 -> art_ref/gen/npc/kaya/npc_kaya_s3.png (6 poses)
