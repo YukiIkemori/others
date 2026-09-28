@@ -9,6 +9,9 @@
 //    町のまわり・名所・峠などの小さな地名は見ない。
 // 3. 灯台の岬（灯台の前から続く緑の地面）と、ロア → ファロス → 灯台の道: 序章か半島の表だけで、背景は海辺か森（灰・火山にならない）。
 //    札の地名は緑の地方の名前（ファロス半島など）か小さな地名で、灰の荒野にならない。
+// 4. 体験版で歩ける所（序章の後、ロアから歩いて着くマス。峠は DB.config.slice の崖崩れで閉じる）: どのマスにも出現表があり、
+//    ティア 0〜2 で組を出せる。気ままに歩いて、地名ごとに 1 戦あたりの歩数がワールドの平均（K.ENC.world）の 2 倍より少ない
+//    （北の野が街道の率 0.3 のままで約 160 歩に 1 戦、「敵が全然出ない」だった。オーナー 2026-09-28）。
 'use strict';
 const { ok, section, done } = require('../lib/testkit');
 const WZ = require('../world_zones');
@@ -117,5 +120,63 @@ for (const [a, b] of [['roa', 'pharos'], ['pharos', 'lighthouse']]) {
   ok(`${a} → ${b} の道 ${p.length} マスは序章か半島の表、背景は海辺か森`, pb.length === 0, pb.slice(0, 6));
   const pn = badName(p);
   ok(`${a} → ${b} の道の札の地名は緑の地方`, pn.length === 0, pn.slice(0, 6));
+}
+section('4. 体験版で歩ける所の出現（序章の後）');
+{
+  R.State.newGame({ hero: { type: 'warrior', sex: 'm', name: 'アルン', fav: 'sword' }, seed: 4242 });
+  R.Game.flags.prologue_done = true;   // 跳ね橋が下りた後
+  R.MapUtil.invalidate();
+  const g = R.MapUtil.grid(m);
+  const walkG = (x, y) => { const l = m.legend[g[y][x]]; return !!l && !l.solid && l.walk !== false; };
+  const areaName = (x, y) => { const a = WZ.firstArea(areas, x, y); return (a && a.name) || m.name; };
+  // ロアの門の前から歩いて着くマス（tilePatches を当てた後の行。峠の崖崩れ・番人の所は歩けない）
+  const reach = new Uint8Array(W * H), cells = [];
+  {
+    const s = m.spawns.roa, q = [[s.x, s.y]]; reach[s.y * W + s.x] = 1;
+    while (q.length) {
+      const [x, y] = q.pop(); cells.push([x, y]);
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const X = x + dx, Y = y + dy;
+        if (X < 0 || Y < 0 || X >= W || Y >= H || reach[Y * W + X] || !walkG(X, Y)) continue;
+        reach[Y * W + X] = 1; q.push([X, Y]);
+      }
+    }
+  }
+  ok(`体験版で歩けるマス ${cells.length}（跳ね橋の先まで）`, cells.length > 20000);
+  const noZone = cells.filter(([x, y]) => !R.MapUtil.zoneAt(m, x, y));
+  ok('歩けるマスはどれも出現表がある', noZone.length === 0, noZone.slice(0, 6));
+  const zids = [...new Set(cells.map(([x, y]) => R.MapUtil.zoneAt(m, x, y)).filter(Boolean))];
+  const dead = [];
+  for (const zid of zids) for (const t of [0, 1, 2]) {
+    const z = E[zid], Tb = z ? R.Mon.zoneTier(zid, z, t) : null;
+    if (!z || !(R.Mon.stepChance(zid, z) > 0) || !R.Mon.zoneGroups(zid, Tb).length) dead.push([zid, t]);
+  }
+  ok(`出現表 ${zids.join('・')} はティア 0〜2 で組を出せる（率 > 0）`, dead.length === 0, dead);
+  // 気ままに歩く（10 歩に 1 回くらい向きを変える）。一人旅と 4 人、ティア 0〜2
+  const per = {};
+  const DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+  for (const t of [0, 1, 2]) for (const party of [1, 4]) for (let rep = 0; rep < 12; rep++) {
+    R.Game.seed = 7000 + rep * 31 + t * 7 + party; R.Mon.resetEncounter();
+    const rr = R.Mon.mkRng('walk:' + rep + ':' + t + ':' + party);
+    const st = m.spawns[['bridge_n', 'fern', 'yura', 'hut'][rep % 4]];
+    let x = st.x, y = st.y, d = DIRS[0];
+    for (let s = 1; s <= 3000; s++) {
+      if (rr.next() < 0.1) d = DIRS[Math.floor(rr.next() * 4)];
+      let k = 0;
+      while (k < 12 && !(x + d[0] >= 0 && y + d[1] >= 0 && x + d[0] < W && y + d[1] < H && reach[(y + d[1]) * W + x + d[0]])) { d = DIRS[Math.floor(rr.next() * 4)]; k++; }
+      if (k >= 12) continue;
+      x += d[0]; y += d[1];
+      const zid = R.MapUtil.zoneAt(m, x, y), nm = areaName(x, y);
+      const P = (per[nm] = per[nm] || { steps: 0, battles: 0 });
+      P.steps++;
+      if (zid && R.Mon.encounter(zid, { tier: t, steps: s, partySize: party })) P.battles++;
+    }
+  }
+  const lim = 2 * R.Mon.K('ENC').world;
+  const rows = Object.entries(per).filter(([, v]) => v.steps >= 5000).map(([nm, v]) => [nm, v.steps, v.battles, Math.round(v.steps / Math.max(1, v.battles))]);
+  if (VERBOSE) console.log(rows);
+  ok(`気ままに歩いた地名 ${rows.length} か所（5000 歩以上）`, rows.length >= 3, rows);
+  const slow = rows.filter((r) => r[3] > lim);
+  ok(`どの地名も 1 戦あたり ${lim} 歩より少ない（${rows.map((r) => r[0] + ' ' + r[3]).join('・')}）`, slow.length === 0, slow);
 }
 done('check_world_zones');
