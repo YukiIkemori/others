@@ -85,8 +85,9 @@
     R.UIK.card(g, r, { focused: f && on, frost: true });
     if (f && !on) { g.save(); R.UIK.rr(g, r.x, r.y, r.w, r.h, u(8)); g.strokeStyle = 'rgba(240,228,200,0.35)'; g.lineWidth = 1; g.stroke(); g.restore(); }
     const col = !on ? C.disabled : f ? C.goldHi : C.text;
-    R.UIK.icon(g, 'check', r.x + u(18), r.y + r.h / 2 - u(8), u(16), col);
-    R.UIK.text(g, o.label || 'これでよい', r.x + r.w / 2, r.y + r.h / 2 - u(10), { size: u(17), weight: 700, color: col, align: 'center' });
+    if (r.w >= u(200) && r.h >= u(36)) R.UIK.icon(g, 'check', r.x + u(18), r.y + r.h / 2 - u(8), u(16), col);
+    const fs = r.h >= u(36) ? 17 : 13;
+    R.UIK.text(g, o.label || 'これでよい', r.x + r.w / 2, r.y + r.h / 2 - u(fs * 0.6), { size: u(fs), weight: 700, color: col, align: 'center' });
     if (o.note) R.UIK.text(g, o.note, r.x + r.w - u(12), r.y + r.h / 2 - u(7), { size: u(11.5), color: on ? C.teal : C.text3, align: 'right' });
     return r;
   };
@@ -108,7 +109,6 @@
       this.list = new R.UIK.List({ rows: this.ids.map((id) => ({ label: this.info[id].name, value: id })), rowH: gd.rowH, cols: gd.cols });
       this.list.onSelect = (row) => this.toggle(row.value);
       this.list.onCancel = () => this.back();
-      this.list.sound = true;
       this.busy = false;
     },
     layout() { const gd = S.companionGrid(); this.list.cols = gd.cols; this.list.rowH = gd.rowH; },

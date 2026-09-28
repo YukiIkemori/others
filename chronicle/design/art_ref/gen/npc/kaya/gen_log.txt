@@ -32,3 +32,10 @@
 21:53:23   pitch in raw image: 6.20 px per art pixel (upright median 496 px / 80)
 21:53:24 sheet 3 -> art_ref/gen/npc/kaya/npc_kaya_s3.png (6 poses)
 21:55:32 pipeline: sheets.py ../art_ref/gen/npc/kaya --npc kaya --out out/npc/npc_kaya
+21:56:07   | 
+21:56:07   | ■ シートの状態
+21:56:07   |   シート1 歩き＋演技4: 確認あり  npc_kaya_s1.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+21:56:07   |   シート3 顔6: OK  npc_kaya_s3.png  ドット 8.00px → 描かれた格子のまま（81.0 ドット）
+21:56:07   | 
+21:56:07   | packed field 140x228, face 207x170 | palette 52 + face 48
+21:56:07 to_v2 npc_kaya: npc_kaya → /home/user/others/chronicle/v2/assets/sprites/npc_kaya |   field: 16 frames |   face: 6 frames

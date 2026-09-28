@@ -180,5 +180,42 @@ section('魔石: 道具の画面で仲間に使う → その属性の最初の�
   v.tgt = null;
 }
 
-
-done('test_screens');
+section('仲間選び・酒場の入れ替え: 「これでよい」（A）で決める・B は取り消し（持ち主 2026-09-28）');
+(async () => {
+  R.Dev.applyState('menus_party');
+  const G4 = R.Game;
+  const mk = (id, p) => { const v = Object.assign(Object.create(null), S._defs[id]); v.closed = []; v.close = (r) => { v.closed.push(r); }; v.init(p || {}); return v; };
+  const ask0 = S.ask;
+  let asked = 0, answer = 0;
+  S.ask = async () => { asked++; return answer; };
+  try {
+    let v = mk('partySelect', { count: 3 });
+    const c = v.ids.slice(0, 3);
+    v.toggle(c[0]); v.toggle(c[1]);
+    ok('partySelect: 「これでよい」 refuses until 3 are picked', v.accept() === false && !v.closed.length);
+    v.toggle(c[2]);
+    ok('partySelect: the 3rd pick moves focus to 「これでよい」, nothing closes yet', v.onOk && !v.closed.length && asked === 0);
+    ok('partySelect: 「これでよい」 → the 3 ids', v.accept() === true && JSON.stringify(v.closed[0]) === JSON.stringify(c));
+    v = mk('partySelect', { count: 3 }); v.toggle(c[0]);
+    answer = 1; await v.back();
+    ok('partySelect: B with picks asks; 「選び続ける」 keeps them', asked === 1 && !v.closed.length && v.picks.length === 1);
+    answer = 0; await v.back();
+    ok('partySelect: 「取り消して戻る」 → []', v.closed.length === 1 && Array.isArray(v.closed[0]) && !v.closed[0].length);
+    v = mk('partySelect', { count: 3 }); asked = 0; await v.back();
+    ok('partySelect: B with nobody picked → [] without asking', asked === 0 && v.closed.length === 1);
+    const p0 = G4.party.join(','), r0 = G4.reserve.join(',');
+    v = mk('tavern', { swap: true });
+    const nid = v.ids.find((id) => v.state(id) !== 'party');
+    v.choose(nid); const out = v.members()[v.mi];
+    v.doSwap(out);
+    ok('tavern: a swap is only a draft (R.Game unchanged), focus on 「これでよい」', G4.party.join(',') === p0 && v.cur.party.includes(nid) && v.onOk && v.changed());
+    answer = 0; await v.back();
+    ok('tavern: B → 「取り消して戻る」 closes without changing the party', v.closed.length === 1 && G4.party.join(',') === p0 && G4.reserve.join(',') === r0);
+    v = mk('tavern', { swap: true });
+    v.choose(nid); v.doSwap(v.members()[v.mi]);
+    v.accept();
+    ok('tavern: 「これでよい」 applies the swap (join + swap) and closes', v.closed.length === 1 && G4.party.includes(nid) && G4.reserve.includes(out.id), [G4.party, G4.reserve]);
+    v = mk('tavern', { swap: true }); asked = 0; await v.back();
+    ok('tavern: B with no swap closes without asking', asked === 0 && v.closed.length === 1);
+  } finally { S.ask = ask0; }
+})().then(() => done('test_screens'), (e) => { console.error(e); process.exit(1); });

@@ -73,7 +73,7 @@
   function foot(u) {
     if (u && u.boss) return [70, 34];
     const s = u && u.size;
-    return s === 'l' || s === 'boss' ? [50, 26] : s === 's' ? [28, 18] : [36, 22];
+    return s === 'l' || s === 'boss' ? [50, 26] : s === 's' ? [34, 18] : [38, 22];   // 名札（〜80 px）が隣と重ならない幅
   }
   Lay.foot = foot;
   function clash(p, fp, q) {
