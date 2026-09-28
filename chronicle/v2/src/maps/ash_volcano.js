@@ -26,18 +26,18 @@
       // 入口の広間（X）
       blob(g, 28, 40, 8, 5, '.', 1);
       K.rect(g, 26, 44, 4, 4, '.');
-      // 西の部屋（Z、壁画 1）
-      blob(g, 9, 38, 6, 6, '.', 2);
-      // 北の大きな洞（Y）: まん中の広間・東の部屋（番犬）・西の部屋（壁画 3）・北の通路（岩戸）
+      // 西の部屋（Z、壁画 1）: 北の壁は平ら（壁画を描く面）
+      K.rect(g, 5, 34, 10, 9, '.'); blob(g, 9, 40, 5, 4, '.', 2);
+      // 北の大きな洞（Y）: まん中の広間・東の部屋（番犬・壁画 2）・西の部屋（壁画 3）・北の通路（岩戸）
       blob(g, 28, 23, 9, 6, '.', 3);
-      blob(g, 45, 18, 7, 7, '.', 4);
-      blob(g, 11, 17, 7, 7, '.', 5);
+      K.rect(g, 41, 12, 11, 12, '.'); blob(g, 46, 20, 6, 5, '.', 4);
+      K.rect(g, 5, 12, 12, 11, '.'); blob(g, 10, 19, 6, 5, '.', 5);
       K.rect(g, 26, 6, 4, 12, '.');
       blob(g, 28, 6, 5, 3, '.', 6);
-      K.rect(g, 36, 21, 4, 3, '.');                  // まん中 → 東の部屋
+      K.rect(g, 36, 20, 6, 3, '.');                  // まん中 → 東の部屋
       K.rect(g, 16, 20, 5, 3, '.');                  // まん中 → 西の部屋
       // 黒曜石の床（東の部屋の奥・岩戸の前）
-      blob(g, 48, 16, 3, 3, 'o', 7, ['.']);
+      blob(g, 48, 15, 3, 2.5, 'o', 7, ['.']);
       blob(g, 28, 5, 3, 1.6, 'o', 8, ['.']);
       // 溶岩の川 A（西。Z と X の間を南北に流れる）と、渡り場
       for (let y = 29; y <= 47; y++) for (let x = 16; x <= 18; x++) K.put(g, x, y, '%');
@@ -47,8 +47,7 @@
       K.rect(g, 26, 29, 4, 2, '.'); K.rect(g, 26, 33, 4, 3, '.');   // 渡り場の両岸
       // 溶岩の池（景色。通れない）
       blob(g, 28, 22, 2.5, 1.6, '%', 9, ['.']);
-      blob(g, 44, 23, 2, 1.4, '%', 10, ['.']);
-      blob(g, 9, 13, 2, 1.5, '%', 11, ['.']);
+      blob(g, 44, 22, 2, 1.4, '%', 10, ['.']);
       blob(g, 35, 41, 1.8, 1.3, '%', 12, ['.']);
       // 渡り場（閉じた形 = 溶岩。tilePatches で冷えた殻 'k' になる）
       const crossA = [], crossB = [];
@@ -64,39 +63,37 @@
       const pA = patch(crossA), pB = patch(crossB);
       const O = [];
       // 溶岩の堰のレバー（広間 = L1、北の洞 = L2）。引くたびに流れが入れ替わる
-      for (const [n, x, y] of [[1, 33, 35], [2, 33, 27]]) {
+      for (const [n, x, y] of [[1, 32, 37], [2, 33, 25]]) {
         O.push(K.prop('lever', x, y, { cond: '!ash_sluice' }), K.prop('lever', x, y, { frame: 'on', cond: 'ash_sluice' }), K.exam(x, y, 'volcano_sluice', { lever: n }));
       }
       // 壁画 3 つ（北の壁の前に立って調べる。絵は下絵の壁に描いてある）
-      O.push(K.exam(6, 33, 'volcano_mural', { mural: 1 }));
-      O.push(K.exam(51, 13, 'volcano_mural', { mural: 2 }));
-      O.push(K.exam(9, 11, 'volcano_mural', { mural: 3 }));
+      O.push(K.exam(9, 33, 'volcano_mural', { mural: 1 }), K.exam(10, 33, 'volcano_mural', { mural: 1 }));
+      O.push(K.exam(47, 11, 'volcano_mural', { mural: 2 }), K.exam(48, 11, 'volcano_mural', { mural: 2 }));
+      O.push(K.exam(10, 11, 'volcano_mural', { mural: 3 }), K.exam(11, 11, 'volcano_mural', { mural: 3 }));
       // 火口への岩戸（ash_murals ≥ 3 で開く階段。閉じている間は調べる）
       O.push(K.stairs(28, 3, { map: 'ash_volcano_2', spawn: 'stairs' }, { id: 'volcano_1_up', look: 'up', cond: { var: 'ash_murals', gte: 3 } }));
       O.push(K.exam(28, 3, 'volcano_rockdoor', { cond: { not: { var: 'ash_murals', gte: 3 } } }));
       // 宝箱（見える所）
-      O.push(K.chest('volcano_1_c1', 5, 40, { pool: 'p_T' }), K.chest('volcano_1_c2', 12, 43, { item: 'i_ether', n: 2 }),
-        K.chest('volcano_1_c3', 50, 21, { pool: 'p_rare' }), K.chest('volcano_1_c4', 6, 20, { pool: 'p_T' }), K.chest('volcano_1_c5', 22, 41, { gold: 420 }),
-        K.chest('volcano_1_c6', 36, 17, { item: 'i_panacea', n: 2 }));
-      // かがり火（部屋の隅。通り道に置かない）と、溶岩の照り返し（光だけ）
-      for (const [x, y] of [[21, 44], [34, 44], [4, 35], [37, 20], [52, 20], [7, 22], [24, 7], [32, 7]]) O.push(K.prop('iron_brazier', x, y));
-      for (const [x, y] of [[17, 33], [17, 44], [20, 31], [38, 32], [28, 22], [44, 23], [9, 13]]) O.push(K.prop('lava_glow', x, y));
+      O.push(K.chest('volcano_1_c1', 5, 42, { pool: 'p_T' }), K.chest('volcano_1_c2', 13, 35, { item: 'i_ether', n: 2 }),
+        K.chest('volcano_1_c3', 51, 23, { pool: 'p_rare' }), K.chest('volcano_1_c4', 5, 22, { pool: 'p_T' }), K.chest('volcano_1_c5', 22, 42, { gold: 420 }),
+        K.chest('volcano_1_c6', 51, 12, { item: 'i_panacea', n: 2 }));
+      // 光: 溶岩の照り返し（光だけ。溶岩のマスの上）。かがり火は置かない（溶岩が照らす）
+      for (const [x, y] of [[17, 34], [17, 45], [20, 31], [38, 32], [28, 22], [44, 22], [35, 41], [13, 31]]) O.push(K.prop('lava_glow', x, y));
       O.push(K.sign(30, 44, '――灰の火山。\n火の鳥の眠る山。\n試練の勝者のほか、入るべからず。'));
       K.def('ash_volcano_1', {
         name: '灰の火山', kind: 'dungeon', region: 'r_ash', location: 'volcano', theme: 'cave',
         legend: AK.VOLCANO(), rows: g, outside: 'wall_cave',
         objects: O,
         npcs: [
-          K.npc('hound', 'boss_hellhound', 45, 15, { name: '炎の番犬', dir: 's', talk: null, cond: '!ash_hound' }),
-          K.npc('copyist_a', 'npc_scribe', 10, 13, { name: '記録院の写し手', dir: 'n', talk: null, cond: ['ash_copyists', '!ash_copy_done'] }),
-          K.npc('copyist_b', 'npc_scribe', 12, 14, { name: '記録院の写し手', dir: 'n', talk: null, cond: ['ash_copyists', '!ash_copy_done'] }),
+          K.npc('copyist_a', 'npc_scribe', 9, 13, { name: '記録院の写し手', dir: 'n', talk: null, cond: ['ash_copyists', '!ash_copy_done'] }),
+          K.npc('copyist_b', 'npc_scribe', 12, 13, { name: '記録院の写し手', dir: 'n', talk: null, cond: ['ash_copyists', '!ash_copy_done'] }),
         ],
         spawns: { entrance: { x: 27, y: 45, dir: 'n' }, stairs: { x: 28, y: 5, dir: 's' } },
         exits: [{ x: 26, y: 47, w: 4, h: 1, to: { map: 'world', spawn: 'volcano' } }],
         triggers: [
           { id: 'arrive', on: 'enter', event: 'volcano_arrive' },
-          { id: 'hound', x: 39, y: 18, w: 3, h: 7, on: 'step', event: 'volcano_hound', cond: '!ash_hound' },
-          { id: 'copy', x: 15, y: 18, w: 3, h: 6, on: 'step', event: 'volcano_copyists', cond: ['ash_champion', '!ash_copy_done'] },
+          { id: 'hound', x: 39, y: 20, w: 2, h: 3, on: 'step', event: 'volcano_hound', cond: '!ash_hound' },
+          { id: 'copy', x: 16, y: 20, w: 2, h: 3, on: 'step', event: 'volcano_copyists', cond: ['ash_champion', '!ash_copy_done'] },
         ],
         tilePatches: [
           { cond: '!ash_sluice', rect: pA.rect, rows: pA.rows },
@@ -131,9 +128,9 @@
       K.rect(g, 21, 7, 2, 8, '.');
       const O = [];
       O.push(K.stairs(21, 34, { map: 'ash_volcano_1', spawn: 'stairs' }, { id: 'volcano_2_down', look: 'down' }));
-      O.push(K.exam(22, 17, 'crater_egg'));
+      for (const [x, y] of [[21, 16], [22, 16], [21, 17], [22, 17]]) K.put(g, x, y, 'X');   // 卵（描いた物）
+      O.push(K.exam(21, 16, 'crater_egg'), K.exam(22, 16, 'crater_egg'));
       O.push(K.chest('volcano_2_c1', 33, 30, { pool: 'p_rare' }), K.chest('volcano_2_c2', 39, 12, { item: 'i_elixir', n: 1 }), K.chest('volcano_2_c3', 5, 9, { pool: 'p_T' }));
-      for (const [x, y] of [[8, 28], [3, 20], [8, 4], [20, 2], [33, 2], [26, 33]]) O.push(K.prop('iron_brazier', x, y));
       for (const [x, y] of [[12, 12], [32, 12], [14, 22], [30, 22], [22, 25], [10, 17], [34, 17]]) O.push(K.prop('lava_glow', x, y));
       K.def('ash_volcano_2', {
         name: '灰の火山', kind: 'dungeon', region: 'r_ash', location: 'volcano', theme: 'cave',
@@ -141,14 +138,12 @@
         objects: O,
         npcs: [
           K.npc('fine', 'fine', 27, 4, { name: '灰色のマントの少女', dir: 's', talk: 'crater_fine', reward: null, pushable: false, cond: ['ash_lavabeast', '!ash_fine_seen'] }),
-          K.npc('beast', 'boss_flame_lord', 22, 11, { name: '溶岩の巨獣', dir: 's', talk: null, cond: ['ash_beast_up', '!ash_lavabeast'] }),
         ],
         spawns: { stairs: { x: 21, y: 32, dir: 'n' }, rim: { x: 22, y: 5, dir: 's' }, egg: { x: 22, y: 15, dir: 's' } },
         exits: [],
         triggers: [
           { id: 'arrive', on: 'enter', event: 'crater_arrive', once: true },
           { id: 'beast', x: 21, y: 9, w: 2, h: 3, on: 'step', event: 'crater_beast', cond: '!ash_lavabeast' },
-          { id: 'fine', x: 24, y: 3, w: 3, h: 4, on: 'step', event: 'crater_fine', cond: ['ash_lavabeast', '!ash_fine_seen'] },
         ],
         zones: [{ rect: [16, 3, 12, 14], zone: null }, { rect: [0, 0, 44, 36], zone: 'z_ash_crater' }].filter((z) => z.zone),
         light: AK.LIGHT_VOLCANO, dark: false,
