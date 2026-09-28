@@ -106,7 +106,9 @@ async function main() {
 
   ok('title: はじめから is the first row with no record', await ev(p, "RPG.Engine.top().list.rows[0].value==='new'"));
   // タイトルは起動して最初に出てくる順を見せる（design/TITLE_ART.md §4）: 最初の A はとばすだけ、はじめからは光って暗転
-  ok('title → はじめから → 序章の幕 → 主人公の作成', await pressUntil(p, 'a', `${top}==='screen:charcreate'`, 28));
+  // 序章の幕（2026-09-28 から: 暗いままの字幕 4 枚＋ベルナの声の 6 ページ → 作成）。字幕は出てすぐ（250 ms）と閉じる間（300 ms）の A を
+  //   受けないので、押す回数は幕の枚数より多めに見る（遊ぶ人の早押しが飛ばされるのは字幕の作り）
+  ok('title → はじめから → 序章の幕 → 主人公の作成', await pressUntil(p, 'a', `${top}==='screen:charcreate'`, 70));
   await p.waitForTimeout(250);
   await p.screenshot({ path: path.join(OUT, 'p0_charcreate_1920.png') });
   // 性別・タイプ・得意・名前（名前の入力が開き、決定の上）→「この主人公で旅立つ」→ ベルナの台詞 → 書見台へ歩く
