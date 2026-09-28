@@ -658,7 +658,7 @@
           (cd.faces || []).slice(0, 4).forEach((look, i) => S.faceCircle(g, look, cr.x + u(32) + i * u(38), cr.y + u(102), u(16)));
         }
         // 左下・右下（縦持ちは R.safe.b の分だけ上げてある）
-        R.UIK.text(g, `${R.COPYRIGHT || '© Studio Metem'}      ver ${R.VERSION || ''}`, s.l + u(18), footY, { size: u(11.5), color: C.text3, shadow: true });
+        R.UIK.text(g, `${R.COPYRIGHT || '© Studio Metem'}      ver ${R.VERSION || ''}${R.DB.config && R.DB.config.slice ? '　体験版' : ''}`, s.l + u(18), footY, { size: u(11.5), color: C.text3, shadow: true });
         if (!tall) S.prompts(g, [{ btn: 'a', label: '決定' }, { btn: 'up', label: '選ぶ' }]);
         g.restore();
       } else this.list.rect = lr;
