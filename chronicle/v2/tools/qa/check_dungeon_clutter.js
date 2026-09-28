@@ -6,12 +6,12 @@
 //
 // 対象: kind 'dungeon' のマップ。当たる（solid で soft でない）prop のうち、
 //   CONTAINER（樽・木箱・壺・かめ・たきぎ…）= 数と置き場所の両方を見る
-//   SMALL（岩・丸太・切り株・崩れた柱・雪だまり…）= 置き場所だけ見る
+//   SMALL（岩・丸太・切り株・崩れた柱・雪だまり…）= 通路の検査（1〜3）だけ（広い野外の真ん中の岩は景色として置いてよい）
 // 検査（小物のマスを「床」とみなして、まわりのマスで決める。ほかの小物も床とみなす = 1 つずつ見る）:
 //  1 通路: 小物のマスの通り幅（左右が床なら上下に続く床の数、上下が床なら左右に続く床の数）が 2 以下 → 通路をふさぐ／半分にする
 //  2 すきま: 小物を置くと、となり（上下左右）の床の通り幅が 1 になる → 1 マスのすきましか残さない
 //  3 分断: まわり 8 マスの床が 2 つ以上のかたまりに分かれる → 小物が道の間に挟まっている
-//  4 壁ぎわ: 上下左右のどれかが壁（マスの当たり）か、壁ぎわの小物につながっている。でなければ床の真ん中
+//  4 壁ぎわ（CONTAINER だけ）: 上下左右のどれかが壁（マスの当たり）か、壁ぎわの小物につながっている。でなければ床の真ん中
 //  5 数: CONTAINER は 1 つのマップ（1 階）に MAX（4）まで
 // painted（下絵に描いてある物）は動かせない（描き直しが要る）ので、既定では「要描き直し」として数えるだけ（--strict で失敗にする）。
 'use strict';
@@ -69,7 +69,7 @@ function checkMap(m) {
     if (w <= 2) c.bad.push('passage(w' + w + ')');
     for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
       const X = x + dx, Y = y + dy;
-      if (floor(X, Y) && width(X, Y, c) <= 1) { c.bad.push('squeeze@' + X + ',' + Y); break; }
+      if (floor(X, Y) && !at.has(X + ',' + Y) && width(X, Y, c) <= 1) { c.bad.push('squeeze@' + X + ',' + Y); break; }
     }
     // まわり 8 マスの床のかたまり（輪の上でとなり合う床の並び）。斜めの 1 マスだけの並びは小物のマスとも行き来できないので数えない
     const open = RING.map(([dx, dy]) => floor(x + dx, y + dy));
@@ -89,7 +89,7 @@ function checkMap(m) {
     grow = false;
     for (const c of list) if (!edge.has(c) && [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => { const n = at.get((c.x + dx) + ',' + (c.y + dy)); return n && edge.has(n); })) { edge.add(c); grow = true; }
   }
-  for (const c of list) if (!edge.has(c)) c.bad.push('mid-floor');
+  for (const c of list) if (!edge.has(c) && c.kind === 'container') c.bad.push('mid-floor');
   return list;
 }
 
@@ -110,7 +110,7 @@ for (const id of maps) {
     ok(name, !c.bad.length, c.bad);
   }
   // 数: 動かせる（描いていない）物だけで MAX まで。描いた物が多いマップは要描き直しとして書き出す
-  ok(`${id}: 樽・木箱・壺は ${MAX} つまで（描いていない物 ${sprite.length}）`, sprite.length <= MAX || (!STRICT && cont.length - sprite.length > 0 && sprite.length <= 1), sprite.map((c) => c.id + '@' + c.x + ',' + c.y));
+  ok(`${id}: 樽・木箱・壺は ${MAX} つまで（描いていない物 ${sprite.length}）`, sprite.length <= MAX, sprite.map((c) => c.id + '@' + c.x + ',' + c.y));
   if (cont.length > MAX && cont.length - sprite.length > 0) repaint.push(`${id}: 下絵に描いた樽・木箱・壺が ${cont.length - sprite.length}（全部で ${cont.length}、${MAX} まで）`);
   if (STRICT) ok(`${id}: 樽・木箱・壺は全部で ${MAX} つまで`, cont.length <= MAX, cont.length);
 }
