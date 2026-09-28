@@ -1,4 +1,4 @@
-// TERRAIN: ワールドの素材（WORLD v3、2026-09-28）。描いた絵は v2/assets/env/world/mat/wm_*（gpt-6-sol の 2×2 の見本 8 枚から）。
+// TERRAIN: ワールドの素材（WORLD v3、2026-09-28）。描いた絵は v2/assets/env/world/mat/wm_*（画像生成の 2×2 の見本 8 枚から）。
 // 町・ダンジョンの素材はそのまま（ワールドの凡例だけ tools/gen_world.js が wm_* に替える）。絵が読めないとき・node では元の素材のコードの絵。
 // splat.js の混ぜ方: splat = ノイズの強さ（大きいほど境がうねる）、shallowTint = 水の岸の近くの色。
 (function (R) {

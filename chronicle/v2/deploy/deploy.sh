@@ -8,7 +8,7 @@ ROOT=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
 WORK=${DEPLOY_WORK:-/tmp/claude-0/deploy_work}
 DRY=${1:-}
 rm -rf "${WORK:?}" && mkdir -p "$WORK"
-git -C "$ROOT" archive HEAD chronicle/v2/src chronicle/v2/tools chronicle/v2/assets chronicle/v2/design chronicle/assets chronicle/design/portraits | tar -x -C "$WORK"
+git -C "$ROOT" archive HEAD chronicle/v2/src chronicle/v2/tools chronicle/v2/assets chronicle/v2/design chronicle/assets chronicle/design/portraits chronicle/design/voice chronicle/tools | tar -x -C "$WORK"
 mkdir -p "$WORK/chronicle/v2/dist"   # 文字のキャッシュ（.fontcache）は作業のツリーから写す（無ければ build が作る）
 [ -d "$ROOT/chronicle/v2/dist/.fontcache" ] && cp -r "$ROOT/chronicle/v2/dist/.fontcache" "$WORK/chronicle/v2/dist/"
 cd "$WORK/chronicle/v2"
