@@ -51,9 +51,10 @@
     s_water_1: sp('水の刃', ['water'], '1', 2, 'enemy',
       [dmg(1.3)], 'water1',
       '水を刃に変えて、敵1体を切る。'),
+    // 水の回復（持ち主 2026-09-28「水で回復あるだろ」）: HP の回復を足す。熟練度は水（R.Rules.profPowerMul が水で効く）
     s_water_2: sp('清めの水', ['water'], '2', 4, 'ally',
-      [cure('all'), st('regen')], 'cure',
-      '悪い状態を治し、再生状態にする。'),
+      [heal(0.3), cure('all'), st('regen')], ['heal', 'cure'],
+      '1人のHPを回復し、悪い状態を治して再生状態にする。', { field: true }),
     s_water_3: sp('水のとばり', ['water'], '3', 5, 'allies',
       [buff('mdef', 1)], 'buff',
       '水の膜で、全員の術防を上げる。'),
