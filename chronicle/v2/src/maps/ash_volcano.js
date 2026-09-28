@@ -105,6 +105,8 @@
         light: AK.LIGHT_VOLCANO, dark: false,
         bgm: 'cave', bbg: 'ash',
         meta: { chestsInfo: true, floor: '1階', sub: '溶岩の流れる洞', live: [{ cells: crossA, cond: '!ash_sluice' }, { cells: crossB, cond: 'ash_sluice' }] },
+        // 1 枚の下絵（両方の渡り場が冷えた形）。流れている方の渡り場は閉じた絵（溶岩）をそのマスに置く。壁画・岩戸・溶岩は絵、lava_glow は光だけ
+        art: { image: 'ash/under/ash_volcano_1', closed: 'ash/under/ash_volcano_1_closed', emit: 'ash/under/ash_volcano_1_emit', painted: ['lava_glow'] },
       });
     }
 
