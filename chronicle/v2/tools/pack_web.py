@@ -16,6 +16,8 @@ dist（node v2/tools/build.js の外置きの版）から、次の形の写し�
   voice/pack_NN.ogg        ボイスは Ogg をつないだ（chained Ogg）ファイルにまとめる（{url, off, len}）
   publish_batches.json     ファイルと大きさの一覧と、1 回の公開（64 MB・255 本まで）ごとの組
 切り出し・範囲の読み方は src/core/media.js（image() と bytes()）。
+テスト用メニュー（src/tester/、?tester=1 と F9）は dist の index.html にあればそのまま入る（公開のテスト版用）。
+製品版の写しには build.js --release で作った dist を使う（テスト用メニューが入らない）。
 """
 import argparse
 import hashlib

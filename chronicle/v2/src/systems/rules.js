@@ -635,7 +635,8 @@
       if (!info) return [];
       const G = K.PROF_GAIN, ups = [];
       const o = { mods: Rules.mods(c), tier: info.tier };
-      const bump = (k, id, pts) => { const r = Rules.addProf(c, k, id, pts, o); if (r.up) ups.push({ kind: k, id, rank: r.rank, from: r.from }); };
+      const tm = R.Tester ? R.Tester.mul('prof') : 1;   // テスト用メニュー（src/tester/）: 熟練度 ×N。無い・無効なら 1
+      const bump = (k, id, pts) => { const r = Rules.addProf(c, k, id, pts * tm, o); if (r.up) ups.push({ kind: k, id, rank: r.rank, from: r.from }); };
       const a = info.actionId && actionOf(info.actionId);
       if (info.kind === 'attack' || info.kind === 'tech') {
         let w = info.wtype;

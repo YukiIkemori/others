@@ -23,6 +23,8 @@
     if (card.bad) { R.UIK.text(g, '前の版のセーブのため読めません', r.x + u(42), r.y + u(42), { size: u(14), color: C.disabled }); return; }
     const tall = S.tall();
     R.UIK.text(g, R.U.date(card.date), r.x + r.w - u(16), r.y + u(14), { size: u(12), color: C.text3, align: 'right' });
+    // テスト用メニュー（src/tester/）を使った旅の記録: 小さな印
+    if (card.test) R.UIK.chip(g, r.x + u(42) + R.UIK.measure(o.label || S.slotName(slot), { size: u(14), weight: 700 }) + u(10), r.y + u(11), 'TEST', { size: 10, bg: 'rgba(160,40,40,0.7)', line: 'rgba(255,200,180,0.7)', color: '#ffe8e0' });
     R.UIK.text(g, card.place || '', r.x + u(42), r.y + u(38), { size: u(17), weight: 700, color: C.text, maxW: r.w * (tall ? 0.8 : 0.45) });
     R.UIK.text(g, `${card.chapter ? '第' + card.chapter + '章' : '序章'}　・　${S.playTimeJa(card.playMs)}`, tall ? r.x + u(42) : r.x + r.w * 0.52, tall ? r.y + u(64) : r.y + u(41), { size: u(13.5), color: C.text2 });
     const faces = card.faces || [];

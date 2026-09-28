@@ -6,6 +6,8 @@
 //   const R = require('./v2/tools/lib/load')({stubs: false});   // 仮の実装を埋めない（本物だけの形を調べる）
 //   const R = require('./v2/tools/lib/load')({extra: ['path/to/x.js']});   // 最後に足すファイル（テスト用）
 //   const R = require('./v2/tools/lib/load')({fixtures: true}); // window.RPG_FIXTURES に tools/fixtures/**.json を入れる
+//   const R = require('./v2/tools/lib/load')({tester: false});  // テスト用メニュー（src/tester/）を読まない（製品版 --release と同じ）
+//   const R = require('./v2/tools/lib/load')({globals: {location: {search: '?tester=1'}}});  // window に足す物（テスト用）
 //
 // 読む順番はビルドと同じ（tools/build.js の order()）。読み込み時に document に触れないのが約束（§2.4）なので、
 // 絵のファイルも「登録だけ」で読める。焼く（factory を呼ぶ）には canvas が要るので node ではしない。
@@ -20,10 +22,11 @@ const V2 = path.resolve(__dirname, '..', '..');
 module.exports = function load(opts) {
   opts = opts || {};
   const { order, fixtures } = require('../build.js');
-  const files = order({ dev: !!opts.dev });
+  const files = order({ dev: !!opts.dev, tester: opts.tester });   // tester: false で製品版と同じ（src/tester/ を読まない）
   const noop = () => {};
   const store = {};
   const sandbox = {
+    ...(opts.globals || {}),
     console: opts.quiet ? { log: noop, warn: noop, info: noop, error: (...a) => console.error(...a) } : console,
     setTimeout, clearTimeout, setInterval, clearInterval, Promise, Math, JSON, Date,
     performance: { now: () => Number(process.hrtime.bigint()) / 1e6 },

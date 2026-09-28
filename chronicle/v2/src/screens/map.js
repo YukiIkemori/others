@@ -27,15 +27,28 @@
       const tm = p && p.town && R.DB.maps[p.town];
       this.town = tm && tm.kind === 'town' && R.Field && R.Field.townmap ? tm.id : null;
       this.view = this.town ? 'town' : 'world';
+      this.pm = null;   // 羊皮紙の地図の見え方 {cx, cy, z}（絵の px の中心と倍率。開いたときに今いる地方へ寄せる）
     },
     update() {
       const I = R.Input;
-      if (this.town && (I.pressed('y') || I.pressed('r'))) { R.UIK.sfx('cursor'); this.view = this.view === 'town' ? 'world' : 'town'; return; }
+      if (this.town && I.pressed('y')) { R.UIK.sfx('cursor'); this.view = this.view === 'town' ? 'world' : 'town'; return; }
+      if (this.view === 'world' && this.pm) {
+        // 羊皮紙の地図: 十字（左スティック）で動かす・L/R（Q/E）とホイールで拡大・縮小。ゲームパッドも同じボタン
+        const P = this.pm, dt = Math.min(50, R.Engine.dt || 16);
+        const sp = (I.down('dash') ? 2.2 : 1) * dt * 0.9 / P.z;
+        if (I.down('left')) P.cx -= sp; if (I.down('right')) P.cx += sp;
+        if (I.down('up')) P.cy -= sp; if (I.down('down')) P.cy += sp;
+        const wz = (I.pointer && I.pointer.wheel) || 0;
+        if (I.repeat('r') || wz < 0) P.zt = Math.min(P.zmax, P.zt * 1.25);
+        if (I.repeat('l') || wz > 0) P.zt = Math.max(P.zmin, P.zt / 1.25);
+        P.z += (P.zt - P.z) * Math.min(1, dt / 90);
+      } else if (this.town && I.pressed('r')) { R.UIK.sfx('cursor'); this.view = 'world'; return; }
       if (I.pressed('b') || I.pressed('a') || I.pressed('x')) { R.UIK.sfx('cancel'); this.close(undefined); }
     },
     promptList() {
-      if (!this.town) return [{ btn: 'b', label: '戻る' }];
-      return [{ btn: 'y', label: this.view === 'town' ? '世界の地図' : '町の地図' }, { btn: 'b', label: '閉じる' }];
+      const pan = this.view === 'world' && this.pm ? [{ btn: 'l', label: '縮小' }, { btn: 'r', label: '拡大' }] : [];
+      if (!this.town) return pan.concat([{ btn: 'b', label: '戻る' }]);
+      return pan.concat([{ btn: 'y', label: this.view === 'town' ? '世界の地図' : '町の地図' }, { btn: 'b', label: '閉じる' }]);
     },
     /** 町の地図（R.Field.townmap が描く）: 町の名前・地図・凡例 */
     drawTown(g) {
@@ -49,6 +62,107 @@
       R.Field.townmap.legend(g, { x: b.x + (b.w - lw) / 2, y: Math.min(r.y + r.h + u(14), b.y + b.h - lh - u(tall ? 56 : 4)), w: lw, h: lh }, m.id);
       S.prompts(g, this.promptList());
     },
+    /** 絵の上の位置（絵の px）: 今いる所・行った所・目印 */
+    paintPos(mapId, x, y) {
+      const WM = R.WorldMap, m = R.DB.maps[mapId];
+      if (!WM || !m) return null;
+      const A = WM.areas[mapId], wr = m.meta && m.meta.worldRect;
+      if (A && x != null) return [A[0] + ((x + 0.5) / m.w) * A[2], A[1] + ((y + 0.5) / m.h) * A[3]];
+      if (A) return [A[0] + A[2] / 2, A[1] + A[3] / 2];
+      if (WM.anchors[mapId]) return WM.anchors[mapId];
+      if (wr) return WM.toPaint(wr[0] + ((x == null ? m.w / 2 : x + 0.5) / m.w) * wr[2], wr[1] + ((y == null ? m.h / 2 : y + 0.5) / m.h) * wr[3]);
+      if (m.kind === 'world' && x != null) return WM.toPaint(x + 0.5, y + 0.5);
+      const L = m.location && R.DB.locations && R.DB.locations[m.location];
+      if (L && L.map !== mapId) return this.paintPos(L.map);
+      if (L && WM.anchors[m.location]) return WM.anchors[m.location];
+      const w = S.worldPosOf(mapId);
+      return w ? WM.toPaint(w.x, w.y) : null;
+    },
+    /** 羊皮紙の一枚絵の地図（R.WorldMap）。絵が読めていなければ false（前の地図を出す） */
+    drawParchment(g) {
+      const WM = R.WorldMap;
+      if (!WM || !R.Media || !R.Media.image) return false;
+      const rec = R.Media.image(WM.image, 'env');
+      if (!rec || rec.failed) return false;
+      const b = S.box(), C = T().color, G = R.Game || {}, t = R.Engine.time;
+      S.heading(g, '地図', b.x + u(8), b.y + u(6), 0, { size: 15, track: 4 });
+      const area = { x: b.x, y: b.y + u(44), w: b.w, h: b.h - u(44) };
+      if (!rec.ready) { R.UIK.text(g, '地図をひろげている……', area.x + area.w / 2, area.y + area.h / 2, { size: u(18), color: C.text2, align: 'center' }); S.prompts(g, this.promptList()); return true; }
+      const [IW, IH] = WM.size, fit = Math.min(area.w / IW, area.h / IH);
+      // 今いる所
+      const pos = (R.Field && R.Field.pos) || G.pos || {};
+      const here = this.paintPos(pos.map, pos.x, pos.y);
+      if (!this.pm) {
+        const c = here || [IW / 2, IH / 2];
+        this.pm = { cx: c[0], cy: c[1], z: 1.9, zt: 1.9, zmin: 1, zmax: 4 };
+      }
+      const P = this.pm, k = fit * P.z;
+      // 絵の外へ出ない
+      const hw = area.w / 2 / k, hh = area.h / 2 / k;
+      P.cx = hw * 2 >= IW ? IW / 2 : Math.max(hw, Math.min(IW - hw, P.cx));
+      P.cy = hh * 2 >= IH ? IH / 2 : Math.max(hh, Math.min(IH - hh, P.cy));
+      const X = (px) => area.x + area.w / 2 + (px - P.cx) * k, Y = (py) => area.y + area.h / 2 + (py - P.cy) * k;
+      const dw = IW * k, dh = IH * k;
+      g.save();
+      R.UIK.rr(g, area.x, area.y, area.w, area.h, u(10)); g.clip();
+      g.fillStyle = '#2a1f14'; g.fillRect(area.x, area.y, area.w, area.h);
+      g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
+      g.drawImage(rec.img, X(0), Y(0), dw, dh);
+      // 地方の霧: まだ行っていない地方は羊皮紙のしみでかすませる（体験版で閉じた地方は濃く）
+      const seen = new Set();
+      for (const id of Object.keys(G.visited || {})) { const m = R.DB.maps[id]; if (m && m.region) seen.add(m.region); }
+      const C0 = R.DB.config || {}, open = new Set(C0.sliceOpen || []);
+      for (const [rid, circles] of Object.entries(WM.regions)) {
+        if (seen.has(rid)) continue;
+        const reg = R.DB.regions && R.DB.regions[rid];
+        const locked = (reg && reg.slice === 'locked') || (C0.slice && open.size && !open.has(rid));
+        const a = locked ? 0.8 : 0.55;
+        for (const [cx, cy, r] of circles) {
+          const gr = g.createRadialGradient(X(cx), Y(cy), 0, X(cx), Y(cy), r * k);
+          gr.addColorStop(0, `rgba(214,190,146,${a})`); gr.addColorStop(0.65, `rgba(208,184,140,${a * 0.85})`); gr.addColorStop(1, 'rgba(208,184,140,0)');
+          g.fillStyle = gr; g.beginPath(); g.arc(X(cx), Y(cy), r * k, 0, Math.PI * 2); g.fill();
+        }
+      }
+      // 名前（行った町・ダンジョン・エリア）。字は絵に描いていないので、ここで墨の字を重ねる
+      const ink = '#3b2614', paper = 'rgba(240,226,192,0.92)';
+      const label = (text, px, py, sz, strong) => R.UIK.text(g, text, X(px), Y(py), { size: u(sz), weight: strong ? 700 : 500, color: ink, align: 'center', stroke: [paper, u(3.2)] });
+      const drawn = new Set();
+      for (const m of Object.values(R.DB.maps)) {
+        if (!m || m.kind !== 'field' || !(G.visited && G.visited[m.id])) continue;
+        const c = this.paintPos(m.id);
+        if (c) label(m.name, c[0], c[1] - 10 / k, 12, false);
+      }
+      for (const p of this.places()) {
+        if (!p.been || drawn.has(p.map)) continue;
+        drawn.add(p.map);
+        const c = this.paintPos(p.map);
+        if (!c) continue;
+        const qx = X(c[0]), qy = Y(c[1]);
+        if (p.kind === 'town') { R.UIK.diamond(g, qx, qy, u(5.5), '#8a2d1c', 'rgba(250,236,200,0.9)', 1.5); label(p.name, c[0], c[1] + 9 / k, 14, true); }
+        else { g.save(); g.fillStyle = '#20404a'; g.strokeStyle = 'rgba(250,236,200,0.9)'; g.lineWidth = 1.5; g.beginPath(); g.arc(qx, qy, u(4), 0, Math.PI * 2); g.fill(); g.stroke(); g.restore(); label(p.name, c[0], c[1] + 8 / k, 12, false); }
+      }
+      // 目印の手がかり
+      const pinned = R.Leads && R.Leads.pinned ? R.Leads.pinned() : null, pinL = pinned && R.DB.leads ? R.DB.leads[pinned] : null;
+      if (pinL && pinL.place) {
+        const L = R.DB.locations && R.DB.locations[pinL.place];
+        const c = this.paintPos(L ? L.map : pinL.place);
+        if (c) { const a = 0.6 + 0.4 * Math.sin(t / 600); R.UIK.glow(g, X(c[0]), Y(c[1]) - u(10), u(18), [255, 214, 140], a * 0.6); R.UIK.icon(g, 'pin', X(c[0]) - u(9), Y(c[1]) - u(22), u(18), '#8a2d1c'); }
+      }
+      // いま（ゆっくり脈打つ輪と矢）
+      if (here) {
+        const qx = X(here[0]), qy = Y(here[1]), ph = (t % 1600) / 1600, s = u(8);
+        g.save(); g.strokeStyle = `rgba(138,45,28,${0.8 * (1 - ph)})`; g.lineWidth = u(2.2); g.beginPath(); g.arc(qx, qy, u(6) + ph * u(20), 0, Math.PI * 2); g.stroke();
+        g.fillStyle = '#8a2d1c'; g.strokeStyle = 'rgba(250,236,200,0.95)'; g.lineWidth = u(1.5); g.beginPath();
+        g.moveTo(qx, qy - s); g.lineTo(qx + s * 0.7, qy + s * 0.6); g.lineTo(qx, qy + s * 0.25); g.lineTo(qx - s * 0.7, qy + s * 0.6); g.closePath(); g.fill(); g.stroke(); g.restore();
+      }
+      g.restore();
+      g.save(); R.UIK.rr(g, area.x, area.y, area.w, area.h, u(10)); g.strokeStyle = 'rgba(236,201,124,0.45)'; g.lineWidth = 1.5; g.stroke(); g.restore();
+      // 今いる所の名前（左下）
+      const nm = S.placeName();
+      if (nm) { R.UIK.panel(g, { x: area.x + u(12), y: area.y + area.h - u(52), w: R.UIK.measure(nm, { size: u(15), weight: 700 }) + u(60), h: u(40) }, { dense: true }); R.UIK.icon(g, 'pin', area.x + u(26), area.y + area.h - u(42), u(16), C.gold); R.UIK.text(g, nm, area.x + u(50), area.y + area.h - u(42), { size: u(15), weight: 700, color: C.text }); }
+      S.prompts(g, this.promptList());
+      return true;
+    },
     places() {
       const G = R.Game || {}, out = [];
       for (const [id, L] of Object.entries(R.DB.locations || {})) {
@@ -60,6 +174,7 @@
     },
     draw(g) {
       if (this.view === 'town') { this.drawTown(g); return; }
+      if (this.drawParchment(g)) return;
       const b = S.box(), C = T().color, tall = S.tall(), G = R.Game || {};
       S.heading(g, '地図', b.x + u(8), b.y + u(6), 0, { size: 15, track: 4 });
       const w = worldMap();

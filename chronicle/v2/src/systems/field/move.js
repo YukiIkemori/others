@@ -113,7 +113,7 @@
     const chained = now - S.lastEnd < 60;
     const t0 = chained ? S.lastEnd : now;
     const diag = !!(go[0] && go[1]);
-    const ms = (dash ? F.DASH_MS : F.WALK_MS) * (diag ? 1.41 : 1);
+    const ms = (dash ? F.DASH_MS : F.WALK_MS) * (diag ? 1.41 : 1) * (R.Tester ? R.Tester.moveMul() : 1);   // テスト用メニュー（src/tester/）: 移動速度 ×2
     // 歩きのコマは道のりで進める（layers.js）: 止まった所から歩き出したら数え直す
     if (!chained) S.gait0 = S.odo || 0;
     // 走り出し・ダッシュ中の向き変え: 足もとに土ぼこり

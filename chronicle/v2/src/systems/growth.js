@@ -109,12 +109,16 @@
       const out = [];
       const one = (c, o) => {
         if (!c) return;
-        const p = Growth.chance(c, E, { boss: !!info.boss, reserve: o.reserve, fallen: o.fallen });
+        let p = Growth.chance(c, E, { boss: !!info.boss, reserve: o.reserve, fallen: o.fallen });
+        // テスト用メニュー（src/tester/）: 経験値 ×N = 伸びの期待値を N 倍（確率を N 倍、1 を越えた分は伸びの量へ）。無い・無効なら 1
+        const tm = R.Tester ? R.Tester.mul('exp') : 1;
+        let tk = 1;
+        if (tm !== 1 && p > 0) { const want = p * tm; p = Math.min(1, want); tk = want / p; }
         if (!(rnd() < p)) return;
         const gl0 = Growth.gl(c);
         if (gl0 >= capT) return;
         const mul = info.boss ? G.mul.boss : metal ? G.mul.metal : 1;
-        const d = Growth.step(gl0) * (G.rf[0] + (G.rf[1] - G.rf[0]) * rnd()) * mul;
+        const d = Growth.step(gl0) * (G.rf[0] + (G.rf[1] - G.rf[0]) * rnd()) * mul * tk;
         const before = R.Rules.stats(c);
         c.gl = Math.round(Math.min(capT, gl0 + d) * 1000) / 1000;
         const after = R.Rules.stats(c);

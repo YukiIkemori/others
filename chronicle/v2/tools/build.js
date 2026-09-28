@@ -11,9 +11,12 @@
 //     --out <dir>          出力先（既定 v2/dist。テスト用）
 //     --with <dir>         フィクスチャを足した dev_<dir の名前>.html も作る（<dir>/states/*.json・scenes/*.json・*.js）
 //     --no-dev             dev.html を作らない
+//     --no-tester          テスト用メニュー（src/tester/。?tester=1 と F9 で開く）を入れない
+//     --release            製品版（Steam）: --no-tester ＋ --no-dev。テスト用メニューと開発用の道具を一切入れない
+//                          （既定のビルドと pack_web.py の公開のテスト版にはテスト用メニューが入る。?tester=1 を付けない限り眠っている）
 //
 // 読み込みの順（§2.4）: core（ns util bus engine fit gfx の順、残りは名前順・再帰）→ render → uik → data → art → audio
-//   → maps → events → systems → screens →（dev.html だけ dev）→ main.js。各ディレクトリの中は名前順（再帰）。
+//   → maps → events → systems → screens →（--release でなければ tester）→（dev.html だけ dev）→ main.js。各ディレクトリの中は名前順（再帰）。
 // 構文の壊れたファイルは警告して外す（誰かの作業中の壊れでほかの人が止まらない）。
 // 書体: 使う字を src/** とフィクスチャから集め、Zen Maru Gothic（Medium・Bold）を pyftsubset で woff2 に切り出して埋め込む。
 //   Cinzel（英字）は latin の woff2 をそのまま埋め込む。どちらも OFL（v2/assets/fonts/OFL_*.txt）。
@@ -56,7 +59,7 @@ function walk(dir) {
 }
 const rel = (f) => path.relative(V2, f).replace(/\\/g, '/');
 const byName = (a, b) => (rel(a) < rel(b) ? -1 : rel(a) > rel(b) ? 1 : 0);
-/** 読み込む順のファイルの一覧（絶対パス）。o.dev で src/dev/* を main.js の前に入れる */
+/** 読み込む順のファイルの一覧（絶対パス）。o.dev で src/dev/* を main.js の前に入れる。o.tester === false で src/tester/* を外す */
 function order(o) {
   o = o || {};
   const out = [];
@@ -71,6 +74,8 @@ function order(o) {
     });
     out.push(...list);
   }
+  // テスト用メニュー（src/tester/）: 製品版（--release・--no-tester）では入れない
+  if (o.tester !== false) out.push(...walk(path.join(SRC, 'tester')).sort(byName));
   if (o.dev) out.push(...walk(path.join(SRC, 'dev')).sort(byName));
   const main = path.join(SRC, 'main.js');
   if (fs.existsSync(main)) out.push(main);
@@ -376,8 +381,9 @@ function argVal(argv, k, d) { const i = argv.indexOf(k); return i >= 0 && argv[i
 
 function main(argv) {
   const t0 = Date.now();
-  const has = (k) => argv.includes(k);
-  const devFiles = order({ dev: true });
+  const release = argv.includes('--release');
+  const has = (k) => argv.includes(k) || (release && (k === '--no-dev' || k === '--no-tester'));
+  const devFiles = order({ dev: true, tester: !has('--no-tester') });
   const { ok, bad } = syntax(devFiles);
   for (const b of bad) {
     console.warn(`\n[build] SYNTAX ERROR — excluded: ${rel(b.f)}`);
@@ -437,6 +443,7 @@ function main(argv) {
   const mb = (n) => (n / 1048576).toFixed(1);
   console.log(`[build] ${playFiles.length} files → ${path.relative(process.cwd(), OUT) || '.'}/index.html (${kb('index.html')} KB)` +
     (has('--no-dev') ? '' : `, dev.html (${kb('dev.html')} KB, +${ok.length - playFiles.length} dev files)`) +
+    `\n[build] tester menu: ${has('--no-tester') ? 'EXCLUDED' + (release ? ' (release)' : '') : 'included (?tester=1 + F9)'}` +
     `\n[build] fonts: ${font.chars} chars, ${(font.bytes / 1024).toFixed(0)} KB embedded${font.ok ? '' : ' (SUBSET FAILED)'}` +
     `\n[build] media (${single ? 'embedded' : 'external'}): ${M.counts.bgm} BGM${has('--all-bgm') ? '' : ' (slice)'}, ${M.counts.voice} voice, ${M.counts.portraits} portraits, ${M.counts.sprites} sprite sheets, ${M.counts.env} env images, ${M.counts.title} title images, ${mb(M.bytes)} MB` +
     (bad.length ? `\n[build] ${bad.length} file(s) EXCLUDED (syntax)` : '') + `  [${Date.now() - t0} ms]`);

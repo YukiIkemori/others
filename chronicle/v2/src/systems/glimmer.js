@@ -168,7 +168,8 @@
     const T0 = (!boss && a.kind === 'tech' && T === 0 && G.tier0 && known(c) <= (G.tier0Known != null ? G.tier0Known : Infinity) ? G.tier0 : 1) *
       (boss && BL.slope ? Math.min(BL.max || Infinity, 1 + BL.slope * Math.max(0, T - (BL.from || 0))) : 1);
     let p = base * aptM * GF * FK * EF * MARGIN * T0 * Math.max(0, 1 + gp / 100);
-    return Math.min(G.cap, p);
+    p = Math.min(G.cap, p);
+    return R.Tester ? R.Tester.glim(p) : p;   // テスト用メニュー（src/tester/）: 閃き ×10（1 まで）。無い・無効なら同じ値
   }
   function candidates(c, ctx) {
     c = charOf(c);

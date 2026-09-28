@@ -168,14 +168,21 @@
     const G = R.Game || {};
     const springs = (G.springs && G.springs[m.id]) || [], opened = (G.chests && G.chests[m.id]) || [];
     const d = Math.max(2.2 * big, Math.min(s * 1.1, 2.2 * big + s * 0.4));
+    const reveal = !!(R.Tester && R.Tester.opt('reveal'));   // テスト用メニュー（src/tester/）: 宝箱・隠し通路を地図に出す
     for (const o of m.objects || []) {
       if (o.cond != null && !R.State.check(o.cond)) continue;
       let col = null, cx = o.x + 0.5, cy = o.y + 0.5;
       if (o.type === 'spring' && (springs.includes(o.id) || M.seen(o.x, o.y))) { col = '#8fe8f0'; cx += 0.5; cy += 0.5; }
-      else if (o.type === 'chest' && !opened.includes(o.id) && M.seen(o.x, o.y)) col = T.color.gold;
+      else if (o.type === 'chest' && !opened.includes(o.id) && (M.seen(o.x, o.y) || reveal)) col = T.color.gold;
       else if (o.type === 'stairs' && M.seen(o.x, o.y)) col = '#f0e2c0';
       if (!col) continue;
       dia(g, ox + cx * s, oy + cy * s, d, col);
+    }
+    if (reveal && R.MapUtil.secretAreas) {
+      for (const a of R.MapUtil.secretAreas(m)) for (const k of a.gate) {
+        const [gx, gy] = k.split(',').map(Number);
+        if (!R.MapUtil.secretFound(m.id, gx, gy)) dia(g, ox + (gx + 0.5) * s, oy + (gy + 0.5) * s, d, '#ff7ad0');
+      }
     }
     for (const e of m.exits || []) {
       if (!M.seen(e.x, e.y)) continue;

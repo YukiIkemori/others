@@ -36,13 +36,15 @@
     const map = pos.map && R.DB.maps[pos.map];
     const loc = map && map.location && R.DB.locations[map.location];
     const chars = G.chars || {};
-    return {
+    const card = {
       place: (map && map.name) || (loc && loc.name) || pos.map || '',
       chapter: Object.keys(G.cleared || {}).filter((k) => G.cleared[k]).length,
       playMs: Math.floor(G.playMs || 0),
       date: Date.now(),
       faces: (G.party || []).map((id) => (chars[id] && chars[id].look) || id).slice(0, 4),
     };
+    if (G.testerUsed) card.test = true;   // テスト用メニュー（src/tester/）を使った旅: 札に「TEST」の印（使っていなければ項目も無い）
+    return card;
   }
   function serialize() {
     if (!R.State || !R.State.serialize) throw new Error('R.State.serialize is missing');

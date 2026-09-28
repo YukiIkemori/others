@@ -900,6 +900,7 @@
       }
     }
     *dotDamage(u, n, kind, label) {
+      if (R.Tester && R.Tester.guard(u)) return;   // テスト用メニュー: 無敵（毒・やけどなども受けない）
       u.hp = Math.max(0, u.hp - n);
       if (u.isParty) this.stats.taken += n; else this.stats.dealt += n;
       yield { t: 'dmg', u, n, kind };
@@ -948,7 +949,7 @@
         return false;
       }
       yield this.m('{hero}たちは逃げ出した。');
-      if (sure || chance(this.escapeChance())) {
+      if (sure || (R.Tester && R.Tester.opt('flee')) || chance(this.escapeChance())) {   // テスト用メニュー: 逃げるが必ず成功
         this.result = 'escape';
         yield { t: 'escape', ok: true };
         return true;
@@ -1223,6 +1224,8 @@
     }
     *hit(att, tgt, r, info) {
       const kind = info.kind || 'phys';
+      // テスト用メニュー（src/tester/。無い・無効なら何もしない）: 無敵（味方への害を 0）・一撃（敵に必ず当てる）
+      if (R.Tester && R.Tester.enabled) R.Tester.hitFix(tgt, r, info);
       if (r.miss) {
         yield { t: 'miss', u: tgt, att };
         yield this.m(`${tgt.name}は攻撃をかわした！`);
@@ -1236,7 +1239,8 @@
         yield* this.restore(tgt, Math.min(9999, Math.max(1, Math.round(-r.dmg))), 'hp');
         return false;
       }
-      const dmg = r.zero ? 0 : Math.min(K('DMG').max, Math.max(1, Math.round(r.dmg)));
+      let dmg = r.zero ? 0 : Math.min(K('DMG').max, Math.max(1, Math.round(r.dmg)));
+      if (R.Tester && R.Tester.enabled) dmg = R.Tester.dmgFix(tgt, dmg, info);   // テスト用メニュー: 一撃（上限で止まった分も）
       if (info.mp) {
         const n = Math.min(tgt.mp || 0, dmg);
         if (tgt.isParty) tgt.mp -= n;
@@ -1376,6 +1380,7 @@
         return true;
       }
       const hostile = u.side !== t.side;
+      if (hostile && R.Tester && R.Tester.guard(t)) { const f = fail(); if (f) yield f; return false; }   // テスト用メニュー: 無敵（悪い状態・即死も入らない）
       if (hostile && t.status.veil) { const f = fail(); if (f) yield f; return false; }
       const res = t.resist(s);
       const p = clamp((ch != null ? ch : 1) * this.sf(u, o.sf) * (1 - res), 0, K('STATUS').pCap);
@@ -1890,6 +1895,7 @@
         const ok = this.giveItem(d.item, d.n || 1);
         got.push({ item: d.item, grade: shown, slot: d.grade, n: d.n || 1, mon: d.mon, name: d.name, kept: ok });
       }
+      if (R.Tester) gold = R.Tester.gold(gold);   // テスト用メニュー: お金 ×N（無い・無効なら同じ値）
       this.rewardInfo = { gold, drops: got };
       return this.rewardInfo;
     }

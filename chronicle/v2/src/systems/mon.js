@@ -539,6 +539,7 @@
    */
   function encounter(zoneId, o) {
     o = o || {};
+    if (R.Tester && R.Tester.noEncounter()) return null;   // テスト用メニュー（src/tester/）: エンカウントなし（イベント・ボスの戦闘は別の道なので出る）
     const z = zoneId && DB.encounters[zoneId];
     if (!z) return null;
     const steps = o.steps != null ? o.steps : (R.Game && R.Game.steps) || 0;

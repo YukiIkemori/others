@@ -27,6 +27,10 @@ node v2/tools/port/diff.js             # 移植の元（今の木）が P0 の�
 ```
 - 外に置いた媒体は `file://` では読めない（ブラウザの制限）。`shot.js` と `test_core_flow.js` は手元だけの http（127.0.0.1）で開く。`--single` の版は `file://` でもそのまま鳴る。どの版も実行時に外へ通信しない。
 - 書体: Zen Maru Gothic（Medium/Bold）を使う字だけ `pyftsubset` で切り出して埋め込み、Cinzel（英字）はそのまま埋め込む。どちらも OFL（`assets/fonts/OFL_*.txt`）。
+- テスト用メニュー（`src/tester/`）: 既定のビルドと `pack_web.py` の公開のテスト版に入るが眠っている。URL に `?tester=1` を付けて開くと有効になり（localStorage に覚える。`?tester=0` で戻す）、
+  F9（パッドは セレクト＋L＋R）でフィールドかタイトルの上に開く。切り替え（エンカウントなし・経験値／熟練度／閃き／お金の倍率・無敵・一撃・逃げる・移動 ×2・宝箱と隠し通路の印）は
+  このブラウザに残り（セーブには入らない）、ボタン（全回復・状態異常・お金・道具 ×99・成長 ＋1/＋10）とワープ（体験版の範囲の町・ダンジョン・野）もある。使った旅の記録の札には「TEST」の印。
+  **製品版（Steam）は `node v2/tools/build.js --release`**（= `--no-tester --no-dev`。`src/tester/` を丸ごと外し、差し込み口は `R.Tester` が無ければ何もしない）。テストは `tools/test_tester.js`・`tools/test_tester_browser.js`。
 - BGM は既定で縦切りの 17 曲だけ（`--all-bgm` で全部）。顔絵は `chronicle/design/portraits/manifest.json` で approved の物だけ（`--portraits all|none`）。
 
 ## node で読む
