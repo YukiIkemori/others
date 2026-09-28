@@ -57,6 +57,8 @@
         '~': { mat: 'water', walk: false },
       },
       rows: g, outside: 'wall_bark',
+      // 描いた一枚絵（design/ENV_ASSETS.md §8）。根の戸は closed の絵（閉じている間だけ上に置く）
+      art: { image: 'tree_inside/under/elder_2', closed: 'tree_inside/under/elder_2_closed', painted: [] },
       objects: O, npcs: N,
       spawns: {
         top: { x: 23, y: 6, dir: 's' },

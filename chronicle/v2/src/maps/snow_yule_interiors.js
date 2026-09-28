@@ -13,7 +13,7 @@
       if (o.paint) o.paint(g);
       return K.def(id, {
         name, kind: 'interior', region: 'r_snow', location: 'yule',
-        legend: S.ROOM(), rows: g, outside: 'wall_wood',
+        legend: Object.assign(S.ROOM(), o.legend || {}), rows: g, outside: 'wall_wood',
         objects: o.objects || [], npcs: o.npcs || [],
         spawns: Object.assign({ door: { x: door.x, y: h - 2, dir: 'n' } }, o.spawns || {}),
         exits: [{ x: door.x, y: h - 1, w: 1, h: 1, to: { map: 'yule', spawn: o.back } }],
@@ -21,6 +21,7 @@
         light: Object.assign({}, S.ROOM_LIGHT, o.light || {}),
         bgm: o.bgm || 'yule',
         meta: Object.assign({ minimap: false }, o.meta || {}),
+        ...(o.art ? { art: o.art } : {}),
       });
     }
 
@@ -82,11 +83,17 @@
         K.exam(3, 3, 'yule_jorn_ledger'), K.prop('firewood', 10, 7), K.prop('lantern', 7, 3)],
       npcs: [K.npc('jorn_wife', 'npc_snow_woman', 6, 4, { name: 'ヨルンのおかみさん', dir: 's', talk: 'yule_jorn_wife', reward: 'item' })],
     });
+    // 火守りの家は氷のドーム（外の描いた下絵 yule の氷の家）。中も描いた下絵（v2/assets/env/snow/under/yule_sonja*）: 氷の塊の壁・毛皮を敷いた雪の床・
+    //   奥の石組みの炉（石は h = 歩けない。火は火皿の物 = 灯りと火の絵）。戸口の列（x 5）は炉の手前まで空ける
     interior('yule_sonja', '火守りの家', 12, 10, {
       back: 'sonja',
-      objects: [K.prop('stove', 5, 2), K.prop('stove', 6, 2), K.exam(5, 3, 'yule_sonja_fire'), K.exam(6, 3, 'snow_mat', { mat: 'snow_mat_coal' }), K.prop('bed', 1, 2), K.prop('bed', 10, 2), K.prop('table', 3, 6), K.prop('chair', 2, 6),
+      legend: { h: { mat: 'wood_floor', solid: true, name: 'hearth' } },
+      paint: (g) => { for (const [x, y] of [[5, 3], [7, 3], [6, 2], [6, 4]]) K.put(g, x, y, 'h'); },
+      objects: [{ type: 'brazier', id: 'yule_sonja_hearth', x: 6, y: 3, on: true }, K.exam(6, 4, 'yule_sonja_fire'), K.exam(7, 3, 'snow_mat', { mat: 'snow_mat_coal' }),
+        K.prop('bed', 1, 2), K.prop('bed', 10, 2), K.prop('table', 3, 6), K.prop('chair', 2, 6),
         K.prop('shelf_jars', 9, 5), K.exam(9, 6, 'yule_sonja_note'), K.prop('firewood', 10, 7), K.prop('lantern', 8, 3), K.chest('yule_sonja_c1', 1, 7, { pool: 'p_T' })],
       npcs: [K.npc('sonja_gran', 'npc_snow_old_f', 7, 5, { name: 'ソーニャの祖母', dir: 'w', talk: 'yule_sonja_gran', reward: 'news' })],
+      art: { image: 'snow/under/yule_sonja', painted: [] },
     });
 
     // ---------------------------------------------------------------- 語りの年寄りの家（ブレンダ・オラフ）12×10

@@ -586,13 +586,16 @@
       const dx = Math.round(it.x - X0 - fr.ox), dy = Math.round(it.y - Y0 - fr.oy);
       if (dx >= S || dy >= S || dx + w <= 0 || dy + h <= 0) continue;
       if (it.layer === 'base') { this.bg.drawImage(c, dx, dy); continue; }
-      if (it.layer === 'over') { overCtx(this).drawImage(c, dx, dy); continue; }
+      // over に描いた部分の枠（マップの論理 px）と、その物の足もとの y（FIELD が人と比べて、手前の木・建物に隠れた人を薄く描き直す）
+      const ob = this.overBoxes || (this.overBoxes = []);
+      if (it.layer === 'over') { overCtx(this).drawImage(c, dx, dy); ob.push({ x0: X0 + dx, y0: Y0 + dy, x1: X0 + dx + w, y1: Y0 + dy + h, sy: it.sortY }); continue; }
       const split = Math.round(it.ft - Y0) - dy; // 絵の中の行: ここより上は over
       if (split <= 0) this.bg.drawImage(c, dx, dy);
-      else if (split >= h) overCtx(this).drawImage(c, dx, dy);
+      else if (split >= h) { overCtx(this).drawImage(c, dx, dy); ob.push({ x0: X0 + dx, y0: Y0 + dy, x1: X0 + dx + w, y1: Y0 + dy + h, sy: it.sortY }); }
       else {
         this.bg.drawImage(c, 0, split, w, h - split, dx, dy + split, w, h - split);
         overCtx(this).drawImage(c, 0, 0, w, split, dx, dy, w, split);
+        ob.push({ x0: X0 + dx, y0: Y0 + dy, x1: X0 + dx + w, y1: Y0 + dy + split, sy: it.sortY });
       }
       if (U().now() > deadline) return this.i >= this.draw.length;
     }
@@ -721,6 +724,7 @@
     const props = this.plan.dyn.filter((p) => p.x >= X0 && p.x < X0 + S && p.y - 1 >= Y0 && p.y - 1 < Y0 + S).map((p) => Object.assign({}, p));
     this.result = {
       base: this.base, over: this.over || null, lights: this.chunkLights, glows: this.glows, props,
+      overBoxes: this.over ? this.overBoxes || [] : [],   // over に描いた物の枠 {x0, y0, x1, y1, sy}（マップの論理 px。sy = その物の足もとの y）
       x: X0, y: Y0, size: S, map: this.map.id, cx: this.cx, cy: this.cy, tile: this.tile,
       bytes: S * S * 4 * (this.over ? 2 : 1),
     };

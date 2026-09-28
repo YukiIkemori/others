@@ -170,6 +170,7 @@
     for (let i = 0; i < n; i++) { const e = sorted[i]; if (e.lv === 0) drawEnt(g, e, t, cx, cy); }
     // over（足場・屋根の張り出し）→ 足場の上の人
     F.chunks.eachVisible((e) => { if (e.over) g.drawImage(e.over, e.cx * cs - cx, e.cy * cs - cy); });
+    if (real) reveal(g, sorted, n, t, cx, cy);
     for (let i = 0; i < n; i++) { const e = sorted[i]; if (e.lv === 1) drawEnt(g, e, t, cx, cy); }
     // 見つけた隠し通路の先が浮かび上がる間: 前の壁の絵を薄くしながら重ね、一行はその上に描き直す（secrets.js）
     if (S.secretFx && F._secretFxDraw && F._secretFxDraw(g, t, cx, cy)) for (let i = 0; i < n; i++) { const e = sorted[i]; if (e.kind === 'lead' || e.kind === 'fol') drawEnt(g, e, t, cx, cy); }
@@ -197,6 +198,47 @@
     if (F._wayfindLabels) F._wayfindLabels(g, t, cx, cy);   // 出口の行き先・店の名前の札（近いときだけ）
     F.hud.draw(g, cam);
   };
+
+  /**
+   * over（木の上半分・屋根）に隠れた人を描き直す（WORLDFIX 2026-09-28「NPC が見えない」）。over はチャンクに焼いた 1 枚なので、人の手前の木の葉も
+   * 奥・同じ行の木の葉も人の上に来る。チャンクの overBoxes（over に描いた物の枠と足もとの y）と人の枠を比べて:
+   *   手前の物（足もとが人より下）が掛かる → 人を薄く（REVEAL_A）上に描く（木・家の後ろにいる人が透けて見える）
+   *   奥・同じ行の物だけが掛かる → 人をそのまま上に描き直す（隣の木の葉に頭が隠れない）
+   * 掛かっていない所は同じ画素を重ねるだけなので変わらない。足もとの影は描き直さない。
+   */
+  const REVEAL_A = 0.5;
+  const REDRAW = { on: false };
+  const rbox = [];
+  function reveal(g, sorted, n, t, cx, cy) {
+    rbox.length = 0;
+    F.chunks.eachVisible((e) => { const B = e.overBoxes; if (B) for (let i = 0; i < B.length; i++) rbox.push(B[i]); });
+    if (!rbox.length) return;
+    const tm = R.Engine.time;
+    for (let i = 0; i < n; i++) {
+      const e = sorted[i];
+      if (e.lv !== 0 || (e.kind !== 'lead' && e.kind !== 'fol' && e.kind !== 'npc')) continue;
+      let px;
+      if (e.kind === 'lead') { F._vis(vis); px = vis.px; }
+      else if (e.kind === 'fol') { F._folVis(e.ref, S.mv ? Math.min(1, (tm - S.mv.t0) / S.mv.ms) : 1, vis); px = vis.px; }
+      else {
+        const nn = e.ref;
+        if (nn.fade) continue;   // 出てくる途中の人（濃さを自分で持つ）はそのまま
+        px = nn.mv ? nn.mv.fx + (nn.mv.tx - nn.mv.fx) * Math.min(1, (tm - nn.mv.t0) / nn.mv.ms) : nn.x;
+      }
+      const x0 = (px + 0.5 - 0.42) * t, x1 = (px + 0.5 + 0.42) * t, y1 = e.y, y0 = e.y - 1.7 * t;
+      let front = false, behind = false;
+      for (let k = 0; k < rbox.length && !front; k++) {
+        const b = rbox[k];
+        if (b.x1 <= x0 || b.x0 >= x1 || b.y1 <= y0 || b.y0 >= y1) continue;
+        if (b.sy > e.y + 1) front = true; else behind = true;
+      }
+      if (!front && !behind) continue;
+      REDRAW.on = true;
+      if (front) { g.save(); g.globalAlpha = REVEAL_A; drawEnt(g, e, t, cx, cy); g.restore(); }
+      else drawEnt(g, e, t, cx, cy);
+      REDRAW.on = false;
+    }
+  }
 
   /** 見つける前の隠し通路の先のマスか（MapUtil.secretHidden） */
   function hiddenAt(m, x, y) { return x != null && !!(R.MapUtil.secretHidden && R.MapUtil.secretHidden(m, x, y)); }
@@ -313,10 +355,12 @@
     const t = cam.t, u = t / 32;
     const dirC = dir && dir.length === 2 ? dirFb || dir[0] : dir;   // 斜め（se sw ne nw）の代わりの縦横の向き
     const fade = alpha != null && alpha < 1;
-    if (fade) { g.save(); g.globalAlpha = Math.max(0, alpha); }
-    // 足もとの柔らかい影
-    g.fillStyle = 'rgba(8,8,24,0.38)';
-    g.beginPath(); g.ellipse(x + 2 * u, y, 9 * u, 3.2 * u, 0, 0, Math.PI * 2); g.fill();
+    if (fade) { g.save(); g.globalAlpha = g.globalAlpha * Math.max(0, alpha); }
+    // 足もとの柔らかい影（over の上に描き直すときは描かない）
+    if (!REDRAW.on) {
+      g.fillStyle = 'rgba(8,8,24,0.38)';
+      g.beginPath(); g.ellipse(x + 2 * u, y, 9 * u, 3.2 * u, 0, 0, Math.PI * 2); g.fill();
+    }
     const key = 'hd:field:' + look;
     if (R.Hd.has(key)) {
       const sh = R.Hd.get(key, charOpts(lantern));

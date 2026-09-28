@@ -112,6 +112,8 @@
       name: '迷いの森', kind: 'dungeon', region: 'r_forest', location: 'verda', theme: 'forest_dungeon',
       legend: K.FOREST_LEGEND({ S: { mat: 'forest_dark', solid: true, secret: true, floor: 'grass' } }),
       rows: g, outside: 'forest_dark',
+      // 描いた一枚絵（design/ENV_ASSETS.md §8）。隠し通路（うろ）は closed の絵で、見つけるまで森のまま
+      art: { image: 'forest_dungeon/under/verda_1', closed: 'forest_dungeon/under/verda_1_closed', painted: [] },
       objects: O, npcs: N,
       spawns: {
         south: { x: 29, y: 48, dir: 'n' },

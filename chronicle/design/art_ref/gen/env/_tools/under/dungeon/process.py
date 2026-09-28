@@ -109,8 +109,9 @@ def sprite(name):
     return np.asarray(im).astype(np.float32), j['feet']['32']
 
 
-def paste_sprite(C, name, fx, fy):
+def paste_sprite(C, name, fx, fy, mul=1.0):
     sp, (ax, ay) = sprite(name)
+    sp = sp.copy(); sp[..., :3] *= mul
     x0, y0 = int(round(fx - ax)), int(round(fy - ay)); h, w = sp.shape[:2]
     xa, ya, xb, yb = max(0, x0), max(0, y0), min(W * T, x0 + w), min(H * T, y0 + h)
     s = sp[ya - y0:yb - y0, xa - x0:xb - x0]; al = s[..., 3:4] / 255
@@ -186,7 +187,8 @@ for pi, p in enumerate(d['tilePatches']):
             if c != ' ' and BASE[y][x] != c: ch.append((x, y))
     if not ch: continue
     C = A.copy()
-    can = [(x, y) for x, y in ch if MI.get(ent(BASE, x, y)['mat'], {}).get('tall') in ('canopy',) or BASE[y][x] in 'b']
+    # thicket cells (canopy, or bush in a forest map): painted forest canopy cloned underneath, a darkened bush sprite on top as the hint
+    can = [(x, y) for x, y in ch if MI.get(ent(BASE, x, y)['mat'], {}).get('tall') in ('canopy', 'bush') and canopy.any()]
     if can:
         off = find_offset(can, canI) or find_offset(can, canopy)
         for (x, y) in can: cell(C, x, y)[:] = cell(A, x + off[0], y + off[1])
@@ -194,7 +196,7 @@ for pi, p in enumerate(d['tilePatches']):
         tall = MI.get(ent(BASE, x, y)['mat'], {}).get('tall')
         v = (x * 7 + y * 3) % 2
         if tall == 'roots': paste_sprite(C, 'roots_v%d' % v, (x + 0.5) * T, (y + 0.86) * T)
-        elif tall == 'bush': paste_sprite(C, 'bush_v%d' % v, (x + 0.5) * T, (y + 0.86) * T)
+        elif tall == 'bush': paste_sprite(C, 'bush_v%d' % v, (x + 0.5) * T, (y + 0.86) * T, 0.62 if canopy.any() else 1.0)
     diff = np.abs(C - A).sum(-1) > 1
     cells = [(x, y) for y in range(H) for x in range(W) if cell(diff, x, y).any()]
     for (x, y) in cells: cell(CL, x, y)[:] = cell(C, x, y)

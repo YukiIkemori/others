@@ -106,6 +106,8 @@
         v: { mat: 'bush', solid: true, name: 'vines' },
       }),
       rows: g, outside: 'forest_dark',
+      // 描いた一枚絵（design/ENV_ASSETS.md §8）。隠し通路・つるの壁・小鹿の獣道は closed の絵（閉じている間だけ上に置く）
+      art: { image: 'forest_dungeon/under/verda_2', closed: 'forest_dungeon/under/verda_2_closed', painted: [] },
       objects: O, npcs: N,
       spawns: {
         south: { x: 29, y: 49, dir: 'n' },

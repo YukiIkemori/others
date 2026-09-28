@@ -124,20 +124,29 @@ const pen = (x, y) => {
   const b = ((x - 104) / 7.5) ** 2 + ((y - 123) / 6.5) ** 2;
   return a < 1 + n || b < 1 + n || c < 1 + n;
 };
-const forest = (x, y) => x >= 12 + (fbm(x, y, 8, 43) - 0.5) * 6 && x <= 62 + (fbm(x, y, 8, 47) - 0.5) * 4 && y >= 44 && y <= 121;
+// 西の海岸の線（WORLDFIX 2026-09-28: 以前は x 12〜13 のまっすぐな線だった。y に沿った大きなうねり＋細かいゆらぎ）
+const westCoast = (x, y) => 12.5 + (vn(0, y, 11, 44) - 0.5) * 6 + (fbm(x, y, 8, 43) - 0.5) * 6;
+const forest = (x, y) => x >= westCoast(x, y) && x <= 62 + (fbm(x, y, 8, 47) - 0.5) * 4 && y >= 44 && y <= 121;
 const plains = (x, y) => x >= 58 && x <= 115 && y >= 44 && y <= 71 - (x > 60 && x < 112 ? 0 : 0) + ((fbm(x, y, 6, 53) - 0.5) * 2 | 0);
+// WORLDFIX: 範囲の南東の端（y 134・x 118）で見取り図の陸（灰の荒野）がまっすぐな線で切れていた。端から数マスは見取り図の陸を
+//   ゆらいだ線で残す（半島の陸から 4 マス以上離れた所だけ。つながって縦切りの外へ歩けるようにはしない）
+const nearPen = (x, y, r) => { for (let j = -r; j <= r; j++) for (let i = -r; i <= r; i++) if (pen(x + i, y + j) && y + j >= 78) return true; return false; };
+const keepSketch = (x, y) => !'~O'.includes(get(x, y)) &&
+  ((x >= 96 && y >= 124 && y + (fbm(x, y, 6, 57) - 0.5) * 12 > 131) || (x >= 108 && y >= 80 && x + (fbm(x, y, 6, 59) - 0.5) * 12 > 116)) && !nearPen(x, y, 4);
 for (let y = BOX.y0; y <= BOX.y1; y++) for (let x = BOX.x0; x <= BOX.x1; x++) {
   let c;
   if (pen(x, y) && y >= 78) c = ',';
   else if (plains(x, y) && y <= 71) c = ',';
   else if (forest(x, y)) c = 'h';
+  else if (x >= 63 && y >= 72 && keepSketch(x, y)) continue;
   else if (x >= 63 && y >= 72) c = '~';
   else if (y > 121 || y < 44 || x > 115) continue;   // 見取り図のまま（砂漠・雪原・山地）
   else c = x < 16 ? '~' : 'h';
   set(x, y, c);
 }
 // 西の海岸（森の西は内海）
-for (let y = 44; y <= 121; y++) for (let x = BOX.x0; x < 22; x++) if (!forest(x, y)) set(x, y, x < 10 ? 'O' : '~');
+//   深い海と内海の境もまっすぐな縦の線（x 10）にしない
+for (let y = 44; y <= 121; y++) for (let x = BOX.x0; x < 22; x++) if (!forest(x, y)) set(x, y, x < 8.5 + (vn(0, y, 9, 45) - 0.5) * 5 + (fbm(x, y, 5, 46) - 0.5) * 3 ? 'O' : '~');
 
 // 尾根（他の地方との境。峠の道だけ空く）
 function ridge(pts, wd, seed) {
@@ -150,20 +159,39 @@ function ridge(pts, wd, seed) {
         if (Math.abs(j) + Math.abs(q) > wd + (h2(x + q, y + j, seed) > 0.5 ? 1 : 0)) continue;
         const c = get(x + q, y + j);
         if (c === 'O' || c === '~') continue;
-        set(x + q, y + j, h2(x + q, y + j, seed + 1) > 0.35 ? 'm' : 'c');
+        set(x + q, y + j, '^');   // WORLDFIX: 以前は 1 マスごとに岩（m）と崖（c）を混ぜていて、上面が市松模様・正面の面が石と土で交互になった
       }
     }
+  }
+}
+/** 尾根の縁をぎざぎざにする（まっすぐな縁にしない）。side = -1 は北の縁（上の行）、+1 は南の縁。上／下が歩ける地面 floor のマスだけ削る */
+function ridgeEdge(x0, x1, yFrom, side, floor, seed) {
+  for (let x = x0; x <= x1; x++) {
+    let y = yFrom;
+    while (get(x, y) !== '^' && Math.abs(y - yFrom) < 4) y -= side;   // 縁のマスを探す
+    if (get(x, y) !== '^' || !floor.includes(get(x, y + side))) continue;
+    if (fbm(x, y, 3, seed) > 0.5) set(x, y, get(x, y + side));   // 1 マスだけ（尾根の厚みは 3 マス以上残る）
   }
 }
 ridge([[10, 46], [36, 45], [62, 46], [90, 47], [116, 46]], 2, 101);    // 北（雪原・山地との境）
 ridge([[114, 46], [114, 60], [113, 72]], 2, 103);                       // 東（山地との境）
 ridge([[12, 119], [36, 120], [62, 119]], 2, 107);                        // 南（砂漠との境）
-set(10, 46, 'm');
+ridgeEdge(13, 62, 116, -1, 'h', 111);                                   // 南の尾根の森の側の縁
+ridgeEdge(13, 62, 123, 1, 's', 113);                                    // 南の尾根の砂漠の側の縁（北の尾根の雪原の側は雪原の担当が上から描く）
 
 // 北の野の南の海岸と、半島の北の海岸のあいだの海峡（y 72〜77）
-for (let x = 63; x <= 115; x++) for (let y = 72; y <= 77; y++) set(x, y, '~');
-// 森と半島のあいだの水路
-for (let y = 72; y <= 134; y++) for (let x = 63; x <= 70; x++) set(x, y, '~');
+//   WORLDFIX: 北の野の海岸は y 71 のまっすぐな浜だった → x 68〜113 は y 68〜71 でゆらぐ（跳ね橋の袂 x 83〜91 は y 71 のまま）
+for (let x = 63; x <= 115; x++) {
+  const coast = x < 68 || x > 113 || (x >= 83 && x <= 91) ? 71 : Math.max(68, Math.min(71, Math.round(70 + (vn(x, 0, 6, 48) - 0.5) * 6 + (h2(x, 0, 49) - 0.5))));
+  for (let y = coast + 1; y <= 77; y++) set(x, y, '~');
+}
+// 森と半島のあいだの水路（WORLDFIX: 森の側の岸は x 62/63 のまっすぐな線だった → x 61〜65 でゆらぐ。灯籠 wl_forest_2 と樵の野営のあたりは岸を寄せない）
+for (let y = 72; y <= 134; y++) {
+  let wx = Math.round(63 + (vn(0, y, 6, 46) - 0.5) * 6 + (h2(0, y, 47) - 0.5));
+  if (y <= 76 || (y >= 86 && y <= 96)) wx = Math.max(wx, 63);
+  wx = Math.max(61, Math.min(65, wx));
+  for (let x = wx; x <= 70; x++) set(x, y, '~');
+}
 
 // 森の中: 地面の変化と木
 for (let y = 44; y <= 121; y++) for (let x = 12; x <= 64; x++) {
@@ -182,7 +210,6 @@ for (let y = 44; y <= 71; y++) for (let x = 58; x <= 115; x++) {
   let c = m > 0.72 ? '"' : m < 0.3 ? ';' : ',';
   if (n > 0.7) c = 'T';
   else if (r < 0.025) c = 'T';
-  else if (r > 0.99) c = 'm';
   set(x, y, c);
 }
 // 半島: 草・花・林
@@ -192,7 +219,6 @@ for (let y = 78; y <= 134; y++) for (let x = 70; x <= 116; x++) {
   let c = m > 0.72 ? '"' : m < 0.3 ? ';' : ',';
   if (n > 0.72) c = 'T';
   else if (r < 0.02) c = 'T';
-  else if (r > 0.992) c = 'm';
   set(x, y, c);
 }
 beaches(66, 76, 116, 134);
@@ -276,9 +302,10 @@ ROADS.length = ROADS.length / 2;
 // 跳ね橋（序章の間は上がっている = tilePatch）
 rect(86, 71, 3, 8, '=');
 // 見晴らし台: 小さな岩の段（南から上る）
-for (const [x, y] of [[98, 79], [102, 79], [99, 78], [101, 78], [100, 78], [97, 80], [103, 80]]) if (!'~O'.includes(get(x, y))) set(x, y, 'm');
+const LOOKOUT_ROCKS = [[98, 79], [102, 79], [99, 78], [101, 78], [100, 78], [97, 80], [103, 80]];   // 岩の物（下の「見晴らし台」で置く。1 マスの岩の地形は浮いた箱に見えた）
+for (const [x, y] of LOOKOUT_ROCKS) if ('TF'.includes(get(x, y))) set(x, y, ',');
 // 峠の道の岩をどける（尾根を道が抜ける所）
-for (const [x, y, w, h] of [[37, 40, 3, 8], [110, 62, 6, 3], [30, 116, 3, 7]]) for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) if ('mc'.includes(get(i, j))) set(i, j, '.');
+for (const [x, y, w, h] of [[37, 40, 3, 8], [110, 62, 6, 3], [30, 116, 3, 7]]) for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) if ('mc^'.includes(get(i, j))) set(i, j, '.');
 // 千年樹のまわりは深い森（入口は迷いの森の中。ワールドからはこずえだけが見える）
 for (let y = 78; y <= 90; y++) for (let x = 18; x <= 30; x++) if (Math.hypot(x - 24, y - 84) < 6.5) set(x, y, 'F');
 for (let y = 82; y <= 86; y++) for (let x = 22; x <= 26; x++) set(x, y, 'h');
@@ -324,11 +351,13 @@ spawns.lighthouse = { x: 106, y: 126, dir: 'n' };
 S(104, 127, 'ファロス灯台');
 // 古井戸（下り口）
 objects.push({ type: 'stairs', x: PL.well[0], y: PL.well[1], to: { map: 'well', spawn: 'entrance' } });
-P('well', 75, 86); P('rock_small', 75, 88); P('rock_small', 78, 88);
+for (const [x, y] of [[74, 85], [75, 85], [74, 86], [75, 86]]) if ('~O'.includes(get(x, y))) set(x, y, 's');   // WORLDFIX: 井戸が海の上に描かれていた
+P('well', 75, 86);   // （小石 75,88・78,88 はロアの家の中だったので外した）
 spawns.well = { x: 77, y: 86, dir: 'e' };
 S(79, 85, '旅人の古井戸\n枯れ井戸。底へ下りる縄ばしごがある。');
 // 見晴らし台（古い灯籠。依頼 q_pharos_lamp でともす）
 LAMP('wl_pen_lookout', 100, 80, 'prologue_lamp_lookout', { event: 'world_pen_lamp' });
+for (const [x, y] of LOOKOUT_ROCKS) if (!'~O.d'.includes(get(x, y))) P('rock', x, y, { variant: (x + y) % 3 });
 S(98, 81, '見晴らし台\n半島の北の海を見わたす。');
 P('bench', 102, 81);
 // 跳ね橋
@@ -368,7 +397,7 @@ for (const [x, y] of [[30, 58], [32, 60], [35, 59]]) P('lantern', x, y);
 P('tree_giant', 24, 84); P('tree_giant', 23, 83); P('tree_giant', 25, 83);
 P('beacon', 24, 82, { cond: 'cleared_r_forest' });
 // 風鳴りの丘（#2）
-for (const [x, y] of [[38, 53], [42, 53], [39, 52], [41, 55]]) set(x, y, 'm');
+for (const [x, y] of [[38, 53], [42, 53], [39, 52], [41, 55]]) { set(x, y, ','); P('rock', x, y, { variant: (x * 3 + y) % 3 }); }   // WORLDFIX: 1 マスの岩の地形 → 岩の物
 P('rock', 40, 52); objects.push({ type: 'examine', x: 40, y: 53, event: 'windhill_notes' }); P('signboard', 42, 55);
 S(41, 57, '風鳴りの丘\n風が歌のように鳴るという。');
 // どんぐりの広場（森の南の広場。レア魔物のうわさ）
@@ -409,7 +438,7 @@ function lampsAlong(pts, every, side, skip) {
           if (placed) break;
           const ox = x + (horiz ? 0 : sd * off), oy = y + (horiz ? sd * off : 0);
           const c = get(ox, oy);
-          if (!'~Ow=.dmcTFbs'.includes(c) && !solidAt(ox, oy)) {
+          if (!'~Ow=.dmc^TFbs'.includes(c) && !solidAt(ox, oy)) {
             k++;
             if (!(skip && skip.includes(k))) LAMP('wl_' + (++lampN), ox, oy, LIT);
             acc = 0; placed = true;
@@ -439,7 +468,11 @@ for (let i = objects.length - 1; i >= 0; i--) {
 }
 
 // --- 野営の跡・旅人（景色の目印）
-function camp(x, y) { P('tent', x, y); P('lantern', x + 1, y + 1); P('log', x - 1, y + 1); }
+// WORLDFIX: 深い森（F・T）の中の野営は小さな広場を空けてから置く（25,70 のテントが森の木の上に描かれていた）。灯りはテントの右（樵の立つ 59,91 と重ねない）
+function camp(x, y) {
+  if ('TF'.includes(get(x, y))) clearing(x, y, 2, x <= 64 ? 'h' : ',');
+  P('tent', x, y); P('lantern', x + 1, y); P('log', x - 1, y + 1);
+}
 camp(96, 57); camp(58, 90); camp(25, 70); camp(96, 124 - 9);
 npcs.push({ id: 'traveler_plains', look: 'npc_merchant_2', name: '旅の行商人', x: 97, y: 59, dir: 's', move: 'still', talk: 'world_traveler_plains', reward: 'news', key: 'world_traveler_plains' });
 npcs.push({ id: 'woodcutter_road', look: 'npc_woodcutter_1', name: 'きこり', x: 59, y: 91, dir: 'w', move: 'still', talk: 'world_woodcutter', reward: 'hint', key: 'world_woodcutter' });
@@ -448,8 +481,10 @@ npcs.push({ id: 'shepherd', look: 'npc_old_m_2', name: '羊飼いの年寄り', 
 // --- 景色の飾り（森の光るこけ・蛍、野の岩・切り株）。道と出口には置かない
 function freeFor(x, y) {
   const c = get(x, y);
-  if (!',;"hs'.includes(c)) return false;
+  if (!',;"h'.includes(c)) return false;   // 浜（s）には置かない（WORLDFIX: 浜の小石）
   if (solidAt(x, y)) return false;
+  // 建物の敷地と屋根の上には置かない（WORLDFIX: ユラの屋根の上の光るこけ・ロアの家の中の蛍）
+  for (const o of objects) if (o.type === 'building' && x >= o.x - 1 && x <= o.x + o.w && y >= o.y - 2 && y <= o.y + o.h) return false;
   for (const e of exits) if (x >= e.x - 1 && x <= e.x + e.w && y >= e.y - 1 && y <= e.y + e.h) return false;
   for (const n of npcs) if (Math.abs(n.x - x) <= 1 && Math.abs(n.y - y) <= 1) return false;
   for (const k of Object.keys(spawns)) if (Math.abs(spawns[k].x - x) <= 1 && Math.abs(spawns[k].y - y) <= 1) return false;
@@ -471,6 +506,18 @@ for (let y = 44; y <= 130; y++) for (let x = 12; x <= 116; x++) {
     else if (r < 0.022) P('stump', x, y);
     else if (r < 0.026) P('rock', x, y);
   }
+}
+
+// --- WORLDFIX: 木（T・F）のマスの上に置いた物（看板 40,96・ユラの道の灯り 32,60）は、そのマスの木をどける（木の中に物が描かれていた）
+for (const o of objects) {
+  if (o.type === 'building' || o.x == null || !'TFb'.includes(get(o.x, o.y))) continue;
+  set(o.x, o.y, o.x <= 64 ? 'h' : ',');
+}
+// --- WORLDFIX: 人の手前（南の 2 行・左右 1 マス）に木を置かない。木の上半分は人より上に描くので、北に立つ人がまるごと隠れていた
+//   （北の野の行商人 97,59 が木の列 y 60〜61 の後ろで見えなかった）
+for (const n of npcs) for (let dy = 1; dy <= 2; dy++) for (let dx = -1; dx <= 1; dx++) {
+  const x = n.x + dx, y = n.y + dy;
+  if ('TF'.includes(get(x, y))) set(x, y, x <= 64 ? 'h' : ',');
 }
 
 // ------------------------------------------------------------------ 出現表（上から最初に合う物。V2_PLAN §3.6）
@@ -500,6 +547,7 @@ const LEGEND = {
   s: { mat: 'sand' }, ',': { mat: 'grass' }, ';': { mat: 'tall_grass' }, '"': { mat: 'flowers' }, '.': { mat: 'road' }, d: { mat: 'dirt' },
   h: { mat: 'moss_earth' }, T: { mat: 'tree', solid: true }, F: { mat: 'forest_dark', solid: true }, b: { mat: 'bush', solid: true },
   m: { mat: 'rock', solid: true, rise: 1 }, c: { mat: 'cliff', solid: true, rise: 1 }, '=': { mat: 'bridge' },
+  '^': { mat: 'rock', solid: true, rise: 2 },   // 地方の境の尾根（WORLDFIX: 1 つの素材で、正面の面は 2 マスの高さ）
   n: { mat: 'snow' }, a: { mat: 'ash' },
 };
 const walkCh = (ch) => { const l = LEGEND[ch]; return !!l && !l.solid && l.walk !== false; };
