@@ -520,7 +520,8 @@
   "Tier B faces: none by default; adding faces for the forest named NPCs (hanna, rita, gord, katri, pim, yura_elder) costs one face6 sheet each.",
   "Battle sprites for zakuro (ash final) and rashid (hawk band leader) are missing from MONSTER_REQUEST: optional sheets 101-102 here, or reuse monster art.",
   "Human enemies with no art in any brief: tournament rounds 1-4 (clan youths, beast tamer, caster sisters, armored man), hawk band archers, academy guards (noisy path). Reuse monster art or add battle_single sheets.",
-  "Tier C volume (74 people / 40 sheets): can be cut to the first two sheets per region with the engine recoloring a neighbouring region for children and jobs."
+  "Tier C volume (74 people / 40 sheets): can be cut to the first two sheets per region with the engine recoloring a neighbouring region for children and jobs.",
+  "2026-09-28 オーナー: 町の人の顔は外す（名前だけの窓）。物語の主な人は仲間と同じ質で顔を作る: 段 A の 6 人（berna fine otto rowell lazaro noa）に加え、段 B の tadeo yena pim zaid jorn kaya rashid zakuro に顔6（形C、_s3）を 1 枚ずつ足す。"
  ],
  "npcs": [
   {
@@ -882,7 +883,8 @@
    "region": "prologue",
    "appears": "ファロス（序章）、宿場・各地方の町の夜市、エンディングのカード",
    "heightDots": {
-    "field": 48
+    "field": 48,
+    "face": 80
    },
    "headgearExtraDots": 2,
    "measureH": {
@@ -898,7 +900,7 @@
    "lantern": false,
    "sigPose": "油差しを片手で掲げ、もう片手の指で値段を示す",
    "avoid": null,
-   "face": false,
+   "face": true,
    "recolor": false,
    "spirit": false,
    "section": "NPC_REQUEST.md §4.2",
@@ -910,6 +912,15 @@
      "layout": "walk_act",
      "targetH": 48,
      "required": true
+    },
+    {
+     "n": 3,
+     "no": 13,
+     "file": "npc_tadeo_s3.png",
+     "layout": "face6",
+     "targetH": 80,
+     "required": true,
+     "addedFace": true
     }
    ]
   },
@@ -924,7 +935,8 @@
    "region": "prologue",
    "appears": "ファロスの桟橋（序章、遠くで説いている）、湿原（エマの家）、そのほか 3 地方の町",
    "heightDots": {
-    "field": 47
+    "field": 47,
+    "face": 80
    },
    "headgearExtraDots": 0,
    "measureH": {
@@ -940,7 +952,7 @@
    "lantern": false,
    "sigPose": "両手をそっと前へ差し伸べて、説く",
    "avoid": "フィーネ（青みの灰のマントと丸いフード）と混ざらないよう、フードはかぶらず肩に下ろす。",
-   "face": false,
+   "face": true,
    "recolor": false,
    "spirit": false,
    "section": "NPC_REQUEST.md §4.2",
@@ -952,6 +964,15 @@
      "layout": "walk_act",
      "targetH": 47,
      "required": true
+    },
+    {
+     "n": 3,
+     "no": 14,
+     "file": "npc_yena_s3.png",
+     "layout": "face6",
+     "targetH": 80,
+     "required": true,
+     "addedFace": true
     }
    ]
   },
@@ -1092,7 +1113,8 @@
    "region": "forest",
    "appears": "迷いの森（苔の語り石の前）・野営地、一行の後ろについてくる（連れて進む選択）、フェルン、エンディングのカード",
    "heightDots": {
-    "field": 36
+    "field": 36,
+    "face": 80
    },
    "headgearExtraDots": 3,
    "measureH": {
@@ -1108,7 +1130,7 @@
    "lantern": false,
    "sigPose": "しゃがんで両腕を広げ、後ろの何かをかばう（小鹿をかばう姿）",
    "avoid": "ティッタ（大きすぎるハンチング帽）・テオ（とんがり帽子）に似せない。",
-   "face": false,
+   "face": true,
    "recolor": false,
    "spirit": false,
    "section": "NPC_REQUEST.md §4.2",
@@ -1120,6 +1142,15 @@
      "layout": "walk_act",
      "targetH": 36,
      "required": true
+    },
+    {
+     "n": 3,
+     "no": 25,
+     "file": "npc_pim_s3.png",
+     "layout": "face6",
+     "targetH": 80,
+     "required": true,
+     "addedFace": true
     }
    ]
   },
@@ -1428,7 +1459,8 @@
    "region": "desert",
    "appears": "カシム（隊商ギルド）、3 つの野営地（一行についてくる）",
    "heightDots": {
-    "field": 49
+    "field": 49,
+    "face": 80
    },
    "headgearExtraDots": 3,
    "measureH": {
@@ -1444,7 +1476,7 @@
    "lantern": false,
    "sigPose": "片手を高く上げて、星を指さす",
    "avoid": null,
-   "face": false,
+   "face": true,
    "recolor": false,
    "spirit": false,
    "section": "NPC_REQUEST.md §4.2",
@@ -1456,6 +1488,15 @@
      "layout": "walk_act",
      "targetH": 49,
      "required": true
+    },
+    {
+     "n": 3,
+     "no": 39,
+     "file": "npc_zaid_s3.png",
+     "layout": "face6",
+     "targetH": 80,
+     "required": true,
+     "addedFace": true
     }
    ]
   },
@@ -1596,7 +1637,8 @@
    "region": "desert",
    "appears": "砂漠の野営地 1「岩の井戸」、砂の鷹団のアジト",
    "heightDots": {
-    "field": 50
+    "field": 50,
+    "face": 80
    },
    "headgearExtraDots": 4,
    "measureH": {
@@ -1612,7 +1654,7 @@
    "lantern": false,
    "sigPose": "左腕を掲げ、右手の指で鷹笛を吹く",
    "avoid": "ハーゲン（鉄の黒灰・眼帯・毛皮）に似せない。",
-   "face": false,
+   "face": true,
    "recolor": false,
    "spirit": false,
    "section": "NPC_REQUEST.md §4.2",
@@ -1632,6 +1674,15 @@
      "layout": "battle_single",
      "targetH": 68,
      "required": false
+    },
+    {
+     "n": 3,
+     "no": 43,
+     "file": "npc_rashid_s3.png",
+     "layout": "face6",
+     "targetH": 80,
+     "required": true,
+     "addedFace": true
     }
    ]
   },
@@ -1688,7 +1739,8 @@
    "region": "snow",
    "appears": "ユール（大かまどの集会所）、大火祭、遅れた祭の二日目",
    "heightDots": {
-    "field": 48
+    "field": 48,
+    "face": 80
    },
    "headgearExtraDots": 4,
    "measureH": {
@@ -1704,7 +1756,7 @@
    "lantern": false,
    "sigPose": "杖で地面を突き、片手を広げて演説する",
    "avoid": "ドッカ（二股の編みひげ）に似せない。ひげは短く四角い。",
-   "face": false,
+   "face": true,
    "recolor": false,
    "spirit": false,
    "section": "NPC_REQUEST.md §4.2",
@@ -1716,6 +1768,15 @@
      "layout": "walk_act",
      "targetH": 48,
      "required": true
+    },
+    {
+     "n": 3,
+     "no": 50,
+     "file": "npc_jorn_s3.png",
+     "layout": "face6",
+     "targetH": 80,
+     "required": true,
+     "addedFace": true
     }
    ]
   },
@@ -2444,7 +2505,8 @@
    "region": "ash",
    "appears": "カルデラ（火の神殿）、火口、火の鳥の背の乗り場",
    "heightDots": {
-    "field": 45
+    "field": 45,
+    "face": 80
    },
    "headgearExtraDots": 5,
    "measureH": {
@@ -2460,7 +2522,7 @@
    "lantern": false,
    "sigPose": "両手を前へ差し伸べて、卵に語りかける",
    "avoid": "ノエラ（白と淡い水色の巫女）に似せない。",
-   "face": false,
+   "face": true,
    "recolor": false,
    "spirit": false,
    "section": "NPC_REQUEST.md §4.2",
@@ -2472,6 +2534,15 @@
      "layout": "walk_act",
      "targetH": 45,
      "required": true
+    },
+    {
+     "n": 3,
+     "no": 80,
+     "file": "npc_kaya_s3.png",
+     "layout": "face6",
+     "targetH": 80,
+     "required": true,
+     "addedFace": true
     }
    ]
   },
@@ -2486,7 +2557,8 @@
    "region": "ash",
    "appears": "カルデラ（闘技場・控え室）、決勝の相手",
    "heightDots": {
-    "field": 52
+    "field": 52,
+    "face": 80
    },
    "headgearExtraDots": 0,
    "measureH": {
@@ -2502,7 +2574,7 @@
    "lantern": false,
    "sigPose": "胸の名札に手を当てて、きっちり一礼",
    "avoid": "ハーゲン（大剣・眼帯・毛皮）に似せない。",
-   "face": false,
+   "face": true,
    "recolor": false,
    "spirit": false,
    "section": "NPC_REQUEST.md §4.2",
@@ -2522,6 +2594,15 @@
      "layout": "battle_single",
      "targetH": 68,
      "required": false
+    },
+    {
+     "n": 3,
+     "no": 81,
+     "file": "npc_zakuro_s3.png",
+     "layout": "face6",
+     "targetH": 80,
+     "required": true,
+     "addedFace": true
     }
    ]
   },

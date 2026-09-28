@@ -42,3 +42,4 @@
 01:04:41   | 
 01:04:41   | packed field 184x300 | palette 52 + face 0
 01:04:43 to_v2 npc_yena: npc_yena → /home/user/others/chronicle/v2/assets/sprites/npc_yena |   field: 16 frames
+21:23:34 sheet 3 attempt 1: edit of the Arun template 1728x1152 (pitch 6, quality medium, 3 refs)

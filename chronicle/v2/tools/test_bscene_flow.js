@@ -232,9 +232,10 @@ async function main() {
     await B.press(p, 'a'); await p.waitForTimeout(150);
     await B.press(p, 'a'); await p.waitForTimeout(150);
     if (await B.ev(p, `!!(${D}.ui && ${D}.ui.o && ${D}.ui.o.rows && ${D}.ui.o.rows[0] && ${D}.ui.o.rows[0].id === 'attack')`)) { await B.press(p, 'a'); await p.waitForTimeout(150); }
+    const where = await B.ev(p, `(() => { const d = ${D}; return { ph: d.phase, head: d.head, rows: d.ui && d.ui.o && d.ui.o.rows ? d.ui.o.rows.map((r) => r.id || r.key) : null }; })()`);
     const hot = new Set();
     for (let i = 0; i < 8; i++) { for (const k of await B.ev(p, `Object.keys(${D}.hot || {})`)) hot.add(k); await B.press(p, 'left'); await p.waitForTimeout(60); }
-    ok('attack → every enemy (all 5 wolves and the leader) can be the target', st1.foes.every((a) => hot.has(a.uid)) && hot.size === st1.foes.length, { hot: [...hot], foes: st1.foes.map((a) => a.uid) });
+    ok('attack → every enemy (all 5 wolves and the leader) can be the target', st1.foes.every((a) => hot.has(a.uid)) && hot.size === st1.foes.length, { hot: [...hot], foes: st1.foes.map((a) => a.uid), where });
     // 頭を 1 に、あとは自動で頭をねらう
     await B.ev(p, `(() => { const d = ${D}; const E = d.B.engine, lord = E.mons.find((m) => m.id === 'b_wolflord'); lord.hp = 1; lord.reserved = null; d.setup.autoInput = true;
       const orig = d.aliveEnemies; d.aliveEnemies = () => orig().sort((a, b) => (b.uid === lord.uid ? 1 : 0) - (a.uid === lord.uid ? 1 : 0)); return 0; })()`);

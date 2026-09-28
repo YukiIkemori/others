@@ -31,6 +31,7 @@
       rect(g, 5, 14, 6, 4, 'o');
       // 東の池
       blob(g, 37, 20, 2, 2, 'w', 'roa_pond');
+      rect(g, 36, 18, 3, 1, 'w');   // 池の北の縁（描いた池は y 18 の石の縁から水。縁の上を歩くと足が水に入る）
       // 南の段（低い段。崖の面が南を向く）: y 22 の崖、x 27〜28 の石段
       hline(g, 3, 41, 22, 'R');
       rect(g, 27, 22, 2, 1, 'e');
@@ -52,13 +53,14 @@
       const house = (id, x, y, w, h, o) => b(id, x, y, w, h, Object.assign({ roof: 'thatch', mat: 'plaster', wall: 2, windows: 2, lamp: true, flowers: true }, o));
       const objects = [
         // 北の家並み（戸口は小道へ。中へは入らない家は戸が閉じている）
-        house('roa_h1', 5, 4, 6, 6, { windows: 2, chimney: true, door: D(7, 9, 'roa_home1') }),
-        house('roa_h2', 12, 4, 5, 6, { roof: 'shingle', mat: 'log', door: D(14, 9, 'roa_home2') }),
+        // 敷地は描いた屋根の上の端（y 3）から（オーナー「屋根のパーツに入れてしまう」: 家の裏の 1 行が屋根の絵の上だった）
+        house('roa_h1', 5, 3, 6, 7, { windows: 2, chimney: true, door: D(7, 9, 'roa_home1') }),
+        house('roa_h2', 12, 3, 5, 7, { roof: 'shingle', mat: 'log', door: D(14, 9, 'roa_home2') }),
         b('roa_hall', 18, 3, 8, 7, { roof: 'moss', mat: 'stone', wall: 3, windows: [1, 6], hip: true, lamp: true, door: D(21, 9, 'roa_hall_in') }),   // 語り石の間
-        house('roa_h3', 28, 4, 5, 6, { roof: 'shingle', mat: 'log', chimney: true, door: D(30, 9, 'roa_home3') }),
-        house('roa_h4', 34, 4, 6, 6, { windows: 3, door: D(37, 9, 'roa_home4') }),
-        // 西の家（畑の番）と東の家
-        house('roa_h5', 4, 19, 5, 3, { wall: 1, windows: 1, roof: 'shingle', mat: 'log', small: true, door: D(5, 21, 'roa_home5') }),
+        house('roa_h3', 28, 3, 5, 7, { roof: 'shingle', mat: 'log', chimney: true, door: D(30, 9, 'roa_home3') }),
+        house('roa_h4', 34, 3, 6, 7, { windows: 3, door: D(37, 9, 'roa_home4') }),
+        // 西の家（畑の番）と東の家。畑の番小屋の屋根は畑のすぐ南（y 18）から描いてあるので、敷地も y 18 から（宝箱の左下で屋根に入れた）
+        house('roa_h5', 4, 18, 5, 4, { wall: 1, windows: 1, roof: 'shingle', mat: 'log', small: true, door: D(5, 21, 'roa_home5') }),
         house('roa_h6', 30, 16, 5, 4, { roof: 'thatch', windows: 2, wall: 2, door: D(32, 19, 'roa_home6') }),
         // ベルナの家（南の段）
         b('roa_berna', 16, 24, 9, 7, { roof: 'moss', mat: 'log', wall: 3, windows: 3, chimney: true, lamp: true, flowers: true, door: { x: 20, y: 30, to: { map: 'roa_house', spawn: 'door' } } }),
@@ -75,7 +77,7 @@
         P('well', 30, 13),
         // 畑のまわり
         ...PS('fence', [[4, 12], [5, 12], [6, 12], [7, 12], [8, 12], [9, 12], [10, 12], [11, 12], [12, 13], [12, 14], [12, 16], [12, 17], [12, 18],
-          [4, 13], [4, 14], [4, 15], [4, 16], [4, 17], [9, 18], [10, 18], [11, 18]]),   // 西と南の柵（描いた下絵の柵に合わせる。入口は東の (12,15) と南の (5..8,18)）
+          [4, 13], [4, 14], [4, 15], [4, 16], [4, 17], [9, 18], [10, 18], [11, 18]]),   // 西と南の柵（描いた下絵の柵に合わせる。入口は東の (12,15)。南の (5..8,18) は番小屋の屋根）
         P('hay', 3, 16), P('sack', 9, 19),
         // 池のまわり
         ...PS('rock_small', [[35, 19], [39, 21]]), P('log', 36, 17), P('mushroom_glow', 38, 18), P('firefly', 36, 21), P('firefly', 39, 19),

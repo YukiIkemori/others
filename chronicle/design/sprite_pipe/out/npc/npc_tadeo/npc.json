@@ -8,7 +8,8 @@
  "group": null,
  "slot": null,
  "heightDots": {
-  "field": 48
+  "field": 48,
+  "face": 80
  },
  "measureH": {
   "field": 50
@@ -20,16 +21,17 @@
  "lantern": false,
  "spirit": false,
  "recolor": false,
- "face": false,
+ "face": true,
  "sheets": {
-  "1": "npc_tadeo_s1.png"
+  "1": "npc_tadeo_s1.png",
+  "3": "npc_tadeo_s3.png"
  },
  "proportion": {
   "1": {
    "neck": 0.26041666666666663,
    "head_w": 0.3958333333333333,
-   "shoulder": 0.46875,
-   "neck_clear": 0.8571428571428571
+   "shoulder": 0.47395833333333337,
+   "neck_clear": 0.849624060150376
   }
  },
  "arun_proportion": {
