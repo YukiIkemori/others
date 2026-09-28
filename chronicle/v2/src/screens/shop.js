@@ -182,14 +182,15 @@
         this.refresh(true);
       } finally { this.busy = false; }
     },
-    /** 買った装備を「今すぐ装備する？」: 一行の全員（付けられない人は選べない）、いちばん上がる人にカーソル */
+    /** 買った装備を「今すぐ装備する？」: 一行の全員（付けられない人は選べない）。
+     *  カーソルは上から見て最初の「付けられて、同じ物をまだ付けていない人」（持ち主 2026-09-28）。いなければ付けられる最初の人 */
     async offerEquip(id) {
       const mem = S.party();
       const can = mem.map((c) => canWear(c, id));
       if (!can.some(Boolean)) return;
-      const gainOf = (c) => S.equipScore(c, slotOf(c, id), id) - S.equipScore(c, slotOf(c, id), c.equip[slotOf(c, id)] || null);
-      let best = can.indexOf(true), bv = -Infinity;
-      mem.forEach((c, i) => { if (!can[i]) return; const v = gainOf(c); if (v > bv) { bv = v; best = i; } });
+      const wearing = (c) => Object.values(c.equip || {}).includes(id);
+      let best = mem.findIndex((c, i) => can[i] && !wearing(c));
+      if (best < 0) best = can.indexOf(true);
       const choices = mem.map((c, i) => {
         if (!can[i]) return { label: c.name, right: '装備不可', disabled: true };
         const d = S.bestDelta(S.statDiff(c, slotOf(c, id), id));
