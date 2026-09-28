@@ -76,12 +76,20 @@ for (const id of maps) {
   // （後で開く所 = 「後で届く」として数える。どちらでも届かなければ失敗）
   const res = M.bfs(m, starts, { through: false });
   const orig = R.State.check;
-  let res2;
+  let res2, res3 = null;
   R.State.check = () => false;
   try { res2 = M.bfs(m, starts, { through: false }); } finally { R.State.check = orig; }
+  // 水が引く・道が現れる所（tilePatches。cond が真で開く）は、cond のある物をどけた上で、どの形も当てた形でも歩く
+  // （鐘沈みの沼の泥の道のように、閉じた形が地面で、開いた形が patch の所。cond を外した写しを当てる）
+  const tps = m.tilePatches;
+  if (tps && tps.length) {
+    m.tilePatches = tps.map((p) => Object.assign({}, p, { cond: null }));
+    R.State.check = () => false;
+    try { res3 = M.bfs(m, starts, { through: false }); } finally { R.State.check = orig; m.tilePatches = tps; }
+  }
   const reach = (x, y, lv) => {
     if (res.get(x, y, lv || 0) != null) return true;
-    if (res2.get(x, y, lv || 0) != null) { gated.add(id + ':' + x + ',' + y); return true; }
+    if (res2.get(x, y, lv || 0) != null || (res3 && res3.get(x, y, lv || 0) != null)) { gated.add(id + ':' + x + ',' + y); return true; }
     return false;
   };
   const anyReach = (cells) => cells.some((c) => reach(c.x, c.y, c.lv));
