@@ -238,7 +238,8 @@ section('data: techs and spells');
   const dv = {}; for (const id of Object.keys(DB.techs)) if (DB.techs[id].derived) { by[DB.techs[id].wtype]--; dv[DB.techs[id].wtype] = (dv[DB.techs[id].wtype] || 0) + 1; }
   const want = { sword: 20, greatsword: 22, dagger: 19, bow: 20, staff: 18 };
   ok('99 glimmer techs: sword 20, greatsword 22, dagger 19, bow 20, staff 18 (§8.5)', Object.keys(want).every((w) => by[w] === want[w]) && Object.keys(by).length === 5, by);
-  ok('+ 14 derived techs (派生技, rare): sword 3, greatsword 3, dagger 3, bow 3, staff 2', Object.entries({ sword: 3, greatsword: 3, dagger: 3, bow: 3, staff: 2 }).every(([w, n]) => dv[w] === n) && Object.keys(dv).length === 5, dv);
+  // 持ち主（2026-09-28）「派生技、各武器にあと2~3個ずつ足していいよ」
+  ok('+ 29 derived techs (派生技, rare): sword 6, greatsword 6, dagger 6, bow 6, staff 5', Object.entries({ sword: 6, greatsword: 6, dagger: 6, bow: 6, staff: 5 }).every(([w, n]) => dv[w] === n) && Object.keys(dv).length === 5, dv);
   ok('77 spells', Object.keys(DB.spells).length === 77, Object.keys(DB.spells).length);
   const badSkill = Object.keys(DB.techs).concat(Object.keys(DB.spells)).filter((id) => !chk('skill', Ru.actionOf(id)).ok);
   ok('every tech/spell fits K.skill', !badSkill.length, badSkill.slice(0, 5));
@@ -568,16 +569,18 @@ section('派生技: a few rare techs, only from using the parent, never guarante
   const Gl = R.Glimmer, T = DB.techs, D = K.DERIVE;
   const derived = Object.keys(T).filter((id) => T[id].derived);
   // データ
-  ok(`a small set: 10–15 derived techs (${derived.length}), 2–4 per weapon line`, derived.length >= 10 && derived.length <= 15 &&
-    K.WTYPES.every((w) => { const n = derived.filter((id) => T[id].wtype === w).length; return n >= 2 && n <= 4; }));
+  ok(`still a small set: ≤ 30 derived techs (${derived.length}), 4–7 per weapon line`, derived.length >= 20 && derived.length <= 30 &&
+    K.WTYPES.every((w) => { const n = derived.filter((id) => T[id].wtype === w).length; return n >= 4 && n <= 7; }));
+  ok('each parent has at most one derived child (secrets spread over many techs)', Object.keys(T).every((id) => Gl.deriveOf(id).length <= 1));
   ok('each has derived {from, lv}, a parent on the same weapon line, and is the upgrade (lv above the parent)', derived.every((id) => {
     const a = T[id], p = T[a.derived.from]; const plv = p && ((p.glim && p.glim.lv) || (p.derived && p.derived.lv));
     return p && p.wtype === a.wtype && Number.isInteger(a.derived.lv) && a.derived.lv > plv && a.rank === a.derived.lv;
   }), derived.filter((id) => !T[T[id].derived.from]));
-  ok('upgrades by effect too: more damage per use than the parent', derived.every((id) => {
-    const dmg = (a) => a.effects.filter((e) => e.type === 'damage').reduce((s, e) => s + (e.power || 0) * (e.hits || 1) * (a.target === 'enemies' || a.target === 'group' ? 1.3 : 1), 0);
+  ok('upgrades by effect too: more damage (or healing) per use than the parent', derived.every((id) => {
+    const dmg = (a) => a.effects.reduce((s, e) => s + (e.type === 'damage' ? (e.power || 0) * (e.hits || 1) * (a.target === 'enemies' || a.target === 'group' ? 1.3 : 1) : e.type === 'heal' ? (e.pct || 0) * 10 : 0), 0);
     return dmg(T[id]) > dmg(T[T[id].derived.from]);
-  }));
+  }), derived.filter((id) => !(T[id].effects.length)));
+  ok('MP is at least the parent\'s', derived.every((id) => T[id].mp >= T[T[id].derived.from].mp));
   ok('a few 2-step chains (e.g. 連ね斬り → 返し刃 → 抜刀返し刃)', derived.filter((id) => Gl.tierOf(id) === 2).length >= 2 && Gl.tierOf('t_sword_swallow_draw') === 2 && T.t_sword_swallow.derived.from === 't_sword_twin');
   ok('no 3-step chains', derived.every((id) => Gl.tierOf(id) <= 2));
   ok('every tech fits K.skill (derived ones too)', derived.every((id) => chk('skill', T[id]).ok));

@@ -226,7 +226,7 @@ section('4. 数');
   void sliceLeads;
   const nT = Object.keys(D.techs).filter((id) => !D.techs[id].derived).length, nS = Object.keys(D.spells).length;
   const nD = Object.keys(D.techs).length - nT;   // 派生技（レア。design/BACKLOG「派生技の閃き」）
-  ok(`技 99（${nT}）＋派生技 10〜15（${nD}）・術 約 77（${nS}）`, nT === 99 && nD >= 10 && nD <= 15 && nS >= 70 && nS <= 85);
+  ok(`技 99（${nT}）＋派生技 20〜30（${nD}）・術 約 77（${nS}）`, nT === 99 && nD >= 20 && nD <= 30 && nS >= 70 && nS <= 85);
   const keys = ['k_lighthouse_key', 'k_chronicle', 'k_quill', 'k_bell', 'k_pim_hat', 'k_page_forest'];
   ok('§3.7 の大事な物', keys.every(item), keys.filter((k) => !item(k)));
   const uniq = ['ac_keeper_lantern', 'u_hans_axe', 'u_ben_whistle', 'u_roy_charm', 'u_pim_cap', 'ac_tale_forest', 'ac_st_rooteater', 'ft_st_jewel_hare'];
