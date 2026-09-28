@@ -138,22 +138,43 @@
       }
       // 名前（行った町・ダンジョン・エリア）。字は絵に描いていないので、ここで墨の字を重ねる
       const ink = '#3b2614', paper = 'rgba(240,226,192,0.92)';
-      const label = (text, px, py, sz, strong) => R.UIK.text(g, text, X(px), Y(py), { size: u(sz), weight: strong ? 700 : 500, color: ink, align: 'center', stroke: [paper, u(3.2)] });
-      const drawn = new Set();
+      // 名前は重ならないように置く: 町 → ダンジョン → エリアの順に、重なれば下・上へずらし、それでも重なる物は出さない（引くと小さい物から消える）
+      const labels = [], marks = [];
+      const want = (text, px, py, sz, strong, prio) => labels.push({ text, x: X(px), y: Y(py), sz: u(sz), strong, prio });
       for (const m of Object.values(R.DB.maps)) {
         if (!m || m.kind !== 'field' || !(G.visited && G.visited[m.id])) continue;
         const c = this.paintPos(m.id);
-        if (c) label(m.name, c[0], c[1] - 10 / k, 12, false);
+        if (c) want(m.name, c[0], c[1] - 10 / k, 12, false, 1);
       }
+      const drawn = new Set();
       for (const p of this.places()) {
         if (!p.been || drawn.has(p.map)) continue;
         drawn.add(p.map);
         const c = this.paintPos(p.map);
         if (!c) continue;
-        const qx = X(c[0]), qy = Y(c[1]);
-        if (p.kind === 'town') { R.UIK.diamond(g, qx, qy, u(5.5), '#8a2d1c', 'rgba(250,236,200,0.9)', 1.5); label(p.name, c[0], c[1] + 9 / k, 14, true); }
-        else { g.save(); g.fillStyle = '#20404a'; g.strokeStyle = 'rgba(250,236,200,0.9)'; g.lineWidth = 1.5; g.beginPath(); g.arc(qx, qy, u(4), 0, Math.PI * 2); g.fill(); g.stroke(); g.restore(); label(p.name, c[0], c[1] + 8 / k, 12, false); }
+        marks.push({ kind: p.kind, x: X(c[0]), y: Y(c[1]) });
+        if (p.kind === 'town') want(p.name, c[0], c[1] + 9 / k, 14, true, 3); else want(p.name, c[0], c[1] + 8 / k, 12, false, 2);
       }
+      for (const q of marks) {
+        if (q.kind === 'town') R.UIK.diamond(g, q.x, q.y, u(5.5), '#8a2d1c', 'rgba(250,236,200,0.9)', 1.5);
+        else { g.save(); g.fillStyle = '#20404a'; g.strokeStyle = 'rgba(250,236,200,0.9)'; g.lineWidth = 1.5; g.beginPath(); g.arc(q.x, q.y, u(4), 0, Math.PI * 2); g.fill(); g.stroke(); g.restore(); }
+      }
+      const placed = marks.map((q) => ({ x0: q.x - u(6), y0: q.y - u(6), x1: q.x + u(6), y1: q.y + u(6) }));
+      const hit = (b) => placed.some((o) => b.x0 < o.x1 && b.x1 > o.x0 && b.y0 < o.y1 && b.y1 > o.y0);
+      labels.sort((a, b) => b.prio - a.prio);
+      for (const L of labels) {
+        const w = R.UIK.measure(L.text, { size: L.sz, weight: L.strong ? 700 : 500 }) + u(6), h = L.sz + u(6);
+        let ok = null;
+        for (const dy of [0, h, -h - u(10), 2 * h, -2 * h - u(10)]) {
+          const b = { x0: L.x - w / 2, y0: L.y + dy - u(2), x1: L.x + w / 2, y1: L.y + dy + h - u(2) };
+          if (!hit(b)) { ok = { b, dy }; break; }
+        }
+        if (!ok) continue;
+        placed.push(ok.b);
+        L.drawnAt = ok.b;
+        R.UIK.text(g, L.text, L.x, L.y + ok.dy, { size: L.sz, weight: L.strong ? 700 : 500, color: ink, align: 'center', stroke: [paper, u(3.2)] });
+      }
+      WM.labels = labels.map((L) => ({ text: L.text, box: L.drawnAt || null }));   // 検査用
       // 目印の手がかり
       const pinned = R.Leads && R.Leads.pinned ? R.Leads.pinned() : null, pinL = pinned && R.DB.leads ? R.DB.leads[pinned] : null;
       if (pinL && pinL.place) {
