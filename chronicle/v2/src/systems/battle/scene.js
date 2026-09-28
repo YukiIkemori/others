@@ -242,7 +242,7 @@
 
   /**
    * 右下の操作の案内（2026-09-27 の持ち主の決まり: 速さとリピートはここに 1 つだけ）。
-   *   速さ: 「[R] 速さ：通常／＋1／＋2」（押すたびに変わる）。リピート: 動いている間は「リピート中：[B]でやめる」、
+   *   速さ: 「[R] 速さ：通常／＋1／＋2」（押すたびに変わる）。リピート: 動いている間は「リピート中：[L]でやめる」（B でも止まる）、
    *   選べるときは「[L] リピート」。勝利・全滅・閉じる間は出さない。縦持ちは下の札（速さ・リピート・逃げる、タップ）が同じ役。
    * → {list, repeatOn}
    */
@@ -252,13 +252,13 @@
     const live = st.phase === 'input' || st.phase === 'play' || st.phase === 'intro';
     const repeatOn = !!(live && st.B && st.B.repeatOn);
     if (live && !st.L.tall) {
-      if (repeatOn) list = [{ btn: 'b', label: 'でやめる', repeat: true }].concat(list.filter((p) => p.btn !== 'b'));
-      else if (st.phase === 'input' && (st.partyOpts || []).includes('repeat')) list = list.concat([{ btn: 'l', label: 'リピート' }]);
+      if (repeatOn) list = [{ btn: 'l', label: 'でやめる', repeat: true }].concat(list.filter((p) => p.btn !== 'b' && p.btn !== 'l'));
+      else if ((st.partyOpts || []).includes('repeat')) list = list.concat([{ btn: 'l', label: 'リピート' }]);
       list = list.concat([{ btn: 'r', label: '速さ：' + Bt.speedLabel(speed()) }]);
     }
     return { list, repeatOn: repeatOn && !st.L.tall };
   };
-  /** 「リピート中：」の金の札（案内の [B]でやめる の左） */
+  /** 「リピート中：」の金の札（案内の [L]でやめる の左） */
   function drawRepeatTag(g, rect) {
     const k = R.uiScale || 1, Kt = _.K, s = 12 * k;
     const label = 'リピート中：';
@@ -390,8 +390,13 @@
         const I = R.Input;
         // 戦闘の速さ（R）: 通常 → ＋1 → ＋2 → 通常（どの場面でも。勝利の札・全滅の画面では変えない）
         if (I.pressed('r') && st.phase !== 'result' && st.phase !== 'gameover' && st.phase !== 'closing') Bt.cycleSpeed();
-        // リピートを始める（L、選べるときだけ。一行の命令・1 人ずつの命令のどちらの窓でも）
-        if (I.pressed('l') && st.phase === 'input' && st.B && !st.B.repeatOn && (st.partyOpts || []).includes('repeat')) st.chipTap = 'repeat';
+        // リピートの ON／OFF（L。持ち主 2026-09-28「L でリピートの切り替え」）。命令の窓では今すぐ始め、動いている間は次のラウンドから
+        if (I.pressed('l') && st.B && (st.phase === 'input' || st.phase === 'play' || st.phase === 'intro')) {
+          const can = (st.partyOpts || []).includes('repeat');
+          if (st.B.repeatOn) { st.B.setRepeat(false); if (R.UIK && R.UIK.toast) R.UIK.toast('リピート：OFF', { anchor: 'bl' }); }
+          else if (can && st.phase === 'input') st.chipTap = 'repeat';
+          else if (can) { st.B.setRepeat(true); if (R.UIK && R.UIK.toast) R.UIK.toast('リピート：ON（次のラウンドから）', { anchor: 'bl' }); }
+        }
         // 縦持ちの札（タップ）
         const p = I.pointer;
         if (p && p.pressed && st.chipRects) {

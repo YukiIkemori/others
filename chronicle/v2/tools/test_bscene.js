@@ -172,7 +172,7 @@ section('人の札は隊列の順（前列・後列で分けない。2026-09-27 
   ok('one card rect per member, top to bottom in that order', st && _.hud.partyRects(st).every((r, i, a) => i === 0 || r.y > a[i - 1].y) && _.hud.partyRects(st).length === cards.length);
   const pp = st && R.Battle.prompts(st);
   ok('bottom-right prompts carry the speed 「速さ：通常」 (no separate chip)', pp && pp.list.some((p) => p.btn === 'r' && p.label === '速さ：' + R.Battle.speedLabel(R.Settings.get('battleSpeed'))), pp && pp.list);
-  if (st) { st.B.setRepeat(true); const p2 = R.Battle.prompts(st); ok('repeat running → 「リピート中：[B]でやめる」 in the prompts', p2.repeatOn && p2.list[0].btn === 'b' && p2.list[0].label === 'でやめる', p2.list); st.B.setRepeat(false); }
+  if (st) { st.B.setRepeat(true); const p2 = R.Battle.prompts(st); ok('repeat running → 「リピート中：[L]でやめる」 in the prompts', p2.repeatOn && p2.list[0].btn === 'l' && p2.list[0].label === 'でやめる', p2.list); st.B.setRepeat(false); }
 
   // 派生技の帯（design/BACKLOG「派生技の閃き」。持ち主「何かの技を使ってたらその上位版を覚えるの」）:
   // 閃きの帯を使い「〇〇から、」「△△を編み出した！」。行動の後に出て、速さ 1 / 2 / 3 / 5 で短くなる

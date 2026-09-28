@@ -146,7 +146,7 @@ async function main() {
   ok('last commands remembered for the next battle', await B.ev(p, '!!RPG.Battle.repeatMemory().cmds'));
   await B.ev(p, start({ demo: 'normal', mons: [['x', 1]] }));
   ok('next normal battle: repeat is on from the first turn (no input)', await B.waitFor(p, `${D} && ${D}.B && ${D}.B.repeatOn && ${D}.repeatCarried`, 20000) && await B.waitFor(p, `!!${D} && ${D}.phase==='play'`, 20000));
-  ok('prompts show 「リピート中：[B]でやめる」 from the first turn', await B.ev(p, `RPG.Battle.prompts(${D}).repeatOn`));
+  ok('prompts show 「リピート中：[L]でやめる」 from the first turn', await B.ev(p, `RPG.Battle.prompts(${D}).repeatOn`));
   ok('battle ends', await finishWin());
   await B.ev(p, start({ demo: 'boss_pageeater', boss: true, autoInput: true, mons: [['x', 1]] }));
   ok('boss battle: repeat suspended (starts with normal input, memory stays on)', await B.waitFor(p, `${D} && ${D}.B`, 20000) && await B.ev(p, `${D}.repeatSuspended && !${D}.B.repeatOn && !${D}.repeatCarried && RPG.Battle.repeatMemory().on`));
