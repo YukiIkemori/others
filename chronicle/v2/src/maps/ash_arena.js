@@ -37,25 +37,25 @@
     // 受付の台・賭け屋の台
     for (const x of [13, 14, 15, 16]) O.push(K.prop('counter', x, 24));
     for (const x of [24, 25, 26]) O.push(K.prop('counter', x, 24));
-    O.push(K.exam(14, 25, 'arena_roster'));                                     // 大会の名簿（lo_ev_ash）
-    O.push(K.prop('board', 22, 22), K.exam(22, 23, 'arena_board'));            // 勝ち抜きの板（無敗の語り部の名）
+    O.push(K.exam(14, 25, 'caldera_arena_roster'));                                     // 大会の名簿（lo_ev_ash）
+    O.push(K.prop('board', 22, 22), K.exam(22, 23, 'caldera_arena_board'));            // 勝ち抜きの板（無敗の語り部の名）
     O.push(K.prop('arena_banner', 12, 22), K.prop('arena_banner', 27, 22));
     // 西の観客席の銘板と、その上の立会人の席
-    O.push(K.exam(2, 12, 'arena_plaque'), K.exam(5, 10, 'arena_witness_seat'));
+    O.push(K.exam(2, 12, 'caldera_arena_plaque'), K.exam(5, 10, 'caldera_arena_witness_seat'));
     // 控え室: 一行（休む）・ザクロ（荷）
-    O.push(K.prop('bench', 3, 24), K.prop('bench', 5, 24), K.prop('bed', 2, 27), K.prop('bed', 2, 29), K.prop('water_urn', 8, 23), K.exam(5, 24, 'arena_rest'), K.exam(3, 24, 'arena_rest'));
-    O.push(K.prop('bench', 34, 24), K.prop('crate', 36, 23), K.prop('ash_weapon_rack', 31, 23), K.exam(36, 23, 'arena_zakuro_bag'));
+    O.push(K.prop('bench', 3, 24), K.prop('bench', 5, 24), K.prop('bed', 2, 27), K.prop('bed', 2, 29), K.prop('water_urn', 8, 23), K.exam(5, 24, 'caldera_arena_rest'), K.exam(3, 24, 'caldera_arena_rest'));
+    O.push(K.prop('bench', 34, 24), K.prop('crate', 36, 23), K.prop('ash_weapon_rack', 31, 23), K.exam(36, 23, 'caldera_arena_zakuro_bag'));
     // かがり火（観客席の上。道・戸口の前には置かない）
     for (const [x, y] of [[4, 4], [35, 4], [2, 17], [37, 17], [12, 2], [27, 2]]) O.push(K.prop('iron_brazier', x, y));
     O.push(K.prop('lantern', 11, 30), K.prop('lantern', 28, 30), K.prop('lantern', 2, 22), K.prop('lantern', 37, 22));
 
     const N = [
-      K.npc('receptionist', 'npc_ash_woman', 15, 23, { name: '受付のミラン', dir: 's', talk: 'arena_reception', reward: 'lead', pushable: false }),
-      K.npc('bookie', 'npc_ash_bookie', 25, 23, { name: '賭け屋のボッツ', dir: 's', talk: 'arena_bookie', reward: 'side', pushable: false }),
-      K.npc('arena_fan', 'npc_ash_child', 20, 27, { name: '闘技好きの子', dir: 'n', talk: 'arena_fan', reward: 'hint' }),
-      K.npc('arena_vet', 'npc_ash_old_m', 12, 27, { name: '古参の闘士', dir: 'e', talk: 'arena_vet', reward: 'boss' }),
-      K.npc('zakuro', 'npc_zakuro', 34, 27, { name: 'ザクロ', title: '記録院付きの闘士', dir: 'w', talk: 'arena_zakuro', reward: 'lead', cond: ['ash_champion', '!ash_zakuro_gone'] }),
-      K.npc('dorga_plaque', 'npc_dorga', 6, 12, { name: 'ドルガ', title: '族長', dir: 'w', talk: 'arena_dorga', reward: 'news', pushable: false, cond: 'ash_plaque_scene' }),
+      K.npc('receptionist', 'npc_ash_woman', 15, 23, { name: '受付のミラン', dir: 's', talk: 'caldera_arena_reception', reward: 'lead', pushable: false }),
+      K.npc('bookie', 'npc_ash_bookie', 25, 23, { name: '賭け屋のボッツ', dir: 's', talk: 'caldera_arena_bookie', reward: 'side', pushable: false }),
+      K.npc('caldera_arena_fan', 'npc_ash_child', 20, 27, { name: '闘技好きの子', dir: 'n', talk: 'caldera_arena_fan', reward: 'hint' }),
+      K.npc('caldera_arena_vet', 'npc_ash_old_m', 12, 27, { name: '古参の闘士', dir: 'e', talk: 'caldera_arena_vet', reward: 'boss' }),
+      K.npc('zakuro', 'npc_zakuro', 34, 27, { name: 'ザクロ', title: '記録院付きの闘士', dir: 'w', talk: 'caldera_arena_zakuro', reward: 'lead', cond: ['ash_champion', '!ash_zakuro_gone'] }),
+      K.npc('dorga_plaque', 'npc_dorga', 6, 12, { name: 'ドルガ', title: '族長', dir: 'w', talk: 'caldera_arena_dorga', reward: 'news', pushable: false, cond: 'ash_plaque_scene' }),
       // 大会の相手（回ごとに砂の場に現れる。ash_bout = 回の番号）
       K.npc('opp_1a', 'npc_ash_fighter', 18, 8, { name: '一族の若者', dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 1 } }),
       K.npc('opp_1b', 'npc_ash_fighter', 22, 8, { name: '一族の若者', dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 1 } }),
@@ -78,7 +78,7 @@
         plaque: { x: 4, y: 12, dir: 'w' },
       },
       exits: [{ x: 19, y: 31, w: 1, h: 1, to: { map: 'caldera', spawn: 'arena' } }],
-      triggers: [{ id: 'arrive', on: 'enter', event: 'arena_arrive' }],
+      triggers: [{ id: 'arrive', on: 'enter', event: 'caldera_arena_arrive' }],
       zones: [],
       light: AK.LIGHT_ARENA, dark: false,
       bgm: 'town',

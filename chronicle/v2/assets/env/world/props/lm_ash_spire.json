@@ -1,0 +1,47 @@
+{
+ "id": "lm_ash_spire",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   59,
+   72
+  ],
+  "32": [
+   79,
+   96
+  ],
+  "40": [
+   99,
+   120
+  ]
+ },
+ "feet": {
+  "24": [
+   30,
+   70
+  ],
+  "32": [
+   40,
+   94
+  ],
+  "40": [
+   49,
+   118
+  ]
+ },
+ "files": {
+  "24": "lm_ash_spire@24.png",
+  "32": "lm_ash_spire@32.png",
+  "40": "lm_ash_spire@40.png"
+ },
+ "fam": "ash",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  2,
+  2
+ ]
+}

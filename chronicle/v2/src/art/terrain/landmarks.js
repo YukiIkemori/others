@@ -40,12 +40,13 @@
     reeds: [['marsh', 0]],
     snowrock: [['snowmount', 60], ['snowfir', 0]],
     sandrock: [['desert', 0]],
-    rock: [['mount', 60], ['rock', 0], ['ash', 0]],
+    rock: [['mount', 60], ['rock', 0]],
+    ashrock: [['ash', 0]],
   };
   // fam の中で、その種類に使ってよい絵（id の末尾）
   const OK = {
     marshtree: /^lm_marsh_(dead3|swamptree)$/, reeds: /^lm_marsh_reeds/, ashtree: /^lm_ash_charred/, snowtree: /^lm_snowfir_(s1|m1|l1|xl)$/,
-    snowrock: /^lm_(snowmount_|snowfir_(rock1|crag1))/, sandrock: /^lm_desert_(mesa1|hoodoo|boulders)$/, rock: /^lm_(mount_|rock_|ash_(lavarock|crag|spire))/,
+    snowrock: /^lm_(snowmount_|snowfir_(rock1|crag1))/, sandrock: /^lm_desert_(mesa1|hoodoo|boulders)$/, rock: /^lm_(mount_|rock_)/, ashrock: /^lm_ash_(lavarock|crag|spire)$/,
   };
 
   let catalog = null;
@@ -77,6 +78,16 @@
     const byCh = {};
     for (const ch of Object.keys(legend)) byCh[ch] = classOf(legend[ch], T._matInfo(legend[ch].mat));
     for (let y = 0; y < H; y++) { const row = grid[y]; for (let x = 0; x < W; x++) cls[y * W + x] = byCh[row[x]] || null; }
+    // 岩の地方: まわりの地面の素材で雪・灰・砂漠の岩に分ける（岩の凡例は地方で共通）
+    const regionOf = (mat) => (/snow|ice/.test(mat) ? 'snowrock' : /ash|obsidian|lava/.test(mat) ? 'ashrock' : /dune|sand|clay/.test(mat) ? 'sandrock' : null);
+    const matAt = (x, y) => { const e = legend[(grid[y] || '')[x]]; return e ? e.mat || '' : ''; };
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      if (cls[y * W + x] !== 'rock') continue;
+      const cnt = {};
+      for (let j = -4; j <= 4; j += 2) for (let i = -4; i <= 4; i += 2) { const r = regionOf(matAt(x + i, y + j)); if (r) cnt[r] = (cnt[r] || 0) + 1; }
+      const best = Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a])[0];
+      if (best && cnt[best] >= 3) cls[y * W + x] = best === 'sandrock' ? 'rock' : best;   // 砂漠の岩場は緑の岩でなく…（砂岩の塊は X が別）→ 灰色の岩のまま
+    }
     // 塊の大きさ（4 方向でつながる同じ種類のマスの数）
     const comp = new Int32Array(W * H).fill(-1), compN = [];
     for (let i = 0; i < W * H; i++) {
@@ -147,18 +158,25 @@
   const POI = ['lm_way_shrine', 'lm_way_post', 'lm_way_caravan', 'lm_way_stones', 'lm_way_tower', 'lm_way_lookout', 'lm_ruin_wall', 'lm_ruin_arch', 'lm_ruin_pillars',
     'lm_ruin_tower', 'lm_ruin_found', 'lm_ruin_statue', 'lm_desert_camp', 'lm_desert_ruin', 'lm_marsh_stilt', 'lm_marsh_belltower', 'lm_ash_shrine', 'lm_ash_fumarole'];
   for (const id of POI) if (!(R.DB.props && R.DB.props[id])) R.def('props', id, { solid: true });
+  for (const id of ['lm_bridge_draw', 'lm_bridge_causeway', 'lm_bridge_arch_h', 'lm_bridge_foot_h']) if (!(R.DB.props && R.DB.props[id])) R.def('props', id, { soft: true });   // 橋の絵（歩ける）
   /** チャンクの描く物に足す（足もと = 覆う枠の下の辺のまん中、足もとの行より上は over）。名所の物（map.objects の lm）も */
   T._lmDraw = function (job, draw, map) {
     const plan = T._lmPlan(map);
     const t = job.tile, s = t / 32, X0 = job.X0, Y0 = job.Y0, S = job.size;
     const list = [];
-    for (const o of map.objects || []) if (o.lm && o.type === 'prop') list.push({ id: o.id, fp: [o.x, o.y, o.w || 1, o.h || 1] });
+    for (const o of map.objects || []) {
+      if (!o.lm || o.type !== 'prop') continue;
+      if (o.cond != null) { let ok = false; try { ok = !!(R.State && R.Game && R.State.check(o.cond)); } catch (e) { ok = false; } if (!ok) continue; }
+      list.push({ id: o.id, fp: [o.x, o.y, o.w || 1, o.h || 1], walk: !!o.walk });
+    }
     for (const it of plan ? plan.items.concat(list) : list) {
       const [x0, y0, fw, fh] = it.fp;
       const fx = (x0 + fw / 2) * t, fy = (y0 + fh) * t - 2 * s;
       // 絵の大きさの見積もり（幅は枠 + 1 マス、高さは 7 マスまで）
-      if (fx + (fw / 2 + 1) * t < X0 || fx - (fw / 2 + 1) * t > X0 + S || fy < Y0 - 2 * t || fy - 7 * t > Y0 + S) continue;
+      if (fx + (fw / 2 + 1) * t < X0 || fx - (fw / 2 + 1) * t > X0 + S || fy < Y0 - 2 * t || fy - Math.max(7, fh + 2) * t > Y0 + S) continue;
       const o = { v: 0 }; if (s !== 1) o.s = s;
+      // 橋（walk）は人より下: 足もとを枠の下の辺、絵は枠の真ん中に合わせて base に描く
+      if (it.walk) { draw.push({ key: 'hd:prop:' + it.id, opts: o, x: fx, y: fy + 3 * s, ft: fy, layer: 'base', shadow: null, sortY: -1e9, lm: true }); continue; }
       draw.push({ key: 'hd:prop:' + it.id, opts: o, x: fx, y: fy, ft: (y0 + fh - 1) * t, layer: 'split', shadow: null, sortY: fy, lm: true });
     }
   };

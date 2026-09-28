@@ -6,9 +6,11 @@
 //   5. ワールドの凡例の素材を wm_*（src/art/terrain/wmats.js、描いた素材）に替える
 // 置く物の絵は v2/assets/env/world/props/lm_*（type 'prop'、w・h・lm: true。当たりは w×h の枠。src/art/terrain/landmarks.js が描く）。
 'use strict';
+const fs = require('fs');
+const path = require('path');
 
 // ワールドの凡例の素材 → ワールドの素材（src/art/terrain/wmats.js の T.WORLD_MATS と同じ表）
-const WM = { grass: 'wm_grass', flowers: 'wm_flowers', tall_grass: 'wm_tall_grass', moss_earth: 'wm_forest_floor', dirt: 'wm_dirt', road: 'wm_road', mud: 'wm_mud',
+const WM = { grass: 'wm_grass', flowers: 'wm_flowers', tall_grass: 'wm_tall_grass', moss_earth: 'wm_forest_floor', dirt: 'wm_road', road: 'wm_road', mud: 'wm_mud',
   sand: 'wm_sand', dune_sand: 'wm_dune', cracked_clay: 'wm_clay', snow: 'wm_snow', snow_path: 'wm_snow_path', ice: 'wm_ice', peat_grass: 'wm_peat',
   marsh_water: 'wm_marsh_water', rock: 'wm_rock', ash: 'wm_ash', obsidian: 'wm_obsidian', sea: 'wm_sea', deep_water: 'wm_deep', shallow: 'wm_shallow', water: 'wm_lake' };
 // 目印になる物（tools/qa/check_world.js の MARK と同じ）と、景色のマス（木・森・岩・葦: 大きな絵で描く）
@@ -25,6 +27,11 @@ const FP = {
   lm_desert_camp: [3, 2], lm_desert_ruin: [4, 2], lm_marsh_stilt: [3, 3], lm_marsh_belltower: [2, 2], lm_ash_shrine: [3, 2], lm_ash_fumarole: [2, 2],
 };
 
+/** 絵の当たりの枠（v2/assets/env/world/props/<id>.json の fp。絵を切り直したらそのまま追う）。無ければ上の表 */
+function fpOf(id) {
+  try { const j = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'assets', 'env', 'world', 'props', id + '.json'), 'utf8')); if (j.fp) return j.fp; } catch (e) { /* 表の値 */ }
+  return FP[id] || [1, 1];
+}
 module.exports = Object.assign(function worldPoi(A) {
   const { g, W, H, LEGEND, SCALE, objects, npcs, exits, spawns, h2 } = A;
   const info = {};
@@ -92,7 +99,7 @@ module.exports = Object.assign(function worldPoi(A) {
   }
   let nObj = 0;
   function place(id, x0, y0, extra) {
-    const [w, h] = FP[id];
+    const [w, h] = fpOf(id);
     objects.push(Object.assign({ type: 'prop', id, x: x0, y: y0, w, h, lm: true }, extra || {}));
     addOcc(x0 - 1, y0 - 1, w + 2, h + 2); mark.push([x0 + (w >> 1), y0 + h - 1]); nObj++;
   }
@@ -156,7 +163,7 @@ module.exports = Object.assign(function worldPoi(A) {
       if (nearMark(Math.round(p.x), Math.round(p.y), 11)) { next = acc + 6; continue; }
       const bio = biome(Math.round(p.x), Math.round(p.y)), cyc = CYCLE[bio] || CYCLE.plains;
       turn[bio] = (turn[bio] || 0) + 1;
-      const id = cyc[turn[bio] % cyc.length], [fw, fh] = FP[id];
+      const id = cyc[turn[bio] % cyc.length], [fw, fh] = fpOf(id);
       let done = false;
       const side0 = h2(ri, i, 73) < 0.5 ? 1 : -1;
       for (const side of [side0, -side0]) for (const off of [2, 3, 4, 5]) {
@@ -202,7 +209,7 @@ module.exports = Object.assign(function worldPoi(A) {
   ];
   let nSite = 0;
   for (const s of SITES) {
-    const [wx, wy] = SCALE.toW(s.at[0] + 0.5, s.at[1] + 0.5), [fw, fh] = FP[s.id];
+    const [wx, wy] = SCALE.toW(s.at[0] + 0.5, s.at[1] + 0.5), [fw, fh] = fpOf(s.id);
     let best = null;
     for (let r = 0; r <= 14 && !best; r++) for (let j = -r; j <= r && !best; j++) for (let i = -r; i <= r; i++) {
       if (Math.max(Math.abs(i), Math.abs(j)) !== r) continue;
@@ -263,7 +270,34 @@ module.exports = Object.assign(function worldPoi(A) {
   }
   info.fill = nFill;
 
-  // ---------------------------------------------------------------- 6. 凡例の素材をワールドの素材に
+  // ---------------------------------------------------------------- 6. 橋の絵（'=' のひと続き。縦で幅 3 = 跳ね橋、幅 2 = 石の土手道、横 = 石橋・木の橋）
+  //   歩ける（walk: true。当たりなし、人より下に描く）。橋を上げる tilePatch（序章の跳ね橋）が重なれば、その逆の cond で出す
+  {
+    const seen = new Uint8Array(W * H);
+    let nb = 0;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      if (seen[y * W + x] || g[y][x] !== '=') continue;
+      let x0 = x, y0 = y, x1 = x, y1 = y; const q = [[x, y]]; seen[y * W + x] = 1;
+      while (q.length) {
+        const [cx, cy] = q.pop(); x0 = Math.min(x0, cx); y0 = Math.min(y0, cy); x1 = Math.max(x1, cx); y1 = Math.max(y1, cy);
+        for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const X = cx + dx, Y = cy + dy; if (inB(X, Y) && !seen[Y * W + X] && g[Y][X] === '=') { seen[Y * W + X] = 1; q.push([X, Y]); } }
+      }
+      const w = x1 - x0 + 1, h = y1 - y0 + 1;
+      if (Math.max(w, h) < 4) continue;
+      const id = h > w ? (w >= 3 ? 'lm_bridge_draw' : 'lm_bridge_causeway') : (h >= 3 ? 'lm_bridge_arch_h' : 'lm_bridge_foot_h');
+      let cond;
+      for (const p of A.tilePatches || []) {
+        const [px, py, pw, ph] = p.rect;
+        if (px + pw <= x0 || px > x1 || py + ph <= y0 || py > y1) continue;
+        cond = typeof p.cond === 'string' ? (p.cond[0] === '!' ? p.cond.slice(1) : '!' + p.cond) : { not: p.cond };
+      }
+      objects.push(Object.assign({ type: 'prop', id, x: x0, y: y0, w, h, lm: true, walk: true }, cond ? { cond } : {}));
+      nb++;
+    }
+    info.bridges = nb;
+  }
+
+  // ---------------------------------------------------------------- 7. 凡例の素材をワールドの素材に
   for (const ch of Object.keys(LEGEND)) {
     const e = LEGEND[ch];
     if (e.solid && e.mat === 'tall_grass') e.mat = 'wm_reeds';

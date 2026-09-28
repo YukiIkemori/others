@@ -11,6 +11,7 @@
 //   R.WorldXform.toW(xf|map, lx, ly)    → [wx, wy]  L の点 → W の点
 //   R.WorldXform.cell(xf|map, lx, ly)   → [x, y]    L のマス → W のマス（マスの中心どうし）
 //   R.WorldXform.lcell(xf|map, x, y)    → [lx, ly]  W のマス → L のマス
+//   R.WorldXform.fill(map, {lx, ly})    → 同じ物に x, y（W）を足す。データは L で書く（regions の beaconAt {map:'world', lx, ly} はデータの後処理で自動）
 //   R.WorldXform.band(xf|map, wx, wy)   → {i, t}    どの core の帯か（i = −1 は帯の外）、t = 0（core の中）〜 1（帯の外の縁）
 // node の道具からは require('.../src/core/world_xform.js') でも使える（同じ関数）。
 (function (root) {
@@ -83,7 +84,22 @@
   }
   const cell = (xf, lx, ly) => { const p = toW(xf, lx + 0.5, ly + 0.5); return [Math.floor(p[0]), Math.floor(p[1])]; };
   const lcell = (xf, x, y) => { const p = toL(xf, x + 0.5, y + 0.5); return [Math.floor(p[0]), Math.floor(p[1])]; };
-  const api = { of, make, toL, toW, cell, lcell, band };
-  if (root && root.RPG) root.RPG.WorldXform = api;
+  /** データの中のワールドの場所 {map:'world', lx, ly}（論理の座標 L で書いた物）に W の x, y を足す（無ければそのまま） */
+  function fill(map, o) {
+    if (!o || o.lx == null || o.ly == null) return o;
+    const xf = of(map);
+    const [x, y] = xf ? cell(xf, o.lx, o.ly) : [o.lx, o.ly];
+    o.x = x; o.y = y;
+    return o;
+  }
+  const api = { of, make, toL, toW, cell, lcell, band, fill };
+  if (root && root.RPG) {
+    root.RPG.WorldXform = api;
+    // データの後処理: 地方の光の柱の場所（regions の beaconAt {map:'world', lx, ly}）を W に
+    if (root.RPG.onData) root.RPG.onData(() => {
+      const R = root.RPG, w = R.DB && R.DB.maps && R.DB.maps.world;
+      for (const r of Object.values((R.DB && R.DB.regions) || {})) if (r && r.beaconAt && r.beaconAt.map === 'world') fill(w, r.beaconAt);
+    });
+  }
   if (typeof module === 'object' && module && module.exports) module.exports = api;
 })(typeof window !== 'undefined' ? window : null);

@@ -412,11 +412,16 @@
     const c0x = this.cells[0] - 1, c0y = this.cells[1] - 1, n = CHUNK + 1;
     while (this.i < n) {
       const dy = c0y + this.i;
-      for (let k = 0; k < n; k++) {
+      for (let k = this.k || 0; k < n; k++) {
         const dx = c0x + k;
-        if (this.map.splat && T._dgSplat && T._dgSplat(this.px, S, this.X0, this.Y0, dx, dy, this.C, t)) continue;   // WORLD v3: なめらかな地面（splat.js）
+        if (this.map.splat && T._dgSplat && T._dgSplat(this.px, S, this.X0, this.Y0, dx, dy, this.C, t)) {
+          // WORLD v3: なめらかな地面（splat.js）。1 枚が重いので、表示のタイルごとに時間を見て続きへ（1 step ≤ 3 ms）
+          if (k < n - 1 && U().now() > deadline) { this.k = k + 1; return false; }
+          continue;
+        }
         T._dgTile(this.px, S, this.X0, this.Y0, dx, dy, [this.C(dx, dy).mat, this.C(dx + 1, dy).mat, this.C(dx, dy + 1).mat, this.C(dx + 1, dy + 1).mat], t);
       }
+      this.k = 0;
       this.i++;
       if (U().now() > deadline) return this.i >= n;
     }

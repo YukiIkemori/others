@@ -1,0 +1,47 @@
+{
+ "id": "lm_ash_lavarock",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   84,
+   45
+  ],
+  "32": [
+   112,
+   60
+  ],
+  "40": [
+   140,
+   75
+  ]
+ },
+ "feet": {
+  "24": [
+   42,
+   44
+  ],
+  "32": [
+   56,
+   58
+  ],
+  "40": [
+   70,
+   72
+  ]
+ },
+ "files": {
+  "24": "lm_ash_lavarock@24.png",
+  "32": "lm_ash_lavarock@32.png",
+  "40": "lm_ash_lavarock@40.png"
+ },
+ "fam": "ash",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  3,
+  2
+ ]
+}

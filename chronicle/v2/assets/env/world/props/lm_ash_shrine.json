@@ -1,0 +1,47 @@
+{
+ "id": "lm_ash_shrine",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   65,
+   48
+  ],
+  "32": [
+   87,
+   64
+  ],
+  "40": [
+   109,
+   80
+  ]
+ },
+ "feet": {
+  "24": [
+   33,
+   46
+  ],
+  "32": [
+   44,
+   62
+  ],
+  "40": [
+   54,
+   78
+  ]
+ },
+ "files": {
+  "24": "lm_ash_shrine@24.png",
+  "32": "lm_ash_shrine@32.png",
+  "40": "lm_ash_shrine@40.png"
+ },
+ "fam": "ash",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  2,
+  2
+ ]
+}

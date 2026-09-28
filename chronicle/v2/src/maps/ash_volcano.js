@@ -133,7 +133,7 @@
       const O = [];
       O.push(K.stairs(21, 34, { map: 'ash_volcano_1', spawn: 'stairs' }, { id: 'volcano_2_down', look: 'down' }));
       for (const [x, y] of [[21, 16], [22, 16], [21, 17], [22, 17]]) K.put(g, x, y, 'X');   // 卵（描いた物）
-      O.push(K.exam(21, 16, 'crater_egg'), K.exam(22, 16, 'crater_egg'));
+      O.push(K.exam(21, 16, 'ash_crater_egg'), K.exam(22, 16, 'ash_crater_egg'));
       O.push(K.chest('volcano_2_c1', 33, 30, { pool: 'p_rare' }), K.chest('volcano_2_c2', 39, 12, { item: 'i_elixir', n: 1 }), K.chest('volcano_2_c3', 5, 9, { pool: 'p_T' }));
       for (const [x, y] of [[12, 12], [32, 12], [14, 22], [30, 22], [22, 25], [10, 17], [34, 17]]) O.push(K.prop('lava_glow', x, y));
       K.def('ash_volcano_2', {
@@ -141,13 +141,13 @@
         legend: AK.VOLCANO(), rows: g, outside: 'wall_cave',
         objects: O,
         npcs: [
-          K.npc('fine', 'fine', 27, 4, { name: '灰色のマントの少女', dir: 's', talk: 'crater_fine', reward: null, pushable: false, cond: ['ash_lavabeast', '!ash_fine_seen'] }),
+          K.npc('fine', 'fine', 27, 4, { name: '灰色のマントの少女', dir: 's', talk: 'ash_crater_fine', reward: null, pushable: false, cond: ['ash_lavabeast', '!ash_fine_seen'] }),
         ],
         spawns: { stairs: { x: 21, y: 32, dir: 'n' }, rim: { x: 22, y: 5, dir: 's' }, egg: { x: 22, y: 15, dir: 's' } },
         exits: [],
         triggers: [
-          { id: 'arrive', on: 'enter', event: 'crater_arrive', once: true },
-          { id: 'beast', x: 21, y: 9, w: 2, h: 3, on: 'step', event: 'crater_beast', cond: '!ash_lavabeast' },
+          { id: 'arrive', on: 'enter', event: 'ash_crater_arrive', once: true },
+          { id: 'beast', x: 21, y: 9, w: 2, h: 3, on: 'step', event: 'ash_crater_beast', cond: '!ash_lavabeast' },
         ],
         zones: [{ rect: [16, 3, 12, 14], zone: null }, { rect: [0, 0, 44, 36], zone: 'z_ash_crater' }].filter((z) => z.zone),
         light: AK.LIGHT_VOLCANO, dark: false,

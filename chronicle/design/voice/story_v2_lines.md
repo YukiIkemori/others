@@ -281,5 +281,5 @@
 
 | id | 種類 | 場面 | 台詞 | 演技 |
 |---|---|---|---|---|
-| `v_zakuro_ash_01` | story | `arena_zakuro` after the final page 2 | ……写す仕事は降りる。<br>後味が悪い。 | beaten, calm and blunt; decides to quit a job that tastes bad |
-| `v_zakuro_ash_02` | story | `arena_zakuro` after the final: the letter | 人の手紙は読まねえ。<br>そういう決まりで生きてる。 | terse and matter-of-fact about his own rule; quietly proud |
+| `v_zakuro_ash_01` | story | `caldera_arena_zakuro` after the final page 2 | ……写す仕事は降りる。<br>後味が悪い。 | beaten, calm and blunt; decides to quit a job that tastes bad |
+| `v_zakuro_ash_02` | story | `caldera_arena_zakuro` after the final: the letter | 人の手紙は読まねえ。<br>そういう決まりで生きてる。 | terse and matter-of-fact about his own rule; quietly proud |

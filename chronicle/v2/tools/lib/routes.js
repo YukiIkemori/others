@@ -30,8 +30,8 @@ const DUNGEONS = [
   { id: 'bog', open: true, variant: { ch_marsh_accuse: 'first', ch_marsh_write: 'pain' }, start: { map: 'marsh_bog', spawn: 'entrance' }, goal: { map: 'marsh_bog', ev: 'bog_mistbeast' },
     unset: ['marsh_mistbeast', 'cleared_r_marsh', 'marsh_finale_done'], bosses: [['marsh_bog', 'bog_mistbeast']] },
   // 灰の荒野（ash_*.js）: 灰の火山（1 階と火口。溶岩の堰は北の渡り場が冷えた形 = レバーを 1 度引いた後で道を引く。中ボスは東の部屋の炎の番犬）
-  { id: 'volcano', open: true, variant: { ch_ash_bribe: 'refuse', ch_ash_write: 'pain' }, start: { map: 'ash_volcano_1', spawn: 'entrance' }, goal: { map: 'ash_volcano_2', ev: 'crater_beast' },
-    unset: ['ash_hound', 'ash_lavabeast', 'ash_egg', 'ash_fine_seen', 'cleared_r_ash', 'ash_finale_done'], bosses: [['ash_volcano_2', 'crater_beast'], ['ash_volcano_1', 'volcano_hound']] },
+  { id: 'volcano', open: true, variant: { ch_ash_bribe: 'refuse', ch_ash_write: 'pain' }, start: { map: 'ash_volcano_1', spawn: 'entrance' }, goal: { map: 'ash_volcano_2', ev: 'ash_crater_beast' },
+    unset: ['ash_hound', 'ash_lavabeast', 'ash_egg', 'ash_fine_seen', 'cleared_r_ash', 'ash_finale_done'], bosses: [['ash_volcano_2', 'ash_crater_beast'], ['ash_volcano_1', 'volcano_hound']] },
   // 雪原（snow_*.js）: 雪の林・白竜の峰（氷の壁は冬至の火でとけた形・巨人の後の形で道を引く）・つららの回廊・オーロラの崖・氷に閉じた帆船
   // 雪原も縦切りの外（北の番人 guard_north が塞ぐ）: 砂漠と同じく open で閉包を slice なしで回す
   { id: 'snow_woods', open: true, variant: { ch_snow_tale: 'dragon' }, start: { map: 'snow_woods', spawn: 'south' }, goal: { map: 'snow_woods', far: true }, unset: [], bosses: [] },

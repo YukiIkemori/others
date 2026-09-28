@@ -95,8 +95,15 @@
     const NZ = noiseOf(tile), S = NZ.S, nz = NZ.n, K = kernOf(tile);
     const nM = ids.length, inf = ids.map(mi), sh = ids.map((id) => sheets(id, tile)), off = ids.map((id) => offOf(id, S));
     const vOff = offOf('variant', S);
+    // 4×4 がすべて同じ素材: 写すだけ（変化の絵があるときだけ画素ごと）
+    if (ids.length === 1) {
+      const sh0 = sh[0];
+      if (!sh0.b) { T._blit(dst, dw, sh0.a, wx, wy, lx0, ly0, x0, y0, x1, y1); return true; }
+      for (let y = y0; y < y1; y++) { const WY = wy + (y - ly0), row = y * dw; for (let x = x0; x < x1; x++) dst[row + x] = texel(sh0, wx + (x - lx0), WY, nz, S, vOff); }
+      return true;
+    }
     // 1 種類だけ（4×4 すべて同じ）: 写すだけ（変化の絵があればまぜる）
-    const rows = new Float32Array(nM * 4), w = new Float32Array(nM), isW = inf.map((q) => q.water);
+    const rows = new Float32Array(nM * 4), isW = inf.map((q) => q.water), amps = inf.map((q) => q.amp), nrow = new Int32Array(nM), arow = new Int32Array(nM);
     const anyWater = isW.some(Boolean), anyLand = isW.some((q) => !q);
     for (let y = y0; y < y1; y++) {
       const ty = y - ly0, ky = ty * 4;
@@ -106,24 +113,29 @@
         rows[m * 4 + i] = (cell[i] === id ? by0 : 0) + (cell[4 + i] === id ? by1 : 0) + (cell[8 + i] === id ? by2 : 0) + (cell[12 + i] === id ? by3 : 0);
       }
       const WY = wy + ty, row = y * dw, nyRow = (((WY % S) + S) % S);
-      for (let x = x0; x < x1; x++) {
+      // 行ごとの前計算: 素材ごとのノイズの行、絵の行（変化の絵が無いときは直に読む）
+      for (let m = 0; m < nM; m++) {
+        nrow[m] = ((nyRow + off[m][1]) % S) * S;
+        const A = sh[m].a; arow[m] = ((((WY % A.S) + A.S) % A.S)) * A.S;
+      }
+      let wxm = ((((wx + (x0 - lx0)) % S) + S) % S);
+      for (let x = x0; x < x1; x++, wxm = wxm + 1 === S ? 0 : wxm + 1) {
         const tx = x - lx0, kx = tx * 4, WX = wx + tx;
         const bx0 = K[kx], bx1 = K[kx + 1], bx2 = K[kx + 2], bx3 = K[kx + 3];
         let b1 = -9, b2 = -9, m1 = 0, m2 = 0, land = 0;
         for (let m = 0; m < nM; m++) {
           const r4 = m * 4, ww = rows[r4] * bx0 + rows[r4 + 1] * bx1 + rows[r4 + 2] * bx2 + rows[r4 + 3] * bx3;
           if (!isW[m]) land += ww;
-          const o = off[m], q = ((nyRow + o[1]) % S) * S + (((WX % S) + S + o[0]) % S);
-          const s = nM > 1 ? ww + (nz[q] - 0.5) * inf[m].amp : ww;
-          w[m] = s;
-          if (s > b1) { b2 = b1; m2 = m1; b1 = s; m1 = m; } else if (s > b2) { b2 = s; m2 = m; }
+          let qx = wxm + off[m][0]; if (qx >= S) qx -= S;
+          const sc = ww + (nz[nrow[m] + qx] - 0.5) * amps[m];
+          if (sc > b1) { b2 = b1; m2 = m1; b1 = sc; m1 = m; } else if (sc > b2) { b2 = sc; m2 = m; }
         }
-        const px = texel(sh[m1], WX, WY, nz, S, vOff);
-        let p = px;
+        const s1 = sh[m1];
+        let p = s1.b ? texel(s1, WX, WY, nz, S, vOff) : s1.a.px[arow[m1] + (((WX % s1.a.S) + s1.a.S) % s1.a.S)];
         const d = b1 - b2;
-        if (nM > 1 && d < BAND) {
-          const q = texel(sh[m2], WX, WY, nz, S, vOff), t = 0.5 - (0.5 * d) / BAND;
-          p = mixPx(px, q, t);
+        if (d < BAND) {
+          const s2 = sh[m2], q = s2.b ? texel(s2, WX, WY, nz, S, vOff) : s2.a.px[arow[m2] + (((WX % s2.a.S) + s2.a.S) % s2.a.S)], t = 0.5 - (0.5 * d) / BAND;
+          p = mixPx(p, q, t);
           // 陸と水の境: 泡の線
           if (isW[m1] !== isW[m2] && d < 0.035) p = tint(p, FOAM, 0.45 * (1 - d / 0.035));
           // 高い素材の縁の影（草の縁の下の道・砂）

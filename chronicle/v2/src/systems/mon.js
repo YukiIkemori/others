@@ -70,7 +70,7 @@
     ABIL: { mid: 16, minMul: 0.5, heal: 0.04 },
     HEALF: { min: 0.6, max: 2.0 },
     // 出現（DESIGN §4.11.1。旧は field.js の K.ENC。v2 では R.Mon.encounter が率を持つ）
-    ENC: { world: 26, dungeon: 22, safeSteps: 6 },
+    ENC: { world: 52, dungeon: 22, safeSteps: 6 },   // WORLD v3: rules.js の ENC と同じ
     ENC_ITEM: { weakMargin: 3 },
     // 闇の強まり（WORLD_REDESIGN E6）: 暗い階の灯りの外で始まった戦闘
     DARK: { ambush: 0.08, stat: 1.1 },

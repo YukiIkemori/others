@@ -6,9 +6,9 @@
   const bout = (mons, o) => Object.assign({ mons, noEscape: true, scale: 'tier', lvOff: 1, bg: 'ash', bgm: 'battle' }, o || {});
   Object.assign(T, {
     tr_ash_r1: bout([['ash_youth', 4]]),
-    tr_ash_r2: bout([['ash_pup', 1], ['b_rockbeast', 1], ['b_tamer', 1], ['ash_pup', 1]], { lvOff: 2 }),
-    tr_ash_r3: bout([['b_sister_younger', 1], ['b_sister_elder', 1]], { lvOff: 2 }),
-    tr_ash_r4: bout([['b_armorman', 1]], { lvOff: 2, bgm: 'boss' }),
+    tr_b_ash_r2: bout([['ash_pup', 1], ['b_rockbeast', 1], ['b_tamer', 1], ['ash_pup', 1]], { lvOff: 2 }),
+    tr_b_ash_r3: bout([['b_sister_younger', 1], ['b_sister_elder', 1]], { lvOff: 2 }),
+    tr_b_ash_r4: bout([['b_armorman', 1]], { lvOff: 2, bgm: 'boss' }),
     tr_b_zakuro: bout([['b_zakuro', 1]], { lvOff: 3, bgm: 'boss' }),
     tr_ash_copyists: bout([['ash_copyist', 3]], { lvOff: 1 }),
   });

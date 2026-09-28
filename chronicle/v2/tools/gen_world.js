@@ -667,7 +667,7 @@ function blockedByObj(x, y, cond) {
   for (const o of objects) {
     if (o.cond && !cond(o.cond)) continue;
     if (o.type === 'building') { if (x >= o.x && x < o.x + o.w && y >= o.y && y < o.y + o.h && !(o.door && o.door.x === x && o.door.y === y)) return true; continue; }
-    if (o.type === 'prop' && o.lm) { if (x >= o.x && x < o.x + (o.w || 1) && y >= o.y && y < o.y + (o.h || 1)) return true; continue; }   // WORLD v3 の名所の絵（w×h の当たり）
+    if (o.type === 'prop' && o.lm) { if (o.walk) continue; if (x >= o.x && x < o.x + (o.w || 1) && y >= o.y && y < o.y + (o.h || 1)) return true; continue; }   // WORLD v3 の名所の絵（w×h の当たり）
     if (o.x !== x || o.y !== y) continue;
     if (SOLID_OBJ.has(o.type)) return true;
     if (o.type === 'prop' && /^(barrel|crate|table|bed|bookshelf|counter|stove|lamp_post|fence|planter|well|signboard|board|rock|stump|log|tent|grave|hay|tree|pine|tree_giant|bush|roots|bollard|stall|rowboat|ship|crystal|songstone)$/.test(o.id)) return true;

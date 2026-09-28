@@ -1,0 +1,47 @@
+{
+ "id": "lm_ash_charred3",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   92,
+   66
+  ],
+  "32": [
+   123,
+   88
+  ],
+  "40": [
+   154,
+   110
+  ]
+ },
+ "feet": {
+  "24": [
+   46,
+   64
+  ],
+  "32": [
+   62,
+   86
+  ],
+  "40": [
+   77,
+   108
+  ]
+ },
+ "files": {
+  "24": "lm_ash_charred3@24.png",
+  "32": "lm_ash_charred3@32.png",
+  "40": "lm_ash_charred3@40.png"
+ },
+ "fam": "ash",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  4,
+  2
+ ]
+}

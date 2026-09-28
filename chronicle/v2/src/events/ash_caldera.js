@@ -24,16 +24,16 @@
     await ev.caption('町の底の闘技場から、\n歓声が湧き上がった。', { ms: 2000 });
     ev.lead('l_ash_trial');
   }, { meta: { needs: [], gives: ['flag:ash_arrived', 'lead:l_ash_trial'] } });
-  E('arena_arrive', async (ev) => {
+  E('caldera_arena_arrive', async (ev) => {
     if (ev.flag('ash_arena_seen')) return;
     ev.setFlag('ash_arena_seen');
     await ev.caption(cleared(ev) ? '闘技場。今夜も、腕試しの\n歓声が響いている。' : '闘技場。受付の前に、\n出場を待つ闘士の列ができている。', { ms: 2200 });
   });
 
   // ---------------------------------------------------------------- 受付（出場・次の回・決勝の前夜・挑戦者の間）
-  E('arena_reception', async (ev) => {
+  E('caldera_arena_reception', async (ev) => {
     const x = X();
-    if (cleared(ev)) { await ev.call('arena_challenge'); return; }
+    if (cleared(ev)) { await ev.call('caldera_arena_challenge'); return; }
     if (champ(ev)) { await ev.say('receptionist', ['優勝、おめでとうございます！\n火山の岩戸は、族長が開けました。', '闘技場の売り台も、どうぞ。']); await ev.shop('shop_arena'); return; }
     if (!ev.flag('ash_entered')) {
       await ev.say('receptionist', ['炎の試練の受付です。\n勝ち抜いた一人だけが、\n火口に入ることを許されます。', 'よそのお方も出られますよ。\n五回勝てば、優勝です。']);
@@ -56,11 +56,11 @@
     const b = x.BOUTS[n];
     const i = await ev.choose([`${b.name}に出る`, 'まだ支度をする'], { text: `${b.name}の相手は、${b.foe}。` });
     if (i !== 0) return;
-    await ev.call('arena_bout', { n });
-  }, { meta: { needs: [], gives: ['flag:ash_entered', 'item:k_arena_token', 'lead:l_ash_stranger'], calls: ['arena_bout', 'arena_challenge'] } });
+    await ev.call('caldera_arena_bout', { n });
+  }, { meta: { needs: [], gives: ['flag:ash_entered', 'item:k_arena_token', 'lead:l_ash_stranger'], calls: ['caldera_arena_bout', 'caldera_arena_challenge'] } });
 
   // 1 回戦ぶん: 砂の場へ → 相手が現れる → 戦い → 勝てば控え室で全快（負けてもその回から）
-  E('arena_bout', async (ev, ctx) => {
+  E('caldera_arena_bout', async (ev, ctx) => {
     const x = X();
     const n = (ctx && ctx.n) || x.round(ev) + 1;
     const b = x.BOUTS[n];
@@ -71,7 +71,7 @@
     ev.sfx('cheer');
     await ev.caption(`炎の試練、${b.name}！\n観客席が、足踏みで揺れる。`, { ms: 2000 });
     await ev.say(null, b.intro);
-    if (n === 5) await ev.call('arena_final_words');
+    if (n === 5) await ev.call('caldera_arena_final_words');
     const r = await ev.battle(b.troop, { canLose: true, boss: n >= 4 });
     ev.setVar('ash_bout', 0);
     if (r !== 'win') {
@@ -85,22 +85,22 @@
     }
     ev.setVar('ash_round', n);
     ev.setFlag('ash_round_' + n);
-    if (n === 5) { await ev.call('arena_champion'); return; }
+    if (n === 5) { await ev.call('caldera_arena_champion'); return; }
     await ev.caption(`${b.name}、勝ち抜き！\n歓声が、火口の縁まで\n駆け上がっていく。`, { ms: 2200 });
     await ev.fade('out', 400);
     await ev.warp('caldera_arena', 'waiting');
     ev.rest();
     await ev.caption('控え室で、ひと息ついた。\n（HP・MP が回復した）', { ms: 1800 });
-  }, { meta: { needs: ['flag:ash_entered'], gives: ['var:ash_round+5', 'flag:ash_round_4'], calls: ['arena_champion', 'arena_final_words'] } });
+  }, { meta: { needs: ['flag:ash_entered'], gives: ['var:ash_round+5', 'flag:ash_round_4'], calls: ['caldera_arena_champion', 'caldera_arena_final_words'] } });
 
   // 決勝の前のザクロ（律儀）
-  E('arena_final_words', async (ev) => {
+  E('caldera_arena_final_words', async (ev) => {
     await ev.say('opp_5', ['ザクロだ。雇われだが、\n手は抜かねえ。', '大技の前には、そう言う。\nそれが決まりだ。……構えな。'], ZAKURO);
     if (ev.choiceOf('ch_ash_bribe') === 'accept') await ev.say('opp_5', '……前の晩の使いの話は、\n聞かなかったことにしてくれ。\n俺は、ああいうのは好かねえ。', ZAKURO);
   });
 
   // 優勝: 族長が砂に下りてくる → 火口の岩戸を開ける（ash_champion）
-  E('arena_champion', async (ev) => {
+  E('caldera_arena_champion', async (ev) => {
     if (champ(ev)) return;
     ev.setFlag('ash_champion');
     if (!ev.var('ash_losses')) ev.setFlag('ash_unbeaten');
@@ -276,28 +276,28 @@
   });
 
   // ---------------------------------------------------------------- 闘技場の人と物（名簿・銘板・立会人の席・賭け・ザクロ）
-  E('arena_roster', async (ev) => {
+  E('caldera_arena_roster', async (ev) => {
     await ev.say(null, ['受付の台の上の、大会の名簿。', '若者組・獣使いのガロ・\n術師の姉妹・鉄鎧のバルガ……。', '「十六番、ザクロ（記録院付き）」\nそこだけ、見慣れない字の札だ。']);
     await X().lore(ev, 'lo_ev_ash');
     ev.lead('l_main_recorder_ash');
     ev.lead('l_ash_stranger');
   }, { meta: { needs: [], gives: ['lore:lo_ev_ash', 'lead:l_main_recorder_ash', 'lead:l_ash_stranger'] } });
-  E('arena_plaque', async (ev) => {
+  E('caldera_arena_plaque', async (ev) => {
     const lines = ['西の観客席の柱に、\n小さな銘板がある。', '「光暦二九二年　冬至の前夜\n最後の代理試合」', 'その下に、名が二つ\n彫られていたらしい。\n……削れて、読めない。'];
     if (ev.flag('ash_singer_board')) lines.push('銘板の下に、新しい板が一枚。\n「歌い手の席」とだけ、\n彫られている。');
     await ev.say(null, lines);
     await X().lore(ev, 'lo_time_ash');
   }, { meta: { needs: [], gives: ['lore:lo_time_ash'] } });
-  E('arena_witness_seat', async (ev) => {
+  E('caldera_arena_witness_seat', async (ev) => {
     await ev.say(null, ['西の観客席の上に、背もたれの\n高い石の席がひとつ。', '立会人の席だという。\n二十年、誰も座っていない。\n席の上に、灰が薄く積もっている。']);
   });
-  E('arena_board', async (ev) => {
+  E('caldera_arena_board', async (ev) => {
     const lines = ['勝ち抜きの板。\n今年の炎の試練の勝ち上がりが、\n焼き印で押されている。'];
     if (ev.flag('ash_unbeaten')) lines.push('いちばん上に、\n「無敗の語り部」と刻まれている。');
     else if (champ(ev)) lines.push('いちばん上に、十七番の札。');
     await ev.say(null, lines);
   });
-  E('arena_rest', async (ev) => {
+  E('caldera_arena_rest', async (ev) => {
     if (!ev.flag('ash_entered') || champ(ev)) { await ev.say(null, '控え室の長椅子。\n汗と、湯の花の匂いがする。'); return; }
     const i = await ev.choose(['休む', 'やめる'], { text: '控え室の長椅子で、ひと休みする？' });
     if (i !== 0) return;
@@ -306,11 +306,11 @@
     await ev.fade('in', 400);
     await ev.caption('ひと休みした。\n（HP・MP が回復した）', { ms: 1600 });
   });
-  E('arena_zakuro_bag', async (ev) => {
+  E('caldera_arena_zakuro_bag', async (ev) => {
     if (!champ(ev)) { await ev.say(null, ['ザクロの控え室の荷だ。\n……勝手に開けるのは、やめておこう。']); return; }
     await ev.say(null, ev.flag('ash_zakuro_letter') ? '荷は、きちんと縛り直されている。' : ['ザクロの荷だ。\n本人に断ってからにしよう。']);
   });
-  E('arena_zakuro', async (ev) => {
+  E('caldera_arena_zakuro', async (ev) => {
     if (ev.flag('ash_zakuro_letter')) { await ev.say('zakuro', ['俺は北へ行く。\n雇い主には、降りたと伝えた。', '……次に会うときは、\n雇われじゃなく会いたいもんだ。'], ZAKURO); return; }
     await ev.say('zakuro', ['負けたよ。いい腕だ。', '記録院に雇われて、\n火口の絵を写す仕事だった。\n写せば、この土地の争いの種が\nなくなるらしい。'], ZAKURO);
     await ev.say('zakuro', '……写す仕事は降りる。\n後味が悪い。', Object.assign({ voice: 'v_zakuro_ash_01' }, ZAKURO));
@@ -321,16 +321,16 @@
     try { await ev.leave('zakuro'); } catch (e) { /* */ }
     ev.setFlag('ash_zakuro_gone');
   }, { meta: { needs: ['flag:ash_champion'], gives: ['flag:ash_zakuro_letter', 'flag:ash_zakuro_gone'] } });
-  E('arena_dorga', async (ev) => { await ev.call('caldera_dorga', { npc: 'dorga_plaque' }); });
-  E('arena_fan', async (ev) => {
-    await ev.say('arena_fan', cleared(ev) ? (X().skyLine() || ['火の鳥、見た？\n闘技場の上を、ぐるっと\n回っていったよ！']) : champ(ev) ? 'ねえ、ザクロを倒したの？\nすっげえ！' : ['四回戦の鉄鎧のバルガは、\n剣がぜんぜん通らないんだ。', 'でも、棍棒や槌で\nたたくと、よく響くんだって！']);
+  E('caldera_arena_dorga', async (ev) => { await ev.call('caldera_dorga', { npc: 'dorga_plaque' }); });
+  E('caldera_arena_fan', async (ev) => {
+    await ev.say('caldera_arena_fan', cleared(ev) ? (X().skyLine() || ['火の鳥、見た？\n闘技場の上を、ぐるっと\n回っていったよ！']) : champ(ev) ? 'ねえ、ザクロを倒したの？\nすっげえ！' : ['四回戦の鉄鎧のバルガは、\n剣がぜんぜん通らないんだ。', 'でも、棍棒や槌で\nたたくと、よく響くんだって！']);
   });
-  E('arena_vet', async (ev) => {
-    await ev.say('arena_vet', ['術師の姉妹とやるなら、\n姉のヒノエを先に落とせ。\n妹を何度でも起こすからな。', '妹が目を閉じて長く唱えたら、\n身を固めろ。火柱が来るぞ。', '……南の黒い砂浜にゃ、\n動く岩がいる。火山ガメだ。']);
+  E('caldera_arena_vet', async (ev) => {
+    await ev.say('caldera_arena_vet', ['術師の姉妹とやるなら、\n姉のヒノエを先に落とせ。\n妹を何度でも起こすからな。', '妹が目を閉じて長く唱えたら、\n身を固めろ。火柱が来るぞ。', '……南の黒い砂浜にゃ、\n動く岩がいる。火山ガメだ。']);
     ev.lead('l_opt_turtle');
   }, { meta: { needs: [], gives: ['lead:l_opt_turtle'] } });
   // 賭け（順番・選択: ほかの試合の勝ちを当てる。段位ごとに 1 回だけ品）
-  E('arena_bookie', async (ev) => {
+  E('caldera_arena_bookie', async (ev) => {
     const x = X();
     await ev.say('bookie', ev.flag('ash_bet_done') ? '当て屋の旦那、今夜も一口どうだい。' : ['賭け屋のボッツだ。\nほかの試合に、一口どうだい。', '当てるたびに、段が上がる。\n三段まで行ったら、いい物をやるよ。']);
     ev.lead('q_ash_bet');
@@ -367,13 +367,13 @@
     }
   }, { meta: { needs: [], gives: ['lead:q_ash_bet', 'flag:ash_bet_done'] } });
   // 挑戦者の間（解決の後。5 組の勝ち抜き。3 組と 5 組で品。ティア連動）
-  E('arena_challenge', async (ev) => {
+  E('caldera_arena_challenge', async (ev) => {
     await ev.say('receptionist', ev.flag('ash_challenge_done') ? '挑戦者の間は、いつでも\n開いていますよ。' : ['大会は終わりましたが、\n挑戦者の間が開いています。', '五組を勝ち抜く腕試し。\n三組、五組で品が出ますよ。']);
     ev.lead('q_ash_challenge');
     const i = await ev.choose(['挑戦者の間に入る', '売り台を見る', 'やめる'], { text: '受付のミランが、札を差し出している。' });
     if (i === 1) { await ev.shop('shop_arena'); return; }
     if (i !== 0) return;
-    const list = ['tr_ash_r1', 'tr_ash_r2', 'tr_ash_r3', 'tr_ash_r4', 'tr_b_zakuro'];
+    const list = ['tr_ash_r1', 'tr_b_ash_r2', 'tr_b_ash_r3', 'tr_b_ash_r4', 'tr_b_zakuro'];
     await ev.fade('out', 400);
     await ev.warp('caldera_arena', 'sand');
     let won = 0;

@@ -24,7 +24,7 @@
     R.def('materials', id, { name, edge: M[id].edge, walk: M[id].walk });
   }
   /** ワールドの凡例の素材 → ワールドの素材（tools/gen_world.js と同じ表。生成器が使う） */
-  T.WORLD_MATS = { grass: 'wm_grass', flowers: 'wm_flowers', tall_grass: 'wm_tall_grass', moss_earth: 'wm_forest_floor', dirt: 'wm_dirt', road: 'wm_road', mud: 'wm_mud',
+  T.WORLD_MATS = { grass: 'wm_grass', flowers: 'wm_flowers', tall_grass: 'wm_tall_grass', moss_earth: 'wm_forest_floor', dirt: 'wm_road', road: 'wm_road', mud: 'wm_mud',
     sand: 'wm_sand', dune_sand: 'wm_dune', cracked_clay: 'wm_clay', snow: 'wm_snow', snow_path: 'wm_snow_path', ice: 'wm_ice', peat_grass: 'wm_peat',
     marsh_water: 'wm_marsh_water', rock: 'wm_rock', ash: 'wm_ash', obsidian: 'wm_obsidian', sea: 'wm_sea', deep_water: 'wm_deep', shallow: 'wm_shallow', water: 'wm_lake' };
 })(window.RPG);

@@ -93,7 +93,7 @@
     // 行商人ロッタの旅: 雪原の名物（毛皮）を運ぶ配達の 1 つ（旗 lotta_fur を ロッタの担当が読む）
     lotta: { region: 'world', item: 'hd_yeti_fur', flag: 'lotta_snow_fur' },
     // 鉱山の「誓い」の道: ドヴァン ⇔ 雪原の近道（WORLD §2.5）。峠の宿の東の崖崩れの番人の所に出る
-    mine_shortcut: { region: 'r_mine', at: { map: 'world', x: 90, y: 31 } },
+    mine_shortcut: { region: 'r_mine', at: { map: 'world', lx: 90, ly: 31 } },   // 論理の座標 L（WORLD v3: 使うときに R.WorldXform.fill(R.DB.maps.world, at) で W の x, y）
   };
 
   // ---------------------------------------------------------------- 手紙（K.letter）: くべられなかった手紙（拾った順で n 通目。灯の数 n−1 以上で読める）

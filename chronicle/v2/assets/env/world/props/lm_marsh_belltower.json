@@ -1,0 +1,47 @@
+{
+ "id": "lm_marsh_belltower",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   52,
+   72
+  ],
+  "32": [
+   69,
+   96
+  ],
+  "40": [
+   86,
+   120
+  ]
+ },
+ "feet": {
+  "24": [
+   26,
+   70
+  ],
+  "32": [
+   34,
+   94
+  ],
+  "40": [
+   43,
+   118
+  ]
+ },
+ "files": {
+  "24": "lm_marsh_belltower@24.png",
+  "32": "lm_marsh_belltower@32.png",
+  "40": "lm_marsh_belltower@40.png"
+ },
+ "fam": "marsh",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  2,
+  2
+ ]
+}

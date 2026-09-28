@@ -53,7 +53,7 @@ ok(`灰の荒野のイベント ${myEvents.length} 本が R.DB.events にある`
 const leads = Object.entries(D.leads).filter(([, l]) => l.region === 'r_ash');
 ok(`灰の荒野の手がかり ${leads.length} 件（地方・依頼・うわさ）`, leads.length >= 12, leads.length);
 ok('手がかりが K.lead', leads.every(([, l]) => R.Contract.check('lead', l).ok), leads.filter(([, l]) => !R.Contract.check('lead', l).ok).map(([id]) => id));
-ok('編成（大会 4 回戦・決勝ザクロ・炎の番犬・溶岩の巨獣・写し手）', ['tr_ash_r1', 'tr_ash_r2', 'tr_ash_r3', 'tr_ash_r4', 'tr_b_zakuro', 'tr_b_hellhound', 'tr_b_lavabeast', 'tr_ash_copyists'].every((t) => D.troops[t] && R.Contract.check('troop', D.troops[t]).ok));
+ok('編成（大会 4 回戦・決勝ザクロ・炎の番犬・溶岩の巨獣・写し手）', ['tr_ash_r1', 'tr_b_ash_r2', 'tr_b_ash_r3', 'tr_b_ash_r4', 'tr_b_zakuro', 'tr_b_hellhound', 'tr_b_lavabeast', 'tr_ash_copyists'].every((t) => D.troops[t] && R.Contract.check('troop', D.troops[t]).ok));
 ok('場所 caldera・haimi・volcano', ['caldera', 'haimi', 'volcano'].every((id) => D.locations[id] && D.locations[id].region === 'r_ash' && D.maps[D.locations[id].map]));
 ok('店 4 つ（殻の道具屋・武具屋・闘技場の売り台・灰見の宿）と品がそろう', ['shop_caldera_items', 'shop_caldera_arms', 'shop_arena', 'shop_haimi'].every((id) => D.shops[id] && R.Contract.check('shop', D.shops[id]).ok &&
   [...D.shops[id].items, ...Object.values(D.shops[id].tier || {}).flat()].every((it) => D.items[it])));
@@ -192,21 +192,21 @@ async function story() {
   const G = R.Game;
   // 出場 → 1 回戦を負け → もう一度 → 勝ち
   let f = fakeEv({ choose: [0] });
-  await D.events.arena_reception.run(f.ev, {});
+  await D.events.caldera_arena_reception.run(f.ev, {});
   ok('受付で出場（出場の札）', G.flags.ash_entered === true && (G.items.k_arena_token || 0) > 0);
   f = fakeEv({ choose: [0], battles: ['lose'] });
-  await D.events.arena_reception.run(f.ev, {});
+  await D.events.caldera_arena_reception.run(f.ev, {});
   ok('1 回戦に負けると控え室で全快し、同じ回からやり直せる', X.round(f.ev) === 0 && G.vars.ash_losses === 1 && f.said.some((s) => s[0] === 'rest') && f.said.some((s) => s[0] === 'battle' && s[1] === 'tr_ash_r1'));
-  for (let n = 1; n <= 4; n++) { f = fakeEv({ choose: [0] }); await D.events.arena_reception.run(f.ev, {}); }
+  for (let n = 1; n <= 4; n++) { f = fakeEv({ choose: [0] }); await D.events.caldera_arena_reception.run(f.ev, {}); }
   ok('1〜4 回戦を勝ち抜く（相手の組が回ごとに違う）', G.vars.ash_round === 4 && G.vars.ash_bout === 0);
   f = fakeEv({ choose: [0] });
-  await D.events.arena_reception.run(f.ev, {});
+  await D.events.caldera_arena_reception.run(f.ev, {});
   ok('決勝は、宿で休む（前夜）まで出られない', G.vars.ash_round === 4 && !f.said.some((s) => s[0] === 'battle'));
   f = fakeEv({ choose: [0, 1] });
   await D.events.caldera_inn_keeper.run(f.ev, {});
   ok('4 回戦のあと宿で休むと、決勝の前夜の使い（受けた）', G.flags.ash_eve_done === true && G.choices.ch_ash_bribe === 'accept' && f.said.some((s) => /明後日の夜明け前/.test(String(s[1]))));
   f = fakeEv({ choose: [0] });
-  await D.events.arena_reception.run(f.ev, {});
+  await D.events.caldera_arena_reception.run(f.ev, {});
   ok('決勝ザクロ → 優勝（岩戸が開く）。一度負けたので無敗ではない', G.flags.ash_champion === true && !G.flags.ash_unbeaten && f.said.some((s) => s[0] === 'battle' && s[1] === 'tr_b_zakuro'));
   // 受けた: 写し手を止める
   f = fakeEv({});
@@ -236,7 +236,7 @@ async function story() {
   // 卵に語る: 白い壁画の行は短い → 締め → 断った = 闘士の帯
   R.Game.flags.ash_lavabeast = true;
   f = fakeEv({ choose: [1] });
-  await D.events.crater_egg.run(f.ev, {});
+  await D.events.ash_crater_egg.run(f.ev, {});
   ok('卵に語る（白くされた壁画は一行短い）→ 締め → 年代記（痛み）で歌い手の席', R.Game.flags.ash_egg && R.Game.flags.ash_finale_done && R.Game.choices.ch_ash_write === 'pain' && R.Game.flags.ash_singer_board && f.said.some((s) => s[1] === X.TELL_BLANK));
   ok('断った: 族長から闘士の帯', (R.Game.items.u_champion_belt || 0) > 0 && !(R.Game.items.u_mural_ember || 0));
   R.State.newGame({ seed: 5 });
@@ -248,7 +248,7 @@ async function story() {
   R.State.newGame({ seed: 6 });
   R.Game.flags.ash_entered = true; R.Game.vars.ash_round = 4; R.Game.flags.ash_eve_done = true; R.Game.choices.ch_ash_bribe = 'refuse';
   f = fakeEv({ choose: [0] });
-  await D.events.arena_reception.run(f.ev, {});
+  await D.events.caldera_arena_reception.run(f.ev, {});
   ok('一度も負けずに優勝すると「無敗の語り部」', R.Game.flags.ash_champion && R.Game.flags.ash_unbeaten);
 }
 function clearing() {

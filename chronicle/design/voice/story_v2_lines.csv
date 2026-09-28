@@ -114,5 +114,5 @@ v_dorga_ash_02,dorga,story,v2/src/events/ash_caldera.js,caldera_dorga,the singer
 v_dorga_ash_03,dorga,story,v2/src/events/ash_volcano.js,ash_finale,"the plaque, the painful chronicle chosen",……歌い手の席を、空けておこう。\nいつか、二人の名を\n彫れる日が来るまで。,"moved and resolved, standing before the old plaque; gentle and firm"
 v_kaya_ash_01,kaya,story,v2/src/events/ash_caldera.js,caldera_kaya,first meeting page 2,卵が、冷えていくの。\n火の鳥の物語を、語ってあげなきゃ\nいけないのに……。,"worried and close to tears, a young priestess who has failed her duty"
 v_kaya_ash_02,kaya,story,v2/src/events/ash_caldera.js,caldera_kaya,first meeting page 3,去年、記録院の人に語ったら、\nそれきり……声に出そうとしても、\n出てこないの。,"bewildered and afraid; the words have gone since she told them to the Archive"
-v_zakuro_ash_01,zakuro,story,v2/src/events/ash_caldera.js,arena_zakuro,after the final page 2,……写す仕事は降りる。\n後味が悪い。,"beaten, calm and blunt; decides to quit a job that tastes bad"
-v_zakuro_ash_02,zakuro,story,v2/src/events/ash_caldera.js,arena_zakuro,after the final: the letter,人の手紙は読まねえ。\nそういう決まりで生きてる。,"terse and matter-of-fact about his own rule; quietly proud"
+v_zakuro_ash_01,zakuro,story,v2/src/events/ash_caldera.js,caldera_arena_zakuro,after the final page 2,……写す仕事は降りる。\n後味が悪い。,"beaten, calm and blunt; decides to quit a job that tastes bad"
+v_zakuro_ash_02,zakuro,story,v2/src/events/ash_caldera.js,caldera_arena_zakuro,after the final: the letter,人の手紙は読まねえ。\nそういう決まりで生きてる。,"terse and matter-of-fact about his own rule; quietly proud"

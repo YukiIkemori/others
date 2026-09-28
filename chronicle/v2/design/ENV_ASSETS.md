@@ -258,3 +258,58 @@ Raw paintings and guides: `design/art_ref/gen/env/under/<map>_genN_raw.png` and 
 - **hawks_1** came back with a flat wall-top colour. `toptex.py` adds the tile render's rock texture as a high-pass on wall-top cells (`TOPTEX=0.7`).
 - The rooms are padded to whole chunks (`PAD=1`, `pad.py`); otherwise the light multiply turns the transparent area below a small room white.
 - Images: 20 generations in all, one per map except temple_1. temple_1 gen1 was rejected, but its pillar row was lost to my warp, not to the model; the raw gen1 was fine. Five small-room calls were rejected as too small (768×640 is under the model's minimum pixel budget; 12×10 rooms now use 80 px/tile, which gives 960×800). Emit: none. Torches, braziers and lamps stay sprites and keep their lights.
+
+## 9. Props painted into the paintings, and themed functional sprites (2026-09-28, demo slice)
+
+The owner found the small props on the painted maps "floating" and wrongly sized (「小物…明らかに浮いてない？サイズ感全然合ってないし。」). The props were separate generated sprites with flat light, a harder pixel style and no contact shadow, laid over a softer painting. Plan A+B was approved on two conditions: **edit the existing paintings, do not regenerate the maps** (「ベースはもうあるからソレ使ってね？もったいないから」), and generate with the OpenAI API. The budget is limited (「節約できるところは節約してね」), so every call covers a whole cluster of props.
+
+**Scale check.** On a painted map, sprites are not mis-scaled by the engine. The painting is box-downscaled to @24/@32/@40 (`T.Env.under(key, tile)`), and a sprite is drawn from its own @tile image (`E.prop` → `envProp`), so both are at t px per tile. The mismatch came from how the sprites were drawn (flat, outlined, no shadow), not from the renderer. `props.js` scaling is therefore unchanged.
+
+### A. Paint decorative props into the painting (`_tools/propfix/`)
+
+1. `node dump.js` writes `maps.json` (objects, grid and art of the scope maps).
+2. `classify.py` sorts each prop:
+   - **Decorative** (painted in): barrel, crate, sack, flower_pot, planter, net, hay, stump, log, rock_small, rock, fern, reeds, bench, table, chair, bush, bollard, rowboat, grave, tent, bookshelf, tree_giant, well.
+   - **Kept as sprites**: every other id (lamps, lanterns, braziers, torches, crystals, glowing mushrooms, songstones, boards, stalls, ships, stairs, doors, chests, springs); any prop with a `cond` or `lv`; any prop within one tile of a `K.exam` target; any prop on or next to a closed-layer `live` cell (secrets, tilePatches); ids already in `art.painted`.
+3. `windows.py` and `mkjob.py` greedily cover the decorative props with edit windows of 32×21, 21×21 or 21×32 tiles. A prop must be at least 1.5 tiles inside the window. A window with fewer than 3 props, or with only tiny stones, is not worth a call, and its props stay sprites (`plan.json` `leftover`). The model input is the current @32 painting with **only that window's decorative sprites** composited, upscaled ×1.5 to 48 px/tile (the paintings' native generation scale: 1536×1008, 1008×1008 or 1008×1536). The prompt lists the objects with a natural size in tiles for each, and asks for: the same place and footprint, a natural size, the painting's upper-left light, palette and brushwork, a soft contact shadow, everything else unchanged, nothing removed, no light effects. One `gen_env.py` call per window (quality high, 1 reference = the crop).
+4. `apply.py <map> <k>` composites the edit back:
+   - **Alignment**: the model sometimes reframes the crop slightly (up to about 2 % zoom and 7 px). A scale and offset are fitted on normalised luminance away from the props.
+   - **Colour**: per-channel moment matching away from the props. A least-squares fit underestimates the gain on re-rendered texture.
+   - **Did the model paint it?** For each prop, the change inside the sprite box is divided by the change in a ring around it. A ratio below 1.6 means the spot was left empty; that prop is not masked, and it stays a sprite.
+   - **Mask**: the sprite box + 5 px (+3 px below for the shadow), Gaussian-feathered. The edit is resampled for each tile size (24/32/40) with the same warp and blended in place. Outside the masks the painting stays pixel-identical.
+   - The untouched paintings are kept in `work/orig/` and the results are recorded in `applied.json`.
+5. **Review is required.** `contact.py <map> out.png` shows old sprite | new painting, 3×3 tiles per painted prop. The ratio test misses some removals (a sack at 1.93 had been erased) and flags some real paintings as removed (Yura's graves at 1.6). Fix with `apply.py … id@x,y` (force keep), `--all` (after a visual check), or `revert.py <map> <id> <x> <y>` (copies the original pixels back and keeps the sprite).
+6. `mark.py` writes the painted props into the map's `art.painted` as `'id@x,y'` entries (plain ids keep their old meaning, "every prop of this id").
+   - `chunks.js` skips a sprite whose id **or** `id@x,y` is listed.
+   - The object stays in the data, so collision (and the town clutter rule in `collide.js`), density counts, light pools (`props_light.js` reads objects) and interactions are unchanged.
+   - The painted object sits on the same tile as its collision.
+   - A lit prop (e.g. a table with a candle) keeps its light without its sprite, the same trick as the snow hearth.
+
+**Density tests**: `test_content_p` / `test_content_f` / `check_density` count objects, and painted props are still objects, so no test change was needed (roa median 35, pharos median 25).
+
+### B. Themed functional sprites (`sheets.py`)
+
+- Each set is **one sheet** generated with one call. The style reference is that region's first edited window (`propfix/<map>_w0.png`, which shows the painting and painted-in props at the right scale). The background is transparent. The sheet is cut with `proc_props.grouped/reading_order`.
+- `sheets.py cut <set>`:
+  - `pixelize_sprite` with 32 colours and **no dark outline** (the outline was part of the stuck-on look).
+  - Height = the old sprite's @32 height, so light anchors and footprints are unchanged; width is capped at 115 % of the old sprite.
+  - A **baked soft contact shadow**: an ellipse under the base, offset to the lower right for the upper-left light, alpha 0.45 for soft props and 0.28 for solid props (the engine adds its blob under solid props too). Stairs get none.
+  - `light32` is scaled from the base sprite.
+- Files: `assets/env/<folder>/props/<id>__<set>@24/32/40.png` + json (`set`, `base`).
+- Lookup:
+  - Map theme → set is `PROP_SET` in `props.js`: harbor→harbor, hill_village→village, treetop and moss_village→forest, forest_dungeon and tree_inside→wood, cave→cave, lighthouse→lighthouse. `map.propSet` overrides it.
+  - `T._propSet` (called by `planOf` in `chunks.js`, one line) adds `opts.set` to the plan items and dyn items whose id has a `<id>__<set>` image.
+  - `bakeProp` then prefers `T.Env.prop(id + '__' + set)`. Hd caches per opts, so each set bakes separately.
+  - `<id>__<set>` ids are not registered as placeable props.
+  - Other regions and ids are unaffected. Chests stay common: they are meant to stand out on every floor (WORLD_REDESIGN §6.3).
+
+### Applying this to another region (desert, snow, marsh, ash…)
+
+Add the maps to `dump.js`, then run the pipeline: `node dump.js` → `python3 mkjob.py <maps>` → `gen_env.py work/jobs.json` → `apply.py` per window → `contact.py` review (+ `revert.py`) → `mark.py`. Then add a set to `sheets.py SETS` and to `props.js PROP_SET` → `sheets.py jobs <set>` → `gen_env.py work/sheet_jobs.json` → `sheets.py cut <set>` → build.
+- Extend `classify.DECOR` if the region has its own decorative ids (desert `clay_jars`, snow `firewood`…).
+- Delete `work/` afterwards; keep `plan.json`, `applied.json` and the raw edits.
+
+### Results (demo slice)
+
+| Map | Windows | Painted in | Still sprites (all ids) | …of which decorative |
+|---|---|---|---|---|

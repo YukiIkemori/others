@@ -18,9 +18,9 @@
   X.BOUTS = [
     null,
     { n: 1, troop: 'tr_ash_r1', name: '一回戦', foe: '一族の若者たち', intro: '一族の若者が四人、\n砂の上にずらりと並んだ。', npcs: ['opp_1a', 'opp_1b'] },
-    { n: 2, troop: 'tr_ash_r2', name: '二回戦', foe: '獣使いのガロ', intro: '獣使いのガロが口笛を吹くと、\n岩の獣と火トカゲの子が\n砂を蹴って飛び出してきた。', npcs: ['opp_2'] },
-    { n: 3, troop: 'tr_ash_r3', name: '三回戦', foe: '術師の姉妹', intro: '術師の姉妹が、杖を交差させて\n一礼した。「姉のヒノエ」「妹のスミ」', npcs: ['opp_3a', 'opp_3b'] },
-    { n: 4, troop: 'tr_ash_r4', name: '四回戦', foe: '鉄鎧のバルガ', intro: '鉄鎧のバルガが、大斧を\n砂に突き立てた。\n鎧の中から、低い笑い声がする。', npcs: ['opp_4'] },
+    { n: 2, troop: 'tr_b_ash_r2', name: '二回戦', foe: '獣使いのガロ', intro: '獣使いのガロが口笛を吹くと、\n岩の獣と火トカゲの子が\n砂を蹴って飛び出してきた。', npcs: ['opp_2'] },
+    { n: 3, troop: 'tr_b_ash_r3', name: '三回戦', foe: '術師の姉妹', intro: '術師の姉妹が、杖を交差させて\n一礼した。「姉のヒノエ」「妹のスミ」', npcs: ['opp_3a', 'opp_3b'] },
+    { n: 4, troop: 'tr_b_ash_r4', name: '四回戦', foe: '鉄鎧のバルガ', intro: '鉄鎧のバルガが、大斧を\n砂に突き立てた。\n鎧の中から、低い笑い声がする。', npcs: ['opp_4'] },
     { n: 5, troop: 'tr_b_zakuro', name: '決勝', foe: 'ザクロ', intro: '「記録院付き」の名札を下げた闘士が、\n刀の柄に手を置いて立っている。', npcs: ['opp_5'] },
   ];
   // 壁画の物語（v1 の文のまま）。3 つ目は、写し手に白くされると後半が消える

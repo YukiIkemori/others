@@ -1,0 +1,47 @@
+{
+ "id": "lm_ash_crag",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   128,
+   78
+  ],
+  "32": [
+   170,
+   104
+  ],
+  "40": [
+   212,
+   130
+  ]
+ },
+ "feet": {
+  "24": [
+   64,
+   76
+  ],
+  "32": [
+   85,
+   102
+  ],
+  "40": [
+   106,
+   128
+  ]
+ },
+ "files": {
+  "24": "lm_ash_crag@24.png",
+  "32": "lm_ash_crag@32.png",
+  "40": "lm_ash_crag@40.png"
+ },
+ "fam": "ash",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  5,
+  3
+ ]
+}

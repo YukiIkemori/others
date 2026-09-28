@@ -2,7 +2,7 @@
 //   1 階: volcano_arrive・溶岩のせきのレバー（流れが A と B の間で入れ替わる）・壁画 3 つ（好きな順。3 つで火口への岩戸が開く）・
 //         炎の番犬（tr_b_hellhound、東の部屋の前）・記録院の写し手（西の部屋の前。八百長を受けた = 刻限を知っていれば止められる。
 //         断った = 着いたときには壁画 3 の後半が白く塗りこめられている）
-//   火口: crater_arrive・溶岩の巨獣（tr_b_lavabeast、土手道）→ 火口の縁にフィーネ（v_fine_ash_01、録音の文のまま）→
+//   火口: ash_crater_arrive・溶岩の巨獣（tr_b_lavabeast、土手道）→ 火口の縁にフィーネ（v_fine_ash_01、録音の文のまま）→
 //         卵に壁画の物語を語る（白くされた壁画は一行短い）→ 火の鳥がかえる → ash_finale（clearRegion('r_ash') → 町の上を火の鳥がめぐる →
 //         闘技場の銘板の前でドルガ → 年代記に書く選択 ch_ash_write → 帯か残り火）
 //   ワールド: 火山の岩戸（優勝の前）・峠の旅人・湯の郷・火山ガメの浜・折れた剣の碑・灰見の宿の人。
@@ -95,11 +95,11 @@
   }, { meta: { needs: ['flag:ash_champion'], gives: ['flag:ash_copy_done'] } });
 
   // ================================================================ 火口
-  E('crater_arrive', async (ev) => {
+  E('ash_crater_arrive', async (ev) => {
     if (ev.flag('ash_lavabeast')) return;
     await ev.caption('火口。溶岩の湖のまん中の島に、\n灰をかぶった大きな卵が見える。', { ms: 2600 });
   });
-  E('crater_beast', async (ev) => {
+  E('ash_crater_beast', async (ev) => {
     if (ev.flag('ash_lavabeast')) return;
     ev.bgm('omen');
     await ev.say(null, '卵へ続く土手道の前で、\n煮えたぎる溶岩が盛り上がった！');
@@ -111,11 +111,11 @@
     ev.setFlag('ash_lavabeast');
     await ev.say(null, '溶岩の巨獣は、黒い岩になって\n崩れ落ちた。');
     ev.leadDone('l_ash_volcano');
-    await ev.call('crater_fine');
+    await ev.call('ash_crater_fine');
     ev.mapBgm();
-  }, { meta: { needs: [], gives: ['flag:ash_lavabeast', 'flag:ash_fine_seen'], calls: ['crater_fine'] } });
+  }, { meta: { needs: [], gives: ['flag:ash_lavabeast', 'flag:ash_fine_seen'], calls: ['ash_crater_fine'] } });
   // 火口の縁のフィーネ（録音の文のまま。卵がかえる前）
-  E('crater_fine', async (ev) => {
+  E('ash_crater_fine', async (ev) => {
     if (ev.flag('ash_fine_seen')) return;
     R.Audio && R.Audio.pushBgm && R.Audio.pushBgm('fine_theme');
     try {
@@ -131,7 +131,7 @@
     } finally { R.Audio && R.Audio.popBgm && R.Audio.popBgm(); }
   }, { meta: { needs: ['flag:ash_lavabeast'], gives: ['flag:ash_fine_seen'] } });
   // 卵に壁画の物語を語る → 火の鳥がかえる → 締め
-  E('crater_egg', async (ev) => {
+  E('ash_crater_egg', async (ev) => {
     const x = X();
     if (x.cleared(ev)) { await ev.say(null, ['からっぽの殻が、まだ\nほんのり温かい。']); return; }
     if (!ev.flag('ash_lavabeast')) { await ev.say(null, ['灰をかぶった、大きな卵。\n手を当てると、冷たい。']); return; }
