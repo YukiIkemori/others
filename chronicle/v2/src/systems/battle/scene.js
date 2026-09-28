@@ -253,7 +253,7 @@
     const repeatOn = !!(live && st.B && st.B.repeatOn);
     if (live && !st.L.tall) {
       if (repeatOn) list = [{ btn: 'l', label: 'でやめる', repeat: true }].concat(list.filter((p) => p.btn !== 'b' && p.btn !== 'l'));
-      else if ((st.partyOpts || []).includes('repeat')) list = list.concat([{ btn: 'l', label: 'リピート' }]);
+      else list = list.concat([{ btn: 'l', label: 'リピート' }]);
       list = list.concat([{ btn: 'r', label: '速さ：' + Bt.speedLabel(speed()) }]);
     }
     return { list, repeatOn: repeatOn && !st.L.tall };
@@ -395,7 +395,8 @@
           const can = (st.partyOpts || []).includes('repeat');
           if (st.B.repeatOn) { st.B.setRepeat(false); if (R.UIK && R.UIK.toast) R.UIK.toast('リピート：OFF', { anchor: 'bl' }); }
           else if (can && st.phase === 'input') st.chipTap = 'repeat';
-          else if (can) { st.B.setRepeat(true); if (R.UIK && R.UIK.toast) R.UIK.toast('リピート：ON（次のラウンドから）', { anchor: 'bl' }); }
+          // 繰り返す命令がまだ無い（最初のラウンド）: ON だけ先に立て、このラウンドの命令を次から繰り返す（持ち主 2026-09-28「最初のターンでも ON に」）
+          else { st.B.setRepeat(true); if (R.UIK && R.UIK.toast) R.UIK.toast(can ? 'リピート：ON（次のラウンドから）' : 'リピート：ON（このラウンドの命令を次から繰り返す）', { anchor: 'bl' }); }
         }
         // 縦持ちの札（タップ）
         const p = I.pointer;
