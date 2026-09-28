@@ -104,7 +104,7 @@
     'quest?': 'any',     // 頭の上の依頼の吹き出し（R.Leads.offerOf）の依頼 id か配列で上書き。false で出さない。無ければ talk の台本の meta.gives から
   };
   K.map = {
-    id: 'string', name: 'string', kind: '"town"|"interior"|"dungeon"|"world"', 'optional?': 'bool', region: 'string', 'location?': 'string',
+    id: 'string', name: 'string', kind: '"town"|"interior"|"dungeon"|"world"|"field"', 'optional?': 'bool', region: 'string', 'location?': 'string',
     w: 'int', h: 'int', legend: 'object', rows: 'string[]', 'outside?': 'string', 'objects?': [K.mapObject], 'npcs?': [K.npc], spawns: 'object',
     'exits?': [{ x: 'int', y: 'int', w: 'int', h: 'int', to: { map: 'string', spawn: 'string' }, 'cond?': 'any' }],
     'triggers?': [{ id: 'string', 'x?': 'int', 'y?': 'int', 'w?': 'int', 'h?': 'int', on: '"step"|"enter"', event: 'string', 'cond?': 'any', 'once?': 'bool' }],   // 'enter' は範囲なし（マップに入るたび。once で 1 回）
@@ -269,6 +269,7 @@
   const THEMES = ['harbor', 'treetop', 'moss_village', 'forest_dungeon', 'tree_inside', 'lighthouse', 'cave', 'world', 'hill_village'];
   THEMES.push('snow', 'snow_town', 'ice_cave');   // 雪原（snow_*.js）
   THEMES.push('desert', 'desert_town', 'tomb');   // 砂漠（desert_*.js）
+  THEMES.push('field');   // エリア切り替えのフィールド（kind 'field'、field_*.js。1 エリア = 1 枚の描いた絵）
   // アイコンの名前（R.UIK.icon。MODERN_UI の kit.js の一覧から、斧・槍を除き、版 2 で使う物を足した）
   const ICONS = ['bag', 'arts', 'equip', 'sword', 'greatsword', 'dagger', 'bow', 'staff', 'shield', 'helm', 'armor', 'glove', 'boots', 'ring',
     'order', 'beast', 'book', 'journal', 'map', 'save', 'gear', 'warp', 'exit', 'potion', 'gem', 'coin', 'clock', 'pin', 'quest', 'bulb',

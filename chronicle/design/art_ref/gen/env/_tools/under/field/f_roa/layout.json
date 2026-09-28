@@ -1,0 +1,510 @@
+{
+"id": "f_roa",
+"w": 52,
+"h": 40,
+"rows": [
+"FFFFFFFFFFFFFFFFFFFFF,,;;;;;;;;..;;;;;,,ww,rrrrrrrrr",
+"FFFFFFFFFFFFFFFFFFFFF,,,,;;;;;...;;;;;,,wwwrrrrrrrrr",
+"FFFFFFFFFFFFFFFFFFFF,,,,,,,;;;..;;;;;;,,wwwrrrrrrrrr",
+"FFFFFFFFFFF,,,,TTTT,,,,,,,,,;...,,,,;;;,www,rrrrrrrr",
+"FFFFFFFF,,,,,,;TTT,,,,,,,,,,;..,,,,,,;,,,ww,rrrrrrrr",
+"FFFFFFFF,,,,,;\"\"\"\"\",,,,,,,;;...,,,,TTT,,ww,,rrrrrrrr",
+"FFFFFFF,,,,,,;;\"\"\",,,,,,,,;...,,,,,TTT,,ww,,RRrrrrrr",
+"FFFFFF;;;,,,,,,,;\"\",b,,r,,...,,,,,,TTT,,ww,,RRRRrrrr",
+"FFFFF,;;;,,X,X,,,\"\",,,,,,...,,,,,,,,,,,ww,,,,\"RRRRRR",
+"FFFFF,,;,,,,,,,X,,\",\",,,...,,,\",,,,,,,,ww,,,,,,,,RRR",
+"FFFFF,,,,,X,,c,,,,\"\"\",,\"..,,,\"\"\",,,,,,,ww,,,,,,,,,,,",
+"FFFFF,,,,,,,,,,,X,,,,,,..,\"\"\"\"\"\",,,,;;,w,,,,,,,,,,,,",
+"FFFFF,,,,,,X,,X,,,,,,,...,,\"\",,,,,,,;;,ww,,,,,,\",,,,",
+"FFFFF,,TT,,,,,,,,,,,,,..,,,TTTr,,,,T,;,ww,,\",,,,,,,,",
+"FFFFFF,TTRRRRcRRRR,,,..,,,TTTTT,;TTTT;,ww,,\"\",\",,,,,",
+"FFFFFF,TT,,,,,,,,TT,,..,\"\"TTTT,,;TTTT,,ww,\"\"\"\",,,,,,",
+"FFFFFF;;;,,,,,,,,TT,..cXc\"\",,,,,,,,T,,,www\"\"\"\",,,,,,",
+"FFFFF;;;;r,,,,;,,,,...ccc,,,,,,,,,,,,,,www\"\",,,,,,,,",
+"F.X....;;;,,;;;........,,,,,,,,,,,,,,,,www,,,,,,,,,,",
+"....................;....,,,,,,,,,,,,,,ww,,,,T,,,,,,",
+"FFFF........:...;;;;;;.....,,,,,,,,,,,,ww,,,TTTT\",,,",
+"FFXF,,,,;;;;:;;;;;;;;;;;.....X,,,,,r,,www,,,TTTTT,,,",
+"FFFF;,;;;;;;:;;;;;;;;;;;,,.....,,,,,,,www,,,TTTTT,,,",
+"FFFFF;;;;;;;:,;;;;;;;;;;,,,,.....,,,,,,ww,,,;TTT,,,,",
+"FFFFF;;;;,,,:,,,,,,,,r,,,,,,,,....,,,,,ww,,,;;;,,,,,",
+"FFFFF,;;,,,,:,XX,,,,,,,,,,,,,,,,....,,,ww,,,;;,,,,,\"",
+"FFFFF,,,,,XX,,,,XX,,,,,,,,,,,,,,,......==...,;,,,,b,",
+"FFFFF,,,XX,,,,,,,,X,,,,,,,,,,,,,,;;....==.....,,,,,,",
+"FFFF,,,X,XX,,,,,,,,X,,,,\"\"\",,,,,,;;;;;;ww,,,.....,,,",
+"FFFF,,,X,XX,,,,,,,,X,,,,\"ww,,,,,b;b;;;;ww,,,,,......",
+"FFFF,,,X,,,,,,,,,,,X,,,wwwwww,,,,;;;;;;ww,,,,,,,....",
+"FFFF,,,,X,,,,,,,,,,X,,wwwwwww,,TTT;;;;;www,,,,,,,,,,",
+"FFFF,,b,X,,,,,,,,,X,,,wwwwww,,,TTTT;;;;;ww;;,,,,,,,,",
+"FFFF,,,,,XX,,,,,XX,,,,,,ww,,,,,TTT,;,;;;\"ww,,,TTT,,,",
+"FFFF,,,r,,,XXXXX,,,,,,,,,,,,,,,,T,,b,,\";;ww,,TTTTT;;",
+"FFFF,,,,,,,,,;;;,,,,,,,,,,,,,,,,,,,,\"\"\"\"\"ww,,TTTTT;;",
+"FFFFF,,,,,,,,,;;,,,,,,,,,,,,,,,,,,FFF\"\"\",ww,FFFF;;;;",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF,,wwwFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwwFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwwFFFFFFFF"
+],
+"marks": [
+{
+"kind": "gate",
+"cells": [
+[
+2,
+18
+],
+[
+2,
+21
+]
+],
+"text": "the two stout timber posts of the village gate arch, a crossbeam over the road between them",
+"color": [
+170,
+92,
+40
+],
+"solid": true
+},
+{
+"kind": "well",
+"cells": [
+[
+23,
+16
+]
+],
+"text": "the travellers' OLD WELL: a dry round well of grey fieldstones, open (no roof), a rope ladder hanging down into its dark shaft",
+"color": [
+120,
+120,
+132
+],
+"solid": true
+},
+{
+"kind": "stones",
+"cells": [
+[
+16,
+11
+],
+[
+14,
+12
+],
+[
+11,
+12
+],
+[
+10,
+10
+],
+[
+11,
+8
+],
+[
+13,
+8
+],
+[
+15,
+9
+]
+],
+"text": "a RING OF SEVEN ANCIENT STANDING STONES (tall weathered pale-grey menhirs with lichen)",
+"color": [
+226,
+222,
+204
+],
+"solid": true
+},
+{
+"kind": "altar",
+"cells": [
+[
+13,
+10
+]
+],
+"text": "a low flat altar stone lying in the grass in the middle of the ring (walkable, flat)",
+"color": [
+200,
+196,
+180
+],
+"solid": false
+},
+{
+"kind": "bank",
+"cells": [
+[
+9,
+14
+],
+[
+10,
+14
+],
+[
+11,
+14
+],
+[
+12,
+14
+],
+[
+14,
+14
+],
+[
+15,
+14
+],
+[
+16,
+14
+],
+[
+17,
+14
+]
+],
+"text": "the low grassy SOUTH BANK of the knoll: a one-tile earthen face with exposed stones and roots (the top edge lit), the knoll top is north of it",
+"color": [
+128,
+108,
+88
+],
+"solid": true
+},
+{
+"kind": "steps",
+"cells": [
+[
+13,
+14
+]
+],
+"text": "a few worn stone STEPS up the bank onto the knoll (walkable)",
+"color": [
+180,
+172,
+150
+],
+"solid": false
+},
+{
+"kind": "oak",
+"cells": [
+[
+17,
+15
+],
+[
+18,
+15
+],
+[
+17,
+16
+],
+[
+18,
+16
+]
+],
+"text": "a GIANT ANCIENT OAK standing alone by the fork, a huge round crown spreading about a tile beyond this block, thick roots",
+"color": [
+40,
+110,
+44
+],
+"solid": true
+},
+{
+"kind": "shrine",
+"cells": [
+[
+29,
+21
+]
+],
+"text": "a tiny wooden WAYSIDE SHRINE with a little shingle roof on a stone base, facing the road",
+"color": [
+170,
+60,
+50
+],
+"solid": true
+},
+{
+"kind": "wall",
+"cells": [
+[
+14,
+25
+],
+[
+15,
+25
+],
+[
+10,
+26
+],
+[
+11,
+26
+],
+[
+16,
+26
+],
+[
+17,
+26
+],
+[
+8,
+27
+],
+[
+9,
+27
+],
+[
+18,
+27
+],
+[
+7,
+28
+],
+[
+19,
+28
+],
+[
+7,
+29
+],
+[
+19,
+29
+],
+[
+7,
+30
+],
+[
+19,
+30
+],
+[
+8,
+31
+],
+[
+19,
+31
+],
+[
+8,
+32
+],
+[
+18,
+32
+],
+[
+9,
+33
+],
+[
+10,
+33
+],
+[
+16,
+33
+],
+[
+17,
+33
+],
+[
+11,
+34
+],
+[
+12,
+34
+],
+[
+13,
+34
+],
+[
+14,
+34
+],
+[
+15,
+34
+]
+],
+"text": "a LOW DRY-STONE WALL of the sheep pasture (knee high, grey fieldstones, grass along its foot); the gap in its north side is the pasture gate",
+"color": [
+112,
+108,
+100
+],
+"solid": true
+},
+{
+"kind": "shelter",
+"cells": [
+[
+9,
+28
+],
+[
+10,
+28
+],
+[
+9,
+29
+],
+[
+10,
+29
+]
+],
+"text": "a small round SHEPHERD'S SHELTER of fieldstones with a turf roof (no door on this side)",
+"color": [
+150,
+120,
+80
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "stairs",
+"x": 23,
+"y": 16,
+"to": {
+"map": "well",
+"spawn": "entrance"
+},
+"painted": "stairs_down"
+},
+{
+"type": "sign",
+"x": 21,
+"y": 15,
+"text": "旅人の古井戸\n枯れ井戸。底へ下りる縄ばしごがある。"
+},
+{
+"type": "examine",
+"x": 13,
+"y": 10,
+"event": "world_poi_stones"
+},
+{
+"type": "examine",
+"x": 29,
+"y": 21,
+"event": "world_poi_shrine"
+},
+{
+"type": "waylamp",
+"id": "wl_pen_road",
+"x": 34,
+"y": 23,
+"lit": "prologue_lamp_road",
+"event": "world_pen_lamp"
+},
+{
+"type": "sign",
+"x": 5,
+"y": 17,
+"text": "ロアの里\n語り部の里。"
+},
+{
+"type": "sign",
+"x": 43,
+"y": 27,
+"text": "東 → 港町ファロス・灯台の岬\n北 → 見晴らし台・跳ね橋"
+},
+{
+"type": "chest",
+"id": "f_roa_c1",
+"x": 49,
+"y": 11,
+"item": "i_potion",
+"n": 1
+}
+],
+"spawns": {
+"roa": {
+"x": 1,
+"y": 19,
+"dir": "e"
+},
+"north": {
+"x": 31,
+"y": 1,
+"dir": "s"
+},
+"east": {
+"x": 50,
+"y": 29,
+"dir": "w"
+}
+},
+"exits": [
+{
+"x": 0,
+"y": 19,
+"w": 1,
+"h": 2,
+"to": {
+"map": "roa",
+"spawn": "gate"
+},
+"edge": "w"
+},
+{
+"x": 31,
+"y": 0,
+"w": 2,
+"h": 1,
+"to": {
+"map": "f_lookout",
+"spawn": "south"
+},
+"edge": "n"
+},
+{
+"x": 51,
+"y": 29,
+"w": 1,
+"h": 2,
+"to": {
+"map": "f_cape",
+"spawn": "west"
+},
+"edge": "e"
+}
+],
+"notes": [
+"zone zw_prologue (the whole area)"
+]
+}
