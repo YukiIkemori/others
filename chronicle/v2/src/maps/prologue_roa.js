@@ -128,7 +128,7 @@
         meta: { sub: '語り部の里', chestsInfo: true },
         // 里ぜんたいを 1 枚に描いた下絵（v2/assets/env/hill_village/under/roa*、design/ENV_ASSETS.md §7）。地面・建物・木・柵はこの絵、
         // 当たり・戸口・人・灯り・ほかの物は上のデータのまま。絵が無ければマスから焼く
-        art: { image: 'hill_village/under/roa', overlay: 'hill_village/under/roa_over', emit: 'hill_village/under/roa_emit', painted: ['fence'] },
+        art: { image: 'hill_village/under/roa', overlay: 'hill_village/under/roa_over', emit: 'hill_village/under/roa_emit', painted: ['fence', 'barrel@4,10', 'flower_pot@9,10', 'flower_pot@29,10', 'flower_pot@36,10', 'well@30,13', 'hay@3,16', 'log@36,17', 'sack@9,19', 'bench@19,19', 'bench@23,19', 'rock_small@35,19', 'log@12,24', 'rock_small@34,26', 'chair@29,28', 'table@30,28', 'chair@31,28', 'flower_pot@15,29', 'flower_pot@26,29'] },
       });
     })();
 

@@ -1108,6 +1108,76 @@
    "line": 65,
    "text": "♪　鳴れよ、七つの鐘\n♪　霧は沼の底へ、\n♪　朝は町の窓へ",
    "audio": "assets/voice/v_melda_song_01.ogg"
+  },
+  "v_dorga_ash_01": {
+   "speaker": "dorga",
+   "kind": "story",
+   "file": "v2/src/events/ash_caldera.js",
+   "event": "caldera_dorga",
+   "key": "the singers' night (lo_war_ash) page 1",
+   "line": 267,
+   "text": "試合の最中に、娘が二人、\n砂の上に下りてきて歌った。\n敵も味方も、剣を止めた。",
+   "audio": "assets/voice/v_dorga_ash_01.ogg"
+  },
+  "v_dorga_ash_02": {
+   "speaker": "dorga",
+   "kind": "story",
+   "file": "v2/src/events/ash_caldera.js",
+   "event": "caldera_dorga",
+   "key": "the singers' night page 2",
+   "line": 268,
+   "text": "……何を歌っていたのか、\n思い出せん。あの夜から、わしは\nこの大会を『試練』と呼ぶことにした。",
+   "audio": "assets/voice/v_dorga_ash_02.ogg"
+  },
+  "v_dorga_ash_03": {
+   "speaker": "dorga",
+   "kind": "story",
+   "file": "v2/src/events/ash_volcano.js",
+   "event": "ash_finale",
+   "key": "the plaque, the painful chronicle chosen",
+   "line": 184,
+   "text": "……歌い手の席を、空けておこう。\nいつか、二人の名を\n彫れる日が来るまで。",
+   "audio": "assets/voice/v_dorga_ash_03.ogg"
+  },
+  "v_kaya_ash_01": {
+   "speaker": "kaya",
+   "kind": "story",
+   "file": "v2/src/events/ash_caldera.js",
+   "event": "caldera_kaya",
+   "key": "first meeting page 2",
+   "line": 166,
+   "text": "卵が、冷えていくの。\n火の鳥の物語を、語ってあげなきゃ\nいけないのに……。",
+   "audio": "assets/voice/v_kaya_ash_01.ogg"
+  },
+  "v_kaya_ash_02": {
+   "speaker": "kaya",
+   "kind": "story",
+   "file": "v2/src/events/ash_caldera.js",
+   "event": "caldera_kaya",
+   "key": "first meeting page 3",
+   "line": 167,
+   "text": "去年、記録院の人に語ったら、\nそれきり……声に出そうとしても、\n出てこないの。",
+   "audio": "assets/voice/v_kaya_ash_02.ogg"
+  },
+  "v_zakuro_ash_01": {
+   "speaker": "zakuro",
+   "kind": "story",
+   "file": "v2/src/events/ash_caldera.js",
+   "event": "arena_zakuro",
+   "key": "after the final page 2",
+   "line": 316,
+   "text": "……写す仕事は降りる。\n後味が悪い。",
+   "audio": "assets/voice/v_zakuro_ash_01.ogg"
+  },
+  "v_zakuro_ash_02": {
+   "speaker": "zakuro",
+   "kind": "story",
+   "file": "v2/src/events/ash_caldera.js",
+   "event": "arena_zakuro",
+   "key": "after the final: the letter",
+   "line": 318,
+   "text": "人の手紙は読まねえ。\nそういう決まりで生きてる。",
+   "audio": "assets/voice/v_zakuro_ash_02.ogg"
   }
  }
 }

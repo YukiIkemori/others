@@ -1,0 +1,44 @@
+{
+ "id": "grave__cave",
+ "kind": "props",
+ "theme": "cave",
+ "set": "cave",
+ "base": "grave",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   18,
+   19
+  ],
+  "32": [
+   23,
+   25
+  ],
+  "40": [
+   28,
+   31
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   15
+  ],
+  "32": [
+   10,
+   21
+  ],
+  "40": [
+   12,
+   27
+  ]
+ },
+ "files": {
+  "24": "grave__cave@24.png",
+  "32": "grave__cave@32.png",
+  "40": "grave__cave@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_cave.png"
+}

@@ -1,0 +1,44 @@
+{
+ "id": "board__forest",
+ "kind": "props",
+ "theme": "treetop",
+ "set": "forest",
+ "base": "board",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   30,
+   27
+  ],
+  "32": [
+   39,
+   35
+  ],
+  "40": [
+   48,
+   43
+  ]
+ },
+ "feet": {
+  "24": [
+   14,
+   23
+  ],
+  "32": [
+   18,
+   31
+  ],
+  "40": [
+   22,
+   39
+  ]
+ },
+ "files": {
+  "24": "board__forest@24.png",
+  "32": "board__forest@32.png",
+  "40": "board__forest@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_forest.png"
+}

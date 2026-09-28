@@ -261,6 +261,28 @@
    "style": "stern, measured older male voice, about sixty; the chair of a tense town assembly; standard Tokyo Japanese",
    "fx": null,
    "pitch": 0.92
+  },
+  "dorga": {
+   "voice": "ja-jp-advisor-1",
+   "type": "prebuilt",
+   "profile": "Dorga, the chief of the crater town Caldera, about sixty; a former proxy fighter of the Firebird League, broad and scarred; grave, few words; speaks older-man Japanese (わし).",
+   "style": "deep, weathered older male voice, about sixty; slow and grave, a veteran fighter remembering; standard Tokyo Japanese",
+   "fx": null,
+   "pitch": 0.9
+  },
+  "kaya": {
+   "voice": "ja-jp-podcaster-2",
+   "type": "prebuilt",
+   "profile": "Kaya, the young fire priestess of the crater town Caldera, about twenty; earnest and gentle, frightened because she cannot remember the firebird's story she must tell the cooling egg.",
+   "style": "clear, soft young female voice, about twenty; earnest and a little shaky; standard Tokyo Japanese",
+   "fx": null
+  },
+  "zakuro": {
+   "voice": "ja-jp-advisor-10",
+   "type": "prebuilt",
+   "profile": "Zakuro, a hired fighter attached to the Archive, in his thirties; laconic and blunt but strictly honourable (never reads other people's letters); rough-spoken (俺, ねえ).",
+   "style": "low, dry adult male voice, about thirty-five; blunt and terse, quietly honourable; standard Tokyo Japanese",
+   "fx": null
   }
  },
  "hero": {

@@ -77,7 +77,9 @@ ok('大事な物・一品物（出場の札・種火・火の鳥の羽・湯の�
   const v1 = D.maps.ash_volcano_1;
   const jf = path.join(V2, 'assets', 'env', 'ash', 'under', 'ash_volcano_1.json');
   const j = fs.existsSync(jf) ? JSON.parse(fs.readFileSync(jf, 'utf8')) : {};
-  ok('火山 1 階の下絵は両方の渡り場が冷えた形、流れている方は閉じた絵（live が tilePatches と同じ）', JSON.stringify(j.live) === JSON.stringify(v1.meta.live) && (j.live || []).every((L, i) => v1.tilePatches[L.patch] && L.patch === i));
+  // live: 流れている方の渡り場（tilePatches[i] の cond が真 = 溶岩）が閉じた絵。live の cond は、その tilePatch の cond の否定
+  const neg = (c) => (c[0] === '!' ? c.slice(1) : '!' + c);
+  ok('火山 1 階の下絵は両方の渡り場が冷えた形、流れている方は閉じた絵（live が tilePatches と同じ）', JSON.stringify(j.live) === JSON.stringify(v1.meta.live) && (j.live || []).every((L, i) => v1.tilePatches[i] && L.cond === neg(v1.tilePatches[i].cond)));
 }
 
 // ================================================================ 2
@@ -215,7 +217,7 @@ async function story() {
   ok('断った: 着いたときには壁画 3 の後半が白い', R.Game.flags.ash_mural_blank === true && !R.Game.flags.ash_copy_stopped);
   // 溶岩の堰: 引くたびに流れが入れ替わる（2 通りの tilePatches）
   const v1 = D.maps.ash_volcano_1;
-  const open = (i) => R.State.check(v1.tilePatches[i].cond);
+  const open = (i) => !R.State.check(v1.tilePatches[i].cond);   // tilePatch は流れている方を溶岩にする
   const a0 = open(0) && !open(1);
   f = fakeEv({ choose: [0] }); await D.events.volcano_sluice.run(f.ev, {});
   const a1 = !open(0) && open(1);

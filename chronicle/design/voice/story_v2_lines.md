@@ -33,6 +33,9 @@
 | neve `neve` | `ja-jp-training-10` fx spirit | Neve, the noble white dragon (female) of the frozen peak. Majestic and cold at first, then warm and grateful. |
 | mayor `mayor` | `ja-jp-concierge-2` ×0.92 | Oswald, the mayor of the lake town Loch, about sixty; stern and careful, presides over the town assembly; speaks older-man Japanese (わし). |
 | melda `melda` | `ja-jp-tutor-1` fx spirit | Melda, the ghost of the kind witch who once owned the misty manor. Elegant mature woman, gentle and melancholic. |
+| dorga `dorga` | `ja-jp-advisor-1` ×0.9 | Dorga, the chief of the crater town Caldera, about sixty; a former proxy fighter of the Firebird League, broad and scarred; grave, few words; speaks older-man Japanese (わし). |
+| kaya `kaya` | `ja-jp-podcaster-2` | Kaya, the young fire priestess of the crater town Caldera, about twenty; earnest and gentle, frightened because she cannot remember the firebird's story she must tell the cooling egg. |
+| zakuro `zakuro` | `ja-jp-advisor-10` | Zakuro, a hired fighter attached to the Archive, in his thirties; laconic and blunt but strictly honourable (never reads other people's letters); rough-spoken (俺, ねえ). |
 
 ## オットー
 
@@ -258,3 +261,25 @@
 | id | 種類 | 場面 | 台詞 | 演技 |
 |---|---|---|---|---|
 | `v_melda_song_01` | story | `manor_melda` the bell song (caption, X.SONG, after v_melda_manor_05) | ♪　鳴れよ、七つの鐘<br>♪　霧は沼の底へ、<br>♪　朝は町の窓へ | sings the old bell song softly, a ghostly lullaby |
+
+## dorga
+
+| id | 種類 | 場面 | 台詞 | 演技 |
+|---|---|---|---|---|
+| `v_dorga_ash_01` | story | `caldera_dorga` the singers' night (lo_war_ash) page 1 | 試合の最中に、娘が二人、<br>砂の上に下りてきて歌った。<br>敵も味方も、剣を止めた。 | quiet and faraway, an old fighter remembering the night two girls sang in the middle of the last proxy match |
+| `v_dorga_ash_02` | story | `caldera_dorga` the singers' night page 2 | ……何を歌っていたのか、<br>思い出せん。あの夜から、わしは<br>この大会を『試練』と呼ぶことにした。 | troubled that he cannot remember the song; slow, grave, a vow made long ago |
+| `v_dorga_ash_03` | story | `ash_finale` the plaque, the painful chronicle chosen | ……歌い手の席を、空けておこう。<br>いつか、二人の名を<br>彫れる日が来るまで。 | moved and resolved, standing before the old plaque; gentle and firm |
+
+## kaya
+
+| id | 種類 | 場面 | 台詞 | 演技 |
+|---|---|---|---|---|
+| `v_kaya_ash_01` | story | `caldera_kaya` first meeting page 2 | 卵が、冷えていくの。<br>火の鳥の物語を、語ってあげなきゃ<br>いけないのに……。 | worried and close to tears, a young priestess who has failed her duty |
+| `v_kaya_ash_02` | story | `caldera_kaya` first meeting page 3 | 去年、記録院の人に語ったら、<br>それきり……声に出そうとしても、<br>出てこないの。 | bewildered and afraid; the words have gone since she told them to the Archive |
+
+## zakuro
+
+| id | 種類 | 場面 | 台詞 | 演技 |
+|---|---|---|---|---|
+| `v_zakuro_ash_01` | story | `arena_zakuro` after the final page 2 | ……写す仕事は降りる。<br>後味が悪い。 | beaten, calm and blunt; decides to quit a job that tastes bad |
+| `v_zakuro_ash_02` | story | `arena_zakuro` after the final: the letter | 人の手紙は読まねえ。<br>そういう決まりで生きてる。 | terse and matter-of-fact about his own rule; quietly proud |

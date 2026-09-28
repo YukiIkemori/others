@@ -107,7 +107,7 @@
       }),
       rows: g, outside: 'forest_dark',
       // 描いた一枚絵（design/ENV_ASSETS.md §8）。隠し通路・つるの壁・小鹿の獣道は closed の絵（閉じている間だけ上に置く）
-      art: { image: 'forest_dungeon/under/verda_2', closed: 'forest_dungeon/under/verda_2_closed', painted: [] },
+      art: { image: 'forest_dungeon/under/verda_2', closed: 'forest_dungeon/under/verda_2_closed', painted: ['stump@16,7', 'stump@9,8', 'tree_giant@51,11', 'rock_small@53,15', 'rock@35,16', 'rock_small@25,17', 'fern@14,18', 'rock_small@12,21', 'rock@27,30', 'rock@34,34', 'stump@15,35', 'rock_small@34,44', 'rock@49,45', 'rock@53,45'] },
       objects: O, npcs: N,
       spawns: {
         south: { x: 29, y: 49, dir: 'n' },

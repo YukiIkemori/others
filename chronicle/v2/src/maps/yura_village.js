@@ -99,7 +99,7 @@
       bgm: 'sorrow',
       meta: { sub: '名を置いてきた者の里' },
       // 里ぜんたいを 1 枚に描いた下絵（地面・小屋・水車・小山・川・森）。当たり・戸口・人・灯り・墓石ほかの物は上のデータのまま。絵が無ければマスから焼く
-      art: { image: 'moss_village/under/yura', overlay: 'moss_village/under/yura_over', emit: 'moss_village/under/yura_emit', painted: [] },
+      art: { image: 'moss_village/under/yura', overlay: 'moss_village/under/yura_over', emit: 'moss_village/under/yura_emit', painted: ['barrel@16,5', 'flower_pot@11,6', 'sack@18,8', 'stump@2,13', 'bench@12,16', 'crate@10,20', 'bench@17,21', 'rock@27,21'] },
     });
 
     // ---------------------------------------------------------------- ユラの宿 11×9（家具は文字の絵 R.ContentP.kit.furnish）

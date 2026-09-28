@@ -49,7 +49,7 @@
       blob(g, 28, 22, 2.5, 1.6, '%', 9, ['.']);
       blob(g, 44, 22, 2, 1.4, '%', 10, ['.']);
       blob(g, 35, 41, 1.8, 1.3, '%', 12, ['.']);
-      // 渡り場（閉じた形 = 溶岩。tilePatches で冷えた殻 'k' になる）
+      // 渡り場（地面は冷えた殻 'k'。流れている方の渡り場を tilePatches で溶岩 '%' にする = cond の無い形はどちらも渡れる）
       const crossA = [], crossB = [];
       for (let y = 39; y <= 41; y++) for (let x = 16; x <= 18; x++) crossA.push([x, y]);
       for (let y = 31; y <= 32; y++) for (let x = 27; x <= 28; x++) crossB.push([x, y]);
@@ -57,10 +57,11 @@
         const xs = cells.map((c) => c[0]), ys = cells.map((c) => c[1]);
         const x0 = Math.min(...xs), y0 = Math.min(...ys), x1 = Math.max(...xs), y1 = Math.max(...ys);
         const rows = [];
-        for (let y = y0; y <= y1; y++) { let s = ''; for (let x = x0; x <= x1; x++) s += cells.some((c) => c[0] === x && c[1] === y) ? 'k' : ' '; rows.push(s); }
+        for (let y = y0; y <= y1; y++) { let s = ''; for (let x = x0; x <= x1; x++) s += cells.some((c) => c[0] === x && c[1] === y) ? '%' : ' '; rows.push(s); }
         return { rect: [x0, y0, x1 - x0 + 1, y1 - y0 + 1], rows };
       };
       const pA = patch(crossA), pB = patch(crossB);
+      for (const [x, y] of crossA.concat(crossB)) g[y][x] = 'k';
       const O = [];
       // 溶岩の堰のレバー（広間 = L1、北の洞 = L2）。引くたびに流れが入れ替わる
       for (const [n, x, y] of [[1, 32, 37], [2, 33, 25]]) {
@@ -95,14 +96,15 @@
           { id: 'hound', x: 39, y: 20, w: 2, h: 3, on: 'step', event: 'volcano_hound', cond: '!ash_hound' },
           { id: 'copy', x: 16, y: 20, w: 2, h: 3, on: 'step', event: 'volcano_copyists', cond: ['ash_champion', '!ash_copy_done'] },
         ],
+        // 堰を引いた後（ash_sluice）は西の渡り場 A が流れ、引く前は北の渡り場 B が流れる
         tilePatches: [
-          { cond: '!ash_sluice', rect: pA.rect, rows: pA.rows },
-          { cond: 'ash_sluice', rect: pB.rect, rows: pB.rows },
+          { cond: 'ash_sluice', rect: pA.rect, rows: pA.rows },
+          { cond: '!ash_sluice', rect: pB.rect, rows: pB.rows },
         ],
         zones: [{ rect: [0, 0, 56, 48], zone: 'z_ash_volcano' }],
         light: AK.LIGHT_VOLCANO, dark: false,
         bgm: 'cave', bbg: 'ash',
-        meta: { chestsInfo: true, floor: '1階', sub: '溶岩の流れる洞', live: [{ cells: crossA, patch: 0 }, { cells: crossB, patch: 1 }] },
+        meta: { chestsInfo: true, floor: '1階', sub: '溶岩の流れる洞', live: [{ cells: crossA, cond: '!ash_sluice' }, { cells: crossB, cond: 'ash_sluice' }] },
       });
     }
 

@@ -141,7 +141,7 @@
     // 【灯りを守る】崖の上の灯籠 3（冷えた石灯籠は下絵。ともすと、かがり火の灯り）
     for (const [n, x, y] of [[1, 9, 16], [2, 45, 16], [3, 21, 47]]) O.push(K.exam(x, y, 'caldera_lantern', { lamp: n }), K.prop('iron_brazier', x, y, { cond: 'ash_lantern_' + n }));
     // 町の宝箱 2（見える所だけ）
-    O.push(K.chest('caldera_c1', 12, 8, { pool: 'p_T' }), K.chest('caldera_c2', 14, 42, { item: 'i_ether', n: 2 }));
+    O.push(K.chest('caldera_c1', 35, 5, { pool: 'p_T' }), K.chest('caldera_c2', 14, 42, { item: 'i_ether', n: 2 }));
     // かがり火（崖・岩の上。道・戸口の前・出入り口には置かない）と、溶岩の堀の照り返し（光だけ）
     for (const [x, y] of [[6, 30], [47, 31], [17, 4], [37, 4], [11, 40], [44, 40]]) O.push(K.prop('iron_brazier', x, y));
     for (const [x, y] of [[22, 15], [32, 15], [17, 19], [37, 19], [16, 23], [38, 30], [17, 35], [37, 35], [22, 38], [32, 38]]) O.push(K.prop('lava_glow', x, y));

@@ -1,0 +1,44 @@
+{
+ "id": "signboard__forest",
+ "kind": "props",
+ "theme": "treetop",
+ "set": "forest",
+ "base": "signboard",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   18,
+   25
+  ],
+  "32": [
+   23,
+   33
+  ],
+  "40": [
+   28,
+   41
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   21
+  ],
+  "32": [
+   10,
+   29
+  ],
+  "40": [
+   12,
+   37
+  ]
+ },
+ "files": {
+  "24": "signboard__forest@24.png",
+  "32": "signboard__forest@32.png",
+  "40": "signboard__forest@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_forest.png"
+}

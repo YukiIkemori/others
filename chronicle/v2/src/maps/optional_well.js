@@ -56,7 +56,7 @@
       name: '旅人の古井戸', kind: 'dungeon', optional: true, region: 'prologue', location: 'well', theme: 'cave',
       legend, rows: g, outside: 'wall_cave', objects,
       // 描いた一枚絵（design/ENV_ASSETS.md §8）。隠し通路の先は closed の絵で、見つけるまで岩のまま
-      art: { image: 'cave/under/well', closed: 'cave/under/well_closed', emit: 'cave/under/well_emit', painted: [] },
+      art: { image: 'cave/under/well', closed: 'cave/under/well_closed', emit: 'cave/under/well_emit', painted: ['rock_small@32,10', 'rock_small@6,11', 'rock_small@16,12', 'rock_small@17,13', 'rock_small@31,13', 'stump@31,14', 'log@9,21', 'rock_small@11,21', 'rock_small@28,21', 'bush@34,24', 'rock_small@24,26'] },
       spawns: { entrance: { x: 18, y: 4, dir: 's' } },
       triggers: [{ id: 'nest', x: 22, y: 21, w: 3, h: 5, on: 'step', event: 'well_nest', once: true }],
       zones: [{ rect: null, zone: 'z_well' }],

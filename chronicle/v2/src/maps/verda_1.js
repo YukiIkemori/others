@@ -113,7 +113,7 @@
       legend: K.FOREST_LEGEND({ S: { mat: 'forest_dark', solid: true, secret: true, floor: 'grass' } }),
       rows: g, outside: 'forest_dark',
       // 描いた一枚絵（design/ENV_ASSETS.md §8）。隠し通路（うろ）は closed の絵で、見つけるまで森のまま
-      art: { image: 'forest_dungeon/under/verda_1', closed: 'forest_dungeon/under/verda_1_closed', painted: [] },
+      art: { image: 'forest_dungeon/under/verda_1', closed: 'forest_dungeon/under/verda_1_closed', painted: ['fern@29,10', 'rock@53,10', 'rock_small@30,11', 'rock_small@48,12', 'rock@28,14', 'rock_small@45,25', 'rock_small@52,25', 'fern@27,28', 'log@29,31', 'log@33,31', 'rock@12,35', 'stump@31,37', 'rock@34,45', 'rock_small@13,48'] },
       objects: O, npcs: N,
       spawns: {
         south: { x: 29, y: 48, dir: 'n' },

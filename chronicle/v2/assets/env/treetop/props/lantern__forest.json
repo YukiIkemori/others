@@ -1,0 +1,48 @@
+{
+ "id": "lantern__forest",
+ "kind": "props",
+ "theme": "treetop",
+ "set": "forest",
+ "base": "lantern",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   10,
+   19
+  ],
+  "32": [
+   12,
+   25
+  ],
+  "40": [
+   14,
+   31
+  ]
+ },
+ "feet": {
+  "24": [
+   4,
+   15
+  ],
+  "32": [
+   4,
+   21
+  ],
+  "40": [
+   6,
+   27
+  ]
+ },
+ "files": {
+  "24": "lantern__forest@24.png",
+  "32": "lantern__forest@32.png",
+  "40": "lantern__forest@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_forest.png",
+ "light32": [
+  0,
+  -10
+ ]
+}

@@ -81,7 +81,7 @@
       ];
       K.def('lighthouse_1', Object.assign({}, BASE, {
         name: 'ファロス灯台', legend: LEG, rows: g, outside: 'sea', objects, npcs, tilePatches,
-        art: { image: 'lighthouse/under/lighthouse_1', painted: [] },   // 描いた一枚絵（design/ENV_ASSETS.md §8）
+        art: { image: 'lighthouse/under/lighthouse_1', painted: ['sack@9,3', 'sack@15,3', 'bookshelf@20,3', 'bookshelf@21,3', 'barrel@22,3', 'sack@10,6', 'crate@25,6', 'rock_small@11,7', 'crate@14,7', 'crate@25,7', 'crate@14,8', 'crate@15,8', 'crate@20,8', 'crate@21,8', 'barrel@7,9', 'crate@20,9', 'barrel@16,10', 'sack@18,10', 'chair@24,10', 'table@25,10', 'crate@7,14', 'crate@8,14', 'sack@11,14', 'barrel@29,14', 'crate@24,15', 'crate@25,15', 'barrel@6,16', 'crate@27,16', 'sack@24,18', 'crate@10,19', 'crate@11,19', 'barrel@13,19', 'net@20,19', 'rock_small@8,23', 'rock_small@28,23', 'stump@6,24', 'rock@31,24', 'log@29,25', 'rock_small@23,26', 'rock_small@12,27', 'rock@30,28', 'bollard@11,29', 'bollard@24,29', 'rock@9,30', 'rock@26,30'] },   // 描いた一枚絵（design/ENV_ASSETS.md §8）
         spawns: {
           entrance: { x: 17, y: 29, dir: 'n' }, from_next: { x: 27, y: 4, dir: 'w' },
           hall_w: { x: 17, y: 20, dir: 'n' }, hall_e: { x: 18, y: 20, dir: 'n' }, door_w: { x: 17, y: 23, dir: 's' }, door_e: { x: 18, y: 23, dir: 's' },
@@ -132,7 +132,7 @@
       K.def('lighthouse_2', Object.assign({}, BASE, {
         name: 'ファロス灯台', legend: LEG, rows: g, outside: 'wall_stone', objects,
         // 描いた一枚絵（ENV_ASSETS.md §8）。ふさいだ物置は closed の絵で、見つけるまで石の壁のまま
-        art: { image: 'lighthouse/under/lighthouse_2', closed: 'lighthouse/under/lighthouse_2_closed', painted: [] },
+        art: { image: 'lighthouse/under/lighthouse_2', closed: 'lighthouse/under/lighthouse_2_closed', painted: ['crate@5,5', 'crate@6,5', 'barrel@14,5', 'bookshelf@20,5', 'bookshelf@21,5', 'sack@14,6', 'rock_small@15,7', 'sack@28,7', 'net@3,8', 'crate@30,10', 'crate@30,11', 'barrel@2,12', 'barrel@19,12', 'sack@22,12', 'barrel@25,14', 'crate@3,15', 'crate@4,15', 'barrel@31,16', 'rock_small@5,20', 'sack@10,20', 'crate@21,20', 'crate@22,20'] },
         spawns: { from_prev: { x: 28, y: 26, dir: 'n' }, from_next: { x: 17, y: 16, dir: 's' } },
         zones: [{ rect: null, zone: 'z_lighthouse' }],
         meta: { chestsInfo: true, floor: '2階', sub: 'らせん階段' },
@@ -163,7 +163,7 @@
       ];
       K.def('lighthouse_3', Object.assign({}, BASE, {
         name: 'ファロス灯台', legend: LEG, rows: g, outside: 'wall_stone', objects, npcs,
-        art: { image: 'lighthouse/under/lighthouse_3', painted: [] },   // 描いた一枚絵（ENV_ASSETS.md §8）
+        art: { image: 'lighthouse/under/lighthouse_3', painted: ['rock_small@7,4', 'rock_small@17,10', 'bookshelf@8,13', 'sack@18,16', 'barrel@9,19', 'crate@15,19', 'crate@16,19'] },   // 描いた一枚絵（ENV_ASSETS.md §8）
         spawns: { from_prev: { x: 12, y: 18, dir: 'n' }, lamp: { x: 12, y: 9, dir: 'n' } },
         triggers: [
           { id: 'fine', x: 10, y: 16, w: 6, h: 1, on: 'step', event: 'lighthouse_3_fine', cond: '!prologue_fine' },

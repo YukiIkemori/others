@@ -185,7 +185,7 @@
       meta: { sub: '潮風と灯台の町', chestsInfo: true },
       // 町ぜんたいを 1 枚に描いた下絵（v2/assets/env/harbor/under/pharos*、design/ENV_ASSETS.md §7）。地面・崖・建物・橋・桟橋はこの絵、
       // 当たり・戸口・人・灯り・ほかの物は上のデータのまま。over = 吊り橋の手前の綱（人より上）。絵が無ければマスから焼く
-      art: { image: 'harbor/under/pharos', overlay: 'harbor/under/pharos_over', emit: 'harbor/under/pharos_emit', painted: [] },
+      art: { image: 'harbor/under/pharos', overlay: 'harbor/under/pharos_over', emit: 'harbor/under/pharos_emit', painted: ['crate@17,7', 'bench@32,7', 'planter@20,8', 'flower_pot@25,8', 'flower_pot@8,9', 'barrel@10,9', 'barrel@47,9', 'flower_pot@51,9', 'net@29,11', 'table@36,11', 'chair@37,11', 'net@54,12', 'stump@26,17', 'flower_pot@12,18', 'bollard@60,19', 'rock_small@27,20', 'bench@17,21', 'flower_pot@31,21', 'net@25,22', 'well@16,23', 'net@59,24', 'rock_small@5,25', 'bench@8,25', 'crate@33,26', 'net@35,26', 'barrel@3,29', 'net@7,29', 'flower_pot@19,29', 'crate@26,29', 'net@32,29', 'crate@50,30', 'net@54,30', 'bollard@27,31', 'bollard@59,31', 'bollard@4,32', 'bollard@14,32', 'bollard@37,32', 'bollard@43,32', 'bollard@52,32', 'rowboat@15,35', 'rowboat@44,35', 'rowboat@6,36', 'rowboat@26,36', 'bollard@29,37', 'bollard@9,38', 'bollard@13,42', 'bollard@19,42', 'bollard@27,42'] },
     });
   });
 })(window.RPG);

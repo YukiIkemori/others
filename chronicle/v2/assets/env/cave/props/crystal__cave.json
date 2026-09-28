@@ -1,0 +1,48 @@
+{
+ "id": "crystal__cave",
+ "kind": "props",
+ "theme": "cave",
+ "set": "cave",
+ "base": "crystal",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   25,
+   25
+  ],
+  "32": [
+   32,
+   33
+  ],
+  "40": [
+   39,
+   41
+  ]
+ },
+ "feet": {
+  "24": [
+   11,
+   21
+  ],
+  "32": [
+   14,
+   29
+  ],
+  "40": [
+   18,
+   37
+  ]
+ },
+ "files": {
+  "24": "crystal__cave@24.png",
+  "32": "crystal__cave@32.png",
+  "40": "crystal__cave@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_cave.png",
+ "light32": [
+  0,
+  -12
+ ]
+}

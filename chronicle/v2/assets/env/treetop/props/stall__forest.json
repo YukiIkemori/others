@@ -1,0 +1,44 @@
+{
+ "id": "stall__forest",
+ "kind": "props",
+ "theme": "treetop",
+ "set": "forest",
+ "base": "stall",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   41,
+   40
+  ],
+  "32": [
+   54,
+   52
+  ],
+  "40": [
+   67,
+   64
+  ]
+ },
+ "feet": {
+  "24": [
+   19,
+   36
+  ],
+  "32": [
+   26,
+   48
+  ],
+  "40": [
+   32,
+   60
+  ]
+ },
+ "files": {
+  "24": "stall__forest@24.png",
+  "32": "stall__forest@32.png",
+  "40": "stall__forest@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_forest.png"
+}

@@ -96,9 +96,12 @@ def cut(set_):
         x0, y0, x1, y1, _, _, m = c
         crop = rgba[y0:y1, x0:x1].astype(np.float32).copy(); crop[..., 3] = np.where(m[y0:y1, x0:x1] if m.shape[:2] == rgba.shape[:2] else m, crop[..., 3], 0)
         hh, ww = crop.shape[:2]
+        base = json.load(open([os.path.join(ENV, f, 'props', pid + '.json') for f in ('common', 'harbor') if os.path.exists(os.path.join(ENV, f, 'props', pid + '.json'))][0]))
         if isinstance(hs, tuple): w32 = hs[1]; h32 = max(1, round(hh * w32 / ww))
         else: h32 = hs; w32 = max(1, round(ww * h32 / hh))
-        base = json.load(open([os.path.join(ENV, f, 'props', pid + '.json') for f in ('common', 'harbor') if os.path.exists(os.path.join(ENV, f, 'props', pid + '.json'))][0]))
+        bw = base['cell']['32'][0]
+        if w32 > bw * 1.15:   # keep the footprint: no wider than the old sprite (+15 %)
+            w32 = round(bw * 1.15); h32 = max(1, round(hh * w32 / ww))
         sid = '%s__%s' % (pid, set_); files = {}; cells = {}; feet = {}
         for t in TILES:
             w, h = sprite_sizes(w32, h32)[t]

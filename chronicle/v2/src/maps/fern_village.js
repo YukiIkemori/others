@@ -225,7 +225,7 @@
       // 村ぜんたいを 1 枚に描いた下絵（v2/assets/env/treetop/under/fern*、design/ENV_ASSETS.md §7）。地面・大木・家・足場・つり橋・はしご・根のアーチはこの絵、
       // つり橋と根のアーチと木の葉の張り出しは overlay（地面の人より上）、窓と光るきのこ・こけは emit。当たり・戸口・人・灯り・ほかの物は上のデータのまま。
       // 絵が無ければマスから焼く。roots（橋の下の当たり）は絵に描いてあるので物としては描かない。@40 は無い（2048 の atlas に入らない。@32 を拡大）
-      art: { image: 'treetop/under/fern', overlay: 'treetop/under/fern_over', emit: 'treetop/under/fern_emit', painted: ['roots'] },
+      art: { image: 'treetop/under/fern', overlay: 'treetop/under/fern_over', emit: 'treetop/under/fern_emit', painted: ['roots', 'fern@5,3', 'fern@36,3', 'fern@47,4', 'fern@55,6', 'flower_pot@31,7', 'flower_pot@56,9', 'fern@2,13', 'fern@34,15', 'fern@38,15', 'log@56,15', 'reeds@17,20', 'reeds@44,20', 'reeds@39,22', 'reeds@52,22', 'rock_small@41,23', 'barrel@44,23', 'tent@55,23', 'fern@13,24', 'rock_small@29,24', 'rock_small@33,24', 'fern@3,25', 'crate@38,26', 'fern@55,26', 'bench@30,32', 'bench@38,32', 'fern@57,33', 'well@31,34', 'bench@34,35', 'fern@40,35', 'fern@42,36', 'log@45,36', 'rock_small@55,36', 'fern@48,39', 'fern@55,39', 'rock_small@11,40', 'sack@19,40', 'crate@44,40', 'fern@27,41', 'flower_pot@11,42', 'planter@13,43', 'fern@56,45', 'stump@52,46', 'planter@13,48', 'fern@36,48', 'rock_small@18,49', 'stump@45,49', 'stump@51,49', 'fern@20,51', 'fern@39,51', 'rock@43,51', 'stump@47,51', 'flower_pot@13,52'] },
     });
   });
 })(window.RPG);

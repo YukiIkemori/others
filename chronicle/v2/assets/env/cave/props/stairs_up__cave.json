@@ -1,0 +1,44 @@
+{
+ "id": "stairs_up__cave",
+ "kind": "props",
+ "theme": "cave",
+ "set": "cave",
+ "base": "stairs_up",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   32,
+   31
+  ],
+  "32": [
+   42,
+   40
+  ],
+  "40": [
+   52,
+   49
+  ]
+ },
+ "feet": {
+  "24": [
+   14,
+   27
+  ],
+  "32": [
+   20,
+   36
+  ],
+  "40": [
+   24,
+   45
+  ]
+ },
+ "files": {
+  "24": "stairs_up__cave@24.png",
+  "32": "stairs_up__cave@32.png",
+  "40": "stairs_up__cave@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_cave.png"
+}

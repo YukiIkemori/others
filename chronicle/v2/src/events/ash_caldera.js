@@ -313,9 +313,9 @@
   E('arena_zakuro', async (ev) => {
     if (ev.flag('ash_zakuro_letter')) { await ev.say('zakuro', ['俺は北へ行く。\n雇い主には、降りたと伝えた。', '……次に会うときは、\n雇われじゃなく会いたいもんだ。'], ZAKURO); return; }
     await ev.say('zakuro', ['負けたよ。いい腕だ。', '記録院に雇われて、\n火口の絵を写す仕事だった。\n写せば、この土地の争いの種が\nなくなるらしい。'], ZAKURO);
-    await ev.say('zakuro', '……写す仕事は降りる。\n後味が悪い。', Object.assign({ voice: 'v_zakuro_ash_02' }, ZAKURO));
+    await ev.say('zakuro', '……写す仕事は降りる。\n後味が悪い。', Object.assign({ voice: 'v_zakuro_ash_01' }, ZAKURO));
     await ev.say('zakuro', ['それと、これだ。雇い主から\n預かった荷に、まぎれてた。', '宛名が違う。……俺は開けてねえ。'], ZAKURO);
-    await ev.say('zakuro', '人の手紙は読まねえ。\nそういう決まりで生きてる。', Object.assign({ voice: 'v_zakuro_ash_03' }, ZAKURO));
+    await ev.say('zakuro', '人の手紙は読まねえ。\nそういう決まりで生きてる。', Object.assign({ voice: 'v_zakuro_ash_02' }, ZAKURO));
     ev.setFlag('ash_zakuro_letter');
     await X().lz(ev);
     try { await ev.leave('zakuro'); } catch (e) { /* */ }

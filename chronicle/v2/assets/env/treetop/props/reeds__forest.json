@@ -1,0 +1,44 @@
+{
+ "id": "reeds__forest",
+ "kind": "props",
+ "theme": "treetop",
+ "set": "forest",
+ "base": "reeds",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   13,
+   17
+  ],
+  "32": [
+   16,
+   22
+  ],
+  "40": [
+   19,
+   27
+  ]
+ },
+ "feet": {
+  "24": [
+   5,
+   13
+  ],
+  "32": [
+   6,
+   18
+  ],
+  "40": [
+   8,
+   23
+  ]
+ },
+ "files": {
+  "24": "reeds__forest@24.png",
+  "32": "reeds__forest@32.png",
+  "40": "reeds__forest@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_forest.png"
+}
