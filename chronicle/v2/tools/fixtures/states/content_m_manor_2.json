@@ -1,0 +1,40 @@
+{
+ "desc": "CONTENT（湿原）: 霧の館 2 階",
+ "hero": {
+  "type": "warrior",
+  "sex": "m",
+  "name": "アルン",
+  "fav": "sword"
+ },
+ "party": [
+  "hero",
+  "bartolo",
+  "marta",
+  "sylvain"
+ ],
+ "reserve": [],
+ "tier": 1,
+ "gl": "auto",
+ "prof": "auto",
+ "flags": {
+  "prologue_done": true,
+  "forest_start": true,
+  "cleared_r_forest": true,
+  "story_t1": true,
+  "marsh_arrived": true,
+  "marsh_emma_met": true
+ },
+ "vars": {},
+ "items": {
+  "i_potion": 4,
+  "i_ether": 2,
+  "i_revive": 2,
+  "i_firepot": 3
+ },
+ "gold": 1500,
+ "leads": [],
+ "map": {
+  "id": "marsh_manor_2",
+  "spawn": "stairs"
+ }
+}

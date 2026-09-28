@@ -1,0 +1,44 @@
+{
+ "desc": "CONTENT（湿原）: 鐘沈みの沼の入口（集会の後、鐘の鍵）",
+ "hero": {
+  "type": "warrior",
+  "sex": "m",
+  "name": "アルン",
+  "fav": "sword"
+ },
+ "party": [
+  "hero",
+  "bartolo",
+  "marta",
+  "sylvain"
+ ],
+ "reserve": [],
+ "tier": 1,
+ "gl": "auto",
+ "prof": "auto",
+ "flags": {
+  "prologue_done": true,
+  "forest_start": true,
+  "cleared_r_forest": true,
+  "story_t1": true,
+  "marsh_arrived": true,
+  "marsh_emma_met": true,
+  "marsh_assembly_done": true,
+  "marsh_melda_met": true,
+  "marsh_dolls": true
+ },
+ "vars": {},
+ "items": {
+  "i_potion": 4,
+  "i_ether": 2,
+  "i_revive": 2,
+  "i_firepot": 3,
+  "k_bell_key": 1
+ },
+ "gold": 1500,
+ "leads": [],
+ "map": {
+  "id": "marsh_bog",
+  "spawn": "entrance"
+ }
+}
