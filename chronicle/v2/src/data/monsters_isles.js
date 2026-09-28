@@ -37,7 +37,7 @@
       flags: [], s: { hp: 2.47, atk: 0.62, mag: 0.54, def: 1.25 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_thrust', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }, { id: 'e_tide', w: 1 }],
-      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_sword_tide', rate: 32 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'w_sword_tide', rate: 32 } },
       desc: '海の王に仕える魚人の騎士。\nうろこの鎧は刃を通さない。',
     },
     // ---- kraken タコ（水生・l）: 洞窟と船底の大ダコ。墨、八本の腕、渦潮。

@@ -489,9 +489,10 @@
       const m = Rl.mods ? Rl.mods(caster || c) : {};
       const mul = caster ? Rl.healF(caster) * (1 + ((m.healPct || 0) / 100)) * (Rl.profPowerMul ? Rl.profPowerMul(caster, a) : 1) : 1 + ((Rl.mods(c).itemPct || 0) / 100);
       for (const e of use.effects || []) {
-        if (e.type === 'revive' && dead) { c.hp = Math.max(1, Math.floor(st.maxHp * (e.pct || 0.3))); c.status = []; }
-        else if (e.type === 'heal' && c.hp > 0) c.hp = Math.min(st.maxHp, c.hp + Math.max(1, Math.floor(st.maxHp * (e.pct || 0) * mul)));
-        else if (e.type === 'healMp' && c.hp > 0) c.mp = Math.min(st.maxMp, c.mp + Math.max(1, Math.floor(st.maxMp * (e.pct || 0))));
+        // 決まった量 amount（「HPを40回復」）があればそれ、無ければ 最大値 × pct
+        if (e.type === 'revive' && dead) { c.hp = e.amount != null ? Math.max(1, Math.min(st.maxHp, Math.floor(e.amount))) : Math.max(1, Math.floor(st.maxHp * (e.pct || 0.3))); c.status = []; }
+        else if (e.type === 'heal' && c.hp > 0) c.hp = Math.min(st.maxHp, c.hp + Math.max(1, Math.floor((e.amount != null ? e.amount : st.maxHp * (e.pct || 0)) * mul)));
+        else if (e.type === 'healMp' && c.hp > 0) c.mp = Math.min(st.maxMp, c.mp + Math.max(1, Math.floor(e.amount != null ? e.amount : st.maxMp * (e.pct || 0))));
         else if (e.type === 'cure' && c.hp > 0 && (c.status || []).length) { c.status = []; changed = true; lines.push(c.name + 'の状態が治った。'); }
       }
       if (c.hp !== hp0) { changed = true; lines.push(dead ? `${c.name}が起き上がった。` : `${c.name}のHPが ${c.hp - hp0} 回復した。`); }

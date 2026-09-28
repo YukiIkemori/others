@@ -85,7 +85,7 @@
       const o = { v: 0 }; if (s !== 1) o.s = s;
       // 橋（walk）は人より下: 足もとを枠の下の辺、絵は枠の真ん中に合わせて base に描く
       if (it.walk) { draw.push({ key: 'hd:prop:' + it.id, opts: o, x: fx, y: fy + 3 * s, ft: fy, layer: 'base', shadow: null, sortY: -1e9, lm: true }); continue; }
-      draw.push({ key: 'hd:prop:' + it.id, opts: o, x: fx, y: fy, ft: (y0 + fh - 1) * t, layer: 'split', shadow: null, sortY: fy, lm: true });
+      draw.push({ key: 'hd:prop:' + it.id, opts: o, x: fx, y: fy, ft: (y0 + fh - 1) * t, layer: 'split', shadow: null, sortY: fy, lm: true, lmw: fw, lmh: fh });   // lmw・lmh = 足もとの AO の大きさ（chunks.js の _shadow）
     }
   };
 })(window.RPG);

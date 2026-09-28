@@ -20,7 +20,7 @@
   const S0 = ['i_salve', 'i_revive', 'i_antidote', 'i_clear', 'i_waker', 'i_repel', 'i_torch', 'i_smoke', 'i_firepot'];
   const S1 = ['i_potion', 'i_ether', 'i_numb', 'i_throat', 'i_lure', 'i_lens'];
   const S2 = ['i_incense', 'i_thaw', 'i_bomb', 'i_horn', 'i_censer'];
-  const S3 = ['i_ether2', 'i_panacea'];
+  const S3 = ['i_potion2', 'i_ether2', 'i_panacea'];   // 中盤の回復（HP150・MP40。items_use.js の段）
   // 癒やしの霊水（全回復）は終盤（ティア 5）から（オーナー 2026-09-28「全回復系は基本終盤から」。pools.js の LATE）
   const S5 = ['i_elixir'];
   const STONES = ['fire', 'water', 'wind', 'earth', 'light', 'dark'].map((e) => `i_stone_${e}`);

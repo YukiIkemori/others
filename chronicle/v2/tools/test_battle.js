@@ -689,7 +689,10 @@ section('revive items: ally_dead needs a dead ally, the revive event carries the
   ok('nobody down: よみがえりの花 is greyed (reason nodead), target ally_dead', r0 && r0.usable === false && r0.reason === 'nodead' && r0.target === 'ally_dead', r0);
   ok('nobody down: the revive spell is unusable too (nodead)', Bn.engine.unusable(Bn.engine.party[0], 's_light_4') === 'nodead');
   R.Party.members()[1].hp = 0;
-  for (const [id, pct] of [['i_phoenix', 1], ['i_revive', 0.35]]) {
+  // 気つけの羽根は決まった HP（amount 40。最大HP まで）、よみがえりの花は すべて（pct 1）
+  const reviveHp = (id, mhp) => { const e = DB.items[id].use.effects.find((x) => x.type === 'revive'); return e.amount != null ? Math.max(1, Math.min(mhp, e.amount)) : Math.max(1, Math.floor(mhp * e.pct)); };
+  ok('i_revive revives with a fixed 40 HP (owner 2026-09-28: fixed amounts, not %)', DB.items.i_revive.use.effects[0].amount === 40 && DB.items.i_revive.use.effects[0].pct == null);
+  for (const id of ['i_phoenix', 'i_revive']) {
     R.Party.members()[1].hp = 0;
     const B = mk('rv-' + id);
     B.intro();
@@ -701,8 +704,8 @@ section('revive items: ally_dead needs a dead ally, the revive event carries the
     if (p2) B.submit(p2.uid, { cmd: 'defend' });
     const evs = B.round();
     const rv = evs.find((e) => e.t === 'revive');
-    const want = Math.max(1, Math.floor(p1.mhp * pct));
-    ok(`${id}: the ally stands up with hp = max(1, floor(maxHp×${pct}))`, p1.alive && p1.hp === want, [p1.hp, want]);
+    const want = reviveHp(id, p1.mhp);
+    ok(`${id}: the ally stands up with the item's HP (${want} of ${p1.mhp})`, p1.alive && p1.hp === want, [p1.hp, want]);
     ok(`${id}: the revive event carries hp (${want})`, rv && rv.uid === p1.uid && rv.hp === want && C.check('battleEvent', rv).ok, rv);
     ok(`${id}: B.unit shows alive with hp > 0`, B.unit(p1.uid).alive && B.unit(p1.uid).hp === want);
   }
@@ -721,11 +724,40 @@ section('revive items: ally_dead needs a dead ally, the revive event carries the
   er.party[1].hp = 0;
   const ev = drainAll(er.effect(er.party[0], er.party[1], { type: 'revive', pct: 1 }, {}));
   ok('effect revive pct 1: full HP, statuses cleared', er.party[1].hp === er.party[1].mhp && er.party[1].alive && !Object.keys(er.party[1].status).length && ev.some((e) => e.t === 'revive'));
+  // 決まった量（amount）: 蘇生は min(最大HP, amount)・1 以上、回復は amount（最大まで）、MP も amount
+  {
+    const ea = engine({ mons: ['rat_1'] });
+    const t = ea.party[1], mhp = t.mhp;
+    t.hp = 0;
+    drainAll(ea.effect(ea.party[0], t, { type: 'revive', amount: 5 }, {}));
+    ok('effect revive amount 5: stands up with 5 HP', t.alive && t.hp === Math.min(mhp, 5), [t.hp, mhp]);
+    t.hp = 0;
+    drainAll(ea.effect(ea.party[0], t, { type: 'revive', amount: 99999 }, {}));
+    ok('effect revive amount above max: capped at max HP', t.alive && t.hp === mhp, [t.hp, mhp]);
+    t.hp = 0;
+    drainAll(ea.effect(ea.party[0], t, { type: 'revive', amount: 0 }, {}));
+    ok('effect revive amount 0: at least 1 HP', t.alive && t.hp === 1, t.hp);
+    t.hp = 1;
+    drainAll(ea.effect(ea.party[0], t, { type: 'heal', amount: 3 }, { item: true }));
+    ok('effect heal amount 3 (item): +3 HP, not % of max', t.hp === Math.min(mhp, 1 + Math.round(3 * (1 + (t.mods.itemPct || 0) / 100))), [t.hp, mhp]);
+    drainAll(ea.effect(ea.party[0], t, { type: 'heal', amount: 99999 }, { item: true }));
+    ok('effect heal amount above the missing HP: capped at max HP', t.hp === mhp, [t.hp, mhp]);
+    t.mp = 0;
+    drainAll(ea.effect(ea.party[0], t, { type: 'healMp', amount: 4 }, { item: true }));
+    ok('effect healMp amount 4: +4 MP', t.mp === Math.min(t.mmp, 4), [t.mp, t.mmp]);
+    drainAll(ea.effect(ea.party[0], t, { type: 'healMp', amount: 99999 }, { item: true }));
+    ok('effect healMp amount above max: capped at max MP', t.mp === t.mmp, [t.mp, t.mmp]);
+    t.hp = 1;
+    ok('expectHeal reads amount (AI): i_salve → 30 on a hurt ally', ea.expectHeal(ea.party[0], DB.items.i_salve.use, t, DB.items.i_salve) === Math.round(30 * (1 + (ea.party[0].mods.itemPct || 0) / 100)), ea.expectHeal(ea.party[0], DB.items.i_salve.use, t, DB.items.i_salve));
+  }
   // フィールド: 同じ道具で起き上がる（HP = floor(最大 HP × pct)）
   const c = R.Party.members()[1];
   c.hp = 0;
   const res = R.Screens && R.Screens.applyField ? R.Screens.applyField(DB.items.i_revive, null, [c]) : null;
-  ok('field: i_revive stands up with floor(maxHp×0.35)', !R.Screens || !R.Screens.applyField || (res.changed && c.hp === Math.max(1, Math.floor(R.Screens.stats(c).maxHp * 0.35))), c.hp);
+  ok('field: i_revive stands up with min(maxHp, 40)', !R.Screens || !R.Screens.applyField || (res.changed && c.hp === reviveHp('i_revive', R.Screens.stats(c).maxHp)), c.hp);
+  c.hp = 0;
+  const res2 = R.Rules.fieldUse(DB.items.i_revive, null, [c]);
+  ok('field (R.Rules.fieldUse): i_revive stands up with min(maxHp, 40)', res2.changed && c.hp === reviveHp('i_revive', R.Rules.stats(c).maxHp), c.hp);
   ok('field: canTarget allows only the dead for ally_dead', !R.Screens || !R.Screens.canTarget || (R.Screens.canTarget(DB.items.i_phoenix, { hp: 0 }) && !R.Screens.canTarget(DB.items.i_phoenix, { hp: 5 })));
 }
 

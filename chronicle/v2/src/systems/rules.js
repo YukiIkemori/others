@@ -493,6 +493,7 @@
      * MP の支払いと品の数は呼ぶ側（MENUS）。→ {changed, lines:[文]}
      *   heal: 最大HP × pct × 回復の力（術: HEALF(精神) × (1 + healPct) × 熟練、道具: 1 + 使う人の itemPct）
      *   healMp: ceil(最大MP × pct)、revive: 倒れた人を最大HP × pct（既定 0.25）で、cure: 状態を消す
+     *   決まった量 amount があれば 最大値 × pct の代わりにそれ（heal は回復の力を掛ける。revive は最大HP まで、1 以上）
      *   encounter（魔除けの香 pct < 0）・light（松明）は R.Field.encounter.ward / R.Field.light があれば渡す
      */
     fieldUse(action, caster, targets, o) {
@@ -509,12 +510,14 @@
           ? Rules.healF(caster) * (1 + ((cm.healPct || 0) / 100)) * (Rules.profPowerMul(caster, a) || 1)
           : 1 + ((Rules.mods(c).itemPct || 0) / 100);
         for (const e of use.effects || []) {
-          if (e.type === 'revive' && dead) { c.hp = Math.max(1, Math.floor(st.maxHp * (e.pct != null ? e.pct : 0.25))); c.status = []; }
-          else if (e.type === 'heal' && c.hp > 0) {
-            const n = e.pct != null ? st.maxHp * e.pct : e.power || 0;
+          if (e.type === 'revive' && dead) {
+            c.hp = e.amount != null ? Math.max(1, Math.min(st.maxHp, Math.floor(e.amount))) : Math.max(1, Math.floor(st.maxHp * (e.pct != null ? e.pct : 0.25)));
+            c.status = [];
+          } else if (e.type === 'heal' && c.hp > 0) {
+            const n = e.amount != null ? e.amount : e.pct != null ? st.maxHp * e.pct : e.power || 0;
             if (n > 0) c.hp = Math.min(st.maxHp, c.hp + Math.max(1, Math.round(n * mul)));
           } else if (e.type === 'healMp' && c.hp > 0) {
-            const n = e.pct != null ? Math.ceil(st.maxMp * e.pct) : e.power || 0;
+            const n = e.amount != null ? Math.round(e.amount) : e.pct != null ? Math.ceil(st.maxMp * e.pct) : e.power || 0;
             if (n > 0) c.mp = Math.min(st.maxMp, (c.mp || 0) + n);
           } else if (e.type === 'cure' && c.hp > 0 && Array.isArray(c.status) && c.status.length) {
             const list = e.statuses === 'all' || !e.statuses ? null : e.statuses;

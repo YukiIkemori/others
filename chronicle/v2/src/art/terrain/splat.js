@@ -96,7 +96,8 @@
     const nM = ids.length, inf = ids.map(mi), sh = ids.map((id) => sheets(id, tile)), off = ids.map((id) => offOf(id, S));
     const vOff = offOf('variant', S);
     // 4×4 がすべて同じ素材: 写すだけ（変化の絵があるときだけ画素ごと）
-    const MK = T._splatMask;   // 水の印（relief.js: 陸 = 水の重み 0〜127、水 = 128 + 陸の重み）
+    const MK = T._splatMask;
+    RVS = T._splatRS || null;   // 起伏の標本（relief.js）: あれば変化の絵の選びを日なた・陰に合わせる   // 水の印（relief.js: 陸 = 水の重み 0〜127、水 = 128 + 陸の重み）
     if (ids.length === 1) {
       const sh0 = sh[0];
       if (MK && inf[0].water) for (let y = y0; y < y1; y++) MK.fill(128, y * dw + x0, y * dw + x1);
@@ -151,11 +152,13 @@
     }
     return true;
   };
+  let RVS = null;
   function texel(s, WX, WY, nz, S, vo) {
     const A = s.a, SA = A.S, pa = A.px[(((WY % SA) + SA) % SA) * SA + (((WX % SA) + SA) % SA)];
     if (!s.b) return pa;
-    // 変化の絵: 大きなノイズ（ずらした表を 4 倍に引き伸ばして読む）で A と B
-    const qx = ((((WX >> 2) + vo[0]) % S) + S) % S, qy = ((((WY >> 2) + vo[1]) % S) + S) % S, v = nz[qy * S + qx];
+    // 変化の絵: 大きなノイズ（ずらした表を 4 倍に引き伸ばして読む）で A と B。起伏があれば日なた・尾根 = B、陰・谷 = A
+    let v = RVS ? T._reliefVar(RVS, WX, WY) : -1;
+    if (v < 0) { const qx = ((((WX >> 2) + vo[0]) % S) + S) % S, qy = ((((WY >> 2) + vo[1]) % S) + S) % S; v = nz[qy * S + qx]; }
     if (v < 0.44) return pa;
     const B = s.b, SB = B.S, pb = B.px[(((WY % SB) + SB) % SB) * SB + (((WX % SB) + SB) % SB)];
     if (v > 0.56) return pb;

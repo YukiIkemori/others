@@ -44,7 +44,13 @@ const leads = Object.entries(D.leads).filter(([, l]) => l.region === 'r_desert')
 ok(`砂漠の手がかり ${leads.length} 件（地方・依頼・うわさ）`, leads.length >= 18, leads.length);
 ok('ボスの編成（鷹団の頭・アジト・砂もぐり・砂の王）', ['tr_b_hawkchief', 'tr_b_hawkhold', 'tr_b_sandworm', 'tr_b_sandking'].every((t) => D.troops[t]));
 ok('地方 r_desert の錠が外れ、光の柱の場所がある', !D.regions.r_desert.slice && !!D.regions.r_desert.beaconAt);
-ok('ほかの地方は錠のまま（雪原は別の担当）', Object.entries(D.regions).filter(([id, r]) => !['r_forest', 'r_desert', 'r_snow', 'prologue', 'world'].includes(id)).every(([, r]) => r.slice));
+// 地方の slice:'locked' は「まだ作っていない地方」（湿原・灰の荒野は marsh_*.js・ash_*.js で開いた）。
+//   体験版で行けないこと自体は、ワールドの峠の崖崩れと番人（cond {slice:true}）が受け持つ（qa/progress.js の 3b・5）
+ok('まだ作っていない地方（諸島・鉱山・星）は錠のまま', ['r_isles', 'r_mine', 'r_star'].every((id) => D.regions[id].slice === 'locked'));
+{
+  const W = D.maps.world;
+  ok('体験版では砂漠への南の峠と灰の荒野への峠に番人が立つ（cond {slice:true}）', ['guard_south', 'guard_ash'].every((id) => (W.npcs || []).some((n) => n.id === id && n.cond && n.cond.slice === true)));
+}
 
 // ================================================================ 2
 section('2. 置き場所（A27・泉・宝箱）');

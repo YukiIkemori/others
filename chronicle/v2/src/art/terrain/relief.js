@@ -17,14 +17,15 @@
   const K = {
     light: [-0.62, -0.78, 0.9],   // 光の向き（左上・北西から。x 右、y 下、z 上）
     shade: 1,                     // 斜面の明暗の強さ
-    z: 3.2,                       // 陰影を出すときの高さの誇張（高さの場は歩く所の見た目に合わせて低め）
-    curv: 0.55,                   // 曲がり（尾根の明るさ・足もとの暗さ）
+    z: 4,                       // 陰影を出すときの高さの誇張（高さの場は歩く所の見た目に合わせて低め）
+    curv: 0.8,                   // 曲がり（尾根の明るさ・足もとの暗さ）
     occ: 0.3,                     // 森の縁の AO
-    fMin: 0.42, fMax: 1.45,
+    fMin: 0.45, fMax: 1.3,
     steep: [0.55, 1.25],          // この傾き（マスあたりの高さ）から地肌が出る
     macro: 0.6,                   // 大きな色のゆらぎの強さ
     deep: 0.3,                    // 水の深さの暗さ
-    wet: 0.3,                     // 濡れた砂・土の暗さ
+    wet: 0.2,                     // 濡れた砂・土の暗さ
+    faceMax: 0.42,                // 岸の崖の面のいちばん長い所（マス）
   };
   T._RELIEF_K = K;
 
@@ -126,7 +127,7 @@
     }
   }
   /** 値のノイズ（u.vn と同じ形）を格子の表から直に足す */
-  function noiseAdd(NZ, w, h, L, sd, amp, h3) {
+  function noiseAdd(NZ, w, h, L, sd, amp, h3, ridge) {
     const gw = Math.ceil(w / L) + 2, gh = Math.ceil(h / L) + 2, lat = new Float32Array(gw * gh);
     for (let j = 0; j < gh; j++) for (let i = 0; i < gw; i++) lat[j * gw + i] = h3(i, j, sd);
     for (let y = 0; y < h; y++) {
@@ -134,7 +135,8 @@
       for (let x = 0; x < w; x++) {
         const fx0 = x / L, i = fx0 | 0, tx = fx0 - i, sx = tx * tx * (3 - 2 * tx);
         const a = lat[o0 + i], b = lat[o0 + i + 1], c = lat[o1 + i], d = lat[o1 + i + 1];
-        NZ[y * w + x] += (a + (b - a) * sx + (c - a) * sy + (a - b - c + d) * sx * sy) * amp;
+        const v = a + (b - a) * sx + (c - a) * sy + (a - b - c + d) * sx * sy;
+        NZ[y * w + x] += (ridge ? 1 - Math.abs(v * 2 - 1) : v) * amp;   // ridge = 尾根の筋（なだらかな丘に背を作る）
       }
     }
   }
@@ -150,8 +152,9 @@
       }
       const dw = dW[i] * q, coast = 1 - Math.exp(-dw / 8), flat = Math.min(1, dB[i] * q / 7);
       let v = 0.2 + 1.2 * coast;
-      v += n * 2.8 * Math.min(1, dw / 5) * (0.35 + 0.65 * flat);   // 丘（岸と町の近くは弱く）
+      v += n * 4.2 * Math.min(1, dw / 5) * (0.35 + 0.65 * flat);   // 丘（岸と町の近くは弱く）
       if (flag[i] & 2) v -= 0.25;                                   // 砂浜は低い
+      else v += 0.95 * Math.exp(-dw / 3) * Math.max(0, Math.min(1, (NZ[i] - 0.42) * 4));   // 草の岸はところどころ高い崖（面は ledges が水の上に描く）
       if (k === 2) v += 1.7 + (lvl[i] - 1) * 1.3 + 1.6 * (1 - Math.exp(-dI[i] * q / 2.2)) + n * 0.8;   // 山: 縁から奥へ高く
       else v += 1.5 * Math.exp(-dM[i] * q / 4) + tr[i] * 0.15;     // 山のすそ・森はわずかに高い
       H[i] = v;
@@ -173,9 +176,9 @@
     const bm = new Uint8Array(N);
     for (const o of map.objects || []) if (o.type === 'building' && o.x != null) for (let y = o.y - 1; y < o.y + (o.h || 3) + 1; y++) for (let x = o.x - 1; x < o.x + (o.w || 3) + 1; x++) if (x >= 0 && y >= 0 && x < W0 && y < H0) bm[Math.floor(y / Q) * w + Math.floor(x / Q)] = 1;
     D.B = dist(bm, w, h, 30); yield;
-    // 丘のノイズ: 大きいうねり（約 36 マス）・中（約 13 マス）・小（約 5 マス）
+    // 丘のノイズ: 大きいうねり（約 44 マス）＋尾根の筋（約 17 マス）。細かい段は入れない（雲の影のように見える）
     const NZ = new Float32Array(N);
-    noiseAdd(NZ, w, h, 36 / Q, 911, 0.62, u.h3); noiseAdd(NZ, w, h, 13 / Q, 912, 0.28, u.h3); noiseAdd(NZ, w, h, 5 / Q, 913, 0.1, u.h3);
+    noiseAdd(NZ, w, h, 44 / Q, 911, 0.72, u.h3, false); noiseAdd(NZ, w, h, 17 / Q, 912, 0.28, u.h3, true);
     yield;
     const H = new Float32Array(N);
     heights(c, D, NZ, H); yield;
@@ -235,18 +238,25 @@
 
   // ------------------------------------------------------------------ チャンクに掛ける
   // 標本は B px ごと（B = tile / 8、世界の座標の格子なので隣のチャンクと同じ値）。標本ごとに 3 次の B スプラインで高さ・傾き・曲がりを出し、
-  // 画素ごとには標本の間を双一次でつなぐ
+  // 画素ごとには標本の間を双一次でつなぐ。段（崖の面）を探すために、チャンクの上に EP px 分の行も数える（上のチャンクと同じ値）
+  // 標本の組は仕事ごと（地面を焼く間に別の仕事が入る）。画素の段の一時の入れ物は 1 組を使い回す（apply は一度に終わる）
   const bufs = {};
-  function buf(name, n) { const k = name + n; return bufs[k] || (bufs[k] = new Float32Array(n)); }
-  T._reliefApply = function (job) {
+  function buf(name, n, T8) { const k = name + n; return bufs[k] || (bufs[k] = new (T8 || Float32Array)(n)); }
+  const spool = [];
+  /** 標本を先に（地面を焼く前。splat が草の変化の絵を選ぶのに V を使う: 日の当たる尾根は乾いた色、陰の谷は濃い色） */
+  T._reliefPrep = function (job) {
     const map = job.map, rf = T._relief(map);
-    if (!rf || !rf.ready || !job.px) return;
+    if (!rf || !rf.ready) return null;
     const u = U(), t = job.tile, S = job.size, X0 = job.X0, Y0 = job.Y0;
-    const B = Math.max(2, t >> 3), N = Math.floor(S / B) + 1, NN = N * N;
+    const B = Math.max(2, t >> 3), N = Math.floor(S / B) + 1;
+    const FH = Math.round(t * K.faceMax), E = Math.ceil((FH + 2) / B), EP = E * B, NR = N + E, NS = NR * N;   // 上に足す行（標本 E 行 = EP px）
     const w = rf.w, h = rf.h, H = rf.H, O = rf.O, info = rf.info, grid = R.MapUtil.grid(map), MW = map.w, MH = map.h, iq = 1 / Q;
-    /** 画素（チャンクの中）の下のマスの凡例の種類（無ければ null） */
+    /** 世界の px の下のマスの凡例の種類（無ければ null） */
     const cellAt = (wx0, wy0) => { const ci = Math.floor(wx0 / t), cj = Math.floor(wy0 / t); if (ci < 0 || cj < 0 || ci >= MW || cj >= MH) return null; const row = grid[cj] || ''; return info[row.length === MW ? row.charAt(ci) : [...row][ci]] || null; };
-    const F = buf('F', NN), Fw = buf('Fw', NN), DR = buf('DR', NN), DG = buf('DG', NN), DB = buf('DB', NN), BA = buf('BA', NN);
+    let rs = spool.pop();
+    if (!rs || rs.NS !== NS) rs = { NS, F: new Float32Array(NS), Fw: new Float32Array(NS), DR: new Float32Array(NS), DG: new Float32Array(NS), DB: new Float32Array(NS), BA: new Float32Array(NS), HS: new Float32Array(NS), V: new Float32Array(NS) };
+    Object.assign(rs, { N, NR, E, EP, FH, B, X0, Y0, S });
+    const F = rs.F, Fw = rs.Fw, DR = rs.DR, DG = rs.DG, DB = rs.DB, BA = rs.BA, HS = rs.HS, V = rs.V;
     const Lx = K.light[0], Ly = K.light[1], Lz = K.light[2], Ll = Math.hypot(Lx, Ly, Lz), lx = Lx / Ll, ly = Ly / Ll, lz = Lz / Ll;
     const Hat = (x, y) => H[(y < 0 ? 0 : y >= h ? h - 1 : y) * w + (x < 0 ? 0 : x >= w ? w - 1 : x)];
     const wx = new Float32Array(4), dx = new Float32Array(4), sx = new Float32Array(4), wy = new Float32Array(4), dy = new Float32Array(4), sy = new Float32Array(4);
@@ -257,9 +267,8 @@
       S2[0] = g; S2[1] = 3 * f - 2; S2[2] = -3 * f + 1; S2[3] = f;
     };
     const hv = new Float32Array(16);
-    let anyWet = false;
-    for (let j = 0; j < N; j++) {
-      const py = Y0 + j * B, fy0 = (py / t) * iq - 0.5, cy = Math.floor(fy0);
+    for (let jj = 0; jj < NR; jj++) {
+      const j = jj - E, py = Y0 + j * B, fy0 = (py / t) * iq - 0.5, cy = Math.floor(fy0);
       basis(fy0 - cy, wy, dy, sy);
       for (let i = 0; i < N; i++) {
         const px = X0 + i * B, fx0 = (px / t) * iq - 0.5, cx = Math.floor(fx0);
@@ -272,8 +281,10 @@
           hh += wy[b] * r0; hx += wy[b] * r1; hy += dy[b] * r0; hxx += wy[b] * r2; hyy += sy[b] * r0;
         }
         hx *= iq; hy *= iq; hxx *= iq * iq; hyy *= iq * iq;   // 高さの格子（Q マス）→ マスあたり
-        const q = j * N + i;
-        // 明暗: 面の向き（Lambert、平らな所を 1 に）＋曲がり
+        const q = jj * N + i, sl = Math.sqrt(hx * hx + hy * hy);
+        HS[q] = hh;
+        if (j < 0) continue;
+        // 明暗: 面の向き（Lambert、平らな所を 1 に。高さは K.z 倍に誇張）＋曲がり（尾根は明るく、足もと・谷は暗く）
         const zx = hx * K.z, zy = hy * K.z, nl = 1 / Math.sqrt(zx * zx + zy * zy + 1);
         const d = (-zx * lx - zy * ly + lz) * nl;
         let f = 1 + K.shade * (d / lz - 1);
@@ -281,58 +292,88 @@
         f -= K.curv * Math.max(-0.6, Math.min(0.6, lap)) * 0.5;
         const ce = cellAt(px, py);
         // 森の縁の AO（高さの格子で双一次）
-        let oc;
-        {
-          const ox = Math.max(0, Math.min(w - 2, cx)), oy = Math.max(0, Math.min(h - 2, cy));
-          const ax = Math.max(0, Math.min(1, fx0 - ox)), ay = Math.max(0, Math.min(1, fy0 - oy)), o0 = oy * w + ox;
-          oc = ((O[o0] * (1 - ax) + O[o0 + 1] * ax) * (1 - ay) + (O[o0 + w] * (1 - ax) + O[o0 + w + 1] * ax) * ay) / 255;
-        }
-        f -= K.occ * oc;
+        const ox = Math.max(0, Math.min(w - 2, cx)), oy = Math.max(0, Math.min(h - 2, cy));
+        const ax = Math.max(0, Math.min(1, fx0 - ox)), ay = Math.max(0, Math.min(1, fy0 - oy)), o0 = oy * w + ox;
+        f -= K.occ * (((O[o0] * (1 - ax) + O[o0 + 1] * ax) * (1 - ay) + (O[o0 + w] * (1 - ax) + O[o0 + w + 1] * ax) * ay) / 255);
         if (f < K.fMin) f = K.fMin; else if (f > K.fMax) f = K.fMax;
         F[q] = f;
+        // 草の変化の絵の選び: 日なた・尾根 → 高い値、陰・谷 → 低い値（元のノイズも少し残す）
+        V[q] = 0.5 + (f - 1) * 1.0 + (u.vn(px / t, py / t, 9, 961) - 0.5) * 0.45;
         // 水: 深さで暗く（溶岩は変えない）
         Fw[q] = ce && ce.kind === 1 ? 1 - K.deep * Math.max(0, Math.min(1, -hh / 1.6)) : 1;
-        // 色のゆらぎ
+        // 色のゆらぎ（地方の色の組ごと。大きい 40 マス・中 14 マス）
         const tt = TINT[ce ? ce.fam : 1] || TINT[1];
         const na = (u.vn(px / t, py / t, 40, 921) - 0.5) * 2, nb = (u.vn(px / t, py / t, 14, 922) - 0.5) * 2, mk = K.macro * (ce && ce.lava ? 0 : 1);
-        // 高い所は少し明るく冷たく、低い所は少し暖かく
+        // 高い所は少し冷たく、低い所は少し暖かく
         const lift = Math.max(-1, Math.min(1, (hh - 1.2) / 2.5));
         DR[q] = (tt[0][0] * na + tt[1][0] * nb) * mk - lift * 4;
         DG[q] = (tt[0][1] * na + tt[1][1] * nb) * mk + lift * 1;
         DB[q] = (tt[0][2] * na + tt[1][2] * nb) * mk + lift * 6;
         // 急な所の地肌（崖・がれ場）: 割合
-        const sl = Math.sqrt(hx * hx + hy * hy);
         let ba = (sl - K.steep[0]) / (K.steep[1] - K.steep[0]);
         ba = ba <= 0 ? 0 : ba >= 1 ? 1 : ba * ba * (3 - 2 * ba);
         if (ce && ce.kind === 1) ba = 0;
         BA[q] = ba * 0.55;
-        if (ba > 0) anyWet = true;
       }
     }
-    // 画素ごと
+    return rs;
+  };
+  /** 地面の画素に掛ける（地面を焼いた後。rs = T._reliefPrep の標本） */
+  // 帯（RBANDS）に分けて呼ぶ（1 回の仕事を短く）。band = 0〜RBANDS-1、最後の帯の後で岸の崖の面。true = 全部済んだ
+  const RBANDS = 3;
+  T._reliefApply = function (job, band) {
+    const rs = job.rs, map = job.map, rf = T._relief(map);
+    if (!rs || !rf || !job.px) return true;
+    if (band == null) { for (let b = 0; b < RBANDS; b++) T._reliefApply(job, b); return true; }
+    const u = U(), t = job.tile, S = job.size, X0 = job.X0, Y0 = job.Y0, info = rf.info, grid = R.MapUtil.grid(map), MW = map.w, MH = map.h;
+    const { N, NR, EP, FH, B, F, Fw, DR, DG, DB, BA, HS } = rs;
+    const cellAt = (wx0, wy0) => { const ci = Math.floor(wx0 / t), cj = Math.floor(wy0 / t); if (ci < 0 || cj < 0 || ci >= MW || cj >= MH) return null; const row = grid[cj] || ''; return info[row.length === MW ? row.charAt(ci) : [...row][ci]] || null; };
+    // 画素ごと（上の EP 行は高さ・水かだけ）
     const px8 = new Uint8ClampedArray(job.px.buffer, job.px.byteOffset, S * S * 4), wm = job.wmask;
-    const rF = buf('rF', N), rW = buf('rW', N), rR = buf('rR', N), rG = buf('rG', N), rB = buf('rB', N), rA = buf('rA', N);
+    const SH = S + EP;
+    if (!rs.PH || rs.PH.length !== SH * S) { rs.PH = new Float32Array(SH * S); rs.PW = new Uint8Array(SH * S); }
+    const PH = rs.PH, PW = rs.PW;
+    const hb = Math.ceil(S / RBANDS), yA = band === 0 ? 0 : EP + band * hb, yB = Math.min(SH, EP + (band + 1) * hb);
+    const rF = buf('rF', N), rW = buf('rW', N), rR = buf('rR', N), rG = buf('rG', N), rB = buf('rB', N), rA = buf('rA', N), rH = buf('rH', N);
     const invB = 1 / B;
     const fmAt = (x, y) => { const c = cellAt(X0 + x, Y0 + y); return c ? c.fam : 1; };
-    for (let y = 0; y < S; y++) {
-      const gj = y * invB, j = Math.min(N - 2, gj | 0), fy = gj - j, gy = 1 - fy, r0 = j * N, r1 = r0 + N;
+    for (let yy = yA; yy < yB; yy++) {
+      const y = yy - EP, gj = yy * invB, jj = Math.min(NR - 2, gj | 0), fy = gj - jj, gy = 1 - fy, r0 = jj * N, r1 = r0 + N, top = y < 0;
       for (let i = 0; i < N; i++) {
+        rH[i] = HS[r0 + i] * gy + HS[r1 + i] * fy;
+        if (top) continue;
         rF[i] = F[r0 + i] * gy + F[r1 + i] * fy; rW[i] = Fw[r0 + i] * gy + Fw[r1 + i] * fy;
         rR[i] = DR[r0 + i] * gy + DR[r1 + i] * fy; rG[i] = DG[r0 + i] * gy + DG[r1 + i] * fy; rB[i] = DB[r0 + i] * gy + DB[r1 + i] * fy;
         rA[i] = BA[r0 + i] * gy + BA[r1 + i] * fy;
+      }
+      const prow = yy * S;
+      if (top) {
+        // 上のチャンクの行: 水かはマスから（splat の岸のうねりとは少し違うが、段の面の長さを決めるだけ）
+        let cw = -1, cwv = 0;
+        for (let x = 0; x < S; x++) {
+          const gi = x * invB, i = Math.min(N - 2, gi | 0), fx = gi - i, gx = 1 - fx;
+          PH[prow + x] = rH[i] * gx + rH[i + 1] * fx;
+          const ci = Math.floor((X0 + x) / t);
+          if (ci !== cw) { cw = ci; const c = cellAt(X0 + x, Y0 + y); cwv = c && c.kind === 1 ? 1 : 0; }
+          PW[prow + x] = cwv;
+        }
+        continue;
       }
       const row = y * S;
       let bare = null, bfm = -1;
       for (let x = 0; x < S; x++) {
         const gi = x * invB, i = Math.min(N - 2, gi | 0), fx = gi - i, gx = 1 - fx, k = row + x, q = k * 4;
+        PH[prow + x] = rH[i] * gx + rH[i + 1] * fx;
         const m = wm ? wm[k] : 0;
         let r = px8[q], g = px8[q + 1], b = px8[q + 2];
         if (m >= 128) {
           // 水
+          PW[prow + x] = 1;
           const fw = rW[i] * gx + rW[i + 1] * fx;
           px8[q] = r * fw; px8[q + 1] = g * fw; px8[q + 2] = b * (fw * 0.7 + 0.3);
           continue;
         }
+        PW[prow + x] = 0;
         const f = rF[i] * gx + rF[i + 1] * fx;
         // 急な所の地肌
         const ba = rA[i] * gx + rA[i + 1] * fx;
@@ -342,9 +383,9 @@
           const nz = u.h3((X0 + x) >> 1, (Y0 + y) >> 1, 931) * 0.5 + 0.75, a = Math.min(0.85, ba * nz);
           r += (bare[0] - r) * a; g += (bare[1] - g) * a; b += (bare[2] - b) * a;
         }
-        let dr = rR[i] * gx + rR[i + 1] * fx, dg = rG[i] * gx + rG[i + 1] * fx, db = rB[i] * gx + rB[i + 1] * fx;
+        const dr = rR[i] * gx + rR[i + 1] * fx, dg = rG[i] * gx + rG[i + 1] * fx, db = rB[i] * gx + rB[i + 1] * fx;
         // 岸・川べりの濡れた砂と土（splat の水の近さ 1〜127）
-        if (m > 0) { const wt = Math.min(1, m / 60) * K.wet; r *= 1 - wt; g *= 1 - wt * 0.9; b *= 1 - wt * 0.75; }
+        if (m > 44) { const wv = Math.min(1, (m - 44) / 24), wt = wv * wv * (3 - 2 * wv) * K.wet; r *= 1 - wt; g *= 1 - wt * 0.9; b *= 1 - wt * 0.72; }
         // 陰は青く、日なたは少し暖かく
         const fb = f < 1 ? 1 - (1 - f) * 0.78 : f;
         const fr = f > 1 ? 1 + (f - 1) * 1.1 : f;
@@ -352,6 +393,128 @@
         px8[q] = r * fr + dr; px8[q + 1] = g * f + dg; px8[q + 2] = b * fb + db;
       }
     }
-    void anyWet;
+    if (band < RBANDS - 1) return false;
+    ledges(px8, PH, PW, S, EP, FH, X0, Y0, fmAt, u);
+    if (spool.length < 3) spool.push(rs);
+    job.rs = null;
+    return true;
+  };
+  T._RELIEF_BANDS = RBANDS;
+  /** splat の草の変化の値（世界の px）: 標本の間を双一次。範囲の外は -1（元のノイズ） */
+  T._reliefVar = function (rs, WX, WY) {
+    const gx = (WX - rs.X0) / rs.B, gy = (WY - rs.Y0) / rs.B + rs.E, N = rs.N;
+    if (gx < 0 || gy < rs.E || gx >= N - 1 || gy >= rs.NR - 1) return -1;
+    const i = gx | 0, j = gy | 0, fx = gx - i, fy = gy - j, q = j * N + i, V = rs.V;
+    return (V[q] * (1 - fx) + V[q + 1] * fx) * (1 - fy) + (V[q + N] * (1 - fx) + V[q + N + 1] * fx) * fy;
+  };
+
+  // ------------------------------------------------------------------ 岸の崖（段の面）
+  // 南向き（画面の下が水）の岸で、陸が高い所だけ、水の上に崖の面（地肌の色、上は明るい縁、下へ暗く・すじ）と面の下の落ち影を描く。
+  // 砂浜・山の岩（立ち上がりの面がある）には描かない。列ごとに上から下へ見るので、上のチャンクの行（EP）から数える（継ぎ目が出ない）
+
+  const FACE = { 1: [98, 84, 60], 2: [76, 62, 46], 3: [160, 140, 108], 4: [170, 180, 196], 5: [74, 64, 60], 6: [86, 80, 60], 7: [104, 96, 104], 8: [112, 94, 70], 9: [128, 100, 76] };
+  function ledges(px8, PH, PW, S, EP, FH, X0, Y0, fmAt, u) {
+    const SH = S + EP;
+    const paint = (k, c, a) => { const q = k * 4; px8[q] += (c[0] - px8[q]) * a; px8[q + 1] += (c[1] - px8[q + 1]) * a; px8[q + 2] += (c[2] - px8[q + 2]) * a; };
+    const mul = (k, f) => { const q = k * 4; px8[q] *= f; px8[q + 1] *= f; px8[q + 2] *= f < 1 ? 1 - (1 - f) * 0.8 : f; };
+    for (let x = 0; x < S; x++) {
+      let prev = PW[x];
+      for (let yy = 1; yy < SH; yy++) {
+        const wv = PW[yy * S + x];
+        if (wv === prev) continue;
+        prev = wv;
+        // 岸（陸 → 水、南向き）だけ面を描く。陸の中の段は面を描かない（歩ける所に崖を描くと当たりと食い違う）
+        if (!wv) continue;
+        const hu = PH[(yy - 1) * S + x], fm = fmAt(x, Math.max(0, yy - 1 - EP));
+        if (fm === 7 || fm === 3) continue;   // 山の岩（立ち上がりの面がある）・砂浜は面なし
+        // 陸が高いほど長い面（低い岸は無し）
+        const a = Math.max(0, Math.min(1, (hu - 0.45) / 0.5)), fh = Math.round(FH * 0.75 * a);
+        if (fh < 2) continue;
+        const fc = FACE[fm] || FACE[1];
+        // 上の縁（高い側の最後の 2 px）: 明るい
+        for (let e = 1; e <= 2; e++) { const y = yy - e - EP; if (y >= 0) mul(y * S + x, 1 + (0.28 / e) * Math.min(1, a * 1.5)); }
+        // 面（上から下へ暗く、細かいすじ）
+        for (let e = 0; e < fh; e++) {
+          const y = yy + e - EP;
+          if (y < 0) continue;
+          if (y >= S) break;
+          const dd = e / fh, st = u.h3((X0 + x) >> 1, Math.floor((Y0 + y) / 3), 951);
+          const sh = 0.95 - dd * 0.42 + (st - 0.5) * 0.14;
+          const k = y * S + x;
+          paint(k, [fc[0] * sh, fc[1] * sh, fc[2] * sh], 0.9);
+        }
+        // 面の下の落ち影（水にも）
+        const sd = Math.round(fh * 0.7);
+        for (let e = 0; e < sd; e++) { const y = yy + fh + e - EP; if (y < 0) continue; if (y >= S) break; mul(y * S + x, 1 - 0.3 * (1 - e / sd)); }
+      }
+    }
+  }
+  // ------------------------------------------------------------------ 打ち寄せる波の線（岸の泡。FIELD が毎フレーム、明るさだけ揺らして描く）
+  // splat の水の印（水の画素 = 128 + 陸の重み）を G px の格子で読み、陸の重みの等高線（岸に近い線と少し沖の線）を
+  // 四角の行進（marching squares）で線分にして Path2D に。チャンクごとに 2 本（数 KB）。
+  const FOAM_LV = [0.34, 0.16];
+  T._foamOf = function (job) {
+    const wm = job.wmask, S = job.size;
+    if (!wm || typeof Path2D === 'undefined') return null;
+    let any = false;
+    for (let i = 0; i < wm.length; i += 7) if (wm[i] >= 128) { any = true; break; }
+    if (!any) return null;
+    const G = Math.max(2, job.tile >> 3), n = Math.floor(S / G) + 1, val = new Float32Array(n * n);
+    let land = false, water = false;
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+      const x = Math.min(S - 1, i * G), y = Math.min(S - 1, j * G), m = wm[y * S + x];
+      const v = m === 1 ? -1 : m >= 128 ? (m - 128) / 127 : 1;   // 1 = 硬い素材の表示のタイル（分からない: 線を引かない）
+      val[j * n + i] = v;
+      if (v >= 1) land = true; else if (v >= 0) water = true;
+    }
+    if (!land || !water) return null;
+    const out = [];
+    for (const lv of FOAM_LV) {
+      const p = new Path2D();
+      let segs = 0;
+      const lerp = (a, b) => (lv - a) / (b - a);
+      for (let j = 0; j < n - 1; j++) for (let i = 0; i < n - 1; i++) {
+        const a = val[j * n + i], b = val[j * n + i + 1], c = val[(j + 1) * n + i + 1], d = val[(j + 1) * n + i];
+        if (a < 0 || b < 0 || c < 0 || d < 0) continue;
+        const code = (a > lv ? 8 : 0) | (b > lv ? 4 : 0) | (c > lv ? 2 : 0) | (d > lv ? 1 : 0);
+        if (code === 0 || code === 15) continue;
+        const x0 = i * G, y0 = j * G;
+        const T0 = [x0 + lerp(a, b) * G, y0], R0 = [x0 + G, y0 + lerp(b, c) * G], B0 = [x0 + lerp(d, c) * G, y0 + G], L0 = [x0, y0 + lerp(a, d) * G];
+        const seg = (P, Qp) => { p.moveTo(P[0], P[1]); p.lineTo(Qp[0], Qp[1]); segs++; };
+        switch (code) {
+          case 1: case 14: seg(L0, B0); break;
+          case 2: case 13: seg(B0, R0); break;
+          case 3: case 12: seg(L0, R0); break;
+          case 4: case 11: seg(T0, R0); break;
+          case 6: case 9: seg(T0, B0); break;
+          case 7: case 8: seg(L0, T0); break;
+          case 5: seg(L0, T0); seg(B0, R0); break;
+          case 10: seg(T0, R0); seg(L0, B0); break;
+        }
+      }
+      if (segs) out.push({ p, lv, ph: ((job.cx * 7 + job.cy * 13) % 10) / 10 });
+    }
+    return out.length ? { lines: out, s: job.tile / 32 } : null;
+  };
+  /** 岸の泡を描く（FIELD の地面の後）。x, y = チャンクの左上の画面の位置、time = ms。reduce = 動きを減らす */
+  T._foamDraw = function (g, foam, x, y, time, reduce) {
+    const s = foam.s;
+    g.save();
+    g.translate(x, y);
+    g.lineCap = 'round';
+    for (let i = 0; i < foam.lines.length; i++) {
+      const L = foam.lines[i];
+      // 波: 岸に近い線と沖の線が交互に明るくなる（周期 3.2 秒。チャンクごとに少し位相をずらす）
+      const k = reduce ? 0.5 : 0.5 + 0.5 * Math.sin((time / 3200 + L.ph * 0.25 + i * 0.5) * Math.PI * 2);
+      g.strokeStyle = 'rgb(190,208,232)';
+      // 太く淡い帯の上に細い芯（くっきりした輪郭の線に見えないように）
+      g.globalAlpha = ((i ? 0.04 : 0.06) + k * (i ? 0.06 : 0.07));
+      g.lineWidth = (i ? 4 : 5) * s;
+      g.stroke(L.p);
+      g.globalAlpha = ((i ? 0.03 : 0.06) + k * (i ? 0.07 : 0.1));
+      g.lineWidth = (i ? 1 : 1.3) * s;
+      g.stroke(L.p);
+    }
+    g.restore();
   };
 })(window.RPG);

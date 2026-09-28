@@ -1558,12 +1558,14 @@
         }
         case 'healMp': {
           if (!t.alive) return;
-          const n = eff.pct != null ? Math.max(1, Math.ceil(t.mmp * eff.pct)) : eff.power || 0;
+          // 決まった量（amount）が先。無ければ 最大MP × pct
+          const n = eff.amount != null ? Math.max(1, Math.round(eff.amount)) : eff.pct != null ? Math.max(1, Math.ceil(t.mmp * eff.pct)) : eff.power || 0;
           return yield* this.restore(t, n, 'mp', ctx.multi ? 'multi' : undefined);
         }
         case 'revive': {
           if (t.alive || t.gone) return;
-          t.hp = Math.max(1, Math.floor(t.mhp * (eff.pct != null ? eff.pct : 0.25)));
+          // amount: 決まった HP で起き上がる（最大HP まで）。無ければ 最大HP × pct（既定 0.25）
+          t.hp = eff.amount != null ? Math.max(1, Math.min(t.mhp, Math.floor(eff.amount))) : Math.max(1, Math.floor(t.mhp * (eff.pct != null ? eff.pct : 0.25)));
           const i = this.killed.indexOf(t);
           if (i >= 0) this.killed.splice(i, 1);
           yield { t: 'revive', u: t };

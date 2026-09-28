@@ -20,7 +20,9 @@
   // 全回復の品（霊水・命のしずく・よみがえりの花・天の恵み）は終盤（ティア LATE 以上）から（オーナー 2026-09-28「全回復系は基本終盤から」）。
   //   地方はどの順番でも回れる（灰の荒野もティア 1 から）ので、地方ではなくティアで分ける。LATE = 5: 縦切りの後の 6 地方のうち最後の 1 つ
   const LATE = 5;
-  const S3 = [...S2, ['i_ether2', 1], ['i_panacea', 1]];
+  // 回復の品は決まった量の段（items_use.js）: 中盤（ティア MID から）は 癒やしの清水 HP150・魔力の霊水 MP40
+  const MID = 3;
+  const S3 = [...S2, ['i_potion2', 3], ['i_ether2', 1], ['i_panacea', 1]];
   const S5 = [...S3, ['i_elixir', 2]];
   const S6 = [...S5, ['i_lifedew', 1]];
   const SUPPLY = [S0, S1, S2, S3, S3, S5, S6, S6, S6, S6];
@@ -32,7 +34,7 @@
   // ティア宝箱 p_T の混ぜ方（重みの合計）: 道具 55・装備 25・お金 20
   const MIX = { supply: 55, gear: 25, gold: 20 };
 
-  R.Pools = { RB: RB.slice(), GOLD: GOLD.slice(), MIX: Object.assign({}, MIX), LATE };
+  R.Pools = { RB: RB.slice(), GOLD: GOLD.slice(), MIX: Object.assign({}, MIX), LATE, MID };
 
   R.onData(function buildPools() {
     const all = Object.entries(R.DB.items);
@@ -61,8 +63,8 @@
       p_armor: P((T) => W1(normal(T, ARMOR))),
       p_acc: P((T) => W1(normal(T, ['acc']))),
       p_rare: P((T) => [...W1(rare(T), 2), ...W1(mrare(T), 1), ...(T >= LATE ? E([['i_lifedew', 2], ['i_phoenix', 2], ['i_grace', 1]]) : [])]),
-      // 大きな回復の 1 品（地方ボスの確定の 2 つ目・中盤のダンジョンの決まった宝箱）: 終盤の前は癒やしの水 2 つ、終盤から癒やしの霊水
-      p_heal: P((T) => (T >= LATE ? [{ item: 'i_elixir', w: 1 }] : [{ item: 'i_potion', w: 1, n: 2 }])),
+      // 大きな回復の 1 品（地方ボスの確定の 2 つ目・中盤のダンジョンの決まった宝箱）: 序盤は癒やしの水 2 つ、中盤（MID）から癒やしの清水 2 つ、終盤から癒やしの霊水
+      p_heal: P((T) => (T >= LATE ? [{ item: 'i_elixir', w: 1 }] : T >= MID ? [{ item: 'i_potion2', w: 1, n: 2 }] : [{ item: 'i_potion', w: 1, n: 2 }])),
       p_boss: P((T) => [...W1(rare(T), 3), ...W1(sup(T), 1)]),
       p_boss_mid: P((T) => W1(normal(T, EQ))),
       // 空のティアは近いティア（下を先に）の品で埋める（深い階の 1 箱が空にならないように）

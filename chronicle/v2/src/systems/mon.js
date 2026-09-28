@@ -425,13 +425,14 @@
   /**
    * 効果 eff で回る HP。user/target は戦闘の unit か CharState（メニュー）。
    * 術・技: 最大HP × pct × HEALF(使い手) × (1 + healPct/100) × 熟練、道具: 最大HP × pct × (1 + itemPct/100)、魔物: 最大HP × pct
+   * 決まった量 amount（道具の「HPを40回復」。オーナー 2026-09-28「何％ではなく数値で」）は 最大HP × pct の代わり（掛ける回復の力は同じ）
    */
   function healAmount(user, target, eff, opts) {
     opts = opts || {};
     if (!eff || !target) return 0;
     const tst = target.isParty != null ? null : statsOf(target);
     const mhp = target.mhp != null ? target.mhp : tst.maxHp || tst.hp || 0;
-    let n = eff.pct != null ? mhp * eff.pct : eff.power || 0;
+    let n = eff.amount != null ? eff.amount : eff.pct != null ? mhp * eff.pct : eff.power || 0;
     if (user && user.isParty === false) return n > 0 ? Math.max(1, Math.round(n)) : 0;
     const ust = user && user.isParty != null ? null : statsOf(user);
     const mods = (user && (user.isParty != null ? user.mods : ust.mods)) || {};

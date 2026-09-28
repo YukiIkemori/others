@@ -73,9 +73,29 @@ function nodePart() {
       const s = m.spawns[k];
       if (!F._walkable(m, s.x, s.y, null, s.lv || 0) && !variants(m).some((v) => F._walkable(v, s.x, s.y, null, s.lv || 0))) bad.push(`spawn ${k} (${s.x},${s.y}) is blocked`);
     }
-    // 到達（2 つの形の和）
+    // 到達（形の和）
     const R0 = new Set();
     for (const v of variants(m)) for (const k of reach(R, v, sp.map((k) => m.spawns[k]))) R0.add(k);
+    // 鍵で開く扉（扉の物の unlock = {cond, event}）: 開けた後の形でも歩く。unlock.cond とそのイベントの meta.gives のフラグを
+    //   立てた状態では、閉じた扉の上に cond つきの行き先のある扉（灯台の塔の扉など）が出る。フラグは歩き終えたら元へ戻す
+    {
+      const flags = new Set();
+      for (const o of m.objects || []) {
+        if (o.type !== 'door' || !o.unlock) continue;
+        if (typeof o.unlock.cond === 'string' && !o.unlock.cond.startsWith('!')) flags.add(o.unlock.cond);
+        const meta = o.unlock.event && R.DB.events[o.unlock.event] && R.DB.events[o.unlock.event].meta;
+        for (const g of (meta && meta.gives) || []) if (/^flag:/.test(g)) flags.add(g.slice(5));
+      }
+      if (flags.size) {
+        const G = R.Game, had = {};
+        for (const f of flags) { had[f] = G.flags[f]; G.flags[f] = true; }
+        R.MapUtil.invalidate();
+        try { for (const k of reach(R, variants(m)[1], sp.map((k) => m.spawns[k]))) R0.add(k); } finally {
+          for (const f of flags) { if (had[f] === undefined) delete G.flags[f]; else G.flags[f] = had[f]; }
+          R.MapUtil.invalidate();
+        }
+      }
+    }
     const at = (x, y, lv) => R0.has(x + ',' + y + ',' + (lv || 0));
     const near = (x, y, lv, w, h) => {
       for (let yy = y - 1; yy <= y + (h || 1); yy++) for (let xx = x - 1; xx <= x + (w || 1); xx++) {

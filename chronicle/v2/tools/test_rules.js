@@ -348,7 +348,7 @@ section('the three full heals (V2_PLAN §2.11)');
   ok('fullHeal: healed ids = the hurt ones', JSON.stringify(res.healed.sort()) === JSON.stringify(['hero', 'titta']), res.healed);
   marta.mp = 0; h.hp = 3;
   const r2 = R.Party.fullHeal();
-  ok('fullHeal: no MP → cheapest heal item (salve) from the bag', r2.used.some((u) => u.who === 'bag' && u.what === 'i_salve') && R.Game.items.i_salve < 5, [r2, R.Game.items]);
+  ok('fullHeal: no MP → cheapest heal item (salve) from the bag', r2.used.some((u) => u.who === 'bag' && u.what === 'i_salve') && (R.Game.items.i_salve || 0) < 5, [r2, R.Game.items]);
 }
 
 section('chests (V2_PLAN §2.11)');

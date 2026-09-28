@@ -103,7 +103,7 @@
       flags: [], s: { hp: 2.4, atk: 0.75, mag: 0.66, agi: 0.85 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_swallow', w: 2 }, { id: 'e_tongue', w: 1 }, { id: 'e_heal_self', w: 1, cond: { hpBelow: 0.5 } }],
-      drops: { normal: { item: 'i_potion', rate: 8 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 } },
       desc: '何でものみこむ大きな口。\n人の子どもほどの大きさ。',
     },
     frog_4: {
@@ -177,7 +177,7 @@
       flags: [], s: { hp: 2.87, atk: 0.6, mag: 0.5, def: 1.1 }, eva: 5,
       elem: { water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_heavy', w: 2 }, { id: 'e_howl', w: 2, cond: { once: true } }, { id: 'e_tide', w: 1 }],
-      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'ac_soul_candle', rate: 32 }, steal: { item: 'w_greatsword_st_stoneaxe', rate: 32 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'ac_soul_candle', rate: 32 }, steal: { item: 'w_greatsword_st_stoneaxe', rate: 32 } },
       desc: '羽根飾りのトカゲの族長。\n大斧で沼の一族を守る。',
     },
     // ---- spider クモ（虫・m）: 古い館と森の奥の大グモ。糸、毒、影、そして女郎グモ。

@@ -37,7 +37,7 @@
       flags: ['flying'], s: { hp: 4.2, atk: 0.46, mag: 0.42, agi: 1.35 }, eva: 15,
       elem: { fire: 1.5, wind: 1.5, earth: 0.5 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_needles', w: 3 }, { id: 'e_poison_sting', w: 1 }],
-      drops: { normal: { item: 'i_potion', rate: 8 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 } },
       desc: '体じゅうが針のハチ。針を\n雨のように撃ちこんでくる。',
     },
     bee_5: {
@@ -177,7 +177,7 @@
       flags: [], s: { hp: 1.21, atk: 1.26, mag: 1.26, def: 1.25, mdef: 1.1, agi: 0.65 }, eva: 5,
       elem: { fire: 1.5, water: 0.5, wind: 1.5, earth: 0.25 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_regen_self', w: 1, cond: { once: true } }, { id: 'e_root_bind', w: 2 }, { id: 'e_stomp', w: 2 }],
-      drops: { normal: { item: 'i_potion', rate: 8 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 } },
       desc: '全身がこけと花におおわれた老木。\n根を張って傷をふさぐ。',
     },
     treant_4: {

@@ -29,7 +29,7 @@
       flags: [], s: { hp: 1.89, atk: 0.49, mag: 0.45, def: 1.15 }, eva: 5,
       elem: { fire: -1, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_lava_spit', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_potion', rate: 8 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 } },
       desc: '溶岩の中を泳ぐトカゲ。\n火を浴びるほど元気になる。',
     },
     salamander_4: {
@@ -78,7 +78,7 @@
       flags: [], s: { hp: 3.9, atk: 0.26, mag: 0.33, agi: 1.2 }, eva: 5,
       elem: { fire: 0.25, water: 1.5, light: 1.5, dark: 0.5 }, phys: {}, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_fire_rain', w: 2 }, { id: 'e_fire_bolt', w: 2 }, { id: 'e_haste', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_potion', rate: 8 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 } },
       desc: '炎をまとう大角の悪魔。\n火の雨で荒野を焼く。',
     },
     imp_5: {
@@ -119,7 +119,7 @@
       flags: ['flying'], s: { hp: 2.04, atk: 0.86, mag: 0.75, def: 1.35 }, eva: 12,
       elem: { wind: 1.5, earth: 0.5, light: 1.5, dark: 0.5 }, phys: { slash: 0.75, blunt: 1.25, pierce: 0.75 }, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_gaze', w: 2 }, { id: 'e_dive', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_sword_ash', rate: 32 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'w_sword_ash', rate: 32 } },
       desc: '大角の石像鬼の長。\nにらまれると体が石になる。',
     },
     // ---- orc 大鬼（人型・l）: 荒野をのし歩く大鬼。力まかせと鉄棒。

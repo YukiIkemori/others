@@ -62,7 +62,7 @@
       flags: [], s: { hp: 2.43, atk: 0.53, mag: 0.46, def: 1.1, agi: 0.85 }, eva: 5,
       elem: { fire: 1.25, wind: 1.5, earth: 0.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_quake', w: 2 }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }, { id: 'e_claw', w: 2 }],
-      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_greatsword_forgehammer', rate: 32 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'w_greatsword_forgehammer', rate: 32 } },
       desc: '白ひげのモグラの親方。\n地響きで坑道をゆさぶる。',
     },
     // ---- beetle カブト（虫・s）: 岩山の甲虫。石・鉄・火花・金剛と殻が硬くなる。
@@ -95,7 +95,7 @@
       flags: [], s: { hp: 3.39, atk: 0.74, mag: 0.74, def: 1.8, agi: 0.8 }, eva: 5,
       elem: { fire: 1.25, wind: 1.5, earth: 0.25 }, phys: { slash: 0.75, blunt: 1.25 }, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_horn', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }, { id: 'e_charge', w: 2 }],
-      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_greatsword_forgehammer', rate: 32 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'w_greatsword_forgehammer', rate: 32 } },
       desc: '金剛石のように光る甲虫。\nどんな刃もはね返す。',
     },
     // ---- crystal 水晶（魔造・s）: 坑道の奥で生まれる、浮かぶ水晶。色で属性が変わる。
@@ -161,7 +161,7 @@
       flags: [], s: { hp: 2.75, atk: 0.66, mag: 0.57, def: 1.1 }, rw: { gold: 1.3 }, eva: 5,
       elem: {}, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_howl', w: 2, cond: { once: true } }, { id: 'e_double', w: 1 }, { id: 'e_slash', w: 1 }],
-      drops: { normal: { item: 'i_potion', rate: 8 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 } },
       desc: '角兜の小鬼の隊長。\n手下を奮い立たせて戦う。',
     },
     goblin_5: {

@@ -1,6 +1,6 @@
 // MENUS: 年代記・手がかり（MODERN_UI §6.11、WORLD_REDESIGN §3.2、V2_PLAN §2.6.4・§3.5）
 //   タブ（L/R）: 年代記（章）／手がかり。手がかりは地方ごとに並べ、右に題名・聞いた所・場所と方角・詳しい文。
-//   A で目印（1 つだけ、琥珀の羽ペンの印。もう一度 A で外す）。解決した物は薄く。slice:'locked' は「この先は、まだ語られていない」。
+//   A で目印（1 つだけ、琥珀の羽ペンの印。もう一度 A で外す）。解決した物は薄く。slice:'locked' と体験版で行けない地方の物（R.Leads.locked）は「この先は、まだ語られていない」。
 //   開いて見た手がかりは seen（「新」の印が消える）。
 (function (R) {
   'use strict';
@@ -35,7 +35,7 @@
         const items = gr.items.slice().sort((a, b) => (a.state === 'done') - (b.state === 'done'));
         items.forEach((it, i) => {
           const L = (R.DB.leads || {})[it.id] || { title: it.id, text: '' };
-          rows.push({ value: it.id, label: L.title, L, st: it.state, pinned: it.pinned, region: gr.region, first: i === 0, locked: L.slice === 'locked' });
+          rows.push({ value: it.id, label: L.title, L, st: it.state, pinned: it.pinned, region: gr.region, first: i === 0, locked: R.Leads.locked ? R.Leads.locked(L) : L.slice === 'locked' });
         });
       }
       return rows;

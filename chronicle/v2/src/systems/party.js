@@ -193,11 +193,11 @@
       const hurt0 = sim.map((c, i) => (missing(i) > 0 ? c.id : null)).filter(Boolean);
       const used = {};
       const note = (who, what) => { const k = who + '|' + what; used[k] = used[k] || { who, what, n: 0 }; used[k].n++; };
+      // 効果の HP（決まった量 amount か 最大HP × pct）の合計
+      const rawHeal = (effects, i) => { let n = 0; for (const e of effects || []) if (e.type === 'heal') n += e.amount != null ? e.amount : maxHp[i] * (e.pct || 0); return n; };
       const healAmt = (caster, a, i) => {
-        let pct = 0;
-        for (const e of a.effects || []) if (e.type === 'heal') pct += e.pct || 0;
         const m = Rules().mods(caster);
-        return Math.floor(maxHp[i] * pct * Rules().healF(caster) * (1 + (m.healPct || 0) / 100) * Rules().profPowerMul(caster, a));
+        return Math.floor(rawHeal(a.effects, i) * Rules().healF(caster) * (1 + (m.healPct || 0) / 100) * Rules().profPowerMul(caster, a));
       };
       // 1. 術
       for (let guard = 0; guard < 200; guard++) {
@@ -242,10 +242,8 @@
         const i = hurt.reduce((x, y) => (missing(y) > missing(x) ? y : x));
         const id = items.find((x) => (inv[x] || 0) > 0);
         if (!id) break;
-        let pct = 0;
-        for (const e of DB.items[id].use.effects) if (e.type === 'heal') pct += e.pct || 0;
         const m = Rules().mods(sim[i]);
-        sim[i].hp = Math.min(maxHp[i], sim[i].hp + Math.floor(maxHp[i] * pct * (1 + (m.itemPct || 0) / 100)));
+        sim[i].hp = Math.min(maxHp[i], sim[i].hp + Math.floor(rawHeal(DB.items[id].use.effects, i) * (1 + (m.itemPct || 0) / 100)));
         inv[id]--;
         if (!dry && inv[id] <= 0) delete inv[id];
         note('bag', id);

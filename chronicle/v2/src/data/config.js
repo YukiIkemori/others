@@ -4,6 +4,8 @@
 //                  P1 の間だけ: roa_house と roa_house_intro の両方がそろうまでは（CONTENT の作業中）、仮の一本道（stub_road）から始める
 //                  （起動の通し tools/test_core_flow.js を止めない。そろった時点で CORE の通しのテストは序章に合わせ直す）
 //   slice          縦切り（{slice:true} の条件・手がかりの slice:'locked'）
+//   sliceOpen      体験版（slice の間）で行ける地方の region。ほかの地方の手がかりは帳で「まだ語られていない」（R.Leads.locked）。
+//                  行けないこと自体はワールドの峠の崖崩れと番人（cond {slice:true}）
 //   startGold / startItems   0 と {}（ベルナが P2 で 50 G と回復の品 3 を渡す）
 //   defaultHero    主人公の作成を飛ばしたとき（フィクスチャ・createHero を閉じたまま）の主人公（K.hero）
 //   innPrice       ティアごとの宿の値段（R.Tier.innPrice、ev.inn の既定）
@@ -22,6 +24,7 @@
   });
   Object.assign(C, {
     slice: true,
+    sliceOpen: ['prologue', 'r_forest', 'world'],
     startGold: 0,
     startItems: {},
     defaultHero: { type: 'warrior', sex: 'm', name: 'アルン', fav: 'sword' },

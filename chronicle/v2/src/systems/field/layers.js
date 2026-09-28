@@ -151,6 +151,8 @@
     let real = false;
     F.chunks.eachVisible((e) => { if (e.base) g.drawImage(e.base, e.cx * cs - cx, e.cy * cs - cy); if (!e.fb) real = true; });
     S.realTerrain = real;
+    // 岸の打ち寄せる泡（WORLD v3、terrain/relief.js）: 明るさだけ揺らす線。チャンクの結果の foam
+    if (R.Terrain && R.Terrain._foamDraw) F.chunks.eachVisible((e) => { if (e.foam) R.Terrain._foamDraw(g, e.foam, e.cx * cs - cx, e.cy * cs - cy, R.Engine.time, REDUCE.on); });
     // 先頭のランタンの光の輪（STYLE_REFERENCE R4。効果 off で消える）: 地面に掛ける（人の絵の上に足すと先頭が白く飛ぶ、CAST の依頼）
     const q = R.Hd.quality();
     F._vis(vis);

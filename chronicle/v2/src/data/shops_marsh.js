@@ -19,7 +19,7 @@
     0: ['i_salve', 'i_revive', 'i_antidote', 'i_waker', 'i_torch', 'i_repel', 'i_smoke', 'ac_ward_sleep', 'ac_ward_poison', 'i_stone_wind'],
     1: ['i_potion', 'i_ether', 'i_clear', 'i_numb', 'i_lens', 'ac_ward_blind', 'ac_ward_confuse', 'i_stone_light'],
     2: ['i_incense', 'i_horn', 'i_censer', 'i_bomb'],
-    3: ['i_ether2', 'i_panacea'],
+    3: ['i_potion2', 'i_ether2', 'i_panacea'],   // 中盤の回復（HP150・MP40。items_use.js の段）
     5: ['i_elixir'],
   };
   // 癒やしの霊水（全回復）は終盤（ティア 5）から（オーナー 2026-09-28「全回復系は基本終盤から」。pools.js の LATE）

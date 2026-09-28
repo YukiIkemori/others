@@ -37,7 +37,7 @@
       flags: [], s: { hp: 4.31, atk: 0.5, mag: 0.46, def: 1.1 }, eva: 5,
       elem: { fire: 1.25 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_howl', w: 2, cond: { every: [3, 0] } }, { id: 'e_crush', w: 2 }],
-      drops: { normal: { item: 'i_potion', rate: 8 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 } },
       desc: '兜をかぶった赤いゼリー。\nゼリーの群れを率いる。',
     },
     jelly_5: {
@@ -70,7 +70,7 @@
       flags: [], s: { hp: 2.94, atk: 0.59, mag: 0.53, def: 1.25 }, eva: 5,
       elem: { fire: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_gnaw', w: 3 }, { id: 'e_bite', w: 1 }],
-      drops: { normal: { item: 'i_potion', rate: 8 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 } },
       desc: '鉄のように硬い歯のネズミ。\n鎧さえかじって穴をあける。',
     },
     rat_4: {
@@ -78,7 +78,7 @@
       flags: [], s: { hp: 3.01, atk: 0.76, mag: 0.69 }, eva: 5,
       elem: { fire: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_call_lesser', w: 2, cond: { countBelow: 6 } }, { id: 'e_double', w: 2 }, { id: 'e_howl', w: 1 }],
-      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'hd_rat_bandana', rate: 32 }, steal: { item: 'ac_st_rat_boss', rate: 32 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'hd_rat_bandana', rate: 32 }, steal: { item: 'ac_st_rat_boss', rate: 32 } },
       desc: '片目の大ネズミ。手下を呼び\n集めては荷を奪う。',
     },
     // ---- bat コウモリ（獣・s・飛ぶ）: 暗い所ならどこにでも。血を吸い、音で惑わせ、最後は闇の貴族になる。
@@ -136,7 +136,7 @@
       flags: [], s: { hp: 1.94, atk: 1.27, mag: 1.2, agi: 1.1 }, eva: 5,
       elem: { fire: 1.5, light: 0.25, dark: 1.5 }, phys: { slash: 1.25, blunt: 0.75 }, statusRes: { poison: 1, death: 1, confuse: 0.5, sleep: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_bite', w: 2 }, { id: 'e_forget', w: 2 }, { id: 'e_erase_all', w: 1, cond: { every: [4, 1] } }],
-      drops: { normal: { item: 'i_potion', rate: 8 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 } },
       desc: '忘れられたオオカミの物語から\n生まれた白い獣。',
     },
     paper_3: {

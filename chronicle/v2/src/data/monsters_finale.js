@@ -38,7 +38,7 @@
       flags: [], s: { hp: 3.18, atk: 0.58, mag: 0.53, agi: 1.1 }, eva: 5,
       elem: { fire: 1.5, water: 1.25, wind: 0.75 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_bite', w: 2 }, { id: 'e_paper_cut', w: 2 }],
-      drops: { normal: { item: 'i_potion', rate: 8 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 } },
       desc: '表紙を口のように開く本。\n読もうとするとかみつく。',
     },
     book_2: {

@@ -91,7 +91,7 @@
   }
   function apply(e, res, rebake) {
     if (!res || !res.base) res = fallback(e.m, e.cx, e.cy, e.tile, res);
-    e.base = res.base; e.over = res.over || null; e.overBoxes = res.overBoxes || null;
+    e.base = res.base; e.over = res.over || null; e.overBoxes = res.overBoxes || null; e.foam = res.foam || null;
     e.lights = res.lights || []; e.glows = res.glows || []; e.props = res.props || [];
     e.fb = !!res.fb;
     e.ready = true;

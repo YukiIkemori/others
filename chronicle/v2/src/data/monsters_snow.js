@@ -29,7 +29,7 @@
       flags: [], s: { hp: 1.82, atk: 0.42, mag: 0.44, agi: 1.15 }, eva: 5,
       elem: { fire: 1.25, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_frost_breath', w: 2 }, { id: 'e_bite', w: 2 }, { id: 'e_howl', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_potion', rate: 8 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 } },
       desc: '吹雪の中から現れる白いオオカミ。\n凍てつく息で群れを守る。',
     },
     wolf_4: {
@@ -103,7 +103,7 @@
       flags: [], s: { hp: 2.5, atk: 0.47, mag: 0.45, agi: 1.05 }, eva: 5,
       elem: { fire: 1.25, water: 0.25, earth: 1.5, light: 0.5, dark: 1.5 }, phys: {}, statusRes: { confuse: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_frost_fist', w: 2 }, { id: 'e_frost', w: 2 }, { id: 'e_howl', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_potion', rate: 8 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 } },
       desc: '氷の兜をかぶった小鬼の\n大将。雪の子らを率いる。',
     },
     frostling_5: {

@@ -251,6 +251,7 @@
   function takePx(n) { const l = pool.px[n] || (pool.px[n] = []); const a = l.pop() || new Uint32Array(n); a.fill(0); return a; }
   function givePx(a) { if (!a) return; const l = pool.px[a.length] || (pool.px[a.length] = []); if (l.length < 3) l.push(a); }
   const maskPool = {};
+  function markDg(m, S, lx0, ly0, t) { const x0 = Math.max(0, lx0), x1 = Math.min(S, lx0 + t); for (let y = Math.max(0, ly0); y < Math.min(S, ly0 + t); y++) if (x1 > x0) m.fill(1, y * S + x0, y * S + x1); }
   function takeMask(n) { const l = maskPool[n] || (maskPool[n] = []); const a = l.pop() || new Uint8Array(n); a.fill(0); return a; }
   function giveMask(a) { if (!a) return; const l = maskPool[a.length] || (maskPool[a.length] = []); if (l.length < 3) l.push(a); }
   function imgOf(g, S) { return pool.img[S] || (pool.img[S] = g.createImageData(S, S)); }
@@ -276,7 +277,7 @@
     this.profMax = {}; // 1 回の呼び出しの最長
   }
   // 一度に済ませる仕事の平均の時間（ms。走らせながら覚える）。step の残りに収まらなければ先に戻る
-  const AVG = {}, ATOMIC = { prep: 1, rise: 1, relief: 1, deck: 1, emissive: 1, finish: 1 };
+  const AVG = {}, ATOMIC = { prep: 1, rise: 1, deck: 1, emissive: 1, finish: 1 };
   // 光の地図は帯に分けて掛ける（1 帯 = チャンクの 1/LIGHT_BANDS。Job.step ≤ 3 ms、P2 の依頼）
   const LIGHT_BANDS = 4;
   T._phaseAvg = AVG;
@@ -413,8 +414,11 @@
     const S = this.size;
     if (!this.px) this.px = takePx(S * S);
     // WORLD v3 の起伏（relief.js）: splat が画素ごとの水の印を書く（間に別の仕事が入ってもよいように毎回つなぎ直す）
-    if (this.map.splat && T._reliefApply && !this.o.noRelief) { if (!this.wmask) this.wmask = takeMask(S * S); T._splatMask = this.wmask; }
-    try { return this._groundRun(deadline); } finally { T._splatMask = null; }
+    if (this.map.splat && T._reliefApply && !this.o.noRelief) {
+      if (!this.wmask) { this.wmask = takeMask(S * S); this.rs = T._reliefPrep(this); }
+      T._splatMask = this.wmask; T._splatRS = this.rs;
+    }
+    try { return this._groundRun(deadline); } finally { T._splatMask = null; T._splatRS = null; }
   };
   Job.prototype._groundRun = function (deadline) {
     const t = this.tile, S = this.size;
@@ -429,6 +433,7 @@
           continue;
         }
         T._dgTile(this.px, S, this.X0, this.Y0, dx, dy, [this.C(dx, dy).mat, this.C(dx + 1, dy).mat, this.C(dx, dy + 1).mat, this.C(dx + 1, dy + 1).mat], t);
+        if (T._splatMask) markDg(T._splatMask, S, dx * t + (t >> 1) - this.X0, dy * t + (t >> 1) - this.Y0, t);   // 起伏: 硬い素材の表示のタイル = 1（岸の泡を引かない）
       }
       this.k = 0;
       this.i++;
@@ -445,9 +450,17 @@
     return true;
   };
   // 起伏の陰影・色のゆらぎ・濡れた岸（WORLD v3、relief.js）。岸の打ち寄せる線（FIELD が毎フレーム描く）もここで決める
-  Job.prototype._relief = function () {
+  Job.prototype._relief = function (deadline) {
     if (this.und || !this.wmask) return true;
-    T._reliefApply(this);
+    // 帯ごと（relief.js の T._RELIEF_BANDS）。残りの時間に 1 帯が入らなければ次の step へ
+    while (this.i < (T._RELIEF_BANDS || 1)) {
+      const now = U().now();
+      if (this.i > 0 && AVG.reliefBand && now + AVG.reliefBand > deadline) return false;
+      T._reliefApply(this, this.i);
+      AVG.reliefBand = AVG.reliefBand ? AVG.reliefBand * 0.8 + (U().now() - now) * 0.2 : U().now() - now;
+      this.i++;
+      if (U().now() > deadline && this.i < (T._RELIEF_BANDS || 1)) return false;
+    }
     if (T._foamOf) this.foam = T._foamOf(this);
     giveMask(this.wmask); this.wmask = null;
     return true;
@@ -578,6 +591,8 @@
     const g = this.bg, X0 = this.X0, Y0 = this.Y0, s = this.s;
     while (this.i < this.draw.length) {
       const it = this.draw[this.i++];
+      // WORLD v3 の大きな絵（木立・山・岩場）: 足もとの枠に柔らかい AO（絵は影を持たない）
+      if (it.lmw && it.sheet && it.layer !== 'over') { const t = this.tile; blob(g, it.x - X0 + 2 * s, it.y - Y0 - it.lmh * t * 0.32, it.lmw * t * 0.58, Math.max(t * 0.6, it.lmh * t * 0.45), 0.34); continue; }
       if (!it.shadow || !it.sheet || it.layer === 'over') continue;
       const fr = frameOf(it.sheet, it.frame);
       if (it.shadow === 'blob') {
