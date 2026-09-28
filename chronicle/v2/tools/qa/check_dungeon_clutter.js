@@ -2,7 +2,8 @@
 // QA: ダンジョンの通れない小物（樽・木箱・壺・岩…）の置き場所と数。node だけ。
 //   持ち主 2026-09-28「ダンジョンに樽とか木箱みたいに移動通り抜け不可のはあまり置かないで。奥としても端っことかにして。通路真ん中にはおかないで。」
 //
-//   node v2/tools/qa/check_dungeon_clutter.js [--map id,…] [--verbose] [--strict]
+//   node v2/tools/qa/check_dungeon_clutter.js [--map id,…] [--verbose] [--strict] [--suggest]
+//   --suggest: 引っかかった物（描いていない物）ごとに、近くの置き直せるマス（壁ぎわ・角を先に）を書き出す
 //
 // 対象: kind 'dungeon' のマップ。当たる（solid で soft でない）prop のうち、
 //   CONTAINER（樽・木箱・壺・かめ・たきぎ…）= 数と置き場所の両方を見る
@@ -21,6 +22,7 @@ const argv = process.argv.slice(2);
 const arg = (k, d) => { const i = argv.indexOf(k); return i >= 0 ? argv[i + 1] : d; };
 const VERBOSE = argv.includes('--verbose');
 const STRICT = argv.includes('--strict');
+const SUGGEST = argv.includes('--suggest');
 const ONLY = arg('--map', null);
 const MAX = 4;
 
@@ -32,16 +34,16 @@ const F = R.Field;
 R.State.newGame({ seed: 1 });
 
 const isSolid = (o) => { const meta = (R.DB.props && R.DB.props[o.id]) || {}; return !!meta.solid && !meta.soft && !o.soft; };
-const condOk = (c) => { if (c == null) return true; try { return !!R.State.check(c); } catch (e) { return false; } };
 
 function checkMap(m) {
   const painted = new Set((m.art && m.art.painted) || []);
   const list = [];
   for (const o of m.objects || []) {
-    if (o.type !== 'prop' || o.x == null || (o.lv || 0) !== 0 || !isSolid(o) || !condOk(o.cond)) continue;
+    // cond のある物は仕掛け（切れる丸太・出てくる氷…）なので数えない
+    if (o.type !== 'prop' || o.x == null || (o.lv || 0) !== 0 || o.cond != null || !isSolid(o)) continue;
     const kind = CONTAINER.test(o.id) ? 'container' : SMALL.test(o.id) ? 'small' : null;
     if (!kind) continue;
-    list.push({ id: o.id, x: o.x, y: o.y, kind, painted: painted.has(o.id) || painted.has(o.id + '@' + o.x + ',' + o.y), bad: [] });
+    list.push({ o, id: o.id, x: o.x, y: o.y, kind, painted: painted.has(o.id) || painted.has(o.id + '@' + o.x + ',' + o.y), bad: [] });
   }
   const at = new Map(list.map((c) => [c.x + ',' + c.y, c]));
   // 床: マスが歩けて、物に当たらない（小物だけのマスは床とみなす）
@@ -93,6 +95,42 @@ function checkMap(m) {
   return list;
 }
 
+/** 引っかかった物 c の置き直し先の候補（近い順、角 = 壁 2 面を先に）。ほかの物・人・spawn・出口・きっかけのマスとその上下左右は避ける */
+function suggest(m, c) {
+  const busy = new Set(), near = new Set();
+  const mark = (x, y, w, h, pad) => { for (let yy = y - pad; yy < y + (h || 1) + pad; yy++) for (let xx = x - pad; xx < x + (w || 1) + pad; xx++) (pad ? near : busy).add(xx + ',' + yy); };
+  for (const o of m.objects || []) {
+    if (o === c.o || o.x == null) continue;
+    const w = o.type === 'spring' ? 2 : o.w || 1, h = o.type === 'spring' ? 2 : o.h || 1;
+    mark(o.x, o.y, w, h, 0);
+    if (o.type !== 'prop') mark(o.x, o.y, w, h, 1);   // 宝箱・階段・調べる所…の前はあける
+  }
+  for (const n of m.npcs || []) if (n.x != null) { mark(n.x, n.y, 1, 1, 0); mark(n.x, n.y, 1, 1, 1); }
+  for (const sp of Object.values(m.spawns || {})) { mark(sp.x, sp.y, 1, 1, 0); mark(sp.x, sp.y, 1, 1, 1); }
+  for (const e of m.exits || []) mark(e.x, e.y, e.w, e.h, 1);
+  for (const t of m.triggers || []) if (t.x != null) mark(t.x, t.y, t.w, t.h, 0);
+  const out = [];
+  const ox = c.o.x, oy = c.o.y;
+  const before = new Map(checkMap(m).map((a) => [a.o, a.bad.length]));   // ほかの物が前より悪くならない
+  for (let r = 1; r <= 8 && out.length < 3; r++) {
+    const ring = [];
+    for (let y = oy - r; y <= oy + r; y++) for (let x = ox - r; x <= ox + r; x++) {
+      if (Math.max(Math.abs(x - ox), Math.abs(y - oy)) !== r) continue;
+      const k = x + ',' + y;
+      if (busy.has(k) || near.has(k) || !F._walkable(m, x, y, null, 0)) continue;
+      const walls = [[1, 0], [-1, 0], [0, 1], [0, -1]].filter(([dx, dy]) => !F.passable(m, x + dx, y + dy, null, 0)).length;
+      if (!walls) continue;
+      c.o.x = x; c.o.y = y;
+      const after = checkMap(m);
+      c.o.x = ox; c.o.y = oy;
+      if (after.every((a) => a.bad.length <= (a.o === c.o ? 0 : (before.get(a.o) || 0)))) ring.push({ x, y, walls });
+    }
+    ring.sort((a, b) => b.walls - a.walls);
+    out.push(...ring);
+  }
+  return out.slice(0, 4).map((p) => p.x + ',' + p.y + (p.walls >= 2 ? '(角)' : ''));
+}
+
 const maps = Object.keys(R.DB.maps).filter((id) => R.DB.maps[id].kind === 'dungeon' && (!ONLY || ONLY.split(',').includes(id))).sort();
 const repaint = [];
 const table = [];
@@ -108,6 +146,7 @@ for (const id of maps) {
     const name = `${id}: ${c.id}@${c.x},${c.y} は通路・床の真ん中に無い`;
     if (c.painted && c.bad.length) { repaint.push(`${id} ${c.id}@${c.x},${c.y} ${c.bad.join(' ')}`); if (STRICT) ok(name, false, c.bad); continue; }
     ok(name, !c.bad.length, c.bad);
+    if (SUGGEST && c.bad.length) console.log(`      → 置き直し: ${suggest(m, c).join(' ') || '（近くに無い。減らす）'}`);
   }
   // 数: 動かせる（描いていない）物だけで MAX まで。描いた物が多いマップは要描き直しとして書き出す
   ok(`${id}: 樽・木箱・壺は ${MAX} つまで（描いていない物 ${sprite.length}）`, sprite.length <= MAX, sprite.map((c) => c.id + '@' + c.x + ',' + c.y));
