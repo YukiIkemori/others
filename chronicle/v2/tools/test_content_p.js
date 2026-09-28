@@ -350,8 +350,17 @@ ok('world.js は生成器の今の出力と同じ（手で直していない）'
   return out === before;
 })());
 const W = R.DB.maps.world;
-// 体験版では東の峠・灰の峠・雪原東に加え、北（雪原）と南（砂漠）の峠も閉じる（持ち主の決まり 2026-09-27）→ 5 か所
-ok('峠の崖崩れと番人は DB.config.slice の間だけ', W.tilePatches.filter((p) => p.cond && p.cond.slice === true).length === 5 && W.npcs.filter((n) => n.cond && n.cond.slice === true).length === 5);
+// 体験版では東の峠・灰の峠・雪原東・湿原に加え、北（雪原）と南（砂漠）の峠も閉じる（持ち主の決まり 2026-09-27）→ 6 か所。
+//   数だけでなく、番人の顔ぶれと「崖崩れ 1 つに番人 1 人（3 マス以内）」で見る（閉じ方を足したらここに id を足す）
+{
+  const GUARDS = ['guard_ash', 'guard_east', 'guard_marsh', 'guard_north', 'guard_snow_east', 'guard_south'];
+  const pats = W.tilePatches.filter((p) => p.cond && p.cond.slice === true);
+  const gs = W.npcs.filter((n) => n.cond && n.cond.slice === true);
+  const near = (p, n) => { const [x, y, w, h] = p.rect; return n.x >= x - 3 && n.x < x + w + 3 && n.y >= y - 3 && n.y < y + h + 3; };
+  const lone = pats.filter((p) => !gs.some((n) => near(p, n))).map((p) => p.rect.join(','));
+  ok('峠の崖崩れと番人は DB.config.slice の間だけ（6 か所・どの崖崩れにも番人）', pats.length === GUARDS.length && gs.map((n) => n.id).sort().join() === GUARDS.join() && !lone.length,
+    { patches: pats.length, guards: gs.map((n) => n.id).sort(), lone });
+}
 ok('跳ね橋は序章の間だけ上がっている', W.tilePatches.some((p) => p.cond === '!prologue_done'));
 ok('森の街道の消えた灯籠 3 つ（q_forest_fireflies）', W.objects.filter((o) => o.type === 'waylamp' && /^q_forest_fireflies_/.test(o.lit)).length === 3);
 ok('半島の消えた灯籠 2 つ（P3・q_pharos_lamp）', W.objects.filter((o) => o.type === 'waylamp' && /^prologue_lamp_/.test(o.lit)).length === 2);

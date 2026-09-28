@@ -53,27 +53,33 @@
       out[ch] = {
         kind: water ? 1 : mtn ? 2 : 0, lvl: mtn ? Math.max(1, e.rise || 1) : 0, tree, lava,
         deep: /deep/.test(e.mat) ? 1 : /shallow/.test(e.mat) ? -1 : 0, lake: /lake|marsh_water/.test(e.mat),
-        sand: /sand|dune/.test(under), fam: tree && !e.under && e.mat === 'forest_dark' ? FAM.forest : famOf(under),
+        sand: /sand|dune/.test(under), wf: (/deep/.test(e.mat) ? 4 : 0) | (/shallow/.test(e.mat) ? 8 : 0) | (/lake|marsh_water/.test(e.mat) ? 16 : 0), fam: tree && !e.under && e.mat === 'forest_dark' ? FAM.forest : famOf(under),
       };
     }
     return out;
   }
 
-  // ------------------------------------------------------------------ 距離の場（面取り 1 / 1.41、2 回の走査）
+  // ------------------------------------------------------------------ 距離の場（面取り 10 / 14 の整数、2 回の走査。値は距離 × 10）
   function dist(src, w, h, cap) {
-    const d = new Float32Array(w * h), D = 1.41;
-    for (let i = 0; i < d.length; i++) d[i] = src[i] ? 0 : cap;
-    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-      const i = y * w + x; let v = d[i]; if (!v) continue;
-      if (x > 0 && d[i - 1] + 1 < v) v = d[i - 1] + 1;
-      if (y > 0) { const j = i - w; if (d[j] + 1 < v) v = d[j] + 1; if (x > 0 && d[j - 1] + D < v) v = d[j - 1] + D; if (x < w - 1 && d[j + 1] + D < v) v = d[j + 1] + D; }
-      d[i] = v;
+    const d = new Uint16Array(w * h), C = cap * 10;
+    for (let i = 0; i < d.length; i++) d[i] = src[i] ? 0 : C;
+    for (let y = 0; y < h; y++) {
+      const o = y * w;
+      for (let x = 0; x < w; x++) {
+        const i = o + x; let v = d[i]; if (v === 0) continue; let q;
+        if (x > 0) { q = d[i - 1] + 10; if (q < v) v = q; }
+        if (y > 0) { q = d[i - w] + 10; if (q < v) v = q; if (x > 0) { q = d[i - w - 1] + 14; if (q < v) v = q; } if (x < w - 1) { q = d[i - w + 1] + 14; if (q < v) v = q; } }
+        d[i] = v;
+      }
     }
-    for (let y = h - 1; y >= 0; y--) for (let x = w - 1; x >= 0; x--) {
-      const i = y * w + x; let v = d[i]; if (!v) continue;
-      if (x < w - 1 && d[i + 1] + 1 < v) v = d[i + 1] + 1;
-      if (y < h - 1) { const j = i + w; if (d[j] + 1 < v) v = d[j] + 1; if (x < w - 1 && d[j + 1] + D < v) v = d[j + 1] + D; if (x > 0 && d[j - 1] + D < v) v = d[j - 1] + D; }
-      d[i] = v;
+    for (let y = h - 1; y >= 0; y--) {
+      const o = y * w;
+      for (let x = w - 1; x >= 0; x--) {
+        const i = o + x; let v = d[i]; if (v === 0) continue; let q;
+        if (x < w - 1) { q = d[i + 1] + 10; if (q < v) v = q; }
+        if (y < h - 1) { q = d[i + w] + 10; if (q < v) v = q; if (x < w - 1) { q = d[i + w + 1] + 14; if (q < v) v = q; } if (x > 0) { q = d[i + w - 1] + 14; if (q < v) v = q; } }
+        d[i] = v;
+      }
     }
     return d;
   }
@@ -93,71 +99,104 @@
   }
 
   // ------------------------------------------------------------------ マップの高さの場（1 回だけ。暗転の中で区切って作る）
+  // 高さは 2 × 2 マスで 1 つ（Q）。丘・山のすそは広いので足り、作る時間と量が 1/4（672×576 のワールドで 336×288 = 約 0.5 MB）。
+  // 岸・川べりの細かい形は splat の水の印（画素ごと）で描くので、ここでは要らない。
+  const Q = 2;
   const cache = new WeakMap();
-  function* build(map, out) {
-    const u = U(), w = map.w, h = map.h, N = w * h, grid = R.MapUtil.grid(map), info = legendInfo(map);
-    const kind = new Uint8Array(N), lvl = new Uint8Array(N), flag = new Uint8Array(N), fam = new Uint8Array(N);   // flag: 1 木 2 砂 4 深い 8 浅い 16 湖 32 溶岩
-    for (let y = 0; y < h; y++) {
-      const row = grid[y] || '', one = row.length === w, arr = one ? null : [...row];
-      for (let x = 0; x < w; x++) {
-        const f = info[one ? row.charAt(x) : arr[x]], i = y * w + x;
-        if (!f) continue;
-        kind[i] = f.kind; lvl[i] = f.lvl; fam[i] = f.fam;
-        flag[i] = (f.tree ? 1 : 0) | (f.sand ? 2 : 0) | (f.deep > 0 ? 4 : 0) | (f.deep < 0 ? 8 : 0) | (f.lake ? 16 : 0) | (f.lava ? 32 : 0);
+  // 重い繰り返しは普通の関数に分ける（生成器の中の繰り返しは速くならない）
+  /** 2 × 2 のマスの多い方: kind 0 陸 1 水 2 山（lvl = 山の高さ）、flag: 2 砂 4 深い 8 浅い 16 湖、tr = 木の割合。行 Y0〜Y1 */
+  function classify(c, Y0, Y1) {
+    const { rows, info, W0, H0, w, kind, lvl, flag, tr } = c;
+    for (let Y = Y0; Y < Y1; Y++) {
+      const r0 = rows[Math.min(H0 - 1, Y * Q)], r1 = rows[Math.min(H0 - 1, Y * Q + 1)];
+      for (let X = 0; X < w; X++) {
+        let nw = 0, nm = 0, nt = 0, ns = 0, lv = 0, fl = 0;
+        for (let k = 0; k < 4; k++) {
+          const f = info[(k < 2 ? r0 : r1).charAt(Math.min(W0 - 1, X * Q + (k & 1)))];
+          if (!f) continue;
+          if (f.kind === 1) { nw++; fl |= f.wf; } else if (f.kind === 2) { nm++; if (f.lvl > lv) lv = f.lvl; }
+          if (f.tree) nt++;
+          if (f.sand) ns++;
+        }
+        const i = Y * w + X, kd = nw >= 2 ? 1 : nm >= 2 ? 2 : 0;
+        kind[i] = kd; lvl[i] = lv; tr[i] = nt / 4;
+        flag[i] = (kd === 1 ? fl : 0) | (ns >= 2 ? 2 : 0);
       }
     }
-    out.fam = fam;
-    yield;
-    const m1 = new Uint8Array(N), m2 = new Uint8Array(N), m3 = new Uint8Array(N);
-    for (let i = 0; i < N; i++) { m1[i] = kind[i] === 1 ? 1 : 0; m2[i] = kind[i] !== 1 ? 1 : 0; m3[i] = kind[i] === 2 ? 1 : 0; }
-    const dW = dist(m1, w, h, 60); yield;     // 陸 → 水までの距離
-    const dL = dist(m2, w, h, 60); yield;     // 水 → 陸まで
-    const dM = dist(m3, w, h, 60); yield;     // 山まで
-    for (let i = 0; i < N; i++) m3[i] = kind[i] === 2 ? 0 : 1;
-    const dI = dist(m3, w, h, 60); yield;     // 山の中 → 山の外まで
+  }
+  /** 値のノイズ（u.vn と同じ形）を格子の表から直に足す */
+  function noiseAdd(NZ, w, h, L, sd, amp, h3) {
+    const gw = Math.ceil(w / L) + 2, gh = Math.ceil(h / L) + 2, lat = new Float32Array(gw * gh);
+    for (let j = 0; j < gh; j++) for (let i = 0; i < gw; i++) lat[j * gw + i] = h3(i, j, sd);
+    for (let y = 0; y < h; y++) {
+      const fy0 = y / L, j = fy0 | 0, ty = fy0 - j, sy = ty * ty * (3 - 2 * ty), o0 = j * gw, o1 = o0 + gw;
+      for (let x = 0; x < w; x++) {
+        const fx0 = x / L, i = fx0 | 0, tx = fx0 - i, sx = tx * tx * (3 - 2 * tx);
+        const a = lat[o0 + i], b = lat[o0 + i + 1], c = lat[o1 + i], d = lat[o1 + i + 1];
+        NZ[y * w + x] += (a + (b - a) * sx + (c - a) * sy + (a - b - c + d) * sx * sy) * amp;
+      }
+    }
+  }
+  /** 高さ（マス単位）。距離は × 10 の高さの格子の単位なのでマスに直す（× Q / 10） */
+  function heights(c, D, NZ, H) {
+    const { kind, lvl, flag, tr, N } = c, q = Q / 10, dW = D.W, dL = D.L, dM = D.M, dI = D.I, dB = D.B;
+    for (let i = 0; i < N; i++) {
+      const k = kind[i], n = NZ[i] - 0.5;
+      if (k === 1) {
+        const dd = 1 - Math.exp(-dL[i] * q / 5), f = flag[i];
+        H[i] = f & 8 ? -0.18 - dd * 0.3 : f & 16 ? -0.3 - dd * 0.7 : -0.3 - dd * (f & 4 ? 1.6 : 1.1);
+        continue;
+      }
+      const dw = dW[i] * q, coast = 1 - Math.exp(-dw / 8), flat = Math.min(1, dB[i] * q / 7);
+      let v = 0.2 + 1.2 * coast;
+      v += n * 2.8 * Math.min(1, dw / 5) * (0.35 + 0.65 * flat);   // 丘（岸と町の近くは弱く）
+      if (flag[i] & 2) v -= 0.25;                                   // 砂浜は低い
+      if (k === 2) v += 1.7 + (lvl[i] - 1) * 1.3 + 1.6 * (1 - Math.exp(-dI[i] * q / 2.2)) + n * 0.8;   // 山: 縁から奥へ高く
+      else v += 1.5 * Math.exp(-dM[i] * q / 4) + tr[i] * 0.15;     // 山のすそ・森はわずかに高い
+      H[i] = v;
+    }
+  }
+  function mask(src, N, fn) { const m = new Uint8Array(N); for (let i = 0; i < N; i++) m[i] = fn(src[i]) ? 1 : 0; return m; }
+  function* build(map, out) {
+    const u = U(), W0 = map.w, H0 = map.h, w = Math.ceil(W0 / Q), h = Math.ceil(H0 / Q), N = w * h, grid = R.MapUtil.grid(map);
+    const rows = [];
+    for (let y = 0; y < H0; y++) { const row = grid[y] || ''; rows.push(row.length === W0 ? row : [...row].join('')); }
+    const c = { rows, info: out.info, W0, H0, w, h, N, kind: new Uint8Array(N), lvl: new Uint8Array(N), flag: new Uint8Array(N), tr: new Float32Array(N) };
+    for (let Y = 0; Y < h; Y += 72) { classify(c, Y, Math.min(h, Y + 72)); yield; }
+    const kind = c.kind, D = {};
+    D.W = dist(mask(kind, N, (k) => k === 1), w, h, 60); yield;   // 陸 → 水までの距離（× 10、高さの格子の単位）
+    D.L = dist(mask(kind, N, (k) => k !== 1), w, h, 60); yield;   // 水 → 陸まで
+    D.M = dist(mask(kind, N, (k) => k === 2), w, h, 60); yield;   // 山まで
+    D.I = dist(mask(kind, N, (k) => k !== 2), w, h, 60); yield;   // 山の中 → 山の外まで
     // 町・建物の周りは起伏を弱める（家が斜面に傾いて見えないように）
     const bm = new Uint8Array(N);
-    for (const o of map.objects || []) if (o.type === 'building' && o.x != null) for (let y = o.y - 1; y < o.y + (o.h || 3) + 1; y++) for (let x = o.x - 1; x < o.x + (o.w || 3) + 1; x++) if (x >= 0 && y >= 0 && x < w && y < h) bm[y * w + x] = 1;
-    const dB = dist(bm, w, h, 40); yield;
+    for (const o of map.objects || []) if (o.type === 'building' && o.x != null) for (let y = o.y - 1; y < o.y + (o.h || 3) + 1; y++) for (let x = o.x - 1; x < o.x + (o.w || 3) + 1; x++) if (x >= 0 && y >= 0 && x < W0 && y < H0) bm[Math.floor(y / Q) * w + Math.floor(x / Q)] = 1;
+    D.B = dist(bm, w, h, 30); yield;
+    // 丘のノイズ: 大きいうねり（約 36 マス）・中（約 13 マス）・小（約 5 マス）
+    const NZ = new Float32Array(N);
+    noiseAdd(NZ, w, h, 36 / Q, 911, 0.62, u.h3); noiseAdd(NZ, w, h, 13 / Q, 912, 0.28, u.h3); noiseAdd(NZ, w, h, 5 / Q, 913, 0.1, u.h3);
+    yield;
     const H = new Float32Array(N);
-    for (let y = 0; y < h; y++) {
-      for (let x = 0; x < w; x++) {
-        const i = y * w + x, k = kind[i];
-        // 丘: 大きいうねり（約 36 マス）と中くらい（約 13 マス）
-        const n = u.vn(x, y, 36, 911) * 0.62 + u.vn(x, y, 13, 912) * 0.28 + u.vn(x, y, 5, 913) * 0.1 - 0.5;
-        if (k === 1) {
-          const dd = 1 - Math.exp(-dL[i] / 5);
-          H[i] = flag[i] & 8 ? -0.18 - dd * 0.3 : flag[i] & 16 ? -0.3 - dd * 0.7 : -0.3 - dd * (flag[i] & 4 ? 1.6 : 1.1);
-          continue;
-        }
-        const coast = 1 - Math.exp(-dW[i] / 8), flat = Math.min(1, dB[i] / 7);
-        let v = 0.2 + 1.2 * coast;
-        v += n * 2.8 * Math.min(1, dW[i] / 5) * (0.35 + 0.65 * flat);
-        if (flag[i] & 2) v -= 0.25;
-        if (k === 2) v += 1.7 + (lvl[i] - 1) * 1.3 + 1.6 * (1 - Math.exp(-dI[i] / 2.2)) + n * 0.8;
-        else v += 1.5 * Math.exp(-dM[i] / 4) + (flag[i] & 1 ? 0.15 : 0);
-        H[i] = v;
-      }
-      if ((y & 63) === 63) yield;
-    }
+    heights(c, D, NZ, H); yield;
     const tmp = new Float32Array(N);
     blur(H, w, h, 1, tmp); yield;
-    blur(H, w, h, 1, tmp); yield;
     // 森の覆い（木のマスの割合をぼかした物）
-    for (let i = 0; i < N; i++) tmp[i] = flag[i] & 1 ? 1 : 0;
-    const t2 = new Float32Array(N);
-    blur(tmp, w, h, 1, t2); blur(tmp, w, h, 1, t2);
+    const tr = c.tr;
+    blur(tr, w, h, 1, tmp);
     const O = new Uint8Array(N);
-    for (let i = 0; i < N; i++) O[i] = Math.round(Math.min(1, tmp[i]) * 255);
-    yield;
-    out.H = H; out.O = O; out.kind = kind; out.flag = flag;
+    for (let i = 0; i < N; i++) O[i] = Math.round(Math.min(1, tr[i]) * 255);
+    out.w = w; out.h = h; out.H = H; out.O = O;
     out.ready = true;
-    if (R.Hd && R.Hd.track) R.Hd.track('chunk', 'terrain:relief:' + map.id, N * 7);
+    if (R.Hd && R.Hd.track) R.Hd.track('chunk', 'terrain:relief:' + map.id, N * 5);
+  }
+  function entry(map) {
+    let r = cache.get(map);
+    if (!r) { r = { w: 0, h: 0, ready: false, gen: null, info: legendInfo(map) }; cache.set(map, r); }
+    return r;
   }
   T._relief = function (map) {
     if (!map || !map.splat) return null;
-    let r = cache.get(map);
-    if (!r) { r = { w: map.w, h: map.h, ready: false, gen: null }; cache.set(map, r); }
+    const r = entry(map);
     if (!r.ready) { if (!r.gen) r.gen = build(map, r); while (!r.gen.next().done) { /* 焼く前に要る: 一度に作り切る */ } r.gen = null; }
     return r;
   };
@@ -166,8 +205,7 @@
       step(ms) {
         const t0 = U().now(), deadline = t0 + (ms == null ? 3 : ms);
         if (!map || !map.splat) { job.done = true; return true; }
-        let r = cache.get(map);
-        if (!r) { r = { w: map.w, h: map.h, ready: false, gen: null }; cache.set(map, r); }
+        const r = entry(map);
         if (!r.ready && !r.gen) r.gen = build(map, r);
         while (!r.ready) { if (r.gen.next().done) break; if (U().now() > deadline) break; }
         if (r.ready) { r.gen = null; job.done = true; job.result = r; }
@@ -204,7 +242,9 @@
     if (!rf || !rf.ready || !job.px) return;
     const u = U(), t = job.tile, S = job.size, X0 = job.X0, Y0 = job.Y0;
     const B = Math.max(2, t >> 3), N = Math.floor(S / B) + 1, NN = N * N;
-    const w = rf.w, h = rf.h, H = rf.H, O = rf.O, fam = rf.fam, kind = rf.kind, flag = rf.flag;
+    const w = rf.w, h = rf.h, H = rf.H, O = rf.O, info = rf.info, grid = R.MapUtil.grid(map), MW = map.w, MH = map.h, iq = 1 / Q;
+    /** 画素（チャンクの中）の下のマスの凡例の種類（無ければ null） */
+    const cellAt = (wx0, wy0) => { const ci = Math.floor(wx0 / t), cj = Math.floor(wy0 / t); if (ci < 0 || cj < 0 || ci >= MW || cj >= MH) return null; const row = grid[cj] || ''; return info[row.length === MW ? row.charAt(ci) : [...row][ci]] || null; };
     const F = buf('F', NN), Fw = buf('Fw', NN), DR = buf('DR', NN), DG = buf('DG', NN), DB = buf('DB', NN), BA = buf('BA', NN);
     const Lx = K.light[0], Ly = K.light[1], Lz = K.light[2], Ll = Math.hypot(Lx, Ly, Lz), lx = Lx / Ll, ly = Ly / Ll, lz = Lz / Ll;
     const Hat = (x, y) => H[(y < 0 ? 0 : y >= h ? h - 1 : y) * w + (x < 0 ? 0 : x >= w ? w - 1 : x)];
@@ -218,10 +258,10 @@
     const hv = new Float32Array(16);
     let anyWet = false;
     for (let j = 0; j < N; j++) {
-      const py = Y0 + j * B, fy0 = py / t - 0.5, cy = Math.floor(fy0);
+      const py = Y0 + j * B, fy0 = (py / t) * iq - 0.5, cy = Math.floor(fy0);
       basis(fy0 - cy, wy, dy, sy);
       for (let i = 0; i < N; i++) {
-        const px = X0 + i * B, fx0 = px / t - 0.5, cx = Math.floor(fx0);
+        const px = X0 + i * B, fx0 = (px / t) * iq - 0.5, cx = Math.floor(fx0);
         basis(fx0 - cx, wx, dx, sx);
         for (let b = 0; b < 4; b++) for (let a = 0; a < 4; a++) hv[b * 4 + a] = Hat(cx - 1 + a, cy - 1 + b);
         let hh = 0, hx = 0, hy = 0, hxx = 0, hyy = 0;
@@ -230,6 +270,7 @@
           for (let a = 0; a < 4; a++) { const v = hv[b * 4 + a]; r0 += wx[a] * v; r1 += dx[a] * v; r2 += sx[a] * v; }
           hh += wy[b] * r0; hx += wy[b] * r1; hy += dy[b] * r0; hxx += wy[b] * r2; hyy += sy[b] * r0;
         }
+        hx *= iq; hy *= iq; hxx *= iq * iq; hyy *= iq * iq;   // 高さの格子（Q マス）→ マスあたり
         const q = j * N + i;
         // 明暗: 面の向き（Lambert、平らな所を 1 に）＋曲がり
         const nl = 1 / Math.sqrt(hx * hx + hy * hy + 1);
@@ -237,23 +278,22 @@
         let f = 1 + K.shade * (d / lz - 1);
         const lap = hxx + hyy;
         f -= K.curv * Math.max(-0.6, Math.min(0.6, lap)) * 0.5;
-        // 近いマス
-        const ci = Math.floor(px / t), cj = Math.floor(py / t), inb = ci >= 0 && cj >= 0 && ci < w && cj < h, ck = inb ? cj * w + ci : -1;
-        // 森の縁の AO（双一次）
-        let oc = 0;
-        if (inb) {
-          const gx = px / t - 0.5, gy = py / t - 0.5, ox = Math.max(0, Math.min(w - 2, Math.floor(gx))), oy = Math.max(0, Math.min(h - 2, Math.floor(gy)));
-          const ax = Math.max(0, Math.min(1, gx - ox)), ay = Math.max(0, Math.min(1, gy - oy)), o0 = oy * w + ox;
+        const ce = cellAt(px, py);
+        // 森の縁の AO（高さの格子で双一次）
+        let oc;
+        {
+          const ox = Math.max(0, Math.min(w - 2, cx)), oy = Math.max(0, Math.min(h - 2, cy));
+          const ax = Math.max(0, Math.min(1, fx0 - ox)), ay = Math.max(0, Math.min(1, fy0 - oy)), o0 = oy * w + ox;
           oc = ((O[o0] * (1 - ax) + O[o0 + 1] * ax) * (1 - ay) + (O[o0 + w] * (1 - ax) + O[o0 + w + 1] * ax) * ay) / 255;
         }
         f -= K.occ * oc;
         if (f < K.fMin) f = K.fMin; else if (f > K.fMax) f = K.fMax;
         F[q] = f;
         // 水: 深さで暗く（溶岩は変えない）
-        Fw[q] = ck >= 0 && kind[ck] === 1 ? 1 - K.deep * Math.max(0, Math.min(1, -hh / 1.6)) : 1;
+        Fw[q] = ce && ce.kind === 1 ? 1 - K.deep * Math.max(0, Math.min(1, -hh / 1.6)) : 1;
         // 色のゆらぎ
-        const fm = ck >= 0 ? fam[ck] : 1, tt = TINT[fm] || TINT[1];
-        const na = (u.vn(px / t, py / t, 40, 921) - 0.5) * 2, nb = (u.vn(px / t, py / t, 14, 922) - 0.5) * 2, mk = K.macro * (ck >= 0 && flag[ck] & 32 ? 0 : 1);
+        const tt = TINT[ce ? ce.fam : 1] || TINT[1];
+        const na = (u.vn(px / t, py / t, 40, 921) - 0.5) * 2, nb = (u.vn(px / t, py / t, 14, 922) - 0.5) * 2, mk = K.macro * (ce && ce.lava ? 0 : 1);
         // 高い所は少し明るく冷たく、低い所は少し暖かく
         const lift = Math.max(-1, Math.min(1, (hh - 1.2) / 2.5));
         DR[q] = (tt[0][0] * na + tt[1][0] * nb) * mk - lift * 4;
@@ -263,7 +303,7 @@
         const sl = Math.sqrt(hx * hx + hy * hy);
         let ba = (sl - K.steep[0]) / (K.steep[1] - K.steep[0]);
         ba = ba <= 0 ? 0 : ba >= 1 ? 1 : ba * ba * (3 - 2 * ba);
-        if (ck >= 0 && kind[ck] === 1) ba = 0;
+        if (ce && ce.kind === 1) ba = 0;
         BA[q] = ba * 0.55;
         if (ba > 0) anyWet = true;
       }
@@ -272,7 +312,7 @@
     const px8 = new Uint8ClampedArray(job.px.buffer, job.px.byteOffset, S * S * 4), wm = job.wmask;
     const rF = buf('rF', N), rW = buf('rW', N), rR = buf('rR', N), rG = buf('rG', N), rB = buf('rB', N), rA = buf('rA', N);
     const invB = 1 / B;
-    const fmAt = (x, y) => { const ci = Math.floor((X0 + x) / t), cj = Math.floor((Y0 + y) / t); return ci >= 0 && cj >= 0 && ci < w && cj < h ? fam[cj * w + ci] : 1; };
+    const fmAt = (x, y) => { const c = cellAt(X0 + x, Y0 + y); return c ? c.fam : 1; };
     for (let y = 0; y < S; y++) {
       const gj = y * invB, j = Math.min(N - 2, gj | 0), fy = gj - j, gy = 1 - fy, r0 = j * N, r1 = r0 + N;
       for (let i = 0; i < N; i++) {
