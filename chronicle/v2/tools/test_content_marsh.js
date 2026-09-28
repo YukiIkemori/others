@@ -114,7 +114,13 @@ section('2. 置き場所（泉・宝箱・戸口・灯り）');
 
 // ================================================================ 3
 section('3. 文（声はあとで・A36・録音の文）');
-ok('湿原のイベントに voice を書かない', !/voice\s*:/.test(SRC), (SRC.match(/voice\s*:[^,}]*/g) || []).slice(0, 5));
+{
+  // ボイス: 持ち主の決まりは「声はあとで」。声の担当が録音の id を足した所（design/voice_story_map.json・design/voice/script.csv にある id）だけ許す
+  const ids = [...SRC.matchAll(/'(v_[a-z0-9_]+)'/g)].map((m) => m[1]);
+  const known = fs.readFileSync(path.join(V2, 'design', 'voice_story_map.json'), 'utf8') + fs.readFileSync(path.join(V2, '..', 'design', 'voice', 'script.csv'), 'utf8');
+  const unknown = ids.filter((id) => !known.includes(id));
+  ok(`湿原のイベントのボイス ${ids.length} 本は、声の担当の一覧にある id だけ`, unknown.length === 0, unknown);
+}
 {
   const names = Object.values(D.companions || {}).map((c) => c.name).filter((n) => n && n.length >= 2);
   const hits = names.filter((n) => SRC.includes(n) || MAP_SRC.includes(n));
