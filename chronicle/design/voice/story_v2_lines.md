@@ -23,6 +23,16 @@
 | ハンナ `hanna` | `ja-jp-csagent-4` | Hanna, an old woman in her seventies in the forest village Fern who married in from the storytellers' village long ago; kind and gentle. |
 | リタ `rita` | `ja-jp-tutor-3` | Rita, about twenty, the singer of the forest village Fern who lives in a treetop house; clear-voiced, earnest, a little shy. |
 | ピム `pim` | `ja-jp-csagent-2` ×1.06 | Pim, a ten-year-old boy of the forest village Fern, the woodcutter's son; lively, brave, wants to become a storyteller. Performed by a female voice actress, as is usual for boys in anime. |
+| zaid `zaid` | `ja-jp-concierge-6` | Zaid, the caravan master of the oasis town Kasim, in his fifties: sun-dried, steady and responsible; sings the old star songs at the campfire; speaks a plain older man's Japanese (わし). |
+| rashid `rashid` | `ja-jp-tutor-9` | Rashid, the masked chief of the Sand Hawks bandits, about forty; a deserter of the Sun League army; hard and terse, but not cruel, and haunted by a night he cannot remember. |
+| hazal `hazal` | `ja-jp-advisor-3` fx spirit | Hazal, a desert king sealed in his tomb whose name was forgotten; anguished, then relieved when the name returns. |
+| nadia `nadia` | `ja-jp-training-5` | Nadia, a dancer of the oasis town Kasim, about eighteen; lively and warm, sings the song of the forgotten king every night in the square. |
+| jorn `jorn` | `ja-jp-podcaster-11` ×0.93 | Jorn, the chief of the snow village Yule, about sixty; broad, weathered and dependable, carries the village through the midwinter fire festival and the siege; speaks older-man Japanese (わし). |
+| hald `hald` | `ja-jp-techagent-11` ×0.9 | Hald, the old watchman of the snow village Yule, about seventy, missing two fingers; gruff and watchful, remembers the night the north gate burned. |
+| sonja `sonja` | `ja-jp-advisor-5` | Sonja, about sixteen, the daughter of the fire-keepers of the snow village Yule who guards the great hearth; earnest, quiet and a little lonely; keeps a board counting the nights. |
+| neve `neve` | `ja-jp-training-10` fx spirit | Neve, the noble white dragon (female) of the frozen peak. Majestic and cold at first, then warm and grateful. |
+| mayor `mayor` | `ja-jp-concierge-2` ×0.92 | Oswald, the mayor of the lake town Loch, about sixty; stern and careful, presides over the town assembly; speaks older-man Japanese (わし). |
+| melda `melda` | `ja-jp-tutor-1` fx spirit | Melda, the ghost of the kind witch who once owned the misty manor. Elegant mature woman, gentle and melancholic. |
 
 ## オットー
 
@@ -43,6 +53,7 @@
 | `v_otto_reward_02` | story | `pharos_otto_reward` first time say 3 | これは、わしが若いころから<br>使ってきたランタンじゃ。<br>持っていっておくれ。 | tender and grateful, giving a treasured keepsake |
 | `v_otto_reward_03` | story | `pharos_otto_reward` first time say 4 | 若いころ、灯台には<br>『朝番』というのがあってな。<br>火が戻ったら、また立てるつもりじゃ。 | fond reminiscence, smiling, looking forward |
 | `v_otto_reward_04` | story | `pharos_otto_reward` first time say 5 | ……はて。何を見張る番<br>じゃったかのう。<br>どうしても思い出せん。 | the smile fades into puzzlement; quiet, a little lost, unsettling in its gentleness |
+| `v_otto_reward_05` | story | `pharos_otto_reward` first time say 1 (the name shows first; the voice skips {hero}) | 灯台に火が戻ったぞ！<br>守り歌も、思い出せた。 | overjoyed and moved, an old man almost laughing with relief; the lighthouse is lit again and the song came back |
 
 ## ベルナ
 
@@ -134,9 +145,116 @@
 | id | 種類 | 場面 | 台詞 | 演技 |
 |---|---|---|---|---|
 | `v_rita_greet_01` | bark | `rita (fern)` bark: when the talk opens | あ、語り部さん。 | a young village singer, clear and bright, a little shy |
+| `v_rita_forest_01` | story | `fern_rita` first talk page 1 (sings the first verse, then stops) | ♪　眠れ森の主、千の年輪に……。<br>だめ。この先が、<br>どうしても出てこないの。 | sings the first line softly and slowly as a melody, then breaks off; frustrated and sad that the rest will not come |
+| `v_rita_forest_02` | story | `fern_rita` first talk page 2 (introduces herself) | わたしはリタ。この村の歌い手。<br>千年樹の歌は、最初の一節しか<br>思い出せないの。 | introduces herself shyly and earnestly; a little ashamed that the village singer has forgotten the song |
+| `v_rita_forest_03` | story | `forest_finale` the song night in the plaza (before the song) | みんな、聞いて。<br>千年樹の歌よ。 | calls the gathered village to listen, happy and a little nervous; she can sing the whole song again |
 
 ## ピム
 
 | id | 種類 | 場面 | 台詞 | 演技 |
 |---|---|---|---|---|
 | `v_pim_greet_01` | bark | `pim_after (fern)` bark: when the talk opens (after the rescue) | あっ、語り部さん！ | a ten-year-old boy, excited and happy |
+
+## zaid
+
+| id | 種類 | 場面 | 台詞 | 演技 |
+|---|---|---|---|---|
+| `v_zaid_desert_01` | story | `kasim_zaid` first meeting page 1 | わしは隊商の長ザイード。<br>掲示を見てくれたか。 | first meeting; introduces himself plainly, a caravan master sizing up the travellers |
+| `v_zaid_desert_02` | story | `kasim_zaid` first meeting page 2 | 王墓のオアシスへ、供え物を運ぶ。<br>昔からの習わしでな。泉の水の源が、<br>そこの古い泉なんだ。 | explains the old custom calmly, with quiet respect for the tradition |
+| `v_zaid_desert_03` | story | `kasim_zaid` first meeting page 3 (the request) | 砂嵐と盗賊で、隊が出せずにいる。<br>護衛を頼めないか。<br>野営を三晩、オアシスまでだ。 | worried but steady; asks for help as a serious request |
+| `v_zaid_desert_04` | story | `desert_camp3_scene` third night page 1 (the dawn star) | 地の果ての、白む星……。<br>祖母は、あれを「夜明けの星」と<br>呼んでいた。 | at the campfire, looking at a star low on the horizon; soft and nostalgic, remembering his grandmother |
+| `v_zaid_desert_05` | story | `desert_camp3_scene` third night page 2 (what is dawn?) | ……夜明け。<br>ふしぎな言葉だな。<br>夜が、明ける？　何が明けるんだ？ | puzzled and wondering, almost to himself; he does not know what the word dawn means |
+| `v_zaid_desert_06` | story | `desert_finale` the spring fills page 1 | 泉が……泉が満ちていく！ | astonished, overjoyed, his voice rising as the water wells up |
+| `v_zaid_desert_07` | story | `desert_finale` the spring fills page 2 | ……この光、祖母の歌の<br>「夜明けの星」の色だ。 | hushed and moved, recognising the colour from his grandmother's song |
+| `v_zaid_song_01` | story | `desert_camp1_scene` star song 1 (caption, X.STARS[0]) | ♪　北のくぎ星　動かぬ星よ<br>♪　迷う隊商の　くいとなれ | sings a slow, simple caravan song at the campfire, low and steady, like an old folk melody |
+| `v_zaid_song_02` | story | `desert_camp2_scene` star song 2 (caption, X.STARS[1]) | ♪　七つの泉星　ひしゃくを傾け<br>♪　夜のしずくを　砂にまけ | sings a slow, simple caravan song at the campfire, warm and steady |
+| `v_zaid_song_03` | story | `desert_camp3_scene` star song 3 (caption, X.STARS[2]) | ♪　地の果ての　白む星よ<br>♪　……祖母は　「夜明けの星」と呼んだ | sings softly, the last line spoken more than sung, wistful |
+
+## rashid
+
+| id | 種類 | 場面 | 台詞 | 演技 |
+|---|---|---|---|---|
+| `v_rashid_desert_01` | story | `desert_camp1_scene` the ambush page 1 (before the boss) | 動くな。命まではもらわん。 | a masked bandit on a rock with bows drawn: cold, low and commanding |
+| `v_rashid_desert_02` | story | `desert_camp1_scene` the ambush page 2 | おれたちは「砂の鷹」。<br>欲しいのは水だ。水がめを<br>半分置いていけ。 | names his band and makes the demand; hard, businesslike, not cruel |
+| `v_rashid_desert_03` | story | `desert_camp1_scene` after the boss (fight) page 1 | ……いい腕だ。おれはラシード。<br>昔は、日輪同盟の兵だった。 | beaten, kneeling, breathing hard; grudging respect as he gives his name and his past |
+| `v_rashid_desert_04` | story | `desert_camp1_scene` after the boss (fight) page 2 | 二十年前の代理試合の夜……<br>歌が聞こえた。敵も味方も、<br>手を止めた。 | quiet and faraway, remembering a night when a song stopped a battle |
+| `v_rashid_desert_05` | story | `desert_camp1_scene` after the boss (fight) page 3 | ……そのあとのことは、<br>なぜか思い出せん。気づけば、<br>砂の上で盗賊をしていた。 | troubled and bitter; he cannot remember what came after |
+| `v_rashid_desert_06` | story | `desert_camp1_scene` after the boss (fight) page 4 | 行け。おれたちは台地の洞へ帰る。<br>……次は、こうはいかんぞ。 | gets up and leaves; gruff warning with a trace of respect |
+| `v_rashid_hawks_01` | story | `desert_hawks_boss` before the boss page 1 | ……来たか。隊商の犬め。<br>ここは、おれたちの最後の巣だ。 | in his last hideout, hostile and cornered; spits the insult |
+| `v_rashid_hawks_02` | story | `desert_hawks_boss` before the boss page 2 | 今度は、手加減せんぞ！ | draws his blade, fierce battle resolve |
+| `v_rashid_hawks_03` | story | `desert_hawks_boss` after the boss page 1 | ……まいった。<br>おれたちの負けだ。 | defeated and out of breath; admits it plainly |
+| `v_rashid_hawks_04` | story | `desert_hawks_boss` after the boss page 2 | この手袋を持っていけ。<br>……もう、盗みはやめる。<br>洞の者を食わせる道を探すさ。 | hands over his gloves; tired, resolved to give up stealing, quietly decent |
+
+## hazal
+
+| id | 種類 | 場面 | 台詞 | 演技 |
+|---|---|---|---|---|
+| `v_hazal_tomb_05` | story | `desert_tomb_king` after the name page 1 | 水と引き換えに、わたしは名を<br>砂の精霊に差し出した。 | the king with his name back: slow, grave, confessing an old bargain |
+| `v_hazal_tomb_06` | story | `desert_tomb_king` after the name page 2 | 名を呼ぶかぎり、日輪の火は消えぬ。<br>……その約束も、石から写されて<br>消えてしまったのだ。 | sorrowful: the promise was copied from the stone and lost |
+| `v_hazal_tomb_07` | story | `desert_tomb_king` after the name page 3 | 語り部よ。<br>わたしの名を、もう一度<br>泉の民に返してくれ。 | a solemn, gentle plea to the storyteller |
+
+## nadia
+
+| id | 種類 | 場面 | 台詞 | 演技 |
+|---|---|---|---|---|
+| `v_nadia_desert_01` | story | `kasim_nadia` first meeting (before the song) | わたしはナディア。踊り子よ。<br>毎晩、広場で王さまの歌を<br>歌って踊るの。聞いて。 | bright and friendly, introduces herself and invites them to listen |
+| `v_nadia_desert_02` | story | `kasim_nadia` after the song page 1 | ……名前の所だけ、<br>どうしても歌えないの。<br>母さんも、おばあちゃんも。 | sad and a little embarrassed; the name will not come to anyone |
+| `v_nadia_desert_03` | story | `kasim_nadia` after the song page 2 | 王さまの名前、王墓の石に<br>刻まれてたって聞いたわ。<br>誰も、読みに行けないけど。 | thoughtful, with a hint of longing |
+| `v_nadia_desert_04` | story | `desert_finale` the square, page 1 (asks the name) | 王さまの名前、わかったんでしょう？<br>……教えて。 | eager and hopeful, then quietly asking |
+| `v_nadia_desert_05` | story | `desert_finale` the square, page 2 (the name fits) | ハザル……。うん、ぴったり。<br>歌ってみるね。 | tries the name, delighted, then ready to sing |
+| `v_nadia_song_01` | story | `kasim_nadia` the king's song with the name missing (caption, X.SONG_BLANK) | ♪　砂の海に　水を招いた王よ<br>♪　その名は――　……<br>♪　夕べの祈りに　とこしえに | sings a graceful dancer's song; at the missing name she falters into a silent pause, then finishes the last line |
+| `v_nadia_song_02` | story | `desert_finale` the king's song in full (caption, X.SONG_FULL) | ♪　砂の海に　水を招いた王よ<br>♪　その名はハザル　日輪の友<br>♪　夕べの祈りに　とこしえに | sings the whole song joyfully and clearly, the name ringing out |
+
+## jorn
+
+| id | 種類 | 場面 | 台詞 | 演技 |
+|---|---|---|---|---|
+| `v_jorn_snow_01` | story | `yule_jorn` first talk say 1 page 1 | よい灯りを、旅の人。<br>わしはヨルン。ユールの村長だ。 | first meeting; a warm, grave village chief greeting a traveller |
+| `v_jorn_snow_02` | story | `yule_jorn` first talk say 1 page 2 | 今夜は冬至。大火祭の夜だ。<br>大かまどで冬至の火を燃やし、<br>昔話を語って、峰へ運ぶ。 | explains the festival with pride and a little solemnity |
+| `v_jorn_snow_03` | story | `yule_jorn` first talk say 2 page 1 (the promise) | 峰の白竜に火と物語を届け、<br>竜は吹雪を鎮める。<br>……それが村と竜の約束だ。 | solemn, telling the old pact between the village and the dragon |
+| `v_jorn_snow_04` | story | `yule_jorn` first talk say 2 page 2 | ところが今年は、秋から<br>一日も吹雪がやまん。<br>竜に物語が届いておらんのだ。 | worried and heavy; the blizzard has not stopped since autumn |
+| `v_jorn_snow_05` | story | `snow_festival` the festival: asks for the tale page 1 | 語り部よ。<br>今年の物語を、火の前で<br>語ってくれ。 | before the great fire, formal and hopeful, asking the storyteller |
+| `v_jorn_snow_06` | story | `snow_festival` the festival page 2 | 峰の竜に届くように。 | quiet, a wish sent toward the peak |
+| `v_jorn_snow_07` | story | `snow_festival` the wolves: three gates page 1 | 門は三つ。北、東、西。<br>わしらの手では、<br>二つしか守りきれん。 | urgent, commanding over the howling; grim about the odds |
+| `v_jorn_snow_08` | story | `snow_festival` the wolves page 2 (the name shows first; the voice skips {hero}) | 力を貸してくれ。<br>守る門を、選んでくれ。 | urgent, asking for help and trusting the storyteller |
+
+## hald
+
+| id | 種類 | 場面 | 台詞 | 演技 |
+|---|---|---|---|---|
+| `v_hald_snow_01` | story | `snow_festival` the wolves: alarm page 1 | 狼の群れだ！<br>村を囲んでおる！ | a shouted alarm through the blizzard, urgent |
+| `v_hald_snow_02` | story | `snow_festival` the wolves: alarm page 2 | 門を閉めろ！<br>男たちは門へ！ | shouting orders, commanding |
+
+## sonja
+
+| id | 種類 | 場面 | 台詞 | 演技 |
+|---|---|---|---|---|
+| `v_sonja_snow_01` | story | `yule_sonja` first talk say 1 page 1 | ……火が細いの。<br>脂を足しても、足しても。 | worried, murmuring by the weak fire |
+| `v_sonja_snow_02` | story | `yule_sonja` first talk say 1 page 2 | わたしはソーニャ。<br>火守りの家の娘よ。<br>大かまどの火を守ってるの。 | introduces herself quietly and earnestly |
+| `v_sonja_snow_03` | story | `yule_sonja` first talk say 2 page 1 (the book) | 祭ではね、火の前で<br>物語の本を読むの。<br>毎年、同じ本を。 | explains the custom gently |
+| `v_sonja_snow_04` | story | `yule_sonja` first talk say 2 page 2 (the blank book) | でも今年、本を開いたら……<br>真っ白だったの。<br>一文字も、残ってなかった。 | shaken, almost whispering; the book was completely blank |
+| `v_sonja_snow_05` | story | `snow_finale` the square page 1 (the name shows first; the voice skips {hero}) | おかえりなさい。 | relieved and happy to see them back |
+| `v_sonja_snow_06` | story | `snow_finale` the square page 2 (the night board) | 夜数えの板に、今夜の刻みを<br>入れようとしたの。<br>……でも、手が止まっちゃった。 | thoughtful and puzzled, her hand stopped over the board |
+| `v_sonja_snow_07` | story | `snow_finale` the square page 3 | ……今夜は、いつもより<br>空が明るい。 | soft wonder, looking up at a sky that is a little brighter |
+
+## neve
+
+| id | 種類 | 場面 | 台詞 | 演技 |
+|---|---|---|---|---|
+| `v_neve_peak_04` | story | `snow_finale` the scale (after v_neve_peak_02・03) | ……これを持っていくがよい。<br>わたしの、うろこの一枚だ。 | calm and gracious, the dragon giving one of her scales |
+
+## mayor
+
+| id | 種類 | 場面 | 台詞 | 演技 |
+|---|---|---|---|---|
+| `v_mayor_marsh_01` | story | `loch_assembly` the assembly: asks for the name | では、名指しを聞こう。<br>子どもたちを、誰がさらった？ | grave, formal, chairing a tense assembly |
+| `v_mayor_marsh_02` | story | `loch_assembly` the mist is named page 1 | 霧……だと？<br>霧が、子どもをさらうというのか。 | taken aback, sceptical |
+| `v_mayor_marsh_03` | story | `loch_assembly` the mist is named page 2 | 証拠を示しなさい。 | stern, demanding proof |
+| `v_mayor_marsh_04` | story | `loch_assembly_right` the proof holds page 1 | 霧が、魔女の姿をまねて<br>子どもを連れていった……。 | slowly realising the truth, shaken |
+| `v_mayor_marsh_05` | story | `loch_assembly_right` the proof holds page 2 | ……わしらは、あやうく<br>無実の館に火をかけるところだった。 | ashamed and relieved; the town nearly burned an innocent house |
+
+## melda
+
+| id | 種類 | 場面 | 台詞 | 演技 |
+|---|---|---|---|---|
+| `v_melda_song_01` | story | `manor_melda` the bell song (caption, X.SONG, after v_melda_manor_05) | ♪　鳴れよ、七つの鐘<br>♪　霧は沼の底へ、<br>♪　朝は町の窓へ | sings the old bell song softly, a ghostly lullaby |

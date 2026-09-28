@@ -95,7 +95,7 @@
     try { R.Field.flash('#ffb060', 500); } catch (e) { /* */ }
     await ev.caption('火が入った。\n――冬至の火が、夜空へ\n燃え上がる！', { ms: 2600 });
     if (ev.flag('snow_ice_done')) await ev.caption('氷の灯籠が、トンネルの入口ごとに\nいっせいにともった。\n村じゅうが、青く光っている。', { ms: 2800 });
-    await ev.say('jorn', ['語り部よ。\n今年の物語を、火の前で\n語ってくれ。', '峰の竜に届くように。']);
+    await ev.say('jorn', ['語り部よ。\n今年の物語を、火の前で\n語ってくれ。', '峰の竜に届くように。'], { voice: ['v_jorn_snow_05', 'v_jorn_snow_06'] });
     const keys = ['dragon', 'hunter', 'fire_child'].filter((k) => ev.flag('snow_tale_' + k));
     const i = await ev.choose(keys.map((k) => x.TALES[k].name), { text: '火の前で、どの話を語る？' });
     const key = keys[i] || keys[0];
@@ -112,8 +112,8 @@
     try { R.Field.shake(4, 600); } catch (e) { /* */ }
     await ev.caption('そのとき、吹雪が急に強まった。\n火の粉が、横なぐりに\n吹き散らされる。', { ms: 2600 });
     await ev.caption('吹雪の奥から、遠吠え。\nひとつ、ふたつ……\n数えきれない。', { ms: 2400 });
-    await ev.say('hald', ['狼の群れだ！\n村を囲んでおる！', '門を閉めろ！\n男たちは門へ！']);
-    await ev.say('jorn', ['門は三つ。北、東、西。\nわしらの手では、\n二つしか守りきれん。', '{hero}、力を貸してくれ。\n守る門を、選んでくれ。']);
+    await ev.say('hald', ['狼の群れだ！\n村を囲んでおる！', '門を閉めろ！\n男たちは門へ！'], { voice: ['v_hald_snow_01', 'v_hald_snow_02'] });
+    await ev.say('jorn', ['門は三つ。北、東、西。\nわしらの手では、\n二つしか守りきれん。', '{hero}、力を貸してくれ。\n守る門を、選んでくれ。'], { voice: ['v_jorn_snow_07', 'v_jorn_snow_08'] });   // 2 つ目は名前を読まない
     ev.leadDone('l_snow_prep');
     await ev.call('snow_siege_wave');
   }, {
@@ -247,7 +247,7 @@
     try {
       try { await ev.npc('fine').face('n'); } catch (e) { /* */ }
       await ev.say(null, '見張り台に、灰色のマントの少女が\n立っていた。峰を見上げている。');
-      await ev.say('fine', '凍っているのは、竜の体じゃない。\n心のほうよ。', { name: '灰色のマントの少女' });
+      await ev.say('fine', '凍っているのは、竜の体じゃない。\n心のほうよ。', { name: '灰色のマントの少女', voice: 'v_fine_snow_01' });
       ev.sfx('magic');
       // 見張りの台の東の端へ歩き、吹雪の中へ薄れて消える（パッと消さない）
       try { await ev.leave('fine', { path: [[32, 1], [33, 1]], ms: 900 }); } catch (e) { /* */ }

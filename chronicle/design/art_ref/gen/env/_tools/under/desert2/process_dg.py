@@ -117,19 +117,28 @@ def paste_sprite(C, name, fx, fy):
 
 
 def quicksand(C, cells, x, y):
-    """closed look of a quicksand cell: the painted sand, darker and wetter, with slow sink rings round a few vortex points (pixel-quantised)"""
-    cs = set(cells); vort = quicksand.v = getattr(quicksand, 'v', None) or [((cx + 0.5) * T, (cy + 0.5) * T) for i, (cx, cy) in enumerate(sorted(cells)) if i % 5 == 2]
+    """closed look of a quicksand cell: the painted sand made darker and wetter, with spiral sink bands round a few vortex points
+    (3 quantised tones), only on sand-coloured pixels (the painted stone rims stay), soft 6 px fade at the edge of the quicksand"""
+    cs = set(cells)
+    if not hasattr(quicksand, 'v'):
+        quicksand.v = [((cx + 0.5) * T, (cy + 0.5) * T) for i, (cx, cy) in enumerate(sorted(cells, key=lambda q: (q[1], q[0]))) if i % 7 == 3]
+    vort = quicksand.v
     yy, xx = np.mgrid[y * T:(y + 1) * T, x * T:(x + 1) * T].astype(np.float32)
-    dd = np.min([np.hypot(xx - vx, yy - vy) for vx, vy in vort], 0)
-    ring = (np.floor(dd / 5) % 2).astype(np.float32)
-    # edge fade: cells whose neighbour is not quicksand keep a 5 px rim of dry sand
+    dists = np.stack([np.hypot(xx - vx, yy - vy) for vx, vy in vort]); i0 = np.argmin(dists, 0)
+    vx = np.array([v[0] for v in vort])[i0]; vy = np.array([v[1] for v in vort])[i0]; dd = np.min(dists, 0)
+    ang = np.arctan2(yy - vy, xx - vx)
+    band = np.floor(((dd / 7 + ang / (2 * np.pi) * 2) % 3))            # spiral bands 0,1,2
+    tone = 0.62 + 0.07 * band + 0.10 * np.clip(dd / 48, 0, 1)            # darker towards the eye of each vortex
+    base = cell(C, x, y); r, g, b = base[..., 0], base[..., 1], base[..., 2]
+    sandy = ((r > g) & (g > b) & (r - b > 40)).astype(np.float32)
     ex = np.ones_like(dd)
-    for dx, dy, sl in ((-1, 0, (slice(None), slice(0, 5))), (1, 0, (slice(None), slice(T - 5, T))), (0, -1, (slice(0, 5), slice(None))), (0, 1, (slice(T - 5, T), slice(None)))):
-        if (x + dx, y + dy) not in cs: ex[sl] = 0.35
-    base = cell(C, x, y)
-    tone = np.array([0.78, 0.66, 0.52], np.float32) * (0.86 + 0.08 * ring)[..., None] + np.array([0, 0, 0.04])
-    k = np.clip(0.25 + 0.75 * np.minimum(1, dd / 40), 0, 1)[..., None] * 0 + ex[..., None]
-    cell(C, x, y)[:] = base * (1 - k) + base * tone * k
+    for dx, dy_ in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+        if (x + dx, y + dy_) not in cs:
+            dist = {(-1, 0): xx - x * T, (1, 0): (x + 1) * T - 1 - xx, (0, -1): yy - y * T, (0, 1): (y + 1) * T - 1 - yy}[(dx, dy_)]
+            ex = np.minimum(ex, np.clip(dist / 6, 0.15, 1))
+    k = (sandy * ex)[..., None]
+    wet = base * np.stack([tone, tone * 0.93, tone * 0.86], -1)
+    cell(C, x, y)[:] = base * (1 - k) + wet * k
 
 
 live = []

@@ -3,7 +3,7 @@
 //       メルダ（v_melda_manor_01〜05 の文のまま。証拠 5、鐘の鍵、鐘の歌）
 //   沼: bog_arrive・鐘 3 つ（鐘の鍵で鳴らすと水が引く）・霧食らい（v_mistwitch_marsh_01 → tr_b_mistbeast → v_melda_marsh_01）→
 //       marsh_finale（子どもたちが見つかる → ev.clearRegion('r_marsh') → ロッホで朝の鐘・七つの鐘楼の灯・クラウスの墨の楽譜・日継ぎの主張 →
-//       年代記に書く選択 ch_marsh_write → 帽子かお詫びの品）
+//       年代記に書く選択 ch_marsh_write → 帽子かおわびの品）
 //   ワールド: 沼の縁の鐘の歌の石碑（証拠 6）・沼の入口の霧の壁・山あいの街道の旅人。
 //   録音済みの文は 1 字も変えずに地の文として置く（声はあとで）。
 (function (R) {
@@ -28,7 +28,7 @@
     await ev.say(null, ['書庫の棚に、楽譜の書き付けが\nはさまっている。', '「夜の演奏会の始め方。\nまず弦、次に笛、最後に太鼓。\n三つの箱を、この順に」']);
   }, { meta: { needs: [], gives: ['flag:marsh_sheet_read'] } });
   E('manor_portrait', async (ev) => {
-    await ev.say(null, ['大広間の肖像画。灰色の髪の\n婦人が、青銅の鐘を抱いている。', '額の銘板に「館の主 メルダ」。\n……魔女には、見えない。']);
+    await ev.say(null, ['大広間の肖像画。灰色の髪の\n婦人が、青銅の鐘を抱いている。', '額の銘板に「館の主・メルダ」。\n……魔女には、見えない。']);
   });
   E('manor_fountain', async (ev) => {
     await ev.say(null, ev.flag('marsh_melda_met') ? ['枯れた噴水の像が、鐘を掲げている。', '像の足もとに、小さく\n「鳴れよ、七つの鐘」と彫られていた。'] : ['枯れた噴水。まん中の像は、\n鐘を掲げた婦人の姿だ。', '水盤の底に、落ち葉と\n泥がたまっている。']);
@@ -87,17 +87,17 @@
     ev.setFlag('marsh_melda_met');
     ev.bgm('sorrow');
     await ev.say(null, '奥の部屋に、青白い婦人の姿が\n浮かび上がった。');
-    await ev.say('melda', '……驚かせてしまったわね。\nわたしはメルダ。\nこの館の、昔の主よ。', MELDA);
-    await ev.say('melda', 'わたしは子どもたちを\nさらってなどいない。\n霧が、わたしの姿をまねているの。', MELDA);
-    await ev.say('melda', '昔、沼の霧から魔物があふれたとき、\nわたしは七つの鐘を沈めて、\n鐘の音で霧を封じたの。', MELDA);
-    await ev.say('melda', 'でも、町の人たちが鐘の歌を忘れて、\n鐘は鳴らなくなった……。', MELDA);
-    await ev.say('melda', '沼の鐘を鳴らして。\nこれは鐘の鍵。\nそして、これが鐘の歌よ。', MELDA);
+    await ev.say('melda', '……驚かせてしまったわね。\nわたしはメルダ。\nこの館の、昔の主よ。', Object.assign({ voice: 'v_melda_manor_01' }, MELDA));
+    await ev.say('melda', 'わたしは子どもたちを\nさらってなどいない。\n霧が、わたしの姿をまねているの。', Object.assign({ voice: 'v_melda_manor_02' }, MELDA));
+    await ev.say('melda', '昔、沼の霧から魔物があふれたとき、\nわたしは七つの鐘を沈めて、\n鐘の音で霧を封じたの。', Object.assign({ voice: 'v_melda_manor_03' }, MELDA));
+    await ev.say('melda', 'でも、町の人たちが鐘の歌を忘れて、\n鐘は鳴らなくなった……。', Object.assign({ voice: 'v_melda_manor_04' }, MELDA));
+    await ev.say('melda', '沼の鐘を鳴らして。\nこれは鐘の鍵。\nそして、これが鐘の歌よ。', Object.assign({ voice: 'v_melda_manor_05' }, MELDA));
     ev.item('k_bell_key', 1);
-    await ev.caption(X().SONG, { ms: 3200 });
+    await ev.caption(X().SONG, { ms: 3200, voice: X().SONG_VOICE });
     await X().lore(ev, 'lo_marsh_song');
     ev.leadDone('l_marsh_manor');
     ev.lead('l_marsh_bog');
-    await X().give(ev, 'melda');
+    await X().evidence(ev, 'melda');
     if (!ev.flag('marsh_assembly_done')) await ev.say(null, ['……けれど、町の人は\n魔女の言葉を信じないだろう。', '沼へ入るには、町の集会で\n町の人を説き伏せなければ。']);
     ev.mapBgm();
   }, { meta: { needs: ['flag:marsh_dolls'], gives: ['flag:marsh_melda_met', 'item:k_bell_key', 'lore:lo_marsh_song', 'flag:marsh_ev_melda', 'var:marsh_evidence', 'lead:l_marsh_bog'] } });
@@ -114,7 +114,7 @@
     const f = 'marsh_bell_' + n;
     if (ev.flag(f)) { await ev.say(null, '鐘が、まだ低く震えている。'); return; }
     await ev.say(null, '沈んだ鐘楼の頭。青銅の鐘が、\n泥の上に口を開けている。');
-    if (!ev.has('k_bell_key')) { await ev.say(null, '鐘の舌が、錆びた錠で\n留められている。……鍵が要る。'); return; }
+    if (!ev.has('k_bell_key')) { await ev.say(null, '鐘の舌が、さびた錠で\n留められている。……鍵が要る。'); return; }
     await ev.say(null, ['鐘の鍵で錠を外し、\n鐘の歌を口ずさみながら、\n綱を引いた。', X().SONG]);
     ev.sfx('bell');
     try { R.Field.shake(3, 600); } catch (e) { /* */ }
@@ -126,7 +126,7 @@
     if (rung === 1) ev.lead('l_marsh_bog');
   }, { meta: { needs: ['item:k_bell_key'], gives: ['flag:marsh_bell_1', 'flag:marsh_bell_2', 'flag:marsh_bell_3'] } });
   E('bog_stone', async (ev) => {
-    await ev.say(null, ['苔むした石碑。沼の縁の石碑と\n同じ歌が彫られている。', 'こちらは、最後の節まで\n残っていた。', X().SONG]);
+    await ev.say(null, ['こけむした石碑。沼の縁の石碑と\n同じ歌が彫られている。', 'こちらは、最後の節まで\n残っていた。', X().SONG]);
     await X().lore(ev, 'lo_marsh_song');
   }, { meta: { needs: [], gives: ['lore:lo_marsh_song'] } });
 
@@ -136,7 +136,7 @@
     ev.bgm('omen');
     try { R.Field.shake(5, 900); } catch (e) { /* */ }
     await ev.caption('霧が集まり、灰色の婦人の\n形になった。……メルダの姿だ。\n顔だけが、ない。', { ms: 2600 });
-    await ev.say('mistwitch', '……オイデ……コドモタチ……\nワスレラレタ……カネノ……ウタ……。', WITCH);
+    await ev.say('mistwitch', '……オイデ……コドモタチ……\nワスレラレタ……カネノ……ウタ……。', Object.assign({ voice: 'v_mistwitch_marsh_01' }, WITCH));
     ev.sfx('roar');
     const r = await ev.battle('tr_b_mistbeast', { boss: true });
     if (r !== 'win') { ev.mapBgm(); return; }
@@ -144,7 +144,7 @@
     await ev.say(null, '霧食らいはほどけて、\n沼の底へ沈んでいった。');
     ev.bgm('dawn');
     await ev.say(null, 'どこからか、メルダの声がした。');
-    await ev.say('melda', 'ありがとう、語り部さん。\nこれでまた、町の朝に\n鐘が鳴るわ。', MELDA);
+    await ev.say('melda', 'ありがとう、語り部さん。\nこれでまた、町の朝に\n鐘が鳴るわ。', Object.assign({ voice: 'v_melda_marsh_01' }, MELDA));
     await ev.caption('南東の小島で、子どもたちが\n身を寄せ合って眠っていた。', { ms: 2400 });
     try { await ev.appear(['bog_kid_a', 'bog_kid_b'], { ms: 900 }); } catch (e) { /* */ }
     await ev.call('marsh_finale');
@@ -195,7 +195,7 @@
     await ev.call('marsh_reward');
     ev.mapBgm();
   }, { meta: { needs: ['flag:marsh_mistbeast'], gives: ['region:r_marsh', 'flag:marsh_finale_done', 'choice:ch_marsh_write', 'item:k_ink_score', 'flag:marsh_melda_gone'], calls: ['marsh_reward'], warp: { to: 'loch', spawn: 'plaza' } } });
-  // 町長の礼（一度で正しく名指し: 探偵の帽子／間違えた: 詫びの鈴。同じ強さ）
+  // 町長の礼（一度で正しく名指し: 探偵の帽子／間違えた: わびの鈴。同じ強さ）
   E('marsh_reward', async (ev) => {
     if (ev.flag('marsh_reward_given')) return;
     ev.setFlag('marsh_reward_given');
@@ -204,7 +204,7 @@
       await ev.say(null, ['町長のオスヴァルトが、\n古い帽子を差し出した。', '「集会で、まっすぐ霧を\n指さした者に。……この町の、\n昔の探偵の帽子だ」'], { face: false });
       ev.item('u_sleuth_hat', 1);
     } else {
-      await ev.say(null, ['町長のオスヴァルトは、\n捕まえた者の家を一軒ずつ回り、\n頭を下げた。', '「町が罪なき人を責めた。\nそのお詫びの鈴を、\nあなたにも」'], { face: false });
+      await ev.say(null, ['町長のオスヴァルトは、\n捕まえた者の家を一軒ずつ回り、\n頭を下げた。', '「町が罪なき人を責めた。\nそのおわびの鈴を、\nあなたにも」'], { face: false });
       ev.item('u_apology_bell', 1);
     }
     if (ev.choiceOf('ch_marsh_write') === 'pain') await ev.caption('館の前に、町の人が\n花を置きに行く列ができていた。', { ms: 2400 });
@@ -214,7 +214,7 @@
   // 沼の縁の鐘の歌の石碑（証拠 6）
   E('marsh_songstone', async (ev) => {
     await ev.say(null, ['沼の縁の、古い石碑。\n鐘の歌が彫られている。', X().SONG_CUT, '最後の節だけが、\n何かで削り取られていた。']);
-    if (ev.flag('marsh_emma_met')) await X().give(ev, 'stone');
+    if (ev.flag('marsh_emma_met')) await X().evidence(ev, 'stone');
   }, { meta: { needs: ['flag:marsh_emma_met'], gives: ['flag:marsh_ev_stone', 'var:marsh_evidence'] } });
   // 沼の入口の霧の壁（集会の前）
   E('marsh_mistwall', async (ev) => {

@@ -1,132 +1,601 @@
 {
- "date": "2026-09-27T22:00:58.309Z",
+ "date": "2026-09-28T08:05:08.918Z",
  "fixture": "content_p_pharos",
  "walked": [
   {
-   "map": "sandedge_inn",
-   "kind": "exit",
-   "id": "8,11",
+   "map": "world",
+   "kind": "door",
+   "id": "w_lighthouse",
+   "at": "lighthouse_1",
+   "to": "lighthouse_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    106,
+    128
+   ],
+   "ms": 18263
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": "well",
+   "to": "well",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    77,
+    83
+   ],
+   "ms": 15657
+  },
+  {
+   "map": "world",
+   "kind": "door",
+   "id": "w_hut",
+   "at": "hut",
+   "to": "hut",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    68,
+    65
+   ],
+   "ms": 18157
+  },
+  {
+   "map": "world",
+   "kind": "door",
+   "id": "w_sandedge",
    "at": "sandedge",
    "to": "sandedge",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    8,
-    7
+    36,
+    130
    ],
-   "ms": 4880
+   "ms": 23662
   },
   {
-   "map": "sandedge",
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": "snow_woods",
+   "to": "snow_woods",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    64,
+    41
+   ],
+   "ms": 23964
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": "peak_1",
+   "to": "peak_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    60,
+    15
+   ],
+   "ms": 27842
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": "icicle_1",
+   "to": "icicle_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    22,
+    31
+   ],
+   "ms": 13434
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": "aurora",
+   "to": "aurora",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    22,
+    10
+   ],
+   "ms": 12930
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": "frost_ship_1",
+   "to": "frost_ship_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    41,
+    10
+   ],
+   "ms": 12878
+  },
+  {
+   "map": "world",
    "kind": "exit",
-   "id": "18,29",
-   "at": "world",
-   "to": "world",
+   "id": "82,91",
+   "at": "roa",
+   "to": "roa",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    17,
-    26
+    82,
+    87
    ],
-   "ms": 6919
+   "ms": 8348
   },
   {
-   "map": "sandedge",
+   "map": "world",
    "kind": "door",
-   "id": "sandedge_b_inn",
-   "at": "sandedge_inn",
-   "to": "sandedge_inn",
+   "id": "w_manor",
+   "at": "marsh_manor_1",
+   "to": "marsh_manor_1",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    20,
-    14
+    200,
+    72
    ],
-   "ms": 7132
+   "ms": 10182
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "100,108",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    100,
+    104
+   ],
+   "ms": 7539
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "26,59",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    26,
+    63
+   ],
+   "ms": 15324
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "38,72",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    42,
+    68
+   ],
+   "ms": 16927
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "46,138",
+   "at": "kasim",
+   "to": "kasim",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    45,
+    135
+   ],
+   "ms": 20604
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "37,152",
+   "at": "desert_camp1",
+   "to": "desert_camp1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    37,
+    156
+   ],
+   "ms": 10410
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "58,138",
+   "at": "kasim",
+   "to": "kasim",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    55,
+    137
+   ],
+   "ms": 17588
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "27,158",
+   "at": "desert_camp2",
+   "to": "desert_camp2",
+   "ok": true,
+   "steps": 2,
+   "why": null,
+   "start": [
+    26,
+    161
+   ],
+   "ms": 8295
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "16,141",
+   "at": "desert_camp3",
+   "to": "desert_camp3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    16,
+    145
+   ],
+   "ms": 12222
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "27,150",
+   "at": "desert_oldcamp",
+   "to": "desert_oldcamp",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    27,
+    154
+   ],
+   "ms": 12445
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "28,141",
+   "at": "desert_hawks_1",
+   "to": "desert_hawks_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    27,
+    144
+   ],
+   "ms": 8533
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "13,151",
+   "at": "desert_wellroom",
+   "to": "desert_wellroom",
+   "ok": true,
+   "steps": 5,
+   "why": null,
+   "start": [
+    14,
+    148
+   ],
+   "ms": 20804
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "57,125",
+   "at": "desert_rocks",
+   "to": "desert_rocks",
+   "ok": true,
+   "steps": 5,
+   "why": null,
+   "start": [
+    57,
+    129
+   ],
+   "ms": 24149
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "44,27",
+   "at": "yule",
+   "to": "yule",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    43,
+    24
+   ],
+   "ms": 23837
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "54,27",
+   "at": "yule",
+   "to": "yule",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    56,
+    25
+   ],
+   "ms": 21384
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "84,32",
+   "at": "pass_inn",
+   "to": "pass_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    84,
+    36
+   ],
+   "ms": 7998
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "49,21",
+   "at": "yule",
+   "to": "yule",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    49,
+    17
+   ],
+   "ms": 16304
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "177,73",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    179,
+    71
+   ],
+   "ms": 11806
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "189,73",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    187,
+    71
+   ],
+   "ms": 11458
   }
  ],
  "looks": [
   {
-   "map": "sandedge",
-   "npc": "lotta",
-   "look": "npc_lotta",
-   "art": "npc_lotta",
+   "map": "world",
+   "npc": "bridge_guard",
+   "look": "npc_guard_2",
+   "art": "npc_pen_guard_2",
    "ok": true
   },
   {
-   "map": "sandedge",
-   "npc": "stall",
-   "look": "npc_desert_man",
-   "art": "npc_desert_man",
+   "map": "world",
+   "npc": "guard_east",
+   "look": "npc_guard_1",
+   "art": "npc_pen_guard_1",
    "ok": true
   },
   {
-   "map": "sandedge",
-   "npc": "stable",
-   "look": "npc_desert_child",
-   "art": "npc_desert_child",
+   "map": "world",
+   "npc": "guard_north",
+   "look": "npc_guard_1",
+   "art": "npc_pen_guard_1",
    "ok": true
   },
   {
-   "map": "sandedge",
-   "npc": "camel_a",
+   "map": "world",
+   "npc": "guard_south",
+   "look": "npc_guard_1",
+   "art": "npc_pen_guard_1",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "traveler_plains",
+   "look": "npc_merchant_2",
+   "art": "npc_pen_keeper_2",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "woodcutter_road",
+   "look": "npc_woodcutter_1",
+   "art": "npc_woodcutter",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "shepherd",
+   "look": "npc_old_m_2",
+   "art": "npc_pen_old_m_2",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "lost_camel",
    "look": "ani_camel",
    "art": "ani_camel",
    "ok": true
   },
   {
-   "map": "sandedge",
-   "npc": "camel_b",
+   "map": "world",
+   "npc": "pilgrim",
+   "look": "npc_desert_old_f",
+   "art": "npc_desert_old_f",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "oil_caravan",
+   "look": "npc_oil_carrier",
+   "art": "npc_oil_carrier",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "oil_camel",
    "look": "ani_camel",
    "art": "ani_camel",
    "ok": true
   },
   {
-   "map": "sandedge",
-   "npc": "forest_trav",
+   "map": "world",
+   "npc": "guard_ash",
+   "look": "npc_guard_1",
+   "art": "npc_pen_guard_1",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "snow_trapper",
+   "look": "npc_snow_man",
+   "art": "npc_snow_man",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "snow_pilgrim",
+   "look": "npc_snow_old_m",
+   "art": "npc_snow_old_m",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "snow_scout",
+   "look": "npc_snow_watch",
+   "art": "npc_snow_watch",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "guard_snow_east",
+   "look": "npc_guard_1",
+   "art": "npc_pen_guard_1",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "marsh_traveler",
    "look": "npc_traveler",
    "art": "npc_traveler",
    "ok": true
   },
   {
-   "map": "sandedge",
-   "npc": "ash_trav",
-   "look": "npc_ash_fighter",
-   "art": "npc_ash_fighter",
-   "ok": true
-  },
-  {
-   "map": "sandedge",
-   "npc": "well_girl",
-   "look": "npc_desert_child",
-   "art": "npc_desert_child",
-   "ok": true
-  },
-  {
-   "map": "sandedge_inn",
-   "npc": "keeper",
-   "look": "npc_desert_old_m",
-   "art": "npc_desert_old_m",
-   "ok": true
-  },
-  {
-   "map": "sandedge_inn",
-   "npc": "drinker",
-   "look": "npc_caravan",
-   "art": "npc_caravan",
-   "ok": true
-  },
-  {
-   "map": "sandedge_inn",
-   "npc": "bard",
-   "look": "npc_bard",
-   "art": "npc_bard",
+   "map": "world",
+   "npc": "guard_marsh",
+   "look": "npc_guard_1",
+   "art": "npc_pen_guard_1",
    "ok": true
   }
  ],
- "skipped": [],
+ "skipped": [
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "to": "desert_temple_1",
+   "cond": {
+    "any": [
+     "cleared_r_desert",
+     {
+      "var": "desert_nights",
+      "gte": 3
+     }
+    ]
+   }
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "to": "marsh_bog",
+   "cond": "marsh_assembly_done"
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "40,142",
+   "to": "desert_mirage",
+   "cond": "desert_night"
+  }
+ ],
  "errors": []
 }

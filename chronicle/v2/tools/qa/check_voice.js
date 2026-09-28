@@ -64,6 +64,18 @@ for (const id of SLICE) {
   const file = ['ogg', 'mp3', 'm4a'].map((e) => path.join(CHRON, 'assets', 'voice', id + '.' + e)).find((p) => fs.existsSync(p));
   ok(`${id}: 音のファイルがある`, !!file);
 }
+// 2026-09-28: 地方のボイス（再開）。script.csv の録音済みの行（ハザル・巨人・ネーヴェ・メルダ・霧食らい・雪原と湿原のフィーネ）を
+// 砂漠・雪原・湿原のイベントでそのまま使う。縦切りの 22 本と同じく、1 回ずつ・文面が script.csv と同じ・音のファイルがある
+const REGION = ['v_hazal_tomb_01', 'v_hazal_tomb_02', 'v_hazal_tomb_03', 'v_hazal_tomb_04', 'v_giant_peak_01', 'v_neve_peak_01', 'v_neve_peak_02', 'v_neve_peak_03',
+  'v_fine_snow_01', 'v_melda_manor_01', 'v_melda_manor_02', 'v_melda_manor_03', 'v_melda_manor_04', 'v_melda_manor_05', 'v_mistwitch_marsh_01', 'v_melda_marsh_01', 'v_fine_marsh_01'];
+section('地方のボイス（script.csv の録音済みの行）');
+for (const id of REGION) {
+  const u = used[id] || [];
+  ok(`${id}: イベントで 1 回`, u.length === 1, u.map((x) => x.file));
+  if (u[0] && u[0].text != null) ok(`${id}: 文面が script.csv と同じ`, u[0].text === script[id], [u[0].text, script[id]]);
+  else if (u[0]) ok(`${id}: 文面が読める形で書かれている（ev.say の 2 つ目の文字列）`, false, u[0].file);
+  ok(`${id}: 音のファイルがある`, fs.existsSync(path.join(CHRON, 'assets', 'voice', id + '.ogg')));
+}
 // 2026-09-27: 町の人と物語のボイス（design/voice_story_map.json。文面は node chronicle/tools/story_voice.js --check が見る）
 section('物語のボイスとあいさつ（voice_story_map.json）');
 const SMAP = JSON.parse(fs.readFileSync(path.join(V2, 'design', 'voice_story_map.json'), 'utf8')).lines;
@@ -83,7 +95,7 @@ for (const id of BARK) {
   ok(`${id}: 音のファイルがある`, fs.existsSync(path.join(CHRON, 'assets', 'voice', id + '.ogg')));
 }
 ok('まだ決まっていない optional のボイス（冒頭のキャプション）は鳴らさない', OPTIONAL.every((id) => !used[id]), OPTIONAL.filter((id) => used[id]));
-const extra = Object.keys(used).filter((id) => !SLICE.includes(id) && !STORY.includes(id));
+const extra = Object.keys(used).filter((id) => !SLICE.includes(id) && !REGION.includes(id) && !STORY.includes(id));
 ok('縦切りの外のボイスを使っていない', extra.length === 0, extra);
 const dist = path.join(V2, 'dist', 'voice');
 if (fs.existsSync(dist)) {

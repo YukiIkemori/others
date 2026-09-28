@@ -1,0 +1,17 @@
+{
+ "id": "pass_inn_in",
+ "kind": "under",
+ "map": "pass_inn_in",
+ "tile": 32,
+ "size32": [
+  576,
+  384
+ ],
+ "windows32": [],
+ "painted": [],
+ "files": {
+  "24": "pass_inn_in@24.png",
+  "32": "pass_inn_in@32.png",
+  "40": "pass_inn_in@40.png"
+ }
+}

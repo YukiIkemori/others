@@ -129,7 +129,7 @@
     run: async (ev) => {
       const E = X();
       if (!ev.flag('prologue_otto_reward')) {
-        await E.say(ev, 'otto', 'おお、{hero}！\n灯台に火が戻ったぞ！\n守り歌も、思い出せた。', { face: 'otto:smile' });
+        await E.say(ev, 'otto', 'おお、{hero}！\n灯台に火が戻ったぞ！\n守り歌も、思い出せた。', { voice: 'v_otto_reward_05', face: 'otto:smile' });   // 声は名前を読まない
         await ev.say('otto', '♪　海の果てまで、灯よ届け\n帰る舟に、道を照らせ……。', { voice: 'v_otto_reward_01', face: 'otto:smile' });
         await ev.say('otto', 'これは、わしが若いころから\n使ってきたランタンじゃ。\n持っていっておくれ。', { voice: 'v_otto_reward_02', face: 'otto:neutral' });
         await E.give(ev, 'ac_keeper_lantern', 1, { say: true });

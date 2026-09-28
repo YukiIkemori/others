@@ -41,10 +41,10 @@
     }
     if (!ev.flag('desert_nadia_met')) {
       ev.setFlag('desert_nadia_met');
-      await ev.say('nadia', ['わたしはナディア。踊り子よ。\n毎晩、広場で王さまの歌を\n歌って踊るの。聞いて。']);
+      await ev.say('nadia', ['わたしはナディア。踊り子よ。\n毎晩、広場で王さまの歌を\n歌って踊るの。聞いて。'], { voice: 'v_nadia_desert_01' });
       ev.sfx('bell');
-      await ev.caption(X().SONG_BLANK, { ms: 4200 });
-      await ev.say('nadia', ['……名前の所だけ、\nどうしても歌えないの。\n母さんも、おばあちゃんも。', '王さまの名前、王墓の石に\n刻まれてたって聞いたわ。\n誰も、読みに行けないけど。']);
+      await ev.caption(X().SONG_BLANK, { ms: 4200, voice: X().SONG_VOICE.blank });
+      await ev.say('nadia', ['……名前の所だけ、\nどうしても歌えないの。\n母さんも、おばあちゃんも。', '王さまの名前、王墓の石に\n刻まれてたって聞いたわ。\n誰も、読みに行けないけど。'], { voice: ['v_nadia_desert_02', 'v_nadia_desert_03'] });
       ev.lead('l_desert_song');
     }
     if (ev.flag('desert_anklet_done')) { await ev.say('nadia', '足鈴、ありがとう！\n踊るたびに、しゃらりって\n鳴るの。聞こえる？'); return; }

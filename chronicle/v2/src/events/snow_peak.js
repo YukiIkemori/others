@@ -43,7 +43,7 @@
     if (ev.flag('snow_giant')) return;
     ev.bgm('omen');
     await ev.say(null, 'ズシン……ズシン……。\n氷の壁そのものが、立ち上がった。');
-    await ev.say('icegiant', '……ここより上へは、\n誰も通さぬ……。', GIANT);
+    await ev.say('icegiant', '……ここより上へは、\n誰も通さぬ……。', Object.assign({ voice: 'v_giant_peak_01' }, GIANT));
     ev.sfx('roar');
     const r = await ev.battle('tr_b_icegiant', { boss: true });
     ev.mapBgm();
@@ -71,7 +71,7 @@
     ev.bgm('omen');
     try { R.Field.shake(6, 900); } catch (e) { /* */ }
     await ev.caption('吹雪を裂いて、白い竜が\n祭壇に舞い降りた。', { ms: 2400 });
-    await ev.say('neve', '……去れ……人の子よ……。\nこの峰に、もはや\n語るべき物語はない……！', NEVE);
+    await ev.say('neve', '……去れ……人の子よ……。\nこの峰に、もはや\n語るべき物語はない……！', Object.assign({ voice: 'v_neve_peak_01' }, NEVE));
     const canTalk = ev.flag('snow_logs_done') && ev.flag('snow_ice_done') && ev.flag('snow_tales_done') && ev.choiceOf('ch_snow_tale') === 'dragon';
     let how = 'fight';
     if (canTalk) {
@@ -93,8 +93,8 @@
     }
     ev.choice('ch_snow_neve', how);
     ev.bgm('dawn');
-    await ev.say('neve', '……あたたかい。人の子らは、\nわたしを忘れてはいなかったのか。', NEVE);
-    await ev.say('neve', '吹雪は、わたしが鎮めよう。\n語り部よ、礼を言う。', NEVE);
+    await ev.say('neve', '……あたたかい。人の子らは、\nわたしを忘れてはいなかったのか。', Object.assign({ voice: 'v_neve_peak_02' }, NEVE));
+    await ev.say('neve', '吹雪は、わたしが鎮めよう。\n語り部よ、礼を言う。', Object.assign({ voice: 'v_neve_peak_03' }, NEVE));
     ev.setFlag('snow_neve');
     await ev.call('snow_finale');
   }, {
@@ -111,7 +111,7 @@
     const x = X();
     // 竜の品（戦う: 竜の牙の剣／語る: 竜のうろこのお守り。同じ強さの別の品）
     if (ev.choiceOf('ch_snow_neve') === 'talk') {
-      await ev.say('neve', '……これを持っていくがよい。\nわたしの、うろこの一枚だ。', NEVE);
+      await ev.say('neve', '……これを持っていくがよい。\nわたしの、うろこの一枚だ。', Object.assign({ voice: 'v_neve_peak_04' }, NEVE));
       ev.item('u_dragon_scale', 1);
     } else {
       await ev.say(null, '戦いで折れた竜の牙が、\n雪の上に落ちていた。');
@@ -132,7 +132,7 @@
     await ev.fade('out', 800);
     await ev.warp('yule', 'hearth');
     await ev.caption('ユール。\n吹雪のやんだ広場に、\n村じゅうの人が空を見上げていた。', { ms: 2600 });
-    await ev.say('sonja', ['{hero}！　おかえりなさい。', '夜数えの板に、今夜の刻みを\n入れようとしたの。\n……でも、手が止まっちゃった。', '……今夜は、いつもより\n空が明るい。']);
+    await ev.say('sonja', ['{hero}！　おかえりなさい。', '夜数えの板に、今夜の刻みを\n入れようとしたの。\n……でも、手が止まっちゃった。', '……今夜は、いつもより\n空が明るい。'], { voice: ['v_sonja_snow_05', 'v_sonja_snow_06', 'v_sonja_snow_07'] });   // 1 つ目は名前を読まない
     ev.setFlag('snow_board_stop');
     await ev.say('old_m', ['冬至に火を峰へ運ぶから、\nいつか太陽が戻ってくる。', '……わしのじいさまは、\nそう言っておったよ。'], { name: '村の年寄り' });
     // 年代記に書く選択（ch_snow_write。痛みの側は pain_count を足す）

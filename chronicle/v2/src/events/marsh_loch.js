@@ -29,7 +29,7 @@
     }
     if (night(ev) && !ev.flag('marsh_night_seen')) {
       ev.setFlag('marsh_night_seen');
-      await ev.caption('消灯の刻。湖の灯が落ち、\n南の筏に、夜市の灯りがともった。', { ms: 2200 });
+      await ev.caption('消灯の刻。湖の灯が落ち、\n南のいかだに、夜市の灯りがともった。', { ms: 2200 });
     }
   }, { meta: { needs: [], gives: ['flag:marsh_arrived', 'lead:l_marsh_mist', 'lead:l_marsh_emma'] } });
 
@@ -50,7 +50,7 @@
     const id = (ctx && ctx.npc) || 'emma_inn';
     if (cleared(ev)) {
       const said = ev.flag('marsh_yena_torn');
-      await ev.say(id, said ? ['ヨハンが帰ってきたの。\n泥だらけで、ぐっすり眠ってた。', 'あの紙を破ってよかった。\n……忘れていたら、今夜の\nこの嬉しさもなかったもの。'] : ['ヨハンが帰ってきたの。\n泥だらけで、ぐっすり眠ってた。', '……あの人たちの紙、\nまだ引き出しにあるの。\n今夜、燃やすわ。']);
+      await ev.say(id, said ? ['ヨハンが帰ってきたの。\n泥だらけで、ぐっすり眠ってた。', 'あの紙を破ってよかった。\n……忘れていたら、今夜の\nこのうれしさもなかったもの。'] : ['ヨハンが帰ってきたの。\n泥だらけで、ぐっすり眠ってた。', '……あの人たちの紙、\nまだ引き出しにあるの。\n今夜、燃やすわ。']);
       return;
     }
     if (!ev.flag('marsh_emma_met')) {
@@ -70,12 +70,12 @@
   E('loch_emma_drawing', async (ev) => {
     await ev.say(null, ['食卓に、子どもの絵がある。\n霧の中の女の人と、\n手をつないだ男の子。', '女の人の顔は、灰色の\nぐるぐるで塗りつぶされている。']);
     if (!ev.flag('marsh_emma_met')) return;
-    await X().give(ev, 'drawing');
+    await X().evidence(ev, 'drawing');
   }, { meta: { needs: ['flag:marsh_emma_met'], gives: ['flag:marsh_ev_drawing', 'var:marsh_evidence'] } });
   E('loch_lina', async (ev) => {
     if (cleared(ev)) { await ev.say('lina', ['おにいちゃん、かえってきたよ！', 'ねえ、朝の鐘って、\nどうして朝じゃないのに\n鳴るの？']); return; }
     await ev.say('lina', ['あのね、おばあさんが\n歌ってくれたの。窓の外で。', 'でもね、口が\nうごいてなかったの。', 'おにいちゃんは、おばあさんと\n手をつないで、いっちゃった。']);
-    if (ev.flag('marsh_emma_met')) await X().give(ev, 'drawing');
+    if (ev.flag('marsh_emma_met')) await X().evidence(ev, 'drawing');
   }, { meta: { needs: ['flag:marsh_emma_met'], gives: ['flag:marsh_ev_drawing', 'var:marsh_evidence'] } });
 
   // 静夜会のイェナ（任意。エマの家の前。同席するとエマが奉納の紙を破る）
@@ -110,8 +110,8 @@
 
   // ---------------------------------------------------------------- 夜: 運河の岸の光る足あと（証拠 1）
   E('loch_footprints', async (ev) => {
-    await ev.say(null, ['運河の岸の泥に、小さな足あとが\n青白く光っている。光る苔を\n踏んだ跡だ。', '足あとは、東の館の方ではなく、\n南の……沼の方へ続いている。']);
-    if (ev.flag('marsh_emma_met')) await X().give(ev, 'foot');
+    await ev.say(null, ['運河の岸の泥に、小さな足あとが\n青白く光っている。光るこけを\n踏んだ跡だ。', '足あとは、東の館の方ではなく、\n南の……沼の方へ続いている。']);
+    if (ev.flag('marsh_emma_met')) await X().evidence(ev, 'foot');
   }, { meta: { needs: ['flag:marsh_emma_met', 'flag:marsh_night'], gives: ['flag:marsh_ev_foot', 'var:marsh_evidence'] } });
 
   // 夜の運河の橋: 灰色のマントの少女（v_fine_marsh_01 の文のまま。声はあとで）
@@ -121,7 +121,7 @@
     R.Audio && R.Audio.pushBgm && R.Audio.pushBgm('fine_theme');
     try {
       await ev.say(null, '夜の橋の上で、灰色のマントの\n少女とすれ違った。');
-      await ev.say('fine', '霧は形を持たないから、\n誰の姿にでもなれるの。', FINE);
+      await ev.say('fine', '霧は形を持たないから、\n誰の姿にでもなれるの。', Object.assign({ voice: 'v_fine_marsh_01' }, FINE));
       ev.sfx('magic');
       try { await ev.leave('fine', { path: [[27, 27], [27, 29]], ms: 900 }); } catch (e) { /* */ }
       await ev.caption('振り返ると、少女の姿は\n運河の霧に溶けていた。', { ms: 2000 });
@@ -148,12 +148,12 @@
     }
   }, { meta: { needs: [], gives: ['flag:marsh_tobias_met', 'item:k_blank_score', 'lore:lo_ev_marsh', 'lore:lo_war_marsh', 'lead:l_main_recorder_marsh'], calls: ['loch_tobias_reward'] } });
   E('loch_tower_book', async (ev) => {
-    await ev.say(null, ['鐘楼の記録帳だ。鐘をついた晩が、\n几帳面な字で並んでいる。', '「光暦二九二年 冬　朝の鐘を\n『日の出』より『灯りの刻の始め』へ改む。\n理由の欄――」', '理由の欄だけが、白い。']);
+    await ev.say(null, ['鐘楼の記録帳だ。鐘をついた晩が、\nきちょうめんな字で並んでいる。', '「光暦二九二年、冬。朝の鐘を\n『日の出』より『灯りの刻の始め』へ改む。\n理由の欄――」', '理由の欄だけが、白い。']);
     await X().lore(ev, 'lo_time_marsh');
-    await ev.say(null, ['最後の頁。去年の秋から、\n鐘をついた印が途絶えている。', 'その次の頁から、\n「霧の晩、子ども消ゆ」の書き込みが\n三つ、続いていた。']);
-    if (ev.flag('marsh_emma_met')) await X().give(ev, 'book');
+    await ev.say(null, ['最後のページ。去年の秋から、\n鐘をついた印が途絶えている。', 'その次のページから、\n「霧の晩、子ども消ゆ」の書き込みが\n三つ、続いていた。']);
+    if (ev.flag('marsh_emma_met')) await X().evidence(ev, 'book');
   }, { meta: { needs: ['flag:marsh_emma_met'], gives: ['lore:lo_time_marsh', 'flag:marsh_ev_book', 'var:marsh_evidence'] } });
-  E('loch_tower_ladder', async (ev) => { await ev.say(null, '鐘の吊られた上の段へ続く、\n古いはしご。段が何枚か抜けている。'); });
+  E('loch_tower_ladder', async (ev) => { await ev.say(null, '鐘のつられた上の段へ続く、\n古いはしご。段が何枚か抜けている。'); });
   E('loch_tower_bell', async (ev) => {
     await ev.say(null, cleared(ev) ? '鐘の縁に、新しい灯がともっている。\n朝の鐘の、低く澄んだ音の名残。' : ['試しに、鐘の綱を引いてみた。', '……鐘は、動くのに鳴らない。\n音が、霧に吸われていくようだ。']);
   });
@@ -172,10 +172,10 @@
   });
   E('loch_beppo_dolls', async (ev) => {
     await ev.say(null, ['棚に、子どもの人形が並んでいる。\nそのうちの三体が、\nどれも、消えた子の顔によく似ている。', '人形の足の裏に、\n沼の泥がこびりついていた。']);
-    if (ev.flag('marsh_emma_met')) await X().give(ev, 'doll');
+    if (ev.flag('marsh_emma_met')) await X().evidence(ev, 'doll');
   }, { meta: { needs: ['flag:marsh_emma_met'], gives: ['flag:marsh_ev_doll', 'var:marsh_evidence'] } });
   E('loch_beppo_order', async (ev) => {
-    await ev.say(null, ['注文の帳面だ。\n「子の人形 三体。代金は前払い。\n霧色のマントの婦人より」', '代金の欄には、\n湿った銀貨の絵が描いてある。\n……銀貨が、泥に変わっていたらしい。']);
+    await ev.say(null, ['注文の帳面だ。\n「子の人形、三体。代金は前払い。\n霧色のマントの婦人より」', '代金の欄には、\n湿った銀貨の絵が描いてある。\n……銀貨が、泥に変わっていたらしい。']);
   });
 
   // ---------------------------------------------------------------- 記録院ロッホ出張所（クラウス。写したことを覚えていない）
@@ -212,7 +212,7 @@
     ev.lead('l_marsh_manor');
   }, { meta: { needs: [], gives: ['lead:l_marsh_manor'] } });
   E('loch_fisher', async (ev) => {
-    await ev.say('fisher', cleared(ev) ? ['沼の霧が晴れたら、\n魚が戻ってきた。', '鐘が鳴ると、魚も起きるのかね。'] : ['霧は、いつも南の沼の方から\n来るんだ。東の館の方からじゃない。', '……魚は、嘘をつかんよ。\n霧の来る晩は、みんな\n南を向いて固まっとる。']);
+    await ev.say('fisher', cleared(ev) ? ['沼の霧が晴れたら、\n魚が戻ってきた。', '鐘が鳴ると、魚も起きるのかね。'] : ['霧は、いつも南の沼の方から\n来るんだ。東の館の方からじゃない。', '……魚は、うそをつかんよ。\n霧の来る晩は、みんな\n南を向いて固まっとる。']);
   });
   E('loch_laundress', async (ev) => {
     await ev.say('laundress', cleared(ev) ? '洗濯物が、よく乾くわ。\n霧って、こんなに\n重たかったのね。' : ['朝の鐘が鳴らなくなって、\n町の時が狂っちゃったわ。', '「灯りの刻の始め」に鳴る鐘を、\nどうして朝の鐘って呼ぶのか、\n誰も知らないのにね。']);
@@ -221,12 +221,12 @@
     await ev.say('boy_south', cleared(ev) ? 'おじいちゃんが、館に\n花を持っていくんだって。' : ['おじいちゃんは町長なんだ。\n集会を開くのは、おじいちゃん。', '証拠がないと、\n誰も話を聞かないって。']);
   });
   E('loch_ferryman', async (ev) => {
-    await ev.say('ferryman', ['渡し守のグンターだ。\n運河の向こうへ渡すよ。\n舟着きで、竿の舟に声をかけな。']);
+    await ev.say('ferryman', ['渡し守のグンターだ。\n運河の向こうへ渡すよ。\n舟着きで、さおの舟に声をかけな。']);
   });
   E('loch_ferry', async (ev, ctx) => {
     const o = ctx && R.DB.maps.loch && (R.DB.maps.loch.objects || []).find((q) => q.type === 'examine' && q.event === 'loch_ferry' && q.x === ctx.x && q.y === ctx.y);
     const side = (o && o.side) || 'n';
-    const i = await ev.choose(['渡る', 'やめる'], { text: '竿の舟で、運河を渡る？' });
+    const i = await ev.choose(['渡る', 'やめる'], { text: 'さおの舟で、運河を渡る？' });
     if (i !== 0) return;
     await ev.fade('out', 400);
     await ev.warp('loch', side === 'n' ? 'ferry_s' : 'ferry_n');
@@ -234,7 +234,7 @@
   E('loch_board', async (ev) => {
     const lines = [];
     lines.push(cleared(ev) ? '「祝・鐘の音、戻る。\n今宵、七つの鐘楼に灯をともす。\n――町長オスヴァルト」' : '「霧の晩の外出、控えられたし。\n子を持つ家は、窓に鈴を下げよ。\n――町長」');
-    lines.push(ev.flag('marsh_cat_done') ? '「猫のミーナ、戻る。礼」' : '「夜市の猫、ミーナ。\n見かけた方は夜市の筏まで」');
+    lines.push(ev.flag('marsh_cat_done') ? '「猫のミーナ、戻る。礼」' : '「夜市の猫、ミーナ。\n見かけた方は夜市のいかだまで」');
     if (X().tier() >= 2) lines.push('「北の山あいの街道、\n落石に注意」');
     await ev.say(null, lines);
   });
@@ -254,7 +254,7 @@
     ev.lead('l_opt_lotus');
   }, { meta: { needs: [], gives: ['lead:l_opt_lotus'] } });
   E('loch_tav_sailor', async (ev) => {
-    await ev.say('tav_sailor', ['沼の霧食らいを知ってるか。\n霧の手で眠らせ、魔女のまねで\n呪いを吐くって話だ。', '霧を吸いこむ前に、\nしっかり叩くことだな。\n吸われたら、傷がふさがっちまう。']);
+    await ev.say('tav_sailor', ['沼の霧食らいを知ってるか。\n霧の手で眠らせ、魔女のまねで\n呪いを吐くって話だ。', '霧を吸いこむ前に、\nしっかりたたくことだな。\n吸われたら、傷がふさがっちまう。']);
   });
   E('loch_tav_match', async (ev) => {
     await ev.say('tav_match', cleared(ev) ? '霧が晴れたら、北の山あいの\n街道から、旅の人が\n増えたのよ。' : ['霧の晩は、店を早じまいよ。', 'ベッポの店、夜中に\n灯りがついてたって。\n……まさか、ね。']);
@@ -267,7 +267,7 @@
     await ev.say('hall_clerk', ev.flag('marsh_assembly_done') ? '集会の書き付けは、わたしが\n残しておきますよ。……町の顔も、\n全部ね。' : n >= 4 ? '証拠が四つ。集会を開くには、\n十分ですよ。演台の町長に。' : `集会には、証拠が四つ要ります。\n今は、${n} つ。`);
   });
   E('loch_hall_board', async (ev) => { await ev.say(null, ['集会の決まりが貼ってある。', '「名指しは、証拠を示して行うべし。\n証拠なき名指しは、名指しにあらず」']); });
-  E('loch_mayor_shelf', async (ev) => { await ev.say(null, ['町の古い記録が並んでいる。\n「日輪同盟へ、鐘をひとつ差し出す」\nとだけ書かれた頁がある。']); });
+  E('loch_mayor_shelf', async (ev) => { await ev.say(null, ['町の古い記録が並んでいる。\n「日輪同盟へ、鐘をひとつ差し出す」\nとだけ書かれたページがある。']); });
   E('loch_mayor_wife', async (ev) => {
     if (!ev.flag('marsh_mayor_wife_gift')) {
       ev.setFlag('marsh_mayor_wife_gift');
@@ -297,7 +297,7 @@
     await ev.fade('out', 500);
     await ev.caption('集会所に、町の人が集まった。\n松明の匂いが、まだ残っている。', { ms: 2400 });
     await ev.fade('in', 400);
-    await ev.say('mayor', ['では、名指しを聞こう。\n子どもたちを、誰がさらった？']);
+    await ev.say('mayor', ['では、名指しを聞こう。\n子どもたちを、誰がさらった？'], { voice: 'v_mayor_marsh_01' });
     for (;;) {
       const i = await ev.choose(x.SUSPECTS.map((s) => s.name), { text: '誰を名指しする？' });
       const who = x.SUSPECTS[i].id;
@@ -310,7 +310,7 @@
       break;
     }
     // 霧そのもの: 証拠を 3 つ示す
-    await ev.say('mayor', ['霧……だと？\n霧が、子どもをさらうというのか。', '証拠を示しなさい。']);
+    await ev.say('mayor', ['霧……だと？\n霧が、子どもをさらうというのか。', '証拠を示しなさい。'], { voice: ['v_mayor_marsh_02', 'v_mayor_marsh_03'] });
     let good = 0;
     const shown = new Set();
     while (good < 3) {
@@ -345,7 +345,7 @@
   E('loch_assembly_right', async (ev) => {
     if (ev.flag('marsh_assembly_done')) return;
     const wrong = ev.var('marsh_wrong');
-    await ev.say('mayor', ['霧が、魔女の姿をまねて\n子どもを連れていった……。', '……わしらは、あやうく\n無実の館に火をかけるところだった。']);
+    await ev.say('mayor', ['霧が、魔女の姿をまねて\n子どもを連れていった……。', '……わしらは、あやうく\n無実の館に火をかけるところだった。'], { voice: ['v_mayor_marsh_04', 'v_mayor_marsh_05'] });
     if (wrong) await ev.say('mayor', '捕まえた者は、今すぐ放そう。\nわしが、頭を下げに行く。');
     for (const w of ['beppo', 'tobias', 'melda']) if (ev.flag('marsh_held_' + w)) { ev.setFlag('marsh_held_' + w, false); ev.setFlag('marsh_held_' + w + '_was'); }
     ev.choice('ch_marsh_accuse', wrong ? 'wrong' : 'first');
@@ -379,8 +379,8 @@
     const give = ev.var('marsh_wrong') >= 3 ? missing : missing.slice(0, 1);
     await ev.say('mayor', [`${name}は、見張りの前から\n一歩も出ておらん。……無理だ。`, 'わしらは、間違えたのか。']);
     for (const e of give) {
-      await ev.say(null, { foot: '朝、運河の岸に、光る苔の\n小さな足あとが残っていた。\n沼の方へ。', book: 'トビアスの記録帳が、集会所に\n届けられた。鐘の止まった晩から、\n子どもが消えている。', drawing: 'リナが、描いた絵を\n集会所に持ってきた。', stone: '沼の縁の石碑の写しが、\n集会所に届いた。\n歌の最後の節が、削れている。' }[e.id]);
-      await x.give(ev, e.id);
+      await ev.say(null, { foot: '朝、運河の岸に、光るこけの\n小さな足あとが残っていた。\n沼の方へ。', book: 'トビアスの記録帳が、集会所に\n届けられた。鐘の止まった晩から、\n子どもが消えている。', drawing: 'リナが、描いた絵を\n集会所に持ってきた。', stone: '沼の縁の石碑の写しが、\n集会所に届いた。\n歌の最後の節が、削れている。' }[e.id]);
+      await x.evidence(ev, e.id);
     }
     await ev.say('mayor', 'もう一度、集会を開こう。\n今度こそ、証拠を示してくれ。');
   }, { meta: { needs: [], gives: ['var:marsh_wrong'] } });
@@ -421,8 +421,8 @@
       X().small(ev, [['gold', 200], ['gold', 300], ['gold', 450], ['gold', 600], ['gold', 800]]);
       return;
     }
-    if (ev.has('k_canal_oil')) { await ev.say('lamp_keeper', `運河の灯籠は、あと ${3 - lit} つだ。\n消灯の刻に、杭の灯籠へ\n油をさしてくれ。`); return; }
-    await ev.say('lamp_keeper', ['灯籠守のヨストだ。\n霧のせいで、運河の灯籠が\n三つも消えちまった。', '消灯の刻に、この油で\nともして回ってくれんか。\n運河ぞいの杭の灯籠だ。']);
+    if (ev.has('k_canal_oil')) { await ev.say('lamp_keeper', `運河の灯籠は、あと ${3 - lit} つだ。\n消灯の刻に、くいの灯籠へ\n油をさしてくれ。`); return; }
+    await ev.say('lamp_keeper', ['灯籠守のヨストだ。\n霧のせいで、運河の灯籠が\n三つも消えちまった。', '消灯の刻に、この油で\nともして回ってくれんか。\n運河ぞいのくいの灯籠だ。']);
     ev.item('k_canal_oil', 1);
     ev.setFlag('q_marsh_lanterns_on');
     ev.lead('q_marsh_lanterns');
@@ -431,8 +431,8 @@
     const o = ctx && R.DB.maps.loch && (R.DB.maps.loch.objects || []).find((q) => q.type === 'examine' && q.event === 'loch_canal_lamp' && q.x === ctx.x && q.y === ctx.y);
     const n = (o && o.lamp) || 1;
     if (ev.flag('marsh_canal_lamp_' + n)) { await ev.say(null, '灯籠が、運河の水に\n揺れる光を落としている。'); return; }
-    if (!night(ev)) { await ev.say(null, '杭の上の、消えた灯籠。\n火をともすのは、消灯の刻だ。'); return; }
-    if (!ev.has('k_canal_oil')) { await ev.say(null, '杭の上の、消えた灯籠。\n油が、すっかり乾いている。'); return; }
+    if (!night(ev)) { await ev.say(null, 'くいの上の、消えた灯籠。\n火をともすのは、消灯の刻だ。'); return; }
+    if (!ev.has('k_canal_oil')) { await ev.say(null, 'くいの上の、消えた灯籠。\n油が、すっかり乾いている。'); return; }
     ev.setFlag('marsh_canal_lamp_' + n);
     ev.sfx('fire');
     await ev.say(null, '灯籠に油をさして、火をともした。');

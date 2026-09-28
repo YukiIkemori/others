@@ -36,6 +36,15 @@ module.exports = function marsh(A) {
     for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) if (get(x + dx, y + dy) === 'W') wet = true;
     if (wet && h2(x, y, 607) < 0.25) set(x, y, 'R');
   }
+  // 東の岸は x 205 まで（その先の東の果ての岬は別の地方。縦切りの外から見える端に歩けるマスを出さない）
+  for (let y = Y0; y <= Y1; y++) for (let x = 206; x <= X1; x++) if (get(x, y) !== 'O') set(x, y, '~');
+  // 北の縁（オルビス高原との境）: 岩と葦の尾根。入口の道（x 166〜167）だけ空く
+  for (let x = 146; x <= 205; x++) for (const y of [56, 57]) {
+    if (x >= 166 && x <= 167) continue;
+    const c = get(x, y);
+    if (c === 'O' || c === '~') continue;
+    if (y === 56 || h2(x, y, 613) < 0.5) set(x, y, h2(x, y, 615) < 0.7 ? 'm' : 'c');
+  }
   // ---------------------------------------------------------------- 2. 山あいの街道（仮）: 東の峠 → 山地の北の縁 → 湿原の北の入口
   //   峠の東（x 116〜117）の海を陸にして北へ。峠そのものは縦切りでは崖崩れ（gen_world.js の guard_east）なので、体験版からは出られない
   for (let y = 50; y <= 64; y++) for (let x = 116; x <= 118; x++) if ('~O'.includes(get(x, y))) set(x, y, x === 118 ? 'm' : 'd');
@@ -45,6 +54,25 @@ module.exports = function marsh(A) {
     const [ax, ay] = LINK[i], [bx, by] = LINK[i + 1];
     for (let y = Math.min(ay, by) - 1; y <= Math.max(ay, by) + 2; y++) for (let x = Math.min(ax, bx) - 1; x <= Math.max(ax, bx) + 2; x++) if ('mcT'.includes(get(x, y)) && !(x <= 116 && y >= 60)) set(x, y, 'd');
   }
+  // 街道は山あいの切り通し: 道の両側を岩の壁にして、まだ作っていない山地・高原の原へ出ない（道だけを通る）。
+  //   道の脇の野営の空き地（旅人）だけ 1 か所あける
+  const isRoad = (x, y) => get(x, y) === '.';
+  const camp0 = [[160, 55], [161, 55], [162, 55], [160, 56], [161, 56], [162, 56]];
+  for (const [x, y] of camp0) set(x, y, ',');
+  const keep = new Set(camp0.map(([x, y]) => x + ',' + y));
+  const fence = [];
+  for (let y = 44; y <= 60; y++) for (let x = 112; x <= 170; x++) {
+    if (isRoad(x, y) || keep.has(x + ',' + y)) continue;
+    const c = get(x, y);
+    if ('~Om'.includes(c)) continue;
+    if (y >= 57 && x >= 146) continue;                          // 湿原の側は北の縁の尾根で閉じる
+    let near = false;
+    for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) if (isRoad(x + i, y + j) || keep.has((x + i) + ',' + (y + j))) near = true;
+    if (near) fence.push([x, y]);
+  }
+  for (const [x, y] of fence) set(x, y, h2(x, y, 617) < 0.75 ? 'm' : 'c');
+  // 切り通しのわきの岩に掛けた灯（街道の目印。道の上には置かない）
+  for (const [x, y] of [[116, 58], [116, 53], [123, 50], [131, 53], [139, 50], [147, 48], [155, 48], [157, 52], [164, 52], [165, 55]]) if ('mc'.includes(get(x, y))) P('lantern', x, y);
   // ---------------------------------------------------------------- 3. 湿原の道（泥の道。沼を渡る所は板の道）
   const ROUTES = [];
   const Z2 = (pts, wd) => {
@@ -102,13 +130,12 @@ module.exports = function marsh(A) {
   objects.push({ type: 'examine', x: 192, y: 92, event: 'marsh_lotus' });
   S(189, 89, 'はすの池\n消灯の刻に、青く光る蓮が咲くという。');
   // ---------------------------------------------------------------- 5. 旅人・景色・灯籠
-  npcs.push({ id: 'marsh_traveler', look: 'npc_traveler', name: '湿原の旅人', x: 163, y: 56, dir: 'e', move: 'still', talk: 'marsh_world_traveler', reward: 'news', key: 'world_marsh_traveler' });
-  P('tent', 161, 55); P('lantern', 162, 56); P('log', 160, 56);
-  S(169, 55, 'グレイモア湿原\n南 → 水辺の町ロッホ');
-  S(118, 60, '山あいの街道\n東 → グレイモア湿原');
+  npcs.push({ id: 'marsh_traveler', look: 'npc_traveler', name: '湿原の旅人', x: 161, y: 56, dir: 'n', move: 'still', talk: 'marsh_world_traveler', reward: 'news', key: 'world_marsh_traveler' });
+  P('tent', 162, 56); P('lantern', 160, 55); P('log', 160, 56);
+  S(168, 59, 'グレイモア湿原\n南 → 水辺の町ロッホ');
+  S(116, 61, '山あいの街道\n北 → グレイモア湿原');
   // 道しるべの灯籠（街道にそって。沼の道は鬼火の灯）
-  for (const [x, y] of [[119, 57], [124, 53], [133, 53], [145, 47], [154, 47], [160, 54]]) LAMP('wl_marsh_link_' + x, x, y, true);
-  for (const [x, y] of [[169, 68], [174, 80], [178, 88], [182, 93]]) P('wisp_lamp', x, y);
+  for (const [x, y] of [[169, 68], [174, 80], [178, 88], [182, 93], [176, 104], [196, 104], [199, 90], [188, 108]]) P('wisp_lamp', x, y);   // 湿原の南と東の原の目印（鬼火の灯）
   // 景色の飾り（枯れ木・葦・光るきのこ）。道と出口のまわりには置かない
   const solidAt = (x, y) => objects.some((o) => o.x === x && o.y === y);
   for (let y = Y0 + 2; y <= Y1; y++) for (let x = X0; x <= X1; x++) {
@@ -124,6 +151,7 @@ module.exports = function marsh(A) {
   }
   // ---------------------------------------------------------------- 6. 縦切りの閉じ方（湿原の北の入口。峠の guard_east と二重）
   tilePatches.push({ cond: { slice: true }, rect: [166, 56, 2, 2], rows: ['mm', 'mm'] });
+  set(168, 57, 'G'); set(168, 58, 'G');
   npcs.push({ id: 'guard_marsh', look: 'npc_guard_1', name: '番人', x: 168, y: 57, dir: 'n', move: 'still', pushable: false, cond: { slice: true },
     talk: { lines: [{ text: ['この先の湿原は、霧が深くて\n道が見えないんだ。', 'ロッホへ行くのは、\n霧が晴れるまで待ってくれ。'] }] }, reward: 'news', key: 'world_guard_marsh' });
   // ---------------------------------------------------------------- 7. 出現表（上から最初に合う物。先頭に入れる）と地名

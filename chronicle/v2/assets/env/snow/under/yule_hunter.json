@@ -1,0 +1,17 @@
+{
+ "id": "yule_hunter",
+ "kind": "under",
+ "map": "yule_hunter",
+ "tile": 32,
+ "size32": [
+  384,
+  320
+ ],
+ "windows32": [],
+ "painted": [],
+ "files": {
+  "24": "yule_hunter@24.png",
+  "32": "yule_hunter@32.png",
+  "40": "yule_hunter@40.png"
+ }
+}

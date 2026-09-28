@@ -113,7 +113,7 @@
     await ev.warp('fern', 'plaza');
     ev.bgm('village');
     await ev.caption('その夜、フェルンの広場に\n村じゅうの人が集まった。', { ms: 2400 });
-    await ev.say('npc_rita', 'みんな、聞いて。\n千年樹の歌よ。', { name: 'リタ' });
+    await ev.say('npc_rita', 'みんな、聞いて。\n千年樹の歌よ。', { name: 'リタ', voice: 'v_rita_forest_03' });
     await ev.caption(f.SONG, { ms: 5200 });
     await ev.say(null, ['ピムが一番を歌いまちがえて、\n広場に笑い声が起きた。', 'ピムは真っ赤になって、\nもう一度、大きな声で歌った。']);
     if (ev.choiceOf('ch_forest_pim') === 'take') await ev.say('npc_pim', 'ぼくも行ったんだ！\n千年樹の抜け穴、\nぼくが開けたんだから！', { name: 'ピム' });

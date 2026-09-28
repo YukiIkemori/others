@@ -82,6 +82,7 @@
       objects: [K.prop('bed', 9, 2), K.prop('table', 7, 6), K.prop('chair', 6, 6), K.prop('chair', 8, 6), K.prop('stove', 1, 2), K.prop('bookshelf', 3, 2),   // 戸口の列（x 5）は空ける
         K.exam(3, 3, 'yule_jorn_ledger'), K.prop('firewood', 10, 7), K.prop('lantern', 7, 3)],
       npcs: [K.npc('jorn_wife', 'npc_snow_woman', 6, 4, { name: 'ヨルンのおかみさん', dir: 's', talk: 'yule_jorn_wife', reward: 'item' })],
+      art: { image: 'snow/under/yule_jorn', painted: [] },   // 石の塔の家（描いた下絵）
     });
     // 火守りの家は氷のドーム（外の描いた下絵 yule の氷の家）。中も描いた下絵（v2/assets/env/snow/under/yule_sonja*）: 氷の塊の壁・毛皮を敷いた雪の床・
     //   奥の石組みの炉（石は h = 歩けない。火は火皿の物 = 灯りと火の絵）。戸口の列（x 5）は炉の手前まで空ける
@@ -109,6 +110,7 @@
       objects: [K.prop('stove', 10, 2), K.prop('weapon_rack', 1, 2), K.prop('weapon_rack', 2, 2), K.prop('bed', 8, 2), K.prop('table', 4, 6), K.prop('chair', 3, 6),
         K.prop('firewood', 10, 7), K.prop('crate', 1, 7), K.prop('lantern', 6, 3), K.exam(1, 3, 'yule_hunter_bow')],
       npcs: [K.npc('olaf', 'npc_snow_old_m', 5, 4, { name: 'オラフ', title: '年寄りの猟師', dir: 's', talk: 'yule_olaf', reward: 'lead' })],
+      art: { image: 'snow/under/yule_hunter', painted: [] },   // マンモスの牙の皮の小屋（描いた下絵）
     });
 
     // ---------------------------------------------------------------- 釣り小屋 12×10
@@ -126,6 +128,7 @@
       objects: [K.prop('rug_roll', 3, 4), K.prop('snow_barrel', 1, 3), K.prop('lantern', 5, 3), K.prop('crate', 9, 3), K.prop('sack', 9, 4),
         K.exam(2, 5, 'yule_base_drawing'), K.chest('yule_base_c1', 9, 6, { pool: 'p_rare' }), K.chest('yule_base_c2', 2, 7, { item: 'i_potion', n: 3 })],
       npcs: [K.npc('pekka_in', 'npc_snow_child', 6, 5, { name: 'ペッカ', dir: 's', talk: 'yule_base_in', reward: 'hint' })],
+      art: { image: 'snow/under/yule_base', painted: [] },   // 雪の土手をくりぬいた部屋（描いた下絵）
       light: { ambient: '#707a9a', k: 0.7 },
       meta: { sub: '雪の土手の中' },
     });
@@ -134,6 +137,7 @@
       back: 'branch',
       objects: [K.prop('bookshelf', 1, 2), K.prop('bookshelf', 2, 2), K.prop('bookshelf', 9, 2), K.prop('table', 5, 4), K.prop('chair', 5, 5), K.exam(5, 4, 'yule_branch_desk'),
         K.prop('crate', 10, 6), K.prop('crate', 10, 7), K.prop('rug_roll', 1, 7), K.exam(1, 3, 'yule_branch_shelf'), K.chest('yule_branch_c1', 8, 7, { pool: 'p_T' })],
+      art: { image: 'snow/under/yule_branch', painted: [] },   // 冷たい石の分室（描いた下絵）
       npcs: [],
       light: { ambient: '#5e6284', k: 0.62 },
       bgm: 'sorrow',

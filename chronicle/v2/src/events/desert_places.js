@@ -194,12 +194,12 @@
     if (ev.flag('desert_hawkhold_done')) return;
     ev.bgm('tension');
     try { await ev.npc('rashid').face('s'); } catch (e) { /* */ }
-    await ev.say('rashid', ['……来たか。隊商の犬め。\nここは、おれたちの最後の巣だ。', '今度は、手加減せんぞ！']);
+    await ev.say('rashid', ['……来たか。隊商の犬め。\nここは、おれたちの最後の巣だ。', '今度は、手加減せんぞ！'], { voice: ['v_rashid_hawks_01', 'v_rashid_hawks_02'] });
     const r = await ev.battle('tr_b_hawkhold', { boss: true });
     ev.mapBgm();
     if (r !== 'win') return;
     ev.setFlag('desert_hawkhold_done');
-    await ev.say('rashid', ['……まいった。\nおれたちの負けだ。', 'この手袋を持っていけ。\n……もう、盗みはやめる。\n洞の者を食わせる道を探すさ。']);
+    await ev.say('rashid', ['……まいった。\nおれたちの負けだ。', 'この手袋を持っていけ。\n……もう、盗みはやめる。\n洞の者を食わせる道を探すさ。'], { voice: ['v_rashid_hawks_03', 'v_rashid_hawks_04'] });
     ev.item('u_hawk_gloves', 1);
   }, { meta: { needs: ['flag:desert_hawk_met'], gives: ['flag:desert_hawkhold_done', 'item:u_hawk_gloves'] } });
 

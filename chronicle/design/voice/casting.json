@@ -6,7 +6,8 @@
   "hero: the silent protagonist only has short battle voices, one set per gender (R.State.hero().gender m/f): v_hero_<g>_<kind>_<n>, played by R.Audio.battleVoice(kind).",
   "Hero voices: the male hero uses the custom voice Signature Voice (median F0 ≈ 139 Hz). Both custom voices read as adult male, so the female hero was recast (2026-09-26) to the prebuilt ja-jp-assistant-4 (female, 22, Tokyo; auditioned against ja-jp-training-6 / ja-jp-commercial-6): median F0 of her 12 clips ≈ 309 Hz vs 216 Hz for the male set (calm lines ≈ 180–210 Hz vs ≈ 124 Hz).",
   "readings[<id>]: what the TTS is asked to say instead of the script text, for words it misreads (the check still compares with the script).",
-  "v2 slice (2026-09-27): otto + town barks (tadeo, fishwife, gateguard, master, gord, hanna, rita, pim). Their lines are design/voice/story_v2_lines.csv (tools/story_voice.js), not voice_script.js; bark:true = a 1–2 s greeting played when a talk opens."
+  "v2 slice (2026-09-27): otto + town barks (tadeo, fishwife, gateguard, master, gord, hanna, rita, pim). Their lines are design/voice/story_v2_lines.csv (tools/story_voice.js), not voice_script.js; bark:true = a 1–2 s greeting played when a talk opens.",
+  "Region voices (2026-09-28): zaid, rashid, nadia (desert), jorn, sonja, hald (snow), mayor (marsh). Their lines are design/voice/story_v2_lines.csv (tools/story_voice.js). readings[] gives kana for the sung lyrics (灯・泉星・白む・夕べ are misread otherwise)."
  ],
  "model": "gemini-3.8-flash-tts",
  "speakers": {
@@ -208,6 +209,58 @@
    "fx": null,
    "pitch": 1.06,
    "bark": true
+  },
+  "zaid": {
+   "voice": "ja-jp-concierge-6",
+   "type": "prebuilt",
+   "profile": "Zaid, the caravan master of the oasis town Kasim, in his fifties: sun-dried, steady and responsible; sings the old star songs at the campfire; speaks a plain older man's Japanese (わし).",
+   "style": "mature male voice in his fifties, steady, dry and warm; a caravan leader used to wind and sand; calm authority",
+   "fx": null
+  },
+  "rashid": {
+   "voice": "ja-jp-tutor-9",
+   "type": "prebuilt",
+   "profile": "Rashid, the masked chief of the Sand Hawks bandits, about forty; a deserter of the Sun League army; hard and terse, but not cruel, and haunted by a night he cannot remember.",
+   "style": "low, rough male voice around forty, terse and guarded; a soldier-turned-bandit, quiet menace, weary underneath",
+   "fx": null
+  },
+  "nadia": {
+   "voice": "ja-jp-training-5",
+   "type": "prebuilt",
+   "profile": "Nadia, a dancer of the oasis town Kasim, about eighteen; lively and warm, sings the song of the forgotten king every night in the square.",
+   "style": "bright, clear young female voice, lively and warm, a natural singer",
+   "fx": null
+  },
+  "jorn": {
+   "voice": "ja-jp-podcaster-11",
+   "type": "prebuilt",
+   "profile": "Jorn, the chief of the snow village Yule, about sixty; broad, weathered and dependable, carries the village through the midwinter fire festival and the siege; speaks older-man Japanese (わし).",
+   "style": "deep, steady older male voice, about sixty; dependable village chief, grave and warm",
+   "fx": null,
+   "pitch": 0.93
+  },
+  "sonja": {
+   "voice": "ja-jp-advisor-5",
+   "type": "prebuilt",
+   "profile": "Sonja, about sixteen, the daughter of the fire-keepers of the snow village Yule who guards the great hearth; earnest, quiet and a little lonely; keeps a board counting the nights.",
+   "style": "soft, clear young female voice (a girl of sixteen), earnest and a little fragile",
+   "fx": null
+  },
+  "hald": {
+   "voice": "ja-jp-techagent-11",
+   "type": "prebuilt",
+   "profile": "Hald, the old watchman of the snow village Yule, about seventy, missing two fingers; gruff and watchful, remembers the night the north gate burned.",
+   "style": "old, gravelly male voice, about seventy; a gruff watchman, urgent when he raises the alarm; standard Tokyo Japanese",
+   "fx": null,
+   "pitch": 0.9
+  },
+  "mayor": {
+   "voice": "ja-jp-concierge-2",
+   "type": "prebuilt",
+   "profile": "Oswald, the mayor of the lake town Loch, about sixty; stern and careful, presides over the town assembly; speaks older-man Japanese (わし).",
+   "style": "stern, measured older male voice, about sixty; the chair of a tense town assembly; standard Tokyo Japanese",
+   "fx": null,
+   "pitch": 0.92
   }
  },
  "hero": {
@@ -468,7 +521,13 @@
   "b_sylvain_ko_1": "森へ……かえる……のか……",
   "b_belladonna_bigtech_1": "特製のいっぷく、お代は結構！",
   "b_bartolo_bigtech_2": "ろうこつの意地、見せてくれよう！",
-  "b_sylvain_bigtech_1": "ひゃくねんの弓、受けてみよ。"
+  "b_sylvain_bigtech_1": "ひゃくねんの弓、受けてみよ。",
+  "v_nadia_song_01": "すなのうみに、みずをまねいた、おうよ。そのなは……。ゆうべのいのりに、とこしえに。",
+  "v_nadia_song_02": "すなのうみに、みずをまねいた、おうよ。そのなはハザル、にちりんのとも。ゆうべのいのりに、とこしえに。",
+  "v_zaid_song_01": "きたのくぎぼし、うごかぬほしよ。まようたいしょうの、くいとなれ。",
+  "v_zaid_song_02": "ななつのいずみぼし、ひしゃくをかたむけ。よるのしずくを、すなにまけ。",
+  "v_zaid_song_03": "ちのはての、しらむほしよ。……そぼは、「よあけのほし」とよんだ。",
+  "v_melda_song_01": "なれよ、ななつのかね。きりはぬまのそこへ、あさはまちのまどへ。"
  },
  "battle": {
   "_readme": [

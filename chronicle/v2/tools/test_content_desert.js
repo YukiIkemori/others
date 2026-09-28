@@ -3,7 +3,7 @@
 //   node v2/tools/test_content_desert.js
 //   1 形: マップ・イベント・手がかり・編成が契約どおり、参照がそろう
 //   2 置き場所: ダンジョンごとに泉、宝箱は床の上で見える（町は見える物だけ）、隠し通路はダンジョンの中だけ（A27）、ワールドに宝箱なし
-//   3 文: ボイスを使わない（声はあとで）・仲間 20 人の名前を出さない（A36）
+//   3 文: ボイスの id が台本にあって音のファイルがある・仲間 20 人の名前を出さない（A36）
 //   4 筋: 閉包で clearRegion('r_desert') に着く（鷹団 3 通り × 近道／遠回り）。解決でティア +1・ページ・光の柱の場所
 //   5 戦闘: ボスの予告と第 2 の姿、名を呼ぶ道具（第 2 の姿の前は戻る・後は勝ち）、盗み専用の品の出どころ
 'use strict';
@@ -83,8 +83,17 @@ section('2. 置き場所（A27・泉・宝箱）');
 }
 
 // ================================================================ 3
-section('3. 文（声はあとで・A36）');
-ok('砂漠のイベントに voice を書かない', !/voice\s*:/.test(SRC), (SRC.match(/voice\s*:[^,}]*/g) || []).slice(0, 5));
+section('3. 文（ボイス・A36）');
+{
+  // 2026-09-28: 地方のボイスを再開。使う id は voice_story_map.json の story か script.csv の録音済みの行で、音のファイルがある（文面は qa/check_voice.js）
+  const CHRON = path.resolve(V2, '..');
+  const SMAP = JSON.parse(fs.readFileSync(path.join(V2, 'design', 'voice_story_map.json'), 'utf8')).lines;
+  const SCRIPT = fs.readFileSync(path.join(CHRON, 'design', 'voice', 'script.csv'), 'utf8');
+  const ids = [...new Set([...SRC.matchAll(/'(v_[a-z]+_[a-z0-9]+_\d\d)'/g)].map((m) => m[1]))];
+  const bad = ids.filter((id) => !((SMAP[id] && SMAP[id].kind === 'story') || SCRIPT.includes('\n' + id + ',')) || !fs.existsSync(path.join(CHRON, 'assets', 'voice', id + '.ogg')));
+  ok(`砂漠のイベントのボイス ${ids.length} 本は、どれも台本にあって音のファイルがある`, bad.length === 0, bad);
+  ok('砂漠のイベントのボイスは {hero} を読まない（voice_story_map.json の文面に {hero} が無い）', ids.every((id) => !(SMAP[id] && /\{hero\}/.test(SMAP[id].text))));
+}
 {
   const names = Object.values(D.companions || {}).map((c) => c.name).filter((n) => n && n.length >= 2);
   const hits = names.filter((n) => SRC.includes(n) || MAP_SRC.includes(n));

@@ -142,7 +142,7 @@
     if (ev.flag('desert_king')) return;
     ev.bgm('omen');
     await ev.say(null, '玉座の前に、包帯を巻いた\n大きな影が立っている。');
-    await ev.say('npc_hazal', '……わが名を……\nわが名を、返せ……！', HAZAL);
+    await ev.say('npc_hazal', '……わが名を……\nわが名を、返せ……！', Object.assign({ voice: 'v_hazal_tomb_01' }, HAZAL));
     if (X().glyphs(ev) >= 3 && !ev.has('i_desert_kingname')) ev.item('i_desert_kingname', 1);
     if (ev.has('i_desert_kingname')) await ev.caption('（年代記の端に書いた王の名が、\nかすかに光っている。\n戦いの中で「使う」と、名を呼べる）', { ms: 2600 });
     ev.setFlag('desert_named', false);
@@ -158,14 +158,14 @@
       await ev.say(null, '砂の王は膝をつき、\n包帯の下から砂がこぼれ落ちた。');
     }
     await ev.appear('hazal_king', { ms: 700 });
-    await ev.say('npc_hazal', '……わが名を……だれか……。', HAZAL);
+    await ev.say('npc_hazal', '……わが名を……だれか……。', Object.assign({ voice: 'v_hazal_tomb_02' }, HAZAL));
     ev.sfx('quill');
     if (X().glyphs(ev) >= 3 || named) await ev.say(null, '{hero}は、年代記を開いて\n王の名を書いた。\n「ハザル」と。');
     else await ev.say(null, ['{hero}は、拾った石片と、\n石板に残った墨の跡から、\n王の名を読み取った。', '年代記を開き、\n王の名を書いた。「ハザル」と。']);
     ev.sfx('light');
-    await ev.say('npc_hazal', 'ハザル……そうだ、\nそれがわたしの名だ。', HAZAL2);
-    await ev.say('npc_hazal', '民は、約束を覚えていて\nくれたのだな……。', HAZAL2);
-    await ev.say('npc_hazal', ['水と引き換えに、わたしは名を\n砂の精霊に差し出した。', '名を呼ぶかぎり、日輪の火は消えぬ。\n……その約束も、石から写されて\n消えてしまったのだ。', '語り部よ。\nわたしの名を、もう一度\n泉の民に返してくれ。'], HAZAL2);
+    await ev.say('npc_hazal', 'ハザル……そうだ、\nそれがわたしの名だ。', Object.assign({ voice: 'v_hazal_tomb_03' }, HAZAL2));
+    await ev.say('npc_hazal', '民は、約束を覚えていて\nくれたのだな……。', Object.assign({ voice: 'v_hazal_tomb_04' }, HAZAL2));
+    await ev.say('npc_hazal', ['水と引き換えに、わたしは名を\n砂の精霊に差し出した。', '名を呼ぶかぎり、日輪の火は消えぬ。\n……その約束も、石から写されて\n消えてしまったのだ。', '語り部よ。\nわたしの名を、もう一度\n泉の民に返してくれ。'], Object.assign({ voice: ['v_hazal_tomb_05', 'v_hazal_tomb_06', 'v_hazal_tomb_07'] }, HAZAL2));
     if (named) {
       ev.lead('l_main_margin_named');
       await ev.caption('手がかり帳の余白に、\n一行が増えていた。', { ms: 2000 });
@@ -190,7 +190,7 @@
     ev.sfx('light');
     ev.bgm('dawn');
     await ev.caption('古い泉の底で、金色の火がともった。\n日輪の火――\n水が、底から湧きあがってくる。', { ms: 3200 });
-    await ev.say('npc_zaid', ['泉が……泉が満ちていく！', '……この光、祖母の歌の\n「夜明けの星」の色だ。'], { name: 'ザイード' });
+    await ev.say('npc_zaid', ['泉が……泉が満ちていく！', '……この光、祖母の歌の\n「夜明けの星」の色だ。'], { name: 'ザイード', voice: ['v_zaid_desert_06', 'v_zaid_desert_07'] });
     ev.setFlag('desert_finale_done');
     // 2. カシムへ（帰り道は暗転で省く）
     await ev.fade('out', 600);
@@ -198,9 +198,9 @@
     ev.bgm('kasim');
     await ev.caption('隊がカシムに帰りついた夜。\n枯れかけていた町の泉から、\n水がこんこんと湧きだした。', { ms: 3000 });
     await ev.say('fara_after', ['泉が……！　父さん、見て！\n底の古い字が、光ってる！'], { name: 'ファラ' });
-    await ev.say('nadia', ['王さまの名前、わかったんでしょう？\n……教えて。', 'ハザル……。うん、ぴったり。\n歌ってみるね。'], { name: 'ナディア' });
+    await ev.say('nadia', ['王さまの名前、わかったんでしょう？\n……教えて。', 'ハザル……。うん、ぴったり。\n歌ってみるね。'], { name: 'ナディア', voice: ['v_nadia_desert_04', 'v_nadia_desert_05'] });
     ev.sfx('bell');
-    await ev.caption(X().SONG_FULL, { ms: 5200 });
+    await ev.caption(X().SONG_FULL, { ms: 5200, voice: X().SONG_VOICE.full });
     await ev.say(null, ['広場じゅうが、ナディアといっしょに\n王の名を歌った。', '夕べの祈りに、\nひとつの名が戻った。']);
     // 日継ぎの主張（STORY_BIBLE §7.2）
     await ev.say('sundial_old', ['日輪の火は、太陽のかけらじゃ。\nハザル王が、空から取ってきた。', '……わしの祖父は、そう言うとった。\n日輪同盟は、その火を守るために\n戦ったんじゃ。'], { name: '日時計のじいさま' });

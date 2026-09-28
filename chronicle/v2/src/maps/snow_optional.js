@@ -176,18 +176,20 @@
       K.def('pass_inn_in', {
         name: '峠の宿', kind: 'interior', optional: true, region: 'r_snow', location: 'pass_inn',
         legend: S.ROOM(), rows: r.g, outside: 'wall_wood',
-        objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('shelf_jars', 14, 2),
+        // 描いた下絵（v2/assets/env/snow/under/pass_inn_in*）: 北の壁の西に大きな石の暖炉（火は光だけの物 fireplace = art.painted）。帳場は東へ
+        objects: [K.prop('fireplace', 3, 2), K.prop('counter', 11, 3), K.prop('counter', 12, 3), K.prop('counter', 13, 3), K.prop('shelf_jars', 14, 2),
           K.prop('bed', 16, 5), K.prop('bed', 16, 8), K.prop('table', 6, 7), K.prop('chair', 5, 7), K.prop('chair', 7, 7),   // 戸口の列（x 8）は空ける
           K.prop('table', 11, 8), K.prop('chair', 10, 8), K.prop('chair', 12, 8),
           K.prop('stove', 1, 6), K.prop('lantern', 9, 3), K.prop('firewood', 1, 9), K.prop('snow_barrel', 15, 10)],
         npcs: [
-          K.npc('pass_inn_innkeeper', 'npc_snow_woman', 4, 2, { name: '峠の宿のおかみ', dir: 's', talk: 'pass_inn_innkeeper', pushable: false }),
+          K.npc('pass_inn_innkeeper', 'npc_snow_woman', 12, 2, { name: '峠の宿のおかみ', dir: 's', talk: 'pass_inn_innkeeper', pushable: false }),
           K.npc('rumor_gossip', 'npc_snow_woman', 6, 8, { name: 'うわさ好きの湯治客', dir: 'e', talk: 'pass_inn_rumor_gossip', reward: 'lead' }),
           K.npc('rumor_bard', 'npc_bard_3', 11, 7, { name: '吟遊詩人', dir: 's', talk: 'pass_inn_rumor_bard', reward: 'lead' }),
           K.npc('rumor_merchant', 'npc_traveler', 13, 9, { name: '旅の商人', dir: 'w', talk: 'pass_inn_rumor_merchant', reward: 'lead' }),
         ],
         spawns: { door: { x: r.door.x, y: 10, dir: 'n' } },
         exits: [{ x: r.door.x, y: 11, w: 1, h: 1, to: { map: 'pass_inn', spawn: 'inn' } }],
+        art: { image: 'snow/under/pass_inn_in', painted: ['fireplace'] },
         triggers: [], light: S.ROOM_LIGHT, bgm: 'tavern', meta: { minimap: false },
       });
       // 売店（東の塔の中）
@@ -200,6 +202,7 @@
         npcs: [K.npc('pass_shop', 'npc_snow_man', 5, 2, { name: '売店の主人', dir: 's', talk: 'pass_inn_shopkeeper', pushable: false })],
         spawns: { door: { x: r2.door.x, y: 6, dir: 'n' } },
         exits: [{ x: r2.door.x, y: 7, w: 1, h: 1, to: { map: 'pass_inn', spawn: 'shop' } }],
+        art: { image: 'snow/under/pass_inn_shop', painted: [] },
         triggers: [], light: S.ROOM_LIGHT, bgm: 'tavern', meta: { minimap: false },
       });
     }

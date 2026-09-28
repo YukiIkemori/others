@@ -45,8 +45,8 @@
     if (ev.flag('snow_siege_done')) { await ev.say('jorn', ['籠城は明けた。……だが、\n吹雪はまだやまん。', '冬至の火を、峰の竜へ\n届けてくれ。頼む。']); return; }
     if (ev.flag('snow_festival_lit')) return;
     if (!ev.flag('snow_jorn_talked')) {
-      await ev.say('jorn', ['よい灯りを、旅の人。\nわしはヨルン。ユールの村長だ。', '今夜は冬至。大火祭の夜だ。\n大かまどで冬至の火を燃やし、\n昔話を語って、峰へ運ぶ。']);
-      await ev.say('jorn', ['峰の白竜に火と物語を届け、\n竜は吹雪を鎮める。\n……それが村と竜の約束だ。', 'ところが今年は、秋から\n一日も吹雪がやまん。\n竜に物語が届いておらんのだ。']);
+      await ev.say('jorn', ['よい灯りを、旅の人。\nわしはヨルン。ユールの村長だ。', '今夜は冬至。大火祭の夜だ。\n大かまどで冬至の火を燃やし、\n昔話を語って、峰へ運ぶ。'], { voice: ['v_jorn_snow_01', 'v_jorn_snow_02'] });
+      await ev.say('jorn', ['峰の白竜に火と物語を届け、\n竜は吹雪を鎮める。\n……それが村と竜の約束だ。', 'ところが今年は、秋から\n一日も吹雪がやまん。\n竜に物語が届いておらんのだ。'], { voice: ['v_jorn_snow_03', 'v_jorn_snow_04'] });
       await ev.say('jorn', ['支度の手が足りん。\n頼めるか。仕事は三つだ。', '雪の林で薪を三本。\n凍った池で灯籠の氷。\nそれと、祭で語る昔話だ。']);
       await ev.say('jorn', ['昔話は、村の年寄りが知っとる。\n集会所のイングリッド、\n狩人のオラフ、ブレンダばあさん。', '祭の本があれば、それを\n読むだけで済んだんだがな……。\nソーニャに聞いてみてくれ。']);
       ev.setFlag('snow_jorn_talked');
@@ -90,8 +90,8 @@
     }
     if (ev.flag('snow_siege_done')) { await ev.say('sonja', ['冬至の火の火種、なくさないでね。', '峰の氷の壁も、\nこの火ならとけるはず。']); return; }
     if (!ev.flag('snow_sonja_talked')) {
-      await ev.say('sonja', ['……火が細いの。\n脂を足しても、足しても。', 'わたしはソーニャ。\n火守りの家の娘よ。\n大かまどの火を守ってるの。']);
-      await ev.say('sonja', ['祭ではね、火の前で\n物語の本を読むの。\n毎年、同じ本を。', 'でも今年、本を開いたら……\n真っ白だったの。\n一文字も、残ってなかった。']);
+      await ev.say('sonja', ['……火が細いの。\n脂を足しても、足しても。', 'わたしはソーニャ。\n火守りの家の娘よ。\n大かまどの火を守ってるの。'], { voice: ['v_sonja_snow_01', 'v_sonja_snow_02'] });
+      await ev.say('sonja', ['祭ではね、火の前で\n物語の本を読むの。\n毎年、同じ本を。', 'でも今年、本を開いたら……\n真っ白だったの。\n一文字も、残ってなかった。'], { voice: ['v_sonja_snow_03', 'v_sonja_snow_04'] });
       await ev.say('sonja', '本は、集会所の書見台にあるわ。\n見てみて。……何か、\n分かるかもしれない。');
       ev.setFlag('snow_sonja_talked');
       ev.lead('l_snow_book');

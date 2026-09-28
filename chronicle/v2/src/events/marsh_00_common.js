@@ -15,7 +15,7 @@
 
   // ---------------------------------------------------------------- 証拠（WORLD §4.4 の 6 つ）。right = 「霧そのもの」を示す証拠
   X.EVIDENCE = [
-    { id: 'foot', n: 1, name: '運河の岸の小さな足あと', right: true, say: '夜の運河の岸に、光る苔を踏んだ\n小さな足あとがありました。\n館とは逆の、沼の方へ向かっていた。' },
+    { id: 'foot', n: 1, name: '運河の岸の小さな足あと', right: true, say: '夜の運河の岸に、光るこけを踏んだ\n小さな足あとがありました。\n館とは逆の、沼の方へ向かっていた。' },
     { id: 'book', n: 2, name: '鐘楼の記録帳', right: true, say: '鐘楼の記録帳です。鐘が鳴らなく\nなってから、子どもが消えはじめた。\n日付が、ぴったり重なります。' },
     { id: 'doll', n: 3, name: 'ベッポの人形', right: false, say: 'ベッポの店に、消えた子に\nそっくりな人形がありました。\n頼んだのは「霧色のマントの女」だと。' },
     { id: 'drawing', n: 4, name: 'リナの絵', right: true, say: '消えた子の妹リナの絵です。\n「おばあさんが歌ってくれた。\nでも、口が動いてなかった」と。' },
@@ -28,7 +28,7 @@
   X.cleared = (ev) => ev.flag('cleared_r_marsh');
   X.narr = (ev, text) => ev.say(null, text, { face: false });
   /** 証拠を手に入れる（旗・数・手がかり帳の証拠の行）。初めてなら true */
-  X.give = async function (ev, id) {
+  X.evidence = async function (ev, id) {
     if (X.has(ev, id)) return false;
     const e = X.EVIDENCE.find((q) => q.id === id);
     ev.setFlag('marsh_ev_' + id);
@@ -63,6 +63,7 @@
   };
   // 鐘の歌（メルダが教える。石碑は最後の節が削れている）
   X.SONG = '♪　鳴れよ、七つの鐘\n♪　霧は沼の底へ、\n♪　朝は町の窓へ';
+  X.SONG_VOICE = 'v_melda_song_01';   // 館でメルダが歌う（caption の voice）
   X.SONG_CUT = '♪　鳴れよ、七つの鐘\n♪　霧は沼の底へ、\n♪　――――――';
   // 名指しの相手
   X.SUSPECTS = [
@@ -100,8 +101,8 @@
 
   // ---------------------------------------------------------------- 読み物（STORY_BIBLE §10.2 の 20〜22 ほか）
   const lore = (id, o) => R.def('lore', id, Object.assign({ region: 'r_marsh' }, o));
-  lore('lo_ev_marsh', { title: '貸し出し簿', kind: 'main', must: true, text: '鐘楼の貸し出し簿。\n「鐘の歌の楽譜 一冊 記録院へ貸し出し」\n受け取りの欄に、記録官クラウスの署名。' });
-  lore('lo_time_marsh', { title: '鐘楼の記録帳', kind: 'main', must: true, text: '「光暦二九二年 冬　朝の鐘を\n『日の出』より『灯りの刻の始め』へ改む。\n理由の欄――」理由の欄だけが白い。' });
+  lore('lo_ev_marsh', { title: '貸し出し簿', kind: 'main', must: true, text: '鐘楼の貸し出し簿。\n「鐘の歌の楽譜、一冊、記録院へ貸し出し」\n受け取りの欄に、記録官クラウスの署名。' });
+  lore('lo_time_marsh', { title: '鐘楼の記録帳', kind: 'main', must: true, text: '「光暦二九二年、冬。朝の鐘を\n『日の出』より『灯りの刻の始め』へ改む。\n理由の欄――」理由の欄だけが白い。' });
   lore('lo_war_marsh', { title: '新しい第七の鐘', kind: 'region', must: false, text: '七つの鐘のうち、ひとつだけが新しい。\n古い第七の鐘は、日輪同盟が\n矢じりにするために溶かしたという。' });
   lore('lo_marsh_song', { title: '鐘の歌', kind: 'region', must: false, text: '♪　鳴れよ、七つの鐘\n♪　霧は沼の底へ、\n♪　朝は町の窓へ' });
 

@@ -223,7 +223,8 @@ if (argv.includes('--derive')) {
   const chk = (ok, msg) => { res.push((ok ? 'PASS ' : 'FAIL ') + msg); if (!ok) bad++; };
   chk(mean(demoAny) >= 0.3 && mean(demoAny) <= 0.5, `spamming one parent through the demo: any derivation ${pct(mean(demoAny))} on average (30–50%; by parent ${demoAny.map((x) => (100 * x).toFixed(0)).join('/')})`);
   chk(Math.max(...demo2) <= 0.03, `spamming: a 2nd-tier derivation in the demo is very rare (max ${pct(Math.max(...demo2))}, ≤ 3%)`);
-  chk(Math.max(...casDemo) <= 0.3 && mean(casDemo) <= 0.2, `casual play: usually none in the demo (mean ${pct(mean(casDemo))}, max ${pct(Math.max(...casDemo))}; ≤ 20% / ≤ 30%)`);
+  // 持ち主が派生技を足した（2026-09-28「各武器にあと2~3個ずつ」）ので、入門技のほとんどに秘密がある。1 人の上限は 35% まで（平均は 20% まで）
+  chk(Math.max(...casDemo) <= 0.35 && mean(casDemo) <= 0.2, `casual play: usually none in the demo (mean ${pct(mean(casDemo))}, max ${pct(Math.max(...casDemo))}; ≤ 20% / ≤ 35%)`);
   chk(Math.max(...casClear2) <= 0.15, `casual play: a 2nd-tier (top) derived tech by the clear stays rare (max ${pct(Math.max(...casClear2))}, ≤ 15%)`);
   const f2 = full2.filter((x) => x != null);
   chk(Math.max(...f2) <= 0.6, `even spamming the whole game, a 2nd-tier one is not a sure thing (max ${pct(Math.max(...f2))}, ≤ 60%)`);

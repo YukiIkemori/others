@@ -50,7 +50,7 @@
     ev.sfx('fire');
     await ev.caption(['たき火がはぜる。\nザイードが、星を見上げて歌いだした。', 'たき火のまわりに、隊の者が\n輪になって座った。ザイードが歌う。', 'オアシスの泉のほとりで、\n三晩目のたき火。ザイードが歌う。'][i], { ms: 2200 });
     ev.sfx('bell');
-    await ev.caption(X().STARS[i], { ms: 3600 });
+    await ev.caption(X().STARS[i], { ms: 3600, voice: X().STARS_VOICE[i] });
   }
 
   // ---------------------------------------------------------------- 野営地 1「岩の井戸」: 砂の鷹団
@@ -72,7 +72,7 @@
     await ev.caption('火が落ちたころ――\n岩の上で、鷹の笛が鳴った。', { ms: 2200 });
     ev.bgm('tension', { fade: 400 });
     await ev.say(null, '顔を布で覆った男たちが、\n岩の上から弓を向けている。');
-    await ev.say('npc_rashid', ['動くな。命まではもらわん。', 'おれたちは「砂の鷹」。\n欲しいのは水だ。水がめを\n半分置いていけ。'], RASHID);
+    await ev.say('npc_rashid', ['動くな。命まではもらわん。', 'おれたちは「砂の鷹」。\n欲しいのは水だ。水がめを\n半分置いていけ。'], Object.assign({ voice: ['v_rashid_desert_01', 'v_rashid_desert_02'] }, RASHID));
     await ev.say('npc_zaid', '……半分だと？　それでは\nオアシスまで持たん！', ZAID);
     const price = X().gold(160);
     const i = await ev.choose(['戦う', '水を分ける', `お金を払う（${price} G）`], { text: '砂の鷹団にどうする？' });
@@ -83,7 +83,7 @@
       ev.mapBgm();
       if (r !== 'win') { ev.choice('ch_desert_hawk', undefined); return; }
       await ev.say(null, '覆面の男は膝をつき、\n曲刀を砂に突き立てた。');
-      await ev.say('npc_rashid', ['……いい腕だ。おれはラシード。\n昔は、日輪同盟の兵だった。', '二十年前の代理試合の夜……\n歌が聞こえた。敵も味方も、\n手を止めた。', '……そのあとのことは、\nなぜか思い出せん。気づけば、\n砂の上で盗賊をしていた。', '行け。おれたちは台地の洞へ帰る。\n……次は、こうはいかんぞ。'], RASHID);
+      await ev.say('npc_rashid', ['……いい腕だ。おれはラシード。\n昔は、日輪同盟の兵だった。', '二十年前の代理試合の夜……\n歌が聞こえた。敵も味方も、\n手を止めた。', '……そのあとのことは、\nなぜか思い出せん。気づけば、\n砂の上で盗賊をしていた。', '行け。おれたちは台地の洞へ帰る。\n……次は、こうはいかんぞ。'], Object.assign({ voice: ['v_rashid_desert_03', 'v_rashid_desert_04', 'v_rashid_desert_05', 'v_rashid_desert_06'] }, RASHID));
     } else if (i === 1) {
       ev.choice('ch_desert_hawk', 'water');
       ev.setFlag('desert_thirst');
@@ -211,7 +211,7 @@
     await ev.fade('in', 400);
     await ev.caption('王墓のオアシス。\n古い泉は、底の石が見えるほど\n浅くなっていた。', { ms: 2400 });
     await starSong(ev, 2);
-    await ev.say('npc_zaid', ['地の果ての、白む星……。\n祖母は、あれを「夜明けの星」と\n呼んでいた。', '……夜明け。\nふしぎな言葉だな。\n夜が、明ける？　何が明けるんだ？'], ZAID);
+    await ev.say('npc_zaid', ['地の果ての、白む星……。\n祖母は、あれを「夜明けの星」と\n呼んでいた。', '……夜明け。\nふしぎな言葉だな。\n夜が、明ける？　何が明けるんだ？'], Object.assign({ voice: ['v_zaid_desert_04', 'v_zaid_desert_05'] }, ZAID));
     await ev.say(null, 'ザイードは首をかしげて、\nたき火に薪を足した。');
     await ev.say('npc_zaid', ['供え物は、泉のほとりに置いた。\n隊はここで待つ。', '墓の入口の砂は、隊の者でどけた。\n……ここから先は、あんたたちだけだ。', '王墓の番のアブルじいさんも、\n古い道を通って来ているはずだ。\n話を聞いていくといい。'], ZAID);
     // 暗転のあいだに、ついてきたザイードが隊の輪に戻り、古い道を来たアブルが着く（出し消しを見せない）

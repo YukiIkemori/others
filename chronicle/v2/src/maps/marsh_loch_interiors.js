@@ -37,7 +37,7 @@
         K.prop('table', 11, 5), K.prop('chair', 10, 5), K.prop('chair', 12, 5), K.prop('table', 11, 8), K.prop('chair', 10, 8), K.prop('chair', 12, 8),
         K.prop('table', 3, 8), K.prop('chair', 2, 8), K.prop('lantern', 8, 3), K.prop('lantern', 14, 8), K.prop('wall_painting', 10, 1)],
       npcs: [
-        K.npc('barkeep', 'npc_marsh_old_m', 5, 2, { name: '酒場の主人', dir: 's', talk: 'loch_barkeep', reward: 'lead', pushable: false }),
+        K.npc('barkeep', 'npc_marsh_old_m', 5, 2, { name: '酒場の亭主', dir: 's', talk: 'loch_barkeep', reward: 'lead', pushable: false }),
         K.npc('tav_bard', 'npc_bard', 11, 6, { name: '旅の吟遊詩人', dir: 's', talk: 'loch_tav_bard', reward: 'lead' }),
         K.npc('tav_sailor', 'npc_marsh_man', 3, 7, { name: '舟乗りのディルク', dir: 'e', talk: 'loch_tav_sailor', reward: 'boss' }),
         K.npc('tav_match', 'npc_marsh_woman', 13, 9, { name: '酒場のエルゼ', dir: 'w', talk: 'loch_tav_match', reward: 'news' }),

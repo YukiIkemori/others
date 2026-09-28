@@ -165,7 +165,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "P2[0]",
-   "line": 56,
+   "line": 60,
    "text": "そうそう、大事な話があるんだ。",
    "audio": "assets/voice/v_berna_p2_01.ogg"
   },
@@ -175,7 +175,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "P2[1]",
-   "line": 57,
+   "line": 61,
    "text": "近ごろ、あちこちで\n伝承が消えていくんだよ。",
    "audio": "assets/voice/v_berna_p2_02.ogg"
   },
@@ -185,7 +185,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "P2[2]",
-   "line": 58,
+   "line": 62,
    "text": "歌の続きが出てこない。\n祭りの由来が分からない。\nそんな話ばかりさ。",
    "audio": "assets/voice/v_berna_p2_03.ogg"
   },
@@ -195,7 +195,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "P2[3]",
-   "line": 59,
+   "line": 63,
    "text": "わたしたち語り部は、それを\n『白紙』と呼んでいる。",
    "audio": "assets/voice/v_berna_p2_04.ogg"
   },
@@ -205,7 +205,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "P2[4]",
-   "line": 60,
+   "line": 64,
    "text": "里の語り石の文字も、\n半分が白く抜けてしまった。",
    "audio": "assets/voice/v_berna_p2_05.ogg"
   },
@@ -215,7 +215,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "P2[5]",
-   "line": 61,
+   "line": 65,
    "text": "それにね、港町ファロスの\n灯台の火が、細りはじめて三晩。\nきのう、とうとう消えたそうだ。",
    "audio": "assets/voice/v_berna_p2_06.ogg"
   },
@@ -225,7 +225,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "P2[6]",
-   "line": 62,
+   "line": 66,
    "text": "あの灯台には、守り歌という\n古い伝承があってね。\nそれも、白紙になりかけている。",
    "audio": "assets/voice/v_berna_p2_07.ogg"
   },
@@ -235,7 +235,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "P2[8]",
-   "line": 64,
+   "line": 68,
    "text": "ただし、ひとりで行っちゃ\nだめだよ。ファロスの酒場\n「潮風亭」で、仲間を探しなさい。",
    "audio": "assets/voice/v_berna_p2_08.ogg"
   },
@@ -245,7 +245,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "P2[9]",
-   "line": 65,
+   "line": 69,
    "text": "それから、これを持って\nお行き。",
    "audio": "assets/voice/v_berna_p2_09.ogg"
   },
@@ -255,7 +255,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_seat",
    "key": "say (berna_desk)",
-   "line": 132,
+   "line": 136,
    "text": "昔からの習わしさ。\n誰の席かは……忘れちまったよ。",
    "audio": "assets/voice/v_berna_seat_01.ogg"
   },
@@ -265,7 +265,7 @@
    "file": "v2/src/events/pharos_story.js",
    "event": "pharos_departure",
    "key": "say after the chapter caption (rumours)",
-   "line": 176,
+   "line": 177,
    "text": "うわさは酒場に集まるものさ。\nまずは港の酒場で\n聞いてごらん。",
    "audio": "assets/voice/v_berna_depart_01.ogg"
   },
@@ -275,7 +275,7 @@
    "file": "v2/src/events/pharos_story.js",
    "event": "pharos_departure",
    "key": "farewell (the first forgetting)",
-   "line": 182,
+   "line": 183,
    "text": "わたしは里へ帰るよ。\n……いってらっしゃい、",
    "audio": "assets/voice/v_berna_depart_02.ogg"
   },
@@ -285,7 +285,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "after prologue pick (default)",
-   "line": 91,
+   "line": 95,
    "text": "おかえり。年代記は、\nちゃんと書いているかい？",
    "audio": "assets/voice/v_berna_home_01.ogg"
   },
@@ -295,7 +295,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "after prologue pick cleared_r_forest",
-   "line": 90,
+   "line": 94,
    "text": "森の灯が戻ったそうだね。\n語り石の文字が、ほんの少し\n読めるようになった気がするよ。",
    "audio": "assets/voice/v_berna_home_02.ogg"
   },
@@ -305,7 +305,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "stay morning (E.stay o.morning)",
-   "line": 94,
+   "line": 98,
    "text": "よく眠れたかい？\n……さあ、いってらっしゃい。",
    "audio": "assets/voice/v_berna_home_03.ogg"
   },
@@ -335,7 +335,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_house_intro",
    "key": "caption 1 (ev.caption voice; owner 2026-09-27)",
-   "line": 29,
+   "line": 30,
    "text": "……ねえ、聞こえる？",
    "audio": "assets/voice/v_fine_opening_01.ogg"
   },
@@ -345,7 +345,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_house_intro",
    "key": "caption 2",
-   "line": 32,
+   "line": 35,
    "text": "これは、忘れられかけた物語。",
    "audio": "assets/voice/v_fine_opening_02.ogg"
   },
@@ -355,7 +355,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_house_intro",
    "key": "caption 3",
-   "line": 33,
+   "line": 37,
    "text": "そして、それを語り直した、\nひとりの語り部の物語。",
    "audio": "assets/voice/v_fine_opening_03.ogg"
   },
@@ -495,7 +495,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_house_intro",
    "key": "caption after 「……ねえ、聞こえる？」 (the lighthouse song over black; ev.caption voice)",
-   "line": 31,
+   "line": 33,
    "text": "♪　海の果てまで、灯よ届け\n帰る舟に、道を照らせ",
    "audio": "assets/voice/v_fine_song_01.ogg"
   },
@@ -505,7 +505,7 @@
    "file": "v2/src/events/prologue_lighthouse.js",
    "event": "lighthouse_3_boss",
    "key": "caption after the Page Eater (the song comes back on the paper; ev.caption voice)",
-   "line": 113,
+   "line": 111,
    "text": "♪　海の果てまで、灯よ届け\n帰る舟に、道を照らせ",
    "audio": "assets/voice/v_fine_song_02.ogg"
   },
@@ -515,7 +515,7 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_house_intro",
    "key": "E.say after ev.createHero (the name shows first; the voice skips {hero})",
-   "line": 46,
+   "line": 50,
    "text": "……うん、いい名前だ。",
    "audio": "assets/voice/v_berna_intro_01.ogg"
   },
@@ -525,9 +525,589 @@
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "P2[7] (the name shows first; the voice skips {hero})",
-   "line": 63,
+   "line": 67,
    "text": "行っておくれ。\n語り部の見習いとしての、\n最初の仕事だよ。",
    "audio": "assets/voice/v_berna_p2_10.ogg"
+  },
+  "v_otto_reward_05": {
+   "speaker": "otto",
+   "kind": "story",
+   "file": "v2/src/events/pharos_story.js",
+   "event": "pharos_otto_reward",
+   "key": "first time say 1 (the name shows first; the voice skips {hero})",
+   "line": 132,
+   "text": "灯台に火が戻ったぞ！\n守り歌も、思い出せた。",
+   "audio": "assets/voice/v_otto_reward_05.ogg"
+  },
+  "v_rita_forest_01": {
+   "speaker": "rita",
+   "kind": "story",
+   "file": "v2/src/events/forest_fern.js",
+   "event": "fern_rita",
+   "key": "first talk page 1 (sings the first verse, then stops)",
+   "line": 118,
+   "text": "♪　眠れ森の主、千の年輪に……。\nだめ。この先が、\nどうしても出てこないの。",
+   "audio": "assets/voice/v_rita_forest_01.ogg"
+  },
+  "v_rita_forest_02": {
+   "speaker": "rita",
+   "kind": "story",
+   "file": "v2/src/events/forest_fern.js",
+   "event": "fern_rita",
+   "key": "first talk page 2 (introduces herself)",
+   "line": 118,
+   "text": "わたしはリタ。この村の歌い手。\n千年樹の歌は、最初の一節しか\n思い出せないの。",
+   "audio": "assets/voice/v_rita_forest_02.ogg"
+  },
+  "v_rita_forest_03": {
+   "speaker": "rita",
+   "kind": "story",
+   "file": "v2/src/events/forest_elder.js",
+   "event": "forest_finale",
+   "key": "the song night in the plaza (before the song)",
+   "line": 116,
+   "text": "みんな、聞いて。\n千年樹の歌よ。",
+   "audio": "assets/voice/v_rita_forest_03.ogg"
+  },
+  "v_zaid_desert_01": {
+   "speaker": "zaid",
+   "kind": "story",
+   "file": "v2/src/events/desert_kasim.js",
+   "event": "kasim_zaid",
+   "key": "first meeting page 1",
+   "line": 158,
+   "text": "わしは隊商の長ザイード。\n掲示を見てくれたか。",
+   "audio": "assets/voice/v_zaid_desert_01.ogg"
+  },
+  "v_zaid_desert_02": {
+   "speaker": "zaid",
+   "kind": "story",
+   "file": "v2/src/events/desert_kasim.js",
+   "event": "kasim_zaid",
+   "key": "first meeting page 2",
+   "line": 158,
+   "text": "王墓のオアシスへ、供え物を運ぶ。\n昔からの習わしでな。泉の水の源が、\nそこの古い泉なんだ。",
+   "audio": "assets/voice/v_zaid_desert_02.ogg"
+  },
+  "v_zaid_desert_03": {
+   "speaker": "zaid",
+   "kind": "story",
+   "file": "v2/src/events/desert_kasim.js",
+   "event": "kasim_zaid",
+   "key": "first meeting page 3 (the request)",
+   "line": 158,
+   "text": "砂嵐と盗賊で、隊が出せずにいる。\n護衛を頼めないか。\n野営を三晩、オアシスまでだ。",
+   "audio": "assets/voice/v_zaid_desert_03.ogg"
+  },
+  "v_zaid_desert_04": {
+   "speaker": "zaid",
+   "kind": "story",
+   "file": "v2/src/events/desert_caravan.js",
+   "event": "desert_camp3_scene",
+   "key": "third night page 1 (the dawn star)",
+   "line": 214,
+   "text": "地の果ての、白む星……。\n祖母は、あれを「夜明けの星」と\n呼んでいた。",
+   "audio": "assets/voice/v_zaid_desert_04.ogg"
+  },
+  "v_zaid_desert_05": {
+   "speaker": "zaid",
+   "kind": "story",
+   "file": "v2/src/events/desert_caravan.js",
+   "event": "desert_camp3_scene",
+   "key": "third night page 2 (what is dawn?)",
+   "line": 214,
+   "text": "……夜明け。\nふしぎな言葉だな。\n夜が、明ける？　何が明けるんだ？",
+   "audio": "assets/voice/v_zaid_desert_05.ogg"
+  },
+  "v_zaid_desert_06": {
+   "speaker": "zaid",
+   "kind": "story",
+   "file": "v2/src/events/desert_tomb.js",
+   "event": "desert_finale",
+   "key": "the spring fills page 1",
+   "line": 193,
+   "text": "泉が……泉が満ちていく！",
+   "audio": "assets/voice/v_zaid_desert_06.ogg"
+  },
+  "v_zaid_desert_07": {
+   "speaker": "zaid",
+   "kind": "story",
+   "file": "v2/src/events/desert_tomb.js",
+   "event": "desert_finale",
+   "key": "the spring fills page 2",
+   "line": 193,
+   "text": "……この光、祖母の歌の\n「夜明けの星」の色だ。",
+   "audio": "assets/voice/v_zaid_desert_07.ogg"
+  },
+  "v_rashid_desert_01": {
+   "speaker": "rashid",
+   "kind": "story",
+   "file": "v2/src/events/desert_caravan.js",
+   "event": "desert_camp1_scene",
+   "key": "the ambush page 1 (before the boss)",
+   "line": 75,
+   "text": "動くな。命まではもらわん。",
+   "audio": "assets/voice/v_rashid_desert_01.ogg"
+  },
+  "v_rashid_desert_02": {
+   "speaker": "rashid",
+   "kind": "story",
+   "file": "v2/src/events/desert_caravan.js",
+   "event": "desert_camp1_scene",
+   "key": "the ambush page 2",
+   "line": 75,
+   "text": "おれたちは「砂の鷹」。\n欲しいのは水だ。水がめを\n半分置いていけ。",
+   "audio": "assets/voice/v_rashid_desert_02.ogg"
+  },
+  "v_rashid_desert_03": {
+   "speaker": "rashid",
+   "kind": "story",
+   "file": "v2/src/events/desert_caravan.js",
+   "event": "desert_camp1_scene",
+   "key": "after the boss (fight) page 1",
+   "line": 86,
+   "text": "……いい腕だ。おれはラシード。\n昔は、日輪同盟の兵だった。",
+   "audio": "assets/voice/v_rashid_desert_03.ogg"
+  },
+  "v_rashid_desert_04": {
+   "speaker": "rashid",
+   "kind": "story",
+   "file": "v2/src/events/desert_caravan.js",
+   "event": "desert_camp1_scene",
+   "key": "after the boss (fight) page 2",
+   "line": 86,
+   "text": "二十年前の代理試合の夜……\n歌が聞こえた。敵も味方も、\n手を止めた。",
+   "audio": "assets/voice/v_rashid_desert_04.ogg"
+  },
+  "v_rashid_desert_05": {
+   "speaker": "rashid",
+   "kind": "story",
+   "file": "v2/src/events/desert_caravan.js",
+   "event": "desert_camp1_scene",
+   "key": "after the boss (fight) page 3",
+   "line": 86,
+   "text": "……そのあとのことは、\nなぜか思い出せん。気づけば、\n砂の上で盗賊をしていた。",
+   "audio": "assets/voice/v_rashid_desert_05.ogg"
+  },
+  "v_rashid_desert_06": {
+   "speaker": "rashid",
+   "kind": "story",
+   "file": "v2/src/events/desert_caravan.js",
+   "event": "desert_camp1_scene",
+   "key": "after the boss (fight) page 4",
+   "line": 86,
+   "text": "行け。おれたちは台地の洞へ帰る。\n……次は、こうはいかんぞ。",
+   "audio": "assets/voice/v_rashid_desert_06.ogg"
+  },
+  "v_rashid_hawks_01": {
+   "speaker": "rashid",
+   "kind": "story",
+   "file": "v2/src/events/desert_places.js",
+   "event": "desert_hawks_boss",
+   "key": "before the boss page 1",
+   "line": 197,
+   "text": "……来たか。隊商の犬め。\nここは、おれたちの最後の巣だ。",
+   "audio": "assets/voice/v_rashid_hawks_01.ogg"
+  },
+  "v_rashid_hawks_02": {
+   "speaker": "rashid",
+   "kind": "story",
+   "file": "v2/src/events/desert_places.js",
+   "event": "desert_hawks_boss",
+   "key": "before the boss page 2",
+   "line": 197,
+   "text": "今度は、手加減せんぞ！",
+   "audio": "assets/voice/v_rashid_hawks_02.ogg"
+  },
+  "v_rashid_hawks_03": {
+   "speaker": "rashid",
+   "kind": "story",
+   "file": "v2/src/events/desert_places.js",
+   "event": "desert_hawks_boss",
+   "key": "after the boss page 1",
+   "line": 202,
+   "text": "……まいった。\nおれたちの負けだ。",
+   "audio": "assets/voice/v_rashid_hawks_03.ogg"
+  },
+  "v_rashid_hawks_04": {
+   "speaker": "rashid",
+   "kind": "story",
+   "file": "v2/src/events/desert_places.js",
+   "event": "desert_hawks_boss",
+   "key": "after the boss page 2",
+   "line": 202,
+   "text": "この手袋を持っていけ。\n……もう、盗みはやめる。\n洞の者を食わせる道を探すさ。",
+   "audio": "assets/voice/v_rashid_hawks_04.ogg"
+  },
+  "v_hazal_tomb_05": {
+   "speaker": "hazal",
+   "kind": "story",
+   "file": "v2/src/events/desert_tomb.js",
+   "event": "desert_tomb_king",
+   "key": "after the name page 1",
+   "line": 168,
+   "text": "水と引き換えに、わたしは名を\n砂の精霊に差し出した。",
+   "audio": "assets/voice/v_hazal_tomb_05.ogg"
+  },
+  "v_hazal_tomb_06": {
+   "speaker": "hazal",
+   "kind": "story",
+   "file": "v2/src/events/desert_tomb.js",
+   "event": "desert_tomb_king",
+   "key": "after the name page 2",
+   "line": 168,
+   "text": "名を呼ぶかぎり、日輪の火は消えぬ。\n……その約束も、石から写されて\n消えてしまったのだ。",
+   "audio": "assets/voice/v_hazal_tomb_06.ogg"
+  },
+  "v_hazal_tomb_07": {
+   "speaker": "hazal",
+   "kind": "story",
+   "file": "v2/src/events/desert_tomb.js",
+   "event": "desert_tomb_king",
+   "key": "after the name page 3",
+   "line": 168,
+   "text": "語り部よ。\nわたしの名を、もう一度\n泉の民に返してくれ。",
+   "audio": "assets/voice/v_hazal_tomb_07.ogg"
+  },
+  "v_nadia_desert_01": {
+   "speaker": "nadia",
+   "kind": "story",
+   "file": "v2/src/events/desert_quests.js",
+   "event": "kasim_nadia",
+   "key": "first meeting (before the song)",
+   "line": 44,
+   "text": "わたしはナディア。踊り子よ。\n毎晩、広場で王さまの歌を\n歌って踊るの。聞いて。",
+   "audio": "assets/voice/v_nadia_desert_01.ogg"
+  },
+  "v_nadia_desert_02": {
+   "speaker": "nadia",
+   "kind": "story",
+   "file": "v2/src/events/desert_quests.js",
+   "event": "kasim_nadia",
+   "key": "after the song page 1",
+   "line": 47,
+   "text": "……名前の所だけ、\nどうしても歌えないの。\n母さんも、おばあちゃんも。",
+   "audio": "assets/voice/v_nadia_desert_02.ogg"
+  },
+  "v_nadia_desert_03": {
+   "speaker": "nadia",
+   "kind": "story",
+   "file": "v2/src/events/desert_quests.js",
+   "event": "kasim_nadia",
+   "key": "after the song page 2",
+   "line": 47,
+   "text": "王さまの名前、王墓の石に\n刻まれてたって聞いたわ。\n誰も、読みに行けないけど。",
+   "audio": "assets/voice/v_nadia_desert_03.ogg"
+  },
+  "v_nadia_desert_04": {
+   "speaker": "nadia",
+   "kind": "story",
+   "file": "v2/src/events/desert_tomb.js",
+   "event": "desert_finale",
+   "key": "the square, page 1 (asks the name)",
+   "line": 201,
+   "text": "王さまの名前、わかったんでしょう？\n……教えて。",
+   "audio": "assets/voice/v_nadia_desert_04.ogg"
+  },
+  "v_nadia_desert_05": {
+   "speaker": "nadia",
+   "kind": "story",
+   "file": "v2/src/events/desert_tomb.js",
+   "event": "desert_finale",
+   "key": "the square, page 2 (the name fits)",
+   "line": 201,
+   "text": "ハザル……。うん、ぴったり。\n歌ってみるね。",
+   "audio": "assets/voice/v_nadia_desert_05.ogg"
+  },
+  "v_jorn_snow_01": {
+   "speaker": "jorn",
+   "kind": "story",
+   "file": "v2/src/events/snow_yule.js",
+   "event": "yule_jorn",
+   "key": "first talk say 1 page 1",
+   "line": 48,
+   "text": "よい灯りを、旅の人。\nわしはヨルン。ユールの村長だ。",
+   "audio": "assets/voice/v_jorn_snow_01.ogg"
+  },
+  "v_jorn_snow_02": {
+   "speaker": "jorn",
+   "kind": "story",
+   "file": "v2/src/events/snow_yule.js",
+   "event": "yule_jorn",
+   "key": "first talk say 1 page 2",
+   "line": 48,
+   "text": "今夜は冬至。大火祭の夜だ。\n大かまどで冬至の火を燃やし、\n昔話を語って、峰へ運ぶ。",
+   "audio": "assets/voice/v_jorn_snow_02.ogg"
+  },
+  "v_jorn_snow_03": {
+   "speaker": "jorn",
+   "kind": "story",
+   "file": "v2/src/events/snow_yule.js",
+   "event": "yule_jorn",
+   "key": "first talk say 2 page 1 (the promise)",
+   "line": 49,
+   "text": "峰の白竜に火と物語を届け、\n竜は吹雪を鎮める。\n……それが村と竜の約束だ。",
+   "audio": "assets/voice/v_jorn_snow_03.ogg"
+  },
+  "v_jorn_snow_04": {
+   "speaker": "jorn",
+   "kind": "story",
+   "file": "v2/src/events/snow_yule.js",
+   "event": "yule_jorn",
+   "key": "first talk say 2 page 2",
+   "line": 49,
+   "text": "ところが今年は、秋から\n一日も吹雪がやまん。\n竜に物語が届いておらんのだ。",
+   "audio": "assets/voice/v_jorn_snow_04.ogg"
+  },
+  "v_jorn_snow_05": {
+   "speaker": "jorn",
+   "kind": "story",
+   "file": "v2/src/events/snow_festival.js",
+   "event": "snow_festival",
+   "key": "the festival: asks for the tale page 1",
+   "line": 98,
+   "text": "語り部よ。\n今年の物語を、火の前で\n語ってくれ。",
+   "audio": "assets/voice/v_jorn_snow_05.ogg"
+  },
+  "v_jorn_snow_06": {
+   "speaker": "jorn",
+   "kind": "story",
+   "file": "v2/src/events/snow_festival.js",
+   "event": "snow_festival",
+   "key": "the festival page 2",
+   "line": 98,
+   "text": "峰の竜に届くように。",
+   "audio": "assets/voice/v_jorn_snow_06.ogg"
+  },
+  "v_jorn_snow_07": {
+   "speaker": "jorn",
+   "kind": "story",
+   "file": "v2/src/events/snow_festival.js",
+   "event": "snow_festival",
+   "key": "the wolves: three gates page 1",
+   "line": 116,
+   "text": "門は三つ。北、東、西。\nわしらの手では、\n二つしか守りきれん。",
+   "audio": "assets/voice/v_jorn_snow_07.ogg"
+  },
+  "v_jorn_snow_08": {
+   "speaker": "jorn",
+   "kind": "story",
+   "file": "v2/src/events/snow_festival.js",
+   "event": "snow_festival",
+   "key": "the wolves page 2 (the name shows first; the voice skips {hero})",
+   "line": 116,
+   "text": "力を貸してくれ。\n守る門を、選んでくれ。",
+   "audio": "assets/voice/v_jorn_snow_08.ogg"
+  },
+  "v_hald_snow_01": {
+   "speaker": "hald",
+   "kind": "story",
+   "file": "v2/src/events/snow_festival.js",
+   "event": "snow_festival",
+   "key": "the wolves: alarm page 1",
+   "line": 115,
+   "text": "狼の群れだ！\n村を囲んでおる！",
+   "audio": "assets/voice/v_hald_snow_01.ogg"
+  },
+  "v_hald_snow_02": {
+   "speaker": "hald",
+   "kind": "story",
+   "file": "v2/src/events/snow_festival.js",
+   "event": "snow_festival",
+   "key": "the wolves: alarm page 2",
+   "line": 115,
+   "text": "門を閉めろ！\n男たちは門へ！",
+   "audio": "assets/voice/v_hald_snow_02.ogg"
+  },
+  "v_sonja_snow_01": {
+   "speaker": "sonja",
+   "kind": "story",
+   "file": "v2/src/events/snow_yule.js",
+   "event": "yule_sonja",
+   "key": "first talk say 1 page 1",
+   "line": 93,
+   "text": "……火が細いの。\n脂を足しても、足しても。",
+   "audio": "assets/voice/v_sonja_snow_01.ogg"
+  },
+  "v_sonja_snow_02": {
+   "speaker": "sonja",
+   "kind": "story",
+   "file": "v2/src/events/snow_yule.js",
+   "event": "yule_sonja",
+   "key": "first talk say 1 page 2",
+   "line": 93,
+   "text": "わたしはソーニャ。\n火守りの家の娘よ。\n大かまどの火を守ってるの。",
+   "audio": "assets/voice/v_sonja_snow_02.ogg"
+  },
+  "v_sonja_snow_03": {
+   "speaker": "sonja",
+   "kind": "story",
+   "file": "v2/src/events/snow_yule.js",
+   "event": "yule_sonja",
+   "key": "first talk say 2 page 1 (the book)",
+   "line": 94,
+   "text": "祭ではね、火の前で\n物語の本を読むの。\n毎年、同じ本を。",
+   "audio": "assets/voice/v_sonja_snow_03.ogg"
+  },
+  "v_sonja_snow_04": {
+   "speaker": "sonja",
+   "kind": "story",
+   "file": "v2/src/events/snow_yule.js",
+   "event": "yule_sonja",
+   "key": "first talk say 2 page 2 (the blank book)",
+   "line": 94,
+   "text": "でも今年、本を開いたら……\n真っ白だったの。\n一文字も、残ってなかった。",
+   "audio": "assets/voice/v_sonja_snow_04.ogg"
+  },
+  "v_sonja_snow_05": {
+   "speaker": "sonja",
+   "kind": "story",
+   "file": "v2/src/events/snow_peak.js",
+   "event": "snow_finale",
+   "key": "the square page 1 (the name shows first; the voice skips {hero})",
+   "line": 135,
+   "text": "おかえりなさい。",
+   "audio": "assets/voice/v_sonja_snow_05.ogg"
+  },
+  "v_sonja_snow_06": {
+   "speaker": "sonja",
+   "kind": "story",
+   "file": "v2/src/events/snow_peak.js",
+   "event": "snow_finale",
+   "key": "the square page 2 (the night board)",
+   "line": 135,
+   "text": "夜数えの板に、今夜の刻みを\n入れようとしたの。\n……でも、手が止まっちゃった。",
+   "audio": "assets/voice/v_sonja_snow_06.ogg"
+  },
+  "v_sonja_snow_07": {
+   "speaker": "sonja",
+   "kind": "story",
+   "file": "v2/src/events/snow_peak.js",
+   "event": "snow_finale",
+   "key": "the square page 3",
+   "line": 135,
+   "text": "……今夜は、いつもより\n空が明るい。",
+   "audio": "assets/voice/v_sonja_snow_07.ogg"
+  },
+  "v_neve_peak_04": {
+   "speaker": "neve",
+   "kind": "story",
+   "file": "v2/src/events/snow_peak.js",
+   "event": "snow_finale",
+   "key": "the scale (after v_neve_peak_02・03)",
+   "line": 114,
+   "text": "……これを持っていくがよい。\nわたしの、うろこの一枚だ。",
+   "audio": "assets/voice/v_neve_peak_04.ogg"
+  },
+  "v_mayor_marsh_01": {
+   "speaker": "mayor",
+   "kind": "story",
+   "file": "v2/src/events/marsh_loch.js",
+   "event": "loch_assembly",
+   "key": "the assembly: asks for the name",
+   "line": 300,
+   "text": "では、名指しを聞こう。\n子どもたちを、誰がさらった？",
+   "audio": "assets/voice/v_mayor_marsh_01.ogg"
+  },
+  "v_mayor_marsh_02": {
+   "speaker": "mayor",
+   "kind": "story",
+   "file": "v2/src/events/marsh_loch.js",
+   "event": "loch_assembly",
+   "key": "the mist is named page 1",
+   "line": 313,
+   "text": "霧……だと？\n霧が、子どもをさらうというのか。",
+   "audio": "assets/voice/v_mayor_marsh_02.ogg"
+  },
+  "v_mayor_marsh_03": {
+   "speaker": "mayor",
+   "kind": "story",
+   "file": "v2/src/events/marsh_loch.js",
+   "event": "loch_assembly",
+   "key": "the mist is named page 2",
+   "line": 313,
+   "text": "証拠を示しなさい。",
+   "audio": "assets/voice/v_mayor_marsh_03.ogg"
+  },
+  "v_mayor_marsh_04": {
+   "speaker": "mayor",
+   "kind": "story",
+   "file": "v2/src/events/marsh_loch.js",
+   "event": "loch_assembly_right",
+   "key": "the proof holds page 1",
+   "line": 348,
+   "text": "霧が、魔女の姿をまねて\n子どもを連れていった……。",
+   "audio": "assets/voice/v_mayor_marsh_04.ogg"
+  },
+  "v_mayor_marsh_05": {
+   "speaker": "mayor",
+   "kind": "story",
+   "file": "v2/src/events/marsh_loch.js",
+   "event": "loch_assembly_right",
+   "key": "the proof holds page 2",
+   "line": 348,
+   "text": "……わしらは、あやうく\n無実の館に火をかけるところだった。",
+   "audio": "assets/voice/v_mayor_marsh_05.ogg"
+  },
+  "v_zaid_song_01": {
+   "speaker": "zaid",
+   "kind": "story",
+   "file": "v2/src/events/desert_00_common.js",
+   "event": "desert_camp1_scene",
+   "key": "star song 1 (caption, X.STARS[0])",
+   "line": 21,
+   "text": "♪　北のくぎ星　動かぬ星よ\n♪　迷う隊商の　くいとなれ",
+   "audio": "assets/voice/v_zaid_song_01.ogg"
+  },
+  "v_zaid_song_02": {
+   "speaker": "zaid",
+   "kind": "story",
+   "file": "v2/src/events/desert_00_common.js",
+   "event": "desert_camp2_scene",
+   "key": "star song 2 (caption, X.STARS[1])",
+   "line": 22,
+   "text": "♪　七つの泉星　ひしゃくを傾け\n♪　夜のしずくを　砂にまけ",
+   "audio": "assets/voice/v_zaid_song_02.ogg"
+  },
+  "v_zaid_song_03": {
+   "speaker": "zaid",
+   "kind": "story",
+   "file": "v2/src/events/desert_00_common.js",
+   "event": "desert_camp3_scene",
+   "key": "star song 3 (caption, X.STARS[2])",
+   "line": 23,
+   "text": "♪　地の果ての　白む星よ\n♪　……祖母は　「夜明けの星」と呼んだ",
+   "audio": "assets/voice/v_zaid_song_03.ogg"
+  },
+  "v_nadia_song_01": {
+   "speaker": "nadia",
+   "kind": "story",
+   "file": "v2/src/events/desert_00_common.js",
+   "event": "kasim_nadia",
+   "key": "the king's song with the name missing (caption, X.SONG_BLANK)",
+   "line": 16,
+   "text": "♪　砂の海に　水を招いた王よ\n♪　その名は――　……\n♪　夕べの祈りに　とこしえに",
+   "audio": "assets/voice/v_nadia_song_01.ogg"
+  },
+  "v_nadia_song_02": {
+   "speaker": "nadia",
+   "kind": "story",
+   "file": "v2/src/events/desert_00_common.js",
+   "event": "desert_finale",
+   "key": "the king's song in full (caption, X.SONG_FULL)",
+   "line": 17,
+   "text": "♪　砂の海に　水を招いた王よ\n♪　その名はハザル　日輪の友\n♪　夕べの祈りに　とこしえに",
+   "audio": "assets/voice/v_nadia_song_02.ogg"
+  },
+  "v_melda_song_01": {
+   "speaker": "melda",
+   "kind": "story",
+   "file": "v2/src/events/marsh_00_common.js",
+   "event": "manor_melda",
+   "key": "the bell song (caption, X.SONG, after v_melda_manor_05)",
+   "line": 65,
+   "text": "♪　鳴れよ、七つの鐘\n♪　霧は沼の底へ、\n♪　朝は町の窓へ",
+   "audio": "assets/voice/v_melda_song_01.ogg"
   }
  }
 }
