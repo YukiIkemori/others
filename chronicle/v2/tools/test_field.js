@@ -92,7 +92,8 @@ async function main() {
   ok('blocked by the outer wall: stays', same(at(), p0), at());
 
   section('主人公だけのフィールド（オーナーの決まり 2026-09-27）');
-  ok('fieldParty is off by default', R.Settings.get('fieldParty') === false && !R.Field.partyTrail());
+  ok('field shows the hero only (no party-trail setting)', !R.Field.partyTrail() && (R.Settings.set('fieldParty', true), !R.Field.partyTrail()));
+  R.Settings.set('fieldParty', false);
   await enter('field_lab', 2, 10, 'e');
   for (let i = 0; i < 4; i++) await step('right');
   ok('4-member party, no followers drawn or tracked', R.Game.party.length >= 4 && R.Field.trail().length === 0, { party: R.Game.party, trail: R.Field.trail() });
@@ -205,8 +206,8 @@ async function main() {
   R.Field.unlock('event');
   ok('no looking around while the field is locked (events / talk)', !gl3);
 
-  section('隊列のなぞり（設定 fieldParty = 後ろに並ぶ）');
-  R.Settings.set('fieldParty', true);
+  section('隊列のなぞり（仕組みだけ。F._trailForce）');
+  R.Field._trailForce = true;
   await enter('field_lab', 2, 10, 'e');
   for (let i = 0; i < 4; i++) await step('right');
   const tr = R.Field.trail();
@@ -218,7 +219,7 @@ async function main() {
   ok('guest follows', same([R.Field.trail()[3].x, R.Field.trail()[3].y], [4, 10]) || same([R.Field.trail()[3].x, R.Field.trail()[3].y], [3, 10]), R.Field.trail());
   R.Field.setGuest(null);
   ok('guest leaves', R.Field.trail().length === 3 && R.Game.guest === null);
-  R.Settings.set('fieldParty', false);
+  R.Field._trailForce = false;
   ok('turning the setting off empties the line on the next draw', (R.Field._trailCheck(), R.Field.trail().length === 0));
 
   section('タイル進入で 1 回・歩数');
@@ -270,7 +271,7 @@ async function main() {
   ok('lv 0 walks under the deck', same(at(), [15, 4]) && S.lv === 0, { at: at(), lv: S.lv });
   await step('up'); await step('up');
   ok('… across it (still lv 0)', same(at(), [15, 2]) && S.lv === 0, { at: at(), lv: S.lv });
-  R.Settings.set('fieldParty', true);
+  R.Field._trailForce = true;
   await enter('field_lab', 12, 3, 'e');
   await step('right');
   ok('onto the ladder (lv stays 0)', same(at(), [13, 3]) && S.lv === 0, { at: at(), lv: S.lv });
@@ -283,7 +284,7 @@ async function main() {
   ok('cannot step off the deck edge at lv 1', same(at(), [16, 4]) && S.lv === 1, { at: at(), lv: S.lv });
   const trl = R.Field.trail();
   ok('followers trace the height (lv 1 on the deck)', trl[0].lv === 1 && same([trl[0].x, trl[0].y], [16, 3]), trl);
-  R.Settings.set('fieldParty', false);
+  R.Field._trailForce = false;
   await step('up'); await step('left'); await step('left'); await step('left');
   ok('back to the ladder at lv 1', same(at(), [13, 3]) && S.lv === 1, { at: at(), lv: S.lv });
   await step('left');

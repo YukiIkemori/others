@@ -10,7 +10,9 @@
   const S = (F._s = F._s || {});
 
   /** 仲間を後ろに並べるか（設定 fieldParty。既定は主人公だけ） */
-  F.partyTrail = function () { try { return !!(R.Settings && R.Settings.get('fieldParty')); } catch (e) { return false; } };
+  // 持ち主 2026-09-28: 仲間を後ろに並べる設定は出さない（歩くモーションが全員分は無い）。フィールドは主人公だけ。
+  //   仕組みは残す（F._trailForce はテスト用）。保存された古い設定 fieldParty は読まない
+  F.partyTrail = function () { return !!F._trailForce; };
   /** フィールドで先頭に立つ人の id。隊列の順に関係なく主人公（持ち主 2026-09-27「どんな隊列でも主人公」）。主人公がいなければ隊列の先頭 */
   F.leadId = function () {
     const G = R.Game;

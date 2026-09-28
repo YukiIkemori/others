@@ -17,7 +17,7 @@
       { key: 'alwaysDash', name: '常にダッシュ', names: ONOFF, desc: 'オンにすると、B を押している間だけ歩く。' },
       { key: 'cursorMemory', name: 'カーソル記憶', names: { true: 'する', false: 'しない' }, desc: '戦闘で、前に選んだ行動と相手を覚えておく。' },
       { key: 'fieldZoom', name: 'フィールドの広さ', names: { near: 'ちかい', normal: 'ふつう', far: 'ひろい' }, desc: 'フィールドを映す広さ。' },
-      { key: 'fieldParty', name: 'フィールドの仲間', names: { false: '主人公だけ', true: '後ろに並ぶ' }, desc: 'フィールドで仲間を主人公の後ろに並べて歩かせる。' },
+      // 「フィールドの仲間（後ろに並ぶ）」の設定は無くした（持ち主 2026-09-28「歩くモーションを 20 人分は作っていない」）
       { key: 'fieldMap', name: 'ダンジョンの地図', names: { mini: '小さく', big: '大きく', off: '出さない' }, desc: 'ダンジョンで出す地図。フィールドで X を押しても切り替わる。' },
       { key: 'wipe', name: '全滅したとき', names: { retry: '直前の戦闘から', inn: '最後に泊まった宿から' }, desc: '全滅の画面で先に選んでおく物。' },
       { act: 'tips', name: '説明の札を読み直す', desc: 'これまでに見た、仕組みの説明の札を読み直す。' },
