@@ -253,7 +253,7 @@ module.exports = Object.assign(function worldPoi(A) {
       if (!walkCh(g[y][x]) || win(x, y) >= 3) continue;
       // 近い空き地に 3×2（まわり 1 マス空き）の木立か岩場を置く
       let spot = null;
-      for (let r = 0; r <= 8 && !spot; r++) for (let j = -r; j <= r && !spot; j++) for (let i = -r; i <= r; i++) {
+      for (let r = 0; r <= 16 && !spot; r++) for (let j = -r; j <= r && !spot; j++) for (let i = -r; i <= r; i++) {
         if (Math.max(Math.abs(i), Math.abs(j)) !== r) continue;
         if (free(x + i - 1, y + j, 3, 2, 1)) { spot = [x + i - 1, y + j]; break; }
       }
