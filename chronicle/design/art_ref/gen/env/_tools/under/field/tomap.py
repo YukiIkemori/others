@@ -14,15 +14,21 @@ for aid in sys.argv[1:]:
     M = d['meta']
     rows = d.get('rows_fit') or d['rows']
     painted, objects = list(d.get('painted_extra') or []), []
+    fx = json.load(open(aid + '/fix.json')) if os.path.exists(aid + '/fix.json') else {}
+    for mv in fx.get('objects', []):   # move objects to where the painting put their landmark
+        for o in d['objects']:
+            if all(o.get(k) == v for k, v in mv['match'].items()): o.update(mv['set'])
+    for k, v in fx.get('spawns', {}).items(): d['spawns'][k] = v
     for o in d['objects']:
         o = dict(o)
         p = o.pop('painted', None)
         if p: painted.append('%s@%d,%d' % (p, o['x'], o['y']))
         objects.append(o)
-    exits = [{k: v for k, v in e.items() if k != 'edge'} for e in d['exits']]
+    exits = [{k: v for k, v in e.items() if k != 'edge'} for e in d['exits'] + fx.get('exits', [])]
     has_over = os.path.exists(os.path.join(V2, 'assets/env/field/under/%s_over@32.png' % aid))
     art = {'image': 'field/under/' + aid, 'painted': painted}
     if has_over: art['overlay'] = 'field/under/%s_over' % aid
+    if os.path.exists(os.path.join(V2, 'assets/env/field/under/%s_closed@32.png' % aid)): art['closed'] = 'field/under/%s_closed' % aid
     short = aid[2:] if aid.startswith('f_') else aid
     edges = ', '.join('%s → %s.%s' % (e['edge'], e['to']['map'], e['to']['spawn']) for e in d['exits'])
     out = f"""// 生成物（design/art_ref/gen/env/_tools/under/field/ の areas.py → fit.py → tomap.py）。手で直さない: 配置は areas.py、当たりは fit.py で作り直す。

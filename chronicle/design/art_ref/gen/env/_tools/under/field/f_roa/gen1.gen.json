@@ -4,9 +4,11 @@
  "size": "2496x1920",
  "quality": "high",
  "background": "opaque",
+ "tag": "f_roa_under",
  "refs": [
   "/home/user/others/chronicle/design/art_ref/gen/env/_tools/under/field/f_roa/guide_48.png",
   "/home/user/others/chronicle/design/art_ref/gen/env/_tools/under/field/style_field.png"
  ],
- "tag": "f_roa_under"
+ "revised_prompt": "Create ONE complete finished top-down fantasy JRPG outdoor map image using the TWO attached images: FIRST image is mandatory exact spatial layout guide, paint directly over it and preserve every precise position, dimensions, routes, gaps and landmarks; SECOND image is rendering STYLE ONLY, never borrow its structures. Target 2496x1920, 52x40 tiles at 48px/tile. Premium intricate hand-placed crisp square pixel clusters, hue-shifted color ramps, warm dark outlines, no antialias/no blur, same pixel granularity and craftsmanship as style reference. Traditional directly-overhead RPG view with tree crowns and visible south sides of trees/landmarks, NOT isometric. Early summer Rolling Sheep Hills peninsula, bright green pastoral meadows, buttercup yellow flowers, tall grasses, looping tan rutted earth road, thin brown footpaths, north-south blue freshwater creek precisely on guide and small pond in lower-middle-left, arched gray stone bridge at guide crossing; old dense forest on west and south edges exactly matching guide forest footprint; north-east grey rocky crag field exactly in guide grey-circle area, rocky cliff shelves precisely matching irregular grey/brown guide shape in southwest, groves as indicated, small sandy shallows and blue-green sea wherever guide codes water, northwestern stone ring and central flat altar, south bank of knoll and worn steps, northwest village gate timber posts and crossbeam over road, grey well beside flagstones, huge ancient oak by fork, wayside red wooden shrine, dry-stone pasture walls of exactly guide shape and gate opening, shepherd fieldstone shelter, far bank stone windmill with four lattice sails. Interpret all color coded materials naturally: organic detailed edges remaining within one-third tile of original guide boundaries; textured stone, tiny wild flowers, pebbles, grass. Exact guide placement, no rearrangement or change of footprint; keep roads/gaps entirely walkable and free of props. Bright neutral even albedo lighting, no vignette, shadow pools, fog or glow. Absolutely no characters, animals, text, labels, grid, border, UI, signs, lanterns or chests. Produce only the image.",
+ "model": "generated"
 }

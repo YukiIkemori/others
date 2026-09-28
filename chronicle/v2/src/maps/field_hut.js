@@ -1,0 +1,71 @@
+// 生成物（design/art_ref/gen/env/_tools/under/field/ の areas.py → fit.py → tomap.py）。手で直さない: 配置は areas.py、当たりは fit.py で作り直す。
+// エリア f_hut「きこりの野」（森の手前の切り株の野、52×40）。エリア切り替えのフィールド（maps/field_00_kit.js）。
+//   出口: e → f_cross.west, w → f_fern.east
+//   絵: field/under/f_hut（v2/assets/env/field/under/。無ければマスから焼く）
+(function (R) {
+  'use strict';
+  R.FieldArea.def("f_hut", {
+    name: "きこりの野", region: "r_forest", outside: "forest_dark",
+    rows: [
+      "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwwFFFFFFFFFFFFFFF",
+      "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwFFFFFFFFFFFFF,FF",
+      "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwwFTTTTT,,,,,,,,;;",
+      "FFFFFFFFFFFFFFFFFFFFFFFFFFFFT;;;;Tww;;,,,,,,,,,,,,,;",
+      "FFFFFFFF\"T;,,,;T,,,,,;,;TT\";;;\";;;ww;;,,,,,,\",,,,,,;",
+      "FFFFFFFT\";;TrTT,,,,,,;;;TT;,,;,;;;ww;;,,,,,,\",;;,r,,",
+      "FFFFFFFT;,;TTTTTT,,,;;;,TTT,,,,;;;ww;,,,,,,;;;;;;,,,",
+      "FFFFFFF;;;,TTTTTT\"T,,;TTTTT,,,,;;;;w;,,,,,,\";\";;;;,,",
+      "FFFFFFFF;;;;TTTTTT,,,,,TTTTT,,;;;;;ww,,,;,\"\"\"\"\",;;;;",
+      "FFFFFFFF;T;FFF,\"\"TT,,,,,TTTT,,;;;,,,w;,,,,,,,,,,;;;,",
+      "FFFFFFFFFFFFFF,,,,,,,,,,,,T,;;,,,,,;ww,;,,,,\",,;;;;,",
+      "FFFFFFFFFFFFFF,,,,,,,,,,,,,,;T;;;;;;;w;;r,,,,,,;;;\"\"",
+      "FFFFFFFFFFFFFF;T,,,,,,,,,,,X;,;;;;;;;w,;\",;,,,,;;;\"\"",
+      "FFFFFFFFFFFFFFTTT,,XX,,,,,,;,X,;;;;;ww,,,,,,;;;;;;\",",
+      "FFFFFFFFFFFFFFTT,,,,,,,,,,,;,,,,;;;;ww,,,,,;;,;;;,,,",
+      "FFFFFFFFFFFFFFF;;X,,,,XXXXX,,,,,;;;;ww;,,,;;;;;;;;,;",
+      "FFFFFF,FFFFFFFFF,,,,,,XXXXX,,,,X;;;ww;,,,,;;;;;;;;;;",
+      "FFFFFF,FFFFFFFFFF,,,,,XXXXX,XX,,,;;ww,,,;;X;;;;;;;;;",
+      "FFFFFFFFFFFFFFFFFFX,,,XXXXX,,,,,;;;ww,,,;;;;;;;;;;;;",
+      "FFFFFFFFFFFFFFFFFF,,,,,::;,,,,,;;;,ww,,;;;;;;;;;;;;.",
+      "FFFFFFFFFFFFFTTTTTT,X,,::;,,,\"X;;;,ww,..............",
+      "FFFFFFFFFFFTTTTTXTT,,,;::,;.........==..............",
+      "FFFFFFFFFFFTTTTTTTTT;T.::...........==,,;;;;;;;;;;;;",
+      "............................,;;;;;;,ww,,,,;;;;;;,,,;",
+      "......................,,;,,,,,;;;;,,\"ww;,,,;;;;;;,,,",
+      "FFFFFFFFFF...;;;FFTTT;,,,,,,,;;,;r;,\"ww,,,,,;r;,;,,,",
+      "FFFFFFFFFFF,;;;;FFTTTT;,,,,,,,,,,;;,,ww,,,,,;;;,,;;;",
+      "FFFFFFFFFFFF;;;TFFTTTT;,,,,,,,,,,;,,,ww,,,,;;;;,r;;;",
+      "FF;\",;FTT\"FFF;;TT;;TTT;,,,,,,T,,,;,,,w,,,,;;;;;;;,;,",
+      "TTT;;;T;;;FFFFFT,;;TT;;;,,,;,,TT,;;;ww,,;;;;;;;;;;,,",
+      "TTTT;;;;;TFFFFFF,TTTTT;;,,T,,,,TT;;;ww,,;;;;;;;;;;;,",
+      "FFTTT;;;;;FFFFF,,TTT;TTTT,,,,,TT;;;;ww,;;;;;;;;;;,,,",
+      "FFFFFFF;;;FFFFF,,TTT;;,T,TT,,,,,;;;;w,,;;;;;\";;;,,,,",
+      "FFFFFFFFFFFFFFF,,T,,,;T,,;,;,,,;;;;,w;;;;;;;;;;;;;;;",
+      "FFFFFFFFFFFFFF;;,T,,,,TTTT,,,,,,;;;;ww;;;,;;;;;;;;;;",
+      "FFFFFFFFFFFFFTT;,,;T,T,;T;;,,,,;;;;;ww;,;,,;;;;;;;;;",
+      "FFFFFFFFFFFFFFFFFFFFFFFFFFTTTT,,,;;;ww;;,,,;;;;;;;\"\"",
+      "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;;wwTFFFTTTTT,,TT;",
+      "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwwFFFFFFFFFFFFFF",
+      "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwwFFFFFFFFFFFFF",
+    ],
+    objects: [
+      {"type":"door","x":24,"y":18,"look":"none","to":{"map":"hut","spawn":"door"}},
+      {"type":"examine","x":42,"y":17,"event":"world_poi_shrine"},
+      {"type":"waylamp","id":"wl_forest_1","x":33,"y":20,"lit":"q_forest_fireflies_1","event":"forest_waylamp"},
+      {"type":"sign","x":21,"y":20,"text":"きこりの休み小屋\n旅の人も、ひと休みを。"},
+      {"type":"prop","id":"lantern","x":27,"y":19},
+      {"type":"chest","id":"f_hut_c1","x":17,"y":13,"item":"i_potion","n":2},
+    ],
+    npcs: [
+
+    ],
+    spawns: {"east":{"x":50,"y":20,"dir":"w"},"west":{"x":1,"y":24,"dir":"e"},"hut":{"x":24,"y":19,"dir":"s"}},
+    exits: [{"x":51,"y":20,"w":1,"h":2,"to":{"map":"f_cross","spawn":"west"}},{"x":0,"y":24,"w":1,"h":2,"to":{"map":"f_fern","spawn":"east"}}],
+    triggers: [],
+    tilePatches: [],
+    zones: [{"rect":null,"zone":"zw_forest"}],
+    art: {"image":"field/under/f_hut","painted":[]},
+    meta: {"sub":"森の手前の切り株の野","worldRect":[170,160,70,60]},
+    links: {"hut":{"map":"f_hut","spawn":"hut"}},
+  });
+})(window.RPG);

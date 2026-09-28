@@ -79,6 +79,10 @@ def f_roa():
         a.blob(x, y, rx, ry, 'T', rough=0.35, seed=s, only=',;"')
     a.scatter('r', 0.012, only=',;', seed=31, clear=1)
     a.scatter('b', 0.010, only=',;', seed=32, clear=1)
+    # the old windmill on the far bank of the creek (a stone tower, its four sails reach over the grass north of it)
+    a.blob(46.5, 16, 3.2, 2.6, ',', rough=0.2, seed=51, force=True)
+    a.mark('windmill', [(x, y) for x in range(45, 48) for y in range(13, 17)], 'an OLD STONE WINDMILL: a round tapering tower of pale fieldstone with a conical shingle cap and four big lattice sails (canvas furled), a little wooden door on its south side (closed)', (214, 200, 170))
+    a.stroke([(44, 27.5), (45.5, 22), (46, 17.5)], 1.4, ':', force=True, only=',;"rTb')
     # the small nook in front of the ridge (east of the creek) with a chest
     a.rect(48, 11, 3, 2, ',', force=True, keep=True)
     a.tidy()

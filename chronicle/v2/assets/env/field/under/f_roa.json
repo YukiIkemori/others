@@ -1,0 +1,19 @@
+{
+ "id": "f_roa",
+ "kind": "under",
+ "map": "f_roa",
+ "tile": 32,
+ "size32": [
+  1664,
+  1280
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.868,
+ "files": {
+  "24": "f_roa@24.png",
+  "32": "f_roa@32.png"
+ },
+ "src": "generated"
+}

@@ -1,0 +1,19 @@
+{
+ "id": "f_cape",
+ "kind": "under",
+ "map": "f_cape",
+ "tile": 32,
+ "size32": [
+  1792,
+  1408
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.872,
+ "files": {
+  "24": "f_cape@24.png",
+  "32": "f_cape@32.png"
+ },
+ "src": "generated"
+}

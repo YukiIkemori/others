@@ -1,0 +1,8 @@
+{"note": "hand fits from check.png (gen1): the lighthouse painted 1.5 tiles east (door at x 31), its forecourt; the gatehouse arch north of the road (a second way into the town); the round ruin on the plateau is the old wall POI; the path down to the cove",
+ "open_rect": [[28,27,1,10,","],[27,27,1,10,":"],[28,37,6,2,"c"],[29,39,4,1,"c"],[51,7,5,1,","],[51,10,5,6,","],[20,23,2,9,":"]],
+ "solid_rect": [[29,27,4,10,"X"],[35,12,3,3,"X"]],
+ "open": [[48,6,"c"],[49,6,"c"]],
+ "objects": [{"match": {"type": "door"}, "set": {"x": 31, "w": 1}}, {"match": {"event": "world_poi_pen_wall"}, "set": {"x": 36, "y": 14}},
+             {"match": {"text": "ファロス灯台"}, "set": {"x": 28, "y": 38}}],
+ "spawns": {"lighthouse": {"x": 31, "y": 37, "dir": "s"}},
+ "exits": [{"x": 48, "y": 6, "w": 2, "h": 1, "to": {"map": "pharos", "spawn": "gate_w"}}]}

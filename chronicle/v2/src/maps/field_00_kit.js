@@ -27,6 +27,7 @@
       id, kind: 'field', theme: 'field', legend: LEGEND, outside: 'forest_dark',
       light: { ambient: '#4a5290', k: 0.5, mood: 'night' }, bgm: 'overworld',
       art: { image: 'field/under/' + id, overlay: 'field/under/' + id + '_over', painted: [] },
+      propSet: spec.region === 'r_forest' ? 'forest' : 'village',   // 看板・灯籠などの絵の組（props.js PROP_SET）: 半島は里の組、森は森の組
     }, spec);
     m.h = m.rows.length; m.w = [...m.rows[0]].length;
     for (const [spawn, to] of Object.entries(spec.links || {})) LINKS[spawn] = to;
@@ -35,8 +36,19 @@
     return m;
   };
   // データの後処理（ほかのファイルの onData の後）: 町・ダンジョンの「ワールドへ」の出口・戸口・階段の行き先を、エリアに付け替える
+  // 前のワールドへ出る所（縦切りの間は峠の崖崩れと番人で閉じている。全部の地方が開いたら、峠の先の前のワールドへ）。
+  // いずれ隣のエリアに替える（北の峠 → 雪原のエリア、東の峠 → 山地のエリア、南の峠 → 砂漠のエリア）
+  const WORLD_SPAWNS = { f_cross_e: { x: 341, y: 190, dir: 'e' }, f_south_s: { x: 100, y: 368, dir: 's' }, f_windhill_n: { x: 118, y: 133, dir: 'n' } };
   function link() {
     const M = R.DB.maps || {};
+    const w = M.world;
+    if (w && w.spawns) for (const [k, v] of Object.entries(WORLD_SPAWNS)) if (!w.spawns[k]) w.spawns[k] = Object.assign({}, v);
+    // 前のワールドの峠（崖崩れの tilePatches の所）から戻ると、エリアへ（前のワールドの体験版の範囲には戻らない）
+    if (w && w.exits && !w.exits.some((e) => e.to && e.to.map === 'f_cross')) {
+      w.exits.push({ x: 338, y: 188, w: 1, h: 3, to: { map: 'f_cross', spawn: 'east' } },
+        { x: 115, y: 136, w: 3, h: 1, to: { map: 'f_windhill', spawn: 'pass' } },
+        { x: 98, y: 366, w: 3, h: 1, to: { map: 'f_south', spawn: 'south' } });
+    }
     const re = (to) => { if (to && to.map === 'world' && LINKS[to.spawn]) { const n = LINKS[to.spawn]; to.map = n.map; to.spawn = n.spawn; } };
     for (const m of Object.values(M)) {
       if (!m || m.kind === 'world' || m.kind === 'field') continue;
