@@ -78,6 +78,7 @@ module.exports = function marsh(A) {
   const Z2 = (pts, wd) => {
     wd = wd || 2;
     ROUTES.push({ pts, wd });
+    if (A.ROADS) A.ROADS.push({ pts, wd, ch: 'Z', wet: 'K', zone: null });   // WORLD v3: ワールドを大きくするとき、この道も写して描き直す（沼の水の上は板の道）
     for (let i = 0; i < pts.length - 1; i++) {
       let [x, y] = pts[i]; const [x2, y2] = pts[i + 1];
       const put = () => { for (let j = 0; j < wd; j++) for (let q = 0; q < wd; q++) { const c = get(x + q, y + j); if (c === '~' || c === 'O') continue; set(x + q, y + j, c === 'W' || c === 'K' ? 'K' : 'Z'); } };

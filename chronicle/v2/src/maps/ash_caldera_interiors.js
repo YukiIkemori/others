@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.onData(function () {
-    const K = R.ContentF.kit, AK = R.Ash.kit;
+    const K = R.ContentF.kit, AK = R.Ash.kit, L = K.L;
 
     function interior(id, name, w, h, o) {
       const { g, door } = K.room(w, h, { doorX: o.doorX });
@@ -60,6 +60,7 @@
       npcs: [
         K.npc('inn_keeper', 'npc_ash_woman', 4, 2, { name: '宿のおかみ', dir: 's', talk: 'caldera_inn_keeper', pushable: false }),
         K.npc('inn_guest', 'npc_traveler', 12, 8, { name: '湯治の行商', dir: 's', talk: 'caldera_inn_guest', reward: 'lead' }),
+        K.npc('messenger', 'npc_hawk', 8, 9, { name: '頭巾の使い', dir: 'n', talk: [L('……。')], cond: 'ash_eve_on' }),
       ],
       spawns: { bed: { x: 12, y: 7, dir: 's' } },
     });
@@ -98,5 +99,29 @@
       ],
       meta: { sub: '壁に古い槍が掛かっている' },
     });
+
+    // ---------------------------------------------------------------- 宿場「灰見の宿」16×12（#27、潮見橋のたもと。ワールドの戸から）
+    {
+      const { g, door } = K.room(16, 12, {});
+      K.rect(g, 5, 6, 6, 3, 'c');
+      K.def('haimi_inn', {
+        name: '宿場「灰見の宿」', kind: 'interior', region: 'r_ash', location: 'haimi',
+        legend: AK.ROOM('wall_stone', 'basalt_floor'), rows: g, outside: 'wall_stone',
+        objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('bookshelf', 1, 2),
+          K.prop('bed', 11, 2), K.prop('bed', 13, 2), K.prop('bed', 13, 5), K.prop('table', 7, 7), K.prop('chair', 6, 7), K.prop('chair', 8, 7),
+          K.prop('stove', 1, 6), K.prop('water_urn', 14, 9), K.prop('lantern', 9, 3), K.exam(1, 3, 'haimi_bridge_log')],
+        npcs: [
+          K.npc('haimi_keeper', 'npc_ash_old_f', 4, 2, { name: '宿のばあさま', dir: 's', talk: 'haimi_keeper', pushable: false }),
+          K.npc('haimi_bridgeman', 'npc_ash_old_m', 11, 8, { name: '橋番のゴウ', dir: 'w', talk: 'haimi_bridgeman', reward: 'news' }),
+          K.npc('haimi_guest', 'npc_traveler', 4, 8, { name: '湿原から来た行商', dir: 'e', talk: 'haimi_guest', reward: 'lead' }),
+        ],
+        spawns: { door: { x: door.x, y: 10, dir: 'n' } },
+        exits: [{ x: door.x, y: 11, w: 1, h: 1, to: { map: 'world', spawn: 'haimi' } }],
+        triggers: [],
+        light: Object.assign({}, AK.LIGHT_ROOM),
+        bgm: 'town',
+        meta: { minimap: false, sub: '潮見橋のたもとの古い宿' },
+      });
+    }
   });
 })(window.RPG);

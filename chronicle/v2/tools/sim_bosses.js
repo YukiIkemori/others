@@ -49,6 +49,16 @@ for (const T of [1, 3]) {
   BOSSES['tr_b_dolls' + k] = { troop: 'tr_b_dolls', tier: T, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 9], note: '指揮者を先に（楽士を起こす）、棒を掲げたら守る' };
   BOSSES['tr_b_mistbeast' + k] = { troop: 'tr_b_mistbeast', tier: T, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 13], note: '霧を集めたら守る、分身は後回し、半分を切ったら物理で押す' };
 }
+// 灰の荒野（src/data/bosses_ash.js）。好きな順に遊ぶので、ティア 1・3 で測る。大会の 1〜4 回戦は間に全快の連戦（負けてもその回から）
+for (const T of [1, 3]) {
+  const k = '@' + T;
+  BOSSES['tr_ash_r2' + k] = { troop: 'tr_ash_r2', tier: T, kind: 'mid', members: STD, fight: 60, repeat: 60, script: 95, rounds: [4, 8], note: '獣使いを先に（獣が座る）、口笛が鳴ったら守る' };
+  BOSSES['tr_ash_r3' + k] = { troop: 'tr_ash_r3', tier: T, kind: 'mid', members: STD, fight: 60, repeat: 60, script: 95, rounds: [4, 8], note: '姉を先に（妹を起こす）、妹の詠唱が来たら守る' };
+  BOSSES['tr_ash_r4' + k] = { troop: 'tr_ash_r4', tier: T, kind: 'mid', members: STD, fight: 50, repeat: 50, script: 92, rounds: [5, 9], note: '硬い。振りかぶったら守る' };
+  BOSSES['tr_b_zakuro' + k] = { troop: 'tr_b_zakuro', tier: T, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [6, 10], note: '大会の決勝。居合の構え（「構えな」）→ 守る。半分で二本目' };
+  BOSSES['tr_b_hellhound' + k] = { troop: 'tr_b_hellhound', tier: T, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 9], note: '二つの頭が息を吸ったら守る。水に弱い' };
+  BOSSES['tr_b_lavabeast' + k] = { troop: 'tr_b_lavabeast', tier: T, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 13], note: '背の火口がふくれたら守る。半分で冷えて硬くなる' };
+}
 
 function loadR() { return require('./lib/load')({ quiet: true }); }
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : 0);

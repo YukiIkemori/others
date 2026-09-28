@@ -11,7 +11,7 @@
 (function (R) {
   'use strict';
   R.onData(function () {
-    const K = R.ContentF.kit, AK = R.Ash.kit;
+    const K = R.ContentF.kit, AK = R.Ash.kit, L = K.L;
     const blob = (g, cx, cy, rx, ry, ch, seed, only) => {
       for (let y = Math.floor(cy - ry - 1); y <= cy + ry + 1; y++) for (let x = Math.floor(cx - rx - 1); x <= cx + rx + 1; x++) {
         const wob = (((x * 17 + y * 31 + seed * 7) % 9) / 9 - 0.5) * 0.3;
@@ -85,8 +85,8 @@
         legend: AK.VOLCANO(), rows: g, outside: 'wall_cave',
         objects: O,
         npcs: [
-          K.npc('copyist_a', 'npc_scribe', 9, 13, { name: '記録院の写し手', dir: 'n', talk: null, cond: ['ash_copyists', '!ash_copy_done'] }),
-          K.npc('copyist_b', 'npc_scribe', 12, 13, { name: '記録院の写し手', dir: 'n', talk: null, cond: ['ash_copyists', '!ash_copy_done'] }),
+          K.npc('copyist_a', 'npc_scribe', 9, 13, { name: '記録院の写し手', dir: 'n', talk: [L('……。')], cond: ['ash_copyists', '!ash_copy_done'] }),
+          K.npc('copyist_b', 'npc_scribe', 12, 13, { name: '記録院の写し手', dir: 'n', talk: [L('……。')], cond: ['ash_copyists', '!ash_copy_done'] }),
         ],
         spawns: { entrance: { x: 27, y: 45, dir: 'n' }, stairs: { x: 28, y: 5, dir: 's' } },
         exits: [{ x: 26, y: 47, w: 4, h: 1, to: { map: 'world', spawn: 'volcano' } }],

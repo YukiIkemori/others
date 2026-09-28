@@ -240,6 +240,7 @@
         default: break;
       }
     }
+    if (T._propSet) T._propSet(map, items, dyn);   // テーマの描き直した物（props.js、ENV_ASSETS.md §9）: opts.set
     const plan = { items, dyn, occ };
     planCache.set(map, { sig, plan });
     return plan;
@@ -331,7 +332,7 @@
     const hit = (x0, y0, x1, y1) => x1 > X0 - M && x0 < X0 + S + M && y1 > Y0 - M && y0 < Y0 + S + M;
     const draw = [];
     for (const it of plan.items) {
-      if (und && (it.bld || und.painted.has(it.key.slice(8)))) continue;   // 下絵に描いてある（建物・柵…）
+      if (und && (it.bld || und.painted.has(it.key.slice(8)) || (und.painted.size && und.painted.has(it.key.slice(8) + '@' + Math.floor(it.x / t) + ',' + Math.round(it.ft / t))))) continue;   // 下絵に描いてある（建物・柵…、'id@x,y' = その 1 つだけ。ENV_ASSETS.md §9）
       if (it.bld) { if (hit(it.x - 8 * s, it.y - it.h - 24 * s, it.x + it.w + 40 * s, it.y + 24 * s)) draw.push(it); }
       else if (hit(it.x - 96 * s, it.y - 120 * s, it.x + 96 * s, it.y + 32 * s)) draw.push(it);
     }

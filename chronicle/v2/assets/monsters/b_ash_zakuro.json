@@ -1,0 +1,50 @@
+{
+ "sprite": "b_ash_zakuro",
+ "id": "b_ash_zakuro",
+ "name": "ザクロ",
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 54,
+ "h": 104,
+ "anchor": [
+  27,
+  102
+ ],
+ "points": {
+  "head": [
+   31,
+   6
+  ],
+  "center": [
+   27,
+   52
+  ],
+  "fx": [
+   31,
+   44
+  ],
+  "top": [
+   27,
+   0
+  ],
+  "body": [
+   27,
+   56,
+   16,
+   34
+  ]
+ },
+ "facing": "right",
+ "long": 104,
+ "core_long": null,
+ "target": {
+  "w": 54,
+  "h": 104,
+  "long": 104
+ },
+ "colors": 48,
+ "pitch": 8,
+ "note": "derived from the field sprite (v2/assets/sprites/npc_zakuro) by the ash content agent",
+ "scaled2x": true
+}

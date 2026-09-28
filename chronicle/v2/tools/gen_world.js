@@ -17,7 +17,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const W = 224, H = 192;
+let W = 224, H = 192;   // 論理の座標 L の大きさ。world_scale（下の「ワールドを K 倍に」）の後は W の大きさになる
+const WORLD_K = +(process.env.WORLD_K || 3);   // WORLD v3（2026-09-28）: ワールドの倍率。1 なら L のまま（前の生成物と同じ）
 const OUT = path.join(__dirname, '..', 'src', 'maps', 'world.js');
 
 // ------------------------------------------------------------------ 乱数とノイズ（種つき）
@@ -559,7 +560,24 @@ const inDesert = (x, y) => x >= DESERT.x0 && x <= DESERT.x1 && y >= DESERT.y0 &&
 const SNOW = require('./gen_world_snow')({ get, set, rect, road, h2, fbm, P, S, LAMP, objects, npcs, exits, triggers, tilePatches, spawns, zones, areas, LEGEND, ROADS }).box;
 const inSnow = (x, y) => x >= SNOW.x0 && x <= SNOW.x1 && y >= SNOW.y0 && y <= SNOW.y1;
 // 湿原の地方（グレイモア湿原・山あいの街道（仮）、tools/gen_world_marsh.js）: 地形・町と入口・灯籠・出現表・地名・北の入口の閉じ方を上から描く
-require('./gen_world_marsh')({ get, set, rect, road, h2, fbm, P, S, LAMP, objects, npcs, exits, triggers, tilePatches, spawns, zones, areas, LEGEND });
+require('./gen_world_marsh')({ get, set, rect, road, h2, fbm, P, S, LAMP, objects, npcs, exits, triggers, tilePatches, spawns, zones, areas, LEGEND, ROADS });
+// 灰の荒野の地方（灰の荒野・潮見橋、tools/gen_world_ash.js）: 地形・町と入口・灯り・出現表・地名を上から描く（縦切りでは砂漠の側の guard_ash で閉じる）
+require('./gen_world_ash')({ get, set, road, h2, fbm, P, S, LAMP, objects, npcs, exits, tilePatches, spawns, zones, areas, LEGEND });
+
+// ------------------------------------------------------------------ ワールドを K 倍に（WORLD v3、tools/world_scale.js。地方の生成器は全部この前）
+// 上の地方の生成器はどれも論理の座標 L（224×192）で描く。ここで町・門・閉じ方の塊（core）はそのまま、その外を K 倍にし、道を蛇行させ、
+// 空いた所に名所と飾りを置く（tools/world_poi.js）。変換は meta.xform（src/core/world_xform.js）。以下の検査の L の枠は XF.toL で比べる
+const XF = require('../src/core/world_xform.js');
+let XFORM = null, SCALE = null;
+if (WORLD_K > 1) {
+  SCALE = require('./world_scale')({ g, W, H, K: WORLD_K, LEGEND, ROADS, objects, npcs, exits, triggers, tilePatches, spawns, zones, areas, h2, fbm, vn });
+  g.length = 0; for (const r of SCALE.g) g.push(r);
+  W = SCALE.W; H = SCALE.H; XFORM = SCALE.xform;
+  require('./world_poi')({ g, W, H, K: WORLD_K, LEGEND, SCALE, objects, npcs, exits, spawns, zones, h2, vn, XF, XFORM });
+}
+/** L のマス → W のマス、W のマス → L のマス（倍率 1 ならそのまま） */
+const cW = (x, y) => (XFORM ? XF.cell(XFORM, x, y) : [x, y]);
+const cL = (x, y) => (XFORM ? XF.lcell(XFORM, x, y) : [x, y]);
 
 // --- 街灯の置き場所をならす（v2/tools/qa/check_lamps.js と同じ決まり。オーナーの報告「街灯が通行不能で移動が面倒」）
 // 当たりのある灯り（waylamp・lamp_post・snow_lamp）が道の上・戸口の前・出入り口・着く所にあるか、そばの通り道を 1 マス幅にする・
@@ -677,9 +695,9 @@ function check() {
   // 到達の検査は製品版（縦切りの閉じ方なし）で見る。縦切りで閉じた先（雪原・砂漠）は下で「閉じていること」を見る
   const sliceOff = (c) => c && c.slice === true ? false : sliceOn(c);
   const seen = bfs(applyPatches(sliceOff), spawns.roa.x, spawns.roa.y, sliceOff);
-  for (const k of ['yule', 'pass_inn', 'kasim', 'loch']) if (spawns[k] && seenSlice[spawns[k].y * W + spawns[k].x]) errs.push('slice leak: ' + k + ' is reachable in the demo');
+  for (const k of ['yule', 'pass_inn', 'kasim', 'loch', 'caldera']) if (spawns[k] && seenSlice[spawns[k].y * W + spawns[k].x]) errs.push('slice leak: ' + k + ' is reachable in the demo');
   let n = 0, pen = 0, fst = 0, pl = 0;
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (seenSlice[y * W + x]) { n++; if (y >= 78 && x >= 66) pen++; else if (x <= 64) fst++; else pl++; }
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (seenSlice[y * W + x]) { n++; const [lx, ly] = cL(x, y); if (ly >= 78 && lx >= 66) pen++; else if (lx <= 64) fst++; else pl++; }
   info.walk = n; info.peninsula = pen; info.forest = fst; info.plains = pl;
   // 入口に着く（出口のマスの隣か上）
   for (const e of exits) {
@@ -688,21 +706,23 @@ function check() {
     if (!ok) errs.push('exit not reachable: ' + JSON.stringify(e.to));
   }
   for (const o of objects) if (o.type === 'building' && o.door) { if (!seen[(o.door.y + 1) * W + o.door.x]) errs.push('door not reachable: ' + o.id); }
-  for (const o of objects) if (o.type === 'stairs' && !seen[o.y * W + o.x] && !(SNOW.late && SNOW.late(o.x, o.y))) errs.push('stairs not reachable ' + o.x + ',' + o.y);
-  for (const k of Object.keys(spawns)) { const s = spawns[k]; if (!walkCh(gg[s.y][s.x]) && k !== 'bridge_n') errs.push('spawn on a wall: ' + k); if (!seen[s.y * W + s.x] && k !== 'bridge_n' && !(SNOW.late && SNOW.late(s.x, s.y))) errs.push('spawn not reachable: ' + k); }
+  const late = (x, y) => SNOW.late && SNOW.late(...cL(x, y));
+  for (const o of objects) if (o.type === 'stairs' && !seen[o.y * W + o.x] && !late(o.x, o.y)) errs.push('stairs not reachable ' + o.x + ',' + o.y);
+  for (const k of Object.keys(spawns)) { const s = spawns[k]; if (!walkCh(gg[s.y][s.x]) && k !== 'bridge_n') errs.push('spawn on a wall: ' + k); if (!seen[s.y * W + s.x] && k !== 'bridge_n' && !late(s.x, s.y)) errs.push('spawn not reachable: ' + k); }
   // 閉じ方: 縦切りの範囲の外（雪原・山地・砂漠）に出られない
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (seenSlice[y * W + x] && (y < 40 || x > 118 || y > 134)) { errs.push('slice leaks at ' + x + ',' + y); y = H; break; }
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { if (!seenSlice[y * W + x]) continue; const [lx, ly] = cL(x, y); if (ly < 40 || lx > 118 || ly > 134) { errs.push('slice leaks at ' + x + ',' + y + ' (L ' + lx + ',' + ly + ')'); y = H; break; } }
   // 跳ね橋が上がっている間、半島から出られない
   const pro = (c) => c && c.slice === true ? true : c === '!prologue_done' ? true : false;
   const gp = applyPatches(pro);
   const sp = bfs(gp, spawns.roa.x, spawns.roa.y, pro);
-  if (sp[63 * W + 87]) errs.push('the drawbridge does not close the peninsula in the prologue');
+  if (sp[cW(87, 63)[1] * W + cW(87, 63)[0]]) errs.push('the drawbridge does not close the peninsula in the prologue');
   // 30 歩の空白（街道と小道のマスから半径 15 に目印が 1 つも無い）
   const marks = objects.filter((o) => o.type === 'waylamp' || o.type === 'sign' || o.type === 'building' || o.type === 'stairs' || o.type === 'examine' ||
     (o.type === 'prop' && /lamp|lantern|tent|mushroom_glow|firefly|beacon|tree_giant|ship/.test(o.id))).map((o) => [o.x, o.y]);
   for (const n2 of npcs) marks.push([n2.x, n2.y]);
   let empty = 0; const emptyAt = [];
-  for (let y = 40; y <= DESERT.y1; y++) for (let x = 6; x <= 118; x++) {
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    { const [lx, ly] = cL(x, y); if (ly < 40 || ly > DESERT.y1 || lx < 6 || lx > 118) continue; }
     if (!seenSlice[y * W + x] || !'.d'.includes(gg[y][x])) continue;   // 体験版で歩ける範囲だけ見る
     if (!marks.some(([mx, my]) => Math.abs(mx - x) <= 15 && Math.abs(my - y) <= 8)) { empty++; if (emptyAt.length < 8) emptyAt.push(x + ',' + y); }
   }
@@ -716,7 +736,7 @@ function emit() {
   const rows = g.map((r) => r.join(''));
   const js = [];
   js.push('// 生成物（CONTENT-P の tools/gen_world.js）。手で直さない: node v2/tools/gen_world.js で作り直す。');
-  js.push('// ワールド（224×192）。縦切りの範囲はファロス半島・北の野・ヴェルダの森（V2_PLAN §3.2、WORLD_REDESIGN §2）。');
+  js.push('// ワールド（' + W + '×' + H + '）。縦切りの範囲はファロス半島・北の野・ヴェルダの森（V2_PLAN §3.2、WORLD_REDESIGN §2）。' + (XFORM ? ' WORLD v3: 論理の座標 L を K=' + XFORM.K + ' 倍（meta.xform、src/core/world_xform.js）。' : ''));
   js.push('// 他の地方への峠は DB.config.slice の間だけ崖崩れと番人で閉じる（tilePatches・npcs の cond {slice:true}）。');
   js.push('(function (R) {');
   js.push("  'use strict';");
@@ -739,7 +759,7 @@ function emit() {
   js.push('    tilePatches: ' + JSON.stringify(tilePatches) + ',');
   js.push('    zones: ' + JSON.stringify(zones) + ',');
   js.push("    light: { ambient: '#4a5290', k: 0.5, mood: 'night' }, bgm: 'overworld', bbg: 'forest',");
-  js.push('    meta: ' + JSON.stringify({ sub: '長い夜の大陸', areas }) + ',');
+  js.push('    meta: ' + JSON.stringify(Object.assign({ sub: '長い夜の大陸', areas }, XFORM ? { xform: XFORM } : {})) + ',');
   js.push('  });');
   js.push('})(window.RPG);');
   return js.join('\n') + '\n';
@@ -769,4 +789,4 @@ if (require.main === module) {
   console.log('[gen_world] wrote', path.relative(process.cwd(), OUT), (fs.statSync(OUT).size / 1024).toFixed(0) + ' KB');
   if (r.errs.length) process.exitCode = 1;
 }
-module.exports = { check, W, H };
+module.exports = { check, W, H, _state: () => ({ g, W, H, LEGEND, ROADS, objects, npcs, exits, triggers, tilePatches, spawns, zones, areas }) };

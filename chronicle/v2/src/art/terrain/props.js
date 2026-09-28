@@ -351,7 +351,7 @@
     if (!T.Env || !T.Env.propIds) return;
     const SOFT = /^(dec_|fern|reeds|rug_roll|house_plant|stool|wash_tub)/;
     for (const id of T.Env.propIds()) {
-      if (DRAW[id]) continue;
+      if (DRAW[id] || id.indexOf('__') > 0) continue;   // <id>__<set> はテーマの描き直し（置ける物ではない）
       if (!R.DB.props[id]) R.def('props', id, SOFT.test(id) ? { soft: true } : { solid: true, shadow: 'blob' });
       if (!META[id]) META[id] = SOFT.test(id) ? { soft: true } : { solid: true, shadow: 'blob' };
       DRAW[id] = function () { return null; };
@@ -359,8 +359,28 @@
       T._hdDef('hd:prop:' + id, (o) => bakeProp(id, o || {}), R.DB.props[id] || {});
     }
   };
+  // テーマの描き直した物（design/ENV_ASSETS.md §9）: 下絵の町・ダンジョンに合わせて描き直した機能の物は <id>__<set> の画像。
+  // チャンクの一覧（planOf の後）で、その組に絵のある物だけ opts.set を足す（Hd の焼いた絵は opts ごとなので、組ごとに別に焼ける）
+  const PROP_SET = { harbor: 'harbor', hill_village: 'village', treetop: 'forest', moss_village: 'forest', forest_dungeon: 'wood', tree_inside: 'wood', cave: 'cave', lighthouse: 'lighthouse' };
+  const SET_IDS = {};   // set → Set(id)（画像の索引から。T.Env が読めてから作る）
+  function setIds(set) {
+    if (SET_IDS[set]) return SET_IDS[set];
+    if (!(T.Env && T.Env.ready && T.Env.propIds)) return null;
+    const r = new Set(), tail = '__' + set;
+    for (const k of T.Env.propIds()) if (k.endsWith(tail)) r.add(k.slice(0, -tail.length));
+    return (SET_IDS[set] = r);
+  }
+  T._propSetOf = function (map) { return (map && (map.propSet || PROP_SET[map.theme])) || null; };
+  T._propSet = function (map, items, dyn) {
+    const set = T._propSetOf(map), ids = set && setIds(set);
+    if (!ids || !ids.size) return;
+    for (const it of items.concat(dyn)) {
+      if (!it.key || it.key.slice(0, 8) !== 'hd:prop:' || !ids.has(it.key.slice(8))) continue;
+      it.opts = Object.assign({}, it.opts || {}, { set });
+    }
+  };
   function bakeProp(id, o) {
-    const ev = T.Env && T.Env.prop ? T.Env.prop(id, o.v, o) : null;
+    const ev = T.Env && T.Env.prop ? ((o.set && T.Env.prop(id + '__' + o.set, o.v, o)) || T.Env.prop(id, o.v, o)) : null;
     if (ev) return envProp(id, ev, o);
     // 画像にしかない物で、画像がまだ（読み込み中・無い）: 透明な 1 コマ（コードの絵は無い）
     if (DRAW[id] && DRAW[id].envOnly) {

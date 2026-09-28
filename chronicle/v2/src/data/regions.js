@@ -27,7 +27,8 @@
       page: 'k_page_marsh', town: 'loch', dungeons: ['manor', 'bog'], bossTroop: 'tr_b_mistbeast', zone: 'zw_marsh', beacon: '七つの鐘楼の灯', beaconAt: { map: 'world', x: 183, y: 69 } },   // 湿原は開いた（marsh_*.js）
     r_isles: { name: 'マレア諸島', short: 'isles', n: 5, chapter: { title: '帰らずの船長', summary: '' }, page: 'k_page_isles', town: 'coral', beacon: '帰らずの灯', slice: 'locked' },
     r_mine: { name: 'ガルド山地', short: 'mine', n: 6, chapter: { title: '鍛冶神の誓い', summary: '' }, page: 'k_page_mine', town: 'dovan', beacon: '鍛冶神の炉', slice: 'locked' },
-    r_ash: { name: '灰の荒野', short: 'ash', n: 7, chapter: { title: '火の鳥の眠る山', summary: '' }, page: 'k_page_ash', town: 'caldera', beacon: '火の鳥', slice: 'locked' },
+    r_ash: { name: '灰の荒野', short: 'ash', n: 7, chapter: { title: '火の鳥の眠る山', summary: '火口の卵が冷え、\n灰の荒野の赤が鈍っていった。\n語り部が炎の試練を勝ち抜き、\n壁画の物語を卵に語ると、\n火の鳥がかえった。' },
+      page: 'k_page_ash', town: 'caldera', dungeons: ['volcano'], bossTroop: 'tr_b_lavabeast', zone: 'zw_ash_plain', beacon: '火の鳥', beaconAt: { map: 'world', x: 193, y: 136 } },   // 灰の荒野は開いた（ash_*.js）
     r_star: { name: 'オルビス高原', short: 'star', n: 8, chapter: { title: '星を数えた賢者', summary: '' }, page: 'k_page_star', town: 'orbis', beacon: '星', slice: 'locked' },
     world: { name: '世界のうわさ', short: 'world', n: 9, chapter: { title: '', summary: '' } },
   });

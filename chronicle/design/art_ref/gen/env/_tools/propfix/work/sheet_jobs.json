@@ -1,0 +1,68 @@
+[
+ {
+  "out": "/home/user/others/chronicle/design/art_ref/gen/env/propfix/sheet_harbor.png",
+  "tag": "propfix_sheet_harbor",
+  "size": "1024x1024",
+  "quality": "high",
+  "background": "transparent",
+  "refs": [
+   "/home/user/others/chronicle/design/art_ref/gen/env/propfix/pharos_w0.png"
+  ],
+  "prompt": "A sprite sheet of 9 separate objects for a top-down JRPG map, to be placed on top of the painted map shown in the reference image. Match the reference exactly: the same hi-bit pixel-painting style and brushwork, the same palette and material textures, the same soft light from the upper left (lit tops and left sides, shaded right sides), the same classic steep 3/4 top-down view (you see the top surface and the front face; objects stand upright, base at the bottom). Arrange them in a 3 x 3 grid in reading order (left to right, top to bottom) with wide empty space between them; every object fully separate, nothing touching, nothing cut off. Draw each object large, filling most of its grid cell. The objects, in order: 1) tall black iron harbour street lamp post with a glass lantern head (unlit, dark glass); 2) small iron and glass lantern standing on the ground (unlit); 3) wooden notice board on two posts with pinned paper notices and a small roof; 4) fish-and-fruit market stall with a red-and-white striped cloth awning on poles; 5) small wooden signpost with a blank plank sign; 6) terracotta pot with red flowers; 7) weathered oak barrel with iron hoops; 8) wooden cargo crate; 9) short black iron mooring bollard.\nBackground: fully transparent. No ground, no floor, no shadows, no text, no labels, no numbers. Even albedo lighting: no night, no glow halos and no light spilling around the objects (lamps unlit)."
+ },
+ {
+  "out": "/home/user/others/chronicle/design/art_ref/gen/env/propfix/sheet_village.png",
+  "tag": "propfix_sheet_village",
+  "size": "1024x1024",
+  "quality": "high",
+  "background": "transparent",
+  "refs": [
+   "/home/user/others/chronicle/design/art_ref/gen/env/propfix/roa_w0.png"
+  ],
+  "prompt": "A sprite sheet of 4 separate objects for a top-down JRPG map, to be placed on top of the painted map shown in the reference image. Match the reference exactly: the same hi-bit pixel-painting style and brushwork, the same palette and material textures, the same soft light from the upper left (lit tops and left sides, shaded right sides), the same classic steep 3/4 top-down view (you see the top surface and the front face; objects stand upright, base at the bottom). Arrange them in a 2 x 2 grid in reading order (left to right, top to bottom) with wide empty space between them; every object fully separate, nothing touching, nothing cut off. Draw each object large, filling most of its grid cell. The objects, in order: 1) village street lamp: dark wooden post with a small iron lantern hanging from an arm (unlit); 2) small iron lantern standing on the ground (unlit); 3) small wooden signpost with a blank plank sign; 4) small cluster of pale teal glowing mushrooms.\nBackground: fully transparent. No ground, no floor, no shadows, no text, no labels, no numbers. Even albedo lighting: no night, no glow halos and no light spilling around the objects (lamps unlit)."
+ },
+ {
+  "out": "/home/user/others/chronicle/design/art_ref/gen/env/propfix/sheet_forest.png",
+  "tag": "propfix_sheet_forest",
+  "size": "1536x1024",
+  "quality": "high",
+  "background": "transparent",
+  "refs": [
+   "/home/user/others/chronicle/design/art_ref/gen/env/propfix/fern_w0.png"
+  ],
+  "prompt": "A sprite sheet of 6 separate objects for a top-down JRPG map, to be placed on top of the painted map shown in the reference image. Match the reference exactly: the same hi-bit pixel-painting style and brushwork, the same palette and material textures, the same soft light from the upper left (lit tops and left sides, shaded right sides), the same classic steep 3/4 top-down view (you see the top surface and the front face; objects stand upright, base at the bottom). Arrange them in a 2 x 3 grid in reading order (left to right, top to bottom) with wide empty space between them; every object fully separate, nothing touching, nothing cut off. Draw each object large, filling most of its grid cell. The objects, in order: 1) small forest lantern: a paper-and-wood lantern on a short wooden stake (unlit); 2) small cluster of pale teal glowing mushrooms; 3) rustic notice board made of rough planks and branches with pinned leaves of paper; 4) rustic wooden signpost made of a branch with a blank plank; 5) small forest market stall with a green leaf-patterned cloth awning and baskets; 6) clump of tall reeds.\nBackground: fully transparent. No ground, no floor, no shadows, no text, no labels, no numbers. Even albedo lighting: no night, no glow halos and no light spilling around the objects (lamps unlit)."
+ },
+ {
+  "out": "/home/user/others/chronicle/design/art_ref/gen/env/propfix/sheet_cave.png",
+  "tag": "propfix_sheet_cave",
+  "size": "1536x1024",
+  "quality": "high",
+  "background": "transparent",
+  "refs": [
+   "/home/user/others/chronicle/design/art_ref/gen/env/propfix/well_w0.png"
+  ],
+  "prompt": "A sprite sheet of 5 separate objects for a top-down JRPG map, to be placed on top of the painted map shown in the reference image. Match the reference exactly: the same hi-bit pixel-painting style and brushwork, the same palette and material textures, the same soft light from the upper left (lit tops and left sides, shaded right sides), the same classic steep 3/4 top-down view (you see the top surface and the front face; objects stand upright, base at the bottom). Arrange them in a 2 x 3 grid in reading order (left to right, top to bottom) with wide empty space between them; every object fully separate, nothing touching, nothing cut off. Draw each object large, filling most of its grid cell. The objects, in order: 1) cluster of pale blue crystals growing from the rock; 2) small cluster of pale teal glowing cave mushrooms; 3) rough stone steps going up toward the top of the image, cut into cave rock; 4) old worn stone grave marker; 5) old wooden signpost with a blank plank.\nBackground: fully transparent. No ground, no floor, no shadows, no text, no labels, no numbers. Even albedo lighting: no night, no glow halos and no light spilling around the objects (lamps unlit)."
+ },
+ {
+  "out": "/home/user/others/chronicle/design/art_ref/gen/env/propfix/sheet_lighthouse.png",
+  "tag": "propfix_sheet_lighthouse",
+  "size": "1024x1024",
+  "quality": "high",
+  "background": "transparent",
+  "refs": [
+   "/home/user/others/chronicle/design/art_ref/gen/env/propfix/lighthouse_1_w0.png"
+  ],
+  "prompt": "A sprite sheet of 9 separate objects for a top-down JRPG map, to be placed on top of the painted map shown in the reference image. Match the reference exactly: the same hi-bit pixel-painting style and brushwork, the same palette and material textures, the same soft light from the upper left (lit tops and left sides, shaded right sides), the same classic steep 3/4 top-down view (you see the top surface and the front face; objects stand upright, base at the bottom). Arrange them in a 3 x 3 grid in reading order (left to right, top to bottom) with wide empty space between them; every object fully separate, nothing touching, nothing cut off. Draw each object large, filling most of its grid cell. The objects, in order: 1) small brass ship lantern standing on the floor (unlit); 2) tall black iron lamp post with a glass lantern head (unlit); 3) stone stair steps going up toward the top of the image; 4) square opening in a stone floor with steps descending into darkness; 5) wooden supply crate; 6) oak barrel with iron hoops; 7) tied burlap sack; 8) small square wooden table; 9) small wooden signpost with a blank plank sign.\nBackground: fully transparent. No ground, no floor, no shadows, no text, no labels, no numbers. Even albedo lighting: no night, no glow halos and no light spilling around the objects (lamps unlit)."
+ },
+ {
+  "out": "/home/user/others/chronicle/design/art_ref/gen/env/propfix/sheet_wood.png",
+  "tag": "propfix_sheet_wood",
+  "size": "1536x1024",
+  "quality": "high",
+  "background": "transparent",
+  "refs": [
+   "/home/user/others/chronicle/design/art_ref/gen/env/propfix/verda_1_w0.png"
+  ],
+  "prompt": "A sprite sheet of 7 separate objects for a top-down JRPG map, to be placed on top of the painted map shown in the reference image. Match the reference exactly: the same hi-bit pixel-painting style and brushwork, the same palette and material textures, the same soft light from the upper left (lit tops and left sides, shaded right sides), the same classic steep 3/4 top-down view (you see the top surface and the front face; objects stand upright, base at the bottom). Arrange them in a 2 x 4 grid in reading order (left to right, top to bottom) with wide empty space between them; every object fully separate, nothing touching, nothing cut off. Draw each object large, filling most of its grid cell. The objects, in order: 1) small cluster of pale teal glowing mushrooms; 2) cluster of pale green-blue crystals growing from mossy rock; 3) small old iron lantern standing on the ground (unlit); 4) mossy tree stump; 5) fallen mossy log lying on the ground; 6) small mossy stone; 7) rustic wooden signpost with a blank plank.\nBackground: fully transparent. No ground, no floor, no shadows, no text, no labels, no numbers. Even albedo lighting: no night, no glow halos and no light spilling around the objects (lamps unlit)."
+ }
+]

@@ -65,18 +65,50 @@
     const bInn = bld('caldera_inn', 6, 19, 7, 6, { wall: 2, windows: 2, sign: 'inn', door: door(9, 24, 'caldera_inn') });
     const bDorga = bld('caldera_dorga', 41, 18, 6, 6, { wall: 3, windows: 2, door: door(43, 23, 'caldera_dorga') });
     const bHouse = bld('caldera_house', 9, 33, 5, 4, { wall: 2, windows: 1, door: door(11, 36, 'caldera_house') });
+    // 戸の無い建物（段の上の暮らし: 鍛冶場・穀物蔵・小屋。絵の中の建物で、当たりだけ）
+    bld('caldera_forge', 40, 30, 5, 4, { wall: 2, windows: 1 });
+    bld('caldera_store', 14, 12, 4, 3, { wall: 1, windows: 0 });
+    bld('caldera_hut', 36, 40, 4, 3, { wall: 1, windows: 1 });
     // 闘技場（丸い石の闘技場。戸は南。丸い壁は描いた物 X、戸のまわりだけ建物）
     const bArena = bld('caldera_arena', 24, 32, 7, 3, { wall: 3, windows: 0, sign: 'guild', door: door(27, 34, 'caldera_arena') });
-    for (let y = 32; y <= 34; y++) for (let x = 24; x <= 30; x++) if (!(x === 27 && y === 34)) { /* 建物の敷地 */ }
     // 戸の前（出て着く所）
     for (const b of [bItems, bTav, bArms, bTemple, bInn, bDorga, bHouse, bArena]) if ('FMX%h'.includes(g[b.door.y + 1][b.door.x])) g[b.door.y + 1][b.door.x] = 'a';
+
+    // ---------------------------------------------------------------- 物: 掲示板・湯・灯籠（依頼）・宝箱・かがり火・溶岩の照り返し
+    // 飾りの小物（樽・岩・布など）は下絵に描く（持ち主の決まり 2026-09-28）。ここに置くのは働く物（調べる物・宝箱・灯り）だけ
+    O.push(K.prop('board', 23, 33), K.exam(23, 33, 'caldera_board'));                  // 闘技場の壁の掲示板
+    O.push(K.exam(26, 43, 'caldera_spa'), K.exam(27, 43, 'caldera_spa'), K.exam(28, 43, 'caldera_spa'));   // 町の湯（温泉）
+    // 【灯りを守る】崖の上の灯籠 3（冷えた石灯籠は下絵。ともすと、かがり火の灯り）
+    for (const [n, x, y] of [[1, 9, 16], [2, 45, 16], [3, 21, 47]]) O.push(K.exam(x, y, 'caldera_lantern', { lamp: n }), K.prop('iron_brazier', x, y, { cond: 'ash_lantern_' + n }));
+    // 町の宝箱 2（見える所だけ）
+    O.push(K.chest('caldera_c1', 12, 8, { pool: 'p_T' }), K.chest('caldera_c2', 14, 42, { item: 'i_ether', n: 2 }));
+    // かがり火（崖・岩の上。道・戸口の前・出入り口には置かない）と、溶岩の堀の照り返し（光だけ）
+    for (const [x, y] of [[6, 30], [47, 31], [17, 4], [37, 4], [11, 40], [44, 40]]) O.push(K.prop('iron_brazier', x, y));
+    for (const [x, y] of [[22, 15], [32, 15], [17, 19], [37, 19], [16, 23], [38, 30], [17, 35], [37, 35], [22, 38], [32, 38]]) O.push(K.prop('lava_glow', x, y));
+    // 門の看板（門のわきの岩）
+    O.push(K.sign(2, 25, '炎の町カルデラ\n西の門 → 灰の荒野・カシムの峠'), K.sign(51, 25, '東の門 → 灰の火山・潮見橋'));
+
+    // ---------------------------------------------------------------- 人
+    const N = [
+      K.npc('guard_w', 'npc_ash_fighter', 4, 28, { name: '西の門番', dir: 'n', talk: 'caldera_gate_w', reward: 'news' }),
+      K.npc('guard_e', 'npc_ash_fighter', 50, 28, { name: '東の門番', dir: 'n', talk: 'caldera_gate_e', reward: 'boss' }),
+      K.npc('apprentice', 'npc_ash_acolyte', 31, 5, { name: '火守りの見習いのトト', dir: 's', talk: 'caldera_apprentice', reward: 'side' }),
+      K.npc('oldman', 'npc_ash_old_m', 12, 29, { name: '段々の年寄り', dir: 'e', talk: 'caldera_oldman', reward: 'lead' }),
+      K.npc('woman', 'npc_ash_woman', 39, 14, { name: '水汲みの女', dir: 's', talk: 'caldera_woman', reward: 'news' }),
+      K.npc('child', 'npc_ash_child', 21, 41, { name: '闘士になりたい子', dir: 'e', talk: 'caldera_child', reward: 'hint' }),
+      K.npc('spa_keeper', 'npc_ash_old_f', 33, 42, { name: '湯守りのばあさま', dir: 'w', talk: 'caldera_spa_keeper', reward: 'side' }),
+      // 闘技場の前の列（大会のあいだ）・空気だけ
+      K.npc('queue_a', 'npc_ash_fighter', 25, 36, { name: '出場を待つ闘士', dir: 'n', talk: [L('受付は中だ。\n列に並びな。'), L('ash_champion', '優勝者か！\n……来年は、負けねえぞ。')], reward: null, cond: '!cleared_r_ash' }),
+      K.npc('queue_b', 'npc_ash_man', 29, 36, { name: '見物の男', dir: 'n', talk: [L('今年の決勝は、よそ者どうしか。\nこりゃ見ものだ。'), L('cleared_r_ash', '火の鳥が、闘技場の上を\n回っていったんだ。……見たか？')], reward: null }),
+      K.npc('dog', 'ani_dog', 40, 36, { name: '闘技場の犬', dir: 'w', move: 'wander', talk: [L('ワン！')], reward: null }),
+    ];
 
     const sp = AK.doorSpawn;
     K.def('caldera', {
       name: '炎の町カルデラ', kind: 'town', region: 'r_ash', location: 'caldera', theme: 'desert_town',
       legend: AK.TOWN(),
       rows: g, outside: 'rock',
-      objects: O, npcs: [],
+      objects: O, npcs: N,
       spawns: {
         gate_w: { x: 2, y: 26, dir: 'e' },
         gate_e: { x: 51, y: 26, dir: 'w' },

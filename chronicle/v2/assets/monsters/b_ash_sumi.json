@@ -1,0 +1,50 @@
+{
+ "sprite": "b_ash_sumi",
+ "id": "b_ash_sumi",
+ "name": "術師の妹スミ",
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 46,
+ "h": 90,
+ "anchor": [
+  23,
+  88
+ ],
+ "points": {
+  "head": [
+   27,
+   6
+  ],
+  "center": [
+   23,
+   45
+  ],
+  "fx": [
+   27,
+   37
+  ],
+  "top": [
+   23,
+   0
+  ],
+  "body": [
+   23,
+   49,
+   16,
+   30
+  ]
+ },
+ "facing": "right",
+ "long": 90,
+ "core_long": null,
+ "target": {
+  "w": 46,
+  "h": 90,
+  "long": 90
+ },
+ "colors": 48,
+ "pitch": 8,
+ "note": "derived from the field sprite (v2/assets/sprites/npc_star_woman) by the ash content agent",
+ "scaled2x": true
+}

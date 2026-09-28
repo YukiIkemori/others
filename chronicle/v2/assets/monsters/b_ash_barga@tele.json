@@ -1,0 +1,51 @@
+{
+ "sprite": "b_ash_barga",
+ "id": "b_ash_barga",
+ "name": "鉄鎧のバルガ",
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 58,
+ "h": 98,
+ "anchor": [
+  29,
+  96
+ ],
+ "points": {
+  "head": [
+   33,
+   6
+  ],
+  "center": [
+   29,
+   49
+  ],
+  "fx": [
+   33,
+   41
+  ],
+  "top": [
+   29,
+   0
+  ],
+  "body": [
+   29,
+   53,
+   16,
+   32
+  ]
+ },
+ "facing": "right",
+ "long": 98,
+ "core_long": null,
+ "target": {
+  "w": 58,
+  "h": 98,
+  "long": 98
+ },
+ "colors": 48,
+ "pitch": 8,
+ "note": "derived from the field sprite (v2/assets/sprites/npc_pen_guard) by the ash content agent",
+ "scaled2x": true,
+ "pose": "tele"
+}

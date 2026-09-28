@@ -31,6 +31,7 @@ const BBG = ['coast', 'tower', 'forest', 'tree', 'cave'];
 SLICE_BGM.push('ice', 'ghost', 'yule', 'bonfire', 'siege'); BBG.push('snow');
 SLICE_BGM.push('kasim', 'desert', 'caravan', 'pyramid'); BBG.push('desert');   // 砂漠（desert_*.js）
 BBG.push('marsh');   // 湿原（marsh_*.js。BGM は縦切りの town・ghost）
+BBG.push('ash');   // 灰の荒野（ash_*.js。BGM は縦切りの town・cave・battle・boss）
 const maps = M.sliceMaps();
 const EV_SRC = fs.readdirSync(path.join(V2, 'src', 'events')).map((f) => fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8')).join('\n');
 

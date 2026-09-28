@@ -49,6 +49,13 @@ const ZONES = {
   zw_marsh_lotus: { tier: 1, kind: 'party', members: STD },
   z_marsh_manor: { tier: 1, kind: 'party', members: STD },
   z_marsh_bog: { tier: 1, kind: 'mid', members: STD },
+  // 灰の荒野（encounters_ash.js）。好きな順なので 2 番目の地方として T1 で見る。縦切りの後のダンジョンは 1 組 4〜5 匹まで
+  zw_ash_plain: { tier: 1, kind: 'party', members: STD },
+  zw_ash_road: { tier: 1, kind: 'party', members: STD },
+  zw_ash_spa: { tier: 1, kind: 'party', members: STD },
+  zw_ash_beach: { tier: 1, kind: 'party', members: STD },
+  z_ash_volcano: { tier: 1, kind: 'party', members: STD },
+  z_ash_crater: { tier: 1, kind: 'mid', members: STD },
 };
 const TARGET = { win: 99.5, roundsLo: 2.5, roundsHi: 3.5, hpLo: 8, hpHi: 12, hpZoneLo: 5, hpZoneHi: 15, p95: 20, down: 3, wipe: 0.1 };
 

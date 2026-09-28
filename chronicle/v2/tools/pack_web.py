@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """v2 の公開用の写し（ファイルの数と大きさを、静的な置き場の決まりに収める）
 
-  python3 v2/tools/pack_web.py [--dist v2/dist] --out <dir> [--page 2048] [--voice-pack-mb 2.5]
+  python3 v2/tools/pack_web.py [--dist v2/dist] --out <dir> [--page 2048] [--voice-pack-mb 2.5] [--scope demo|all] [--under-quality 94]
+
+  --scope demo（既定）: 縦切りで閉じた地方（regions.js の slice: 'locked'）の env のテーマと戦闘背景を入れない
+  --under-quality Q（既定 94）: 描いた下絵の本体（不透明）だけ非可逆の WebP（PSNR ≥ 30 dB を確かめる）。0 で可逆。層（_over・_emit・_closed）は可逆のまま
 
 dist（node v2/tools/build.js の外置きの版）から、次の形の写しを作る:
   index.html               遊ぶ版（RPG_MEDIA をまとめた版に書き換える）
@@ -66,6 +69,35 @@ def shelf_pack(items, page):
     return pages
 
 
+MIN_PSNR = 30.0   # 細かい @24 の絵は q94 で 32 dB 前後（色の細部が少し鈍る。見た目はほぼ同じ）
+
+
+def psnr(a, b):
+    """8 bit RGB の 2 枚の PSNR（dB。間引いて数える）"""
+    import math
+    x, y = a.tobytes()[::31], b.tobytes()[::31]
+    mse = sum((p - r) * (p - r) for p, r in zip(x, y)) / max(1, len(x))
+    return 99.0 if mse == 0 else 10 * math.log10(255 * 255 / mse)
+
+
+def under_lossy(quality):
+    """下絵の本体（<theme>/under/<name>@<tile>、_over・_emit・_closed でない）で不透明な物だけを非可逆に（quality 0 = しない）"""
+    def f(key, im):
+        if not quality or '/under/' not in key or re.search(r'_(over|emit|closed)@\d+$', key):
+            return None
+        return quality if im.getextrema()[3][0] == 255 else None
+    return f
+
+
+def locked_themes(v2):
+    """縦切りで閉じた地方（src/data/regions.js の slice: 'locked'）の short = env のテーマと戦闘背景の名前"""
+    try:
+        src = open(os.path.join(v2, 'src', 'data', 'regions.js'), encoding='utf-8').read()
+    except OSError:
+        return set()
+    return {m.group(1) for line in src.splitlines() if "slice: 'locked'" in line for m in [re.search(r"short: '([a-z_]+)'", line)] if m}
+
+
 def env_group(key):
     """env の画像の組（1 つの組 = 1 つ以上の地図帳のファイル。組ごとに別々に読める）
     下絵（<theme>/under/<name>[_over|_emit|_closed]@<tile>）: マップ 1 枚・マスの大きさ 1 つごと（入るときにその組だけ読む）
@@ -81,20 +113,26 @@ def env_group(key):
     return f'{parts[0]}_{t.group(1) if t else "x"}'
 
 
-def pack_images(kind, table, dist, out, page, group=None):
-    """table: {id: {url, meta}} → 新しい table（{url, rect, meta}）。group(key) を渡すと組ごとに別の地図帳（名前に組の名前）"""
+def pack_images(kind, table, dist, out, page, group=None, lossy=None):
+    """table: {id: {url, meta}} → 新しい table（{url, rect, meta}）。group(key) を渡すと組ごとに別の地図帳（名前に組の名前）。
+    lossy(key, im) → quality | None: その画像を非可逆の WebP の地図帳に入れる（組の名前に _q。切り出しは PSNR で確かめる）"""
     os.makedirs(os.path.join(out, kind), exist_ok=True)
     imgs = {}
     for k, e in table.items():
         im = Image.open(os.path.join(dist, bare(e['url'])))
         im.load()
         imgs[k] = im.convert('RGBA')
-    groups = {}
+    groups, gq = {}, {}
     for k in imgs:
-        groups.setdefault(group(k) if group else 'atlas', []).append(k)
+        q = lossy(k, imgs[k]) if lossy else None
+        g = (group(k) if group else 'atlas') + ('_q' if q else '')
+        groups.setdefault(g, []).append(k)
+        if q:
+            gq[g] = q
     new, sheets = {}, []
     for gname in sorted(groups):
         ks = groups[gname]
+        q = gq.get(gname)
         pg_size = max([page] + [max(imgs[k].width, imgs[k].height) for k in ks])
         pages = shelf_pack([(k, imgs[k].width, imgs[k].height) for k in ks], pg_size)
         for i, pg in enumerate(pages):
@@ -105,22 +143,30 @@ def pack_images(kind, table, dist, out, page, group=None):
                 sheet.paste(imgs[k], (x, y))
             base = f'{kind}/{gname}_{i:02d}.webp' if group else f'{kind}/atlas_{len(sheets):02d}.webp'
             tmp = os.path.join(out, base + '.tmp')
-            sheet.save(tmp, 'WEBP', lossless=True, exact=True, quality=100, method=4)
+            if q:
+                sheet.convert('RGB').save(tmp, 'WEBP', quality=q, method=6)
+            else:
+                sheet.save(tmp, 'WEBP', lossless=True, exact=True, quality=100, method=4)
             name = hashed_name(base, open(tmp, 'rb').read())
             os.replace(tmp, os.path.join(out, name))
-            sheets.append((name, pg))
+            sheets.append((name, pg, q))
             for k, x, y, w, h in pg:
                 e = dict(table[k])
                 e['url'] = name
                 e['rect'] = [x, y, w, h]
                 new[k] = e
     # 切り出しが元の画像と 1 画素も違わないこと（exact: 透明な画素の色も残す）
-    for name, pg in sheets:
+    # 非可逆の地図帳（不透明な下絵だけ）は PSNR が MIN_PSNR 以上で、不透明のままであること
+    for name, pg, q in sheets:
         sheet = Image.open(os.path.join(out, name)).convert('RGBA')
         for k, x, y, w, h in pg:
             a = sheet.crop((x, y, x + w, y + h))
             b = imgs[k]
-            if a.tobytes() != b.tobytes():
+            if q:
+                p = psnr(a.convert('RGB'), b.convert('RGB'))
+                if p < MIN_PSNR or a.getextrema()[3][0] != 255:
+                    raise SystemExit(f'{kind} {k}: lossy copy too far from the source (PSNR {p:.1f} dB)')
+            elif a.tobytes() != b.tobytes():
                 raise SystemExit(f'{kind} {k}: pixels differ after packing')
     return new, len(sheets)
 
@@ -164,6 +210,10 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--page', type=int, default=2048)
     ap.add_argument('--voice-pack-mb', type=float, default=2.5)
+    ap.add_argument('--scope', choices=('demo', 'all'), default='demo',
+                    help="demo: leave out the env themes and battle backgrounds of regions locked in the slice (regions.js slice: 'locked')")
+    ap.add_argument('--under-quality', type=int, default=94,
+                    help='WebP quality for the opaque painted map underlays (0 = lossless). Layers with alpha stay lossless')
     a = ap.parse_args()
     dist, out = os.path.abspath(a.dist), os.path.abspath(a.out)
     html = open(os.path.join(dist, 'index.html'), encoding='utf-8').read()
@@ -185,9 +235,16 @@ def main():
                 os.makedirs(os.path.join(out, os.path.dirname(u)), exist_ok=True)
                 shutil.copyfile(os.path.join(dist, u), os.path.join(out, u))
     counts = {}
+    if a.scope == 'demo' and media.get('env'):
+        locked = locked_themes(os.path.join(here, '..'))
+        drop = [k for k in media['env'] if k.split('/')[0] in locked or (k.startswith('bbg/') and k.split('/')[1] in locked)]
+        new['env'] = media['env'] = {k: e for k, e in media['env'].items() if k not in set(drop)}
+        counts['env_dropped'] = len(drop)
+        print(f'[pack_web] scope demo: left out {len(drop)} env images of locked regions {sorted(locked)}')
     for kind in ('env', 'sprites', 'monsters'):
         if media.get(kind):
-            new[kind], counts[kind] = pack_images(kind, media[kind], dist, out, a.page, env_group if kind == 'env' else None)
+            new[kind], counts[kind] = pack_images(kind, media[kind], dist, out, a.page, env_group if kind == 'env' else None,
+                                                  under_lossy(a.under_quality) if kind == 'env' else None)
     if media.get('voice'):
         new['voice'], counts['voice'] = pack_voice(media['voice'], dist, out, int(a.voice_pack_mb * 1000 * 1000))
     table = json.dumps(new, ensure_ascii=False, separators=(',', ':'))

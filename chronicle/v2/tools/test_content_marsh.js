@@ -52,7 +52,7 @@ ok('場所 loch・manor・bog', ['loch', 'manor', 'bog'].every((id) => D.locatio
 ok('店 3 つ（大鐘の道具屋・武具屋・夜市）と品がそろう', ['shop_loch_items', 'shop_loch_arms', 'shop_loch_night'].every((id) => D.shops[id] && R.Contract.check('shop', D.shops[id]).ok &&
   [...D.shops[id].items, ...Object.values(D.shops[id].tier || {}).flat()].every((it) => D.items[it])));
 ok('地方 r_marsh の錠が外れ、光の柱の場所・ボス・章の要約がある', !D.regions.r_marsh.slice && !!D.regions.r_marsh.beaconAt && D.regions.r_marsh.bossTroop === 'tr_b_mistbeast' && !!D.regions.r_marsh.chapter.summary);
-ok('まだ作っていない地方（諸島・鉱山・灰・星）は錠のまま', ['r_isles', 'r_mine', 'r_ash', 'r_star'].every((id) => D.regions[id].slice));
+ok('まだ作っていない地方（諸島・鉱山・星）は錠のまま（灰は ash_*.js で開いた）', ['r_isles', 'r_mine', 'r_star'].every((id) => D.regions[id].slice));
 ok('年代記の章 r_marsh（E14）', !!(D.chronicle && D.chronicle.r_marsh && R.Contract.check('chronicleEntry', D.chronicle.r_marsh).ok));
 ok('読み物 lo_ev_marsh・lo_time_marsh（必）・lo_war_marsh', ['lo_ev_marsh', 'lo_time_marsh', 'lo_war_marsh'].every((id) => D.lore[id]) && D.lore.lo_ev_marsh.must && D.lore.lo_time_marsh.must);
 {

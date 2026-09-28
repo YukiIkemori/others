@@ -1,0 +1,50 @@
+{
+ "sprite": "b_ash_tamer",
+ "id": "b_ash_tamer",
+ "name": "獣使いのガロ",
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 42,
+ "h": 102,
+ "anchor": [
+  21,
+  100
+ ],
+ "points": {
+  "head": [
+   25,
+   6
+  ],
+  "center": [
+   21,
+   51
+  ],
+  "fx": [
+   25,
+   43
+  ],
+  "top": [
+   21,
+   0
+  ],
+  "body": [
+   21,
+   55,
+   16,
+   34
+  ]
+ },
+ "facing": "right",
+ "long": 102,
+ "core_long": null,
+ "target": {
+  "w": 42,
+  "h": 102,
+  "long": 102
+ },
+ "colors": 48,
+ "pitch": 8,
+ "note": "derived from the field sprite (v2/assets/sprites/npc_drake) by the ash content agent",
+ "scaled2x": true
+}

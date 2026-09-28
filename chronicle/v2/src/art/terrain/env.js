@@ -129,7 +129,8 @@
   //   下絵: 入るマップの分（本体・_over・_emit・_closed、今のマスの大きさ）を F.enter の暗転の中で待つ（E.awaitMap）。隣のマップは map:enter で先に読む。
   //   戦闘背景: その地方の分を map:enter で先に読み、戦闘の始まりで待つ（E.awaitBbg）。読めるまでに焼いたコードの絵は、読めたら忘れて焼き直す。
   //   展開した大きさ（幅×高さ×4）の合計が CAP を超えたら、使っていない順に手放す（今のマップと待っている物は残す）。
-  const CAP = 176 * 1048576;
+  // 端末のメモリが少ない（navigator.deviceMemory ≤ 4 GB。スマホ）ときは小さく
+  const CAP = (typeof navigator !== 'undefined' && navigator.deviceMemory && navigator.deviceMemory <= 4 ? 112 : 176) * 1048576;
   const held = new Map();   // key → {bytes, used}
   const loading = {};       // key → Promise<bool>
   const pinned = new Set(); // 待っている間は手放さない

@@ -72,6 +72,8 @@ if (R.DB.regions.r_snow && !R.DB.regions.r_snow.slice) BUILT.push([8, 93, 1, 48]
 if (R.DB.regions.r_desert && !R.DB.regions.r_desert.slice) BUILT.push([8, 95, 118, 166]);
 // 湿原 x 155〜212・y 55〜114 と、峠から湿原への山あいの街道 x 112〜170・y 44〜64（tools/gen_world_marsh.js）
 if (R.DB.regions.r_marsh && !R.DB.regions.r_marsh.slice) BUILT.push([155, 212, 55, 114], [112, 170, 44, 64]);
+// 灰の荒野 x 96〜206・y 115〜162 と、潮見橋から湿原の沼の道まで x 186〜187・y 101〜121（tools/gen_world_ash.js）
+if (R.DB.regions.r_ash && !R.DB.regions.r_ash.slice) BUILT.push([96, 206, 115, 162], [186, 187, 101, 121]);
 const inBuilt = (x, y) => BUILT.some(([x0, x1, y0, y1]) => x >= x0 && x <= x1 && y >= y0 && y <= y1);
 const leak = cells.filter(([x, y]) => (y < 40 || x > 118 || y > 134) && !inBuilt(x, y));
 ok('縦切りの範囲の外（雪原・山地・砂漠）へ出られない', leak.length === 0, leak.slice(0, 5));

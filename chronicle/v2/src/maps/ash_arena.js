@@ -9,7 +9,7 @@
 (function (R) {
   'use strict';
   R.onData(function () {
-    const K = R.ContentF.kit, AK = R.Ash.kit;
+    const K = R.ContentF.kit, AK = R.Ash.kit, L = K.L;
     const W = 40, H = 32;
     const g = K.grid(W, H, 'W');
     // 観客席（外の壁の内側）と砂の場
@@ -43,11 +43,11 @@
     // 西の観客席の銘板と、その上の立会人の席
     O.push(K.exam(2, 12, 'arena_plaque'), K.exam(5, 10, 'arena_witness_seat'));
     // 控え室: 一行（休む）・ザクロ（荷）
-    O.push(K.prop('bench', 3, 24), K.prop('bench', 5, 24), K.prop('bed', 2, 27), K.prop('bed', 2, 29), K.prop('water_urn', 8, 23), K.exam(5, 23, 'arena_rest'));
-    O.push(K.prop('bench', 34, 24), K.prop('crate', 36, 23), K.prop('ash_weapon_rack', 31, 23), K.exam(35, 24, 'arena_zakuro_bag'));
+    O.push(K.prop('bench', 3, 24), K.prop('bench', 5, 24), K.prop('bed', 2, 27), K.prop('bed', 2, 29), K.prop('water_urn', 8, 23), K.exam(5, 24, 'arena_rest'), K.exam(3, 24, 'arena_rest'));
+    O.push(K.prop('bench', 34, 24), K.prop('crate', 36, 23), K.prop('ash_weapon_rack', 31, 23), K.exam(36, 23, 'arena_zakuro_bag'));
     // かがり火（観客席の上。道・戸口の前には置かない）
     for (const [x, y] of [[4, 4], [35, 4], [2, 17], [37, 17], [12, 2], [27, 2]]) O.push(K.prop('iron_brazier', x, y));
-    O.push(K.prop('lantern', 12, 29), K.prop('lantern', 27, 29), K.prop('lantern', 3, 22), K.prop('lantern', 36, 22));
+    O.push(K.prop('lantern', 11, 30), K.prop('lantern', 28, 30), K.prop('lantern', 2, 22), K.prop('lantern', 37, 22));
 
     const N = [
       K.npc('receptionist', 'npc_ash_woman', 15, 23, { name: '受付のミラン', dir: 's', talk: 'arena_reception', reward: 'lead', pushable: false }),
@@ -55,16 +55,15 @@
       K.npc('arena_fan', 'npc_ash_child', 20, 27, { name: '闘技好きの子', dir: 'n', talk: 'arena_fan', reward: 'hint' }),
       K.npc('arena_vet', 'npc_ash_old_m', 12, 27, { name: '古参の闘士', dir: 'e', talk: 'arena_vet', reward: 'boss' }),
       K.npc('zakuro', 'npc_zakuro', 34, 27, { name: 'ザクロ', title: '記録院付きの闘士', dir: 'w', talk: 'arena_zakuro', reward: 'lead', cond: ['ash_champion', '!ash_zakuro_gone'] }),
-      K.npc('dorga_arena', 'npc_dorga', 20, 7, { name: 'ドルガ', title: '族長', dir: 's', talk: 'arena_dorga', reward: 'lead', pushable: false, cond: { var: 'ash_bout', eq: 9 } }),
-      K.npc('dorga_plaque', 'npc_dorga', 6, 12, { name: 'ドルガ', title: '族長', dir: 'w', talk: 'arena_dorga', reward: 'news', pushable: false, cond: 'ash_finale_done' }),
+      K.npc('dorga_plaque', 'npc_dorga', 6, 12, { name: 'ドルガ', title: '族長', dir: 'w', talk: 'arena_dorga', reward: 'news', pushable: false, cond: 'ash_plaque_scene' }),
       // 大会の相手（回ごとに砂の場に現れる。ash_bout = 回の番号）
-      K.npc('opp_1a', 'npc_ash_fighter', 18, 8, { name: '一族の若者', dir: 's', talk: null, cond: { var: 'ash_bout', eq: 1 } }),
-      K.npc('opp_1b', 'npc_ash_fighter', 22, 8, { name: '一族の若者', dir: 's', talk: null, cond: { var: 'ash_bout', eq: 1 } }),
-      K.npc('opp_2', 'npc_drake', 20, 8, { name: '獣使いのガロ', dir: 's', talk: null, cond: { var: 'ash_bout', eq: 2 } }),
-      K.npc('opp_3a', 'npc_desert_woman', 18, 8, { name: '術師の姉ヒノエ', dir: 's', talk: null, cond: { var: 'ash_bout', eq: 3 } }),
-      K.npc('opp_3b', 'npc_star_woman', 22, 8, { name: '術師の妹スミ', dir: 's', talk: null, cond: { var: 'ash_bout', eq: 3 } }),
-      K.npc('opp_4', 'npc_pen_guard', 20, 8, { name: '鉄鎧のバルガ', dir: 's', talk: null, cond: { var: 'ash_bout', eq: 4 } }),
-      K.npc('opp_5', 'npc_zakuro', 20, 8, { name: 'ザクロ', dir: 's', talk: null, cond: { var: 'ash_bout', eq: 5 } }),
+      K.npc('opp_1a', 'npc_ash_fighter', 18, 8, { name: '一族の若者', dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 1 } }),
+      K.npc('opp_1b', 'npc_ash_fighter', 22, 8, { name: '一族の若者', dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 1 } }),
+      K.npc('opp_2', 'npc_drake', 20, 8, { name: '獣使いのガロ', dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 2 } }),
+      K.npc('opp_3a', 'npc_desert_woman', 18, 8, { name: '術師の姉ヒノエ', dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 3 } }),
+      K.npc('opp_3b', 'npc_star_woman', 22, 8, { name: '術師の妹スミ', dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 3 } }),
+      K.npc('opp_4', 'npc_pen_guard', 20, 8, { name: '鉄鎧のバルガ', dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 4 } }),
+      K.npc('opp_5', 'npc_zakuro', 20, 8, { name: 'ザクロ', dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 5 } }),
     ];
 
     K.def('caldera_arena', {

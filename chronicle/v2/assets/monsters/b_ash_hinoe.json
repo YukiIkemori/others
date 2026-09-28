@@ -1,0 +1,50 @@
+{
+ "sprite": "b_ash_hinoe",
+ "id": "b_ash_hinoe",
+ "name": "術師の姉ヒノエ",
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 50,
+ "h": 92,
+ "anchor": [
+  25,
+  90
+ ],
+ "points": {
+  "head": [
+   29,
+   6
+  ],
+  "center": [
+   25,
+   46
+  ],
+  "fx": [
+   29,
+   38
+  ],
+  "top": [
+   25,
+   0
+  ],
+  "body": [
+   25,
+   50,
+   16,
+   30
+  ]
+ },
+ "facing": "right",
+ "long": 92,
+ "core_long": null,
+ "target": {
+  "w": 50,
+  "h": 92,
+  "long": 92
+ },
+ "colors": 48,
+ "pitch": 8,
+ "note": "derived from the field sprite (v2/assets/sprites/npc_desert_woman) by the ash content agent",
+ "scaled2x": true
+}
