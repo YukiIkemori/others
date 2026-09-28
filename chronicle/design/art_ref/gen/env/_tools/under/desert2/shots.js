@@ -11,7 +11,7 @@ const spots = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
   await B.ev(p, `(() => { RPG.Events.run = () => Promise.resolve(); RPG.Mon.encounter = () => null; RPG.Game.flags.prologue_done = true; return 0; })()`);
   for (const s of spots) {
     await p.evaluate(async (s) => {
-      const f = RPG.Game.flags; for (const k of Object.keys(s.flags || {})) f[k] = s.flags[k];
+      const f = RPG.Game.flags; for (const k of Object.keys(s.flags || {})) f[k] = s.flags[k]; if (s.pre) (0, eval)(s.pre);
       RPG.Field.chunks.reset(); await RPG.Field.enter(s.map, { x: s.x, y: s.y, dir: s.dir || 's' }, { fade: 0, noAutosave: true });
     }, s);
     await p.waitForTimeout(s.wait || 3000);

@@ -46,7 +46,12 @@ if LIVE:
     dist = ndimage.distance_transform_edt(~mask)
     al = np.clip(1 - dist / 10.0, 0, 1)[..., None]
     closed = closed * (1 - al) + water * al
-    save_set(NAME + '_closed', np.rint(closed))
+    # RGBA, opaque only on the live cells (ENV_ASSETS.md §8: the engine draws whole live cells from it)
+    rgba = np.zeros((H * T, W * T, 4), np.uint8)
+    rgba[..., :3] = np.rint(np.clip(closed, 0, 255)).astype(np.uint8)
+    rgba[..., 3] = np.where(mask, 255, 0).astype(np.uint8)
+    rgba[~mask] = 0
+    save_set(NAME + '_closed', rgba, True)
     meta['live'] = live
     meta['closedFiles'] = {t: '%s_closed@%d.png' % (NAME, t) for t in sizes}
 json.dump(meta, open(os.path.join(outdir, NAME + '.json'), 'w'), indent=1)
