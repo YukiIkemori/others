@@ -1,0 +1,17 @@
+{
+ "id": "frost_ship_1",
+ "kind": "under",
+ "map": "frost_ship_1",
+ "tile": 32,
+ "size32": [
+  1344,
+  768
+ ],
+ "windows32": [],
+ "painted": [],
+ "files": {
+  "24": "frost_ship_1@24.png",
+  "32": "frost_ship_1@32.png",
+  "40": "frost_ship_1@40.png"
+ }
+}

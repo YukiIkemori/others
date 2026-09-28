@@ -251,6 +251,11 @@
       K.rect(g, 18, 20, 4, 4, ',');
       K.rect(g, 19, 18, 2, 2, 'p');                              // 渡り板
       K.rect(g, 5, 3, 4, 3, 'W'); K.rect(g, 32, 3, 5, 3, 'W');   // 船団のほかの船の残骸（氷から突き出た船尾楼）
+      // 描いた下絵（v2/assets/env/snow/under/frost_ship_1*）に合わせた当たり: 折れた帆柱の根もと 3 本・南の雪の土手（21 行目）は歩けない、
+      //   東西の縁の氷（1・40 列）は歩ける
+      for (const x of [12, 20, 28]) K.put(g, x, 12, 'R');
+      for (let x = 2; x < 40; x++) if (K.at(g, x, 21) === '.') K.put(g, x, 21, 'H');
+      for (let y = 2; y <= 20; y++) { K.put(g, 1, y, '.'); K.put(g, 40, y, '.'); }
       const O = [];
       O.push(K.prop('sack', 10, 12), K.prop('sack', 11, 13));   // 荷（泉は置かない。WORLD §6.2）
       O.push(K.stairs(33, 12, { map: 'frost_ship_2', spawn: 'up' }, { id: 'frost_ship_1_down', look: 'down' }));
@@ -263,6 +268,7 @@
         name: '氷に閉じた帆船', kind: 'dungeon', optional: true, region: 'r_snow', location: 'frost_ship', theme: 'snow',
         legend: S.LEGEND({ '.': { mat: 'ice' }, p: { mat: 'plank' }, W: { mat: 'wall_wood', solid: true, rise: 2 }, R: { mat: 'wall_wood', solid: true, rise: 1, name: 'hull' } }), rows: g, outside: 'ice', objects: O, npcs: [],
         spawns: { entrance: { x: 19, y: 22, dir: 'n' }, up: { x: 32, y: 13, dir: 'w' } },
+        art: { image: 'snow/under/frost_ship_1', painted: [] },   // 描いた下絵（design/ENV_ASSETS.md §7）
         exits: [{ x: 18, y: 23, w: 4, h: 1, to: { map: 'world', spawn: 'frost_ship' } }],
         triggers: [{ id: 'arrive', on: 'enter', event: 'frost_ship_arrive', once: true }],
         zones: [{ rect: null, zone: 'z_snow_ship' }],

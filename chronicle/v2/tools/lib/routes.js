@@ -24,6 +24,11 @@ const DUNGEONS = [
     unset: ['desert_hawkhold_done'], bosses: [['desert_hawks_2', 'desert_hawks_boss']] },
   { id: 'rocks', start: { map: 'desert_rocks', spawn: 'mouth' }, goal: { map: 'desert_rocks', far: true }, unset: [], bosses: [] },
   { id: 'oldcamp', start: { map: 'desert_oldcamp', spawn: 'road' }, goal: { map: 'desert_oldcamp', far: true }, unset: [], bosses: [] },
+  // 湿原（marsh_*.js）: 霧の館（2 階、中ボスは音楽室の人形の楽団）・鐘沈みの沼（1 階。水の引いた形で道を引く = 鐘 3 つを鳴らした後、霧食らいの前）
+  { id: 'manor', open: true, variant: { ch_marsh_accuse: 'first', ch_marsh_write: 'pain' }, start: { map: 'marsh_manor_1', spawn: 'entrance' }, goal: { map: 'marsh_manor_2', ev: 'manor_band' },
+    unset: ['marsh_dolls', 'marsh_melda_met', 'marsh_mistbeast', 'cleared_r_marsh', 'marsh_finale_done'], bosses: [['marsh_manor_2', 'manor_band']] },
+  { id: 'bog', open: true, variant: { ch_marsh_accuse: 'first', ch_marsh_write: 'pain' }, start: { map: 'marsh_bog', spawn: 'entrance' }, goal: { map: 'marsh_bog', ev: 'bog_mistbeast' },
+    unset: ['marsh_mistbeast', 'cleared_r_marsh', 'marsh_finale_done'], bosses: [['marsh_bog', 'bog_mistbeast']] },
   // 雪原（snow_*.js）: 雪の林・白竜の峰（氷の壁は冬至の火でとけた形・巨人の後の形で道を引く）・つららの回廊・オーロラの崖・氷に閉じた帆船
   // 雪原も縦切りの外（北の番人 guard_north が塞ぐ）: 砂漠と同じく open で閉包を slice なしで回す
   { id: 'snow_woods', open: true, variant: { ch_snow_tale: 'dragon' }, start: { map: 'snow_woods', spawn: 'south' }, goal: { map: 'snow_woods', far: true }, unset: [], bosses: [] },
@@ -47,6 +52,7 @@ function prepare(R, d) {
   for (const f of d.unset || []) delete G.flags[f];
   if ((d.unset || []).includes('cleared_r_forest')) { delete G.cleared.r_forest; G.tier = 0; }
   if ((d.unset || []).includes('cleared_r_desert')) delete G.cleared.r_desert;
+  if ((d.unset || []).includes('cleared_r_marsh')) delete G.cleared.r_marsh;
   if ((d.unset || []).includes('cleared_r_snow')) delete G.cleared.r_snow;
   Object.assign(G.vars, d.vars || {});
   R.MapUtil.invalidate();

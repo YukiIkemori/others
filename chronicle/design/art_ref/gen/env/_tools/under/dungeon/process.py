@@ -70,9 +70,11 @@ for y in range(H):
         if MI.get(e.get('mat'), {}).get('tall') == 'canopy': canopy[y, x] = True
 # ---- wall-top contrast: keep the old top/floor luminance ratio (the painted rock tops come out close to the floor), soft 6 px mask edge
 tm = ndimage.gaussian_filter(np.kron(top, np.ones((T, T))).astype(np.float32), 3)
-oldr = lum(old[np.kron(top, np.ones((T, T), bool))]).mean() / lum(old[msk]).mean()
-newr = lum(A[np.kron(top, np.ones((T, T), bool))]).mean() / lum(A[msk]).mean()
-tg = float(np.clip(oldr / newr, 0.6, 1.0)) if top.any() else 1.0
+oldr = newr = 1.0
+if top.any():
+    oldr = lum(old[np.kron(top, np.ones((T, T), bool))]).mean() / lum(old[msk]).mean()
+    newr = lum(A[np.kron(top, np.ones((T, T), bool))]).mean() / lum(A[msk]).mean()
+tg = float(np.clip(oldr / newr, 0.6, 1.0))
 tg = float(os.environ.get('TOPGAIN', tg))
 A = A * (1 - tm[..., None] * (1 - tg))
 print('top gain', round(tg, 3), 'old ratio', round(float(oldr), 2), 'new ratio', round(float(newr), 2))
@@ -152,12 +154,16 @@ for ai, ar in enumerate(d['areas']):
     tops += faces_above
     # a ring of plain wall-top cells around them (the painting's room edge may bleed a few px into its neighbours)
     ring = {(x + dx, y + dy) for (x, y) in closed | set(faces_above) for dx in (-1, 0, 1) for dy in (-1, 0, 1)}
-    tops += [q for q in sorted(ring) if 0 <= q[0] < W and 0 <= q[1] < H and top[q[1], q[0]] and q not in tops]
-    off = find_offset(tops, topI) or find_offset(tops, top)
+    # clone source: plain cells of the secret's own wall material (rock/masonry/bark top, or forest canopy), not faces
+    wm = np.array([[ent(OPEN, x, y).get('mat') == wall.get('mat') and not ent(OPEN, x, y).get('secret') and ent(OPEN, x, y).get('solid') and (x, y) not in FACE
+                    for x in range(W)] for y in range(H)])
+    wmI = interior(wm)
+    tops += [q for q in sorted(ring) if 0 <= q[0] < W and 0 <= q[1] < H and wm[q[1], q[0]] and q not in tops]
+    off = find_offset(tops, wmI) or find_offset(tops, wm)
     if off:
         for (x, y) in tops: cell(C, x, y)[:] = cell(A, x + off[0], y + off[1])
-    else:   # thin walls (no block of rock big enough): each cell from the nearest clean wall-top cell outside the region
-        src = [(x, y) for y in range(H) for x in range(W) if (topI if topI.any() else top)[y, x] and (x, y) not in closed]
+    else:   # thin walls (no block big enough): each cell from the nearest clean wall cell outside the region
+        src = [(x, y) for y in range(H) for x in range(W) if (wmI if wmI.any() else wm)[y, x] and (x, y) not in closed]
         for (x, y) in tops:
             sx, sy = min(src, key=lambda q: abs(q[0] - x) + abs(q[1] - y) + 0.01 * ((q[0] * 7 + q[1] * 13) % 5))
             cell(C, x, y)[:] = cell(A, sx, sy)
@@ -198,10 +204,11 @@ for pi, p in enumerate(d['tilePatches']):
 # ---- emit: glowing crystal / fungus pixels inside solid cells
 emit = np.zeros(A.shape[:2] + (4,), np.uint8)
 if os.environ.get('EMIT', 'cyan') == 'cyan':
-    sol = np.kron(np.array([[not walk(ent(OPEN, x, y)) for x in range(W)] for y in range(H)]), np.ones((T, T), bool))
+    sol = np.kron(np.array([[raised(ent(OPEN, x, y)) for x in range(W)] for y in range(H)]), np.ones((T, T), bool))   # rock/wall only (not water)
     R_, G_, B_ = A0[..., 0], A0[..., 1], A0[..., 2]
-    glow = (B_ > 150) & (G_ > 130) & (R_ < 0.8 * B_) & (B_ - R_ > 50) & sol
-    glow = ndimage.binary_opening(glow, iterations=1) | (glow & ndimage.binary_dilation(ndimage.binary_opening(glow), iterations=1))
+    glow = (B_ > 115) & (G_ > 0.55 * B_) & (B_ - R_ > 35) & sol
+    lab, n = ndimage.label(glow, np.ones((3, 3)))   # small veins are 1-2 px wide: drop only specks under 4 px
+    sz = ndimage.sum(glow, lab, np.arange(1, n + 1)); glow = np.isin(lab, np.nonzero(sz >= 4)[0] + 1)
     px = np.clip(A0 * 1.1 + np.array([10, 20, 30]), 0, 255)
     emit[glow, :3] = px[glow]; emit[glow, 3] = 230
     print('emit px', int(glow.sum()))

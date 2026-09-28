@@ -48,7 +48,7 @@ for y in range(H):
             face[(x, y - j)] = (j, r)
 
 WALLTOP = {'wall_snow': (74, 80, 100), 'wall_wood': (70, 46, 30)}
-FACE = {'snow_cliff': (150, 176, 214), 'wood': (140, 92, 58)}
+FACE = {'snow_cliff': (112, 124, 156), 'wood': (140, 92, 58)}
 FLOOR = {'snow': (238, 240, 246), 'snow_path': (204, 186, 150), 'ice': (156, 210, 236), 'water': (40, 110, 190), 'cobble': (150, 146, 140),
          'plank': (176, 122, 72), 'wood_floor': (176, 122, 72), 'carpet': (150, 36, 44), 'tree': (238, 240, 246), 'road': (196, 164, 112), 'dirt': (150, 102, 62)}
 
@@ -75,8 +75,10 @@ def draw(T):
                 g.rectangle(R(x, y), fill=tuple(int(v * (1.1 - 0.3 * (j - 1) / max(1, r))) for v in c))
                 if st == 'wood':
                     for q in range(0, T, T // 3): g.line([x * T, y * T + q, x * T + T, y * T + q], fill=(96, 62, 38), width=lw)
-                else:
-                    for q in range(3, T, max(3, T // 6)): g.line([x * T + q, y * T, x * T + q + rnd.randint(-2, 2), y * T + T], fill=tuple(int(v * 0.75) for v in c), width=lw)
+                else:   # rock strata (horizontal: vertical stripes read as palisades, ENV_ASSETS §8) + a few short icicles under the lip
+                    for q in (T // 3, 2 * T // 3): g.line([x * T, y * T + q + rnd.randint(-2, 2), x * T + T, y * T + q + rnd.randint(-2, 2)], fill=tuple(int(v * 0.75) for v in c), width=lw)
+                    if j == r:
+                        for q in range(T // 8, T, T // 4): g.line([x * T + q, y * T + T // 8, x * T + q, y * T + T // 3], fill=(236, 246, 255), width=lw)
                 if j == r or (x, y - 1) not in face:
                     g.rectangle([x * T, y * T, x * T + T - 1, y * T + max(2, T // 8)], fill=(250, 252, 255) if st == 'snow_cliff' else tuple(min(255, int(v * 1.35)) for v in c))
             elif e.get('name') == 'hull':

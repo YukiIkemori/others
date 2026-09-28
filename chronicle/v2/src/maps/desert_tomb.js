@@ -78,6 +78,7 @@
         tilePatches: [{ cond: DOOR, rect: [27, 19, 3, 2], rows: ['OOO', 'OOO'] }],
         zones: [{ rect: null, zone: 'z_desert_tomb' }],
         light: DK.LIGHT_TOMB, dark: false, bgm: 'pyramid', bbg: 'cave',
+        art: { image: 'desert/under/tomb_1', closed: 'desert/under/tomb_1_closed', painted: [] },   // 1 枚の下絵（隠し部屋は閉じた形の層）
         meta: { chestsInfo: true, floor: '1 階', sub: '墓守の回廊' },
       });
     }

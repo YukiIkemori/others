@@ -22,7 +22,7 @@ const argv = process.argv.slice(2);
 const VERBOSE = argv.includes('--verbose');
 let R = null, M = null;
 /** 縦切り（slice）では峠の番人の先にある地方（3b） */
-const SLICE_OUT = ['r_desert', 'r_snow'];
+const SLICE_OUT = ['r_desert', 'r_snow', 'r_marsh'];
 let SLICE0 = null;
 /** 縦切りの錠を外す（同じ R の中だけ。本物の config のファイルは変えない） */
 function sliceOff() { if (SLICE0 === null) SLICE0 = !!(R.DB.config && R.DB.config.slice); if (R.DB.config) R.DB.config.slice = false; R.MapUtil.invalidate(); }
@@ -239,6 +239,16 @@ function main() {
         ok(`鷹団=${hawk} 道=${route}${restricted ? '（隠し通路・寄り道・依頼なし）' : ''}: 隊商 → 王墓 → 砂の王 → clearRegion('r_desert')`,
           !!(r.flags.desert_camp3_done && r.flags.desert_worm && r.flags.desert_king && r.flags.cleared_r_desert && r.flags.desert_finale_done),
           { camp3: !!r.flags.desert_camp3_done, worm: !!r.flags.desert_worm, king: !!r.flags.desert_king, cleared: !!r.flags.cleared_r_desert });
+      }
+    }
+    // 湿原（regions の slice の錠が外れていれば）: 名指しは一度で正しく／間違えてから。寄り道・依頼なしも 1 本
+    if (R.DB.regions.r_marsh && !R.DB.regions.r_marsh.slice) {
+      section('2d. 湿原の閉包（clearRegion(\'r_marsh\')）');
+      for (const [write, restricted] of [['pain', false], ['legend', true]]) {
+        const r = closure({ variant: Object.assign({}, variants[0], { ch_marsh_write: write, ch_marsh_accuse: 'first' }), restricted });
+        ok(`年代記=${write}${restricted ? '（隠し通路・寄り道・依頼なし）' : ''}: 証拠 → 集会 → 館のメルダ → 沼の鐘 3 つ → 霧食らい → clearRegion('r_marsh')`,
+          !!(r.flags.marsh_assembly_done && r.flags.marsh_melda_met && r.flags.marsh_bell_3 && r.flags.marsh_mistbeast && r.flags.cleared_r_marsh && r.flags.marsh_finale_done),
+          { assembly: !!r.flags.marsh_assembly_done, melda: !!r.flags.marsh_melda_met, bell3: !!r.flags.marsh_bell_3, cleared: !!r.flags.cleared_r_marsh });
       }
     }
     section('3. 全マップの到達（縦切りの錠を外した全体の筋）');

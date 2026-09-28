@@ -509,6 +509,8 @@ const inDesert = (x, y) => x >= DESERT.x0 && x <= DESERT.x1 && y >= DESERT.y0 &&
 // 雪原の地方（ノルデン雪原・北の流氷原、tools/gen_world_snow.js）: 地形・町と入口・灯籠・出現表・地名を上から描く
 const SNOW = require('./gen_world_snow')({ get, set, rect, road, h2, fbm, P, S, LAMP, objects, npcs, exits, triggers, tilePatches, spawns, zones, areas, LEGEND, ROADS }).box;
 const inSnow = (x, y) => x >= SNOW.x0 && x <= SNOW.x1 && y >= SNOW.y0 && y <= SNOW.y1;
+// 湿原の地方（グレイモア湿原・山あいの街道（仮）、tools/gen_world_marsh.js）: 地形・町と入口・灯籠・出現表・地名・北の入口の閉じ方を上から描く
+require('./gen_world_marsh')({ get, set, rect, road, h2, fbm, P, S, LAMP, objects, npcs, exits, triggers, tilePatches, spawns, zones, areas, LEGEND });
 
 // --- 街灯の置き場所をならす（v2/tools/qa/check_lamps.js と同じ決まり。オーナーの報告「街灯が通行不能で移動が面倒」）
 // 当たりのある灯り（waylamp・lamp_post・snow_lamp）が道の上・戸口の前・出入り口・着く所にあるか、そばの通り道を 1 マス幅にする・
@@ -626,7 +628,7 @@ function check() {
   // 到達の検査は製品版（縦切りの閉じ方なし）で見る。縦切りで閉じた先（雪原・砂漠）は下で「閉じていること」を見る
   const sliceOff = (c) => c && c.slice === true ? false : sliceOn(c);
   const seen = bfs(applyPatches(sliceOff), spawns.roa.x, spawns.roa.y, sliceOff);
-  for (const k of ['yule', 'pass_inn', 'kasim']) if (spawns[k] && seenSlice[spawns[k].y * W + spawns[k].x]) errs.push('slice leak: ' + k + ' is reachable in the demo');
+  for (const k of ['yule', 'pass_inn', 'kasim', 'loch']) if (spawns[k] && seenSlice[spawns[k].y * W + spawns[k].x]) errs.push('slice leak: ' + k + ' is reachable in the demo');
   let n = 0, pen = 0, fst = 0, pl = 0;
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (seenSlice[y * W + x]) { n++; if (y >= 78 && x >= 66) pen++; else if (x <= 64) fst++; else pl++; }
   info.walk = n; info.peninsula = pen; info.forest = fst; info.plains = pl;

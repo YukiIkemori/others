@@ -8,9 +8,9 @@ d = json.load(open(m + '/layout_data.json'))
 W, H = d['w'], d['h']
 
 ROCK = """- dark slate blue-grey = the HIGH MOUNTAIN ROCK seen from above (not walkable): dark grey-blue crags and boulders, deep cracks, wind-packed snow lying in the hollows and on the ledges, a few small snow-laden firs clinging to it; it must read clearly darker than the walkable snow.
-- light blue bands with vertical strokes and a white top line = the VERTICAL CLIFF FACES facing the viewer (south): layered ice-glazed rock with long icicles, a thick lip of snow along the top; each face is exactly as tall as its band and its foot ends exactly on the ground edge below it."""
+- blue-grey bands with a few horizontal strata lines and a white top line = the VERTICAL CLIFF FACES facing the viewer (south): layered ice-glazed rock with long icicles, a thick lip of snow along the top; each face is exactly as tall as its band and its foot ends exactly on the ground edge below it."""
 ICE_ROCK = """- dark slate blue-grey = SOLID FROZEN ROCK AND GLACIER ICE seen from above (not walkable): dark blue-grey rock with veins and lumps of old blue glacier ice, frost, a few small pale ice crystals growing in the cracks.
-- light blue bands with vertical strokes and a white top line = the VERTICAL WALLS of the ice cave facing the viewer (south): walls of translucent blue glacier ice and frozen rock with hanging icicles, a frosty lip on top; each wall is exactly as tall as its band and its foot ends exactly on the floor edge below it."""
+- blue-grey bands with a few horizontal strata lines and a white top line = the VERTICAL WALLS of the ice cave facing the viewer (south): walls of translucent blue glacier ice and frozen rock with hanging icicles, a frosty lip on top; each wall is exactly as tall as its band and its foot ends exactly on the floor edge below it."""
 SNOW = """- off-white = open SNOW (walkable): smooth wind-packed snow, soft drifts, footprints, a few tufts of dry grass (FLAT).
 - warm tan = a TRODDEN PATH (walkable): packed, dirty trampled snow with footprints and sled tracks (FLAT)."""
 MAPS = {
@@ -46,7 +46,8 @@ MAPS = {
     'frost_ship_2': ('THE HOLD OF THE FROZEN GALLEON: below the deck of the ice-locked ship, seen from above with the deck taken away (a cut-away): the cargo hold in the west with plank floors; a thick wooden bulkhead with a doorway divides it from the east part; the captain\'s cabin in the south-east lies on a faded red carpet. Frost and ice crust on every timber, icicles hanging from the beams.', """- dark brown = the heavy TIMBERS of the hull and bulkheads seen from above (not walkable): thick dark oak frames and ribs, tarred seams, frost on top.
 - brown bands with horizontal lines = the WOODEN WALLS facing the viewer (south): old tarred planking with iron bolts, frost and icicles, a lit lip on top; exactly as tall as the band, the foot ending exactly on the floor edge below.
 - warm brown with lines = the PLANK FLOOR of the hold (walkable): worn, frosted planks running left-right, nail heads (FLAT).
-- red = the captain's faded red CARPET with a worn gold border (walkable, flat)."""),
+- red = the captain's faded red CARPET with a worn gold border (walkable, flat).
+The east part (right of the bulkhead) is ONE open room from the top wall down to the carpet: no beams, walls or rails across its floor. Show the ship: the outer walls are the curved inner planking of the hull with big ribs (frames) standing along them, hanging nets and ropes, frost on the frames; the floor planks run left-right with a few hatch covers lying flat."""),
 }
 title, key = MAPS[m]
 cell = T * 48 // 32
@@ -60,6 +61,7 @@ The SECOND attached image is only a STYLE REFERENCE from the same game (a painte
 
 Guide colour key:
 {key}
+The guide is flat colour-coding on a grid: interpret every colour as natural material. Boundaries between ground and rock, cliff lips and path edges must look natural and irregular (wobbling by up to about a quarter tile around the guide line), never ruler-straight lines, staircase steps or perfect rectangles; a trodden path is a worn trail with soft, uneven edges, not a rectangle laid on the snow. Keep the overall positions exact.
 Walkable areas must stay walkable-looking: no boulders, pillars, trees or furniture standing on them.
 
 Make it rich, detailed, handcrafted and cohesive, with the mood of a cold, silent, beautiful northern place.

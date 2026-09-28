@@ -48,7 +48,7 @@
       O.push(K.chest('desert_hawks_1_c1', 38, 25, { pool: 'p_T' }), K.chest('desert_hawks_1_c2', 5, 26, { item: 'i_smoke', n: 2 }),
         K.chest('desert_hawks_1_c3', 36, 16, { pool: 'p_T' }), K.chest('desert_hawks_1_c4', 5, 10, { gold: 180 }), K.chest('desert_hawks_1_c5', 24, 9, { pool: 'p_rare' }));
       O.push(K.exam(33, 9, 'desert_hawks_water'), K.exam(4, 16, 'desert_hawks_bunks'));
-      deco(O, [['tent', 7, 11], ['tent', 11, 17], ['firewood', 10, 13], ['sack', 13, 9], ['crate', 4, 13], ['weapon_rack', 6, 9], ['bones', 12, 18],
+      deco(O, [['tent', 7, 11], ['tent', 11, 17], ['log', 10, 13], ['sack', 13, 9], ['crate', 4, 13], ['weapon_rack', 6, 9], ['bones', 12, 18],
         ['clay_jars', 31, 8], ['clay_jars', 37, 8], ['cart_barrels', 31, 15], ['crate', 38, 14], ['sack', 33, 17], ['barrel', 39, 12],
         ['broken_pillar', 16, 26], ['bones', 27, 31], ['sand_mound', 24, 32], ['thorn_bush', 18, 33], ['rock_small', 27, 27], ['clay_jars', 17, 11], ['weapon_rack', 24, 10],
         ['bones', 6, 29], ['sand_mound', 38, 28]]);
@@ -69,6 +69,7 @@
         triggers: [{ id: 'arrive', on: 'enter', event: 'desert_hawks_arrive' }],
         zones: [{ rect: null, zone: 'z_desert_hawks', cond: FIGHT }],
         light: DK.LIGHT_TOMB, dark: false, bgm: 'cave', bbg: 'cave',
+        art: { image: 'desert/under/hawks_1', painted: [] },   // 1 枚の下絵（design/ENV_ASSETS.md「Painted dungeons」・_tools/under/desert2）
         meta: { chestsInfo: true, floor: '1 階', sub: '見張りの洞' },
       });
     }
