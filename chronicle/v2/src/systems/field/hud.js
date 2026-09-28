@@ -3,7 +3,7 @@
 //         町では「新しい話 ◯人」（E19）。
 //   右上: 目印の手がかりの札（題名・場所・方角の針）。目印が無ければ出さない。ダンジョンは下に小地図（minimap.js）。縦持ちは左上の場所の下。
 //         X で 小地図 → 大きな地図（画面の中ほど、歩ける）→ 出さない（設定 fieldMap。H.cycleMap）。小地図の無いマップの X は世界の地図の画面。
-//   人・物の上: 近づいたときだけ「[A] 話す」「[A] 調べる」「[A] 泉で休む」の吹き出し（R.UIK.bubble）。
+//   物の上: 近づいたときだけ「[A] 調べる」「[A] 泉で休む」の吹き出し（R.UIK.bubble）。人の上には出さない（ほぼ誰とでも話せる。持ち主 2026-09-28）。
 //   右下: ボタン表示（設定 prompts: always／最初の 2 時間／出さない）。タッチの操作パッドが出ているときは出さない。
 //   通知: R.Field.hud.toast(text, {icon, anchor}) → R.UIK.toast（入手は右上 'tr'、システムは左下 'bl'）。
 //   毎フレームの文字は refresh() で作っておく（毎フレーム新しい文字列を作らない）。
@@ -166,13 +166,13 @@
       const ah = R.H - s.t - s.b - U(tall ? 260 : 150), aw = R.W - s.l - s.r - U(tall ? 24 : 120);
       F.minimap.drawBig(g, s.l + (R.W - s.l - s.r) / 2, s.t + U(tall ? 150 : 84) + ah / 2, Math.min(aw, U(760)), Math.min(ah, U(560)));
     }
-    // ---- 吹き出し（近づいたときだけ）
+    // ---- 吹き出し（近づいたときだけ。物だけ: 人の「[A] 話す」は出さない。持ち主の決まり 2026-09-28: ほぼ誰とでも話せるので要らない）
     if (top && !F._locked() && !S.mv && !R.Events.busy()) {
       const f = F._front();
-      if (f) {
+      if (f && f.kind !== 'npc') {
         const t = cam.t;
         const bx = Math.round((f.x + (f.kind === 'obj' && f.obj.type === 'spring' ? 1 : 0.5)) * t - cam.cx);
-        const by = Math.round(f.y * t - cam.cy - (f.kind === 'npc' ? 36 * F._charScale() * (t / 32) : 6));
+        const by = Math.round(f.y * t - cam.cy - 6);
         B[0].label = f.label;
         R.UIK.bubble(g, bx, by, B);
       }
