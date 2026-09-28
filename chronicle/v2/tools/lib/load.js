@@ -36,6 +36,7 @@ module.exports = function load(opts) {
     localStorage: {
       getItem: (k) => (Object.prototype.hasOwnProperty.call(store, k) ? store[k] : null),
       setItem: (k, v) => { store[k] = String(v); }, removeItem: (k) => { delete store[k]; },
+      key: (i) => Object.keys(store)[i] || null, get length() { return Object.keys(store).length; },
     },
     TextEncoder, TextDecoder, URLSearchParams,
     btoa: (s) => Buffer.from(s, 'binary').toString('base64'),

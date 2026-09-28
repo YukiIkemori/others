@@ -81,13 +81,60 @@
     }
     openCount++;
     try { v.init(v.p); } catch (e) { console.error('[screen ' + id + ']', e); }
+    const memo = S._recall(id, v);
     return R.Engine.await(scene, params).then((r) => {
+      if (memo) S._remember(memo, v);
       openCount--;
       if (openCount <= 0) { openCount = 0; try { R.UIK.dropSnapshot(); } catch (e) { /* */ } }
       R.Input.touchLayout(prevLayout);
       return r;
     });
   };
+  // ---------------------------------------------------------------- カーソルの記憶（オーナーの依頼 2026-09-28「開き直すと前の位置」）
+  //   閉じたときのタブ（this.tab）・人（this.ci。人を指定して開いたときは覚えない）・一覧の行（値で探し、無ければ番号）を覚え、
+  //   次に同じ画面を開いたら init の後に戻す。旅（R.Game）が替わったら忘れる。セーブには入れない。
+  //   キーは 画面 id（＋店などは params.id）。人の指定（params.id が人の id）の画面は人ごと。
+  const MEMO = { menu: 1, items: 1, skills: 1, equip: 1, chronicle: 1, bestiary: 1, order: 1, warp: 1, save: 1, load: 1, settings: 1, shop: 1 };
+  const memoStore = { game: null, map: {} };
+  S._memo = memoStore;
+  S._recall = function (id, v) {
+    if (!MEMO[id] || (v.p && v.p.fresh)) return null;
+    if (memoStore.game !== R.Game) { memoStore.game = R.Game; memoStore.map = {}; }
+    const key = id + (v.p && v.p.id ? ':' + v.p.id : '');
+    const ref = { key, list: v.list || null };
+    const m = memoStore.map[key];
+    if (!m) return ref;
+    try {
+      if (m.tab != null && typeof v.tab === 'number' && m.tab !== v.tab && typeof v.refresh === 'function') {
+        const t0 = v.tab, had = v.list ? v.list.rows.length : 0;
+        v.tab = m.tab;
+        try { v.refresh(false); if (v.list && !v.list.rows.length && had) { v.tab = t0; v.refresh(false); } } catch (e) { v.tab = t0; try { v.refresh(false); } catch (e2) { /* */ } }
+      }
+      if (m.ci != null && typeof v.ci === 'number' && !(v.p && v.p.id) && m.ci !== v.ci && m.ci < S.party().length) {
+        v.ci = m.ci;
+        if (typeof v.refresh === 'function' && id === 'skills') v.refresh(false);
+      }
+      const L = v.list;
+      if (L && L.rows && L.rows.length && m.row != null) {
+        let i = m.value != null ? L.rows.findIndex((r) => r && r.value === m.value) : -1;
+        if (i < 0) i = Math.min(m.row, L.rows.length - 1);
+        L.focusIndex(i);
+        if (m.top != null) { L.top = Math.max(0, Math.min(m.top, i)); L.clampTop(); }
+      }
+    } catch (e) { R.warn('Screens: recall ' + id, e && e.message); }
+    ref.list = v.list || null;
+    return ref;
+  };
+  S._remember = function (ref, v) {
+    if (memoStore.game !== R.Game) return;
+    const L = ref.list;
+    const m = {};
+    if (typeof v.tab === 'number') m.tab = v.tab;
+    if (typeof v.ci === 'number' && !(v.p && v.p.id)) m.ci = v.ci;
+    if (L && L.rows && L.rows.length) { m.row = L.index; m.top = L.top; const row = L.rows[L.index]; if (row && (typeof row.value === 'string' || typeof row.value === 'number')) m.value = row.value; }
+    memoStore.map[ref.key] = m;
+  };
+
   /** 初めての仕組みの説明の札（1 回だけ）。o.force で見た後も開く（設定 › 遊び方） */
   S.tip = function (id, o) {
     const G = R.Game;

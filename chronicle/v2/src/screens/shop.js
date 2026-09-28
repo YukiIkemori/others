@@ -4,13 +4,18 @@
 //   一覧の上の札: 並び（種類順 → 値段順 → 強さ順。X かタップ。下の表示は「並べ方」）、しぼり込み「装備できる物だけ」（一行の誰かが付けられる品。START かタップ。武器・防具のタブ）。
 //   一覧の行: アイコン・名前・「装備中」の札・持っている数 ×N・値段（売るタブは売値。お金が足りない値段は灰色、誰も付けられない装備は名前が灰色）。
 //   右（縦持ちは下）: 名前・種類・値段・主な値・説明（2 行まで）。装備なら「仲間が付けると」の帯: 一行の全員の顔と増減
-//     （▲+n 緑 ／ ▼−n 赤 ／ ±0 灰。付けられない人は顔を薄くして「装備不可」、もう付けている人は「装備中」）。
+//     （▲+n 緑 ／ ▼−n 赤 ／ ±0 灰。付けられない人は顔を薄くして「装備できない」、もう付けている人は「装備中」）。
 //     1 人 1 列で、顔 → 名前 → 増減の行を縦に積む（列の幅を測って入れる）ので、顔と数字は重ならない。
-//   買う: 道具は数を選ぶ札（←→ 1 つ、↑↓ 10 ずつ、タップの −10・−1・＋1・＋10）→ 合計と残りの所持金。装備は 1 つ買って
-//     「今すぐ装備する？」（一行の全員。付けられない人は選べない。いちばん上がる人にカーソル）。品を入れるのは R.State.gain（1 か所）。
-//   売る: 2 つ以上持っていれば数を選ぶ札。めずらしい品は確かめる。
+//   買う（まとめ買い）: 道具も装備も数を選ぶ札（←→ 1 つ、↑↓ 10 ずつ、L/R で 1 つ・買えるだけ、タップの −10・−1・＋1・＋10）→ 合計と残りの所持金。
+//     上限は所持金と持てる数（99）の小さい方で、どちらで止まったかを札に出す。装備は買った数だけ続けて
+//     「今すぐ装備する？」（一行の全員。付けられない人は選べない。カーソルは上から見て最初の「付けられて、まだ同じ物を付けていない人」）。
+//     「装備しない」を選んだらそこでやめる。品を入れるのは R.State.gain（1 か所）。
+//   売る（まとめ売り）: 2 つ以上持っていれば数を選ぶ札。めずらしい品は確かめる。
+//   売るタブの START（札のタップも）:「使わない物をまとめて売る」。候補（決まりは shop_junk.js の S.shopJunk）を札に並べ、
+//     A で 1 つずつ外す／戻す、「まとめて売る」で合計を受け取る。候補が無ければ知らせるだけ。
 //   タッチ・マウス: まだ選んでいない行を押すと選ぶだけ、選んでいる行をもう一度押すと買う／売る（うっかり買わない）。
-//   テスト・QA の手がかり: this.tabs [{key, label}]・this.tab・this.tabKey()・this.list・this.qtyPick {id, mode, n, max}・this.sortMode・this.onlyUsable
+//   テスト・QA の手がかり: this.tabs [{key, label}]・this.tab・this.tabKey()・this.list・this.qtyPick {id, mode, n, max, cap}・this.sortMode・this.onlyUsable・
+//     this.junk {rows:[{id, n, unit, total, why, on}], list}・this.openJunk()・this.sellJunk()
 (function (R) {
   'use strict';
   const S = (R.Screens = R.Screens || {});
@@ -84,6 +89,7 @@
       this.sortMode = pref.sort;
       this.onlyUsable = pref.onlyUsable;
       this.qtyPick = null;
+      this.junk = null;
       this.hot = {};
       this.busy = false;
       this.list = new R.UIK.List({ rows: [], rowH: 40 });
@@ -125,8 +131,10 @@
       this.list.setRows(rows, !!keep);
       if (cur) { const i = rows.findIndex((r) => r.value === cur); if (i >= 0) this.list.focusIndex(i); }
     },
-    setTab(k) { if (k === this.tab || k < 0 || k >= this.tabs.length) return; this.tab = k; this.qtyPick = null; this.refresh(false); },
+    setTab(k) { if (k === this.tab || k < 0 || k >= this.tabs.length) return; this.tab = k; this.qtyPick = null; this.junk = null; this.refresh(false); },
     maxBuy(id) { const p = this.price(id); return Math.max(0, Math.min(MAX - S.count(id), p > 0 ? Math.floor(S.gold() / p) : MAX)); },
+    /** 買える数を止めているもの: 'gold'（所持金）か 'stack'（持てる数） */
+    buyCap(id) { const p = this.price(id), byGold = p > 0 ? Math.floor(S.gold() / p) : MAX; return byGold < MAX - S.count(id) ? 'gold' : 'stack'; },
     // ---------------------------------------------------------------- 売り買い
     onRow(row) {
       // タッチ・マウスで、まだ選んでいなかった行を押したときは選ぶだけ（もう一度押すと買う・売る）
@@ -144,12 +152,11 @@
       }
       if (this.price(id) > S.gold()) { R.UIK.sfx('buzzer'); R.UIK.toast('お金が足りない', { anchor: 'bl' }); return; }
       if (S.count(id) >= MAX) { R.UIK.sfx('buzzer'); R.UIK.toast('これ以上は持てない', { anchor: 'bl' }); return; }
-      if (!isEquip(id)) { this.openQty(id, 'buy'); return; }
-      this.doBuy(id, 1);
+      this.openQty(id, 'buy');
     },
     openQty(id, mode) {
       const max = mode === 'sell' ? S.count(id) : this.maxBuy(id);
-      this.qtyPick = { id, mode, n: 1, max: Math.max(1, max), rects: {} };
+      this.qtyPick = { id, mode, n: 1, max: Math.max(1, max), cap: mode === 'sell' ? 'have' : this.buyCap(id), rects: {} };
     },
     async doBuy(id, n) {
       if (this.busy) return;
@@ -162,7 +169,8 @@
         gain(id, n);
         R.UIK.sfx('coin');
         R.UIK.toast(`${it.name}${n > 1 ? ' ×' + n : ''} を買った`, { anchor: 'tr', icon: S.iconOf(it) });
-        if (isEquip(id)) await this.offerEquip(id);
+        // 装備は買った数だけ続けて聞く（「装備しない」・付けられる人がいない でやめる）
+        if (isEquip(id)) for (let i = 0; i < n; i++) if (!(await this.offerEquip(id, n - i))) break;
         this.refresh(true);
       } finally { this.busy = false; }
     },
@@ -183,30 +191,68 @@
       } finally { this.busy = false; }
     },
     /** 買った装備を「今すぐ装備する？」: 一行の全員（付けられない人は選べない）。
-     *  カーソルは上から見て最初の「付けられて、同じ物をまだ付けていない人」（持ち主 2026-09-28）。いなければ付けられる最初の人 */
-    async offerEquip(id) {
+     *  カーソルは上から見て最初の「付けられて、同じ物をまだ付けていない人」（持ち主 2026-09-28）。いなければ付けられる最初の人。
+     *  left = まだ聞く数（2 つ以上なら題に「あと n 個」）。→ 誰かが付けたら true */
+    async offerEquip(id, left) {
       const mem = S.party();
       const can = mem.map((c) => canWear(c, id));
-      if (!can.some(Boolean)) return;
+      if (!can.some(Boolean) || S.count(id) < 1) return false;
       const wearing = (c) => Object.values(c.equip || {}).includes(id);
       let best = mem.findIndex((c, i) => can[i] && !wearing(c));
       if (best < 0) best = can.indexOf(true);
       const choices = mem.map((c, i) => {
-        if (!can[i]) return { label: c.name, right: '装備不可', disabled: true };
+        if (!can[i]) return { label: c.name, right: '装備できない', disabled: true };
         const d = S.bestDelta(S.statDiff(c, slotOf(c, id), id));
         return { label: c.name, right: d ? `${d.name} ${d.d > 0 ? '+' : '−'}${Math.abs(d.d)}` : '±0' };
       });
-      const k = await S.ask(this, { title: '今すぐ装備する？', text: S.item(id).name, choices: choices.concat([{ label: '装備しない' }]), cancel: mem.length, index: best });
-      if (k < 0 || k >= mem.length || !can[k]) return;
+      const title = left > 1 ? `今すぐ装備する？（あと ${left} 個）` : '今すぐ装備する？';
+      const k = await S.ask(this, { title, text: S.item(id).name, choices: choices.concat([{ label: '装備しない' }]), cancel: mem.length, index: best });
+      if (k < 0 || k >= mem.length || !can[k]) return false;
       const c = mem[k];
       const r = R.Rules.equip(c, slotOf(c, id), id);
-      if (r.ok) { R.UIK.sfx('equip'); R.UIK.toast(`${c.name} が ${S.item(id).name} を付けた`, { anchor: 'bl', icon: 'equip' }); }
-      else R.UIK.toast(r.reason || '付けられない', { anchor: 'bl' });
+      if (r.ok) { R.UIK.sfx('equip'); R.UIK.toast(`${c.name} が ${S.item(id).name} を付けた`, { anchor: 'bl', icon: 'equip' }); return true; }
+      R.UIK.toast(r.reason || '付けられない', { anchor: 'bl' });
+      return false;
+    },
+    // ---------------------------------------------------------------- 使わない物をまとめて売る
+    /** 候補の札を開く（候補が無ければ知らせるだけ）→ 開いたら true */
+    openJunk() {
+      if (this.busy) return false;
+      const rows = S.shopJunk(this.stock).map((r) => Object.assign(r, { on: true }));
+      if (!rows.length) { R.UIK.sfx('buzzer'); R.UIK.toast('使わない物は見当たらない', { anchor: 'bl' }); return false; }
+      const list = new R.UIK.List({ rows: rows.map((r) => ({ value: r.id, label: S.item(r.id).name })).concat([{ value: '__ok', label: 'まとめて売る' }, { value: '__cancel', label: 'やめる' }]), rowH: 38, wrap: true });
+      list.onSelect = (row) => {
+        if (row.value === '__ok') { this.sellJunk(); return; }
+        if (row.value === '__cancel') { this.junk = null; return; }
+        const r = rows.find((x) => x.id === row.value);
+        if (r) r.on = !r.on;
+      };
+      list.onCancel = () => { this.junk = null; };
+      this.junk = { rows, list };
+      R.UIK.sfx('confirm');
+      return true;
+    },
+    junkTotal() { return this.junk ? this.junk.rows.reduce((s, r) => s + (r.on ? r.total : 0), 0) : 0; },
+    /** 札で残した品を売る → 受け取った G */
+    sellJunk() {
+      const j = this.junk;
+      if (!j || this.busy) return 0;
+      const pick = j.rows.filter((r) => r.on);
+      if (!pick.length) { R.UIK.sfx('buzzer'); R.UIK.toast('売る物が選ばれていない', { anchor: 'bl' }); return 0; }
+      let got = 0, kinds = 0;
+      for (const r of pick) if (take(r.id, r.n)) { got += r.unit * r.n; kinds++; }
+      this.junk = null;
+      R.Game.gold += got;
+      R.UIK.sfx('coin');
+      R.UIK.toast(`${kinds} 種類をまとめて ${R.UIK.num(got)} G で売った`, { anchor: 'bl', icon: 'coin' });
+      this.refresh(true);
+      return got;
     },
     // ---------------------------------------------------------------- 入力
     update() {
       if (this.busy) return;
       if (this.qtyPick) { this.updateQty(); return; }
+      if (this.junk) { this.junk.list.update(); return; }
       const I = R.Input;
       const k = S.tabInput(this.tabRects, this.tab, this.tabs.length);
       if (k >= 0) { this.setTab(k); return; }
@@ -218,6 +264,7 @@
         this.onlyUsable = pref.onlyUsable = !this.onlyUsable;
         R.UIK.sfx('cursor'); this.refresh(true); return;
       }
+      if (this.selling() && (I.pressed('start') || S.clicked(this.hot.junk))) { this.openJunk(); return; }
       this._prevIndex = this.list.index;
       this.list.update();
     },
@@ -228,6 +275,8 @@
       if (I.repeat('left') || S.clicked(rc.m1)) { set(q.n - 1); return; }
       if (I.repeat('up') || S.clicked(rc.p10)) { set(q.n + 10); return; }
       if (I.repeat('down') || S.clicked(rc.m10)) { set(q.n - 10); return; }
+      if (I.pressed('l')) { set(1); return; }
+      if (I.pressed('r')) { set(q.max); return; }
       if (I.pressed('a') || S.clicked(rc.ok)) {
         R.UIK.sfx('confirm');
         this.qtyPick = null;
@@ -306,9 +355,14 @@
       if (this.qtyPick) {
         this.drawQty(g);
         S.prompts(g, [{ btn: 'a', label: this.qtyPick.mode === 'buy' ? '買う' : '売る' }, { btn: 'b', label: 'やめる' }]);
+      } else if (this.junk) {
+        this.drawJunk(g);
+        const cur = this.junk.list.current(), onItem = cur && cur.value !== '__ok' && cur.value !== '__cancel';
+        S.prompts(g, [{ btn: 'a', label: onItem ? '外す・戻す' : '決める' }, { btn: 'b', label: 'やめる' }]);
       } else if (row) {
         const pr = [{ btn: 'a', label: sell ? '売る' : '買う' }, { btn: 'b', label: '戻る' }, { btn: 'x', label: '並べ方' }, { btn: 'y', label: '詳しく' }];
         if (!tall && this.canFilter()) pr.push({ btn: 'start', label: 'しぼり込み' });
+        if (!tall && sell) pr.push({ btn: 'start', label: 'まとめて売る' });
         S.prompts(g, pr);
       } else S.prompts(g, [{ btn: 'b', label: '戻る' }, { btn: 'x', label: '並べ方' }]);
     },
@@ -333,6 +387,16 @@
           x += gw2;
           const w2 = R.UIK.chip(g, x, y, fLabel, on ? { kind: 'gold', size: sz } : { kind: 'plain', size: sz, color: C.text2 });
           this.hot.narrow = { x: x - u(6), y: y - u(8), w: w2 + u(12), h: h + u(16) };
+        }
+      } else if (this.selling()) {
+        // 売るタブ: 「使わない物をまとめて売る」（START）
+        const jLabel = '使わない物をまとめて売る';
+        const fw = chipW(jLabel, sz);
+        const gw2 = S.tall() ? 0 : R.UIK.glyph(g, 'start', x + u(8), y + h / 2, { size: u(12) }) + u(6);
+        if (x + gw2 + fw <= lp.x + lp.w - u(12)) {
+          x += gw2;
+          const w2 = R.UIK.chip(g, x, y, jLabel, { kind: 'plain', size: sz, color: C.gold });
+          this.hot.junk = { x: x - u(6), y: y - u(8), w: w2 + u(12), h: h + u(16) };
         }
       }
     },
@@ -397,21 +461,42 @@
       }
     },
     /**
+     * 仲間の帯の中身（描くのと同じ数。テストも読む）: 一行の全員について
+     * [{id, name, slot, state: 'cant'（装備できない）| 'wearing'（装備中）| 'diff', show: [{k, name, d}]（上から lines 行。主な値 → 変わる値の大きい順）}]
+     */
+    compare(id, lines) {
+      const it = S.item(id);
+      if (!it) return [];
+      const mainKeys = it.slot === 'weapon' ? ['atk', 'mag'] : it.slot === 'acc' ? [] : ['def', 'mdef'];
+      return S.party().map((c) => {
+        const slot = slotOf(c, id), can = canWear(c, id);
+        const o = { id: c.id, name: c.name, slot, state: 'diff', show: [] };
+        if (!can) { o.state = 'cant'; return o; }
+        if (c.equip[slot] === id || (it.slot === 'acc' && (c.equip.acc1 === id || c.equip.acc2 === id))) { o.state = 'wearing'; return o; }
+        const rows = S.statDiff(c, slot, id);
+        const main = rows.filter((rr) => mainKeys.includes(rr.k)).sort((a, b2) => Math.abs(b2.d) - Math.abs(a.d))[0] || null;
+        const rest = rows.filter((rr) => rr !== main && rr.d).sort((a, b2) => Math.abs(b2.d) - Math.abs(a.d) || (b2.d > 0) - (a.d > 0));
+        o.show = (main ? [main] : []).concat(rest).slice(0, lines || 2);
+        if (!o.show.length) o.show.push({ name: '', d: 0 });
+        return o;
+      });
+    },
+    /**
      * 仲間の帯: 一行の全員を 1 人 1 列に。列の中は [顔（丸）] → [名前] → [増減 1〜2 行]（▲+n 緑・▼−n 赤・±0 灰）を縦に積む。
-     * 付けられない人は顔を薄くして「装備不可」、もう付けている人は「装備中」。文字は列の幅に入るように測って縮める。
+     * 付けられない人は顔を薄くして「装備できない」、もう付けている人は「装備中」。文字は列の幅に入るように測って縮める。
      */
     drawStrip(g, id, x, y, w, h) {
       const C = T().color, tall = S.tall(), mem = S.party();
       const n = Math.max(1, mem.length), gap = u(tall ? 6 : 8), cw = (w - gap * (n - 1)) / n;
-      const lines = 2, lh = u(22);
+      const lh = u(22);
       const extra = tall ? 0 : u(20);   // 横長は名前の下に「いま：…」
+      // 増減の行: 縦持ちは 2 行、横長は入るだけ（2〜4 行。主な値 → 変わる値の大きい順）
+      const lines = tall ? 2 : clamp(Math.floor((h - u(8) - u(40) - u(8) - u(21) - extra - u(10)) / lh), 2, 4);
       const r = clamp(Math.min(cw * 0.2, (h - u(18) - u(22) - extra - lines * lh) / 2), u(10), tall ? u(20) : u(24));
-      const it = S.item(id);
-      const mainKeys = it.slot === 'weapon' ? ['atk', 'mag'] : it.slot === 'acc' ? [] : ['def', 'mdef'];
+      const cmp = this.compare(id, lines);
       mem.forEach((c, i) => {
         const cx0 = x + i * (cw + gap), cx = cx0 + cw / 2;
-        const slot = slotOf(c, id), can = canWear(c, id);
-        const wearing = can && (c.equip[slot] === id || (it.slot === 'acc' && (c.equip.acc1 === id || c.equip.acc2 === id)));
+        const slot = cmp[i].slot, can = cmp[i].state !== 'cant', wearing = cmp[i].state === 'wearing';
         // 列の地
         const cardH = Math.min(h, u(8) + r * 2 + u(8) + u(21) + extra + lines * lh + u(10));
         g.save(); R.UIK.rr(g, cx0, y, cw, Math.max(u(40), cardH), u(8)); g.fillStyle = can ? 'rgba(240,228,200,0.05)' : 'rgba(240,228,200,0.02)'; g.fill(); g.restore();
@@ -424,14 +509,9 @@
           if (can) R.UIK.text(g, 'いま：' + (cur ? cur.name : 'なし'), cx, ty, { size: u(12), color: C.text2, align: 'center', maxW: cw - u(10) });
           ty += extra;
         }
-        if (!can) { R.UIK.text(g, '装備不可', cx, ty, { size: u(13), weight: 700, color: C.disabled, align: 'center', maxW: cw - u(8) }); return; }
+        if (!can) { R.UIK.text(g, '装備できない', cx, ty, { size: u(13), weight: 700, color: C.disabled, align: 'center', maxW: cw - u(8) }); return; }
         if (wearing) { R.UIK.text(g, '装備中', cx, ty, { size: u(13), weight: 700, color: C.gold, align: 'center', maxW: cw - u(8) }); return; }
-        const rows = S.statDiff(c, slot, id);
-        const main = rows.filter((rr) => mainKeys.includes(rr.k)).sort((a, b2) => Math.abs(b2.d) - Math.abs(a.d))[0] || null;
-        const rest = rows.filter((rr) => rr !== main && rr.d).sort((a, b2) => Math.abs(b2.d) - Math.abs(a.d) || (b2.d > 0) - (a.d > 0));
-        const show = (main ? [main] : []).concat(rest).slice(0, lines);
-        if (!show.length) show.push({ name: '', d: 0 });
-        for (const rr of show) {
+        for (const rr of cmp[i].show) {
           this.deltaLine(g, rr, cx, ty, cw - u(4));
           ty += lh;
         }
@@ -472,7 +552,8 @@
       q.rects.p1 = button(g, { x: px + pw - bw * 2 - u(8), y: ry, w: bw, h: bh }, '＋1', { disabled: q.n >= q.max });
       q.rects.p10 = button(g, { x: px + pw - bw, y: ry, w: bw, h: bh }, '＋10', { disabled: q.n >= q.max });
       R.UIK.text(g, '×' + q.n, nx, ry + (bh - u(28)) / 2, { size: u(28), weight: 700, color: C.goldHi, align: 'center' });
-      R.UIK.text(g, '←→で1つ、↑↓で10ずつ', nx, ry + bh + u(8), { size: u(12.5), color: C.text3, align: 'center', maxW: pw });
+      const capLine = q.n >= q.max ? (q.cap === 'gold' ? '（所持金で買えるのはここまで）' : q.cap === 'stack' ? `（持てるのは ${MAX} 個まで）` : '（持っているのはここまで）') : '';
+      R.UIK.text(g, '←→で1つ、↑↓で10ずつ、L・Rで最小・最大' + capLine, nx, ry + bh + u(8), { size: u(12.5), color: capLine ? C.text2 : C.text3, align: 'center', maxW: pw });
       // 合計と所持金
       const ty = ry + bh + u(36);
       R.UIK.text(g, (buy ? '合計 ' : '受け取り ') + R.UIK.num(total) + ' G', px, ty, { size: u(17), weight: 700, color: C.gold });
@@ -482,6 +563,41 @@
       const oy = y + h - bh - u(16), ow = (pw - u(12)) / 2;
       q.rects.ok = button(g, { x: px, y: oy, w: ow, h: bh }, buy ? '買う' : '売る', { primary: true, size: 16 });
       q.rects.cancel = button(g, { x: px + ow + u(12), y: oy, w: ow, h: bh }, 'やめる', { size: 16 });
+    },
+    /** 「使わない物をまとめて売る」の札: 候補（✓・名前・わけ・×n・売値）→ 合計 → まとめて売る・やめる */
+    drawJunk(g) {
+      const j = this.junk, C = T().color, L = j.list, rp = L.rowPx();
+      const shown = Math.min(L.rows.length, 11);
+      const w = Math.min(R.W - u(32), u(640)), h = u(20) + u(34) + u(24) + shown * rp + u(52);
+      const x = (R.W - w) / 2, y = Math.max(u(20), (R.H - h) / 2);
+      R.UIK.dim(g, 0.5);
+      R.UIK.panel(g, { x, y, w, h }, { dense: true, frost: true });
+      const px = x + u(24), pw = w - u(48);
+      R.UIK.text(g, '使わない物をまとめて売る', px, y + u(18), { size: u(18), weight: 700, color: C.gold });
+      R.UIK.text(g, '大事な物・めずらしい装備・付けている物は入れていない', px, y + u(50), { size: u(12.5), color: C.text3, maxW: pw });
+      L.render = (gg, row, rect, f) => {
+        const cy = rect.y + (rect.h - u(15)) / 2 - u(1);
+        if (row.value === '__ok' || row.value === '__cancel') {
+          const ok = row.value === '__ok';
+          R.UIK.text(gg, row.label, rect.x + u(14), cy, { size: u(15.5), weight: 700, color: ok ? C.goldHi : C.text });
+          if (ok) R.UIK.text(gg, '合計 ' + R.UIK.num(this.junkTotal()) + ' G', rect.x + rect.w - u(12), cy, { size: u(15.5), weight: 700, color: C.gold, align: 'right' });
+          return;
+        }
+        const r = j.rows.find((z) => z.id === row.value);
+        const on = r && r.on;
+        // 売る印（✓）と外した印（空の枠）
+        if (on) R.UIK.icon(gg, 'check', rect.x + u(10), rect.y + (rect.h - u(16)) / 2, u(16), C.up);
+        else { gg.save(); R.UIK.rr(gg, rect.x + u(11), rect.y + (rect.h - u(14)) / 2, u(14), u(14), u(3)); gg.strokeStyle = C.disabled; gg.lineWidth = 1; gg.stroke(); gg.restore(); }
+        const right = rect.x + rect.w - u(12);
+        const tw = R.UIK.text(gg, R.UIK.num(r.total) + ' G', right, cy, { size: u(15), weight: 700, color: on ? C.gold : C.disabled, align: 'right' });
+        const nw = R.UIK.text(gg, '×' + r.n, right - Math.max(tw, u(84)) - u(12), cy + u(1), { size: u(13.5), color: on ? C.text2 : C.disabled, align: 'right' });
+        const ww = R.UIK.text(gg, r.why, right - Math.max(tw, u(84)) - u(12) - nw - u(14), cy + u(2), { size: u(12), color: C.text3, align: 'right' });
+        S.itemLabel(gg, r.id, rect.x + u(34), cy, { focused: f, size: u(15), maxW: rect.w - u(34) - (Math.max(tw, u(84)) + nw + ww + u(50)), disabled: !on && !f });
+      };
+      L.draw(g, { x: x + u(12), y: y + u(78), w: w - u(24), h: shown * rp });
+      const got = this.junkTotal();
+      R.UIK.text(g, '所持金 ' + R.UIK.num(S.gold()) + ' → ' + R.UIK.num(S.gold() + got) + ' G', px + pw, y + h - u(34), { size: u(13.5), color: C.text2, align: 'right' });
+      R.UIK.text(g, j.rows.filter((r) => r.on).length + ' / ' + j.rows.length + ' 種類', px, y + h - u(34), { size: u(13.5), color: C.text2 });
     },
   });
 })(window.RPG);

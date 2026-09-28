@@ -28,6 +28,10 @@
     ruby: false,
     shake: 'on',
     battleVoice: 'on',   // 戦闘ボイス: あり／大技だけ／なし（BRIEF A37、BSCENE が読む）
+    // PC 版（Steam の基本）: パッドの印・画面の出し方・拡大のしかた
+    padGlyphs: 'auto',   // ボタンの印: 自動（最後に触ったパッドの名前で）／A が下（Xbox 系）／○×△□（PlayStation 系）／A が右（Nintendo 系）
+    display: 'window',   // ウィンドウ／全画面（F11・Alt+Enter でも。core/display.js）
+    scaleMode: 'fit',    // 拡大: 画面に合わせる（実画面の画素に 1:1 で描く）／整数倍（余りは帯）。core/fit.js
   };
   const VOL = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const CHOICES = {
@@ -50,13 +54,14 @@
     colorAssist: [false, true], lessFlash: [false, true], reduceMotion: [false, true], ruby: [false, true],
     shake: ['on', 'weak', 'off'],
     battleVoice: ['on', 'big', 'off'],
+    padGlyphs: ['auto', 'xbox', 'ps', 'nintendo'],
+    display: ['window', 'fullscreen'],
+    scaleMode: ['fit', 'integer'],
   };
   const KEY = 'settings';
   let cur = Object.assign({}, DEFAULTS);
-
-  function store() {
-    try { return window.localStorage || null; } catch (e) { return null; }
-  }
+  // キーとボタンの割り当て（core/input.js が形を決める）。既定から変えた物だけ {kb:{btn:[code, code]}, pad:{btn:index}}
+  let binds = null;
 
   const S = (R.Settings = {
     defaults: Object.freeze(Object.assign({}, DEFAULTS)),
@@ -75,30 +80,65 @@
     },
     all() { return Object.assign({}, cur); },
     load() {
-      const ls = store();
       let raw = null;
-      try { raw = ls && ls.getItem(R.SAVE_PREFIX + KEY); } catch (e) { raw = null; }
+      try { raw = R.Storage ? R.Storage.get(KEY) : null; } catch (e) { raw = null; }
       cur = Object.assign({}, DEFAULTS);
+      binds = null;
       if (raw) {
         try {
           const o = JSON.parse(raw) || {};
           for (const k of Object.keys(o)) if (CHOICES[k] && CHOICES[k].includes(o[k])) cur[k] = o[k];
+          if (o.binds && typeof o.binds === 'object') binds = cleanBinds(o.binds);
         } catch (e) { /* 壊れた設定は既定に */ }
       }
       for (const k of ['vol.bgm']) apply(k, cur[k]);
+      R.emit('settings', { key: 'binds' });
       return S.all();
     },
     save() {
-      const ls = store();
-      try { if (ls) ls.setItem(R.SAVE_PREFIX + KEY, JSON.stringify(cur)); } catch (e) { /* 保存できない環境でも止まらない */ }
+      const o = Object.assign({}, cur);
+      if (binds) o.binds = binds;
+      try { if (R.Storage) R.Storage.set(KEY, JSON.stringify(o)); } catch (e) { /* 保存できない環境でも止まらない */ }
     },
-    reset() { cur = Object.assign({}, DEFAULTS); S.save(); apply('vol.bgm'); R.emit('settings', { key: '*' }); },
+    /** 割り当ての上書き（{kb, pad} か null）。形は input.js が確かめてから渡す */
+    getBinds() { return binds ? JSON.parse(JSON.stringify(binds)) : null; },
+    setBinds(b) {
+      binds = b ? cleanBinds(b) : null;
+      S.save();
+      R.emit('settings', { key: 'binds' });
+      return true;
+    },
+    reset() { cur = Object.assign({}, DEFAULTS); binds = null; S.save(); apply('vol.bgm'); apply('scaleMode'); R.emit('settings', { key: '*' }); },
   });
 
   function apply(key) {
     if (/^vol\./.test(key) && R.Audio && R.Audio.setVolumes) {
       R.Audio.setVolumes(S.get('vol.bgm') / 10, S.get('vol.sfx') / 10, S.get('vol.voice') / 10);
     }
-    if (key === 'uiSize' && R.fit) R.fit(true);
+    if ((key === 'uiSize' || key === 'scaleMode') && R.fit) R.fit(true);
+    if (key === 'display' && R.Display && R.Display.apply) R.Display.apply();
+  }
+  /** 読んだ割り当ての形を整える（知らない名前・変な値は落とす） */
+  function cleanBinds(b) {
+    const out = {};
+    const code = /^[A-Za-z0-9]{1,24}$/;
+    if (b.kb && typeof b.kb === 'object') {
+      const kb = {};
+      for (const k of Object.keys(b.kb)) {
+        const v = b.kb[k];
+        if (!/^[a-z]{1,8}$/.test(k) || !Array.isArray(v)) continue;
+        kb[k] = v.slice(0, 2).map((c) => (typeof c === 'string' && code.test(c) ? c : null));
+      }
+      out.kb = kb;
+    }
+    if (b.pad && typeof b.pad === 'object') {
+      const pad = {};
+      for (const k of Object.keys(b.pad)) {
+        const v = b.pad[k];
+        if (/^[a-z]{1,8}$/.test(k) && Number.isInteger(v) && v >= -1 && v <= 31) pad[k] = v;
+      }
+      out.pad = pad;
+    }
+    return out.kb || out.pad ? out : null;
   }
 })(window.RPG);

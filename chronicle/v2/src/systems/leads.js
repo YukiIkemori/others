@@ -166,6 +166,44 @@
     return (r && r.name) || rid;
   };
 
+  // ================================================================ 次にやること（R.DB.goals。オーナーの依頼 2026-09-28「今の目標がいつでも 1 行で見える」）
+  //   Leads.goal() → {id, text, lead} | null。表（src/data/goals.js）の、at が真の段のうち いちばん後ろの物。
+  //   メニューの上（hub.js）とフィールドの L の札（field/hud.js）が読む。'goal' は段が変わったとき（hud.js が見る）
+  function goalRows() {
+    const T = R.DB.goals || {};
+    return Object.keys(T).map((id) => Object.assign({ id }, T[id])).sort((a, b) => (a.n || 0) - (b.n || 0));
+  }
+  function fillGoal(s) {
+    const g = G() || {};
+    return String(s).replace(/\{(flags|var):([^}]*)\}/g, (m, k, v) => {
+      if (k === 'var') return String(+((g.vars && g.vars[v]) || 0));
+      return String(v.split(',').filter((f) => g.flags && g.flags[f.trim()]).length);
+    });
+  }
+  /** 段の文（text が配列なら when が真の最初の物） */
+  Leads.goalText = function (row) {
+    if (!row) return '';
+    let t = row.text;
+    if (Array.isArray(t)) {
+      const hit = t.find((x) => x && (x.when == null || R.State.check(x.when)));
+      t = hit ? hit.text : '';
+    }
+    return t ? fillGoal(t) : '';
+  };
+  Leads.goal = function () {
+    if (!G()) return null;
+    const rows = goalRows();
+    for (let i = rows.length - 1; i >= 0; i--) {
+      const r = rows[i];
+      let ok = false;
+      try { ok = R.State.check(r.at); } catch (e) { ok = false; }
+      if (!ok) continue;
+      const text = Leads.goalText(r);
+      if (text) return { id: r.id, text, lead: r.lead || null };
+    }
+    return null;
+  };
+
   Leads.list = function (o) {
     const g = G();
     if (!g) return [];

@@ -3,31 +3,17 @@
 // 保存するのは R.State.serialize() の結果だけ（形は EVENTS が持つ）。記録 = {ver: 2, card, state, t}
 // 接頭辞 luminous_chronicle_v2_。版が違う・読めない記録は札に {bad:'old'} を返し、読まない（止まらない・壊れない）
 // 札に Lv を出さない（章＝クリアした地方の数）
-// 使える所: ブラウザの localStorage。使えない環境（プライベート窓・node）ではメモリだけ（ページを閉じると消える）
+// 使える所: R.Storage（デスクトップ版はファイル、ブラウザは localStorage、使えない環境ではメモリだけ＝ページを閉じると消える）
 (function (R) {
   'use strict';
   const SLOTS = ['auto', 'suspend', 's1', 's2', 's3'];
   const VER = 2;
-  const mem = {}; // localStorage が使えないときの置き場
   const checkpoints = {}; // tag → {state, extra}（メモリの中だけ）
 
-  function ls() { try { return window.localStorage || null; } catch (e) { return null; } }
-  function rawGet(k) {
-    const s = ls();
-    try { const v = s && s.getItem(R.SAVE_PREFIX + k); if (v != null) return v; } catch (e) { /* 読めない */ }
-    return Object.prototype.hasOwnProperty.call(mem, k) ? mem[k] : null;
-  }
-  function rawSet(k, v) {
-    mem[k] = v;
-    const s = ls();
-    try { if (s) s.setItem(R.SAVE_PREFIX + k, v); } catch (e) { return false; }
-    return true;
-  }
-  function rawDel(k) {
-    delete mem[k];
-    const s = ls();
-    try { if (s) s.removeItem(R.SAVE_PREFIX + k); } catch (e) { /* 消せない */ }
-  }
+  // 置き場は R.Storage（core/storage.js）: デスクトップ版はファイル、ブラウザは localStorage、どちらも無ければメモリ
+  function rawGet(k) { return R.Storage.get(k); }
+  function rawSet(k, v) { return R.Storage.set(k, v); }
+  function rawDel(k) { R.Storage.remove(k); }
 
   /** 今の R.Game から札を作る */
   function makeCard() {

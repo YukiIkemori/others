@@ -5,6 +5,7 @@
 //         X で 小地図 → 大きな地図（画面の中ほど、歩ける）→ 出さない（設定 fieldMap。H.cycleMap）。小地図の無いマップの X は世界の地図の画面。
 //   物の上: 近づいたときだけ「[A] 調べる」「[A] 泉で休む」の吹き出し（R.UIK.bubble）。人の上には出さない（ほぼ誰とでも話せる。持ち主 2026-09-28）。
 //   右下: ボタン表示（設定 prompts: always／最初の 2 時間／出さない）。タッチの操作パッドが出ているときは出さない。
+//   上の中ほど: 「次にやること」の札（L で数秒。本筋の段が変わったときも一度。H.showGoal）。
 //   通知: R.Field.hud.toast(text, {icon, anchor}) → R.UIK.toast（入手は右上 'tr'、システムは左下 'bl'）。
 //   毎フレームの文字は refresh() で作っておく（毎フレーム新しい文字列を作らない）。
 (function (R) {
@@ -14,8 +15,8 @@
   const H = (F.hud = F.hud || {});
   const TWO_H = 2 * 3600 * 1000;
   const FAC = { inn: 'inn', shop: 'shop', tavern: 'chat', item: 'bag', weapon: 'sword', armor: 'shield', church: 'light', guild: 'journal', records: 'book', record: 'book' };
-  const PROMPTS_TOWN = [{ btn: 'y', label: 'メニュー' }, { btn: 'x', label: '地図' }, { btn: 'b', label: '走る' }];   // 町の X は「町の地図」（draw で）
-  const PROMPTS_DUN = [{ btn: 'y', label: 'メニュー' }, { btn: 'x', label: '地図' }, { btn: 'b', label: '走る' }];
+  const PROMPTS_TOWN = [{ btn: 'y', label: 'メニュー' }, { btn: 'x', label: '地図' }, { btn: 'l', label: '目標' }, { btn: 'b', label: '走る' }];   // 町の X は「町の地図」（draw で）
+  const PROMPTS_DUN = [{ btn: 'y', label: 'メニュー' }, { btn: 'x', label: '地図' }, { btn: 'l', label: '目標' }, { btn: 'b', label: '走る' }];
   // ダンジョンの地図（設定 fieldMap）: X で 小地図 → 大きな地図 → 出さない → 小地図。ボタン表示は「次に押すと何になるか」
   const MAP_NEXT = { mini: 'big', big: 'off', off: 'mini' };
   const MAP_LABEL = { mini: '大きな地図', big: '地図を消す', off: '小地図' };
@@ -23,6 +24,73 @@
   const DIR_ANGLE = { n: 0, ne: Math.PI / 4, e: Math.PI / 2, se: Math.PI * 0.75, s: Math.PI, sw: -Math.PI * 0.75, w: -Math.PI / 2, nw: -Math.PI / 4 };
   const DIR_JA = { n: '北', ne: '北東', e: '東', se: '南東', s: '南', sw: '南西', w: '西', nw: '北西' };
   const B = [{ btn: 'a', label: '' }];
+
+  // ---------------------------------------------------------------- 次にやること（L。オーナーの依頼 2026-09-28）
+  //   フィールドで L（キーボード Q・パッド LB。フィールドでは空いていたボタン）を押すと、上の中ほどに「次にやること」の札を数秒。
+  //   本筋の段（R.Leads.goal()）が変わったときも、落ち着いた（会話・暗転・メニューが無い）ところで一度だけ出す。読み込んだ直後は出さない。
+  const GOAL_MS = 4200, GOAL_AUTO_MS = 3200;
+  const goal = { t0: -1e9, ms: GOAL_MS, text: '', last: undefined, game: null, frame: 0, installed: false };
+  function fieldCalm() {
+    const top = R.Engine && R.Engine.top && R.Engine.top();
+    return !!top && top === F.scene && !!S.map && !S.entering && !F._locked() && !(R.Events && R.Events.busy && R.Events.busy()) && R.Engine.fade.a < 0.01;
+  }
+  /** 札を出す（ms は出している長さ）。→ 出したら true（目標が無ければ false） */
+  H.showGoal = function (ms) {
+    const gl = R.Leads && R.Leads.goal ? R.Leads.goal() : null;
+    if (!gl) return false;
+    goal.text = gl.text; goal.t0 = R.Engine.time; goal.ms = ms || GOAL_MS; goal.last = gl.id;
+    return true;
+  };
+  /** 今出している札（テスト用）: {text, age} | null */
+  H._goal = function () { const age = R.Engine.time - goal.t0; return age >= 0 && age < goal.ms ? { text: goal.text, age } : null; };
+  function goalTick() {
+    if (!R.Game || R.Game !== goal.game) { goal.game = R.Game || null; goal.last = undefined; goal.t0 = -1e9; }
+    if (!R.Game || !fieldCalm()) return;
+    if (R.Input.pressed('l')) {
+      R.Input.consume('l');
+      if (H.showGoal(GOAL_MS)) R.UIK.sfx('cursor'); else R.UIK.sfx('buzzer');
+      return;
+    }
+    // 段が変わったか（毎フレームは量らない）
+    if (++goal.frame % 20) return;
+    const gl = R.Leads && R.Leads.goal ? R.Leads.goal() : null;
+    const id = gl ? gl.id : null;
+    if (goal.last === undefined) { goal.last = id; return; }
+    if (id && id !== goal.last) {
+      // 手がかりの通知の札が出ている間は待つ（右上と重ねない）
+      if (R.Leads._current && R.Leads._current()) return;
+      H.showGoal(GOAL_AUTO_MS);
+    } else goal.last = id;
+  }
+  function installGoal() {
+    if (goal.installed || !R.Engine || !R.Engine.addTick) return;
+    goal.installed = true;
+    R.Engine.addTick(goalTick);
+  }
+  function drawGoal(g) {
+    const age = R.Engine.time - goal.t0;
+    if (age < 0 || age >= goal.ms || !goal.text) return;
+    const U = R.UIK.u, T = R.UIK.T, C = T.color, s = R.safe, tall = R.layout === 'tall';
+    const kin = Math.min(1, age / 200), kout = Math.min(1, (goal.ms - age) / 360);
+    const a = Math.max(0, Math.min(kin, kout));
+    if (a <= 0) return;
+    const ts = U(15), lab = '次にやること';
+    const tw = R.UIK.measure(goal.text, { size: ts, weight: 700 });
+    const maxW = Math.min(R.W - s.l - s.r - U(tall ? 32 : 40), U(460));
+    const w = Math.min(maxW, Math.max(U(240), tw + U(64)));
+    const h = U(54);
+    const x = Math.round(s.l + (R.W - s.l - s.r - w) / 2);
+    const y = Math.round(s.t + U(tall ? 64 : 16) - (1 - R.UIK.ease(kin)) * U(10));
+    g.save();
+    g.globalAlpha = a;
+    R.UIK.panel(g, { x, y, w, h }, { r: U(12), a: 0.86 });
+    g.fillStyle = 'rgba(236,201,124,0.85)';
+    g.fillRect(x + U(1), y + U(12), U(2), h - U(24));
+    R.UIK.icon(g, 'star', x + U(16), y + U(10), U(14), C.gold);
+    R.UIK.text(g, lab, x + U(36), y + U(10), { size: U(11), weight: 700, color: C.gold, track: U(1.5) });
+    R.UIK.text(g, goal.text, x + U(16), y + U(28), { size: ts, weight: 700, color: C.text, maxW: w - U(32) });
+    g.restore();
+  }
 
   H.toast = function (text, o) { R.UIK.toast(text, Object.assign({ anchor: 'tr' }, o || {})); };
 
@@ -42,6 +110,7 @@
   /** 文字と数を作り直す（入る・宝箱・手がかり・会話・フラグのあと） */
   H.refresh = function () {
     const m = S.map, G = R.Game;
+    installGoal();
     if (!m) return;
     const c = (S.hud = S.hud || {});
     c.name = m.name || m.id;
@@ -179,6 +248,8 @@
         R.UIK.bubble(g, bx, by, B);
       }
     }
+    // ---- 上の中ほど: 次にやること（L）
+    if (top) drawGoal(g);
     // ---- 右下: ボタン表示
     if (top && showPrompts()) {
       PROMPTS_DUN[1].label = mode ? MAP_LABEL[mode] : '地図';

@@ -27,15 +27,30 @@ function ok(name, cond, info) {
     ['PC 16:10', 1920, 1200, 1, false, 960, 540, 2, 1.0],
     ['4K TV', 3840, 2160, 1, false, 960, 540, 4, 1.0],
     ['720p', 1280, 720, 1, false, 960, 540, 2, 1.0],
-    ['phone land 19.5:9', 844, 390, 3, true, 1168, 540, 2, 1.25],
-    ['phone portrait', 390, 844, 3, true, 540, 1169, 2, 1.3],
-    ['tablet 4:3', 1024, 768, 2, true, 720, 540, 2, 1.1],
+    ['1440p', 2560, 1440, 1, false, 960, 540, 2.667, 1.0],
+    ['1080p at 125%', 1536, 864, 1.25, false, 960, 540, 2, 1.0],
+    // 2 より細かい実画面は実画面の画素に合わせる（PC 版の決め直し。スマホ・タブレットも同じ式）
+    ['phone land 19.5:9', 844, 390, 3, true, 1168, 540, 2.167, 1.25],
+    ['phone portrait', 390, 844, 3, true, 540, 1169, 2.166, 1.3],
+    ['tablet 4:3', 1024, 768, 2, true, 720, 540, 2.844, 1.1],
   ];
   for (const [name, w, h, dpr, coarse, W, H, S, ui] of rows) {
     const f = R.fitCalc({ cssW: w, cssH: h, dpr, coarse, uiSize: 1 });
-    ok(`fit ${name}: ${W}x${H} SCALE ${S} ui ${ui}`, f.W === W && f.H === H && f.SCALE === S && f.uiScale === ui, f);
+    ok(`fit ${name}: ${W}x${H} SCALE ${S} ui ${ui}`, f.W === W && f.H === H && Math.abs(f.SCALE - S) < 0.001 && f.uiScale === ui, f);
+    // ぼけない: 実キャンバスが実画面の画素に 1:1（2 以下の実画面は大きく描いて縮める）、帯の位置も実画面の画素に揃う
+    const dev = Math.min(w / W, h / H) * dpr;
+    if (dev >= 2 - 1e-6) ok(`fit ${name}: backing = device px (1:1)`, f.crisp && Math.abs(f.css.w * dpr - f.backing.w) < 0.01 && Math.abs(f.css.h * dpr - f.backing.h) < 0.01, f);
+    ok(`fit ${name}: bars on device px`, Math.abs(f.css.left * dpr - Math.round(f.css.left * dpr)) < 1e-6 && Math.abs(f.css.top * dpr - Math.round(f.css.top * dpr)) < 1e-6, f.css);
     ok(`fit ${name}: body 15 px ≥ 12 CSS px`, 15 * f.uiScale * f.cssScale >= 12 - 1e-6, { css: 15 * f.uiScale * f.cssScale });
   }
+  const int1440 = R.fitCalc({ cssW: 2560, cssH: 1440, dpr: 1, scaleMode: 'integer' });
+  ok('fit integer 1440p: 2x (1920x1080 in the middle, 1:1)', int1440.SCALE === 2 && int1440.css.w === 1920 && int1440.css.left === 320 && int1440.crisp, int1440);
+  const int4k = R.fitCalc({ cssW: 3840, cssH: 2160, dpr: 1, scaleMode: 'integer' });
+  ok('fit integer 4K: 4x fills the screen', int4k.SCALE === 4 && int4k.css.w === 3840 && int4k.css.left === 0, int4k);
+  const f720 = R.fitCalc({ cssW: 1280, cssH: 720, dpr: 1 });
+  ok('fit 720p: draws at 2x and shrinks (backing 1920x1080 in a 1280x720 box)', f720.backing.w === 1920 && f720.css.w === 1280, f720);
+  const f5k = R.fitCalc({ cssW: 5120, cssH: 2880, dpr: 1 });
+  ok('fit 5K: SCALE capped at 4', f5k.SCALE === 4 && f5k.backing.w === 3840, f5k);
   const wide = R.fitCalc({ cssW: 3000, cssH: 1000, dpr: 1 });
   ok('fit ultra-wide caps at 1260', wide.W === 1260 && wide.css.left > 0, wide);
   const big = R.fitCalc({ cssW: 1920, cssH: 1080, dpr: 1, uiSize: 1.3 });
@@ -64,10 +79,15 @@ function ok(name, cond, info) {
   I.lastDevice = 'kb';
   ok('prompt kb: a → Z, y → C', I.prompt('a').label === 'Z' && I.prompt('y').label === 'C' && I.prompt('a').kind === 'kb');
   I.lastDevice = 'pad';
-  ok('prompt pad (confirm right): a → A', I.prompt('a').label === 'A' && I.prompt('b').label === 'B');
+  // 印の字は標準配置のボタンの番号から（決定は既定で右 = 1）。A が右の系統（nintendo）で前の表と同じ字、A が下（xbox）は右が B
+  R.Settings.set('padGlyphs', 'nintendo');
+  ok('prompt pad nintendo (confirm right): a → A', I.prompt('a').label === 'A' && I.prompt('b').label === 'B');
   R.Settings.set('confirmButton', 'down');
-  ok('prompt pad (confirm down): a → B (position)', I.prompt('a').label === 'B' && I.prompt('b').label === 'A');
+  ok('prompt pad nintendo (confirm down): a → B (position)', I.prompt('a').label === 'B' && I.prompt('b').label === 'A');
   R.Settings.set('confirmButton', 'right');
+  R.Settings.set('padGlyphs', 'xbox');
+  ok('prompt pad xbox (confirm right): a → B (right face), index 1', I.prompt('a').label === 'B' && I.prompt('a').index === 1 && I.prompt('a').style === 'xbox');
+  R.Settings.set('padGlyphs', 'auto');
   I.lastDevice = 'touch';
   ok('prompt touch', I.prompt('a').kind === 'touch');
   for (const k of ['a', 'b', 'x', 'y']) ok(`prompt shape ${k}`, R.Contract.check('prompt', I.prompt(k)).ok);

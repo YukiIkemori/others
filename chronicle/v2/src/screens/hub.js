@@ -143,17 +143,21 @@
       const rx0 = b.x + b.w;
       const cw = Math.min(u(372), (rx0 - cx) * 0.54);
       const mem = S.party();
-      const ch = Math.min(u(92), (b.h - u(8) - u(10) * 3) / 4);
+      // 上: 次にやること（人の札と右の欄の上に 1 行。オーナーの依頼 2026-09-28）
+      const gh = u(48);
+      const hasGoal = S.goalBar(g, { x: cx, y: b.y + u(8), w: rx0 - cx, h: gh });
+      const top = b.y + u(8) + (hasGoal ? gh + u(12) : 0);
+      const ch = Math.min(u(92), (b.y + b.h - top - u(10) * 3) / 4);
       this.cards = [];
       mem.forEach((c, i) => {
-        const r = { x: cx, y: b.y + u(8) + i * (ch + u(10)), w: cw, h: ch };
+        const r = { x: cx, y: top + i * (ch + u(10)), w: cw, h: ch };
         this.cards.push(r);
         S.charCard(g, c, r, { focused: this.focus === 'card' && this.ci === i });
       });
       // 右: お金・時間・場所、目印の手がかり
       const rx = cx + cw + u(22), rw = rx0 - rx;
       const G = R.Game || {};
-      const pr = { x: rx, y: b.y + u(8), w: rw, h: u(128) };
+      const pr = { x: rx, y: top, w: rw, h: u(128) };
       R.UIK.panel(g, pr, { frost: true });
       const rowsR = [
         ['coin', 'ゴールド', R.UIK.num(G.gold || 0) + ' G', C.gold],
@@ -182,6 +186,7 @@
       R.UIK.text(g, '閉じる', this.closeRect.x + cwid / 2, this.closeRect.y + (chh - cs) / 2, { size: cs, weight: 700, color: C.text, align: 'center' });
       R.UIK.text(g, `${R.UIK.num(G.gold || 0)} G   ・   ${R.U.playTime(G.playMs || 0)}`, this.closeRect.x - u(12), y + u(1), { size: u(14), color: C.text2, align: 'right' });
       y += u(34);
+      if (S.goalBar(g, { x: b.x, y, w: b.w, h: u(40) }, { compact: true })) y += u(48);
       const mem = S.party();
       const gap = u(10), cw = (b.w - gap) / 2, ch = u(146);
       this.cards = [];
@@ -234,6 +239,26 @@
     if (!compact) R.UIK.text(g, S.title(c), x, r.y + pad + u(26), { size: u(12), color: C.text2, maxW: r.x + r.w - x - pad });
     S.hpmp(g, c, r.x + pad, r.y + pad + fs + u(4), r.w - pad * 2, { size: 13.5, stack: true });
     if (o.note) R.UIK.text(g, o.note, r.x + r.w - pad, r.y + pad + (compact ? u(20) : u(44)), { size: u(12), color: C.text3, align: 'right', maxW: r.x + r.w - x - pad });
+  };
+
+  /** 次にやること（R.Leads.goal()）の 1 行の札。無ければ描かずに false。o.compact は縦持ち（見出しの字を小さく） */
+  S.goalBar = function (g, r, o) {
+    o = o || {};
+    const goal = R.Leads && R.Leads.goal ? R.Leads.goal() : null;
+    if (!goal) return false;
+    const C = T().color;
+    R.UIK.panel(g, r, { frost: true });
+    // 左の琥珀の細い帯（手がかりの通知の札と同じ印）
+    g.fillStyle = 'rgba(236,201,124,0.85)';
+    g.fillRect(r.x + u(1), r.y + u(10), u(2), r.h - u(20));
+    const isz = u(16), my = r.y + r.h / 2;
+    R.UIK.icon(g, 'star', r.x + u(16), my - isz / 2, isz, C.gold);
+    const lab = '次にやること', ls = u(o.compact ? 11 : 12);
+    R.UIK.text(g, lab, r.x + u(40), my - ls / 2 - u(1), { size: ls, weight: 700, color: C.gold, track: u(1.5) });
+    const lx = r.x + u(40) + R.UIK.measure(lab, { size: ls, weight: 700 }) + u(1.5) * lab.length + u(18);
+    const ts = u(o.compact ? 14 : 16.5);
+    R.UIK.text(g, goal.text, lx, my - ts / 2 - u(1), { size: ts, weight: 700, color: C.text, maxW: r.x + r.w - lx - u(16) });
+    return true;
   };
 
   /** 今いる所の名前 */

@@ -261,6 +261,8 @@ async function backTo(p, id, max) {
     ok('shop: START → only gear someone in the party can equip', (await B.ev(p, `${V}.onlyUsable`)) && (await B.ev(p, `RPG.Engine.top().list.rows.every((r) => RPG.Party.members().some((c) => RPG.Rules.canEquip(c, r.value, RPG.Rules.defaultSlot(c, r.value))))`)) && (await B.ev(p, 'RPG.Engine.top().list.rows.length')) <= nAll);
     await B.press(p, 'start');
     await B.press(p, 'a');
+    ok('shop: A on gear → quantity picker (まとめ買い)', await B.waitFor(p, `!!${V}.qtyPick && ${V}.qtyPick.n === 1`, 1500));
+    await B.press(p, 'a');
     ok('shop: buying gear asks 今すぐ装備する？', await B.waitFor(p, `!!${V}.modal && ${V}.modal.o.title === '今すぐ装備する？'`, 1500));
     ok('shop: the prompt lists every member (+ 装備しない), can\'t-equip rows disabled', await B.ev(p, `(() => { const m = ${V}.modal; const rows = m.list.rows; return rows.length === RPG.Party.members().length + 1 && RPG.Party.members().every((c, i) => !!rows[i].disabled === !RPG.Rules.canEquip(c, ${V}.list.current().value, RPG.Rules.defaultSlot(c, ${V}.list.current().value))); })()`));
     await B.press(p, 'a'); await p.waitForTimeout(250);

@@ -75,12 +75,15 @@
     const canvas = document.getElementById('screen');
     R.Stubs.install();
     R.runDataHooks();
+    // 記録と設定の置き場（デスクトップ版はファイルを先に全部読む。core/storage.js）
+    try { if (R.Storage && R.Storage.init) await R.Storage.init(); } catch (e) { console.error('storage init failed', e); }
     R.Settings.load();
     R.Gfx.init(canvas);
     R.fit(true);
     window.addEventListener('resize', () => R.fit());
     window.addEventListener('orientationchange', () => R.fit());
     R.Input.init(canvas);
+    if (R.Display && R.Display.init) R.Display.init();   // ウィンドウ／全画面（F11・Alt+Enter）
     R.Input.onAnyPress(() => { try { R.Audio.init(); } catch (e) { console.error(e); } });
     // 読み込みの画面（主人公が進みの棒の上を走る。core/loading.js）: 書体と起動の仕事（原画・素材の先読み）の間
     if (R.Loading) R.Loading.boot();

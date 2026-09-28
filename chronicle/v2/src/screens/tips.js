@@ -8,26 +8,142 @@
   if (!S.def) S.def = function (id, v) { (S._defs = S._defs || {})[id] = v; };   // 読み込み順に依らない登録
   const u = (v) => R.UIK.u(v);
 
+  // 文の中の {btn:x} は今の入力のボタンの字（キーボード Q・パッド L など。R.Input.prompt）。1〜3 行（オーナー 2026-09-28「短く」）
   R.defs('tips', {
-    glimmer: { title: '閃き', text: '戦いの最中、仲間が新しい技や術を思いつくことがある。\n閃いた技は、メニューの「技・術」で見られる。\n強い相手ほど、閃きやすい。' },
-    row: { title: '前列と後列', text: '仲間は前列と後列に並ぶ。\n後列は狙われにくいが、弓と杖のほかは前まで届かない。\n並びはメニューの「並びと隊列」で変えられる。' },
-    leads: { title: '手がかり帳', text: '聞いた話は、手がかり帳に書き留められる。\nメニューの「年代記・手がかり」で読み、Y で目印を付けると、\n右上の札と地図に印が出る。' },
-    spring: { title: '女神の像', text: 'ダンジョンの女神の像に祈ると、仲間全員の\nHP と MP が戻り、倒れた人も起き上がる。\n控えの仲間も元気になる。何度でも使える。\n町やオアシスの泉で休んでも同じ。' },
-    chest: { title: '宝箱', text: 'ダンジョンでは、階の名前の横に\n開けた宝箱の数が出る。\n開けていない宝箱は、地図にも印が出る。' },
+    glimmer: { title: '閃き', text: '戦いの最中、仲間が新しい技や術を閃くことがある。\n閃いた技と術は、メニューの「技・術」で見られる。\n強い相手ほど、閃きやすい。' },
+    prof: { title: '熟練度', text: '武器の技や術は、使うほど熟練度が上がる。\n熟練度が高いほど、その武器や属性がよく効く。\n上がった所は「強さ」の画面に ▲ で出る。' },
+    row: { title: '前列と後列', text: '後列は狙われにくいが、弓と杖のほかは前まで届かない。\n並びはメニューの「隊列」で変えられる。' },
+    leads: { title: '手がかり帳', text: '聞いた話は、手がかり帳に書き留められる。\n「年代記・手がかり」で目印を付けると、右上の札と地図に印が出る。\n次にやることは、メニューの上とフィールドの {btn:l} で見られる。' },
+    spring: { title: '女神の像', text: '女神の像に祈ると、控えも含めて全員の HP と MP が戻り、\n倒れた人も起き上がる。何度でも使える。\n町やオアシスの泉で休んでも同じ。' },
+    chest: { title: '宝箱', text: '開けていない宝箱は、地図にも印が出る。' },
     secret: { title: '隠し通路', text: '壁の中には、通り抜けられる所がある。\n一度見つけた通路は、壁の縁に細い印が付く。' },
-    fullheal: { title: '満タン', text: 'メニューで X を押すと、覚えている回復の術を\n効きのよい順に使って HP を満たす。\n足りなければ、確かめてから安い回復の道具を使う。' },
-    repeat: { title: 'リピート', text: '「リピート」は、前のラウンドと同じ手を\nみんなでくり返す。B を押すまで続く。' },
-    speed: { title: '戦闘の速さ', text: '戦闘中に R で倍速を切り替えられる。\n敵の構え（予告）からは目を離さないように。' },
+    fullheal: { title: '満タン', text: 'メニューで {btn:x} を押すと、回復の術を効きのよい順に使って HP を満たす。\n足りなければ、確かめてから安い回復の道具を使う。' },
+    repeat: { title: 'リピートと速さ', text: '{btn:l} で「リピート」: 前のラウンドと同じ手を、みんなでくり返す。\nもう一度 {btn:l} か {btn:b} でやめる。\n{btn:r} で戦闘の速さを切り替えられる。' },
+    speed: { title: '戦闘の速さ', text: '戦闘中に {btn:r} で速さを切り替えられる。\n敵の構え（予告）からは目を離さないように。' },
     telegraph: { title: '大技の予告', text: '強い敵は、大技の前に構えを見せる。\n画面の端の言葉を読んで、守りや並びで備えよう。' },
-    steal: { title: '盗む', text: '短剣の技などで、敵から品を盗める。\nめったに手に入らない品を持つ魔物もいる。' },
-    equip: { title: '装備', text: '武器は 1 つ、防具は盾・頭・体・手・足、\nアクセサリは 2 つまで付けられる。\nX で「いちばん強く」をまとめて選べる（アクセサリは変えない）。' },
-    warp: { title: 'ワープと脱出', text: 'メニューの「ワープ」で、行ったことのある町や\nダンジョンの入口へ飛べる。\nダンジョンの中では「脱出」で入口へ戻れる。' },
+    steal: { title: '盗む', text: '短剣の技などで、敵から品を盗める。\nめったに手に入らない品を持つ魔物もいる。\n盗んだ品は図鑑にも載る。' },
+    equip: { title: '装備', text: '武器・盾・頭・体・手・足と、アクセサリ 2 つの 8 か所に付けられる。\n{btn:x} で「いちばん強く」をまとめて選べる（アクセサリは変えない）。\n{btn:l}・{btn:r} で仲間を切り替える。' },
+    tavern: { title: '仲間', text: '潮風亭には 20 人の腕利きがいて、一緒に旅するのは 3 人。\n仲間は、あとで潮風亭のマスターに頼めば入れ替えられる。\n控えの仲間も、戦いのあとの伸びを少し分けてもらえる。' },
+    zonelock: { title: '魔物の強さ', text: '地方の事件を解決すると、その地方の魔物はそのときの強さのまま。\nまだ解決していない地方の魔物は、旅が進むほど手ごわくなる。' },
+    stone: { title: '魔石', text: '魔石を仲間に使うと、その属性の最初の術を覚える。\nメニューの「道具」から、覚えさせたい仲間を選んで使う。\nもう覚えている人には使えない（石は減らない）。' },
+    warp: { title: 'ワープと脱出', text: 'メニューの「ワープ」で、行ったことのある町やダンジョンの入口へ飛べる。\nダンジョンの中では「脱出」で入口へ戻れる。' },
     bestiary: { title: '図鑑', text: '出会った魔物は図鑑に載る。\n落とし物や盗んだ品は、手に入れると名前が埋まる。' },
     save: { title: 'セーブ', text: '戦闘の外なら、いつでも記録できる。\n町やダンジョンの階に入ったとき、戦闘に勝ったときは\nオートセーブの枠にも書かれる。' },
     dark: { title: '暗がり', text: '暗がりでは、ランタンの届く所しか見えない。\nしょく台に火をともすと、周りが明るくなる。' },
     waylamp: { title: '道しるべの灯籠', text: '火のともった灯籠の周りには、\n魔物が寄ってこない。' },
-    tavern: { title: '仲間の入れ替え', text: 'ファロスの潮風亭では、一緒に旅する仲間を\n入れ替えられる。控えの仲間も、戦いのあとの伸びを少し分けてもらえる。' },
   });
+
+  /** 説明の札の文（{btn:x} をボタンの字に） */
+  S.tipText = function (t) {
+    const text = Array.isArray(t && t.text) ? t.text.join('\n') : String((t && t.text) || '');
+    return text.replace(/\{btn:([a-z]+)\}/g, (m, b) => {
+      try { const p = R.Input.prompt(b); return p && p.label ? p.label : b.toUpperCase(); } catch (e) { return b.toUpperCase(); }
+    });
+  };
+
+  // ---------------------------------------------------------------- 初めての時に出す（仕組みが初めて出てきた所。1 回だけ、R.Game.flags.tip_<id>）
+  //   出来事（R.on）で「出す札」を積み、フィールドが一番上で落ち着いた（会話・暗転・メニュー・手がかりの通知が無い）ところで 1 枚ずつ開く。
+  //   画面の札（装備・仲間選び・ワープ…）は、その画面が開いた次のフレームに画面の上へ。戦闘のリピートは、リピートが使える最初の命令の時。
+  //   dev.html のフィクスチャ（?fixture= / ?scene=）と node では出さない（ほかの担当の撮影・テストを止めない）。?tips=1 か S.autoTips = 'force' で出す。
+//   S.autoTips = false で止める。
+  S.autoTips = true;
+  const SCREEN_TIPS = { equip: 'equip', partySelect: 'tavern', tavern: 'tavern', warp: 'warp', bestiary: 'bestiary', order: 'row' };
+  const tq = { list: [], game: null, busy: false, screen: null, installed: false };
+  function query() { try { return (typeof location !== 'undefined' && location.search) || ''; } catch (e) { return ''; } }
+  function autoOn() {
+    if (!S.autoTips || !R.Game) return false;
+    if (S.autoTips === 'force') return true;
+    if (typeof document === 'undefined') return false;   // node（tools/lib/load.js）のテストでは出さない
+    const q = query();
+    if (/[?&]tips=1/.test(q)) return true;
+    if (/[?&](fixture|scene)=/.test(q)) return false;
+    return true;
+  }
+  /** 旅（R.Game）が替わったら積んだ札を忘れる */
+  function syncGame() { if (tq.game !== R.Game) { tq.game = R.Game || null; tq.list.length = 0; tq.screen = null; } }
+  const seen = (id) => !!(R.Game && R.Game.flags && R.Game.flags['tip_' + id]);
+  /** 札を積む（もう見た・無い id は何もしない）。→ 積んだら true */
+  S.tipLater = function (id) {
+    if (!id || !R.DB.tips || !R.DB.tips[id] || seen(id) || !autoOn()) return false;
+    syncGame();
+    for (let i = tq.list.length - 1; i >= 0; i--) if (seen(tq.list[i])) tq.list.splice(i, 1);   // ほかの道で見た札は外す
+    if (tq.list.includes(id)) return false;
+    tq.list.push(id);
+    installTips();
+    return true;
+  };
+  S._tipQueue = () => tq.list.slice();
+  function fieldCalm() {
+    const E = R.Engine, top = E && E.top && E.top();
+    if (!top || top.id !== 'field' || E.fade.a > 0.01) return false;
+    if (R.Events && R.Events.busy && R.Events.busy()) return false;
+    if (R.Field && R.Field._locked && R.Field._locked()) return false;
+    if (R.Leads && R.Leads._current && R.Leads._current()) return false;
+    return true;
+  }
+  function openTip(id) {
+    tq.busy = true;
+    Promise.resolve(S.tip(id)).catch((e) => R.warn('tip ' + id, e && e.message)).then(() => { tq.busy = false; });
+  }
+  function tipTick() {
+    if (!R.Game || tq.busy) return;
+    syncGame();
+    const top = R.Engine.top && R.Engine.top();
+    // 画面の札: 開いた画面が一番上（小さな選択の窓が無い）なら、その上に
+    if (tq.screen) {
+      const want = tq.screen;
+      if (!top || top.id !== 'screen:' + want.screen) { if (!R.Engine.has('screen:' + want.screen)) tq.screen = null; }
+      else if (!(top.view && top.view.modal)) { tq.screen = null; if (!seen(want.tip)) { openTip(want.tip); return; } }
+    }
+    // 戦闘のリピート: 2 ラウンド目の命令（リピートが使える）で 1 回
+    if (top && top.id === 'battle' && !seen('repeat') && autoOn() && R.DB.tips.repeat) {
+      const st = R.Battle && R.Battle.debug ? R.Battle.debug() : null;
+      if (st && st.phase === 'input' && (st.partyOpts || []).includes('repeat') && !(st.setup && st.setup.autoInput) && !(st.B && st.B.repeatOn)) { openTip('repeat'); return; }
+    }
+    if (!tq.list.length || !fieldCalm()) return;
+    const id = tq.list.shift();
+    if (!seen(id)) openTip(id);
+  }
+  function installTips() {
+    if (tq.installed || !R.Engine || !R.Engine.addTick) return;
+    tq.installed = true;
+    R.Engine.addTick(tipTick);
+  }
+  const isStone = (id) => { const it = R.DB.items && R.DB.items[id]; return !!(it && (it.stone || (it.use && (it.use.effects || []).some((e) => e && e.type === 'learnSpell')))); };
+  const isStealTech = (id) => { const t = R.DB.techs && R.DB.techs[id]; return !!(t && (t.effects || []).some((e) => e && e.type === 'steal')); };
+  function partyCanSteal() {
+    const G = R.Game;
+    if (!G || !G.chars) return false;
+    return (G.party || []).some((id) => { const c = G.chars[id]; return !!(c && (c.techs || []).some(isStealTech)); });
+  }
+  // 出来事の聞き手（読み込み時に登録だけ。R.on はほかのファイルに触れない）
+  if (R.on) {
+    R.on('scene:push', (e) => {
+      const id = e && typeof e.id === 'string' && e.id.indexOf('screen:') === 0 ? e.id.slice(7) : null;
+      const tip = id && SCREEN_TIPS[id];
+      if (!tip || seen(tip) || !autoOn()) return;
+      syncGame();
+      tq.screen = { screen: id, tip };
+      installTips();
+    });
+    R.on('battle:start', () => { if (!seen('repeat') && autoOn()) installTips(); });
+    R.on('glimmer', (e) => {
+      S.tipLater('glimmer');
+      if (e && e.kind !== 'spell' && isStealTech(e.id)) S.tipLater('steal');
+    });
+    R.on('battle:end', (res) => {
+      const rw = (res && res.rewards) || {};
+      if (rw.glimmers && rw.glimmers.length) S.tipLater('glimmer');
+      // 1 回の戦闘の後に札を重ねすぎない: 閃きの札を出すときは、熟練度は次に上がった時
+      if (rw.prof && rw.prof.length && !(tq.list.includes('glimmer') && !seen('glimmer'))) S.tipLater('prof');
+      if ((rw.stolen && rw.stolen.length) || partyCanSteal()) S.tipLater('steal');
+    });
+    R.on('chest:open', () => S.tipLater('chest'));
+    R.on('item:gain', (e) => { if (e && isStone(e.id)) S.tipLater('stone'); });
+    R.on('region:clear', () => S.tipLater('zonelock'));
+    R.on('spring:use', () => S.tipLater('spring'));
+    R.on('secret:found', () => S.tipLater('secret'));
+  }
 
   // ---------------------------------------------------------------- 説明の札
   S.def('tip', {
@@ -44,8 +160,8 @@
     },
     draw(g) {
       const C = R.UIK.T.color, t = this.tip;
-      const w = Math.min(R.W - u(40), u(520));
-      const text = Array.isArray(t.text) ? t.text.join('\n') : String(t.text || '');
+      const w = Math.min(R.W - u(40), u(600));
+      const text = S.tipText(t);
       const lines = R.UIK.wrap(text, w - u(56), { size: u(15) });
       const h = u(78) + lines.length * u(27) + u(52);
       const x = (R.W - w) / 2, y = (R.H - h) / 2;

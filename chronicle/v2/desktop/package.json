@@ -1,0 +1,13 @@
+{
+  "name": "luminous-chronicle-desktop",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Minimal desktop shell for the v2 build (local files only, no network). Not part of deploy.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^31.0.0"
+  }
+}

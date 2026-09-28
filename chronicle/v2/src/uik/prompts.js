@@ -1,6 +1,8 @@
 // UIK: ボタン表示（MODERN_UI §3.8）と吹き出し（§3.3）
 //   glyph(g, btn, cx, cy, o)            1 つのボタンの印（最後に触った入力で パッド＝白い丸・L/R は角丸の札／キーボード＝キー帽子／タッチ＝輪）。
-//                                        o = {size（掛けた後）, kind?}。→ 幅
+//                                        o = {size（掛けた後）, kind?, label?, style?, index?}。→ 幅
+//                                        パッドは R.Input.prompt の style（'xbox' 下が A・'ps' ×○□△・'nintendo' 右が A）と今の割り当ての
+//                                        ボタンの番号で描く（面は色の付いた字・形、肩は LB/L1/L の札、start は ≡ や Options）。どの画面もここを通る
 //   prompts(g, list, anchor)            [{btn, label}…]（[btn, label] も可）を 1 行に。anchor = 'br'（既定）|'bl'|'bc'|'tr'|'tl'|{x, y, align}
 //                                        大きさは中で uiScale を掛ける。→ {x, y, w, h}（掛けた後）
 //   bubble(g, x, y, prompts)            人・物の上（x, y = 頭の上の点）に「[A] 話す」の小さな吹き出し。中で uiScale を掛ける
@@ -12,19 +14,42 @@
 
   // 印の中の字（× 0.8〜0.92）も 12 CSS px 以上に: 印の大きさの下限（R.minFont は R.fit、スマホ縦だけ効く）
   const minG = (sz) => Math.max(sz, (R.minFont || 0) / 0.8);
+  // パッドの面のボタンの色（標準配置の番号 0 下・1 右・2 左・3 上）。地は同じクリーム、字と形だけ色を付ける
+  const FACE = {
+    xbox: ['#2f8a3a', '#c23b33', '#2f63b8', '#a87808'],
+    ps: ['#3d67b8', '#c8424e', '#b85c9c', '#23897a'],
+    nintendo: [INK, INK, INK, INK],
+  };
+  const DPAD = { 12: 'up', 13: 'down', 14: 'left', 15: 'right' };
   function info(btn, o) {
-    if (o && o.kind) return { kind: o.kind, label: o.label || String(btn).toUpperCase() };
+    if (o && o.kind) return { kind: o.kind, label: o.label || String(btn).toUpperCase(), style: o.style, index: o.index };
     try { if (R.Input && R.Input.prompt) return R.Input.prompt(btn); } catch (e) { /* */ }
     return { kind: 'kb', label: String(btn).toUpperCase() };
   }
+  /** 印の形: 'key'（キー帽子）| 'touch' | 'face'（丸に字）| 'ps'（丸に ×○□△ の形）| 'pill'（角丸の札）| 'arrow' | 'view' | 'menu' */
+  function shape(btn, pr) {
+    if (pr.kind === 'kb') return 'key';
+    if (pr.kind === 'touch') return 'touch';
+    const i = pr.index;
+    if (i == null) return btn === 'l' || btn === 'r' ? 'pill' : ARROW[btn] ? 'arrow' : 'face';   // 系統の無い古い形（仮の実装など）
+    if (DPAD[i]) return 'arrow';
+    if (i >= 0 && i <= 3) return pr.style === 'ps' ? 'ps' : 'face';
+    if (i === 8 || i === 9) return pr.style === 'xbox' ? (i === 8 ? 'view' : 'menu') : pr.style === 'nintendo' ? 'face' : 'pill';
+    return 'pill';
+  }
+  /** 札の字の大きさ（長い名前は小さく） */
+  const pillFs = (pr, size) => size * (String(pr.label).length > 3 ? 0.66 : 0.8);
   /** 印の幅（掛けた後）。size は掛けた後の文字の大きさ */
   function glyphW(btn, size, pr) {
     const r = size / 2 + size * 0.14;
-    if (pr.kind === 'kb') return Math.max(r * 2, UIK.measure(pr.label, { size: size * 0.82, weight: 700 }) + size * 0.7);
-    if (pr.kind === 'touch') return r * 2;
-    if (btn === 'l' || btn === 'r') return Math.max(r * 2.4, UIK.measure(pr.label, { size: size * 0.8, weight: 700 }) + size * 0.9);
+    const sh = shape(btn, pr);
+    if (sh === 'key') return Math.max(r * 2, UIK.measure(pr.label, { size: size * 0.82, weight: 700 }) + size * 0.7);
+    if (sh === 'pill') return Math.max(r * 2.4, UIK.measure(pr.label, { size: pillFs(pr, size), weight: 700 }) + size * 0.9);
     return r * 2;
   }
+
+  /** 印の幅（描かずに。o は glyph と同じ） */
+  UIK.glyphWidth = function (btn, size, o) { return glyphW(btn, size, info(btn, o)); };
 
   UIK.glyph = function (g, btn, cx, cy, o) {
     o = o || {};
@@ -33,23 +58,45 @@
     const r = size / 2 + size * 0.14;
     const w = glyphW(btn, size, pr);
     const x = cx - r;
+    const sh = shape(btn, pr);
+    const disc = () => { g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.fillStyle = CAP; g.fill(); };
     g.save();
-    if (pr.kind === 'kb') {
+    if (sh === 'key') {
       UIK.rr(g, x, cy - r, w, r * 2, size * 0.3); g.fillStyle = CAP; g.fill();
       g.fillStyle = 'rgba(20,16,10,0.28)'; g.fillRect(x + 1, cy + r - size * 0.16, w - 2, size * 0.13);
       UIK.text(g, pr.label, x + w / 2, cy - size * 0.82 / 2 - size * 0.04, { size: size * 0.82, weight: 700, color: INK, align: 'center' });
-    } else if (pr.kind === 'touch') {
+    } else if (sh === 'touch') {
       g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.strokeStyle = CAP; g.lineWidth = Math.max(1, size * 0.1); g.stroke();
       g.beginPath(); g.arc(cx, cy, r * 0.42, 0, Math.PI * 2); g.fillStyle = CAP; g.fill();
-    } else if (btn === 'l' || btn === 'r') {
+    } else if (sh === 'pill') {
       UIK.rr(g, x, cy - r * 0.85, w, r * 1.7, r * 0.85); g.fillStyle = CAP; g.fill();
-      UIK.text(g, pr.label, x + w / 2, cy - size * 0.8 / 2 - size * 0.04, { size: size * 0.8, weight: 700, color: INK, align: 'center' });
-    } else if (ARROW[btn]) {
-      g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.fillStyle = CAP; g.fill();
-      g.translate(cx, cy); g.scale(size / 12, size / 12); g.fillStyle = INK; g.fill(new Path2D(ARROW[btn]));
+      const fs = pillFs(pr, size);
+      UIK.text(g, pr.label, x + w / 2, cy - fs / 2 - size * 0.04, { size: fs, weight: 700, color: INK, align: 'center' });
+    } else if (sh === 'arrow') {
+      disc();
+      const dir = DPAD[pr.index] || btn;
+      g.translate(cx, cy); g.scale(size / 12, size / 12); g.fillStyle = INK; g.fill(new Path2D(ARROW[dir] || ARROW.up));
+    } else if (sh === 'ps') {
+      // ×○□△ は書体に頼らず線で描く（どの書体でも同じ形）
+      disc();
+      const k = size * 0.3, col = FACE.ps[pr.index] || INK;
+      g.strokeStyle = col; g.lineWidth = Math.max(1, size * 0.13); g.lineCap = 'round'; g.lineJoin = 'round';
+      g.beginPath();
+      if (pr.index === 0) { g.moveTo(cx - k, cy - k); g.lineTo(cx + k, cy + k); g.moveTo(cx + k, cy - k); g.lineTo(cx - k, cy + k); }
+      else if (pr.index === 1) g.arc(cx, cy, k * 1.02, 0, Math.PI * 2);
+      else if (pr.index === 2) g.rect(cx - k * 0.9, cy - k * 0.9, k * 1.8, k * 1.8);
+      else { g.moveTo(cx, cy - k * 1.05); g.lineTo(cx + k * 1.05, cy + k * 0.75); g.lineTo(cx - k * 1.05, cy + k * 0.75); g.closePath(); }
+      g.stroke();
+    } else if (sh === 'view' || sh === 'menu') {
+      disc();
+      g.fillStyle = INK; g.strokeStyle = INK; g.lineWidth = Math.max(0.75, size * 0.09);
+      const k = size * 0.26;
+      if (sh === 'menu') { for (const dy of [-k * 0.75, 0, k * 0.75]) g.fillRect(cx - k, cy + dy - size * 0.045, k * 2, size * 0.09); }
+      else { g.strokeRect(cx - k, cy - k * 0.8, k * 1.25, k * 1.1); g.fillRect(cx - k * 0.25, cy - k * 0.3, k * 1.25, k * 1.1); }
     } else {
-      g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.fillStyle = CAP; g.fill();
-      UIK.text(g, pr.label, cx, cy - size * 0.92 / 2 - size * 0.02, { size: size * 0.92, weight: 700, color: INK, align: 'center' });
+      disc();
+      const col = (pr.style && FACE[pr.style] && pr.index >= 0 && pr.index <= 3) ? FACE[pr.style][pr.index] : INK;
+      UIK.text(g, pr.label, cx, cy - size * 0.92 / 2 - size * 0.02, { size: size * 0.92, weight: 700, color: col, align: 'center' });
     }
     g.restore();
     return w;
