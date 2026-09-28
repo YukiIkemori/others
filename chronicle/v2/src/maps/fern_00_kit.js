@@ -68,6 +68,12 @@
    * （持ち主 2026-09-28「壁際の下のほうが判定おかしくて、壁にめり込んでる」「上の判定も右の判定もおかしい」）。
    * objs を渡すと、壁になったマスに落ちた散らしの小物（scatter の物・painted に無い物）を除く（木や壁の上に小物を浮かせない）
    */
+  /** 物を (x, y) へ動かす（match の鍵がみな等しい最初の物）。散らしのあとに動かす（前に動かすと散らしの置き方が変わり、絵の小物とずれる） */
+  K.moveTo = function (objs, match, x, y) {
+    const o = objs.find((ob) => Object.keys(match).every((k) => ob[k] === match[k]));
+    if (!o) { R.warn && R.warn('ContentF.kit.moveTo: no object ' + JSON.stringify(match)); return; }
+    o.x = x; o.y = y;
+  };
   K.fit = function (g, fit, objs, painted) {
     const solidNow = new Set();
     for (const ch of Object.keys(fit)) {

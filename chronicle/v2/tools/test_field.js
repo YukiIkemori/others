@@ -449,6 +449,26 @@ async function main() {
       for (const e of m.exits || []) if (e.confirm) noAsk.push(m.id + ' exit→' + e.to.map);
     }
     ok('town gates and area edges do not ask', !noAsk.length, noAsk);
+    // 序章のひとりの間の通せんぼ（gate）: 古井戸・見晴らし台・灯台は閉じ、ファロスへの道は開いている
+    const party0 = R.Game.party.slice(), pf0 = R.Game.flags.prologue_party;
+    R.Game.party = [R.Game.party[0]]; delete R.Game.flags.prologue_party;
+    const lookEx = roa.exits.find((e) => e.to.map === 'f_lookout'), capeEx = roa.exits.find((e) => e.to.map === 'f_cape');
+    ok('solo gates: well, f_lookout, lighthouse shut; the road to Pharos open', R.Field._gateShut(wellSt.gate) && R.Field._gateShut(lookEx.gate) && R.Field._gateShut(lhDoor.gate) && !capeEx.gate && !roa.exits.find((e) => e.to.map === 'roa').gate && !cape.exits.some((e) => e.gate));
+    await enter('f_roa', wellSt.x, wellSt.y + 1, 'n');
+    R.Field.encounter.suppress(50);
+    asked = [];
+    await step('up');
+    await settle(600);
+    ok('solo: the well refuses (a note pointing to Pharos, no question) and steps back', asked.length === 1 && !asked[0].choices && /ファロス/.test(asked[0].text) && R.Field.pos.map === 'f_roa' && same(at(), [wellSt.x, wellSt.y + 1]), { asked, pos: R.Field.pos });
+    await enter('f_roa', lookEx.x, lookEx.y + 1, 'n');
+    R.Field.encounter.suppress(50);
+    asked = [];
+    await step('up');
+    await settle(600);
+    ok('solo: the north edge (見晴らし台) refuses and steps back', asked.length === 1 && R.Field.pos.map === 'f_roa' && R.Field.pos.y === lookEx.y + 1, R.Field.pos);
+    R.Game.party = [R.Game.party[0], 'x']; ok('two in the party → the gate lifts', !R.Field._gateShut(wellSt.gate));
+    R.Game.party = [party0[0]]; R.Game.flags.prologue_party = true; ok('prologue_party → the gate lifts', !R.Field._gateShut(wellSt.gate));
+    R.Game.party = party0; if (pf0 === undefined) delete R.Game.flags.prologue_party; else R.Game.flags.prologue_party = pf0;
     await enter('f_roa', wellSt.x, wellSt.y + 1, 'n');
     R.Field.encounter.suppress(50);
     answer = 1; asked = [];

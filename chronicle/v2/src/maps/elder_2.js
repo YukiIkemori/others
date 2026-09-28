@@ -53,6 +53,9 @@
       ".": '28,25 25,27 28,28 31,29 28,34',
       "~": '42,15 43,15 44,15',
     }, O);
+    // 絵の壁・木に埋まっていた物を床へ（持ち主 2026-09-28「宝箱も壁にめり込んでるのがある」）
+    K.moveTo(O, { id: 'elder_2_sw2' }, 29, 7);
+    K.moveTo(O, { id: 'elder_2_c1' }, 7, 18);
 
     const N = [
       K.npc('elm', 'elm', 26, 42, { name: '森の主エルム', dir: 's', talk: 'elder_elm', cond: 'forest_boss', pushable: false, reward: 'news' }),
