@@ -13,7 +13,7 @@
     ['wm_road', 'road', '土の道', { nodecor: true, splat: 0.18 }], ['wm_highway', 'road', '石の街道', { nodecor: true, splat: 0.16 }], ['wm_dirt', 'dirt', '土', { splat: 0.3 }], ['wm_mud', 'mud', '泥', { nodecor: true, splat: 0.3 }],
     ['wm_sand', 'sand', '砂浜', { nodecor: true, splat: 0.4 }], ['wm_dune', 'dune_sand', '砂丘', { nodecor: true, splat: 0.46 }], ['wm_clay', 'cracked_clay', 'ひび割れた粘土', { nodecor: true, splat: 0.4 }],
     ['wm_snow', 'snow', '雪原', { splat: 0.46 }], ['wm_snow_path', 'snow_path', '雪の道', { nodecor: true, splat: 0.18 }], ['wm_ice', 'ice', '氷', { splat: 0.36 }],
-    ['wm_peat', 'peat_grass', '湿った草', { splat: 0.46 }], ['wm_bog_mud', 'mud', '沼の泥', { nodecor: true, splat: 0.4 }], ['wm_marsh_water', 'marsh_water', '沼の水', { splat: 0.34 }], ['wm_reeds', 'tall_grass', '葦', {}],
+    ['wm_peat', 'peat_grass', '湿った草', { splat: 0.46 }], ['wm_bog_mud', 'mud', '沼の泥', { nodecor: true, splat: 0.4 }], ['wm_marsh_water', 'marsh_water', '沼の水', { splat: 0.34 }], ['wm_reeds', 'tall_grass', 'アシの原', {}],
     ['wm_rock', 'rock', '岩山', {}], ['wm_scree', 'dirt', 'がれ場', { splat: 0.4 }], ['wm_ash', 'ash', '灰', { splat: 0.44 }], ['wm_obsidian', 'obsidian', '黒い砂', { splat: 0.4 }],
     ['wm_sea', 'sea', '海', { splat: 0.34, shallowTint: [52, 112, 126] }], ['wm_deep', 'deep_water', '深い海', { splat: 0.34 }], ['wm_shallow', 'shallow', '浅瀬', { splat: 0.34 }],
     ['wm_lake', 'water', '湖', { splat: 0.34, shallowTint: [48, 100, 108] }],

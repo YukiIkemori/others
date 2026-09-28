@@ -151,7 +151,7 @@
     const st = R.Media && R.Media.stat;
     const done = st && base ? st.done - base.done : 0;
     const all = Math.max(expect, st && base ? st.req - base.req : 0);
-    const dots = '・・・'.slice(0, 1 + (Math.floor(t / 400) % 3));
+    const dots = '・'.repeat(1 + (Math.floor(t / 400) % 3));   // 読み込み中の点の動き（1〜3 個。文の三点リーダーではない）
     text(g, '読み込み中' + dots, bx, by + bh + 12, 14, '#d8ceb8');
     text(g, Math.floor(L.shown * 100) + '%', bx + bw, by + bh + 12, 14, '#f9d36d', 'right', 'en');
     if (all > 0) text(g, Math.min(done, all) + ' / ' + all, bx + bw, by + bh + 32, 11, '#7d7690', 'right', 'en');

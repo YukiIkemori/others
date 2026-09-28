@@ -5,6 +5,7 @@
 //   - 契約の名前（§2.5.4）を足した: bgm(id,{fade ms}) pushBgm popBgm stopBgm(ms) sfx(id,{vol,pan}) jingle(id) voice(id)→Promise stopVoice()
 //   - 起動時に録音を先読みしない（'battle' の先読みをやめた。§2.10「起動からタイトルまでに解く音 0」）
 //   - 今のボイスの id は voiceId（voice は関数の名前にした）
+//   - endJingle(fadeMs): 鳴っているジングルを途中で閉じて BGM を戻す（宿の眠りを飛ばす。'ended' を待たない）/ jingleId
 // Audio: SFC-flavoured Web Audio synth — instruments, MML sequencer, chord
 // arranger, BGM / jingle / SFX control (DESIGN §3). No samples: every sound is
 // synthesised (pulse waves via PeriodicWave, filtered saws, FM bells, noise
@@ -1206,12 +1207,13 @@
     pump();
   }
   function stopPb(fade) { if (pb) { pb.stop(fade); pb = null; } }
-  function finishJingle(j, resume) {
+  function finishJingle(j, resume, fade) {
     if (!j || jin !== j) return;
     jin = null;
     clearTimeout(j.timer);
-    j.pb.stop(resume ? 1.2 : 0.08);
-    if (resume && cur && !pb) startCur({ fadeIn: 0.5 });
+    // fade（秒）: 途中で閉じるとき（endJingle）はジングルを短く消し、その半ばから BGM を戻す
+    j.pb.stop(fade != null ? fade : resume ? 1.2 : 0.08);
+    if (resume && cur && !pb) startCur(fade != null ? { delay: fade * 0.5, fadeIn: Math.max(0.3, fade) } : { fadeIn: 0.5 });
     j.resolve();
   }
   function pump() {
@@ -1328,6 +1330,15 @@
         pump();
       });
     },
+    /** 鳴っているジングルを途中で閉じる（宿の眠りを飛ばしたとき）: fadeMs で消し、止めていた BGM を戻す。
+     *  ジングルの Promise もここで解決する（'ended' を待たない）。鳴っていなければ何もしない → 閉じたら true */
+    endJingle(fadeMs) {
+      if (!jin) return false;
+      finishJingle(jin, true, Math.max(0.05, (fadeMs == null ? 500 : +fadeMs || 0) / 1000));
+      return true;
+    },
+    /** 鳴っているジングルの id（無ければ null） */
+    get jingleId() { return jin ? jin.pb.id : null; },
     sfx(id) {
       if (!mx || !(running() || Date.now() - initAt < 1500)) return;
       const def = sfxDef(id);

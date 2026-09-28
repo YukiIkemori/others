@@ -60,13 +60,12 @@
     o = o || {};
     const i = await ev.choose([o.yes || '泊まる', o.no || 'やめておく'], { cancel: 1, text: E.t(o.ask || '泊まっていくかい？') });
     if (i !== 0) { if (o.bye) await E.say(ev, o.who || null, o.bye); return false; }
-    await ev.fade('out', 500);
-    ev.rest();
-    try { R.Audio.jingle('inn'); } catch (e) { /* */ }
     const p = R.Field.pos;
-    if (R.Game) R.Game.lastInn = { map: p.map, x: p.x, y: p.y, dir: p.dir };
-    await ev.wait(700);
-    await ev.fade('in', 500);
+    // 暗転とジングル（飛ばせるのは 2.5 秒から。明ける前にジングルを閉じて BGM を戻す）は ev.inn と同じ R.Events.night
+    await R.Events.night({ onDark() {
+      ev.rest();
+      if (R.Game) R.Game.lastInn = { map: p.map, x: p.x, y: p.y, dir: p.dir };
+    } });
     try { R.Save.autosave('inn'); } catch (e) { /* */ }
     R.emit('inn', { map: p.map });
     if (o.morning) await E.say(ev, o.who || null, o.morning, o.morningVoice ? { voice: o.morningVoice } : undefined);

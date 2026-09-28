@@ -9,6 +9,7 @@
 //   R.Events.isNew(map, npc) → bool       E19 の「新しい話」: 今の台詞のハッシュが R.Game.heard[key] と違う
 //   R.Events.makeEv(ctx) → ev             OBJ_API.ev の全部（下）
 //   足した物: runId() / current() → {id, ctx} | null / after(fn)（走っているイベントが終わったら。無ければすぐ）/ lineHash(line)
+//   night({onDark}) → {skipped}   宿・寝床の暗転とジングル（ev.inn・休み小屋・序章の宿が使う）
 //   bark(map, npc)：npc.bark（あいさつのボイス）を、マップに来てから最初に話しかけたときだけ鳴らす（talk が呼ぶ）
 //
 // ev の決まり（§2.11）
@@ -20,6 +21,7 @@
 //   item(id, n, {silent}) → K.gain。右上に「〜を 手に入れた」/ take(id, n) → bool / gold(n, {silent}) / has(id)（袋＋装備）
 //   battle(troop|setup, opts) → 'win'|'lose'|'escape'（全滅して宿・タイトルを選んだら戻らない）
 //   inn(price?) → bool          画面は {stay} だけ。お金・暗転・R.Party.restoreAll・lastInn（K.place）・autosave('inn')・emit('inn') はここ
+//                               暗転とジングルは Events.night（下）: 2.5 秒は飛ばせない → A・B・タップで飛ばす／ジングルの終わりで明ける
 //   chooseCompanions({count}) → ids（R.Party.join までここ）/ createHero() → K.hero（B で戻ったらもう一度開く）
 //   clearRegion(rid)            ページ → cleared・regionTier（出現の固定）・tier+1・pendingTier・章の数 → 地方の目印を外す → R.Tier.celebrate → 'region:clear'
 //   letter(id) → R.Screens.open('letter') / mini.sequence・mini.timing → R.Mini
@@ -124,6 +126,49 @@
   }
   Events._autoShow = autoShow;
 
+  // ---------------------------------------------------------------- 宿の眠り（暗転の中のジングル）
+  // 暗転 → 'inn' のジングル → o.onDark()（全快など）→ ジングルが終わるまで暗いまま → 明ける。ジングルは明ける前に必ず閉じる
+  // （前は 0.9 秒で明けてジングルが会話・フィールドの上で鳴り続けた）。はじめの hold ms は押しても飛ばない（押下は溜めず、
+  // ここで飲み込む）。その後の A・B・タップで飛ばす: ジングルを skipFade ms で消して BGM を戻す（R.Audio.endJingle）。
+  // 飛ばさなければジングルの終わり（長くても max ms）で明ける。音が無い・BGM の音量 0 なら min ms だけ暗くする
+  const NIGHT = { hold: 2500, min: 900, max: 7500, skipFade: 500, endFade: 1200, fade: 400 };
+  Events.NIGHT = NIGHT;
+  function bgmOn() {
+    try { return !(R.Settings && R.Settings.get && R.Settings.get('vol.bgm') <= 0); } catch (e) { return true; }
+  }
+  function skipPress() {
+    const I = R.Input;
+    if (!I) return false;
+    const hit = I.pressed('a') || I.pressed('b') || !!(I.pointer && I.pointer.pressed);
+    I.consume();   // 押したままの A が明けた後の会話に漏れない
+    return hit;
+  }
+  Events.night = async function (o) {
+    o = o || {};
+    await R.Engine.fadeTo(1, NIGHT.fade);
+    let over = true;
+    if (bgmOn()) {
+      let p = null;
+      try { p = R.Audio.jingle && R.Audio.jingle('inn'); } catch (e) { p = null; }
+      if (p && p.then) { over = false; p.then(() => { over = true; }, () => { over = true; }); }
+    }
+    if (o.onDark) o.onDark();
+    const t0 = R.Engine.time;
+    let skipped = false;
+    await R.until(() => {
+      const t = R.Engine.time - t0;
+      const hit = skipPress();
+      if (t >= NIGHT.max) return true;
+      if (over) return t >= NIGHT.min;
+      if (hit && t >= NIGHT.hold) { skipped = true; return true; }
+      return false;
+    });
+    // 飛ばした・長すぎた: ジングルを閉じて BGM を戻す（'ended' を待たない。前の曲はここで必ず戻る）
+    try { if (R.Audio.jingleId === 'inn' && R.Audio.endJingle) R.Audio.endJingle(skipped ? NIGHT.skipFade : NIGHT.endFade); } catch (e) { /* */ }
+    await R.Engine.fadeTo(0, NIGHT.fade);
+    return { skipped };
+  };
+
   // ---------------------------------------------------------------- ev
   function makeEv(ctx) {
     ctx = ctx || {};
@@ -199,13 +244,11 @@
         if (!r || !r.stay) return false;
         if ((G().gold || 0) < price) return false;
         G().gold -= price;
-        await R.Engine.fadeTo(1, 400);
-        try { R.Audio.jingle && R.Audio.jingle('inn'); } catch (e) { /* */ }
-        R.Party.restoreAll();
         const p = R.Field.pos || {};
-        G().lastInn = { map: p.map, x: p.x | 0, y: p.y | 0, dir: p.dir || 's' };
-        await R.wait(900);
-        await R.Engine.fadeTo(0, 400);
+        await Events.night({ onDark() {
+          R.Party.restoreAll();
+          G().lastInn = { map: p.map, x: p.x | 0, y: p.y | 0, dir: p.dir || 's' };
+        } });
         guard();
         try { R.Save.autosave('inn'); } catch (e) { R.warn('autosave inn', e && e.message); }
         R.emit('inn', { map: p.map });

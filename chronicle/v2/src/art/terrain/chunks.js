@@ -455,7 +455,7 @@
     // 帯ごと（relief.js の T._RELIEF_BANDS）。残りの時間に 1 帯が入らなければ次の step へ
     while (this.i < (T._RELIEF_BANDS || 1)) {
       const now = U().now();
-      if (this.i > 0 && AVG.reliefBand && now + AVG.reliefBand > deadline) return false;
+      if (now - this.t0 > 0.05 && AVG.reliefBand && now + AVG.reliefBand > deadline) return false;
       T._reliefApply(this, this.i);
       AVG.reliefBand = AVG.reliefBand ? AVG.reliefBand * 0.8 + (U().now() - now) * 0.2 : U().now() - now;
       this.i++;

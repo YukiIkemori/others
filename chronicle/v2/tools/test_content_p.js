@@ -50,6 +50,9 @@ const MY_LEADS = ['l_main_rumors', 'l_main_recorder_forest', 'l_main_margin_1', 
 for (const id of MY_LEADS) { const l = R.DB.leads[id]; ok(`lead ${id}`, !!l && R.Contract.check('lead', l).ok, l && R.Contract.check('lead', l).errors); if (l) ok(`lead ${id} の見出し 14 字まで`, [...l.title].length <= 14, l.title); }
 // 縦切りの後に作った地方（regions の slice の錠が外れた地方）の噂は錠なし
 ok('森以外の噂は slice:locked', ['snow', 'desert', 'marsh', 'isles', 'mine', 'ash', 'star'].every((k) => R.DB.leads['l_rumor_' + k].slice === 'locked' || !R.DB.regions['r_' + k].slice));
+// 体験版（DB.config.slice）の帳: 峠の先の地方（sliceOpen に無い region）の噂は「まだ語られていない」、森の噂は読める
+ok('体験版の帳: 森以外の噂は R.Leads.locked、森の噂は読める', !R.DB.config.slice
+  || (['snow', 'desert', 'marsh', 'isles', 'mine', 'ash', 'star'].every((k) => R.Leads.locked('l_rumor_' + k)) && !R.Leads.locked('l_rumor_forest') && !R.Leads.locked('l_main_rumors')));
 for (const [id, l] of Object.entries(R.DB.locations)) { if (/^stub/.test(id)) continue; const c = R.Contract.check('location', l); ok(`location ${id}`, c.ok, c.errors); }
 ok('letter berna_t1', R.Contract.check('letter', R.DB.letters.berna_t1).ok);
 for (const f of fs.readdirSync(path.join(V2, 'tools', 'fixtures', 'states')).filter((f) => /^content_p_/.test(f))) {
@@ -325,6 +328,8 @@ async function flow() {
   log.length = 0;
   await run('story_t1', {});
   ok('T1: 手紙 → 少女（v_fine_t1_01・02）→ 余白の一行', log.some((l) => l[0] === 'letter' && l[1] === 'berna_t1') && G.flags.story_t1 && !!G.leads.l_main_margin_1);
+  ok('体験版（DB.config.slice）: T1 の後に「体験版の終わり」（お礼の字幕・記録の案内、フラグ world_demo_end）', !R.DB.config.slice
+    || (G.flags.world_demo_end && log.some((l) => l[0] === 'caption' && /体験版/.test(l[1])) && log.some((l) => l[0] === 'choose' && (l[1] || []).includes('記録する'))));
   const f0 = log.length; await run('story_t1', {});
   ok('T1 は 1 回だけ', log.length === f0);
 }

@@ -371,6 +371,57 @@ R.DB.events.story_t1 = { async run(ev, ctx) { ran.push('t1:' + ctx.reason); } };
   G().gold = 1000; screenAnswer.inn = { stay: true };
   await drive(ev.inn());
   ok('inn(): default price from DB.config.innPrice by tier', last('screen')[2].price === R.DB.config.innPrice[0] && G().gold === 1000 - R.DB.config.innPrice[0]);
+  // 宿の眠り（Events.night）: はじめの 2.5 秒は押しても飛ばない → その後の A で飛ばす（ジングルを閉じて BGM を戻す）／押さなければジングルの終わりで明ける
+  {
+    const A = R.Audio, keep = { jingle: A.jingle, endJingle: A.endJingle, d: Object.getOwnPropertyDescriptor(A, 'jingleId') };
+    let fj = null; const ends = [];
+    A.jingle = (id) => new Promise((res) => { const j = (fj = { id, res }); R.wait(6000).then(() => { if (fj === j) { fj = null; res(); } }); });
+    Object.defineProperty(A, 'jingleId', { configurable: true, get: () => (fj ? fj.id : null) });
+    A.endJingle = (ms) => { ends.push(ms); if (!fj) return false; const r = fj.res; fj = null; r(); return true; };
+    const until = async (pred, max) => { for (let t = 0; t < max && !pred(); t += 16.7) await frames(1); };
+    const pressAt = async (btn) => { R.Input._set(btn, true); await frames(2); R.Input._set(btn, false); await frames(2); };
+    // 1) 押し続け・連打しても 2.5 秒までは暗いまま。2.5 秒の後の A で飛ばす
+    G().gold = 100; G().chars.hero.hp = 1; screenAnswer.inn = { stay: true };
+    let fin = false; const t0 = R.Engine.time;
+    ev.inn(30).then(() => { fin = true; });
+    await until(() => fj, 3000);
+    const tj = R.Engine.time;
+    ok('night: the inn jingle starts in the dark, party healed in the dark', fj && fj.id === 'inn' && R.Engine.fade.a > 0.99 && G().chars.hero.hp === R.Rules.stats(G().chars.hero).maxHp);
+    R.Input._set('a', true); await frames(30); R.Input._set('a', false);   // 押したまま
+    for (let i = 0; i < 6; i++) { await pressAt('a'); await pressAt('b'); await frames(10); }   // 連打
+    await until(() => R.Engine.time - tj > 2300, 3000);
+    ok('night: presses in the first 2.5 s are ignored (still dark, jingle on, not finished)', !fin && fj && R.Engine.fade.a > 0.99 && ends.length === 0);
+    await until(() => R.Engine.time - tj > 2600, 1000);
+    ok('night: the ignored presses are not buffered (nothing fires at 2.5 s on its own)', !fin && fj && ends.length === 0);
+    await pressAt('a');
+    ok('night: A after 2.5 s skips — the jingle is closed with the short fade (BGM back)', ends.length === 1 && ends[0] === R.Events.NIGHT.skipFade && !fj);
+    await until(() => fin, 3000);
+    ok('night: skipped → fades back in, inn resolves, autosave', fin && R.Engine.fade.a < 0.01 && R.Engine.time - t0 < 4500);
+    // 2) 押さない: ジングルの終わりで明ける（endJingle は呼ばない）
+    ends.length = 0; fin = false; G().gold = 100;
+    const t1 = R.Engine.time;
+    ev.inn(30).then(() => { fin = true; });
+    await until(() => fin, 12000);
+    ok('night: no press → ends when the jingle ends (≈6 s dark), no early close', fin && ends.length === 0 && !fj && R.Engine.time - t1 >= 6000 && R.Engine.time - t1 < 7800 && R.Engine.fade.a < 0.01);
+    // 3) ジングルが長すぎる: max で閉じる
+    A.jingle = (id) => new Promise((res) => { fj = { id, res }; });
+    ends.length = 0; fin = false; G().gold = 100;
+    const t2 = R.Engine.time;
+    ev.inn(30).then(() => { fin = true; });
+    await until(() => fin, 12000);
+    ok('night: a jingle that never ends is closed at NIGHT.max', fin && ends.length === 1 && ends[0] === R.Events.NIGHT.endFade && !fj && R.Engine.time - t2 < R.Events.NIGHT.max + 1500);
+    // 4) BGM の音量 0: ジングルを鳴らさず、短い暗転だけ
+    const vb = R.Settings.get('vol.bgm'); R.Settings.set('vol.bgm', 0);
+    let rang = 0; A.jingle = () => { rang++; return Promise.resolve(); };
+    fin = false; G().gold = 100;
+    const t3 = R.Engine.time;
+    ev.inn(30).then(() => { fin = true; });
+    await until(() => fin, 5000);
+    ok('night: BGM volume 0 → no jingle, short dark only', fin && rang === 0 && R.Engine.time - t3 < 2500);
+    R.Settings.set('vol.bgm', vb);
+    A.jingle = keep.jingle; A.endJingle = keep.endJingle;
+    if (keep.d) Object.defineProperty(A, 'jingleId', keep.d); else delete A.jingleId;
+  }
   R.off('inn', onInn);
   screenAnswer.shop = undefined;
   await drive(ev.shop('shop_pharos_item'));

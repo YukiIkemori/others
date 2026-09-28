@@ -526,7 +526,9 @@ for (const n of npcs) for (let dy = 1; dy <= 2; dy++) for (let dx = -1; dx <= 1;
 const zones = [];
 zones.push({ rect: [72, 86, 30, 26], zone: 'zw_prologue' });                       // ロア〜ファロスの夜道（仲間を選ぶ前に歩く）
 zones.push({ rect: [66, 72, 52, 63], zone: 'zw_peninsula' });                      // 半島の残り（北・灯台の岬）
-zones.push({ rect: [58, 40, 60, 32], zone: 'zw_forest_road' });                    // 北の野（街道と同じ率）
+// 北の野: 森の原野と同じ表・同じ率（街道の 0.3 だった → WORLD v3 で広さ 3 倍・間隔 52 歩になり、1 戦に約 160 歩かかって
+//   「北の野で敵が全然出ない」（オーナー 2026-09-28）。野の中の街道もこの表（半島と同じ）。森の中の街道は下の zw_forest_road のまま
+zones.push({ rect: [58, 40, 60, 32], zone: 'zw_forest' });
 for (const r of ROADS) {
   if (r.zone !== 'road') continue;
   for (let i = 0; i < r.pts.length - 1; i++) {

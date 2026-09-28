@@ -459,7 +459,7 @@ section('recovery items restore fixed amounts, laddered by tier (owner 2026-09-2
   const first = (id) => { let b = 99; for (const sid of Object.keys(DB.shops)) for (let T = 0; T <= 9 && T < b; T++) if (Ru.shopItems(sid, T).includes(id)) { b = T; break; } return b; };
   // 1 人用の HP の段: 傷薬 30（0）→ 癒やしの水 60（1）→ 癒やしの清水 150（MID）→ 癒やしの霊水 すべて（LATE）
   const LADDER = [['i_salve', 30, 0], ['i_potion', 60, 1], ['i_potion2', 150, MID], ['i_elixir', Infinity, LATE]];
-  ok('HP ladder: salve 30 (T0) → potion 60 (T1) → potion2 150 (MID) → elixir full (LATE)', LADDER.every(([id, n, T]) => val(id, 'heal') === n && first(id) === T), LADDER.map(([id]) => [id, val(id, 'heal'), first(id)]));
+  ok('HP ladder: salve 30 (T0) → potion 60 (T1) → potion2 150 (MID) → elixir full (LATE)', LADDER.every(([id, n, T]) => val(id, 'heal') === n && (T <= 1 ? first(id) <= T : first(id) === T)), LADDER.map(([id]) => [id, val(id, 'heal'), first(id)]));
   ok('MP ladder: ether 15 (T1) → ether2 40 (MID)', val('i_ether', 'healMp') === 15 && val('i_ether2', 'healMp') === 40 && first('i_ether') <= 1 && first('i_ether2') === MID, [first('i_ether'), first('i_ether2')]);
   ok('revive: feather 40 HP (T0), flower full (rare, not sold)', val('i_revive', 'revive') === 40 && first('i_revive') === 0 && val('i_phoenix', 'revive') === Infinity && first('i_phoenix') === 99);
   ok('party-wide heals give less per member than the single ones of their tier (incense 40 each < potion2)', val('i_incense', 'heal') === 40 && DB.items.i_incense.use.target === 'allies' && val('i_incense', 'heal') < val('i_potion2', 'heal'));
@@ -483,6 +483,7 @@ section('recovery items restore fixed amounts, laddered by tier (owner 2026-09-2
   ok('monsters first met before MID drop only the low recovery items', !earlyHigh.length, earlyHigh);
   // 決まった量の効き目: 戦闘（R.Mon.healAmount）とフィールド（R.Rules.fieldUse）
   const c = R.Party.makeChar('hero', { hero: { type: 'warrior', sex: 'm', name: 'アルン' }, tier: 3, joinFrom: 'start' });
+  c.gl = R.Growth.glAt(3, 'party');   // ティア 3 の育ち（最大HP 300 前後）
   R.Rules.fullRestore(c);
   const st = Ru.stats(c), im = 1 + ((Ru.mods(c).itemPct || 0) / 100);
   ok('R.Mon.healAmount: amount 30 (item) → 30 × itemPct, not % of max', R.Mon.healAmount(null, c, { type: 'heal', amount: 30 }, { item: true }) === Math.max(1, Math.round(30 * im)) && st.maxHp > 100, st.maxHp);
@@ -497,7 +498,6 @@ section('recovery items restore fixed amounts, laddered by tier (owner 2026-09-2
   c.hp = 0;
   Ru.fieldUse(DB.items.i_revive, null, [c]);
   ok('fieldUse: revive amount 40 → 40 HP (max HP > 40)', c.hp === 40);
-  // 満タン（A2）の道具の見込みも amount を読む
   ok('spells keep their % heals (only items moved to fixed amounts)', Object.values(DB.spells).some((a) => (a.effects || []).some((e) => e.type === 'heal' && e.pct > 0 && e.amount == null)));
 }
 

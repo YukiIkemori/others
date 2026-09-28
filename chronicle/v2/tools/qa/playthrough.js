@@ -88,7 +88,8 @@ function forest(o) {
     { id: 'spring_elder', spring: ['elder_2'], optional: true, noHeal: true },
     Object.assign({ id: 'boss_rooteater', ev: 'elder_boss', done: 'cleared_r_forest' }, o.loseBoss ? { lose: 'tr_b_rooteater', wipeTo: 'retry' } : {}),
     { id: 'unique', ev: 'fern_after', done: 'forest_unique_given' },
-    { id: 't1', ev: 'fern_inn_keeper', done: 'story_t1', maxTries: 12 },
+    // T1 の場面。体験版（DB.config.slice）では続く「体験版の終わり」（お礼・記録の案内）が閉じるまで
+    { id: 't1', ev: 'fern_inn_keeper', doneJs: "!!G().flags.story_t1 && (!R.DB.config.slice || !!G().flags.world_demo_end) && !R.Events.busy()", maxTries: 12 },
   );
   return g;
 }

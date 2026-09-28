@@ -13,11 +13,8 @@
     await ev.say(null, '干し草を詰めた寝床だ。\n少し、休んでいこうか。');
     const i = await ev.choose(['休む', 'やめておく'], { cancel: 1 });
     if (i !== 0) return;
-    await ev.fade('out', 500);
-    ev.rest();
-    try { ev.jingle('inn'); } catch (e) { /* */ }
-    await ev.wait(700);
-    await ev.fade('in', 500);
+    // 暗転とジングル（飛ばせるのは 2.5 秒から。明ける前にジングルを閉じて BGM を戻す）は宿と同じ R.Events.night
+    await R.Events.night({ onDark: () => ev.rest() });
     await ev.caption('ぐっすり眠って、\nすっかり元気になった。', { ms: 1600 });
   });
 
