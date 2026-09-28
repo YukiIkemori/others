@@ -389,7 +389,6 @@
         // 陰は青く、日なたは少し暖かく
         const fb = f < 1 ? 1 - (1 - f) * 0.78 : f;
         const fr = f > 1 ? 1 + (f - 1) * 1.1 : f;
-        if (K.debug) { px8[q] = px8[q + 1] = px8[q + 2] = 140 * f; continue; }
         px8[q] = r * fr + dr; px8[q + 1] = g * f + dg; px8[q + 2] = b * fb + db;
       }
     }
