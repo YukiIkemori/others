@@ -3,7 +3,7 @@
 //   宝箱の中身は R.Rules.chestLoot(chest, tier, rng)（→ K.chestLoot）が引く。chest.pool:
 //     'p_T'    ティア宝箱（開けたときのティア。道具・装備・お金を混ぜた表。V2_PLAN §3.7）
 //     'p_rare' レアの箱（帯のレア品。各ダンジョン 1〜2 箱）
-//     ほかに p_supply p_gold p_stone p_gear p_weapon p_armor p_acc p_boss p_boss_mid p_super
+//     ほかに p_supply p_gold p_stone p_gear p_weapon p_armor p_acc p_boss p_boss_mid p_super p_heal
 // - 装備のプールは品の line・tier・grade・src から R.onData で作る（品の数値を埋める順に依らない）。
 // - プールには盗み専用（src 'steal'）・一品物（'unique'）・報酬・遺物・魔物の品（'mdrop'）を入れない。
 // - §10.1（STATS_REWORK）: 魔物の枠を失った品の行き先。tools/port/trim_drops.js が残す品を選び、ほかは消した。
@@ -17,9 +17,13 @@
   const S0 = [['i_salve', 6, 2], ['i_revive', 3], ['i_antidote', 2], ['i_clear', 1], ['i_waker', 2], ['i_repel', 1], ['i_firepot', 2], ['i_smoke', 1], ['i_torch', 1]];
   const S1 = [...S0, ['i_potion', 4], ['i_ether', 3], ['i_numb', 1], ['i_throat', 1], ['i_lure', 1], ['i_lens', 1]];
   const S2 = [...S1, ['i_incense', 2], ['i_thaw', 1], ['i_bomb', 2], ['i_horn', 1], ['i_censer', 1]];
-  const S3 = [...S2, ['i_elixir', 2], ['i_ether2', 1], ['i_panacea', 1]];
-  const S6 = [...S3, ['i_lifedew', 1]];
-  const SUPPLY = [S0, S1, S2, S3, S3, S3, S6, S6, S6, S6];
+  // 全回復の品（霊水・命のしずく・よみがえりの花・天の恵み）は終盤（ティア LATE 以上）から（オーナー 2026-09-28「全回復系は基本終盤から」）。
+  //   地方はどの順番でも回れる（灰の荒野もティア 1 から）ので、地方ではなくティアで分ける。LATE = 5: 縦切りの後の 6 地方のうち最後の 1 つ
+  const LATE = 5;
+  const S3 = [...S2, ['i_ether2', 1], ['i_panacea', 1]];
+  const S5 = [...S3, ['i_elixir', 2]];
+  const S6 = [...S5, ['i_lifedew', 1]];
+  const SUPPLY = [S0, S1, S2, S3, S3, S5, S6, S6, S6, S6];
   const STONES = ['fire', 'water', 'wind', 'earth', 'light', 'dark'].map((e) => `i_stone_${e}`);
   const E = (list) => list.map(([item, w, n]) => (n ? { item, w, n } : { item, w }));
   const EQ = ['weapon', 'shield', 'head', 'body', 'hands', 'feet', 'acc'];
@@ -28,7 +32,7 @@
   // ティア宝箱 p_T の混ぜ方（重みの合計）: 道具 55・装備 25・お金 20
   const MIX = { supply: 55, gear: 25, gold: 20 };
 
-  R.Pools = { RB: RB.slice(), GOLD: GOLD.slice(), MIX: Object.assign({}, MIX) };
+  R.Pools = { RB: RB.slice(), GOLD: GOLD.slice(), MIX: Object.assign({}, MIX), LATE };
 
   R.onData(function buildPools() {
     const all = Object.entries(R.DB.items);
@@ -56,7 +60,9 @@
       p_weapon: P((T) => W1(normal(T, ['weapon']))),
       p_armor: P((T) => W1(normal(T, ARMOR))),
       p_acc: P((T) => W1(normal(T, ['acc']))),
-      p_rare: P((T) => [...W1(rare(T), 2), ...W1(mrare(T), 1), ...(T >= 4 ? E([['i_lifedew', 2], ['i_phoenix', 2], ['i_grace', 1]]) : [])]),
+      p_rare: P((T) => [...W1(rare(T), 2), ...W1(mrare(T), 1), ...(T >= LATE ? E([['i_lifedew', 2], ['i_phoenix', 2], ['i_grace', 1]]) : [])]),
+      // 大きな回復の 1 品（地方ボスの確定の 2 つ目・中盤のダンジョンの決まった宝箱）: 終盤の前は癒やしの水 2 つ、終盤から癒やしの霊水
+      p_heal: P((T) => (T >= LATE ? [{ item: 'i_elixir', w: 1 }] : [{ item: 'i_potion', w: 1, n: 2 }])),
       p_boss: P((T) => [...W1(rare(T), 3), ...W1(sup(T), 1)]),
       p_boss_mid: P((T) => W1(normal(T, EQ))),
       // 空のティアは近いティア（下を先に）の品で埋める（深い階の 1 箱が空にならないように）

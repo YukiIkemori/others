@@ -192,8 +192,9 @@
   // @@V2-BEGIN 縦切りのレア枠（BATTLE、2026-09-27。オーナー「レアがめっきり減ったねえ……」。決まりと見込みは monsters_common.js の同じ区画）
   // 花バチ〜さまよい木の段 1〜2
   // オーナー「普通の雑魚は多くはレアっつっても消耗品でいいよ」: 段 1 と まだらダケ・いばら花は消耗品、装備は段 2 の 3 体（短剣・杖・大剣）だけ
-  const DEMO_RARE = { bee_1: 'i_incense', bee_2: 'w_dagger_r1', mushroom_1: 'i_panacea', mushroom_2: 'i_lifedew', plant_1: 'i_elixir', plant_2: 'i_bomb',
-    fairy_1: 'i_ether2', fairy_2: 'w_staff_r1', treant_1: 'i_censer', treant_2: 'w_greatsword_r1' };
+  // 全回復と魔力の霊水は外した（オーナー 2026-09-28「序盤のレアは 30% 回復くらいまで」。決まりは monsters_common.js の同じ区画）
+  const DEMO_RARE = { bee_1: 'i_incense', bee_2: 'w_dagger_r1', mushroom_1: 'i_panacea', mushroom_2: 'i_tonic', plant_1: 'i_tonic', plant_2: 'i_bomb',
+    fairy_1: 'i_tonic', fairy_2: 'w_staff_r1', treant_1: 'i_censer', treant_2: 'w_greatsword_r1' };
   const DEMO_STEAL = { bee_1: 'ac_st_royal_jelly', mushroom_1: 'ac_st_spore_sachet', fairy_2: 'w_staff_st_petal' };
   for (const [id, item] of Object.entries(DEMO_RARE)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { rare: { item, rate: /_2$/.test(id) ? 16 : 32 } });
   for (const [id, item] of Object.entries(DEMO_STEAL)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { steal: { item, rate: 32 } });

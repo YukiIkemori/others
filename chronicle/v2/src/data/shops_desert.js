@@ -20,7 +20,9 @@
   const S0 = ['i_salve', 'i_revive', 'i_antidote', 'i_clear', 'i_waker', 'i_repel', 'i_torch', 'i_smoke', 'i_firepot'];
   const S1 = ['i_potion', 'i_ether', 'i_numb', 'i_throat', 'i_lure', 'i_lens'];
   const S2 = ['i_incense', 'i_thaw', 'i_bomb', 'i_horn', 'i_censer'];
-  const S3 = ['i_elixir', 'i_ether2', 'i_panacea'];
+  const S3 = ['i_ether2', 'i_panacea'];
+  // 癒やしの霊水（全回復）は終盤（ティア 5）から（オーナー 2026-09-28「全回復系は基本終盤から」。pools.js の LATE）
+  const S5 = ['i_elixir'];
   const STONES = ['fire', 'water', 'wind', 'earth', 'light', 'dark'].map((e) => `i_stone_${e}`);
   const WARDS = ['ac_ward_poison', 'ac_ward_blind', 'ac_ward_sleep', 'ac_ward_paralyze', 'ac_ward_silence', 'ac_ward_confuse', 'ac_ward_stun'];
   const ACC = (t) => ['str', 'vit', 'dex', 'agi', 'int', 'mnd'].map((s) => `ac_${s}_${t}`);
@@ -36,13 +38,13 @@
   R.onData(function () {
     const f = (a) => a.filter(has);
     R.defs('shops', {
-      shop_kasim_items: { name: 'カシムの道具屋', kind: 'item', priceMul: guild, keepOld: true, sell: true, items: f(S0.concat(S1, ['i_stone_earth', 'i_stone_wind'])), tier: { 2: f(S2), 4: f(S3) } },
+      shop_kasim_items: { name: 'カシムの道具屋', kind: 'item', priceMul: guild, keepOld: true, sell: true, items: f(S0.concat(S1, ['i_stone_earth', 'i_stone_wind'])), tier: { 2: f(S2), 4: f(S3), 5: f(S5) } },
       shop_kasim_arms: { name: '市場の武具の屋台', kind: 'weapon', priceMul: guild, keepOld: false, sell: true,
         items: gear(WEAPON_LINES, 0).concat(gear(WEAPON_LINES, 1), gear(ARMOR_LINES, 0)),
         tier: tiers((t) => gear(WEAPON_LINES, t).concat(gear(WEAPON_LINES, t + 1), gear(ARMOR_LINES, t)), 1, 8) },
       shop_kasim_bazaar: { name: '市場の屋台', kind: 'special', priceMul: bazaar, keepOld: false, sell: true,
         items: f(STONES.concat(WARDS.slice(0, 4), ACC(0))), tier: tiers((t) => f(STONES.concat(WARDS, ACC(Math.min(t, 8)))), 1, 8) },
-      shop_sandedge: { name: '砂の縁の売り台', kind: 'item', keepOld: true, sell: true, items: f(S0.concat(['i_potion', 'i_ether'])), tier: { 2: f(['i_incense', 'i_thaw']), 4: f(['i_elixir']) } },
+      shop_sandedge: { name: '砂の縁の売り台', kind: 'item', keepOld: true, sell: true, items: f(S0.concat(['i_potion', 'i_ether'])), tier: { 2: f(['i_incense', 'i_thaw']), 5: f(S5) } },
       shop_lotta: { name: 'ロッタの背負い籠', kind: 'special', keepOld: false, sell: true,
         // 砂漠は序盤〜中盤: 先制・ドロップ率・レア率の品（見張りの角笛・目利きの片眼鏡・四つ葉）は置かない（持ち主の決まり）
         items: f(['ac_quiet', 'i_lure', 'i_lens']), tier: { 1: f(['ac_quiet', 'ac_ward_poison', 'ac_purse', 'i_lure', 'i_lens']), 2: f(['ac_quiet', 'ac_ward_poison', 'ac_ward_blind', 'ac_purse', 'i_lure', 'i_lens']) } },

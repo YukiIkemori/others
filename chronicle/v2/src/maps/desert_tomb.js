@@ -171,7 +171,7 @@
       O.push(K.prop('broken_pillar', 20, 3), K.exam(20, 4, 'desert_tomb_rubbing'));        // 拓本の跡（lo_ev_desert）
       O.push(K.prop('obelisk', 16, 3), K.prop('obelisk', 36, 3));
       O.push(K.prop('crystal', 26, 3), K.exam(26, 4, 'desert_tomb_throne'));
-      O.push(K.chest('desert_tomb_3_c1', 4, 21, { pool: 'p_T' }), K.chest('desert_tomb_3_c2', 10, 36, { item: 'i_elixir', n: 1 }), K.chest('desert_tomb_3_c3', 47, 36, { pool: 'p_T' }),
+      O.push(K.chest('desert_tomb_3_c1', 4, 21, { pool: 'p_T' }), K.chest('desert_tomb_3_c2', 10, 36, { pool: 'p_heal' }), K.chest('desert_tomb_3_c3', 47, 36, { pool: 'p_T' }),
         K.chest('desert_tomb_3_c4', 4, 36, { pool: 'p_rare' }));
       O.push(K.sign(31, 14, '――王に名を返す者よ。\n日の玉は火と光を、月の玉は水と闇を\n王に与える。玉を先に砕け。\n（墓守の書き付け）'));
       for (const [x, y] of [[21, 34], [31, 34], [20, 13], [32, 13], [16, 8], [36, 8], [5, 25], [46, 25], [26, 25]]) O.push(K.prop('torch', x, y));

@@ -87,7 +87,7 @@
       O.push(K.stairs(20, 30, { map: 'desert_temple_1', spawn: 'down' }, { id: 'desert_temple_2_up', look: 'up' }));
       O.push(K.prop('rock_small', 9, 26), K.prop('rock_small', 10, 27));   // 崩れた石（泉は置かない。WORLD §6.2）
       O.push(K.chest('desert_temple_2_staff', 20, 5, { item: 'u_sun_staff' }));
-      O.push(K.chest('desert_temple_2_c1', 32, 23, { pool: 'p_rare' }), K.chest('desert_temple_2_c2', 30, 26, { pool: 'p_T' }), K.chest('desert_temple_2_c3', 7, 28, { item: 'i_elixir', n: 1 }));
+      O.push(K.chest('desert_temple_2_c1', 32, 23, { pool: 'p_rare' }), K.chest('desert_temple_2_c2', 30, 26, { pool: 'p_T' }), K.chest('desert_temple_2_c3', 7, 28, { pool: 'p_heal' }));
       O.push(K.prop('obelisk', 14, 4), K.exam(14, 5, 'desert_temple_claim'), K.prop('obelisk', 25, 4), K.exam(25, 5, 'desert_temple_disk'));
       deco(O, [['copper_brazier', 17, 9], ['copper_brazier', 22, 9], ['tomb_urn', 8, 4], ['tomb_urn', 31, 4], ['tomb_urn', 8, 16], ['tomb_urn', 31, 16],
         ['sand_mound', 13, 28], ['bones', 33, 26]]);   // 階段の前の崩れた柱・東の小部屋の口の壺はどけた（通路をふさがない）

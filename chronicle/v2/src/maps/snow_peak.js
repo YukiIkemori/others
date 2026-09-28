@@ -123,7 +123,7 @@
       O.push(K.prop('beacon', 20, 7, { cond: 'cleared_r_snow' }));                  // 冬至の火（大灯火）
       O.push(K.exam(20, 8, 'peak_altar'));
       O.push(K.chest('peak_top_c1', 30, 14, { pool: 'p_T' }));
-      O.push(K.chest('peak_top_c2', 9, 16, { item: 'i_elixir', n: 1 }));
+      O.push(K.chest('peak_top_c2', 9, 16, { pool: 'p_heal' }));
       O.push(K.sign(22, 22, '――竜は、火と物語を受け取る。\n吹雪の息をためたら、身を伏せよ。\n（誰かの書き付け）'));
       K.scatter(g, O, ['snow_rock', 'snow_bank'], 8, [4, 4, 32, 18], '.', 'ptdeco', { gap: 4, variant: true, roomy: '.,ni', keep: new Set(['19,18', '20,18', '21,18', '20,9', '20,10', '19,10', '21,10']) });
       K.def('peak_top', {

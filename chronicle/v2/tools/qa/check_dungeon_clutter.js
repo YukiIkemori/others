@@ -26,6 +26,10 @@ const SUGGEST = argv.includes('--suggest');
 const ONLY = arg('--map', null);
 const MAX = 4;
 
+// わけがあって今の所に置く物（'map:id@x,y' → わけ）
+const ALLOW = {
+  'desert_tomb_3:broken_pillar@20,3': '拓本の跡（調べる所 20,4 の目印）。後ろの y 2 は下絵では壁の面で、通る道ではない',
+};
 const CONTAINER = /^(barrel|crate|box|clay_jars|cart_barrels|tomb_urn|water_urn|snow_barrel|firewood|hay|keg|jar|urn|pot_big)/;
 const SMALL = /^(rock|snow_rock|snow_bank|log|log_moss|stump|bush|broken_pillar|rubble|sled|debris)/;
 
@@ -144,6 +148,7 @@ for (const id of maps) {
   if (VERBOSE) for (const c of list) console.log(`   ${c.id}@${c.x},${c.y}${c.painted ? ' (painted)' : ''}${c.bad.length ? '  ← ' + c.bad.join(' ') : ''}`);
   for (const c of list) {
     const name = `${id}: ${c.id}@${c.x},${c.y} は通路・床の真ん中に無い`;
+    if (c.bad.length && ALLOW[id + ':' + c.id + '@' + c.x + ',' + c.y]) { if (VERBOSE) console.log(`   （${c.id}@${c.x},${c.y} は ${ALLOW[id + ':' + c.id + '@' + c.x + ',' + c.y]}）`); continue; }
     if (c.painted && c.bad.length) { repaint.push(`${id} ${c.id}@${c.x},${c.y} ${c.bad.join(' ')}`); if (STRICT) ok(name, false, c.bad); continue; }
     ok(name, !c.bad.length, c.bad);
     if (SUGGEST && c.bad.length) console.log(`      → 置き直し: ${suggest(m, c).join(' ') || '（近くに無い。減らす）'}`);

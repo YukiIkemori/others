@@ -88,7 +88,7 @@
       ['eb_admiral_crew', 200, { every: [4, 2], countBelow: 3 }]]),
     phases: [{ hpBelow: 0.4, msg: '船団長の氷の鎧がはがれ落ちた！\n――帰りたい、と声がした。', set: { buffs: { atk: 1 } } }],
     s: { hp: 0.6, atk: 0.5, mag: 0.5 },
-    drops: { normal: { pool: 'p_boss', rate: 1 }, bonus: { item: 'i_elixir', rate: 1 } },
+    drops: { normal: { pool: 'p_boss', rate: 1 }, bonus: { pool: 'p_heal', rate: 1 } },   // 確定の 2 つ目: 終盤の前は癒やしの水（pools.js p_heal）
     desc: '氷に閉じこめられた帆船の船団長。\n百年、帰る港を探している。',
   });
   def('b_frost_sailor', {

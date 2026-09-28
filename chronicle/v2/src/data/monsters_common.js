@@ -319,9 +319,12 @@
   // 2 回目（オーナー 2026-09-27「普通の敵さ、全員が装備じゃなくていいからね、装備溢れちゃうし。普通の雑魚は多くはレアっつっても消耗品でいいよ」）:
   // 22 体のうち 16 体は消耗品（縦切りの店 T0〜T1 に無い・より強い品。同じ品が別の魔物と重なってもよい）、装備は当たりの 6 体だけ
   // （段 2 の武器 5 ＋ 浜ガニの甲羅盾）。外した装備のレアは宝箱 p_rare に戻る（pools.js は魔物が落とす品だけを外す）
+  // 3 回目（オーナー 2026-09-28「天の恵み・よみがえりの花・癒しの霊水が早すぎる。全回復系は基本終盤から。序盤のレアは 30% 回復くらいまで」）:
+  //   全回復（霊水・命のしずく・天の恵み・よみがえりの花）と魔力の霊水（MP 60%）を、滋養の丸薬（HP・MP 30%）・癒やしの香炉（全員 35%）・清めの霊薬へ。
+  //   倒れた味方は店の気つけの羽根（HP 35%）で起こす
   const DEMO_RARE = {
-    jelly_1: 'i_ether2', jelly_2: 'w_bow_r1', rat_1: 'i_bomb', rat_2: 'i_phoenix', seabird_1: 'i_horn', seabird_2: 'i_lifedew',
-    crab_1: 'sh_crab_shell', crab_2: 'w_sword_coral', bat_1: 'i_elixir', bat_2: 'i_grace',
+    jelly_1: 'i_tonic', jelly_2: 'w_bow_r1', rat_1: 'i_bomb', rat_2: 'i_panacea', seabird_1: 'i_horn', seabird_2: 'i_tonic',
+    crab_1: 'sh_crab_shell', crab_2: 'w_sword_coral', bat_1: 'i_incense', bat_2: 'i_incense',
   };
   const DEMO_STEAL = { rat_1: 'ac_st_rat_pouch', crab_1: 'hd_st_beach_crab', seabird_2: 'ft_st_storm_gull' };
   for (const [id, item] of Object.entries(DEMO_RARE)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { rare: { item, rate: /_2$/.test(id) ? 16 : 32 } });

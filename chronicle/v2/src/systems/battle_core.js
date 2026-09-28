@@ -47,7 +47,7 @@
     SF: { min: 0.6, max: 1.8 },
     METAL: { dmg: 1, critDmg: 2, hitMul: 3 },
     STATUS: { mndPer: 0.005, resistCap: 0.9, pCap: 0.95, bossDebuff: 0.5 },
-    STEAL: { base: 0.35, agiDiv: 200, min: 0.1, max: 0.8, boss: 0.5, rareMul: 4, rareCap: 0.5, autoRare: 0.5, only: { cap: 0.5, autoMul: 0.5, golden: 2 } },
+    STEAL: { base: 0.35, agiDiv: 200, min: 0.1, max: 0.8, boss: 0.5, rareMul: 1.5, rareCap: 0.15, autoRare: 0.5, only: { cap: 0.5, autoMul: 0.5, golden: 2 } },
     BOSS_RES: { death: 1, sleep: 0.75, paralyze: 0.75, freeze: 0.75, confuse: 0.75, stun: 0.5, silence: 0.5, blind: 0.5, poison: 0.25, burn: 0.25 },
     GROW: { add: { boss: 4, rare: 2, golden: 1, metal: 6 } },
     DARK: { ambush: 0.08, stat: 1.1 },

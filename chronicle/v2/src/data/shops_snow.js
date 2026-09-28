@@ -22,18 +22,20 @@
     0: ['i_salve', 'i_revive', 'i_antidote', 'i_waker', 'i_firepot', 'i_torch', 'i_repel', 'i_smoke', 'ac_ward_freeze', 'ac_ward_sleep', 'i_stone_fire'],
     1: ['i_potion', 'i_ether', 'i_clear', 'i_numb', 'i_lens', 'i_lure', 'ac_ward_stun', 'ac_ward_confuse'].concat(STONES),
     2: ['i_thaw', 'i_incense', 'i_bomb', 'i_horn', 'i_censer'],
-    3: ['i_elixir', 'i_ether2', 'i_panacea'],
+    3: ['i_ether2', 'i_panacea'],
+    5: ['i_elixir'],
   };
+  // 癒やしの霊水（全回復）は終盤（ティア 5）から（オーナー 2026-09-28「全回復系は基本終盤から」。pools.js の LATE）
   const items = (t) => (IT[t] || []).filter(has);
   const ACC = (t) => ['str', 'vit', 'dex', 'agi', 'int', 'mnd'].map((s) => `ac_${s}_${t}`).filter(has);
   R.onData(function () {
     const arms = (sh) => ({ items: gear(WEAPON_LINES, Math.max(0, sh)).concat(gear(ARMOR_LINES, Math.max(0, sh))), tier: byTier((t) => gear(WEAPON_LINES, Math.max(0, t + sh)).concat(gear(ARMOR_LINES, Math.max(0, t + sh)))) });
     R.defs('shops', {
-      shop_yule_items: { name: 'ユールの道具屋', kind: 'item', keepOld: true, sell: true, items: items(0).concat(ACC(0)), tier: { 1: items(1), 2: items(2).concat(ACC(1)), 3: items(3), 5: ACC(2).length ? ACC(2) : items(3) } },
+      shop_yule_items: { name: 'ユールの道具屋', kind: 'item', keepOld: true, sell: true, items: items(0).concat(ACC(0)), tier: { 1: items(1), 2: items(2).concat(ACC(1)), 3: items(3), 5: (ACC(2).length ? ACC(2) : items(3)).concat(items(5)) } },
       shop_yule_arms: Object.assign({ name: 'ユールの武具屋', kind: 'weapon', keepOld: false, sell: true }, arms(0)),
       shop_yule_arms_low: Object.assign({ name: 'ユールの武具屋（荒らされた倉）', kind: 'weapon', keepOld: false, sell: true }, arms(-1)),
       shop_yule_fur: { name: '毛皮の行商', kind: 'weapon', keepOld: false, sell: true, items: gear(ARMOR_LINES, 0), tier: byTier((t) => gear(ARMOR_LINES, t)) },
-      shop_pass_inn: { name: '峠の宿の売店', kind: 'item', keepOld: true, sell: true, items: items(0).concat(items(1)), tier: { 2: items(2), 3: items(3) } },
+      shop_pass_inn: { name: '峠の宿の売店', kind: 'item', keepOld: true, sell: true, items: items(0).concat(items(1)), tier: { 2: items(2), 3: items(3), 5: items(5) } },
     });
   });
 })(window.RPG);

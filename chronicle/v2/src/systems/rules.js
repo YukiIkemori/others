@@ -135,7 +135,9 @@
       profSlope: 0.01, profMin: 0.7, profMax: 1.25, useSlope: 0.02, useMax: 2.5, maxCount: 9999 },
     // §4.10 落とし物・盗み（§7.3 盗み専用の枠）
     DROP: { rate: { normal: 8, rare: 32, super: 256 }, cap: { normal: 0.75, rare: 0.5, super: 0.125 }, modCap: 150, golden: { normal: 2, rare: 8, super: 8 } },
-    STEAL: { base: 0.35, agiDiv: 200, min: 0.1, max: 0.8, boss: 0.5, rareMul: 4, rareCap: 0.5, autoRare: 0.5, autoMul: 0.4, autoPerBattle: 1,
+    // 盗みのレア枠: min(rareCap, レアの落ちる率 × rareMul)。4・0.5 → 1.5・0.15（オーナー 2026-09-28「ティッタのレアを盗む確率が高すぎる。レアばかり持つ」）。
+    //   成功 1 回あたり 縦切りの雑魚 段 1（率 32）4.7%・段 2（率 16）9.4%、ついでに（autoRare 0.5）はその半分。めずらしい魔物（率 6）は 15%
+    STEAL: { base: 0.35, agiDiv: 200, min: 0.1, max: 0.8, boss: 0.5, rareMul: 1.5, rareCap: 0.15, autoRare: 0.5, autoMul: 0.4, autoPerBattle: 1,
       only: { cap: 0.5, autoMul: 0.5, golden: 2 }, rate: { mob: 32, rare: 16, boss: 16 } },
     // §3.3.16 効果の合計の上限（exp → grow。§9.4）
     MODCAP: { party: 150, partyMin: -100, preempt: 30, grow: 30, growMin: -100, glim: 40, glimMin: -100, prof: 50, profMin: -100, cost: -50, encounter: 50, autoSteal: 100 },

@@ -122,7 +122,7 @@
     await ev.fade('in', 500);
     ev.leadDone('q_snow_statue');
     await ev.say('sculptor', 'できた！\nお礼に、これをどうぞ。');
-    X().small(ev, [['i_potion', 3], ['i_elixir', 1], ['i_elixir', 2], ['i_elixir', 3]]);
+    X().small(ev, [['i_potion', 3], ['i_potion', 4], ['i_incense', 2], ['i_incense', 3], ['i_incense', 3], ['i_elixir', 3]]);   // 表はティア順。癒やしの霊水（全回復）は終盤（ティア 5）から（オーナー 2026-09-28）
   }, { meta: { needs: [], gives: ['flag:snow_statue_asked', 'lead:q_snow_statue', 'flag:snow_statue_done', 'choice:ch_snow_statue'] } });
   // 材料（ついでに拾える所。雪像を頼まれていなくても拾える）
   E('snow_mat', async (ev, ctx) => {

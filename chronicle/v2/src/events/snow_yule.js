@@ -149,7 +149,7 @@
     // ⑤ 一度だけの品
     if (!ev.flag('snow_soup_given')) {
       await ev.say('soup_woman', ['寒かったでしょう。\n獣脂の火で煮たスープよ。\n……あったまるわ。', '瓶に分けておくから、\n旅に持っていって。']);
-      X().small(ev, [['i_potion', 2], ['i_potion', 3], ['i_elixir', 1], ['i_elixir', 2]]);
+      X().small(ev, [['i_potion', 2], ['i_potion', 3], ['i_potion', 4], ['i_incense', 2], ['i_incense', 3], ['i_elixir', 2]]);   // 表はティア順。癒やしの霊水（全回復）は終盤（ティア 5）から（オーナー 2026-09-28）
       ev.setFlag('snow_soup_given');
       return;
     }

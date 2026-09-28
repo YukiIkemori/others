@@ -76,7 +76,7 @@
       O.push({ type: 'brazier', id: 'icicle_2_b1', x: 23, y: 20 }, { type: 'brazier', id: 'icicle_2_b2', x: 34, y: 12 }, { type: 'brazier', id: 'icicle_2_b3', x: 16, y: 9 });
       O.push(K.chest('icicle_2_c1', 20, 4, { item: 'u_icicle_spear', n: 1 }), K.exam(20, 7, 'icicle_frozen', { box: 2 }));
       for (let i = 0; i < 3; i++) O.push(K.prop('ice_crystal', 19 + i, 6, { cond: '!snow_icicle_box_2', variant: i }));
-      O.push(K.chest('icicle_2_c2', 35, 16, { pool: 'p_T' }), K.chest('icicle_2_c3', 4, 11, { pool: 'p_T' }), K.chest('icicle_2_c4', 24, 24, { item: 'i_elixir', n: 1 }));
+      O.push(K.chest('icicle_2_c2', 35, 16, { pool: 'p_T' }), K.chest('icicle_2_c3', 4, 11, { pool: 'p_T' }), K.chest('icicle_2_c4', 24, 24, { pool: 'p_heal' }));
       O.push(K.prop('talestone', 7, 9), K.exam(7, 10, 'icicle_seal'));             // 宝の地図 その2 の封じの扉（地図は縦切りの外）
       O.push(K.sign(22, 12, '――つらら番、眠りを破る者を打つ。\n火のある所では、やつは目が利かぬ。\n（誰かの書き付け）'));
       for (const [x, y] of [[12, 22], [28, 13], [33, 18], [24, 7], [9, 13]]) O.push(K.prop('ice_crystal', x, y, { variant: (x + y) % 3 }));

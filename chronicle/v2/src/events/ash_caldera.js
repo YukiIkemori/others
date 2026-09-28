@@ -359,7 +359,7 @@
       if (step + 1 >= 3 && !ev.flag('ash_bet_done')) {
         ev.setFlag('ash_bet_done');
         ev.leadDone('q_ash_bet');
-        x.small(ev, [['i_ether', 3], ['i_ether', 3], ['i_ether2', 1], ['i_ether2', 2], ['i_elixir', 1]]);
+        x.small(ev, [['i_ether', 3], ['i_ether', 3], ['i_ether2', 1], ['i_ether2', 2], ['i_ether2', 2], ['i_elixir', 1]]);   // 表はティア順。癒やしの霊水（全回復）は終盤（ティア 5）から（オーナー 2026-09-28）
       }
     } else {
       ev.setFlag('ash_bet_hint_' + step);
@@ -386,7 +386,7 @@
       const r = await ev.battle(list[k], { canLose: true, boss: k >= 3 });
       if (r !== 'win') break;
       won = k + 1;
-      if (won === 3 && !ev.flag('ash_challenge_3')) { ev.setFlag('ash_challenge_3'); X().small(ev, [['i_potion', 3], ['i_potion', 4], ['i_elixir', 1], ['i_elixir', 2], ['i_elixir', 2]]); }
+      if (won === 3 && !ev.flag('ash_challenge_3')) { ev.setFlag('ash_challenge_3'); X().small(ev, [['i_potion', 3], ['i_potion', 4], ['i_incense', 2], ['i_incense', 3], ['i_incense', 3], ['i_elixir', 2]]); }   // 表はティア順。癒やしの霊水（全回復）は終盤（ティア 5）から（オーナー 2026-09-28）
       if (won === 5 && !ev.flag('ash_challenge_done')) { ev.setFlag('ash_challenge_done'); ev.leadDone('q_ash_challenge'); X().small(ev, [['gold', 800], ['gold', 1200], ['gold', 1800], ['gold', 2400], ['gold', 3000]]); }
     }
     await ev.fade('out', 400);

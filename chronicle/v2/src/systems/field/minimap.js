@@ -1,8 +1,12 @@
 // FIELD — 小地図（MODERN_UI §5.9・§6.2、dungeon.png。E11・E12）
 //   ダンジョンの右上（手がかりの札の下）。X で 小地図 → 大きな地図（drawBig、画面の中ほど）→ 出さない（設定 fieldMap、hud.js）。
 //   歩いた所の周り（4 マス）が埋まる。見つけた泉（青緑）・開けていない宝箱（金）・階段（白）の印、
-//   一行の向きの矢印。下に「泉（ダンジョンでは女神の像） 宝箱 階段」の凡例。埋まった所はマップごとに覚える（このセッションの間。R.Game には持たない）。
+//   一行の向きの矢印。下に「泉（ダンジョンでは女神の像） 宝箱 階段」の凡例。
+//   埋まった所はマップごとに R.Game.explored[mapId] に書く（セーブ・合言葉に残る。オーナーの報告「通ったはずの通路が地図に表示されてない」:
+//     前はこのセッションの間だけで、読み込み・再読み込みのあとは歩いた所が消えていた）。形は 'w x h : 連の長さ'（下の enc・dec）。
+//     R.Game が入れ替わったら（読み込み・新しい旅・戦闘のやり直し）手元の写し S.seen を捨てて、R.Game.explored から読み直す。
 //   地図の画像は 1 マス 1 px の小さなキャンバスに、見えた所だけ足していく（毎フレームは drawImage と印だけ）。
+//     キャンバスの中身が消えたとき（tilePatches の変化・スマホで裏に回したときの context lost）は bits から描き直す（sync）。
 (function (R) {
   'use strict';
   const F = (R.Field = R.Field || {});
@@ -12,23 +16,81 @@
   const WATER = /water|sea|shallow/;
   const ANG = { n: 0, e: Math.PI / 2, s: Math.PI, w: -Math.PI / 2 };
 
-  function rec() {
-    const m = S.map;
+  /**
+   * 歩いた所の書き方: 'w x h : 連'。連 = 埋まっていない数・埋まった数・…を交互に 36 進で '.' つなぎ（左上から行ごと）。
+   * 歩いた所はひと固まりなので、ビットをそのまま書くより短い（合言葉が長くなりすぎない）
+   */
+  function enc(r) {
+    const out = [];
+    let v = 0, n = 0;
+    for (let i = 0; i < r.bits.length; i++) {
+      const b = r.bits[i] ? 1 : 0;
+      if (b === v) { n++; continue; }
+      out.push(n.toString(36)); v = b; n = 1;
+    }
+    if (v === 1) out.push(n.toString(36));   // 最後の埋まっていない連は書かない
+    return r.w + 'x' + r.h + ':' + out.join('.');
+  }
+  /** enc の逆。形が合わない（マップの大きさが変わった・壊れた）ときは null（埋まっていない所から数え直す） */
+  function dec(s, w, h) {
+    const m = typeof s === 'string' && /^(\d+)x(\d+):([0-9a-z.]*)$/.exec(s);
+    if (!m || +m[1] !== w || +m[2] !== h) return null;
+    const bits = new Uint8Array(w * h);
+    if (!m[3]) return bits;
+    let i = 0, v = 0;
+    for (const t of m[3].split('.')) {
+      const n = parseInt(t, 36);
+      if (!(n >= 0) || i + n > bits.length) return null;
+      if (v) bits.fill(1, i, i + n);
+      i += n; v ^= 1;
+    }
+    return bits;
+  }
+  M._enc = enc; M._dec = dec;
+
+  /** 今の R.Game の歩いた所の記録（無ければ作る）。g を渡せばそのマップ（M.seenAt・テスト） */
+  function recOf(m) {
+    const G = R.Game || null;
+    if (S.seenG !== G) { S.seen = {}; S.seenG = G; }   // 読み込み・新しい旅: 前の旅の手元の写しを使わない
     const all = (S.seen = S.seen || {});
     let r = all[m.id];
     if (!r || r.w !== m.w || r.h !== m.h) {
-      r = all[m.id] = { w: m.w, h: m.h, bits: new Uint8Array(m.w * m.h), cv: R.Gfx.canvas2d(m.w, m.h), grid: null };
+      const saved = G && G.explored && G.explored[m.id];
+      const bits = (saved && dec(saved, m.w, m.h)) || new Uint8Array(m.w * m.h);
+      r = all[m.id] = { w: m.w, h: m.h, bits, cv: R.Gfx.canvas2d(m.w, m.h), grid: null, lost: false };
+      // スマホで裏に回すと 2D のキャンバスも中身が消えることがある: 戻ったら描き直す
+      if (r.cv && r.cv.addEventListener) r.cv.addEventListener('contextrestored', () => { r.grid = null; });
     }
     return r;
+  }
+  function rec() { return recOf(S.map); }
+  /** キャンバスを bits に合わせる: tilePatches が変わった・キャンバスの中身が消えた → 全部描き直す */
+  function sync(m, r) {
+    const g = r.cv && r.cv.getContext('2d');
+    if (!g) return null;
+    if (g.isContextLost && g.isContextLost()) { r.lost = true; return null; }
+    const grid = R.MapUtil.grid(m);
+    if (r.grid !== grid || r.lost) {
+      r.grid = grid; r.lost = false;
+      g.clearRect(0, 0, m.w, m.h);
+      for (let i = 0; i < r.bits.length; i++) if (r.bits[i]) paint(g, m, i % m.w, (i / m.w) | 0);
+    }
+    return g;
+  }
+  /** 手元の bits を R.Game に書く（セーブに残す） */
+  function store(m, r) {
+    const G = R.Game;
+    if (!G) return;
+    if (!G.explored || typeof G.explored !== 'object') G.explored = {};
+    G.explored[m.id] = enc(r);
   }
   /** 一行の周りを埋める（入ったとき・1 歩ごと） */
   M.reveal = function () {
     const m = S.map;
     if (!m || m.kind !== 'dungeon') return;
     const r = rec();
-    const g = r.cv && r.cv.getContext('2d');
-    const grid = R.MapUtil.grid(m);
-    if (r.grid !== grid) { r.grid = grid; if (g) { g.clearRect(0, 0, m.w, m.h); for (let i = 0; i < r.bits.length; i++) if (r.bits[i]) paint(g, m, i % m.w, (i / m.w) | 0); } }
+    const g = sync(m, r);
+    let added = 0;
     for (let y = S.y - REVEAL; y <= S.y + REVEAL; y++) {
       if (y < 0 || y >= m.h) continue;
       for (let x = S.x - REVEAL; x <= S.x + REVEAL; x++) {
@@ -37,10 +99,11 @@
         const i = y * m.w + x;
         if (r.bits[i]) continue;
         if (R.MapUtil.secretHidden && R.MapUtil.secretHidden(m, x, y)) continue;   // 見つける前の隠し通路の先は地図に載せない（secrets.js）
-        r.bits[i] = 1;
+        r.bits[i] = 1; added++;
         if (g) paint(g, m, x, y);
       }
     }
+    if (added) store(m, r);
   };
   function paint(g, m, x, y) {
     const c = R.MapUtil.cell(m, x, y);
@@ -51,13 +114,20 @@
     g.fillRect(x, y, 1, 1);
   }
   M.seen = function (x, y) {
-    const r = S.seen && S.map && S.seen[S.map.id];
+    if (!S.map) return false;
+    const r = rec();
     return !!(r && r.bits[y * r.w + x]);
+  };
+  /** そのマップの歩いた所か（今のマップでなくてもよい。R.Game.explored から読む。テスト・QA 用） */
+  M.seenAt = function (mapId, x, y) {
+    const m = R.DB.maps[mapId];
+    if (!m || x < 0 || y < 0 || x >= m.w || y >= m.h) return false;
+    return !!recOf(m).bits[y * m.w + x];
   };
 
   M.draw = function (g, x, y, w, h) {
     const m = S.map, r = rec();
-    if (!r.cv) return;
+    if (!r.cv || !sync(m, r)) return;
     const U = R.UIK.u, T = R.UIK.T;
     R.UIK.panel(g, { x, y, w, h }, { r: U(10) });
     const pad = U(8), s = Math.min((w - pad * 2) / m.w, (h - pad * 2) / m.h);
@@ -72,7 +142,7 @@
    */
   M.drawBig = function (g, cx, cy, maxW, maxH) {
     const m = S.map, r = rec();
-    if (!r.cv) return;
+    if (!r.cv || !sync(m, r)) return;
     const U = R.UIK.u, T = R.UIK.T;
     const pad = U(18), head = U(40), foot = U(28);
     const s = Math.max(1, Math.min((maxW - pad * 2) / m.w, (maxH - pad * 2 - head - foot) / m.h));

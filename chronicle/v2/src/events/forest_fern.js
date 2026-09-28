@@ -218,7 +218,7 @@
     if (!ev.flag('yura_miller_thanked')) {
       await ev.say('yura_miller', ['ここが、わたしの家のある村。\n……エダ。わたしの名前は、エダ。', 'ユラで、あなたに会ったわね。\n思い出したとき、真っ先に\nあなたの顔が浮かんだの。']);
       await ev.say('yura_miller', 'これ、粉ひきの小屋に\nしまってあったの。\nよかったら、持っていって。');
-      R.ContentF.forest.small(ev, [['i_potion', 2], ['i_potion', 3], ['i_elixir', 1], ['i_elixir', 2]]);
+      R.ContentF.forest.small(ev, [['i_potion', 2], ['i_potion', 3], ['i_potion', 4], ['i_incense', 2], ['i_incense', 3], ['i_elixir', 2]]);   // 表はティア順。癒やしの霊水（全回復）は終盤（ティア 5）から（オーナー 2026-09-28）
       ev.setFlag('yura_miller_thanked');
       ev.leadDone('q_yura_names');
       return;

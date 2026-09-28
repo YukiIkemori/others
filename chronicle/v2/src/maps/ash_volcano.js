@@ -134,7 +134,7 @@
       O.push(K.stairs(21, 34, { map: 'ash_volcano_1', spawn: 'stairs' }, { id: 'volcano_2_down', look: 'down' }));
       for (const [x, y] of [[21, 16], [22, 16], [21, 17], [22, 17]]) K.put(g, x, y, 'X');   // 卵（描いた物）
       O.push(K.exam(21, 16, 'ash_crater_egg'), K.exam(22, 16, 'ash_crater_egg'));
-      O.push(K.chest('volcano_2_c1', 33, 30, { pool: 'p_rare' }), K.chest('volcano_2_c2', 39, 12, { item: 'i_elixir', n: 1 }), K.chest('volcano_2_c3', 5, 9, { pool: 'p_T' }));
+      O.push(K.chest('volcano_2_c1', 33, 30, { pool: 'p_rare' }), K.chest('volcano_2_c2', 39, 12, { pool: 'p_heal' }), K.chest('volcano_2_c3', 5, 9, { pool: 'p_T' }));
       for (const [x, y] of [[12, 12], [32, 12], [14, 22], [30, 22], [22, 25], [10, 17], [34, 17]]) O.push(K.prop('lava_glow', x, y));
       K.def('ash_volcano_2', {
         name: '灰の火山', kind: 'dungeon', region: 'r_ash', location: 'volcano', theme: 'cave',

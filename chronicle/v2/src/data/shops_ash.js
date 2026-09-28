@@ -20,8 +20,10 @@
     0: ['i_salve', 'i_revive', 'i_antidote', 'i_waker', 'i_torch', 'i_repel', 'i_smoke', 'i_stone_water', 'ac_ward_blind'],
     1: ['i_potion', 'i_ether', 'i_clear', 'i_numb', 'i_lens', 'i_stone_wind'],
     2: ['i_incense', 'i_horn', 'i_censer', 'i_bomb'],
-    3: ['i_elixir', 'i_ether2', 'i_panacea'],
+    3: ['i_ether2', 'i_panacea'],
+    5: ['i_elixir'],
   };
+  // 癒やしの霊水（全回復）は終盤（ティア 5）から（オーナー 2026-09-28「全回復系は基本終盤から」。pools.js の LATE）
   const items = (t) => (IT[t] || []).filter(has);
   const ACC = (t) => ['str', 'vit', 'dex', 'agi', 'int', 'mnd'].map((s) => `ac_${s}_${t}`).filter(has);
   // 一族の信頼（WORLD §4.7）: 八百長を断って優勝すると、闘技場の売り台が 1 割安い
@@ -29,11 +31,11 @@
   R.onData(function () {
     const arms = { items: gear(WEAPON_LINES, 0).concat(gear(ARMOR_LINES, 0)), tier: byTier((t) => gear(WEAPON_LINES, t).concat(gear(ARMOR_LINES, t))) };
     R.defs('shops', {
-      shop_caldera_items: { name: '殻の道具屋', kind: 'item', keepOld: true, sell: true, items: items(0).concat(ACC(0)), tier: { 1: items(1), 2: items(2).concat(ACC(1)), 3: items(3), 5: ACC(2).length ? ACC(2) : items(3) } },
+      shop_caldera_items: { name: '殻の道具屋', kind: 'item', keepOld: true, sell: true, items: items(0).concat(ACC(0)), tier: { 1: items(1), 2: items(2).concat(ACC(1)), 3: items(3), 5: (ACC(2).length ? ACC(2) : items(3)).concat(items(5)) } },
       shop_caldera_arms: Object.assign({ name: '殻の武具屋', kind: 'weapon', keepOld: false, sell: true }, arms),
       shop_arena: { name: '闘技場の売り台', kind: 'special', priceMul: trust, keepOld: true, sell: true,
-        items: items(1).concat(ACC(0)), tier: { 2: items(2).concat(ACC(1)), 4: items(3).concat(ACC(2)), 6: ACC(3) } },
-      shop_haimi: { name: '灰見の宿の売り台', kind: 'item', keepOld: true, sell: true, items: items(0).concat(['i_potion', 'i_ether'].filter(has)), tier: { 2: items(2), 4: items(3) } },
+        items: items(1).concat(ACC(0)), tier: { 2: items(2).concat(ACC(1)), 4: items(3).concat(ACC(2)), 5: items(5), 6: ACC(3) } },
+      shop_haimi: { name: '灰見の宿の売り台', kind: 'item', keepOld: true, sell: true, items: items(0).concat(['i_potion', 'i_ether'].filter(has)), tier: { 2: items(2), 4: items(3), 5: items(5) } },
     });
   });
 })(window.RPG);

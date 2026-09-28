@@ -1,4 +1,4 @@
-// items_use.js — 使う道具 54（RULES。K.item。数値は R.Rules.fillItem が R.onData で埋める）
+// items_use.js — 使う道具 55（RULES。K.item。数値は R.Rules.fillItem が R.onData で埋める）
 // 生成: node v2/tools/port/*.js（今の木から移した結果。以後はこのファイルが正）
 (function (R) {
   'use strict';
@@ -67,6 +67,18 @@
     use: { target: 'allies', effects: [{ type: 'heal', pct: 1 }, { type: 'cure', statuses: 'all' }], fx: 'heal3', battle: true, field: true },
     icon: 'heal',
     sort: 1005,
+    slot: 'use',
+  },
+  // 序盤の雑魚のレア（オーナー 2026-09-28「序盤のレアは 30% 回復くらいまで」。全回復の品は終盤から）
+  i_tonic: {
+    name: '滋養の丸薬',
+    grade: 'rare',
+    src: 'drop',
+    price: 200,
+    desc: '味方1人のHPとMPを\n最大値の30%回復する。',
+    use: { target: 'ally', effects: [{ type: 'heal', pct: 0.3 }, { type: 'healMp', pct: 0.3 }], fx: 'heal', battle: true, field: true },
+    icon: 'potion',
+    sort: 1031,
     slot: 'use',
   },
   i_revive: {
@@ -350,25 +362,27 @@
     sort: 1030,
     slot: 'use',
   },
+  // 序章のめずらしい魔物の品: 全回復 → 30%（オーナー 2026-09-28「全回復の品は終盤から。序盤のレアは 30% くらいまで」）
   i_jewel_carrot: {
     name: '宝石にんじん',
     grade: 'rare',
     src: 'relic',
     price: 1000,
-    desc: '味方1人のHPとMPを\nすべて回復する。',
-    use: { target: 'ally', effects: [{ type: 'heal', pct: 1 }, { type: 'healMp', pct: 1 }], fx: 'heal', battle: true, field: true },
+    desc: '味方1人のHPとMPを\n最大値の30%回復する。',
+    use: { target: 'ally', effects: [{ type: 'heal', pct: 0.3 }, { type: 'healMp', pct: 0.3 }], fx: 'heal', battle: true, field: true },
     icon: 'gem',
     exclusive: 'rm_jewel_hare',
     sort: 1033,
     slot: 'use',
   },
+  // 森のめずらしい魔物の品: 全員 50% → 30%＋状態を治す（序盤のレアは 30% くらいまで）
   i_bloom_nectar: {
     name: '花角の蜜',
     grade: 'rare',
     src: 'relic',
     price: 1200,
-    desc: '味方全員のHPを\n最大値の50%回復する。',
-    use: { target: 'allies', effects: [{ type: 'heal', pct: 0.5 }], fx: 'heal3', battle: true, field: true },
+    desc: '味方全員のHPを\n最大値の30%回復し、\n悪い状態を治す。',
+    use: { target: 'allies', effects: [{ type: 'heal', pct: 0.3 }, { type: 'cure', statuses: 'all' }], fx: 'heal3', battle: true, field: true },
     icon: 'potion',
     exclusive: 'rm_bloom_fawn',
     sort: 1034,
@@ -456,13 +470,14 @@
     sort: 1041,
     slot: 'use',
   },
+  // 湿原（中盤）のめずらしい魔物の品: 全回復 → 70%（全回復の品は終盤から）
   i_ghost_tea: {
     name: 'おばけの紅茶',
     grade: 'rare',
     src: 'relic',
     price: 1200,
-    desc: '味方1人のHPをすべて回復し、\n悪い状態を治す。',
-    use: { target: 'ally', effects: [{ type: 'heal', pct: 1 }, { type: 'cure', statuses: 'all' }], fx: 'heal', battle: true, field: true },
+    desc: '味方1人のHPを\n最大値の70%回復し、\n悪い状態を治す。',
+    use: { target: 'ally', effects: [{ type: 'heal', pct: 0.7 }, { type: 'cure', statuses: 'all' }], fx: 'heal', battle: true, field: true },
     icon: 'potion',
     exclusive: 'rm_ghost_teapot',
     sort: 1042,
@@ -515,13 +530,14 @@
     sort: 1046,
     slot: 'use',
   },
+  // 山地（中盤）のめずらしい魔物の品: MP 全回復 → 70%（全回復の品は終盤から）
   i_prism_shard: {
     name: '虹晶のかけら',
     grade: 'rare',
     src: 'relic',
     price: 1500,
-    desc: '味方1人のMPを\nすべて回復する。',
-    use: { target: 'ally', effects: [{ type: 'healMp', pct: 1 }], fx: 'mp', battle: true, field: true },
+    desc: '味方1人のMPを\n最大値の70%回復する。',
+    use: { target: 'ally', effects: [{ type: 'healMp', pct: 0.7 }], fx: 'mp', battle: true, field: true },
     icon: 'potion',
     exclusive: 'rm_prisma',
     sort: 1047,

@@ -130,7 +130,7 @@
    *   もう無い id は捨てる。体験版（DB.config.slice）では レア率・ドロップ率・先制・レア遭遇 の品（中盤以降の品）を
    *   外して、1 つにつき代わりの品（RETIRE_TO）を袋へ。→ 外した数
    */
-  const RETIRE_TO = 'i_elixir';
+  const RETIRE_TO = 'i_incense';   // 全回復の霊水は終盤から（オーナー 2026-09-28「全回復系は基本終盤から」）→ 癒やしの香炉
   const EARLY = ['rarePct', 'dropPct', 'preemptPct', 'rareEncPct'];
   State.retireItems = function (G) {
     if (!G) return 0;

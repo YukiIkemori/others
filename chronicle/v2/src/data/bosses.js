@@ -29,7 +29,8 @@
     'eb_sink', 'eb_sand_strike', 'eb_sun_orb', 'eb_moon_orb', 'eb_star_orb']);
   const A = (list) => list.map(([id, w, cond]) => (cond ? { id, w: SCHEDULED.has(id) && cond.every ? w * SCHED : w, cond } : { id, w }));
   const MID = (seed) => ({ normal: { pool: 'p_boss_mid', rate: 1 }, bonus: { item: seed, rate: 1 } });
-  const REGION = (seed) => ({ normal: { pool: 'p_boss', rate: 1 }, bonus: { item: seed, rate: 1 } });
+  // bonus に 'p_' で始まる id を渡すとプール（p_heal: 終盤の前は癒やしの水、終盤から癒やしの霊水。オーナー 2026-09-28「全回復系は基本終盤から」）
+  const REGION = (seed) => ({ normal: { pool: 'p_boss', rate: 1 }, bonus: /^p_/.test(seed) ? { pool: seed, rate: 1 } : { item: seed, rate: 1 } });
   const CONSTRUCT_PHYS = { slash: 0.75, blunt: 1.5, pierce: 0.75 };
   const CONSTRUCT_RES = { poison: 1, sleep: 1, confuse: 1, death: 1 };
   const UNDEAD_RES = { poison: 1, death: 1, sleep: 1, confuse: 0.5 };
@@ -108,7 +109,7 @@
       actions: A([['attack', 3], ['eb_root_drain', 2], ['eb_rot_breath', 2, { every: [3, 1] }],
         ['eb_call_roots', 1, { every: [4, 3], countBelow: 3 }], ['eb_body_slam', 2]]),
       phases: [{ hpBelow: 0.5, msg: '根食らいの白い体が、ぬらりと光った！', set: { buffs: { atk: 1 } } }],
-      drops: REGION('i_elixir'),
+      drops: REGION('p_heal'),
       desc: '忘却から生まれ、千年樹の根を\nかじる白い虫。中は空っぽだ。',
     },
     b_root: {
@@ -138,7 +139,7 @@
       actions: A([['attack', 2], ['eb_steal_name', 2], ['eb_king_sand', 2],
         ['eb_raise_guard', 1, { every: [4, 2], countBelow: 3 }], ['eb_withering', 2]]),
       phases: [{ hpBelow: 0.4, msg: '王の顔の包帯がほどけ、\nうつろな目がのぞいた……。', set: { buffs: { atk: 1, mag: 1 } } }],
-      drops: REGION('i_elixir'),
+      drops: REGION('p_heal'),
       desc: '名を砂の精霊に差し出した王。\n忘れられた名を探してさまよう。',
     },
 
@@ -160,7 +161,7 @@
       actions: A([['attack', 2], ['eb_white_blizzard', 2], ['eb_ice_claw', 2], ['eb_dragon_tail', 2],
         ['eb_frozen_roar', 1, { every: [4, 1] }], ['eb_glacier_fall', 2, { hpBelow: 0.5 }]]),
       phases: [{ hpBelow: 0.5, msg: '白竜の胸の氷に、ひびが入った！', set: { elem: { fire: 1.5 } } }],
-      drops: REGION('i_elixir'),
+      drops: REGION('p_heal'),
       desc: '北の峰で吹雪を鎮めてきた白竜。\n忘却に心が凍りついている。',
     },
 
@@ -205,7 +206,7 @@
       actions: A([['attack', 2], ['eb_mist_hand', 2], ['eb_mist_breath', 2],
         ['eb_call_double', 1, { every: [4, 1], countBelow: 3 }], ['eb_witch_mimic', 2], ['eb_inhale_mist', 1, { every: [4, 3] }]]),
       phases: [{ hpBelow: 0.5, msg: '霧が薄れて、\n霧食らいの本当の口がのぞいた！', set: { phys: { slash: 1, blunt: 1, pierce: 1 } } }],
-      drops: REGION('i_elixir'),
+      drops: REGION('p_heal'),
       desc: '鐘の音が絶えた沼の霧の魔物。\n魔女の姿をまねて人をさらう。',
     },
     b_mist_double: {
@@ -244,7 +245,7 @@
       actions: A([['attack', 2], ['eb_cutlass', 2], ['eb_fire_volley', 2], ['eb_ghost_shanty', 1, { every: [4, 2] }],
         ['eb_call_crew', 1, { every: [4, 0], countBelow: 3 }], ['eb_anchor_throw', 1]]),
       phases: [{ hpBelow: 0.5, msg: '船長の目に、かすかな光が戻った……。', set: { buffs: { atk: 1 } } }],
-      drops: REGION('i_elixir'),
+      drops: REGION('p_heal'),
       desc: '嵐の海に消えた船長の亡霊。\n霧の夜に船を岩礁へ誘う。',
     },
 
@@ -267,7 +268,7 @@
         { hpBelow: 0.75, msg: '鉄の番人が、完全に目を覚ました！', set: { actsPerTurn: 2 } },
         { hpBelow: 0.3, msg: '炉心が赤く燃え上がった！\n鎧のすき間から湯気が噴く！', set: { elem: { water: 2 }, buffs: { atk: 1 } } },
       ],
-      drops: REGION('i_elixir'),
+      drops: REGION('p_heal'),
       desc: '七の層の下で眠っていた番人。\n胸の炉が燃えると手に負えない。',
     },
 
@@ -291,7 +292,7 @@
         hpBelow: 0.5, msg: '溶岩が冷えて、黒い岩に固まった！',
         set: { elem: { fire: 0.5, water: 1, wind: 1.5, earth: 0.25 }, buffs: { def: 2, agi: -1 }, sprite: 'b_lavabeast_cold' },
       }],
-      drops: REGION('i_elixir'),
+      drops: REGION('p_heal'),
       desc: '守り手を失った山の火が、\n獣の形になって暴れている。',
     },
 
@@ -311,7 +312,7 @@
       elem: { light: 1.5, dark: 0.25 }, statusRes: { death: 0.8 },
       actions: A([['attack', 2], ['eb_swallow_star', 2, { every: [3, 2] }], ['eb_star_spit', 2], ['eb_void_fang', 2], ['eb_dark_nova', 2]]),
       phases: [{ hpBelow: 0.5, msg: '飲みこんだ星が、腹の中で光っている……！', set: { elem: { light: 2 } } }],
-      drops: REGION('i_elixir'),
+      drops: REGION('p_heal'),
       desc: '名を失った星を食べる闇の獣。\n腹の中で星がかすかに光る。',
     },
 
@@ -376,7 +377,7 @@
       actions: A([['attack', 1], ['eb_white_book', 2], ['eb_erase_memory', 2], ['eb_silver_quill', 3],
         ['eb_page_shield', 1, { hpBelow: 0.7, once: true }], ['eb_call_scribes', 1, { every: [4, 2], countBelow: 3 }]]),
       phases: [{ hpBelow: 0.5, msg: 'ラザロの手が、かすかに震えている……。', set: { actsPerTurn: 2 } }],
-      drops: REGION('i_elixir'),
+      drops: REGION('p_heal'),
       desc: '記録院の長。すべてを忘れれば、\n悲しみも消えると信じている。',
     },
     b_nemrea1: {
