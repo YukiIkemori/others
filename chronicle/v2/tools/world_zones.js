@@ -7,6 +7,7 @@
 //   2. そのマスで最初に合う出現表の地方が違えば、正しい地方の条件の無い出現表で、そのマスを含む物（無ければいちばん近い物）に付け替える。
 //      条件つきの表（隊商など）は、条件が付いた時と外れた時の両方で見る。
 //   3. 付け替えるマスを四角にまとめて zones の先頭に置く（同じ入力なら同じ出力）。
+//   4. 地名（meta.areas）も同じに: 地方全体の名前の箱（灰の荒野など）が他の地方の地面にかかる所に、正しい地方の名前の写しを先頭に置く。
 'use strict';
 
 const ORDER = ['green', 'snow', 'desert', 'marsh', 'ash'];
@@ -151,28 +152,89 @@ function fit(A) {
   const patched = new Uint8Array(W * H);
   for (const p of A.tilePatches || []) { const [px, py, pw, ph] = p.rect; for (let j = 0; j < ph; j++) for (let i = 0; i < pw; i++) if (px + i < W && py + j < H) patched[(py + j) * W + px + i] = 1; }
   const same = (x, y, zid) => { const a = firstZone(zones, x, y, false), b = firstZone(zones, x, y, true); return a && b && a.zone === zid && b.zone === zid; };
-  const added = [];
   const zids = [...want.keys()].sort((a, b) => ORDER.indexOf(zoneRegion(a)) - ORDER.indexOf(zoneRegion(b)) || (a < b ? -1 : a > b ? 1 : 0));
+  const added = [];
   for (const zid of zids) {
-    const S = want.get(zid), done = new Set();
     // 四角に入れてよいマス: 付け替えるマス・歩けないマス（条件で変わらない）・もうこの表のマス
-    const okAt = (x, y) => x >= 0 && y >= 0 && x < W && y < H && (S.has(y * W + x) || (!walkOf(LEGEND, rows[y][x]) && !patched[y * W + x]) || same(x, y, zid));
-    const keys = [...S].sort((a, b) => a - b);
-    for (const k of keys) {
-      if (done.has(k)) continue;
-      const x0 = k % W, y0 = (k / W) | 0;
-      let x1 = x0; while (okAt(x1 + 1, y0)) x1++;
-      let y1 = y0;
-      for (;;) { let all = true; for (let x = x0; x <= x1; x++) if (!okAt(x, y1 + 1)) { all = false; break; } if (!all) break; y1++; }
-      // 付け替えるマスの外枠まで縮める
-      let bx0 = x1, bx1 = x0, by0 = y1, by1 = y0;
-      for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (S.has(y * W + x)) { done.add(y * W + x); bx0 = Math.min(bx0, x); bx1 = Math.max(bx1, x); by0 = Math.min(by0, y); by1 = Math.max(by1, y); }
-      added.push({ rect: [bx0, by0, bx1 - bx0 + 1, by1 - by0 + 1], zone: zid });
-    }
+    const S = want.get(zid);
+    const okAt = (x, y) => S.has(y * W + x) || (!walkOf(LEGEND, rows[y][x]) && !patched[y * W + x]) || same(x, y, zid);
+    for (const rect of mergeRects(W, H, S, okAt)) added.push({ rect, zone: zid });
   }
   zones.unshift(...added);
   const after = scan(rows, LEGEND, zones, T);
+  return { before, after, added, T, patched };
+}
+
+/** マスの集合 S（y * W + x）を四角にまとめる。okAt のマスは四角に入ってよい（行ごとに右へ、それから下へ伸ばして、S の外枠まで縮める） */
+function mergeRects(W, H, S, okAt) {
+  const ok = (x, y) => x >= 0 && y >= 0 && x < W && y < H && okAt(x, y);
+  const out = [], done = new Set();
+  for (const k of [...S].sort((a, b) => a - b)) {
+    if (done.has(k)) continue;
+    const x0 = k % W, y0 = (k / W) | 0;
+    let x1 = x0; while (ok(x1 + 1, y0)) x1++;
+    let y1 = y0;
+    for (;;) { let all = true; for (let x = x0; x <= x1; x++) if (!ok(x, y1 + 1)) { all = false; break; } if (!all) break; y1++; }
+    let bx0 = x1, bx1 = x0, by0 = y1, by1 = y0;
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (S.has(y * W + x)) { done.add(y * W + x); bx0 = Math.min(bx0, x); bx1 = Math.max(bx1, x); by0 = Math.min(by0, y); by1 = Math.max(by1, y); }
+    out.push([bx0, by0, bx1 - bx0 + 1, by1 - by0 + 1]);
+  }
+  return out;
+}
+
+// ------------------------------------------------------------------ 地名（meta.areas、HUD の左上の札。上から最初に合う物）
+// 地方全体の名前の箱だけを直す（町のまわり・名所・峠などの小さな地名はそのまま）。名前 → 地方
+const AREA_REGION = {
+  'ファロス半島': 'green', '北の野': 'green', 'ヴェルダの森': 'green',
+  'ノルデン雪原': 'snow', '北の流氷原': 'snow', 'ザハラ砂漠': 'desert', 'グレイモア湿原': 'marsh', '灰の荒野': 'ash',
+};
+const areaRegion = (a) => (a && AREA_REGION[a.name]) || null;
+function firstArea(areas, x, y) { for (const a of areas) if (inRect(x, y, a.rect)) return a; return null; }
+
+/** 地名の食い違い（地方の名前の箱が最初に合うマスで、地面の地方と違う物） */
+function scanAreas(rows, LEGEND, areas, T) {
+  T = T || terrainRegions(rows, LEGEND);
+  const { W, H, reg } = T;
+  const pairs = {}, bad = [];
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    if (!walkOf(LEGEND, rows[y][x])) continue;
+    const t = reg[y * W + x];
+    if (t < 0) continue;
+    const a = firstArea(areas, x, y), ar = areaRegion(a);
+    if (!ar || ar === ORDER[t]) continue;
+    const k = ar + ' over ' + ORDER[t];
+    pairs[k] = (pairs[k] || 0) + 1; bad.push([x, y, a.name, ORDER[t]]);
+  }
+  return { pairs, bad };
+}
+
+/** 地名を地形に合わせる。areas をその場で直し（正しい地方の名前の箱の写しを先頭に）、{ before, after, added } を返す */
+function fitAreas(A) {
+  const { rows, LEGEND, areas } = A;
+  const T = A.T || terrainRegions(rows, LEGEND);
+  const { W, H } = T;
+  const before = scanAreas(rows, LEGEND, areas, T);
+  const big = areas.filter((a) => areaRegion(a));
+  const rectDist = (x, y, r) => { const dx = Math.max(r[0] - x, 0, x - (r[0] + r[2] - 1)), dy = Math.max(r[1] - y, 0, y - (r[1] + r[3] - 1)); return dx * dx + dy * dy; };
+  const want = new Map();
+  for (const [x, y, , tr] of before.bad) {
+    let best = null, bd = Infinity;
+    for (const a of big) { if (areaRegion(a) !== tr) continue; const d = rectDist(x, y, a.rect); if (d < bd) { bd = d; best = a; if (!d) break; } }
+    if (!best) continue;
+    if (!want.has(best)) want.set(best, new Set());
+    want.get(best).add(y * W + x);
+  }
+  const patched = A.patched || new Uint8Array(W * H);
+  const added = [];
+  const list = [...want.keys()].sort((a, b) => areas.indexOf(a) - areas.indexOf(b));
+  for (const a of list) {
+    const S = want.get(a);
+    const okAt = (x, y) => { if (S.has(y * W + x)) return true; if (!walkOf(LEGEND, rows[y][x]) && !patched[y * W + x]) return true; const f = firstArea(areas, x, y); return !!f && f.name === a.name; };
+    for (const rect of mergeRects(W, H, S, okAt)) added.push(Object.assign({ rect }, a.sub != null ? { name: a.name, sub: a.sub } : { name: a.name }));
+  }
+  areas.unshift(...added);
+  const after = scanAreas(rows, LEGEND, areas, T);
   return { before, after, added };
 }
 
-module.exports = { ORDER, zoneRegion, charRegion, terrainRegions, firstZone, scan, fit };
+module.exports = { ORDER, zoneRegion, charRegion, terrainRegions, firstZone, scan, fit, mergeRects, AREA_REGION, areaRegion, firstArea, scanAreas, fitAreas };

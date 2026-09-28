@@ -91,7 +91,9 @@
     const m = S.map;
     if (!m || !m.meta || !m.meta.areas) return;
     const ar = areaAt(m, S.x, S.y);
-    if (S.hud && ar !== S.hud.area) { H.refresh(); S.placeT0 = R.Engine.time; }
+    // 同じ名前の別の四角（地形に合わせて付け替えた所、tools/world_zones.js）に移っただけなら札を出し直さない
+    const nm = (a) => (a ? a.name + '\n' + (a.sub || '') : '');
+    if (S.hud && nm(ar) !== nm(S.hud.area)) { H.refresh(); S.placeT0 = R.Engine.time; }
   };
 
   /** 場所の札を出している強さ 0〜1（入ったとき 2.4 秒、ダンジョンは常に） */

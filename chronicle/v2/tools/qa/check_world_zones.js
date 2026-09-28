@@ -1,11 +1,14 @@
 #!/usr/bin/env node
-// QA: ワールドの出現表が地面の地方に合っているか（node だけ）。tools/world_zones.js と同じ地方の分け方で数える。
+// QA: ワールドの出現表と地名が地面の地方に合っているか（node だけ）。tools/world_zones.js と同じ地方の分け方で数える。
 //
 //   node v2/tools/qa/check_world_zones.js [--verbose]
 //
 // 1. 歩けるワールドのマスで、最初に合う出現表の地方（緑・雪・砂漠・湿原・灰）が地面の地方と同じ。条件つきの表（隊商など）は付いた時と外れた時の両方。
 //    境の 2 マスまでは許す（出現表の地方の素材が 2 マス以内にあれば良し）。出現表の無いマス（閉じた山地など）は見ない。
-// 2. 灯台の岬（灯台の前から続く緑の地面）と、ロア → ファロス → 灯台の道: 序章か半島の表だけで、背景は海辺か森（灰・火山にならない）。
+// 2. 地名（meta.areas、HUD の左上の札）: 地方全体の名前（灰の荒野・ザハラ砂漠など）が最初に合うマスで、その地方が地面の地方と同じ（境 2 マスまで）。
+//    町のまわり・名所・峠などの小さな地名は見ない。
+// 3. 灯台の岬（灯台の前から続く緑の地面）と、ロア → ファロス → 灯台の道: 序章か半島の表だけで、背景は海辺か森（灰・火山にならない）。
+//    札の地名は緑の地方の名前（ファロス半島など）か小さな地名で、灰の荒野にならない。
 'use strict';
 const { ok, section, done } = require('../lib/testkit');
 const WZ = require('../world_zones');
@@ -38,7 +41,16 @@ ok(`地方の決まらないマスは少ない（${S.unknown}）`, S.unknown < 5
 const unknownZ = [...new Set(m.zones.map((z) => z.zone))].filter((id) => !E[id]);
 ok('出現表の id はどれも R.DB.encounters にある', unknownZ.length === 0, unknownZ);
 
-section('2. 灯台の岬とロア → ファロス → 灯台の道');
+section('2. 地名と地面の地方');
+const areas = (m.meta && m.meta.areas) || [];
+const SA = WZ.scanAreas(m.rows, m.legend, areas, T);
+const offA = SA.bad.filter(([x, y, name]) => !near(x, y, WZ.AREA_REGION[name], 2));
+const pairsA = {};
+for (const [, , name, tr] of offA) { const k = name + ' over ' + tr; pairsA[k] = (pairsA[k] || 0) + 1; }
+if (VERBOSE) console.log({ areas: areas.length, raw: SA.pairs });
+ok('地方全体の地名が地面の地方と同じ（境 2 マスまで）', offA.length === 0, { pairs: pairsA, at: offA.slice(0, 6) });
+
+section('3. 灯台の岬とロア → ファロス → 灯台の道');
 const GOOD = new Set(['zw_prologue', 'zw_peninsula']);
 const bgOf = (zid) => (E[zid] && E[zid].bg) || m.bbg || 'forest';
 const zoneAt = (x, y, on) => { const z = WZ.firstZone(m.zones, x, y, on); return z && z.zone; };
@@ -47,6 +59,15 @@ const bad = (cells) => {
   for (const [x, y] of cells) for (const on of [false, true]) {
     const zid = zoneAt(x, y, on);
     if (!GOOD.has(zid) || !/^(coast|forest)$/.test(bgOf(zid))) { out.push([x, y, zid, bgOf(zid)]); break; }
+  }
+  return out;
+};
+// 札の地名: 最初に合う地名が緑の地方の名前か、地方の名前でない小さな地名（灰・砂漠・雪・湿原の地方の名前は×）
+const badName = (cells) => {
+  const out = [];
+  for (const [x, y] of cells) {
+    const a = WZ.firstArea(areas, x, y), r = WZ.areaRegion(a);
+    if (!a || (r && r !== 'green')) out.push([x, y, a && a.name]);
   }
   return out;
 };
@@ -69,6 +90,8 @@ const cape = [], seen = new Uint8Array(W * H);
 ok(`岬の緑の地面 ${cape.length} マス（灯台のまわり）`, cape.length > 500);
 const capeBad = bad(cape);
 ok('岬は序章か半島の表だけ、背景は海辺か森（灰・火山にならない）', capeBad.length === 0, capeBad.slice(0, 6));
+const capeName = badName(cape);
+ok('岬の札の地名は緑の地方（灰の荒野にならない）', capeName.length === 0, capeName.slice(0, 6));
 // 道: 歩けるマスの最短の道（4 方向）
 function path(a, b) {
   const prev = new Int32Array(W * H).fill(-1), q = [a.y * W + a.x]; prev[q[0]] = q[0];
@@ -92,5 +115,7 @@ for (const [a, b] of [['roa', 'pharos'], ['pharos', 'lighthouse']]) {
   if (!p) continue;
   const pb = bad(p);
   ok(`${a} → ${b} の道 ${p.length} マスは序章か半島の表、背景は海辺か森`, pb.length === 0, pb.slice(0, 6));
+  const pn = badName(p);
+  ok(`${a} → ${b} の道の札の地名は緑の地方`, pn.length === 0, pn.slice(0, 6));
 }
 done('check_world_zones');

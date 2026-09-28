@@ -578,6 +578,8 @@ if (WORLD_K > 1) {
 // --- 出現表を地形に合わせる（tools/world_zones.js）。地方の箱の角が隣の地方にかかっていた所（灯台の岬の草地に灰の荒野の魔物と火山の背景など）を、
 //   地面の地方の出現表に付け替えて zones の先頭に置く。地面は変えない。qa/check_world_zones.js が同じ決まりで見る
 const ZFIT = require('./world_zones').fit({ rows: g, LEGEND, zones, tilePatches });
+//   地名（meta.areas）も同じ決まりで: 地方全体の名前の箱の角が隣の地方にかかる所（灯台の岬の「灰の荒野」など）に、地面の地方の名前を先頭に置く
+const AFIT = require('./world_zones').fitAreas({ rows: g, LEGEND, areas, T: ZFIT.T, patched: ZFIT.patched });
 /** L のマス → W のマス、W のマス → L のマス（倍率 1 ならそのまま） */
 const cW = (x, y) => (XFORM ? XF.cell(XFORM, x, y) : [x, y]);
 const cL = (x, y) => (XFORM ? XF.lcell(XFORM, x, y) : [x, y]);
@@ -737,6 +739,8 @@ function check() {
   info.emptyRoad = empty; if (empty) info.emptyAt = emptyAt;
   if (SCALE) { const si = SCALE.info; info.scale = { K: WORLD_K, W, H, cores: si.cores, islands: si.islands, groups: si.groups, droppedDecor: si.droppedDecor }; info.poi = SCALE.poi; }
   info.zoneFit = { before: ZFIT.before.pairs, added: ZFIT.added.length };   // 出現表の付け替え（地面の地方と違ったマスの数）
+  info.areaFit = { before: AFIT.before.pairs, added: AFIT.added.length };   // 地名の付け替え
+  for (const k of Object.keys(AFIT.after.pairs)) errs.push('area name over other terrain: ' + k + ' ' + AFIT.after.pairs[k]);
   for (const k of Object.keys(ZFIT.after.pairs)) errs.push('zone over other terrain: ' + k + ' ' + ZFIT.after.pairs[k]);
   info.objects = objects.length; info.npcs = npcs.length; info.lamps = objects.filter((o) => o.type === 'waylamp').length;
   return { errs, info };
