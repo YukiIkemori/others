@@ -86,7 +86,7 @@
   // 渡す先（届け物の相手・報告の相手）には出さない（受けた依頼の数だけ町じゅうに出てうるさい。行き先は手がかり帳と目印が示す）。
   //   どの依頼か: 話す台本（def.talk の events）の meta.gives の 'lead:<id>'（meta.calls の台本も 1 段だけ）。
   //     地図の人の def.quest で上書き（id か id の配列。false なら出さない）
-  //   今くれるか: まだ聞いていない・解決の条件（DB.leads[id].done）がまだ偽・Leads.locked でない（slice:'locked'・体験版で行けない地方）・hideWhen が偽・
+  //   今くれるか: まだ聞いていない・解決の条件（DB.leads[id].done）がまだ偽・slice:'locked' でない・hideWhen が偽・
   //     台本の meta.needs（flag: / item: / cleared: だけ読む。ほかは読まずに真）が真・手がかりの offer（条件。台本の中の分かれ道で
   //     まだ話を出さない間、たとえば灯台が戻るまでのタデオ）が真
   const offerInfo = new WeakMap();   // 台本 → {leads: [id], needs: cond[]}（台本の中身は変わらないので 1 回だけ読む）
@@ -134,7 +134,7 @@
   /** 依頼 id を今くれるか（受けていない・解けていない・条件が真） */
   Leads.offerable = function (id) {
     const g = G(), d = def(id);
-    if (!g || !d || d.kind !== 'side' || Leads.locked(d)) return false;
+    if (!g || !d || d.kind !== 'side' || d.slice === 'locked') return false;
     if (g.leads[id]) return false;
     if (d.done != null && d.done !== false && R.State.check(d.done)) return false;   // 聞く前に解けた（先に井戸の底を見た、など）
     if (d.hideWhen != null && R.State.check(d.hideWhen)) return false;
