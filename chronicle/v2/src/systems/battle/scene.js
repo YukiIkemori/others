@@ -701,7 +701,15 @@
       };
       let covered = null;
       try { covered = _.trans.cover({ boss: heavy }); } catch (e) { console.error('[battle trans]', e); covered = null; }
-      if (covered) covered.then(go, go); else go();
+      // 描いた戦闘背景は使う時に読む（TERRAIN Env）: 移りの間に読み終えるのを待ち（上限 2.5 秒）、読めたら描いた絵で焼き直す
+      let bgWait = null;
+      try {
+        const E = R.Terrain && R.Terrain.Env, bk = bgKey(st);
+        if (bk && E && E.awaitBbg && E.bbg && !E.bbg(bk.slice(7))) {
+          bgWait = E.awaitBbg(bk.slice(7), 2500).then(() => { try { if (R.Hd.has(bk) && !R.Hd.ready(bk, bgOpts())) R.Hd.now(bk, bgOpts()); } catch (e) { console.error('[battle bg]', e); } });
+        }
+      } catch (e) { bgWait = null; }
+      if (covered || bgWait) Promise.all([covered, bgWait]).then(go, go); else go();
     });
   };
 })(window.RPG);

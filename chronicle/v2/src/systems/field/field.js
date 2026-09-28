@@ -104,6 +104,8 @@
       // 暗くなる間に、行き先の見える範囲を焼き始める（歩いている間に始めていればその続き。§2.10）
       if (onStack && S.map !== map) F.chunks.preload(mapId, spawn);
       if (onStack && fade) await R.Engine.fadeTo(1, fade / 2);
+      // 描いた下絵（map.art）は使う時に読む: 暗転の中（場面を積む前）で読み終えるのを待つ（最初の 1 枚からタイルの控えを出さない。上限 4 秒）
+      try { const E = R.Terrain && R.Terrain.Env; if (map.art && E && E.awaitMap) S.stat.artWait = await E.awaitMap(map, F._tile(), 4000); } catch (e) { /* 読めなければタイルのまま */ }
       if (S.map) R.emit('map:leave', { map: S.map.id });
       const from = S.map ? S.map.id : null;
       const sp = R.MapUtil.spawn(map, spawn);

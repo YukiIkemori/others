@@ -7,7 +7,8 @@ dist（node v2/tools/build.js の外置きの版）から、次の形の写し�
   index.html               遊ぶ版（RPG_MEDIA をまとめた版に書き換える）
   bgm/<id>.ogg             BGM はそのまま（1 曲 1 ファイル）
   title/<id>.webp|png      タイトルの一枚絵はそのまま（webp。png は読めないときの代わり）
-  env/atlas_NN.webp        地形・戦闘背景の画像を地図帳にまとめる（WebP 可逆・exact。{url, rect, meta}）
+  env/<group>_NN.webp      地形・戦闘背景の画像を組ごとの地図帳にまとめる（WebP 可逆・exact。{url, rect, meta}）。
+                           組 = 下絵はマップ 1 枚×マスの大きさ、戦闘背景は 1 つ、ほかはテーマ×マスの大きさ（env_group。使う時に組だけ読む）
   sprites/atlas_NN.webp    CAST の原画も同じ
   voice/pack_NN.ogg        ボイスは Ogg をつないだ（chained Ogg）ファイルにまとめる（{url, off, len}）
   publish_batches.json     ファイルと大きさの一覧と、1 回の公開（64 MB・255 本まで）ごとの組
@@ -65,41 +66,63 @@ def shelf_pack(items, page):
     return pages
 
 
-def pack_images(kind, table, dist, out, page):
-    """table: {id: {url, meta}} → 新しい table（{url, rect, meta}）"""
+def env_group(key):
+    """env の画像の組（1 つの組 = 1 つ以上の地図帳のファイル。組ごとに別々に読める）
+    下絵（<theme>/under/<name>[_over|_emit|_closed]@<tile>）: マップ 1 枚・マスの大きさ 1 つごと（入るときにその組だけ読む）
+    戦闘背景（bbg/<id>/<layer>）: 背景 1 つごと（使う時に読む）
+    ほか（素材・物・建物）: テーマとマスの大きさごと（起動では今のマスの大きさの分だけ読む）"""
+    parts = key.split('/')
+    if parts[0] == 'bbg':
+        return 'bbg_' + parts[1]
+    m = re.match(r'^(.*?)(?:_(?:over|emit|closed))?@(\d+)$', parts[-1])
+    if len(parts) >= 3 and parts[1] == 'under' and m:
+        return f'u_{parts[0]}_{m.group(1)}_{m.group(2)}'
+    t = re.search(r'@(\d+)$', key)
+    return f'{parts[0]}_{t.group(1) if t else "x"}'
+
+
+def pack_images(kind, table, dist, out, page, group=None):
+    """table: {id: {url, meta}} → 新しい table（{url, rect, meta}）。group(key) を渡すと組ごとに別の地図帳（名前に組の名前）"""
     os.makedirs(os.path.join(out, kind), exist_ok=True)
     imgs = {}
     for k, e in table.items():
         im = Image.open(os.path.join(dist, bare(e['url'])))
         im.load()
         imgs[k] = im.convert('RGBA')
-    pages = shelf_pack([(k, im.width, im.height) for k, im in imgs.items()], page)
-    new, names = {}, []
-    for i, pg in enumerate(pages):
-        pw = max(x + w for _, x, _, w, _ in pg)
-        ph = max(y + h for _, _, y, _, h in pg)
-        sheet = Image.new('RGBA', (pw, ph), (0, 0, 0, 0))
-        for k, x, y, w, h in pg:
-            sheet.paste(imgs[k], (x, y))
-        tmp = os.path.join(out, f'{kind}/atlas_{i:02d}.tmp.webp')
-        sheet.save(tmp, 'WEBP', lossless=True, exact=True, quality=100, method=4)
-        name = hashed_name(f'{kind}/atlas_{i:02d}.webp', open(tmp, 'rb').read())
-        os.replace(tmp, os.path.join(out, name))
-        names.append(name)
-        for k, x, y, w, h in pg:
-            e = dict(table[k])
-            e['url'] = name
-            e['rect'] = [x, y, w, h]
-            new[k] = e
+    groups = {}
+    for k in imgs:
+        groups.setdefault(group(k) if group else 'atlas', []).append(k)
+    new, sheets = {}, []
+    for gname in sorted(groups):
+        ks = groups[gname]
+        pg_size = max([page] + [max(imgs[k].width, imgs[k].height) for k in ks])
+        pages = shelf_pack([(k, imgs[k].width, imgs[k].height) for k in ks], pg_size)
+        for i, pg in enumerate(pages):
+            pw = max(x + w for _, x, _, w, _ in pg)
+            ph = max(y + h for _, _, y, _, h in pg)
+            sheet = Image.new('RGBA', (pw, ph), (0, 0, 0, 0))
+            for k, x, y, w, h in pg:
+                sheet.paste(imgs[k], (x, y))
+            base = f'{kind}/{gname}_{i:02d}.webp' if group else f'{kind}/atlas_{len(sheets):02d}.webp'
+            tmp = os.path.join(out, base + '.tmp')
+            sheet.save(tmp, 'WEBP', lossless=True, exact=True, quality=100, method=4)
+            name = hashed_name(base, open(tmp, 'rb').read())
+            os.replace(tmp, os.path.join(out, name))
+            sheets.append((name, pg))
+            for k, x, y, w, h in pg:
+                e = dict(table[k])
+                e['url'] = name
+                e['rect'] = [x, y, w, h]
+                new[k] = e
     # 切り出しが元の画像と 1 画素も違わないこと（exact: 透明な画素の色も残す）
-    for i in range(len(pages)):
-        sheet = Image.open(os.path.join(out, names[i])).convert('RGBA')
-        for k, x, y, w, h in pages[i]:
+    for name, pg in sheets:
+        sheet = Image.open(os.path.join(out, name)).convert('RGBA')
+        for k, x, y, w, h in pg:
             a = sheet.crop((x, y, x + w, y + h))
             b = imgs[k]
             if a.tobytes() != b.tobytes():
                 raise SystemExit(f'{kind} {k}: pixels differ after packing')
-    return new, len(pages)
+    return new, len(sheets)
 
 
 def pack_voice(table, dist, out, chunk):
@@ -164,7 +187,7 @@ def main():
     counts = {}
     for kind in ('env', 'sprites', 'monsters'):
         if media.get(kind):
-            new[kind], counts[kind] = pack_images(kind, media[kind], dist, out, a.page)
+            new[kind], counts[kind] = pack_images(kind, media[kind], dist, out, a.page, env_group if kind == 'env' else None)
     if media.get('voice'):
         new['voice'], counts['voice'] = pack_voice(media['voice'], dist, out, int(a.voice_pack_mb * 1000 * 1000))
     table = json.dumps(new, ensure_ascii=False, separators=(',', ':'))

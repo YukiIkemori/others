@@ -13,14 +13,12 @@
   'use strict';
   const blobUrls = {};
   const images = {};
-  const atlases = {};   // url → {img, ready, failed, promise, left}（切り出しが済んだら画像を手放す）
+  const atlases = {};   // url → {img, ready, failed, promise, pending}（頼まれた切り出しが済んだら地図帳を手放す。あとで別の部分を頼まれたら読み直す）
   const packs = {};     // url → Promise<ArrayBuffer>
   function atlas(kind, url) {
     let a = atlases[url];
     if (a) return a;
-    a = atlases[url] = { img: new Image(), ready: false, failed: false, promise: null, left: 0 };
-    const t = table()[kind] || {};
-    for (const k of Object.keys(t)) if (t[k] && t[k].url === url && t[k].rect) a.left++;
+    a = atlases[url] = { img: new Image(), ready: false, failed: false, promise: null, pending: 0 };
     a.promise = new Promise((res) => {
       a.img.onload = () => { a.ready = true; res(a); };
       a.img.onerror = () => { a.failed = true; res(a); };
@@ -103,10 +101,13 @@
         c.width = w; c.height = h;
         const rec = { img: c, ready: false, failed: false, meta: e.meta || null, promise: null };
         const a = atlas(kind, url);
+        a.pending++;
         rec.promise = a.promise.then(() => {
-          if (a.failed) { rec.failed = true; return rec; }
-          try { c.getContext('2d').drawImage(a.img, x, y, w, h, 0, 0, w, h); rec.ready = true; } catch (err) { rec.failed = true; }
-          if (--a.left <= 0) { a.img = null; }
+          if (a.failed) { rec.failed = true; } else {
+            try { c.getContext('2d').drawImage(a.img, x, y, w, h, 0, 0, w, h); rec.ready = true; } catch (err) { rec.failed = true; }
+          }
+          // 待っている切り出しが無くなったら地図帳の画像を手放す（展開した地図帳を持ち続けない）
+          if (--a.pending <= 0) { a.img = null; if (atlases[url] === a) delete atlases[url]; }
           return rec;
         });
         images[ik] = rec;
@@ -120,6 +121,13 @@
       rec.img.src = url;
       images[ik] = rec;
       return rec;
+    },
+    /** 読んだ画像を手放す（覚えを消すだけ。使っている所が無くなれば GC が展開した画素を返す。次に image() で読み直す） */
+    release(key, kind) {
+      const ik = (kind || 'portraits') + '|' + key;
+      if (!images[ik]) return false;
+      delete images[ik];
+      return true;
     },
     /** 画像をまとめて先に読む（CAST が R.onBoot で sprites を読む用）。→ Promise<読めた数>。失敗しても解決する */
     preload(kind, keys) {

@@ -177,6 +177,9 @@
     const m = R.DB.maps[mapId];
     if (!m || !S.map || m === S.map || !canBake()) return null;
     const tile = F._tile();
+    // 描いた下絵がまだ読めていない: 読み始めるだけ（タイルで焼いた物を入ったときに使い回さない。次の一歩でまた来る）
+    const Env = R.Terrain && R.Terrain.Env;
+    if (m.art && Env && Env.mapReady && !Env.mapReady(m, tile)) return null;
     const sp = R.MapUtil.spawn(m, spawn);
     const key = m.id + ':' + tile + ':' + sp.x + ',' + sp.y;
     if (S.pre && S.pre.key === key) return S.pre;

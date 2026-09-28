@@ -33,7 +33,9 @@
   function painted(m) {
     const a = m.art, E = R.Terrain && R.Terrain.Env;
     if (!a || !a.image || !E || !E.under) return null;
-    for (const t of [F._tile ? F._tile() : 32, 24, 32, 40]) { const u = E.under(a.image, t); if (u && u.img) return u.img; }
+    // 今のマスの大きさは読み始める。ほかの大きさは読めている物だけ（全部の大きさを読まない）
+    const t0 = F._tile ? F._tile() : 32;
+    for (const t of [t0, 24, 32, 40]) { const u = E.under(a.image, t, t !== t0); if (u && u.img) return u.img; }
     return null;
   }
   const tileCache = {};
