@@ -33,7 +33,7 @@
       const stats = [];
       let sub = '';
       if (d && this.kind === 'item') {
-        sub = d.slot === 'use' ? (d.use && d.use.field ? 'フィールドでも戦闘でも使える道具' : '戦闘で使う道具') : d.slot === 'key' ? '大事な物' : S.kindLine(d);
+        sub = d.slot === 'use' ? (d.use && d.use.field ? (d.use.battle === false ? 'フィールドで使う道具' : 'フィールドでも戦闘でも使える道具') : '戦闘で使う道具') : d.slot === 'key' ? '大事な物' : S.kindLine(d);
         const N = R.Rules.DIFF_NAMES || {};
         for (const k of RAW) if (d[k]) stats.push([N[k] || k, d[k]]);
         for (const k of Object.keys(d.stats || {})) if (d.stats[k]) stats.push([N[k] || k, (d.stats[k] > 0 ? '+' : '') + d.stats[k]]);

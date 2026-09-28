@@ -746,8 +746,7 @@
         case 'item': {
           const it = DB.items[cmd.id];
           if (!it || !it.use) return;
-          const r = yield* this.useAction(u, cmd.id, it.use, cmd.target, { item: it });
-          if (u.isParty && it.stone && r.done) yield* this.trainAfter(u, { kind: 'spell', stone: it.stone, id: cmd.id }, r);
+          yield* this.useAction(u, cmd.id, it.use, cmd.target, { item: it });
           return;
         }
       }
@@ -768,9 +767,6 @@
       } else if (cmd.type === 'spell') {
         const a = ACT(cmd.id);
         if (a && !this.unusable(u, cmd.id) && this.targets(u, a, cmd.target).length) ctx = { kind: 'spell', elements: (a.elements || []).slice(), used: cmd.id };
-      } else if (cmd.type === 'item') {
-        const it = DB.items[cmd.id];
-        if (it && it.stone && this.count(cmd.id) > 0) ctx = { kind: 'spell', elements: [it.stone], used: cmd.id, stone: true };
       }
       if (!ctx && !force) return null;
       if (!ctx) ctx = { kind: 'tech', wtype: null, used: cmd.type };
@@ -853,7 +849,7 @@
       if (a.target === 'ally' || a.target === 'ally_any') return this.friends(u).slice().sort((x, y) => x.hpRate() - y.hpRate())[0] || u;
       return null;
     }
-    /** 熟練度: 味方の攻撃・技・術・魔石のたびに R.Rules.train（写しの人に。B.finish が R.Game に写す） */
+    /** 熟練度: 味方の攻撃・技・術のたびに（魔石は術を覚える品になったので伸ばさない） R.Rules.train（写しの人に。B.finish が R.Game に写す） */
     *trainAfter(u, info, r) {
       if (!R.Rules || !R.Rules.train || !r || r.done === false) return;
       const tgt = (r && r.target) || (r && r.targets && r.targets[0]) || null;
@@ -862,8 +858,7 @@
         x.slot = 'weapon1';
         x.wtype = info.act ? info.act.wtype : u.wtype;
       } else {
-        x.elements = info.stone ? [info.stone] : (info.act && info.act.elements) || [];
-        if (info.stone) x.stone = true;
+        x.elements = (info.act && info.act.elements) || [];
       }
       x.mon = tgt && !tgt.isParty ? { lv: tgt.level, rank: this.rankB, boss: tgt.boss } : { lv: this.lv, rank: this.rankB, boss: this.boss };
       let ups = null;

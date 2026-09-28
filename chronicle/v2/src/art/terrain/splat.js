@@ -5,6 +5,9 @@
 // 素材に変化の絵（<id>_b、env の mat）があれば、大きなノイズで A と B をまぜて周期を隠す。
 // 硬い素材（板・橋・石畳など edge:'hard'）が角にある表示のタイルは、今までどおり T._dgTile（dualgrid.js）で描く。
 //
+// 起伏（relief.js、2026-09-28）: T._splatMask があれば画素ごとの水の印（陸 = 水の重み 0〜127、水 = 128 + 陸の重み）を書き、T._splatRS があれば
+//   変化の絵の A・B を日なた・陰に合わせて選ぶ（乾いた尾根・濃い谷）。どちらもチャンクの仕事が地面を焼く間だけ置く。
+//
 //   T._dgSplat(dst, dw, X0, Y0, dx, dy, C, tile) → true（描いた）| false（硬い素材があるので呼んだ側が _dgTile で描く）
 (function (R) {
   'use strict';

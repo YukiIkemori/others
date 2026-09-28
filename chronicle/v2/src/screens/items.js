@@ -44,8 +44,9 @@
       const t = v.tgt;
       const on = t && (t.kind === 'all' ? S.canTarget(t.a, c) : t.i === i);
       const can = !t || S.canTarget(t.a, c);
-      if (tall) S.tallCard(g, c, r, !!on);
-      else S.charCard(g, c, r, { focused: !!on, compact: true, face: ch - u(16), dim: t && !can });
+      const note = t ? S.targetReason(t.a, c) : '';   // 魔石: 「もう覚えている」「術を使えない」
+      if (tall) S.tallCard(g, c, r, !!on, { dim: t && !can, note });
+      else S.charCard(g, c, r, { focused: !!on, compact: true, face: ch - u(16), dim: t && !can, note });
     });
     return rects;
   };
@@ -81,13 +82,19 @@
       const it = S.item(id);
       if (!it || S.count(id) <= 0) { this.tgt = null; return; }
       const ok = targets.filter((c) => S.canTarget(it, c));
-      if (targets.length && !ok.length) { R.UIK.sfx('buzzer'); return; }
+      if (targets.length && !ok.length) {
+        R.UIK.sfx('buzzer');
+        const why = S.targetReason(it, targets[0]);   // 魔石: 使えないわけを出す（品は減らない）
+        if (why) R.UIK.toast(`${targets[0].name}は ${why}`, { anchor: 'bl' });
+        return;
+      }
       const res = S.applyField(it, null, ok);
       if (!res.changed) { R.UIK.sfx('buzzer'); R.UIK.toast('効き目がなかった', { anchor: 'bl' }); return; }
       R.Game.items[id]--;
       if (R.Game.items[id] <= 0) delete R.Game.items[id];
-      R.UIK.sfx('heal');
-      for (const l of res.lines.slice(0, 2)) R.UIK.toast(l, { anchor: 'bl', icon: 'heal' });
+      const learned = (it.use.effects || []).some((e) => e.type === 'learnSpell');
+      R.UIK.sfx(learned ? 'glimmer' : 'heal');
+      for (const l of res.lines.slice(0, 2)) R.UIK.toast(l, { anchor: 'bl', icon: learned ? 'star' : 'heal' });
       if (S.count(id) <= 0) this.tgt = null;
       this.refresh(true);
     },

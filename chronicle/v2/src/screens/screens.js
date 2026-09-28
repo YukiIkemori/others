@@ -249,6 +249,7 @@
     const nw = R.UIK.text(g, c.name, x + tw + u(8), y - u(1), { size: nm, weight: 700, color: dead ? C.disabled : o.focused ? C.goldHi : C.text, maxW: w * 0.5 });
     if (!o.noTitle) R.UIK.text(g, S.title(c), x + tw + u(16) + nw, y + nm * 0.28, { size: u(12.5), color: C.text2, maxW: Math.max(0, w - tw - nw - u(20)) });
     if (dead) R.UIK.chip(g, x + w - u(60), y, '戦闘不能', { kind: 'plain', size: 10, color: C.down });
+    if (o.note) R.UIK.text(g, o.note, x + w, y + (dead ? u(20) : u(1)), { size: u(12), color: C.text3, align: 'right' });   // 選べないわけ（魔石の「もう覚えている」など）
     if (o.extra) o.extra(g, x, y, w);
     y += nm + (o.compact ? u(10) : u(18));
     if (o.hpmp !== false) S.hpmp(g, c, x, y, w, { size: o.compact ? 15 : 16.5, stack: o.stack });
@@ -456,7 +457,8 @@
 
   // ---------------------------------------------------------------- 使う（フィールド）
   // 道具と術のフィールドでの効き目（HP・MP・状態・蘇生・魔除けの香）。数字は R.Rules の式（healF・profPowerMul・mods）から。
-  const FIELD_EFFECTS = ['heal', 'healMp', 'cure', 'revive', 'encounter'];
+  // learnSpell = 魔石（使った仲間がその属性の最初の術を覚える。R.Glimmer.useStone）
+  const FIELD_EFFECTS = ['heal', 'healMp', 'cure', 'revive', 'encounter', 'learnSpell'];
   /** フィールドで使えるか（効き目が全部ここで扱える物） */
   S.fieldUsable = function (a) {
     if (!a) return false;
@@ -494,6 +496,7 @@
         else if (e.type === 'heal' && c.hp > 0) c.hp = Math.min(st.maxHp, c.hp + Math.max(1, Math.floor((e.amount != null ? e.amount : st.maxHp * (e.pct || 0)) * mul)));
         else if (e.type === 'healMp' && c.hp > 0) c.mp = Math.min(st.maxMp, c.mp + Math.max(1, Math.floor(e.amount != null ? e.amount : st.maxMp * (e.pct || 0))));
         else if (e.type === 'cure' && c.hp > 0 && (c.status || []).length) { c.status = []; changed = true; lines.push(c.name + 'の状態が治った。'); }
+        else if (e.type === 'learnSpell' && R.Glimmer && R.Glimmer.useStone) { const r = R.Glimmer.useStone(c, a); if (r.ok) { changed = true; lines.push(r.line); } }
       }
       if (c.hp !== hp0) { changed = true; lines.push(dead ? `${c.name}が起き上がった。` : `${c.name}のHPが ${c.hp - hp0} 回復した。`); }
       if (c.mp !== mp0) { changed = true; lines.push(`${c.name}のMPが ${c.mp - mp0} 回復した。`); }
@@ -505,10 +508,18 @@
     }
     return { changed, lines };
   };
-  /** 相手になれるか（蘇生は倒れた人だけ、ほかは生きている人） */
+  /** 相手になれないわけ（札に出す短い言葉。なれるなら ''）。今は魔石だけ: 「もう覚えている」「術を使えない」 */
+  S.targetReason = function (a, c) {
+    const use = (a && (a.use || a)) || {};
+    if (!c || !(use.effects || []).some((e) => e.type === 'learnSpell') || !R.Glimmer || !R.Glimmer.stoneBlock) return '';
+    return R.Glimmer.stoneBlock(c, a) || '';
+  };
+  /** 相手になれるか（蘇生は倒れた人だけ、魔石は術を覚えられる人（倒れていてもよい）、ほかは生きている人） */
   S.canTarget = function (a, c) {
     const use = a.use || a;
     const t = use.target || '';
+    if (S.targetReason(a, c)) return false;
+    if ((use.effects || []).some((e) => e.type === 'learnSpell')) return true;
     const rev = (use.effects || []).some((e) => e.type === 'revive');
     if (t === 'ally_dead' || (rev && t !== 'allies' && t !== 'party')) return !(c.hp > 0);
     return c.hp > 0;

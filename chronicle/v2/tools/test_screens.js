@@ -142,4 +142,42 @@ section('技・術: 派生で覚えた技は「〇〇から派生」（design/BA
   ok('detail.js adds 「〇〇から派生」 to the sub line of a derived tech', /'から派生'/.test(det) && /derivedFromName/.test(det));
 }
 
+section('魔石: 道具の画面で仲間に使う → その属性の最初の術を覚える');
+{
+  R.Dev.applyState('menus_party');
+  const G2 = R.Game, water = R.DB.items.i_stone_water;
+  ok('water stone is field-usable, one target', S.fieldUsable(water) && S.targetKind(water) === 'one');
+  const who = R.Party.members().find((c) => !(c.spells || []).includes('s_water_1'));
+  const knows = R.Party.members().find((c) => (c.spells || []).includes('s_fire_1'));
+  G2.items.i_stone_water = 2; G2.items.i_stone_fire = 1;
+  const v = Object.assign(Object.create(null), S._defs.items);
+  v.init();
+  S.targetStart(v, water, null, 'i_stone_water');
+  ok('target list: a member who can learn is selectable, no reason', S.canTarget(water, who) && S.targetReason(water, who) === '');
+  v.use([who]);
+  ok('use on a member → knows s_water_1, one stone consumed', who.spells.includes('s_water_1') && G2.items.i_stone_water === 1, [who.spells, G2.items.i_stone_water]);
+  ok('the new spell is in the member’s spell list (the spells screen reads it)', R.Rules.spellList(who).includes('s_water_1') && R.Rules.commandList(who).includes('spell'));
+  ok('the same member is now greyed with 「もう覚えている」', !S.canTarget(water, who) && S.targetReason(water, who) === 'もう覚えている');
+  v.use([who]);
+  ok('using it again on them is blocked, not consumed', G2.items.i_stone_water === 1 && who.spells.filter((x) => x === 's_water_1').length === 1);
+  if (knows) {
+    S.targetStart(v, R.DB.items.i_stone_fire, null, 'i_stone_fire');
+    v.use([knows]);
+    ok('fire stone on someone who already knows 火の矢 → blocked, not consumed', G2.items.i_stone_fire === 1 && S.targetReason(R.DB.items.i_stone_fire, knows) === 'もう覚えている');
+  }
+  const ns = R.Party.members().find((c) => c !== who && !(c.spells || []).includes('s_earth_1'));
+  const head0 = ns.equip.head;
+  ns.equip.head = 'hd_sr_oni';   // 術を使えない兜（mods.noSpell）
+  G2.items.i_stone_earth = 1;
+  S.targetStart(v, R.DB.items.i_stone_earth, null, 'i_stone_earth');
+  v.use([ns]);
+  ok('a no-spell member is greyed 「術を使えない」, stone not consumed', S.targetReason(R.DB.items.i_stone_earth, ns) === '術を使えない' && G2.items.i_stone_earth === 1 && !ns.spells.includes('s_earth_1'));
+  ns.equip.head = head0;
+  const fallen = R.Party.members().find((c) => c !== who && !(c.spells || []).includes('s_light_1'));
+  fallen.hp = 0;
+  ok('a fallen member can still learn from a stone (learning needs no HP)', S.canTarget(R.DB.items.i_stone_light, fallen));
+  fallen.hp = 1;
+  v.tgt = null;
+}
+
 done('test_screens');

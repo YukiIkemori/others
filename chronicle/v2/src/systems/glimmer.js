@@ -10,8 +10,9 @@
 //   派生技: countUse(c, id) → n   deriveRoll(c, usedTechId, {rankB, rng, force}) → {kind:'tech', id, from} | null   learnDerived(c, to, from)
 //           deriveChance(c, from, to, {rankB}, n?)   deriveOf(id) → [{to, lv, tier}]   deriveSources(to)   tierOf(id)   isDerived(id)
 //           derivedFrom(c, id)   useCount(c, id)   sanitize(c)（読み込み）
+//   魔石: firstSpell(el) → id   stoneOf(item) → {element, spell}   stoneBlock(c, item) → わけ | null   useStone(c, item) → {ok, id, reason, line}
 //
-//   ctx = { kind:'tech'|'spell', wtype?(既定は今の武器), elements?, used: actionId|'attack', stone?, rankB, ef, tier?, row:'front'|'back',
+//   ctx = { kind:'tech'|'spell', wtype?(既定は今の武器), elements?, used: actionId|'attack', rankB, ef, tier?, row:'front'|'back',
 //           silenced?, force?(glimmerForce), rng?:()=>[0,1) }
 //   c は R.Rules の CharState（BATTLE の unit なら unit.c か unit.char を渡す。unit に techs・spells・equip があればそのままでもよい）
 (function (R) {
@@ -167,12 +168,7 @@
     const T0 = (!boss && a.kind === 'tech' && T === 0 && G.tier0 && known(c) <= (G.tier0Known != null ? G.tier0Known : Infinity) ? G.tier0 : 1) *
       (boss && BL.slope ? Math.min(BL.max || Infinity, 1 + BL.slope * Math.max(0, T - (BL.from || 0))) : 1);
     let p = base * aptM * GF * FK * EF * MARGIN * T0 * Math.max(0, 1 + gp / 100);
-    if (ctx.stone && a.kind === 'spell' && ctx.elements && ctx.elements[0] && !knowsElement(c, ctx.elements[0])) p *= G.stoneEntry;
     return Math.min(G.cap, p);
-  }
-  function knowsElement(c, el) {
-    for (const id of c.spells || []) { const a = act(id); if (a && a.elements && a.elements.indexOf(el) >= 0) return true; }
-    return false;
   }
   function candidates(c, ctx) {
     c = charOf(c);
@@ -229,6 +225,50 @@
     c[key].push(id);
     if (!(opts && opts.quiet)) R.emit('glimmer', { c: c.id, id, kind: a.kind });
     return true;
+  }
+
+  // ------------------------------------------------------------ 魔石（オーナー 2026-09-28「魔石はアイテムで、それを誰かに使うと、
+  // そいつはその系統の最初の魔法が覚えられるって仕様にしてよ」）
+  // 品の use.effects の {type:'learnSpell', element, spell?} → 使った仲間が、その属性の最初の術（単属性で段 step が一番低い物）を確実に覚える。
+  // 覚えるのは learn（'glimmer' の知らせ・記録は閃きと同じ）。もう覚えている人・術を使えない人（mods.noSpell）には使えない（品は減らない）。
+  // 術を唱えるのに熟練度の条件は無い（覚えていれば段階 1 から唱えられる）ので、熟練度は足さない。
+  /** 属性の最初の術の id（単属性で step が一番低い物。無ければ null） */
+  function firstSpell(el) {
+    let best = null;
+    for (const id of Object.keys(DB.spells || {})) {
+      const a = DB.spells[id];
+      if (!a || a.kind !== 'spell' || !Array.isArray(a.elements) || a.elements.length !== 1 || a.elements[0] !== el) continue;
+      const st = a.step != null ? a.step : (a.glim && a.glim.lv) || 99;
+      if (!best || st < best.st) best = { id, st };
+    }
+    return best ? best.id : null;
+  }
+  /** 品の「術を覚える」効き目（無ければ null）→ {element, spell} */
+  function stoneOf(it) {
+    const use = it && (it.use || it);
+    const e = use && (use.effects || []).find((x) => x && x.type === 'learnSpell');
+    if (!e) return null;
+    const spell = e.spell || firstSpell(e.element);
+    const a = spell && DB.spells && DB.spells[spell];
+    return a ? { element: e.element || (a.elements || [])[0], spell } : null;
+  }
+  /** この人に使えないわけ（使えるなら null）: 'もう覚えている' | '術を使えない' */
+  function stoneBlock(u, it) {
+    const c = charOf(u), s = stoneOf(it);
+    if (!c || !s) return '使えない';
+    if (has(c.spells, s.spell)) return 'もう覚えている';
+    if (R.Rules && R.Rules.mods && R.Rules.mods(c).noSpell) return '術を使えない';
+    return null;
+  }
+  /** 魔石を使う（品の数は呼ぶ側）→ {ok, id, reason, line} */
+  function useStone(u, it, opts) {
+    const c = charOf(u), s = stoneOf(it);
+    const reason = stoneBlock(c, it);
+    if (reason) return { ok: false, id: s && s.spell, reason, line: '' };
+    if (!learn(c, s.spell, opts)) return { ok: false, id: s.spell, reason: 'もう覚えている', line: '' };
+    const el = DB.elements && DB.elements[s.element];
+    const line = `${c.name}は ${el ? el.name : ''}の術『${DB.spells[s.spell].name}』を覚えた！`;
+    return { ok: true, id: s.spell, reason: null, line };
   }
 
   // ------------------------------------------------------------ 派生技（design/BACKLOG「派生技の閃き」。定数は K.DERIVE）
@@ -388,7 +428,7 @@
 
   const Glimmer = (R.Glimmer = R.Glimmer || {});
   Object.assign(Glimmer, {
-    ELEMENTS, classOf, candidates, chance, roll, learn, monRank, params, pairsKnown, spellId, sideOf, banner,
+    ELEMENTS, classOf, candidates, chance, roll, learn, firstSpell, stoneOf, stoneBlock, useStone, monRank, params, pairsKnown, spellId, sideOf, banner,
     deriveOf, deriveSources, tierOf, isDerived, useCount, countUse, deriveChance, deriveRoll, learnDerived, derivedFrom, sanitize,
     reindex() { index = null; return idx(); },
   });

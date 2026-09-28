@@ -760,4 +760,49 @@ section('派生技: a few rare techs, only from using the parent, never guarante
   ok('a wrong shape (array / null) becomes {}', R.State.deserialize(arr) && JSON.stringify(R.State.hero().techUse) === '{}' && JSON.stringify(R.State.hero().derived) === '{}');
 }
 
+// ---------------------------------------------------------------- 魔石（オーナー 2026-09-28「魔石はアイテムで、それを誰かに使うと、そいつはその系統の最初の魔法が覚えられる」）
+section('element stones: use on an ally → learn the element’s first spell');
+{
+  const Gl = R.Glimmer;
+  const EL = ['fire', 'water', 'wind', 'earth', 'light', 'dark'];
+  const first = {};
+  for (const e of EL) {
+    const ids = Object.keys(DB.spells).filter((id) => { const a = DB.spells[id]; return a.elements.length === 1 && a.elements[0] === e; });
+    ids.sort((x, y) => DB.spells[x].step - DB.spells[y].step);
+    first[e] = ids[0];
+  }
+  ok('all six elements have a first spell (lowest step single-element spell = s_<el>_1)', EL.every((e) => first[e] === 's_' + e + '_1' && Gl.firstSpell(e) === first[e]), first);
+  for (const e of EL) {
+    const it = DB.items['i_stone_' + e];
+    const s = Gl.stoneOf(it);
+    ok(`i_stone_${e}: an ally item (field, not battle) that teaches ${first[e]}`, it && it.use.target === 'ally' && it.use.field === true && it.use.battle === false &&
+      s && s.spell === first[e] && s.element === e && !it.use.effects.some((x) => x.type === 'damage'), it && it.use);
+    ok(`i_stone_${e}: desc names the spell, price 200`, it.desc.replace(/\n/g, '').includes('『' + DB.spells[first[e]].name + '』') && it.price === 200, it.desc);
+  }
+  const c = R.Party.makeChar('hero', { hero: { type: 'warrior', sex: 'm', name: 'アルン' }, tier: 0, joinFrom: 'start' });
+  c.spells = [];
+  const stone = DB.items.i_stone_water;
+  ok('a member who can learn: no block reason', Gl.stoneBlock(c, stone) === null);
+  const r = Ru.fieldUse(stone, null, [c]);
+  ok('fieldUse(water stone) → learns s_water_1 with a message', r.changed && c.spells.includes('s_water_1') && /アルンは 水の術『水の刃』を覚えた！/.test(r.lines.join()), r);
+  ok('the learned spell is castable right away (spell command, no proficiency gate)', Ru.commandList(c).includes('spell') && Ru.spellList(c).includes('s_water_1') && Ru.mpCost(c, 's_water_1') <= Ru.stats(c).maxMp);
+  ok('already known → blocked 「もう覚えている」, nothing changes', Gl.stoneBlock(c, stone) === 'もう覚えている' && !Ru.fieldUse(stone, null, [c]).changed && c.spells.filter((x) => x === 's_water_1').length === 1);
+  const d = R.Party.makeChar('hero', { hero: { type: 'warrior', sex: 'm', name: 'アルン' }, tier: 0, joinFrom: 'start' });
+  d.spells = [];
+  d.equip.head = 'hd_sr_oni';
+  ok('a member who cannot cast (mods.noSpell) → blocked 「術を使えない」, not learned', Ru.mods(d).noSpell && Gl.stoneBlock(d, DB.items.i_stone_fire) === '術を使えない' && !Ru.fieldUse(DB.items.i_stone_fire, null, [d]).changed && !d.spells.includes('s_fire_1'));
+  ok('useStone goes through learn (emits glimmer)', (() => {
+    const e = R.Party.makeChar('hero', { hero: { type: 'warrior', sex: 'm', name: 'アルン' }, tier: 0, joinFrom: 'start' }); e.spells = [];
+    let got = null; const fn = (x) => { got = x; };
+    R.on('glimmer', fn);
+    const res = Gl.useStone(e, DB.items.i_stone_dark);
+    R.off('glimmer', fn);
+    return res.ok && res.id === 's_dark_1' && e.spells.includes('s_dark_1') && got && got.id === 's_dark_1' && got.kind === 'spell';
+  })());
+  ok('stones no longer grow proficiency or feed glimmer (K.PROF_GAIN.stone / GLIM.stoneEntry gone)', K.PROF_GAIN.stone === undefined && K.GLIM.stoneEntry === undefined);
+  const e2 = R.Party.makeChar('hero', { hero: { type: 'warrior', sex: 'm', name: 'アルン' }, tier: 0, joinFrom: 'start' });
+  const before = JSON.stringify(e2.eprof);
+  ok('train with an item action does not touch element proficiency', !Ru.train(e2, { kind: 'item', actionId: 'i_stone_fire', elements: ['fire'] }).length && JSON.stringify(e2.eprof) === before);
+}
+
 done('test_rules');

@@ -21,7 +21,8 @@ const BOSSES = {
   tr_b_rooteater: { tier: 0, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 11], note: '根がもぐる → 前列へ突き上げ（守る）、火で根を焼く' },
 };
 // 砂漠（ザハラ砂漠、src/data/bosses_desert.js）。地方は好きな順に遊ぶので、ティア 0・1・3 で測る。
-// 砂もぐりの答えの土は、カシムの道具屋の土の魔石（台本の道具に足す）
+// 砂もぐりの答えの土は、カシムの道具屋の土の魔石（台本の道具に足す）。
+// 注: 魔石は「使った仲間が最初の術を覚える」フィールドの品になり、戦闘では使えない（土の答えは術『石つぶて』か突き）
 {
   const DITEMS = Object.assign({}, ITEMS, { i_stone_earth: 4 });
   for (const T of [0, 1, 3]) {

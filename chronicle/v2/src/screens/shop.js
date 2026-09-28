@@ -392,7 +392,7 @@
         this.drawStrip(g, id, px, y, pw, stripH);
         if (!tall) R.UIK.text(g, own, px, dp.y + dp.h - u(34), { size: u(13), color: C.text2, maxW: pw });
       } else {
-        if (it.slot === 'use') { R.UIK.text(g, it.use && it.use.field ? 'フィールドでも戦闘でも使える。' : '戦闘で使う。', px, y, { size: u(13.5), color: C.teal, maxW: pw }); y += u(26); }
+        if (it.slot === 'use') { R.UIK.text(g, it.use && it.use.field ? (it.use.battle === false ? 'フィールドで使う。' : 'フィールドでも戦闘でも使える。') : '戦闘で使う。', px, y, { size: u(13.5), color: C.teal, maxW: pw }); y += u(26); }
         R.UIK.text(g, own, px, y, { size: u(13), color: C.text2, maxW: pw });
       }
     },

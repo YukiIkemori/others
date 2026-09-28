@@ -761,4 +761,27 @@ section('revive items: ally_dead needs a dead ally, the revive event carries the
   ok('field: canTarget allows only the dead for ally_dead', !R.Screens || !R.Screens.canTarget || (R.Screens.canTarget(DB.items.i_phoenix, { hp: 0 }) && !R.Screens.canTarget(DB.items.i_phoenix, { hp: 5 })));
 }
 
+// ================================================================ 魔石（仲間が術を覚える品。戦闘では使わない）
+section('魔石: 戦闘の道具・自動の戦い・リピートは使わない、覚えた術はすぐ唱えられる');
+{
+  newGame(['bartolo', 'marta']);
+  R.Game.items = Object.assign({}, R.Game.items, { i_stone_fire: 3, i_stone_water: 3 });
+  const B = R.BattleCore.create({ mons: [['rat_1', 1]], seed: 'stone1', lv: 3 });
+  B.intro();
+  const uid = B.engine.party[0].uid;
+  const row = (B.options(uid).find((o) => o.cmd === 'item') || { list: [] }).list.find((x) => x.id === 'i_stone_fire');
+  ok('battle item list: a stone is not usable in battle', !row || row.usable === false, row);
+  ok('engine.unusable(stone) is set (not a battle item)', !!B.engine.unusable(B.engine.party[0], 'i_stone_fire'));
+  const hero = R.Game.chars.hero;
+  hero.spells = [];
+  const res = R.Glimmer.useStone(hero, DB.items.i_stone_water, { quiet: true });
+  const eng = engine({ mons: ['rat_1'] });
+  const u = eng.party[0];
+  ok('after a water stone the hero knows 水の刃 in battle (only MP can stop it)', res.ok && u.c.spells.includes('s_water_1') && [null, undefined, false, '', 'mp'].includes(eng.unusable(u, 's_water_1')), eng.unusable(u, 's_water_1'));
+  u.mp = 99;
+  ok('with MP it is castable', !eng.unusable(u, 's_water_1'), eng.unusable(u, 's_water_1'));
+  const src = require('fs').readFileSync(require('path').join(__dirname, '..', 'src', 'systems', 'battle_core.js'), 'utf8');
+  ok('battle_core has no stone glimmer / proficiency path left', !/\.stone\b/.test(src));
+}
+
 done('test_battle');

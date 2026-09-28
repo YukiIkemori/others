@@ -45,7 +45,7 @@
     str: '腕力', vit: '体力', dex: '器用さ', agi: '素早さ', int: '知力', mnd: '精神', hp: '最大HP', mp: '最大MP' };
 
   // ------------------------------------------------------------ 定数（DESIGN §4.18.1 ＋ STATS_REWORK §2.1・§5.2・§7.3・§9.3）
-  const Wt = [8, 14, 21, 30, 40, 51, 64, 78, 94, 112];                 // 旧の K.W: 道具・魔石の formula:'tier' と値段・sim の目安だけ
+  const Wt = [8, 14, 21, 30, 40, 51, 64, 78, 94, 112];                 // 旧の K.W: 道具の formula:'tier' と値段・sim の目安だけ
   const PRICE = [70, 160, 290, 450, 660, 900, 1200, 1500, 1900, 2600];
   const WT = (hands, reach, kind, mult, hit, crit, stat, magMult) => ({ hands, twoHanded: hands === 2, reach, kind, mult, hit, crit, stat, magMult });
   const K = {
@@ -97,7 +97,7 @@
     // §4.9.1 熟練度（SYSTEMS_REWORK §1。点を保存し、段階 1〜100 は計算）
     PROF_PTS: [0].concat(Array.from({ length: 100 }, (_, i) => Math.round(11 * Math.pow(i, 1.18)))),
     PROF_CAP: 2490,
-    PROF_GAIN: { weapon: 1, techHigh: 2, techHighLv: 6, single12: 2, single35: 5, pair: 5, triple: 7, stone: 2 },
+    PROF_GAIN: { weapon: 1, techHigh: 2, techHighLv: 6, single12: 2, single35: 5, pair: 5, triple: 7 },
     CATCHUP: 2,
     PEXP: [25, 227, 311, 445, 585, 730, 880, 1034, 1191, 1352],                 // §5.2: [1] 186 → 227
     PROF_SOFT: { rank: [8, 28, 36, 44, 52, 60, 67, 74, 80, 90], mul: 0.3 },     // §5.2: T0 20 → 8
@@ -119,7 +119,7 @@
       techLv: [1, 10], spellLv: [1, 8], cap: 0.35,
       apt: { S: 2, A: 1.5, B: 1, C: 0.6, D: 0.3 },
       expect: [2, 4, 6, 8, 10, 12, 14, 16, 17, 19],
-      fkSlope: 0.6, fkFree: 2, fkMax: 6, stoneEntry: 10,
+      fkSlope: 0.6, fkFree: 2, fkMax: 6,
       ef: { normal: 1, golden: 1.5, rare: 2, boss: 2.5 },
       rank: { boss: 2, rare: 2, golden: 1, metal: 1 }, rankBase: 1, secretLv: 10,
       margin: 0.1, marginMax: 5, wFrom: 3, wLowest: 2,
@@ -495,6 +495,7 @@
      *   healMp: ceil(最大MP × pct)、revive: 倒れた人を最大HP × pct（既定 0.25）で、cure: 状態を消す
      *   決まった量 amount があれば 最大値 × pct の代わりにそれ（heal は回復の力を掛ける。revive は最大HP まで、1 以上）
      *   encounter（魔除けの香 pct < 0）・light（松明）は R.Field.encounter.ward / R.Field.light があれば渡す
+     *   learnSpell（魔石）: その属性の最初の術を覚える（R.Glimmer.useStone）
      */
     fieldUse(action, caster, targets, o) {
       const a = action || {};
@@ -524,6 +525,10 @@
             const before = c.status.length;
             c.status = list ? c.status.filter((s) => !list.includes(s)) : [];
             if (c.status.length !== before) { changed = true; lines.push(c.name + 'の状態が治った。'); }
+          } else if (e.type === 'learnSpell' && R.Glimmer && R.Glimmer.useStone) {
+            // 魔石: その属性の最初の術を覚える（覚えている人・術を使えない人には効かない。R.Glimmer.useStone）
+            const r = R.Glimmer.useStone(c, a);
+            if (r.ok) { changed = true; lines.push(r.line); }
           }
         }
         if (c.hp !== hp0) { changed = true; lines.push(dead ? `${c.name}が起き上がった。` : `${c.name}のHPが ${c.hp - hp0} 回復した。`); }
@@ -614,7 +619,7 @@
     /**
      * 熟練度を伸ばす。2 つの呼び方:
      *   train(c, kind, key, n)  kind 'w'|'weapon'|'e'|'element'、key = 系統か属性、n = 点（上の倍率をかける）
-     *   train(c, info)          戦闘の 1 行動ごと: info = {kind:'attack'|'tech'|'spell'|'item', wtype?, elements?, actionId?, stone?, tier?}
+     *   train(c, info)          戦闘の 1 行動ごと: info = {kind:'attack'|'tech'|'spell'|'item', wtype?, elements?, actionId?, tier?}（道具は伸ばさない。魔石は術を覚える品になった）
      * → [{kind:'w'|'e', id, rank, from}]（段階が上がったもの。from = 上がる前の段階）
      */
     train(c, kind, key, n) {
@@ -632,10 +637,6 @@
       const o = { mods: Rules.mods(c), tier: info.tier };
       const bump = (k, id, pts) => { const r = Rules.addProf(c, k, id, pts, o); if (r.up) ups.push({ kind: k, id, rank: r.rank, from: r.from }); };
       const a = info.actionId && actionOf(info.actionId);
-      if (info.stone || (info.kind === 'item' && a == null && info.elements)) {
-        for (const e of info.elements || []) if (ELEMENTS.includes(e)) bump('e', e, G.stone);
-        return ups;
-      }
       if (info.kind === 'attack' || info.kind === 'tech') {
         let w = info.wtype;
         if (!w) { const it = itemOf(c.equip && c.equip.weapon1); w = it ? it.wtype : UNARMED; }
