@@ -1,5 +1,6 @@
 // CONTENT-P: 序章 P1・P2 とロアの里の人々（V2_PLAN §3.3、STORY_BIBLE §9.1 P1・P2、§3.4・§3.5・§10.2 の 1〜3）
-//   roa_house_intro  P1（DB.config.start.event）: 暗転のキャプション 3 枚（1 枚目の後に守り歌。v_fine_opening_01〜03・v_fine_song_01）→ 消灯の刻の窓明かりで「おはよう」（v_berna_prologue_01〜04）→ ev.createHero()
+//   roa_house_intro  P1（DB.config.start.event）: 暗転のキャプション 3 枚（1 枚目の後に守り歌。v_fine_opening_01〜03・v_fine_song_01）→ 幕のまま「おはよう」（v_berna_prologue_01〜03）
+//                    → ev.createHero() → 幕が上がり、消灯の刻の窓明かりの部屋に主人公（v_berna_intro_01・v_berna_prologue_04）
 //   roa_berna        P2: 白紙・灯台の火（細りはじめて三晩、きのう消えた）・潮風亭で仲間を → 傷薬 3 と 50 G。序章の後は近況とただの宿
 //   roa_lectern      書見台: 語り部の名簿（lo_roa_register）と「手がかり帳の使い方」の短い本
 //   roa_seat         朝の席（lo_roa_seat）   roa_shelf  本棚   roa_stone  語り石（lo_roa_stone）   roa_hall  語り石の間
@@ -36,17 +37,20 @@
         await ev.wait(BREATH);   // 場面が変わるたびにひと呼吸（持ち主 2026-09-27）
         await ev.caption('そして、それを語り直した、\nひとりの語り部の物語。', { ms: 3400, voice: 'v_fine_opening_03' });
         await ev.wait(BREATH);
+        // 主人公ができるまでは幕のまま（持ち主 2026-09-28「主人公のいないマップを見せない」）: 目を覚ます前の声として、
+        // 地の文とベルナの「おはよう」を幕の上で聞き、主人公を作ってから幕を上げる（寝台に主人公がいる部屋が明ける）
+        await E.narr(ev, '窓の外は、まだ消灯の刻の\n闇のなかだった。');
+        await ev.say('berna', 'おはよう。今日は大事な日だよ。', { voice: 'v_berna_prologue_01', face: 'berna:smile' });
+        await ev.say('berna', '語り部の名簿に、\nあなたのことを書いておかないとね。', { voice: 'v_berna_prologue_02', face: 'berna:neutral' });
+        await ev.say('berna', 'さあ、見習いさん。\nあなたがどんな子だったか、\nもう一度聞かせておくれ。', { voice: 'v_berna_prologue_03', face: 'berna:smile' });
+        let h = null;
+        for (let i = 0; i < 5 && !h; i++) h = await ev.createHero();
+        if (!h && !(R.Game.chars && R.Game.chars.hero)) R.State.setHero({ type: 'warrior', sex: 'm', name: 'アルン', fav: 'sword' });
+        await ev.wait(BREATH / 2);
         const t0 = R.Engine.time;
         if (R.Engine.running) await R.until(() => { curtain.a = Math.max(0, 1 - (R.Engine.time - t0) / 1200); return curtain.a <= 0; });
       } finally { R.Engine.remove(curtain); }
-      await ev.wait(BREATH);
-      await E.narr(ev, '窓の外は、まだ消灯の刻の\n闇のなかだった。');
-      await ev.say('berna', 'おはよう。今日は大事な日だよ。', { voice: 'v_berna_prologue_01', face: 'berna:smile' });
-      await ev.say('berna', '語り部の名簿に、\nあなたのことを書いておかないとね。', { voice: 'v_berna_prologue_02', face: 'berna:neutral' });
-      await ev.say('berna', 'さあ、見習いさん。\nあなたがどんな子だったか、\nもう一度聞かせておくれ。', { voice: 'v_berna_prologue_03', face: 'berna:smile' });
-      let h = null;
-      for (let i = 0; i < 5 && !h; i++) h = await ev.createHero();
-      if (!h && !(R.Game.chars && R.Game.chars.hero)) R.State.setHero({ type: 'warrior', sex: 'm', name: 'アルン', fav: 'sword' });
+      await ev.wait(BREATH / 2);
       await E.say(ev, 'berna', '{hero}。……うん、いい名前だ。', { voice: 'v_berna_intro_01', face: 'berna:smile' });   // 声は名前を読まない（「……うん、いい名前だ。」）
       await ev.say('berna', '支度ができたら、\nわたしの書見台までおいで。\n話しておきたいことがあるんだ。', { voice: 'v_berna_prologue_04', face: 'berna:neutral' });
       await ev.npc('berna').move([[12, 5]]);

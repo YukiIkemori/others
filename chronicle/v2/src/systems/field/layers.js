@@ -1,7 +1,7 @@
 // FIELD — 描く順（MODERN_UI §7.2 の F0〜F8、V2_PLAN §2.10・§2.11）
 //   地面（チャンクの base）→ 先頭の光の輪（地面に。人の上に重ねると白く飛ぶ）→ lv 0 の立っている物と人（足もとの y で並べる）→
 //   チャンクの over（屋根の張り出し・足場・木の葉）→ lv 1 の人（足場の上）→ 発光の描き直し（芯＋にじみ、30 個まで）→ 暗がりの膜（E6）→
-//   宝箱と泉のきらめき（膜の上、WORLD §6.3）→ 新しい話の印 → 光の明滅 → R.Post.frame → HUD。
+//   宝箱と泉のきらめき（膜の上、WORLD §6.3）→ 光の明滅 → R.Post.frame → HUD。
 //   人の絵は hd:field:<look>（opts {scale, lantern}）。登録が無い間は dev だけ仮の人形（index.html では影だけ）。
 //   歩きの絵: ダッシュは run_*（無ければ walk_*）、止まれば idle_*（2 コマ以上あれば）か stand_*。先頭は斜めの絵（*_se sw ne nw）があれば斜め移動でそれ。コマの数と fps はシートから（cast/sprites.js が json を読む）。
 //   歩き・走りのコマは歩いた道のりで進める（1 マスあたり fps × 1 マスの時間 ÷ 1000 コマ、json の stride があれば 1 巡りのマス数）: 速さが変わっても足が滑らない。
@@ -181,11 +181,10 @@
     if (m.weather && F._weather) F._weather(g, m, cx, cy, t);
     // 暗がり（E6）
     F.dark.draw(g, cam);
-    // 膜の上: 宝箱・泉のきらめき、新しい話の印
+    // 膜の上: 宝箱・泉のきらめき（人の頭の上の「新しい話」の印は描かない。持ち主の決まり 2026-09-28: ほぼ誰とでも話せるので要らない）
     // 町の道しるべ（出口の灯り・店の吊り看板。wayfind.js）: 町の絵の上、膜の上
     if (F._wayfind) F._wayfind(g, t, cx, cy);
     sparkles(g, t, cx, cy);
-    newTalk(g, t, cx, cy);
     // 光の明滅
     const fl = S.flashFx;
     if (fl) {
@@ -628,7 +627,7 @@
     }
   }
 
-  // ---------------------------------------------------------------- 発光・きらめき・新しい話
+  // ---------------------------------------------------------------- 発光・きらめき
   function glows(g, t, cx, cy, real) {
     let n = 0;
     const tm = R.Engine.time;
@@ -667,20 +666,6 @@
       const k = Math.sin((ph / 360) * Math.PI), sx = x + t / 2 + 8 * u, sy = y + t - 19 * u, r = 5 * u * k;
       g.fillStyle = o.pool === 'p_rare' ? `rgba(255,226,140,${k})` : `rgba(255,248,226,${k})`;
       g.fillRect(sx - r, sy - 0.6 * u, r * 2, 1.2 * u); g.fillRect(sx - 0.6 * u, sy - r, 1.2 * u, r * 2);
-    }
-  }
-  function newTalk(g, t, cx, cy) {
-    const N = S.npcs || [], u = t / 32;
-    if (!S.map || R.Engine.top() !== F.scene) return;
-    for (let i = 0; i < N.length; i++) {
-      const n = N[i];
-      if (!n.vis || !n.isNew || n.talking) continue;
-      const x = Math.round((n.x + 0.5) * t - cx), y = Math.round(n.y * t - cy - 22 * u * F._charScale());
-      if (x < -20 || y < -20 || x > R.W + 20 || y > R.H + 20) continue;
-      const b = Math.sin(R.Engine.time / 260) * 1.5;
-      R.Gfx.roundRect(x - 10, y - 16 + b, 20, 13, 6.5, 'rgba(14,16,28,0.82)', 'rgba(236,201,124,0.7)', 0.75);
-      g.fillStyle = '#ecc97c';
-      for (let d = -1; d <= 1; d++) { g.beginPath(); g.arc(x + d * 5, y - 9.5 + b, 1.4, 0, 7); g.fill(); }
     }
   }
 })(window.RPG);

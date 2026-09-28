@@ -1,7 +1,7 @@
 // R.Mon（BATTLE）: 魔物の解決・出現・ドロップ・回復の式（V2_PLAN §2.5.13、DESIGN §3.3.6・§4.10・§4.14・§9.1.2、STATS_REWORK §2.2・§7.4・§9.4）
 // 移植の元は chronicle/src/systems/mon.js。登録だけで、読み込み時に document に触れない。
 //
-//   R.Mon.encounter(zoneId, {tier, dark, steps, ward}) → K.setup | null   FIELD が歩数ごとに呼ぶ（率・組・レア・金色・魔除けの香）
+//   R.Mon.encounter(zoneId, {tier, dark, steps, ward, partySize}) → K.setup | null   FIELD が歩数ごとに呼ぶ（率・組・レア・金色・魔除けの香・一人旅は 1 匹）
 //   R.Mon.curve(L, kind) / hpBoss(L)                   魔物の曲線（R.Rules.K が持てばそちら、無ければ下の KF）
 //   R.Mon.resolve(ref, tier, from)                     '@系統' 'same' 'lower' か id → 魔物の id
 //   R.Mon.def(id, {Lb, golden, dark})                  戦闘の定義（Lb に合わせた数値・金色の個体・闇の強まり）。DB は変えない
@@ -490,6 +490,18 @@
     const gl = (c) => (R.Growth && R.Growth.equivLevel ? R.Growth.equivLevel(c) : c.gl || 1);
     return chars.reduce((s, c) => s + gl(c), 0) / chars.length;
   }
+  /** 出撃中の人数（一人旅の判定） */
+  function partySize() {
+    try { return R.Party && R.Party.members ? R.Party.members().length : 0; } catch (e) { return 0; }
+  }
+  /**
+   * 一人旅（出撃中が 1 人）の雑魚戦は 1 匹だけ（持ち主 2026-09-28「一人のときは敵も 1 匹に」）。
+   * ids（出現表から振った並び）の中から 1 匹を選ぶ。ボス・イベントの編成（troop）には使わない。n = 出撃中の人数
+   */
+  function soloCap(ids, n) {
+    if (!ids || ids.length <= 1 || n !== 1) return ids;
+    return [rng().pick(ids)];
+  }
   let encLast = { zone: null, step: -1e9 };
   /** 出現の 1 歩あたりの確率: 平均の歩数（world 26・dungeon 22、ゾーンの steps で上書き）から安全な歩数を引いた幅の逆数 × rate */
   function stepChance(zoneId, z) {
@@ -546,7 +558,7 @@
       if (!ids) {
         const grp = zoneGroup(zoneId, Tb);
         if (!grp) return null;
-        ids = buildList(grp.mons, Tb);
+        ids = soloCap(buildList(grp.mons, Tb), o.partySize != null ? o.partySize : partySize());
       }
       if (!ids.length) return null;
       const golden = rare || o.noGolden ? -1 : rollGolden(ids, partyMods());
@@ -564,7 +576,7 @@
 
   Object.assign((R.Mon = R.Mon || {}), {
     K, KF, LZ, curve, hpBoss, mobTier, resolve, lower, def, buildList, zoneGroups, zoneGroup, rollGolden, dropChances, rollDrops, pickPool,
-    healAmount, healf, abilMul, fillStats, fillAll, goldenName, canBeGolden, isDark, rank, ef, fwLen, encounter, resetEncounter, stepChance, zoneLb,
+    healAmount, healf, abilMul, fillStats, fillAll, goldenName, canBeGolden, isDark, rank, ef, fwLen, encounter, resetEncounter, stepChance, zoneLb, soloCap,
     rng, setRng, mkRng, weighted,
     clearCache() { cache.clear(); },
   });

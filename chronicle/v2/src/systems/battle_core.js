@@ -1913,15 +1913,18 @@
         fallen: this.party.filter((p) => !p.alive).map((p) => p.c.id), members: this.party.map((p) => p.c.id),
         killed: this.killed.map((m) => ({ id: m.id, boss: m.boss, rare: m.rare, golden: m.golden, metal: m.metal })), rng: this.rng };
     }
-    /** 戦闘の後の回復（§4.12.1）: 勝ち → 生きている人の HP 全快・MP + 12%、逃げた → HP 全快。状態は消える */
+    /**
+     * 戦闘の後の回復（§4.12.1）: 勝ち → 生きている人の MP だけ戻る（R.Rules.afterWinMpPct: 10〜20%）。HP は戦闘の終わりのまま（勝ちも逃げも）。状態は消える
+     * （持ち主 2026-09-28「終わった後に HP 全回復しちゃってるよ」。旧は勝ち・逃げで HP 全快だった）
+     */
     recover(result) {
       const A = K('AFTER');
       for (const p of this.party) {
         const c = p.c;
         c.status = {};
-        if ((result === 'win' || result === 'escape') && c.hp > 0) {
-          c.hp = p.mhp;
-          if (result === 'win') { const pct = R.Rules.afterWinMpPct ? R.Rules.afterWinMpPct(c) : A.mpPct; if (pct > 0) c.mp = Math.min(p.mmp, c.mp + Math.ceil(p.mmp * pct)); }
+        if (result === 'win' && c.hp > 0) {
+          const pct = R.Rules.afterWinMpPct ? R.Rules.afterWinMpPct(c) : A.mpPct;
+          if (pct > 0) c.mp = Math.min(p.mmp, c.mp + Math.ceil(p.mmp * pct));
         }
         c.hp = clamp(c.hp, 0, p.mhp); c.mp = clamp(c.mp, 0, p.mmp);
       }
@@ -1964,7 +1967,9 @@
       }
       if (!spec) { const g = R.Mon.zoneGroup(o.zone, Tb); spec = g ? g.mons : null; }
     } else return null;
-    const ids = R.Mon.buildList(spec || [], Tb, { keepOrder: kind !== 'zone' || !!o.mons });
+    let ids = R.Mon.buildList(spec || [], Tb, { keepOrder: kind !== 'zone' || !!o.mons });
+    // 出現表だけ（sim・デバッグ）でも一人旅は 1 匹（R.Mon.encounter と同じ。field の setup は mons で来るので済んでいる）
+    if (kind === 'zone' && !o.mons && !rare && o.partySize != null) ids = R.Mon.soloCap(ids, o.partySize);
     if (!ids.length) return null;
     let gi = -1;
     if (typeof o.golden === 'number') gi = o.golden < ids.length ? o.golden : -1;
@@ -2060,7 +2065,7 @@
       : `${(G && G.seed) || 0}:${(G && G.steps) || 0}:${setup.troop || setup.zone || ''}:${setup.retry || 0}`;
     const rng = R.Mon.mkRng(seed);
     R.Mon.setRng(rng);
-    const res = resolveMonsters(Object.assign({}, setup, { tier: setup.tier != null ? setup.tier : undefined }), charsMods(chars));
+    const res = resolveMonsters(Object.assign({ partySize: chars.length }, setup, { tier: setup.tier != null ? setup.tier : undefined }), charsMods(chars));
     if (!res) throw new Error('R.BattleCore.create: no monsters for ' + JSON.stringify(setup).slice(0, 120));
     const eng = new Engine({
       party: copies, mons: res.mons, inv: clone((G && G.items) || {}), gold: (G && G.gold) || 0, rng,
@@ -2343,7 +2348,7 @@
       const party = (o.party || []).map((c) => clone(c));
       const inv = clone(o.inv || {});
       const troop = o.troop && DB.troops[o.troop];
-      const ro = Object.assign({}, o);
+      const ro = Object.assign({ partySize: party.length }, o);
       if (!o.rare) ro.noRare = true;
       if (!o.golden) ro.noGolden = true;
       const r0 = resolveMonsters(ro, charsMods(party));

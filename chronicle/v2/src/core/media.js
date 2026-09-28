@@ -51,8 +51,13 @@
     return u;
   }
 
+  // 読み込みの数（R.Loading の進みの棒が読む）: req = 読み始めた画像、done = 読み終えた（読めなかった物も）
+  const stat = { req: 0, done: 0 };
+  function count(rec) { stat.req++; rec.promise.then(() => { stat.done++; }, () => { stat.done++; }); return rec; }
+
   const Media = (R.Media = {
     table,
+    stat,
     has(kind, id) { return !!raw(kind, id); },
     /** bgm: {url, loopStart, loopEnd, gain, loop} / voice・portraits: {url} / 無ければ null */
     entry(kind, id) {
@@ -110,7 +115,7 @@
           if (--a.pending <= 0) { a.img = null; if (atlases[url] === a) delete atlases[url]; }
           return rec;
         });
-        images[ik] = rec;
+        images[ik] = count(rec);
         return rec;
       }
       const rec = { img: new Image(), ready: false, failed: false, meta: e.meta || null, promise: null };
@@ -119,7 +124,7 @@
         rec.img.onerror = () => { rec.failed = true; res(rec); };
       });
       rec.img.src = url;
-      images[ik] = rec;
+      images[ik] = count(rec);
       return rec;
     },
     /** 読んだ画像を手放す（覚えを消すだけ。使っている所が無くなれば GC が展開した画素を返す。次に image() で読み直す） */

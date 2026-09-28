@@ -215,7 +215,7 @@
   }
 
   R.Stubs.define('Events', {
-    /** 版 2: 「新しい話」の印（E19）。npc.key があり、今の台詞のハッシュが R.Game.heard[key] と違えば true（FIELD の吹き出し・HUD の人数） */
+    /** 版 2: 「新しい話」の印（E19）。npc.key があり、今の台詞のハッシュが R.Game.heard[key] と違えば true（HUD の人数。人の頭の上の印は描かない） */
     isNew(map, npc) {
       if (!npc || !npc.key || !R.Game) return false;
       const line = currentLine(npc);

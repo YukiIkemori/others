@@ -256,8 +256,8 @@
 
     // ------------------------------------------------------------ 戦闘のあと
     /**
-     * 戦闘のあとの回復（§4.12.1）: 勝ち → 生きている人は HP 満タン・MP を最大の 12%（切り上げ）、逃げ → 生きている人は HP 満タン。
-     * 状態はいつも消える。倒れた人はそのまま。BATTLE の B.finish が呼ぶ（o.members は出撃した id）
+     * 戦闘のあとの回復（§4.12.1）: 勝ち → 生きている人の MP を最大の 10〜20%（R.Rules.afterWinMpPct。切り上げ）。HP はそのまま（勝ちも逃げも）。
+     * 状態はいつも消える。倒れた人はそのまま。BATTLE の B.finish と同じ決まり（o.members は出撃した id）
      */
     afterBattle(result, o) {
       o = o || {};
@@ -268,7 +268,7 @@
         if (!(c.hp > 0)) { c.hp = 0; continue; }
         if (res !== 'win' && res !== 'escape') continue;
         const st = Rules().stats(c);
-        c.hp = st.maxHp;
+        c.hp = Math.min(st.maxHp, c.hp);
         if (res === 'win') { const pct = Rules().afterWinMpPct ? Rules().afterWinMpPct(c) : A.mpPct; if (pct > 0) c.mp = Math.min(st.maxMp, (c.mp || 0) + Math.ceil(st.maxMp * pct)); }
       }
     },

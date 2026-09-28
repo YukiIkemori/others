@@ -82,11 +82,14 @@
     window.addEventListener('orientationchange', () => R.fit());
     R.Input.init(canvas);
     R.Input.onAnyPress(() => { try { R.Audio.init(); } catch (e) { console.error(e); } });
+    // 読み込みの画面（主人公が進みの棒の上を走る。core/loading.js）: 書体と起動の仕事（原画・素材の先読み）の間
+    if (R.Loading) R.Loading.boot();
     await waitFonts();
     R.Engine.addTick((dt, real) => { if (R.Game && R.Engine.has('field')) R.Game.playMs = (R.Game.playMs || 0) + real; });
     // 焼く列（版 2）: 毎フレーム R.Hd.pump(予算 3 ms) を CORE が 1 回だけ呼ぶ。ほかの担当は pump を呼ばない（暗転中の同期の焼きは R.Hd.now）
     R.Engine.addTick(() => { if (R.Hd && R.Hd.pump) R.Hd.pump((R.Hd.BUDGET && R.Hd.BUDGET.frameBakeMs) || 3); });
     for (const fn of R._bootHooks) { try { await fn(); } catch (e) { console.error('boot hook failed', e); } }
+    if (R.Loading) R.Loading.bootDone();
     R.Engine.start(canvas);
     if (R.loadErrors.length) console.error('LOAD ERRORS:\n' + R.loadErrors.join('\n'));
     R.emit('booted');

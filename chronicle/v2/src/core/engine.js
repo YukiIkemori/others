@@ -94,7 +94,7 @@
     addTick(fn) { if (!ticks.includes(fn)) ticks.push(fn); },
 
     // ---------------------------------------------------------------- 重ね描き
-    /** 全部の場面の上に描く物を登録（id が同じなら入れ替え）。z が大きいほど上 */
+    /** 全部の場面の上に描く物を登録（id が同じなら入れ替え）。z が大きいほど上。z ≥ 1000 は暗転（fade）より上（読み込みの走る絵） */
     overlay(id, draw, z) {
       const i = overlays.findIndex((o) => o.id === id);
       if (i >= 0) overlays.splice(i, 1);
@@ -199,18 +199,23 @@
         g.restore();
         G.reset();
       }
-      for (const o of overlays) {
-        g.save();
-        try { o.draw(g); } catch (e) { report(e); }
-        g.restore();
-        G.reset();
-      }
+      const over = (top) => {
+        for (const o of overlays) {
+          if ((o.z >= 1000) !== top) continue;
+          g.save();
+          try { o.draw(g); } catch (e) { report(e); }
+          g.restore();
+          G.reset();
+        }
+      };
+      over(false);
       if (Engine.fade.a > 0) {
         g.globalAlpha = Math.min(1, Engine.fade.a);
         g.fillStyle = Engine.fade.color;
         g.fillRect(0, 0, R.W, R.H);
         g.globalAlpha = 1;
       }
+      over(true);
       if (Engine.error) drawError(g);
     },
 

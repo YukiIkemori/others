@@ -194,7 +194,14 @@
     if (!keys.length) return Promise.resolve(true);
     for (const k of keys) pinned.add(k);
     const all = Promise.all(keys.map(loadKey)).then((r) => r.every(Boolean));
-    return Promise.race([all, timeout(ms || 3000).then(() => false)]).then((ok) => { for (const k of keys) pinned.delete(k); return ok; });
+    const p = Promise.race([all, timeout(ms || 3000).then(() => false)]).then((ok) => { for (const k of keys) pinned.delete(k); return ok; });
+    showWait(keys, p);
+    return p;
+  }
+  /** 待っている間の進み（R.Loading の小さな走る絵。読み終えた枚数 / 待つ枚数） */
+  function showWait(keys, p) {
+    if (!R.Loading || !R.Loading.wait || keys.every((k) => held.has(k))) return;
+    R.Loading.wait(p, () => keys.filter(settled).length, keys.length);
   }
   E.stats = function () {
     let b = 0;
@@ -236,7 +243,9 @@
     if (!E.ready || typeof Image === 'undefined' || !bbgKeys(id).length) return Promise.resolve(false);
     const ks = bbgKeys(id);
     for (const k of ks) pinned.add(k);
-    return Promise.race([bbgLoad(id), timeout(ms || 2500).then(() => false)]).then((ok) => { for (const k of ks) pinned.delete(k); return ok; });
+    const p = Promise.race([bbgLoad(id), timeout(ms || 2500).then(() => false)]).then((ok) => { for (const k of ks) pinned.delete(k); return ok; });
+    showWait(ks, p);
+    return p;
   };
 
   /** 描いた下絵（マップ 1 枚）: 32 の絵の meta も返す（_emit・_over は meta を持たないので本体の名前で引く） */
@@ -303,24 +312,28 @@
   };
 
   // ------------------------------------------------------------------ 起動のときに読む（読めなかった物はコードの絵のまま）
-  R.onBoot(async function () {
-    if (!R.Media || !R.Media.preload || typeof Image === 'undefined') return;
-    const all = Object.keys(table());
-    if (!all.length) return;
-    const t0 = typeof performance !== 'undefined' ? performance.now() : 0;
-    // 起動で読むのは素材・物・建物（下絵と戦闘背景は使う時に読む。上の「使う時に読み」）の今のマスの大きさの分だけ。
-    // 待つのは縦切りのテーマの分、ほかのテーマは後ろで。別の大きさはマスの大きさを変えたときに読む（2026-09-28: 全部で 1.4 GB）
-    const SLICE = /^(common|harbor|hill_village|treetop|moss_village|tree_inside|lighthouse|cave|forest_dungeon|snow|desert|world)\//;   // world = WORLD v3 のワールドの素材と大きな景色
-    const LAZY = /\/under\/|^bbg\//;
-    const has = new Set(all);
-    /** マスの大きさ t の素材・物・建物（t の絵が無い物は 32 の絵。pickTile と同じ） */
-    const setOf = (t) => all.filter((k) => {
+  // 起動で読むのは素材・物・建物（下絵と戦闘背景は使う時に読む。上の「使う時に読み」）の今のマスの大きさの分だけ。
+  // 待つのは縦切りのテーマの分（now）、ほかのテーマは後ろで（later）。別の大きさはマスの大きさを変えたときに読む（2026-09-28: 全部で 1.4 GB）
+  const SLICE = /^(common|harbor|hill_village|treetop|moss_village|tree_inside|lighthouse|cave|forest_dungeon|snow|desert|world)\//;   // world = WORLD v3 のワールドの素材と大きな景色
+  const LAZY = /\/under\/|^bbg\//;
+  /** マスの大きさ t の素材・物・建物（t の絵が無い物は 32 の絵。pickTile と同じ） */
+  function setOf(t) {
+    const all = Object.keys(table()), has = new Set(all);
+    return all.filter((k) => {
       if (LAZY.test(k)) return false;
       const m = /@(\d+)$/.exec(k);
       if (!m) return t === 32;
       if (+m[1] === t) return true;
       return +m[1] === 32 && !has.has(k.replace(/@32$/, '@' + t));
     });
+  }
+  /** 起動で待つ画像の数（R.Loading の進みの棒の見積もり） */
+  E.bootCount = function () { return typeof Image === 'undefined' ? 0 : setOf(curTile()).filter((k) => SLICE.test(k)).length; };
+  R.onBoot(async function () {
+    if (!R.Media || !R.Media.preload || typeof Image === 'undefined') return;
+    const all = Object.keys(table());
+    if (!all.length) return;
+    const t0 = typeof performance !== 'undefined' ? performance.now() : 0;
     const decode = (keys) => Promise.all(keys.map((k) => { const r = R.Media.image(k, 'env'); return r && r.ready && r.img.decode ? r.img.decode().catch(() => null) : null; }));
     const loadList = async (list, n) => {
       for (let i = 0; i < list.length; i += n) {

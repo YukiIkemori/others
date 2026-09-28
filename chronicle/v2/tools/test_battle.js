@@ -182,6 +182,76 @@ section('出現（R.Mon.encounter: 率・組・魔除けの香・決まった結
   ok(`golden ≈ 1/40 of battles (${(gold / 80).toFixed(2)} %)`, gold / 8000 > 0.017 && gold / 8000 < 0.034);
 }
 
+// ================================================================ 一人旅の出現・戦闘の後の HP（持ち主 2026-09-28）
+section('一人旅は雑魚 1 匹（ボス・イベントの編成はそのまま）・勝っても HP は全快しない');
+{
+  // 出撃中が 1 人: 出現表の戦闘はいつも 1 匹
+  newGame([]);
+  const G = R.Game;
+  const count = (zone, tier) => {
+    let n = 0, multi = 0;
+    for (let s = 0; s < 600; s++) {
+      R.Mon.resetEncounter();
+      const r = R.Mon.encounter(zone, { steps: s, tier, force: true, noRare: true });
+      if (!r) continue;
+      n++;
+      if (r.mons.length > 1) multi++;
+    }
+    return { n, multi };
+  };
+  const solo = ['zw_prologue', 'zw_peninsula', 'zw_forest', 'z_verda'].map((z) => [z, count(z, 0)]);
+  ok('solo party: every random encounter has exactly 1 monster', solo.every(([, c]) => c.n > 100 && c.multi === 0), solo);
+  // 決まった結果（同じ歩数なら同じ 1 匹）と、選んだ 1 匹は振った組の中の物
+  R.Mon.resetEncounter();
+  const s1 = R.Mon.encounter('zw_peninsula', { steps: 4321, tier: 0, force: true, noRare: true });
+  R.Mon.resetEncounter();
+  const s2 = R.Mon.encounter('zw_peninsula', { steps: 4321, tier: 0, force: true, noRare: true });
+  ok('solo pick is deterministic for the same steps', JSON.stringify(s1) === JSON.stringify(s2));
+  ok('solo pick is one of the zone\'s monsters', R.Mon.zoneGroups('zw_peninsula', 0).some((g) => g.mons.some((e) => e[0] === s1.mons[0][0])), s1.mons);
+  // 2 人以上なら今までどおり（2 匹以上の組も出る）
+  newGame(['bartolo']);
+  const duo = count('zw_forest', 0);
+  ok('party of 2: multi-monster groups still appear', duo.multi > 0, duo);
+  // ボス・イベントの編成（troop）は一人でも減らない
+  newGame([]);
+  const Bt = R.BattleCore.create({ troop: 'tr_desert_ambush', seed: 'solo-troop' });
+  ok('solo party: scripted troop keeps all its monsters', Bt.units.filter((u) => u.side === 'enemy').length === 3, Bt.units.filter((u) => u.side === 'enemy').length);
+  // 出現表だけの setup（sim・デバッグ）も一人なら 1 匹
+  const sim = BC.simulate({ party: R.Party.members(), zone: 'zw_forest', tier: 0, seed: 'solo-sim', maxRounds: 1 });
+  ok('simulate with zone + solo party → 1 monster', sim.mons && sim.mons.length === 1, sim.mons && sim.mons.length);
+
+  // 戦闘の後: HP は戦闘の終わりのまま（勝ち）。MP は割合だけ戻る
+  newGame([]);
+  const hero = R.Party.members()[0];
+  R.Mon.resetEncounter();
+  const setup = R.Mon.encounter('zw_prologue', { steps: 99, tier: 0, force: true, noRare: true, noGolden: true });
+  const B = R.BattleCore.create(Object.assign({ seed: 'hp-keep' }, setup));
+  const pu = B.engine.party[0];
+  pu.hp = Math.max(1, Math.floor(pu.mhp * 0.5));   // 戦闘の前に半分（歩いて減っていた）
+  pu.mp = 0;
+  B.intro();
+  for (let r = 0; r < 40 && !B.over; r++) {
+    for (const u of B.units.filter((x) => x.side === 'party' && x.alive)) B.submit(u.uid, R.BattleAI.partyCommand(B, u.uid, 'script'));
+    B.round();
+  }
+  ok('solo random battle is won', B.over === 'win', B.over);
+  const endHp = B.units.find((u) => u.side === 'party').hp;
+  const mmp = R.Rules.stats(hero).maxMp;
+  const rw = B.finish();
+  const grew = ((rw && rw.grow) || []).find((g) => g.c === hero.id) || {};
+  ok('after a won random battle HP stays damaged (no full heal)', hero.hp === endHp + (grew.hp || 0) && hero.hp < R.Rules.stats(hero).maxHp, [endHp, hero.hp, R.Rules.stats(hero).maxHp]);
+  const pct = R.Rules.afterWinMpPct(hero);
+  ok('after a win MP recovers only by afterWinMpPct', mmp === 0 || hero.mp === Math.min(R.Rules.stats(hero).maxMp, Math.ceil(mmp * pct) + (grew.mp || 0)), [hero.mp, mmp, pct]);
+  // R.Party.afterBattle（sim の一行の決まり）も同じ
+  newGame(['bartolo']);
+  const cs = R.Party.members();
+  cs[0].hp = 5; cs[1].hp = 7;
+  R.Party.afterBattle('win');
+  ok('R.Party.afterBattle(win) keeps HP', cs[0].hp === 5 && cs[1].hp === 7, cs.map((c) => c.hp));
+  R.Party.afterBattle('escape');
+  ok('R.Party.afterBattle(escape) keeps HP', cs[0].hp === 5 && cs[1].hp === 7, cs.map((c) => c.hp));
+}
+
 // ================================================================ 戦闘の 1 回（B）と出来事
 section('B（R.BattleCore.create）: 契約の形・出来事・finish が 1 回');
 {
@@ -214,6 +284,8 @@ section('B（R.BattleCore.create）: 契約の形・出来事・finish が 1 回
   const hp0 = R.Game.chars.hero.hp;
   ok('R.Game not written before finish (HP copy)', typeof hp0 === 'number');
   const gold0 = G.gold;
+  const endHp = {};
+  for (const u of B.units.filter((x) => x.side === 'party')) endHp[u.id] = u.hp;
   const rw = B.finish();
   const rw2 = B.finish();
   ok('finish is idempotent', rw === rw2);
@@ -222,7 +294,10 @@ section('B（R.BattleCore.create）: 契約の形・出来事・finish が 1 回
     ok('gold added once', G.gold === gold0 + rw.gold);
     ok('boss battle: everyone who fought grows (p = 1)', rw.grow.length >= 1, rw.grow);
     ok('bestiary: seen + kills', G.book.mon.b_moth && G.book.mon.b_moth.seen && G.book.mon.b_moth.kills === 1);
-    ok('after a win the living are at full HP', R.Party.members().filter((c) => c.hp > 0).every((c) => c.hp === R.Rules.stats(c).maxHp));
+    // 勝っても HP は全快しない（持ち主 2026-09-28「終わった後に HP 全回復しちゃってるよ」）。伸びた人は最大 HP の増えだけ足す
+    const grewHp = (id) => ((rw.grow || []).find((g) => g.c === id) || {}).hp || 0;
+    ok('after a win HP stays at the end-of-battle value (+ growth only)', R.Party.members().every((c) => c.hp === Math.min(R.Rules.stats(c).maxHp, endHp[c.id] + (endHp[c.id] > 0 ? grewHp(c.id) : 0))),
+      R.Party.members().map((c) => [c.id, endHp[c.id], c.hp]));
   } else ok('boss fight lost in this seed (checked elsewhere)', true);
   ok('lastRound stored for the cursor memory', Array.isArray(G.battle.lastRound));
   ok('statuses cleared after battle', R.Party.members().every((c) => Array.isArray(c.status) && !c.status.length));

@@ -39,12 +39,19 @@
   };
   // cond（地図の条件）が、地図を見ている間に偽 → 真になった人は、パッと出さずに薄く浮かび上がる（APPEAR_MS）。
   // 地図に入ったとき（_initNpcs・入る途中）と、hide/show で出し入れした人は今までどおりすぐ
+  // 逆に、イベントの途中で cond が真 → 偽になった人（ev.setFlag の後に ev.leave で立ち去らせる、など）は、その場でパッと消さない:
+  //   イベントが終わるまで出したまま（n.hold）。ev.leave / hide で去ればそこで消え、残っていればイベントの後に薄れて消える。
+  //   画面が暗い間（暗転中）に偽になった人は今までどおりすぐ消す
   const APPEAR_MS = 400;
+  const dark = () => { try { return R.Engine.fade.a > 0.95; } catch (e) { return false; } };
+  const evBusy = () => { try { return R.Events.busy(); } catch (e) { return false; } };
   F._npcVis = function () {
     for (const n of S.npcs || []) {
       const ok = !n.def.cond || R.State.check(n.def.cond);
       const was = n.vis;
-      n.vis = !n.hidden && ok;
+      if (ok || n.hidden) { if (n.hold === 2 && !n.hidden) { n.fade = null; n.fadeDone = null; } n.hold = 0; }   // 薄れる途中で cond が戻った: 濃さを戻す
+      else if (was && !n.hold && !n.party && !S.entering && evBusy() && !dark()) n.hold = 1;
+      n.vis = !n.hidden && (ok || !!n.hold);
       if (n.vis && !was && n.condOk === false && !S.entering && !n.party) { fadeOf(n, 1, APPEAR_MS); n.fade.from = 0; n.fadeDone = null; }
       n.condOk = ok;
     }
@@ -94,6 +101,16 @@
     const list = S.npcs;
     if (!list) return;
     F._tickPartyFade();
+    // イベントの間だけ出したままにしていた人（n.hold）: イベントが終わったら薄れて消す
+    if (!evBusy()) {
+      for (let i = 0; i < list.length; i++) {
+        const n = list[i];
+        if (n.hold !== 1) continue;
+        n.hold = 2;
+        fadeOf(n, 0, APPEAR_MS);
+        n.fadeDone = () => { n.hold = 0; F._npcVis(); };
+      }
+    }
     const now = R.Engine.time;
     const top = R.Engine.top() === F.scene;
     const calm = top && !F._locked() && !R.Events.busy();
