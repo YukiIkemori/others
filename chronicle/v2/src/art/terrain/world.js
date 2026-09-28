@@ -25,6 +25,8 @@
     cave: { ground: 'cave_floor', tree: ['tree'], leaf: 'dk', mood: 'cave', decor: { dec_pebbles: 0.05, dec_mush: 0.03 }, fireflies: 5, outside: 'wall_cave', pools: true },
     world: { ground: 'grass', tree: ['pine', 'tree'], leaf: 'leaf', mood: 'night', decor: { dec_tuft: 0.06, dec_flowers: 0.02, dec_pebbles: 0.02 }, fireflies: 5, outside: 'sea', edgeTrees: true, twoTrees: true },
     hill_village: { ground: 'grass', tree: ['tree'], leaf: 'leaf', mood: 'town_night', decor: { dec_tuft: 0.07, dec_flowers: 0.05 }, fireflies: 4, outside: 'grass' },
+    // エリア切り替えのフィールド（kind 'field'、maps/field_*.js）。ふだんは 1 エリア 1 枚の描いた絵（map.art）。これは絵が無いときのタイルの控え
+    field: { ground: 'grass', tree: ['tree', 'pine'], leaf: 'leaf', mood: 'night', decor: { dec_tuft: 0.06, dec_flowers: 0.03, dec_pebbles: 0.02 }, fireflies: 5, outside: 'forest_dark', edgeTrees: true },
     // 雪原（snow_*.js）: 木は雪のもみ（描いた絵が無いときはコードの松）
     snow: { ground: 'snow', get tree() { return snowFir(); }, leaf: 'leaf', mood: 'night', decor: { dec_pebbles: 0.02 }, fireflies: 0, outside: 'snow' },
     snow_town: { ground: 'snow', get tree() { return snowFir(); }, leaf: 'leaf', mood: 'town_night', decor: { dec_pebbles: 0.02 }, fireflies: 0, outside: 'snow' },

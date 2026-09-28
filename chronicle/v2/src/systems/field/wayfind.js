@@ -110,7 +110,7 @@
     if (c && c.sig === sig) return c;
     const out = { sig, exits: [], signs: [] };
     const ok = (cond) => cond == null || (R.State && R.State.check(cond));
-    if (m.kind === 'town' || m.kind === 'dungeon') {
+    if (m.kind === 'town' || m.kind === 'dungeon' || m.kind === 'field') {   // field = エリア切り替えのフィールド（端の出口に行き先の札）
       for (const e of m.exits || []) {
         if (!e.to || e.to.map === m.id || !ok(e.cond)) continue;
         const d = R.DB.maps[e.to.map];
@@ -276,7 +276,7 @@
 
   F._wayfind = function (g, t, cx, cy) {
     const m = S.map;
-    if (!m || (m.kind !== 'town' && m.kind !== 'dungeon')) return;
+    if (!m || (m.kind !== 'town' && m.kind !== 'dungeon' && m.kind !== 'field')) return;
     const I = W.info(m), tm = R.Engine.time, u = t / 32;
     for (const e of I.exits) drawExit(g, e, t, cx, cy, tm);
     for (const s of I.signs) {
@@ -310,7 +310,7 @@
   }
   F._wayfindLabels = function (g, t, cx, cy) {
     const m = S.map;
-    if (!m || (m.kind !== 'town' && m.kind !== 'dungeon')) return;
+    if (!m || (m.kind !== 'town' && m.kind !== 'dungeon' && m.kind !== 'field')) return;
     const I = W.info(m), tm = R.Engine.time;
     for (const e of I.exits) drawArrow(g, e, t, cx, cy, tm);
     const top = R.Engine.top() === F.scene && !F._locked() && !(R.Events && R.Events.busy && R.Events.busy());

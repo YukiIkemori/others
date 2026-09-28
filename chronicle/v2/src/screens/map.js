@@ -109,7 +109,11 @@
       const pos = (R.Field && R.Field.pos) || G.pos || {};
       let here = null;
       if (pos.map === w.id) here = { x: pos.x + 0.5, y: pos.y + 0.5 };
-      else { const m = R.DB.maps[pos.map]; const L = m && m.location && R.DB.locations[m.location]; here = S.worldPosOf((L && L.map) || pos.map); }
+      else {
+        const m = R.DB.maps[pos.map], wr = m && m.meta && m.meta.worldRect;   // エリア切り替えのフィールド: エリアがワールドのどの四角か（meta.worldRect [x, y, w, h]）から位置を割り出す
+        if (wr && m.w && m.h) here = { x: wr[0] + ((pos.x + 0.5) / m.w) * wr[2], y: wr[1] + ((pos.y + 0.5) / m.h) * wr[3] };
+        else { const L = m && m.location && R.DB.locations[m.location]; here = S.worldPosOf((L && L.map) || pos.map); }
+      }
       if (here) {
         const q = px(here), s = u(7);
         R.UIK.glow(g, q.x, q.y, u(14), [143, 214, 216], 0.5 + 0.2 * Math.sin(t / 400));
