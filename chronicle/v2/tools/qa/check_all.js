@@ -35,6 +35,7 @@ const STEPS = [
   ['check_leads', [T('qa/check_leads.js')]],
   ['check_springs', [T('qa/check_springs.js')]],
   ['check_density', [T('qa/check_density.js')]],
+  ['check_dungeon_clutter', [T('qa/check_dungeon_clutter.js')]],   // ダンジョンの樽・木箱・壺は 4 つまで、通路の真ん中に置かない
   ['check_world', [T('qa/check_world.js')]],
   ['check_world_zones', [T('qa/check_world_zones.js')]],   // ワールドの出現表の地方が地面の地方と同じ（灯台の岬に灰の荒野の魔物が出ない）
   ['check_chests', [T('qa/check_chests.js'), '--no-build']],
