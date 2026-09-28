@@ -344,7 +344,7 @@ async function backTo(p, id, max) {
     };
     await openScreen(p, 'menu');
     await p.waitForTimeout(300);
-    const tile = await B.ev(p, `(() => { const L = RPG.Engine.top().list; const r = L.rowRect(2); return {x: r.x + r.w/2, y: r.y + r.h/2}; })()`);
+    const tile = await B.ev(p, `(() => { const T = RPG.Engine.top(), L = T.list; const i = (T.rows || []).findIndex((r) => r.value === 'equip'); const r = L.rowRect(i < 0 ? 1 : i); return {x: r.x + r.w/2, y: r.y + r.h/2}; })()`);
     await tap(tile.x, tile.y);
     ok('touch: tap the 装備 tile → equip', await B.waitFor(p, `${TOP}==='screen:equip'`, 2000), await B.ev(p, TOP));
     const bs = await B.ev(p, "RPG.Input.touchSpot('b')");
