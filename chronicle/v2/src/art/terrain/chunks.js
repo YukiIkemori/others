@@ -330,13 +330,10 @@
     }
     // 木・藪・根・深い森の縁の木、地面の小さな飾り（マスから決まる）
     const th = this.theme, C = this.C;
-    // 下絵のマップの端のチャンク（マップの外のマスを含む）: 外のマスだけはマスから焼き、下絵をその上に置く（外の色の帯を出さない）
-    this.edge = !!und && map.kind !== 'town' && (c0x < 0 || c0y < 0 || c0x + CHUNK > map.w || c0y + CHUNK > map.h);
-    if (und && !this.edge) { this.mats = []; draw.sort((a, b) => a.sortY - b.sortY || a.x - b.x); this.draw = draw; return true; }   // 木・地面の飾りも下絵
-    const inMap = (x, y) => x >= 0 && y >= 0 && x < map.w && y < map.h;
+    if (und) { this.mats = []; draw.sort((a, b) => a.sortY - b.sortY || a.x - b.x); this.draw = draw; return true; }   // 木・地面の飾りも下絵
     for (let y = c0y - 1; y < c0y + CHUNK + 4; y++) for (let x = c0x - 3; x < c0x + CHUNK + 3; x++) {
       const c = C(x, y);
-      if (c.found || !c.tall || (und && inMap(x, y))) continue;
+      if (c.found || !c.tall) continue;
       const fy = (y + 0.86) * t;
       if (c.tall === 'tree') {
         const n = th.twoTrees ? 2 : 1;
@@ -362,7 +359,7 @@
     const dec = th.decor || {};
     for (let y = c0y - 1; y < c0y + CHUNK + 1; y++) for (let x = c0x - 1; x < c0x + CHUNK + 1; x++) {
       const c = C(x, y);
-      if (und || !c.walk || c.water || c.hard || c.raised || c.tall || plan.occ.has(x + ',' + y) || x < 0 || y < 0 || x >= map.w || y >= map.h) continue;
+      if (!c.walk || c.water || c.hard || c.raised || c.tall || plan.occ.has(x + ',' + y) || x < 0 || y < 0 || x >= map.w || y >= map.h) continue;
       if (c.mat === 'road' || c.mat === 'sand' || c.mat === 'dune_sand' || c.mat === 'cracked_clay') continue;
       let k = 0;
       for (const id of Object.keys(dec)) {
@@ -400,7 +397,7 @@
   };
 
   Job.prototype._ground = function (deadline) {
-    if (this.und && !this.edge) return true;
+    if (this.und) return true;
     const t = this.tile, S = this.size;
     if (!this.px) this.px = takePx(S * S);
     const c0x = this.cells[0] - 1, c0y = this.cells[1] - 1, n = CHUNK + 1;
@@ -417,7 +414,7 @@
   };
 
   Job.prototype._rise = function () {
-    if (this.und && !this.edge) return true;
+    if (this.und) return true;
     const [x0, y0, x1, y1] = this.cells;
     T._rise(this.px, this.size, this.X0, this.Y0, this.C, this.tile, x0, y0, x1, y1);
     T._waterEdges(this.px, this.size, this.X0, this.Y0, this.C, this.tile, x0, y0, x1, y1);
@@ -453,7 +450,7 @@
   Job.prototype._put = function (deadline) {
     const S = this.size;
     if (!this.base) { const c = U().canvas(S, S); if (!c) throw new Error('no canvas'); this.base = c; this.bg = c.getContext('2d'); }
-    if (this.und && !this.edge) { this._putUnder(); return true; }
+    if (this.und) { this._putUnder(); return true; }
     const img = imgOf(this.bg, S), h = S / BANDS;
     while (this.i < BANDS) {
       new Uint32Array(img.data.buffer).set(this.px);
@@ -464,16 +461,28 @@
     if (this.i < BANDS) return false;
     givePx(this.px); this.px = null;
     this._macro2();
-    if (this.und) this._putUnder();   // 端のチャンク: マスから焼いた外の上に、マップの中の下絵
     return true;
   };
   Job.prototype._putUnder = function () {
     const S = this.size;
     {
-      // 下絵の同じ所（マップの外は下の絵のまま）
-      const u = this.und, k = u.k, bg = this.bg;
+      // 下絵の同じ所。町でないマップ（ダンジョン）はマップの外に下絵を縁で折り返して置く（外の色の帯・マスの壁との継ぎ目を出さない）
+      const u = this.und, k = u.k, bg = this.bg, map = this.map, t = this.tile, MW = map.w * t, MH = map.h * t, X0 = this.X0, Y0 = this.Y0;
       bg.imageSmoothingEnabled = false;
-      bg.drawImage(u.img, this.X0 / k, this.Y0 / k, S / k, S / k, 0, 0, S, S);
+      if (map.kind !== 'town' && (X0 < 0 || Y0 < 0 || X0 + S > MW || Y0 + S > MH)) {
+        for (const fy of [-1, 0, 1]) for (const fx of [-1, 0, 1]) {
+          if (!fx && !fy) continue;
+          const rx0 = fx < 0 ? -MW : fx > 0 ? MW : 0, ry0 = fy < 0 ? -MH : fy > 0 ? MH : 0;   // この折り返しが受け持つマップの外の範囲
+          if (rx0 + MW <= X0 || rx0 >= X0 + S || ry0 + MH <= Y0 || ry0 >= Y0 + S) continue;
+          bg.save();
+          bg.beginPath(); bg.rect(rx0 - X0, ry0 - Y0, MW, MH); bg.clip();
+          bg.translate((fx ? 2 * (fx > 0 ? MW : 0) : 0) - X0, (fy ? 2 * (fy > 0 ? MH : 0) : 0) - Y0);
+          bg.scale(fx ? -1 : 1, fy ? -1 : 1);
+          bg.drawImage(u.img, 0, 0, MW, MH);
+          bg.restore();
+        }
+      }
+      bg.drawImage(u.img, X0 / k, Y0 / k, S / k, S / k, 0, 0, S, S);
       if (u.closed && u.j.live) {   // 閉じている変わるマス（隠し通路の壁・根の戸・つるの壁…）
         const t = this.tile, [x0, y0, x1, y1] = this.cells, ck = u.closed.k;
         for (const L of u.j.live) {

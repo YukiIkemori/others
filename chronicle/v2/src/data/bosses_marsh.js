@@ -10,7 +10,7 @@
   Object.assign(R.DB.bossActions, {
     eb_doll_raise: { name: '指揮棒を掲げる', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は、指揮棒を高く掲げた……！',
       telegraph: { text: '人形たちが、いっせいに息を吸うように楽器を構えた……。', pose: 'tele', tint: '#f0d8ff', next: 'eb_doll_fortissimo', guard: 'defend', lethal: true } },
-    eb_doll_fortissimo: { name: '楽団の強奏', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.72, guardPct: 0.08, kind: 'blunt' }], fx: 'song', msg: '楽団の音が、嵐のように一行を打ちのめした！' },
+    eb_doll_fortissimo: { name: '楽団の強奏', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.88, guardPct: 0.06, kind: 'blunt' }], fx: 'song', msg: '楽団の音が、嵐のように一行を打ちのめした！' },
     eb_mist_gather: { name: '霧を集める', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}のまわりで、霧が渦を巻きはじめた……！',
       telegraph: { text: '沼じゅうの霧が、霧食らいの口へ吸い寄せられていく……。', pose: 'tele', tint: '#dfe8e8', next: 'eb_mist_wave', guard: 'defend', lethal: true } },
     eb_mist_wave: { name: '霧の大波', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.8, guardPct: 0.1, kind: 'blunt' }], fx: 'breath', msg: '白い霧の大波が、一行をのみこんだ！' },
@@ -22,6 +22,7 @@
     C.s = { hp: 2.1, atk: 0.55, mag: 0.55 };
     for (const id of ['b_doll_violin', 'b_doll_drum', 'b_doll_flute']) if (L[id]) L[id].s = { hp: 0.8, atk: 0.5, mag: 0.5 };
     C.desc = '霧の館で演奏を続ける人形の長。\n棒を掲げたら、楽団の強奏が来る。';
+    if (L.b_doll_flute) L.b_doll_flute.actions = A([['attack', 2], ['eb_flute_lullaby', 1], ['eb_shrill', 2]]);   // 眠った人は強奏を守れない: 眠りの笛は控えめに
   }
   const M = L.b_mistbeast;
   if (M) {

@@ -49,7 +49,7 @@ for y in range(H):
             face[(x, y - j)] = (j, r)
 
 # colours
-WALLTOP = {'wall_cave': (58, 48, 66), 'wall_stone': (52, 56, 70), 'wall_bark': (66, 42, 28), 'rock': (96, 96, 90)}
+WALLTOP = {'wall_cave': (58, 48, 66), 'wall_stone': (78, 82, 96), 'wall_bark': (66, 42, 28), 'rock': (96, 96, 90)}
 FACE = {'cave': (118, 106, 104), 'stone': (160, 160, 164), 'bark': (140, 92, 58), 'rock': (140, 136, 124)}
 FLOOR = {'cave_floor': (112, 112, 132), 'moss_earth': (78, 124, 62), 'flowers': (96, 150, 80), 'water': (40, 110, 190), 'sea': (22, 64, 140),
          'wood_floor': (176, 122, 72), 'carpet': (170, 40, 44), 'grass': (100, 160, 70), 'bark_floor': (184, 126, 76), 'root_floor': (132, 112, 84),
@@ -78,6 +78,9 @@ def draw(T):
                     g.rectangle([x * T, y * T, x * T + T - 1, y * T + max(2, T // 10)], fill=tuple(min(255, int(v * 1.35)) for v in c))
             elif m in WALLTOP and (e.get('solid')):
                 g.rectangle(R(x, y), fill=WALLTOP[m])
+                if m == 'wall_stone':   # masonry seen from above: blocks and joints (so the model textures the wall tops)
+                    for q in range(0, T, T // 2): g.line([x * T, y * T + q, x * T + T, y * T + q], fill=(40, 42, 54), width=lw)
+                    for q in range(0, T, T // 2): g.line([x * T + q + (T // 4 if (y + q // (T // 2)) % 2 else 0), y * T, x * T + q + (T // 4 if (y + q // (T // 2)) % 2 else 0), y * T + T], fill=(40, 42, 54), width=lw)
             else:
                 g.rectangle(R(x, y), fill=FLOOR.get(m, (255, 0, 255)))
     # textures / symbols on top
@@ -95,10 +98,9 @@ def draw(T):
                 g.ellipse([cx - r + rnd.randint(-2, 2), cy - r + rnd.randint(-2, 2), cx + r, cy + r], fill=(30, 84, 46) if m == 'forest_dark' else (52, 130, 60), outline=(12, 40, 20), width=lw)
             elif m == 'bush':
                 r = int(T * 0.45); g.ellipse([cx - r, cy - r, cx + r, cy + r], fill=(84, 156, 66), outline=(30, 70, 30), width=lw)
-            elif m == 'roots':
-                for k in range(4):
-                    a = rnd.random() * math.pi
-                    g.line([cx - math.cos(a) * T * 0.5, cy - math.sin(a) * T * 0.5, cx + math.cos(a) * T * 0.5, cy + math.sin(a) * T * 0.5], fill=(60, 36, 20), width=lw * 3)
+            elif m == 'roots':   # a gnarled knot of roots (irregular dark blob; no crossing strokes: they came back as crates)
+                pts = [(cx + math.cos(a) * T * (0.32 + 0.16 * rnd.random()), cy + math.sin(a) * T * (0.32 + 0.16 * rnd.random())) for a in [i * math.pi / 5 for i in range(10)]]
+                g.polygon(pts, fill=(70, 44, 26), outline=(40, 24, 12))
             elif m == 'rock' and ent(x, y).get('solid'):
                 r = int(T * 0.45); g.ellipse([cx - r, cy - r, cx + r, cy + r], fill=(120, 118, 110), outline=(50, 48, 44), width=lw)
             elif m == 'root_floor':

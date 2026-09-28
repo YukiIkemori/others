@@ -9,10 +9,6 @@
  ],
  "windows32": [],
  "painted": [],
- "files": {
-  "24": "peak_1@24.png",
-  "32": "peak_1@32.png"
- },
  "live": [
   {
    "cells": [
@@ -199,5 +195,10 @@
    ],
    "secret": "4,39"
   }
- ]
+ ],
+ "gain": 0.88,
+ "files": {
+  "24": "peak_1@24.png",
+  "32": "peak_1@32.png"
+ }
 }
