@@ -59,6 +59,13 @@
     return (underCache[ck] = r);
   }
   T._underOf = underOf;
+  /** Env が手放した下絵（img）を使う覚えを捨てる（次に入ったときに読み直す） */
+  T._underForget = function (im) {
+    for (const ck of Object.keys(underCache)) {
+      const r = underCache[ck];
+      if (r && [r.img, r.over && r.over.img, r.emit && r.emit.img, r.closed && r.closed.img].indexOf(im) >= 0) delete underCache[ck];
+    }
+  };
   // 変わるマス（描いた下絵のダンジョン、ENV_ASSETS.md §8）: 下絵は「開いた」形（隠し通路を見つけた後・tilePatches を全部当てた後）で描き、
   //   meta.live = [{cells: [[x, y]…], secret?: 'x,y' | patch?: i | cond?}] の範囲が閉じている間は、そのマスだけ map.art.closed の絵（閉じた形）を上に置く
   function liveClosed(map, L, st) {

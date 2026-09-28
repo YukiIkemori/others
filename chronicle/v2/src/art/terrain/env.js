@@ -7,7 +7,9 @@
 //   T.Env.face(style, tile, h) → {S, H, px}   立ち上がりの面（上の縁＋中＋根元の帯を h マスの高さに組む）
 //   T.Env.prop(id, v, o) → {img, j}  物の画像（変化 v。tree は o.leaf === 'moss' で苔の木）
 //   T.Env.bld(defId) → {img:{tile:Image}, emit:{tile:Image}, j}   建物（地図の建物 id ごと。無ければ def.art の汎用の建物）
-//   T.Env.bbg(id) → {img:{layer:Image}, j}                           戦闘背景（back ground front post と _tall）
+//   T.Env.bbg(id) → {layer(name), j} | null                          戦闘背景（back ground front post と _tall）。使う時に読む（読めるまで null）
+//   T.Env.awaitBbg(id, ms) / T.Env.awaitMap(map, tile, ms) → Promise   戦闘背景・マップの下絵を読み終えるまで待つ（上限 ms）
+//   T.Env.stats() → {heldMB, n, capMB, evicted}                       使う時に読んだ絵（下絵・戦闘背景）の展開した大きさ（LRU で CAP まで）
 //   T.Env.meanColor(id) → css | null 素材の代表の色（小地図・地図）
 //   T.Env.under(key, tile) → {img, k, j} | null   マップ 1 枚の描いた下絵（使う時に読む。読めるまで null、読めたら今のマップのチャンクを焼き直す）（'<theme>/under/<name>'。map.art.image・overlay・emit が指す。
 //                                    k = tile / 画像のマスの大きさ。j = <name>.json の meta: windows32 など）
@@ -122,49 +124,167 @@
     const b = X.bld[id];
     return { id, b, j: E.metaOf(b[32]) || {}, img: (t) => pickTile(b, t), emit: (t) => pickTile(b.emit, t) };
   };
+  // ------------------------------------------------------------------ 使う時に読み、遠い物を手放す（下絵・戦闘背景。2026-09-28）
+  // 下絵（/under/）と戦闘背景（bbg/）は起動で読まない（全部を展開すると 1 GB を超え、ページが落ちる）。
+  //   下絵: 入るマップの分（本体・_over・_emit・_closed、今のマスの大きさ）を F.enter の暗転の中で待つ（E.awaitMap）。隣のマップは map:enter で先に読む。
+  //   戦闘背景: その地方の分を map:enter で先に読み、戦闘の始まりで待つ（E.awaitBbg）。読めるまでに焼いたコードの絵は、読めたら忘れて焼き直す。
+  //   展開した大きさ（幅×高さ×4）の合計が CAP を超えたら、使っていない順に手放す（今のマップと待っている物は残す）。
+  const CAP = 176 * 1048576;
+  const held = new Map();   // key → {bytes, used}
+  const loading = {};       // key → Promise<bool>
+  const pinned = new Set(); // 待っている間は手放さない
+  let useN = 0;
+  function curTile() { try { return ({ near: 40, normal: 32, far: 24 })[R.Settings.get('fieldZoom')] || 32; } catch (e) { return 32; } }
+  function rec(k) { return R.Media && R.Media.image ? R.Media.image(k, 'env') : null; }
+  function touch(k) { const h = held.get(k); if (h) h.used = ++useN; }
+  function hold(k) {
+    const im = img(k);
+    if (!im) return false;
+    if (!held.has(k)) held.set(k, { bytes: im.width * im.height * 4, used: ++useN }); else touch(k);
+    return true;
+  }
+  /** 1 枚を読んで展開する → Promise<読めたか> */
+  function loadKey(k) {
+    if (hold(k)) return Promise.resolve(true);
+    if (loading[k]) return loading[k];
+    if (!R.Media || !R.Media.preload) return Promise.resolve(false);
+    loading[k] = Promise.resolve(R.Media.preload('env', [k])).then(() => {
+      const r = rec(k);
+      return r && r.ready && r.img && r.img.decode ? r.img.decode().catch(() => null) : null;   // 地図帳の切り出し（canvas）は decode 不要
+    }).catch(() => null).then(() => {
+      delete loading[k];
+      const ok = hold(k);
+      if (ok) trim();
+      return ok;
+    });
+    return loading[k];
+  }
+  const settled = (k) => { const r = rec(k); return !r || r.ready || r.failed; };
+  /** マップの今のマスの大きさの層の key（本体・_emit・_over・_closed と map.art が指す物） */
+  function mapKeys(map, tile) {
+    const a = map && map.art, out = [];
+    if (!E.ready || !a || !a.image) return out;
+    const U = I().under, base = a.image.replace(/_(emit|over|closed)$/, '');
+    const names = new Set([base, base + '_emit', base + '_over', base + '_closed']);
+    for (const f of ['overlay', 'emit', 'closed']) if (a[f]) names.add(a[f]);
+    for (const n of names) { const keys = U[n]; if (!keys) continue; const k = keys[tile] || keys[32]; if (k) out.push(k); }
+    return out;
+  }
+  function curMap() { const F = R.Field; return F && F._s ? F._s.map : null; }
+  function release(k) {
+    const im = img(k);
+    held.delete(k);
+    if (T._underForget && im) T._underForget(im);   // TERRAIN のチャンクが覚えた下絵も
+    if (R.Media.release) R.Media.release(k, 'env');
+    E.evicted = (E.evicted || 0) + 1;
+  }
+  function trim() {
+    let total = 0;
+    for (const h of held.values()) total += h.bytes;
+    if (total <= CAP) return;
+    const keep = new Set(pinned);
+    const m = curMap();
+    if (m) for (const k of mapKeys(m, curTile())) keep.add(k);
+    const list = [...held.entries()].filter(([k]) => !keep.has(k) && !loading[k]).sort((a, b) => a[1].used - b[1].used);
+    for (const [k, h] of list) { if (total <= CAP) break; release(k); total -= h.bytes; }
+  }
+  function timeout(ms) { return R.wait && R.Engine && R.Engine.running ? R.wait(ms) : new Promise((res) => setTimeout(res, ms)); }
+  function waitAll(keys, ms) {
+    if (!keys.length) return Promise.resolve(true);
+    for (const k of keys) pinned.add(k);
+    const all = Promise.all(keys.map(loadKey)).then((r) => r.every(Boolean));
+    return Promise.race([all, timeout(ms || 3000).then(() => false)]).then((ok) => { for (const k of keys) pinned.delete(k); return ok; });
+  }
+  E.stats = function () {
+    let b = 0;
+    for (const h of held.values()) b += h.bytes;
+    return { heldMB: +(b / 1048576).toFixed(1), n: held.size, capMB: CAP / 1048576, loading: Object.keys(loading).length, evicted: E.evicted || 0 };
+  };
+  E._held = held;
+
+  // 戦闘背景
+  const bbgLoading = {}, fellBack = {};
+  function bbgKeys(id) { const b = E.ready && I().bbg[id]; return b && b.back ? Object.values(b) : []; }
+  function bbgLoad(id) {
+    const ks = bbgKeys(id);
+    if (!ks.length) return Promise.resolve(false);
+    if (bbgLoading[id]) return bbgLoading[id];
+    return (bbgLoading[id] = Promise.all(ks.map(loadKey)).then(() => {
+      delete bbgLoading[id];
+      const ok = !!img(I().bbg[id].back);
+      // 読めるまでにコードの絵で焼いた物を忘れ、描いた絵で焼き直す
+      if (ok && fellBack[id] && R.Hd && R.Hd.forget) {
+        delete fellBack[id];
+        const hk = 'hd:bbg:' + id;
+        try { R.Hd.forget(hk); if (R.Hd.want && R.Hd.has && R.Hd.has(hk)) R.Hd.want(hk, { w: R.W, h: R.H }, -3); } catch (e) { /* 次に使うときに焼く */ }
+      }
+      return ok;
+    }));
+  }
   E.bbg = function (id) {
     if (!E.ready) return null;
     const b = I().bbg[id];
     if (!b || !b.back) return null;
-    const out = { j: E.metaOf(b.back) || {}, layer: (name) => img(b[name]) };
-    return out.layer('back') ? out : null;
+    const ks = Object.values(b);
+    if (!img(b.back) || !ks.every(settled)) { fellBack[id] = true; bbgLoad(id); return null; }
+    for (const k of ks) touch(k);
+    return { j: E.metaOf(b.back) || {}, layer: (name) => img(b[name]) };
   };
+  /** 戦闘背景の絵を読み終えるまで待つ（上限 ms）→ Promise<読めたか> */
+  E.awaitBbg = function (id, ms) {
+    if (!E.ready || typeof Image === 'undefined' || !bbgKeys(id).length) return Promise.resolve(false);
+    const ks = bbgKeys(id);
+    for (const k of ks) pinned.add(k);
+    return Promise.race([bbgLoad(id), timeout(ms || 2500).then(() => false)]).then((ok) => { for (const k of ks) pinned.delete(k); return ok; });
+  };
+
   /** 描いた下絵（マップ 1 枚）: 32 の絵の meta も返す（_emit・_over は meta を持たないので本体の名前で引く） */
-  // 下絵は使う時に読む（E.under が null を返すあいだ、チャンクはタイルで焼く。読めたら今のマップの物ならチャンクを焼き直す）
-  const underLoad = {};
+  // 下絵は使う時に読む（E.under が null を返すあいだ、チャンクはタイルで焼く。今のマップの層が全部読めたらチャンクを焼き直す）
   function loadUnder(k) {
-    if (underLoad[k] || !R.Media || !R.Media.preload) return underLoad[k] || null;
-    underLoad[k] = Promise.resolve(R.Media.preload('env', [k])).then(() => {
-      const r = R.Media.image(k, 'env'); return r && r.ready && r.img && r.img.decode ? r.img.decode().catch(() => null) : null;
-    }).catch(() => null).then(() => {
+    return loadKey(k).then((ok) => {
       try {
-        const F = R.Field, m = F && F._s && F._s.map, a = m && m.art;
-        if (a && [a.image, a.overlay, a.emit, a.closed].some((x) => x && k.indexOf(x + '@') === 0) && F.chunks && F.chunks.reset) F.chunks.reset();
+        const F = R.Field, m = curMap();
+        if (!ok || !m || !F.chunks || !F.chunks.reset || (F._s && F._s.entering)) return ok;   // 入る途中は F.enter が焼く
+        const ks = mapKeys(m, curTile());
+        if (ks.indexOf(k) >= 0 && ks.every((x) => img(x))) F.chunks.reset();
       } catch (e) { /* 焼き直せなくても次に入ったときに使う */ }
+      return ok;
     });
-    return underLoad[k];
   }
-  /** 下絵の本体と、その層（_emit・_over・_closed）をこのマスの大きさで読んでおく（読めていれば true） */
-  function underReady(key, tile) {
+  /** 下絵の本体と、その層（_emit・_over・_closed）をこのマスの大きさで読んでおく（読めていれば true）。noLoad は読み始めない */
+  function underReady(key, tile, noLoad) {
     const U = I().under; let ok = true;
     for (const sfx of ['', '_emit', '_over', '_closed']) {
       const keys = U[key + sfx]; if (!keys) continue;
       const k = keys[tile] || keys[32]; if (!k) continue;
-      if (!img(k)) { ok = false; loadUnder(k); }
+      if (noLoad ? !(held.has(k) && img(k)) : !img(k)) { ok = false; if (!noLoad) loadUnder(k); }
+      else touch(k);
     }
     return ok;
   }
   E.underReady = underReady;
-  /** マップ（とその隣のマップ）の下絵を先に読む（map.art）。FIELD の map:enter から */
+  /** マップの下絵を先に読む（map.art）。map:enter の隣のマップから */
   E.warmUnder = function (map, tile) {
     if (!E.ready || !map || !map.art || !map.art.image) return;
-    underReady(map.art.image.replace(/_(emit|over|closed)$/, ''), tile || 32);
+    for (const k of mapKeys(map, tile || curTile())) if (!img(k)) loadUnder(k);
   };
-  E.under = function (key, tile) {
+  /** マップの下絵が今のマスの大きさでそろっているか（無ければ読み始める）。FIELD の先焼き（CK.preload）が、タイルで焼いた物を使い回さないように */
+  E.mapReady = function (map, tile) {
+    const ks = mapKeys(map, tile || curTile());
+    let ok = true;
+    for (const k of ks) if (!img(k)) { ok = false; loadUnder(k); } else touch(k);
+    return ok;
+  };
+  /** 入るマップの下絵を読み終えるまで待つ（F.enter の暗転の中。上限 ms）→ Promise<読めたか> */
+  E.awaitMap = function (map, tile, ms) {
+    if (!E.ready || typeof Image === 'undefined' || !map || !map.art) return Promise.resolve(true);
+    return waitAll(mapKeys(map, tile || curTile()), ms || 4000);
+  };
+  E.under = function (key, tile, noLoad) {
     if (!E.ready || !key) return null;
     const keys = I().under[key];
     if (!keys) return null;
-    if (!underReady(key.replace(/_(emit|over|closed)$/, ''), tile)) return null;   // 本体と層がそろうまではタイルのまま
+    if (!underReady(key.replace(/_(emit|over|closed)$/, ''), tile, noLoad)) return null;   // 本体と層がそろうまではタイルのまま
     const p = pickTile(keys, tile);
     if (!p) return null;
     const baseKey = key.replace(/_(emit|over|closed)$/, ''), bk = I().under[baseKey];
@@ -187,53 +307,84 @@
     const all = Object.keys(table());
     if (!all.length) return;
     const t0 = typeof performance !== 'undefined' ? performance.now() : 0;
-    // 起動で待つのは縦切りの分（共通・序章と森のテーマ・縦切りの戦闘背景）の今のマスの大きさの絵だけ。ほかの地方と別の大きさは後ろで読む
-    let tile = 32;
-    try { tile = ({ near: 40, normal: 32, far: 24 })[R.Settings.get('fieldZoom')] || 32; } catch (e) { tile = 32; }
-    const SLICE = /^(common|harbor|hill_village|treetop|moss_village|tree_inside|lighthouse|cave|forest_dungeon|snow|desert)\//, SLICE_BBG = /^bbg\/(coast|tower|forest|tree|cave|snow|desert)\//;
-    // マップ 1 枚の下絵（/under/）は起動でもあとでも読まない: 入ったマップとその隣の分だけ E.under が読む（全部で数百 MB になり、
-    // 起動で全部を展開すると Chromium のページが落ちる。2026-09-28）
-    const UNDER = /\/under\//;
-    const now = all.filter((k) => !UNDER.test(k) && ((SLICE.test(k) && new RegExp('@' + tile + '$').test(k)) || SLICE_BBG.test(k)));
-    const later = all.filter((k) => !UNDER.test(k) && now.indexOf(k) < 0);
+    // 起動で読むのは素材・物・建物（下絵と戦闘背景は使う時に読む。上の「使う時に読み」）の今のマスの大きさの分だけ。
+    // 待つのは縦切りのテーマの分、ほかのテーマは後ろで。別の大きさはマスの大きさを変えたときに読む（2026-09-28: 全部で 1.4 GB）
+    const SLICE = /^(common|harbor|hill_village|treetop|moss_village|tree_inside|lighthouse|cave|forest_dungeon|snow|desert)\//;
+    const LAZY = /\/under\/|^bbg\//;
+    const has = new Set(all);
+    /** マスの大きさ t の素材・物・建物（t の絵が無い物は 32 の絵。pickTile と同じ） */
+    const setOf = (t) => all.filter((k) => {
+      if (LAZY.test(k)) return false;
+      const m = /@(\d+)$/.exec(k);
+      if (!m) return t === 32;
+      if (+m[1] === t) return true;
+      return +m[1] === 32 && !has.has(k.replace(/@32$/, '@' + t));
+    });
     const decode = (keys) => Promise.all(keys.map((k) => { const r = R.Media.image(k, 'env'); return r && r.ready && r.img.decode ? r.img.decode().catch(() => null) : null; }));
-    // 32 枚ずつ（一度に全部を頼むと、描いた下絵が増えた今は Chromium が ERR_INSUFFICIENT_RESOURCES で落ちる。2026-09-28）
-    for (let i = 0; i < now.length; i += 32) {
-      const b = now.slice(i, i + 32);
-      try { await R.Media.preload('env', b); await decode(b); } catch (e) { /* 読めた物だけ使う */ }
-    }
-    E.bootMs = Math.round((typeof performance !== 'undefined' ? performance.now() : 0) - t0); E.bootN = now.length;
-    // 残りは少しずつ（12 枚ずつ読み、展開してから次へ）。読み終えたら物の絵を焼き直す（地方の物・別の大きさ）
-    E.later = (async () => {
-      for (let i = 0; i < later.length; i += 12) {
-        const b = later.slice(i, i + 12);
-        try { await R.Media.preload('env', b); await decode(b); } catch (e) { /* 読めた物だけ */ }
+    const loadList = async (list, n) => {
+      for (let i = 0; i < list.length; i += n) {
+        const b = list.slice(i, i + n);
+        try { await R.Media.preload('env', b); await decode(b); } catch (e) { /* 読めた物だけ使う */ }
       }
-      idx = null; E.all = true;
+    };
+    // 読み終えたら、読めていなかった間にコードの絵で焼いた物（素材・面・物）を焼き直す
+    const refresh = () => {
+      idx = null;
       for (const k of Object.keys(matCache)) if (!matCache[k]) delete matCache[k];
       for (const k of Object.keys(faceCache)) if (!faceCache[k]) delete faceCache[k];
       if (R.Hd && R.Hd.keys && R.Hd.forget) for (const k of R.Hd.keys('hd:prop:')) if (T._envProp && T.Env.prop(k.slice(8), 0, {})) R.Hd.forget(k);
-    })();
-    const keys = all;
+    };
+    const tile = curTile();
+    const set = setOf(tile);
+    const now = set.filter((k) => SLICE.test(k));
+    const later = set.filter((k) => !SLICE.test(k));
+    // 32 枚ずつ（一度に全部を頼むと Chromium が ERR_INSUFFICIENT_RESOURCES で落ちる）
+    await loadList(now, 32);
+    E.bootMs = Math.round((typeof performance !== 'undefined' ? performance.now() : 0) - t0); E.bootN = now.length;
+    const loadedTiles = new Set([tile]);
+    E.later = (async () => { await loadList(later, 12); refresh(); E.all = true; })();
+    // マスの大きさを変えた: その大きさの分を後ろで読む
+    if (R.on) R.on('settings', (e) => {
+      if (!e || e.key !== 'fieldZoom') return;
+      const t = curTile();
+      if (loadedTiles.has(t)) return;
+      loadedTiles.add(t);
+      E.later = Promise.resolve(E.later).then(() => loadList(setOf(t), 12)).then(refresh);
+    });
     idx = null;
     E.ready = true;
-    E.count = keys.length;
+    E.count = all.length;
     // 先に焼かれた（コードの絵の）物を忘れる
     if (R.Hd && R.Hd.keys && R.Hd.forget) for (const p of ['hd:prop:', 'hd:bld:', 'hd:bbg:', 'hd:secret:']) for (const k of R.Hd.keys(p)) R.Hd.forget(k);
     if (T._envReset) T._envReset();
     if (T._faceReset) T._faceReset();
     // 画像にしかない物の登録（家具・木の変化などの新しい id）。R.DB.props にも足す（CONTENT が置ける）
     if (T._envRegisterProps) T._envRegisterProps();
-    // 入ったマップの隣（出口・扉・階段の行き先）の下絵を先に読む
+    // 入ったマップの隣（出口・扉・階段・建物の入口の行き先）の下絵と、このマップの戦闘背景を先に読む。
+    // 隣は近い順に、見積もり（幅×高さ×マス²×4×層）で WARM_MB まで（町の扉が多くても全部は読まない。遠い物は LRU が手放す）
+    const WARM_MB = 64;
     if (R.on) R.on('map:enter', (e) => {
       try {
-        let t = 32; try { t = ({ near: 40, normal: 32, far: 24 })[R.Settings.get('fieldZoom')] || 32; } catch (x) { t = 32; }
+        const t = curTile();
         const M = R.DB.maps || {}, m = M[e && e.map]; if (!m) return;
         E.warmUnder(m, t);
-        const to = new Set();
-        for (const x of m.exits || []) if (x.to && x.to.map) to.add(x.to.map);
-        for (const o of m.objects || []) { if (o.to && o.to.map) to.add(o.to.map); if (o.door && o.door.to && o.door.to.map) to.add(o.door.to.map); }
-        for (const id of to) E.warmUnder(M[id], t);
+        const F = R.Field, S = F && F._s, px = S && S.map === m ? S.x : 0, py = S && S.map === m ? S.y : 0;
+        const to = new Map();
+        const add = (x, y, dest) => { if (!dest || !dest.map || dest.map === m.id || !M[dest.map] || !M[dest.map].art) return; const d = Math.hypot((x || 0) - px, (y || 0) - py); if (!to.has(dest.map) || to.get(dest.map) > d) to.set(dest.map, d); };
+        for (const x of m.exits || []) add(x.x, x.y, x.to);
+        for (const o of m.objects || []) { add(o.x, o.y, o.to); if (o.door) add(o.door.x, o.door.y, o.door.to); }
+        let mb = 0;
+        for (const [id] of [...to.entries()].sort((a, b) => a[1] - b[1])) {
+          const n = M[id], layers = mapKeys(n, t).length || 1;
+          mb += ((n.w || 32) * (n.h || 32) * t * t * 4 * layers) / 1048576;
+          if (mb > WARM_MB) break;
+          E.warmUnder(n, t);
+        }
+        // 戦闘背景: マップの bbg と出現表の bg
+        const bgs = new Set();
+        if (m.bbg) bgs.add(m.bbg);
+        for (const z of m.zones || []) { const en = R.DB.encounters && R.DB.encounters[z.zone]; if (en && en.bg) bgs.add(en.bg); }
+        for (const id of bgs) bbgLoad(id);
       } catch (x) { /* 先読みできなくても入ったときに読む */ }
     });
   });
