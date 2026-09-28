@@ -52,31 +52,31 @@
    "to": "face_neutral",
    "dx": 0,
    "dy": 0,
-   "fit": 1.286
+   "fit": 1.34
   },
   "face_sad": {
    "to": "face_neutral",
    "dx": 0,
    "dy": 0,
-   "fit": 1.341
+   "fit": 1.409
   },
   "face_angry": {
    "to": "face_neutral",
    "dx": 0,
    "dy": 0,
-   "fit": 1.339
+   "fit": 1.421
   },
   "face_surprise": {
    "to": "face_neutral",
    "dx": 0,
    "dy": 0,
-   "fit": 1.242
+   "fit": 1.324
   },
   "face_closed": {
    "to": "face_neutral",
    "dx": 0,
    "dy": 0,
-   "fit": 1.254
+   "fit": 1.327
   }
  },
  "attach": {},

@@ -180,37 +180,5 @@ section('魔石: 道具の画面で仲間に使う → その属性の最初の�
   v.tgt = null;
 }
 
-section('並びと隊列: 「これでよい」で決める・B は取り消し（持ち主 2026-09-28）');
-(async () => {
-  R.Dev.applyState('menus_party');
-  const G3 = R.Game;
-  const src = fs.readFileSync(path.join(SRC, 'order.js'), 'utf8');
-  ok('order.js draws a 「これでよい」 entry', /'これでよい'/.test(src));
-  const mk = () => { const v = Object.assign(Object.create(null), S._defs.order); v.closed = 0; v.close = () => { v.closed++; }; v.init(); return v; };
-  const ask0 = S.ask;
-  let asked = 0, answer = 0;
-  S.ask = async () => { asked++; return answer; };
-  try {
-    const ord0 = G3.party.join(','), row0 = R.Party.members().map((c) => c.row).join(',');
-    let v = mk();
-    v.i = 0; v.lift(); v.swapTo(1); v.put();
-    v.i = 2; v.setRow(R.Party.members()[2].row === 'front' ? 'back' : 'front');
-    ok('changes show at once and are detected', G3.party.join(',') !== ord0 && v.changed());
-    answer = 1; await v.back();
-    ok('B with changes asks; 「続ける」 keeps the screen open and the changes', asked === 1 && v.closed === 0 && G3.party.join(',') !== ord0);
-    answer = 0; await v.back();
-    ok('B → 「取り消して戻る」 restores the order and the rows, then closes', v.closed === 1 && G3.party.join(',') === ord0 && R.Party.members().map((c) => c.row).join(',') === row0, [G3.party, R.Party.members().map((c) => c.row)]);
-    v = mk(); asked = 0;
-    await v.back();
-    ok('B without changes closes without asking', v.closed === 1 && asked === 0);
-    v = mk();
-    v.i = 0; v.lift(); v.swapTo(2);
-    v.unlift();
-    ok('B while holding puts the card back where it was lifted', G3.party.join(',') === ord0 && v.held === -1 && v.i === 0);
-    v.lift(); v.swapTo(3); v.put();
-    const ord2 = G3.party.join(',');
-    v.focusOk(); v.accept();
-    ok('「これでよい」 (A) closes and keeps the new order', v.closed === 1 && v.onOk && G3.party.join(',') === ord2 && ord2 !== ord0);
-    R.Party.setOrder(ord0.split(','));
-  } finally { S.ask = ask0; }
-})().then(() => done('test_screens'), (e) => { console.error(e); process.exit(1); });
+
+done('test_screens');

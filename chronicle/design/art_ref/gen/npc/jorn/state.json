@@ -326,6 +326,13 @@
      "kind": "full",
      "extra": "",
      "t": "2026-09-28T21:28:07"
+    },
+    {
+     "raw": "raw/s3_a2.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "- NO staff in these busts: remove the village-head staff completely; chest-up bust only, hands out of frame, like the template.\n- The bust is centred in each cell exactly like the template (same head size and position).",
+     "t": "2026-09-28T21:54:35"
     }
    ],
    "frames": {
@@ -333,8 +340,8 @@
      "row": 1,
      "column": 1,
      "logical_bbox": [
-      86,
-      79
+      81,
+      80
      ],
      "air": 0
     },
@@ -342,8 +349,8 @@
      "row": 1,
      "column": 2,
      "logical_bbox": [
-      87,
-      79
+      80,
+      80
      ],
      "air": 0
     },
@@ -351,8 +358,8 @@
      "row": 1,
      "column": 3,
      "logical_bbox": [
-      86,
-      79
+      81,
+      80
      ],
      "air": 0
     },
@@ -360,7 +367,7 @@
      "row": 2,
      "column": 1,
      "logical_bbox": [
-      86,
+      81,
       80
      ],
      "air": 0
@@ -369,7 +376,7 @@
      "row": 2,
      "column": 2,
      "logical_bbox": [
-      87,
+      80,
       80
      ],
      "air": 0
@@ -378,15 +385,15 @@
      "row": 2,
      "column": 3,
      "logical_bbox": [
-      87,
+      80,
       80
      ],
      "air": 0
     }
    },
    "notes": [],
-   "pitch": 5.475,
-   "from_raw": "raw/s3_a1.png"
+   "pitch": 5.7,
+   "from_raw": "raw/s3_a2.png"
   }
  }
 }

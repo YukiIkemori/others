@@ -29,3 +29,13 @@
 21:36:20   | packed field 232x232, face 273x168 | palette 52 + face 48
 21:36:21 to_v2 npc_jorn: npc_jorn → /home/user/others/chronicle/v2/assets/sprites/npc_jorn |   field: 16 frames |   face: 6 frames
 21:53:32 sheet 3 attempt 2: edit of the Arun template 1728x1152 (pitch 6, quality medium, 3 refs) + notes
+21:54:36   pitch in raw image: 5.70 px per art pixel (upright median 456 px / 80)
+21:54:36 sheet 3 -> art_ref/gen/npc/jorn/npc_jorn_s3.png (6 poses)
+21:54:47 pipeline: sheets.py ../art_ref/gen/npc/jorn --npc jorn --out out/npc/npc_jorn
+21:55:31   | 
+21:55:31   | ■ シートの状態
+21:55:31   |   シート1 歩き＋演技4: 確認あり  npc_jorn_s1.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+21:55:31   |   シート3 顔6: OK  npc_jorn_s3.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+21:55:31   | 
+21:55:31   | packed field 232x232, face 255x168 | palette 52 + face 48
+21:55:31 to_v2 npc_jorn: npc_jorn → /home/user/others/chronicle/v2/assets/sprites/npc_jorn |   field: 16 frames |   face: 6 frames

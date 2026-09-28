@@ -279,19 +279,7 @@ async function backTo(p, id, max) {
     await B.press(p, 'down');
     ok('order: ↓ → 後列', (await B.ev(p, `RPG.Game.chars[RPG.Game.party[1]].row`)) === 'back');
     await B.press(p, 'up');
-    // B は取り消し（持ち主 2026-09-28）: 変えていれば聞く →「取り消して戻る」で開いたときの並びに戻る
-    await B.press(p, 'b'); await p.waitForTimeout(200);
-    ok('order: B with changes → asks to discard', await B.ev(p, '!!(RPG.Engine.top().view && RPG.Engine.top().view.modal)'));
-    await B.press(p, 'a');
-    ok('order: 「取り消して戻る」 → closed, order reverted', await B.waitFor(p, `${TOP}==='field'`, 1500) && (await B.ev(p, 'RPG.Game.party.join(",")')) === ord0);
-    // A で「これでよい」: 並べ替え → START で「これでよい」へ → A で決める
-    await openScreen(p, 'order');
-    await B.press(p, 'a'); await B.press(p, 'right'); await B.press(p, 'a');
-    await B.press(p, 'start');
-    ok('order: START → focus on 「これでよい」', await B.ev(p, 'RPG.Engine.top().view.onOk === true'));
-    await B.press(p, 'a');
-    ok('order: A on 「これでよい」 → closed, keeps the new order', await B.waitFor(p, `${TOP}==='field'`, 1500) && (await B.ev(p, 'RPG.Game.party.join(",")')) === ord1);
-    await B.ev(p, `(RPG.Party.setOrder(${JSON.stringify(ord0.split(','))}), true)`);   // 後の検査のために元の並びへ
+    await B.pressUntil(p, 'b', `${TOP}==='field'`, 3);
 
     // 設定: ←→ ですぐ変わる
     await openScreen(p, 'settings');

@@ -96,10 +96,13 @@
    * 空いた場所: 候補を順に見て、どの敵（taken。x・y・size・boss）にも重ならない最初の所。
    * 空きが無ければ（混んでいる）枠の中を細かく探し、いちばん離れている所（重なりを小さく）。
    */
-  function spotFor(L, taken, u) {
+  function spotFor(L, taken, u, near) {
     const fp = foot(u);
     const withBoss = taken.some((q) => q.boss);
-    for (const c of candidates(L, withBoss)) if (!taken.some((q) => clash(c, fp, q))) return c;
+    const cs = candidates(L, withBoss);
+    // near: 味方に近い（x が大きい）順。呼ばれた敵が左端の草の陰に隠れないように
+    if (near) cs.sort((a, b) => b.x - a.x);
+    for (const c of cs) if (!taken.some((q) => clash(c, fp, q))) return c;
     const Z = zone(L);
     let best = null, bestD = -Infinity;
     for (let y = Z.y0; y <= Z.y1; y += 10) {
@@ -143,7 +146,7 @@
   };
 
   /** 呼び出し（summon）で来た敵 u の空いた場所。taken = 今見えている敵の actor（x・y・size・boss） */
-  Lay.freeSpot = function (L, taken, u) { return spotFor(L, taken || [], u || { size: 'm' }); };
+  Lay.freeSpot = function (L, taken, u) { return spotFor(L, taken || [], u || { size: 'm' }, true); };
 
   /** 奥行きの係数（見本の scaleAt。影の長さ・濃さに使う） */
   Lay.depth = function (L, y) { return Math.max(0.6, Math.min(1.2, (y - L.horizon + 200) / 400)); };
