@@ -152,7 +152,7 @@
     if (X().round(ev) >= 4 && !ev.flag('ash_eve_done')) await ev.call('ash_eve');
   }, { meta: { needs: [], gives: [], calls: ['ash_eve'] } });
   E('caldera_inn_guest', async (ev) => {
-    await ev.say('inn_guest', ['荒野の北の岩の間に、\n湯の郷があるんだ。湯気が\n噴き出してるから、すぐわかる。', '西の折れた剣の碑には、\n近づかんほうがいい。\n夜ごと、鬨の声がするそうだ。']);
+    await ev.say('inn_guest', ['荒野の北の岩の間に、\n湯の郷があるんだ。湯気が\n噴き出してるから、すぐわかる。', '西の折れた剣の碑には、\n近づかんほうがいい。\n夜ごと、ときの声がするそうだ。']);
     ev.lead('l_opt_spa');
     ev.lead('l_opt_battlefield');
   }, { meta: { needs: [], gives: ['lead:l_opt_spa', 'lead:l_opt_battlefield'] } });
@@ -217,7 +217,7 @@
   // 【灯りを守る】火守りの見習い: 神殿の種火を、崖の上の灯籠 3 つへ
   E('caldera_seed_fire', async (ev) => {
     if (ev.flag('q_ash_lanterns_on') && !ev.has('k_seed_fire') && !ev.flag('ash_lanterns_done')) {
-      await ev.say(null, '祭壇の種火を、素焼きの火壺に\n分けてもらった。');
+      await ev.say(null, '祭壇の種火を、素焼きの火つぼに\n分けてもらった。');
       ev.item('k_seed_fire', 1);
       return;
     }
@@ -277,7 +277,7 @@
 
   // ---------------------------------------------------------------- 闘技場の人と物（名簿・銘板・立会人の席・賭け・ザクロ）
   E('arena_roster', async (ev) => {
-    await ev.say(null, ['受付の台の上の、大会の名簿。', '若者組・獣使いのガロ・\n術師の姉妹・鉄鎧のバルガ……', '「十六番　ザクロ（記録院付き）」\nそこだけ、見慣れない字の札だ。']);
+    await ev.say(null, ['受付の台の上の、大会の名簿。', '若者組・獣使いのガロ・\n術師の姉妹・鉄鎧のバルガ……。', '「十六番、ザクロ（記録院付き）」\nそこだけ、見慣れない字の札だ。']);
     await X().lore(ev, 'lo_ev_ash');
     ev.lead('l_main_recorder_ash');
     ev.lead('l_ash_stranger');

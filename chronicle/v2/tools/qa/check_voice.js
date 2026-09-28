@@ -69,6 +69,7 @@ for (const id of SLICE) {
 const REGION = ['v_hazal_tomb_01', 'v_hazal_tomb_02', 'v_hazal_tomb_03', 'v_hazal_tomb_04', 'v_giant_peak_01', 'v_neve_peak_01', 'v_neve_peak_02', 'v_neve_peak_03',
   'v_fine_snow_01', 'v_melda_manor_01', 'v_melda_manor_02', 'v_melda_manor_03', 'v_melda_manor_04', 'v_melda_manor_05', 'v_mistwitch_marsh_01', 'v_melda_marsh_01', 'v_fine_marsh_01'];
 section('地方のボイス（script.csv の録音済みの行）');
+REGION.push('v_fine_ash_01'); // 2026-09-28: 灰の荒野の火口のフィーネ（script.csv の録音済みの行のまま）
 for (const id of REGION) {
   const u = used[id] || [];
   ok(`${id}: イベントで 1 回`, u.length === 1, u.map((x) => x.file));

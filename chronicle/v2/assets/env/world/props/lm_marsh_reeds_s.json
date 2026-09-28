@@ -1,0 +1,47 @@
+{
+ "id": "lm_marsh_reeds_s",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   34,
+   30
+  ],
+  "32": [
+   46,
+   40
+  ],
+  "40": [
+   58,
+   50
+  ]
+ },
+ "feet": {
+  "24": [
+   17,
+   28
+  ],
+  "32": [
+   23,
+   38
+  ],
+  "40": [
+   29,
+   48
+  ]
+ },
+ "files": {
+  "24": "lm_marsh_reeds_s@24.png",
+  "32": "lm_marsh_reeds_s@32.png",
+  "40": "lm_marsh_reeds_s@40.png"
+ },
+ "fam": "marsh",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  1,
+  1
+ ]
+}

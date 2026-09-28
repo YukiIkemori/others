@@ -1,0 +1,47 @@
+{
+ "id": "lm_bridge_foot_h",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   89,
+   50
+  ],
+  "32": [
+   119,
+   66
+  ],
+  "40": [
+   149,
+   82
+  ]
+ },
+ "feet": {
+  "24": [
+   45,
+   48
+  ],
+  "32": [
+   60,
+   64
+  ],
+  "40": [
+   74,
+   80
+  ]
+ },
+ "files": {
+  "24": "lm_bridge_foot_h@24.png",
+  "32": "lm_bridge_foot_h@32.png",
+  "40": "lm_bridge_foot_h@40.png"
+ },
+ "fam": "bridge",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  3,
+  2
+ ]
+}

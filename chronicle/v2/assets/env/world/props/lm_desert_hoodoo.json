@@ -1,0 +1,47 @@
+{
+ "id": "lm_desert_hoodoo",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   50,
+   63
+  ],
+  "32": [
+   67,
+   84
+  ],
+  "40": [
+   84,
+   105
+  ]
+ },
+ "feet": {
+  "24": [
+   25,
+   62
+  ],
+  "32": [
+   34,
+   82
+  ],
+  "40": [
+   42,
+   102
+  ]
+ },
+ "files": {
+  "24": "lm_desert_hoodoo@24.png",
+  "32": "lm_desert_hoodoo@32.png",
+  "40": "lm_desert_hoodoo@40.png"
+ },
+ "fam": "desert",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  2,
+  2
+ ]
+}

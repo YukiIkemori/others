@@ -154,7 +154,7 @@
       K.npc('guard_e', 'npc_ash_fighter', 50, 28, { name: '東の門番', dir: 'n', talk: 'caldera_gate_e', reward: 'boss' }),
       K.npc('apprentice', 'npc_ash_acolyte', 31, 5, { name: '火守りの見習いのトト', dir: 's', talk: 'caldera_apprentice', reward: 'side' }),
       K.npc('oldman', 'npc_ash_old_m', 12, 29, { name: '段々の年寄り', dir: 'e', talk: 'caldera_oldman', reward: 'lead' }),
-      K.npc('woman', 'npc_ash_woman', 39, 14, { name: '水汲みの女', dir: 's', talk: 'caldera_woman', reward: 'news' }),
+      K.npc('woman', 'npc_ash_woman', 39, 14, { name: '水くみの女', dir: 's', talk: 'caldera_woman', reward: 'news' }),
       K.npc('child', 'npc_ash_child', 21, 41, { name: '闘士になりたい子', dir: 'e', talk: 'caldera_child', reward: 'hint' }),
       K.npc('spa_keeper', 'npc_ash_old_f', 33, 42, { name: '湯守りのばあさま', dir: 'w', talk: 'caldera_spa_keeper', reward: 'side' }),
       // 闘技場の前の列（大会のあいだ）・空気だけ

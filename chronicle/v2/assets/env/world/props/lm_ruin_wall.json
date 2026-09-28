@@ -1,0 +1,47 @@
+{
+ "id": "lm_ruin_wall",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   107,
+   48
+  ],
+  "32": [
+   143,
+   64
+  ],
+  "40": [
+   179,
+   80
+  ]
+ },
+ "feet": {
+  "24": [
+   54,
+   46
+  ],
+  "32": [
+   72,
+   62
+  ],
+  "40": [
+   89,
+   78
+  ]
+ },
+ "files": {
+  "24": "lm_ruin_wall@24.png",
+  "32": "lm_ruin_wall@32.png",
+  "40": "lm_ruin_wall@40.png"
+ },
+ "fam": "ruin",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  4,
+  1
+ ]
+}

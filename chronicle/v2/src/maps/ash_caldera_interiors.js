@@ -102,7 +102,7 @@
 
     // ---------------------------------------------------------------- 段の上の小さな屋内 3（鍛冶場・灰よけの蔵・見習いの家）
     interior('caldera_smithy', '段の鍛冶場', 12, 10, {
-      back: 'forge', wall: 'wall_stone', floor: 'basalt_floor', meta: { sub: '鎚の音の響く小屋' },
+      back: 'forge', wall: 'wall_stone', floor: 'basalt_floor', meta: { sub: 'つちの音の響く小屋' },
       objects: [K.prop('fireplace', 2, 2), K.prop('ash_weapon_rack', 9, 2), K.prop('water_urn', 10, 5), K.prop('crate', 1, 6), K.exam(5, 2, 'caldera_anvil'), K.prop('lantern', 7, 3)],
       npcs: [K.npc('blacksmith', 'npc_smith', 5, 4, { name: '鍛冶の親方グロム', dir: 's', talk: 'caldera_blacksmith', reward: 'boss' })],
     });

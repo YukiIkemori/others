@@ -1,0 +1,47 @@
+{
+ "id": "lm_bridge_draw",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   116,
+   196
+  ],
+  "32": [
+   154,
+   262
+  ],
+  "40": [
+   192,
+   328
+  ]
+ },
+ "feet": {
+  "24": [
+   58,
+   195
+  ],
+  "32": [
+   77,
+   260
+  ],
+  "40": [
+   96,
+   325
+  ]
+ },
+ "files": {
+  "24": "lm_bridge_draw@24.png",
+  "32": "lm_bridge_draw@32.png",
+  "40": "lm_bridge_draw@40.png"
+ },
+ "fam": "bridge",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  5,
+  8
+ ]
+}

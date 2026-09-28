@@ -108,7 +108,8 @@ module.exports = function scaleWorld(A) {
   // 帯（地形ごとつなぐ）が要るのは、閉じ方・橋の塊と、海に面した塊（港町: 船・岸が町の並びの一部）だけ。ほかの町は島（まわりの地面で埋めた所に 1:1 で置く）。
   //   帯の中は放射状に引き伸ばすので、町のまわりに筋が見える（2026-09-28 の試し: フェルンのまわり）。島なら筋が出ない
   const seaShare = (r) => { let n = 0, s = 0; for (let y = r.y0 - PAD; y <= r.y1 + PAD; y++) for (let x = r.x0 - PAD; x <= r.x1 + PAD; x++) { n++; if ('~O'.includes(Lget(x, y))) s++; } return s / n; };
-  const needsWarp = (r) => r.why.some((w) => w === 'patch' || w === 'bridge') || seaShare(r) >= 0.08;
+  const needsWarp = (r) => r.why.some((w) => w === 'patch' || w === 'bridge') || seaShare(r) >= 0.03;
+  if (process.env.WORLD_DEBUG) for (const r of rects) console.error('[scale] cluster', r.x0, r.y0, r.x1, r.y1, 'sea', seaShare(r).toFixed(3), r.why.slice(0, 3).join(' '));
   const warpR = rects.filter(needsWarp), islandR = rects.filter((r) => !needsWarp(r));
   const mustWarp = (r) => r.why.some((w) => w === 'patch' || w === 'bridge');
   // 錨と帯の幅。帯（W で core を 1 + tau 倍に広げた枠）が重なるなら tau を縮め、TAU_MIN でも重なるなら core をまとめる

@@ -1,0 +1,47 @@
+{
+ "id": "lm_way_post",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   43,
+   42
+  ],
+  "32": [
+   57,
+   56
+  ],
+  "40": [
+   71,
+   70
+  ]
+ },
+ "feet": {
+  "24": [
+   21,
+   40
+  ],
+  "32": [
+   28,
+   54
+  ],
+  "40": [
+   36,
+   68
+  ]
+ },
+ "files": {
+  "24": "lm_way_post@24.png",
+  "32": "lm_way_post@32.png",
+  "40": "lm_way_post@40.png"
+ },
+ "fam": "way",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  2,
+  1
+ ]
+}

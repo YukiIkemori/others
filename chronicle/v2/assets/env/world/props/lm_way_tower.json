@@ -1,0 +1,47 @@
+{
+ "id": "lm_way_tower",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   60,
+   102
+  ],
+  "32": [
+   80,
+   136
+  ],
+  "40": [
+   100,
+   170
+  ]
+ },
+ "feet": {
+  "24": [
+   30,
+   100
+  ],
+  "32": [
+   40,
+   134
+  ],
+  "40": [
+   50,
+   168
+  ]
+ },
+ "files": {
+  "24": "lm_way_tower@24.png",
+  "32": "lm_way_tower@32.png",
+  "40": "lm_way_tower@40.png"
+ },
+ "fam": "way",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  2,
+  3
+ ]
+}

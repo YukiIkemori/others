@@ -1,0 +1,47 @@
+{
+ "id": "lm_desert_camp",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   88,
+   48
+  ],
+  "32": [
+   118,
+   64
+  ],
+  "40": [
+   148,
+   80
+  ]
+ },
+ "feet": {
+  "24": [
+   44,
+   46
+  ],
+  "32": [
+   59,
+   62
+  ],
+  "40": [
+   74,
+   78
+  ]
+ },
+ "files": {
+  "24": "lm_desert_camp@24.png",
+  "32": "lm_desert_camp@32.png",
+  "40": "lm_desert_camp@40.png"
+ },
+ "fam": "desert",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  3,
+  2
+ ]
+}

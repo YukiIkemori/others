@@ -1,0 +1,47 @@
+{
+ "id": "lm_desert_oasis",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   94,
+   78
+  ],
+  "32": [
+   126,
+   104
+  ],
+  "40": [
+   158,
+   130
+  ]
+ },
+ "feet": {
+  "24": [
+   47,
+   76
+  ],
+  "32": [
+   63,
+   102
+  ],
+  "40": [
+   79,
+   128
+  ]
+ },
+ "files": {
+  "24": "lm_desert_oasis@24.png",
+  "32": "lm_desert_oasis@32.png",
+  "40": "lm_desert_oasis@40.png"
+ },
+ "fam": "desert",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  4,
+  3
+ ]
+}

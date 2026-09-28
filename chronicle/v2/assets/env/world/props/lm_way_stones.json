@@ -1,0 +1,47 @@
+{
+ "id": "lm_way_stones",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   65,
+   54
+  ],
+  "32": [
+   87,
+   72
+  ],
+  "40": [
+   109,
+   90
+  ]
+ },
+ "feet": {
+  "24": [
+   33,
+   52
+  ],
+  "32": [
+   44,
+   70
+  ],
+  "40": [
+   54,
+   88
+  ]
+ },
+ "files": {
+  "24": "lm_way_stones@24.png",
+  "32": "lm_way_stones@32.png",
+  "40": "lm_way_stones@40.png"
+ },
+ "fam": "way",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  2,
+  3
+ ]
+}

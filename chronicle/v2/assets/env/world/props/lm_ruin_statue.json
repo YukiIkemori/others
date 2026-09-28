@@ -1,0 +1,47 @@
+{
+ "id": "lm_ruin_statue",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   75,
+   33
+  ],
+  "32": [
+   100,
+   44
+  ],
+  "40": [
+   125,
+   55
+  ]
+ },
+ "feet": {
+  "24": [
+   38,
+   32
+  ],
+  "32": [
+   50,
+   42
+  ],
+  "40": [
+   62,
+   52
+  ]
+ },
+ "files": {
+  "24": "lm_ruin_statue@24.png",
+  "32": "lm_ruin_statue@32.png",
+  "40": "lm_ruin_statue@40.png"
+ },
+ "fam": "ruin",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  3,
+  2
+ ]
+}

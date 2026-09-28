@@ -1,0 +1,47 @@
+{
+ "id": "lm_way_caravan",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   59,
+   57
+  ],
+  "32": [
+   79,
+   76
+  ],
+  "40": [
+   99,
+   95
+  ]
+ },
+ "feet": {
+  "24": [
+   30,
+   56
+  ],
+  "32": [
+   40,
+   74
+  ],
+  "40": [
+   49,
+   92
+  ]
+ },
+ "files": {
+  "24": "lm_way_caravan@24.png",
+  "32": "lm_way_caravan@32.png",
+  "40": "lm_way_caravan@40.png"
+ },
+ "fam": "way",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  2,
+  3
+ ]
+}

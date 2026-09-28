@@ -1,0 +1,47 @@
+{
+ "id": "lm_way_shrine",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   38,
+   48
+  ],
+  "32": [
+   51,
+   64
+  ],
+  "40": [
+   64,
+   80
+  ]
+ },
+ "feet": {
+  "24": [
+   19,
+   46
+  ],
+  "32": [
+   26,
+   62
+  ],
+  "40": [
+   32,
+   78
+  ]
+ },
+ "files": {
+  "24": "lm_way_shrine@24.png",
+  "32": "lm_way_shrine@32.png",
+  "40": "lm_way_shrine@40.png"
+ },
+ "fam": "way",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  1,
+  2
+ ]
+}

@@ -1,0 +1,47 @@
+{
+ "id": "lm_snowmount_hill1",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   181,
+   93
+  ],
+  "32": [
+   241,
+   124
+  ],
+  "40": [
+   301,
+   155
+  ]
+ },
+ "feet": {
+  "24": [
+   90,
+   92
+  ],
+  "32": [
+   120,
+   122
+  ],
+  "40": [
+   151,
+   152
+  ]
+ },
+ "files": {
+  "24": "lm_snowmount_hill1@24.png",
+  "32": "lm_snowmount_hill1@32.png",
+  "40": "lm_snowmount_hill1@40.png"
+ },
+ "fam": "snowmount",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  7,
+  3
+ ]
+}

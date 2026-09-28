@@ -1,0 +1,47 @@
+{
+ "id": "lm_desert_mesa1",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   160,
+   87
+  ],
+  "32": [
+   214,
+   116
+  ],
+  "40": [
+   268,
+   145
+  ]
+ },
+ "feet": {
+  "24": [
+   80,
+   86
+  ],
+  "32": [
+   107,
+   114
+  ],
+  "40": [
+   134,
+   142
+  ]
+ },
+ "files": {
+  "24": "lm_desert_mesa1@24.png",
+  "32": "lm_desert_mesa1@32.png",
+  "40": "lm_desert_mesa1@40.png"
+ },
+ "fam": "desert",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  6,
+  3
+ ]
+}

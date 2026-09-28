@@ -1,5 +1,5 @@
 // 灰の火山と灰の荒野の締め（WORLD_REDESIGN §4.7 の 3〜5・§6.4・§4.10、STORY_BIBLE §7.7・§11.8）
-//   1 階: volcano_arrive・溶岩の堰のレバー（流れが A と B の間で入れ替わる）・壁画 3 つ（好きな順。3 つで火口への岩戸が開く）・
+//   1 階: volcano_arrive・溶岩のせきのレバー（流れが A と B の間で入れ替わる）・壁画 3 つ（好きな順。3 つで火口への岩戸が開く）・
 //         炎の番犬（tr_b_hellhound、東の部屋の前）・記録院の写し手（西の部屋の前。八百長を受けた = 刻限を知っていれば止められる。
 //         断った = 着いたときには壁画 3 の後半が白く塗りこめられている）
 //   火口: crater_arrive・溶岩の巨獣（tr_b_lavabeast、土手道）→ 火口の縁にフィーネ（v_fine_ash_01、録音の文のまま）→
@@ -19,18 +19,18 @@
     if (!ev.flag('ash_volcano_seen')) {
       ev.setFlag('ash_volcano_seen');
       await ev.caption('灰の火山。\n岩の割れ目を、溶岩が\n赤くゆっくりと流れていく。', { ms: 2400 });
-      await ev.caption('川の渡り場のそばに、\n石のレバーがある。\n溶岩の堰を動かすものらしい。', { ms: 2200 });
+      await ev.caption('川の渡り場のそばに、\n石のレバーがある。\n溶岩のせきを動かすものらしい。', { ms: 2200 });
     }
   });
-  // 溶岩の堰（引くたびに、流れが A（西）と B（北）の間で入れ替わる）
+  // 溶岩のせき（引くたびに、流れが A（西）と B（北）の間で入れ替わる）
   E('volcano_sluice', async (ev) => {
-    const i = await ev.choose(['レバーを引く', 'やめる'], { text: '溶岩の堰の、石のレバーだ。' });
+    const i = await ev.choose(['レバーを引く', 'やめる'], { text: '溶岩のせきの、石のレバーだ。' });
     if (i !== 0) return;
     const on = !ev.flag('ash_sluice');
     ev.setFlag('ash_sluice', on);
     ev.sfx('stone');
     try { R.Field.shake(3, 600); } catch (e) { /* */ }
-    await ev.caption(on ? 'ゴゴゴ……。堰の石が動き、\n溶岩が西の川へ流れこんだ。\n北の渡り場の溶岩が、黒く冷えていく。' : 'ゴゴゴ……。堰の石が戻り、\n溶岩が北の川へ流れこんだ。\n西の渡り場の溶岩が、黒く冷えていく。', { ms: 2400 });
+    await ev.caption(on ? 'ゴゴゴ……。せきの石が動き、\n溶岩が西の川へ流れこんだ。\n北の渡り場の溶岩が、黒く冷えていく。' : 'ゴゴゴ……。せきの石が戻り、\n溶岩が北の川へ流れこんだ。\n西の渡り場の溶岩が、黒く冷えていく。', { ms: 2400 });
   }, { meta: { needs: [], gives: ['flag:ash_sluice'] } });
   // 壁画（好きな順）。3 つ目で火口への岩戸が開く
   E('volcano_mural', async (ev, ctx) => {
@@ -79,7 +79,7 @@
       await ev.caption('――夜明け前。使いの言っていた、\n刻限だ。西の部屋に、\n灯りがちらついている。', { ms: 2400 });
       ev.setFlag('ash_copyists');
       try { await ev.appear(['copyist_a', 'copyist_b'], { ms: 600 }); } catch (e) { /* */ }
-      await ev.say('copyist_a', ['……誰だ！　ここは、\n記録院の保管のための写しを……', '見られたからには、\n通すわけにはいかない！']);
+      await ev.say('copyist_a', ['……誰だ！　ここは、\n記録院の保管のための写しを取る場所だ！', '見られたからには、\n通すわけにはいかない！']);
       const r = await ev.battle('tr_ash_copyists');
       if (r !== 'win') return;
       await ev.say(null, '写し手たちは、白紙の束を\n抱えて逃げていった。');
@@ -235,7 +235,7 @@
   }, { meta: { needs: [], gives: ['var:ash_turtle_seen'] } });
   E('ash_battlefield_stone', async (ev) => {
     ev.setFlag('ash_battlefield_seen');
-    await ev.say(null, ['折れた剣の碑。\n根もとに、錆びた剣が\n何本も突き立てられている。', '「日継ぎの戦の、名もなき兵たちへ」', '……碑の奥の古戦場へは、\n崩れた岩で入れない。']);
+    await ev.say(null, ['折れた剣の碑。\n根もとに、さびた剣が\n何本も突き立てられている。', '「日継ぎの戦の、名もなき兵たちへ」', '……碑の奥の古戦場へは、\n崩れた岩で入れない。']);
   }, { meta: { needs: [], gives: ['flag:ash_battlefield_seen'] } });
   E('ash_bridge_sign', async (ev) => {
     await ev.say(null, ['潮見橋。北のグレイモア湿原と、\n灰の荒野をつなぐ石の橋。', '「大きな船の来る晩は、\n橋が上がる」と、古い札。']);

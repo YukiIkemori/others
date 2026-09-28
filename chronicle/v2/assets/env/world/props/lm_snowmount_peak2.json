@@ -1,0 +1,47 @@
+{
+ "id": "lm_snowmount_peak2",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   196,
+   141
+  ],
+  "32": [
+   262,
+   188
+  ],
+  "40": [
+   328,
+   235
+  ]
+ },
+ "feet": {
+  "24": [
+   98,
+   140
+  ],
+  "32": [
+   131,
+   186
+  ],
+  "40": [
+   164,
+   232
+  ]
+ },
+ "files": {
+  "24": "lm_snowmount_peak2@24.png",
+  "32": "lm_snowmount_peak2@32.png",
+  "40": "lm_snowmount_peak2@40.png"
+ },
+ "fam": "snowmount",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  8,
+  4
+ ]
+}

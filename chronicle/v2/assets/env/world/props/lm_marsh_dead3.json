@@ -1,0 +1,47 @@
+{
+ "id": "lm_marsh_dead3",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   80,
+   66
+  ],
+  "32": [
+   106,
+   88
+  ],
+  "40": [
+   132,
+   110
+  ]
+ },
+ "feet": {
+  "24": [
+   40,
+   64
+  ],
+  "32": [
+   53,
+   86
+  ],
+  "40": [
+   66,
+   108
+  ]
+ },
+ "files": {
+  "24": "lm_marsh_dead3@24.png",
+  "32": "lm_marsh_dead3@32.png",
+  "40": "lm_marsh_dead3@40.png"
+ },
+ "fam": "marsh",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  3,
+  2
+ ]
+}

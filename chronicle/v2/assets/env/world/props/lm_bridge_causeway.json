@@ -1,0 +1,47 @@
+{
+ "id": "lm_bridge_causeway",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   80,
+   219
+  ],
+  "32": [
+   107,
+   292
+  ],
+  "40": [
+   134,
+   365
+  ]
+ },
+ "feet": {
+  "24": [
+   40,
+   218
+  ],
+  "32": [
+   54,
+   290
+  ],
+  "40": [
+   67,
+   362
+  ]
+ },
+ "files": {
+  "24": "lm_bridge_causeway@24.png",
+  "32": "lm_bridge_causeway@32.png",
+  "40": "lm_bridge_causeway@40.png"
+ },
+ "fam": "bridge",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  3,
+  9
+ ]
+}

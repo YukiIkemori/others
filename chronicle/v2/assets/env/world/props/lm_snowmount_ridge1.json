@@ -1,0 +1,47 @@
+{
+ "id": "lm_snowmount_ridge1",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   286,
+   117
+  ],
+  "32": [
+   381,
+   156
+  ],
+  "40": [
+   476,
+   195
+  ]
+ },
+ "feet": {
+  "24": [
+   143,
+   116
+  ],
+  "32": [
+   190,
+   154
+  ],
+  "40": [
+   238,
+   192
+  ]
+ },
+ "files": {
+  "24": "lm_snowmount_ridge1@24.png",
+  "32": "lm_snowmount_ridge1@32.png",
+  "40": "lm_snowmount_ridge1@40.png"
+ },
+ "fam": "snowmount",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  12,
+  3
+ ]
+}

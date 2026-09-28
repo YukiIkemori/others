@@ -3,9 +3,9 @@
 //     1 回戦 一族の若者たち（4 人。数が多い）
 //     2 回戦 獣使いのガロと岩の獣・火トカゲの子 2（獣使いが群れの頭: 倒れると獣は座りこむ。口笛を吹く予告 → 岩の獣の突進（全体。守る））
 //     3 回戦 術師の姉妹（姉ヒノエが妹を起こし・癒やす = 先に姉を倒す（群れの頭）。妹スミの詠唱の予告 → 火柱（全体。守る））
-//     4 回戦 鉄鎧のバルガ（硬い。打撃がよく効く。大きく振りかぶる予告 → 大薙ぎ（全体。守る））
+//     4 回戦 鉄鎧のバルガ（硬い。打撃がよく効く。大きく振りかぶる予告 → 大なぎ（全体。守る））
 //     決勝   記録院付きの闘士ザクロ（律儀に「構えな」と言う予告 → 居合の一閃（全体。守る）。半分を切ると二本目の刀（本気））
-//   炎の番犬 tr_b_hellhound（火山 1 階の中ボス）: 二つの頭が息を吸う予告 → 業火の咆哮（全体。守る）。水に弱い。
+//   炎の番犬 tr_b_hellhound（火山 1 階の中ボス）: 二つの頭が息を吸う予告 → 業火の雄たけび（全体。守る）。水に弱い。
 //   溶岩の巨獣 tr_b_lavabeast（地方ボス）: 背の火口がふくれる予告 → 大噴火（全体。守る）。半分で溶岩が冷えて黒い岩に（今の第 2 の姿）。
 //   記録院の写し手 tr_ash_copyists（八百長を受けたときだけ、火山 1 階の壁画の前で）。
 (function (R) {
@@ -106,15 +106,15 @@
     eb_sumi_pillar: { name: '火柱', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.92, guardPct: 0.08, kind: 'fire', element: 'fire' }], fx: 'fire3', msg: '砂の輪から、火柱が噴き上がった！' },
     eb_barga_raise: { name: '振りかぶる', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は、大斧を大きく振りかぶった……！',
       telegraph: { text: '鉄の鎧が、ぎしりと鳴った……。', pose: 'tele', tint: '#d0d0d8', next: 'eb_barga_sweep', guard: 'defend', lethal: true } },
-    eb_barga_sweep: { name: '大薙ぎ', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.92, guardPct: 0.08, kind: 'slash' }], fx: 'slash3', msg: '大斧が、砂ごと一行を薙ぎ払った！' },
-    eb_zakuro_cut: { name: '袈裟斬り', kind: 'enemy', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.5, kind: 'slash' }], fx: 'slash2', msg: '{user}の刀が、斜めに走った！' },
-    eb_zakuro_stance: { name: '居合の構え', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は刀を鞘に納め、腰を落とした。\n「……次のは、でかいぞ。構えな」',
+    eb_barga_sweep: { name: '大なぎ', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.92, guardPct: 0.08, kind: 'slash' }], fx: 'slash3', msg: '大斧が、砂ごと一行をなぎ払った！' },
+    eb_zakuro_cut: { name: 'けさ斬り', kind: 'enemy', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.5, kind: 'slash' }], fx: 'slash2', msg: '{user}の刀が、斜めに走った！' },
+    eb_zakuro_stance: { name: '居合の構え', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は刀をさやに納め、腰を落とした。\n「……次のは、でかいぞ。構えな」',
       telegraph: { text: 'ザクロの気配が、しんと静まった……。', pose: 'tele', tint: '#e0e8ff', next: 'eb_zakuro_flash', guard: 'defend', lethal: true } },
     eb_zakuro_flash: { name: '一閃', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.95, guardPct: 0.08, kind: 'slash' }], fx: 'slash3', msg: '白い一閃が、砂の上を走り抜けた！' },
     eb_zakuro_draw: { name: '二本目', kind: 'enemy', target: 'self', effects: [{ type: 'buff', stat: 'atk', stages: 1 }], fx: 'buff', msg: '{user}は、二本目の刀を抜いた！' },
     eb_hound_inhale: { name: '息を吸う', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}の二つの頭が、深く息を吸いこんだ……！',
       telegraph: { text: '番犬の喉の奥で、溶岩が赤く渦を巻く……。', pose: 'tele', tint: '#ffa060', next: 'eb_hound_inferno', guard: 'defend', lethal: true } },
-    eb_hound_inferno: { name: '業火の咆哮', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.92, guardPct: 0.08, kind: 'fire', element: 'fire' }], fx: 'breath_fire', msg: '二つの口から、業火がほとばしった！' },
+    eb_hound_inferno: { name: '業火の雄たけび', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.92, guardPct: 0.08, kind: 'fire', element: 'fire' }], fx: 'breath_fire', msg: '二つの口から、業火がほとばしった！' },
     eb_beast_swell: { name: '火口がふくれる', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}の背の火口が、赤くふくれ上がった……！',
       telegraph: { text: '火口の底から、地鳴りが近づいてくる……。', pose: 'tele', tint: '#ff9050', next: 'eb_beast_eruption', guard: 'defend', lethal: true } },
     eb_beast_eruption: { name: '大噴火', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.92, guardPct: 0.08, kind: 'fire', element: 'fire' }], fx: 'explosion2', msg: '巨獣の背が火を噴き、溶岩の雨が降り注いだ！' },

@@ -1,0 +1,47 @@
+{
+ "id": "lm_desert_ruin",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   101,
+   52
+  ],
+  "32": [
+   135,
+   70
+  ],
+  "40": [
+   169,
+   88
+  ]
+ },
+ "feet": {
+  "24": [
+   51,
+   51
+  ],
+  "32": [
+   68,
+   68
+  ],
+  "40": [
+   84,
+   85
+  ]
+ },
+ "files": {
+  "24": "lm_desert_ruin@24.png",
+  "32": "lm_desert_ruin@32.png",
+  "40": "lm_desert_ruin@40.png"
+ },
+ "fam": "desert",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  4,
+  2
+ ]
+}

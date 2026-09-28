@@ -1,0 +1,47 @@
+{
+ "id": "lm_marsh_swamptree",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   56,
+   72
+  ],
+  "32": [
+   74,
+   96
+  ],
+  "40": [
+   92,
+   120
+  ]
+ },
+ "feet": {
+  "24": [
+   28,
+   70
+  ],
+  "32": [
+   37,
+   94
+  ],
+  "40": [
+   46,
+   118
+  ]
+ },
+ "files": {
+  "24": "lm_marsh_swamptree@24.png",
+  "32": "lm_marsh_swamptree@32.png",
+  "40": "lm_marsh_swamptree@40.png"
+ },
+ "fam": "marsh",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  2,
+  2
+ ]
+}

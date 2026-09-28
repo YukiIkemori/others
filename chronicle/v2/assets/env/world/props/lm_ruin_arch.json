@@ -1,0 +1,47 @@
+{
+ "id": "lm_ruin_arch",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   67,
+   57
+  ],
+  "32": [
+   89,
+   76
+  ],
+  "40": [
+   111,
+   95
+  ]
+ },
+ "feet": {
+  "24": [
+   33,
+   56
+  ],
+  "32": [
+   44,
+   74
+  ],
+  "40": [
+   56,
+   92
+  ]
+ },
+ "files": {
+  "24": "lm_ruin_arch@24.png",
+  "32": "lm_ruin_arch@32.png",
+  "40": "lm_ruin_arch@40.png"
+ },
+ "fam": "ruin",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  3,
+  1
+ ]
+}

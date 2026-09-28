@@ -1,0 +1,47 @@
+{
+ "id": "lm_desert_boulders",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   80,
+   42
+  ],
+  "32": [
+   107,
+   56
+  ],
+  "40": [
+   134,
+   70
+  ]
+ },
+ "feet": {
+  "24": [
+   40,
+   40
+  ],
+  "32": [
+   54,
+   54
+  ],
+  "40": [
+   67,
+   68
+  ]
+ },
+ "files": {
+  "24": "lm_desert_boulders@24.png",
+  "32": "lm_desert_boulders@32.png",
+  "40": "lm_desert_boulders@40.png"
+ },
+ "fam": "desert",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  3,
+  2
+ ]
+}

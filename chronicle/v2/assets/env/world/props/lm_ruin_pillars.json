@@ -1,0 +1,47 @@
+{
+ "id": "lm_ruin_pillars",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   90,
+   60
+  ],
+  "32": [
+   120,
+   80
+  ],
+  "40": [
+   150,
+   100
+  ]
+ },
+ "feet": {
+  "24": [
+   45,
+   58
+  ],
+  "32": [
+   60,
+   78
+  ],
+  "40": [
+   75,
+   98
+  ]
+ },
+ "files": {
+  "24": "lm_ruin_pillars@24.png",
+  "32": "lm_ruin_pillars@32.png",
+  "40": "lm_ruin_pillars@40.png"
+ },
+ "fam": "ruin",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  4,
+  3
+ ]
+}

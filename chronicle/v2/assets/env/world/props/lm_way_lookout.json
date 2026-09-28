@@ -1,0 +1,47 @@
+{
+ "id": "lm_way_lookout",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   56,
+   81
+  ],
+  "32": [
+   74,
+   108
+  ],
+  "40": [
+   92,
+   135
+  ]
+ },
+ "feet": {
+  "24": [
+   28,
+   80
+  ],
+  "32": [
+   37,
+   106
+  ],
+  "40": [
+   46,
+   132
+  ]
+ },
+ "files": {
+  "24": "lm_way_lookout@24.png",
+  "32": "lm_way_lookout@32.png",
+  "40": "lm_way_lookout@40.png"
+ },
+ "fam": "way",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  2,
+  3
+ ]
+}

@@ -25,7 +25,7 @@ module.exports = function ash(A) {
     pass: [95, 141],                  // カシムの東の峠の出口（砂漠の道の続き）
     town: { x: 161, y: 131, w: 12, h: 11, gateW: [161, 135], gateE: [172, 135] },
     volcano: { cx: 193, cy: 136, rx: 8, ry: 10, door: [185, 141] },
-    inn: { x: 189, y: 122, w: 5, h: 3, door: [191, 124] },
+    inn: { x: 189, y: 122, w: 5, h: 3, door: [192, 124] },
     bridge: { x: 186, y0: 113, y1: 121 },
     marshRoad: [186, 101],            // 湿原の沼の入口の道（gen_world_marsh.js の x 184〜185、y 96〜101）の東隣
     spa: [133, 128], beach: [158, 157], stone: [106, 150], camp: [100, 137], lavaLake: [133, 149],

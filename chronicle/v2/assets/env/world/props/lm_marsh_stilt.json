@@ -1,0 +1,47 @@
+{
+ "id": "lm_marsh_stilt",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   33,
+   69
+  ],
+  "32": [
+   44,
+   92
+  ],
+  "40": [
+   55,
+   115
+  ]
+ },
+ "feet": {
+  "24": [
+   16,
+   68
+  ],
+  "32": [
+   22,
+   90
+  ],
+  "40": [
+   28,
+   112
+  ]
+ },
+ "files": {
+  "24": "lm_marsh_stilt@24.png",
+  "32": "lm_marsh_stilt@32.png",
+  "40": "lm_marsh_stilt@40.png"
+ },
+ "fam": "marsh",
+ "src": "worldv3 (gpt-6-sol sheet)",
+ "fp": [
+  1,
+  3
+ ]
+}

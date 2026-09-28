@@ -35,7 +35,7 @@
     '炎は鳥の姿になり、\n山の火を静めながら\n大地を温めた。',
     '年老いた鳥は灰に還り、\n巫女の語る物語で、\nふたたび卵から生まれる。',
   ];
-  X.TELL_BLANK = '年老いた鳥は灰に還り……';
+  X.TELL_BLANK = '年老いた鳥は灰に還り……。';
   X.tier = () => (R.Tier && R.Tier.get ? R.Tier.get() : 0);
   X.cleared = (ev) => ev.flag('cleared_r_ash');
   X.round = (ev) => ev.var('ash_round');
@@ -84,12 +84,12 @@
   // 寄り道のうわさ（rumor）
   lead('l_opt_spa', { kind: 'rumor', title: '溶岩洞の湯の郷', text: '荒野の北の岩の間から、湯気が\n噴き出している。奥の湯につかると、\n疲れがすっかり取れるという。', from: '湯治の行商', dir: '北西', done: 'ash_spa_bathed' });
   lead('l_opt_turtle', { kind: 'rumor', title: '動く岩の浜', text: '南の黒い砂浜で、岩が動いた。\n火山ガメという、甲羅の硬い\n珍しい魔物らしい。', from: '古参の闘士', dir: '南', done: { var: 'ash_turtle_seen', gte: 1 } });
-  lead('l_opt_battlefield', { kind: 'rumor', title: '折れた剣の碑', text: '荒野の西に、折れた剣の碑が\n立っている。夜ごと、鬨の声が\n聞こえるという。', from: '湯治の行商', dir: '西', done: 'ash_battlefield_seen' });
+  lead('l_opt_battlefield', { kind: 'rumor', title: '折れた剣の碑', text: '荒野の西に、折れた剣の碑が\n立っている。夜ごと、ときの声が\n聞こえるという。', from: '湯治の行商', dir: '西', done: 'ash_battlefield_seen' });
 
   // ---------------------------------------------------------------- 読み物（STORY_BIBLE §10.2 の 29〜31 ほか）
   const lore = (id, o) => R.def('lore', id, Object.assign({ region: 'r_ash' }, o));
-  lore('lo_ev_ash', { title: '大会の名簿', kind: 'main', must: true, text: '炎の試練、出場者名簿。\n若者組・獣使い・術師の姉妹・鉄鎧……\n「十六番　ザクロ（記録院付き）」' });
-  lore('lo_time_ash', { title: '最後の代理試合の銘板', kind: 'main', must: true, text: '西の観客席の柱の銘板。\n「光暦二九二年　冬至の前夜\n最後の代理試合」\nその下の二つの名は、削れて読めない。\n神殿の「火の鳥の巡り」の記録も、\nその夜の欄で止まっている。' });
+  lore('lo_ev_ash', { title: '大会の名簿', kind: 'main', must: true, text: '炎の試練、出場者名簿。\n若者組・獣使い・術師の姉妹・鉄鎧……。\n「十六番、ザクロ（記録院付き）」' });
+  lore('lo_time_ash', { title: '最後の代理試合の銘板', kind: 'main', must: true, text: '西の観客席の柱の銘板。\n「光暦二九二年、冬至の前夜\n最後の代理試合」\nその下の二つの名は、削れて読めない。\n神殿の「火の鳥の巡り」の記録も、\nその夜の欄で止まっている。' });
   lore('lo_war_ash', { title: 'ドルガの記憶', kind: 'region', must: false, text: '二十年前、族長ドルガは\n火の鳥同盟の代理の闘士だった。\n試合の最中、娘が二人、砂の上に\n下りてきて歌った。敵も味方も、\n剣を止めた。' });
   lore('lo_ash_firebird', { title: '火の鳥の物語', kind: 'region', must: false, text: '灰の中から、小さな炎が生まれた。\n炎は鳥の姿になり、山の火を静め、\n大地を温めた。年老いた鳥は灰に還り、\n巫女の語る物語で、ふたたび\n卵から生まれる。' });
 
@@ -105,7 +105,7 @@
       { cond: { choice: 'ch_ash_bribe', is: 'refuse' }, text: '語り部の見習いは、決勝の前夜の\n誘いを断り、炎の試練を勝ち抜いた。' },
       { cond: { choice: 'ch_ash_bribe', is: 'accept' }, text: '語り部の見習いは、決勝の前夜の\n金を一度は受け取った。\n偽らずに、そのことも記す。' },
       { cond: 'ash_unbeaten', text: '一度も砂に膝をつかなかった。' },
-      { cond: { choice: 'ch_ash_write', is: 'rebirth' }, text: '火の鳥は、語りを聞いて\n卵からかえり……' },
+      { cond: { choice: 'ch_ash_write', is: 'rebirth' }, text: '火の鳥は、語りを聞いて\n卵からかえり……。' },
       { cond: { choice: 'ch_ash_write', is: 'pain' }, text: '……この砂の上で、名も知れぬ\n二人の歌い手が死んだ。\nその夜のことも、ここに記す。' },
       { cond: 'cleared_r_ash', text: '火の鳥は火の粉の尾を引いて、\n町の上をひとめぐりした。' },
     ],
