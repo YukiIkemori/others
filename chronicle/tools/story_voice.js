@@ -19,7 +19,7 @@ const CSV = path.join(ROOT, 'design', 'voice', 'story_v2_lines.csv');
 const MAP = path.join(ROOT, 'v2', 'design', 'voice_story_map.json');
 const PAGE = path.join(ROOT, 'design', 'story_audio_preview.html');
 const PROMPTS2 = path.join(ROOT, 'design', 'bgm', 'prompts_v2.json');
-const KINDS = ['story', 'optional', 'bark'];
+const KINDS = ['story', 'optional', 'bark', 'retired'];   // retired: 声を外した行（音は残す。持ち主 2026-09-28「脇役の声は一旦外して」）
 const NAMES = { otto: 'オットー', berna: 'ベルナ', fine: 'フィーネ', rowell: 'ロウェル', elm: 'エルム', tadeo: 'タデオ', fishwife: '漁師のおかみ', gateguard: '門番', master: '潮風亭のマスター', gord: 'ゴード', hanna: 'ハンナ', rita: 'リタ', pim: 'ピム' };
 const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
@@ -65,6 +65,7 @@ function check(lines, C) {
     if (!sp || !sp.voice || !sp.profile) P.push(`${l.id}: speaker ${l.speaker} has no casting`);
     if (l.kind === 'bark' && estimate(l.text) > 2.2) P.push(`${l.id}: a bark should be 1–2 s (${l.text})`);
     // the line must still be in the v2 source (barks are greetings, not lines of the source)
+    if (l.kind === 'retired') continue;   // 外した行は元の文を探さない
     if (l.kind !== 'bark') {
       const n = lineOf(l.file, l.text);
       if (n < 0) P.push(`${l.id}: ${l.file} does not exist`);

@@ -91,11 +91,11 @@
       // 序章の後: 近況と、ただの宿（STORY_BIBLE §6.3。T3 以降の物忘れは TODO: T3・T6 のロアの寄り道で）
       if (ev.flag('prologue_done')) {
         const pk = E.pickEntry([
-          { cond: 'cleared_r_forest', text: '森の灯が戻ったそうだね。\n語り石の文字が、ほんの少し\n読めるようになった気がするよ。', voice: 'v_berna_home_02' },
-          { text: 'おかえり。年代記は、\nちゃんと書いているかい？', voice: 'v_berna_home_01' },
+          { cond: 'cleared_r_forest', text: '森の灯が戻ったそうだね。\n語り石の文字が、ほんの少し\n読めるようになった気がするよ。' },
+          { text: 'おかえり。年代記は、\nちゃんと書いているかい？' },
         ]);
         await E.say(ev, who, pk.text, { voice: pk.voice, face: 'berna:smile' });
-        await E.stay(ev, { who, ask: '泊まっていくかい？', bye: 'そうかい。気をつけてお行き。', morning: 'よく眠れたかい？\n……さあ、いってらっしゃい。', morningVoice: 'v_berna_home_03' });
+        await E.stay(ev, { who, ask: '泊まっていくかい？', bye: 'そうかい。気をつけてお行き。', morning: 'よく眠れたかい？\n……さあ、いってらっしゃい。' });
         return;
       }
       // 序章の途中

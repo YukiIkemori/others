@@ -71,9 +71,9 @@
 | `v_berna_seat_01` | story | `roa_seat` say (berna_desk) | 昔からの習わしさ。<br>誰の席かは……忘れちまったよ。 | light and matter-of-fact at first, then a small puzzled pause; a hint of sadness she does not notice |
 | `v_berna_depart_01` | story | `pharos_departure` say after the chapter caption (rumours) | うわさは酒場に集まるものさ。<br>まずは港の酒場で<br>聞いてごらん。 | cheerful advice, a knowing smile |
 | `v_berna_depart_02` | story | `pharos_departure` farewell (the first forgetting) | わたしは里へ帰るよ。<br>……いってらっしゃい、 | warm farewell; after いってらっしゃい she starts to say the apprentice's name and cannot find it: the line trails off unfinished, a tiny stall |
-| `v_berna_home_01` | story | `roa_berna` after prologue pick (default) | おかえり。年代記は、<br>ちゃんと書いているかい？ | welcoming someone home, teasing a little |
-| `v_berna_home_02` | story | `roa_berna` after prologue pick cleared_r_forest | 森の灯が戻ったそうだね。<br>語り石の文字が、ほんの少し<br>読めるようになった気がするよ。 | proud and moved, quietly happy |
-| `v_berna_home_03` | story | `roa_berna` stay morning (E.stay o.morning) | よく眠れたかい？<br>……さあ、いってらっしゃい。 | soft morning voice, gentle send-off |
+| `v_berna_home_01` | retired | `roa_berna` after prologue pick (default) | おかえり。年代記は、<br>ちゃんと書いているかい？ | welcoming someone home, teasing a little |
+| `v_berna_home_02` | retired | `roa_berna` after prologue pick cleared_r_forest | 森の灯が戻ったそうだね。<br>語り石の文字が、ほんの少し<br>読めるようになった気がするよ。 | proud and moved, quietly happy |
+| `v_berna_home_03` | retired | `roa_berna` stay morning (E.stay o.morning) | よく眠れたかい？<br>……さあ、いってらっしゃい。 | soft morning voice, gentle send-off |
 | `v_berna_intro_01` | story | `roa_house_intro` E.say after ev.createHero (the name shows first; the voice skips {hero}) | ……うん、いい名前だ。 | after hearing the new apprentice's name: a short, clear, affirmative nod-word うん (yes — not a hesitant hmm), then warm fond approval like a grandmother, a small smile in the voice |
 | `v_berna_p2_10` | story | `roa_berna` P2[7] (the name shows first; the voice skips {hero}) | 行っておくれ。<br>語り部の見習いとしての、<br>最初の仕事だよ。 | sending her apprentice off on the first real job: gentle but firm, proud and a little moved, unhurried |
 
@@ -93,58 +93,58 @@
 
 | id | 種類 | 場面 | 台詞 | 演技 |
 |---|---|---|---|---|
-| `v_rowell_pharos_01` | story | `pharos_rowell` repeat talk pick prologue_done | 灯台に火が戻っただと？<br>……写し取ったはずの歌が、<br>どうして。 | stunned disbelief, then a shaken half-whisper; the first crack in his certainty |
-| `v_rowell_pharos_02` | story | `pharos_rowell` repeat talk pick prologue_key | 灯台守から鍵を借りたそうだな。<br>……火をともせるものなら、<br>ともしてみるがいい。 | cool and sarcastic, a challenge |
-| `v_rowell_pharos_03` | story | `pharos_rowell` repeat talk pick default | まだいたのか。<br>写し取った伝承は、本院で<br>大切に保管される。 | curt and dismissive, bureaucratic pride |
+| `v_rowell_pharos_01` | retired | `pharos_rowell` repeat talk pick prologue_done | 灯台に火が戻っただと？<br>……写し取ったはずの歌が、<br>どうして。 | stunned disbelief, then a shaken half-whisper; the first crack in his certainty |
+| `v_rowell_pharos_02` | retired | `pharos_rowell` repeat talk pick prologue_key | 灯台守から鍵を借りたそうだな。<br>……火をともせるものなら、<br>ともしてみるがいい。 | cool and sarcastic, a challenge |
+| `v_rowell_pharos_03` | retired | `pharos_rowell` repeat talk pick default | まだいたのか。<br>写し取った伝承は、本院で<br>大切に保管される。 | curt and dismissive, bureaucratic pride |
 
 ## エルム
 
 | id | 種類 | 場面 | 台詞 | 演技 |
 |---|---|---|---|---|
-| `v_elm_forest_07` | story | `elder_elm` say array page 1 | 森の道は、もう閉ざさぬ。<br>夏至の歌も、村の者たちが<br>また歌ってくれるだろう。 | calm and grateful, slow and resonant |
-| `v_elm_forest_08` | story | `elder_elm` say array page 2 | ただ、迷いの森の魔物は、<br>わたしにも鎮められぬ。<br>腕を磨くには、よいだろう。 | wise, a faint dry humour at the end |
+| `v_elm_forest_07` | retired | `elder_elm` say array page 1 | 森の道は、もう閉ざさぬ。<br>夏至の歌も、村の者たちが<br>また歌ってくれるだろう。 | calm and grateful, slow and resonant |
+| `v_elm_forest_08` | retired | `elder_elm` say array page 2 | ただ、迷いの森の魔物は、<br>わたしにも鎮められぬ。<br>腕を磨くには、よいだろう。 | wise, a faint dry humour at the end |
 
 ## タデオ
 
 | id | 種類 | 場面 | 台詞 | 演技 |
 |---|---|---|---|---|
-| `v_tadeo_greet_01` | bark | `pharos_tadeo` bark: when the talk opens | よい灯りを。 | the world's everyday greeting in the endless night; a businesslike oil merchant, friendly, brief |
+| `v_tadeo_greet_01` | retired | `pharos_tadeo` bark: when the talk opens | よい灯りを。 | the world's everyday greeting in the endless night; a businesslike oil merchant, friendly, brief |
 
 ## 漁師のおかみ
 
 | id | 種類 | 場面 | 台詞 | 演技 |
 |---|---|---|---|---|
-| `v_fishwife_greet_01` | bark | `pharos_fishwife` bark: when the talk opens | よい灯りを。 | brisk, cheerful harbour woman greeting a passer-by |
+| `v_fishwife_greet_01` | retired | `pharos_fishwife` bark: when the talk opens | よい灯りを。 | brisk, cheerful harbour woman greeting a passer-by |
 
 ## 門番
 
 | id | 種類 | 場面 | 台詞 | 演技 |
 |---|---|---|---|---|
-| `v_gateguard_greet_01` | bark | `pharos_gateguard` bark: when the talk opens | よい灯りを、旅の方。 | a town gate guard, polite and a bit formal |
+| `v_gateguard_greet_01` | retired | `pharos_gateguard` bark: when the talk opens | よい灯りを、旅の方。 | a town gate guard, polite and a bit formal |
 
 ## 潮風亭のマスター
 
 | id | 種類 | 場面 | 台詞 | 演技 |
 |---|---|---|---|---|
-| `v_master_greet_01` | bark | `pharos_tavern_master` bark: when the talk opens | いらっしゃい。 | a tavern keeper welcoming a guest, warm and easygoing |
+| `v_master_greet_01` | retired | `pharos_tavern_master` bark: when the talk opens | いらっしゃい。 | a tavern keeper welcoming a guest, warm and easygoing |
 
 ## ゴード
 
 | id | 種類 | 場面 | 台詞 | 演技 |
 |---|---|---|---|---|
-| `v_gord_greet_01` | bark | `gord (fern)` bark: when the talk opens | おう、あんたか。 | a gruff woodcutter chief, tired but glad to see someone |
+| `v_gord_greet_01` | retired | `gord (fern)` bark: when the talk opens | おう、あんたか。 | a gruff woodcutter chief, tired but glad to see someone |
 
 ## ハンナ
 
 | id | 種類 | 場面 | 台詞 | 演技 |
 |---|---|---|---|---|
-| `v_hanna_greet_01` | bark | `hanna (fern)` bark: when the talk opens | おや、旅の方。 | a kind old village woman, gentle surprise |
+| `v_hanna_greet_01` | retired | `hanna (fern)` bark: when the talk opens | おや、旅の方。 | a kind old village woman, gentle surprise |
 
 ## リタ
 
 | id | 種類 | 場面 | 台詞 | 演技 |
 |---|---|---|---|---|
-| `v_rita_greet_01` | bark | `rita (fern)` bark: when the talk opens | あ、語り部さん。 | a young village singer, clear and bright, a little shy |
+| `v_rita_greet_01` | retired | `rita (fern)` bark: when the talk opens | あ、語り部さん。 | a young village singer, clear and bright, a little shy |
 | `v_rita_forest_01` | story | `fern_rita` first talk page 1 (sings the first verse, then stops) | ♪　眠れ森の主、千の年輪に……。<br>だめ。この先が、<br>どうしても出てこないの。 | sings the first line softly and slowly as a melody, then breaks off; frustrated and sad that the rest will not come |
 | `v_rita_forest_02` | story | `fern_rita` first talk page 2 (introduces herself) | わたしはリタ。この村の歌い手。<br>千年樹の歌は、最初の一節しか<br>思い出せないの。 | introduces herself shyly and earnestly; a little ashamed that the village singer has forgotten the song |
 | `v_rita_forest_03` | story | `forest_finale` the song night in the plaza (before the song) | みんな、聞いて。<br>千年樹の歌よ。 | calls the gathered village to listen, happy and a little nervous; she can sing the whole song again |
@@ -153,7 +153,7 @@
 
 | id | 種類 | 場面 | 台詞 | 演技 |
 |---|---|---|---|---|
-| `v_pim_greet_01` | bark | `pim_after (fern)` bark: when the talk opens (after the rescue) | あっ、語り部さん！ | a ten-year-old boy, excited and happy |
+| `v_pim_greet_01` | retired | `pim_after (fern)` bark: when the talk opens (after the rescue) | あっ、語り部さん！ | a ten-year-old boy, excited and happy |
 
 ## zaid
 

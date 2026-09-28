@@ -75,7 +75,7 @@
         K.chest('fern_rita_c1', 10, 8, { item: 'i_potion', n: 1 }),
       ]),
       npcs: [
-        K.npc('rita', 'npc_rita', 4, 5, { name: 'リタ', title: '歌い手', dir: 's', talk: 'fern_rita', reward: 'lead', bark: 'v_rita_greet_01' }),
+        K.npc('rita', 'npc_rita', 4, 5, { name: 'リタ', title: '歌い手', dir: 's', talk: 'fern_rita', reward: 'lead' }),
         K.npc('rita_pupil', 'npc_child_3', 8, 5, { name: 'リタの弟子', dir: 'w', talk: 'fern_song_game', reward: 'side' }),
       ],
       light: { ambient: '#80729c' },   // 夜の環境光の倍率を上げた分（RENDER ambientGain）だけ下げた。宝箱が床に溶けないように（check_chests）
@@ -107,7 +107,7 @@
         's.....xb',
         'k.....bb'], '..a....o'),
       npcs: [
-        K.npc('gord', 'npc_gord', 5, 4, { name: 'ゴード', title: 'きこり頭', dir: 's', talk: 'fern_gord', reward: 'lead', pushable: false, bark: 'v_gord_greet_01' }),
+        K.npc('gord', 'npc_gord', 5, 4, { name: 'ゴード', title: 'きこり頭', dir: 's', talk: 'fern_gord', reward: 'lead', pushable: false }),
       ],
     });
 

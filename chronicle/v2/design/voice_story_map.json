@@ -281,7 +281,7 @@
   },
   "v_berna_home_01": {
    "speaker": "berna",
-   "kind": "story",
+   "kind": "retired",
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "after prologue pick (default)",
@@ -291,7 +291,7 @@
   },
   "v_berna_home_02": {
    "speaker": "berna",
-   "kind": "story",
+   "kind": "retired",
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "after prologue pick cleared_r_forest",
@@ -301,7 +301,7 @@
   },
   "v_berna_home_03": {
    "speaker": "berna",
-   "kind": "story",
+   "kind": "retired",
    "file": "v2/src/events/prologue_roa.js",
    "event": "roa_berna",
    "key": "stay morning (E.stay o.morning)",
@@ -361,7 +361,7 @@
   },
   "v_rowell_pharos_01": {
    "speaker": "rowell",
-   "kind": "story",
+   "kind": "retired",
    "file": "v2/src/events/pharos_story.js",
    "event": "pharos_rowell",
    "key": "repeat talk pick prologue_done",
@@ -371,7 +371,7 @@
   },
   "v_rowell_pharos_02": {
    "speaker": "rowell",
-   "kind": "story",
+   "kind": "retired",
    "file": "v2/src/events/pharos_story.js",
    "event": "pharos_rowell",
    "key": "repeat talk pick prologue_key",
@@ -381,7 +381,7 @@
   },
   "v_rowell_pharos_03": {
    "speaker": "rowell",
-   "kind": "story",
+   "kind": "retired",
    "file": "v2/src/events/pharos_story.js",
    "event": "pharos_rowell",
    "key": "repeat talk pick default",
@@ -391,7 +391,7 @@
   },
   "v_elm_forest_07": {
    "speaker": "elm",
-   "kind": "story",
+   "kind": "retired",
    "file": "v2/src/events/forest_elder.js",
    "event": "elder_elm",
    "key": "say array page 1",
@@ -401,7 +401,7 @@
   },
   "v_elm_forest_08": {
    "speaker": "elm",
-   "kind": "story",
+   "kind": "retired",
    "file": "v2/src/events/forest_elder.js",
    "event": "elder_elm",
    "key": "say array page 2",
@@ -411,47 +411,47 @@
   },
   "v_tadeo_greet_01": {
    "speaker": "tadeo",
-   "kind": "bark",
+   "kind": "retired",
    "file": "v2/src/events/pharos_people.js",
    "event": "pharos_tadeo",
    "key": "bark: when the talk opens",
-   "line": null,
+   "line": 25,
    "text": "よい灯りを。",
    "audio": "assets/voice/v_tadeo_greet_01.ogg"
   },
   "v_fishwife_greet_01": {
    "speaker": "fishwife",
-   "kind": "bark",
+   "kind": "retired",
    "file": "v2/src/events/pharos_people.js",
    "event": "pharos_fishwife",
    "key": "bark: when the talk opens",
-   "line": null,
+   "line": 25,
    "text": "よい灯りを。",
    "audio": "assets/voice/v_fishwife_greet_01.ogg"
   },
   "v_gateguard_greet_01": {
    "speaker": "gateguard",
-   "kind": "bark",
+   "kind": "retired",
    "file": "v2/src/events/pharos_people.js",
    "event": "pharos_gateguard",
    "key": "bark: when the talk opens",
-   "line": null,
+   "line": 16,
    "text": "よい灯りを、旅の方。",
    "audio": "assets/voice/v_gateguard_greet_01.ogg"
   },
   "v_master_greet_01": {
    "speaker": "master",
-   "kind": "bark",
+   "kind": "retired",
    "file": "v2/src/events/pharos_story.js",
    "event": "pharos_tavern_master",
    "key": "bark: when the talk opens",
-   "line": null,
+   "line": 73,
    "text": "いらっしゃい。",
    "audio": "assets/voice/v_master_greet_01.ogg"
   },
   "v_gord_greet_01": {
    "speaker": "gord",
-   "kind": "bark",
+   "kind": "retired",
    "file": "v2/src/events/forest_fern.js",
    "event": "gord (fern)",
    "key": "bark: when the talk opens",
@@ -461,17 +461,17 @@
   },
   "v_hanna_greet_01": {
    "speaker": "hanna",
-   "kind": "bark",
+   "kind": "retired",
    "file": "v2/src/events/forest_fern.js",
    "event": "hanna (fern)",
    "key": "bark: when the talk opens",
-   "line": null,
+   "line": 150,
    "text": "おや、旅の方。",
    "audio": "assets/voice/v_hanna_greet_01.ogg"
   },
   "v_rita_greet_01": {
    "speaker": "rita",
-   "kind": "bark",
+   "kind": "retired",
    "file": "v2/src/events/forest_fern.js",
    "event": "rita (fern)",
    "key": "bark: when the talk opens",
@@ -481,7 +481,7 @@
   },
   "v_pim_greet_01": {
    "speaker": "pim",
-   "kind": "bark",
+   "kind": "retired",
    "file": "v2/src/events/forest_fern.js",
    "event": "pim_after (fern)",
    "key": "bark: when the talk opens (after the rescue)",

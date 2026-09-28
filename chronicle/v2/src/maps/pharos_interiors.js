@@ -61,7 +61,7 @@
             'bx........e.bk'], '....y..w.c..c.'),
         ],
         npcs: [
-          { id: 'master', look: 'npc_merchant_2', name: '潮風亭のマスター', x: 3, y: 3, dir: 's', move: 'still', pushable: false, talk: 'pharos_tavern_master', key: 'pharos_master', bark: 'v_master_greet_01' },
+          { id: 'master', look: 'npc_merchant_2', name: '潮風亭のマスター', x: 3, y: 3, dir: 's', move: 'still', pushable: false, talk: 'pharos_tavern_master', key: 'pharos_master' },
           { id: 'gossip', look: 'npc_woman_3', name: 'うわさ好きのおかみ', x: 7, y: 5, dir: 'e', move: 'still', talk: 'pharos_rumor_gossip', reward: 'lead', key: 'pharos_gossip' },
           { id: 'bard', look: 'npc_bard_1', name: '吟遊詩人', x: 13, y: 3, dir: 's', move: 'still', talk: 'pharos_rumor_bard', reward: 'lead', key: 'pharos_bard' },
           { id: 'trader', look: 'npc_merchant_3', name: '旅の商人', x: 12, y: 6, dir: 's', move: 'still', talk: 'pharos_rumor_trader', reward: 'lead', key: 'pharos_trader' },

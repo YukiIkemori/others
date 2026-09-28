@@ -152,7 +152,7 @@
     const L = K.L;
     const N = [
       // 広場
-      K.npc('hanna', 'npc_hanna', 31, 31, { name: 'ハンナ', title: '村の年寄り', dir: 's', talk: 'fern_hanna', reward: 'item', bark: 'v_hanna_greet_01' }),
+      K.npc('hanna', 'npc_hanna', 31, 31, { name: 'ハンナ', title: '村の年寄り', dir: 's', talk: 'fern_hanna', reward: 'item' }),
       K.npc('search_lead', 'npc_guard_2', 35, 27, { name: '捜索隊の男', dir: 's', talk: 'fern_search_lead', reward: 'lead', cond: '!cleared_r_forest' }),
       K.npc('search_a', 'npc_woodcutter_2', 37, 31, { name: '捜索隊の男', dir: 'w', talk: [L('森が道を変えちまうんだ。\n三歩で元の場所さ。\nどうやって探せってんだ。'), L({ var: 'forest_verses', gte: 1 }, '歌の石？　ああ、ばあさまたちの\n昔話だと思ってたよ。\n……本当にあったのか。')], cond: '!cleared_r_forest', reward: 'hint' }),
       K.npc('peddler', 'npc_merchant_2', 37, 28, { name: '行商人', title: '広場の行商', dir: 's', talk: 'fern_peddler', reward: null, pushable: false }),
@@ -165,7 +165,7 @@
       K.npc('acorn_boy', 'npc_child_1', 41, 44, { name: '木の実拾いの子', dir: 'w', talk: 'fern_acorn_boy', reward: 'side' }),
       K.npc('elder_m', 'npc_old_m_1', 44, 47, { name: '年寄りのきこり', dir: 'e', talk: 'fern_old_woodcutter', reward: 'news' }),
       K.npc('yura_miller', 'npc_yura_folk_2', 30, 29, { name: 'エダ', title: '粉ひき', dir: 'e', talk: 'fern_yura_miller', reward: 'item', cond: 'yura_miller_home' }),
-      K.npc('pim_after', 'npc_pim', 33, 33, { name: 'ピム', dir: 's', talk: 'fern_pim_after', reward: 'side', cond: 'cleared_r_forest', bark: 'v_pim_greet_01' }),
+      K.npc('pim_after', 'npc_pim', 33, 33, { name: 'ピム', dir: 's', talk: 'fern_pim_after', reward: 'side', cond: 'cleared_r_forest' }),
       // 樹上（lv 1）: 手紙配りの 5 軒の住人（幹の莢の家の前の足場に立つ）
       K.npc('deck_1', 'npc_woman_1', 10, 12, { name: '樹上の家の女', dir: 's', lv: 1, talk: 'fern_deck', reward: 'item' }),
       K.npc('deck_2', 'npc_old_m_3', 15, 11, { name: '樹上の家の老人', dir: 's', lv: 1, talk: 'fern_deck', reward: 'item' }),

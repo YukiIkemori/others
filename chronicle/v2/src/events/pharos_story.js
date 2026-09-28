@@ -39,9 +39,9 @@
         return;
       }
       const pk = E.pickEntry([
-        { cond: 'prologue_done', text: '灯台に火が戻っただと？\n……写し取ったはずの歌が、\nどうして。', voice: 'v_rowell_pharos_01' },
-        { cond: 'prologue_key', text: '灯台守から鍵を借りたそうだな。\n……火をともせるものなら、\nともしてみるがいい。', voice: 'v_rowell_pharos_02' },
-        { text: 'まだいたのか。\n写し取った伝承は、本院で\n大切に保管される。', voice: 'v_rowell_pharos_03' },
+        { cond: 'prologue_done', text: '灯台に火が戻っただと？\n……写し取ったはずの歌が、\nどうして。' },
+        { cond: 'prologue_key', text: '灯台守から鍵を借りたそうだな。\n……火をともせるものなら、\nともしてみるがいい。' },
+        { text: 'まだいたのか。\n写し取った伝承は、本院で\n大切に保管される。' },
       ]);
       await E.say(ev, 'rowell', pk.text, { voice: pk.voice, face: 'rowell:neutral' });
     },

@@ -156,7 +156,7 @@
       await ev.say('elm', '世界のあちこちで、白い闇が\n広がっているのを感じる。\n……語り部よ、急ぐがよい。', ELM);
       return;
     }
-    await ev.say('elm', ['森の道は、もう閉ざさぬ。\n夏至の歌も、村の者たちが\nまた歌ってくれるだろう。', 'ただ、迷いの森の魔物は、\nわたしにも鎮められぬ。\n腕を磨くには、よいだろう。'], Object.assign({ voice: ['v_elm_forest_07', 'v_elm_forest_08'] }, ELM));
+    await ev.say('elm', ['森の道は、もう閉ざさぬ。\n夏至の歌も、村の者たちが\nまた歌ってくれるだろう。', 'ただ、迷いの森の魔物は、\nわたしにも鎮められぬ。\n腕を磨くには、よいだろう。'], ELM);
   });
   E('elder_altar', async (ev) => {
     if (ev.flag('forest_boss')) await ev.say(null, '根に囲まれた、古い祭壇だ。\n光るきのこが、ぼんやりと\nあたりを照らしている。');
