@@ -14,6 +14,7 @@ const { ok, section, done } = require('./lib/testkit');
 const R = require('./lib/load')({ quiet: true, dev: true, fixtures: true, fixtureDirs: [path.join(__dirname, 'fixtures')] });
 const F = R.Field, S = F._s, M = F.minimap;
 const REVEAL = 4;
+{ const E = R._sandbox.console.error; R._sandbox.console.error = (...a) => { if (!/warm people|no canvas/.test(String(a[0]) + String(a[1]))) E(...a); }; }   // node には絵を焼くキャンバスが無い
 
 const adv = (ms) => R.Engine.advance(ms);
 async function flush() { for (let i = 0; i < 5; i++) await Promise.resolve(); }
@@ -43,21 +44,22 @@ function bfs(m, target) {
 }
 /** (tx, ty) まで 1 歩ずつ本当に歩く（F._step → 歩き終わり → F._arrive）。歩いたマスを walked に積む */
 async function walkTo(tx, ty, walked) {
-  for (let guard = 0; guard < 400; guard++) {
+  for (let tries = 0; tries < 4; tries++) {
     await settle();
     if (S.x === tx && S.y === ty) return true;
     const m = S.map, tk = tx + ',' + ty, { prev } = bfs(m, tk);
     if (!prev.has(tk)) return false;
-    let k = tk;
-    while (prev.get(k) !== S.x + ',' + S.y) k = prev.get(k);
-    const [nx, ny] = k.split(',').map(Number);
-    const id = m.id;
-    if (!F._step(nx - S.x, ny - S.y, guard % 2 === 0)) return false;   // 歩きと走りを交互に
-    await settle();
-    walked.push([S.map.id, S.x, S.y]);
-    if (S.map.id !== id || S.x !== nx || S.y !== ny) return true;   // ワープした（扉・階段）
+    const path = [];
+    for (let k = tk; k !== S.x + ',' + S.y; k = prev.get(k)) path.unshift(k.split(',').map(Number));
+    let n = 0;
+    for (const [nx, ny] of path) {
+      if (!F._step(nx - S.x, ny - S.y, (n++ % 2) === 0)) break;   // 歩きと走りを交互に
+      await settle();
+      walked.push([S.map.id, S.x, S.y]);
+      if (S.map.id !== m.id || S.x !== nx || S.y !== ny) return true;   // ワープした（扉・階段）
+    }
   }
-  return false;
+  return S.x === tx && S.y === ty;
 }
 /** いちばん遠い所を順に 3 か所回る（部屋と通路をひと通り） */
 async function tour(walked) {
@@ -130,7 +132,7 @@ async function main() {
     await tour(walked);
   }
   const floors = [...new Set(walked.map((w) => w[0]))];
-  ok('walked several floors (≥ 6) and many tiles (≥ 400)', floors.length >= 6 && walked.length >= 400, { floors, n: walked.length });
+  ok('walked several floors (≥ 6) and many tiles (≥ 400): ' + floors.join(' ') + ' / ' + walked.length, floors.length >= 6 && walked.length >= 400);
   const miss = missing(walked);
   ok('every tile stood on and its neighbours (reveal radius) are on the map', miss.length === 0, miss.slice(0, 12));
   ok('R.Game.explored has every walked floor', floors.every((id) => typeof R.Game.explored[id] === 'string'), Object.keys(R.Game.explored || {}));
