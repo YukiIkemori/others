@@ -13,7 +13,9 @@
     meta: { needs: [], gives: ['flag:prologue_lamp_road', 'flag:prologue_lamp_lookout'] },
     run: async (ev, ctx) => {
       const E = X();
-      const lookout = ctx && ctx.y != null && ctx.y < 88;
+      // どちらの灯籠か: 調べたマスの灯籠の id（WORLD v3: ワールドを広げたので座標では決めない）。見つからなければ前の決め方（論理の座標 y < 88 = 見晴らし台）
+      const w = R.DB.maps.world, lamp = w && ctx && ctx.x != null ? (w.objects || []).find((o) => o.type === 'waylamp' && o.x === ctx.x && o.y === ctx.y && /^wl_pen_/.test(o.id || '')) : null;
+      const lookout = lamp ? lamp.id === 'wl_pen_lookout' : !!(ctx && ctx.y != null && ctx.y < 88);
       const flag = lookout ? 'prologue_lamp_lookout' : 'prologue_lamp_road';
       if (ev.flag(flag)) { await E.narr(ev, '道しるべの灯籠に、\n火がともっている。\nまわりの闇が、少しやわらいだ。'); return; }
       if (!ev.flag('prologue_lamp_quest')) {

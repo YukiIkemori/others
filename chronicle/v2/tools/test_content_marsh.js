@@ -82,7 +82,7 @@ section('2. 置き場所（泉・宝箱・戸口・灯り）');
   const secret = MY_MAPS.filter((id) => Object.values(D.maps[id].legend).some((l) => l.secret) && R.MapUtil.grid(D.maps[id]).some((r) => [...r].some((c) => D.maps[id].legend[c] && D.maps[id].legend[c].secret)));
   ok('隠し通路なし', secret.length === 0, secret);
   const w = D.maps.world;
-  const inMarsh = (o) => o.x >= 112 && o.x <= 212 && o.y >= 44 && o.y <= 114;
+  const inMarsh = (o) => { const [x, y] = R.WorldXform ? R.WorldXform.lcell(w, o.x, o.y) : [o.x, o.y]; return x >= 112 && x <= 212 && y >= 44 && y <= 114; };   // 箱は論理の座標 L（WORLD v3）
   ok('ワールドの湿原に宝箱なし', !(w.objects || []).some((o) => o.type === 'chest' && inMarsh(o)));
   const townChests = MY_MAPS.filter((id) => D.maps[id].kind === 'town').flatMap((id) => (D.maps[id].objects || []).filter((o) => o.type === 'chest').map((o) => id + ':' + o.id));
   ok(`町の宝箱は見える物だけ（${townChests.length} 個）`, townChests.length <= 3, townChests);
@@ -152,7 +152,7 @@ section('4. 筋（閉包・集会・解決）');
   ok('縦切りのあいだ（slice）は湿原へ行けない（guard_east・guard_marsh が閉じたまま）', (() => { const q = P.closure({ variant: {} }); return !q.visited.has('loch') && !q.visited.has('marsh_bog') && !q.visited.has('marsh_manor_1'); })());
   const w = D.maps.world;
   const gm = (w.npcs || []).find((n) => n.id === 'guard_marsh');
-  ok('湿原の北の入口の番人 guard_marsh（cond {slice:true}）と崖崩れの tilePatch', !!(gm && gm.cond && gm.cond.slice === true) && (w.tilePatches || []).some((p) => p.cond && p.cond.slice === true && p.rect[0] === 166 && p.rect[1] === 56));
+  ok('湿原の北の入口の番人 guard_marsh（cond {slice:true}）と崖崩れの tilePatch', !!(gm && gm.cond && gm.cond.slice === true) && (w.tilePatches || []).some((p) => { if (!(p.cond && p.cond.slice === true)) return false; const [lx, ly] = R.WorldXform ? R.WorldXform.lcell(w, p.rect[0], p.rect[1]) : [p.rect[0], p.rect[1]]; return lx === 166 && ly === 56; }));
 }
 // 集会と証拠（イベントの本物を、画面なしの ev で走らせる）
 function fakeEv(opts) {

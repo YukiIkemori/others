@@ -7,9 +7,9 @@
   'use strict';
   const D = R.DB.events;
   const X = () => R.ContentP.ev;
-  const lines = (list) => ({ run: async (ev) => { const E = X(); for (const t of list) await E.narr(ev, t); } });
+  const lines = (list) => ({ meta: { needs: [], gives: [] }, run: async (ev) => { const E = X(); for (const t of list) await E.narr(ev, t); } });
 
-  D.world_poi_shrine = { run: async (ev) => {
+  D.world_poi_shrine = { meta: { needs: [], gives: [] }, run: async (ev) => {
     const E = X();
     const n = (ev.var('world_shrine_prayers') || 0) + 1;
     ev.setVar('world_shrine_prayers', n);
@@ -27,7 +27,7 @@
   D.world_poi_desert_ruin = lines(['砂に半分埋もれた神殿の顔。', '二本の柱のあいだから、\n冷たい風が吹いてくる。']);
   D.world_poi_marsh_bell = lines(['沼から突き出た、古い鐘楼。', '苔の中に、錆びた鐘が\n傾いて下がっている。\n……鳴らない。']);
   D.world_poi_marsh_stilt = lines(['高床の小屋の跡。', '床板は抜け、屋根だけが\n沼の上に傾いている。']);
-  D.world_poi_cache = { run: async (ev, args) => {
+  D.world_poi_cache = { meta: { needs: [], gives: ['item:i_ether', 'item:i_potion'] }, run: async (ev, args) => {
     const E = X(), m = R.DB.maps[(args && args.map) || 'world'];
     const o = m && (R.MapUtil.objectsAt(m, args.x, args.y) || []).find((q) => q.type === 'examine' && q.item);
     const key = 'world_cache_' + ((o && o.key) || (args.x + '_' + args.y));

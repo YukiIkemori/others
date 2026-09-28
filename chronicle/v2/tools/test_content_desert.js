@@ -56,7 +56,7 @@ section('2. 置き場所（A27・泉・宝箱）');
   const secretOut = MY_MAPS.filter((id) => D.maps[id].kind !== 'dungeon' && Object.values(D.maps[id].legend).some((l) => l.secret));
   ok('隠し通路はダンジョンの中だけ（町・野営地・屋内に無い）', secretOut.length === 0, secretOut);
   const w = D.maps.world;
-  const inDesert = (o) => o.x >= 8 && o.x <= 95 && o.y >= 118 && o.y <= 166;
+  const inDesert = (o) => { const [x, y] = R.WorldXform ? R.WorldXform.lcell(w, o.x, o.y) : [o.x, o.y]; return x >= 8 && x <= 95 && y >= 118 && y <= 166; };   // 箱は論理の座標 L（WORLD v3）
   ok('ワールドの砂漠に宝箱なし', !(w.objects || []).some((o) => o.type === 'chest' && inDesert(o)));
   const townChests = MY_MAPS.filter((id) => D.maps[id].kind !== 'dungeon').flatMap((id) => (D.maps[id].objects || []).filter((o) => o.type === 'chest').map((o) => id + ':' + o.id));
   ok(`町の宝箱は見える物だけ（${townChests.length} 個、どれも通りから見える床の上）`, townChests.length <= 4, townChests);

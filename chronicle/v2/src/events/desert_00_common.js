@@ -135,7 +135,8 @@
     try {
       const pos = R.Field && R.Field.pos;
       if (!pos || pos.map !== 'world' || !R.Audio || !R.Audio.bgm) { cur = null; return; }
-      const want = inDesert(pos.x, pos.y) ? 'desert' : 'overworld';
+      const [lx, ly] = R.WorldXform ? R.WorldXform.lcell(R.DB.maps.world, pos.x, pos.y) : [pos.x, pos.y];   // 箱は論理の座標 L（WORLD v3）
+      const want = inDesert(lx, ly) ? 'desert' : 'overworld';
       if (!want || want === cur) return;
       if (R.Engine && R.Engine.top && R.Engine.top() && R.Engine.top().id === 'battle') return;
       cur = want;

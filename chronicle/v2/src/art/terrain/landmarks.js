@@ -11,44 +11,7 @@
   const T = (R.Terrain = R.Terrain || {});
   const U = () => T._u;
 
-  // 素材・凡例 → 覆う絵の種類（fam）の候補。big = 山のように大きな塊にだけ使う絵の種類
-  function classOf(e, m) {
-    if (!e) return null;
-    const mat = e.mat || '';
-    if (e.tree) {
-      const t = e.tree[0] || '';
-      if (/snow/.test(t)) return 'snowtree';
-      if (/swamp/.test(t)) return 'marshtree';
-      if (/charred/.test(t)) return 'ashtree';
-      return 'tree';
-    }
-    if (m.tall === 'tree') return 'tree';
-    if (m.tall === 'canopy') return 'forest';
-    if (e.solid && /tall_grass|reeds/.test(mat)) return 'reeds';
-    if (e.solid && /wall_snow/.test(mat)) return 'snowrock';
-    if (e.solid && /sandstone/.test(mat)) return 'sandrock';
-    if (e.solid && /^(rock|wm_rock|cliff)$/.test(mat)) return 'rock';
-    return null;
-  }
-  // 種類 → 使う絵の fam（先頭ほど優先）。area = その塊の大きさの下限（マス。山は大きな塊にだけ）
-  const FAMS = {
-    tree: [['broad', 0], ['conifer', 0]],
-    forest: [['broad', 0], ['conifer', 0]],
-    snowtree: [['snowfir', 0]],
-    marshtree: [['marsh', 0]],
-    ashtree: [['ash', 0]],
-    reeds: [['marsh', 0]],
-    snowrock: [['snowmount', 60], ['snowfir', 0]],
-    sandrock: [['desert', 0]],
-    rock: [['mount', 60], ['rock', 0]],
-    ashrock: [['ash', 0]],
-  };
-  // fam の中で、その種類に使ってよい絵（id の末尾）
-  const OK = {
-    marshtree: /^lm_marsh_(dead3|swamptree)$/, reeds: /^lm_marsh_reeds/, ashtree: /^lm_ash_charred/, snowtree: /^lm_snowfir_(s1|m1|l1|xl)$/,
-    snowrock: /^lm_(snowmount_|snowfir_(rock1|crag1))/, sandrock: /^lm_desert_(mesa1|hoodoo|boulders)$/, rock: /^lm_(mount_|rock_)/, ashrock: /^lm_ash_(lavarock|crag|spire)$/,
-  };
-
+  // 置き方は src/core/world_lm.js（R.WorldLm）。生成器が決めて map.lm に書いてある（無ければここで計算する）
   let catalog = null;
   function cat() {
     if (catalog) return catalog;
@@ -63,90 +26,24 @@
     if (!out.length) return null;
     return (catalog = out);
   }
-  if (R.on) R.on('settings', () => { catalog = null; });
-
   const plans = new WeakMap();
   T._lmPlan = function (map) {
     if (!map || !map.splat) return null;
-    const grid = R.MapUtil.grid(map);
     const c0 = plans.get(map);
-    if (c0 && c0.grid === grid) return c0.plan;
-    const C = cat();
-    if (!C) return null;
-    const W = map.w, H = map.h, legend = map.legend || {}, u = U();
-    const cls = new Array(W * H).fill(null), cov = new Uint8Array(W * H);
-    const byCh = {};
-    for (const ch of Object.keys(legend)) byCh[ch] = classOf(legend[ch], T._matInfo(legend[ch].mat));
-    for (let y = 0; y < H; y++) { const row = grid[y]; for (let x = 0; x < W; x++) cls[y * W + x] = byCh[row[x]] || null; }
-    // 岩の地方: まわりの地面の素材で雪・灰・砂漠の岩に分ける（岩の凡例は地方で共通）
-    const regionOf = (mat) => (/snow|ice/.test(mat) ? 'snowrock' : /ash|obsidian|lava/.test(mat) ? 'ashrock' : /dune|sand|clay/.test(mat) ? 'sandrock' : null);
-    const matAt = (x, y) => { const e = legend[(grid[y] || '')[x]]; return e ? e.mat || '' : ''; };
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-      if (cls[y * W + x] !== 'rock') continue;
-      const cnt = {};
-      for (let j = -4; j <= 4; j += 2) for (let i = -4; i <= 4; i += 2) { const r = regionOf(matAt(x + i, y + j)); if (r) cnt[r] = (cnt[r] || 0) + 1; }
-      const best = Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a])[0];
-      if (best && cnt[best] >= 3) cls[y * W + x] = best === 'sandrock' ? 'rock' : best;   // 砂漠の岩場は緑の岩でなく…（砂岩の塊は X が別）→ 灰色の岩のまま
-    }
-    // 塊の大きさ（4 方向でつながる同じ種類のマスの数）
-    const comp = new Int32Array(W * H).fill(-1), compN = [];
-    for (let i = 0; i < W * H; i++) {
-      if (!cls[i] || comp[i] >= 0) continue;
-      const k = compN.length, q = [i]; comp[i] = k; let n = 0;
-      while (q.length) {
-        const j = q.pop(); n++;
-        const x = j % W, y = (j / W) | 0;
-        for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const X = x + dx, Y = y + dy; if (X < 0 || Y < 0 || X >= W || Y >= H) continue; const jj = Y * W + X; if (comp[jj] < 0 && cls[jj] === cls[i]) { comp[jj] = k; q.push(jj); } }
-      }
-      compN.push(n);
-    }
-    // 地方の色（山の絵の種類）: 岩のそばの地面が雪・灰・砂なら、その地方の岩
-    const items = [];
-    const fits = (x0, y0, w, h, c) => {
-      if (x0 < 0 || y0 < 0 || x0 + w > W || y0 + h > H) return false;
-      for (let y = y0; y < y0 + h; y++) for (let x = x0; x < x0 + w; x++) { const i = y * W + x; if (cov[i] || cls[i] !== c) return false; }
-      return true;
-    };
-    // 置く順: 種類ごとに、マスをハッシュの順に並べ、大きい絵から試す
-    const order = [];
-    for (let i = 0; i < W * H; i++) if (cls[i]) order.push(i);
-    order.sort((a, b) => u.h3(a % W, (a / W) | 0, 911) - u.h3(b % W, (b / W) | 0, 911));
-    const pools = {};
-    for (const c of Object.keys(FAMS)) {
-      const list = [];
-      for (const [fam, minArea] of FAMS[c]) for (const s of C) if (s.fam === fam && (!OK[c] || OK[c].test(s.id))) list.push(Object.assign({ minArea }, s));
-      list.sort((a, b) => b.fp[0] * b.fp[1] - a.fp[0] * a.fp[1] || (a.id < b.id ? -1 : 1));
-      pools[c] = list;
-    }
-    for (const i of order) {
-      if (cov[i]) continue;
-      const c = cls[i], pool = pools[c];
-      if (!pool || !pool.length) continue;
-      const x = i % W, y = (i / W) | 0, area = compN[comp[i]];
-      // 大きさの同じ絵どうしはハッシュで選ぶ（同じ形が並ばない）
-      const rr = u.h3(x, y, 917);
-      for (let k = 0; k < pool.length; k++) {
-        const s = pool[k];
-        if (area < s.minArea) continue;
-        // 木の種類: 広葉樹と針葉樹はゆるいノイズで地域ごとに
-        if ((c === 'tree' || c === 'forest') && s.fam !== (u.vn(x, y, 40, 919) > 0.5 ? 'broad' : 'conifer') && pool.some((q) => q.fam !== s.fam)) continue;
-        const alt = pool.filter((q) => q.fp[0] === s.fp[0] && q.fp[1] === s.fp[1] && q.fam === s.fam);
-        const pick = alt[Math.floor(rr * alt.length)] || s;
-        const [fw, fh] = pick.fp;
-        // (x, y) を足もとの行の左の方に含む置き方を 2 つ試す
-        let placed = false;
-        for (const [ox, oy] of [[0, fh - 1], [Math.floor(fw / 2), fh - 1], [0, 0]]) {
-          const x0 = x - ox, y0 = y - oy;
-          if (!fits(x0, y0, fw, fh, c)) continue;
-          for (let yy = y0; yy < y0 + fh; yy++) for (let xx = x0; xx < x0 + fw; xx++) cov[yy * W + xx] = 1;
-          items.push({ id: pick.id, fp: [x0, y0, fw, fh] });
-          placed = true; break;
-        }
-        if (placed) break;
-      }
+    if (c0) return c0;
+    // 絵が読めるまでは置かない（1 本ずつの木のまま。読めたら env.js がチャンクを焼き直す）
+    if (!cat()) return null;
+    const have = new Set(catalog.map((q) => q.id));
+    let list = map.lm && R.WorldLm ? R.WorldLm.unpack(map.lm) : null;
+    if (!list && R.WorldLm) list = R.WorldLm.plan(R.MapUtil.grid(map), map.legend || {}, map.w, map.h, catalog);
+    const items = [], cov = new Uint8Array(map.w * map.h);
+    for (const [id, x0, y0, w, h] of list || []) {
+      if (!have.has(id)) continue;
+      items.push({ id, fp: [x0, y0, w, h] });
+      for (let y = y0; y < y0 + h; y++) for (let x = x0; x < x0 + w; x++) cov[y * map.w + x] = 1;
     }
     const plan = { items, cov };
-    plans.set(map, { grid, plan });
+    plans.set(map, plan);
     return plan;
   };
   T._lmCovered = function (map, x, y) {
@@ -159,6 +56,17 @@
     'lm_ruin_tower', 'lm_ruin_found', 'lm_ruin_statue', 'lm_desert_camp', 'lm_desert_ruin', 'lm_marsh_stilt', 'lm_marsh_belltower', 'lm_ash_shrine', 'lm_ash_fumarole'];
   for (const id of POI) if (!(R.DB.props && R.DB.props[id])) R.def('props', id, { solid: true });
   for (const id of ['lm_bridge_draw', 'lm_bridge_causeway', 'lm_bridge_arch_h', 'lm_bridge_foot_h']) if (!(R.DB.props && R.DB.props[id])) R.def('props', id, { soft: true });   // 橋の絵（歩ける）
+  // hd:prop の登録（画像にしかない物。env.js の起動の登録より前に node の検査でもそろう）: マップに置いた lm_* と上の名所・橋
+  R.onData(() => {
+    const ids = new Set(POI.concat(['lm_bridge_draw', 'lm_bridge_causeway', 'lm_bridge_arch_h', 'lm_bridge_foot_h']));
+    for (const m of Object.values(R.DB.maps || {})) for (const o of (m && m.objects) || []) if (o.type === 'prop' && /^lm_/.test(o.id || '')) ids.add(o.id);
+    for (const id of ids) {
+      if (!R.DB.props[id]) R.def('props', id, { solid: true });
+      if (T._PROP_DRAW && !T._PROP_DRAW[id]) { T._PROP_DRAW[id] = function () { return null; }; T._PROP_DRAW[id].envOnly = true; }
+      if (T._PROP_META && !T._PROP_META[id]) T._PROP_META[id] = R.DB.props[id].soft ? { soft: true } : { solid: true };
+      if (T._bakeProp && T._hdDef && !(R.Hd && R.Hd.has && R.Hd.has('hd:prop:' + id))) T._hdDef('hd:prop:' + id, (o) => T._bakeProp(id, o || {}), R.DB.props[id]);
+    }
+  });
   /** チャンクの描く物に足す（足もと = 覆う枠の下の辺のまん中、足もとの行より上は over）。名所の物（map.objects の lm）も */
   T._lmDraw = function (job, draw, map) {
     const plan = T._lmPlan(map);

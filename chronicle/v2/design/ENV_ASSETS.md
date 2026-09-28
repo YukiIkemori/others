@@ -259,6 +259,13 @@ Raw paintings and guides: `design/art_ref/gen/env/under/<map>_genN_raw.png` and 
 - The rooms are padded to whole chunks (`PAD=1`, `pad.py`); otherwise the light multiply turns the transparent area below a small room white.
 - Images: 20 generations in all, one per map except temple_1. temple_1 gen1 was rejected, but its pillar row was lost to my warp, not to the model; the raw gen1 was fine. Five small-room calls were rejected as too small (768×640 is under the model's minimum pixel budget; 12×10 rooms now use 80 px/tile, which gives 960×800). Emit: none. Torches, braziers and lamps stay sprites and keep their lights.
 
+### Ash region (r_ash, 2026-09-28)
+
+Three paintings in `assets/env/ash/under/`, one `gen_env.py` call each, no retries: `caldera` (town, 54×54, generated 1728² = 32 px/tile), `ash_volcano_1` (56×48, 1792×1536, with a `_closed` layer for the two lava crossings) and `ash_volcano_2` (crater, 44×36, 1408×1152). `caldera_arena` and the interiors stay tiled (budget). Decorative props were drawn by the guide/prompt, so the maps keep only functional sprites (braziers, levers, board) and the invisible `lava_glow` light (`art.painted`).
+- Town: the painting's rings did not match the generated ring grid, so the map rows were fitted to the painting (`FIT` rows in `ash_caldera.js`); a few buildings painted a tile off their door were moved as whole 16 px blocks (`SHIFT` in the scratch `process.py`).
+- Emit: warm window panes + molten lava pixels. On the crater the dark crust inside the lava lake turned teal under the cave's cool light, so the crust on lava cells is also in the emit layer (warm, alpha 150).
+- Closed layer: the lava texture is tiled from 64 px blocks that are entirely lava, so no bank edges show on the crossing cells. The crossings use the `{cells, cond}` form (`!ash_sluice` / `ash_sluice`); the tiles themselves change by `tilePatches` with the same conds.
+
 ## 9. Props painted into the paintings, and themed functional sprites (2026-09-28, demo slice)
 
 The owner found the small props on the painted maps "floating" and wrongly sized (「小物…明らかに浮いてない？サイズ感全然合ってないし。」). The props were separate generated sprites with flat light, a harder pixel style and no contact shadow, laid over a softer painting. Plan A+B was approved on two conditions: **edit the existing paintings, do not regenerate the maps** (「ベースはもうあるからソレ使ってね？もったいないから」), and generate with the OpenAI API. The budget is limited (「節約できるところは節約してね」), so every call covers a whole cluster of props.

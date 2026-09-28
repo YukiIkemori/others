@@ -590,6 +590,7 @@ const cL = (x, y) => (XFORM ? XF.lcell(XFORM, x, y) : [x, y]);
   const add = (x, y, o) => { const k = x + ',' + y; if (!occ.has(k)) occ.set(k, []); occ.get(k).push(o); };
   for (const o of objects) {
     if (o.type === 'building') { for (let j = 0; j < o.h; j++) for (let i = 0; i < o.w; i++) if (!(o.door && o.door.x === o.x + i && o.door.y === o.y + j)) add(o.x + i, o.y + j, o); }
+    else if (o.type === 'prop' && o.lm) { if (!o.walk) for (let j = 0; j < (o.h || 1); j++) for (let i = 0; i < (o.w || 1); i++) add(o.x + i, o.y + j, o); }   // WORLD v3 の名所の絵（w×h の当たり）
     else if (o.x != null && !(o.type === 'prop' && SOFT.test(o.id)) && o.type !== 'examine' && o.type !== 'trail') add(o.x, o.y, o);
   }
   const keep = new Set();
@@ -748,6 +749,7 @@ function emit() {
   js.push("  R.def('maps', 'world', {");
   js.push("    id: 'world', name: 'エルセリア', kind: 'world', region: 'prologue', theme: 'world', w: " + W + ', h: ' + H + ',');
   if (XFORM) js.push('    splat: true,   // WORLD v3: なめらかな地面（src/art/terrain/splat.js）');
+  if (SCALE && SCALE.lm) js.push('    lm: ' + JSON.stringify(SCALE.lm) + ',   // WORLD v3: 大きな景色の絵の置き方（src/core/world_lm.js。生成器が決める）');
   js.push('    legend: ' + JSON.stringify(LEGEND) + ',');
   js.push("    outside: 'deep_water',");
   js.push('    rows: [');

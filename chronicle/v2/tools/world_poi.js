@@ -177,8 +177,8 @@ module.exports = Object.assign(function worldPoi(A) {
         if (id === 'lm_way_stones') objects.push({ type: 'examine', x: fx, y: fy, event: 'world_poi_stones' });
         if (id === 'lm_way_caravan' || id === 'lm_desert_camp') {
           // 野営の跡: そばに灯した灯籠（灯りの 5 マスは魔物が出ない＝旅の休み所）
-          for (const [lx, ly] of [[x0 + fw + 1, y0 + fh - 1], [x0 - 2, y0 + fh - 1], [x0 + (fw >> 1), y0 + fh + 1]]) {
-            if (!free(lx, ly, 1, 1, 0)) continue;
+          for (const [lx, ly] of [[x0 + fw, y0 + fh - 1], [x0 - 1, y0 + fh - 1], [x0 + fw, y0 + fh - 2]]) {   // 野営の跡に接して（あいだに 1 マスの通り道を作らない）
+            if (!inB(lx, ly) || tcore[ly * W + lx] === 0 || ROADCH.has(g[ly][lx]) || !walkCh(g[ly][lx]) || kind(g[ly][lx]) !== 'ground') continue;   // （名所の枠のまわりの空きは数えない）
             objects.push({ type: 'waylamp', id: 'wl_rest_' + (++nRest), x: lx, y: ly, lit: true }); addOcc(lx, ly, 1, 1); break;
           }
         }
@@ -218,13 +218,15 @@ module.exports = Object.assign(function worldPoi(A) {
     }
     if (!best) continue;
     const [x0, y0] = best;
+    const fx = x0 + (fw >> 1), fy = y0 + fh - 1;
+    // 道から歩いて着けること（前のマスから道まで小道を引けないなら置かない。沼の水に囲まれた所など）
+    const p = pathTo(fx, fy + 1, isRoad, 60);
+    if (!p) continue;
     clearRect(x0, y0, fw, fh, 2);
     place(s.id, x0, y0);
-    const fx = x0 + (fw >> 1), fy = y0 + fh - 1;
     objects.push({ type: 'examine', x: fx, y: fy, event: s.ev });
     if (s.cache) { const cx = x0 + fw, cy = y0 + fh - 1; objects.push({ type: 'examine', x: cx, y: cy, event: 'world_poi_cache', item: s.cache, key: s.ev }); }
-    const p = pathTo(fx, fy + 1, isRoad, 60);
-    if (p && p.length > 2) carve(p, pathCh(fx, fy));
+    if (p.length > 2) carve(p, pathCh(fx, fy));
     nSite++;
   }
   info.sites = nSite;
@@ -304,6 +306,16 @@ module.exports = Object.assign(function worldPoi(A) {
     else if (WM[e.mat]) e.mat = WM[e.mat];
     if (e.under && WM[e.under]) e.under = WM[e.under];
     if (e.mat === 'tree' && !e.under) e.under = 'wm_grass';
+  }
+  // ---------------------------------------------------------------- 8. 大きな景色の置き方（src/core/world_lm.js。ゲームの中で計算しないように map.lm に書く）
+  {
+    const WLM = require('../src/core/world_lm.js');
+    const D = path.join(__dirname, '..', 'assets', 'env', 'world', 'props');
+    const cat = fs.existsSync(D) ? fs.readdirSync(D).filter((f) => /^lm_.*\.json$/.test(f)).map((f) => JSON.parse(fs.readFileSync(path.join(D, f), 'utf8'))).filter((j) => j.fp).map((j) => ({ id: j.id, fam: j.fam, fp: j.fp })) : [];
+    cat.sort((a, b) => (a.id < b.id ? -1 : 1));
+    const items = WLM.plan(g, LEGEND, W, H, cat);
+    A.SCALE.lm = WLM.pack(items);
+    info.landmarks = items.length;
   }
   A.info = info;
   return info;

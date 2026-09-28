@@ -160,7 +160,8 @@
     try {
       const pos = R.Field && R.Field.pos;
       if (!pos || pos.map !== 'world' || !R.Audio || !R.Audio.bgm) { cur = null; return; }
-      const want = inSnow(pos.x, pos.y) ? 'ice' : cur === 'ice' ? 'overworld' : null;
+      const [lx, ly] = R.WorldXform ? R.WorldXform.lcell(R.DB.maps.world, pos.x, pos.y) : [pos.x, pos.y];   // 箱は論理の座標 L（WORLD v3）
+      const want = inSnow(lx, ly) ? 'ice' : cur === 'ice' ? 'overworld' : null;
       if (!want || want === cur) return;
       if (R.Engine && R.Engine.top && R.Engine.top() && R.Engine.top().id === 'battle') return;
       cur = want === 'overworld' ? null : want;

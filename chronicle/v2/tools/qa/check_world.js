@@ -31,14 +31,25 @@ const MARK = /lamp|lantern|tent|mushroom_glow|firefly|beacon|tree_giant|ship|wel
 const marks = [];
 for (const o of m.objects || []) {
   if (o.x == null) continue;
-  if (['waylamp', 'sign', 'building', 'stairs', 'examine', 'door'].includes(o.type) || (o.type === 'prop' && MARK.test(o.id))) marks.push([o.x, o.y]);
+  if (['waylamp', 'sign', 'building', 'stairs', 'examine', 'door'].includes(o.type) || (o.type === 'prop' && (o.lm || MARK.test(o.id)))) marks.push([o.x, o.y]);
 }
 for (const n of m.npcs || []) if (n.x != null) marks.push([n.x, n.y]);
 for (const e of m.exits || []) marks.push([e.x, e.y]);
+// WORLD v3（広げたワールド）: 木・森・岩・葦のマス（大きな景色の絵で描く。木立・山・岩場）が窓に 3 つあれば、目印と同じに数える（tools/world_poi.js と同じ決まり）。
+//   目印（重み 3）と景色のマス（重み 1）の累積和で、窓（±15 × ±8）の和が 3 以上か見る
+const SCEN = require('../world_poi').sceneryChars(m.legend);
+const W1 = m.w + 1, PS = new Int32Array(W1 * (m.h + 1)), mk = new Uint8Array(m.w * m.h);
+{
+  const grid0 = R.MapUtil.grid(m);
+  for (let y = 0; y < m.h; y++) { const r = [...grid0[y]]; for (let x = 0; x < m.w; x++) if (SCEN.has(r[x])) mk[y * m.w + x] = 1; }
+  for (const [x, y] of marks) if (x >= 0 && y >= 0 && x < m.w && y < m.h) mk[y * m.w + x] = 3;
+  for (let y = 0; y < m.h; y++) { let a = 0; for (let x = 0; x < m.w; x++) { a += mk[y * m.w + x]; PS[(y + 1) * W1 + x + 1] = PS[y * W1 + x + 1] + a; } }
+}
+const winSum = (x, y) => { const x0 = Math.max(0, x - 15), y0 = Math.max(0, y - 8), x1 = Math.min(m.w, x + 16), y1 = Math.min(m.h, y + 9); return PS[y1 * W1 + x1] - PS[y0 * W1 + x1] - PS[y1 * W1 + x0] + PS[y0 * W1 + x0]; };
 const empty = [];
 const byKind = {};
 for (const [x, y] of cells) {
-  if (marks.some(([mx, my]) => Math.abs(mx - x) <= 15 && Math.abs(my - y) <= 8)) continue;
+  if (winSum(x, y) >= 3) continue;
   empty.push(x + ',' + y);
   const mat = (R.MapUtil.cell(m, x, y) || {}).mat;
   byKind[mat] = (byKind[mat] || 0) + 1;
@@ -75,7 +86,9 @@ if (R.DB.regions.r_marsh && !R.DB.regions.r_marsh.slice) BUILT.push([155, 212, 5
 // 灰の荒野 x 96〜206・y 115〜162 と、潮見橋から湿原の沼の道まで x 186〜187・y 101〜121（tools/gen_world_ash.js）
 if (R.DB.regions.r_ash && !R.DB.regions.r_ash.slice) BUILT.push([96, 206, 115, 162], [186, 187, 101, 121]);
 const inBuilt = (x, y) => BUILT.some(([x0, x1, y0, y1]) => x >= x0 && x <= x1 && y >= y0 && y <= y1);
-const leak = cells.filter(([x, y]) => (y < 40 || x > 118 || y > 134) && !inBuilt(x, y));
+// 箱は論理の座標 L（tools/gen_world*.js が描く座標）。ワールドのマスは R.WorldXform で L に戻して比べる（WORLD v3）
+const toL = (x, y) => (R.WorldXform ? R.WorldXform.lcell(m, x, y) : [x, y]);
+const leak = cells.filter(([x, y]) => { const [lx, ly] = toL(x, y); return (ly < 40 || lx > 118 || ly > 134) && !inBuilt(lx, ly); });
 ok('縦切りの範囲の外（雪原・山地・砂漠）へ出られない', leak.length === 0, leak.slice(0, 5));
 const guards = (m.npcs || []).filter((n) => n.cond && n.cond.slice === true);
 ok(`峠の番人 ${guards.length} 人（北・東・南）`, guards.length >= 3);

@@ -285,12 +285,14 @@ async function flow() {
     return ev;
   };
   const run = async (id, ctx) => { const e = R.DB.events[id]; if (e.once && G.flags['ev_' + id]) return; await e.run(mk(ctx), ctx || {}); if (e.once) G.flags['ev_' + id] = true; };
+  // 半島の 2 つの灯籠の場所（WORLD v3: ワールドを広げたので、生成物の物の場所を使う）
+  const LP = (id) => { const o = (R.DB.maps.world.objects || []).find((q) => q.id === id) || {}; return { x: o.x, y: o.y }; };
   const steps = [
     ['roa_house_intro', { map: 'roa_house' }], ['roa_lectern', {}], ['roa_seat', {}], ['roa_berna', { npc: 'berna_desk' }], ['roa_stone', {}], ['roa_children', {}], ['roa_farmer', {}],
-    ['world_pen_lamp', { x: 89, y: 96 }], ['pharos_arrival', {}], ['pharos_record_notice', {}], ['pharos_rowell', {}], ['pharos_otto', {}],
+    ['world_pen_lamp', LP('wl_pen_road')], ['pharos_arrival', {}], ['pharos_record_notice', {}], ['pharos_rowell', {}], ['pharos_otto', {}],
     ['pharos_tavern_master', { npc: 'master' }], ['pharos_otto', {}], ['lighthouse_1_tutorial', {}], ['lighthouse_3_fine', {}], ['lighthouse_3_boss', {}],
     ['pharos_rumor_gossip', { npc: 'gossip' }], ['pharos_rumor_gossip', { npc: 'gossip' }], ['pharos_rumor_bard', { npc: 'bard' }], ['pharos_rumor_trader', { npc: 'trader' }],
-    ['pharos_tadeo', {}], ['pharos_tadeo', {}], ['world_pen_lamp', { x: 89, y: 96 }], ['world_pen_lamp', { x: 100, y: 80 }], ['pharos_tadeo', {}],
+    ['pharos_tadeo', {}], ['pharos_tadeo', {}], ['world_pen_lamp', LP('wl_pen_road')], ['world_pen_lamp', LP('wl_pen_lookout')], ['pharos_tadeo', {}],
     ['pharos_well_child', {}], ['well_nest', {}], ['pharos_apprentice', {}], ['windhill_notes', {}],
   ];
   const errs = [];

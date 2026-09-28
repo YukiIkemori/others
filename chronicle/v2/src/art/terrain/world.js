@@ -94,7 +94,7 @@
     if (!map) return null;
     const key = map.id + '|' + t;
     if (thumbs[key]) return thumbs[key];
-    const K = 3, W = map.w * K, H = map.h * K, c = T._u.canvas(W, H);
+    const K = map.w > 400 ? 1 : 3, W = map.w * K, H = map.h * K, c = T._u.canvas(W, H);   // WORLD v3: 広げたワールド（672 マス）は 1 マス 1 px（絵の大きさは前と同じ 672 px）
     if (!c) return null;
     const g = c.getContext('2d'), img = g.createImageData(W, H), d32 = new Uint32Array(img.data.buffer), U = T._u;
     const amb = U.hex(T.ambient(map, t).ambient), lum = 0.55 + Math.min(8, t) * 0.04;
@@ -121,7 +121,7 @@
     for (const o of map.objects || []) {
       if (o.type !== 'building' && o.type !== 'waylamp' && !(o.type === 'prop' && /lamp|beacon/.test(o.id || ''))) continue;
       g.fillStyle = 'rgba(255,208,128,0.9)';
-      g.fillRect(o.x * K + 1, o.y * K + 1, K - 1, K - 1);
+      if (K > 1) g.fillRect(o.x * K + 1, o.y * K + 1, K - 1, K - 1); else g.fillRect(o.x - 1, o.y - 1, 3, 3);
     }
     return (thumbs[key] = c);
   };

@@ -1,317 +1,660 @@
 {
- "date": "2026-09-28T10:25:35.147Z",
+ "date": "2026-09-28T11:56:44.423Z",
  "fixture": "content_p_pharos",
  "walked": [
   {
-   "map": "pharos",
+   "map": "world",
    "kind": "door",
-   "id": "ph_house2",
-   "at": "pharos_home2",
-   "to": "pharos_home2",
+   "id": "w_lighthouse",
+   "at": "lighthouse_1",
+   "to": "lighthouse_1",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    11,
-    12
+    319,
+    378
    ],
-   "ms": 3070
+   "ms": 16423
   },
   {
-   "map": "pharos",
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": "well",
+   "to": "well",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    235,
+    262
+   ],
+   "ms": 17782
+  },
+  {
+   "map": "world",
    "kind": "door",
-   "id": "ph_inn",
-   "at": "pharos_inn",
-   "to": "pharos_inn",
+   "id": "w_hut",
+   "at": "hut",
+   "to": "hut",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    6,
-    12
+    204,
+    186
    ],
-   "ms": 3466
+   "ms": 19168
   },
   {
-   "map": "pharos",
+   "map": "world",
    "kind": "door",
-   "id": "ph_house1",
-   "at": "pharos_home1",
-   "to": "pharos_home1",
+   "id": "w_sandedge",
+   "at": "sandedge",
+   "to": "sandedge",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    19,
-    8
+    104,
+    376
    ],
-   "ms": 2450
+   "ms": 18194
   },
   {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_record",
-   "at": "pharos_record",
-   "to": "pharos_record",
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": "snow_woods",
+   "to": "snow_woods",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    25,
-    8
+    199,
+    121
    ],
-   "ms": 2428
+   "ms": 20509
   },
   {
-   "map": "pharos",
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": "peak_1",
+   "to": "peak_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    181,
+    39
+   ],
+   "ms": 26057
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": "icicle_1",
+   "to": "icicle_1",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    64,
+    97
+   ],
+   "ms": 21774
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": "aurora",
+   "to": "aurora",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    67,
+    24
+   ],
+   "ms": 26416
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": "frost_ship_1",
+   "to": "frost_ship_1",
+   "ok": true,
+   "steps": 2,
+   "why": null,
+   "start": [
+    124,
+    24
+   ],
+   "ms": 25011
+  },
+  {
+   "map": "world",
    "kind": "door",
-   "id": "ph_house3",
-   "at": "pharos_home3",
-   "to": "pharos_home3",
+   "id": "w_manor",
+   "at": "marsh_manor_1",
+   "to": "marsh_manor_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    600,
+    208
+   ],
+   "ms": 20032
+  },
+  {
+   "map": "world",
+   "kind": "door",
+   "id": "w_haimi",
+   "at": "haimi_inn",
+   "to": "haimi_inn",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    570,
+    366
+   ],
+   "ms": 13287
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "241,271",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    241,
+    267
+   ],
+   "ms": 9273
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "308,324",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    308,
+    320
+   ],
+   "ms": 9199
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "126,228",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 2,
+   "why": null,
+   "start": [
+    130,
+    224
+   ],
+   "ms": 18615
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "74,176",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    74,
+    180
+   ],
+   "ms": 17317
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "151,422",
+   "at": "kasim",
+   "to": "kasim",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    150,
+    419
+   ],
+   "ms": 22555
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "112,459",
+   "at": "desert_camp1",
+   "to": "desert_camp1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    112,
+    463
+   ],
+   "ms": 12771
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "163,422",
+   "at": "kasim",
+   "to": "kasim",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    160,
+    421
+   ],
+   "ms": 23977
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "81,476",
+   "at": "desert_camp2",
+   "to": "desert_camp2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    80,
+    479
+   ],
+   "ms": 14639
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "49,426",
+   "at": "desert_camp3",
+   "to": "desert_camp3",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
     49,
-    12
+    430
    ],
-   "ms": 2287
+   "ms": 13374
   },
   {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_house5",
-   "at": "pharos_home5",
-   "to": "pharos_home5",
+   "map": "world",
+   "kind": "exit",
+   "id": "81,451",
+   "at": "desert_oldcamp",
+   "to": "desert_oldcamp",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    15,
-    32
+    81,
+    455
    ],
-   "ms": 2405
+   "ms": 13357
   },
   {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_tavern",
-   "at": "pharos_tavern",
-   "to": "pharos_tavern",
+   "map": "world",
+   "kind": "exit",
+   "id": "85,425",
+   "at": "desert_hawks_1",
+   "to": "desert_hawks_1",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    22,
-    18
+    85,
+    429
    ],
-   "ms": 2281
+   "ms": 12972
   },
   {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_smith",
-   "at": "pharos_smith",
-   "to": "pharos_smith",
+   "map": "world",
+   "kind": "exit",
+   "id": "41,453",
+   "at": "desert_wellroom",
+   "to": "desert_wellroom",
    "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    30,
-    23
-   ],
-   "ms": 2114
-  },
-  {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_house4",
-   "at": "pharos_home4",
-   "to": "pharos_home4",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    8,
-    25
-   ],
-   "ms": 1791
-  },
-  {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_shop",
-   "at": "pharos_shop",
-   "to": "pharos_shop",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    33,
-    26
-   ],
-   "ms": 2355
-  },
-  {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_house6",
-   "at": "pharos_home6",
-   "to": "pharos_home6",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    32,
-    37
-   ],
-   "ms": 2265
-  },
-  {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_shipyard",
-   "at": "pharos_shipyard",
-   "to": "pharos_shipyard",
-   "ok": true,
-   "steps": 4,
+   "steps": 5,
    "why": null,
    "start": [
     42,
-    32
+    450
    ],
-   "ms": 2131
+   "ms": 21203
   },
   {
-   "map": "pharos",
+   "map": "world",
    "kind": "exit",
-   "id": "0,10",
-   "at": "world",
-   "to": "world",
+   "id": "172,377",
+   "at": "desert_rocks",
+   "to": "desert_rocks",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    4,
-    10
+    172,
+    381
    ],
-   "ms": 2415
+   "ms": 11338
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "143,76",
+   "at": "yule",
+   "to": "yule",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    142,
+    73
+   ],
+   "ms": 17804
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "148,70",
+   "at": "yule",
+   "to": "yule",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    148,
+    66
+   ],
+   "ms": 18431
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "258,92",
+   "at": "pass_inn",
+   "to": "pass_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    258,
+    96
+   ],
+   "ms": 12461
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "153,76",
+   "at": "yule",
+   "to": "yule",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    155,
+    74
+   ],
+   "ms": 24384
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "544,221",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    546,
+    219
+   ],
+   "ms": 14686
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "556,221",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    554,
+    219
+   ],
+   "ms": 13798
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "495,408",
+   "at": "caldera",
+   "to": "caldera",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    496,
+    405
+   ],
+   "ms": 14774
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "506,408",
+   "at": "caldera",
+   "to": "caldera",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    507,
+    405
+   ],
+   "ms": 8536
   }
  ],
  "looks": [
   {
-   "map": "pharos",
-   "npc": "otto",
-   "look": "otto",
-   "art": "otto",
+   "map": "world",
+   "npc": "bridge_guard",
+   "look": "npc_guard_2",
+   "art": "npc_pen_guard_2",
    "ok": true
   },
   {
-   "map": "pharos",
-   "npc": "gateguard",
+   "map": "world",
+   "npc": "guard_east",
    "look": "npc_guard_1",
    "art": "npc_pen_guard_1",
    "ok": true
   },
   {
-   "map": "pharos",
-   "npc": "well_child",
-   "look": "npc_child_2",
-   "art": "npc_pen_child_2",
+   "map": "world",
+   "npc": "guard_north",
+   "look": "npc_guard_1",
+   "art": "npc_pen_guard_1",
    "ok": true
   },
   {
-   "map": "pharos",
-   "npc": "tadeo",
-   "look": "npc_tadeo",
-   "art": "npc_tadeo",
+   "map": "world",
+   "npc": "guard_south",
+   "look": "npc_guard_1",
+   "art": "npc_pen_guard_1",
    "ok": true
   },
   {
-   "map": "pharos",
-   "npc": "fishwife",
-   "look": "npc_woman_3",
-   "art": "npc_pen_woman_3",
+   "map": "world",
+   "npc": "traveler_plains",
+   "look": "npc_merchant_2",
+   "art": "npc_pen_keeper_2",
    "ok": true
   },
   {
-   "map": "pharos",
-   "npc": "old_sailor",
-   "look": "npc_sailor_2",
-   "art": "npc_pen_sailor_2",
+   "map": "world",
+   "npc": "woodcutter_road",
+   "look": "npc_woodcutter_1",
+   "art": "npc_woodcutter",
    "ok": true
   },
   {
-   "map": "pharos",
-   "npc": "ship_sailor",
-   "look": "npc_sailor_1",
-   "art": "npc_pen_sailor_1",
-   "ok": true
-  },
-  {
-   "map": "pharos",
-   "npc": "plaza_woman",
-   "look": "npc_woman_1",
-   "art": "npc_pen_woman_1",
-   "ok": true
-  },
-  {
-   "map": "pharos",
-   "npc": "bench_old",
+   "map": "world",
+   "npc": "shepherd",
    "look": "npc_old_m_2",
    "art": "npc_pen_old_m_2",
    "ok": true
   },
   {
-   "map": "pharos",
-   "npc": "merchant",
-   "look": "npc_merchant_1",
-   "art": "npc_pen_keeper_1",
+   "map": "world",
+   "npc": "lost_camel",
+   "look": "ani_camel",
+   "art": "ani_camel",
    "ok": true
   },
   {
-   "map": "pharos",
-   "npc": "yena",
-   "look": "npc_yena",
-   "art": "npc_yena",
+   "map": "world",
+   "npc": "pilgrim",
+   "look": "npc_desert_old_f",
+   "art": "npc_desert_old_f",
    "ok": true
   },
   {
-   "map": "pharos",
-   "npc": "kid_pier",
-   "look": "npc_child_4",
-   "art": "npc_pen_child_4",
+   "map": "world",
+   "npc": "oil_caravan",
+   "look": "npc_oil_carrier",
+   "art": "npc_oil_carrier",
    "ok": true
   },
   {
-   "map": "pharos",
-   "npc": "dog",
-   "look": "ani_dog",
-   "art": "ani_dog",
+   "map": "world",
+   "npc": "oil_camel",
+   "look": "ani_camel",
+   "art": "ani_camel",
    "ok": true
   },
   {
-   "map": "pharos",
-   "npc": "berna",
-   "look": "berna",
-   "art": "berna",
+   "map": "world",
+   "npc": "guard_ash",
+   "look": "npc_guard_1",
+   "art": "npc_pen_guard_1",
    "ok": true
   },
   {
-   "map": "pharos",
-   "npc": "cheer_a",
-   "look": "npc_man_1",
-   "art": "npc_pen_man_1",
+   "map": "world",
+   "npc": "snow_trapper",
+   "look": "npc_snow_man",
+   "art": "npc_snow_man",
    "ok": true
   },
   {
-   "map": "pharos",
-   "npc": "cheer_b",
-   "look": "npc_woman_1",
-   "art": "npc_pen_woman_1",
+   "map": "world",
+   "npc": "snow_pilgrim",
+   "look": "npc_snow_old_m",
+   "art": "npc_snow_old_m",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "snow_scout",
+   "look": "npc_snow_watch",
+   "art": "npc_snow_watch",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "guard_snow_east",
+   "look": "npc_guard_1",
+   "art": "npc_pen_guard_1",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "marsh_traveler",
+   "look": "npc_traveler",
+   "art": "npc_traveler",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "guard_marsh",
+   "look": "npc_guard_1",
+   "art": "npc_pen_guard_1",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "ash_traveler",
+   "look": "npc_traveler",
+   "art": "npc_traveler",
    "ok": true
   }
  ],
- "skipped": [],
+ "skipped": [
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "to": "desert_temple_1",
+   "cond": {
+    "any": [
+     "cleared_r_desert",
+     {
+      "var": "desert_nights",
+      "gte": 3
+     }
+    ]
+   }
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "to": "marsh_bog",
+   "cond": "marsh_assembly_done"
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "to": "ash_volcano_1",
+   "cond": "ash_champion"
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "121,428",
+   "to": "desert_mirage",
+   "cond": "desert_night"
+  }
+ ],
  "errors": []
 }

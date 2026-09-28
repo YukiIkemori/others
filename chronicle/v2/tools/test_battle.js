@@ -143,12 +143,15 @@ section('出現（R.Mon.encounter: 率・組・魔除けの香・決まった結
     return { hits, mean: gaps.reduce((a, b) => a + b, 0) / Math.max(1, gaps.length), min: Math.min(...gaps) };
   };
   const w = runSteps('zw_forest', 30000);
-  ok(`world zone: mean ≈ 26 steps (${w.mean.toFixed(1)})`, w.mean > 24 && w.mean < 28);
+  // ワールドの平均の間隔は R.Rules.K.ENC.world（WORLD v3 で 26 → 52。ワールドが 3 倍に広がった分）
+  const EW = R.Rules.K.ENC.world, ES = R.Rules.K.ENC.safeSteps;
+  ok(`world zone: mean ≈ ${EW} steps (${w.mean.toFixed(1)})`, w.mean > EW * 0.92 && w.mean < EW * 1.08);
   ok('safe steps: never two battles within 6 steps', w.min >= 6, w.min);
   const d = runSteps('z_verda', 30000);
   ok(`dungeon zone: mean ≈ 22 steps (${d.mean.toFixed(1)})`, d.mean > 20.5 && d.mean < 23.5);
   const road = runSteps('zw_forest_road', 60000);
-  ok(`forest road ×0.3: mean ≈ 75 steps (${road.mean.toFixed(1)})`, road.mean > 66 && road.mean < 84);
+  const ER = (EW - ES + 1) / 0.3 + ES - 1;   // 26 のとき 75
+  ok(`forest road ×0.3: mean ≈ ${ER.toFixed(0)} steps (${road.mean.toFixed(1)})`, road.mean > ER * 0.88 && road.mean < ER * 1.12);
   // 一行の encounterPct（シルヴァン −25）が率にかかる
   newGame(['sylvain']);
   const sy = runSteps('zw_forest', 30000);
