@@ -1,4 +1,4 @@
-// techs_bow.js — 弓の技 20（RULES。STATS_REWORK §8.5。tools/port/port_techs.js の出力を正とする）
+// techs_bow.js — 弓の技 20 ＋派生技 3（RULES。STATS_REWORK §8.5。tools/port/port_techs.js の出力を正とする）
 // 生成: node v2/tools/port/*.js（今の木から移した結果。以後はこのファイルが正）
 (function (R) {
   'use strict';
@@ -16,7 +16,6 @@
     fx: 'arrow',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
-    derive: [{ to: 't_bow_hobble', uses: 20, chance: 0.025 }, { to: 't_bow_blind', uses: 25, chance: 0.02 }, { to: 't_bow_hawk', uses: 35, chance: 0.015 }],
   },
   t_bow_twin: {
     kind: 'tech',
@@ -30,7 +29,6 @@
     fx: 'arrow',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
-    derive: [{ to: 't_bow_rain', uses: 25, chance: 0.02 }],
   },
   t_bow_hobble: {
     kind: 'tech',
@@ -44,7 +42,6 @@
     fx: 'arrow',
     rank: 2,
     glim: { lv: 2, from: ['t_bow_rapid'] },
-    derive: [{ to: 't_bow_venom', uses: 30, chance: 0.02 }, { to: 't_bow_receive', uses: 30, chance: 0.02 }],
   },
   t_bow_blind: {
     kind: 'tech',
@@ -58,7 +55,6 @@
     fx: 'arrow',
     rank: 2,
     glim: { lv: 2, from: ['t_bow_rapid'] },
-    derive: [{ to: 't_bow_hush', uses: 30, chance: 0.02 }],
   },
   t_bow_rain: {
     kind: 'tech',
@@ -72,7 +68,6 @@
     fx: 'arrow2',
     rank: 3,
     glim: { lv: 3, from: ['t_bow_twin'] },
-    derive: [{ to: 't_bow_volley', uses: 45, chance: 0.012 }],
   },
   t_bow_receive: {
     kind: 'tech',
@@ -87,7 +82,6 @@
     fx: 'stance',
     rank: 3,
     glim: { lv: 3, from: ['t_dagger_butt'] },
-    derive: [{ to: 't_bow_ripple', uses: 40, chance: 0.012 }],
   },
   t_bow_hush: {
     kind: 'tech',
@@ -101,7 +95,6 @@
     fx: 'arrow2',
     rank: 4,
     glim: { lv: 4, from: ['t_bow_blind'] },
-    derive: [{ to: 't_bow_pin', uses: 40, chance: 0.012 }],
   },
   t_bow_venom: {
     kind: 'tech',
@@ -128,7 +121,6 @@
     fx: 'arrow2',
     rank: 5,
     glim: { lv: 5, from: ['t_bow_rapid'] },
-    derive: [{ to: 't_bow_soar', uses: 50, chance: 0.01 }],
   },
   t_bow_pin: {
     kind: 'tech',
@@ -142,7 +134,6 @@
     fx: 'arrow2',
     rank: 6,
     glim: { lv: 6, from: ['t_bow_hush'] },
-    derive: [{ to: 't_bow_dusk', uses: 50, chance: 0.01 }],
   },
   t_bow_ripple: {
     kind: 'tech',
@@ -156,7 +147,6 @@
     fx: 'pierce2',
     rank: 6,
     glim: { lv: 6, from: ['t_dagger_sweep', 't_bow_receive'] },
-    derive: [{ to: 't_bow_phalanx', uses: 45, chance: 0.012 }],
   },
   t_bow_volley: {
     kind: 'tech',
@@ -170,7 +160,6 @@
     fx: 'arrow3',
     rank: 7,
     glim: { lv: 7, from: ['t_bow_twin', 't_bow_rain'] },
-    derive: [{ to: 't_bow_starrain', uses: 60, chance: 0.008 }],
   },
   t_bow_firerain: {
     kind: 'tech',
@@ -279,6 +268,47 @@
     fx: 'holy3',
     rank: 10,
     glim: { lv: 10, from: ['t_bow_starrain'] },
+  },
+  // ---- 派生技（レア。design/BACKLOG「派生技の閃き」）: glim が無い（通常の閃きの候補に入らない）。derived.from の技を使ったときだけ
+  //      R.Glimmer.deriveRoll で編み出す。derived.lv は閃きの lv と同じ物差し（相手のランク・K.TECH_PROF と比べる）
+  t_bow_three: {
+    kind: 'tech',
+    wtype: 'bow',
+    name: '三つ矢',
+    desc: '3本の矢を放ち、敵のだれかに当てる。',
+    mp: 5,
+    target: 'random',
+    reach: true,
+    effects: [{ type: 'damage', power: 0.8, hits: 3 }],
+    fx: 'arrow',
+    rank: 3,
+    derived: { from: 't_bow_twin', lv: 3 },
+  },
+  t_bow_five: {
+    kind: 'tech',
+    wtype: 'bow',
+    name: '五つ矢',
+    desc: '5本の矢を放ち、敵のだれかに当てる。',
+    mp: 9,
+    target: 'random',
+    reach: true,
+    effects: [{ type: 'damage', power: 0.72, hits: 5 }],
+    fx: 'arrow2',
+    rank: 6,
+    derived: { from: 't_bow_three', lv: 6 },
+  },
+  t_bow_greathawk: {
+    kind: 'tech',
+    wtype: 'bow',
+    name: '大鷹の一矢',
+    desc: '必ず当たる。飛ぶ敵にとても大きなダメージ。',
+    mp: 10,
+    target: 'enemy',
+    reach: true,
+    effects: [{ type: 'damage', power: 2.5, sure: true, vs: { flying: 2 } }],
+    fx: 'arrow2',
+    rank: 7,
+    derived: { from: 't_bow_hawk', lv: 7 },
   },
 });
 })(window.RPG);

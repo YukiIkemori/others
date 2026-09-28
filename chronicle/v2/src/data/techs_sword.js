@@ -1,4 +1,4 @@
-// techs_sword.js — 剣の技 20（RULES。STATS_REWORK §8.5。tools/port/port_techs.js の出力を正とする）
+// techs_sword.js — 剣の技 20 ＋派生技 3（RULES。STATS_REWORK §8.5。tools/port/port_techs.js の出力を正とする）
 // 生成: node v2/tools/port/*.js（今の木から移した結果。以後はこのファイルが正）
 (function (R) {
   'use strict';
@@ -15,7 +15,6 @@
     fx: 'slash',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
-    derive: [{ to: 't_sword_twin', uses: 20, chance: 0.025 }, { to: 't_sword_thrust', uses: 25, chance: 0.02 }],
   },
   t_sword_guard: {
     kind: 'tech',
@@ -30,7 +29,6 @@
     fx: 'stance',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
-    derive: [{ to: 't_sword_disarm', uses: 25, chance: 0.02 }, { to: 't_sword_bulwark', uses: 35, chance: 0.015 }],
   },
   t_sword_disarm: {
     kind: 'tech',
@@ -58,7 +56,6 @@
     fx: 'slash',
     rank: 2,
     glim: { lv: 2, from: ['attack'] },
-    derive: [{ to: 't_sword_mine', uses: 25, chance: 0.02 }],
   },
   t_sword_twin: {
     kind: 'tech',
@@ -72,7 +69,6 @@
     fx: 'slash',
     rank: 2,
     glim: { lv: 2, from: ['t_sword_stepcut'] },
-    derive: [{ to: 't_sword_wheel', uses: 30, chance: 0.02 }, { to: 't_sword_triple', uses: 50, chance: 0.01 }],
   },
   t_sword_mine: {
     kind: 'tech',
@@ -86,7 +82,6 @@
     fx: 'strike',
     rank: 3,
     glim: { lv: 3, from: ['t_sword_draw'] },
-    derive: [{ to: 't_sword_haze', uses: 30, chance: 0.02 }],
   },
   t_sword_thrust: {
     kind: 'tech',
@@ -100,7 +95,6 @@
     fx: 'pierce',
     rank: 3,
     glim: { lv: 3, from: ['t_sword_stepcut'] },
-    derive: [{ to: 't_sword_pierce', uses: 30, chance: 0.02 }],
   },
   t_sword_pierce: {
     kind: 'tech',
@@ -114,7 +108,6 @@
     fx: 'pierce2',
     rank: 4,
     glim: { lv: 4, from: ['attack', 't_dagger_sweep'] },
-    derive: [{ to: 't_sword_cloud', uses: 35, chance: 0.015 }],
   },
   t_sword_wheel: {
     kind: 'tech',
@@ -128,7 +121,6 @@
     fx: 'slash2',
     rank: 4,
     glim: { lv: 4, from: ['t_sword_twin'] },
-    derive: [{ to: 't_sword_bladewind', uses: 45, chance: 0.012 }],
   },
   t_sword_haze: {
     kind: 'tech',
@@ -142,7 +134,6 @@
     fx: 'fire2',
     rank: 4,
     glim: { lv: 4, from: ['t_sword_mine'] },
-    derive: [{ to: 't_sword_void', uses: 40, chance: 0.012 }],
   },
   t_sword_cloud: {
     kind: 'tech',
@@ -196,7 +187,6 @@
     fx: 'wind2',
     rank: 6,
     glim: { lv: 6, from: ['t_sword_haze', 't_sword_wheel'] },
-    derive: [{ to: 't_sword_lifecut', uses: 45, chance: 0.012 }],
   },
   t_sword_bladewind: {
     kind: 'tech',
@@ -223,7 +213,6 @@
     fx: 'slash3',
     rank: 7,
     glim: { lv: 7, from: ['t_sword_void'] },
-    derive: [{ to: 't_sword_first', uses: 60, chance: 0.008 }],
   },
   t_sword_triple: {
     kind: 'tech',
@@ -237,7 +226,6 @@
     fx: 'slash3',
     rank: 8,
     glim: { lv: 8, from: ['t_sword_twin', 't_sword_purify'] },
-    derive: [{ to: 't_sword_dawn', uses: 60, chance: 0.008 }],
   },
   t_sword_first: {
     kind: 'tech',
@@ -278,6 +266,49 @@
     fx: 'holy3',
     rank: 10,
     glim: { lv: 10, from: ['t_sword_dawn'] },
+  },
+  // ---- 派生技（レア。design/BACKLOG「派生技の閃き」）: glim が無い（通常の閃きの候補に入らない）。derived.from の技を使ったときだけ
+  //      R.Glimmer.deriveRoll で編み出す。derived.lv は閃きの lv と同じ物差し（相手のランク・K.TECH_PROF と比べる）
+  t_sword_swallow: {
+    kind: 'tech',
+    wtype: 'sword',
+    name: 'つばめ返し',
+    desc: '斬り下ろした刃をすぐ返し、2回斬る。',
+    mp: 5,
+    target: 'enemy',
+    reach: false,
+    effects: [{ type: 'damage', power: 1.05, hits: 2, critBonus: 10 }],
+    fx: 'slash2',
+    rank: 4,
+    derived: { from: 't_sword_twin', lv: 4 },
+  },
+  t_sword_swallow_draw: {
+    kind: 'tech',
+    wtype: 'sword',
+    name: '抜刀つばめ返し',
+    desc: '抜きざまにつばめ返しを放つ。先に動ける。',
+    mp: 10,
+    target: 'enemy',
+    reach: false,
+    quick: true,
+    effects: [{ type: 'damage', power: 1.2, hits: 2, critBonus: 20 }],
+    fx: 'slash3',
+    rank: 7,
+    derived: { from: 't_sword_swallow', lv: 7 },
+  },
+  t_sword_gale_draw: {
+    kind: 'tech',
+    wtype: 'sword',
+    name: '疾風の抜き打ち',
+    desc: '風のような抜き打ち。先に動き、会心が出やすい。',
+    mp: 5,
+    target: 'enemy',
+    reach: false,
+    quick: true,
+    effects: [{ type: 'damage', power: 1.9, critBonus: 20 }],
+    fx: 'slash2',
+    rank: 4,
+    derived: { from: 't_sword_draw', lv: 4 },
   },
 });
 })(window.RPG);

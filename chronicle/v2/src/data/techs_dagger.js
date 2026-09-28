@@ -1,4 +1,4 @@
-// techs_dagger.js — 短剣の技 19（RULES。STATS_REWORK §8.5。tools/port/port_techs.js の出力を正とする）
+// techs_dagger.js — 短剣の技 19 ＋派生技 3（RULES。STATS_REWORK §8.5。tools/port/port_techs.js の出力を正とする）
 // 生成: node v2/tools/port/*.js（今の木から移した結果。以後はこのファイルが正）
 (function (R) {
   'use strict';
@@ -15,7 +15,6 @@
     fx: 'pierce',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
-    derive: [{ to: 't_dagger_venom', uses: 20, chance: 0.025 }, { to: 't_dagger_gap', uses: 40, chance: 0.012 }],
   },
   t_dagger_filch: {
     kind: 'tech',
@@ -30,7 +29,6 @@
     fx: 'steal',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
-    derive: [{ to: 't_dagger_knives', uses: 25, chance: 0.02 }],
   },
   t_dagger_butt: {
     kind: 'tech',
@@ -44,7 +42,6 @@
     fx: 'strike',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
-    derive: [{ to: 't_dagger_pommel', uses: 25, chance: 0.02 }],
   },
   t_dagger_venom: {
     kind: 'tech',
@@ -58,7 +55,6 @@
     fx: 'poison',
     rank: 2,
     glim: { lv: 2, from: ['t_dagger_vital'] },
-    derive: [{ to: 't_dagger_lull', uses: 30, chance: 0.02 }],
   },
   t_dagger_numb: {
     kind: 'tech',
@@ -72,7 +68,6 @@
     fx: 'pierce',
     rank: 2,
     glim: { lv: 2, from: ['t_dagger_filch'] },
-    derive: [{ to: 't_dagger_serpent', uses: 30, chance: 0.02 }],
   },
   t_dagger_sweep: {
     kind: 'tech',
@@ -99,7 +94,6 @@
     fx: 'pierce',
     rank: 3,
     glim: { lv: 3, from: ['t_dagger_filch'] },
-    derive: [{ to: 't_dagger_bees', uses: 35, chance: 0.015 }],
   },
   t_dagger_pommel: {
     kind: 'tech',
@@ -113,7 +107,6 @@
     fx: 'strike2',
     rank: 3,
     glim: { lv: 3, from: ['t_dagger_vital'] },
-    derive: [{ to: 't_dagger_vault', uses: 35, chance: 0.015 }],
   },
   t_dagger_lull: {
     kind: 'tech',
@@ -127,7 +120,6 @@
     fx: 'sleep',
     rank: 4,
     glim: { lv: 4, from: ['t_dagger_venom'] },
-    derive: [{ to: 't_dagger_nape', uses: 45, chance: 0.012 }],
   },
   t_dagger_serpent: {
     kind: 'tech',
@@ -154,7 +146,6 @@
     fx: 'pierce2',
     rank: 5,
     glim: { lv: 5, from: ['t_dagger_knives'] },
-    derive: [{ to: 't_dagger_dance', uses: 60, chance: 0.008 }],
   },
   t_dagger_hail: {
     kind: 'tech',
@@ -194,7 +185,6 @@
     fx: 'pierce2',
     rank: 6,
     glim: { lv: 6, from: ['t_dagger_vital', 't_dagger_lull'] },
-    derive: [{ to: 't_dagger_shadow', uses: 50, chance: 0.01 }],
   },
   t_dagger_nape: {
     kind: 'tech',
@@ -260,6 +250,47 @@
     fx: 'dark3',
     rank: 10,
     glim: { lv: 10, from: ['t_dagger_dance'] },
+  },
+  // ---- 派生技（レア。design/BACKLOG「派生技の閃き」）: glim が無い（通常の閃きの候補に入らない）。derived.from の技を使ったときだけ
+  //      R.Glimmer.deriveRoll で編み出す。derived.lv は閃きの lv と同じ物差し（相手のランク・K.TECH_PROF と比べる）
+  t_dagger_vital2: {
+    kind: 'tech',
+    wtype: 'dagger',
+    name: '急所二段突き',
+    desc: '急所を2回続けて突く。会心が出やすい。',
+    mp: 4,
+    target: 'enemy',
+    reach: false,
+    effects: [{ type: 'damage', power: 0.8, hits: 2, critBonus: 20 }],
+    fx: 'pierce',
+    rank: 3,
+    derived: { from: 't_dagger_vital', lv: 3 },
+  },
+  t_dagger_vitalstorm: {
+    kind: 'tech',
+    wtype: 'dagger',
+    name: '急所乱れ突き',
+    desc: '急所ばかりを4回、乱れ突く。',
+    mp: 8,
+    target: 'enemy',
+    reach: false,
+    effects: [{ type: 'damage', power: 0.6, hits: 4, critBonus: 25 }],
+    fx: 'pierce2',
+    rank: 6,
+    derived: { from: 't_dagger_vital2', lv: 6 },
+  },
+  t_dagger_venom2: {
+    kind: 'tech',
+    wtype: 'dagger',
+    name: '猛毒の一刺し',
+    desc: '猛毒の刃で刺す。毒にしやすい。',
+    mp: 5,
+    target: 'enemy',
+    reach: false,
+    effects: [{ type: 'damage', power: 1.7 }, { type: 'status', status: 'poison', chance: 0.8 }],
+    fx: 'poison',
+    rank: 4,
+    derived: { from: 't_dagger_venom', lv: 4 },
   },
 });
 })(window.RPG);

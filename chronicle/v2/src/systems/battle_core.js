@@ -789,7 +789,8 @@
       return { replace: true, id, act: a, target };
     }
     // ------------------------------------------------------- 派生技（design/BACKLOG「派生技の閃き」、R.Glimmer.deriveRoll）
-    // 持ち主「その技を使ってる時しか閃かない」: 技 X を使った行動が終わった後（熟練度の後）に、X の derive だけを振る。
+    // 持ち主「その技を使ってる時しか閃かない」「派生技は普通の通常攻撃使ってるだけじゃ覚えないのよ」: 技 X を使った行動が終わった後
+    // （熟練度の後）に、X を親に持つ派生技だけを振る（確率は相手のランク rankB・相性・熟練度。確定は無い）。
     // 攻撃・術・道具・ほかの技では振らない。行動の前の閃き（glimmerStep）で行動が差し替わったときは振らない（重ねない）。1 行動に 1 つまで。
     countUse(u, id) {
       if (R.Glimmer && R.Glimmer.countUse) { try { return R.Glimmer.countUse(u.c, id); } catch (e) { R.warn('battle: R.Glimmer.countUse failed', e && e.message); } }
@@ -798,7 +799,7 @@
     *deriveStep(u, used) {
       if (!u.alive || !R.Glimmer || !R.Glimmer.deriveRoll) return;
       let res = null;
-      try { res = R.Glimmer.deriveRoll(u.c, used, { rng: this.rng, force: !!this.o.deriveForce }); } catch (e) { R.warn('battle: R.Glimmer.deriveRoll failed', e && e.message); res = null; }
+      try { res = R.Glimmer.deriveRoll(u.c, used, { rankB: this.rankB, rng: this.rng, force: !!this.o.deriveForce }); } catch (e) { R.warn('battle: R.Glimmer.deriveRoll failed', e && e.message); res = null; }
       if (!res || !ACT(res.id) || !ACT(used)) return;
       const a = ACT(res.id), from = ACT(used);
       let fresh = false;
@@ -816,7 +817,7 @@
       let best = null;
       for (const id in DB.techs || {}) {
         const a = ACT(id);
-        if (!a || a.wtype !== wtype || known.has(id)) continue;
+        if (!a || a.wtype !== wtype || known.has(id) || !a.glim) continue;   // 派生技（glim が無い）は閃きで出さない
         if (back && !a.reach) continue;
         if (a.magic && u.status.silence) continue;
         const lv = (a.glim && a.glim.lv) || a.rank || 99;

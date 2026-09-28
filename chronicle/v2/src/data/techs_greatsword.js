@@ -1,4 +1,4 @@
-// techs_greatsword.js — 大剣の技 22（RULES。STATS_REWORK §8.5。tools/port/port_techs.js の出力を正とする）
+// techs_greatsword.js — 大剣の技 22 ＋派生技 3（RULES。STATS_REWORK §8.5。tools/port/port_techs.js の出力を正とする）
 // 生成: node v2/tools/port/*.js（今の木から移した結果。以後はこのファイルが正）
 (function (R) {
   'use strict';
@@ -15,7 +15,6 @@
     fx: 'slash2',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
-    derive: [{ to: 't_greatsword_flat', uses: 20, chance: 0.025 }, { to: 't_greatsword_desperate', uses: 30, chance: 0.015 }],
   },
   t_greatsword_mow: {
     kind: 'tech',
@@ -29,7 +28,6 @@
     fx: 'slash2',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
-    derive: [{ to: 't_greatsword_whirl', uses: 25, chance: 0.02 }],
   },
   t_greatsword_crumble: {
     kind: 'tech',
@@ -46,7 +44,6 @@
     fx: 'strike',
     rank: 2,
     glim: { lv: 2, from: ['attack'] },
-    derive: [{ to: 't_greatsword_bell', uses: 30, chance: 0.02 }],
   },
   t_greatsword_throw: {
     kind: 'tech',
@@ -73,7 +70,6 @@
     fx: 'strike2',
     rank: 2,
     glim: { lv: 2, from: ['t_greatsword_overhead'] },
-    derive: [{ to: 't_greatsword_helmsplit', uses: 30, chance: 0.02 }, { to: 't_greatsword_rend', uses: 35, chance: 0.015 }],
   },
   t_greatsword_parry: {
     kind: 'tech',
@@ -115,7 +111,6 @@
     fx: 'slash2',
     rank: 3,
     glim: { lv: 3, from: ['t_greatsword_mow'] },
-    derive: [{ to: 't_greatsword_quake', uses: 40, chance: 0.012 }],
   },
   t_greatsword_bell: {
     kind: 'tech',
@@ -129,7 +124,6 @@
     fx: 'strike2',
     rank: 4,
     glim: { lv: 4, from: ['t_greatsword_crumble'] },
-    derive: [{ to: 't_greatsword_strip', uses: 35, chance: 0.015 }],
   },
   t_greatsword_desperate: {
     kind: 'tech',
@@ -143,7 +137,6 @@
     fx: 'slash3',
     rank: 4,
     glim: { lv: 4, from: ['t_greatsword_overhead'] },
-    derive: [{ to: 't_greatsword_cliff', uses: 40, chance: 0.012 }],
   },
   t_greatsword_helmsplit: {
     kind: 'tech',
@@ -157,7 +150,6 @@
     fx: 'slash3',
     rank: 4,
     glim: { lv: 4, from: ['t_greatsword_flat'] },
-    derive: [{ to: 't_greatsword_adamant', uses: 45, chance: 0.012 }],
   },
   t_greatsword_strip: {
     kind: 'tech',
@@ -171,7 +163,6 @@
     fx: 'strike2',
     rank: 5,
     glim: { lv: 5, from: ['t_greatsword_bell'] },
-    derive: [{ to: 't_greatsword_thunder', uses: 60, chance: 0.008 }],
   },
   t_greatsword_rend: {
     kind: 'tech',
@@ -185,7 +176,6 @@
     fx: 'slash3',
     rank: 5,
     glim: { lv: 5, from: ['t_greatsword_flat'] },
-    derive: [{ to: 't_greatsword_crush', uses: 45, chance: 0.012 }],
   },
   t_greatsword_shatter: {
     kind: 'tech',
@@ -225,7 +215,6 @@
     fx: 'earth2',
     rank: 6,
     glim: { lv: 6, from: ['t_greatsword_whirl', 't_greatsword_desperate'] },
-    derive: [{ to: 't_greatsword_tempest', uses: 50, chance: 0.01 }],
   },
   t_greatsword_crush: {
     kind: 'tech',
@@ -239,7 +228,6 @@
     fx: 'slash3',
     rank: 7,
     glim: { lv: 7, from: ['t_greatsword_rend'] },
-    derive: [{ to: 't_greatsword_skyfall', uses: 60, chance: 0.008 }],
   },
   t_greatsword_adamant: {
     kind: 'tech',
@@ -305,6 +293,47 @@
     fx: 'earth3',
     rank: 10,
     glim: { lv: 10, from: ['t_greatsword_skyfall', 't_greatsword_tempest'] },
+  },
+  // ---- 派生技（レア。design/BACKLOG「派生技の閃き」）: glim が無い（通常の閃きの候補に入らない）。derived.from の技を使ったときだけ
+  //      R.Glimmer.deriveRoll で編み出す。derived.lv は閃きの lv と同じ物差し（相手のランク・K.TECH_PROF と比べる）
+  t_greatsword_bigmow: {
+    kind: 'tech',
+    wtype: 'greatsword',
+    name: '大なぎ倒し',
+    desc: '大きく踏み込み、ひと群れの敵を強くなぎ倒す。',
+    mp: 5,
+    target: 'group',
+    reach: false,
+    effects: [{ type: 'damage', power: 1.3 }],
+    fx: 'slash2',
+    rank: 3,
+    derived: { from: 't_greatsword_mow', lv: 3 },
+  },
+  t_greatsword_galemow: {
+    kind: 'tech',
+    wtype: 'greatsword',
+    name: '旋風なぎ倒し',
+    desc: '旋風のように回り、敵全体をなぎ倒す。',
+    mp: 9,
+    target: 'enemies',
+    reach: false,
+    effects: [{ type: 'damage', power: 1.35 }],
+    fx: 'slash3',
+    rank: 6,
+    derived: { from: 't_greatsword_bigmow', lv: 6 },
+  },
+  t_greatsword_allout: {
+    kind: 'tech',
+    wtype: 'greatsword',
+    name: '捨て身の大上段',
+    desc: '守りを捨てて振りかぶる、全力の大上段。',
+    mp: 5,
+    target: 'enemy',
+    reach: false,
+    effects: [{ type: 'damage', power: 2.6, acc: 0.85, critBonus: 10 }],
+    fx: 'slash3',
+    rank: 4,
+    derived: { from: 't_greatsword_overhead', lv: 4 },
   },
 });
 })(window.RPG);

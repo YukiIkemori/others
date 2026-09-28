@@ -7,8 +7,9 @@
 //   roll(c, ctx)         → 同じ（今の木の形。ctx.used を使う）
 //   candidates(c, ctx) → [{id, w, p}]   chance(c, id, ctx) → p   learn(c, id) → bool   classOf(a)
 //   params(units, Tb) → {rankB, ef}     monRank(u, Tb)   pairsKnown(c, els)   spellId(els, step)   sideOf(a)   banner(a)
-//   派生技: countUse(c, id) → n   deriveRoll(c, usedTechId, {rng, force}) → {kind:'tech', id, from} | null   learnDerived(c, to, from)
-//           deriveChance(c, from, d, n?)   deriveOf(id)   deriveSources(to)   derivedFrom(c, id)   useCount(c, id)   sanitize(c)（読み込み）
+//   派生技: countUse(c, id) → n   deriveRoll(c, usedTechId, {rankB, rng, force}) → {kind:'tech', id, from} | null   learnDerived(c, to, from)
+//           deriveChance(c, from, to, {rankB}, n?)   deriveOf(id) → [{to, lv, tier}]   deriveSources(to)   tierOf(id)   isDerived(id)
+//           derivedFrom(c, id)   useCount(c, id)   sanitize(c)（読み込み）
 //
 //   ctx = { kind:'tech'|'spell', wtype?(既定は今の武器), elements?, used: actionId|'attack', stone?, rankB, ef, tier?, row:'front'|'back',
 //           silenced?, force?(glimmerForce), rng?:()=>[0,1) }
@@ -231,16 +232,25 @@
   }
 
   // ------------------------------------------------------------ 派生技（design/BACKLOG「派生技の閃き」。定数は K.DERIVE）
-  // 持ち主「その技を使ってる時しか閃かない」: 技 X の derive:[{to, uses, chance}] は X を使った行動の後だけ振る。
-  //   c.techUse = {技id: 使った回数}（保存する）、c.derived = {派生した技id: 元の技id}（技・術の画面の「〇〇から派生」）
-  /** 技 id の派生の一覧（データの derive。無ければ []） */
-  function deriveOf(id) { const a = DB.techs && DB.techs[id]; return (a && Array.isArray(a.derive)) ? a.derive : []; }
-  /** 技 to を派生で覚えられる元の技の一覧（データの順） */
-  function deriveSources(to) {
-    const out = [];
-    for (const id of Object.keys(DB.techs || {})) if (deriveOf(id).some((d) => d.to === to)) out.push(id);
-    return out;
+  // 持ち主（2026-09-28）「派生技は普通の通常攻撃使ってるだけじゃ覚えないのよ。派生技ってレア技なのよ」
+  //   「回数と熟練度があっても確率なのよ、結局は。確率と相手のランクと自分の相性の問題」
+  // 派生技 = derived:{from, lv} を持ち glim が無い技（通常の閃きの候補に入らない）。親 from を使った行動の後だけ振る。
+  //   c.techUse = {技id: 使った回数}（保存する）、c.derived = {派生技id: 親の技id}（覚えた記録）
+  let dIndex = null, dIndexN = -1;
+  function dIdx() {
+    const n = Object.keys(DB.techs || {}).length;
+    if (dIndex && dIndexN === n) return dIndex;
+    dIndex = {}; dIndexN = n;
+    for (const id of Object.keys(DB.techs || {})) { const d = DB.techs[id].derived; if (d && d.from) (dIndex[d.from] = dIndex[d.from] || []).push(id); }
+    return dIndex;
   }
+  const isDerived = (id) => !!(DB.techs && DB.techs[id] && DB.techs[id].derived && DB.techs[id].derived.from);
+  /** 派生技の段: 1（親がふつうの技）・2（親も派生技）… 派生技でなければ 0 */
+  function tierOf(id) { let t = 0, x = id; while (isDerived(x) && t < 5) { t++; x = DB.techs[x].derived.from; } return t; }
+  /** 技 id を使うと編み出せる派生技の一覧 [{to, lv, tier}]（データの順） */
+  function deriveOf(id) { return (dIdx()[id] || []).map((to) => ({ to, lv: DB.techs[to].derived.lv || DB.techs[to].rank || 1, tier: tierOf(to) })); }
+  /** 派生技 to の親（1 つ。派生技でなければ []） */
+  function deriveSources(to) { return isDerived(to) ? [DB.techs[to].derived.from] : []; }
   function useCount(u, id) { const c = charOf(u); return (c && c.techUse && c.techUse[id]) | 0; }
   /** 技 id を 1 回使った（戦闘の中で行動が終わったとき）→ 新しい回数 */
   function countUse(u, id) {
@@ -250,27 +260,38 @@
     t[id] = Math.min(K().DERIVE.maxCount, (t[id] | 0) + 1);
     return t[id];
   }
-  /** 派生 1 つの確率（回数 n と今の武器の熟練度で上がる。n < uses・熟練度が TECH_PROF に届かない・もう覚えている → 0） */
-  function deriveChance(u, from, d, n) {
+  /**
+   * 派生 1 つの確率（K.DERIVE の式）。to が from の派生技でない・覚えている・回数が minUses 未満 → 0。
+   * ctx = {rankB（戦闘の閃きレベル。無ければ 1）}。回数と熟練度は少しだけ上げる（上限は低い）。確定にはならない（cap[段] < 1）
+   */
+  function deriveChance(u, from, to, ctx, n) {
     const c = charOf(u);
-    const a = d && DB.techs && DB.techs[d.to], src = DB.techs && DB.techs[from];
-    if (!c || !a || !src || has(c.techs, d.to)) return 0;
-    const D = K().DERIVE, TP = K().TECH_PROF;
+    if (to && typeof to === 'object') to = to.to;
+    const a = DB.techs && DB.techs[to];
+    if (!c || !a || !a.derived || a.derived.from !== from || has(c.techs, to)) return 0;
+    ctx = ctx || {};
+    const D = K().DERIVE, G = K().GLIM, TP = K().TECH_PROF;
     n = n != null ? n : useCount(c, from);
-    const need = Math.max(1, d.uses | 0);
-    if (n < need) return 0;
-    const lv = (a.glim && a.glim.lv) || a.rank || 1;
+    if (n < D.minUses) return 0;
+    const tier = Math.max(1, Math.min(D.base.length - 1, tierOf(to)));
+    const lv = a.derived.lv || a.rank || 1;
+    const apt = R.Rules.aptitude(c);
+    const aptM = apt.w[a.wtype] != null ? apt.w[a.wtype] : 1;
+    const GF = R.Rules.gfOf(R.Rules.finalStats(c).dex);
+    const rankB = ctx.rankB != null ? ctx.rankB : G.rankBase;
+    const RANK = clamp(1 + D.rankSlope * (rankB - lv), D.rankMin, D.rankMax);
     const gate = TP[lv] != null ? TP[lv] : TP[TP.length - 1];
     const pr = R.Rules.profRank(c.wprof ? c.wprof[a.wtype] : 0);
-    if (pr < gate) return 0;
-    const useF = Math.min(D.useMax, 1 + D.useSlope * (n - need) / need);
-    const profF = Math.min(D.profMax, 1 + D.profSlope * (pr - gate));
-    return Math.min(D.cap, (+d.chance || 0) * useF * profF);
+    const PROF = clamp(1 + D.profSlope * (pr - gate), D.profMin, D.profMax);
+    const USE = Math.min(D.useMax, 1 + D.useSlope * n);
+    const m = R.Rules.mods(c);
+    const gp = glimMod(m, a.wtype) + glimMod(m, 'tech');
+    return Math.min(D.cap[tier], D.base[tier] * aptM * GF * RANK * PROF * USE * Math.max(0, 1 + gp / 100));
   }
   /**
    * 技 used を使った行動の後の判定（1 回の行動で派生は 1 つまで。データの順に振り、最初に当たった物）。
-   * used 以外（攻撃・術・道具・ほかの技）の派生は振らない。c は変えない（覚えるのは learnDerived）
-   * → {kind:'tech', id, from} | null
+   * used 以外（攻撃・術・道具・ほかの技）では振らない。c は変えない（覚えるのは learnDerived）
+   * ctx = {rankB, rng, force（テスト用: 覚えていない最初の派生技を必ず）} → {kind:'tech', id, from} | null
    */
   function deriveRoll(u, used, ctx) {
     const c = charOf(u);
@@ -279,7 +300,9 @@
     const rng = typeof ctx.rng === 'function' ? ctx.rng : ctx.rng && ctx.rng.next ? () => ctx.rng.next() : Math.random;
     const n = useCount(c, used);
     for (const d of deriveOf(used)) {
-      const p = ctx.force ? (deriveChance(c, used, Object.assign({}, d, { chance: 1 }), Math.max(n, d.uses | 0)) > 0 ? 1 : 0) : deriveChance(c, used, d, n);
+      if (has(c.techs, d.to)) continue;
+      if (ctx.force) return { kind: 'tech', id: d.to, from: used };
+      const p = deriveChance(c, used, d.to, ctx, n);
       if (p > 0 && rng() < p) return { kind: 'tech', id: d.to, from: used };
     }
     return null;
@@ -292,8 +315,8 @@
     c.derived[to] = from;
     return true;
   }
-  /** 技 id をどの技から派生で覚えたか（無ければ null） */
-  function derivedFrom(u, id) { const c = charOf(u); const f = c && c.derived && c.derived[id]; return f && DB.techs && DB.techs[f] ? f : null; }
+  /** 技 id が派生技なら親の技 id（技・術の「〇〇から派生」。派生技でなければ null） */
+  function derivedFrom(u, id) { void u; return isDerived(id) && DB.techs[DB.techs[id].derived.from] ? DB.techs[id].derived.from : null; }
   /** 読み込んだ人の techUse・derived を正しい形に（古いセーブには無い → {}。知らない技・負の数は捨てる） */
   function sanitize(c) {
     if (!c || typeof c !== 'object') return c;
@@ -301,7 +324,7 @@
     const src = c.techUse && typeof c.techUse === 'object' && !Array.isArray(c.techUse) ? c.techUse : {};
     for (const id of Object.keys(src)) { const v = Math.floor(+src[id]); if (DB.techs && DB.techs[id] && v > 0) tu[id] = Math.min(K().DERIVE.maxCount, v); }
     const d0 = c.derived && typeof c.derived === 'object' && !Array.isArray(c.derived) ? c.derived : {};
-    for (const id of Object.keys(d0)) if (DB.techs && DB.techs[id] && DB.techs[d0[id]]) dv[id] = d0[id];
+    for (const id of Object.keys(d0)) if (isDerived(id) && DB.techs[id].derived.from === d0[id]) dv[id] = d0[id];   // 派生技だけ
     c.techUse = tu; c.derived = dv;
     return c;
   }
@@ -366,7 +389,7 @@
   const Glimmer = (R.Glimmer = R.Glimmer || {});
   Object.assign(Glimmer, {
     ELEMENTS, classOf, candidates, chance, roll, learn, monRank, params, pairsKnown, spellId, sideOf, banner,
-    deriveOf, deriveSources, useCount, countUse, deriveChance, deriveRoll, learnDerived, derivedFrom, sanitize,
+    deriveOf, deriveSources, tierOf, isDerived, useCount, countUse, deriveChance, deriveRoll, learnDerived, derivedFrom, sanitize,
     reindex() { index = null; return idx(); },
   });
 })(window.RPG);

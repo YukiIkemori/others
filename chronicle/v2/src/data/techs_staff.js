@@ -1,4 +1,4 @@
-// techs_staff.js — 杖の技 18（RULES。STATS_REWORK §8.5。tools/port/port_techs.js の出力を正とする）
+// techs_staff.js — 杖の技 18 ＋派生技 2（RULES。STATS_REWORK §8.5。tools/port/port_techs.js の出力を正とする）
 // 生成: node v2/tools/port/*.js（今の木から移した結果。以後はこのファイルが正）
 (function (R) {
   'use strict';
@@ -16,7 +16,6 @@
     fx: 'magic',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
-    derive: [{ to: 't_staff_weaken', uses: 20, chance: 0.025 }, { to: 't_staff_bolt', uses: 35, chance: 0.015 }, { to: 't_staff_wave', uses: 40, chance: 0.012 }],
   },
   t_staff_soothe: {
     kind: 'tech',
@@ -31,7 +30,6 @@
     fx: 'heal',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
-    derive: [{ to: 't_staff_calm', uses: 25, chance: 0.02 }, { to: 't_staff_share', uses: 30, chance: 0.015 }],
   },
   t_staff_seal: {
     kind: 'tech',
@@ -111,7 +109,6 @@
     fx: 'heal',
     rank: 3,
     glim: { lv: 3, from: ['t_staff_soothe'] },
-    derive: [{ to: 't_staff_clarity', uses: 40, chance: 0.012 }],
   },
   t_staff_share: {
     kind: 'tech',
@@ -141,7 +138,6 @@
     fx: 'magic2',
     rank: 5,
     glim: { lv: 5, from: ['t_staff_mind', 't_staff_unward'] },
-    derive: [{ to: 't_staff_rumble', uses: 45, chance: 0.012 }],
   },
   t_staff_bolt: {
     kind: 'tech',
@@ -156,7 +152,6 @@
     fx: 'magic2',
     rank: 5,
     glim: { lv: 5, from: ['t_staff_weaken', 't_staff_seal'] },
-    derive: [{ to: 't_staff_drain', uses: 50, chance: 0.01 }],
   },
   t_staff_whirl: {
     kind: 'tech',
@@ -189,7 +184,6 @@
     fx: 'buff',
     rank: 6,
     glim: { lv: 6, from: ['t_staff_share'] },
-    derive: [{ to: 't_staff_aegis', uses: 45, chance: 0.012 }],
   },
   t_staff_aegis: {
     kind: 'tech',
@@ -249,7 +243,6 @@
     fx: 'drain',
     rank: 8,
     glim: { lv: 8, from: ['t_staff_seal', 't_staff_wave'] },
-    derive: [{ to: 't_staff_oracle', uses: 60, chance: 0.008 }],
   },
   t_staff_oracle: {
     kind: 'tech',
@@ -281,6 +274,36 @@
     fx: 'heal3',
     rank: 10,
     glim: { lv: 10, from: ['t_staff_aegis', 't_staff_oracle'] },
+  },
+  // ---- 派生技（レア。design/BACKLOG「派生技の閃き」）: glim が無い（通常の閃きの候補に入らない）。derived.from の技を使ったときだけ
+  //      R.Glimmer.deriveRoll で編み出す。derived.lv は閃きの lv と同じ物差し（相手のランク・K.TECH_PROF と比べる）
+  t_staff_mindcrush: {
+    kind: 'tech',
+    wtype: 'staff',
+    name: '念じ砕き',
+    desc: '強く念じて打つ。守備力を下げることがある。',
+    mp: 4,
+    target: 'enemy',
+    reach: true,
+    magic: true,
+    effects: [{ type: 'damage', formula: 'magic', power: 1.6 }, { type: 'buff', stat: 'def', stages: -1, chance: 0.5 }],
+    fx: 'magic',
+    rank: 3,
+    derived: { from: 't_staff_mind', lv: 3 },
+  },
+  t_staff_bigbolt: {
+    kind: 'tech',
+    wtype: 'staff',
+    name: '大念弾',
+    desc: '大きな念の弾を放つ。',
+    mp: 12,
+    target: 'enemy',
+    reach: true,
+    magic: true,
+    effects: [{ type: 'damage', formula: 'magic', power: 2.6 }],
+    fx: 'magic2',
+    rank: 7,
+    derived: { from: 't_staff_bolt', lv: 7 },
   },
 });
 })(window.RPG);

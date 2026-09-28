@@ -126,10 +126,13 @@
       gf: { min: 0.7, max: 1.8 },
       tier0: 2.15, tier0Known: 3, bossLate: { from: 4, slope: 0.4, max: 2 },
     },
-    // 派生技（R.Glimmer.deriveRoll。design/BACKLOG「派生技の閃き」）: 技 X の derive:[{to, uses, chance}] を、X を使ったときだけ振る。
-    //   p = min(cap, chance × min(useMax, 1 + useSlope × (n − uses) / uses) × min(profMax, 1 + profSlope × (段階 − TECH_PROF[to の lv])))
-    //   n = X を使った回数（c.techUse[X]、maxCount で止める）。段階が TECH_PROF に届かなければ 0
-    DERIVE: { useSlope: 1, useMax: 3, profSlope: 0.04, profMax: 2, cap: 0.25, maxCount: 9999 },
+    // 派生技（R.Glimmer.deriveRoll。design/BACKLOG「派生技の閃き」）: レアな技。親の技を使ったときだけ、閃きに似た確率で振る（確定は無い）:
+    //   p = min(cap[段], base[段] × 相性（K.GLIM.apt）× GF（器用さ）× RANK × PROF × USE × (1 + glimPct/100))
+    //   RANK = clamp(1 + rankSlope × (rankB − derived.lv), rankMin, rankMax)   … 強い相手ほど上がる
+    //   PROF = clamp(1 + profSlope × (段階 − TECH_PROF[derived.lv]), profMin, profMax)   USE = min(useMax, 1 + useSlope × 回数)（どちらも小さく）
+    //   段 = 1（親がふつうの技）・2（親も派生技）。使った回数が minUses 未満は 0
+    DERIVE: { minUses: 3, base: [0, 0.009, 0.0025], cap: [0, 0.02, 0.006], rankSlope: 0.3, rankMin: 0.3, rankMax: 2.5,
+      profSlope: 0.01, profMin: 0.7, profMax: 1.25, useSlope: 0.002, useMax: 1.3, maxCount: 9999 },
     // §4.10 落とし物・盗み（§7.3 盗み専用の枠）
     DROP: { rate: { normal: 8, rare: 32, super: 256 }, cap: { normal: 0.75, rare: 0.5, super: 0.125 }, modCap: 150, golden: { normal: 2, rare: 8, super: 8 } },
     STEAL: { base: 0.35, agiDiv: 200, min: 0.1, max: 0.8, boss: 0.5, rareMul: 4, rareCap: 0.5, autoRare: 0.5, autoMul: 0.4, autoPerBattle: 1,
@@ -632,7 +635,7 @@
         let w = info.wtype;
         if (!w) { const it = itemOf(c.equip && c.equip.weapon1); w = it ? it.wtype : UNARMED; }
         if (!WTYPES.includes(w)) return ups;
-        const lv = a && a.glim && a.glim.lv;
+        const lv = a && ((a.glim && a.glim.lv) || (a.derived && a.derived.lv));   // 派生技は derived.lv
         bump('w', w, info.kind === 'tech' && lv >= G.techHighLv ? G.techHigh : G.weapon);
       } else if (info.kind === 'spell') {
         const els = (info.elements || (a && a.elements) || []).filter((e) => ELEMENTS.includes(e));
