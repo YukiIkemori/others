@@ -256,7 +256,7 @@
   };
   function addActor(st, u) {
     const k = _.actors.keyOf(u);
-    const a = { uid: u.uid, side: u.side, id: u.id, name: u.name, look: u.look || u.sprite, sprite: u.sprite, wtype: u.wtype, size: u.size, boss: !!u.boss, golden: !!u.golden, key: k.key, opts: k.opts };
+    const a = { uid: u.uid, side: u.side, id: u.id, name: u.name, look: u.look || u.sprite, sprite: u.sprite, wtype: u.wtype, size: u.size, boss: !!u.boss, golden: !!u.golden, special: !u.boss && !!(u.golden || u.rare || u.metal), metal: !!u.metal, key: k.key, opts: k.opts };
     Object.assign(a, _.layout.freeSpot(st.L, st.actors.filter((x) => x.side === 'enemy' && !(st.vis[x.uid] && st.vis[x.uid].gone >= 1))));
     st.actors.push(a);
     if (!st.vis[u.uid]) st.vis[u.uid] = { hp: u.hp, mp: u.mp, maxHp: u.maxHp, maxMp: u.maxMp, alive: true, status: [], pose: 'idle', poseT: 0, dx: 0, dy: 0, flash: 0, gone: 0, appear: 0 };

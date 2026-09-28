@@ -317,6 +317,38 @@
         g.fillStyle = gr; g.fillRect(x - hh, a.y - hh * 1.2, hh * 2, hh * 1.4);
       }
     }
+    if (a.side === 'enemy' && a.special && v.alive !== false) A.sparkle(g, a, x, y, t, rm);
+    g.restore();
+  };
+  /**
+   * 金色・レア・メタル（リピートが止まる魔物）の周りの控えめなキラキラ（持ち主 2026-09-28「分かりづらい」）。
+   *   体の輪郭のまわりに小さな四つ星が 5 つ、ずらした周期でふっと光っては消える。reduceMotion ではゆっくり・少なめ
+   */
+  const SPARK = [[-0.46, 0.78, 0], [0.42, 0.62, 0.21], [-0.3, 0.3, 0.43], [0.5, 0.2, 0.6], [0.05, 1.02, 0.8]];
+  A.sparkle = function (g, a, x, y, t, rm) {
+    const hh = A.height(a), per = rm ? 3600 : 1900, n = rm ? 3 : SPARK.length;
+    const col = a.golden ? '255,226,140' : a.metal ? '220,236,255' : '255,240,210';
+    g.save();
+    g.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < n; i++) {
+      const [fx, fy, off] = SPARK[i];
+      const ph = ((t / per + off + (hash(a.uid) % 97) / 97) % 1);
+      if (ph > 0.42) continue;   // 光っているのは周期の 4 割だけ（常に全部は光らない）
+      const k = Math.sin(ph / 0.42 * Math.PI);
+      const cyc = Math.floor(t / per + off);
+      const jx = (((hash(a.uid + i + ':' + cyc) % 100) / 100) - 0.5) * hh * 0.18;
+      const px = x + fx * hh * 0.9 + jx, py = y - fy * hh;
+      const r = Math.max(3, hh * 0.06) * (0.6 + 0.4 * k);
+      g.globalAlpha = 0.75 * k;
+      g.fillStyle = `rgba(${col},1)`;
+      g.beginPath();
+      g.moveTo(px, py - r * 2.2); g.lineTo(px + r * 0.35, py - r * 0.35); g.lineTo(px + r * 2.2, py); g.lineTo(px + r * 0.35, py + r * 0.35);
+      g.lineTo(px, py + r * 2.2); g.lineTo(px - r * 0.35, py + r * 0.35); g.lineTo(px - r * 2.2, py); g.lineTo(px - r * 0.35, py - r * 0.35);
+      g.closePath(); g.fill();
+      const gr = g.createRadialGradient(px, py, 0, px, py, r * 2.6);
+      gr.addColorStop(0, `rgba(${col},0.35)`); gr.addColorStop(1, `rgba(${col},0)`);
+      g.fillStyle = gr; g.fillRect(px - r * 2.6, py - r * 2.6, r * 5.2, r * 5.2);
+    }
     g.restore();
   };
 

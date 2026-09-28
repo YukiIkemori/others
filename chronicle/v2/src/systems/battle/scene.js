@@ -139,7 +139,7 @@
   }
   function actorOf(u) {
     const k = _.actors.keyOf(u);
-    return { uid: u.uid, side: u.side, id: u.id, name: u.name, look: u.look || u.sprite, sprite: u.sprite, wtype: u.wtype, size: u.size, boss: !!u.boss, golden: !!u.golden, key: k.key, opts: k.opts, x: 0, y: 0 };
+    return { uid: u.uid, side: u.side, id: u.id, name: u.name, look: u.look || u.sprite, sprite: u.sprite, wtype: u.wtype, size: u.size, boss: !!u.boss, golden: !!u.golden, special: !u.boss && !!(u.golden || u.rare || u.metal), metal: !!u.metal, key: k.key, opts: k.opts, x: 0, y: 0 };
   }
   /** 配置（最初と画面の大きさが変わったとき） */
   function place(st) {
