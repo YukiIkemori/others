@@ -67,5 +67,61 @@
 "fit": {
 "SEED": "layout",
 "EM": 3
-}
+},
+"solid": [],
+"open": [
+[
+11,
+3
+],
+[
+11,
+4
+],
+[
+11,
+5
+],
+[
+11,
+6
+],
+[
+11,
+7
+],
+[
+11,
+8
+],
+[
+11,
+9
+],
+[
+11,
+10
+],
+[
+10,
+9
+],
+[
+10,
+10
+],
+[
+13,
+1
+],
+[
+13,
+2
+],
+[
+13,
+4
+]
+],
+"note_collide": "2026-09-28 collision audit: the north-west clearing is painted wider than the fitted path (x 11 rows 3-10, (10,9) (10,10), (13,1) (13,2) (13,4) are open grass). NOTE: fit.py on gen1.png no longer reproduces this area's rows_fit (the painting is gen1 + edit1); these cells were applied straight onto rows_fit."
 }

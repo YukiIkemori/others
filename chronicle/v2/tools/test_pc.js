@@ -181,6 +181,23 @@ const load = require('./lib/load');
     R2.Input._key('KeyZ', false); R2.Input.update(16);
   }
 
+  section('prompt: every button × every device returns a label (no throw)');
+  {
+    const R = load({ quiet: true });
+    const I = R.Input;
+    let bad = [];
+    for (const d of ['kb', 'mouse', 'pad', 'touch']) for (const st of ['auto', 'xbox', 'ps', 'nintendo']) {
+      I.lastDevice = d; R.Settings.set('padGlyphs', st);
+      for (const b of I.BTN.concat(['dash'])) {
+        try { const pr = I.prompt(b); if (!pr || typeof pr.label !== 'string' || !pr.label || !R.Contract.check('prompt', pr).ok) bad.push([d, st, b, pr]); } catch (e) { bad.push([d, st, b, String(e)]); }
+      }
+    }
+    ok('all prompts valid', bad.length === 0, bad.slice(0, 5));
+    R.Settings.set('padGlyphs', 'auto'); I.lastDevice = 'kb';
+    ok('L stays bindable (field banner uses L)', I.bindKey('l', 1, 'KeyN').ok && I.prompt('l').label === 'Q' && I.bindPad('l', 6).ok);
+    I.resetBinds();
+  }
+
   section('remap: capture (listen for the next key)');
   {
     const R = load({ quiet: true });

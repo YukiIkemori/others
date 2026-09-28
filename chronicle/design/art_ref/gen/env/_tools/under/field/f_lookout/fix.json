@@ -60,6 +60,30 @@
 31,
 16,
 ","
+],
+[
+30,
+8
+],
+[
+30,
+9
+],
+[
+30,
+10
+],
+[
+30,
+11
+],
+[
+30,
+12
+],
+[
+30,
+13
 ]
 ],
 "solid_rect": [
@@ -109,5 +133,23 @@
 "fit": {
 "SEED": "layout",
 "EM": 0
-}
+},
+"solid": [
+[
+36,
+18,
+"X"
+],
+[
+28,
+8,
+"~"
+],
+[
+29,
+7,
+"R"
+]
+],
+"note_collide": "2026-09-28 collision audit: the terrace's west wall is painted on x 31-32; the grass west of it (30,8-13) is open; the south wall's stones at (36,18) beside the south stair are solid. (28,8) is water and (29,7) the shore rock: solid."
 }

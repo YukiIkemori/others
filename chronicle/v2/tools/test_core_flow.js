@@ -183,7 +183,7 @@ async function main() {
   const B = await open(browser, base + 'index.html', { viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
   p = B.page;
   const info1 = await ev(p, '({W:RPG.W,H:RPG.H,SCALE:RPG.SCALE,layout:RPG.layout,ui:RPG.uiScale})');
-  ok('fit 390x844 portrait → 540x1169 tall, uiScale 1.3, SCALE 2', info1.W === 540 && info1.H === 1169 && info1.layout === 'tall' && info1.ui === 1.3 && info1.SCALE === 2, info1);
+  ok('fit 390x844 portrait → 540x1169 tall, uiScale 1.3, SCALE ≈ 2.17 (device px 1:1)', info1.W === 540 && info1.H === 1169 && info1.layout === 'tall' && info1.ui === 1.3 && Math.abs(info1.SCALE - 2532 / 1169) < 1e-6, info1);
   await p.screenshot({ path: path.join(OUT, 'p0_title_phone.png') });
   const cdp = await B.ctx.newCDPSession(p);
   const touch = (type, pts) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: pts });
