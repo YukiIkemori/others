@@ -24,6 +24,8 @@ Items the owner asked for "later" — not part of the current demo-polish pass.
     - Spamming one parent through the demo gives any derivation ~36% of the time, and tier 2 ≤ 2%.
     - Casual play: ~14% in the demo.
     - Casual play: tier 2 ≤ 2.5% by the clear.
+- Owner (2026-09-28): 「派生技、各武器にあと2~3個ずつ足していいよ。足した内容は僕には伝えなくていい。楽しみがなくなる。」 → 15 more derived techs added (3 per weapon line; 29 in all). Contents are intentionally not listed here.
+  - K.DERIVE retuned: tier-1 base 0.0022, and the use bonus now reaches ×2 by 50 uses. See `node tools/sim_glimmer.js --derive` for the current rates.
 
 ## 敵の前列・後列（enemy rows）
 - Proposed: enemy front/back rows, melee can't reach the back row while the front lives, bows/spells can.

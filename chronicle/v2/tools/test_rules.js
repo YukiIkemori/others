@@ -614,7 +614,7 @@ section('派生技: a few rare techs, only from using the parent, never guarante
     return p1 > 0 && p1 <= D.cap[1] && D.cap[1] <= 0.01 && p2 > 0 && p2 <= D.cap[2] && D.cap[2] < D.cap[1];
   })());
   ok('even 9999 uses at the cap leave a real chance of never learning in 100 more uses (> 50%)', Math.pow(1 - D.cap[1], 100) > 0.5);
-  ok('uses raise it only mildly (≤ ×2 at most)', (() => { const lo = P(c, D.minUses, 1), hi = P(c, D.maxCount, 1); return hi > lo && hi / lo <= D.useMax + 1e-9; })());
+  ok('uses raise it only mildly (≤ ×2.5 at most, still under the per-use cap)', (() => { const lo = P(c, D.minUses, 1), hi = P(c, D.maxCount, 1); return hi > lo && hi / lo <= D.useMax + 1e-9; })());
   ok('a stronger enemy (rankB) raises it (返し刃 lv4: rankB 1 < 4 < 7)', P(c, 50, 1) < P(c, 50, 4) && P(c, 50, 4) < P(c, 50, 7));
   const lo = JSON.parse(JSON.stringify(c)), hi = JSON.parse(JSON.stringify(c));
   lo.wprof.sword = Ru.profPtsOf(2); hi.wprof.sword = Ru.profPtsOf(40);

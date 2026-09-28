@@ -129,10 +129,10 @@
     // 派生技（R.Glimmer.deriveRoll。design/BACKLOG「派生技の閃き」）: レアな技。親の技を使ったときだけ、閃きに似た確率で振る（確定は無い）:
     //   p = min(cap[段], base[段] × 相性（K.GLIM.apt）× GF（器用さ）× RANK × PROF × USE × (1 + glimPct/100))
     //   RANK = clamp(1 + rankSlope × (rankB − derived.lv), rankMin, rankMax)   … 強い相手ほど上がる
-    //   PROF = clamp(1 + profSlope × (段階 − TECH_PROF[derived.lv]), profMin, profMax)   USE = min(useMax, 1 + useSlope × 回数)（どちらも小さく）
+    //   PROF = clamp(1 + profSlope × (段階 − TECH_PROF[derived.lv]), profMin, profMax)   USE = min(useMax, 1 + useSlope × 回数)（どちらも小さく。確定は cap[段] が止める）
     //   段 = 1（親がふつうの技）・2（親も派生技）。使った回数が minUses 未満は 0
-    DERIVE: { minUses: 3, base: [0, 0.0022, 0.0006], cap: [0, 0.006, 0.0009], rankSlope: 0.3, rankMin: 0.3, rankMax: 2.5,
-      profSlope: 0.01, profMin: 0.7, profMax: 1.25, useSlope: 0.02, useMax: 2, maxCount: 9999 },
+    DERIVE: { minUses: 3, base: [0, 0.002, 0.0006], cap: [0, 0.006, 0.0009], rankSlope: 0.3, rankMin: 0.3, rankMax: 2.5,
+      profSlope: 0.01, profMin: 0.7, profMax: 1.25, useSlope: 0.02, useMax: 2.5, maxCount: 9999 },
     // §4.10 落とし物・盗み（§7.3 盗み専用の枠）
     DROP: { rate: { normal: 8, rare: 32, super: 256 }, cap: { normal: 0.75, rare: 0.5, super: 0.125 }, modCap: 150, golden: { normal: 2, rare: 8, super: 8 } },
     STEAL: { base: 0.35, agiDiv: 200, min: 0.1, max: 0.8, boss: 0.5, rareMul: 4, rareCap: 0.5, autoRare: 0.5, autoMul: 0.4, autoPerBattle: 1,

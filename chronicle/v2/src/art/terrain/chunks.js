@@ -469,7 +469,7 @@
       // 下絵の同じ所。町でないマップ（ダンジョン）はマップの外に下絵を縁で折り返して置く（外の色の帯・マスの壁との継ぎ目を出さない）
       const u = this.und, k = u.k, bg = this.bg, map = this.map, t = this.tile, MW = map.w * t, MH = map.h * t, X0 = this.X0, Y0 = this.Y0;
       bg.imageSmoothingEnabled = false;
-      if (map.kind !== 'town' && (X0 < 0 || Y0 < 0 || X0 + S > MW || Y0 + S > MH)) {
+      if (map.kind !== 'town' && map.kind !== 'interior' && (X0 < 0 || Y0 < 0 || X0 + S > MW || Y0 + S > MH)) {   // 屋内（描いた部屋）は折り返さない: 外は外の色
         for (const fy of [-1, 0, 1]) for (const fx of [-1, 0, 1]) {
           if (!fx && !fy) continue;
           const rx0 = fx < 0 ? -MW : fx > 0 ? MW : 0, ry0 = fy < 0 ? -MH : fy > 0 ? MH : 0;   // この折り返しが受け持つマップの外の範囲

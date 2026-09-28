@@ -1,0 +1,19 @@
+{
+ "id": "oldcamp",
+ "kind": "under",
+ "map": "desert_oldcamp",
+ "tile": 32,
+ "size32": [
+  896,
+  704
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.729,
+ "files": {
+  "24": "oldcamp@24.png",
+  "32": "oldcamp@32.png",
+  "40": "oldcamp@40.png"
+ }
+}

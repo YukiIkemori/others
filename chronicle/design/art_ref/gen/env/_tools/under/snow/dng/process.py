@@ -85,12 +85,19 @@ if d.get('areas'):
     print('live', [len(l['cells']) for l in live])
 
 
+PAD = os.environ.get('PAD')   # interiors: pad to whole chunks (8 tiles) with the dark outside colour, so the chunk outside the room is not left empty
+
+
 def save_set(nm, arr, rgba=False):
+    if PAD and not rgba:
+        C = 8 * T; Hp, Wp = -(-arr.shape[0] // C) * C, -(-arr.shape[1] // C) * C
+        big = np.zeros((Hp, Wp, 3), np.uint8); big[:] = [int(v) for v in PAD.split(',')]; big[:arr.shape[0], :arr.shape[1]] = arr; arr = big
     im = Image.fromarray(arr, 'RGBA' if rgba else 'RGB')
+    Wt, Ht = im.size[0] // T, im.size[1] // T
     im.save(os.path.join(OUTDIR, nm + '@32.png'), optimize=True)
-    im.resize((W * 24, H * 24), Image.NEAREST if rgba else Image.LANCZOS).save(os.path.join(OUTDIR, nm + '@24.png'), optimize=True)
-    if W * 40 <= 2048 and H * 40 <= 2048:
-        im.resize((W * 40, H * 40), Image.NEAREST).save(os.path.join(OUTDIR, nm + '@40.png'), optimize=True)
+    im.resize((Wt * 24, Ht * 24), Image.NEAREST if rgba else Image.LANCZOS).save(os.path.join(OUTDIR, nm + '@24.png'), optimize=True)
+    if Wt * 40 <= 2048 and Ht * 40 <= 2048:
+        im.resize((Wt * 40, Ht * 40), Image.NEAREST).save(os.path.join(OUTDIR, nm + '@40.png'), optimize=True)
 
 
 save_set(name, base)
