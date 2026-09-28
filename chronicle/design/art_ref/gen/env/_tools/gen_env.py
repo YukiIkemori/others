@@ -3,7 +3,7 @@
 Account settings come from the environment only (source the owner's env file in the shell first):
   OPENAI_API_KEY, OPENAI_MODEL  -- never written anywhere by this tool
 Spend log: /tmp/claude-0/secrets/openai_usage.jsonl (outside the repo), one line per call, kind 'env'.
-Cap: ENV_IMAGE_CAP (default 250) images of kind 'env'.
+Cap: ENV_IMAGE_CAP images of kind 'env' (default: no cap — owner 2026-09-28 lifted the 250 cap; budget is tracked on the owner's side).
 
 usage: python3 gen_env.py <job.json> [<job.json> ...]
 job = {"out": "path.png", "prompt": "...", "size": "1024x1024", "quality": "high", "background": "opaque",
@@ -13,7 +13,7 @@ import base64, json, os, sys, time, random, urllib.request, urllib.error
 
 URL = 'https://api.openai.com/v1/responses'
 LOG = '/tmp/claude-0/secrets/openai_usage.jsonl'
-CAP = int(os.environ.get('ENV_IMAGE_CAP') or 250)
+CAP = int(os.environ.get('ENV_IMAGE_CAP') or 0)   # 0 = no cap (owner 2026-09-28)
 
 
 def model():
@@ -47,7 +47,7 @@ def log(e):
 def run(job):
     if os.path.exists(job['out']) and not job.get('force'):
         print('skip (exists)', job['out']); return True
-    if used() + 1 > CAP:
+    if CAP and used() + 1 > CAP:
         print('CAP REACHED', used(), CAP); return False
     key = os.environ.get('OPENAI_API_KEY', '').strip()
     tool = {'type': 'image_generation', 'size': job.get('size', '1024x1024'), 'quality': job.get('quality', 'high')}
