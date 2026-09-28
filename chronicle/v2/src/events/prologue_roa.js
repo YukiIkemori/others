@@ -46,6 +46,12 @@
         let h = null;
         for (let i = 0; i < 5 && !h; i++) h = await ev.createHero();
         if (!h && !(R.Game.chars && R.Game.chars.hero)) R.State.setHero({ type: 'warrior', sex: 'm', name: 'アルン', fav: 'sword' });
+        // 幕の中で主人公の絵を焼いておく（焼く列に任せると、幕が上がってから主人公が遅れて出る）
+        try {
+          const F = R.Field;
+          if (F && F._awaitPeopleArt) await F._awaitPeopleArt(1500);
+          if (F && F._warmPeople) F._warmPeople(400);
+        } catch (e) { /* 焼けなければ焼く列のまま */ }
         await ev.wait(BREATH / 2);
         const t0 = R.Engine.time;
         if (R.Engine.running) await R.until(() => { curtain.a = Math.max(0, 1 - (R.Engine.time - t0) / 1200); return curtain.a <= 0; });

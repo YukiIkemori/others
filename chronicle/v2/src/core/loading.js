@@ -138,7 +138,7 @@
     g.globalAlpha = 1;
     const k = H >= 480 && W >= 480 ? 2 : 1;
     const bw = Math.round(Math.min(440, W * 0.62)), bh = 4;
-    const bx = Math.round((W - bw) / 2), by = Math.round(H * 0.62);
+    const bx = Math.round((W - bw) / 2), by = Math.round(H * (H > W ? 0.56 : 0.62));
     // 地面の線（棒の手前と奥に少しのびる）
     g.fillStyle = '#1a1826'; g.fillRect(bx - 24, by + bh + 3, bw + 48, 1);
     bar(g, bx, by, bw, bh, L.shown);
