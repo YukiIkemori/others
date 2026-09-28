@@ -1,0 +1,5 @@
+{"note": "gen1: the jetty painted one tile east (x 47-48); the caravan wagon painted by the lake (x 37-40); the stone cairn south-east of the crossroads is the stones POI",
+ "open_rect": [[47,11,2,5,"="]],
+ "solid_rect": [[37,10,4,3,"X"],[46,11,1,4,"w"],[44,23,2,1,"X"]],
+ "open": [[46,23,","],[46,15,":"]],
+ "objects": [{"match": {"id": "f_cross_c1"}, "set": {"x": 47}}, {"match": {"event": "world_poi_stones"}, "set": {"x": 44, "y": 23}}]}

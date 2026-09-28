@@ -3,50 +3,50 @@
 "w": 56,
 "h": 44,
 "rows": [
-",,;TFFF;;;,,FFFFFFFFFFFFFFXX..XX;;;;;;;;;;;;,,TTF,,FFFFF",
-",,,TFFFFr;,,TFFFFFFFFFFFT,X;..TX;;;;;;;;;;;;,,,TFFFFFFFF",
-",,,TFFF;;,,,,TT;;;FFFFT,,,X;..FXF;;;;;;;;;;;,,rFFFFFF,,,",
-",,TTFFF;,,,,,,T,;;;FFFT,,,,,..FFFF;FTTT;;;;;;,TFFFFFF,,,",
-",,,TFFF,,;;;;;T;;;;FFFT,,,,...TTFFFFFF;T;;;;,,TFFFFFT,,,",
-",,,TFFFT,;;;;;;;;,,FFF;;,,,...;,FFFFFF,,,,b;TTFFFFFF,,,,",
-",,,TFFFFT,;;;;;T;,TFFFT;,,,..TFFFFFFF,,,,,,,;TTFFFFF,,,,",
-",,TFFTFT,;;;;;;;;,TFFT,,;,,..,,,,FFFF,,,,,,,;TTTFFFF,,,,",
-",TFFTTT,,,;;;;T;;,TTT,,;;;,..,,,,,FF,,,,,,,bTTTTFFFF,,,,",
-",,FFT,,,,,,,,,,;;,,,;;;;;;,..,,r,,FF,,,,,,,FFTTTFTF,,,,;",
-",,FF,,,,,,,,,,bF;;;;;;;;;;;..,,,,,TFFb,,b,FF,FTTT;;;;;;;",
-"FFFF,T,,,,,,,,,T;;;;;;;;;;...,,,,,TXFFFFFFFF,,,TTT;;;;..",
-"FFFFTTTT,,,b,,,,,;;;;T;TFF...,,,,TFTF,TFFFFT,,..........",
-"FFFFFTTTr,,,,,,,,FT;;TTTFF...,,,,TFFF,,,,,..............",
-"T,FFT,;T,,...,,,,TT;;;TTFF,..,,,TFFFF,,,......,;;;;;FF;;",
-"..................;;;T;FF,,..,,,,,,FF......TTTT,;,TTFFT;",
-".......................FX,,..,,,,,......;;,TTT,,,,TFFFTT",
-".....,,FF,,,,,,FF.....................TT;;;;;TXFFFFFFFFF",
-",,,;T;FFFTTT;T;TFFFFFFF............,,;;T;;;;;,,FFFFFFFFF",
-",,,;;;FFTT;FFFFFFFFFFFF,,,,...,,,,,,,;;TTT;;;,,TFFFFFFFF",
-",,,;;;;;TX;;FFFFFFFFFFF,,,,,..,,,,,,,;;TFT;T;,,,FFFFFFFF",
-",,;;;;;TT;;;FFFFFFFFXFFF,,,,,..,,,,;;;TTFF;;;b,,;FFFFFFF",
-",;;;;;;TT;;;FF;;FFFFFFFFFF,,,..,,,,,,;;;,,,,;;;;;;;;;FFF",
-"FT;;;;;;;;;;;;;;TFFFFFFFFF,r,,..,,,,,,,,,,,,,,,b,;;;;T;;",
-"FF;;;;;;;;;b;;;;;;TFFFFF,,,T,,..,,,,,,,,,,,,,,,,;;;;;;;;",
-"RR;;;;;;;T;;;;;;;;;FFFFF,,,TT,..,,,,T,,,,,,,,,,,;;;;;T;;",
-"wRRRRRR;;;;;;;;;;;;FFFFF,,,T,,..,,,,,,,,,,,,,,,,;;;;;;;;",
-"wwwwwRRRRRR;;;FFFFFFFFF;;,,,,,..,,,,,,,,,r,,,,,,,;;;;;;;",
-"RRwwwwwwwwRRRRRFFFFFFFFF;;;T,..T,,,TF,,,,,,,,,,,,;;;;;;;",
-"FRRRRRwwwwwwwwRRRRFFFFFFFFTT,..,,,,FF,,,,,,,,,,,,;;;;;;;",
-"FFFT;RRRRRRwwwwwwRRRRFFFFFF,,..,,,,FFb,,,,,,,,FF,,;;;;;;",
-"FFFT;;;;;RRRRRRwwwwwRRRRRFF,,..,,,,FF,,,,,,FFFFFT;;;;;;;",
-";,TT;;;;;;;;;RRRRRwwwwwRRRRRR==RR,,FF,,,,,FFFFFT;;;;;;;;",
-",TTT,r;;,,;;;;T;TRRRRwwwwwwww==wRRRRF,,,,,FFFFFT;;;;;,,,",
-",,,TFF;T,,;;;;;;;FFFRRRRRwwww==wwwwRRRFFFFFFFFF;;;;;,r,,",
-",,,TFFFFT,;;;;,,,TFFFFFRRRRRR==RRwwwwRRRFFFFFFFFT;;;,,,,",
-",,,TFFFTT,;;;;,:::::FF;;;;:::..FRRRwwwwRRFFFFFFF;;;,,,,,",
-",,FFFFFF,,,T;;T;:::::::::::::..;TRRRRwwwRRRFFFFT;;;,,,,,",
-",,FFFFFFFFFF;TFFFFF,,,,,,,;;TF..Tr;;RRRwwwRRFFFT;;;;,,,,",
-",,FFFFFFFFFFFFFFFFT,,;,,,,;,FF..T,;;;;RRwwwRRTT;;;;;;TFF",
-"FFFFFFFTFFFFFFFFFFF;,;,,,,,,FF..T,;;;;;,RRwwRR;,,;;;;FFF",
-"FFFFFFFFFFFFFFFFFF;;;;,,,,,,TF..T,;;;;;,,RRwwwRR,;;;TFFF",
-"TT,,FFFFFFFFFF;TF;;;;,,,TFTTF...Tb;;;;;,,,RRwwwRR;;TFFTT",
-"T,,,FFFFFFFFF;;;T;;;;;,,FFFFF...T,;;;;;,,,,RRwwwRTFFFF;;"
+",,;FFFFF;;,,FFFFFFFFFFFFFFXX..XXFT;;;;;;;;;F,TFFFF,FFFFF",
+",,,FFFFFT;,,FFFFFFFFFFFFFFXT..FXF;;;r;;;;;;;,,TFFFFFFFFF",
+",,TFFFFF;,,,TFFFFFFFFFFT,,X;..FXFF;TTT;;;T;;,,,FFFFFFFFF",
+"TTFFFFFF,,,,,TFFTFFFFFF,,,,,..FFFFFFFFFT;T;;;,FFFFFFF,,,",
+",TTFFFFFT;;;;rFFFFFFFFF,,,,...FFFFFFFFFF;T;;TTFFFFFFF,,,",
+",,TFFFFFT;;;;;;FFFFFFFF;,,,...FFFFFFFFFTT;;;FFFFFFFFT,,,",
+",TTFFFFFF,;;;;;FTTFFFFF;,,,..FFFFFFFFF,,,,,;TFFFFFFFT,,,",
+",FFFFFFFTT;;TFFTTTFFFFT,;,,..TFFFFFFFF,,,,,;TFFFFFFFT,,,",
+"TFFFFFFTT,;;;FFTTTFFFTT;;;,..TFFFFFF,,,,,,,TFFFFFFFF,,,,",
+"FFFFFT,b,,,,TFFFFT,TT;;;;;,..,,,,FFFFF,,,,,FFFFFFFFF,,,;",
+"FFFFT,,,,,,,,TFFF;;XX;;;FT...,,,,FFFFFF,,,FFFFFFFFFF;;;;",
+"FFFFTFTT,,,,TFFFF;;XX;;;FF...,,T,TFXFFFFFFFFFF,FFFFF;;..",
+"FFFFFFFF,,,,,,,,FFFFFF;FFF...T,,,FFFFFFFFFFFF,..........",
+"FFFFFFFF,,,,,,,,FFFFFFFFFF...,,,TFFFFFFFFF..............",
+"FFFFFTTF,,...,,,FFF;;FFFFFF..;b,FFFFFFFF......TTTTTTFFTT",
+"..................;;;FFFFFF..,,TFFFFF......FFFFT;,FFFFFT",
+".......................FXF,..,,,,.......;TTFFFTTFFFFFFFF",
+".....FFFFFFFFFFFF.....................FFTFT;TFXFFFFFFFFF",
+"T,,;;FFFFFFFFFFFFFFFFFF............TFTTFTF;;T,TFFFFFFFFF",
+",,,;;FFFFFFFFFFFFFFFFFF,,,,...,,,,,FFTTFFF;;;,,FFFFFFFFF",
+",,,;FFFFFXFFFFFFFFFFFFFF,,,,..,,,,FFFTTFFFF;;,,FFFFFFFFF",
+",b;TFFTFFFFFFFFFFFFFXFFF,,,,,..,,TTFTTFFFFF;;,,,FFFFFFFF",
+"FT;;;bTFFTT;FFFFFFFFFFFF,b,,,..,,,,b,;FFFF,,,,,,XXFFFFFF",
+"FF;;;;;TT;;;FFFFFFFFFFFFF,,,,,..,T,,,TTFF,,,,,,,XX;;;FFF",
+"FFF;b;;;;;T;;TFFTTFFFFFFFFTFT,..,TF,,,,T,,,,,,,,,,;;TTTT",
+"RRF;;;;;TFT;;;;FFTFFFFFF,,TFF,..,,FF,,,,,,,,,,,,,;,;TFT;",
+"wRRRRRR;;TT;;;;FFFFFFFFFT,TFT,..,XXT,,,,,,,,,,,,,;T;;TTb",
+"wwwwwRRRRRR;;TFFFFFFFFFFTTTTT,..,XXTT,,,,,,,,,,,;;TTTT;;",
+"RRwwwwwwwwRRRRRFFFFFFFFFFFTFF..FFFFFFT,,b,,T,,,FTTTTTT;;",
+"FRRRRRwwwwwwwwRRRRFFFFFFFFFFF..FFFFFFF,,,,,FF,FFT;;TT;T;",
+"FFFFFRRRRRRwwwwwwRRRRFFFFFFFF..FFFFFF,,,,,TFFFFFTT;TT;;;",
+"FFFF;;;TTRRRRRRwwwwwRRRRRFFFF..FFFFFFF,,,,TFFFFFFT;;;;;;",
+"FFFF;;;;;;;;TRRRRRwwwwwRRRRRR==RRFFFFF,,,,FFFFFF;;;;;;;;",
+",FFFFF;;,,;;;;FTFRRRRwwwwwwww==wRRRRFF,,,FFFFFFF;;;;;,,,",
+",TTFFFFFT,;;;;T;;FFFRRRRRwwww==wwwwRRRFFFFFFFFFF;;;;,,,T",
+",,,FFFFFF,;;b;,,,FFFFFFRRRRRR==RRwwwwRRRFFFFFFFFF;;;,,T,",
+",,TFFFFFFT;;,,,:::::FFF;TT:::..FRRRwwwwRRFFFFFFFT;;,,,T,",
+",,FFFFFFFFFF;,,,,::::::::::::..FFFRRRwwwRRRFFFFF;;;,,,,T",
+",FFFFFFFFFFFFFFFFFFFTT,,,,;FFF..FT;;RRRwwwRRFFFF;;;;,,,F",
+"FFFFFFFFFFFFFFFFFFF,,;,,,TrFFF..FT;;;TRRwwwRRFF;;;;;;FFF",
+"FFFFFFFFFFFFFFFFFFF;,;,,,TbFFF..FT;T;;T,RRwwRR;,,;TTFFFF",
+"FFFFFFFFFFFFFFFFFFF;;;,,,F,,FF..Fb;;;;T,,RRwwwRR,;TTFFFF",
+"FFFFFFFFFFFFFFFFFF;;;,,,FFFFF...FT;;TTTT,FRRwwwRRTTFFFFF",
+"FTFFFFFFFFFFFF;TF;T;;;,TFFFFF...FT;;TTTTTFFRRwwwRFFFFFFT"
 ],
 "marks": [
 {
@@ -92,6 +92,106 @@
 40
 ],
 "solid": true
+},
+{
+"kind": "giant0",
+"cells": [
+[
+33,
+26
+],
+[
+34,
+26
+],
+[
+33,
+27
+],
+[
+34,
+27
+]
+],
+"text": "the huge mossy TRUNK of a COLOSSAL ANCIENT TREE with buttress roots spreading over the ground (its enormous crown fills the area around and above it)",
+"color": [
+96,
+64,
+40
+],
+"solid": true
+},
+{
+"kind": "giant1",
+"cells": [
+[
+19,
+10
+],
+[
+20,
+10
+],
+[
+19,
+11
+],
+[
+20,
+11
+]
+],
+"text": "the huge mossy TRUNK of a COLOSSAL ANCIENT TREE with buttress roots spreading over the ground (its enormous crown fills the area around and above it)",
+"color": [
+96,
+64,
+40
+],
+"solid": true
+},
+{
+"kind": "giant2",
+"cells": [
+[
+48,
+22
+],
+[
+49,
+22
+],
+[
+48,
+23
+],
+[
+49,
+23
+]
+],
+"text": "the huge mossy TRUNK of a COLOSSAL ANCIENT TREE with buttress roots spreading over the ground (its enormous crown fills the area around and above it)",
+"color": [
+96,
+64,
+40
+],
+"solid": true
+},
+{
+"kind": "ring",
+"cells": [
+[
+44,
+25
+]
+],
+"text": "a FAIRY RING of pale glowing mushrooms in the grass (walkable, flat)",
+"color": [
+220,
+200,
+240
+],
+"solid": false
 },
 {
 "kind": "mossrocks",

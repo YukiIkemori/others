@@ -1,0 +1,6 @@
+{"note": "gen1: the cabin painted at x 20-27 (door x 23, row 19); the creek drops over a cliff along the top edge (waterfall) instead of a mid ledge; the shrine painted at x 44-46 rows 8-10; bridge x 35-37",
+ "open_rect": [[31,8,3,1,","],[38,8,4,1,","],[35,23,3,2,"="],[21,20,6,1,","]],
+ "solid_rect": [[20,14,8,6,"X"],[44,8,3,3,"X"],[30,16,3,1,"X"],[29,12,2,2,"X"],[22,10,2,1,"X"]],
+ "objects": [{"match": {"type": "door"}, "set": {"x": 23, "y": 19}}, {"match": {"event": "world_poi_shrine"}, "set": {"x": 45, "y": 10}},
+             {"match": {"id": "lantern"}, "set": {"x": 26, "y": 20}}, {"match": {"text": "きこりの休み小屋\n旅の人も、ひと休みを。"}, "set": {"x": 21, "y": 21}}],
+ "spawns": {"hut": {"x": 23, "y": 20, "dir": "s"}}}

@@ -19,6 +19,9 @@
     r: { mat: 'rock', solid: true }, R: { mat: 'cliff', solid: true, rise: 1 }, X: { mat: 'wall_stone', solid: true },
   };
   const LINKS = {};
+  // 絵の無い光だけの物（描いた絵の上に光だけ置く。art.painted に入れて絵は出さない、ENV_ASSETS.md §8）
+  const PROPS = { lighthouse_glow: { soft: true, glow: true, light: { kind: 'lamp', r: 170 } } };
+  for (const id of Object.keys(PROPS)) if (!R.DB.props[id]) R.def('props', id, PROPS[id]);
   const FA = (R.FieldArea = R.FieldArea || {});
   FA.LEGEND = LEGEND;
   FA.LINKS = LINKS;

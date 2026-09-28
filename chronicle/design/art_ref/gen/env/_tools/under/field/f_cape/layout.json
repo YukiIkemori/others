@@ -560,6 +560,14 @@
 "y": 31,
 "item": "i_salve",
 "n": 2
+},
+{
+"type": "prop",
+"id": "lighthouse_glow",
+"x": 31,
+"y": 28,
+"cond": "prologue_boss",
+"painted": "lighthouse_glow"
 }
 ],
 "spawns": {
@@ -643,7 +651,7 @@
 "npcs": []
 },
 "rows_fit": [
-"FFFFFFFFFFFFFFFFFFFFFT,,,,,,,,,;;;;;,;;;,;TT,,,rrrTTTXXX",
+"FFFFFFFFFFFFFFFFFFFFFT,,,,,,,,,;;;;;,;;;,;TT,,,rrrTTXXXX",
 "FFFFFFFFFFFFFTTTTTTTTT,,,,,,,,,;;;;;,,,,,,,,,,,r,,rTXXXX",
 "FTTTTTTTTTTTTTTTrTTTTT,,,,,,,,,;;;;;,,,,,,,,TTT\"\",rTXXXX",
 "TTT,,TTTTTT,,,,,,;;TT,,,,,,,,,;;;;,,,,,,,,,TTTT\"rrrTXXXX",

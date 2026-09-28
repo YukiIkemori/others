@@ -289,7 +289,11 @@ async function flow() {
   };
   const run = async (id, ctx) => { const e = R.DB.events[id]; if (e.once && G.flags['ev_' + id]) return; await e.run(mk(ctx), ctx || {}); if (e.once) G.flags['ev_' + id] = true; };
   // 半島の 2 つの灯籠の場所（WORLD v3: ワールドを広げたので、生成物の物の場所を使う）
-  const LP = (id) => { const o = (R.DB.maps.world.objects || []).find((q) => q.id === id) || {}; return { x: o.x, y: o.y }; };
+  // 灯籠の場所: エリア切り替えのフィールド（kind 'field'）のエリアにあればそこ、無ければ前のワールド
+  const LP = (id) => {
+    for (const m of Object.values(R.DB.maps)) if (m && m.kind === 'field') { const o = (m.objects || []).find((q) => q.id === id); if (o) return { map: m.id, x: o.x, y: o.y }; }
+    const o = (R.DB.maps.world.objects || []).find((q) => q.id === id) || {}; return { x: o.x, y: o.y };
+  };
   const steps = [
     ['roa_house_intro', { map: 'roa_house' }], ['roa_lectern', {}], ['roa_seat', {}], ['roa_berna', { npc: 'berna_desk' }], ['roa_stone', {}], ['roa_children', {}], ['roa_farmer', {}],
     ['world_pen_lamp', LP('wl_pen_road')], ['pharos_arrival', {}], ['pharos_record_notice', {}], ['pharos_rowell', {}], ['pharos_otto', {}],

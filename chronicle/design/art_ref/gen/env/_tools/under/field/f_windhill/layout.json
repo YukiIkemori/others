@@ -6,41 +6,41 @@
 "FTFFFFF;;;;...;;;;;;;;;,,;;;;;;;;;RRRRT..RRRRRRRRRRR",
 "FTFFFFF;;;;..,;;;;;;;;;;;;;;;;;;;;RRRR;..RRRRRRRRRRR",
 "FFFFFFFF;;;..,,;;;;;b;;;;,,,;;;;;;RRRR;..RRRRRRRRRRR",
-"FFFFFFFT;;,..,,;;;T;;;T;,,,,,;;;;;RRRR;..RRRRRRRRRRR",
-"FFFFFFFFT;,...,;;TTTT;T;,,,,;;,;;;;;;;,..;;;;;;;;;b,",
-"FFFFFFFFF;,...,;;TTTTT;;T,,,;;,;;;;;;;,..;;;;;T;TT;,",
-"FFFFFFFFF;,...,;;;;;;;;,TT,,;;;;T;,b;;,...;;;TFFFT;;",
-"FFFFFFFF,,,...,;;T;;;;;TT,,,;;;;;;;;,;,,..;;rwwwwT,,",
-"FFFFFFFFTT,...,,TT;;;;TTT,,,;;;;;;;;,;;;..;;rwwwwwr,",
-"FFFFFFFTTT,...,,,;;;;TTTT,,,,;;;;;;;;;;;...,rwwwwwr,",
-"FFFFFFFTTT,..,,FT,,T,TTTT,,,;;;;,,,,;;;;,..,,rwwwwr,",
-"FFFFFFFFTFF..FFFF,,,,,,,,,,;;;;;,,,X,,,,;..,,,TwwrFF",
-"FFFFFFFFFFF..FFFFF,,,,,,;,,,b,;;X;;,,,,,,..,TT,rrFFF",
-"FFFFFFFFFFFF..FFFF,,,,,,,,,;,,;;,;X,,X,,,..,,,,,TTFF",
-"FFFFFFT,,FFF..FFFF,,,,,,,,,,,;;;,X,,,,,,,..,,;;,TTTF",
-"FFFFFr,,,,,F..FFFF,,,,,,,,,,,;;::,,,,,,,...,;;;;T;;F",
-"FFFFF,,,,T,FF..FFF,,,,,,,,,,,;;::,,,,,,,..,,;;;b;;;;",
-"FFFF,,,,,,TTT..FFFFFT;;,,,,;;;::,,,,,,,,..,,;;;;;;;;",
-"FFFFr,,,,,;TTT..FFFFT,;,,,,;:::;,,,,,,,...,,;;;;;;;;",
-"FFFF,,,,,,;;FT...FFF,,;;;;;;:::;,,,,,,...,,,;;;;;;;;",
-"FFFFF,,,,TFFFF;...,,,,;;;;;::;;;;;;;;;;..,,,;;;;;,;;",
-"FFFFF,,;;FFFFFFF.::TTFTr;T;::;;;;;;;;;..;,;;;TT,,,b,",
-"FFFFF;;;;;FFFFTTT::..FFTTTT:;;;;;;;;;...;,;;;T,,,,,,",
-"FFFF,;;;;;;FFF;T::T......T;:;;;;;;;;;..;;;;;,,,,,,,r",
-"FFFF;;,;;;;;FF;::;;;;.....::....;;;;..;;;;;;b,,,,,,,",
-"FFFF;;T;;;;;FF::;;;TTF....::..........;;;;;T,,,,,,,,",
-"FFFFF;;;;T;;;::;;;;TTT;;;;;;;;;;........;;;;;;,T,,,;",
-"FFFFFF;,,,r;;::;;;T;;;TbTT;;;;;;;T;;;.....;;TT;TT,;;",
-"FFFFFFF,,,,,::,;;;;T;;;TT;;;T;;;;FF;TTT.....FFTTTFFF",
-"FFFFFFF,,X,::,,,;;;T;;;TT;FFFFFF;FFFFFFFF...........",
-"FFFFFF,,XXX::,,,;;;;;;;FFFFFFFFFFFFFFFFFFFFF........",
-"FFFFFF,,,,::,,,;;;;;;;;FFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-"FFFFFFF,,,,,,,T;;FFF;;FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-"FFFFFFFFF,,,,;FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFTFFF",
-"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFT;;,..,,;;;;;;;;;,,,,,;;;;;RRRR;..RRRRRRRRRRR",
+"FFFFFFFFT;,...,;;TT;;;;;,,,,;;,;;;;;;;,..;;;;b;;;;,,",
+"FFFFFFFFF;,...,;;;;;;;;;,,,;;;,;;;;;;;,..;;;;;T;TT;,",
+"FFFFFFFFF;,...,;;;;b;;;,,,,,;;;;;;,,;;,...;;;rTFFT;;",
+"FFFFFFFF,,,...,;;;;;;;;,,,,,;;;;;;;;,;,,..;;rwwwwT,,",
+"FFFFFFFFTT,...,,TT;;;;,,,,,,;;;;;;;;,;;;..;;rwwwwwr,",
+"FFFFFFFTTT,...,,,;;;;,,,,,,,,;;;;;;;;;;;...,rwwwwwr,",
+"FFFFFFFTTT,..,,,T,,T,,,,,,,,;;;;,,,,;;;;,..,,rwwwwr,",
+"FFFFFFFFTFF..,FFF,,,,b,,,,,;;;;;,,,X,,,,;..,,,rwwrFF",
+"FFFFFFFFFFF...FFF,,,,,,,;,,,,,;;X;;,,,,,,..,XXXrrrFF",
+"FFFFFFFFFFFF..FFF,,,,,,,,R,;,,;;,;X,,X,r,..,XXX,,TTF",
+"FFFFFFT,,FFF..FFF,,,,,,,,R,,,;;;,X,,,,,,,..,,;;,,,TF",
+"FFFFF,,,,,,F..FFFT,,,,,,,R,,,;;::,,,,,,,...,;;;;;;;F",
+"FFFFF,,,,,,FF..FFF,,,,,,,,R,,;;::,,,,,,,..,,;;r;;;;;",
+"FFFF,,,,,,TTT..FFFFT,;;,,,RR;;::,,,,,,,R..,,;;;;;;;;",
+"FFFF,,,,,,;;;T..TTFT,,;,,,,RR::;,,,,,RR...,,;;;;;;;;",
+"FFFF,,,,,,;;FT...FF,,,;;;;;;::RRRRRRRR,..,,,;;;;;;;;",
+"FFFFFr,,,TFFFF;...T,,,;;;;;::;;;,,,,;;;..,,,;;;;;,;;",
+"FFFFF,,;;FFFFFFT.::,,T;;;;;::;;;;;;;;;..;,;;;;;,,,,,",
+"FFFFF;;;;;FFFFTTT::..,;;;;;:;;;;;;;;;...;,;;;,,,,,,,",
+"FFFF,;b;;;;FF;;;::;......;;:;;;;;;;;;..;;;;;,,,,,,,,",
+"FFFF;;,;;;;;;;;::;;;;.....::....;;;;..;;;;;;,,,,,,,,",
+"FFFF;;T;br;;;;::;;;bT;;;..::..........;;;;;;,,,,,,,,",
+"FFFFF;;;rT;;;::;;;;;;;;;;;;;;;;;........;;;;;;,,,,,;",
+"FFFFFF;,,,,;;::;;;;;;;;;;;;;;;;;;;;;;.....;;;;;,,,;;",
+"FFFFFF;,,,,,::,;;;;;r;;;;;;;;;;;;;;;;;;.....;;;;;;TT",
+"FFFFFF,,,X,::,,,;;;b;;;;;;;;;;;;;;;;;;;TT...........",
+"FFFFFF,,XXX::,,,;;;;;;;;;;;;;;T;;;;T;;TTTFF.........",
+"FFFFFF,,,,::,,,;;;;;;;;;;;;T;;;;;;;TT;;;TFF;T;;;;;;;",
+"FFFFFF;,,,,,,,;;;;;;;;;;;;;T,,;;;;;;FT;;;b;;TT;;;;;T",
+"FFFFFTT;;,,,,;;;;;;;;;;;;;T,,,,T,,,,;;;;;,,;;;;;;;;F",
+"FFFFFT,,;;;;;;;;;;;;;;,,TFFTF,,T,,;TT;;;;,,,;;;;;;;F",
+"FFFFFF,,,,,TT;;FFFFFTTTFFFFFFFFFFFFT,;;;;,T,,;;;;;FF",
+"FFFFFFF,,,FFFFFFFFFFFFFFFFFFFFFFFFFF;;;TTFF,,,;FFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFTFFFFTTbFFFFF",
 "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
 "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
 "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
@@ -49,6 +49,126 @@
 "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
 ],
 "marks": [
+{
+"kind": "rim",
+"cells": [
+[
+25,
+13
+],
+[
+25,
+14
+],
+[
+25,
+15
+],
+[
+26,
+16
+],
+[
+26,
+17
+],
+[
+27,
+17
+],
+[
+27,
+18
+],
+[
+28,
+18
+],
+[
+29,
+18
+],
+[
+29,
+19
+],
+[
+30,
+19
+],
+[
+31,
+19
+],
+[
+32,
+19
+],
+[
+33,
+19
+],
+[
+34,
+19
+],
+[
+35,
+19
+],
+[
+36,
+19
+],
+[
+37,
+18
+],
+[
+37,
+19
+],
+[
+38,
+18
+],
+[
+39,
+17
+],
+[
+39,
+18
+],
+[
+40,
+16
+],
+[
+40,
+17
+],
+[
+41,
+13
+],
+[
+41,
+14
+],
+[
+41,
+15
+]
+],
+"text": "the low ROCK RIM of the bald hill: a one-tile grey rock face along its south side (the hilltop is north of it, a little higher)",
+"color": [
+128,
+108,
+88
+],
+"solid": true
+},
 {
 "kind": "rocks",
 "cells": [
@@ -90,6 +210,38 @@
 150,
 146,
 136
+],
+"solid": true
+},
+{
+"kind": "tor",
+"cells": [
+[
+44,
+12
+],
+[
+45,
+12
+],
+[
+44,
+13
+],
+[
+45,
+13
+],
+[
+46,
+13
+]
+],
+"text": "a GRANITE TOR: a stack of huge rounded grey boulders piled by the wind, lichen-spotted",
+"color": [
+150,
+150,
+150
 ],
 "solid": true
 },
@@ -454,6 +606,14 @@
 "x": 15,
 "y": 19,
 "lit": true
+},
+{
+"type": "chest",
+"id": "f_windhill_c1",
+"x": 47,
+"y": 15,
+"item": "i_ether",
+"n": 1
 }
 ],
 "spawns": {

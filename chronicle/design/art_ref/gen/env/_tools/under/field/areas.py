@@ -177,6 +177,7 @@ def f_cape():
         dict(type='waylamp', id='wl_rest_2', x=39, y=7, lit=True),
         dict(type='prop', id='tent', x=43, y=6), dict(type='prop', id='lantern', x=44, y=6),
         dict(type='chest', id='f_cape_c1', x=12, y=31, item='i_salve', n=2),
+        dict(type='prop', id='lighthouse_glow', x=31, y=28, cond='prologue_boss', painted='lighthouse_glow'),   # the lantern room lit after the prologue boss
     ]
     a.meta = dict(name='灯台の岬', sub='ファロス街道と灯台', region='prologue', worldRect=[272, 300, 72, 92], outside='sea',
                   zones=[{'rect': [0, 0, 56, 16], 'zone': 'zw_prologue'}, {'rect': None, 'zone': 'zw_peninsula'}],
@@ -287,12 +288,14 @@ def f_cross():
     a.mark('steps', [(24, 11), (25, 11)], 'three worn stone STEPS at the ruin\'s south side (walkable)', (182, 176, 160), solid=False)
     # a lone rune stone on the grass (E of the ruin)
     a.mark('rune', [(38, 11)], 'a lone tall RUNE STONE, pale grey with faint carved rings, leaning slightly', (226, 222, 204))
+    # a wooden fishing jetty out into the lake (the chest at its end)
+    a.rect(46, 11, 2, 5, '=', force=True, keep=True)
+    a.stroke([(46.5, 16), (45, 19)], 1.4, ':', force=True)
     # the travellers' camp (N of the east road) and the caravan wagon (S of it)
     a.rect(40, 15, 5, 3, ':', force=False)
     a.mark('wagon', [(44, 23), (45, 23), (46, 23)], "a caravan's COVERED WAGON with a patched canvas hood, unhitched by the road", (200, 180, 140))
     # the rockslide at the pass (demo: closed; tilePatch) — the painting shows the open road, the closed look is a layer
-    for (x, y, rx, ry, s_) in [(10, 30, 3, 2.2, 11), (18, 28, 2, 1.5, 12), (40, 29, 3.2, 2.2, 13), (52, 27, 2.4, 1.8, 14), (8, 14, 2.4, 1.8, 15),
-                              (15, 12, 1.8, 1.4, 16), (54, 31, 2, 1.4, 17), (34, 29, 1.6, 1.3, 18)]:
+    for (x, y, rx, ry, s_) in [(10, 30, 2.6, 1.8, 11), (40, 29, 2.4, 1.8, 13), (8, 13, 2.0, 1.5, 15), (54, 31, 1.8, 1.3, 17)]:
         a.blob(x, y, rx, ry, 'T', rough=0.35, seed=s_, only=',;"')
     a.scatter('r', 0.012, only=',;"', seed=31, clear=1)
     a.scatter('b', 0.008, only=',;"', seed=32, clear=1)
@@ -308,6 +311,7 @@ def f_cross():
         dict(type='prop', id='tent', x=41, y=15), dict(type='prop', id='lantern', x=43, y=16),
         dict(type='waylamp', id='wl_rest_3', x=47, y=23, lit=True),
         dict(type='prop', id='lamp_post', x=27, y=32), dict(type='prop', id='lamp_post', x=31, y=32),
+        dict(type='chest', id='f_cross_c1', x=46, y=11, item='i_potion', n=2),
     ]
     a.meta = dict(name='北の野', sub='三つの道の分かれ道', region='r_forest', worldRect=[232, 124, 120, 96], outside='forest_dark',
                   zones=[{'rect': None, 'zone': 'zw_forest'}],
@@ -358,9 +362,17 @@ def f_hut():
         st.append((x, y))
     a.mark('stumps', st, 'old CUT TREE STUMPS with rings and moss, knee high, scattered over the clearing', (176, 132, 84))
     a.mark('shrine', [(42, 17)], 'a small mossy stone WAYSIDE SHRINE with a little roof, facing the road', (170, 60, 50))
+    # a rock ledge across the creek in the north: a little WATERFALL tumbling over it into a pool
+    ledge = [(x, 8) for x in range(31, 42) if a.g[8, x] != 'w']
+    a.mark('ledge', ledge, 'a mossy ROCK LEDGE (a one-tile step in the ground, its face towards the south)', (128, 108, 88), ch='R')
+    wf = [(x, 8) for x in range(31, 42) if a.g[8, x] == 'w']
+    a.mark('falls', wf, 'a small WATERFALL where the creek tumbles white over the ledge into a round pool below', (200, 230, 250), ch='w')
+    a.blob(36.5, 10, 2.0, 1.4, 'w', rough=0.2, seed=61, only=',;"TFbr')
+    # a sawhorse and a timber stack at the clearing's east side
+    a.mark('saw', [(30, 14), (31, 14)], "a woodcutters' SAWHORSE with a half-sawn log and a big two-man saw", (170, 120, 70))
     a.scatter('r', 0.01, only=',;"', seed=31, clear=1)
     a.tidy()
-    a.exit('e', 20, 21, {'map': 'f_cross', 'spawn': 'west'}, 'east')
+    a.exit('e', 23, 24, {'map': 'f_cross', 'spawn': 'west'}, 'east')   # gen1 painted the road straighter: the east end at rows 23-24
     a.exit('w', 24, 25, {'map': 'f_fern', 'spawn': 'east'}, 'west')
     a.spawns['hut'] = dict(x=24, y=19, dir='s')
     a.objects += [
@@ -387,10 +399,10 @@ def f_fern():
     ys, xs = np.mgrid[0:H, 0:W]
     a.mask_fill(fbm(5, W, H, 6) > 0.5, ';')
     fn = fbm(7, W, H, 5)
-    a.mask_fill(fn > 0.56, 'F')
-    a.mask_fill((fn > 0.47) & (fn <= 0.56) & (fbm(8, W, H, 2.2) > 0.5), 'T')
+    a.mask_fill(fn > 0.47, 'F')
+    a.mask_fill((fn > 0.40) & (fn <= 0.47) & (fbm(8, W, H, 2.2) > 0.45), 'T')
     # clearings
-    for (x, y, rx, ry, s_) in [(28, 18, 7, 5, 11), (12, 14, 5, 4, 12), (44, 26, 5, 4, 13), (30, 32, 5, 3.5, 14), (40, 8, 4, 3, 15)]:
+    for (x, y, rx, ry, s_) in [(28, 19, 5.5, 4, 11), (12, 14, 4, 3, 12), (45, 25, 4.5, 3.5, 13), (15, 36, 3, 1.8, 14), (40, 8, 3.2, 2.4, 15)]:
         a.blob(x, y, rx, ry, ',', rough=0.35, seed=s_, force=True)
     # roads
     a.stroke([(56.5, 12.5), (48, 13), (40, 15.5), (33, 18), (28, 18.5)], 2.0, '.', wobble=0.2, seed=6)
@@ -407,6 +419,9 @@ def f_fern():
     # a ledge across the ravine (the chest)
     a.rect(14, 35, 3, 2, ',', force=True, keep=True)
     a.stroke([(16, 36.5), (22, 37.5), (28, 37)], 1.4, ':', force=True, only=',;"TFbr')
+    for k, (x, y) in enumerate([(33, 26), (19, 10), (48, 22)]):
+        a.mark('giant%d' % k, [(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)], 'the huge mossy TRUNK of a COLOSSAL ANCIENT TREE with buttress roots spreading over the ground (its enormous crown fills the area around and above it)', (96, 64, 40), ch='X')
+    a.mark('ring', [(44, 25)], 'a FAIRY RING of pale glowing mushrooms in the grass (walkable, flat)', (220, 200, 240), solid=False)
     a.mark('mossrocks', [(20, 21), (35, 11), (46, 17), (9, 20)], 'big MOSS-COVERED BOULDERS with ferns at their foot', (120, 140, 100))
     a.mark('shrine', [(24, 16)], 'a small mossy stone WAYSIDE SHRINE with a little roof, facing the road', (170, 60, 50))
     a.scatter('r', 0.012, only=',;"', seed=31, clear=1)
@@ -514,21 +529,25 @@ def f_windhill():
     ys, xs = np.mgrid[0:H, 0:W]
     a.mask_fill(fbm(5, W, H, 6) > 0.45, ';')
     fn = fbm(9, W, H, 6)
-    dens = fn + np.maximum(0, (ys - 26) / 20) + np.maximum(0, (8 - xs) / 16) - np.exp(-(((xs - 34) / 11) ** 2 + ((ys - 16) / 9) ** 2)) * 0.6
+    dens = fn + np.maximum(0, (ys - 33) / 12) + np.maximum(0, (8 - xs) / 16) - np.exp(-(((xs - 33) / 12) ** 2 + ((ys - 16) / 10) ** 2)) * 0.8
     a.mask_fill(dens > 0.62, 'F')
     a.mask_fill((dens > 0.52) & (dens <= 0.62) & (fbm(8, W, H, 2.2) > 0.5), 'T')
     # the wind hill: a low cliff ring with a path up from the south-west, the rocks on top
     hill = (((xs - 34) / 7.5) ** 2 + ((ys - 15) / 5.2) ** 2) < 1 + 0.2 * (fbm(12, W, H, 3) - 0.5)
     a.mask_fill(hill, ',', force=True)
     a.mask_fill(hill & (fbm(13, W, H, 3) > 0.55), ';')
-    edge = hill & ~ndimage.binary_erosion(hill) & (ys > 14)
-    a.mask_fill(edge, 'R', force=True)
+    rim = sorted({(int(round(33 + 7.8 * math.cos(t))), int(round(14 + 5.4 * math.sin(t)))) for t in np.linspace(-0.15, math.pi + 0.15, 90)})
+    a.mark('rim', rim, "the low ROCK RIM of the bald hill: a one-tile grey rock face along its south side (the hilltop is north of it, a little higher)", (128, 108, 88), ch='R')
     a.mark('rocks', [(32, 12), (35, 11), (37, 13), (33, 14)], 'tall WIND-WORN ROCKS on the hilltop, pierced with holes by the wind', (170, 164, 150))
     a.mark('notes', [(34, 13)], 'a flat grey ROCK SLAB on the hilltop with an old leather satchel tucked under it (walkable in front)', (150, 146, 136))
     # roads: E edge -> west past the hill; up to the pass (N, east) and to Yura (N, west)
     a.stroke([(52.5, 30.5), (44, 29.5), (36, 26), (27, 25), (18, 22), (13, 15), (12.5, 7), (12.5, -1)], 2.0, '.', wobble=0.2, seed=6)
     a.stroke([(36, 26), (40, 20), (42, 12), (40, 5), (39.5, -1)], 2.0, '.', wobble=0.2, seed=7)
     hp = a.stroke([(27, 25), (28, 21), (30, 18.5), (32, 16)], 1.4, ':', force=True)
+    a.keep[np.array([[False] * W] * H)] = False
+    for (x, y) in hp:
+        if a.inb(x, y) and a.g[y, x] == 'R': a.g[y, x] = 'c'; a.marks.append(dict(kind='steps', cells=[[x, y]], text='worn stone STEPS through the rim (walkable)', color=[182, 176, 160], solid=False))
+    a.mark('tor', [(44, 12), (45, 12), (44, 13), (45, 13), (46, 13)], 'a GRANITE TOR: a stack of huge rounded grey boulders piled by the wind, lichen-spotted', (150, 150, 150))
     # the tarn among rocks (NE)
     tn = a.blob(47, 9, 3, 2.2, 'w', rough=0.3, seed=14)
     a.ring(tn, 'r', 1, only=',;"')
@@ -559,6 +578,7 @@ def f_windhill():
         dict(type='sign', x=42, y=6, text='北の峠を越えて\n↑ 雪の村ユール'),
         dict(type='prop', id='beacon', x=3, y=40, cond='cleared_r_forest'),
         dict(type='waylamp', id='wl_15', x=15, y=19, lit=True),
+        dict(type='chest', id='f_windhill_c1', x=47, y=15, item='i_ether', n=1),
     ]
     a.meta = dict(name='風鳴りの丘', sub='ユーラと北の峠への道', region='r_forest', worldRect=[40, 128, 92, 124], outside='forest_dark',
                   zones=[{'rect': None, 'zone': 'zw_forest'}],

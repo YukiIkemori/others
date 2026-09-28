@@ -107,8 +107,10 @@ if APPLY:
             for i in range(r[0], r[0] + r[2]): fit[j][i] = r[4] if len(r) > 4 else 'X'
     # close unreachable walkable pockets (from the first spawn)
     WALK = set(',;".:s_=c')
-    sp = list(d['spawns'].values())[0]
-    seen = np.zeros((H, W), bool); q = deque([(sp['x'], sp['y'])]); seen[sp['y'], sp['x']] = True
+    seen = np.zeros((H, W), bool); q = deque()
+    for sp in d['spawns'].values():
+        fit[sp['y']][sp['x']] = fit[sp['y']][sp['x']] if fit[sp['y']][sp['x']] in WALK else '.'
+        seen[sp['y'], sp['x']] = True; q.append((sp['x'], sp['y']))
     while q:
         x, y = q.popleft()
         for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):

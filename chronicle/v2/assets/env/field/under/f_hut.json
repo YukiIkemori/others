@@ -1,0 +1,19 @@
+{
+ "id": "f_hut",
+ "kind": "under",
+ "map": "f_hut",
+ "tile": 32,
+ "size32": [
+  1664,
+  1280
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.8,
+ "files": {
+  "24": "f_hut@24.png",
+  "32": "f_hut@32.png"
+ },
+ "src": "generated"
+}

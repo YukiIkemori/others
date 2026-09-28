@@ -81,7 +81,7 @@ for pi, p in enumerate(d['meta'].get('tilePatches', [])):
     C = A.copy()
     for (x, y, c) in ch:
         if c in '~w':   # water: clone the nearest cell of open water whose 3x3 neighbourhood is all water
-            wm = np.isin(g, ['~', 'w']); wi = ndimage.binary_erosion(wm, np.ones((3, 3)))
+            wm = np.isin(g, ["~", "w"]); wi = ndimage.binary_erosion(wm, np.ones((3, 3)), iterations=2)
             ys, xs = np.nonzero(wi)
             k = np.argmin((xs - x) ** 2 + (ys - y) ** 2 + ((xs * 7 + ys * 13) % 3) * 0.1)
             cell(C, x, y)[:] = cell(A, xs[k], ys[k])

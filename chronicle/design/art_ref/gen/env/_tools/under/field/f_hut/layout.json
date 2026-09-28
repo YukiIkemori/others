@@ -11,13 +11,13 @@
 "FFFFFFFT\";;TrTT,,,,,,;;;TT;,,;,;;;ww;;,,,,,,\",;;,r,,",
 "FFFFFFFT;,;TTTTTT,,,;;;,TTT,,,,;;;ww;,,,,,,;;;;;;,,,",
 "FFFFFFF;;;,TTTTTT\"T,,;TTTTT,,,,;;;;w;,,,,,,\";\";;;;,,",
-"FFFFFFFF;;;;TTTTTT,,,,,TTTTT,,;;;;;ww,,,;,\"\"\"\"\",;;;;",
-"FFFFFFFF;T;FFF,\"\"TT,,,,,TTTT,,;;;,,,w;,,,,,,,,,,;;;,",
-"FFFFFFFFFFFFFF,,,,,,,,,,,,T,;;,,,,,;ww,;,,,,\",,;;;;,",
-"FFFFFFFFFFFFFF,,,,,,,,,,,,,,;T;;;;;;;w;;r,,,,,,;;;\"\"",
-"FFFFFFFFFFFFFF;T,,,,,,,,,,,X;,;;;;;;;w,;\",;,,,,;;;\"\"",
+"FFFFFFFF;;;;TTTTTT,,,,,TTTTT,,;RRRRwwRRRRR\"\"\"\"\",;;;;",
+"FFFFFFFF;T;FFF,\"\"TT,,,,,TTTT,,;;;,,,ww,,,,,,,,,,;;;,",
+"FFFFFFFFFFFFFF,,,,,,,,,,,,T,;;,,,,,,www;,,,,\",,;;;;,",
+"FFFFFFFFFFFFFF,,,,,,,,,,,,,,;T;;;;;;www;;,,,,,,;;;\"\"",
+"FFFFFFFFFFFFFF;T,r,,,,,,,,,X;,;;;;;;;w,;\",;,,,,;;;\"\"",
 "FFFFFFFFFFFFFFTTT,,XX,,,,,,;,X,;;;;;ww,,,,,,;;;;;;\",",
-"FFFFFFFFFFFFFFTT,,,,,,,,,,,;,,,,;;;;ww,,,,,;;,;;;,,,",
+"FFFFFFFFFFFFFFTT,,,,,,,,,,,;,,XX;;;;ww,,,,,;;,;;;,,,",
 "FFFFFFFFFFFFFFF;;X,,,,XXXXX,,,,,;;;;ww;,,,;;;;;;;;,;",
 "FFFFFF,FFFFFFFFF,,,,,,XXXXX,,,,X;;;ww;,,,,;;;;;;;;;;",
 "FFFFFF,FFFFFFFFFF,,,,,XXXXX,XX,,,;;ww,,,;;X;;;;;;;;;",
@@ -28,10 +28,10 @@
 "FFFFFFFFFFFTTTTTTTTT;T.::...........==,,;;;;;;;;;;;;",
 "............................,;;;;;;,ww,,,,;;;;;;,,,;",
 "......................,,;,,,,,;;;;,,\"ww;,,,;;;;;;,,,",
-"FFFFFFFFFF...;;;FFTTT;,,,,,,,;;,;r;,\"ww,,,,,;r;,;,,,",
-"FFFFFFFFFFF,;;;;FFTTTT;,,,,,,,,,,;;,,ww,,,,,;;;,,;;;",
-"FFFFFFFFFFFF;;;TFFTTTT;,,,,,,,,,,;,,,ww,,,,;;;;,r;;;",
-"FF;\",;FTT\"FFF;;TT;;TTT;,,,,,,T,,,;,,,w,,,,;;;;;;;,;,",
+"FFFFFFFFFF...;;;FFTTT;,,,,,,,;;,;;;,\"ww,,,,,;;;,;,,r",
+"FFFFFFFFFFF,;;;;FFTTTT;,,,r,,,,,,;;,,ww,,,,,;;;,,;;;",
+"FFFFFFFFFFFF;;;TFFTTTT;,,,,,,,,,,;,,,ww,,,,;;;;,,;;;",
+"FF;\",;FTT\"FFF;;TT;;TTT;,,r,,,T,,,;,,,w,,,,;;;;;;;,;,",
 "TTT;;;T;;;FFFFFT,;;TT;;;,,,;,,TT,;;;ww,,;;;;;;;;;;,,",
 "TTTT;;;;;TFFFFFF,TTTTT;;,,T,,,,TT;;;ww,,;;;;;;;;;;;,",
 "FFTTT;;;;;FFFFF,,TTT;TTTT,,,,,TT;;;;ww,;;;;;;;;;;,,,",
@@ -252,6 +252,94 @@
 50
 ],
 "solid": true
+},
+{
+"kind": "ledge",
+"cells": [
+[
+31,
+8
+],
+[
+32,
+8
+],
+[
+33,
+8
+],
+[
+34,
+8
+],
+[
+37,
+8
+],
+[
+38,
+8
+],
+[
+39,
+8
+],
+[
+40,
+8
+],
+[
+41,
+8
+]
+],
+"text": "a mossy ROCK LEDGE (a one-tile step in the ground, its face towards the south)",
+"color": [
+128,
+108,
+88
+],
+"solid": true
+},
+{
+"kind": "falls",
+"cells": [
+[
+35,
+8
+],
+[
+36,
+8
+]
+],
+"text": "a small WATERFALL where the creek tumbles white over the ledge into a round pool below",
+"color": [
+200,
+230,
+250
+],
+"solid": true
+},
+{
+"kind": "saw",
+"cells": [
+[
+30,
+14
+],
+[
+31,
+14
+]
+],
+"text": "a woodcutters' SAWHORSE with a half-sawn log and a big two-man saw",
+"color": [
+170,
+120,
+70
+],
+"solid": true
 }
 ],
 "objects": [
@@ -303,7 +391,7 @@
 "spawns": {
 "east": {
 "x": 50,
-"y": 20,
+"y": 23,
 "dir": "w"
 },
 "west": {
@@ -320,7 +408,7 @@
 "exits": [
 {
 "x": 51,
-"y": 20,
+"y": 23,
 "w": 1,
 "h": 2,
 "to": {
@@ -366,5 +454,47 @@
 }
 },
 "npcs": []
-}
+},
+"rows_fit": [
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwwFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwFFFFFFFFFFFFFTFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwwFTT,,TTTT,TT,,TT",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFTTT;;Twww;,,,,,,,,,,,,,;",
+"FFFFFFFFTTTTTTTTTTTTTTTTTTTT;;\";;;www;T,,,,,\"w,,,,,;",
+"FFFFFFFTTTTTrTTTTTTTTTTTTTTT,;,;;;ww;;,,,,,,\",;;,,,,",
+"FFFFFFFTTTTTTTTTTTTTTTTTTTT,,TT;;;www,,,,,,;;;;;;,,,",
+"FFFFFFFFTTTTTTTTTTT,TTTTTTT,,TT;;;www,,,,,,\";\";;;;,,",
+"FFFFFFFFTTTTTTTTTT,,,T,TTT,,,,T,,,RwwR,,,,\"\"XXX,;;;;",
+"FFFFFFFFFTFFFFTTTTTT,,,,TTTT,,;;;,,www,,,,,,XXX,;;;,",
+"FFFFFFFFFFFFFFTTTTTT,,XX,,TT;;,,,,,wwww;,,,,XXX;;;;,",
+"FFFFFFFFFFFFFFTTTTT,,,,,,,,,;T;;;;;wwww;;,,,,,,;;;\"\"",
+"FFFFFFFFFFFFFFTTTr,,,,,,,,,X;XX;;;;www,;\",;,,,,;;;\"\"",
+"FFFFFFFFFFFFFFTTT,,XX,,,,,,;,XX;;;;;www,TT,,;;;;;;\",",
+"FFFFFFFFFFFFFFTT,,,,XXXXXXXX,,XX;;;;www,TT,;;,;;;,,,",
+"FFFFFFFFFFFFFFF;;X,,XXXXXXXX,,,,;;;;wwr,TT;;;;;;;;,;",
+"FFFFFFTFFFFFFFFF,,,,XXXXXXXX,,XXX;;www,,,,;;;;;;;;;;",
+"FFFFFFFFFFFFFFFF,,,,XXXXXXXXXX,,,;;www,,;;X;;;;;;;;;",
+"FFFFFFFFFFFFFFFFFFX,XXXXXXXX,,,,;;;www,,;;;;;;;;;;;;",
+"FFFFFFFFFFFFFFFFFF,,XXXX.XXX,,,;;;,www,;;;;;;;;;;;;.",
+"FFFFFFFFFFFFFTTTTTT,X,,,,,,,,\"X;;;,www..............",
+"FFFFFFFFFFFTTTTTXTT,,,;::,;........w==..............",
+"FFFFFFFFFFFTTTTTT,T,;..::..........w==,,;;;;;;;;;;;;",
+"TTTTTTTrT...................,;;;;;;===,,,,;;;;;;,,,;",
+"......................,,;,,,,,;;;;,===.;,,,;;;;;;,,,",
+"F......,.....;;;..,TT;,,,,,,,;;,;;;rwww,,,,,;;;,;,,r",
+"FFFFFFFFFFF,;;r;FFTTTT;,,,r,,,,,,;;wwww,,,,,;;;,,;;;",
+"FFFFFFFFFFF,;;;,FFTTTT;,,,,,,,,,,;,,www,,,,;;;;,,;;;",
+"FFFTTTFTTTFFF;;TTTTTTT;,,r,,T.,,,;,,www,,,;;;;;;;,;,",
+"TTTTTTTTTTFFFFFTTTTTTTT;,,,;,,.,,;;;ww,,;;;;;;;;;;,,",
+"TTTTTTTTTTFFFFFFTTTTTT;;,,T,,,,.,;;;www,;;;;;;;;;;;,",
+"FFTTTTTTTTFFFFFTTTTTTT,,T,,,,,TTw;;;ww,;;;;;;;;;;,,,",
+"FFFFFFFFFFFFFFFTTTTTTT,T,TT,,TT,;rr;ww,;;;;;\";;;,,,,",
+"FFFFFFFFFFFFFFFTTTTTTT.,,;T;,,,;;;;www;;;;;;;;;;;;;;",
+"FFFFFFFFFFFFFFFTTTTTTTTT,T,,,,,,;;;www;;;,;;;;;;;;r;",
+"FFFFFFFFFFFFFTTTTTTTTTTTT;;,,,,;;;;;ww;,;,,;;;;;;;;;",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFT,,T,,,;;;www;,,,;;;;;;;\"\"",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF,;;wwTFFFTTTTT,,TT;",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwwFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwwFFFFFFFFFFFFF"
+]
 }

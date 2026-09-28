@@ -20,6 +20,7 @@ for aid in sys.argv[1:]:
             if all(o.get(k) == v for k, v in mv['match'].items()): o.update(mv['set'])
     for k, v in fx.get('spawns', {}).items(): d['spawns'][k] = v
     for o in d['objects']:
+        if o.get('type') == 'none_removed': continue   # dropped by fix.json (painted into the picture)
         o = dict(o)
         p = o.pop('painted', None)
         if p: painted.append('%s@%d,%d' % (p, o['x'], o['y']))

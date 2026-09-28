@@ -7,7 +7,7 @@
   R.FieldArea.def("f_cape", {
     name: "灯台の岬", region: "prologue", outside: "sea",
     rows: [
-      "FFFFFFFFFFFFFFFFFFFFFT,,,,,,,,,;;;;;,;;;,;TT,,,rrrTTTXXX",
+      "FFFFFFFFFFFFFFFFFFFFFT,,,,,,,,,;;;;;,;;;,;TT,,,rrrTTXXXX",
       "FFFFFFFFFFFFFTTTTTTTTT,,,,,,,,,;;;;;,,,,,,,,,,,r,,rTXXXX",
       "FTTTTTTTTTTTTTTTrTTTTT,,,,,,,,,;;;;;,,,,,,,,TTT\"\",rTXXXX",
       "TTT,,TTTTTT,,,,,,;;TT,,,,,,,,,;;;;,,,,,,,,,TTTT\"rrrTXXXX",
@@ -62,6 +62,7 @@
       {"type":"prop","id":"tent","x":43,"y":6},
       {"type":"prop","id":"lantern","x":44,"y":6},
       {"type":"chest","id":"f_cape_c1","x":12,"y":31,"item":"i_salve","n":2},
+      {"type":"prop","id":"lighthouse_glow","x":31,"y":28,"cond":"prologue_boss"},
     ],
     npcs: [
 
@@ -71,7 +72,7 @@
     triggers: [],
     tilePatches: [],
     zones: [{"rect":[0,0,56,16],"zone":"zw_prologue"},{"rect":null,"zone":"zw_peninsula"}],
-    art: {"image":"field/under/f_cape","painted":[],"overlay":"field/under/f_cape_over"},
+    art: {"image":"field/under/f_cape","painted":["lighthouse_glow@31,28"],"overlay":"field/under/f_cape_over"},
     meta: {"sub":"ファロス街道と灯台","worldRect":[272,300,72,92]},
     links: {"pharos":{"map":"f_cape","spawn":"pharos"},"lighthouse":{"map":"f_cape","spawn":"lighthouse"}},
   });
