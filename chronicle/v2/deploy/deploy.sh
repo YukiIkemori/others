@@ -14,6 +14,7 @@ mkdir -p "$WORK/chronicle/v2/dist"   # 文字のキャッシュ（.fontcache）�
 cd "$WORK/chronicle/v2"
 node tools/build.js > /dev/null
 python3 tools/pack_web.py --dist dist --out "$WORK/public" --scope demo > "$WORK/pack.log" 2>&1 || { tail -20 "$WORK/pack.log"; exit 1; }
+GA4_ID=${GA4_ID:-G-GKKGJ8PJR8}   # GA4 の測定 ID（Firebase のウェブアプリ Luminous Chronicle）
 if [ -n "${GA4_ID:-}" ]; then
   python3 - "$WORK/public/index.html" "$GA4_ID" <<'PY'
 import sys
