@@ -69,7 +69,7 @@ ok('読み物 lo_ev_marsh・lo_time_marsh（必）・lo_war_marsh', ['lo_ev_mars
     if (j.size32[0] !== D.maps[id].w * 32 || j.size32[1] !== D.maps[id].h * 32) miss.push(`${id} size ${j.size32}`);
   }
   ok('町・館 2 階・沼は 1 枚の下絵（絵とメタがあり、大きさがマップと同じ）', miss.length === 0, miss);
-  const bog = JSON.parse(fs.readFileSync(path.join(V2, 'assets', 'env', 'marsh', 'under', 'bog.json'), 'utf8'));
+  const bog = JSON.parse(fs.readFileSync(path.join(V2, 'assets', 'env', 'forest_dungeon', 'under', 'bog.json'), 'utf8'));
   ok('沼の下絵は水の引いた形、閉じている間は bog_closed（live が tilePatches と同じ）', JSON.stringify(bog.live) === JSON.stringify(D.maps.marsh_bog.meta.live) && bog.live.every((L, i) => D.maps.marsh_bog.tilePatches[L.patch] && L.patch === i));
 }
 

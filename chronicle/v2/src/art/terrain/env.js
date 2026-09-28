@@ -9,7 +9,7 @@
 //   T.Env.bld(defId) → {img:{tile:Image}, emit:{tile:Image}, j}   建物（地図の建物 id ごと。無ければ def.art の汎用の建物）
 //   T.Env.bbg(id) → {img:{layer:Image}, j}                           戦闘背景（back ground front post と _tall）
 //   T.Env.meanColor(id) → css | null 素材の代表の色（小地図・地図）
-//   T.Env.under(key, tile) → {img, k, j} | null   マップ 1 枚の描いた下絵（'<theme>/under/<name>'。map.art.image・overlay・emit が指す。
+//   T.Env.under(key, tile) → {img, k, j} | null   マップ 1 枚の描いた下絵（使う時に読む。読めるまで null、読めたら今のマップのチャンクを焼き直す）（'<theme>/under/<name>'。map.art.image・overlay・emit が指す。
 //                                    k = tile / 画像のマスの大きさ。j = <name>.json の meta: windows32 など）
 (function (R) {
   'use strict';
@@ -130,10 +130,41 @@
     return out.layer('back') ? out : null;
   };
   /** 描いた下絵（マップ 1 枚）: 32 の絵の meta も返す（_emit・_over は meta を持たないので本体の名前で引く） */
+  // 下絵は使う時に読む（E.under が null を返すあいだ、チャンクはタイルで焼く。読めたら今のマップの物ならチャンクを焼き直す）
+  const underLoad = {};
+  function loadUnder(k) {
+    if (underLoad[k] || !R.Media || !R.Media.preload) return underLoad[k] || null;
+    underLoad[k] = Promise.resolve(R.Media.preload('env', [k])).then(() => {
+      const r = R.Media.image(k, 'env'); return r && r.ready && r.img && r.img.decode ? r.img.decode().catch(() => null) : null;
+    }).catch(() => null).then(() => {
+      try {
+        const F = R.Field, m = F && F._s && F._s.map, a = m && m.art;
+        if (a && [a.image, a.overlay, a.emit, a.closed].some((x) => x && k.indexOf(x + '@') === 0) && F.chunks && F.chunks.reset) F.chunks.reset();
+      } catch (e) { /* 焼き直せなくても次に入ったときに使う */ }
+    });
+    return underLoad[k];
+  }
+  /** 下絵の本体と、その層（_emit・_over・_closed）をこのマスの大きさで読んでおく（読めていれば true） */
+  function underReady(key, tile) {
+    const U = I().under; let ok = true;
+    for (const sfx of ['', '_emit', '_over', '_closed']) {
+      const keys = U[key + sfx]; if (!keys) continue;
+      const k = keys[tile] || keys[32]; if (!k) continue;
+      if (!img(k)) { ok = false; loadUnder(k); }
+    }
+    return ok;
+  }
+  E.underReady = underReady;
+  /** マップ（とその隣のマップ）の下絵を先に読む（map.art）。FIELD の map:enter から */
+  E.warmUnder = function (map, tile) {
+    if (!E.ready || !map || !map.art || !map.art.image) return;
+    underReady(map.art.image.replace(/_(emit|over|closed)$/, ''), tile || 32);
+  };
   E.under = function (key, tile) {
     if (!E.ready || !key) return null;
     const keys = I().under[key];
     if (!keys) return null;
+    if (!underReady(key.replace(/_(emit|over|closed)$/, ''), tile)) return null;   // 本体と層がそろうまではタイルのまま
     const p = pickTile(keys, tile);
     if (!p) return null;
     const baseKey = key.replace(/_(emit|over|closed)$/, ''), bk = I().under[baseKey];
@@ -160,10 +191,17 @@
     let tile = 32;
     try { tile = ({ near: 40, normal: 32, far: 24 })[R.Settings.get('fieldZoom')] || 32; } catch (e) { tile = 32; }
     const SLICE = /^(common|harbor|hill_village|treetop|moss_village|tree_inside|lighthouse|cave|forest_dungeon|snow|desert)\//, SLICE_BBG = /^bbg\/(coast|tower|forest|tree|cave|snow|desert)\//;
-    const now = all.filter((k) => (SLICE.test(k) && new RegExp('@' + tile + '$').test(k)) || SLICE_BBG.test(k));
-    const later = all.filter((k) => now.indexOf(k) < 0);
+    // マップ 1 枚の下絵（/under/）は起動でもあとでも読まない: 入ったマップとその隣の分だけ E.under が読む（全部で数百 MB になり、
+    // 起動で全部を展開すると Chromium のページが落ちる。2026-09-28）
+    const UNDER = /\/under\//;
+    const now = all.filter((k) => !UNDER.test(k) && ((SLICE.test(k) && new RegExp('@' + tile + '$').test(k)) || SLICE_BBG.test(k)));
+    const later = all.filter((k) => !UNDER.test(k) && now.indexOf(k) < 0);
     const decode = (keys) => Promise.all(keys.map((k) => { const r = R.Media.image(k, 'env'); return r && r.ready && r.img.decode ? r.img.decode().catch(() => null) : null; }));
-    try { await R.Media.preload('env', now); await decode(now); } catch (e) { /* 読めた物だけ使う */ }
+    // 32 枚ずつ（一度に全部を頼むと、描いた下絵が増えた今は Chromium が ERR_INSUFFICIENT_RESOURCES で落ちる。2026-09-28）
+    for (let i = 0; i < now.length; i += 32) {
+      const b = now.slice(i, i + 32);
+      try { await R.Media.preload('env', b); await decode(b); } catch (e) { /* 読めた物だけ使う */ }
+    }
     E.bootMs = Math.round((typeof performance !== 'undefined' ? performance.now() : 0) - t0); E.bootN = now.length;
     // 残りは少しずつ（12 枚ずつ読み、展開してから次へ）。読み終えたら物の絵を焼き直す（地方の物・別の大きさ）
     E.later = (async () => {
@@ -186,5 +224,17 @@
     if (T._faceReset) T._faceReset();
     // 画像にしかない物の登録（家具・木の変化などの新しい id）。R.DB.props にも足す（CONTENT が置ける）
     if (T._envRegisterProps) T._envRegisterProps();
+    // 入ったマップの隣（出口・扉・階段の行き先）の下絵を先に読む
+    if (R.on) R.on('map:enter', (e) => {
+      try {
+        let t = 32; try { t = ({ near: 40, normal: 32, far: 24 })[R.Settings.get('fieldZoom')] || 32; } catch (x) { t = 32; }
+        const M = R.DB.maps || {}, m = M[e && e.map]; if (!m) return;
+        E.warmUnder(m, t);
+        const to = new Set();
+        for (const x of m.exits || []) if (x.to && x.to.map) to.add(x.to.map);
+        for (const o of m.objects || []) { if (o.to && o.to.map) to.add(o.to.map); if (o.door && o.door.to && o.door.to.map) to.add(o.door.to.map); }
+        for (const id of to) E.warmUnder(M[id], t);
+      } catch (x) { /* 先読みできなくても入ったときに読む */ }
+    });
   });
 })(window.RPG);
