@@ -1,0 +1,370 @@
+{
+"id": "f_hut",
+"w": 52,
+"h": 40,
+"rows": [
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwwFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwFFFFFFFFFFFFF,FF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwwFTTTTT,,,,,,,,;;",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFT;;;;Tww;;,,,,,,,,,,,,,;",
+"FFFFFFFF\"T;,,,;T,,,,,;,;TT\";;;\";;;ww;;,,,,,,\",,,,,,;",
+"FFFFFFFT\";;TrTT,,,,,,;;;TT;,,;,;;;ww;;,,,,,,\",;;,r,,",
+"FFFFFFFT;,;TTTTTT,,,;;;,TTT,,,,;;;ww;,,,,,,;;;;;;,,,",
+"FFFFFFF;;;,TTTTTT\"T,,;TTTTT,,,,;;;;w;,,,,,,\";\";;;;,,",
+"FFFFFFFF;;;;TTTTTT,,,,,TTTTT,,;;;;;ww,,,;,\"\"\"\"\",;;;;",
+"FFFFFFFF;T;FFF,\"\"TT,,,,,TTTT,,;;;,,,w;,,,,,,,,,,;;;,",
+"FFFFFFFFFFFFFF,,,,,,,,,,,,T,;;,,,,,;ww,;,,,,\",,;;;;,",
+"FFFFFFFFFFFFFF,,,,,,,,,,,,,,;T;;;;;;;w;;r,,,,,,;;;\"\"",
+"FFFFFFFFFFFFFF;T,,,,,,,,,,,X;,;;;;;;;w,;\",;,,,,;;;\"\"",
+"FFFFFFFFFFFFFFTTT,,XX,,,,,,;,X,;;;;;ww,,,,,,;;;;;;\",",
+"FFFFFFFFFFFFFFTT,,,,,,,,,,,;,,,,;;;;ww,,,,,;;,;;;,,,",
+"FFFFFFFFFFFFFFF;;X,,,,XXXXX,,,,,;;;;ww;,,,;;;;;;;;,;",
+"FFFFFF,FFFFFFFFF,,,,,,XXXXX,,,,X;;;ww;,,,,;;;;;;;;;;",
+"FFFFFF,FFFFFFFFFF,,,,,XXXXX,XX,,,;;ww,,,;;X;;;;;;;;;",
+"FFFFFFFFFFFFFFFFFFX,,,XXXXX,,,,,;;;ww,,,;;;;;;;;;;;;",
+"FFFFFFFFFFFFFFFFFF,,,,,::;,,,,,;;;,ww,,;;;;;;;;;;;;.",
+"FFFFFFFFFFFFFTTTTTT,X,,::;,,,\"X;;;,ww,..............",
+"FFFFFFFFFFFTTTTTXTT,,,;::,;.........==..............",
+"FFFFFFFFFFFTTTTTTTTT;T.::...........==,,;;;;;;;;;;;;",
+"............................,;;;;;;,ww,,,,;;;;;;,,,;",
+"......................,,;,,,,,;;;;,,\"ww;,,,;;;;;;,,,",
+"FFFFFFFFFF...;;;FFTTT;,,,,,,,;;,;r;,\"ww,,,,,;r;,;,,,",
+"FFFFFFFFFFF,;;;;FFTTTT;,,,,,,,,,,;;,,ww,,,,,;;;,,;;;",
+"FFFFFFFFFFFF;;;TFFTTTT;,,,,,,,,,,;,,,ww,,,,;;;;,r;;;",
+"FF;\",;FTT\"FFF;;TT;;TTT;,,,,,,T,,,;,,,w,,,,;;;;;;;,;,",
+"TTT;;;T;;;FFFFFT,;;TT;;;,,,;,,TT,;;;ww,,;;;;;;;;;;,,",
+"TTTT;;;;;TFFFFFF,TTTTT;;,,T,,,,TT;;;ww,,;;;;;;;;;;;,",
+"FFTTT;;;;;FFFFF,,TTT;TTTT,,,,,TT;;;;ww,;;;;;;;;;;,,,",
+"FFFFFFF;;;FFFFF,,TTT;;,T,TT,,,,,;;;;w,,;;;;;\";;;,,,,",
+"FFFFFFFFFFFFFFF,,T,,,;T,,;,;,,,;;;;,w;;;;;;;;;;;;;;;",
+"FFFFFFFFFFFFFF;;,T,,,,TTTT,,,,,,;;;;ww;;;,;;;;;;;;;;",
+"FFFFFFFFFFFFFTT;,,;T,T,;T;;,,,,;;;;;ww;,;,,;;;;;;;;;",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFTTTT,,,;;;ww;;,,,;;;;;;;\"\"",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;;wwTFFFTTTTT,,TT;",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwwFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwwFFFFFFFFFFFFF"
+],
+"marks": [
+{
+"kind": "hut",
+"cells": [
+[
+22,
+15
+],
+[
+22,
+16
+],
+[
+22,
+17
+],
+[
+22,
+18
+],
+[
+23,
+15
+],
+[
+23,
+16
+],
+[
+23,
+17
+],
+[
+23,
+18
+],
+[
+24,
+15
+],
+[
+24,
+16
+],
+[
+24,
+17
+],
+[
+24,
+18
+],
+[
+25,
+15
+],
+[
+25,
+16
+],
+[
+25,
+17
+],
+[
+25,
+18
+],
+[
+26,
+15
+],
+[
+26,
+16
+],
+[
+26,
+17
+],
+[
+26,
+18
+]
+],
+"text": "the WOODCUTTERS' REST HUT: a sturdy log cabin with a mossy shingle roof, a stone chimney, a small porch with a bench on its south side",
+"color": [
+140,
+92,
+52
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+24,
+18
+]
+],
+"text": "the hut's DOOR: a closed plank door with iron bands on the south face",
+"color": [
+40,
+26,
+16
+],
+"solid": true
+},
+{
+"kind": "logs",
+"cells": [
+[
+28,
+17
+],
+[
+29,
+17
+]
+],
+"text": "a neat STACK OF CUT LOGS beside the hut under a little lean-to roof",
+"color": [
+160,
+110,
+64
+],
+"solid": true
+},
+{
+"kind": "logs2",
+"cells": [
+[
+19,
+13
+],
+[
+20,
+13
+]
+],
+"text": "a pile of felled TRUNKS lying on the grass",
+"color": [
+150,
+104,
+60
+],
+"solid": true
+},
+{
+"kind": "stumps",
+"cells": [
+[
+18,
+18
+],
+[
+20,
+20
+],
+[
+29,
+13
+],
+[
+30,
+20
+],
+[
+17,
+15
+],
+[
+27,
+12
+],
+[
+16,
+21
+],
+[
+31,
+16
+]
+],
+"text": "old CUT TREE STUMPS with rings and moss, knee high, scattered over the clearing",
+"color": [
+176,
+132,
+84
+],
+"solid": true
+},
+{
+"kind": "shrine",
+"cells": [
+[
+42,
+17
+]
+],
+"text": "a small mossy stone WAYSIDE SHRINE with a little roof, facing the road",
+"color": [
+170,
+60,
+50
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "door",
+"x": 24,
+"y": 18,
+"look": "none",
+"to": {
+"map": "hut",
+"spawn": "door"
+}
+},
+{
+"type": "examine",
+"x": 42,
+"y": 17,
+"event": "world_poi_shrine"
+},
+{
+"type": "waylamp",
+"id": "wl_forest_1",
+"x": 33,
+"y": 20,
+"lit": "q_forest_fireflies_1",
+"event": "forest_waylamp"
+},
+{
+"type": "sign",
+"x": 21,
+"y": 20,
+"text": "きこりの休み小屋\n旅の人も、ひと休みを。"
+},
+{
+"type": "prop",
+"id": "lantern",
+"x": 27,
+"y": 19
+},
+{
+"type": "chest",
+"id": "f_hut_c1",
+"x": 17,
+"y": 13,
+"item": "i_potion",
+"n": 2
+}
+],
+"spawns": {
+"east": {
+"x": 50,
+"y": 20,
+"dir": "w"
+},
+"west": {
+"x": 1,
+"y": 24,
+"dir": "e"
+},
+"hut": {
+"x": 24,
+"y": 19,
+"dir": "s"
+}
+},
+"exits": [
+{
+"x": 51,
+"y": 20,
+"w": 1,
+"h": 2,
+"to": {
+"map": "f_cross",
+"spawn": "west"
+},
+"edge": "e"
+},
+{
+"x": 0,
+"y": 24,
+"w": 1,
+"h": 2,
+"to": {
+"map": "f_fern",
+"spawn": "east"
+},
+"edge": "w"
+}
+],
+"notes": [],
+"meta": {
+"name": "きこりの野",
+"sub": "森の手前の切り株の野",
+"region": "r_forest",
+"worldRect": [
+170,
+160,
+70,
+60
+],
+"outside": "forest_dark",
+"zones": [
+{
+"rect": null,
+"zone": "zw_forest"
+}
+],
+"links": {
+"hut": {
+"map": "f_hut",
+"spawn": "hut"
+}
+},
+"npcs": []
+}
+}

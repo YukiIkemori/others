@@ -1,0 +1,257 @@
+{
+"id": "f_lookout",
+"w": 48,
+"h": 40,
+"rows": [
+"~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X==X~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X==X~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~~~~RRRR~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~RRRRRRRRRRRRR",
+"~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~RRRRR,,;rRRRRRR",
+"~~~~~~~~~~~~~~~~~~~~~~==~~~~~~RRRRR,,,,,;;;,,,,R",
+"~~~~~~~~~~~~~~~~~~~~cccccc~~RRRRR,,,,,,,,,,,,,,R",
+"~~~~~rr~~~~~~~~~~~rrccccccRRRR,,,,,,,,,,,XX;;;,R",
+"rrrrrrrrrrrr~~~rrrr\"ccccccRR,,,,,,,r,,,,,XX;;;,R",
+",,,,\"\"r,;,,rrrrr;;;\"cccccc;;;;,,,,,,,,,,,,;;,,,R",
+"\",\"\"\"\"\";;,,,;;;;;;,,,..;;;;;;;,,,,,,,,,::,;,b,,R",
+"b\"\"\"\"\"\"\";,,,;;;;;;,,\"..;;;;;;;,,,,,,,,::,,r,,,,R",
+"\"\"\"\"\"\"\";\"T,;;;;;;;,,,,..;;;;;;\";;,,,:::,,,,,,,,R",
+"\"\"\"\",\"TTTTT;;;;;;;,,,,..,,;;\";\",,,,:::,,,,,,,,,R",
+"TTTTTTTTTTT;;;;;;,,,,,..,,,,\"\",,,,:::,,,,,,,,,,R",
+"TTTTTTTTTTTT;;;,\",,,,,..,,,\"\"\",,,:::,,,,,,,,;,,R",
+"TTTTTTTTTTTTTT,,\",,,,,..,,,\"\"\",:::,,,,,,,,,;;;RR",
+"TTTTTTTTTTTTTTT,\",,,,,,..,,\"\"::::,,,,,,,,,,;;;r\"",
+"TTTTTTTTTTTTTTT,;,,,,,..,,,::::,,,,,,,,;;;;;;;;;",
+"TTTTTTTTTTTTTTT;;;;;r,..,::::,,,,,,,,,,,\";;;;;;,",
+"TTTTTTTTTTTTTTT;;b;;;;.::::,,,,,,,,,,,r\"\"r\";;;;,",
+"TTTTTTTTTTTTTT;;;;;;;;.::\",\",\",,\"\",,,,\";;\";;;;;,",
+"TTTTTTTTTTTTTT;;;;;;;..,,,\"\"\"\"\"\"\"\"\"b\",;;;;;;;;;,",
+"TTTTTTTTTTTTT;;;;;;;;..,,\"\"\"\"\"b\"\"\"\"\"\"\";;;;;,;;;,",
+"TTTTTTTTTTTTT;;;,,,;;..\"\"\"\"\"\"\"\"\"\"\"\"\"\"\";;;;,,,,,,",
+"TTTTTTTTTTTTT,,,,b,;,..,,,,\"\"\"\"TTTT\"\";;;;;,,,,,\"",
+"TTTTTTTTTTT;;\",,,,;,,..,,,,\"\"\"\"TTTTT;;;;;;,,,,,,",
+"TTTTTTT,;;;;,,,,,,,,,;..,,,,\"\",TTTT;;;;TTT,,,,,,",
+"TTTTT,,,,;;;,,;;;;;,,,...,,,\",,;;;;;;;,TTTT,,,,,",
+",,,,,,,,,;;;,,;;;;;,,,,..,,,\";;;;;,,,,TTTTT;,,,,",
+",b,,,,,,;;;;;;;;;;;;,,,..,,\"\"\";;;,,,,,TTTTT;;;;;",
+",,,,,,,,,;b;TTTr;;;;;,\"\"..\"\"\";;;;;,,,,,T\"\"\";;;;\"",
+",,,,,,,,,,,TTTTT\";,,;,,\"..\"\"\"\";;;,,,,,r\"\"\"\";;;;\"",
+",,,,,,,,,,,,TTT;;FF,;;,\"..\"b\"\",;;,,,,,,,\"\";;;;;\"",
+"FFFFFFFFFF,FFFFFFFFFFFFF..\"FFFFFFFF,,FFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFF..FFFFFFFFFFFFFFFFFFFFFF"
+],
+"marks": [
+{
+"kind": "piers",
+"cells": [
+[
+21,
+4
+],
+[
+24,
+4
+],
+[
+21,
+5
+],
+[
+24,
+5
+]
+],
+"text": "the two stone PIERS of the drawbridge standing in the sea either side of the deck, with the lifting chains and timber frame of the drawbridge",
+"color": [
+120,
+116,
+110
+],
+"solid": true
+},
+{
+"kind": "lookout",
+"cells": [
+[
+41,
+11
+],
+[
+42,
+11
+],
+[
+41,
+12
+],
+[
+42,
+12
+]
+],
+"text": "a tall wooden LOOKOUT TOWER on four timber legs with a railed platform and a little shingle roof, a ladder on its south side",
+"color": [
+170,
+110,
+60
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "waylamp",
+"id": "wl_pen_lookout",
+"x": 40,
+"y": 12,
+"lit": "prologue_lamp_lookout",
+"event": "world_pen_lamp"
+},
+{
+"type": "examine",
+"x": 41,
+"y": 12,
+"event": "world_poi_pen_lookout"
+},
+{
+"type": "sign",
+"x": 38,
+"y": 15,
+"text": "見晴らし台\n半島の北の海を見わたす。"
+},
+{
+"type": "prop",
+"id": "bench",
+"x": 43,
+"y": 14
+},
+{
+"type": "prop",
+"id": "lamp_post",
+"x": 20,
+"y": 13
+},
+{
+"type": "prop",
+"id": "lamp_post",
+"x": 25,
+"y": 10
+},
+{
+"type": "prop",
+"id": "bollard",
+"x": 21,
+"y": 10
+},
+{
+"type": "sign",
+"x": 26,
+"y": 13,
+"text": "跳ね橋\n北 → 北の野"
+},
+{
+"type": "chest",
+"id": "f_lookout_c1",
+"x": 45,
+"y": 9,
+"item": "i_ether",
+"n": 1
+}
+],
+"spawns": {
+"south": {
+"x": 24,
+"y": 38,
+"dir": "n"
+},
+"bridge": {
+"x": 22,
+"y": 1,
+"dir": "s"
+}
+},
+"exits": [
+{
+"x": 24,
+"y": 39,
+"w": 2,
+"h": 1,
+"to": {
+"map": "f_roa",
+"spawn": "north"
+},
+"edge": "s"
+},
+{
+"x": 22,
+"y": 0,
+"w": 2,
+"h": 1,
+"to": {
+"map": "f_cross",
+"spawn": "bridge"
+},
+"edge": "n"
+}
+],
+"notes": [],
+"meta": {
+"name": "見晴らし台",
+"sub": "跳ね橋と北の海",
+"region": "prologue",
+"worldRect": [
+238,
+214,
+70,
+46
+],
+"outside": "sea",
+"zones": [
+{
+"rect": null,
+"zone": "zw_peninsula"
+}
+],
+"tilePatches": [
+{
+"cond": "!prologue_done",
+"rect": [
+22,
+1,
+2,
+8
+],
+"rows": [
+"~~",
+"~~",
+"~~",
+"~~",
+"~~",
+"~~",
+"~~",
+"~~"
+]
+}
+],
+"npcs": [
+{
+"id": "bridge_guard",
+"look": "npc_guard_2",
+"name": "橋番",
+"x": 24,
+"y": 11,
+"dir": "w",
+"move": "still",
+"pushable": false,
+"talk": "world_bridge_guard",
+"reward": "news",
+"key": "world_bridge_guard"
+}
+],
+"links": {}
+}
+}

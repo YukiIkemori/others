@@ -180,7 +180,388 @@ def f_cape():
     return a
 
 
-AREAS = {'f_roa': f_roa, 'f_cape': f_cape}
+def f_lookout():
+    """見晴らし台と跳ね橋: the north shore of the peninsula. The road from the south (f_roa) to the timber drawbridge over the strait (N edge ->
+    f_cross; raised until the prologue ends: tilePatch + closed layer), the bridge-keeper's stone abutment with lamps; on the east a raised
+    grassy bluff above the sea with the wooden lookout tower and the old lamp (the lamp quest), a bench, the chest at the bluff's tip;
+    on the west a heath of heather and a birch wood, a rocky north shore."""
+    from scipy import ndimage
+    a = Area('f_lookout', 48, 40, 37)
+    W, H = a.W, a.H
+    a.mask_fill(fbm(5, W, H, 5) > 0.55, ';')
+    a.mask_fill(fbm(6, W, H, 4) > 0.62, '"', only=',;')      # heather
+    land = [(-3, 13), (6, 11.5), (14, 12.5), (19, 11), (27, 11), (33, 8.5), (40, 6.5), (47, 7.5), (51, 8), (51, 43), (-3, 43)]
+    L = a.region(land, ',', rough=1.1, seed=3, only='')
+    sea = ~L
+    a.mask_fill(sea, '~', force=True)
+    dsea = ndimage.distance_transform_edt(L)
+    ys, xs = np.mgrid[0:H, 0:W]
+    a.mask_fill(L & (dsea <= 1.6) & (xs < 20), 'r', force=True)          # rocky west shore
+    a.mask_fill(L & (dsea <= 2.0) & (xs >= 26), 'R', force=True)          # the bluff's sea cliffs
+    a.mask_fill(L & (dsea <= 1.2) & (xs >= 20) & (xs < 26), 's', force=True)   # a strip of shingle at the abutment
+    # the raised bluff (east): its landward edge is a low cliff with steps on the south-west
+    bl = a.region([(30, 8), (48, 6), (48, 21), (41, 22.5), (33, 19.5), (29.5, 14)], ',', rough=0.9, seed=8, only='')
+    edge = bl & ~ndimage.binary_erosion(bl) & L & (dsea > 2.0)
+    a.mask_fill(bl & L & (dsea > 2.0), ',', force=True)
+    a.mask_fill(bl & L & (dsea > 2.0) & (fbm(9, W, H, 4) > 0.6), ';')
+    a.mask_fill(edge, 'R', force=True)
+    # road: south edge -> the abutment -> the drawbridge (x 22-23)
+    a.stroke([(24.5, 40.5), (24.5, 35), (22, 29), (23.5, 22), (22.5, 16), (22.5, 12.5)], 2.0, '.', wobble=0.2, seed=6)
+    a.rect(20, 10, 6, 4, 'c', force=True, keep=True)      # the stone abutment (flagstones)
+    a.rect(22, 0, 2, 10, '=', force=True, keep=True)      # the drawbridge
+    a.mark('piers', [(21, 4), (24, 4), (21, 5), (24, 5)], 'the two stone PIERS of the drawbridge standing in the sea either side of the deck, with the lifting chains and timber frame of the drawbridge', (120, 116, 110))
+    # the footpath up the bluff: from the road east, the steps through its edge, on to the lookout
+    stair = a.stroke([(24, 25), (29, 22.5), (33.5, 20.2), (36.5, 17.5), (40, 14.5)], 1.5, ':', force=True)
+    a.mark('lookout', [(41, 11), (42, 11), (41, 12), (42, 12)], 'a tall wooden LOOKOUT TOWER on four timber legs with a railed platform and a little shingle roof, a ladder on its south side', (170, 110, 60))
+    # heath and birch wood (west), groves
+    a.region([(-3, 18), (10, 17), (15, 22), (12, 30), (4, 33), (-3, 32)], 'T', rough=1.4, seed=11, only=',;"')
+    for (x, y, rx, ry, s_) in [(33, 30, 2.4, 1.8, 12), (13, 36, 2.6, 1.6, 13), (40, 33, 2.8, 2.0, 14), (7, 24, 1.4, 1.2, 15)]:
+        a.blob(x, y, rx, ry, 'T', rough=0.35, seed=s_, only=',;"')
+    a.region([(-3, 37.5), (48, 38.5), (51, 43), (-3, 43)], 'F', rough=1.0, seed=16, only=',;"')
+    a.scatter('r', 0.015, only=',;"', seed=31, clear=1)
+    a.scatter('b', 0.012, only=',;"', seed=32, clear=1)
+    a.tidy()
+    a.exit('s', 24, 25, {'map': 'f_roa', 'spawn': 'north'}, 'south')
+    a.exit('n', 22, 23, {'map': 'f_cross', 'spawn': 'bridge'}, 'bridge')
+    a.objects += [
+        dict(type='waylamp', id='wl_pen_lookout', x=40, y=12, lit='prologue_lamp_lookout', event='world_pen_lamp'),
+        dict(type='examine', x=41, y=12, event='world_poi_pen_lookout'),
+        dict(type='sign', x=38, y=15, text='見晴らし台\n半島の北の海を見わたす。'),
+        dict(type='prop', id='bench', x=43, y=14),
+        dict(type='prop', id='lamp_post', x=20, y=13), dict(type='prop', id='lamp_post', x=25, y=10),
+        dict(type='prop', id='bollard', x=21, y=10),
+        dict(type='sign', x=26, y=13, text='跳ね橋\n北 → 北の野'),
+        dict(type='chest', id='f_lookout_c1', x=45, y=9, item='i_ether', n=1),
+    ]
+    a.meta = dict(name='見晴らし台', sub='跳ね橋と北の海', region='prologue', worldRect=[238, 214, 70, 46], outside='sea',
+                  zones=[{'rect': None, 'zone': 'zw_peninsula'}],
+                  tilePatches=[{'cond': '!prologue_done', 'rect': [22, 1, 2, 8], 'rows': ['~~'] * 8}],
+                  npcs=[{'id': 'bridge_guard', 'look': 'npc_guard_2', 'name': '橋番', 'x': 24, 'y': 11, 'dir': 'w', 'move': 'still', 'pushable': False,
+                         'talk': 'world_bridge_guard', 'reward': 'news', 'key': 'world_bridge_guard'}], links={})
+    return a
+
+
+def f_cross():
+    """北の野の分かれ道: the open north plains beyond the strait. The drawbridge lands from the south; a crossroads with the old milestone
+    cairn; the road east to the mountain pass (rockslide and a guard in the demo -> the old world map beyond), the road west to the
+    woodcutters' fields; a travellers' camp and a caravan wagon; the grassy ruin of an old coaching inn (a cache in its steps) and a lone
+    rune stone on the rolling grass; a reedy lake in the north-east; the foothills of the northern mountains along the top."""
+    from scipy import ndimage
+    a = Area('f_cross', 60, 40, 41)
+    W, H = a.W, a.H
+    a.mask_fill(fbm(5, W, H, 7) > 0.52, ';')
+    a.mask_fill(fbm(6, W, H, 4) > 0.72, '"', only=',;')
+    ys, xs = np.mgrid[0:H, 0:W]
+    # the strait along the south edge, the bridge landing
+    sea = a.region([(-3, 36.5), (20, 35.5), (40, 36.2), (63, 35), (63, 43), (-3, 43)], '~', rough=0.9, seed=3)
+    a.mask_fill(~sea & (ndimage.distance_transform_edt(~sea) <= 1.2), 'r', force=True)
+    a.rect(28, 35, 2, 5, '=', force=True, keep=True)
+    a.rect(26, 32, 6, 3, 'c', force=True, keep=True)
+    # mountain foothills (N): rock and a cliff
+    hill = a.region([(-3, -3), (63, -3), (63, 3.5), (48, 5), (36, 3.5), (22, 5.5), (8, 4), (-3, 5)], 'r', rough=1.2, seed=4)
+    a.mask_fill(hill & (fbm(7, W, H, 3) > 0.55), 'F')
+    a.mask_fill(~hill & ndimage.binary_dilation(hill, iterations=1) & (ys < 8), 'R', force=True)
+    # the lake (NE) with reeds (bushes on its rim)
+    lk = a.blob(47, 11, 5.5, 3.2, 'w', rough=0.3, seed=5)
+    a.ring(lk, 'b', 1, only=',;"')
+    a.mask_fill(ndimage.binary_dilation(lk, iterations=2) & ~lk & (fbm(8, W, H, 3) > 0.5), ',', force=True)
+    # roads: from the bridge north to the crossroads; east to the pass; west
+    a.stroke([(28.5, 32), (28.5, 26), (29.5, 20.5)], 2.0, '.', wobble=0.2, seed=6)
+    a.stroke([(29.5, 20.5), (36, 19.5), (44, 20.5), (52, 19), (60.5, 18.5)], 2.0, '.', wobble=0.2, seed=7)
+    a.stroke([(29.5, 20.5), (22, 21.5), (13, 23.5), (5, 22.5), (-1, 22.5)], 2.0, '.', wobble=0.2, seed=8)
+    a.stroke([(29.5, 20.5), (27, 15), (25, 11)], 1.5, ':', seed=9)
+    a.mark('cairn', [(31, 22)], 'an old MILESTONE CAIRN: a waist-high pile of fieldstones with a carved upright milestone on top, at the corner of the crossroads', (190, 184, 170))
+    # the ruin of the coaching inn (N of the crossroads): a flagstone floor, broken wall stubs, three steps
+    a.rect(20, 7, 8, 5, 'c', force=True, keep=True)
+    rw = [(20, 7), (21, 7), (22, 7), (26, 7), (27, 7), (20, 8), (20, 9), (27, 8), (27, 9), (27, 10)]
+    a.mark('ruin', rw, 'the grassy RUIN of an old coaching inn: knee-high broken stone wall stubs around a weedy flagstone floor', (150, 144, 132))
+    a.mark('steps', [(24, 11), (25, 11)], 'three worn stone STEPS at the ruin\'s south side (walkable)', (182, 176, 160), solid=False)
+    # a lone rune stone on the grass (E of the ruin)
+    a.mark('rune', [(38, 11)], 'a lone tall RUNE STONE, pale grey with faint carved rings, leaning slightly', (226, 222, 204))
+    # the travellers' camp (N of the east road) and the caravan wagon (S of it)
+    a.rect(40, 15, 5, 3, ':', force=False)
+    a.mark('wagon', [(44, 23), (45, 23), (46, 23)], "a caravan's COVERED WAGON with a patched canvas hood, unhitched by the road", (200, 180, 140))
+    # the rockslide at the pass (demo: closed; tilePatch) — the painting shows the open road, the closed look is a layer
+    for (x, y, rx, ry, s_) in [(10, 30, 3, 2.2, 11), (18, 28, 2, 1.5, 12), (40, 29, 3.2, 2.2, 13), (52, 27, 2.4, 1.8, 14), (8, 14, 2.4, 1.8, 15),
+                              (15, 12, 1.8, 1.4, 16), (54, 31, 2, 1.4, 17), (34, 29, 1.6, 1.3, 18)]:
+        a.blob(x, y, rx, ry, 'T', rough=0.35, seed=s_, only=',;"')
+    a.scatter('r', 0.012, only=',;"', seed=31, clear=1)
+    a.scatter('b', 0.008, only=',;"', seed=32, clear=1)
+    a.tidy()
+    a.exit('s', 28, 29, {'map': 'f_lookout', 'spawn': 'bridge'}, 'bridge')
+    a.exit('w', 22, 23, {'map': 'f_hut', 'spawn': 'east'}, 'west')
+    a.exit('e', 18, 19, {'map': 'world', 'spawn': 'f_cross_e'}, 'east')
+    a.objects += [
+        dict(type='sign', x=31, y=19, text='北の野の分かれ道\n西 → ヴェルダの森・フェルン\n東 → ガルド山地\n南 → 跳ね橋・ファロス半島'),
+        dict(type='examine', x=24, y=10, event='world_poi_plains_found'),
+        dict(type='examine', x=25, y=10, event='world_poi_cache', item='i_potion', key='world_poi_plains_found'),
+        dict(type='examine', x=38, y=11, event='world_poi_stones'),
+        dict(type='prop', id='tent', x=41, y=15), dict(type='prop', id='lantern', x=43, y=16),
+        dict(type='waylamp', id='wl_rest_3', x=47, y=23, lit=True),
+        dict(type='prop', id='lamp_post', x=27, y=32), dict(type='prop', id='lamp_post', x=31, y=32),
+    ]
+    a.meta = dict(name='北の野', sub='三つの道の分かれ道', region='r_forest', worldRect=[232, 124, 120, 96], outside='forest_dark',
+                  zones=[{'rect': None, 'zone': 'zw_forest'}],
+                  tilePatches=[{'cond': {'slice': True}, 'rect': [55, 17, 3, 4], 'rows': ['rrr'] * 4}],
+                  npcs=[{'id': 'traveler_plains', 'look': 'npc_merchant_2', 'name': '旅の行商人', 'x': 42, 'y': 17, 'dir': 's', 'move': 'still',
+                         'talk': 'world_traveler_plains', 'reward': 'news', 'key': 'world_traveler_plains'},
+                        {'id': 'guard_east', 'look': 'npc_guard_1', 'name': '番人', 'x': 54, 'y': 18, 'dir': 'w', 'move': 'still', 'pushable': False,
+                         'cond': {'slice': True}, 'talk': {'lines': [{'text': ['東の峠は、ゆうべの\n崖崩れで通れないんだ。', '山地の鉱山町へ行くなら、\nしばらく待ってくれ。']}]},
+                         'reward': 'news', 'key': 'world_guard_east'}], links={})
+    return a
+
+
+def f_hut():
+    """きこりの野: stump fields at the edge of the great forest. The road from the plains (E) runs west into the trees (-> f_fern); the
+    woodcutters' rest hut in a felled clearing with log stacks; a creek with a log footbridge; the forest waylamp and a wayside shrine
+    among ferns; old woods closing in on the west, north and south; the chest hidden among the stumps."""
+    from scipy import ndimage
+    a = Area('f_hut', 52, 40, 53)
+    W, H = a.W, a.H
+    a.mask_fill(fbm(5, W, H, 5) > 0.55, ';')
+    a.mask_fill(fbm(6, W, H, 4) > 0.75, '"', only=',;')
+    ys, xs = np.mgrid[0:H, 0:W]
+    fn = fbm(7, W, H, 6)
+    # the forest: dense in the west and along the top and bottom, thinning to the east
+    dens = (1 - xs / W) * 0.9 + np.maximum(0, (4 - ys) / 4) + np.maximum(0, (ys - (H - 5)) / 4) + (fn - 0.5) * 0.6
+    a.mask_fill(dens > 0.72, 'F')
+    a.mask_fill((dens > 0.52) & (dens <= 0.72) & (fbm(8, W, H, 2.5) > 0.5), 'T')
+    # the felled clearing around the hut
+    a.blob(24, 16, 8, 5.5, ',', rough=0.3, seed=9, force=True)
+    a.mask_fill(fbm(10, W, H, 3) > 0.6, ';', only=',')
+    # the creek (N -> S) and the log footbridge
+    ck = [(36, -1), (35, 6), (37.5, 12), (36, 19), (38, 26), (36.5, 33), (38, 41)]
+    # roads
+    a.stroke([(52.5, 20.5), (45, 20.8), (38, 21.5), (31, 22), (22, 23.5), (12, 24.5), (4, 24), (-1, 24.5)], 2.0, '.', wobble=0.2, seed=6)
+    a.stroke([(24, 19.5), (24, 22)], 1.4, ':')
+    a.stroke(ck, 1.8, 'w', keep=True, wobble=0.5, seed=4, force=True, only=',;"TFbr')
+    a.stroke(ck, 1.8, '=', keep=True, force=True, only='.')
+    # the hut (4x3 base, the door on its south face) and log stacks
+    hut = [(x, y) for x in range(22, 27) for y in range(15, 19)]
+    a.mark('hut', hut, "the WOODCUTTERS' REST HUT: a sturdy log cabin with a mossy shingle roof, a stone chimney, a small porch with a bench on its south side", (140, 92, 52))
+    a.mark('door', [(24, 18)], "the hut's DOOR: a closed plank door with iron bands on the south face", (40, 26, 16))
+    a.mark('logs', [(28, 17), (29, 17)], 'a neat STACK OF CUT LOGS beside the hut under a little lean-to roof', (160, 110, 64))
+    a.mark('logs2', [(19, 13), (20, 13)], 'a pile of felled TRUNKS lying on the grass', (150, 104, 60))
+    # stumps field: small rocks = stumps (the prompt tells it: cut tree stumps)
+    rnd = np.random.RandomState(4)
+    st = []
+    for (x, y) in [(18, 18), (20, 20), (29, 13), (30, 20), (17, 15), (27, 12), (16, 21), (31, 16)]:
+        st.append((x, y))
+    a.mark('stumps', st, 'old CUT TREE STUMPS with rings and moss, knee high, scattered over the clearing', (176, 132, 84))
+    a.mark('shrine', [(42, 17)], 'a small mossy stone WAYSIDE SHRINE with a little roof, facing the road', (170, 60, 50))
+    a.scatter('r', 0.01, only=',;"', seed=31, clear=1)
+    a.tidy()
+    a.exit('e', 20, 21, {'map': 'f_cross', 'spawn': 'west'}, 'east')
+    a.exit('w', 24, 25, {'map': 'f_fern', 'spawn': 'east'}, 'west')
+    a.spawns['hut'] = dict(x=24, y=19, dir='s')
+    a.objects += [
+        dict(type='door', x=24, y=18, look='none', to={'map': 'hut', 'spawn': 'door'}),
+        dict(type='examine', x=42, y=17, event='world_poi_shrine'),
+        dict(type='waylamp', id='wl_forest_1', x=33, y=20, lit='q_forest_fireflies_1', event='forest_waylamp'),
+        dict(type='sign', x=21, y=20, text='きこりの休み小屋\n旅の人も、ひと休みを。'),
+        dict(type='prop', id='lantern', x=27, y=19),
+        dict(type='chest', id='f_hut_c1', x=17, y=13, item='i_potion', n=2),
+    ]
+    a.meta = dict(name='きこりの野', sub='森の手前の切り株の野', region='r_forest', worldRect=[170, 160, 70, 60], outside='forest_dark',
+                  zones=[{'rect': None, 'zone': 'zw_forest'}],
+                  links={'hut': {'map': 'f_hut', 'spawn': 'hut'}}, npcs=[])
+    return a
+
+
+def f_fern():
+    """森の街道: the old forest road to Fern. From the stump fields (E) the road winds west under colossal mossy trees; the great root arch
+    of Fern's south gate at the top (N); a deep mossy ravine cuts across the south-west with a rope-railed log bridge; the two forest
+    waylamps, a wayside shrine; the roads go on west (f_windhill) and south (f_south); the chest on a ledge across the ravine."""
+    from scipy import ndimage
+    a = Area('f_fern', 56, 44, 67)
+    W, H = a.W, a.H
+    ys, xs = np.mgrid[0:H, 0:W]
+    a.mask_fill(fbm(5, W, H, 6) > 0.5, ';')
+    fn = fbm(7, W, H, 5)
+    a.mask_fill(fn > 0.56, 'F')
+    a.mask_fill((fn > 0.47) & (fn <= 0.56) & (fbm(8, W, H, 2.2) > 0.5), 'T')
+    # clearings
+    for (x, y, rx, ry, s_) in [(28, 18, 7, 5, 11), (12, 14, 5, 4, 12), (44, 26, 5, 4, 13), (30, 32, 5, 3.5, 14), (40, 8, 4, 3, 15)]:
+        a.blob(x, y, rx, ry, ',', rough=0.35, seed=s_, force=True)
+    # roads
+    a.stroke([(56.5, 12.5), (48, 13), (40, 15.5), (33, 18), (28, 18.5)], 2.0, '.', wobble=0.2, seed=6)
+    a.stroke([(28, 18.5), (27.5, 12), (28.5, 5), (28.5, -1)], 2.0, '.', wobble=0.2, seed=7)
+    a.stroke([(28, 18.5), (20, 17), (12, 15.5), (4, 16.5), (-1, 16.5)], 2.0, '.', wobble=0.2, seed=8)
+    a.stroke([(28, 18.5), (31, 25), (29.5, 32), (30.5, 38), (30.5, 44.5)], 2.0, '.', wobble=0.2, seed=9)
+    # Fern's south gate: a great arch of living roots over the road at the top edge
+    a.mark('gate', [(26, 1), (26, 2), (31, 1), (31, 2), (26, 0), (27, 0), (30, 0), (31, 0)], "the great ROOT ARCH of the forest village's south gate: two colossal mossy root pillars either side of the road, their roots arching over it", (110, 70, 40))
+    # the ravine (SW -> centre-south): cliffs either side, a stream at the bottom; the log bridge on the south road
+    rv = [(-1, 27), (8, 29), (16, 31), (24, 33.5), (31, 34), (38, 37), (45, 42), (48, 45)]
+    rim = a.stroke(rv, 4.2, 'R', keep=False, force=True, only=',;"TFbr')
+    a.stroke(rv, 1.6, 'w', keep=True, force=True, only='R')
+    br = a.stroke(rv, 4.4, '=', keep=True, force=True, only='.')
+    # a ledge across the ravine (the chest)
+    a.rect(14, 35, 3, 2, ',', force=True, keep=True)
+    a.stroke([(16, 36.5), (22, 37.5), (28, 37)], 1.4, ':', force=True, only=',;"TFbr')
+    a.mark('mossrocks', [(20, 21), (35, 11), (46, 17), (9, 20)], 'big MOSS-COVERED BOULDERS with ferns at their foot', (120, 140, 100))
+    a.mark('shrine', [(24, 16)], 'a small mossy stone WAYSIDE SHRINE with a little roof, facing the road', (170, 60, 50))
+    a.scatter('r', 0.012, only=',;"', seed=31, clear=1)
+    a.scatter('b', 0.015, only=',;"', seed=32, clear=1)
+    a.tidy()
+    a.exit('e', 12, 13, {'map': 'f_hut', 'spawn': 'west'}, 'east')
+    a.exit('n', 28, 29, {'map': 'fern', 'spawn': 'gate_s'}, 'fern')
+    a.exit('w', 16, 17, {'map': 'f_windhill', 'spawn': 'east'}, 'west')
+    a.exit('s', 30, 31, {'map': 'f_south', 'spawn': 'north'}, 'south')
+    a.objects += [
+        dict(type='waylamp', id='wl_forest_2', x=38, y=14, lit='q_forest_fireflies_2', event='forest_waylamp'),
+        dict(type='waylamp', id='wl_forest_3', x=26, y=23, lit='q_forest_fireflies_3', event='forest_waylamp'),
+        dict(type='examine', x=24, y=16, event='world_poi_shrine'),
+        dict(type='sign', x=30, y=4, text='森の村フェルン'),
+        dict(type='sign', x=33, y=21, text='北 → フェルン\n西 → 風鳴りの丘\n南 → 森の南'),
+        dict(type='prop', id='mushroom_glow', x=13, y=36), dict(type='prop', id='mushroom_glow', x=44, y=24),
+        dict(type='chest', id='f_fern_c1', x=15, y=35, item='i_ether', n=1),
+    ]
+    a.meta = dict(name='森の街道', sub='フェルンへの森の道', region='r_forest', worldRect=[112, 188, 90, 74], outside='forest_dark',
+                  zones=[{'rect': None, 'zone': 'zw_forest_road'}],
+                  links={'fern': {'map': 'f_fern', 'spawn': 'fern'}}, npcs=[])
+    a.spawns['fern'] = dict(x=28, y=2, dir='s')
+    return a
+
+
+def f_south():
+    """森の南: the southern forest glades on the way to the desert pass. A woodcutters' camp in a sunny glade, the forest's south square
+    (a clearing with a ring of mossy pillars), the twin watchtowers under repair (fenced), the crumbling old forest tower in the west
+    (a cache in its steps), a stone circle and a shrine by the road, a brook with stepping-stone fords; the road south ends at the pass
+    (rockslide and a guard in the demo -> the old world map beyond)."""
+    from scipy import ndimage
+    a = Area('f_south', 56, 48, 79)
+    W, H = a.W, a.H
+    ys, xs = np.mgrid[0:H, 0:W]
+    a.mask_fill(fbm(5, W, H, 6) > 0.5, ';')
+    fn = fbm(9, W, H, 6)
+    a.mask_fill(fn > 0.55, 'F')
+    a.mask_fill((fn > 0.47) & (fn <= 0.55) & (fbm(8, W, H, 2.2) > 0.5), 'T')
+    for (x, y, rx, ry, s_) in [(30, 8, 6, 4, 11), (38, 20, 7, 5, 12), (22, 26, 7, 5, 13), (12, 14, 5, 4.5, 14), (40, 36, 6, 4, 15), (20, 40, 5, 3.5, 16)]:
+        a.blob(x, y, rx, ry, ',', rough=0.35, seed=s_, force=True)
+    # roads
+    a.stroke([(30.5, -1), (31, 6), (35, 13), (37, 20), (31, 25), (22, 28), (19, 35), (20.5, 42), (20.5, 48.5)], 2.0, '.', wobble=0.2, seed=6)
+    a.stroke([(22, 28), (15, 21), (12, 15)], 1.5, ':', seed=7)
+    a.stroke([(37, 20), (41, 28), (40, 35)], 1.5, ':', seed=8)
+    # the brook, fords where paths cross
+    bk = [(57, 30), (48, 29), (42, 31.5), (33, 31), (25, 33), (14, 31.5), (6, 34), (-1, 33)]
+    a.stroke(bk, 1.8, 'w', keep=True, wobble=0.4, seed=4, force=True, only=',;"TFbr')
+    a.stroke(bk, 1.8, '_', keep=True, force=True, only='.:')
+    # the ring of mossy pillars in the south square (the glade at 38,20)
+    pil = [(round(38 + 3.2 * math.cos(t)), round(19 + 2.4 * math.sin(t))) for t in [i * 2 * math.pi / 8 + 0.2 for i in range(8)]]
+    pil = [p for p in pil if a.g[p[1], p[0]] != '.']
+    a.mark('pillars', pil, 'a RING OF OLD MOSSY STONE PILLARS, some broken, around a floor stone carved with a great leaf pattern', (190, 196, 170))
+    a.mark('leaf', [(38, 19)], 'the round FLOOR STONE carved with a thousand-year-tree leaf (walkable, flat)', (170, 180, 150), solid=False)
+    a.rect(38, 19, 1, 1, 'c', force=True, keep=True)
+    # the twin watchtowers under repair (fenced), east of the south road
+    a.mark('towers', [(26, 38), (27, 38), (26, 39), (27, 39), (31, 38), (32, 38), (31, 39), (32, 39)],
+           'the TWIN WATCHTOWERS: two square timber-and-stone towers with scaffolding and ladders against them, planks and tools stacked (under repair)', (150, 120, 90))
+    # the old forest tower (W): a crumbling round stone tower overgrown with roots
+    a.mark('tower', [(10, 12), (11, 12), (10, 13), (11, 13)], 'the crumbling OLD FOREST TOWER: a squat round stone ruin overgrown with roots and ivy, its doorway blocked with earth', (140, 136, 124))
+    a.mark('steps', [(12, 14)], 'a few broken stone STEPS in front of the tower (walkable)', (182, 176, 160), solid=False)
+    # a stone circle and a shrine by the road
+    a.mark('stones', [(26, 5), (28, 4), (26, 10)], 'three leaning STANDING STONES in the grass', (226, 222, 204))
+    a.mark('shrine', [(34, 9)], 'a small mossy stone WAYSIDE SHRINE with a little roof, facing the road', (170, 60, 50))
+    # the pass at the south: rocky walls either side of the road
+    a.region([(-3, 44), (17, 43.5), (18.5, 49), (-3, 49)], 'R', rough=0.8, seed=21, force=True)
+    a.region([(23, 43.5), (59, 43), (59, 49), (22.5, 49)], 'R', rough=0.8, seed=22, force=True)
+    a.scatter('r', 0.01, only=',;"', seed=31, clear=1)
+    a.scatter('b', 0.012, only=',;"', seed=32, clear=1)
+    a.tidy()
+    a.exit('n', 30, 31, {'map': 'f_fern', 'spawn': 'south'}, 'north')
+    a.exit('s', 20, 21, {'map': 'world', 'spawn': 'f_south_s'}, 'south')
+    a.objects += [
+        dict(type='examine', x=38, y=19, event='world_poi_forest_ring'),
+        dict(type='sign', x=35, y=23, text='森の南の広場'),
+        dict(type='sign', x=29, y=41, text='双子の見張り塔\n修理中につき、立ち入り禁止。'),
+        dict(type='prop', id='fence', x=28, y=40), dict(type='prop', id='fence', x=29, y=40), dict(type='prop', id='fence', x=30, y=40),
+        dict(type='examine', x=12, y=14, event='world_poi_forest_tower'),
+        dict(type='examine', x=13, y=14, event='world_poi_cache', item='i_ether', key='world_poi_forest_tower'),
+        dict(type='examine', x=27, y=6, event='world_poi_stones'),
+        dict(type='examine', x=34, y=9, event='world_poi_shrine'),
+        dict(type='prop', id='tent', x=19, y=24), dict(type='prop', id='lantern', x=20, y=24),
+        dict(type='waylamp', id='wl_17', x=33, y=12, lit=True),
+        dict(type='waylamp', id='wl_18', x=19, y=37, lit=True),
+        dict(type='sign', x=23, y=42, text='南の峠\n南 → ザハラ砂漠'),
+    ]
+    a.meta = dict(name='森の南', sub='きこりの野営地と古い塔', region='r_forest', worldRect=[84, 262, 110, 100], outside='forest_dark',
+                  zones=[{'rect': None, 'zone': 'zw_forest'}],
+                  tilePatches=[{'cond': {'slice': True}, 'rect': [19, 44, 4, 2], 'rows': ['rrrr', 'rrrr']}],
+                  npcs=[{'id': 'woodcutter_road', 'look': 'npc_woodcutter_1', 'name': 'きこり', 'x': 21, 'y': 25, 'dir': 'w', 'move': 'still',
+                         'talk': 'world_woodcutter', 'reward': 'hint', 'key': 'world_woodcutter'},
+                        {'id': 'guard_south', 'look': 'npc_guard_1', 'name': '番人', 'x': 21, 'y': 42, 'dir': 'n', 'move': 'still', 'pushable': False,
+                         'cond': {'slice': True}, 'talk': {'lines': [{'text': ['南の峠は、砂嵐で\n道が埋まってしまったんだ。', '砂漠へ行くのは、\n嵐がやむまで待ってくれ。']}]},
+                         'reward': 'news', 'key': 'world_guard_south'}], links={})
+    return a
+
+
+def f_windhill():
+    """風鳴りの丘: the high windy downs of the north-west forest. A bare grassy hill crowned by wind-worn rocks that hum (the notes); the
+    road to the moss village Yura (N, west) and the northern pass to the snowfields (N, east; rockslide and a guard in the demo);
+    a travellers' camp; a fallen colossal statue in the woods; in the south-west the crown of the thousand-year tree towers over the
+    forest (its beacon lights when the forest is saved); a tarn among the rocks."""
+    from scipy import ndimage
+    a = Area('f_windhill', 52, 44, 91)
+    W, H = a.W, a.H
+    ys, xs = np.mgrid[0:H, 0:W]
+    a.mask_fill(fbm(5, W, H, 6) > 0.45, ';')
+    fn = fbm(9, W, H, 6)
+    dens = fn + np.maximum(0, (ys - 26) / 20) + np.maximum(0, (8 - xs) / 16) - np.exp(-(((xs - 34) / 11) ** 2 + ((ys - 16) / 9) ** 2)) * 0.6
+    a.mask_fill(dens > 0.62, 'F')
+    a.mask_fill((dens > 0.52) & (dens <= 0.62) & (fbm(8, W, H, 2.2) > 0.5), 'T')
+    # the wind hill: a low cliff ring with a path up from the south-west, the rocks on top
+    hill = (((xs - 34) / 7.5) ** 2 + ((ys - 15) / 5.2) ** 2) < 1 + 0.2 * (fbm(12, W, H, 3) - 0.5)
+    a.mask_fill(hill, ',', force=True)
+    a.mask_fill(hill & (fbm(13, W, H, 3) > 0.55), ';')
+    edge = hill & ~ndimage.binary_erosion(hill) & (ys > 14)
+    a.mask_fill(edge, 'R', force=True)
+    a.mark('rocks', [(32, 12), (35, 11), (37, 13), (33, 14)], 'tall WIND-WORN ROCKS on the hilltop, pierced with holes by the wind', (170, 164, 150))
+    a.mark('notes', [(34, 13)], 'a flat grey ROCK SLAB on the hilltop with an old leather satchel tucked under it (walkable in front)', (150, 146, 136))
+    # roads: E edge -> west past the hill; up to the pass (N, east) and to Yura (N, west)
+    a.stroke([(52.5, 30.5), (44, 29.5), (36, 26), (27, 25), (18, 22), (13, 15), (12.5, 7), (12.5, -1)], 2.0, '.', wobble=0.2, seed=6)
+    a.stroke([(36, 26), (40, 20), (42, 12), (40, 5), (39.5, -1)], 2.0, '.', wobble=0.2, seed=7)
+    hp = a.stroke([(27, 25), (28, 21), (30, 18.5), (32, 16)], 1.4, ':', force=True)
+    # the tarn among rocks (NE)
+    tn = a.blob(47, 9, 3, 2.2, 'w', rough=0.3, seed=14)
+    a.ring(tn, 'r', 1, only=',;"')
+    # the pass: rock walls either side of the north road
+    a.region([(33, -3), (38.2, -3), (38.2, 3.5), (34, 4.5)], 'R', rough=0.6, seed=21, force=True)
+    a.region([(41, -3), (55, -3), (55, 4), (41, 3.5)], 'R', rough=0.6, seed=22, force=True)
+    # the fallen statue in the west woods and the camp
+    a.blob(10, 30, 5, 3.6, ',', rough=0.3, seed=15, force=True)
+    a.mark('statue', [(8, 30), (9, 30), (10, 30), (11, 30), (9, 29)], 'a FALLEN COLOSSAL STATUE of a robed figure lying on its side, cracked and mossy, its face worn smooth', (180, 176, 164))
+    a.stroke([(18, 22), (14, 27), (11, 31.5)], 1.4, ':', seed=9)
+    a.blob(21, 14, 3.5, 2.6, ',', rough=0.3, seed=16, force=True)
+    # the thousand-year tree's crown (SW corner)
+    ct = [(x, y) for x in range(0, 9) for y in range(36, 44) if (x - 3) ** 2 + (y - 41) ** 2 < 30]
+    a.mark('elder', ct, 'the CROWN OF THE THOUSAND-YEAR TREE rising over the forest: a colossal ancient tree crown, far bigger than any other, layered dark leaves with a faint silvery sheen', (20, 60, 36), ch='F')
+    a.scatter('r', 0.012, only=',;"', seed=31, clear=1)
+    a.scatter('b', 0.012, only=',;"', seed=32, clear=1)
+    a.tidy()
+    a.exit('e', 30, 31, {'map': 'f_fern', 'spawn': 'west'}, 'east')
+    a.exit('n', 12, 13, {'map': 'yura', 'spawn': 'gate'}, 'yura')
+    a.exit('n', 39, 40, {'map': 'world', 'spawn': 'f_windhill_n'}, 'pass')
+    a.spawns['yura'] = dict(x=12, y=2, dir='s')
+    a.objects += [
+        dict(type='examine', x=34, y=13, event='windhill_notes'),
+        dict(type='sign', x=30, y=19, text='風鳴りの丘\n風が歌のように鳴るという。'),
+        dict(type='examine', x=10, y=31, event='world_poi_forest_statue'),
+        dict(type='prop', id='tent', x=20, y=13), dict(type='prop', id='lantern', x=22, y=13),
+        dict(type='sign', x=15, y=6, text='北 → 苔の村ユーラ'),
+        dict(type='sign', x=42, y=6, text='北の峠を越えて\n↑ 雪の村ユール'),
+        dict(type='prop', id='beacon', x=3, y=40, cond='cleared_r_forest'),
+        dict(type='waylamp', id='wl_15', x=15, y=19, lit=True),
+    ]
+    a.meta = dict(name='風鳴りの丘', sub='ユーラと北の峠への道', region='r_forest', worldRect=[40, 128, 92, 124], outside='forest_dark',
+                  zones=[{'rect': None, 'zone': 'zw_forest'}],
+                  tilePatches=[{'cond': {'slice': True}, 'rect': [38, 1, 4, 2], 'rows': ['rrrr', 'rrrr']}],
+                  npcs=[{'id': 'guard_north', 'look': 'npc_guard_1', 'name': '番人', 'x': 41, 'y': 4, 'dir': 's', 'move': 'still', 'pushable': False,
+                         'cond': {'slice': True}, 'talk': {'lines': [{'text': ['北の峠は、雪崩で\nふさがってしまったんだ。', '雪原へ行くのは、\n雪が落ちつくまで待ってくれ。']}]},
+                         'reward': 'news', 'key': 'world_guard_north'}],
+                  links={'yura': {'map': 'f_windhill', 'spawn': 'yura'}})
+    return a
+
+
+AREAS = {'f_roa': f_roa, 'f_cape': f_cape, 'f_lookout': f_lookout, 'f_cross': f_cross, 'f_hut': f_hut, 'f_fern': f_fern, 'f_south': f_south, 'f_windhill': f_windhill}
 
 if __name__ == '__main__':
     for aid in sys.argv[1:]:

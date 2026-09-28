@@ -1,0 +1,580 @@
+{
+"id": "f_windhill",
+"w": 52,
+"h": 44,
+"rows": [
+"FTFFFFF;;;;...;;;;;;;;;,,;;;;;;;;;RRRRT..RRRRRRRRRRR",
+"FTFFFFF;;;;..,;;;;;;;;;;;;;;;;;;;;RRRR;..RRRRRRRRRRR",
+"FFFFFFFF;;;..,,;;;;;b;;;;,,,;;;;;;RRRR;..RRRRRRRRRRR",
+"FFFFFFFT;;,..,,;;;T;;;T;,,,,,;;;;;RRRR;..RRRRRRRRRRR",
+"FFFFFFFFT;,...,;;TTTT;T;,,,,;;,;;;;;;;,..;;;;;;;;;b,",
+"FFFFFFFFF;,...,;;TTTTT;;T,,,;;,;;;;;;;,..;;;;;T;TT;,",
+"FFFFFFFFF;,...,;;;;;;;;,TT,,;;;;T;,b;;,...;;;TFFFT;;",
+"FFFFFFFF,,,...,;;T;;;;;TT,,,;;;;;;;;,;,,..;;rwwwwT,,",
+"FFFFFFFFTT,...,,TT;;;;TTT,,,;;;;;;;;,;;;..;;rwwwwwr,",
+"FFFFFFFTTT,...,,,;;;;TTTT,,,,;;;;;;;;;;;...,rwwwwwr,",
+"FFFFFFFTTT,..,,FT,,T,TTTT,,,;;;;,,,,;;;;,..,,rwwwwr,",
+"FFFFFFFFTFF..FFFF,,,,,,,,,,;;;;;,,,X,,,,;..,,,TwwrFF",
+"FFFFFFFFFFF..FFFFF,,,,,,;,,,b,;;X;;,,,,,,..,TT,rrFFF",
+"FFFFFFFFFFFF..FFFF,,,,,,,,,;,,;;,;X,,X,,,..,,,,,TTFF",
+"FFFFFFT,,FFF..FFFF,,,,,,,,,,,;;;,X,,,,,,,..,,;;,TTTF",
+"FFFFFr,,,,,F..FFFF,,,,,,,,,,,;;::,,,,,,,...,;;;;T;;F",
+"FFFFF,,,,T,FF..FFF,,,,,,,,,,,;;::,,,,,,,..,,;;;b;;;;",
+"FFFF,,,,,,TTT..FFFFFT;;,,,,;;;::,,,,,,,,..,,;;;;;;;;",
+"FFFFr,,,,,;TTT..FFFFT,;,,,,;:::;,,,,,,,...,,;;;;;;;;",
+"FFFF,,,,,,;;FT...FFF,,;;;;;;:::;,,,,,,...,,,;;;;;;;;",
+"FFFFF,,,,TFFFF;...,,,,;;;;;::;;;;;;;;;;..,,,;;;;;,;;",
+"FFFFF,,;;FFFFFFF.::TTFTr;T;::;;;;;;;;;..;,;;;TT,,,b,",
+"FFFFF;;;;;FFFFTTT::..FFTTTT:;;;;;;;;;...;,;;;T,,,,,,",
+"FFFF,;;;;;;FFF;T::T......T;:;;;;;;;;;..;;;;;,,,,,,,r",
+"FFFF;;,;;;;;FF;::;;;;.....::....;;;;..;;;;;;b,,,,,,,",
+"FFFF;;T;;;;;FF::;;;TTF....::..........;;;;;T,,,,,,,,",
+"FFFFF;;;;T;;;::;;;;TTT;;;;;;;;;;........;;;;;;,T,,,;",
+"FFFFFF;,,,r;;::;;;T;;;TbTT;;;;;;;T;;;.....;;TT;TT,;;",
+"FFFFFFF,,,,,::,;;;;T;;;TT;;;T;;;;FF;TTT.....FFTTTFFF",
+"FFFFFFF,,X,::,,,;;;T;;;TT;FFFFFF;FFFFFFFF...........",
+"FFFFFF,,XXX::,,,;;;;;;;FFFFFFFFFFFFFFFFFFFFF........",
+"FFFFFF,,,,::,,,;;;;;;;;FFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFF,,,,,,,T;;FFF;;FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFF,,,,;FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFTFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+],
+"marks": [
+{
+"kind": "rocks",
+"cells": [
+[
+32,
+12
+],
+[
+35,
+11
+],
+[
+37,
+13
+],
+[
+33,
+14
+]
+],
+"text": "tall WIND-WORN ROCKS on the hilltop, pierced with holes by the wind",
+"color": [
+170,
+164,
+150
+],
+"solid": true
+},
+{
+"kind": "notes",
+"cells": [
+[
+34,
+13
+]
+],
+"text": "a flat grey ROCK SLAB on the hilltop with an old leather satchel tucked under it (walkable in front)",
+"color": [
+150,
+146,
+136
+],
+"solid": true
+},
+{
+"kind": "statue",
+"cells": [
+[
+8,
+30
+],
+[
+9,
+30
+],
+[
+10,
+30
+],
+[
+11,
+30
+],
+[
+9,
+29
+]
+],
+"text": "a FALLEN COLOSSAL STATUE of a robed figure lying on its side, cracked and mossy, its face worn smooth",
+"color": [
+180,
+176,
+164
+],
+"solid": true
+},
+{
+"kind": "elder",
+"cells": [
+[
+0,
+37
+],
+[
+0,
+38
+],
+[
+0,
+39
+],
+[
+0,
+40
+],
+[
+0,
+41
+],
+[
+0,
+42
+],
+[
+0,
+43
+],
+[
+1,
+36
+],
+[
+1,
+37
+],
+[
+1,
+38
+],
+[
+1,
+39
+],
+[
+1,
+40
+],
+[
+1,
+41
+],
+[
+1,
+42
+],
+[
+1,
+43
+],
+[
+2,
+36
+],
+[
+2,
+37
+],
+[
+2,
+38
+],
+[
+2,
+39
+],
+[
+2,
+40
+],
+[
+2,
+41
+],
+[
+2,
+42
+],
+[
+2,
+43
+],
+[
+3,
+36
+],
+[
+3,
+37
+],
+[
+3,
+38
+],
+[
+3,
+39
+],
+[
+3,
+40
+],
+[
+3,
+41
+],
+[
+3,
+42
+],
+[
+3,
+43
+],
+[
+4,
+36
+],
+[
+4,
+37
+],
+[
+4,
+38
+],
+[
+4,
+39
+],
+[
+4,
+40
+],
+[
+4,
+41
+],
+[
+4,
+42
+],
+[
+4,
+43
+],
+[
+5,
+36
+],
+[
+5,
+37
+],
+[
+5,
+38
+],
+[
+5,
+39
+],
+[
+5,
+40
+],
+[
+5,
+41
+],
+[
+5,
+42
+],
+[
+5,
+43
+],
+[
+6,
+37
+],
+[
+6,
+38
+],
+[
+6,
+39
+],
+[
+6,
+40
+],
+[
+6,
+41
+],
+[
+6,
+42
+],
+[
+6,
+43
+],
+[
+7,
+38
+],
+[
+7,
+39
+],
+[
+7,
+40
+],
+[
+7,
+41
+],
+[
+7,
+42
+],
+[
+7,
+43
+],
+[
+8,
+39
+],
+[
+8,
+40
+],
+[
+8,
+41
+],
+[
+8,
+42
+],
+[
+8,
+43
+]
+],
+"text": "the CROWN OF THE THOUSAND-YEAR TREE rising over the forest: a colossal ancient tree crown, far bigger than any other, layered dark leaves with a faint silvery sheen",
+"color": [
+20,
+60,
+36
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "examine",
+"x": 34,
+"y": 13,
+"event": "windhill_notes"
+},
+{
+"type": "sign",
+"x": 30,
+"y": 19,
+"text": "風鳴りの丘\n風が歌のように鳴るという。"
+},
+{
+"type": "examine",
+"x": 10,
+"y": 31,
+"event": "world_poi_forest_statue"
+},
+{
+"type": "prop",
+"id": "tent",
+"x": 20,
+"y": 13
+},
+{
+"type": "prop",
+"id": "lantern",
+"x": 22,
+"y": 13
+},
+{
+"type": "sign",
+"x": 15,
+"y": 6,
+"text": "北 → 苔の村ユーラ"
+},
+{
+"type": "sign",
+"x": 42,
+"y": 6,
+"text": "北の峠を越えて\n↑ 雪の村ユール"
+},
+{
+"type": "prop",
+"id": "beacon",
+"x": 3,
+"y": 40,
+"cond": "cleared_r_forest"
+},
+{
+"type": "waylamp",
+"id": "wl_15",
+"x": 15,
+"y": 19,
+"lit": true
+}
+],
+"spawns": {
+"east": {
+"x": 50,
+"y": 30,
+"dir": "w"
+},
+"yura": {
+"x": 12,
+"y": 2,
+"dir": "s"
+},
+"pass": {
+"x": 39,
+"y": 1,
+"dir": "s"
+}
+},
+"exits": [
+{
+"x": 51,
+"y": 30,
+"w": 1,
+"h": 2,
+"to": {
+"map": "f_fern",
+"spawn": "west"
+},
+"edge": "e"
+},
+{
+"x": 12,
+"y": 0,
+"w": 2,
+"h": 1,
+"to": {
+"map": "yura",
+"spawn": "gate"
+},
+"edge": "n"
+},
+{
+"x": 39,
+"y": 0,
+"w": 2,
+"h": 1,
+"to": {
+"map": "world",
+"spawn": "f_windhill_n"
+},
+"edge": "n"
+}
+],
+"notes": [],
+"meta": {
+"name": "風鳴りの丘",
+"sub": "ユーラと北の峠への道",
+"region": "r_forest",
+"worldRect": [
+40,
+128,
+92,
+124
+],
+"outside": "forest_dark",
+"zones": [
+{
+"rect": null,
+"zone": "zw_forest"
+}
+],
+"tilePatches": [
+{
+"cond": {
+"slice": true
+},
+"rect": [
+38,
+1,
+4,
+2
+],
+"rows": [
+"rrrr",
+"rrrr"
+]
+}
+],
+"npcs": [
+{
+"id": "guard_north",
+"look": "npc_guard_1",
+"name": "番人",
+"x": 41,
+"y": 4,
+"dir": "s",
+"move": "still",
+"pushable": false,
+"cond": {
+"slice": true
+},
+"talk": {
+"lines": [
+{
+"text": [
+"北の峠は、雪崩で\nふさがってしまったんだ。",
+"雪原へ行くのは、\n雪が落ちつくまで待ってくれ。"
+]
+}
+]
+},
+"reward": "news",
+"key": "world_guard_north"
+}
+],
+"links": {
+"yura": {
+"map": "f_windhill",
+"spawn": "yura"
+}
+}
+}
+}
