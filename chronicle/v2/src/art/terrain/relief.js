@@ -16,12 +16,13 @@
   // ------------------------------------------------------------------ 調整の値（見た目）
   const K = {
     light: [-0.62, -0.78, 0.9],   // 光の向き（左上・北西から。x 右、y 下、z 上）
-    shade: 0.95,                  // 斜面の明暗の強さ
+    shade: 1,                     // 斜面の明暗の強さ
+    z: 3.2,                       // 陰影を出すときの高さの誇張（高さの場は歩く所の見た目に合わせて低め）
     curv: 0.55,                   // 曲がり（尾根の明るさ・足もとの暗さ）
     occ: 0.3,                     // 森の縁の AO
-    fMin: 0.5, fMax: 1.32,
+    fMin: 0.42, fMax: 1.45,
     steep: [0.55, 1.25],          // この傾き（マスあたりの高さ）から地肌が出る
-    macro: 1,                     // 大きな色のゆらぎの強さ
+    macro: 0.6,                   // 大きな色のゆらぎの強さ
     deep: 0.3,                    // 水の深さの暗さ
     wet: 0.3,                     // 濡れた砂・土の暗さ
   };
@@ -273,8 +274,8 @@
         hx *= iq; hy *= iq; hxx *= iq * iq; hyy *= iq * iq;   // 高さの格子（Q マス）→ マスあたり
         const q = j * N + i;
         // 明暗: 面の向き（Lambert、平らな所を 1 に）＋曲がり
-        const nl = 1 / Math.sqrt(hx * hx + hy * hy + 1);
-        const d = (-hx * lx - hy * ly + lz) * nl;
+        const zx = hx * K.z, zy = hy * K.z, nl = 1 / Math.sqrt(zx * zx + zy * zy + 1);
+        const d = (-zx * lx - zy * ly + lz) * nl;
         let f = 1 + K.shade * (d / lz - 1);
         const lap = hxx + hyy;
         f -= K.curv * Math.max(-0.6, Math.min(0.6, lap)) * 0.5;
@@ -347,6 +348,7 @@
         // 陰は青く、日なたは少し暖かく
         const fb = f < 1 ? 1 - (1 - f) * 0.78 : f;
         const fr = f > 1 ? 1 + (f - 1) * 1.1 : f;
+        if (K.debug) { px8[q] = px8[q + 1] = px8[q + 2] = 140 * f; continue; }
         px8[q] = r * fr + dr; px8[q + 1] = g * f + dg; px8[q + 2] = b * fb + db;
       }
     }
