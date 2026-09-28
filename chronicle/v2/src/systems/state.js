@@ -34,7 +34,7 @@
       ver: VER, seed, playMs: 0, chapter: 0,
       hero: 'hero', chars: {}, party: [], reserve: [], joined: [],
       gold: 0, items: {}, flags: {}, vars: {}, choices: {},
-      tier: 0, pendingTier: null, cleared: {},
+      tier: 0, pendingTier: null, cleared: {}, regionTier: {},   // regionTier: 解決した地方の出現の固定ティア {rid: T}（R.Tier.forZone）
       pos: { map: '', x: 0, y: 0, dir: 's' }, lastTown: null, lastInn: null, visited: {}, warps: {},
       chests: {}, secrets: {}, springs: {}, lit: {}, lamps: {},
       leads: {}, heard: {}, seenSkill: {},
@@ -197,6 +197,7 @@
     if (!Array.isArray(G.battle.lastRound)) G.battle.lastRound = [];
     State.migrateItems(G);   // 消した品の id（R.DB.itemAlias）を残した品へ
     State.migrateChars(G);   // 派生技の回数（techUse・derived）: 古いセーブには無い → {}
+    if (R.Tier && R.Tier.migrateLocks) R.Tier.migrateLocks(G);   // 出現の固定: 古いセーブの解決済みの地方は章の並びから
     const chk =R.Contract && R.Contract.check ? R.Contract.check('game', G) : { ok: true };
     if (!chk.ok) { R.warn('R.State.deserialize: ' + chk.errors.slice(0, 3).join('; ')); return false; }
     R.Game = G;

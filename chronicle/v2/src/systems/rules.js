@@ -262,13 +262,13 @@
     gfOf(a) { return clamp(Rules.abilMul(a, K.ABIL.gf), K.GLIM.gf.min, K.GLIM.gf.max); },
     dk(L) { return K.DK(L); },
     lz(T) { return K.LZ(T); },
-    /** 戦闘のティアとレベル（§4.14.1）: Tb = zone.tier か R.Game.tier、Lb = LZ(Tb) + (map.lvOff ?? zone.lvOff ?? 0) */
+    /** 戦闘のティアとレベル（§4.14.1）: Tb = zone.tier か R.Game.tier（解決した地方は R.Tier.forZone の固定ティア）、Lb = LZ(Tb) + (map.lvOff ?? zone.lvOff ?? 0) */
     zoneLevel(zone, map, opts) {
       const z = typeof zone === 'string' ? DB.encounters[zone] : zone;
       let md = typeof map === 'string' ? DB.maps[map] : map;
       if (md === undefined && R.Game && R.Game.pos) md = DB.maps[R.Game.pos.map];
       const gt = (R.Game && R.Game.tier) || 0;
-      const Tb = z && typeof z.tier === 'number' ? z.tier : gt;
+      const Tb = z && typeof z.tier === 'number' ? z.tier : z && R.Tier && R.Tier.forZone ? R.Tier.forZone(z, gt) : gt;   // 解決した地方は固定のティア
       if (z && Array.isArray(z.lv)) {
         const lo = z.lv[0], hi = z.lv[1] != null ? z.lv[1] : z.lv[0];
         const rng = opts && opts.rng;

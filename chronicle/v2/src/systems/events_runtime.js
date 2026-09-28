@@ -21,7 +21,7 @@
 //   battle(troop|setup, opts) → 'win'|'lose'|'escape'（全滅して宿・タイトルを選んだら戻らない）
 //   inn(price?) → bool          画面は {stay} だけ。お金・暗転・R.Party.restoreAll・lastInn（K.place）・autosave('inn')・emit('inn') はここ
 //   chooseCompanions({count}) → ids（R.Party.join までここ）/ createHero() → K.hero（B で戻ったらもう一度開く）
-//   clearRegion(rid)            ページ → cleared・tier+1・pendingTier・章の数 → 地方の目印を外す → R.Tier.celebrate → 'region:clear'
+//   clearRegion(rid)            ページ → cleared・regionTier（出現の固定）・tier+1・pendingTier・章の数 → 地方の目印を外す → R.Tier.celebrate → 'region:clear'
 //   letter(id) → R.Screens.open('letter') / mini.sequence・mini.timing → R.Mini
 //   lore(id) → bool             読み物を書庫へ（旗 = id。呼ぶ側が先に旗を立てていても通知は出す）
 //   partyShow(id | ids | 'all', {near:'hero'|npcId, at:[x,y], dir, ms, wait, stay}) / partyHide(id | ids | 'all', {ms, wait})
@@ -318,6 +318,8 @@
     // 2. 状態
     g.cleared[rid] = true;
     g.flags['cleared_' + rid] = true;
+    // その地方の雑魚は解決する直前のティア（ここで戦ってきた強さ）で止める（R.Tier.forZone）
+    if (R.Tier.lockRegion) R.Tier.lockRegion(rid, g.tier || 0);
     g.tier = Math.min(R.Tier.MAX, (g.tier || 0) + 1);
     g.pendingTier = g.tier;
     g.chapter = Object.keys(g.cleared).filter((k) => g.cleared[k]).length;

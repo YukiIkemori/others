@@ -7,6 +7,8 @@
 //       暗転 → R.emit('tier')（R.Sky・FIELD のチャンクがここで引き直す）→ カメラを光の柱へ → 明ける → 光の柱が立つ →
 //       章の札（第 N 章・章題・ページ）→ A か 7 秒で閉じる → カメラを先頭へ戻す
 //   足した物: MAX / pick(table, tier) / innPrice(tier?) / scene（場面 id 'celebrate'）
+//   地方ごとの出現の固定: forZone(zoneId, t?) → 出現表のティア / lockOf(rid) → 解決した地方の固定ティア|null /
+//     lockRegion(rid, t?)（ev.clearRegion）/ migrateLocks(G)（R.State.deserialize）。R.Game.regionTier = {rid: T}
 //
 // E17（ティアの場面の遅らせ）: 'inn'（ev.inn）と町（map.kind 'town'）の 'map:enter' で pending() があれば、
 //   走っているイベントが終わってから story_t<N>（中身は CONTENT-P）を ctx {map, reason:'inn'|'enter', tier:N} で走らせる。
@@ -40,6 +42,73 @@
     for (const k of Object.keys(table)) { const n = +k; if (!isNaN(n) && n <= t && (best === null || n > best)) best = n; }
     return best === null ? undefined : table[best];
   };
+  // ================================================================ 地方ごとの出現の固定（持ち主 2026-09-28「解決した地方の魔物はその時の強さのまま」）
+  // 雑魚の戦闘レベル LZ(T)・段（@系統）・組の tierMin/Max・落とし物の表・レア・金色は、その地方を解決したときのティアで止まる。
+  //   止めるティア = 解決する直前の R.Game.tier（その地方で戦っていた強さ。ev.clearRegion が +1 する前に R.Game.regionTier[rid] に書く）。
+  //   まだ解決していない地方は今までどおり全体のティアで伸びる（飛ばした地方は手ごたえが残る）。
+  //   序章（'prologue'）は clearRegion を通らない: 年代記の章 'prologue'（E.chapter）が入った時を解決とみなす（その時のティアは 0）。
+  //   地方の無い表・DB.regions に無い地方（z_stub など）は全体のティア。数のティアの表（終章 8・クリア後 9・序章の lv の表）はその数のまま。
+  //   古いセーブ（regionTier が無い）: 解決済みの地方は年代記の章の並び（clearRegion が解決の順に足す）から「前に解決した地方の数」を出す。
+  //   章に無いとき（テストの状態など）は min(地方の番号 n − 1, 今のティア − 1)（0 より下にはしない）。出した値は regionTier に書いて固定する。
+  //   宿・店・宝箱・ボスとイベントの編成は全体のティアのまま（ここは使わない）。
+  function isCleared(G, rid) {
+    if (!G || !rid) return false;
+    if (G.cleared && G.cleared[rid]) return true;
+    if (G.flags && G.flags['cleared_' + rid]) return true;
+    return rid === 'prologue' && !!(G.chronicle && Array.isArray(G.chronicle.chapters) && G.chronicle.chapters.some((c) => c && c.id === rid));
+  }
+  /** 記録の無い解決済みの地方の固定ティア（古いセーブ）: 章の並びで前にある解決済みの地方（序章を除く）の数 */
+  function deriveLock(G, rid) {
+    const ch = (G.chronicle && Array.isArray(G.chronicle.chapters)) ? G.chronicle.chapters.map((c) => c && c.id) : [];
+    const i = ch.indexOf(rid);
+    if (i >= 0) {
+      let n = 0;
+      for (let k = 0; k < i; k++) if (ch[k] && ch[k] !== 'prologue' && G.cleared && G.cleared[ch[k]]) n++;
+      return Math.min(Tier.MAX, n);
+    }
+    if (rid === 'prologue') return 0;
+    const reg = R.DB.regions && R.DB.regions[rid];
+    const byN = reg && typeof reg.n === 'number' ? reg.n - 1 : Tier.MAX;
+    return Math.max(0, Math.min(byN, (G.tier || 0) - 1));
+  }
+  /** 地方の固定ティア（解決していなければ null）。記録が無ければ出して書く */
+  Tier.lockOf = function (rid, G) {
+    G = G || R.Game;
+    if (!G || !rid || !(R.DB.regions && R.DB.regions[rid]) || !isCleared(G, rid)) return null;
+    if (!G.regionTier || typeof G.regionTier !== 'object') G.regionTier = {};
+    const v = G.regionTier[rid];
+    if (typeof v === 'number' && v >= 0) return v | 0;
+    return (G.regionTier[rid] = deriveLock(G, rid));
+  };
+  /** ev.clearRegion が tier を +1 する前に呼ぶ: 今のティアで固定する（もう書いてあれば変えない） */
+  Tier.lockRegion = function (rid, t) {
+    const G = R.Game;
+    if (!G || !rid) return null;
+    if (!G.regionTier || typeof G.regionTier !== 'object') G.regionTier = {};
+    if (typeof G.regionTier[rid] !== 'number') G.regionTier[rid] = Math.max(0, (t == null ? Tier.get() : t) | 0);
+    return G.regionTier[rid];
+  };
+  /** 古いセーブ: 解決済みで記録の無い地方をまとめて埋める（R.State.deserialize が呼ぶ） */
+  Tier.migrateLocks = function (G) {
+    if (!G) return 0;
+    if (!G.regionTier || typeof G.regionTier !== 'object' || Array.isArray(G.regionTier)) G.regionTier = {};
+    let n = 0;
+    for (const rid of Object.keys(R.DB.regions || {})) {
+      if (typeof G.regionTier[rid] === 'number' || !isCleared(G, rid)) continue;
+      G.regionTier[rid] = deriveLock(G, rid); n++;
+    }
+    return n;
+  };
+  /** 出現表のティア: 数のティアの表はその数、地方を解決していれば固定のティア、それ以外は t（既定は全体のティア） */
+  Tier.forZone = function (zoneId, t) {
+    const cur = t == null ? Tier.get() : t;
+    const z = zoneId && R.DB.encounters && (typeof zoneId === 'string' ? R.DB.encounters[zoneId] : zoneId);
+    if (!z) return cur;
+    if (typeof z.tier === 'number') return z.tier;
+    const lk = z.region ? Tier.lockOf(z.region) : null;
+    return lk == null ? cur : lk;
+  };
+
   /** 宿の値段（DB.config.innPrice、ティアごと） */
   Tier.innPrice = function (t) {
     const tbl = R.DB.config && R.DB.config.innPrice;

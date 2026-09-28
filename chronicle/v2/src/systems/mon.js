@@ -2,6 +2,7 @@
 // 移植の元は chronicle/src/systems/mon.js。登録だけで、読み込み時に document に触れない。
 //
 //   R.Mon.encounter(zoneId, {tier, dark, steps, ward, partySize}) → K.setup | null   FIELD が歩数ごとに呼ぶ（率・組・レア・金色・魔除けの香・一人旅は 1 匹）
+//     tier は全体のティア。解決した地方の表は R.Tier.forZone の固定ティアで振る（setup.tier もそれ。落とし物・段・閃きの位もそのティア）
 //   R.Mon.curve(L, kind) / hpBoss(L)                   魔物の曲線（R.Rules.K が持てばそちら、無ければ下の KF）
 //   R.Mon.resolve(ref, tier, from)                     '@系統' 'same' 'lower' か id → 魔物の id
 //   R.Mon.def(id, {Lb, golden, dark})                  戦闘の定義（Lb に合わせた数値・金色の個体・闇の強まり）。DB は変えない
@@ -465,6 +466,12 @@
   }
 
   // ---------------------------------------------------------------- 出現（V2_PLAN §2.5.13・§2.11「出現」）
+  /** 出現表のティア: 数のティアの表はその数、解決した地方は固定のティア（R.Tier.forZone）、それ以外は T */
+  function zoneTier(zoneId, z, T) {
+    if (typeof z.tier === 'number') return z.tier;
+    if (R.Tier && typeof R.Tier.forZone === 'function') return R.Tier.forZone(zoneId, T);
+    return T;
+  }
   /** ゾーンの戦闘レベルの範囲（lv の表か LZ(T)+lvOff） */
   function zoneLb(z, T) {
     if (z.lv && z.lv.length) return { lo: z.lv[0], hi: z.lv[z.lv.length - 1] };
@@ -535,8 +542,9 @@
     if (!z) return null;
     const steps = o.steps != null ? o.steps : (R.Game && R.Game.steps) || 0;
     const seed = (R.Game && R.Game.seed) || 0;
-    const T = o.tier != null ? o.tier : typeof z.tier === 'number' ? z.tier : tierNow();
-    const Tb = typeof z.tier === 'number' ? z.tier : T;
+    // 解決した地方の表はその時のティアで止まる（R.Tier.forZone）。o.tier は全体のティアとして読み、固定があればそちら
+    const T = o.tier != null ? o.tier : tierNow();
+    const Tb = zoneTier(zoneId, z, T);
     const lb = zoneLb(z, Tb);
     if (o.ward && avgGl() >= lb.hi + K('ENC_ITEM').weakMargin) return null;
     if (!o.force) {
@@ -576,7 +584,7 @@
 
   Object.assign((R.Mon = R.Mon || {}), {
     K, KF, LZ, curve, hpBoss, mobTier, resolve, lower, def, buildList, zoneGroups, zoneGroup, rollGolden, dropChances, rollDrops, pickPool,
-    healAmount, healf, abilMul, fillStats, fillAll, goldenName, canBeGolden, isDark, rank, ef, fwLen, encounter, resetEncounter, stepChance, zoneLb, soloCap,
+    healAmount, healf, abilMul, fillStats, fillAll, goldenName, canBeGolden, isDark, rank, ef, fwLen, encounter, resetEncounter, stepChance, zoneLb, zoneTier, soloCap,
     rng, setRng, mkRng, weighted,
     clearCache() { cache.clear(); },
   });

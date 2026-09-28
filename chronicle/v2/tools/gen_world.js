@@ -575,6 +575,9 @@ if (WORLD_K > 1) {
   W = SCALE.W; H = SCALE.H; XFORM = SCALE.xform;
   SCALE.poi = require('./world_poi')({ g, W, H, K: WORLD_K, LEGEND, SCALE, objects, npcs, exits, spawns, zones, h2, vn, XF, XFORM });
 }
+// --- 出現表を地形に合わせる（tools/world_zones.js）。地方の箱の角が隣の地方にかかっていた所（灯台の岬の草地に灰の荒野の魔物と火山の背景など）を、
+//   地面の地方の出現表に付け替えて zones の先頭に置く。地面は変えない。qa/check_world_zones.js が同じ決まりで見る
+const ZFIT = require('./world_zones').fit({ rows: g, LEGEND, zones, tilePatches });
 /** L のマス → W のマス、W のマス → L のマス（倍率 1 ならそのまま） */
 const cW = (x, y) => (XFORM ? XF.cell(XFORM, x, y) : [x, y]);
 const cL = (x, y) => (XFORM ? XF.lcell(XFORM, x, y) : [x, y]);
@@ -733,6 +736,8 @@ function check() {
   }
   info.emptyRoad = empty; if (empty) info.emptyAt = emptyAt;
   if (SCALE) { const si = SCALE.info; info.scale = { K: WORLD_K, W, H, cores: si.cores, islands: si.islands, groups: si.groups, droppedDecor: si.droppedDecor }; info.poi = SCALE.poi; }
+  info.zoneFit = { before: ZFIT.before.pairs, added: ZFIT.added.length };   // 出現表の付け替え（地面の地方と違ったマスの数）
+  for (const k of Object.keys(ZFIT.after.pairs)) errs.push('zone over other terrain: ' + k + ' ' + ZFIT.after.pairs[k]);
   info.objects = objects.length; info.npcs = npcs.length; info.lamps = objects.filter((o) => o.type === 'waylamp').length;
   return { errs, info };
 }

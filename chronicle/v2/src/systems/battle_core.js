@@ -1957,7 +1957,7 @@
     } else if (zone) {
       // 出現表だけ（sim・デバッグ）: R.Mon.encounter と同じ組の選び方
       kind = 'zone';
-      Tb = typeof zone.tier === 'number' ? zone.tier : cur;
+      Tb = R.Mon.zoneTier ? R.Mon.zoneTier(o.zone, zone, cur) : typeof zone.tier === 'number' ? zone.tier : cur;   // 解決した地方は固定のティア
       const lb = R.Mon.zoneLb(zone, Tb);
       Lb = o.lv != null ? o.lv : lb.lo === lb.hi ? lb.lo : ri(lb.lo, lb.hi);
       const rr = !o.noRare && DB.rareEncounters && DB.rareEncounters[o.zone];
