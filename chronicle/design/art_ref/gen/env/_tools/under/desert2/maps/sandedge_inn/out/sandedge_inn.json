@@ -1,0 +1,19 @@
+{
+ "id": "sandedge_inn",
+ "kind": "under",
+ "map": "sandedge_inn",
+ "tile": 32,
+ "size32": [
+  576,
+  384
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.778,
+ "files": {
+  "24": "sandedge_inn@24.png",
+  "32": "sandedge_inn@32.png",
+  "40": "sandedge_inn@40.png"
+ }
+}

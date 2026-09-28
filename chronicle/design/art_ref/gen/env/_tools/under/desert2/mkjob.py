@@ -46,7 +46,7 @@ MAPS = {
 }
 IN_KEY = """(The guide's colours only mark the areas; paint them in the materials described above, not in the guide's colours.)
 - dark brown along the left, right and bottom edges and above the top band = the THICK OUTER WALLS seen from above (not walkable): their dark tops, one tile thick on the sides and bottom.
-- tan band with vertical strokes (the two tile rows at the top) = the BACK WALL of the room facing the viewer: exactly two tiles tall, its foot ending exactly on the floor edge below it. This is where the character of the room shows most.
+- tan band with vertical strokes (the two tile rows at the top) = the BACK WALL of the room facing the viewer: exactly two tiles tall, its foot ending exactly on the floor edge below it. This is where the character of the room shows most: pack it with rich, specific, handcrafted detail of the materials described (it is only two tiles tall). The floor too should be rich (varied tiles or flags, wear, small cracks, scattered sand) while staying flat.
 - pale beige with joints = the walkable FLOOR (flat).
 - red with gold lines = a woven RUG / carpet lying flat on the floor exactly over those tiles (walkable).
 - the one-tile gap in the bottom wall = the doorway (plain floor, the way out)."""

@@ -1,0 +1,19 @@
+{
+ "id": "kasim_guild",
+ "kind": "under",
+ "map": "kasim_guild",
+ "tile": 32,
+ "size32": [
+  576,
+  384
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.772,
+ "files": {
+  "24": "kasim_guild@24.png",
+  "32": "kasim_guild@32.png",
+  "40": "kasim_guild@40.png"
+ }
+}

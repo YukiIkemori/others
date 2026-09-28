@@ -1,0 +1,19 @@
+{
+ "id": "kasim_shop",
+ "kind": "under",
+ "map": "kasim_shop",
+ "tile": 32,
+ "size32": [
+  384,
+  320
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.7,
+ "files": {
+  "24": "kasim_shop@24.png",
+  "32": "kasim_shop@32.png",
+  "40": "kasim_shop@40.png"
+ }
+}

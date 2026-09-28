@@ -113,6 +113,7 @@
       spawns: { door: { x: door.x, y: 10, dir: 'n' } },
       exits: [{ x: door.x, y: 11, w: 1, h: 1, to: { map: 'sandedge', spawn: 'inn' } }],
       triggers: [], light: DK.LIGHT_ROOM, bgm: 'kasim', meta: { minimap: false },
+      art: { image: 'desert/under/sandedge_inn', painted: [] },   // 石化した大樹のうろの中（1 枚の描いた部屋。_tools/under/desert2）
     });
   });
 })(window.RPG);

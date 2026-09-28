@@ -5,7 +5,7 @@ const B = require('/home/user/others/chronicle/v2/tools/lib/browser');
 const spots = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
 (async () => {
   const S = await B.start({ dist: process.env.DIST });
-  const P = await B.open(S, 'dev.html?fixture=content_p_pharos', { timeout: 120000, size: [1280, 720] });
+  const P = await B.open(S, 'dev.html?fixture=content_p_pharos', { timeout: +process.env.V2_OPEN_TIMEOUT || 120000, size: [1280, 720] });
   const p = P.page;
   await B.waitFor(p, `${B.TOP}==='field' && RPG.Engine.fade.a < 0.01`, 30000);
   await B.ev(p, `(() => { RPG.Events.run = () => Promise.resolve(); RPG.Mon.encounter = () => null; RPG.Game.flags.prologue_done = true; return 0; })()`);

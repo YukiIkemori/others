@@ -1,0 +1,19 @@
+{
+ "id": "kasim_digger",
+ "kind": "under",
+ "map": "kasim_digger",
+ "tile": 32,
+ "size32": [
+  384,
+  320
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.7,
+ "files": {
+  "24": "kasim_digger@24.png",
+  "32": "kasim_digger@32.png",
+  "40": "kasim_digger@40.png"
+ }
+}

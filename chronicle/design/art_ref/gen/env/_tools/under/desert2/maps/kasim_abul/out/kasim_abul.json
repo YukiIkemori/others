@@ -1,0 +1,19 @@
+{
+ "id": "kasim_abul",
+ "kind": "under",
+ "map": "kasim_abul",
+ "tile": 32,
+ "size32": [
+  384,
+  320
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.785,
+ "files": {
+  "24": "kasim_abul@24.png",
+  "32": "kasim_abul@32.png",
+  "40": "kasim_abul@40.png"
+ }
+}
