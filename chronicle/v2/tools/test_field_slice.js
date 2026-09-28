@@ -45,13 +45,22 @@ function reach(R, map, starts) {
   }
   return seen;
 }
-/** tilePatches を「全部外す」／「全部当てる」／「全部当てて条件つきの物を除く」の 3 つの形（条件の組み合わせのどれかで行ければよい） */
+/** tilePatches を「全部外す」／「全部当てる」／「全部当てて条件つきの物を除く」の 3 つの形と、開く扉の形（条件の組み合わせのどれかで行ければよい） */
 function variants(map) {
   const on = Object.assign({}, map, { id: map.id + '__on', tilePatches: (map.tilePatches || []).map((p) => Object.assign({}, p, { cond: null })) });
   const off = Object.assign({}, map, { id: map.id + '__off', tilePatches: [] });
   // 条件つきの物（倒木・つるなど、筋で消える物）が無い形
   const open = Object.assign({}, on, { id: map.id + '__open', objects: (map.objects || []).filter((o) => o.cond == null || o.type === 'trail') });
-  return [off, on, open];
+  // 開く扉の形: 閉じた扉（行き先の無い type:'door'。鍵・仕掛けの locked / unlock）の上に、cond つきの行き先のある扉が重なる所
+  //   （灯台の塔の扉＝鍵で開く・砂漠の封じの扉＝紋がそろうと開く）は、cond が真になった後の形（閉じた扉を除き、開いた扉の cond を外す）。
+  //   cond がいつか真になることは qa/progress.js の 4 が見る
+  const objs = map.objects || [];
+  const opens = objs.filter((o) => o.type === 'door' && o.to && o.cond != null);
+  const covers = (a, b) => b.x >= a.x && b.x < a.x + (a.w || 1) && b.y >= a.y && b.y < a.y + (a.h || 1) && (a.lv || 0) === (b.lv || 0);
+  const shut = objs.filter((o) => o.type === 'door' && !o.to && opens.some((d) => covers(o, d)));
+  if (!shut.length) return [off, on, open];
+  const unlocked = Object.assign({}, on, { id: map.id + '__unlocked', objects: objs.filter((o) => !shut.includes(o)).map((o) => (opens.includes(o) ? Object.assign({}, o, { cond: null }) : o)) });
+  return [off, on, open, unlocked];
 }
 
 function nodePart() {
@@ -76,26 +85,6 @@ function nodePart() {
     // 到達（形の和）
     const R0 = new Set();
     for (const v of variants(m)) for (const k of reach(R, v, sp.map((k) => m.spawns[k]))) R0.add(k);
-    // 鍵で開く扉（扉の物の unlock = {cond, event}）: 開けた後の形でも歩く。unlock.cond とそのイベントの meta.gives のフラグを
-    //   立てた状態では、閉じた扉の上に cond つきの行き先のある扉（灯台の塔の扉など）が出る。フラグは歩き終えたら元へ戻す
-    {
-      const flags = new Set();
-      for (const o of m.objects || []) {
-        if (o.type !== 'door' || !o.unlock) continue;
-        if (typeof o.unlock.cond === 'string' && !o.unlock.cond.startsWith('!')) flags.add(o.unlock.cond);
-        const meta = o.unlock.event && R.DB.events[o.unlock.event] && R.DB.events[o.unlock.event].meta;
-        for (const g of (meta && meta.gives) || []) if (/^flag:/.test(g)) flags.add(g.slice(5));
-      }
-      if (flags.size) {
-        const G = R.Game, had = {};
-        for (const f of flags) { had[f] = G.flags[f]; G.flags[f] = true; }
-        R.MapUtil.invalidate();
-        try { for (const k of reach(R, variants(m)[1], sp.map((k) => m.spawns[k]))) R0.add(k); } finally {
-          for (const f of flags) { if (had[f] === undefined) delete G.flags[f]; else G.flags[f] = had[f]; }
-          R.MapUtil.invalidate();
-        }
-      }
-    }
     const at = (x, y, lv) => R0.has(x + ',' + y + ',' + (lv || 0));
     const near = (x, y, lv, w, h) => {
       for (let yy = y - 1; yy <= y + (h || 1); yy++) for (let xx = x - 1; xx <= x + (w || 1); xx++) {
