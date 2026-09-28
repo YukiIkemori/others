@@ -36,6 +36,7 @@ const STEPS = [
   ['check_springs', [T('qa/check_springs.js')]],
   ['check_density', [T('qa/check_density.js')]],
   ['check_world', [T('qa/check_world.js')]],
+  ['check_world_zones', [T('qa/check_world_zones.js')]],   // ワールドの出現表の地方が地面の地方と同じ（灯台の岬に灰の荒野の魔物が出ない）
   ['check_chests', [T('qa/check_chests.js'), '--no-build']],
   ['check_secrets', [T('qa/check_secrets.js'), '--no-build']],
   ['check_stubs', [T('qa/check_stubs.js')]],

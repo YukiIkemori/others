@@ -670,7 +670,8 @@ section('slice rare drops: grade rare reaches the result (★ and the rare jingl
   R.Mon.setRng(R.Mon.mkRng('after-rare'));
   const rare = rw.drops.find((d) => d.slot === 'rare');
   // a consumable rare (owner 2026-09-27: 「普通の雑魚は多くはレアっつっても消耗品でいいよ」) is still shown as rare (★ and jingle)
-  ok('jelly_1 rare slot drops i_ether2 with grade rare', !!rare && rare.item === 'i_ether2' && rare.grade === 'rare', rw.drops);
+  // owner 2026-09-28: 「全回復系は基本終盤から。序盤のレアは 30% 回復くらいまで」 → i_ether2 (MP 60%) became i_tonic (HP・MP 30%)
+  ok('jelly_1 rare slot drops i_tonic with grade rare', !!rare && rare.item === 'i_tonic' && rare.grade === 'rare', rw.drops);
   // src/systems/battle/result.js: any drop of grade rare/super → R.Audio.jingle('rare' | 'superrare')
   ok('the rare / superrare jingles exist (R.DB.music)', !!(DB.music && DB.music.rare && DB.music.rare.jingle && DB.music.superrare));
 }

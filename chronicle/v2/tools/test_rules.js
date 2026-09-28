@@ -441,6 +441,44 @@ section('§10.1 drop slots and chest pools (A30)');
   ok('no pool holds a steal-only item', [...pooled].every((id) => DB.items[id].src !== 'steal'));
 }
 
+// 全回復の品は終盤から（オーナー 2026-09-28「天の恵み・よみがえりの花・癒しの霊水が早すぎる。全回復系は基本終盤から。序盤のレアは 30% 回復くらいまで」）
+section('full-recovery items only from the late tier (owner 2026-09-28)');
+{
+  const LATE = R.Pools.LATE;
+  const full = (id) => { const u = DB.items[id] && DB.items[id].use; return !!(u && (u.effects || []).some((e) => ['heal', 'healMp', 'revive'].includes(e.type) && e.pct >= 1)); };
+  const heal = (id) => { const u = DB.items[id] && DB.items[id].use; return u ? Math.max(0, ...(u.effects || []).filter((e) => ['heal', 'healMp', 'revive'].includes(e.type)).map((e) => e.pct || 0)) : 0; };
+  ok('LATE is tier 5', LATE === 5);
+  ok('the five full items are still full (elixir, lifedew, grace, phoenix, memory bubble)', ['i_elixir', 'i_lifedew', 'i_grace', 'i_phoenix', 'i_memory_bubble'].every(full));
+  const badPool = [];
+  for (const [pid, p] of Object.entries(DB.pools)) p.tiers.forEach((t, T) => { if (T < LATE) for (const e of t) if (e.item && full(e.item)) badPool.push(`${pid}:${T}:${e.item}`); });
+  ok('no pool gives a full item before LATE', !badPool.length, badPool.slice(0, 6));
+  ok('pools still give full items from LATE (p_supply elixir, p_rare grace / phoenix, p_heal elixir)', DB.pools.p_supply.tiers[LATE].some((e) => e.item === 'i_elixir') && ['i_grace', 'i_phoenix', 'i_lifedew'].every((id) => DB.pools.p_rare.tiers[LATE].some((e) => e.item === id)) && DB.pools.p_heal.tiers[LATE][0].item === 'i_elixir' && DB.pools.p_heal.tiers[0][0].item === 'i_potion');
+  const badShop = [];
+  for (const sid of Object.keys(DB.shops)) for (let T = 0; T < LATE; T++) for (const id of Ru.shopItems(sid, T)) if (full(id)) badShop.push(`${sid}:${T}:${id}`);
+  ok('no shop sells a full item before LATE', !badShop.length, [...new Set(badShop)].slice(0, 6));
+  ok('item shops sell the elixir from LATE', ['shop_yule_items', 'shop_loch_items', 'shop_caldera_items', 'shop_kasim_items'].filter((s) => DB.shops[s]).every((s) => Ru.shopItems(s, LATE).includes('i_elixir')));
+  // 魔物: 段の出始めのティアが LATE より前の雑魚（lineages）と、終盤・クリア後の前のめずらしい魔物
+  const first = {};
+  for (const L of Object.values(DB.lineages)) for (const st of L.stages || []) first[st.mon] = Math.min(first[st.mon] == null ? 99 : first[st.mon], st.tier);
+  const LATE_RARE = ['rm_bookworm', 'rm_golden_quill', 'rm_memory_fish', 'rm_dream_tapir'];
+  const badMon = [];
+  for (const [id, m] of Object.entries(DB.monsters)) {
+    const early = first[id] != null ? first[id] < LATE : (/^rm_/.test(id) && !LATE_RARE.includes(id));
+    if (!early || !m.drops) continue;
+    for (const k of ['normal', 'rare', 'super', 'bonus', 'steal']) if (m.drops[k] && m.drops[k].item && full(m.drops[k].item)) badMon.push(`${id}.${k}:${m.drops[k].item}`);
+  }
+  ok('no early / mid monster (stage before LATE, rare monsters before the finale) drops a full item', !badMon.length, badMon.slice(0, 8));
+  ok('region bosses give p_heal as the bonus (potion before LATE)', DB.monsters.b_rooteater.drops.bonus.pool === 'p_heal');
+  // 縦切りの雑魚（段 1〜2）のレアの消耗品は 35% まで（「30% くらい」。癒やしの香炉 35% を含む）
+  const DEMO = ['jelly', 'rat', 'seabird', 'crab', 'bat', 'bee', 'mushroom', 'plant', 'fairy', 'wolf', 'treant'].flatMap((l) => [l + '_1', l + '_2']);
+  const strong = DEMO.map((id) => DB.monsters[id].drops.rare.item).filter((id) => DB.items[id].slot === 'use' && heal(id) > 0.35);
+  ok('slice stage 1–2 rare consumables heal ≤ 35 %', !strong.length, strong);
+  ok('i_tonic: rare, HP・MP 30 %', DB.items.i_tonic && DB.items.i_tonic.grade === 'rare' && heal('i_tonic') === 0.3);
+  ok('early rare-monster items heal ≤ 30 % (jewel carrot, bloom nectar)', heal('i_jewel_carrot') <= 0.3 && heal('i_bloom_nectar') <= 0.3);
+  // 盗みのレア枠（オーナー 2026-09-28「ティッタのレアを盗む確率が高すぎる」）: 成功 1 回あたり 段 1 の率 32 で 5% 前後、率 16 で 10% まで
+  ok('steal rare: rate 32 → ≤ 5 %, rate 16 → ≤ 10 %, cap ≤ 15 %', K.STEAL.rareMul / 32 <= 0.05 && K.STEAL.rareMul / 16 <= 0.1 && K.STEAL.rareCap <= 0.15, K.STEAL);
+}
+
 section('fieldUse・new items (MENUS 50, CONTENT-F 64)');
 {
   R.State.newGame({ hero: { type: 'warrior', sex: 'm', name: 'アルン', fav: 'sword' }, seed: 4 });
