@@ -8,6 +8,7 @@
   'use strict';
   const C = (R.ContentF = R.ContentF || {});
   const K = (C.kit = C.kit || {});
+  const SCATTERED = new WeakSet();   // scatter が置いた物（K.fit が壁の上の物を除く）
 
   K.grid = function (w, h, ch) { const a = []; for (let y = 0; y < h; y++) a.push(new Array(w).fill(ch)); return a; };
   K.at = function (g, x, y) { return g[y] ? g[y][x] : undefined; };
@@ -61,6 +62,30 @@
   /** 文字の絵を (x, y) に置く（' ' はそのまま） */
   K.stamp = function (g, x, y, art) { art.forEach((r, j) => [...r].forEach((ch, i) => { if (ch !== ' ') K.put(g, x + i, y + j, ch); })); };
   K.rows = function (g) { return g.map((r) => r.join('')); };
+  /**
+   * 描いた一枚絵に当たりを合わせる: fit = { 字: 'x,y x,y …' }（その字に置き換えるマス）。組み立ての最後（散らしのあと）に呼ぶ。
+   * 絵が下書きからずれた所（壁の立ち上がり・描き足した大木・広がった床）を直す。マスの一覧は絵の床の割合から拾い、目で確かめた物
+   * （持ち主 2026-09-28「壁際の下のほうが判定おかしくて、壁にめり込んでる」「上の判定も右の判定もおかしい」）。
+   * objs を渡すと、壁になったマスに落ちた散らしの小物（scatter の物・painted に無い物）を除く（木や壁の上に小物を浮かせない）
+   */
+  K.fit = function (g, fit, objs, painted) {
+    const solidNow = new Set();
+    for (const ch of Object.keys(fit)) {
+      for (const p of fit[ch].trim().split(/\s+/)) {
+        if (!p) continue;
+        const [x, y] = p.split(',').map(Number);
+        K.put(g, x, y, ch);
+        solidNow.add(x + ',' + y + ':' + ch);
+      }
+    }
+    if (!objs) return;
+    const pset = new Set((painted || []).map((s) => s.split('@')[1]));
+    const walls = new Set([...solidNow].filter((k) => /[FTbBR~]$/.test(k)).map((k) => k.split(':')[0]));
+    for (let i = objs.length - 1; i >= 0; i--) {
+      const o = objs[i];
+      if (SCATTERED.has(o) && walls.has(o.x + ',' + o.y) && !pset.has(o.x + ',' + o.y)) objs.splice(i, 1);
+    }
+  };
 
   /** マップを登録（rows が配列の配列なら文字列にし、w・h を数える） */
   K.def = function (id, m) {
@@ -111,7 +136,7 @@
       if (o.roomy && !roomyAt(x, y)) continue;
       const p = Object.assign({ type: 'prop', id: Array.isArray(id) ? id[rng.int(0, id.length - 1)] : id, x, y }, o.extra || {});
       if (o.variant) p.variant = rng.int(0, 3);
-      out.push(p); used.add(k);
+      out.push(p); used.add(k); SCATTERED.add(p);
     }
     objs.push(...out);
     return out;

@@ -456,6 +456,43 @@ section('予告の予約（E18）・考えどころ（§3.6）');
   eng.rng = seqRng([], 0); eng.use();
   drainAll(eng.inflict(eng.party[0], eng.mons[0], 'sleep', 1, {}));
   ok('a disabled boss loses its reservation', !eng.mons[0].reserved);
+  // 呼び出し（2026-09-28 の持ち主の報告「文字の無い狼がいる」「呼ばれた雑魚に攻撃が選べない」）:
+  // 呼ばれた敵は B.units に入り、同じ種類みんなに重ならない文字、summon の出来事の uid はその本物、攻撃のねらいにできる
+  {
+    const B = R.BattleCore.create({ troop: 'tr_a21_forest_wolves', seed: 'sum' });
+    const E = B.engine, lord = E.mons.find((m) => m.id === 'b_wolflord');
+    E.party.forEach((p) => { p.hp = 99999; });
+    lord.hp = lord.mhp = 99999;
+    const sev = [];
+    // 群れ頭に毎ラウンド遠吠えを予約させ（上限は頭を入れて 6 体）、一行は守るだけ
+    for (let r = 0; r < 6 && E.living('mon').length < 6; r++) {
+      lord.reserved = { id: 'eb_pack_howl', round: -1 };
+      for (const u of B.units.filter((x) => x.side === 'party')) B.submit(u.uid, { cmd: 'defend' });
+      for (const ev of B.round()) if (ev.t === 'summon') sev.push(ev.uid);
+    }
+    const wolves = B.units.filter((u) => u.id === 'b_packwolf');
+    const names = wolves.map((u) => u.name);
+    ok('summons: 2 + 3 pack wolves (cap 6 with the leader), all in B.units', wolves.length === 5 && E.mons.length === 6, names);
+    ok('summons: every wolf has its own letter (Ａ〜Ｅ, beyond Ｄ)', new Set(names).size === 5 && names.every((n) => /[Ａ-Ｚ]$/.test(n)), names);
+    ok('summon events point at the real new units (uid e_<n>)', sev.length === 3 && sev.every((uid) => B.units.some((u) => u.uid === uid && u.alive)), sev);
+    ok('the letters are recomputed when more of the same kind come (no bare 「群れの狼」)', !B.units.some((u) => u.name === '群れの狼'));
+    E.mons.forEach((m) => { if (m !== lord) m.hp = m.mhp = 99999; });
+    lord.hp = 1; lord.reserved = null;
+    const tgt = wolves[wolves.length - 1].uid;
+    for (const u of B.units.filter((x) => x.side === 'party')) ok('attack on a summoned wolf is accepted', B.submit(u.uid, { cmd: 'attack', target: tgt }) && B.options(u.uid)[0].cmd === 'attack');
+    for (const u of B.units.filter((x) => x.side === 'party')) B.submit(u.uid, { cmd: 'attack', target: lord.uid });
+    let evs = [];
+    for (let r = 0; r < 6 && !B.over; r++) evs = evs.concat(B.round());
+    const fled = evs.filter((e) => e.t === 'flee').map((e) => e.uid);
+    ok('leader down → every wolf, summoned too, flees (flee event each)', wolves.every((w) => fled.includes(w.uid)), { fled, wolves: wolves.map((w) => w.uid) });
+    ok('… nobody is left standing and the battle is won', B.over === 'win' && !B.units.some((u) => u.side === 'enemy' && u.alive));
+  }
+  {
+    const E = engine({ mons: ['rat_1', 'rat_1'], lv: 3 });
+    for (let k = 0; k < 4; k++) drainAll(E.summon(E.mons[0], { mon: 'same', n: 2, max: 8 }));
+    const names = E.mons.map((m) => m.name);
+    ok('8 of one kind: letters Ａ〜Ｈ, all different', new Set(names).size === E.mons.length && E.mons.length === 8, names);
+  }
 }
 
 // ================================================================ リピート（A6）

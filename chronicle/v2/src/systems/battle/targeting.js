@@ -25,6 +25,21 @@
     return p.x >= a.x - w / 2 && p.x <= a.x + w / 2 && p.y >= a.y - h - 6 && p.y <= a.y + 10;
   }
 
+  /**
+   * タップの当たり: 絵が重なっていたら手前（足もとが下＝後から描く）の物。無ければ右上の一覧の行（味方）。
+   * 以前は並びの最初に当たった物を選んだので、ボスの大きな絵の上の雑魚（呼ばれた根・狼）を押すと奥のボスに決まることがあった
+   */
+  Tg.hitAt = function (st, list, p, rects) {
+    let best = null;
+    for (const a of list) if (inActor(st, a, p) && (!best || a.y > best.y || (a.y === best.y && _.actors.height(a) < _.actors.height(best)))) best = a;
+    if (best || !rects) return best;
+    for (const a of list) {
+      const pi = st.partyUnits().findIndex((x) => x.uid === a.uid); const r = rects[pi];
+      if (r && p.x >= r.x && p.x <= r.x + r.w && p.y >= r.y && p.y <= r.y + r.h) return a;
+    }
+    return null;
+  };
+
   Tg.pick = function (st, u, type, o) {
     o = o || {};
     const M = o.mem || {};
@@ -87,12 +102,8 @@
         if (p && p.pressed) {
           // 敵・味方の絵、または右上の一覧の行
           const rects = party ? _.hud.partyRects(st) : null;
-          for (let i = 0; i < list.length; i++) {
-            const a = list[i];
-            let hit = inActor(st, a, p);
-            if (!hit && rects) { const pi = st.partyUnits().findIndex((x) => x.uid === a.uid); const r = rects[pi]; hit = r && p.x >= r.x && p.x <= r.x + r.w && p.y >= r.y && p.y <= r.y + r.h; }
-            if (hit) { sfx('confirm'); done(group ? null : a.uid); return; }
-          }
+          const a = Tg.hitAt(st, list, p, rects);
+          if (a) { sfx('confirm'); done(group ? null : a.uid); return; }
         }
         if (I.pressed('a')) { sfx('confirm'); done(group ? null : list[sel].uid); }
         else if (I.pressed('b')) { sfx('cancel'); done('back'); }

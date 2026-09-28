@@ -124,7 +124,7 @@
     }
     S.lastDash = !!dash; S.lastGo = go;
     F._trailPush(S.x, S.y, S.lv, S.dir);
-    S.mv = { fx: S.x, fy: S.y, tx: nx, ty: ny, t0, ms, dx: go[0], dy: go[1], dash: !!dash, len: diag ? Math.SQRT2 : 1 };
+    S.mv = { fx: S.x, fy: S.y, flv: S.lv || 0, tx: nx, ty: ny, t0, ms, dx: go[0], dy: go[1], dash: !!dash, len: diag ? Math.SQRT2 : 1 };
     S.x = nx; S.y = ny; S.lv = nlv;
     F._trailStart(S.mv);
     S.phase = (S.phase + 1) & 1023;
@@ -148,6 +148,8 @@
     S.odo = (S.odo || 0) + (m.len || 1);
     S.mv = null;
     F._trailEnd();
+    if (m.back) { if (R.Game && R.Game.pos) Object.assign(R.Game.pos, { x: S.x, y: S.y }); return; }   // 確かめの「いいえ」で 1 歩下がった: 入った瞬間の判定はしない
+    S.from = { x: m.fx, y: m.fy, lv: m.flv || 0 };
     const p = F._arrive();
     if (p && p.then) {
       S.arriving = true;
@@ -193,6 +195,42 @@
     return out || spawn;
   };
 
+  /**
+   * 入る前の確かめ（持ち主 2026-09-28「古井戸に入る際、いきなりマップ切り替わるんじゃなくて、入りますか？みたいな確認」）。
+   *   出口・扉・階段・建物の戸口に confirm: '古井戸の底へ降りますか？' があれば、はい／いいえを聞いてから go()。
+   *   いいえ（B も）は来たマスへ 1 歩下がる（向きはそのまま＝入口を向いたまま下がる）。confirm が無ければすぐ go()。
+   *   フィールドのエリアからダンジョンへの入口には field_00_kit.js が文を足す（町の門・エリアの端には付けない）
+   */
+  function confirmGo(text, go) {
+    if (!text) return go();
+    return (async () => {
+      F.lock('confirm');
+      let yes = false;
+      try {
+        const r = await R.UIK.Message.say({ text, choices: ['はい', 'いいえ'], cancel: 1, face: false });
+        yes = r === 0;
+      } finally { F.unlock('confirm'); }
+      if (yes) return go();
+      F._stepBack();
+      return null;
+    })();
+  }
+  F._confirmGo = confirmGo;
+  /** 来たマス（S.from）へ 1 歩下がる。向きは変えない。後ろの人は 1 つずつ前の人の元の所へ戻る（trail.js） */
+  F._stepBack = function () {
+    const f = S.from;
+    if (!f || !S.map || (f.x === S.x && f.y === S.y)) return false;
+    const dx = f.x - S.x, dy = f.y - S.y;
+    if (Math.abs(dx) > 1 || Math.abs(dy) > 1) return false;
+    const now = R.Engine.time, diag = !!(dx && dy);
+    if (F._trailBack) F._trailBack();
+    S.mv = { fx: S.x, fy: S.y, flv: S.lv || 0, tx: f.x, ty: f.y, t0: now, ms: F.WALK_MS * 1.2 * (diag ? 1.41 : 1), dx, dy, dash: false, len: diag ? Math.SQRT2 : 1, back: true };
+    S.gait0 = S.odo || 0;
+    S.x = f.x; S.y = f.y; S.lv = f.lv || 0;
+    S.from = null;
+    return true;
+  };
+
   /** 入った瞬間の判定（1 マスに 1 回）。非同期の仕事（マップの移動・イベント・戦闘）があれば Promise を返す */
   F._arrive = function () {
     const m = S.map, G = R.Game;
@@ -222,17 +260,22 @@
       const o = objs[i];
       if (o.type === 'switch' && o.look === 'plate') F._switch(o, 'step');
       if ((o.type === 'stairs' || o.type === 'door') && o.to && (!o.cond || R.State.check(o.cond))) {
-        try { R.Audio.sfx(o.type === 'stairs' ? 'stairs' : 'door'); } catch (e) { /* */ }
-        return F.enter(o.to.map, o.type === 'stairs' ? F.stairsLanding(o.to.map, o.to.spawn, m.id) : o.to.spawn);
+        const st = o.type === 'stairs';
+        return confirmGo(o.confirm, () => {
+          try { R.Audio.sfx(st ? 'stairs' : 'door'); } catch (e) { /* */ }
+          return F.enter(o.to.map, st ? F.stairsLanding(o.to.map, o.to.spawn, m.id) : o.to.spawn);
+        });
       }
       if (o.type === 'building' && o.door && o.door.x === S.x && o.door.y === S.y && o.door.to) {
-        try { R.Audio.sfx('door'); } catch (e) { /* */ }
-        return F.enter(o.door.to.map, o.door.to.spawn);
+        return confirmGo(o.door.confirm, () => {
+          try { R.Audio.sfx('door'); } catch (e) { /* */ }
+          return F.enter(o.door.to.map, o.door.to.spawn);
+        });
       }
     }
     // 出口（上から順に最初に cond の合う物）
     for (const e of m.exits || []) {
-      if (inRect(S.x, S.y, e) && (!e.cond || R.State.check(e.cond))) return F.enter(e.to.map, e.to.spawn);
+      if (inRect(S.x, S.y, e) && (!e.cond || R.State.check(e.cond))) return confirmGo(e.confirm, () => F.enter(e.to.map, e.to.spawn));
     }
     // step のトリガー
     for (const tr of m.triggers || []) {

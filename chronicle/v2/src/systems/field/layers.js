@@ -22,10 +22,9 @@
   // 昔の速さ（json に fps の無い 3 コマの歩き・4 コマの走り・仮の絵）: 1 コマ 130 ms、ダッシュ 85 ms
   const LEG_WALK_FPS = 1000 / 130, LEG_RUN_FPS = 1000 / 85;
   const NPC_STEP_MS = 320;   // npc.js の STEP_MS（NPC の歩の足の運びの基準）
-  // 息: 周期 2.6〜3.8 秒、位相は id から（人ごとにずれる）。reduceMotion はフレームごとに 1 回だけ読む
+  // 人ごとの位相（id から。待ちの絵のコマ・吹き出しの浮きをずらす）。立ち止まった人の上下の揺れ（息）は 2026-09-28 にやめた。reduceMotion はフレームごとに 1 回だけ読む
   const REDUCE = { on: false };
-  function idleOf(n) { const h = R.U.hash(String(n.id || n.look || 'x')); return { ph: h % 4000, w: (2 * Math.PI) / (2600 + ((h >> 12) % 1200)) }; }
-  const u1 = (t) => (t / 32) * (F._charScale ? F._charScale() / 1.15 : 1);   // 原画の 1 px（広さの設定で拡大）
+  function idleOf(n) { const h = R.U.hash(String(n.id || n.look || 'x')); return { ph: h % 4000 }; }
   const pool = [];
   let used = 0;
   const OPTS = {};
@@ -325,12 +324,12 @@
       if (n.mv) { k = Math.min(1, (tm - n.mv.t0) / n.mv.ms); px = n.mv.fx + (n.mv.tx - n.mv.fx) * k; py = n.mv.fy + (n.mv.ty - n.mv.fy) * k; }
       const al = n.fade && F._npcAlpha ? F._npcAlpha(n) : 1;
       if (al <= 0.01) return;
-      // 立ち止まった人の息（1 px、人ごとの位相と速さ。動きを減らす設定では出さない）
+      // 立ち止まった人は上下に揺らさない（持ち主 2026-09-28「上下に揺れるモーションは自然じゃない。カウンター奥の人がカウンターに立っちゃうように見える」）。
+      //   生きている感じは向きのちら見（npc.js の n.glance）だけ。id.ph は待ちの絵のコマの位相と吹き出しの浮きの位相
       const id = n.idle || (n.idle = idleOf(n));
-      const bob = !n.mv && !n.pose && !REDUCE.on ? (Math.sin((tm + id.ph) * id.w) > 0.35 ? Math.max(1, Math.round(u1(t))) : 0) : 0;
-      const bx = Math.round((px + 0.5) * t - cx), by = Math.round((py + 1) * t - cy - t * 0.1) - bob;
+      const bx = Math.round((px + 0.5) * t - cx), by = Math.round((py + 1) * t - cy - t * 0.1);
       drawChar(g, n.look, bx, by, (n.glance && n.glance.dir) || n.dir, !!n.mv, false, false, n.pose && n.pose.name, (n.odo || 0) + k, NPC_STEP_MS, al, id.ph);
-      // 依頼の吹き出しは、今描いた体と同じ点（歩きの途中の位置・息の 1 px 込み）に付ける。over の上の描き直しでは積まない
+      // 依頼の吹き出しは、今描いた体と同じ点（歩きの途中の位置込み）に付ける。over の上の描き直しでは積まない
       if (!REDRAW.on && F._npcQuest(n)) markQuest(n, bx, by, al);
       return;
     }
@@ -356,7 +355,7 @@
 
   // ---------------------------------------------------------------- 依頼の吹き出し
   // 話しかけると依頼をくれる人（R.Leads.offerOf、leads.js）の頭の上に、オレンジの吹き出しと白い「!」（オーナーの依頼 2026-09-28）。
-  //   位置: drawEnt が体を描いたのと同じ (x, y)（補間した歩きの位置・息の 1 px・カメラ）を積み、膜の上でまとめて描く。
+  //   位置: drawEnt が体を描いたのと同じ (x, y)（補間した歩きの位置・カメラ）を積み、膜の上でまとめて描く。
   //     論理のマス（n.x, n.y）から出さない（前の「新しい話」の印は歩くと遅れてずれた）。
   //   高さ: 立ちの絵（stand_s）の一番上の不透明な行（シートごとに 1 回読む）。歩きの上下では動かさない（吹き出しが震えない）。
   //   出さない: 話している間・イベントの間・消える途中（n.hold）。濃さは人のフェードに合わせる。動きを減らす設定では揺らさない

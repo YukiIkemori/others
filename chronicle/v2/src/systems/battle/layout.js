@@ -66,29 +66,84 @@
     return out;
   };
 
-  /** 敵の足もと。大きい物（ボス・size l）を先に良い場所へ。ボスは敵側の真ん中（2 体以上は真ん中から左右に並べる） */
+  /**
+   * 足もとの占める広さ（半幅・半奥行き、論理 px）。重なりの判定に使う。ボスの絵は大きいので広く取る
+   * （2026-09-28 の持ち主の報告「新しく敵が召喚した雑魚は当たり判定がおかしい」: 呼ばれた根・狼がボスの絵に重なっていた）
+   */
+  function foot(u) {
+    if (u && u.boss) return [70, 34];
+    const s = u && u.size;
+    return s === 'l' || s === 'boss' ? [50, 26] : s === 's' ? [28, 18] : [36, 22];
+  }
+  Lay.foot = foot;
+  function clash(p, fp, q) {
+    const fq = foot(q);
+    return Math.abs(q.x - p.x) < fp[0] + fq[0] && Math.abs(q.y - p.y) < fp[1] + fq[1];
+  }
+  /** 敵の場所の候補（論理 px。ボスが居るときはお供の場所を先に） */
+  function candidates(L, withBoss) {
+    const T = L.T, out = [];
+    for (const p of (withBoss ? T.bossAdds : []).concat(T.foes)) out.push({ x: p[0] + L.ox, y: p[1] + L.oy });
+    return out;
+  }
+  /** 敵の場所の枠（候補の外に出さない） */
+  function zone(L) {
+    const ps = candidates(L, true);
+    const xs = ps.map((p) => p.x), ys = ps.map((p) => p.y);
+    return { x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) };
+  }
+  /**
+   * 空いた場所: 候補を順に見て、どの敵（taken。x・y・size・boss）にも重ならない最初の所。
+   * 空きが無ければ（混んでいる）枠の中を細かく探し、いちばん離れている所（重なりを小さく）。
+   */
+  function spotFor(L, taken, u) {
+    const fp = foot(u);
+    const withBoss = taken.some((q) => q.boss);
+    for (const c of candidates(L, withBoss)) if (!taken.some((q) => clash(c, fp, q))) return c;
+    const Z = zone(L);
+    let best = null, bestD = -Infinity;
+    for (let y = Z.y0; y <= Z.y1; y += 10) {
+      for (let x = Z.x0; x <= Z.x1; x += 10) {
+        let d = Infinity;
+        for (const q of taken) {
+          const fq = foot(q);
+          d = Math.min(d, Math.max(Math.abs(q.x - x) / (fp[0] + fq[0]), Math.abs(q.y - y) / (fp[1] + fq[1])));
+        }
+        if (d > bestD) { bestD = d; best = { x, y }; }
+      }
+    }
+    return best || candidates(L, withBoss)[0];
+  }
+
+  /**
+   * 敵の足もと。大きい物（ボス・size l）を先に良い場所へ。ボスは敵側の真ん中（2 体以上は真ん中から左右に並べる）。
+   * お供・雑魚は候補の順に、先に置いた物に重ならない所へ（お供が 4 体を超えても重ねない）。
+   */
   Lay.enemySpots = function (L, units) {
     const T = L.T, out = {};
     const bosses = units.filter((u) => u.boss);
     const rest = units.filter((u) => !u.boss).slice().sort((a, b) => (big(b) ? 1 : 0) - (big(a) ? 1 : 0));
+    const taken = [];
+    const put = (u, p) => { out[u.uid] = p; taken.push({ x: p.x, y: p.y, size: u.size, boss: !!u.boss }); };
     if (bosses.length) {
-      bosses.forEach((u, i) => { const d = i - (bosses.length - 1) / 2; out[u.uid] = { x: T.boss[0] + L.ox + d * 120, y: T.boss[1] + L.oy + Math.abs(d) * 20 }; });
-      rest.forEach((u, i) => { const p = T.bossAdds[i % T.bossAdds.length]; out[u.uid] = { x: p[0] + L.ox, y: p[1] + L.oy + Math.floor(i / 4) * 6 }; });
+      bosses.forEach((u, i) => { const d = i - (bosses.length - 1) / 2; put(u, { x: T.boss[0] + L.ox + d * 120, y: T.boss[1] + L.oy + Math.abs(d) * 20 }); });
+      rest.forEach((u, i) => {
+        const p = T.bossAdds[i];
+        const q = p ? { x: p[0] + L.ox, y: p[1] + L.oy } : null;
+        put(u, q && !taken.some((t) => clash(q, foot(u), t)) ? q : spotFor(L, taken, u));
+      });
       return out;
     }
-    rest.forEach((u, i) => { const p = T.foes[i % T.foes.length]; out[u.uid] = { x: p[0] + L.ox + Math.floor(i / 8) * 12, y: p[1] + L.oy }; });
+    rest.forEach((u, i) => {
+      const p = T.foes[i];
+      const q = p ? { x: p[0] + L.ox, y: p[1] + L.oy } : null;
+      put(u, q && !taken.some((t) => clash(q, foot(u), t)) ? q : spotFor(L, taken, u));
+    });
     return out;
   };
 
-  /** 呼び出し（summon）で来た敵の空いた場所 */
-  Lay.freeSpot = function (L, taken) {
-    const T = L.T;
-    for (const p of T.foes) {
-      const x = p[0] + L.ox, y = p[1] + L.oy;
-      if (!taken.some((q) => Math.abs(q.x - x) < 40 && Math.abs(q.y - y) < 30)) return { x, y };
-    }
-    return { x: T.foes[0][0] + L.ox - 20, y: T.foes[0][1] + L.oy + 10 };
-  };
+  /** 呼び出し（summon）で来た敵 u の空いた場所。taken = 今見えている敵の actor（x・y・size・boss） */
+  Lay.freeSpot = function (L, taken, u) { return spotFor(L, taken || [], u || { size: 'm' }); };
 
   /** 奥行きの係数（見本の scaleAt。影の長さ・濃さに使う） */
   Lay.depth = function (L, y) { return Math.max(0.6, Math.min(1.2, (y - L.horizon + 200) / 400)); };

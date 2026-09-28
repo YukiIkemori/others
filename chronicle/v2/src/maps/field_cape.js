@@ -1,6 +1,6 @@
 // 生成物（design/art_ref/gen/env/_tools/under/field/ の areas.py → fit.py → tomap.py）。手で直さない: 配置は areas.py、当たりは fit.py で作り直す。
 // エリア f_cape「灯台の岬」（ファロス街道と灯台、56×44）。エリア切り替えのフィールド（maps/field_00_kit.js）。
-//   出口: w → f_roa.east, e → pharos.gate_w
+//   出口: w → f_roa.east
 //   絵: field/under/f_cape（v2/assets/env/field/under/。無ければマスから焼く）
 (function (R) {
   'use strict';
@@ -15,8 +15,8 @@
       "\"\",,,TTTTTT;;;,TTTT,,,,,,,,,,,,,,,,,XXXr;,;,,T,rrrrrXXXX",
       "\"\",,,,TTTrT;;;;TTTT,,,,,,r,,,,,,,,::::::;,,,,,,rccr,XXXX",
       "\",,,,,,,,,;;;;;;\",,,,,,,,,,,,,,,,,::::::,,,,,,.....,,,,,",
-      "..........,;;,,;\",,,,,,,,,,,,,,,\",......................",
-      ".................,,,,;,;;,..............................",
+      "..........,;;,,;\",,,,,,,,,,,,,,,\",.....................X",
+      ".................,,,,;,;;,.............................X",
       ",,,,,,,,,,...............::.......,,,,,,,,,,,,,,;,,,,,,,",
       ",,,,,,,,,,,,,,,,,;.......::\",,\",,,,,,,,r,,,,,,,,,,;,,,,,",
       ",,r,,,,,,r,,,,,,,;;;;;;;;::,,,\",,,,XXX,,,,,,,,,,,,;,,,,,",
@@ -63,12 +63,14 @@
       {"type":"prop","id":"lantern","x":44,"y":6},
       {"type":"chest","id":"f_cape_c1","x":12,"y":31,"item":"i_salve","n":2},
       {"type":"prop","id":"lighthouse_glow","x":31,"y":28,"cond":"prologue_boss"},
+      {"type":"door","x":55,"y":8,"look":"none","locked":"港町ファロスへは、北の門をくぐって入ろう。"},
+      {"type":"door","x":55,"y":9,"look":"none","locked":"港町ファロスへは、北の門をくぐって入ろう。"},
     ],
     npcs: [
 
     ],
-    spawns: {"west":{"x":1,"y":8,"dir":"e"},"pharos":{"x":54,"y":8,"dir":"w"},"lighthouse":{"x":31,"y":37,"dir":"s"}},
-    exits: [{"x":0,"y":8,"w":1,"h":2,"to":{"map":"f_roa","spawn":"east"}},{"x":55,"y":8,"w":1,"h":2,"to":{"map":"pharos","spawn":"gate_w"}},{"x":48,"y":6,"w":2,"h":1,"to":{"map":"pharos","spawn":"gate_w"}}],
+    spawns: {"west":{"x":1,"y":8,"dir":"e"},"pharos":{"x":48,"y":7,"dir":"s"},"lighthouse":{"x":31,"y":37,"dir":"s"}},
+    exits: [{"x":0,"y":8,"w":1,"h":2,"to":{"map":"f_roa","spawn":"east"}},{"x":48,"y":6,"w":2,"h":1,"to":{"map":"pharos","spawn":"gate_w"}}],
     triggers: [],
     tilePatches: [],
     zones: [{"rect":[0,0,56,16],"zone":"zw_prologue"},{"rect":null,"zone":"zw_peninsula"}],

@@ -74,7 +74,7 @@
   const glimTierNow = () => (R.Tier && R.Tier.effective ? R.Tier.effective() : tierNow());
   const abilMul = (a, k) => (R.Mon && R.Mon.abilMul ? R.Mon.abilMul(a, k) : Math.max(0.5, 1 + k * ((a == null ? 16 : a) - 16)));
   const BUFF_STATS = ['atk', 'def', 'mag', 'mdef', 'agi'];
-  const LETTERS = 'ＡＢＣＤＥＦＧＨ';
+  const LETTERS = 'ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ';   // 同じ種類が何体いても（呼び出しで増えても）文字を付ける
   const EMPTY = Object.freeze({});
   const PARTY_KEYS = { goldPct: 1, dropPct: 1, rarePct: 1, superPct: 1, rareEncPct: 1, goldenPct: 1, escapePct: 1 };
 

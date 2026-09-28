@@ -1,5 +1,5 @@
 {
-"note": "hand fits from check.png (gen1): the lighthouse painted 1.5 tiles east (door at x 31), its forecourt; the gatehouse arch north of the road (a second way into the town); the round ruin on the plateau is the old wall POI; the path down to the cove",
+"note": "hand fits from check.png (gen1): the lighthouse painted 1.5 tiles east (door at x 31), its forecourt; the gatehouse arch north of the road (a second way into the town); the round ruin on the plateau is the old wall POI; the path down to the cove; one way into the town only (owner 2026-09-28): the gatehouse arch; the road east past the wall is closed at the map edge (a bump note)",
 "open_rect": [
 [
 28,
@@ -113,6 +113,11 @@
 "x": 31,
 "y": 37,
 "dir": "s"
+},
+"pharos": {
+"x": 48,
+"y": 7,
+"dir": "s"
 }
 },
 "exits": [
@@ -130,5 +135,36 @@
 "fit": {
 "SEED": "layout",
 "EM": 0
+},
+"drop_exits": [
+"e"
+],
+"solid": [
+[
+55,
+8,
+"X"
+],
+[
+55,
+9,
+"X"
+]
+],
+"objects_add": [
+{
+"type": "door",
+"x": 55,
+"y": 8,
+"look": "none",
+"locked": "港町ファロスへは、北の門をくぐって入ろう。"
+},
+{
+"type": "door",
+"x": 55,
+"y": 9,
+"look": "none",
+"locked": "港町ファロスへは、北の門をくぐって入ろう。"
 }
+]
 }

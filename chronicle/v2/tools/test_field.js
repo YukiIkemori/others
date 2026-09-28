@@ -186,7 +186,7 @@ async function main() {
   labDef.npcs = labNpcs0;
   delete R.Game.flags.lab_ghost_on;
 
-  section('立っている人の小さな動き（見回す・息）');
+  section('立っている人の小さな動き（見回す。上下には揺れない）');
   await enter('field_lab', 2, 12, 's');
   const lp = S.npcById.lab_push, lr = S.npcById.lab_rock;
   let glanced = false, glanceDirs = new Set(), rockGl = false;
@@ -433,6 +433,51 @@ async function main() {
   await settle(800);
   ok('hub result {escape}', R.Field.pos.map === 'field_world');
   R.Screens.open = origOpen;
+
+  section('入口の確かめ（confirm: はい → 入る、いいえ → 1 歩下がる。持ち主 2026-09-28）');
+  {
+    const sayO = R.UIK.Message.say;
+    let asked = [], answer = 1;
+    R.UIK.Message.say = async (o) => { asked.push(o); return answer; };
+    const roa = R.DB.maps.f_roa, cape = R.DB.maps.f_cape;
+    const wellSt = roa.objects.find((o) => o.type === 'stairs' && o.to.map === 'well');
+    const lhDoor = cape.objects.find((o) => o.type === 'door' && o.to && o.to.map === 'lighthouse_1');
+    ok('field → dungeon entrances get a confirm text (well, lighthouse)', !!(wellSt && wellSt.confirm && /古井戸/.test(wellSt.confirm) && lhDoor && lhDoor.confirm && /灯台/.test(lhDoor.confirm)), [wellSt && wellSt.confirm, lhDoor && lhDoor.confirm]);
+    const noAsk = [];
+    for (const m of Object.values(R.DB.maps)) {
+      if (!m || m.kind !== 'field') continue;
+      for (const e of m.exits || []) if (e.confirm) noAsk.push(m.id + ' exit→' + e.to.map);
+    }
+    ok('town gates and area edges do not ask', !noAsk.length, noAsk);
+    await enter('f_roa', wellSt.x, wellSt.y + 1, 'n');
+    R.Field.encounter.suppress(50);
+    answer = 1; asked = [];
+    await step('up');
+    await settle(600);
+    ok('stepping onto the well asks (はい／いいえ, B = いいえ)', asked.length === 1 && asked[0].text === wellSt.confirm && asked[0].choices.join() === 'はい,いいえ' && asked[0].cancel === 1, asked);
+    ok('いいえ → back one tile, still facing the well, nothing locked', R.Field.pos.map === 'f_roa' && same(at(), [wellSt.x, wellSt.y + 1]) && R.Field.pos.dir === 'n' && !Object.keys(R.Field.locks()).length && !S.mv, { pos: R.Field.pos, locks: R.Field.locks() });
+    const st0 = R.Game.steps;
+    await settle(300);
+    ok('… the step back is not a new arrival (no second question)', asked.length === 1 && R.Game.steps === st0);
+    answer = 0; asked = [];
+    await step('up');
+    await settle(800);
+    ok('はい → into the well', asked.length === 1 && R.Field.pos.map === 'well', R.Field.pos);
+    // 行き先の無い端（f_cape の東の端の道）は押すと一言
+    const px = cape.exits.filter((e) => e.to.map === 'pharos');
+    ok('f_cape: one way into Pharos (the gatehouse arch)', px.length === 1 && px[0].x === 48 && px[0].y === 6, px);
+    const sp = cape.spawns.pharos;
+    ok('f_cape: the arrival from Pharos stands in front of the arch', sp.x >= 48 && sp.x <= 49 && sp.y === 7 && R.Field._walkable(cape, sp.x, sp.y, null, 0));
+    const toast0 = R.Field.hud.toast;
+    let toasts = [];
+    R.Field.hud.toast = (t) => { toasts.push(t); };
+    await enter('f_cape', 54, 8, 'e');
+    R.Field.encounter.suppress(50);
+    await hold('right', 200); await settle(100);
+    R.Field.hud.toast = toast0;
+    ok('f_cape: the road end by the east edge is closed (a note, no map change)', R.Field.pos.map === 'f_cape' && R.Field.pos.x === 54 && toasts.some((t) => /門/.test(t)), { pos: R.Field.pos, toasts });
+    R.UIK.Message.say = sayO;
+  }
 
   section('戦闘の abort では何もしない');
   const origBattle = R.Battle.start, origEnc2 = R.Mon.encounter;

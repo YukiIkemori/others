@@ -19,6 +19,13 @@ for aid in sys.argv[1:]:
         for o in d['objects']:
             if all(o.get(k) == v for k, v in mv['match'].items()): o.update(mv['set'])
     for k, v in fx.get('spawns', {}).items(): d['spawns'][k] = v
+    # fix.json: drop_exits ['e', ...] = edge exits removed by hand (one way in only), solid [[x, y, ch?]] also over rows_fit,
+    # objects_add [...] = extra objects (a bump note on a closed road end)
+    rows = [list(r) for r in rows]
+    for q in fx.get('solid', []): rows[q[1]][q[0]] = q[2] if len(q) > 2 else 'X'
+    rows = [''.join(r) for r in rows]
+    d['exits'] = [e for e in d['exits'] if e.get('edge') not in set(fx.get('drop_exits', []))]
+    d['objects'] = d['objects'] + list(fx.get('objects_add', []))
     # lamps (waylamp / lamp_post) stand beside the road, never on it and never in a narrow gap (tools/qa/check_lamps.js):
     # the nearest cell whose 5x5 neighbourhood is all walkable, which is not road itself, with a road cell within 2
     WALKC, ROADC = set(',;".:s_=c'), set('.:c=')

@@ -253,11 +253,23 @@
       // B.units に居る敵で、actors に居ない（呼び出しの本物）→ 足す
       if (!st.actor(u.uid)) addActor(st, u);
     }
+    P.relabel(st);
+  };
+  /**
+   * 敵の名前（Ａ・Ｂ…）を中の今の名前に合わせる。呼び出しで同じ種類が増えると中で付け直す（最初は「狼」→「狼Ａ」）ので、
+   * 絵の下の名札・ねらいの見出しが古い名前のまま残らないように（2026-09-28 の持ち主の報告「文字の無い狼がいる」）
+   */
+  P.relabel = function (st) {
+    for (const a of st.actors) {
+      const u = st.unit(a.uid);
+      if (u && u.name && a.name !== u.name) a.name = u.name;
+    }
   };
   function addActor(st, u) {
     const k = _.actors.keyOf(u);
     const a = { uid: u.uid, side: u.side, id: u.id, name: u.name, look: u.look || u.sprite, sprite: u.sprite, wtype: u.wtype, size: u.size, boss: !!u.boss, golden: !!u.golden, special: !u.boss && !!(u.golden || u.rare || u.metal), metal: !!u.metal, key: k.key, opts: k.opts };
-    Object.assign(a, _.layout.freeSpot(st.L, st.actors.filter((x) => x.side === 'enemy' && !(st.vis[x.uid] && st.vis[x.uid].gone >= 1))));
+    // 今見えている敵（倒れて消えた物は除く）に重ならない場所。ボスの大きな絵の上に重ねない
+    Object.assign(a, _.layout.freeSpot(st.L, st.actors.filter((x) => x.side === 'enemy' && !(st.vis[x.uid] && st.vis[x.uid].gone >= 1)), a));
     st.actors.push(a);
     if (!st.vis[u.uid]) st.vis[u.uid] = { hp: u.hp, mp: u.mp, maxHp: u.maxHp, maxMp: u.maxMp, alive: true, status: [], pose: 'idle', poseT: 0, dx: 0, dy: 0, flash: 0, gone: 0, appear: 0 };
     return a;
@@ -516,16 +528,21 @@
   };
   H.summon = async (st, e) => {
     const m = e.mon;
-    let u = m && typeof m === 'object' && m.uid != null ? m : null;
+    // 中の本物（B.units の e_<番号>）を先に使う。以前は mon（魔物の id の文字列）から仮の敵 sum_<n> を作っていたので、
+    // 本物と仮の 2 体が並び、仮の方は名前の文字が無く・当たらず・退却しても残っていた（2026-09-28 の持ち主の報告）
+    // （見本の demo は mon に敵の形を入れて uid に呼んだ側を入れる。中の出来事は uid が呼ばれた敵、mon が魔物の id）
+    let u = m && typeof m === 'object' && m.uid != null ? (st.B && st.B.units.find((x) => x.uid === m.uid)) || m : null;
+    if (!u && typeof m !== 'object' && e.uid) u = (st.B && st.B.units.find((x) => x.uid === e.uid && x.side === 'enemy')) || null;
     if (!u) {
       const id = typeof m === 'string' ? m : (m && m.id) || 'unknown';
       const d = (R.DB.monsters && R.DB.monsters[id]) || {};
-      u = { uid: 'sum_' + (st.actors.length + 1), side: 'enemy', id, name: d.name || id, hp: 1, mp: 0, maxHp: 1, maxMp: 0, row: 'front', status: [], sprite: d.sprite || id, size: d.size || 's', alive: true };
+      u = { uid: e.uid && !st.actor(e.uid) ? e.uid : 'sum_' + (st.actors.length + 1), side: 'enemy', id, name: d.name || id, hp: 1, mp: 0, maxHp: 1, maxMp: 0, row: 'front', status: [], sprite: d.sprite || id, size: d.size || 's', alive: true };
     }
     if (!st.B.units.some((x) => x.uid === u.uid)) st.extra[u.uid] = u;
     const a = st.actor(u.uid) || addActor(st, u);
     const v = st.vis[u.uid];
     v.gone = 0; v.appear = 0; v.alive = true;
+    P.relabel(st);
     P.fx(st, 'summon', a.x, a.y - 20, {});
     sfx('teleport');
     await P.tween(st, v, 'appear', 1, 420);

@@ -121,7 +121,12 @@
       return us.slice().sort((a, b) => at(a) - at(b));
     };
     st.enemyUnits = () => st.actors.filter((a) => a.side === 'enemy').map((a) => st.unit(a.uid)).filter(Boolean);
-    st.aliveEnemies = () => st.actors.filter((a) => a.side === 'enemy' && st.vis[a.uid] && st.vis[a.uid].alive && !(st.vis[a.uid].gone >= 1));
+    // ねらえる敵: 絵が見えていて、中でも生きている物（呼ばれた敵も actors に入る。仮の絵・逃げた物は入れない）
+    st.aliveEnemies = () => st.actors.filter((a) => {
+      if (a.side !== 'enemy') return false;
+      const v = st.vis[a.uid], u = st.unit(a.uid);
+      return !!(v && v.alive && !(v.gone >= 1) && (!u || u.alive !== false));
+    });
     /** 戦闘の時計で待つ（戦闘の速さに従う） */
     st.pwait = (ms) => { const at = st.clock + (ms > 0 ? ms : 0); return R.until(() => st.clock >= at || st.dead); };
     /** 実時間で待つ（最短の表示時間） */

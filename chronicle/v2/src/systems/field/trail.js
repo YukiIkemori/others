@@ -63,6 +63,8 @@
   /** 先頭が動く前に呼ぶ: 先頭の今の位置を 1 人目へ、1 人目を 2 人目へ… */
   F._trailPush = function (x, y, lv, dir) {
     const f = S.fol || [];
+    const z = f[f.length - 1];
+    S.trailTail = z ? { x: z.x, y: z.y, lv: z.lv, dir: z.dir } : null;   // 1 歩下がる（_trailBack）ときの最後の人の戻り先
     for (let i = f.length - 1; i >= 0; i--) {
       const a = f[i];
       a.fx = a.x; a.fy = a.y;
@@ -72,6 +74,18 @@
       if (a.moving) a.dir = R.U.dirOf(nx - a.x, ny - a.y, a.dir);
       a.x = nx; a.y = ny; a.lv = nlv;
     }
+  };
+  /** 先頭が 1 歩下がる前に呼ぶ（入口の確かめの「いいえ」、move.js）: 1 人目を 2 人目の所へ…最後の人は前の歩の前の所へ。向きは変えない */
+  F._trailBack = function () {
+    const f = S.fol || [], z = S.trailTail;
+    for (let i = 0; i < f.length; i++) {
+      const a = f[i], b = i + 1 < f.length ? f[i + 1] : z;
+      a.fx = a.x; a.fy = a.y;
+      if (!b) { a.moving = false; continue; }
+      a.moving = b.x !== a.x || b.y !== a.y;
+      a.x = b.x; a.y = b.y; a.lv = b.lv || 0;
+    }
+    S.trailTail = null;
   };
   F._trailStart = function () {};
   F._trailEnd = function () { const f = S.fol || []; for (let i = 0; i < f.length; i++) { f[i].moving = false; f[i].fx = f[i].x; f[i].fy = f[i].y; } };

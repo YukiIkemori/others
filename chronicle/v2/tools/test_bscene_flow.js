@@ -211,6 +211,42 @@ async function main() {
     ok('revive battle closed', await B.waitFor(p, 'window.__r', 10000));
   }
 
+  // 呼び出し（2026-09-28 の持ち主の報告: 狼の群れ頭が呼んだ狼に文字が無い・退却しても残る、呼ばれた雑魚の当たりがおかしい・攻撃が選べない）
+  section('呼び出し: 森の狼の群れ頭（呼んだ狼に文字、ねらえる、頭が倒れると全員いなくなって勝利）');
+  {
+    await B.ev(p, "RPG.Settings.set('battleSpeed', 3); 0");
+    await B.ev(p, `(() => { const m = RPG.Party.members(); for (const c of m) c.hp = Math.max(1, c.maxHp || c.hp); return 0; })()`);
+    await B.ev(p, start({ troop: 'tr_a21_forest_wolves', autoInput: true, seed: 11 }));
+    ok('wolf battle opens', await B.waitFor(p, `${D} && ${D}.B`, 20000));
+    // 一行は倒れない・狼は倒れない。群れ頭に遠吠えを予約させ続け、3 匹呼んだら手で命令する
+    await B.ev(p, `(() => { const E = ${D}.B.engine; E.party.forEach((x) => { x.hp = 99999; }); E.mons.forEach((m) => { m.hp = m.mhp = 99999; });
+      window.__howl = setInterval(() => { const d = ${D}; if (!d || !d.B) return; const E = d.B.engine, lord = E.mons.find((m) => m.id === 'b_wolflord');
+        if (E.mons.filter((m) => m.summoned).length >= 3) { d.setup.autoInput = false; clearInterval(window.__howl); return; }
+        if (lord && !lord.reserved) lord.reserved = { id: 'eb_pack_howl', round: -1 }; }, 30); return 0; })()`);
+    ok('3 wolves summoned, then the command menu opens', await B.waitFor(p, `${D} && !${D}.setup.autoInput && ${D}.phase==='input' && ${D}.ui`, 90000));
+    const st1 = await B.ev(p, `(() => { const d = ${D}; const f = d.actors.filter((a) => a.side === 'enemy' && !(d.vis[a.uid].gone >= 1)); return { foes: f.map((a) => ({ uid: a.uid, name: a.name, x: a.x, y: a.y })), real: f.every((a) => d.B.units.some((u) => u.uid === a.uid)), alive: d.aliveEnemies().map((a) => a.uid).sort().join(), core: d.B.units.filter((u) => u.side === 'enemy' && u.alive).map((u) => u.uid).sort().join() }; })()`);
+    const wolves = st1.foes.filter((a) => /群れの狼/.test(a.name));
+    ok('5 wolves on screen, each lettered once (Ａ〜Ｅ), all real core units', wolves.length === 5 && new Set(wolves.map((a) => a.name)).size === 5 && wolves.every((a) => /[Ａ-Ｚ]$/.test(a.name)) && st1.real, st1.foes);
+    ok('targets = the living enemies in the core', st1.alive === st1.core, st1);
+    // 戦う → 武器（攻撃） → ねらい。←で全員を回る
+    await B.press(p, 'a'); await p.waitForTimeout(150);
+    await B.press(p, 'a'); await p.waitForTimeout(150);
+    if (await B.ev(p, `!!(${D}.ui && ${D}.ui.o && ${D}.ui.o.rows && ${D}.ui.o.rows[0] && ${D}.ui.o.rows[0].id === 'attack')`)) { await B.press(p, 'a'); await p.waitForTimeout(150); }
+    const hot = new Set();
+    for (let i = 0; i < 8; i++) { for (const k of await B.ev(p, `Object.keys(${D}.hot || {})`)) hot.add(k); await B.press(p, 'left'); await p.waitForTimeout(60); }
+    ok('attack → every enemy (all 5 wolves and the leader) can be the target', st1.foes.every((a) => hot.has(a.uid)) && hot.size === st1.foes.length, { hot: [...hot], foes: st1.foes.map((a) => a.uid) });
+    // 頭を 1 に、あとは自動で頭をねらう
+    await B.ev(p, `(() => { const d = ${D}; const E = d.B.engine, lord = E.mons.find((m) => m.id === 'b_wolflord'); lord.hp = 1; lord.reserved = null; d.setup.autoInput = true;
+      const orig = d.aliveEnemies; d.aliveEnemies = () => orig().sort((a, b) => (b.uid === lord.uid ? 1 : 0) - (a.uid === lord.uid ? 1 : 0)); return 0; })()`);
+    ok('the round plays', await B.pressUntil(p, 'a', `${D}.phase==='play' || ${D}.phase==='result'`, 20));
+    ok('leader down → victory panel', await B.waitFor(p, `${D} && ${D}.result`, 60000));
+    const left = await B.ev(p, `(() => { const d = ${D}; return d.actors.filter((a) => a.side === 'enemy' && !(d.vis[a.uid].gone >= 1)).map((a) => a.uid + ':' + a.name); })()`);
+    ok('no wolf left on screen after the retreat', left.length === 0, left);
+    ok('the flee of every wolf was played', await B.ev(p, `${D}.log.filter((l) => l.t === 'flee').length >= 4`));
+    ok('confirm closes the victory as a win', await B.pressUntil(p, 'a', 'window.__r', 30) && (await B.ev(p, 'window.__r.result')) === 'win');
+    await B.ev(p, "RPG.Settings.set('battleSpeed', 1); 0");
+  }
+
   section('全滅: タイトルへ');
   await B.ev(p, start({ demo: 'wipe', autoInput: true, mons: [['x', 1]] }));
   ok('wipe screen', await B.waitFor(p, `${D} && ${D}.go && ${D}.ui`, 30000));

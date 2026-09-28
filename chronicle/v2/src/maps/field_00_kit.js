@@ -19,12 +19,20 @@
     r: { mat: 'rock', solid: true }, R: { mat: 'cliff', solid: true, rise: 1 }, X: { mat: 'wall_stone', solid: true },
   };
   const LINKS = {};
+  // エリアからダンジョンへ入る所の確かめの文（持ち主 2026-09-28「古井戸に入る際…入りますか？みたいな確認取ったら？」）。
+  //   行き先のマップ id → 文。エリアの出口・扉・階段・建物の戸口で、行き先がこの表にあり confirm の無い物に足す（move.js が はい／いいえ を聞く）。
+  //   町の門・エリアの端・家の戸口には付けない。物に confirm: false と書けば聞かない
+  const CONFIRM = {
+    well: '縄ばしごを伝って、古井戸の底へ降りますか？',
+    lighthouse_1: '重い扉の向こうは、灯台の中だ。\n中へ入りますか？',
+  };
   // 絵の無い光だけの物（描いた絵の上に光だけ置く。art.painted に入れて絵は出さない、ENV_ASSETS.md §8）
   const PROPS = { lighthouse_glow: { soft: true, glow: true, light: { kind: 'lamp', r: 170 } } };
   for (const id of Object.keys(PROPS)) if (!R.DB.props[id]) R.def('props', id, PROPS[id]);
   const FA = (R.FieldArea = R.FieldArea || {});
   FA.LEGEND = LEGEND;
   FA.LINKS = LINKS;
+  FA.CONFIRM = CONFIRM;
   FA.def = function (id, spec) {
     const m = Object.assign({
       id, kind: 'field', theme: 'field', legend: LEGEND, outside: 'forest_dark',
@@ -61,6 +69,13 @@
     }
     // 前のワールドの建物の戸口で、中の出口がエリアへ付け替わった所（きこりの休み小屋）: 前のワールドからは入れない
     // （入ると戻りがエリアになり、行きと帰りが合わない。前のワールドの体験版の範囲はもう歩かない）
+    // エリアからダンジョンへの入口に確かめの文
+    for (const m of Object.values(M)) {
+      if (!m || m.kind !== 'field') continue;
+      const ask = (o, to) => { if (o && to && o.confirm === undefined && CONFIRM[to.map]) o.confirm = CONFIRM[to.map]; };
+      for (const e of m.exits || []) ask(e, e.to);
+      for (const o of m.objects || []) { if (o.type === 'building') ask(o.door, o.door && o.door.to); else ask(o, o.to); }
+    }
     const into = (to) => to && M[to.map] && M[to.map].kind === 'interior' && (M[to.map].exits || []).some((e) => e.to && M[e.to.map] && M[e.to.map].kind === 'field');
     if (w && w.objects) for (const o of w.objects) if (o.type === 'building' && o.door && into(o.door.to)) delete o.door;
   }

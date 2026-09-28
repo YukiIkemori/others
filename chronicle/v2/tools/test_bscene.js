@@ -37,11 +37,30 @@ ok('back row is a step to the right of the front row line', (() => { const P = _
 const foes = Array.from({ length: 8 }, (x, i) => ({ uid: 'e' + i, size: i === 0 ? 'l' : 's' }));
 const es = _.layout.enemySpots(L, foes);
 ok('enemies inside x 40〜420, y 320〜470', Object.values(es).every((p) => p.x >= 40 && p.x <= 420 && p.y >= 320 && p.y <= 470), es);
+// 呼び出しで増えたお供（2026-09-28 の持ち主の報告「新しく敵が召喚した雑魚は当たり判定がおかしい」）: ボス＋お供 7 体でも重ならず枠の中
+const clashOf = (spots, us) => { const bad = []; for (let i = 0; i < us.length; i++) for (let j = i + 1; j < us.length; j++) { const a = us[i], b = us[j], p = spots[a.uid], q = spots[b.uid], fa = _.layout.foot(a), fb = _.layout.foot(b); if (Math.abs(p.x - q.x) < fa[0] + fb[0] && Math.abs(p.y - q.y) < fa[1] + fb[1]) bad.push([a.uid, b.uid]); } return bad; };
+{
+  const us = [{ uid: 'b', boss: true, size: 'l' }].concat(Array.from({ length: 7 }, (x, i) => ({ uid: 'w' + i, size: 's' })));
+  const sp = _.layout.enemySpots(L, us);
+  ok('boss + 7 adds: no two feet overlap', !clashOf(sp, us).length, clashOf(sp, us));
+  ok('boss + 7 adds: all inside x 40〜420, y 320〜470', Object.values(sp).every((p) => p.x >= 40 && p.x <= 420 && p.y >= 320 && p.y <= 470), sp);
+  const taken = [{ x: sp.b.x, y: sp.b.y, boss: true, size: 'l' }, { x: sp.w0.x, y: sp.w0.y, size: 's' }];
+  const f = _.layout.freeSpot(L, taken, { size: 's' });
+  ok('freeSpot keeps off the boss sprite (was foes[0], right on top of the boss)', Math.abs(f.x - sp.b.x) >= 98 || Math.abs(f.y - sp.b.y) >= 52, f);
+  const crowd = Array.from({ length: 14 }, (x, i) => ({ uid: 'c' + i, size: 's' }));
+  const cs = _.layout.enemySpots(L, crowd);
+  ok('14 small foes: still inside the stage and each spot distinct', Object.values(cs).every((p) => p.x >= 40 && p.x <= 420 && p.y >= 320 && p.y <= 470) && new Set(Object.values(cs).map((p) => p.x + ',' + p.y)).size === 14, cs);
+}
 R.W = 540; R.H = 1169; R.layout = 'tall'; R.uiScale = 1.3;
 L = _.layout.compute();
 ok('tall: stage on the upper part, cards / commands / chips below', L.tall && L.stageH < R.H * 0.6 && L.cardsY < L.cmdY && L.cmdY < L.chipsY && L.chipsY < R.H, L);
 const tp = _.layout.partySpots(L, party);
 ok('tall: party inside the stage', Object.values(tp).every((p) => p.x > 0 && p.x < R.W && p.y < L.stageH), tp);
+{
+  const us = [{ uid: 'b', boss: true, size: 'l' }].concat(Array.from({ length: 6 }, (x, i) => ({ uid: 'w' + i, size: 's' })));
+  const sp = _.layout.enemySpots(L, us);
+  ok('tall: boss + 6 adds inside the stage, no overlap', !clashOf(sp, us).length && Object.values(sp).every((p) => p.x > 0 && p.x < R.W * 0.6 && p.y < L.stageH), sp);
+}
 R.W = 960; R.H = 540; R.layout = 'wide'; R.uiScale = 1;
 
 section('見本の戦闘（demo）の形');
@@ -213,6 +232,74 @@ section('人の札は隊列の順（前列・後列で分けない。2026-09-27 
     _.target.pick(s4, u, 'party', { row: { cmd: 'spell', id: 's_earth_light_dark' }, mem: {} });
     ok('party (revive all): whole party lit, dead included', Object.keys(s4.hot || {}).sort().join() === 'p0,p1,p2');
     ok('TARGET_JA names ally_dead', _.cmd.TARGET_JA.ally_dead === '倒れた味方ひとりに');
+  }
+  // 呼び出し → 退却（2026-09-28 の持ち主の報告: 狼の群れ頭が呼んだ狼に文字が無い・退却しても残る、呼ばれた雑魚の当たりがおかしい）
+  section('呼び出し: 森の狼の群れ頭・根食らい（場面）');
+  const summonRun = async (troop, want) => {
+    R.State.newGame({ hero: { type: 'warrior', sex: 'm', name: 'アルン' }, seed: 3 });
+    for (const id of ['hagen', 'sylvain', 'noela']) { try { R.Party.join(id); } catch (e) { /* 仲間が無いデータ */ } }
+    R.W = 960; R.H = 540; R.layout = 'wide'; R.uiScale = 1; R.safe = { l: 0, t: 0, r: 0, b: 0 };
+    const err = console.error; console.error = () => {};
+    let res = null, mid = null;
+    R.Battle.start({ troop, autoInput: true }).then((r) => { res = r; });
+    for (let i = 0; i < 20000; i++) {
+      R.Engine.advance(50); await new Promise((r) => setImmediate(r));
+      const st = R.Battle.debug();
+      if (!st || !st.B) { if (res) break; continue; }
+      const E = st.B.engine;
+      const boss = E.mons.find((m) => m.boss && m.d.bossType !== 'add');
+      if (!st.t_god) { st.t_god = 1; E.party.forEach((p) => { p.hp = 99999; }); E.mons.forEach((m) => { m.hp = m.mhp = 99999; }); if (troop === 'tr_b_rooteater') E.mons[0].hp = 1; }
+      const summoned = E.mons.filter((m) => m.summoned).length;
+      if (!mid && summoned < want && st.phase === 'input' && boss && !boss.reserved) boss.reserved = { id: troop === 'tr_b_rooteater' ? 'eb_call_roots' : 'eb_pack_howl', round: -1 };
+      if (!mid && summoned >= want && st.phase === 'input') {
+        const foes = st.actors.filter((a) => a.side === 'enemy' && !(st.vis[a.uid].gone >= 1));
+        mid = {
+          foes: foes.map((a) => ({ uid: a.uid, name: a.name, x: a.x, y: a.y, size: a.size, boss: a.boss, real: !!st.B.units.find((u) => u.uid === a.uid) })),
+          alive: st.aliveEnemies().map((a) => a.uid).sort().join(), engAlive: st.B.units.filter((u) => u.side === 'enemy' && u.alive).map((u) => u.uid).sort().join(),
+          names: foes.map((a) => [a.name, (st.unit(a.uid) || {}).name]),
+          hits: foes.filter((a) => !a.boss).map((a) => { const h = _.target.hitAt(st, st.aliveEnemies(), { x: a.x, y: a.y - 8 }); return [a.uid, h && h.uid]; }),
+          attack: st.partyUnits().every((u) => (st.B.options(u.uid)[0] || {}).cmd === 'attack'),
+        };
+        // 頭を先にねらう（自動の攻撃は ねらえる敵の最初）
+        boss.hp = 1;
+        if (troop === 'tr_b_rooteater') E.mons.forEach((x) => { if (x.alive) x.hp = 1; });   // 根食らいのお供は頭が倒れても残る（逃げない）
+        const orig = st.aliveEnemies;
+        st.aliveEnemies = () => orig().sort((a, b) => (b.uid === boss.uid ? 1 : 0) - (a.uid === boss.uid ? 1 : 0));
+      }
+      if (st.phase === 'result' && !st.t_res) st.t_res = i;
+      if (st.t_res && i - st.t_res === 60) {
+        const left = st.actors.filter((a) => a.side === 'enemy' && !(st.vis[a.uid].gone >= 1)).map((a) => a.uid);
+        // 勝利の札を閉じる（A を押して離す）
+        for (let j = 0; j < 400 && !res; j++) { R.Input._set('a', j % 4 === 0); R.Engine.advance(50); await new Promise((r) => setImmediate(r)); }
+        R.Input._set('a', false);
+        console.error = err;
+        return { mid, left, over: st.B.over, res: res && res.result };
+      }
+    }
+    console.error = err;
+    return { mid, left: null, over: null, res };
+  };
+  {
+    const w = await summonRun('tr_a21_forest_wolves', 3); 
+    const m = w.mid || { foes: [], names: [], hits: [] };
+    const wolves = m.foes.filter((a) => /群れの狼/.test(a.name));
+    ok('wolves: 2 + 3 summoned wolves on screen, every one a real unit (no stand-in sum_<n>)', wolves.length === 5 && m.foes.every((a) => a.real && !/^sum_/.test(a.uid)), m.foes);
+    ok('wolves: every wolf lettered and unique (Ａ〜Ｅ), label = the core name', new Set(wolves.map((a) => a.name)).size === 5 && wolves.every((a) => /[Ａ-Ｚ]$/.test(a.name)) && m.names.every(([a, b]) => a === b), m.names);
+    ok('wolves: targets = the living enemies in the core', m.alive && m.alive === m.engAlive, [m.alive, m.engAlive]);
+    ok('wolves: tapping each wolf picks that wolf', m.hits.length === 5 && m.hits.every(([a, b]) => a === b), m.hits);
+    ok('wolves: attack is offered to everyone', m.attack === true);
+    ok('wolves: positions inside the stage, no overlap', !clashOf(Object.fromEntries(m.foes.map((a) => [a.uid, a])), m.foes).length && m.foes.every((a) => a.x >= 40 && a.x <= 420 && a.y >= 320 && a.y <= 470), m.foes);
+    ok('wolves: leader down → pack flees, nothing left on screen, victory closes as a win', w.over === 'win' && w.left && !w.left.length && w.res === 'win', w);
+  }
+  {
+    const t = await summonRun('tr_b_rooteater', 1);
+    const m = t.mid || { foes: [], hits: [] };
+    const roots = m.foes.filter((a) => /根の触手/.test(a.name));
+    // 根は本体と合わせて 3 まで: 根Ａを倒した後に呼ぶ → 見えているのは 根Ｂ と 新しい 根Ｃ
+    ok('roots: after root Ａ falls a new tentacle comes, all real and lettered uniquely (Ｂ・Ｃ)', roots.length === 2 && m.foes.every((a) => a.real) && roots.map((a) => a.name).sort().join() === '根の触手Ｂ,根の触手Ｃ', m.foes);
+    ok('roots: the new tentacle is not on top of the tree eater (tap picks it)', m.hits.every(([a, b]) => a === b) && !clashOf(Object.fromEntries(m.foes.map((a) => [a.uid, a])), m.foes).length, [m.hits, m.foes]);
+    ok('roots: targets = the living enemies in the core', m.alive && m.alive === m.engAlive, [m.alive, m.engAlive]);
+    ok('roots: all down → result screen, every tentacle removed', t.over === 'win' && t.left && !t.left.length && t.res === 'win', t);
   }
   done('test_bscene');
 })();
