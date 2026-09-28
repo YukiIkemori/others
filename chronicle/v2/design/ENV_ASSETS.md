@@ -213,4 +213,29 @@ The painting is albedo; the dark mood comes from the map's `light`/`dark` exactl
 - Hidden objects (a chest behind a secret) are still hidden by `secretHidden`.
 - The minimap still uses the tiles.
 
-**Engine change for this** (small): `chunks.js` `underOf` loads `art.closed`, `liveClosed()` decides the state, and `_put` draws the closed cells. `env.js` `E.under` also finds the meta for `_closed` keys.
+**Engine changes for this** (small, all in `chunks.js` apart from one regex in `env.js`):
+- `underOf` loads `art.closed`, `liveClosed()` decides the state, and `_putUnder` draws the closed cells. `env.js` `E.under` also finds the meta for `_closed` keys.
+- **The edges of non-town painted maps are mirrored.** When a chunk reaches past the map, the painting is drawn mirrored across the map edge into the out-of-map part. Before this, small dungeons (lighthouse_3 is 26 wide) showed a flat band in the "outside" colour next to the painting, or a seam against tile-baked walls. Town maps are unchanged.
+
+**Guide and prompt lessons** (guide symbols get copied literally):
+- Vertical stripes on faces came back as wooden palisades. Use a few horizontal strata and say "raw cave rock, not bricks or a dry-stone wall".
+- A flat dark wall-top colour came back as flat black (lighthouse gen1). Masonry block lines on the wall tops give textured stone.
+- Crossed strokes for root knots came back as X-marked crates (elder_1 gen1). Use an irregular dark blob. `process.py STAMP=roots` also puts the engine's roots sprite on static `roots` cells over a floor clone.
+- Circles per forest cell work: at full size the model paints a varied canopy.
+- Rounder, prettier results (elder_1 gen2) can cut the room corners and thin the 2-wide corridors. Prefer the one that keeps the grid.
+- Generate one image at a time and regenerate only when the result is actually wrong (owner, 2026-09-28).
+
+**Results (demo dungeons, 15 images in all):**
+
+| Map | Painting | Size, px/tile | Live regions | Notes |
+|---|---|---|---|---|
+| well | `cave/under/well` gen3 | 1728×1440, 48 | secret (26 cells) | gen1: flat, palisade faces. gen2: dry-stone look. gen4: a redundant candidate. Emit = crystal veins in the rock (`EMIT=cyan`). |
+| lighthouse_1 | `lighthouse/under/lighthouse_1` gen2 | 1728×1536, 48 | – | The big door stays a sprite in the painted arch; cape, path and sea are painted. |
+| lighthouse_2 | `lighthouse/under/lighthouse_2` gen2 | 1632×1440, 48 | secret (49 cells: bricked store room) | Thin walls: no block of wall is big enough to clone as a whole, so each cell is cloned from the nearest clean wall cell. |
+| lighthouse_3 | `lighthouse/under/lighthouse_3` gen2 | 1248×1056, 48 | – | gen1 had flat black wall tops. |
+| elder_1 | `tree_inside/under/elder_1` gen1 | 1872×1728, 36 | secret (32), root gate `forest_sw1` (4) | Root knots stamped (`STAMP=roots`). gen2 (rounder) was rejected. No @40 (52 × 40 > 2048). |
+| elder_2 | `tree_inside/under/elder_2` gen1 | 1872×1728, 36 | root gate `forest_sw2` (4) | Stamped root knots. |
+| verda_1 | `forest_dungeon/under/verda_1` gen1 | 1920×1664, 32 | secret (33: the hollow tree) | – |
+| verda_2 | `forest_dungeon/under/verda_2` gen1 | 1920×1664, 32 | secret (32), vine wall (18), fawn trail (22) | The hut is painted (the engine skips buildings). Thickets: painted canopy clone plus a darkened bush sprite as the hint. |
+
+Raw paintings and guides: `design/art_ref/gen/env/under/<map>_genN_raw.png` and `<map>_guide.png`. The working files are in `_tools/under/dungeon/<map>/`, and `shot_map.sh <map> x y out.png [js]` takes an in-game screenshot (the js can set flags or `RPG.Game.secrets` to show the open state).

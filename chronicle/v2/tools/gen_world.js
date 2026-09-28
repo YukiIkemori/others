@@ -187,9 +187,10 @@ for (let x = 63; x <= 115; x++) {
 }
 // 森と半島のあいだの水路（WORLDFIX: 森の側の岸は x 62/63 のまっすぐな線だった → x 61〜65 でゆらぐ。灯籠 wl_forest_2 と樵の野営のあたりは岸を寄せない）
 for (let y = 72; y <= 134; y++) {
-  let wx = Math.round(63 + (vn(0, y, 6, 46) - 0.5) * 6 + (h2(0, y, 47) - 0.5));
-  if (y <= 76 || (y >= 86 && y <= 96)) wx = Math.max(wx, 63);
-  wx = Math.max(61, Math.min(65, wx));
+  let wx = Math.round(62.5 + (vn(0, y, 5, 46) - 0.5) * 9 + (h2(0, y, 47) - 0.5));
+  if (y <= 76) wx = Math.max(wx, 63);
+  else if (y >= 86 && y <= 96) wx = Math.max(wx, 61);
+  wx = Math.max(60, Math.min(65, wx));
   for (let x = wx; x <= 70; x++) set(x, y, '~');
 }
 
@@ -410,7 +411,7 @@ S(53, 114, '双子の見張り塔\n修理中につき、立ち入り禁止。');
 
 // --- 縦切りだけの閉じ方（崖崩れと番人。cond {slice:true}）
 function closure(id, x, y, w, h, guard, text) {
-  const rows = []; for (let j = 0; j < h; j++) rows.push('m'.repeat(w));
+  const rows = []; for (let j = 0; j < h; j++) rows.push('^'.repeat(w));   // 尾根と同じ岩（WORLDFIX）
   tilePatches.push({ cond: { slice: true }, rect: [x, y, w, h], rows });
   npcs.push(Object.assign({ id, look: 'npc_guard_1', name: '番人', move: 'still', pushable: false, cond: { slice: true }, talk: { lines: [{ text }] }, reward: 'news', key: 'world_' + id }, guard));
 }

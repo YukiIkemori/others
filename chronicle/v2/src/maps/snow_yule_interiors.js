@@ -102,6 +102,7 @@
       objects: [K.prop('stove', 1, 2), K.prop('bed', 9, 2), K.prop('table', 7, 6), K.prop('chair', 6, 6), K.prop('chair', 8, 6), K.prop('rug_roll', 10, 6), K.prop('lantern', 6, 3),   // 戸口の列（x 5）は空ける
         K.prop('shelf_jars', 3, 2), K.prop('house_plant', 10, 7)],
       npcs: [K.npc('brenda', 'npc_snow_old_f', 5, 4, { name: 'ブレンダ', title: '語りの年寄り', dir: 's', talk: 'yule_brenda', reward: 'lead' })],
+      art: { image: 'snow/under/yule_brenda', painted: [] },   // 芝土の竪穴の家（描いた下絵）
     });
     interior('yule_hunter', '狩人の家', 12, 10, {
       back: 'hunter',
