@@ -1,0 +1,11 @@
+{
+ "out": "/home/user/others/chronicle/design/art_ref/gen/env/_tools/under/field/f_fern/edit1.png",
+ "prompt": "Edit this finished top-down pixel-art RPG map (the attached image) with ONE small change and keep everything else exactly as it is (same pixels, same framing, same size, same trees, ravine, roads and colours):\nOn the right side, the packed-earth forest road that runs east from the central crossroads currently stops at the edge of the trees about four tiles before the right edge of the image. CONTINUE that same road (same width, same colour and texture, small pebbles, soft grassy edges) from its current east end, curving gently up to the north-east through the grassy gap, and run it off the RIGHT EDGE of the image at about 28 to 31 percent of the image height from the top (the same height where the road should leave the map). Move or remove only the few small rocks or bushes that stand exactly on the new road. Do not add anything else. No text, no characters.",
+ "size": "2688x2112",
+ "quality": "high",
+ "background": "opaque",
+ "refs": [
+  "/home/user/others/chronicle/design/art_ref/gen/env/_tools/under/field/f_fern/gen1.png"
+ ],
+ "tag": "f_fern_edit"
+}

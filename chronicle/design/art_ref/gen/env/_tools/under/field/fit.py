@@ -15,6 +15,9 @@ from scipy import ndimage
 from collections import deque
 
 aid, src = sys.argv[1], sys.argv[2]
+import os as _os
+_fx = json.load(open(aid + '/fix.json')) if _os.path.exists(aid + '/fix.json') else {}
+for _k, _v in (_fx.get('fit') or {}).items(): _os.environ.setdefault(_k, str(_v))   # per-area classifier settings (SEED, EM, MARGIN)
 APPLY = '--apply' in sys.argv
 MARGIN = float(__import__('os').environ.get('MARGIN', 0.6))   # |ground fraction - 0.5| * 4: 0.6 = below 0.35 or above 0.65
 d = json.load(open(aid + '/layout.json'))
@@ -45,8 +48,13 @@ feat = np.stack([C4(A[..., 0]).mean((1, 3)), C4(A[..., 1]).mean((1, 3)), C4(A[..
                  C4((hsvmax - hsvmin).astype(float)).mean((1, 3))], -1)
 GROUPS = {'ground': ',;".:s_', 'tree': 'TFb', 'water': '~w', 'rock': 'rR'}
 models = {}
+SEED = __import__('os').environ.get('SEED', 'rules')   # rules = seed the classes from the painting itself (rules.py), layout = from the layout cells
+if SEED == 'rules':
+    from rules import labels as _rl
+    RL, _ = _rl(A.astype(float), W, H)
 for c, chars in GROUPS.items():
-    m = np.isin(g, list(chars))
+    m = (RL == c) if SEED == 'rules' else np.isin(g, list(chars))
+    if SEED == 'rules' and m.sum() < 6: m = np.isin(g, list(chars))
     me = ndimage.binary_erosion(m, iterations=1)
     if me.sum() < 6: me = m
     if me.sum() < 3: continue
@@ -54,8 +62,25 @@ for c, chars in GROUPS.items():
     mu = X.mean(0); cov = np.cov(X.T) + np.eye(X.shape[1]) * 4.0
     models[c] = (mu, np.linalg.inv(cov), np.linalg.slogdet(cov)[1], np.log(me.sum()))
 cn = list(models)
-ll = np.stack([-0.5 * (np.einsum('hwi,ij,hwj->hw', feat - models[c][0], models[c][1], feat - models[c][0]) + models[c][2]) + 0.3 * models[c][3] for c in cn], -1)
-post = np.exp(ll - ll.max(-1, keepdims=True)); post /= post.sum(-1, keepdims=True)
+
+
+def posterior(models):
+    ll = np.stack([-0.5 * (np.einsum('hwi,ij,hwj->hw', feat - models[c][0], models[c][1], feat - models[c][0]) + models[c][2]) + 0.3 * models[c][3] for c in cn], -1)
+    p = np.exp(ll - ll.max(-1, keepdims=True)); return p / p.sum(-1, keepdims=True)
+
+
+post = posterior(models)
+# re-train on the painting's own confident cells (the layout labels are only a start: the model may paint far less forest than the guide)
+for it in range(int(__import__('os').environ.get('EM', 1))):
+    lab = post.argmax(-1); conf = post.max(-1) > 0.9
+    nm = {}
+    for k, c in enumerate(cn):
+        m = (lab == k) & conf
+        if m.sum() < 8: nm[c] = models[c]; continue
+        X = feat[m]; mu = X.mean(0); cov = np.cov(X.T) + np.eye(X.shape[1]) * 4.0
+        nm[c] = (mu, np.linalg.inv(cov), np.linalg.slogdet(cov)[1], np.log(m.sum()))
+    models = nm
+    post = posterior(models)
 ground = post[..., cn.index('ground')]
 solidc = [c for c in cn if c != 'ground']
 bestsolid = np.array(solidc)[np.stack([post[..., cn.index(c)] for c in solidc], -1).argmax(-1)]

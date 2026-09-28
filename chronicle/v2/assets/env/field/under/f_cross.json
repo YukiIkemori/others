@@ -61,7 +61,11 @@
      20
     ]
    ],
-   "patch": 0
+   "cond": {
+    "not": {
+     "slice": true
+    }
+   }
   }
  ],
  "gain": 1.044,

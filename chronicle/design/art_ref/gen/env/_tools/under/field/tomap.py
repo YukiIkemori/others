@@ -19,6 +19,21 @@ for aid in sys.argv[1:]:
         for o in d['objects']:
             if all(o.get(k) == v for k, v in mv['match'].items()): o.update(mv['set'])
     for k, v in fx.get('spawns', {}).items(): d['spawns'][k] = v
+    # lamps (waylamp / lamp_post) stand beside the road, never on it and never in a narrow gap (tools/qa/check_lamps.js):
+    # the nearest cell whose 5x5 neighbourhood is all walkable, which is not road itself, with a road cell within 2
+    WALKC, ROADC = set(',;".:s_=c'), set('.:c=')
+    H_, W_ = len(rows), len(rows[0])
+    taken = {(o['x'], o['y']) for o in d['objects']}
+    def good(x, y):
+        if not (2 <= x < W_ - 2 and 2 <= y < H_ - 2) or rows[y][x] in ROADC or (x, y) in taken: return False
+        if any(rows[y + j][x + i] not in WALKC for i in range(-2, 3) for j in range(-2, 3)): return False
+        return any(rows[y + j][x + i] in ROADC for i in range(-2, 3) for j in range(-2, 3))
+    for o in d['objects']:
+        if o.get('type') in ('waylamp',) or o.get('id') == 'lamp_post':
+            if good(o['x'], o['y']): continue
+            c = sorted(((abs(x - o['x']) + abs(y - o['y']), x, y) for y in range(H_) for x in range(W_) if good(x, y)))
+            if c and c[0][0] <= 8:
+                taken.discard((o['x'], o['y'])); o['x'], o['y'] = c[0][1], c[0][2]; taken.add((o['x'], o['y']))
     for o in d['objects']:
         if o.get('type') == 'none_removed': continue   # dropped by fix.json (painted into the picture)
         o = dict(o)

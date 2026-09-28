@@ -1,0 +1,61 @@
+{
+ "id": "f_windhill",
+ "kind": "under",
+ "map": "f_windhill",
+ "tile": 32,
+ "size32": [
+  1664,
+  1408
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [
+  {
+   "cells": [
+    [
+     38,
+     1
+    ],
+    [
+     39,
+     1
+    ],
+    [
+     40,
+     1
+    ],
+    [
+     41,
+     1
+    ],
+    [
+     38,
+     2
+    ],
+    [
+     39,
+     2
+    ],
+    [
+     40,
+     2
+    ],
+    [
+     41,
+     2
+    ]
+   ],
+   "cond": {
+    "not": {
+     "slice": true
+    }
+   }
+  }
+ ],
+ "gain": 0.8,
+ "files": {
+  "24": "f_windhill@24.png",
+  "32": "f_windhill@32.png"
+ },
+ "src": "generated"
+}

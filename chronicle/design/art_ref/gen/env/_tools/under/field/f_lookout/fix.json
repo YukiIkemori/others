@@ -1,5 +1,113 @@
-{"note": "gen1: the bluff is a walled terrace; its south stair at x 37-38 and a second stair on its west wall (x 32); the bench is painted (sprite dropped); tower legs x 41-42",
- "open": [[37,17,"c"],[37,18,"c"],[37,19,"c"],[38,17,"c"],[38,18,"c"],[38,19,"c"],[32,12,"c"],[32,13,"c"],[32,14,"c"],[32,15,"c"],[32,16,","],[31,16,","]],
- "solid_rect": [[41,10,2,5,"X"],[37,3,2,1,"X"]],
- "objects": [{"match": {"id": "bench"}, "set": {"type": "none_removed"}}, {"match": {"id": "wl_pen_lookout"}, "set": {"x": 39, "y": 13}},
-             {"match": {"text": "見晴らし台\n半島の北の海を見わたす。"}, "set": {"x": 39, "y": 17}}]}
+{
+"note": "gen1: the bluff is a walled terrace; its south stair at x 37-38 and a second stair on its west wall (x 32); the bench is painted (sprite dropped); tower legs x 41-42",
+"open": [
+[
+37,
+17,
+"c"
+],
+[
+37,
+18,
+"c"
+],
+[
+37,
+19,
+"c"
+],
+[
+38,
+17,
+"c"
+],
+[
+38,
+18,
+"c"
+],
+[
+38,
+19,
+"c"
+],
+[
+32,
+12,
+"c"
+],
+[
+32,
+13,
+"c"
+],
+[
+32,
+14,
+"c"
+],
+[
+32,
+15,
+"c"
+],
+[
+32,
+16,
+","
+],
+[
+31,
+16,
+","
+]
+],
+"solid_rect": [
+[
+41,
+10,
+2,
+5,
+"X"
+],
+[
+37,
+3,
+2,
+1,
+"X"
+]
+],
+"objects": [
+{
+"match": {
+"id": "bench"
+},
+"set": {
+"type": "none_removed"
+}
+},
+{
+"match": {
+"id": "wl_pen_lookout"
+},
+"set": {
+"x": 39,
+"y": 13
+}
+},
+{
+"match": {
+"text": "見晴らし台\n半島の北の海を見わたす。"
+},
+"set": {
+"x": 39,
+"y": 17
+}
+}
+],
+"fit": {
+"SEED": "layout",
+"EM": 0
+}
+}

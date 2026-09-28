@@ -1,0 +1,71 @@
+{
+"note": "gen1 + edit1 (the east road continued to the right edge, composited over x 40-56 y 8-22). The glade south-west of the ravine is closed by trees in the painting, so the chest moved next to the fairy ring; the shrine painted at x 21-22",
+"solid_rect": [
+[
+21,
+13,
+2,
+3,
+"X"
+]
+],
+"objects": [
+{
+"match": {
+"id": "f_fern_c1"
+},
+"set": {
+"x": 46,
+"y": 26
+}
+},
+{
+"match": {
+"event": "world_poi_shrine"
+},
+"set": {
+"x": 21,
+"y": 15
+}
+},
+{
+"match": {
+"id": "wl_forest_2"
+},
+"set": {
+"x": 40,
+"y": 18
+}
+},
+{
+"match": {
+"id": "mushroom_glow",
+"x": 13
+},
+"set": {
+"x": 43,
+"y": 27
+}
+}
+],
+"open_rect": [
+[
+28,
+0,
+3,
+3,
+"."
+],
+[
+29,
+3,
+2,
+5,
+"."
+]
+],
+"fit": {
+"SEED": "layout",
+"EM": 3
+}
+}

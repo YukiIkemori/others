@@ -367,7 +367,12 @@
 "map": "world",
 "spawn": "f_south_s"
 },
-"edge": "s"
+"edge": "s",
+"cond": {
+"not": {
+"slice": true
+}
+}
 }
 ],
 "notes": [],
@@ -445,5 +450,55 @@
 }
 ],
 "links": {}
-}
+},
+"rows_fit": [
+"TTTTTTFTTTFFFFFTTTTTTTTTTTT;;...;;TTTFFFTTwwwwwwwwwwrTTb",
+"TTTTTTTTTTFFFFTTTTTTTTTTTTTT;...;;TTTTTTTTwTwwwwwwwwrTTb",
+"TTTTTTTTTTTFFFTTTTTTTTTTTTTTT...T;T;TTTTTTwwwwwwwwwTTTTb",
+"TTTTTTTTTTTTTFFTTTTTTTTFFF,,,...X;;,,;TTTTwwTTTTwwwFFTTb",
+"FFTTTTTT,;TFFFFTFFTTTFFFFF,,X..TXT,;;;;TTTFTTTTTwwTFFTTb",
+"FFFTT,,,,TTFFFFFFFFFFFFFFFX,,,.TXT,,;FFFFFFFTTTTTTTFFTTT",
+"FFFT,,,,,T;TFFFFTFFFFFFFFT,,,,..,T,rFFFFFFFFTTTTTTTFFFFT",
+"FFFT,,,,,;,FFFFTFFFFFFFFFT,,,,...,,TTTFFFFFFTTTTrTTTTTTF",
+"FFF,,XXXXX,FFFFTTTTTTTFFT,,,,,,...,,TTFFFFFFTTTTrTTTTTTT",
+"FFF,sXXXXX,,TTTTrTTTTTTTT,,,,,,,..XTTTFFFFFFFTTTrrrrTTTT",
+"FFFFFXXXXXT,,,,TT;T;;;T;;;X,,,,,...TTTFFFFFFFFFFFFFFTTTT",
+"FFFFFXXXXXTT,,,,,;;T;;;;;;,,,,,,,..,FFFFFFFFFFFFFFFFTTTT",
+"FFFFFXXXXXXX,,,,,;;;;;;;;,,,,,,,FF..FFFFFFFFFFFFFFFFTTTT",
+"FFFFFF::TTXX,,,,,;;;;;TTTTFFFFFFFF.TFFFFFFFFFFFFFFFFTTTT",
+"FFFFF,:,,,,::,,,,;;;;;TTFFFFFFFFFF...FFFFFFFFFFFFFFTTTTT",
+"FFFFFF,,,,,::,,,,;;;;;TFFFFFFFFFFF..T,TFFFTFFFFFFFTTTTTT",
+"FFFFFF,,,,,,T,,,,;;;;TTFFFTFFFFFFT,...,,,TTTFFFFFFFTTTTT",
+"FFFFFF,,,,,,::,,;;;;;TTFFFTbTTTTTT,,.XXX,,,TFFFFFFFFTTTT",
+"FFFFFFF,,,,,,:,,T;F,;TTFFFTTTTTT,,,,TXXX,X,,,FFFFFFFTTTT",
+"FFFFFFFF,,;;,::;;TTT;TTFFFFTTTT;,,,XTXXXTXTTT,FFFFFFTTTT",
+"FFFFFFFFT;;;;;:TTTFTTTTTTFFTTbT;,,,X::,T,,,,T,FFFFFFTTTT",
+"FFFFFFTTTT;;;;::TTTTTTTTTTFT,TT,,,,XXX:,X,,,,,FFFFFFTTTT",
+"FFFFTTTTTT;;,.,:TTTTT,TTTTT,,,,,,..XXX:,,,,,T,,FFFFFbTTT",
+"FFFFTTTrT;,,,s.::TT,,,,,TTTT,,,,...XXX::,,,T,,,FFFFFTTTT",
+"FFFFTT;;;;,,,,,,,::,,,,,,TTT,,....,XXX,:,,,,,,,FFFFFTTTT",
+"FFFFTT;;;;TFFF,,,,::,,,,,,......,,,,r,,::,,,,;FFFFFFTTTT",
+"FFFT;;,;;;TTFF,,,,,:::........,,,,,,,,,T:,,,,;TTTTTFTTTT",
+"FFFTT,;;;TTTTTT,,,,,:::...,,,,,,,,,,,,,,::,,,,TTTTTFTTTT",
+"FFFTT,,F,FFFFFT,,,,,.::,,,,,,,,,,,,,,TT,::,,,,,wwwwwwwTT",
+"FFFTFFFF,,FFFFFT,,,...,,,,,,,,,,,,T,,,,,T:,T,,,,,,wwwwww",
+"FFFTFFFFFFFFFFFT;,,..,,,,,,,,,Tw,,,,,,,,::,,,,TTTTTTTTww",
+"TFFTFFFFFFwwwwwww,,__,,,,,,,,,,,,,,wwww,__,wwTwwwwbwwwFF",
+"wFFFFTTTwwwwwwwww,___.,wwwwwwwwTwwwwwwwTT.TwwwwwwwwwwwwT",
+"wwwwwwwwwwFFFwTwwTww;wwwwwwwTwwwwwwwwwwww,wwww,,;;;;,,TT",
+"wwwwwwwwTwwwTwwwwTww;wTwwwTwwwTw,,,w,,,:w,,,w,,FF,;;,,TT",
+"wwwwwwwwwwwTTTTT;FT.,wwwwwwTwFFFF,,,,,T::,,,,,,FFF,,,,,,",
+",wwwwwwwwwTTTT;;,FT.,,;;;;,FFFFFFFFT,,T,,,,,,,,FFFFF,,,,",
+",,,,T,,,,,,;;;;;,F..,,;;;;TTTFFFFFFTT,,,,,,,,,FFFFFTT,,,",
+",,,,,,,,,,,;;;;;TTT..,,,,,XXTTFXXTTTT,,,,,,,,,TTTTTTT,,F",
+",T,,,,;;;;,;;;;,,TT..,,,,,XX,TTXXTTTTT,,,,,;;TTTTTTT;,,,",
+"TT,,,,;rr;,;;TT,,,,..,,,,,,,,,,,TTTTT;,,,,,,,,TT,TT;,;TF",
+",,,,,,;TT,,FFFTT,,,..,,,T,,,,,,,,,;;TTT,,,,,,,,,,;;;T;;T",
+",,,,,,;;;,TFFFFTF,,,..,,,,,,,,,,,,;TTFFT,,,,,,,;,;;;T;TT",
+",,,,,RR,,RRRFFTTTF,,..,,,,,,,,,,,,,RRRRRRR,,,,,RRRR,,,RR",
+"R,R,,RRRRRRRRRRRRTT;...,RRRRR,RR,,RRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRTrTr..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRFT...RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRFF...RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
+]
 }

@@ -290,7 +290,12 @@
 "map": "world",
 "spawn": "f_cross_e"
 },
-"edge": "e"
+"edge": "e",
+"cond": {
+"not": {
+"slice": true
+}
+}
 }
 ],
 "notes": [],

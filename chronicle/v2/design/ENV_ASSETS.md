@@ -346,3 +346,30 @@ Not done yet:
 - chests, doors, the lighthouse beacon, braziers, torches (frames), ships and songstones keep their old sprites;
 - the town interiors are tile-built (no painting), so A does not apply to them;
 - desert, snow, marsh and ash, which follow the same method.
+
+## 10. Area-switching field (2026-09-28, demo scope)
+
+The owner replaced the walkable world map with **field areas**: each area is one rectangular painted map (`kind: 'field'`, `maps/field_*.js`), and walking off a road at an area's edge fades into the neighbouring area. Borders need not match; exits line up and the biomes roughly agree. The old world map stays in the build for the regions outside the demo; the world-map screen (X) still shows the old world picture and places the player inside an area through `meta.worldRect`.
+
+**Engine** (small): `maps/field_00_kit.js` (`R.FieldArea.def`, the shared legend, defaults: night light, BGM `overworld`, `art` = `field/under/<id>`, prop set village/forest; a data hook rewires every "to world" exit of Roa, Pharos, lighthouse_1, the well, the hut, Fern and Yura to its area through `LINKS`, so those map files are unchanged; the three demo passes lead into the old world at `f_cross_e` / `f_south_s` / `f_windhill_n`, and the old world's pass cells lead back). Contract kind `'field'`, terrain theme `field`, wayfind exit labels on field maps, and the map screen position (`screens/map.js`). Encounters use the zw_* tables through `zones` at the world rate (`K.ENC.world`). The lamp quest event reads the lamp from `ctx.map`.
+
+**Areas** (identity, size, generations):
+
+| id | name | size | identity | images |
+|---|---|---|---|---|
+| f_roa | ロアの丘 | 52×40 | early-summer sheep downs: a walled knoll of standing stones, the travellers' old well (well dungeon), a giant oak, a creek under an arched stone bridge, an old windmill, a pasture | 1 |
+| f_cape | 灯台の岬 | 56×44 | windswept cape: sea cliffs, sea stacks, a sandy cove with the chest, a round ruin, the harbour gatehouse, the lighthouse on the tip (door → lighthouse_1) | 1 |
+| f_lookout | 見晴らし台 | 48×40 | purple heather heath: the drawbridge on stone piers (raised until `prologue_done`: tilePatch + `_closed` layer), a walled bluff with the lookout tower, birches, a shingle beach | 1 |
+| f_cross | 北の野 | 60×40 | golden late-summer plains: the three-way crossroads, the coaching-inn ruin, a lake with a jetty (chest), a wagon, the eastern pass (rockslide in the demo) | 1 |
+| f_hut | きこりの野 | 52×40 | logging clearing: the woodcutters' cabin (→ hut), a waterfall over a rock step, a log bridge, stumps, a shrine | 1 |
+| f_fern | 森の街道 | 56×44 | deep emerald forest: colossal buttress-rooted trees, Fern's root-arch gate, a ravine with a rope-railed bridge, a fairy ring (chest) | 1 + 1 edit (the east road continued to the edge) |
+| f_south | 森の南 | 56×48 | golden autumn glades: the old forest tower, the stone-pillar ring, the twin watchtowers, a brook with stepping stones, the red sandstone pass south (rockslide) | 1 |
+| f_windhill | 風鳴りの丘 | 52×44 | silver-green windy downs: a ringed bald hill with humming holed stones, a tarn, a fallen colossus, the northern pass (rockslide), Yura's road | 1 |
+
+9 images in all (8 areas + 1 edit), one at a time.
+
+**Tools** (`design/art_ref/gen/env/_tools/under/field/`): `areas.py` (layouts: noise-shaped regions, spline roads and rivers, landmark marks, exits, objects, meta) → `guide.py` (colour guide at 48 px/tile) → `mkjob.py` (per-area scene prompt + the guide + `style_field.png`, a crop of the painted Roa and Pharos) → `gen.sh` (one `gen_env.py` call; the stored `.gen.json` says `generated` for the model) → `fit.py` (the collision fitted to the painting: a per-cell classifier seeded from the layout or from colour rules `rules.py`, then `<id>/fix.json` hand fits read off `check.py` pictures, unreachable pockets closed) → `process.py` (brightness matched to Roa's grass, canopy overlay over the row north of trees, `_closed` layer for tilePatches as `{cells, cond: {not: cond}}`) → `tomap.py` (writes `v2/src/maps/field_<id>.js`; moves objects per fix.json, puts lamps beside roads). `apply_edit.py` composites one box of an edited painting back (scale/shift fitted on a ring). `shots.js` takes in-game screenshots.
+
+**Tests**: `tools/test_field_areas.js` (in `check_all`): shape, every exit/door/stair lands on a walkable spawn, everything reachable in each area, no rewired "to world" exit left, and Roa → Pharos / lighthouse / well / Fern / Yura / hut without passing through the old world.
+
+**Next** (not done): the world-map screen could draw the areas instead of the old world picture; areas for the regions beyond the passes (snow, desert, mines, marsh, ash) would replace the old world there too.

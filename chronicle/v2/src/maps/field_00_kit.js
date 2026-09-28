@@ -59,6 +59,10 @@
       for (const o of m.objects || []) { re(o.to); if (o.door) re(o.door.to); }
       for (const t of m.triggers || []) re(t.to);
     }
+    // 前のワールドの建物の戸口で、中の出口がエリアへ付け替わった所（きこりの休み小屋）: 前のワールドからは入れない
+    // （入ると戻りがエリアになり、行きと帰りが合わない。前のワールドの体験版の範囲はもう歩かない）
+    const into = (to) => to && M[to.map] && M[to.map].kind === 'interior' && (M[to.map].exits || []).some((e) => e.to && M[e.to.map] && M[e.to.map].kind === 'field');
+    if (w && w.objects) for (const o of w.objects) if (o.type === 'building' && o.door && into(o.door.to)) delete o.door;
   }
   if (R.onData) R.onData(() => R.onData(link));   // 2 段: 読み込みのときに積まれた onData（マップの登録）が全部すんでから
 })(window.RPG);

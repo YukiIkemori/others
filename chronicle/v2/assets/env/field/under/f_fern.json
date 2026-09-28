@@ -1,0 +1,19 @@
+{
+ "id": "f_fern",
+ "kind": "under",
+ "map": "f_fern",
+ "tile": 32,
+ "size32": [
+  1792,
+  1408
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.986,
+ "files": {
+  "24": "f_fern@24.png",
+  "32": "f_fern@32.png"
+ },
+ "src": "generated"
+}

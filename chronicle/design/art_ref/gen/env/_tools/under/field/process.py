@@ -91,7 +91,9 @@ for pi, p in enumerate(d['meta'].get('tilePatches', [])):
     diff = np.abs(C - A).sum(-1) > 1
     cells = [(x, y) for y in range(H) for x in range(W) if cell(diff, x, y).any()]
     for (x, y) in cells: cell(CL, x, y)[:] = cell(C, x, y)
-    live.append({'cells': [[x, y] for x, y in cells], 'patch': pi})
+    # a field patch CLOSES the way while its cond holds (the painting shows the open road): the closed look shows while cond is true,
+    # i.e. while {not: cond} is false (chunks.js liveClosed draws a {cond} region when its cond is false). The patch still changes the grid, so it re-bakes
+    live.append({'cells': [[x, y] for x, y in cells], 'cond': {'not': p['cond']}})
     print('patch', pi, p.get('cond'), 'cells', len(cells))
 
 sizes = [24, 32] + ([40] if max(W, H) * 40 <= 2048 else [])

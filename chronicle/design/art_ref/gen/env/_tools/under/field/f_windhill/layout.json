@@ -665,7 +665,12 @@
 "map": "world",
 "spawn": "f_windhill_n"
 },
-"edge": "n"
+"edge": "n",
+"cond": {
+"not": {
+"slice": true
+}
+}
 }
 ],
 "notes": [],
@@ -736,5 +741,51 @@
 "spawn": "yura"
 }
 }
-}
+},
+"rows_fit": [
+"FTFFFFFTT;;...;;;;;;;;;,T;;;;;;;;;RRRRT..RRRRRRRRRRR",
+"FTFFFFFTT;;..,;;;;;;;;;;;;;;;;;;;;RRRRr..RRRRRRRRRRR",
+"FFFFFFFFTT;..,,;;;;;bT;;;,,,;;;;;;RRRRr..RRRRRRRRRRR",
+"FFFFFFFTTTT..,,;;;;;;;;;,,,,,;;;;;RRRRr..RRRRRRRRRRR",
+"FFFFFFFFTTT...,;;TT;;;;;,,,,;;,;;;;;;;,..;;rrbTrrrrr",
+"FFFFFFFFFTT...,;;;;;;;;;,,,;;;,;;;;;;;,..;;;;TTTTTTT",
+"FFFFFFFFFTT...,;;;;bT;;,,,,,;;;;;;,,;;,...;;;rTFFTTT",
+"FFFFFFFF,,,...,;;;T;;;;,,,,,;;;;;;;;,;,,..;;rwwwwTTT",
+"FFFFFFFFTTTT..,,TTT;;;,,,,,,;;;;RRRR,;;;..;;rwwwwwrT",
+"FFFFFFFTTTT...,,,;;;;,,,,,,,,RRrrrr;RRR;...rrwwwwwrT",
+"FFFFFFFTTTTT.,,,TT,TT,,,,,,RRrr;,,,,;rRR,..,,rwwwwrT",
+"FFFFFFFFTFFTT,.FFT,,,b,,,,,Rr;;;,,,X,,,RR..,,,rwwrFF",
+"FFFFFFFFFFFTT..FFT,,,,,,;TR,,,;rXr;r,,,,R..,XXXrrrFF",
+"FFFFFFFFFFFFT..FFT,,,,,,,RRr,,;r,;X,,Xr,RR.,XXX,TTTF",
+"FFFFFFT,,,FFT..FF,,,,,,,,,R,,;;r,X,,,,,,RR.,,;;,,,TF",
+"FFFFFT,,,,,FFr.FFTT,,,,,,,R,,;;::,,,,,,,Rr.,;;;;;;;F",
+"FFFFF,,,,,,FFT..FF,,T,,,,,.R,;;:r,,,,,,RR.,,;;r;;;;;",
+"FFFFT,,,,,,TT...FFFTT;TT,,,R,,:r,,,,,,RR..,,;;;;;;;;",
+"FFFFT,,,,,;;;TT..TFTT,;T,,,,ccR;,,,,RRRr..,,;;;;;;;;",
+"FFFF,,,,,,r;FT....FT,,;;;;;;ccRRRRRRRR,..,,,;;;;;;;;",
+"FFFFFrr,,,,FFF;...TT,,;;;;;:::;;,,,,;;;..,,,;;;;;,;;",
+"FFFFFT,;;,,FFFFT.::,,TT;;;;::;;;;;;;;;..;,;;;;;,,,,,",
+"FFFFFT;;;;FFFFT,,::..,;;;;;:;;;;;;;;;...;,;;;,,,,,,,",
+"FFFFT;b;;;;,FTT;::;......;;:;;;;;;;;;..;;;;;,,,,,,,,",
+"FFFF;;,;;;;;;;;::;;;;.....::....;;;;..;;;;;;,,,,,,,,",
+"FFFF;;T;brr;;;::;;;,TT;;..::..........;;;;;;,,,,,,,,",
+"FFFFF;;;rTr;;::;;;;;T;;;;;;;;;;;........;;;;;;,,,,,;",
+"FFFFFF;,,rrr;::;;;;;;;;;;;;;;;;;;;;;;.....;;;;;,,,;;",
+"FFFFFFT,,,,,::,;;;;;,;;;;;;;;;;;;;;;;;;.....;;;;;;TT",
+"FFFFFFT,,X,::,,,;;;,;;;;;;;;;;;;;;;;;;;.............",
+"FFFFFF,,XXX::,,,;;;TT;;;;;;;;;T;;;;T;;TTTF..........",
+"FFFFFF,,,,::,,,;;;;;;;;;;;;,;;T;;;TT,;TTTFF;.;;;;;;;",
+"FFFFFF;,,,,,,,;;;;;;;;;;;;;TT,;;;;;TFT;;TbTTT,;;;;;T",
+"FFFFFTT;;,,,,;;;;;;;;;;;;;T,,,,T,,,,;;;;;,,TTT;;;;;F",
+"FFFFFTT,;;;;;;;;;;;;;;,,TFFTF,,T,,;TT;;;;,,,;;;;;;;F",
+"FFFFFF,,,,,,T;;FFFFFTTTFFFFFF,FFFFFT,;;;;,T,,;;;;;FF",
+"FFFFFFF,,,FFFFFFFFFFFFFFFFFFFFFFFFF,;;;TTFF,,,;FFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFTFFFFTT,FFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+]
 }

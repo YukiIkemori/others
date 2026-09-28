@@ -1,0 +1,13 @@
+{
+ "out": "/home/user/others/chronicle/design/art_ref/gen/env/_tools/under/field/f_fern/edit1.png",
+ "prompt": "Edit this finished top-down pixel-art RPG map (the attached image) with ONE small change and keep everything else exactly as it is (same pixels, same framing, same size, same trees, ravine, roads and colours):\nOn the right side, the packed-earth forest road that runs east from the central crossroads currently stops at the edge of the trees about four tiles before the right edge of the image. CONTINUE that same road (same width, same colour and texture, small pebbles, soft grassy edges) from its current east end, curving gently up to the north-east through the grassy gap, and run it off the RIGHT EDGE of the image at about 28 to 31 percent of the image height from the top (the same height where the road should leave the map). Move or remove only the few small rocks or bushes that stand exactly on the new road. Do not add anything else. No text, no characters.",
+ "size": "2688x2112",
+ "quality": "high",
+ "background": "opaque",
+ "tag": "f_fern_edit",
+ "refs": [
+  "/home/user/others/chronicle/design/art_ref/gen/env/_tools/under/field/f_fern/gen1.png"
+ ],
+ "revised_prompt": "Edit the provided attached pixel-art map in place, preserving original exact canvas dimensions, framing, pixel-art resolution, style, and ALL existing pixels outside the minimal road-extension corridor. Make ONLY this alteration: the eastbound tan packed-earth road from the central crossroads currently ends near the trees on the right, around image coordinate (2250, 950) on a 2688x2048 canvas. Extend it continuously from that exact existing east end, turning gently northeast through the grassy opening, until it exits the RIGHT border at y approximately 600–630 (29–30% down from the top). Match the existing road's width (~65–85 pixels), tan/brown palette, natural irregular soft grass edges, pixelated earthy texture and small pebbles. The new road must be a continuous unobstructed path, not stop short at rocks or trees. Remove or shift ONLY small rocks/bushes that directly obstruct the extension; do not alter trees, other roads, ravine, water, bridge, flowers, or any other parts of the map. No additions beyond the road; no characters, no text.",
+ "model": "generated"
+}

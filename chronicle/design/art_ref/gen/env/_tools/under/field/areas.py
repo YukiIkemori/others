@@ -232,7 +232,7 @@ def f_lookout():
     a.scatter('r', 0.012, only=',;"', seed=31, clear=1)
     a.tidy()
     a.exit('s', 24, 25, {'map': 'f_roa', 'spawn': 'north'}, 'south')
-    a.exit('n', 22, 23, {'map': 'f_cross', 'spawn': 'bridge'}, 'bridge')
+    a.exit('n', 22, 23, {'map': 'f_cross', 'spawn': 'bridge'}, 'bridge')['cond'] = 'prologue_done'   # the drawbridge is up until the prologue ends
     a.objects += [
         dict(type='waylamp', id='wl_pen_lookout', x=40, y=12, lit='prologue_lamp_lookout', event='world_pen_lamp'),
         dict(type='examine', x=41, y=11, event='world_poi_pen_lookout'),
@@ -302,7 +302,7 @@ def f_cross():
     a.tidy()
     a.exit('s', 28, 29, {'map': 'f_lookout', 'spawn': 'bridge'}, 'bridge')
     a.exit('w', 22, 23, {'map': 'f_hut', 'spawn': 'east'}, 'west')
-    a.exit('e', 18, 19, {'map': 'world', 'spawn': 'f_cross_e'}, 'east')
+    a.exit('e', 18, 19, {'map': 'world', 'spawn': 'f_cross_e'}, 'east')['cond'] = {'not': {'slice': True}}   # the pass: rockslide in the demo
     a.objects += [
         dict(type='sign', x=31, y=19, text='北の野の分かれ道\n西 → ヴェルダの森・フェルン\n東 → ガルド山地\n南 → 跳ね橋・ファロス半島'),
         dict(type='examine', x=24, y=10, event='world_poi_plains_found'),
@@ -492,7 +492,7 @@ def f_south():
     a.scatter('b', 0.012, only=',;"', seed=32, clear=1)
     a.tidy()
     a.exit('n', 30, 31, {'map': 'f_fern', 'spawn': 'south'}, 'north')
-    a.exit('s', 20, 21, {'map': 'world', 'spawn': 'f_south_s'}, 'south')
+    a.exit('s', 20, 21, {'map': 'world', 'spawn': 'f_south_s'}, 'south')['cond'] = {'not': {'slice': True}}
     a.objects += [
         dict(type='examine', x=38, y=19, event='world_poi_forest_ring'),
         dict(type='sign', x=35, y=23, text='森の南の広場'),
@@ -567,7 +567,7 @@ def f_windhill():
     a.tidy()
     a.exit('e', 30, 31, {'map': 'f_fern', 'spawn': 'west'}, 'east')
     a.exit('n', 12, 13, {'map': 'yura', 'spawn': 'gate'}, 'yura')
-    a.exit('n', 39, 40, {'map': 'world', 'spawn': 'f_windhill_n'}, 'pass')
+    a.exit('n', 39, 40, {'map': 'world', 'spawn': 'f_windhill_n'}, 'pass')['cond'] = {'not': {'slice': True}}
     a.spawns['yura'] = dict(x=12, y=2, dir='s')
     a.objects += [
         dict(type='examine', x=34, y=13, event='windhill_notes'),

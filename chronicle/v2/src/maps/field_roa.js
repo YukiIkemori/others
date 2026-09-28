@@ -53,7 +53,7 @@
       {"type":"sign","x":21,"y":15,"text":"旅人の古井戸\n枯れ井戸。底へ下りる縄ばしごがある。"},
       {"type":"examine","x":14,"y":10,"event":"world_poi_stones"},
       {"type":"examine","x":29,"y":21,"event":"world_poi_shrine"},
-      {"type":"waylamp","id":"wl_pen_road","x":34,"y":23,"lit":"prologue_lamp_road","event":"world_pen_lamp"},
+      {"type":"waylamp","id":"wl_pen_road","x":34,"y":24,"lit":"prologue_lamp_road","event":"world_pen_lamp"},
       {"type":"sign","x":5,"y":17,"text":"ロアの里\n語り部の里。"},
       {"type":"sign","x":43,"y":27,"text":"東 → 港町ファロス・灯台の岬\n北 → 見晴らし台・跳ね橋"},
       {"type":"chest","id":"f_roa_c1","x":49,"y":11,"item":"i_potion","n":1},
