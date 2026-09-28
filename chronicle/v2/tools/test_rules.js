@@ -441,18 +441,79 @@ section('§10.1 drop slots and chest pools (A30)');
   ok('no pool holds a steal-only item', [...pooled].every((id) => DB.items[id].src !== 'steal'));
 }
 
+// 回復の品は決まった量（オーナー 2026-09-28「回復薬は HP/MP の何％ではなく、20 回復・40 回復のように数値で。序盤は低く、中盤から数値を高める」）
+section('recovery items restore fixed amounts, laddered by tier (owner 2026-09-28)');
+{
+  const MID = R.Pools.MID, LATE = R.Pools.LATE;
+  const RE = ['heal', 'healMp', 'revive'];
+  const effs = (id) => ((DB.items[id] && DB.items[id].use && DB.items[id].use.effects) || []).filter((e) => RE.includes(e.type));
+  const rec = Object.keys(DB.items).filter((id) => effs(id).length);
+  const val = (id, type) => Math.max(0, ...effs(id).filter((e) => e.type === type).map((e) => (e.amount != null ? e.amount : e.pct >= 1 ? Infinity : 0)));
+  // 「すべて」の品（pct 1）だけが割合のまま。ほかは amount（整数）
+  const bad = rec.filter((id) => effs(id).some((e) => !(e.pct === 1 && e.amount == null) && !(Number.isInteger(e.amount) && e.amount > 0 && e.pct == null)));
+  ok(`every recovery item (${rec.length}) uses a fixed amount, or pct 1 for the "full" ones`, rec.length >= 20 && !bad.length, bad);
+  ok('full (pct 1) items say すべて in the desc, fixed ones name their number', rec.every((id) => {
+    const d = DB.items[id].desc.replace(/\n/g, '');
+    return effs(id).every((e) => (e.pct === 1 ? /すべて/.test(d) : d.includes(String(e.amount)))) && !/最大値/.test(d);
+  }), rec.filter((id) => /最大値/.test(DB.items[id].desc)));
+  const first = (id) => { let b = 99; for (const sid of Object.keys(DB.shops)) for (let T = 0; T <= 9 && T < b; T++) if (Ru.shopItems(sid, T).includes(id)) { b = T; break; } return b; };
+  // 1 人用の HP の段: 傷薬 30（0）→ 癒やしの水 60（1）→ 癒やしの清水 150（MID）→ 癒やしの霊水 すべて（LATE）
+  const LADDER = [['i_salve', 30, 0], ['i_potion', 60, 1], ['i_potion2', 150, MID], ['i_elixir', Infinity, LATE]];
+  ok('HP ladder: salve 30 (T0) → potion 60 (T1) → potion2 150 (MID) → elixir full (LATE)', LADDER.every(([id, n, T]) => val(id, 'heal') === n && first(id) === T), LADDER.map(([id]) => [id, val(id, 'heal'), first(id)]));
+  ok('MP ladder: ether 15 (T1) → ether2 40 (MID)', val('i_ether', 'healMp') === 15 && val('i_ether2', 'healMp') === 40 && first('i_ether') <= 1 && first('i_ether2') === MID, [first('i_ether'), first('i_ether2')]);
+  ok('revive: feather 40 HP (T0), flower full (rare, not sold)', val('i_revive', 'revive') === 40 && first('i_revive') === 0 && val('i_phoenix', 'revive') === Infinity && first('i_phoenix') === 99);
+  ok('party-wide heals give less per member than the single ones of their tier (incense 40 each < potion2)', val('i_incense', 'heal') === 40 && DB.items.i_incense.use.target === 'allies' && val('i_incense', 'heal') < val('i_potion2', 'heal'));
+  ok('the ladder costs more per step (salve < potion < potion2 < elixir; ether < ether2)', DB.items.i_salve.price < DB.items.i_potion.price && DB.items.i_potion.price < DB.items.i_potion2.price && DB.items.i_potion2.price < DB.items.i_elixir.price && DB.items.i_ether.price < DB.items.i_ether2.price);
+  // 序盤（ティア 1 まで）の店・宝箱は HP 60・MP 15 まで、MID の前は HP 60 まで。中盤の品（HP 100 以上・MP 30 以上）は MID から
+  const over = (id, T) => (T <= 1 && (val(id, 'heal') > 60 || val(id, 'healMp') > 15 || val(id, 'revive') > 60)) || (T < MID && (val(id, 'heal') > 60 || val(id, 'healMp') > 20));
+  const badShop = [];
+  for (const sid of Object.keys(DB.shops)) for (let T = 0; T < MID; T++) for (const id of Ru.shopItems(sid, T)) if (effs(id).length && over(id, T)) badShop.push(`${sid}:${T}:${id}`);
+  ok('early shops sell only the low items (tier ≤ 1: ≤ 60 HP / ≤ 15 MP; before MID: ≤ 60 HP / ≤ 20 MP)', !badShop.length, [...new Set(badShop)].slice(0, 6));
+  const badPool = [];
+  for (const [pid, p] of Object.entries(DB.pools)) p.tiers.forEach((t, T) => { if (T < MID) for (const e of t) if (e.item && effs(e.item).length && over(e.item, T)) badPool.push(`${pid}:${T}:${e.item}`); });
+  ok('early pools follow the ladder too', !badPool.length, badPool.slice(0, 6));
+  ok('mid shops add the stronger ones (item shops sell potion2 + ether2 at MID or MID+1)', ['shop_yule_items', 'shop_loch_items', 'shop_caldera_items', 'shop_kasim_items'].filter((sid) => DB.shops[sid]).every((sid) => ['i_potion2', 'i_ether2'].every((id) => Ru.shopItems(sid, MID + 1).includes(id))));
+  ok('p_supply adds potion2 from MID', !DB.pools.p_supply.tiers[MID - 1].some((e) => e.item === 'i_potion2') && DB.pools.p_supply.tiers[MID].some((e) => e.item === 'i_potion2'));
+  // 魔物の普通のドロップ: 段 3 から（ティア 4〜）は 癒やしの水ではなく 癒やしの清水
+  const firstT = {};
+  for (const L of Object.values(DB.lineages)) for (const st of L.stages || []) firstT[st.mon] = Math.min(firstT[st.mon] == null ? 99 : firstT[st.mon], st.tier);
+  const lowLate = Object.entries(DB.monsters).filter(([id, m]) => firstT[id] >= 4 && m.drops && m.drops.normal && ['i_salve', 'i_potion'].includes(m.drops.normal.item)).map(([id]) => id);
+  ok('monsters first met at tier ≥ 4 do not drop the low HP items (salve / potion)', !lowLate.length, lowLate);
+  const earlyHigh = Object.entries(DB.monsters).filter(([id, m]) => firstT[id] < MID && m.drops && ['normal', 'rare'].some((k) => m.drops[k] && effs(m.drops[k].item).length && over(m.drops[k].item, firstT[id] <= 1 ? 1 : MID - 1))).map(([id]) => id);
+  ok('monsters first met before MID drop only the low recovery items', !earlyHigh.length, earlyHigh);
+  // 決まった量の効き目: 戦闘（R.Mon.healAmount）とフィールド（R.Rules.fieldUse）
+  const c = R.Party.makeChar('hero', { hero: { type: 'warrior', sex: 'm', name: 'アルン' }, tier: 3, joinFrom: 'start' });
+  R.Rules.fullRestore(c);
+  const st = Ru.stats(c), im = 1 + ((Ru.mods(c).itemPct || 0) / 100);
+  ok('R.Mon.healAmount: amount 30 (item) → 30 × itemPct, not % of max', R.Mon.healAmount(null, c, { type: 'heal', amount: 30 }, { item: true }) === Math.max(1, Math.round(30 * im)) && st.maxHp > 100, st.maxHp);
+  c.hp = 1; c.mp = 0;
+  const r = Ru.fieldUse(DB.items.i_potion2, null, [c]);
+  ok('fieldUse: potion2 gives +150 (× itemPct)', r.changed && c.hp === Math.min(st.maxHp, 1 + Math.round(150 * im)), [c.hp, st.maxHp]);
+  Ru.fieldUse(DB.items.i_ether, null, [c]);
+  ok('fieldUse: ether gives +15 MP', c.mp === Math.min(st.maxMp, 15), [c.mp, st.maxMp]);
+  c.hp = st.maxHp - 10;
+  Ru.fieldUse(DB.items.i_potion2, null, [c]);
+  ok('fieldUse: a fixed heal stops at max HP', c.hp === st.maxHp);
+  c.hp = 0;
+  Ru.fieldUse(DB.items.i_revive, null, [c]);
+  ok('fieldUse: revive amount 40 → 40 HP (max HP > 40)', c.hp === 40);
+  // 満タン（A2）の道具の見込みも amount を読む
+  ok('spells keep their % heals (only items moved to fixed amounts)', Object.values(DB.spells).some((a) => (a.effects || []).some((e) => e.type === 'heal' && e.pct > 0 && e.amount == null)));
+}
+
 // 全回復の品は終盤から（オーナー 2026-09-28「天の恵み・よみがえりの花・癒しの霊水が早すぎる。全回復系は基本終盤から。序盤のレアは 30% 回復くらいまで」）
 section('full-recovery items only from the late tier (owner 2026-09-28)');
 {
   const LATE = R.Pools.LATE;
   const full = (id) => { const u = DB.items[id] && DB.items[id].use; return !!(u && (u.effects || []).some((e) => ['heal', 'healMp', 'revive'].includes(e.type) && e.pct >= 1)); };
-  const heal = (id) => { const u = DB.items[id] && DB.items[id].use; return u ? Math.max(0, ...(u.effects || []).filter((e) => ['heal', 'healMp', 'revive'].includes(e.type)).map((e) => e.pct || 0)) : 0; };
+  // 決まった量（オーナー 2026-09-28「何％ではなく 20 回復・40 回復のように数値で」）: amt(id, 'heal') = その品の HP の量（無ければ 0）
+  const amt = (id, type) => { const u = DB.items[id] && DB.items[id].use; return u ? Math.max(0, ...(u.effects || []).filter((e) => e.type === type).map((e) => (e.amount != null ? e.amount : e.pct >= 1 ? Infinity : 0))) : 0; };
   ok('LATE is tier 5', LATE === 5);
   ok('the five full items are still full (elixir, lifedew, grace, phoenix, memory bubble)', ['i_elixir', 'i_lifedew', 'i_grace', 'i_phoenix', 'i_memory_bubble'].every(full));
   const badPool = [];
   for (const [pid, p] of Object.entries(DB.pools)) p.tiers.forEach((t, T) => { if (T < LATE) for (const e of t) if (e.item && full(e.item)) badPool.push(`${pid}:${T}:${e.item}`); });
   ok('no pool gives a full item before LATE', !badPool.length, badPool.slice(0, 6));
-  ok('pools still give full items from LATE (p_supply elixir, p_rare grace / phoenix, p_heal elixir)', DB.pools.p_supply.tiers[LATE].some((e) => e.item === 'i_elixir') && ['i_grace', 'i_phoenix', 'i_lifedew'].every((id) => DB.pools.p_rare.tiers[LATE].some((e) => e.item === id)) && DB.pools.p_heal.tiers[LATE][0].item === 'i_elixir' && DB.pools.p_heal.tiers[0][0].item === 'i_potion');
+  ok('pools still give full items from LATE (p_supply elixir, p_rare grace / phoenix, p_heal elixir)', DB.pools.p_supply.tiers[LATE].some((e) => e.item === 'i_elixir') && ['i_grace', 'i_phoenix', 'i_lifedew'].every((id) => DB.pools.p_rare.tiers[LATE].some((e) => e.item === id)) && DB.pools.p_heal.tiers[LATE][0].item === 'i_elixir' && DB.pools.p_heal.tiers[0][0].item === 'i_potion' && DB.pools.p_heal.tiers[R.Pools.MID][0].item === 'i_potion2');
   const badShop = [];
   for (const sid of Object.keys(DB.shops)) for (let T = 0; T < LATE; T++) for (const id of Ru.shopItems(sid, T)) if (full(id)) badShop.push(`${sid}:${T}:${id}`);
   ok('no shop sells a full item before LATE', !badShop.length, [...new Set(badShop)].slice(0, 6));
@@ -469,12 +530,12 @@ section('full-recovery items only from the late tier (owner 2026-09-28)');
   }
   ok('no early / mid monster (stage before LATE, rare monsters before the finale) drops a full item', !badMon.length, badMon.slice(0, 8));
   ok('region bosses give p_heal as the bonus (potion before LATE)', DB.monsters.b_rooteater.drops.bonus.pool === 'p_heal');
-  // 縦切りの雑魚（段 1〜2）のレアの消耗品は 35% まで（「30% くらい」。癒やしの香炉 35% を含む）
+  // 縦切りの雑魚（段 1〜2）のレアの消耗品は HP 40・MP 15 まで（「30% くらい」＝ティア 0 の仲間の最大HP 80〜110 の 3〜4 割。癒やしの香炉 40 ずつを含む）
   const DEMO = ['jelly', 'rat', 'seabird', 'crab', 'bat', 'bee', 'mushroom', 'plant', 'fairy', 'wolf', 'treant'].flatMap((l) => [l + '_1', l + '_2']);
-  const strong = DEMO.map((id) => DB.monsters[id].drops.rare.item).filter((id) => DB.items[id].slot === 'use' && heal(id) > 0.35);
-  ok('slice stage 1–2 rare consumables heal ≤ 35 %', !strong.length, strong);
-  ok('i_tonic: rare, HP・MP 30 %', DB.items.i_tonic && DB.items.i_tonic.grade === 'rare' && heal('i_tonic') === 0.3);
-  ok('early rare-monster items heal ≤ 30 % (jewel carrot, bloom nectar)', heal('i_jewel_carrot') <= 0.3 && heal('i_bloom_nectar') <= 0.3);
+  const strong = DEMO.map((id) => DB.monsters[id].drops.rare.item).filter((id) => DB.items[id].slot === 'use' && (amt(id, 'heal') > 40 || amt(id, 'healMp') > 15 || amt(id, 'revive') > 40));
+  ok('slice stage 1–2 rare consumables heal ≤ 40 HP / ≤ 15 MP', !strong.length, strong);
+  ok('i_tonic: rare, HP 30・MP 10', DB.items.i_tonic && DB.items.i_tonic.grade === 'rare' && amt('i_tonic', 'heal') === 30 && amt('i_tonic', 'healMp') === 10);
+  ok('early rare-monster items heal ≤ 40 HP / ≤ 15 MP (jewel carrot, bloom nectar)', ['i_jewel_carrot', 'i_bloom_nectar'].every((id) => amt(id, 'heal') <= 40 && amt(id, 'healMp') <= 15));
   // 盗みのレア枠（オーナー 2026-09-28「ティッタのレアを盗む確率が高すぎる」）: 成功 1 回あたり 段 1 の率 32 で 5% 前後、率 16 で 10% まで
   ok('steal rare: rate 32 → ≤ 5 %, rate 16 → ≤ 10 %, cap ≤ 15 %', K.STEAL.rareMul / 32 <= 0.05 && K.STEAL.rareMul / 16 <= 0.1 && K.STEAL.rareCap <= 0.15, K.STEAL);
 }
