@@ -100,6 +100,23 @@
       meta: { sub: '壁に古い槍が掛かっている' },
     });
 
+    // ---------------------------------------------------------------- 段の上の小さな屋内 3（鍛冶場・灰よけの蔵・見習いの家）
+    interior('caldera_smithy', '段の鍛冶場', 12, 10, {
+      back: 'forge', wall: 'wall_stone', floor: 'basalt_floor', meta: { sub: '鎚の音の響く小屋' },
+      objects: [K.prop('fireplace', 2, 2), K.prop('ash_weapon_rack', 9, 2), K.prop('water_urn', 10, 5), K.prop('crate', 1, 6), K.exam(5, 2, 'caldera_anvil'), K.prop('lantern', 7, 3)],
+      npcs: [K.npc('blacksmith', 'npc_smith', 5, 4, { name: '鍛冶の親方グロム', dir: 's', talk: 'caldera_blacksmith', reward: 'boss' })],
+    });
+    interior('caldera_granary', '灰よけの蔵', 12, 10, {
+      back: 'store', wall: 'wall_stone', floor: 'basalt_floor', meta: { sub: '灰をかぶらぬよう、戸は小さい' },
+      objects: [K.prop('barrel', 1, 2), K.prop('barrel', 2, 2), K.prop('crate', 9, 2), K.prop('crate', 10, 2), K.prop('sack', 1, 6), K.prop('sack', 10, 6), K.prop('lantern', 6, 3)],
+      npcs: [K.npc('granary_keeper', 'npc_ash_old_f', 6, 4, { name: '蔵番のばあさま', dir: 's', talk: 'caldera_granary_keeper', reward: 'news' })],
+    });
+    interior('caldera_toto', '見習いの家', 12, 10, {
+      back: 'hut', wall: 'wall_stone', floor: 'basalt_floor', meta: { sub: '火守りの見習いトトの家' },
+      objects: [K.prop('bed', 1, 2), K.prop('bed', 9, 2), K.prop('table', 5, 6), K.prop('chair', 4, 6), K.prop('stove', 10, 6), K.prop('lantern', 7, 3)],
+      npcs: [K.npc('toto_mother', 'npc_ash_woman', 6, 4, { name: 'トトの母さん', dir: 's', talk: 'caldera_toto_mother', reward: 'hint' })],
+    });
+
     // ---------------------------------------------------------------- 宿場「灰見の宿」16×12（#27、潮見橋のたもと。ワールドの戸から）
     {
       const { g, door } = K.room(16, 12, {});

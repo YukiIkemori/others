@@ -473,3 +473,19 @@
   });
   E('caldera_house_kid', async (ev) => { await ev.say('house_kid', ['じいちゃんの槍、\nさわっちゃだめなんだ。', 'でも、火の鳥の紋は\nかっこいいんだ！']); });
 })(window.RPG);
+// 段の上の小さな屋内（鍛冶場・灰よけの蔵・見習いの家）
+(function (R) {
+  'use strict';
+  const E = (id, run, o) => R.def('events', id, Object.assign({ run, meta: { needs: [], gives: [] } }, o || {}));
+  const X = () => R.Ash.ev;
+  E('caldera_blacksmith', async (ev) => {
+    await ev.say('blacksmith', ev.flag('cleared_r_ash') ? ['火の鳥が飛んでから、炉の火の\n通りがいい。……気のせいかね。'] : ['四回戦の鉄鎧のバルガの鎧は、\nおれが打った。……自慢の出来だ。', '刃は通らんぞ。棍棒か槌で\nたたけ。鎧の中で、よく響く。', '大斧を振りかぶったら、\n身を固めることだ。']);
+  });
+  E('caldera_anvil', async (ev) => { await ev.say(null, ['使いこまれた金床。\n縁に、火の鳥の紋が打ち出されている。']); });
+  E('caldera_granary_keeper', async (ev) => {
+    await ev.say('granary_keeper', ev.flag('cleared_r_ash') ? ['灰が、少し減ったよ。\n段々の畑に、芽が出たんだ。'] : ['火山が灰を吐くから、\n段々の畑はさっぱりさ。', 'この蔵の麦も、あとひと冬。\n……火の鳥がかえってくれればねえ。']);
+  });
+  E('caldera_toto_mother', async (ev) => {
+    await ev.say('toto_mother', ev.flag('ash_lanterns_done') ? ['トトが、灯籠のことを\nうれしそうに話してたよ。', '……ありがとうね。'] : X().skyLine() || ['うちのトトは、火守りの見習い。\n高い所がこわいくせにね。', '崖の上の灯籠が消えたのを、\nずっと気にしてるんだよ。']);
+  });
+})(window.RPG);

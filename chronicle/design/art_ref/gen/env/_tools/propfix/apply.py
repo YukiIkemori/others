@@ -9,6 +9,8 @@ from PIL import Image, ImageFilter
 import lib
 HERE = os.path.dirname(os.path.abspath(__file__)); WORK = os.path.join(HERE, 'work')
 RAW = '/home/user/others/chronicle/design/art_ref/gen/env/propfix'
+ALL = '--all' in sys.argv
+SKIP = set(a for a in sys.argv if '@' in a)   # id@x,y: the review found the model removed it -> stays a sprite   # after a visual check: every prop of the window counts as painted
 MIN_CHANGE = 1.6   # box change / ring change: below this the model left the spot empty (removed the object)
 def sizes(mid):
     a = lib.MAPS[mid]['art']['image']
@@ -89,7 +91,7 @@ def main(mid, k, dry=False):
                                d[ya:yb, max(0, xa - 10):max(0, xa - 3)].ravel(), d[ya:yb, xb + 3:xb + 10].ravel()])
         ch = box / max(1.0, ring.mean() if ring.size else e0)
         p['change'] = round(float(ch), 2)
-        if ch < MIN_CHANGE: kept.append(p); continue
+        if (ch < MIN_CHANGE and not ALL) or '%s@%d,%d' % (p['id'], p['x'], p['y']) in SKIP: kept.append(p); continue
         painted.append(p)
         mx, my = 5, 5
         mask[max(0, ya - my):min(wh * t, yb + my + 3), max(0, xa - mx):min(ww * t, xb + mx + 2)] = 1

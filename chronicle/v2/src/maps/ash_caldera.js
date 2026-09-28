@@ -65,14 +65,74 @@
     const bInn = bld('caldera_inn', 6, 19, 7, 6, { wall: 2, windows: 2, sign: 'inn', door: door(9, 24, 'caldera_inn') });
     const bDorga = bld('caldera_dorga', 41, 18, 6, 6, { wall: 3, windows: 2, door: door(43, 23, 'caldera_dorga') });
     const bHouse = bld('caldera_house', 9, 33, 5, 4, { wall: 2, windows: 1, door: door(11, 36, 'caldera_house') });
-    // 戸の無い建物（段の上の暮らし: 鍛冶場・穀物蔵・小屋。絵の中の建物で、当たりだけ）
-    bld('caldera_forge', 40, 30, 5, 4, { wall: 2, windows: 1 });
-    bld('caldera_store', 14, 12, 4, 3, { wall: 1, windows: 0 });
-    bld('caldera_hut', 36, 40, 4, 3, { wall: 1, windows: 1 });
+    // 段の上の暮らし: 鍛冶場・灰よけの蔵・見習いの家（下絵の戸口に合わせた小さな屋内）
+    const bForge = bld('caldera_forge', 40, 30, 5, 4, { wall: 2, windows: 1, door: door(42, 33, 'caldera_smithy') });
+    const bStore = bld('caldera_store', 14, 12, 4, 3, { wall: 1, windows: 2, door: door(16, 14, 'caldera_granary') });
+    const bHut = bld('caldera_hut', 36, 40, 4, 4, { wall: 2, windows: 2, door: door(37, 43, 'caldera_toto') });
     // 闘技場（丸い石の闘技場。戸は南。丸い壁は描いた物 X、戸のまわりだけ建物）
     const bArena = bld('caldera_arena', 24, 32, 7, 3, { wall: 3, windows: 0, sign: 'guild', door: door(27, 34, 'caldera_arena') });
     // 戸の前（出て着く所）
-    for (const b of [bItems, bTav, bArms, bTemple, bInn, bDorga, bHouse, bArena]) if ('FMX%h'.includes(g[b.door.y + 1][b.door.x])) g[b.door.y + 1][b.door.x] = 'a';
+    for (const b of [bItems, bTav, bArms, bTemple, bInn, bDorga, bHouse, bArena, bForge, bStore, bHut]) if ('FMX%h'.includes(g[b.door.y + 1][b.door.x])) g[b.door.y + 1][b.door.x] = 'a';
+
+    // ---------------------------------------------------------------- 下絵に合わせた当たり（design/ENV_ASSETS.md §7 の 6）: 描いた輪は円より四角いので、
+    //   縁の道・段の崖・外の岩のマスを絵に合わせる（' ' = そのまま。scratchpad の fit_town.py が絵から作った）
+    const FIT = [
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                   a M          MMaa                  ",
+      "                  MMM            MMM                  ",
+      "                MMM      FFFF       MM                ",
+      "              MMM     aa     aaaa    MMMM             ",
+      "              MM   aaaaa       aaaa    MMM            ",
+      "             F   aa                      M            ",
+      "           FF    a                       MMM          ",
+      "          F                                MM         ",
+      "        MM                                  MMM       ",
+      "        M                                    MM       ",
+      "        M                                             ",
+      "       MM                                     F M     ",
+      "      MM                                       MM     ",
+      "      M                                         MM    ",
+      "     M                                       aa MM    ",
+      "     M                                           MM   ",
+      "    MM                                         a MM   ",
+      "    M                                          a  M   ",
+      "   MM                                             M   ",
+      "   MM                                             MM  ",
+      "   M                                               M  ",
+      "   M                                               M  ",
+      "      a                                         a     ",
+      "                                                      ",
+      "                                                      ",
+      "   M                                              MM  ",
+      "   M  a                                         a  M  ",
+      "   M                                               M  ",
+      "   M                                               M  ",
+      "   M                                              MM  ",
+      "   M                                               M  ",
+      "    M                                             M   ",
+      "    M                                            MM   ",
+      "                                                 M    ",
+      "     M                                           M    ",
+      "     M                                           M    ",
+      "      M                                         M     ",
+      "      M                                        MM     ",
+      "       M                                       M      ",
+      "        M                                     M       ",
+      "        MM                                    M       ",
+      "         M                                   M        ",
+      "          M                                 M         ",
+      "          aM                                a         ",
+      "            aF        aa       aa       F a           ",
+      "             aF       aaaaaaaaaaa       Fa            ",
+      "              aaF                      aa             ",
+      "                aaF                 Faa               ",
+      "                  a a             aaa                 ",
+      "                            a                         ",
+      "                                                      ",
+    ];
+    FIT.forEach((r, y) => [...r].forEach((ch, x) => { if (ch !== ' ') g[y][x] = ch; }));
 
     // ---------------------------------------------------------------- 物: 掲示板・湯・灯籠（依頼）・宝箱・かがり火・溶岩の照り返し
     // 飾りの小物（樽・岩・布など）は下絵に描く（持ち主の決まり 2026-09-28）。ここに置くのは働く物（調べる物・宝箱・灯り）だけ
@@ -113,6 +173,7 @@
         gate_w: { x: 2, y: 26, dir: 'e' },
         gate_e: { x: 51, y: 26, dir: 'w' },
         items: sp(bItems), tavern: sp(bTav), arms: sp(bArms), temple: sp(bTemple), inn: sp(bInn), dorga: sp(bDorga), house: sp(bHouse), arena: sp(bArena),
+        forge: sp(bForge), store: sp(bStore), hut: sp(bHut),
         warp: { x: 27, y: 37, dir: 's' },
       },
       exits: [
@@ -125,6 +186,9 @@
       dark: false,
       bgm: 'town',
       meta: { sub: '火口の段々と闘技場の町', chestsInfo: false },
+      // 町ぜんたいを 1 枚に描いた下絵（v2/assets/env/ash/under/caldera*、design/ENV_ASSETS.md §7）。崖・段・溶岩の堀・建物・闘技場・大卵殻・湯はこの絵、
+      // 当たり・戸口・人・灯り・働く物は上のデータ。lava_glow は光だけ（絵を持たない）
+      art: { image: 'ash/under/caldera', emit: 'ash/under/caldera_emit', painted: ['lava_glow'] },
     });
   });
 })(window.RPG);

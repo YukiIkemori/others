@@ -413,6 +413,7 @@
       const dy = c0y + this.i;
       for (let k = 0; k < n; k++) {
         const dx = c0x + k;
+        if (this.map.splat && T._dgSplat && T._dgSplat(this.px, S, this.X0, this.Y0, dx, dy, this.C, t)) continue;   // WORLD v3: なめらかな地面（splat.js）
         T._dgTile(this.px, S, this.X0, this.Y0, dx, dy, [this.C(dx, dy).mat, this.C(dx + 1, dy).mat, this.C(dx, dy + 1).mat, this.C(dx + 1, dy + 1).mat], t);
       }
       this.i++;

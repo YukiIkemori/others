@@ -742,6 +742,7 @@ function emit() {
   js.push("  'use strict';");
   js.push("  R.def('maps', 'world', {");
   js.push("    id: 'world', name: 'エルセリア', kind: 'world', region: 'prologue', theme: 'world', w: " + W + ', h: ' + H + ',');
+  if (XFORM) js.push('    splat: true,   // WORLD v3: なめらかな地面（src/art/terrain/splat.js）');
   js.push('    legend: ' + JSON.stringify(LEGEND) + ',');
   js.push("    outside: 'deep_water',");
   js.push('    rows: [');
