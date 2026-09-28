@@ -389,6 +389,8 @@
     if (!b) return;
     if (down) {
       src.key[b] = true;
+      // 1 フレームより短い押下（重いフレームの間に押して離した）も落とさない: 次の update で 1 フレームだけ押した扱い
+      if (!e.repeat) src.pulse[b] = true;
       (src.keyCodes[b] = src.keyCodes[b] || new Set()).add(e.code);
     } else {
       // 同じ操作の別のキーを押したままなら離さない

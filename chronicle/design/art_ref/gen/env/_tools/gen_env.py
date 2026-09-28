@@ -11,6 +11,9 @@ job = {"out": "path.png", "prompt": "...", "size": "1024x1024", "quality": "high
 """
 import base64, json, os, sys, time, random, urllib.request, urllib.error
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..', 'sprite_pipe', 'tools'))
+from pngclean import strip_png   # noqa: E402  IHDR/PLTE/IDAT/IEND/tRNS/gAMA/sRGB/iCCP/pHYs だけ残す
+
 URL = 'https://api.openai.com/v1/responses'
 LOG = '/tmp/claude-0/secrets/openai_usage.jsonl'
 CAP = int(os.environ.get('ENV_IMAGE_CAP') or 0)   # 0 = no cap (owner 2026-09-28)
@@ -79,8 +82,10 @@ def run(job):
         if not outs:
             print('no image', job['out'], json.dumps([o.get('type') for o in js.get('output', [])])[:200]); time.sleep(5); continue
         os.makedirs(os.path.dirname(job['out']), exist_ok=True)
-        open(job['out'], 'wb').write(base64.b64decode(outs[0]['result']))
-        meta = dict(job); meta.pop('refs', None); meta['refs'] = job.get('refs', []); meta['revised_prompt'] = outs[0].get('revised_prompt'); meta['model'] = body['model']
+        # 付随チャンク（caBX = 生成の来歴、tEXt など。作った道具の名前が入る）は落として書く
+        open(job['out'], 'wb').write(strip_png(base64.b64decode(outs[0]['result'])))
+        # 横の .gen.json にもモデル名は書かない（リポジトリに入る。使ったモデルはリポジトリの外の LOG にだけ残る）
+        meta = dict(job); meta.pop('refs', None); meta['refs'] = job.get('refs', []); meta['revised_prompt'] = outs[0].get('revised_prompt')
         json.dump(meta, open(job['out'][:-4] + '.gen.json', 'w'), ensure_ascii=False, indent=1)
         print('ok', job['out'], round(time.time() - t0, 1), 's')
         return True

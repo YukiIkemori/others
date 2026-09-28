@@ -120,7 +120,10 @@ function nodePart() {
     // NPC の足もと（押してもどかない人が道をふさいでいないか・話しかけられるか）
     for (const n of m.npcs || []) {
       if (n.x == null) continue;
-      if (!near(n.x, n.y, n.lv || 0, 1, 1) && !at(n.x, n.y, n.lv || 0)) bad.push(`npc ${n.id} (${n.x},${n.y}) cannot be reached`);
+      // 店の台の向こうの人（台 1 マスを挟んで話せる。FIELD の話しかけ・lib/maps.js の talkSpots と同じ）
+      const lv = n.lv || 0;
+      const across = [[0, 2], [0, -2], [2, 0], [-2, 0]].some(([dx, dy]) => F._objBlocks && F._objBlocks(m, n.x + dx / 2, n.y + dy / 2, lv) && at(n.x + dx, n.y + dy, lv));
+      if (!near(n.x, n.y, lv, 1, 1) && !at(n.x, n.y, lv) && !across) bad.push(`npc ${n.id} (${n.x},${n.y}) cannot be reached`);
     }
     ok(`${id}: FIELD で歩ける（spawn・出口・扉・階段・宝箱・泉・調べる物・人に届く）`, bad.length === 0, bad.slice(0, 6));
   }

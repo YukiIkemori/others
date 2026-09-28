@@ -55,7 +55,7 @@
       P.reserve.push(member.id);
       this.ops.push({ out: member.id, in: id });
       R.UIK.sfx('confirm');
-      R.UIK.toast(`${member.name} と ${S.companion(id).name} を入れ替える`, { anchor: 'bl', icon: 'person' });
+      R.UIK.toast(`${member.name} と ${S.companion(id).name} を入れ替えます（「これでよい」で決定）`, { anchor: 'bl', icon: 'person' });
       this.mode = 'pick';
       this.onOk = true;   // 交代の後は「これでよい」へ（A でそのまま決まる）
     },

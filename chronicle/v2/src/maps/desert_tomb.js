@@ -112,8 +112,8 @@
       O.push(K.stairs(49, 41, { map: 'desert_tomb_3', spawn: 'up' }, { id: 'desert_tomb_2_down' }));
       O.push(K.prop('rock_small', 27, 22), K.prop('rock_small', 28, 23));   // 灯りの間の崩れた石（泉は 3 階の王の前だけ）
       O.push(K.prop('rock_small', 31, 32), K.prop('rock_small', 31, 33));   // 控えの間の崩れた石（砂もぐりの前）
-      // 燭台（火をともすと周りが明るいまま、E6）
-      const BZ = [[28, 5], [16, 6], [9, 5], [9, 16], [9, 30], [7, 38], [22, 19], [34, 19], [22, 27], [34, 27], [24, 33], [32, 33], [45, 6], [45, 17], [40, 24], [50, 28], [50, 40], [20, 38], [37, 38]];
+      // 燭台（火をともすと周りが明るいまま、E6）。1 つ目は上の広間の階段の脇（着く所 top 28,5 をふさがない）
+      const BZ = [[25, 4], [16, 6], [9, 5], [9, 16], [9, 30], [7, 38], [22, 19], [34, 19], [22, 27], [34, 27], [24, 33], [32, 33], [45, 6], [45, 17], [40, 24], [50, 28], [50, 40], [20, 38], [37, 38]];
       BZ.forEach(([x, y], i) => O.push({ type: 'brazier', id: 'desert_tomb_2_b' + (i + 1), x, y }));
       O.push(K.prop('obelisk', 5, 36), K.exam(5, 37, 'desert_tomb_glyph', { glyph: 'za' }));
       O.push(K.exam(28, 36, 'desert_tomb_quicksand'), K.exam(39, 40, 'desert_tomb_quicksand'), K.exam(41, 27, 'desert_tomb_quicksand'));

@@ -140,7 +140,8 @@
       const ink = '#3b2614', paper = 'rgba(240,226,192,0.92)';
       // 名前は重ならないように置く: 町 → ダンジョン → エリアの順に、重なれば下・上へずらし、それでも重なる物は出さない（引くと小さい物から消える）
       const labels = [], marks = [];
-      const want = (text, px, py, sz, strong, prio) => labels.push({ text, x: X(px), y: Y(py), sz: u(sz), strong, prio });
+      // mx, my: 印の位置（町・ダンジョン、絵の px）。下に置けないときは印のすぐ上・右・左に置く（引いたとき、隣の町の名前をよけて遠くへ飛ばない）
+      const want = (text, px, py, sz, strong, prio, mx, my) => labels.push({ text, x: X(px), y: Y(py), sz: u(sz), strong, prio, mark: mx != null, mx: X(mx != null ? mx : px), my: Y(my != null ? my : py) });
       for (const m of Object.values(R.DB.maps)) {
         if (!m || m.kind !== 'field' || !(G.visited && G.visited[m.id])) continue;
         const c = this.paintPos(m.id);
@@ -153,7 +154,7 @@
         const c = this.paintPos(p.map);
         if (!c) continue;
         marks.push({ kind: p.kind, x: X(c[0]), y: Y(c[1]) });
-        if (p.kind === 'town') want(p.name, c[0], c[1] + 9 / k, 14, true, 3); else want(p.name, c[0], c[1] + 8 / k, 12, false, 2);
+        if (p.kind === 'town') want(p.name, c[0], c[1] + 9 / k, 14, true, 3, c[0], c[1]); else want(p.name, c[0], c[1] + 8 / k, 12, false, 2, c[0], c[1]);
       }
       for (const q of marks) {
         if (q.kind === 'town') R.UIK.diamond(g, q.x, q.y, u(5.5), '#8a2d1c', 'rgba(250,236,200,0.9)', 1.5);
@@ -165,14 +166,21 @@
       for (const L of labels) {
         const w = R.UIK.measure(L.text, { size: L.sz, weight: L.strong ? 700 : 500 }) + u(6), h = L.sz + u(6);
         let ok = null;
-        for (const dy of [0, h, -h - u(10), 2 * h, -2 * h - u(10)]) {
-          const b = { x0: L.x - w / 2, y0: L.y + dy - u(2), x1: L.x + w / 2, y1: L.y + dy + h - u(2) };
-          if (!hit(b)) { ok = { b, dy }; break; }
+        // 置く所の候補（印の近くから）: 既定（下か上）→ 印のすぐ上 → 印の右・左 → すぐ上で左右に少しずらす → 上下にもうひとつ離す
+        //   （引いた ×1 では隣の町の名前とぶつかりやすい。前は上下に 2 段飛ばして、印から離れた所に出ていた）
+        const gap = u(9), up = L.my - u(6) - h + u(2), side = L.my - h / 2 + u(2);
+        const far = [[L.x, L.y + h, 'center'], [L.x, L.y - h - u(10), 'center'], [L.x, L.y + 2 * h, 'center'], [L.x, L.y - 2 * h - u(10), 'center']];
+        const cands = L.mark ? [[L.x, L.y, 'center'], [L.mx, up, 'center'], [L.mx + gap, side, 'left'], [L.mx - gap, side, 'right'],
+          [L.mx + w / 3, up, 'center'], [L.mx - w / 3, up, 'center']].concat(far) : [[L.x, L.y, 'center']].concat(far);   // エリアの名前（印なし）は上下だけ
+        for (const [tx, ty, align] of cands) {
+          const x0 = align === 'left' ? tx - u(3) : align === 'right' ? tx - w + u(3) : tx - w / 2, y0 = ty - u(2);
+          const b = { x0, y0, x1: x0 + w, y1: y0 + h };
+          if (!hit(b)) { ok = { b, tx, ty, align }; break; }
         }
         if (!ok) continue;
         placed.push(ok.b);
         L.drawnAt = ok.b;
-        R.UIK.text(g, L.text, L.x, L.y + ok.dy, { size: L.sz, weight: L.strong ? 700 : 500, color: ink, align: 'center', stroke: [paper, u(3.2)] });
+        R.UIK.text(g, L.text, ok.tx, ok.ty, { size: L.sz, weight: L.strong ? 700 : 500, color: ink, align: ok.align, stroke: [paper, u(3.2)] });
       }
       WM.labels = labels.map((L) => ({ text: L.text, box: L.drawnAt || null }));   // 検査用
       // 目印の手がかり

@@ -16,6 +16,8 @@ import time
 import urllib.error
 import urllib.request
 
+from pngclean import strip_png   # the provenance chunks (caBX / tEXt) carry the tool's name: never keep them
+
 URL = 'https://api.openai.com/v1/responses'
 BANNED_MODEL_PARTS = ('astra',)
 OWN_TAGS = ('probe', 'arun', 'companion', 'npc')   # tags written by gen_sheets.py (the cap counts these)         # the owner's rule: the heavy model family is never used
@@ -140,7 +142,7 @@ def generate(prompt, images=(), size='1536x1024', quality='medium', background='
             time.sleep(5 * (attempt + 1))
             continue
         outs = [o for o in js.get('output', []) if o.get('type') == 'image_generation_call']
-        pngs = [base64.b64decode(o['result']) for o in outs if o.get('result')]
+        pngs = [strip_png(base64.b64decode(o['result'])) for o in outs if o.get('result')]   # only IHDR/PLTE/IDAT/IEND/tRNS/gAMA/sRGB/iCCP/pHYs
         info = dict(t=time.strftime('%Y-%m-%dT%H:%M:%S'), tag=tag, model=body['model'], images=len(pngs), secs=round(time.time() - t0, 1),
                     settings=tool, n_refs=len(images), usage=js.get('usage'),
                     tool_usage=js.get('tool_usage') or [o.get('usage') for o in outs if o.get('usage')] or None,

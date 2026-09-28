@@ -25,6 +25,9 @@ import numpy as np
 from PIL import Image
 from scipy import ndimage as nd
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from pngclean import strip_png_file   # noqa: E402
+
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 V2_SPRITES = os.path.normpath(os.path.join(HERE, '..', '..', 'v2', 'assets', 'sprites'))
 KINDS = {'battle': 'battle', 'field': 'field', 'face': 'face', 'battle_bare': 'bare', 'weapons': 'weapons'}
@@ -77,6 +80,7 @@ def convert_set(src_json, kind, look, dst, source):
         # 描かれている武器の系統。アルン（設定資料・シート5/6）は剣、仲間は得意武器（pack の meta.weapon）
         out['weapon'] = d.get('weapon') or 'sword'
     shutil.copyfile(img, os.path.join(dst, kind + '.png'))
+    strip_png_file(os.path.join(dst, kind + '.png'))   # 付随チャンク（生成の来歴の札など）は v2 に持ち込まない
     json.dump(out, open(os.path.join(dst, kind + '.json'), 'w'), ensure_ascii=False, indent=1)
     return len(frames)
 
@@ -135,6 +139,7 @@ def pack_faces(files, look, dst, source):
         poses[name] = [i]
     expr = expr_map([n for n, _ in ims])
     Image.fromarray(sheet).save(os.path.join(dst, 'face.png'))
+    strip_png_file(os.path.join(dst, 'face.png'))
     out = {'look': look, 'set': 'face', 'source': source, 'cell': [cw, ch], 'anchor': [cw // 2, ch - 1], 'frames': frames,
            'poses': poses, 'fps': {}, 'expr': expr}
     json.dump(out, open(os.path.join(dst, 'face.json'), 'w'), ensure_ascii=False, indent=1)

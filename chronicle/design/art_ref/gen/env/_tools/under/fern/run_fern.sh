@@ -1,5 +1,5 @@
 #!/bin/bash
-# final processing of full3 (gpt-6-sol, 2880x2688 = 48 px/tile) -> v2/assets/env/treetop/under/fern*
+# final processing of full3 (2880x2688 = 48 px/tile) -> v2/assets/env/treetop/under/fern*
 # (the map dump fern_data.json and new_albedo.png = the tile bake of the same layout, fullmap.js fern new, without map.art)
 cd "$(dirname "$0")"   # needs full3.png (= ../../../under/fern_gen3_raw.png) and new_albedo.png (fullmap.js fern new, map.art removed) here
 node dump.js fern fern_data.json && python3 guide_fern.py >/dev/null

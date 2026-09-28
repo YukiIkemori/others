@@ -9,6 +9,37 @@ const os = require('os');
 const { execFileSync } = require('child_process');
 const load = require('./lib/load');
 
+/** root の下の PNG で、残してよいチャンク以外を持つ物 {n, list: ['path: caBX,…']}（チャンクの頭だけ読む） */
+function pngMetaLeaks(root) {
+  const KEEP = new Set(['IHDR', 'PLTE', 'IDAT', 'IEND', 'tRNS', 'gAMA', 'sRGB', 'iCCP', 'pHYs']);
+  const SKIP = new Set(['node_modules', '.git', 'raw']);
+  const head = Buffer.alloc(12);
+  const out = { n: 0, list: [] };
+  const walk = (d) => {
+    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+      const q = path.join(d, e.name);
+      if (e.isDirectory()) { if (!SKIP.has(e.name)) walk(q); continue; }
+      if (!e.name.endsWith('.png')) continue;
+      out.n++;
+      const fd = fs.openSync(q, 'r');
+      try {
+        const size = fs.fstatSync(fd).size, extra = [];
+        let pos = 8;
+        while (pos + 8 <= size) {
+          fs.readSync(fd, head, 0, 8, pos);
+          const len = head.readUInt32BE(0), type = head.toString('latin1', 4, 8);
+          if (!KEEP.has(type)) extra.push(type);
+          if (type === 'IEND') break;
+          pos += 12 + len;
+        }
+        if (extra.length) out.list.push(path.relative(root, q) + ': ' + [...new Set(extra)].join(','));
+      } finally { fs.closeSync(fd); }
+    }
+  };
+  walk(root);
+  return out;
+}
+
 let n = 0, bad = 0;
 function ok(name, cond, info) {
   n++; if (!cond) bad++;
@@ -202,6 +233,14 @@ function ok(name, cond, info) {
   walk(path.join(__dirname, '..'));
   const leaks = txt.filter(([, s]) => /sk-[A-Za-z0-9]{20,}|AIza[0-9A-Za-z_-]{30,}|\b(gpt-[0-9]|dall-e|gemini-[0-9]|lyria|claude-[a-z0-9])/i.test(s)).map(([q]) => q);
   ok('no API keys / model identifiers in v2 sources', leaks.length === 0, leaks);
+
+  // ---- PNG に付随チャンク（caBX = 生成の来歴・tEXt/iTXt/zTXt・eXIf など。作った道具の名前が入る）が無い（chronicle の木の全部）
+  //   チャンクの頭（12 バイト）だけ読んで飛ばす（画素は開かない）。生成の生の出力（design/art_ref/gen/**/raw/）は版に入れないので除く
+  {
+    const t0 = Date.now();
+    const bad = pngMetaLeaks(path.join(__dirname, '..', '..'));
+    ok(`PNGs carry no ancillary chunks (only IHDR/PLTE/IDAT/IEND/tRNS/gAMA/sRGB/iCCP/pHYs; ${bad.n} files, ${Date.now() - t0} ms)`, bad.list.length === 0, bad.list.slice(0, 8));
+  }
 
   // ---- --single（任意。重いので指定したときだけ）
   if (process.argv.includes('--single')) {

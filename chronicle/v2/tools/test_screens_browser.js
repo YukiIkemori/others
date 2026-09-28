@@ -98,8 +98,14 @@ async function backTo(p, id, max) {
         if (!noShots) await B.shot(p, path.join(OUT, `${sc.id}_${phone ? 'phone' : '1920'}.png`));
         if (sc.id === 'title') { await B.ev(p, 'RPG.Engine.remove(RPG.Engine.top(), {cmd:"new"})'); await p.waitForTimeout(200); continue; }
         // B で閉じる（名前の入力は 1 字ずつ消すので数回）
-        const closed = await B.pressUntil(p, 'b', `${TOP}==='field'`, sc.id === 'nameentry' ? 10 : sc.id === 'partySelect' ? 1 : 4);
-        if (sc.id === 'partySelect') { ok('partySelect: B with nobody picked closes (→ [])', closed); continue; }
+        // 仲間選び: B は 1 回だけ（2 回目は下の場面に届く）。閉じるのは条件で待つ（重いとき閉じる動きが 1 回の待ちより長い）
+        if (sc.id === 'partySelect') {
+          await B.waitFor(p, `${TOP}==='screen:partySelect'`, 3000);
+          await B.press(p, 'b');
+          ok('partySelect: B with nobody picked closes (→ [])', await B.waitFor(p, `${TOP}==='field'`, 5000), await B.ev(p, TOP));
+          continue;
+        }
+        const closed = await B.pressUntil(p, 'b', `${TOP}==='field'`, sc.id === 'nameentry' ? 10 : 4);
         ok(`${sc.id} closes with B → field`, closed, await B.ev(p, TOP));
       }
       ok('0 console errors', P.errors.length === 0, P.errors.slice(0, 5));
