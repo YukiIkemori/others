@@ -185,57 +185,62 @@ def f_cape():
 
 
 def f_lookout():
-    """見晴らし台と跳ね橋: the north shore of the peninsula. The road from the south (f_roa) to the timber drawbridge over the strait (N edge ->
-    f_cross; raised until the prologue ends: tilePatch + closed layer), the bridge-keeper's stone abutment with lamps; on the east a raised
-    grassy bluff above the sea with the wooden lookout tower and the old lamp (the lamp quest), a bench, the chest at the bluff's tip;
-    on the west a heath of heather and a birch wood, a rocky north shore."""
+    """見晴らし台と跳ね橋 (identity: a purple heather heath on the north shore, a timber drawbridge on stone piers over a grey strait,
+    a high bluff with a wooden lookout tower). The road from the south (f_roa) to the drawbridge (N edge -> f_cross; raised until the
+    prologue ends: tilePatch + closed layer), the stone abutment with lamps and the bridge-keeper; the bluff (E) rises behind a rock
+    face, a stair cut through it, the lookout tower, the old lamp (the lamp quest), a bench, the chest at the bluff's tip; a shingle
+    beach with an upturned fishing boat (W), a birch copse, heather everywhere."""
     from scipy import ndimage
     a = Area('f_lookout', 48, 40, 37)
     W, H = a.W, a.H
-    a.mask_fill(fbm(5, W, H, 5) > 0.55, ';')
-    a.mask_fill(fbm(6, W, H, 4) > 0.62, '"', only=',;')      # heather
-    land = [(-3, 13), (6, 11.5), (14, 12.5), (19, 11), (27, 11), (33, 8.5), (40, 6.5), (47, 7.5), (51, 8), (51, 43), (-3, 43)]
-    L = a.region(land, ',', rough=1.1, seed=3, only='')
-    sea = ~L
-    a.mask_fill(sea, '~', force=True)
-    dsea = ndimage.distance_transform_edt(L)
     ys, xs = np.mgrid[0:H, 0:W]
-    a.mask_fill(L & (dsea <= 1.6) & (xs < 20), 'r', force=True)          # rocky west shore
-    a.mask_fill(L & (dsea <= 2.0) & (xs >= 26), 'R', force=True)          # the bluff's sea cliffs
-    a.mask_fill(L & (dsea <= 1.2) & (xs >= 20) & (xs < 26), 's', force=True)   # a strip of shingle at the abutment
-    # the raised bluff (east): its landward edge is a low cliff with steps on the south-west
-    bl = a.region([(30, 8), (48, 6), (48, 21), (41, 22.5), (33, 19.5), (29.5, 14)], ',', rough=0.9, seed=8, only='')
-    edge = bl & ~ndimage.binary_erosion(bl) & L & (dsea > 2.0)
-    a.mask_fill(bl & L & (dsea > 2.0), ',', force=True)
-    a.mask_fill(bl & L & (dsea > 2.0) & (fbm(9, W, H, 4) > 0.6), ';')
-    a.mask_fill(edge, 'R', force=True)
-    # road: south edge -> the abutment -> the drawbridge (x 22-23)
-    a.stroke([(24.5, 40.5), (24.5, 35), (22, 29), (23.5, 22), (22.5, 16), (22.5, 12.5)], 2.0, '.', wobble=0.2, seed=6)
-    a.rect(20, 10, 6, 4, 'c', force=True, keep=True)      # the stone abutment (flagstones)
-    a.rect(22, 0, 2, 10, '=', force=True, keep=True)      # the drawbridge
-    a.mark('piers', [(21, 4), (24, 4), (21, 5), (24, 5)], 'the two stone PIERS of the drawbridge standing in the sea either side of the deck, with the lifting chains and timber frame of the drawbridge', (120, 116, 110))
-    # the footpath up the bluff: from the road east, the steps through its edge, on to the lookout
-    stair = a.stroke([(24, 25), (29, 22.5), (33.5, 20.2), (36.5, 17.5), (40, 14.5)], 1.5, ':', force=True)
-    a.mark('lookout', [(41, 11), (42, 11), (41, 12), (42, 12)], 'a tall wooden LOOKOUT TOWER on four timber legs with a railed platform and a little shingle roof, a ladder on its south side', (170, 110, 60))
-    # heath and birch wood (west), groves
-    a.region([(-3, 18), (10, 17), (15, 22), (12, 30), (4, 33), (-3, 32)], 'T', rough=1.4, seed=11, only=',;"')
-    for (x, y, rx, ry, s_) in [(33, 30, 2.4, 1.8, 12), (13, 36, 2.6, 1.6, 13), (40, 33, 2.8, 2.0, 14), (7, 24, 1.4, 1.2, 15)]:
+    a.mask_fill(fbm(5, W, H, 5) > 0.5, ';')
+    a.mask_fill(fbm(6, W, H, 4) > 0.5, '"', only=',;')      # heather
+    land = [(-3, 12.5), (8, 11.5), (15, 12.5), (20, 10.5), (26, 10.5), (29.5, 8), (31, 5), (38, 3.5), (46, 4.5), (51, 5), (51, 43), (-3, 43)]
+    L = a.region(land, ',', rough=1.0, seed=3, only='')
+    a.mask_fill(~L, '~', force=True)
+    dsea = ndimage.distance_transform_edt(L)
+    a.mask_fill(L & (dsea <= 1.8) & (xs < 20), 's', force=True)            # shingle beach (W)
+    a.mask_fill(L & (dsea <= 0.9) & (xs < 20) & (fbm(11, W, H, 2) > 0.55), 'r', force=True)
+    # the bluff: high ground, sea cliffs on its sea sides, a rock face on its land sides
+    bl = (xs >= 31) & (ys <= 19) & L
+    bl &= ~((xs < 34) & (ys > 16))
+    a.mask_fill(bl & (dsea <= 1.6), 'R', force=True)
+    face = bl & ~ndimage.binary_erosion(bl, iterations=2, border_value=1) & (dsea > 1.6)
+    face &= (ys >= 17) | (xs <= 32)
+    a.mask_fill(face, 'R', force=True)
+    a.mask_fill(bl & ~face & (dsea > 1.6), ',', force=True)
+    a.mask_fill(bl & ~face & (dsea > 1.6) & (fbm(9, W, H, 4) > 0.55), '"')
+    a.rect(33, 16, 1, 4, 'R', force=True)     # the face's south-west corner
+    # road: south edge -> abutment -> drawbridge (x 22-23)
+    a.stroke([(24.5, 40.5), (24.5, 34), (22.5, 28), (23.5, 21), (22.5, 15), (22.5, 12.5)], 2.0, '.', wobble=0.2, seed=6)
+    a.rect(20, 10, 6, 3, 'c', force=True, keep=True)
+    a.rect(22, 0, 2, 10, '=', force=True, keep=True)
+    a.mark('piers', [(21, 4), (24, 4), (21, 5), (24, 5)], 'the two massive stone PIERS of the drawbridge in the sea either side of the deck, with the lifting chains and the tall timber frame of the drawbridge', (120, 116, 110))
+    # footpath: from the road east to the stair cut through the bluff's face, on up to the lookout
+    a.stroke([(24, 27), (30, 24.5), (36.5, 22), (37, 19.5), (38.5, 15), (41, 11.8)], 1.5, ':', force=True)
+    a.mark('stair', [(36, 18), (37, 18), (36, 17), (37, 17)], 'a flight of rough STONE STEPS cut up through the rock face onto the bluff (walkable)', (182, 176, 160), solid=False)
+    a.rect(36, 17, 2, 2, 'c', force=True, keep=True)
+    a.mark('lookout', [(41, 10), (42, 10), (41, 11), (42, 11)], 'a tall wooden LOOKOUT TOWER on four timber legs with a railed platform and a little shingle roof, a ladder on its south side', (170, 110, 60))
+    a.mark('boat', [(9, 12), (10, 12)], 'an old UPTURNED FISHING BOAT lying keel-up on the shingle, weathered planks, a coil of rope', (130, 96, 70))
+    # the birch copse (W) and groves
+    a.region([(-3, 17), (9, 16.5), (14, 21), (12, 29), (5, 31), (-3, 30)], 'T', rough=1.3, seed=11, only=',;"')
+    for (x, y, rx, ry, s_) in [(31, 31, 2.4, 1.8, 12), (14, 36, 2.6, 1.6, 13), (41, 30, 2.8, 2.0, 14), (44, 24, 1.6, 1.3, 15)]:
         a.blob(x, y, rx, ry, 'T', rough=0.35, seed=s_, only=',;"')
     a.region([(-3, 37.5), (48, 38.5), (51, 43), (-3, 43)], 'F', rough=1.0, seed=16, only=',;"')
-    a.scatter('r', 0.015, only=',;"', seed=31, clear=1)
-    a.scatter('b', 0.012, only=',;"', seed=32, clear=1)
+    a.scatter('r', 0.012, only=',;"', seed=31, clear=1)
     a.tidy()
     a.exit('s', 24, 25, {'map': 'f_roa', 'spawn': 'north'}, 'south')
     a.exit('n', 22, 23, {'map': 'f_cross', 'spawn': 'bridge'}, 'bridge')
     a.objects += [
         dict(type='waylamp', id='wl_pen_lookout', x=40, y=12, lit='prologue_lamp_lookout', event='world_pen_lamp'),
-        dict(type='examine', x=41, y=12, event='world_poi_pen_lookout'),
-        dict(type='sign', x=38, y=15, text='見晴らし台\n半島の北の海を見わたす。'),
-        dict(type='prop', id='bench', x=43, y=14),
-        dict(type='prop', id='lamp_post', x=20, y=13), dict(type='prop', id='lamp_post', x=25, y=10),
+        dict(type='examine', x=41, y=11, event='world_poi_pen_lookout'),
+        dict(type='sign', x=38, y=16, text='見晴らし台\n半島の北の海を見わたす。'),
+        dict(type='prop', id='bench', x=44, y=13),
+        dict(type='prop', id='lamp_post', x=20, y=12), dict(type='prop', id='lamp_post', x=25, y=10),
         dict(type='prop', id='bollard', x=21, y=10),
         dict(type='sign', x=26, y=13, text='跳ね橋\n北 → 北の野'),
-        dict(type='chest', id='f_lookout_c1', x=45, y=9, item='i_ether', n=1),
+        dict(type='chest', id='f_lookout_c1', x=45, y=7, item='i_ether', n=1),
     ]
     a.meta = dict(name='見晴らし台', sub='跳ね橋と北の海', region='prologue', worldRect=[238, 214, 70, 46], outside='sea',
                   zones=[{'rect': None, 'zone': 'zw_peninsula'}],
