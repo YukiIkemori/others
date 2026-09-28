@@ -53,6 +53,22 @@ for (const rid of Object.keys(R.DB.regions || {})) if (rid !== 'world') ok(`地�
       if (shots) { fs.mkdirSync(shots, { recursive: true }); await B.shot(p, path.join(shots, 'map_' + id + '.png')); }
       await p.keyboard.press('KeyX'); await p.waitForTimeout(600);
     }
+    // 名前が重ならない（体験版の町・ダンジョン・エリアを全部行ったことにして、いちばん引いた所といちばん寄った所で）
+    await p.evaluate(async () => {
+      const G = RPG.Game; for (const m of Object.values(RPG.DB.maps)) if (m && (m.kind === 'field' || m.region === 'prologue' || m.region === 'r_forest')) G.visited[m.id] = true;
+      await RPG.Field.enter('f_cape', 'lighthouse', { fade: 0, noAutosave: true }); RPG.Screens.open('map');
+    });
+    await B.waitFor(p, `(RPG.Engine.top()||{}).id==='screen:map'`, 10000).catch(() => null);
+    for (const z of [1, 1.9, 4]) {
+      await p.evaluate((z) => { const s = RPG.Engine.top(); const P = (s && s.pm) || (s && s.def && s.def.pm); if (P) { P.z = P.zt = z; } else { for (const k of Object.keys(s || {})) if (s[k] && s[k].pm) { s[k].pm.z = s[k].pm.zt = z; } } }, z);
+      await p.waitForTimeout(1200);
+      const L = await p.evaluate(() => (RPG.WorldMap.labels || []).map((l) => l.box).filter(Boolean));
+      const bad = [];
+      for (let i = 0; i < L.length; i++) for (let j = i + 1; j < L.length; j++) { const a = L[i], b = L[j]; if (a.x0 < b.x1 && a.x1 > b.x0 && a.y0 < b.y1 && a.y1 > b.y0) bad.push(i + '/' + j); }
+      const z1 = await p.evaluate(() => RPG.WorldMap.drawn && RPG.WorldMap.drawn.z);
+      ok(`倍率 ${z}（${Math.round(z1 * 10) / 10}）: 名前 ${L.length} が重ならない`, bad.length === 0 && L.length > 0, bad);
+      if (shots) await B.shot(p, path.join(shots, 'labels_z' + z + '.png'));
+    }
     ok('コンソールのエラーが無い', P.errors.length === 0, P.errors.slice(0, 5));
     await B.stop(S);
   }
