@@ -1,0 +1,48 @@
+{
+ "id": "lamp_post__lighthouse",
+ "kind": "props",
+ "theme": "lighthouse",
+ "set": "lighthouse",
+ "base": "lamp_post",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   15,
+   49
+  ],
+  "32": [
+   19,
+   65
+  ],
+  "40": [
+   23,
+   81
+  ]
+ },
+ "feet": {
+  "24": [
+   6,
+   45
+  ],
+  "32": [
+   8,
+   61
+  ],
+  "40": [
+   10,
+   77
+  ]
+ },
+ "files": {
+  "24": "lamp_post__lighthouse@24.png",
+  "32": "lamp_post__lighthouse@32.png",
+  "40": "lamp_post__lighthouse@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_lighthouse.png",
+ "light32": [
+  0,
+  -52
+ ]
+}

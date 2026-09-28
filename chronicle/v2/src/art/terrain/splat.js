@@ -48,8 +48,8 @@
   function offOf(id, S) {
     const k = id + '|' + S;
     if (offs[k]) return offs[k];
-    const h = R.U.hash(id);
-    return (offs[k] = [(h % 997) * 37 % S, ((h >> 10) % 991) * 53 % S]);
+    const h = R.U.hash(id) >>> 0;   // hash は負のこともある（負のずれ → 表の外 → NaN）
+    return (offs[k] = [(h % 997) * 37 % S, ((h >>> 10) % 991) * 53 % S]);
   }
   const infoC = {};
   function mi(id) {

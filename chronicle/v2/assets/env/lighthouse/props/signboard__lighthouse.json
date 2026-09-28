@@ -1,0 +1,44 @@
+{
+ "id": "signboard__lighthouse",
+ "kind": "props",
+ "theme": "lighthouse",
+ "set": "lighthouse",
+ "base": "signboard",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   19,
+   25
+  ],
+  "32": [
+   24,
+   33
+  ],
+  "40": [
+   29,
+   41
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   21
+  ],
+  "32": [
+   10,
+   29
+  ],
+  "40": [
+   13,
+   37
+  ]
+ },
+ "files": {
+  "24": "signboard__lighthouse@24.png",
+  "32": "signboard__lighthouse@32.png",
+  "40": "signboard__lighthouse@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_lighthouse.png"
+}

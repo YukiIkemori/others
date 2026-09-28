@@ -1,0 +1,18 @@
+{
+ "id": "ash_volcano_2",
+ "kind": "under",
+ "map": "ash_volcano_2",
+ "tile": 32,
+ "size32": [
+  1408,
+  1152
+ ],
+ "windows32": [],
+ "doors32": [],
+ "painted": [],
+ "files": {
+  "24": "ash_volcano_2@24.png",
+  "32": "ash_volcano_2@32.png",
+  "40": "ash_volcano_2@40.png"
+ }
+}

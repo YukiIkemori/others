@@ -1,0 +1,48 @@
+{
+ "id": "lantern__wood",
+ "kind": "props",
+ "theme": "forest_dungeon",
+ "set": "wood",
+ "base": "lantern",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   11,
+   18
+  ],
+  "32": [
+   14,
+   23
+  ],
+  "40": [
+   17,
+   28
+  ]
+ },
+ "feet": {
+  "24": [
+   4,
+   14
+  ],
+  "32": [
+   6,
+   19
+  ],
+  "40": [
+   7,
+   24
+  ]
+ },
+ "files": {
+  "24": "lantern__wood@24.png",
+  "32": "lantern__wood@32.png",
+  "40": "lantern__wood@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_wood.png",
+ "light32": [
+  0,
+  -9
+ ]
+}

@@ -573,7 +573,7 @@ if (WORLD_K > 1) {
   SCALE = require('./world_scale')({ g, W, H, K: WORLD_K, LEGEND, ROADS, objects, npcs, exits, triggers, tilePatches, spawns, zones, areas, h2, fbm, vn });
   g.length = 0; for (const r of SCALE.g) g.push(r);
   W = SCALE.W; H = SCALE.H; XFORM = SCALE.xform;
-  require('./world_poi')({ g, W, H, K: WORLD_K, LEGEND, SCALE, objects, npcs, exits, spawns, zones, h2, vn, XF, XFORM });
+  SCALE.poi = require('./world_poi')({ g, W, H, K: WORLD_K, LEGEND, SCALE, objects, npcs, exits, spawns, zones, h2, vn, XF, XFORM });
 }
 /** L のマス → W のマス、W のマス → L のマス（倍率 1 ならそのまま） */
 const cW = (x, y) => (XFORM ? XF.cell(XFORM, x, y) : [x, y]);
@@ -667,6 +667,7 @@ function blockedByObj(x, y, cond) {
   for (const o of objects) {
     if (o.cond && !cond(o.cond)) continue;
     if (o.type === 'building') { if (x >= o.x && x < o.x + o.w && y >= o.y && y < o.y + o.h && !(o.door && o.door.x === x && o.door.y === y)) return true; continue; }
+    if (o.type === 'prop' && o.lm) { if (x >= o.x && x < o.x + (o.w || 1) && y >= o.y && y < o.y + (o.h || 1)) return true; continue; }   // WORLD v3 の名所の絵（w×h の当たり）
     if (o.x !== x || o.y !== y) continue;
     if (SOLID_OBJ.has(o.type)) return true;
     if (o.type === 'prop' && /^(barrel|crate|table|bed|bookshelf|counter|stove|lamp_post|fence|planter|well|signboard|board|rock|stump|log|tent|grave|hay|tree|pine|tree_giant|bush|roots|bollard|stall|rowboat|ship|crystal|songstone)$/.test(o.id)) return true;
@@ -727,6 +728,7 @@ function check() {
     if (!marks.some(([mx, my]) => Math.abs(mx - x) <= 15 && Math.abs(my - y) <= 8)) { empty++; if (emptyAt.length < 8) emptyAt.push(x + ',' + y); }
   }
   info.emptyRoad = empty; if (empty) info.emptyAt = emptyAt;
+  if (SCALE) { const si = SCALE.info; info.scale = { K: WORLD_K, W, H, cores: si.cores, islands: si.islands, groups: si.groups, droppedDecor: si.droppedDecor }; info.poi = SCALE.poi; }
   info.objects = objects.length; info.npcs = npcs.length; info.lamps = objects.filter((o) => o.type === 'waylamp').length;
   return { errs, info };
 }

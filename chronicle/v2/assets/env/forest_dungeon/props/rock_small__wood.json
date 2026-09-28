@@ -1,0 +1,44 @@
+{
+ "id": "rock_small__wood",
+ "kind": "props",
+ "theme": "forest_dungeon",
+ "set": "wood",
+ "base": "rock_small",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   18,
+   15
+  ],
+  "32": [
+   23,
+   19
+  ],
+  "40": [
+   28,
+   23
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   11
+  ],
+  "32": [
+   10,
+   15
+  ],
+  "40": [
+   12,
+   19
+  ]
+ },
+ "files": {
+  "24": "rock_small__wood@24.png",
+  "32": "rock_small__wood@32.png",
+  "40": "rock_small__wood@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_wood.png"
+}

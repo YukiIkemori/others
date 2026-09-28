@@ -1,0 +1,44 @@
+{
+ "id": "stairs_down__lighthouse",
+ "kind": "props",
+ "theme": "lighthouse",
+ "set": "lighthouse",
+ "base": "stairs_down",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   20,
+   20
+  ],
+  "32": [
+   27,
+   27
+  ],
+  "40": [
+   34,
+   34
+  ]
+ },
+ "feet": {
+  "24": [
+   10,
+   19
+  ],
+  "32": [
+   14,
+   26
+  ],
+  "40": [
+   17,
+   33
+  ]
+ },
+ "files": {
+  "24": "stairs_down__lighthouse@24.png",
+  "32": "stairs_down__lighthouse@32.png",
+  "40": "stairs_down__lighthouse@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_lighthouse.png"
+}

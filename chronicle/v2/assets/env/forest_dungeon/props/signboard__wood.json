@@ -1,0 +1,44 @@
+{
+ "id": "signboard__wood",
+ "kind": "props",
+ "theme": "forest_dungeon",
+ "set": "wood",
+ "base": "signboard",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   19,
+   25
+  ],
+  "32": [
+   25,
+   33
+  ],
+  "40": [
+   31,
+   41
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   21
+  ],
+  "32": [
+   11,
+   29
+  ],
+  "40": [
+   14,
+   37
+  ]
+ },
+ "files": {
+  "24": "signboard__wood@24.png",
+  "32": "signboard__wood@32.png",
+  "40": "signboard__wood@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_wood.png"
+}

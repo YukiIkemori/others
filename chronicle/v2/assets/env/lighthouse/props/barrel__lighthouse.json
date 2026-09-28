@@ -1,0 +1,44 @@
+{
+ "id": "barrel__lighthouse",
+ "kind": "props",
+ "theme": "lighthouse",
+ "set": "lighthouse",
+ "base": "barrel",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   16,
+   23
+  ],
+  "32": [
+   20,
+   29
+  ],
+  "40": [
+   24,
+   35
+  ]
+ },
+ "feet": {
+  "24": [
+   6,
+   19
+  ],
+  "32": [
+   8,
+   25
+  ],
+  "40": [
+   10,
+   31
+  ]
+ },
+ "files": {
+  "24": "barrel__lighthouse@24.png",
+  "32": "barrel__lighthouse@32.png",
+  "40": "barrel__lighthouse@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_lighthouse.png"
+}

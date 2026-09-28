@@ -106,7 +106,7 @@ def cut(set_):
         for t in TILES:
             w, h = sprite_sizes(w32, h32)[t]
             spr = pixelize_sprite(crop, w, h, ncol=32, outline=False, seed=1)
-            spr = shadowed(spr, pid in SOLID)
+            if not pid.startswith('stairs'): spr = shadowed(spr, pid in SOLID)   # stairs lie in the floor: no shadow
             fn = '%s@%d.png' % (sid, t); save(spr, os.path.join(d, fn)); files[t] = fn
             cells[t] = [spr.shape[1], spr.shape[0]]; feet[t] = [round(w / 2), h - 1]
         meta = dict(id=sid, kind='props', theme=folder, set=set_, base=pid, frames=['default'], cell=cells, feet=feet, files=files,

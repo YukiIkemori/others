@@ -1,0 +1,47 @@
+{
+ "id": "lm_broad_l1",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   144,
+   78
+  ],
+  "32": [
+   192,
+   104
+  ],
+  "40": [
+   240,
+   130
+  ]
+ },
+ "feet": {
+  "24": [
+   72,
+   76
+  ],
+  "32": [
+   96,
+   102
+  ],
+  "40": [
+   120,
+   128
+  ]
+ },
+ "files": {
+  "24": "lm_broad_l1@24.png",
+  "32": "lm_broad_l1@32.png",
+  "40": "lm_broad_l1@40.png"
+ },
+ "src": "../../../../tmp/claude-0/-home-user-others/00503990-4adc-574c-b37a-87d13f1cb58c/scratchpad/worldv3/raw/lm_forest_broad.png",
+ "fam": "broad",
+ "fp": [
+  6,
+  3
+ ]
+}

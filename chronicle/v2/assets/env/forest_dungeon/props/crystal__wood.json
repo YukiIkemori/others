@@ -1,0 +1,48 @@
+{
+ "id": "crystal__wood",
+ "kind": "props",
+ "theme": "forest_dungeon",
+ "set": "wood",
+ "base": "crystal",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   25,
+   25
+  ],
+  "32": [
+   33,
+   33
+  ],
+  "40": [
+   41,
+   41
+  ]
+ },
+ "feet": {
+  "24": [
+   11,
+   21
+  ],
+  "32": [
+   15,
+   29
+  ],
+  "40": [
+   19,
+   37
+  ]
+ },
+ "files": {
+  "24": "crystal__wood@24.png",
+  "32": "crystal__wood@32.png",
+  "40": "crystal__wood@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_wood.png",
+ "light32": [
+  0,
+  -12
+ ]
+}

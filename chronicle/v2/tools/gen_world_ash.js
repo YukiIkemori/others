@@ -6,7 +6,10 @@
 //       カルデラの東の門 → 北の潮見橋（x 186〜187、y 113〜121）→ 湿原の南の岸（鐘沈みの沼の入口の道 x 184〜185、y 101 へつなぐ）。
 //       湿原の山あいの街道（仮、gen_world_marsh.js）とあわせて、北の野 → 湿原 → 灰 → 砂漠 → 森の輪になる。
 //   座標は下の PL の 1 か所にまとめる（ワールドを大きくするときは、ここと BOX を写せばよい）。飾りはハッシュで散らすだけ。
-//   凡例を足す: '%' 溶岩（通れない）・'j' 黒い砂浜（黒曜石）・'v' 焦げた木（通れない、地面は灰）
+//   凡例を足す: '%' 溶岩（通れない水の類。mat lava）・'j' 黒い砂浜（地面。mat obsidian）・'v' 焦げた木（木の類 = 地物、solid。mat tree、地面は灰）
+//   ワールドの拡大（scratchpad/worldv3/DESIGN.md §1.3）に合わせて: 座標は L（224×192）のまま、道はすべて road()、
+//   門・出口・spawn・閉じ方は近くにまとめる（ひとつの固い芯になる）、1 マスごとの飾りは置かない（拡大の段が散らし直す）。
+//   潮見橋は芯にする（両端の調べる所と、まん中の spawn）。
 'use strict';
 module.exports = function ash(A) {
   const { get, set, road, h2, fbm, P, S, LAMP, objects, npcs, exits, tilePatches, spawns, zones, areas, LEGEND } = A;
@@ -106,6 +109,10 @@ module.exports = function ash(A) {
   objects.push({ type: 'examine', x: PL.bridge.x + 2, y: PL.bridge.y1 + 1, event: 'ash_bridge_sign' });
   set(PL.bridge.x + 2, PL.bridge.y1 + 1, 'a');
   S(PL.marshRoad[0] + 2, PL.marshRoad[1] + 1, '南 → 潮見橋・灰の荒野');
+  // 潮見橋を芯にする（拡大で橋の形がそのまま写る）: 北の端の調べる所と、まん中の spawn
+  set(PL.bridge.x - 1, PL.bridge.y0 - 1, get(PL.bridge.x - 1, PL.bridge.y0 - 1) === 'W' ? 'K' : get(PL.bridge.x - 1, PL.bridge.y0 - 1));
+  objects.push({ type: 'examine', x: PL.bridge.x - 1, y: PL.bridge.y0 - 1, event: 'ash_bridge_sign' });
+  spawns.ash_bridge = { x: PL.bridge.x, y: Math.round((PL.bridge.y0 + PL.bridge.y1) / 2), dir: 's' };
   // 湯の郷（#25）: 湯気の噴き出す岩の間の湯
   const [sx, sy] = PL.spa;
   for (let y = sy - 2; y <= sy + 2; y++) for (let x = sx - 3; x <= sx + 3; x++) if (land(x, y) && Math.hypot(x - sx, y - sy) < 3.2) set(x, y, 'a');
@@ -130,19 +137,7 @@ module.exports = function ash(A) {
   S(PL.pass[0] + 2, PL.pass[1] - 2, '灰の荒野\n東 → 炎の町カルデラ');
   // 道しるべの鉄のかがり火（街道にそって、道の外）
   for (const [x, y] of [[104, 139], [120, 135], [140, 141], [150, 133], [158, 138], [178, 133], [182, 128], [178, 143], [128, 132], [152, 148], [114, 147]]) if (get(x, y) === 'a') P('iron_brazier', x, y);
-  // 景色の飾り（焦げた木・硫黄・溶岩石）。道と出口のまわりには置かない
-  const solidAt = (x, y) => objects.some((o) => o.x === x && o.y === y);
-  for (let y = BOX.y0; y <= BOX.y1; y++) for (let x = BOX.x0; x <= BOX.x1; x++) {
-    if (!inBox(x, y) || get(x, y) !== 'a' || solidAt(x, y)) continue;
-    let near = false;
-    for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) if ('.=K'.includes(get(x + i, y + j))) near = true;
-    for (const e of exits) if (x >= e.x - 2 && x <= e.x + e.w + 1 && y >= e.y - 2 && y <= e.y + e.h + 1) near = true;
-    if (near) continue;
-    const r = h2(x, y, 721);
-    if (r < 0.008) P('charred_stump', x, y);
-    else if (r < 0.014) P('sulphur', x, y);
-    else if (r < 0.02) P('lava_rock', x, y);
-  }
+  // 1 マスごとの飾り（焦げた切り株・硫黄など）は置かない（ワールドの拡大の段が、ワールドの密度で散らし直す）
   // ---------------------------------------------------------------- 5. 出現表（上から最初に合う物。先頭に入れる）と地名
   const Z = [
     { rect: [sx - 8, sy - 4, 17, 9], zone: 'zw_ash_spa' },

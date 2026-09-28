@@ -153,6 +153,8 @@
         light: AK.LIGHT_VOLCANO, dark: false,
         bgm: 'cave', bbg: 'ash',
         meta: { chestsInfo: true, floor: '火口', sub: '火の鳥の卵の眠る所' },
+        // 1 枚の下絵（溶岩の湖・岩棚・土手道・卵の島と卵）。lava_glow は光だけ
+        art: { image: 'ash/under/ash_volcano_2', emit: 'ash/under/ash_volcano_2_emit', painted: ['lava_glow'] },
       });
     }
   });

@@ -91,7 +91,8 @@ section('2. 置き場所（泉・宝箱・戸口・灯り）');
   const secret = MY_MAPS.filter((id) => Object.values(D.maps[id].legend).some((l) => l.secret) && R.MapUtil.grid(D.maps[id]).some((r) => [...r].some((c) => D.maps[id].legend[c] && D.maps[id].legend[c].secret)));
   ok('隠し通路なし', secret.length === 0, secret);
   const w = D.maps.world;
-  const inAsh = (o) => o.x >= 96 && o.x <= 206 && o.y >= 115 && o.y <= 162;
+  const L = (w.meta && w.meta.xform && R.WorldXform) ? (x, y) => R.WorldXform.toL(w, x, y) : (x, y) => [x, y];
+  const inAsh = (o) => { const [x, y] = L(o.x, o.y); return x >= 96 && x <= 206 && y >= 115 && y <= 162; };
   ok('ワールドの灰の荒野に宝箱なし', !(w.objects || []).some((o) => o.type === 'chest' && inAsh(o)));
   const townChests = MY_MAPS.filter((id) => D.maps[id].kind === 'town').flatMap((id) => (D.maps[id].objects || []).filter((o) => o.type === 'chest').map((o) => id + ':' + o.id));
   ok(`町の宝箱は見える物だけ（${townChests.length} 個）`, townChests.length <= 3, townChests);
@@ -163,8 +164,10 @@ section('4. 筋（閉包・大会・解決）');
   ok('縦切りのあいだ（slice）は灰の荒野へ行けない（guard_ash が閉じたまま）', (() => { const q = P.closure({ variant: {} }); return !q.visited.has('caldera') && !q.visited.has('ash_volcano_1') && !q.visited.has('haimi_inn'); })());
   const w = D.maps.world;
   const g = (w.npcs || []).find((n) => n.id === 'guard_ash');
-  ok('カシムの東の峠の番人 guard_ash（cond {slice:true}）と崖崩れの tilePatch', !!(g && g.cond && g.cond.slice === true) && (w.tilePatches || []).some((p) => p.cond && p.cond.slice === true && p.rect[0] === 90 && p.rect[1] === 140));
-  ok('潮見橋が湿原の沼の道につながる（橋のマスは歩ける）', [113, 117, 121].every((y) => { const c = R.MapUtil.cell(w, 186, y); return c && c.walk !== false && !c.solid; }));
+  ok('カシムの東の峠の番人 guard_ash（cond {slice:true}）と崖崩れの tilePatch', !!(g && g.cond && g.cond.slice === true) && (w.tilePatches || []).some((p) => p.cond && p.cond.slice === true && Math.abs(p.rect[0] - g.x) <= 4 && Math.abs(p.rect[1] - g.y) <= 4));
+  // ワールドは拡大されることがある（worldv3: meta.xform）。L の座標（tools/gen_world_ash.js の PL）を W に写して見る
+  const X = (w.meta && w.meta.xform && R.WorldXform) ? (lx, ly) => R.WorldXform.toW(w, lx, ly) : (lx, ly) => [lx, ly];
+  ok('潮見橋が湿原の沼の道につながる（橋のマスは歩ける）', [113, 117, 121].every((y) => { const [wx, wy] = X(186, y); const c = R.MapUtil.cell(w, Math.round(wx), Math.round(wy)); return c && c.walk !== false && !c.solid; }));
 }
 function fakeEv(opts) {
   const G = R.Game;

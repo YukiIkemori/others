@@ -193,7 +193,7 @@
           break;
         }
         case 'prop': {
-          if (!T._PROP_DRAW[o.id]) break;
+          if (!T._PROP_DRAW[o.id] || o.lm) break;   // lm = WORLD v3 の名所の大きな絵（landmarks.js が描く）
           const meta = T._PROP_META[o.id] || {};
           const anim = /^(beacon)$/.test(o.id);
           const opts = optsS({ v: o.variant || 0 }, s);
@@ -341,7 +341,7 @@
     if (und) { this.mats = []; draw.sort((a, b) => a.sortY - b.sortY || a.x - b.x); this.draw = draw; return true; }   // 木・地面の飾りも下絵
     for (let y = c0y - 1; y < c0y + CHUNK + 4; y++) for (let x = c0x - 3; x < c0x + CHUNK + 3; x++) {
       const c = C(x, y);
-      if (c.found || !c.tall) continue;
+      if (c.found || !c.tall || (map.splat && T._lmCovered && T._lmCovered(map, x, y))) continue;   // WORLD v3: 大きな絵（landmarks.js）が覆うマスの木は描かない
       const fy = (y + 0.86) * t;
       if (c.tall === 'tree') {
         const n = th.twoTrees ? 2 : 1;
@@ -363,12 +363,13 @@
         }
       }
     }
+    if (map.splat && T._lmDraw) T._lmDraw(this, draw, map);   // WORLD v3: 木立・山・岩場の大きな絵（landmarks.js）
     // 地面の飾り（歩ける地面の上だけ。建物・物のマスは避ける）。はみ出す分があるので周り 1 マスも見る（チャンクの境でつながる）
     const dec = th.decor || {};
     for (let y = c0y - 1; y < c0y + CHUNK + 1; y++) for (let x = c0x - 1; x < c0x + CHUNK + 1; x++) {
       const c = C(x, y);
       if (!c.walk || c.water || c.hard || c.raised || c.tall || plan.occ.has(x + ',' + y) || x < 0 || y < 0 || x >= map.w || y >= map.h) continue;
-      if (c.mat === 'road' || c.mat === 'sand' || c.mat === 'dune_sand' || c.mat === 'cracked_clay') continue;
+      if (c.mat === 'road' || c.mat === 'sand' || c.mat === 'dune_sand' || c.mat === 'cracked_clay' || T._matInfo(c.mat).nodecor) continue;
       let k = 0;
       for (const id of Object.keys(dec)) {
         k++;

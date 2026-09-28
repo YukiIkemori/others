@@ -1,0 +1,44 @@
+{
+ "id": "sack__lighthouse",
+ "kind": "props",
+ "theme": "lighthouse",
+ "set": "lighthouse",
+ "base": "sack",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   13,
+   17
+  ],
+  "32": [
+   17,
+   22
+  ],
+  "40": [
+   21,
+   27
+  ]
+ },
+ "feet": {
+  "24": [
+   5,
+   13
+  ],
+  "32": [
+   7,
+   18
+  ],
+  "40": [
+   9,
+   23
+  ]
+ },
+ "files": {
+  "24": "sack__lighthouse@24.png",
+  "32": "sack__lighthouse@32.png",
+  "40": "sack__lighthouse@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_lighthouse.png"
+}

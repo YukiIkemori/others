@@ -1,0 +1,44 @@
+{
+ "id": "stump__wood",
+ "kind": "props",
+ "theme": "forest_dungeon",
+ "set": "wood",
+ "base": "stump",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   27,
+   19
+  ],
+  "32": [
+   35,
+   25
+  ],
+  "40": [
+   43,
+   31
+  ]
+ },
+ "feet": {
+  "24": [
+   12,
+   15
+  ],
+  "32": [
+   16,
+   21
+  ],
+  "40": [
+   20,
+   27
+  ]
+ },
+ "files": {
+  "24": "stump__wood@24.png",
+  "32": "stump__wood@32.png",
+  "40": "stump__wood@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_wood.png"
+}

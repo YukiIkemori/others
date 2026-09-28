@@ -1,0 +1,48 @@
+{
+ "id": "lantern__lighthouse",
+ "kind": "props",
+ "theme": "lighthouse",
+ "set": "lighthouse",
+ "base": "lantern",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   10,
+   18
+  ],
+  "32": [
+   12,
+   23
+  ],
+  "40": [
+   14,
+   28
+  ]
+ },
+ "feet": {
+  "24": [
+   4,
+   14
+  ],
+  "32": [
+   4,
+   19
+  ],
+  "40": [
+   6,
+   24
+  ]
+ },
+ "files": {
+  "24": "lantern__lighthouse@24.png",
+  "32": "lantern__lighthouse@32.png",
+  "40": "lantern__lighthouse@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_lighthouse.png",
+ "light32": [
+  0,
+  -9
+ ]
+}

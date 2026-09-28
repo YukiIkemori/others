@@ -310,7 +310,7 @@
     const t0 = typeof performance !== 'undefined' ? performance.now() : 0;
     // 起動で読むのは素材・物・建物（下絵と戦闘背景は使う時に読む。上の「使う時に読み」）の今のマスの大きさの分だけ。
     // 待つのは縦切りのテーマの分、ほかのテーマは後ろで。別の大きさはマスの大きさを変えたときに読む（2026-09-28: 全部で 1.4 GB）
-    const SLICE = /^(common|harbor|hill_village|treetop|moss_village|tree_inside|lighthouse|cave|forest_dungeon|snow|desert)\//;
+    const SLICE = /^(common|harbor|hill_village|treetop|moss_village|tree_inside|lighthouse|cave|forest_dungeon|snow|desert|world)\//;   // world = WORLD v3 のワールドの素材と大きな景色
     const LAZY = /\/under\/|^bbg\//;
     const has = new Set(all);
     /** マスの大きさ t の素材・物・建物（t の絵が無い物は 32 の絵。pickTile と同じ） */

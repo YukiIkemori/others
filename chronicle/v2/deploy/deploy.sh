@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Firebase Hosting への公開（プロジェクト luminous-chronicle）。持ち主 2026-09-28「Firebase に移行」
+#   HEAD の中身だけでビルドする（作業中の変更は入れない）→ pack_web で体験版の範囲を固める → GA4 のタグを入れる → deploy
+#   必要な環境変数: FIREBASE_SERVICE_ACCOUNT（サービスアカウントの JSON。Firebase Hosting 管理者）、GA4_ID（G-XXXX、任意）
+#   使い方: bash chronicle/v2/deploy/deploy.sh [--dry]
+set -euo pipefail
+ROOT=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
+WORK=${DEPLOY_WORK:-/tmp/claude-0/deploy_work}
+DRY=${1:-}
+rm -rf "${WORK:?}" && mkdir -p "$WORK"
+git -C "$ROOT" archive HEAD chronicle/v2/src chronicle/v2/tools chronicle/v2/assets chronicle/v2/design chronicle/assets chronicle/design/portraits | tar -x -C "$WORK"
+mkdir -p "$WORK/chronicle/v2/dist"   # 文字のキャッシュ（.fontcache）は作業のツリーから写す（無ければ build が作る）
+[ -d "$ROOT/chronicle/v2/dist/.fontcache" ] && cp -r "$ROOT/chronicle/v2/dist/.fontcache" "$WORK/chronicle/v2/dist/"
+cd "$WORK/chronicle/v2"
+node tools/build.js > /dev/null
+python3 tools/pack_web.py --dist dist --out "$WORK/public" --scope demo > "$WORK/pack.log" 2>&1 || { tail -20 "$WORK/pack.log"; exit 1; }
+if [ -n "${GA4_ID:-}" ]; then
+  python3 - "$WORK/public/index.html" "$GA4_ID" <<'PY'
+import sys
+p, gid = sys.argv[1], sys.argv[2]
+s = open(p, encoding='utf8').read()
+tag = f'<script async src="https://www.googletagmanager.com/gtag/js?id={gid}"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag("js",new Date());gtag("config","{gid}");</script>'
+if 'googletagmanager' not in s:
+    s = s.replace('</head>', tag + '</head>', 1)
+open(p, 'w', encoding='utf8').write(s)
+PY
+fi
+cp "$ROOT/chronicle/v2/deploy/firebase.json" "$ROOT/chronicle/v2/deploy/.firebaserc" "$WORK/"
+du -sh "$WORK/public"
+[ "$DRY" = "--dry" ] && { echo "dry run: $WORK/public"; exit 0; }
+: "${FIREBASE_SERVICE_ACCOUNT:?set FIREBASE_SERVICE_ACCOUNT (service account JSON) in the environment}"
+KEYF=$(mktemp /tmp/claude-0/secrets/fb_sa.XXXXXX.json); trap 'rm -f "$KEYF"' EXIT
+printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$KEYF"; chmod 600 "$KEYF"
+cd "$WORK" && GOOGLE_APPLICATION_CREDENTIALS="$KEYF" npx --yes firebase-tools@latest deploy --only hosting --project luminous-chronicle --non-interactive
