@@ -285,7 +285,9 @@ function main() {
   ok('restore で DB.config.slice が戻る', R.DB.config.slice === true);
   const demo = M.sliceMaps();
   const outReached = demo.filter((m) => full.visited.has(m) && SLICE_OUT.includes(R.DB.maps[m].region));
-  const inMissed = demo.filter((m) => !full.visited.has(m) && !SLICE_OUT.includes(R.DB.maps[m].region));
+  // エリア切り替えのフィールド（kind 'field'）があるときは、前のワールド（kind 'world'）は体験版では歩かない（峠の先にだけつながる）
+  const hasAreas = Object.values(R.DB.maps).some((m) => m && m.kind === 'field');
+  const inMissed = demo.filter((m) => !full.visited.has(m) && !SLICE_OUT.includes(R.DB.maps[m].region) && !(hasAreas && R.DB.maps[m].kind === 'world'));
   ok(`縦切りの筋は ${SLICE_OUT.join('・')} のマップに入らない`, outReached.length === 0, outReached);
   ok('縦切りの範囲のマップにはすべて入れる', inMissed.length === 0, inMissed);
   const world = R.DB.maps.world;

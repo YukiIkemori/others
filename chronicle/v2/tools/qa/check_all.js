@@ -39,6 +39,7 @@ const STEPS = [
   ['check_world', [T('qa/check_world.js')]],
   ['check_world_zones', [T('qa/check_world_zones.js')]],   // ワールドの出現表の地方が地面の地方と同じ（灯台の岬に灰の荒野の魔物が出ない）
   ['test_field_areas', [T('test_field_areas.js')]],   // エリア切り替えのフィールド: 形・行き先・到達・付け替え・前のワールドを通らない体験版のつながり
+  ['test_worldmap', [T('test_worldmap.js')]],   // 世界の地図（羊皮紙の一枚絵）: 表・体験版のエリアと町・ダンジョンの印が絵の中・地方の霧
   ['check_chests', [T('qa/check_chests.js'), '--no-build']],
   ['check_secrets', [T('qa/check_secrets.js'), '--no-build']],
   ['check_stubs', [T('qa/check_stubs.js')]],

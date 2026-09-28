@@ -76,7 +76,19 @@
       if (L && L.map !== mapId) return this.paintPos(L.map);
       if (L && WM.anchors[m.location]) return WM.anchors[m.location];
       const w = S.worldPosOf(mapId);
-      return w ? WM.toPaint(w.x, w.y) : null;
+      if (w) return WM.toPaint(w.x, w.y);
+      // それでも無ければ、入口のある所（エリア・町・ひとつ上の階）の入口の位置（深さ 4 まで）
+      if ((this._depth || 0) > 4) return null;
+      this._depth = (this._depth || 0) + 1;
+      try {
+        const kinds = ['field', 'town', 'dungeon', 'interior'];
+        for (const kd of kinds) for (const o of Object.values(R.DB.maps)) {
+          if (!o || o.kind !== kd || o.id === mapId) continue;
+          const hit = (o.exits || []).find((e) => e.to && e.to.map === mapId) || (o.objects || []).find((q) => (q.to && q.to.map === mapId) || (q.door && q.door.to && q.door.to.map === mapId));
+          if (hit) { const c = this.paintPos(o.id, hit.door ? hit.door.x : hit.x, hit.door ? hit.door.y : hit.y); if (c) return c; }
+        }
+      } finally { this._depth--; }
+      return null;
     },
     /** 羊皮紙の一枚絵の地図（R.WorldMap）。絵が読めていなければ false（前の地図を出す） */
     drawParchment(g) {
@@ -97,6 +109,7 @@
         this.pm = { cx: c[0], cy: c[1], z: 1.9, zt: 1.9, zmin: 1, zmax: 4 };
       }
       const P = this.pm, k = fit * P.z;
+      WM.drawn = { t, z: P.z, here: !!here };   // 検査用（tools/test_worldmap.js）
       // 絵の外へ出ない
       const hw = area.w / 2 / k, hh = area.h / 2 / k;
       P.cx = hw * 2 >= IW ? IW / 2 : Math.max(hw, Math.min(IW - hw, P.cx));

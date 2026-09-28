@@ -373,3 +373,9 @@ The owner replaced the walkable world map with **field areas**: each area is one
 **Tests**: `tools/test_field_areas.js` (in `check_all`): shape, every exit/door/stair lands on a walkable spawn, everything reachable in each area, no rewired "to world" exit left, and Roa → Pharos / lighthouse / well / Fern / Yura / hut without passing through the old world.
 
 **Next** (not done): the world-map screen could draw the areas instead of the old world picture; areas for the regions beyond the passes (snow, desert, mines, marsh, ash) would replace the old world there too.
+
+## 11. Parchment world map (map screen, 2026-09-28)
+
+The map screen (X in a field area, or the menu's 地図) draws one painted **old parchment chart** of the whole continent (`assets/env/world/under/parchment@32.png`, 2048×1536, no text in the image; packed as its own lossy WebP group) instead of the old world thumbnail. It was generated once, with a biome guide made from the old world grid (`design/art_ref/gen/env/_tools/worldmap/guide.py` → `gen1.job.json`). The model kept the guide's layout, so the default transform (world cell → painting px: ×2.6667, +128 px) places everything; `src/data/worldmap.js` also has `anchors` and `areas` for hand fixes (empty so far) and the fog circles per region.
+
+Screen (`screens/map.js` `drawParchment`, keyboard/gamepad): opens zoomed ×1.9 on the current position; arrow keys pan (dash = faster), L/R (Q/E) and the mouse wheel zoom (×1 to ×4). Overlays: ink names with a paper stroke for visited field areas, towns (red diamond) and dungeons (dark dot), the pinned lead, and a pulsing red arrow for "you are here". Regions not visited yet get a parchment-coloured fog; locked demo regions a denser one. The old picture is still used when the painting can't load. Tests: `tools/test_worldmap.js` (node: table, markers inside the picture for every demo area/town/dungeon, fog per region; `--browser`: opens the map in areas/town/dungeon, no console errors).

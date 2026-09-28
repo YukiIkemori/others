@@ -48,8 +48,8 @@ for (const rid of Object.keys(R.DB.regions || {})) if (rid !== 'world') ok(`地�
       await p.evaluate(() => { RPG.Screens.open('map'); });
       const opened = await B.waitFor(p, `(RPG.Engine.top()||{}).id==='screen:map'`, 10000).then(() => true, () => false);
       await p.waitForTimeout(2500);
-      const st = await p.evaluate(() => { const s = RPG.Engine.top(); return { pm: !!(s && s.pm), id: s && s.id }; });
-      ok(`${id}: 地図が開いて羊皮紙が描ける`, opened && st.pm, JSON.stringify(st));
+      const st = await p.evaluate(() => { const d = RPG.WorldMap.drawn; return { drawn: !!(d && RPG.Engine.time - d.t < 1000), here: !!(d && d.here) }; });
+      ok(`${id}: 地図が開いて羊皮紙が描け、今いる所の印がある`, opened && st.drawn && st.here, JSON.stringify(st));
       if (shots) { fs.mkdirSync(shots, { recursive: true }); await B.shot(p, path.join(shots, 'map_' + id + '.png')); }
       await p.keyboard.press('KeyX'); await p.waitForTimeout(600);
     }
