@@ -544,9 +544,9 @@
         else if (v === 'credits') {
           await S.note(this, { title: 'クレジット', lines: [
             { text: 'ルミナス・クロニクル 〜八つの灯火〜', color: T().color.goldHi },
+            // 持ち主 2026-09-28「企画・制作 Studio Metem でいい。書体とか音楽とかの項目は要らない」
+            //   （書体の OFL の文は、配布物の中の v2/assets/fonts/OFL_*.txt で満たす）
             '企画・制作　Studio Metem',
-            '書体　Zen Maru Gothic・Cinzel・Shippori Mincho B1（SIL Open Font License）',
-            '音楽・効果音・声　Studio Metem',
           ] });
         }
       } finally { this.busy = false; }
