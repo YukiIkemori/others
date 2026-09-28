@@ -1,0 +1,315 @@
+// TERRAIN: ワールドの起伏（WORLD v3 の奥行き、2026-09-28。map.splat のマップ = ワールド）。オーナーの報告「フィールドが平坦でしょぼい」への答え（段 1: 絵を足さない）。
+// マップの凡例から高さの場を作り（山・丘は高く、野は中、岸・水は低い。距離の場＋低い周波数のノイズでなめらかに）、チャンクを焼くときに
+// 地面の画素へ陰影を焼き込む。毎フレームの仕事は無い（打ち寄せる波の線だけ FIELD が描く。T._foamDraw）。
+//   陰影 = 左上からの光（日の当たる斜面は明るく、陰の斜面は暗く青く）＋曲がり（尾根は明るく、山の足もと・谷は暗い）＋森の縁の AO
+//   ＋急な所の地肌（崖・がれ）＋大きな色のゆらぎ（地方の色のまま、広い所が 1 色にならない）＋水の深さ＋岸・川べりの濡れた砂と土。
+//
+//   T._relief(map) → {w, h, H: Float32Array（高さ、マス単位）, O: Uint8Array（森の覆い 0〜255）, ready} | null（ワールドでない）
+//   T._reliefJob(map) → Job（prewarm が暗転の中で進める。step(ms)）
+//   T._reliefApply(job)  チャンクの px（地面を焼いた直後）に陰影を掛ける（chunks.js の 'relief'）。job.wmask = splat の水の印
+//   T._foamOf(job) → Path2D の組 | null（岸の打ち寄せる線。チャンクの結果に持たせる）、T._foamDraw(g, e, x, y, time)  FIELD が毎フレーム
+(function (R) {
+  'use strict';
+  const T = (R.Terrain = R.Terrain || {});
+  const U = () => T._u;
+
+  // ------------------------------------------------------------------ 調整の値（見た目）
+  const K = {
+    light: [-0.62, -0.78, 0.9],   // 光の向き（左上・北西から。x 右、y 下、z 上）
+    shade: 0.95,                  // 斜面の明暗の強さ
+    curv: 0.55,                   // 曲がり（尾根の明るさ・足もとの暗さ）
+    occ: 0.3,                     // 森の縁の AO
+    fMin: 0.5, fMax: 1.32,
+    steep: [0.55, 1.25],          // この傾き（マスあたりの高さ）から地肌が出る
+    macro: 1,                     // 大きな色のゆらぎの強さ
+    deep: 0.3,                    // 水の深さの暗さ
+    wet: 0.3,                     // 濡れた砂・土の暗さ
+  };
+  T._RELIEF_K = K;
+
+  // ------------------------------------------------------------------ 凡例 → 種類
+  // kind: 0 陸 1 水 2 山、fam: 色のゆらぎの組
+  const FAM = { grass: 1, forest: 2, sand: 3, snow: 4, ash: 5, marsh: 6, rock: 7, road: 8, clay: 9 };
+  function famOf(mat) {
+    if (/snow|ice/.test(mat)) return FAM.snow;
+    if (/ash|obsidian|lava/.test(mat)) return FAM.ash;
+    if (/sand|dune/.test(mat)) return FAM.sand;
+    if (/clay/.test(mat)) return FAM.clay;
+    if (/peat|marsh|bog|reeds|mud/.test(mat)) return FAM.marsh;
+    if (/forest|root|moss|undergrowth/.test(mat)) return FAM.forest;
+    if (/rock|scree|cliff|wall/.test(mat)) return FAM.rock;
+    if (/road|highway|dirt|path|plank|bridge/.test(mat)) return FAM.road;
+    return FAM.grass;
+  }
+  function legendInfo(map) {
+    const out = {}, L = map.legend || {};
+    for (const ch of Object.keys(L)) {
+      const e = L[ch], m = T._matInfo(e.mat) || {};
+      const lava = /lava/.test(e.mat);
+      const water = !!m.water && !lava;
+      const mtn = !!e.solid && !!e.rise && /rock|cliff|wall_snow/.test(e.mat);
+      const tree = m.tall === 'tree' || m.tall === 'canopy' || m.tall === 'bush' || /^(tree|forest_dark|bush)$/.test(e.mat);
+      const under = tree && e.under ? e.under : e.mat;
+      out[ch] = {
+        kind: water ? 1 : mtn ? 2 : 0, lvl: mtn ? Math.max(1, e.rise || 1) : 0, tree, lava,
+        deep: /deep/.test(e.mat) ? 1 : /shallow/.test(e.mat) ? -1 : 0, lake: /lake|marsh_water/.test(e.mat),
+        sand: /sand|dune/.test(under), fam: tree && !e.under && e.mat === 'forest_dark' ? FAM.forest : famOf(under),
+      };
+    }
+    return out;
+  }
+
+  // ------------------------------------------------------------------ 距離の場（面取り 1 / 1.41、2 回の走査）
+  function dist(src, w, h, cap) {
+    const d = new Float32Array(w * h), D = 1.41;
+    for (let i = 0; i < d.length; i++) d[i] = src[i] ? 0 : cap;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const i = y * w + x; let v = d[i]; if (!v) continue;
+      if (x > 0 && d[i - 1] + 1 < v) v = d[i - 1] + 1;
+      if (y > 0) { const j = i - w; if (d[j] + 1 < v) v = d[j] + 1; if (x > 0 && d[j - 1] + D < v) v = d[j - 1] + D; if (x < w - 1 && d[j + 1] + D < v) v = d[j + 1] + D; }
+      d[i] = v;
+    }
+    for (let y = h - 1; y >= 0; y--) for (let x = w - 1; x >= 0; x--) {
+      const i = y * w + x; let v = d[i]; if (!v) continue;
+      if (x < w - 1 && d[i + 1] + 1 < v) v = d[i + 1] + 1;
+      if (y < h - 1) { const j = i + w; if (d[j] + 1 < v) v = d[j] + 1; if (x < w - 1 && d[j + 1] + D < v) v = d[j + 1] + D; if (x > 0 && d[j - 1] + D < v) v = d[j - 1] + D; }
+      d[i] = v;
+    }
+    return d;
+  }
+  /** 横と縦の箱のぼかし（半径 r）。端は端の値を伸ばす */
+  function blur(a, w, h, r, tmp) {
+    const n = 2 * r + 1;
+    for (let y = 0; y < h; y++) {
+      const o = y * w; let s = 0;
+      for (let k = -r; k <= r; k++) s += a[o + Math.min(w - 1, Math.max(0, k))];
+      for (let x = 0; x < w; x++) { tmp[o + x] = s / n; s += a[o + Math.min(w - 1, x + r + 1)] - a[o + Math.max(0, x - r)]; }
+    }
+    for (let x = 0; x < w; x++) {
+      let s = 0;
+      for (let k = -r; k <= r; k++) s += tmp[Math.min(h - 1, Math.max(0, k)) * w + x];
+      for (let y = 0; y < h; y++) { a[y * w + x] = s / n; s += tmp[Math.min(h - 1, y + r + 1) * w + x] - tmp[Math.max(0, y - r) * w + x]; }
+    }
+  }
+
+  // ------------------------------------------------------------------ マップの高さの場（1 回だけ。暗転の中で区切って作る）
+  const cache = new WeakMap();
+  function* build(map, out) {
+    const u = U(), w = map.w, h = map.h, N = w * h, grid = R.MapUtil.grid(map), info = legendInfo(map);
+    const kind = new Uint8Array(N), lvl = new Uint8Array(N), flag = new Uint8Array(N), fam = new Uint8Array(N);   // flag: 1 木 2 砂 4 深い 8 浅い 16 湖 32 溶岩
+    for (let y = 0; y < h; y++) {
+      const row = grid[y] || '', one = row.length === w, arr = one ? null : [...row];
+      for (let x = 0; x < w; x++) {
+        const f = info[one ? row.charAt(x) : arr[x]], i = y * w + x;
+        if (!f) continue;
+        kind[i] = f.kind; lvl[i] = f.lvl; fam[i] = f.fam;
+        flag[i] = (f.tree ? 1 : 0) | (f.sand ? 2 : 0) | (f.deep > 0 ? 4 : 0) | (f.deep < 0 ? 8 : 0) | (f.lake ? 16 : 0) | (f.lava ? 32 : 0);
+      }
+    }
+    out.fam = fam;
+    yield;
+    const m1 = new Uint8Array(N), m2 = new Uint8Array(N), m3 = new Uint8Array(N);
+    for (let i = 0; i < N; i++) { m1[i] = kind[i] === 1 ? 1 : 0; m2[i] = kind[i] !== 1 ? 1 : 0; m3[i] = kind[i] === 2 ? 1 : 0; }
+    const dW = dist(m1, w, h, 60); yield;     // 陸 → 水までの距離
+    const dL = dist(m2, w, h, 60); yield;     // 水 → 陸まで
+    const dM = dist(m3, w, h, 60); yield;     // 山まで
+    for (let i = 0; i < N; i++) m3[i] = kind[i] === 2 ? 0 : 1;
+    const dI = dist(m3, w, h, 60); yield;     // 山の中 → 山の外まで
+    // 町・建物の周りは起伏を弱める（家が斜面に傾いて見えないように）
+    const bm = new Uint8Array(N);
+    for (const o of map.objects || []) if (o.type === 'building' && o.x != null) for (let y = o.y - 1; y < o.y + (o.h || 3) + 1; y++) for (let x = o.x - 1; x < o.x + (o.w || 3) + 1; x++) if (x >= 0 && y >= 0 && x < w && y < h) bm[y * w + x] = 1;
+    const dB = dist(bm, w, h, 40); yield;
+    const H = new Float32Array(N);
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const i = y * w + x, k = kind[i];
+        // 丘: 大きいうねり（約 36 マス）と中くらい（約 13 マス）
+        const n = u.vn(x, y, 36, 911) * 0.62 + u.vn(x, y, 13, 912) * 0.28 + u.vn(x, y, 5, 913) * 0.1 - 0.5;
+        if (k === 1) {
+          const dd = 1 - Math.exp(-dL[i] / 5);
+          H[i] = flag[i] & 8 ? -0.18 - dd * 0.3 : flag[i] & 16 ? -0.3 - dd * 0.7 : -0.3 - dd * (flag[i] & 4 ? 1.6 : 1.1);
+          continue;
+        }
+        const coast = 1 - Math.exp(-dW[i] / 8), flat = Math.min(1, dB[i] / 7);
+        let v = 0.2 + 1.2 * coast;
+        v += n * 2.8 * Math.min(1, dW[i] / 5) * (0.35 + 0.65 * flat);
+        if (flag[i] & 2) v -= 0.25;
+        if (k === 2) v += 1.7 + (lvl[i] - 1) * 1.3 + 1.6 * (1 - Math.exp(-dI[i] / 2.2)) + n * 0.8;
+        else v += 1.5 * Math.exp(-dM[i] / 4) + (flag[i] & 1 ? 0.15 : 0);
+        H[i] = v;
+      }
+      if ((y & 63) === 63) yield;
+    }
+    const tmp = new Float32Array(N);
+    blur(H, w, h, 1, tmp); yield;
+    blur(H, w, h, 1, tmp); yield;
+    // 森の覆い（木のマスの割合をぼかした物）
+    for (let i = 0; i < N; i++) tmp[i] = flag[i] & 1 ? 1 : 0;
+    const t2 = new Float32Array(N);
+    blur(tmp, w, h, 1, t2); blur(tmp, w, h, 1, t2);
+    const O = new Uint8Array(N);
+    for (let i = 0; i < N; i++) O[i] = Math.round(Math.min(1, tmp[i]) * 255);
+    yield;
+    out.H = H; out.O = O; out.kind = kind; out.flag = flag;
+    out.ready = true;
+    if (R.Hd && R.Hd.track) R.Hd.track('chunk', 'terrain:relief:' + map.id, N * 7);
+  }
+  T._relief = function (map) {
+    if (!map || !map.splat) return null;
+    let r = cache.get(map);
+    if (!r) { r = { w: map.w, h: map.h, ready: false, gen: null }; cache.set(map, r); }
+    if (!r.ready) { if (!r.gen) r.gen = build(map, r); while (!r.gen.next().done) { /* 焼く前に要る: 一度に作り切る */ } r.gen = null; }
+    return r;
+  };
+  T._reliefJob = function (map) {
+    const job = { kind: 'relief', done: false, result: null, ms: 0,
+      step(ms) {
+        const t0 = U().now(), deadline = t0 + (ms == null ? 3 : ms);
+        if (!map || !map.splat) { job.done = true; return true; }
+        let r = cache.get(map);
+        if (!r) { r = { w: map.w, h: map.h, ready: false, gen: null }; cache.set(map, r); }
+        if (!r.ready && !r.gen) r.gen = build(map, r);
+        while (!r.ready) { if (r.gen.next().done) break; if (U().now() > deadline) break; }
+        if (r.ready) { r.gen = null; job.done = true; job.result = r; }
+        job.ms += U().now() - t0;
+        return job.done;
+      } };
+    return job;
+  };
+  T._reliefForget = function (map) { if (map) cache.delete(map); };
+
+  // ------------------------------------------------------------------ 色のゆらぎ（組ごとの 2 つの色の向き。昼の色に足す値）
+  //   a = 大きいゆらぎ（約 40 マス）の向き、b = 中くらい（約 14 マス）の向き
+  const TINT = {
+    1: [[16, 8, -10], [-10, 6, 8]],      // 草: 乾いた黄緑 ↔ 青みの濃い緑
+    2: [[10, 2, -8], [-8, 8, 0]],        // 森の地面: 茶 ↔ 苔
+    3: [[12, 9, 4], [-10, -9, -6]],      // 砂: 明るい ↔ 湿った暗い
+    4: [[-8, -2, 8], [6, 6, 2]],         // 雪: 青い影 ↔ 白
+    5: [[12, 0, -6], [-6, -6, -2]],      // 灰: 赤茶 ↔ 灰
+    6: [[8, 8, -8], [-8, -2, 4]],        // 湿原: 黄土 ↔ 青緑
+    7: [[8, 4, 0], [-6, -4, 2]],         // 岩
+    8: [[8, 4, -4], [-6, -4, 0]],        // 道
+    9: [[12, 4, -6], [-8, -6, -2]],      // 粘土
+  };
+  // 急な所の地肌の色（組ごと。昼の色）
+  const BARE = { 1: [92, 80, 62], 2: [70, 58, 44], 3: [150, 132, 104], 4: [150, 160, 178], 5: [70, 62, 60], 6: [80, 76, 58], 7: [96, 90, 96], 8: [110, 92, 70], 9: [120, 96, 74] };
+
+  // ------------------------------------------------------------------ チャンクに掛ける
+  // 標本は B px ごと（B = tile / 8、世界の座標の格子なので隣のチャンクと同じ値）。標本ごとに 3 次の B スプラインで高さ・傾き・曲がりを出し、
+  // 画素ごとには標本の間を双一次でつなぐ
+  const bufs = {};
+  function buf(name, n) { const k = name + n; return bufs[k] || (bufs[k] = new Float32Array(n)); }
+  T._reliefApply = function (job) {
+    const map = job.map, rf = T._relief(map);
+    if (!rf || !rf.ready || !job.px) return;
+    const u = U(), t = job.tile, S = job.size, X0 = job.X0, Y0 = job.Y0;
+    const B = Math.max(2, t >> 3), N = Math.floor(S / B) + 1, NN = N * N;
+    const w = rf.w, h = rf.h, H = rf.H, O = rf.O, fam = rf.fam, kind = rf.kind, flag = rf.flag;
+    const F = buf('F', NN), Fw = buf('Fw', NN), DR = buf('DR', NN), DG = buf('DG', NN), DB = buf('DB', NN), BA = buf('BA', NN);
+    const Lx = K.light[0], Ly = K.light[1], Lz = K.light[2], Ll = Math.hypot(Lx, Ly, Lz), lx = Lx / Ll, ly = Ly / Ll, lz = Lz / Ll;
+    const Hat = (x, y) => H[(y < 0 ? 0 : y >= h ? h - 1 : y) * w + (x < 0 ? 0 : x >= w ? w - 1 : x)];
+    const wx = new Float32Array(4), dx = new Float32Array(4), sx = new Float32Array(4), wy = new Float32Array(4), dy = new Float32Array(4), sy = new Float32Array(4);
+    const basis = (f, W, D, S2) => {
+      const f2 = f * f, f3 = f2 * f, g = 1 - f;
+      W[0] = g * g * g / 6; W[1] = (3 * f3 - 6 * f2 + 4) / 6; W[2] = (-3 * f3 + 3 * f2 + 3 * f + 1) / 6; W[3] = f3 / 6;
+      D[0] = -g * g / 2; D[1] = (3 * f2 - 4 * f) / 2; D[2] = (-3 * f2 + 2 * f + 1) / 2; D[3] = f2 / 2;
+      S2[0] = g; S2[1] = 3 * f - 2; S2[2] = -3 * f + 1; S2[3] = f;
+    };
+    const hv = new Float32Array(16);
+    let anyWet = false;
+    for (let j = 0; j < N; j++) {
+      const py = Y0 + j * B, fy0 = py / t - 0.5, cy = Math.floor(fy0);
+      basis(fy0 - cy, wy, dy, sy);
+      for (let i = 0; i < N; i++) {
+        const px = X0 + i * B, fx0 = px / t - 0.5, cx = Math.floor(fx0);
+        basis(fx0 - cx, wx, dx, sx);
+        for (let b = 0; b < 4; b++) for (let a = 0; a < 4; a++) hv[b * 4 + a] = Hat(cx - 1 + a, cy - 1 + b);
+        let hh = 0, hx = 0, hy = 0, hxx = 0, hyy = 0;
+        for (let b = 0; b < 4; b++) {
+          let r0 = 0, r1 = 0, r2 = 0;
+          for (let a = 0; a < 4; a++) { const v = hv[b * 4 + a]; r0 += wx[a] * v; r1 += dx[a] * v; r2 += sx[a] * v; }
+          hh += wy[b] * r0; hx += wy[b] * r1; hy += dy[b] * r0; hxx += wy[b] * r2; hyy += sy[b] * r0;
+        }
+        const q = j * N + i;
+        // 明暗: 面の向き（Lambert、平らな所を 1 に）＋曲がり
+        const nl = 1 / Math.sqrt(hx * hx + hy * hy + 1);
+        const d = (-hx * lx - hy * ly + lz) * nl;
+        let f = 1 + K.shade * (d / lz - 1);
+        const lap = hxx + hyy;
+        f -= K.curv * Math.max(-0.6, Math.min(0.6, lap)) * 0.5;
+        // 近いマス
+        const ci = Math.floor(px / t), cj = Math.floor(py / t), inb = ci >= 0 && cj >= 0 && ci < w && cj < h, ck = inb ? cj * w + ci : -1;
+        // 森の縁の AO（双一次）
+        let oc = 0;
+        if (inb) {
+          const gx = px / t - 0.5, gy = py / t - 0.5, ox = Math.max(0, Math.min(w - 2, Math.floor(gx))), oy = Math.max(0, Math.min(h - 2, Math.floor(gy)));
+          const ax = Math.max(0, Math.min(1, gx - ox)), ay = Math.max(0, Math.min(1, gy - oy)), o0 = oy * w + ox;
+          oc = ((O[o0] * (1 - ax) + O[o0 + 1] * ax) * (1 - ay) + (O[o0 + w] * (1 - ax) + O[o0 + w + 1] * ax) * ay) / 255;
+        }
+        f -= K.occ * oc;
+        if (f < K.fMin) f = K.fMin; else if (f > K.fMax) f = K.fMax;
+        F[q] = f;
+        // 水: 深さで暗く（溶岩は変えない）
+        Fw[q] = ck >= 0 && kind[ck] === 1 ? 1 - K.deep * Math.max(0, Math.min(1, -hh / 1.6)) : 1;
+        // 色のゆらぎ
+        const fm = ck >= 0 ? fam[ck] : 1, tt = TINT[fm] || TINT[1];
+        const na = (u.vn(px / t, py / t, 40, 921) - 0.5) * 2, nb = (u.vn(px / t, py / t, 14, 922) - 0.5) * 2, mk = K.macro * (ck >= 0 && flag[ck] & 32 ? 0 : 1);
+        // 高い所は少し明るく冷たく、低い所は少し暖かく
+        const lift = Math.max(-1, Math.min(1, (hh - 1.2) / 2.5));
+        DR[q] = (tt[0][0] * na + tt[1][0] * nb) * mk - lift * 4;
+        DG[q] = (tt[0][1] * na + tt[1][1] * nb) * mk + lift * 1;
+        DB[q] = (tt[0][2] * na + tt[1][2] * nb) * mk + lift * 6;
+        // 急な所の地肌（崖・がれ場）: 割合
+        const sl = Math.sqrt(hx * hx + hy * hy);
+        let ba = (sl - K.steep[0]) / (K.steep[1] - K.steep[0]);
+        ba = ba <= 0 ? 0 : ba >= 1 ? 1 : ba * ba * (3 - 2 * ba);
+        if (ck >= 0 && kind[ck] === 1) ba = 0;
+        BA[q] = ba * 0.55;
+        if (ba > 0) anyWet = true;
+      }
+    }
+    // 画素ごと
+    const px8 = new Uint8ClampedArray(job.px.buffer, job.px.byteOffset, S * S * 4), wm = job.wmask;
+    const rF = buf('rF', N), rW = buf('rW', N), rR = buf('rR', N), rG = buf('rG', N), rB = buf('rB', N), rA = buf('rA', N);
+    const invB = 1 / B;
+    const fmAt = (x, y) => { const ci = Math.floor((X0 + x) / t), cj = Math.floor((Y0 + y) / t); return ci >= 0 && cj >= 0 && ci < w && cj < h ? fam[cj * w + ci] : 1; };
+    for (let y = 0; y < S; y++) {
+      const gj = y * invB, j = Math.min(N - 2, gj | 0), fy = gj - j, gy = 1 - fy, r0 = j * N, r1 = r0 + N;
+      for (let i = 0; i < N; i++) {
+        rF[i] = F[r0 + i] * gy + F[r1 + i] * fy; rW[i] = Fw[r0 + i] * gy + Fw[r1 + i] * fy;
+        rR[i] = DR[r0 + i] * gy + DR[r1 + i] * fy; rG[i] = DG[r0 + i] * gy + DG[r1 + i] * fy; rB[i] = DB[r0 + i] * gy + DB[r1 + i] * fy;
+        rA[i] = BA[r0 + i] * gy + BA[r1 + i] * fy;
+      }
+      const row = y * S;
+      let bare = null, bfm = -1;
+      for (let x = 0; x < S; x++) {
+        const gi = x * invB, i = Math.min(N - 2, gi | 0), fx = gi - i, gx = 1 - fx, k = row + x, q = k * 4;
+        const m = wm ? wm[k] : 0;
+        let r = px8[q], g = px8[q + 1], b = px8[q + 2];
+        if (m >= 128) {
+          // 水
+          const fw = rW[i] * gx + rW[i + 1] * fx;
+          px8[q] = r * fw; px8[q + 1] = g * fw; px8[q + 2] = b * (fw * 0.7 + 0.3);
+          continue;
+        }
+        const f = rF[i] * gx + rF[i + 1] * fx;
+        // 急な所の地肌
+        const ba = rA[i] * gx + rA[i + 1] * fx;
+        if (ba > 0.01) {
+          const fmx = fmAt(x, y);
+          if (fmx !== bfm) { bfm = fmx; bare = BARE[fmx] || BARE[1]; }
+          const nz = u.h3((X0 + x) >> 1, (Y0 + y) >> 1, 931) * 0.5 + 0.75, a = Math.min(0.85, ba * nz);
+          r += (bare[0] - r) * a; g += (bare[1] - g) * a; b += (bare[2] - b) * a;
+        }
+        let dr = rR[i] * gx + rR[i + 1] * fx, dg = rG[i] * gx + rG[i + 1] * fx, db = rB[i] * gx + rB[i + 1] * fx;
+        // 岸・川べりの濡れた砂と土（splat の水の近さ 1〜127）
+        if (m > 0) { const wt = Math.min(1, m / 60) * K.wet; r *= 1 - wt; g *= 1 - wt * 0.9; b *= 1 - wt * 0.75; }
+        // 陰は青く、日なたは少し暖かく
+        const fb = f < 1 ? 1 - (1 - f) * 0.78 : f;
+        const fr = f > 1 ? 1 + (f - 1) * 1.1 : f;
+        px8[q] = r * fr + dr; px8[q + 1] = g * f + dg; px8[q + 2] = b * fb + db;
+      }
+    }
+    void anyWet;
+  };
+})(window.RPG);
