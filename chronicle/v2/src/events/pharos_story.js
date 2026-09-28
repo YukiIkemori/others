@@ -165,8 +165,8 @@
       await ev.say('berna', 'これは、あなたの年代記だよ。\n語り部はみんな、自分の\n年代記を持って旅に出るんだ。', { voice: 'v_berna_lute_01', face: 'berna:smile' });
       await E.give(ev, 'k_chronicle', 1, { say: true });
       await ev.say('berna', 'それから、これもお持ち。\n語り部の羽ペンと、\n帰り道の鈴だよ。', { voice: 'v_berna_lute_02', face: 'berna:neutral' });
-      await E.give(ev, 'k_quill', 1);
-      await E.give(ev, 'k_bell', 1);
+      await E.give(ev, 'k_quill', 1, { quiet: true });
+      await E.give(ev, 'k_bell', 1, { quiet: true });
       await E.narr(ev, '{hero}は、語り部の羽ペンと\n帰り道の鈴を手に入れた！');
       await ev.say('berna', ['羽ペンで年代記の地図をなぞれば、\n行ったことのある町へ飛べる。', '鈴を鳴らせば、ダンジョンの\n奥からでも外へ帰れるよ。', 'メニューの『ワープ』と『脱出』が、\nその力のことだよ。'], { face: 'berna:neutral' });
       try { R.Audio.sfx('quill'); } catch (e) { /* */ }

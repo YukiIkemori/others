@@ -91,8 +91,8 @@
           const t = P2[i];
           await E.say(ev, who, t, { voice: P2_VOICE[i] || undefined, face: /大事|白紙|消えた/.test(t) ? 'berna:sad' : 'berna:neutral' });
         }
-        await E.give(ev, 'i_salve', 3);
-        E.gold(ev, 50);
+        await E.give(ev, 'i_salve', 3, { quiet: true });
+        E.gold(ev, 50, { quiet: true });
         await E.narr(ev, '傷薬を 3 つと、\n50 ゴールドを受け取った。');
         await E.say(ev, who, 'ファロスは、里を出て\n南東へ行った所だよ。\n……気をつけてお行き、{hero}。', { face: 'berna:smile' });
         ev.setFlag('prologue_berna');

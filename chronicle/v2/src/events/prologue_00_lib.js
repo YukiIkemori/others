@@ -35,11 +35,12 @@
     const name = (r && r.name) || E.itemName(id);
     const cnt = (n || 1) > 1 ? ' ×' + n : '';
     const key = /^k_/.test(id);
-    E.toast(name + cnt + ' を手に入れた', key ? 'key' : 'bag');
+    // 語り（say）や、その場の地の文で入手を言うときは通知を出さない（持ち主 2026-09-28「受け取った／手に入れたが二重に出る」）
+    if (!(o && (o.say || o.quiet))) E.toast(name + cnt + ' を手に入れた', key ? 'key' : 'bag');
     if (o && o.say) await E.narr(ev, '{hero}は ' + name + cnt + ' を\n手に入れた！');
     return r;
   };
-  E.gold = function (ev, n) { ev.gold(n); E.toast(n + ' ゴールドを受け取った', 'coin'); };
+  E.gold = function (ev, n, o) { ev.gold(n, { silent: true }); if (!(o && o.quiet)) E.toast(n + ' ゴールドを受け取った', 'coin'); };   // 通知は 1 つだけ（ev.gold の分は出さない）
   E.lore = function (ev, id) {
     if (ev.flag(id)) return false;
     ev.setFlag(id);
