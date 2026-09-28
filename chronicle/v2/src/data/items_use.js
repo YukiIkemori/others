@@ -362,8 +362,9 @@
     grade: 'normal',
     src: 'shop',
     price: 200,
-    desc: '使った仲間が、光の術\n『ひだまり』を覚える。',
-    use: { target: 'ally', effects: [{ type: 'learnSpell', element: 'light', spell: 's_light_1' }], fx: 'holy', battle: false, field: true },
+    desc: '使った仲間が、光の術\n『ひだまり』『光の矢』を覚える。',
+    // 光は回復と攻撃の 2 つ（持ち主 2026-09-28「光術師が最初に攻撃するすべがない」）
+    use: { target: 'ally', effects: [{ type: 'learnSpell', element: 'light', spell: 's_light_1', spells: ['s_light_1', 's_light_2'] }], fx: 'holy', battle: false, field: true },
     icon: 'light',
     stone: 'light',
     sort: 1029,

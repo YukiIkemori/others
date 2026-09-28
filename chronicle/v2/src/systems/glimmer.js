@@ -250,13 +250,16 @@
     if (!e) return null;
     const spell = e.spell || firstSpell(e.element);
     const a = spell && DB.spells && DB.spells[spell];
-    return a ? { element: e.element || (a.elements || [])[0], spell } : null;
+    if (!a) return null;
+    // spells: 一度に覚える術（光は『ひだまり』と『光の矢』）。無ければ spell 1 つ
+    const spells = (Array.isArray(e.spells) && e.spells.length ? e.spells : [spell]).filter((id) => DB.spells && DB.spells[id]);
+    return { element: e.element || (a.elements || [])[0], spell, spells };
   }
   /** この人に使えないわけ（使えるなら null）: 'もう覚えている' | '術を使えない' */
   function stoneBlock(u, it) {
     const c = charOf(u), s = stoneOf(it);
     if (!c || !s) return '使えない';
-    if (has(c.spells, s.spell)) return 'もう覚えている';
+    if (s.spells.every((id) => has(c.spells, id))) return 'もう覚えている';
     if (R.Rules && R.Rules.mods && R.Rules.mods(c).noSpell) return '術を使えない';
     return null;
   }
@@ -265,10 +268,11 @@
     const c = charOf(u), s = stoneOf(it);
     const reason = stoneBlock(c, it);
     if (reason) return { ok: false, id: s && s.spell, reason, line: '' };
-    if (!learn(c, s.spell, opts)) return { ok: false, id: s.spell, reason: 'もう覚えている', line: '' };
+    const got = s.spells.filter((id) => !has(c.spells, id) && learn(c, id, opts));
+    if (!got.length) return { ok: false, id: s.spell, reason: 'もう覚えている', line: '' };
     const el = DB.elements && DB.elements[s.element];
-    const line = `${c.name}は ${el ? el.name : ''}の術『${DB.spells[s.spell].name}』を覚えた！`;
-    return { ok: true, id: s.spell, reason: null, line };
+    const line = `${c.name}は ${el ? el.name : ''}の術${got.map((id) => `『${DB.spells[id].name}』`).join('と')}を覚えた！`;
+    return { ok: true, id: got[0], ids: got, reason: null, line };
   }
 
   // ------------------------------------------------------------ 派生技（design/BACKLOG「派生技の閃き」。定数は K.DERIVE）

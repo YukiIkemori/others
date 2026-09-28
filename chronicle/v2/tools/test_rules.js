@@ -240,7 +240,16 @@ section('data: techs and spells');
   ok('99 glimmer techs: sword 20, greatsword 22, dagger 19, bow 20, staff 18 (§8.5)', Object.keys(want).every((w) => by[w] === want[w]) && Object.keys(by).length === 5, by);
   // 持ち主（2026-09-28）「派生技、各武器にあと2~3個ずつ足していいよ」
   ok('+ 29 derived techs (派生技, rare): sword 6, greatsword 6, dagger 6, bow 6, staff 5', Object.entries({ sword: 6, greatsword: 6, dagger: 6, bow: 6, staff: 5 }).every(([w, n]) => dv[w] === n) && Object.keys(dv).length === 5, dv);
-  ok('77 spells', Object.keys(DB.spells).length === 77, Object.keys(DB.spells).length);
+  {
+    const G = R.Glimmer, lightStone = DB.items.i_stone_light;
+    const c = { name: '光のテスト', spells: [], techs: [], equip: {} };
+    const r = G.useStone(c, lightStone);
+    ok('光の魔石: ひだまりと光の矢の 2 つを覚える', r.ok && c.spells.includes('s_light_1') && c.spells.includes('s_light_2'), { r, spells: c.spells });
+    ok('光の魔石: 2 つとも覚えていたら使えない', G.stoneBlock(c, lightStone) === 'もう覚えている');
+    ok('清めの水は状態異常だけ（HP は回復しない）', DB.spells.s_water_2.effects.every((e) => e.type === 'cure'), DB.spells.s_water_2.effects);
+    ok('水・土にも段 1 の 1 人回復がある', ['s_water_1h', 's_earth_1h'].every((id) => DB.spells[id] && DB.spells[id].step === 1 && DB.spells[id].target === 'ally' && DB.spells[id].effects.some((e) => e.type === 'heal')));
+  }
+  ok('79 spells (水・土の小さな回復を足した 2026-09-28)', Object.keys(DB.spells).length === 79, Object.keys(DB.spells).length);
   const badSkill = Object.keys(DB.techs).concat(Object.keys(DB.spells)).filter((id) => !chk('skill', Ru.actionOf(id)).ok);
   ok('every tech/spell fits K.skill', !badSkill.length, badSkill.slice(0, 5));
   ok('combo spells keep all effects in fxs (fx = the first)', DB.spells.s_fire_water_a.fx === 'water2' && DB.spells.s_fire_water_a.fxs.length === 2);

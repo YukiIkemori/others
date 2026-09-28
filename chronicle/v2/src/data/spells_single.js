@@ -51,10 +51,14 @@
     s_water_1: sp('水の刃', ['water'], '1', 2, 'enemy',
       [dmg(1.3)], 'water1',
       '水を刃に変えて、敵1体を切る。'),
-    // 水の回復（持ち主 2026-09-28「水で回復あるだろ」）: HP の回復を足す。熟練度は水（R.Rules.profPowerMul が水で効く）
+    // 清めの水: 状態異常だけ（持ち主 2026-09-28「HP 回復いらない、状態異常だけ」）
     s_water_2: sp('清めの水', ['water'], '2', 4, 'ally',
-      [heal(0.3), cure('all'), st('regen')], ['heal', 'cure'],
-      '1人のHPを回復し、悪い状態を治して再生状態にする。', { field: true }),
+      [cure('all')], 'cure',
+      '清らかな水で、1人の悪い状態を治す。', { field: true }),
+    // 水・土にもひだまり相当の小さな回復（持ち主 2026-09-28）。段 1・MP 3・1人 35%
+    s_water_1h: sp('せせらぎ', ['water'], '1', 3, 'ally',
+      [heal(0.35)], 'heal',
+      'せせらぎの水で、1人のHPを回復する。', { field: true }),
     s_water_3: sp('水のとばり', ['water'], '3', 5, 'allies',
       [buff('mdef', 1)], 'buff',
       '水の膜で、全員の術防を上げる。'),
@@ -76,6 +80,9 @@
     s_earth_1: sp('石つぶて', ['earth'], '1', 2, 'enemy',
       [dmg(1.2), st('stun', 0.15)], 'earth1',
       '石を飛ばして、敵1体を打つ。'),
+    s_earth_1h: sp('大地のぬくもり', ['earth'], '1', 3, 'ally',
+      [heal(0.35)], 'heal',
+      '大地のぬくもりで、1人のHPを回復する。', { field: true }),
     s_earth_2: sp('岩の構え', ['earth'], '2', 3, 'ally',
       [buff('def', 1), st('counter')], 'buff',
       '守りを固め、反撃の構えをとらせる。'),
