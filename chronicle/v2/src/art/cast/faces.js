@@ -1,7 +1,9 @@
 // CAST: 仮の顔 hd:face:<look>（V2_PLAN §6.1・§2.5.7）。胸から上、表情 5 つ（neutral smile sad angry surprise）の 1 コマずつ。
 //   原画の顔（v2/assets/sprites/<look>/face.png、キャラのシートの表情。A38: 顔絵は画像 API を使わず、シートの表情で作る）があればそれ、
 //   無ければ骨組みの頭を大きく焼いた**仮の顔**（ART_REWORK §4.2 の「顔 34」の作り方、scale 3、夜の光・背中のリム）。
-//   顔を出す人（§6.1）: 主人公 10・仲間 20・物語の人・名前のある町の人。町の人の型・動物は顔なし（R.Portrait.has が null → 枠ごと出さない）。
+//   顔を出す人（§6.1、オーナーの決まり 2026-09-28「町の人の顔は外す・物語の主な人は仲間と同じ質で」）:
+//   主人公 10・仲間 20・物語の主な人（MAIN_CAST。どれも原画の顔 face.png がある）だけ。ほかの町の人・名前のある町の人・動物は顔なし
+//   （R.Portrait.has が null → 会話は名前だけの窓、枠ごと出さない）。
 //   コマの (ox, oy) は下の中央。R.Portrait.draw が枠に合わせて拡大する（整数に近い倍率、ぼかさない）。
 (function (R) {
   'use strict';
@@ -9,12 +11,18 @@
   const cast = (Art.cast = Art.cast || {});
   const EXPRS = ['neutral', 'smile', 'sad', 'angry', 'surprise'];
   const FACE_SCALE = 3;
+  // 物語の主な人（design/art_ref/npc_sheets.json の顔6 のある人）。序章の 4 人・敵・地方をまたぐ人・各地方の要の人
+  const MAIN_CAST = ['berna', 'fine', 'rowell', 'otto', 'lazaro', 'noa',
+    'npc_tadeo', 'npc_yena', 'npc_pim', 'npc_zaid', 'npc_rashid', 'npc_jorn', 'npc_kaya', 'npc_zakuro'];
+  cast.MAIN_CAST = MAIN_CAST;
 
-  /** この look に顔を出すか（§6.1） */
+  /** この look に顔を出すか（§6.1）: 主人公・仲間・物語の主な人だけ */
   cast.hasFace = function (look) {
     const l = (R.DB.looks || {})[look];
-    if (!l || l.animal) return false;
-    return l.face !== false && !/^npc_(man|woman|old_m|old_f|child|sailor|merchant|woodcutter|guard|keeper|bard|yura_folk)_\d$/.test(look);
+    if (!l || l.animal || l.face === false && !MAIN_CAST.includes(look)) return false;
+    if (/^hero_/.test(look) || MAIN_CAST.includes(look)) return true;
+    const C = R.DB.companions || {};
+    return Object.keys(C).some((id) => (C[id].look || id) === look);
   };
 
   function rigFace(look) {
@@ -85,7 +93,7 @@
         const sp = cast.sprites.face(look);
         if (sp === null) return null;
         if (sp) return sp;
-        // 顔の原画は無いが歩きの原画はある人（タデオ・イェナ・ハンス…）: 古い仮の顔ではなく、歩きの原画の胸から上を拡大して顔にする
+        // 顔の原画がまだ読めない・無い主な人: 古い仮の顔ではなく、歩きの原画の胸から上を拡大して顔にする（予備の道）
         if (cast.sprites.has(look, 'field')) {
           const fs = fieldFace(look);
           if (fs !== undefined) return fs;

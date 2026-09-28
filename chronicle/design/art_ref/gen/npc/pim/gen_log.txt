@@ -17,3 +17,4 @@
 01:07:03   | 
 01:07:03   | packed field 152x180 | palette 52 + face 0
 01:07:04 to_v2 npc_pim: npc_pim → /home/user/others/chronicle/v2/assets/sprites/npc_pim |   field: 16 frames
+21:24:42 sheet 3 attempt 1: edit of the Arun template 1728x1152 (pitch 6, quality medium, 3 refs)
