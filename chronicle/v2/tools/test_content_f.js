@@ -313,13 +313,23 @@ function mockEv(script) {
   };
   return ev;
 }
+// 宿・寝床の眠り（R.Events.night、暗転とジングル）は node では R.Engine.time が進まず終わらないので、すぐ明ける物に替える（onDark は呼ぶ）
+R.Events.night = async (o) => { if (o && o.onDark) await o.onDark(); };
+// 終わらないイベント（node で解けない Promise を待つ）: 何も待つ物が無いと node はそのまま 0 で抜け、残りの検査と done() が走らない。
+//   5 秒で「止まった」として落とし、次へ進む
+const HANG_MS = 5000;
 async function run(id, script, ctx) {
   const e = R.DB.events[id];
   if (!e) { ok(`event ${id} がある`, false); return; }
   if (e.cond && !R.State.check(e.cond)) return;
   const ev = mockEv(script);
   ev.ctx = ctx || {};
-  try { await e.run(ev, ev.ctx); } catch (err) { ok(`event ${id} が止まらない`, false, String(err && err.stack || err)); }
+  let timer = null;
+  const hang = new Promise((res) => { timer = setTimeout(() => res('hang'), HANG_MS); });
+  try {
+    const r = await Promise.race([Promise.resolve(e.run(ev, ev.ctx)).then(() => 'done'), hang]);
+    if (r === 'hang') ok(`event ${id} が終わる（${HANG_MS} ms の内）`, false, 'node で解けない待ち（R.wait・画面・R.Events.night など、ev の外の物）');
+  } catch (err) { ok(`event ${id} が止まらない`, false, String(err && err.stack || err)); } finally { clearTimeout(timer); }
 }
 async function route(name, o) {
   state(R, { items: { i_salve: 3 } });
