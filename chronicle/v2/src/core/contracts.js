@@ -81,14 +81,14 @@
   const BEV = {
     turn: { uid: 'any' }, act: { uid: 'any', cmd: 'string', id: 'any', name: 'string', targets: 'array' },
     dmg: { uid: 'any', n: 'number', 'crit?': 'bool', 'weak?': 'bool', 'kind?': 'string' }, heal: { uid: 'any', n: 'number', 'mp?': 'bool' },
-    miss: { uid: 'any' }, status: { uid: 'any', id: 'string', on: 'bool' }, ko: { uid: 'any' }, revive: { uid: 'any' },
+    miss: { uid: 'any' }, status: { uid: 'any', id: 'string', on: 'bool' }, ko: { uid: 'any' }, revive: { uid: 'any', 'hp?': 'number' },
     glimmer: { uid: 'any', kind: 'string', id: 'string', name: 'string', 'from?': 'string', 'fromName?': 'string' }, telegraph: { uid: 'any', text: 'string', pose: 'string', tint: 'string', next: 'string' },
     summon: { uid: 'any', mon: 'any' }, flee: { uid: 'any' }, steal: { uid: 'any', target: 'any', item: 'string|null', 'grade?': 'string', 'stealOnly?': 'bool' },
     gain: { item: 'string', grade: 'string', 'stolen?': 'bool', 'stealOnly?': 'bool' }, grow: { c: 'any', hp: 'number', mp: 'number' },
     prof: { c: 'any', key: 'string' }, msg: { text: 'string' }, end: { result: '"win"|"lose"|"escape"' },
   };
   // --- 手がかり・ティア（§2.5.14、§2.6.4）
-  K.lead = { title: 'string', text: 'string', region: 'string', 'from?': 'string', 'place?': 'string', 'dir?': 'string', 'done?': 'any', 'hideWhen?': 'any', kind: '"main"|"region"|"side"|"rumor"|"map"', 'slice?': '"locked"' };
+  K.lead = { title: 'string', text: 'string', region: 'string', 'from?': 'string', 'place?': 'string', 'dir?': 'string', 'done?': 'any', 'hideWhen?': 'any', 'offer?': 'any', kind: '"main"|"region"|"side"|"rumor"|"map"', 'slice?': '"locked"' };
   K.leadGroup = { region: 'string', items: [{ id: 'string', state: '"new"|"open"|"done"', pinned: 'bool' }] };
   // --- 顔絵（§2.5.16）
   K.portraitParse = { look: 'string', expr: '"neutral"|"smile"|"sad"|"angry"|"surprise"' };
@@ -101,6 +101,7 @@
     'name?': 'string', 'title?': 'string',   // 話者名は npc.name → looks[look].name の順（版 2）
     'cond?': 'any', 'reward?': '"lead"|"side"|"discount"|"hint"|"item"|"boss"|"news"|null', 'key?': 'string', 'lv?': '0|1',
     'bark?': 'string',   // 話しかけたときの短いあいさつのボイスの id（R.Events.talk が鳴らす。design/voice_story_map.json の bark）
+    'quest?': 'any',     // 頭の上の依頼の吹き出し（R.Leads.offerOf）の依頼 id か配列で上書き。false で出さない。無ければ talk の台本の meta.gives から
   };
   K.map = {
     id: 'string', name: 'string', kind: '"town"|"interior"|"dungeon"|"world"', 'optional?': 'bool', region: 'string', 'location?': 'string',

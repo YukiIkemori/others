@@ -6,7 +6,8 @@
 //   R.Leads.list({all}) → K.leadGroup[]  地方ごと（本筋 → 世界のうわさ → 地方の順）。hideWhen が真の物は外す（all で入れる）
 //   R.Leads.pinned() → id | null
 //   足した物: state(id) → 'new'|'open'|'done'|null / isDone(id) / seen(id)（MENUS が詳しい文を開いたとき）/
-//             clearRegionPins(rid)（ev.clearRegion が呼ぶ）/ unseen() → 数 / regionName(rid)
+//             clearRegionPins(rid)（ev.clearRegion が呼ぶ）/ unseen() → 数 / regionName(rid) /
+//             offerOf(npcDef) → 話しかけると今くれる依頼の id | null（FIELD の頭の上の吹き出し。下の「依頼をくれる人」）
 //
 // 通知（MODERN_UI §6.2 の右上の札の形）: 新しく聞いたら右上に「新しい手がかり」の札（題名と聞いた所）を 4.5 秒。
 //   フィールドが一番上でイベントが走っていない間に出す（会話の中で聞いたら、会話が終わってから）。
@@ -79,6 +80,74 @@
     return null;
   };
   Leads.unseen = function () { const g = G(); if (!g) return 0; return Object.keys(g.leads).filter((k) => !g.leads[k].seen && !Leads.isDone(k)).length; };
+
+  // ================================================================ 依頼をくれる人（頭の上のオレンジの吹き出し、layers.js。オーナーの依頼 2026-09-28）
+  // 「話しかけたら依頼（kind:'side' の手がかり）をくれる人」だけ。受けた（R.Game.leads にある）・解けた人には出さない。
+  // 渡す先（届け物の相手・報告の相手）には出さない（受けた依頼の数だけ町じゅうに出てうるさい。行き先は手がかり帳と目印が示す）。
+  //   どの依頼か: 話す台本（def.talk の events）の meta.gives の 'lead:<id>'（meta.calls の台本も 1 段だけ）。
+  //     地図の人の def.quest で上書き（id か id の配列。false なら出さない）
+  //   今くれるか: まだ聞いていない・解決の条件（DB.leads[id].done）がまだ偽・slice:'locked' でない・hideWhen が偽・
+  //     台本の meta.needs（flag: / item: / cleared: だけ読む。ほかは読まずに真）が真・手がかりの offer（条件。台本の中の分かれ道で
+  //     まだ話を出さない間、たとえば灯台が戻るまでのタデオ）が真
+  const offerInfo = new WeakMap();   // 台本 → {leads: [id], needs: cond[]}（台本の中身は変わらないので 1 回だけ読む）
+  function needCond(s) {
+    const i = typeof s === 'string' ? s.indexOf(':') : -1;
+    if (i < 0) return null;
+    const k = s.slice(0, i), v = s.slice(i + 1);
+    if (k === 'flag') return v;
+    if (k === 'item') return { item: v };
+    if (k === 'cleared') return 'cleared_' + v;
+    return null;
+  }
+  function eventOffers(evId, depth) {
+    const e = R.DB.events && R.DB.events[evId];
+    if (!e || typeof e !== 'object') return null;
+    let info = offerInfo.get(e);
+    if (info) return info;
+    info = { leads: [], needs: [] };
+    const m = e.meta || {};
+    for (const n of m.needs || []) { const c = needCond(n); if (c != null) info.needs.push(c); }
+    for (const gv of m.gives || []) {
+      if (typeof gv !== 'string' || gv.indexOf('lead:') !== 0) continue;
+      const id = gv.slice(5), d = def(id);
+      if (d && d.kind === 'side' && !info.leads.includes(id)) info.leads.push(id);
+    }
+    // 呼ぶ台本（釣り小屋のトーレ → snow_fishing_talk など）。その台本の needs も足す
+    if (!(depth > 0)) for (const c of m.calls || []) {
+      const sub = eventOffers(c, 1);
+      if (!sub || !sub.leads.length) continue;
+      for (const id of sub.leads) if (!info.leads.includes(id)) info.leads.push(id);
+      for (const nc of sub.needs) info.needs.push(nc);
+    }
+    offerInfo.set(e, info);
+    return info;
+  }
+  /** 依頼 id を今くれるか（受けていない・解けていない・条件が真） */
+  Leads.offerable = function (id) {
+    const g = G(), d = def(id);
+    if (!g || !d || d.kind !== 'side' || d.slice === 'locked') return false;
+    if (g.leads[id]) return false;
+    if (d.done != null && d.done !== false && R.State.check(d.done)) return false;   // 聞く前に解けた（先に井戸の底を見た、など）
+    if (d.hideWhen != null && R.State.check(d.hideWhen)) return false;
+    if (d.offer != null && !R.State.check(d.offer)) return false;
+    return true;
+  };
+  /** 地図の人（def）が話しかけると今くれる依頼の id | null */
+  Leads.offerOf = function (nd) {
+    if (!nd || !G()) return null;
+    let ids, needs = null;
+    if (nd.quest === false) return null;
+    if (nd.quest != null) ids = [].concat(nd.quest);
+    else {
+      if (typeof nd.talk !== 'string') return null;
+      const info = eventOffers(nd.talk, 0);
+      if (!info || !info.leads.length) return null;
+      ids = info.leads; needs = info.needs;
+    }
+    if (needs) for (let i = 0; i < needs.length; i++) if (!R.State.check(needs[i])) return null;
+    for (let i = 0; i < ids.length; i++) if (Leads.offerable(ids[i])) return ids[i];
+    return null;
+  };
 
   /** 地方の見出しの名前（行ったことのない地方は方角で。MENUS が使う） */
   Leads.regionName = function (rid) {

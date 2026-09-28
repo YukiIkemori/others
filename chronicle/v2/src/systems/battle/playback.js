@@ -490,6 +490,9 @@
     const v = st.vis[e.uid];
     if (!v) return;
     v.alive = true; v.gone = 0;
+    // 起き上がった後の HP（e.hp）。無い古い出来事は 1 にしておく（立っているのに HP 0 にしない）
+    v.hp = e.hp > 0 ? Math.min(v.maxHp || e.hp, e.hp) : Math.max(1, v.hp || 0);
+    v.status = [];
     const a = st.actor(e.uid);
     if (a) P.fx(st, 'revive', a.x, a.y - 60, {});
     setPose(st, e.uid, 'idle');

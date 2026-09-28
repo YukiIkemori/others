@@ -485,6 +485,7 @@
         if (!it.use || !it.use.battle || !hasBattleEffect(it.use)) return 'field';
         if (this.count(id) <= 0) return 'none';
         if (u.isParty && this.noEscape && isEscape(it.use)) return 'noescape';
+        if (u.isParty && it.use.target === 'ally_dead' && !this.anyDead(u)) return 'nodead';   // 倒れた仲間がいない（蘇生の道具は選べない）
         return null;
       }
       if (u.isParty) {
@@ -502,9 +503,12 @@
       } else if (isMagicAct(a) && u.status.silence) return 'silence';
       if (!hasBattleEffect(a)) return 'field';
       if (u.isParty && a.target === 'ally_other' && !this.friends(u).some((x) => x !== u)) return 'none';
+      if (u.isParty && a.target === 'ally_dead' && !this.anyDead(u)) return 'nodead';
       if (u.isParty && this.noEscape && isEscape(a)) return 'noescape';
       return null;
     }
+    /** u の側に倒れた人（逃げた・消えた人は除く）がいるか */
+    anyDead(u) { return (u.isParty ? this.party : this.mons).some((x) => !x.alive && !x.gone); }
     weaponFx(u) {
       if (u.isParty) {
         const W = u.weapon();
@@ -2022,7 +2026,7 @@
       case 'heal': out.push({ t: 'heal', uid: uidOf(ev.u), n: ev.n, mp: !!ev.mp }); break;
       case 'miss': out.push(ev.parry ? { t: 'miss', uid: uidOf(ev.u), parry: true } : { t: 'miss', uid: uidOf(ev.u) }); break;
       case 'die': out.push({ t: 'ko', uid: uidOf(ev.u) }); break;
-      case 'revive': out.push({ t: 'revive', uid: uidOf(ev.u) }); break;
+      case 'revive': out.push({ t: 'revive', uid: uidOf(ev.u), hp: ev.u ? ev.u.hp : 0 }); break;   // 起き上がった後の HP（演出の HP を 0 のままにしない）
       case 'status': out.push({ t: 'status', uid: uidOf(ev.u), id: ev.s, on: !!ev.on }); break;
       case 'buff': out.push({ t: 'status', uid: uidOf(ev.u), id: 'buff_' + ev.stat, on: (ev.stage || 0) !== 0, stage: ev.stage || 0 }); break;
       case 'glimmer': {

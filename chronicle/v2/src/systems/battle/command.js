@@ -9,7 +9,7 @@
   const C = (_.cmd = {});
 
   const WNAME = { sword: '剣', greatsword: '大剣', dagger: '短剣', bow: '弓', staff: '杖' };
-  const TARGET_JA = { enemy: 'ひとりに', enemies: '敵全体に', ally: '味方ひとりに', allies: '味方全体に', self: '自分に' };
+  const TARGET_JA = { enemy: 'ひとりに', group: '同じ群れに', enemies: '敵全体に', random: '敵のだれかに', ally: '味方ひとりに', ally_other: 'ほかの味方ひとりに', ally_any: '味方ひとりに', ally_dead: '倒れた味方ひとりに', allies: '味方全体に', party: '味方全体に', self: '自分に' };
   C.WNAME = WNAME;
   C.TARGET_JA = TARGET_JA;
   const sfx = (id) => { try { R.Audio.sfx(id); } catch (e) { /* ignore */ } };
@@ -373,7 +373,7 @@
         desc(i) {
           const r = rows[i];
           if (!r) return null;
-          const text = r.reason === 'reach' ? '後列からは届かない。' : r.disabled && r.reason === 'mp' ? 'MP が足りない。' : r.id === 'attack' ? '武器でふつうに攻撃する。' : r.desc || '';
+          const text = r.reason === 'reach' ? '後列からは届かない。' : r.disabled && r.reason === 'mp' ? 'MP が足りない。' : r.disabled && r.reason === 'nodead' ? '倒れた仲間がいない。' : r.id === 'attack' ? '武器でふつうに攻撃する。' : r.desc || '';
           const tn = targetName(st, M, r);
           return { text, sub: (TARGET_JA[r.target] || '') + (tn ? '　・　ねらい：' + tn : '') };
         },

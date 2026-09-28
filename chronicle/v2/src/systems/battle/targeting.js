@@ -1,12 +1,24 @@
 // BSCENE: ねらい（MODERN_UI §6.17）。選ぶ前から前回の相手に琥珀の菱形（カーソル記憶）。十字で相手を替え、相手の名前を見出しに。
 // 味方をねらうときは右上の一覧の行が光る。全体（enemies・allies）は全員が光り、A で決める。タップはその相手に決める。
 //   _.target.pick(st, u, type, {row, mem}) → uid | null（全体）| 'back'
+//   type: enemy・group（敵ひとり）、enemies・random（敵全体）、ally・ally_other・ally_any・ally_dead（味方ひとり）、allies・party（味方全体）、self
 (function (R) {
   'use strict';
   const Bt = (R.Battle = R.Battle || {});
   const _ = (Bt._ = Bt._ || {});
   const Tg = (_.target = {});
   const sfx = (id) => { try { R.Audio.sfx(id); } catch (e) { /* ignore */ } };
+
+  // 味方を選ぶ相手の種類（ally_dead は倒れた人だけ）と、全員に当たる種類
+  const PARTY = { ally: 1, ally_other: 1, ally_dead: 1, ally_any: 1, allies: 1, party: 1 };
+  const GROUP = { enemies: 1, random: 1, allies: 1, party: 1 };
+  /** 行（道具・術・技）の効き目に蘇生があるか */
+  function revives(row) {
+    const D = R.DB || {};
+    const it = row.cmd === 'item' ? D.items && D.items[row.id] : null;
+    const a = it ? it.use : (D.spells && D.spells[row.id]) || (D.techs && D.techs[row.id]) || null;
+    return !!(a && (a.effects || []).some((e) => e.type === 'revive'));
+  }
 
   function inActor(st, a, p) {
     const h = _.actors.height(a), w = Math.max(28, h * 0.6);
@@ -18,19 +30,25 @@
     const M = o.mem || {};
     const row = o.row || {};
     if (type === 'self') return Promise.resolve(u.uid);
-    const party = type === 'ally' || type === 'allies';
-    const group = type === 'enemies' || type === 'allies';
+    const party = !!PARTY[type];
+    const group = !!GROUP[type];
     let list;
     if (party) {
-      const dead = row.cmd === 'item' || /revive|raise|life/.test(row.id || '');
-      list = st.actors.filter((a) => a.side === 'party' && (dead || (st.vis[a.uid] && st.vis[a.uid].alive)));
-      if (!list.length) list = st.actors.filter((a) => a.side === 'party');
+      // 倒れた人だけ（ally_dead）・生きている人だけ（ally・ally_other）・誰でも（ally_any）。全体の蘇生は倒れた人も光らせる
+      const mine = st.actors.filter((a) => a.side === 'party' && !(type === 'ally_other' && a.uid === u.uid));
+      const alive = (a) => !!(st.vis[a.uid] && st.vis[a.uid].alive);
+      if (type === 'ally_dead') list = mine.filter((a) => !alive(a));
+      else if (type === 'ally_any' || (group && revives(row))) list = mine;
+      else list = mine.filter(alive);
+      // 倒れた人がいない蘇生（ふつうは選ぶ前に灰色）: ブザーで一覧へ戻る
+      if (!list.length && type === 'ally_dead') { sfx('buzzer'); return Promise.resolve('back'); }
+      if (!list.length) list = mine.length ? mine : st.actors.filter((a) => a.side === 'party');
     } else {
       list = st.aliveEnemies().slice().sort((a, b) => (b.x - a.x) || (a.y - b.y));
     }
     if (!list.length) return Promise.resolve(group ? null : u.uid);
     let sel = 0;
-    if (!group) {
+    if (!group && type !== 'ally_dead') {   // 蘇生は最初の倒れた人から
       const memKey = party ? 'ally' : 'target';
       const want = M[memKey];
       const j = list.findIndex((a) => a.uid === want);
@@ -82,7 +100,9 @@
       w.draw = function (g) {
         const t = R.Engine.time, k = R.uiScale || 1;
         for (const a of group ? list : [list[sel]]) {
-          const h = _.actors.height(a);
+          // 倒れた味方（蘇生のねらい）は寝ている絵の上に菱形を置く
+          const down = a.side === 'party' && st.vis[a.uid] && !st.vis[a.uid].alive;
+          const h = down ? 34 : _.actors.height(a);
           const bob = R.Settings.get('reduceMotion') ? 0 : Math.sin(t / 220) * 2;
           const x = a.x + (a.side === 'enemy' ? 8 : -4), y = a.y - h - 12 + bob;
           g.save();

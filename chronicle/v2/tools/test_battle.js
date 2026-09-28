@@ -676,4 +676,57 @@ section('slice rare drops: grade rare reaches the result (★ and the rare jingl
   ok('the rare / superrare jingles exist (R.DB.music)', !!(DB.music && DB.music.rare && DB.music.rare.jingle && DB.music.superrare));
 }
 
+// ================================================================ 蘇生（オーナー 2026-09-28「よみがえりの花で敵しか選べない・起き上がっても HP 0」）
+section('revive items: ally_dead needs a dead ally, the revive event carries the new HP');
+{
+  newGame(['bartolo', 'marta']);
+  R.Game.items = Object.assign({}, R.Game.items, { i_phoenix: 2, i_revive: 2 });
+  const mk = (seed) => R.BattleCore.create({ mons: [['rat_1', 1]], seed, lv: 3 });
+  const Bn = mk('rv0');
+  Bn.intro();
+  const rowOf = (B, uid, id) => B.options(uid).find((o) => o.cmd === 'item').list.find((x) => x.id === id);
+  const r0 = rowOf(Bn, Bn.engine.party[0].uid, 'i_phoenix');
+  ok('nobody down: よみがえりの花 is greyed (reason nodead), target ally_dead', r0 && r0.usable === false && r0.reason === 'nodead' && r0.target === 'ally_dead', r0);
+  ok('nobody down: the revive spell is unusable too (nodead)', Bn.engine.unusable(Bn.engine.party[0], 's_light_4') === 'nodead');
+  R.Party.members()[1].hp = 0;
+  for (const [id, pct] of [['i_phoenix', 1], ['i_revive', 0.35]]) {
+    R.Party.members()[1].hp = 0;
+    const B = mk('rv-' + id);
+    B.intro();
+    const [p0, p1, p2] = B.engine.party;
+    const row = rowOf(B, p0.uid, id);
+    ok(`${id}: usable once an ally is down`, row && row.usable === true, row);
+    B.submit(p0.uid, { cmd: 'item', id, target: p1.uid });
+    B.submit(p1.uid, { cmd: 'defend' });
+    if (p2) B.submit(p2.uid, { cmd: 'defend' });
+    const evs = B.round();
+    const rv = evs.find((e) => e.t === 'revive');
+    const want = Math.max(1, Math.floor(p1.mhp * pct));
+    ok(`${id}: the ally stands up with hp = max(1, floor(maxHp×${pct}))`, p1.alive && p1.hp === want, [p1.hp, want]);
+    ok(`${id}: the revive event carries hp (${want})`, rv && rv.uid === p1.uid && rv.hp === want && C.check('battleEvent', rv).ok, rv);
+    ok(`${id}: B.unit shows alive with hp > 0`, B.unit(p1.uid).alive && B.unit(p1.uid).hp === want);
+  }
+  // 敵を選んだ（古い UI）・生きている味方を選んだ: 倒れた人へ付け替え。倒れた人がいなければ効き目なし
+  R.Party.members()[1].hp = 0;
+  const Bt = mk('rv-retarget');
+  Bt.intro();
+  const [q0, q1, q2] = Bt.engine.party;
+  Bt.submit(q0.uid, { cmd: 'item', id: 'i_revive', target: Bt.engine.mons[0].uid });
+  Bt.submit(q1.uid, { cmd: 'defend' });
+  if (q2) Bt.submit(q2.uid, { cmd: 'item', id: 'i_revive', target: q1.uid });
+  const evt = Bt.round();
+  ok('chosen enemy → retargets to the dead ally', q1.alive && q1.hp > 0 && evt.filter((e) => e.t === 'revive').length === 1, evt.filter((e) => e.t === 'revive' || e.t === 'act'));
+  ok('the second revive on the same (now standing) ally does nothing', !q2 || evt.some((e) => e.t === 'msg' && /効き目がなかった/.test(e.text)));
+  const er = engine({ mons: ['rat_1'] });
+  er.party[1].hp = 0;
+  const ev = drainAll(er.effect(er.party[0], er.party[1], { type: 'revive', pct: 1 }, {}));
+  ok('effect revive pct 1: full HP, statuses cleared', er.party[1].hp === er.party[1].mhp && er.party[1].alive && !Object.keys(er.party[1].status).length && ev.some((e) => e.t === 'revive'));
+  // フィールド: 同じ道具で起き上がる（HP = floor(最大 HP × pct)）
+  const c = R.Party.members()[1];
+  c.hp = 0;
+  const res = R.Screens && R.Screens.applyField ? R.Screens.applyField(DB.items.i_revive, null, [c]) : null;
+  ok('field: i_revive stands up with floor(maxHp×0.35)', !R.Screens || !R.Screens.applyField || (res.changed && c.hp === Math.max(1, Math.floor(R.Screens.stats(c).maxHp * 0.35))), c.hp);
+  ok('field: canTarget allows only the dead for ally_dead', !R.Screens || !R.Screens.canTarget || (R.Screens.canTarget(DB.items.i_phoenix, { hp: 0 }) && !R.Screens.canTarget(DB.items.i_phoenix, { hp: 5 })));
+}
+
 done('test_battle');
