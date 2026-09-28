@@ -8,7 +8,8 @@
  "group": null,
  "slot": null,
  "heightDots": {
-  "field": 47
+  "field": 47,
+  "face": 80
  },
  "measureH": {
   "field": 47
@@ -20,14 +21,15 @@
  "lantern": false,
  "spirit": false,
  "recolor": false,
- "face": false,
+ "face": true,
  "sheets": {
-  "1": "npc_yena_s1.png"
+  "1": "npc_yena_s1.png",
+  "3": "npc_yena_s3.png"
  },
  "proportion": {
   "1": {
    "neck": 0.2553191489361702,
-   "head_w": 0.40425531914893614,
+   "head_w": 0.3829787234042553,
    "shoulder": 0.39361702127659576,
    "neck_clear": 0.8333333333333334
   }

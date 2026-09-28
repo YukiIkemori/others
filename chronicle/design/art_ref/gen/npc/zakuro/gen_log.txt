@@ -39,3 +39,14 @@
 02:20:49   | 
 02:20:49   | packed field 188x268 | palette 52 + face 0
 02:20:50 to_v2 npc_zakuro: npc_zakuro → /home/user/others/chronicle/v2/assets/sprites/npc_zakuro |   field: 16 frames
+21:30:29 sheet 3 attempt 1: edit of the Arun template 1728x1152 (pitch 6, quality medium, 3 refs)
+21:31:33   pitch in raw image: 5.71 px per art pixel (upright median 457 px / 80)
+21:31:34 sheet 3 -> art_ref/gen/npc/zakuro/npc_zakuro_s3.png (6 poses)
+21:38:10 pipeline: sheets.py ../art_ref/gen/npc/zakuro --npc zakuro --out out/npc/npc_zakuro
+21:39:38   | 
+21:39:38   | ■ シートの状態
+21:39:38   |   シート1 歩き＋演技4: 確認あり  npc_zakuro_s1.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+21:39:38   |   シート3 顔6: OK  npc_zakuro_s3.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+21:39:38   | 
+21:39:38   | packed field 180x236, face 240x168 | palette 52 + face 47
+21:39:39 to_v2 npc_zakuro: npc_zakuro → /home/user/others/chronicle/v2/assets/sprites/npc_zakuro |   field: 16 frames |   face: 6 frames

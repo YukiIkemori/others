@@ -314,6 +314,154 @@
      "scale": 0.926
     }
    }
+  },
+  "3": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/kaya/npc_kaya_s3.png",
+   "size": [
+    2304,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x3",
+    "logical_cell": [
+     96,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 648.0,
+   "native_height_at_period": 81.0,
+   "scale_note": "描かれた格子のまま（81.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "face_neutral": {
+     "size": [
+      54,
+      80
+     ],
+     "box": [
+      152,
+      48,
+      616,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_smile": {
+     "size": [
+      54,
+      81
+     ],
+     "box": [
+      920,
+      40,
+      1384,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_sad": {
+     "size": [
+      54,
+      80
+     ],
+     "box": [
+      1688,
+      48,
+      2152,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_angry": {
+     "size": [
+      54,
+      81
+     ],
+     "box": [
+      152,
+      808,
+      616,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_surprise": {
+     "size": [
+      54,
+      81
+     ],
+     "box": [
+      920,
+      808,
+      1384,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_closed": {
+     "size": [
+      54,
+      81
+     ],
+     "box": [
+      1688,
+      808,
+      2152,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    }
+   }
   }
  },
  "items": [

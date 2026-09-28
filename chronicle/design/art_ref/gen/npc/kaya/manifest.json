@@ -157,5 +157,74 @@
     ]
    }
   ]
+ },
+ {
+  "sheet": 3,
+  "file": "npc_kaya_s3.png",
+  "layout": "2x3",
+  "logical_cell": [
+   96,
+   96
+  ],
+  "image_px": [
+   2304,
+   1536
+  ],
+  "frames": [
+   {
+    "id": "face_neutral",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     54,
+     80
+    ]
+   },
+   {
+    "id": "face_smile",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     54,
+     81
+    ]
+   },
+   {
+    "id": "face_sad",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     54,
+     80
+    ]
+   },
+   {
+    "id": "face_angry",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     54,
+     81
+    ]
+   },
+   {
+    "id": "face_surprise",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     54,
+     81
+    ]
+   },
+   {
+    "id": "face_closed",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     54,
+     81
+    ]
+   }
+  ]
  }
 ]

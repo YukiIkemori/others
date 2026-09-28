@@ -57,6 +57,7 @@
       {"type":"sign","x":5,"y":17,"text":"ロアの里\n語り部の里。"},
       {"type":"sign","x":43,"y":27,"text":"東 → 港町ファロス・灯台の岬\n北 → 見晴らし台・跳ね橋"},
       {"type":"chest","id":"f_roa_c1","x":49,"y":11,"item":"i_potion","n":1},
+      {"type":"examine","x":46,"y":16,"event":"world_poi_windmill"},
     ],
     npcs: [
       {"id":"shepherd","look":"npc_old_m_2","name":"羊飼いの年寄り","x":14,"y":31,"dir":"w","move":"still","cond":"prologue_done","talk":"world_shepherd","reward":"news","key":"world_shepherd"},

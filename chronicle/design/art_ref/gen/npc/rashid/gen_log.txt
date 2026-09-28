@@ -49,3 +49,14 @@
 02:18:20   | 
 02:18:20   | packed field 240x292 | palette 52 + face 0
 02:18:21 to_v2 npc_rashid: npc_rashid → /home/user/others/chronicle/v2/assets/sprites/npc_rashid |   field: 16 frames
+21:29:15 sheet 3 attempt 1: edit of the Arun template 1728x1152 (pitch 6, quality medium, 3 refs)
+21:30:27   pitch in raw image: 6.50 px per art pixel (upright median 520 px / 80)
+21:30:28 sheet 3 -> art_ref/gen/npc/rashid/npc_rashid_s3.png (6 poses)
+21:37:06 pipeline: sheets.py ../art_ref/gen/npc/rashid --npc rashid --out out/npc/npc_rashid
+21:38:06   | 
+21:38:06   | ■ シートの状態
+21:38:06   |   シート1 歩き＋演技4: 確認あり  npc_rashid_s1.png  ドット 8.00px → 描かれた格子のまま（54.0 ドット）
+21:38:06   |   シート3 顔6: OK  npc_rashid_s3.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+21:38:06   | 
+21:38:06   | packed field 220x240, face 210x168 | palette 52 + face 48
+21:38:08 to_v2 npc_rashid: npc_rashid → /home/user/others/chronicle/v2/assets/sprites/npc_rashid |   field: 16 frames |   face: 6 frames

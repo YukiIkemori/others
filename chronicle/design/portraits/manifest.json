@@ -11,7 +11,7 @@
   ],
   "priority": 1,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "fine",
@@ -25,7 +25,147 @@
   ],
   "priority": 1,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
+ },
+ {
+  "look": "lazaro",
+  "name": "ラザロ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 1,
+  "status": "todo",
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
+ },
+ {
+  "look": "noa",
+  "name": "ノア",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 1,
+  "status": "todo",
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
+ },
+ {
+  "look": "npc_jorn",
+  "name": "ヨルン",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 1,
+  "status": "todo",
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
+ },
+ {
+  "look": "npc_kaya",
+  "name": "カヤ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 1,
+  "status": "todo",
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
+ },
+ {
+  "look": "npc_pim",
+  "name": "ピム",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 1,
+  "status": "todo",
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
+ },
+ {
+  "look": "npc_rashid",
+  "name": "ラシード",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 1,
+  "status": "todo",
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
+ },
+ {
+  "look": "npc_tadeo",
+  "name": "タデオ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 1,
+  "status": "todo",
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
+ },
+ {
+  "look": "npc_yena",
+  "name": "イェナ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 1,
+  "status": "todo",
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
+ },
+ {
+  "look": "npc_zaid",
+  "name": "ザイード",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 1,
+  "status": "todo",
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
+ },
+ {
+  "look": "npc_zakuro",
+  "name": "ザクロ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 1,
+  "status": "todo",
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "otto",
@@ -39,7 +179,7 @@
   ],
   "priority": 1,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "rowell",
@@ -53,7 +193,7 @@
   ],
   "priority": 1,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "bartolo",
@@ -67,7 +207,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "basil",
@@ -81,7 +221,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "belladonna",
@@ -95,7 +235,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "boden",
@@ -109,7 +249,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "brigitta",
@@ -123,7 +263,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "dokka",
@@ -137,7 +277,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "ferno",
@@ -151,7 +291,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "hagen",
@@ -165,7 +305,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "hero_f_mage",
@@ -319,7 +459,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "marta",
@@ -333,7 +473,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "morga",
@@ -347,7 +487,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "noela",
@@ -361,7 +501,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "rouga",
@@ -375,7 +515,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "selma",
@@ -389,7 +529,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "shigure",
@@ -403,7 +543,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "sylvain",
@@ -417,7 +557,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "teo",
@@ -431,7 +571,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "titta",
@@ -445,7 +585,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "viola",
@@ -459,7 +599,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "zafira",
@@ -473,166 +613,6 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
- },
- {
-  "look": "elm",
-  "name": "エルム",
-  "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
-  ],
-  "priority": 3,
-  "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
- },
- {
-  "look": "npc_ben",
-  "name": "ベン",
-  "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
-  ],
-  "priority": 3,
-  "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
- },
- {
-  "look": "npc_gord",
-  "name": "ゴード",
-  "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
-  ],
-  "priority": 3,
-  "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
- },
- {
-  "look": "npc_hanna",
-  "name": "ハンナ",
-  "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
-  ],
-  "priority": 3,
-  "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
- },
- {
-  "look": "npc_hans",
-  "name": "ハンス",
-  "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
-  ],
-  "priority": 3,
-  "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
- },
- {
-  "look": "npc_pim",
-  "name": "ピム",
-  "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
-  ],
-  "priority": 3,
-  "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
- },
- {
-  "look": "npc_pim_mother",
-  "name": "ピムの母",
-  "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
-  ],
-  "priority": 3,
-  "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
- },
- {
-  "look": "npc_rita",
-  "name": "リタ",
-  "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
-  ],
-  "priority": 3,
-  "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
- },
- {
-  "look": "npc_roy",
-  "name": "ロイ",
-  "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
-  ],
-  "priority": 3,
-  "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
- },
- {
-  "look": "npc_yura_elder",
-  "name": "ユラの長老",
-  "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
-  ],
-  "priority": 3,
-  "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
- },
- {
-  "look": "npc_tadeo",
-  "name": "タデオ",
-  "exprs": [
-   "neutral"
-  ],
-  "priority": 3,
-  "status": "todo",
-  "note": "仮の顔（骨組み）。ファロスの人（CONTENT-P の依頼）"
- },
- {
-  "look": "npc_yena",
-  "name": "イェナ",
-  "exprs": [
-   "neutral"
-  ],
-  "priority": 3,
-  "status": "todo",
-  "note": "仮の顔（骨組み）。ファロスの人（CONTENT-P の依頼）"
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  }
 ]

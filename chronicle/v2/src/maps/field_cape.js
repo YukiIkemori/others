@@ -63,8 +63,8 @@
       {"type":"prop","id":"lantern","x":44,"y":6},
       {"type":"chest","id":"f_cape_c1","x":12,"y":31,"item":"i_salve","n":2},
       {"type":"prop","id":"lighthouse_glow","x":31,"y":28,"cond":"prologue_boss"},
-      {"type":"door","x":55,"y":8,"look":"none","locked":"港町ファロスへは、北の門をくぐって入ろう。"},
-      {"type":"door","x":55,"y":9,"look":"none","locked":"港町ファロスへは、北の門をくぐって入ろう。"},
+      {"type":"door","x":55,"y":8,"look":"none","locked":"ファロスの町へは、北の門から入ろう。"},
+      {"type":"door","x":55,"y":9,"look":"none","locked":"ファロスの町へは、北の門から入ろう。"},
     ],
     npcs: [
 

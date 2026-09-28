@@ -152,6 +152,8 @@
     S.realTerrain = real;
     // 岸の打ち寄せる泡（WORLD v3、terrain/relief.js）: 明るさだけ揺らす線。チャンクの結果の foam
     if (R.Terrain && R.Terrain._foamDraw) F.chunks.eachVisible((e) => { if (e.foam) R.Terrain._foamDraw(g, e.foam, e.cx * cs - cx, e.cy * cs - cy, R.Engine.time, REDUCE.on); });
+    // 屋内の出口の戸口（柱・敷居・戸板・マット・外からの光。doorway.js）: 地面の上・人の下
+    if (F._doorways) F._doorways(g, t, cx, cy);
     // 先頭のランタンの光の輪（STYLE_REFERENCE R4。効果 off で消える）: 地面に掛ける（人の絵の上に足すと先頭が白く飛ぶ、CAST の依頼）
     const q = R.Hd.quality();
     F._vis(vis);
@@ -187,6 +189,7 @@
     //   依頼をくれる人の吹き出しだけは出す。下の questMarks）
     // 町の道しるべ（出口の灯り・店の吊り看板。wayfind.js）: 町の絵の上、膜の上
     if (F._wayfind) F._wayfind(g, t, cx, cy);
+    if (F._doorwayArrows) F._doorwayArrows(g, t, cx, cy);   // 屋内の出口の矢印（先頭が近いとき）
     sparkles(g, t, cx, cy);
     // 依頼をくれる人の頭の上のオレンジの吹き出し（膜の上。体を描いたときの位置をそのまま使う）
     if (QM.n) questMarks(g, t);

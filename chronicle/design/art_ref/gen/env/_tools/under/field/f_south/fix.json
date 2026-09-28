@@ -98,8 +98,8 @@
 "text": "森の南の広場"
 },
 "set": {
-"x": 39,
-"y": 23
+"x": 40,
+"y": 24
 }
 },
 {
@@ -137,10 +137,53 @@
 7,
 14,
 ","
+],
+[
+35,
+19,
+":"
+],
+[
+35,
+20,
+":"
+],
+[
+39,
+20,
+","
+],
+[
+40,
+19,
+","
+],
+[
+42,
+19,
+","
+],
+[
+44,
+19,
+","
+],
+[
+44,
+20,
+","
 ]
 ],
 "fit": {
 "SEED": "rules",
 "EM": 1
-}
+},
+"note2": "2026-09-28 owner: the road between the round tower and the scaffold tower was blocked by the guide's old pillar cells (35,19)(35,20); the painted standing stones are at (41,18-19) (43,19-20) (40,21) (43,23) (44,22) - the cells between them are open",
+"solid": [
+[
+43,
+20,
+"r"
+]
+]
 }

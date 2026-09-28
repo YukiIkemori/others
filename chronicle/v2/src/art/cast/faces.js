@@ -19,8 +19,10 @@
   /** この look に顔を出すか（§6.1）: 主人公・仲間・物語の主な人だけ */
   cast.hasFace = function (look) {
     const l = (R.DB.looks || {})[look];
-    if (!l || l.animal || l.face === false && !MAIN_CAST.includes(look)) return false;
-    if (/^hero_/.test(look) || MAIN_CAST.includes(look)) return true;
+    if (!l || l.animal) return false;
+    if (MAIN_CAST.includes(look)) return true;
+    if (l.face === false) return false;
+    if (/^hero_/.test(look)) return true;
     const C = R.DB.companions || {};
     return Object.keys(C).some((id) => (C[id].look || id) === look);
   };

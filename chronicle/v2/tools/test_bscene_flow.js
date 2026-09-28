@@ -229,9 +229,17 @@ async function main() {
     ok('5 wolves on screen, each lettered once (Ａ〜Ｅ), all real core units', wolves.length === 5 && new Set(wolves.map((a) => a.name)).size === 5 && wolves.every((a) => /[Ａ-Ｚ]$/.test(a.name)) && st1.real, st1.foes);
     ok('targets = the living enemies in the core', st1.alive === st1.core, st1);
     // 戦う → 武器（攻撃） → ねらい。←で全員を回る
-    await B.press(p, 'a'); await p.waitForTimeout(150);
-    await B.press(p, 'a'); await p.waitForTimeout(150);
-    if (await B.ev(p, `!!(${D}.ui && ${D}.ui.o && ${D}.ui.o.rows && ${D}.ui.o.rows[0] && ${D}.ui.o.rows[0].id === 'attack')`)) { await B.press(p, 'a'); await p.waitForTimeout(150); }
+    // 一覧のカーソルは前の戦闘の位置を覚えているので、行を探して選ぶ
+    const pickRow = async (want) => {
+      for (let i = 0; i < 12; i++) {
+        if (await B.ev(p, `(() => { const w = ${D}.ui; const r = w && w.o && w.o.rows ? w.o.rows[w.sel] : null; return !!r && (r.key || r.id) === ${JSON.stringify(want)}; })()`)) { await B.press(p, 'a'); await p.waitForTimeout(150); return true; }
+        await B.press(p, 'up'); await p.waitForTimeout(40);
+      }
+      return false;
+    };
+    await pickRow('fight');
+    await pickRow('weapon');
+    if (await B.ev(p, `!!(${D}.ui && ${D}.ui.o && ${D}.ui.o.rows && ${D}.ui.o.rows.some((r) => r.id === 'attack'))`)) await pickRow('attack');
     const where = await B.ev(p, `(() => { const d = ${D}; return { ph: d.phase, head: d.head, rows: d.ui && d.ui.o && d.ui.o.rows ? d.ui.o.rows.map((r) => r.id || r.key) : null }; })()`);
     const hot = new Set();
     for (let i = 0; i < 8; i++) { for (const k of await B.ev(p, `Object.keys(${D}.hot || {})`)) hot.add(k); await B.press(p, 'left'); await p.waitForTimeout(60); }

@@ -35,13 +35,13 @@ function args(argv) {
 function load() { return require('./lib/load')({ quiet: true }); }
 function readManifest() { return fs.existsSync(MANIFEST) ? JSON.parse(fs.readFileSync(MANIFEST, 'utf8')) : []; }
 
-/** 顔を出す人（§6.1）と優先（1 = 物語の 4 人、2 = 仲間・主人公、3 = 町の人） */
+/** 顔を出す人（§6.1）と優先（1 = 物語の主な人 MAIN_CAST、2 = 仲間・主人公）。町の人は顔なし（オーナーの決まり 2026-09-28） */
 function faceList(R) {
   const L = R.DB.looks;
   const out = [];
   for (const id of Object.keys(L)) {
     if (!R.Art.cast.hasFace(id)) continue;
-    const pri = ['berna', 'fine', 'rowell', 'otto'].includes(id) ? 1 : /^hero_/.test(id) || R.DB.companions[id] ? 2 : 3;
+    const pri = (R.Art.cast.MAIN_CAST || []).includes(id) ? 1 : 2;
     out.push({ look: id, name: L[id].name, pri });
   }
   return out.sort((a, b) => a.pri - b.pri || a.look.localeCompare(b.look));
@@ -55,7 +55,7 @@ function init() {
     const o = old[f.look] || {};
     const hasSheet = fs.existsSync(path.join(ROOT, 'v2', 'assets', 'sprites', f.look, 'face.png'));
     return { look: f.look, name: f.name, exprs: EXPRS.slice(), priority: f.pri, status: o.status || 'todo',
-      note: o.note || (hasSheet ? '原画のシートの表情（sprite_pipe）を使用中' : '仮の顔（骨組み）。原画のシート9 待ち') };
+      note: hasSheet ? '原画のシートの表情（sprite_pipe）を使用中' : o.note || '仮の顔（骨組み）。原画のシート9 待ち' };   // 原画の顔が届いたら古いメモは使わない
   });
   fs.mkdirSync(DIR, { recursive: true });
   fs.writeFileSync(MANIFEST, JSON.stringify(list, null, 1) + '\n');

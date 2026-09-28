@@ -45,3 +45,11 @@
 21:23:34 sheet 3 attempt 1: edit of the Arun template 1728x1152 (pitch 6, quality medium, 3 refs)
 21:24:41   pitch in raw image: 5.79 px per art pixel (upright median 463 px / 80)
 21:24:42 sheet 3 -> art_ref/gen/npc/yena/npc_yena_s3.png (6 poses)
+21:31:51 pipeline: sheets.py ../art_ref/gen/npc/yena --npc yena --out out/npc/npc_yena
+21:32:52   | 
+21:32:52   | ■ シートの状態
+21:32:52   |   シート1 歩き＋演技4: 要作り直し  npc_yena_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
+21:32:52   |   シート3 顔6: OK  npc_yena_s3.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+21:32:52   | 
+21:32:52   | packed field 160x216, face 210x168 | palette 52 + face 48
+21:32:52 to_v2 npc_yena: npc_yena → /home/user/others/chronicle/v2/assets/sprites/npc_yena |   field: 16 frames |   face: 6 frames

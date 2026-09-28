@@ -242,6 +242,33 @@ for (const id of ['verda_1', 'verda_2', 'elder_1', 'elder_2']) {
   R.MapUtil.invalidate(id);
 }
 
+// 当たりが両向き（持ち主 2026-09-28「真ん中から左にはいけるけど、真ん中左から真ん中へはいけない」）: 隣どうしの歩けるマスで
+// A → B に入れれば B → A にも入れる（一方通行・向きのあるマスを置かない）。宝箱・人は描いた絵の床の上（マスの当たりが歩ける所）
+section('当たりが両向き・物と人は床の上');
+{
+  const Fd = R.Field;
+  const OPP = { e: 'w', w: 'e', s: 'n', n: 's' };
+  for (const id of ['verda_1', 'verda_2', 'elder_1', 'elder_2', 'f_south']) {
+    const m = R.DB.maps[id];
+    if (!m) continue;
+    state(R, {});
+    R.MapUtil.invalidate(id);
+    const bad = [];
+    for (let y = 0; y < m.h; y++) for (let x = 0; x < m.w; x++) {
+      for (const [d, dx, dy] of [['e', 1, 0], ['s', 0, 1]]) {
+        const nx = x + dx, ny = y + dy;
+        if (nx >= m.w || ny >= m.h || !Fd._walkable(m, x, y, null, 0) || !Fd._walkable(m, nx, ny, null, 0)) continue;
+        if (Fd._canEnter(m, x, y, nx, ny, 0, d) !== Fd._canEnter(m, nx, ny, x, y, 0, OPP[d])) bad.push(`${x},${y}${d}`);
+      }
+    }
+    ok(`${id}: 隣のマスへの出入りが両向き`, bad.length === 0, bad.slice(0, 12));
+    const onWall = [];
+    for (const o of m.objects || []) if (o.type === 'chest' || o.type === 'switch' || o.type === 'stairs') if (!Fd.passable(m, o.x, o.y, null, 0)) onWall.push(`${o.id || o.type}@${o.x},${o.y}`);
+    for (const n of m.npcs || []) if (!Fd.passable(m, n.x, n.y, null, 0)) onWall.push(`npc ${n.id}@${n.x},${n.y}`);
+    ok(`${id}: 宝箱・スイッチ・階段・人が壁や木のマスの上に無い`, onWall.length === 0, onWall);
+  }
+}
+
 // ================================================================ 5. 話す見返り（WORLD §3.3、V2_PLAN §3.3）
 section('話す見返りのある人');
 function rewardCount(maps) {

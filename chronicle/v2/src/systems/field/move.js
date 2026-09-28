@@ -235,6 +235,7 @@
     if (!f || !S.map || (f.x === S.x && f.y === S.y)) return false;
     const dx = f.x - S.x, dy = f.y - S.y;
     if (Math.abs(dx) > 1 || Math.abs(dy) > 1) return false;
+    if (F._npcAt(f.x, f.y, f.lv || 0)) return false;   // 聞いている間に人が来た: その場に残る（もう一度踏み直せば聞く）
     const now = R.Engine.time, diag = !!(dx && dy);
     if (F._trailBack) F._trailBack();
     S.mv = { fx: S.x, fy: S.y, flv: S.lv || 0, tx: f.x, ty: f.y, t0: now, ms: F.WALK_MS * 1.2 * (diag ? 1.41 : 1), dx, dy, dash: false, len: diag ? Math.SQRT2 : 1, back: true };

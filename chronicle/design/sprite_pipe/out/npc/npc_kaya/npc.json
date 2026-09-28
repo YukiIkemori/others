@@ -8,7 +8,8 @@
  "group": null,
  "slot": null,
  "heightDots": {
-  "field": 45
+  "field": 45,
+  "face": 80
  },
  "measureH": {
   "field": 50
@@ -20,9 +21,10 @@
  "lantern": false,
  "spirit": false,
  "recolor": false,
- "face": false,
+ "face": true,
  "sheets": {
-  "1": "npc_kaya_s1.png"
+  "1": "npc_kaya_s1.png",
+  "3": "npc_kaya_s3.png"
  },
  "proportion": {
   "1": {

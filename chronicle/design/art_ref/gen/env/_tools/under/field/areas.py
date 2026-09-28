@@ -99,6 +99,7 @@ def f_roa():
         dict(type='sign', x=5, y=17, text='ロアの里\n語り部の里。'),
         dict(type='sign', x=43, y=27, text='東 → 港町ファロス・灯台の岬\n北 → 見晴らし台・跳ね橋'),
         dict(type='chest', id='f_roa_c1', x=49, y=11, item='i_potion', n=1),
+        # the windmill's closed door is added by f_roa/fix.json objects_add (examine world_poi_windmill at the painted door)
     ]
     a.spawns['well'] = dict(x=22, y=17, dir='s')
     a.meta = dict(name='ロアの丘', sub='羊の丘と古井戸', region='prologue', worldRect=[222, 246, 70, 60], outside='forest_dark',

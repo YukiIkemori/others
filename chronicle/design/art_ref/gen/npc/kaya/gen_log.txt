@@ -17,3 +17,14 @@
 02:15:14   | 
 02:15:14   | packed field 140x228 | palette 52 + face 0
 02:15:15 to_v2 npc_kaya: npc_kaya → /home/user/others/chronicle/v2/assets/sprites/npc_kaya |   field: 16 frames
+21:28:09 sheet 3 attempt 1: edit of the Arun template 1728x1152 (pitch 6, quality medium, 3 refs)
+21:29:14   pitch in raw image: 6.49 px per art pixel (upright median 519 px / 80)
+21:29:14 sheet 3 -> art_ref/gen/npc/kaya/npc_kaya_s3.png (6 poses)
+21:36:21 pipeline: sheets.py ../art_ref/gen/npc/kaya --npc kaya --out out/npc/npc_kaya
+21:37:05   | 
+21:37:05   | ■ シートの状態
+21:37:05   |   シート1 歩き＋演技4: 確認あり  npc_kaya_s1.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+21:37:05   |   シート3 顔6: OK  npc_kaya_s3.png  ドット 8.00px → 描かれた格子のまま（81.0 ドット）
+21:37:05   | 
+21:37:05   | packed field 140x228, face 174x170 | palette 52 + face 48
+21:37:06 to_v2 npc_kaya: npc_kaya → /home/user/others/chronicle/v2/assets/sprites/npc_kaya |   field: 16 frames |   face: 6 frames

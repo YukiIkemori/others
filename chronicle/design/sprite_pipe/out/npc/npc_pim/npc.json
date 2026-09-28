@@ -8,7 +8,8 @@
  "group": null,
  "slot": null,
  "heightDots": {
-  "field": 36
+  "field": 36,
+  "face": 80
  },
  "measureH": {
   "field": 39
@@ -20,9 +21,10 @@
  "lantern": false,
  "spirit": false,
  "recolor": false,
- "face": false,
+ "face": true,
  "sheets": {
-  "1": "npc_pim_s1.png"
+  "1": "npc_pim_s1.png",
+  "3": "npc_pim_s3.png"
  },
  "proportion": {
   "1": {

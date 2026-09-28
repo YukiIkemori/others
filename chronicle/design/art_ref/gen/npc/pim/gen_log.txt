@@ -18,3 +18,13 @@
 01:07:03   | packed field 152x180 | palette 52 + face 0
 01:07:04 to_v2 npc_pim: npc_pim → /home/user/others/chronicle/v2/assets/sprites/npc_pim |   field: 16 frames
 21:24:42 sheet 3 attempt 1: edit of the Arun template 1728x1152 (pitch 6, quality medium, 3 refs)
+21:25:46   pitch in raw image: 5.97 px per art pixel (upright median 478 px / 80)
+21:25:46 sheet 3 -> art_ref/gen/npc/pim/npc_pim_s3.png (6 poses)
+21:32:53 pipeline: sheets.py ../art_ref/gen/npc/pim --npc pim --out out/npc/npc_pim
+21:33:48   | 
+21:33:48   | ■ シートの状態
+21:33:48   |   シート1 歩き＋演技4: 確認あり  npc_pim_s1.png  ドット 8.00px → 描かれた格子のまま（40.0 ドット）
+21:33:48   |   シート3 顔6: OK  npc_pim_s3.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+21:33:48   | 
+21:33:48   | packed field 152x180, face 189x168 | palette 52 + face 48
+21:33:50 to_v2 npc_pim: npc_pim → /home/user/others/chronicle/v2/assets/sprites/npc_pim |   field: 16 frames |   face: 6 frames

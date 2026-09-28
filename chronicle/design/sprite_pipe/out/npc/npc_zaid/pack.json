@@ -47,13 +47,44 @@
    "dx": -7,
    "dy": 0,
    "fit": 0.958
+  },
+  "face_smile": {
+   "to": "face_neutral",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.438
+  },
+  "face_sad": {
+   "to": "face_neutral",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.422
+  },
+  "face_angry": {
+   "to": "face_neutral",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.441
+  },
+  "face_surprise": {
+   "to": "face_neutral",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.407
+  },
+  "face_closed": {
+   "to": "face_neutral",
+   "dx": 1,
+   "dy": 0,
+   "fit": 1.31
   }
  },
  "attach": {},
  "weapons": {},
  "sets": [
-  "field"
+  "field",
+  "face"
  ],
  "colors": 52,
- "face_colors": 0
+ "face_colors": 48
 }

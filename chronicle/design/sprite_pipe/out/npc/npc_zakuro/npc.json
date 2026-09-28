@@ -8,7 +8,8 @@
  "group": null,
  "slot": null,
  "heightDots": {
-  "field": 52
+  "field": 52,
+  "face": 80
  },
  "measureH": {
   "field": 52
@@ -20,9 +21,10 @@
  "lantern": false,
  "spirit": false,
  "recolor": false,
- "face": false,
+ "face": true,
  "sheets": {
-  "1": "npc_zakuro_s1.png"
+  "1": "npc_zakuro_s1.png",
+  "3": "npc_zakuro_s3.png"
  },
  "proportion": {
   "1": {

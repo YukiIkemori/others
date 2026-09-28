@@ -14,14 +14,15 @@ section('見た目の一覧（§2.6.2）');
 const TYPES = ['warrior', 'ranger', 'mage', 'spellblade', 'wanderer'];
 const heroes = [].concat(...['m', 'f'].map((s) => TYPES.map((t) => `hero_${s}_${t}`)));
 const comps = Object.keys(R.DB.companions || {});
-const story = ['berna', 'rowell', 'fine', 'otto', 'elm'];
+// 物語の主な人（顔あり。オーナーの決まり 2026-09-28）。ほかの名前のある町の人・物語の霊（elm）は顔なし
+const story = ['berna', 'rowell', 'fine', 'otto', 'lazaro', 'noa', 'npc_tadeo', 'npc_yena', 'npc_pim', 'npc_zaid', 'npc_rashid', 'npc_jorn', 'npc_kaya', 'npc_zakuro'];
 const named = ['npc_hanna', 'npc_rita', 'npc_gord', 'npc_pim_mother', 'npc_pim', 'npc_hans', 'npc_ben', 'npc_roy', 'npc_yura_elder'];
 const ntypes = ['man', 'woman', 'old_m', 'old_f', 'child', 'sailor', 'merchant', 'woodcutter', 'guard', 'keeper', 'bard', 'yura_folk'];
 const townsfolk = [].concat(...ntypes.map((t) => [1, 2, 3, 4].map((n) => `npc_${t}_${n}`)));
 const animals = ['ani_cat', 'ani_dog', 'ani_hen', 'ani_fawn'];
 ok('主人公 10', heroes.every((id) => L[id]), heroes.filter((id) => !L[id]));
 ok('仲間 20（companions の look と同じ id）', comps.length === 20 && comps.every((id) => L[R.DB.companions[id].look]), comps.filter((id) => !L[R.DB.companions[id].look]));
-ok('物語の人 5', story.every((id) => L[id]));
+ok('物語の主な人 14（R.Art.cast.MAIN_CAST）', story.every((id) => L[id]) && story.join() === [...R.Art.cast.MAIN_CAST].sort((a, b) => story.indexOf(a) - story.indexOf(b)).join());
 ok('名前のある町の人 9', named.every((id) => L[id]));
 ok('町の人の型 12 × 4', townsfolk.every((id) => L[id]), townsfolk.filter((id) => !L[id]));
 ok('動物 4', animals.every((id) => L[id]));
@@ -69,9 +70,11 @@ section('絵のキーの登録（§2.5.7）');
 const persons = Object.keys(L).filter((id) => !L[id].animal);
 ok('hd:btl:<look>:<wtype> = 人 × 5 系統', persons.every((id) => R.Art.cast.WTYPES.every((w) => R.Hd.has(`hd:btl:${id}:${w}`))), persons.length);
 ok('hd:field:<look> = 全部の look', Object.keys(L).every((id) => R.Hd.has('hd:field:' + id)));
-const faceLooks = heroes.concat(comps.map((c) => R.DB.companions[c].look), story, named);
-ok('hd:face = 主人公・仲間・物語の人・名前のある町の人（§6.1）', faceLooks.every((id) => R.Hd.has('hd:face:' + id)));
-ok('町の人の型と動物は顔なし', townsfolk.concat(animals).every((id) => !R.Hd.has('hd:face:' + id)));
+const faceLooks = heroes.concat(comps.map((c) => R.DB.companions[c].look), story);
+ok('hd:face = 主人公・仲間・物語の主な人（§6.1）', faceLooks.every((id) => R.Hd.has('hd:face:' + id)), faceLooks.filter((id) => !R.Hd.has('hd:face:' + id)));
+const noFace = named.filter((id) => !story.includes(id)).concat(['elm', 'npc_hald', 'npc_sonja', 'npc_melda']);
+ok('名前のある町の人・町の人の型・動物は顔なし（名前だけの窓）', noFace.concat(townsfolk, animals).every((id) => !R.Hd.has('hd:face:' + id)), noFace.concat(townsfolk, animals).filter((id) => R.Hd.has('hd:face:' + id)));
+ok('顔のある look はこの 3 組だけ', Object.keys(L).filter((id) => R.Hd.has('hd:face:' + id)).every((id) => faceLooks.includes(id)), Object.keys(L).filter((id) => R.Hd.has('hd:face:' + id) && !faceLooks.includes(id)));
 ok('動物は戦闘の絵なし', animals.every((id) => !R.Hd.has(`hd:btl:${id}:sword`)));
 ok('HD_KINDS: btl・field・face', R.Hd.kindOf('hd:btl:selma:sword') === 'btl' && R.Hd.kindOf('hd:field:selma') === 'field' && R.Hd.kindOf('hd:face:selma') === 'face');
 
@@ -84,7 +87,7 @@ ok("parse('berna:smile')", P('berna:smile') === '{"look":"berna","expr":"smile"}
 ok("parse('berna') → neutral", P('berna') === '{"look":"berna","expr":"neutral"}');
 ok("parse('berna:cry') → neutral（無い表情）", P('berna:cry') === '{"look":"berna","expr":"neutral"}');
 ok('parse の結果が K.portraitParse', R.Contract.check('portraitParse', R.Portrait.parse('selma:angry')).ok);
-ok("has: 顔のある人 'placeholder'、町の人の型 null、無い id null", R.Portrait.has('selma') === 'placeholder' && R.Portrait.has('npc_man_1') === null && R.Portrait.has('nobody') === null);
+ok("has: 顔のある人 'placeholder'、町の人の型・名前のある町の人 null、無い id null", R.Portrait.has('selma') === 'placeholder' && R.Portrait.has('npc_tadeo') === 'placeholder' && R.Portrait.has('npc_man_1') === null && R.Portrait.has('npc_hanna') === null && R.Portrait.has('nobody') === null);
 
 section('原画のスプライト（v2/assets/sprites、§2.11）');
 const SP = path.join(V2, 'assets', 'sprites');
@@ -108,7 +111,7 @@ const man = fs.existsSync(MF) ? JSON.parse(fs.readFileSync(MF, 'utf8')) : null;
 ok('design/portraits/manifest.json がある', Array.isArray(man));
 if (man) {
   ok('顔のある人が全部並ぶ', faceLooks.every((id) => man.some((m) => m.look === id)), faceLooks.filter((id) => !man.some((m) => m.look === id)));
-  ok('形 {look, name, exprs, priority, status, note}', man.every((m) => m.look && m.name && Array.isArray(m.exprs) && [1, 2, 3].includes(m.priority) && ['todo', 'generated', 'approved', 'rejected'].includes(m.status)));
+  ok('形 {look, name, exprs, priority, status, note}', man.every((m) => m.look && m.name && Array.isArray(m.exprs) && [1, 2].includes(m.priority) && ['todo', 'generated', 'approved', 'rejected'].includes(m.status)));
 }
 // 原画の置き場: v2/assets/sprites/<look>/ のフォルダはすべて R.DB.looks の id（名前のフォルダ arun/ などの使われない媒体をビルドに入れない）
 {

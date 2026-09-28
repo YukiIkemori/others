@@ -1,5 +1,5 @@
 {
-"note": "hand fits from check.png (gen1): the knoll's walled enclosure and its stones as painted, the pasture gate arch posts, the bridge ends, the windmill base; 2026-09-28 owner fixes: the stone bridge deck is the painted rows 25-26 (row 27 under the arch is water; the small end posts at 38,25 and 41,25 stay walkable so row 25 runs straight onto the deck), the knoll ring's south steps (12,34) open and its west/south wall cells moved onto the painted stones, the dirt plot inside the ring, the big oak's trunk, the pond's east edge, stray rock cells",
+"note": "hand fits from check.png (gen1): the knoll's walled enclosure and its stones as painted, the pasture gate arch posts, the bridge ends, the windmill base; 2026-09-28 owner fixes: the stone bridge deck is the painted rows 25-26 (row 27 under the arch is water; the small end posts at 38,25 and 41,25 stay walkable so row 25 runs straight onto the deck), the knoll ring's south steps (12,34) open and its west/south wall cells moved onto the painted stones, the dirt plot inside the ring, the big oak's trunk, the pond's east edge, stray rock cells; the windmill's closed door (46,16) is an examine spot (objects_add)",
 "solid": [
 [
 11,
@@ -420,5 +420,13 @@
 "fit": {
 "SEED": "layout",
 "EM": 0
+},
+"objects_add": [
+{
+"type": "examine",
+"x": 46,
+"y": 16,
+"event": "world_poi_windmill"
 }
+]
 }

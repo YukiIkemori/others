@@ -4,37 +4,37 @@
    "to": "walk_down_0",
    "dx": 0,
    "dy": 0,
-   "fit": 1.203
+   "fit": 1.196
   },
   "walk_down_2": {
    "to": "walk_down_0",
    "dx": 0,
    "dy": 0,
-   "fit": 1.235
+   "fit": 1.234
   },
   "walk_up_1": {
    "to": "walk_up_0",
    "dx": 0,
    "dy": 0,
-   "fit": 1.258
+   "fit": 1.263
   },
   "walk_up_2": {
    "to": "walk_up_0",
-   "dx": -3,
+   "dx": 1,
    "dy": 0,
-   "fit": 0.696
+   "fit": 1.234
   },
   "walk_left_1": {
    "to": "walk_left_0",
    "dx": -4,
    "dy": 0,
-   "fit": 1.102
+   "fit": 1.104
   },
   "walk_left_2": {
    "to": "walk_left_0",
    "dx": -4,
    "dy": 0,
-   "fit": 1.102
+   "fit": 1.097
   },
   "walk_right_1": {
    "to": "walk_right_0",
@@ -46,14 +46,45 @@
    "to": "walk_right_0",
    "dx": -5,
    "dy": 0,
-   "fit": 1.07
+   "fit": 1.071
+  },
+  "face_smile": {
+   "to": "face_neutral",
+   "dx": -1,
+   "dy": 0,
+   "fit": 1.33
+  },
+  "face_sad": {
+   "to": "face_neutral",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.438
+  },
+  "face_angry": {
+   "to": "face_neutral",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.447
+  },
+  "face_surprise": {
+   "to": "face_neutral",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.31
+  },
+  "face_closed": {
+   "to": "face_neutral",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.424
   }
  },
  "attach": {},
  "weapons": {},
  "sets": [
-  "field"
+  "field",
+  "face"
  ],
  "colors": 52,
- "face_colors": 0
+ "face_colors": 47
 }

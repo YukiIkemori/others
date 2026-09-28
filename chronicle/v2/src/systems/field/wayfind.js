@@ -98,6 +98,19 @@
     d.sort((a, b) => a[1] - b[1]);
     return d[0][0];
   }
+  /**
+   * 出口の向き: データの dir があればそれ。マップの端に触れていれば近い端。端でない出口（描いた門のアーチ、f_cape のファロスの門）は、
+   * 四角のすぐ外で「その向きの先が通れず、反対の向きの先が通れる」向き（門の奥＝建物の側）。決まらなければ近い端
+   */
+  function exitDir(m, e, w, h) {
+    if (e.dir && ARROW[e.dir]) return e.dir;
+    const W0 = m.w || 0, H0 = m.h || 0;
+    if (e.x === 0 || e.y === 0 || e.x + w >= W0 || e.y + h >= H0) return edgeDir(m, e.x, e.y, w, h);
+    const walk = (x, y) => { try { return !!(F.passable && F.passable(m, x, y, null, 0)); } catch (er) { return true; } };
+    const side = { n: [e.x, e.y - 1, e.x, e.y + h], s: [e.x, e.y + h, e.x, e.y - 1], w: [e.x - 1, e.y, e.x + w, e.y], e: [e.x + w, e.y, e.x - 1, e.y] };
+    for (const d of ['n', 's', 'w', 'e']) { const q = side[d]; if (!walk(q[0], q[1]) && walk(q[2], q[3])) return d; }
+    return edgeDir(m, e.x, e.y, w, h);
+  }
   /** 同じ所の続き（迷いの森 1 → 2 など）。外へ出る出口ではない */
   function sameArea(m, d) {
     return d.kind === m.kind && ((m.location && d.location === m.location) || (m.name && d.name === m.name));
@@ -116,13 +129,13 @@
         const d = R.DB.maps[e.to.map];
         if (!d || d.kind === 'interior' || sameArea(m, d)) continue;
         const w = e.w || 1, h = e.h || 1;
-        out.exits.push({ x: e.x, y: e.y, w, h, lv: e.lv || 0, dir: edgeDir(m, e.x, e.y, w, h), label: '', to: e.to });
+        out.exits.push({ x: e.x, y: e.y, w, h, lv: e.lv || 0, dir: exitDir(m, e, w, h), label: '', to: e.to });
       }
       for (const o of m.objects || []) {
         if ((o.type !== 'door' && o.type !== 'stairs') || !o.to || o.to.map === m.id || !ok(o.cond)) continue;
         const d = R.DB.maps[o.to.map];
         if (!d || d.kind === 'interior' || (m.kind === 'dungeon' && d.kind === 'dungeon')) continue;   // 階段の上り下りは別の話
-        out.exits.push({ x: o.x, y: o.y, w: 1, h: 1, lv: o.lv || 0, dir: edgeDir(m, o.x, o.y, 1, 1), label: '', to: o.to, warp: true });
+        out.exits.push({ x: o.x, y: o.y, w: 1, h: 1, lv: o.lv || 0, dir: exitDir(m, o, 1, 1), label: '', to: o.to, warp: true });
       }
       for (const e of out.exits) { const n = W.destName(e.to); e.label = n ? ARROW[e.dir] + ' ' + n : ''; }
     }

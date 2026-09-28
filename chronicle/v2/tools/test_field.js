@@ -500,6 +500,20 @@ async function main() {
     R.UIK.Message.say = sayO;
   }
 
+  section('屋内の出口の戸口（doorway.js）・立っている人は上下に揺れない');
+  {
+    const ints = Object.values(R.DB.maps).filter((m) => m && m.kind === 'interior' && !(m.art && m.art.image));
+    const miss = ints.filter((m) => R.Field.doorways(m).length < 1).map((m) => m.id);
+    ok('every tile-built interior gets a doorway at its exit', ints.length > 20 && !miss.length, miss);
+    const pi = R.Field.doorways(R.DB.maps.pharos_inn)[0], rh = R.Field.doorways(R.DB.maps.roa_home1)[0];
+    ok('the doorway sits on the exit cell (bottom wall), facing out', pi && pi.x === 5 && pi.y === 9 && pi.dir === 's', pi);
+    ok('no doormat on a carpet (pharos_inn), a doormat on a plain floor (roa_home1)', pi && !pi.mat && rh && rh.mat);
+    ok('painted interiors are left to their painting (no overlay by default)', !R.Field.doorways(R.DB.maps.kasim_inn || { id: '_', kind: 'interior' }).length);
+    const src = require('fs').readFileSync(path.join(__dirname, '..', 'src', 'systems', 'field', 'layers.js'), 'utf8');
+    const npcBlock = src.slice(src.indexOf("if (e.kind === 'npc')"), src.indexOf("if (e.kind === 'prop')"));
+    ok('standing NPCs are drawn without a vertical idle offset (no bob)', npcBlock.length > 0 && !/bob/.test(npcBlock));
+  }
+
   section('戦闘の abort では何もしない');
   const origBattle = R.Battle.start, origEnc2 = R.Mon.encounter;
   R.Mon.encounter = () => ({ troop: 'tr_stub' });
