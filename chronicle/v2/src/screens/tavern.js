@@ -119,7 +119,7 @@
         dp = { x: b.x + gw + u(20), y: top, w: b.w - gw - u(20), h: b.h - (top - b.y) };
       }
       // 「これでよい」は下の 4 人の札の右端（縦持ちは右上に小さく）
-      const okW = tall ? u(144) : u(230);
+      const okW = tall ? u(144) : Math.round(mp.w * 0.16);
       const ok = tall ? { x: mp.x + mp.w - okW - u(6), y: mp.y + u(4), w: okW, h: u(24) } : { x: mp.x + mp.w - okW - u(10), y: mp.y + u(12), w: okW, h: mp.h - u(24) };
       const rh = this.list.rowPx();
       gr.h = Math.max(rh, Math.floor(gr.h / rh) * rh);
