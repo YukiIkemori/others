@@ -1,0 +1,47 @@
+{
+ "id": "lm_mount_hill1",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   152,
+   93
+  ],
+  "32": [
+   203,
+   124
+  ],
+  "40": [
+   254,
+   155
+  ]
+ },
+ "feet": {
+  "24": [
+   76,
+   92
+  ],
+  "32": [
+   102,
+   122
+  ],
+  "40": [
+   127,
+   152
+  ]
+ },
+ "files": {
+  "24": "lm_mount_hill1@24.png",
+  "32": "lm_mount_hill1@32.png",
+  "40": "lm_mount_hill1@40.png"
+ },
+ "src": "../../../../tmp/claude-0/-home-user-others/00503990-4adc-574c-b37a-87d13f1cb58c/scratchpad/worldv3/raw/lm_mountains.png",
+ "fam": "mount",
+ "fp": [
+  6,
+  3
+ ]
+}

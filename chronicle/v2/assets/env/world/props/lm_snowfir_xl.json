@@ -1,0 +1,47 @@
+{
+ "id": "lm_snowfir_xl",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   150,
+   90
+  ],
+  "32": [
+   200,
+   120
+  ],
+  "40": [
+   250,
+   150
+  ]
+ },
+ "feet": {
+  "24": [
+   75,
+   88
+  ],
+  "32": [
+   100,
+   118
+  ],
+  "40": [
+   125,
+   148
+  ]
+ },
+ "files": {
+  "24": "lm_snowfir_xl@24.png",
+  "32": "lm_snowfir_xl@32.png",
+  "40": "lm_snowfir_xl@40.png"
+ },
+ "src": "../../../../tmp/claude-0/-home-user-others/00503990-4adc-574c-b37a-87d13f1cb58c/scratchpad/worldv3/raw/lm_snow_firs.png",
+ "fam": "snowfir",
+ "fp": [
+  6,
+  3
+ ]
+}

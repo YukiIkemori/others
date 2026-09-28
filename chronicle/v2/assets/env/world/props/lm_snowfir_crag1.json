@@ -1,0 +1,47 @@
+{
+ "id": "lm_snowfir_crag1",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   58,
+   63
+  ],
+  "32": [
+   78,
+   84
+  ],
+  "40": [
+   98,
+   105
+  ]
+ },
+ "feet": {
+  "24": [
+   29,
+   62
+  ],
+  "32": [
+   39,
+   82
+  ],
+  "40": [
+   49,
+   102
+  ]
+ },
+ "files": {
+  "24": "lm_snowfir_crag1@24.png",
+  "32": "lm_snowfir_crag1@32.png",
+  "40": "lm_snowfir_crag1@40.png"
+ },
+ "src": "../../../../tmp/claude-0/-home-user-others/00503990-4adc-574c-b37a-87d13f1cb58c/scratchpad/worldv3/raw/lm_snow_firs.png",
+ "fam": "snowfir",
+ "fp": [
+  2,
+  2
+ ]
+}

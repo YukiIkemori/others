@@ -117,7 +117,6 @@
   // 火口の縁のフィーネ（録音の文のまま。卵がかえる前）
   E('crater_fine', async (ev) => {
     if (ev.flag('ash_fine_seen')) return;
-    ev.setFlag('ash_fine_seen', false);
     R.Audio && R.Audio.pushBgm && R.Audio.pushBgm('fine_theme');
     try {
       await ev.say(null, 'ふり返ると、火口の縁に\n灰色のマントの少女が立っていた。');

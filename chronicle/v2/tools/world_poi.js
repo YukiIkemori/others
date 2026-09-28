@@ -11,6 +11,13 @@
 const WM = { grass: 'wm_grass', flowers: 'wm_flowers', tall_grass: 'wm_tall_grass', moss_earth: 'wm_forest_floor', dirt: 'wm_dirt', road: 'wm_road', mud: 'wm_mud',
   sand: 'wm_sand', dune_sand: 'wm_dune', cracked_clay: 'wm_clay', snow: 'wm_snow', snow_path: 'wm_snow_path', ice: 'wm_ice', peat_grass: 'wm_peat',
   marsh_water: 'wm_marsh_water', rock: 'wm_rock', ash: 'wm_ash', obsidian: 'wm_obsidian', sea: 'wm_sea', deep_water: 'wm_deep', shallow: 'wm_shallow', water: 'wm_lake' };
+// 目印になる物（tools/qa/check_world.js の MARK と同じ）と、景色のマス（木・森・岩・葦: 大きな絵で描く）
+const MARK = /lamp|lantern|tent|mushroom_glow|firefly|beacon|tree_giant|ship|well|signboard|campfire|bench|crate|statue|stone|shrine|ruin/;
+function sceneryChars(LEGEND) {
+  const out = new Set();
+  for (const ch of Object.keys(LEGEND)) { const e = LEGEND[ch]; if (e.solid && (e.tree || /^(tree|forest_dark|bush|tall_grass|wm_reeds|rock|wm_rock|wall_snow|wall_sandstone|cliff)$/.test(e.mat))) out.add(ch); }
+  return out;
+}
 // 名所・道しるべの絵（src/art/terrain/landmarks.js の POI と同じ id。[幅, 高さ] は当たりの枠）
 const FP = {
   lm_way_shrine: [2, 2], lm_way_post: [2, 1], lm_way_caravan: [4, 3], lm_way_stones: [4, 3], lm_way_tower: [3, 3], lm_way_lookout: [3, 3],
@@ -102,7 +109,7 @@ module.exports = Object.assign(function worldPoi(A) {
         if (!inB(X, Y) || seen.has(k) || Math.abs(X - sx) + Math.abs(Y - sy) > lim) continue;
         const c = g[Y][X], kk = kind(c);
         if (!(walkCh(c) || kk === 'feature')) continue;
-        if (occ.has(k) && !goal(X, Y)) continue;
+        if (occ.has(k) && !goal(X, Y) && Math.max(Math.abs(X - sx), Math.abs(Y - sy)) > 2) continue;   // 出発のまわり（spawn・出口の枠）は通ってよい
         seen.set(k, x + ',' + y); q.push([X, Y]);
       }
     }
@@ -122,11 +129,11 @@ module.exports = Object.assign(function worldPoi(A) {
   for (const k of Object.keys(spawns)) {
     const s = spawns[k];
     if (tcore[s.y * W + s.x] !== 0) continue;   // （core の中の spawn だけ: 島・町）
-    let near = false;
-    for (let j = -3; j <= 3 && !near; j++) for (let i = -3; i <= 3; i++) if (isRoad(s.x + i, s.y + j)) { near = true; break; }
-    if (near) continue;
-    const p = pathTo(s.x, s.y, isRoad, 70);
-    if (p && p.length > 3) { carve(p, pathCh(s.x, s.y)); links++; }
+    // 道の網（core の外の道）までの道のり。4 マスより遠ければ小道を引く（core の中の道の切れ端は数えない）
+    const netRoad = (x, y) => isRoad(x, y) && tcore[y * W + x] !== 0;
+    const p = pathTo(s.x, s.y, netRoad, 90);
+    if (!p || p.length <= 5) continue;
+    carve(p, pathCh(s.x, s.y)); links++;
   }
   info.links = links;
 
@@ -215,7 +222,48 @@ module.exports = Object.assign(function worldPoi(A) {
   }
   info.sites = nSite;
 
-  // ---------------------------------------------------------------- 5. 凡例の素材をワールドの素材に
+  // ---------------------------------------------------------------- 5. 景色の空白を埋める（画面 1 枚 ±15×±8 に目印か景色が 1 つ。tools/qa/check_world.js と同じ決まり）
+  //   目印 = 物（灯籠・看板・建物・名所…）、景色 = 木・森・岩・葦のマス 3 つ（描くと木立・岩場の大きな絵になる）
+  const SCEN = sceneryChars(LEGEND);
+  const mk = new Uint8Array(W * H);
+  const setMk = (x, y, v) => { if (inB(x, y) && mk[y * W + x] < v) mk[y * W + x] = v; };
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (SCEN.has(g[y][x])) mk[y * W + x] = 1;
+  for (const [x, y] of mark) setMk(x, y, 3);
+  for (const o of objects) if (o.x != null && (o.lm || /waylamp|sign|building|stairs|examine|door/.test(o.type) || (o.type === 'prop' && MARK.test(o.id)))) setMk(o.x, o.y, 3);
+  for (const e of exits) setMk(e.x, e.y, 3);
+  const PS = new Int32Array((W + 1) * (H + 1));
+  const prefix = () => { for (let y = 0; y < H; y++) { let r = 0; for (let x = 0; x < W; x++) { r += mk[y * W + x]; PS[(y + 1) * (W + 1) + x + 1] = PS[y * (W + 1) + x + 1] + r; } } };
+  const win = (x, y) => { const x0 = Math.max(0, x - 15), y0 = Math.max(0, y - 8), x1 = Math.min(W, x + 16), y1 = Math.min(H, y + 9); return PS[y1 * (W + 1) + x1] - PS[y0 * (W + 1) + x1] - PS[y1 * (W + 1) + x0] + PS[y0 * (W + 1) + x0]; };
+  prefix();
+  const GROVE = { plains: 'T', forest: 't', desert: 'X', snow: 'Y', marsh: 'V', ash: 'v' };
+  let nFill = 0;
+  for (let pass = 0; pass < 3; pass++) {
+    let added = 0;
+    const st = pass ? 1 : 3;
+    for (let y = 0; y < H; y += st) for (let x = 0; x < W; x += st) {
+      if (!walkCh(g[y][x]) || win(x, y) >= 3) continue;
+      // 近い空き地に 3×2（まわり 1 マス空き）の木立か岩場を置く
+      let spot = null;
+      for (let r = 0; r <= 8 && !spot; r++) for (let j = -r; j <= r && !spot; j++) for (let i = -r; i <= r; i++) {
+        if (Math.max(Math.abs(i), Math.abs(j)) !== r) continue;
+        if (free(x + i - 1, y + j, 3, 2, 1)) { spot = [x + i - 1, y + j]; break; }
+      }
+      if (!spot) continue;
+      const bio = biome(spot[0] + 1, spot[1]), ch = GROVE[bio] || 'T';
+      if (!LEGEND[ch]) continue;
+      for (let j = 0; j < 2; j++) for (let i = 0; i < 3; i++) {
+        if ((i === 0 || i === 2) && h2(spot[0] + i, spot[1] + j, 81) < 0.3) continue;   // 角を少し欠く（四角く見せない）
+        g[spot[1] + j][spot[0] + i] = ch; mk[(spot[1] + j) * W + spot[0] + i] = 1;
+      }
+      addOcc(spot[0] - 1, spot[1] - 1, 5, 4);
+      added++; nFill++;
+      prefix();
+    }
+    if (!added) break;
+  }
+  info.fill = nFill;
+
+  // ---------------------------------------------------------------- 6. 凡例の素材をワールドの素材に
   for (const ch of Object.keys(LEGEND)) {
     const e = LEGEND[ch];
     if (e.solid && e.mat === 'tall_grass') e.mat = 'wm_reeds';
@@ -225,4 +273,4 @@ module.exports = Object.assign(function worldPoi(A) {
   }
   A.info = info;
   return info;
-}, { FP, WM });
+}, { FP, WM, MARK, sceneryChars });

@@ -28,7 +28,8 @@ fi
 cp "$ROOT/chronicle/v2/deploy/firebase.json" "$ROOT/chronicle/v2/deploy/.firebaserc" "$WORK/"
 du -sh "$WORK/public"
 [ "$DRY" = "--dry" ] && { echo "dry run: $WORK/public"; exit 0; }
-: "${FIREBASE_SERVICE_ACCOUNT:?set FIREBASE_SERVICE_ACCOUNT (service account JSON) in the environment}"
-KEYF=$(mktemp /tmp/claude-0/secrets/fb_sa.XXXXXX.json); trap 'rm -f "$KEYF"' EXIT
-printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$KEYF"; chmod 600 "$KEYF"
+# 鍵: 環境変数 FIREBASE_SERVICE_ACCOUNT（JSON の中身）か、/tmp/claude-0/secrets/firebase_sa.json（リポジトリには置かない）
+KEYF=/tmp/claude-0/secrets/firebase_sa.json
+if [ -n "${FIREBASE_SERVICE_ACCOUNT:-}" ]; then KEYF=$(mktemp /tmp/claude-0/secrets/fb_sa.XXXXXX.json); trap 'rm -f "$KEYF"' EXIT; printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$KEYF"; chmod 600 "$KEYF"; fi
+[ -f "$KEYF" ] || { echo "no Firebase key (FIREBASE_SERVICE_ACCOUNT or $KEYF)"; exit 1; }
 cd "$WORK" && GOOGLE_APPLICATION_CREDENTIALS="$KEYF" npx --yes firebase-tools@latest deploy --only hosting --project luminous-chronicle --non-interactive

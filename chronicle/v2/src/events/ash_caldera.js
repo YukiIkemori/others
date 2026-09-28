@@ -342,7 +342,7 @@
     const step = Math.min(ev.var('ash_bet_step'), 2);
     const m = MATCHES[step];
     const stake = [100, 200, 300][step];
-    const i = await ev.choose([`${m.a}に賭ける`, `${m.b}に賭ける`, 'やめる'], { text: `${m.a} 対 ${m.b}（${stake} ゴールド）` });
+    const i = await ev.choose([`${m.a}に賭ける`, `${m.b}に賭ける`, 'やめる'], { text: `${m.a} 対 ${m.b}（${stake} G）` });
     if (i === 2 || i < 0) return;
     if ((R.Game.gold || 0) < stake) { await ev.say('bookie', '持ち合わせが足りないね。'); return; }
     ev.gold(-stake, { silent: true });

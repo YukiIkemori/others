@@ -1,0 +1,17 @@
+{
+ "id": "wm_forest_floor",
+ "kind": "material",
+ "theme": "world",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "wm_forest_floor@32.png",
+  "24": "wm_forest_floor@24.png",
+  "40": "wm_forest_floor@40.png"
+ },
+ "src": "worldv3 (gpt-6-sol, 2x2 sheet)",
+ "colours": 44
+}

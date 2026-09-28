@@ -1,0 +1,47 @@
+{
+ "id": "lm_rock_m1",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   76,
+   42
+  ],
+  "32": [
+   101,
+   56
+  ],
+  "40": [
+   126,
+   70
+  ]
+ },
+ "feet": {
+  "24": [
+   38,
+   40
+  ],
+  "32": [
+   50,
+   54
+  ],
+  "40": [
+   63,
+   68
+  ]
+ },
+ "files": {
+  "24": "lm_rock_m1@24.png",
+  "32": "lm_rock_m1@32.png",
+  "40": "lm_rock_m1@40.png"
+ },
+ "src": "../../../../tmp/claude-0/-home-user-others/00503990-4adc-574c-b37a-87d13f1cb58c/scratchpad/worldv3/raw/lm_rocks.png",
+ "fam": "rock",
+ "fp": [
+  3,
+  2
+ ]
+}

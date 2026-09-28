@@ -36,7 +36,7 @@ const M = require('../lib/maps').create(R);
 const F = R.Field, MU = R.MapUtil;
 
 const STREET = /^(lamp_post|snow_lamp)$/;
-const ROAD = new Set(['road', 'cobble', 'snow_path', 'bridge', 'pier', 'path', 'dirt_path', 'sand_road']);
+const ROAD = new Set(['road', 'cobble', 'snow_path', 'bridge', 'pier', 'path', 'dirt_path', 'sand_road', 'wm_road', 'wm_highway', 'wm_snow_path']);   // wm_* = WORLD v3 のワールドの素材（'.' の街道 wm_road・雪の道。'd' の小道 wm_dirt は前の dirt と同じく道の外）
 const isStreet = (o) => (o.type === 'prop' && STREET.test(o.id)) || o.type === 'waylamp';
 const isLantern = (o) => o.type === 'prop' && o.id === 'lantern';
 const D4 = [[1, 0], [-1, 0], [0, 1], [0, -1]];

@@ -719,13 +719,16 @@ function check() {
   if (sp[cW(87, 63)[1] * W + cW(87, 63)[0]]) errs.push('the drawbridge does not close the peninsula in the prologue');
   // 30 歩の空白（街道と小道のマスから半径 15 に目印が 1 つも無い）
   const marks = objects.filter((o) => o.type === 'waylamp' || o.type === 'sign' || o.type === 'building' || o.type === 'stairs' || o.type === 'examine' ||
-    (o.type === 'prop' && /lamp|lantern|tent|mushroom_glow|firefly|beacon|tree_giant|ship/.test(o.id))).map((o) => [o.x, o.y]);
+    (o.type === 'prop' && (o.lm || /lamp|lantern|tent|mushroom_glow|firefly|beacon|tree_giant|ship/.test(o.id)))).map((o) => [o.x, o.y]);
   for (const n2 of npcs) marks.push([n2.x, n2.y]);
+  // WORLD v3: 木・森・岩・葦のマス（大きな絵で描く景色）が窓の中に 3 つあれば、目印と同じに数える（tools/world_poi.js・qa/check_world.js と同じ）
+  const SCEN = require('./world_poi').sceneryChars(LEGEND);
+  const scenAt = (x, y) => { let n = 0; for (let j = y - 8; j <= y + 8; j++) { const r = gg[j]; if (!r) continue; for (let i = x - 15; i <= x + 15; i++) if (SCEN.has(r[i]) && ++n >= 3) return true; } return false; };
   let empty = 0; const emptyAt = [];
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
     { const [lx, ly] = cL(x, y); if (ly < 40 || ly > DESERT.y1 || lx < 6 || lx > 118) continue; }
     if (!seenSlice[y * W + x] || !'.d'.includes(gg[y][x])) continue;   // 体験版で歩ける範囲だけ見る
-    if (!marks.some(([mx, my]) => Math.abs(mx - x) <= 15 && Math.abs(my - y) <= 8)) { empty++; if (emptyAt.length < 8) emptyAt.push(x + ',' + y); }
+    if (!marks.some(([mx, my]) => Math.abs(mx - x) <= 15 && Math.abs(my - y) <= 8) && !(XFORM && scenAt(x, y))) { empty++; if (emptyAt.length < 8) emptyAt.push(x + ',' + y); }
   }
   info.emptyRoad = empty; if (empty) info.emptyAt = emptyAt;
   if (SCALE) { const si = SCALE.info; info.scale = { K: WORLD_K, W, H, cores: si.cores, islands: si.islands, groups: si.groups, droppedDecor: si.droppedDecor }; info.poi = SCALE.poi; }

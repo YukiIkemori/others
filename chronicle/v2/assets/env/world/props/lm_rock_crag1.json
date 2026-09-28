@@ -1,0 +1,47 @@
+{
+ "id": "lm_rock_crag1",
+ "kind": "props",
+ "theme": "world",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   47,
+   69
+  ],
+  "32": [
+   63,
+   92
+  ],
+  "40": [
+   79,
+   115
+  ]
+ },
+ "feet": {
+  "24": [
+   24,
+   68
+  ],
+  "32": [
+   32,
+   90
+  ],
+  "40": [
+   39,
+   112
+  ]
+ },
+ "files": {
+  "24": "lm_rock_crag1@24.png",
+  "32": "lm_rock_crag1@32.png",
+  "40": "lm_rock_crag1@40.png"
+ },
+ "src": "../../../../tmp/claude-0/-home-user-others/00503990-4adc-574c-b37a-87d13f1cb58c/scratchpad/worldv3/raw/lm_rocks.png",
+ "fam": "rock",
+ "fp": [
+  2,
+  2
+ ]
+}
