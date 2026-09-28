@@ -24,6 +24,16 @@ const DUNGEONS = [
     unset: ['desert_hawkhold_done'], bosses: [['desert_hawks_2', 'desert_hawks_boss']] },
   { id: 'rocks', start: { map: 'desert_rocks', spawn: 'mouth' }, goal: { map: 'desert_rocks', far: true }, unset: [], bosses: [] },
   { id: 'oldcamp', start: { map: 'desert_oldcamp', spawn: 'road' }, goal: { map: 'desert_oldcamp', far: true }, unset: [], bosses: [] },
+  // 雪原（snow_*.js）: 雪の林・白竜の峰（氷の壁は冬至の火でとけた形・巨人の後の形で道を引く）・つららの回廊・オーロラの崖・氷に閉じた帆船
+  // 雪原も縦切りの外（北の番人 guard_north が塞ぐ）: 砂漠と同じく open で閉包を slice なしで回す
+  { id: 'snow_woods', open: true, variant: { ch_snow_tale: 'dragon' }, start: { map: 'snow_woods', spawn: 'south' }, goal: { map: 'snow_woods', far: true }, unset: [], bosses: [] },
+  { id: 'peak', open: true, variant: { ch_snow_tale: 'dragon' }, start: { map: 'peak_1', spawn: 'south' }, goal: { map: 'peak_top', ev: 'peak_neve' },
+    unset: ['snow_neve', 'snow_finale_done', 'cleared_r_snow'], bosses: [['peak_top', 'peak_neve'], ['peak_1', 'peak_giant']] },
+  { id: 'icicle', open: true, variant: { ch_snow_tale: 'dragon' }, start: { map: 'icicle_1', spawn: 'entrance' }, goal: { map: 'icicle_2', ev: 'icicle_guard' },
+    unset: ['snow_icicle_guard'], bosses: [['icicle_2', 'icicle_guard']] },
+  { id: 'aurora', open: true, variant: { ch_snow_tale: 'dragon' }, start: { map: 'aurora', spawn: 'south' }, goal: { map: 'aurora', far: true }, unset: [], bosses: [] },
+  { id: 'frost_ship', open: true, variant: { ch_snow_tale: 'dragon' }, start: { map: 'frost_ship_1', spawn: 'entrance' }, goal: { map: 'frost_ship_2', ev: 'frost_ship_boss' },
+    unset: ['snow_admiral'], bosses: [['frost_ship_2', 'frost_ship_boss']] },
 ];
 
 let SLICE0 = null;
@@ -37,6 +47,7 @@ function prepare(R, d) {
   for (const f of d.unset || []) delete G.flags[f];
   if ((d.unset || []).includes('cleared_r_forest')) { delete G.cleared.r_forest; G.tier = 0; }
   if ((d.unset || []).includes('cleared_r_desert')) delete G.cleared.r_desert;
+  if ((d.unset || []).includes('cleared_r_snow')) delete G.cleared.r_snow;
   Object.assign(G.vars, d.vars || {});
   R.MapUtil.invalidate();
   return G;

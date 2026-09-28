@@ -499,77 +499,85 @@ section('乱数: 同じ種なら同じ戦闘（直前の戦闘からのやり直
 }
 
 // ================================================================ 派生技（design/BACKLOG「派生技の閃き」）
-// 持ち主: 「特定の技を何度も使ってると、派生技を編み出す」「その技を使ってる時しか閃かない」
-section('派生技: 技 X を使った行動の後だけ、X の derive を振る（1 行動に 1 つ、閃きと重ねない）');
+// 持ち主（2026-09-28）「派生技は普通の通常攻撃使ってるだけじゃ覚えないのよ」「つばめがえし→抜刀つばめがえし みたいに
+//   その技を使うと覚えられる文脈がある技限定なの」「回数と熟練度があっても確率なのよ、結局は」
+section('派生技: 親の技を使った行動の後だけ振る（1 行動に 1 つ、閃きと重ねない、確定は無い）');
 {
   newGame();
-  const setHero = (c, uses) => { c.techs = ['t_sword_stepcut', 't_sword_draw']; c.wprof = Object.assign({}, c.wprof, { sword: R.Rules.profPtsOf(20) }); c.techUse = Object.assign({}, uses); c.derived = {}; c.mp = 99; };
+  const setHero = (c, uses) => { c.techs = ['t_sword_twin', 't_sword_draw', 't_sword_stepcut']; c.wprof = Object.assign({}, c.wprof, { sword: R.Rules.profPtsOf(20) }); c.techUse = Object.assign({}, uses); c.derived = {}; c.mp = 99; };
   const sword = (eng) => eng.party.find((p) => p.c.id === 'hero');
-  const mk = (uses) => {
-    const eng = engine({ mons: ['treant_1'], lv: 7, rng: seqRng([], 0) });   // rng 0: どんな p > 0 でも当たる
+  const mk = (uses, rv) => {
+    const eng = engine({ mons: ['treant_1'], lv: 7, rng: seqRng([], rv == null ? 0 : rv) });   // rng 0: どんな p > 0 でも当たる
     const u = sword(eng); setHero(u.c, uses); u.mp = 99;
     eng.rankB = 0;   // 行動の前の閃きの候補を無くす（派生だけを見る）
     return { eng, u };
   };
   const derives = (evs) => evs.filter((e) => e.t === 'glimmer' && e.from);
   {
-    const { eng, u } = mk({ t_sword_stepcut: 999 });
+    const { eng, u } = mk({ t_sword_twin: 40 });
     ok('hero holds a sword', u.wtype === 'sword');
-    const evs = drainAll(eng.execute(u, { type: 'tech', id: 't_sword_stepcut', target: eng.mons[0] }));
+    const evs = drainAll(eng.execute(u, { type: 'tech', id: 't_sword_twin', target: eng.mons[0] }));
     const d = derives(evs);
-    ok('using X (踏み込み斬り, 999 uses) → one derivation of X', d.length === 1 && d[0].from === 't_sword_stepcut' && d[0].id === 't_sword_twin', d);
-    ok('message 「〇〇から、△△を編み出した！」', evs.some((e) => e.t === 'msg' && /踏み込み斬りから、連ね斬りを編み出した！$/.test(e.text)), evs.filter((e) => e.t === 'msg').map((e) => e.text));
+    ok('using the parent (連ね斬り) → 返し刃', d.length === 1 && d[0].from === 't_sword_twin' && d[0].id === 't_sword_swallow', d);
+    ok('message 「連ね斬りから、返し刃を編み出した！」', evs.some((e) => e.t === 'msg' && /連ね斬りから、返し刃を編み出した！$/.test(e.text)), evs.filter((e) => e.t === 'msg').map((e) => e.text));
     ok('the derivation comes after the action resolves (after the damage)', evs.findIndex((e) => e.t === 'glimmer') > evs.findIndex((e) => e.t === 'dmg' || e.t === 'miss'));
-    ok('learned, with its source, and counted in eng.glimmers', u.c.techs.includes('t_sword_twin') && u.c.derived.t_sword_twin === 't_sword_stepcut' && eng.glimmers.some((g) => g.id === 't_sword_twin' && g.from === 't_sword_stepcut'));
-    ok('the use counter went up (999 → 1000)', u.c.techUse.t_sword_stepcut === 1000);
+    ok('learned, with its parent, and counted in eng.glimmers', u.c.techs.includes('t_sword_swallow') && u.c.derived.t_sword_swallow === 't_sword_twin' && eng.glimmers.some((g) => g.id === 't_sword_swallow' && g.from === 't_sword_twin'));
+    ok('the use counter went up (40 → 41)', u.c.techUse.t_sword_twin === 41);
     const out = []; for (const e of evs) BC.toEvents(e, 'アルン', out, eng);
-    ok('contract event: glimmer with from / fromName', out.some((e) => e.t === 'glimmer' && e.from === 't_sword_stepcut' && e.fromName === '踏み込み斬り') && !badEvents(out).length, badEvents(out));
-    const again = drainAll(eng.execute(u, { type: 'tech', id: 't_sword_stepcut', target: eng.mons[0] }));
-    ok('the next use can find the other branch (刺し貫き), still one per action', derives(again).length <= 1 && derives(again).every((e) => e.id === 't_sword_thrust'), derives(again));
+    ok('contract event: glimmer with from / fromName', out.some((e) => e.t === 'glimmer' && e.from === 't_sword_twin' && e.fromName === '連ね斬り') && !badEvents(out).length, badEvents(out));
+    u.c.techUse.t_sword_swallow = 40;
+    const again = drainAll(eng.execute(u, { type: 'tech', id: 't_sword_swallow', target: eng.mons[0] }));
+    ok('the derived tech is itself a parent: 返し刃 → 抜刀返し刃 (2-step chain)', derives(again).length === 1 && derives(again)[0].id === 't_sword_swallow_draw', derives(again));
   }
   {
-    // 「その技を使ってる時しか閃かない」: 踏み込み斬りを 999 回使っていても、攻撃・防御・ほかの技では出ない
-    const { eng, u } = mk({ t_sword_stepcut: 999 });
+    // 「派生技は普通の通常攻撃使ってるだけじゃ覚えないのよ」: 連ね斬りを 999 回使っていても、攻撃・防御・ほかの技では出ない
+    const { eng, u } = mk({ t_sword_twin: 999, t_sword_stepcut: 999 });
     let evs = [];
     for (let i = 0; i < 20; i++) evs = evs.concat(drainAll(eng.execute(u, { type: 'attack', target: eng.mons[0] })));
     for (let i = 0; i < 5; i++) evs = evs.concat(drainAll(eng.execute(u, { type: 'defend' })));
-    ok('attack ×20 and defend ×5 never derive from 踏み込み斬り', !derives(evs).length && !u.c.techs.includes('t_sword_twin'));
-    ok('attack does not count as a use', u.c.techUse.t_sword_stepcut === 999 && !u.c.techUse.attack);
+    ok('attack ×20 and defend ×5 never derive (even with rng 0)', !derives(evs).length && !u.c.techs.some((id) => DB.techs[id].derived));
+    ok('attack does not count as a use', u.c.techUse.t_sword_twin === 999 && !u.c.techUse.attack);
+    evs = drainAll(eng.execute(u, { type: 'tech', id: 't_sword_stepcut', target: eng.mons[0] }));
+    ok('another tech with no derived child (踏み込み斬り) never derives', !derives(evs).length && u.c.techUse.t_sword_stepcut === 1000);
     evs = drainAll(eng.execute(u, { type: 'tech', id: 't_sword_draw', target: eng.mons[0] }));
-    ok('using another tech (抜き打ち, 1 use) neither derives from 踏み込み斬り nor from itself yet', !derives(evs).length && u.c.techUse.t_sword_draw === 1 && !u.c.techs.includes('t_sword_twin'));
-    u.c.techUse.t_sword_draw = 999;
-    evs = drainAll(eng.execute(u, { type: 'tech', id: 't_sword_draw', target: eng.mons[0] }));
-    ok('抜き打ち with enough uses derives only its own branch (峰打ち)', derives(evs).length === 1 && derives(evs)[0].id === 't_sword_mine' && derives(evs)[0].from === 't_sword_draw');
+    ok('抜き打ち (1st use, < minUses) → nothing yet; never another parent\'s child', !derives(evs).length && u.c.techUse.t_sword_draw === 1 && !u.c.techs.includes('t_sword_swallow'));
     u.c.techUse.t_sword_draw = 999; u.mp = 0; u.c.mp = 0;
     evs = drainAll(eng.execute(u, { type: 'tech', id: 't_sword_draw', target: eng.mons[0] }));
     ok('a tech that was not performed (no MP) neither counts nor derives', !derives(evs).length && u.c.techUse.t_sword_draw === 999);
   }
   {
-    // 閃きと重ねない: 行動の前の閃きで行動が差し替わったら、派生は振らない
-    const { eng, u } = mk({ t_sword_stepcut: 999 });
-    eng.rankB = 10; eng.forceGlim = 'hero'; eng.forceUsed = false;
-    const evs = drainAll(eng.execute(u, { type: 'tech', id: 't_sword_stepcut', target: eng.mons[0] }));
-    const gl = evs.filter((e) => e.t === 'glimmer');
-    ok('a glimmer that replaces the action → no derivation on the same action', gl.length === 1 && !gl[0].from, gl.map((e) => [e.id, e.from]));
-    ok('踏み込み斬り was not used, so its counter did not move', u.c.techUse.t_sword_stepcut === 999);
+    // 「回数と熟練度があっても確率なのよ」: 999 回でも、乱数が確率より大きければ出ない（rng 0.05 > cap）
+    const { eng, u } = mk({ t_sword_twin: 999 }, 0.05);
+    let evs = [];
+    for (let i = 0; i < 30; i++) { u.mp = 99; evs = evs.concat(drainAll(eng.execute(u, { type: 'tech', id: 't_sword_twin', target: eng.mons[0] }))); }
+    ok('999 uses + max prof do not force it: 30 more uses with rng 0.05 → none', !derives(evs).length && !u.c.techs.includes('t_sword_swallow'));
   }
   {
-    // 実際の戦闘（B）: 保存する人に techUse・derived が戻る
+    // 閃きと重ねない: 行動の前の閃きで行動が差し替わったら、派生は振らない
+    const { eng, u } = mk({ t_sword_twin: 999 });
+    eng.rankB = 10; eng.forceGlim = 'hero'; eng.forceUsed = false;
+    const evs = drainAll(eng.execute(u, { type: 'tech', id: 't_sword_twin', target: eng.mons[0] }));
+    const gl = evs.filter((e) => e.t === 'glimmer');
+    ok('a glimmer that replaces the action → no derivation on the same action; the glimmer is a normal tech', gl.length === 1 && !gl[0].from && !DB.techs[gl[0].id].derived, gl.map((e) => [e.id, e.from]));
+    ok('連ね斬り was not used, so its counter did not move', u.c.techUse.t_sword_twin === 999);
+  }
+  {
+    // 実際の戦闘（B）: 保存する人に techUse・derived が戻る（テスト用の engine.o.deriveForce）
     newGame();
     const h = R.State.hero();
-    setHero(h, { t_sword_stepcut: 40 });
+    setHero(h, { t_sword_twin: 40 });
     const B = BC.create({ mons: [['treant_1', 1]], lv: 7, seed: 'derive' });
     B.engine.o.deriveForce = true; B.engine.rankB = 0;
     B.intro();
     let evs = [];
     for (let n = 0; n < 3 && !B.over; n++) {
-      B.submit('p_hero', { cmd: 'skill', id: 't_sword_stepcut', target: B.units.find((x) => x.side === 'enemy' && x.alive).uid });
+      B.submit('p_hero', { cmd: 'skill', id: 't_sword_twin', target: B.units.find((x) => x.side === 'enemy' && x.alive).uid });
       evs = evs.concat(B.round());
     }
     B.finish();
-    ok('B: a forced derivation reaches the events with from', evs.some((e) => e.t === 'glimmer' && e.from === 't_sword_stepcut'));
-    ok('B.finish writes techUse and derived back to R.Game', h.techUse.t_sword_stepcut > 40 && h.derived.t_sword_twin === 't_sword_stepcut' && h.techs.includes('t_sword_twin'), [h.techUse, h.derived]);
-    ok('the derived tech is NEW in the menu (seenSkill false)', R.Game.seenSkill && R.Game.seenSkill[Object.keys(R.Game.seenSkill).find((k) => /t_sword_twin/.test(k))] === false);
+    ok('B: a forced derivation reaches the events with from', evs.some((e) => e.t === 'glimmer' && e.from === 't_sword_twin'));
+    ok('B.finish writes techUse and derived back to R.Game', h.techUse.t_sword_twin > 40 && h.derived.t_sword_swallow === 't_sword_twin' && h.techs.includes('t_sword_swallow'), [h.techUse, h.derived]);
+    ok('the derived tech is NEW in the menu (seenSkill false)', R.Game.seenSkill && R.Game.seenSkill[Object.keys(R.Game.seenSkill).find((k) => /t_sword_swallow/.test(k))] === false);
   }
 }
 

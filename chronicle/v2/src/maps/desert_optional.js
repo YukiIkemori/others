@@ -22,7 +22,7 @@
       const O = [];
       // 屋台の列（灯りだけの市）
       for (const [x, y] of [[7, 8], [12, 8], [23, 8], [28, 8], [7, 15], [12, 15], [23, 15], [28, 15]]) O.push(K.prop('desert_stall', x, y));
-      for (const [x, y] of [[9, 10], [14, 10], [21, 10], [26, 10], [9, 14], [14, 14], [21, 14], [26, 14], [18, 4], [18, 21]]) O.push(K.prop('lantern', x, y));
+      for (const [x, y] of [[9, 10], [14, 10], [21, 10], [26, 10], [9, 14], [14, 14], [21, 14], [26, 14], [16, 4], [20, 4]]) O.push(K.prop('lantern', x, y));   // 通りと碑の前は空ける
       O.push(K.prop('copper_brazier', 16, 10), K.prop('copper_brazier', 20, 10), K.prop('copper_brazier', 16, 14), K.prop('copper_brazier', 20, 14));
       deco(O, [['carpet_rack', 5, 12], ['carpet_rack', 31, 12], ['clay_jars', 10, 7], ['clay_jars', 25, 7], ['cart_barrels', 5, 17], ['cart_barrels', 30, 17],
         ['tent', 4, 7], ['tent', 31, 7], ['desert_palm', 3, 13], ['desert_palm', 33, 11, 1], 
@@ -60,12 +60,11 @@
       for (const [x, y, rx, ry, sd] of [[16, 12, 2, 2, 'a'], [9, 18, 2, 2, 'b'], [25, 9, 2, 2, 'c'], [20, 21, 1, 1, 'd'], [13, 6, 1, 1, 'e']]) K.blob(g, x, y, rx, ry, 'm', 'rkm' + sd, 's');
       K.rect(g, 16, 24, 3, 4, 'd');
       const O = [];
-      O.push(K.prop('rock_small', 19, 14), K.prop('rock_small', 20, 15));   // 小石（泉は置かない。WORLD §6.2）
       O.push(K.chest('desert_rocks_c1', 22, 6, { pool: 'p_T' }), K.chest('desert_rocks_c2', 5, 19, { item: 'i_stone_earth', n: 3 }), K.chest('desert_rocks_c3', 29, 19, { pool: 'p_rare' }));
       O.push(K.sign(19, 24, '金剛トカゲの岩場\n――岩が動いても、驚かぬこと。'));
       O.push(K.exam(12, 21, 'desert_rocks_scales'));
-      deco(O, [['rock_small', 7, 7], ['rock_small', 22, 13], ['rock_small', 12, 16], ['bones', 20, 6], ['bones', 8, 23], ['cactus', 28, 13], ['thorn_bush', 5, 9],
-        ['sand_mound', 22, 23], ['sand_mound', 26, 11], ['cactus', 11, 3], ['thorn_bush', 30, 16], ['broken_pillar', 17, 4], ['bones', 26, 22]]);
+      // 小物は岩壁の際にだけ（道と入口は空ける。岩・砂の起伏は下絵に描いてある）
+      deco(O, [['bones', 20, 6], ['cactus', 28, 13], ['thorn_bush', 30, 16], ['bones', 26, 22]]);
       const N = [K.npc('watcher', 'npc_naturalist', 18, 20, { name: 'トカゲ見の学者', dir: 'n', talk: 'desert_rocks_watcher', reward: 'hint' })];
       K.def('desert_rocks', {
         name: '金剛トカゲの岩場', kind: 'dungeon', optional: true, region: 'r_desert', location: 'rocks', theme: 'desert',
@@ -87,11 +86,12 @@
       K.blob(g, 14, 12, 4, 3, 'k', 'oc5', 's');
       K.rect(g, 26, 10, 2, 2, 'd');
       const O = [];
-      O.push(K.prop('sack', 9, 9), K.prop('rock_small', 10, 10));   // 野営の荷（泉は置かない。WORLD §6.2）
+      O.push(K.prop('sack', 11, 7));   // 野営の荷（天幕の脇。泉は置かない。WORLD §6.2）
       O.push(K.chest('desert_oldcamp_c1', 6, 13, { pool: 'p_T' }), K.chest('desert_oldcamp_c2', 19, 6, { gold: 220 }), K.chest('desert_oldcamp_c3', 20, 17, { pool: 'p_rare' }));
-      O.push(K.prop('tent', 12, 7), K.prop('tent', 16, 16, { variant: 1 }), K.prop('log', 14, 12), K.prop('log', 15, 13), K.prop('firewood', 13, 12));
-      O.push(K.prop('broken_pillar', 17, 9), K.exam(11, 11, 'desert_oldcamp_notes'), K.prop('cart_barrels', 8, 16), K.prop('bones', 21, 11), K.prop('sand_mound', 11, 17), K.prop('clay_jars', 18, 12));
-      O.push(K.prop('thorn_bush', 3, 11), K.prop('sand_mound', 22, 8), K.prop('bones', 7, 7));
+      // 小物は岩陰の際にだけ（東の入口からたき火の跡までの道は空ける）
+      O.push(K.prop('tent', 12, 7), K.prop('tent', 16, 16, { variant: 1 }), K.prop('log', 14, 12), K.prop('log', 15, 13));
+      O.push(K.prop('broken_pillar', 17, 9), K.exam(11, 11, 'desert_oldcamp_notes'), K.prop('cart_barrels', 7, 16), K.prop('clay_jars', 22, 13));
+      O.push(K.prop('thorn_bush', 3, 11), K.prop('bones', 8, 7));
       K.def('desert_oldcamp', {
         name: '古い野営跡', kind: 'dungeon', optional: true, region: 'r_desert', location: 'camp2', theme: 'desert',
         legend: DK.LEGEND(), rows: g, outside: 'dune_sand', objects: O, npcs: [],

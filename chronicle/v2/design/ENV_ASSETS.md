@@ -169,3 +169,48 @@ Sandedge (`desert/under/sandedge*`, 40×30, 2026-09-27): the caravan stop, rebui
 Yule (`snow/under/yule*`, 2026-09-27, 56×50, no @40): the snow village redesigned as a non-orthodox painted town. Deep wind-carved snowdrifts (solid) with trodden lanes winding between them; a round stone fire circle with the great hearth; one serpentine "dragon-back longhouse" curled round the north of the circle, holding four places each with its own 1-tile door (item shop at the carved dragon-head end, inn, great hall, arms); a round stone tower-house (chief), an ice-block dome (fire-keeper), a turf pit-house (Brenda), a mammoth-tusk hide lodge (Olaf), a fishing hut on sled runners on the frozen pond, a cold square stone outsiders' office (Norden branch), a timber watchtower with a bell and lookout deck, a stilt food store and a lean-to sled shed. `yule_night` uses the same art. Tools in `_tools/under/snow/yule/` (README there). 2 generations at 1.5× (2688×2400), the first chosen (`under/yule_gen1_raw.png`). The model drew the lower half about 2 tiles low: `rowwarp.py` (DTW over per-row class profiles) gives a vertical warp; then door surgery (whole buildings −23…+12 px, the hall and arms door patches). No overlay (every painted building stays inside its footprint or over drift). `yule.json` carries `doors32`.
 
 Pass inn (`snow/under/pass_inn*`, 34×26): the inn lives in the ruin of an old border gatehouse astride the pass; the west tower is the inn (door → `pass_inn_in`), the east tower the trading post (door → `pass_inn_shop`, new interior), the gate arch between them is blocked by a rockslide; stepped travertine hot-spring pools (water, not walkable) east of the road, a travellers' camp west. 2 generations at 1.5× (1632×1248), the second chosen (`under/pass_inn_gen2_raw.png`); the gatehouse moved up 18 px and both door patches centred (+7, +18 px). Tools in `_tools/under/snow/pass/`.
+
+## 8. Painted dungeons (2026-09-28, pilot: the demo dungeons)
+
+The owner asked for dungeons as single paintings too (「街、ダンジョンは一枚絵で」). Dungeons use the same `map.art` as §7, with one addition: a **closed layer** for the cells whose look depends on the game state. The existing layouts, puzzles and data are kept; the painting follows the tile grid exactly.
+
+**Tools:** `design/art_ref/gen/env/_tools/under/dungeon/`. They are generic, so you run them with a map id instead of copying a per-town script.
+1. `node fullmap.js <map> <map>/layout`: the dump. On top of the §7 dump it writes `tilePatches`, the secret areas (`R.MapUtil.secretAreas`: gate cells plus the hidden cells behind) and the material info (`face`, `tall`).
+2. `python3 guide.py <map> <T>`: the layout guide in the **open state**, with every tilePatch applied and every secret cell drawn as its floor. It draws wall faces with the engine's rule (`rise.js`): a raised solid cell shows its face on the `rise` wall cells above a lower cell, and the face's foot sits on the floor edge. Buildings and door objects are marked too; the engine does not draw buildings on a painted map.
+3. `python3 mkjob.py <map> <T> genN`, then `gen_env.py`. It sends two images: the guide and a style reference, which is a crop of an approved painted town (`style_rock.png` for caves and towers, `style_forest.png` for forests and tree interiors). The prompt says to trace the guide, not to copy the style reference's content, and to leave props out.
+   - T ≤ 2048 / max(w, h), and the image size must be a multiple of 16 (the demo maps used 48, 36 and 32).
+   - Lesson from the well (gen1 → gen2): a guide face drawn as vertical stripes came back as wooden palisades. Draw faces with a few horizontal strata, and tell the model the guide is flat colour-coding to be interpreted as natural material.
+4. `python3 check.py <map> genN.png out.png`: the painting with the solid cells outlined. `zoom.py` gives tile-grid crops.
+5. `python3 process.py <map> genN.png <theme> [name]` writes into `<map>/out/` and does the following:
+   - box-downscales the painting to 1×;
+   - applies a brightness gain on walkable cells, matched to the tile render, as in §7;
+   - applies a **wall-top contrast** step that keeps the tile render's top/floor luminance ratio (painted rock tops come out close to the floor);
+   - builds the closed layer and the `live` regions (below);
+   - builds an optional emit layer (`EMIT=cyan`: glowing crystal or fungus pixels inside solid cells);
+   - writes @24/@32, plus @40 when 40 × max(w, h) ≤ 2048.
+   Copy the output to `v2/assets/env/<theme>/under/`.
+   - **Use the map's theme as the folder** (`cave`, `lighthouse`, `tree_inside`, `forest_dungeon`, `snow`, `desert`…). Only those prefixes are in the boot preload (`env.js` `SLICE`). Any other folder loads in the background, so the first visit shows the tile fallback.
+6. Map data: `art: { image: '<theme>/under/<map>', closed: '<theme>/under/<map>_closed', emit?: …, painted: [] }`.
+
+**What stays a sprite on top of the painting** (leave it out of the painting and out of `painted`):
+- chests, springs/goddess statues (`springLook`), switches, levers, braziers, lamps, torches, crystals, mushrooms, stairs, doors (for example the lighthouse's big door), signs, NPCs, trails, beacons;
+- every prop with a `cond`, such as the lighthouse lamp before and after the boss, or the fallen log;
+- every lamp or light prop, which also keeps its light.
+The painting is albedo; the dark mood comes from the map's `light`/`dark` exactly as before.
+
+**Closed layer (things a painting can't change):**
+- The painting shows the **open** state. `<map>_closed@t.png` is RGBA and opaque only on the live cells.
+- The meta has `live: [{cells: [[x, y]…], secret: 'x,y'} | {cells, patch: i} | {cells, cond}]`.
+- When the chunk is baked (`chunks.js` `_put`), each region that is still closed is drawn over the painting, whole cells only. The region is closed when:
+  - the secret gate is not found (`MapUtil.secretOpen`), or
+  - `tilePatches[i].cond` is false, or
+  - `cond` is false.
+- Re-baking already follows secret discovery (`secrets.js` re-bakes the gate, the hidden cells and 2 rows above) and grid changes (`checkGrid`). A pure `cond` region with no grid change is **not** re-baked by itself; tie it to a tilePatch.
+- What `process.py` puts in the closed look:
+  - **Secret area** (gate + hidden cells, plus the open-state faces above the hidden floor, plus a ring of plain wall-top cells): wall top cloned from painted rock nearby with one common offset. A face is cloned from a painted face with the same rise row when the cell below stays open.
+  - **tilePatch** (cells whose base char differs from the patch): `tall: 'roots'`/`'bush'` cells get the engine's own prop sprites (`roots_v*`, `bush_v*`) composited at the cell's feet. `canopy` or `b` cells in a forest get painted forest canopy cloned from nearby. The region is every cell where the result differs from the painting, so a sprite top reaching into the cell above is included.
+- For melting or breakable walls (snow/desert), use the same pattern: paint the open state, then make the closed look by cloning the painted wall or compositing the wall's sprite, tied to the tilePatch or the secret.
+- Hidden objects (a chest behind a secret) are still hidden by `secretHidden`.
+- The minimap still uses the tiles.
+
+**Engine change for this** (small): `chunks.js` `underOf` loads `art.closed`, `liveClosed()` decides the state, and `_put` draws the closed cells. `env.js` `E.under` also finds the meta for `_closed` keys.

@@ -325,8 +325,8 @@
   t_greatsword_allout: {
     kind: 'tech',
     wtype: 'greatsword',
-    name: '捨て身の大上段',
-    desc: '守りを捨てて振りかぶる、全力の大上段。',
+    name: '真っ向大上段',
+    desc: '守りを忘れて振りかぶる、真っ向からの全力の一撃。',
     mp: 5,
     target: 'enemy',
     reach: false,

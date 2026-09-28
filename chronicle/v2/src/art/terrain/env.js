@@ -136,7 +136,7 @@
     if (!keys) return null;
     const p = pickTile(keys, tile);
     if (!p) return null;
-    const baseKey = key.replace(/_(emit|over)$/, ''), bk = I().under[baseKey];
+    const baseKey = key.replace(/_(emit|over|closed)$/, ''), bk = I().under[baseKey];
     return { img: p.im, k: p.k, j: (bk && E.metaOf(bk[32])) || {} };
   };
   const meanCache = {};

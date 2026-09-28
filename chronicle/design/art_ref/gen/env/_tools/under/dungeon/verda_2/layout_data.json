@@ -1,0 +1,1787 @@
+{
+ "id": "verda_2",
+ "w": 60,
+ "h": 52,
+ "rows": [
+  "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFrrFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+  "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFrrFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+  "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFrrFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+  "FFFFFFFFF,,,,,,,FFFFFFFFFFFFFrrFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+  "FFFFFFFF,,,,,,,b,FFFFFFFFFFvvvvvvFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+  "FFFFFFF,T,*****,,,FFFFFFFFFvvvvvvFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+  "FFFFFFF,,,*****,,,FFFFFFFFFvvvvvvFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+  "FFFFFFF,,,*****,,TFFFFFFFFFFFrrFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+  "FFFFFFFF,,,,,,,,,,FFFFFFFFFFFrrFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+  "FFFFFFFFF,,,,,,,FFFFFFFFFFFFFrrFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+  "FFFFFFFFFFFeeFFFFFFFFFFFFFFFFrrFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+  "FFFFFFFFFFFeeFFFFFFFFFFFFF,F,rr,,,FFFFFFFFFFFF,,,,,FFFFFFFFF",
+  "FFFFFFFFFFFeeFFFFFFFFFFFFF,,,,,,,,,,FFFFFFFF,,,,,,b,,FFFFFFF",
+  "FFFFFFFFFFFeeFFFFFFFFFFFT,,,,,,,,b,,,FFFFFFFT,,,,,,,,FFFFFFF",
+  "FFFFFFFFFFFeeFFFFFFFFFFF,,,,.....,,,,FFFFFF,,,,,,,,,,,FFFFFF",
+  "FFFFFFFFFF,ee,,,FFFFFFFF,,,,.....,,,,eeeeeee,,,,,,,,,,FFFFFF",
+  "FFFFFFFF,,b,,,,,,FFFFFFF,,,,.....,,,,eeeeeee,,,,,,,,,,FFFFFF",
+  "FFFFFFFF,,,,,,,,,eeeeeeee,,,,,,,,,,,FFFFFFF,,,,,,,,,,TFFFFFF",
+  "FFFFFFFF,,,,,,,,,eeeeeeeeF,,,,,,,,,,TFFFFFFF,,b,,,,,,FFFFFFF",
+  "FFFFFFFFT,,,,,,,,FFFFFFFFFF,,,,bbFFFFFFFFFFFF,,,,,,FFFFFFFFF",
+  "FFFFFFFFF,,,,,,,TFFFFFFFFFFFFFFbbFFFFFFFFFFFFFFFeeFFFFFFFFFF",
+  "FFFFFFFFF,,,,,,FFFFFFFFFFFFFFFFbbFFFFFFFFFFFFFFFeeFFFFFFFFFF",
+  "FFFFFFFFFFFeeFFFFFFFFFFFFFFFFFFbbFFFFFFFFFFFFFFFeeFFFFFFFFFF",
+  "FFFFFFFFFFFeeFFFFFFFFFFFFFFFFFFbbFFFFFFFFFFFFFFFeeFFFFFFFFFF",
+  "FFFFFFFFFFFeeFFFFFFFFFFFFFFFFFFbbFFFFFFFFFFFFFFFeeFFFFFFFFFF",
+  "FFFFFFFFFFFeeFFFFFFFFFFFFFFFFFFbbFFFFFFFFFFFFFFFeeFFFFFFFFFF",
+  "F~~~~~~~~FFeeFFFFFFFFFFFFFFFFFFbbFFFFFFFFFFFFFFFeeFFFFFFFFFF",
+  "FFFFFFFF~FFeeFFFFFFFFFFFFFFFFFFbbFFFFFFFFFFFFFFFeeFFFFFFFFFF",
+  "FFFFFFFF~~~__~~~~~~~~~~FFFFFFFFbbFFFFFFFFFFFFFFFeeFFFFFFFFFF",
+  "FFFFFFFFFFFeeFFFFFFFFFFFFFF,,,,bb,FFFFFFFFFFFFFFeeFFFFFFFFFF",
+  "FFFFFFFFFFFeeFFFFFFFFFFFFFT,,,,,,,,FFFFFFFFFFFFFeeFFFFF...FF",
+  "FFFFFFFFFFFeeFFFFFFFFFFFF,,,,,,,,,,,FFFFFFFFFFFFeeFFFFF...FF",
+  "FFFFFFFF,,,,,,,FFFeeeeeee,,,,,,,,,,,FFFFFFFFFFFFeeFFFFF...FF",
+  "FFFFFFF.....,,b,,Feeeeeee,,,,,,,,,,,eeeeeeeeee,,ee,F,SSSFFFF",
+  "FFFFF,,.....,,,,,,eeFFFFFF,b,,,,,,,Teeeeeeeeee,,,,,T,FFFFFFF",
+  "FFFFF,,.....,,,,,,eeFFFFFFF,,,,,,,FFFFFFFFFFee,,,,,,,FFFFFFF",
+  "FFFFF,,,,,,,,,,,,,FFFFFFFFFFFrrFFFFFFFFFFFFFee,,,,,,,FFFFFFF",
+  "FFFFF,,,,,,,,,,,,,FFFFFFFFFFFrrFFFFFFFFFFFFF,T,,,,,,,FFFFFFF",
+  "FFFFF,T,,,,,,,,,,,FFFFFFFFFFFrrFFFFFFFFFFFFF,,,,,,,,,FFFFFFF",
+  "FFFFFFF,,,,,,,,,TFFFFFFFFFFFFrrFFFFFFFFFFFFFFF,b,,,FFFFFFFFF",
+  "FFFFFFFb,,,,,,,FFFFFFFFFFFFFFrrFFFFFFFFFFFFFFFFFFFeeFFFFFFFF",
+  "FFFFFFFFFFFFFFeeFFFFFFFFFFFFFrrFFFFFFFFFFFFFFFFFFFeeFFFFFFFF",
+  "FFFFFFFFFFFFFFeeFFFFFFFFFFF,,rr,,,FFFFFFFFFFFFFFFFeeFFFFFFFF",
+  "FFFFFFFFFFFFFFeeFFFFFFFFFT,,,,,,,,,FFFFFFFFFFFFFFFeeFFFFFFFF",
+  "FFFFFFFFFFFFFFeeFFFFFFFFF,,,,,,,,b,,FFFFFFFFFFFFFFee,,,FFFFF",
+  "FFFFFFFFFFFFFFeeFFFFFFFFF,,,,,,,,,,,FFFFFFFFFFFFF,,,,,,,FFFF",
+  "FFFFFFFFFFFFFFeeeeeeeeeeee,,,,,,,,,TFFFFFFFFFFFFF,,,,,,,FFFF",
+  "FFFFFFFFFFFFFFeeeeeeeeeeee,,,,,,,,,,FFFFFFFFFFFFF,,,,,,,FFFF",
+  "FFFFFFFFFFFFFFFFFFFFFFFFFFF,rrrr,,FFFFFFFFFFFFFFFF,,,,,FFFFF",
+  "FFFFFFFFFFFFFFFFFFFFFFFFFFFFrrrrFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+  "FFFFFFFFFFFFFFFFFFFFFFFFFFFFrrrrFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+  "FFFFFFFFFFFFFFFFFFFFFFFFFFFFrrrrFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+ ],
+ "legend": {
+  "F": {
+   "mat": "forest_dark",
+   "solid": true
+  },
+  "T": {
+   "mat": "tree",
+   "solid": true
+  },
+  "b": {
+   "mat": "bush",
+   "solid": true
+  },
+  "R": {
+   "mat": "roots",
+   "solid": true
+  },
+  ",": {
+   "mat": "grass"
+  },
+  "\"": {
+   "mat": "tall_grass"
+  },
+  ".": {
+   "mat": "moss_earth"
+  },
+  "*": {
+   "mat": "flowers"
+  },
+  "r": {
+   "mat": "road"
+  },
+  "e": {
+   "mat": "dirt"
+  },
+  "~": {
+   "mat": "water",
+   "walk": false
+  },
+  "_": {
+   "mat": "shallow"
+  },
+  "S": {
+   "mat": "forest_dark",
+   "solid": true,
+   "secret": true,
+   "floor": "grass"
+  },
+  "v": {
+   "mat": "bush",
+   "solid": true,
+   "name": "vines"
+  }
+ },
+ "objects": [
+  {
+   "type": "prop",
+   "id": "songstone",
+   "x": 8,
+   "y": 33,
+   "variant": 1
+  },
+  {
+   "type": "examine",
+   "x": 8,
+   "y": 34,
+   "event": "verda_moss_stone"
+  },
+  {
+   "type": "prop",
+   "id": "log",
+   "x": 50,
+   "y": 41,
+   "cond": "!forest_log_cut"
+  },
+  {
+   "type": "prop",
+   "id": "log",
+   "x": 51,
+   "y": 41,
+   "cond": "!forest_log_cut"
+  },
+  {
+   "type": "examine",
+   "x": 50,
+   "y": 40,
+   "event": "verda_log",
+   "cond": "!forest_log_cut"
+  },
+  {
+   "type": "examine",
+   "x": 51,
+   "y": 40,
+   "event": "verda_log",
+   "cond": "!forest_log_cut"
+  },
+  {
+   "type": "prop",
+   "id": "tree_giant",
+   "x": 51,
+   "y": 11
+  },
+  {
+   "type": "examine",
+   "x": 51,
+   "y": 13,
+   "event": "verda_hollow"
+  },
+  {
+   "type": "brazier",
+   "id": "verda_2_b1",
+   "x": 25,
+   "y": 13
+  },
+  {
+   "type": "brazier",
+   "id": "verda_2_b2",
+   "x": 36,
+   "y": 18
+  },
+  {
+   "type": "brazier",
+   "id": "verda_2_b3",
+   "x": 30,
+   "y": 19
+  },
+  {
+   "type": "building",
+   "id": "verda_2_hut",
+   "x": 32,
+   "y": 10,
+   "w": 5,
+   "h": 3,
+   "wall": 2,
+   "roof": "moss",
+   "mat": "log",
+   "windows": 0,
+   "small": true
+  },
+  {
+   "type": "examine",
+   "x": 34,
+   "y": 13,
+   "event": "verda_empty_hut"
+  },
+  {
+   "type": "prop",
+   "id": "firefly",
+   "x": 13,
+   "y": 17
+  },
+  {
+   "type": "prop",
+   "id": "fern",
+   "x": 14,
+   "y": 18
+  },
+  {
+   "type": "prop",
+   "id": "songstone",
+   "x": 12,
+   "y": 4
+  },
+  {
+   "type": "examine",
+   "x": 12,
+   "y": 5,
+   "event": "verda_stone_c"
+  },
+  {
+   "type": "prop",
+   "id": "mushroom_glow",
+   "x": 33,
+   "y": 30
+  },
+  {
+   "type": "examine",
+   "x": 33,
+   "y": 30,
+   "event": "verda_herb",
+   "herb": 4
+  },
+  {
+   "type": "prop",
+   "id": "mushroom_glow",
+   "x": 45,
+   "y": 17
+  },
+  {
+   "type": "examine",
+   "x": 45,
+   "y": 17,
+   "event": "verda_herb",
+   "herb": 5
+  },
+  {
+   "type": "chest",
+   "id": "verda_2_c1",
+   "x": 5,
+   "y": 37,
+   "pool": "p_T"
+  },
+  {
+   "type": "chest",
+   "id": "verda_2_c2",
+   "x": 55,
+   "y": 47,
+   "item": "i_potion",
+   "n": 2
+  },
+  {
+   "type": "chest",
+   "id": "verda_2_c3",
+   "x": 56,
+   "y": 31,
+   "pool": "p_rare"
+  },
+  {
+   "type": "chest",
+   "id": "verda_2_c4",
+   "x": 33,
+   "y": 17,
+   "pool": "p_T"
+  },
+  {
+   "type": "chest",
+   "id": "verda_2_c5",
+   "x": 53,
+   "y": 14,
+   "gold": 140
+  },
+  {
+   "type": "chest",
+   "id": "verda_2_c6",
+   "x": 16,
+   "y": 6,
+   "pool": "p_T"
+  },
+  {
+   "type": "chest",
+   "id": "verda_2_c7",
+   "x": 9,
+   "y": 20,
+   "item": "i_antidote",
+   "n": 2
+  },
+  {
+   "type": "trail",
+   "id": "verda_2_pim",
+   "path": [
+    [
+     29,
+     49
+    ],
+    [
+     28,
+     47
+    ],
+    [
+     26,
+     46
+    ],
+    [
+     23,
+     47
+    ],
+    [
+     20,
+     46
+    ],
+    [
+     17,
+     47
+    ],
+    [
+     15,
+     45
+    ],
+    [
+     14,
+     43
+    ],
+    [
+     13,
+     41
+    ],
+    [
+     12,
+     39
+    ],
+    [
+     10,
+     37
+    ]
+   ],
+   "cond": {
+    "item": "k_pim_hat"
+   }
+  },
+  {
+   "type": "sign",
+   "x": 27,
+   "y": 29,
+   "text": "この先、森の奥。\n――ひとりで入るべからず（きこり組）"
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 27,
+   "y": 41
+  },
+  {
+   "type": "prop",
+   "id": "mushroom_glow",
+   "x": 13,
+   "y": 18,
+   "variant": 0
+  },
+  {
+   "type": "prop",
+   "id": "mushroom_glow",
+   "x": 29,
+   "y": 29,
+   "variant": 2
+  },
+  {
+   "type": "prop",
+   "id": "mushroom_glow",
+   "x": 27,
+   "y": 44,
+   "variant": 1
+  },
+  {
+   "type": "prop",
+   "id": "mushroom_glow",
+   "x": 34,
+   "y": 16,
+   "variant": 3
+  },
+  {
+   "type": "prop",
+   "id": "mushroom_glow",
+   "x": 48,
+   "y": 12,
+   "variant": 2
+  },
+  {
+   "type": "prop",
+   "id": "mushroom_glow",
+   "x": 46,
+   "y": 17,
+   "variant": 1
+  },
+  {
+   "type": "prop",
+   "id": "mushroom_glow",
+   "x": 14,
+   "y": 34,
+   "variant": 1
+  },
+  {
+   "type": "prop",
+   "id": "mushroom_glow",
+   "x": 28,
+   "y": 35,
+   "variant": 0
+  },
+  {
+   "type": "prop",
+   "id": "mushroom_glow",
+   "x": 7,
+   "y": 7,
+   "variant": 2
+  },
+  {
+   "type": "prop",
+   "id": "mushroom_glow",
+   "x": 53,
+   "y": 48,
+   "variant": 1
+  },
+  {
+   "type": "prop",
+   "id": "mushroom_glow",
+   "x": 24,
+   "y": 15,
+   "variant": 2
+  },
+  {
+   "type": "prop",
+   "id": "mushroom_glow",
+   "x": 34,
+   "y": 31,
+   "variant": 3
+  },
+  {
+   "type": "prop",
+   "id": "stump",
+   "x": 15,
+   "y": 35,
+   "variant": 0
+  },
+  {
+   "type": "prop",
+   "id": "rock",
+   "x": 27,
+   "y": 30,
+   "variant": 1
+  },
+  {
+   "type": "prop",
+   "id": "rock",
+   "x": 53,
+   "y": 45,
+   "variant": 2
+  },
+  {
+   "type": "prop",
+   "id": "rock_small",
+   "x": 12,
+   "y": 21,
+   "variant": 3
+  },
+  {
+   "type": "prop",
+   "id": "rock",
+   "x": 34,
+   "y": 34,
+   "variant": 0
+  },
+  {
+   "type": "prop",
+   "id": "rock_small",
+   "x": 25,
+   "y": 17,
+   "variant": 0
+  },
+  {
+   "type": "prop",
+   "id": "rock",
+   "x": 35,
+   "y": 16,
+   "variant": 3
+  },
+  {
+   "type": "prop",
+   "id": "rock",
+   "x": 49,
+   "y": 45,
+   "variant": 1
+  },
+  {
+   "type": "prop",
+   "id": "rock_small",
+   "x": 53,
+   "y": 15,
+   "variant": 2
+  },
+  {
+   "type": "prop",
+   "id": "stump",
+   "x": 9,
+   "y": 8,
+   "variant": 2
+  },
+  {
+   "type": "prop",
+   "id": "rock_small",
+   "x": 34,
+   "y": 44,
+   "variant": 2
+  },
+  {
+   "type": "prop",
+   "id": "stump",
+   "x": 16,
+   "y": 7,
+   "variant": 3
+  },
+  {
+   "type": "prop",
+   "id": "firefly",
+   "x": 31,
+   "y": 42
+  },
+  {
+   "type": "prop",
+   "id": "firefly",
+   "x": 31,
+   "y": 34
+  },
+  {
+   "type": "prop",
+   "id": "firefly",
+   "x": 48,
+   "y": 39
+  },
+  {
+   "type": "prop",
+   "id": "firefly",
+   "x": 13,
+   "y": 19
+  },
+  {
+   "type": "prop",
+   "id": "firefly",
+   "x": 52,
+   "y": 17
+  },
+  {
+   "type": "prop",
+   "id": "firefly",
+   "x": 5,
+   "y": 38
+  },
+  {
+   "type": "prop",
+   "id": "firefly",
+   "x": 16,
+   "y": 4
+  },
+  {
+   "type": "prop",
+   "id": "firefly",
+   "x": 28,
+   "y": 18
+  },
+  {
+   "type": "prop",
+   "id": "firefly",
+   "x": 17,
+   "y": 37
+  },
+  {
+   "type": "prop",
+   "id": "firefly",
+   "x": 11,
+   "y": 36
+  }
+ ],
+ "npcs": [
+  {
+   "id": "pim",
+   "look": "npc_pim",
+   "x": 10,
+   "y": 36,
+   "dir": "e",
+   "move": "still",
+   "name": "ピム",
+   "talk": "verda_pim",
+   "cond": "!forest_found_pim",
+   "pushable": false,
+   "reward": "side",
+   "key": "pim"
+  },
+  {
+   "id": "fawn",
+   "look": "ani_fawn",
+   "x": 9,
+   "y": 37,
+   "dir": "e",
+   "move": "still",
+   "name": "花角の小鹿",
+   "talk": "verda_fawn_choice",
+   "cond": "!forest_fawn_done",
+   "pushable": false,
+   "key": "fawn"
+  },
+  {
+   "id": "hans",
+   "look": "npc_hans",
+   "x": 52,
+   "y": 46,
+   "dir": "n",
+   "move": "still",
+   "name": "ハンス",
+   "talk": "verda_hans",
+   "cond": "!forest_found_hans",
+   "pushable": false,
+   "key": "hans"
+  },
+  {
+   "id": "roy",
+   "look": "npc_roy",
+   "x": 51,
+   "y": 13,
+   "dir": "s",
+   "move": "still",
+   "name": "ロイ",
+   "talk": "verda_hollow",
+   "cond": [
+    "forest_roy_out",
+    "!forest_found_roy"
+   ],
+   "pushable": false,
+   "key": "roy"
+  }
+ ],
+ "spawns": {
+  "south": {
+   "x": 29,
+   "y": 49,
+   "dir": "n"
+  },
+  "north": {
+   "x": 29,
+   "y": 2,
+   "dir": "s"
+  },
+  "h3": {
+   "x": 45,
+   "y": 34,
+   "dir": "e"
+  },
+  "moth": {
+   "x": 11,
+   "y": 11,
+   "dir": "n"
+  }
+ },
+ "exits": [
+  {
+   "x": 28,
+   "y": 51,
+   "w": 4,
+   "h": 1,
+   "to": {
+    "map": "verda_1",
+    "spawn": "north"
+   }
+  },
+  {
+   "x": 28,
+   "y": 0,
+   "w": 4,
+   "h": 1,
+   "to": {
+    "map": "elder_1",
+    "spawn": "south"
+   }
+  },
+  {
+   "x": 20,
+   "y": 32,
+   "w": 1,
+   "h": 2,
+   "to": {
+    "map": "verda_2",
+    "spawn": "h3"
+   },
+   "cond": {
+    "var": "forest_verses",
+    "lte": 2
+   }
+  }
+ ],
+ "walk": [
+  "############################....############################",
+  "#############################..#############################",
+  "#############################..#############################",
+  "#########.......#############..#############################",
+  "########....#..#.###########################################",
+  "#######.#.........##########################################",
+  "#######.........#.##########################################",
+  "#######.........#############..#############################",
+  "########.#........###########..#############################",
+  "#########.......#############..#############################",
+  "###########..################..#############################",
+  "###########..#############.#....##############.....#########",
+  "###########..#############......############......#..#######",
+  "###########..#############.......#...########........#######",
+  "###########..###########.............######..........#######",
+  "##########......########..............................######",
+  "########..#......#######...........#..................######",
+  "########.........................#..#######..........#######",
+  "########.................#..........########..#......#######",
+  "#########........##########...###############......#########",
+  "##########......################################..##########",
+  "#########......#################################..##########",
+  "###########..###################################..##########",
+  "###########..###################################..##########",
+  "###########..###################################..##########",
+  "###########..###################################..##########",
+  "###########..###################################..##########",
+  "###########..###################################..##########",
+  "###########..###################################..##########",
+  "###########..###############...##.##############..##########",
+  "###########..###############.......#############..#####...##",
+  "###########..############...........############..#####.#.##",
+  "########.......###..................############..#####...##",
+  "#######.#.....#..#.................................#....####",
+  "#####...............######.#......##...............#.#######",
+  "#####..........#....#######.......##########.........#######",
+  "#####.............###########..#############.........#######",
+  "######............###########..#############.#.......#######",
+  "#####.#...........###########..#############.........#######",
+  "#######.........#############..###############.#...#########",
+  "########.......##############..###################..########",
+  "##############..#############..#############################",
+  "##############..###########.......################..########",
+  "##############..##########.........###############..########",
+  "##############..#########........#..##############.....#####",
+  "##############..#########...........##############...#..####",
+  "##############.....................##############.......####",
+  "##############......................#############......#####",
+  "###########################.......################.....#####",
+  "############################....############################",
+  "############################....############################",
+  "############################....############################"
+ ],
+ "props": {
+  "barrel": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "crate": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "sack": {
+   "soft": true
+  },
+  "bench": {
+   "soft": true
+  },
+  "chair": {
+   "soft": true
+  },
+  "table": {
+   "solid": true,
+   "light": {
+    "r": 40,
+    "kind": "candle"
+   }
+  },
+  "bed": {
+   "solid": true
+  },
+  "bookshelf": {
+   "solid": true
+  },
+  "counter": {
+   "solid": true
+  },
+  "stove": {
+   "solid": true,
+   "light": {
+    "r": 70,
+    "kind": "fire"
+   }
+  },
+  "lamp_post": {
+   "solid": true,
+   "glow": true,
+   "shadow": "long",
+   "light": {
+    "r": 110,
+    "kind": "lamp"
+   }
+  },
+  "lantern": {
+   "soft": true,
+   "glow": true,
+   "light": {
+    "r": 60,
+    "kind": "lamp"
+   }
+  },
+  "fence": {
+   "solid": true
+  },
+  "flower_pot": {
+   "soft": true
+  },
+  "planter": {
+   "solid": true
+  },
+  "well": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "signboard": {
+   "solid": true
+  },
+  "board": {
+   "solid": true
+  },
+  "rock_small": {
+   "soft": true
+  },
+  "rock": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "stump": {
+   "solid": true
+  },
+  "log": {
+   "solid": true
+  },
+  "mushroom_glow": {
+   "soft": true,
+   "glow": true,
+   "light": {
+    "r": 34,
+    "kind": "crystal"
+   }
+  },
+  "firefly": {
+   "soft": true,
+   "glow": true
+  },
+  "rope_bridge": {
+   "overChars": true
+  },
+  "leaves_over": {
+   "overChars": true
+  },
+  "chest": {
+   "solid": true,
+   "glow": "sparkle",
+   "frames": [
+    "closed",
+    "open",
+    "rare_closed",
+    "rare_open"
+   ],
+   "light": {
+    "r": 34,
+    "kind": "chest"
+   }
+  },
+  "spring": {
+   "solid": true,
+   "glow": true,
+   "footprint": [
+    2,
+    2
+   ],
+   "frames": [
+    "f0",
+    "f1",
+    "f2",
+    "f3"
+   ],
+   "light": {
+    "r": 150,
+    "kind": "spring"
+   }
+  },
+  "goddess": {
+   "solid": true,
+   "glow": true,
+   "footprint": [
+    2,
+    2
+   ],
+   "light": {
+    "r": 150,
+    "kind": "lamp"
+   }
+  },
+  "brazier": {
+   "solid": true,
+   "frames": [
+    "off",
+    "on"
+   ],
+   "light": {
+    "r": 143,
+    "kind": "fire"
+   }
+  },
+  "torch": {
+   "solid": true,
+   "frames": [
+    "off",
+    "on"
+   ],
+   "light": {
+    "r": 90,
+    "kind": "fire"
+   }
+  },
+  "waylamp": {
+   "solid": true,
+   "frames": [
+    "off",
+    "on"
+   ],
+   "light": {
+    "r": 110,
+    "kind": "lamp"
+   }
+  },
+  "switch": {
+   "soft": true,
+   "frames": [
+    "off",
+    "on"
+   ]
+  },
+  "talestone": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "songstone": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 48,
+    "kind": "crystal"
+   }
+  },
+  "footprint": {
+   "soft": true,
+   "glow": true
+  },
+  "beacon": {
+   "glow": true,
+   "light": {
+    "r": 220,
+    "kind": "fire"
+   }
+  },
+  "stairs_up": {},
+  "stairs_down": {},
+  "door": {},
+  "bollard": {
+   "solid": true
+  },
+  "stall": {
+   "solid": true
+  },
+  "net": {
+   "soft": true
+  },
+  "rowboat": {
+   "solid": true
+  },
+  "ship": {
+   "solid": true,
+   "light": {
+    "r": 80,
+    "kind": "lamp"
+   }
+  },
+  "crystal": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 90,
+    "kind": "crystal"
+   }
+  },
+  "tent": {
+   "solid": true
+  },
+  "grave": {
+   "solid": true
+  },
+  "hay": {
+   "solid": true
+  },
+  "tree": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "pine": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "tree_giant": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "bush": {
+   "solid": true
+  },
+  "roots": {
+   "solid": true
+  },
+  "cupboard": {
+   "solid": true
+  },
+  "dresser": {
+   "solid": true
+  },
+  "stool": {
+   "soft": true
+  },
+  "house_plant": {
+   "soft": true
+  },
+  "shelf_jars": {
+   "solid": true
+  },
+  "wash_tub": {
+   "soft": true
+  },
+  "rug_roll": {
+   "soft": true
+  },
+  "weapon_rack": {
+   "solid": true
+  },
+  "ladder_prop": {
+   "solid": true
+  },
+  "lever": {
+   "solid": true,
+   "frames": [
+    "off",
+    "on"
+   ]
+  },
+  "fern": {
+   "soft": true
+  },
+  "reeds": {
+   "soft": true
+  },
+  "log_moss": {
+   "solid": true
+  },
+  "tree_moss": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "tree_dead": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "tree_glow": {
+   "solid": true,
+   "glow": true,
+   "shadow": "long"
+  },
+  "cactus": {
+   "solid": true
+  },
+  "desert_palm": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "desert_stall": {
+   "solid": true
+  },
+  "carpet_rack": {
+   "solid": true
+  },
+  "cart_barrels": {
+   "solid": true
+  },
+  "clay_jars": {
+   "solid": true
+  },
+  "copper_brazier": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 90,
+    "kind": "fire"
+   }
+  },
+  "dry_well": {
+   "solid": true
+  },
+  "obelisk": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "sand_mound": {
+   "soft": true
+  },
+  "thorn_bush": {
+   "soft": true
+  },
+  "tomb_urn": {
+   "solid": true
+  },
+  "bones": {
+   "soft": true
+  },
+  "broken_pillar": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "armor_stand": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "shield_rack": {
+   "solid": true
+  },
+  "candelabra": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 64,
+    "kind": "candle"
+   }
+  },
+  "fireplace": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 96,
+    "kind": "fire"
+   }
+  },
+  "dining_table": {
+   "solid": true
+  },
+  "bar_counter": {
+   "solid": true
+  },
+  "potion_shelf": {
+   "solid": true
+  },
+  "keg_rack": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "double_bed": {
+   "solid": true
+  },
+  "spinning_wheel": {
+   "solid": true
+  },
+  "basket_veg": {
+   "soft": true
+  },
+  "basket_bread": {
+   "soft": true
+  },
+  "writing_desk": {
+   "solid": true
+  },
+  "wall_window": {},
+  "wall_painting": {},
+  "wall_shelf": {},
+  "wall_herbs": {},
+  "wall_sconce": {
+   "glow": true,
+   "light": {
+    "r": 56,
+    "kind": "candle"
+   }
+  },
+  "wall_trophy": {},
+  "wall_chart": {},
+  "wall_tapestry": {},
+  "wall_pots": {},
+  "wall_antlers": {},
+  "wall_wheel": {},
+  "wall_tools": {},
+  "firewood": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "frozen_well": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "hay_sled": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "ice_crystal": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 48,
+    "kind": "crystal"
+   }
+  },
+  "ice_hole": {
+   "soft": true
+  },
+  "sled": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "snow_bank": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "snow_barrel": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "snow_fence": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "snow_fir": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "snow_lamp": {
+   "solid": true,
+   "glow": true,
+   "shadow": "long",
+   "light": {
+    "r": 110,
+    "kind": "lamp"
+   }
+  },
+  "snow_rock": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "snow_sign": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "stove_pipe": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "arena_banner": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "ash_bush": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "ash_weapon_rack": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "charred_stump": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "charred_tree": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "hot_spring": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "iron_brazier": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "lava_rock": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "obsidian_shards": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "phoenix_statue": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "rope_post": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "steam_vent": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "sulphur": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "volcanic_rocks": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "water_urn": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "anchor": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "blue_bench": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "buoys": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "coco_palm": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "coral": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "driftwood": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "fish_barrel": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "lamp_pillar": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "map_sign": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "net_frame": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "palm_small": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "palm_umbrella": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "rope_bollard": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "shells": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "white_pot": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "bell_frame": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "board_steps": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "crooked_sign": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "fish_trap": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "grave_moss": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "lily_pads": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "mangrove_roots": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "mud_boat": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "pale_mushrooms": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "reeds_tall": {
+   "soft": true
+  },
+  "rotten_stump": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "stilt_posts": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "swamp_tree": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "willow": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "wisp_lamp": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "anvil": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "bellows": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "coal_barrel": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "forge": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "hook_lamp": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "lift_cage": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "mine_cart": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "mine_cart_ore": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "oath_stone": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "ore_blue": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "ore_copper": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "rail": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "timber_frame": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "tool_crate": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "tool_rack": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "blue_flowers": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "book_cart": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "book_stack": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "fountain": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "globe": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "iron_gate": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "lectern": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "marble_bench": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "orrery": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "scholar_statue": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "star_banner": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "star_dial": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "star_lamp": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "telescope": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "topiary": {
+   "solid": true,
+   "shadow": "blob"
+  }
+ },
+ "tilePatches": [
+  {
+   "cond": {
+    "var": "forest_verses",
+    "gte": 3
+   },
+   "rect": [
+    27,
+    4,
+    6,
+    3
+   ],
+   "rows": [
+    "eeeeee",
+    "eeeeee",
+    "eeeeee"
+   ]
+  },
+  {
+   "cond": {
+    "choice": "ch_forest_fawn",
+    "is": "heal"
+   },
+   "rect": [
+    31,
+    19,
+    2,
+    11
+   ],
+   "rows": [
+    "ee",
+    "ee",
+    "ee",
+    "ee",
+    "ee",
+    "ee",
+    "ee",
+    "ee",
+    "ee",
+    "ee",
+    "ee"
+   ]
+  }
+ ],
+ "oneway": [
+  {
+   "x": 40,
+   "y": 15,
+   "dir": "w"
+  },
+  {
+   "x": 40,
+   "y": 16,
+   "dir": "w"
+  }
+ ],
+ "dark": [
+  {
+   "rect": [
+    21,
+    8,
+    19,
+    14
+   ],
+   "cond": "!cleared_r_forest"
+  }
+ ],
+ "light": {
+  "ambient": "#505c98",
+  "k": 0.52,
+  "mood": "forest_night"
+ },
+ "theme": "forest_dungeon",
+ "outside": "forest_dark",
+ "areas": [
+  {
+   "gate": [
+    "53,33",
+    "54,33",
+    "55,33"
+   ],
+   "cells": [
+    "55,32",
+    "56,32",
+    "55,31",
+    "56,31",
+    "55,30",
+    "56,30",
+    "57,30",
+    "57,31",
+    "57,32"
+   ],
+   "parent": null
+  }
+ ],
+ "mats": {
+  "forest_dark": {
+   "name": "深い森",
+   "pri": 86,
+   "edge": "soft",
+   "amp": 0.34,
+   "walk": false,
+   "tall": "canopy",
+   "rim": 0.12,
+   "halo": -0.35
+  },
+  "tree": {
+   "name": "木",
+   "under": "ground",
+   "tall": "tree",
+   "pri": 29,
+   "edge": "soft",
+   "walk": false
+  },
+  "bush": {
+   "name": "藪",
+   "under": "ground",
+   "tall": "bush",
+   "pri": 29,
+   "edge": "soft",
+   "walk": false
+  },
+  "roots": {
+   "name": "根",
+   "under": "root_floor",
+   "tall": "roots",
+   "pri": 29,
+   "edge": "soft",
+   "walk": false
+  },
+  "grass": {
+   "name": "草地",
+   "pri": 30,
+   "edge": "soft",
+   "amp": 0.28,
+   "walk": true,
+   "rim": 0.08,
+   "halo": -0.1,
+   "macro": 0.14
+  },
+  "tall_grass": {
+   "name": "深い草",
+   "pri": 32,
+   "edge": "soft",
+   "amp": 0.32,
+   "walk": true,
+   "rim": 0.12,
+   "halo": -0.14,
+   "macro": 0.12
+  },
+  "moss_earth": {
+   "name": "苔の土",
+   "pri": 28,
+   "edge": "soft",
+   "amp": 0.3,
+   "walk": true,
+   "halo": -0.08,
+   "macro": 0.14
+  },
+  "flowers": {
+   "name": "花畑",
+   "pri": 31,
+   "edge": "soft",
+   "amp": 0.3,
+   "walk": true,
+   "rim": 0.06,
+   "halo": -0.08,
+   "macro": 0.1
+  },
+  "road": {
+   "name": "土の道",
+   "pri": 22,
+   "edge": "soft",
+   "amp": 0.24,
+   "walk": true,
+   "rim": -0.06,
+   "halo": -0.1,
+   "macro": 0.08
+  },
+  "dirt": {
+   "name": "土",
+   "pri": 20,
+   "edge": "soft",
+   "amp": 0.26,
+   "walk": true,
+   "halo": -0.06,
+   "macro": 0.12
+  },
+  "water": {
+   "name": "水",
+   "pri": 2,
+   "edge": "soft",
+   "amp": 0.26,
+   "walk": false,
+   "water": true,
+   "rim": 0.3
+  },
+  "shallow": {
+   "name": "浅瀬",
+   "pri": 5,
+   "edge": "soft",
+   "amp": 0.28,
+   "walk": true,
+   "water": true,
+   "rim": 0.2
+  }
+ }
+}

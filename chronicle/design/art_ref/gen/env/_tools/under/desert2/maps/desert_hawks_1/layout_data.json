@@ -1,0 +1,1393 @@
+{
+ "id": "desert_hawks_1",
+ "w": 44,
+ "h": 36,
+ "rows": [
+  "############################################",
+  "############################################",
+  "####################...#####################",
+  "####################...#####################",
+  "####################...#####################",
+  "####################...#####################",
+  "####################...#####################",
+  "####################...#########.....#######",
+  "#######....#######.......#####.........#####",
+  "######.......####..........###........ww####",
+  "#####.........#............##.....kkk.ww####",
+  "####........................#.....kkk...####",
+  "####..............................kkk...####",
+  "####...ccccc............................####",
+  "####...ccccc...#...........##...........####",
+  "####...ccccc...#...........###.........#####",
+  "####..........####.......#####.........#####",
+  "######.......########.##########.....#######",
+  "######.....##########.######################",
+  "#####################.######################",
+  "#####################.######################",
+  "#####################.######################",
+  "#####################.######################",
+  "#####################.######################",
+  "#####################.############.....#####",
+  "#####.....###########.###########.......####",
+  "####.......######..........######.......####",
+  "####.........#..........................####",
+  "####.............................#.....#####",
+  "#####.....##......ssssssss.....#############",
+  "#############....sssssssss.....#############",
+  "#############.....ssssssss...###############",
+  "################...........#################",
+  "####################...#####################",
+  "####################...#####################",
+  "####################...#####################"
+ ],
+ "legend": {
+  "#": {
+   "mat": "rock",
+   "solid": true,
+   "rise": 2
+  },
+  ".": {
+   "mat": "dirt"
+  },
+  "s": {
+   "mat": "sand"
+  },
+  "k": {
+   "mat": "cracked_clay"
+  },
+  "c": {
+   "mat": "carpet"
+  },
+  "w": {
+   "mat": "water",
+   "walk": false
+  },
+  "Q": {
+   "mat": "sandstone_floor"
+  }
+ },
+ "objects": [
+  {
+   "type": "stairs",
+   "x": 21,
+   "y": 3,
+   "to": {
+    "map": "desert_hawks_2",
+    "spawn": "top"
+   },
+   "id": "desert_hawks_1_down"
+  },
+  {
+   "type": "prop",
+   "id": "rock_small",
+   "x": 15,
+   "y": 29
+  },
+  {
+   "type": "prop",
+   "id": "sack",
+   "x": 16,
+   "y": 30
+  },
+  {
+   "type": "prop",
+   "id": "rock_small",
+   "x": 22,
+   "y": 9
+  },
+  {
+   "type": "prop",
+   "id": "sack",
+   "x": 23,
+   "y": 10
+  },
+  {
+   "type": "chest",
+   "id": "desert_hawks_1_c1",
+   "x": 38,
+   "y": 25,
+   "pool": "p_T"
+  },
+  {
+   "type": "chest",
+   "id": "desert_hawks_1_c2",
+   "x": 5,
+   "y": 26,
+   "item": "i_smoke",
+   "n": 2
+  },
+  {
+   "type": "chest",
+   "id": "desert_hawks_1_c3",
+   "x": 36,
+   "y": 16,
+   "pool": "p_T"
+  },
+  {
+   "type": "chest",
+   "id": "desert_hawks_1_c4",
+   "x": 5,
+   "y": 10,
+   "gold": 180
+  },
+  {
+   "type": "chest",
+   "id": "desert_hawks_1_c5",
+   "x": 24,
+   "y": 9,
+   "pool": "p_rare"
+  },
+  {
+   "type": "examine",
+   "x": 33,
+   "y": 9,
+   "event": "desert_hawks_water"
+  },
+  {
+   "type": "examine",
+   "x": 4,
+   "y": 16,
+   "event": "desert_hawks_bunks"
+  },
+  {
+   "type": "prop",
+   "id": "tent",
+   "x": 7,
+   "y": 11
+  },
+  {
+   "type": "prop",
+   "id": "tent",
+   "x": 11,
+   "y": 17
+  },
+  {
+   "type": "prop",
+   "id": "firewood",
+   "x": 10,
+   "y": 13
+  },
+  {
+   "type": "prop",
+   "id": "sack",
+   "x": 13,
+   "y": 9
+  },
+  {
+   "type": "prop",
+   "id": "crate",
+   "x": 4,
+   "y": 13
+  },
+  {
+   "type": "prop",
+   "id": "weapon_rack",
+   "x": 6,
+   "y": 9
+  },
+  {
+   "type": "prop",
+   "id": "bones",
+   "x": 12,
+   "y": 18
+  },
+  {
+   "type": "prop",
+   "id": "clay_jars",
+   "x": 31,
+   "y": 8
+  },
+  {
+   "type": "prop",
+   "id": "clay_jars",
+   "x": 37,
+   "y": 8
+  },
+  {
+   "type": "prop",
+   "id": "cart_barrels",
+   "x": 31,
+   "y": 15
+  },
+  {
+   "type": "prop",
+   "id": "crate",
+   "x": 38,
+   "y": 14
+  },
+  {
+   "type": "prop",
+   "id": "sack",
+   "x": 33,
+   "y": 17
+  },
+  {
+   "type": "prop",
+   "id": "barrel",
+   "x": 39,
+   "y": 12
+  },
+  {
+   "type": "prop",
+   "id": "broken_pillar",
+   "x": 16,
+   "y": 26
+  },
+  {
+   "type": "prop",
+   "id": "bones",
+   "x": 27,
+   "y": 31
+  },
+  {
+   "type": "prop",
+   "id": "sand_mound",
+   "x": 24,
+   "y": 32
+  },
+  {
+   "type": "prop",
+   "id": "thorn_bush",
+   "x": 18,
+   "y": 33
+  },
+  {
+   "type": "prop",
+   "id": "rock_small",
+   "x": 27,
+   "y": 27
+  },
+  {
+   "type": "prop",
+   "id": "clay_jars",
+   "x": 17,
+   "y": 11
+  },
+  {
+   "type": "prop",
+   "id": "weapon_rack",
+   "x": 24,
+   "y": 10
+  },
+  {
+   "type": "prop",
+   "id": "bones",
+   "x": 6,
+   "y": 29
+  },
+  {
+   "type": "prop",
+   "id": "sand_mound",
+   "x": 38,
+   "y": 28
+  },
+  {
+   "type": "prop",
+   "id": "torch",
+   "x": 18,
+   "y": 28
+  },
+  {
+   "type": "prop",
+   "id": "torch",
+   "x": 25,
+   "y": 28
+  },
+  {
+   "type": "prop",
+   "id": "torch",
+   "x": 18,
+   "y": 10
+  },
+  {
+   "type": "prop",
+   "id": "torch",
+   "x": 25,
+   "y": 14
+  },
+  {
+   "type": "prop",
+   "id": "torch",
+   "x": 8,
+   "y": 16
+  },
+  {
+   "type": "prop",
+   "id": "torch",
+   "x": 34,
+   "y": 15
+  },
+  {
+   "type": "prop",
+   "id": "torch",
+   "x": 22,
+   "y": 7
+  },
+  {
+   "type": "prop",
+   "id": "torch",
+   "x": 37,
+   "y": 27
+  },
+  {
+   "type": "prop",
+   "id": "torch",
+   "x": 8,
+   "y": 29
+  },
+  {
+   "type": "sign",
+   "x": 23,
+   "y": 33,
+   "text": "――ここより砂の鷹の巣\n名のある者は帰れ"
+  }
+ ],
+ "npcs": [
+  {
+   "id": "sentry",
+   "look": "npc_hawk",
+   "x": 21,
+   "y": 24,
+   "dir": "s",
+   "move": "still",
+   "name": "見張りの男",
+   "talk": "desert_hawks_sentry",
+   "pushable": false,
+   "reward": "hint",
+   "cond": "!desert_hawk_met",
+   "key": "sentry"
+  },
+  {
+   "id": "hawk_door",
+   "look": "npc_hawk",
+   "x": 23,
+   "y": 27,
+   "dir": "w",
+   "move": "still",
+   "name": "鷹団の見張り",
+   "talk": "desert_hawks_member",
+   "reward": "news",
+   "cond": [
+    "desert_hawk_met",
+    {
+     "not": {
+      "choice": "ch_desert_hawk",
+      "is": "fight"
+     }
+    }
+   ],
+   "key": "hawk_door"
+  },
+  {
+   "id": "hawk_shop",
+   "look": "npc_hawk",
+   "x": 10,
+   "y": 12,
+   "dir": "s",
+   "move": "still",
+   "name": "鷹団の闇市",
+   "title": "闇市",
+   "talk": "desert_hawks_shop",
+   "pushable": false,
+   "reward": "discount",
+   "cond": [
+    "desert_hawk_met",
+    {
+     "not": {
+      "choice": "ch_desert_hawk",
+      "is": "fight"
+     }
+    }
+   ],
+   "key": "hawk_shop"
+  },
+  {
+   "id": "hawk_cook",
+   "look": "npc_desert_woman",
+   "x": 12,
+   "y": 16,
+   "dir": "w",
+   "move": "still",
+   "name": "鷹団の炊き手",
+   "talk": "desert_hawks_member",
+   "reward": "news",
+   "cond": [
+    "desert_hawk_met",
+    {
+     "not": {
+      "choice": "ch_desert_hawk",
+      "is": "fight"
+     }
+    }
+   ],
+   "key": "hawk_cook"
+  },
+  {
+   "id": "hawk_old",
+   "look": "npc_desert_old_m",
+   "x": 34,
+   "y": 13,
+   "dir": "s",
+   "move": "still",
+   "name": "年寄りの鷹",
+   "talk": "desert_hawks_old",
+   "reward": "news",
+   "cond": [
+    "desert_hawk_met",
+    {
+     "not": {
+      "choice": "ch_desert_hawk",
+      "is": "fight"
+     }
+    }
+   ],
+   "key": "hawk_old"
+  }
+ ],
+ "spawns": {
+  "mouth": {
+   "x": 21,
+   "y": 33,
+   "dir": "n"
+  },
+  "down": {
+   "x": 21,
+   "y": 5,
+   "dir": "s"
+  }
+ },
+ "exits": [
+  {
+   "x": 20,
+   "y": 35,
+   "w": 3,
+   "h": 1,
+   "to": {
+    "map": "world",
+    "spawn": "hawks"
+   }
+  }
+ ],
+ "walk": [
+  "############################################",
+  "############################################",
+  "####################...#####################",
+  "####################...#####################",
+  "####################...#####################",
+  "####################...#####################",
+  "####################...#####################",
+  "####################..##########.....#######",
+  "#######....#######.......#####.#.....#.#####",
+  "#######......####.......#..###........######",
+  "######........#...#.....#..##.........######",
+  "####...#.........#..........#...........####",
+  "####...................................#####",
+  "#####.....#.............................####",
+  "####...........#.........#.##.........#.####",
+  "####...........#...........###.#..#....#####",
+  "####....#.....####.......#####......#..#####",
+  "######.....#.########.##########.....#######",
+  "######.....##########.######################",
+  "#####################.######################",
+  "#####################.######################",
+  "#####################.######################",
+  "#####################.######################",
+  "#####################.######################",
+  "#####################.############.....#####",
+  "#####.....###########.###########.....#.####",
+  "####.#.....######..........######.......####",
+  "####.........#.......................#..####",
+  "####..............#......#.......#.....#####",
+  "#####...#.##...................#############",
+  "#############..................#############",
+  "#############................###############",
+  "################...........#################",
+  "####################...#####################",
+  "####################...#####################",
+  "####################...#####################"
+ ],
+ "props": {
+  "barrel": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "crate": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "sack": {
+   "soft": true
+  },
+  "bench": {
+   "soft": true
+  },
+  "chair": {
+   "soft": true
+  },
+  "table": {
+   "solid": true,
+   "light": {
+    "r": 40,
+    "kind": "candle"
+   }
+  },
+  "bed": {
+   "solid": true
+  },
+  "bookshelf": {
+   "solid": true
+  },
+  "counter": {
+   "solid": true
+  },
+  "stove": {
+   "solid": true,
+   "light": {
+    "r": 70,
+    "kind": "fire"
+   }
+  },
+  "lamp_post": {
+   "solid": true,
+   "glow": true,
+   "shadow": "long",
+   "light": {
+    "r": 110,
+    "kind": "lamp"
+   }
+  },
+  "lantern": {
+   "soft": true,
+   "glow": true,
+   "light": {
+    "r": 60,
+    "kind": "lamp"
+   }
+  },
+  "fence": {
+   "solid": true
+  },
+  "flower_pot": {
+   "soft": true
+  },
+  "planter": {
+   "solid": true
+  },
+  "well": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "signboard": {
+   "solid": true
+  },
+  "board": {
+   "solid": true
+  },
+  "rock_small": {
+   "soft": true
+  },
+  "rock": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "stump": {
+   "solid": true
+  },
+  "log": {
+   "solid": true
+  },
+  "mushroom_glow": {
+   "soft": true,
+   "glow": true,
+   "light": {
+    "r": 34,
+    "kind": "crystal"
+   }
+  },
+  "firefly": {
+   "soft": true,
+   "glow": true
+  },
+  "rope_bridge": {
+   "overChars": true
+  },
+  "leaves_over": {
+   "overChars": true
+  },
+  "chest": {
+   "solid": true,
+   "glow": "sparkle",
+   "frames": [
+    "closed",
+    "open",
+    "rare_closed",
+    "rare_open"
+   ],
+   "light": {
+    "r": 34,
+    "kind": "chest"
+   }
+  },
+  "spring": {
+   "solid": true,
+   "glow": true,
+   "footprint": [
+    2,
+    2
+   ],
+   "frames": [
+    "f0",
+    "f1",
+    "f2",
+    "f3"
+   ],
+   "light": {
+    "r": 150,
+    "kind": "spring"
+   }
+  },
+  "goddess": {
+   "solid": true,
+   "glow": true,
+   "footprint": [
+    2,
+    2
+   ],
+   "light": {
+    "r": 150,
+    "kind": "lamp"
+   }
+  },
+  "brazier": {
+   "solid": true,
+   "frames": [
+    "off",
+    "on"
+   ],
+   "light": {
+    "r": 143,
+    "kind": "fire"
+   }
+  },
+  "torch": {
+   "solid": true,
+   "frames": [
+    "off",
+    "on"
+   ],
+   "light": {
+    "r": 90,
+    "kind": "fire"
+   }
+  },
+  "waylamp": {
+   "solid": true,
+   "frames": [
+    "off",
+    "on"
+   ],
+   "light": {
+    "r": 110,
+    "kind": "lamp"
+   }
+  },
+  "switch": {
+   "soft": true,
+   "frames": [
+    "off",
+    "on"
+   ]
+  },
+  "talestone": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "songstone": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 48,
+    "kind": "crystal"
+   }
+  },
+  "footprint": {
+   "soft": true,
+   "glow": true
+  },
+  "beacon": {
+   "glow": true,
+   "light": {
+    "r": 220,
+    "kind": "fire"
+   }
+  },
+  "stairs_up": {},
+  "stairs_down": {},
+  "door": {},
+  "bollard": {
+   "solid": true
+  },
+  "stall": {
+   "solid": true
+  },
+  "net": {
+   "soft": true
+  },
+  "rowboat": {
+   "solid": true
+  },
+  "ship": {
+   "solid": true,
+   "light": {
+    "r": 80,
+    "kind": "lamp"
+   }
+  },
+  "crystal": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 90,
+    "kind": "crystal"
+   }
+  },
+  "tent": {
+   "solid": true
+  },
+  "grave": {
+   "solid": true
+  },
+  "hay": {
+   "solid": true
+  },
+  "tree": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "pine": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "tree_giant": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "bush": {
+   "solid": true
+  },
+  "roots": {
+   "solid": true
+  },
+  "cupboard": {
+   "solid": true
+  },
+  "dresser": {
+   "solid": true
+  },
+  "stool": {
+   "soft": true
+  },
+  "house_plant": {
+   "soft": true
+  },
+  "shelf_jars": {
+   "solid": true
+  },
+  "wash_tub": {
+   "soft": true
+  },
+  "rug_roll": {
+   "soft": true
+  },
+  "weapon_rack": {
+   "solid": true
+  },
+  "ladder_prop": {
+   "solid": true
+  },
+  "lever": {
+   "solid": true,
+   "frames": [
+    "off",
+    "on"
+   ]
+  },
+  "fern": {
+   "soft": true
+  },
+  "reeds": {
+   "soft": true
+  },
+  "log_moss": {
+   "solid": true
+  },
+  "tree_moss": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "tree_dead": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "tree_glow": {
+   "solid": true,
+   "glow": true,
+   "shadow": "long"
+  },
+  "cactus": {
+   "solid": true
+  },
+  "desert_palm": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "desert_stall": {
+   "solid": true
+  },
+  "carpet_rack": {
+   "solid": true
+  },
+  "cart_barrels": {
+   "solid": true
+  },
+  "clay_jars": {
+   "solid": true
+  },
+  "copper_brazier": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 90,
+    "kind": "fire"
+   }
+  },
+  "dry_well": {
+   "solid": true
+  },
+  "obelisk": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "sand_mound": {
+   "soft": true
+  },
+  "thorn_bush": {
+   "soft": true
+  },
+  "tomb_urn": {
+   "solid": true
+  },
+  "bones": {
+   "soft": true
+  },
+  "broken_pillar": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "armor_stand": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "shield_rack": {
+   "solid": true
+  },
+  "candelabra": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 64,
+    "kind": "candle"
+   }
+  },
+  "fireplace": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 96,
+    "kind": "fire"
+   }
+  },
+  "dining_table": {
+   "solid": true
+  },
+  "bar_counter": {
+   "solid": true
+  },
+  "potion_shelf": {
+   "solid": true
+  },
+  "keg_rack": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "double_bed": {
+   "solid": true
+  },
+  "spinning_wheel": {
+   "solid": true
+  },
+  "basket_veg": {
+   "soft": true
+  },
+  "basket_bread": {
+   "soft": true
+  },
+  "writing_desk": {
+   "solid": true
+  },
+  "wall_window": {},
+  "wall_painting": {},
+  "wall_shelf": {},
+  "wall_herbs": {},
+  "wall_sconce": {
+   "glow": true,
+   "light": {
+    "r": 56,
+    "kind": "candle"
+   }
+  },
+  "wall_trophy": {},
+  "wall_chart": {},
+  "wall_tapestry": {},
+  "wall_pots": {},
+  "wall_antlers": {},
+  "wall_wheel": {},
+  "wall_tools": {},
+  "firewood": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "frozen_well": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "hay_sled": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "ice_crystal": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 48,
+    "kind": "crystal"
+   }
+  },
+  "ice_hole": {
+   "soft": true
+  },
+  "sled": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "snow_bank": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "snow_barrel": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "snow_fence": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "snow_fir": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "snow_lamp": {
+   "solid": true,
+   "glow": true,
+   "shadow": "long",
+   "light": {
+    "r": 110,
+    "kind": "lamp"
+   }
+  },
+  "snow_rock": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "snow_sign": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "stove_pipe": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "wisp_lamp": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "kind": "lamp",
+    "r": 100
+   },
+   "shadow": "long"
+  },
+  "bell_frame": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "board_steps": {
+   "soft": true
+  },
+  "crooked_sign": {
+   "solid": true
+  },
+  "fish_trap": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "grave_moss": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "lily_pads": {
+   "soft": true
+  },
+  "mangrove_roots": {
+   "solid": true
+  },
+  "mud_boat": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "pale_mushrooms": {
+   "soft": true,
+   "glow": true
+  },
+  "reeds_tall": {
+   "soft": true
+  },
+  "rotten_stump": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "stilt_posts": {
+   "solid": true
+  },
+  "swamp_tree": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "willow": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "arena_banner": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "ash_bush": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "ash_weapon_rack": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "charred_stump": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "charred_tree": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "hot_spring": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "iron_brazier": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "lava_rock": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "obsidian_shards": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "phoenix_statue": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "rope_post": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "steam_vent": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "sulphur": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "volcanic_rocks": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "water_urn": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "anchor": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "blue_bench": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "buoys": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "coco_palm": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "coral": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "driftwood": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "fish_barrel": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "lamp_pillar": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "map_sign": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "net_frame": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "palm_small": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "palm_umbrella": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "rope_bollard": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "shells": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "white_pot": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "anvil": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "bellows": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "coal_barrel": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "forge": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "hook_lamp": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "lift_cage": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "mine_cart": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "mine_cart_ore": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "oath_stone": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "ore_blue": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "ore_copper": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "rail": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "timber_frame": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "tool_crate": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "tool_rack": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "blue_flowers": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "book_cart": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "book_stack": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "fountain": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "globe": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "iron_gate": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "lectern": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "marble_bench": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "orrery": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "scholar_statue": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "star_banner": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "star_dial": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "star_lamp": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "telescope": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "topiary": {
+   "solid": true,
+   "shadow": "blob"
+  }
+ },
+ "tilePatches": [],
+ "oneway": [],
+ "dark": null,
+ "light": {
+  "ambient": "#5a5688",
+  "k": 0.6,
+  "mood": "cave"
+ },
+ "theme": "cave",
+ "outside": "rock",
+ "areas": [],
+ "mats": {
+  "rock": {
+   "name": "岩",
+   "pri": 90,
+   "edge": "hard",
+   "walk": false,
+   "face": "rock",
+   "rim": 0.35
+  },
+  "dirt": {
+   "name": "土",
+   "pri": 20,
+   "edge": "soft",
+   "amp": 0.26,
+   "walk": true,
+   "halo": -0.06,
+   "macro": 0.12
+  },
+  "sand": {
+   "name": "砂",
+   "pri": 10,
+   "edge": "soft",
+   "amp": 0.3,
+   "walk": true,
+   "halo": -0.04,
+   "macro": 0.1
+  },
+  "cracked_clay": {
+   "name": "ひび割れた粘土",
+   "pri": 21,
+   "edge": "soft",
+   "amp": 0.26,
+   "walk": true,
+   "halo": -0.06,
+   "macro": 0.1
+  },
+  "carpet": {
+   "name": "敷物",
+   "pri": 46,
+   "edge": "hard",
+   "walk": true,
+   "rim": 0.35,
+   "halo": -0.25
+  },
+  "water": {
+   "name": "水",
+   "pri": 2,
+   "edge": "soft",
+   "amp": 0.26,
+   "walk": false,
+   "water": true,
+   "rim": 0.3
+  },
+  "sandstone_floor": {
+   "name": "砂岩の床",
+   "pri": 43,
+   "edge": "hard",
+   "walk": true,
+   "rim": -0.2,
+   "halo": -0.18
+  }
+ }
+}

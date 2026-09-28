@@ -256,7 +256,7 @@
   t_dagger_vital2: {
     kind: 'tech',
     wtype: 'dagger',
-    name: '急所二段突き',
+    name: '急所二連突き',
     desc: '急所を2回続けて突く。会心が出やすい。',
     mp: 4,
     target: 'enemy',
@@ -269,8 +269,8 @@
   t_dagger_vitalstorm: {
     kind: 'tech',
     wtype: 'dagger',
-    name: '急所乱れ突き',
-    desc: '急所ばかりを4回、乱れ突く。',
+    name: '急所千本突き',
+    desc: '急所ばかりを、目にも止まらず4回突く。',
     mp: 8,
     target: 'enemy',
     reach: false,

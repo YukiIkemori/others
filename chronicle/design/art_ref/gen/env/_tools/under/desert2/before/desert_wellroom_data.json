@@ -1,0 +1,149 @@
+{
+ "id": "desert_wellroom",
+ "w": 16,
+ "h": 12,
+ "kind": "interior",
+ "rows": [
+  "WWWWWWWWWWWWWWWW",
+  "WWWWWWWWWWWWWWWW",
+  "WffffffffffffffW",
+  "WffffffffffffffW",
+  "WffffffffffffffW",
+  "WffffffffffffffW",
+  "WfccccfffffffffW",
+  "WfccccfffffffffW",
+  "WfccccfffffffffW",
+  "WffffffffffffffW",
+  "WffffffffffffffW",
+  "WWWWWWWdWWWWWWWW"
+ ],
+ "legend": {
+  "W": {
+   "mat": "wall_sandstone",
+   "solid": true,
+   "rise": 2,
+   "secret": false
+  },
+  "f": {
+   "mat": "sandstone_floor",
+   "solid": false,
+   "secret": false
+  },
+  "c": {
+   "mat": "carpet",
+   "solid": false,
+   "secret": false
+  },
+  "d": {
+   "mat": "sandstone_floor",
+   "solid": false,
+   "secret": false,
+   "name": "door"
+  }
+ },
+ "objects": [
+  {
+   "type": "spring",
+   "id": "desert_wellroom_s1",
+   "x": 10,
+   "y": 4
+  },
+  {
+   "type": "prop",
+   "id": "bed",
+   "x": 1,
+   "y": 2
+  },
+  {
+   "type": "prop",
+   "id": "table",
+   "x": 5,
+   "y": 4
+  },
+  {
+   "type": "prop",
+   "id": "stool",
+   "x": 4,
+   "y": 4
+  },
+  {
+   "type": "prop",
+   "id": "clay_jars",
+   "x": 14,
+   "y": 2
+  },
+  {
+   "type": "prop",
+   "id": "wash_tub",
+   "x": 14,
+   "y": 7
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 7,
+   "y": 2
+  },
+  {
+   "type": "prop",
+   "id": "sack",
+   "x": 1,
+   "y": 9
+  },
+  {
+   "type": "examine",
+   "x": 13,
+   "y": 2,
+   "event": "desert_wellroom_journal"
+  }
+ ],
+ "npcs": [
+  {
+   "id": "wellkeeper",
+   "look": "npc_desert_old_f",
+   "x": 6,
+   "y": 6,
+   "dir": "s",
+   "move": "still",
+   "name": "井戸守りのばあさま",
+   "talk": "desert_wellroom_keeper",
+   "reward": "news",
+   "key": "wellkeeper"
+  }
+ ],
+ "spawns": {
+  "road": {
+   "x": 7,
+   "y": 10,
+   "dir": "n"
+  }
+ },
+ "exits": [
+  {
+   "x": 7,
+   "y": 11,
+   "w": 1,
+   "h": 1,
+   "to": {
+    "map": "world",
+    "spawn": "wellroom"
+   }
+  }
+ ],
+ "triggers": [],
+ "walk": [
+  "################",
+  "################",
+  "##............##",
+  "#..............#",
+  "#....#....##...#",
+  "#.........##...#",
+  "#..............#",
+  "#..............#",
+  "#..............#",
+  "#..............#",
+  "#..............#",
+  "#######.########"
+ ],
+ "outside": "wall_sandstone"
+}

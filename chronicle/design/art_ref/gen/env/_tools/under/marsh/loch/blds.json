@@ -1,0 +1,132 @@
+[
+ {
+  "id": "loch_bell_items",
+  "kind": "bell",
+  "x": 18,
+  "y": 8,
+  "w": 6,
+  "h": 4,
+  "wall": 3,
+  "door": [
+   20,
+   11
+  ]
+ },
+ {
+  "id": "loch_bell_tavern",
+  "kind": "bell",
+  "x": 24,
+  "y": 8,
+  "w": 8,
+  "h": 4,
+  "wall": 3,
+  "door": [
+   27,
+   11
+  ]
+ },
+ {
+  "id": "loch_bell_arms",
+  "kind": "bell",
+  "x": 32,
+  "y": 8,
+  "w": 6,
+  "h": 4,
+  "wall": 3,
+  "door": [
+   35,
+   11
+  ]
+ },
+ {
+  "id": "loch_hall",
+  "kind": "heron",
+  "x": 4,
+  "y": 11,
+  "w": 10,
+  "h": 8,
+  "wall": 3,
+  "door": [
+   8,
+   18
+  ]
+ },
+ {
+  "id": "loch_tower",
+  "kind": "tower",
+  "x": 43,
+  "y": 9,
+  "w": 5,
+  "h": 9,
+  "wall": 3,
+  "door": [
+   45,
+   17
+  ]
+ },
+ {
+  "id": "loch_inn",
+  "kind": "barges",
+  "x": 2,
+  "y": 33,
+  "w": 10,
+  "h": 7,
+  "wall": 3,
+  "door": [
+   7,
+   39
+  ]
+ },
+ {
+  "id": "loch_mayor",
+  "kind": "willowhouse",
+  "x": 30,
+  "y": 31,
+  "w": 6,
+  "h": 5,
+  "wall": 2,
+  "door": [
+   32,
+   35
+  ]
+ },
+ {
+  "id": "loch_emma",
+  "kind": "hut",
+  "x": 15,
+  "y": 41,
+  "w": 5,
+  "h": 4,
+  "wall": 2,
+  "door": [
+   17,
+   44
+  ]
+ },
+ {
+  "id": "loch_beppo",
+  "kind": "leaning",
+  "x": 46,
+  "y": 30,
+  "w": 5,
+  "h": 6,
+  "wall": 3,
+  "door": [
+   48,
+   35
+  ]
+ },
+ {
+  "id": "loch_klaus",
+  "kind": "stonebox",
+  "x": 38,
+  "y": 41,
+  "w": 6,
+  "h": 5,
+  "wall": 2,
+  "door": [
+   40,
+   45
+  ]
+ }
+]

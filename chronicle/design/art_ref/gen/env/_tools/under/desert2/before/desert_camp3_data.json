@@ -1,0 +1,578 @@
+{
+ "id": "desert_camp3",
+ "w": 30,
+ "h": 26,
+ "kind": "town",
+ "rows": [
+  "uuuuuuuuuuuuuuuuuuuuuuuuuuuuuu",
+  "uuuuuuuuuuuuuuuuXXXXXXXXXXXXuu",
+  "uuuuuuuuuuuuuuuuXXXXXXXXXXXXuu",
+  "uuuuuuuuuuuuuuuuXXXXXQQXXXXXuu",
+  "uuuuuuuuuuususssXXXXXQQXXXXXuu",
+  "uuuuuuuuusssssssXXXXQQQQXXXXuu",
+  "uuuuuuusssssssssXXXXQQQQXXXXuu",
+  "uuuuuuusssssssssXXXXQQQQXXXXuu",
+  "uuuuussssssssssssssssdsssuuuuu",
+  "uuuusssssssssssssssssdsssssuuu",
+  "uuusssssgggggggssssssdssssssuu",
+  "uuuusssggwwwwwggsssssdssssssuu",
+  "uuussssggwwwwwggsssssdssssssuu",
+  "uuuusssggwwwwwggsssssdsssssuuu",
+  "uuusssssgggggggssssssdssssssuu",
+  "uuuusssssssssssssssssdssssssuu",
+  "uuuusssssssssssssssssdsssssuuu",
+  "uuuuussssssssssdddddddssssuuuu",
+  "uuuusssssssssssdsssssssssuuuuu",
+  "uuuuuuussssssssdsssssssssuuuuu",
+  "uuuuuuussssssssdsssssssuuuuuuu",
+  "uuuuuuuuussssssdsssssusuuuuuuu",
+  "uuuuuuuuuuusssddssussuuuuuuuuu",
+  "uuuuuuuuuuuuuudduuuuuuuuuuuuuu",
+  "uuuuuuuuuuuuuudduuuuuuuuuuuuuu",
+  "uuuuuuuuuuuuuudduuuuuuuuuuuuuu"
+ ],
+ "legend": {
+  "s": {
+   "mat": "sand",
+   "solid": false,
+   "secret": false
+  },
+  "u": {
+   "mat": "dune_sand",
+   "solid": false,
+   "secret": false
+  },
+  "k": {
+   "mat": "cracked_clay",
+   "solid": false,
+   "secret": false
+  },
+  "d": {
+   "mat": "dirt",
+   "solid": false,
+   "secret": false
+  },
+  "Q": {
+   "mat": "sandstone_floor",
+   "solid": false,
+   "secret": false
+  },
+  "c": {
+   "mat": "cobble",
+   "solid": false,
+   "secret": false
+  },
+  "X": {
+   "mat": "wall_sandstone",
+   "solid": true,
+   "rise": 2,
+   "secret": false
+  },
+  "x": {
+   "mat": "wall_sandstone",
+   "solid": true,
+   "rise": 1,
+   "secret": false
+  },
+  "m": {
+   "mat": "rock",
+   "solid": true,
+   "rise": 1,
+   "secret": false
+  },
+  "w": {
+   "mat": "water",
+   "solid": false,
+   "walk": false,
+   "secret": false
+  },
+  "_": {
+   "mat": "shallow",
+   "solid": false,
+   "secret": false
+  },
+  "g": {
+   "mat": "grass",
+   "solid": false,
+   "secret": false
+  }
+ },
+ "objects": [
+  {
+   "type": "brazier",
+   "id": "fire_17_14",
+   "x": 17,
+   "y": 14,
+   "on": true
+  },
+  {
+   "type": "prop",
+   "id": "log",
+   "x": 16,
+   "y": 15
+  },
+  {
+   "type": "prop",
+   "id": "log",
+   "x": 18,
+   "y": 15
+  },
+  {
+   "type": "prop",
+   "id": "log",
+   "x": 17,
+   "y": 13
+  },
+  {
+   "type": "stairs",
+   "x": 21,
+   "y": 3,
+   "to": {
+    "map": "desert_tomb_1",
+    "spawn": "entrance"
+   },
+   "id": "desert_camp3_tomb",
+   "cond": "desert_camp3_done"
+  },
+  {
+   "type": "examine",
+   "x": 21,
+   "y": 3,
+   "event": "desert_tomb_sealed",
+   "cond": "!desert_camp3_done"
+  },
+  {
+   "type": "prop",
+   "id": "obelisk",
+   "x": 19,
+   "y": 6
+  },
+  {
+   "type": "prop",
+   "id": "obelisk",
+   "x": 24,
+   "y": 6
+  },
+  {
+   "type": "prop",
+   "id": "tomb_urn",
+   "x": 20,
+   "y": 8
+  },
+  {
+   "type": "prop",
+   "id": "tomb_urn",
+   "x": 23,
+   "y": 8
+  },
+  {
+   "type": "spring",
+   "id": "desert_camp3_s1",
+   "x": 7,
+   "y": 15
+  },
+  {
+   "type": "examine",
+   "x": 13,
+   "y": 11,
+   "event": "desert_camp3_oldspring"
+  },
+  {
+   "type": "prop",
+   "id": "beacon",
+   "x": 13,
+   "y": 8,
+   "cond": "cleared_r_desert"
+  },
+  {
+   "type": "prop",
+   "id": "desert_palm",
+   "x": 6,
+   "y": 9,
+   "variant": 0
+  },
+  {
+   "type": "prop",
+   "id": "desert_palm",
+   "x": 16,
+   "y": 9,
+   "variant": 1
+  },
+  {
+   "type": "prop",
+   "id": "desert_palm",
+   "x": 5,
+   "y": 13,
+   "variant": 1
+  },
+  {
+   "type": "prop",
+   "id": "desert_palm",
+   "x": 17,
+   "y": 11,
+   "variant": 0
+  },
+  {
+   "type": "prop",
+   "id": "desert_palm",
+   "x": 8,
+   "y": 18,
+   "variant": 0
+  },
+  {
+   "type": "prop",
+   "id": "desert_palm",
+   "x": 13,
+   "y": 19,
+   "variant": 1
+  },
+  {
+   "type": "prop",
+   "id": "desert_palm",
+   "x": 25,
+   "y": 12,
+   "variant": 0
+  },
+  {
+   "type": "prop",
+   "id": "tent",
+   "x": 22,
+   "y": 13
+  },
+  {
+   "type": "prop",
+   "id": "tent",
+   "x": 22,
+   "y": 18
+  },
+  {
+   "type": "prop",
+   "id": "cart_barrels",
+   "x": 26,
+   "y": 16
+  },
+  {
+   "type": "prop",
+   "id": "clay_jars",
+   "x": 24,
+   "y": 20
+  },
+  {
+   "type": "prop",
+   "id": "crate",
+   "x": 20,
+   "y": 20
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 19,
+   "y": 12
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 15,
+   "y": 17
+  },
+  {
+   "type": "prop",
+   "id": "copper_brazier",
+   "x": 19,
+   "y": 9
+  },
+  {
+   "type": "prop",
+   "id": "copper_brazier",
+   "x": 24,
+   "y": 9
+  },
+  {
+   "type": "prop",
+   "id": "copper_brazier",
+   "x": 14,
+   "y": 22
+  },
+  {
+   "type": "prop",
+   "id": "copper_brazier",
+   "x": 16,
+   "y": 22
+  },
+  {
+   "type": "sign",
+   "x": 18,
+   "y": 22,
+   "text": "王墓のオアシス\n――名なき王の墓所"
+  },
+  {
+   "type": "sign",
+   "x": 25,
+   "y": 9,
+   "text": "王墓\n入る者は名を忘るべからず"
+  },
+  {
+   "type": "prop",
+   "id": "bones",
+   "x": 3,
+   "y": 17
+  },
+  {
+   "type": "prop",
+   "id": "sand_mound",
+   "x": 26,
+   "y": 21
+  },
+  {
+   "type": "prop",
+   "id": "thorn_bush",
+   "x": 4,
+   "y": 7
+  }
+ ],
+ "npcs": [
+  {
+   "id": "c3_zaid",
+   "look": "npc_zaid",
+   "x": 18,
+   "y": 13,
+   "dir": "w",
+   "move": "still",
+   "name": "ザイード",
+   "title": "隊商の長",
+   "talk": "desert_camp_zaid",
+   "reward": "news",
+   "cond": [
+    "desert_camp3_done",
+    "!desert_finale_done"
+   ],
+   "pushable": false,
+   "key": "c3_zaid"
+  },
+  {
+   "id": "c3_man1",
+   "look": "npc_caravan",
+   "x": 16,
+   "y": 15,
+   "dir": "e",
+   "move": "still",
+   "name": "隊商のファド",
+   "talk": "desert_camp_man",
+   "reward": "news",
+   "cond": [
+    {
+     "any": [
+      [
+       "desert_caravan_on",
+       "desert_camp2_done"
+      ],
+      "desert_camp3_done"
+     ]
+    },
+    "!desert_finale_done"
+   ],
+   "key": "c3_man1"
+  },
+  {
+   "id": "c3_man2",
+   "look": "npc_desert_man",
+   "x": 20,
+   "y": 15,
+   "dir": "w",
+   "move": "still",
+   "name": "隊商のサミル",
+   "talk": "desert_camp_man",
+   "reward": "news",
+   "cond": [
+    {
+     "any": [
+      [
+       "desert_caravan_on",
+       "desert_camp2_done"
+      ],
+      "desert_camp3_done"
+     ]
+    },
+    "!desert_finale_done"
+   ],
+   "key": "c3_man2"
+  },
+  {
+   "id": "c3_camel1",
+   "look": "ani_camel",
+   "x": 25,
+   "y": 14,
+   "dir": "w",
+   "move": "still",
+   "name": "ラクダ",
+   "talk": {
+    "lines": [
+     {
+      "text": "ラクダは、荷を下ろしてもらって\n満足そうに目を細めている。"
+     }
+    ]
+   },
+   "reward": null,
+   "cond": [
+    {
+     "any": [
+      [
+       "desert_caravan_on",
+       "desert_camp2_done"
+      ],
+      "desert_camp3_done"
+     ]
+    },
+    "!desert_finale_done"
+   ],
+   "key": "c3_camel1"
+  },
+  {
+   "id": "c3_camel2",
+   "look": "ani_camel",
+   "x": 9,
+   "y": 18,
+   "dir": "e",
+   "move": "still",
+   "name": "ラクダ",
+   "talk": {
+    "lines": [
+     {
+      "text": "ラクダが、鼻を鳴らした。"
+     }
+    ]
+   },
+   "reward": null,
+   "cond": [
+    {
+     "any": [
+      [
+       "desert_caravan_on",
+       "desert_camp2_done"
+      ],
+      "desert_camp3_done"
+     ]
+    },
+    "!desert_finale_done"
+   ],
+   "key": "c3_camel2"
+  },
+  {
+   "id": "abul_oasis",
+   "look": "npc_abul",
+   "x": 12,
+   "y": 16,
+   "dir": "n",
+   "move": "still",
+   "name": "アブル",
+   "title": "王墓の番",
+   "talk": "desert_abul_oasis",
+   "reward": "boss",
+   "cond": [
+    "desert_abul_came",
+    "!cleared_r_desert"
+   ],
+   "key": "abul_oasis"
+  },
+  {
+   "id": "hazal_spirit",
+   "look": "npc_hazal",
+   "x": 11,
+   "y": 10,
+   "dir": "s",
+   "move": "still",
+   "name": "ハザル王",
+   "talk": "desert_hazal_after",
+   "reward": "news",
+   "cond": "cleared_r_desert",
+   "key": "hazal_spirit"
+  }
+ ],
+ "spawns": {
+  "road": {
+   "x": 15,
+   "y": 23,
+   "dir": "n"
+  },
+  "tomb": {
+   "x": 21,
+   "y": 5,
+   "dir": "s"
+  },
+  "fire": {
+   "x": 17,
+   "y": 16,
+   "dir": "n"
+  },
+  "spring": {
+   "x": 13,
+   "y": 15,
+   "dir": "n"
+  }
+ },
+ "exits": [
+  {
+   "x": 14,
+   "y": 25,
+   "w": 2,
+   "h": 1,
+   "to": {
+    "map": "world",
+    "spawn": "camp3"
+   }
+  }
+ ],
+ "triggers": [
+  {
+   "id": "scene",
+   "on": "enter",
+   "event": "desert_camp3_scene"
+  }
+ ],
+ "tilePatches": [
+  {
+   "cond": "cleared_r_desert",
+   "rect": [
+    8,
+    11,
+    7,
+    3
+   ],
+   "rows": [
+    " wwwww ",
+    "wwwwwww",
+    " wwwww "
+   ]
+  }
+ ],
+ "walk": [
+  "..............................",
+  "................############..",
+  "................############..",
+  "................#####..#####..",
+  "................#####..#####..",
+  "................####....####..",
+  "................####....####..",
+  "................####....####..",
+  "..............................",
+  "......#.........#..#....##....",
+  "..............................",
+  ".........#####...#............",
+  ".........#####...........#....",
+  ".....#...#####........#.......",
+  ".................#............",
+  ".......##.....................",
+  ".......##.....................",
+  "..............................",
+  "........#.............#.......",
+  ".............#................",
+  "..............................",
+  "..............................",
+  "..............#.#.#...........",
+  "..............................",
+  "..............................",
+  ".............................."
+ ],
+ "dark": false,
+ "outside": "dune_sand"
+}

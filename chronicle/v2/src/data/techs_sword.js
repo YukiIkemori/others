@@ -272,7 +272,7 @@
   t_sword_swallow: {
     kind: 'tech',
     wtype: 'sword',
-    name: 'つばめ返し',
+    name: '返し刃',
     desc: '斬り下ろした刃をすぐ返し、2回斬る。',
     mp: 5,
     target: 'enemy',
@@ -285,8 +285,8 @@
   t_sword_swallow_draw: {
     kind: 'tech',
     wtype: 'sword',
-    name: '抜刀つばめ返し',
-    desc: '抜きざまにつばめ返しを放つ。先に動ける。',
+    name: '抜刀返し刃',
+    desc: '抜きざまに返し刃を放つ。先に動ける。',
     mp: 10,
     target: 'enemy',
     reach: false,

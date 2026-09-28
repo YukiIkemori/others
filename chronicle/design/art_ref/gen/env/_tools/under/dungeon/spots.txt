@@ -1,0 +1,7 @@
+lighthouse_1 17 24
+lighthouse_2 28 26
+lighthouse_3 12 16
+elder_1 25 40
+elder_2 26 22
+verda_1 30 33
+verda_2 29 16

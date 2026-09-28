@@ -38,8 +38,17 @@ const ZONES = {
   zw_snow_road: { tier: 1, kind: 'party', members: STD },
   z_snow_woods: { tier: 1, kind: 'party', members: STD },
   z_snow_peak: { tier: 1, kind: 'mid', members: STD },
+  z_snow_peak_high: { tier: 1, kind: 'mid', members: STD },   // 峰の上の段（1 組 5 匹まで）
   z_snow_icicle: { tier: 1, kind: 'mid', members: STD },   // 寄り道の強めのダンジョン（峰の後に来る前提）
+  z_snow_icicle_deep: { tier: 1, kind: 'mid', members: STD },   // 回廊の 2 階（1 組 5 匹まで）
   z_snow_floe: { tier: 1, kind: 'party', members: STD },
+  z_snow_ship: { tier: 1, kind: 'mid', members: STD },   // 氷に閉じた帆船（1 組 5 匹まで）
+  // 湿原（encounters_marsh.js）。好きな順なので 2 番目の地方として T1 で見る。縦切りの後のダンジョンは 1 組 4〜5 匹まで
+  zw_marsh: { tier: 1, kind: 'party', members: STD },
+  zw_marsh_road: { tier: 1, kind: 'party', members: STD },
+  zw_marsh_lotus: { tier: 1, kind: 'party', members: STD },
+  z_marsh_manor: { tier: 1, kind: 'party', members: STD },
+  z_marsh_bog: { tier: 1, kind: 'mid', members: STD },
 };
 const TARGET = { win: 99.5, roundsLo: 2.5, roundsHi: 3.5, hpLo: 8, hpHi: 12, hpZoneLo: 5, hpZoneHi: 15, p95: 20, down: 3, wipe: 0.1 };
 

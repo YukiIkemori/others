@@ -15,7 +15,7 @@
 //   R.Terrain.prewarm(map, {tile, tier}) → Job   マップの素材のタイル・建物・物・木の絵を先に焼く（暗転の中で）
 //   R.Terrain.chunkOf(x, y) → [cx, cy]          マス → チャンク
 //
-// 描いた下絵（map.art = {image, overlay?, emit?, painted?: [prop id]}、design/ENV_ASSETS.md §7）: 絵があれば地面・立ち上がり・水の縁・
+// 描いた下絵（map.art = {image, overlay?, emit?, closed?, painted?: [prop id]}、design/ENV_ASSETS.md §7・§8）: 絵があれば地面・立ち上がり・水の縁・
 //   建物・木・地面の飾り・足場（deck）・painted の物は焼かず、下絵の同じ所を base に置く（overlay は over＝人より上、emit は窓の灯り）。
 //   当たり・戸口・人・灯り・宝箱などの物はマップのデータのまま。絵が無ければ今までどおりマスから焼く（控え）。
 // 1 チャンクの仕事の順: 準備（マスの読み・要る絵の一覧）→ 素材のタイル → 絵（建物・物・木）→ 地面（dual grid）→ 立ち上がり・水の縁 →
@@ -44,7 +44,8 @@
     const b = T.Env.under(a.image, tile);
     if (!b) return null;   // まだ読めていないかもしれない: 覚えない
     const ov = a.overlay ? T.Env.under(a.overlay, tile) : null, em = a.emit ? T.Env.under(a.emit, tile) : null;
-    const r = { img: b.img, k: b.k, j: b.j || {}, over: ov, emit: em, painted: new Set(a.painted || (b.j && b.j.painted) || []), overChunks: null, emitC: null };
+    const cl = a.closed ? T.Env.under(a.closed, tile) : null;
+    const r = { img: b.img, k: b.k, j: b.j || {}, over: ov, emit: em, closed: cl, painted: new Set(a.painted || (b.j && b.j.painted) || []), overChunks: null, emitC: null };
     // overlay に画素のあるチャンク（無いチャンクに over の canvas を作らない）
     if (ov) {
       try {
@@ -58,6 +59,14 @@
     return (underCache[ck] = r);
   }
   T._underOf = underOf;
+  // 変わるマス（描いた下絵のダンジョン、ENV_ASSETS.md §8）: 下絵は「開いた」形（隠し通路を見つけた後・tilePatches を全部当てた後）で描き、
+  //   meta.live = [{cells: [[x, y]…], secret?: 'x,y' | patch?: i | cond?}] の範囲が閉じている間は、そのマスだけ map.art.closed の絵（閉じた形）を上に置く
+  function liveClosed(map, L, st) {
+    if (L.secret != null) { const [x, y] = String(L.secret).split(',').map(Number); return !(R.MapUtil.secretOpen ? R.MapUtil.secretOpen(map, x, y, st.secrets) : st.secrets.indexOf(L.secret) >= 0); }
+    const cond = L.patch != null ? ((map.tilePatches || [])[L.patch] || {}).cond : L.cond;
+    if (cond == null) return false;
+    try { return !(R.State && R.Game && R.State.check(cond)); } catch (e) { return true; }
+  }
   /** 下絵の窓の灯り（emit の絵をこのマスの大きさの canvas に）と窓ごとの光（meta.windows32） */
   function underLights(map, und, tile, v) {
     const s = tile / 32, SL = (R.Hd && R.Hd.STYLE && R.Hd.STYLE.light) || {}, wc = SL.windowColor || '#ffcf86';
@@ -446,6 +455,13 @@
       const u = this.und, k = u.k, bg = this.bg;
       bg.imageSmoothingEnabled = false;
       bg.drawImage(u.img, this.X0 / k, this.Y0 / k, S / k, S / k, 0, 0, S, S);
+      if (u.closed && u.j.live) {   // 閉じている変わるマス（隠し通路の壁・根の戸・つるの壁…）
+        const t = this.tile, [x0, y0, x1, y1] = this.cells, ck = u.closed.k;
+        for (const L of u.j.live) {
+          if (!L.cells.some(([x, y]) => x >= x0 && x < x1 && y >= y0 && y < y1) || !liveClosed(this.map, L, this.st)) continue;
+          for (const [x, y] of L.cells) if (x >= x0 && x < x1 && y >= y0 && y < y1) bg.drawImage(u.closed.img, (x * t) / ck, (y * t) / ck, t / ck, t / ck, x * t - this.X0, y * t - this.Y0, t, t);
+        }
+      }
       return true;
     }
     const img = imgOf(this.bg, S), h = S / BANDS;

@@ -1,0 +1,17 @@
+{
+ "id": "desert_hawks_1",
+ "kind": "under",
+ "map": "desert_hawks_1",
+ "tile": 32,
+ "size32": [
+  1408,
+  1152
+ ],
+ "windows32": [],
+ "painted": [],
+ "files": {
+  "24": "desert_hawks_1@24.png",
+  "32": "desert_hawks_1@32.png",
+  "40": "desert_hawks_1@40.png"
+ }
+}

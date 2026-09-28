@@ -1,0 +1,16 @@
+{
+ "id": "desert_tomb_1",
+ "kind": "under",
+ "map": "desert_tomb_1",
+ "tile": 32,
+ "size32": [
+  1792,
+  1536
+ ],
+ "windows32": [],
+ "painted": [],
+ "files": {
+  "24": "desert_tomb_1@24.png",
+  "32": "desert_tomb_1@32.png"
+ }
+}

@@ -93,7 +93,7 @@
           { id: 'giant', x: 38, y: 5, w: 7, h: 2, on: 'step', event: 'peak_giant', cond: '!snow_giant' },
         ],
         oneway: [{ x: 47, y: 30, dir: 's' }, { x: 48, y: 30, dir: 's' }],
-        zones: [{ rect: [0, 0, 58, 44], zone: 'z_snow_peak' }],
+        zones: [{ rect: [0, 0, 58, 17], zone: 'z_snow_peak_high' }, { rect: [0, 0, 58, 44], zone: 'z_snow_peak' }],   // 上の段（氷の壁 2・3 の先、y < 17）は 1 組 5 匹まで
         light: { ambient: '#56629e', k: 0.56, poolK: 0.7, spillR: 0.9, mood: 'night' },
         dark: false,
         bgm: 'ice', bbg: 'snow', weather: 'blizzard', weatherCond: '!cleared_r_snow', weatherElse: 'snow',

@@ -143,7 +143,7 @@ function learnFor(R, c, o) {
   const w = R.Rules.weaponType(c);
   const L = R.Rules.aptLetters(c);
   const els = R.Rules.ELEMENTS.filter((e) => /[SA]/.test(L.e[e]));
-  const techs = Object.keys(R.DB.techs).filter((id) => R.DB.techs[id].wtype === w && R.DB.techs[id].glim.lv <= T + 2).sort((a, b) => R.DB.techs[a].glim.lv - R.DB.techs[b].glim.lv);
+  const techs = Object.keys(R.DB.techs).filter((id) => R.DB.techs[id].wtype === w && R.DB.techs[id].glim && R.DB.techs[id].glim.lv <= T + 2).sort((a, b) => R.DB.techs[a].glim.lv - R.DB.techs[b].glim.lv);
   const spells = Object.keys(R.DB.spells).filter((id) => { const s = R.DB.spells[id]; return s.elements.length === 1 && s.elements.every((e) => els.includes(e)) && s.glim.lv <= T + 2; })
     .sort((a, b) => R.DB.spells[a].glim.lv - R.DB.spells[b].glim.lv);
   const want = [];

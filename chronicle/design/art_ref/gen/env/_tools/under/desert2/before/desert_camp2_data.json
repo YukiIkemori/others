@@ -1,0 +1,444 @@
+{
+ "id": "desert_camp2",
+ "w": 30,
+ "h": 22,
+ "kind": "town",
+ "rows": [
+  "uuuuuuuuuuuuuuuuuuuuuuuuuuuuuu",
+  "uuuuuuuuuuuuuuuuuuuuuuuuuuuuuu",
+  "uuuuuuuuuuuuuuuuuuuuuuuuuuuuuu",
+  "uuuXXXuuuuuuuuuuuuuuuuuuuuuuuu",
+  "uuXXXXXuuuuussssssusuuuuuXXXuu",
+  "uuXXXXXuusssssssssssssuuXXXXXu",
+  "uuXXXXXussssssssssssssssXXXXXu",
+  "uuuXXXssssssssssssssssssXXXXXu",
+  "uuuuusssssssssssssssssssXXXXXu",
+  "uuuuusssssssssssssssssssXXXXXu",
+  "uuuusssssssskkkkkkkssssssXXXuu",
+  "uuuussssssskkkkkkkkkssssssuuuu",
+  "uuuussssssskkkkkkkkkssssssuuuu",
+  "uuuussssssskkkkdkkkkssssssuuuu",
+  "uuuuuusssssskkkdkkkssssssuuuuu",
+  "uuuuuusssssssssdssssssssssuuuu",
+  "uuuuuuuusssssssdsssssmmmmmuuuu",
+  "uuuuuuuuussssssdsssssmmmmmuuuu",
+  "uuuuuuuuuuusssddssuuummmmmuuuu",
+  "uuuuuuuuuuuuuudduuuuuuuuuuuuuu",
+  "uuuuuuuuuuuuuudduuuuuuuuuuuuuu",
+  "uuuuuuuuuuuuuudduuuuuuuuuuuuuu"
+ ],
+ "legend": {
+  "s": {
+   "mat": "sand",
+   "solid": false,
+   "secret": false
+  },
+  "u": {
+   "mat": "dune_sand",
+   "solid": false,
+   "secret": false
+  },
+  "k": {
+   "mat": "cracked_clay",
+   "solid": false,
+   "secret": false
+  },
+  "d": {
+   "mat": "dirt",
+   "solid": false,
+   "secret": false
+  },
+  "Q": {
+   "mat": "sandstone_floor",
+   "solid": false,
+   "secret": false
+  },
+  "c": {
+   "mat": "cobble",
+   "solid": false,
+   "secret": false
+  },
+  "X": {
+   "mat": "wall_sandstone",
+   "solid": true,
+   "rise": 2,
+   "secret": false
+  },
+  "x": {
+   "mat": "wall_sandstone",
+   "solid": true,
+   "rise": 1,
+   "secret": false
+  },
+  "m": {
+   "mat": "rock",
+   "solid": true,
+   "rise": 1,
+   "secret": false
+  },
+  "w": {
+   "mat": "water",
+   "solid": false,
+   "walk": false,
+   "secret": false
+  },
+  "_": {
+   "mat": "shallow",
+   "solid": false,
+   "secret": false
+  },
+  "g": {
+   "mat": "grass",
+   "solid": false,
+   "secret": false
+  }
+ },
+ "objects": [
+  {
+   "type": "brazier",
+   "id": "fire_13_12",
+   "x": 13,
+   "y": 12,
+   "on": true
+  },
+  {
+   "type": "prop",
+   "id": "log",
+   "x": 12,
+   "y": 13
+  },
+  {
+   "type": "prop",
+   "id": "log",
+   "x": 14,
+   "y": 13
+  },
+  {
+   "type": "prop",
+   "id": "log",
+   "x": 13,
+   "y": 11
+  },
+  {
+   "type": "prop",
+   "id": "obelisk",
+   "x": 18,
+   "y": 7
+  },
+  {
+   "type": "examine",
+   "x": 18,
+   "y": 8,
+   "event": "desert_camp2_stone"
+  },
+  {
+   "type": "prop",
+   "id": "sack",
+   "x": 23,
+   "y": 12
+  },
+  {
+   "type": "examine",
+   "x": 23,
+   "y": 13,
+   "event": "desert_camp2_saddlebag"
+  },
+  {
+   "type": "prop",
+   "id": "tent",
+   "x": 8,
+   "y": 10
+  },
+  {
+   "type": "prop",
+   "id": "tent",
+   "x": 19,
+   "y": 13
+  },
+  {
+   "type": "prop",
+   "id": "cart_barrels",
+   "x": 9,
+   "y": 15
+  },
+  {
+   "type": "prop",
+   "id": "clay_jars",
+   "x": 17,
+   "y": 15
+  },
+  {
+   "type": "prop",
+   "id": "crate",
+   "x": 10,
+   "y": 15
+  },
+  {
+   "type": "prop",
+   "id": "bones",
+   "x": 6,
+   "y": 13
+  },
+  {
+   "type": "prop",
+   "id": "sand_mound",
+   "x": 21,
+   "y": 4
+  },
+  {
+   "type": "prop",
+   "id": "thorn_bush",
+   "x": 7,
+   "y": 7
+  },
+  {
+   "type": "prop",
+   "id": "cactus",
+   "x": 24,
+   "y": 10
+  },
+  {
+   "type": "prop",
+   "id": "rock_small",
+   "x": 12,
+   "y": 4
+  },
+  {
+   "type": "prop",
+   "id": "desert_palm",
+   "x": 11,
+   "y": 6,
+   "variant": 1
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 15,
+   "y": 10
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 11,
+   "y": 14
+  },
+  {
+   "type": "prop",
+   "id": "copper_brazier",
+   "x": 14,
+   "y": 17
+  },
+  {
+   "type": "prop",
+   "id": "copper_brazier",
+   "x": 16,
+   "y": 17
+  },
+  {
+   "type": "sign",
+   "x": 17,
+   "y": 18,
+   "text": "野営地「星の石」\n――北は砂嵐のくぼ地"
+  },
+  {
+   "type": "prop",
+   "id": "sand_mound",
+   "x": 4,
+   "y": 16
+  },
+  {
+   "type": "prop",
+   "id": "rock_small",
+   "x": 27,
+   "y": 14
+  },
+  {
+   "type": "prop",
+   "id": "thorn_bush",
+   "x": 11,
+   "y": 18
+  },
+  {
+   "type": "prop",
+   "id": "sack",
+   "x": 16,
+   "y": 16
+  },
+  {
+   "type": "prop",
+   "id": "cactus",
+   "x": 3,
+   "y": 10
+  },
+  {
+   "type": "prop",
+   "id": "bones",
+   "x": 26,
+   "y": 19
+  },
+  {
+   "type": "prop",
+   "id": "rock_small",
+   "x": 8,
+   "y": 4
+  },
+  {
+   "type": "prop",
+   "id": "clay_jars",
+   "x": 20,
+   "y": 11
+  }
+ ],
+ "npcs": [
+  {
+   "id": "c2_man1",
+   "look": "npc_caravan",
+   "x": 11,
+   "y": 13,
+   "dir": "e",
+   "move": "still",
+   "name": "隊商のファド",
+   "talk": "desert_camp_man",
+   "reward": "news",
+   "cond": [
+    "desert_caravan_on",
+    "desert_camp1_done",
+    "!desert_camp3_done"
+   ],
+   "key": "c2_man1"
+  },
+  {
+   "id": "c2_man2",
+   "look": "npc_desert_man",
+   "x": 15,
+   "y": 13,
+   "dir": "w",
+   "move": "still",
+   "name": "隊商のサミル",
+   "talk": "desert_camp_man",
+   "reward": "news",
+   "cond": [
+    "desert_caravan_on",
+    "desert_camp1_done",
+    "!desert_camp3_done"
+   ],
+   "key": "c2_man2"
+  },
+  {
+   "id": "c2_camel1",
+   "look": "ani_camel",
+   "x": 21,
+   "y": 15,
+   "dir": "w",
+   "move": "still",
+   "name": "ラクダ",
+   "talk": {
+    "lines": [
+     {
+      "text": "ラクダは、荷を下ろしてもらって\n満足そうに目を細めている。"
+     }
+    ]
+   },
+   "reward": null,
+   "cond": [
+    "desert_caravan_on",
+    "desert_camp1_done",
+    "!desert_camp3_done"
+   ],
+   "key": "c2_camel1"
+  },
+  {
+   "id": "c2_camel2",
+   "look": "ani_camel",
+   "x": 7,
+   "y": 12,
+   "dir": "e",
+   "move": "still",
+   "name": "ラクダ",
+   "talk": {
+    "lines": [
+     {
+      "text": "ラクダが、鼻を鳴らした。"
+     }
+    ]
+   },
+   "reward": null,
+   "cond": [
+    "desert_caravan_on",
+    "desert_camp1_done",
+    "!desert_camp3_done"
+   ],
+   "key": "c2_camel2"
+  },
+  {
+   "id": "camp2_star",
+   "look": "npc_desert_child",
+   "x": 20,
+   "y": 9,
+   "dir": "w",
+   "move": "still",
+   "name": "星読みの子",
+   "talk": "desert_camp2_child",
+   "reward": "hint",
+   "cond": "!desert_caravan_on",
+   "key": "camp2_star"
+  }
+ ],
+ "spawns": {
+  "road": {
+   "x": 15,
+   "y": 19,
+   "dir": "n"
+  },
+  "fire": {
+   "x": 13,
+   "y": 14,
+   "dir": "n"
+  }
+ },
+ "exits": [
+  {
+   "x": 14,
+   "y": 21,
+   "w": 2,
+   "h": 1,
+   "to": {
+    "map": "world",
+    "spawn": "camp2"
+   }
+  }
+ ],
+ "triggers": [
+  {
+   "id": "scene",
+   "on": "enter",
+   "event": "desert_camp2_scene"
+  }
+ ],
+ "walk": [
+  "..............................",
+  "..............................",
+  "..............................",
+  "...###........................",
+  "..#####..................###..",
+  "..#####.................#####.",
+  "..#####....#............#####.",
+  "...###............#.....#####.",
+  "........................#####.",
+  "........................#####.",
+  "...#....#...............####..",
+  "..............................",
+  ".............#................",
+  "...................#..........",
+  "..............................",
+  "..............................",
+  ".....................#####....",
+  "..............#.#....#####....",
+  ".................#...#####....",
+  "..............................",
+  "..............................",
+  ".............................."
+ ],
+ "dark": false,
+ "outside": "dune_sand"
+}

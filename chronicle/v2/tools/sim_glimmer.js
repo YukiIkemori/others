@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // 閃きと熟練度の sim（RULES）: ゲームの R.Rules.train・R.Glimmer.roll・R.Glimmer.learn をそのまま回す模型。
 //   node v2/tools/sim_glimmer.js [--runs 40] [--seed 1]         熟練度の目安（STATS_REWORK §5.3 の P0・P1・P1b・P2）と閃き（SYSTEMS_REWORK §4.3 G）
-//   node v2/tools/sim_glimmer.js --derive [--runs 200] [--share 0.33]  派生技: 入門技を何回使うと最初の派生を編み出すか
+//   node v2/tools/sim_glimmer.js --derive [--runs 200] [--share 0.33]  派生技（レア）: 親の技を連打・ふつうの遊びで編み出す確率
 //   node v2/tools/sim_glimmer.js --slice [--json out.json]      縦切りの範囲（V2_PLAN §3.9）: 序章 35 戦＋森 95 戦＋ボス 4 で、
 //                                                               だれか（仲間 20 人・主人公 5 型）が閃く確率が 5% 以上の技・術の一覧（QA の slice_scope が読む）
 // 模型（SYSTEMS_REWORK §4.3・STATS_REWORK §5.1）: 1 戦 3 行動。武器の人は 92% が武器の行動（そのうち覚えた技があれば 4 割が技）、
@@ -59,9 +59,17 @@ function battle(m, o, rnd) {
     Ru.train(c, { kind: useTech ? 'tech' : 'attack', wtype, actionId: useTech ? id : null, tier: o.T });
     const hit = Gl.roll(c, id, Object.assign({ kind: 'tech', wtype, used: id }, ctx0));
     if (hit && Gl.learn(c, hit.id, { quiet: true })) { got++; o.learned && o.learned.push(hit.id); }
+    if (!hit && useTech && o.derive) derive(c, id, ctx0.rankB, rnd, o.derive);   // 派生技（--derive の模型だけ）
   }
   m.glims += got;
   return got;
+}
+/** 派生技の判定（ゲームと同じ: 使った回数 → R.Glimmer.deriveRoll → learnDerived）。当たれば rec.push({id, tier}) */
+function derive(c, used, rankB, rnd, rec) {
+  Gl.countUse(c, used);
+  const d = Gl.deriveRoll(c, used, { rankB, rng: rnd });
+  if (d && Gl.learnDerived(c, d.id, used, { quiet: true })) { rec.push({ id: d.id, tier: Gl.tierOf(d.id), uses: Gl.useCount(c, used) }); return d.id; }
+  return null;
 }
 const rankW = (m) => Ru.rankOf(m.c, 'w', Ru.weaponType(m.c));
 const rankE = (m) => (m.element ? Ru.rankOf(m.c, 'e', m.element) : 0);
@@ -101,7 +109,7 @@ if (SLICE) {
   console.log(`slice scope (P ≥ 5% for anyone, ${specs.length} characters × ${N} runs): techs ${techs.length}, spells ${spells.length}`);
   for (const id of list) console.log(`  ${(100 * P[id]).toFixed(0).padStart(3)}%  ${id}  ${Ru.actionOf(id).name}`);
   if (JSON_OUT) fs.writeFileSync(JSON_OUT, JSON.stringify({ made: new Date().toISOString(), model: 'prologue 35 + forest 95 + bosses 4', threshold: 0.05, p: P, techs, spells }, null, 1));
-  const lv = techs.map((id) => DB.techs[id].glim.lv);
+  const lv = techs.map((id) => (DB.techs[id].glim || DB.techs[id].derived).lv);
   // §3.9 の見込みは「lv1〜3 の技 約 20 と入門技」: 閃く技（入門技を除く）を数える
   const glimT = techs.filter((id) => !START.has(id));
   // 見込みとの比べ（範囲の広さの目安。釣り合いの合格ではないので NOTE。技の lv の上限だけは合格の条件）
@@ -114,71 +122,113 @@ if (SLICE) {
 }
 
 // ================================================================== 派生技（design/BACKLOG「派生技の閃き」）
-//   node v2/tools/sim_glimmer.js --derive [--runs 200]
-// 持ち主「特定の技を何度も使ってると派生技を編み出す」「その技を使ってる時しか閃かない」。
-// 模型: 体験版の流れ（序章 35 戦＋森 95 戦、ティア 0。1 戦 3 行動）。入門技 X を覚えた人が、3 行動のうち 1 回 X（割合 --share、既定 1/3）、
-// 残りは攻撃。行動のたびに R.Rules.train、X のときは R.Glimmer.countUse → 閃き（R.Glimmer.roll。当たれば行動が差し替わり X は使わない）→
-// 当たらなければ R.Glimmer.deriveRoll（X の derive だけ）。X からの最初の派生までの X の使用回数と戦闘の番号を数える。
-// 目安（依頼）: 最初の派生は体験版の中ほど、入門技を 30〜60 回使ったころ（入門技ごとの中央値で見る）。
+//   node v2/tools/sim_glimmer.js --derive [--runs 200] [--share 0.33]
+// 持ち主（2026-09-28）「派生技ってレア技なのよ。そんな数必要ないのよ」「回数こなすと必ず覚えられるってことはやめて。
+//   回数と熟練度があっても確率なのよ、結局は。確率と相手のランクと自分の相性の問題」「最上位の技とかは覚えづらいものなのよ」
+// 模型: 体験版 = 序章 35 戦＋ボス 2＋森 95 戦＋ボス 2（ティア 0、rankB 1・ボス 3）。本編 = 続けてティア 1〜8（95 戦＋ボス 2、ティア 8 は 60 戦）。
+//   連打: 親の技 X を初めから覚え、3 行動のうち 1 回（--share）X、残りは攻撃。編み出したら、その派生技に次の段があればそれを連打する（上限の見込み）。
+//   ふつう: 通しの模型（武器の行動の 4 割が覚えた技のどれか。親は閃きで覚える）に派生の判定を足しただけ。
+// 目安（依頼）: 連打で体験版に何か 1 つ 30〜50%、2 段目はごくまれ。ふつうの遊びでは体験版でたいてい無し。2 段目は本編の終わりでもまれ。
 if (argv.includes('--derive')) {
-  const N = Math.max(40, +opt('--runs', 200));
+  const N = Math.max(100, +opt('--runs', 200));
   const SHARE = +opt('--share', 1 / 3);
-  const DEMO = 130, MID = [40, 95];
-  const specs = [
-    { hero: 'warrior', fav: 'sword', x: 't_sword_stepcut' }, { id: 'viola', x: 't_sword_stepcut' }, { id: 'shigure', x: 't_sword_draw' }, { hero: 'warrior', fav: 'sword', x: 't_sword_guard' },
-    { id: 'bartolo', x: 't_greatsword_overhead' }, { id: 'basil', x: 't_greatsword_crumble' }, { id: 'bartolo', x: 't_greatsword_mow' },
-    { id: 'titta', x: 't_dagger_vital' }, { id: 'titta', x: 't_dagger_filch' }, { id: 'titta', x: 't_dagger_butt' }, { id: 'zafira', x: 't_dagger_numb' },
-    { id: 'sylvain', x: 't_bow_rapid' }, { id: 'sylvain', x: 't_bow_twin' },
-    { id: 'teo', x: 't_staff_mind' }, { id: 'marta', x: 't_staff_soothe' },
-  ];
-  const q = (a, f) => { const s = a.slice().sort((x, y) => x - y); return s.length ? s[Math.min(s.length - 1, Math.floor(s.length * f))] : NaN; };
-  console.log(`derive sim: ${N} runs, X share ${SHARE.toFixed(2)} of actions, demo ${DEMO} battles (tier 0)`);
-  console.log('member        basic tech               derives to                uses p25/med/p75   battle med   in demo   first target');
-  const meds = [], battles = [], basicMeds = [];
-  for (const sp of specs) {
-    const uses = [], bat = [], tgt = {};
-    let inDemo = 0;
-    for (let run = 0; run < N; run++) {
-      const rng = R.rng(`derive:${SEED}:${sp.id || sp.hero}:${sp.x}:${run}`);
-      const rnd = () => rng.next();
-      R.State.newGame({ seed: 1 });
-      const c = member(sp).c;
-      if (!c.techs.includes(sp.x)) c.techs.push(sp.x);
-      const wtype = Ru.weaponType(c);
-      let got = null;
-      for (let b = 0; b < 400 && !got; b++) {
-        const ctx0 = { rankB: K.GLIM.rankBase, ef: 1, tier: 0, row: c.row, rng: rnd };
-        for (let a = 0; a < 3 && !got; a++) {
-          const useX = rnd() < SHARE;
-          const id = useX ? sp.x : 'attack';
-          const hit = Gl.roll(c, id, Object.assign({ kind: 'tech', wtype, used: id }, ctx0));
-          if (hit) { Gl.learn(c, hit.id, { quiet: true }); Ru.train(c, { kind: 'tech', wtype, actionId: hit.id, tier: 0 }); continue; }   // 閃きが先（重ねない）
-          Ru.train(c, { kind: useX ? 'tech' : 'attack', wtype, actionId: useX ? id : null, tier: 0 });
-          if (!useX) continue;
-          Gl.countUse(c, sp.x);
-          const d = Gl.deriveRoll(c, sp.x, { rng: rnd });
-          if (d) { Gl.learnDerived(c, d.id, sp.x, { quiet: true }); got = { uses: Gl.useCount(c, sp.x), b: b + 1, id: d.id }; }
-        }
+  const pct = (x) => (100 * x).toFixed(1).padStart(5) + '%';
+  const TIERS = (full) => { const out = [{ T: 0, n: 35, boss: 2 }, { T: 0, n: 95, boss: 2 }]; if (full) for (let T = 1; T <= 8; T++) out.push({ T, n: T === 8 ? 60 : 95, boss: 2 }); return out; };
+  /** 連打の 1 回の通し → {first: 最初の派生の {id, tier, uses, b} | null, tier2: bool} */
+  function spamRun(sp, full, rnd) {
+    R.State.newGame({ seed: 1 });
+    const c = member(sp).c;
+    if (!c.techs.includes(sp.x)) c.techs.push(sp.x);
+    const wtype = Ru.weaponType(c);
+    let x = sp.x, b = 0;
+    const rec = [];
+    const act = (T, boss) => {
+      b++;
+      const ctx0 = { rankB: T + K.GLIM.rankBase + (boss ? K.GLIM.rank.boss : 0), ef: boss ? K.GLIM.ef.boss : 1, tier: T, row: c.row, rng: rnd };
+      for (let a = 0; a < 3; a++) {
+        const useX = rnd() < SHARE;
+        const id = useX ? x : 'attack';
+        const hit = Gl.roll(c, id, Object.assign({ kind: 'tech', wtype, used: id }, ctx0));
+        if (hit) { Gl.learn(c, hit.id, { quiet: true }); Ru.train(c, { kind: 'tech', wtype, actionId: hit.id, tier: T }); continue; }   // 閃きが先（重ねない）
+        Ru.train(c, { kind: useX ? 'tech' : 'attack', wtype, actionId: useX ? id : null, tier: T });
+        if (!useX) continue;
+        const got = derive(c, x, ctx0.rankB, rnd, rec);
+        if (got) { rec[rec.length - 1].b = b; if (Gl.deriveOf(got).length) x = got; }
       }
-      if (got) { uses.push(got.uses); bat.push(got.b); tgt[got.id] = (tgt[got.id] || 0) + 1; if (got.b <= DEMO) inDemo++; }
-      else { uses.push(Infinity); bat.push(Infinity); }
+    };
+    for (const s of TIERS(full)) { for (let i = 0; i < s.n; i++) act(s.T, false); for (let i = 0; i < s.boss; i++) act(s.T, true); }
+    return { first: rec[0] || null, tier2: rec.some((r) => r.tier >= 2), n: rec.length };
+  }
+  const SPAM = [
+    { hero: 'warrior', fav: 'sword', x: 't_sword_twin' }, { id: 'shigure', x: 't_sword_draw' },
+    { id: 'bartolo', x: 't_greatsword_mow' }, { id: 'bartolo', x: 't_greatsword_overhead' },
+    { id: 'titta', x: 't_dagger_vital' }, { id: 'titta', x: 't_dagger_venom' },
+    { id: 'sylvain', x: 't_bow_twin' }, { id: 'teo', x: 't_staff_mind' },
+  ];
+  const LATE = [{ id: 'sylvain', x: 't_bow_hawk' }, { id: 'teo', x: 't_staff_bolt' }];
+  console.log(`derive sim: ${N} runs each, parent share ${SHARE.toFixed(2)} of actions`);
+  console.log('\n[spam one parent through the demo]   (apt = the member\'s 相性 letter for the weapon)');
+  console.log('member      apt  parent            → derived (lv)              demo any  demo 2nd   uses med   full game any  2nd');
+  const demoAny = [], demo2 = [], full2 = [];
+  for (const sp of SPAM.concat(LATE)) {
+    let any = 0, t2 = 0, fAny = 0, f2 = 0;
+    const uses = [];
+    for (let run = 0; run < N; run++) {
+      const r1 = spamRun(sp, false, (() => { const g = R.rng(`dv:${SEED}:${sp.id || sp.hero}:${sp.x}:${run}`); return () => g.next(); })());
+      if (r1.first) { any++; uses.push(r1.first.uses); }
+      if (r1.tier2) t2++;
+      if (run < N / 4) {
+        const r2 = spamRun(sp, true, (() => { const g = R.rng(`dvf:${SEED}:${sp.id || sp.hero}:${sp.x}:${run}`); return () => g.next(); })());
+        if (r2.first) fAny++;
+        if (r2.tier2) f2++;
+      }
     }
-    const top = Object.keys(tgt).sort((a, b) => tgt[b] - tgt[a]).map((id) => `${DB.techs[id].name} ${(100 * tgt[id] / N).toFixed(0)}%`).join(' ');
-    const m = q(uses, 0.5), mb = q(bat, 0.5);
-    meds.push(m); battles.push(mb);
-    const basic = DB.techs[sp.x].glim.lv === 1;
-    if (basic) basicMeds.push(m);
-    const to = Gl.deriveOf(sp.x).map((d) => DB.techs[d.to].name).join('・');
-    console.log(`${(sp.id || sp.hero).padEnd(13)} ${(DB.techs[sp.x].name + (basic ? '' : '*')).padEnd(22)} ${to.padEnd(24)} ${[q(uses, 0.25), m, q(uses, 0.75)].join('/').padStart(16)} ${String(mb).padStart(10)} ${(100 * inDemo / N).toFixed(0).padStart(8)}%   ${top}`);
+    const nf = Math.ceil(N / 4);
+    const late = LATE.includes(sp);
+    if (!late) { demoAny.push(any / N); demo2.push(t2 / N); }
+    full2.push(Gl.deriveOf(sp.x).some((d) => Gl.deriveOf(d.to).length) ? f2 / nf : null);
+    R.State.newGame({ seed: 1 });
+    const c = member(sp).c, L = Ru.aptLetters ? Ru.aptLetters(c).w[Ru.weaponType(c)] : '?';
+    const to = Gl.deriveOf(sp.x).map((d) => `${DB.techs[d.to].name}(${d.lv})` + (Gl.deriveOf(d.to).length ? '→' + Gl.deriveOf(d.to).map((e) => `${DB.techs[e.to].name}(${e.lv})`).join('') : '')).join(' ');
+    console.log(`${(sp.id || sp.hero).padEnd(11)} ${String(L).padEnd(4)} ${DB.techs[sp.x].name.padEnd(8)} → ${to.padEnd(26)} ${pct(any / N)} ${pct(t2 / N)} ${String(uses.length ? median(uses) : '-').padStart(9)}   ${pct(fAny / nf)}  ${pct(f2 / nf)}${late ? '   (lv5 parent: not in the demo)' : ''}`);
+  }
+  // ふつうの遊び（通しの模型そのまま、派生の判定を足す）
+  const CAS = [{ hero: 'warrior', fav: 'sword', name: 'hero sword' }, { id: 'bartolo', name: 'bartolo greatsword' }, { id: 'sylvain', name: 'sylvain bow' }, { id: 'titta', name: 'titta dagger' }, { id: 'teo', casts: 0.75, element: 'fire', name: 'teo staff/fire' }];
+  console.log('\n[casual play: the normal model, techs picked among the known ones]');
+  console.log('member               demo any   clear any   clear 2nd tier');
+  const casDemo = [], casClear2 = [];
+  for (const sp of CAS) {
+    let dA = 0, cA = 0, c2 = 0;
+    for (let run = 0; run < N / 2; run++) {
+      const g = R.rng(`dvc:${SEED}:${sp.name}:${run}`); const rnd = () => g.next();
+      R.State.newGame({ seed: 1 });
+      const m = member(sp);
+      const rec = [];
+      const o = (T, boss) => ({ T, boss, derive: rec });
+      for (let i = 0; i < 35; i++) battle(m, o(0, false), rnd);
+      battle(m, o(0, true), rnd); battle(m, o(0, true), rnd);
+      for (let i = 0; i < 95; i++) battle(m, o(0, false), rnd);
+      battle(m, o(0, true), rnd); battle(m, o(0, true), rnd);
+      if (rec.length) dA++;
+      for (let T = 1; T <= 8; T++) { for (let i = 0; i < (T === 8 ? 60 : 95); i++) battle(m, o(T, false), rnd); battle(m, o(T, true), rnd); battle(m, o(T, true), rnd); }
+      if (rec.length) cA++;
+      if (rec.some((r) => r.tier >= 2)) c2++;
+    }
+    const n = Math.floor(N / 2);
+    casDemo.push(dA / n); casClear2.push(c2 / n);
+    console.log(`${sp.name.padEnd(20)} ${pct(dA / n)}    ${pct(cA / n)}    ${pct(c2 / n)}`);
   }
   const res = [];
   let bad = 0;
   const chk = (ok, msg) => { res.push((ok ? 'PASS ' : 'FAIL ') + msg); if (!ok) bad++; };
-  chk(basicMeds.every((m) => m >= 30 && m <= 60), `first derivation from a basic (lv1) tech after 30–60 uses (medians ${basicMeds.join('/')})`);
-  const midB = q(battles, 0.5);
-  chk(midB >= MID[0] && midB <= MID[1], `first derivation around the mid-demo: median battle ${midB} (${MID[0]}–${MID[1]} of ${DEMO})`);
-  console.log('\n* = a lv2 starter (抜き打ち・打ち崩し・しびれ刺し), for reference; a lv4 target waits for weapon rank 14 (K.TECH_PROF), after the demo\n' + res.join('\n'));
-  console.log(`\nsim_glimmer --derive: ${res.filter((x) => x.startsWith('PASS')).length}/${res.length} passed`);
+  chk(mean(demoAny) >= 0.3 && mean(demoAny) <= 0.5, `spamming one parent through the demo: any derivation ${pct(mean(demoAny))} on average (30–50%; by parent ${demoAny.map((x) => (100 * x).toFixed(0)).join('/')})`);
+  chk(Math.max(...demo2) <= 0.03, `spamming: a 2nd-tier derivation in the demo is very rare (max ${pct(Math.max(...demo2))}, ≤ 3%)`);
+  chk(Math.max(...casDemo) <= 0.3 && mean(casDemo) <= 0.2, `casual play: usually none in the demo (mean ${pct(mean(casDemo))}, max ${pct(Math.max(...casDemo))}; ≤ 20% / ≤ 30%)`);
+  chk(Math.max(...casClear2) <= 0.15, `casual play: a 2nd-tier (top) derived tech by the clear stays rare (max ${pct(Math.max(...casClear2))}, ≤ 15%)`);
+  const f2 = full2.filter((x) => x != null);
+  chk(Math.max(...f2) <= 0.6, `even spamming the whole game, a 2nd-tier one is not a sure thing (max ${pct(Math.max(...f2))}, ≤ 60%)`);
+  console.log('\n' + res.join('\n'));
+  console.log(`\nsim_glimmer --derive: ${res.filter((x) => x.startsWith('PASS')).length}/${res.length} passed (runs ${N}, seed ${SEED})`);
   if (bad) process.exitCode = 1;
   return;
 }
@@ -224,7 +274,7 @@ for (let run = 0; run < RUNS; run++) {
   ms.forEach((m, k) => {
     track[k].clear.push(m.casts >= 0.75 ? rankE(m) : rankW(m));
     const w = Ru.weaponType(m.c);
-    const pool = Object.keys(DB.techs).filter((id) => DB.techs[id].wtype === w && DB.techs[id].glim.lv <= 9);
+    const pool = Object.keys(DB.techs).filter((id) => DB.techs[id].wtype === w && DB.techs[id].glim && DB.techs[id].glim.lv <= 9);   // 派生技（glim なし）は数えない
     track[k].techsClear.push((m.c.techs || []).length + (m.c.spells || []).length);
     track[k].mainShare.push(pool.filter((id) => m.c.techs.includes(id)).length / pool.length);
   });

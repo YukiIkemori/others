@@ -89,7 +89,7 @@
           { id: 'guard', x: 17, y: 7, w: 7, h: 3, on: 'step', event: 'icicle_guard', cond: '!snow_icicle_guard' },
         ],
         tilePatches: [{ cond: 'snow_icicle_box_2', rect: [19, 6, 3, 1], rows: ['...'] }],
-        zones: [{ rect: null, zone: 'z_snow_icicle' }],
+        zones: [{ rect: null, zone: 'z_snow_icicle_deep' }],
         light: { ambient: '#3e4a82', k: 0.66, poolK: 0.6, spillR: 0.8, mood: 'cave' },
         dark: [{ rect: [0, 0, 40, 32] }], bgm: 'cave', bbg: 'snow',
         meta: { chestsInfo: true, floor: '2 階', sub: '暗い氷の洞' },
@@ -238,11 +238,14 @@
       const W = 42, H = 24;
       const g = K.grid(W, H, '.');
       K.border(g, 'H', 2);
-      K.blob(g, 21, 12, 15, 6, 'p', 'fs_deck', '.');            // 甲板
-      K.rect(g, 8, 9, 26, 7, 'p');
+      // 船体（上から見た形。甲板は描いた下絵 v2/assets/env/snow/under/frost_ship_1*）: 船尾は西（x 6 の平らな船尾板）、船首は東（x 37 でとがる）。
+      //   半幅 w(x): 船尾 3.5 → x 10 で 5、x 28 まで 5、船首へ 0。舷（ふなべり）= 甲板の縁のマスは歩けない（手すりと船腹）。上り下りは南の渡り板だけ
+      const hw = (x) => (x < 10 ? 3.5 + (1.5 * (x - 6)) / 4 : x <= 28 ? 5 : (5 * (37 - x)) / 9);
+      const inHull = (x, y) => x >= 6 && x <= 36 && Math.abs(y + 0.5 - 12.5) <= hw(x + 0.5);
+      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (inHull(x, y)) K.put(g, x, y, [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => !inHull(x + dx, y + dy)) && !(x >= 19 && x <= 20 && y === 17) ? 'R' : 'p');
       K.rect(g, 18, 20, 4, 4, ',');
-      K.rect(g, 19, 16, 2, 4, 'p');                              // 渡り板
-      K.rect(g, 6, 6, 4, 3, 'W'); K.rect(g, 30, 6, 5, 3, 'W');   // 船室の壁
+      K.rect(g, 19, 18, 2, 2, 'p');                              // 渡り板
+      K.rect(g, 5, 3, 4, 3, 'W'); K.rect(g, 32, 3, 5, 3, 'W');   // 船団のほかの船の残骸（氷から突き出た船尾楼）
       const O = [];
       O.push(K.prop('sack', 10, 12), K.prop('sack', 11, 13));   // 荷（泉は置かない。WORLD §6.2）
       O.push(K.stairs(33, 12, { map: 'frost_ship_2', spawn: 'up' }, { id: 'frost_ship_1_down', look: 'down' }));
@@ -253,11 +256,11 @@
       O.push(K.exam(20, 9, 'frost_ship_log'));
       K.def('frost_ship_1', {
         name: '氷に閉じた帆船', kind: 'dungeon', optional: true, region: 'r_snow', location: 'frost_ship', theme: 'snow',
-        legend: S.LEGEND({ '.': { mat: 'ice' }, p: { mat: 'plank' }, W: { mat: 'wall_wood', solid: true, rise: 2 } }), rows: g, outside: 'ice', objects: O, npcs: [],
+        legend: S.LEGEND({ '.': { mat: 'ice' }, p: { mat: 'plank' }, W: { mat: 'wall_wood', solid: true, rise: 2 }, R: { mat: 'wall_wood', solid: true, rise: 1, name: 'hull' } }), rows: g, outside: 'ice', objects: O, npcs: [],
         spawns: { entrance: { x: 19, y: 22, dir: 'n' }, up: { x: 32, y: 13, dir: 'w' } },
         exits: [{ x: 18, y: 23, w: 4, h: 1, to: { map: 'world', spawn: 'frost_ship' } }],
         triggers: [{ id: 'arrive', on: 'enter', event: 'frost_ship_arrive', once: true }],
-        zones: [{ rect: null, zone: 'z_snow_floe' }],
+        zones: [{ rect: null, zone: 'z_snow_ship' }],
         light: { ambient: '#56629c', k: 0.58, poolK: 0.7, spillR: 0.9, mood: 'night' },
         dark: false, bgm: 'ghost', bbg: 'snow', weather: 'snow',
         meta: { chestsInfo: true, floor: '甲板', sub: '氷の中の帆柱' },
@@ -280,7 +283,7 @@
         spawns: { up: { x: 5, y: 5, dir: 's' } },
         exits: [],
         triggers: [{ id: 'boss', x: 20, y: 8, w: 3, h: 10, on: 'step', event: 'frost_ship_boss', cond: '!snow_admiral' }],
-        zones: [{ rect: [0, 0, 14, 22], zone: 'z_snow_floe' }],
+        zones: [{ rect: [0, 0, 14, 22], zone: 'z_snow_ship' }],
         light: { ambient: '#4e5890', k: 0.62, poolK: 0.6, spillR: 0.8, mood: 'cave' },
         dark: false, bgm: 'ghost', bbg: 'snow',
         meta: { chestsInfo: true, floor: '船倉', sub: '凍りついた船長室' },
