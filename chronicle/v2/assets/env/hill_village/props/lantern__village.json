@@ -1,8 +1,8 @@
 {
- "id": "lantern__wood",
+ "id": "lantern__village",
  "kind": "props",
- "theme": "forest_dungeon",
- "set": "wood",
+ "theme": "hill_village",
+ "set": "village",
  "base": "lantern",
  "frames": [
   "default"
@@ -13,17 +13,17 @@
    18
   ],
   "32": [
-   14,
+   13,
    23
   ],
   "40": [
-   17,
+   15,
    28
   ]
  },
  "feet": {
   "24": [
-   3,
+   4,
    14
   ],
   "32": [
@@ -36,11 +36,11 @@
   ]
  },
  "files": {
-  "24": "lantern__wood@24.png",
-  "32": "lantern__wood@32.png",
-  "40": "lantern__wood@40.png"
+  "24": "lantern__village@24.png",
+  "32": "lantern__village@32.png",
+  "40": "lantern__village@40.png"
  },
- "src": "design/art_ref/gen/env/propfix/sheet_wood.png",
+ "src": "design/art_ref/gen/env/propfix/sheet_village.png",
  "light32": [
   0,
   -9

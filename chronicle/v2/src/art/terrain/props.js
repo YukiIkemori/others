@@ -379,6 +379,13 @@
       it.opts = Object.assign({}, it.opts || {}, { set });
     }
   };
+  /** テーマの描き直した物の灯りの芯（art px、倍率 s）。無ければ null（props_light.js の表を使う） */
+  T._setAnchor = function (map, id, s) {
+    const set = T._propSetOf(map), ids = set && setIds(set);
+    if (!ids || !ids.has(id)) return null;
+    const ev = T.Env.prop(id + '__' + set, 0, {}), l = ev && ev.j && ev.j.light32;
+    return l ? [l[0] * s, l[1] * s] : null;
+  };
   function bakeProp(id, o) {
     const ev = T.Env && T.Env.prop ? ((o.set && T.Env.prop(id + '__' + o.set, o.v, o)) || T.Env.prop(id, o.v, o)) : null;
     if (ev) return envProp(id, ev, o);

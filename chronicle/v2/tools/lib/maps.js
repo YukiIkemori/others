@@ -66,7 +66,10 @@
         }
         return out;
       };
-      try { return fn(); } finally { MU.objectsAt = orig; idx = null; }
+      // マップの形（tilePatches の cond を毎回読む）も、索引の間（状態が変わらない BFS の中）は覚えておく（WORLD v3: ワールドが 9 倍のマスになった）
+      const origGrid = MU.grid, gridMemo = new Map();
+      MU.grid = function (map) { let g = gridMemo.get(map); if (!g) { g = origGrid.call(MU, map); gridMemo.set(map, g); } return g; };
+      try { return fn(); } finally { MU.objectsAt = orig; MU.grid = origGrid; idx = null; }
     };
 
     // ---------------------------------------------------------------- 出入り口

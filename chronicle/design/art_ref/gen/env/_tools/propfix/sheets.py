@@ -100,18 +100,28 @@ def cut(set_):
         if isinstance(hs, tuple): w32 = hs[1]; h32 = max(1, round(hh * w32 / ww))
         else: h32 = hs; w32 = max(1, round(ww * h32 / hh))
         bw = base['cell']['32'][0]
-        if w32 > bw * 1.15:   # keep the footprint: no wider than the old sprite (+15 %)
+        if w32 > bw * 1.15 and pid != 'lamp_post':   # (a lamp arm may reach past the tile)   # keep the footprint: no wider than the old sprite (+15 %)
             w32 = round(bw * 1.15); h32 = max(1, round(hh * w32 / ww))
         sid = '%s__%s' % (pid, set_); files = {}; cells = {}; feet = {}
+        base_light = round(base['light32'][1] * h32 / base['cell']['32'][1]) if base.get('light32') else None; light = None
         for t in TILES:
             w, h = sprite_sizes(w32, h32)[t]
             spr = pixelize_sprite(crop, w, h, ncol=32, outline=False, seed=1)
             if not pid.startswith('stairs'): spr = shadowed(spr, pid in SOLID)   # stairs lie in the floor: no shadow
             fn = '%s@%d.png' % (sid, t); save(spr, os.path.join(d, fn)); files[t] = fn
-            cells[t] = [spr.shape[1], spr.shape[0]]; feet[t] = [round(w / 2), h - 1]
+            al = spr[:h, :w, 3] > 200; ys = np.nonzero(al.any(1))[0]; base = al[max(0, ys.max() - max(2, h // 10)):ys.max() + 1]
+            fx = int(round(np.nonzero(base.any(0))[0].mean()))   # feet under the base (a lamp post's arm makes the box off-centre)
+            cells[t] = [spr.shape[1], spr.shape[0]]; feet[t] = [fx, h - 1]
+            if t == 32 and base_light is not None:
+                ly = h - 1 + base_light; row = al[max(0, ly - 3):ly + 4]; xs = np.nonzero(row.any(0))[0]
+                far = xs[np.abs(xs - fx) > 3]; lx = int(round(far.mean())) - fx if far.size and pid == 'lamp_post' else 0
+                light = [lx, base_light]
+                if pid == 'lamp_post' and lx:   # a hanging lantern: the light is the middle of the part off the post
+                    off = al.copy(); off[:, max(0, fx - 4):fx + 5] = False; rows = np.nonzero(off.sum(1) >= 4)[0]
+                    if rows.size: light = [lx, int(round(rows.mean())) - (h - 1)]
         meta = dict(id=sid, kind='props', theme=folder, set=set_, base=pid, frames=['default'], cell=cells, feet=feet, files=files,
                     src=os.path.relpath(raw, '/home/user/others/chronicle'))
-        if base.get('light32'): meta['light32'] = [0, round(base['light32'][1] * h32 / base['cell']['32'][1])]
+        if light: meta['light32'] = light
         json.dump(meta, open(os.path.join(d, sid + '.json'), 'w'), indent=1)
         print(sid, w32, h32, meta.get('light32'))
 if __name__ == '__main__':

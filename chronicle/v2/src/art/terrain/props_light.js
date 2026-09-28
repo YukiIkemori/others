@@ -120,7 +120,7 @@
           const meta = T._PROP_META[o.id];
           if (!meta || !meta.light) break;
           const spec = T._lightSpec(meta.light, false);
-          const a = anchorOf(o.id, s);
+          const a = (T._setAnchor && T._setAnchor(map, o.id, s)) || anchorOf(o.id, s);   // テーマの描き直した物は絵の灯りの芯（props.js）
           const lx = fx + a[0], ly = fy + a[1];
           const color = /crystal|mushroom|songstone/.test(o.id) ? S.crystalColor : spec.color;
           L(lx, fy - 4 * s, spec.r, color, spec.k * 1.2, 'pool', spec.kind, o.id + '@' + o.x + ',' + o.y);

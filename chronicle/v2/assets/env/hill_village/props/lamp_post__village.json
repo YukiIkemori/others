@@ -1,0 +1,48 @@
+{
+ "id": "lamp_post__village",
+ "kind": "props",
+ "theme": "hill_village",
+ "set": "village",
+ "base": "lamp_post",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   26,
+   49
+  ],
+  "32": [
+   34,
+   65
+  ],
+  "40": [
+   42,
+   81
+  ]
+ },
+ "feet": {
+  "24": [
+   6,
+   45
+  ],
+  "32": [
+   8,
+   61
+  ],
+  "40": [
+   10,
+   77
+  ]
+ },
+ "files": {
+  "24": "lamp_post__village@24.png",
+  "32": "lamp_post__village@32.png",
+  "40": "lamp_post__village@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_village.png",
+ "light32": [
+  9,
+  -33
+ ]
+}
