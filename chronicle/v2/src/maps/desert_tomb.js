@@ -140,6 +140,7 @@
         ],
         zones: [{ rect: [18, 35, 21, 11], zone: 'z_desert_tomb' }, { rect: null, zone: 'z_desert_tomb' }],
         light: { ambient: '#4c4a7e', k: 0.62, mood: 'dark' }, dark: true, bgm: 'pyramid', bbg: 'cave',
+        art: { image: 'desert/under/tomb_2', closed: 'desert/under/tomb_2_closed', painted: [] },   // 1 枚の下絵（_tools/under/desert2）
         meta: { chestsInfo: true, floor: '2 階', sub: '流砂の間' },
       });
     }
@@ -190,6 +191,7 @@
         ],
         zones: [{ rect: [0, 12, 52, 32], zone: 'z_desert_tomb_deep' }],
         light: DK.LIGHT_TOMB, dark: false, bgm: 'pyramid', bbg: 'cave',
+        art: { image: 'desert/under/tomb_3', painted: [] },   // 1 枚の下絵（_tools/under/desert2）
         meta: { chestsInfo: true, floor: '3 階', sub: '王の間' },
       });
     }

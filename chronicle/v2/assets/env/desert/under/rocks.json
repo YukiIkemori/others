@@ -1,0 +1,19 @@
+{
+ "id": "rocks",
+ "kind": "under",
+ "map": "desert_rocks",
+ "tile": 32,
+ "size32": [
+  1088,
+  896
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.7,
+ "files": {
+  "24": "rocks@24.png",
+  "32": "rocks@32.png",
+  "40": "rocks@40.png"
+ }
+}

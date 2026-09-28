@@ -220,6 +220,7 @@
       K.path(g, [[12, 17], [10, 17]], ',', 2);
       K.soften(g, 'H', 'n,i', ['#', 'H'], 0.3, 'au');
       K.rect(g, 12, 3, 17, 1, 'H');                             // 崖の縁
+      for (const [x, y] of [[27, 16], [28, 17]]) K.put(g, x, y, '#');   // 描いた下絵（v2/assets/env/snow/under/aurora*）の崖の角
       const O = [];
       O.push(K.prop('rock_small', 6, 15), K.prop('rock_small', 7, 16));   // 小石（泉は置かない。WORLD §6.2）
       O.push(K.exam(20, 5, 'aurora_view'), K.prop('ice_crystal', 16, 4), K.prop('ice_crystal', 24, 4), K.prop('snow_sign', 21, 6));

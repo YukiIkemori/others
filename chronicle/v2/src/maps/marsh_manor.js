@@ -3,7 +3,7 @@
 //             書庫の楽譜の書き付けに、オルゴールを回す順（弦・笛・太鼓）がある（2 階の小さな遊び）。
 //   2 階 48×36: 大階段の踊り場 → 長い回廊 → 北の音楽室（人形の楽団 tr_b_dolls）→ 奥のメルダの部屋（鐘の鍵と鐘の歌、証拠 5）。
 //             西の子ども部屋・南の寝室 2 つ。寝室と子ども部屋のオルゴール 3 つを順に回すと、回廊の飾り棚の隠し箱が開く（任意）。
-//   泉は置かない（館は 2 階。WORLD §6.2）。隠し通路なし。どちらの階も 1 枚の下絵（v2/assets/env/marsh/under/manor_1*・manor_2*）。
+//   泉は置かない（館は 2 階。WORLD §6.2）。隠し通路なし。どちらの階も 1 枚の下絵（v2/assets/env/lighthouse/under/manor_1*・manor_2*）。
 (function (R) {
   'use strict';
   R.onData(function () {
@@ -61,7 +61,7 @@
         light: MK.LIGHT_MANOR, dark: false,
         bgm: 'ghost', bbg: 'tower',
         meta: { chestsInfo: true, floor: '1階', sub: '主なき館' },
-        art: { image: 'marsh/under/manor_1', painted: [] },
+        art: { image: 'lighthouse/under/manor_1', painted: [] },
       });
     }
 
@@ -115,7 +115,7 @@
         light: MK.LIGHT_MANOR, dark: false,
         bgm: 'ghost', bbg: 'tower',
         meta: { chestsInfo: true, floor: '2階', sub: '楽の音の響く階' },
-        art: { image: 'marsh/under/manor_2', painted: [] },
+        art: { image: 'lighthouse/under/manor_2', painted: [] },
       });
     }
   });

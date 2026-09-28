@@ -73,6 +73,7 @@
         exits: [{ x: 16, y: 27, w: 3, h: 1, to: { map: 'world', spawn: 'rocks' } }],
         triggers: [], zones: [{ rect: null, zone: 'z_desert_rocks' }],
         light: DK.LIGHT_OUT, dark: false, bgm: 'desert', bbg: 'desert',
+        art: { image: 'desert/under/rocks', painted: [] },   // 1 枚の下絵（_tools/under/desert2）
         meta: { chestsInfo: true, sub: 'レア魔物の巣' },
       });
     }
@@ -99,6 +100,7 @@
         exits: [{ x: 27, y: 10, w: 1, h: 2, to: { map: 'world', spawn: 'oldcamp' } }],
         triggers: [{ id: 'arrive', on: 'enter', event: 'desert_oldcamp_arrive', once: true }],
         zones: [], light: DK.LIGHT_OUT, dark: false, bgm: 'caravan', bbg: 'desert',
+        art: { image: 'desert/under/oldcamp', painted: [] },   // 1 枚の下絵（_tools/under/desert2）
         meta: { chestsInfo: true, sub: '砂嵐の岩陰' },
       });
     }
@@ -119,6 +121,7 @@
         spawns: { road: { x: door.x, y: 10, dir: 'n' } },
         exits: [{ x: door.x, y: 11, w: 1, h: 1, to: { map: 'world', spawn: 'wellroom' } }],
         triggers: [], light: DK.LIGHT_ROOM, bgm: 'caravan', meta: { minimap: false },
+        art: { image: 'desert/under/wellroom', painted: [] },   // 1 枚の下絵（_tools/under/desert2）
       });
     }
   });

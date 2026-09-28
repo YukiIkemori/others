@@ -4,7 +4,7 @@
 //     西と東の鐘を鳴らす → 西の小島から北へ泥の道が現れる → 北の鐘（3）→ 北の鐘を鳴らす → 沼のまん中の小島への泥の道が現れる。
 //   まん中の小島に霧が集まり、霧食らい（tr_b_mistbeast）。そのあと、南の小さな島で眠っていた子どもたちが見つかる（marsh_finale）。
 //   泉は置かない（沼は 1 階。WORLD §6.2）。隠し通路なし。
-//   下絵（v2/assets/env/marsh/under/bog*）は水の引いた形（開いた形）で描き、閉じている間は bog_closed の絵（水のある形）をそのマスに置く（art.closed・meta.live）。
+//   下絵（v2/assets/env/forest_dungeon/under/bog*）は水の引いた形（tilePatches を全部当てた開いた形）で描き、閉じている間は bog_closed の絵（水のある形）をそのマスに置く（art.closed・meta.live）。
 (function (R) {
   'use strict';
   R.onData(function () {
@@ -61,7 +61,7 @@
       const xs = cells.map((c) => c[0]), ys = cells.map((c) => c[1]);
       const x0 = Math.min(...xs), y0 = Math.min(...ys), x1 = Math.max(...xs), y1 = Math.max(...ys);
       const rows = [];
-      for (let y = y0; y <= y1; y++) { let s = ''; for (let x = x0; x <= x1; x++) { const c = cells.find((q) => q[0] === x && q[1] === y); s += c ? (c[2] === '=' ? '=' : '~') : ' '; } rows.push(s); }
+      for (let y = y0; y <= y1; y++) { let s = ''; for (let x = x0; x <= x1; x++) { const c = cells.find((q) => q[0] === x && q[1] === y); s += c ? 'm' : ' '; } rows.push(s); }
       return { rect: [x0, y0, x1 - x0 + 1, y1 - y0 + 1], rows, cells: cells.map((c) => [c[0], c[1]]) };
     };
     function onPath(pts, x, y) {
@@ -72,6 +72,8 @@
       return false;
     }
     const pA = patchOf(A), pB = patchOf(B);
+    // 地面は水のある形（閉じた形）。泥の道は鐘を鳴らした後の tilePatches で現れる（下絵は開いた形。ENV_ASSETS.md §8 の決まり）
+    for (const [x, y] of pA.cells.concat(pB.cells)) g[y][x] = before[y][x] === 'g' ? '~' : before[y][x];
 
     const O = [];
     // 3 つの鐘（沈んだ鐘楼の頭。鐘の枠の描いた物と、鳴らす所）
@@ -103,14 +105,14 @@
         { id: 'mist', x: 26, y: 18, w: 9, h: 3, on: 'step', event: 'bog_mistbeast', cond: ['marsh_bell_3', '!marsh_mistbeast'] },
       ],
       tilePatches: [
-        { cond: { any: ['!marsh_bell_1', '!marsh_bell_2'] }, rect: pA.rect, rows: pA.rows },
-        { cond: '!marsh_bell_3', rect: pB.rect, rows: pB.rows },
+        { cond: ['marsh_bell_1', 'marsh_bell_2'], rect: pA.rect, rows: pA.rows },
+        { cond: 'marsh_bell_3', rect: pB.rect, rows: pB.rows },
       ],
       zones: [{ rect: [24, 16, 13, 8], zone: null }, { rect: [0, 0, 60, 52], zone: 'z_marsh_bog' }].filter((z) => z.zone),
       light: MK.LIGHT_BOG, dark: false,
       bgm: 'ghost', bbg: 'marsh',
       meta: { chestsInfo: true, floor: '沼', sub: '鐘の沈んだ沼', live: [{ cells: pA.cells, patch: 0 }, { cells: pB.cells, patch: 1 }] },
-      art: { image: 'marsh/under/bog', closed: 'marsh/under/bog_closed', painted: [] },
+      art: { image: 'forest_dungeon/under/bog', closed: 'forest_dungeon/under/bog_closed', painted: [] },
     });
   });
 })(window.RPG);

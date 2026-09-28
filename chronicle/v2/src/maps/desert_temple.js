@@ -65,6 +65,7 @@
         tilePatches: [{ cond: { all: DISCS }, rect: [21, 30, 6, 2], rows: ['OOOOOO', 'OOOOOO'] }],
         zones: [{ rect: null, zone: 'z_desert_temple' }],
         light: DK.LIGHT_TOMB, dark: false, bgm: 'pyramid', bbg: 'cave',
+        art: { image: 'desert/under/temple_1', painted: [] },   // 1 枚の下絵（_tools/under/desert2）
         meta: { chestsInfo: true, floor: '1 階', sub: '柱の間' },
       });
     }
@@ -98,6 +99,7 @@
         triggers: [{ id: 'guard', x: 18, y: 17, w: 4, h: 1, on: 'step', event: 'desert_temple_guard', cond: '!desert_temple_guard' }],
         zones: [{ rect: null, zone: 'z_desert_temple' }],
         light: DK.LIGHT_TOMB, dark: false, bgm: 'pyramid', bbg: 'cave',
+        art: { image: 'desert/under/temple_2', painted: [] },   // 1 枚の下絵（_tools/under/desert2）
         meta: { chestsInfo: true, floor: '2 階', sub: '日輪の奥殿' },
       });
     }

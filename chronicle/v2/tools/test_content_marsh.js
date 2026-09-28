@@ -224,7 +224,7 @@ async function assembly() {
   await D.events.bog_bell.run(f.ev, { x: bellAt(1).x, y: bellAt(1).y });
   ok('沼の鐘: 鐘の鍵が無いと鳴らない', !R.Game.flags.marsh_bell_1);
   R.Game.items.k_bell_key = 1;
-  const open = (i) => !R.State.check(bog.tilePatches[i].cond);
+  const open = (i) => R.State.check(bog.tilePatches[i].cond);
   for (const n of [1, 2]) { f = fakeEv({}); await D.events.bog_bell.run(f.ev, { x: bellAt(n).x, y: bellAt(n).y }); }
   const a = open(0) && !open(1);
   f = fakeEv({}); await D.events.bog_bell.run(f.ev, { x: bellAt(3).x, y: bellAt(3).y });

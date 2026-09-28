@@ -108,6 +108,7 @@
         triggers: [{ id: 'boss', x: 9, y: 11, w: 19, h: 1, on: 'step', event: 'desert_hawks_boss', cond: [FIGHT, '!desert_hawkhold_done'] }],
         zones: [{ rect: null, zone: 'z_desert_hawks', cond: [FIGHT, '!desert_hawkhold_done'] }],
         light: DK.LIGHT_TOMB, dark: false, bgm: 'cave', bbg: 'cave',
+        art: { image: 'desert/under/hawks_2', painted: [] },   // 1 枚の下絵（_tools/under/desert2）
         meta: { chestsInfo: true, floor: '2 階', sub: '頭の広間' },
       });
     }

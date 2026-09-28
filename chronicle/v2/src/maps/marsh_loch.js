@@ -12,7 +12,7 @@
 //   門は西の板の道（ワールドの湿原の道へ）と東の石の橋（霧の館の方へ）。
 //   灯り: 湖の中のくいに掛けた鬼火の灯（wisp_lamp）。道・戸口の前・出入り口には置かない。消灯の刻（marsh_night）には落ちる。
 //   小物は置かない（持ち主の決まり: 道をふさがない・散らかさない）。宝箱は見える物 2 つ。隠し通路なし（A27）。
-//   町の絵は 1 枚の下絵（v2/assets/env/marsh/under/loch*、design/ENV_ASSETS.md §7）。当たり・戸口・人・灯り・物は下のデータ。
+//   町の絵は 1 枚の下絵（v2/assets/env/moss_village/under/loch*、design/ENV_ASSETS.md §7）。当たり・戸口・人・灯り・物は下のデータ。
 (function (R) {
   'use strict';
   R.onData(function () {
@@ -181,9 +181,9 @@
       dark: false,
       bgm: 'town',
       meta: { sub: '湖の上の、鐘の町', chestsInfo: false },
-      // 町ぜんたいを 1 枚に描いた下絵（v2/assets/env/marsh/under/loch*、design/ENV_ASSETS.md §7）。湖・葦・板の道・小島・建物・大鐘・くいの鐘楼はこの絵、
+      // 町ぜんたいを 1 枚に描いた下絵（v2/assets/env/moss_village/under/loch*、design/ENV_ASSETS.md §7）。湖・葦・板の道・小島・建物・大鐘・くいの鐘楼はこの絵、
       // 当たり・戸口・人・灯り・ほかの物は上のデータのまま。絵が無ければマスから焼く
-      art: { image: 'marsh/under/loch', emit: 'marsh/under/loch_emit', painted: [] },
+      art: { image: 'moss_village/under/loch', emit: 'moss_village/under/loch_emit', painted: [] },
     });
   });
 })(window.RPG);

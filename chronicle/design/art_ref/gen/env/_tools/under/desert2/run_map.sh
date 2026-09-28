@@ -14,3 +14,4 @@ if [ -n "$TOPTEX" ]; then python3 toptex.py $m maps/$m/aligned.png maps/$m/align
 NAME=${m#desert_}
 cd maps && EMIT=none python3 ../process_dg.py $m $m/$A desert $NAME
 cd .. && python3 check.py $m maps/$m/out/$NAME@32.png maps/$m/check.png
+# (the aligned result is a candidate: compare maps/<map>/check.png with a raw one (align.py without WARP/FLOW) and keep the better, then ./finalize.sh)
