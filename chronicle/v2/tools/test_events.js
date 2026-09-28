@@ -228,6 +228,24 @@ R.DB.events.story_t1 = { async run(ev, ctx) { ran.push('t1:' + ctx.reason); } };
   ok('clearRegionPins removes the region pin', R.Leads.pinned() === null);
   ok('no toast/tip without a field scene (fixtures, title)', !R.UIK.toasts().some((t) => /手がかり/.test(t.text)) && !last('tip'));
 
+  // 依頼をくれる人（頭の上のオレンジの吹き出し。R.Leads.offerOf、layers.js が描く）
+  R.State.newGame({ hero: { type: 'warrior', sex: 'm', name: 'A' }, seed: 4 });
+  const npcOf = (map, id) => (R.DB.maps[map].npcs || []).find((n) => n.id === id);
+  const child = npcOf('pharos', 'well_child'), tadeo = npcOf('pharos', 'tadeo'), fish = npcOf('pharos', 'fishwife'), appr = npcOf('pharos_shipyard', 'apprentice');
+  ok('offer: a quest giver with an untaken quest is flagged (talk meta.gives lead:q_*)', R.Leads.offerOf(child) === 'q_pharos_well');
+  ok('offer: an ordinary NPC is not flagged', R.Leads.offerOf(fish) === null && R.Leads.offerOf(npcOf('pharos', 'otto')) === null);
+  ok('offer: not before the giver would ask (meta.needs / lead offer cond)', R.Leads.offerOf(appr) === null && R.Leads.offerOf(tadeo) === null);
+  G().flags.prologue_done = true;
+  ok('offer: … and yes once it would', R.Leads.offerOf(appr) === 'q_pharos_delivery' && R.Leads.offerOf(tadeo) === 'q_pharos_lamp');
+  R.Leads.add('q_pharos_well', { silent: true });
+  ok('offer: gone once the quest is accepted', R.Leads.offerOf(child) === null);
+  R.Leads.done('q_pharos_well');
+  ok('offer: stays gone after completion', R.Leads.offerOf(child) === null);
+  G().flags.prologue_lamp_road = true; G().flags.prologue_lamp_lookout = true;
+  ok('offer: gone when the quest was solved before it was asked for (done cond)', R.Leads.offerOf(tadeo) === null);
+  ok('offer: def.quest overrides (id / false)', R.Leads.offerOf({ id: 'x', talk: 'pharos_fishwife', quest: 'q_pharos_delivery' }) === 'q_pharos_delivery' && R.Leads.offerOf(Object.assign({}, appr, { quest: false })) === null);
+  ok('offer: follows meta.calls one level (the fisher → snow_fishing_talk)', R.Leads.offerOf({ id: 'x', talk: 'yule_fisher' }) === 'q_snow_fishing');
+
   // ================================================================ イベントの実行
   section('events run');
   R.State.newGame({ hero: { type: 'warrior', sex: 'm', name: 'アルン' }, seed: 4 });

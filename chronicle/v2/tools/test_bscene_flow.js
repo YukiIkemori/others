@@ -178,6 +178,39 @@ async function main() {
   ok('battle with the core ends (press A)', await B.pressUntil(p, 'a', 'window.__r', 160), await B.ev(p, `${D} && [${D}.phase, ${D}.log.slice(-3)]`));
   ok('invariants after the real-core battle', await B.waitFor(p, INV, 3000));
 
+  section('蘇生の道具: ねらいは倒れた味方だけ、起き上がると HP と構えが戻る（オーナー 2026-09-28）');
+  {
+    const nav = async (pred) => {
+      for (let i = 0; i < 12; i++) {
+        if (await B.ev(p, `(() => { const w = ${D}.ui; if (!w || !w.o) return false; const r = w.o.rows[w.sel]; return !!r && (${pred})(r); })()`)) return true;
+        await B.press(p, 'down');
+      }
+      return false;
+    };
+    await B.ev(p, "RPG.Settings.set('battleSpeed', 1); 0");
+    const who = await B.ev(p, `(() => { for (const id of ['bartolo', 'marta', 'selma']) if (RPG.Party.members().length < 3) try { RPG.Party.join(id); } catch (e) { /* ignore */ } const m = RPG.Party.members(); for (const c of m) c.hp = Math.max(1, c.hp); m[1].hp = 0; RPG.Game.items.i_phoenix = 1; return m[1].id; })()`);
+    await B.ev(p, `(() => { window.__r = null; RPG.Battle.start({ mons: [['rat_1', 1]], lv: 3, seed: 7 }).then((r) => { window.__r = r; }); return true; })()`);
+    ok('revive battle waits for input', await B.waitFor(p, `${D} && ${D}.phase==='input' && ${D}.ui`, 20000));
+    await B.press(p, 'a');
+    ok('item command → よみがえりの花 row', (await nav(`(r) => r.key === 'item'`)) && (await B.press(p, 'a'), await p.waitForTimeout(150), await nav(`(r) => r.id === 'i_phoenix'`)));
+    await B.press(p, 'a'); await p.waitForTimeout(250);
+    const uid = await B.ev(p, `${D}.B.units.find((u) => u.side === 'party' && u.id === ${JSON.stringify(who)}).uid`);
+    const hot = await B.ev(p, `Object.keys(${D}.hot || {})`);
+    ok('the cursor starts on the dead ally (not an enemy)', hot.length === 1 && hot[0] === uid, hot);
+    await B.press(p, 'down'); await B.press(p, 'left'); await p.waitForTimeout(100);
+    ok('moving the cursor stays on dead allies only', JSON.stringify(await B.ev(p, `Object.keys(${D}.hot || {})`)) === JSON.stringify([uid]));
+    await B.press(p, 'a'); await p.waitForTimeout(250);
+    for (let m = 0; m < 4; m++) {
+      if (!(await B.ev(p, `${D}.phase==='input' && !!${D}.ui`))) break;
+      if (await nav(`(r) => r.key === 'defend'`)) { await B.press(p, 'a'); await p.waitForTimeout(200); } else break;
+    }
+    ok('the revive is played', await B.waitFor(p, `${D}.log.some((l) => l.t === 'revive')`, 20000));
+    const v = await B.ev(p, `(() => { const v = ${D}.vis[${JSON.stringify(uid)}]; return { alive: v.alive, hp: v.hp, maxHp: v.maxHp, pose: v.pose }; })()`);
+    ok('HUD: the revived ally has hp = max HP (pct 1), alive, not KO', v.alive && v.hp > 0 && v.hp === v.maxHp && v.pose !== 'ko', v);
+    await B.ev(p, `${D}.finish({ result: 'escape', rewards: null }); 0`);
+    ok('revive battle closed', await B.waitFor(p, 'window.__r', 10000));
+  }
+
   section('全滅: タイトルへ');
   await B.ev(p, start({ demo: 'wipe', autoInput: true, mons: [['x', 1]] }));
   ok('wipe screen', await B.waitFor(p, `${D} && ${D}.go && ${D}.ui`, 30000));

@@ -36,7 +36,7 @@
     const O = [];
     O.push(K.prop('rock_small', 24, 21), K.prop('rock_small', 25, 22));   // 小石（泉は置かない。WORLD §6.2）
     O.push({ type: 'brazier', id: 'snow_woods_camp', x: 27, y: 24, on: true });
-    O.push(K.prop('tent', 29, 21), K.prop('firewood', 20, 25), K.prop('sled', 28, 26), K.prop('log', 22, 24));
+    O.push(K.prop('tent', 29, 21), K.prop('firewood', 21, 26), K.prop('sled', 28, 26), K.prop('log', 22, 24));
     // 倒木
     O.push(K.prop('log', 8, 23), K.prop('log', 9, 23), K.exam(8, 24, 'snow_woods_log', { log: 1 }));
     O.push(K.prop('log', 26, 7), K.prop('log', 27, 7), K.exam(27, 8, 'snow_woods_log', { log: 2 }));

@@ -73,7 +73,7 @@
   lead('q_snow_base', { kind: 'side', title: '子どもの秘密基地', text: '雪の土手の奥に、子どもの\n秘密基地がある。合言葉が\n要るらしい。', from: '村の子', place: 'yule', done: 'snow_base_open' });
   lead('q_snow_lamps', { kind: 'side', title: '峠の道しるべ', text: 'ユールから峠の宿への道の\n灯籠が三つ消えている。\n冬至の火を分けて回る。', from: 'ソーニャ', place: 'pass_inn', dir: '東', done: 'snow_lamps_done' });
   lead('q_pass_bath', { kind: 'side', title: '凍った湯のくみ口', text: '峠の宿の湯殿のくみ口が\n凍りついた。火のつぼが\nひとつあればとけるという。', from: '峠の宿の湯の番', place: 'pass_inn', done: 'pass_inn_bath_done' });
-  lead('q_snow_ingrid', { kind: 'side', title: '語りの年寄りたち', text: '祭で語る昔話は、村の\n年寄り三人が知っている。\nイングリッド・オラフ・ブレンダ。', from: 'ヨルン', place: 'yule', done: 'snow_tales_done' });
+  lead('q_snow_ingrid', { kind: 'side', title: '語りの年寄りたち', text: '祭で語る昔話は、村の\n年寄り三人が知っている。\nイングリッド・オラフ・ブレンダ。', from: 'ヨルン', place: 'yule', done: 'snow_tales_done', offer: ['!snow_festival_lit', '!snow_siege_done', '!snow_finale_done'] });   // offer: ヨルンが頼むのは祭の支度の間だけ（R.Leads.offerOf）
   // 寄り道のうわさ（rumor）
   lead('l_opt_icicle', { kind: 'rumor', title: '氷の中の宝箱', text: '西の崖の洞で、氷の中に\n宝箱が閉じこめられている\nのを見た者がいる。', from: 'ユールの泊まり客', place: 'icicle', dir: '西', done: { visited: 'icicle_2' } });
   lead('l_opt_pass_inn', { kind: 'rumor', title: '峠の湯気', text: '東の峠の上に、湯気の立つ\n宿がある。旅人の休み処だ。', from: 'ユールの旅の商人', place: 'pass_inn', dir: '東', done: { visited: 'pass_inn' } });

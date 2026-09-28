@@ -78,6 +78,7 @@
       title: '半島の灯籠に火を', kind: 'side', region: 'prologue', from: '灯守組合のタデオ', dir: '半島',
       text: '見晴らし台の古い灯籠と、\nロアからの夜道の灯籠に、\n組合の火種をともす。',
       done: ['prologue_lamp_road', 'prologue_lamp_lookout'],
+      offer: 'prologue_done',   // タデオが頼むのは灯台が戻ってから（頭の上の依頼の吹き出し、R.Leads.offerOf）
     },
     q_pharos_delivery: {
       title: '造船所の届け物', kind: 'side', region: 'prologue', from: '造船所の見習い', place: 'fern', dir: '西',

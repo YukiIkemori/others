@@ -163,6 +163,7 @@
     if (S.dust && S.dust.length) drawDust(g, t, cx, cy);
     // F4: 立っている物と人
     used = 0;
+    QM.n = 0;
     collect(t, real);
     const list = pool;
     const n = used;
@@ -181,10 +182,13 @@
     if (m.weather && F._weather) F._weather(g, m, cx, cy, t);
     // 暗がり（E6）
     F.dark.draw(g, cam);
-    // 膜の上: 宝箱・泉のきらめき（人の頭の上の「新しい話」の印は描かない。持ち主の決まり 2026-09-28: ほぼ誰とでも話せるので要らない）
+    // 膜の上: 宝箱・泉のきらめき（人の頭の上の「新しい話」の印は描かない。持ち主の決まり 2026-09-28: ほぼ誰とでも話せるので要らない。
+    //   依頼をくれる人の吹き出しだけは出す。下の questMarks）
     // 町の道しるべ（出口の灯り・店の吊り看板。wayfind.js）: 町の絵の上、膜の上
     if (F._wayfind) F._wayfind(g, t, cx, cy);
     sparkles(g, t, cx, cy);
+    // 依頼をくれる人の頭の上のオレンジの吹き出し（膜の上。体を描いたときの位置をそのまま使う）
+    if (QM.n) questMarks(g, t);
     // 光の明滅
     const fl = S.flashFx;
     if (fl) {
@@ -322,7 +326,10 @@
       // 立ち止まった人の息（1 px、人ごとの位相と速さ。動きを減らす設定では出さない）
       const id = n.idle || (n.idle = idleOf(n));
       const bob = !n.mv && !n.pose && !REDUCE.on ? (Math.sin((tm + id.ph) * id.w) > 0.35 ? Math.max(1, Math.round(u1(t))) : 0) : 0;
-      drawChar(g, n.look, Math.round((px + 0.5) * t - cx), Math.round((py + 1) * t - cy - t * 0.1) - bob, (n.glance && n.glance.dir) || n.dir, !!n.mv, false, false, n.pose && n.pose.name, (n.odo || 0) + k, NPC_STEP_MS, al, id.ph);
+      const bx = Math.round((px + 0.5) * t - cx), by = Math.round((py + 1) * t - cy - t * 0.1) - bob;
+      drawChar(g, n.look, bx, by, (n.glance && n.glance.dir) || n.dir, !!n.mv, false, false, n.pose && n.pose.name, (n.odo || 0) + k, NPC_STEP_MS, al, id.ph);
+      // 依頼の吹き出しは、今描いた体と同じ点（歩きの途中の位置・息の 1 px 込み）に付ける。over の上の描き直しでは積まない
+      if (!REDRAW.on && F._npcQuest(n)) markQuest(n, bx, by, al);
       return;
     }
     if (e.kind === 'prop') {
@@ -343,6 +350,86 @@
     }
     if (e.kind === 'bld') { drawBuilding(g, e.ref, t, cx, cy); return; }
     drawObj(g, e.ref, t, cx, cy, tm);
+  }
+
+  // ---------------------------------------------------------------- 依頼の吹き出し
+  // 話しかけると依頼をくれる人（R.Leads.offerOf、leads.js）の頭の上に、オレンジの吹き出しと白い「!」（オーナーの依頼 2026-09-28）。
+  //   位置: drawEnt が体を描いたのと同じ (x, y)（補間した歩きの位置・息の 1 px・カメラ）を積み、膜の上でまとめて描く。
+  //     論理のマス（n.x, n.y）から出さない（前の「新しい話」の印は歩くと遅れてずれた）。
+  //   高さ: 立ちの絵（stand_s）の一番上の不透明な行（シートごとに 1 回読む）。歩きの上下では動かさない（吹き出しが震えない）。
+  //   出さない: 話している間・イベントの間・消える途中（n.hold）。濃さは人のフェードに合わせる。動きを減らす設定では揺らさない
+  const QM = { n: 0, list: [] };
+  const headOf = new WeakMap();   // シート → 足もとから頭のてっぺんまで（px）
+  /** 依頼の吹き出しを出す人か → 依頼 id | null */
+  F._npcQuest = function (n) {
+    if (!n || !n.vis || n.hidden || n.hold || n.talking || n.party || !R.Leads || !R.Leads.offerOf) return null;
+    if (R.Events && R.Events.busy && R.Events.busy()) return null;
+    return R.Leads.offerOf(n.def);
+  };
+  function headH(look, t) {
+    const s = F._charScale() / 1.15, u = t / 32;
+    const key = 'hd:field:' + look;
+    const sh = R.Hd.has(key) ? R.Hd.get(key, charOpts(false)) : null;
+    if (!sh) return Math.round(40 * u * s);   // 絵がまだ無い間（仮の人形の頭のてっぺんくらい）
+    let h = headOf.get(sh);
+    if (h != null) return h;
+    const P = sh.poses.stand_s || sh.poses.idle_s || [0];
+    const fr = sh.frames[P[0]] || sh.frames[0];
+    h = fr ? fr.oy : Math.round(40 * u * s);
+    try {
+      const c = fr.c, w = c.width, ht = c.height, d = c.getContext('2d').getImageData(0, 0, w, ht).data;
+      let top = -1;
+      for (let y = 0; y < ht && top < 0; y++) for (let x = 0; x < w; x++) if (d[(y * w + x) * 4 + 3] > 40) { top = y; break; }
+      if (top >= 0) h = fr.oy - top;
+    } catch (e) { /* 読めない絵は枠の上端 */ }
+    headOf.set(sh, h);
+    return h;
+  }
+  function markQuest(n, x, y, al) {
+    let q = QM.list[QM.n];
+    if (!q) q = QM.list[QM.n] = { x: 0, y: 0, look: '', al: 1, ph: 0 };
+    QM.n++;
+    q.x = x; q.y = y; q.look = n.look; q.al = al; q.ph = (n.idle && n.idle.ph) || 0;
+  }
+  function questMarks(g, t) {
+    const s = F._charScale() / 1.15, u = (t / 32) * s, tm = R.Engine.time;
+    const W = Math.round(15 * u), H = Math.round(14 * u), r = Math.max(2, Math.round(4 * u)), tail = Math.round(4 * u), lw = Math.max(1, Math.round(1.5 * u));
+    g.save();
+    for (let i = 0; i < QM.n; i++) {
+      const q = QM.list[i];
+      if (q.al <= 0.01) continue;
+      const fl = REDUCE.on ? 0 : Math.round(Math.sin((tm + q.ph) / 420) * 1.5 * u);   // ゆっくり浮き沈み（人ごとに位相）
+      const x0 = Math.round(q.x - W / 2), y1 = q.y - headH(q.look, t) - Math.round(5 * u) + fl, y0 = y1 - tail - H;
+      if (y1 < -4 || y0 > R.H || x0 + W < 0 || x0 > R.W) continue;
+      g.globalAlpha = q.al;
+      // 影 → 縁取りの吹き出し（角の丸い四角と下向きのしっぽ）
+      g.fillStyle = 'rgba(20,10,4,0.35)';
+      bubblePath(g, x0 + 1, y0 + Math.max(1, Math.round(u)), W, H, r, tail); g.fill();
+      bubblePath(g, x0, y0, W, H, r, tail);
+      g.fillStyle = '#f29a38'; g.fill();
+      g.lineWidth = lw; g.strokeStyle = '#7a3b12'; g.lineJoin = 'round'; g.stroke();
+      // 上のふちの明かり
+      g.fillStyle = 'rgba(255,214,150,0.75)';
+      g.fillRect(x0 + r, y0 + lw + Math.round(u * 0.5), W - r * 2, Math.max(1, Math.round(u)));
+      // 白い「!」（字にしない。どの書体でもくっきり）
+      const bw = Math.max(2, Math.round(2.6 * u)), bxm = Math.round(q.x - bw / 2);
+      const top = y0 + Math.round(2 * u), bar = Math.round(6 * u), dot = Math.max(2, Math.round(2.4 * u));
+      g.fillStyle = '#fffaf0';
+      g.fillRect(bxm, top, bw, bar);
+      g.fillRect(bxm, top + bar + Math.max(1, Math.round(1.4 * u)), bw, dot);
+    }
+    g.restore();
+  }
+  function bubblePath(g, x, y, w, h, r, tail) {
+    const cx = x + w / 2, b = y + h;
+    g.beginPath();
+    g.moveTo(x + r, y);
+    g.lineTo(x + w - r, y); g.quadraticCurveTo(x + w, y, x + w, y + r);
+    g.lineTo(x + w, b - r); g.quadraticCurveTo(x + w, b, x + w - r, b);
+    g.lineTo(cx + tail * 0.8, b); g.lineTo(cx, b + tail); g.lineTo(cx - tail * 0.8, b);
+    g.lineTo(x + r, b); g.quadraticCurveTo(x, b, x, b - r);
+    g.lineTo(x, y + r); g.quadraticCurveTo(x, y, x + r, y);
+    g.closePath();
   }
 
   // ---------------------------------------------------------------- 人

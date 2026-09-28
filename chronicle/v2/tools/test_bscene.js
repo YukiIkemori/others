@@ -194,5 +194,25 @@ section('人の札は隊列の順（前列・後列で分けない。2026-09-27 
   }
   ok('shorter at higher battle speed (1 > 2 > 3 > 5)', ms[1] > ms[2] && ms[2] > ms[3] && ms[3] > ms[5], ms);
   ok('brief: ≤ 1.6 s at 1, ≤ 0.5 s at 5 (the 0.9 s glimmer minimum does not apply)', ms[1] <= 1600 && ms[5] <= 500, ms);
+  // 蘇生のねらい（オーナー 2026-09-28「よみがえりの花で敵しか選べない」）: ally_dead は倒れた味方だけ、いなければ一覧へ戻る
+  section('ねらい: ally_dead は倒れた味方だけ');
+  {
+    const acts = [{ uid: 'p0', side: 'party', name: 'A', x: 800, y: 300 }, { uid: 'p1', side: 'party', name: 'B', x: 800, y: 340 }, { uid: 'p2', side: 'party', name: 'C', x: 800, y: 380 }, { uid: 'e0', side: 'enemy', name: 'E', x: 200, y: 300 }];
+    const mk = (dead) => ({ actors: acts, vis: { p0: { alive: true }, p1: { alive: !dead.includes('p1') }, p2: { alive: !dead.includes('p2') }, e0: { alive: true } }, aliveEnemies: () => [acts[3]], head: null, L: {} });
+    const u = acts[0];
+    const s1 = mk(['p2']);
+    _.target.pick(s1, u, 'ally_dead', { row: { cmd: 'item', id: 'i_phoenix', label: 'よみがえりの花' }, mem: { ally: 'p0', target: 'e0' } });
+    ok('ally_dead: cursor on the first dead ally (memory ignored)', JSON.stringify(Object.keys(s1.hot || {})) === '["p2"]' && /よみがえりの花 → C/.test(s1.head.sub), [s1.hot, s1.head]);
+    const s2 = mk([]);
+    const back = await _.target.pick(s2, u, 'ally_dead', { row: { cmd: 'item', id: 'i_phoenix' }, mem: {} });
+    ok('ally_dead with nobody down → back (no enemy cursor)', back === 'back' && !s2.hot);
+    const s3 = mk(['p1']);
+    _.target.pick(s3, u, 'ally', { row: { cmd: 'item', id: 'i_potion' }, mem: {} });
+    ok('ally (potion): living allies only, starts on self', JSON.stringify(Object.keys(s3.hot || {})) === '["p0"]');
+    const s4 = mk(['p1']);
+    _.target.pick(s4, u, 'party', { row: { cmd: 'spell', id: 's_earth_light_dark' }, mem: {} });
+    ok('party (revive all): whole party lit, dead included', Object.keys(s4.hot || {}).sort().join() === 'p0,p1,p2');
+    ok('TARGET_JA names ally_dead', _.cmd.TARGET_JA.ally_dead === '倒れた味方ひとりに');
+  }
   done('test_bscene');
 })();

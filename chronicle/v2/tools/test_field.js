@@ -470,6 +470,23 @@ async function main() {
   ok('after talking: unlocked', Object.keys(R.Field.locks()).length === 0 && !R.Events.busy(), R.Field.locks());
   R.off('talk', onTalk);
 
+  section('依頼の吹き出し（F._npcQuest: 依頼をくれる人だけ、話す間・イベントの間は出さない）');
+  const hn = S.npcById.ph_hanna, qOld = hn.def.quest, qLead = R.Game.leads.q_pharos_well;
+  delete R.Game.leads.q_pharos_well;
+  hn.def.quest = 'q_pharos_well';
+  ok('a quest giver (untaken quest) gets the bubble', R.Field._npcQuest(hn) === 'q_pharos_well');
+  hn.talking = true;
+  ok('… not while talking to it', R.Field._npcQuest(hn) === null);
+  hn.talking = false;
+  hn.hold = 1;
+  ok('… not while it is leaving (hold / fade out)', R.Field._npcQuest(hn) === null);
+  hn.hold = 0;
+  R.Leads.add('q_pharos_well', { silent: true });
+  ok('… gone once the quest is accepted', R.Field._npcQuest(hn) === null);
+  if (qLead) R.Game.leads.q_pharos_well = qLead; else delete R.Game.leads.q_pharos_well;
+  if (qOld === undefined) delete hn.def.quest; else hn.def.quest = qOld;
+  ok('an ordinary NPC has no bubble', R.Field._npcQuest(hn) === null);
+
   section('チャンク（持つ範囲・R.Hd.track・焼き直し）');
   await enter('field_world', 40, 25, 's');
   const cs = R.Field.chunks.stats();
