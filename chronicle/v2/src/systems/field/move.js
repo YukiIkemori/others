@@ -201,20 +201,33 @@
    *   いいえ（B も）は来たマスへ 1 歩下がる（向きはそのまま＝入口を向いたまま下がる）。confirm が無ければすぐ go()。
    *   フィールドのエリアからダンジョンへの入口には field_00_kit.js が文を足す（町の門・エリアの端には付けない）
    */
-  function confirmGo(text, go) {
-    if (!text) return go();
+  function confirmGo(text, go, gate) {
+    const shut = gateShut(gate);
+    if (!text && !shut) return go();
     return (async () => {
       F.lock('confirm');
       let yes = false;
       try {
-        const r = await R.UIK.Message.say({ text, choices: ['はい', 'いいえ'], cancel: 1, face: false });
-        yes = r === 0;
+        if (shut) await R.UIK.Message.say({ text: gate.text || 'この先へは、まだ行けない。', face: false });
+        else yes = (await R.UIK.Message.say({ text, choices: ['はい', 'いいえ'], cancel: 1, face: false })) === 0;
       } finally { F.unlock('confirm'); }
       if (yes) return go();
       F._stepBack();
       return null;
     })();
   }
+  /**
+   * 通せんぼ（持ち主 2026-09-28「一人だと入れないようにして」「ファロスへのマップ以外に行こうとしたら…行けないように」）。
+   *   出口・扉・階段・建物の戸口に gate: {text, solo?, when?}。閉じている間は入らずに text を出し、来たマスへ 1 歩下がる。
+   *   閉じているのは「solo なら一行が 1 人のとき」かつ「when（条件）が無いか真のとき」。序章の置き場所は field_00_kit.js の SOLO_GATES
+   */
+  function gateShut(gate) {
+    if (!gate) return false;
+    if (gate.solo) { const G = R.Game; if (G && G.party && G.party.length > 1) return false; }
+    if (gate.when != null) { try { if (!R.State.check(gate.when)) return false; } catch (e) { return false; } }
+    return true;
+  }
+  F._gateShut = gateShut;
   F._confirmGo = confirmGo;
   /** 来たマス（S.from）へ 1 歩下がる。向きは変えない。後ろの人は 1 つずつ前の人の元の所へ戻る（trail.js） */
   F._stepBack = function () {
@@ -264,18 +277,18 @@
         return confirmGo(o.confirm, () => {
           try { R.Audio.sfx(st ? 'stairs' : 'door'); } catch (e) { /* */ }
           return F.enter(o.to.map, st ? F.stairsLanding(o.to.map, o.to.spawn, m.id) : o.to.spawn);
-        });
+        }, o.gate);
       }
       if (o.type === 'building' && o.door && o.door.x === S.x && o.door.y === S.y && o.door.to) {
         return confirmGo(o.door.confirm, () => {
           try { R.Audio.sfx('door'); } catch (e) { /* */ }
           return F.enter(o.door.to.map, o.door.to.spawn);
-        });
+        }, o.door.gate);
       }
     }
     // 出口（上から順に最初に cond の合う物）
     for (const e of m.exits || []) {
-      if (inRect(S.x, S.y, e) && (!e.cond || R.State.check(e.cond))) return confirmGo(e.confirm, () => F.enter(e.to.map, e.to.spawn));
+      if (inRect(S.x, S.y, e) && (!e.cond || R.State.check(e.cond))) return confirmGo(e.confirm, () => F.enter(e.to.map, e.to.spawn), e.gate);
     }
     // step のトリガー
     for (const tr of m.triggers || []) {

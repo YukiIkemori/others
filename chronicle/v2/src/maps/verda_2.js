@@ -91,7 +91,6 @@
     K.scatter(g, O, ['rock_small', 'stump', 'rock'], 12, [1, 1, 58, 50], ',"', 'v2rk', { keep, gap: 4, variant: true });
     K.scatter(g, O, 'firefly', 10, [1, 1, 58, 50], ',"', 'v2ff', { keep, gap: 6 });
 
-    // ---------------------------------------------------------------- 人
     // ---------------------------------------------------------------- 描いた絵に当たりを合わせる（K.fit。絵の床・壁・描き足した大木の所。
     //   手で組んだ上の形は絵の下書き。絵がずれた所だけここで直す。マスの一覧はマップの絵の床の割合から拾い、重ねた当たりの絵で確かめた）
     const PAINTED = ['stump@16,7', 'stump@9,8', 'tree_giant@51,11', 'rock_small@53,15', 'rock@35,16', 'rock_small@25,17', 'fern@14,18', 'rock_small@12,21', 'rock@27,30', 'rock@34,34', 'stump@15,35', 'rock_small@34,44', 'rock@49,45', 'rock@53,45'];
@@ -105,6 +104,7 @@
       ",": '15,4 17,4 18,5 32,10 33,10 53,13 16,15 54,16 53,18 31,19 32,19 31,29 32,29 14,33 51,34 47,39',
     }, O, PAINTED);
 
+    // ---------------------------------------------------------------- 人
     const N = [
       K.npc('pim', 'npc_pim', 10, 36, { name: 'ピム', dir: 'e', talk: 'verda_pim', cond: '!forest_found_pim', pushable: false, reward: 'side' }),
       K.npc('fawn', 'ani_fawn', 9, 37, { name: '花角の小鹿', dir: 'e', talk: 'verda_fawn_choice', cond: '!forest_fawn_done', pushable: false }),
