@@ -96,8 +96,10 @@
     const nM = ids.length, inf = ids.map(mi), sh = ids.map((id) => sheets(id, tile)), off = ids.map((id) => offOf(id, S));
     const vOff = offOf('variant', S);
     // 4×4 がすべて同じ素材: 写すだけ（変化の絵があるときだけ画素ごと）
+    const MK = T._splatMask;   // 水の印（relief.js: 陸 = 水の重み 0〜127、水 = 128 + 陸の重み）
     if (ids.length === 1) {
       const sh0 = sh[0];
+      if (MK && inf[0].water) for (let y = y0; y < y1; y++) MK.fill(128, y * dw + x0, y * dw + x1);
       if (!sh0.b) { T._blit(dst, dw, sh0.a, wx, wy, lx0, ly0, x0, y0, x1, y1); return true; }
       for (let y = y0; y < y1; y++) { const WY = wy + (y - ly0), row = y * dw; for (let x = x0; x < x1; x++) dst[row + x] = texel(sh0, wx + (x - lx0), WY, nz, S, vOff); }
       return true;
@@ -143,6 +145,7 @@
         }
         // 水: 岸の近く（陸の重み）ほど浅瀬の色
         if (anyWater && anyLand && isW[m1] && land > 0.02) p = tint(p, inf[m1].shallow || SHALLOW, Math.min(0.55, land * 1.1));
+        if (MK) MK[row + x] = isW[m1] ? 128 + Math.min(127, (land * 127) | 0) : anyWater ? Math.min(127, ((1 - land) * 127) | 0) : 0;
         dst[row + x] = p;
       }
     }

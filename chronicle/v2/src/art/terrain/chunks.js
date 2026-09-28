@@ -19,7 +19,7 @@
 //   建物・木・地面の飾り・足場（deck）・painted の物は焼かず、下絵の同じ所を base に置く（overlay は over＝人より上、emit は窓の灯り）。
 //   当たり・戸口・人・灯り・宝箱などの物はマップのデータのまま。絵が無ければ今までどおりマスから焼く（控え）。
 // 1 チャンクの仕事の順: 準備（マスの読み・要る絵の一覧）→ 素材のタイル → 絵（建物・物・木）→ 地面（dual grid）→ 立ち上がり・水の縁 →
-//   大きなゆらぎ → base に置く → 足場 → 影 → 建物・木・物（足もとより上は over）→ 光の地図（R.Light.map）→ 窓・戸口の描き直し・照り返し → 結果
+//   起伏の陰影（WORLD v3、relief.js）→ 大きなゆらぎ → base に置く → 足場 → 影 → 建物・木・物（足もとより上は over）→ 光の地図（R.Light.map）→ 窓・戸口の描き直し・照り返し → 結果
 (function (R) {
   'use strict';
   R.Stubs && R.Stubs.claim && R.Stubs.claim('Terrain');
@@ -250,6 +250,9 @@
   const pool = { px: {}, img: {}, cv: {} };
   function takePx(n) { const l = pool.px[n] || (pool.px[n] = []); const a = l.pop() || new Uint32Array(n); a.fill(0); return a; }
   function givePx(a) { if (!a) return; const l = pool.px[a.length] || (pool.px[a.length] = []); if (l.length < 3) l.push(a); }
+  const maskPool = {};
+  function takeMask(n) { const l = maskPool[n] || (maskPool[n] = []); const a = l.pop() || new Uint8Array(n); a.fill(0); return a; }
+  function giveMask(a) { if (!a) return; const l = maskPool[a.length] || (maskPool[a.length] = []); if (l.length < 3) l.push(a); }
   function imgOf(g, S) { return pool.img[S] || (pool.img[S] = g.createImageData(S, S)); }
   /** 一時の canvas（同じ仕事の中だけで使う。name ごとに 1 枚） */
   function scratch(name, S) { const k = name + S; let c = pool.cv[k]; if (!c) { c = pool.cv[k] = U().canvas(S, S); } else c.getContext('2d').clearRect(0, 0, S, S); return c; }
@@ -273,11 +276,11 @@
     this.profMax = {}; // 1 回の呼び出しの最長
   }
   // 一度に済ませる仕事の平均の時間（ms。走らせながら覚える）。step の残りに収まらなければ先に戻る
-  const AVG = {}, ATOMIC = { prep: 1, rise: 1, deck: 1, emissive: 1, finish: 1 };
+  const AVG = {}, ATOMIC = { prep: 1, rise: 1, relief: 1, deck: 1, emissive: 1, finish: 1 };
   // 光の地図は帯に分けて掛ける（1 帯 = チャンクの 1/LIGHT_BANDS。Job.step ≤ 3 ms、P2 の依頼）
   const LIGHT_BANDS = 4;
   T._phaseAvg = AVG;
-  const PHASES = ['prep', 'mats', 'sprites', 'ground', 'rise', 'put', 'deck', 'shadow', 'draw', 'light', 'emissive', 'finish'];
+  const PHASES = ['prep', 'mats', 'sprites', 'ground', 'rise', 'relief', 'put', 'deck', 'shadow', 'draw', 'light', 'emissive', 'finish'];
   Job.prototype.step = function (ms) {
     if (this.done) return true;
     const t0 = U().now(), deadline = t0 + (ms == null ? 3 : ms);
@@ -407,8 +410,14 @@
 
   Job.prototype._ground = function (deadline) {
     if (this.und) return true;
-    const t = this.tile, S = this.size;
+    const S = this.size;
     if (!this.px) this.px = takePx(S * S);
+    // WORLD v3 の起伏（relief.js）: splat が画素ごとの水の印を書く（間に別の仕事が入ってもよいように毎回つなぎ直す）
+    if (this.map.splat && T._reliefApply && !this.o.noRelief) { if (!this.wmask) this.wmask = takeMask(S * S); T._splatMask = this.wmask; }
+    try { return this._groundRun(deadline); } finally { T._splatMask = null; }
+  };
+  Job.prototype._groundRun = function (deadline) {
+    const t = this.tile, S = this.size;
     const c0x = this.cells[0] - 1, c0y = this.cells[1] - 1, n = CHUNK + 1;
     while (this.i < n) {
       const dy = c0y + this.i;
@@ -433,6 +442,14 @@
     const [x0, y0, x1, y1] = this.cells;
     T._rise(this.px, this.size, this.X0, this.Y0, this.C, this.tile, x0, y0, x1, y1);
     T._waterEdges(this.px, this.size, this.X0, this.Y0, this.C, this.tile, x0, y0, x1, y1);
+    return true;
+  };
+  // 起伏の陰影・色のゆらぎ・濡れた岸（WORLD v3、relief.js）。岸の打ち寄せる線（FIELD が毎フレーム描く）もここで決める
+  Job.prototype._relief = function () {
+    if (this.und || !this.wmask) return true;
+    T._reliefApply(this);
+    if (T._foamOf) this.foam = T._foamOf(this);
+    giveMask(this.wmask); this.wmask = null;
     return true;
   };
 
@@ -739,7 +756,8 @@
     const props = this.plan.dyn.filter((p) => p.x >= X0 && p.x < X0 + S && p.y - 1 >= Y0 && p.y - 1 < Y0 + S).map((p) => Object.assign({}, p));
     this.result = {
       base: this.base, over: this.over || null, lights: this.chunkLights, glows: this.glows, props,
-      overBoxes: this.over ? this.overBoxes || [] : [],   // over に描いた物の枠 {x0, y0, x1, y1, sy}（マップの論理 px。sy = その物の足もとの y）
+      overBoxes: this.over ? this.overBoxes || [] : [],
+      foam: this.foam || null,   // WORLD v3: 岸の打ち寄せる線（relief.js の T._foamDraw で FIELD が毎フレーム描く）   // over に描いた物の枠 {x0, y0, x1, y1, sy}（マップの論理 px。sy = その物の足もとの y）
       x: X0, y: Y0, size: S, map: this.map.id, cx: this.cx, cy: this.cy, tile: this.tile,
       bytes: S * S * 4 * (this.over ? 2 : 1),
     };
@@ -788,6 +806,7 @@
     o = o || {};
     const tile = tileOf(o), theme = T.theme(map), s = tile / 32;
     const todo = [];
+    if (map.splat && T._reliefJob) todo.push({ relief: T._reliefJob(map) });   // WORLD v3 の高さの場（relief.js）。区切って作る
     const mats = new Set([theme.ground, map.outside || theme.outside, 'deck']);
     for (const k of Object.keys(map.legend || {})) { const e = map.legend[k]; mats.add(T._underOf(e.mat, theme)); if (e.floor) mats.add(e.floor); if (T._matInfo(e.mat).face) todo.push({ face: T._matInfo(e.mat).face, rise: Math.max(1, e.rise || 1) }); }
     for (const m of mats) if (m) todo.push({ mat: m }, { thr: m });
@@ -816,7 +835,8 @@
     this.t0 = t0;
         while (job.i < todo.length) {
           const w = todo[job.i];
-          if (w.mat) { if (!T._sheet(w.mat, tile, deadline).done) break; }
+          if (w.relief) { if (!w.relief.step(Math.max(0.5, deadline - U().now()))) break; }
+          else if (w.mat) { if (!T._sheet(w.mat, tile, deadline).done) break; }
           else if (w.face) T._faceSheet(w.face, tile, w.rise);
           else if (w.thr) T._thrTable(w.thr, tile);
           else if (w.key && R.Hd.has(w.key)) {
