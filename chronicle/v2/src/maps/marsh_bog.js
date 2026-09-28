@@ -110,7 +110,7 @@
       light: MK.LIGHT_BOG, dark: false,
       bgm: 'ghost', bbg: 'marsh',
       meta: { chestsInfo: true, floor: '沼', sub: '鐘の沈んだ沼', live: [{ cells: pA.cells, patch: 0 }, { cells: pB.cells, patch: 1 }] },
-      art: { image: 'marsh/under/bog', closed: 'marsh/under/bog_closed', emit: 'marsh/under/bog_emit', painted: [] },
+      art: { image: 'marsh/under/bog', closed: 'marsh/under/bog_closed', painted: [] },
     });
   });
 })(window.RPG);

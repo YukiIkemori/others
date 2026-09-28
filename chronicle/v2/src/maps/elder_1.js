@@ -70,6 +70,8 @@
         S: { mat: 'wall_bark', solid: true, secret: true, floor: 'bark_floor' },
       },
       rows: g, outside: 'wall_bark',
+      // 描いた一枚絵（design/ENV_ASSETS.md §8）。根の戸・隠し通路は closed の絵（閉じている間だけ上に置く）
+      art: { image: 'tree_inside/under/elder_1', closed: 'tree_inside/under/elder_1_closed', painted: [] },
       objects: O, npcs: N,
       spawns: {
         south: { x: 25, y: 45, dir: 'n' },

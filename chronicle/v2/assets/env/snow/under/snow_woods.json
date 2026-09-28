@@ -1,0 +1,17 @@
+{
+ "id": "snow_woods",
+ "kind": "under",
+ "map": "snow_woods",
+ "tile": 32,
+ "size32": [
+  1600,
+  1344
+ ],
+ "windows32": [],
+ "painted": [],
+ "files": {
+  "24": "snow_woods@24.png",
+  "32": "snow_woods@32.png",
+  "40": "snow_woods@40.png"
+ }
+}

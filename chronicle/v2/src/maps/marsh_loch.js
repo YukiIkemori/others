@@ -115,6 +115,8 @@
     for (const [x, y] of lamps) O.push(K.prop('wisp_lamp', x, y, { cond: '!marsh_night' }));
     // 夜市の屋台（消灯の刻だけ）と、その灯り
     for (const [x, y] of [[26, 45], [33, 43], [36, 43]]) O.push(K.prop('lantern', x, y, { cond: 'marsh_night' }));   // 筏のまわりの杭
+    // 【灯りを守る】運河の灯籠 3（杭。消灯の刻に油でともす。ともすと灯りがつく）
+    for (const [n, x, y] of [[1, 8, 25], [2, 25, 29], [3, 44, 31]]) O.push(K.prop('stilt_posts', x, y), K.exam(x, y, 'loch_canal_lamp', { lamp: n }), K.prop('lantern', x, y, { cond: 'marsh_canal_lamp_' + n }));
     // 町の宝箱 2（見える所だけ）
     O.push(K.chest('loch_c1', 52, 15, { pool: 'p_T' }), K.chest('loch_c2', 12, 32, { item: 'i_ether', n: 2 }));
     // 門の看板

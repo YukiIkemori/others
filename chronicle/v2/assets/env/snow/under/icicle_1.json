@@ -1,0 +1,17 @@
+{
+ "id": "icicle_1",
+ "kind": "under",
+ "map": "icicle_1",
+ "tile": 32,
+ "size32": [
+  1408,
+  1088
+ ],
+ "windows32": [],
+ "painted": [],
+ "files": {
+  "24": "icicle_1@24.png",
+  "32": "icicle_1@32.png",
+  "40": "icicle_1@40.png"
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "id": "peak_top",
+ "kind": "under",
+ "map": "peak_top",
+ "tile": 32,
+ "size32": [
+  1280,
+  960
+ ],
+ "windows32": [],
+ "painted": [],
+ "files": {
+  "24": "peak_top@24.png",
+  "32": "peak_top@32.png",
+  "40": "peak_top@40.png"
+ }
+}

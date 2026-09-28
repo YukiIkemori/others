@@ -115,6 +115,21 @@ def paste_sprite(C, name, fx, fy):
     C[ya:yb, xa:xb] = C[ya:yb, xa:xb] * (1 - al) + s[..., :3] * al
 
 
+# ---- STAMP=roots: static solid 'roots' cells (knots in the floor) get the engine's roots sprite (the model tends to copy the guide's X mark)
+if 'roots' in os.environ.get('STAMP', '').split(','):
+    pcells = set()
+    for p in d['tilePatches']:
+        if p.get('rect'): pcells |= {(p['rect'][0] + i, p['rect'][1] + j) for i in range(p['rect'][2]) for j in range(p['rect'][3])}
+    n = 0
+    for y in range(H):
+        for x in range(W):
+            e = ent(OPEN, x, y)
+            if MI.get(e.get('mat'), {}).get('tall') == 'roots' and (x, y) not in pcells:
+                nb = [(x + dx, y + dy) for dx, dy in ((-1, 0), (1, 0), (0, 1), (0, -1)) if 0 <= x + dx < W and 0 <= y + dy < H and walk(ent(OPEN, x + dx, y + dy)) and (x + dx, y + dy) not in FACE]
+                if nb: cell(A, x, y)[:] = cell(A, *nb[0])   # the floor under the knot first (hides the painted guide mark)
+                paste_sprite(A, 'roots_v%d' % ((x * 5 + y) % 2), (x + 0.5) * T, (y + 0.86) * T); n += 1
+    print('stamped roots', n)
+
 live = []
 CL = A.copy()   # the closed layer (painting + closed looks); drawn per live cell only
 # ---- secret areas
@@ -139,7 +154,14 @@ for ai, ar in enumerate(d['areas']):
     ring = {(x + dx, y + dy) for (x, y) in closed | set(faces_above) for dx in (-1, 0, 1) for dy in (-1, 0, 1)}
     tops += [q for q in sorted(ring) if 0 <= q[0] < W and 0 <= q[1] < H and top[q[1], q[0]] and q not in tops]
     off = find_offset(tops, topI) or find_offset(tops, top)
-    for (x, y) in tops: cell(C, x, y)[:] = cell(A, x + off[0], y + off[1])
+    if off:
+        for (x, y) in tops: cell(C, x, y)[:] = cell(A, x + off[0], y + off[1])
+    else:   # thin walls (no block of rock big enough): each cell from the nearest clean wall-top cell outside the region
+        src = [(x, y) for y in range(H) for x in range(W) if (topI if topI.any() else top)[y, x] and (x, y) not in closed]
+        for (x, y) in tops:
+            sx, sy = min(src, key=lambda q: abs(q[0] - x) + abs(q[1] - y) + 0.01 * ((q[0] * 7 + q[1] * 13) % 5))
+            cell(C, x, y)[:] = cell(A, sx, sy)
+        off = (0, 0)
     for (x, y, j) in fcs:
         s = face_source(j, rr, closed)
         if s: cell(C, x, y)[:] = cell(A, *s)

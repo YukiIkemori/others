@@ -1,0 +1,17 @@
+{
+ "id": "aurora",
+ "kind": "under",
+ "map": "aurora",
+ "tile": 32,
+ "size32": [
+  1280,
+  960
+ ],
+ "windows32": [],
+ "painted": [],
+ "files": {
+  "24": "aurora@24.png",
+  "32": "aurora@32.png",
+  "40": "aurora@40.png"
+ }
+}

@@ -1,0 +1,19 @@
+{
+ "id": "lighthouse_1",
+ "kind": "under",
+ "map": "lighthouse_1",
+ "tile": 32,
+ "size32": [
+  1152,
+  1024
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.878,
+ "files": {
+  "24": "lighthouse_1@24.png",
+  "32": "lighthouse_1@32.png",
+  "40": "lighthouse_1@40.png"
+ }
+}

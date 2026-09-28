@@ -82,6 +82,9 @@ def draw(T):
                     g.rectangle([x * T, y * T, x * T + T - 1, y * T + max(2, T // 10)], fill=tuple(min(255, int(v * 1.35)) for v in c))
             elif m in WALLTOP and (e.get('solid')):
                 g.rectangle(R(x, y), fill=WALLTOP[m])
+                for _ in range(2):   # texture so the painting does not copy a flat fill
+                    c0 = WALLTOP[m]; k = rnd.choice((0.8, 0.9, 1.12, 1.22)); px, py = x * T + rnd.randint(0, T - 1), y * T + rnd.randint(0, T - 1); r = rnd.randint(T // 6, T // 3)
+                    g.ellipse([px - r, py - r // 2, px + r, py + r // 2], fill=tuple(min(255, int(v * k)) for v in c0))
             else:
                 g.rectangle(R(x, y), fill=FLOOR.get(m, (255, 0, 255)))
     # textures / symbols on top

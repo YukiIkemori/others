@@ -61,7 +61,7 @@
         light: MK.LIGHT_MANOR, dark: false,
         bgm: 'ghost', bbg: 'tower',
         meta: { chestsInfo: true, floor: '1階', sub: '主なき館' },
-        art: { image: 'marsh/under/manor_1', emit: 'marsh/under/manor_1_emit', painted: [] },
+        art: { image: 'marsh/under/manor_1', painted: [] },
       });
     }
 
@@ -115,7 +115,7 @@
         light: MK.LIGHT_MANOR, dark: false,
         bgm: 'ghost', bbg: 'tower',
         meta: { chestsInfo: true, floor: '2階', sub: '楽の音の響く階' },
-        art: { image: 'marsh/under/manor_2', emit: 'marsh/under/manor_2_emit', painted: [] },
+        art: { image: 'marsh/under/manor_2', painted: [] },
       });
     }
   });

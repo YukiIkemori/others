@@ -47,6 +47,7 @@
         spawns: { entrance: { x: 41, y: 17, dir: 'w' }, up: { x: 8, y: 18, dir: 'e' } },
         exits: [{ x: 43, y: 16, w: 1, h: 3, to: { map: 'world', spawn: 'icicle' } }],
         triggers: [{ id: 'arrive', on: 'enter', event: 'icicle_arrive', once: true }],
+        art: { image: 'snow/under/icicle_1', painted: [] },   // 描いた下絵（design/ENV_ASSETS.md §7）
         zones: [{ rect: null, zone: 'z_snow_icicle' }],
         light: { ambient: '#4c5c98', k: 0.6, poolK: 0.6, spillR: 0.8, mood: 'cave' },
         dark: false, bgm: 'cave', bbg: 'snow',
@@ -79,6 +80,7 @@
       O.push(K.prop('talestone', 7, 9), K.exam(7, 10, 'icicle_seal'));             // 宝の地図 その2 の封じの扉（地図は縦切りの外）
       O.push(K.sign(22, 12, '――つらら番、眠りを破る者を打つ。\n火のある所では、やつは目が利かぬ。\n（誰かの書き付け）'));
       for (const [x, y] of [[12, 22], [28, 13], [33, 18], [24, 7], [9, 13]]) O.push(K.prop('ice_crystal', x, y, { variant: (x + y) % 3 }));
+      K.put(g, 11, 7, '#');   // 描いた下絵の岩（v2/assets/env/snow/under/icicle_2*）
       K.def('icicle_2', {
         name: 'つららの回廊', kind: 'dungeon', optional: true, region: 'r_snow', location: 'icicle', theme: 'ice_cave',
         legend: CAVE(), rows: g, outside: 'wall_snow', objects: O, npcs: [],
@@ -89,6 +91,7 @@
           { id: 'guard', x: 17, y: 7, w: 7, h: 3, on: 'step', event: 'icicle_guard', cond: '!snow_icicle_guard' },
         ],
         tilePatches: [{ cond: 'snow_icicle_box_2', rect: [19, 6, 3, 1], rows: ['...'] }],
+        art: { image: 'snow/under/icicle_2', painted: [] },   // 描いた下絵（design/ENV_ASSETS.md §7）
         zones: [{ rect: null, zone: 'z_snow_icicle_deep' }],
         light: { ambient: '#3e4a82', k: 0.66, poolK: 0.6, spillR: 0.8, mood: 'cave' },
         dark: [{ rect: [0, 0, 40, 32] }], bgm: 'cave', bbg: 'snow',
@@ -174,7 +177,8 @@
         name: '峠の宿', kind: 'interior', optional: true, region: 'r_snow', location: 'pass_inn',
         legend: S.ROOM(), rows: r.g, outside: 'wall_wood',
         objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('shelf_jars', 14, 2),
-          K.prop('bed', 16, 5), K.prop('bed', 16, 8), K.prop('table', 7, 7), K.prop('chair', 6, 7), K.prop('chair', 8, 7), K.prop('table', 11, 8), K.prop('chair', 10, 8), K.prop('chair', 12, 8),
+          K.prop('bed', 16, 5), K.prop('bed', 16, 8), K.prop('table', 6, 7), K.prop('chair', 5, 7), K.prop('chair', 7, 7),   // 戸口の列（x 8）は空ける
+          K.prop('table', 11, 8), K.prop('chair', 10, 8), K.prop('chair', 12, 8),
           K.prop('stove', 1, 6), K.prop('lantern', 9, 3), K.prop('firewood', 1, 9), K.prop('snow_barrel', 15, 10)],
         npcs: [
           K.npc('pass_inn_innkeeper', 'npc_snow_woman', 4, 2, { name: '峠の宿のおかみ', dir: 's', talk: 'pass_inn_innkeeper', pushable: false }),
@@ -226,6 +230,7 @@
         spawns: { south: { x: 19, y: 27, dir: 'n' } },
         exits: [{ x: 18, y: 29, w: 4, h: 1, to: { map: 'world', spawn: 'aurora' } }],
         triggers: [{ id: 'arrive', on: 'enter', event: 'aurora_arrive', once: true }],
+        art: { image: 'snow/under/aurora', painted: [] },   // 描いた下絵（design/ENV_ASSETS.md §7）
         zones: [{ rect: null, zone: 'z_snow_floe' }],
         light: { ambient: '#6a64b0', k: 0.58, poolK: 0.7, spillR: 0.9, mood: 'night' },
         dark: false, bgm: 'ice', bbg: 'snow', weather: 'snow',
@@ -283,6 +288,7 @@
         spawns: { up: { x: 5, y: 5, dir: 's' } },
         exits: [],
         triggers: [{ id: 'boss', x: 20, y: 8, w: 3, h: 10, on: 'step', event: 'frost_ship_boss', cond: '!snow_admiral' }],
+        art: { image: 'snow/under/frost_ship_2', painted: [] },   // 描いた下絵（design/ENV_ASSETS.md §7）
         zones: [{ rect: [0, 0, 14, 22], zone: 'z_snow_ship' }],
         light: { ambient: '#4e5890', k: 0.62, poolK: 0.6, spillR: 0.8, mood: 'cave' },
         dark: false, bgm: 'ghost', bbg: 'snow',

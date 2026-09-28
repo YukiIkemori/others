@@ -45,6 +45,7 @@ MAPS = {
     'desert_wellroom': ("AN OLD WELL-KEEPER'S HUT, INSIDE (seen from above with the roof taken away): one small room with thick sandstone and mud-brick walls, a sandstone floor with woven rugs, cosy and poor.", SAND_WALL.replace('massive old sandstone walls', 'thick plastered mud-brick walls') + "\n" + PAVE + "\n" + CARPET + "\n- the doorway in the bottom wall (the lower middle) stays a plain floor gap: the door is added later."),
 }
 title, key = MAPS[m]
+DOOR = '- black rectangle = a big SEALED STONE DOORWAY in the wall face: paint a deep, dark doorway recess with a carved sandstone frame exactly there and exactly that wide (the door leaf itself is added later as a sprite).\n' if any(o.get('type') == 'door' and o.get('look') != 'none' for o in d['objects']) else ''
 cell = T * 48 // 32
 P = f"""Paint the COMPLETE top-down map of a fantasy JRPG {'DUNGEON' if m not in ('desert_rocks', 'desert_oldcamp', 'desert_wellroom') else 'LOCATION'} as ONE finished game map image, in rich premium modern hi-bit pixel art (the "HD pixel art" JRPG look: hand-placed crisp square pixels, hue-shifted ramps, dark warm outlines), flat classic top-down RPG map view (walls seen from above with their south-facing vertical faces showing, like a classic JRPG dungeon; NOT an HD-2D diorama, no depth-of-field, no tilt-shift, no 3D render).
 
@@ -56,6 +57,7 @@ The SECOND attached image is only a STYLE REFERENCE from the same game (a desert
 
 Guide colour key:
 {key}
+{DOOR}The solid (not walkable) masses must be fully textured, detailed pixel-art rock or masonry (never a flat colour field), and every edge between floor and solid must look natural and hand-painted, following the guide's outline within a few pixels.
 Walkable areas must stay walkable-looking: no boulders, pillars, rubble heaps or furniture standing on them.
 
 Make it rich, detailed, handcrafted and cohesive: warm sandstone, ochre, faded madder red, indigo and old gold.

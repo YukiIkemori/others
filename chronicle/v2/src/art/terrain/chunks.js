@@ -330,10 +330,13 @@
     }
     // 木・藪・根・深い森の縁の木、地面の小さな飾り（マスから決まる）
     const th = this.theme, C = this.C;
-    if (und) { this.mats = []; draw.sort((a, b) => a.sortY - b.sortY || a.x - b.x); this.draw = draw; return true; }   // 木・地面の飾りも下絵
+    // 下絵のマップの端のチャンク（マップの外のマスを含む）: 外のマスだけはマスから焼き、下絵をその上に置く（外の色の帯を出さない）
+    this.edge = !!und && map.kind !== 'town' && (c0x < 0 || c0y < 0 || c0x + CHUNK > map.w || c0y + CHUNK > map.h);
+    if (und && !this.edge) { this.mats = []; draw.sort((a, b) => a.sortY - b.sortY || a.x - b.x); this.draw = draw; return true; }   // 木・地面の飾りも下絵
+    const inMap = (x, y) => x >= 0 && y >= 0 && x < map.w && y < map.h;
     for (let y = c0y - 1; y < c0y + CHUNK + 4; y++) for (let x = c0x - 3; x < c0x + CHUNK + 3; x++) {
       const c = C(x, y);
-      if (c.found || !c.tall) continue;
+      if (c.found || !c.tall || (und && inMap(x, y))) continue;
       const fy = (y + 0.86) * t;
       if (c.tall === 'tree') {
         const n = th.twoTrees ? 2 : 1;
@@ -359,7 +362,7 @@
     const dec = th.decor || {};
     for (let y = c0y - 1; y < c0y + CHUNK + 1; y++) for (let x = c0x - 1; x < c0x + CHUNK + 1; x++) {
       const c = C(x, y);
-      if (!c.walk || c.water || c.hard || c.raised || c.tall || plan.occ.has(x + ',' + y) || x < 0 || y < 0 || x >= map.w || y >= map.h) continue;
+      if (und || !c.walk || c.water || c.hard || c.raised || c.tall || plan.occ.has(x + ',' + y) || x < 0 || y < 0 || x >= map.w || y >= map.h) continue;
       if (c.mat === 'road' || c.mat === 'sand' || c.mat === 'dune_sand' || c.mat === 'cracked_clay') continue;
       let k = 0;
       for (const id of Object.keys(dec)) {
@@ -397,7 +400,7 @@
   };
 
   Job.prototype._ground = function (deadline) {
-    if (this.und) return true;
+    if (this.und && !this.edge) return true;
     const t = this.tile, S = this.size;
     if (!this.px) this.px = takePx(S * S);
     const c0x = this.cells[0] - 1, c0y = this.cells[1] - 1, n = CHUNK + 1;
@@ -414,7 +417,7 @@
   };
 
   Job.prototype._rise = function () {
-    if (this.und) return true;
+    if (this.und && !this.edge) return true;
     const [x0, y0, x1, y1] = this.cells;
     T._rise(this.px, this.size, this.X0, this.Y0, this.C, this.tile, x0, y0, x1, y1);
     T._waterEdges(this.px, this.size, this.X0, this.Y0, this.C, this.tile, x0, y0, x1, y1);
@@ -450,20 +453,7 @@
   Job.prototype._put = function (deadline) {
     const S = this.size;
     if (!this.base) { const c = U().canvas(S, S); if (!c) throw new Error('no canvas'); this.base = c; this.bg = c.getContext('2d'); }
-    if (this.und) {
-      // 下絵の同じ所（マップの外は透明のまま = FIELD の外の色）
-      const u = this.und, k = u.k, bg = this.bg;
-      bg.imageSmoothingEnabled = false;
-      bg.drawImage(u.img, this.X0 / k, this.Y0 / k, S / k, S / k, 0, 0, S, S);
-      if (u.closed && u.j.live) {   // 閉じている変わるマス（隠し通路の壁・根の戸・つるの壁…）
-        const t = this.tile, [x0, y0, x1, y1] = this.cells, ck = u.closed.k;
-        for (const L of u.j.live) {
-          if (!L.cells.some(([x, y]) => x >= x0 && x < x1 && y >= y0 && y < y1) || !liveClosed(this.map, L, this.st)) continue;
-          for (const [x, y] of L.cells) if (x >= x0 && x < x1 && y >= y0 && y < y1) bg.drawImage(u.closed.img, (x * t) / ck, (y * t) / ck, t / ck, t / ck, x * t - this.X0, y * t - this.Y0, t, t);
-        }
-      }
-      return true;
-    }
+    if (this.und && !this.edge) { this._putUnder(); return true; }
     const img = imgOf(this.bg, S), h = S / BANDS;
     while (this.i < BANDS) {
       new Uint32Array(img.data.buffer).set(this.px);
@@ -474,6 +464,24 @@
     if (this.i < BANDS) return false;
     givePx(this.px); this.px = null;
     this._macro2();
+    if (this.und) this._putUnder();   // 端のチャンク: マスから焼いた外の上に、マップの中の下絵
+    return true;
+  };
+  Job.prototype._putUnder = function () {
+    const S = this.size;
+    {
+      // 下絵の同じ所（マップの外は下の絵のまま）
+      const u = this.und, k = u.k, bg = this.bg;
+      bg.imageSmoothingEnabled = false;
+      bg.drawImage(u.img, this.X0 / k, this.Y0 / k, S / k, S / k, 0, 0, S, S);
+      if (u.closed && u.j.live) {   // 閉じている変わるマス（隠し通路の壁・根の戸・つるの壁…）
+        const t = this.tile, [x0, y0, x1, y1] = this.cells, ck = u.closed.k;
+        for (const L of u.j.live) {
+          if (!L.cells.some(([x, y]) => x >= x0 && x < x1 && y >= y0 && y < y1) || !liveClosed(this.map, L, this.st)) continue;
+          for (const [x, y] of L.cells) if (x >= x0 && x < x1 && y >= y0 && y < y1) bg.drawImage(u.closed.img, (x * t) / ck, (y * t) / ck, t / ck, t / ck, x * t - this.X0, y * t - this.Y0, t, t);
+        }
+      }
+    }
     return true;
   };
 

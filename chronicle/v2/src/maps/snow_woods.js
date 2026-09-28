@@ -53,6 +53,11 @@
     const keep = new Set();
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (K.at(g, x, y) === ',') keep.add(x + ',' + y);
     K.scatter(g, O, ['snow_rock', 'snow_bank', 'snow_fir'], 18, [2, 2, 46, 38], '.', 'swdeco', { keep, gap: 4, variant: true });
+    // 描いた下絵（v2/assets/env/snow/under/snow_woods*）に合わせた当たり: 絵のもみの立つマスは歩けない・絵で開けた雪のマスは歩ける
+    //   （design/art_ref/gen/env/_tools/under/snow/dng の fitcheck.py で拾ったマス）
+    for (const [x, y] of [[18, 6], [34, 22], [7, 23], [30, 27], [26, 32], [26, 34], [19, 36]]) K.put(g, x, y, 'T');
+    for (const [x, y] of [[6, 5], [7, 5], [8, 5], [10, 5], [11, 5], [19, 5], [39, 5], [5, 6], [12, 6], [5, 7], [4, 9], [4, 10], [39, 17], [27, 18], [45, 19], [46, 21],
+      [3, 24], [29, 25], [3, 26], [3, 27], [43, 27], [4, 28], [6, 28], [23, 28], [26, 28], [9, 29], [10, 29], [26, 29], [7, 30]]) K.put(g, x, y, '.');
 
     const N = [
       K.npc('woods_hunter', 'npc_snow_man', 26, 25, { name: '薪割りの男', dir: 'w', talk: 'snow_woods_camp', reward: 'hint' }),
@@ -70,6 +75,7 @@
       ],
       oneway: [{ x: 15, y: 8, dir: 'w' }, { x: 15, y: 9, dir: 'w' }],
       zones: [{ rect: null, zone: 'z_snow_woods' }],
+      art: { image: 'snow/under/snow_woods', overlay: 'snow/under/snow_woods_over', painted: [] },
       light: { ambient: '#5a64a4', k: 0.55, poolK: 0.7, spillR: 0.9, mood: 'night' },
       dark: false,
       bgm: 'ice', bbg: 'snow', weather: 'snow', weatherCond: '!cleared_r_snow',

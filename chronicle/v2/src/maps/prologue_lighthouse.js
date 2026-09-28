@@ -81,6 +81,7 @@
       ];
       K.def('lighthouse_1', Object.assign({}, BASE, {
         name: 'ファロス灯台', legend: LEG, rows: g, outside: 'sea', objects, npcs, tilePatches,
+        art: { image: 'lighthouse/under/lighthouse_1', painted: [] },   // 描いた一枚絵（design/ENV_ASSETS.md §8）
         spawns: {
           entrance: { x: 17, y: 29, dir: 'n' }, from_next: { x: 27, y: 4, dir: 'w' },
           hall_w: { x: 17, y: 20, dir: 'n' }, hall_e: { x: 18, y: 20, dir: 'n' }, door_w: { x: 17, y: 23, dir: 's' }, door_e: { x: 18, y: 23, dir: 's' },
@@ -130,6 +131,8 @@
       ];
       K.def('lighthouse_2', Object.assign({}, BASE, {
         name: 'ファロス灯台', legend: LEG, rows: g, outside: 'wall_stone', objects,
+        // 描いた一枚絵（ENV_ASSETS.md §8）。ふさいだ物置は closed の絵で、見つけるまで石の壁のまま
+        art: { image: 'lighthouse/under/lighthouse_2', closed: 'lighthouse/under/lighthouse_2_closed', painted: [] },
         spawns: { from_prev: { x: 28, y: 26, dir: 'n' }, from_next: { x: 17, y: 16, dir: 's' } },
         zones: [{ rect: null, zone: 'z_lighthouse' }],
         meta: { chestsInfo: true, floor: '2階', sub: 'らせん階段' },
@@ -160,6 +163,7 @@
       ];
       K.def('lighthouse_3', Object.assign({}, BASE, {
         name: 'ファロス灯台', legend: LEG, rows: g, outside: 'wall_stone', objects, npcs,
+        art: { image: 'lighthouse/under/lighthouse_3', painted: [] },   // 描いた一枚絵（ENV_ASSETS.md §8）
         spawns: { from_prev: { x: 12, y: 18, dir: 'n' }, lamp: { x: 12, y: 9, dir: 'n' } },
         triggers: [
           { id: 'fine', x: 10, y: 16, w: 6, h: 1, on: 'step', event: 'lighthouse_3_fine', cond: '!prologue_fine' },

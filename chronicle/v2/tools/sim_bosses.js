@@ -43,6 +43,12 @@ for (const T of [0, 1, 3]) {
   BOSSES['tr_b_whitedragon' + k] = { troop: 'tr_b_whitedragon', tier: T, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 12], note: '息を吸う → 白い息（守る）。半分で思い出す間' };
 }
 BOSSES['tr_b_frost_admiral@6'] = { troop: 'tr_b_frost_admiral', tier: 6, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 85, diff: 40, rounds: [8, 13], note: '氷に閉じた帆船（隠しボス。ティア 6 から）' };
+// 湿原（グレイモア湿原、src/data/bosses_marsh.js）。好きな順に遊ぶので、ティア 1・3 で測る（湿原は縦切りの後）
+for (const T of [1, 3]) {
+  const k = '@' + T;
+  BOSSES['tr_b_dolls' + k] = { troop: 'tr_b_dolls', tier: T, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 9], note: '指揮者を先に（楽士を起こす）、棒を掲げたら守る' };
+  BOSSES['tr_b_mistbeast' + k] = { troop: 'tr_b_mistbeast', tier: T, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 13], note: '霧を集めたら守る、分身は後回し、半分を切ったら物理で押す' };
+}
 
 function loadR() { return require('./lib/load')({ quiet: true }); }
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : 0);

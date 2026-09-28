@@ -76,6 +76,7 @@
       const keep = new Set();
       for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (K.at(g, x, y) === ',') keep.add(x + ',' + y);
       K.scatter(g, O, ['snow_rock', 'snow_bank', 'snow_fir'], 16, [2, 2, 54, 44], '.', 'pk1deco', { keep, gap: 4, variant: true });
+      for (const [x, y] of [[25, 24], [25, 26]]) K.put(g, x, y, 'w');   // 描いた下絵の湯だまりの縁（v2/assets/env/snow/under/peak_1*）
 
       K.def('peak_1', {
         name: '白竜の峰', kind: 'dungeon', region: 'r_snow', location: 'peak', theme: 'snow',
@@ -93,6 +94,8 @@
           { id: 'giant', x: 38, y: 5, w: 7, h: 2, on: 'step', event: 'peak_giant', cond: '!snow_giant' },
         ],
         oneway: [{ x: 47, y: 30, dir: 's' }, { x: 48, y: 30, dir: 's' }],
+        // 描いた下絵（design/ENV_ASSETS.md §7・§8）: 隠し通路の壁と奥の小部屋は、見つけるまで closed の絵（meta.live）
+        art: { image: 'snow/under/peak_1', overlay: 'snow/under/peak_1_over', closed: 'snow/under/peak_1_closed', painted: [] },
         zones: [{ rect: [0, 0, 58, 17], zone: 'z_snow_peak_high' }, { rect: [0, 0, 58, 44], zone: 'z_snow_peak' }],   // 上の段（氷の壁 2・3 の先、y < 17）は 1 組 5 匹まで
         light: { ambient: '#56629e', k: 0.56, poolK: 0.7, spillR: 0.9, mood: 'night' },
         dark: false,
@@ -136,6 +139,7 @@
           { id: 'neve', x: 14, y: 9, w: 13, h: 3, on: 'step', event: 'peak_neve', cond: '!cleared_r_snow' },
         ],
         zones: [],
+        art: { image: 'snow/under/peak_top', painted: [] },
         light: { ambient: '#5a64a4', k: 0.55, poolK: 0.7, spillR: 0.9, mood: 'night' },
         dark: false,
         bgm: 'ice', bbg: 'snow', weather: 'blizzard', weatherCond: '!cleared_r_snow',

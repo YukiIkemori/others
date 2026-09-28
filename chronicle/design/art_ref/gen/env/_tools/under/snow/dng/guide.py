@@ -31,6 +31,7 @@ def ent(x, y):
 
 def raised(x, y):
     e = ent(x, y); m = MI.get(e['mat'], {})
+    if e.get('name') == 'hull': return False   # the ship's bulwark: drawn as its own band (no face)
     return bool(m.get('face') and (e.get('solid') or e.get('rise')) and e.get('rise', 1) != 0)
 
 
@@ -52,6 +53,14 @@ FLOOR = {'snow': (238, 240, 246), 'snow_path': (204, 186, 150), 'ice': (156, 210
          'plank': (176, 122, 72), 'wood_floor': (176, 122, 72), 'carpet': (150, 36, 44), 'tree': (238, 240, 246), 'road': (196, 164, 112), 'dirt': (150, 102, 62)}
 
 
+import os
+_c = lambda k: tuple(int(v) for v in os.environ[k].split(',')) if os.environ.get(k) else None
+if _c('GUIDE_FLOOR'): FLOOR['wood_floor'] = _c('GUIDE_FLOOR')
+if _c('GUIDE_WALL'): WALLTOP['wall_wood'] = _c('GUIDE_WALL')
+if _c('GUIDE_FACE'): FACE['wood'] = _c('GUIDE_FACE')
+PLAIN = bool(os.environ.get('GUIDE_FLOOR'))   # interiors with a non-plank floor: no plank lines
+
+
 def draw(T):
     im = Image.new('RGB', (W * T, H * T)); g = ImageDraw.Draw(im)
     R = lambda x, y: [x * T, y * T, (x + 1) * T - 1, (y + 1) * T - 1]
@@ -70,6 +79,8 @@ def draw(T):
                     for q in range(3, T, max(3, T // 6)): g.line([x * T + q, y * T, x * T + q + rnd.randint(-2, 2), y * T + T], fill=tuple(int(v * 0.75) for v in c), width=lw)
                 if j == r or (x, y - 1) not in face:
                     g.rectangle([x * T, y * T, x * T + T - 1, y * T + max(2, T // 8)], fill=(250, 252, 255) if st == 'snow_cliff' else tuple(min(255, int(v * 1.35)) for v in c))
+            elif e.get('name') == 'hull':
+                g.rectangle(R(x, y), fill=(92, 50, 34)); g.rectangle([x * T + T // 3, y * T + T // 3, x * T + T - T // 3, y * T + T - T // 3], fill=(150, 96, 60))
             elif m in WALLTOP and e.get('solid'):
                 g.rectangle(R(x, y), fill=WALLTOP[m])
             else:
@@ -78,7 +89,7 @@ def draw(T):
         for x in range(W):
             if (x, y) in face: continue
             e = ent(x, y); m = e['mat']; cx, cy = x * T + T // 2, y * T + T // 2
-            if m in ('plank', 'wood_floor') and not e.get('solid'):
+            if m in ('plank', 'wood_floor') and not e.get('solid') and not (PLAIN and m == 'wood_floor'):
                 for q in range(0, T, T // 3): g.line([x * T, y * T + q, x * T + T, y * T + q], fill=(130, 88, 50), width=lw)
             elif m == 'cobble':
                 if (x + y) % 2 == 0: g.rectangle([x * T + T // 6, y * T + T // 6, x * T + T - T // 6, y * T + T - T // 6], outline=(116, 112, 108), width=lw)

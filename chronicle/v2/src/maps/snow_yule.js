@@ -78,6 +78,10 @@
 
     function build(night) {
       const g = ROWS.map((r) => [...r]);
+      // 描いた下絵に合わせた当たり（2026-09-28）: 見張りの台は描いた手すり（3 行目）と左の板壁（29 列）が歩けない。台へは左上の角（29,1）から上がる。
+      //   氷のドームの石の台座（15 行目、戸口の石段 50,15 の左右）も歩けない
+      for (const [x, y] of [[29, 2], [29, 3], [30, 3], [31, 3], [32, 3], [33, 3], [48, 15], [49, 15], [51, 15], [52, 15]]) g[y][x] = '#';
+      g[1][29] = 'p';
       const O = [];
       // ---------------------------------------------------------------- 建物（戸口は描いた扉のマス。出て着くのはその真下）
       const B = (id, x, y, w, h, o) => Object.assign({ type: 'building', id, x, y, w, h, wall: 2, roof: 'slate', mat: 'log', windows: 2, lamp: true, chimney: true }, o || {});
@@ -110,7 +114,8 @@
       }
 
       // ---------------------------------------------------------------- 広場の大かまど・祭の飾り
-      O.push({ type: 'brazier', id: 'yule_hearth', x: 28, y: 25, on: true });
+      // 大かまどの火は下絵に描いた炉の火。立つ火皿の絵は置かず、灯りだけ（copper_brazier を art.painted に入れて絵を出さない = 光だけの物）
+      O.push(K.prop('copper_brazier', 28, 25), K.prop('copper_brazier', 28, 26));
       O.push(K.exam(28, 26, 'yule_hearth'), K.exam(27, 26, 'yule_hearth'), K.exam(29, 26, 'yule_hearth'));
       O.push(K.prop('beacon', 28, 25, { cond: 'cleared_r_snow' }));    // 冬至の火（大灯火の光の柱）
       for (const [x, y] of [[23, 24], [33, 24], [23, 30], [33, 30]]) O.push({ type: 'brazier', id: 'yule_fire_' + x + '_' + y, x, y, on: night || 'snow_festival_lit' });
@@ -202,7 +207,7 @@
         hall: { x: 29, y: 19, dir: 's' }, inn: { x: 18, y: 20, dir: 's' }, items: { x: 11, y: 25, dir: 's' }, arms: { x: 38, y: 20, dir: 's' },
         jorn: { x: 45, y: 8, dir: 's' }, sonja: { x: 50, y: 15, dir: 's' }, brenda: { x: 16, y: 36, dir: 's' }, hunter: { x: 39, y: 36, dir: 's' },
         branch: { x: 47, y: 43, dir: 's' }, fish: { x: 8, y: 8, dir: 's' }, base: { x: 36, y: 41, dir: 's' }, sled: { x: 9, y: 44, dir: 'n' },
-        watch: { x: 30, y: 3, dir: 'n' }, snowman: { x: 28, y: 43, dir: 'n' },
+        watch: { x: 30, y: 2, dir: 'n' }, snowman: { x: 28, y: 43, dir: 'n' },
         // 籠城の門（守る門の前）
         def_n: { x: 27, y: 4, dir: 'n' }, def_w: { x: 5, y: 29, dir: 'w' }, def_e: { x: 50, y: 28, dir: 'e' },
       },
@@ -214,7 +219,7 @@
       zones: [],
       dark: false,
       // 村ぜんたいを 1 枚に描いた下絵（地面・吹きだまり・建物・池・広場）。当たり・戸口・人・灯り・ほかの物は上のデータのまま。絵が無ければマスから焼く
-      art: { image: 'snow/under/yule', emit: 'snow/under/yule_emit', painted: [] },
+      art: { image: 'snow/under/yule', emit: 'snow/under/yule_emit', painted: ['copper_brazier'] },
     });
 
     const D1 = build(false);
