@@ -48,9 +48,10 @@
       O.push(K.chest('desert_hawks_1_c1', 38, 25, { pool: 'p_T' }), K.chest('desert_hawks_1_c2', 5, 26, { item: 'i_smoke', n: 2 }),
         K.chest('desert_hawks_1_c3', 36, 16, { pool: 'p_T' }), K.chest('desert_hawks_1_c4', 5, 10, { gold: 180 }), K.chest('desert_hawks_1_c5', 24, 9, { pool: 'p_rare' }));
       O.push(K.exam(33, 9, 'desert_hawks_water'), K.exam(4, 16, 'desert_hawks_bunks'));
+      // 樽・木箱・壺は 4 つまで、壁ぎわと角だけ（持ち主 2026-09-28「通路真ん中にはおかないで」）
       deco(O, [['tent', 7, 11], ['tent', 11, 17], ['log', 10, 13], ['sack', 13, 9], ['crate', 4, 13], ['weapon_rack', 6, 9], ['bones', 12, 18],
-        ['clay_jars', 31, 8], ['clay_jars', 37, 8], ['cart_barrels', 31, 15], ['crate', 38, 14], ['sack', 33, 17], ['barrel', 39, 12],
-        ['broken_pillar', 16, 26], ['bones', 27, 31], ['sand_mound', 24, 32], ['thorn_bush', 18, 33], ['rock_small', 27, 27], ['clay_jars', 17, 11], ['weapon_rack', 24, 10],
+        ['clay_jars', 31, 8], ['clay_jars', 38, 8], ['sack', 33, 17], ['barrel', 39, 12],
+        ['broken_pillar', 16, 26], ['bones', 27, 31], ['sand_mound', 24, 32], ['thorn_bush', 18, 33], ['rock_small', 27, 27], ['weapon_rack', 24, 10],
         ['bones', 6, 29], ['sand_mound', 38, 28]]);
       for (const [x, y] of [[18, 28], [25, 28], [18, 10], [25, 14], [8, 16], [34, 15], [22, 7], [37, 27], [8, 29]]) O.push(K.prop('torch', x, y));
       O.push(K.sign(23, 33, '――ここより砂の鷹の巣\n名のある者は帰れ'));
@@ -91,7 +92,7 @@
       O.push(K.chest('desert_hawks_2_c1', 31, 21, { pool: 'p_T' }), K.chest('desert_hawks_2_c2', 9, 23, { item: 'i_ether', n: 2 }), K.chest('desert_hawks_2_c3', 26, 6, { pool: 'p_rare' }));
       O.push(K.prop('obelisk', 11, 5, { cond: [FRIEND[0], FRIEND[1], { choice: 'ch_desert_write', is: 'pain' }] }), K.exam(11, 6, 'desert_hawks_memorial', { cond: [FRIEND[0], FRIEND[1], { choice: 'ch_desert_write', is: 'pain' }] }));
       O.push(K.exam(24, 4, 'desert_hawks_map_table'));
-      deco(O, [['carpet_rack', 13, 3], ['carpet_rack', 23, 3], ['clay_jars', 10, 8], ['clay_jars', 26, 9], ['weapon_rack', 8, 10], ['weapon_rack', 28, 7],
+      deco(O, [['carpet_rack', 13, 3], ['carpet_rack', 23, 3], ['clay_jars', 8, 9], ['clay_jars', 27, 10], ['weapon_rack', 8, 10], ['weapon_rack', 28, 7],
         ['copper_brazier', 15, 3], ['copper_brazier', 21, 3], ['tomb_urn', 9, 12], ['sack', 31, 18], ['crate', 32, 20], ['bones', 5, 22], ['table', 24, 5]]);
       for (const [x, y] of [[12, 7], [24, 11], [17, 18], [9, 20], [30, 17]]) O.push(K.prop('torch', x, y));
       const N = [

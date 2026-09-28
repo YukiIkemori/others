@@ -48,8 +48,9 @@
       O.push(K.chest('desert_temple_1_c1', 3, 24, { pool: 'p_T' }), K.chest('desert_temple_1_c2', 45, 19, { pool: 'p_T' }), K.chest('desert_temple_1_c3', 14, 9, { gold: 400 }),
         K.chest('desert_temple_1_c4', 39, 28, { pool: 'p_rare' }), K.chest('desert_temple_1_c5', 17, 36, { item: 'i_stone_light', n: 2 }));
       O.push(K.sign(27, 9, '――日輪の民の宮\n三つの盤に、日を置け'));
-      deco(O, [['broken_pillar', 19, 3], ['broken_pillar', 28, 3], ['obelisk', 18, 8], ['obelisk', 29, 8], ['tomb_urn', 7, 15], ['tomb_urn', 40, 15], ['sand_mound', 12, 28],
-        ['bones', 30, 16], ['tomb_urn', 7, 28], ['tomb_urn', 40, 28], ['broken_pillar', 31, 36], ['obelisk', 16, 33], ['sand_mound', 38, 9], ['bones', 9, 9], ['clay_jars', 2, 18], ['clay_jars', 45, 25]]);
+      // 通れない小物は角と壁ぎわだけ（持ち主 2026-09-28「通路真ん中にはおかないで」）
+      deco(O, [['broken_pillar', 18, 2], ['broken_pillar', 29, 2], ['obelisk', 18, 8], ['obelisk', 29, 8], ['tomb_urn', 7, 15], ['tomb_urn', 40, 15], ['sand_mound', 12, 28],
+        ['bones', 30, 16], ['broken_pillar', 31, 36], ['obelisk', 16, 33], ['sand_mound', 38, 9], ['bones', 9, 9], ['clay_jars', 2, 18], ['clay_jars', 45, 25]]);
       for (const [x, y] of [[20, 5], [27, 5], [7, 21], [40, 21], [19, 33], [29, 33], [33, 5], [12, 5]]) O.push(K.prop('torch', x, y));
       K.def('desert_temple_1', {
         name: '砂に沈んだ神殿', kind: 'dungeon', optional: true, region: 'r_desert', location: 'temple', theme: 'tomb',
@@ -89,7 +90,7 @@
       O.push(K.chest('desert_temple_2_c1', 32, 23, { pool: 'p_rare' }), K.chest('desert_temple_2_c2', 30, 26, { pool: 'p_T' }), K.chest('desert_temple_2_c3', 7, 28, { item: 'i_elixir', n: 1 }));
       O.push(K.prop('obelisk', 14, 4), K.exam(14, 5, 'desert_temple_claim'), K.prop('obelisk', 25, 4), K.exam(25, 5, 'desert_temple_disk'));
       deco(O, [['copper_brazier', 17, 9], ['copper_brazier', 22, 9], ['tomb_urn', 8, 4], ['tomb_urn', 31, 4], ['tomb_urn', 8, 16], ['tomb_urn', 31, 16],
-        ['broken_pillar', 17, 27], ['broken_pillar', 22, 27], ['sand_mound', 13, 28], ['bones', 33, 26], ['clay_jars', 27, 22]]);
+        ['sand_mound', 13, 28], ['bones', 33, 26]]);   // 階段の前の崩れた柱・東の小部屋の口の壺はどけた（通路をふさがない）
       for (const [x, y] of [[10, 9], [29, 9], [18, 20], [21, 22], [7, 25], [27, 23]]) O.push(K.prop('torch', x, y));
       K.def('desert_temple_2', {
         name: '砂に沈んだ神殿', kind: 'dungeon', optional: true, region: 'r_desert', location: 'temple', theme: 'tomb',

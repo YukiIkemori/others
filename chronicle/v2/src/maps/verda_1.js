@@ -63,7 +63,7 @@
     O.push(K.prop('firefly', 26, 27), K.prop('fern', 27, 28));      // 蛍だまり
     O.push(K.prop('fern', 29, 10), K.prop('rock_small', 30, 11));   // 北の草地
     O.push({ type: 'brazier', id: 'verda_1_camp', x: 31, y: 30, on: true });   // 野営地のたき火
-    O.push(K.prop('tent', 34, 27), K.prop('log', 29, 31), K.prop('log', 33, 31), K.prop('sack', 35, 28), K.prop('crate', 35, 30));
+    O.push(K.prop('tent', 34, 27), K.prop('log', 29, 31), K.prop('log', 33, 31), K.prop('sack', 35, 28), K.prop('crate', 36, 30));   // 木箱は野営地の東の木ぎわ（すきまを残さない）
     O.push(K.prop('lantern', 28, 26), K.prop('lantern', 34, 32));
     O.push(K.prop('beacon', 30, 23, { cond: 'cleared_r_forest' }));   // こずえの歌の灯（解決のあと。大灯火の光の柱）
 
@@ -96,6 +96,8 @@
     K.scatter(g, O, 'firefly', 8, [20, 20, 22, 18], ',."', 'v1ff', { keep, gap: 3 });
     K.scatter(g, O, 'mushroom_glow', 10, [1, 1, 58, 50], ',"', 'v1mg', { keep, gap: 4, variant: true });
     K.scatter(g, O, ['rock_small', 'stump', 'rock'], 12, [1, 1, 58, 50], ',"', 'v1rk', { keep, gap: 4, variant: true });
+    // 散らした切り株のうち、北西の広場の口（木との間に 1 マスのすきま）に落ちた 1 つは角へ（描いた石・丸太は下絵の所のまま。持ち主 2026-09-28）
+    for (const o of O) if (o.id === 'stump' && o.x === 12 && o.y === 9) { o.x = 11; o.y = 7; }
     K.scatter(g, O, 'firefly', 8, [1, 1, 58, 50], ',"', 'v1ff2', { keep, gap: 6 });
 
     // ---------------------------------------------------------------- 人（救い出した人は野営地で待つ。STORY_BIBLE §7.1 の 1）

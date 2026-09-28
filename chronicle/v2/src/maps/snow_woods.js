@@ -36,13 +36,13 @@
     const O = [];
     O.push(K.prop('rock_small', 24, 21), K.prop('rock_small', 25, 22));   // 小石（泉は置かない。WORLD §6.2）
     O.push({ type: 'brazier', id: 'snow_woods_camp', x: 27, y: 24, on: true });
-    O.push(K.prop('tent', 29, 21), K.prop('firewood', 21, 25), K.prop('sled', 28, 26), K.prop('log', 22, 24));
+    O.push(K.prop('tent', 29, 21), K.prop('firewood', 20, 25), K.prop('sled', 28, 26), K.prop('log', 22, 24));
     // 倒木
     O.push(K.prop('log', 8, 23), K.prop('log', 9, 23), K.exam(8, 24, 'snow_woods_log', { log: 1 }));
     O.push(K.prop('log', 26, 7), K.prop('log', 27, 7), K.exam(27, 8, 'snow_woods_log', { log: 2 }));
     O.push(K.prop('log', 43, 21), K.prop('log', 44, 21), K.exam(43, 22, 'snow_woods_log', { log: 3 }));
     O.push(K.prop('stump', 10, 26), K.prop('stump', 23, 9), K.prop('stump', 40, 24));
-    O.push(K.prop('bush', 38, 22, { variant: 2 }), K.exam(38, 23, 'snow_mat', { mat: 'snow_mat_berry' }));   // 雪像の飾り: 赤い実
+    O.push(K.prop('bush', 37, 22, { variant: 2 }), K.exam(37, 23, 'snow_mat', { mat: 'snow_mat_berry' }));   // 雪像の飾り: 赤い実（西の木ぎわ。木との間にすきまを残さない）
     // 宝箱
     O.push(K.chest('snow_woods_c1', 7, 8, { pool: 'p_T' }));
     O.push(K.chest('snow_woods_c2', 42, 25, { item: 'i_firepot', n: 2 }));
@@ -52,7 +52,7 @@
     O.push(K.prop('snow_lamp', 20, 34), K.prop('snow_lamp', 30, 34));   // 入口の広場の両端（道の口をふさがない）
     const keep = new Set();
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (K.at(g, x, y) === ',') keep.add(x + ',' + y);
-    K.scatter(g, O, ['snow_rock', 'snow_bank', 'snow_fir'], 18, [2, 2, 46, 38], '.', 'swdeco', { keep, gap: 4, variant: true });
+    K.scatter(g, O, ['snow_rock', 'snow_bank', 'snow_fir'], 18, [2, 2, 46, 38], '.', 'swdeco', { keep, gap: 4, variant: true, roomy: '.,ni' });
     // 描いた下絵（v2/assets/env/snow/under/snow_woods*）に合わせた当たり: 絵のもみの立つマスは歩けない・絵で開けた雪のマスは歩ける
     //   （design/art_ref/gen/env/_tools/under/snow/dng の fitcheck.py で拾ったマス）
     for (const [x, y] of [[18, 6], [34, 22], [7, 23], [30, 27], [26, 32], [26, 34], [19, 36]]) K.put(g, x, y, 'T');

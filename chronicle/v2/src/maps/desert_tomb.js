@@ -60,9 +60,10 @@
         K.chest('desert_tomb_1_c3', 52, 36, { pool: 'p_T' }), K.chest('desert_tomb_1_c4', 42, 8, { gold: 150 }),
         K.chest('desert_tomb_1_c5', 22, 31, { pool: 'p_rare' }), K.chest('desert_tomb_1_c6', 38, 7, { pool: 'p_T' }));
       O.push(K.sign(26, 33, '――名を捨てし王の墓\n王を呼ぶ者は、墓守の像の\n足もとを見よ。'));
-      deco(O, [['tomb_urn', 21, 35], ['tomb_urn', 35, 35], ['tomb_urn', 3, 24], ['tomb_urn', 53, 24], ['broken_pillar', 24, 44], ['bones', 34, 44],
+      // 壺は 4 つまで・角と壁ぎわだけ（持ち主 2026-09-28「樽とか木箱みたいに移動通り抜け不可のはあまり置かないで」）
+      deco(O, [['broken_pillar', 24, 44], ['bones', 34, 44],
         ['obelisk', 19, 7], ['obelisk', 38, 12], ['tomb_urn', 17, 18], ['tomb_urn', 39, 18], ['bones', 5, 30], ['bones', 51, 31], ['sand_mound', 22, 7],
-        ['clay_jars', 14, 12], ['clay_jars', 51, 12], ['tomb_urn', 3, 44], ['sand_mound', 48, 8], ['broken_pillar', 16, 36], ['broken_pillar', 40, 36]]);
+        ['clay_jars', 14, 12], ['clay_jars', 51, 12], ['sand_mound', 48, 8], ['broken_pillar', 16, 36], ['broken_pillar', 40, 36]]);
       for (const [x, y] of [[24, 36], [32, 44], [27, 25], [29, 30], [21, 12], [35, 12], [10, 25], [46, 25], [5, 8], [50, 8], [4, 42]]) O.push(K.prop('torch', x, y));
       K.def('desert_tomb_1', {
         name: '砂の王墓', kind: 'dungeon', region: 'r_desert', location: 'tomb', theme: 'tomb',
@@ -119,7 +120,7 @@
       O.push(K.sign(26, 30, '――流砂の主、ここに眠る。\n砂にもぐるものは、土を嫌う。\n槍は砂を突き通す。\n（誰かの書き付け）'));
       O.push(K.chest('desert_tomb_2_c1', 5, 4, { pool: 'p_T' }), K.chest('desert_tomb_2_c2', 50, 6, { pool: 'p_T' }), K.chest('desert_tomb_2_c3', 38, 11, { item: 'i_torch', n: 2 }),
         K.chest('desert_tomb_2_c4', 11, 41, { gold: 220 }), K.chest('desert_tomb_2_c5', 52, 30, { pool: 'p_rare' }), K.chest('desert_tomb_2_c6', 12, 12, { item: 'i_potion', n: 2 }));
-      deco(O, [['tomb_urn', 21, 3], ['tomb_urn', 35, 3], ['bones', 5, 22], ['bones', 12, 32], ['sand_mound', 20, 44], ['sand_mound', 36, 44], ['bones', 30, 44],
+      deco(O, [['bones', 5, 22], ['bones', 12, 32], ['sand_mound', 20, 44], ['sand_mound', 36, 44], ['bones', 30, 44],
         ['broken_pillar', 38, 5], ['tomb_urn', 51, 12], ['clay_jars', 45, 43], ['obelisk', 47, 27], ['tomb_urn', 53, 43], ['bones', 24, 45], ['sand_mound', 22, 37]]);
       const N = [
         K.npc('worm_track', 'npc_desert_old_m', 25, 33, { name: '倒れた墓荒らし', dir: 'e', talk: 'desert_tomb_robber', reward: 'boss', cond: '!desert_robber_gone' }),   // 砂もぐりの後、起きて帰る場面で消える（desert_tomb_robber_leave）
@@ -168,14 +169,14 @@
       O.push(K.spring('desert_tomb_3_s1', 25, 15));        // 控えの間の泉（王の前。王墓でただ 1 つ。WORLD §6.2）
       O.push(K.prop('obelisk', 44, 19), K.exam(44, 20, 'desert_tomb_glyph', { glyph: 'ru' }));
       O.push(K.prop('broken_pillar', 20, 3), K.exam(20, 4, 'desert_tomb_rubbing'));        // 拓本の跡（lo_ev_desert）
-      O.push(K.prop('tomb_urn', 23, 3), K.prop('tomb_urn', 29, 3), K.prop('obelisk', 16, 3), K.prop('obelisk', 36, 3));
+      O.push(K.prop('obelisk', 16, 3), K.prop('obelisk', 36, 3));
       O.push(K.prop('crystal', 26, 3), K.exam(26, 4, 'desert_tomb_throne'));
       O.push(K.chest('desert_tomb_3_c1', 4, 21, { pool: 'p_T' }), K.chest('desert_tomb_3_c2', 10, 36, { item: 'i_elixir', n: 1 }), K.chest('desert_tomb_3_c3', 47, 36, { pool: 'p_T' }),
         K.chest('desert_tomb_3_c4', 4, 36, { pool: 'p_rare' }));
       O.push(K.sign(31, 14, '――王に名を返す者よ。\n日の玉は火と光を、月の玉は水と闇を\n王に与える。玉を先に砕け。\n（墓守の書き付け）'));
       for (const [x, y] of [[21, 34], [31, 34], [20, 13], [32, 13], [16, 8], [36, 8], [5, 25], [46, 25], [26, 25]]) O.push(K.prop('torch', x, y));
-      deco(O, [['tomb_urn', 3, 20], ['tomb_urn', 11, 20], ['bones', 6, 30], ['sand_mound', 44, 33], ['bones', 47, 22], ['tomb_urn', 20, 41], ['tomb_urn', 32, 41],
-        ['clay_jars', 48, 18], ['broken_pillar', 41, 30], ['obelisk', 9, 27]]);
+      deco(O, [['tomb_urn', 11, 20], ['bones', 6, 30], ['sand_mound', 44, 33], ['bones', 47, 22], ['tomb_urn', 20, 41], ['tomb_urn', 32, 41],
+        ['clay_jars', 48, 18], ['broken_pillar', 40, 30], ['obelisk', 9, 27]]);   // 壺は 4 つまで、崩れた柱は壁ぎわ（持ち主 2026-09-28）
       const N = [
         K.npc('hazal_king', 'npc_hazal', 26, 6, { name: 'ハザル王', dir: 's', talk: 'desert_hazal_after', reward: 'news', cond: 'desert_king' }),
       ];

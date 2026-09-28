@@ -40,7 +40,7 @@
       O.push(K.chest('icicle_1_c2', 25, 30, { pool: 'p_T' }), K.chest('icicle_1_c3', 28, 6, { item: 'i_thaw', n: 2 }), K.chest('icicle_1_c4', 8, 21, { gold: 180 }));
       O.push(K.sign(38, 14, 'つららの回廊\n氷はとけない。火のつぼなら、少しは……\n（古い字）'));
       for (const [x, y] of [[20, 7], [26, 9], [24, 28], [19, 26], [36, 19], [9, 16], [25, 17]]) O.push(K.prop('ice_crystal', x, y, { variant: (x * 3 + y) % 3 }));
-      K.scatter(g, O, ['snow_rock', 'ice_crystal'], 8, [2, 2, 40, 30], '.n', 'ic1deco', { gap: 5, variant: true });
+      K.scatter(g, O, ['snow_rock', 'ice_crystal'], 8, [2, 2, 40, 30], '.n', 'ic1deco', { gap: 5, variant: true, roomy: '.,ni' });
       K.def('icicle_1', {
         name: 'つららの回廊', kind: 'dungeon', optional: true, region: 'r_snow', location: 'icicle', theme: 'ice_cave',
         legend: CAVE(), rows: g, outside: 'wall_snow', objects: O, npcs: [],
@@ -227,7 +227,7 @@
       O.push(K.prop('talestone', 28, 9), K.exam(28, 10, 'aurora_legend'));
       O.push(K.chest('aurora_c1', 30, 20, { pool: 'p_T' }), K.chest('aurora_c2', 5, 13, { pool: 'p_rare' }), K.chest('aurora_c3', 11, 8, { item: 'i_ether', n: 2 }));
       for (const [x, y] of [[14, 20], [27, 22], [17, 11], [25, 12], [9, 18]]) O.push(K.prop('ice_crystal', x, y, { variant: (x + y) % 3 }));
-      K.scatter(g, O, ['snow_rock', 'snow_bank'], 10, [2, 2, 36, 24], 'n', 'audeco', { gap: 4, variant: true });
+      K.scatter(g, O, ['snow_rock', 'snow_bank'], 10, [2, 2, 36, 24], 'n', 'audeco', { gap: 4, variant: true, roomy: '.,ni' });
       K.def('aurora', {
         name: 'オーロラの崖', kind: 'dungeon', optional: true, region: 'r_snow', location: 'aurora', theme: 'snow',
         legend: S.LEGEND({ n: { mat: 'snow' } }), rows: g, outside: 'wall_snow', objects: O, npcs: [],
@@ -264,7 +264,8 @@
       O.push(K.prop('sack', 10, 12), K.prop('sack', 11, 13));   // 荷（泉は置かない。WORLD §6.2）
       O.push(K.stairs(33, 12, { map: 'frost_ship_2', spawn: 'up' }, { id: 'frost_ship_1_down', look: 'down' }));
       for (const [x, y] of [[14, 10], [22, 10], [28, 14]]) O.push(K.prop('ice_crystal', x, y));
-      O.push(K.prop('barrel', 12, 14), K.prop('crate', 25, 14), K.prop('snow_barrel', 16, 14), K.prop('net', 29, 10), K.prop('rowboat', 5, 18));
+      // 樽・木箱は甲板の奥（北の舷）の壁ぎわ（持ち主 2026-09-28「通路真ん中にはおかないで」）
+      O.push(K.prop('barrel', 11, 8), K.prop('crate', 26, 8), K.prop('snow_barrel', 15, 8), K.prop('net', 29, 10), K.prop('rowboat', 5, 18));
       O.push(K.chest('frost_ship_1_c1', 9, 14, { pool: 'p_T' }), K.chest('frost_ship_1_c2', 31, 10, { pool: 'p_T' }));
       O.push(K.sign(22, 19, '――この船に入るべからず。\n百年、帰らぬ船団。凍てつく長あり。\n（峠の宿の組合の札）'));
       O.push(K.exam(20, 9, 'frost_ship_log'));
@@ -287,7 +288,8 @@
       const O2 = [];
       O2.push(K.prop('sack', 6, 12), K.prop('sack', 7, 13));   // 荷（泉は置かない。WORLD §6.2）
       O2.push(K.stairs(4, 4, { map: 'frost_ship_1', spawn: 'up' }, { id: 'frost_ship_2_up', look: 'up' }));
-      O2.push(K.prop('barrel', 8, 5), K.prop('barrel', 9, 5), K.prop('crate', 11, 16), K.prop('crate', 12, 16), K.prop('table', 27, 14), K.prop('chair', 26, 14), K.prop('bookshelf', 31, 4),
+      O2.push(K.prop('barrel', 8, 3), K.prop('barrel', 9, 3), K.prop('crate', 12, 18), K.prop('crate', 13, 18), K.prop('table', 27, 14),   // 樽・木箱は船倉の壁ぎわと角
+        K.prop('chair', 26, 14), K.prop('bookshelf', 31, 4),
         K.prop('ice_crystal', 20, 6), K.prop('ice_crystal', 30, 17), K.prop('lantern', 24, 6));
       O2.push(K.chest('frost_ship_2_c1', 12, 5, { pool: 'p_rare' }));
       O2.push(K.chest('frost_ship_2_c2', 30, 16, { item: 'u_frost_compass', n: 1, cond: 'snow_admiral' }));

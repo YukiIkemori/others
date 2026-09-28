@@ -82,6 +82,8 @@
   /**
    * 空いたマスに物を散らす: g の字が on に含まれ、ほかの物・人・keep（'x,y' の集合）と重ならず、
    * 同じ散らしの物どうしが gap マス以上離れる所へ n 個。→ 置いた物の配列（objs に足す）
+   * o.roomy = 歩ける字の文字列: まわり 2 マス（5×5）がどれもその字で、ほかの物も無い広い所にだけ置く（ダンジョンの当たる小物が
+   *   通路をふさいだり、壁や物との間に 1 マスのすきまを残したりしない。持ち主 2026-09-28「通路真ん中にはおかないで」）
    */
   K.scatter = function (g, objs, id, n, area, on, seed, o) {
     o = o || {};
@@ -93,12 +95,20 @@
     const rng = R.rng('cf_scatter:' + seed);
     const [ax, ay, aw, ah] = area;
     const out = [];
+    const roomyAt = (x, y) => {
+      for (let j = -2; j <= 2; j++) for (let i = -2; i <= 2; i++) {
+        const c = K.at(g, x + i, y + j);
+        if (c == null || !o.roomy.includes(c) || used.has((x + i) + ',' + (y + j))) return false;
+      }
+      return true;
+    };
     let tries = 0;
     while (out.length < n && tries++ < n * 80) {
       const x = ax + rng.int(0, aw - 1), y = ay + rng.int(0, ah - 1);
       const k = x + ',' + y;
       if (used.has(k) || keep.has(k) || !on.includes(K.at(g, x, y))) continue;
       if (out.some((p) => Math.abs(p.x - x) < gap && Math.abs(p.y - y) < gap)) continue;
+      if (o.roomy && !roomyAt(x, y)) continue;
       const p = Object.assign({ type: 'prop', id: Array.isArray(id) ? id[rng.int(0, id.length - 1)] : id, x, y }, o.extra || {});
       if (o.variant) p.variant = rng.int(0, 3);
       out.push(p); used.add(k);

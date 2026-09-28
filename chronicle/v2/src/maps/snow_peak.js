@@ -72,10 +72,10 @@
       O.push(K.exam(46, 40, 'peak_overlook'));
       for (const [x, y] of [[22, 40], [34, 40], [24, 26], [34, 27], [37, 9], [45, 5]]) O.push(K.prop('ice_crystal', x, y));
       for (const [x, y] of [[26, 38], [30, 38], [41, 9]]) O.push(K.prop('snow_lamp', x, y));   // 41,9: 上の段の縁（下り口の通路をふさがない）
-      O.push(K.prop('firewood', 31, 36), K.prop('sled', 23, 42), K.prop('snow_rock', 12, 24), K.prop('snow_rock', 44, 26));
+      O.push(K.prop('firewood', 31, 36), K.prop('sled', 23, 42), K.prop('snow_rock', 12, 24), K.prop('snow_rock', 44, 27));   // 44,27: 南の壁ぎわ（壁との間に 1 マスのすきまを残さない）
       const keep = new Set();
       for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (K.at(g, x, y) === ',') keep.add(x + ',' + y);
-      K.scatter(g, O, ['snow_rock', 'snow_bank', 'snow_fir'], 16, [2, 2, 54, 44], '.', 'pk1deco', { keep, gap: 4, variant: true });
+      K.scatter(g, O, ['snow_rock', 'snow_bank', 'snow_fir'], 16, [2, 2, 54, 44], '.', 'pk1deco', { keep, gap: 4, variant: true, roomy: '.,ni' });
       for (const [x, y] of [[25, 24], [25, 26]]) K.put(g, x, y, 'w');   // 描いた下絵の湯だまりの縁（v2/assets/env/snow/under/peak_1*）
 
       K.def('peak_1', {
@@ -125,7 +125,7 @@
       O.push(K.chest('peak_top_c1', 30, 14, { pool: 'p_T' }));
       O.push(K.chest('peak_top_c2', 9, 16, { item: 'i_elixir', n: 1 }));
       O.push(K.sign(22, 22, '――竜は、火と物語を受け取る。\n吹雪の息をためたら、身を伏せよ。\n（誰かの書き付け）'));
-      K.scatter(g, O, ['snow_rock', 'snow_bank'], 8, [4, 4, 32, 18], '.', 'ptdeco', { gap: 4, variant: true, keep: new Set(['19,18', '20,18', '21,18', '20,9', '20,10', '19,10', '21,10']) });
+      K.scatter(g, O, ['snow_rock', 'snow_bank'], 8, [4, 4, 32, 18], '.', 'ptdeco', { gap: 4, variant: true, roomy: '.,ni', keep: new Set(['19,18', '20,18', '21,18', '20,9', '20,10', '19,10', '21,10']) });
       K.def('peak_top', {
         name: '白竜の峰', kind: 'dungeon', region: 'r_snow', location: 'peak', theme: 'snow',
         legend: S.LEGEND({}),
