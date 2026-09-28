@@ -100,7 +100,7 @@
     await X().evidence(ev, 'melda');
     if (!ev.flag('marsh_assembly_done')) await ev.say(null, ['……けれど、町の人は\n魔女の言葉を信じないだろう。', '沼へ入るには、町の集会で\n町の人を説き伏せなければ。']);
     ev.mapBgm();
-  }, { meta: { needs: ['flag:marsh_dolls'], gives: ['flag:marsh_melda_met', 'item:k_bell_key', 'lore:lo_marsh_song', 'flag:marsh_ev_melda', 'var:marsh_evidence', 'lead:l_marsh_bog'] } });
+  }, { meta: { needs: ['flag:marsh_dolls'], gives: ['flag:marsh_melda_met', 'item:k_bell_key', 'lore:lo_marsh_song', 'flag:marsh_ev_melda', 'lead:l_marsh_ev_melda', 'var:marsh_evidence', 'lead:l_marsh_bog'] } });
 
   // ================================================================ 鐘沈みの沼
   E('bog_arrive', async (ev) => {
@@ -215,7 +215,7 @@
   E('marsh_songstone', async (ev) => {
     await ev.say(null, ['沼の縁の、古い石碑。\n鐘の歌が彫られている。', X().SONG_CUT, '最後の節だけが、\n何かで削り取られていた。']);
     if (ev.flag('marsh_emma_met')) await X().evidence(ev, 'stone');
-  }, { meta: { needs: ['flag:marsh_emma_met'], gives: ['flag:marsh_ev_stone', 'var:marsh_evidence'] } });
+  }, { meta: { needs: ['flag:marsh_emma_met'], gives: ['flag:marsh_ev_stone', 'lead:l_marsh_ev_stone', 'var:marsh_evidence'] } });
   // 沼の入口の霧の壁（集会の前）
   E('marsh_mistwall', async (ev) => {
     await ev.say(null, ['沼の入口を、厚い霧の壁が\nふさいでいる。', '一歩踏み込むと、方角が\nわからなくなる。……ひとりでは\n入れそうにない。']);

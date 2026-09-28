@@ -99,7 +99,7 @@
       const b = S.box(), C = T().color, G = R.Game || {}, t = R.Engine.time;
       S.heading(g, '地図', b.x + u(8), b.y + u(6), 0, { size: 15, track: 4 });
       const area = { x: b.x, y: b.y + u(44), w: b.w, h: b.h - u(44) };
-      if (!rec.ready) { R.UIK.text(g, '地図をひろげている……', area.x + area.w / 2, area.y + area.h / 2, { size: u(18), color: C.text2, align: 'center' }); S.prompts(g, this.promptList()); return true; }
+      if (!rec.ready) { R.UIK.text(g, '地図をひろげている……。', area.x + area.w / 2, area.y + area.h / 2, { size: u(18), color: C.text2, align: 'center' }); S.prompts(g, this.promptList()); return true; }
       const [IW, IH] = WM.size, fit = Math.min(area.w / IW, area.h / IH);
       // 今いる所
       const pos = (R.Field && R.Field.pos) || G.pos || {};

@@ -42,7 +42,11 @@ for (const id of Object.keys(R.DB.maps).sort()) {
     R.State.check = (c) => (c === o.cond ? true : orig.call(R.State, c));
     Object.assign(S, { map: m, x: o.x, y: o.y, lv: o.lv || 0, dir: 's', torch: null, npcs: [] });
     got = null;
-    try { F._arrive(); } finally { R.State.check = orig; }
+    // 「降りますか？」の問い（confirm）と通せんぼ（gate: 体験版の番・ひとりでは入れない）は、はいと答えて開いた後の形で見る
+    //  （問いは札を待つので、そのままでは行き先が同じ手番で返らない。通せんぼの開け閉めは gateShut の決まりで、ここの検査の外）
+    const { confirm, gate } = o;
+    delete o.confirm; delete o.gate;
+    try { F._arrive(); } finally { R.State.check = orig; if (confirm !== undefined) o.confirm = confirm; if (gate !== undefined) o.gate = gate; }
     const dest = R.DB.maps[o.to.map];
     if (!ok(name + ': 行き先へ移る', got && got.map === o.to.map && dest, got)) continue;
     const sp = R.MapUtil.spawn(dest, got.spawn);

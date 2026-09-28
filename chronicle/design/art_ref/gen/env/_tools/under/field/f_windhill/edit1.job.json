@@ -1,0 +1,11 @@
+{
+ "out": "/home/user/others/chronicle/design/art_ref/gen/env/_tools/under/field/f_windhill/edit1.png",
+ "prompt": "Edit this finished top-down pixel-art RPG map (the attached image) with ONE change and keep everything else exactly as it is (same pixels, same framing, same size, same meadow, road, rocks, statue and colours):\nIn the BOTTOM-LEFT CORNER, inside the dense dark pine forest (the area from the left edge to about 17 percent of the image width, and from about 80 percent of the image height down to the bottom edge), paint the enormous CROWN OF THE THOUSAND-YEAR TREE rising above the forest: one single colossal ancient broadleaf tree crown, roughly circular, about 11 tiles (about 21 percent of the image width) across, centred about 6 percent from the left edge and about 94 percent down from the top, so it runs off the left and bottom edges. Layered billowing masses of deep dark green leaves with a faint silvery-green sheen on the top-left of each leaf cluster, dark warm outlines, a soft shadow cast onto the surrounding pines, in exactly the same hi-bit pixel-art style, top-down 3/4 view and cool night-friendly lighting as the rest of the map. It must look much bigger and older than every pine around it. Only the forest pines under the crown change; the grassy meadow north of the forest edge stays exactly as it is. Do not add anything else. No text, no characters, no light beams.",
+ "size": "2496x2112",
+ "quality": "high",
+ "background": "opaque",
+ "refs": [
+  "/home/user/others/chronicle/design/art_ref/gen/env/_tools/under/field/f_windhill/gen1.png"
+ ],
+ "tag": "f_windhill_edit"
+}

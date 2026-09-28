@@ -205,7 +205,7 @@
           const L = rm.listen;
           if (L && L.btn === row.btn && L.slot === col) {
             const blink = 0.55 + 0.45 * Math.sin(R.Engine.time / 180);
-            R.UIK.text(gg, rm.kind === 'kb' ? 'キーを押す…' : 'ボタンを押す…', cx, cy, { size: u(13.5), weight: 700, color: `rgba(236,201,124,${blink.toFixed(2)})`, align: 'center' });
+            R.UIK.text(gg, rm.kind === 'kb' ? 'キーを押してください' : 'ボタンを押してください', cx, cy, { size: u(13.5), weight: 700, color: `rgba(236,201,124,${blink.toFixed(2)})`, align: 'center', maxW: cw - u(10) });
             continue;
           }
           if (rm.kind === 'kb') {

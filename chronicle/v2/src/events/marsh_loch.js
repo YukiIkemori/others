@@ -71,12 +71,12 @@
     await ev.say(null, ['食卓に、子どもの絵がある。\n霧の中の女の人と、\n手をつないだ男の子。', '女の人の顔は、灰色の\nぐるぐるで塗りつぶされている。']);
     if (!ev.flag('marsh_emma_met')) return;
     await X().evidence(ev, 'drawing');
-  }, { meta: { needs: ['flag:marsh_emma_met'], gives: ['flag:marsh_ev_drawing', 'var:marsh_evidence'] } });
+  }, { meta: { needs: ['flag:marsh_emma_met'], gives: ['flag:marsh_ev_drawing', 'lead:l_marsh_ev_drawing', 'var:marsh_evidence'] } });
   E('loch_lina', async (ev) => {
     if (cleared(ev)) { await ev.say('lina', ['おにいちゃん、かえってきたよ！', 'ねえ、朝の鐘って、\nどうして朝じゃないのに\n鳴るの？']); return; }
     await ev.say('lina', ['あのね、おばあさんが\n歌ってくれたの。窓の外で。', 'でもね、口が\nうごいてなかったの。', 'おにいちゃんは、おばあさんと\n手をつないで、いっちゃった。']);
     if (ev.flag('marsh_emma_met')) await X().evidence(ev, 'drawing');
-  }, { meta: { needs: ['flag:marsh_emma_met'], gives: ['flag:marsh_ev_drawing', 'var:marsh_evidence'] } });
+  }, { meta: { needs: ['flag:marsh_emma_met'], gives: ['flag:marsh_ev_drawing', 'lead:l_marsh_ev_drawing', 'var:marsh_evidence'] } });
 
   // 静夜会のイェナ（任意。エマの家の前。同席するとエマが奉納の紙を破る）
   E('loch_yena', async (ev) => {
@@ -112,7 +112,7 @@
   E('loch_footprints', async (ev) => {
     await ev.say(null, ['運河の岸の泥に、小さな足あとが\n青白く光っている。光るこけを\n踏んだ跡だ。', '足あとは、東の館の方ではなく、\n南の……沼の方へ続いている。']);
     if (ev.flag('marsh_emma_met')) await X().evidence(ev, 'foot');
-  }, { meta: { needs: ['flag:marsh_emma_met', 'flag:marsh_night'], gives: ['flag:marsh_ev_foot', 'var:marsh_evidence'] } });
+  }, { meta: { needs: ['flag:marsh_emma_met', 'flag:marsh_night'], gives: ['flag:marsh_ev_foot', 'lead:l_marsh_ev_foot', 'var:marsh_evidence'] } });
 
   // 夜の運河の橋: 灰色のマントの少女（v_fine_marsh_01 の文のまま。声はあとで）
   E('loch_bridge_fine', async (ev) => {
@@ -152,7 +152,7 @@
     await X().lore(ev, 'lo_time_marsh');
     await ev.say(null, ['最後のページ。去年の秋から、\n鐘をついた印が途絶えている。', 'その次のページから、\n「霧の晩、子ども消ゆ」の書き込みが\n三つ、続いていた。']);
     if (ev.flag('marsh_emma_met')) await X().evidence(ev, 'book');
-  }, { meta: { needs: ['flag:marsh_emma_met'], gives: ['lore:lo_time_marsh', 'flag:marsh_ev_book', 'var:marsh_evidence'] } });
+  }, { meta: { needs: ['flag:marsh_emma_met'], gives: ['lore:lo_time_marsh', 'flag:marsh_ev_book', 'lead:l_marsh_ev_book', 'var:marsh_evidence'] } });
   E('loch_tower_ladder', async (ev) => { await ev.say(null, '鐘のつられた上の段へ続く、\n古いはしご。段が何枚か抜けている。'); });
   E('loch_tower_bell', async (ev) => {
     await ev.say(null, cleared(ev) ? '鐘の縁に、新しい灯がともっている。\n朝の鐘の、低く澄んだ音の名残。' : ['試しに、鐘の綱を引いてみた。', '……鐘は、動くのに鳴らない。\n音が、霧に吸われていくようだ。']);
@@ -173,7 +173,7 @@
   E('loch_beppo_dolls', async (ev) => {
     await ev.say(null, ['棚に、子どもの人形が並んでいる。\nそのうちの三体が、\nどれも、消えた子の顔によく似ている。', '人形の足の裏に、\n沼の泥がこびりついていた。']);
     if (ev.flag('marsh_emma_met')) await X().evidence(ev, 'doll');
-  }, { meta: { needs: ['flag:marsh_emma_met'], gives: ['flag:marsh_ev_doll', 'var:marsh_evidence'] } });
+  }, { meta: { needs: ['flag:marsh_emma_met'], gives: ['flag:marsh_ev_doll', 'lead:l_marsh_ev_doll', 'var:marsh_evidence'] } });
   E('loch_beppo_order', async (ev) => {
     await ev.say(null, ['注文の帳面だ。\n「子の人形、三体。代金は前払い。\n霧色のマントの婦人より」', '代金の欄には、\n湿った銀貨の絵が描いてある。\n……銀貨が、泥に変わっていたらしい。']);
   });

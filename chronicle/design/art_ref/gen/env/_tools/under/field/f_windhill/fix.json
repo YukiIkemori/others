@@ -331,5 +331,6 @@
 }
 }
 ],
-"note_collide": "2026-09-28 collision audit: the bald hill's rock ring re-read from the painting: its south rim (31-36,18) and the rocks either side of the stair's foot (27-28,17-19) (30,17) are solid (only the stair x 29 climbs it); the grass above the ring's top (33-36,8) is open; the ring's west road at x 41 rows 13-15 is open (the wall is x 40); the lone boulder (5,18) solid. The boulder pile by the west road (8-11,30-31) solid down to its base row."
+"note_collide": "2026-09-28 collision audit: the bald hill's rock ring re-read from the painting: its south rim (31-36,18) and the rocks either side of the stair's foot (27-28,17-19) (30,17) are solid (only the stair x 29 climbs it); the grass above the ring's top (33-36,8) is open; the ring's west road at x 41 rows 13-15 is open (the wall is x 40); the lone boulder (5,18) solid. The boulder pile by the west road (8-11,30-31) solid down to its base row.",
+"note_crown": "2026-09-28: the thousand-year tree's crown painted in (edit1.png, one edit of gen1; the crown was cut out of edit1 and moved onto the layout's SW corner over gen1 by the scratch script crown.py -> gen2.png). The painting source is now gen2.png (process.py f_windhill f_windhill/gen2.png). The crown lies over forest cells (already solid; the trunk is hidden under it); its top edge hangs over (6,35) (7,36), which stay walkable and walk-behind through the _over layer."
 }
