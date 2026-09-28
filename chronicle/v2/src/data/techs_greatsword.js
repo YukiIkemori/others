@@ -1,4 +1,4 @@
-// techs_greatsword.js — 大剣の技 22 ＋派生技 3（RULES。STATS_REWORK §8.5。tools/port/port_techs.js の出力を正とする）
+// techs_greatsword.js — 大剣の技 22 ＋派生技 6（RULES。STATS_REWORK §8.5。tools/port/port_techs.js の出力を正とする）
 // 生成: node v2/tools/port/*.js（今の木から移した結果。以後はこのファイルが正）
 (function (R) {
   'use strict';
@@ -334,6 +334,45 @@
     fx: 'slash3',
     rank: 4,
     derived: { from: 't_greatsword_overhead', lv: 4 },
+  },
+  t_greatsword_bigcrumble: {
+    kind: 'tech',
+    wtype: 'greatsword',
+    name: '大打ち崩し',
+    desc: '構えごと打ち崩し、必ず守備力を下げる。',
+    mp: 5,
+    target: 'enemy',
+    reach: false,
+    effects: [{ type: 'damage', power: 1.9, kind: 'blunt' }, { type: 'buff', stat: 'def', stages: -1, chance: 1 }],
+    fx: 'strike2',
+    rank: 4,
+    derived: { from: 't_greatsword_crumble', lv: 4 },
+  },
+  t_greatsword_bigwhirl: {
+    kind: 'tech',
+    wtype: 'greatsword',
+    name: '大渦巻き斬り',
+    desc: '大きな渦のように振り回し、敵全体を斬る。',
+    mp: 9,
+    target: 'enemies',
+    reach: false,
+    effects: [{ type: 'damage', power: 1.3 }],
+    fx: 'slash3',
+    rank: 6,
+    derived: { from: 't_greatsword_whirl', lv: 6 },
+  },
+  t_greatsword_bigbell: {
+    kind: 'tech',
+    wtype: 'greatsword',
+    name: '大鐘打ち',
+    desc: '大鐘を鳴らすように打つ。気絶させやすい。',
+    mp: 9,
+    target: 'enemy',
+    reach: false,
+    effects: [{ type: 'damage', power: 2.4, kind: 'blunt' }, { type: 'status', status: 'stun', chance: 0.6 }],
+    fx: 'strike2',
+    rank: 6,
+    derived: { from: 't_greatsword_bell', lv: 6 },
   },
 });
 })(window.RPG);

@@ -1,4 +1,4 @@
-// techs_sword.js — 剣の技 20 ＋派生技 3（RULES。STATS_REWORK §8.5。tools/port/port_techs.js の出力を正とする）
+// techs_sword.js — 剣の技 20 ＋派生技 6（RULES。STATS_REWORK §8.5。tools/port/port_techs.js の出力を正とする）
 // 生成: node v2/tools/port/*.js（今の木から移した結果。以後はこのファイルが正）
 (function (R) {
   'use strict';
@@ -309,6 +309,45 @@
     fx: 'slash2',
     rank: 4,
     derived: { from: 't_sword_draw', lv: 4 },
+  },
+  t_sword_pierce_through: {
+    kind: 'tech',
+    wtype: 'sword',
+    name: '貫き通し',
+    desc: '剣先で守りごと貫き通す。守備力を少し無視する。',
+    mp: 7,
+    target: 'enemy',
+    reach: false,
+    effects: [{ type: 'damage', power: 2.4, kind: 'pierce', ignoreDef: 0.3 }],
+    fx: 'pierce2',
+    rank: 5,
+    derived: { from: 't_sword_thrust', lv: 5 },
+  },
+  t_sword_bigwheel: {
+    kind: 'tech',
+    wtype: 'sword',
+    name: '大風車斬り',
+    desc: '大きく回り、ひと群れの敵を強く斬り払う。',
+    mp: 9,
+    target: 'group',
+    reach: false,
+    effects: [{ type: 'damage', power: 1.6 }],
+    fx: 'slash3',
+    rank: 6,
+    derived: { from: 't_sword_wheel', lv: 6 },
+  },
+  t_sword_twinmine: {
+    kind: 'tech',
+    wtype: 'sword',
+    name: '重ね峰打ち',
+    desc: '峰で2回打つ。気絶させやすい。',
+    mp: 6,
+    target: 'enemy',
+    reach: false,
+    effects: [{ type: 'damage', power: 0.95, hits: 2, kind: 'blunt' }, { type: 'status', status: 'stun', chance: 0.45 }],
+    fx: 'strike2',
+    rank: 5,
+    derived: { from: 't_sword_mine', lv: 5 },
   },
 });
 })(window.RPG);

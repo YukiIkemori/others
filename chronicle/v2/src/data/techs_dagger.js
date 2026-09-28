@@ -1,4 +1,4 @@
-// techs_dagger.js — 短剣の技 19 ＋派生技 3（RULES。STATS_REWORK §8.5。tools/port/port_techs.js の出力を正とする）
+// techs_dagger.js — 短剣の技 19 ＋派生技 6（RULES。STATS_REWORK §8.5。tools/port/port_techs.js の出力を正とする）
 // 生成: node v2/tools/port/*.js（今の木から移した結果。以後はこのファイルが正）
 (function (R) {
   'use strict';
@@ -291,6 +291,46 @@
     fx: 'poison',
     rank: 4,
     derived: { from: 't_dagger_venom', lv: 4 },
+  },
+  t_dagger_filch2: {
+    kind: 'tech',
+    wtype: 'dagger',
+    name: 'ごっそり取り',
+    desc: '深く切りつけながら、持ち物をかすめ取る。',
+    mp: 4,
+    target: 'enemy',
+    reach: false,
+    noAuto: true,
+    effects: [{ type: 'damage', power: 1.1 }, { type: 'steal' }],
+    fx: 'steal',
+    rank: 3,
+    derived: { from: 't_dagger_filch', lv: 3 },
+  },
+  t_dagger_numb2: {
+    kind: 'tech',
+    wtype: 'dagger',
+    name: '深しびれ刺し',
+    desc: '深く刺してしびれさせる。まひさせやすい。',
+    mp: 5,
+    target: 'enemy',
+    reach: false,
+    effects: [{ type: 'damage', power: 1.8 }, { type: 'status', status: 'paralyze', chance: 0.6 }],
+    fx: 'pierce',
+    rank: 4,
+    derived: { from: 't_dagger_numb', lv: 4 },
+  },
+  t_dagger_knives2: {
+    kind: 'tech',
+    wtype: 'dagger',
+    name: '大刃つぶて',
+    desc: '3本の刃を投げ、敵のだれかに当てる。',
+    mp: 8,
+    target: 'random',
+    reach: true,
+    effects: [{ type: 'damage', power: 0.8, hits: 3 }],
+    fx: 'pierce2',
+    rank: 5,
+    derived: { from: 't_dagger_knives', lv: 5 },
   },
 });
 })(window.RPG);

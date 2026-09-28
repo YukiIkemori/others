@@ -1,4 +1,4 @@
-// techs_bow.js — 弓の技 20 ＋派生技 3（RULES。STATS_REWORK §8.5。tools/port/port_techs.js の出力を正とする）
+// techs_bow.js — 弓の技 20 ＋派生技 6（RULES。STATS_REWORK §8.5。tools/port/port_techs.js の出力を正とする）
 // 生成: node v2/tools/port/*.js（今の木から移した結果。以後はこのファイルが正）
 (function (R) {
   'use strict';
@@ -309,6 +309,46 @@
     fx: 'arrow2',
     rank: 7,
     derived: { from: 't_bow_hawk', lv: 7 },
+  },
+  t_bow_rapid2: {
+    kind: 'tech',
+    wtype: 'bow',
+    name: '二連速射',
+    desc: 'すばやく2本、続けて射る。先に動ける。',
+    mp: 4,
+    target: 'enemy',
+    reach: true,
+    quick: true,
+    effects: [{ type: 'damage', power: 0.85, hits: 2 }],
+    fx: 'arrow',
+    rank: 3,
+    derived: { from: 't_bow_rapid', lv: 3 },
+  },
+  t_bow_venom2: {
+    kind: 'tech',
+    wtype: 'bow',
+    name: '猛毒の矢',
+    desc: '猛毒の矢を射る。毒にしやすい。',
+    mp: 8,
+    target: 'enemy',
+    reach: true,
+    effects: [{ type: 'damage', power: 2.2 }, { type: 'status', status: 'poison', chance: 0.8 }],
+    fx: 'arrow',
+    rank: 6,
+    derived: { from: 't_bow_venom', lv: 6 },
+  },
+  t_bow_bigrain: {
+    kind: 'tech',
+    wtype: 'bow',
+    name: '大矢しぐれ',
+    desc: '大雨のように矢を降らせ、敵全体を射る。',
+    mp: 9,
+    target: 'enemies',
+    reach: true,
+    effects: [{ type: 'damage', power: 1.35 }],
+    fx: 'arrow2',
+    rank: 6,
+    derived: { from: 't_bow_rain', lv: 6 },
   },
 });
 })(window.RPG);

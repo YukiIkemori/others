@@ -1,4 +1,4 @@
-// techs_staff.js — 杖の技 18 ＋派生技 2（RULES。STATS_REWORK §8.5。tools/port/port_techs.js の出力を正とする）
+// techs_staff.js — 杖の技 18 ＋派生技 5（RULES。STATS_REWORK §8.5。tools/port/port_techs.js の出力を正とする）
 // 生成: node v2/tools/port/*.js（今の木から移した結果。以後はこのファイルが正）
 (function (R) {
   'use strict';
@@ -304,6 +304,48 @@
     fx: 'magic2',
     rank: 7,
     derived: { from: 't_staff_bolt', lv: 7 },
+  },
+  t_staff_soothe2: {
+    kind: 'tech',
+    wtype: 'staff',
+    name: '深いいたわり',
+    desc: '心をこめて、味方ひとりのHPを大きく回復する。',
+    mp: 6,
+    target: 'ally',
+    reach: true,
+    magic: true,
+    effects: [{ type: 'heal', pct: 0.45 }],
+    fx: 'heal',
+    rank: 4,
+    derived: { from: 't_staff_soothe', lv: 4 },
+  },
+  t_staff_weaken2: {
+    kind: 'tech',
+    wtype: 'staff',
+    name: '大力封じ',
+    desc: '念で打ち、攻撃力を大きく下げる。',
+    mp: 5,
+    target: 'enemy',
+    reach: true,
+    magic: true,
+    effects: [{ type: 'damage', formula: 'magic', power: 1.6 }, { type: 'buff', stat: 'atk', stages: -2, chance: 0.8 }],
+    fx: 'debuff',
+    rank: 4,
+    derived: { from: 't_staff_weaken', lv: 4 },
+  },
+  t_staff_bigwave: {
+    kind: 'tech',
+    wtype: 'staff',
+    name: '大念の波',
+    desc: '大きな念の波で、敵全体を打つ。',
+    mp: 12,
+    target: 'enemies',
+    reach: true,
+    magic: true,
+    effects: [{ type: 'damage', formula: 'magic', power: 1.55 }],
+    fx: 'magic2',
+    rank: 7,
+    derived: { from: 't_staff_wave', lv: 7 },
   },
 });
 })(window.RPG);
