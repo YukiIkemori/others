@@ -96,7 +96,12 @@ def f_roa():
         dict(type='sign', x=43, y=27, text='東 → 港町ファロス・灯台の岬\n北 → 見晴らし台・跳ね橋'),
         dict(type='chest', id='f_roa_c1', x=49, y=11, item='i_potion', n=1),
     ]
-    a.notes.append('zone zw_prologue (the whole area)')
+    a.spawns['well'] = dict(x=22, y=17, dir='s')
+    a.meta = dict(name='ロアの丘', sub='羊の丘と古井戸', region='prologue', worldRect=[222, 246, 70, 60], outside='forest_dark',
+                  zones=[{'rect': None, 'zone': 'zw_prologue'}],
+                  links={'roa': {'map': 'f_roa', 'spawn': 'roa'}, 'well': {'map': 'f_roa', 'spawn': 'well'}},
+                  npcs=[{'id': 'shepherd', 'look': 'npc_old_m_2', 'name': '羊飼いの年寄り', 'x': 14, 'y': 31, 'dir': 'w', 'move': 'still', 'cond': 'prologue_done',
+                         'talk': 'world_shepherd', 'reward': 'news', 'key': 'world_shepherd'}])
     return a
 
 
@@ -169,7 +174,9 @@ def f_cape():
         dict(type='prop', id='tent', x=43, y=6), dict(type='prop', id='lantern', x=44, y=6),
         dict(type='chest', id='f_cape_c1', x=12, y=31, item='i_salve', n=2),
     ]
-    a.notes.append('zones: y < 16 zw_prologue (the Pharos road), the cape zw_peninsula')
+    a.meta = dict(name='灯台の岬', sub='ファロス街道と灯台', region='prologue', worldRect=[272, 300, 72, 92], outside='sea',
+                  zones=[{'rect': [0, 0, 56, 16], 'zone': 'zw_prologue'}, {'rect': None, 'zone': 'zw_peninsula'}],
+                  links={'pharos': {'map': 'f_cape', 'spawn': 'pharos'}, 'lighthouse': {'map': 'f_cape', 'spawn': 'lighthouse'}}, npcs=[])
     return a
 
 

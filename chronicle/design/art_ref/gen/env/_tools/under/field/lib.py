@@ -57,6 +57,7 @@ class Area:
         self.marks = []      # landmarks for the guide/prompt: {kind, cells:[[x,y]..], color, text}
         self.objects = []    # data objects (sprites/examines/doors/exits etc., written to the map file by hand from these)
         self.spawns, self.exits, self.notes = {}, [], []
+        self.meta = {}       # name, sub, region, zones, npcs, links, worldRect, bbg, outside (tomap.py)
         self.keep = np.zeros((H, W), bool)   # cells that later passes must not overwrite (roads, bridges, marks)
 
     # ------------------------------------------------------------ painting helpers
@@ -200,7 +201,7 @@ class Area:
     def save(self, d):
         os.makedirs(d, exist_ok=True)
         json.dump(dict(id=self.id, w=self.W, h=self.H, rows=[''.join(r) for r in self.g], marks=self.marks, objects=self.objects,
-                       spawns=self.spawns, exits=self.exits, notes=self.notes), open(os.path.join(d, 'layout.json'), 'w'), ensure_ascii=False, indent=0)
+                       spawns=self.spawns, exits=self.exits, notes=self.notes, meta=self.meta), open(os.path.join(d, 'layout.json'), 'w'), ensure_ascii=False, indent=0)
 
     def ascii(self):
         return '\n'.join('%2d %s' % (y, ''.join(r)) for y, r in enumerate(self.g))

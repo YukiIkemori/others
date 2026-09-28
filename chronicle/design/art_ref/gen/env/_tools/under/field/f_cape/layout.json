@@ -603,7 +603,43 @@
 "edge": "e"
 }
 ],
-"notes": [
-"zones: y < 16 zw_prologue (the Pharos road), the cape zw_peninsula"
-]
+"notes": [],
+"meta": {
+"name": "灯台の岬",
+"sub": "ファロス街道と灯台",
+"region": "prologue",
+"worldRect": [
+272,
+300,
+72,
+92
+],
+"outside": "sea",
+"zones": [
+{
+"rect": [
+0,
+0,
+56,
+16
+],
+"zone": "zw_prologue"
+},
+{
+"rect": null,
+"zone": "zw_peninsula"
+}
+],
+"links": {
+"pharos": {
+"map": "f_cape",
+"spawn": "pharos"
+},
+"lighthouse": {
+"map": "f_cape",
+"spawn": "lighthouse"
+}
+},
+"npcs": []
+}
 }

@@ -467,6 +467,11 @@
 "x": 50,
 "y": 29,
 "dir": "w"
+},
+"well": {
+"x": 22,
+"y": 17,
+"dir": "s"
 }
 },
 "exits": [
@@ -504,7 +509,48 @@
 "edge": "e"
 }
 ],
-"notes": [
-"zone zw_prologue (the whole area)"
+"notes": [],
+"meta": {
+"name": "ロアの丘",
+"sub": "羊の丘と古井戸",
+"region": "prologue",
+"worldRect": [
+222,
+246,
+70,
+60
+],
+"outside": "forest_dark",
+"zones": [
+{
+"rect": null,
+"zone": "zw_prologue"
+}
+],
+"links": {
+"roa": {
+"map": "f_roa",
+"spawn": "roa"
+},
+"well": {
+"map": "f_roa",
+"spawn": "well"
+}
+},
+"npcs": [
+{
+"id": "shepherd",
+"look": "npc_old_m_2",
+"name": "羊飼いの年寄り",
+"x": 14,
+"y": 31,
+"dir": "w",
+"move": "still",
+"cond": "prologue_done",
+"talk": "world_shepherd",
+"reward": "news",
+"key": "world_shepherd"
+}
 ]
+}
 }
