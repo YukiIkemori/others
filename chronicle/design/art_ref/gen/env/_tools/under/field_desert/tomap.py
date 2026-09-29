@@ -1,4 +1,4 @@
-"""Write the game map file of a FIELD area from <id>/layout.json: v2/src/maps/field_<short>.js (generated; do not edit by hand).
+"""(desert copy of ../field/tomap.py: v2/src/maps/field_desert_<id without d_>.js, desert legend/theme/bgm/bbg) Write the game map file of a FIELD area from <id>/layout.json: v2/src/maps/field_<short>.js (generated; do not edit by hand).
 Rows: layout.json 'rows_fit' (the collision fitted to the painting, fit.py) when present, else 'rows'.
 usage: python3 tomap.py <id> [...]"""
 import json, sys, os
@@ -28,7 +28,7 @@ for aid in sys.argv[1:]:
     d['objects'] = d['objects'] + list(fx.get('objects_add', []))
     # lamps (waylamp / lamp_post) stand beside the road, never on it and never in a narrow gap (tools/qa/check_lamps.js):
     # the nearest cell whose 5x5 neighbourhood is all walkable, which is not road itself, with a road cell within 2
-    WALKC, ROADC = set(',;".:s_=c'), set('.:c=')
+    WALKC, ROADC = set(',;".:s_=cuk'), set('.:c=')
     H_, W_ = len(rows), len(rows[0])
     taken = {(o['x'], o['y']) for o in d['objects']}
     def good(x, y):
@@ -52,16 +52,17 @@ for aid in sys.argv[1:]:
     art = {'image': 'field/under/' + aid, 'painted': painted}
     if has_over: art['overlay'] = 'field/under/%s_over' % aid
     if os.path.exists(os.path.join(V2, 'assets/env/field/under/%s_closed@32.png' % aid)): art['closed'] = 'field/under/%s_closed' % aid
-    short = aid[2:] if aid.startswith('f_') else aid
-    edges = ', '.join('%s → %s.%s' % (e['edge'], e['to']['map'], e['to']['spawn']) for e in d['exits'])
-    out = f"""// 生成物（design/art_ref/gen/env/_tools/under/field/ の areas.py → fit.py → tomap.py）。手で直さない: 配置は areas.py、当たりは fit.py で作り直す。
-// エリア {aid}「{M['name']}」（{M.get('sub', '')}、{d['w']}×{d['h']}）。エリア切り替えのフィールド（maps/field_00_kit.js）。
+    short = aid[2:] if aid.startswith('d_') else aid
+    edges = ', '.join('%s → %s.%s' % (e.get('edge', '門'), e['to']['map'], e['to']['spawn']) for e in d['exits'])
+    out = f"""// 生成物（design/art_ref/gen/env/_tools/under/field_desert/ の areas_desert.py → fit.py → tomap.py）。手で直さない: 配置は areas_desert.py、当たりは fit.py で作り直す。
+// エリア {aid}「{M['name']}」（{M.get('sub', '')}、{d['w']}×{d['h']}）。エリア切り替えのフィールド（maps/field_00_kit.js、砂漠の凡例は field_desert_00_kit.js）。
 //   出口: {edges}
 //   絵: field/under/{aid}（v2/assets/env/field/under/。無ければマスから焼く）
 (function (R) {{
   'use strict';
   R.FieldArea.def({js(aid)}, {{
-    name: {js(M['name'])}, region: {js(M['region'])}, outside: {js(M.get('outside', 'forest_dark'))},
+    name: {js(M['name'])}, region: {js(M['region'])}, outside: {js(M.get('outside', 'dune_sand'))},
+    legend: R.FieldArea.DESERT_LEGEND, theme: 'desert', bgm: 'desert', bbg: 'desert',
     rows: [
 {chr(10).join('      ' + js(r) + ',' for r in rows)}
     ],
@@ -83,6 +84,6 @@ for aid in sys.argv[1:]:
 }})(window.RPG);
 """
     if M.get('bbg'): out = out.replace("    art: ", "    bbg: %s,\n    art: " % js(M['bbg']), 1)
-    p = os.path.join(V2, 'src/maps/field_%s.js' % short)
+    p = os.path.join(V2, 'src/maps/field_desert_%s.js' % short)
     open(p, 'w').write(out)
     print(p, len(out))

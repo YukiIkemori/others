@@ -36,10 +36,10 @@ def f_snowpass():
     base_snow(a)
     ys, xs = np.mgrid[0:H, 0:W]
     # the forest side (S): snowy firs along the bottom, thinning out upwards
-    a.region([(-2, 33), (12, 35), (18, 38.5), (30, 39), (38, 36), (50, 34), (50, 46), (-2, 46)], 'F', rough=1.6, seed=1)
+    a.region([(-2, 37), (10, 38.5), (18, 40.5), (30, 41), (38, 39), (50, 37.5), (50, 46), (-2, 46)], 'F', rough=1.4, seed=1)
     # the two massifs (crags, not walkable), their canyon faces (ice cliffs)
-    west = a.region([(-2, -2), (15, -2), (17, 5), (14, 11), (16, 17), (13, 23), (9, 28), (4, 30), (-2, 31)], 'r', rough=1.3, seed=2, force=True)
-    east = a.region([(34, -2), (50, -2), (50, 26), (44, 28), (39, 24), (36.5, 17), (38, 10), (35, 4)], 'r', rough=1.3, seed=3, force=True)
+    west = a.region([(-2, -2), (14, -2), (16, 6), (13, 12), (15, 17), (11, 23), (6, 26.5), (-2, 27.5)], 'r', rough=1.3, seed=2, force=True)
+    east = a.region([(34, -2), (50, -2), (50, 24), (44, 26), (40, 22.5), (37, 17), (38.5, 10), (35.5, 4)], 'r', rough=1.3, seed=3, force=True)
     for m in (west, east):
         a.mask_fill(ndimage.binary_dilation(m, iterations=1) & ~m & (ys < 30), 'R', only=',;"')
     # the road: S edge -> hairpin -> through the boulder field -> N edge
@@ -74,7 +74,7 @@ def f_snowpass():
     a.exit('s', 23, 24, {'map': 'f_windhill', 'spawn': 'pass'}, 'south')
     a.exit('n', 24, 25, {'map': 'f_lake', 'spawn': 'south'}, 'north')
     a.objects += [
-        dict(type='sign', x=21, y=40, text='北の峠を越えて\n↑ 雪の村ユール'),
+        dict(type='sign', x=21, y=39, text='北の峠を越えて\n↑ 雪の村ユール'),
         dict(type='examine', x=31, y=31, event='snow_pass_cairn'),
         dict(type='examine', x=18, y=22, event='snow_pass_hut'),
         dict(type='waylamp', id='wl_snow_39_43', x=26, y=40, lit=True),
@@ -101,12 +101,12 @@ def f_lake():
     base_snow(a)
     ys, xs = np.mgrid[0:H, 0:W]
     # the lake: open dark water reaching the north edge in the middle
-    lake = a.region([(8, -3), (46, -3), (44, 4), (46, 12), (42, 20), (36, 25.5), (27, 27.5), (18, 26), (12, 20), (10, 12), (11, 4)], 'w', rough=1.4, seed=3)
+    lake = a.region([(14, -3), (39, -3), (38, 5), (42, 12), (38.5, 19), (33, 23.5), (25, 25), (18, 22.5), (14.5, 16), (15.5, 6)], 'w', rough=1.3, seed=3)
     d_out = ndimage.distance_transform_edt(~lake)
     a.mask_fill(~lake & (d_out <= 1.5) & (ys < 30), 's', force=True)   # the shore ice shelf (walkable)
     # the rocky islet with the dead tree
-    a.blob(33, 12, 2.2, 1.6, 'r', rough=0.2, seed=4, force=True)
-    a.mark('deadtree', [(33, 12)], 'a lone DEAD WIND-BENT TREE, bare grey branches glazed with ice, on a rocky islet in the lake', (120, 110, 100))
+    a.blob(33, 13, 2.2, 1.6, 'r', rough=0.2, seed=4, force=True)
+    a.mark('deadtree', [(33, 13)], 'a lone DEAD WIND-BENT TREE, bare grey branches glazed with ice, on a rocky islet in the lake', (120, 110, 100))
     # the west: icicle cliffs (a high ice wall), the corridor mouth
     cl = a.region([(-3, -3), (7, -3), (6, 8), (8, 18), (6.5, 28), (8, 35), (5, 40), (-3, 42)], 'r', rough=1.0, seed=5, force=True)
     a.mask_fill(ndimage.binary_dilation(cl, iterations=1) & ~cl, 'R', only=',;"s')
@@ -114,12 +114,13 @@ def f_lake():
     a.mark('cave', [(6, 29), (7, 29), (8, 29), (9, 29), (6, 30), (9, 30)], 'the ICICLE CLIFFS around the mouth of the ice corridor: a wall of blue glacier ice hung with enormous icicles like organ pipes', ICE)
     a.mark('door', mouth, 'the dark MOUTH of the ice corridor: a tall cave opening in the blue ice wall, fringed with icicles', (30, 40, 60))
     a.blob(10, 31.5, 2.6, 1.6, ',', rough=0.2, seed=6, force=True)
+    a.rect(6, 31, 5, 1, ',', force=True, keep=True)
     # the road: S edge -> north-east -> Yule's west gate (E edge)
     a.stroke([(27.5, 44.5), (28, 39), (32, 35), (38, 33.5), (45, 32.5), (50, 31), (56.5, 30.5)], 2.0, '.', wobble=0.2, seed=7)
     # footpath west along the south shore to the icicle corridor
     a.stroke([(28, 37), (22, 35.5), (16, 33), (11, 31.5)], 1.4, ':', force=True)
     # the ice road (painted; closed by the tilePatch before the region is solved): south shore -> N edge
-    ice = a.stroke([(29.5, 33), (29, 27), (28, 20), (27.5, 12), (26.5, 4), (26.5, -1)], 2.0, 's', force=True)
+    ice = a.stroke([(29.5, 31), (29, 26), (28, 20), (27.5, 12), (26.5, 4), (26.5, -1)], 2.0, 's', force=True)
     icecells = sorted(c for c in ice if a.inb(*c) and lake[c[1], c[0]])
     # Yule's west palisade and gate posts along the east edge (gap = the road)
     pal = [(54, y) for y in range(18, 43) if y not in (29, 30, 31, 32)] + [(55, y) for y in range(18, 43) if y not in (29, 30, 31, 32)]
@@ -148,12 +149,12 @@ def f_lake():
         dict(type='sign', x=11, y=33, text='つららの回廊\n氷の中に、何かが閉じこめられている。'),
         dict(type='sign', x=32, y=36, text='凍った湖\n今年は氷が薄い。渡るべからず。'),
         dict(type='examine', x=31, y=34, event='world_snow_lake'),
-        dict(type='prop', id='sled', x=26, y=34), dict(type='prop', id='ice_hole', x=33, y=31),
-        dict(type='prop', id='ice_crystal', x=5, y=27), dict(type='prop', id='ice_crystal', x=11, y=29),
+        dict(type='prop', id='sled', x=26, y=34), dict(type='prop', id='ice_hole', x=36, y=25),
+        dict(type='prop', id='ice_crystal', x=10, y=27), dict(type='prop', id='ice_crystal', x=12, y=30),
         dict(type='waylamp', id='wl_snow_26_37', x=19, y=36, lit=True),
         dict(type='waylamp', id='wl_snow_42_32', x=44, y=35, lit=True),
-        dict(type='prop', id='tent', x=14, y=24), dict(type='prop', id='firewood', x=15, y=25), dict(type='prop', id='snow_lamp', x=13, y=25),
-        dict(type='examine', x=16, y=24, event='snow_mat', mat='snow_mat_ice'),
+        dict(type='prop', id='tent', x=10, y=18), dict(type='prop', id='firewood', x=11, y=19), dict(type='prop', id='snow_lamp', x=9, y=19),
+        dict(type='examine', x=13, y=21, event='snow_mat', mat='snow_mat_ice'),
     ]
     tp = {}
     for (x, y) in icecells: tp[(x, y)] = 'w'
@@ -177,7 +178,7 @@ def f_peakfoot():
     base_snow(a)
     ys, xs = np.mgrid[0:H, 0:W]
     # the massif across the top, its ice-cliff foot
-    mas = a.region([(-3, -3), (51, -3), (51, 9), (42, 11), (33, 9.5), (24, 10.5), (15, 8.5), (6, 10), (-3, 9)], 'r', rough=1.3, seed=2, force=True)
+    mas = a.region([(-3, -3), (51, -3), (51, 7.5), (42, 9.5), (33, 8), (24, 9), (15, 7), (6, 8.5), (-3, 7.5)], 'r', rough=1.3, seed=2, force=True)
     face = ndimage.binary_dilation(mas, iterations=2) & ~mas
     a.mask_fill(face, 'R', only=',;"')
     # the peak gate: a stone arch and stair into the cliff (door on the stair top), a small flagstone forecourt
@@ -219,13 +220,13 @@ def f_peakfoot():
     a.objects += [
         dict(type='door', x=gx, y=10, w=2, look='none', to={'map': 'peak_1', 'spawn': 'south'}),
         dict(type='sign', x=27, y=13, text='白竜の峰\n吹雪の奥に、竜が眠るという。'),
-        dict(type='examine', x=15, y=23, event='snow_foot_bones'),
-        dict(type='examine', x=cx, y=cy + 1, event='snow_foot_shrine'),
+        dict(type='examine', x=10, y=23, event='snow_foot_bones'),
+        dict(type='examine', x=cx, y=cy, event='snow_foot_shrine'),
         dict(type='prop', id='beacon', x=cx, y=cy, cond='cleared_r_snow'),
         dict(type='waylamp', id='wl_snow_48_17', x=25, y=31, lit=True),
         dict(type='waylamp', id='wl_snow_55_17', x=33, y=16, lit=True),
-        dict(type='prop', id='ice_crystal', x=26, y=12), dict(type='prop', id='snow_lamp', x=34, y=12),
-        dict(type='chest', id='f_peakfoot_c1', x=10, y=23, item='i_revive', n=1),
+        dict(type='prop', id='ice_crystal', x=26, y=13), dict(type='prop', id='snow_lamp', x=34, y=13),
+        dict(type='chest', id='f_peakfoot_c1', x=16, y=24, item='i_revive', n=1),
     ]
     a.meta = dict(name='白竜の峰のふもと', sub='竜の骨と冬至の祠', region='r_snow', worldRect=[134, 16, 64, 52], outside='wall_snow',
                   zones=ZONE, weather='snow', weatherCond='!cleared_r_snow',
@@ -304,8 +305,8 @@ def f_passinn():
     base_snow(a)
     ys, xs = np.mgrid[0:H, 0:W]
     # crags: the gorge walls in the east, rock along the bottom
-    a.region([(36, -3), (55, -3), (55, 24), (46, 25), (40, 20), (37, 12)], 'r', rough=1.3, seed=2, force=True)
-    a.region([(38, 45), (39, 36), (46, 33), (55, 31), (55, 45)], 'r', rough=1.3, seed=3, force=True)
+    a.region([(36, -3), (55, -3), (55, 26.3), (47, 26.3), (41, 22), (37, 12)], 'r', rough=0.8, seed=2, force=True)
+    a.region([(38, 45), (39, 36), (44, 32), (47, 30.6), (55, 30.6), (55, 45)], 'r', rough=0.8, seed=3, force=True)
     a.region([(-3, 36), (12, 37), (24, 39.5), (38, 38), (40, 45), (-3, 45)], 'F', rough=1.4, seed=4)
     # the hot springs (middle-south): pools with rock rims, warm wet stone around them
     pools = []
@@ -313,7 +314,7 @@ def f_passinn():
         pools.append(a.blob(x, y, rx, ry, 'w', rough=0.25, seed=s_, force=True))
     P = np.any(pools, axis=0)
     a.mask_fill(ndimage.binary_dilation(P, iterations=2) & ~P, ':', force=True)
-    a.mark('springs', [(x, y) for y in range(H) for x in range(W) if P[y, x]][:1], 'natural HOT SPRING pools of milky turquoise water, steaming, edged by orange-and-cream mineral terraces and dark wet rock with no snow on them', (80, 200, 200), solid=True)
+    a.mark('springs', [(x, y) for y in range(H) for x in range(W) if P[y, x]], 'natural HOT SPRING pools of milky turquoise water, steaming, edged by orange-and-cream mineral terraces and dark wet rock with no snow on them', (80, 200, 200), solid=False)
     # the warm stream from the springs east under the road, a stone bridge
     creek = [(29, 28), (33, 26), (35, 23.5), (36.5, 20.5), (35.5, 15), (37, 10), (36, -1)]
     a.stroke(creek, 1.4, 'w', keep=True, force=True, only=',;"rTbF:')
@@ -321,6 +322,11 @@ def f_passinn():
     a.stroke([(-1, 24.5), (8, 23.5), (16, 21), (24, 20.5), (32, 21.5), (40, 26), (46, 28.5), (52.5, 28.5)], 2.0, '.', wobble=0.2, seed=6)
     a.stroke([(20, 21), (20.5, 14), (20.5, 6), (20.5, -1)], 2.0, '.', wobble=0.15, seed=7)
     a.stroke(creek, 1.4, '=', keep=True, force=True, only='.')
+    for x in range(45, W):   # the gorge: three cells wide at the east edge (rows 27-29)
+        for y in (25, 26, 30, 31):
+            a.g[y, x] = 'r'; a.keep[y, x] = True
+        for y in (27, 28, 29):
+            a.g[y, x] = '.'; a.keep[y, x] = True
     # the inn's gate and fence at the top edge (gap = the road)
     fence = [(x, 0) for x in list(range(9, 19)) + list(range(23, 33))] + [(x, 1) for x in (18, 23)]
     a.mark('fence', fence, "the pass inn's TIMBER FENCE with a roofed GATE over the road, snow on its shingles, lanterns at the posts", WOOD)
@@ -342,13 +348,13 @@ def f_passinn():
         dict(type='examine', x=21, y=31, event='snow_pass_springs'),
         dict(type='waylamp', id='wl_snow_80_35', x=10, y=21, lit=True),
         dict(type='prop', id='snow_lamp', x=18, y=2), dict(type='prop', id='snow_lamp', x=23, y=2),
-        dict(type='chest', id='f_passinn_c1', x=44, y=30, item='i_incense', n=1),
+        dict(type='chest', id='f_passinn_c1', x=11, y=31, item='i_incense', n=1),
         dict(type='examine', x=12, y=15, event='snow_mat', mat='snow_mat_berry'),
     ]
     a.meta = dict(name='湯けむりの峠', sub='峠の宿と、湯の湧く谷', region='r_snow', worldRect=[240, 70, 44, 44], outside='wall_snow',
                   zones=ZONE, weather='snow', weatherCond='!cleared_r_snow',
                   tilePatches=[{'cond': {'slice': True}, 'rect': [48, 27, 3, 3], 'rows': ['rrr'] * 3}],
-                  npcs=[{'id': 'guard_snow_east', 'look': 'npc_guard_1', 'name': '番人', 'x': 46, 'y': 30, 'dir': 'w', 'move': 'still', 'pushable': False,
+                  npcs=[{'id': 'guard_snow_east', 'look': 'npc_guard_1', 'name': '番人', 'x': 47, 'y': 28, 'dir': 'w', 'move': 'still', 'pushable': False,
                          'cond': {'slice': True}, 'talk': {'lines': [{'text': ['この先の峠は、崖崩れで\nふさがっておる。', '山の鉱山町へ行くのは、\n道が片づくまで待ってくれ。']}]},
                          'reward': 'news', 'key': 'world_guard_snow_east'}],
                   links={'pass_inn': {'map': 'f_passinn', 'spawn': 'inn'}})
@@ -364,21 +370,23 @@ def f_floe():
     W, H = a.W, a.H
     ys, xs = np.mgrid[0:H, 0:W]
     a.g[:, :] = '~'
-    n = fbm(11, W, H, 6)
-    ice = (n > 0.40) | (((xs - 26) / 26.0) ** 2 + ((ys - 22) / 15.0) ** 2 < 1.0)
+    n = fbm(11, W, H, 5)
+    floes = [(26, 33, 15, 7.5), (12, 21, 9, 6.5), (39, 10, 13, 7.5), (41, 26, 8.5, 5.5), (22, 8, 7, 5)]
+    ice = np.zeros((H, W), bool)
+    for (cx, cy, rx, ry) in floes:
+        ice |= (((xs - cx) / rx) ** 2 + ((ys - cy) / ry) ** 2) < 1 + (n - 0.5) * 0.9
     ice = ndimage.binary_opening(ice, iterations=1)
     a.mask_fill(ice, ',', force=True)
     a.mask_fill(ice & (fbm(12, W, H, 4) > 0.6), 's', force=True)
-    # leads of open water between the floes
-    for (pts, s_) in [([(14, -1), (17, 8), (15, 15), (19, 22)], 1), ([(33, 16), (37, 22), (35, 29), (40, 41)], 2), ([(-1, 20), (6, 19), (11, 17)], 3)]:
-        a.stroke(pts, 1.6, '~', keep=False, force=True)
-    # pressure ridges (tumbled ice blocks)
-    for (pts, s_) in [([(20, 12), (26, 10), (31, 11)], 4), ([(22, 30), (27, 28.5)], 5), ([(42, 31), (47, 33)], 6)]:
-        a.stroke(pts, 1.2, 'r', keep=False, force=True)
+    # pressure ridges (tumbled ice blocks) on the floes, small bergs in the leads
+    for (pts, s_) in [([(17, 30), (22, 28), (27, 28.5)], 4), ([(35, 34), (40, 33)], 5), ([(8, 19), (13, 16)], 6), ([(44, 24), (47, 27)], 7)]:
+        a.stroke(pts, 1.2, 'r', keep=False, force=True, only=',s')
+    for (x, y) in [(32, 20), (4, 30), (48, 36), (29, 17), (50, 15)]:
+        a.put(x, y, 'r', True)
     # the aurora cliffs (W): blue glacier ice wall, the cave
     cl = a.region([(-3, -3), (11, -3), (10, 5), (12, 10), (9, 14), (-3, 15)], 'r', rough=0.8, seed=7, force=True)
     a.mask_fill(ndimage.binary_dilation(cl, iterations=1) & ~cl & (ys < 17), 'R', only=',s~')
-    a.rect(10, 11, 5, 3, ',', force=True)
+    a.rect(9, 10, 6, 4, ',', force=True)
     a.mark('aurora', [(9, 8), (10, 8), (11, 8), (12, 8), (9, 9), (12, 9)], 'the AURORA CLIFFS: a wall of translucent blue glacier ice glowing faintly from within, streaked with green and violet', ICE)
     a.mark('door', [(10, 9), (11, 9)], 'the dark mouth of an ICE CAVE in the glacier wall, its rim glittering with frost crystals', (30, 40, 70))
     # the ice-locked ship (NE): hull on the ice, the gangplank down to the ice on its south side
@@ -388,8 +396,10 @@ def f_floe():
     a.mark('door', [(38, 9)], 'the ship\'s GANGPLANK: a timber ramp from the ice up to an opening in the hull side', (40, 26, 16))
     # the landing (S): flat ice, the ice road arriving at the S edge
     a.rect(20, 32, 12, 8, 's', force=True)
-    a.stroke([(26.5, 41), (26, 33), (24, 26), (22, 20), (16, 14), (13, 12.5)], 2.0, 's', keep=True, force=True)
-    a.stroke([(26, 33), (31, 26), (36, 18), (38, 11)], 2.0, 's', keep=True, force=True)
+    # the ice necks between the floes (the only ways across the leads)
+    a.stroke([(26.5, 41), (26, 33), (21, 27.5), (16, 21), (13, 14), (12, 11.5)], 2.0, 's', keep=True, force=True, only='~,sr')
+    a.stroke([(28, 30), (34, 27.5), (38, 25)], 2.0, 's', keep=True, force=True, only='~,sr')
+    a.stroke([(41, 22), (40, 17), (38.5, 11)], 2.0, 's', keep=True, force=True, only='~,sr')
     a.tidy()
     a.exit('s', 26, 27, {'map': 'f_lake', 'spawn': 'north'}, 'south')['cond'] = 'cleared_r_snow'
     a.spawns['landing'] = dict(x=24, y=34, dir='n')
@@ -402,7 +412,7 @@ def f_floe():
         dict(type='sign', x=36, y=12, text='氷に閉じた帆船\n――危険。強い魔物の気配がする。'),
         dict(type='examine', x=22, y=35, event='world_snow_floe_sled'),
         dict(type='prop', id='sled', x=21, y=35), dict(type='prop', id='snow_lamp', x=27, y=35),
-        dict(type='prop', id='ice_crystal', x=8, y=12), dict(type='prop', id='ice_crystal', x=14, y=10),
+        dict(type='prop', id='ice_crystal', x=9, y=12), dict(type='prop', id='ice_crystal', x=14, y=10),
     ]
     a.meta = dict(name='北の流氷原', sub='オーロラの海', region='r_snow', worldRect=[44, 4, 100, 36], outside='sea',
                   zones=[{'rect': None, 'zone': 'z_snow_floe'}], weather='snow',

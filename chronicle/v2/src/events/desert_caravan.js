@@ -19,12 +19,12 @@
     ev.setFlag('desert_caravan_on');
     ev.lead('l_desert_caravan');
     ev.guest('npc_zaid');
-    await ev.warp('world', 'kasim');
+    await ev.warp('d_west', 'kasim');   // カシムの西の門の外（エリア 鷹の台地）
     await ev.fade('in', 400);
     ev.bgm('caravan', { fade: 600 });
     await ev.caption(R.T('events.desert_caravan_depart.caption'), { ms: 2600 });
     await ev.say('npc_zaid', R.T('events.desert_caravan_depart.say'), ZAID);
-  }, { meta: { needs: ['flag:desert_zaid_met'], gives: ['flag:desert_caravan_on', 'lead:l_desert_caravan'], warp: { to: 'world', spawn: 'kasim' } } });
+  }, { meta: { needs: ['flag:desert_zaid_met'], gives: ['flag:desert_caravan_on', 'lead:l_desert_caravan'], warp: { to: 'd_west', spawn: 'kasim' } } });
 
   // ---------------------------------------------------------------- 隊が襲われる（3 回）
   const AMBUSH = {

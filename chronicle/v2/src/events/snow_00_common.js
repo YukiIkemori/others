@@ -152,15 +152,17 @@
     ],
   });
 
-  // ---------------------------------------------------------------- 雪原の BGM（ワールドの雪原の範囲 = tools/gen_world_snow.js の箱）
+  // ---------------------------------------------------------------- 雪原の BGM（雪原のエリアと、ワールドの雪原の範囲 = tools/gen_world_snow.js の箱）
   //   入ると ice、出ると overworld（砂漠と同じく 'step' と 'map:enter' で切り替える。砂漠の範囲とは重ならない）
   const inSnow = (x, y) => x >= 8 && x <= 93 && y >= 1 && y <= 48;
   let cur = null;
   function snowBgm(e) {
     try {
       const pos = R.Field && R.Field.pos;
-      if (!pos || pos.map !== 'world' || !R.Audio || !R.Audio.bgm) { cur = null; return; }
-      const [lx, ly] = R.WorldXform ? R.WorldXform.lcell(R.DB.maps.world, pos.x, pos.y) : [pos.x, pos.y];   // 箱は論理の座標 L（WORLD v3）
+      const m = pos && R.DB.maps[pos.map];
+      const area = !!(m && m.kind === 'field' && m.region === 'r_snow');   // 雪原のエリア（snow_field_*.js。マップの曲は overworld のまま、ここで ice）
+      if (!pos || (pos.map !== 'world' && !area) || !R.Audio || !R.Audio.bgm) { cur = null; return; }
+      const [lx, ly] = area ? [8, 1] : R.WorldXform ? R.WorldXform.lcell(R.DB.maps.world, pos.x, pos.y) : [pos.x, pos.y];   // 箱は論理の座標 L（WORLD v3）
       const want = inSnow(lx, ly) ? 'ice' : cur === 'ice' ? 'overworld' : null;
       if (!want || want === cur) return;
       if (R.Engine && R.Engine.top && R.Engine.top() && R.Engine.top().id === 'battle') return;

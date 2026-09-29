@@ -1,0 +1,336 @@
+{
+"id": "f_snowpass",
+"w": 48,
+"h": 44,
+"rows": [
+"rrrrrrrrrrrrrrrR,;;;;;;;..;T;;;;;;;Rrrrrrrrrrrrr",
+"rrrrrrrrrrrrrrrrR;;;;;r;..;;;r;;;;;Rrrrrrrrrrrrr",
+"rrrrrrrrrrrrrrrrR,;;;;;,..;;;;;;T;;Rrrrrrrrrrrrr",
+"rrrrrrrrrrrrrrrrR,,,,;,,..,,,,;;,,,Rrrrrrrrrrrrr",
+"rrrrrrrrrrrrrrrrR\",,,,,,..,,r,,,,,,Rrrrrrrrrrrrr",
+"rrrrrrrrrrrrrrrrR,,,,,,,,..,,,,,,,,,Rrrrrrrrrrrr",
+"rrrrrrrrrrrrrrrrR,,,,,,,,..,,,,,,,,,Rrrrrrrrrrrr",
+"rrrrrrrrrrrrrrrR,,,,\",,,,..,,,,,,,,\"Rrrrrrrrrrrr",
+"rrrrrrrrrrrrrrrR,,,,,,,,,...,,,,,,,\"\"Rrrrrrrrrrr",
+"rrrrrrrrrrrrrrrR,,,,\"\",,,,..,,,,\",,,,Rrrrrrrrrrr",
+"rrrrrrrrrrrrrrrR,,,r,,,,,..;;;;;T;T,,Rrrrrrrrrrr",
+"rrrrrrrrrrrrrrR,\",,,,,,,...;;;;;;;;,,Rrrrrrrrrrr",
+"rrrrrrrrrrrrrR,,\",,,,,;...r;;;;;;;r,,XXrrrrrrrrr",
+"rrrrrrrrrrrrrrR,\",,,,,..;;;;;;;;;;r,RXXrrrrrrrrr",
+"rrrrrrrrrrrrrrR,,,,,,..;;;;r;;;;;;,,RXXrrrrrrrrr",
+"rrrrrrrrrrrrrrR,,,,,...;;r;;;r;r;;,XXXXrrrrrrrrr",
+"rrrrrrrrrrrrrrrR,,,,..r;rr;;;r;r;;,,XXrrrrrrrrrr",
+"rrrrrrrrrrrrrrrR,,,..r;;;;;;;;;;;;,rRrrrrrrrrrrr",
+"rrrrrrrrrrrrrrR,,,,..,;;;;;;;;;;;;,,Rrrrrrrrrrrr",
+"rrrrrrrrrrrrrR,,,,r..,;;\"rr;;;;;;;;,TRrrrrrrrrrr",
+"rrrrrrrrrrrrrXXXXX,.:,,r\";;;;r;;,,,,,,Rrrrrrrrrr",
+"rrrrrrrrrrrrRXccc::::.r;r;;;r;;;,,,,,,Rrrrrrrrrr",
+"rrrrrrrrrrrrRXccc::,...;;;;;;;;,,,,,,,,Rrrrrrrrr",
+"rrrrrrrrrrRR,XXXXX;,,....,;;;;,,,,,,,,,,Rrrrrrrr",
+"rrrrrrrrRR,,,,,,,;;,,,......;;,,,,,,,,,,;Rrrrrrr",
+"rrrrrrrR,,,,,,,,,,,,,,,,,....;;;;,,,,,,,,;RrrrrR",
+"rrrrRRR,,,,,T,,,,,,,,,,,;,;...,,,,,,,,,,,;;RRRR;",
+"RRRR,,,,,,,,,,,;,,,,,,,;;;;,..,,,,,,,,,,,;;;,,,;",
+",;;;;,;,,,,,,,,,,,T,,,,,,;,\"\"..\"\",,,,,,,,,,,,,,r",
+",;;;;;;;,,,,,,,,,TTT,,,,,,,,,..\"\",;;;,,,,,,,,,,,",
+",,;;;;;;,,,,,,,r,TTT,,,,,,,,.,,,X,T;,,TTTT,,TT,\"",
+",,;;;;;;,,,,,,,,,,,,,,,,T,,..,,,,,;;,TTTTT,TTT,,",
+"\"\";;;;;,,,,,,,,,,,,,,,,,;,...,,,,,r,,,,TTT,,T,,,",
+"\";,,,;,,,,,::,,,,,,,,,,,;...,,,,,,,,,,,,,;\"\";,,,",
+";;,,,;,,,,,::::,,,,,r,,,...,,,,,,,,,,,,,,;;;;,,\"",
+";,,\",,,,,,,,,,::::,,,,,,..,,,,,TTT,,,,,,,;;;;,,,",
+",,,\"\"TTT,,,,,,,,:::::,,...,,,,,TTTT,,,,,,,;;;;,,",
+",,,,\"TTT,,,,,,,,,,,:::::.,,,,,;TTT,,r,,,,;;,;;,,",
+"FFFFFFFFFFF,,,,,,,,,,,,:.,,,T,;;,,,,,,,,,,,,FFFF",
+"FFFFFFFFFFFFF,,,,,,,\",..,,,,;;;;;,,,,FFFFFFFFFFF",
+"FFFFFFFFFFFFFFF,,,FFFF..FF,T;;;FFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFF..FFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFF..FFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFF...FFFFFFFFFFFFFFFFFFFFFFF"
+],
+"marks": [
+{
+"kind": "icefall",
+"cells": [
+[
+37,
+12
+],
+[
+37,
+13
+],
+[
+37,
+14
+],
+[
+38,
+12
+],
+[
+38,
+13
+],
+[
+38,
+14
+]
+],
+"text": "a tall FROZEN WATERFALL: a curtain of pale blue ice and huge icicles pouring down the east cliff face, frozen mid-fall",
+"color": [
+150,
+210,
+240
+],
+"solid": true
+},
+{
+"kind": "pool",
+"cells": [
+[
+35,
+15
+],
+[
+36,
+15
+],
+[
+37,
+15
+],
+[
+38,
+15
+],
+[
+36,
+16
+],
+[
+37,
+16
+]
+],
+"text": "the FROZEN POOL at the foot of the icefall: smooth blue-green ice rimmed by snowy boulders and broken icicles",
+"color": [
+110,
+190,
+220
+],
+"solid": true
+},
+{
+"kind": "cairn",
+"cells": [
+[
+32,
+30
+]
+],
+"text": "an old STONE CAIRN of stacked flat stones with a weathered wooden PRAYER POST on top, faded cloth strips frozen stiff",
+"color": [
+170,
+160,
+150
+],
+"solid": true
+},
+{
+"kind": "hut",
+"cells": [
+[
+13,
+20
+],
+[
+14,
+20
+],
+[
+15,
+20
+],
+[
+16,
+20
+],
+[
+17,
+20
+],
+[
+13,
+21
+],
+[
+13,
+22
+],
+[
+13,
+23
+],
+[
+14,
+23
+],
+[
+15,
+23
+],
+[
+16,
+23
+],
+[
+17,
+23
+],
+[
+17,
+21
+]
+],
+"text": "the roofless RUIN of a small stone WATCH HUT: waist-high snow-capped fieldstone walls around a flagstone floor, a doorway gap on its east side",
+"color": [
+150,
+146,
+140
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "sign",
+"x": 21,
+"y": 39,
+"text": "北の峠を越えて\n↑ 雪の村ユール"
+},
+{
+"type": "examine",
+"x": 31,
+"y": 31,
+"event": "snow_pass_cairn"
+},
+{
+"type": "examine",
+"x": 18,
+"y": 22,
+"event": "snow_pass_hut"
+},
+{
+"type": "waylamp",
+"id": "wl_snow_39_43",
+"x": 26,
+"y": 40,
+"lit": true
+},
+{
+"type": "waylamp",
+"id": "wl_snow_39_38",
+"x": 24,
+"y": 8,
+"lit": true
+},
+{
+"type": "prop",
+"id": "tent",
+"x": 8,
+"y": 32
+},
+{
+"type": "prop",
+"id": "firewood",
+"x": 9,
+"y": 34
+},
+{
+"type": "prop",
+"id": "snow_lamp",
+"x": 7,
+"y": 34
+},
+{
+"type": "chest",
+"id": "f_snowpass_c1",
+"x": 15,
+"y": 21,
+"item": "i_ether",
+"n": 1
+}
+],
+"spawns": {
+"south": {
+"x": 23,
+"y": 42,
+"dir": "n"
+},
+"north": {
+"x": 24,
+"y": 1,
+"dir": "s"
+}
+},
+"exits": [
+{
+"x": 23,
+"y": 43,
+"w": 2,
+"h": 1,
+"to": {
+"map": "f_windhill",
+"spawn": "pass"
+},
+"edge": "s"
+},
+{
+"x": 24,
+"y": 0,
+"w": 2,
+"h": 1,
+"to": {
+"map": "f_lake",
+"spawn": "south"
+},
+"edge": "n"
+}
+],
+"notes": [],
+"meta": {
+"name": "凍て風の峠",
+"sub": "森から雪原へ越える峠",
+"region": "r_snow",
+"worldRect": [
+98,
+104,
+44,
+40
+],
+"outside": "wall_snow",
+"zones": [
+{
+"rect": null,
+"zone": "zw_snow"
+}
+],
+"weather": "blizzard",
+"npcs": [
+{
+"id": "snow_trapper",
+"look": "npc_snow_man",
+"name": "わな猟師",
+"x": 11,
+"y": 33,
+"dir": "s",
+"move": "still",
+"talk": "world_snow_trapper",
+"reward": "hint",
+"key": "world_snow_trapper"
+}
+],
+"links": {}
+}
+}

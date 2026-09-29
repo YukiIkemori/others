@@ -1,0 +1,88 @@
+{
+"id": "desert_camp2",
+"w": 30,
+"h": 22,
+"rows": [
+"uuuuuuuuuuuuuuuuuuuuuuuuuuuuuu",
+"uuuuuuuuuuuuuuuuuuuuuuuuuuuuuu",
+"uuuuuuuuuuuuuuuuuuuuuuuuuuuuuu",
+"uuuRRRuuuuuuuuuuuuuuuuuuuuuuuu",
+"uuRRRRRuuuuussssssusuuuuuRRRuu",
+"uuRRRRRuusssssssssssssuuRRRRRu",
+"uuRRRRRussssssssssssssssRRRRRu",
+"uuuRRRssssssssssssssssssRRRRRu",
+"uuuuusssssssssssssssssssRRRRRu",
+"uuuuusssssssssssssssssssRRRRRu",
+"uuuusssssssskkkkkkkssssssRRRuu",
+"uuuussssssskkkkkkkkkssssssuuuu",
+"uuuussssssskkkkkkkkkssssssuuuu",
+"uuuussssssskkkk.kkkkssssssuuuu",
+"uuuuuusssssskkk.kkkssssssuuuuu",
+"uuuuuusssssssss.ssssssssssuuuu",
+"uuuuuuuusssssss.sssssRRRRRuuuu",
+"uuuuuuuuussssss.sssssRRRRRuuuu",
+"uuuuuuuuuuusss..ssuuuRRRRRuuuu",
+"uuuuuuuuuuuuuu..uuuuuuuuuuuuuu",
+"uuuuuuuuuuuuuu..uuuuuuuuuuuuuu",
+"uuuuuuuuuuuuuu..uuuuuuuuuuuuuu"
+],
+"marks": [],
+"objects": [
+{
+"type": "brazier",
+"id": "fire_13_12",
+"x": 13,
+"y": 12
+},
+{
+"type": "examine",
+"id": "desert_camp2_stone",
+"x": 18,
+"y": 8
+},
+{
+"type": "examine",
+"id": "desert_camp2_saddlebag",
+"x": 23,
+"y": 13
+}
+],
+"spawns": {
+"road": {
+"x": 15,
+"y": 19,
+"dir": "n"
+},
+"fire": {
+"x": 13,
+"y": 14,
+"dir": "n"
+}
+},
+"exits": [
+{
+"x": 14,
+"y": 21,
+"w": 2,
+"h": 1,
+"to": {
+"map": "d_caravan",
+"spawn": "camp2"
+},
+"edge": "s"
+}
+],
+"notes": [],
+"meta": {
+"name": "desert_camp2",
+"region": "r_desert",
+"worldRect": [
+0,
+0,
+1,
+1
+],
+"zones": [],
+"links": {}
+}
+}

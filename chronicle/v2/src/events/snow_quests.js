@@ -64,7 +64,7 @@
       if (i !== 0) return;
       await ev.fade('out', 500);
       await ev.caption(R.T('events.yule_sled.caption'), { ms: 2400 });
-      await ev.warp('world', 'floe');
+      await ev.warp('f_floe', 'landing');   // 北の流氷原のエリアのそりの着き場
       return;
     }
     if (!ev.flag('snow_dog_asked')) {
@@ -214,7 +214,24 @@
     }
   }, { meta: { needs: [], gives: ['flag:snow_log_1', 'flag:snow_log_2', 'flag:snow_log_3', 'flag:snow_logs_done', 'item:k_yule_logs', 'var:snow_logs+3'], calls: ['snow_woods_yeti'] } });
 
-  // ================================================================ ワールドの雪原
+  // ================================================================ 雪原のエリアの景色（調べる所。どれも本筋に要らない）
+  E('snow_pass_cairn', async (ev) => {
+    await ev.say(null, R.T('events.snow_pass_cairn.say'));
+  });
+  E('snow_pass_hut', async (ev) => {
+    await ev.say(null, R.T('events.snow_pass_hut.say'));
+  });
+  E('snow_foot_bones', async (ev) => {
+    await ev.say(null, X().cleared(ev) ? R.T('events.snow_foot_bones.say') : R.T('events.snow_foot_bones.say_2'));
+  });
+  E('snow_foot_shrine', async (ev) => {
+    await ev.say(null, X().cleared(ev) ? R.T('events.snow_foot_shrine.say') : R.T('events.snow_foot_shrine.say_2'));
+  });
+  E('snow_pass_springs', async (ev) => {
+    await ev.say(null, R.T('events.snow_pass_springs.say'));
+  });
+
+  // ================================================================ ワールドの雪原（今は雪原のエリアの上）
   E('world_snow_lake', async (ev) => {
     if (ev.flag('cleared_r_snow')) { await ev.say(null, R.T('events.world_snow_lake.say')); return; }
     await ev.say(null, R.T('events.world_snow_lake.say_2'));

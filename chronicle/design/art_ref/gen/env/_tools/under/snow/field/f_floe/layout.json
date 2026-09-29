@@ -1,0 +1,605 @@
+{
+"id": "f_floe",
+"w": 52,
+"h": 40,
+"rows": [
+"rrrrrrrrrrrR~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"rrrrrrrrrrrR~~~~~~~~~~~~~~~~~ssssssssssssssssssss~~~",
+"rrrrrrrrrrrR~~~~~~~~~~~~~~~~~ssssssssssssssssssss~~~",
+"rrrrrrrrrrR~~~~~~~~~~~~~~~~~~sssXXXXXXXXXXXXXXsss~~~",
+"rrrrrrrrrrR~~~~~~~~~~,,,,,,~~sssXXXXXXXXXXXXXXsss~~~",
+"rrrrrrrrrrR~~~~~~~,,,,,,,,,,,sssXXXXXXXXXXXXXXsss~~~",
+"rrrrrrrrrrR~~~~~~,,,,,,,,,,,,sssXXXXXXXXXXXXXXsss,~~",
+"rrrrrrrrrrrR~~~~ss,s,,,,,,,,,sssXXXXXXXXXXXXXXsss,,~",
+"rrrrrrrrrXXXX~~~,ssssss,,,,,,sssXXXXXXXXXXXXXXsss,s,",
+"rrrrrrrrrXXXX~~~ss,,,ss,,,,,,sssssssssXssssssssss,,,",
+"rrrrrrrrr,,,,,,~ss,,,,s,,,,,,ssssssssssssssssssss,,,",
+"rrrrrrrrr,,ss,,~~s,,,,,,,,,,,ssssssssssssssssssss,,,",
+"rrrrrrrrr,,ss,,~~~~,,,,,,,,,,ssssssssssssssssssss,ss",
+"rrrrrrrrr,,,ss,~~~~~~~~~~~~~,,,,,,,,s,ss,,,,,,,,,,,~",
+"rrrrrrRRR~,,sss~~~~~~~~~~~~~~,,,,,,,s,ss,,,,,,,,,,~~",
+"RRRRRR~~~~,,sss~~~~~~~~~~~~~~~,,,,ssss,ss,,sss,,,~r~",
+"~~~~~~~~,,,rrssss~~~~~~~~~~~~~~~,,ssss,ss,,sss,,~~~~",
+"~~~~~~,,,rrr,ss,ss~~~~~~~~~~~r~~~~,,sssss,,ssss~~~~~",
+"~~~~~,,,rrs,,,ssss,~~~~~~~~~~~~~~~~~~,ssss~~~~~~~~~~",
+"~~~~sssssss,,,sss,,~~~~~~~~~~~~~~~~~~~~sss~~~~~~~~~~",
+"~~~~ssssssss,s,sss,s~~~~~~~~~~~~r~~~~~~ssss,~~~~~~~~",
+"~~~~sssss,,,,s,sss,s~~~~~~~~~~~~~~~~~,sssss,,,,~~~~~",
+"~~~~sss,,,,,,,s,sssss~~~~~~~~~~~~~~,,,,ssss,,,,,~~~~",
+"~~~~sss,,,,,,,s,ssss,~~~~~~~~~~~~~,,,,,sssss,,,,,~~~",
+"~~~~ss,,,,,,,,,,,sss,~~~~~~~~~~~~,,,,sssssssrs,,,~~~",
+"~~~~~,,,,,,,s,s,,,sss~~~~~~~~~,~~,,ssss,sssssr,,,~~~",
+"~~~~~~,,,,,sss,,,,,ssssssss,,,,,,,ssss,ss,s,,,r,,,~~",
+"~~~~~~~~,,,ss,s,,,,,ssrrrs,,,,,sssss,,,,s,,,,,,,,,~~",
+"~~~~~~~~~~~~~,,,,,,rrssrrrrr,sssss,,,,ss,s,,,,,,,~~~",
+"~~~~~~~~~~~~~s,,,rrr,,ssss,sssss,,,,,,s,,,,,,,,,,~~~",
+"~~~~r~~~~~~~~,,,,,,,,,,sss,ss,,,,,,,s,,,,,,,,,,,~~~~",
+"~~~~~~~~~~~~,,,,,,,,,,,,ss,,,,,,,,,,,s,,,,,,,,~~~~~~",
+"~~~~~~~~~~~,,,,,,,,,ssssssssssss,,,,,,,r,,~~~~~~~~~~",
+"~~~~~~~~~~~,,,,,,,,,ssssssssssss,,,rrrrr,,~~~~~~~~~~",
+"~~~~~~~~~~~,,,,,,,,,ssssssssssss,,,r,,,,,,~~~~~~~~~~",
+"~~~~~~~~~~~,,,,,,,,,ssssssssssss,,,,s,,,,~~~~~~~~~~~",
+"~~~~~~~~~~~~,,,,,,ssssssssssssss,,ssss,ss~~~~~~~r~~~",
+"~~~~~~~~~~~~~~,,,,s,ssssssssssss,,,s,ss,~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~,,,ssssssssssss,,,,,s~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~sssssssssssss,,,,~~~~~~~~~~~~~~~~"
+],
+"marks": [
+{
+"kind": "aurora",
+"cells": [
+[
+9,
+8
+],
+[
+10,
+8
+],
+[
+11,
+8
+],
+[
+12,
+8
+],
+[
+9,
+9
+],
+[
+12,
+9
+]
+],
+"text": "the AURORA CLIFFS: a wall of translucent blue glacier ice glowing faintly from within, streaked with green and violet",
+"color": [
+150,
+210,
+240
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+10,
+9
+],
+[
+11,
+9
+]
+],
+"text": "the dark mouth of an ICE CAVE in the glacier wall, its rim glittering with frost crystals",
+"color": [
+30,
+40,
+70
+],
+"solid": true
+},
+{
+"kind": "ship",
+"cells": [
+[
+32,
+3
+],
+[
+32,
+4
+],
+[
+32,
+5
+],
+[
+32,
+6
+],
+[
+32,
+7
+],
+[
+32,
+8
+],
+[
+33,
+3
+],
+[
+33,
+4
+],
+[
+33,
+5
+],
+[
+33,
+6
+],
+[
+33,
+7
+],
+[
+33,
+8
+],
+[
+34,
+3
+],
+[
+34,
+4
+],
+[
+34,
+5
+],
+[
+34,
+6
+],
+[
+34,
+7
+],
+[
+34,
+8
+],
+[
+35,
+3
+],
+[
+35,
+4
+],
+[
+35,
+5
+],
+[
+35,
+6
+],
+[
+35,
+7
+],
+[
+35,
+8
+],
+[
+36,
+3
+],
+[
+36,
+4
+],
+[
+36,
+5
+],
+[
+36,
+6
+],
+[
+36,
+7
+],
+[
+36,
+8
+],
+[
+37,
+3
+],
+[
+37,
+4
+],
+[
+37,
+5
+],
+[
+37,
+6
+],
+[
+37,
+7
+],
+[
+37,
+8
+],
+[
+38,
+3
+],
+[
+38,
+4
+],
+[
+38,
+5
+],
+[
+38,
+6
+],
+[
+38,
+7
+],
+[
+38,
+8
+],
+[
+39,
+3
+],
+[
+39,
+4
+],
+[
+39,
+5
+],
+[
+39,
+6
+],
+[
+39,
+7
+],
+[
+39,
+8
+],
+[
+40,
+3
+],
+[
+40,
+4
+],
+[
+40,
+5
+],
+[
+40,
+6
+],
+[
+40,
+7
+],
+[
+40,
+8
+],
+[
+41,
+3
+],
+[
+41,
+4
+],
+[
+41,
+5
+],
+[
+41,
+6
+],
+[
+41,
+7
+],
+[
+41,
+8
+],
+[
+42,
+3
+],
+[
+42,
+4
+],
+[
+42,
+5
+],
+[
+42,
+6
+],
+[
+42,
+7
+],
+[
+42,
+8
+],
+[
+43,
+3
+],
+[
+43,
+4
+],
+[
+43,
+5
+],
+[
+43,
+6
+],
+[
+43,
+7
+],
+[
+43,
+8
+],
+[
+44,
+3
+],
+[
+44,
+4
+],
+[
+44,
+5
+],
+[
+44,
+6
+],
+[
+44,
+7
+],
+[
+44,
+8
+],
+[
+45,
+3
+],
+[
+45,
+4
+],
+[
+45,
+5
+],
+[
+45,
+6
+],
+[
+45,
+7
+],
+[
+45,
+8
+]
+],
+"text": "an old THREE-MASTED SAILING SHIP frozen fast in the pack ice, seen from above: dark timber hull and deck, snow on the deck, frost-white rigging and furled sails, masts casting no shadow; its bow points east",
+"color": [
+90,
+64,
+44
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+38,
+9
+]
+],
+"text": "the ship's GANGPLANK: a timber ramp from the ice up to an opening in the hull side",
+"color": [
+40,
+26,
+16
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "door",
+"x": 10,
+"y": 9,
+"w": 2,
+"look": "none",
+"to": {
+"map": "aurora",
+"spawn": "south"
+}
+},
+{
+"type": "door",
+"x": 38,
+"y": 9,
+"look": "none",
+"to": {
+"map": "frost_ship_1",
+"spawn": "entrance"
+}
+},
+{
+"type": "sign",
+"x": 14,
+"y": 12,
+"text": "オーロラの崖\n空が七色に揺れる崖。"
+},
+{
+"type": "sign",
+"x": 36,
+"y": 12,
+"text": "氷に閉じた帆船\n――危険。強い魔物の気配がする。"
+},
+{
+"type": "examine",
+"x": 22,
+"y": 35,
+"event": "world_snow_floe_sled"
+},
+{
+"type": "prop",
+"id": "sled",
+"x": 21,
+"y": 35
+},
+{
+"type": "prop",
+"id": "snow_lamp",
+"x": 27,
+"y": 35
+},
+{
+"type": "prop",
+"id": "ice_crystal",
+"x": 9,
+"y": 12
+},
+{
+"type": "prop",
+"id": "ice_crystal",
+"x": 14,
+"y": 10
+}
+],
+"spawns": {
+"south": {
+"x": 26,
+"y": 38,
+"dir": "n"
+},
+"landing": {
+"x": 24,
+"y": 34,
+"dir": "n"
+},
+"aurora": {
+"x": 11,
+"y": 11,
+"dir": "s"
+},
+"ship": {
+"x": 38,
+"y": 11,
+"dir": "s"
+}
+},
+"exits": [
+{
+"x": 26,
+"y": 39,
+"w": 2,
+"h": 1,
+"to": {
+"map": "f_lake",
+"spawn": "north"
+},
+"edge": "s",
+"cond": "cleared_r_snow"
+}
+],
+"notes": [],
+"meta": {
+"name": "北の流氷原",
+"sub": "オーロラの海",
+"region": "r_snow",
+"worldRect": [
+44,
+4,
+100,
+36
+],
+"outside": "sea",
+"zones": [
+{
+"rect": null,
+"zone": "z_snow_floe"
+}
+],
+"weather": "snow",
+"npcs": [],
+"links": {
+"aurora": {
+"map": "f_floe",
+"spawn": "aurora"
+},
+"frost_ship": {
+"map": "f_floe",
+"spawn": "ship"
+},
+"floe": {
+"map": "f_floe",
+"spawn": "landing"
+}
+}
+}
+}

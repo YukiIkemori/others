@@ -1,0 +1,90 @@
+{
+"id": "desert_camp1",
+"w": 30,
+"h": 22,
+"rows": [
+"uuuuuuuuuuuuuuuuuuuuuuuuuuuuuu",
+"uuuuuuuuuuuuuuuuuuuuuuuuuuuuuu",
+"uuuuuuuuuuuuuuuuuuuuuRRRRRRuuu",
+"uuuRRRRRuuuuuuuuuuuuRRRRRRRRuu",
+"uuRRRRRRuuusussssssuRRRRRRRRRu",
+"uuRRRRRRRsssssssssssRRRRRRRRRu",
+"uuRRRRRRRsssssssssssRRRRRRRRRu",
+"uuRRRRRRRsssssssssssRRRRRRRRuu",
+"uuRRRRRRRssssssssssssRRRRRRuuu",
+"uuuRRRRRsssssssssssssssssssuuu",
+"uuuussssssssskkkkkkssssssssuuu",
+"uuuuusssssskkkkkkkkksssssssuuu",
+"uuuussssssskkkkkkkkkssssssuuuu",
+"uuuuusssssskkkk.kkkkssssssuuuu",
+"uuuususssssskkk.kkkssssRRRRuuu",
+"uuuRRRRRsssssss.sssssssRRRRRuu",
+"uuuRRRRRsssssss.sssssssRRRRRuu",
+"uuuRRRRRussssss.ssssssuRRRRRuu",
+"uuuuuuuuuuusus..ssssuuuuRRRuuu",
+"uuuuuuuuuuuuuu..uuuuuuuuuuuuuu",
+"uuuuuuuuuuuuuu..uuuuuuuuuuuuuu",
+"uuuuuuuuuuuuuu..uuuuuuuuuuuuuu"
+],
+"marks": [],
+"objects": [
+{
+"type": "brazier",
+"id": "fire_15_11",
+"x": 15,
+"y": 11
+},
+{
+"type": "examine",
+"id": "desert_camp1_well",
+"x": 11,
+"y": 8
+},
+{
+"type": "examine",
+"id": "desert_camp1_memorial",
+"x": 20,
+"y": 8
+}
+],
+"spawns": {
+"road": {
+"x": 15,
+"y": 19,
+"dir": "n"
+},
+"fire": {
+"x": 15,
+"y": 13,
+"dir": "n"
+}
+},
+"exits": [
+{
+"x": 14,
+"y": 21,
+"w": 2,
+"h": 1,
+"to": {
+"map": "d_caravan",
+"spawn": "camp1"
+},
+"edge": "s"
+}
+],
+"notes": [
+"camp 1 \"the rock well\": a hollow among red rock outcrops, a dry well and a memorial pillar (sprites)"
+],
+"meta": {
+"name": "desert_camp1",
+"region": "r_desert",
+"worldRect": [
+0,
+0,
+1,
+1
+],
+"zones": [],
+"links": {}
+}
+}

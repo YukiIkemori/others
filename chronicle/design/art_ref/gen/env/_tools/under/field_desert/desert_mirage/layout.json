@@ -1,0 +1,75 @@
+{
+"id": "desert_mirage",
+"w": 36,
+"h": 26,
+"rows": [
+"uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu",
+"uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu",
+"uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu",
+"uuuuuuuuuuuuuususssssssuuuuuuuuuuuuu",
+"uuuuuuuuuusssssssssssssssssuuuuuuuuu",
+"uuuuuuususssssssskkkssssssssssuuuuuu",
+"uuuuuuusssssssssskkkssssssssssuuuuuu",
+"uuuuususssssssssskkksssssssssssuuuuu",
+"uuuussssssssssssskkksssssssssssssuuu",
+"uuusssssssssssssskkkssssssssssssssuu",
+"uuuuusssssssssssscccssssssssssssssuu",
+"uuuusskkkkkkkkkccccccckkkkkkkkssssuu",
+"uuussskkkkkkkkkccccccckkkkkkkksssuuu",
+"uuuusskkkkkkkkkccccccckkkkkkkksssuuu",
+"uuuussssssssssssscccsssssssssssssuuu",
+"uuuuusssssssssssskkksssssssssssssuuu",
+"uuuuusssssssssssskkksssssssssssuuuuu",
+"uuuuususssssssssskkksssssssssssuuuuu",
+"uuuuuusussssssssskkksssssssssssuuuuu",
+"uuuuuuuusussssssskkksssssssssuuuuuuu",
+"uuuuuuuuuuuussssskkksssssusuuuuuuuuu",
+"uuuuuuuuuuuusuusukkkussusuuuuuuuuuuu",
+"uuuuuuuuuuuuuuuuukkkuuuuuuuuuuuuuuuu",
+"uuuuuuuuuuuuuuuuukkkuuuuuuuuuuuuuuuu",
+"uuuuuuuuuuuuuuuuukkkuuuuuuuuuuuuuuuu",
+"uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"
+],
+"marks": [],
+"objects": [
+{
+"type": "examine",
+"id": "desert_mirage_obelisk",
+"x": 18,
+"y": 3
+}
+],
+"spawns": {
+"road": {
+"x": 18,
+"y": 23,
+"dir": "n"
+}
+},
+"exits": [
+{
+"x": 17,
+"y": 25,
+"w": 3,
+"h": 1,
+"to": {
+"map": "d_west",
+"spawn": "mirage"
+},
+"edge": "s"
+}
+],
+"notes": [],
+"meta": {
+"name": "desert_mirage",
+"region": "r_desert",
+"worldRect": [
+0,
+0,
+1,
+1
+],
+"zones": [],
+"links": {}
+}
+}

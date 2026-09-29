@@ -1,0 +1,486 @@
+{
+"id": "f_eastroad",
+"w": 56,
+"h": 40,
+"rows": [
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwwFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwwFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwwFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwwFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwwFFFFFFFFFFFFFFFF",
+"XXFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwwFFFFFFFFFFFFFFFF",
+"XX,r,,,,,,,FFFFFFFFFFFFFFFFFF;;,,FFFFFFwFFFFFFFFFFFFFFFF",
+"XX;;,,,,,,,T,,,,;;FFFFFF;;\"\"\";;,,,,;;;;wwFFFFFFFFFFFFFFF",
+"XX;b,,,,,,,,,,,b;;;;;;;;;;;;;,,,,,,,,,,,wFFFFF,,,,,,,,,,",
+"XX;;;;;;,,,,,,,,;;;;;;;;;;;,,,T,,,,,,,,,ww,,,,,,,,,,,,,,",
+"XX;;;;;;;,,,\",,,,;;;;;;;;;T,,,,,,,,,,,,,,w,,,,,,r,,,,,,,",
+"XX;;;;;;;,,,,,,,,,;;;;;;TTTT,,,,,,,,,,,,,w,\"\",,,,,,,\",,,",
+"XX;;;;;\"\"\",,,,,,,,,;;;;;;TT,,,r,,XXX,,,,,w,,,,,,T,,,,,T,",
+"XX;;;,\"\"\"\",,,T,,,r;;;;;;;;;;b,,,:,,,,,,,ww\"\",,,,T,,TTTT,",
+";;;;,,,\"\"\",,,,,,;;;;;r;;;;\"\"\";,::,,,;;;,ww\",,,,,,,TTTT,,",
+"..........,,,,;;;;;;;;;b\"\"\"\"\";.:..,;;;,,ww\",\";;;,,,TTT,,",
+".............,,,;T;;;;;;;\";...........,,w,,\"\";;;;;,,,,,,",
+",,,,,,,,,,......;;;;;;;;................=,,\"\"\";;;;;;,,,,",
+"XX,,,,,,,,,,...........::...;;;;,;,;;;..==.,\"\";T;;;,r,,,",
+"XX,,\",,,,,,,,\"\"\"........::;;\";\"\"\",,,,,,,w=....;;;;,,,,,,",
+"XX;\"\",,,,,,,r\",\"\",\",,;;;::;,,,;,,,,,,,,,ww,.........,,,.",
+"XX;;\",,,,,,,,,,,;;\"\"TT,;;::,,,,,,,,,,,,,,ww,,,..........",
+"XX;;,,,TTT,,,,,,,;;,TT,,;,::,,,,T,,,r,T,,ww,,,,,,,,,....",
+"XX\";,bTTTTT,,T,,,,;,,,,;;,::,,,,,,,TTT,,,,w,,,,,;;,,,,,,",
+"XX\"\",bTTTTT,,,,,,,b,,,,T;,,::,T,,,,TTT,,,,w,,,,,;;;,,,,,",
+"XX;\"\",,,,,,,,,,,T,,,,;,,;,,::,,,,,TTTT,,,,w,,,,XXX,,,,,,",
+"XX,\"\",,,,;;;;;TTTT,,;;,,,,,,::,,,,,T,,,,,ww,,,,,,,,,T,,,",
+"XX,,,,,,,;;;;;;\"TT,,,,,,,,,,::,,,,,,,,\",,ww,,,,,,,,;;b,\"",
+"XXFF,,,,,,;;;;;\"\"\";,,,,,,,T,::,,,,,,,,,;,w,,,T,,,,,,;;;;",
+"XXFFFFFFFFFFFFFFFF;,,,,,,,,,,:,,,,,,r,FFFwFFFF;TT,,,;;;;",
+"XXFFFFFFFFFFFFFFFFF,,,,b,,r,,::,T,,,,FFFFwFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFF,,b,,,,::,,,,,FFFFFwFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFF;;,,T,::,,;,FFFFFFwwFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFF;;;,,,,:,,,FFFFFFFwwFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFF;;;,,,:,,FFFFFFFFwwFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFF;FFF:FFFFFFFFFFwwFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF:FFFFFFFFFFFwFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF:FFFFFFFFFFFwFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF:FFFFFFFFFFFwwFFFFFFFFFFFF"
+],
+"marks": [
+{
+"kind": "palisade",
+"cells": [
+[
+0,
+6
+],
+[
+0,
+7
+],
+[
+0,
+8
+],
+[
+0,
+9
+],
+[
+0,
+10
+],
+[
+0,
+11
+],
+[
+0,
+12
+],
+[
+0,
+13
+],
+[
+0,
+14
+],
+[
+0,
+19
+],
+[
+0,
+20
+],
+[
+0,
+21
+],
+[
+0,
+22
+],
+[
+0,
+23
+],
+[
+0,
+24
+],
+[
+0,
+25
+],
+[
+0,
+26
+],
+[
+0,
+27
+],
+[
+0,
+28
+],
+[
+0,
+29
+],
+[
+0,
+30
+],
+[
+0,
+31
+],
+[
+1,
+6
+],
+[
+1,
+7
+],
+[
+1,
+8
+],
+[
+1,
+9
+],
+[
+1,
+10
+],
+[
+1,
+11
+],
+[
+1,
+12
+],
+[
+1,
+13
+],
+[
+1,
+14
+],
+[
+1,
+19
+],
+[
+1,
+20
+],
+[
+1,
+21
+],
+[
+1,
+22
+],
+[
+1,
+23
+],
+[
+1,
+24
+],
+[
+1,
+25
+],
+[
+1,
+26
+],
+[
+1,
+27
+],
+[
+1,
+28
+],
+[
+1,
+29
+],
+[
+1,
+30
+],
+[
+1,
+31
+]
+],
+"text": "the snow village's LOG PALISADE: sharpened log stakes capped with snow",
+"color": [
+150,
+88,
+44
+],
+"solid": true
+},
+{
+"kind": "log",
+"cells": [
+[
+33,
+13
+],
+[
+34,
+13
+],
+[
+35,
+13
+]
+],
+"text": "a huge HOLLOW FALLEN FIR LOG half buried in snow, a small dark opening at its east end",
+"color": [
+110,
+80,
+56
+],
+"solid": true
+},
+{
+"kind": "leanto",
+"cells": [
+[
+47,
+26
+],
+[
+48,
+26
+],
+[
+49,
+26
+]
+],
+"text": "a WOODCUTTER'S LEAN-TO: a slanted roof of bark and fir boughs on posts, split logs stacked under it",
+"color": [
+130,
+96,
+60
+],
+"solid": true
+},
+{
+"kind": "bigfir",
+"cells": [
+[
+20,
+22
+],
+[
+21,
+22
+],
+[
+20,
+23
+],
+[
+21,
+23
+]
+],
+"text": "a GIANT ANCIENT FIR, far taller than the rest, its broad snow-laden boughs spreading a tile beyond this block",
+"color": [
+40,
+90,
+60
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "sign",
+"x": 23,
+"y": 17,
+"text": "← ユール　　峠の宿 →\n↓ 雪の林"
+},
+{
+"type": "sign",
+"x": 28,
+"y": 33,
+"text": "雪の林\n薪になる倒木が多い。"
+},
+{
+"type": "examine",
+"x": 35,
+"y": 14,
+"event": "world_snow_fox"
+},
+{
+"type": "waylamp",
+"id": "wl_snow_1",
+"x": 12,
+"y": 21,
+"lit": "q_snow_lamps_1",
+"event": "snow_waylamp"
+},
+{
+"type": "waylamp",
+"id": "wl_snow_2",
+"x": 33,
+"y": 21,
+"lit": "q_snow_lamps_2",
+"event": "snow_waylamp"
+},
+{
+"type": "waylamp",
+"id": "wl_snow_3",
+"x": 50,
+"y": 20,
+"lit": "q_snow_lamps_3",
+"event": "snow_waylamp"
+},
+{
+"type": "waylamp",
+"id": "wl_snow_67_35",
+"x": 27,
+"y": 28,
+"lit": true
+},
+{
+"type": "prop",
+"id": "tent",
+"x": 13,
+"y": 12
+},
+{
+"type": "prop",
+"id": "firewood",
+"x": 15,
+"y": 13
+},
+{
+"type": "prop",
+"id": "snow_lamp",
+"x": 11,
+"y": 13
+},
+{
+"type": "examine",
+"x": 48,
+"y": 27,
+"event": "snow_mat",
+"mat": "snow_mat_coal"
+}
+],
+"spawns": {
+"yule": {
+"x": 1,
+"y": 16,
+"dir": "e"
+},
+"east": {
+"x": 54,
+"y": 22,
+"dir": "w"
+},
+"woods": {
+"x": 30,
+"y": 38,
+"dir": "n"
+}
+},
+"exits": [
+{
+"x": 0,
+"y": 16,
+"w": 1,
+"h": 2,
+"to": {
+"map": "yule",
+"spawn": "gate_e"
+},
+"edge": "w"
+},
+{
+"x": 55,
+"y": 22,
+"w": 1,
+"h": 2,
+"to": {
+"map": "f_passinn",
+"spawn": "west"
+},
+"edge": "e"
+},
+{
+"x": 30,
+"y": 39,
+"w": 2,
+"h": 1,
+"to": {
+"map": "snow_woods",
+"spawn": "south"
+},
+"edge": "s"
+}
+],
+"notes": [],
+"meta": {
+"name": "灯守りの街道",
+"sub": "ユールと峠の宿をむすぶ森の道",
+"region": "r_snow",
+"worldRect": [
+156,
+64,
+96,
+60
+],
+"outside": "forest_dark",
+"zones": [
+{
+"rect": null,
+"zone": "zw_snow"
+}
+],
+"weather": "snow",
+"weatherCond": "!cleared_r_snow",
+"npcs": [
+{
+"id": "snow_pilgrim",
+"look": "npc_snow_old_m",
+"name": "峠越えの年寄り",
+"x": 16,
+"y": 14,
+"dir": "s",
+"move": "still",
+"talk": "world_snow_pilgrim",
+"reward": "news",
+"key": "world_snow_pilgrim"
+}
+],
+"links": {
+"yule_e": {
+"map": "f_eastroad",
+"spawn": "yule"
+},
+"snow_woods": {
+"map": "f_eastroad",
+"spawn": "woods"
+}
+}
+}
+}

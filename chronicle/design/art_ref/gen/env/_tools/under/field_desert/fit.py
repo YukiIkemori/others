@@ -1,4 +1,4 @@
-"""Fit the collision to the painting of a FIELD area.
+"""(desert copy of ../field/fit.py: sand/dune/clay grounds, classifier seeded from the layout) Fit the collision to the painting of a FIELD area.
 usage: python3 fit.py <id> <gen.png> [--apply]
 1. Box-downscale the painting to 32 px/tile and classify every cell with colour likelihoods learnt from the painting itself: for each class
    the pixels of the layout cells deep inside that class's regions (eroded) give a colour histogram; each cell gets the class with the
@@ -24,7 +24,7 @@ d = json.load(open(aid + '/layout.json'))
 W, H, T = d['w'], d['h'], 32
 rows = [list(r) for r in d['rows']]
 A = np.asarray(Image.open(src).convert('RGB').resize((W * T, H * T), Image.BOX)).astype(np.int32)
-CLS = {'open': ',;"', 'road': '.:', 'sand': 's_', 'water': '~w', 'tree': 'TFb', 'rock': 'rR'}
+CLS = {'open': ',;"', 'road': '.:', 'sand': 's_uk', 'water': '~w', 'tree': 'TFb', 'rock': 'rR'}
 WALKC = {'open', 'road', 'sand'}
 g = np.array(rows)
 Q = (A // 16); qi = Q[..., 0] * 256 + Q[..., 1] * 16 + Q[..., 2]
@@ -46,9 +46,9 @@ feat = np.stack([C4(A[..., 0]).mean((1, 3)), C4(A[..., 1]).mean((1, 3)), C4(A[..
                  C4(lum).std((1, 3)), C4(gx + gy).mean((1, 3)), C4((lum < 55).astype(float)).mean((1, 3)) * 100,
                  C4(((A[..., 2] > A[..., 1] + 8) & (A[..., 2] > A[..., 0] + 20)).astype(float)).mean((1, 3)) * 100,
                  C4((hsvmax - hsvmin).astype(float)).mean((1, 3))], -1)
-GROUPS = {'ground': ',;".:s_', 'tree': 'TFb', 'water': '~w', 'rock': 'rR'}
+GROUPS = {'ground': ',;".:s_uk', 'tree': 'TFb', 'water': '~w', 'rock': 'rR'}
 models = {}
-SEED = __import__('os').environ.get('SEED', 'rules')   # rules = seed the classes from the painting itself (rules.py), layout = from the layout cells
+SEED = __import__('os').environ.get('SEED', 'layout')   # rules = seed the classes from the painting itself (rules.py), layout = from the layout cells
 if SEED == 'rules':
     from rules import labels as _rl
     RL, _ = _rl(A.astype(float), W, H)
@@ -131,7 +131,7 @@ if APPLY:
         for j in range(r[1], r[1] + r[3]):
             for i in range(r[0], r[0] + r[2]): fit[j][i] = r[4] if len(r) > 4 else 'X'
     # close unreachable walkable pockets (from the first spawn)
-    WALK = set(',;".:s_=c')
+    WALK = set(',;".:s_=cuk')
     seen = np.zeros((H, W), bool); q = deque()
     for sp in d['spawns'].values():
         fit[sp['y']][sp['x']] = fit[sp['y']][sp['x']] if fit[sp['y']][sp['x']] in WALK else '.'

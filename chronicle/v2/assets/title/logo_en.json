@@ -1,0 +1,60 @@
+{
+ "id": "title_logo_en",
+ "file": "logo_en.png",
+ "size": [
+  1536,
+  832
+ ],
+ "background": "transparent",
+ "text": {
+  "title": "LUMINOUS CHRONICLE",
+  "subtitle": "~ The Eight Beacons ~"
+ },
+ "checked": "every letter verified by eye at full size: LUMINOUS CHRONICLE and ~ The Eight Beacons ~ are the generated lettering, spelled correctly",
+ "anchor": {
+  "subtitle_center": [
+   0.5,
+   0.827
+  ],
+  "lantern_emblem": [
+   0.5,
+   0.312
+  ],
+  "flames": [
+   [
+    0.256,
+    0.376
+   ],
+   [
+    0.312,
+    0.349
+   ],
+   [
+    0.365,
+    0.326
+   ],
+   [
+    0.418,
+    0.304
+   ],
+   [
+    0.577,
+    0.306
+   ],
+   [
+    0.628,
+    0.331
+   ],
+   [
+    0.686,
+    0.35
+   ],
+   [
+    0.743,
+    0.377
+   ]
+  ]
+ },
+ "motif": "English edition of the title logo: same gold engraving, hanging lantern with eight flames = the eight great beacons",
+ "fallback": "if the image fails to load, draw the text logo (R.TITLE in Cinzel with the gold gradient)"
+}

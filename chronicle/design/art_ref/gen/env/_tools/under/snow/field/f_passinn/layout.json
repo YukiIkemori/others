@@ -1,0 +1,554 @@
+{
+"id": "f_passinn",
+"w": 52,
+"h": 42,
+"rows": [
+"FFFFFFF,,XXXXXXXXXX...,XXXXXXXXXX\"\"wwrrrrrrrrrrrrrrr",
+"FFFFFFF,,,,,,,,,,,X...,X;;;;;;;;;;\",wrrrrrrrrrrrrrrr",
+"FFFFFFF,,,,,,,,,,,,...,;;;;;;T;;;,,,wrrrrrrrrrrrrrrr",
+"FFFFFFF,,,,,,,,,,,,...,;;;;T;;;;;,,,wrrrrrrrrrrrrrrr",
+"FFFFFFF,\",,,,,,,,,,...,;;;;;;;;;;,,,wrrrrrrrrrrrrrrr",
+"FFF,,,,,,T,,,,,,,,,...,,;,,,,,,;;,,,wrrrrrrrrrrrrrrr",
+";;,,,,,,,,,,,,,,,,,...,,,TT;,,,,,,,,wwrrrrrrrrrrrrrr",
+";;,,,,,,,,,,,,,,,,,...,,,,,,,,;,,,,\"wwrrrrrrrrrrrrrr",
+";;T;;,,,,,,,,,,,,,,...,,,T,,,,;;;;;\"wwrrrrrrrrrrrrrr",
+";;;;,,,,,,,,,,,,,,,...,,,,,,,,,;;;;,wwrrrrrrrrrrrrrr",
+";;;,,,,,,,,,,,,,,,,...,,,,,,TTTTT;;,wwrrrrrrrrrrrrrr",
+";;;,,,;,,,,,,,,,,,,...,,,,,,TTTTT,,,wwrrrrrrrrrrrrrr",
+";;,,,;;T,,,,,,,,\"\",...,,,,,,TTTT,,,,wrrrrrrrrrrrrrrr",
+";;,,r,;TTTT,,,,,\";;...,T,,,,;;;;;,,wwrrrrrrrrrrrrrrr",
+",,,,,,TTTTTT,,,;;;;...,,,,,,,;;;;;,w,,rrrrrrrrrrrrrr",
+",,,,,,TTTTT,,,;;;;;..,,,,,,,,,;;;,;w,,rrrrrrrrrrrrrr",
+",,,,,,,;;;;;,;;;;;;..,,,,,,,,;;;;;;w;;;rrrrrrrrrrrrr",
+",,,,,,,,;;;;T;;;;;,..,,,,,,,,;;;;;;ww;;rrrrrrrrrrrrr",
+",,,,,,,,;;;;\";;;,,,..,,,,,,,,;,;;;;ww;;;rrrrrrrrrrrr",
+",,,,,,,,;;;;;;;;,,,......,,,,,,;;;;;w;;;rrrrrrrrrrrr",
+",,,,,,,,;;;;;;..................,;;;w;;;;rrrrrrrrrrr",
+",,,,,,,,;;;..........,,............ww;;;;rrrrrrrrrrr",
+",,,,,,,,......;;;;;;,,,,,,,,,,,,...=w;;;;;rrrrrrrrrr",
+"............;;;;;;;;,,,,,,,,,,,,,,==..,,;;;rrrrrrrrr",
+"........;;;;;;;;;;;;,,,,,,,,,,,,,ww....,;;;;rrrrrrrr",
+",,,,,,,;;;;;;;;;;;:;,,,T,,,,:::,www;;....;;;;rrrrrrr",
+"\",,,,,;;r;;;;;;;:::::;,,,,,::::www,;;;;....;;rrrrrrr",
+",\",,,,;,,,;;;;;:::w:::;;;,::wwww:,,;;;;;;...........",
+",,,,,;;,,,;;;;::wwwww::;::::www::,,;\";;;;;;.........",
+",,,,;TTT,;;;;::wwwwwww::::::::::,,;;;;;;;,,,,.......",
+",,,,TTTT;;r;::::wwwwww::www::::,,,;;;;;;,,,,,rrrrrrr",
+",,,,,TTT;,;::::::::::::wwwww::,,,,;;;;X,,,,,,rrrrrrr",
+",,,,,,,,,,::ww:::::::::wwwww::,,\",;;;;,,,,,rrrrrrrrr",
+";,,T,,,,,::wwww::,,,,,:::w:::,,,,,;;,,,,,,rrrrrrrrrr",
+";;;;;;T;;;::www::,,,,,,:::::,,,,,,,,,,,,,rrrrrrrrrrr",
+";;;;;;,;;;;:::::,,,,,,,,,:,TT,,,,,,,,,,,rrrrrrrrrrrr",
+"FFFFFFFF\";,;:::,,,,T,,r,,,,TTT,,,,,,,,,rrrrrrrrrrrrr",
+"FFFFFFFFFFFFFFF,,,T,,,,,T,,TT,,,,T,,,,,rrrrrrrrrrrrr",
+"FFFFFFFFFFFFFFFFFFFF,,,,,,,,,,,,,,,,FF,rrrrrrrrrrrrr",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFrrrrrrrrrrrrr",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFrrrrrrrrrrrrr",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFrrrrrrrrrrrr"
+],
+"marks": [
+{
+"kind": "springs",
+"cells": [
+[
+18,
+27
+],
+[
+28,
+27
+],
+[
+29,
+27
+],
+[
+30,
+27
+],
+[
+16,
+28
+],
+[
+17,
+28
+],
+[
+18,
+28
+],
+[
+19,
+28
+],
+[
+20,
+28
+],
+[
+28,
+28
+],
+[
+29,
+28
+],
+[
+30,
+28
+],
+[
+15,
+29
+],
+[
+16,
+29
+],
+[
+17,
+29
+],
+[
+18,
+29
+],
+[
+19,
+29
+],
+[
+20,
+29
+],
+[
+21,
+29
+],
+[
+16,
+30
+],
+[
+17,
+30
+],
+[
+18,
+30
+],
+[
+19,
+30
+],
+[
+20,
+30
+],
+[
+21,
+30
+],
+[
+24,
+30
+],
+[
+25,
+30
+],
+[
+26,
+30
+],
+[
+23,
+31
+],
+[
+24,
+31
+],
+[
+25,
+31
+],
+[
+26,
+31
+],
+[
+27,
+31
+],
+[
+12,
+32
+],
+[
+13,
+32
+],
+[
+23,
+32
+],
+[
+24,
+32
+],
+[
+25,
+32
+],
+[
+26,
+32
+],
+[
+27,
+32
+],
+[
+11,
+33
+],
+[
+12,
+33
+],
+[
+13,
+33
+],
+[
+14,
+33
+],
+[
+25,
+33
+],
+[
+12,
+34
+],
+[
+13,
+34
+],
+[
+14,
+34
+]
+],
+"text": "natural HOT SPRING pools of milky turquoise water, steaming, edged by orange-and-cream mineral terraces and dark wet rock with no snow on them",
+"color": [
+80,
+200,
+200
+],
+"solid": false
+},
+{
+"kind": "fence",
+"cells": [
+[
+9,
+0
+],
+[
+10,
+0
+],
+[
+11,
+0
+],
+[
+12,
+0
+],
+[
+13,
+0
+],
+[
+14,
+0
+],
+[
+15,
+0
+],
+[
+16,
+0
+],
+[
+17,
+0
+],
+[
+18,
+0
+],
+[
+23,
+0
+],
+[
+24,
+0
+],
+[
+25,
+0
+],
+[
+26,
+0
+],
+[
+27,
+0
+],
+[
+28,
+0
+],
+[
+29,
+0
+],
+[
+30,
+0
+],
+[
+31,
+0
+],
+[
+32,
+0
+],
+[
+18,
+1
+],
+[
+23,
+1
+]
+],
+"text": "the pass inn's TIMBER FENCE with a roofed GATE over the road, snow on its shingles, lanterns at the posts",
+"color": [
+150,
+88,
+44
+],
+"solid": true
+},
+{
+"kind": "cairn",
+"cells": [
+[
+38,
+31
+]
+],
+"text": "a tall stone CAIRN marking the way into the gorge, capped with snow",
+"color": [
+170,
+160,
+150
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "sign",
+"x": 18,
+"y": 5,
+"text": "宿場「峠の宿」\n湯気の立つ峠の宿。"
+},
+{
+"type": "sign",
+"x": 36,
+"y": 24,
+"text": "東 → ガルド山地\n西 → ユール"
+},
+{
+"type": "examine",
+"x": 21,
+"y": 31,
+"event": "snow_pass_springs"
+},
+{
+"type": "waylamp",
+"id": "wl_snow_80_35",
+"x": 10,
+"y": 21,
+"lit": true
+},
+{
+"type": "prop",
+"id": "snow_lamp",
+"x": 18,
+"y": 2
+},
+{
+"type": "prop",
+"id": "snow_lamp",
+"x": 23,
+"y": 2
+},
+{
+"type": "chest",
+"id": "f_passinn_c1",
+"x": 11,
+"y": 31,
+"item": "i_incense",
+"n": 1
+},
+{
+"type": "examine",
+"x": 12,
+"y": 15,
+"event": "snow_mat",
+"mat": "snow_mat_berry"
+}
+],
+"spawns": {
+"west": {
+"x": 1,
+"y": 23,
+"dir": "e"
+},
+"inn": {
+"x": 20,
+"y": 1,
+"dir": "s"
+},
+"east": {
+"x": 50,
+"y": 28,
+"dir": "w"
+}
+},
+"exits": [
+{
+"x": 0,
+"y": 23,
+"w": 1,
+"h": 2,
+"to": {
+"map": "f_eastroad",
+"spawn": "east"
+},
+"edge": "w"
+},
+{
+"x": 20,
+"y": 0,
+"w": 2,
+"h": 1,
+"to": {
+"map": "pass_inn",
+"spawn": "gate"
+},
+"edge": "n"
+},
+{
+"x": 51,
+"y": 28,
+"w": 1,
+"h": 2,
+"to": {
+"map": "world",
+"spawn": "snow_east"
+},
+"edge": "e",
+"cond": {
+"not": {
+"slice": true
+}
+}
+}
+],
+"notes": [],
+"meta": {
+"name": "湯けむりの峠",
+"sub": "峠の宿と、湯の湧く谷",
+"region": "r_snow",
+"worldRect": [
+240,
+70,
+44,
+44
+],
+"outside": "wall_snow",
+"zones": [
+{
+"rect": null,
+"zone": "zw_snow"
+}
+],
+"weather": "snow",
+"weatherCond": "!cleared_r_snow",
+"tilePatches": [
+{
+"cond": {
+"slice": true
+},
+"rect": [
+48,
+27,
+3,
+3
+],
+"rows": [
+"rrr",
+"rrr",
+"rrr"
+]
+}
+],
+"npcs": [
+{
+"id": "guard_snow_east",
+"look": "npc_guard_1",
+"name": "番人",
+"x": 47,
+"y": 28,
+"dir": "w",
+"move": "still",
+"pushable": false,
+"cond": {
+"slice": true
+},
+"talk": {
+"lines": [
+{
+"text": [
+"この先の峠は、崖崩れで\nふさがっておる。",
+"山の鉱山町へ行くのは、\n道が片づくまで待ってくれ。"
+]
+}
+]
+},
+"reward": "news",
+"key": "world_guard_snow_east"
+}
+],
+"links": {
+"pass_inn": {
+"map": "f_passinn",
+"spawn": "inn"
+}
+}
+}
+}

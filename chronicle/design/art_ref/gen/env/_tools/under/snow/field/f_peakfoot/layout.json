@@ -1,0 +1,461 @@
+{
+"id": "f_peakfoot",
+"w": 48,
+"h": 42,
+"rows": [
+"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
+"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
+"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
+"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
+"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
+"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
+"rrrrrrrrrrrrrrrRrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
+"rrrrrrrrrrrrrRRRRRRRrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
+"rrrrrrrRRRRRRRR;RRRRRRrrrrrrrXXXXRRrRRRrrrrrrRRR",
+"RRRRRRRRRRRRRr;;;,,,RRRRRRRRRXXXXRRRRRRRRRRRRRRR",
+"RRRRRRR,,,,,,,;;;;,,\",RRRRRRRXXXX,,\"\",;RRRRRR,,,",
+",,,,,,,,,,,r,T,;;;;;;,T,,,,,cc.ccc;\"\";;;;;;;;,,,",
+"T,,;;;,;;,,,,,,;r;;;,,,,,,,,cc..cc\"\"\"T;r;;;;;;,,",
+",,,,,,TTTTT,,,,;;;;;,,,,,,,,cc..cc\"\";;;,;;;;,,,,",
+",,,r,,TTTTTT,,,;;;;;;;,,,,,,,..,,,,,T,,T,TTT,,,,",
+"\",,,,,TTTT,,,,,,,;;;;;,,,,,,...,,,,,,,,TTTTT,;;,",
+"\",,,,,,,,,,,,,,,;;;,,,,,T,,...,,,,,,,,,,TTTT,,,,",
+",,,,,,,,,,,,,,;;;,,,,,,,,,...,,,,,,,,,,\"\"\",,,,,;",
+",,,,,,,,,,,,;;;\"\",,,;;,,,...,,,r,,,,,,\"T\"\",,,,,;",
+",,,,,,,,,,,;;;;\"\",,,,,,,...\",,;,,,,,,,\"\"\"\"\"\"r,,;",
+",,,,,,r,,,\",,,X,X,,,,,,,..\",,;;,,,,,\"\"\"\"\"\"\"\"\",,;",
+",,,,,,,,,;;,X,,,,,X,,;,..,\",,;,;T,,,\",,,,,\"\",,,,",
+",,,,r,,,,,,,,,:::,,,,,...;,,;;;;,,,,,X,,,,\",,,,,",
+",,,,,,,,,XX,,,:::::,,,..;;;;;;,,,,,,ccc,,,,,,,,\"",
+",,,,\"\",,\",,,,,,,,,::,..,;;;;;;,,::XcccccX,,,,,,T",
+",,,,,,,,\",,,X,,,,,X::..;::::::::::cccXccc,,,,,,,",
+",,,,,,;;,,,;,,X,X,,;::.;:::,,,,,,,XcccccX,,,,,,;",
+",,,,,;;;,,;;;;,,;;;;.:,;;,,,,,,,,,,,ccc,,,,,,,,;",
+",,,,,,,,,,;;;;;;;;;;..,,,,T,,,,,,,,,,X,,,,,,,,,;",
+",,,,,,,,,,,;;;;;;;;;..,,,,,,,,,,,,,,,;;,,;;;T;;;",
+",,,r,,TT,,,;;;;;;;;;..,,,,,,\",,,,,,;;,,,,;;;;\"\";",
+",,,,TTTTT,,\";;;;;;;;..,,\",,,,,,,,,,,;,,;;;;;,T,,",
+",,,TTTTTTT\"T;;;,\",,,,..,,,,,TTT,,,,,,r,;;TTT\",,,",
+",,,TTTTTTT\";;;;,\",,,,..,,;;,,TTT,,,,,,,TTTTTTT,,",
+",,,;\"TTT,,,;;;,,,r,,,...;;T;;;TT;;;,,,,TTTTTTT,,",
+",,,,\";;;;;;;;;,,,,,,,,..;;;;;;;;;;;,\"\",,TTTTTT,,",
+"FFT\"\";;;;;;;;;,,,,,,,,..;;;;;;;;;;;,\",,,,TTTT,,,",
+"FFFFF;;;;;;;;,,,,,,,,,..;;;;;;;T;;;\"\"\",,,,,,,,,,",
+"FFFFFFFF,T,,,,,,,,,,,,..;;;;;;;;;,,,\"\",,,,,,FFFF",
+"FFFFFFFFF,,,,,,,,,,,,,..;;;;;;,;,,,,,,,,,FFFFFFF",
+"FFFFFFFFFF,,,,,,,,,,X,..,,\"X;,,,,,,,,,,,,FFFFFFF",
+"FFFFFFFFFF,,XXXXXXXXX,..,,,XXXXXXXXX,,,,,FFFFFFF"
+],
+"marks": [
+{
+"kind": "arch",
+"cells": [
+[
+29,
+8
+],
+[
+30,
+8
+],
+[
+31,
+8
+],
+[
+32,
+8
+],
+[
+29,
+9
+],
+[
+32,
+9
+],
+[
+29,
+10
+],
+[
+32,
+10
+]
+],
+"text": "the PEAK GATE: a massive ancient stone ARCH carved with a coiled dragon, set into the foot of the ice cliff",
+"color": [
+214,
+214,
+222
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+30,
+9
+],
+[
+31,
+9
+],
+[
+30,
+10
+],
+[
+31,
+10
+]
+],
+"text": "the dark passage behind the arch: worn stone STAIRS climbing up into the mountain (the entrance)",
+"color": [
+40,
+40,
+56
+],
+"solid": true
+},
+{
+"kind": "bones",
+"cells": [
+[
+12,
+21
+],
+[
+14,
+20
+],
+[
+16,
+20
+],
+[
+18,
+21
+],
+[
+12,
+25
+],
+[
+14,
+26
+],
+[
+16,
+26
+],
+[
+18,
+25
+],
+[
+9,
+23
+],
+[
+10,
+23
+]
+],
+"text": "the colossal RIB BONES of an ancient dragon arching up out of the snow in two rows (walk between them), its huge horned SKULL half buried at the west end, bones weathered ivory and frosted",
+"color": [
+236,
+228,
+200
+],
+"solid": true
+},
+{
+"kind": "stones",
+"cells": [
+[
+40,
+26
+],
+[
+37,
+28
+],
+[
+34,
+26
+],
+[
+34,
+24
+],
+[
+37,
+22
+],
+[
+40,
+24
+]
+],
+"text": "a ring of six tall SNOW-CAPPED STANDING STONES carved with flame runes",
+"color": [
+190,
+190,
+200
+],
+"solid": true
+},
+{
+"kind": "bowl",
+"cells": [
+[
+37,
+25
+]
+],
+"text": "a round carved STONE FIRE BOWL on a low plinth in the middle of the ring (cold, filled with snow)",
+"color": [
+130,
+120,
+112
+],
+"solid": true
+},
+{
+"kind": "palisade",
+"cells": [
+[
+12,
+41
+],
+[
+13,
+41
+],
+[
+14,
+41
+],
+[
+15,
+41
+],
+[
+16,
+41
+],
+[
+17,
+41
+],
+[
+18,
+41
+],
+[
+19,
+41
+],
+[
+20,
+41
+],
+[
+27,
+41
+],
+[
+28,
+41
+],
+[
+29,
+41
+],
+[
+30,
+41
+],
+[
+31,
+41
+],
+[
+32,
+41
+],
+[
+33,
+41
+],
+[
+34,
+41
+],
+[
+35,
+41
+],
+[
+20,
+40
+],
+[
+27,
+40
+]
+],
+"text": "the snow village's LOG PALISADE seen from outside, sharpened snow-capped stakes",
+"color": [
+150,
+88,
+44
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "door",
+"x": 30,
+"y": 10,
+"w": 2,
+"look": "none",
+"to": {
+"map": "peak_1",
+"spawn": "south"
+}
+},
+{
+"type": "sign",
+"x": 27,
+"y": 13,
+"text": "白竜の峰\n吹雪の奥に、竜が眠るという。"
+},
+{
+"type": "examine",
+"x": 10,
+"y": 23,
+"event": "snow_foot_bones"
+},
+{
+"type": "examine",
+"x": 37,
+"y": 25,
+"event": "snow_foot_shrine"
+},
+{
+"type": "prop",
+"id": "beacon",
+"x": 37,
+"y": 25,
+"cond": "cleared_r_snow"
+},
+{
+"type": "waylamp",
+"id": "wl_snow_48_17",
+"x": 25,
+"y": 31,
+"lit": true
+},
+{
+"type": "waylamp",
+"id": "wl_snow_55_17",
+"x": 33,
+"y": 16,
+"lit": true
+},
+{
+"type": "prop",
+"id": "ice_crystal",
+"x": 26,
+"y": 13
+},
+{
+"type": "prop",
+"id": "snow_lamp",
+"x": 34,
+"y": 13
+},
+{
+"type": "chest",
+"id": "f_peakfoot_c1",
+"x": 16,
+"y": 24,
+"item": "i_revive",
+"n": 1
+}
+],
+"spawns": {
+"yule": {
+"x": 23,
+"y": 40,
+"dir": "n"
+},
+"peak": {
+"x": 30,
+"y": 11,
+"dir": "s"
+}
+},
+"exits": [
+{
+"x": 23,
+"y": 41,
+"w": 2,
+"h": 1,
+"to": {
+"map": "yule",
+"spawn": "gate_n"
+},
+"edge": "s"
+}
+],
+"notes": [],
+"meta": {
+"name": "白竜の峰のふもと",
+"sub": "竜の骨と冬至の祠",
+"region": "r_snow",
+"worldRect": [
+134,
+16,
+64,
+52
+],
+"outside": "wall_snow",
+"zones": [
+{
+"rect": null,
+"zone": "zw_snow"
+}
+],
+"weather": "snow",
+"weatherCond": "!cleared_r_snow",
+"npcs": [
+{
+"id": "snow_scout",
+"look": "npc_snow_watch",
+"name": "見回りの若者",
+"x": 25,
+"y": 20,
+"dir": "s",
+"move": "still",
+"talk": "world_snow_scout",
+"reward": "boss",
+"key": "world_snow_scout"
+}
+],
+"links": {
+"yule_n": {
+"map": "f_peakfoot",
+"spawn": "yule"
+},
+"peak": {
+"map": "f_peakfoot",
+"spawn": "peak"
+}
+}
+}
+}

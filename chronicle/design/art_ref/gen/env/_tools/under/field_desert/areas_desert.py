@@ -16,7 +16,7 @@ CAR = {'map': 'desert_caravan_on'}
 CARAVAN_ZONE = {'rect': None, 'zone': 'zw_desert_caravan', 'cond': 'desert_caravan_on'}
 
 
-def desert_ground(a, s1, s2, dune=0.55, clay=0.74):
+def desert_ground(a, s1, s2, dune=0.55, clay=1.1):
     W, H = a.W, a.H
     a.mask_fill(fbm(s1, W, H, 9) > dune, 'u', only='s')
     a.mask_fill(fbm(s2, W, H, 6) > clay, 'k', only='s')
@@ -42,7 +42,7 @@ def d_pass():
     a.region([(28.5, -3), (55, -3), (55, 1.5), (36, 2.5), (31, 6), (29, 4)], 'R', rough=0.4, seed=2, force=True)
     # the rock field (NE): a mass of wind-carved red rock towers, a narrow gully cut north into it (mouth at (46, 5))
     a.region([(37, 1), (55, 0), (55, 12), (51, 11.5), (48.5, 9.5), (44, 10), (40.5, 8), (37.5, 5)], 'R', rough=0.8, seed=3, force=True)
-    for (x, y, rx, ry, s_) in [(42.5, 12.5, 1.6, 1.3, 14), (50, 14.5, 1.8, 1.5, 15), (36, 7.5, 1.3, 1.2, 16)]:
+    for (x, y, rx, ry, s_) in [(42.5, 12.5, 1.6, 1.3, 14), (50, 14.5, 1.8, 1.5, 15)]:
         a.blob(x, y, rx, ry, 'R', rough=0.3, seed=s_)
     a.rect(46, 5, 1, 6, ':', force=True, keep=True)
     # roads: the main road from the gorge down to the south edge; the spur to the caravanserai gate; the path to the rock gully
@@ -94,7 +94,7 @@ def d_west():
     W, H = a.W, a.H
     desert_ground(a, 3, 4, dune=0.5)
     # Kasim's west wall and gatehouse (east edge, gate rows 20-21)
-    wall = [(x, y) for x in range(55, 60) for y in range(3, 40) if y not in (20, 21)]
+    wall = [(x, y) for x in range(55, 60) for y in range(0, 44) if y not in (20, 21)]
     a.mark('town', wall, "the oasis town's tall MUD-BRICK CITY WALL with rounded towers and crenellations, and its great arched WEST GATEHOUSE over the road (the gap in this block); date palms peek over the wall", MUDBRICK)
     # palms along the wall
     for (x, y, rx, ry, s_) in [(52, 9, 2.2, 3.0, 11), (52, 32, 2.2, 3.4, 12), (53, 14.5, 1.2, 1.4, 13)]:
@@ -157,7 +157,7 @@ def d_east():
     # the strait (N)
     a.region([(-3, -3), (59, -3), (59, 3.5), (46, 4.5), (36, 3), (24, 4.5), (12, 3.2), (-3, 4)], '~', rough=1.0, seed=1, force=True)
     # Kasim's east wall (W edge), gate rows 17-18
-    wall = [(x, y) for x in range(0, 5) for y in range(5, 34) if y not in (17, 18)]
+    wall = [(x, y) for x in range(0, 5) for y in range(4, 36) if y not in (17, 18)]
     a.mark('town', wall, "the oasis town's tall MUD-BRICK CITY WALL with rounded towers and crenellations, and its great arched EAST GATEHOUSE over the road (the gap in this block); date palms peek over the wall", MUDBRICK)
     # the ash-land crags (E) with the pass
     a.region([(48, 4), (59, 3), (59, 39), (47, 39), (50, 30), (48.5, 22), (51, 17), (49.5, 10)], 'R', rough=0.9, seed=2, force=True)
@@ -208,7 +208,7 @@ def d_south():
     a little palm oasis in the dunes; a nomad camp (E); the beach with the tops of a sunken temple's pillars and an obelisk (S)."""
     a = Area('d_south', 56, 44, 404, base='s')
     W, H = a.W, a.H
-    desert_ground(a, 3, 4, dune=0.45, clay=0.8)
+    desert_ground(a, 3, 4, dune=0.45)
     # dune ridges (tall rippled dunes, walkable) and a few crests of rock
     # the sea (S) and the beach
     a.region([(-3, 38), (10, 37.5), (20, 39), (34, 38.4), (46, 39.5), (59, 38.5), (59, 47), (-3, 47)], '~', rough=1.0, seed=1, force=True)

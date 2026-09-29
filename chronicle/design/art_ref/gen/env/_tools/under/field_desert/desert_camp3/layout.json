@@ -1,0 +1,419 @@
+{
+"id": "desert_camp3",
+"w": 30,
+"h": 26,
+"rows": [
+"uuuuuuuuuuuuuuuuuuuuuuuuuuuuuu",
+"uuuuuuuuuuuuuuuuXXXXXXXXXXXXuu",
+"uuuuuuuuuuuuuuuuXXXXXXXXXXXXuu",
+"uuuuuuuuuuuuuuuuXXXXXccXXXXXuu",
+"uuuuuuuuuuususssXXXXXccXXXXXuu",
+"uuuuuuuuusssssssXXXXccccXXXXuu",
+"uuuuuuusssssssssXXXXccccXXXXuu",
+"uuuuuuusssssssssXXXXccccXXXXuu",
+"uuuuussssssssssssssss.sssuuuuu",
+"uuuusssssssssssssssss.sssssuuu",
+"uuusssss,,,,,,,ssssss.ssssssuu",
+"uuuusss,,wwwww,,sssss.ssssssuu",
+"uuussss,,wwwww,,sssss.ssssssuu",
+"uuuusss,,wwwww,,sssss.sssssuuu",
+"uuusssss,,,,,,,ssssss.ssssssuu",
+"uuuusssssssssssssssss.ssssssuu",
+"uuuusssssssssssssssss.sssssuuu",
+"uuuuussssssssss.......ssssuuuu",
+"uuuusssssssssss.sssssssssuuuuu",
+"uuuuuuussssssss.sssssssssuuuuu",
+"uuuuuuussssssss.sssssssuuuuuuu",
+"uuuuuuuuussssss.sssssusuuuuuuu",
+"uuuuuuuuuuusss..ssussuuuuuuuuu",
+"uuuuuuuuuuuuuu..uuuuuuuuuuuuuu",
+"uuuuuuuuuuuuuu..uuuuuuuuuuuuuu",
+"uuuuuuuuuuuuuu..uuuuuuuuuuuuuu"
+],
+"marks": [
+{
+"kind": "tomb",
+"cells": [
+[
+16,
+1
+],
+[
+17,
+1
+],
+[
+18,
+1
+],
+[
+19,
+1
+],
+[
+20,
+1
+],
+[
+21,
+1
+],
+[
+22,
+1
+],
+[
+23,
+1
+],
+[
+24,
+1
+],
+[
+25,
+1
+],
+[
+26,
+1
+],
+[
+27,
+1
+],
+[
+16,
+2
+],
+[
+17,
+2
+],
+[
+18,
+2
+],
+[
+19,
+2
+],
+[
+20,
+2
+],
+[
+21,
+2
+],
+[
+22,
+2
+],
+[
+23,
+2
+],
+[
+24,
+2
+],
+[
+25,
+2
+],
+[
+26,
+2
+],
+[
+27,
+2
+],
+[
+16,
+3
+],
+[
+17,
+3
+],
+[
+18,
+3
+],
+[
+19,
+3
+],
+[
+20,
+3
+],
+[
+23,
+3
+],
+[
+24,
+3
+],
+[
+25,
+3
+],
+[
+26,
+3
+],
+[
+27,
+3
+],
+[
+16,
+4
+],
+[
+17,
+4
+],
+[
+18,
+4
+],
+[
+19,
+4
+],
+[
+20,
+4
+],
+[
+23,
+4
+],
+[
+24,
+4
+],
+[
+25,
+4
+],
+[
+26,
+4
+],
+[
+27,
+4
+],
+[
+16,
+5
+],
+[
+17,
+5
+],
+[
+18,
+5
+],
+[
+19,
+5
+],
+[
+24,
+5
+],
+[
+25,
+5
+],
+[
+26,
+5
+],
+[
+27,
+5
+],
+[
+16,
+6
+],
+[
+17,
+6
+],
+[
+18,
+6
+],
+[
+19,
+6
+],
+[
+24,
+6
+],
+[
+25,
+6
+],
+[
+26,
+6
+],
+[
+27,
+6
+],
+[
+16,
+7
+],
+[
+17,
+7
+],
+[
+18,
+7
+],
+[
+19,
+7
+],
+[
+24,
+7
+],
+[
+25,
+7
+],
+[
+26,
+7
+],
+[
+27,
+7
+]
+],
+"text": "the carved FACADE OF A ROYAL TOMB cut into a sheer red sandstone cliff: a great rock wall with a tall recessed doorway framed by colossal carved pillars and a sun-disc lintel, the king's face chiselled away; the dark tomb doorway at the foot of the recess (the paved gap in this block) leads inside",
+"color": [
+214,
+150,
+100
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+21,
+3
+],
+[
+22,
+3
+]
+],
+"text": "the dark tomb DOORWAY",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "brazier",
+"id": "fire_17_14",
+"x": 17,
+"y": 14
+},
+{
+"type": "stairs",
+"id": "desert_camp3_tomb",
+"x": 21,
+"y": 3
+},
+{
+"type": "examine",
+"id": "desert_tomb_sealed",
+"x": 21,
+"y": 3
+},
+{
+"type": "spring",
+"id": "desert_camp3_s1",
+"x": 7,
+"y": 15
+},
+{
+"type": "examine",
+"id": "desert_camp3_oldspring",
+"x": 13,
+"y": 11
+}
+],
+"spawns": {
+"road": {
+"x": 15,
+"y": 23,
+"dir": "n"
+},
+"tomb": {
+"x": 21,
+"y": 5,
+"dir": "s"
+},
+"fire": {
+"x": 17,
+"y": 16,
+"dir": "n"
+},
+"spring": {
+"x": 13,
+"y": 15,
+"dir": "n"
+}
+},
+"exits": [
+{
+"x": 14,
+"y": 25,
+"w": 2,
+"h": 1,
+"to": {
+"map": "d_coast",
+"spawn": "camp3"
+},
+"edge": "s"
+}
+],
+"notes": [],
+"meta": {
+"name": "desert_camp3",
+"region": "r_desert",
+"worldRect": [
+0,
+0,
+1,
+1
+],
+"zones": [],
+"links": {}
+}
+}

@@ -1,4 +1,4 @@
-"""Painted FIELD area: generation -> the game's underlay images, @24/@32 (+@40 when 40 x max(w, h) <= 2048), into v2/assets/env/field/under/.
+"""(desert copy of ../field/process.py: brightness matched to the painted Kasim sand) Painted FIELD area: generation -> the game's underlay images, @24/@32 (+@40 when 40 x max(w, h) <= 2048), into v2/assets/env/field/under/.
 usage: python3 process.py <id> <gen.png>
 - box-downscale to 32 px/tile;
 - brightness: a luminance gain so the walkable ground matches the approved painted Roa (the night-light tuning then holds);
@@ -21,12 +21,12 @@ A = np.asarray(Image.open(src).convert('RGB').resize((W * T, H * T), Image.BOX))
 A0 = A.copy()
 lum = lambda v: v @ np.array([0.299, 0.587, 0.114], np.float32)
 kron = lambda m: np.kron(m, np.ones((T, T), bool))
-WALK = set(',;".:s_=c')
+WALK = set(',;".:s_=cuk')
 walk = np.isin(g, list(WALK))
 
 # ---- brightness: walkable ground towards Roa's painted walkable ground
-roa = np.asarray(Image.open(os.path.join(V2, 'assets/env/hill_village/under/roa@32.png')).convert('RGB')).astype(np.float32)
-green = lambda a: (a[..., 1] > a[..., 0]) & (a[..., 1] > a[..., 2])    # grass pixels, the same measure on both paintings
+roa = np.asarray(Image.open(os.path.join(V2, 'assets/env/desert/under/kasim@32.png')).convert('RGB')).astype(np.float32)
+green = lambda a: (a[..., 0] > a[..., 1]) & (a[..., 1] > a[..., 2] + 10) & (lum(a) > 110)    # sand pixels, the same measure on both paintings
 target = float(os.environ.get('TARGET', lum(roa[green(roa)]).mean()))
 gain = float(np.clip(target / lum(A[kron(walk) & green(A)]).mean(), 0.8, 1.15))
 gain = float(os.environ.get('GAIN', gain))

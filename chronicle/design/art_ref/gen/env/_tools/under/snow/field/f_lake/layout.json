@@ -1,0 +1,548 @@
+{
+"id": "f_lake",
+"w": 56,
+"h": 44,
+"rows": [
+"rrrrrrR,,,,\"\"\"swwwwwwwwwwsswwwwwwwwwwws,,,,,,,FFFFFFFFFF",
+"rrrrrrR,,,,,\",swwwwwwwwwwsswwwwwwwwwwws,,,,,,,FFFFFFFFFF",
+"rrrrrrR;;,,,,,swwwwwwwwwwsswwwwwwwwwwws,,,,,,,,FFFFFFFFF",
+"rrrrrrR;;;,,b,swwwwwwwwwwsswwwwwwwwwwws,,,,,,,,FFFFFFFFF",
+"rrrrrrR;T;,,b,swwwwwwwwwwwsswwwwwwwwwws\"\"\",,,T,FFFFFFFFF",
+"rrrrrrR;;;;;b,swwwwwwwwwwwsswwwwwwwwwwss\"\",,,,,FFFFFFFFF",
+"rrrrrrR;;;,;;;swwwwwwwwwwwsswwwwwwwwwwws\"b,,,r,FFFFFFFFF",
+"rrrrrrR;;;,,;;swwwwwwwwwwwsswwwwwwwwwwwss\",,,,,FFFFFFFFF",
+"rrrrrrR;;;;,;;swwwwwwwwwwwsswwwwwwwwwwwwssbr,,,,FFFFFFFF",
+"rrrrrrR;;;;;,sswwwwwwwwwwwsswwwwwwwwwwwwws,,,,,,FFFFFFFF",
+"rrrrrrrR;;;;;swwwwwwwwwwwwsswwwwwwwwwwwwwssb,,,,,FFFFFFF",
+"rrrrrrrR;,;;;swwwwwwwwwwwwsswwwwwwwwwwwwwws,b,,;;FFFFFFF",
+"rrrrrrrR;,;;;swwwwwwwwwwwwwsswwwrrrwwwwwwws,b,,,,FFFFFFF",
+"rrrrrrrR,;;;;sswwwwwwwwwwwwsswwrrXrrwwwwwssb,,,;;FFFFFFF",
+"rrrrrrrR;;;;;;swwwwwwwwwwwwsswwwrrrwwwwwws,b,,T;;FFFFFFF",
+"rrrrrrrrR;,,;,swwwwwwwwwwwwsswwwwwwwwwwwssb,,,;;;;FFFFFF",
+"rrrrrrrrR,,,,,swwwwwwwwwwwwsswwwwwwwwwwws,b,,,;;;;;;;,,,",
+"rrrrrrrrR,,,,,swwwwwwwwwwwwsswwwwwwwwwwss,,,,,,;;;;;;;;;",
+"rrrrrrrrR,,,,,sswwwwwwwwwwwsswwwwwwwwwws,,,,,,;;;;;,;;XX",
+"rrrrrrrrR,,,,,,swwwwwwwwwwwsswwwwwwwwsssb,,,,,,;;;T,,,XX",
+"rrrrrrrrR,,,,,,sswwwwwwwwwwsswwwwwwwss,b,,,,,,,,;TTT\"\"XX",
+"rrrrrrrrR,,,,,,rswwwwwwwwwwsswwwwwwssbb\",,,;;,T;;;,,,,XX",
+"rrrrrrrR,,,;;;,Tsswwwwwwwwwsswwwwwssb,\",\";;;;;;,,,,,,,XX",
+"rrrrrrrR,,;;;;,,,ssswwwwwwwwsswwwssb,,,\"\";;;\"\"TTT,,,,,XX",
+"rrrrrrrR,;;;;r,,,,,ssswwwwwwssssss,,,,,r\";;\";;TTT,,,,,XX",
+"rrrrrrR,,;;;;;;,,,,,,sssssssss,,,r,,,,,,\"\";;;;TTT,,,,,XX",
+"rrrrrrR,,,;;;;;;,,,,,b,,,,,,ss,,br,,,,,;,,;;;;;,,,,,,,XX",
+"rrrrrrR,,,,,,;;;;,,,,,bbbb,,ss,,r;,,,,,;,,;;;;;,,,;,,,XX",
+"rrrrrrR,,,,,\"\"\";;;;;;,,,,,,,ss,,,;,,,,,,,,;;;;;;,;;,\"XXX",
+"rrrrrrXXXX,,;;;;r;;;;,,,,,T,ss;,,,,,,,;;;;;;;;;;;;;;,\",,",
+"rrrrrrXXXX,,;;;;;;;;;,,,,,,,ss;;,,TT,,;;;;;;;;;;........",
+"rrrrrr,,,,::::;;;;;;;,,;,,,;,s;;;;;,,,;;;;;;;...........",
+"rrrrrrrR,,,,:::::;;;;,;;;;;;;;;;,;,,\"...........;;,,,,,,",
+"rrrrrrrR;,,,;;;::::;;;,;;;;;;;;,,............,,,,,,,,XXX",
+"rrrrrrrrR;;;;r;;;;:::;;;;;;;;;;........;;;;,,,,,,,,,,,XX",
+"rrrrrrrrR;;;;;;;;;;;:::::;;;;;...,,,,,,,,;,,,,,,,,,,T,XX",
+"rrrrrrrR,;;;;;\";\"\";;;;;::::::..;;,,,,,,,,,,,r,,,,,T,,,XX",
+"rrrrrrrR,;;T;;;\"TT;;;;;;;;;::.;;\",,,,TTT,,,,,,,,,,,,,,XX",
+"rrrrrrRFF;;;;;;\"TTT;T;;;;;;..;;;,,,,TTTT\",,,,,,,,,,,,,XX",
+"rrrrrRFFFF;;FFFFFFFFFF;;;;;..;;;;,,,,TTT\",,,;;,,,FFF,,XX",
+"rrRRRFFFFFFFFFFFFFFFFFFF;;;..;;;;,,,,,T,,;;;FFFFFFFFFFXX",
+"RRFFFFFFFFFFFFFFFFFFFFFFFF...;;;;,,,,FFFFFFFFFFFFFFFFFXX",
+"FFFFFFFFFFFFFFFFFFFFFFFFFF...FFFFFFFFFFFFFFFFFFFFFFFFFXX",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFF..FFFFFFFFFFFFFFFFFFFFFFFFFFF"
+],
+"marks": [
+{
+"kind": "deadtree",
+"cells": [
+[
+33,
+13
+]
+],
+"text": "a lone DEAD WIND-BENT TREE, bare grey branches glazed with ice, on a rocky islet in the lake",
+"color": [
+120,
+110,
+100
+],
+"solid": true
+},
+{
+"kind": "cave",
+"cells": [
+[
+6,
+29
+],
+[
+7,
+29
+],
+[
+8,
+29
+],
+[
+9,
+29
+],
+[
+6,
+30
+],
+[
+9,
+30
+]
+],
+"text": "the ICICLE CLIFFS around the mouth of the ice corridor: a wall of blue glacier ice hung with enormous icicles like organ pipes",
+"color": [
+150,
+210,
+240
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+7,
+30
+],
+[
+8,
+30
+]
+],
+"text": "the dark MOUTH of the ice corridor: a tall cave opening in the blue ice wall, fringed with icicles",
+"color": [
+30,
+40,
+60
+],
+"solid": true
+},
+{
+"kind": "palisade",
+"cells": [
+[
+54,
+18
+],
+[
+54,
+19
+],
+[
+54,
+20
+],
+[
+54,
+21
+],
+[
+54,
+22
+],
+[
+54,
+23
+],
+[
+54,
+24
+],
+[
+54,
+25
+],
+[
+54,
+26
+],
+[
+54,
+27
+],
+[
+54,
+28
+],
+[
+54,
+33
+],
+[
+54,
+34
+],
+[
+54,
+35
+],
+[
+54,
+36
+],
+[
+54,
+37
+],
+[
+54,
+38
+],
+[
+54,
+39
+],
+[
+54,
+40
+],
+[
+54,
+41
+],
+[
+54,
+42
+],
+[
+55,
+18
+],
+[
+55,
+19
+],
+[
+55,
+20
+],
+[
+55,
+21
+],
+[
+55,
+22
+],
+[
+55,
+23
+],
+[
+55,
+24
+],
+[
+55,
+25
+],
+[
+55,
+26
+],
+[
+55,
+27
+],
+[
+55,
+28
+],
+[
+55,
+33
+],
+[
+55,
+34
+],
+[
+55,
+35
+],
+[
+55,
+36
+],
+[
+55,
+37
+],
+[
+55,
+38
+],
+[
+55,
+39
+],
+[
+55,
+40
+],
+[
+55,
+41
+],
+[
+55,
+42
+]
+],
+"text": "the snow village's LOG PALISADE: sharpened log stakes capped with snow, ice lanterns hung on it",
+"color": [
+150,
+88,
+44
+],
+"solid": true
+},
+{
+"kind": "gate",
+"cells": [
+[
+53,
+28
+],
+[
+53,
+33
+]
+],
+"text": "the two big carved GATE POSTS of the village gate, frost-covered",
+"color": [
+120,
+70,
+36
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "door",
+"x": 7,
+"y": 30,
+"w": 2,
+"look": "none",
+"to": {
+"map": "icicle_1",
+"spawn": "entrance"
+}
+},
+{
+"type": "sign",
+"x": 11,
+"y": 33,
+"text": "つららの回廊\n氷の中に、何かが閉じこめられている。"
+},
+{
+"type": "sign",
+"x": 32,
+"y": 36,
+"text": "凍った湖\n今年は氷が薄い。渡るべからず。"
+},
+{
+"type": "examine",
+"x": 31,
+"y": 34,
+"event": "world_snow_lake"
+},
+{
+"type": "prop",
+"id": "sled",
+"x": 26,
+"y": 34
+},
+{
+"type": "prop",
+"id": "ice_hole",
+"x": 36,
+"y": 25
+},
+{
+"type": "prop",
+"id": "ice_crystal",
+"x": 10,
+"y": 27
+},
+{
+"type": "prop",
+"id": "ice_crystal",
+"x": 12,
+"y": 30
+},
+{
+"type": "waylamp",
+"id": "wl_snow_26_37",
+"x": 19,
+"y": 36,
+"lit": true
+},
+{
+"type": "waylamp",
+"id": "wl_snow_42_32",
+"x": 44,
+"y": 35,
+"lit": true
+},
+{
+"type": "prop",
+"id": "tent",
+"x": 10,
+"y": 18
+},
+{
+"type": "prop",
+"id": "firewood",
+"x": 11,
+"y": 19
+},
+{
+"type": "prop",
+"id": "snow_lamp",
+"x": 9,
+"y": 19
+},
+{
+"type": "examine",
+"x": 13,
+"y": 21,
+"event": "snow_mat",
+"mat": "snow_mat_ice"
+}
+],
+"spawns": {
+"south": {
+"x": 27,
+"y": 42,
+"dir": "n"
+},
+"yule": {
+"x": 54,
+"y": 30,
+"dir": "w"
+},
+"north": {
+"x": 26,
+"y": 1,
+"dir": "s"
+},
+"icicle": {
+"x": 8,
+"y": 31,
+"dir": "s"
+}
+},
+"exits": [
+{
+"x": 27,
+"y": 43,
+"w": 2,
+"h": 1,
+"to": {
+"map": "f_snowpass",
+"spawn": "north"
+},
+"edge": "s"
+},
+{
+"x": 55,
+"y": 30,
+"w": 1,
+"h": 2,
+"to": {
+"map": "yule",
+"spawn": "gate_w"
+},
+"edge": "e"
+},
+{
+"x": 26,
+"y": 0,
+"w": 2,
+"h": 1,
+"to": {
+"map": "f_floe",
+"spawn": "south"
+},
+"edge": "n",
+"cond": "cleared_r_snow"
+}
+],
+"notes": [],
+"meta": {
+"name": "凍った湖",
+"sub": "ユールの西の湖と、つららの崖",
+"region": "r_snow",
+"worldRect": [
+60,
+44,
+84,
+64
+],
+"outside": "wall_snow",
+"zones": [
+{
+"rect": null,
+"zone": "zw_snow"
+}
+],
+"weather": "snow",
+"weatherCond": "!cleared_r_snow",
+"tilePatches": [
+{
+"cond": {
+"not": "cleared_r_snow"
+},
+"rect": [
+25,
+0,
+5,
+24
+],
+"rows": [
+"ww   ",
+"ww   ",
+"ww   ",
+"ww   ",
+" ww  ",
+" ww  ",
+" ww  ",
+" ww  ",
+" ww  ",
+" ww  ",
+" ww  ",
+" ww  ",
+"  ww ",
+"  ww ",
+"  ww ",
+"  ww ",
+"  ww ",
+"  ww ",
+"  ww ",
+"  ww ",
+"  ww ",
+"  ww ",
+"  ww ",
+"   ww"
+]
+}
+],
+"npcs": [],
+"links": {
+"yule_w": {
+"map": "f_lake",
+"spawn": "yule"
+},
+"icicle": {
+"map": "f_lake",
+"spawn": "icicle"
+}
+}
+}
+}
