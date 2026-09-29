@@ -5,6 +5,7 @@ cd "$(dirname "$0")"
 python3 fit.py $1 $2 --apply | tail -2
 python3 rocks.py $1 $2 --write | tail -1
 python3 fit.py $1 $2 --apply | tail -1
+python3 objfix.py $1 $2 --apply | cut -c1-200
 python3 check.py $1 $2 $1/check.png
 python3 process.py $1 $2 | tail -1
 python3 tomap.py $1

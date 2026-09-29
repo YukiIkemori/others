@@ -25,8 +25,9 @@
     return R.FieldArea.def(id, Object.assign({ legend: LEGEND, outside: 'wall_snow', propSet: 'snow' }, spec));
   };
 
-  // 前のワールドの東の峠（山地の側）: 崖崩れ（体験版の間の tilePatches）の先に着く所と、そこから雪原へ戻る出口
-  const EAST = { spawn: { x: 268, y: 91, dir: 'e' }, exit: { x: 265, y: 90, w: 1, h: 2, to: { map: 'f_passinn', spawn: 'east' } } };
+  // 前のワールドの東の峠: 崖崩れ（体験版の間の tilePatches、x 264〜266）の手前（雪原の箱の中）に着き、東を向く。1 歩西へ戻ると湯けむりの峠へ
+  //   （着く所を崖崩れの先＝山地の側に置くと、体験版の間もワールドの山地が歩ける範囲に数えられる。qa/check_world.js）
+  const EAST = { spawn: { x: 263, y: 91, dir: 'e' }, exit: { x: 262, y: 90, w: 1, h: 2, to: { map: 'f_passinn', spawn: 'east' } } };
   function link() {
     const M = R.DB.maps || {};
     if (!M.f_snowpass) return;
