@@ -26,13 +26,13 @@
     K.path(g, [[26, 25], [26, 28]], '.', 2);                    // R3 → R4
     K.path(g, [[26, 34], [26, 37]], 'r', 2);                    // R4 → R5
     K.path(g, [[10, 21], [10, 30], [19, 30]], 'r', 2);          // R4 → R1 の戻り道（控えの間から西へ下りるだけ）
-    for (const [x, y] of [[20, 5], [32, 7], [6, 14], [14, 19], [47, 18], [22, 21], [30, 23], [32, 32], [18, 40], [34, 40], [20, 43], [33, 43]]) if (K.at(g, x, y) === 'r' || K.at(g, x, y) === '.') K.put(g, x, y, 'R');
+    // 根のこぶ（R）は置かない。持ち主 2026-09-29「通路をふさぐ変な茶色の歯車みたいな物」: 下絵の根のこぶ（年輪の輪と桃色の根）も消した（elder_fix/clean.py）
 
     const O = [];
     O.push(K.stairs(22, 5, { map: 'elder_1', spawn: 'up' }, { id: 'elder_2_up', look: 'up' }));
     O.push({ type: 'switch', id: 'elder_2_sw2', x: 29, y: 8, flag: 'forest_sw2', look: 'hole', color: 'teal', by: 'guest' });
     O.push(K.spring('elder_2_s1', 30, 30));                     // 泉（根食らいの手前。千年樹でただ 1 つ。WORLD §6.2）
-    O.push(K.prop('roots', 23, 22), K.exam(24, 22, 'elder_rings'));   // 切り口（調べる所は下の K.moveTo で控えの間の年輪へ）
+    O.push(K.exam(24, 22, 'elder_rings'));   // 切り口（調べる所は下の K.moveTo で控えの間の年輪へ。切り口の根の物は通り道をふさぐので置かない 2026-09-29）
     O.push(K.prop('crystal', 26, 44), K.exam(26, 43, 'elder_altar'));  // 根の祭壇
     O.push(K.chest('elder_2_c1', 6, 18, { pool: 'p_T' }));
     O.push(K.chest('elder_2_c2', 46, 13, { pool: 'p_T' }));
