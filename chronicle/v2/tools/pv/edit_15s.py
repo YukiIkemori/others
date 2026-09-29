@@ -8,6 +8,7 @@ cut, sub, cap, tag, big = L.cut, L.sub, L.cap, L.tag, L.big
 
 cut('nf_cape_pan', 0.0, 2.4, src=4.0, zoom=(1.08, 1.0))
 L.SFX.append(dict(id='bell', at=0.05, gain=-3))
+L.VOICE.append(dict(file=os.path.join(os.environ.get('PV_VO', ''), 'pv_hook_01'), at=0.0, tempo=1.12))   # つかみの一行の声（PV だけ。題字の前に収める）
 tag('この世界は、朝を知らない。', 0.15, 2.3)
 L.FLASH.append((2.4, 0.15, 0.5, 0.9))
 L.SFX.append(dict(id='light', at=2.35, gain=-4))

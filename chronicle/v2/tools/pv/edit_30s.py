@@ -9,6 +9,7 @@ cut, sub, cap, tag, big = L.cut, L.sub, L.cap, L.tag, L.big
 # つかみ: 灯台の光 ＋ 一行
 cut('nf_cape_pan', 0.0, 3.2, src=3.2, zoom=(1.1, 1.0))
 L.SFX.append(dict(id='bell', at=0.05, gain=-3))
+L.VOICE.append(dict(file=os.path.join(os.environ.get('PV_VO', ''), 'pv_hook_01'), at=0.2))   # つかみの一行の声（PV だけ）
 tag('この世界は、朝を知らない。', 0.25, 3.0)
 # 題字
 L.FLASH.append((3.2, 0.2, 0.6, 0.9))

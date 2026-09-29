@@ -70,6 +70,8 @@ def main():
     for i, v in enumerate(E.get('VOICE', [])):
         k = inp(os.path.join(voice, v['file'] + '.ogg'), v.get('src'), v.get('dur'))
         chain = 'aresample=48000,aformat=channel_layouts=stereo,volume=%.2fdB' % v.get('gain', 0)
+        if v.get('tempo'):   # 声を少し速める（短い版で尺に収める）
+            chain += ',atempo=%.3f' % v['tempo']
         if v.get('fout'):
             chain += ',afade=t=out:st=%.3f:d=%.3f' % (v['dur'] - v['fout'], v['fout'])
         chain += ',adelay=%d|%d' % (v['at'] * 1000, v['at'] * 1000)

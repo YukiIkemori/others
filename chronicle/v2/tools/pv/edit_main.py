@@ -30,6 +30,9 @@ FONT_EN_PATH = os.path.join(os.environ.get('PV_FONTS', ''), 'cinzel-700.ttf')
 
 # ================================================================== 1 つかみ（0:00〜）
 SFX.append(dict(id='bell', at=0.25, gain=-2))
+# つかみの一行の声（PV だけの声。フィーネ。v2/tools/pv/pv_voice.js で作った物を PV_VO のディレクトリに置く）
+PV_HOOK = os.path.join(os.environ.get('PV_VO', ''), 'pv_hook_01')
+VOICE.append(dict(file=PV_HOOK, at=0.6))
 T.append(dict(kind='tag', text='この世界は、朝を知らない。', t0=0.7, t1=3.5, x=960, y=540, anim='rise', fin=0.8, fout=0.5))
 # ロアの年寄り（本物の会話の窓。E.AGE.old）
 cut('hook_elder', 3.6, 3.9, src=0.15, zoom=(1.18, 1.24), center=(0.5, 0.8))
