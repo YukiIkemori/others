@@ -328,7 +328,7 @@
         R.UIK.rule(g, dp.x + u(22), dp.x + dp.w - u(22), y, 0.14); y += u(12);
       }
       if (it) {
-        for (const l of R.UIK.wrap(String(it.desc || '').replace(/\n/g, ''), dp.w - u(44), { size: u(14.5) }).slice(0, 2)) { if (y + u(20) > dp.y + dp.h - u(6)) break; R.UIK.text(g, l, dp.x + u(22), y, { size: u(14.5), color: C.text }); y += u(24); }   // 詳しい所からはみ出さない
+        for (const l of R.UIK.wrap(R.I18n.unwrap(it.desc), dp.w - u(44), { size: u(14.5) }).slice(0, 2)) { if (y + u(20) > dp.y + dp.h - u(6)) break; R.UIK.text(g, l, dp.x + u(22), y, { size: u(14.5), color: C.text }); y += u(24); }   // 詳しい所からはみ出さない
         if (it.element && y + u(28) <= dp.y + dp.h - u(6)) { y += u(4); R.UIK.chip(g, dp.x + u(22), y, R.T('ui.equip.draw.chip_2', { ename: S.ename(it.element) }), { kind: 'teal', size: 11 }); }
       }
       // ほかの仲間

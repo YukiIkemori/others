@@ -15,7 +15,7 @@
 //   R.I18n.add(lang, table)     src/i18n/<lang>/*.js が登録する（同じ key の二度目は警告して上書きしない）
 //   R.I18n.lang()               今の言語（'ja' | 'en' | 'zh-Hans' | 'zh-Hant' | 'ko'）
 //   R.I18n.setLang(l)           言語を覚える。データの名前（道具・魔物…）は読み込みの時に決まるので、画面は R.I18n.restart() で起こし直す
-//   R.I18n.has(key, lang) / keys(lang) / table(lang) / script() / isLatin() / fontStack() / format(s, params)
+//   R.I18n.has(key, lang) / keys(lang) / table(lang) / script() / isLatin() / fontStack() / format(s, params) / unwrap(s)（改行をほどく）
 //
 // 文の中の差し込み: {name} は params.name に置き換える（params に無い名前はそのまま残す = {hero} はイベントの側で入る）。
 //   数の言い分け（英語などの単数・複数）: {n, plural, one {# item} other {# items}}（# は数。Intl.PluralRules で選ぶ。日本語は other だけ書けばよい）
@@ -175,6 +175,8 @@
     /** 語を空白で折り返す言語か（英語・韓国語） */
     wrapsByWord(lang) { const s = I18n.script(lang); return s === 'latin' || s === 'hangul'; },
     fontStack(lang) { return FONT[lang || I18n.lang()] || FONT.ja; },
+    /** 表の中の改行（日本語の行の区切り）をほどく: 日本語・中国語はつなぐだけ、英語・韓国語は空白に（折り返しは UIK.wrap に任せる所で使う） */
+    unwrap(s, lang) { return String(s == null ? '' : s).replace(/[ \t]*\n[ \t]*/g, I18n.wrapsByWord(lang) ? ' ' : ''); },
     /** 起こし直す（ブラウザ・デスクトップ版の窓を読み直す。node では何もしない） */
     restart() {
       try { if (typeof location !== 'undefined' && location.reload) { location.reload(); return true; } } catch (e) { /* 読み直せない */ }

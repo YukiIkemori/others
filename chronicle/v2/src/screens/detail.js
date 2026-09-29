@@ -29,7 +29,7 @@
       const pw = w - u(48);
       const lines = [];
       if (!d) lines.push({ t: R.T('ui.detail.draw.t'), c: C.text3 });
-      const desc = d ? String(d.desc || '').replace(/\n/g, '') : '';
+      const desc = d ? R.I18n.unwrap(d.desc) : '';
       const stats = [];
       let sub = '';
       if (d && this.kind === 'item') {

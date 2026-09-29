@@ -120,7 +120,7 @@
         const sub = row.kind === 'tech' ? R.T('ui.skills.draw.sub', { wname: S.wname(a.wtype) }) : R.T('ui.skills.draw.sub_2', { join: (a.elements || []).map(S.ename).join(R.T('ui.skills.draw.sub.join')) });
         R.UIK.text(g, sub, dp.x + dp.w - u(20), dp.y + u(20), { size: u(12.5), color: C.text3, align: 'right' });
         let yy = dp.y + u(50);
-        for (const l of R.UIK.wrap(String(a.desc || '').replace(/\n/g, ''), dp.w - u(40), { size: u(14.5) }).slice(0, 2)) { R.UIK.text(g, l, dp.x + u(20), yy, { size: u(14.5), color: C.text }); yy += u(24); }
+        for (const l of R.UIK.wrap(R.I18n.unwrap(a.desc), dp.w - u(40), { size: u(14.5) }).slice(0, 2)) { R.UIK.text(g, l, dp.x + u(20), yy, { size: u(14.5), color: C.text }); yy += u(24); }
         let cx = dp.x + u(20);
         cx += R.UIK.chip(g, cx, yy + u(4), S.rangeName(a) || '―', { kind: 'plain', size: 11 }) + u(8);
         const from = row.kind === 'tech' ? S.derivedFromName(c, row.value) : null;

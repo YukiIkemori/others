@@ -51,7 +51,12 @@ section('言語の切り替え（設定の lang・英語の表・日本語へ落
   // 読み込みの時の言語（URL の ?lang=）: データの名前は読み込みの時に表を引く
   const E = load({ quiet: true, globals: { location: { search: '?lang=en' } } });
   ok('?lang=en: data names at load time (hero types) are English', E.I18n.lang() === 'en' && E.DB.heroTypes.warrior.name === 'Warrior', E.DB.heroTypes.warrior.name);
-  ok('?lang=en: untranslated data (items) stays Japanese', E.DB.items.w_sword_iron.name === '鉄の剣');
+  ok('?lang=en: translated data (items) is English', E.DB.items.w_sword_iron.name === 'Iron Sword', E.DB.items.w_sword_iron.name);
+  {
+    // 訳の無い key（会話はまだ訳さない）は日本語のまま
+    const k = E.I18n.keys('ja').find((x) => /^ev\./.test(x) && !E.I18n.has(x, 'en') && typeof E.I18n.table('ja')[x] === 'string');
+    ok('?lang=en: untranslated dialogue stays Japanese', !!k && E.T(k) === E.I18n.table('ja')[k], k);
+  }
   ok('?lang=en: title is English', E.TITLE === 'Luminous Chronicle');
 }
 

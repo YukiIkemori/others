@@ -95,7 +95,7 @@
       if (!known) { R.UIK.text(g, R.T('ui.bestiary.draw.text_5'), px, y, { size: u(14.5), color: C.text3 }); S.prompts(g, [{ btn: 'b', label: R.T('ui.bestiary.draw.0.label') }]); return; }
       const hab = habitat(id);
       if (hab) { R.UIK.text(g, R.T('ui.bestiary.draw.text_6', { hab }), px, y, { size: u(13), color: C.text2, maxW: pw }); y += u(24); }
-      for (const l of R.UIK.wrap(String(m.desc || '').replace(/\n/g, ''), pw, { size: u(14) }).slice(0, 2)) { R.UIK.text(g, l, px, y, { size: u(14), color: C.text }); y += u(23); }
+      for (const l of R.UIK.wrap(R.I18n.unwrap(m.desc), pw, { size: u(14) }).slice(0, 2)) { R.UIK.text(g, l, px, y, { size: u(14), color: C.text }); y += u(23); }
       y += u(6);
       R.UIK.rule(g, px, px + pw, y, 0.14); y += u(12);
       S.label(g, R.T('ui.bestiary.draw.label'), px, y); y += u(26);

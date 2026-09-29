@@ -263,7 +263,7 @@ section('人の札は隊列の順（前列・後列で分けない。2026-09-27 
         };
         // 頭を先にねらう（自動の攻撃は ねらえる敵の最初）
         boss.hp = 1;
-        if (troop === 'tr_b_rooteater') E.mons.forEach((x) => { if (x.alive) x.hp = 1; });   // 根食らいのお供は頭が倒れても残る（逃げない）
+        if (troop === 'tr_b_rooteater') E.mons.forEach((x) => { if (x.alive) { x.hp = 1; x.mhp = 20; } });   // mhp も戻す（「養分を吸う」で 99999 まで回復して終わらなくなる）   // 根食らいのお供は頭が倒れても残る（逃げない）
         const orig = st.aliveEnemies;
         st.aliveEnemies = () => orig().sort((a, b) => (b.uid === boss.uid ? 1 : 0) - (a.uid === boss.uid ? 1 : 0));
       }

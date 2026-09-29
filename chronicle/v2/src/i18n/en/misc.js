@@ -5,6 +5,8 @@
   R.I18n.add('en', {
     // ---- src/data/config.js
     'data.config.defaultHero.name': 'Arun',
+    'data.config.chronicle.prologue.title': 'The Lighthouse Keeper\'s Song',
+    'data.config.chronicle.prologue.summary': 'The lighthouse of Port\nPharos had lost its fire,\nits keeper\'s song forgotten.\nAn apprentice storyteller\nbrought the song back, and\nthe light shone over the\nsea once more.',
     // ---- src/data/demo_gate.js
     'data.demo_gate.TEXT': 'In the demo, you can\'t go\nany further from here.',
   });
