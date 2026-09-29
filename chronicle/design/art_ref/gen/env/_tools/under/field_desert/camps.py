@@ -39,6 +39,8 @@ def desert_camp2():
 
 def desert_camp3():
     a = base('desert_camp3', 813)
+    a.meta['tilePatches'] = SRC['desert_camp3']['tilePatches']   # the old spring fills after the region is cleared (closed layer)
+    a.g[0:2, :] = 'R'; a.g[0:8, 28:] = 'R'                      # the cliff runs along the whole top (frames the oasis)
     cells = [(x, y) for y in range(1, 8) for x in range(16, 28) if a.g[y, x] == 'R']
     a.mark('tomb', cells, "the carved FACADE OF A ROYAL TOMB cut into a sheer red sandstone cliff: a great rock wall with a tall recessed doorway framed by colossal carved pillars and a sun-disc lintel, the king's face chiselled away; the dark tomb doorway at the foot of the recess (the paved gap in this block) leads inside", SAND)
     a.mark('door', [(21, 3), (22, 3)], 'the dark tomb DOORWAY', (40, 26, 16), solid=False)

@@ -29,7 +29,7 @@ roa = np.asarray(Image.open(os.path.join(V2, 'assets/env/desert/under/kasim@32.p
 green = lambda a: (a[..., 0] > a[..., 1]) & (a[..., 1] > a[..., 2] + 10) & (lum(a) > 110)    # sand pixels, the same measure on both paintings
 target = float(os.environ.get('TARGET', lum(roa[green(roa)]).mean()))
 gain = float(np.clip(target / lum(A[kron(walk) & green(A)]).mean(), 0.8, 1.15))
-gain = float(os.environ.get('GAIN', gain))
+gain = float(os.environ.get('GAIN', 0.95))   # 砂漠: カシムの砂丘と同じ明るさに見える値（砂の画素の平均はカシムの道の赤れんがに引っぱられるので使わない）
 A = np.clip(A * gain, 0, 255)
 print('gain', round(gain, 3), 'target', round(target, 1))
 

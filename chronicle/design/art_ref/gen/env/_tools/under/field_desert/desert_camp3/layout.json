@@ -3,14 +3,14 @@
 "w": 30,
 "h": 26,
 "rows": [
-"uuuuuuuuuuuuuuuuuuuuuuuuuuuuuu",
-"uuuuuuuuuuuuuuuuXXXXXXXXXXXXuu",
-"uuuuuuuuuuuuuuuuXXXXXXXXXXXXuu",
-"uuuuuuuuuuuuuuuuXXXXXccXXXXXuu",
-"uuuuuuuuuuususssXXXXXccXXXXXuu",
-"uuuuuuuuusssssssXXXXccccXXXXuu",
-"uuuuuuusssssssssXXXXccccXXXXuu",
-"uuuuuuusssssssssXXXXccccXXXXuu",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRXXXXXXXXXXXXRR",
+"uuuuuuuuuuuuuuuuXXXXXXXXXXXXRR",
+"uuuuuuuuuuuuuuuuXXXXXccXXXXXRR",
+"uuuuuuuuuuususssXXXXXccXXXXXRR",
+"uuuuuuuuusssssssXXXXccccXXXXRR",
+"uuuuuuusssssssssXXXXccccXXXXRR",
+"uuuuuuusssssssssXXXXccccXXXXRR",
 "uuuuussssssssssssssss.sssuuuuu",
 "uuuusssssssssssssssss.sssssuuu",
 "uuusssss,,,,,,,ssssss.ssssssuu",
@@ -414,6 +414,22 @@
 1
 ],
 "zones": [],
-"links": {}
+"links": {},
+"tilePatches": [
+{
+"cond": "cleared_r_desert",
+"rect": [
+8,
+11,
+7,
+3
+],
+"rows": [
+" wwwww ",
+"wwwwwww",
+" wwwww "
+]
+}
+]
 }
 }

@@ -1,0 +1,19 @@
+{
+ "id": "d_west",
+ "kind": "under",
+ "map": "d_west",
+ "tile": 32,
+ "size32": [
+  1920,
+  1408
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.95,
+ "files": {
+  "24": "d_west@24.png",
+  "32": "d_west@32.png"
+ },
+ "src": "generated"
+}
