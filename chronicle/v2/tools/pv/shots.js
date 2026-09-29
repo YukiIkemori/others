@@ -159,8 +159,8 @@ const SHOTS = {
   },
   bt_spell: {
     prep: async (T) => {
-      await T.js(BATTLE({ zone: 'z_verda', bg: 'forest', seed: 'pv-spell' }, `(st, u, r) => u.id === 'viola' ? {cmd: 'spell', id: 's_fire_wind_b'} : {cmd: 'defend', id: 'defend', self: true}`,
-        `PV.teach('viola', null, ['s_fire_wind_b']); RPG.Game.chars.viola.mp = 99`));
+      await T.js(BATTLE({ zone: 'z_verda', bg: 'forest', seed: 'pv-spell' }, `(st, u, r) => u.id === 'viola' ? {cmd: 'spell', id: 's_fire_wind_a'} : {cmd: 'defend', id: 'defend', self: true}`,
+        `PV.teach('viola', null, ['s_fire_wind_a', 's_fire_wind_b']); RPG.Game.chars.viola.mp = 99`));
       await T.idle(30);
     },
     n: sec(14),
@@ -222,7 +222,7 @@ const SHOTS = {
   },
   // 体験版の終わりの画面の「八つの灯火」（一つ目だけがともる）。上の灯の列だけを使う
   fin_lights: {
-    prep: async (T) => { await T.js(`PV.clean(); RPG.Demo.showEnd({playMs: 0})`); },
+    prep: async (T) => { await T.js(`PV.clean(); RPG.UIK.text = () => {}; RPG.Screens.prompts = () => {}; RPG.Demo.showEnd({playMs: 0})`); },   // 字は PV の側で重ねる（灯と夜空と峠だけ）
     n: sec(6),
   },
 };
