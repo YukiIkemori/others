@@ -1,0 +1,49 @@
+{
+ "id": "waylamp__isles",
+ "kind": "props",
+ "theme": "isles",
+ "frames": [
+  "off",
+  "on"
+ ],
+ "cell": {
+  "24": [
+   16,
+   40
+  ],
+  "32": [
+   22,
+   53
+  ],
+  "40": [
+   28,
+   66
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   39
+  ],
+  "32": [
+   11,
+   52
+  ],
+  "40": [
+   14,
+   65
+  ]
+ },
+ "files": {
+  "24": "waylamp__isles@24.png",
+  "32": "waylamp__isles@32.png",
+  "40": "waylamp__isles@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/isles_b.png",
+ "set": "isles",
+ "base": "waylamp",
+ "light32": [
+  0,
+  -40
+ ]
+}

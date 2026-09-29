@@ -1,0 +1,44 @@
+{
+ "id": "signboard__isles",
+ "kind": "props",
+ "theme": "isles",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   12,
+   21
+  ],
+  "32": [
+   16,
+   28
+  ],
+  "40": [
+   20,
+   35
+  ]
+ },
+ "feet": {
+  "24": [
+   6,
+   20
+  ],
+  "32": [
+   8,
+   27
+  ],
+  "40": [
+   10,
+   34
+  ]
+ },
+ "files": {
+  "24": "signboard__isles@24.png",
+  "32": "signboard__isles@32.png",
+  "40": "signboard__isles@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/isles_b.png",
+ "set": "isles",
+ "base": "signboard"
+}

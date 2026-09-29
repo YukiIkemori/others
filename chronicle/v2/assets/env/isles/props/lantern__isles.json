@@ -1,0 +1,48 @@
+{
+ "id": "lantern__isles",
+ "kind": "props",
+ "theme": "isles",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   7,
+   14
+  ],
+  "32": [
+   9,
+   18
+  ],
+  "40": [
+   11,
+   22
+  ]
+ },
+ "feet": {
+  "24": [
+   3,
+   13
+  ],
+  "32": [
+   4,
+   17
+  ],
+  "40": [
+   6,
+   21
+  ]
+ },
+ "files": {
+  "24": "lantern__isles@24.png",
+  "32": "lantern__isles@32.png",
+  "40": "lantern__isles@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/isles_b.png",
+ "set": "isles",
+ "base": "lantern",
+ "light32": [
+  0,
+  -9
+ ]
+}

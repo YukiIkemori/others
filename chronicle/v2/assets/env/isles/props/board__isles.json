@@ -1,0 +1,44 @@
+{
+ "id": "board__isles",
+ "kind": "props",
+ "theme": "isles",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   28,
+   28
+  ],
+  "32": [
+   37,
+   38
+  ],
+  "40": [
+   46,
+   48
+  ]
+ },
+ "feet": {
+  "24": [
+   14,
+   28
+  ],
+  "32": [
+   18,
+   37
+  ],
+  "40": [
+   23,
+   46
+  ]
+ },
+ "files": {
+  "24": "board__isles@24.png",
+  "32": "board__isles@32.png",
+  "40": "board__isles@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/isles_b.png",
+ "set": "isles",
+ "base": "board"
+}
