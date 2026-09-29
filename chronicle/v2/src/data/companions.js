@@ -1,5 +1,5 @@
 // 仲間 20 人（R.DB.companions。RULES）。今の木の src/data/companions.js から移し、STATS_REWORK §1.2（能力値 0〜25、合計 95、
-// 25 は hagen 腕力・dokka 体力・titta 器用さ・teo 知力・marta 精神の 5 人）と §8.4（武器 5 系統・武器枠 1 つ・初期の武器と技）を当てた。
+// 25 は hagen 腕力・dokka 体力・teo 知力・marta 精神の 4 人。titta は盗み上手の分だけ低く合計 89（持ち主 2026-09-29））と §8.4（武器 5 系統・武器枠 1 つ・初期の武器と技）を当てた。
 // この順番が酒場の並び順。look は CAST の R.DB.looks の id（仲間は id と同じ）。
 //   {name, look, gender, age, kin, title, from, role, row:'front'|'back', stats{6}, growth{hp,mp}(S〜D),
 //    apt{w:{sword greatsword dagger bow staff}, e:{fire water wind earth light dark}}(S〜D), innate{name, desc, mods},
@@ -202,7 +202,7 @@
     from: '港町の下町',
     role: 'striker',
     row: 'front',
-    stats: { str: 13, vit: 14, dex: 25, agi: 21, int: 11, mnd: 11 },
+    stats: { str: 11, vit: 14, dex: 21, agi: 21, int: 11, mnd: 11 },   // 持ち主 2026-09-29: 盗み上手があるので下げた（腕力 13→11・器用さ 25→21、合計 95→89）
     growth: { hp: 'B', mp: 'A' },
     apt: { w: { sword: 'B', greatsword: 'D', dagger: 'S', bow: 'B', staff: 'C' }, e: { fire: 'C', water: 'B', wind: 'B', earth: 'C', light: 'C', dark: 'A' } },
     innate: { name: '盗み上手', desc: '攻撃が当たるとついでに盗む', mods: { stealPct: 50, autoSteal: 100 } },

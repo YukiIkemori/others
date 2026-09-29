@@ -269,7 +269,7 @@ async function shoot(S, id, out) {
   await sh.prep(T);
   const file = path.join(out, id + '.mp4');
   await C.rec(P, file, sh.n, sh.each || null);
-  const st = await C.run(P, 'JSON.stringify({stuck: PV.stuck || 0, left: PV.route ? PV.route.length - PV.ri : 0})');
+  const st = await C.run(P, 'JSON.stringify(Object.assign({stuck: PV.stuck || 0, left: PV.route ? PV.route.length - PV.ri : 0}, PV.routeStats ? PV.routeStats() : {}))');
   if (sh.each === STEER) console.log(`[pv] ${id} steer`, st);   // stuck > 0 なら道から外れた・止まった
   if (P.errors.length) console.log(`[pv] ${id} errors:`, P.errors.slice(0, 4));
   await P.close();

@@ -297,11 +297,13 @@ section('data: steal-only (§7.2, V2_PLAN §2.6.6)');
 
 section('data: companions and hero types (§1.2, §8.4)');
 {
-  const STAND = { hagen: 'str', dokka: 'vit', titta: 'dex', teo: 'int', marta: 'mnd' };
+  // ティッタは盗み上手の分だけ低い（持ち主 2026-09-29: 合計 89、器用さ 21）。25 は残りの 4 人
+  const STAND = { hagen: 'str', dokka: 'vit', teo: 'int', marta: 'mnd' };
+  const SUM = { titta: 89 };
   const cs = Object.keys(DB.companions).filter((id) => !/^zz_/.test(id));
   ok('20 companions', cs.length === 20, cs.length);
-  ok('each stat 9..25, sum 95', cs.every((id) => { const s = DB.companions[id].stats; const v = Object.values(s); return v.every((x) => x >= 9 && x <= 25) && v.reduce((a, b) => a + b) === 95; }));
-  ok('25 only for the 5 standouts', cs.every((id) => Object.entries(DB.companions[id].stats).every(([k, v]) => v < 25 || STAND[id] === k)) && Object.keys(STAND).every((id) => DB.companions[id].stats[STAND[id]] === 25));
+  ok('each stat 9..25, sum 95 (titta 89)', cs.every((id) => { const s = DB.companions[id].stats; const v = Object.values(s); return v.every((x) => x >= 9 && x <= 25) && v.reduce((a, b) => a + b) === (SUM[id] || 95); }), cs.filter((id) => Object.values(DB.companions[id].stats).reduce((a, b) => a + b) !== (SUM[id] || 95)).map((id) => id + ':' + Object.values(DB.companions[id].stats).reduce((a, b) => a + b)));
+  ok('25 only for the 4 standouts', cs.every((id) => Object.entries(DB.companions[id].stats).every(([k, v]) => v < 25 || STAND[id] === k)) && Object.keys(STAND).every((id) => DB.companions[id].stats[STAND[id]] === 25));
   ok('no one dominates another in all 6', !cs.some((a) => cs.some((b) => a !== b && Ru.ABILS.every((k) => DB.companions[a].stats[k] >= DB.companions[b].stats[k]))));
   ok('apt has the 5 weapon letters, sum of weapon letters 7..11 (S5 A4 B3 C2 D1)', cs.every((id) => {
     const w = DB.companions[id].apt.w; const v = { S: 5, A: 4, B: 3, C: 2, D: 1 };

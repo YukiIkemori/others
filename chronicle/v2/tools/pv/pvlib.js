@@ -106,13 +106,44 @@ module.exports = `(() => {
           if (nd < dist[k]) { dist[k] = nd; prev[k] = y * W + x; steps[k] = steps[y * W + x] + 1; q.push([nd, nx, ny]); }
         }
       }
-      return { dist, prev, steps, W, H };
+      return { dist, prev, steps, W, H, ok };
     },
     _trace(fl, x, y) {
       const out = []; let k = y * fl.W + x;
       if (!isFinite(fl.dist[k])) return null;
       while (k >= 0) { out.push([k % fl.W, (k / fl.W) | 0]); k = fl.prev[k]; }
       out.reverse(); out.shift();   // 今のマスは除く
+      return out;
+    },
+    /** 階段のような歩き（右・下・右・下…）をなめらかな斜めにする: 直交の 2 歩（向きが直角に変わる）を、
+     *  斜めに入れる（行き先と両隣が入れる）ときは斜めの 1 歩にまとめる。何も変わらなくなるまで */
+    _smooth(start, route, ok) {
+      const dn = (dx, dy) => (dy > 0 ? 's' : dy < 0 ? 'n' : '') + (dx > 0 ? 'e' : dx < 0 ? 'w' : '');
+      let r = route.slice(), changed = true;
+      while (changed) {
+        changed = false;
+        for (let i = 0; i + 1 < r.length; i++) {
+          const p = i === 0 ? start : r[i - 1], a = r[i], b = r[i + 1];
+          const d1 = [a[0] - p[0], a[1] - p[1]], d2 = [b[0] - a[0], b[1] - a[1]];
+          const orth1 = !!d1[0] !== !!d1[1], orth2 = !!d2[0] !== !!d2[1];
+          if (!orth1 || !orth2 || (d1[0] && d2[0]) || (d1[1] && d2[1])) continue;   // どちらも直交で、直角に曲がる所だけ
+          const dx = b[0] - p[0], dy = b[1] - p[1];
+          if (!ok(p[0], p[1], b[0], b[1], dn(dx, dy)) || !ok(p[0], p[1], p[0] + dx, p[1], dn(dx, 0)) || !ok(p[0], p[1], p[0], p[1] + dy, dn(0, dy))) continue;
+          r.splice(i, 1); changed = true;
+        }
+      }
+      return r;
+    },
+    /** 道のりの歩きの向きの並び（確かめ用）: 直交・斜めの切り替えの数など */
+    routeStats() {
+      const r = PV.lastRoute || [], out = { steps: r.length, diag: 0, zigzag: 0 };
+      for (let i = 1; i < r.length; i++) {
+        const dx = r[i][0] - r[i - 1][0], dy = r[i][1] - r[i - 1][1];
+        if (dx && dy) out.diag++;
+        if (i >= 2) { const ex = r[i - 1][0] - r[i - 2][0], ey = r[i - 1][1] - r[i - 2][1]; if (!!dx !== !!dy && !!ex !== !!ey && ((dx && ey) || (dy && ex))) out.zigzag++; }
+      }
+      const nm = { '1,0': 'E', '-1,0': 'W', '0,1': 'S', '0,-1': 'N', '1,1': 'e', '-1,1': 's', '1,-1': 'n', '-1,-1': 'w' };   // 小文字は斜め（右下 e・左下 s・右上 n・左上 w）
+      out.seq = r.slice(1).map((c, i) => nm[(c[0] - r[i][0]) + ',' + (c[1] - r[i][1])] || '?').join('');
       return out;
     },
     /** 道に沿って歩く: pts = [[x, y], ...]（順に通る）。o.run: 走る。→ 歩数 */
@@ -128,7 +159,8 @@ module.exports = `(() => {
         S.x = tx; S.y = ty;   // 次の区間の起点（下で戻す）
       }
       S.x = sx; S.y = sy;
-      PV.route = route; PV.ri = 0; PV.run = !!o.run; PV.idleF = 0; PV.stuck = 0;
+      route = PV._smooth([sx, sy], route, PV._flood(o).ok);
+      PV.route = route; PV.lastRoute = [[sx, sy]].concat(route); PV.ri = 0; PV.run = !!o.run; PV.idleF = 0; PV.stuck = 0;
       return route.length;
     },
     /** 今の位置から n 歩ほど道に沿って歩ける所（道のマスを好む。向き (hx, hy) へ進む所ほど良い）を選んで歩く。
