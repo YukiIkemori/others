@@ -169,10 +169,10 @@ const SHOTS = {
     prep: async (T) => {
       await T.js(BATTLE({ troop: 'tr_a21_forest_wolves', boss: true, seed: 'pv-boss' },
         `(st, u, r) => u.id === 'hero' ? {cmd: 'skill', id: 't_sword_twin'} : u.id === 'viola' ? {cmd: 'spell', id: 's_fire_wind_b'} : null`,
-        `PV.teach('hero', ['t_sword_twin']); PV.teach('viola', null, ['s_fire_wind_b']); PV.boost(1); RPG.Engine.addTick(() => { if (PV.round >= 3) PV.dmgMul = 60; })`));
+        `PV.teach('hero', ['t_sword_twin']); PV.teach('viola', null, ['s_fire_wind_b']); PV.boost(1); RPG.Engine.addTick(() => { if (PV.round >= 4) PV.dmgMul = 60; })`));
       await T.idle(10);
     },
-    n: sec(60),
+    n: sec(70),
   },
   bt_speed: {
     prep: async (T) => { await T.js(BATTLE({ zone: 'z_verda', bg: 'forest', seed: 'pv-speed' }, null)); await T.idle(200); },

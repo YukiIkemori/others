@@ -50,9 +50,10 @@ module.exports = `(() => {
     scriptBattle(plan) {
       const C = R.Battle._.cmd;
       PV.plan = plan; PV.round = 0;
-      C.partyMenu = async () => { PV.round++; return 'fight'; };
+      C.partyMenu = async () => 'fight';
       C.member = async (st, u) => {
         PV.st = st;
+        if (u.id === 'hero') PV.round++;   // ラウンドの数（主人公の番が来るたびに 1 つ）
         const t = st.aliveEnemies()[0];
         const c = (PV.plan && PV.plan(st, u, PV.round)) || { cmd: 'attack', id: 'attack' };
         if (c.target == null) c.target = c.self ? u.uid : t ? t.uid : null;
