@@ -1,257 +1,84 @@
 {
- "date": "2026-09-29T01:32:07.510Z",
+ "date": "2026-09-29T08:22:33.492Z",
  "fixture": "content_p_pharos",
  "walked": [
   {
-   "map": "f_cape",
-   "kind": "door",
-   "id": "",
-   "at": "lighthouse_1",
-   "to": "lighthouse_1",
+   "map": "elder_1",
+   "kind": "stairs",
+   "id": "elder_1_down",
+   "at": "elder_2",
+   "to": "elder_2",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    30,
-    39
+    25,
+    26
    ],
-   "ms": 14172
+   "ms": 3097
   },
   {
-   "map": "f_cape",
+   "map": "elder_1",
    "kind": "exit",
-   "id": "0,8",
-   "at": "f_roa",
-   "to": "f_roa",
+   "id": "24,47",
+   "at": "verda_2",
+   "to": "verda_2",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    1,
-    5
+    25,
+    43
    ],
-   "ms": 3602
+   "ms": 3195
   },
   {
-   "map": "f_cape",
-   "kind": "exit",
-   "id": "48,6",
-   "at": "pharos",
-   "to": "pharos",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    48,
-    10
-   ],
-   "ms": 1988
-  },
-  {
-   "map": "f_fern",
-   "kind": "exit",
-   "id": "55,12",
-   "at": "f_hut",
-   "to": "f_hut",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    51,
-    12
-   ],
-   "ms": 3630
-  },
-  {
-   "map": "f_fern",
-   "kind": "exit",
-   "id": "28,0",
-   "at": "fern",
-   "to": "fern",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    29,
-    4
-   ],
-   "ms": 6032
-  },
-  {
-   "map": "f_fern",
-   "kind": "exit",
-   "id": "0,16",
-   "at": "f_windhill",
-   "to": "f_windhill",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    4,
-    16
-   ],
-   "ms": 3197
-  },
-  {
-   "map": "f_fern",
-   "kind": "exit",
-   "id": "30,43",
-   "at": "f_south",
-   "to": "f_south",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    30,
-    39
-   ],
-   "ms": 3295
-  },
-  {
-   "map": "f_hut",
-   "kind": "door",
-   "id": "",
-   "at": "hut",
-   "to": "hut",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    23,
-    23
-   ],
-   "ms": 4711
-  },
-  {
-   "map": "f_hut",
-   "kind": "exit",
-   "id": "51,23",
-   "at": "f_cross",
-   "to": "f_cross",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    51,
-    19
-   ],
-   "ms": 2909
-  },
-  {
-   "map": "f_hut",
-   "kind": "exit",
-   "id": "0,24",
-   "at": "f_fern",
-   "to": "f_fern",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    4,
-    24
-   ],
-   "ms": 2785
-  },
-  {
-   "map": "f_lookout",
-   "kind": "exit",
-   "id": "24,39",
-   "at": "f_roa",
-   "to": "f_roa",
+   "map": "elder_2",
+   "kind": "stairs",
+   "id": "elder_2_up",
+   "at": "elder_1",
+   "to": "elder_1",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
     24,
-    35
+    7
    ],
-   "ms": 4499
+   "ms": 2002
   },
   {
-   "map": "f_roa",
+   "map": "well",
    "kind": "stairs",
    "id": "",
-   "at": "well",
-   "to": "well",
+   "at": "f_roa",
+   "to": "f_roa",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    23,
-    20
+    18,
+    7
    ],
-   "ms": 14343
-  },
-  {
-   "map": "f_roa",
-   "kind": "exit",
-   "id": "0,19",
-   "at": "roa",
-   "to": "roa",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
-    3,
-    18
-   ],
-   "ms": 3827
-  },
-  {
-   "map": "f_roa",
-   "kind": "exit",
-   "id": "31,0",
-   "at": "f_lookout",
-   "to": "f_lookout",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    31,
-    4
-   ],
-   "ms": 3444
-  },
-  {
-   "map": "f_roa",
-   "kind": "exit",
-   "id": "51,29",
-   "at": "f_cape",
-   "to": "f_cape",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    51,
-    25
-   ],
-   "ms": 2964
+   "ms": 2635
   }
  ],
  "looks": [
   {
-   "map": "f_lookout",
-   "npc": "bridge_guard",
-   "look": "npc_guard_2",
-   "art": "npc_pen_guard_2",
+   "map": "elder_1",
+   "npc": "fine",
+   "look": "fine",
+   "art": "fine",
    "ok": true
   },
   {
-   "map": "f_roa",
-   "npc": "shepherd",
-   "look": "npc_old_m_2",
-   "art": "npc_pen_old_m_2",
+   "map": "elder_2",
+   "npc": "elm",
+   "look": "elm",
+   "art": "elm",
    "ok": true
   }
  ],
- "skipped": [
-  {
-   "map": "f_lookout",
-   "kind": "exit",
-   "id": "22,0",
-   "to": "f_cross",
-   "cond": "prologue_done"
-  }
- ],
+ "skipped": [],
  "errors": []
 }
