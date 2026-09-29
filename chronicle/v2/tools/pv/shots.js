@@ -21,6 +21,9 @@ const FOREST = (o) => JSON.stringify(Object.assign({
 // 森で戦闘を始める（台本の指示 plan は (st, u, round) → {cmd, id, target} の式の文字列）
 const BATTLE = (setup, plan, pre) => `PV.clean(); PV.state(${FOREST()}); ${pre || ''}; PV.enter('verda_1', 'camp').then(() => { PV.scriptBattle(${plan || 'null'}); return RPG.Battle.start(${JSON.stringify(setup)}); })`;
 const at = (tbl) => (i) => tbl[i] || null;   // {フレーム: 式}
+// 道に沿って走る（壁に向かって押し続けない）: 撮る前に道のりを決め、毎フレーム PV.steer() で次のマスへ向ける。n フレームぶんより少し長い道のりを取る
+const RUN = (hx, hy, n, o) => async (T) => { const k = await T.js(`PV.goFar(${Math.ceil(n / 60 * 7.3) + 6}, ${hx}, ${hy}, ${JSON.stringify(Object.assign({ run: true }, o || {}))})`); console.log('[pv] route', k); };
+const STEER = () => 'PV.steer()';
 
 const SHOTS = {
   // ---------------------------------------------------------------- 1 つかみ
@@ -57,9 +60,10 @@ const SHOTS = {
     prep: async (T) => {
       await T.js(FIELD('content_p_roa', { prologue_berna: true }, 'f_roa', 'roa'));
       await T.idle(150);
+      await RUN(1, 0, sec(5))(T);
     },
     n: sec(5),
-    each: at({ 0: `PV.btn({right: 1, b: 1})` }),
+    each: STEER,
   },
   pharos_pan: {
     prep: async (T) => {
@@ -86,9 +90,10 @@ const SHOTS = {
     prep: async (T) => {
       await T.js(FIELD('content_p_lighthouse_3', {}, 'lighthouse_1', 'entrance'));
       await T.idle(150);
+      await RUN(0, -1, sec(5))(T);
     },
     n: sec(5),
-    each: at({ 0: `PV.btn({up: 1, b: 1})` }),
+    each: STEER,
   },
   // 灯室: 守り歌を書き記して、灯台に火がともる（戦闘は勝ったことにして飛ばす）
   lamp_lit: {
@@ -126,23 +131,23 @@ const SHOTS = {
   },
 
   // ---------------------------------------------------------------- 4 探索のモンタージュ（走る）
-  ex_windhill: { prep: async (T) => { await T.js(FIELD('content_p_roa', {}, 'f_windhill', 'east')); await T.idle(150); }, n: sec(4), each: at({ 0: `PV.btn({left: 1, b: 1})` }) },
-  ex_cape: { prep: async (T) => { await T.js(FIELD('content_p_roa', { prologue_boss: true }, 'f_cape', 'west')); await T.idle(150); }, n: sec(4), each: at({ 0: `PV.btn({right: 1, b: 1})` }) },
-  ex_verda_stone: { prep: async (T) => { await T.js(FX('content_f_verda_1', {}, { x: 16, y: 29, dir: 'w' })); await T.idle(150); await T.settle(); }, n: sec(4), each: at({ 0: `PV.btn({left: 1})`, 150: `PV.btn({})` }) },
-  ex_verda_dark: { prep: async (T) => { await T.js(FX('content_f_verda_2_dark')); await T.idle(150); await T.settle(); }, n: sec(4), each: at({ 0: `PV.btn({down: 1})` }) },
+  ex_windhill: { prep: async (T) => { await T.js(FIELD('content_p_roa', {}, 'f_windhill', 'east')); await T.idle(150); await RUN(-1, 0, sec(4))(T); }, n: sec(4), each: STEER },
+  ex_cape: { prep: async (T) => { await T.js(FIELD('content_p_roa', { prologue_boss: true }, 'f_cape', 'west')); await T.idle(150); await RUN(1, 0, sec(4))(T); }, n: sec(4), each: STEER },
+  ex_verda_stone: { prep: async (T) => { await T.js(FX('content_f_verda_1', {}, { x: 16, y: 29, dir: 'w' })); await T.idle(150); await T.settle(); await RUN(-1, 0, sec(4))(T); }, n: sec(4), each: STEER },
+  ex_verda_dark: { prep: async (T) => { await T.js(FX('content_f_verda_2_dark')); await T.idle(150); await T.settle(); await RUN(0, 1, sec(4))(T); }, n: sec(4), each: STEER },
   ex_elder: { prep: async (T) => { await T.js(FX('content_f_elder_1')); await T.idle(150); await T.settle(); }, n: sec(4), each: at({ 0: `PV.btn({up: 1, b: 1})` }) },
-  ex_elder2: { prep: async (T) => { await T.js(FX('content_f_elder_2')); await T.idle(150); await T.settle(); }, n: sec(4), each: at({ 0: `PV.btn({down: 1})` }) },
+  ex_elder2: { prep: async (T) => { await T.js(FX('content_f_elder_2')); await T.idle(150); await T.settle(); await RUN(0, 1, sec(4))(T); }, n: sec(4), each: STEER },
   ex_well: { prep: async (T) => { await T.js(FX('content_p_well')); await T.idle(150); await T.settle(); }, n: sec(4), each: at({ 0: `PV.btn({up: 1, b: 1})` }) },
   ex_fern: { prep: async (T) => { await T.js(FX('content_f_fern_plaza')); await T.idle(150); await T.settle(); await T.js(`PV.pan(22, 30, 40, 26, 4000)`); }, n: sec(4) },
   ex_lh2: { prep: async (T) => { await T.js(FX('content_p_lighthouse_2')); await T.idle(150); await T.settle(); }, n: sec(4), each: at({ 0: `PV.btn({up: 1, b: 1})` }) },
   ex_world: { prep: async (T) => { await T.js(FX('content_p_world_forest')); await T.idle(150); await T.settle(); }, n: sec(4), each: at({ 0: `PV.btn({left: 1, b: 1})` }) },
-  ex_pharos_run: { prep: async (T) => { await T.js(FIELD('content_p_pharos', {}, 'pharos', 'gate_w')); await T.idle(150); await T.settle(); }, n: sec(4), each: at({ 0: `PV.btn({right: 1, b: 1})` }) },
+  ex_pharos_run: { prep: async (T) => { await T.js(FIELD('content_p_pharos', {}, 'pharos', 'gate_w')); await T.idle(150); await T.settle(); await RUN(1, 0, sec(4))(T); }, n: sec(4), each: STEER },
   // 一枚絵のフィールド（f_*）を走る（古いマス目のワールド・フィールドの代わり）
-  nf_roa: { prep: async (T) => { await T.js(`PV.clean(); PV.noEnc(); PV.state(${FOREST()}); PV.enter('f_roa', 'east')`); await T.idle(150); await T.settle(); }, n: sec(4.5), each: at({ 0: `PV.btn({left: 1, b: 1})` }) },
-  nf_south: { prep: async (T) => { await T.js(`PV.clean(); PV.noEnc(); PV.state(${FOREST()}); PV.enter('f_south', 'north')`); await T.idle(150); await T.settle(); }, n: sec(4.5), each: at({ 0: `PV.btn({down: 1, b: 1})` }) },
-  nf_hut: { prep: async (T) => { await T.js(`PV.clean(); PV.noEnc(); PV.state(${FOREST()}); PV.enter('f_hut', 'west')`); await T.idle(150); await T.settle(); }, n: sec(4.5), each: at({ 0: `PV.btn({right: 1, b: 1})` }) },
-  nf_lookout: { prep: async (T) => { await T.js(`PV.clean(); PV.noEnc(); PV.state(${FOREST()}); PV.enter('f_lookout', 'south')`); await T.idle(150); await T.settle(); }, n: sec(4.5), each: at({ 0: `PV.btn({up: 1, b: 1})` }) },
-  nf_cross: { prep: async (T) => { await T.js(`PV.clean(); PV.noEnc(); PV.state(${FOREST()}); PV.enter('f_cross', 'west')`); await T.idle(150); await T.settle(); }, n: sec(4.5), each: at({ 0: `PV.btn({right: 1, b: 1})` }) },
+  nf_roa: { prep: async (T) => { await T.js(`PV.clean(); PV.noEnc(); PV.state(${FOREST()}); PV.enter('f_roa', 'east')`); await T.idle(150); await T.settle(); await RUN(-1, 0, sec(4.5))(T); }, n: sec(4.5), each: STEER },
+  nf_south: { prep: async (T) => { await T.js(`PV.clean(); PV.noEnc(); PV.state(${FOREST()}); PV.enter('f_south', 'north')`); await T.idle(150); await T.settle(); await RUN(0, 1, sec(4.5))(T); }, n: sec(4.5), each: STEER },
+  nf_hut: { prep: async (T) => { await T.js(`PV.clean(); PV.noEnc(); PV.state(${FOREST()}); PV.enter('f_hut', 'west')`); await T.idle(150); await T.settle(); await RUN(1, 0, sec(4.5))(T); }, n: sec(4.5), each: STEER },
+  nf_lookout: { prep: async (T) => { await T.js(`PV.clean(); PV.noEnc(); PV.state(${FOREST()}); PV.enter('f_lookout', 'south')`); await T.idle(150); await T.settle(); await RUN(0, -1, sec(4.5))(T); }, n: sec(4.5), each: STEER },
+  nf_cross: { prep: async (T) => { await T.js(`PV.clean(); PV.noEnc(); PV.state(${FOREST()}); PV.enter('f_cross', 'west')`); await T.idle(150); await T.settle(); await RUN(1, 0, sec(4.5))(T); }, n: sec(4.5), each: STEER },
   // つかみ: 灯台の岬（灯った後）をゆっくり見渡す（ワールドの灯台の代わり）
   nf_cape_pan: {
     prep: async (T) => { await T.js(FIELD('content_p_roa', { prologue_done: true, prologue_boss: true }, 'f_cape', 'lighthouse')); await T.idle(150); await T.settle(); await T.js(`PV.pan(18, 14, 31, 30, 6500)`); },
@@ -264,6 +269,8 @@ async function shoot(S, id, out) {
   await sh.prep(T);
   const file = path.join(out, id + '.mp4');
   await C.rec(P, file, sh.n, sh.each || null);
+  const st = await C.run(P, 'JSON.stringify({stuck: PV.stuck || 0, left: PV.route ? PV.route.length - PV.ri : 0})');
+  if (sh.each === STEER) console.log(`[pv] ${id} steer`, st);   // stuck > 0 なら道から外れた・止まった
   if (P.errors.length) console.log(`[pv] ${id} errors:`, P.errors.slice(0, 4));
   await P.close();
   // 頭・中・終わりの 3 コマ（見て確かめる用）

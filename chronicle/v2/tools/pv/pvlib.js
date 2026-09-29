@@ -74,6 +74,93 @@ module.exports = `(() => {
     },
     /** 仲間に技・術を足す（台本用） */
     teach(id, techs, spells) { const c = R.Game.chars[id]; if (techs) c.techs = Array.from(new Set((c.techs || []).concat(techs))); if (spells) c.spells = Array.from(new Set((c.spells || []).concat(spells))); return true; },
+    // ---------------------------------------------------------------- 道に沿って歩く（壁に向かって押し続けない）
+    /** 道らしいマス（道・土・橋・板・石畳） */
+    roadish(c) { return !!c && (/road|dirt|bridge|path|plank|cobble|pave|stone|floor|wood/.test(String(c.mat || '')) || !!c.road || !!c.bridge); },
+    /** 今の位置から入れるマスの重み付きの道のり（8 方向。斜めは両隣が入れるときだけ。出入り口・人のマスは通らない）。
+     *  o.off: 道でないマスの重さ（既定 6）。→ {dist, prev, W, H} */
+    _flood(o) {
+      o = o || {};
+      const F = R.Field, S = F._s, m = S.map, W = m.w, H = m.h, lv = S.lv || 0;
+      const off = o.off == null ? 6 : o.off;
+      const dist = new Float64Array(W * H).fill(Infinity), prev = new Int32Array(W * H).fill(-1), steps = new Int32Array(W * H);
+      const ok = (fx, fy, x, y, d) => x >= 0 && y >= 0 && x < W && y < H && F._canEnter(m, fx, fy, x, y, lv, d) && !F._warpAt(m, x, y, lv) && !F._npcAt(x, y, lv);
+      const D8 = [[1, 0, 'e'], [-1, 0, 'w'], [0, 1, 's'], [0, -1, 'n'], [1, 1, 'se'], [1, -1, 'ne'], [-1, 1, 'sw'], [-1, -1, 'nw']];
+      const q = [[0, S.x, S.y]];
+      dist[S.y * W + S.x] = 0;
+      while (q.length) {
+        let bi = 0; for (let i = 1; i < q.length; i++) if (q[i][0] < q[bi][0]) bi = i;
+        const [d0, x, y] = q[bi]; q[bi] = q[q.length - 1]; q.pop();
+        if (d0 > dist[y * W + x]) continue;
+        for (const [dx, dy, dn] of D8) {
+          const nx = x + dx, ny = y + dy;
+          if (!ok(x, y, nx, ny, dn)) continue;
+          if (dx && dy && !(ok(x, y, x + dx, y, dx > 0 ? 'e' : 'w') && ok(x, y, x, y + dy, dy > 0 ? 's' : 'n'))) continue;
+          const c = R.MapUtil.cell(m, nx, ny);
+          const w = (PV.roadish(c) ? 1 : off) * (dx && dy ? 1.41 : 1);
+          const nd = d0 + w, k = ny * W + nx;
+          if (nd < dist[k]) { dist[k] = nd; prev[k] = y * W + x; steps[k] = steps[y * W + x] + 1; q.push([nd, nx, ny]); }
+        }
+      }
+      return { dist, prev, steps, W, H };
+    },
+    _trace(fl, x, y) {
+      const out = []; let k = y * fl.W + x;
+      if (!isFinite(fl.dist[k])) return null;
+      while (k >= 0) { out.push([k % fl.W, (k / fl.W) | 0]); k = fl.prev[k]; }
+      out.reverse(); out.shift();   // 今のマスは除く
+      return out;
+    },
+    /** 道に沿って歩く: pts = [[x, y], ...]（順に通る）。o.run: 走る。→ 歩数 */
+    go(pts, o) {
+      o = o || {};
+      const F = R.Field, S = F._s, sx = S.x, sy = S.y;
+      let route = [];
+      for (const [tx, ty] of pts) {
+        const fl = PV._flood(o);
+        const seg = PV._trace(fl, tx, ty);
+        if (!seg) throw new Error('PV.go: 届かない ' + tx + ',' + ty);
+        route = route.concat(seg);
+        S.x = tx; S.y = ty;   // 次の区間の起点（下で戻す）
+      }
+      S.x = sx; S.y = sy;
+      PV.route = route; PV.ri = 0; PV.run = !!o.run; PV.idleF = 0; PV.stuck = 0;
+      return route.length;
+    },
+    /** 今の位置から n 歩ほど道に沿って歩ける所（道のマスを好む。向き (hx, hy) へ進む所ほど良い）を選んで歩く。
+     *  n 歩に届く道の行き先が無ければ、道でないマスも行き先にする（屋内・ダンジョン） */
+    goFar(n, hx, hy, o) {
+      o = o || {};
+      const S = R.Field._s, fl = PV._flood(o);
+      const pick = (roadOnly) => {
+        let best = null, bs = -1e9;
+        for (let k = 0; k < fl.dist.length; k++) {
+          const st = fl.steps[k];
+          if (!isFinite(fl.dist[k]) || st > n) continue;
+          const x = k % fl.W, y = (k / fl.W) | 0;
+          if (roadOnly && !PV.roadish(R.MapUtil.cell(S.map, x, y))) continue;
+          const sc = st + 0.5 * ((x - S.x) * hx + (y - S.y) * hy);
+          if (sc > bs) { bs = sc; best = [x, y, st]; }
+        }
+        return best;
+      };
+      let best = pick(true);
+      if (!best || best[2] < n * 0.85) { const b2 = pick(false); if (b2 && (!best || b2[2] > best[2])) best = b2; }
+      if (!best) throw new Error('PV.goFar: 行き先なし');
+      return PV.go([[best[0], best[1]]], o);
+    },
+    /** 毎フレーム（撮りの each）: 次のマスへ向けてボタンを押す。着いたら離す */
+    steer() {
+      const S = R.Field._s, r = PV.route;
+      if (!r) return 0;
+      while (PV.ri < r.length && r[PV.ri][0] === S.x && r[PV.ri][1] === S.y) PV.ri++;
+      if (PV.ri >= r.length) { PV.route = null; PV.btn({}); return 0; }
+      const [tx, ty] = r[PV.ri], dx = Math.sign(tx - S.x), dy = Math.sign(ty - S.y);
+      if (Math.abs(tx - S.x) > 1 || Math.abs(ty - S.y) > 1) PV.stuck++;   // 道から外れた（押し流された）
+      if (!S.mv) { if (++PV.idleF > 2) PV.stuck++; } else PV.idleF = 0;
+      PV.btn({ right: dx > 0, left: dx < 0, down: dy > 0, up: dy < 0, b: PV.run });
+      return 1;
+    },
     lastLine() { const L = R.UIK.Message.log(); return L.length ? L[L.length - 1].text : ''; },
   });
   R.Engine.addTick(() => {
