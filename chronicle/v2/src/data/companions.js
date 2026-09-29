@@ -1,5 +1,5 @@
 // 仲間 20 人（R.DB.companions。RULES）。今の木の src/data/companions.js から移し、STATS_REWORK §1.2（能力値 0〜25、合計 95、
-// 25 は hagen 腕力・dokka 体力・teo 知力・marta 精神の 4 人。titta は盗み上手の分だけ低く合計 89（持ち主 2026-09-29））と §8.4（武器 5 系統・武器枠 1 つ・初期の武器と技）を当てた。
+// 25 は dokka 体力だけ。持ち主 2026-09-29 に hagen・dokka・titta・teo・marta を調整した（合計は 95 から外れる））と §8.4（武器 5 系統・武器枠 1 つ・初期の武器と技）を当てた。
 // この順番が酒場の並び順。look は CAST の R.DB.looks の id（仲間は id と同じ）。
 //   {name, look, gender, age, kin, title, from, role, row:'front'|'back', stats{6}, growth{hp,mp}(S〜D),
 //    apt{w:{sword greatsword dagger bow staff}, e:{fire water wind earth light dark}}(S〜D), innate{name, desc, mods},
@@ -41,7 +41,7 @@
     from: '西の荒れ野',
     role: 'guard',
     row: 'front',
-    stats: { str: 25, vit: 20, dex: 14, agi: 13, int: 10, mnd: 13 },
+    stats: { str: 24, vit: 20, dex: 14, agi: 10, int: 10, mnd: 13 },   // 持ち主 2026-09-29 に調整（腕力 25→24・素早さ 13→10）
     growth: { hp: 'S', mp: 'B' },
     apt: { w: { sword: 'B', greatsword: 'S', dagger: 'C', bow: 'C', staff: 'D' }, e: { fire: 'A', water: 'C', wind: 'C', earth: 'B', light: 'C', dark: 'B' } },
     innate: { name: '戦場かせぎ', desc: '戦闘で手に入るお金が増える', mods: { goldPct: 10 } },
@@ -64,7 +64,7 @@
     from: '山あいの里',
     role: 'guard',
     row: 'front',
-    stats: { str: 21, vit: 25, dex: 15, agi: 10, int: 11, mnd: 13 },
+    stats: { str: 21, vit: 25, dex: 15, agi: 9, int: 11, mnd: 13 },   // 持ち主 2026-09-29 に調整（素早さ 10→9）
     growth: { hp: 'S', mp: 'C' },
     apt: { w: { sword: 'B', greatsword: 'S', dagger: 'D', bow: 'D', staff: 'C' }, e: { fire: 'A', water: 'C', wind: 'D', earth: 'A', light: 'C', dark: 'B' } },
     innate: { name: '山歩き', desc: '毒の沼や熱い床で傷を負わない', mods: { noFloorDamage: true } },
@@ -363,7 +363,7 @@
     from: '魔術学院',
     role: 'caster',
     row: 'back',
-    stats: { str: 10, vit: 12, dex: 15, agi: 16, int: 25, mnd: 17 },
+    stats: { str: 10, vit: 12, dex: 15, agi: 16, int: 23, mnd: 17 },   // 持ち主 2026-09-29 に調整（知力 25→23）
     growth: { hp: 'C', mp: 'S' },
     apt: { w: { sword: 'B', greatsword: 'C', dagger: 'B', bow: 'B', staff: 'A' }, e: { fire: 'S', water: 'C', wind: 'C', earth: 'A', light: 'C', dark: 'B' } },
     innate: { name: 'のみこみが早い', desc: 'HPとMPが伸びやすい', mods: { growPct: 10 } },
@@ -432,7 +432,7 @@
     from: '港町の診療所',
     role: 'healer',
     row: 'back',
-    stats: { str: 11, vit: 14, dex: 14, agi: 13, int: 18, mnd: 25 },
+    stats: { str: 11, vit: 14, dex: 14, agi: 13, int: 18, mnd: 23 },   // 持ち主 2026-09-29 に調整（精神 25→23）
     growth: { hp: 'B', mp: 'S' },
     apt: { w: { sword: 'C', greatsword: 'B', dagger: 'B', bow: 'B', staff: 'A' }, e: { fire: 'C', water: 'S', wind: 'B', earth: 'B', light: 'A', dark: 'D' } },
     innate: { name: '手当て上手', desc: '使う回復の道具がよく効く', mods: { itemPct: 25 } },
