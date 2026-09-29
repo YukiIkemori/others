@@ -1,0 +1,258 @@
+{
+"id": "a_pass",
+"w": 52,
+"h": 40,
+"rows": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRuuuuuuuRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRuuuuuuuRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRuuuuuruuRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRsssuuuuuuuuRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRsssssssuuuuuuuuRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRssssssssssuuuuuuuuuRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRsssssssssssssubuuuuuuuusRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRssssssssssssrssuuuuuuuuussssRRRRRRRRR",
+"RRRRRRRRRRRRRRssssssssssssssssuuuuuuuuusssssssRRssss",
+"RRRRRRRRRRRssssssssssssssssssssuuuuuuuusssssbsssssuu",
+"RRRRRRRRRRsssssssssssssssssrssTTTuuuuuusssssssssssss",
+"RRRRRRRRRRsssssssRRRRRsssssssTTTTuuuuuuussssbsssssss",
+"RRRRRRRRRssssssssRRRRRsssssssTTTuuuuuuuuuussssssssss",
+"RRRRRRRRsssssssssRRRRRsssssssssssuuXXXubuuusssssssss",
+"RRRRRRRsssssssssssssssssssssssssssuXuXuuuuuussssssss",
+"RRRssssssssssskssssssssssssssssssssssssuuuuussssssss",
+"ssssssssssssssskk::kssssssssssss....ssssuuuuuuusssss",
+"ssssssssssssss...s:ssssssss.........................",
+".ssssss...........:.................................",
+"...........................ssssssssssssuuuuuuuuussss",
+".......ssssssssssssssssss..ssssssssbssssssuuuuuuuurs",
+"ssssssssssssusssssssssssss..ssssssssssTTTsuuuuuuuuss",
+"sssssssssrssuusussssssssss..srssssssssTTTTsuuuuuuuss",
+"RRRRRRssuuuuuubussssrsssss..ssssssssssTTTssuuuuuuuus",
+"RRRRRRRsuuuuuuuusssssssssss.sbssssssssssssuuuuuuuuuu",
+"RRRRRRRRuuuuuuussssssssssss.ssssssssssssssuuuruuuuuu",
+"RRRRRRRRRuuuuuussssssssssss.ssbssssssrsssuuuuuuuuuuu",
+"RRRRRRRRRuuuuuusssssssssss..sssssssssssssuuRRRRuuuuu",
+"RRRRRRRRRuuuuuusssssssssss..sssssssssssssRRRRRRRuuuu",
+"RRRRRRRRRuuuurusssssssssss.sssssssssssssuRRRRRRRuuuu",
+"RRRRRRRRRuuuuuuTTssssssss..ssssssssssssuuRRRRRRRuuuu",
+"RRRRRRRRRuuuuuuTTTsssssss..ssssssssssuuuuuuRRRRuuuus",
+"RRRRRRRRRuuuuuussssssssss.sssssssuuruuuuuuuuuuuuusss",
+"RRRRRRRRRuuuuuussssssssss.ssssssusRRRuuuuuuuuuuuussr",
+"RRRRRRRRRuuuuuussssssssss.ssssssusRRRuuuuuuuuuuTTsss",
+"RRRRRRRRRuuuuusssssssbss..ssssssssRRRuuuuuuuuuTTTTss",
+"RRRRRRRRRRuuuussssssssss..ssssssssuussuuuuuuuuTTTTss",
+"RRRRRRRRRRRuuusssssssssss.ssssssssussssuuuuuuussssss",
+"RRRRRRRRRRRuusssssbssssss.sssssssssssbssssuuuuusssss",
+"RRRRRRRRRRRRussssssssssss.sssssssssssssssssuuuuuuuus"
+],
+"marks": [
+{
+"kind": "arch",
+"cells": [
+[
+35,
+13
+],
+[
+36,
+13
+],
+[
+37,
+13
+],
+[
+35,
+14
+],
+[
+37,
+14
+]
+],
+"text": "a toppled ancient WAYGATE ARCH of black basalt blocks: two broken pillars and the fallen lintel half buried in ash, weathered carvings of a bird with spread wings",
+"color": [
+70,
+66,
+72
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "sign",
+"x": 6,
+"y": 22,
+"text": "灰の荒野\n東 → 炎の町カルデラ"
+},
+{
+"type": "sign",
+"x": 29,
+"y": 22,
+"text": "南 → 灰の古戦場\n折れた剣の碑"
+},
+{
+"type": "waylamp",
+"id": "wl_a_pass_1",
+"x": 12,
+"y": 22,
+"lit": true
+},
+{
+"type": "waylamp",
+"id": "wl_a_pass_2",
+"x": 40,
+"y": 21,
+"lit": true
+},
+{
+"type": "prop",
+"id": "tent",
+"x": 14,
+"y": 10
+},
+{
+"type": "prop",
+"id": "lantern",
+"x": 12,
+"y": 11
+}
+],
+"spawns": {
+"west": {
+"x": 1,
+"y": 19,
+"dir": "e"
+},
+"east": {
+"x": 50,
+"y": 18,
+"dir": "w"
+},
+"south": {
+"x": 25,
+"y": 38,
+"dir": "n"
+}
+},
+"exits": [
+{
+"x": 0,
+"y": 19,
+"w": 1,
+"h": 2,
+"to": {
+"map": "d_east",
+"spawn": "pass"
+},
+"edge": "w"
+},
+{
+"x": 51,
+"y": 18,
+"w": 1,
+"h": 2,
+"to": {
+"map": "a_lava",
+"spawn": "west"
+},
+"edge": "e"
+},
+{
+"x": 25,
+"y": 39,
+"w": 2,
+"h": 1,
+"to": {
+"map": "a_battle",
+"spawn": "north"
+},
+"edge": "s"
+}
+],
+"notes": [],
+"meta": {
+"name": "灰かぶりの峠",
+"sub": "砂漠から灰の荒野へ抜ける峠",
+"region": "r_ash",
+"worldRect": [
+285,
+393,
+96,
+48
+],
+"outside": "rock",
+"zones": [
+{
+"rect": [
+0,
+15,
+55,
+7
+],
+"zone": "zw_ash_road"
+},
+{
+"rect": null,
+"zone": "zw_ash_plain"
+}
+],
+"links": {},
+"npcs": [
+{
+"id": "ash_traveler",
+"look": "npc_traveler",
+"name": "灰の荒野の旅人",
+"x": 14,
+"y": 12,
+"dir": "s",
+"move": "still",
+"talk": "ash_world_traveler",
+"reward": "news",
+"key": "world_ash_traveler"
+}
+]
+},
+"rows_fit": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRruuuuuusRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRuuuuuuuRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRuuuuusTTssRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRssssruuuuuuusssRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRssssssTuuuTuuuurssRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRssssssssssuuruuuuuusRrsRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRsssssssssssTsurTuuuuuuussssssRRRRRR",
+"RRRRRRRRRRRRRRRsssssssssssssrsuuuuuuuuusssssssssRsss",
+"RRRRRRRRRRRRRRssssssssssssssssuuuuuuuuusssssrsRsssss",
+"RRRRRRRRRRRrssssssssssssssssTssrrTuuuuusssssrsssssuu",
+"RRRRRRRRRRrsrsssssTTTTTssssssrTTTTuuuuusssssrrssssss",
+"RRRRRRRRRRsssssssRRRRRrssssssTTTTuuuuuuussssssssssss",
+"RRRRRRRRRssssssssRRRRRrssssssTssTuuTTTTurussssssssss",
+"RRRRRRRsssssssssssRRRRTssssssssssuuXXXrbTuusssssssss",
+"RRRRssssssssssTTsssrTsssssssssssssuXrXTruuuussssssss",
+"ssssssssssssssTrTrrrTsssssssssssssssssruuuuussssssss",
+"ssssssssssssssskrrrrTsssssssssss....ssssuuuuuuusssss",
+"ssssssssssssss...s:rsssssss.........................",
+".ssssss...........:r................................",
+"...........................ssssssssssssuuuuuuuuussss",
+".......ssssssssssssssssss..ssssssssbssssssuuuuuuuurs",
+"ssssssssssssusssssssssssss..sssssssrssTTTsuuuuuuuuss",
+"TTTTTssssrssuusussssssssss..srssssssssTTTTsuuuuuuuss",
+"RRRRRRssuuuuuubussssrsssss..ssssssssssTTTTsuuuuuuuus",
+"RRRRRRRruuuuuuuusssssssssss.srTsssssssssrsuuuuuuuuuu",
+"RRRRRRRRTuuuuuussssssssssss.ssssssssssssssuuuruuuuuu",
+"RRRRRRRRRTuuuuussssssssssss.ssbTsssssrsssuuuuTuuuuuu",
+"RRRRRRRRRruuuuusssssssssss..sssssssssssssuTRRRRTuuuu",
+"RRRRRRRRRruuuuusssssssssss..ssssssssssssTRRRRRRRTuuu",
+"RRRRRRRRRruuurTsssssssssss.sssssssssssssTRRRRRRRTuuu",
+"RRRRRRRRRruuuuuTTssssssss..ssssssssssssuuRRRRRRRTuuu",
+"RRRRRRRRRrTuuuuTTTTssssss..ssssssssssuuuuuuRRRRTuuus",
+"RRRRRRRRRrTuuuussssssssss.sssssssuuruuuuuuuruuuuussr",
+"RRRRRRRRRrTuuuussssssssss.ssssssuTRRRuuuuuuuuuuuussr",
+"RRRRRRRRRruuuuussssssrsss.ssssssurRRRTuuuuuuuuuTTrss",
+"RRRRRRRRRrTuuusssssssbss..ssssssTTRRRuuuuuuuuuTTTTTs",
+"RRRRRRRRRRrTuussssssssss..ssssssssTTssuuuuuuuuTTTTss",
+"RRRRRRRRRRRruussssrssssss.ssssssssussrsuuuuuuussssss",
+"RRRRRRRRRRRrTsssssbssssss.sssssssssssbssssuuuuusssss",
+"RRRRRRRRRRRRrssssssssssss.sssssssssssssssssuuuuuuuus"
+]
+}

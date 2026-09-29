@@ -35,6 +35,8 @@
     desert: { ground: 'dune_sand', get tree() { return palm(); }, leaf: 'leaf', mood: 'night', decor: {}, fireflies: 0, outside: 'dune_sand' },
     desert_town: { ground: 'sand', get tree() { return palm(); }, leaf: 'leaf', mood: 'town_night', decor: {}, fireflies: 2, outside: 'dune_sand' },
     tomb: { ground: 'sandstone_floor', tree: ['tree'], leaf: 'dk', mood: 'cave', decor: { dec_pebbles: 0.03 }, fireflies: 0, outside: 'wall_sandstone' },
+    // 灰の荒野のエリア（field_ash_*.js）: 地面は灰、木は焦げた木、蛍は出さない（描いた絵が無いときの控え）
+    ash: { ground: 'ash', tree: ['charred_tree'], leaf: 'dk', mood: 'night', decor: { dec_pebbles: 0.03 }, fireflies: 0, outside: 'rock' },
     interior: { ground: 'wood_floor', tree: ['tree'], leaf: 'leaf', mood: 'interior', decor: {}, fireflies: 0, outside: 'wall_wood' },
   };
   for (const id of Object.keys(THEMES)) THEMES[id].id = id;

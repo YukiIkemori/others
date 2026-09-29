@@ -1,6 +1,6 @@
 // 生成物（design/art_ref/gen/env/_tools/under/field_marsh/ の areas_marsh.py → fit.py → tomap.py）。手で直さない: 配置は areas_marsh.py、当たりは fit.py で作り直す。
 // エリア m_bog「鐘沈みの沼の縁」（霧の来る所、52×44）。エリア切り替えのフィールド（maps/field_00_kit.js、湿原の凡例は marsh_field_00_kit.js）。
-//   出口: n → m_fen.south, s → world.marsh_s, 門 → marsh_bog.entrance
+//   出口: n → m_fen.south, s → world.marsh_s
 //   絵: field/under/m_bog（v2/assets/env/field/under/。無ければマスから焼く）
 (function (R) {
   'use strict';
@@ -40,7 +40,7 @@
       "FFFFFFFFFFsssws,ss.wwwb,,,,..sss,;ssss...wwwwwwwww.s",
       "FFFFFFFFFFFbwwbsss..w.,,,,,..srssssssss..wwwwwwwwwws",
       "FFFFFFFFFFFwwwbs.ss..,,Tss,..ssssssrssss.wwwwwwwwwws",
-      "FFFFFFFFFFFwwww..bss,,,,s,,..,,ss;sssss.bbwwwwwwwwss",
+      "FFFFFFFFFFFwwww..bss,,,,s,,..,,ss;sssss.bwwwwwwwwwss",
       "FFFFFFFFFFFwwww.bw.s,,,,,,..,,,r,,;;;;.wwb.wwww.wwss",
       "FFFFFFFFFFwwwwbwwbs,,,,,,,..,,,,,,,..b.www..w...wssb",
       "FFFFFFFFFFw..wwwwww,,,,,,,..b,,,,,,.ww..ww.,...ssr..",
@@ -55,11 +55,12 @@
       ",,,,,,,,,;;ssssssss,;;;;,..,,ssss,,,,,,,...,,,,,\",,,",
     ],
     objects: [
+      {"type":"door","x":6,"y":22,"w":1,"look":"none","to":{"map":"marsh_bog","spawn":"entrance"},"cond":"marsh_assembly_done"},
       {"type":"examine","x":6,"y":22,"event":"marsh_mistwall","cond":{"not":"marsh_assembly_done"}},
       {"type":"examine","x":18,"y":25,"event":"marsh_songstone"},
       {"type":"examine","x":41,"y":21,"event":"world_poi_marsh_bell"},
-      {"type":"sign","x":15,"y":20,"text":R.T('map.marsh_field_bog.m_bog.objects.3.text')},
-      {"type":"sign","x":29,"y":40,"text":R.T('map.marsh_field_bog.m_bog.objects.4.text')},
+      {"type":"sign","x":15,"y":20,"text":R.T('map.marsh_field_bog.m_bog.objects.4.text_2')},
+      {"type":"sign","x":29,"y":40,"text":R.T('map.marsh_field_bog.m_bog.objects.5.text')},
       {"type":"prop","id":"bell_frame","x":35,"y":12},
       {"type":"prop","id":"bell_frame","x":14,"y":36},
       {"type":"prop","id":"bell_frame","x":46,"y":31},
@@ -70,7 +71,7 @@
 
     ],
     spawns: {"north":{"x":26,"y":1,"dir":"s"},"south":{"x":26,"y":42,"dir":"n"},"bog":{"x":7,"y":22,"dir":"e"}},
-    exits: [{"x":25,"y":0,"w":3,"h":1,"to":{"map":"m_fen","spawn":"south"}},{"x":25,"y":43,"w":3,"h":1,"to":{"map":"world","spawn":"marsh_s"},"cond":{"not":{"slice":true}}},{"x":6,"y":22,"w":1,"h":1,"to":{"map":"marsh_bog","spawn":"entrance"},"cond":"marsh_assembly_done"}],
+    exits: [{"x":25,"y":0,"w":3,"h":1,"to":{"map":"m_fen","spawn":"south"}},{"x":25,"y":43,"w":3,"h":1,"to":{"map":"world","spawn":"marsh_s"},"cond":{"not":{"slice":true}}}],
     triggers: [],
     tilePatches: [],
     zones: [{"rect":null,"zone":"zw_marsh"}],

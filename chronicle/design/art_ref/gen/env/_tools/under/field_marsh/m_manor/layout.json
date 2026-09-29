@@ -952,6 +952,17 @@
 ],
 "objects": [
 {
+"type": "door",
+"x": 38,
+"y": 9,
+"w": 1,
+"look": "none",
+"to": {
+"map": "marsh_manor_1",
+"spawn": "entrance"
+}
+},
+{
 "type": "sign",
 "x": 40,
 "y": 18,
@@ -1035,16 +1046,6 @@
 "spawn": "north"
 },
 "edge": "s"
-},
-{
-"x": 38,
-"y": 9,
-"w": 1,
-"h": 1,
-"to": {
-"map": "marsh_manor_1",
-"spawn": "entrance"
-}
 }
 ],
 "notes": [],
@@ -1080,10 +1081,10 @@
 "rows_fit": [
 "ww,,,,;;;\";,,,,,,,,,,,,;;;;;r;;;;;;;;;,,,,,,,,,,,,\"\"",
 "ss,,,,,,,;;,,,,,,,,,,,,,,;;XXXXXXXXXXXXXXXXXXXXXXX\",",
-"wb,,~,T,,,,,,,,sF,,,,,,,,,,XTTXXXXXXXXXXXXXXX,,,,X,,",
-"s,,~~,,,,,,,,FFFFFFFFFT,,,,XTTTXXXXXXXXXXXXXX,,TTX,,",
+"wb,,~,T,,,,,,,,sF,,,,,,,,,,XTXXXXXXXXXXXXXXXX,,,,X,,",
+"s,,~~,,,,,,,,FFFFFFFFFT,,,,XTXXXXXXXXXXXXXXXX,,TTX,,",
 ",,~~~~,,,,,,FFFFFFFFFFTT,,,XTTTXXXXXXXXXXXXXXTTTTX,,",
-",~~~~~~,,,,,FFFFFFFFFFTT,,;XTTTXXXXXXXXXXXXXX,TTTX,,",
+",~~~~~~,,,,,FFFFFFFFFFFT,,;XTTTXXXXXXXXXXXXXX,TTTX,,",
 "s~~~,,,,,,,,FFFFFFFFFFFT,,;XTTTXXXXXXXXXXXXXX.TTTX,,",
 ",,,,,ss;;,,,FFFwwwwwFFFT,,,XbTTXXXXXXXXXXXXXX.bTTX,,",
 "ssssssss;,,FFFFwwwwwFFFT,sTXw,,XXXXXXXXXXXXXX,,,,X,,",

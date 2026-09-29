@@ -68,7 +68,7 @@
     exits: [{"x":23,"y":41,"w":2,"h":1,"to":{"map":"yule","spawn":"gate_n"}}],
     triggers: [],
     tilePatches: [],
-    zones: [{"rect":null,"zone":"zw_snow"}],
+    zones: [{"rect":[29,10,3,7],"zone":"zw_snow_road"},{"rect":[32,11,1,4],"zone":"zw_snow_road"},{"rect":[28,13,1,7],"zone":"zw_snow_road"},{"rect":[27,14,1,7],"zone":"zw_snow_road"},{"rect":[26,15,1,7],"zone":"zw_snow_road"},{"rect":[25,16,1,12],"zone":"zw_snow_road"},{"rect":[24,17,1,11],"zone":"zw_snow_road"},{"rect":[29,17,2,1],"zone":"zw_snow_road"},{"rect":[23,18,1,10],"zone":"zw_snow_road"},{"rect":[29,18,1,1],"zone":"zw_snow_road"},{"rect":[22,20,1,22],"zone":"zw_snow_road"},{"rect":[13,21,5,4],"zone":"zw_snow_road"},{"rect":[21,21,1,21],"zone":"zw_snow_road"},{"rect":[18,22,2,5],"zone":"zw_snow_road"},{"rect":[20,23,1,13],"zone":"zw_snow_road"},{"rect":[31,23,4,4],"zone":"zw_snow_road"},{"rect":[26,24,5,3],"zone":"zw_snow_road"},{"rect":[17,25,1,1],"zone":"zw_snow_road"},{"rect":[19,27,1,6],"zone":"zw_snow_road"},{"rect":[26,27,2,1],"zone":"zw_snow_road"},{"rect":[23,31,1,11],"zone":"zw_snow_road"},{"rect":[24,33,1,9],"zone":"zw_snow_road"},{"rect":null,"zone":"zw_snow"}],
     weather: "snow",
     weatherCond: "!cleared_r_snow",
     art: {"image":"field/under/f_peakfoot","painted":[],"overlay":"field/under/f_peakfoot_over"},

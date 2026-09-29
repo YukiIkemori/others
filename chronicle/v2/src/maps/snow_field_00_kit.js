@@ -19,10 +19,10 @@
     r: { mat: 'rock', solid: true }, R: { mat: 'wall_snow', solid: true, rise: 1 }, X: { mat: 'wall_stone', solid: true },
   };
   S.FIELD_LEGEND = LEGEND;
-  /** 雪原のエリアを登録。spec は FieldArea.def と同じ形（凡例・外・小道具の組の既定だけ雪原にする）。
+  /** 雪原のエリアを登録。spec は FieldArea.def と同じ形（凡例・外・小道具の組・曲の既定だけ雪原にする。曲は雪原の ice: 砂漠のエリアの desert と同じ）。
    *  小道具の組 'snow'（v2/assets/env/snow/props/*__snow）: 道しるべの灯籠 = 氷の灯籠、野営の天幕 = 毛皮の天幕、置き灯籠 = 氷の灯り、看板 = 雪の看板 */
   S.fieldArea = function (id, spec) {
-    return R.FieldArea.def(id, Object.assign({ legend: LEGEND, outside: 'wall_snow', propSet: 'snow' }, spec));
+    return R.FieldArea.def(id, Object.assign({ legend: LEGEND, outside: 'wall_snow', propSet: 'snow', bgm: 'ice' }, spec));
   };
 
   // 前のワールドの東の峠: 崖崩れ（体験版の間の tilePatches、x 264〜266）の手前（雪原の箱の中）に着き、東を向く。1 歩西へ戻ると湯けむりの峠へ

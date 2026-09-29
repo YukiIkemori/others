@@ -1,0 +1,71 @@
+// 生成物（design/art_ref/gen/env/_tools/under/field_ash/ の areas_ash.py → fit.py → tomap.py）。手で直さない: 配置は areas_ash.py、当たりは fit.py で作り直す。
+// エリア a_battle「灰の古戦場」（折れた剣の眠る窪地、52×40）。エリア切り替えのフィールド（maps/field_00_kit.js、灰の荒野の凡例は field_ash_00_kit.js）。
+//   出口: n → a_pass.south
+//   絵: field/under/a_battle（v2/assets/env/field/under/。無ければマスから焼く）
+(function (R) {
+  'use strict';
+  R.FieldArea.def("a_battle", {
+    name: "灰の古戦場", region: "r_ash", outside: "rock",
+    legend: R.FieldArea.ASH_LEGEND, theme: 'ash', bgm: 'overworld', bbg: 'ash', propSet: 'ash', propSetBase: 'village',
+    light: R.FieldArea.ASH_LIGHT,
+    rows: [
+      "RRRRRRRRRRRRRRRRRRRRrsuuu:uuuuuRRRRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRrTsu::uuuuTRRRRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRrTss::uuuuuRRRRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRrTssss::uuuusssTTsRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRrssssssssssss::uuuuTsssssTTTssTRRRRRRRRRR",
+      "RRRRRRRRrTsssTTsssssssss::uuussssssssssssTRRRRRRRRRR",
+      "RRRRRRRRrssssTsssssssrss::uuusssssssssssssTTRRRRRRRR",
+      "RRRRRRRrsssssTssssssssss::sssTsssssssssTsskrrRRRRRRR",
+      "RRRRRRssssssssssssssssss::uuuXXssssssssTsskrrRRRRRRR",
+      "RRRRRRssXXXXXXXXXXXsssss::uuuTuussssssssskrrsssRRRRR",
+      "RRRRRTssTcccccccccXsssss::uuuuXXTssssssskrrssssTRRRR",
+      "RRRRssssXcrcccccccXssssX::uuuuuuussssssrrrkssssRRRRR",
+      "RRRRrsssXcccccccccXTrssT::ssuuuuusssssTrrrssssTRRRRR",
+      "RRRRssssXcccccccccs::::sX:ssssuuusssssTrrTTssssTRRRR",
+      "RRRRssssTcccccccccs::sssu::srTsuTssssTrrrTssssssRRRR",
+      "RRRRrsssXcccccccccs::ssss::ssssXTssXssrrrTssssssRRRR",
+      "RRRRssssXcccccccccXTsssss::usssssXTXuukrrTssssssRRRR",
+      "RRRRssssXccrccccscXTsssss::uuusXsssuuTrrrTssssssRRRR",
+      "RRRRssssXcccccccccXTssssss:uuuussssrurrrrTssssssRRRR",
+      "RRRRrsssXXXXTsXXXXXTssssss:uuusssssuukrrrTssssssRRRR",
+      "RRRRrTssssssssssssusssTssu::susssssuTrrrrTrsssssRRRR",
+      "RRRRrTsssssssssrsssssTXsss::sssssssuTkrrrTssssTsRRRR",
+      "RRRRrssssssssssssssTXsXTXs::susssssuuukrrTrsssssRRRR",
+      "RRRRssssssssssssssssssXsss::suusssuuuTkrrTssssssRRRR",
+      "RRRTTssssssrssssrsssssssss::uuuuusuuuTrrrTssssssRRRR",
+      "RRRTsssssssssTssrssssssssu::uuuuuuuuTTkrrTTsssssRRRR",
+      "RRRTTsssTssssXTssssssssssu::uuuuuuTuXXukrrTsssssRRRR",
+      "RRRRssssssssssssXTsssssscccccccuuuXuTXskrrTssssTRRRR",
+      "RRRRsTsssssssssXssssTssscccXcccuuuuuuuskrrsssssRRRRR",
+      "RRRRRrsssssssssTssssssscccccccccuuuuuuTrrrrTsssRRRRR",
+      "RRRRRrsssssssssssssssssscccccccsssssssTkrrrssssRRRRR",
+      "RRRRRRTrTsssssssssssssssuccccccsssssssssrrsssssRRRRR",
+      "RRRRRRrsssrssssssssssssTssscssssssssssssTTsTssrRRRRR",
+      "RRRRRRrTssssssssrssssssssssssssssssssssssssTssRRRRRR",
+      "RRRRRRrTssssssssssssssssssssssssssssssssssTssTRRRRRR",
+      "RRRRRRRTTTTTTussssssssssssssssssssssssssssTRRRRRRRRR",
+      "RRRRRRRRRRRRRusssssssssssuuusssssTRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+    ],
+    objects: [
+      {"type":"examine","x":27,"y":28,"event":"ash_battlefield_stone"},
+      {"type":"sign","x":23,"y":4,"text":"灰の古戦場\n折れた剣の碑"},
+      {"type":"chest","id":"a_battle_c1","x":10,"y":17,"item":"i_revive","n":1},
+      {"type":"waylamp","id":"wl_a_battle_1","x":26,"y":5,"lit":true},
+    ],
+    npcs: [
+
+    ],
+    spawns: {"north":{"x":25,"y":1,"dir":"s"}},
+    exits: [{"x":25,"y":0,"w":2,"h":1,"to":{"map":"a_pass","spawn":"south"}}],
+    triggers: [],
+    tilePatches: [],
+    zones: [{"rect":null,"zone":"zw_ash_plain"}],
+    art: {"image":"field/under/a_battle","painted":[],"overlay":"field/under/a_battle_over"},
+    meta: {"sub":"折れた剣の眠る窪地","worldRect":[285,441,96,45]},
+    links: {},
+  });
+})(window.RPG);

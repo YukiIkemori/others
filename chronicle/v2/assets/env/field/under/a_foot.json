@@ -1,0 +1,19 @@
+{
+ "id": "a_foot",
+ "kind": "under",
+ "map": "a_foot",
+ "tile": 32,
+ "size32": [
+  1792,
+  1408
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.9,
+ "files": {
+  "24": "a_foot@24.png",
+  "32": "a_foot@32.png"
+ },
+ "src": "generated"
+}

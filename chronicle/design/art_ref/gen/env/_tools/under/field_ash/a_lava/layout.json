@@ -1,0 +1,353 @@
+{
+"id": "a_lava",
+"w": 60,
+"h": 44,
+"rows": [
+"kkkkkkkkkkkkkkkkk:kkkkllluuussssssuuuuusssssssssssssssRRRRRR",
+"kkkkkkkkkkkkkkkkk:kkkklluuusssssssuuuuusssssssssssssssRRRRRR",
+"kkkkkkkkkRRRRRRR::kkuulluuusssssssssssssssssssssssssssRRRRRR",
+"kkkkkkkRRRRRRRRR::kkullluuusssssssssssssssssssssssssssRRRRRR",
+"kkkkRRRRRRRkkkRR::RRRllluuusssssssssssssssssssssssssssRRRRRR",
+"kkkRRRRRkkkkkkkk::RRRlllssssssssussssssssssssssssssssTRRRRRR",
+"kkkRRRkkkkkkkkkk:sssslllssssuuuuussssuusssRRssssssssssRRRRRR",
+"kkkkkkkkkkkkkkss:sssslllsssuuuuuuuuuuuuuuuRRRRsssssssRRRRRRR",
+"kkkkkkkkkkkrkrs::ssssslllssuuuuuuuuuuuuuuuuRRRRssssssRRRRRRR",
+"kkkkkkkkkkkkkss:sssssslllsssuuuuuuuuuuuuuuuuuRRRssssssRRRRRR",
+"kkkrkkkkkkkkkss:ssssssslllssuuuuuuuuuuuuuuruuuRRRsssssRRRRRR",
+"kkkkkkkkkkkkkk::ssssssslllssuuuuuuuuuullllluuusRRsssssRRRRRR",
+"kkkkkkkkkkkkkk::ssssssssllssuuuuuuuuuullllluuusRRRssssRRRRRR",
+"kkkkkkkkkkkkkk:kssssssssllssuuuuuuuuuuullluuusssRRssssRRRRRR",
+"kkkkkkkkkkkkkk:kkkssssssllssuuuuuusssssuuuuussssRRssssRRRRRR",
+"kkkkkkrkkkkkkk:kkkksssssllssuuuuuusssssuuuuussssRRssssRRRRRR",
+"kkkkkkkkkkkrkk:kkkksssslllsuuuuuuussssssuuuussssRRssssRRRRRR",
+"kkkkkkkkkkkkkk:kkkkssssllssuuuuuuursssssssuuuussssssssRRRRRR",
+"kkkkkkkkkkkkk::kkkkssssRRssuuuuuuusssssssssuuuussuuuusRRXXRR",
+".............::..kksscccccc.......sssssssssuuu..............",
+".............::......cccccc................::...............",
+"kkkkkkkkkkkkkkk......ccccccuuusuus.........::.uuuuuu........",
+"kkkkkkkkkkkkkkkkksssssRRssuuuusuuuuuusssssu::uuuuussssRRRRRR",
+"kkkkkkkkkkkkkkkkssssklllssuuuusuuuuuuuussuu::uuuusssssRRXXRR",
+"kkkkkkkkkkkkkkkksskkkllksuuuuuuuuullluuuuuuk:kuussssssRRRRRR",
+"kkkkkkkkkkkkkkkkkkkklllkkuuuuuslllllluuuuukk:kkussssssRRRRRR",
+"kkkkkkkkkkkkkkkkkkkklllkkkkkusllllRRRRRRRRRk:kksssssrsRRRRRR",
+"kkkkkkkkkkkkkkkkkkklllkkkkkkllllRRRRRRRRRRRR:kksssssssRRRRRR",
+"kkkkkkkkkkkkkkkkkkllllkkkkllllRRRRRsuukkRRRR::ksssssssRRRRRR",
+"kkkkkkkkkkkkkkkkkllllkkkklllkRRRRkkkukkkkkkk::ksssssssRRRRRR",
+"kkkkkkkkkkkkkkkkllllkkkllllkkRRRkkkkkkkkkkkkk:ksssssssRRRRRR",
+"kkkkkkkklllkkklllllkkllllkkkkkkkkkkkkkkkkkkkk::sssssssRRRRRR",
+"kkkkkklllllllllllllllllkkkkkkkkkkkkkkkkkkkkkkk:sssssssRRRRRR",
+"kkkkkllllllllllllllllkkkkkkkkkkkkkkkkkkkkkkkkk::ssssssRRRRRR",
+"kkkkklllllllllllllllkkkkkkkkkkkkkkkkkkkkkkkkkkk:sssssRRRRRRR",
+"kkkkklllllllllllllllkkkkkrkkkkkkkkkkkkkkkkkkkkk::ssssRRRRRRR",
+"kkkkklllllllllllllllkkkkkkkkkkkkkkkkkkkkkkkrssk::kssssRRRRRR",
+"kkkkklllllllllllllllkkkkkkkkkkkkkkrkkkkkkkkksssk:sssssRRRRRR",
+"kkkkkkllllllllllllllkkkkkkkkkkkkkkkkkkkkkkkkssss:sssssRRRRRR",
+"kkkkkkkllllllllllllkkkkkkkkkkkkkkkkkkkkkkkkkksss:sssssRRRRRR",
+"kkkkkkkkllllllkkkkkkrkkkkkkkkkkkkkkkkkkkkkkkkkss:sssssRRRRRR",
+"kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk:sssssRRRRRR",
+"kkkkkkrkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk:sssssRRRRRR",
+"kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk:sssssRRRRRR"
+],
+"marks": [
+{
+"kind": "gate",
+"cells": [
+[
+56,
+18
+],
+[
+57,
+18
+],
+[
+56,
+23
+],
+[
+57,
+23
+]
+],
+"text": "the carved stone GATE TOWERS of the crater town: squat black basalt towers flanking the road where it passes through a cut in the rock wall",
+"color": [
+70,
+66,
+72
+],
+"solid": true
+},
+{
+"kind": "causeway",
+"cells": [
+[
+21,
+19
+],
+[
+21,
+20
+],
+[
+21,
+21
+],
+[
+22,
+19
+],
+[
+22,
+20
+],
+[
+22,
+21
+],
+[
+23,
+19
+],
+[
+23,
+20
+],
+[
+23,
+21
+],
+[
+24,
+19
+],
+[
+24,
+20
+],
+[
+24,
+21
+],
+[
+25,
+19
+],
+[
+25,
+20
+],
+[
+25,
+21
+],
+[
+26,
+19
+],
+[
+26,
+20
+],
+[
+26,
+21
+]
+],
+"text": "a raised CAUSEWAY of fitted black basalt blocks with low kerbs, carrying the road over the glowing lava channel (the deck is walkable)",
+"color": [
+120,
+116,
+122
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "sign",
+"x": 10,
+"y": 23,
+"text": "溶岩の原\n道をはずれると、足もとが熱い。"
+},
+{
+"type": "sign",
+"x": 46,
+"y": 23,
+"text": "北西 → 湯けむりの谷\n南 → 火山ガメの浜\n東 → 炎の町カルデラ"
+},
+{
+"type": "sign",
+"x": 51,
+"y": 18,
+"text": "炎の町カルデラ\n――火口の段々と闘技場の町"
+},
+{
+"type": "waylamp",
+"id": "wl_a_lava_1",
+"x": 30,
+"y": 23,
+"lit": true
+},
+{
+"type": "waylamp",
+"id": "wl_a_lava_gate",
+"x": 51,
+"y": 23,
+"lit": true
+},
+{
+"type": "prop",
+"id": "lava_glow",
+"x": 12,
+"y": 36
+},
+{
+"type": "prop",
+"id": "lava_glow",
+"x": 8,
+"y": 34
+},
+{
+"type": "prop",
+"id": "lava_glow",
+"x": 16,
+"y": 38
+},
+{
+"type": "prop",
+"id": "lava_glow",
+"x": 23,
+"y": 9
+},
+{
+"type": "prop",
+"id": "lava_glow",
+"x": 24,
+"y": 16
+},
+{
+"type": "prop",
+"id": "lava_glow",
+"x": 33,
+"y": 26
+},
+{
+"type": "prop",
+"id": "lava_glow",
+"x": 22,
+"y": 29
+},
+{
+"type": "prop",
+"id": "lava_glow",
+"x": 40,
+"y": 12
+}
+],
+"spawns": {
+"west": {
+"x": 1,
+"y": 20,
+"dir": "e"
+},
+"caldera": {
+"x": 58,
+"y": 20,
+"dir": "w"
+},
+"north": {
+"x": 17,
+"y": 1,
+"dir": "s"
+},
+"south": {
+"x": 48,
+"y": 42,
+"dir": "n"
+}
+},
+"exits": [
+{
+"x": 0,
+"y": 20,
+"w": 1,
+"h": 2,
+"to": {
+"map": "a_pass",
+"spawn": "east"
+},
+"edge": "w"
+},
+{
+"x": 59,
+"y": 20,
+"w": 1,
+"h": 2,
+"to": {
+"map": "caldera",
+"spawn": "gate_w"
+},
+"edge": "e"
+},
+{
+"x": 17,
+"y": 0,
+"w": 2,
+"h": 1,
+"to": {
+"map": "a_spa",
+"spawn": "south"
+},
+"edge": "n"
+},
+{
+"x": 48,
+"y": 43,
+"w": 2,
+"h": 1,
+"to": {
+"map": "a_beach",
+"spawn": "lava"
+},
+"edge": "s"
+}
+],
+"notes": [],
+"meta": {
+"name": "溶岩の原",
+"sub": "カルデラの西の黒い原",
+"region": "r_ash",
+"worldRect": [
+381,
+393,
+105,
+93
+],
+"outside": "rock",
+"zones": [
+{
+"rect": [
+0,
+18,
+63,
+6
+],
+"zone": "zw_ash_road"
+},
+{
+"rect": null,
+"zone": "zw_ash_plain"
+}
+],
+"links": {
+"caldera": {
+"map": "a_lava",
+"spawn": "caldera"
+}
+},
+"npcs": []
+},
+"painted_extra": [
+"lava_glow"
+]
+}

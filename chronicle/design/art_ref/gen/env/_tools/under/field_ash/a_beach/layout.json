@@ -1,0 +1,190 @@
+{
+"id": "a_beach",
+"w": 60,
+"h": 36,
+"rows": [
+"RRRRRR:sRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR:sRRRRRRRR",
+"RRRRRR:sRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR:sRRRRRRRR",
+"RRRRRR:sRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR::RRRRlllR",
+"RRRRss:ssRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR::RRRRlllR",
+"RRssss:sssssRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRuuuu::ssRRlllR",
+"ssssss::ssssssssRRRRRRRRRRRRRRsssssssRRRRRRRssuuuu::ssssllRR",
+"ssssss::ssssssssssssssRRRRssssssssssssssssssuuuuuu::ssslllRR",
+"sssssss::ssssssssssssssssssssssssssssssssssssuuuuu:sssslllRR",
+"ssssssss:sssssssssssssssssssssssssssssssssuuuuuuu::sssslllRR",
+"ssssssss::sssssssRRRssssssssssssssssssssssuuuuuuu::sssslllRR",
+"sssssssss::ssssssRRRssssssssssssssssssssssuuusss::ssssslllRR",
+"ssssssssss:::ssssRRRsssssssssssssssssRRRRsuusss::sssssslllRR",
+"sssssssssss:::ssuuuusssssssssssssssssRRRRssssss::sssssssllRR",
+"sssssssssssss::suuuusssssssssssssssssRRRRsssss::ssssssssllRR",
+"rsssssssrsssss::uuuussssssssssssssssssssssss:::ssssssssslllR",
+"sssssssssrsssss:::uussssssssssssssssssssss:::ssssssssssslllR",
+"ssssssssssssssss:::sssssssXXsssssssssss:::::sssssrsssssslllR",
+"ssssssssssssssXsss:::sssssssssss:::::::::ssssssssssssssslllR",
+"usssssssssssssssssss::::::::::::::::sssssssssRRRsssssssslllR",
+"ussssssssssssssssssssss::::::ssssssssssssssssRRRsssssssslllR",
+"sssssssuussssssssssssssssssRRssssssssssssssssRRRssssssssllRR",
+"ssssssuuuuwwsssssssssssssssRRsssssssssssssssssssssssssssllRR",
+"ssssuuuuuuwwssssssssssssssssssssssssssssssXXssssssssssslllRR",
+"sssuuuuuuuuusssssssssssssssssssswwwsssssssssssssssssssslllRr",
+"uuuuuuuuuuuusssssssssssssssssssswwwsssssssssssssssssssslllRR",
+"_____u__________________________www____________________lllRR",
+"_____________________~~~~~~~~__________________________lllRR",
+"~~_______________~~~~~~~~~~~~~~~~~~___________~~~~~~~~~lll~~",
+"~~~~~~~~~~_~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ll~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ll~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ll~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+],
+"marks": [
+{
+"kind": "shells",
+"cells": [
+[
+26,
+16
+],
+[
+27,
+16
+],
+[
+42,
+22
+],
+[
+43,
+22
+],
+[
+14,
+17
+]
+],
+"text": "huge rounded GREY-GREEN ROCKS whose cracked domed tops look exactly like giant TURTLE SHELLS half sunk in the black sand",
+"color": [
+110,
+118,
+100
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "examine",
+"x": 26,
+"y": 16,
+"event": "ash_beach_rock"
+},
+{
+"type": "sign",
+"x": 9,
+"y": 8,
+"text": "黒い砂浜\n動く岩に注意。"
+},
+{
+"type": "chest",
+"id": "a_beach_c1",
+"x": 47,
+"y": 23,
+"item": "i_panacea",
+"n": 1
+},
+{
+"type": "waylamp",
+"id": "wl_a_beach_1",
+"x": 30,
+"y": 15,
+"lit": true
+},
+{
+"type": "prop",
+"id": "steam_vent",
+"x": 53,
+"y": 26
+},
+{
+"type": "prop",
+"id": "steam_vent",
+"x": 53,
+"y": 12
+},
+{
+"type": "prop",
+"id": "lava_glow",
+"x": 57,
+"y": 10
+},
+{
+"type": "prop",
+"id": "lava_glow",
+"x": 56,
+"y": 22
+}
+],
+"spawns": {
+"lava": {
+"x": 6,
+"y": 1,
+"dir": "s"
+},
+"foot": {
+"x": 50,
+"y": 1,
+"dir": "s"
+}
+},
+"exits": [
+{
+"x": 6,
+"y": 0,
+"w": 2,
+"h": 1,
+"to": {
+"map": "a_lava",
+"spawn": "south"
+},
+"edge": "n"
+},
+{
+"x": 50,
+"y": 0,
+"w": 2,
+"h": 1,
+"to": {
+"map": "a_foot",
+"spawn": "south"
+},
+"edge": "n"
+}
+],
+"notes": [],
+"meta": {
+"name": "火山ガメの浜",
+"sub": "黒い砂浜",
+"region": "r_ash",
+"worldRect": [
+435,
+444,
+105,
+42
+],
+"outside": "sea",
+"zones": [
+{
+"rect": null,
+"zone": "zw_ash_beach"
+}
+],
+"links": {},
+"npcs": []
+},
+"painted_extra": [
+"lava_glow"
+]
+}

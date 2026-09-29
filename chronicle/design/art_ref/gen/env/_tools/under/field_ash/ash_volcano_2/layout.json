@@ -1,0 +1,176 @@
+{
+"id": "ash_volcano_2",
+"w": 44,
+"h": 36,
+"rows": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRskkkkkkkksRRRRRRRRRRRR",
+"RRRRRRRRRRssssssssssskkkkkkkkkkkkssRRRRRRRRR",
+"RRRRRRRRsssssssssssskkkkkkkkkkkkkksssRRRRRRR",
+"RRRRRRsssssssssssssskkkkkkkkkkRRssssssRRRRRR",
+"RRRRRsssssRRRRllllllkkklllllllllRRsssssRRRRR",
+"RRRRRsssRRRRllllllllkkkllllllllllllssssRRRRR",
+"RRRRsssRRRllllllllllkkklllllllllllllssssRRRR",
+"RRRRsssRRlllllllllllkkkllllllllllllllsssRRRR",
+"RRRRsssRllllllllllllkkkllllllllllllllsssRRRR",
+"RRRRssslllllllllllllkkkllllllllllllllsssRRRR",
+"RRRRssslllllllllllllkkkllllllllllllllsssRRRR",
+"RRRRssslllllllllllllkkkkllllllllllllllssRRRR",
+"RRRRsslllllllllllllkkkkkkklllllllllllllRRRRR",
+"RRRsssllllllllllllkkkXXkkklllllllllllllRRRRR",
+"RRRsssllllllllllllkkkXXkkkkllllllllllllRRRRR",
+"RRRssslllllllllllllkkkkkkkkllllllllllllRRRRR",
+"RRRssslllllllllllllkkkkkkklllllllllllllRRRRR",
+"RRRRsslllllllllllllllkkkklllllllllllllRRRRRR",
+"RRRRssllllllllllllllllllllllllllllllllRRRRRR",
+"RRRRssllllllllllllllllllllllllllllllllRRRRRR",
+"RRRRsssllllllllllllllllllllllllllllllRRRRRRR",
+"RRRRssslllllllllllllllllllllllllllllRRRRRRRR",
+"RRRRsssRlllllllllllllllllllllllllllRRRRRRRRR",
+"RRRRssssRRllllllllllllllllllllllllRRRRRRRRRR",
+"RRRRRsssRRRllllllllllllllllllllRRRRRRRRRRRRR",
+"RRRRRsssssRRRlllllllllllllllRRRRRRRRRRRRRRRR",
+"RRRRRRssssssssssssssllRRRRRRRssssssRRRRRRRRR",
+"RRRRRRRssssssssssssssssssssssssssssRRRRRRRRR",
+"RRRRRRRRsssssssssssssssssssssssssssRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRssssssRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRssssssRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRssssRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
+],
+"marks": [
+{
+"kind": "egg",
+"cells": [
+[
+21,
+16
+],
+[
+22,
+16
+],
+[
+21,
+17
+],
+[
+22,
+17
+]
+],
+"text": "a huge smooth EGG of glowing red-bronze shell, as big as a cart, resting in a nest of black obsidian shards",
+"color": [
+170,
+70,
+50
+],
+"solid": true
+},
+{
+"kind": "stairs",
+"cells": [
+[
+21,
+34
+]
+],
+"text": "rough STONE STEPS going down south out of the crater (the only way out)",
+"color": [
+150,
+146,
+140
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "stairs",
+"x": 21,
+"y": 34
+},
+{
+"type": "chest",
+"x": 33,
+"y": 30
+},
+{
+"type": "chest",
+"x": 39,
+"y": 12
+},
+{
+"type": "chest",
+"x": 5,
+"y": 9
+},
+{
+"type": "npc",
+"x": 27,
+"y": 4
+},
+{
+"type": "trigger",
+"x": 21,
+"y": 9
+},
+{
+"type": "trigger",
+"x": 21,
+"y": 10
+},
+{
+"type": "trigger",
+"x": 21,
+"y": 11
+},
+{
+"type": "trigger",
+"x": 22,
+"y": 9
+},
+{
+"type": "trigger",
+"x": 22,
+"y": 10
+},
+{
+"type": "trigger",
+"x": 22,
+"y": 11
+}
+],
+"spawns": {
+"stairs": {
+"x": 21,
+"y": 32,
+"dir": "n"
+},
+"rim": {
+"x": 22,
+"y": 5,
+"dir": "s"
+},
+"egg": {
+"x": 22,
+"y": 15,
+"dir": "s"
+}
+},
+"exits": [],
+"notes": [],
+"meta": {
+"name": "火口",
+"region": "r_ash",
+"zones": [],
+"worldRect": [
+0,
+0,
+1,
+1
+]
+}
+}

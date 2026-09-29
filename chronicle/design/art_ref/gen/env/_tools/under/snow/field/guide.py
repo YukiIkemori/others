@@ -34,6 +34,12 @@ def draw(T, sym=True):
                 if nb.count('~') >= 2: base = C['~']
             g.rectangle(R(x, y), fill=markc.get((x, y), base))
     if not sym: return im
+    # 雪原: 雪・氷・海・崖の境を丸める（マスの段々をなぞらせない。field_desert/guide.py と同じ）。目印（marks）の塊だけはくっきり残す
+    from PIL import ImageFilter
+    soft = im.filter(ImageFilter.GaussianBlur(T * 0.45))
+    keep = Image.new('L', im.size, 0); kd = ImageDraw.Draw(keep)
+    for (mx, my) in markc: kd.rectangle(R(mx, my), fill=255)
+    im = Image.composite(im, soft, keep); g = ImageDraw.Draw(im)
     for y in range(H):
         for x in range(W):
             c = ch(x, y); cx, cy = x * T + T // 2, y * T + T // 2

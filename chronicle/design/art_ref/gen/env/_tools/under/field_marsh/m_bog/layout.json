@@ -112,6 +112,18 @@
 ],
 "objects": [
 {
+"type": "door",
+"x": 6,
+"y": 22,
+"w": 1,
+"look": "none",
+"to": {
+"map": "marsh_bog",
+"spawn": "entrance"
+},
+"cond": "marsh_assembly_done"
+},
+{
 "type": "examine",
 "x": 6,
 "y": 22,
@@ -221,17 +233,6 @@
 "slice": true
 }
 }
-},
-{
-"x": 6,
-"y": 22,
-"w": 1,
-"h": 1,
-"to": {
-"map": "marsh_bog",
-"spawn": "entrance"
-},
-"cond": "marsh_assembly_done"
 }
 ],
 "notes": [],
@@ -292,7 +293,7 @@
 "FFFFFFFFFFsssws,ss.wwwb,,,,..sss,;ssss...wwwwwwwww.s",
 "FFFFFFFFFFFbwwbsss..w.,,,,,..srssssssss..wwwwwwwwwws",
 "FFFFFFFFFFFwwwbs.ss..,,Tss,..ssssssrssss.wwwwwwwwwws",
-"FFFFFFFFFFFwwww..bss,,,,s,,..,,ss;sssss.bbwwwwwwwwss",
+"FFFFFFFFFFFwwww..bss,,,,s,,..,,ss;sssss.bwwwwwwwwwss",
 "FFFFFFFFFFFwwww.bw.s,,,,,,..,,,r,,;;;;.wwb.wwww.wwss",
 "FFFFFFFFFFwwwwbwwbs,,,,,,,..,,,,,,,..b.www..w...wssb",
 "FFFFFFFFFFw..wwwwww,,,,,,,..b,,,,,,.ww..ww.,...ssr..",

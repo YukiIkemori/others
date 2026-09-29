@@ -80,6 +80,28 @@ for aid in sys.argv[1:]:
     art = {'image': 'field/under/' + aid, 'painted': painted}
     if has_over: art['overlay'] = 'field/under/%s_over' % aid
     if os.path.exists(os.path.join(V2, 'assets/env/field/under/%s_closed@32.png' % aid)): art['closed'] = 'field/under/%s_closed' % aid
+    # 街道の出現（旧ワールドの zw_snow_road と同じ、率 0.3）: 道（'.' ':' と橋 '='）とその両脇 1 マスを zw_snow_road の矩形で先に置き、
+    # 残りは原野 zw_snow（体験版の森の f_fern・砂漠の d_east と同じ考え: 道を歩けば少なく、道を外れると野の率）
+    zones = M['zones']
+    if any(z['zone'] == 'zw_snow' for z in zones):
+        lr = d['rows']; road = [[False] * W_ for _ in range(H_)]
+        for y in range(H_):
+            for x in range(W_):
+                if any(0 <= y + j < H_ and 0 <= x + i < W_ and lr[y + j][x + i] in '.:=' for i in (-1, 0, 1) for j in (-1, 0, 1)): road[y][x] = True
+        rects = []
+        for y in range(H_):
+            x = 0
+            while x < W_:
+                if not road[y][x]: x += 1; continue
+                x1 = x
+                while x1 < W_ and road[y][x1]: x1 += 1
+                y1 = y + 1
+                while y1 < H_ and all(road[y1][i] for i in range(x, x1)): y1 += 1
+                rects.append([x, y, x1 - x, y1 - y])
+                for j in range(y, y1):
+                    for i in range(x, x1): road[j][i] = False
+                x = x1
+        zones = [{'rect': r, 'zone': 'zw_snow_road'} for r in rects] + [z for z in zones if z['zone'] != 'zw_snow_road']
     edges = ', '.join('%s → %s.%s' % (e['edge'], e['to']['map'], e['to']['spawn']) for e in d['exits'])
     extra = ''
     for k in ('weather', 'weatherCond', 'bbg'):
@@ -105,7 +127,7 @@ for aid in sys.argv[1:]:
     exits: {js(exits)},
     triggers: {js(M.get('triggers', []))},
     tilePatches: {js(M.get('tilePatches', []))},
-    zones: {js(M['zones'])},
+    zones: {js(zones)},
 {extra}    art: {js(art)},
     meta: {js(dict(sub=T('meta.sub', M.get('sub', '')), worldRect=M['worldRect']))},
     links: {js(M.get('links', {}))},

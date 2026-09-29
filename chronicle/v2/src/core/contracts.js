@@ -270,6 +270,7 @@
   THEMES.push('snow', 'snow_town', 'ice_cave');   // 雪原（snow_*.js）
   THEMES.push('desert', 'desert_town', 'tomb');   // 砂漠（desert_*.js）
   THEMES.push('field');   // エリア切り替えのフィールド（kind 'field'、field_*.js。1 エリア = 1 枚の描いた絵）
+  THEMES.push('ash');   // 灰の荒野のエリア（field_ash_*.js）
   // アイコンの名前（R.UIK.icon。MODERN_UI の kit.js の一覧から、斧・槍を除き、版 2 で使う物を足した）
   const ICONS = ['bag', 'arts', 'equip', 'sword', 'greatsword', 'dagger', 'bow', 'staff', 'shield', 'helm', 'armor', 'glove', 'boots', 'ring',
     'order', 'beast', 'book', 'journal', 'map', 'save', 'gear', 'warp', 'exit', 'potion', 'gem', 'coin', 'clock', 'pin', 'quest', 'bulb',

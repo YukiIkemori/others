@@ -218,7 +218,7 @@ def m_manor():
     a.exit('w', 20, 21, {'map': 'loch', 'spawn': 'gate_e'}, 'loch')
     a.exit('s', 23, 25, {'map': 'm_lotus', 'spawn': 'north'}, 'south')
     a.spawns['manor'] = dict(x=38, y=10, dir='s')
-    a.exits.append(dict(x=38, y=9, w=1, h=1, to={'map': 'marsh_manor_1', 'spawn': 'entrance'}))
+    a.objects.append(dict(type='door', x=38, y=9, w=1, look='none', to={'map': 'marsh_manor_1', 'spawn': 'entrance'}))   # 描いた扉（確かめの文は CONFIRM）
     a.objects += [
         dict(type='sign', x=40, y=18, text='霧の館\n夜ごと、楽の音が聞こえる。'),
         dict(type='prop', id='grave_moss', x=30, y=10), dict(type='prop', id='grave_moss', x=46, y=12), dict(type='prop', id='grave_moss', x=44, y=14),
@@ -353,7 +353,7 @@ def m_bog():
     a.exit('n', 25, 27, {'map': 'm_fen', 'spawn': 'south'}, 'north')
     a.exit('s', 25, 27, {'map': 'world', 'spawn': 'marsh_s'}, 'south')['cond'] = {'not': {'slice': True}}
     a.spawns['bog'] = dict(x=7, y=22, dir='e')
-    a.exits.append(dict(x=6, y=22, w=1, h=1, to={'map': 'marsh_bog', 'spawn': 'entrance'}, cond='marsh_assembly_done'))
+    a.objects.append(dict(type='door', x=6, y=22, w=1, look='none', to={'map': 'marsh_bog', 'spawn': 'entrance'}, cond='marsh_assembly_done'))   # 霧の壁が晴れてから
     a.objects += [
         dict(type='examine', x=6, y=22, event='marsh_mistwall', cond={'not': 'marsh_assembly_done'}),
         dict(type='examine', x=18, y=26, event='marsh_songstone'),

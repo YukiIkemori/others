@@ -114,6 +114,7 @@
     'map.marsh_field_manor.m_manor.name': '枯れ柳の庭',
     'map.marsh_field_manor.m_manor.objects.0.text': '霧の館\n夜ごと、楽の音が聞こえる。',
     'map.marsh_field_manor.m_manor.meta.sub': '霧の館へ続く沈んだ林',
+    'map.marsh_field_manor.m_manor.objects.1.text': '霧の館\n夜ごと、楽の音が聞こえる。',
     // ---- src/maps/marsh_field_fen.js
     'map.marsh_field_fen.m_fen.name': '沈んだ礼拝堂の原',
     'map.marsh_field_fen.m_fen.objects.0.text': '沈んだ礼拝堂\n水の底から、歌が聞こえるという。',
@@ -127,5 +128,7 @@
     'map.marsh_field_bog.m_bog.objects.3.text': '鐘沈みの沼\n――霧の来る所',
     'map.marsh_field_bog.m_bog.objects.4.text': '南 → 潮見橋・灰の荒野',
     'map.marsh_field_bog.m_bog.meta.sub': '霧の来る所',
+    'map.marsh_field_bog.m_bog.objects.4.text_2': '鐘沈みの沼\n――霧の来る所',
+    'map.marsh_field_bog.m_bog.objects.5.text': '南 → 潮見橋・灰の荒野',
   });
 })(window.RPG);

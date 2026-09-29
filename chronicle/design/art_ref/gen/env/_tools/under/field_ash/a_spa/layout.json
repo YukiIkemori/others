@@ -1,0 +1,203 @@
+{
+"id": "a_spa",
+"w": 48,
+"h": 40,
+"rows": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRR,,,XXXssssRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRR,,sss,,,cccccsssssssRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRR,sssss,,,cccccssssss,,,RRRRRRRRRRRR",
+"RRRRRRRRRRRR;ssssss,ccwwwwwcsssssssssRRRRRRRRRRR",
+"RRRRRRRRRRsssssssss,cwwwwwwwsssssssssssRRRRRRRRR",
+"RRRRRRRRRsssssssss,,cwwwwwwwcssssssssssRRRRRRRRR",
+"RRRRRRRRssssssssss,,,cwwwwwcsssssRRsssssRRRRRRRR",
+"RRRRRRRRsrsssssscccccscc:ccssssssRRsssssRRRRRRRR",
+"RRRRRRRRssssssccwwwwwcc::sssssssssssssssRRRRRRRR",
+"RRRRRRRRsssssscwwwwwwwc::ssccccc,sssssssRRRRRRRR",
+"RRRRRRRRsssssscwwwwwwwc:sscwwwwcccssssssRRRRRRRR",
+"RRRRRRRRssssssccwwwwwcc:scwwwwwwwcssssssRRRRRRRR",
+"RRRRRRRRss,,r,ssccccc,,::cwwwwwwwcsssssssRRRRRRR",
+"RRRRRRRsss,,,,,,,,,,,,,::cwwwwwwwc,s,,ss,RRRRRRR",
+"RRRRRRRsss,,,RR,,,,,,,,,:,cwwwwccc,,,,,,,RRRRRRR",
+"RRRRRRRsss,,,RR,,,cccccc:,,ccccc,,,,,,,b,RRRRRRR",
+"RRRRRRRsss,,,RR,ccwwwwww::,,,,,,,,,bR,b,,RRRRRRR",
+"RRRRRRRsss,,,,,,cwwwwwww::c,,,,,,,,RR,,,,RRRRRRR",
+"RRRRRRRsss,,,,,,cwwwwwww::c,,,,,,,,,,,,,RRRRRRRR",
+"RRRRRRRRsss,,,,,,cwwwwww::,,,cccc,,,,,ssRRRRRRRR",
+"RRRRRRRRsssss,,,ssccccccc:scwwwwwcc,,sssRRRRRRRR",
+"RRRRRRRRRsssss,sssssscsss:cwwwwwwwc,,sssRRRRRRRR",
+"RRRRRRRRRssssssssssssssss::wwwwwwwc,,,,sRRRRRRRR",
+"RRRRRRRRRsssssRRsssssssss::cwwwwwc,,,,,sRRRRRRRR",
+"RRRRRRRRRRssssRRsssssssss::sccccc,,,,,ssRRRRRRRR",
+"RRRRRRRRRRsssssssssssssss::ss;,ssssssssRRRRRRRRR",
+"RRRRRRRRRRRrssssssssssss::sss;;sssssssRRRRRRRRRR",
+"RRRRRRRRRRRsssssssssssss::s;;;;;sssssRRRRRRRRRRR",
+"RRRRRRRRRRRRsssssssssss::ss;;,,;sssrsRRRRRRRRRRR",
+"RRRRRRRRRRRRRssssssssss::ss;;,,;ssssRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRsssssssss::ssss,;;;sssRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRsssssssss:;sssss,;;;sRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRsssssssss:;ssss;,,;;RRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRR,,,,,,sss:ssssss,sssRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRR,,,,,,,,ss:ssss;;,,,,RRRRRRRRRRRRRR"
+],
+"marks": [
+{
+"kind": "tube",
+"cells": [
+[
+23,
+5
+],
+[
+24,
+5
+],
+[
+25,
+5
+]
+],
+"text": "the dark round MOUTH OF AN OLD LAVA TUBE in the cliff, hot water and steam pouring out of it",
+"color": [
+40,
+26,
+16
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "examine",
+"x": 23,
+"y": 22,
+"event": "ash_spa_pool"
+},
+{
+"type": "sign",
+"x": 21,
+"y": 33,
+"text": "溶岩洞の湯の郷\n岩の割れ目から、湯が湧く。"
+},
+{
+"type": "prop",
+"id": "steam_vent",
+"x": 12,
+"y": 25
+},
+{
+"type": "prop",
+"id": "steam_vent",
+"x": 33,
+"y": 20
+},
+{
+"type": "prop",
+"id": "steam_vent",
+"x": 28,
+"y": 8
+},
+{
+"type": "chest",
+"id": "a_spa_c1",
+"x": 35,
+"y": 27,
+"item": "i_ether",
+"n": 1
+},
+{
+"type": "waylamp",
+"id": "wl_a_spa_1",
+"x": 27,
+"y": 33,
+"lit": true
+}
+],
+"spawns": {
+"south": {
+"x": 23,
+"y": 38,
+"dir": "n"
+}
+},
+"exits": [
+{
+"x": 23,
+"y": 39,
+"w": 2,
+"h": 1,
+"to": {
+"map": "a_lava",
+"spawn": "north"
+},
+"edge": "s"
+}
+],
+"notes": [],
+"meta": {
+"name": "湯けむりの谷",
+"sub": "溶岩洞の湯の郷",
+"region": "r_ash",
+"worldRect": [
+360,
+354,
+84,
+42
+],
+"outside": "rock",
+"zones": [
+{
+"rect": null,
+"zone": "zw_ash_spa"
+}
+],
+"links": {},
+"npcs": []
+},
+"rows_fit": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRR,,,XXXssssRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRR,,sss,,,cwwwwsssssssRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRR,sssss,,wwwwwwwsssss,,,RRRRRRRRRRRR",
+"RRRRRRRRRRRR;ssssss,cwwwwwwcsssssssssRRRRRRRRRRR",
+"RRRRRRRRRRsssssssss,c,wwwwwwsssssssssssRRRRRRRRR",
+"RRRRRRRRRsssssssss,,c,,,,,,,cssssssssssRRRRRRRRR",
+"RRRRRRRRssssssssssww,c,,,,,csssss,,sssssRRRRRRRR",
+"RRRRRRRRs,sssssscwwwwwcc:ccssssss,,sssssRRRRRRRR",
+"RRRRRRRRssssssccwwwwwwc::sssssssssssssssRRRRRRRR",
+"RRRRRRRRssssssc,wwwwwwc::sscwwww,sssssssRRRRRRRR",
+"RRRRRRRRssssssc,,w,,,,c:sscwwwwwwcssssssRRRRRRRR",
+"RRRRRRRRsssssscc,,,,,cc:scwwwwwwwwssssssRRRRRRRR",
+"RRRRRRRRss,,,,ssccccc,,::c,wwwwwwcsssssssRRRRRRR",
+"RRRRRRRsss,,,,,,,,,,,,,::c,,www,,c,s,,ss,RRRRRRR",
+"RRRRRRRsss,,,,,,,,,wwwww:,c,,,,ccc,,,,,,,RRRRRRR",
+"RRRRRRRsss,,,,,,,,wwwwww:,,ccccc,,,,,,,,,RRRRRRR",
+"RRRRRRRsss,,,,,,cwwwwwww::,,,,,,,,,,,,,,,RRRRRRR",
+"RRRRRRRsss,,,,,,c,wwwwww::c,,,,,,,,,,,,,,RRRRRRR",
+"RRRRRRRsss,,,,,,c,,wwww,::c,,,w,w,,,,,,,RRRRRRRR",
+"RRRRRRRRsss,,,,,,c,,,,,,::,,wwwwww,,,,ssRRRRRRRR",
+"RRRRRRRRsssss,,,ssccccccc:scwwwwwww,,sssRRRRRRRR",
+"RRRRRRRRRsssss,sssssscsss:c,,wwwwwc,,sssRRRRRRRR",
+"RRRRRRRRRssssssssssssssss::,,,,ww,c,,,,sRRRRRRRR",
+"RRRRRRRRRsssss,,sssssssss::c,,,,,c,,,,,sRRRRRRRR",
+"RRRRRRRRRRssss,,sssssssss::sccccc,,,,,ssRRRRRRRR",
+"RRRRRRRRRRsssssssssssssss::ss;,ssssssssRRRRRRRRR",
+"RRRRRRRRRRR,ssssssssssss::sss;;sssssssRRRRRRRRRR",
+"RRRRRRRRRRRsssssssssssss::s;;;;;sssssRRRRRRRRRRR",
+"RRRRRRRRRRRRsssssssssss::ss;;,,;sss,sRRRRRRRRRRR",
+"RRRRRRRRRRRRRssssssssss::ss;;,,;ssssRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRsssssssss::ssss,;;;sssRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRsssssssss:;sssss,;;;sRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRsssssssss:;ssss;,,;;RRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRR,,,,,,sss:ssssss,sssRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRR,,,,,,,,ss:ssss;;,,,,RRRRRRRRRRRRRR"
+]
+}

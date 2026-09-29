@@ -1,0 +1,334 @@
+{
+"id": "a_foot",
+"w": 56,
+"h": 44,
+"rows": [
+"RRkssssuuuusuuukkkks.ssbsssssuuuuuruuRRRRRRRRRRRRRRRRRRR",
+"RRsssssssuuuuukkkkss..sssssssuuuuuuuRRRRRRRRRRRRRRRRRRRR",
+"RRssssssssssssssssss..ssssuuuuuuuuusRRRRRRRRRRRRRRRRRRRR",
+"RRusssssssssssssssss..ssssuuuuuuuuusRRRRRRRRRRRRRRRRRRRR",
+"RRuussssssssssssssss..ssssuuuuuuuuuRRRRRRRRRRRRRRRRRRRRR",
+"RRuussssssssssssssss..ssssuuuuussusRRRRRRRRRRRRRRRRRRRRR",
+"RRssssssssssskkksss..sssRRRRRuussssRRRRRRRRRRRRRRRRRRRRR",
+"RRsssssssRRRskkkkss..ssuRRRRRusssssRRRRRRRRRRRRRRRRRRRRR",
+"RRsssssssRRRskkkss...surRRRRuussssssRRRRRRRRRRRRRRRRRRRR",
+"RRsssssssRRRskksss..sssuuuuuuussssssRRRRRRRRRRRRRRRRRRRR",
+"RRsssssssssssssss...ssuuuuuuuusssrssRRRRRRRRRRRRRRRRRRRR",
+"RRsrssssssssbssss..sssuuuuuuuussrsssRRRRRRRRRRRRRRRRRRRR",
+"RRsssrssssssssssT..TssuuuuuuuussssssRRRRRRRRRRRRRRRRRRRR",
+"RRssssskssssssss..TTssuuuuuuuussssssRRRRRRRRRRRRRRRRRRRR",
+"RRksskksssssssrs..ssssuuuuuuuusssssssRRRRRRRRRRRRRRRRRRR",
+"RRssbsssssssssss..ssssruuuuuuusssssssRRRRRRRRRRRRRRRRRRR",
+"RRssssssssssssss..sssssuuuuuussssssssRRRRRRRRRRRRRRRRRRR",
+"RRssssssssssssss.sssssruuuuuusssbssssRRRRRRRRRRRRRRRRRRR",
+"RRsssssssssssss..sssssuuuuuuussssssssX:XRRRRRRRRRRRRRRRR",
+"XXsssssssssssss..sssssuu..............ccRRRRRRRRRRRRRRRR",
+"..sssss...............................ccRRRRRRRRRRRRRRRR",
+"........................usuuuuusssuussssRRRRRRRRRRRRRRRR",
+"........sssssssssss..suuuuuusssssuuuuuusRRRRRRRRRRRRRRRR",
+"RRsssssssssssssssss..suuuuuusssusruuuuusRRRRRRRRRRRRRRRR",
+"XXsssssssssssssssss..uuuuuuuuuuuuuuuuussuRRRRRRRRRRRRRRR",
+"RRsssssssssssssssuu..uuuuuuuuuuuuussusssuuRRRRRRRRRRRRRR",
+"RRssssssssssssssuuu.uuuuuuuuuuuuuusssssuuuuRRRRRRRRRRRRR",
+"RRssssssssssssssuuu.uuuuuuuuuuuuuusssssuuuuuRRRRRRRRRRRR",
+"RRssssssssssssuuuu..uuuuuuuuuuuuuuussssuuuuuuRRRRRRRRRRR",
+"RRssbssssssssuuuuu..uuuuuuuuuRRRuuuuuuruuuuuuuRRRllRRRRR",
+"RRsssssssssssuuuuu..sssssssssRRRuuuuubuusssuuuuulllRRRRR",
+"RRsssssssssuuuuuu..ssssssssssuRRuuubuuusssssssslllRRRRRR",
+"RRsssssuusuuuRRRR..sssssssssssuuuuussuussssssslllRRRRRRR",
+"RRssuuuuuuuuRRRRR..sssssssssssssssssssssssssslllRRRRRRRR",
+"RRssuuuuuuusRRRR..sssssssssssssssssssssssssslllRRRRRRRRR",
+"RRssuTTTssssssss.sssssssssssssrsssssssssssllllRRRRRRRRRR",
+"RRbssTTTTssssss..sssssssssssssssssskssssslllRRRRRRRRRRRR",
+"RRssuTTTsssssss..ssssssssssssssssskksssslllRRRRRRRRRRRRR",
+"RRssuuTussssss..sssssssrssssssssskkkssssllRRRRRRRRRRRRRR",
+"RRssuuuuuuuuss..ssssssssssssrssskkkkksslllRRRRRRRRRRRRRR",
+"RRssssuuuuuuss..sssssssssssssssssskkkssllRRRRRRRRRRRRRRR",
+"RRssssuuuuuuss..ssssssssssssksssssskkksllRRRRRRRRRRRRRRR",
+"RRssssssuuuuus..ssssssssssskksssssskkskllRRRRRRRRRRRRRRR",
+"RRssssssuuuuus.ssssssssssssskssssssskkkllRRRRRRRRRRRRRRR"
+],
+"marks": [
+{
+"kind": "gate",
+"cells": [
+[
+0,
+19
+],
+[
+1,
+19
+],
+[
+0,
+24
+],
+[
+1,
+24
+]
+],
+"text": "the carved stone GATE TOWERS of the crater town: squat black basalt towers flanking the road where it passes through a cut in the rock wall",
+"color": [
+70,
+66,
+72
+],
+"solid": true
+},
+{
+"kind": "rockdoor",
+"cells": [
+[
+37,
+18
+],
+[
+39,
+18
+]
+],
+"text": "the carved stone jambs of an ancient ROCK DOOR cut into the volcano: a round slab of black stone with three hollows shaped like birds with spread wings",
+"color": [
+70,
+66,
+72
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+38,
+18
+]
+],
+"text": "a dark ENTRANCE",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "stairs",
+"x": 38,
+"y": 18,
+"to": {
+"map": "ash_volcano_1",
+"spawn": "entrance"
+},
+"cond": "ash_champion",
+"look": "none"
+},
+{
+"type": "examine",
+"x": 38,
+"y": 18,
+"event": "ash_rockdoor_world",
+"cond": {
+"not": "ash_champion"
+}
+},
+{
+"type": "sign",
+"x": 34,
+"y": 22,
+"text": "灰の火山\n炎の試練の勝者のほか、入るべからず。"
+},
+{
+"type": "sign",
+"x": 5,
+"y": 24,
+"text": "北 → 潮見橋・灰見の宿\n南 → 火山ガメの浜"
+},
+{
+"type": "waylamp",
+"id": "wl_a_foot_gate",
+"x": 6,
+"y": 19,
+"lit": true
+},
+{
+"type": "waylamp",
+"id": "wl_a_foot_1",
+"x": 22,
+"y": 17,
+"lit": true
+},
+{
+"type": "prop",
+"id": "iron_brazier",
+"x": 37,
+"y": 18
+},
+{
+"type": "prop",
+"id": "iron_brazier",
+"x": 39,
+"y": 18
+},
+{
+"type": "prop",
+"id": "lava_glow",
+"x": 44,
+"y": 35
+},
+{
+"type": "prop",
+"id": "lava_glow",
+"x": 40,
+"y": 40
+}
+],
+"spawns": {
+"caldera": {
+"x": 1,
+"y": 21,
+"dir": "e"
+},
+"north": {
+"x": 20,
+"y": 1,
+"dir": "s"
+},
+"south": {
+"x": 14,
+"y": 42,
+"dir": "n"
+},
+"volcano": {
+"x": 38,
+"y": 19,
+"dir": "s"
+}
+},
+"exits": [
+{
+"x": 0,
+"y": 21,
+"w": 1,
+"h": 2,
+"to": {
+"map": "caldera",
+"spawn": "gate_e"
+},
+"edge": "w"
+},
+{
+"x": 20,
+"y": 0,
+"w": 2,
+"h": 1,
+"to": {
+"map": "a_bridge",
+"spawn": "south"
+},
+"edge": "n"
+},
+{
+"x": 14,
+"y": 43,
+"w": 2,
+"h": 1,
+"to": {
+"map": "a_beach",
+"spawn": "foot"
+},
+"edge": "s"
+}
+],
+"notes": [],
+"meta": {
+"name": "火山のふもと",
+"sub": "カルデラの東、火の鳥の眠る山",
+"region": "r_ash",
+"worldRect": [
+519,
+384,
+99,
+66
+],
+"outside": "rock",
+"zones": [
+{
+"rect": [
+0,
+18,
+40,
+6
+],
+"zone": "zw_ash_road"
+},
+{
+"rect": null,
+"zone": "zw_ash_plain"
+}
+],
+"links": {
+"caldera_e": {
+"map": "a_foot",
+"spawn": "caldera"
+},
+"volcano": {
+"map": "a_foot",
+"spawn": "volcano"
+}
+},
+"npcs": []
+},
+"painted_extra": [
+"lava_glow"
+],
+"rows_fit": [
+"RRTrsssuuuusuuTrrrrr.ssbTssssuuuuusTTRRRRRRRRRRRRRRRRRRR",
+"RRrrsssssuuuuurrrrrT..ssTssssuuuuuuTTRRRRRRRRRRRRRRRRRRR",
+"RRrrssssssssssrrrrTs..ssssuuuuuuuuusRRRRRRRRRRRRRRRRRRRR",
+"RRrTsssssssssssssTss..ssssuuuuuuuuusRRRRRRRRRRRRRRRRRRRR",
+"RRrTssssssssssssssss..ssssuuuuuuuuuRRRRRRRRRRRRRRRRRRRRR",
+"RRrussssssssssssssss..ssssuuuuussusRRRRRRRRRRRRRRRRRRRRR",
+"RRrTssssssssskrrrTs..sssRRRRRrussssRRRRRRRRRRRRRRRRRRRRR",
+"RRrTssssssRRTkrrrrs..ssuRRRRRrsssssRRRRRRRRRRRRRRRRRRRRR",
+"RRrrsssssRRRrTrrrT...susRRRRrTsssssTRRRRRRRRRRRRRRRRRRRR",
+"RRrTsssssRRRrTrrrs..sssTTTTTTussssssRRRRRRRRRRRRRRRRRRRR",
+"RRrrssssssTrrTrTs...TsuuuuuuuusssrTsRRRRRRRRRRRRRRRRRRRR",
+"RRrrTsssssssbTsssT.sssuuuuuuuussrTTsRRRRRRRRRRRRRRRRRRRR",
+"RRrrTsTsssssTTsssT..TsuuuuruuussTTssRRRRRRRRRRRRRRRRRRRR",
+"RRrrssTkrTssssss.T.TTsuuuuuuuussssssRRRRRRRRRRRRRRRRRRRR",
+"RRrrsTrrrsssssrT..sTrsuuuuuuuussssssrRRRRRRRRRRRRRRRRRRR",
+"RRrrsTrrTsssssTT..ssssrTuuuuuussssssTRRRRRRRRRRRRRRRRRRR",
+"RRrrsTssssssssss..sssssruuuuussssssssRRRRRRRRRRRRRRRRRRR",
+"RRrrssssssssssss.sssssruuuuuusssbTssTRRRRRRRRRRRRRRRRRRR",
+"RRrrsssssssssss..sssssuTuuuuusssTTsssX:XRRRRRRRRRRRRRRRR",
+"XXrTsssssssssss..sssssuu...........TT.ccRRRRRRRRRRRRRRRR",
+"Tlrrsss..............................rX:XRRRRRRRRRRRRRRR",
+"........................usuuuuusss...ccccRRRRRRRRRRRRRRR",
+".T......sssssTsssss..suTuuuusssssuuucccccRRRRRRRRRRRRRRR",
+"RRrTsssssssssssssss..suuuuuusssussuuuTTrRRRRRRRRRRRRRRRR",
+"XXrrsssssssssssssss..uuuuuuuuuuuuTTuuussrRRRRRRRRRRRRRRR",
+"RRrrsssssssssssssuu..uurruuuuuuuuussusssTrRRRRRRRRRRRRRR",
+"RRrrssssssssssssuuu.uuruuuuuuuuuuusssssuuTrRRRRRRRRRRRRR",
+"RRrrssssssssssssuuu.uuuuuuruuuuuuusssssuuuTrRRRRRRRRRRRR",
+"RRrrssssssssssuuru..uuuuuuuuuuuuuuussssuuuuTrRRRRRRRRRRR",
+"RRrrsTssssTssuuuuu..uuuruuuuuRRRTuruuuruuuuuTrRRRllRRRRR",
+"RRrTsrsssssssuuuuu..sssssssssRRRruuuubTTsssuuTrrlllRRRRR",
+"RRrTsssssssuuuuuu..ssssssssssTRRruubTTTsssssssTlllRRRRRR",
+"RRrrsssuusuuuRRRRT.sssssssssssTrrurTTuussssssslllRRRRRRR",
+"RRrruuuuuuuuRRRRRr.sssssssssssssssssssssssssssllRRRRRRRR",
+"RRrruuuuuuurRRRRrrsssssssssssssssssssssssssslllRRRRRRRRR",
+"RRrrusTTssssTrrrTssssssssssssssTssssssssssllllRRRRRRRRRR",
+"RRbTTsTTTTsssss..sssssssssssssTrsssrrsssslllRRRRRRRRRRRR",
+"RRrrTsTTrTsssss..sssssssssssssssssrrrssslllRRRRRRRRRRRRR",
+"RRrruusTTsssss..sssssssrrssssssssrrrrsssllRRRRRRRRRRRRRR",
+"RRrruurTuuuuss..ssssssssTsssrTssTrrrrTslllRRRRRRRRRRRRRR",
+"RRrrssuuuuuuss..ssssssssssssTTssrrrrrrsllRRRRRRRRRRRRRRR",
+"RRrrssuurruuss..ssssssssssssrrssssrrrrrllRRRRRRRRRRRRRRR",
+"RRrrssssuuuuus..sssssssssssrrrsssssrrrrllRRRRRRRRRRRRRRR",
+"RRrrssssuuuuus.ssssssssssssTrrsssssrrrrllRRRRRRRRRRRRRRR"
+]
+}

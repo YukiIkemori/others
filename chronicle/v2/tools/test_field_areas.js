@@ -34,7 +34,7 @@ for (const m of areas) {
   for (const z of m.zones || []) if (!R.DB.encounters[z.zone]) bad.push('出現表が無い ' + z.zone);
   if (!(m.zones || []).length) bad.push('出現表が無い');
   if (!(m.meta && Array.isArray(m.meta.worldRect) && m.meta.worldRect.length === 4)) bad.push('meta.worldRect');
-  if (m.bgm !== 'overworld' && !(m.region === 'r_desert' && m.bgm === 'desert')) bad.push('曲 ' + m.bgm);   // 砂漠のエリアは砂漠の曲
+  if (m.bgm !== 'overworld' && !(m.region === 'r_desert' && m.bgm === 'desert') && !(m.region === 'r_snow' && m.bgm === 'ice')) bad.push('曲 ' + m.bgm);   // 砂漠のエリアは砂漠の曲・雪原のエリアは雪原の曲
   ok(`${m.id}（${m.name}、${m.w}×${m.h}）: 形`, !bad.length, bad);
 }
 

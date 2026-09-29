@@ -1,0 +1,19 @@
+{
+ "id": "a_pass",
+ "kind": "under",
+ "map": "a_pass",
+ "tile": 32,
+ "size32": [
+  1664,
+  1280
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.9,
+ "files": {
+  "24": "a_pass@24.png",
+  "32": "a_pass@32.png"
+ },
+ "src": "generated"
+}

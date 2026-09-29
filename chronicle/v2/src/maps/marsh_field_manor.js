@@ -1,6 +1,6 @@
 // 生成物（design/art_ref/gen/env/_tools/under/field_marsh/ の areas_marsh.py → fit.py → tomap.py）。手で直さない: 配置は areas_marsh.py、当たりは fit.py で作り直す。
 // エリア m_manor「枯れ柳の庭」（霧の館へ続く沈んだ林、52×44）。エリア切り替えのフィールド（maps/field_00_kit.js、湿原の凡例は marsh_field_00_kit.js）。
-//   出口: w → loch.gate_e, s → m_lotus.north, 門 → marsh_manor_1.entrance
+//   出口: w → loch.gate_e, s → m_lotus.north
 //   絵: field/under/m_manor（v2/assets/env/field/under/。無ければマスから焼く）
 (function (R) {
   'use strict';
@@ -11,10 +11,10 @@
     rows: [
       "ww,,,,;;;\";,,,,,,,,,,,,;;;;;r;;;;;;;;;,,,,,,,,,,,,\"\"",
       "ss,,,,,,,;;,,,,,,,,,,,,,,;;XXXXXXXXXXXXXXXXXXXXXXX\",",
-      "wb,,~,T,,,,,,,,sF,,,,,,,,,,XTTXXXXXXXXXXXXXXX,,,,X,,",
-      "s,,~~,,,,,,,,FFFFFFFFFT,,,,XTTTXXXXXXXXXXXXXX,,TTX,,",
+      "wb,,~,T,,,,,,,,sF,,,,,,,,,,XTXXXXXXXXXXXXXXXX,,,,X,,",
+      "s,,~~,,,,,,,,FFFFFFFFFT,,,,XTXXXXXXXXXXXXXXXX,,TTX,,",
       ",,~~~~,,,,,,FFFFFFFFFFTT,,,XTTTXXXXXXXXXXXXXXTTTTX,,",
-      ",~~~~~~,,,,,FFFFFFFFFFTT,,;XTTTXXXXXXXXXXXXXX,TTTX,,",
+      ",~~~~~~,,,,,FFFFFFFFFFFT,,;XTTTXXXXXXXXXXXXXX,TTTX,,",
       "s~~~,,,,,,,,FFFFFFFFFFFT,,;XTTTXXXXXXXXXXXXXX.TTTX,,",
       ",,,,,ss;;,,,FFFwwwwwFFFT,,,XbTTXXXXXXXXXXXXXX.bTTX,,",
       "ssssssss;,,FFFFwwwwwFFFT,sTXw,,XXXXXXXXXXXXXX,,,,X,,",
@@ -55,7 +55,8 @@
       ",,,,,,,,T;;;ss~s,,,,;;;::,,www,,,,,,,,,,,,,,,,,,\"\",,",
     ],
     objects: [
-      {"type":"sign","x":40,"y":18,"text":R.T('map.marsh_field_manor.m_manor.objects.0.text')},
+      {"type":"door","x":38,"y":9,"w":1,"look":"none","to":{"map":"marsh_manor_1","spawn":"entrance"}},
+      {"type":"sign","x":40,"y":18,"text":R.T('map.marsh_field_manor.m_manor.objects.1.text')},
       {"type":"prop","id":"grave_moss","x":30,"y":10},
       {"type":"prop","id":"grave_moss","x":46,"y":12},
       {"type":"prop","id":"grave_moss","x":44,"y":14},
@@ -67,7 +68,7 @@
 
     ],
     spawns: {"loch":{"x":1,"y":20,"dir":"e"},"south":{"x":24,"y":42,"dir":"n"},"manor":{"x":38,"y":10,"dir":"s"}},
-    exits: [{"x":0,"y":20,"w":1,"h":2,"to":{"map":"loch","spawn":"gate_e"}},{"x":23,"y":43,"w":3,"h":1,"to":{"map":"m_lotus","spawn":"north"}},{"x":38,"y":9,"w":1,"h":1,"to":{"map":"marsh_manor_1","spawn":"entrance"}}],
+    exits: [{"x":0,"y":20,"w":1,"h":2,"to":{"map":"loch","spawn":"gate_e"}},{"x":23,"y":43,"w":3,"h":1,"to":{"map":"m_lotus","spawn":"north"}}],
     triggers: [],
     tilePatches: [],
     zones: [{"rect":null,"zone":"zw_marsh"}],

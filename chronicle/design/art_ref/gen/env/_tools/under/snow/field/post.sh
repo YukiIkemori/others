@@ -6,6 +6,7 @@ A=$1; G=$2
 [ -f $A/fix.json ] || echo '{"fit": {"SEED": "layout"}}' > $A/fix.json
 python3 ../../field/fit.py $A $G --apply | tail -3
 GAIN=$(python3 gain.py $A $G) python3 ../../field/process.py $A $G | tail -3
+python3 closed_soft.py $A   # 水の tilePatch の閉じた絵をマスの段々でなく描いた氷の形で（湖の氷の道）
 python3 blobs.py $A 0.1 --apply | tail -1
 python3 ../../field/fit.py $A $G --apply | tail -2
 rm -f $A/fit.png

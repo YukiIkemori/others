@@ -1,0 +1,665 @@
+{
+"id": "a_bridge",
+"w": 48,
+"h": 40,
+"rows": [
+"~~~~~~~~~~~~~~~~~~~~~X==X~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X==X~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X==X~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X==X~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X==X~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X==X~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X==X~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X==X~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X==X~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X==X~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X==X~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X==X~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X==X~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~kk~~~~X==X~~~~kk~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~kkkkkkkkkX==X~kkkkkkkk~~~~~~~~~~~~kk",
+"RRRR~~~~wwkkkkkkkkkkkk.=kkkkkkkkkkkkkkkkkkkkkkkk",
+"RRRRRRkkkkkkkkkkkkkkkk..kkkkkkkkwwwkkkkkkkkkkkkk",
+"RRRRRRRkkkkkkkkkkkkkkk..kkkkkkkkwwwkkkkkkRRRRRRR",
+"RRRRRRRsssssXXXXXXXsss..kkkkksssskssskkkRRRRRRRR",
+"RRRRRRRRssssXXXXXXXsss..ssssssssssssssssRRRRRRRR",
+"RRRRRRRRRsssXXXXXXXsss..sssssssssssssssRRRRRRRRR",
+"RRRRRRRRRsssXXXXXXXsss..sssssssssssssssRRRRRRRRR",
+"RRRRRRRRRsssXXX:XXXsss..sssssssssssssssRRRRRRRRR",
+"RRRRRRRRRssssc:::::::::.ssssssssssssssRRRRRRRRRR",
+"RRRRRRRRRssssc:::::::::.ssssssssssssssRRRRRRRRRR",
+"RRRRRRRRRsssssssssssss..ssssssssssssssRRRRRRRRRR",
+"RRRRRRRRRuussssssssss..ssssssssssssssssRRRRRRRRR",
+"RRRRRRRRuuussssssssss..ssssssssssssssssRRRRRRRRR",
+"RRRRRRRRuuussssssssss..ssrsssrsssssssrsRRRRRRRRR",
+"RRRRRRRRuussrssssrsss..sssssssssssssTsssRRRRRRRR",
+"RRRRRRRRuusssssssssss..sssssrssrssssssssRRRRRRRR",
+"RRRRRRRRsssssssssssss..sssssssssssssssuuRRRRRRRR",
+"RRRRRRRRsssssssssssss..ssssssssssssssuuuRRRRRRRR",
+"RRRRRRRRRssuuusssssss..ssssssssssssssuuuRRRRRRRR",
+"RRRRRRRRRuuuuuurssss..ssssssssssssssuTuuRRRRRRRR",
+"RRRRRRRRRuuuuuuuusss..ssssssssssssssuuuRRRRRRRRR",
+"RRRRRRRRRuuuuuuuusss..sssssssssssssuuuuRRRRRRRRR",
+"RRRRRRRRRRuuuuuuusss..ssssssssssTsssuuuRRRRRRRRR",
+"RRRRRRRRRRuuuuusssss..ssssssssssssssuuRRRRRRRRRR",
+"RRRRRRRRRRuuusssssss...sssssssssssssssRRRRRRRRRR"
+],
+"marks": [
+{
+"kind": "bridge",
+"cells": [
+[
+22,
+0
+],
+[
+22,
+1
+],
+[
+22,
+2
+],
+[
+22,
+3
+],
+[
+22,
+4
+],
+[
+22,
+5
+],
+[
+22,
+6
+],
+[
+22,
+7
+],
+[
+22,
+8
+],
+[
+22,
+9
+],
+[
+22,
+10
+],
+[
+22,
+11
+],
+[
+22,
+12
+],
+[
+22,
+13
+],
+[
+22,
+14
+],
+[
+22,
+15
+],
+[
+22,
+16
+],
+[
+23,
+0
+],
+[
+23,
+1
+],
+[
+23,
+2
+],
+[
+23,
+3
+],
+[
+23,
+4
+],
+[
+23,
+5
+],
+[
+23,
+6
+],
+[
+23,
+7
+],
+[
+23,
+8
+],
+[
+23,
+9
+],
+[
+23,
+10
+],
+[
+23,
+11
+],
+[
+23,
+12
+],
+[
+23,
+13
+],
+[
+23,
+14
+],
+[
+23,
+15
+],
+[
+23,
+16
+]
+],
+"text": "a long old STONE BRIDGE of grey blocks on arched piers, its deck running north across the sea (walkable)",
+"color": [
+176,
+172,
+164
+],
+"solid": false
+},
+{
+"kind": "parapet",
+"cells": [
+[
+21,
+0
+],
+[
+21,
+1
+],
+[
+21,
+2
+],
+[
+21,
+3
+],
+[
+21,
+4
+],
+[
+21,
+5
+],
+[
+21,
+6
+],
+[
+21,
+7
+],
+[
+21,
+8
+],
+[
+21,
+9
+],
+[
+21,
+10
+],
+[
+21,
+11
+],
+[
+21,
+12
+],
+[
+21,
+13
+],
+[
+21,
+14
+],
+[
+24,
+0
+],
+[
+24,
+1
+],
+[
+24,
+2
+],
+[
+24,
+3
+],
+[
+24,
+4
+],
+[
+24,
+5
+],
+[
+24,
+6
+],
+[
+24,
+7
+],
+[
+24,
+8
+],
+[
+24,
+9
+],
+[
+24,
+10
+],
+[
+24,
+11
+],
+[
+24,
+12
+],
+[
+24,
+13
+],
+[
+24,
+14
+]
+],
+"text": "the low stone PARAPETS of the bridge, with a few stubby pillars",
+"color": [
+150,
+146,
+140
+],
+"solid": true
+},
+{
+"kind": "inn",
+"cells": [
+[
+12,
+18
+],
+[
+12,
+19
+],
+[
+12,
+20
+],
+[
+12,
+21
+],
+[
+12,
+22
+],
+[
+13,
+18
+],
+[
+13,
+19
+],
+[
+13,
+20
+],
+[
+13,
+21
+],
+[
+13,
+22
+],
+[
+14,
+18
+],
+[
+14,
+19
+],
+[
+14,
+20
+],
+[
+14,
+21
+],
+[
+14,
+22
+],
+[
+15,
+18
+],
+[
+15,
+19
+],
+[
+15,
+20
+],
+[
+15,
+21
+],
+[
+16,
+18
+],
+[
+16,
+19
+],
+[
+16,
+20
+],
+[
+16,
+21
+],
+[
+16,
+22
+],
+[
+17,
+18
+],
+[
+17,
+19
+],
+[
+17,
+20
+],
+[
+17,
+21
+],
+[
+17,
+22
+],
+[
+18,
+18
+],
+[
+18,
+19
+],
+[
+18,
+20
+],
+[
+18,
+21
+],
+[
+18,
+22
+]
+],
+"text": "the roadside INN: a squat house of grey fieldstone with a steep dark slate roof, a stone chimney, small warm windows, a wooden door in the middle of its south wall (the dark block)",
+"color": [
+120,
+110,
+104
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+15,
+22
+]
+],
+"text": "a dark ENTRANCE",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "examine",
+"x": 24,
+"y": 15,
+"event": "ash_bridge_sign"
+},
+{
+"type": "examine",
+"x": 21,
+"y": 3,
+"event": "ash_bridge_sign"
+},
+{
+"type": "sign",
+"x": 26,
+"y": 19,
+"text": "潮見橋\n北 → グレイモア湿原"
+},
+{
+"type": "sign",
+"x": 19,
+"y": 25,
+"text": "灰見の宿"
+},
+{
+"type": "waylamp",
+"id": "wl_a_bridge_inn",
+"x": 19,
+"y": 22,
+"lit": true
+},
+{
+"type": "waylamp",
+"id": "wl_a_bridge_1",
+"x": 25,
+"y": 30,
+"lit": true
+}
+],
+"spawns": {
+"north": {
+"x": 22,
+"y": 1,
+"dir": "s"
+},
+"south": {
+"x": 21,
+"y": 38,
+"dir": "n"
+},
+"haimi": {
+"x": 15,
+"y": 23,
+"dir": "s"
+}
+},
+"exits": [
+{
+"x": 22,
+"y": 0,
+"w": 2,
+"h": 1,
+"to": {
+"map": "m_bog",
+"spawn": "south"
+},
+"edge": "n"
+},
+{
+"x": 21,
+"y": 39,
+"w": 2,
+"h": 1,
+"to": {
+"map": "a_foot",
+"spawn": "north"
+},
+"edge": "s"
+},
+{
+"x": 15,
+"y": 22,
+"w": 1,
+"h": 1,
+"to": {
+"map": "haimi_inn",
+"spawn": "door"
+}
+}
+],
+"notes": [],
+"meta": {
+"name": "潮見橋のたもと",
+"sub": "湿原と灰をつなぐ橋",
+"region": "r_ash",
+"worldRect": [
+528,
+336,
+90,
+48
+],
+"outside": "sea",
+"zones": [
+{
+"rect": [
+19,
+14,
+7,
+29
+],
+"zone": "zw_ash_road"
+},
+{
+"rect": null,
+"zone": "zw_ash_plain"
+}
+],
+"links": {
+"haimi": {
+"map": "a_bridge",
+"spawn": "haimi"
+},
+"ash_bridge": {
+"map": "a_bridge",
+"spawn": "north"
+}
+},
+"npcs": []
+},
+"rows_fit": [
+"~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X===~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X===~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X===~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~rr~~~~X===s~~~rr~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~rrrkrrrrX===skrrrTrrr~~~~~~~~~~~~~~",
+"RRRR~~~~wwrrrTkkkkkTrrT=kkrkkkkrrrrrrrrrrrrrrrrr",
+"RRRRRRrrrrrrTkkkkkkkkTT.krkkkkkrrrrrrTTTkkTrrTTr",
+"RRRRRRRrrrTkTTTrrTTTkk..TTkkkkkrrrrrrkkkkRRRRRRR",
+"RRRRRRRrssssXXXXXXXTss..kkkkkssTrrrrskkkRRRRRRRR",
+"RRRRRRRRTsssXXXXXXXrss..ssssssssssssssssRRRRRRRR",
+"RRRRRRRRRTssXXXXXXXrss..sssssssssssssssRRRRRRRRR",
+"RRRRRRRRRTssXXXXXXXsss..sssssssssssssssRRRRRRRRR",
+"RRRRRRRRRsssXXX:XXXsss..sssssssssssssssRRRRRRRRR",
+"RRRRRRRRRTsssccccc:::::.ssssssssssssssRRRRRRRRRR",
+"RRRRRRRRRTsssccccc:::::.ssssssssssssssRRRRRRRRRR",
+"RRRRRRRRRTssssssssssss..sssssssssssssTRRRRRRRRRR",
+"RRRRRRRRRrrrsssssssss..sssssssssssssssTRRRRRRRRR",
+"RRRRRRRRrTrrsssssssss..ssssssssssssssssRRRRRRRRR",
+"RRRRRRRRTuussssssssss..ssrTssrTssssssrTRRRRRRRRR",
+"RRRRRRRRrusrrTsssrTss..sssssssssssssTssTRRRRRRRR",
+"RRRRRRRRrusssssssssss..sssssrTsrTsssssssRRRRRRRR",
+"RRRRRRRRrssssssssssss..sssssssssssssssuuRRRRRRRR",
+"RRRRRRRRrssssssssssss..ssssssssssssssuuuRRRRRRRR",
+"RRRRRRRRRTsssssssssss..ssssssssssssssuTuRRRRRRRR",
+"RRRRRRRRRrusrrrsTsss..ssssssssssssssuTTTRRRRRRRR",
+"RRRRRRRRRrTsrsrrssss..ssssssssssssssuuuRRRRRRRRR",
+"RRRRRRRRRrTssssrrsss..sssssssssssTsuuuuRRRRRRRRR",
+"RRRRRRRRRRrsrrsrrsss..ssssssssssTsssuuTRRRRRRRRR",
+"RRRRRRRRRRrsrrrsssss..ssssssssssssssuuRRRRRRRRRR",
+"RRRRRRRRRRrssrssssss...sssssssTsssssssRRRRRRRRRR"
+]
+}

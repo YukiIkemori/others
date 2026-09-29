@@ -1,0 +1,73 @@
+// 生成物（design/art_ref/gen/env/_tools/under/field_ash/ の areas_ash.py → fit.py → tomap.py）。手で直さない: 配置は areas_ash.py、当たりは fit.py で作り直す。
+// エリア a_bridge「潮見橋のたもと」（湿原と灰をつなぐ橋、48×40）。エリア切り替えのフィールド（maps/field_00_kit.js、灰の荒野の凡例は field_ash_00_kit.js）。
+//   出口: n → m_bog.south, s → a_foot.north, 門 → haimi_inn.door
+//   絵: field/under/a_bridge（v2/assets/env/field/under/。無ければマスから焼く）
+(function (R) {
+  'use strict';
+  R.FieldArea.def("a_bridge", {
+    name: "潮見橋のたもと", region: "r_ash", outside: "sea",
+    legend: R.FieldArea.ASH_LEGEND, theme: 'ash', bgm: 'overworld', bbg: 'ash', propSet: 'ash', propSetBase: 'village',
+    light: R.FieldArea.ASH_LIGHT,
+    rows: [
+      "~~~~~~~~~~~~~~~~~~~~~X===~~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~X===~~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~X===~~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~X===~~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~rr~~~~X===s~~~rr~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~rrrkrrrrX===skrrrTrrr~~~~~~~~~~~~~~",
+      "RRRR~~~~wwrrrTkkkkkTrrT=kkrkkkkrrrrrrrrrrrrrrrrr",
+      "RRRRRRrrrrrrTkkkkkkkkTT.krkkkkkrrrrrrTTTkkTrrTTr",
+      "RRRRRRRrrrTkTTTrrTTTkk..TTkkkkkrrrrrrkkkkRRRRRRR",
+      "RRRRRRRrssssXXXXXXXTss..kkkkkssTrrrrskkkRRRRRRRR",
+      "RRRRRRRRTsssXXXXXXXrss..ssssssssssssssssRRRRRRRR",
+      "RRRRRRRRRTssXXXXXXXrss..sssssssssssssssRRRRRRRRR",
+      "RRRRRRRRRTssXXXXXXXsss..sssssssssssssssRRRRRRRRR",
+      "RRRRRRRRRsssXXX:XXXsss..sssssssssssssssRRRRRRRRR",
+      "RRRRRRRRRTsssccccc:::::.ssssssssssssssRRRRRRRRRR",
+      "RRRRRRRRRTsssccccc:::::.ssssssssssssssRRRRRRRRRR",
+      "RRRRRRRRRTssssssssssss..sssssssssssssTRRRRRRRRRR",
+      "RRRRRRRRRrrrsssssssss..sssssssssssssssTRRRRRRRRR",
+      "RRRRRRRRrTrrsssssssss..ssssssssssssssssRRRRRRRRR",
+      "RRRRRRRRTuussssssssss..ssrTssrTssssssrTRRRRRRRRR",
+      "RRRRRRRRrusrrTsssrTss..sssssssssssssTssTRRRRRRRR",
+      "RRRRRRRRrusssssssssss..sssssrTsrTsssssssRRRRRRRR",
+      "RRRRRRRRrssssssssssss..sssssssssssssssuuRRRRRRRR",
+      "RRRRRRRRrssssssssssss..ssssssssssssssuuuRRRRRRRR",
+      "RRRRRRRRRTsssssssssss..ssssssssssssssuTuRRRRRRRR",
+      "RRRRRRRRRrusrrrsTsss..ssssssssssssssuTTTRRRRRRRR",
+      "RRRRRRRRRrTsrsrrssss..ssssssssssssssuuuRRRRRRRRR",
+      "RRRRRRRRRrTssssrrsss..sssssssssssTsuuuuRRRRRRRRR",
+      "RRRRRRRRRRrsrrsrrsss..ssssssssssTsssuuTRRRRRRRRR",
+      "RRRRRRRRRRrsrrrsssss..ssssssssssssssuuRRRRRRRRRR",
+      "RRRRRRRRRRrssrssssss...sssssssTsssssssRRRRRRRRRR",
+    ],
+    objects: [
+      {"type":"examine","x":24,"y":15,"event":"ash_bridge_sign"},
+      {"type":"examine","x":21,"y":3,"event":"ash_bridge_sign"},
+      {"type":"sign","x":26,"y":19,"text":"潮見橋\n北 → グレイモア湿原"},
+      {"type":"sign","x":19,"y":25,"text":"灰見の宿"},
+      {"type":"waylamp","id":"wl_a_bridge_inn","x":18,"y":25,"lit":true},
+      {"type":"waylamp","id":"wl_a_bridge_1","x":24,"y":31,"lit":true},
+    ],
+    npcs: [
+
+    ],
+    spawns: {"north":{"x":22,"y":1,"dir":"s"},"south":{"x":21,"y":38,"dir":"n"},"haimi":{"x":15,"y":23,"dir":"s"}},
+    exits: [{"x":22,"y":0,"w":2,"h":1,"to":{"map":"m_bog","spawn":"south"}},{"x":21,"y":39,"w":2,"h":1,"to":{"map":"a_foot","spawn":"north"}},{"x":15,"y":22,"w":1,"h":1,"to":{"map":"haimi_inn","spawn":"door"}}],
+    triggers: [],
+    tilePatches: [],
+    zones: [{"rect":[19,14,7,29],"zone":"zw_ash_road"},{"rect":null,"zone":"zw_ash_plain"}],
+    art: {"image":"field/under/a_bridge","painted":[],"overlay":"field/under/a_bridge_over"},
+    meta: {"sub":"湿原と灰をつなぐ橋","worldRect":[528,336,90,48]},
+    links: {"haimi":{"map":"a_bridge","spawn":"haimi"},"ash_bridge":{"map":"a_bridge","spawn":"north"}},
+  });
+})(window.RPG);

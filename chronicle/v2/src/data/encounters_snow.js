@@ -52,7 +52,8 @@
       [4, [['@bat', 2, 3], ['@frostling', 1, 1]]],
       [3, [['@owl', 2, 2], ['@frostling', 1, 1]]],
     ]),
-    z_snow_floe: woods(small(clone(W, { lvOff: 0, bg: 'snow' }), 4)),
+    // 流氷原は野外のエリア（f_floe）: 名前が zw_ でないので既定はダンジョンの間隔（22 歩）になる → 野外のエリアと同じ K.ENC.world の間隔に
+    z_snow_floe: woods(small(clone(W, { lvOff: 0, bg: 'snow', steps: 52 }), 4)),
     // 氷に閉じた帆船（甲板・船倉）
     z_snow_ship: more(reweigh(small(clone(W, { lvOff: 0, bg: 'snow' }), 5), { 'wolf+frostling': 0.7 }), [
       [3, [['@wolf', 2, 3], ['@frostling', 1, 1]]],

@@ -1,0 +1,437 @@
+{
+"id": "a_battle",
+"w": 52,
+"h": 40,
+"rows": [
+"RRRRRRRRRRRRRRRRRRRRssuuu:uuuuuRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRsssu::uuuuuRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRssss::uuuuuRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRssssss::uuuussssssRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRsssssssssssss::uuuussssssssssssRRRRRRRRRR",
+"RRRRRRRRssssssssssssssss::uuusssssssssssssRRRRRRRRRR",
+"RRRRRRRRsssssssssssssrss::uuusssssssssssssskRRRRRRRR",
+"RRRRRRRsssssTsssssssssss::sssssssssssssTsskkkRRRRRRR",
+"RRRRRRssssssssssssssssss::uuuXXssssssssssskkkRRRRRRR",
+"RRRRRRssXXXXXXXXXXXsssss::uuuuuussssssssskkksssRRRRR",
+"RRRRRsssscccccccccXsssss::uuuuXXussssssskkksssssRRRR",
+"RRRRssssXcrcccccccXssssX::uuuuuuussssssrkkkssssRRRRR",
+"RRRRssssXcccccccccXsrss:::ssuuuuusssssskkksssssRRRRR",
+"RRRRssssXcccccccccs::::sX:ssssuuusssssskkkssssssRRRR",
+"RRRRssssscccccccccs::sssu::srssuussssskkksssssssRRRR",
+"RRRRssssXcccccccccs::ssss::sTssXussXsskkksssssssRRRR",
+"RRRRssssXcccccccccXssssss::usssssXuXuukkksssssssRRRR",
+"RRRRssssXccrccccrcXssssss::uuusXsssuuukkksssssssRRRR",
+"RRRRssssXcccccccccXussssss:uuuussssrukkkksssssssRRRR",
+"RRRRssssXXXXssXXXXXussssss:uuusssssuukkkksssssssRRRR",
+"RRRRssssssssssssssussssssu::susssssuukkkksrsssssRRRR",
+"RRRRsssssssssssrssssssXsss::sssssssuukkkksssssTsRRRR",
+"RRRRssssssssssssssssXsXsXs::susssssuuukkksssssssRRRR",
+"RRRRssssssssssssssssssXsss::suusssuuuukkksssssssRRRR",
+"RRRssssssssrssssrsssssssss::uuuuusuuuukkksssssssRRRR",
+"RRRsssssssssssssrssssssssu::uuuuuuuuuukkkussssssRRRR",
+"RRRssssssssssXsssssssssssu::uuuuuusuXXukkkssssssRRRR",
+"RRRRssssssssssssXssssssscccccccuuuXuuXskkkssssssRRRR",
+"RRRRsssssssssssXssssTssscccXcccuuuuuuuskkksssssRRRRR",
+"RRRRRsssssssssssssssssscccccccccuuuuuuskkkkssssRRRRR",
+"RRRRRssssssssssssssssssscccccccsssssssskkkkssssRRRRR",
+"RRRRRssrssssssssssssssssuccccccssssssssskksssssRRRRR",
+"RRRRRRssssrsssssssssssssssscssssssssssssuusTssrRRRRR",
+"RRRRRRssssssssssrsssssssssssssssssssssssssssssRRRRRR",
+"RRRRRRuussssssssssssssssssssssssssssssssssTsssRRRRRR",
+"RRRRRRuuusuuuusssssssssssssssssssssssssssssRRRRRRRRR",
+"RRRRRRRRRRRRRusssssssssssuuussssssRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
+],
+"marks": [
+{
+"kind": "fort",
+"cells": [
+[
+8,
+9
+],
+[
+8,
+11
+],
+[
+8,
+12
+],
+[
+8,
+13
+],
+[
+8,
+15
+],
+[
+8,
+16
+],
+[
+8,
+17
+],
+[
+8,
+18
+],
+[
+8,
+19
+],
+[
+9,
+9
+],
+[
+9,
+19
+],
+[
+10,
+9
+],
+[
+10,
+19
+],
+[
+11,
+9
+],
+[
+11,
+19
+],
+[
+12,
+9
+],
+[
+13,
+9
+],
+[
+14,
+9
+],
+[
+14,
+19
+],
+[
+15,
+9
+],
+[
+15,
+19
+],
+[
+16,
+9
+],
+[
+16,
+19
+],
+[
+17,
+9
+],
+[
+17,
+19
+],
+[
+18,
+9
+],
+[
+18,
+10
+],
+[
+18,
+11
+],
+[
+18,
+12
+],
+[
+18,
+16
+],
+[
+18,
+17
+],
+[
+18,
+18
+],
+[
+18,
+19
+]
+],
+"text": "the RUINED WALLS of a small square stone watch-fort seen from above: thick walls of grey stone blocks broken down to chest height in places, a collapsed corner tower, a wide gap of a lost gate in the east wall, rubble spilling into the ash",
+"color": [
+150,
+146,
+140
+],
+"solid": true
+},
+{
+"kind": "monument",
+"cells": [
+[
+27,
+28
+]
+],
+"text": "a tall weathered STONE MONUMENT shaped like a huge BROKEN SWORD standing point-down, its blade snapped half way, on a small plinth",
+"color": [
+214,
+206,
+186
+],
+"solid": true
+},
+{
+"kind": "blades",
+"cells": [
+[
+13,
+26
+],
+[
+15,
+28
+],
+[
+16,
+27
+],
+[
+20,
+22
+],
+[
+22,
+13
+],
+[
+22,
+21
+],
+[
+22,
+22
+],
+[
+22,
+23
+],
+[
+23,
+11
+],
+[
+24,
+13
+],
+[
+24,
+22
+],
+[
+25,
+11
+],
+[
+25,
+12
+],
+[
+29,
+8
+],
+[
+30,
+8
+],
+[
+30,
+10
+],
+[
+31,
+10
+],
+[
+31,
+15
+],
+[
+31,
+17
+],
+[
+33,
+16
+],
+[
+34,
+27
+],
+[
+35,
+15
+],
+[
+35,
+16
+],
+[
+36,
+26
+],
+[
+37,
+26
+],
+[
+37,
+27
+]
+],
+"text": "CLUSTERS OF RUSTED SWORDS, SPEARS AND BROKEN SHIELDS stuck upright in the ash (a small thicket of old weapons on each block)",
+"color": [
+150,
+96,
+70
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "examine",
+"x": 27,
+"y": 28,
+"event": "ash_battlefield_stone"
+},
+{
+"type": "sign",
+"x": 23,
+"y": 4,
+"text": "灰の古戦場\n折れた剣の碑"
+},
+{
+"type": "chest",
+"id": "a_battle_c1",
+"x": 10,
+"y": 17,
+"item": "i_revive",
+"n": 1
+},
+{
+"type": "waylamp",
+"id": "wl_a_battle_1",
+"x": 29,
+"y": 5,
+"lit": true
+}
+],
+"spawns": {
+"north": {
+"x": 25,
+"y": 1,
+"dir": "s"
+}
+},
+"exits": [
+{
+"x": 25,
+"y": 0,
+"w": 2,
+"h": 1,
+"to": {
+"map": "a_pass",
+"spawn": "south"
+},
+"edge": "n"
+}
+],
+"notes": [],
+"meta": {
+"name": "灰の古戦場",
+"sub": "折れた剣の眠る窪地",
+"region": "r_ash",
+"worldRect": [
+285,
+441,
+96,
+45
+],
+"outside": "rock",
+"zones": [
+{
+"rect": null,
+"zone": "zw_ash_plain"
+}
+],
+"links": {},
+"npcs": []
+},
+"rows_fit": [
+"RRRRRRRRRRRRRRRRRRRRrsuuu:uuuuuRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRrTsu::uuuuTRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRrTss::uuuuuRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRrTssss::uuuusssTTsRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRrssssssssssss::uuuuTsssssTTTssTRRRRRRRRRR",
+"RRRRRRRRrTsssTTsssssssss::uuussssssssssssTRRRRRRRRRR",
+"RRRRRRRRrssssTsssssssrss::uuusssssssssssssTTRRRRRRRR",
+"RRRRRRRrsssssTssssssssss::sssTsssssssssTsskrrRRRRRRR",
+"RRRRRRssssssssssssssssss::uuuXXssssssssTsskrrRRRRRRR",
+"RRRRRRssXXXXXXXXXXXsssss::uuuTuussssssssskrrsssRRRRR",
+"RRRRRTssTcccccccccXsssss::uuuuXXTssssssskrrssssTRRRR",
+"RRRRssssXcrcccccccXssssX::uuuuuuussssssrrrkssssRRRRR",
+"RRRRrsssXcccccccccXTrssT::ssuuuuusssssTrrrssssTRRRRR",
+"RRRRssssXcccccccccs::::sX:ssssuuusssssTrrTTssssTRRRR",
+"RRRRssssTcccccccccs::sssu::srTsuTssssTrrrTssssssRRRR",
+"RRRRrsssXcccccccccs::ssss::ssssXTssXssrrrTssssssRRRR",
+"RRRRssssXcccccccccXTsssss::usssssXTXuukrrTssssssRRRR",
+"RRRRssssXccrccccscXTsssss::uuusXsssuuTrrrTssssssRRRR",
+"RRRRssssXcccccccccXTssssss:uuuussssrurrrrTssssssRRRR",
+"RRRRrsssXXXXTsXXXXXTssssss:uuusssssuukrrrTssssssRRRR",
+"RRRRrTssssssssssssusssTssu::susssssuTrrrrTrsssssRRRR",
+"RRRRrTsssssssssrsssssTXsss::sssssssuTkrrrTssssTsRRRR",
+"RRRRrssssssssssssssTXsXTXs::susssssuuukrrTrsssssRRRR",
+"RRRRssssssssssssssssssXsss::suusssuuuTkrrTssssssRRRR",
+"RRRTTssssssrssssrsssssssss::uuuuusuuuTrrrTssssssRRRR",
+"RRRTsssssssssTssrssssssssu::uuuuuuuuTTkrrTTsssssRRRR",
+"RRRTTsssTssssXTssssssssssu::uuuuuuTuXXukrrTsssssRRRR",
+"RRRRssssssssssssXTsssssscccccccuuuXuTXskrrTssssTRRRR",
+"RRRRsTsssssssssXssssTssscccXcccuuuuuuuskrrsssssRRRRR",
+"RRRRRrsssssssssTssssssscccccccccuuuuuuTrrrrTsssRRRRR",
+"RRRRRrsssssssssssssssssscccccccsssssssTkrrrssssRRRRR",
+"RRRRRRTrTsssssssssssssssuccccccsssssssssrrsssssRRRRR",
+"RRRRRRrsssrssssssssssssTssscssssssssssssTTsTssrRRRRR",
+"RRRRRRrTssssssssrssssssssssssssssssssssssssTssRRRRRR",
+"RRRRRRrTssssssssssssssssssssssssssssssssssTssTRRRRRR",
+"RRRRRRRTTTTTTussssssssssssssssssssssssssssTRRRRRRRRR",
+"RRRRRRRRRRRRRusssssssssssuuusssssTRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
+]
+}

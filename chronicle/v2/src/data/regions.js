@@ -29,7 +29,7 @@
     r_isles: { name: R.T('regions.r_isles.name'), short: 'isles', n: 5, chapter: { title: R.T('regions.r_isles.chapter.title'), summary: '' }, page: 'k_page_isles', town: 'coral', beacon: R.T('regions.r_isles.beacon'), slice: 'locked' },
     r_mine: { name: R.T('regions.r_mine.name'), short: 'mine', n: 6, chapter: { title: R.T('regions.r_mine.chapter.title'), summary: '' }, page: 'k_page_mine', town: 'dovan', beacon: R.T('regions.r_mine.beacon'), slice: 'locked' },
     r_ash: { name: R.T('regions.r_ash.name'), short: 'ash', n: 7, chapter: { title: R.T('regions.r_ash.chapter.title'), summary: R.T('regions.r_ash.chapter.summary') },
-      page: 'k_page_ash', town: 'caldera', dungeons: ['volcano'], bossTroop: 'tr_b_lavabeast', zone: 'zw_ash_plain', beacon: R.T('regions.r_ash.beacon'), beaconAt: { map: 'world', x: 193, y: 136 } },   // 灰の荒野は開いた（ash_*.js）
+      page: 'k_page_ash', town: 'caldera', dungeons: ['volcano'], bossTroop: 'tr_b_lavabeast', zone: 'zw_ash_plain', beacon: R.T('regions.r_ash.beacon'), beaconAt: { map: 'ash_volcano_2', x: 22, y: 16 } },   // 灰の荒野は開いた（ash_*.js）。光の柱は火口の卵の上（大灯火は火口で灯る）
     r_star: { name: R.T('regions.r_star.name'), short: 'star', n: 8, chapter: { title: R.T('regions.r_star.chapter.title'), summary: '' }, page: 'k_page_star', town: 'orbis', beacon: R.T('regions.r_star.beacon'), slice: 'locked' },
     world: { name: R.T('regions.world.name'), short: 'world', n: 9, chapter: { title: '', summary: '' } },
   });
