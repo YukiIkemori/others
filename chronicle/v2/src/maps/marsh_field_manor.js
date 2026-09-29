@@ -1,0 +1,78 @@
+// 生成物（design/art_ref/gen/env/_tools/under/field_marsh/ の areas_marsh.py → fit.py → tomap.py）。手で直さない: 配置は areas_marsh.py、当たりは fit.py で作り直す。
+// エリア m_manor「枯れ柳の庭」（霧の館へ続く沈んだ林、52×44）。エリア切り替えのフィールド（maps/field_00_kit.js、湿原の凡例は marsh_field_00_kit.js）。
+//   出口: w → loch.gate_e, s → m_lotus.north, 門 → marsh_manor_1.entrance
+//   絵: field/under/m_manor（v2/assets/env/field/under/。無ければマスから焼く）
+(function (R) {
+  'use strict';
+  R.FieldArea.def("m_manor", {
+    name: R.T('map.marsh_field_manor.m_manor.name'), region: "r_marsh", outside: "marsh_water",
+    legend: R.FieldArea.MARSH_LEGEND, theme: 'moss_village', propSet: 'marsh', bbg: 'marsh',
+    light: { ambient: '#667aa6', k: 0.64, mood: 'night' },   // 湿原: 泥炭と葦の絵は砂より暗いので、夜の明るさを少し上げる（霧の青み）
+    rows: [
+      "ww,,,,;;;\";,,,,,,,,,,,,;;;;;;;;;;;;;;;,,,,,,,,,,,,\"\"",
+      "ss,,,,,,,;;,,,,,,,,,,,,,,;;XXXXXXXXXXXXXXXXXXXXXXX\",",
+      "wb,,~,s,,,,,,,,sF,,,,,,,,,,XTXXXXXXXXXXXXXXXX,,,,X,,",
+      "s,,~~,,,,,,,,FFFFFFFFFT,,,,XTXXXXXXXXXXXXXXXX,,,,X,,",
+      ",,~~~~,,,,,,FFFFFFFFFFTT,,,XTTTXXXXXXXXXXXXXXT,,,X,,",
+      ",~~~~~~,,,,,FFFFFFFFFFTT,,;XTTTXXXXXXXXXXXXXX,,TTX,,",
+      "s~~~,,,,,,,,FFFFFFFFFFFT,,;XTTTXXXXXXXXXXXXXX.TT,X,,",
+      ",,,,,ss;;,,,FFFwwwwwFFFT,,,Xb,,XXXXXXXXXXXXXX.b,,X,,",
+      "ssssssss;,,FFFFwwwwwFFFT,sTXw,,XXXXXXXXXXXXXX,,,,X,,",
+      "~~~~sssss,,.FFFFwwwFFFFT,wwXw,,XXXXXXX:XXXXXX,,,,X,,",
+      "~~~~~~~~~s,FFFFFFFFFFFF,,swXT,,,,,cccccccc,,,,,,,X,,",
+      "~~~~~~~~~,,,,FFFFFFFFF,,,ssXTT,,,,cccccccc,,,,,,,X,,",
+      "~~~~~~~~~~b,.FFFFFFFF,,,,swX,,,,,,cccccccc,,,,,b,X,,",
+      "~~~~~~~~~~~bs.FFFFFFT,,,swwXb,,,,,,,ccc,,,,,,,,,wX,,",
+      "~~~~~~~~~~~bs,,,,F,,,,,sswwX.,TTT,,,ccc,,,,,,,,,,X,,",
+      "~~~~~~~~~~~ss,,,,,,,,,,,wwwX.b,,,,,,c:c,,,,,,,,,,X,,",
+      "~~~~~~~~~~~sss,,,,sss,,,,wwXXXXXXXXXc::XXXXXXXXXXX,,",
+      "~~~~~~~~~~~bsss,,sss,,,,,,wT,::::::::::,,,,,,,,,,,,,",
+      "~~~~~~~~~~~s;sss;;s,:::::::::::::::::::,,,,,,,,,,,,,",
+      "~~~~~~~~~~s:;;s;:::::::::::::::,b,,,s,,,,,,,,,,,,,,,",
+      "cccccccccc::::::::::;::,,,,,www.sb,,ss,,,,,,,,,,,,,,",
+      "ccccccccccc:::::;.s;;;::,,,,wwwbss,s\"s,,;,,,,,,,,,,,",
+      "~~~~~~~~~~s;;;;;;;s;;;::,,,,,,,,.,,FFFFFF,,,,,,,,,,,",
+      "~~~~~~~~~~s;,T;;;;;FFF::,,,,,,,FFFFFFFFFFFFF;;;,,,,,",
+      "~~~~~~~~~~s,.FFFFFFFFF,::,,,,FFFFFFFFFFFFFFFFF;,,,,,",
+      "~~~~~~~~~~sFFFFFFFFFFFF::,,,,FFFFFFFFFFFFFFFFFFF,,,,",
+      "~~~~~~~~~~s.FFFFFFFFFFF::,,,\"FFFFFFFFFFFFFFFFFFFFFT,",
+      "~~~~~~~~~~.FFFFFFFFFFFFT:,,,,FFFFFFFFFFFFFFFFFFFFF,,",
+      "~~~~~~~~~sFFFFFFFFFFFFF:::,,,FFFFFFFFFFFFFFFFFFFFF,,",
+      "~~~~~~~~,.FFFFFFFwwFFFFF::,,,FFFFFFFwwwwwFFFFFFFFF,,",
+      "~~~~~~~~s.FFFFFwwwwwFFFFT:,,\",FFFFFFwwwwwFFFFFFFFF,,",
+      "~~~~~~~~s.FFFFFwwwwwFFFF::.,,,FFFFFwwwwwwwFFFFFFFF,,",
+      "~~~~~~~~s.FFFFFwwwwwFFFT::wb,,FFFFFFwwwwwFFFFFFFFFF,",
+      "~~~~~~~ss.FFFFFFwwFFFFT,::ws,,FFFFFFFwwwFFFFFFFFFFF,",
+      "s~~~~~ssFFFFFFFFFFFFFT,,::,,,,,FFFFFFFFFFFFFFFFFFFF,",
+      ",,,,,s,,FFFFFFFFFFFFT,,:::,,,,,,FFFFFFFFFFFFwwwwFFFF",
+      ",,,,,,,,,.FFFFFFFFF,\",,::,,,,,,,,FFFFFFFFFFFwwwwwFFF",
+      "~,~,,,,,,,FFFFFFFFFT\",,::,,,,,,,,FFFFFFFFFFFFwwwFFFF",
+      "~~~~,,,,,,FFFFT,,,\"\"\",,::,,,s,,,,,FFFFFFFFFFFFFFFFFF",
+      "~~~~,,,,,,,,,,,,\",,\"\"\",::,,sws,,,,FFFFFFFFFFFFFFFFFF",
+      "~~~~~,,,,,,,,,,,,,,,;;;::\",,s,,,ss,FFFFFFFFT,,TT,,,,",
+      "~~~,~,,,,,,,,,,,,,,,;;;::,,,,,,,s,,,T,,,,,,,,,,,,,,,",
+      "~,,,,,,,,,;;,sTs,,,;;;;::,,,T,,,,,,,,,,,,,,,,,,\",\",,",
+      ",,,,,,,,,;;;ss~s,,,,;;;::,,www,,,,,,,,,,,,,,,,,,\"\",,",
+    ],
+    objects: [
+      {"type":"sign","x":40,"y":18,"text":R.T('map.marsh_field_manor.m_manor.objects.0.text')},
+      {"type":"prop","id":"grave_moss","x":30,"y":10},
+      {"type":"prop","id":"grave_moss","x":46,"y":12},
+      {"type":"prop","id":"grave_moss","x":44,"y":14},
+      {"type":"prop","id":"pale_mushrooms","x":33,"y":14},
+      {"type":"waylamp","id":"wl_m_manor_gate","x":36,"y":19,"lit":true},
+      {"type":"waylamp","id":"wl_m_manor_cw","x":14,"y":19,"lit":true},
+    ],
+    npcs: [
+
+    ],
+    spawns: {"loch":{"x":1,"y":20,"dir":"e"},"south":{"x":24,"y":42,"dir":"n"},"manor":{"x":38,"y":10,"dir":"s"}},
+    exits: [{"x":0,"y":20,"w":1,"h":2,"to":{"map":"loch","spawn":"gate_e"}},{"x":23,"y":43,"w":3,"h":1,"to":{"map":"m_lotus","spawn":"north"}},{"x":38,"y":9,"w":1,"h":1,"to":{"map":"marsh_manor_1","spawn":"entrance"}}],
+    triggers: [],
+    tilePatches: [],
+    zones: [{"rect":null,"zone":"zw_marsh"}],
+    art: {"image":"field/under/m_manor","painted":[],"overlay":"field/under/m_manor_over"},
+    meta: {"sub":R.T('map.marsh_field_manor.m_manor.meta.sub'),"worldRect":[571,181,51,54]},
+    links: {"loch_e":{"map":"m_manor","spawn":"loch"},"manor":{"map":"m_manor","spawn":"manor"}},
+  });
+})(window.RPG);

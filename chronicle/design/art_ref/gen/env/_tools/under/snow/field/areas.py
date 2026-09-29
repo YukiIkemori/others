@@ -127,8 +127,7 @@ def f_lake():
     a.mark('palisade', pal, "the snow village's LOG PALISADE: sharpened log stakes capped with snow, ice lanterns hung on it", WOOD)
     a.mark('gate', [(53, 28), (53, 33)], 'the two big carved GATE POSTS of the village gate, frost-covered', (120, 70, 36))
     # frozen reeds (shrubs) along the south shore, firs, rocks
-    a.ring(lake, 'b', 1, only=',;"')
-    a.mask_fill(ndimage.binary_dilation(lake, iterations=3) & ~ndimage.binary_dilation(lake, iterations=2) & (fbm(9, W, H, 3) > 0.55), 'b', only=',;"')
+    a.mask_fill(ndimage.binary_dilation(lake, iterations=4) & ~ndimage.binary_dilation(lake, iterations=2) & (fbm(9, W, H, 3) > 0.62), 'b', only=',;"')
     a.region([(-3, 38), (20, 39), (30, 42), (52, 40), (58, 44), (58, 47), (-3, 47)], 'F', rough=1.4, seed=8, only=',;"b')
     a.region([(46, -3), (58, -3), (58, 16), (50, 15), (47, 8)], 'F', rough=1.3, seed=9, only=',;"b')
     for (x, y, rx, ry, s_) in [(38, 38, 2.2, 1.4, 21), (47, 24, 2.0, 1.6, 22), (17, 38, 1.8, 1.2, 23), (50, 20, 1.5, 1.2, 24)]:
@@ -143,7 +142,7 @@ def f_lake():
     a.exit('s', 27, 28, {'map': 'f_snowpass', 'spawn': 'north'}, 'south')
     a.exit('e', 30, 31, {'map': 'yule', 'spawn': 'gate_w'}, 'yule')
     a.exit('n', 26, 27, {'map': 'f_floe', 'spawn': 'south'}, 'north')['cond'] = 'cleared_r_snow'
-    a.spawns['icicle'] = dict(x=8, y=31, dir='s')
+    a.spawns['icicle'] = dict(x=8, y=32, dir='s')
     a.objects += [
         dict(type='door', x=7, y=30, w=2, look='none', to={'map': 'icicle_1', 'spawn': 'entrance'}),
         dict(type='sign', x=11, y=33, text='つららの回廊\n氷の中に、何かが閉じこめられている。'),

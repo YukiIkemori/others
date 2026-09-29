@@ -1,0 +1,12 @@
+{
+ "out": "/home/user/others/chronicle/design/art_ref/gen/env/propfix/sheet_desert.png",
+ "tag": "propfix_sheet_desert",
+ "size": "1536x1024",
+ "quality": "high",
+ "background": "transparent",
+ "refs": [
+  "/home/user/others/chronicle/design/art_ref/gen/env/propfix/desert_w0.png",
+  "/home/user/others/chronicle/design/art_ref/gen/env/props/desert_a.png"
+ ],
+ "prompt": "A sprite sheet of 3 separate objects for a top-down JRPG map, to be placed on top of the painted desert map shown in the FIRST reference image. Match the references exactly: the same hi-bit pixel-painting style and brushwork as the desert props in the SECOND reference image (the copper brazier, clay jars, obelisk), the same palette and material textures, the same soft light from the upper left (lit tops and left sides, shaded right sides), the same classic steep 3/4 top-down view (you see the top surface and the front face; objects stand upright, base at the bottom). Arrange them in one row of 3, left to right, with wide empty space between them; every object fully separate, nothing touching, nothing cut off. Draw each object large, filling most of its third of the image. The objects, in order: 1) a tall desert roadside BRAZIER (a waymarker fire along a caravan road): a slender square pillar of carved pale sandstone with a stepped base and a simple carved band, as tall as a person, topped by a wide shallow hammered-copper fire bowl held by three small curled copper claws; the bowl is UNLIT: it holds only cold grey ash and a few black charcoal lumps, no fire, no smoke; 2) the EXACT SAME brazier (identical pillar, bowl, size, colours and position of every detail), but LIT: bright pixel-art flames rise from the bowl, about half the pillar's height, drawn as crisp flame shapes with a dark red-orange outline, orange body and yellow-white core, glowing embers in the bowl (no glow halo, no light around it); 3) a small low copper FIRE POT for a street side: a round hammered-copper bowl on three short curled legs, knee height, burning with a small lively flame (same flame style). \nBackground: fully transparent. No ground, no floor, no shadows, no smoke, no sparks flying away, no text, no labels, no numbers. Even albedo lighting: no night, no glow halos and no light spilling around the objects (the game adds the fire light later)."
+}

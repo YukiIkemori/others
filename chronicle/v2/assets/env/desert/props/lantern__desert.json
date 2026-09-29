@@ -1,0 +1,49 @@
+{
+ "id": "lantern__desert",
+ "kind": "props",
+ "theme": "desert",
+ "set": "desert",
+ "base": "lantern",
+ "frames": [
+  "default"
+ ],
+ "fire": true,
+ "cell": {
+  "24": [
+   14,
+   22
+  ],
+  "32": [
+   18,
+   28
+  ],
+  "40": [
+   22,
+   35
+  ]
+ },
+ "feet": {
+  "24": [
+   5,
+   18
+  ],
+  "32": [
+   8,
+   24
+  ],
+  "40": [
+   9,
+   31
+  ]
+ },
+ "files": {
+  "24": "lantern__desert@24.png",
+  "32": "lantern__desert@32.png",
+  "40": "lantern__desert@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_desert.png",
+ "light32": [
+  -1,
+  -12
+ ]
+}

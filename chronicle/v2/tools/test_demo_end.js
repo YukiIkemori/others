@@ -140,11 +140,12 @@ const ev = Object.assign({}, R.Events.makeEv ? R.Events.makeEv({}) : {}, {
   const g1 = M.world.exits.find((e) => e.to.map === 'kasim');
   ok('通せんぼは体験版の間だけ閉じる（文「体験版では、ここから先へは行けません」）', !!shut && shut(g1.gate) === true && /体験版では、ここから先へは\n行けません/.test(g1.gate.text));
   DB.config.slice = false; ok('製品版（slice 偽）では開く', shut(g1.gate) === false); DB.config.slice = true;
-  for (const [mid, to] of [['f_cross', 'f_cross_e'], ['f_south', 'f_south_s'], ['f_windhill', 'f_windhill_n']]) {
-    const ex = (M[mid].exits || []).filter((e) => e.to && e.to.map === 'world' && e.to.spawn === to);
-    const off = ex.find((e) => !e.demoMirror), mir = ex.find((e) => e.demoMirror);
-    ok(`${mid}: 峠の消える出口に、体験版の間だけの写し（黙って何も起きない、を無くす）`, !!(off && mir && mir.x === off.x && mir.y === off.y && R.State.check(mir.cond) && !R.State.check(off.cond) && shut(mir.gate)));
-    ok(`${mid}: 写しのマスで demo_boundary の行き先が分かる`, DG.at(mid, mir.x, mir.y) === 'world');
+  // 峠の出口の行き先は前のワールドか、峠の先の地方のエリア（雪原 f_snowpass・砂漠のエリアなど。行き先は体験版で行けない地方）
+  for (const mid of ['f_cross', 'f_south', 'f_windhill']) {
+    const ex = (M[mid].exits || []).filter((e) => e.to && M[e.to.map] && (e.to.map === 'world' || !DG.isOpen(e.to.map)) && e.cond);
+    const mir = ex.find((e) => e.demoMirror), off = mir && ex.find((e) => !e.demoMirror && e.x === mir.x && e.y === mir.y);
+    ok(`${mid}: 峠の消える出口に、体験版の間だけの写し（黙って何も起きない、を無くす）`, !!(off && mir && R.State.check(mir.cond) && !R.State.check(off.cond) && shut(mir.gate)));
+    ok(`${mid}: 写しのマスで demo_boundary の行き先が分かる`, !!mir && DG.at(mid, mir.x, mir.y) === mir.to.map);
   }
   R.Game.warps = { fern: true, pharos: true, kasim: true, loch: true, yule: true, caldera: true };
   Object.assign(R.Game.flags, { prologue_done: true });

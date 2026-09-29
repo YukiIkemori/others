@@ -97,5 +97,35 @@
     // ---- src/maps/marsh_field_00_kit.js
     'map.marsh_field_00_kit.CONFIRM.marsh_manor_1': '重い扉の向こうは、霧の館の中だ。\n中へ入りますか？',
     'map.marsh_field_00_kit.CONFIRM.marsh_bog': '霧の向こうは、鐘沈みの沼だ。\n沼へ踏み込みますか？',
+    // ---- src/maps/marsh_field_north.js
+    'map.marsh_field_north.m_north.name': '霧の入口',
+    'map.marsh_field_north.m_north.objects.0.text': 'グレイモア湿原\n南 → 水辺の町ロッホ',
+    'map.marsh_field_north.m_north.peat_cutter.name': '泥炭掘り',
+    'map.marsh_field_north.m_north.lines.0.text': ['泥炭を掘って、干して、\nロッホへ売りに行くのさ。', '霧の濃い晩は、道の板を\n踏み外さないようにね。\n沼は底なしだよ。'],
+    'map.marsh_field_north.m_north.meta.sub': '山あいの街道から湿原へ下りる所',
+    // ---- src/maps/marsh_field_west.js
+    'map.marsh_field_west.m_west.name': 'ロッホの西の岸',
+    'map.marsh_field_west.m_west.objects.0.text': '水辺の町ロッホ\n――湖の上の、鐘の町',
+    'map.marsh_field_west.m_west.shore_fisher.name': '岸の漁師',
+    'map.marsh_field_west.m_west.lines.0.text': ['湖のくいの鐘楼は、七つある。\n今は、どれも鳴らん。', '鐘が鳴らなくなってから、\n霧が町の中まで入ってくる。'],
+    'map.marsh_field_west.m_west.lines.1.text': '朝の鐘が、また鳴った。\n魚もよく跳ねるよ。',
+    'map.marsh_field_west.m_west.meta.sub': '湖の町へ渡る桟橋',
+    // ---- src/maps/marsh_field_manor.js
+    'map.marsh_field_manor.m_manor.name': '枯れ柳の庭',
+    'map.marsh_field_manor.m_manor.objects.0.text': '霧の館\n夜ごと、楽の音が聞こえる。',
+    'map.marsh_field_manor.m_manor.meta.sub': '霧の館へ続く沈んだ林',
+    // ---- src/maps/marsh_field_fen.js
+    'map.marsh_field_fen.m_fen.name': '沈んだ礼拝堂の原',
+    'map.marsh_field_fen.m_fen.objects.0.text': '沈んだ礼拝堂\n水の底から、歌が聞こえるという。',
+    'map.marsh_field_fen.m_fen.meta.sub': 'ロッホの南の泥炭の原',
+    // ---- src/maps/marsh_field_lotus.js
+    'map.marsh_field_lotus.m_lotus.name': 'はすの池',
+    'map.marsh_field_lotus.m_lotus.objects.1.text': 'はすの池\n消灯の刻に、青く光る蓮が咲くという。',
+    'map.marsh_field_lotus.m_lotus.meta.sub': '消灯の刻に光る蓮',
+    // ---- src/maps/marsh_field_bog.js
+    'map.marsh_field_bog.m_bog.name': '鐘沈みの沼の縁',
+    'map.marsh_field_bog.m_bog.objects.3.text': '鐘沈みの沼\n――霧の来る所',
+    'map.marsh_field_bog.m_bog.objects.4.text': '南 → 潮見橋・灰の荒野',
+    'map.marsh_field_bog.m_bog.meta.sub': '霧の来る所',
   });
 })(window.RPG);

@@ -1,0 +1,19 @@
+{
+ "id": "m_bog",
+ "kind": "under",
+ "map": "m_bog",
+ "tile": 32,
+ "size32": [
+  1664,
+  1408
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 1.0,
+ "files": {
+  "24": "m_bog@24.png",
+  "32": "m_bog@32.png"
+ },
+ "src": "generated"
+}

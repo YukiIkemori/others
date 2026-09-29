@@ -5,8 +5,9 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("m_north", {
-    name: "霧の入口", region: "r_marsh", outside: "marsh_water",
-    legend: R.FieldArea.MARSH_LEGEND, theme: 'moss_village', propSet: 'forest', bbg: 'marsh',
+    name: R.T('map.marsh_field_north.m_north.name'), region: "r_marsh", outside: "marsh_water",
+    legend: R.FieldArea.MARSH_LEGEND, theme: 'moss_village', propSet: 'marsh', bbg: 'marsh',
+    light: { ambient: '#667aa6', k: 0.64, mood: 'night' },   // 湿原: 泥炭と葦の絵は砂より暗いので、夜の明るさを少し上げる（霧の青み）
     rows: [
       "RRRRRRRRRRRRRRRRRRRRRRR;...;rRRRRRRRRRRRRRRRRRRRRRRR",
       "RRRRRRRRRRRRRRRRRRRRRRR,,..;rRRRRRRRRRRRRRRRRRRRRRRR",
@@ -50,7 +51,7 @@
       "wbwwwwwwwbbwwwwwwwb\"\"\",,,..\"\",bw,,,,,,,,,,,,\"\"\",\",,,",
     ],
     objects: [
-      {"type":"sign","x":27,"y":6,"text":"グレイモア湿原\n南 → 水辺の町ロッホ"},
+      {"type":"sign","x":27,"y":6,"text":R.T('map.marsh_field_north.m_north.objects.0.text')},
       {"type":"examine","x":34,"y":14,"event":"marsh_field_tower"},
       {"type":"examine","x":35,"y":14,"event":"world_poi_cache","item":"i_ether","key":"marsh_tower"},
       {"type":"waylamp","id":"wl_m_north_1","x":27,"y":15,"lit":true},
@@ -58,7 +59,7 @@
       {"type":"prop","id":"log","x":13,"y":16},
     ],
     npcs: [
-      {"id":"peat_cutter","look":"npc_marsh_woman","name":"泥炭掘り","x":14,"y":17,"dir":"s","move":"still","talk":{"lines":[{"text":["泥炭を掘って、干して、\nロッホへ売りに行くのさ。","霧の濃い晩は、道の板を\n踏み外さないようにね。\n沼は底なしだよ。"]}]},"reward":null},
+      {"id":"peat_cutter","look":"npc_marsh_woman","name":R.T('map.marsh_field_north.m_north.peat_cutter.name'),"x":14,"y":17,"dir":"s","move":"still","talk":{"lines":[{"text":R.T('map.marsh_field_north.m_north.lines.0.text')}]},"reward":null},
     ],
     spawns: {"north":{"x":25,"y":1,"dir":"s"},"south":{"x":26,"y":38,"dir":"n"}},
     exits: [{"x":24,"y":0,"w":3,"h":1,"to":{"map":"world","spawn":"marsh_n"}},{"x":25,"y":39,"w":3,"h":1,"to":{"map":"m_west","spawn":"north"}}],
@@ -66,7 +67,7 @@
     tilePatches: [],
     zones: [{"rect":null,"zone":"zw_marsh_road"}],
     art: {"image":"field/under/m_north","painted":[],"overlay":"field/under/m_north_over"},
-    meta: {"sub":"山あいの街道から湿原へ下りる所","worldRect":[475,166,54,33]},
+    meta: {"sub":R.T('map.marsh_field_north.m_north.meta.sub'),"worldRect":[475,166,54,33]},
     links: {},
   });
 })(window.RPG);

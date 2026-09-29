@@ -203,7 +203,7 @@ def m_manor():
     a.mark('fence', fence, 'a rusted WROUGHT-IRON FENCE with spiked bars between square mossy stone posts, enclosing the manor garden (a gap for the gate in the south side)', (70, 70, 76))
     mn = [(x, y) for x in range(31, 45) for y in range(2, 10)]
     a.mark('manor', mn, 'a gloomy two-storey MANOR HOUSE of grey stone seen from above: steep dark slate roofs with gables and chimneys, a tall pointed SPIRE tower at its west end, narrow dark windows, ivy, its arched front DOOR in the middle of the south face (the dark cell)', MANOR)
-    door(a, 37, 9, 1, 'the manor\'s arched front DOOR (dark)')
+    door(a, 38, 9, 1, 'the manor\'s arched front DOOR (dark)')
     a.rect(34, 10, 8, 3, 'c', force=True, keep=True)   # the forecourt
     a.stroke([(37.5, 12), (37.5, 16.5)], 2.0, 'c', seed=6)
     for (x, y, rx, ry, s_) in [(29.5, 5, 1.5, 3.2, 31), (47, 5, 1.5, 3.0, 32), (30, 13.5, 2.0, 1.4, 33)]:
@@ -217,8 +217,8 @@ def m_manor():
     a.tidy()
     a.exit('w', 20, 21, {'map': 'loch', 'spawn': 'gate_e'}, 'loch')
     a.exit('s', 23, 25, {'map': 'm_lotus', 'spawn': 'north'}, 'south')
-    a.spawns['manor'] = dict(x=37, y=10, dir='s')
-    a.exits.append(dict(x=37, y=9, w=1, h=1, to={'map': 'marsh_manor_1', 'spawn': 'entrance'}))
+    a.spawns['manor'] = dict(x=38, y=10, dir='s')
+    a.exits.append(dict(x=38, y=9, w=1, h=1, to={'map': 'marsh_manor_1', 'spawn': 'entrance'}))
     a.objects += [
         dict(type='sign', x=40, y=18, text='霧の館\n夜ごと、楽の音が聞こえる。'),
         dict(type='prop', id='grave_moss', x=30, y=10), dict(type='prop', id='grave_moss', x=46, y=12), dict(type='prop', id='grave_moss', x=44, y=14),

@@ -1,0 +1,72 @@
+// 生成物（design/art_ref/gen/env/_tools/under/field_marsh/ の areas_marsh.py → fit.py → tomap.py）。手で直さない: 配置は areas_marsh.py、当たりは fit.py で作り直す。
+// エリア m_lotus「はすの池」（消灯の刻に光る蓮、44×36）。エリア切り替えのフィールド（maps/field_00_kit.js、湿原の凡例は marsh_field_00_kit.js）。
+//   出口: w → m_fen.east, n → m_manor.south
+//   絵: field/under/m_lotus（v2/assets/env/field/under/。無ければマスから焼く）
+(function (R) {
+  'use strict';
+  R.FieldArea.def("m_lotus", {
+    name: R.T('map.marsh_field_lotus.m_lotus.name'), region: "r_marsh", outside: "marsh_water",
+    legend: R.FieldArea.MARSH_LEGEND, theme: 'moss_village', propSet: 'marsh', bbg: 'marsh',
+    light: { ambient: '#667aa6', k: 0.64, mood: 'night' },   // 湿原: 泥炭と葦の絵は砂より暗いので、夜の明るさを少し上げる（霧の青み）
+    rows: [
+      "\"\",,,,;;;\";,,,\"\",,,,,,,;;;;;;;;::;;;;;T\"\",,,",
+      "\"\",,b,;\"\"\"\"\",,,,,,,~T,;;;;;;;;;;:;;;;T,,,,,,",
+      ";\",bwb\",,,\"\"TTT,,,,,,;;;;;;;;,,,::;;;\"TT,,,,",
+      ";,wTTT,,sT,,,T~,,,,\";;;;;\",\"\"\",,::;;TTTTTT,,",
+      ";;TTTTTww,,,,,,,,,,~w,;;,,,\"\"\"\",\":;bwTTTTT,,",
+      ",TTTTTTbw,,,,,,,,,,;,;;;,,,\"\"\",\"\"::,TTTTTT,,",
+      ",TTTTT,sw,,,,,,,,;;s;;;,,,,,\",,,,::;TTTTTT,,",
+      "wT,TTT,bw,\"sw,,,,b~~~~~,,,,,\",,,,;:;;TTTT~,,",
+      "wwsT,,,,s,swsws~~~~~~~~~~~~s\"\",,,,::;;;T,,,,",
+      "ww,,,,,,,,,s\".~~~~~~~~~~~~~~~,,,,,::\",,,,,,,",
+      "w,,,,,,,,,,,,~~~~~~~~~~~~~~~~~\",,,,:,,,,,,,,",
+      "ws,,,,,,,,,,s~~~~~~~~~~~~~~~~~,\"\",,::,,,,,s,",
+      "s,,,,,,,,,,,s~~~~~~~~~~~~~~~~~,\"\"\",::,,,\"Tss",
+      ",\",,T,,,,,,,~~~~~~~~~~~~~~~~~~~\"\"\",::,\",\",,s",
+      "\"\",,,,,,,,,~~~~~~~~~~~~~~~~~~~~~,,,::,,TT,,,",
+      ",,,T,,,,\"\",~~~~~~~~====~~~~~~~~~s\"\"::\",,,,,,",
+      "\"\",,,,,,\"\",~~~~~~~~====~~~~~~~~~,\"\":\"\"\",,,,;",
+      "\"\",,,,,\"\",,,~~~~~~~~==~~~~~~~~~~s\"::,,\";;;;,",
+      "\"\",,,,,\",,,,~~~~~~~~==~~~~~~~~~,,,::,;;;;;;;",
+      ",,,\"\",,,,,,sw~~~~~~~==~~~~~~~~,,,::;;;;;;;;;",
+      ":::::\"\",,,,,;;~~~~~~==~~~~~~~,;;::;;;;;;;;;;",
+      ",::::::::,,,;;,;~~~~==~~~,;,,;;::T;;;;;;;;;;",
+      "\",,\"\"\",:::::;;;;;;;;==;;;;;;,;:::;TT;;;;;;;;",
+      "\",,,\",s,,,:::,;sss;\"==;;;;;::::,,TTT;;;;,,,,",
+      ",,\",\",s;;;;;:::::ss\"\"\"\";;:::Ts,,,TTTss;;,,,,",
+      ",,\"\"\";s;;;;sws:::::::::::::Tww,,,,,\"\"\"\",,,,,",
+      ",,\";\",,;,,,,w,,,,,\"\"\"\"\"\"\"\",Tw,,,,,,\"\"\"\",,,,,",
+      ",;;;;T,,,,~~T,,,,,,\"\"\"\"\"\"\",,,,,,,,,\"\"\"\",,,\"\"",
+      ";;;;TTT,,,www~,,,,,\"\"\"\"\"\"\",,,,,,,,,s\"\"\"\",,,\"",
+      ";,,TTTTT,,wwww,,,,\"\"\"\"\"\"\"\",,\"\",,~~TTTTTTTTT\"",
+      ";,,TTTTT;,,wwws,,,,\",\",,,,,,\",,~~ww,TTTTTTT\"",
+      ",,;TTTTT;;;Twwb,,,,\"\",,,,,,\"\"\",~www\"TTTTTTT\"",
+      ",;;;;TT;;;;wwww,,,,\"\"\"\",,,,\"\"\",,ww,\"\"TTT~,,\"",
+      ";;;;,,,,;;,wwww,,,\"\"\"\",,,,,\"\"\",,,,\"\"\"\",,,,,\"",
+      ";;;;,,,,,;,,,,,,,,\"\"\"\",,,,,,,,,\",\"\",,,,,,,,,",
+      ";;;;;;,,,,,,ss,,,,\"\"\"s,,,,,,,,,\",\"\"\"\",,,,,,,",
+    ],
+    objects: [
+      {"type":"examine","x":21,"y":14,"event":"marsh_lotus"},
+      {"type":"sign","x":17,"y":27,"text":R.T('map.marsh_field_lotus.m_lotus.objects.1.text')},
+      {"type":"prop","id":"wisp_lamp","x":14,"y":11},
+      {"type":"prop","id":"wisp_lamp","x":28,"y":10},
+      {"type":"prop","id":"wisp_lamp","x":27,"y":18},
+      {"type":"prop","id":"pale_mushrooms","x":8,"y":18},
+      {"type":"prop","id":"pale_mushrooms","x":36,"y":26},
+      {"type":"prop","id":"pale_mushrooms","x":31,"y":4},
+      {"type":"waylamp","id":"wl_m_lotus","x":24,"y":27,"lit":true},
+    ],
+    npcs: [
+
+    ],
+    spawns: {"west":{"x":1,"y":20,"dir":"e"},"north":{"x":31,"y":1,"dir":"s"}},
+    exits: [{"x":0,"y":20,"w":1,"h":2,"to":{"map":"m_fen","spawn":"east"}},{"x":30,"y":0,"w":3,"h":1,"to":{"map":"m_manor","spawn":"south"}}],
+    triggers: [],
+    tilePatches: [],
+    zones: [{"rect":null,"zone":"zw_marsh_lotus"}],
+    art: {"image":"field/under/m_lotus","painted":[],"overlay":"field/under/m_lotus_over"},
+    meta: {"sub":R.T('map.marsh_field_lotus.m_lotus.meta.sub'),"worldRect":[559,253,42,36]},
+    links: {},
+  });
+})(window.RPG);

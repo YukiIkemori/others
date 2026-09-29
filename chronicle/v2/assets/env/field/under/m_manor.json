@@ -1,0 +1,19 @@
+{
+ "id": "m_manor",
+ "kind": "under",
+ "map": "m_manor",
+ "tile": 32,
+ "size32": [
+  1664,
+  1408
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 1.0,
+ "files": {
+  "24": "m_manor@24.png",
+  "32": "m_manor@32.png"
+ },
+ "src": "generated"
+}

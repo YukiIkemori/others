@@ -1,0 +1,19 @@
+{
+ "id": "m_west",
+ "kind": "under",
+ "map": "m_west",
+ "tile": 32,
+ "size32": [
+  1792,
+  1408
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 1.0,
+ "files": {
+  "24": "m_west@24.png",
+  "32": "m_west@32.png"
+ },
+ "src": "generated"
+}

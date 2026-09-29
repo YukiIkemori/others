@@ -1,0 +1,49 @@
+{
+ "id": "copper_brazier__desert",
+ "kind": "props",
+ "theme": "desert",
+ "set": "desert",
+ "base": "copper_brazier",
+ "frames": [
+  "default"
+ ],
+ "fire": true,
+ "cell": {
+  "24": [
+   18,
+   28
+  ],
+  "32": [
+   24,
+   36
+  ],
+  "40": [
+   29,
+   45
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   24
+  ],
+  "32": [
+   10,
+   32
+  ],
+  "40": [
+   14,
+   41
+  ]
+ },
+ "files": {
+  "24": "copper_brazier__desert@24.png",
+  "32": "copper_brazier__desert@32.png",
+  "40": "copper_brazier__desert@40.png"
+ },
+ "src": "design/art_ref/gen/env/propfix/sheet_desert.png",
+ "light32": [
+  0,
+  -17
+ ]
+}

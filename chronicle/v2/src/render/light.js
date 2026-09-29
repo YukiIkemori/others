@@ -13,7 +13,7 @@
 //       → 光の地図の canvas（使い回し。次の compose で上書き）
 //   R.Light.map(rect, o) → 光の地図の canvas だけ（チャンクに焼き込むときに。compose と同じ中身、使い回さない新しい canvas）
 //   R.Light.glow(g, x, y, {r, color, core, halo}, t)   発光の描き直し: 白に近い芯（半径 core、既定 6）＋芯の 3 倍のにじみ（加算、半径 halo、r でも可）。
-//       o.pulse（ms）= ゆっくり息づく、o.beam = {len, period, width, squash, k} 灯台の回る光の帯（world の w_lighthouse）。
+//       o.pulse（ms）= ゆっくり息づく、o.flick = [振れ幅, Hz] ゆらぎを変える（火）、o.beam = {len, period, width, squash, k} 灯台の回る光の帯（world の w_lighthouse）。
 //       t（ms）を渡すと小さくゆらぐ（±8%、3 Hz。効果「高」だけ）。効果「切」は芯だけ
 //   R.Light.ring(g, x, y, r, t, o?)   先頭の人のランタンの光の輪（r = 88 art px、暗がりの階は 4 マス）。掛けた後の画面を暖色の灯りの下の色へ戻す
 //       （color-dodge。色は環境光から決める: o.mood / o.ambient、無ければ最後の compose の環境光）
@@ -221,7 +221,8 @@
     const color = o.color || S.lampColor || '#ffc27a';
     const core = o.core != null ? o.core : S.coreR || 6;
     const halo = o.halo != null ? o.halo : o.r != null ? o.r : core * (S.haloMul || 3);
-    const f = flick(x, y, t, (S.flicker && S.flicker.lamp[0]) || 0.08, (S.flicker && S.flicker.lamp[1]) || 3);
+    // o.flick = [振れ幅, Hz]（火: 砂漠のかがり火）。無ければ灯りの既定のゆらぎ
+    const f = o.flick ? flick(x, y, t, o.flick[0], o.flick[1]) : flick(x, y, t, (S.flicker && S.flicker.lamp[0]) || 0.08, (S.flicker && S.flicker.lamp[1]) || 3);
     const quality = q();
     const a0 = g.globalAlpha, op = g.globalCompositeOperation, sm = g.imageSmoothingEnabled;
     g.imageSmoothingEnabled = true;

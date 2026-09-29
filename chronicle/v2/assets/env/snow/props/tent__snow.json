@@ -1,0 +1,42 @@
+{
+ "id": "tent__snow",
+ "kind": "props",
+ "theme": "snow",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   32,
+   34
+  ],
+  "32": [
+   43,
+   46
+  ],
+  "40": [
+   54,
+   58
+  ]
+ },
+ "feet": {
+  "24": [
+   16,
+   34
+  ],
+  "32": [
+   22,
+   45
+  ],
+  "40": [
+   27,
+   56
+  ]
+ },
+ "files": {
+  "24": "tent__snow@24.png",
+  "32": "tent__snow@32.png",
+  "40": "tent__snow@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/snow_b.png"
+}

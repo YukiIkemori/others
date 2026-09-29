@@ -1,0 +1,20 @@
+{
+ "id": "m_lotus",
+ "kind": "under",
+ "map": "m_lotus",
+ "tile": 32,
+ "size32": [
+  1408,
+  1152
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 1.0,
+ "files": {
+  "24": "m_lotus@24.png",
+  "32": "m_lotus@32.png",
+  "40": "m_lotus@40.png"
+ },
+ "src": "generated"
+}

@@ -1,0 +1,47 @@
+{
+ "id": "waylamp__marsh",
+ "kind": "props",
+ "theme": "marsh",
+ "frames": [
+  "off",
+  "on"
+ ],
+ "cell": {
+  "24": [
+   22,
+   41
+  ],
+  "32": [
+   30,
+   55
+  ],
+  "40": [
+   38,
+   69
+  ]
+ },
+ "feet": {
+  "24": [
+   11,
+   40
+  ],
+  "32": [
+   15,
+   54
+  ],
+  "40": [
+   19,
+   68
+  ]
+ },
+ "files": {
+  "24": "waylamp__marsh@24.png",
+  "32": "waylamp__marsh@32.png",
+  "40": "waylamp__marsh@40.png"
+ },
+ "src": "marsh/props/wisp_lamp (off frame = glass dimmed)",
+ "light32": [
+  9,
+  -35
+ ]
+}

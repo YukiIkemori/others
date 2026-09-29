@@ -1,0 +1,42 @@
+{
+ "id": "signboard__snow",
+ "kind": "props",
+ "theme": "snow",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   14,
+   18
+  ],
+  "32": [
+   19,
+   24
+  ],
+  "40": [
+   24,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   7,
+   17
+  ],
+  "32": [
+   10,
+   23
+  ],
+  "40": [
+   12,
+   29
+  ]
+ },
+ "files": {
+  "24": "signboard__snow@24.png",
+  "32": "signboard__snow@32.png",
+  "40": "signboard__snow@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/snow_a.png"
+}

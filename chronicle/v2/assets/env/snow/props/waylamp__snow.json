@@ -1,0 +1,47 @@
+{
+ "id": "waylamp__snow",
+ "kind": "props",
+ "theme": "snow",
+ "frames": [
+  "off",
+  "on"
+ ],
+ "cell": {
+  "24": [
+   15,
+   40
+  ],
+  "32": [
+   20,
+   54
+  ],
+  "40": [
+   25,
+   68
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   40
+  ],
+  "32": [
+   10,
+   53
+  ],
+  "40": [
+   12,
+   66
+  ]
+ },
+ "files": {
+  "24": "waylamp__snow@24.png",
+  "32": "waylamp__snow@32.png",
+  "40": "waylamp__snow@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/snow_b.png",
+ "light32": [
+  0,
+  -40
+ ]
+}

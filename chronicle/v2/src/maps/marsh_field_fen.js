@@ -1,0 +1,76 @@
+// 生成物（design/art_ref/gen/env/_tools/under/field_marsh/ の areas_marsh.py → fit.py → tomap.py）。手で直さない: 配置は areas_marsh.py、当たりは fit.py で作り直す。
+// エリア m_fen「沈んだ礼拝堂の原」（ロッホの南の泥炭の原、56×44）。エリア切り替えのフィールド（maps/field_00_kit.js、湿原の凡例は marsh_field_00_kit.js）。
+//   出口: n → m_west.south, s → m_bog.north, e → m_lotus.west
+//   絵: field/under/m_fen（v2/assets/env/field/under/。無ければマスから焼く）
+(function (R) {
+  'use strict';
+  R.FieldArea.def("m_fen", {
+    name: R.T('map.marsh_field_fen.m_fen.name'), region: "r_marsh", outside: "marsh_water",
+    legend: R.FieldArea.MARSH_LEGEND, theme: 'moss_village', propSet: 'marsh', bbg: 'marsh',
+    light: { ambient: '#667aa6', k: 0.64, mood: 'night' },   // 湿原: 泥炭と葦の絵は砂より暗いので、夜の明るさを少し上げる（霧の青み）
+    rows: [
+      "\"\",,,,;;;\";,wb,,,,bw..wwwwbTbwwwbbbbbbbTTTTTTTTTTTbwwwwb",
+      ",,,,,;;;;;;,bT,,,,,b..wwwbTTbbwwbbbTTbbbTTTTTTTTTTTb~wbb",
+      ",,,,,TbwrTTT,,,\"\",,,..bbb;,TbwwbbbbTTbbbbTTTTTTTTTTbbbbw",
+      ",,,,bwwwrwwTT,,\"\"\",..,,TT,,,;bbbbbbbbbbbbTrTrrrrbbbbbbbw",
+      ",,,,,wwwwwwT,,,\"\"\"...,,,\",,rbbTbbbbbbbbbbr~wwwbbbwwwwbTb",
+      ",,,,,bbbbwb,,,,\"\"...,,\",,,bbbb~~~TTbbbbbbr~wwwbbwwwwwbbb",
+      ",,,,bwwwbb;,,,,,...bbbb,,bbb~~~~~~~~bbbb~wwTbbwbwwwwwTbw",
+      ",,,bwwwwwb,,,,,...bbbbbrr~~~~~~~~~~~~~bbbwbTTbwbbbwwwbbb",
+      ",,bwwwwwwb,,,,...bb~~~~~~~~~~~~~~~~~~~~~bbbTTrrrrrbwbbww",
+      ",,,bwwwwwb,bb,..,bb~~~~~~~~~~~~~~~~~~~~~~~~TTrrrbrwbTbww",
+      ",,,,bbbwb,,ww..,,bb~~~~~~~~~~~~~~~~~~~~~~~~~Trrbbbbb,Tbw",
+      ",,,,wrbbr,,,...,,bb~~~~~~~~~XXX~~~~~~~~~~~~~Tbbbbbbb,,;,",
+      ",,,rrrrrwTr,..,,bb~~~~~~~~~~XXX~~~~~~~~~~~~~~bbbbbb,;;;;",
+      ",,bwwrrrwwr,..b,bb~~~~~~~~~~XX~~~~~~~~~~~~~~~bbbbbb,;;;;",
+      ",,,bwbTrww,,..,,b~~~~~~~~X~~~~~~.X~~~~~~~~~~~bbbbb,;;;;;",
+      ",,,,bbrbwb,,..,,,r~~~~~~~~ccccccc~~~~~~~~~~~~b,;;;;;;;;;",
+      ";,,,bwwwb,,..=============ccccccc~~~~~~~~~~~~b,;;;;;,,,;",
+      ";,,bwbbb,,,..==============cccccc~~X~~~~~~~~~~,;,,,,,,,,",
+      ";;,bwb,,,r,..,============ccccccc~~~~~~~~~~~~b;,,,,,,,,,",
+      ";;,,b,,,,T,..,,,\"b~~~~~~~.ccccccc~~~~~~~~~~~~b,,,,,,,,,,",
+      ";;bbbbb,,,,..,,,\"bb~~~~~~X~~~~~~.X~~~~~~~~~~~b,,,,,,,,,,",
+      ",,bbbbb\",,,,.c,,\"bb~~~~~~~~~~~~~~~~~~~~~~~~~TbT,,,,,,,,,",
+      ",,bbbbbTT\"\",.c,,,,bb~~~~~~~~~~~~~~~~~~~~~~~,,,,,\",,rbb,,",
+      ",,,bbbbT\"\",,..,,,,,r~~~~~~~~~~~~~~~~~~~~~~~b,,,T\"\",bwwb,",
+      ",,,,bbb\"\"b,,...T,,,Tr~~~~~~~~~~~~~~~~~~~~~b,,,,\"sTbbbbwb",
+      ",,,,b,,,bwb,,..,,,,rb~~~~~~~~~~~~~~~~~~~~~,,T,,,sTbbbbw,",
+      ",,T,,,,bwwb;,,..,,bwbww~~~~~~~~~~~~~~~~,,,,,rTr~,Tbbbb,,",
+      ",\",;;;bwwwb;,T..c,bwwbbbbbb~~~~~~~~b,,,,T,,,,,~wwTbbb,,,",
+      "\"\";;;bwwwwb,;,\"..c.wwwbbbbbbb~~~bbbb,b,,,,,,,,rw,Tbbb,,,",
+      ",,,;;;,wwwb;;;,\"..c\"\",,,,,,,bbbbbb,,,,,,,,,,,,,,,,,..,,,",
+      "~r,;;;;,ww;;;;;s\"....,,,,,,,,bbbww.,,,,::::::::::::::T::",
+      "w~,,,,,,,;;;;;;ssss....,,,,,,,,bw.:::::::::::,,,,\"\"T,T~b",
+      "wwb,,,,,;;;;TT;s,,ss..:::::::::::::::,,,,,,,r~bbbbb\",r~w",
+      "w,,,,;;;;;;;s;;;,;;,,,::::::::,,,,,,,,,,,,,,~wwwwwwT,,rw",
+      "r,,,,;bbbbb;;;;bbb;;;;;....,,,,,,,,,,,,,,,,,~wwwwwwwb,,,",
+      "~,,,;bwwwwwb;;,wwwb;;;;;;...rb,,,,,,,,,,,,,,bwwwwwwwwb,,",
+      "wb,,;;wwwwwb;;,wwwwb;r;;;;..bw,,\"\",,~bbb,,\",,bwwwww,bTr,",
+      ",,,,;bwwwwb;;;;;ww;;,,;;;;;..,;TT,,,bwww,,\"\",\",b,b,,,r,,",
+      ",,\",;,bbbb\";;;;;;\",,,,TT;;;..;,T,,,,~www,,,,,,,,,,,,;;;;",
+      ",T,,,,bwwb\",;;;;;,T,,,rrr;;..;,,T,,,Twww,,T;,,,,,,,,;;;;",
+      "b,,,,,bwwwb,;T;;;T,,,,,,,,;..;,,,,,,,,,,,,,;;,,,,,,,,,;;",
+      "wb,,,Tbwww\",;;T;;,,,,,,,,,,..,,,,,,,,,,,,,,,;,T,,,,,,,,,",
+      "ww,\"\"T,,w\"\",;Tr;sss,TT,,,,,..,,,,,,,,,,,,,T,,TTr,,,,,,,,",
+      "wb\"\",\",,,\"\",;;;;ss,,,,,,,,,..,,,,,,,,,,,\"\",;;,rT,,,,,,,,",
+    ],
+    objects: [
+      {"type":"sign","x":11,"y":14,"text":R.T('map.marsh_field_fen.m_fen.objects.0.text')},
+      {"type":"examine","x":29,"y":14,"event":"marsh_field_chapel"},
+      {"type":"waylamp","id":"wl_m_fen_1","x":14,"y":6,"lit":true},
+      {"type":"waylamp","id":"wl_m_fen_2","x":24,"y":35,"lit":true},
+      {"type":"prop","id":"rotten_stump","x":9,"y":27},
+    ],
+    npcs: [
+
+    ],
+    spawns: {"north":{"x":21,"y":1,"dir":"s"},"south":{"x":27,"y":42,"dir":"n"},"east":{"x":54,"y":30,"dir":"w"}},
+    exits: [{"x":20,"y":0,"w":3,"h":1,"to":{"map":"m_west","spawn":"south"}},{"x":26,"y":43,"w":3,"h":1,"to":{"map":"m_bog","spawn":"north"}},{"x":55,"y":30,"w":1,"h":2,"to":{"map":"m_lotus","spawn":"west"}}],
+    triggers: [],
+    tilePatches: [],
+    zones: [{"rect":null,"zone":"zw_marsh"}],
+    art: {"image":"field/under/m_fen","painted":[],"overlay":"field/under/m_fen_over"},
+    meta: {"sub":R.T('map.marsh_field_fen.m_fen.meta.sub'),"worldRect":[499,241,60,48]},
+    links: {},
+  });
+})(window.RPG);

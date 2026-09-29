@@ -1,0 +1,42 @@
+{
+ "id": "signboard__marsh",
+ "kind": "props",
+ "theme": "marsh",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   16,
+   24
+  ],
+  "32": [
+   20,
+   30
+  ],
+  "40": [
+   25,
+   38
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   23
+  ],
+  "32": [
+   10,
+   29
+  ],
+  "40": [
+   12,
+   37
+  ]
+ },
+ "files": {
+  "24": "signboard__marsh@24.png",
+  "32": "signboard__marsh@32.png",
+  "40": "signboard__marsh@40.png"
+ },
+ "src": "marsh/props/crooked_sign"
+}

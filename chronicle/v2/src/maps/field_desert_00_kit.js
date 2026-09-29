@@ -21,6 +21,8 @@
   const PASS_BACK = { x: 271, y: 423, w: 1, h: 2 };
   function link() {
     const M = R.DB.maps || {};
+    // 物の絵の組: 砂漠のエリアは砂漠の組（灯籠 → かがり火）。砂漠の組に無い物（看板など）は前のまま里の組（field_00_kit.js の既定）
+    for (const m of Object.values(M)) if (m && m.kind === 'field' && m.region === 'r_desert' && m.propSet === 'village') { m.propSet = 'desert'; m.propSetBase = 'village'; }
     const fs = M.f_south;
     if (fs) for (const e of fs.exits || []) if (e.to && e.to.map === 'world' && e.to.spawn === 'f_south_s') e.to = { map: 'd_pass', spawn: 'north' };
     const w = M.world;

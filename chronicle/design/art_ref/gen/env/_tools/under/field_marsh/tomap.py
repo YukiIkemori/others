@@ -62,7 +62,8 @@ for aid in sys.argv[1:]:
   'use strict';
   R.FieldArea.def({js(aid)}, {{
     name: {js(M['name'])}, region: {js(M['region'])}, outside: {js(M.get('outside', 'marsh_water'))},
-    legend: R.FieldArea.MARSH_LEGEND, theme: 'moss_village', propSet: 'forest', bbg: 'marsh',
+    legend: R.FieldArea.MARSH_LEGEND, theme: 'moss_village', propSet: 'marsh', bbg: 'marsh',
+    light: {{ ambient: '#667aa6', k: 0.64, mood: 'night' }},   // 湿原: 泥炭と葦の絵は砂より暗いので、夜の明るさを少し上げる（霧の青み）
     rows: [
 {chr(10).join('      ' + js(r) + ',' for r in rows)}
     ],

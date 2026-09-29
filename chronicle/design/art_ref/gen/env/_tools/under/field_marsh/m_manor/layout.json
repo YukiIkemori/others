@@ -12,7 +12,7 @@
 "s,,,,,,,,,,,FFFFFFFFFFF,,r;X,TTXXXXXXXXXXXXXXbTTTX,,",
 ",,,,,bb;;,,,FFFwwwwwFFF,,,,XbTTXXXXXXXXXXXXXXwbTTX,,",
 "bbbbbwwb;,,FFFFwwwwwFFF,,b,Xw,,XXXXXXXXXXXXXX,,,,X,,",
-"~~~~bbbbb,,FFFFFwwwFFFF,bwwXw,,XXXXXX:XXXXXXX,,,,X,,",
+"~~~~bbbbb,,FFFFFwwwFFFF,bwwXw,,XXXXXXX:XXXXXX,,,,X,,",
 "~~~~~~~~~b,FFFFFFFFFFFF,bwwX,,,,,,cccccccc,,,,,,,X,,",
 "~~~~~~~~~b,,FFFFFFFFFF,,,bbX,,,,,,cccccccc,,,,,,bX,,",
 "~~~~~~~~~~b,FFFFFFFFF,,,,bwX,,,,,,cccccccc,,,,,bwX,,",
@@ -937,7 +937,7 @@
 "kind": "door",
 "cells": [
 [
-37,
+38,
 9
 ]
 ],
@@ -1008,7 +1008,7 @@
 "dir": "n"
 },
 "manor": {
-"x": 37,
+"x": 38,
 "y": 10,
 "dir": "s"
 }
@@ -1037,7 +1037,7 @@
 "edge": "s"
 },
 {
-"x": 37,
+"x": 38,
 "y": 9,
 "w": 1,
 "h": 1,
@@ -1076,5 +1076,51 @@
 }
 },
 "npcs": []
-}
+},
+"rows_fit": [
+"ww,,,,;;;\";,,,,,,,,,,,,;;;;;;;;;;;;;;;,,,,,,,,,,,,\"\"",
+"ss,,,,,,,;;,,,,,,,,,,,,,,;;XXXXXXXXXXXXXXXXXXXXXXX\",",
+"wb,,~,s,,,,,,,,sF,,,,,,,,,,XTXXXXXXXXXXXXXXXX,,,,X,,",
+"s,,~~,,,,,,,,FFFFFFFFFT,,,,XTXXXXXXXXXXXXXXXX,,,,X,,",
+",,~~~~,,,,,,FFFFFFFFFFTT,,,XTTTXXXXXXXXXXXXXXT,,,X,,",
+",~~~~~~,,,,,FFFFFFFFFFTT,,;XTTTXXXXXXXXXXXXXX,,TTX,,",
+"s~~~,,,,,,,,FFFFFFFFFFFT,,;XTTTXXXXXXXXXXXXXX.TT,X,,",
+",,,,,ss;;,,,FFFwwwwwFFFT,,,Xb,,XXXXXXXXXXXXXX.b,,X,,",
+"ssssssss;,,FFFFwwwwwFFFT,sTXw,,XXXXXXXXXXXXXX,,,,X,,",
+"~~~~sssss,,.FFFFwwwFFFFT,wwXw,,XXXXXXX:XXXXXX,,,,X,,",
+"~~~~~~~~~s,FFFFFFFFFFFF,,swXT,,,,,cccccccc,,,,,,,X,,",
+"~~~~~~~~~,,,,FFFFFFFFF,,,ssXTT,,,,cccccccc,,,,,,,X,,",
+"~~~~~~~~~~b,.FFFFFFFF,,,,swX,,,,,,cccccccc,,,,,b,X,,",
+"~~~~~~~~~~~bs.FFFFFFT,,,swwXb,,,,,,,ccc,,,,,,,,,wX,,",
+"~~~~~~~~~~~bs,,,,F,,,,,sswwX.,TTT,,,ccc,,,,,,,,,,X,,",
+"~~~~~~~~~~~ss,,,,,,,,,,,wwwX.b,,,,,,c:c,,,,,,,,,,X,,",
+"~~~~~~~~~~~sss,,,,sss,,,,wwXXXXXXXXXc::XXXXXXXXXXX,,",
+"~~~~~~~~~~~bsss,,sss,,,,,,wT,::::::::::,,,,,,,,,,,,,",
+"~~~~~~~~~~~s;sss;;s,:::::::::::::::::::,,,,,,,,,,,,,",
+"~~~~~~~~~~s:;;s;:::::::::::::::,b,,,s,,,,,,,,,,,,,,,",
+"cccccccccc::::::::::;::,,,,,www.sb,,ss,,,,,,,,,,,,,,",
+"ccccccccccc:::::;.s;;;::,,,,wwwbss,s\"s,,;,,,,,,,,,,,",
+"~~~~~~~~~~s;;;;;;;s;;;::,,,,,,,,.,,FFFFFF,,,,,,,,,,,",
+"~~~~~~~~~~s;,T;;;;;FFF::,,,,,,,FFFFFFFFFFFFF;;;,,,,,",
+"~~~~~~~~~~s,.FFFFFFFFF,::,,,,FFFFFFFFFFFFFFFFF;,,,,,",
+"~~~~~~~~~~sFFFFFFFFFFFF::,,,,FFFFFFFFFFFFFFFFFFF,,,,",
+"~~~~~~~~~~s.FFFFFFFFFFF::,,,\"FFFFFFFFFFFFFFFFFFFFFT,",
+"~~~~~~~~~~.FFFFFFFFFFFFT:,,,,FFFFFFFFFFFFFFFFFFFFF,,",
+"~~~~~~~~~sFFFFFFFFFFFFF:::,,,FFFFFFFFFFFFFFFFFFFFF,,",
+"~~~~~~~~,.FFFFFFFwwFFFFF::,,,FFFFFFFwwwwwFFFFFFFFF,,",
+"~~~~~~~~s.FFFFFwwwwwFFFFT:,,\",FFFFFFwwwwwFFFFFFFFF,,",
+"~~~~~~~~s.FFFFFwwwwwFFFF::.,,,FFFFFwwwwwwwFFFFFFFF,,",
+"~~~~~~~~s.FFFFFwwwwwFFFT::wb,,FFFFFFwwwwwFFFFFFFFFF,",
+"~~~~~~~ss.FFFFFFwwFFFFT,::ws,,FFFFFFFwwwFFFFFFFFFFF,",
+"s~~~~~ssFFFFFFFFFFFFFT,,::,,,,,FFFFFFFFFFFFFFFFFFFF,",
+",,,,,s,,FFFFFFFFFFFFT,,:::,,,,,,FFFFFFFFFFFFwwwwFFFF",
+",,,,,,,,,.FFFFFFFFF,\",,::,,,,,,,,FFFFFFFFFFFwwwwwFFF",
+"~,~,,,,,,,FFFFFFFFFT\",,::,,,,,,,,FFFFFFFFFFFFwwwFFFF",
+"~~~~,,,,,,FFFFT,,,\"\"\",,::,,,s,,,,,FFFFFFFFFFFFFFFFFF",
+"~~~~,,,,,,,,,,,,\",,\"\"\",::,,sws,,,,FFFFFFFFFFFFFFFFFF",
+"~~~~~,,,,,,,,,,,,,,,;;;::\",,s,,,ss,FFFFFFFFT,,TT,,,,",
+"~~~,~,,,,,,,,,,,,,,,;;;::,,,,,,,s,,,T,,,,,,,,,,,,,,,",
+"~,,,,,,,,,;;,sTs,,,;;;;::,,,T,,,,,,,,,,,,,,,,,,\",\",,",
+",,,,,,,,,;;;ss~s,,,,;;;::,,www,,,,,,,,,,,,,,,,,,\"\",,"
+]
 }

@@ -9,6 +9,9 @@
   const T = (R.Terrain = R.Terrain || {});
   const SL = () => (R.Hd && R.Hd.STYLE && R.Hd.STYLE.light) || { lampColor: '#ffc27a', windowColor: '#ffcf86', crystalColor: '#bfe6ff', fireColor: '#ff9c4a', lampR: 110, fireMul: 1.3, coreR: 6, haloMul: 3 };
 
+  // 火のゆらぎ [振れ幅, Hz]（R.Light.glow の o.flick。灯籠の既定 STYLE.flicker.lamp より強く速い）
+  const FIRE_FLICK = [0.2, 4.5];
+
   /** 仕掛けの物の今の状態（state は chunks.js の stateOf の結果） */
   T._objState = function (map, o, st) {
     switch (o.type) {
@@ -105,7 +108,15 @@
           if (stt.on) { L(fx, fy - 4 * s, S.lampR * S.fireMul, S.fireColor, 1.3, 'pool', 'fire', o.id); G(fx, fy - 22 * s, { r: 24 * s, core: 5 * s, halo: 24 * s, color: S.fireColor, k: 1, type: 'fire' }); }
           break;
         case 'waylamp':
-          if (stt.on) { L(fx, fy - 4 * s, S.lampR, S.lampColor, 1.2, 'pool', 'lamp', o.id); G(fx, fy - 31 * s, { r: 20 * s, core: 4 * s, halo: 20 * s, color: S.lampColor, k: 1, type: 'lamp' }); }
+          if (stt.on && T._setFire && T._setFire(map, 'waylamp')) {
+            // 砂漠のかがり火（waylamp__desert）: 火の色の大きめの光だまりと、絵の炎の芯でゆらぐ火の光（FIRE_FLICK）
+            const fa = (T._setAnchor && T._setAnchor(map, 'waylamp', s)) || [0, -36 * s];
+            L(fx, fy - 4 * s, Math.round(S.lampR * 1.15), S.fireColor, 1, 'pool', 'fire', o.id);
+            G(fx + fa[0], fy + fa[1], { r: 26 * s, core: 2.5 * s, halo: 26 * s, color: S.fireColor, k: 0.85, type: 'fire', flick: FIRE_FLICK });   // 芯は小さく（絵の炎を消さない）
+          } else if (stt.on) {
+            const wa = T._setAnchor && T._setAnchor(map, 'waylamp', s);   // 地方の描き直した灯籠（湿原の鉤の灯など）は絵の灯りの芯
+            L(fx, fy - 4 * s, S.lampR, S.lampColor, 1.2, 'pool', 'lamp', o.id); G(wa ? fx + wa[0] : fx, wa ? fy + wa[1] : fy - 31 * s, { r: 20 * s, core: 4 * s, halo: 20 * s, color: S.lampColor, k: 1, type: 'lamp' });
+          }
           break;
         case 'switch':
           if (stt.on) G(fx, fy - 5 * s, { r: 12 * s, core: 2 * s, halo: 12 * s, color: S.crystalColor, k: 0.6, type: 'switch' });
@@ -122,10 +133,13 @@
           const spec = T._lightSpec(meta.light, false);
           const a = (T._setAnchor && T._setAnchor(map, o.id, s)) || anchorOf(o.id, s);   // テーマの描き直した物は絵の灯りの芯（props.js）
           const lx = fx + a[0], ly = fy + a[1];
-          const color = /crystal|mushroom|songstone/.test(o.id) ? S.crystalColor : spec.color;
-          L(lx, fy - 4 * s, spec.r, color, spec.k * 1.2, 'pool', spec.kind, o.id + '@' + o.x + ',' + o.y);
-          if (/lamp|lantern|beacon|torch|crystal|stove|fireplace|candelabra|sconce/.test(o.id)) L(lx, ly, 24, color, 0.7, 'point', spec.kind, o.id);
+          const fire = !!(T._setFire && T._setFire(map, o.id));   // テーマの描き直しが火（砂漠の置きかがり火 lantern__desert）
+          const color = /crystal|mushroom|songstone/.test(o.id) ? S.crystalColor : fire ? S.fireColor : spec.color;
+          // 火の描き直し（砂漠の置きかがり火）は光だまりを控えめに・芯の点の光は無し（足もとに焼いた小さな絵が白く飛ばない）
+          L(lx, fy - 4 * s, spec.r, color, spec.k * (fire ? 0.6 : 1.2), 'pool', spec.kind, o.id + '@' + o.x + ',' + o.y);
+          if (!fire && /lamp|lantern|beacon|torch|crystal|stove|fireplace|candelabra|sconce/.test(o.id)) L(lx, ly, 24, color, 0.7, 'point', spec.kind, o.id);
           const soft = /crystal|mushroom|songstone/.test(o.id);
+          if (fire) { G(lx, ly, { r: 14 * s, core: 1.5 * s, halo: 14 * s, color, k: 0.6, type: 'fire', flick: FIRE_FLICK }); break; }   // 小さな火: にじみは炎のまわりだけ（鉢と脚の絵を白く飛ばさない）
           G(lx, ly, { r: (o.id === 'beacon' ? 60 : soft ? 18 : 22) * s, core: (o.id === 'beacon' ? 9 : soft ? 1.5 : 3) * s, halo: (o.id === 'beacon' ? 60 : soft ? 18 : 22) * s, color, k: soft ? 0.55 : 0.9, type: spec.kind });
           break;
         }

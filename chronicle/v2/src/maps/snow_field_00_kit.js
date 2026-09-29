@@ -19,9 +19,10 @@
     r: { mat: 'rock', solid: true }, R: { mat: 'wall_snow', solid: true, rise: 1 }, X: { mat: 'wall_stone', solid: true },
   };
   S.FIELD_LEGEND = LEGEND;
-  /** 雪原のエリアを登録。spec は FieldArea.def と同じ形（凡例・外・小道具の組の既定だけ雪原にする） */
+  /** 雪原のエリアを登録。spec は FieldArea.def と同じ形（凡例・外・小道具の組の既定だけ雪原にする）。
+   *  小道具の組 'snow'（v2/assets/env/snow/props/*__snow）: 道しるべの灯籠 = 氷の灯籠、野営の天幕 = 毛皮の天幕、置き灯籠 = 氷の灯り、看板 = 雪の看板 */
   S.fieldArea = function (id, spec) {
-    return R.FieldArea.def(id, Object.assign({ legend: LEGEND, outside: 'wall_snow', propSet: null }, spec));
+    return R.FieldArea.def(id, Object.assign({ legend: LEGEND, outside: 'wall_snow', propSet: 'snow' }, spec));
   };
 
   // 前のワールドの東の峠（山地の側）: 崖崩れ（体験版の間の tilePatches）の先に着く所と、そこから雪原へ戻る出口

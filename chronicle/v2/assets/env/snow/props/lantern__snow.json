@@ -1,0 +1,46 @@
+{
+ "id": "lantern__snow",
+ "kind": "props",
+ "theme": "snow",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   10,
+   10
+  ],
+  "32": [
+   14,
+   14
+  ],
+  "40": [
+   18,
+   18
+  ]
+ },
+ "feet": {
+  "24": [
+   5,
+   10
+  ],
+  "32": [
+   7,
+   13
+  ],
+  "40": [
+   9,
+   16
+  ]
+ },
+ "files": {
+  "24": "lantern__snow@24.png",
+  "32": "lantern__snow@32.png",
+  "40": "lantern__snow@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/snow_b.png",
+ "light32": [
+  0,
+  -6
+ ]
+}

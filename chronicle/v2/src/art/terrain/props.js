@@ -321,6 +321,8 @@
     const w = Math.max(1, Math.round(cell[0] * k)), h = Math.max(1, Math.round(ev.im.height * k));
     // 宝箱は床より明るく（WORLD_REDESIGN §6.3: どの床の上でも見分けられる）。夜の環境光は軽くだけ掛ける
     const mul = o.amb ? (id === 'chest' ? ambMul(o.amb).map((v) => Math.min(1.25, 0.55 + v * 0.75)) : ambMul(o.amb)) : null;
+    // 火の物（j.fire。砂漠のかがり火）: 炎の画素（鮮やかな暖色: 青がほとんど無い。砂岩・銅の茶は青が 60 より上）は夜の環境光を掛けない（火は自分で光る）
+    const hot = j.fire ? (d, q) => d[q] > 180 && d[q + 2] < 60 && d[q] - d[q + 1] > 40 : null;
     const frames = [], poses = {};
     names.forEach((f, i) => {
       const c = R.Hd.RZ.canvas(w, h), g = c.getContext('2d');
@@ -328,7 +330,7 @@
       g.drawImage(ev.im, i * cell[0], 0, cell[0], ev.im.height, 0, 0, w, h);
       if (mul || (id === 'tree' && o.leaf === 'dk')) {
         const m = mul || [0.8, 0.86, 0.9], d = g.getImageData(0, 0, w, h);
-        for (let q = 0; q < d.data.length; q += 4) { d.data[q] = Math.min(255, d.data[q] * m[0]); d.data[q + 1] = Math.min(255, d.data[q + 1] * m[1]); d.data[q + 2] = Math.min(255, d.data[q + 2] * m[2]); }
+        for (let q = 0; q < d.data.length; q += 4) { if (hot && hot(d.data, q)) continue; d.data[q] = Math.min(255, d.data[q] * m[0]); d.data[q + 1] = Math.min(255, d.data[q + 1] * m[1]); d.data[q + 2] = Math.min(255, d.data[q + 2] * m[2]); }
         g.putImageData(d, 0, 0);
       }
       frames.push({ c, ox: Math.round(feet[0] * k), oy: Math.round(feet[1] * k) });
@@ -336,14 +338,17 @@
     });
     const s = (o.s || 1);
     const lt = j.light32 ? [j.light32[0] * s, j.light32[1] * s] : null;
-    if (poses.on) { poses.on0 = poses.on1 = poses.on2 = poses.on; }
+    const fps = {};
+    // 灯ったコマが on0 on1 on2 と並ぶ絵（砂漠のかがり火の炎のゆらぎ）: on はその 3 コマを時間で回す（j.fps、既定 8）
+    if (!poses.on && poses.on0 && poses.on1 && poses.on2) { poses.on = [poses.on0[0], poses.on1[0], poses.on2[0]]; fps.on = j.fps || 8; }
+    else if (poses.on) { poses.on0 = poses.on1 = poses.on2 = poses.on; }
     if (!poses.default) poses.default = [0];
     if (!poses.f0) poses.f0 = poses.default;
     // コードの絵のコマの名前（META.frames・アニメのコマ）が無ければ近い名前のコマで代える
     for (const f of ((META[id] && META[id].frames) || []).concat(frameNames(id))) if (!poses[f]) poses[f] = poses[f.replace(/\d+$/, '')] || poses.default;
     const meta = Object.assign({ id, env: ev.id }, R.DB.props[id] || {});
-    if (lt) meta.emit = { light: lt, cyan: /crystal|mushroom|spring|songstone|switch/.test(id), small: w < 16, fire: /brazier|torch|stove|beacon/.test(id) };
-    return { frames, poses, fps: {}, anchors: { feet: [0, 0], light: lt }, w, h, meta };
+    if (lt) meta.emit = { light: lt, cyan: /crystal|mushroom|spring|songstone|switch/.test(id), small: w < 16, fire: !!j.fire || /brazier|torch|stove|beacon/.test(id) };
+    return { frames, poses, fps, anchors: { feet: [0, 0], light: lt }, w, h, meta };
   }
   T._envProp = envProp;
   /** 画像にしかない物（家具・木の変化など）も hd:prop:<id> として登録し、R.DB.props に足す（env.js が起動のときに呼ぶ） */
@@ -361,7 +366,8 @@
   };
   // テーマの描き直した物（design/ENV_ASSETS.md §9）: 下絵の町・ダンジョンに合わせて描き直した機能の物は <id>__<set> の画像。
   // チャンクの一覧（planOf の後）で、その組に絵のある物だけ opts.set を足す（Hd の焼いた絵は opts ごとなので、組ごとに別に焼ける）
-  const PROP_SET = { harbor: 'harbor', hill_village: 'village', treetop: 'forest', moss_village: 'forest', forest_dungeon: 'wood', tree_inside: 'wood', cave: 'cave', lighthouse: 'lighthouse' };
+  // 砂漠（desert・desert_town）: 灯籠と置き灯籠を砂漠のかがり火に（waylamp__desert・lantern__desert。森・里の灯籠はそのまま）
+  const PROP_SET = { harbor: 'harbor', hill_village: 'village', treetop: 'forest', moss_village: 'forest', forest_dungeon: 'wood', tree_inside: 'wood', cave: 'cave', lighthouse: 'lighthouse', desert: 'desert', desert_town: 'desert' };
   const SET_IDS = {};   // set → Set(id)（画像の索引から。T.Env が読めてから作る）
   function setIds(set) {
     if (SET_IDS[set]) return SET_IDS[set];
@@ -373,10 +379,13 @@
   T._propSetOf = function (map) { return (map && (map.propSet || PROP_SET[map.theme])) || null; };
   T._propSet = function (map, items, dyn) {
     const set = T._propSetOf(map), ids = set && setIds(set);
-    if (!ids || !ids.size) return;
+    // map.propSetBase = その組に絵の無い物の組（砂漠のエリア: かがり火は砂漠の組、看板などは前のまま里の組）
+    const base = map && map.propSetBase, bids = base && setIds(base);
+    if ((!ids || !ids.size) && (!bids || !bids.size)) return;
     for (const it of items.concat(dyn)) {
-      if (!it.key || it.key.slice(0, 8) !== 'hd:prop:' || !ids.has(it.key.slice(8))) continue;
-      it.opts = Object.assign({}, it.opts || {}, { set });
+      if (!it.key || it.key.slice(0, 8) !== 'hd:prop:') continue;
+      const id = it.key.slice(8), use = ids && ids.has(id) ? set : bids && bids.has(id) ? base : null;
+      if (use) it.opts = Object.assign({}, it.opts || {}, { set: use });
     }
   };
   /** テーマの描き直した物の灯りの芯（art px、倍率 s）。無ければ null（props_light.js の表を使う） */
@@ -385,6 +394,13 @@
     if (!ids || !ids.has(id)) return null;
     const ev = T.Env.prop(id + '__' + set, 0, {}), l = ev && ev.j && ev.j.light32;
     return l ? [l[0] * s, l[1] * s] : null;
+  };
+  /** テーマの描き直した物が火か（j.fire: 砂漠のかがり火）→ bool。props_light.js が光の色とゆらぎを火にする */
+  T._setFire = function (map, id) {
+    const set = T._propSetOf(map), ids = set && setIds(set);
+    if (!ids || !ids.has(id)) return false;
+    const ev = T.Env.prop(id + '__' + set, 0, {});
+    return !!(ev && ev.j && ev.j.fire);
   };
   function bakeProp(id, o) {
     const ev = T.Env && T.Env.prop ? ((o.set && T.Env.prop(id + '__' + o.set, o.v, o)) || T.Env.prop(id, o.v, o)) : null;
