@@ -29,9 +29,13 @@ function serve(root) {
   const S = { sink: null };
   S.srv = http.createServer((req, rsp) => {
     if (req.method === 'POST' && req.url.startsWith('/__pv')) {
-      const sink = S.sink;
-      req.on('data', (c) => { if (sink && !sink.write(c)) { req.pause(); sink.once('drain', () => req.resume()); } });
-      req.on('end', () => { rsp.writeHead(200); rsp.end('ok'); });
+      // 1 コマを全部受け取ってから書く（途中で切れた送りは捨てる。ページはもう一度送る）
+      const sink = S.sink, parts = [];
+      req.on('data', (c) => parts.push(c));
+      req.on('end', () => {
+        const done = () => { rsp.writeHead(200); rsp.end('ok'); };
+        if (sink && !sink.write(Buffer.concat(parts))) sink.once('drain', done); else done();
+      });
       return;
     }
     const u = decodeURIComponent(new URL(req.url, 'http://x').pathname);
@@ -128,7 +132,7 @@ async function rec(P, out, n, each, o) {
     const js = each ? each(i) : null;
     await P.page.evaluate(`(async () => { ${js ? js + ';' : ''}RPG.Engine.advance(1000/60);
       const b = await new Promise((r) => document.querySelector('canvas').toBlob(r, 'image/jpeg', ${o.q || 0.95}));
-      await fetch('/__pv', { method: 'POST', body: b }); return 1; })()`);
+      for (let k = 0; ; k++) { try { await fetch('/__pv', { method: 'POST', body: b }); break; } catch (e) { if (k >= 4) throw e; await new Promise((r) => setTimeout(r, 200)); } } return 1; })()`);
   }
   P.S.S0.sink = null;
   ff.stdin.end();

@@ -20,7 +20,12 @@
     if (a) return a;
     a = atlases[url] = { img: new Image(), ready: false, failed: false, promise: null, pending: 0 };
     a.promise = new Promise((res) => {
-      a.img.onload = () => { a.ready = true; res(a); };
+      // 読めたら先に decode() で解いておく（2026-09-29 性能: 切り出しの drawImage が主の糸で 2048² の WebP を解いて、起動の間
+      // タイトルが止まっていた。decode() は裏の糸で解く）。decode が無い・失敗したときはそのまま（切り出しの時に解く）
+      a.img.onload = () => {
+        const ok = () => { a.ready = true; res(a); };
+        if (a.img && a.img.decode) a.img.decode().then(ok, ok); else ok();
+      };
       a.img.onerror = () => { a.failed = true; res(a); };
     });
     a.img.src = url;

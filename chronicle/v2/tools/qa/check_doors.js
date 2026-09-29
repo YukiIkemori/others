@@ -134,7 +134,9 @@ const PAGE_LIB = function () {
           for (let j = 0; j < (e.h || 1); j++) for (let i = 0; i < (e.w || 1); i++) cells.push([e.x + i, e.y + j]);
           // 屋内から町の建物の戸口へ戻る出口: 着くのは戸口の真下（下向き）
           const tm = R.DB.maps[e.to.map], bd = m.kind === 'interior' && tm && (tm.objects || []).find((o) => o.type === 'building' && o.door && o.door.to && o.door.to.map === id);
-          out.push({ map: id, kind: 'exit', id: e.x + ',' + e.y, cells, lv: 0, to: e.to.map, cond: e.cond, on: check(e.cond), arrive: bd ? [bd.door.x, bd.door.y + 1] : null });
+          // 体験版の境（data/demo_gate.js の gate.demo。入らずに文を出す通せんぼ）は数えるだけ（歩いて入れないのが正しい。確かめは test_demo_end*）
+          const demo = !!(e.gate && e.gate.demo && check(e.gate.when));
+          out.push({ map: id, kind: 'exit', id: e.x + ',' + e.y, cells, lv: 0, to: e.to.map, cond: demo ? { demoGate: e.gate.when } : e.cond, on: !demo && check(e.cond), arrive: bd ? [bd.door.x, bd.door.y + 1] : null });
         }
       }
       return out;

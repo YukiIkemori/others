@@ -26,15 +26,18 @@
   };
   Hd._def = function (key) { return S.defs[key] || null; };
 
+  let sortedKeys = null;   // Hd.keys の並べた一覧（登録が増えたら捨てる）
   /** 登録。同じキーを 2 回登録したら警告して上書きしない（§2.4） */
   Hd.def = function (key, factory, meta) {
     if (typeof key !== 'string' || typeof factory !== 'function') { R.loadErrors.push(`bad R.Hd.def ${key}`); return false; }
     if (S.defs[key]) { const m = `duplicate R.Hd.def ${key} (ignored)`; R.loadErrors.push(m); if (typeof console !== 'undefined') console.warn('[RPG]', m); return false; }
     S.defs[key] = { factory, meta: meta || {} };
+    sortedKeys = null;
     return true;
   };
   /** 登録の差し替え（同じ担当が「空の登録」を中身に替える・原画が届いて画像から作り直す）。焼いた物は捨てる */
   Hd.redef = function (key, factory, meta) {
+    if (!S.defs[key]) sortedKeys = null;
     S.defs[key] = { factory, meta: meta || (S.defs[key] && S.defs[key].meta) || {} };
     Hd.forget(key);
     if (S.failed) for (const ck of Array.from(S.failed.keys())) if (ck === key || ck.startsWith(key + '|')) S.failed.delete(ck);
@@ -44,10 +47,8 @@
   Hd.meta = function (key) { const d = S.defs[key]; return d ? d.meta : null; };
   /** 登録のキーの一覧（接頭辞で絞る。'hd:mon:' など）。並べた一覧は登録が変わるまで使い回し、接頭辞は二分探索で探す
    *  （2026-09-29 性能: 起動の原画の読み込みで look ごとに全部のキーを並べ直していて、CPU 4 倍遅いで 3 秒掛かっていた） */
-  let sortedKeys = null, sortedN = -1;
   Hd.keys = function (prefix) {
-    const n = Object.keys(S.defs).length;
-    if (!sortedKeys || sortedN !== n) { sortedKeys = Object.keys(S.defs).sort(); sortedN = n; }
+    if (!sortedKeys) sortedKeys = Object.keys(S.defs).sort();
     if (!prefix) return sortedKeys.slice();
     let lo = 0, hi = sortedKeys.length;
     while (lo < hi) { const mid = (lo + hi) >> 1; if (sortedKeys[mid] < prefix) lo = mid + 1; else hi = mid; }
