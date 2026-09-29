@@ -314,7 +314,8 @@
   // ------------------------------------------------------------------ 起動のときに読む（読めなかった物はコードの絵のまま）
   // 起動で読むのは素材・物・建物（下絵と戦闘背景は使う時に読む。上の「使う時に読み」）の今のマスの大きさの分だけ。
   // 待つのは縦切りのテーマの分（now）、ほかのテーマは後ろで（later）。別の大きさはマスの大きさを変えたときに読む（2026-09-28: 全部で 1.4 GB）
-  const SLICE = /^(common|harbor|hill_village|treetop|moss_village|tree_inside|lighthouse|cave|forest_dungeon|snow|desert|world)\//;   // world = WORLD v3 のワールドの素材と大きな景色
+  const SLICE = /^(common|harbor|hill_village|treetop|moss_village|tree_inside|lighthouse|cave|forest_dungeon|world)\//;   // world = WORLD v3 のワールドの素材と大きな景色
+  // 雪原・砂漠は体験版の外（テスターのワープ用）。起動では待たず、後ろの読み込み（later）に回す（持ち主 2026-09-29）
   const LAZY = /\/under\/|^bbg\//;
   /** マスの大きさ t の素材・物・建物（t の絵が無い物は 32 の絵。pickTile と同じ） */
   function setOf(t) {

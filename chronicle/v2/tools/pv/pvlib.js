@@ -62,13 +62,13 @@ module.exports = `(() => {
       return true;
     },
     /** 敵に入るダメージを n 倍にする（戦闘を台本の長さで終わらせる用。テスト用メニューの差し込み口を使うが、切り替えは入れないので「TEST」の札は出ない） */
-    dmgMul: 1,
+    dmgMul: 1, kill: false,
     boost(n) {
       const Tt = R.Tester;
       if (!Tt) return false;
       Tt.enabled = true;
       Tt.hitFix = (tgt, r) => r;
-      Tt.dmgFix = (tgt, dmg) => (tgt && !tgt.isParty && PV.dmgMul !== 1 ? Math.round(dmg * PV.dmgMul) : dmg);
+      Tt.dmgFix = (tgt, dmg) => (tgt && !tgt.isParty ? (PV.kill ? Math.max(dmg, tgt.hp || 1) : PV.dmgMul !== 1 ? Math.round(dmg * PV.dmgMul) : dmg) : dmg);   // PV.kill: 当たれば倒れる
       PV.dmgMul = n;
       return true;
     },

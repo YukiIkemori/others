@@ -169,12 +169,12 @@ const SHOTS = {
     prep: async (T) => {
       await T.js(BATTLE({ troop: 'tr_a21_forest_wolves', boss: true, seed: 'pv-boss' },
         `(st, u, r) => u.id === 'hero' ? {cmd: 'skill', id: 't_sword_twin'} : u.id === 'viola' ? {cmd: 'spell', id: 's_fire_wind_b'} : null`,
-        `PV.teach('hero', ['t_sword_twin']); PV.teach('viola', null, ['s_fire_wind_b']); RPG.Party.restoreAll()`));
+        `PV.teach('hero', ['t_sword_twin']); PV.teach('viola', null, ['s_fire_wind_b']); PV.boost(1); RPG.Party.restoreAll()`));
       await T.idle(10);
     },
     n: sec(66),
-    // 遠吠え（仲間を呼ぶ）の後で、敵の残りの HP を 1 にして次の攻撃で終わらせる（台本の長さに収める）
-    each: at({ [sec(45)]: `for (const m of PV.st.B.engine.mons) if (m.hp > 1) m.hp = 1` }),
+    // 遠吠え（仲間を呼ぶ）の後は、当たれば倒れるようにして台本の長さで終わらせる
+    each: at({ [sec(44)]: `PV.kill = true` }),
   },
   bt_speed: {
     prep: async (T) => { await T.js(BATTLE({ zone: 'z_verda', bg: 'forest', seed: 'pv-speed' }, null)); await T.idle(200); },
