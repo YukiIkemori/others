@@ -5,7 +5,7 @@
   R.I18n.add('en', {
     // ---- src/maps/elder_1.js
     'map.elder_1.sign': '-- The Millennial Tree.\nThe tree where the forest lord sleeps. Do not tread on its roots.',
-    'map.elder_1.N.0.fine.name': 'Fine',
+    'map.elder_1.N.0.fine.name': 'Fina',
     'map.elder_1.name': 'Millennial Tree',
     'map.elder_1.meta.floor': '1F',
     'map.elder_1.meta.sub': 'Spiral within the trunk',
@@ -96,7 +96,7 @@
     'map.verda_2.meta.floor': '2F',
     'map.verda_2.meta.sub': 'Forest of Song Stones',
     // ---- src/maps/yura_village.js
-    'map.yura_village.sign': '-- This is Yura.\nVillage of those who left their names behind.',
+    'map.yura_village.sign': '-- This is Yarrow.\nVillage of those who left their names behind.',
     'map.yura_village.N.0.yura_elder.name': 'Elder',
     'map.yura_village.N.0.yura_elder.title': '-- The chief who forgot her name',
     'map.yura_village.N.1.yura_miller.name': 'Miller',
@@ -107,9 +107,9 @@
     'map.yura_village.N.6.yura_child.name': 'Nameless Child',
     'map.yura_village.N.7.yura_cat.name': 'Cat',
     'map.yura_village.N.talk.0.L': 'Meow.',
-    'map.yura_village.yura.name': 'Yura, the Hidden Village',
+    'map.yura_village.yura.name': 'Yarrow, the Hidden Village',
     'map.yura_village.yura.meta.sub': 'Village of those who left their names behind',
-    'map.yura_village.yura_inn.name': 'Yura Inn',
+    'map.yura_village.yura_inn.name': 'Yarrow Inn',
     'map.yura_village.yura_inn.npcs.0.yura_innkeeper.name': 'Innkeeper',
     'map.yura_village.yura_inn.npcs.1.yura_guest.name': 'Guest',
     'map.yura_village.yura_inn.talk.0.L': 'I remember the day I came here\nvery well. ...Everything but my own name.',

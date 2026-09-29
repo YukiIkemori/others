@@ -9,7 +9,7 @@
     'locations.lighthouse.name': 'Pharos Lighthouse',
     'locations.well.name': 'Old Travelers\' Well',
     'locations.fern.name': 'Fern',
-    'locations.yura.name': 'Yura, the Hidden Village',
+    'locations.yura.name': 'Yarrow, the Hidden Village',
     'locations.verda.name': 'Wandering Woods',
     'locations.elder.name': 'Millennial Tree',
     'locations.hut.name': 'Woodcutters\' Hut',

@@ -477,7 +477,10 @@
     if (!logoId()) return false;
     const rec = loadImg(logoId());
     if (!rec.ready || !(A.logo > 0)) return rec.ready;
-    const lm = meta('logo'), ls = m.logo_safe, sf = R.safe || { l: 0, t: 0 };
+    // 言語ごとの題字は自分のサイドカー（logo_en.json など）。無ければ絵の大きさだけ（炎の光は足さない）
+    const id = logoId();
+    const lm = id === 'logo' ? meta('logo') : Object.assign({ size: [rec.img.naturalWidth || rec.img.width, rec.img.naturalHeight || rec.img.height], anchor: {} }, meta(id));
+    const ls = m.logo_safe, sf = R.safe || { l: 0, t: 0 };
     const w = ls.w * R.W, h = w * (lm.size[1] / lm.size[0]);
     const x = Math.max(sf.l + 4, ls.x * R.W), y = Math.max(sf.t + 4, ls.y * R.H) + 8 * (1 - A.logo);
     const a = A.logo * alpha;

@@ -1,0 +1,173 @@
+{
+"id": "d_hollow",
+"w": 44,
+"h": 36,
+"rows": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRuuuuuuuuRRRRRRRRRRRRRRuuuuuRRRRRR",
+"uuuuuuuuuuuuuuuuuuuuuuuuuuuussuuuuuuuuuRRRRR",
+"::uuuuuuuuuuuuuuuuuuuuuuuuusssuuuuuuuuuRRRRR",
+"u::::uuuuuuuuuussubbuuuuuuuuuuuuuuuuuuuRRRRR",
+"uuus:::ssssuussbsssuuuuuruuuuuuuuuuuuuuuRRRR",
+"uussss:::sssusssssusuuuuuuuuuuuusuuuuuuuRRRR",
+"uRRssss:::susssssssuuuuusuuuuRRRuuuuuuuuuRRR",
+"RRRuuusus::ursrsuuuuuuuuuuuuuRRRuuuuuuuuuuRR",
+"RRRuuuuuuu:usRRRuuuuuuuuuuuuuRRRuuuuuuuuurRR",
+"RRRuuuuuuu:::RRRuuuuRRRRRuuuuuuuuuuuuubuuRRR",
+"RRRuuuuuuss::RRRuuRRRRRRRRuuuuruuuuuuuuuuRRR",
+"RRRuuuuususs::uuuuRRRRRRRRRuuuuuuuuuuuuuuRRR",
+"RRRuuusssuuus::uuuRRRRRRRRRuuuuuuuuRRuuuuRRR",
+"RRRssssssuuuus:::uuRRRRRRRuuuuruuuuRRRuuuRRR",
+"RRRsrussssuuuss::::::::RRuuuuuuuuuuuRbuuuRRR",
+"RRRuuuusssuruusuuu::::::uuuuuuuuuuuuuruuuRRR",
+"RRRsssssssuuuuuuuuuuuuu::::uuuuuuuuuuuuuuRRR",
+"RRRsssssssuuusursuuuuuuuuu:::::uuuuuuuuuuRRR",
+"RRRssussssuuuuuuuuuuruuuuuuuu::::::uuuubuRRR",
+"RRRusuussssuuussuuuuuuuuuuuuuuuuu:::::uuuRRR",
+"RRRsuususRRRuuussssssssssusuuuusussuu::::RRR",
+"RRRsuusssRRRuuussssusssssssuubusrssbsuuu::::",
+"RRRRuuuuuRRRuusssssssssssssuuuuusssssuuuuu::",
+"RRRRuuuuuuuuuussrsussssssssuuuuuuuuususuuuuu",
+"RRRRuuuuuuuususssssssssssssusuuuuuuusuuuuruu",
+"RRRRRuuuuuuussusssssssssssssuuuuuuuusuussRRR",
+"RRRRRuuuuuusssusssssssssuuuuuuuuuuuuuuussRRR",
+"RRRRRuuuuuusssuuusuuubuuuuuuuuuuuuuuuusRRRRR",
+"RRRRRRuuuuussssussuuuuuuuuuuuuuuuuuusRRRRRRR",
+"RRRRRRRRRRRRRRrsuuuuuuuuuuuuuuuuuRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRuuurRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
+],
+"marks": [
+{
+"kind": "door",
+"cells": [
+[
+22,
+17
+]
+],
+"text": "a dark ENTRANCE",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "sign",
+"x": 38,
+"y": 23,
+"text": "砂嵐のくぼ地\n風の音にまぎれて、はぐれないように。"
+},
+{
+"type": "prop",
+"id": "bones",
+"x": 18,
+"y": 20
+},
+{
+"type": "prop",
+"id": "tent",
+"x": 25,
+"y": 19
+}
+],
+"spawns": {
+"caravan": {
+"x": 42,
+"y": 25,
+"dir": "w"
+},
+"coast": {
+"x": 1,
+"y": 5,
+"dir": "e"
+},
+"oldcamp": {
+"x": 22,
+"y": 18,
+"dir": "s"
+}
+},
+"exits": [
+{
+"x": 43,
+"y": 25,
+"w": 1,
+"h": 2,
+"to": {
+"map": "d_caravan",
+"spawn": "hollow"
+},
+"edge": "e"
+},
+{
+"x": 0,
+"y": 4,
+"w": 1,
+"h": 3,
+"to": {
+"map": "d_coast",
+"spawn": "hollow"
+},
+"edge": "w"
+},
+{
+"x": 22,
+"y": 17,
+"w": 1,
+"h": 1,
+"to": {
+"map": "desert_oldcamp",
+"spawn": "road"
+}
+}
+],
+"notes": [],
+"meta": {
+"name": "砂嵐のくぼ地",
+"sub": "隊商路の近道",
+"region": "r_desert",
+"worldRect": [
+54,
+436,
+40,
+32
+],
+"outside": "rock",
+"zones": [
+{
+"rect": null,
+"zone": "zw_desert_storm"
+}
+],
+"triggers": [
+{
+"id": "desert_ambush_3b",
+"x": 12,
+"y": 13,
+"w": 5,
+"h": 5,
+"on": "step",
+"event": "desert_ambush_3",
+"cond": [
+"desert_caravan_on",
+"!desert_ambush_3_done"
+]
+}
+],
+"links": {
+"oldcamp": {
+"map": "d_hollow",
+"spawn": "oldcamp"
+}
+},
+"npcs": []
+}
+}

@@ -1,0 +1,339 @@
+{
+"id": "d_south",
+"w": 56,
+"h": 44,
+"rows": [
+"uuuuuuuuuuuuuuuusssssssssuuuuubuuuuuuuuuuuu::uuuuussssss",
+"uuuuuuuuuuuuuuuussssssssuuuuuuuuuuuuuuuuuuu::ubuuussssss",
+"uuuuuuuuuuuuuuusssssssssuuuuuuuuuuuuuuuuuu::uuuuuussssss",
+"uuuuuuuuuuuuuuussssssssuuuuuuuuuuuuuuuuuuu::uuuuuussssss",
+"uuuuuuuussskkkkkksssssssuuuuuuuuuuuuuuuuu::uuuuuuussssss",
+"uuuuuuussskkkkkkkkkkuusuuuuuuuuuuuuussbuu::uuuuuuussssss",
+"uuuuusssskkkkkkkkkkksuuuuuuuuuuuuuuuuuuu::uuuuuuuuusrsus",
+"ruurssssskkkkkkkkkkkkuuuuuuuuuubussuuuu::uRRRRRuuuuusuuu",
+"uussssssskkkkkkkkkkkkuuuuuuuuuuusssuuuu::uRRRRRuuuuuuuuu",
+"uussrssrsskkkkkkkkkkuuuuuuuuuuussssuuu::uuRRRRRuuuuuuuuu",
+"uussusssssskkkkkksssuuuuuuuuuuussssuu::uuuuruuuuuuuuuuuu",
+"ssssusssssssssssssssuuuuuuuuuuusssss::ssssuuuuubruuuruuu",
+"ssssuusssssssssssuuuuuuuuuuuuuusss:::sssssuruuuussuuuuuu",
+"sssuuusssssssssssuuuuuuuuuuuuuuu:::sssssssssssuuusuuuuuu",
+"sssuuusssssssssssuuuuuuuuuuu::::r:sssbsssssssssssssuuuuu",
+"sssuuuussssssssssuu::::::::T:::ussssssssssbsssssssssssuu",
+":::::b::::::::::::::::::T,,,,,,,sssssssssssssssssssssssu",
+"ssssssssssussssssuuuuuuu,,,wwww,Tssbussssssssssssssssssu",
+"sssssssssssussssuuuuuuuu,,,wwww,,ssuusssssssssssssssssss",
+"sssssssssssssssssuuuuuuu,,,wwww,,uubuusrssssskkksrssssuu",
+"ssbsuuuusssssssssuuuuuuuu,,,,,,Tuuuuuuussskkkkkkkkuuuuuu",
+"ssssuuuussssssssuuuuuuuuuTuu,,,uuuuuuuuusskkkkkkkkkuuuuu",
+"sssssuuuuusssssuuuuuuuuuuuuu::uuuuuuuuuuuukkkkkkkkkuuuuu",
+"ssssssuususssssuuuuuuuuuuuuu::uuuuuuuuuuuukkkkkkkkkuuuuu",
+"ssssssssssssssuuuuuuuuuuuuuu::uuuuuuuRRubuuukkkkkuuuuuuu",
+"sssssssRRRsssuuuuuuuuuubuuuu::uuuuuuuRRubbuuukkuuuuuuuuu",
+"sssssssRRRsssuuuuuuuuuuuuuuu::uuubuuuRRubuuubuuuuuuuuuuu",
+"sssssssRRRsssuubuuuuuuuuuuuu::uuuuuuuuuuuuuuuuuuuuububuu",
+"ksssssssssssuuuuuuuuuuuuuuuu::uuuuuuuuuuuuuuuuuuuuuuuuuu",
+"uuussuuuuuuuuuuuuuuuuuuuuuuu::uuuuuuuuuuuuuuuuRRRbuuuuuu",
+"uuuuuuuuuuuuuuuuuuuuuuuuuuuu::uuuuuuuuuuuuuuuuRRRuuuuruu",
+"uuuuuuuuuuuuuuuuuuuussssuuuuuuuuuuuuuuuuuuuuuuRRuuuuuuuu",
+"uuuuuuuuuuuuuuuuuuuussssssssuXuuuuuuuuuuuuruuuuuuuuuuuuu",
+"uuuuuuuuuuuuuuuuuuusssssssXssuuuXuuuuuuussuuuuuuuuuuurus",
+"uuuuuuuuuuuuuuusssssssssXsssXsXssuXuuuuusssussuuuussuuus",
+"ssussssssuuussssssssssssssssX:Xssssssssussssssssssssssss",
+"sssbssssssssssssssssssssssssssssssssssssssssssssssbsssss",
+"ssssssss~~~~~ssssssssssssrssssssssssssssssssssssssssssss",
+"~~~~~~~~~~~~~~~~~sssssssssss~~~~ssssssssssssrsssssssssrs",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ssssuuu~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+],
+"marks": [
+{
+"kind": "pillars",
+"cells": [
+[
+24,
+34
+],
+[
+26,
+33
+],
+[
+32,
+33
+],
+[
+34,
+34
+],
+[
+29,
+32
+]
+],
+"text": "the TOPS OF HUGE SANDSTONE TEMPLE PILLARS with carved capitals sticking out of the sand (the rest is buried), sand drifted against them",
+"color": [
+214,
+150,
+100
+],
+"solid": true
+},
+{
+"kind": "lintel",
+"cells": [
+[
+28,
+34
+],
+[
+30,
+34
+],
+[
+28,
+35
+],
+[
+30,
+35
+]
+],
+"text": "the carved stone JAMBS of a buried temple doorway, sand spilling down between them",
+"color": [
+214,
+150,
+100
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+29,
+35
+]
+],
+"text": "a dark ENTRANCE",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "stairs",
+"x": 29,
+"y": 35,
+"to": {
+"map": "desert_temple_1",
+"spawn": "entrance"
+},
+"cond": {
+"any": [
+"cleared_r_desert",
+{
+"var": "desert_nights",
+"gte": 3
+}
+]
+},
+"look": "none"
+},
+{
+"type": "examine",
+"x": 29,
+"y": 35,
+"event": "desert_temple_sand",
+"cond": {
+"not": {
+"any": [
+"cleared_r_desert",
+{
+"var": "desert_nights",
+"gte": 3
+}
+]
+}
+}
+},
+{
+"type": "sign",
+"x": 24,
+"y": 36,
+"text": "沈んだ柱の浜\n砂嵐が晴れた晩、柱が増えるという。"
+},
+{
+"type": "examine",
+"x": 11,
+"y": 6,
+"event": "desert_dig",
+"dig": 1
+},
+{
+"type": "prop",
+"id": "sand_mound",
+"x": 12,
+"y": 6
+},
+{
+"type": "examine",
+"x": 16,
+"y": 5,
+"event": "desert_dig",
+"dig": 2
+},
+{
+"type": "prop",
+"id": "sand_mound",
+"x": 17,
+"y": 5
+},
+{
+"type": "examine",
+"x": 13,
+"y": 9,
+"event": "desert_dig",
+"dig": 3
+},
+{
+"type": "prop",
+"id": "sand_mound",
+"x": 14,
+"y": 9
+},
+{
+"type": "spring",
+"id": "world_desert_spring",
+"x": 16,
+"y": 6,
+"cond": "desert_dig_found"
+},
+{
+"type": "prop",
+"id": "tent",
+"x": 45,
+"y": 21
+},
+{
+"type": "prop",
+"id": "tent",
+"x": 49,
+"y": 22
+},
+{
+"type": "prop",
+"id": "clay_jars",
+"x": 44,
+"y": 23
+},
+{
+"type": "prop",
+"id": "bones",
+"x": 50,
+"y": 25
+},
+{
+"type": "waylamp",
+"id": "wl_d_south_1",
+"x": 40,
+"y": 11,
+"lit": true
+}
+],
+"spawns": {
+"north": {
+"x": 44,
+"y": 1,
+"dir": "s"
+},
+"west": {
+"x": 1,
+"y": 16,
+"dir": "e"
+},
+"temple": {
+"x": 29,
+"y": 36,
+"dir": "s"
+}
+},
+"exits": [
+{
+"x": 44,
+"y": 0,
+"w": 2,
+"h": 1,
+"to": {
+"map": "d_east",
+"spawn": "south"
+},
+"edge": "n"
+},
+{
+"x": 0,
+"y": 16,
+"w": 1,
+"h": 2,
+"to": {
+"map": "d_caravan",
+"spawn": "east"
+},
+"edge": "w"
+}
+],
+"notes": [],
+"meta": {
+"name": "沈んだ柱の浜",
+"sub": "カシムの南の砂丘",
+"region": "r_desert",
+"worldRect": [
+150,
+430,
+140,
+71
+],
+"outside": "dune_sand",
+"zones": [
+{
+"rect": null,
+"zone": "zw_desert_caravan",
+"cond": "desert_caravan_on"
+},
+{
+"rect": null,
+"zone": "zw_desert"
+}
+],
+"links": {
+"temple": {
+"map": "d_south",
+"spawn": "temple"
+}
+},
+"npcs": [
+{
+"id": "lost_camel",
+"look": "ani_camel",
+"name": "ラクダ",
+"x": 40,
+"y": 29,
+"dir": "w",
+"move": "still",
+"cond": [
+"desert_camel_asked",
+"!desert_camel_found"
+],
+"talk": "desert_camel_world",
+"reward": "side",
+"key": "world_lost_camel"
+}
+]
+}
+}

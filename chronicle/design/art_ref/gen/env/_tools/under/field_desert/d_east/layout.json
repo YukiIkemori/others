@@ -1,0 +1,899 @@
+{
+"id": "d_east",
+"w": 56,
+"h": 36,
+"rows": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~RR~~~~~~~~~~~~~~~~~~~~~~",
+"~u~busssssss~~~~~~~~~~~~~~~~~~~~RRuuuuuuuu~~~~~~~~~~RRRR",
+"uuuuuussssssssssssssss~~~~~~uubuRRRrssssssuuuuuuRRRRRRRR",
+"XXXXXssssssssssssssssrssssuuuuuuRRRssssbsssuuuuusRRRRRRR",
+"XXXXXssssssrbsssssssssssuuuuuuuuRRRssssssskuuuussRRRRRRR",
+"XXXXXssssssssssssssssbuuuuuuuuussRRsssssssuuuuuuuRRRRRRR",
+"XXXXXssssssssssssssrssuuuuuuuusssRRssssssuuuuuuuuRRRRRRR",
+"XXXXXssssssssssssssssuuuuuuuuusssRRssssssuuuuuuuuRRRRRRR",
+"XXXXXssssssssssssssssuuuuuuuuussRRRsssssskuuuuuuuuRRRRRR",
+"XXXXXsssssssssssssssssuuuuuuuussRRRssssbskkuuuusssRRRRRR",
+"XXXXXssssssssssssssssuuuuuuuuuusRRRssssskkkkksssssRRRRRR",
+"XXXXXsssssssssssbssssuXXXuuuubuuRRRsssssssskss..........",
+"XXXXXssssssssssssssssuuuuuuuuuu=====....................",
+"XXXXXsssssssssssss...suuuuuuu..=====............sssRRR..",
+"XXXXXssssss....................=====kssssssssssssssRRRRR",
+"...................s.........ussRRRkksbssssssssssssRRRRR",
+"...........s:ssssssssuuuuuuuusssRRRskssssssssssssssRRRRR",
+"XXXXXsssssss:sssssssssuuuuuuuusssRRsksssssssssssssRRRRRR",
+"XXXXXssssrss:sssssssssuuuuuuuubusRRukssssssssssssRRRRRRR",
+"XXXXXsssssss:sssssssssuuuuuuuuuuuRRuuusssssssssssRRRRRRR",
+"XXXXXsssbsss:ssssskkkkkkuuuuuuuuuRRuuuusssssssssuRRRRRRR",
+"XXXXXssssssk:kkkkkkkkkkkkuuuuuuuRRRuuuuusssssssuuRRRRRRR",
+"XXXXXsssskkk:kkkkkkkkkkkkkuuuuuuRRRuuuuuuuuuuuuuuRRRRRRR",
+"XXXXXssssskk:kkkkkkkkkkkkkkuuuuuRRuuuusuuuuuuuuuuRRRRRRR",
+"XXXXXsssskkk:kkkkkkkkkkkkkkkuuruRRussssruuuuuuuuuRRRRRRR",
+"XXXXXssskskk:kkkkkkkkkkkkkkuuuuuRRussssuuuuuuuuuuRRRRRRR",
+"XXXXXssssssk:kkkkkkkkkkkkkuuuuuuRRRuuuuuuuuuuuuuuuRRRRRR",
+"XXXXXsssssss:kkkkkkkkkkkkuuuuuuuRRRuuuuuuuuuuuuuuuRRRRRR",
+"XXXXXsssssss:uukkkkkkkkkuuuuuuuuuRRuuuuuuuuuuuuuuuRRRRRR",
+"XXXXXsuuuuuu:uuuuuuskssskssssuuuuRRRuubusssruuuuuRRRRRRR",
+"XXXXXuuuuuuu:uuuussssssskssssuuuuuRRuuuusssssssssRRRRRRR",
+"XXXXXuuuuuuu:uuussssssssssssssssssRRuuussssssssssRRRRRRR",
+"uuuuuuuuuuuu:ssssssssssssssrsssrssRRssssssssssssRRRRRRRR",
+"uuuuuuuuuuus:bssssssssssssssssssssRRRsssssssssssRRRRRRRR"
+],
+"marks": [
+{
+"kind": "town",
+"cells": [
+[
+0,
+5
+],
+[
+0,
+6
+],
+[
+0,
+7
+],
+[
+0,
+8
+],
+[
+0,
+9
+],
+[
+0,
+10
+],
+[
+0,
+11
+],
+[
+0,
+12
+],
+[
+0,
+13
+],
+[
+0,
+14
+],
+[
+0,
+15
+],
+[
+0,
+16
+],
+[
+0,
+19
+],
+[
+0,
+20
+],
+[
+0,
+21
+],
+[
+0,
+22
+],
+[
+0,
+23
+],
+[
+0,
+24
+],
+[
+0,
+25
+],
+[
+0,
+26
+],
+[
+0,
+27
+],
+[
+0,
+28
+],
+[
+0,
+29
+],
+[
+0,
+30
+],
+[
+0,
+31
+],
+[
+0,
+32
+],
+[
+0,
+33
+],
+[
+1,
+5
+],
+[
+1,
+6
+],
+[
+1,
+7
+],
+[
+1,
+8
+],
+[
+1,
+9
+],
+[
+1,
+10
+],
+[
+1,
+11
+],
+[
+1,
+12
+],
+[
+1,
+13
+],
+[
+1,
+14
+],
+[
+1,
+15
+],
+[
+1,
+16
+],
+[
+1,
+19
+],
+[
+1,
+20
+],
+[
+1,
+21
+],
+[
+1,
+22
+],
+[
+1,
+23
+],
+[
+1,
+24
+],
+[
+1,
+25
+],
+[
+1,
+26
+],
+[
+1,
+27
+],
+[
+1,
+28
+],
+[
+1,
+29
+],
+[
+1,
+30
+],
+[
+1,
+31
+],
+[
+1,
+32
+],
+[
+1,
+33
+],
+[
+2,
+5
+],
+[
+2,
+6
+],
+[
+2,
+7
+],
+[
+2,
+8
+],
+[
+2,
+9
+],
+[
+2,
+10
+],
+[
+2,
+11
+],
+[
+2,
+12
+],
+[
+2,
+13
+],
+[
+2,
+14
+],
+[
+2,
+15
+],
+[
+2,
+16
+],
+[
+2,
+19
+],
+[
+2,
+20
+],
+[
+2,
+21
+],
+[
+2,
+22
+],
+[
+2,
+23
+],
+[
+2,
+24
+],
+[
+2,
+25
+],
+[
+2,
+26
+],
+[
+2,
+27
+],
+[
+2,
+28
+],
+[
+2,
+29
+],
+[
+2,
+30
+],
+[
+2,
+31
+],
+[
+2,
+32
+],
+[
+2,
+33
+],
+[
+3,
+5
+],
+[
+3,
+6
+],
+[
+3,
+7
+],
+[
+3,
+8
+],
+[
+3,
+9
+],
+[
+3,
+10
+],
+[
+3,
+11
+],
+[
+3,
+12
+],
+[
+3,
+13
+],
+[
+3,
+14
+],
+[
+3,
+15
+],
+[
+3,
+16
+],
+[
+3,
+19
+],
+[
+3,
+20
+],
+[
+3,
+21
+],
+[
+3,
+22
+],
+[
+3,
+23
+],
+[
+3,
+24
+],
+[
+3,
+25
+],
+[
+3,
+26
+],
+[
+3,
+27
+],
+[
+3,
+28
+],
+[
+3,
+29
+],
+[
+3,
+30
+],
+[
+3,
+31
+],
+[
+3,
+32
+],
+[
+3,
+33
+],
+[
+4,
+5
+],
+[
+4,
+6
+],
+[
+4,
+7
+],
+[
+4,
+8
+],
+[
+4,
+9
+],
+[
+4,
+10
+],
+[
+4,
+11
+],
+[
+4,
+12
+],
+[
+4,
+13
+],
+[
+4,
+14
+],
+[
+4,
+15
+],
+[
+4,
+16
+],
+[
+4,
+19
+],
+[
+4,
+20
+],
+[
+4,
+21
+],
+[
+4,
+22
+],
+[
+4,
+23
+],
+[
+4,
+24
+],
+[
+4,
+25
+],
+[
+4,
+26
+],
+[
+4,
+27
+],
+[
+4,
+28
+],
+[
+4,
+29
+],
+[
+4,
+30
+],
+[
+4,
+31
+],
+[
+4,
+32
+],
+[
+4,
+33
+]
+],
+"text": "the oasis town's tall MUD-BRICK CITY WALL with rounded towers and crenellations, and its great arched EAST GATEHOUSE over the road (the gap in this block); date palms peek over the wall",
+"color": [
+196,
+150,
+104
+],
+"solid": true
+},
+{
+"kind": "bridge",
+"cells": [
+[
+31,
+14
+],
+[
+31,
+15
+],
+[
+31,
+16
+],
+[
+32,
+14
+],
+[
+32,
+15
+],
+[
+32,
+16
+],
+[
+33,
+14
+],
+[
+33,
+15
+],
+[
+33,
+16
+],
+[
+34,
+14
+],
+[
+34,
+15
+],
+[
+34,
+16
+],
+[
+35,
+14
+],
+[
+35,
+15
+],
+[
+35,
+16
+]
+],
+"text": "an OLD STONE BRIDGE of sandstone blocks with low parapets carrying the road over the dry ravine (the deck is walkable)",
+"color": [
+190,
+160,
+120
+],
+"solid": false
+},
+{
+"kind": "wagon",
+"cells": [
+[
+22,
+13
+],
+[
+23,
+13
+],
+[
+24,
+13
+]
+],
+"text": "an OIL CARAVAN'S COVERED WAGON with a patched cream canvas hood and big clay oil jars roped on its back, unhitched",
+"color": [
+200,
+180,
+140
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "sign",
+"x": 46,
+"y": 17,
+"text": "東 → 灰の荒野・カルデラ"
+},
+{
+"type": "sign",
+"x": 8,
+"y": 15,
+"text": "オアシスの町カシム\n東の門"
+},
+{
+"type": "waylamp",
+"id": "wl_d_east_1",
+"x": 9,
+"y": 20,
+"lit": true
+},
+{
+"type": "waylamp",
+"id": "wl_d_east_2",
+"x": 26,
+"y": 19,
+"lit": true
+},
+{
+"type": "waylamp",
+"id": "wl_d_east_3",
+"x": 42,
+"y": 17,
+"lit": true
+},
+{
+"type": "prop",
+"id": "cart_barrels",
+"x": 21,
+"y": 13
+}
+],
+"spawns": {
+"kasim": {
+"x": 1,
+"y": 17,
+"dir": "e"
+},
+"pass": {
+"x": 54,
+"y": 14,
+"dir": "w"
+},
+"south": {
+"x": 12,
+"y": 34,
+"dir": "n"
+}
+},
+"exits": [
+{
+"x": 0,
+"y": 17,
+"w": 1,
+"h": 2,
+"to": {
+"map": "kasim",
+"spawn": "gate_e"
+},
+"edge": "w"
+},
+{
+"x": 55,
+"y": 14,
+"w": 1,
+"h": 2,
+"to": {
+"map": "world",
+"spawn": "d_east_e"
+},
+"edge": "e",
+"cond": {
+"not": {
+"slice": true
+}
+}
+},
+{
+"x": 12,
+"y": 35,
+"w": 2,
+"h": 1,
+"to": {
+"map": "d_south",
+"spawn": "north"
+},
+"edge": "s"
+}
+],
+"notes": [],
+"meta": {
+"name": "東の街道",
+"sub": "灰の荒野への古い道",
+"region": "r_desert",
+"worldRect": [
+165,
+395,
+125,
+50
+],
+"outside": "dune_sand",
+"zones": [
+{
+"rect": [
+0,
+10,
+56,
+12
+],
+"zone": "zw_desert_road"
+},
+{
+"rect": null,
+"zone": "zw_desert"
+}
+],
+"tilePatches": [
+{
+"cond": {
+"slice": true
+},
+"rect": [
+52,
+13,
+3,
+3
+],
+"rows": [
+"rrr",
+"rrr",
+"rrr"
+]
+}
+],
+"links": {
+"kasim_e": {
+"map": "d_east",
+"spawn": "kasim"
+}
+},
+"npcs": [
+{
+"id": "oil_caravan",
+"look": "npc_oil_carrier",
+"name": "油運び",
+"x": 25,
+"y": 14,
+"dir": "w",
+"move": "still",
+"talk": "desert_world_oil",
+"reward": "hint",
+"key": "world_oil_caravan"
+},
+{
+"id": "oil_camel",
+"look": "ani_camel",
+"name": "ラクダ",
+"x": 26,
+"y": 13,
+"dir": "w",
+"move": "still",
+"talk": {
+"lines": [
+{
+"text": "ラクダは、油のつぼを背に\nのんびり砂をかんでいる。"
+}
+]
+},
+"reward": null
+},
+{
+"id": "guard_ash",
+"look": "npc_guard_1",
+"name": "番人",
+"x": 50,
+"y": 16,
+"dir": "e",
+"move": "still",
+"pushable": false,
+"cond": {
+"slice": true
+},
+"talk": {
+"lines": [
+{
+"text": [
+"灰の荒野へ抜ける峠は、\n灰の崩れでふさがってるんだ。",
+"カルデラへ行くなら、\n片づくまで待ってくれ。"
+]
+}
+]
+},
+"reward": "news",
+"key": "world_guard_ash"
+}
+]
+}
+}

@@ -8,7 +8,7 @@
     'shops.shop_pharos_arms.name': 'Pharos Armory',
     'shops.shop_fern_items.name': 'Fern Item Shop',
     'shops.shop_fern_peddler.name': 'Square Peddler',
-    'shops.shop_yura.name': 'Yura Shop',
+    'shops.shop_yura.name': 'Yarrow Shop',
     // ---- src/data/shops_ash.js
     'shops.shop_caldera_items.name': 'Shell Item Shop',
     'shops.shop_caldera_arms.name': 'Shell Armory',

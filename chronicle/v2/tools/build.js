@@ -314,12 +314,15 @@ function scanTitle(root) {
   const out = [], meta = {};
   if (!fs.existsSync(root)) return { list: out, meta };
   for (const f of fs.readdirSync(root).sort()) {
-    const m = /^([a-z0-9_]+)\.webp$/.exec(f);
+    const m = /^([a-z0-9_-]+)\.webp$/.exec(f);
     if (!m) continue;
     const png = path.join(root, m[1] + '.png');
     out.push({ id: m[1], ext: 'webp', file: path.join(root, f), png: fs.existsSync(png) ? png : null, meta: null, outName: m[1] + '.webp' });
   }
-  for (const [k, f] of [['wide', 'title_wide.json'], ['phone', 'title_phone.json'], ['logo', 'logo.json']]) {
+  // 言語ごとの題字（logo_en.json など。title.js の logoId）も同じ名前の key で
+  const sides = [['wide', 'title_wide.json'], ['phone', 'title_phone.json'], ['logo', 'logo.json']];
+  for (const f of fs.readdirSync(root).sort()) { const m = /^(logo_[a-z0-9_-]+)\.json$/.exec(f); if (m) sides.push([m[1], f]); }
+  for (const [k, f] of sides) {
     const js = path.join(root, f);
     if (!fs.existsSync(js)) continue;
     try { const j = JSON.parse(fs.readFileSync(js, 'utf8')); delete j.style; delete j.note; delete j.checked; meta[k] = j; } catch (e) { console.warn(`[build] ${js}: bad JSON (${e.message})`); }

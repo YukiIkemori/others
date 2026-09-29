@@ -22,7 +22,7 @@
     'heroTypes.wanderer.name': 'Wanderer',
     'heroTypes.wanderer.desc': 'Balanced in every way; can do anything.\nChoose one favored weapon or element.',
     'data.herotypes.starterKit.heroNames.m': ['Arun', 'Lark', 'Hart', 'Kamil', 'Neil', 'Bale', 'Royce', 'Orto'],
-    'data.herotypes.starterKit.heroNames.f': ['Lina', 'Kotoha', 'Erna', 'Orie', 'Marika', 'Lucia', 'Anna', 'Misha'],
+    'data.herotypes.starterKit.heroNames.f': ['Lina', 'Wren', 'Erna', 'Oriel', 'Marika', 'Lucia', 'Anna', 'Misha'],
     'data.herotypes.starterKit.favorDesc.sword': 'One-handed. Pairs with a shield for balanced offense and defense.',
     'data.herotypes.starterKit.favorDesc.greatsword': 'Two-handed. Heavy blows with greatswords, axes and hammers.',
     'data.herotypes.starterKit.favorDesc.dagger': 'Fights with Dexterity. Lands critical hits often.',

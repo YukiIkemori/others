@@ -13,10 +13,10 @@
    "category": "title",
    "ja": "ルミナス・クロニクル",
    "en": "Luminous Chronicle",
-   "zh-Hans": "光之编年史",
-   "zh-Hant": "光之編年史",
+   "zh-Hans": "流光编年史",
+   "zh-Hant": "流光編年史",
    "ko": "루미너스 크로니클",
-   "note": "Title logo. zh could also keep the transliteration 路米纳斯编年史; decide with publisher."
+   "note": "DECIDED 2026-09-29. EN keeps \"Luminous Chronicle\" (EN logo: assets/title/logo_en). zh uses a meaning-based title, not the transliteration 路米纳斯编年史: 流光 = \"flowing light\" and, classically, \"the passing of time\" (流光易逝), so it carries both Luminous and Chronicle; four-plus-three characters read like established zh titles of localized JRPGs, are searchable on Steam, and avoid the generic 光之… pattern. Check trademark/store-name collisions with the publisher before release."
   },
   {
    "id": "title.subtitle",
@@ -26,7 +26,7 @@
    "zh-Hans": "～八盏灯火～",
    "zh-Hant": "～八盞燈火～",
    "ko": "~여덟 개의 등불~",
-   "note": "灯火 = Beacon in EN throughout (lighthouse motif, 大灯火 = Great Beacon)."
+   "note": "DECIDED 2026-09-29: EN subtitle stays \"The Eight Beacons\" (not \"Lights\"): 灯火 = Beacon everywhere in the game (Great Beacon, beacons lit per region), so the subtitle names the thing the player lights. zh ～八盏灯火～ / ～八盞燈火～."
   },
   {
    "id": "core.storyteller",
@@ -902,10 +902,11 @@
    "id": "places.yura",
    "category": "places",
    "ja": "隠れ里ユラ",
-   "en": "Yura, the Hidden Village",
+   "en": "Yarrow, the Hidden Village",
    "zh-Hans": "隐村尤拉",
    "zh-Hant": "隱村尤拉",
-   "ko": "숨은 마을 유라"
+   "ko": "숨은 마을 유라",
+   "note": "EN name localized (not romanized Japanese); see w_names/names_en.md. Yarrow = a meadow herb; quiet, old-English village sound. Short form: Yarrow."
   },
   {
    "id": "places.verda",
@@ -1071,7 +1072,7 @@
    "zh-Hans": "阿伦",
    "zh-Hant": "阿倫",
    "ko": "아룬",
-   "note": "Default hero name (player can rename)."
+   "note": "Default hero name (player can rename). EN keeps Arun: short, pronounceable, not Japanese-flavoured, and it is the name painted into the title art spec."
   },
   {
    "id": "people.berna",
@@ -1141,20 +1142,21 @@
    "id": "people.shigure",
    "category": "people",
    "ja": "シグレ",
-   "en": "Shigure",
+   "en": "Rainer",
    "zh-Hans": "时雨",
    "zh-Hant": "時雨",
    "ko": "시구레",
-   "note": "Japanese-style name: zh uses the kanji 時雨."
+   "note": "Eastern swordsman. EN name localized (not romanized Japanese); see w_names/names_en.md. \"Rainer\" keeps the rain of 時雨 (he likes rainy days). zh uses the kanji 時雨."
   },
   {
    "id": "people.rouga",
    "category": "people",
    "ja": "ロウガ",
-   "en": "Rouga",
+   "en": "Ulric",
    "zh-Hans": "狼牙",
    "zh-Hant": "狼牙",
-   "ko": "로우가"
+   "ko": "로우가",
+   "note": "Eastern martial artist. EN name localized (not romanized Japanese); see w_names/names_en.md. Ulric = \"wolf ruler\", echoing 狼牙 (wolf fang)."
   },
   {
    "id": "people.titta",
@@ -1278,11 +1280,11 @@
    "id": "people.fine",
    "category": "people",
    "ja": "フィーネ",
-   "en": "Fine",
+   "en": "Fina",
    "zh-Hans": "菲涅",
    "zh-Hant": "菲涅",
    "ko": "피네",
-   "note": "Girl in a Gray Cloak (灰色のマントの少女). EN keeps 'Fine' (two syllables: FEE-neh)."
+   "note": "Girl in a Gray Cloak (灰色のマントの少女). EN changed from \"Fine\" to \"Fina\" (FEE-na): \"Fine\" reads as the English word."
   },
   {
    "id": "people.elm",
@@ -1398,21 +1400,21 @@
    "id": "people.zakuro",
    "category": "people",
    "ja": "ザクロ",
-   "en": "Zakuro",
+   "en": "Garnet",
    "zh-Hans": "石榴",
    "zh-Hant": "石榴",
    "ko": "자쿠로",
-   "note": "Japanese-style name: zh uses the kanji 石榴."
+   "note": "Archive fighter (two blades). EN name localized (not romanized Japanese); see w_names/names_en.md. Garnet shares its root with pomegranate (ザクロ). zh uses the kanji 石榴."
   },
   {
    "id": "people.kaya",
    "category": "people",
    "ja": "カヤ",
-   "en": "Kaya",
+   "en": "Tessa",
    "zh-Hans": "卡娅",
    "zh-Hant": "卡婭",
    "ko": "카야",
-   "note": "Fire priestess (火の巫女)."
+   "note": "Fire priestess (火の巫女). EN name localized (not romanized Japanese); see w_names/names_en.md."
   },
   {
    "id": "people.dorga",
@@ -1443,6 +1445,156 @@
    "zh-Hant": "索妮婭",
    "ko": "소냐",
    "note": "Firekeeper's daughter."
+  },
+  {
+   "id": "people.hinoe",
+   "category": "people",
+   "ja": "ヒノエ",
+   "en": "Brenna",
+   "zh-Hans": "日乃惠",
+   "zh-Hant": "日乃惠",
+   "ko": "히노에",
+   "note": "Elder of the sorcerer sisters (Caldera arena). EN name localized (not romanized Japanese); see w_names/names_en.md. Brenna ~ \"burn\"."
+  },
+  {
+   "id": "people.sumi",
+   "category": "people",
+   "ja": "スミ",
+   "en": "Cinda",
+   "zh-Hans": "澄",
+   "zh-Hant": "澄",
+   "ko": "스미",
+   "note": "Younger sorcerer sister. EN name localized (not romanized Japanese); see w_names/names_en.md. Cinda ~ \"cinder\" (墨/炭)."
+  },
+  {
+   "id": "people.garo",
+   "category": "people",
+   "ja": "ガロ",
+   "en": "Garrick",
+   "zh-Hans": "加罗",
+   "zh-Hant": "加羅",
+   "ko": "가로",
+   "note": "Beast tamer (Caldera arena). EN name localized (not romanized Japanese); see w_names/names_en.md."
+  },
+  {
+   "id": "people.nene",
+   "category": "people",
+   "ja": "ネネ",
+   "en": "Nell",
+   "zh-Hans": "宁宁",
+   "zh-Hant": "寧寧",
+   "ko": "네네",
+   "note": "Granny in Caldera (ばあさまのネネ = Granny Nell). EN name localized (not romanized Japanese); see w_names/names_en.md."
+  },
+  {
+   "id": "people.gou",
+   "category": "people",
+   "ja": "ゴウ",
+   "en": "Gus",
+   "zh-Hans": "刚",
+   "zh-Hant": "剛",
+   "ko": "고우",
+   "note": "Bridgekeeper at Ashview Inn. EN name localized (not romanized Japanese); see w_names/names_en.md."
+  },
+  {
+   "id": "people.toto",
+   "category": "people",
+   "ja": "トト",
+   "en": "Tam",
+   "zh-Hans": "托托",
+   "zh-Hant": "托托",
+   "ko": "토토",
+   "note": "Firekeeper apprentice (Caldera). EN name localized (not romanized Japanese); see w_names/names_en.md."
+  },
+  {
+   "id": "people.hero_f_kotoha",
+   "category": "people",
+   "ja": "コトハ",
+   "en": "Wren",
+   "zh-Hans": "琴叶",
+   "zh-Hant": "琴葉",
+   "ko": "코토하",
+   "note": "Heroine name suggestion. EN name localized (not romanized Japanese); see w_names/names_en.md."
+  },
+  {
+   "id": "people.hero_f_orie",
+   "category": "people",
+   "ja": "オリエ",
+   "en": "Oriel",
+   "zh-Hans": "织绘",
+   "zh-Hant": "織繪",
+   "ko": "오리에",
+   "note": "Heroine name suggestion. EN name localized (not romanized Japanese); see w_names/names_en.md."
+  },
+  {
+   "id": "items.w_sword_uchi",
+   "category": "items",
+   "ja": "打ち刀",
+   "en": "Eastern Blade",
+   "zh-Hans": "打刀",
+   "zh-Hant": "打刀",
+   "ko": "우치가타나",
+   "note": "Rainer's starting sword. EN name localized (not romanized Japanese); see w_names/names_en.md."
+  },
+  {
+   "id": "items.tachi",
+   "category": "items",
+   "ja": "太刀",
+   "en": "Longblade",
+   "zh-Hans": "太刀",
+   "zh-Hant": "太刀",
+   "ko": "다치",
+   "note": "白金の太刀 = Platinum Longblade, 夢断ちの太刀 = Dreamsever Longblade."
+  },
+  {
+   "id": "items.w_sword_r7k",
+   "category": "items",
+   "ja": "しらさぎ丸",
+   "en": "White Heron",
+   "zh-Hans": "白鹭丸",
+   "zh-Hant": "白鷺丸",
+   "ko": "시라사기마루",
+   "note": "Named sword (白鷺 = white heron)."
+  },
+  {
+   "id": "items.w_sword_r9k",
+   "category": "items",
+   "ja": "夜叉丸",
+   "en": "Nightfiend",
+   "zh-Hans": "夜叉丸",
+   "zh-Hant": "夜叉丸",
+   "ko": "야샤마루",
+   "note": "Named sword, dark element."
+  },
+  {
+   "id": "items.w_sword_sr_matsuyoi",
+   "category": "items",
+   "ja": "待宵丸",
+   "en": "Moonvigil",
+   "zh-Hans": "待宵丸",
+   "zh-Hant": "待宵丸",
+   "ko": "마쓰요이마루",
+   "note": "Named sword (待宵 = the night waiting for the full moon)."
+  },
+  {
+   "id": "items.iai_stance",
+   "category": "items",
+   "ja": "居合の構え",
+   "en": "Quickdraw Stance",
+   "zh-Hans": "居合架势",
+   "zh-Hant": "居合架勢",
+   "ko": "발도 자세",
+   "note": "Garnet's boss stance (bossActions.eb_zakuro_stance)."
+  },
+  {
+   "id": "items.spider_4",
+   "category": "items",
+   "ja": "女郎グモ",
+   "en": "Gilded Widow",
+   "zh-Hans": "络新妇",
+   "zh-Hant": "絡新婦",
+   "ko": "무당거미",
+   "note": "Monster (gold-and-black spider). EN avoids the romanized yokai name."
   }
  ]
 }

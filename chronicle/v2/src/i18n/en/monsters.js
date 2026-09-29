@@ -309,7 +309,7 @@
     'monsters.spider_2.desc': 'A poison spider with green spots.\nIts bite spreads venom.',
     'monsters.spider_3.name': 'Shadow Spider',
     'monsters.spider_3.desc': 'A black spider blending into shadow.\nOnly its red eyes glow in the dark.',
-    'monsters.spider_4.name': 'Jorogumo',
+    'monsters.spider_4.name': 'Gilded Widow',
     'monsters.spider_4.desc': 'A huge gold-and-black striped spider.\nTreasures hang caught in its web.',
     // ---- src/data/monsters_mine.js
     'monsters.golem_1.name': 'Rubble Soldier',

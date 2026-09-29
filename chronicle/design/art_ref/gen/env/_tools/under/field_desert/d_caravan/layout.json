@@ -1,0 +1,340 @@
+{
+"id": "d_caravan",
+"w": 60,
+"h": 40,
+"rows": [
+"RRRRRRRRRRRRRRRRRRRssssssuuuuu..uuuuuuuuuuuuuuuuuussssssssss",
+"RRRRRRRRRRRRRRRRRRRssksssuuuuu..uuuuuuuuuuuuuuuuuussssrsssss",
+"RRRRRRRRRRRRRRRRRRssssssuuuuuu..uuuuuuuuuuuuuuuuusssssssssss",
+"RRRRRRRRRRRRRRRRRssssuuuuuuuuu..uuuuuuuuuuuuuuuuussssssssssk",
+"RRRRRRRRRRRRRRRsrsssuuuuuuuuuu..uuuuuuuuuuuuuuuksussRRRRRsss",
+"RRRRRRRRRRRRRRssssssuuruuuuRRR....sssuuuuuuuuuukkrssRRRRRsss",
+"uussRRRRRsssssssssussuuuuuuRRR.....sssssuuuuuuuuukkuuRRRRkss",
+"ussssssssssssssuuuuussuuuuuRR..uss...sssuuuuuuuuuksuuuuussss",
+":::::::::::::::::uuuusuuuuuuu..ussss....uuuuuuuuurssssusssss",
+"ksssss:::::::::::::::::::uuu..uusuusss.....uuuuuussssssssrss",
+"ssssssssssssssuuuuuuuu::::::::usssssssuu.........ussssssssss",
+"RRRssssssssssssuussuussssuuu::ussssssssssuuuu.............ss",
+"RRRRRRRsssssssssssssuuuuuubu..kssssssssssssusssssuu.........",
+"RRRRRRRRRRssssssssssuuuuuuuuu..ussssssssssssssssssuuuusssuuu",
+"RRRRRRRRRRsssssssssssuuuuuuuu..usssssssssssssssssssuuussuuuu",
+"RRRRRRRRRRssuuusssssssuuuuuuu..ssssssssssssrsssssssuuuuuuuuu",
+"RRRRRRRRRssssuussssssbsuuuuuuu:.sssssssssssssssssssuuuuuuuuu",
+"RRRRRRRRssssssssssssssssuuuuu.::sssssssuuRRRRRRRsssuuuuuubuu",
+"uusuuuuusssssssksskssssssuuuu..:::ssssuuRRRRRRRRRssuuuuuuuuu",
+"uusuuuuuussssssssssssssssuuuu..us::ssssuRRRRRRRRRRsuuuuuuuuu",
+"ssuuuuuuubsssuussssssssuuuuu..uuus:::ssRRRRRRRRRRRsssuuuuuuu",
+"ksssssssssssuuuussssrsuuuuu...uuuusu::sRRRRRRRRRRRsssuuuuuuu",
+"sssssssssussuuuuuuuuuuuuuu...uuuuuuuu:::RRRRRRRRRssuussuuuuu",
+"sssssssssussuuuuuuuuuuuu....uuuuuuuuuuu::::RRRRRbuuuuusuuuuu",
+"ssssssssssrsuuuuuuuuuu.....uuuuuuuuuuuuuu::sRRuuuuuuuuuuuuus",
+"ssssssssssssuuuuuuu......uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuss",
+"ssssssssssssuuu...::..uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuss",
+"sssssssss........::uuuuubuuuuuuuuuuuuuuuuuuuuuuuuubuuuuuuuus",
+"...............u::uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuus",
+".........ssssuuu:uuuuuuuubuuuuuuuuuuruuuuuuuuuuuuuuuuuuuuuus",
+"suuuuuuusssssuuX:XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuRRRRuuuus",
+"uuuuuuuusssuuuRRRRRRuuuuuuuuuuuuuuuuuuuuuuuuuuruuRRRRRRRuuss",
+"uuuuuuuusssuRRRRRRRRRusssuuuuuuuuuuuuuuuuuuuuuuuuRRRRRRRssss",
+"uuuuuuuusssRRRRRRRRRRsssssssssuuuuuuuuuuuuuuuuuuuRRRRRRRssss",
+"uuuuuuRRsssRRRRRRRRRRssssssssssssssuuuuuuuuuuuuuuuuRRRssssss",
+"uuuuuRRRRssRRRRRRRRRRssssrsssssssssuuuuuuuuuuuuuuuusssssssss",
+"uuuuRRRRRsssRRRRRRRRRssbsssssssssssuuubuuuuuuuuuuuuskksssssb",
+"uuuuRRRRRssssRRRRRRRssssssssssssssssuuuuuuuuuuuuuuusskksssss",
+"uuuuuuuuuuuuusssssusssssssssssssssssssuuuubuuuuussssssssssss",
+"uuuuuuuuuuuuuussssssssssssssssssssssssuuuuusuuusssssssssssss"
+],
+"marks": [
+{
+"kind": "door",
+"cells": [
+[
+42,
+23
+]
+],
+"text": "a dark ENTRANCE",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+},
+{
+"kind": "stones",
+"cells": [
+[
+15,
+30
+],
+[
+17,
+30
+]
+],
+"text": "two TALL STANDING STONES carved with stars and crescent moons, flanking the path up onto the knoll",
+"color": [
+226,
+214,
+180
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+16,
+30
+]
+],
+"text": "a dark ENTRANCE",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "sign",
+"x": 39,
+"y": 25,
+"text": "野営地「岩の井戸」"
+},
+{
+"type": "sign",
+"x": 19,
+"y": 29,
+"text": "野営地「星の石」"
+},
+{
+"type": "sign",
+"x": 8,
+"y": 10,
+"text": "砂嵐のくぼ地\n――風のやまない近道。"
+},
+{
+"type": "sign",
+"x": 27,
+"y": 13,
+"text": "西 → 西の浜（遠回り）\n北西 → 砂嵐のくぼ地（近道）"
+},
+{
+"type": "waylamp",
+"id": "wl_desert_beacon_2",
+"x": 23,
+"y": 27,
+"lit": "q_kasim_beacon_2",
+"event": "desert_beacon"
+},
+{
+"type": "prop",
+"id": "tent",
+"x": 39,
+"y": 22
+},
+{
+"type": "prop",
+"id": "copper_brazier",
+"x": 44,
+"y": 25
+},
+{
+"type": "prop",
+"id": "clay_jars",
+"x": 13,
+"y": 29
+},
+{
+"type": "prop",
+"id": "bones",
+"x": 33,
+"y": 34
+},
+{
+"type": "prop",
+"id": "cactus",
+"x": 47,
+"y": 15
+}
+],
+"spawns": {
+"north": {
+"x": 30,
+"y": 1,
+"dir": "s"
+},
+"east": {
+"x": 58,
+"y": 12,
+"dir": "w"
+},
+"hollow": {
+"x": 1,
+"y": 8,
+"dir": "e"
+},
+"coast": {
+"x": 1,
+"y": 29,
+"dir": "e"
+},
+"camp1": {
+"x": 42,
+"y": 24,
+"dir": "s"
+},
+"camp2": {
+"x": 16,
+"y": 29,
+"dir": "n"
+}
+},
+"exits": [
+{
+"x": 30,
+"y": 0,
+"w": 2,
+"h": 1,
+"to": {
+"map": "d_west",
+"spawn": "south"
+},
+"edge": "n"
+},
+{
+"x": 59,
+"y": 12,
+"w": 1,
+"h": 2,
+"to": {
+"map": "d_south",
+"spawn": "west"
+},
+"edge": "e"
+},
+{
+"x": 0,
+"y": 8,
+"w": 1,
+"h": 2,
+"to": {
+"map": "d_hollow",
+"spawn": "caravan"
+},
+"edge": "w"
+},
+{
+"x": 0,
+"y": 29,
+"w": 1,
+"h": 2,
+"to": {
+"map": "d_coast",
+"spawn": "caravan"
+},
+"edge": "w"
+},
+{
+"x": 42,
+"y": 23,
+"w": 1,
+"h": 1,
+"to": {
+"map": "desert_camp1",
+"spawn": "road"
+}
+},
+{
+"x": 16,
+"y": 30,
+"w": 1,
+"h": 1,
+"to": {
+"map": "desert_camp2",
+"spawn": "road"
+}
+}
+],
+"notes": [],
+"meta": {
+"name": "隊商路",
+"sub": "野営地をつなぐ砂の道",
+"region": "r_desert",
+"worldRect": [
+60,
+440,
+100,
+61
+],
+"outside": "dune_sand",
+"zones": [
+{
+"rect": null,
+"zone": "zw_desert_caravan",
+"cond": "desert_caravan_on"
+},
+{
+"rect": null,
+"zone": "zw_desert"
+}
+],
+"tilePatches": [
+{
+"cond": {
+"not": {
+"any": [
+{
+"choice": "ch_desert_route",
+"is": "short"
+},
+"cleared_r_desert"
+]
+}
+},
+"rect": [
+0,
+7,
+2,
+4
+],
+"rows": [
+"RR",
+"RR",
+"RR",
+"RR"
+]
+}
+],
+"triggers": [
+{
+"id": "desert_ambush_2",
+"x": 24,
+"y": 22,
+"w": 5,
+"h": 4,
+"on": "step",
+"event": "desert_ambush_2",
+"cond": [
+"desert_caravan_on",
+"!desert_ambush_2_done"
+]
+}
+],
+"links": {
+"camp1": {
+"map": "d_caravan",
+"spawn": "camp1"
+},
+"camp2": {
+"map": "d_caravan",
+"spawn": "camp2"
+}
+},
+"npcs": []
+}
+}

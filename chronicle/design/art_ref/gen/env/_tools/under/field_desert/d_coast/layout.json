@@ -1,0 +1,336 @@
+{
+"id": "d_coast",
+"w": 44,
+"h": 52,
+"rows": [
+"~~~~~~~sRRRRRRRRRRR..ssRRRRRRRRRRRRRRRRRRRRR",
+"~~~~~~~ssRRRRRRRRRR..ssRRRRRRRRRRRRRRRRRRRRR",
+"~~~~~~sssRRRRRRRRRs..ssRRRRRRRRRRRRRRRRRRRRR",
+"~~~~~~sssRRRRRRRRRs..ssRRRRRRRRRRRRRRRRRRRRR",
+"~~~~~~ssssRRRRRRRsss.ssRRRRRRRRRRRRRRRRRRRRR",
+"~~~~~sssrssssuukksus..sssssssssssssssRRRRRRR",
+"~~~~~~ssssssskk,kuuu..ssssssssssssssRRRRRRRR",
+"~~~~~~ssssssss,,,Xuu..ssXsssssssssssRRRRRRRR",
+"~~~~~~sssssssT,,,,,,..sssssTsssssssssRRRRRRR",
+"~~~~~~sssssss,,,,,,,..sssssssssssssssRRRRRRR",
+"~~~~~~sssssss,,,,,,,..sssssssssssssssRRRRRRR",
+"~~~~~~ssssssTs,T,,,s..sssTsssssssssssssRRRRR",
+"~~~~~~ssssssssssskss..ssssssssssssssssssssRR",
+"~~~~~~ssssssssssssks..sssssssssssssssssssssu",
+"~~~~~~ssssbukssssssss..sssssssss::::::::::::",
+"~~~~~~sssssskssssssss..ssss::::::::::::sssss",
+"~~~~~~~ssssusssssssss..s:::::sssssssssssssss",
+"~~~~~~~ssssuuusssssss::::sssssssssssssRRRRRR",
+"~~~~~~~~ssssuusssssss::sssssssssssssssRRRRRR",
+"~~~~~~~~ssssussssssss..sssssssssssssssRRRRRR",
+"~~~~~~~~ssssssssssss...suuussssssssssRRRRRRR",
+"~~~~~~~~ssssssssssss..ssuuuussssssrssRRRRRRR",
+"~~~~~~~~ssssssssssss..ssuuuuusssrssssRRRRRRR",
+"~~~~~~~~ssssssssssss..ssuuuuussuussrssRRRRRR",
+"~~~~~~~ssssssssssss..sssssssuuuuuuuuuuRRRRRR",
+"~~~~~~~ssssssssssss..ssssssssuuuuuuuuuuRRRRR",
+"~~~~~~~sssskkssssss..ssssssssuuubuuuuuuRRRRR",
+"~~~~~~~ssssukssssss..sssrssssuuuuububuuuRRRR",
+"~~~~~~~ssssussssss..ssssssssssuuuuuuuuuusRRR",
+"~~~~~~ssssuursssss..sssssssssssuuurruuuusRRR",
+"~~~~~~ssssuuuuusss..ssXXXXuuussuuuuuuuuussRR",
+"~~~~~~ssssuuuuuuus..ssXXXXusuuuuuuuruuuuusss",
+"~~~~~~ssssuuuuuubu..uuX:XXuXuuuuuuuuuuuuuuuu",
+"~~~~~~ssssuuuuuuuu..::::uuuuuuuuuuuuuuuuuuuu",
+"~~~~~~sssssuuuurru..:uuuuuuuuuruuuuuuuuuuuuu",
+"~~~~~~~ssssuuuuuuu...uuuuuuuuuuuuuuuuuuubuuu",
+"~~~~~~~ssssuuuuuuuu..uuuuuuuuuuuuuuuuuuuuuuu",
+"~~~~~~~sssssuuuuuuuu..uuuuuuuuuuuuuuuuuuuuuu",
+"~~~~~~~~ssssuuuuuuuu...uuuuuusssuuuuuuuuuuuu",
+"~~~~~~~~ssssuuuuuuuuu...uuuussssuuubuuuuuuuu",
+"~~~~~~~~~ssssruubuuuuu....ssssssuubuuuuuuuuu",
+"~~~~~~~~~ssssuuuuuuuuuuu....ssssssuussssssss",
+"~~~~~~~~~ssssuuuuuuuuuuuus......ssssssssssss",
+"~~~~~~~~~sssssssuuuuuuuuusss................",
+"~~~~~~~~~ssssssssuuuuussssssssss............",
+"~~~~~~~~~ssssssssssuuussssssssksssssssssssss",
+"~~~~~~~~sssssssssuuusuusssssssssssssssssssss",
+"~~~~~~~~sssssssssuuusuuuuussssssssssssssssss",
+"~~~~~~~~sssssssssuuuuuuuuuuuuuuuusssssssssss",
+"~~~~~~~~sssssssssssuuuuuuuuuuuuuuussssssrsss",
+"~~~~~~~~sssrssssssssuuuuuuuubuuuuussssssssss",
+"~~~~~~~~sssssssssssssuuuuuuuuuuuuuusssssssss"
+],
+"marks": [
+{
+"kind": "obelisk",
+"cells": [
+[
+24,
+7
+]
+],
+"text": "a tall weathered sandstone OBELISK carved with sun discs and a faceless king",
+"color": [
+226,
+214,
+180
+],
+"solid": true
+},
+{
+"kind": "pillar",
+"cells": [
+[
+17,
+7
+]
+],
+"text": "a BROKEN SANDSTONE PILLAR, its top fallen beside it",
+"color": [
+226,
+214,
+180
+],
+"solid": true
+},
+{
+"kind": "hut",
+"cells": [
+[
+22,
+30
+],
+[
+22,
+31
+],
+[
+22,
+32
+],
+[
+23,
+30
+],
+[
+23,
+31
+],
+[
+23,
+32
+],
+[
+24,
+30
+],
+[
+24,
+31
+],
+[
+24,
+32
+],
+[
+25,
+30
+],
+[
+25,
+31
+],
+[
+25,
+32
+]
+],
+"text": "a small square MUD-BRICK HUT with a flat roof of palm trunks and a low wooden door in its south wall (the dark block), a dry stone well beside it",
+"color": [
+196,
+150,
+104
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+23,
+32
+]
+],
+"text": "a dark ENTRANCE",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+},
+{
+"kind": "well",
+"cells": [
+[
+27,
+32
+]
+],
+"text": "a DRY round stone WELL with a wooden winch frame",
+"color": [
+120,
+110,
+100
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "sign",
+"x": 18,
+"y": 6,
+"text": "王墓のオアシス\n北 → 名のない王の墓"
+},
+{
+"type": "sign",
+"x": 26,
+"y": 35,
+"text": "古い井戸の小屋"
+},
+{
+"type": "waylamp",
+"id": "wl_desert_beacon_3",
+"x": 24,
+"y": 21,
+"lit": "q_kasim_beacon_3",
+"event": "desert_beacon"
+},
+{
+"type": "prop",
+"id": "bones",
+"x": 14,
+"y": 26
+},
+{
+"type": "prop",
+"id": "clay_jars",
+"x": 21,
+"y": 31
+}
+],
+"spawns": {
+"camp3": {
+"x": 20,
+"y": 1,
+"dir": "s"
+},
+"hollow": {
+"x": 42,
+"y": 14,
+"dir": "w"
+},
+"caravan": {
+"x": 42,
+"y": 44,
+"dir": "w"
+},
+"wellroom": {
+"x": 23,
+"y": 33,
+"dir": "s"
+}
+},
+"exits": [
+{
+"x": 20,
+"y": 0,
+"w": 2,
+"h": 1,
+"to": {
+"map": "desert_camp3",
+"spawn": "road"
+},
+"edge": "n"
+},
+{
+"x": 43,
+"y": 14,
+"w": 1,
+"h": 2,
+"to": {
+"map": "d_hollow",
+"spawn": "coast"
+},
+"edge": "e"
+},
+{
+"x": 43,
+"y": 44,
+"w": 1,
+"h": 2,
+"to": {
+"map": "d_caravan",
+"spawn": "coast"
+},
+"edge": "e"
+},
+{
+"x": 23,
+"y": 32,
+"w": 1,
+"h": 1,
+"to": {
+"map": "desert_wellroom",
+"spawn": "road"
+}
+}
+],
+"notes": [],
+"meta": {
+"name": "西の浜",
+"sub": "遠回りの浜の道と王墓のオアシス",
+"region": "r_desert",
+"worldRect": [
+24,
+400,
+40,
+101
+],
+"outside": "sea",
+"zones": [
+{
+"rect": null,
+"zone": "zw_desert_caravan",
+"cond": "desert_caravan_on"
+},
+{
+"rect": null,
+"zone": "zw_desert"
+}
+],
+"triggers": [
+{
+"id": "desert_ambush_3",
+"x": 17,
+"y": 36,
+"w": 6,
+"h": 4,
+"on": "step",
+"event": "desert_ambush_3",
+"cond": [
+"desert_caravan_on",
+"!desert_ambush_3_done"
+]
+}
+],
+"links": {
+"camp3": {
+"map": "d_coast",
+"spawn": "camp3"
+},
+"wellroom": {
+"map": "d_coast",
+"spawn": "wellroom"
+}
+},
+"npcs": []
+}
+}
