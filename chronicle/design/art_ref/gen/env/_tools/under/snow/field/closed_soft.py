@@ -50,16 +50,16 @@ for pi, p in enumerate(pats):
         band[yy, a:b + 1] = True
     band = ndimage.binary_closing(band, np.ones((9, 3)))
     band = ndimage.binary_dilation(band, np.ones((9, 25)))   # over the white rim on both sides
-    # only the rows the patch closes: the strip's end on the shore stays (a stub of shore ice), rounded off
+    # only the rows the patch closes: the strip's end on the shore stays (a stub of shore ice)
     y0, y1 = min(y for _, y in cells) * T, (max(y for _, y in cells) + 1) * T
     band[:y0] = False; band[y1:] = False
-    tip = band[y1 - T:y1].copy()
-    for k in range(T):   # the last tile of the strip narrows into a round end
-        row = tip[k]; xs = np.nonzero(row)[0]
+    # the strip's end: in the last tile the ice comes out of the water as a rounded tip (0 wide at its top, full width at the patch's end)
+    for k in range(T):
+        yy = y1 - T + k; xs = np.nonzero(m[yy])[0] if m[yy].any() else np.nonzero(band[yy])[0]
         if not len(xs): continue
-        c, w = (xs[0] + xs[-1]) / 2, (xs[-1] - xs[0]) / 2 * np.sqrt(max(0.0, 1 - (k / T) ** 2))
-        row[:] = False; row[int(round(c - w)):int(round(c + w)) + 1] = True
-    band[y1 - T:y1] = tip
+        c, hw = (xs[0] + xs[-1]) / 2, (xs[-1] - xs[0]) / 2 + 2
+        w = hw * np.sqrt(k / (T - 1))
+        band[yy, max(0, int(round(c - w))):int(round(c + w)) + 1] = False
     # fill: the lake beside the strip (4 tiles to the side where it is water), pixel for pixel
     #   one shift for the whole strip (row by row shifts would shear the plates into streaks)
     F = A.copy(); by, bx = np.nonzero(band)

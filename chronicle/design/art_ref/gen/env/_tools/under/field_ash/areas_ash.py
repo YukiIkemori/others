@@ -353,8 +353,9 @@ def a_beach():
     a.region([(-3, 25), (63, 25), (63, 29), (-3, 29)], '_', rough=0.8, seed=2, only='suk')
     # the steaming cliffs (N), gaps for the two paths at x 6-7 and x 50-51
     a.region([(-3, -3), (63, -3), (63, 4), (56, 5.5), (52, 3.5), (49, 3.5), (44, 6), (34, 5), (24, 6.5), (14, 5), (9, 3.5), (5, 3.5), (1, 5.5), (-3, 5)], 'R', rough=0.7, seed=3, force=True)
-    for x in (6, 7): a.rect(x, 0, 1, 6, 's', force=True, keep=True)
-    for x in (50, 51): a.rect(x, 0, 1, 6, 's', force=True, keep=True)
+    # gen1 painted the gaps at x 7-8 and 48-49 (the exits follow the painting)
+    for x in (7, 8): a.rect(x, 0, 1, 6, 's', force=True, keep=True)
+    for x in (48, 49): a.rect(x, 0, 1, 6, 's', force=True, keep=True)
     # the lava flow into the sea (E)
     a.stroke([(57.5, 3), (56.5, 10), (57.5, 17), (56.5, 24), (57, 30)], 2.6, 'l', keep=False, wobble=0.5, seed=21, force=True)
     # basalt column clusters
@@ -367,11 +368,11 @@ def a_beach():
     shells = [(26, 16), (27, 16), (42, 22), (43, 22), (14, 17)]
     a.mark('shells', shells, 'huge rounded GREY-GREEN ROCKS whose cracked domed tops look exactly like giant TURTLE SHELLS half sunk in the black sand', (110, 118, 100))
     # the footpath along the beach between the two cliff gaps
-    a.stroke([(6.5, -1), (7, 6), (12, 12), (22, 18.5), (34, 18), (44, 15.5), (50.5, 8), (50.5, -1)], 1.4, ':', seed=6, force=True)
+    a.stroke([(7.5, -1), (8, 6), (12, 12), (22, 18.5), (34, 18), (44, 15.5), (48.5, 8), (48.5, -1)], 1.4, ':', seed=6, force=True)
     a.scatter('r', 0.010, only='suk', seed=41, clear=1)
     a.tidy()
-    a.exit('n', 6, 7, {'map': 'a_lava', 'spawn': 'south'}, 'lava')
-    a.exit('n', 50, 51, {'map': 'a_foot', 'spawn': 'south'}, 'foot')
+    a.exit('n', 7, 8, {'map': 'a_lava', 'spawn': 'south'}, 'lava')
+    a.exit('n', 48, 49, {'map': 'a_foot', 'spawn': 'south'}, 'foot')
     a.objects += [
         dict(type='examine', x=26, y=16, event='ash_beach_rock'),
         dict(type='sign', x=9, y=8, text='黒い砂浜\n動く岩に注意。'),
