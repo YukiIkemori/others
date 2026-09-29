@@ -22,7 +22,7 @@ const FOREST = (o) => JSON.stringify(Object.assign({
 const BATTLE = (setup, plan, pre) => `PV.clean(); PV.state(${FOREST()}); ${pre || ''}; PV.enter('verda_1', 'camp').then(() => { PV.scriptBattle(${plan || 'null'}); return RPG.Battle.start(${JSON.stringify(setup)}); })`;
 const at = (tbl) => (i) => tbl[i] || null;   // {フレーム: 式}
 // 道に沿って走る（壁に向かって押し続けない）: 撮る前に道のりを決め、毎フレーム PV.steer() で次のマスへ向ける。n フレームぶんより少し長い道のりを取る
-const RUN = (hx, hy, n, o) => async (T) => { const k = await T.js(`PV.goFar(${Math.ceil(n / 60 * 7.3) + 6}, ${hx}, ${hy}, ${JSON.stringify(Object.assign({ run: true }, o || {}))})`); console.log('[pv] route', k); };
+const RUN = (hx, hy, n, o) => async (T) => { const k = await T.js(`PV.goFar(${Math.ceil(n / 60 * (o && o.run === false ? 4.1 : 7.3)) + 6}, ${hx}, ${hy}, ${JSON.stringify(Object.assign({ run: true }, o || {}))})`); console.log('[pv] route', k); };
 const STEER = () => 'PV.steer()';
 
 const SHOTS = {
@@ -90,7 +90,7 @@ const SHOTS = {
     prep: async (T) => {
       await T.js(FIELD('content_p_lighthouse_3', {}, 'lighthouse_1', 'entrance'));
       await T.idle(150);
-      await RUN(0, -1, sec(5))(T);
+      await RUN(0, -1, sec(5), { run: false })(T);   // 灯台の中は歩く（狭いので走ると先に着いて止まる）
     },
     n: sec(5),
     each: STEER,
@@ -100,7 +100,7 @@ const SHOTS = {
     prep: async (T) => {
       await T.js(FIELD('content_p_lighthouse_3', {}, 'lighthouse_3', 'lamp'));
       await T.idle(150); await T.settle();
-      await T.js(`RPG.Battle.start = async () => ({result: 'win'}); PV.autoMsg(40); RPG.Events.run('lighthouse_3_boss', {map: 'lighthouse_3'})`);
+      await T.js(`RPG.Battle.start = async () => ({result: 'win'}); PV.hideMsg(); PV.autoMsg(40); RPG.Events.run('lighthouse_3_boss', {map: 'lighthouse_3'})`);   // 窓は出さない（火がともる絵だけ）
       await T.until(`PV.lastLine().includes('文字が浮かんで')`, 3000);
     },
     n: sec(16),
@@ -136,7 +136,7 @@ const SHOTS = {
   ex_verda_stone: { prep: async (T) => { await T.js(FX('content_f_verda_1', {}, { x: 16, y: 29, dir: 'w' })); await T.idle(150); await T.settle(); await RUN(-1, 0, sec(4))(T); }, n: sec(4), each: STEER },
   ex_verda_dark: { prep: async (T) => { await T.js(FX('content_f_verda_2_dark')); await T.idle(150); await T.settle(); await RUN(0, 1, sec(4))(T); }, n: sec(4), each: STEER },
   ex_elder: { prep: async (T) => { await T.js(FX('content_f_elder_1')); await T.idle(150); await T.settle(); }, n: sec(4), each: at({ 0: `PV.btn({up: 1, b: 1})` }) },
-  ex_elder2: { prep: async (T) => { await T.js(FX('content_f_elder_2')); await T.idle(150); await T.settle(); await RUN(0, 1, sec(4))(T); }, n: sec(4), each: STEER },
+  ex_elder2: { prep: async (T) => { await T.js(FX('content_f_elder_2', {}, { x: 23, y: 6, dir: 's' })); await T.idle(150); await T.settle(); await RUN(-1, 1, sec(4))(T); }, n: sec(4), each: STEER },
   ex_well: { prep: async (T) => { await T.js(FX('content_p_well')); await T.idle(150); await T.settle(); }, n: sec(4), each: at({ 0: `PV.btn({up: 1, b: 1})` }) },
   ex_fern: { prep: async (T) => { await T.js(FX('content_f_fern_plaza')); await T.idle(150); await T.settle(); await T.js(`PV.pan(22, 30, 40, 26, 4000)`); }, n: sec(4) },
   ex_lh2: { prep: async (T) => { await T.js(FX('content_p_lighthouse_2')); await T.idle(150); await T.settle(); }, n: sec(4), each: at({ 0: `PV.btn({up: 1, b: 1})` }) },

@@ -84,7 +84,11 @@ module.exports = `(() => {
       const F = R.Field, S = F._s, m = S.map, W = m.w, H = m.h, lv = S.lv || 0;
       const off = o.off == null ? 6 : o.off;
       const dist = new Float64Array(W * H).fill(Infinity), prev = new Int32Array(W * H).fill(-1), steps = new Int32Array(W * H);
-      const ok = (fx, fy, x, y, d) => x >= 0 && y >= 0 && x < W && y < H && F._canEnter(m, fx, fy, x, y, lv, d) && !F._warpAt(m, x, y, lv) && !F._npcAt(x, y, lv);
+      // 踏むと始まる出来事の床（triggers の on: 'step'）も通らない（会話・ボス戦が始まって止まるので）
+      const condOk = (c) => { if (c == null) return true; try { return !!R.State.check(c); } catch (e) { return true; } };
+      const trig = (m.triggers || []).filter((t) => (!t.on || t.on === 'step') && condOk(t.cond) && !(t.once !== false && R.Game.flags['trig_' + t.id]));
+      const onTrig = (x, y) => trig.some((t) => x >= t.x && y >= t.y && x < t.x + (t.w || 1) && y < t.y + (t.h || 1));
+      const ok = (fx, fy, x, y, d) => x >= 0 && y >= 0 && x < W && y < H && F._canEnter(m, fx, fy, x, y, lv, d) && !F._warpAt(m, x, y, lv) && !F._npcAt(x, y, lv) && !onTrig(x, y);
       const D8 = [[1, 0, 'e'], [-1, 0, 'w'], [0, 1, 's'], [0, -1, 'n'], [1, 1, 'se'], [1, -1, 'ne'], [-1, 1, 'sw'], [-1, -1, 'nw']];
       const q = [[0, S.x, S.y]];
       dist[S.y * W + S.x] = 0;
@@ -160,6 +164,15 @@ module.exports = `(() => {
       if (!S.mv) { if (++PV.idleF > 2) PV.stuck++; } else PV.idleF = 0;
       PV.btn({ right: dx > 0, left: dx < 0, down: dy > 0, up: dy < 0, b: PV.run });
       return 1;
+    },
+    /** 会話の窓・地の文を描かない（話は進む。窓の無いきれいな絵を撮る用） */
+    hideMsg() {
+      const E = R.Engine;
+      if (E.__pvHide) return true;
+      E.__pvHide = true;
+      const push = E.push;
+      E.push = function (scene) { if (scene && (scene.id === 'message' || scene.id === 'caption')) scene.draw = () => {}; return push.apply(this, arguments); };
+      return true;
     },
     lastLine() { const L = R.UIK.Message.log(); return L.length ? L[L.length - 1].text : ''; },
   });
