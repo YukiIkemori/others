@@ -148,7 +148,7 @@ STYLES = {
     'big': dict(size=210, gold=True, stroke=8, glow=26, glow_color=(255, 180, 80), glow_k=0.9, track=18),
     'big_sub': dict(size=58, color=(255, 250, 238), stroke=5, stroke_k=0.8, track=4),
     # 終わりの札
-    'end_main': dict(size=76, gold=True, stroke=5, glow=20, glow_color=(255, 190, 90), glow_k=0.8, track=5),   # 左端で切れない幅（中心 x=478）
+    'end_main': dict(size=72, gold=True, stroke=5, glow=20, glow_color=(255, 190, 90), glow_k=0.8, track=4),   # 左右とも画面の 5% より内側（中心 x=478）
     'end_sub': dict(size=54, color=(246, 238, 220), stroke=3, stroke_k=0.7, track=6),
     'end_credit': dict(size=40, color=(222, 210, 186), font=FONT_EN, stroke=0, track=6, glow=0),
     'center_mid': dict(size=64, color=(255, 252, 244), stroke=5, stroke_k=0.8, track=4, glow=12, glow_color=(0, 0, 0), glow_k=0.6),
