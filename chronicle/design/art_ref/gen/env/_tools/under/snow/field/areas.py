@@ -377,7 +377,6 @@ def f_floe():
         ice |= (((xs - cx) / rx) ** 2 + ((ys - cy) / ry) ** 2) < 1 + (n - 0.5) * 0.9
     ice = ndimage.binary_opening(ice, iterations=1)
     a.mask_fill(ice, ',', force=True)
-    a.mask_fill(ice & (fbm(12, W, H, 4) > 0.6), 's', force=True)
     # pressure ridges (tumbled ice blocks) on the floes, small bergs in the leads
     for (pts, s_) in [([(17, 30), (22, 28), (27, 28.5)], 4), ([(35, 34), (40, 33)], 5), ([(8, 19), (13, 16)], 6), ([(44, 24), (47, 27)], 7)]:
         a.stroke(pts, 1.2, 'r', keep=False, force=True, only=',s')
@@ -391,11 +390,11 @@ def f_floe():
     a.mark('door', [(10, 9), (11, 9)], 'the dark mouth of an ICE CAVE in the glacier wall, its rim glittering with frost crystals', (30, 40, 70))
     # the ice-locked ship (NE): hull on the ice, the gangplank down to the ice on its south side
     ship = [(x, y) for x in range(32, 46) for y in range(3, 9)]
-    a.mask_fill((xs >= 29) & (xs <= 48) & (ys >= 1) & (ys <= 12), 's', force=True)
+    a.blob(38.5, 6, 10.5, 5.8, 's', rough=0.25, seed=21, force=True)
     a.mark('ship', ship, 'an old THREE-MASTED SAILING SHIP frozen fast in the pack ice, seen from above: dark timber hull and deck, snow on the deck, frost-white rigging and furled sails, masts casting no shadow; its bow points east', (90, 64, 44))
     a.mark('door', [(38, 9)], 'the ship\'s GANGPLANK: a timber ramp from the ice up to an opening in the hull side', (40, 26, 16))
     # the landing (S): flat ice, the ice road arriving at the S edge
-    a.rect(20, 32, 12, 8, 's', force=True)
+    a.blob(25.5, 35.5, 6.5, 4.2, 's', rough=0.25, seed=22, force=True)
     # the ice necks between the floes (the only ways across the leads)
     a.stroke([(26.5, 41), (26, 33), (21, 27.5), (16, 21), (13, 14), (12, 11.5)], 2.0, 's', keep=True, force=True, only='~,sr')
     a.stroke([(28, 30), (34, 27.5), (38, 25)], 2.0, 's', keep=True, force=True, only='~,sr')

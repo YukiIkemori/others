@@ -59,7 +59,6 @@
       {"type":"waylamp","id":"wl_snow_48_17","x":23,"y":31,"lit":true},
       {"type":"waylamp","id":"wl_snow_55_17","x":33,"y":14,"lit":true},
       {"type":"prop","id":"ice_crystal","x":26,"y":13},
-      {"type":"prop","id":"snow_lamp","x":32,"y":14},
       {"type":"chest","id":"f_peakfoot_c1","x":16,"y":24,"item":"i_revive","n":1},
     ],
     npcs: [

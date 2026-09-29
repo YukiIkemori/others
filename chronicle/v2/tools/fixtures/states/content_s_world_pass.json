@@ -1,5 +1,5 @@
 {
- "desc": "CONTENT（雪原）: ワールドの雪原（峠の宿の前）",
+ "desc": "CONTENT（雪原）: 湯けむりの峠（峠の宿の前）",
  "hero": {
   "type": "warrior",
   "sex": "m",
@@ -33,7 +33,7 @@
  "gold": 1500,
  "leads": [],
  "map": {
-  "id": "world",
-  "spawn": "pass_inn"
+  "id": "f_passinn",
+  "spawn": "inn"
  }
 }

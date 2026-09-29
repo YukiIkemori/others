@@ -106,7 +106,10 @@
       K.path(g, [[15, 22], [15, 17], [21, 17], [21, 8]], 'd', 1, 'sukg');
       const O = [];
       camp(O, 17, 14);
-      O.push(K.stairs(21, 3, { map: 'desert_tomb_1', spawn: 'entrance' }, { id: 'desert_camp3_tomb', cond: 'desert_camp3_done' }), K.exam(21, 3, 'desert_tomb_sealed', { cond: '!desert_camp3_done' }));
+      // 王墓の戸口（描いた下絵の戸口は 2 マス幅、y 5。当たりは desert_painted_rows.js）
+      for (const [x, id] of [[21, 'desert_camp3_tomb'], [22, 'desert_camp3_tomb_b']]) {
+        O.push(K.stairs(x, 5, { map: 'desert_tomb_1', spawn: 'entrance' }, { id, cond: 'desert_camp3_done', look: 'none' }), K.exam(x, 5, 'desert_tomb_sealed', { cond: '!desert_camp3_done' }));
+      }
       O.push(K.prop('obelisk', 19, 6), K.prop('obelisk', 24, 6), K.prop('tomb_urn', 18, 8), K.prop('tomb_urn', 24, 8));   // 壺は墓の崖の際（入口の前 x 20〜23 は空ける）
       O.push(K.spring('desert_camp3_s1', 7, 15));             // 古い泉のほとりの湧き水（回復の泉）
       O.push(K.exam(13, 11, 'desert_camp3_oldspring'));
@@ -126,7 +129,7 @@
         ...painted('desert_camp3', g),
         name: R.T('map.desert_camps.desert_camp3.name'), kind: 'town', region: 'r_desert', location: 'oasis', theme: 'desert',
         legend: DK.LEGEND(), outside: 'dune_sand', objects: O, npcs: N,
-        spawns: { road: { x: 15, y: 23, dir: 'n' }, tomb: { x: 21, y: 5, dir: 's' }, fire: { x: 17, y: 16, dir: 'n' }, spring: { x: 13, y: 15, dir: 'n' } },
+        spawns: { road: { x: 15, y: 23, dir: 'n' }, tomb: { x: 21, y: 7, dir: 's' }, fire: { x: 17, y: 16, dir: 'n' }, spring: { x: 13, y: 15, dir: 'n' } },
         exits: [{ x: 14, y: 25, w: 2, h: 1, to: { map: 'world', spawn: 'camp3' } }],
         triggers: [{ id: 'scene', on: 'enter', event: 'desert_camp3_scene' }],
         tilePatches: [{ cond: 'cleared_r_desert', rect: [8, 11, 7, 3], rows: [' wwwww ', 'wwwwwww', ' wwwww '] }],

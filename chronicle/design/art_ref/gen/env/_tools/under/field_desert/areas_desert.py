@@ -382,22 +382,22 @@ def d_coast():
     a.mark('obelisk', [(24, 7)], 'a tall weathered sandstone OBELISK carved with sun discs and a faceless king', STONE)
     a.mark('pillar', [(17, 7)], 'a BROKEN SANDSTONE PILLAR, its top fallen beside it', STONE)
     # the well hut
-    hut = [(x, y) for x in range(22, 26) for y in range(30, 33)]
+    hut = [(x, y) for x in range(22, 27) for y in range(30, 35) if (x, y) != (24, 34)]   # gen1: 描いた小屋は x 22〜26・y 30〜34、戸は (24, 34)
     a.mark('hut', hut, 'a small square MUD-BRICK HUT with a flat roof of palm trunks and a low wooden door in its south wall (the dark block), a dry stone well beside it', MUDBRICK)
-    door(a, 23, 32, 1)
+    door(a, 24, 34, 1)
     a.mark('well', [(27, 32)], "a DRY round stone WELL with a wooden winch frame", (120, 110, 100))
     # roads
     a.stroke([(44.5, 44.5), (34, 44), (24, 40.5), (19, 34), (20, 26), (22, 18), (21, 11), (20.5, 5), (20.5, -1)], 2.0, '.', wobble=0.2, seed=6)
     a.stroke([(22, 18), (30, 15.5), (44.5, 14.5)], 1.4, ':', seed=7)
-    a.stroke([(20, 34), (23, 33.5)], 1.2, ':', seed=8)
+    a.stroke([(20, 35), (24, 35.5)], 1.2, ':', seed=8)
     a.scatter('r', 0.008, only='suk', seed=31, clear=1)
     a.scatter('b', 0.010, only='u', seed=32, clear=1)
     a.tidy()
     a.exit('n', 20, 21, {'map': 'desert_camp3', 'spawn': 'road'}, 'camp3')
     a.exit('e', 14, 15, {'map': 'd_hollow', 'spawn': 'coast'}, 'hollow')
     a.exit('e', 44, 45, {'map': 'd_caravan', 'spawn': 'coast'}, 'caravan')
-    a.spawns['wellroom'] = dict(x=23, y=33, dir='s')
-    a.exits.append(dict(x=23, y=32, w=1, h=1, to={'map': 'desert_wellroom', 'spawn': 'road'}))
+    a.spawns['wellroom'] = dict(x=24, y=35, dir='s')
+    a.exits.append(dict(x=24, y=34, w=1, h=1, to={'map': 'desert_wellroom', 'spawn': 'road'}))
     a.objects += [
         dict(type='sign', x=18, y=6, text='王墓のオアシス\n北 → 名のない王の墓'),
         dict(type='sign', x=26, y=35, text='古い井戸の小屋'),

@@ -1,5 +1,5 @@
 {
- "desc": "CONTENT（雪原）: ワールドの北の流氷原（解決の後）",
+ "desc": "CONTENT（雪原）: 北の流氷原（そりの着き場）",
  "hero": {
   "type": "warrior",
   "sex": "m",
@@ -49,7 +49,7 @@
  "gold": 1500,
  "leads": [],
  "map": {
-  "id": "world",
-  "spawn": "floe"
+  "id": "f_floe",
+  "spawn": "landing"
  }
 }

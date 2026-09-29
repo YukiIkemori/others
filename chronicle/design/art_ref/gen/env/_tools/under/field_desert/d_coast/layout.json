@@ -33,18 +33,18 @@
 "~~~~~~~ssssusssssss..sssrssssuuuuububuuuRRRR",
 "~~~~~~~ssssussssss..ssssssssssuuuuuuuuuusRRR",
 "~~~~~~ssssuursssss..sssssssssssuuurruuuusRRR",
-"~~~~~~ssssuuuuusss..ssXXXXuuussuuuuuuuuussRR",
-"~~~~~~ssssuuuuuuus..ssXXXXusuuuuuuuruuuuusss",
-"~~~~~~ssssuuuuuubu..uuX:XXuXuuuuuuuuuuuuuuuu",
-"~~~~~~ssssuuuuuuuu..::::uuuuuuuuuuuuuuuuuuuu",
-"~~~~~~sssssuuuurru..:uuuuuuuuuruuuuuuuuuuuuu",
-"~~~~~~~ssssuuuuuuu...uuuuuuuuuuuuuuuuuuubuuu",
+"~~~~~~ssssuuuuusss..ssXXXXXuussuuuuuuuuussRR",
+"~~~~~~ssssuuuuuuus..ssXXXXXsuuuuuuuuuruuusss",
+"~~~~~~ssssuuuuuuuu..uuXXXXXXuuuuuuuuuuuuuuuu",
+"~~~~~~ssssuuuuuuuu..uuXXXXXuuuuuuuuuuuuuuuuu",
+"~~~~~~sssssuuuuuuu..:uXX:XXuruuuuuuuuuuruuuu",
+"~~~~~~~ssssuuuuuuu..:::::uuuuuuuuuuuuuuuuuuu",
 "~~~~~~~ssssuuuuuuuu..uuuuuuuuuuuuuuuuuuuuuuu",
 "~~~~~~~sssssuuuuuuuu..uuuuuuuuuuuuuuuuuuuuuu",
 "~~~~~~~~ssssuuuuuuuu...uuuuuusssuuuuuuuuuuuu",
-"~~~~~~~~ssssuuuuuuuuu...uuuussssuuubuuuuuuuu",
-"~~~~~~~~~ssssruubuuuuu....ssssssuubuuuuuuuuu",
-"~~~~~~~~~ssssuuuuuuuuuuu....ssssssuussssssss",
+"~~~~~~~~ssssuuuuuuuuu...uuuussssuuuuuuuuuuuu",
+"~~~~~~~~~ssssuuubuuuuu....ssssrsuuuuubuuuuuu",
+"~~~~~~~~~ssssubuuuuuuuuu....ssssssuussssssss",
 "~~~~~~~~~ssssuuuuuuuuuuuus......ssssssssssss",
 "~~~~~~~~~sssssssuuuuuuuuusss................",
 "~~~~~~~~~ssssssssuuuuussssssssss............",
@@ -52,9 +52,9 @@
 "~~~~~~~~sssssssssuuusuusssssssssssssssssssss",
 "~~~~~~~~sssssssssuuusuuuuussssssssssssssssss",
 "~~~~~~~~sssssssssuuuuuuuuuuuuuuuusssssssssss",
-"~~~~~~~~sssssssssssuuuuuuuuuuuuuuussssssrsss",
-"~~~~~~~~sssrssssssssuuuuuuuubuuuuussssssssss",
-"~~~~~~~~sssssssssssssuuuuuuuuuuuuuusssssssss"
+"~~~~~~~~sssssssssssuuuuuuuuuuuuuuussssssssss",
+"~~~~~~~~sssssssssrssuuuuruuuuuuuuussssssssss",
+"~~~~~~~~sssssssssssssuuuuuubuuuuuuusssssssss"
 ],
 "marks": [
 {
@@ -105,6 +105,14 @@
 32
 ],
 [
+22,
+33
+],
+[
+22,
+34
+],
+[
 23,
 30
 ],
@@ -115,6 +123,14 @@
 [
 23,
 32
+],
+[
+23,
+33
+],
+[
+23,
+34
 ],
 [
 24,
@@ -129,6 +145,10 @@
 32
 ],
 [
+24,
+33
+],
+[
 25,
 30
 ],
@@ -139,6 +159,34 @@
 [
 25,
 32
+],
+[
+25,
+33
+],
+[
+25,
+34
+],
+[
+26,
+30
+],
+[
+26,
+31
+],
+[
+26,
+32
+],
+[
+26,
+33
+],
+[
+26,
+34
 ]
 ],
 "text": "a small square MUD-BRICK HUT with a flat roof of palm trunks and a low wooden door in its south wall (the dark block), a dry stone well beside it",
@@ -153,8 +201,8 @@
 "kind": "door",
 "cells": [
 [
-23,
-32
+24,
+34
 ]
 ],
 "text": "a dark ENTRANCE",
@@ -233,8 +281,8 @@
 "dir": "w"
 },
 "wellroom": {
-"x": 23,
-"y": 33,
+"x": 24,
+"y": 35,
 "dir": "s"
 }
 },
@@ -273,8 +321,8 @@
 "edge": "e"
 },
 {
-"x": 23,
-"y": 32,
+"x": 24,
+"y": 34,
 "w": 1,
 "h": 1,
 "to": {
@@ -351,7 +399,7 @@
 "~~~~~~sssssusssssssss..sssssssss::::::::::::",
 "~~~~~~ssssrTsssssssss..ssss::::::::::::sssss",
 "~~~~~~sssssusssssssss..s:::::sssssssssssssss",
-"~~~~~~~ssssTuusssssss::::sssssssssssssssssss",
+"~~~~~~~ssssuuusssssss::::sssssssssssssssssss",
 "~~~~~~~ssssTursssssss::sssssssssssssss.RRRRR",
 "~~~~~~~~sssTrrsssssss..sssssssssssssssRRRRRR",
 "~~~~~~~~ssssrsssssss...suuusssssssssssRRRRRR",
@@ -362,21 +410,21 @@
 "~~~~~~~ssssssssssss..ssssssssuuuuuuuuuuRRRRR",
 "~~~~~~~ssssssssssss..ssssssssuuusuuuuuuRRRRR",
 "~~~~~~~ssssusssssss..ssssssssuuuTTsusuuuRRRR",
-"~~~~~~~ssssussssss..ssssssssssuuuuTTTTuurRRR",
+"~~~~~~~ssssussssss..ssssssssssuuuuuTuTuurRRR",
 "~~~~~~~sssuussssss..ssssrssssssuuurrTTuusRRR",
-"~~~~~~ssssTurTusss..ssXXXXuuussuuuuuuuuussRR",
-"~~~~~~ssssTTuuuuus..ssXXXXusTuuuuuu.uuuuusrr",
-"~~~~~~ssssuuuuuusu..uuX:XXuXTuuuuuuuuuuuuuuu",
-"~~~~~~ssssuuuuuuTT..::::uuurruuuuuuuuuuuuuuu",
-"~~~~~~sssssuuuusru..:uuuruuuuusuuuuuuuuuuuuu",
-"~~~~~~sssssuuuuuuu...uuuuuuuuuuuuuuuuuuusuuu",
-"~~~~~~~ssssuuuurrTu..uuuuuuuuuuTuuuuuuuuTTuu",
+"~~~~~~ssssuurTusss..ssXXXXXuussuuuuuuuuussRR",
+"~~~~~~ssssTTuuuuus..ssXXXXXsuuuuuuuuusuuusrr",
+"~~~~~~ssssuuuuuuuu..uuXXXXXXTuuuuuuuuuuuuuuu",
+"~~~~~~ssssuuuuuuuT..uuXXXXXrruuuuuuuuuuuuuuu",
+"~~~~~~sssssuuuuuTu..:uXX:XXu.uuuuuuuuuusuuuu",
+"~~~~~~sssssuuuuuuu..:::::uuuuuuuuuuuuuuuuuuu",
+"~~~~~~~ssssuuuurruu..uuuuuuuuuuuuuuuuuuuuTuu",
 "~~~~~~~sssssuuuuuuuu..uuuuuuuuuuuuuuuuuuTuuu",
 "~~~~~~~sssssuuuuuuuu...uuuuuusssuuuuuuuuuuuu",
-"~~~~~~~~ssssuuuuuuuuu...uuuussssuuusuuuuuuuu",
-"~~~~~~~~ssssssuusuuuuu....ssssssuusuuuuuuuuu",
-"~~~~~~~~~ssssuuuuuuuuuuu....ssssssuTTsssssss",
-"~~~~~~~~~ssssrTuTTuuuuuuus......ssTTssssssss",
+"~~~~~~~~ssssuuuuuuuuu...uuuussssuuuuuuuuuuuu",
+"~~~~~~~~sssssuuusuuuuu....ssssssuuuuusuuuuuu",
+"~~~~~~~~~ssssusuuuuuuuuu....ssssssuTTsssssss",
+"~~~~~~~~~ssssrTuTTuuuuuuus......sssTssssssss",
 "~~~~~~~~~sssssssuuuuuuuuusss......T.........",
 "~~~~~~~~~ssssssssuuuuussssssssss............",
 "~~~~~~~~~ssssssssssuuussssssssssssssssssssss",
@@ -384,7 +432,7 @@
 "~~~~~~~~~ssssssssuuusuuuuussssssssssssssssss",
 "~~~~~~~~sssssssssuuuuuuuuuuuuuuuusssssssrTss",
 "~~~~~~~~~ssssssssssuuuuuuuuuuuuuuussssssssss",
-"~~~~~~~~~ssrTsssssssuuuuuuuubuuuuussssssssss",
-"~~~~~~~~~ssrsssssssssuuuuuuuuuuuuuusssssssss"
+"~~~~~~~~~ssrTsssssssuuuusuuuTuuuuussssssssss",
+"~~~~~~~~~ssrsssssssssuuuuuusuuuuuuusssssssss"
 ]
 }

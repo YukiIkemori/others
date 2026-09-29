@@ -1,5 +1,5 @@
 {
- "desc": "CONTENT（雪原）: ワールドの雪原（ユールの西）",
+ "desc": "CONTENT（雪原）: 凍った湖（ユールの西の門の外）",
  "hero": {
   "type": "warrior",
   "sex": "m",
@@ -33,7 +33,7 @@
  "gold": 1500,
  "leads": [],
  "map": {
-  "id": "world",
-  "spawn": "yule_w"
+  "id": "f_lake",
+  "spawn": "yule"
  }
 }

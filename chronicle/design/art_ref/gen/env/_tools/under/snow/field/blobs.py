@@ -19,7 +19,7 @@ for s in d['spawns'].values(): protect.add((s['x'], s['y']))
 for e in d['exits']:
     for j in range(e['h']):
         for i in range(e['w']): protect.add((e['x'] + i, e['y'] + j))
-solid, opn = [], []
+solid, opn, cand = [], [], set()
 for y in range(H):
     for x in range(W):
         c = rows[y][x]
@@ -29,9 +29,17 @@ for y in range(H):
         if c in ',;"' and cd > thr and ct <= 0.3 and (x, y) not in protect: solid.append((x, y, round(float(cd), 2)))
         ct = tan[y * T:(y + 1) * T, x * T:(x + 1) * T].mean()
         if c in 'rTb' and ct > 0.45 and d['rows'][y][x] in '.:' and (x, y) not in protect: opn.append((x, y, round(float(ct), 2))); continue
-        if c in 'rT' and cb > 0.93 and (x, y) not in protect:
-            nb = [rows[j][i] for i, j in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)) if 0 <= i < W and 0 <= j < H]
-            if sum(n in ',;".:s' for n in nb) >= 2: opn.append((x, y, round(float(cb), 2)))
+        if c in 'rTF' and cb > float(__import__('os').environ.get('OPEN_B', 0.8)) and cd < 0.03 and (x, y) not in protect: cand.add((x, y))
+# plain bright snow painted over solid cells: open those connected (through each other) to the walkable ground
+from collections import deque
+WK = set(',;".:s_=c')
+q = deque(p for p in cand if any(0 <= p[0] + dx < W and 0 <= p[1] + dy < H and rows[p[1] + dy][p[0] + dx] in WK for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))))
+seen = set(q)
+while q:
+    x, y = q.popleft(); opn.append((x, y, 1))
+    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+        p = (x + dx, y + dy)
+        if p in cand and p not in seen: seen.add(p); q.append(p)
 print('dark on walkable', solid)
 print('plain snow / road on solid', opn)
 if '--apply' in sys.argv:

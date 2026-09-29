@@ -44,6 +44,8 @@ def desert_camp3():
     cells = [(x, y) for y in range(1, 8) for x in range(16, 28) if a.g[y, x] == 'R']
     a.mark('tomb', cells, "the carved FACADE OF A ROYAL TOMB cut into a sheer red sandstone cliff: a great rock wall with a tall recessed doorway framed by colossal carved pillars and a sun-disc lintel, the king's face chiselled away; the dark tomb doorway at the foot of the recess (the paved gap in this block) leads inside", SAND)
     a.mark('door', [(21, 3), (22, 3)], 'the dark tomb DOORWAY', (40, 26, 16), solid=False)
+    # gen1: 描いた戸口は 2 マス下（x 21〜22, y 5）。戸口の奥（y 3〜4）と戸口の脇は壁（desert_camps.js の階段も y 5）
+    for (x, y) in [(21, 3), (22, 3), (21, 4), (22, 4), (20, 5), (23, 5)]: a.g[y, x] = 'X'
     return a
 
 

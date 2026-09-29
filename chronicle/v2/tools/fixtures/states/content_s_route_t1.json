@@ -32,7 +32,7 @@
  "gold": 1500,
  "leads": [],
  "map": {
-  "id": "world",
-  "spawn": "yule_w"
+  "id": "f_lake",
+  "spawn": "yule"
  }
 }

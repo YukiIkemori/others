@@ -49,7 +49,7 @@ The FIRST attached image is an exact LAYOUT GUIDE drawn on a {W} x {H} tile grid
 
 The SECOND attached image is only a STYLE REFERENCE from the same game: match its pixel-art rendering (pixel size, clusters, outlines, colour ramps, level of detail). Do NOT copy anything from it (no houses, huts, ponds, paths or objects from it).
 
-The guide is flat colour-coding only: do NOT copy its flat colours, straight tile steps, circles or stripes. Interpret every area as the real material with rich natural variation, and give shores, woods, meadows and cliffs natural, organic, slightly irregular outlines (bulging or receding by at most a third of a tile around the guide edge). Make it feel like a real, exciting place to explore, full of small natural detail.
+The guide is flat colour-coding only: do NOT copy its flat colours, straight tile steps, circles or stripes. Interpret every area as the real material with rich natural variation, and give shores, woods, meadows and cliffs natural, organic, slightly irregular outlines (bulging or receding by at most a third of a tile around the guide edge). Every shore, floe edge, ice edge and forest edge must be smooth and organic, NEVER stair-stepped along the tile grid. Make it feel like a real, exciting place to explore, full of small natural detail.
 
 Guide colour key:
 {KEY}

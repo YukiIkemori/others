@@ -479,5 +479,15 @@
 "r"
 ]
 ],
-"open": []
+"open": [],
+"objects": [
+{
+"match": {
+"id": "snow_lamp"
+},
+"set": {
+"type": "none_removed"
+}
+}
+]
 }

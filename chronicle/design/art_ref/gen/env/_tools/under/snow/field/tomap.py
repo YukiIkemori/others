@@ -39,7 +39,7 @@ for aid in sys.argv[1:]:
     fx = json.load(open(aid + '/fix.json')) if os.path.exists(aid + '/fix.json') else {}
     for mv in fx.get('objects', []):
         for o in d['objects']:
-            if all(o.get(k) == v for k, v in mv['match'].items()): o.update(mv['set'])
+            if all(o.get(k) == v for k, v in mv['match'].items()): o.update(mv['set']); o['_fixed'] = 1   # placed by hand: the lamp rule below leaves it
     for k, v in fx.get('spawns', {}).items(): d['spawns'][k] = v
     rows = [list(r) for r in rows]
     for qq in fx.get('solid', []): rows[qq[1]][qq[0]] = qq[2] if len(qq) > 2 else 'X'
@@ -56,13 +56,14 @@ for aid in sys.argv[1:]:
         return any(rows[y + j][x + i] in ROADC for i in range(-2, 3) for j in range(-2, 3))
     for o in d['objects']:
         if o.get('type') in ('waylamp',) or o.get('id') in ('lamp_post', 'snow_lamp'):
-            if good(o['x'], o['y']): continue
+            if o.get('_fixed') or good(o['x'], o['y']): continue
             c = sorted(((abs(x - o['x']) + abs(y - o['y']), x, y) for y in range(H_) for x in range(W_) if good(x, y)))
             if c and c[0][0] <= 8:
                 taken.discard((o['x'], o['y'])); o['x'], o['y'] = c[0][1], c[0][2]; taken.add((o['x'], o['y']))
     for i, o in enumerate(d['objects']):
         if o.get('type') == 'none_removed': continue
         o = dict(o)
+        o.pop('_fixed', None)
         p = o.pop('painted', None)
         if p: painted.append('%s@%d,%d' % (p, o['x'], o['y']))
         if 'text' in o: o['text'] = T('objects.%d.text' % i, o['text'])
