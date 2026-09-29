@@ -1,0 +1,19 @@
+{
+ "id": "a_beach",
+ "kind": "under",
+ "map": "a_beach",
+ "tile": 32,
+ "size32": [
+  1920,
+  1152
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.9,
+ "files": {
+  "24": "a_beach@24.png",
+  "32": "a_beach@32.png"
+ },
+ "src": "generated"
+}

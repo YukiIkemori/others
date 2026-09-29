@@ -1,0 +1,71 @@
+// 生成物（design/art_ref/gen/env/_tools/under/field_ash/ の areas_ash.py → fit.py → tomap.py）。手で直さない: 配置は areas_ash.py、当たりは fit.py で作り直す。
+// エリア a_beach「火山ガメの浜」（黒い砂浜、60×36）。エリア切り替えのフィールド（maps/field_00_kit.js、灰の荒野の凡例は field_ash_00_kit.js）。
+//   出口: n → a_lava.south, n → a_foot.south
+//   絵: field/under/a_beach（v2/assets/env/field/under/。無ければマスから焼く）
+(function (R) {
+  'use strict';
+  R.FieldArea.def("a_beach", {
+    name: "火山ガメの浜", region: "r_ash", outside: "sea",
+    legend: R.FieldArea.ASH_LEGEND, theme: 'ash', bgm: 'overworld', bbg: 'ash', propSet: 'ash', propSetBase: 'village',
+    light: R.FieldArea.ASH_LIGHT,
+    rows: [
+      "RRRRRRR:sRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR:sRRRRRRRRRR",
+      "RRRRRRR:rRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR:sRRRRRRRRRR",
+      "RRRRRRR:sRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR:sRRRRRRlllR",
+      "RRRRrrr:sRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR.::RRRRRRlllR",
+      "RRrrrss:sssrRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRssssuu::uussRRlllR",
+      "rrrssss::sssssssRRRRRRRRRRRRRsssssssssssssssssuu::uussslllRR",
+      "srsssss::sssssssssssssRRRRssssssssssssssssssuuuu:uusssslllRR",
+      "ssssssss:ssssssssssssssssssssssssssssssssssssuuu:uusssrlllRR",
+      "ssssssss::ssssssssssssssssssssssssssssssssuuuuuu:ussssrlllRR",
+      "sssssssss::ssssssRRRrsssssssssssssssssssssuuuuu::ussssrlllRR",
+      "ssssssssss:sssssrRRRrsssssssssssssssssssssuuuss:sussssrlllRR",
+      "ssssssssss:::ssssRRRsssssssssssssssssRRRRsuuss::ssssssrlllRR",
+      "sssssssssss:::ssuuuussssssssssssssssrRRRRsssss::sssssssrllRR",
+      "sssssssssssss::suuuusssssssssssssssssRRRRssss::ssssssssrllRR",
+      "sssssssssrssss::uuuussssssssssssssssssssssss::sssssssssrlllR",
+      "sssssssssssssss:::uussssssrrrssssssssssssss::ssssssssssrlllR",
+      "ssssssssssssssrrr::sssssssrrrssssssssss:::::sssssssssssrlllR",
+      "ssssssssssssssrrrs:::sssssssssss:::::::::ssssssssssssssrlllR",
+      "usssssssssssssssssss::::::::::::::::sssssssssRRRrssssssrlllR",
+      "ussssssssssssssssssssss::::::ssssssssssssssssRRRrssssssrlllR",
+      "sssssssuussssssssssssssssssRRrsssssssssssrrrsRRRsssssssrllRR",
+      "ssssssuuuu.swwsssssssssssssRRrsssssssssssrrrrsssssssssslllRR",
+      "ssssuuuuuu..wwsssssssssssssssssswwwssssssrrrssssssssssrlllRR",
+      "sssuuuuuuuuusssssssssssssssssssswwwsssssssssssssssssssrlllRR",
+      "uuuuuuuuuuuusssssssssssssssssssswwwsssssssssssssssssssslllRR",
+      "_____u__________________~~______sss____________________lllRR",
+      "~~~_______________~~~~~~~~~~~__________________________lllRR",
+      "~~~~~~~_~____~___~~~~~~~~~~~~~~~~~~___________~~~~~~~~~lll~~",
+      "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ll~~",
+      "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ll~~",
+      "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ll~~",
+      "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+    ],
+    objects: [
+      {"type":"examine","x":26,"y":16,"event":"ash_beach_rock"},
+      {"type":"sign","x":9,"y":8,"text":"黒い砂浜\n動く岩に注意。"},
+      {"type":"chest","id":"a_beach_c1","x":47,"y":23,"item":"i_panacea","n":1},
+      {"type":"waylamp","id":"wl_a_beach_1","x":31,"y":15,"lit":true},
+      {"type":"prop","id":"steam_vent","x":53,"y":26},
+      {"type":"prop","id":"steam_vent","x":53,"y":12},
+      {"type":"prop","id":"lava_glow","x":57,"y":10},
+      {"type":"prop","id":"lava_glow","x":56,"y":22},
+    ],
+    npcs: [
+
+    ],
+    spawns: {"lava":{"x":7,"y":1,"dir":"s"},"foot":{"x":48,"y":1,"dir":"s"}},
+    exits: [{"x":7,"y":0,"w":2,"h":1,"to":{"map":"a_lava","spawn":"south"}},{"x":48,"y":0,"w":2,"h":1,"to":{"map":"a_foot","spawn":"south"}}],
+    triggers: [],
+    tilePatches: [],
+    zones: [{"rect":null,"zone":"zw_ash_beach"}],
+    art: {"image":"field/under/a_beach","painted":["lava_glow"],"emit":"field/under/a_beach_emit"},
+    meta: {"sub":"黒い砂浜","worldRect":[435,444,105,42]},
+    links: {},
+  });
+})(window.RPG);
