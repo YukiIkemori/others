@@ -1,0 +1,73 @@
+// 生成物（design/art_ref/gen/env/_tools/under/field_isles/ の areas_isles.py → fit.py → tomap.py）。手で直さない: 配置は areas_isles.py、当たりは fit.py で作り直す。
+// エリア i_cove「夜光虫の入り江」（白い砂の入り江と潮鳴りの洞窟、56×40）。エリア切り替えのフィールド（maps/field_00_kit.js、諸島の凡例は field_isles_00_kit.js）。
+//   出口: w → i_cliff.east, e → i_cape.west
+//   絵: field/under/i_cove（v2/assets/env/field/under/。無ければマスから焼く）
+(function (R) {
+  'use strict';
+  R.FieldArea.def("i_cove", {
+    name: "夜光虫の入り江", region: "r_isles", outside: "sea",
+    legend: R.FieldArea.ISLE_LEGEND, theme: 'field', bgm: 'overworld', bbg: 'isles', propSet: 'isles', propSetBase: 'harbor',
+    light: R.FieldArea.ISLE_LIGHT,
+    rows: [
+      "\",,,,rr;;\";;;,,,,T,,r;;;;;;;,,,,,,,,,,,,,;;;;;;,,,;;;,rb",
+      ",,,,,rTr;;;rrr,,,T,,;;;;r;;;,,,,,,,,,,;;;;r;;rb,,,;;,,TT",
+      ",,,,,,;;;;;;;,,,,,,,;;;;;;;;,,,,,,,rr;;;;;r;;rT,,,;,,,,,",
+      ",,,,,,,,,,rr,,,,,,,,,,;;;;;,,,,,,,,,,;;rr;,,r;,,,,,,,,,,",
+      ",,,,,,,,,,,,,,,,,,,,\",r;,,,,r,,,,,;;,,;;;r,,,,,,,,,,,,,,",
+      ",,,,,,\",,,,,,,,,,,,,\"\",,,\",Tb,,,Tb,;,\"\",,,,,,,,,,,\"\",,,,",
+      ",,,,,\",,,,,,,,,,,,,,,,,,\"\",,,;;TTTTTT,,,,,,,,,,,,,,,,,,,",
+      ",,,,,TTT;,,,\",,,,,,,,,,,\"\",,;rrTTTTTT,,,\",,,,,,,,,,,,,,,",
+      ",,,,TTTTT;,\"\"\",\"\",,,,,,,,,,,;;r;TTTT;,,,\"\",,,,,,,,,,,,b,",
+      ",,,,TTTTTT\"\"\"\"\"\"\",,,,,,,,,,,,;r;;;;;;,,\"\"\",,,,,,,TTTTTr,",
+      "...............\"\",,,,,,,,,,,,,;....;,,,\"\"\"\",,,,,TTTTTT,,",
+      "........................................................",
+      ",,,,,,,,,,,,,,..........................................",
+      ",,,,,,,,,,,,,,,,,,,,,:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,;;;",
+      ",,,\"\"\",,,,,,,,,,,,,,,:,,,,,Tb,,,,,,\",,,,,,,,,,,,,,,,;;;;",
+      ",,\"\"\"\"\"\",,,,,,,,,,,,T::,,,,rrr,,,,,,,,,,,,,,,,,,,,,,r;;;",
+      ",,,,\"\"\"\",,,,,,,RRRRRR:rRRRRRRRRRRRRRRRRRR,,,,,,,,,,,,;;;",
+      ",,,,,,\",,,,,RRRRRRRRR:rRRRRRRRRRRRRRRRRRRRR,,,,,,,,,,;;;",
+      ",,,,,,,,,RRRRRRRRRRRR::,,,,,,,,,RRRRRRRRRRRRR,,,,,,,,;;;",
+      ",,r,,,RRRRRRRRr,,,,,,::\",,,,,rrssss,,,,rRRRRRRRR,,,,,,;;",
+      ",,,,,RRRRR,,ssrssrrrr:rsrrrrssssssrrrrs,,,rRRRRRRR,,,,;,",
+      ",,,,,RRRrrrrsssssssss:ssssssssssssssssrrrrrrRRRRRR,,,,,,",
+      ",,,,RRRrrssssssssssss::sssssssssssssssssssrrrrRRRRR,,,,,",
+      ",,,,RRRrsssssssssssrss:::ssssTTsssssssssssssrrRRRRR,,,,,",
+      ",,,RRRrsssrssssssssTsss:::::::T:sssssssssssssrXXXR,,,,,,",
+      ",,rRRRssssTssssssssTssssssss::::::::::::TTsssr::RRRR,,,,",
+      ",,,RRsssssTsssssssssssssssssssssssss:::::T::::::rRRR,,,,",
+      ",,,,ssssssssssssssssssssssssssssssssssssssssssssrRRR,,,,",
+      ",,,,sssssssssssssssssssssssssssssssssssssssssssssr,,,,,,",
+      ",,,,ss_ssssssssssssssssssssssssssssssssssssssssssr,,;,,~",
+      ",,,rrs___ssssssssssssssssssssssssssssssssssss_sssr;;~~~~",
+      "~~~~~~____sssssssssssssssssssssssssssssssss___sr~~~~~~~~",
+      "~~~~~~~______sssssssssssssssssssssssssssr_____~~~~~~~~~~",
+      "~~~~~~~~~_____________________________________~~~~~~~~~~",
+      "~~~~~~~~~~s_sss____________________________~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~r_____________________ssr~_~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~___~~~_____________srrrr~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~rrrr~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~~~~~rrr~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+    ],
+    objects: [
+      {"type":"stairs","x":47,"y":25,"to":{"map":"isles_cave_1","spawn":"entrance"},"look":"none"},
+      {"type":"sign","x":24,"y":14,"text":"夜光虫の入り江\n下の浜の東に、潮鳴りの洞窟。"},
+      {"type":"examine","x":26,"y":30,"event":"isles_cove_glow"},
+      {"type":"chest","id":"i_cove_c1","x":8,"y":28,"item":"i_ether","n":1},
+      {"type":"waylamp","id":"wl_i_cove_1","x":17,"y":13,"lit":true},
+      {"type":"waylamp","id":"wl_i_cove_2","x":44,"y":28,"lit":true},
+    ],
+    npcs: [
+
+    ],
+    spawns: {"west":{"x":1,"y":10,"dir":"e"},"east":{"x":54,"y":11,"dir":"w"},"cave":{"x":47,"y":26,"dir":"s"}},
+    exits: [{"x":0,"y":10,"w":1,"h":2,"to":{"map":"i_cliff","spawn":"east"}},{"x":55,"y":11,"w":1,"h":2,"to":{"map":"i_cape","spawn":"west"}}],
+    triggers: [],
+    tilePatches: [],
+    zones: [{"rect":null,"zone":"zw_isles"}],
+    art: {"image":"field/under/i_cove","painted":[],"overlay":"field/under/i_cove_over"},
+    meta: {"sub":"白い砂の入り江と潮鳴りの洞窟","worldRect":[650,492,56,40]},
+    links: {"tidecave":{"map":"i_cove","spawn":"cave"}},
+  });
+})(window.RPG);

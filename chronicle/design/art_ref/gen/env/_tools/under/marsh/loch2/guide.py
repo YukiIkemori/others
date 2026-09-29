@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw, ImageFilter
 L = json.load(open('layout.json')); W, H = L['w'], L['h']
 CLS = np.asarray(Image.open('cls_36.png')); S0 = 36
 CH = '~=rgcpbXT'
-COL = {'~': (72, 122, 118), '=': (30, 66, 104), 'r': (128, 140, 64), 'g': (96, 132, 70), 'c': (172, 168, 158), 'p': (168, 116, 66),
+COL = {'~': (72, 122, 118), '=': (30, 66, 104), 'r': (128, 140, 64), 'g': (104, 150, 64), 'c': (172, 168, 158), 'p': (168, 116, 66),
        'b': (196, 188, 172), 'X': (72, 122, 118), 'T': (96, 132, 70)}
 KIND = {'loch_bell_items': 'bell', 'loch_bell_tavern': 'bell', 'loch_bell_arms': 'bell', 'loch_hall': 'heron', 'loch_tower': 'tower',
         'loch_inn': 'barges', 'loch_mayor': 'willowhouse', 'loch_emma': 'hut', 'loch_beppo': 'leaning', 'loch_klaus': 'stonebox', 'loch_s_netshed': 'shed'}
@@ -23,7 +23,7 @@ def draw(T):
     base = Image.fromarray(pal[cls])
     lw = max(1, T // 24); rnd = random.Random(5)
     # soft natural shores: blur the water / reeds / island fields; man-made things stay crisp
-    soft = base.filter(ImageFilter.GaussianBlur(T * 0.35))
+    soft = base.filter(ImageFilter.GaussianBlur(T * 0.22))
     crisp = np.isin(cls, [CH.index(c) for c in 'cpbX'])
     im = Image.composite(base, soft, Image.fromarray((crisp * 255).astype(np.uint8)))
     g = ImageDraw.Draw(im)

@@ -1,0 +1,19 @@
+{
+ "id": "i_cliff",
+ "kind": "under",
+ "map": "i_cliff",
+ "tile": 32,
+ "size32": [
+  1664,
+  1216
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.8,
+ "files": {
+  "24": "i_cliff@24.png",
+  "32": "i_cliff@32.png"
+ },
+ "src": "generated"
+}

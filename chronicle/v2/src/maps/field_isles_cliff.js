@@ -1,0 +1,70 @@
+// 生成物（design/art_ref/gen/env/_tools/under/field_isles/ の areas_isles.py → fit.py → tomap.py）。手で直さない: 配置は areas_isles.py、当たりは fit.py で作り直す。
+// エリア i_cliff「白崖の道」（港町コーラルの北の崖の上、52×38）。エリア切り替えのフィールド（maps/field_00_kit.js、諸島の凡例は field_isles_00_kit.js）。
+//   出口: s → coral.north, e → i_cove.west
+//   絵: field/under/i_cliff（v2/assets/env/field/under/。無ければマスから焼く）
+(function (R) {
+  'use strict';
+  R.FieldArea.def("i_cliff", {
+    name: "白崖の道", region: "r_isles", outside: "sea",
+    legend: R.FieldArea.ISLE_LEGEND, theme: 'field', bgm: 'overworld', bbg: 'isles', propSet: 'isles', propSetBase: 'harbor',
+    light: R.FieldArea.ISLE_LIGHT,
+    rows: [
+      "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~~~~RRR~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+      "~~~~~~~~~~~~~~~~~~RRRRRRRRRR~~~~~RRRRRR~~~~~RRRRRRRR",
+      "~~~~~~~~~~~~~~~~~RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+      "~~~~~~~~~~~~~~~~~RRRRXXXXRRRRRRRRRrrrRRRRRRRRRRRrRRR",
+      "~~~~~~~~~~~~~~~~~RRRRXXXXTRRRRRrrrrrrrrRRRRRrrrrrrrR",
+      "~~~~~~~~~~~~~~~~~RRrrX:XXTRRRRrrrrrrrrrTTTTrrrrrrrrb",
+      "~~~~~~~~~~~~RRRR~RRrr,:,,,rRRRrrrrrrrrrTTTTrrrrrrrrr",
+      "~~~~~~~~~RRRRRRRRRRrr,:,rrrrrrrrrrrrrrrrTTrrrrrrrrrr",
+      "~~~~~~~~RRRRRrrrRRrr,::.Rrrrrrrrrrrbrrrrrrrrrrrrrrrr",
+      "~~~~~~RRRRRRRrrrrrrr,::.Rrrrrrrrrrrrrrrrrrrrrrrrrrrr",
+      "~~~~~RRRRrrrrrrrrrrr,::;rrrrrrrrTTTTTrrrrrrrrrr,,rrr",
+      "~~~~RRRrrrrbTTTrrrrr,::,,,rrrrrrTTTTTrrrrrrrrrr;;,rr",
+      "~~~~RRRrrrrrrTTrrrrr,:,,r,rrrrrrTTTTTrrrrbrrrrr;;rrr",
+      "~~~~RRRrrrrrrrrrrrrr,:,rrrrrrrrrr,,,rrrrr,rrrr;;;;r,",
+      "~~~~RRRRRrrrrrrrrrrr,:,rrr;,,,,,,,,,,,,,,,,,,,,;;;,,",
+      "~~~~RRRRRRRrrr,rrr,,,:,;;;;;........................",
+      "~~~~RRTTTTRr,,,r,,..::..............................",
+      "~~~~RRTTTTbT;;;,...............,,,,;;,,\"\",,,,,,,,,;,",
+      "~~~~RRTTTTTr;r;....;;;;;;;;;;;,rrr;;r;;r;rrrrrr,rrr,",
+      "~~~RRRr,,,,rr;...;;;;;;;;rrr;,\"rrrr;r;;;;;;;r;;;;;br",
+      "~~~RRRr,r,,r;...;r;;;;;r;;;;;\"\";;;;r;;;;;;;;;;;;;;rr",
+      "~~~RRRrrrr,;...;;rr;r;;;;rr;r\"\"rr;r;;;;;r;;;T;;r;;rr",
+      "~~~RRRrrrrr,..;r;rrrrr;;;r;;\"\"\";;r;;;;r;;;TTTTTT;;rr",
+      "~~RRRrrrrr,,..;;rrrrrrr;r;;;T\"\"\"rrr;;;rrrTTTTTTTrrrr",
+      "~~RRRrrrrr,,..;;;;rrrrrrrTTT;;\"rrrrrr;r;;TTTTTTTrrrr",
+      "~~RRRrrrrrr,..;;;;rrrrrrrTTTTTrrrrrrr;;;rrTTTrrrrrrr",
+      "~RRRRrrrrr,,..,,;,rrrrrrrTTTTrrrrrrrrr;rrrTTTTrrrrrr",
+      "RRrrrrrrrr,..,,r;rrrrrrrrrTTTrrrrrrrrb;rrrrrrrrrrrrr",
+      "Rrrrrrrrrr,..,,r;rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
+      "RrRRRRRRR,,rr=rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
+      "RRRRRRRRRRRrr=rrrRRRRRrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
+      "RRRRRRRRRRRrr=RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRrr=RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRr.=RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRr.=RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+    ],
+    objects: [
+      {"type":"examine","x":22,"y":9,"event":"isles_watchtower"},
+      {"type":"sign","x":15,"y":27,"text":"白崖の道\n南 → 港町コーラル\n東 → 夜光虫の入り江・岬の村ネレイ"},
+      {"type":"chest","id":"i_cliff_c1","x":45,"y":23,"item":"i_potion","n":2},
+      {"type":"waylamp","id":"wl_i_cliff_1","x":16,"y":28,"lit":true},
+      {"type":"waylamp","id":"wl_i_cliff_2","x":38,"y":22,"lit":true},
+    ],
+    npcs: [
+
+    ],
+    spawns: {"south":{"x":12,"y":36,"dir":"n"},"east":{"x":50,"y":19,"dir":"w"}},
+    exits: [{"x":12,"y":37,"w":2,"h":1,"to":{"map":"coral","spawn":"north"}},{"x":51,"y":19,"w":1,"h":2,"to":{"map":"i_cove","spawn":"west"}}],
+    triggers: [],
+    tilePatches: [],
+    zones: [{"rect":null,"zone":"zw_isles"}],
+    art: {"image":"field/under/i_cliff","painted":[],"overlay":"field/under/i_cliff_over"},
+    meta: {"sub":"港町コーラルの北の崖の上","worldRect":[600,492,50,36]},
+    links: {},
+  });
+})(window.RPG);
