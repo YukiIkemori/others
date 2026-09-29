@@ -113,7 +113,15 @@ const SHOTS = {
   },
   title_screen: {
     url: 'dev.html',
-    prep: async (T) => { await T.idle(60); },
+    // 命令の列・版の表記・ボタンの手引きを描かない（題字と絵だけ）
+    prep: async (T) => {
+      await T.js(`(() => { const U = RPG.UIK, S = RPG.Screens; const tx = U.text;
+        U.text = function (g, s) { if (typeof s === 'string' && s.indexOf('ver ') >= 0 && s.indexOf('Studio Metem') >= 0) return; return tx.apply(this, arguments); };
+        S.prompts = () => {};
+        for (const sc of RPG.Engine.stack) for (const o of [sc, sc.view]) if (o && o.list && o.list.draw) o.list.draw = () => {};
+        return true; })()`);
+      await T.idle(4);
+    },
     n: sec(8),
   },
 

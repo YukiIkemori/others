@@ -212,6 +212,11 @@ class Item:
                 c = -0.25 * w + p * (1.5 * w + h * 0.45)
                 band = np.exp(-((u - c) / (w * 0.07 + 18)) ** 2) * mask
                 rgb = np.clip(rgb + band[..., None] * np.array([1.0, 0.95, 0.8], np.float32) * 0.85, 0, 1)
+                if d.get('sweep_only'):   # 下の絵（ゲームの題字）の上を光だけが走る
+                    al = band * a * d.get('sweep_k', 0.8)
+                    rgb = np.broadcast_to(np.array([1.0, 0.96, 0.84], np.float32), rgb.shape)
+            elif d.get('sweep_only'):
+                return
         blend(frame, rgb, al, x, y)
 
 
