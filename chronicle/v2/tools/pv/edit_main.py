@@ -78,7 +78,7 @@ for i, (c, src, br) in enumerate(EXP):
         cut('ex_well', at + dur, BAR_OW - dur, src=0.1, grade=dict(bright=1.1))
 cap('FIELD', '一枚絵のフィールド', T0_OW + 0.3, T0_OW + 2 * BAR_OW - 0.15)
 cap('TOWN', '夜の街並み', T0_OW + 2 * BAR_OW + 0.15, T0_OW + 4 * BAR_OW - 0.15)
-cap('DUNGEON', 'ダンジョン探索', T0_OW + 4 * BAR_OW + 0.15, T0_OW + 9 * BAR_OW - 0.15)
+cap('DUNGEON', 'ダンジョン探索', T0_OW + 4 * BAR_OW + 0.15, T0_OW + 6 * BAR_OW - 0.15)   # 千年樹の入口で会話の窓が出る前に消す
 T_TAV = T0_OW + 10 * BAR_OW
 
 # ================================================================== 5 仲間（潮風亭の 20 人）
