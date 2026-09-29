@@ -34,7 +34,7 @@
     ] },
     g_song: { n: 120, at: ALL_FOUND, lead: 'l_forest_song', text: '迷いの森の歌の石を探そう（{var:forest_verses}/3）' },
     g_elder: { n: 130, at: ALL_FOUND.concat([{ var: 'forest_verses', gte: 3 }]), text: '森の奥、千年樹のもとへ向かおう' },
-    g_rest: { n: 140, at: 'cleared_r_forest', text: '町に戻って、ひと休みしよう' },
+    g_rest: { n: 140, at: 'cleared_r_forest', text: '村か里に戻って、ひと休みしよう' },
     // ---------------------------------------------------------------- 体験版の終わりのあと（製品版は次のうわさへ）
     g_free: { n: 150, at: { any: ['story_t1', 'world_demo_end'] }, text: [
       { when: { slice: true }, text: '体験版はここまで。森と半島の依頼や寄り道をどうぞ' },
