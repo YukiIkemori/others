@@ -804,7 +804,9 @@ if (require.main === module) {
   console.log('[gen_world]', JSON.stringify(r.info));
   for (const e of r.errs) console.log('  ERROR', e);
   if (argv[0] === '--check') { process.exitCode = r.errs.length ? 1 : 0; return; }
-  fs.writeFileSync(OUT, emit());
+  // 画面に出す文は文の表へ（i18n。src/i18n/ja/maps_field.js の key を使い回す。新しい文は OUT が src の中のときだけ表に足す）
+  const text = require('./i18n_extract.js').extractText('src/maps/world.js', emit(), { writeTables: OUT === path.join(__dirname, '..', 'src', 'maps', 'world.js') });
+  fs.writeFileSync(OUT, text);
   console.log('[gen_world] wrote', path.relative(process.cwd(), OUT), (fs.statSync(OUT).size / 1024).toFixed(0) + ' KB');
   if (r.errs.length) process.exitCode = 1;
 }

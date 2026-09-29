@@ -18,14 +18,11 @@
   P('dim', (g, u, L, c) => {
     const a = (L.a || 0.4) * E.env(u, L.fi || 0.2, L.fo || 0.3);
     if (a <= 0.004) return;
-    g.fillStyle = `rgba(${L.col || '6,6,16'},${a})`;
-    g.fillRect(-20, -20, c.W + 40, c.H + 40);
-    // 周りをもう少し暗く（見せ場の集中）
-    if (g.createRadialGradient) {
-      const gr = g.createRadialGradient(c.tc.x, c.tc.y, Math.min(c.W, c.H) * 0.2, c.tc.x, c.tc.y, Math.max(c.W, c.H) * 0.75);
-      gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, `rgba(0,0,6,${a * 0.6})`);
-      g.fillStyle = gr; g.fillRect(-20, -20, c.W + 40, c.H + 40);
-    }
+    // 1 回の塗りで: 的の周りは少し薄く、画面の端ほど暗く（見せ場の集中）
+    const col0 = L.col || '6,6,16';
+    const gr = g.createRadialGradient(c.tc.x, c.tc.y, Math.min(c.W, c.H) * 0.15, c.tc.x, c.tc.y, Math.max(c.W, c.H) * 0.8);
+    gr.addColorStop(0, `rgba(${col0},${a * 0.8})`); gr.addColorStop(1, `rgba(${col0},${Math.min(0.95, a * 1.4)})`);
+    g.fillStyle = gr; g.fillRect(-20, -20, c.W + 40, c.H + 40);
   });
   // 閃光（加算）。閃光を減らす設定で 3 割
   P('flash', (g, u, L, c) => {

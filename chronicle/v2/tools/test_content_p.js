@@ -13,6 +13,7 @@
 //   9. ワールド: gen_world の検査（歩ける数・入口・閉じ方・30 歩の空白）と、生成物が今の生成器の出力と同じ
 'use strict';
 const fs = require('fs');
+const { inline: i18nInline } = require('./lib/i18n_src');   // R.T('key') を日本語の文に戻して文面を確かめる（i18n）
 const path = require('path');
 const { ok, section, done } = require('./lib/testkit');
 const V2 = path.resolve(__dirname, '..');
@@ -21,9 +22,9 @@ const R = require('./lib/load')({ quiet: true, fixtures: true });
 const MY_MAPS = ['world', 'roa', 'roa_house', 'pharos', 'pharos_inn', 'pharos_tavern', 'pharos_shop', 'pharos_smith', 'pharos_record', 'pharos_shipyard',
   'lighthouse_1', 'lighthouse_2', 'lighthouse_3', 'well'];
 const MY_FILES = fs.readdirSync(path.join(V2, 'src', 'events')).filter((f) => /^(prologue_|pharos_|world_|story_|leads_main|optional_well|optional_windhill)/.test(f));
-const SRC = MY_FILES.map((f) => fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8')).join('\n');
-const MAP_SRC = fs.readdirSync(path.join(V2, 'src', 'maps')).filter((f) => /^(prologue_|pharos_|optional_well|optional_windhill|world)/.test(f))
-  .map((f) => fs.readFileSync(path.join(V2, 'src', 'maps', f), 'utf8')).join('\n');
+const SRC = i18nInline(MY_FILES.map((f) => fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8')).join('\n'));
+const MAP_SRC = i18nInline(fs.readdirSync(path.join(V2, 'src', 'maps')).filter((f) => /^(prologue_|pharos_|optional_well|optional_windhill|world)/.test(f))
+  .map((f) => fs.readFileSync(path.join(V2, 'src', 'maps', f), 'utf8')).join('\n'));
 const MY_EVENTS = Object.keys(R.DB.events).filter((id) => SRC.includes('D.' + id + ' =') || SRC.includes("D." + id + "=") || new RegExp('D\\.' + id + '\\s*=').test(SRC));
 
 // ------------------------------------------------------------------ 1. 形
@@ -222,7 +223,7 @@ for (const id of ['roa', 'pharos']) for (const n of R.DB.maps[id].npcs || []) if
 // ------------------------------------------------------------------ 6. 文
 section('6. 文（1 ページ 3 行・1 行 18 字、表示してはいけない言葉、仲間の名前）');
 const pages = [];
-const SAY_SRC = MY_FILES.filter((f) => f !== 'leads_main.js').map((f) => fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8')).join('\n');
+const SAY_SRC = i18nInline(MY_FILES.filter((f) => f !== 'leads_main.js').map((f) => fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8')).join('\n'));
 const strs = SAY_SRC.match(/'(?:[^'\\\n]|\\.)*'/g) || [];
 for (const s of strs) { const t = s.slice(1, -1); if (/[ぁ-んァ-ン一-龥]/.test(t) && t.includes('\\n')) pages.push(t.replace(/\\n/g, '\n')); }
 let bad = [];

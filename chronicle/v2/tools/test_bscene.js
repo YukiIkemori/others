@@ -118,7 +118,8 @@ ok('isBig: skill with mp ≥ 8 or data big', (() => { R.DB.techs = R.DB.techs ||
 
 section('勝利の報酬の言葉（A17）');
 ok('proficiency names only (剣・火)', _.result.profName('sword') === '剣' && _.result.profName('fire') === '火');
-const src = ['scene', 'hud', 'command', 'result', 'gameover', 'playback'].map((f) => require('fs').readFileSync(path.join(__dirname, '..', 'src', 'systems', 'battle', f + '.js'), 'utf8')).join('\n').replace(/^\s*\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '');
+// 画面の文は文の表（i18n）にあるので、R.T('key') を日本語の文に戻してから確かめる
+const src = require('./lib/i18n_src').inline(['scene', 'hud', 'command', 'result', 'gameover', 'playback'].map((f) => require('fs').readFileSync(path.join(__dirname, '..', 'src', 'systems', 'battle', f + '.js'), 'utf8')).join('\n')).replace(/^\s*\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '');
 ok('no forbidden words shown (Lv・経験値・オート戦闘・WP)', !/['"`][^'"`]*(Lv|経験値|次のレベル|オート戦闘|WP)[^'"`]*['"`]/.test(src));
 
 section('動きを柔らかく（2026-09-27）');

@@ -5,6 +5,7 @@
 //   node v2/tools/test_content_f.js [--verbose]
 'use strict';
 const fs = require('fs');
+const { inline: i18nInline } = require('./lib/i18n_src');   // R.T('key') を日本語の文に戻して文面を確かめる（i18n）
 const path = require('path');
 const { ok, section, done } = require('./lib/testkit');
 const { MY_MAPS, load, state, reach, reachObj } = require('./test_content_f_lib');
@@ -92,7 +93,7 @@ for (const id of ['location:fern', 'location:verda', 'location:elder', 'location
   ok(`${id} → ${l.map}.${l.spawn}`, R.DB.maps[l.map] && R.DB.maps[l.map].spawns[l.spawn]);
 }
 // イベントの中の品・ボイス・手紙の参照（ソースから拾う）
-const SRC = MY_EVENT_FILES.map((f) => fs.readFileSync(path.join(__dirname, '..', 'src', 'events', f), 'utf8')).join('\n');
+const SRC = i18nInline(MY_EVENT_FILES.map((f) => fs.readFileSync(path.join(__dirname, '..', 'src', 'events', f), 'utf8')).join('\n'));
 for (const m of SRC.matchAll(/(?:give\(ev, |ev\.item\(|ev\.take\(|ev\.has\()'([a-z0-9_]+)'/g)) if (!R.DB.items[m[1]]) missingItems.add(m[1]);
 for (const m of SRC.matchAll(/\['([a-z]+_[a-z0-9_]+)', \d\]/g)) if (/^(i|ac|hd|ft|w|u|k)_/.test(m[1]) && !R.DB.items[m[1]]) missingItems.add(m[1]);
 const REQUESTED = new Set(['ac_climb_shoes']);   // RULES に依頼した品（requests.jsonl）

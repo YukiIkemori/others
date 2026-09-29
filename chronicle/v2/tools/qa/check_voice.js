@@ -10,6 +10,7 @@
 //  - 戦闘中の主人公の声（b_hero_*）を鳴らさない（A20）
 'use strict';
 const fs = require('fs');
+const { inline: i18nInline } = require('../lib/i18n_src');   // R.T('key') を日本語の文に戻して文面を確かめる（i18n）
 const path = require('path');
 const { ok, section, done } = require('../lib/testkit');
 
@@ -48,7 +49,7 @@ ok('縦切りのボイスは 22 本', SLICE.length === 22);
 // ev.say(who, 'text' | ['a','b'], {… voice: 'v_…' …}) を、文字列の連結と Object.assign も含めて拾う
 const used = {};
 for (const f of fs.readdirSync(path.join(V2, 'src', 'events'))) {
-  const src = fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8');
+  const src = i18nInline(fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8'));
   const re = /\.say\(\s*[^,]+,\s*('(?:[^'\\]|\\.)*'(?:\s*\+\s*'(?:[^'\\]|\\.)*')*)\s*,[^;]*?voice:\s*'(v_[a-z0-9_]+)'/g;
   for (const m of src.matchAll(re)) {
     const text = m[1].split(/'\s*\+\s*'/).join('').replace(/^'|'$/g, '').replace(/\\n/g, '').replace(/\\'/g, "'");
@@ -83,14 +84,14 @@ const SMAP = JSON.parse(fs.readFileSync(path.join(V2, 'design', 'voice_story_map
 const STORY = Object.keys(SMAP).filter((id) => SMAP[id].kind === 'story');
 const OPTIONAL = Object.keys(SMAP).filter((id) => SMAP[id].kind === 'optional');
 const BARK = Object.keys(SMAP).filter((id) => SMAP[id].kind === 'bark');
-const srcOf = (f) => fs.readFileSync(path.join(CHRON, f), 'utf8');
+const srcOf = (f) => i18nInline(fs.readFileSync(path.join(CHRON, f), 'utf8'));
 for (const id of STORY) {
   const L = SMAP[id], src = srcOf(L.file);
   ok(`${id}: ${path.basename(L.file)} で鳴らす`, src.includes(`'${id}'`));
   ok(`${id}: 文面が ${path.basename(L.file)} にそのまま残っている`, src.includes(JSON.stringify(L.text).slice(1, -1).replace(/\\"/g, '"')));
   ok(`${id}: 音のファイルがある`, fs.existsSync(path.join(CHRON, 'assets', 'voice', id + '.ogg')));
 }
-const mapsSrc = fs.readdirSync(path.join(V2, 'src', 'maps')).map((f) => fs.readFileSync(path.join(V2, 'src', 'maps', f), 'utf8')).join('\n');
+const mapsSrc = fs.readdirSync(path.join(V2, 'src', 'maps')).map((f) => i18nInline(fs.readFileSync(path.join(V2, 'src', 'maps', f), 'utf8'))).join('\n');
 for (const id of BARK) {
   ok(`${id}: マップの NPC の bark`, (mapsSrc.match(new RegExp(`bark: '${id}'`, 'g')) || []).length === 1);
   ok(`${id}: 音のファイルがある`, fs.existsSync(path.join(CHRON, 'assets', 'voice', id + '.ogg')));
@@ -112,13 +113,13 @@ section('灯台の守り歌（v_fine_song_01・02）');
   for (const [id, [file, event]] of Object.entries(where)) {
     const L = SMAP[id];
     ok(`${id}: voice_story_map.json に story として載っている`, !!L && L.kind === 'story' && L.speaker === 'fine' && L.event === event && L.text === SONG, L);
-    const src = fs.readFileSync(path.join(V2, 'src', 'events', file), 'utf8');
+    const src = i18nInline(fs.readFileSync(path.join(V2, 'src', 'events', file), 'utf8'));
     ok(`${id}: ${file} の守り歌のキャプションに声がつく`, src.includes(`ev.caption('${lit}', { ms: 4200, voice: '${id}' })`));
     const ogg = path.join(CHRON, 'assets', 'voice', id + '.ogg');
     ok(`${id}: Ogg のファイルがある`, fs.existsSync(ogg) && fs.readFileSync(ogg).subarray(0, 4).toString() === 'OggS');
     if (fs.existsSync(dist)) ok(`${id}: ビルドの dist/voice に写されている`, fs.existsSync(path.join(dist, id + '.ogg')));
   }
-  const lead = fs.readFileSync(path.join(V2, 'src', 'events', 'leads_main.js'), 'utf8');
+  const lead = i18nInline(fs.readFileSync(path.join(V2, 'src', 'events', 'leads_main.js'), 'utf8'));
   ok('読み物 lo_lighthouse_song に声（年代記で聞き直す）', /lo_lighthouse_song:[^\n]*voice: 'v_fine_song_02'/.test(lead));
   const msg = fs.readFileSync(path.join(V2, 'src', 'uik', 'message.js'), 'utf8');
   ok('UIK のキャプションが voice を鳴らし、声の終わりまで待つ', /const voiceId = o && o\.voice;/.test(msg) && /R\.Audio\.voice\(voiceId\)/.test(msg) && /st\.voiceDone \|\|/.test(msg));
@@ -128,7 +129,7 @@ section('灯台の守り歌（v_fine_song_01・02）');
 // 2026-09-27: 冒頭（オーナー「最初の一言にも声を」）。幕の上のフィーネ 3 本と守り歌、ベルナの「……うん、いい名前だ。」、P2[7]。幕の前に先読みする
 section('冒頭のボイス（roa_house_intro・roa_berna）');
 {
-  const src = fs.readFileSync(path.join(V2, 'src', 'events', 'prologue_roa.js'), 'utf8');
+  const src = i18nInline(fs.readFileSync(path.join(V2, 'src', 'events', 'prologue_roa.js'), 'utf8'));
   const caps = [['v_fine_opening_01', '……ねえ、聞こえる？'], ['v_fine_opening_02', 'これは、忘れられかけた物語。'], ['v_fine_opening_03', 'そして、それを語り直した、\\nひとりの語り部の物語。']];
   for (const [id, t] of caps) ok(`${id}: 幕のキャプション「${t.replace(/\\n/g, '')}」に声`, new RegExp(`ev\\.caption\\('${t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}', \\{ ms: \\d+, voice: '${id}' \\}\\)`).test(src));
   ok('v_berna_intro_01: 名前の後の「……うん、いい名前だ。」に声', /'\{hero\}。……うん、いい名前だ。', \{ voice: 'v_berna_intro_01'/.test(src));

@@ -8,6 +8,7 @@
 //   5 戦闘: ボスの予告と第 2 の姿、名を呼ぶ道具（第 2 の姿の前は戻る・後は勝ち）、盗み専用の品の出どころ
 'use strict';
 const fs = require('fs');
+const { inline: i18nInline } = require('./lib/i18n_src');   // R.T('key') を日本語の文に戻して文面を確かめる（i18n）
 const path = require('path');
 const { ok, section, done } = require('./lib/testkit');
 
@@ -17,8 +18,8 @@ const D = R.DB;
 const V2 = path.resolve(__dirname, '..');
 const MY_MAPS = Object.keys(D.maps).filter((id) => /^(desert_|kasim|sandedge)/.test(id));
 const EV_FILES = fs.readdirSync(path.join(V2, 'src', 'events')).filter((f) => /^desert_/.test(f));
-const SRC = EV_FILES.map((f) => fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8')).join('\n');
-const MAP_SRC = fs.readdirSync(path.join(V2, 'src', 'maps')).filter((f) => /^desert_/.test(f)).map((f) => fs.readFileSync(path.join(V2, 'src', 'maps', f), 'utf8')).join('\n');
+const SRC = i18nInline(EV_FILES.map((f) => fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8')).join('\n'));
+const MAP_SRC = i18nInline(fs.readdirSync(path.join(V2, 'src', 'maps')).filter((f) => /^desert_/.test(f)).map((f) => fs.readFileSync(path.join(V2, 'src', 'maps', f), 'utf8')).join('\n'));
 
 // ================================================================ 1
 section('1. 形と参照');

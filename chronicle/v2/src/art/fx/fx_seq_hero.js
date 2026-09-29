@@ -294,27 +294,54 @@
   });
 
   // ---------------------------------------------------------------- 極光（空にたなびく光の幕）
-  P('aurora', (g, u, L, c, e) => {
+  // 広い面を何度も塗るので、4 分の 1 の大きさの裏の絵に描いて引き伸ばす（ぼけて極光らしくなり、ソフトの描画でも軽い）
+  let aurC = null;
+  P('aurora', (g0, u, L, c, e) => {
     const k = E.env(u, 0.2, 0.25) * (L.a || 1);
     const n = L.n || 4, W = L.w || 900, top = -e.y + 20;
+    let g = g0;
+    const Q = 0.25, fl = -c.dir;
+    if (typeof document !== 'undefined' && g0.drawImage) {
+      const w = Math.ceil(c.W * Q), h = Math.ceil(c.H * Q);
+      if (!aurC) aurC = document.createElement('canvas');
+      if (aurC.width !== w || aurC.height !== h) { aurC.width = w; aurC.height = h; }
+      g = aurC.getContext('2d');
+      g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, w, h);
+      g.globalCompositeOperation = 'lighter';
+      g.setTransform(Q, 0, 0, Q, e.x * Q, e.y * Q);
+    }
+    const spread = E.out(Math.min(1, u * 1.4));
     for (let j = 0; j < n; j++) {
       const cc = col(c, j % 3), y0 = top + (L.y0 || 40) + j * 18, len = (L.len || 160) * (0.8 + 0.3 * Math.sin(j));
-      // 幕: 細い縦の光の線を密に並べる（線の上の端が波打つ）。明るさはなめらかに揺らす
-      const strips = N(c, 110), sw = W / strips;
-      const spread = E.out(Math.min(1, u * 1.6));
+      // 幕: 上の端が波打つ帯を縦のグラデーションで塗り、細い縦の筋を少し重ねる
+      const seg = 36, half = W / 2 * spread;
+      const yt = (t) => y0 + Math.sin(t * 6 + e.ms / 700 + j * 1.3) * 24 + Math.sin(t * 13 - e.ms / 450 + j) * 7;
       const gr = g.createLinearGradient(0, y0 - 30, 0, y0 + len);
-      gr.addColorStop(0, `rgba(${cc},0)`); gr.addColorStop(0.18, `rgba(${cc},1)`); gr.addColorStop(1, `rgba(${cc},0)`);
+      gr.addColorStop(0, `rgba(${cc},0)`); gr.addColorStop(0.12, `rgba(${cc},${0.42 * k})`); gr.addColorStop(0.5, `rgba(${cc},${0.16 * k})`); gr.addColorStop(1, `rgba(${cc},0)`);
       g.fillStyle = gr;
-      for (let i = 0; i < strips; i++) {
-        const t = i / strips;
-        if (Math.abs(t - 0.5) > spread * 0.5) continue;
-        const x = -W / 2 + t * W, y = Math.sin(t * 6 + e.ms / 700 + j * 1.3) * 24 + Math.sin(t * 13 - e.ms / 450) * 7;
-        const a = k * (0.16 + 0.12 * Math.sin(t * 9 + e.ms / 380 + j * 2)) * (1 - Math.abs(t - 0.5) * 1.2);
-        if (a <= 0.01) continue;
-        g.globalAlpha = a;
-        g.fillRect(x, y0 - 30 + y, sw * 1.3, len * (0.8 + 0.2 * Math.sin(t * 5 + j)));
+      g.beginPath();
+      for (let i = 0; i <= seg; i++) { const t = i / seg, x = -half + t * half * 2; if (i) g.lineTo(x, yt(t)); else g.moveTo(x, yt(t)); }
+      for (let i = seg; i >= 0; i--) { const t = i / seg, x = -half + t * half * 2; g.lineTo(x, yt(t) + len * (0.75 + 0.25 * Math.sin(t * 9 + e.ms / 500 + j))); }
+      g.closePath(); g.fill();
+      // 筋
+      for (let i = 0; i < N(c, 26); i++) {
+        const t = hr(e.seed + j * 97 + i), x = -half + t * half * 2, y = yt(t);
+        S.line(g, x, y, x, y + len * (0.5 + 0.4 * hr(e.seed + i * 3 + j)), 2 + 3 * hr(e.seed + i + j * 5), cc, 0.22 * k * (0.6 + 0.4 * Math.sin(e.ms / 300 + i)));
       }
-      g.globalAlpha = 1;
+    }
+    // 左右の端をぼかす（裏の絵の時だけ。画面のままの時はそのまま）
+    if (g !== g0) {
+      g.globalCompositeOperation = 'destination-in';
+      const hg = g.createLinearGradient(-W / 2, 0, W / 2, 0);
+      hg.addColorStop(0, 'rgba(0,0,0,0)'); hg.addColorStop(0.2, 'rgba(0,0,0,1)'); hg.addColorStop(0.8, 'rgba(0,0,0,1)'); hg.addColorStop(1, 'rgba(0,0,0,0)');
+      g.fillStyle = hg; g.fillRect(-W / 2 - 400, -e.y - 50, W + 800, c.H + 100);
+      g.globalCompositeOperation = 'lighter';
+    }
+    if (g !== g0) {
+      g0.save(); g0.scale(fl, 1);   // 向きの反転を戻して、画面の座標で置く
+      g0.imageSmoothingEnabled = true;
+      g0.drawImage(aurC, -e.x, -e.y, c.W, c.H);
+      g0.restore();
     }
   });
 

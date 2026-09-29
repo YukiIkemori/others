@@ -10,14 +10,15 @@
 // 3. 目印: 地方の手がかりの done が森の解決で真になる（森を解決したら森の目印が外れる）。
 'use strict';
 const fs = require('fs');
+const { inline: i18nInline } = require('../lib/i18n_src');   // R.T('key') を日本語の文に戻して文面を確かめる（i18n）
 const path = require('path');
 const { ok, section, done } = require('../lib/testkit');
 
 const V2 = path.resolve(__dirname, '..', '..');
 const R = require('../lib/load')({ quiet: true });
 const D = R.DB;
-const EV_SRC = fs.readdirSync(path.join(V2, 'src', 'events')).map((f) => fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8')).join('\n');
-const MAP_SRC = fs.readdirSync(path.join(V2, 'src', 'maps')).map((f) => fs.readFileSync(path.join(V2, 'src', 'maps', f), 'utf8')).join('\n');
+const EV_SRC = i18nInline(fs.readdirSync(path.join(V2, 'src', 'events')).map((f) => fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8')).join('\n'));
+const MAP_SRC = i18nInline(fs.readdirSync(path.join(V2, 'src', 'maps')).map((f) => fs.readFileSync(path.join(V2, 'src', 'maps', f), 'utf8')).join('\n'));
 const KINDS = ['lead', 'side', 'discount', 'hint', 'item', 'boss', 'news'];
 
 section('1. 話す見返りのある人（町ごと）');

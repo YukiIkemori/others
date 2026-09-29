@@ -494,5 +494,40 @@ function main() {
   if (report) fs.writeFileSync(report, JSON.stringify(rep, null, 1));
   console.log(`i18n_extract: ${nUnits} strings (${nChars} chars) in ${nFiles} files${WRITE ? ' — written' : ' — dry run'}`);
 }
-module.exports = { domainOf, prefixOf, JP, SKIP_FILES };
+/**
+ * 1 つのソースの文字列を移す（生成器の出力など、ファイルに書く前の文字）。今の表の key を使い回すので、同じ入力なら同じ出力。
+ * o.writeTables で、新しい文を日本語の表に足す（既定は足さない: 同じ入力なら足す物は無い）。→ 書き換えた文字（acorn が無ければ元のまま）
+ */
+function extractText(rel, src, o) {
+  o = o || {};
+  let acorn = null;
+  for (const t of ['acorn', '/opt/node22/lib/node_modules/eslint/node_modules/acorn', '/opt/node22/lib/node_modules/ts-node/node_modules/acorn']) { try { acorn = require(t); break; } catch (e) { /* 次へ */ } }
+  if (!acorn) { console.warn('[i18n_extract] acorn が無いので文字列を移さない: ' + rel); return src; }
+  const keysTaken = new Map();
+  const tables = {};
+  if (fs.existsSync(OUT)) for (const f of fs.readdirSync(OUT).filter((x) => x.endsWith('.js'))) {
+    const t = readTable(path.join(OUT, f));
+    tables[f.slice(0, -3)] = t;
+    for (const k of Object.keys(t)) keysTaken.set(k, Array.isArray(t[k]) ? '[' + t[k].join('\u0001') + ']' : t[k]);
+  }
+  const r = processFile(acorn, rel, src, keysTaken, {});
+  if (r.error) throw new Error(rel + ': ' + r.error);
+  const d = domainOf(rel);
+  const fresh = r.units.filter((u) => !(tables[d] && u.key in tables[d]) && !Object.values(tables).some((t) => u.key in t));
+  if (fresh.length && o.writeTables) {
+    const add = {};
+    for (const u of fresh) add[u.key] = u.value;
+    appendTable(path.join(OUT, d + '.js'), rel, add);
+  } else if (fresh.length) console.warn(`[i18n_extract] ${rel}: 新しい文 ${fresh.length} 個（表に無い。--write で足す）`);
+  return r.out;
+}
+/** 表のファイルの最後に key を足す（区切りのコメントはソースのファイル名） */
+function appendTable(file, from, add) {
+  let s = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : "(function (R) {\n  'use strict';\n  R.I18n.add('ja', {\n  });\n})(window.RPG);\n";
+  const at = s.lastIndexOf('  });');
+  let blk = `    // ---- ${from}\n`;
+  for (const k of Object.keys(add)) blk += `    ${q(k)}: ${Array.isArray(add[k]) ? '[' + add[k].map(q).join(', ') + ']' : q(add[k])},\n`;
+  fs.writeFileSync(file, s.slice(0, at) + blk + s.slice(at));
+}
+module.exports = { domainOf, prefixOf, JP, SKIP_FILES, extractText };
 if (require.main === module) main();

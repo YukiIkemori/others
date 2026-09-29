@@ -11,6 +11,7 @@
 //   5 戦闘: ボスの予告（人形の楽団・霧食らい）、出現表の数（縦切りの後のダンジョンは 1 組 5 匹まで）、レアの落とし物は道具が主（中盤の手前）
 'use strict';
 const fs = require('fs');
+const { inline: i18nInline } = require('./lib/i18n_src');   // R.T('key') を日本語の文に戻して文面を確かめる（i18n）
 const path = require('path');
 const { ok, section, done } = require('./lib/testkit');
 
@@ -19,8 +20,8 @@ const D = R.DB;
 const V2 = path.resolve(__dirname, '..');
 const MY_MAPS = Object.keys(D.maps).filter((id) => /^(marsh_|loch)/.test(id));
 const EV_FILES = fs.readdirSync(path.join(V2, 'src', 'events')).filter((f) => /^marsh_/.test(f));
-const SRC = EV_FILES.map((f) => fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8')).join('\n');
-const MAP_SRC = fs.readdirSync(path.join(V2, 'src', 'maps')).filter((f) => /^marsh_/.test(f)).map((f) => fs.readFileSync(path.join(V2, 'src', 'maps', f), 'utf8')).join('\n');
+const SRC = i18nInline(EV_FILES.map((f) => fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8')).join('\n'));
+const MAP_SRC = i18nInline(fs.readdirSync(path.join(V2, 'src', 'maps')).filter((f) => /^marsh_/.test(f)).map((f) => fs.readFileSync(path.join(V2, 'src', 'maps', f), 'utf8')).join('\n'));
 
 // ================================================================ 1
 section('1. 形と参照');

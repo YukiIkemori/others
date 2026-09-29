@@ -100,9 +100,9 @@ async function main() {
     // 1 コマの描画の時間（R.Engine.render、ソフトの描画）: 静かな時と、演出の間
     const i0 = args.indexOf('--perf') + 1;
     const ids = idsFrom(args.slice(i0).filter((a) => !a.startsWith('--')), all).filter((id) => info[id]);
-    const time = () => p.evaluate(() => { const t0 = performance.now(); RPG.Engine.render(); return performance.now() - t0; });
+    const time = () => p.evaluate(() => { const g = RPG.Gfx.ctx; g.getImageData(0, 0, 1, 1); const t0 = performance.now(); RPG.Engine.render(); g.getImageData(0, 0, 1, 1); return performance.now() - t0; });   // getImageData で描画を実際に終わらせて測る
     const base = [];
-    for (let i = 0; i < 20; i++) base.push(await time());
+    for (let i = 0; i < 40; i++) { await p.evaluate(() => RPG.FxGallery.step(1000 / 30)); base.push(await time()); }
     const med = (a) => a.slice().sort((x, y) => x - y)[a.length >> 1];
     console.log(`idle: median ${med(base).toFixed(1)} ms  max ${Math.max(...base).toFixed(1)} ms`);
     for (const id of ids) {

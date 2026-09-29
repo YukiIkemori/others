@@ -41,7 +41,7 @@ const BAD = [
   [/オート(?!セーブ)/, 'オート（オートセーブ以外）'], [/前衛|後衛/, '役割'], [/技の書|術の書/, '技の書・術の書'], [/特性/, '特性'],
 ];
 for (const f of files) {
-  const s = strings(fs.readFileSync(path.join(SRC, f), 'utf8'));
+  const s = strings(require('./lib/i18n_src').inline(fs.readFileSync(path.join(SRC, f), 'utf8')));   // 文の表（i18n）の文に戻して確かめる
   for (const [re, name] of BAD) { const hit = s.filter((x) => re.test(x)); ok(`${f}: no ${name}`, hit.length === 0, hit.slice(0, 3)); }
 }
 // 得意の文字の段（S〜D）を出していない: aptLetter を画面で使わない

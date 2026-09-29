@@ -13,6 +13,7 @@
 // 8. 盗み専用（STATS_REWORK §7.6・V2_PLAN §2.6.6）: 30〜40 品、grade super・src steal・quirk なし、1 品 1 体、ほかの枠・表・店・宝箱に無い、率 通常 32・レア 16・ボス 16。
 'use strict';
 const fs = require('fs');
+const { inline: i18nInline } = require('../lib/i18n_src');   // R.T('key') を日本語の文に戻して文面を確かめる（i18n）
 const path = require('path');
 const { ok, section, done } = require('../lib/testkit');
 
@@ -33,7 +34,7 @@ SLICE_BGM.push('kasim', 'desert', 'caravan', 'pyramid'); BBG.push('desert');   /
 BBG.push('marsh');   // 湿原（marsh_*.js。BGM は縦切りの town・ghost）
 BBG.push('ash');   // 灰の荒野（ash_*.js。BGM は縦切りの town・cave・battle・boss）
 const maps = M.sliceMaps();
-const EV_SRC = fs.readdirSync(path.join(V2, 'src', 'events')).map((f) => fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8')).join('\n');
+const EV_SRC = i18nInline(fs.readdirSync(path.join(V2, 'src', 'events')).map((f) => fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8')).join('\n'));
 
 // ================================================================ 1. 形
 section('1. 形（R.Contract.check）');
