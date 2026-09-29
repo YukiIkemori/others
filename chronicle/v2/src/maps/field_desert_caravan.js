@@ -65,7 +65,7 @@
 
     ],
     spawns: {"north":{"x":30,"y":1,"dir":"s"},"east":{"x":58,"y":12,"dir":"w"},"hollow":{"x":1,"y":8,"dir":"e"},"coast":{"x":1,"y":29,"dir":"e"},"camp1":{"x":42,"y":24,"dir":"s"},"camp2":{"x":16,"y":29,"dir":"n"}},
-    exits: [{"x":30,"y":0,"w":2,"h":1,"to":{"map":"d_west","spawn":"south"}},{"x":59,"y":12,"w":1,"h":2,"to":{"map":"d_south","spawn":"west"}},{"x":0,"y":8,"w":1,"h":2,"to":{"map":"d_hollow","spawn":"caravan"}},{"x":0,"y":29,"w":1,"h":2,"to":{"map":"d_coast","spawn":"caravan"}},{"x":42,"y":23,"w":1,"h":1,"to":{"map":"desert_camp1","spawn":"road"}},{"x":16,"y":30,"w":1,"h":1,"to":{"map":"desert_camp2","spawn":"road"}}],
+    exits: [{"x":30,"y":0,"w":2,"h":1,"to":{"map":"d_west","spawn":"south"}},{"x":59,"y":12,"w":1,"h":2,"to":{"map":"d_south","spawn":"west"}},{"x":0,"y":8,"w":1,"h":2,"to":{"map":"d_hollow","spawn":"caravan"},"cond":{"any":[{"choice":"ch_desert_route","is":"short"},"cleared_r_desert"]}},{"x":0,"y":29,"w":1,"h":2,"to":{"map":"d_coast","spawn":"caravan"}},{"x":42,"y":23,"w":1,"h":1,"to":{"map":"desert_camp1","spawn":"road"}},{"x":16,"y":30,"w":1,"h":1,"to":{"map":"desert_camp2","spawn":"road"}}],
     triggers: [{"id":"desert_ambush_2","x":24,"y":22,"w":5,"h":4,"on":"step","event":"desert_ambush_2","cond":["desert_caravan_on","!desert_ambush_2_done"]}],
     tilePatches: [{"cond":{"not":{"any":[{"choice":"ch_desert_route","is":"short"},"cleared_r_desert"]}},"rect":[0,7,2,4],"rows":["rr","rr","rr","rr"]}],
     zones: [{"rect":null,"zone":"zw_desert_caravan","cond":"desert_caravan_on"},{"rect":null,"zone":"zw_desert"}],

@@ -292,7 +292,8 @@ def d_caravan():
     a.tidy()
     a.exit('n', 30, 31, {'map': 'd_west', 'spawn': 'south'}, 'north')
     a.exit('e', 12, 13, {'map': 'd_south', 'spawn': 'west'}, 'east')
-    a.exit('w', 8, 9, {'map': 'd_hollow', 'spawn': 'caravan'}, 'hollow')
+    short = {'any': [{'choice': 'ch_desert_route', 'is': 'short'}, 'cleared_r_desert']}
+    a.exit('w', 8, 9, {'map': 'd_hollow', 'spawn': 'caravan'}, 'hollow')['cond'] = short   # 砂嵐で閉じている間は出口も無い（tilePatch の岩）
     a.exit('w', 29, 30, {'map': 'd_coast', 'spawn': 'caravan'}, 'coast')
     a.spawns['camp1'] = dict(x=42, y=24, dir='s')
     a.spawns['camp2'] = dict(x=16, y=29, dir='n')

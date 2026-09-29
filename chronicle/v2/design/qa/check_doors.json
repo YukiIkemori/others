@@ -1,8 +1,1084 @@
 {
- "date": "2026-09-29T20:27:24.608Z",
+ "date": "2026-09-29T20:28:32.650Z",
  "fixture": "content_p_pharos",
- "walked": [],
- "looks": [],
- "skipped": [],
+ "walked": [
+  {
+   "map": "d_caravan",
+   "kind": "exit",
+   "id": "30,0",
+   "at": "d_west",
+   "to": "d_west",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    30,
+    4
+   ],
+   "ms": 2394
+  },
+  {
+   "map": "d_caravan",
+   "kind": "exit",
+   "id": "0,8",
+   "at": [
+    0,
+    8
+   ],
+   "to": "d_hollow",
+   "ok": false,
+   "why": "no cell to stand before it",
+   "ms": 20
+  },
+  {
+   "map": "d_caravan",
+   "kind": "exit",
+   "id": "59,12",
+   "at": "d_south",
+   "to": "d_south",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    59,
+    8
+   ],
+   "ms": 2633
+  },
+  {
+   "map": "d_caravan",
+   "kind": "exit",
+   "id": "0,29",
+   "at": "d_coast",
+   "to": "d_coast",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    0,
+    25
+   ],
+   "ms": 1614
+  },
+  {
+   "map": "d_caravan",
+   "kind": "exit",
+   "id": "42,23",
+   "at": "desert_camp1",
+   "to": "desert_camp1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    42,
+    27
+   ],
+   "ms": 2051
+  },
+  {
+   "map": "d_caravan",
+   "kind": "exit",
+   "id": "16,30",
+   "at": "desert_camp2",
+   "to": "desert_camp2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    16,
+    26
+   ],
+   "ms": 2109
+  },
+  {
+   "map": "d_coast",
+   "kind": "exit",
+   "id": "20,0",
+   "at": "desert_camp3",
+   "to": "desert_camp3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    20,
+    4
+   ],
+   "ms": 2185
+  },
+  {
+   "map": "d_coast",
+   "kind": "exit",
+   "id": "43,14",
+   "at": "d_hollow",
+   "to": "d_hollow",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    40,
+    13
+   ],
+   "ms": 1371
+  },
+  {
+   "map": "d_coast",
+   "kind": "exit",
+   "id": "43,44",
+   "at": "d_caravan",
+   "to": "d_caravan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    43,
+    40
+   ],
+   "ms": 1401
+  },
+  {
+   "map": "d_coast",
+   "kind": "exit",
+   "id": "23,32",
+   "at": "desert_wellroom",
+   "to": "desert_wellroom",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    23,
+    36
+   ],
+   "ms": 1362
+  },
+  {
+   "map": "d_east",
+   "kind": "exit",
+   "id": "12,35",
+   "at": "d_south",
+   "to": "d_south",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    12,
+    31
+   ],
+   "ms": 1809
+  },
+  {
+   "map": "d_hollow",
+   "kind": "exit",
+   "id": "43,25",
+   "at": "d_caravan",
+   "to": "d_caravan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    40,
+    24
+   ],
+   "ms": 1302
+  },
+  {
+   "map": "d_east",
+   "kind": "exit",
+   "id": "0,17",
+   "at": "kasim",
+   "to": "kasim",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    4,
+    17
+   ],
+   "ms": 4199
+  },
+  {
+   "map": "d_hollow",
+   "kind": "exit",
+   "id": "0,4",
+   "at": "d_coast",
+   "to": "d_coast",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    4
+   ],
+   "ms": 1394
+  },
+  {
+   "map": "d_hollow",
+   "kind": "exit",
+   "id": "22,17",
+   "at": "desert_oldcamp",
+   "to": "desert_oldcamp",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    22,
+    21
+   ],
+   "ms": 2407
+  },
+  {
+   "map": "d_pass",
+   "kind": "exit",
+   "id": "24,0",
+   "at": "f_south",
+   "to": "f_south",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    24,
+    4
+   ],
+   "ms": 1904
+  },
+  {
+   "map": "d_pass",
+   "kind": "exit",
+   "id": "27,39",
+   "at": "d_west",
+   "to": "d_west",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    27,
+    35
+   ],
+   "ms": 1881
+  },
+  {
+   "map": "d_pass",
+   "kind": "exit",
+   "id": "9,23",
+   "at": "sandedge",
+   "to": "sandedge",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    9,
+    27
+   ],
+   "ms": 2307
+  },
+  {
+   "map": "d_pass",
+   "kind": "exit",
+   "id": "46,5",
+   "at": "desert_rocks",
+   "to": "desert_rocks",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    46,
+    9
+   ],
+   "ms": 1654
+  },
+  {
+   "map": "d_south",
+   "kind": "exit",
+   "id": "44,0",
+   "at": "d_east",
+   "to": "d_east",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    44,
+    4
+   ],
+   "ms": 1563
+  },
+  {
+   "map": "d_south",
+   "kind": "exit",
+   "id": "0,16",
+   "at": "d_caravan",
+   "to": "d_caravan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    0,
+    12
+   ],
+   "ms": 1730
+  },
+  {
+   "map": "d_west",
+   "kind": "exit",
+   "id": "30,0",
+   "at": "d_pass",
+   "to": "d_pass",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    30,
+    4
+   ],
+   "ms": 1513
+  },
+  {
+   "map": "d_west",
+   "kind": "exit",
+   "id": "59,20",
+   "at": "kasim",
+   "to": "kasim",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    56,
+    19
+   ],
+   "ms": 1545
+  },
+  {
+   "map": "d_west",
+   "kind": "exit",
+   "id": "34,43",
+   "at": "d_caravan",
+   "to": "d_caravan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    34,
+    39
+   ],
+   "ms": 1405
+  },
+  {
+   "map": "d_west",
+   "kind": "exit",
+   "id": "12,24",
+   "at": "desert_hawks_1",
+   "to": "desert_hawks_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    12,
+    28
+   ],
+   "ms": 1471
+  },
+  {
+   "map": "desert_camp1",
+   "kind": "exit",
+   "id": "14,21",
+   "at": "d_caravan",
+   "to": "d_caravan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    13,
+    18
+   ],
+   "ms": 3749
+  },
+  {
+   "map": "desert_camp2",
+   "kind": "exit",
+   "id": "14,21",
+   "at": "d_caravan",
+   "to": "d_caravan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    13,
+    18
+   ],
+   "ms": 3884
+  },
+  {
+   "map": "desert_camp3",
+   "kind": "exit",
+   "id": "14,25",
+   "at": "d_coast",
+   "to": "d_coast",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    14,
+    21
+   ],
+   "ms": 4423
+  },
+  {
+   "map": "desert_mirage",
+   "kind": "exit",
+   "id": "17,25",
+   "at": "d_west",
+   "to": "d_west",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    17,
+    21
+   ],
+   "ms": 4349
+  },
+  {
+   "map": "kasim",
+   "kind": "door",
+   "id": "kasim_b_fortune",
+   "at": "kasim_fortune",
+   "to": "kasim_fortune",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    31,
+    20
+   ],
+   "ms": 1911
+  },
+  {
+   "map": "kasim",
+   "kind": "door",
+   "id": "kasim_b_mapshop",
+   "at": "kasim_mapshop",
+   "to": "kasim_mapshop",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    37,
+    20
+   ],
+   "ms": 1432
+  },
+  {
+   "map": "kasim",
+   "kind": "door",
+   "id": "kasim_b_inn",
+   "at": "kasim_inn",
+   "to": "kasim_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    10,
+    19
+   ],
+   "ms": 1386
+  },
+  {
+   "map": "kasim",
+   "kind": "door",
+   "id": "kasim_b_tavern",
+   "at": "kasim_tavern",
+   "to": "kasim_tavern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    50,
+    18
+   ],
+   "ms": 1366
+  },
+  {
+   "map": "kasim",
+   "kind": "door",
+   "id": "kasim_b_digger",
+   "at": "kasim_digger",
+   "to": "kasim_digger",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    54,
+    25
+   ],
+   "ms": 1291
+  },
+  {
+   "map": "kasim",
+   "kind": "door",
+   "id": "kasim_b_shop",
+   "at": "kasim_shop",
+   "to": "kasim_shop",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    20
+   ],
+   "ms": 9583
+  },
+  {
+   "map": "kasim",
+   "kind": "door",
+   "id": "kasim_b_guild",
+   "at": "kasim_guild",
+   "to": "kasim_guild",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    45,
+    46
+   ],
+   "ms": 1335
+  },
+  {
+   "map": "kasim",
+   "kind": "door",
+   "id": "kasim_b_abul",
+   "at": "kasim_abul",
+   "to": "kasim_abul",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    8,
+    39
+   ],
+   "ms": 1425
+  },
+  {
+   "map": "kasim",
+   "kind": "exit",
+   "id": "0,26",
+   "at": "d_west",
+   "to": "d_west",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    25
+   ],
+   "ms": 1433
+  },
+  {
+   "map": "kasim",
+   "kind": "exit",
+   "id": "61,26",
+   "at": "d_east",
+   "to": "d_east",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    58,
+    25
+   ],
+   "ms": 2118
+  },
+  {
+   "map": "sandedge",
+   "kind": "exit",
+   "id": "18,29",
+   "at": "d_pass",
+   "to": "d_pass",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    17,
+    26
+   ],
+   "ms": 1956
+  },
+  {
+   "map": "sandedge",
+   "kind": "door",
+   "id": "sandedge_b_inn",
+   "at": "sandedge_inn",
+   "to": "sandedge_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    20,
+    14
+   ],
+   "ms": 4311
+  }
+ ],
+ "looks": [
+  {
+   "map": "d_east",
+   "npc": "oil_caravan",
+   "look": "npc_oil_carrier",
+   "art": "npc_oil_carrier",
+   "ok": true
+  },
+  {
+   "map": "d_east",
+   "npc": "oil_camel",
+   "look": "ani_camel",
+   "art": "ani_camel",
+   "ok": true
+  },
+  {
+   "map": "d_east",
+   "npc": "guard_ash",
+   "look": "npc_guard_1",
+   "art": "npc_desert_man_1",
+   "ok": true
+  },
+  {
+   "map": "d_pass",
+   "npc": "pilgrim",
+   "look": "npc_desert_old_f",
+   "art": "npc_desert_old_f",
+   "ok": true
+  },
+  {
+   "map": "d_south",
+   "npc": "lost_camel",
+   "look": "ani_camel",
+   "art": "ani_camel",
+   "ok": true
+  },
+  {
+   "map": "desert_camp1",
+   "npc": "c1_man1",
+   "look": "npc_caravan",
+   "art": "npc_caravan",
+   "ok": true
+  },
+  {
+   "map": "desert_camp1",
+   "npc": "c1_man2",
+   "look": "npc_desert_man",
+   "art": "npc_desert_man",
+   "ok": true
+  },
+  {
+   "map": "desert_camp1",
+   "npc": "c1_camel1",
+   "look": "ani_camel",
+   "art": "ani_camel",
+   "ok": true
+  },
+  {
+   "map": "desert_camp1",
+   "npc": "c1_camel2",
+   "look": "ani_camel",
+   "art": "ani_camel",
+   "ok": true
+  },
+  {
+   "map": "desert_camp1",
+   "npc": "rashid_fire",
+   "look": "npc_rashid",
+   "art": "npc_rashid",
+   "ok": true
+  },
+  {
+   "map": "desert_camp1",
+   "npc": "camp1_old",
+   "look": "npc_desert_old_m",
+   "art": "npc_desert_old_m",
+   "ok": true
+  },
+  {
+   "map": "desert_camp2",
+   "npc": "c2_man1",
+   "look": "npc_caravan",
+   "art": "npc_caravan",
+   "ok": true
+  },
+  {
+   "map": "desert_camp2",
+   "npc": "c2_man2",
+   "look": "npc_desert_man",
+   "art": "npc_desert_man",
+   "ok": true
+  },
+  {
+   "map": "desert_camp2",
+   "npc": "c2_camel1",
+   "look": "ani_camel",
+   "art": "ani_camel",
+   "ok": true
+  },
+  {
+   "map": "desert_camp2",
+   "npc": "c2_camel2",
+   "look": "ani_camel",
+   "art": "ani_camel",
+   "ok": true
+  },
+  {
+   "map": "desert_camp2",
+   "npc": "camp2_star",
+   "look": "npc_desert_child",
+   "art": "npc_desert_child",
+   "ok": true
+  },
+  {
+   "map": "desert_camp3",
+   "npc": "c3_zaid",
+   "look": "npc_zaid",
+   "art": "npc_zaid",
+   "ok": true
+  },
+  {
+   "map": "desert_camp3",
+   "npc": "c3_man1",
+   "look": "npc_caravan",
+   "art": "npc_caravan",
+   "ok": true
+  },
+  {
+   "map": "desert_camp3",
+   "npc": "c3_man2",
+   "look": "npc_desert_man",
+   "art": "npc_desert_man",
+   "ok": true
+  },
+  {
+   "map": "desert_camp3",
+   "npc": "c3_camel1",
+   "look": "ani_camel",
+   "art": "ani_camel",
+   "ok": true
+  },
+  {
+   "map": "desert_camp3",
+   "npc": "c3_camel2",
+   "look": "ani_camel",
+   "art": "ani_camel",
+   "ok": true
+  },
+  {
+   "map": "desert_camp3",
+   "npc": "abul_oasis",
+   "look": "npc_abul",
+   "art": "npc_abul",
+   "ok": true
+  },
+  {
+   "map": "desert_camp3",
+   "npc": "hazal_spirit",
+   "look": "npc_hazal",
+   "art": "npc_hazal",
+   "ok": true
+  },
+  {
+   "map": "desert_mirage",
+   "npc": "m_seller_a",
+   "look": "npc_desert_old_f",
+   "art": "npc_desert_old_f",
+   "ok": true
+  },
+  {
+   "map": "desert_mirage",
+   "npc": "m_seller_b",
+   "look": "npc_desert_man",
+   "art": "npc_desert_man",
+   "ok": true
+  },
+  {
+   "map": "desert_mirage",
+   "npc": "m_seller_c",
+   "look": "npc_merchant_2",
+   "art": "npc_traveler_2",
+   "ok": true
+  },
+  {
+   "map": "desert_mirage",
+   "npc": "m_old",
+   "look": "npc_desert_old_m",
+   "art": "npc_desert_old_m",
+   "ok": true
+  },
+  {
+   "map": "desert_mirage",
+   "npc": "m_child",
+   "look": "npc_desert_child",
+   "art": "npc_desert_child",
+   "ok": true
+  },
+  {
+   "map": "desert_mirage",
+   "npc": "m_dancer",
+   "look": "npc_desert_woman",
+   "art": "npc_desert_woman",
+   "ok": true
+  },
+  {
+   "map": "desert_mirage",
+   "npc": "m_camel",
+   "look": "ani_camel",
+   "art": "ani_camel",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "fara",
+   "look": "npc_fara",
+   "art": "npc_fara",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "fara_after",
+   "look": "npc_fara",
+   "art": "npc_fara",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "nadia",
+   "look": "npc_nadia",
+   "art": "npc_nadia",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "zaid_plaza",
+   "look": "npc_zaid",
+   "art": "npc_zaid",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "zaid_after",
+   "look": "npc_zaid",
+   "art": "npc_zaid",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "child_dates",
+   "look": "npc_desert_child",
+   "art": "npc_desert_child",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "sundial_old",
+   "look": "npc_desert_old_m",
+   "art": "npc_desert_old_m",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "arms_vendor",
+   "look": "npc_desert_man",
+   "art": "npc_desert_man",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "bazaar",
+   "look": "npc_desert_woman",
+   "art": "npc_desert_woman",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "dates_vendor",
+   "look": "npc_desert_old_f",
+   "art": "npc_desert_old_f",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "salt_vendor",
+   "look": "npc_caravan",
+   "art": "npc_caravan",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "tadeo",
+   "look": "npc_tadeo",
+   "art": "npc_tadeo",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "guard_w",
+   "look": "npc_desert_man",
+   "art": "npc_desert_man",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "guard_e",
+   "look": "npc_desert_man",
+   "art": "npc_desert_man",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "woman_mid",
+   "look": "npc_desert_woman",
+   "art": "npc_desert_woman",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "hawk_friend",
+   "look": "npc_desert_man",
+   "art": "npc_desert_man",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "rashid_memorial",
+   "look": "npc_rashid",
+   "art": "npc_rashid",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "yura_returnee",
+   "look": "npc_yura_woman",
+   "art": "npc_yura_woman",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "pilgrim_kid",
+   "look": "npc_desert_child",
+   "art": "npc_desert_child",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "camel_1",
+   "look": "ani_camel",
+   "art": "ani_camel",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "cat",
+   "look": "ani_cat",
+   "art": "ani_cat",
+   "ok": true
+  },
+  {
+   "map": "kasim",
+   "npc": "woman_air",
+   "look": "npc_desert_woman",
+   "art": "npc_desert_woman",
+   "ok": true
+  },
+  {
+   "map": "sandedge",
+   "npc": "lotta",
+   "look": "npc_lotta",
+   "art": "npc_lotta",
+   "ok": true
+  },
+  {
+   "map": "sandedge",
+   "npc": "stall",
+   "look": "npc_desert_man",
+   "art": "npc_desert_man",
+   "ok": true
+  },
+  {
+   "map": "sandedge",
+   "npc": "stable",
+   "look": "npc_desert_child",
+   "art": "npc_desert_child",
+   "ok": true
+  },
+  {
+   "map": "sandedge",
+   "npc": "camel_a",
+   "look": "ani_camel",
+   "art": "ani_camel",
+   "ok": true
+  },
+  {
+   "map": "sandedge",
+   "npc": "camel_b",
+   "look": "ani_camel",
+   "art": "ani_camel",
+   "ok": true
+  },
+  {
+   "map": "sandedge",
+   "npc": "forest_trav",
+   "look": "npc_traveler",
+   "art": "npc_traveler",
+   "ok": true
+  },
+  {
+   "map": "sandedge",
+   "npc": "ash_trav",
+   "look": "npc_ash_fighter",
+   "art": "npc_ash_fighter",
+   "ok": true
+  },
+  {
+   "map": "sandedge",
+   "npc": "well_girl",
+   "look": "npc_desert_child",
+   "art": "npc_desert_child",
+   "ok": true
+  }
+ ],
+ "skipped": [
+  {
+   "map": "d_east",
+   "kind": "exit",
+   "id": "55,14",
+   "to": "world",
+   "cond": {
+    "not": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "d_south",
+   "kind": "stairs",
+   "id": "",
+   "to": "desert_temple_1",
+   "cond": {
+    "any": [
+     "cleared_r_desert",
+     {
+      "var": "desert_nights",
+      "gte": 3
+     }
+    ]
+   }
+  },
+  {
+   "map": "d_west",
+   "kind": "exit",
+   "id": "29,21",
+   "to": "desert_mirage",
+   "cond": "desert_night"
+  },
+  {
+   "map": "desert_camp3",
+   "kind": "stairs",
+   "id": "desert_camp3_tomb",
+   "to": "desert_tomb_1",
+   "cond": "desert_camp3_done"
+  }
+ ],
  "errors": []
 }
