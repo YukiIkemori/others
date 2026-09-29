@@ -1,163 +1,103 @@
 {
- "date": "2026-09-29T22:27:31.491Z",
+ "date": "2026-09-29T23:04:59.431Z",
  "fixture": "content_p_pharos",
  "walked": [
   {
-   "map": "aurora",
+   "map": "a_battle",
    "kind": "exit",
-   "id": "18,29",
-   "at": "f_floe",
-   "to": "f_floe",
+   "id": "25,0",
+   "at": "a_pass",
+   "to": "a_pass",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    18,
-    25
+    25,
+    4
    ],
-   "ms": 6380
+   "ms": 3773
   },
   {
-   "map": "f_eastroad",
+   "map": "a_beach",
    "kind": "exit",
-   "id": "0,16",
-   "at": "yule",
-   "to": "yule",
+   "id": "7,0",
+   "at": "a_lava",
+   "to": "a_lava",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    2,
-    14
+    7,
+    4
    ],
-   "ms": 9272
+   "ms": 3436
   },
   {
-   "map": "f_eastroad",
+   "map": "a_bridge",
    "kind": "exit",
-   "id": "55,22",
-   "at": "f_passinn",
-   "to": "f_passinn",
+   "id": "22,0",
+   "at": "m_bog",
+   "to": "m_bog",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
-    55,
-    18
+    22,
+    4
    ],
-   "ms": 5411
+   "ms": 3847
   },
   {
-   "map": "f_eastroad",
+   "map": "a_beach",
    "kind": "exit",
-   "id": "30,39",
-   "at": "snow_woods",
-   "to": "snow_woods",
+   "id": "48,0",
+   "at": "a_foot",
+   "to": "a_foot",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    30,
+    48,
+    4
+   ],
+   "ms": 4684
+  },
+  {
+   "map": "a_bridge",
+   "kind": "exit",
+   "id": "21,39",
+   "at": "a_foot",
+   "to": "a_foot",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    21,
     35
    ],
-   "ms": 3720
+   "ms": 2099
   },
   {
-   "map": "f_floe",
-   "kind": "door",
-   "id": "",
-   "at": "aurora",
-   "to": "aurora",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    11,
-    13
-   ],
-   "ms": 1953
-  },
-  {
-   "map": "f_lake",
-   "kind": "door",
-   "id": "",
-   "at": "icicle_1",
-   "to": "icicle_1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    9,
-    33
-   ],
-   "ms": 3807
-  },
-  {
-   "map": "f_floe",
-   "kind": "door",
-   "id": "",
-   "at": "frost_ship_1",
-   "to": "frost_ship_1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    38,
-    13
-   ],
-   "ms": 4741
-  },
-  {
-   "map": "f_lake",
+   "map": "a_bridge",
    "kind": "exit",
-   "id": "27,43",
-   "at": "f_snowpass",
-   "to": "f_snowpass",
+   "id": "15,22",
+   "at": "haimi_inn",
+   "to": "haimi_inn",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    27,
-    39
+    15,
+    26
    ],
-   "ms": 2348
+   "ms": 2508
   },
   {
-   "map": "f_lake",
-   "kind": "exit",
-   "id": "55,30",
-   "at": "yule",
-   "to": "yule",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    52,
-    29
-   ],
-   "ms": 2467
-  },
-  {
-   "map": "f_passinn",
-   "kind": "exit",
-   "id": "0,23",
-   "at": "f_eastroad",
-   "to": "f_eastroad",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    0,
-    19
-   ],
-   "ms": 1886
-  },
-  {
-   "map": "f_passinn",
+   "map": "a_foot",
    "kind": "exit",
    "id": "20,0",
-   "at": "pass_inn",
-   "to": "pass_inn",
+   "at": "a_bridge",
+   "to": "a_bridge",
    "ok": true,
    "steps": 4,
    "why": null,
@@ -165,194 +105,179 @@
     20,
     4
    ],
-   "ms": 3316
+   "ms": 1999
   },
   {
-   "map": "f_peakfoot",
-   "kind": "door",
-   "id": "",
-   "at": "peak_1",
-   "to": "peak_1",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
-    30,
-    14
-   ],
-   "ms": 4480
-  },
-  {
-   "map": "f_peakfoot",
+   "map": "a_foot",
    "kind": "exit",
-   "id": "23,41",
-   "at": "yule",
-   "to": "yule",
+   "id": "0,21",
+   "at": "caldera",
+   "to": "caldera",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    23,
-    37
+    3,
+    22
    ],
-   "ms": 2862
+   "ms": 3167
   },
   {
-   "map": "f_snowpass",
+   "map": "a_foot",
    "kind": "exit",
-   "id": "24,0",
-   "at": "f_lake",
-   "to": "f_lake",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
-    24,
-    4
-   ],
-   "ms": 2638
-  },
-  {
-   "map": "f_snowpass",
-   "kind": "exit",
-   "id": "23,43",
-   "at": "f_windhill",
-   "to": "f_windhill",
+   "id": "14,43",
+   "at": "a_beach",
+   "to": "a_beach",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    23,
+    14,
     39
    ],
-   "ms": 4027
+   "ms": 1561
   },
   {
-   "map": "frost_ship_1",
-   "kind": "stairs",
-   "id": "frost_ship_1_down",
-   "at": "frost_ship_2",
-   "to": "frost_ship_2",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    30,
-    11
-   ],
-   "ms": 3186
-  },
-  {
-   "map": "icicle_1",
-   "kind": "stairs",
-   "id": "icicle_1_down",
-   "at": "icicle_2",
-   "to": "icicle_2",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    6,
-    21
-   ],
-   "ms": 5181
-  },
-  {
-   "map": "icicle_1",
+   "map": "a_lava",
    "kind": "exit",
-   "id": "43,16",
-   "at": "f_lake",
-   "to": "f_lake",
+   "id": "0,20",
+   "at": "a_pass",
+   "to": "a_pass",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    40,
-    15
+    0,
+    16
    ],
-   "ms": 1966
+   "ms": 1790
   },
   {
-   "map": "frost_ship_1",
+   "map": "a_lava",
    "kind": "exit",
-   "id": "18,23",
-   "at": "f_floe",
-   "to": "f_floe",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    18,
-    19
-   ],
-   "ms": 9357
-  },
-  {
-   "map": "pass_inn",
-   "kind": "door",
-   "id": "pass_gate_inn",
-   "at": "pass_inn_in",
-   "to": "pass_inn_in",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    7,
-    11
-   ],
-   "ms": 1724
-  },
-  {
-   "map": "pass_inn",
-   "kind": "exit",
-   "id": "15,25",
-   "at": "f_passinn",
-   "to": "f_passinn",
+   "id": "15,0",
+   "at": "a_spa",
+   "to": "a_spa",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
     15,
-    21
+    4
    ],
-   "ms": 1498
+   "ms": 1744
   },
   {
-   "map": "pass_inn",
-   "kind": "door",
-   "id": "pass_gate_shop",
-   "at": "pass_inn_shop",
-   "to": "pass_inn_shop",
+   "map": "a_lava",
+   "kind": "exit",
+   "id": "59,20",
+   "at": "caldera",
+   "to": "caldera",
    "ok": true,
-   "steps": 3,
+   "steps": 4,
+   "why": null,
+   "start": [
+    56,
+    19
+   ],
+   "ms": 3338
+  },
+  {
+   "map": "a_lava",
+   "kind": "exit",
+   "id": "48,43",
+   "at": "a_beach",
+   "to": "a_beach",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    47,
+    40
+   ],
+   "ms": 1805
+  },
+  {
+   "map": "a_pass",
+   "kind": "exit",
+   "id": "51,18",
+   "at": "a_lava",
+   "to": "a_lava",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    51,
+    14
+   ],
+   "ms": 1493
+  },
+  {
+   "map": "a_pass",
+   "kind": "exit",
+   "id": "0,19",
+   "at": "d_east",
+   "to": "d_east",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    0,
+    15
+   ],
+   "ms": 2579
+  },
+  {
+   "map": "a_pass",
+   "kind": "exit",
+   "id": "25,39",
+   "at": "a_battle",
+   "to": "a_battle",
+   "ok": true,
+   "steps": 4,
    "why": null,
    "start": [
     25,
-    11
+    35
    ],
-   "ms": 4352
+   "ms": 1767
   },
   {
-   "map": "snow_woods",
+   "map": "a_spa",
    "kind": "exit",
-   "id": "23,41",
-   "at": "f_eastroad",
-   "to": "f_eastroad",
+   "id": "23,39",
+   "at": "a_lava",
+   "to": "a_lava",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
     23,
-    37
+    35
    ],
-   "ms": 5354
+   "ms": 2110
   },
   {
-   "map": "peak_1",
+   "map": "ash_volcano_2",
+   "kind": "stairs",
+   "id": "volcano_2_down",
+   "at": "ash_volcano_1",
+   "to": "ash_volcano_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    21,
+    30
+   ],
+   "ms": 7053
+  },
+  {
+   "map": "ash_volcano_1",
    "kind": "exit",
    "id": "26,47",
-   "at": "f_peakfoot",
-   "to": "f_peakfoot",
+   "at": "a_foot",
+   "to": "a_foot",
    "ok": true,
    "steps": 4,
    "why": null,
@@ -360,462 +285,92 @@
     26,
     43
    ],
-   "ms": 8018
+   "ms": 8024
   },
   {
-   "map": "yule",
-   "kind": "door",
-   "id": "yule_lh_inn",
-   "at": "yule_inn",
-   "to": "yule_inn",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    19,
-    22
-   ],
-   "ms": 1844
-  },
-  {
-   "map": "yule",
-   "kind": "door",
-   "id": "yule_lh_items",
-   "at": "yule_items",
-   "to": "yule_items",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    11,
-    28
-   ],
-   "ms": 1471
-  },
-  {
-   "map": "yule",
-   "kind": "door",
-   "id": "yule_lh_arms",
-   "at": "yule_arms",
-   "to": "yule_arms",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    37,
-    22
-   ],
-   "ms": 1952
-  },
-  {
-   "map": "yule",
-   "kind": "door",
-   "id": "yule_jorn_tower",
-   "at": "yule_jorn",
-   "to": "yule_jorn",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    45,
-    11
-   ],
-   "ms": 1459
-  },
-  {
-   "map": "yule",
-   "kind": "door",
-   "id": "yule_sonja_dome",
-   "at": "yule_sonja",
-   "to": "yule_sonja",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    50,
-    18
-   ],
-   "ms": 1749
-  },
-  {
-   "map": "yule",
-   "kind": "door",
-   "id": "yule_brenda_pit",
-   "at": "yule_brenda",
-   "to": "yule_brenda",
-   "ok": true,
-   "steps": 2,
-   "why": null,
-   "start": [
-    16,
-    39
-   ],
-   "ms": 1615
-  },
-  {
-   "map": "yule",
-   "kind": "door",
-   "id": "yule_olaf_lodge",
-   "at": "yule_hunter",
-   "to": "yule_hunter",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    39,
-    39
-   ],
-   "ms": 1622
-  },
-  {
-   "map": "yule",
-   "kind": "door",
-   "id": "yule_lh_hall",
-   "at": "yule_hall",
-   "to": "yule_hall",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    29,
-    22
-   ],
-   "ms": 14016
-  },
-  {
-   "map": "yule",
-   "kind": "door",
-   "id": "yule_branch",
-   "at": "yule_branch",
-   "to": "yule_branch",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    47,
-    46
-   ],
-   "ms": 1577
-  },
-  {
-   "map": "yule",
-   "kind": "door",
-   "id": "yule_fishhut",
-   "at": "yule_fishhut",
-   "to": "yule_fishhut",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    8,
-    11
-   ],
-   "ms": 1909
-  },
-  {
-   "map": "yule",
+   "map": "haimi_inn",
    "kind": "exit",
-   "id": "27,0",
-   "at": "f_peakfoot",
-   "to": "f_peakfoot",
+   "id": "7,11",
+   "at": "a_bridge",
+   "to": "a_bridge",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    27,
-    4
+    6,
+    8
    ],
-   "ms": 1804
-  },
-  {
-   "map": "yule",
-   "kind": "exit",
-   "id": "0,29",
-   "at": "f_lake",
-   "to": "f_lake",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    4,
-    29
-   ],
-   "ms": 2569
-  },
-  {
-   "map": "yule",
-   "kind": "exit",
-   "id": "55,28",
-   "at": "f_eastroad",
-   "to": "f_eastroad",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    51,
-    28
-   ],
-   "ms": 1977
+   "ms": 1447
   }
  ],
  "looks": [
   {
-   "map": "f_eastroad",
-   "npc": "snow_pilgrim",
-   "look": "npc_snow_old_m",
-   "art": "npc_snow_old_m",
+   "map": "a_pass",
+   "npc": "ash_traveler",
+   "look": "npc_traveler",
+   "art": "npc_traveler",
    "ok": true
   },
   {
-   "map": "f_passinn",
-   "npc": "guard_snow_east",
-   "look": "npc_guard_1",
-   "art": "npc_snow_watch_1",
+   "map": "ash_volcano_1",
+   "npc": "copyist_a",
+   "look": "npc_scribe",
+   "art": "npc_scribe",
    "ok": true
   },
   {
-   "map": "f_peakfoot",
-   "npc": "snow_scout",
-   "look": "npc_snow_watch",
-   "art": "npc_snow_watch",
+   "map": "ash_volcano_1",
+   "npc": "copyist_b",
+   "look": "npc_scribe",
+   "art": "npc_scribe",
    "ok": true
   },
   {
-   "map": "f_snowpass",
-   "npc": "snow_trapper",
-   "look": "npc_snow_man",
-   "art": "npc_snow_man",
-   "ok": true
-  },
-  {
-   "map": "pass_inn",
-   "npc": "bath_keeper",
-   "look": "npc_snow_old_m",
-   "art": "npc_snow_old_m",
-   "ok": true
-  },
-  {
-   "map": "pass_inn",
-   "npc": "pass_inn_scout",
-   "look": "npc_snow_watch",
-   "art": "npc_snow_watch",
-   "ok": true
-  },
-  {
-   "map": "pass_inn",
-   "npc": "pass_inn_fox_man",
-   "look": "npc_snow_man",
-   "art": "npc_snow_man",
-   "ok": true
-  },
-  {
-   "map": "pass_inn",
-   "npc": "pass_dog",
-   "look": "ani_dog",
-   "art": "ani_dog",
-   "ok": true
-  },
-  {
-   "map": "snow_woods",
-   "npc": "woods_hunter",
-   "look": "npc_snow_man",
-   "art": "npc_snow_man",
-   "ok": true
-  },
-  {
-   "map": "snow_woods",
-   "npc": "lost_dog",
-   "look": "ani_dog",
-   "art": "ani_dog",
-   "ok": true
-  },
-  {
-   "map": "yule",
-   "npc": "jorn",
-   "look": "npc_jorn",
-   "art": "npc_jorn",
-   "ok": true
-  },
-  {
-   "map": "yule",
-   "npc": "sonja",
-   "look": "npc_sonja",
-   "art": "npc_sonja",
-   "ok": true
-  },
-  {
-   "map": "yule",
-   "npc": "hald",
-   "look": "npc_hald",
-   "art": "npc_hald",
-   "ok": true
-  },
-  {
-   "map": "yule",
+   "map": "ash_volcano_2",
    "npc": "fine",
    "look": "fine",
    "art": "fine",
    "ok": true
   },
   {
-   "map": "yule",
-   "npc": "watch_e",
-   "look": "npc_snow_watch",
-   "art": "npc_snow_watch",
+   "map": "haimi_inn",
+   "npc": "haimi_keeper",
+   "look": "npc_ash_old_f",
+   "art": "npc_ash_old_f",
    "ok": true
   },
   {
-   "map": "yule",
-   "npc": "sled_man",
-   "look": "npc_snow_man",
-   "art": "npc_snow_man",
+   "map": "haimi_inn",
+   "npc": "haimi_bridgeman",
+   "look": "npc_ash_old_m",
+   "art": "npc_ash_old_m",
    "ok": true
   },
   {
-   "map": "yule",
-   "npc": "sled_dog",
-   "look": "ani_dog",
-   "art": "ani_dog",
-   "ok": true
-  },
-  {
-   "map": "yule",
-   "npc": "sculptor",
-   "look": "npc_snow_woman",
-   "art": "npc_snow_woman",
-   "ok": true
-  },
-  {
-   "map": "yule",
-   "npc": "base_kid",
-   "look": "npc_snow_child",
-   "art": "npc_snow_child",
-   "ok": true
-  },
-  {
-   "map": "yule",
-   "npc": "kid_a",
-   "look": "npc_snow_child",
-   "art": "npc_snow_child",
-   "ok": true
-  },
-  {
-   "map": "yule",
-   "npc": "kid_b",
-   "look": "npc_snow_child",
-   "art": "npc_snow_child",
-   "ok": true
-  },
-  {
-   "map": "yule",
-   "npc": "soup_woman",
-   "look": "npc_snow_woman",
-   "art": "npc_snow_woman",
-   "ok": true
-  },
-  {
-   "map": "yule",
-   "npc": "fur_peddler",
-   "look": "npc_merchant_2",
-   "art": "npc_traveler_2",
-   "ok": true
-  },
-  {
-   "map": "yule",
-   "npc": "traveler",
+   "map": "haimi_inn",
+   "npc": "haimi_guest",
    "look": "npc_traveler",
    "art": "npc_traveler",
-   "ok": true
-  },
-  {
-   "map": "yule",
-   "npc": "tadeo",
-   "look": "npc_oil_carrier",
-   "art": "npc_oil_carrier",
-   "ok": true
-  },
-  {
-   "map": "yule",
-   "npc": "villager_m",
-   "look": "npc_snow_man",
-   "art": "npc_snow_man",
-   "ok": true
-  },
-  {
-   "map": "yule",
-   "npc": "old_m",
-   "look": "npc_snow_old_m",
-   "art": "npc_snow_old_m",
-   "ok": true
-  },
-  {
-   "map": "yule",
-   "npc": "scribe",
-   "look": "npc_scribe",
-   "art": "npc_scribe",
-   "ok": true
-  },
-  {
-   "map": "yule",
-   "npc": "dog",
-   "look": "ani_dog",
-   "art": "ani_dog",
-   "ok": true
-  },
-  {
-   "map": "yule",
-   "npc": "child_c",
-   "look": "npc_snow_child",
-   "art": "npc_snow_child",
-   "ok": true
-  },
-  {
-   "map": "yule",
-   "npc": "woman_b",
-   "look": "npc_snow_woman",
-   "art": "npc_snow_woman",
    "ok": true
   }
  ],
  "skipped": [
   {
-   "map": "f_floe",
-   "kind": "exit",
-   "id": "26,39",
-   "to": "f_lake",
-   "cond": "cleared_r_snow"
-  },
-  {
-   "map": "f_lake",
-   "kind": "exit",
-   "id": "26,0",
-   "to": "f_floe",
-   "cond": "cleared_r_snow"
-  },
-  {
-   "map": "f_passinn",
-   "kind": "exit",
-   "id": "51,28",
-   "to": "world",
-   "cond": {
-    "not": {
-     "slice": true
-    }
-   }
-  },
-  {
-   "map": "peak_1",
+   "map": "a_foot",
    "kind": "stairs",
-   "id": "peak_1_up",
-   "to": "peak_top",
-   "cond": "snow_giant"
+   "id": "",
+   "to": "ash_volcano_1",
+   "cond": "ash_champion"
   },
   {
-   "map": "yule",
-   "kind": "door",
-   "id": "",
-   "to": "yule_base",
-   "cond": "snow_base_open"
+   "map": "ash_volcano_1",
+   "kind": "stairs",
+   "id": "volcano_1_up",
+   "to": "ash_volcano_2",
+   "cond": {
+    "var": "ash_murals",
+    "gte": 3
+   }
   }
  ],
  "errors": []

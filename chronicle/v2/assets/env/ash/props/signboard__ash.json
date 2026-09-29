@@ -1,0 +1,44 @@
+{
+ "id": "signboard__ash",
+ "kind": "props",
+ "theme": "ash",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   12,
+   20
+  ],
+  "32": [
+   16,
+   26
+  ],
+  "40": [
+   20,
+   32
+  ]
+ },
+ "feet": {
+  "24": [
+   6,
+   19
+  ],
+  "32": [
+   8,
+   25
+  ],
+  "40": [
+   10,
+   31
+  ]
+ },
+ "files": {
+  "24": "signboard__ash@24.png",
+  "32": "signboard__ash@32.png",
+  "40": "signboard__ash@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/ash_b.png",
+ "set": "ash",
+ "base": "signboard"
+}

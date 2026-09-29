@@ -1,0 +1,19 @@
+{
+ "id": "a_lava",
+ "kind": "under",
+ "map": "a_lava",
+ "tile": 32,
+ "size32": [
+  1920,
+  1408
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.9,
+ "files": {
+  "24": "a_lava@24.png",
+  "32": "a_lava@32.png"
+ },
+ "src": "generated"
+}

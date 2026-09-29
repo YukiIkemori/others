@@ -8,11 +8,13 @@
   1152
  ],
  "windows32": [],
- "doors32": [],
  "painted": [],
+ "live": [],
+ "gain": 1.0,
  "files": {
   "24": "ash_volcano_2@24.png",
   "32": "ash_volcano_2@32.png",
   "40": "ash_volcano_2@40.png"
- }
+ },
+ "src": "generated"
 }

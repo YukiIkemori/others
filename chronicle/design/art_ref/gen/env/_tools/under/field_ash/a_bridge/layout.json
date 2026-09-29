@@ -518,16 +518,18 @@
 {
 "type": "waylamp",
 "id": "wl_a_bridge_inn",
-"x": 19,
-"y": 22,
-"lit": true
+"x": 27,
+"y": 21,
+"lit": true,
+"fixed": true
 },
 {
 "type": "waylamp",
 "id": "wl_a_bridge_1",
-"x": 25,
-"y": 30,
-"lit": true
+"x": 26,
+"y": 32,
+"lit": true,
+"fixed": true
 }
 ],
 "spawns": {
@@ -621,7 +623,7 @@
 "npcs": []
 },
 "rows_fit": [
-"~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~X===~~~~~~~~~~~~~~~~~~~~~~~",
 "~~~~~~~~~~~~~~~~~~~~~X===~~~~~~~~~~~~~~~~~~~~~~~",
 "~~~~~~~~~~~~~~~~~~~~~X===~~~~~~~~~~~~~~~~~~~~~~~",
 "~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
@@ -636,14 +638,14 @@
 "~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
 "~~~~~~~~~~~~~~~rr~~~~X===s~~~rr~~~~~~~~~~~~~~~~~",
 "~~~~~~~~~~~~~rrrkrrrrX===skrrrTrrr~~~~~~~~~~~~~~",
-"RRRR~~~~wwrrrTkkkkkTrrT=kkrkkkkrrrrrrrrrrrrrrrrr",
-"RRRRRRrrrrrrTkkkkkkkkTT.krkkkkkrrrrrrTTTkkTrrTTr",
+"RRRR~~~~w~rrrTkkkkkTrrT=kkrkkkkrrrrrrrrrrrrrrrrr",
+"RRRRRRrrrrrrTkkkkkkkkTT.krkkkkkrrrrrrTTTkkTrrTTT",
 "RRRRRRRrrrTkTTTrrTTTkk..TTkkkkkrrrrrrkkkkRRRRRRR",
 "RRRRRRRrssssXXXXXXXTss..kkkkkssTrrrrskkkRRRRRRRR",
 "RRRRRRRRTsssXXXXXXXrss..ssssssssssssssssRRRRRRRR",
 "RRRRRRRRRTssXXXXXXXrss..sssssssssssssssRRRRRRRRR",
-"RRRRRRRRRTssXXXXXXXsss..sssssssssssssssRRRRRRRRR",
-"RRRRRRRRRsssXXX:XXXsss..sssssssssssssssRRRRRRRRR",
+"RRRRRRRRRTssXXXXXXXrss..sssssssssssssssRRRRRRRRR",
+"RRRRRRRRRsssXXX:XXXrss..sssssssssssssssRRRRRRRRR",
 "RRRRRRRRRTsssccccc:::::.ssssssssssssssRRRRRRRRRR",
 "RRRRRRRRRTsssccccc:::::.ssssssssssssssRRRRRRRRRR",
 "RRRRRRRRRTssssssssssss..sssssssssssssTRRRRRRRRRR",
@@ -655,11 +657,11 @@
 "RRRRRRRRrssssssssssss..sssssssssssssssuuRRRRRRRR",
 "RRRRRRRRrssssssssssss..ssssssssssssssuuuRRRRRRRR",
 "RRRRRRRRRTsssssssssss..ssssssssssssssuTuRRRRRRRR",
-"RRRRRRRRRrusrrrsTsss..ssssssssssssssuTTTRRRRRRRR",
-"RRRRRRRRRrTsrsrrssss..ssssssssssssssuuuRRRRRRRRR",
-"RRRRRRRRRrTssssrrsss..sssssssssssTsuuuuRRRRRRRRR",
-"RRRRRRRRRRrsrrsrrsss..ssssssssssTsssuuTRRRRRRRRR",
-"RRRRRRRRRRrsrrrsssss..ssssssssssssssuuRRRRRRRRRR",
-"RRRRRRRRRRrssrssssss...sssssssTsssssssRRRRRRRRRR"
+"RRRRRRRRRrusssssTsss..ssssssssssssssuTTTRRRRRRRR",
+"RRRRRRRRRrTsssssssss..ssssssssssssssuuuRRRRRRRRR",
+"RRRRRRRRRrTsssssssss..sssssssssssTsuuuuRRRRRRRRR",
+"RRRRRRRRRRrsssssssss..ssssssssssTsssuuTRRRRRRRRR",
+"RRRRRRRRRRrsssssssss..ssssssssssssssuuRRRRRRRRRR",
+"RRRRRRRRRRrsssssssss...sssssssTsssssssRRRRRRRRRR"
 ]
 }

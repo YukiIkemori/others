@@ -77,6 +77,8 @@ def draw(T, sym=True):
                 r = int(T * 0.40); g.ellipse([cx - r, cy - r, cx + r, cy + r], fill=(112, 116, 96), outline=(56, 58, 46), width=lw)
             elif c == 'r':
                 r = int(T * 0.42); g.ellipse([cx - r, cy - r + T // 10, cx + r, cy + r], fill=(84, 80, 82), outline=(34, 30, 32), width=lw)
+            elif c == 'R' and __import__('os').environ.get('SOFTWALL'):   # dungeons: walls only as a soft colour (no per-tile strata to copy)
+                pass
             elif c == 'R':
                 up = ch(x, y - 1)
                 for q in range(T // 4, T, T // 3): g.line([x * T, y * T + q + rnd.randint(-2, 2), x * T + T, y * T + q + rnd.randint(-2, 2)], fill=(62, 54, 52), width=lw)

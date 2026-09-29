@@ -1,0 +1,49 @@
+{
+ "id": "lantern__ash",
+ "kind": "props",
+ "theme": "ash",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   10,
+   12
+  ],
+  "32": [
+   14,
+   16
+  ],
+  "40": [
+   18,
+   20
+  ]
+ },
+ "feet": {
+  "24": [
+   5,
+   11
+  ],
+  "32": [
+   7,
+   15
+  ],
+  "40": [
+   9,
+   19
+  ]
+ },
+ "files": {
+  "24": "lantern__ash@24.png",
+  "32": "lantern__ash@32.png",
+  "40": "lantern__ash@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/ash_b.png",
+ "set": "ash",
+ "base": "lantern",
+ "light32": [
+  0,
+  -8
+ ],
+ "fire": true
+}

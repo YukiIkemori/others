@@ -112,8 +112,10 @@ save_set(aid, A)
 lava = ndimage.binary_dilation(kron(g == 'l'), iterations=10)
 r_, g_, b_ = A[..., 0], A[..., 1], A[..., 2]
 hot = lava & (r_ > 170) & (r_ - b_ > 90) & (g_ > 50)
-if hot.any():
-    e = np.zeros((H * T, W * T, 4), np.float32); e[..., :3] = A; e[..., 3] = hot * 235
+if hot.any() or (g == 'l').any():
+    # the dark crust plates on the lava cells glow too (a little): under the cool night / cave light they would turn teal-grey
+    crust = kron(g == 'l') & ~hot
+    e = np.zeros((H * T, W * T, 4), np.float32); e[..., :3] = A; e[..., 3] = hot * 235 + crust * 150
     e[..., :3] *= (e[..., 3:4] > 0)
     save_set(aid + '_emit', e, True)
 print('emit px', int(hot.sum()))

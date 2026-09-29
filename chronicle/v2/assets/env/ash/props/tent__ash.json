@@ -1,0 +1,44 @@
+{
+ "id": "tent__ash",
+ "kind": "props",
+ "theme": "ash",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   37,
+   27
+  ],
+  "32": [
+   49,
+   36
+  ],
+  "40": [
+   61,
+   45
+  ]
+ },
+ "feet": {
+  "24": [
+   18,
+   26
+  ],
+  "32": [
+   24,
+   35
+  ],
+  "40": [
+   31,
+   44
+  ]
+ },
+ "files": {
+  "24": "tent__ash@24.png",
+  "32": "tent__ash@32.png",
+  "40": "tent__ash@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/ash_b.png",
+ "set": "ash",
+ "base": "tent"
+}

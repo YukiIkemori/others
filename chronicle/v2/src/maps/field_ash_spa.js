@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("a_spa", {
-    name: "湯けむりの谷", region: "r_ash", outside: "rock",
+    name: R.T('map.field_ash_spa.a_spa.name'), region: "r_ash", outside: "rock",
     legend: R.FieldArea.ASH_LEGEND, theme: 'ash', bgm: 'overworld', bbg: 'ash', propSet: 'ash', propSetBase: 'village',
     light: R.FieldArea.ASH_LIGHT,
     rows: [
@@ -52,7 +52,7 @@
     ],
     objects: [
       {"type":"examine","x":23,"y":22,"event":"ash_spa_pool"},
-      {"type":"sign","x":21,"y":33,"text":"溶岩洞の湯の郷\n岩の割れ目から、湯が湧く。"},
+      {"type":"sign","x":21,"y":33,"text":R.T('map.field_ash_spa.a_spa.objects.1.text')},
       {"type":"prop","id":"steam_vent","x":12,"y":25},
       {"type":"prop","id":"steam_vent","x":33,"y":20},
       {"type":"prop","id":"steam_vent","x":28,"y":8},
@@ -68,7 +68,7 @@
     tilePatches: [],
     zones: [{"rect":null,"zone":"zw_ash_spa"}],
     art: {"image":"field/under/a_spa","painted":[],"overlay":"field/under/a_spa_over"},
-    meta: {"sub":"溶岩洞の湯の郷","worldRect":[360,354,84,42]},
+    meta: {"sub":R.T('map.field_ash_spa.a_spa.meta.sub'),"worldRect":[360,354,84,42]},
     links: {},
   });
 })(window.RPG);

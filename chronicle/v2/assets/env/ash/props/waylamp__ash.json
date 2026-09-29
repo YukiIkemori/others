@@ -1,0 +1,50 @@
+{
+ "id": "waylamp__ash",
+ "kind": "props",
+ "theme": "ash",
+ "frames": [
+  "off",
+  "on"
+ ],
+ "cell": {
+  "24": [
+   24,
+   43
+  ],
+  "32": [
+   32,
+   57
+  ],
+  "40": [
+   40,
+   71
+  ]
+ },
+ "feet": {
+  "24": [
+   12,
+   42
+  ],
+  "32": [
+   16,
+   56
+  ],
+  "40": [
+   20,
+   70
+  ]
+ },
+ "files": {
+  "24": "waylamp__ash@24.png",
+  "32": "waylamp__ash@32.png",
+  "40": "waylamp__ash@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/ash_b.png",
+ "set": "ash",
+ "base": "waylamp",
+ "light32": [
+  0,
+  -40
+ ],
+ "fire": true
+}

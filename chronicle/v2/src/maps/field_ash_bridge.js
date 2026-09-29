@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("a_bridge", {
-    name: "潮見橋のたもと", region: "r_ash", outside: "sea",
+    name: R.T('map.field_ash_bridge.a_bridge.name'), region: "r_ash", outside: "sea",
     legend: R.FieldArea.ASH_LEGEND, theme: 'ash', bgm: 'overworld', bbg: 'ash', propSet: 'ash', propSetBase: 'village',
     light: R.FieldArea.ASH_LIGHT,
     rows: [
@@ -24,14 +24,14 @@
       "~~~~~~~~~~~~~~~~~~~~~X===s~~~~~~~~~~~~~~~~~~~~~~",
       "~~~~~~~~~~~~~~~rr~~~~X===s~~~rr~~~~~~~~~~~~~~~~~",
       "~~~~~~~~~~~~~rrrkrrrrX===skrrrTrrr~~~~~~~~~~~~~~",
-      "RRRR~~~~wwrrrTkkkkkTrrT=kkrkkkkrrrrrrrrrrrrrrrrr",
-      "RRRRRRrrrrrrTkkkkkkkkTT.krkkkkkrrrrrrTTTkkTrrTTr",
+      "RRRR~~~~w~rrrTkkkkkTrrT=kkrkkkkrrrrrrrrrrrrrrrrr",
+      "RRRRRRrrrrrrTkkkkkkkkTT.krkkkkkrrrrrrTTTkkTrrTTT",
       "RRRRRRRrrrTkTTTrrTTTkk..TTkkkkkrrrrrrkkkkRRRRRRR",
       "RRRRRRRrssssXXXXXXXTss..kkkkkssTrrrrskkkRRRRRRRR",
       "RRRRRRRRTsssXXXXXXXrss..ssssssssssssssssRRRRRRRR",
       "RRRRRRRRRTssXXXXXXXrss..sssssssssssssssRRRRRRRRR",
-      "RRRRRRRRRTssXXXXXXXsss..sssssssssssssssRRRRRRRRR",
-      "RRRRRRRRRsssXXX:XXXsss..sssssssssssssssRRRRRRRRR",
+      "RRRRRRRRRTssXXXXXXXrss..sssssssssssssssRRRRRRRRR",
+      "RRRRRRRRRsssXXX:XXXrss..sssssssssssssssRRRRRRRRR",
       "RRRRRRRRRTsssccccc:::::.ssssssssssssssRRRRRRRRRR",
       "RRRRRRRRRTsssccccc:::::.ssssssssssssssRRRRRRRRRR",
       "RRRRRRRRRTssssssssssss..sssssssssssssTRRRRRRRRRR",
@@ -43,20 +43,20 @@
       "RRRRRRRRrssssssssssss..sssssssssssssssuuRRRRRRRR",
       "RRRRRRRRrssssssssssss..ssssssssssssssuuuRRRRRRRR",
       "RRRRRRRRRTsssssssssss..ssssssssssssssuTuRRRRRRRR",
-      "RRRRRRRRRrusrrrsTsss..ssssssssssssssuTTTRRRRRRRR",
-      "RRRRRRRRRrTsrsrrssss..ssssssssssssssuuuRRRRRRRRR",
-      "RRRRRRRRRrTssssrrsss..sssssssssssTsuuuuRRRRRRRRR",
-      "RRRRRRRRRRrsrrsrrsss..ssssssssssTsssuuTRRRRRRRRR",
-      "RRRRRRRRRRrsrrrsssss..ssssssssssssssuuRRRRRRRRRR",
-      "RRRRRRRRRRrssrssssss...sssssssTsssssssRRRRRRRRRR",
+      "RRRRRRRRRrusssssTsss..ssssssssssssssuTTTRRRRRRRR",
+      "RRRRRRRRRrTsssssssss..ssssssssssssssuuuRRRRRRRRR",
+      "RRRRRRRRRrTsssssssss..sssssssssssTsuuuuRRRRRRRRR",
+      "RRRRRRRRRRrsssssssss..ssssssssssTsssuuTRRRRRRRRR",
+      "RRRRRRRRRRrsssssssss..ssssssssssssssuuRRRRRRRRRR",
+      "RRRRRRRRRRrsssssssss...sssssssTsssssssRRRRRRRRRR",
     ],
     objects: [
       {"type":"examine","x":24,"y":15,"event":"ash_bridge_sign"},
       {"type":"examine","x":21,"y":3,"event":"ash_bridge_sign"},
-      {"type":"sign","x":26,"y":19,"text":"潮見橋\n北 → グレイモア湿原"},
-      {"type":"sign","x":19,"y":25,"text":"灰見の宿"},
-      {"type":"waylamp","id":"wl_a_bridge_inn","x":18,"y":25,"lit":true},
-      {"type":"waylamp","id":"wl_a_bridge_1","x":24,"y":31,"lit":true},
+      {"type":"sign","x":26,"y":19,"text":R.T('map.field_ash_bridge.a_bridge.objects.2.text')},
+      {"type":"sign","x":19,"y":25,"text":R.T('map.field_ash_bridge.a_bridge.objects.3.text')},
+      {"type":"waylamp","id":"wl_a_bridge_inn","x":27,"y":21,"lit":true},
+      {"type":"waylamp","id":"wl_a_bridge_1","x":26,"y":32,"lit":true},
     ],
     npcs: [
 
@@ -67,7 +67,7 @@
     tilePatches: [],
     zones: [{"rect":[19,14,7,29],"zone":"zw_ash_road"},{"rect":null,"zone":"zw_ash_plain"}],
     art: {"image":"field/under/a_bridge","painted":[],"overlay":"field/under/a_bridge_over"},
-    meta: {"sub":"湿原と灰をつなぐ橋","worldRect":[528,336,90,48]},
+    meta: {"sub":R.T('map.field_ash_bridge.a_bridge.meta.sub'),"worldRect":[528,336,90,48]},
     links: {"haimi":{"map":"a_bridge","spawn":"haimi"},"ash_bridge":{"map":"a_bridge","spawn":"north"}},
   });
 })(window.RPG);

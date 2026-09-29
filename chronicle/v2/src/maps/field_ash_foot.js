@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("a_foot", {
-    name: "火山のふもと", region: "r_ash", outside: "rock",
+    name: R.T('map.field_ash_foot.a_foot.name'), region: "r_ash", outside: "rock",
     legend: R.FieldArea.ASH_LEGEND, theme: 'ash', bgm: 'overworld', bbg: 'ash', propSet: 'ash', propSetBase: 'village',
     light: R.FieldArea.ASH_LIGHT,
     rows: [
@@ -57,8 +57,8 @@
     objects: [
       {"type":"stairs","x":39,"y":20,"to":{"map":"ash_volcano_1","spawn":"entrance"},"cond":"ash_champion","look":"none"},
       {"type":"examine","x":39,"y":20,"event":"ash_rockdoor_world","cond":{"not":"ash_champion"}},
-      {"type":"sign","x":34,"y":22,"text":"灰の火山\n炎の試練の勝者のほか、入るべからず。"},
-      {"type":"sign","x":5,"y":24,"text":"北 → 潮見橋・灰見の宿\n南 → 火山ガメの浜"},
+      {"type":"sign","x":34,"y":22,"text":R.T('map.field_ash_foot.a_foot.objects.2.text')},
+      {"type":"sign","x":5,"y":24,"text":R.T('map.field_ash_foot.a_foot.objects.3.text')},
       {"type":"waylamp","id":"wl_a_foot_gate","x":6,"y":20,"lit":true},
       {"type":"waylamp","id":"wl_a_foot_1","x":19,"y":17,"lit":true},
       {"type":"prop","id":"iron_brazier","x":38,"y":20},
@@ -75,7 +75,7 @@
     tilePatches: [],
     zones: [{"rect":[0,18,40,6],"zone":"zw_ash_road"},{"rect":null,"zone":"zw_ash_plain"}],
     art: {"image":"field/under/a_foot","painted":["lava_glow"],"overlay":"field/under/a_foot_over","emit":"field/under/a_foot_emit"},
-    meta: {"sub":"カルデラの東、火の鳥の眠る山","worldRect":[519,384,99,66]},
+    meta: {"sub":R.T('map.field_ash_foot.a_foot.meta.sub'),"worldRect":[519,384,99,66]},
     links: {"caldera_e":{"map":"a_foot","spawn":"caldera"},"volcano":{"map":"a_foot","spawn":"volcano"}},
   });
 })(window.RPG);

@@ -1,0 +1,412 @@
+{
+"id": "ash_volcano_1",
+"w": 56,
+"h": 48,
+"rows": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRXXXRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRkkkkkkkkRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRkkkkkkkkkkRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRkkkkkkkkkkRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRkkkkkkkkRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRssssRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRssssRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRssssRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRXXRRRRRRRRRRRRRRssssRRRRRRRRRRRRRRRRRXXRRRRRRR",
+"RRRRRRRRRRssssRRRRRRRRRRRRssssRRRRRRRRRRRRRRRRsssRRsRRRR",
+"RRRRRRRsssssssssRRRRRRRRRRssssRRRRRRRRRRRRRsssskkkssRRRR",
+"RRRRRRsssssssssssRRRRRRRRRssssRRRRRRRRRRRRsssskkkkksRRRR",
+"RRRRRssssssssssssRRRRRRRRRssssRRRRRRRRRRRssssskkkkkksRRR",
+"RRRRRssssssssssssRRRRRRRRRssssRRRRRRRRRRRssssskkkkkssRRR",
+"RRRRRssssssssssssRRRRRRRRRssssRRRRRRRRRRRsssssskkksssRRR",
+"RRRRRssssssssssssRRRRRssssssssssRRRRRRRRRssssssssssssRRR",
+"RRRRRssssssssssssssssssssssssssssssssssssssssssssssssRRR",
+"RRRRRssssssssssssssssssssssssssssssssssssssssssssssssRRR",
+"RRRRRssssssssssssssssssssslllllsssssssssssslllsssssssRRR",
+"RRRRRssssssrsssssssssssssslllllssssssRRssRlllllsssssRRRR",
+"RRRRRRRssssssRRRRRRssssssslllllssssssRRRRRRlllRRssssRRRR",
+"RRRRRRRRssssRRRRRRRssssssssssssssssssRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRssssssssssssssssssRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRsssssssssssssssssRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRllRRRRssssssssssssssRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRlllRRRRRsssssssssssRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRlllRRRRRRRssssRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRllllllllllRRRRssssllllllllRRRRRRRlllRRRRRRRR",
+"RRRRRRRRRRlllllllllllllllllkklllllllllllllllllllRRRRRRRR",
+"RRRRRRRRRRRlllRllllllllllllkklllRlllllllllllllllRRRRRRRR",
+"RRRRRRRRRXXRRRRlllRRRRRRRRssssRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRsssRRRlllRRRRRRRRssssRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRsssssssRRllRRRRRRsssssssssRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRsssssssssRlllRRRsssssssssssssRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRssssssssssslllRssssssssssssssssRRRRRRRRRRRRRRRRRRRR",
+"RRRRsssssssssssslllRsssssssssssssssssRRRRRRRRRRRRRRRRRRR",
+"RRRRsssssssssssskkkssssssssssssssssssRRRRRRRRRRRRRRRRRRR",
+"RRRRRssssssssssskkkssssssssssssssslllRRRRRRRRRRRRRRRRRRR",
+"RRRRRssssssssssskkksssssssssssssssllllRRRRRRRRRRRRRRRRRR",
+"RRRRRsssssssssRRllRRRssssssssssssslllRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRsssssRRRllRRRRRsssssssssssssRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRllRRRRRRRsssssssssRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRlllRRRRRRRssssRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRlllRRRRRRRssssRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRlllRRRRRRRssssRRRRRRRRRRRRRRRRRRRRRRRRRR"
+],
+"marks": [
+{
+"kind": "mural9",
+"cells": [
+[
+9,
+33
+],
+[
+10,
+33
+]
+],
+"text": "a MURAL carved and painted in red and gold ochre on the rock wall: a flaming firebird rising from a burning egg",
+"color": [
+190,
+120,
+60
+],
+"solid": true
+},
+{
+"kind": "mural47",
+"cells": [
+[
+47,
+11
+],
+[
+48,
+11
+]
+],
+"text": "a MURAL carved and painted in red and gold ochre on the rock wall: a great firebird with spread wings over a mountain",
+"color": [
+190,
+120,
+60
+],
+"solid": true
+},
+{
+"kind": "mural10",
+"cells": [
+[
+10,
+11
+],
+[
+11,
+11
+]
+],
+"text": "a MURAL carved and painted in red and gold ochre on the rock wall: people bowing before a sleeping firebird",
+"color": [
+190,
+120,
+60
+],
+"solid": true
+},
+{
+"kind": "rockdoor",
+"cells": [
+[
+27,
+2
+],
+[
+28,
+2
+],
+[
+29,
+2
+]
+],
+"text": "a round carved ROCK DOOR slab of black stone in the north wall with three bird-shaped hollows",
+"color": [
+60,
+56,
+62
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 28,
+"y": 3
+},
+{
+"type": "o",
+"x": 28,
+"y": 4
+},
+{
+"type": "o",
+"x": 28,
+"y": 5
+},
+{
+"type": "o",
+"x": 27,
+"y": 45
+},
+{
+"type": "o",
+"x": 5,
+"y": 42
+},
+{
+"type": "o",
+"x": 13,
+"y": 35
+},
+{
+"type": "o",
+"x": 51,
+"y": 23
+},
+{
+"type": "o",
+"x": 5,
+"y": 22
+},
+{
+"type": "o",
+"x": 22,
+"y": 42
+},
+{
+"type": "o",
+"x": 51,
+"y": 12
+},
+{
+"type": "o",
+"x": 32,
+"y": 37
+},
+{
+"type": "o",
+"x": 33,
+"y": 25
+},
+{
+"type": "o",
+"x": 30,
+"y": 44
+},
+{
+"type": "o",
+"x": 9,
+"y": 13
+},
+{
+"type": "o",
+"x": 12,
+"y": 13
+},
+{
+"type": "o",
+"x": 9,
+"y": 34
+},
+{
+"type": "o",
+"x": 10,
+"y": 34
+},
+{
+"type": "o",
+"x": 47,
+"y": 12
+},
+{
+"type": "o",
+"x": 48,
+"y": 12
+},
+{
+"type": "o",
+"x": 10,
+"y": 12
+},
+{
+"type": "o",
+"x": 11,
+"y": 12
+},
+{
+"type": "o",
+"x": 39,
+"y": 20
+},
+{
+"type": "o",
+"x": 39,
+"y": 21
+},
+{
+"type": "o",
+"x": 39,
+"y": 22
+},
+{
+"type": "o",
+"x": 40,
+"y": 20
+},
+{
+"type": "o",
+"x": 40,
+"y": 21
+},
+{
+"type": "o",
+"x": 40,
+"y": 22
+},
+{
+"type": "o",
+"x": 16,
+"y": 20
+},
+{
+"type": "o",
+"x": 16,
+"y": 21
+},
+{
+"type": "o",
+"x": 16,
+"y": 22
+},
+{
+"type": "o",
+"x": 17,
+"y": 20
+},
+{
+"type": "o",
+"x": 17,
+"y": 21
+},
+{
+"type": "o",
+"x": 17,
+"y": 22
+},
+{
+"type": "o",
+"x": 26,
+"y": 47
+},
+{
+"type": "o",
+"x": 27,
+"y": 47
+},
+{
+"type": "o",
+"x": 28,
+"y": 47
+},
+{
+"type": "o",
+"x": 29,
+"y": 47
+}
+],
+"spawns": {
+"entrance": {
+"x": 27,
+"y": 45,
+"dir": "n"
+},
+"stairs": {
+"x": 28,
+"y": 5,
+"dir": "s"
+}
+},
+"exits": [
+{
+"x": 26,
+"y": 47,
+"w": 4,
+"h": 1,
+"to": {},
+"edge": "s"
+}
+],
+"notes": [],
+"meta": {
+"name": "灰の火山",
+"region": "r_ash",
+"zones": [],
+"worldRect": [
+0,
+0,
+1,
+1
+]
+},
+"rows_fit": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRXXXRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRskkkrRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRrrkkkkkrRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRkkkkkkkkrrRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRkkkkkkkkrrRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRkkkkkkrrRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRssssRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRsssssRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRsssssRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRXXRRRRRRRRRRRRRsssssRRRRRRRRRRRRRRRRRXXRRRRRRR",
+"RRRRRRRssRssssRsRRRRRRRRRRssssRRRRRRRRRRRRRssssssRRsRRRR",
+"RRRRRRssssssssssRRRRRRRRRRssssRRRRRRRRRRRRssssskkkssRRRR",
+"RRRRRRsssssssssssRRRRRRRRsssssRRRRRRRRRRRssssskkkkksRRRR",
+"RRRRRssssssssssssRRRRRRRRsssssRRRRRRRRRRRssssskkkkkksRRR",
+"RRRRRssssssssssssRRRRRRRRsssssRRRRRRRRRRRssssskkkkkssRRR",
+"RRRRRssssssssssssRRRRRssssssssssRRRRRRRRRsssssskkkssrRRR",
+"RRRRRsssssssssssssRRRsssssssssssRRRRRRsRRsssssssssssrRRR",
+"RRRRRssssssssssssssssssssssssssssssssssssssssssssssssRRR",
+"RRRRRssssssssssssssssssssslllllsssssssssssllllsssssssRRR",
+"RRRRRssssssssssssssssssssllllllssssssssssslllllsssssrRRR",
+"RRRRRssssssssssssssssssssllllllssssssRRssRlllllsssssRRRR",
+"RRRRRRRrssssrRRRRRRsssssssllslsssssssRRRRRRlllRRrrssRRRR",
+"RRRRRRRRrrrrRRRRRRRssssssssssssssssssRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRssssssssssssssssssRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRrssssssssssssssssRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRllRRRRsssssssssssssrRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRlllRRRRRsssssssssssRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRlllRRRRRRRssslRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRllllllllllRRRRlkklllllllllRRRRRRRlllRRRRRRRR",
+"RRRRRRRRRRlllllllllllllllllkklllllllllllllllllllRRRRRRRR",
+"RRRRRRRRRRRlllRllllllllllsssssllRlllllllllllllllRRRRRRRR",
+"RRRRRRRRRXXRRRRlllRRRRRRRRssssRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRsRssssRRlllRRRRRRssssssssRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRssssssssRRllRRRRsssssssssssssRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRssssssssssslllRssssssssssssssssRRRRRRRRRRRRRRRRRRRR",
+"RRRRsssssssssssslllRsssssssssssssssssRRRRRRRRRRRRRRRRRRR",
+"RRRRsssssssssssskkkssssssssssssssssssRRRRRRRRRRRRRRRRRRR",
+"RRRRrssssssssssskkkssssssssssssssllllRRRRRRRRRRRRRRRRRRR",
+"RRRRRssssssssssskkkssssssssssssssllllRRRRRRRRRRRRRRRRRRR",
+"RRRRRsssssssssrrllrrrsssssssssssslllllRRRRRRRRRRRRRRRRRR",
+"RRRRRssrsssssrRRllRRRssssssssssssssslRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRrrrrrRRRllRRRRRrrssssssssrrrRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRllRRRRRRRrssssssrrRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRlllRRRRRRRssssRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRlllRRRRRRRssssRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRlllRRRRRRRssssRRRRRRRRRRRRRRRRRRRRRRRRRR"
+]
+}

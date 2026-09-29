@@ -416,5 +416,41 @@
     'map.field_desert_west.d_west.objects.7.text': '岩の台地\n夜、鷹の笛が聞こえるという。',
     'map.field_desert_west.d_west.objects.8.text': 'オアシスの町カシム\n――泉を囲む市場',
     'map.field_desert_west.d_west.meta.sub': 'カシムの西の野',
+    // ---- src/maps/field_ash_00_kit.js
+    'map.field_ash_00_kit.ash_volcano_1': '岩戸の奥は、灰の火山の中だ。\n中へ入りますか？',
+    // ---- src/maps/field_ash_battle.js
+    'map.field_ash_battle.a_battle.name': '灰の古戦場',
+    'map.field_ash_battle.a_battle.objects.1.text': '灰の古戦場\n折れた剣の碑',
+    'map.field_ash_battle.a_battle.meta.sub': '折れた剣の眠る窪地',
+    // ---- src/maps/field_ash_beach.js
+    'map.field_ash_beach.a_beach.name': '火山ガメの浜',
+    'map.field_ash_beach.a_beach.objects.1.text': '黒い砂浜\n動く岩に注意。',
+    'map.field_ash_beach.a_beach.meta.sub': '黒い砂浜',
+    // ---- src/maps/field_ash_bridge.js
+    'map.field_ash_bridge.a_bridge.name': '潮見橋のたもと',
+    'map.field_ash_bridge.a_bridge.objects.2.text': '潮見橋\n北 → グレイモア湿原',
+    'map.field_ash_bridge.a_bridge.objects.3.text': '灰見の宿',
+    'map.field_ash_bridge.a_bridge.meta.sub': '湿原と灰をつなぐ橋',
+    // ---- src/maps/field_ash_foot.js
+    'map.field_ash_foot.a_foot.name': '火山のふもと',
+    'map.field_ash_foot.a_foot.objects.2.text': '灰の火山\n炎の試練の勝者のほか、入るべからず。',
+    'map.field_ash_foot.a_foot.objects.3.text': '北 → 潮見橋・灰見の宿\n南 → 火山ガメの浜',
+    'map.field_ash_foot.a_foot.meta.sub': 'カルデラの東、火の鳥の眠る山',
+    // ---- src/maps/field_ash_lava.js
+    'map.field_ash_lava.a_lava.name': '溶岩の原',
+    'map.field_ash_lava.a_lava.objects.0.text': '溶岩の原\n道をはずれると、足もとが熱い。',
+    'map.field_ash_lava.a_lava.objects.1.text': '北西 → 湯けむりの谷\n南 → 火山ガメの浜\n東 → 炎の町カルデラ',
+    'map.field_ash_lava.a_lava.objects.2.text': '炎の町カルデラ\n――火口の段々と闘技場の町',
+    'map.field_ash_lava.a_lava.meta.sub': 'カルデラの西の黒い原',
+    // ---- src/maps/field_ash_pass.js
+    'map.field_ash_pass.a_pass.name': '灰かぶりの峠',
+    'map.field_ash_pass.a_pass.objects.0.text': '灰の荒野\n東 → 炎の町カルデラ',
+    'map.field_ash_pass.a_pass.objects.1.text': '南 → 灰の古戦場\n折れた剣の碑',
+    'map.field_ash_pass.a_pass.ash_traveler.name': '灰の荒野の旅人',
+    'map.field_ash_pass.a_pass.meta.sub': '砂漠から灰の荒野へ抜ける峠',
+    // ---- src/maps/field_ash_spa.js
+    'map.field_ash_spa.a_spa.name': '湯けむりの谷',
+    'map.field_ash_spa.a_spa.objects.1.text': '溶岩洞の湯の郷\n岩の割れ目から、湯が湧く。',
+    'map.field_ash_spa.a_spa.meta.sub': '溶岩洞の湯の郷',
   });
 })(window.RPG);

@@ -37,7 +37,7 @@ for aid in sys.argv[1:]:
         return any(rows[y + j][x + i] in ROADC for i in range(-2, 3) for j in range(-2, 3))
     for o in d['objects']:
         if o.get('type') in ('waylamp',) or o.get('id') == 'lamp_post':
-            if good(o['x'], o['y']): continue
+            if o.pop('fixed', None) or good(o['x'], o['y']): continue   # fixed: placed by hand off the painted road
             c = sorted(((abs(x - o['x']) + abs(y - o['y']), x, y) for y in range(H_) for x in range(W_) if good(x, y)))
             if c and c[0][0] <= 8:
                 taken.discard((o['x'], o['y'])); o['x'], o['y'] = c[0][1], c[0][2]; taken.add((o['x'], o['y']))

@@ -171,14 +171,14 @@ def a_lava():
     for (x, y) in [(x, y) for x in range(21, 27) for y in (18, 22)]:
         if a.g[y, x] == 'l': a.put(x, y, 'R', True)
     # north path to the spa valley, south path to the beach (crosses the second channel on a crust ford)
-    a.stroke([(14, 20), (15, 12), (17, 5), (17.5, -1)], 1.4, ':', seed=7, force=True)
+    a.stroke([(14, 20), (15, 12), (15.8, 5), (16, -1)], 1.4, ':', seed=7, force=True)   # gen2: the path reaches the top at x 15-16
     a.stroke([(44, 21), (45, 29), (48, 36), (48.5, 44.5)], 1.4, ':', seed=8, force=True)
     a.scatter('r', 0.008, only='suk', seed=41, clear=1)
     a.scatter('T', 0.004, only='su', seed=42, clear=1)
     a.tidy()
     a.exit('w', 20, 21, {'map': 'a_pass', 'spawn': 'east'}, 'west')
     a.exit('e', 20, 21, {'map': 'caldera', 'spawn': 'gate_w'}, 'caldera')
-    a.exit('n', 17, 18, {'map': 'a_spa', 'spawn': 'south'}, 'north')
+    a.exit('n', 15, 16, {'map': 'a_spa', 'spawn': 'south'}, 'north')
     a.exit('s', 48, 49, {'map': 'a_beach', 'spawn': 'lava'}, 'south')
     glow = [(12, 36), (8, 34), (16, 38), (23, 9), (24, 16), (33, 26), (22, 29), (40, 12)]
     a.objects += [
@@ -332,8 +332,8 @@ def a_bridge():
         dict(type='examine', x=21, y=3, event='ash_bridge_sign'),
         dict(type='sign', x=26, y=19, text='潮見橋\n北 → グレイモア湿原'),
         dict(type='sign', x=19, y=25, text='灰見の宿'),
-        dict(type='waylamp', id='wl_a_bridge_inn', x=19, y=22, lit=True),
-        dict(type='waylamp', id='wl_a_bridge_1', x=25, y=30, lit=True),
+        dict(type='waylamp', id='wl_a_bridge_inn', x=27, y=21, lit=True, fixed=True),
+        dict(type='waylamp', id='wl_a_bridge_1', x=26, y=32, lit=True, fixed=True),
     ]
     a.meta = dict(name='潮見橋のたもと', sub='湿原と灰をつなぐ橋', region='r_ash', worldRect=[528, 336, 90, 48], outside='sea',
                   zones=[{'rect': road_band(road, 2), 'zone': ROAD_ZONE}, {'rect': None, 'zone': PLAIN_ZONE}],

@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("a_battle", {
-    name: "灰の古戦場", region: "r_ash", outside: "rock",
+    name: R.T('map.field_ash_battle.a_battle.name'), region: "r_ash", outside: "rock",
     legend: R.FieldArea.ASH_LEGEND, theme: 'ash', bgm: 'overworld', bbg: 'ash', propSet: 'ash', propSetBase: 'village',
     light: R.FieldArea.ASH_LIGHT,
     rows: [
@@ -52,7 +52,7 @@
     ],
     objects: [
       {"type":"examine","x":27,"y":28,"event":"ash_battlefield_stone"},
-      {"type":"sign","x":23,"y":4,"text":"灰の古戦場\n折れた剣の碑"},
+      {"type":"sign","x":23,"y":4,"text":R.T('map.field_ash_battle.a_battle.objects.1.text')},
       {"type":"chest","id":"a_battle_c1","x":10,"y":17,"item":"i_revive","n":1},
       {"type":"waylamp","id":"wl_a_battle_1","x":26,"y":5,"lit":true},
     ],
@@ -65,7 +65,7 @@
     tilePatches: [],
     zones: [{"rect":null,"zone":"zw_ash_plain"}],
     art: {"image":"field/under/a_battle","painted":[],"overlay":"field/under/a_battle_over"},
-    meta: {"sub":"折れた剣の眠る窪地","worldRect":[285,441,96,45]},
+    meta: {"sub":R.T('map.field_ash_battle.a_battle.meta.sub'),"worldRect":[285,441,96,45]},
     links: {},
   });
 })(window.RPG);

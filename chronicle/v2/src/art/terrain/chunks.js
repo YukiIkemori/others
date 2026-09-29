@@ -697,7 +697,7 @@
     const [x0, y0, x1, y1] = this.cells;
     if (this.theme.pools) for (let y = y0 - 3; y < y1 + 3; y++) for (let x = x0 - 3; x < x1 + 3; x++) {
       const c = this.C(x, y);
-      if (c.water && U().h3(x, y, 5) > 0.55) lights.push({ x: (x + 0.5) * t, y: (y + 0.5) * t, r: 48 * s, color: '#3cc8c8', k: 0.35, kind: 'pool', type: 'pool' });
+      if (c.water && c.mat !== 'lava' && U().h3(x, y, 5) > 0.55) lights.push({ x: (x + 0.5) * t, y: (y + 0.5) * t, r: 48 * s, color: '#3cc8c8', k: 0.35, kind: 'pool', type: 'pool' });   // 溶岩は青緑に光らせない（灰の火山）
     }
     this.chunkLights = lights.filter((L) => L.x >= X0 && L.x < X0 + S && L.y >= Y0 && L.y < Y0 + S);
     for (const G of all.glows) if (G.x >= X0 && G.x < X0 + S && G.y >= Y0 && G.y < Y0 + S) glows.push(G);
@@ -757,11 +757,12 @@
     if (this.og) for (const e of this.emissive) if (e.kind === 'img') { this.og.save(); this.og.globalCompositeOperation = 'source-atop'; this.og.globalAlpha = e.a != null ? e.a : 1; this.og.drawImage(e.c, Math.round(e.x - X0), Math.round(e.y - Y0)); this.og.restore(); }
     const [x0, y0, x1, y1] = this.cells;
     let water = false;
-    for (let y = y0 - 1; y <= y1 && !water; y++) for (let x = x0 - 1; x <= x1; x++) if (C(x, y).water) { water = true; break; }
+    const wet = (c) => c.water && c.mat !== 'lava';   // 溶岩には水のきらめきを描かない
+    for (let y = y0 - 1; y <= y1 && !water; y++) for (let x = x0 - 1; x <= x1; x++) if (wet(C(x, y))) { water = true; break; }
     if (water) {
       const lights = (this.allLights || []).filter((L) => L.r >= 60 && L.x > X0 - 24 && L.x < X0 + S + 24 && L.y < Y0 + S && L.y > Y0 - 90);
-      const cells = (fn) => { for (let y = y0 - 1; y <= y1; y++) for (let x = x0 - 1; x <= x1; x++) if (C(x, y).water) fn(x, y); };
-      T._waterGlints(g, X0, Y0, S, (wx, wy) => C(Math.floor(wx / t), Math.floor(wy / t)).water, lights, t, cells);
+      const cells = (fn) => { for (let y = y0 - 1; y <= y1; y++) for (let x = x0 - 1; x <= x1; x++) if (wet(C(x, y))) fn(x, y); };
+      T._waterGlints(g, X0, Y0, S, (wx, wy) => wet(C(Math.floor(wx / t), Math.floor(wy / t))), lights, t, cells);
     }
     return true;
   };
