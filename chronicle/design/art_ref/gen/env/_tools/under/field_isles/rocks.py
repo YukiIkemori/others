@@ -8,7 +8,7 @@ d = json.load(open(aid + '/layout.json')); W, H, T = d['w'], d['h'], 32
 rows = d.get('rows_fit') or d['rows']; g = np.array([list(r) for r in rows])
 A = np.asarray(Image.open(src).convert('RGB').resize((W * T, H * T), Image.BOX)).astype(float)
 lum = A @ np.array([.299, .587, .114])
-dk = lum < 105
+dk = (lum < 120) & (np.abs(A[..., 0] - A[..., 1]) < 22) & (np.abs(A[..., 1] - A[..., 2]) < 26) & (A[..., 1] <= A[..., 0] + 12)   # 諸島: 灰色の岩（草の暗い所は数えない）
 lab, n = ndimage.label(ndimage.binary_opening(dk, iterations=1))
 sizes = ndimage.sum(dk, lab, range(n + 1))
 big = np.isin(lab, np.nonzero((sizes >= 70) & (sizes <= 1400))[0])
@@ -27,7 +27,7 @@ frac = big.reshape(H, T, W, T).mean((1, 3))
 out = []
 for y in range(H):
     for x in range(W):
-        if g[y, x] in 'suk,;' and not near[y, x] and (x, y) not in prot and frac[y, x] >= thr: out.append([x, y, 'r'])
+        if g[y, x] in 's,;"' and not near[y, x] and (x, y) not in prot and frac[y, x] >= thr: out.append([x, y, 'r'])
 im = Image.fromarray(A.astype(np.uint8)); dr = ImageDraw.Draw(im)
 for x, y, _ in out: dr.rectangle([x * T, y * T, x * T + T - 1, y * T + T - 1], outline=(0, 255, 255), width=2)
 im.save(aid + '/rocks.png')

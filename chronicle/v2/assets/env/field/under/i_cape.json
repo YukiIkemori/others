@@ -1,0 +1,20 @@
+{
+ "id": "i_cape",
+ "kind": "under",
+ "map": "i_cape",
+ "tile": 32,
+ "size32": [
+  1536,
+  1280
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.8,
+ "files": {
+  "24": "i_cape@24.png",
+  "32": "i_cape@32.png",
+  "40": "i_cape@40.png"
+ },
+ "src": "generated"
+}
