@@ -19,9 +19,9 @@ def sub(text, t0, t1, who=None, y=1015):
     T.append(dict(kind='sub', text=text, t0=t0, t1=t1, x=960, y=y, fin=0.25, fout=0.3))
 
 
-def cap(kicker, text, t0, t1):
-    """機能の見出し（左下）: 小さい金の英字 ＋ 大きい白"""
-    T.append(dict(kind='cap_k', text=kicker, style=dict(font=FONT_EN_PATH), t0=t0, t1=t1, x=110, y=838, anchor=(0, 0.5), anim='slide', fin=0.35, fout=0.3))
+def cap(kicker, text, t0, t1, band=None):
+    """機能の見出し（左下）: 小さい金の英字 ＋ 大きい白。band=高さ で後ろに暗い帯"""
+    T.append(dict(kind='cap_k', text=kicker, style=dict(font=FONT_EN_PATH), t0=t0, t1=t1, x=110, y=838, anchor=(0, 0.5), anim='slide', fin=0.35, fout=0.3, band=band, band_k=0.75))
     T.append(dict(kind='cap', text=text, t0=t0 + 0.08, t1=t1, x=104, y=915, anchor=(0, 0.5), anim='slide', fin=0.35, fout=0.3))
 
 
@@ -83,8 +83,8 @@ T_TAV = T0_OW + 10 * BAR_OW
 
 # ================================================================== 5 仲間（潮風亭の 20 人）
 cut('tavern', T_TAV, 8.8, src=0.3, zoom=(1.0, 1.04), center=(0.3, 0.4))
-cap('COMPANIONS', '20人から、自分だけの仲間を。', T_TAV + 0.3, T_TAV + 4.3)
-cap('VOICE', 'ボイス対応', T_TAV + 4.5, T_TAV + 8.6)
+cap('COMPANIONS', '20人から、自分だけの仲間を。', T_TAV + 0.3, T_TAV + 4.3, band=260)
+cap('VOICE', 'ボイス対応', T_TAV + 4.5, T_TAV + 8.6, band=260)
 VOICE.append(dict(file='b_selma_bigtech_1', at=T_TAV + 0.8))
 sub('セルマ「この剣、曲げはしない！」', T_TAV + 0.8, T_TAV + 3.0, y=80)
 VOICE.append(dict(file='b_titta_bigtech_2', at=T_TAV + 3.6))
@@ -119,7 +119,7 @@ cut('bt_glimmer', T_FRZ + 1.4, 1.7, src=7.75, gamesfx=-6)
 # 派生技:「連ね斬りから、返し刃を編み出した！」（カットの 18.8 秒ごろ）
 D0 = T_FRZ + 3.1
 cut('bt_derive', D0, 4.9, src=15.3, zoom=(1.0, 1.05), center=(0.5, 0.45), gamesfx=-6)
-big('技は、派生する。', D0 + 3.1, D0 + 4.85, y=820, size=120, band=260)
+big('技は、派生する。', D0 + 3.3, D0 + 4.85, y=870, size=120, band=250)
 # 合成術（2 属性）: ヴィオラの 野を焼く風
 S0 = D0 + 4.9
 SPELL_SRC = 4.9   # カットの 5.2 秒で「ヴィオラは野を焼く風を唱えた！」、6.0〜8.0 秒で術の光
@@ -127,7 +127,8 @@ cut('bt_spell', S0, 4.6, src=SPELL_SRC, zoom=(1.0, 1.22), center=(0.36, 0.62), g
 FLASH.append((S0 + 1.15, 0.08, 0.4, 0.35, (1.0, 0.8, 0.55)))
 VOICE.append(dict(file='b_viola_bigtech_1', at=S0 + 0.2))
 sub('ヴィオラ「炎よ、風よ、舞いなさい！」', S0 + 0.2, S0 + 2.9, y=990)
-big('属性を重ねて ― 合成術', S0 + 2.3, S0 + 4.55, y=820, size=110, band=240)
+T.append(dict(kind='big_sub', text='属性を重ねて', t0=S0 + 2.2, t1=S0 + 4.55, x=960, y=720, anim='rise', fin=0.3, fout=0.35, band=330))
+big('合成術', S0 + 2.4, S0 + 4.55, y=840, size=150)
 # 速さ（戦闘の速さを切り替える）
 P0 = S0 + 4.6
 cut('bt_speed', P0, 3.2, src=0.35, gamesfx=-7)
@@ -140,18 +141,19 @@ EXTRA = [('ex_golden', 1.4, '金色の魔物'), ('ex_steal', 8.0, '盗む'), ('e
 for i, (c, src, label) in enumerate(EXTRA):
     bx, by = BOX[i]
     cut(c, X0 + i * 0.2, 7.8 - i * 0.2, src=src, box=(bx, by, 956, 536), xin=0.3, gamesfx=-9 if i < 2 else None)
-    T.append(dict(kind='cap_k', text=label, style=dict(size=40, track=4), t0=X0 + i * 0.2 + 0.2, t1=X0 + 7.7, x=bx + 40, y=by + 490, anchor=(0, 0.5), anim='slide', fin=0.3))
+    T.append(dict(kind='cap_k', text=label, style=dict(size=40, track=4), t0=X0 + i * 0.2 + 0.2, t1=X0 + 7.7, x=bx + 40, y=by + 60, anchor=(0, 0.5), anim='slide', fin=0.3, band=None))
 big('寄り道も、たっぷり。', X0 + 1.2, X0 + 7.6, y=540, size=100, band=230)
 
 # ================================================================== 6' 強敵（狼の群れ頭）
 B0 = X0 + 8.0
-BOSS_SUMMON, BOSS_KILL = 41.0, 60.0   # 撮り直しの後に合わせる
+BOSS_SUMMON = 40.2   # bt_boss: 40〜44 秒「群れの遠吠え」→ 狼 C・D が現れる
+BOSS_KILL = 16.4     # bt_boss_kill: 18 秒ごろ炎の旋風で倒れる → 21 秒「勝利」
 cut('bt_boss', B0, 3.0, src=2.0, gamesfx=-6)
 SFX.append(dict(id='roar', at=B0 + 0.1, gain=-4))
-cut('bt_boss', B0 + 3.0, 3.0, src=BOSS_SUMMON, gamesfx=-6)
-cut('bt_boss', B0 + 6.0, 4.0, src=BOSS_KILL, gamesfx=-4)
-cap('BOSS', '仲間を呼ぶ強敵', B0 + 3.2, B0 + 5.9)
-C0 = B0 + 10.0
+cut('bt_boss', B0 + 3.0, 3.8, src=BOSS_SUMMON, zoom=(1.0, 1.12), center=(0.3, 0.6), gamesfx=-6)
+cap('BOSS', '仲間を呼ぶ強敵', B0 + 3.2, B0 + 6.6)
+cut('bt_boss_kill', B0 + 6.8, 5.4, src=BOSS_KILL, gamesfx=-4)
+C0 = B0 + 12.2
 
 # ================================================================== 8 山場: 千年樹のこずえに歌の灯
 FLASH.append((C0, 0.25, 0.8, 0.9))

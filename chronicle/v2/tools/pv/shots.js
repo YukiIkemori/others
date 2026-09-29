@@ -173,8 +173,16 @@ const SHOTS = {
       await T.idle(10);
     },
     n: sec(66),
-    // 遠吠え（仲間を呼ぶ）の後は、当たれば倒れるようにして台本の長さで終わらせる
-    each: at({ [sec(44)]: `PV.kill = true` }),
+  },
+  // 強敵の倒れる所（ラウンドの出来事は始まりにまとめて決まるので、別の撮りで「当たれば倒れる」を最初から入れる）
+  bt_boss_kill: {
+    prep: async (T) => {
+      await T.js(BATTLE({ troop: 'tr_a21_forest_wolves', boss: true, seed: 'pv-boss' },
+        `(st, u, r) => u.id === 'hero' ? {cmd: 'skill', id: 't_sword_twin'} : u.id === 'viola' ? {cmd: 'spell', id: 's_fire_wind_b'} : null`,
+        `PV.teach('hero', ['t_sword_twin']); PV.teach('viola', null, ['s_fire_wind_b']); PV.boost(1); PV.kill = true; RPG.Party.restoreAll()`));
+      await T.idle(10);
+    },
+    n: sec(26),
   },
   bt_speed: {
     prep: async (T) => { await T.js(BATTLE({ zone: 'z_verda', bg: 'forest', seed: 'pv-speed' }, null)); await T.idle(200); },
