@@ -135,15 +135,15 @@ const SHOTS = {
   bt_enc: {
     prep: async (T) => { await T.js(`PV.clean(); PV.noEnc(); PV.state(${FOREST()}); PV.enter('verda_1', 'camp')`); await T.idle(150); await T.settle(); await T.js(`PV.scriptBattle(null)`); },
     n: sec(6),
-    each: at({ 0: `PV.btn({up: 1})`, 50: `PV.btn({}); RPG.Battle.start({zone: 'z_verda', seed: 'pv-enc'})` }),
+    each: at({ 0: `PV.btn({up: 1})`, 50: `PV.btn({}); RPG.Battle.start({zone: 'z_verda', bg: 'forest', seed: 'pv-enc'})` }),
   },
   bt_glimmer: {
-    prep: async (T) => { await T.js(BATTLE({ zone: 'z_verda', seed: 'pv-glim', glimmerForce: 'hero' }, `(st, u, r) => u.id === 'hero' ? {cmd: 'skill', id: 't_sword_stepcut'} : null`)); await T.idle(30); },
+    prep: async (T) => { await T.js(BATTLE({ zone: 'z_verda', bg: 'forest', seed: 'pv-glim', glimmerForce: 'hero' }, `(st, u, r) => u.id === 'hero' ? {cmd: 'skill', id: 't_sword_stepcut'} : null`)); await T.idle(30); },
     n: sec(14),
   },
   bt_derive: {
     prep: async (T) => {
-      await T.js(BATTLE({ zone: 'z_verda', seed: 'pv-derive' }, `(st, u, r) => u.id === 'hero' ? {cmd: 'skill', id: 't_sword_twin'} : {cmd: 'defend', id: 'defend', self: true}`,
+      await T.js(BATTLE({ zone: 'z_verda', bg: 'forest', seed: 'pv-derive' }, `(st, u, r) => u.id === 'hero' ? {cmd: 'skill', id: 't_sword_twin'} : {cmd: 'defend', id: 'defend', self: true}`,
         `PV.teach('hero', ['t_sword_twin']); RPG.Game.chars.hero.techUse = {t_sword_twin: 40}; const dr = RPG.Glimmer.deriveRoll; RPG.Glimmer.deriveRoll = (c, used, ctx) => dr(c, used, Object.assign({}, ctx, {force: c && c.id === 'hero'}))`));
       await T.idle(30);
     },
@@ -151,7 +151,7 @@ const SHOTS = {
   },
   bt_spell: {
     prep: async (T) => {
-      await T.js(BATTLE({ zone: 'z_verda', seed: 'pv-spell' }, `(st, u, r) => u.id === 'viola' ? {cmd: 'spell', id: 's_fire_wind_b'} : {cmd: 'defend', id: 'defend', self: true}`,
+      await T.js(BATTLE({ zone: 'z_verda', bg: 'forest', seed: 'pv-spell' }, `(st, u, r) => u.id === 'viola' ? {cmd: 'spell', id: 's_fire_wind_b'} : {cmd: 'defend', id: 'defend', self: true}`,
         `PV.teach('viola', null, ['s_fire_wind_b']); RPG.Game.chars.viola.mp = 99`));
       await T.idle(30);
     },
@@ -167,23 +167,38 @@ const SHOTS = {
     n: sec(40),
   },
   bt_speed: {
-    prep: async (T) => { await T.js(BATTLE({ zone: 'z_verda', seed: 'pv-speed' }, null)); await T.idle(200); },
+    prep: async (T) => { await T.js(BATTLE({ zone: 'z_verda', bg: 'forest', seed: 'pv-speed' }, null)); await T.idle(200); },
     n: sec(10),
     each: at({ 30: `PV.tap('r', 3)`, 150: `PV.tap('r', 3)` }),
   },
   // ---------------------------------------------------------------- 7 寄り道
   ex_golden: {
-    prep: async (T) => { await T.js(BATTLE({ zone: 'z_verda', seed: 'pv-gold', golden: 'force' }, null)); await T.idle(10); },
+    prep: async (T) => { await T.js(BATTLE({ zone: 'z_verda', bg: 'forest', seed: 'pv-gold', golden: 'force' }, null)); await T.idle(10); },
     n: sec(8),
   },
   ex_steal: {
-    prep: async (T) => { await T.js(BATTLE({ zone: 'z_verda', seed: 'pv-steal' }, `(st, u, r) => u.id === 'titta' ? {cmd: 'skill', id: 't_dagger_filch'} : {cmd: 'defend', id: 'defend', self: true}`, `PV.teach('titta', ['t_dagger_filch'])`)); await T.idle(30); },
+    prep: async (T) => { await T.js(BATTLE({ zone: 'z_verda', bg: 'forest', seed: 'pv-steal' }, `(st, u, r) => u.id === 'titta' ? {cmd: 'skill', id: 't_dagger_filch'} : {cmd: 'defend', id: 'defend', self: true}`, `PV.teach('titta', ['t_dagger_filch'])`)); await T.idle(30); },
     n: sec(12),
   },
   ex_shop: { url: 'dev.html?scene=menus_shop', prep: async (T) => { await T.js(`PV.cleanMsg()`); await T.idle(60); }, n: sec(6), each: at({ 30: `PV.tap('down', 3)`, 60: `PV.tap('a', 3)`, 100: `PV.tap('right', 3)`, 120: `PV.tap('right', 3)`, 140: `PV.tap('up', 3)`, 160: `PV.tap('up', 3)`, 180: `PV.tap('up', 3)` }) },
   ex_bestiary: { url: 'dev.html?scene=menus_bestiary', prep: async (T) => { await T.idle(60); }, n: sec(5), each: at({ 60: `PV.tap('down', 3)`, 120: `PV.tap('down', 3)`, 180: `PV.tap('down', 3)` }) },
   // ---------------------------------------------------------------- 5 仲間
   tavern: { url: 'dev.html?scene=menus_tavern', prep: async (T) => { await T.idle(60); }, n: sec(9), each: (i) => (i >= 30 && i % 24 === 0 && i < 500 ? `PV.tap('${['right', 'right', 'down', 'left', 'left', 'down', 'right', 'right', 'down', 'left', 'left', 'down', 'right', 'right', 'down', 'left', 'left', 'down', 'right', 'right'][(i - 30) / 24 | 0] || 'right'}', 3)` : null) },
+
+  // ---------------------------------------------------------------- 8 山場: 千年樹のこずえに歌の灯（forest_finale の頭。地方の解決の演出）
+  fin_beacon: {
+    prep: async (T) => {
+      await T.js(`PV.clean(); PV.noEnc(); PV.state(${FOREST({ map: { id: 'elder_2', spawn: 'altar' } })}); PV.enter('elder_2', 'altar')`);
+      await T.idle(120); await T.settle();
+      await T.js(`PV.autoMsg(50); RPG.Events.run('forest_finale', {map: 'elder_2'})`);
+    },
+    n: sec(24),
+  },
+  // 体験版の終わりの画面の「八つの灯火」（一つ目だけがともる）。上の灯の列だけを使う
+  fin_lights: {
+    prep: async (T) => { await T.js(`PV.clean(); RPG.Demo.showEnd({playMs: 0})`); },
+    n: sec(6),
+  },
 };
 
 // ---------------------------------------------------------------- 撮る
