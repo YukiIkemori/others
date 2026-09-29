@@ -162,6 +162,5 @@
     'map.snow_field.snowpass.name': '凍て風の峠',
     'map.snow_field.snowpass.objects.0.text': '北の峠を越えて\n↑ 雪の村ユール',
     'map.snow_field.snowpass.snow_trapper.name': 'わな猟師',
-    // ---- snow_field ここまで
   });
 })(window.RPG);

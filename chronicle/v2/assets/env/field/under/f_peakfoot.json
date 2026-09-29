@@ -1,0 +1,20 @@
+{
+ "id": "f_peakfoot",
+ "kind": "under",
+ "map": "f_peakfoot",
+ "tile": 32,
+ "size32": [
+  1536,
+  1344
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.827,
+ "files": {
+  "24": "f_peakfoot@24.png",
+  "32": "f_peakfoot@32.png",
+  "40": "f_peakfoot@40.png"
+ },
+ "src": "generated"
+}

@@ -1,0 +1,42 @@
+{
+"solid": [
+[
+3,
+3,
+"r"
+],
+[
+43,
+26,
+"r"
+]
+],
+"note": "gen1: the oil wagon was painted south-west of the road (x 8-10, y 22-24), not on its mark (22-24, 13): the mark cells are sand",
+"open": [
+[
+22,
+13,
+"s"
+],
+[
+23,
+13,
+"s"
+],
+[
+24,
+13,
+"s"
+]
+],
+"open_rect": [
+[
+0,
+17,
+7,
+2,
+"."
+]
+],
+"note2": "the east gatehouse passage (rows 17-18) is kept open"
+}

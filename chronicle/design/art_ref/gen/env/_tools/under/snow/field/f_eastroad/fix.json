@@ -1,0 +1,47 @@
+{
+"fit": {
+"SEED": "layout"
+},
+"solid": [
+[
+29,
+7,
+"r"
+],
+[
+21,
+21,
+"r"
+]
+],
+"open": [],
+"solid_rect": [
+[
+30,
+12,
+7,
+5,
+"X"
+]
+],
+"objects": [
+{
+"match": {
+"event": "world_snow_fox"
+},
+"set": {
+"x": 5,
+"y": 25
+}
+}
+],
+"objects_add": [
+{
+"type": "examine",
+"x": 33,
+"y": 16,
+"event": "snow_road_hut"
+}
+],
+"note": "gen1 painted a round palisade hut on the hollow-log mark (a closed hut: examine snow_road_hut) and the hollow log west at (5-10,23-25): the fox tracks moved to the log's opening"
+}

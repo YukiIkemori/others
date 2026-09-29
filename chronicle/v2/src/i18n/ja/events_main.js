@@ -15,9 +15,9 @@
     'ev.demo_end.playTime.ret': '{h}時間{padStart}分',
     'ev.demo_end.playTime.ret_2': '{p0}分',
     'ev.demo_end.draw.txt': '体験版はここまで',
-    'ev.demo_end.draw.txt_2': '遊んでくださって、ありがとうございました。',   // check_text:ignore（体験版の終わりの画面の 1 行。会話の窓ではない）
+    'ev.demo_end.draw.txt_2': '遊んでくださって、ありがとうございました。',
     'ev.demo_end.draw.txt_3': 'プレイ時間　{playTime}',
-    'ev.demo_end.draw.txt_4': 'Steamでウィッシュリスト登録をお願いします',   // check_text:ignore（体験版の終わりの画面の 1 行。会話の窓ではない）
+    'ev.demo_end.draw.txt_4': 'Steamでウィッシュリスト登録をお願いします',
     'ev.demo_end.draw.0.label': 'タイトルへ',
     'ev.demo_end.draw.text': 'A　タイトルへ',
     // ---- src/events/leads_main.js

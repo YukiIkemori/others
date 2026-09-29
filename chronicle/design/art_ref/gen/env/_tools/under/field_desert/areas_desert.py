@@ -190,14 +190,14 @@ def d_east():
         dict(type='waylamp', id='wl_d_east_1', x=9, y=20, lit=True),
         dict(type='waylamp', id='wl_d_east_2', x=26, y=19, lit=True),
         dict(type='waylamp', id='wl_d_east_3', x=42, y=17, lit=True),
-        dict(type='prop', id='cart_barrels', x=21, y=13),
+        dict(type='prop', id='cart_barrels', x=7, y=25),
     ]
     a.meta = dict(name='東の街道', sub='灰の荒野への古い道', region='r_desert', worldRect=[165, 395, 125, 50], outside='dune_sand',
                   zones=[{'rect': [0, 10, 56, 12], 'zone': 'zw_desert_road'}, {'rect': None, 'zone': 'zw_desert'}],
                   tilePatches=[{'cond': {'slice': True}, 'rect': [52, 13, 3, 3], 'rows': ['rrr', 'rrr', 'rrr']}],
                   links={'kasim_e': {'map': 'd_east', 'spawn': 'kasim'}},
-                  npcs=[{'id': 'oil_caravan', 'look': 'npc_oil_carrier', 'name': '油運び', 'x': 25, 'y': 14, 'dir': 'w', 'move': 'still', 'talk': 'desert_world_oil', 'reward': 'hint', 'key': 'world_oil_caravan'},
-                        {'id': 'oil_camel', 'look': 'ani_camel', 'name': 'ラクダ', 'x': 26, 'y': 13, 'dir': 'w', 'move': 'still', 'talk': {'lines': [{'text': 'ラクダは、油のつぼを背に\nのんびり砂をかんでいる。'}]}, 'reward': None},
+                  npcs=[{'id': 'oil_caravan', 'look': 'npc_oil_carrier', 'name': '油運び', 'x': 12, 'y': 22, 'dir': 'w', 'move': 'still', 'talk': 'desert_world_oil', 'reward': 'hint', 'key': 'world_oil_caravan'},
+                        {'id': 'oil_camel', 'look': 'ani_camel', 'name': 'ラクダ', 'x': 11, 'y': 25, 'dir': 'w', 'move': 'still', 'talk': {'lines': [{'text': 'ラクダは、油のつぼを背に\nのんびり砂をかんでいる。'}]}, 'reward': None},
                         {'id': 'guard_ash', 'look': 'npc_guard_1', 'name': '番人', 'x': 50, 'y': 16, 'dir': 'e', 'move': 'still', 'pushable': False, 'cond': {'slice': True},
                          'talk': {'lines': [{'text': ['灰の荒野へ抜ける峠は、\n灰の崩れでふさがってるんだ。', 'カルデラへ行くなら、\n片づくまで待ってくれ。']}]}, 'reward': 'news', 'key': 'world_guard_ash'}])
     return a
@@ -310,7 +310,7 @@ def d_caravan():
     ]
     a.meta = dict(name='隊商路', sub='野営地をつなぐ砂の道', region='r_desert', worldRect=[60, 440, 100, 61], outside='dune_sand',
                   zones=[CARAVAN_ZONE, {'rect': None, 'zone': 'zw_desert'}],
-                  tilePatches=[{'cond': {'not': short}, 'rect': [0, 7, 2, 4], 'rows': ['RR', 'RR', 'RR', 'RR']}],
+                  tilePatches=[{'cond': {'not': short}, 'rect': [0, 7, 2, 4], 'rows': ['rr', 'rr', 'rr', 'rr']}],
                   triggers=[{'id': 'desert_ambush_2', 'x': 24, 'y': 22, 'w': 5, 'h': 4, 'on': 'step', 'event': 'desert_ambush_2',
                              'cond': ['desert_caravan_on', '!desert_ambush_2_done']}],
                   links={'camp1': {'map': 'd_caravan', 'spawn': 'camp1'}, 'camp2': {'map': 'd_caravan', 'spawn': 'camp2'}}, npcs=[])

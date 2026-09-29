@@ -1,0 +1,20 @@
+{
+ "id": "d_hollow",
+ "kind": "under",
+ "map": "d_hollow",
+ "tile": 32,
+ "size32": [
+  1408,
+  1152
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.95,
+ "files": {
+  "24": "d_hollow@24.png",
+  "32": "d_hollow@32.png",
+  "40": "d_hollow@40.png"
+ },
+ "src": "generated"
+}

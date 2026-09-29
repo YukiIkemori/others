@@ -1,0 +1,19 @@
+{
+ "id": "f_eastroad",
+ "kind": "under",
+ "map": "f_eastroad",
+ "tile": 32,
+ "size32": [
+  1792,
+  1280
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.805,
+ "files": {
+  "24": "f_eastroad@24.png",
+  "32": "f_eastroad@32.png"
+ },
+ "src": "generated"
+}

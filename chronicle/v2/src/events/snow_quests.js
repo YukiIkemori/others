@@ -227,6 +227,9 @@
   E('snow_foot_shrine', async (ev) => {
     await ev.say(null, X().cleared(ev) ? R.T('events.snow_foot_shrine.say') : R.T('events.snow_foot_shrine.say_2'));
   });
+  E('snow_road_hut', async (ev) => {
+    await ev.say(null, R.T('events.snow_road_hut.say'));
+  });
   E('snow_pass_springs', async (ev) => {
     await ev.say(null, R.T('events.snow_pass_springs.say'));
   });

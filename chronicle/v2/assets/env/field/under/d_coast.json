@@ -1,0 +1,19 @@
+{
+ "id": "d_coast",
+ "kind": "under",
+ "map": "d_coast",
+ "tile": 32,
+ "size32": [
+  1408,
+  1664
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.95,
+ "files": {
+  "24": "d_coast@24.png",
+  "32": "d_coast@32.png"
+ },
+ "src": "generated"
+}

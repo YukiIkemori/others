@@ -5,7 +5,7 @@ usage: python3 tomap.py <id> [...]"""
 import json, sys, os, re
 V2 = '/home/user/others/chronicle/v2'
 JA = os.path.join(V2, 'src/i18n/ja/maps_snow.js')
-B0, B1 = '    // ---- snow_field（生成物: design/art_ref/gen/env/_tools/under/snow/field/tomap.py。手で直さない）', '    // ---- snow_field ここまで'
+B0, B1 = '    // ---- snow_field（生成物: design/art_ref/gen/env/_tools/under/snow/field/tomap.py。手で直さない）', '    // ---- snow_field ここまで'   # B1: old end marker (removed)
 
 
 def js(v):
@@ -20,10 +20,8 @@ def q(s):
 strings = {}
 if os.path.exists(JA):
     t = open(JA).read()
-    if B0 in t:
-        blk = t[t.index(B0) + len(B0):t.index(B1)]
-        for m in re.finditer(r"^    '(map\.snow_field\.[^']+)': (.+),$", blk, re.M):
-            strings[m.group(1)] = m.group(2)
+    for m in re.finditer(r"^    '(map\.snow_field\.[^']+)': (.+),$", t, re.M):
+        strings[m.group(1)] = m.group(2)
 
 for aid in sys.argv[1:]:
     d = json.load(open(aid + '/layout.json'))
@@ -119,11 +117,10 @@ for aid in sys.argv[1:]:
 
 # the strings block in maps_snow.js
 t = open(JA).read()
-blk = B0 + '\n' + ''.join("    '%s': %s,\n" % (k, strings[k]) for k in sorted(strings)) + B1
-if B0 in t:
-    t = t[:t.index(B0)] + blk + t[t.index(B1) + len(B1):]
-else:
-    i = t.rindex('  });')
-    t = t[:i] + blk + '\n' + t[i:]
+# drop the old block (the marker line, the key lines, an end marker if any) and write it again before the table's end
+t = '\n'.join(l for l in t.split('\n') if not (l.startswith("    'map.snow_field.") or l.strip() in (B0.strip(), B1.strip()))) 
+blk = B0 + '\n' + ''.join("    '%s': %s,\n" % (k, strings[k]) for k in sorted(strings))
+i = t.rindex('  });')
+t = t[:i] + blk + t[i:]
 open(JA, 'w').write(t)
 print(JA, len(strings), 'strings')

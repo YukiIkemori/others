@@ -13,7 +13,7 @@ from scipy import ndimage
 
 aid, src = sys.argv[1], sys.argv[2]
 V2 = '/home/user/others/chronicle/v2'
-OUT = os.path.join(V2, 'assets/env/field/under'); os.makedirs(OUT, exist_ok=True)
+OUT = os.path.join(V2, os.environ.get('OUT', 'assets/env/field/under')); os.makedirs(OUT, exist_ok=True)   # 野営地・市は OUT=assets/env/desert/under
 d = json.load(open(aid + '/layout.json')); W, H, T = d['w'], d['h'], 32
 rows = d.get('rows_fit') or d['rows']
 g = np.array([list(r) for r in rows])
@@ -82,6 +82,8 @@ for pi, p in enumerate(d['meta'].get('tilePatches', [])):
     for (x, y, c) in ch:
         if c in '~w':   # water: clone the nearest cell of open water whose 3x3 neighbourhood is all water
             wm = np.isin(g, ["~", "w"]); wi = ndimage.binary_erosion(wm, np.ones((3, 3)), iterations=2)
+            if not wi.any(): wi = ndimage.binary_erosion(wm, np.ones((3, 3)), iterations=1)   # 小さな池（野営地の泉）
+            if not wi.any(): wi = wm
             ys, xs = np.nonzero(wi)
             k = np.argmin((xs - x) ** 2 + (ys - y) ** 2 + ((xs * 7 + ys * 13) % 3) * 0.1)
             cell(C, x, y)[:] = cell(A, xs[k], ys[k])

@@ -372,5 +372,49 @@
     'maps.world.areas.76.sub': 'オーロラの海',
     'maps.world.areas.77.name': 'ノルデン雪原',
     'maps.world.areas.77.sub': '吹雪のやまない雪原',
+    // ---- src/maps/field_desert_caravan.js
+    'map.field_desert_caravan.d_caravan.name': '隊商路',
+    'map.field_desert_caravan.d_caravan.objects.0.text': '野営地「岩の井戸」',
+    'map.field_desert_caravan.d_caravan.objects.1.text': '野営地「星の石」',
+    'map.field_desert_caravan.d_caravan.objects.2.text': '砂嵐のくぼ地\n――風のやまない近道。',
+    'map.field_desert_caravan.d_caravan.objects.3.text': '西 → 西の浜（遠回り）\n北西 → 砂嵐のくぼ地（近道）',
+    'map.field_desert_caravan.d_caravan.meta.sub': '野営地をつなぐ砂の道',
+    // ---- src/maps/field_desert_coast.js
+    'map.field_desert_coast.d_coast.name': '西の浜',
+    'map.field_desert_coast.d_coast.objects.0.text': '王墓のオアシス\n北 → 名のない王の墓',
+    'map.field_desert_coast.d_coast.objects.1.text': '古い井戸の小屋',
+    'map.field_desert_coast.d_coast.meta.sub': '遠回りの浜の道と王墓のオアシス',
+    // ---- src/maps/field_desert_east.js
+    'map.field_desert_east.d_east.name': '東の街道',
+    'map.field_desert_east.d_east.objects.0.text': '東 → 灰の荒野・カルデラ',
+    'map.field_desert_east.d_east.objects.1.text': 'オアシスの町カシム\n東の門',
+    'map.field_desert_east.d_east.oil_caravan.name': '油運び',
+    'map.field_desert_east.d_east.oil_camel.name': 'ラクダ',
+    'map.field_desert_east.d_east.lines.0.text': 'ラクダは、油のつぼを背に\nのんびり砂をかんでいる。',
+    'map.field_desert_east.d_east.guard_ash.name': '番人',
+    'map.field_desert_east.d_east.lines.0.text_2': ['灰の荒野へ抜ける峠は、\n灰の崩れでふさがってるんだ。', 'カルデラへ行くなら、\n片づくまで待ってくれ。'],
+    'map.field_desert_east.d_east.meta.sub': '灰の荒野への古い道',
+    // ---- src/maps/field_desert_hollow.js
+    'map.field_desert_hollow.d_hollow.name': '砂嵐のくぼ地',
+    'map.field_desert_hollow.d_hollow.objects.0.text': '砂嵐のくぼ地\n風の音にまぎれて、はぐれないように。',
+    'map.field_desert_hollow.d_hollow.meta.sub': '隊商路の近道',
+    // ---- src/maps/field_desert_pass.js
+    'map.field_desert_pass.d_pass.name': '赤岩の峠',
+    'map.field_desert_pass.d_pass.objects.0.text': 'ザハラ砂漠\n北 → ヴェルダの森　南 → カシム',
+    'map.field_desert_pass.d_pass.objects.1.text': '宿場「砂の縁」\n森と砂漠と灰の街道の、まん中の宿',
+    'map.field_desert_pass.d_pass.objects.2.text': '北の岩場\n「岩が動いた」と隊商が言う。',
+    'map.field_desert_pass.d_pass.pilgrim.name': '夜明け待ちの巡礼',
+    'map.field_desert_pass.d_pass.meta.sub': '森から砂漠へ下りる道',
+    // ---- src/maps/field_desert_south.js
+    'map.field_desert_south.d_south.name': '沈んだ柱の浜',
+    'map.field_desert_south.d_south.objects.2.text': '沈んだ柱の浜\n砂嵐が晴れた晩、柱が増えるという。',
+    'map.field_desert_south.d_south.lost_camel.name': 'ラクダ',
+    'map.field_desert_south.d_south.meta.sub': 'カシムの南の砂丘',
+    // ---- src/maps/field_desert_west.js
+    'map.field_desert_west.d_west.name': '鷹の台地',
+    'map.field_desert_west.d_west.objects.6.text': '砂の真ん中の平地\n消灯の刻に、灯りの列が揺れるという。',
+    'map.field_desert_west.d_west.objects.7.text': '岩の台地\n夜、鷹の笛が聞こえるという。',
+    'map.field_desert_west.d_west.objects.8.text': 'オアシスの町カシム\n――泉を囲む市場',
+    'map.field_desert_west.d_west.meta.sub': 'カシムの西の野',
   });
 })(window.RPG);

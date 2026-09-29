@@ -40,9 +40,11 @@
         K.npc('m_dancer', 'npc_desert_woman', 27, 13, { name: R.T('map.desert_optional.N.5.m_dancer.name'), dir: 'w', talk: 'desert_mirage_dancer', reward: 'news' }),
         K.npc('m_camel', 'ani_camel', 30, 15, { name: R.T('map.desert_optional.N.6.m_camel.name'), dir: 'w', talk: [L(R.T('map.desert_optional.N.talk.0.L'))], reward: null }),
       ];
+      const PM = R.Desert.PAINTED && R.Desert.PAINTED.desert_mirage;   // 描いた下絵（desert_painted_rows.js）の当たりと絵
       K.def('desert_mirage', {
+        ...(PM ? { rows: PM.rows, art: PM.art } : { rows: g }),
         name: R.T('map.desert_optional.desert_mirage.name'), kind: 'town', optional: true, region: 'r_desert', location: 'mirage', theme: 'desert',
-        legend: DK.LEGEND(), rows: g, outside: 'dune_sand', objects: O, npcs: N,
+        legend: DK.LEGEND(), outside: 'dune_sand', objects: O, npcs: N,
         spawns: { road: { x: 18, y: 23, dir: 'n' } },
         exits: [{ x: 17, y: 25, w: 3, h: 1, to: { map: 'world', spawn: 'mirage' } }],
         triggers: [{ id: 'arrive', on: 'enter', event: 'desert_mirage_arrive' }],

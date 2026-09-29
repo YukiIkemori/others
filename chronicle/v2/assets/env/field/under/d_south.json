@@ -1,0 +1,19 @@
+{
+ "id": "d_south",
+ "kind": "under",
+ "map": "d_south",
+ "tile": 32,
+ "size32": [
+  1792,
+  1408
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.95,
+ "files": {
+  "24": "d_south@24.png",
+  "32": "d_south@32.png"
+ },
+ "src": "generated"
+}

@@ -1,84 +1,8 @@
 {
- "date": "2026-09-29T08:22:33.492Z",
+ "date": "2026-09-29T20:27:24.608Z",
  "fixture": "content_p_pharos",
- "walked": [
-  {
-   "map": "elder_1",
-   "kind": "stairs",
-   "id": "elder_1_down",
-   "at": "elder_2",
-   "to": "elder_2",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    25,
-    26
-   ],
-   "ms": 3097
-  },
-  {
-   "map": "elder_1",
-   "kind": "exit",
-   "id": "24,47",
-   "at": "verda_2",
-   "to": "verda_2",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    25,
-    43
-   ],
-   "ms": 3195
-  },
-  {
-   "map": "elder_2",
-   "kind": "stairs",
-   "id": "elder_2_up",
-   "at": "elder_1",
-   "to": "elder_1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    24,
-    7
-   ],
-   "ms": 2002
-  },
-  {
-   "map": "well",
-   "kind": "stairs",
-   "id": "",
-   "at": "f_roa",
-   "to": "f_roa",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    18,
-    7
-   ],
-   "ms": 2635
-  }
- ],
- "looks": [
-  {
-   "map": "elder_1",
-   "npc": "fine",
-   "look": "fine",
-   "art": "fine",
-   "ok": true
-  },
-  {
-   "map": "elder_2",
-   "npc": "elm",
-   "look": "elm",
-   "art": "elm",
-   "ok": true
-  }
- ],
+ "walked": [],
+ "looks": [],
  "skipped": [],
  "errors": []
 }

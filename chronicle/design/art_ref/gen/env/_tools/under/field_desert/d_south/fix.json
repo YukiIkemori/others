@@ -1,0 +1,120 @@
+{
+"solid": [
+[
+32,
+1,
+"r"
+],
+[
+6,
+7,
+"r"
+],
+[
+52,
+7,
+"r"
+],
+[
+52,
+11,
+"r"
+],
+[
+20,
+12,
+"r"
+],
+[
+47,
+12,
+"r"
+],
+[
+42,
+26,
+"r"
+],
+[
+41,
+27,
+"r"
+],
+[
+52,
+31,
+"r"
+],
+[
+53,
+31,
+"r"
+],
+[
+42,
+33,
+"r"
+],
+[
+27,
+34,
+"r"
+],
+[
+53,
+34,
+"r"
+],
+[
+34,
+35,
+"r"
+],
+[
+28,
+36,
+"r"
+],
+[
+28,
+36,
+"X"
+],
+[
+30,
+36,
+"X"
+],
+[
+29,
+35,
+"X"
+]
+],
+"note": "gen1: the buried doorway is painted one row lower (y 36) than its mark; the stairs/examine and the spawn move down one row, the jambs beside it are solid",
+"objects": [
+{
+"match": {
+"type": "stairs"
+},
+"set": {
+"y": 36
+}
+},
+{
+"match": {
+"event": "desert_temple_sand"
+},
+"set": {
+"y": 36
+}
+}
+],
+"spawns": {
+"temple": {
+"x": 29,
+"y": 37,
+"dir": "s"
+}
+}
+}

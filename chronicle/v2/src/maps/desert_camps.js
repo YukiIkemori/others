@@ -9,6 +9,8 @@
     const K = R.ContentF.kit, DK = R.Desert.kit;
     const L = K.L;
     const W = 30, H = 22;
+    // 描いた下絵（desert_painted_rows.js）があれば、その当たりと絵を使う（無ければマスから焼く）
+    const painted = (id, g) => { const P = R.Desert.PAINTED && R.Desert.PAINTED[id]; return P ? { rows: P.rows, art: P.art } : { rows: g }; };
 
     function base(seed) {
       const g = K.grid(W, H, 'u');
@@ -53,8 +55,9 @@
           K.npc('camp1_old', 'npc_desert_old_m', 22, 9, { name: R.T('map.desert_camps.N.1.camp1_old.name'), dir: 'w', talk: 'desert_camp1_old', reward: 'news', cond: '!desert_caravan_on' }),
         ]);
       K.def('desert_camp1', {
+        ...painted('desert_camp1', g),
         name: R.T('map.desert_camps.desert_camp1.name'), kind: 'town', region: 'r_desert', location: 'camp1', theme: 'desert',
-        legend: DK.LEGEND(), rows: g, outside: 'dune_sand', objects: O, npcs: N,
+        legend: DK.LEGEND(), outside: 'dune_sand', objects: O, npcs: N,
         spawns: { road: { x: 15, y: 19, dir: 'n' }, fire: { x: 15, y: 13, dir: 'n' } },
         exits: [{ x: 14, y: 21, w: 2, h: 1, to: { map: 'world', spawn: 'camp1' } }],
         triggers: [{ id: 'scene', on: 'enter', event: 'desert_camp1_scene' }],
@@ -80,8 +83,9 @@
       const N = caravan('c2', ['desert_caravan_on', 'desert_camp1_done', '!desert_camp3_done'], { zx: 12, zy: 11, ax: 11, ay: 13, bx: 15, by: 13, c1x: 21, c1y: 15, c2x: 7, c2y: 12 })
         .concat([K.npc('camp2_star', 'npc_desert_child', 20, 9, { name: R.T('map.desert_camps.N.0.camp2_star.name'), dir: 'w', talk: 'desert_camp2_child', reward: 'hint', cond: '!desert_caravan_on' })]);
       K.def('desert_camp2', {
+        ...painted('desert_camp2', g),
         name: R.T('map.desert_camps.desert_camp2.name'), kind: 'town', region: 'r_desert', location: 'camp2', theme: 'desert',
-        legend: DK.LEGEND(), rows: g, outside: 'dune_sand', objects: O, npcs: N,
+        legend: DK.LEGEND(), outside: 'dune_sand', objects: O, npcs: N,
         spawns: { road: { x: 15, y: 19, dir: 'n' }, fire: { x: 13, y: 14, dir: 'n' } },
         exits: [{ x: 14, y: 21, w: 2, h: 1, to: { map: 'world', spawn: 'camp2' } }],
         triggers: [{ id: 'scene', on: 'enter', event: 'desert_camp2_scene' }],
@@ -119,8 +123,9 @@
           K.npc('hazal_spirit', 'npc_hazal', 11, 10, { name: R.T('map.desert_camps.N.1.hazal_spirit.name'), dir: 's', talk: 'desert_hazal_after', reward: 'news', cond: 'cleared_r_desert' }),
         ]);
       K.def('desert_camp3', {
+        ...painted('desert_camp3', g),
         name: R.T('map.desert_camps.desert_camp3.name'), kind: 'town', region: 'r_desert', location: 'oasis', theme: 'desert',
-        legend: DK.LEGEND(), rows: g, outside: 'dune_sand', objects: O, npcs: N,
+        legend: DK.LEGEND(), outside: 'dune_sand', objects: O, npcs: N,
         spawns: { road: { x: 15, y: 23, dir: 'n' }, tomb: { x: 21, y: 5, dir: 's' }, fire: { x: 17, y: 16, dir: 'n' }, spring: { x: 13, y: 15, dir: 'n' } },
         exits: [{ x: 14, y: 25, w: 2, h: 1, to: { map: 'world', spawn: 'camp3' } }],
         triggers: [{ id: 'scene', on: 'enter', event: 'desert_camp3_scene' }],

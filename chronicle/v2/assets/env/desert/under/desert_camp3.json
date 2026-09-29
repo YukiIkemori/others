@@ -1,0 +1,64 @@
+{
+ "id": "desert_camp3",
+ "kind": "under",
+ "map": "desert_camp3",
+ "tile": 32,
+ "size32": [
+  960,
+  832
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [
+  {
+   "cells": [
+    [
+     9,
+     11
+    ],
+    [
+     10,
+     11
+    ],
+    [
+     11,
+     11
+    ],
+    [
+     12,
+     11
+    ],
+    [
+     13,
+     11
+    ],
+    [
+     8,
+     12
+    ],
+    [
+     9,
+     12
+    ],
+    [
+     13,
+     12
+    ],
+    [
+     14,
+     12
+    ]
+   ],
+   "cond": {
+    "not": "cleared_r_desert"
+   }
+  }
+ ],
+ "gain": 0.95,
+ "files": {
+  "24": "desert_camp3@24.png",
+  "32": "desert_camp3@32.png",
+  "40": "desert_camp3@40.png"
+ },
+ "src": "generated"
+}

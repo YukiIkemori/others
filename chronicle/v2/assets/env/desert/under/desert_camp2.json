@@ -1,0 +1,20 @@
+{
+ "id": "desert_camp2",
+ "kind": "under",
+ "map": "desert_camp2",
+ "tile": 32,
+ "size32": [
+  960,
+  704
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.95,
+ "files": {
+  "24": "desert_camp2@24.png",
+  "32": "desert_camp2@32.png",
+  "40": "desert_camp2@40.png"
+ },
+ "src": "generated"
+}

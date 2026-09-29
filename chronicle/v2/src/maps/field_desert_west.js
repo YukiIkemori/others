@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("d_west", {
-    name: "鷹の台地", region: "r_desert", outside: "dune_sand",
+    name: R.T('map.field_desert_west.d_west.name'), region: "r_desert", outside: "dune_sand",
     legend: R.FieldArea.DESERT_LEGEND, theme: 'desert', bgm: 'desert', bbg: 'desert',
     rows: [
       "uubuuuuuuuuuuuuusssssssssuuuu...uuuuuuuuuuuuuuuuuusssssXXXXX",
@@ -60,9 +60,9 @@
       {"type":"prop","id":"lantern","x":25,"y":23,"cond":"desert_night"},
       {"type":"prop","id":"lantern","x":33,"y":23,"cond":"desert_night"},
       {"type":"prop","id":"lantern","x":29,"y":18,"cond":"desert_night"},
-      {"type":"sign","x":35,"y":24,"text":"砂の真ん中の平地\n消灯の刻に、灯りの列が揺れるという。"},
-      {"type":"sign","x":15,"y":27,"text":"岩の台地\n夜、鷹の笛が聞こえるという。"},
-      {"type":"sign","x":50,"y":23,"text":"オアシスの町カシム\n――泉を囲む市場"},
+      {"type":"sign","x":35,"y":24,"text":R.T('map.field_desert_west.d_west.objects.6.text')},
+      {"type":"sign","x":15,"y":27,"text":R.T('map.field_desert_west.d_west.objects.7.text')},
+      {"type":"sign","x":50,"y":23,"text":R.T('map.field_desert_west.d_west.objects.8.text')},
       {"type":"waylamp","id":"wl_desert_beacon_1","x":43,"y":31,"lit":"q_kasim_beacon_1","event":"desert_beacon"},
       {"type":"waylamp","id":"wl_d_west_gate_n","x":50,"y":18,"lit":true},
       {"type":"waylamp","id":"wl_d_west_gate_s","x":49,"y":24,"lit":true},
@@ -81,7 +81,7 @@
     tilePatches: [],
     zones: [{"rect":null,"zone":"zw_desert_caravan","cond":"desert_caravan_on"},{"rect":null,"zone":"zw_desert"}],
     art: {"image":"field/under/d_west","painted":[],"overlay":"field/under/d_west_over"},
-    meta: {"sub":"カシムの西の野","worldRect":[40,400,116,70]},
+    meta: {"sub":R.T('map.field_desert_west.d_west.meta.sub'),"worldRect":[40,400,116,70]},
     links: {"kasim":{"map":"d_west","spawn":"kasim"},"hawks":{"map":"d_west","spawn":"hawks"},"mirage":{"map":"d_west","spawn":"mirage"}},
   });
 })(window.RPG);

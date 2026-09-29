@@ -1,0 +1,20 @@
+{
+ "id": "desert_mirage",
+ "kind": "under",
+ "map": "desert_mirage",
+ "tile": 32,
+ "size32": [
+  1152,
+  832
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.95,
+ "files": {
+  "24": "desert_mirage@24.png",
+  "32": "desert_mirage@32.png",
+  "40": "desert_mirage@40.png"
+ },
+ "src": "generated"
+}
