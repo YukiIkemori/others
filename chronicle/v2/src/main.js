@@ -91,10 +91,20 @@
     R.Engine.addTick((dt, real) => { if (R.Game && R.Engine.has('field')) R.Game.playMs = (R.Game.playMs || 0) + real; });
     // 焼く列（版 2）: 毎フレーム R.Hd.pump(予算 3 ms) を CORE が 1 回だけ呼ぶ。ほかの担当は pump を呼ばない（暗転中の同期の焼きは R.Hd.now）
     R.Engine.addTick(() => { if (R.Hd && R.Hd.pump) R.Hd.pump((R.Hd.BUDGET && R.Hd.BUDGET.frameBakeMs) || 3); });
-    for (const fn of R._bootHooks) { try { await fn(); } catch (e) { console.error('boot hook failed', e); } }
+    // 起動の仕事（原画・素材の先読み）。遊ぶ版はタイトルを先に出し、読み込みはタイトルの裏で続ける（2026-09-29 性能: CPU 4 倍遅いで
+    // タイトルまで 14.6 秒 → 数秒。はじめから・つづきからは Flow.ready() で読み終わりを待つ）。dev.html（フィクスチャ）は今までどおり待ってから
+    const runHooks = async () => { for (const fn of R._bootHooks) { try { await fn(); } catch (e) { console.error('boot hook failed', e); } } };
+    const early = !R.devBoot && !(typeof location !== 'undefined' && /[?&]bootWait=1/.test(location.search || ''));
+    if (!early) { R.bootReady = runHooks(); await R.bootReady; }
     if (R.Loading) R.Loading.bootDone();
     R.Engine.start(canvas);
     if (R.loadErrors.length) console.error('LOAD ERRORS:\n' + R.loadErrors.join('\n'));
+    if (early) {
+      Flow.title();   // タイトルの絵の読み込みを先に頼む（下の先読みより前に並ぶ）
+      R.bootReady = runHooks();
+      R.bootReady.then(() => R.emit('booted'));
+      return;
+    }
     R.emit('booted');
     if (R.devBoot && (await R.devBoot())) return; // dev.html だけ: ?fixture= / ?scene=（src/dev/fixtures.js）
     Flow.title();
