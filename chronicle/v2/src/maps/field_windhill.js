@@ -58,7 +58,7 @@
       {"type":"examine","x":10,"y":31,"event":"world_poi_forest_statue"},
       {"type":"prop","id":"tent","x":20,"y":13},
       {"type":"prop","id":"lantern","x":22,"y":13},
-      {"type":"sign","x":15,"y":6,"text":"北 → 苔の村ユーラ"},
+      {"type":"sign","x":15,"y":6,"text":"北 → こけの村ユーラ"},
       {"type":"sign","x":42,"y":6,"text":"北の峠を越えて\n↑ 雪の村ユール"},
       {"type":"prop","id":"beacon","x":3,"y":40,"cond":"cleared_r_forest"},
       {"type":"waylamp","id":"wl_15","x":17,"y":25,"lit":true},

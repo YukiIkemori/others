@@ -42,8 +42,19 @@
   };
   Hd.has = function (key) { return !!S.defs[key]; };
   Hd.meta = function (key) { const d = S.defs[key]; return d ? d.meta : null; };
-  /** 登録のキーの一覧（接頭辞で絞る。'hd:mon:' など） */
-  Hd.keys = function (prefix) { return Object.keys(S.defs).filter((k) => !prefix || k.startsWith(prefix)).sort(); };
+  /** 登録のキーの一覧（接頭辞で絞る。'hd:mon:' など）。並べた一覧は登録が変わるまで使い回し、接頭辞は二分探索で探す
+   *  （2026-09-29 性能: 起動の原画の読み込みで look ごとに全部のキーを並べ直していて、CPU 4 倍遅いで 3 秒掛かっていた） */
+  let sortedKeys = null, sortedN = -1;
+  Hd.keys = function (prefix) {
+    const n = Object.keys(S.defs).length;
+    if (!sortedKeys || sortedN !== n) { sortedKeys = Object.keys(S.defs).sort(); sortedN = n; }
+    if (!prefix) return sortedKeys.slice();
+    let lo = 0, hi = sortedKeys.length;
+    while (lo < hi) { const mid = (lo + hi) >> 1; if (sortedKeys[mid] < prefix) lo = mid + 1; else hi = mid; }
+    const out = [];
+    for (let i = lo; i < sortedKeys.length && sortedKeys[i].startsWith(prefix); i++) out.push(sortedKeys[i]);
+    return out;
+  };
 
   /**
    * get は「このフレームに描く物」（画面に出ている人・物）なので、列では高めの prio（GET_PRIO）で待つ。
