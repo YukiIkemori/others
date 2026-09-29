@@ -17,7 +17,11 @@
     if (!fx) throw new Error('no state fixture ' + name);
     const chk = R.Contract.check('fixtureState', fx);
     if (!chk.ok) console.warn('[fixture] ' + name + ': ' + chk.errors.join('; '));
-    R.State.newGame({ hero: fx.hero, seed: fx.seed != null ? fx.seed : 12345 });
+    // 日本語でない言語で撮るときは、フィクスチャの既定の名前（アルン）をその言語の既定の名前にする（i18n の撮影用）
+    let hero = fx.hero;
+    const I = R.I18n, dk = 'data.config.defaultHero.name';
+    if (hero && I && I.lang() !== 'ja' && hero.name === I.table('ja')[dk]) hero = Object.assign({}, hero, { name: R.T(dk) });
+    R.State.newGame({ hero, seed: fx.seed != null ? fx.seed : 12345 });
     const G = R.Game;
     G.tier = fx.tier || 0;
     for (const id of fx.party || []) if (id !== 'hero') R.Party.join(id);
