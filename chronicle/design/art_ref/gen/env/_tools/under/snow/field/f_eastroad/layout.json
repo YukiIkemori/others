@@ -374,9 +374,9 @@
 },
 {
 "type": "prop",
-"id": "snow_lamp",
+"id": "lantern",
 "x": 11,
-"y": 13
+"y": 12
 },
 {
 "type": "examine",

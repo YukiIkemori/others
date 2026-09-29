@@ -23,7 +23,7 @@ SCENE = {
 }
 
 KEY = """- pale sand colour = open SAND (walkable): flat pale desert sand with small pebbles, footprints, faint ripples.
-- pale sand with orange arc strokes = rolling DUNES (walkable): smooth honey-golden dunes with wind ripples and soft crests, their outlines free-flowing and organic (never square or stepped), blending softly into the flat sand (low, walkable, no cliffs).
+- soft darker golden areas = rolling DUNES (walkable): smooth honey-golden dunes with wind ripples and soft crests, their outlines free-flowing and organic (never square or stepped), blending softly into the flat sand (low, walkable, no cliffs).
 - beige with crack lines = flat CRACKED CLAY or SALT PAN (walkable): dry cracked mud plates, pale crust.
 - olive with short strokes = tufts of DRY DESERT GRASS (walkable, low).
 - green = GRASS of an oasis (walkable, flat).
@@ -54,7 +54,7 @@ The FIRST attached image is an exact LAYOUT GUIDE drawn on a {W} x {H} tile grid
 
 The SECOND attached image is only a STYLE REFERENCE from the same game: match its pixel-art rendering (pixel size, clusters, outlines, colour ramps, level of detail). Do NOT copy anything from it (no houses, towers, ponds, paths or objects from it).
 
-The guide is flat colour-coding only: do NOT copy its flat colours, straight tile steps, circles or stripes. Interpret every area as the real material with rich natural variation, and give shores, woods, meadows and cliffs natural, organic, slightly irregular outlines (bulging or receding by at most a third of a tile around the guide edge). Make it feel like a real, exciting place to explore, full of small natural detail.
+The guide is soft colour-coding only (its blurred edges only mean the edge is natural and free-flowing): do NOT copy its flat colours, straight tile steps, circles or stripes. Interpret every area as the real material with rich natural variation, and give shores, woods, meadows and cliffs natural, organic, slightly irregular outlines (bulging or receding by at most a third of a tile around the guide edge). Make it feel like a real, exciting place to explore, full of small natural detail.
 
 Guide colour key:
 {KEY}

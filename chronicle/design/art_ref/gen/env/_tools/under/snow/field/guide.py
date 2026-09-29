@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw
 aid = sys.argv[1]; T = int(sys.argv[2]) if len(sys.argv) > 2 else 48
 d = json.load(open(aid + '/layout.json'))
 W, H, rows = d['w'], d['h'], d['rows']
-C = {',': (238, 242, 250), ';': (220, 228, 242), '"': (232, 236, 242), '.': (200, 168, 116), ':': (168, 140, 110), 's': (150, 206, 236),
+C = {',': (238, 242, 250), ';': (238, 242, 250), '"': (238, 242, 250), '.': (200, 168, 116), ':': (168, 140, 110), 's': (150, 206, 236),
      '_': (150, 206, 236), '=': (150, 98, 54), 'c': (172, 170, 160), '~': (16, 40, 84), 'w': (40, 76, 118), 'T': (238, 242, 250),
      'F': (30, 70, 56), 'b': (238, 242, 250), 'r': (238, 242, 250), 'R': (120, 150, 196), 'X': (150, 150, 150)}
 
@@ -40,7 +40,7 @@ def draw(T, sym=True):
             if (x, y) in markc:
                 continue
             if c == ';':
-                for q in range(T // 6, T, T // 3): g.arc([x * T + q - T // 5, y * T + T // 3, x * T + q + T // 5, y * T + T // 3 + T // 3], 200, 340, fill=(170, 186, 214), width=lw)
+                for q in range(T // 6, T, T // 3): g.arc([x * T + q - T // 5, y * T + T // 3, x * T + q + T // 5, y * T + T // 3 + T // 3], 200, 340, fill=(214, 222, 238), width=lw)
             elif c == '"':
                 for _ in range(3):
                     px, py = x * T + rnd.randint(4, T - 5), y * T + rnd.randint(4, T - 5)

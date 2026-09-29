@@ -79,7 +79,7 @@ def f_snowpass():
         dict(type='examine', x=18, y=22, event='snow_pass_hut'),
         dict(type='waylamp', id='wl_snow_39_43', x=26, y=40, lit=True),
         dict(type='waylamp', id='wl_snow_39_38', x=24, y=8, lit=True),
-        dict(type='prop', id='tent', x=8, y=32), dict(type='prop', id='firewood', x=9, y=34), dict(type='prop', id='snow_lamp', x=7, y=34),
+        dict(type='prop', id='tent', x=8, y=32), dict(type='prop', id='firewood', x=9, y=34), dict(type='prop', id='lantern', x=7, y=33),
         dict(type='chest', id='f_snowpass_c1', x=15, y=21, item='i_ether', n=1),
     ]
     a.meta = dict(name='凍て風の峠', sub='森から雪原へ越える峠', region='r_snow', worldRect=[98, 104, 44, 40], outside='wall_snow',
@@ -153,7 +153,7 @@ def f_lake():
         dict(type='prop', id='ice_crystal', x=10, y=27), dict(type='prop', id='ice_crystal', x=12, y=30),
         dict(type='waylamp', id='wl_snow_26_37', x=19, y=36, lit=True),
         dict(type='waylamp', id='wl_snow_42_32', x=44, y=35, lit=True),
-        dict(type='prop', id='tent', x=10, y=18), dict(type='prop', id='firewood', x=11, y=19), dict(type='prop', id='snow_lamp', x=9, y=19),
+        dict(type='prop', id='tent', x=10, y=18), dict(type='prop', id='firewood', x=11, y=19), dict(type='prop', id='lantern', x=9, y=18),
         dict(type='examine', x=13, y=21, event='snow_mat', mat='snow_mat_ice'),
     ]
     tp = {}
@@ -224,7 +224,7 @@ def f_peakfoot():
         dict(type='examine', x=cx, y=cy, event='snow_foot_shrine'),
         dict(type='prop', id='beacon', x=cx, y=cy, cond='cleared_r_snow'),
         dict(type='waylamp', id='wl_snow_48_17', x=25, y=31, lit=True),
-        dict(type='waylamp', id='wl_snow_55_17', x=33, y=16, lit=True),
+        dict(type='waylamp', id='wl_snow_55_17', x=34, y=18, lit=True),
         dict(type='prop', id='ice_crystal', x=26, y=13), dict(type='prop', id='snow_lamp', x=34, y=13),
         dict(type='chest', id='f_peakfoot_c1', x=16, y=24, item='i_revive', n=1),
     ]
@@ -284,7 +284,7 @@ def f_eastroad():
         dict(type='waylamp', id='wl_snow_2', x=33, y=21, lit='q_snow_lamps_2', event='snow_waylamp'),
         dict(type='waylamp', id='wl_snow_3', x=50, y=20, lit='q_snow_lamps_3', event='snow_waylamp'),
         dict(type='waylamp', id='wl_snow_67_35', x=27, y=28, lit=True),
-        dict(type='prop', id='tent', x=13, y=12), dict(type='prop', id='firewood', x=15, y=13), dict(type='prop', id='snow_lamp', x=11, y=13),
+        dict(type='prop', id='tent', x=13, y=12), dict(type='prop', id='firewood', x=15, y=13), dict(type='prop', id='lantern', x=11, y=12),
         dict(type='examine', x=48, y=27, event='snow_mat', mat='snow_mat_coal'),
     ]
     a.meta = dict(name='灯守りの街道', sub='ユールと峠の宿をむすぶ森の道', region='r_snow', worldRect=[156, 64, 96, 60], outside='forest_dark',

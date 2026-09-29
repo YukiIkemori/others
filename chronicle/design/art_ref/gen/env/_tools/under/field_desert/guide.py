@@ -11,7 +11,7 @@ W, H, rows = d['w'], d['h'], d['rows']
 C = {',': (110, 160, 70), ';': (160, 150, 80), '"': (104, 160, 74), '.': (176, 128, 84), ':': (150, 108, 68), 's': (236, 212, 156),
      '_': (120, 188, 212), '=': (150, 98, 54), 'c': (172, 170, 160), '~': (22, 62, 138), 'w': (44, 112, 192), 'T': (236, 212, 156),
      'F': (24, 70, 40), 'b': (236, 212, 156), 'r': (236, 212, 156), 'R': (150, 84, 56), 'X': (150, 150, 150),
-     'u': (236, 212, 156), 'k': (200, 178, 150)}
+     'u': (222, 172, 96), 'k': (200, 178, 150)}
 
 
 def ch(x, y):
@@ -35,6 +35,12 @@ def draw(T, sym=True):
                     if nb.count(gc) >= 2: base = C[gc]; break
             g.rectangle(R(x, y), fill=markc.get((x, y), base))
     if not sym: return im
+    # 砂漠: 地面・水・崖の境を丸める（マスの段々をなぞらせない）。目印（marks）の塊だけはくっきり残す
+    from PIL import ImageFilter
+    soft = im.filter(ImageFilter.GaussianBlur(T * 0.45))
+    keep = Image.new('L', im.size, 0); kd = ImageDraw.Draw(keep)
+    for (mx, my) in markc: kd.rectangle(R(mx, my), fill=255)
+    im = Image.composite(im, soft, keep); g = ImageDraw.Draw(im)
     for y in range(H):
         for x in range(W):
             c = ch(x, y); cx, cy = x * T + T // 2, y * T + T // 2
@@ -52,7 +58,7 @@ def draw(T, sym=True):
                     a_ = k * 2 * math.pi / 7
                     g.line([cx, cy - T // 5, cx + r * math.cos(a_), cy - T // 5 + r * math.sin(a_)], fill=(40, 120, 50), width=max(2, T // 8))
                 g.ellipse([cx - T // 10, cy - T // 5 - T // 10, cx + T // 10, cy - T // 5 + T // 10], fill=(110, 80, 40))
-            elif c == 'u':
+            elif c == 'u' and False:   # 砂丘は色の濃淡だけ（ぼかした塊で）
                 for q in range(T // 5, T, T // 3): g.arc([x * T - T // 4, y * T + q - T // 4, x * T + T + T // 4, y * T + q + T // 4], 200, 340, fill=(200, 150, 80), width=max(2, lw * 2))
             elif c == 'k':
                 for _ in range(3):

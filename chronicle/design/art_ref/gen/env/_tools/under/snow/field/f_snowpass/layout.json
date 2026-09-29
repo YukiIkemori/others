@@ -249,9 +249,9 @@
 },
 {
 "type": "prop",
-"id": "snow_lamp",
+"id": "lantern",
 "x": 7,
-"y": 34
+"y": 33
 },
 {
 "type": "chest",
