@@ -1,0 +1,308 @@
+{
+"id": "m_fen",
+"w": 56,
+"h": 44,
+"rows": [
+"\"\",,,,;;;\";,wb,,,,bw..wwwwb;bww;;;;;;;,,\",,,,,,,,\"bwwww,",
+",,,,,;;;;;;,b,,,,,,b..wwwb;;;bwwb;;;;;,,,,,,,,,,,,\"b,wbb",
+",,,,,;bw;;;;,,,\"\",,,..bbb;,,bwwb;;;;T,,,,,,,,,,,,,,,,bbw",
+",,,,bwww;ww,,,,\"\"\",..,,\"\",,,;bbbb,,,,,,,,,,,,,,,,bbbbbbw",
+",,,,bwwwwww,,,,\"\"\"...,,,\",,rb;;bb,bb,,,,,,,wwwb,bwwwwb,b",
+",,,,,bbbbwb,,,,\"\"...,,\",,,bbbb,~~,,bbb,,,,,wwwbbwwwwwb,b",
+",,,,bwwwbb;,,,,,...bbbb,,bbb~~~~~~~~bbbb,ww;bbwbwwwwb,bw",
+",,,bwwwwwb,,,,,...bbbbb,,,~~~~~~~~~~~~bbbwb;;bwbbbwb,,bb",
+",,bwwwwwwb,,,,...bb~~~~~~~~~~~~~~~~~~~~~bbb;;r,,,,bwbbww",
+",,,bwwwwwb,bb,..,bb~~~~~~~~~~~~~~~~~~~~~~~~,,,,,b,wb,bww",
+",,,,bbbwb,,ww..,,bb~~~~~~~~~~~~~~~~~~~~~~~~~,,,bbbbb,,bw",
+",,,,wr,b,,,,...,,bb~~~~~~~~~XXX~~~~~~~~~~~~~Tbbbbbbbb,;b",
+",,,,,,,,wT,,..,,bb~~~~~~~~~~XXX~~~~~~~~~~~~~~bbbbbbb;;;;",
+",,bww,,,ww,,..b,bb~~~~~~~~~~~X~~~~~~~~~~~~~~~bbbbbbb;;;;",
+",,,bwb,,ww,,..,,b,~~~~~~~X~~~~~~~X~~~~~~~~~~~bbbbbb;;;;;",
+",,,,bb,bwb,,..,,,,~~~~~~~~ccccccc~~~~~~~~~~~~bb;;;;;;;;;",
+";,,,bwwwb,,..=============ccccccc~~~~~~~~~~~~bb;;;;;,,,;",
+";,,bwbbb,,,..==============cccccc~~X~~~~~~~~~~b;,,,,,,,,",
+";;,bwb,,,,,..,============ccccccc~~~~~~~~~~~~b;,,,,,,,,,",
+";;,,b,,,,,,..,,,\"b~~~~~~~~ccccccc~~~~~~~~~~~~bb,,,,,,,,,",
+";;bbbbb,,,,..,,,\"bb~~~~~~X~~~~~~~X~~~~~~~~~~~bb,,,,,,,,,",
+",,bbbbb\",,,,.c,,\"bb~~~~~~~~~~~~~~~~~~~~~~~~~,bT,,,,,,,,,",
+",,bbbbb\"\"\"\",.c,,,,bb~~~~~~~~~~~~~~~~~~~~~~~,,,,,\",,,bb,,",
+",,bbbbb\"\"\",,..,,,,b,~~~~~~~~~~~~~~~~~~~~~~~bb,,,\"\",bwwb,",
+",,,bbbb\"\"b,,...,,,,;;~~~~~~~~~~~~~~~~~~~~~bb,,,\"s,bbbbwb",
+",,,,bb,,bwb,,..,,,,;b~~~~~~~~~~~~~~~~~~~~~bb,,,,s\"bbbbwb",
+",,,,,,,bwwb;,,..,,bwbww~~~~~~~~~~~~~~~~,,,,,,T,,,\"bbbbb,",
+",\",;;;bwwwb;,\"..c,bwwbbbbbb~~~~~~~~b,,,,,,,,,,,ww,bbbb,,",
+"\"\";;;bwwwwb,;,\"..cbwwwbbbbbbb~~~bbbbbbb,,,,,,,,ww,bbbb,,",
+",,,;;;bwwwb;;;,\"..c\"\",,,,,,,bbbbbbb,,,,,,,,,,,,,,,,bb,,,",
+",,,;;;;bww;;;;;s\"....,,,,,,,,bbbwwb,,,,:::::::::::::::::",
+"w,,,,,,,b;;;;;;ssss....,,,,,,,,bww:::::::::::,,,,\"\",,,,b",
+"wwb,,,,,;;;;;;;s,,ss..:::::::::::::::,,,,,,,,,bbbbb\",\",w",
+"wb,,,;;;;;;;s;;;,;;,,,::::::::,,,,,,,,,,,,,,,wwwwww\",,,w",
+",,,,,;bbbbb;;;;bbb;;;;;....,,,,,,,,,,,,,,,,,,wwwwwwwb,,,",
+",,,,;bwwwwwb;;,wwwb;;;;;;...,b,,,,,,,,,,,,,,bwwwwwwwwb,,",
+"wb,,;;wwwwwb;;bwwwwb;;;;;;..bwb,\"\",,,bbb,,\",,bwwwwwwb,,,",
+",,,,;bwwwwb;;;;;ww;;T,;;;;;..b;,,,,,bwwwb,\"\",\"bbwbbb,\"T,",
+",,\",;,bbbb\";;;;;;\",,,,,;;;;..;,,,,,,,wwwb,,,,,,,b,,,;;;;",
+",,,r,,bwwb\",;;;;;,,,,,,,;;;..;,,T,,,,wwwb,,;,,,,,,,,;;;;",
+"b,,,,,bwwwb,;;;;;,,,,,,T,,;..;,,,,,,,bbb,,,;;,,,,,,,,,;;",
+"wb,,,,bwww\",;;;;;,,,,,,,,,,..,,,,,,,,,,,,,,,;,,,,,,,,,,,",
+"ww,\"\"\",bw\"\",;T;;sss,,,,,,,,..,,,,,,,,,,,,,,,,;,,,,,,,,,,",
+"wb\"\",\",,b\"\",;;;;ss,,,,,,,,,..,,,,,,,,,,,\"\",;;,,T,,,,,,,,"
+],
+"marks": [
+{
+"kind": "pillar",
+"cells": [
+[
+25,
+14
+]
+],
+"text": "broken PILLAR STUMPS and a fallen pointed ARCH of a drowned stone CHAPEL standing in the water, mossy grey stone",
+"color": [
+150,
+150,
+140
+],
+"solid": true
+},
+{
+"kind": "pillar",
+"cells": [
+[
+33,
+14
+]
+],
+"text": "broken PILLAR STUMPS and a fallen pointed ARCH of a drowned stone CHAPEL standing in the water, mossy grey stone",
+"color": [
+150,
+150,
+140
+],
+"solid": true
+},
+{
+"kind": "pillar",
+"cells": [
+[
+25,
+20
+]
+],
+"text": "broken PILLAR STUMPS and a fallen pointed ARCH of a drowned stone CHAPEL standing in the water, mossy grey stone",
+"color": [
+150,
+150,
+140
+],
+"solid": true
+},
+{
+"kind": "pillar",
+"cells": [
+[
+33,
+20
+]
+],
+"text": "broken PILLAR STUMPS and a fallen pointed ARCH of a drowned stone CHAPEL standing in the water, mossy grey stone",
+"color": [
+150,
+150,
+140
+],
+"solid": true
+},
+{
+"kind": "pillar",
+"cells": [
+[
+29,
+13
+]
+],
+"text": "broken PILLAR STUMPS and a fallen pointed ARCH of a drowned stone CHAPEL standing in the water, mossy grey stone",
+"color": [
+150,
+150,
+140
+],
+"solid": true
+},
+{
+"kind": "pillar",
+"cells": [
+[
+35,
+17
+]
+],
+"text": "broken PILLAR STUMPS and a fallen pointed ARCH of a drowned stone CHAPEL standing in the water, mossy grey stone",
+"color": [
+150,
+150,
+140
+],
+"solid": true
+},
+{
+"kind": "pillar",
+"cells": [
+[
+23,
+17
+]
+],
+"text": "broken PILLAR STUMPS and a fallen pointed ARCH of a drowned stone CHAPEL standing in the water, mossy grey stone",
+"color": [
+150,
+150,
+140
+],
+"solid": true
+},
+{
+"kind": "apse",
+"cells": [
+[
+28,
+11
+],
+[
+28,
+12
+],
+[
+29,
+11
+],
+[
+29,
+12
+],
+[
+30,
+11
+],
+[
+30,
+12
+]
+],
+"text": "the broken APSE wall of the drowned chapel, a tall pointed ARCH window frame still standing, grey stone with moss",
+"color": [
+150,
+150,
+140
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "sign",
+"x": 11,
+"y": 14,
+"text": "沈んだ礼拝堂\n水の底から、歌が聞こえるという。"
+},
+{
+"type": "examine",
+"x": 29,
+"y": 14,
+"event": "marsh_field_chapel"
+},
+{
+"type": "waylamp",
+"id": "wl_m_fen_1",
+"x": 17,
+"y": 7,
+"lit": true
+},
+{
+"type": "waylamp",
+"id": "wl_m_fen_2",
+"x": 24,
+"y": 37,
+"lit": true
+},
+{
+"type": "prop",
+"id": "rotten_stump",
+"x": 9,
+"y": 27
+}
+],
+"spawns": {
+"north": {
+"x": 21,
+"y": 1,
+"dir": "s"
+},
+"south": {
+"x": 27,
+"y": 42,
+"dir": "n"
+},
+"east": {
+"x": 54,
+"y": 30,
+"dir": "w"
+}
+},
+"exits": [
+{
+"x": 20,
+"y": 0,
+"w": 3,
+"h": 1,
+"to": {
+"map": "m_west",
+"spawn": "south"
+},
+"edge": "n"
+},
+{
+"x": 26,
+"y": 43,
+"w": 3,
+"h": 1,
+"to": {
+"map": "m_bog",
+"spawn": "north"
+},
+"edge": "s"
+},
+{
+"x": 55,
+"y": 30,
+"w": 1,
+"h": 2,
+"to": {
+"map": "m_lotus",
+"spawn": "west"
+},
+"edge": "e"
+}
+],
+"notes": [],
+"meta": {
+"name": "沈んだ礼拝堂の原",
+"sub": "ロッホの南の泥炭の原",
+"region": "r_marsh",
+"worldRect": [
+499,
+241,
+60,
+48
+],
+"outside": "marsh_water",
+"zones": [
+{
+"rect": null,
+"zone": "zw_marsh"
+}
+],
+"links": {},
+"npcs": []
+}
+}

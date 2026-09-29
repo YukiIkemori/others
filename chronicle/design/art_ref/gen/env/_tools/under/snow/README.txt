@@ -22,3 +22,15 @@ Snow dungeons and the Yule / pass-inn interiors (2026-09-28), folder dng/ (gener
 Chosen: snow_woods g1, peak_1 g1, peak_top g1, icicle_1 g2, icicle_2 g1, aurora g2 (flat outer area filled from aligned g1),
 frost_ship_1 g2 (g1 was on the old jagged deck; the deck is now a hull shape in the data), frost_ship_2 g2 (g1 had a beam across the floor),
 yule_sonja g1 (fire ring moved +0.45 tile), the other interiors g1. Raw paintings: ../../../under/<map>_genN_raw.png, guides <map>_guide.png.
+
+Snow FIELD areas (2026-09-29), folder field/ (the demo's area-switching field, ../field/, with the snow legend reading):
+  areas.py <id>        layouts (lib.py of ../field) -> <id>/layout.json      ids: f_snowpass f_lake f_peakfoot f_eastroad f_passinn f_floe
+  guide.py <id>        snow palette guide; mkjob.py <id> genN (style ref ../dng/style_snow.png); sh gen.sh <id>/genN.job.json (one job at a time)
+  sh post.sh <id> <gen.png>   ../../field/fit.py (layout-seeded: fix.json fit.SEED=layout) -> gain.py (bright snow matched to painted Yule)
+                              -> ../../field/process.py (field/under/<id>@24/32/40, _over, _closed) -> blobs.py (painted rocks/edges the fit
+                              missed -> fix.json) -> refit -> tomap.py (v2/src/maps/snow_field_<x>.js + the map.snow_field.* strings in
+                              v2/src/i18n/ja/maps_snow.js)
+  crop.py <id> x0 y0 x1 y1 out.png   close-up of the underlay with the collision hatched (hand fixes go into <id>/fix.json)
+Chosen: f_snowpass gen2 (gen1 painted raised snow terraces on the ';' drifts: guide/prompt fixed), f_lake gen1, f_peakfoot gen1,
+f_eastroad gen1 (a round hunting hut on the hollow-log mark: kept as a closed hut, the log is the painted one at the west), f_passinn gen1,
+f_floe gen2 (gen1 stair-stepped flat floes: layout smoothed). The lake's ice road is painted; before cleared_r_snow a closed layer shows water.

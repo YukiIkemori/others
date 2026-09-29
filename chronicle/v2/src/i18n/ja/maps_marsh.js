@@ -94,5 +94,8 @@
     'map.marsh_manor.marsh_manor_2.npcs.0.melda.title': '霧の館の魔女',
     'map.marsh_manor.marsh_manor_2.meta.floor': '2階',
     'map.marsh_manor.marsh_manor_2.meta.sub': '楽の音の響く階',
+    // ---- src/maps/marsh_field_00_kit.js
+    'map.marsh_field_00_kit.CONFIRM.marsh_manor_1': '重い扉の向こうは、霧の館の中だ。\n中へ入りますか？',
+    'map.marsh_field_00_kit.CONFIRM.marsh_bog': '霧の向こうは、鐘沈みの沼だ。\n沼へ踏み込みますか？',
   });
 })(window.RPG);

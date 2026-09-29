@@ -1,0 +1,19 @@
+{
+ "id": "m_north",
+ "kind": "under",
+ "map": "m_north",
+ "tile": 32,
+ "size32": [
+  1664,
+  1280
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 1.0,
+ "files": {
+  "24": "m_north@24.png",
+  "32": "m_north@32.png"
+ },
+ "src": "generated"
+}

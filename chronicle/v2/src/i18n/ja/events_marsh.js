@@ -311,5 +311,9 @@
     'events.loch_night_market.say.0': '夜市へようこそ。\n消灯の刻だけの、秘密の市さ。',
     'events.loch_night_market.say.1': '今夜は、ちょっと珍しいお守りも\n仕入れてあるよ。',
     'events.loch_night_market.say.1_2': '蓮の露なんて、どうだい。',
+    // ---- src/events/marsh_field.js
+    'ev.marsh_field.marsh_field_tower': ['崩れかけた、丸い石の見張りの塔。', '石段は途中で落ちている。\n昔はここから、湿原の霧の\n行き来を見張ったのだろう。'],
+    'ev.marsh_field.marsh_field_chapel': ['水に沈んだ、古い礼拝堂。\n折れた柱と、とがったアーチの\n枠だけが残っている。', '……水の底から、かすかに\n歌が聞こえた気がした。\n鐘の音では、ない。'],
+    'ev.marsh_field.marsh_field_chapel.after': '朝の鐘が鳴るようになっても、\nこの水の底の歌だけは\n止まない。',
   });
 })(window.RPG);
