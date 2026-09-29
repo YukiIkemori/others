@@ -33,9 +33,9 @@ SFX.append(dict(id='bell', at=0.25, gain=-2))
 # つかみの一行の声（PV だけの声。フィーネ。v2/tools/pv/pv_voice.js で作った物を PV_VO のディレクトリに置く）
 PV_HOOK = os.path.join(os.environ.get('PV_VO', ''), 'pv_hook_01')
 VOICE.append(dict(file=PV_HOOK, at=0.6))
-T.append(dict(kind='tag', text='この世界は、朝を知らない。', t0=0.7, t1=3.5, x=960, y=540, anim='rise', fin=0.8, fout=0.5))
+T.append(dict(kind='tag', text='この世界は、朝を知らない。', t0=0.7, t1=4.6, x=960, y=540, anim='rise', fin=0.8, fout=0.6))   # 声（0.6〜3.5）の後も 1 秒ほど残す
 # ロアの年寄り（本物の会話の窓。E.AGE.old）
-cut('hook_elder', 3.6, 3.9, src=0.15, zoom=(1.18, 1.24), center=(0.5, 0.8))
+cut('hook_elder', 4.6, 2.9, src=1.15, zoom=(1.18, 1.24), center=(0.5, 0.8))   # 一行を長く出した 1 秒ぶん、頭を詰める
 # 灯台の岬を見渡す ＋ フィーネの声「……ねえ、聞こえる？」
 cut('nf_cape_pan', 7.5, 4.7, src=1.8, zoom=(1.12, 1.0), xin=0.5)   # 灯台の岬（一枚絵のフィールド）
 VOICE.append(dict(file='v_fine_opening_01', at=8.1))

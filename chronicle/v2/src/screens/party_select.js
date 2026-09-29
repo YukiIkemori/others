@@ -1,9 +1,7 @@
 // MENUS: 仲間選び（潮風亭の 20 人から 3 人、V2_PLAN §3.3 P6・§3.11、MODERN_UI §6.14、A14・A15・A17）
 //   ↑↓ で行・←→ で列。札は胸から上の顔・名前・肩書き。右（縦持ちは上）の詳しい札に 年と出身・紹介文（2〜3 行、オーナーの指示 2026-09-27:
 //   選ぶときは誰なのかが分かるように）・得意武器/得意属性の名前・能力値（特性・役割・S〜D の文字は出さない。A14・A17）。
-//   A で選ぶ／外す。人数がそろうと「これでよい」に移り、A で決めて id の配列を返す（加入は呼ぶ側の ev.chooseCompanions）。
-//   持ち主 2026-09-28「B でキャンセルしないと決定できなかった」: 決めるのは「これでよい」（A）。START でもそこへ。↑ で札へ戻る。
-//   B は取り消し: 選んだ人がいれば「選んだ仲間を取り消して戻る？」を聞き、取り消すと [] で閉じる（潮風亭のマスターは「また声をかけとくれ」）
+//   A で選ぶ／外す、B で最後に選んだ人を外す。人数がそろったら確かめて、id の配列を返す（加入は呼ぶ側の ev.chooseCompanions）。
 (function (R) {
   'use strict';
   const S = (R.Screens = R.Screens || {});
@@ -75,22 +73,6 @@
       S.abilBars(g, info.stats, lx, y + u(26), p.w - pad * 2, { cols: 2, lh: 24 });
     } else S.abilBars(g, info.stats, lx, y + u(2), p.w - pad * 2, { cols: 2, lh: Math.max(20, Math.floor(room / R.UIK.u(1) / 3)) });
   };
-  /**
-   * 「これでよい」の札（仲間選び・酒場の入れ替え）。o = {focused, enabled, label, note} → rect をそのまま返す。
-   *   決める物は A で選ぶ札にする（持ち主 2026-09-28: B の「戻る」で決まるのは分かりづらい）
-   */
-  S.okButton = function (g, r, o) {
-    o = o || {};
-    const C = T().color, on = o.enabled !== false, f = !!o.focused;
-    R.UIK.card(g, r, { focused: f && on, frost: true });
-    if (f && !on) { g.save(); R.UIK.rr(g, r.x, r.y, r.w, r.h, u(8)); g.strokeStyle = 'rgba(240,228,200,0.35)'; g.lineWidth = 1; g.stroke(); g.restore(); }
-    const col = !on ? C.disabled : f ? C.goldHi : C.text;
-    if (r.w >= u(200) && r.h >= u(36)) R.UIK.icon(g, 'check', r.x + u(18), r.y + r.h / 2 - u(8), u(16), col);
-    const fs = r.h >= u(36) ? 17 : 13;
-    R.UIK.text(g, o.label || 'これでよい', r.x + r.w / 2, r.y + r.h / 2 - u(fs * 0.6), { size: u(fs), weight: 700, color: col, align: 'center' });
-    if (o.note) R.UIK.text(g, o.note, r.x + r.w - u(12), r.y + r.h / 2 - u(7), { size: u(11.5), color: on ? C.teal : C.text3, align: 'right' });
-    return r;
-  };
   /** 仲間の札の行の高さ（掛ける前）と列の数 */
   S.companionGrid = function () { return S.tall() ? { rowH: 70, cols: 2 } : { rowH: 70, cols: 3 }; };
   /** 詳しい札の高さ（縦持ち） */
@@ -104,52 +86,29 @@
       this.info = {};
       for (const id of this.ids) this.info[id] = S.companion(id);
       this.picks = [];
-      this.onOk = false; this.okRect = null;
       const gd = S.companionGrid();
       this.list = new R.UIK.List({ rows: this.ids.map((id) => ({ label: this.info[id].name, value: id })), rowH: gd.rowH, cols: gd.cols });
       this.list.onSelect = (row) => this.toggle(row.value);
-      this.list.onCancel = () => this.back();
+      this.list.onCancel = () => { if (this.picks.length) { this.picks.pop(); } else R.UIK.sfx('buzzer'); };
       this.busy = false;
     },
     layout() { const gd = S.companionGrid(); this.list.cols = gd.cols; this.list.rowH = gd.rowH; },
-    full() { return this.picks.length === this.count; },
-    toggle(id) {
+    async toggle(id) {
       if (this.busy) return;
       const i = this.picks.indexOf(id);
       if (i >= 0) { this.picks.splice(i, 1); return; }
       if (this.picks.length >= this.count) { R.UIK.sfx('buzzer'); return; }
       this.picks.push(id);
-      if (this.full()) this.onOk = true;   // そろったら「これでよい」へ（A でそのまま決まる。↑ で札へ戻る）
-    },
-    /** 「これでよい」: そろっていれば選んだ人で閉じる */
-    accept() {
-      if (!this.full()) { R.UIK.sfx('buzzer'); R.UIK.toast(`あと ${this.count - this.picks.length} 人、選んでください`, { anchor: 'bl' }); return false; }
-      R.UIK.sfx('confirm');
-      this.close(this.picks.slice());
-      return true;
-    },
-    /** B: 選んだ人がいれば取り消すか聞く。取り消す（か誰も選んでいない）と [] で閉じる */
-    async back() {
-      if (this.busy) return;
-      if (!this.picks.length) { this.close([]); return; }
-      this.busy = true;
-      const k = await S.ask(this, { title: '仲間を選ぶ', text: '選んだ仲間を取り消して戻る？', choices: ['取り消して戻る', '選び続ける'], cancel: 1 });
-      this.busy = false;
-      if (k === 0) { this.picks = []; this.close([]); }
-    },
-    update() {
-      if (this.busy) return;
-      const I = R.Input;
-      if (this.okRect && S.clicked(this.okRect)) { this.onOk = true; this.accept(); return; }
-      if (this.onOk) {
-        if (I.pressed('a') || I.pressed('start')) { this.accept(); return; }
-        if (I.pressed('b')) { R.UIK.sfx('cancel'); this.back(); return; }
-        if (I.repeat('up') || I.repeat('left') || I.repeat('right')) { this.onOk = false; R.UIK.sfx('cursor'); }
-        return;
+      if (this.picks.length === this.count) {
+        this.busy = true;
+        const names = this.picks.map((x) => this.info[x].name).join('・');
+        const k = await S.ask(this, { title: '旅の仲間', text: names + '　の ' + this.count + ' 人で旅立つ？', choices: ['旅立つ', '選び直す'], cancel: 1 });
+        this.busy = false;
+        if (k === 0) this.close(this.picks.slice());
+        else this.picks.pop();
       }
-      if (I.pressed('start')) { this.onOk = true; R.UIK.sfx('cursor'); return; }
-      this.list.update();
     },
+    update() { if (!this.busy) this.list.update(); },
     draw(g) {
       const b = S.box(), C = T().color, tall = S.tall();
       const cur = this.ids[this.list.index];
@@ -162,31 +121,25 @@
         else { g.save(); g.beginPath(); g.arc(cx, b.y + u(16), u(18), 0, Math.PI * 2); g.setLineDash([u(3), u(3)]); g.strokeStyle = 'rgba(240,228,200,0.3)'; g.stroke(); g.restore(); }
       }
       R.UIK.text(g, `あと ${this.count - this.picks.length} 人`, hx - u(22) - this.count * u(48) + u(4), b.y + u(8), { size: u(14), color: C.text2, align: 'right' });
-      const top = b.y + u(48), okH = u(48);
-      let gr, dp, ok;
+      const top = b.y + u(48);
+      let gr, dp;
       if (tall) {
         dp = { x: b.x, y: top, w: b.w, h: S.companionDetailH() };
-        ok = { x: b.x, y: b.y + b.h - okH, w: b.w, h: okH };
-        gr = { x: b.x, y: dp.y + dp.h + u(12), w: b.w, h: ok.y - u(10) - (dp.y + dp.h + u(12)) };
+        gr = { x: b.x, y: dp.y + dp.h + u(12), w: b.w, h: b.y + b.h - (dp.y + dp.h + u(12)) };
       } else {
         const gw = Math.min(b.w * 0.6, u(600));
-        gr = { x: b.x, y: top, w: gw, h: b.h - (top - b.y) - okH - u(12) };
-        ok = { x: b.x, y: b.y + b.h - okH, w: gw, h: okH };
-        dp = { x: b.x + gw + u(20), y: top, w: b.w - gw - u(20), h: b.h - (top - b.y) };
+        gr = { x: b.x, y: top, w: gw, h: b.h - (top - b.y) };
+        dp = { x: b.x + gw + u(20), y: top, w: b.w - gw - u(20), h: gr.h };
       }
       const rh = this.list.rowPx();
-      gr.h = Math.max(rh, Math.floor(gr.h / rh) * rh);
-      this.list.active = !this.onOk;
+      gr.h = Math.floor(gr.h / rh) * rh;
       this.list.render = (gg, row, rect, f) => {
         const id = row.value, k = this.picks.indexOf(id);
-        S.companionCard(gg, this.info[id], { x: rect.x + u(3), y: rect.y + u(3), w: rect.w - u(6), h: rect.h - u(6) }, { focused: f && !this.onOk, picked: k >= 0, chip: k >= 0 ? `${k + 1} 人目` : null });
+        S.companionCard(gg, this.info[id], { x: rect.x + u(3), y: rect.y + u(3), w: rect.w - u(6), h: rect.h - u(6) }, { focused: f, picked: k >= 0, chip: k >= 0 ? `${k + 1} 人目` : null });
       };
       this.list.draw(g, gr);
       if (cur) S.companionDetail(g, this.info[cur], dp);
-      this.okRect = S.okButton(g, ok, { focused: this.onOk || S.over(ok), enabled: this.full(),
-        note: this.full() ? this.picks.map((x) => this.info[x].name).join('・') + ' で旅立つ' : `あと ${this.count - this.picks.length} 人` });
-      S.prompts(g, this.onOk ? [{ btn: 'a', label: 'これでよい' }, { btn: 'up', label: '札へ戻る' }, { btn: 'b', label: '取り消す' }]
-        : [{ btn: 'a', label: this.picks.includes(cur) ? '外す' : '選ぶ' }, { btn: 'start', label: 'これでよい' }, { btn: 'b', label: this.picks.length ? '取り消す' : '戻る' }]);
+      S.prompts(g, [{ btn: 'a', label: this.picks.includes(cur) ? '外す' : '選ぶ' }, { btn: 'b', label: 'ひとつ戻る' }]);
     },
   });
 })(window.RPG);

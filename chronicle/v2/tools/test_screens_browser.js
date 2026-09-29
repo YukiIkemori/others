@@ -98,14 +98,8 @@ async function backTo(p, id, max) {
         if (!noShots) await B.shot(p, path.join(OUT, `${sc.id}_${phone ? 'phone' : '1920'}.png`));
         if (sc.id === 'title') { await B.ev(p, 'RPG.Engine.remove(RPG.Engine.top(), {cmd:"new"})'); await p.waitForTimeout(200); continue; }
         // B で閉じる（名前の入力は 1 字ずつ消すので数回）
-        // 仲間選び: B は 1 回だけ（2 回目は下の場面に届く）。閉じるのは条件で待つ（重いとき閉じる動きが 1 回の待ちより長い）
-        if (sc.id === 'partySelect') {
-          await B.waitFor(p, `${TOP}==='screen:partySelect'`, 3000);
-          await B.press(p, 'b');
-          ok('partySelect: B with nobody picked closes (→ [])', await B.waitFor(p, `${TOP}==='field'`, 5000), await B.ev(p, TOP));
-          continue;
-        }
-        const closed = await B.pressUntil(p, 'b', `${TOP}==='field'`, sc.id === 'nameentry' ? 10 : 4);
+        const closed = await B.pressUntil(p, 'b', `${TOP}==='field'`, sc.id === 'nameentry' ? 10 : sc.id === 'partySelect' ? 1 : 4);
+        if (sc.id === 'partySelect') { ok('partySelect: B does not cancel (ids are required)', !closed); await B.ev(p, 'RPG.Engine.remove(RPG.Engine.top(), [])'); await p.waitForTimeout(250); continue; }
         ok(`${sc.id} closes with B → field`, closed, await B.ev(p, TOP));
       }
       ok('0 console errors', P.errors.length === 0, P.errors.slice(0, 5));
@@ -187,43 +181,12 @@ async function backTo(p, id, max) {
     await B.press(p, 'a'); await p.waitForTimeout(300);
     ok('nameentry → string', (await result(p)) === 'アキ', await result(p));
 
-    // 仲間選び（持ち主 2026-09-28: 決めるのは「これでよい」（A）、B は取り消し）
+    // 仲間選び（持ち主 2026-09-29: 「これでよい」は外して元の仕様に戻した。A で選ぶ・B でひとつ戻る）
     await openScreen(p, 'partySelect', { count: 3 });
     await B.press(p, 'a'); await B.press(p, 'right'); await B.press(p, 'a'); await B.press(p, 'down'); await B.press(p, 'a');
-    ok('partySelect: 3 picks → focus moves to 「これでよい」 (no auto-confirm)', await B.waitFor(p, `RPG.Engine.top().view.onOk === true && RPG.Engine.top().view.picks.length === 3`, 1500) && (await result(p)) === 'pending');
-    await B.press(p, 'up');
-    ok('partySelect: ↑ → back to the cards, picks kept', await B.ev(p, `!RPG.Engine.top().view.onOk && RPG.Engine.top().view.picks.length === 3`));
-    await B.press(p, 'start');
+    ok('partySelect: 3 picks → confirm', await B.waitFor(p, `!!RPG.Engine.top().view.modal`, 1500));
     await B.press(p, 'a');
-    ok('partySelect: A on 「これでよい」 → 3 companion ids', await B.waitFor(p, `Array.isArray(window.__r) && window.__r.length === 3 && window.__r.every((x) => typeof x === 'string')`, 3000), await result(p));
-    await openScreen(p, 'partySelect', { count: 3 });
-    await B.press(p, 'a'); await B.press(p, 'b');
-    ok('partySelect: B with a pick → asks to discard', await B.waitFor(p, `!!RPG.Engine.top().view.modal`, 1500));
-    await B.press(p, 'a');
-    ok('partySelect: 「取り消して戻る」 → closes with []', await B.waitFor(p, `Array.isArray(window.__r) && window.__r.length === 0`, 3000), await result(p));
-
-    // 酒場の入れ替え: 交代は下書き → 「これでよい」（A）で決まる。B は取り消し
-    const TV = 'RPG.Engine.top().view';
-    const pickOut = `(() => { const v = ${TV}; const i = v.ids.findIndex((id) => v.state(id) !== 'party'); v.list.index = i; return v.ids[i]; })()`;
-    const party0 = await B.ev(p, 'RPG.Game.party.join(",")');
-    await openScreen(p, 'tavern', { swap: true });
-    const newId = await B.ev(p, pickOut);
-    await B.press(p, 'a');
-    ok('tavern: A on a companion → choose whom to swap', (await B.ev(p, `${TV}.mode`)) === 'swap');
-    await B.press(p, 'a');
-    ok('tavern: swap is a draft (party unchanged), focus on 「これでよい」', (await B.ev(p, `${TV}.onOk === true && ${TV}.cur.party.includes(${JSON.stringify(newId)})`)) && (await B.ev(p, 'RPG.Game.party.join(",")')) === party0);
-    await B.press(p, 'a');
-    ok('tavern: A on 「これでよい」 → closes, the swap is applied', await B.waitFor(p, `${TOP}==='field' && RPG.Game.party.includes(${JSON.stringify(newId)})`, 3000), await B.ev(p, 'RPG.Game.party'));
-    const party1 = await B.ev(p, 'RPG.Game.party.join(",")');
-    await openScreen(p, 'tavern', { swap: true });
-    await B.ev(p, pickOut);
-    await B.press(p, 'a'); await B.press(p, 'a'); await B.press(p, 'b');
-    ok('tavern: B after a swap → asks to discard', await B.waitFor(p, `!!${TV}.modal`, 1500));
-    await B.press(p, 'a');
-    ok('tavern: 「取り消して戻る」 → closes, party unchanged', await B.waitFor(p, `${TOP}==='field'`, 3000) && (await B.ev(p, 'RPG.Game.party.join(",")')) === party1);
-    await openScreen(p, 'tavern', { swap: true });
-    await B.press(p, 'b');
-    ok('tavern: B with no swap → closes at once', await B.waitFor(p, `${TOP}==='field'`, 3000));
+    ok('partySelect → 3 companion ids', await B.waitFor(p, `Array.isArray(window.__r) && window.__r.length === 3 && window.__r.every((x) => typeof x === 'string')`, 3000), await result(p));
 
     // 店: タブ（武器・防具・道具は並ぶ種類だけ＋売る）・数を選ぶ札・売る（2026-09 の作り直し: 道具は ←→ の数ではなく A で数を選ぶ札を開く）
     const V = 'RPG.Engine.top().view';

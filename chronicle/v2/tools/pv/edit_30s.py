@@ -7,14 +7,14 @@ L.reset()
 cut, sub, cap, tag, big = L.cut, L.sub, L.cap, L.tag, L.big
 
 # つかみ: 灯台の光 ＋ 一行
-cut('nf_cape_pan', 0.0, 3.2, src=3.2, zoom=(1.1, 1.0))
+cut('nf_cape_pan', 0.0, 4.4, src=2.0, zoom=(1.1, 1.0))
 L.SFX.append(dict(id='bell', at=0.05, gain=-3))
 L.VOICE.append(dict(file=os.path.join(os.environ.get('PV_VO', ''), 'pv_hook_01'), at=0.2))   # つかみの一行の声（PV だけ）
-tag('この世界は、朝を知らない。', 0.25, 3.0)
+tag('この世界は、朝を知らない。', 0.25, 4.3)   # 声（0.2〜3.1）の後も 1 秒ほど残す
 # 題字
-L.FLASH.append((3.2, 0.2, 0.6, 0.9))
-L.SFX.append(dict(id='light', at=3.15, gain=-4))
-cut('title_screen', 3.2, 2.8, src=1.1)
+L.FLASH.append((4.4, 0.2, 0.6, 0.9))
+L.SFX.append(dict(id='light', at=4.35, gain=-4))
+cut('title_screen', 4.4, 1.6, src=1.1)   # 一行を長く出したぶん短く
 # 探索（半小節ごと）
 X0 = 6.0
 H = L.BAR_OW / 2
