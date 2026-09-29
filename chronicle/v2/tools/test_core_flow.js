@@ -173,6 +173,8 @@ async function main() {
   await p.waitForFunction('window.RPG && RPG.Engine && RPG.Engine.running && RPG.Engine.top()', null, { timeout: +process.env.V2_OPEN_TIMEOUT || 15000 });
   await p.waitForTimeout(300);
   ok('title offers つづきから first after reload', await ev(p, "(() => { const r = RPG.Engine.top().list.rows; return r[0].value==='continue' && !r[0].disabled; })()"));
+  // 遊ぶ版はタイトルを先に出し、原画・素材はその裏で読む（main.js の R.bootReady）。つづきからはその読み終わりを待つので、ここでも待つ
+  await p.evaluate('Promise.resolve(RPG.bootReady).then(() => 1)');
   ok('つづきから → field at the saved place', await pressUntil(p, 'a', FREE, 6));
   const pos2 = await ev(p, 'RPG.Field.pos');
   ok('resumed at the same tile', pos2.x === pos.x && pos2.y === pos.y && pos2.map === pos.map, { pos, pos2 });
