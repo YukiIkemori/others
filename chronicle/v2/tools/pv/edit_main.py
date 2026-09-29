@@ -122,8 +122,9 @@ cut('bt_derive', D0, 4.9, src=15.3, zoom=(1.0, 1.05), center=(0.5, 0.45), gamesf
 big('技は、派生する。', D0 + 3.1, D0 + 4.85, y=820, size=120, band=260)
 # 合成術（2 属性）: ヴィオラの 野を焼く風
 S0 = D0 + 4.9
-SPELL_SRC = 7.4
-cut('bt_spell', S0, 4.6, src=SPELL_SRC, zoom=(1.0, 1.05), center=(0.4, 0.55), gamesfx=-5)
+SPELL_SRC = 4.9   # カットの 5.2 秒で「ヴィオラは野を焼く風を唱えた！」、6.0〜8.0 秒で術の光
+cut('bt_spell', S0, 4.6, src=SPELL_SRC, zoom=(1.0, 1.22), center=(0.36, 0.62), gamesfx=-5)
+FLASH.append((S0 + 1.15, 0.08, 0.4, 0.35, (1.0, 0.8, 0.55)))
 VOICE.append(dict(file='b_viola_bigtech_1', at=S0 + 0.2))
 sub('ヴィオラ「炎よ、風よ、舞いなさい！」', S0 + 0.2, S0 + 2.9, y=990)
 big('属性を重ねて ― 合成術', S0 + 2.3, S0 + 4.55, y=820, size=110, band=240)
@@ -159,8 +160,8 @@ SFX.append(dict(id='light', at=C0 + 0.3, gain=-3))
 cut('fin_beacon', C0 + 3.6, 3.0, src=5.6, zoom=(1.12, 1.16), center=(0.5, 0.42), xin=0.3)
 cut('fin_beacon', C0 + 6.6, 3.0, src=12.9, zoom=(1.1, 1.14), center=(0.5, 0.8), xin=0.3)
 L0 = C0 + 9.6
-cut('fin_lights', L0, 5.6, src=0.2, zoom=(1.35, 1.45), center=(0.5, 0.3), xin=0.6)
-T.append(dict(kind='tag', text='峠の向こうで、残る七つの灯が\n語り部を待っている。', style=dict(size=66), t0=L0 + 1.4, t1=L0 + 5.4, x=960, y=640, anim='rise', fin=0.7, fout=0.5))
+cut('fin_lights', L0, 5.6, src=0.2, zoom=(1.6, 1.72), center=(0.5, 0.24), xin=0.6)
+T.append(dict(kind='tag', text='峠の向こうで、残る七つの灯が\n語り部を待っている。', style=dict(size=66), t0=L0 + 1.4, t1=L0 + 5.4, x=960, y=700, anim='rise', fin=0.7, fout=0.5))
 
 # ================================================================== 9 終わりの札
 E0 = L0 + 5.6

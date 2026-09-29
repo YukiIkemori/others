@@ -47,17 +47,9 @@ def main():
     bgm, voice, sfx, clips = arg(a, '--bgm'), arg(a, '--voice'), arg(a, '--sfx'), arg(a, '--clips')
     E = runpy.run_path(edit)
     T = E['DURATION']
-    inputs, filt = [], []
+    filt = []
     music_lbls, voice_lbls, sfx_lbls = [], [], []
 
-    def add_input(path, ss=None, t=None):
-        o = []
-        if ss is not None:
-            o += ['-ss', '%.3f' % ss]
-        if t is not None:
-            o += ['-t', '%.3f' % t]
-        inputs.extend(o + ['-i', path])
-        return len(inputs_list) - 1
     inputs_list = []
 
     def inp(path, ss=None, t=None):
@@ -97,7 +89,6 @@ def main():
 
     def mix(lbls, name, extra=''):
         if not lbls:
-            filt.append('[base]asplit=1[%s]' % name) if False else None
             return None
         filt.append('%samix=inputs=%d:normalize=0:dropout_transition=0%s[%s]' % (''.join(lbls), len(lbls), extra, name))
         return name
@@ -106,9 +97,11 @@ def main():
     sb = mix(sfx_lbls, 'sfx')
     parts = []
     if mb and vb:
-        filt.append('[voice]asplit=2[vk][vo]')
+        # サイドチェインは短い方で終わるので、ボイスの束を最後まで無音で伸ばす
+        filt.append('[voice]apad=whole_dur=%.3f,asplit=2[vk][vo]' % T)
         # ボイスの間は BGM を下げる（-9 dB ほど）
-        filt.append('[music][vk]sidechaincompress=threshold=0.02:ratio=6:attack=40:release=450:makeup=1[mduck]')
+        filt.append('[music]apad=whole_dur=%.3f[music2]' % T)
+        filt.append('[music2][vk]sidechaincompress=threshold=0.02:ratio=6:attack=40:release=450:makeup=1[mduck]')
         parts += ['[mduck]', '[vo]']
     else:
         parts += ['[%s]' % x for x in (mb, vb) if x]
