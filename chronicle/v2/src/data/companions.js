@@ -1,5 +1,5 @@
 // 仲間 20 人（R.DB.companions。RULES）。今の木の src/data/companions.js から移し、STATS_REWORK §1.2（能力値 0〜25、合計 95、
-// 25 は dokka 体力だけ。持ち主 2026-09-29 に hagen・dokka・titta・teo・marta を調整した（合計は 95 から外れる））と §8.4（武器 5 系統・武器枠 1 つ・初期の武器と技）を当てた。
+// 25 は dokka 体力だけ。持ち主 2026-09-29 に hagen・dokka・titta・teo・marta・ilse を調整した（合計は 95 から外れる））と §8.4（武器 5 系統・武器枠 1 つ・初期の武器と技）を当てた。
 // この順番が酒場の並び順。look は CAST の R.DB.looks の id（仲間は id と同じ）。
 //   {name, look, gender, age, kin, title, from, role, row:'front'|'back', stats{6}, growth{hp,mp}(S〜D),
 //    apt{w:{sword greatsword dagger bow staff}, e:{fire water wind earth light dark}}(S〜D), innate{name, desc, mods},
@@ -386,7 +386,7 @@
     from: '天文台のある町',
     role: 'caster',
     row: 'back',
-    stats: { str: 10, vit: 13, dex: 15, agi: 16, int: 23, mnd: 18 },
+    stats: { str: 10, vit: 13, dex: 15, agi: 16, int: 22, mnd: 18 },   // 持ち主 2026-09-29 に調整（知力 23→22。テオより上にならないように）
     growth: { hp: 'C', mp: 'S' },
     apt: { w: { sword: 'B', greatsword: 'D', dagger: 'B', bow: 'B', staff: 'A' }, e: { fire: 'C', water: 'B', wind: 'S', earth: 'C', light: 'C', dark: 'A' } },
     innate: { name: '星読み', desc: 'めずらしい魔物に出会いやすい', mods: { rareEncPct: 10 } },
