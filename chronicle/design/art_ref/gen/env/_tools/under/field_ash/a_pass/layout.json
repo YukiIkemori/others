@@ -15,33 +15,33 @@
 "RRRRRRRRRRRssssssssssssssssssssuuuuuuuusssssbsssssuu",
 "RRRRRRRRRRsssssssssssssssssrssTTTuuuuuusssssssssssss",
 "RRRRRRRRRRsssssssRRRRRsssssssTTTTuuuuuuussssbsssssss",
-"RRRRRRRRRssssssssRRRRRsssssssTTTuuuuuuuuuussssssssss",
-"RRRRRRRRsssssssssRRRRRsssssssssssuuXXXubuuusssssssss",
+"RRRRRRRRRssssssssRRRRRsssssssTTTuuuuuuuuuusssssXssss",
+"RRRRRRRRsssssssssRRRRRsssssssssssuuXXXuubuusssssssss",
 "RRRRRRRsssssssssssssssssssssssssssuXuXuuuuuussssssss",
 "RRRssssssssssskssssssssssssssssssssssssuuuuussssssss",
 "ssssssssssssssskk::kssssssssssss....ssssuuuuuuusssss",
 "ssssssssssssss...s:ssssssss.........................",
 ".ssssss...........:.................................",
 "...........................ssssssssssssuuuuuuuuussss",
-".......ssssssssssssssssss..ssssssssbssssssuuuuuuuurs",
-"ssssssssssssusssssssssssss..ssssssssssTTTsuuuuuuuuss",
-"sssssssssrssuusussssssssss..srssssssssTTTTsuuuuuuuss",
-"RRRRRRssuuuuuubussssrsssss..ssssssssssTTTssuuuuuuuus",
-"RRRRRRRsuuuuuuuusssssssssss.sbssssssssssssuuuuuuuuuu",
-"RRRRRRRRuuuuuuussssssssssss.ssssssssssssssuuuruuuuuu",
-"RRRRRRRRRuuuuuussssssssssss.ssbssssssrsssuuuuuuuuuuu",
-"RRRRRRRRRuuuuuusssssssssss..sssssssssssssuuRRRRuuuuu",
+".......ssssssssssssssssss..sssssssssbsssssuuuuXuuuss",
+"ssssssssssssusssssssssssss..ssssssssssTTssuuuuuuuuss",
+"sssXsssssssssusussssXXssss..ssssssrsssTTTTsuuuuuuuss",
+"RRRRRRssuuuuuuuussbsssssss..ssssssssssTTTssuuuuuuuus",
+"RRRRRRRsuuuuuuuusssssssssss.sssssXssssssssuuuuuuuuuu",
+"RRRRRRRRuuuuuuussssssssssss.ssssssssssssssuuuuuuuuur",
+"RRRRRRRRRXuuuuussssssssssss.sssssssbsssssuuuXXXuuuuu",
+"RRRRRRRRRRuuuuusssssssssss..sssssssssssssuuRRRRuuuuu",
 "RRRRRRRRRuuuuuusssssssssss..sssssssssssssRRRRRRRuuuu",
-"RRRRRRRRRuuuurusssssssssss.sssssssssssssuRRRRRRRuuuu",
-"RRRRRRRRRuuuuuuTTssssssss..ssssssssssssuuRRRRRRRuuuu",
+"RRRRRRRRRuuuuuussssssssrss.ssssssssssrssuRRRRRRRuuuu",
+"RRRRRRRRRuuuuuuTTssssssss..sssssssbssssuuRRRRRRRuuuu",
 "RRRRRRRRRuuuuuuTTTsssssss..ssssssssssuuuuuuRRRRuuuus",
-"RRRRRRRRRuuuuuussssssssss.sssssssuuruuuuuuuuuuuuusss",
-"RRRRRRRRRuuuuuussssssssss.ssssssusRRRuuuuuuuuuuuussr",
-"RRRRRRRRRuuuuuussssssssss.ssssssusRRRuuuuuuuuuuTTsss",
-"RRRRRRRRRuuuuusssssssbss..ssssssssRRRuuuuuuuuuTTTTss",
+"RRRRRRRRRuuuuuussssssssss.sssssssuuuuuuuuuuuuruuusss",
+"RRRRRRRRRuuuuuussssssssss.ssssXXusRRRuuuuuuuuuuuusss",
+"RRRRRRRRRuuuuuusssssrssss.ssssssusRRRuuuuuuuuuuTTsss",
+"RRRRRRRRRuuuuussssssssss..sssssssbRRRuuuuuuuuuTTTTss",
 "RRRRRRRRRRuuuussssssssss..ssssssssuussuuuuuuuuTTTTss",
 "RRRRRRRRRRRuuusssssssssss.ssssssssussssuuuuuuussssss",
-"RRRRRRRRRRRuusssssbssssss.sssssssssssbssssuuuuusssss",
+"RRRRRRRRRRRuussssssssssss.sssbssssssssssssuuuuubssss",
 "RRRRRRRRRRRRussssssssssss.sssssssssssssssssuuuuuuuus"
 ],
 "marks": [
@@ -73,6 +73,102 @@
 "color": [
 70,
 66,
+72
+],
+"solid": true
+},
+{
+"kind": "ribs",
+"cells": [
+[
+44,
+26
+],
+[
+45,
+26
+],
+[
+46,
+26
+]
+],
+"text": "the bleached RIBCAGE and skull of a colossal ancient beast half buried in the ash, great curved white ribs arching out of a drift",
+"color": [
+232,
+226,
+200
+],
+"solid": true
+},
+{
+"kind": "wagon",
+"cells": [
+[
+20,
+22
+],
+[
+21,
+22
+]
+],
+"text": "a burnt-out, abandoned CARAVAN WAGON tipped on its side, one big spoked wheel broken, charred canvas hoops, spilled crates half buried in ash",
+"color": [
+132,
+88,
+44
+],
+"solid": true
+},
+{
+"kind": "obsidian",
+"cells": [
+[
+30,
+33
+],
+[
+31,
+33
+],
+[
+47,
+12
+],
+[
+9,
+26
+]
+],
+"text": "jagged glassy black OBSIDIAN OUTCROPS with sharp purple-sheened facets catching the light",
+"color": [
+58,
+40,
+92
+],
+"solid": true
+},
+{
+"kind": "cairn",
+"cells": [
+[
+33,
+24
+],
+[
+3,
+22
+],
+[
+46,
+20
+]
+],
+"text": "a tall stacked-stone CAIRN waymarker of dark basalt slabs, a faded red cloth tied to its top",
+"color": [
+98,
+86,
 72
 ],
 "solid": true
@@ -212,47 +308,5 @@
 "key": "world_ash_traveler"
 }
 ]
-},
-"rows_fit": [
-"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRruuuuuusRRRRRRRRRRRRRRR",
-"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRuuuuuuuRRRRRRRRRRRRRRRR",
-"RRRRRRRRRRRRRRRRRRRRRRRRRRRRuuuuusTTssRRRRRRRRRRRRRR",
-"RRRRRRRRRRRRRRRRRRRRRRRRRssssruuuuuuusssRRRRRRRRRRRR",
-"RRRRRRRRRRRRRRRRRRRRRRRssssssTuuuTuuuurssRRRRRRRRRRR",
-"RRRRRRRRRRRRRRRRRRRRssssssssssuuruuuuuusRrsRRRRRRRRR",
-"RRRRRRRRRRRRRRRRRsssssssssssTsurTuuuuuuussssssRRRRRR",
-"RRRRRRRRRRRRRRRsssssssssssssrsuuuuuuuuusssssssssRsss",
-"RRRRRRRRRRRRRRssssssssssssssssuuuuuuuuusssssrsRsssss",
-"RRRRRRRRRRRrssssssssssssssssTssrrTuuuuusssssrsssssuu",
-"RRRRRRRRRRrsrsssssTTTTTssssssrTTTTuuuuusssssrrssssss",
-"RRRRRRRRRRsssssssRRRRRrssssssTTTTuuuuuuussssssssssss",
-"RRRRRRRRRssssssssRRRRRrssssssTssTuuTTTTurussssssssss",
-"RRRRRRRsssssssssssRRRRTssssssssssuuXXXrbTuusssssssss",
-"RRRRssssssssssTTsssrTsssssssssssssuXrXTruuuussssssss",
-"ssssssssssssssTrTrrrTsssssssssssssssssruuuuussssssss",
-"ssssssssssssssskrrrrTsssssssssss....ssssuuuuuuusssss",
-"ssssssssssssss...s:rsssssss.........................",
-".ssssss...........:r................................",
-"...........................ssssssssssssuuuuuuuuussss",
-".......ssssssssssssssssss..ssssssssbssssssuuuuuuuurs",
-"ssssssssssssusssssssssssss..sssssssrssTTTsuuuuuuuuss",
-"TTTTTssssrssuusussssssssss..srssssssssTTTTsuuuuuuuss",
-"RRRRRRssuuuuuubussssrsssss..ssssssssssTTTTsuuuuuuuus",
-"RRRRRRRruuuuuuuusssssssssss.srTsssssssssrsuuuuuuuuuu",
-"RRRRRRRRTuuuuuussssssssssss.ssssssssssssssuuuruuuuuu",
-"RRRRRRRRRTuuuuussssssssssss.ssbTsssssrsssuuuuTuuuuuu",
-"RRRRRRRRRruuuuusssssssssss..sssssssssssssuTRRRRTuuuu",
-"RRRRRRRRRruuuuusssssssssss..ssssssssssssTRRRRRRRTuuu",
-"RRRRRRRRRruuurTsssssssssss.sssssssssssssTRRRRRRRTuuu",
-"RRRRRRRRRruuuuuTTssssssss..ssssssssssssuuRRRRRRRTuuu",
-"RRRRRRRRRrTuuuuTTTTssssss..ssssssssssuuuuuuRRRRTuuus",
-"RRRRRRRRRrTuuuussssssssss.sssssssuuruuuuuuuruuuuussr",
-"RRRRRRRRRrTuuuussssssssss.ssssssuTRRRuuuuuuuuuuuussr",
-"RRRRRRRRRruuuuussssssrsss.ssssssurRRRTuuuuuuuuuTTrss",
-"RRRRRRRRRrTuuusssssssbss..ssssssTTRRRuuuuuuuuuTTTTTs",
-"RRRRRRRRRRrTuussssssssss..ssssssssTTssuuuuuuuuTTTTss",
-"RRRRRRRRRRRruussssrssssss.ssssssssussrsuuuuuuussssss",
-"RRRRRRRRRRRrTsssssbssssss.sssssssssssbssssuuuuusssss",
-"RRRRRRRRRRRRrssssssssssss.sssssssssssssssssuuuuuuuus"
-]
+}
 }

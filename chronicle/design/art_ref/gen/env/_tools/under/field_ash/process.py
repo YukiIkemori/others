@@ -29,8 +29,17 @@ roa = np.asarray(Image.open(os.path.join(V2, 'assets/env/ash/under/caldera@32.pn
 green = lambda a: (a[..., 0] > a[..., 1]) & (a[..., 1] > a[..., 2] + 10) & (lum(a) > 110)    # sand pixels, the same measure on both paintings
 target = float(os.environ.get('TARGET', lum(roa[green(roa)]).mean()))
 gain = float(np.clip(target / lum(A[kron(walk) & green(A)]).mean(), 0.8, 1.15))
-gain = float(os.environ.get('GAIN', 0.9))   # 灰: 荒野の灰の地面が暗めに沈む値（カルデラの段は町の灯りの下で暗く描いてあるので合わせない）
-A = np.clip(A * gain, 0, 255)
+# 2026-09-29 見直し: 暗く沈んで見えたので、歩ける地面の明るさを砂漠・雪原のエリア（歩ける所の平均 150〜165）に近づける。
+#   掛け算ではなく明るさの曲線（L' = 255 (L/255)^gam）: 暗い所を持ち上げ、溶岩など明るい所はほぼそのまま
+WT = float(os.environ.get('WALK_TARGET', 148))
+L0 = np.maximum(lum(A), 1.0)
+wm = float(L0[kron(walk)].mean())
+gam = float(np.clip(np.log(WT / 255) / np.log(wm / 255), 0.45, 1.1)) if 'GAIN' not in os.environ else 1.0
+A = np.clip(A * ((255 * (L0 / 255) ** gam) / L0)[..., None], 0, 255)
+gain = float(os.environ.get('GAIN', 1.0)) * (1.0 if 'GAIN' not in os.environ else 1.0)
+if 'GAIN' in os.environ: A = np.clip(A * gain, 0, 255)
+print('walk mean', round(wm, 1), '-> gam', round(gam, 3), 'walk now', round(float(lum(A)[kron(walk)].mean()), 1))
+gain = round(gam, 3)
 print('gain', round(gain, 3), 'target', round(target, 1))
 
 # ---- overlay: crowns over the walkable row north of tree cells

@@ -26,6 +26,22 @@ def ash_ground(a, s1, s2, drift=0.56, crust=1.1):
     a.mask_fill(fbm(s2, W, H, 7) > crust, 'k', only='s')
 
 
+# 見どころの小物（2026-09-29 見直し: 空っぽで暗いエリアに、その土地らしい目印を足す）。地面（灰・吹きだまり・殻）のマスにだけ置く
+OBSID = (58, 40, 92)
+BANNER = (190, 52, 64)
+WRECK = (132, 88, 44)
+BONES = (232, 226, 200)
+VENT = (214, 196, 60)
+STATUE = (104, 96, 118)
+CAIRN = (98, 86, 72)
+
+
+def deco(a, kind, cells, text, color):
+    ok = [(x, y) for (x, y) in cells if a.inb(x, y) and a.g[y, x] in 'suk;']
+    if len(ok) != len(cells): print('deco', kind, 'skipped', sorted(set(cells) - set(ok)))
+    if ok: a.mark(kind, ok, text, color)
+
+
 def door(a, x, y, w=1):
     a.mark('door', [(x + i, y) for i in range(w)], 'a dark ENTRANCE', DARK, solid=False)
     a.rect(x, y, w, 1, ':', force=True, keep=True)
@@ -66,6 +82,10 @@ def a_pass():
     a.rect(15, 14, 5, 2, 's', force=True, keep=True)
     # the toppled waygate arch (N of the road)
     a.mark('arch', [(35, 13), (36, 13), (37, 13), (35, 14), (37, 14)], 'a toppled ancient WAYGATE ARCH of black basalt blocks: two broken pillars and the fallen lintel half buried in ash, weathered carvings of a bird with spread wings', BASALT)
+    deco(a, 'ribs', [(44, 26), (45, 26), (46, 26)], 'the bleached RIBCAGE and skull of a colossal ancient beast half buried in the ash, great curved white ribs arching out of a drift', BONES)
+    deco(a, 'wagon', [(20, 22), (21, 22)], 'a burnt-out, abandoned CARAVAN WAGON tipped on its side, one big spoked wheel broken, charred canvas hoops, spilled crates half buried in ash', WRECK)
+    deco(a, 'obsidian', [(30, 33), (31, 33), (47, 12), (9, 26), (40, 5)], 'jagged glassy black OBSIDIAN OUTCROPS with sharp purple-sheened facets catching the light', OBSID)
+    deco(a, 'cairn', [(33, 24), (3, 22), (46, 20)], 'a tall stacked-stone CAIRN waymarker of dark basalt slabs, a faded red cloth tied to its top', CAIRN)
     a.scatter('r', 0.010, only='suk', seed=41, clear=1)
     a.scatter('b', 0.010, only='su', seed=42, clear=1)
     a.tidy()
@@ -120,6 +140,10 @@ def a_battle():
             blades.append((int(cx + rnd.randint(-2, 3)), int(cy + rnd.randint(-1, 2))))
     blades = sorted(set(b for b in blades if a.g[b[1], b[0]] in 'suk'))
     a.mark('blades', blades, 'CLUSTERS OF RUSTED SWORDS, SPEARS AND BROKEN SHIELDS stuck upright in the ash (a small thicket of old weapons on each block)', RUST)
+    deco(a, 'banners', [(6, 22), (31, 21), (21, 32), (44, 29), (14, 6)], 'a torn old WAR BANNER on a leaning broken pole: faded crimson cloth in rags, a tarnished bronze finial (one per block)', BANNER)
+    deco(a, 'obsidian', [(45, 14), (46, 14), (7, 30), (8, 30), (36, 34)], 'jagged glassy black OBSIDIAN OUTCROPS with sharp purple-sheened facets catching the light', OBSID)
+    deco(a, 'wreck', [(37, 4), (38, 4), (39, 4)], 'the wreck of a great wooden SIEGE ENGINE (a broken catapult): charred beams, a snapped throwing arm, an iron-rimmed wheel lying in the ash', WRECK)
+    deco(a, 'cairns', [(13, 33), (30, 34), (38, 24), (45, 7)], 'a low BURIAL CAIRN of piled dark stones with a rusted helmet set on top', CAIRN)
     a.scatter('r', 0.010, only='suk', seed=41, clear=1)
     a.scatter('T', 0.006, only='su', seed=42, clear=1)
     # the path from the north in to the mound, and to the fort gate
@@ -264,6 +288,9 @@ def a_foot():
     a.stroke(road, 2.0, '.', wobble=0.1, seed=6)
     a.stroke([(16, 21), (17.5, 13), (20.5, 6), (20.5, -1)], 1.8, '.', wobble=0.2, seed=7)
     a.stroke([(20, 22), (19, 30), (15.5, 38), (14.5, 44.5)], 1.6, '.', wobble=0.2, seed=8)
+    deco(a, 'statues', [(30, 17), (34, 17), (30, 23)], 'a weathered pilgrim guardian STATUE of a FIREBIRD with folded wings on a square stone plinth, soot-streaked (one per block)', STATUE)
+    deco(a, 'obsidian', [(8, 28), (9, 28), (26, 36), (27, 36), (6, 4), (7, 4)], 'jagged glassy black OBSIDIAN OUTCROPS with sharp purple-sheened facets catching the light', OBSID)
+    deco(a, 'fumarole', [(36, 27), (37, 27), (10, 40)], 'a steaming FUMAROLE: a low cracked mound crusted with bright yellow SULPHUR, a dark vent at its top', VENT)
     a.scatter('r', 0.012, only='suk', seed=41, clear=1)
     a.scatter('b', 0.006, only='su', seed=42, clear=1)
     a.tidy()
@@ -369,6 +396,11 @@ def a_beach():
     a.mark('shells', shells, 'huge rounded GREY-GREEN ROCKS whose cracked domed tops look exactly like giant TURTLE SHELLS half sunk in the black sand', (110, 118, 100))
     # the footpath along the beach between the two cliff gaps
     a.stroke([(7.5, -1), (8, 6), (12, 12), (22, 18.5), (34, 18), (44, 15.5), (48.5, 8), (48.5, -1)], 1.4, ':', seed=6, force=True)
+    a.mark('shells', [(x, y) for (x, y) in [(5, 10), (6, 10), (36, 8), (37, 8), (52, 17)] if a.g[y, x] in 'suk'], 'huge rounded GREY-GREEN ROCKS whose cracked domed tops look exactly like giant TURTLE SHELLS half sunk in the black sand', (110, 118, 100))
+    deco(a, 'boat', [(22, 23), (23, 23), (24, 23)], 'the stranded WRECK of an old wooden fishing boat, its hull broken open with the ribs showing, half sunk in the black sand', WRECK)
+    deco(a, 'skeleton', [(3, 19), (4, 19), (5, 19)], 'the bleached SKELETON of a huge sea creature (long curved ribs, a great skull) washed up on the black sand', BONES)
+    deco(a, 'fumarole', [(30, 6), (14, 7)], 'a steaming FUMAROLE: a low cracked mound crusted with bright yellow SULPHUR, a dark vent at its top', VENT)
+    deco(a, 'obsidian', [(44, 9), (45, 9), (27, 12), (28, 12)], 'jagged glassy black OBSIDIAN OUTCROPS with sharp purple-sheened facets catching the light', OBSID)
     a.scatter('r', 0.010, only='suk', seed=41, clear=1)
     a.tidy()
     a.exit('n', 7, 8, {'map': 'a_lava', 'spawn': 'south'}, 'lava')
@@ -393,6 +425,9 @@ if __name__ == '__main__':
     for aid in sys.argv[1:]:
         a = AREAS[aid]()
         # walkable pockets no spawn reaches become crags (the guide then shows what the collision will be)
+        # 置く物（灯籠・看板・宝箱）の下に散らした岩・茂み・木が来たら、灰の地面に戻す
+        for o in a.objects:
+            if o.get('type') != 'prop' and a.g[o['y'], o['x']] in 'rbT': a.g[o['y'], o['x']] = 's'
         seen0 = np.zeros((a.H, a.W), bool)
         for s_ in a.spawns.values(): seen0 |= a.reach(s_['x'], s_['y'])
         pk = a.walk() & ~seen0

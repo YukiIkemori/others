@@ -1,0 +1,202 @@
+{
+"id": "i_cove",
+"w": 56,
+"h": 40,
+"rows": [
+"\",,,,;;;;\";;;,,,,,r,;;;;;;;;,,,,,,,,,,,,,;;;;;;,,,;;;,,b",
+",,,,,;;;;;;;;,,,,,,,;;;;;;;;,,,,,,,,,,;;;;;;;;b,,,;;,,,;",
+",,,,,,;;;;;;;,,,,,,,;;;;;;;;,,,,,,,,r;;;;;,;;;,,,,;,,,,,",
+",,,,,,,,,,;;,,,,,,,,,,;;;;;,,,,,,,,,,;;;;;,,;;,,,,,,,,,,",
+",,,,,,,,,,,,,,,,,,,,\",;;,,,,,,,,,,;;,,;;;;,,,,,,,,,,,,,,",
+",,,,,,\",,,,,,,,,,,,,\"\",,,\",,b,,,,b,;,\"\",,,,,,,,,,,\"\",,,,",
+",,,,,\",,,,,,,,,,,,,,,,,,\"\",,,;;;;TTT;,,,,,,,,,,,,,,,,,,,",
+",,,,,TTT;,,,\",,,,,,,,,,,\"\",,;;;;TTTT;,,,\",,,,,,,,,,,,,,,",
+",,,,TTTTT;,\"\"\",\"\",,,,,,,,,,,;;r;;TTT;,,,\"\",,,,,,,,,,,,b,",
+",,,,TTTTT;\"\"\"\"\"\"\",,,,,,,,,,,,;;;;;;;;,,\"\"\",,,,,,,TTTT,r,",
+"...............\"\",,,,,,,,,,,,,;....;,,,\"\"\"\",,,,,TTTTT,,,",
+"........................................................",
+",,,,,,,,,,,,,,..........................................",
+",,,,,,,,,,,,,,,,,,,,,:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,;;;",
+",,,\"\"\",,,,,,,,,,,,,,,:,,,,,,b,,,,,,\",,,,,,,,,,,,,,,,;;;;",
+",,\"\"\"\"\"\",,,,,,,,,,,,,::,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,;;;",
+",,,,\"\"\"\",,,,,,,RRRRRR::RRRRRRRRRRRRRRRRRRR,,,,,,,,,,,;;;",
+",,,,,,\",,,,,RRRRRRRRR::RRRRRRRRRRRRRRRRRRRRR,,,,,,,,,;;;",
+",,,,,,,,,RRRRRRRRRRRR::,,,,,,,,,RRRRRRRRRRRRRR,,,,,,,;;;",
+",,r,,,RRRRRRRR,,,,,,,::\",,,,,ssssss,,,,,RRRRRRRR,,,,,,;;",
+",,,,,RRRRR,,sssssssss::ssssssssssssssss,,,,RRRRRRR,,,,;,",
+",,,,,RRR,ssssssssssss:sssssssssssssssssssss,,RRRRR,,,,,,",
+",,,,RRR,sssssssssssss::ssssssssssssssssssssss,,RRRR,,,,,",
+",,,,RRRsssssssssssssss:::sssssTsssssssssssssssRRRRR,,,,,",
+",,,RRRsssssssssssssTsss:::::::::ssssssssssssssXXXRR,,,,,",
+",,,RRRssssTsssssssssssssssss::::::::::::sTssss::RRRR,,,,",
+",,,RRsssssssssssssssssssssssssssssss::::::::::::sRRR,,,,",
+",,,,sssssssssssssssssssssssssssssssssssssssssssssRRR,,,,",
+",,,,ssssssssssssssssssssssssssssssssssssssssssssss,,,,,,",
+",,,,ss_sssssssssssssssssssssssssssssssssssssssssss,,;,,~",
+",,,,ss___ssssssssssssssssssssssssssssssssssss_ssss;;~~~~",
+"~~~~~~____sssssssssssssssssssssssssssssssss___ss~~~~~~~~",
+"~~~~~~~______ssssssssssssssssssssssssssss_____~~~~~~~~~~",
+"~~~~~~~~~_____________________________________~~~~~~~~~~",
+"~~~~~~~~~~r_rrr____________________________~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~______________________rrr~_~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~___~~~_____________rrrrr~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~rrrr~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~rrr~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+],
+"marks": [
+{
+"kind": "door",
+"cells": [
+[
+47,
+25
+]
+],
+"text": "a dark ENTRANCE",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+},
+{
+"kind": "cave",
+"cells": [
+[
+46,
+24
+],
+[
+47,
+24
+],
+[
+48,
+24
+]
+],
+"text": "the dark jagged MOUTH OF A SEA CAVE in the white cliff, wet black rock around it, sea spray",
+"color": [
+40,
+26,
+16
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "stairs",
+"x": 47,
+"y": 25,
+"to": {
+"map": "isles_cave_1",
+"spawn": "entrance"
+},
+"look": "none"
+},
+{
+"type": "sign",
+"x": 24,
+"y": 14,
+"text": "夜光虫の入り江\n下の浜の東に、潮鳴りの洞窟。"
+},
+{
+"type": "examine",
+"x": 26,
+"y": 30,
+"event": "isles_cove_glow"
+},
+{
+"type": "chest",
+"id": "i_cove_c1",
+"x": 8,
+"y": 28,
+"item": "i_ether",
+"n": 1
+},
+{
+"type": "waylamp",
+"id": "wl_i_cove_1",
+"x": 18,
+"y": 14,
+"lit": true
+},
+{
+"type": "waylamp",
+"id": "wl_i_cove_2",
+"x": 44,
+"y": 26,
+"lit": true
+}
+],
+"spawns": {
+"west": {
+"x": 1,
+"y": 10,
+"dir": "e"
+},
+"east": {
+"x": 54,
+"y": 11,
+"dir": "w"
+},
+"cave": {
+"x": 47,
+"y": 26,
+"dir": "s"
+}
+},
+"exits": [
+{
+"x": 0,
+"y": 10,
+"w": 1,
+"h": 2,
+"to": {
+"map": "i_cliff",
+"spawn": "east"
+},
+"edge": "w"
+},
+{
+"x": 55,
+"y": 11,
+"w": 1,
+"h": 2,
+"to": {
+"map": "i_cape",
+"spawn": "west"
+},
+"edge": "e"
+}
+],
+"notes": [],
+"meta": {
+"name": "夜光虫の入り江",
+"sub": "白い砂の入り江と潮鳴りの洞窟",
+"region": "r_isles",
+"worldRect": [
+650,
+492,
+56,
+40
+],
+"outside": "sea",
+"zones": [
+{
+"rect": null,
+"zone": "zw_isles"
+}
+],
+"links": {
+"tidecave": {
+"map": "i_cove",
+"spawn": "cave"
+}
+},
+"npcs": []
+}
+}

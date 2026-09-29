@@ -9,25 +9,25 @@
 "RRRRsss:sRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR::RRRRRRlllR",
 "RRsssss:ssssRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRuu::uussRRlllR",
 "sssssss::sssssssRRRRRRRRRRRRRRsssssssRRRRRRRssuu::uussssllRR",
-"sssssss::sssssssssssssRRRRssssssssssssssssssuuuu:uusssslllRR",
-"ssssssss:ssssssssssssssssssssssssssssssssssssuuu:uusssslllRR",
-"ssssssss::ssssssssssssssssssssssssssssssssuuuuuu:ussssslllRR",
-"sssssssss::ssssssRRRssssssssssssssssssssssuuuuu::ussssslllRR",
-"ssssssssss:ssssssRRRssssssssssssssssssssssuuuss:sussssslllRR",
+"sssssss::sssssssssssssRRRRssssXsssssssssssssuuuu:uusssslllRR",
+"ssssssss:sssssXssssssssssssssssssssssssssssssuuu:uusssslllRR",
+"ssssssss::ssssssssssssssssssssssssssXXssssuuuuuu:ussssslllRR",
+"sssssssss::ssssssRRRssssssssssssssssssssssuuXXu::ussssslllRR",
+"sssssXXsss:ssssssRRRssssssssssssssssssssssuuuss:sussssslllRR",
 "ssssssssss:::ssssRRRsssssssssssssssssRRRRsuuss::ssssssslllRR",
-"sssssssssss:::ssuuuusssssssssssssssssRRRRsssss::ssssssssllRR",
-"sssssssssssss::suuuusssssssssssssssssRRRRssss::sssssssrsllRR",
-"ssssrsssssssss::uuuussssssssssssssssssssssss::sssssssssslllR",
-"ssssrssssssssss:::uusssssssssssssssssssssss::ssssssssssslllR",
+"sssssssssss:::ssuuuusssssssXXssssssssRRRRsssss::ssssssssllRR",
+"sssssssssssss::suuuusssssssssssssssssRRRRssss::sssssssssllRR",
+"ssssssrsssssss::uuuussssssssssssssssssssssss::sssssssssslllR",
+"sssssssssssssss:::uusssssssssssssssssssssss::ssssssssssslllR",
 "ssssssssssssssss:::sssssssXXsssssssssss:::::sssssssssssslllR",
-"ssssssssssssssXsss:::sssssssssss:::::::::ssssssssssssssslllR",
+"ssssssssssssssXsss:::sssssssssss:::::::::sssssssssssXssslllR",
 "usssssssssssssssssss::::::::::::::::sssssssssRRRsssssssslllR",
-"ussssssssssssssssssssss::::::ssssssssssssssssRRRsssssssslllR",
+"ussXXXsssssssssssssssss::::::ssssssssssssssssRRRsssssssslllR",
 "sssssssuussssssssssssssssssRRssssssssssssssssRRRssssssssllRR",
 "ssssssuuuuwwsssssssssssssssRRsssssssssssssssssssssssssssllRR",
 "ssssuuuuuuwwssssssssssssssssssssssssssssssXXssssssssssslllRR",
-"sssuuuuuuuuusssssssssssssssssssswwwsssssssssssssssrsssslllRR",
-"uuuuuuuuuuuusssssssssssssssssssswwwsssssssssssssssssssslllRR",
+"sssuuuuuuuuussssssssssXXXssssssswwwsssssssssssssssssssslllRR",
+"uuuuuuuuuurusssssssssssssssssssswwwsssssssssssssssssssslllRR",
 "_____u__________________________www____________________lllRR",
 "_____________________~~~~~~~~__________________________lllRR",
 "~~_______________~~~~~~~~~~~~~~~~~~___________~~~~~~~~~lll~~",
@@ -70,6 +70,134 @@
 110,
 118,
 100
+],
+"solid": true
+},
+{
+"kind": "shells",
+"cells": [
+[
+5,
+10
+],
+[
+6,
+10
+],
+[
+36,
+8
+],
+[
+37,
+8
+],
+[
+52,
+17
+]
+],
+"text": "huge rounded GREY-GREEN ROCKS whose cracked domed tops look exactly like giant TURTLE SHELLS half sunk in the black sand",
+"color": [
+110,
+118,
+100
+],
+"solid": true
+},
+{
+"kind": "boat",
+"cells": [
+[
+22,
+23
+],
+[
+23,
+23
+],
+[
+24,
+23
+]
+],
+"text": "the stranded WRECK of an old wooden fishing boat, its hull broken open with the ribs showing, half sunk in the black sand",
+"color": [
+132,
+88,
+44
+],
+"solid": true
+},
+{
+"kind": "skeleton",
+"cells": [
+[
+3,
+19
+],
+[
+4,
+19
+],
+[
+5,
+19
+]
+],
+"text": "the bleached SKELETON of a huge sea creature (long curved ribs, a great skull) washed up on the black sand",
+"color": [
+232,
+226,
+200
+],
+"solid": true
+},
+{
+"kind": "fumarole",
+"cells": [
+[
+30,
+6
+],
+[
+14,
+7
+]
+],
+"text": "a steaming FUMAROLE: a low cracked mound crusted with bright yellow SULPHUR, a dark vent at its top",
+"color": [
+214,
+196,
+60
+],
+"solid": true
+},
+{
+"kind": "obsidian",
+"cells": [
+[
+44,
+9
+],
+[
+45,
+9
+],
+[
+27,
+12
+],
+[
+28,
+12
+]
+],
+"text": "jagged glassy black OBSIDIAN OUTCROPS with sharp purple-sheened facets catching the light",
+"color": [
+58,
+40,
+92
 ],
 "solid": true
 }
@@ -186,43 +314,5 @@
 },
 "painted_extra": [
 "lava_glow"
-],
-"rows_fit": [
-"RRRRRRR:sRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR:sRRRRRRRRRR",
-"RRRRRRR:rRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR:sRRRRRRRRRR",
-"RRRRRRR:sRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR:sRRRRRRlllR",
-"RRRRrrr:sRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR.::RRRRRRlllR",
-"RRrrrss:sssrRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRssssuu::uussRRlllR",
-"rrrssss::sssssssRRRRRRRRRRRRRsssssssssssssssssuu::uussslllRR",
-"srsssss::sssssssssssssRRRRssssssssssssssssssuuuu:uusssslllRR",
-"ssssssss:ssssssssssssssssssssssssssssssssssssuuu:uusssrlllRR",
-"ssssssss::ssssssssssssssssssssssssssssssssuuuuuu:ussssrlllRR",
-"sssssssss::ssssssRRRrsssssssssssssssssssssuuuuu::ussssrlllRR",
-"ssssssssss:sssssrRRRrsssssssssssssssssssssuuuss:sussssrlllRR",
-"ssssssssss:::ssssRRRsssssssssssssssssRRRRsuuss::ssssssrlllRR",
-"sssssssssss:::ssuuuussssssssssssssssrRRRRsssss::sssssssrllRR",
-"sssssssssssss::suuuusssssssssssssssssRRRRssss::ssssssssrllRR",
-"sssssssssrssss::uuuussssssssssssssssssssssss::sssssssssrlllR",
-"sssssssssssssss:::uussssssrrrssssssssssssss::ssssssssssrlllR",
-"ssssssssssssssrrr::sssssssrrrssssssssss:::::sssssssssssrlllR",
-"ssssssssssssssrrrs:::sssssssssss:::::::::ssssssssssssssrlllR",
-"usssssssssssssssssss::::::::::::::::sssssssssRRRrssssssrlllR",
-"ussssssssssssssssssssss::::::ssssssssssssssssRRRrssssssrlllR",
-"sssssssuussssssssssssssssssRRrsssssssssssrrrsRRRsssssssrllRR",
-"ssssssuuuu.swwsssssssssssssRRrsssssssssssrrrrsssssssssslllRR",
-"ssssuuuuuu..wwsssssssssssssssssswwwssssssrrrssssssssssrlllRR",
-"sssuuuuuuuuusssssssssssssssssssswwwsssssssssssssssssssrlllRR",
-"uuuuuuuuuuuusssssssssssssssssssswwwsssssssssssssssssssslllRR",
-"_____u__________________~~______sss____________________lllRR",
-"~~~_______________~~~~~~~~~~~__________________________lllRR",
-"~~~~~~~_~____~___~~~~~~~~~~~~~~~~~~___________~~~~~~~~~lll~~",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ll~~",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ll~~",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ll~~",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 ]
 }
