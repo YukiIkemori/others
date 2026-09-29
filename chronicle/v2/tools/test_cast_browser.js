@@ -56,7 +56,10 @@ function pageCheck() {
   }
   // 表情の違い（仮の顔の 5 コマが同じ画素でない）
   // 仮の顔（骨組み）の look で。selma は原画の顔（表情の対応で同じコマを使う表情がある）になったので、顔の原画の無い名前のある町の人で見る
-  const fl = ['npc_hanna', 'npc_rita', 'npc_gord'].find((l) => R.Hd.has('hd:face:' + l) && !(R.Art.cast.sprites.has(l, 'face'))) || 'selma';
+  //   （町の人の顔も原画が増えたので、決まった 3 人ではなく、顔の原画の無い人を全部の look から探す）
+  const rigFace = (l) => R.Hd.has('hd:face:' + l) && !(R.Art.cast.sprites.has(l, 'face'));
+  const fl = ['npc_hanna', 'npc_rita', 'npc_gord'].find(rigFace) || Object.keys(R.DB.looks).find(rigFace) || 'selma';
+  out.faceLook = fl;
   const fs = R.Hd.now('hd:face:' + fl);
   const hs = fs.frames.map((f) => { const d = f.c.getContext('2d').getImageData(0, 0, f.c.width, f.c.height).data; let h = 2166136261; for (let i = 0; i < d.length; i++) h = Math.imul(h ^ d[i], 16777619); return h >>> 0; });
   out.faceDistinct = new Set(hs).size;
@@ -184,7 +187,7 @@ async function run() {
     section('R.Portrait');
     ok('顔のある人に描く（原画・仮の顔）', ['hero_m_warrior', 'selma', 'berna'].every((l) => res.portrait[l].drew && res.portrait[l].px > 1500), res.portrait);
     ok('町の人の型は描かない（has null）', !res.portrait.npc_man_1.drew && res.portrait.npc_man_1.has === null);
-    ok('仮の顔の 5 つの表情がすべて違う画素', res.faceDistinct === 5, res.faceDistinct);
+    ok('仮の顔の 5 つの表情がすべて違う画素', res.faceDistinct === 5, { look: res.faceLook, distinct: res.faceDistinct });
     ok('同じキーで同じ画素', res.same);
 
     section('出撃中の 4 人だけ（§2.10）');

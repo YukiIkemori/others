@@ -135,6 +135,9 @@ const run = (p, id) => p.evaluate((id) => { window.__evDone = false; RPG.Events.
       const inv3 = await B.invariants(P.page);
       ok('invariants after the clear' + tag, inv3.ok, inv3);
       // E17: 次の町に入る → story_t1
+      //   体験版（config.slice）では story_t1 の最後に「体験版の終わり」（demo_end.js: 記録の案内 → 終わりの画面 → タイトル。持ち主 2026-09-28）が続く。
+      //   それは test_demo_end(_browser).js が見るので、ここでは済んだ印（world_demo_end）を立てて T1 の場面だけを見る（終わりはフィールドに戻る）
+      await P.page.evaluate('RPG.Game.flags.world_demo_end = true');
       await P.page.evaluate(`(() => { const o = RPG.Events.run; RPG.Events.run = function (id, c) { if (id === 'story_t1') window.__evT1 = c && c.reason; return o.apply(this, arguments); }; })()`);
       await P.page.evaluate("RPG.Field.enter('field_pharos', 'plaza')");
       await B.waitFor(P.page, 'window.__evT1 !== undefined', 8000);
