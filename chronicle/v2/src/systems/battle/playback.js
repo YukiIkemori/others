@@ -243,7 +243,7 @@
   };
   P.card = async function (st, item, grade, how) {
     const MIN = Bt.MIN;
-    st.card = { name: P.itemName(item), grade, icon: P.itemIcon(item), label: how === 'steal' ? (grade === 'super' ? '超レアを盗んだ！' : 'レアを盗んだ！') : (grade === 'super' ? '超レアを手に入れた！' : 'レアを手に入れた！'), t0: R.Engine.time };
+    st.card = { name: P.itemName(item), grade, icon: P.itemIcon(item), label: how === 'steal' ? (grade === 'super' ? R.T('battle.playback.card.label') : R.T('battle.playback.card.label_2')) : (grade === 'super' ? R.T('battle.playback.card.label_3') : R.T('battle.playback.card.label_4')), t0: R.Engine.time };
     try { R.Audio.jingle(grade === 'super' ? 'superrare' : 'rare'); } catch (e) { /* ignore */ }
     const t0 = R.Engine.time;
     await R.until(() => { const el = R.Engine.time - t0; return st.dead || el >= MIN.rareCard || (el >= MIN.rareCardSkip && (R.Input.pressed('a') || R.Input.pointer.pressed)); });
@@ -432,7 +432,7 @@
     ctx.actor = e.uid; ctx.act = e; ctx.fx = fxFor(st, e); ctx.fxs = fxsFor(e); ctx.hits = 0;
     ctx.seq = seqOf(e); ctx.seqC = null; ctx.seqEnd = 0;
     const an = u.name;
-    st.head = e.cmd === 'attack' ? { name: `${an}の攻撃`, t0: R.Engine.time } : { name: e.name || '', sub: an, t0: R.Engine.time };
+    st.head = e.cmd === 'attack' ? { name: R.T('battle.playback.act.head.name', { an }), t0: R.Engine.time } : { name: e.name || '', sub: an, t0: R.Engine.time };
     if (st.tele && st.tele.uid === e.uid) { st.tele = null; }
     const v = st.vis[e.uid];
     const sp = st.speed();
@@ -537,7 +537,7 @@
         P.streak(st, c.x, c.y, at.side === 'party' ? (at.wtype || 'sword') : (ctx.fx === 'bite' || ctx.fx === 'claw' ? ctx.fx : 'hit'), at.side === 'party');
       }
     }
-    P.pop(st, e.uid, (e.n | 0).toLocaleString('en-US'), e.crit ? 'crit' : mpDmg ? 'mp' : 'dmg', e.crit ? { tag: '会心' } : e.weak ? { tag: '弱点', tagColor: '#f4a07c' } : {});
+    P.pop(st, e.uid, (e.n | 0).toLocaleString('en-US'), e.crit ? 'crit' : mpDmg ? 'mp' : 'dmg', e.crit ? { tag: R.T('battle.playback.dmg.tag') } : e.weak ? { tag: R.T('battle.playback.dmg.tag_2'), tagColor: '#f4a07c' } : {});
     sfx(u.side === 'party' ? 'hurt' : e.crit ? 'crit' : 'hit');
     if (u.side === 'party' && e.n > 0) _.voice.play(u, 'hurt', { speed: st.speed(), rng: st.vrng, force: false, chance: true });
     ctx.hits++;
@@ -556,7 +556,7 @@
   };
   H.miss = async (st, e) => {
     const v = st.vis[e.uid], u = st.unit(e.uid);
-    P.pop(st, e.uid, 'ミス', 'miss');
+    P.pop(st, e.uid, R.T('battle.playback.miss.pop'), 'miss');
     sfx('miss');
     if (v && u) { const d = u.side === 'party' ? 16 : -16; P.smear(st, v, 120); await P.tween(st, v, 'dx', (v.dx || 0) + d, 110, 'out3'); await P.tween(st, v, 'dx', 0, 170, 'inOut'); }
     else await st.pwait(200);
@@ -569,14 +569,14 @@
     // 強化・弱体（BATTLE 34-3）: {id:'buff_<atk|def|mag|mdef|agi>', on, stage:-2..2}
     const bm = /^buff_(atk|def|mag|mdef|agi)$/.exec(e.id || '');
     if (bm) {
-      const BN = { atk: '攻撃', def: '防御', mag: '魔力', mdef: '魔防', agi: '素早さ' };
+      const BN = { atk: R.T('battle.playback.status.BN.atk'), def: R.T('battle.playback.status.BN.def'), mag: R.T('battle.playback.status.BN.mag'), mdef: R.T('battle.playback.status.BN.mdef'), agi: R.T('battle.playback.status.BN.agi') };
       const stg = e.stage | 0;
       const up = stg > 0;
       v.status = v.status.filter((x) => (x.id || x) !== e.id);
       if (e.on && stg) v.status.push(e.id);
       const a0 = st.actor(e.uid);
       if (a0 && e.on && stg && !seqd) P.fx(st, up ? 'buff' : 'debuff', a0.x, a0.y - 40, {});
-      P.pop(st, e.uid, !e.on || !stg ? `${BN[bm[1]]}が元に戻った` : `${BN[bm[1]]}${up ? '↑' : '↓'}${Math.abs(stg) > 1 ? '↑↓'[up ? 0 : 1] : ''}`, 'status');
+      P.pop(st, e.uid, !e.on || !stg ? R.T('battle.playback.status.pop', { p0: BN[bm[1]] }) : `${BN[bm[1]]}${up ? '↑' : '↓'}${Math.abs(stg) > 1 ? '↑↓'[up ? 0 : 1] : ''}`, 'status');
       sfx(e.on && stg ? (up ? 'buff' : 'debuff') : 'heal');
       await st.pwait(240);
       return;
@@ -588,7 +588,7 @@
     const a = st.actor(e.uid);
     const good = /haste|regen|protect|shell|guard|buff|up/.test(e.id);
     if (a && e.on && !seqd) P.fx(st, good ? 'buff' : 'status', a.x, a.y - 40, {});
-    P.pop(st, e.uid, e.on ? name : `${name}が治った`, 'status');
+    P.pop(st, e.uid, e.on ? name : R.T('battle.playback.status.pop_2', { name }), 'status');
     sfx(e.on ? (good ? 'buff' : 'debuff') : 'heal');
     await st.pwait(260);
   };
@@ -672,10 +672,10 @@
     const a = st.actor(e.target);
     if (a) P.fx(st, 'steal', a.x, a.y - _.actors.height(a) * 0.5, { flip: true });
     sfx('steal');
-    if (!e.item) { P.pop(st, e.target != null ? e.target : e.uid, '盗めなかった', 'miss'); await st.pwait(300); return; }
+    if (!e.item) { P.pop(st, e.target != null ? e.target : e.uid, R.T('battle.playback.steal.pop'), 'miss'); await st.pwait(300); return; }
     const g = P.gradeOf(e.item, e.grade);
     ctx.stolen = e.item;
-    st.head = { name: `${P.itemName(e.item)}を盗んだ！`, sub: nameOf(st, e.uid), t0: R.Engine.time };
+    st.head = { name: R.T('battle.playback.steal.head.name', { itemName: P.itemName(e.item) }), sub: nameOf(st, e.uid), t0: R.Engine.time };
     if (rare(g)) await P.card(st, e.item, g, 'steal');
     else await st.pwait(500);
   };
@@ -684,7 +684,7 @@
     const g = P.gradeOf(e.item, e.grade);
     if (e.stolen) {
       if (ctx.stolen === e.item) return;   // steal の札で見せた
-      st.head = { name: `${P.itemName(e.item)}を盗んだ！`, t0: R.Engine.time };
+      st.head = { name: R.T('battle.playback.gain.head.name', { itemName: P.itemName(e.item) }), t0: R.Engine.time };
       if (rare(g)) await P.card(st, e.item, g, 'steal'); else await st.pwait(400);
     }
   };

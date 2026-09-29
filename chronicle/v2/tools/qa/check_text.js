@@ -76,6 +76,8 @@ function run() {
     const lines = src.split('\n');
     // 素材の name（src/art/terrain/materials.js）は一覧表の見出しだけで画面に出ない（地名・物の名は maps の方）
     if (/^src\/art\/terrain\/materials\.js$/.test(rel)) continue;
+    // 演出の表（src/art/fx/fx_seq_table.js）の c は演出の設計のメモ（開発用の fx_gallery だけが出す。画面の文ではない）
+    if (/^src\/art\/fx\/fx_seq_table\.js$/.test(rel)) continue;
     // 会話・キャプション・看板（20 字の窓）。文の表に移した物は src/i18n/ja/events_*・maps_*
     const talk = /^src\/(events|maps)\//.test(rel) || /^src\/i18n\/ja\/(events|maps)_/.test(rel);
     for (const { s, line } of OLD.strings(src)) {

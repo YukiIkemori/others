@@ -34,6 +34,8 @@
       c.shadowColor = 'transparent';
       c.textBaseline = 'alphabetic';
       c.textAlign = 'left';
+      // ラテン字の言語は字の位置を小数のまま置く（小さい字で字の間が丸められ「Not owned」が「Notowned」に見えるのを防ぐ）。日本語は今までどおり
+      if ('textRendering' in c) c.textRendering = R.I18n && R.I18n.isLatin() ? 'geometricPrecision' : 'auto';
     },
     clear(color) {
       const c = Gfx.ctx;

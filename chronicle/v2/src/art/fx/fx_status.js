@@ -60,10 +60,10 @@
 
   // ---------------------------------------------------------------- 状態の印
   const MARK = {
-    poison: ['#8fd06a', '毒'], sleep: ['#8fb0f0', '眠'], paralysis: ['#f0d060', '麻'], paralyze: ['#f0d060', '麻'], confuse: ['#f09ad0', '混'],
-    blind: ['#a0a0b0', '暗'], silence: ['#b0c8e0', '封'], stone: ['#b8b0a0', '石'], charm: ['#ff9ab0', '魅'], stun: ['#ffe080', '気'],
-    slow: ['#90a8d0', '遅'], haste: ['#8ee08a', '速'], regen: ['#8ee08a', '再'], protect: ['#ecc97c', '守'], shell: ['#8fd6d8', '護'],
-    berserk: ['#f47e6c', '狂'], doom: ['#c090f0', '死'], guard: ['#ecc97c', '防'],
+    poison: ['#8fd06a', R.T('art.fx_status.MARK.poison.1')], sleep: ['#8fb0f0', R.T('art.fx_status.MARK.sleep.1')], paralysis: ['#f0d060', R.T('art.fx_status.MARK.paralysis.1')], paralyze: ['#f0d060', R.T('art.fx_status.MARK.paralyze.1')], confuse: ['#f09ad0', R.T('art.fx_status.MARK.confuse.1')],
+    blind: ['#a0a0b0', R.T('art.fx_status.MARK.blind.1')], silence: ['#b0c8e0', R.T('art.fx_status.MARK.silence.1')], stone: ['#b8b0a0', R.T('art.fx_status.MARK.stone.1')], charm: ['#ff9ab0', R.T('art.fx_status.MARK.charm.1')], stun: ['#ffe080', R.T('art.fx_status.MARK.stun.1')],
+    slow: ['#90a8d0', R.T('art.fx_status.MARK.slow.1')], haste: ['#8ee08a', R.T('art.fx_status.MARK.haste.1')], regen: ['#8ee08a', R.T('art.fx_status.MARK.regen.1')], protect: ['#ecc97c', R.T('art.fx_status.MARK.protect.1')], shell: ['#8fd6d8', R.T('art.fx_status.MARK.shell.1')],
+    berserk: ['#f47e6c', R.T('art.fx_status.MARK.berserk.1')], doom: ['#c090f0', R.T('art.fx_status.MARK.doom.1')], guard: ['#ecc97c', R.T('art.fx_status.MARK.guard.1')],
   };
   BFX.statusMark = function (g, id, x, y, r) {
     const key = typeof id === 'string' ? id : (id && (id.id || id.key)) || '';
@@ -72,14 +72,14 @@
     g.save();
     g.fillStyle = 'rgba(14,16,28,0.85)'; g.beginPath(); g.arc(x + r, y, r + 1.5, 0, 7); g.fill();
     g.strokeStyle = m[0]; g.lineWidth = 1.2; g.beginPath(); g.arc(x + r, y, r, 0, 7); g.stroke();
-    g.fillStyle = m[0]; g.font = R.Gfx.font(r * 1.3, 700); g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillStyle = m[0]; g.font = R.Gfx.font(r * ([...String(m[1])].length > 1 ? 0.95 : 1.3), 700);   // 英語などの 2 字の印は小さく g.textAlign = 'center'; g.textBaseline = 'middle';
     g.fillText(m[1], x + r, y + 0.5);
     g.restore();
   };
   BFX.statusName = function (id) {
     const d = R.DB.statuses && R.DB.statuses[id];
     if (d && d.name) return d.name;
-    const N = { poison: '毒', sleep: '眠り', paralysis: 'まひ', paralyze: 'まひ', confuse: '混乱', blind: '暗闇', silence: '沈黙', stone: '石化', charm: '魅了', stun: '気絶', slow: 'スロウ', haste: '身軽', regen: '再生', protect: '守り', shell: '魔よけ', berserk: '狂戦士', doom: '死の宣告', guard: '防御' };
+    const N = { poison: R.T('art.fx_status.statusName.N.poison'), sleep: R.T('art.fx_status.statusName.N.sleep'), paralysis: R.T('art.fx_status.statusName.N.paralysis'), paralyze: R.T('art.fx_status.statusName.N.paralyze'), confuse: R.T('art.fx_status.statusName.N.confuse'), blind: R.T('art.fx_status.statusName.N.blind'), silence: R.T('art.fx_status.statusName.N.silence'), stone: R.T('art.fx_status.statusName.N.stone'), charm: R.T('art.fx_status.statusName.N.charm'), stun: R.T('art.fx_status.statusName.N.stun'), slow: R.T('art.fx_status.statusName.N.slow'), haste: R.T('art.fx_status.statusName.N.haste'), regen: R.T('art.fx_status.statusName.N.regen'), protect: R.T('art.fx_status.statusName.N.protect'), shell: R.T('art.fx_status.statusName.N.shell'), berserk: R.T('art.fx_status.statusName.N.berserk'), doom: R.T('art.fx_status.statusName.N.doom'), guard: R.T('art.fx_status.statusName.N.guard') };
     return N[id] || id;
   };
 })(window.RPG);

@@ -517,14 +517,20 @@
         }
       });
     },
-    /** 増減の 1 行（中央寄せ）: 「守備 ▲+5」「魔防 ±0」。入らなければ名前を落として数字だけ */
+    /** 増減の 1 行（中央寄せ）: 「守備 ▲+5」「魔防 ±0」。入らなければ名前の字を縮め、それでも入らなければ名前の末尾を「…」に（名前は落とさない） */
     deltaLine(g, rr, cx, y, maxW) {
-      const C = T().color, sz = u(S.tall() ? 14 : 15), ns = u(13);
+      const C = T().color, sz = u(S.tall() ? 14 : 15);
+      let ns = u(13);
       const dw = rr.d ? S.deltaW(rr.d, sz) : R.UIK.measure('±0', { size: sz, weight: 700 });
-      let nw = rr.name ? R.UIK.measure(rr.name, { size: ns }) + u(4) : 0;
-      if (nw + dw > maxW) nw = 0;
+      let name = rr.name || '';
+      let nw = name ? R.UIK.measure(name, { size: ns }) + u(4) : 0;
+      if (name && nw + dw > maxW) {
+        const f = R.UIK.fitSize(name, Math.max(u(8), maxW - dw - u(4)), { size: ns });
+        name = f.s; ns = f.size; nw = R.UIK.measure(name, { size: ns }) + u(4);
+        if (name === '…') { name = ''; nw = 0; }   // 数字だけでも入らないほど狭いときだけ
+      }
       const x0 = cx - (nw + dw) / 2;
-      if (nw) R.UIK.text(g, rr.name, x0, y + (sz - ns) / 2, { size: ns, color: C.text2 });
+      if (nw) R.UIK.text(g, name, x0, y + (sz - ns) / 2, { size: ns, color: C.text2 });
       if (rr.d) S.delta(g, rr.d, x0 + nw + dw, y, { size: sz });
       else R.UIK.text(g, '±0', x0 + nw + dw, y, { size: sz, weight: 700, color: C.same, align: 'right' });
     },

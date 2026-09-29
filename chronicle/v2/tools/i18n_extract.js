@@ -35,7 +35,7 @@ const JP = /[぀-ゟ゠-ヿ㐀-䶿一-鿿豈-﫿！-～ｦ-ﾟ]/;
 // 移さないファイル（開発用・仮の実装・ほかの担当が持つ演出のコード・表そのもの）
 const SKIP_FILES = [
   /^src\/core\/stubs\//, /^src\/dev\//, /^src\/tester\//, /^src\/i18n\//, /^src\/core\/i18n\.js$/,
-  /^src\/art\/fx\//, /^src\/systems\/battle\/playback\.js$/, /^src\/art\/terrain\/materials\.js$/,
+  /^src\/art\/fx\/fx_seq_table\.js$/, /^src\/art\/terrain\/materials\.js$/,
   // 手で移す: ns.js（R.T より先に読む）・contracts.js（契約の説明で画面に出ない）・nameentry.js（言語ごとの字の表）
   /^src\/core\/ns\.js$/, /^src\/core\/contracts\.js$/, /^src\/screens\/nameentry\.js$/,
 ];

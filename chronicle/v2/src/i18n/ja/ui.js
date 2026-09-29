@@ -749,7 +749,7 @@
     'ui.panel.tag.label': '前',
     'ui.panel.tag.label_2': '後',
     // ---- src/screens/nameentry.js（手で移した: 言語ごとの字の表）
-    'ui.nameentry.kanaA': ['アイウエオ', 'カキクケコ', 'サシスセソ', 'タチツテト', 'ナニヌネノ', 'ハヒフヘホ', 'マミムメモ', 'ヤ ユ ヨ', 'ラリルレロ', 'ワヲンー '],   // check_text:ignore（五十音の表の空き）
+    'ui.nameentry.kanaA': ['アイウエオ', 'カキクケコ', 'サシスセソ', 'タチツテト', 'ナニヌネノ', 'ハヒフヘホ', 'マミムメモ', 'ヤ ユ ヨ', 'ラリルレロ', 'ワヲンー '],   // check_text:ignore（五十音の表: 空白は空きのます目）
     'ui.nameentry.kanaB': ['ガギグゲゴ', 'ザジズゼゾ', 'ダヂヅデド', 'バビブベボ', 'パピプペポ', 'ァィゥェォ', 'ャュョッヴ'],
     'ui.nameentry.latinA': ['ABCDEFGHIJ', 'KLMNOPQRST', 'UVWXYZ-\'. ', '0123456789', '&!?,:;()~ '],
     'ui.nameentry.latinB': ['ÀÁÂÄÇÈÉ', 'ÊËÌÍÎÏÑ', 'ÒÓÔÖÙÚÛ', 'ÜÝŸÆŒØÅ', 'ẞÞÐ+=#*'],
