@@ -1,0 +1,197 @@
+{
+"id": "ghost_ship_3",
+"w": 52,
+"h": 30,
+"rows": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXRRRRRRRRRR",
+"RXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXRRRRRRRRR",
+"RXXuuXXXXXXuuuXuuuuuuuuuuuuuuuuuuuuuuuuuuuuXRRRRRRRR",
+"RXXuuuuuuuuuuuXuuurrruuuuurrrruuuuuuuuuuuuuuXRRRRRRR",
+"RXXuuuuuuuuuuuXuuurrruuuuurrrruuuurrruuuuuuuuXRRRRRR",
+"RXXuuuuuuuuuuuXuuuuuuuuuuuuuuuuuuurrruuuuuuuuuXRRRRR",
+"RXXuuuuuuuuuuuXuuuuuuuuuuuuuuuuuuuuuuuuwwwuuuuuXRRRR",
+"RXXuuuuuuuuuuuXuuuuuuuuuuuuuuuuuuuuuuuwwwwwuuuuuXRRR",
+"RXXuccccccccuuXuuuuuuuuuuuuuuuuuuuuuuuuwwwwuuuuuuXRR",
+"RXXuccccccccuuXuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXXR",
+"RXXuccccccccuuXuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXXR",
+"RXXuccXXXcccuuXuuuuuuurruuuuuuuuuuuuuuuuuuuuuuuuuXXR",
+"RXXuccccccccuuXuuuuuuurruuuuuuuuurruuuuuuuuuuuuuuXXR",
+"RXXuccccccccuuuuuuuuuuuuuuuuuuuuurruuuuuuuuuuuuuuXXR",
+"RXXuccccccccuuXuuuuuuuuuuuuuuuuuurruuuuuuuuuuuuuuXXR",
+"RXXuccccccccuuXuuuuuuuuuuuwwwwwuuuuuuuuuuuuuuuuuuXXR",
+"RXXuccccccccuuXuuuuuuuuuuwwwwwwwuuuuuuuuuuuuuuuuuXXR",
+"RXXuccccccccuuXuuuuuuuuuuuwwwwwuuuuuuuuuuuuuuuuuuXRR",
+"RXXuuuuuuuuuuuXuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXRRR",
+"RXXuuuuuuuuuuuXuuuuuuuuuuuuuuuuuuuuuuuurrruuuuuXRRRR",
+"RXXuuuuuuuuuuuXuuuuuuuuuuuuuurrruuuuuuurrruuuuXRRRRR",
+"RXXuuuuuuuuuuuXuuurrrruuuuuuurrruuuuuuuuuuuuuXRRRRRR",
+"RXXuuuuuuuuuuuXuuurrrruuuuuuurrruuuuuuuuuuuuXRRRRRRR",
+"RXXuuuuuuuuuuuXuuuuuuuuuuuuuuuuuuuuuuuuuuuuXRRRRRRRR",
+"RXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXRRRRRRRRR",
+"RXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
+],
+"marks": [
+{
+"kind": "table",
+"cells": [
+[
+6,
+13
+],
+[
+7,
+13
+],
+[
+8,
+13
+]
+],
+"text": "the captain's CHART TABLE of dark wood with an open logbook, a brass compass and rolled charts on it",
+"color": [
+96,
+64,
+40
+],
+"solid": true
+},
+{
+"kind": "windows",
+"cells": [
+[
+5,
+4
+],
+[
+6,
+4
+],
+[
+7,
+4
+],
+[
+8,
+4
+],
+[
+9,
+4
+],
+[
+10,
+4
+]
+],
+"text": "the STERN WINDOWS of the captain's cabin: small leaded panes, cracked, pale light behind them",
+"color": [
+150,
+170,
+180
+],
+"solid": true
+},
+{
+"kind": "up",
+"cells": [
+[
+47,
+14
+],
+[
+47,
+15
+]
+],
+"text": "narrow wooden STEPS going up",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 46,
+"y": 15
+},
+{
+"type": "o",
+"x": 18,
+"y": 15
+},
+{
+"type": "o",
+"x": 17,
+"y": 15
+},
+{
+"type": "o",
+"x": 15,
+"y": 15
+},
+{
+"type": "o",
+"x": 13,
+"y": 15
+},
+{
+"type": "o",
+"x": 7,
+"y": 15
+},
+{
+"type": "o",
+"x": 7,
+"y": 14
+},
+{
+"type": "o",
+"x": 44,
+"y": 8
+},
+{
+"type": "o",
+"x": 24,
+"y": 20
+},
+{
+"type": "o",
+"x": 11,
+"y": 18
+},
+{
+"type": "o",
+"x": 5,
+"y": 11
+}
+],
+"spawns": {
+"up": {
+"x": 46,
+"y": 15,
+"dir": "w"
+}
+},
+"exits": [],
+"notes": [],
+"meta": {
+"name": "幽霊船",
+"region": "r_isles",
+"zones": [],
+"worldRect": [
+0,
+0,
+1,
+1
+],
+"look": "ship"
+}
+}

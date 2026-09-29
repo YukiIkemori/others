@@ -1,0 +1,137 @@
+{
+"id": "isles_cave_2",
+"w": 44,
+"h": 36,
+"rows": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRssssssRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRsssssssRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRkkkssskkkkRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRkkkkkkkkkkkRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRkkkkkkkkkkkkRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRkkkkkkkkkkkkkrRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRkkkkkkkkkkkkkkRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRkkkkkkkkkkkkkRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRkkkkkkkkkkkkkkRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRkkkkkkkkkkkkkkkkkRwwwRRRRRRRRR",
+"RRRRRRRRRRRRkkkkkkkkkwwwwwkkkkkkRRRRRRRRRRRR",
+"RRRRRRRRRRRkkkkwwwwwwwwwwwwwwwkkkkRRRRRRRRRR",
+"RRRRRRRRRRkkkwwwwwwwwwwwwwwwwwwkkkkRRRRRRRRR",
+"RRRRRRRRkkkkkwwwwwwwwwwwwwwwwwwwwkkRRRRRRRRR",
+"RRRRRRRRRkkkwwwwwwwwwwwwwwwwwwwwwkkkRRRRRRRR",
+"RRRRRRRRRkkkwwwwwwwwwwwwwwwwwwwwwkkkRRRRRRRR",
+"RRRRRRRRRRkkwwwwwwwwwwwwwwwwwwwwwkkkkRRRRRRR",
+"RRRRRRRRRRkkwwwwwwwwwwwwwwwwwwwwwkkkkRRRRRRR",
+"RRRRRRRRRRkkwwwwwwwwwwwwwwwwwwwwwkkkkRRRRRRR",
+"RRRRRRRRRRkkwwwwwwwwwwwwwwwwwwwwwkkkkRRRRRRR",
+"RRRRRRRRRRkkkwwwwwwwwwwwwwwwwwwwwkkkRRRRRRRR",
+"RRRRRRRRRRRkkkwwwwwwwwwwwwwwwwwkkkkkRRRRRRRR",
+"RRRRRRRRRRRkkkkkwwwwwkkwwwwwwwkkkkkssRRRRRRR",
+"RRRRRRRRRwwwRkkkkkkkkkkkwwwwkkkkkksssssRRRRR",
+"RRRRRRRRRRwRRRkkkkkkkkkkkkkkkkkkkkssssssRRRR",
+"RRRRRRRRRRRRRRRkkkkkkkkkkkkkkkkRRRsssssRRRRR",
+"RRRRRRRRRRRRRRRRRkkkkkkkkkkRRRRRRRRssRRRRRRR",
+"RRRRRRRRRRRRRRRRRRkkkkkkkkkRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRkkkkkkkkkkRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRkkkkkkkkkkRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRkkkkkkkkkRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRkkkkkkkkRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRkkkRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
+],
+"marks": [],
+"objects": [
+{
+"type": "o",
+"x": 22,
+"y": 33
+},
+{
+"type": "o",
+"x": 22,
+"y": 31
+},
+{
+"type": "o",
+"x": 8,
+"y": 15
+},
+{
+"type": "o",
+"x": 22,
+"y": 3
+},
+{
+"type": "o",
+"x": 36,
+"y": 26
+},
+{
+"type": "o",
+"x": 21,
+"y": 9
+},
+{
+"type": "o",
+"x": 22,
+"y": 9
+},
+{
+"type": "o",
+"x": 23,
+"y": 9
+},
+{
+"type": "o",
+"x": 21,
+"y": 10
+},
+{
+"type": "o",
+"x": 22,
+"y": 10
+},
+{
+"type": "o",
+"x": 23,
+"y": 10
+},
+{
+"type": "o",
+"x": 22,
+"y": 6
+},
+{
+"type": "o",
+"x": 30,
+"y": 27
+}
+],
+"spawns": {
+"up": {
+"x": 22,
+"y": 31,
+"dir": "n"
+},
+"shelf": {
+"x": 22,
+"y": 4,
+"dir": "s"
+}
+},
+"exits": [],
+"notes": [],
+"meta": {
+"name": "潮鳴りの洞窟",
+"region": "r_isles",
+"zones": [],
+"worldRect": [
+0,
+0,
+1,
+1
+],
+"look": "cave"
+}
+}

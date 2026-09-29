@@ -279,7 +279,7 @@ def i_wreck():
     shore_ring(a, isl)
     a.mask_fill(isl, 's', only=',')
     a.mask_fill(isl & (fbm(9, a.W, a.H, 5) > 0.5), 'k', only='s')
-    ship = [(x, y) for x in range(15, 33) for y in range(11, 17) if abs((y - 13.8) * 3.2) + max(0, x - 29) * 1.2 + max(0, 17 - x) * 1.4 < 9.6]
+    ship = [(x, y) for x in range(14, 34) for y in range(10, 18) if abs(y + 0.5 - 13.8) <= 2.9 * math.sqrt(max(0.0, 1 - ((x + 0.5 - 24) / 10.0) ** 2)) * (1.0 if x < 28 else max(0.2, (34 - x) / 6.0))]
     a.mark('wreck', ship, 'a big two-masted wooden MERCHANT SHIP run aground on the rocks, lying heeled over, its bow pointing east, the hull holed and the sails torn, seen from above (its deck faces the viewer)', (130, 92, 58))
     a.rect(20, 17, 6, 2, 's', force=True, keep=True)
     jetty(a, 22, 25, 5, 's')

@@ -13,6 +13,12 @@ aid, src = sys.argv[1], sys.argv[2]
 THR = float(sys.argv[3]) if len(sys.argv) > 3 else 0.2
 d = json.load(open(aid + '/layout.json')); W, H, T = d['w'], d['h'], 32
 rows = [list(r) for r in (d.get('rows_fit') or d['rows'])]
+import os
+fx = json.load(open(aid + '/fix.json')) if os.path.exists(aid + '/fix.json') else {}
+for mv in fx.get('objects', []):   # tomap.py と同じ: 絵に合わせて動かした物・spawn
+    for o in d['objects']:
+        if all(o.get(k) == v for k, v in mv['match'].items()): o.update(mv['set'])
+for k, v in fx.get('spawns', {}).items(): d['spawns'][k] = v
 lay = np.array([list(r) for r in d['rows']])
 A = np.asarray(Image.open(src).convert('RGB').resize((W * T, H * T), Image.BOX)).astype(float)
 lum = A @ np.array([.299, .587, .114])
@@ -28,9 +34,17 @@ lab, n = ndimage.label(obj)
 sizes = ndimage.sum(obj, lab, range(n + 1))
 sl = ndimage.find_objects(lab)
 ok = np.zeros(n + 1, bool)
+# 塊ごとに: 外の岩山にかかる・冷えた溶岩の殻や敷石の上が半分以上 → 地形なので数えない（小物ではない）
+outer0 = lay == 'R'
+lb0, _ = ndimage.label(outer0)
+bord0 = set(np.unique(np.concatenate([lb0[0], lb0[-1], lb0[:, 0], lb0[:, -1]]))) - {0}
+outerpx = kr(np.isin(lb0, list(bord0)))
+flatpx = kr(np.isin(lay, list('kc')))
+on_outer = ndimage.sum(outerpx, lab, range(n + 1))
+on_flat = ndimage.sum(flatpx, lab, range(n + 1))
 for i in range(1, n + 1):
     s = sl[i - 1]; hh, ww = s[0].stop - s[0].start, s[1].stop - s[1].start
-    ok[i] = 30 <= sizes[i] <= 9000 and hh <= 5 * T and ww <= 5 * T
+    ok[i] = 30 <= sizes[i] <= 60000 and hh <= 9 * T and ww <= 9 * T and on_outer[i] < 0.15 * sizes[i] and on_flat[i] < 0.5 * sizes[i]
 obj = ok[lab]
 frac = obj.reshape(H, T, W, T).mean((1, 3))
 # 外の岩山
@@ -64,8 +78,6 @@ for y in range(H):
         else: n_ = c if c in WALK else (lay[y, x] if lay[y, x] in WALK else 's')
         if n_ != c: rows[y][x] = n_; nch += 1
 # 手の直し（fix.json の objfit_solid / objfit_open）
-import os
-fx = json.load(open(aid + '/fix.json')) if os.path.exists(aid + '/fix.json') else {}
 for q in fx.get('objfit_solid', []): rows[q[1]][q[0]] = q[2] if len(q) > 2 else 'r'
 for q in fx.get('objfit_open', []): rows[q[1]][q[0]] = q[2] if len(q) > 2 else 's'
 # とどかない歩けるマスを閉じる

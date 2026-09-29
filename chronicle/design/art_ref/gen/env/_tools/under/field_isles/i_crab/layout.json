@@ -1,0 +1,170 @@
+{
+"id": "i_crab",
+"w": 40,
+"h": 30,
+"rows": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~_________~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~_________________~~~~~~~~~",
+"~~~~~~~~~~~~____,,sssssss_______~~~~~~~~",
+"~~~~~~~~~~____,,,,sssssssssssss__~~~~~~~",
+"~~~~~~~~~___,,,,ss,sssssssssssss__~~~~~~",
+"~~~~~~~~__s,,,,,ssssssssssssssss__~~~~~~",
+"~~~~~~~~__ss,s,,ss,ssssssTssssss__~~~~~~",
+"~~~~~~~__sssTs,,,,,sssssssssss,,,__~~~~~",
+"~~~~~~__ssssss,,,,,,ssssssssss,,,__~~~~~",
+"~~~~~__ssssss,,,,,,,sssssssss,,T,,__~~~~",
+"~~~~~__sssssss,,,,,XXsssssss,,,,s,__~~~~",
+"~~~~~__ssssssss::::XXsssssss,,,ssss__~~~",
+"~~~===:::::::::::sss,sssssswwssssss__~~~",
+"~~~=====ssssssssssssssssswwwww,sss__~~~~",
+"~~~~~~__s,ssssssssssssssswwwwwssss__~~~~",
+"~~~~~~~__,ssssssssssssssswwwwwsss__~~~~~",
+"~~~~~~~~__,sssssssssssssssswwssss__~~~~~",
+"~~~~~~~~~__ssssTssssssssssssssss__~~~~~~",
+"~~~~~~~~~~__sssssssss,Tssssssss__~~~~~~~",
+"~~~~~~~~~~~____ssssssssssssssss__~~~~~~~",
+"~~~~~~~~~~~~____ssssssssssssss__~~~~~~~~",
+"~~~~~~~~~~~~~~~________________~~~~~~~~~",
+"~~~~~~~~~~~~~~~~______________~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+],
+"marks": [
+{
+"kind": "nest",
+"cells": [
+[
+19,
+13
+],
+[
+20,
+13
+],
+[
+19,
+14
+],
+[
+20,
+14
+]
+],
+"text": "a big glittering MOUND OF SEASHELLS, old gold coins and bits of coral (a giant hermit crab's nest)",
+"color": [
+224,
+196,
+120
+],
+"solid": true
+},
+{
+"kind": "jetty",
+"cells": [
+[
+7,
+15
+],
+[
+7,
+16
+],
+[
+6,
+15
+],
+[
+6,
+16
+],
+[
+5,
+15
+],
+[
+5,
+16
+],
+[
+4,
+15
+],
+[
+4,
+16
+],
+[
+3,
+15
+],
+[
+3,
+16
+]
+],
+"text": "a simple WOODEN JETTY of weathered grey planks on posts running out into the water (walkable deck)",
+"color": [
+150,
+104,
+60
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "examine",
+"x": 19,
+"y": 15,
+"event": "isles_crab_nest"
+},
+{
+"type": "examine",
+"x": 3,
+"y": 16,
+"event": "isles_boat"
+},
+{
+"type": "chest",
+"id": "i_crab_c1",
+"x": 30,
+"y": 11,
+"pool": "p_T"
+}
+],
+"spawns": {
+"boat": {
+"x": 7,
+"y": 15,
+"dir": "e"
+}
+},
+"exits": [],
+"notes": [],
+"meta": {
+"name": "財宝ヤドカリの島",
+"sub": "貝がらの光る小島",
+"region": "r_isles",
+"worldRect": [
+700,
+560,
+40,
+30
+],
+"outside": "sea",
+"look": "field",
+"zones": [
+{
+"rect": null,
+"zone": "zw_isles"
+}
+],
+"links": {},
+"npcs": []
+}
+}

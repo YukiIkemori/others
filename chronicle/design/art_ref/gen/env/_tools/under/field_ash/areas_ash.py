@@ -96,7 +96,7 @@ def a_pass():
         dict(type='sign', x=6, y=22, text='灰の荒野\n東 → 炎の町カルデラ'),
         dict(type='sign', x=29, y=22, text='南 → 灰の古戦場\n折れた剣の碑'),
         dict(type='waylamp', id='wl_a_pass_1', x=12, y=22, lit=True),
-        dict(type='waylamp', id='wl_a_pass_2', x=40, y=21, lit=True),
+        dict(type='waylamp', id='wl_a_pass_2', x=35, y=20, lit=True),
         dict(type='prop', id='tent', x=14, y=10), dict(type='prop', id='lantern', x=12, y=11),
     ]
     a.meta = dict(name='灰かぶりの峠', sub='砂漠から灰の荒野へ抜ける峠', region='r_ash', worldRect=[285, 393, 96, 48], outside='rock',

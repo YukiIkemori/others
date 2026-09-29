@@ -1,0 +1,167 @@
+{
+"id": "isles_cave_1",
+"w": 48,
+"h": 40,
+"rows": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRkkkkkkkRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRkkkkkkkkkRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRkkkkkkkkRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRkkkkkRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRwwwwwwwwwkkkkkwwwwwwwwRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRwwwwwwwwwkkkkkwwwwwwwwRRRRRRRRRRRRR",
+"RRRRRRRRRRRRsRRRRRRRRRkkkkkRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRsssRRRRRRRRkkkkkRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRkkkkkkssRRRRRRRkkkkkkkkkkRRRRRRRRRRRRRRRRR",
+"RRRRkkkkkkkkkkRRRRkkkkkkkkkkkkkkRRRRRRRRRRRRRRRR",
+"RRRRkkkkkkkkkkkkkkkkXkkkkkkkkkkkkRRRRRRRRRRRRRRR",
+"RRRRkkkkkkkkkkkkkkkkkkkkkkkwwwkkkRRRRRRRRRRRRRRR",
+"RRRRkkkkkkkkkkkkkkkkkkkkkwwwwwkkkkkkkkkwwwkRRRRR",
+"RRRRRkkkkkkkkkkRRRkkkkkkkwwwwwkkkkkkkkkwwwkkkRRR",
+"RRRRRkkkkkkkkRRRRRRkkkkkkkwwwwkkkkkkkkkkkkkkkRRR",
+"RRRRRRRkkkkkRRRRRRRkkkkkkkkkkkkRRRkkkkkkkkkkkRRR",
+"RRRRRRRRRRRRRRRRRRRRkkkkkkkkkRRRRRRRkkkkkkkkkRRR",
+"RRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRRRRkkkkkskkRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRRRRRRkksssRRRRR",
+"RRRRRRRRwwwwwwwwwwwwwwkkkkkwwwwwwwwwwwwRRsRRRRRR",
+"RRRRRRRwwwwwwwwwwwwwwwkkkkkwwwwwwwwwwwwwwRRRRRRR",
+"RRRRRRRRwwRRRRRRRRwwwwkkkkkwwRRRRRRwwwwwwRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRkkkkkkRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRkkkkkkkkkkRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRkkkkkkkkkkkkRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRkkkkkkkkskkkkkkRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRkkkkkkkkssskkkkkRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRkkkkkkkkkskkkkkRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRkwwkkkkkkkkkkRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRwkkkkkkkRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRRRRRRRRRRRRRRRR"
+],
+"marks": [
+{
+"kind": "stone",
+"cells": [
+[
+20,
+16
+]
+],
+"text": "a waist-high STANDING STONE carved with wave lines and a moon, crusted with barnacles (the tide stone)",
+"color": [
+150,
+150,
+160
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 23,
+"y": 38
+},
+{
+"type": "o",
+"x": 24,
+"y": 38
+},
+{
+"type": "o",
+"x": 24,
+"y": 5
+},
+{
+"type": "o",
+"x": 24,
+"y": 3
+},
+{
+"type": "o",
+"x": 20,
+"y": 17
+},
+{
+"type": "o",
+"x": 8,
+"y": 15
+},
+{
+"type": "o",
+"x": 6,
+"y": 19
+},
+{
+"type": "o",
+"x": 42,
+"y": 21
+},
+{
+"type": "o",
+"x": 38,
+"y": 22
+},
+{
+"type": "o",
+"x": 30,
+"y": 33
+},
+{
+"type": "o",
+"x": 18,
+"y": 32
+},
+{
+"type": "o",
+"x": 11,
+"y": 20
+},
+{
+"type": "o",
+"x": 44,
+"y": 19
+}
+],
+"spawns": {
+"entrance": {
+"x": 24,
+"y": 37,
+"dir": "n"
+},
+"up": {
+"x": 24,
+"y": 5,
+"dir": "s"
+}
+},
+"exits": [
+{
+"x": 22,
+"y": 39,
+"w": 4,
+"h": 1,
+"to": {},
+"edge": "s"
+}
+],
+"notes": [],
+"meta": {
+"name": "潮鳴りの洞窟",
+"region": "r_isles",
+"zones": [],
+"worldRect": [
+0,
+0,
+1,
+1
+],
+"look": "cave"
+}
+}

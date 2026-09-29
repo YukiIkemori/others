@@ -1,4 +1,4 @@
-"""(ash copy of ../field_desert/process.py: fixed gain for the ash greys, plus the LAVA emit layer <id>_emit) Painted FIELD area: generation -> the game's underlay images, @24/@32 (+@40 when 40 x max(w, h) <= 2048), into v2/assets/env/field/under/.
+"""(isles copy of ../field_ash/process.py: grass gain towards Roa like the demo; OUT=assets/env/isles/under for towns and dungeons) Painted FIELD area: generation -> the game's underlay images, @24/@32 (+@40 when 40 x max(w, h) <= 2048), into v2/assets/env/field/under/.
 usage: python3 process.py <id> <gen.png>
 - box-downscale to 32 px/tile;
 - brightness: a luminance gain so the walkable ground matches the approved painted Roa (the night-light tuning then holds);
@@ -24,12 +24,13 @@ kron = lambda m: np.kron(m, np.ones((T, T), bool))
 WALK = set(',;".:s_=cuk')
 walk = np.isin(g, list(WALK))
 
-# ---- brightness: walkable ground towards Roa's painted walkable ground
-roa = np.asarray(Image.open(os.path.join(V2, 'assets/env/ash/under/caldera@32.png')).convert('RGB')).astype(np.float32)
-green = lambda a: (a[..., 0] > a[..., 1]) & (a[..., 1] > a[..., 2] + 10) & (lum(a) > 110)    # sand pixels, the same measure on both paintings
+# ---- brightness: grass towards the demo's painted Roa (the night-light tuning then holds); caves / ships / grassless maps use GAIN
+roa = np.asarray(Image.open(os.path.join(V2, 'assets/env/hill_village/under/roa@32.png')).convert('RGB')).astype(np.float32)
+green = lambda a: (a[..., 1] > a[..., 0]) & (a[..., 1] > a[..., 2])
 target = float(os.environ.get('TARGET', lum(roa[green(roa)]).mean()))
-gain = float(np.clip(target / lum(A[kron(walk) & green(A)]).mean(), 0.8, 1.15))
-gain = float(os.environ.get('GAIN', 0.9))   # 灰: 荒野の灰の地面が暗めに沈む値（カルデラの段は町の灯りの下で暗く描いてあるので合わせない）
+gm = kron(walk) & green(A)
+gain = float(np.clip(target / lum(A[gm]).mean(), 0.8, 1.0)) if gm.sum() > 5000 else 0.9
+gain = float(os.environ.get('GAIN', gain))
 A = np.clip(A * gain, 0, 255)
 print('gain', round(gain, 3), 'target', round(target, 1))
 

@@ -201,8 +201,8 @@
 "objects": [
 {
 "type": "stairs",
-"x": 38,
-"y": 18,
+"x": 39,
+"y": 19,
 "to": {
 "map": "ash_volcano_1",
 "spawn": "entrance"
@@ -212,8 +212,8 @@
 },
 {
 "type": "examine",
-"x": 38,
-"y": 18,
+"x": 39,
+"y": 19,
 "event": "ash_rockdoor_world",
 "cond": {
 "not": "ash_champion"
@@ -248,14 +248,14 @@
 {
 "type": "prop",
 "id": "iron_brazier",
-"x": 37,
-"y": 18
+"x": 38,
+"y": 19
 },
 {
 "type": "prop",
 "id": "iron_brazier",
-"x": 39,
-"y": 18
+"x": 40,
+"y": 19
 },
 {
 "type": "prop",
@@ -287,8 +287,8 @@
 "dir": "n"
 },
 "volcano": {
-"x": 38,
-"y": 19,
+"x": 39,
+"y": 20,
 "dir": "s"
 }
 },
@@ -368,5 +368,51 @@
 },
 "painted_extra": [
 "lava_glow"
+],
+"rows_fit": [
+"RRkssssuuuuruuukkkks.ssrsssssuuuuuruuRRRRRRRRRRRRRRRRRRR",
+"RRsssssssuuuuukkkkss..sssssssuuuuuuuRRRRRRRRRRRRRRRRRRRR",
+"RRssssssssssssssssss..ssssuuuuuuuuusRRRRRRRRRRRRRRRRRRRR",
+"RRusssrrssssssssssrs..ssssuuuuuuuuusRRRRRRRRRRRRRRRRRRRR",
+"RRuussrrrsssssssssss..ssssuuuuuuuuuRRRRRRRRRRRRRRRRRRRRR",
+"RRuussrrrsssssssssss..ssssuuuuusrusRRRRRRRRRRRRRRRRRRRRR",
+"RRssssssssssskkksss..sssrsssruussssRRRRRRRRRRRRRRRRRRRRR",
+"RRsssssssrssrkkkkss..ssurrrrrrsssssRRRRRRRRRRRRRRRRRRRRR",
+"RRsssssssrrrrkkkss...surrrrrrrssssssRRRRRRRRRRRRRRRRRRRR",
+"RRsssssssrrrrkksss..sssuuuuuuussssssRRRRRRRRRRRRRRRRRRRR",
+"RRsssssssssssssss...ssuuuuuuuusssssrRRRRRRRRRRRRRRRRRRRR",
+"RRsssrssssssssrrs..sssuuuuuuuussssrsRRRRRRRRRRRRRRRRRRRR",
+"RRsssssrsssssssss..sssuuuuuuuussssssRRRRRRRRRRRRRRRRRRRR",
+"RRssssskssssssss..rrssuuuuuuuussssssRRRRRRRRRRRRRRRRRRRR",
+"RRksskksssssssss..ssssuuuuuuuusssssssRRRRRRRRRRRRRRRRRRR",
+"RRsssrssssssssss..sssssuruuuuusssssssRRRRRRRRRRRRRRRRRRR",
+"RRsssrssssssssss..sssssuuuuuurrssssssRRRRRRRRRRRRRRRRRRR",
+"RRssssssssssssss.sssssuuruuuurrssssssRRRRRRRRRRRRRRRRRRR",
+"RRsssssssssssss..sssssuuruuuurrrsssssXRRRRRRRRRRRRRRRRRR",
+"XXsssssssssssss..sssssuu..............R:RRRRRRRRRRRRRRRR",
+"..sssss...............................cccRRRRRRRRRRRRRRR",
+"........................usuuuuusssuus.cccRRRRRRRRRRRRRRR",
+"........sssssssssss..suuuuuusrrssuuuuuusRRRRRRRRRRRRRRRR",
+"RRsssssssssssssssss..suuuuuusrrusuuuuursRRRRRRRRRRRRRRRR",
+"XXsssssssssssssssss..uuuuuuuurruuuuuuursuRRRRRRRRRRRRRRR",
+"RRsssssssssssssssuu..uuuuuuuuuuuuussusssuuRRRRRRRRRRRRRR",
+"RRssssssssssssssuuu.uuuuuuuuuuuuuusssssuuuuRRRRRRRRRRRRR",
+"RRssssssrrssssssuuu.uuuuuuuuuuuuuussrrsuuuuuRRRRRRRRRRRR",
+"RRssssssrrrsssuuuu..uuuuuuuuuuuuuuusrrruuuuuuRRRRRRRRRRR",
+"RRsssssrrrrssuuuuu..uuuuuuuuusssuuuuuuuuuuuuuuRRRllRRRRR",
+"RRsssssssrssruuuuu..ssssssssrrrruuuuuuuusssuusuulllRRRRR",
+"RRsrsssssssuuuuuu..sssssssssrrrrruuuuuussssssrslllRRRRRR",
+"RRsssssuusuuussss..sssssssssssrruuussuussssrsslllRRRRRRR",
+"RRssuuuuuuuusssrrr.sssssssssssssssssssssssssslllRRRRRRRR",
+"RRssuuuuuuusrrrrr.sssssssssssssssssssssssssslllRRRRRRRRR",
+"RRssusssssssrrrr.sssssssssrrsssssssssssrssllllRRRRRRRRRR",
+"RRsssrrrsssssss..ssssssssrrrsssssssksssrslllRRRRRRRRRRRR",
+"RRssurrrrssssss..sssssssssrrsssssskksssslllRRRRRRRRRRRRR",
+"RRssuurrssrsss..ssssssssssssrsssskskssssllRRRRRRRRRRRRRR",
+"RRssuuuuuurrss..ssssssssssssrssskkkkksslllrRRRRRRRRRRRRR",
+"RRssssuuurrrrs..srsssssssssssssssskkkssllRRRRRRRRRRRRRRR",
+"RRssssuuuurrss..sssssrrsssssksssssskkksllRRRRRRRRRRRRRRR",
+"RRssssssuuuuus..ssssssssssskksssssskkskllRRRRRRRRRRRRRRR",
+"RRssssssuuuuus.ssssssssssssskssssssskkkllRRRRRRRRRRRRRRR"
 ]
 }

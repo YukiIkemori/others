@@ -1,4 +1,4 @@
-"""(ash copy of ../field_desert/tomap.py: v2/src/maps/field_ash_<id without a_>.js, ash legend/theme/bbg, prop set ash) Write the game map file of a FIELD area from <id>/layout.json: v2/src/maps/field_<short>.js (generated; do not edit by hand).
+"""(isles copy of ../field_ash/tomap.py: v2/src/maps/field_isles_<id without i_>.js, isles legend/light, bbg isles, prop set isles) Write the game map file of a FIELD area from <id>/layout.json: v2/src/maps/field_<short>.js (generated; do not edit by hand).
 Rows: layout.json 'rows_fit' (the collision fitted to the painting, fit.py) when present, else 'rows'.
 usage: python3 tomap.py <id> [...]"""
 import json, sys, os
@@ -53,18 +53,18 @@ for aid in sys.argv[1:]:
     if has_over: art['overlay'] = 'field/under/%s_over' % aid
     if os.path.exists(os.path.join(V2, 'assets/env/field/under/%s_closed@32.png' % aid)): art['closed'] = 'field/under/%s_closed' % aid
     if os.path.exists(os.path.join(V2, 'assets/env/field/under/%s_emit@32.png' % aid)): art['emit'] = 'field/under/%s_emit' % aid
-    short = aid[2:] if aid.startswith('a_') else aid
+    short = aid[2:] if aid.startswith('i_') else aid
     edges = ', '.join('%s → %s.%s' % (e.get('edge', '門'), e['to']['map'], e['to']['spawn']) for e in d['exits'])
-    out = f"""// 生成物（design/art_ref/gen/env/_tools/under/field_ash/ の areas_ash.py → fit.py → tomap.py）。手で直さない: 配置は areas_ash.py、当たりは fit.py で作り直す。
-// エリア {aid}「{M['name']}」（{M.get('sub', '')}、{d['w']}×{d['h']}）。エリア切り替えのフィールド（maps/field_00_kit.js、灰の荒野の凡例は field_ash_00_kit.js）。
+    out = f"""// 生成物（design/art_ref/gen/env/_tools/under/field_isles/ の areas_isles.py → fit.py → tomap.py）。手で直さない: 配置は areas_isles.py、当たりは fit.py で作り直す。
+// エリア {aid}「{M['name']}」（{M.get('sub', '')}、{d['w']}×{d['h']}）。エリア切り替えのフィールド（maps/field_00_kit.js、諸島の凡例は field_isles_00_kit.js）。
 //   出口: {edges}
 //   絵: field/under/{aid}（v2/assets/env/field/under/。無ければマスから焼く）
 (function (R) {{
   'use strict';
   R.FieldArea.def({js(aid)}, {{
     name: {js(M['name'])}, region: {js(M['region'])}, outside: {js(M.get('outside', 'rock'))},
-    legend: R.FieldArea.ASH_LEGEND, theme: 'ash', bgm: 'overworld', bbg: 'ash', propSet: 'ash', propSetBase: 'village',
-    light: R.FieldArea.ASH_LIGHT,
+    legend: R.FieldArea.ISLE_LEGEND, theme: 'field', bgm: 'overworld', bbg: 'isles', propSet: 'isles', propSetBase: 'harbor',
+    light: R.FieldArea.ISLE_LIGHT,
     rows: [
 {chr(10).join('      ' + js(r) + ',' for r in rows)}
     ],
@@ -86,6 +86,6 @@ for aid in sys.argv[1:]:
 }})(window.RPG);
 """
     if M.get('bbg'): out = out.replace("    art: ", "    bbg: %s,\n    art: " % js(M['bbg']), 1)
-    p = os.path.join(V2, 'src/maps/field_ash_%s.js' % short)
+    p = os.path.join(V2, 'src/maps/field_isles_%s.js' % short)
     open(p, 'w').write(out)
     print(p, len(out))

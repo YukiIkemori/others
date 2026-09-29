@@ -1,0 +1,171 @@
+{
+"id": "ghost_ship_2",
+"w": 48,
+"h": 28,
+"rows": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXRRRRRRRRRR",
+"RRXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXRRRRRRRRR",
+"RRXXuuuuuuuuXuuuuuuuXuuuuuuuXuuuuuuuXuuXRRRRRRRR",
+"RRXXuuuuuuuuXuuuuuuuXuuuuuuuXuuuuuuuXuuuXRRRRRRR",
+"RRXXuuuuuuuuXuuuuuuuXuuuuuuuXuuuuuuuXuuuuXRRRRRR",
+"RRXXuuuuuuuuXuuuuuuuXuuuuuuuXuuuuuuuXuuuuuXXRRRR",
+"RRXXuuuuuuuuXuuuuuuuXuuuuuuuXuuuuuuuXuuuuuuXXRRR",
+"RRXXuuuuuuuuXuuuuuuuXuuuuuuuXuuuuuuuXuuuuuuuXXRR",
+"RRXXuuuuuuuuXuuuuuuuXuuuuuuuXuuuuuuuXuuuuuuuXXRR",
+"RRXXXXXXuXXXXXXXuXXXXXXXuXXXXXXXuXXXXXXXuuuuXXRR",
+"RRXXuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXXRR",
+"RRXXuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXXRR",
+"RRXXuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXXRR",
+"RRXXuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXXRR",
+"RRXXXXXXuXXXXXXXuXXXXXXXuXXXXXXXuXXXXXXXuuuuXXRR",
+"RRXXuuuuuuuuXuuuuuuuXuuuuuuuXuuuuuuuXuuuuuuuXXRR",
+"RRXXuuuuuuuuXuuuuuuuXuuuuuuuXuuuuuuuXuuuuuuuXXRR",
+"RRXXuuuuuuuuXuuuuuuuXuuuuuuuXuuuuuuuXuuuuuuXXRRR",
+"RRXXuuuuuuuuXuuuuuuuXuuuuuuuXuuuwwwuXuuuuuXXRRRR",
+"RRXXuuuuuuuuXuuuuuuuXuuuuuuuXuuwwwwwXuuuuXRRRRRR",
+"RRXXuuuuuuuuXuuuuuuuXuuuuuuuXuuuwwwuXuuuXRRRRRRR",
+"RRXXuuuuuuuuXuuuuuuuXuuuuuuuXuuuuuuuXuuXRRRRRRRR",
+"RRXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXRRRRRRRRR",
+"RRXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
+],
+"marks": [
+{
+"kind": "hatch",
+"cells": [
+[
+5,
+13
+]
+],
+"text": "a LADDER going up through a square hole in the ceiling",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+},
+{
+"kind": "down",
+"cells": [
+[
+41,
+13
+],
+[
+41,
+14
+]
+],
+"text": "narrow wooden STEPS going down into the dark hold",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 6,
+"y": 13
+},
+{
+"type": "o",
+"x": 40,
+"y": 13
+},
+{
+"type": "o",
+"x": 40,
+"y": 14
+},
+{
+"type": "o",
+"x": 8,
+"y": 6
+},
+{
+"type": "o",
+"x": 16,
+"y": 5
+},
+{
+"type": "o",
+"x": 24,
+"y": 7
+},
+{
+"type": "o",
+"x": 32,
+"y": 5
+},
+{
+"type": "o",
+"x": 8,
+"y": 21
+},
+{
+"type": "o",
+"x": 17,
+"y": 22
+},
+{
+"type": "o",
+"x": 25,
+"y": 21
+},
+{
+"type": "o",
+"x": 31,
+"y": 20
+},
+{
+"type": "o",
+"x": 10,
+"y": 8
+},
+{
+"type": "o",
+"x": 26,
+"y": 9
+},
+{
+"type": "o",
+"x": 18,
+"y": 20
+}
+],
+"spawns": {
+"up": {
+"x": 6,
+"y": 13,
+"dir": "e"
+},
+"down": {
+"x": 40,
+"y": 13,
+"dir": "w"
+}
+},
+"exits": [],
+"notes": [],
+"meta": {
+"name": "幽霊船",
+"region": "r_isles",
+"zones": [],
+"worldRect": [
+0,
+0,
+1,
+1
+],
+"look": "ship"
+}
+}

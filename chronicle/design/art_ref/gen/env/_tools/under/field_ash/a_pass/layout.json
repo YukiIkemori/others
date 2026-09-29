@@ -24,7 +24,7 @@
 ".ssssss...........:.................................",
 "...........................ssssssssssssuuuuuuuuussss",
 ".......ssssssssssssssssss..sssssssssbsssssuuuuXuuuss",
-"ssssssssssssusssssssssssss..ssssssssssTTssuuuuuuuuss",
+"ssssssssssssusssssssssssss..ssssssssssTTTsuuuuuuuuss",
 "sssXsssssssssusussssXXssss..ssssssrsssTTTTsuuuuuuuss",
 "RRRRRRssuuuuuuuussbsssssss..ssssssssssTTTssuuuuuuuus",
 "RRRRRRRsuuuuuuuusssssssssss.sssssXssssssssuuuuuuuuuu",
@@ -197,8 +197,8 @@
 {
 "type": "waylamp",
 "id": "wl_a_pass_2",
-"x": 40,
-"y": 21,
+"x": 35,
+"y": 20,
 "lit": true
 },
 {
@@ -308,5 +308,47 @@
 "key": "world_ash_traveler"
 }
 ]
-}
+},
+"rows_fit": [
+"TTTTTRRRRRRRRRRRRRRRRRRRRRRRRuuuuuuusRRRRRRRRRRRRRRR",
+"TTTTTRRRRRRRRRRRRRRRRRRRRRRRRuuuuuuusRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRuuuuusursRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRsssuuuuuuuusRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRsssssssuuuuuuuusRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRssssssssssuuuuuuuuusRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRsssssssssssrsusruuuuuuussRRRRRRRRRR",
+"RRRRRRRRRRRRRRRsssssssssssssrsuuuuuuuuussssRRRRRRRRR",
+"RRRRRRRRRRRRRRssssssssssssssssuuuuuuuuusssssrssRssss",
+"RRRRRRRRRRRssssssssssssssssssssruruuuuusssssssssssuu",
+"RRRRRRRRRRssssssssrrrrrsssssrsrrrruuuuussssssrssssss",
+"RRRRRRRRRRsssssssrrrrrrsssssssrrruuuuuuusssssssrrsss",
+"RRRRRRRRRssssssssrrrrrrsssssssssuuurrrrurrssssrrrsss",
+"RRRRRRRRsssssssssssrrrsssssssssssuuXXXrusuusssssssss",
+"RRRRRRRssssssssrssssssssssssssssssuXrXruuuuussssssss",
+"RRRssssssssssskrrrrrrssssssssssssssssssuuuuussssssss",
+"ssssssssssssssskr::rssssssssssss....ssssuuuuuuusssss",
+"ssssssssssssss...s:ssssssss.........................",
+".ssssss...........:.................................",
+"...........................ssssssssssrsuuuuuuurrssss",
+".......ssssssssssssssssss..sssssssssbssrssuuuuruuuss",
+"sssrrsssssssusssssssrrrsss..ssssssrssssrrruuuuuuuuss",
+"rrrrsssssssssusussrrsrrsss..sssssssssssrrssuuuuuuuss",
+"RRRRRRssuuuuuuuussssssssss..sssssrrssssssssuuuuuuuus",
+"RRRRRRRsuuuuuuuusssssssssss.sssssrssssssssuuuuuuuuur",
+"RRRRRRRRuuuuuuussssssssssss.sssssssrrsssssuuuuuuuuus",
+"RRRRRRRRRsuuuuussssssssssss.sssssssssssssuuusrruuuuu",
+"RRRRRRRRRRuuuuusssssssssss..sssssssssssssrrrrrruuuuu",
+"RRRRRRRRRuuuuuussssssssrss..ssssssssssrssrrrrrrruuuu",
+"RRRRRRRRRuuuuuusrsssssssss.sssssssrrssssurrrrrrruuuu",
+"RRRRRRRRRuuuuuusrrsssssss..ssssssssssssuussrrrrsuuuu",
+"RRRRRRRRRuuuuuussssssssss..ssssssssssuuuuuussrsuuuus",
+"RRRRRRRRRuuuuuussssssssss.ssssrrrurrruuuuuuuusuuusss",
+"RRRRRRRRRuuuuuusssssrssss.ssssrrrsrrrruuuuuuuuurrsss",
+"RRRRRRRRRuuuuuussssssssss.ssssssurrrrruuuuuuuuurrrss",
+"RRRRRRRRRuuuuussssssssss..sssssssssssuuuuuuuuurrrrss",
+"RRRRRRRRRRuuuussssssssss..ssssssssuussuuuuuuuussssss",
+"RRRRRRRRRRRuuusssssssssss.ssssrsssussssuuuuuuusrrsss",
+"RRRRRRRRRRRuussssssssssss.ssssssssssssssssuuuuusssss",
+"RRRRRRRRRRRRussssssssssss.sssssssssssssssssuuuuuuuus"
+]
 }

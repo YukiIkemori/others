@@ -1,0 +1,254 @@
+{
+"id": "ghost_ship_1",
+"w": 56,
+"h": 30,
+"rows": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~~~~~~~~~~~~~~~~",
+"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXXX~~~~~~~~~~~~~",
+"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXX~~~~~~~~~~~",
+"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXX~~~~~~~~~",
+"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~~~",
+"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~~",
+"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~",
+"~~~~~~XuuuXXuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~",
+"~~~~~~XuuuXXuuuuuuXXuuuuuuuuuuXXuuuuuuuuuXXuuuuuuX~~~~~~",
+"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~",
+"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~~",
+"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~~~",
+"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXX~~~~~~~~~",
+"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXX~~~~~~~~~~~",
+"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXXX~~~~~~~~~~~~~",
+"~~~~~~XXXXXXXXXXXXXXXXXXXXXX==XXXXXXXXXX~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+],
+"marks": [
+{
+"kind": "mast18",
+"cells": [
+[
+18,
+15
+],
+[
+19,
+15
+]
+],
+"text": "the stump of a broken MAST wrapped in rotten rigging and torn grey sails",
+"color": [
+70,
+50,
+38
+],
+"solid": true
+},
+{
+"kind": "mast30",
+"cells": [
+[
+30,
+15
+],
+[
+31,
+15
+]
+],
+"text": "the stump of a broken MAST wrapped in rotten rigging and torn grey sails",
+"color": [
+70,
+50,
+38
+],
+"solid": true
+},
+{
+"kind": "mast41",
+"cells": [
+[
+41,
+15
+],
+[
+42,
+15
+]
+],
+"text": "the stump of a broken MAST wrapped in rotten rigging and torn grey sails",
+"color": [
+70,
+50,
+38
+],
+"solid": true
+},
+{
+"kind": "skylight",
+"cells": [
+[
+10,
+14
+],
+[
+11,
+14
+],
+[
+10,
+15
+],
+[
+11,
+15
+]
+],
+"text": "the captain's cabin SKYLIGHT of cracked glass panes in a wooden frame on the stern deck",
+"color": [
+90,
+110,
+120
+],
+"solid": true
+},
+{
+"kind": "hatch",
+"cells": [
+[
+24,
+11
+],
+[
+25,
+11
+]
+],
+"text": "an open square HATCH in the deck with a ladder going down into darkness",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+},
+{
+"kind": "plank",
+"cells": [
+[
+28,
+22
+],
+[
+28,
+23
+],
+[
+28,
+24
+],
+[
+28,
+25
+],
+[
+29,
+22
+],
+[
+29,
+23
+],
+[
+29,
+24
+],
+[
+29,
+25
+]
+],
+"text": "a wide wooden GANGPLANK laid from the rail across the gap to a boat below (walkable)",
+"color": [
+150,
+104,
+60
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 28,
+"y": 21
+},
+{
+"type": "o",
+"x": 24,
+"y": 12
+},
+{
+"type": "o",
+"x": 25,
+"y": 12
+},
+{
+"type": "o",
+"x": 36,
+"y": 18
+},
+{
+"type": "o",
+"x": 14,
+"y": 11
+},
+{
+"type": "o",
+"x": 46,
+"y": 15
+},
+{
+"type": "o",
+"x": 20,
+"y": 19
+}
+],
+"spawns": {
+"board": {
+"x": 28,
+"y": 21,
+"dir": "n"
+},
+"up": {
+"x": 24,
+"y": 12,
+"dir": "s"
+}
+},
+"exits": [],
+"notes": [],
+"meta": {
+"name": "幽霊船",
+"region": "r_isles",
+"zones": [],
+"worldRect": [
+0,
+0,
+1,
+1
+],
+"look": "ship"
+}
+}
