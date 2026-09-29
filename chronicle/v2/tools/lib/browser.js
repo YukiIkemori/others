@@ -49,6 +49,8 @@ async function open(S, page, o) {
   });
   await p.goto(S.base + page);
   await p.waitForFunction('window.RPG && RPG.Engine && RPG.Engine.running && RPG.Engine.top()', null, { timeout: o.timeout || +process.env.V2_OPEN_TIMEOUT || 60000 });   // 負荷の高い時でも開けるように長め
+  // 遊ぶ版（index.html）はタイトルを先に出し、原画・素材は裏で読む（main.js の R.bootReady）。今までどおり読み終えてから返す
+  await p.evaluate('Promise.resolve(window.RPG && RPG.bootReady).then(() => 1)');
   await p.waitForTimeout(300);
   return { ctx, page: p, errors, close: () => ctx.close() };
 }
