@@ -233,6 +233,46 @@
    "note": "Currency suffix stays 'G' in all languages."
   },
   {
+   "id": "core.trial_of_flame",
+   "category": "core",
+   "ja": "炎の試練",
+   "en": "Trial of Flame",
+   "zh-Hans": "火焰试炼",
+   "zh-Hant": "火焰試煉",
+   "ko": "불꽃의 시련",
+   "note": "Caldera arena tournament."
+  },
+  {
+   "id": "core.firebird",
+   "category": "core",
+   "ja": "火の鳥",
+   "en": "firebird",
+   "zh-Hans": "火鸟",
+   "zh-Hant": "火鳥",
+   "ko": "불새",
+   "note": "Lowercase in running text."
+  },
+  {
+   "id": "core.recorder",
+   "category": "core",
+   "ja": "記録官",
+   "en": "Recorder",
+   "zh-Hans": "记录官",
+   "zh-Hant": "記錄官",
+   "ko": "기록관",
+   "note": "Archive rank. 書記 = Scribe, 司書長 = Head Librarian."
+  },
+  {
+   "id": "core.salve",
+   "category": "core",
+   "ja": "傷薬",
+   "en": "Salve",
+   "zh-Hans": "伤药",
+   "zh-Hant": "傷藥",
+   "ko": "상처약",
+   "note": "Basic healing item. 癒やしの水 = Healing Water."
+  },
+  {
    "id": "stats.str",
    "category": "stats",
    "ja": "腕力",
@@ -958,6 +998,72 @@
    "ko": "백룡의 봉우리"
   },
   {
+   "id": "places.elseria",
+   "category": "places",
+   "ja": "エルセリア",
+   "en": "Elseria",
+   "zh-Hans": "艾尔瑟莉亚",
+   "zh-Hant": "艾爾瑟莉亞",
+   "ko": "엘세리아",
+   "note": "The continent (world map name)."
+  },
+  {
+   "id": "places.sunken_bell",
+   "category": "places",
+   "ja": "鐘沈みの沼",
+   "en": "Sunken Bell Marsh",
+   "zh-Hans": "沉钟沼泽",
+   "zh-Hant": "沉鐘沼澤",
+   "ko": "종이 가라앉은 늪"
+  },
+  {
+   "id": "places.tidewatch",
+   "category": "places",
+   "ja": "潮見橋",
+   "en": "Tidewatch Bridge",
+   "zh-Hans": "观潮桥",
+   "zh-Hant": "觀潮橋",
+   "ko": "조견교"
+  },
+  {
+   "id": "places.sandedge",
+   "category": "places",
+   "ja": "砂の縁",
+   "en": "Sandedge",
+   "zh-Hans": "沙之缘",
+   "zh-Hant": "沙之緣",
+   "ko": "모래 끝",
+   "note": "Waystation (宿場)."
+  },
+  {
+   "id": "places.pass_inn",
+   "category": "places",
+   "ja": "峠の宿",
+   "en": "Pass Inn",
+   "zh-Hans": "山口旅店",
+   "zh-Hant": "山口旅店",
+   "ko": "고개 여관"
+  },
+  {
+   "id": "places.great_archive",
+   "category": "places",
+   "ja": "大書庫",
+   "en": "Great Archive",
+   "zh-Hans": "大书库",
+   "zh-Hant": "大書庫",
+   "ko": "대서고"
+  },
+  {
+   "id": "places.sand_hawks",
+   "category": "places",
+   "ja": "砂の鷹団",
+   "en": "Sand Hawks",
+   "zh-Hans": "沙鹰团",
+   "zh-Hant": "沙鷹團",
+   "ko": "모래매단",
+   "note": "Bandit group; short: 鷹団 = the Hawks."
+  },
+  {
    "id": "people.arun",
    "category": "people",
    "ja": "アルン",
@@ -1157,6 +1263,186 @@
    "zh-Hans": "诺艾拉",
    "zh-Hant": "諾艾拉",
    "ko": "노엘라"
+  },
+  {
+   "id": "people.otto",
+   "category": "people",
+   "ja": "オットー",
+   "en": "Otto",
+   "zh-Hans": "奥托",
+   "zh-Hant": "奧托",
+   "ko": "오토",
+   "note": "Lighthouse keeper of Pharos."
+  },
+  {
+   "id": "people.fine",
+   "category": "people",
+   "ja": "フィーネ",
+   "en": "Fine",
+   "zh-Hans": "菲涅",
+   "zh-Hant": "菲涅",
+   "ko": "피네",
+   "note": "Girl in a Gray Cloak (灰色のマントの少女). EN keeps 'Fine' (two syllables: FEE-neh)."
+  },
+  {
+   "id": "people.elm",
+   "category": "people",
+   "ja": "エルム",
+   "en": "Elm",
+   "zh-Hans": "艾尔姆",
+   "zh-Hant": "艾爾姆",
+   "ko": "엘름",
+   "note": "Lord of the Forest (森の主)."
+  },
+  {
+   "id": "people.rowell",
+   "category": "people",
+   "ja": "ロウェル",
+   "en": "Rowell",
+   "zh-Hans": "罗威尔",
+   "zh-Hant": "羅威爾",
+   "ko": "로웰",
+   "note": "Young recorder of the Archive (記録官 = Recorder)."
+  },
+  {
+   "id": "people.lazaro",
+   "category": "people",
+   "ja": "ラザロ",
+   "en": "Lazaro",
+   "zh-Hans": "拉扎罗",
+   "zh-Hant": "拉撒羅",
+   "ko": "라자로",
+   "note": "Grand Scribe (大書記)."
+  },
+  {
+   "id": "people.nemrea",
+   "category": "people",
+   "ja": "ネムレア",
+   "en": "Nemrea",
+   "zh-Hans": "涅姆蕾亚",
+   "zh-Hant": "涅姆蕾亞",
+   "ko": "넴레아",
+   "note": "Final boss; 虚ろの王 = the Hollow King."
+  },
+  {
+   "id": "people.neve",
+   "category": "people",
+   "ja": "ネーヴェ",
+   "en": "Neve",
+   "zh-Hans": "涅维",
+   "zh-Hant": "涅維",
+   "ko": "네베",
+   "note": "白竜ネーヴェ = Neve the White Dragon."
+  },
+  {
+   "id": "people.hazar",
+   "category": "people",
+   "ja": "ハザル",
+   "en": "Hazar",
+   "zh-Hans": "哈扎尔",
+   "zh-Hant": "哈札爾",
+   "ko": "하자르",
+   "note": "The Nameless Sand King (名なき砂の王)."
+  },
+  {
+   "id": "people.rashid",
+   "category": "people",
+   "ja": "ラシード",
+   "en": "Rashid",
+   "zh-Hans": "拉希德",
+   "zh-Hant": "拉希德",
+   "ko": "라시드",
+   "note": "Leader of the Sand Hawks (砂の鷹団)."
+  },
+  {
+   "id": "people.zaid",
+   "category": "people",
+   "ja": "ザイード",
+   "en": "Zaid",
+   "zh-Hans": "扎伊德",
+   "zh-Hant": "札伊德",
+   "ko": "자이드",
+   "note": "Caravan master."
+  },
+  {
+   "id": "people.melda",
+   "category": "people",
+   "ja": "メルダ",
+   "en": "Melda",
+   "zh-Hans": "梅尔达",
+   "zh-Hant": "梅爾達",
+   "ko": "멜다",
+   "note": "Witch of Mist Manor."
+  },
+  {
+   "id": "people.klaus",
+   "category": "people",
+   "ja": "クラウス",
+   "en": "Klaus",
+   "zh-Hans": "克劳斯",
+   "zh-Hant": "克勞斯",
+   "ko": "클라우스",
+   "note": "Archive recorder in Loch."
+  },
+  {
+   "id": "people.glen",
+   "category": "people",
+   "ja": "グレン",
+   "en": "Glen",
+   "zh-Hans": "格伦",
+   "zh-Hant": "格倫",
+   "ko": "글렌",
+   "note": "亡霊船長グレン = Glen the Ghost Captain."
+  },
+  {
+   "id": "people.zakuro",
+   "category": "people",
+   "ja": "ザクロ",
+   "en": "Zakuro",
+   "zh-Hans": "石榴",
+   "zh-Hant": "石榴",
+   "ko": "자쿠로",
+   "note": "Japanese-style name: zh uses the kanji 石榴."
+  },
+  {
+   "id": "people.kaya",
+   "category": "people",
+   "ja": "カヤ",
+   "en": "Kaya",
+   "zh-Hans": "卡娅",
+   "zh-Hant": "卡婭",
+   "ko": "카야",
+   "note": "Fire priestess (火の巫女)."
+  },
+  {
+   "id": "people.dorga",
+   "category": "people",
+   "ja": "ドルガ",
+   "en": "Dorga",
+   "zh-Hans": "多尔加",
+   "zh-Hant": "多爾加",
+   "ko": "도르가",
+   "note": "Clan chieftain of Caldera."
+  },
+  {
+   "id": "people.jorn",
+   "category": "people",
+   "ja": "ヨルン",
+   "en": "Jorn",
+   "zh-Hans": "约恩",
+   "zh-Hant": "約恩",
+   "ko": "요른",
+   "note": "Chief of Yule."
+  },
+  {
+   "id": "people.sonja",
+   "category": "people",
+   "ja": "ソーニャ",
+   "en": "Sonja",
+   "zh-Hans": "索尼娅",
+   "zh-Hant": "索妮婭",
+   "ko": "소냐",
+   "note": "Firekeeper's daughter."
   }
  ]
 }

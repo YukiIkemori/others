@@ -617,7 +617,11 @@
           // ラテン字の言語は題名そのものを飾りの書体（Cinzel）で。上の小さな英字の行は重なるので出さない
           const latin = R.I18n && R.I18n.isLatin();
           if (!latin) R.UIK.text(g, 'LUMINOUS CHRONICLE', x + u(4), y, { size: u(19), family: 'en', weight: 700, color: C.gold, track: u(7), shadow: true });
-          R.UIK.text(g, latin ? R.TITLE.toUpperCase() : R.TITLE, x, y + u(latin ? 22 : 30), { size: u(latin ? 44 : 48), family: latin ? 'en' : undefined, weight: 700, grad: [C.goldHi, C.gold, C.goldLo], shadow: 'rgba(10,8,20,0.8)', blur: 8, track: u(4) });
+          // ラテン字の題名は長いので、主人公の絵（右）にかからない幅（画面の半分）まで字を小さくする
+          const tt = latin ? R.TITLE.toUpperCase() : R.TITLE;
+          let ts = latin ? 44 : 48;
+          while (latin && ts > 30 && R.UIK.measure(tt, { size: u(ts), family: 'en', weight: 700 }) + u(4) * tt.length > R.W * 0.5) ts -= 1;
+          R.UIK.text(g, tt, x, y + u(latin ? 22 + (44 - ts) * 0.5 : 30), { size: u(ts), family: latin ? 'en' : undefined, weight: 700, grad: [C.goldHi, C.gold, C.goldLo], shadow: 'rgba(10,8,20,0.8)', blur: 8, track: u(4) });
           R.UIK.hline(g, x, x + u(420), y + u(96), 0.45, '236,201,124');
           R.UIK.text(g, R.T('ui.title.draw.text'), x + u(2), y + u(112), { size: u(20), weight: 700, color: C.gold, track: u(10), shadow: true });
         }

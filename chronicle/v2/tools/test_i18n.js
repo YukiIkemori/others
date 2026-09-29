@@ -76,6 +76,9 @@ section('折り返し: 英語は語で、日本語は今までどおり字で');
   const long = R.UIK.wrap('Supercalifragilisticexpialidociousness', 16 * 10, { size: 16 });
   ok('en: a word longer than the line is cut by characters', long.length > 1 && long.join('') === 'Supercalifragilisticexpialidociousness', long);
   ok('en: newlines are kept', R.UIK.wrap('One.\nTwo.', w, { size: 16 }).length === 2);
+  // 表の改行（日本語の行の区切り）をほどく: 英語は空白、日本語はつなぐだけ（説明の欄の「30 HPto」を防ぐ）
+  ok('unwrap (en): newline becomes a space', R.I18n.unwrap('Restores 30 HP\nto one ally.') === 'Restores 30 HP to one ally.');
+  ok('unwrap (ja): newline is removed', R.I18n.unwrap('味方1人のHPを\n30回復する。', 'ja') === '味方1人のHPを30回復する。');
 }
 
 section('表と監査（tools/i18n_audit.js）');

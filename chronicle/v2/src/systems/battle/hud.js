@@ -280,7 +280,10 @@
     K.diamond(g, x + 14 * k, y + 14 * k, 8 * k, null, h.tint || 'rgba(236,230,214,0.55)', 0.75);
     const x2 = x + Math.min(360, R.W * 0.4) * k;
     K.hline(g, x + 30 * k, x2, y + 13 * k + 14 * k, 0.55);
-    K.text(g, K.fit(h.name, x2 - x - 40 * k, { size: 17 * k, weight: 700 }), x + 38 * k, y + 2 * k, { size: 17 * k, weight: 700, raw: true, shadow: true, color: h.color || COL.text });
+    // 長い見出し（英語の「A, B, C appeared!」など）は字を 13 まで小さくしてから切る
+    let hs = 17;
+    while (hs > 13 && R.UIK.measure(h.name, { size: hs * k, weight: 700 }) > x2 - x - 40 * k) hs -= 1;
+    K.text(g, K.fit(h.name, x2 - x - 40 * k, { size: hs * k, weight: 700 }), x + 38 * k, y + 2 * k + (17 - hs) * k * 0.5, { size: hs * k, weight: 700, raw: true, shadow: true, color: h.color || COL.text });
     if (h.sub) K.text(g, K.fit(h.sub, st.L.tall ? R.W - x - 50 * k : R.W - x - 330 * k, { size: 12 * k }), x + 38 * k, y + 32 * k, { size: 12 * k, color: COL.text2, raw: true, shadow: true });
     g.restore();
   };
