@@ -62,4 +62,35 @@ cut('title_screen', 33.9, 3.3, src=1.82, freeze=True, zoom=(1.0, 1.05), center=(
 SFX.append(dict(id='light', at=31.25, gain=-3))
 SFX.append(dict(id='glimmer', at=34.2, gain=-10))
 
-DURATION = 37.2
+
+# ================================================================== 4 探索（overworld の小節ごとに切る）
+T0_OW = 37.2
+EXP = [  # (カット, src, 明るさ)
+    ('ex_windhill', 0.3, 1.18), ('ex_cape', 0.6, 1.2), ('ex_pharos_run', 0.4, 1.05), ('ex_fern', 0.4, 1.0),
+    ('ex_verda_stone', 0.2, 1.15), ('ex_verda_dark', 0.6, 1.3), ('ex_elder', 0.0, 1.1), ('ex_elder2', 0.2, 1.1),
+    ('ex_lh2', 0.3, 1.05), ('ex_world', 0.3, 1.15),
+]
+for i, (c, src, br) in enumerate(EXP):
+    at = T0_OW + i * BAR_OW
+    dur = BAR_OW if c != 'ex_elder' else BAR_OW * 0.75   # 千年樹の入口は会話が出る前まで
+    cut(c, at, dur, src=src, zoom=(1.0, 1.07) if i % 2 == 0 else (1.07, 1.0), grade=dict(bright=br))
+    if c == 'ex_elder':
+        cut('ex_well', at + dur, BAR_OW - dur, src=0.1, grade=dict(bright=1.1))
+cap('FIELD', '一枚絵のフィールド', T0_OW + 0.3, T0_OW + 2 * BAR_OW - 0.15)
+cap('TOWN', '夜の街並み', T0_OW + 2 * BAR_OW + 0.15, T0_OW + 4 * BAR_OW - 0.15)
+cap('DUNGEON', 'ダンジョン探索', T0_OW + 4 * BAR_OW + 0.15, T0_OW + 9 * BAR_OW - 0.15)
+T_TAV = T0_OW + 10 * BAR_OW
+
+# ================================================================== 5 仲間（潮風亭の 20 人）
+cut('tavern', T_TAV, 8.8, src=0.3, zoom=(1.0, 1.04), center=(0.3, 0.4))
+cap('COMPANIONS', '20人から、自分だけの仲間を。', T_TAV + 0.3, T_TAV + 4.3)
+cap('VOICE', 'ボイス対応', T_TAV + 4.5, T_TAV + 8.6)
+VOICE.append(dict(file='b_selma_bigtech_1', at=T_TAV + 0.8))
+sub('セルマ「この剣、曲げはしない！」', T_TAV + 0.8, T_TAV + 3.0, y=80)
+VOICE.append(dict(file='b_titta_bigtech_2', at=T_TAV + 3.6))
+sub('ティッタ「ちょろいちょろい！」', T_TAV + 3.6, T_TAV + 5.4, y=80)
+VOICE.append(dict(file='b_viola_bigtech_1', at=T_TAV + 5.9))
+sub('ヴィオラ「炎よ、風よ、舞いなさい！」', T_TAV + 5.9, T_TAV + 8.6, y=80)
+T_ENC = T_TAV + 8.8
+
+DURATION = T_ENC

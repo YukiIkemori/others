@@ -125,10 +125,18 @@
     if (R.loadErrors.length) console.error('LOAD ERRORS:\n' + R.loadErrors.join('\n'));
     if (early) {
       Flow.title();   // タイトルの絵の読み込みを先に頼む（下の先読みより前に並ぶ）
-      Flow._bootStat = R.Media && R.Media.stat ? { req: R.Media.stat.req, done: R.Media.stat.done } : null;
-      // 裏では並べて読む（原画・素材・魔物の読み込みと解きが重なる。1 つずつ待つより早く揃う）
-      R.bootReady = Promise.all(R._bootHooks.map((fn) => Promise.resolve().then(fn).catch((e) => console.error('boot hook failed', e)))).then(() => undefined);
+      // 裏では並べて読む（原画・素材・魔物の読み込みと解きが重なる。1 つずつ待つより早く揃う）。
+      // 始めるのはタイトルの一枚絵が読めてから（最長 3 秒）: 先に始めると絵の読み込みと解きが遅れ、暗いままの待ちが延びる
+      let go = null;
+      R.bootReady = new Promise((res) => { go = res; }).then(() => {
+        Flow._bootStat = R.Media && R.Media.stat ? { req: R.Media.stat.req, done: R.Media.stat.done } : null;
+        return Promise.all(R._bootHooks.map((fn) => Promise.resolve().then(fn).catch((e) => console.error('boot hook failed', e))));
+      }).then(() => undefined);
       R.bootReady.then(() => R.emit('booted'));
+      const f0 = R.Engine.frame, t0 = Date.now();
+      const titleArt = () => { const t = R.Engine.top(), v = t && t.view; return !v || v.id !== 'title' || (R.Engine.frame > f0 + 1 && !v.artWait); };
+      const poll = () => { if (titleArt() || Date.now() - t0 > 3000) go(); else setTimeout(poll, 50); };
+      poll();
       return;
     }
     R.emit('booted');

@@ -147,7 +147,7 @@ const SHOTS = {
         `PV.teach('hero', ['t_sword_twin']); RPG.Game.chars.hero.techUse = {t_sword_twin: 40}; const dr = RPG.Glimmer.deriveRoll; RPG.Glimmer.deriveRoll = (c, used, ctx) => dr(c, used, Object.assign({}, ctx, {force: c && c.id === 'hero'}))`));
       await T.idle(30);
     },
-    n: sec(14),
+    n: sec(28),
   },
   bt_spell: {
     prep: async (T) => {
@@ -161,10 +161,10 @@ const SHOTS = {
     prep: async (T) => {
       await T.js(BATTLE({ troop: 'tr_a21_forest_wolves', boss: true, seed: 'pv-boss' },
         `(st, u, r) => u.id === 'hero' ? {cmd: 'skill', id: 't_sword_twin'} : u.id === 'viola' ? {cmd: 'spell', id: 's_fire_wind_b'} : null`,
-        `PV.teach('hero', ['t_sword_twin']); PV.teach('viola', null, ['s_fire_wind_b']); for (const id of ['hero','selma','viola','titta']) { const c = RPG.Game.chars[id]; c.gl = 40; } RPG.Party.restoreAll()`));
+        `PV.teach('hero', ['t_sword_twin']); PV.teach('viola', null, ['s_fire_wind_b']); PV.boost(1); RPG.Engine.addTick(() => { if (PV.round >= 3) PV.dmgMul = 60; })`));
       await T.idle(10);
     },
-    n: sec(40),
+    n: sec(60),
   },
   bt_speed: {
     prep: async (T) => { await T.js(BATTLE({ zone: 'z_verda', bg: 'forest', seed: 'pv-speed' }, null)); await T.idle(200); },
@@ -180,8 +180,26 @@ const SHOTS = {
     prep: async (T) => { await T.js(BATTLE({ zone: 'z_verda', bg: 'forest', seed: 'pv-steal' }, `(st, u, r) => u.id === 'titta' ? {cmd: 'skill', id: 't_dagger_filch'} : {cmd: 'defend', id: 'defend', self: true}`, `PV.teach('titta', ['t_dagger_filch'])`)); await T.idle(30); },
     n: sec(12),
   },
-  ex_shop: { url: 'dev.html?scene=menus_shop', prep: async (T) => { await T.js(`PV.cleanMsg()`); await T.idle(60); }, n: sec(6), each: at({ 30: `PV.tap('down', 3)`, 60: `PV.tap('a', 3)`, 100: `PV.tap('right', 3)`, 120: `PV.tap('right', 3)`, 140: `PV.tap('up', 3)`, 160: `PV.tap('up', 3)`, 180: `PV.tap('up', 3)` }) },
-  ex_bestiary: { url: 'dev.html?scene=menus_bestiary', prep: async (T) => { await T.idle(60); }, n: sec(5), each: at({ 60: `PV.tap('down', 3)`, 120: `PV.tap('down', 3)`, 180: `PV.tap('down', 3)` }) },
+  ex_shop: {
+    prep: async (T) => {
+      await T.js(`PV.clean(); PV.noEnc(); PV.state(${FOREST({ gold: 3000, map: { id: 'pharos', spawn: 'warp' } })}); PV.enter('pharos', 'warp')`);
+      await T.idle(90); await T.settle();
+      await T.js(`RPG.Screens.open('shop', {id: 'shop_pharos_items'})`); await T.idle(40);
+    },
+    n: sec(6), each: at({ 30: `PV.tap('a', 3)`, 80: `PV.tap('right', 3)`, 105: `PV.tap('right', 3)`, 130: `PV.tap('up', 3)`, 160: `PV.tap('right', 3)`, 185: `PV.tap('right', 3)` }),
+  },
+  // 図鑑: 体験版の範囲で出会う魔物を「見た」にしてから開く（空の図鑑を撮らない）
+  ex_bestiary: {
+    prep: async (T) => {
+      await T.js(`PV.clean(); PV.noEnc(); PV.state(${FOREST({ map: { id: 'fern', spawn: 'plaza' } })}); PV.enter('fern', 'plaza')`);
+      await T.idle(90); await T.settle();
+      await T.js(`(() => { const G = RPG.Game; G.book = G.book || {}; G.book.mon = G.book.mon || {}; const E = RPG.DB.encounters || RPG.DB.zones || {};
+        for (const z of ['zw_peninsula', 'z_lighthouse', 'zw_forest_road', 'z_verda', 'z_elder', 'z_well']) for (const g of ((E[z] || {}).groups || [])) for (const m of g.mons) G.book.mon[m[0]] = Object.assign({seen: true, kills: 3}, G.book.mon[m[0]] || {});
+        return RPG.Screens.open('bestiary'); })()`);
+      await T.idle(40);
+    },
+    n: sec(5), each: at({ 50: `PV.tap('down', 3)`, 110: `PV.tap('down', 3)`, 170: `PV.tap('down', 3)`, 230: `PV.tap('down', 3)` }),
+  },
   // ---------------------------------------------------------------- 5 仲間
   tavern: { url: 'dev.html?scene=menus_tavern', prep: async (T) => { await T.idle(60); }, n: sec(9), each: (i) => (i >= 30 && i % 24 === 0 && i < 500 ? `PV.tap('${['right', 'right', 'down', 'left', 'left', 'down', 'right', 'right', 'down', 'left', 'left', 'down', 'right', 'right', 'down', 'left', 'left', 'down', 'right', 'right'][(i - 30) / 24 | 0] || 'right'}', 3)` : null) },
 

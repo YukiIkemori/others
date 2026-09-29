@@ -173,13 +173,29 @@ async function main() {
   await p.waitForFunction('window.RPG && RPG.Engine && RPG.Engine.running && RPG.Engine.top()', null, { timeout: +process.env.V2_OPEN_TIMEOUT || 15000 });
   await p.waitForTimeout(300);
   ok('title offers つづきから first after reload', await ev(p, "(() => { const r = RPG.Engine.top().list.rows; return r[0].value==='continue' && !r[0].disabled; })()"));
-  // 遊ぶ版はタイトルを先に出し、原画・素材はその裏で読む（main.js の R.bootReady）。つづきからはその読み終わりを待つので、ここでも待つ
-  await p.evaluate('Promise.resolve(RPG.bootReady).then(() => 1)');
-  ok('つづきから → field at the saved place', await pressUntil(p, 'a', FREE, 6));
+  // 遊ぶ版はタイトルを先に出し、原画・素材はその裏で読む（main.js の R.bootReady）。押した つづきから は読み終わりを待ってから進む（押し直さない）
+  await pressUntil(p, 'a', `${top}!=='screen:title' || RPG.Engine.top().view.closing`, 6);
+  ok('つづきから → field at the saved place', await waitFor(p, FREE, 90000));
   const pos2 = await ev(p, 'RPG.Field.pos');
   ok('resumed at the same tile', pos2.x === pos.x && pos2.y === pos.y && pos2.map === pos.map, { pos, pos2 });
   ok('0 console errors (after reload)', A.errors.length === 0, A.errors);
   await A.ctx.close();
+
+  // ------------------------------------------------ タイトルが出てすぐ（原画・素材の先読みの途中）の押下を捨てない（2026-09-29）
+  {
+    const Q = await open(browser, base + 'index.html', { viewport: { width: 1920, height: 1080 } });
+    const q = Q.page;
+    ok('title is up before the boot assets are loaded', (await ev(q, top)) === 'screen:title', { ready: await ev(q, '!!RPG.Flow._ready') });
+    // 1 回目の A: 出てくる順（絵の待ちの間も）をとばして一覧を出す
+    await press(q, 'a');
+    ok('A during the title intro / art wait is not lost (menu comes up)', await waitFor(q, "(() => { const v = RPG.Engine.top() && RPG.Engine.top().view; return !!v && !v.artWait && (v.skipped || v.introT() >= 3000); })()", 15000));
+    const notReady = !(await ev(q, '!!RPG.Flow._ready'));
+    // 2 回目の A: はじめから。読み込みの途中でも捨てずに、読み終えたら始まる（右下に読み込みの小さな進み）
+    await press(q, 'a');
+    ok('one A on はじめから (boot assets still loading) reaches the field', await waitFor(q, "RPG.Engine.has('field')", 90000), { pressedBeforeReady: notReady });
+    ok('0 console errors (early press run)', Q.errors.length === 0, Q.errors);
+    await Q.ctx.close();
+  }
 
   // ------------------------------------------------ スマホ縦（390×844、DPR 3、タッチ）
   const B = await open(browser, base + 'index.html', { viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });

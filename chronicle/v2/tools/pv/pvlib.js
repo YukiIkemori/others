@@ -60,6 +60,17 @@ module.exports = `(() => {
       };
       return true;
     },
+    /** 敵に入るダメージを n 倍にする（戦闘を台本の長さで終わらせる用。テスト用メニューの差し込み口を使うが、切り替えは入れないので「TEST」の札は出ない） */
+    dmgMul: 1,
+    boost(n) {
+      const Tt = R.Tester;
+      if (!Tt) return false;
+      Tt.enabled = true;
+      Tt.hitFix = (tgt, r) => r;
+      Tt.dmgFix = (tgt, dmg) => (tgt && !tgt.isParty && PV.dmgMul !== 1 ? Math.round(dmg * PV.dmgMul) : dmg);
+      PV.dmgMul = n;
+      return true;
+    },
     /** 仲間に技・術を足す（台本用） */
     teach(id, techs, spells) { const c = R.Game.chars[id]; if (techs) c.techs = Array.from(new Set((c.techs || []).concat(techs))); if (spells) c.spells = Array.from(new Set((c.spells || []).concat(spells))); return true; },
     lastLine() { const L = R.UIK.Message.log(); return L.length ? L[L.length - 1].text : ''; },

@@ -553,8 +553,11 @@
     },
     update() {
       if (this.busy) return;
-      if (this.artWait) return;   // 絵を読んでいる間は暗いまま（下の draw）
       const I = R.Input;
+      if (this.artWait) {   // 絵を読んでいる間は暗いまま（下の draw）。押したら出てくる順をとばす（押した分を捨てない）
+        if (this.intro && ((I.BTN || []).some((b) => I.pressed(b)) || (I.pointer && I.pointer.pressed))) this.skipped = true;
+        return;
+      }
       if (this.intro && !this.skipped && R.Engine.time - this.t0 < INTRO.input) {
         // どのキーでも残りをとばしてすぐ操作できるように
         const any = (I.BTN || []).some((b) => I.pressed(b)) || (I.pointer && I.pointer.pressed);
