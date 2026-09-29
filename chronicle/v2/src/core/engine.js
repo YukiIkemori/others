@@ -21,6 +21,23 @@
 
   const perf = { n: 0, i: 0, ms: new Float32Array(600), long: 0 };
 
+  // 画面の更新の間隔に揃える（2026-09-29 性能: 60/120/144 Hz でのむら）。requestAnimationFrame の時刻の揺れ（± 1〜2 ms）で
+  // 1 フレームに進む時間がばらつくと、歩き・カメラの 1 フレームの動きがばらついてカクついて見える。
+  // 間隔の平均（per）を見積もり、per の整数倍に近い間隔はその倍数に揃える。ずれは carry に貯め、少しずつ返す（実時間から離れない）。
+  // 整数倍から外れた間隔（止まっていた・重いフレーム）はそのまま使う
+  const pacer = { per: 0, carry: 0 };
+  function pace(d) {
+    const P = pacer;
+    if (d > 3 && d < 40) P.per = P.per ? P.per + (d - P.per) * 0.05 : d;
+    if (!P.per || d <= 0) return d;
+    const n = Math.round(d / P.per);
+    if (n < 1 || n > 3 || Math.abs(d - n * P.per) > P.per * 0.2) { P.carry = 0; return d; }
+    P.carry += d - n * P.per;
+    const back = P.carry * 0.1;
+    P.carry -= back;
+    return n * P.per + back;
+  }
+
   const Engine = (R.Engine = {
     time: 0,
     dt: 0,
@@ -31,6 +48,8 @@
     fade: { a: 0, color: '#070812', anim: null },
     error: null,
     perf,
+    /** 画面の更新の間隔の見積もり（ms。60 Hz ≈ 16.7、144 Hz ≈ 6.9。まだ分からなければ 0） */
+    get period() { return pacer.per; },
 
     get stack() { return stack.map((e) => e.scene); },
     top() { const e = stack[stack.length - 1]; return e ? e.scene : null; },
@@ -122,7 +141,7 @@
       last = performance.now();
       const loop = (now) => {
         raf = requestAnimationFrame(loop);
-        const real = Math.min(50, Math.max(0, now - last));
+        const real = pace(Math.min(50, Math.max(0, now - last)));
         last = now;
         if (Engine.paused) return;
         const t0 = performance.now();

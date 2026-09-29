@@ -12,7 +12,8 @@
 //     --with <dir>         フィクスチャを足した dev_<dir の名前>.html も作る（<dir>/states/*.json・scenes/*.json・*.js）
 //     --no-dev             dev.html を作らない
 //     --no-tester          テスト用メニュー（src/tester/。?tester=1 と F9 で開く）を入れない
-//     --release            製品版（Steam）: --no-tester ＋ --no-dev。テスト用メニューと開発用の道具を一切入れない
+//     --release            製品版（Steam）: --no-tester ＋ --no-dev ＋ --minify。テスト用メニューと開発用の道具を一切入れない
+//     --minify / --no-minify   遊ぶ版の JS をファイルごとに esbuild で縮める（--release の既定。esbuild が無ければ警告して縮めない）
 //                          （既定のビルドと pack_web.py の公開のテスト版にはテスト用メニューが入る。?tester=1 を付けない限り眠っている）
 //
 // 読み込みの順（§2.4）: core（ns util bus engine fit gfx の順、残りは名前順・再帰）→ render → uik → data → art → audio
@@ -361,11 +362,37 @@ ${o.embeds || ''}
 `;
 }
 const esc = (code) => code.replace(/<\/script/gi, '<\\/script');
-/** index.html: 1 本にまとめ、ファイルごとに try/catch（読み込みの失敗は R.loadErrors へ） */
-function bundle(files) {
+/** 縮める道具（esbuild）。v2/node_modules・tools/node_modules・NODE_PATH・node の全体の置き場の順に探す。無ければ null */
+function findEsbuild() {
+  const paths = [path.join(V2, 'node_modules'), path.join(V2, 'tools', 'node_modules')]
+    .concat((process.env.NODE_PATH || '').split(path.delimiter).filter(Boolean), ['/opt/node22/lib/node_modules']);
+  try { return require(require.resolve('esbuild', { paths })); } catch (e) { return null; }
+}
+/** ファイルごとに縮める（空白・書き方・中の変数名。外に見える名前・プロパティ・日本語の文字列はそのまま）。失敗した物は元のまま */
+function minifier(es) {
+  let inB = 0, outB = 0, failed = 0;
+  const fn = (code, name) => {
+    inB += Buffer.byteLength(code);
+    try {
+      const r = es.transformSync(code, { loader: 'js', minifyWhitespace: true, minifySyntax: true, minifyIdentifiers: true, legalComments: 'none', charset: 'utf8', sourcefile: name });
+      outB += Buffer.byteLength(r.code);
+      return r.code;
+    } catch (e) {
+      failed++;
+      console.warn(`[build] minify failed for ${name} (kept as is): ${String(e.message || e).split('\n')[0]}`);
+      outB += Buffer.byteLength(code);
+      return code;
+    }
+  };
+  fn.stats = () => ({ inB, outB, failed });
+  return fn;
+}
+/** index.html: 1 本にまとめ、ファイルごとに try/catch（読み込みの失敗は R.loadErrors へ）。min(code, name) を渡すとファイルごとに縮める */
+function bundle(files, min) {
   return '<script>\n' + files.map((f) => {
     const r = rel(f);
-    return `// ==== ${r}\ntry{\n${esc(fs.readFileSync(f, 'utf8'))}\n}catch(e){(window.RPG=window.RPG||{}).loadErrors=(window.RPG.loadErrors||[]);window.RPG.loadErrors.push(${JSON.stringify(r)}+': '+(e&&e.stack||e));console.error(${JSON.stringify(r)},e);}`;
+    const code = fs.readFileSync(f, 'utf8');
+    return `// ==== ${r}\ntry{\n${esc(min ? min(code, r) : code)}\n}catch(e){(window.RPG=window.RPG||{}).loadErrors=(window.RPG.loadErrors||[]);window.RPG.loadErrors.push(${JSON.stringify(r)}+': '+(e&&e.stack||e));console.error(${JSON.stringify(r)},e);}`;
   }).join('\n') + '\n</script>';
 }
 /** dev.html: ファイルごとに別の <script>（エラーの行がファイル名で出る） */
@@ -417,7 +444,14 @@ function main(argv) {
 
   // 遊ぶ版
   const M = mediaTable(media, single ? 'embed' : 'external', OUT);
-  const indexHtml = page({ title: TITLE, fonts: font.css, stamp, head: M.script, body: bundle(playFiles), embeds: M.embeds });
+  // 製品版（--release）は遊ぶ版の JS を縮める（--minify で既定の版にも、--no-minify で外す）。esbuild が無ければ縮めずに警告
+  let min = null;
+  if ((release || argv.includes('--minify')) && !argv.includes('--no-minify')) {
+    const es = findEsbuild();
+    if (es) min = minifier(es);
+    else console.warn('[build] !!!!! minify skipped: esbuild not found. Fix: (cd v2 && npm i --no-save esbuild) or NODE_PATH=<dir with esbuild>');
+  }
+  const indexHtml = page({ title: TITLE, fonts: font.css, stamp, head: M.script, body: bundle(playFiles, min), embeds: M.embeds });
   fs.writeFileSync(path.join(OUT, 'index.html'), indexHtml);
 
   // dev 版（外に置いた媒体を使う。--single のときも dev は外に置く）
@@ -443,6 +477,7 @@ function main(argv) {
   const mb = (n) => (n / 1048576).toFixed(1);
   console.log(`[build] ${playFiles.length} files → ${path.relative(process.cwd(), OUT) || '.'}/index.html (${kb('index.html')} KB)` +
     (has('--no-dev') ? '' : `, dev.html (${kb('dev.html')} KB, +${ok.length - playFiles.length} dev files)`) +
+    (min ? `\n[build] minified: ${(min.stats().inB / 1024).toFixed(0)} KB → ${(min.stats().outB / 1024).toFixed(0)} KB of JS${min.stats().failed ? ` (${min.stats().failed} file(s) kept as is)` : ''}` : '') +
     `\n[build] tester menu: ${has('--no-tester') ? 'EXCLUDED' + (release ? ' (release)' : '') : 'included (?tester=1 + F9)'}` +
     `\n[build] fonts: ${font.chars} chars, ${(font.bytes / 1024).toFixed(0)} KB embedded${font.ok ? '' : ' (SUBSET FAILED)'}` +
     `\n[build] media (${single ? 'embedded' : 'external'}): ${M.counts.bgm} BGM${has('--all-bgm') ? '' : ' (slice)'}, ${M.counts.voice} voice, ${M.counts.portraits} portraits, ${M.counts.sprites} sprite sheets, ${M.counts.env} env images, ${M.counts.title} title images, ${mb(M.bytes)} MB` +

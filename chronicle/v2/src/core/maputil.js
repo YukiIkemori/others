@@ -142,7 +142,13 @@
       const on = patches.map((p) => check(p.cond));
       const sig = on.map((b) => (b ? 1 : 0)).join('');
       const c = cache[map.id];
-      if (c && c.sig === sig && c.src === map.rows) return c.rows;
+      if (c && c.sig === sig && c.src === map.rows && c.patches === patches) {
+        // invalidate の後（2026-09-29 性能）: 行は cond の真偽と tilePatches の中身だけで決まるので、中身が同じなら作り直さない
+        // （ワールドに入るとき道しるべの灯籠 39 個ぶんの焼き直しの印で、672×576 の行を 39 回作り直していた）
+        if (!c.stale) return c.rows;
+        const pj = JSON.stringify(patches), rs = c.rowsAt;
+        if (pj === c.pj && rs.length === map.rows.length && rs.every((r, i) => r === map.rows[i])) { c.stale = false; return c.rows; }
+      }
       const rows = map.rows.map((r) => [...r]);
       patches.forEach((p, i) => {
         if (!on[i]) return;
@@ -152,7 +158,7 @@
         } else if (p.ch != null && rows[p.y]) rows[p.y][p.x] = p.ch;
       });
       const out = rows.map((r) => r.join(''));
-      cache[map.id] = { sig, rows: out, src: map.rows };
+      cache[map.id] = { sig, rows: out, src: map.rows, patches, pj: JSON.stringify(patches), rowsAt: map.rows.slice(), stale: false };
       return out;
     },
     cell(map, x, y) {
@@ -224,7 +230,7 @@
       for (let n = 0; k >= 0 && n < 16; n++) { const a = A.areas[k]; if (!gateOpen(a, list)) return wall; k = a.parent == null ? -1 : a.parent; }
       return null;
     },
-    invalidate(mapId) { if (mapId) delete cache[mapId]; else for (const k of Object.keys(cache)) delete cache[k]; },
+    invalidate(mapId) { if (mapId) { if (cache[mapId]) cache[mapId].stale = true; } else for (const k of Object.keys(cache)) cache[k].stale = true; },
     /**
      * 回復の場所（type 'spring'）の見た目: 'goddess'（女神の像）| 'water'（泉）。
      * 持ち主の決まり（2026-09）:「泉がいきなりあるのは違和感」→ ダンジョンの中は女神の像。町・宿場・井戸・オアシスなど本当に水のある所は泉のまま。

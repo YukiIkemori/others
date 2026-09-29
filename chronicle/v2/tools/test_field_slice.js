@@ -112,7 +112,8 @@ function nodePart() {
       const lv = o.lv || 0;
       if (o.type === 'stairs' || o.type === 'door') { dest(o.to, `${o.type} ${o.x},${o.y}`); if (o.to && !at(o.x, o.y, lv)) bad.push(`${o.type} (${o.x},${o.y}) → ${o.to.map} unreachable`); }
       else if (o.type === 'building' && o.door && o.door.to) { dest(o.door.to, `building ${o.id}`); if (!at(o.door.x, o.door.y, lv)) bad.push(`door of ${o.id || 'building'} (${o.door.x},${o.door.y}) unreachable`); }
-      else if (/^(chest|spring|sign|examine|brazier|waylamp)$/.test(o.type) || (o.type === 'switch' && o.look !== 'plate' && o.by !== 'guest')) {
+      // はじめから燃えている火（brazier の on: true）は、ともす用が無いので届かなくてよい（炉の石に囲まれた火など）
+      else if (/^(chest|spring|sign|examine|waylamp)$/.test(o.type) || (o.type === 'brazier' && o.on !== true) || (o.type === 'switch' && o.look !== 'plate' && o.by !== 'guest')) {
         const w = o.type === 'spring' ? 2 : 1;
         if (!near(o.x, o.y, lv, w, w)) bad.push(`${o.type} ${o.id || ''} (${o.x},${o.y}) cannot be reached to examine`);
       }

@@ -15,13 +15,31 @@
       Flow._titled = true;
       R.Audio.bgm('title', { fade: first ? 1200 : 600 });
       const r = await R.Screens.open('title', { intro: first });
+      await Flow.ready();   // 起動の先読みの後（R.onBoot の差し込み＝製品版の引き継ぎなども済んでから）
       if (r && r.cmd === 'continue' && R.Save.load(r.slot)) return Flow.resume();
       if (r && (r.cmd === 'load' || r.cmd === 'passphrase') && R.Game) return Flow.resume();   // 記録を選ぶ・冒険の合言葉は画面の中で読み込み済み
       return Flow.newGame(r || {});
     },
+    /** 起動の先読み（R.bootReady）の終わりを待つ。長いときは右下に小さな進み（R.Loading.wait）。→ Promise */
+    ready() {
+      const p = R.bootReady;
+      if (!p || Flow._ready) return Promise.resolve();
+      p.then(() => { Flow._ready = true; });
+      const st = R.Media && R.Media.stat, b = Flow._bootStat;
+      if (R.Loading && R.Loading.wait && st && b) {
+        // 起動で読む見積もり（原画・魔物の全部＋今のマスの大きさの素材。R.Loading の起動の棒と同じ数え方）
+        const T = (R.Media.table && R.Media.table()) || {};
+        let n = Object.keys(T.sprites || {}).length + Object.keys(T.monsters || {}).length;
+        try { const E = R.Terrain && R.Terrain.Env; if (E && E.bootCount) n += E.bootCount(); } catch (e) { /* 原画の分だけ */ }
+        const done = () => st.done - b.done;
+        R.Loading.wait(p, done, Math.max(1, n, st.req - b.req));
+      }
+      return p;
+    },
     /** 新しいゲーム。R.DB.config.start = {map, spawn, event?} */
     async newGame(o) {
       o = o || {};
+      await Flow.ready();
       const s = (R.DB.config && R.DB.config.start) || {};
       // タイトルの「はじめから」は暗転して閉じる（o.faded）: 次の場面の幕が出たところで明ける
       const unfade = () => { if (o.faded) { o.faded = false; R.Engine.fadeTo(0, 300); } };
@@ -34,6 +52,7 @@
     },
     /** 読み込んだ R.Game の場所から続ける */
     async resume() {
+      await Flow.ready();
       const p = R.Game.pos || {};
       await R.Field.enter(p.map, { x: p.x, y: p.y, dir: p.dir }, { fade: 260, noAutosave: true });
     },
@@ -90,7 +109,12 @@
     await waitFonts();
     R.Engine.addTick((dt, real) => { if (R.Game && R.Engine.has('field')) R.Game.playMs = (R.Game.playMs || 0) + real; });
     // 焼く列（版 2）: 毎フレーム R.Hd.pump(予算 3 ms) を CORE が 1 回だけ呼ぶ。ほかの担当は pump を呼ばない（暗転中の同期の焼きは R.Hd.now）
-    R.Engine.addTick(() => { if (R.Hd && R.Hd.pump) R.Hd.pump((R.Hd.BUDGET && R.Hd.BUDGET.frameBakeMs) || 3); });
+    // 更新の速い画面（120・144 Hz）は 1 フレームが短いので、予算も間隔の 2 割までに（1 秒あたりの焼きの量は 60 Hz と同じくらい）
+    R.Engine.addTick(() => {
+      if (!R.Hd || !R.Hd.pump) return;
+      const B = (R.Hd.BUDGET && R.Hd.BUDGET.frameBakeMs) || 3, per = R.Engine.period;
+      R.Hd.pump(per > 0 ? Math.min(B, Math.max(1, per * 0.2)) : B);
+    });
     // 起動の仕事（原画・素材の先読み）。遊ぶ版はタイトルを先に出し、読み込みはタイトルの裏で続ける（2026-09-29 性能: CPU 4 倍遅いで
     // タイトルまで 14.6 秒 → 数秒。はじめから・つづきからは Flow.ready() で読み終わりを待つ）。dev.html（フィクスチャ）は今までどおり待ってから
     const runHooks = async () => { for (const fn of R._bootHooks) { try { await fn(); } catch (e) { console.error('boot hook failed', e); } } };
@@ -101,7 +125,9 @@
     if (R.loadErrors.length) console.error('LOAD ERRORS:\n' + R.loadErrors.join('\n'));
     if (early) {
       Flow.title();   // タイトルの絵の読み込みを先に頼む（下の先読みより前に並ぶ）
-      R.bootReady = runHooks();
+      Flow._bootStat = R.Media && R.Media.stat ? { req: R.Media.stat.req, done: R.Media.stat.done } : null;
+      // 裏では並べて読む（原画・素材・魔物の読み込みと解きが重なる。1 つずつ待つより早く揃う）
+      R.bootReady = Promise.all(R._bootHooks.map((fn) => Promise.resolve().then(fn).catch((e) => console.error('boot hook failed', e)))).then(() => undefined);
       R.bootReady.then(() => R.emit('booted'));
       return;
     }

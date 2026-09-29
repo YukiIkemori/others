@@ -1,6 +1,6 @@
 // PV（宣伝の動画）の撮影の道具。ゲームの時計を 1 フレームずつ手で進めて撮る（負荷のある機械でもコマ落ちしない）。
 //   ゲームのコードは変えない: R.Engine.pause() で rAF のループを止め、R.Engine.advance(1000/60) で 1 フレーム進め、
-//   Chromium の CDP の画面の写し（JPEG）を ffmpeg の標準入力へそのまま流す（PNG の連番をディスクに書かない）。
+//   キャンバスを JPEG（質 0.95）にして手元の http へ POST し、そのまま ffmpeg の標準入力へ流す（PNG の連番をディスクに書かない）。
 //   音はここでは鳴らさない: R.Audio の呼び出しを「何フレーム目に何が鳴ったか」の記録に差し替える（あとで ffmpeg で混ぜる）。
 //
 //   const C = require('./cap');
@@ -14,7 +14,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
-const { serve } = require('../shot.js');
+const http = require('http');
 let playwright;
 try { playwright = require('playwright'); } catch (e) { playwright = require('/opt/node22/lib/node_modules/playwright'); }
 if (!process.env.PLAYWRIGHT_BROWSERS_PATH && fs.existsSync('/opt/pw-browsers')) process.env.PLAYWRIGHT_BROWSERS_PATH = '/opt/pw-browsers';
@@ -22,11 +22,33 @@ if (!process.env.PLAYWRIGHT_BROWSERS_PATH && fs.existsSync('/opt/pw-browsers')) 
 const FF = process.env.FFMPEG || '/usr/local/lib/python3.11/dist-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v7.0.2';
 const FPS = 60;
 
+const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.json': 'application/json', '.png': 'image/png', '.webp': 'image/webp',
+  '.jpg': 'image/jpeg', '.ogg': 'audio/ogg', '.woff2': 'font/woff2', '.css': 'text/css' };
+// 手元だけの http: 静的なファイル＋ POST /__pv（ページが送る 1 フレームの JPEG をそのまま今の ffmpeg へ。生の RGBA は fetch が遅すぎた）
+function serve(root) {
+  const S = { sink: null };
+  S.srv = http.createServer((req, rsp) => {
+    if (req.method === 'POST' && req.url.startsWith('/__pv')) {
+      const sink = S.sink;
+      req.on('data', (c) => { if (sink && !sink.write(c)) { req.pause(); sink.once('drain', () => req.resume()); } });
+      req.on('end', () => { rsp.writeHead(200); rsp.end('ok'); });
+      return;
+    }
+    const u = decodeURIComponent(new URL(req.url, 'http://x').pathname);
+    const f = path.join(root, path.normalize(u).replace(/^([/\\])+/, ''));
+    if (!f.startsWith(root) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { rsp.writeHead(404); rsp.end('not found'); return; }
+    rsp.writeHead(200, { 'Content-Type': MIME[path.extname(f)] || 'application/octet-stream' });
+    fs.createReadStream(f).pipe(rsp);
+  });
+  return new Promise((res) => S.srv.listen(0, '127.0.0.1', () => res(S)));
+}
+
 async function start(o) {
-  const srv = await serve(path.resolve(o.site));
+  const S0 = await serve(path.resolve(o.site));
+  const srv = S0.srv;
   const base = `http://127.0.0.1:${srv.address().port}/`;
   const browser = await playwright.chromium.launch({ args: ['--autoplay-policy=no-user-gesture-required', '--mute-audio'] });
-  return { srv, base, browser };
+  return { srv, base, browser, S0 };
 }
 async function stop(S) { await S.browser.close(); S.srv.close(); }
 
@@ -59,7 +81,7 @@ async function open(S, url, o) {
   await page.evaluate('window.R = window.RPG; RPG.Engine.pause(); true');
   await page.evaluate(AUDIO_HOOK);
   const cdp = await ctx.newCDPSession(page);
-  const P = { ctx, page, cdp, errors, recFrame0: 0 };
+  const P = { S, ctx, page, cdp, errors, recFrame0: 0 };
   P.audio = async () => {
     const L = await page.evaluate('window.__pvLog');
     return L.filter((e) => e.f >= P.recFrame0).map((e) => Object.assign({}, e, { f: e.f - P.recFrame0 }));
@@ -70,7 +92,7 @@ async function open(S, url, o) {
 
 const ev = (P, js) => P.page.evaluate(js);
 /** 式を評価（Promise なら待たない。ゲームの時計が止まっているので await すると進まない物がある） */
-async function run(P, js) { return P.page.evaluate(`(() => { const r = (${js}); return r && typeof r.then === 'function' ? '[promise]' : r; })()`); }
+async function run(P, js) { return P.page.evaluate(`(() => { const r = (0, eval)(${JSON.stringify(js)}); return r && typeof r.then === 'function' ? '[promise]' : r; })()`); }
 /** 撮らずに n フレーム進める。途中で each(i) の式を毎フレームの前に評価 */
 async function idle(P, n, each) {
   for (let i = 0; i < n; i++) {
@@ -101,12 +123,14 @@ async function rec(P, out, n, each, o) {
   const done = new Promise((res, rej) => ff.on('close', (c) => (c === 0 ? res() : rej(new Error('ffmpeg ' + c)))));
   P.recFrame0 = await P.page.evaluate('RPG.Engine.frame + 1');
   const t0 = Date.now();
+  P.S.S0.sink = ff.stdin;
   for (let i = 0; i < n; i++) {
     const js = each ? each(i) : null;
-    await P.page.evaluate(`${js ? js + ';' : ''}RPG.Engine.advance(1000/60); 1`);
-    const buf = await grab(P, o.q);
-    if (!ff.stdin.write(buf)) await new Promise((r) => ff.stdin.once('drain', r));
+    await P.page.evaluate(`(async () => { ${js ? js + ';' : ''}RPG.Engine.advance(1000/60);
+      const b = await new Promise((r) => document.querySelector('canvas').toBlob(r, 'image/jpeg', ${o.q || 0.95}));
+      await fetch('/__pv', { method: 'POST', body: b }); return 1; })()`);
   }
+  P.S.S0.sink = null;
   ff.stdin.end();
   await done;
   const log = await P.audio();

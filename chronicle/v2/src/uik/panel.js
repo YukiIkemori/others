@@ -9,6 +9,61 @@
 
   function tone(o) { return (o && o.tone) || UIK.T.color.glass; }
 
+  // 窓の落ち影（2026-09-29 性能）: 画面いっぱいの窓の影のぼかしを毎フレーム描いていた（店・メニューで 1 フレームの 3 割）。
+  // 同じ角の丸み・色・ぼかし・画素の端数の影を小さな 1 枚（角の周りだけ）に焼き、9 つに切って置く。辺と中は 1 画素の列を伸ばすだけ
+  // （ぼかしの届く幅より内側は辺に沿って同じ値なので、直に描いた影と同じ画素）。窓の端が実画素の途中にあっても、左上と右下の端数を
+  // 焼いた 1 枚に合わせるので置く位置は整数のまま。変換が拡大と平行移動だけ・影のぼかしとずれが整数のときだけ（ほかは今までどおり直に）
+  const PSH = { color: 'rgba(2,3,8,0.45)', cache: new Map() };
+  const isInt = (v) => Math.abs(v - Math.round(v)) < 1e-6;
+  const frac = (v) => { const f = v - Math.floor(v); return f > 1 - 1e-6 ? 0 : f; };
+  function shadowSprite(Rd, blur, fill, sc, fx, fy, fr, fb) {
+    const key = [Rd.toFixed(4), blur, fill, sc, fx.toFixed(4), fy.toFixed(4), fr.toFixed(4), fb.toFixed(4)].join('|');
+    let e = PSH.cache.get(key);
+    if (e) { PSH.cache.delete(key); PSH.cache.set(key, e); return e; }
+    const K = Math.ceil(Rd + 1.5 * blur) + 2, P = Math.ceil(1.5 * blur) + 2, n = 2 * K + 1;
+    const ws = n + fr - fx, hs = n + fb - fy;   // 焼く形の大きさ（右・下の端の端数を窓と同じにする）
+    const cw = 2 * P + n + (fr > 0 ? 1 : 0), ch = 2 * P + n + (fb > 0 ? 1 : 0);
+    const c = R.Gfx.canvas2d(cw, ch);
+    if (!c) return null;
+    const x = c.getContext('2d');
+    // 形は画面の外に置き、影だけを (P + fx, P + fy) に落とす（影のずれは変換に掛からない実画素）
+    const BIG = 16384;
+    x.shadowColor = PSH.color; x.shadowBlur = blur; x.shadowOffsetX = BIG; x.shadowOffsetY = 0;
+    x.setTransform(sc, 0, 0, sc, P + fx - BIG, P + fy);
+    UIK.rr(x, 0, 0, ws / sc, hs / sc, Rd / sc);
+    x.fillStyle = fill; x.fill();
+    e = { c, K, P, n };
+    PSH.cache.set(key, e);
+    while (PSH.cache.size > 24) PSH.cache.delete(PSH.cache.keys().next().value);
+    return e;
+  }
+  /** 焼いた影を置けたら true（置けない形・変換なら false で、呼ぶ側が直に描く） */
+  function panelShadow(g, x, y, w, h, r, fill) {
+    if (!g.getTransform || !R.Gfx.canvas2d || UIK._direct) return false;   // UIK._direct: 比べる試験用（焼いた物を使わず直に描く）
+    const m = g.getTransform(), S = R.SCALE || 2, blur = 20 * S / 2, offY = 6 * S / 2;
+    if (m.b || m.c || m.a !== m.d || !(m.a > 0) || g.globalCompositeOperation !== 'source-over' || !isInt(offY) || !isInt(blur)) return false;   // ぼかしが端数（2560×1440）は直に（端数のぼかしは形の大きさで僅かに違う）
+    const sc = m.a, X = sc * x + m.e, Y = sc * y + m.f, W = sc * w, H = sc * h;
+    if (!(r >= 0) || !(r <= w / 2 && r <= h / 2)) return false;   // 丸みが縮められる小さな窓は直に
+    const Rd = r * sc, K = Math.ceil(Rd + 1.5 * blur) + 2, n = 2 * K + 1;
+    const x0 = Math.floor(X), y0 = Math.floor(Y);
+    const D = Math.floor(X + W) - x0 - n, E = Math.floor(Y + H) - y0 - n;   // 伸ばす長さ − 1
+    if (D < 0 || E < 0) return false;
+    const sp = shadowSprite(Rd, blur, fill, sc, frac(X), frac(Y), frac(X + W), frac(Y + H));
+    if (!sp) return false;
+    const { c, P } = sp, a = K + P;
+    const dx = x0 - P, dy = y0 + offY - P;
+    const cw = c.width - (a + 1), ch = c.height - (a + 1);   // 右・下の切れの幅
+    const sx = [0, a, a + 1], sw = [a, 1, cw], tx = [dx, dx + a, dx + a + 1 + D], tw = [a, D + 1, cw];
+    const sy = [0, a, a + 1], sh = [a, 1, ch], ty = [dy, dy + a, dy + a + 1 + E], th = [a, E + 1, ch];
+    g.save();
+    g.setTransform(1, 0, 0, 1, 0, 0);
+    g.imageSmoothingEnabled = false;
+    for (let j = 0; j < 3; j++) for (let i = 0; i < 3; i++) g.drawImage(c, sx[i], sy[j], sw[i], sh[j], tx[i], ty[j], tw[i], th[j]);
+    g.restore();
+    return true;
+  }
+  UIK._panelShadow = panelShadow;
+
   /** 紺のすりガラスの窓 */
   UIK.panel = function (g, rect, o) {
     o = o || {};
@@ -19,10 +74,13 @@
     const [r0, g0, b0] = tone(o);
     g.save();
     if (o.shadow !== false) {
-      g.save();
-      g.shadowColor = 'rgba(2,3,8,0.45)'; g.shadowBlur = 20 * (R.SCALE || 2) / 2; g.shadowOffsetY = 6 * (R.SCALE || 2) / 2;
-      UIK.rr(g, x, y, w, h, r); g.fillStyle = `rgba(${r0},${g0},${b0},${Math.min(1, a)})`; g.fill();
-      g.restore();
+      const fill = `rgba(${r0},${g0},${b0},${Math.min(1, a)})`;
+      if (!panelShadow(g, x, y, w, h, r, fill)) {
+        g.save();
+        g.shadowColor = PSH.color; g.shadowBlur = 20 * (R.SCALE || 2) / 2; g.shadowOffsetY = 6 * (R.SCALE || 2) / 2;
+        UIK.rr(g, x, y, w, h, r); g.fillStyle = fill; g.fill();
+        g.restore();
+      } else { UIK.rr(g, x, y, w, h, r); g.fillStyle = fill; g.fill(); }
     }
     // すりガラス（写しがあるときだけ）
     const fr = o.frost === true ? snap : o.frost && o.frost.canvas ? o.frost : o.frost ? { canvas: o.frost, w: R.W, h: R.H } : null;
@@ -193,10 +251,44 @@
     g.restore();
   };
   /** 柔らかい光（足し算）。c = [r,g,b] */
-  UIK.glow = function (g, x, y, r, c, a) {
+  // 光のにじみ（2026-09-29 性能）: 放射グラデーションを毎フレーム塗っていた（一覧の選んだ行の光だけで店の 1 フレームの 3 割）。
+  // 大きさ・色・画素の端数が 2 フレーム続けて同じなら、濃さ 1 の 1 枚に焼き、濃さ a は globalAlpha で掛けて置く
+  // （色が同じで濃さだけの段なので、掛ける順が違っても同じ絵。丸めの差は 1/255 まで）。動き続けるにじみは今までどおり直に塗る
+  const GLOW = { cache: new Map(), seen: new Map(), frame: -1 };
+  function glowDirect(g, x, y, r, c, a) {
     const gr = g.createRadialGradient(x, y, 0, x, y, r);
     gr.addColorStop(0, `rgba(${c[0]},${c[1]},${c[2]},${a})`); gr.addColorStop(0.35, `rgba(${c[0]},${c[1]},${c[2]},${a * 0.4})`); gr.addColorStop(1, `rgba(${c[0]},${c[1]},${c[2]},0)`);
     g.save(); g.globalCompositeOperation = 'lighter'; g.fillStyle = gr; g.fillRect(x - r, y - r, r * 2, r * 2); g.restore();
+  }
+  UIK.glow = function (g, x, y, r, c, a) {
+    const m = g.getTransform ? g.getTransform() : null;
+    if (!m || m.b || m.c || m.a !== m.d || !(m.a > 0) || !(r > 0) || !(a > 0) || a > 1 || r * m.a < 24 || !R.Gfx.canvas2d || UIK._direct) { glowDirect(g, x, y, r, c, a); return; }
+    const sc = m.a, X = sc * (x - r) + m.e, Y = sc * (y - r) + m.f, fx = X - Math.floor(X), fy = Y - Math.floor(Y);
+    const key = [r * sc, c.join(','), sc, fx.toFixed(4), fy.toFixed(4)].join('|');
+    let e = GLOW.cache.get(key);
+    if (!e) {
+      const f = R.Engine ? R.Engine.frame : 0;
+      if (GLOW.frame !== f) { GLOW.frame = f; for (const [k, v] of GLOW.seen) if (f - v > 2) GLOW.seen.delete(k); }
+      const prev = GLOW.seen.get(key);
+      GLOW.seen.set(key, f);
+      if (prev == null || prev === f) { glowDirect(g, x, y, r, c, a); return; }
+      const d = Math.ceil(2 * r * sc + fx) + 1, d2 = Math.ceil(2 * r * sc + fy) + 1;
+      const cv = R.Gfx.canvas2d(d, d2);
+      if (!cv) { glowDirect(g, x, y, r, c, a); return; }
+      const cx = cv.getContext('2d');
+      cx.setTransform(sc, 0, 0, sc, fx - sc * (x - r), fy - sc * (y - r));
+      glowDirect(cx, x, y, r, c, 1);
+      e = { cv };
+      GLOW.cache.set(key, e);
+      while (GLOW.cache.size > 16) GLOW.cache.delete(GLOW.cache.keys().next().value);
+    } else { GLOW.cache.delete(key); GLOW.cache.set(key, e); }
+    g.save();
+    g.setTransform(1, 0, 0, 1, 0, 0);
+    g.globalCompositeOperation = 'lighter';
+    g.globalAlpha *= a;
+    g.imageSmoothingEnabled = false;
+    g.drawImage(e.cv, Math.floor(X), Math.floor(Y));
+    g.restore();
   };
   /** 画面全体を暗く */
   UIK.dim = function (g, a) { g.save(); g.fillStyle = `rgba(6,7,12,${a})`; g.fillRect(0, 0, R.W, R.H); g.restore(); };

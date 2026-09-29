@@ -186,6 +186,13 @@
   F._waylamps = function (quiet) {
     const G = R.Game, m = S.map;
     if (!G || !m) return;
+    // はじめから燃えている火（type 'brazier' の on: true。野営地のたき火・炉・門のかがり火）は、入った時にともした扱い
+    //   （ともした火の表 G.lit だけを見る描き・暗がり・「火をともす」の札がそのまま使える）
+    for (const o of m.objects || []) {
+      if (o.type !== 'brazier' || o.on !== true || !o.id) continue;
+      const L = (G.lit[m.id] = G.lit[m.id] || []);
+      if (!L.includes(o.id)) L.push(o.id);
+    }
     for (const o of m.objects || []) {
       if (o.type !== 'waylamp' || !o.id || G.lamps[o.id]) continue;
       if (o.lit != null && R.State.check(o.lit)) {

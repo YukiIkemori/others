@@ -55,12 +55,12 @@ function pageCheck() {
     out.portrait[l] = { drew: r, px: n, has: R.Portrait.has(l) };
   }
   // 表情の違い（仮の顔の 5 コマが同じ画素でない）
-  // 仮の顔（骨組み）の look で。selma は原画の顔（表情の対応で同じコマを使う表情がある）になったので、顔の原画の無い名前のある町の人で見る
-  //   （町の人の顔も原画が増えたので、決まった 3 人ではなく、顔の原画の無い人を全部の look から探す）
-  const rigFace = (l) => R.Hd.has('hd:face:' + l) && !(R.Art.cast.sprites.has(l, 'face'));
-  const fl = ['npc_hanna', 'npc_rita', 'npc_gord'].find(rigFace) || Object.keys(R.DB.looks).find(rigFace) || 'selma';
+  // 仮の顔（骨組み、faces.js の rigFace）の 5 コマ。主な人も町の人も顔の原画か歩きの原画から作る顔（予備の道）になり、
+  //   hd:face で仮の顔が出る人はもういない（2026-09）。なので仮の顔の作り方そのもの（R.Art.cast._rigFace）を、顔のある人で直に見る
+  const fl = ['npc_hanna', 'selma'].find((l) => R.DB.looks[l]) || Object.keys(R.DB.looks).find((l) => R.Art.cast.hasFace(l));
   out.faceLook = fl;
-  const fs = R.Hd.now('hd:face:' + fl);
+  if (!R.Hd.has('hd:face:__rig_test')) R.Hd.def('hd:face:__rig_test', () => R.Art.cast._rigFace(fl), { kind: 'face', look: fl });   // 焼きの仕事は Hd.now が回す
+  const fs = R.Hd.now('hd:face:__rig_test');
   const hs = fs.frames.map((f) => { const d = f.c.getContext('2d').getImageData(0, 0, f.c.width, f.c.height).data; let h = 2166136261; for (let i = 0; i < d.length; i++) h = Math.imul(h ^ d[i], 16777619); return h >>> 0; });
   out.faceDistinct = new Set(hs).size;
   // 同じキーで同じ画素

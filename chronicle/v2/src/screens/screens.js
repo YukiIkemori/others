@@ -150,9 +150,43 @@
   };
 
   // ---------------------------------------------------------------- 後ろ（すりガラスの写しか夜の色）
+  // 後ろは画面を開いている間は変わらないので、実キャンバスの大きさの 1 枚に焼いて毎フレームはそれを置くだけ（2026-09-29 性能:
+  // 画面いっぱいの放射グラデーション（周辺減光）と写しの拡大を毎フレーム描いていた。CPU 4 倍遅い 1080p で 1 フレーム 100 ms 超）。
+  // 焼くのは変換が素（R.SCALE 倍・ずれ 0）で不透明度 1 のときだけ（charcreate のように開く動きの中で呼ばれたら今までどおり描く）
+  let bdCache = null;   // {key, snap, c}
   S.backdrop = function (g, v) {
     const snap = R.UIK.lastSnapshot && R.UIK.lastSnapshot();
-    if (snap && !(v && v.plainBg)) {
+    const plain = !snap || !!(v && v.plainBg);
+    const cv = g.canvas, m = g.getTransform ? g.getTransform() : null, Sc = R.SCALE || 2;
+    if (m && cv && !R.UIK._direct && m.a === Sc && m.d === Sc && !m.b && !m.c && !m.e && !m.f && g.globalAlpha === 1 && g.globalCompositeOperation === 'source-over') {
+      const key = [plain ? 'plain' : 'snap', R.W, R.H, Sc, cv.width, cv.height].join(',');
+      if (!bdCache || bdCache.key !== key || (!plain && bdCache.snap !== snap)) {
+        const c = R.Gfx.canvas2d(cv.width, cv.height);
+        if (c) {
+          const x = c.getContext('2d');
+          x.setTransform(Sc, 0, 0, Sc, 0, 0);
+          x.imageSmoothingEnabled = false;
+          drawBackdrop(x, plain ? null : snap);
+          bdCache = { key, snap: plain ? null : snap, c };
+          try { if (R.Hd && R.Hd.track) R.Hd.track('snap', 'screens_backdrop', c.width * c.height * 4); } catch (e) { /* 量の届けは無くてよい */ }
+        } else bdCache = null;
+      }
+      if (bdCache) {
+        g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.imageSmoothingEnabled = false; g.drawImage(bdCache.c, 0, 0); g.restore();
+        return;
+      }
+    }
+    drawBackdrop(g, plain ? null : snap);
+  };
+  /** 画面を閉じ切ったとき（フィールド・戦闘に戻った）: 焼いた後ろを手放す */
+  S._dropBackdrop = function () {
+    if (!bdCache) return;
+    bdCache = null;
+    try { if (R.Hd && R.Hd.track) R.Hd.track('snap', 'screens_backdrop', null); } catch (e) { /* */ }
+  };
+  if (R.on) R.on('scene:pop', () => { if (!R.Engine.stack.some(isScreen)) S._dropBackdrop(); });
+  function drawBackdrop(g, snap) {
+    if (snap) {
       g.save(); g.imageSmoothingEnabled = true; g.drawImage(snap, 0, 0, R.W, R.H); g.restore();
       g.save(); g.fillStyle = 'rgba(8,9,18,0.34)'; g.fillRect(0, 0, R.W, R.H); g.restore();
     } else {
@@ -166,7 +200,7 @@
     const vg = g.createRadialGradient(R.W / 2, R.H / 2, Math.min(R.W, R.H) * 0.35, R.W / 2, R.H / 2, Math.max(R.W, R.H) * 0.75);
     vg.addColorStop(0, 'rgba(4,5,10,0)'); vg.addColorStop(1, 'rgba(4,5,10,0.45)');
     g.fillStyle = vg; g.fillRect(0, 0, R.W, R.H);
-  };
+  }
 
   // ---------------------------------------------------------------- 並べ方
   /** 画面の中の使える箱（セーフエリアと余白、下のボタン表示の行を除く） */
