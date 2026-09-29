@@ -43,14 +43,14 @@
   const PAD_NAMES = {
     xbox: ['A', 'B', 'X', 'Y', 'LB', 'RB', 'LT', 'RT', 'View', 'Menu', 'LS', 'RS', '↑', '↓', '←', '→', 'Guide'],
     ps: ['×', '○', '□', '△', 'L1', 'R1', 'L2', 'R2', 'Create', 'Options', 'L3', 'R3', '↑', '↓', '←', '→', 'PS'],
-    nintendo: ['B', 'A', 'Y', 'X', 'L', 'R', 'ZL', 'ZR', '−', '＋', 'LS', 'RS', '↑', '↓', '←', '→', 'Home'],
+    nintendo: ['B', 'A', 'Y', 'X', 'L', 'R', 'ZL', 'ZR', '−', R.T('ui.input.PAD_NAMES.nintendo.9'), 'LS', 'RS', '↑', '↓', '←', '→', 'Home'],
   };
   const KEYNAME = {
     ArrowUp: '↑', ArrowDown: '↓', ArrowLeft: '←', ArrowRight: '→', Enter: 'Enter', NumpadEnter: 'Enter', Space: 'Space', Escape: 'Esc',
-    Backspace: 'BS', Tab: 'Tab', ShiftLeft: 'Shift', ShiftRight: '右Shift', ControlLeft: 'Ctrl', ControlRight: '右Ctrl', CapsLock: 'Caps',
+    Backspace: 'BS', Tab: 'Tab', ShiftLeft: 'Shift', ShiftRight: R.T('ui.input.KEYNAME.ShiftRight'), ControlLeft: 'Ctrl', ControlRight: R.T('ui.input.KEYNAME.ControlRight'), CapsLock: 'Caps',
     Minus: '-', Equal: '=', BracketLeft: '[', BracketRight: ']', Backslash: '\\', Semicolon: ';', Quote: "'", Comma: ',', Period: '.', Slash: '/',
-    Backquote: '`', IntlRo: 'ろ', IntlYen: '¥', Insert: 'Ins', Delete: 'Del', Home: 'Home', End: 'End', PageUp: 'PgUp', PageDown: 'PgDn',
-    Convert: '変換', NonConvert: '無変換', KanaMode: 'かな', NumpadAdd: 'Num+', NumpadSubtract: 'Num-', NumpadMultiply: 'Num*', NumpadDivide: 'Num/', NumpadDecimal: 'Num.',
+    Backquote: '`', IntlRo: R.T('ui.input.KEYNAME.IntlRo'), IntlYen: '¥', Insert: 'Ins', Delete: 'Del', Home: 'Home', End: 'End', PageUp: 'PgUp', PageDown: 'PgDn',
+    Convert: R.T('ui.input.KEYNAME.Convert'), NonConvert: R.T('ui.input.KEYNAME.NonConvert'), KanaMode: R.T('ui.input.KEYNAME.KanaMode'), NumpadAdd: 'Num+', NumpadSubtract: 'Num-', NumpadMultiply: 'Num*', NumpadDivide: 'Num/', NumpadDecimal: 'Num.',
   };
   function keyLabel(code) {
     if (!code) return '—';
@@ -100,7 +100,7 @@
     R.Settings.setBinds(b.kb || b.pad ? b : null);
     rebuild();
   }
-  const TOUCH_LABEL = { a: 'タップ', b: '戻る', y: 'メニュー', x: '長押し', l: 'L', r: 'R', start: 'メニュー', up: '↑', down: '↓', left: '←', right: '→', dash: '長押し' };
+  const TOUCH_LABEL = { a: R.T('ui.input.TOUCH_LABEL.a'), b: R.T('ui.input.TOUCH_LABEL.b'), y: R.T('ui.input.TOUCH_LABEL.y'), x: R.T('ui.input.TOUCH_LABEL.x'), l: 'L', r: 'R', start: R.T('ui.input.TOUCH_LABEL.start'), up: '↑', down: '↓', left: '←', right: '→', dash: R.T('ui.input.TOUCH_LABEL.dash') };
   const REPEAT_DELAY = 260, REPEAT_RATE = 70, LONG_MS = 450;
 
   const src = { key: {}, keyCodes: {}, pad: {}, touch: {}, test: {}, pulse: {} };
@@ -456,7 +456,7 @@
         g.fillStyle = '#f6f0e3';
         g.font = `700 ${Math.round(s.r * 0.62)}px ${R.Gfx.FONT.jp}`;
         g.textAlign = 'center'; g.textBaseline = 'middle';
-        g.fillText(k === 'y' ? '≡' : k === 'b' && layoutName !== 'field' ? '戻' : k.toUpperCase(), s.x, s.y + 1);
+        g.fillText(k === 'y' ? '≡' : k === 'b' && layoutName !== 'field' ? R.T('ui.input.drawTouch.fillText') : k.toUpperCase(), s.x, s.y + 1);
       }
     }
     g.restore();

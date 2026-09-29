@@ -4,8 +4,8 @@
   'use strict';
   const W = 'prologue_done';
   R.defs('locations', {
-    caldera: { name: '炎の町カルデラ', region: 'r_ash', kind: 'town', map: 'caldera', spawn: 'warp', warp: W },
-    haimi: { name: '宿場「灰見の宿」', region: 'r_ash', kind: 'town', map: 'haimi_inn', spawn: 'door', warp: W },
-    volcano: { name: '灰の火山', region: 'r_ash', kind: 'dungeon', map: 'ash_volcano_1', spawn: 'entrance', warp: 'ash_champion' },
+    caldera: { name: R.T('locations.caldera.name'), region: 'r_ash', kind: 'town', map: 'caldera', spawn: 'warp', warp: W },
+    haimi: { name: R.T('locations.haimi.name'), region: 'r_ash', kind: 'town', map: 'haimi_inn', spawn: 'door', warp: W },
+    volcano: { name: R.T('locations.volcano.name'), region: 'r_ash', kind: 'dungeon', map: 'ash_volcano_1', spawn: 'entrance', warp: 'ash_champion' },
   });
 })(window.RPG);

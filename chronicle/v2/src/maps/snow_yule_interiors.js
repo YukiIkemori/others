@@ -26,7 +26,7 @@
     }
 
     // ---------------------------------------------------------------- 大かまどの集会所（祭の広間）22×14
-    interior('yule_hall', '大かまどの集会所', 22, 14, {
+    interior('yule_hall', R.T('map.snow_yule_interiors.yule_hall'), 22, 14, {
       back: 'hall', carpet: [7, 5, 8, 5],
       objects: [
         K.prop('stove', 10, 2), K.prop('stove', 11, 2), K.exam(10, 3, 'yule_hall_hearth'),
@@ -38,15 +38,15 @@
         K.prop('snow_barrel', 20, 2), K.prop('sack', 1, 4), K.prop('house_plant', 19, 10),
       ],
       npcs: [
-        K.npc('ingrid', 'npc_snow_old_f', 12, 4, { name: 'イングリッド', title: '語りの年寄り', dir: 's', talk: 'yule_ingrid', reward: 'lead' }),
-        K.npc('hall_helper', 'npc_snow_woman', 17, 6, { name: '祭の手伝い', dir: 'w', talk: 'yule_hall_helper', reward: 'hint' }),
-        K.npc('hall_kid', 'npc_snow_child', 8, 8, { name: '村の子', dir: 'e', talk: 'yule_hall_kid', reward: 'hint' }),
+        K.npc('ingrid', 'npc_snow_old_f', 12, 4, { name: R.T('map.snow_yule_interiors.yule_hall.npcs.0.ingrid.name'), title: R.T('map.snow_yule_interiors.yule_hall.npcs.0.ingrid.title'), dir: 's', talk: 'yule_ingrid', reward: 'lead' }),
+        K.npc('hall_helper', 'npc_snow_woman', 17, 6, { name: R.T('map.snow_yule_interiors.yule_hall.npcs.1.hall_helper.name'), dir: 'w', talk: 'yule_hall_helper', reward: 'hint' }),
+        K.npc('hall_kid', 'npc_snow_child', 8, 8, { name: R.T('map.snow_yule_interiors.yule_hall.npcs.2.hall_kid.name'), dir: 'e', talk: 'yule_hall_kid', reward: 'hint' }),
       ],
-      meta: { sub: '祭の広間' },
+      meta: { sub: R.T('map.snow_yule_interiors.yule_hall.meta.sub') },
     });
 
     // ---------------------------------------------------------------- 宿「雪あかり亭」16×12
-    interior('yule_inn', '雪あかり亭', 16, 12, {
+    interior('yule_inn', R.T('map.snow_yule_interiors.yule_inn'), 16, 12, {
       back: 'inn', carpet: [5, 6, 6, 3],
       objects: [
         K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('bookshelf', 1, 2),
@@ -56,84 +56,84 @@
         K.prop('snow_barrel', 1, 9), K.prop('firewood', 14, 9), K.prop('lantern', 8, 3), K.prop('lantern', 14, 8),
       ],
       npcs: [
-        K.npc('inn_keeper', 'npc_snow_woman', 4, 2, { name: '宿のおかみ', dir: 's', talk: 'yule_inn_keeper', pushable: false }),
-        K.npc('inn_guest', 'npc_snow_man', 8, 8, { name: '泊まり客の猟師', dir: 'w', talk: 'yule_inn_guest', reward: 'lead' }),
-        K.npc('inn_bard', 'npc_bard_2', 12, 8, { name: '旅の吟遊詩人', dir: 's', talk: 'yule_inn_bard', reward: 'lead' }),
+        K.npc('inn_keeper', 'npc_snow_woman', 4, 2, { name: R.T('map.snow_yule_interiors.yule_inn.npcs.0.inn_keeper.name'), dir: 's', talk: 'yule_inn_keeper', pushable: false }),
+        K.npc('inn_guest', 'npc_snow_man', 8, 8, { name: R.T('map.snow_yule_interiors.yule_inn.npcs.1.inn_guest.name'), dir: 'w', talk: 'yule_inn_guest', reward: 'lead' }),
+        K.npc('inn_bard', 'npc_bard_2', 12, 8, { name: R.T('map.snow_yule_interiors.yule_inn.npcs.2.inn_bard.name'), dir: 's', talk: 'yule_inn_bard', reward: 'lead' }),
       ],
     });
 
     // ---------------------------------------------------------------- 道具屋・武具屋 12×10
-    interior('yule_items', 'ユールの道具屋', 12, 10, {
+    interior('yule_items', R.T('map.snow_yule_interiors.yule_items'), 12, 10, {
       back: 'items',
       objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('counter', 6, 3), K.prop('shelf_jars', 1, 2), K.prop('shelf_jars', 9, 2),
         K.prop('snow_barrel', 10, 4), K.prop('crate', 10, 5), K.prop('sack', 1, 6), K.prop('firewood', 1, 7), K.prop('lantern', 2, 4)],
-      npcs: [K.npc('item_keeper', 'npc_snow_old_m', 5, 2, { name: '道具屋の主人', dir: 's', talk: 'yule_item_keeper', pushable: false })],
+      npcs: [K.npc('item_keeper', 'npc_snow_old_m', 5, 2, { name: R.T('map.snow_yule_interiors.yule_items.npcs.0.item_keeper.name'), dir: 's', talk: 'yule_item_keeper', pushable: false })],
     });
-    interior('yule_arms', 'ユールの武具屋', 12, 10, {
+    interior('yule_arms', R.T('map.snow_yule_interiors.yule_arms'), 12, 10, {
       back: 'arms',
       objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('counter', 6, 3), K.prop('weapon_rack', 1, 2), K.prop('weapon_rack', 9, 2),
         K.prop('stove', 10, 5), K.prop('crate', 1, 6), K.prop('crate', 1, 7), K.prop('lantern', 8, 4)],
-      npcs: [K.npc('smith', 'npc_snow_man', 5, 2, { name: '武具屋の主人', dir: 's', talk: 'yule_smith', pushable: false })],
+      npcs: [K.npc('smith', 'npc_snow_man', 5, 2, { name: R.T('map.snow_yule_interiors.yule_arms.npcs.0.smith.name'), dir: 's', talk: 'yule_smith', pushable: false })],
     });
 
     // ---------------------------------------------------------------- 村長ヨルンの家・火守りの家 12×10
-    interior('yule_jorn', '村長の家', 12, 10, {
+    interior('yule_jorn', R.T('map.snow_yule_interiors.yule_jorn'), 12, 10, {
       back: 'jorn', carpet: [3, 5, 6, 3],
       objects: [K.prop('bed', 9, 2), K.prop('table', 7, 6), K.prop('chair', 6, 6), K.prop('chair', 8, 6), K.prop('stove', 1, 2), K.prop('bookshelf', 3, 2),   // 戸口の列（x 5）は空ける
         K.exam(3, 3, 'yule_jorn_ledger'), K.prop('firewood', 10, 7), K.prop('lantern', 7, 3)],
-      npcs: [K.npc('jorn_wife', 'npc_snow_woman', 6, 4, { name: 'ヨルンのおかみさん', dir: 's', talk: 'yule_jorn_wife', reward: 'item' })],
+      npcs: [K.npc('jorn_wife', 'npc_snow_woman', 6, 4, { name: R.T('map.snow_yule_interiors.yule_jorn.npcs.0.jorn_wife.name'), dir: 's', talk: 'yule_jorn_wife', reward: 'item' })],
       art: { image: 'snow/under/yule_jorn', painted: [] },   // 石の塔の家（描いた下絵）
     });
     // 火守りの家は氷のドーム（外の描いた下絵 yule の氷の家）。中も描いた下絵（v2/assets/env/snow/under/yule_sonja*）: 氷の塊の壁・毛皮を敷いた雪の床・
     //   奥の石組みの炉（石は h = 歩けない。火は火皿の物 = 灯りと火の絵）。戸口の列（x 5）は炉の手前まで空ける
-    interior('yule_sonja', '火守りの家', 12, 10, {
+    interior('yule_sonja', R.T('map.snow_yule_interiors.yule_sonja'), 12, 10, {
       back: 'sonja',
       legend: { h: { mat: 'wood_floor', solid: true, name: 'hearth' } },
       paint: (g) => { for (const [x, y] of [[5, 3], [7, 3], [6, 2], [6, 4]]) K.put(g, x, y, 'h'); },
       objects: [{ type: 'brazier', id: 'yule_sonja_hearth', x: 6, y: 3, on: true }, K.exam(6, 4, 'yule_sonja_fire'), K.exam(7, 3, 'snow_mat', { mat: 'snow_mat_coal' }),
         K.prop('bed', 1, 2), K.prop('bed', 10, 2), K.prop('table', 3, 6), K.prop('chair', 2, 6),
         K.prop('shelf_jars', 9, 5), K.exam(9, 6, 'yule_sonja_note'), K.prop('firewood', 10, 7), K.prop('lantern', 8, 3), K.chest('yule_sonja_c1', 1, 7, { pool: 'p_T' })],
-      npcs: [K.npc('sonja_gran', 'npc_snow_old_f', 7, 5, { name: 'ソーニャの祖母', dir: 'w', talk: 'yule_sonja_gran', reward: 'news' })],
+      npcs: [K.npc('sonja_gran', 'npc_snow_old_f', 7, 5, { name: R.T('map.snow_yule_interiors.yule_sonja.npcs.0.sonja_gran.name'), dir: 'w', talk: 'yule_sonja_gran', reward: 'news' })],
       art: { image: 'snow/under/yule_sonja', painted: [] },
     });
 
     // ---------------------------------------------------------------- 語りの年寄りの家（ブレンダ・オラフ）12×10
-    interior('yule_brenda', 'ブレンダの家', 12, 10, {
+    interior('yule_brenda', R.T('map.snow_yule_interiors.yule_brenda'), 12, 10, {
       back: 'brenda', carpet: [3, 5, 6, 3],
       objects: [K.prop('stove', 1, 2), K.prop('bed', 9, 2), K.prop('table', 7, 6), K.prop('chair', 6, 6), K.prop('chair', 8, 6), K.prop('rug_roll', 10, 6), K.prop('lantern', 6, 3),   // 戸口の列（x 5）は空ける
         K.prop('shelf_jars', 3, 2), K.prop('house_plant', 10, 7)],
-      npcs: [K.npc('brenda', 'npc_snow_old_f', 5, 4, { name: 'ブレンダ', title: '語りの年寄り', dir: 's', talk: 'yule_brenda', reward: 'lead' })],
+      npcs: [K.npc('brenda', 'npc_snow_old_f', 5, 4, { name: R.T('map.snow_yule_interiors.yule_brenda.npcs.0.brenda.name'), title: R.T('map.snow_yule_interiors.yule_brenda.npcs.0.brenda.title'), dir: 's', talk: 'yule_brenda', reward: 'lead' })],
       art: { image: 'snow/under/yule_brenda', painted: [] },   // 芝土の竪穴の家（描いた下絵）
     });
-    interior('yule_hunter', '狩人の家', 12, 10, {
+    interior('yule_hunter', R.T('map.snow_yule_interiors.yule_hunter'), 12, 10, {
       back: 'hunter',
       objects: [K.prop('stove', 10, 2), K.prop('weapon_rack', 1, 2), K.prop('weapon_rack', 2, 2), K.prop('bed', 8, 2), K.prop('table', 4, 6), K.prop('chair', 3, 6),
         K.prop('firewood', 10, 7), K.prop('crate', 1, 7), K.prop('lantern', 6, 3), K.exam(1, 3, 'yule_hunter_bow')],
-      npcs: [K.npc('olaf', 'npc_snow_old_m', 5, 4, { name: 'オラフ', title: '年寄りの猟師', dir: 's', talk: 'yule_olaf', reward: 'lead' })],
+      npcs: [K.npc('olaf', 'npc_snow_old_m', 5, 4, { name: R.T('map.snow_yule_interiors.yule_hunter.npcs.0.olaf.name'), title: R.T('map.snow_yule_interiors.yule_hunter.npcs.0.olaf.title'), dir: 's', talk: 'yule_olaf', reward: 'lead' })],
       art: { image: 'snow/under/yule_hunter', painted: [] },   // マンモスの牙の皮の小屋（描いた下絵）
     });
 
     // ---------------------------------------------------------------- 釣り小屋 12×10
-    interior('yule_fishhut', '氷上の釣り小屋', 12, 10, {
+    interior('yule_fishhut', R.T('map.snow_yule_interiors.yule_fishhut'), 12, 10, {
       back: 'fish',
       objects: [K.prop('stove', 1, 2), K.prop('snow_barrel', 10, 2), K.prop('snow_barrel', 10, 3), K.prop('table', 3, 5), K.prop('chair', 2, 5), K.prop('ice_hole', 8, 6),   // 戸口の列（x 5）は空ける
         K.exam(8, 6, 'yule_fish_hole'), K.prop('sled', 2, 7), K.prop('lantern', 6, 3), K.prop('crate', 10, 7)],
-      npcs: [K.npc('fisher', 'npc_snow_old_m', 7, 4, { name: 'トーレ', title: '釣り小屋のじいさま', dir: 's', talk: 'yule_fisher', reward: 'side', pushable: false })],
+      npcs: [K.npc('fisher', 'npc_snow_old_m', 7, 4, { name: R.T('map.snow_yule_interiors.yule_fishhut.npcs.0.fisher.name'), title: R.T('map.snow_yule_interiors.yule_fishhut.npcs.0.fisher.title'), dir: 's', talk: 'yule_fisher', reward: 'side', pushable: false })],
     });
 
     // ---------------------------------------------------------------- 子どもの秘密基地（雪の土手をくりぬいた部屋）12×10
-    interior('yule_base', '子どもの秘密基地', 12, 10, {
+    interior('yule_base', R.T('map.snow_yule_interiors.yule_base'), 12, 10, {
       back: 'base',
       paint: (g) => { K.rect(g, 1, 2, 10, 7, 'f'); },
       objects: [K.prop('rug_roll', 3, 4), K.prop('snow_barrel', 1, 3), K.prop('lantern', 5, 3), K.prop('crate', 9, 3), K.prop('sack', 9, 4),
         K.exam(2, 5, 'yule_base_drawing'), K.chest('yule_base_c1', 9, 6, { pool: 'p_rare' }), K.chest('yule_base_c2', 2, 7, { item: 'i_potion', n: 3 })],
-      npcs: [K.npc('pekka_in', 'npc_snow_child', 6, 5, { name: 'ペッカ', dir: 's', talk: 'yule_base_in', reward: 'hint' })],
+      npcs: [K.npc('pekka_in', 'npc_snow_child', 6, 5, { name: R.T('map.snow_yule_interiors.yule_base.npcs.0.pekka_in.name'), dir: 's', talk: 'yule_base_in', reward: 'hint' })],
       art: { image: 'snow/under/yule_base', painted: [] },   // 雪の土手をくりぬいた部屋（描いた下絵）
       light: { ambient: '#707a9a', k: 0.7 },
-      meta: { sub: '雪の土手の中' },
+      meta: { sub: R.T('map.snow_yule_interiors.yule_base.meta.sub') },
     });
     // ---------------------------------------------------------------- ノルデン分室の空き家（村はずれ）12×10
-    interior('yule_branch', 'ノルデン分室の空き家', 12, 10, {
+    interior('yule_branch', R.T('map.snow_yule_interiors.yule_branch'), 12, 10, {
       back: 'branch',
       objects: [K.prop('bookshelf', 1, 2), K.prop('bookshelf', 2, 2), K.prop('bookshelf', 9, 2), K.prop('table', 5, 4), K.prop('chair', 5, 5), K.exam(5, 4, 'yule_branch_desk'),
         K.prop('crate', 10, 6), K.prop('crate', 10, 7), K.prop('rug_roll', 1, 7), K.exam(1, 3, 'yule_branch_shelf'), K.chest('yule_branch_c1', 8, 7, { pool: 'p_T' })],
@@ -141,7 +141,7 @@
       npcs: [],
       light: { ambient: '#5e6284', k: 0.62 },
       bgm: 'sorrow',
-      meta: { sub: '記録院の札が、はがれかけている' },
+      meta: { sub: R.T('map.snow_yule_interiors.yule_branch.meta.sub') },
     });
   });
 })(window.RPG);

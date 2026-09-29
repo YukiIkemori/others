@@ -10,7 +10,7 @@
   const _ = (Bt._ = Bt._ || {});
   const Rs = (_.result = {});
 
-  const PROF_JA = { sword: '剣', greatsword: '大剣', dagger: '短剣', bow: '弓', staff: '杖', fire: '火', ice: '氷', thunder: '雷', wind: '風', earth: '土', light: '光', dark: '闇', heal: '癒し', shield: '盾' };
+  const PROF_JA = { sword: R.T('battle.result.PROF_JA.sword'), greatsword: R.T('battle.result.PROF_JA.greatsword'), dagger: R.T('battle.result.PROF_JA.dagger'), bow: R.T('battle.result.PROF_JA.bow'), staff: R.T('battle.result.PROF_JA.staff'), fire: R.T('battle.result.PROF_JA.fire'), ice: R.T('battle.result.PROF_JA.ice'), thunder: R.T('battle.result.PROF_JA.thunder'), wind: R.T('battle.result.PROF_JA.wind'), earth: R.T('battle.result.PROF_JA.earth'), light: R.T('battle.result.PROF_JA.light'), dark: R.T('battle.result.PROF_JA.dark'), heal: R.T('battle.result.PROF_JA.heal'), shield: R.T('battle.result.PROF_JA.shield') };
   Rs.profName = (key) => PROF_JA[key] || (R.DB.elements && R.DB.elements[key] && R.DB.elements[key].name) || key;
 
   function charOf(c) {
@@ -79,7 +79,7 @@
     g.beginPath(); g.moveTo(x - 7 * k, y - 4 * k + bob); g.lineTo(x + 7 * k, y - 4 * k + bob); g.lineTo(x, y + 5 * k + bob); g.closePath(); g.fill();
     g.restore();
   };
-  const NEXT_PROMPTS = [{ btn: 'a', label: '決定で進む' }];
+  const NEXT_PROMPTS = [{ btn: 'a', label: R.T('battle.result.NEXT_PROMPTS.0.label') }];
   Rs.NEXT_PROMPTS = NEXT_PROMPTS;
 
   /**
@@ -275,7 +275,7 @@
     Kt.text(g, nmS, x0 + 26 * k, ry + 2 * k, { size: 13.5 * k, weight: rr ? 700 : 500, color: col, raw: true, shadow: true });
     let tx = x0 + 31 * k + Kt.measure(nmS, { size: 13.5 * k, weight: rr ? 700 : 500 });
     if (rr) { Kt.text(g, dr.grade === 'super' ? '★★' : '★', tx, ry + 3 * k, { size: 12 * k, weight: 700, color: col, raw: true }); tx += (dr.grade === 'super' ? 26 : 14) * k; }
-    if (dr.stolen) Kt.text(g, '盗んだ', tx + 2 * k, ry + 4 * k, { size: 10.5 * k, weight: 700, color: Kt.COL.gold, raw: true, shadow: true });
+    if (dr.stolen) Kt.text(g, R.T('battle.result.drawItem.text'), tx + 2 * k, ry + 4 * k, { size: 10.5 * k, weight: 700, color: Kt.COL.gold, raw: true, shadow: true });
     Kt.text(g, '×' + dr.n, x0 + colW, ry + 3 * k, { size: 12.5 * k, color: Kt.COL.text2, align: 'right', raw: true, shadow: true });
   }
   function drawMember(g, st, b, x, y, w, k, t) {
@@ -287,7 +287,7 @@
       Kt.text(g, Kt.fit(u.name, 120 * k, { size: 13.5 * k, weight: 700 }), x + 42 * k, y + 8 * k, { size: 13.5 * k, weight: 700, color: alive ? Kt.COL.text : Kt.COL.disabled, raw: true, shadow: true });
       const gr = b.grow;
       if (gr && (gr.hp || gr.mp)) {
-        const s = [gr.hp ? '最大HP +' + gr.hp : '', gr.mp ? '最大MP +' + gr.mp : ''].filter(Boolean).join('  ');
+        const s = [gr.hp ? R.T('battle.result.drawMember.s.0', { hp: gr.hp }) : '', gr.mp ? R.T('battle.result.drawMember.s.1', { mp: gr.mp }) : ''].filter(Boolean).join('  ');
         Kt.text(g, s, x + w, y + 9 * k, { size: 12 * k, color: Kt.COL.up, align: 'right', raw: true, shadow: true });
       }
     }
@@ -317,7 +317,7 @@
       if ('letterSpacing' in g) g.letterSpacing = 6 * k + 'px';
       g.shadowColor = 'rgba(0,0,0,0.8)'; g.shadowBlur = 8;
       const gr = g.createLinearGradient(0, y, 0, y + 30 * k); gr.addColorStop(0, '#fffdf2'); gr.addColorStop(1, '#f2d08a');
-      g.fillStyle = gr; g.fillText('勝利', x0, y);
+      g.fillStyle = gr; g.fillText(R.T('battle.result.drawVictory.fillText'), x0, y);
       g.restore();
       if (lay.pages.length > 1) Kt.text(g, `${page + 1} / ${lay.pages.length}`, x0 + fullW, y + 8 * k, { size: 13 * k, weight: 700, color: Kt.COL.text2, align: 'right', raw: true, shadow: true });
       Kt.hline(g, x0 - 8 * k, x0 + fullW + 20 * k, y + 44 * k, 0.5, '255,226,160');
@@ -329,17 +329,17 @@
       const gy = G.tall ? y - 50 * k : y, gw = G.tall ? fullW - (lay.pages.length > 1 ? 50 * k : 0) : G.lw;
       row(() => {
         Kt.icon(g, 'coin', x0 + (G.tall ? gw - 190 * k : 0), gy, 18 * k, Kt.COL.text2);
-        Kt.text(g, 'ゴールド', x0 + (G.tall ? gw - 162 * k : 28 * k), gy + 1 * k, { size: 13 * k, color: Kt.COL.text2, raw: true, shadow: true });
+        Kt.text(g, R.T('battle.result.drawVictory.text'), x0 + (G.tall ? gw - 162 * k : 28 * k), gy + 1 * k, { size: 13 * k, color: Kt.COL.text2, raw: true, shadow: true });
         Kt.text(g, '+' + d.gold.toLocaleString('en-US') + ' G', x0 + gw, gy - 2 * k, { size: 18 * k, weight: 700, color: Kt.COL.gold, align: 'right', raw: true, shadow: true });
       });
       if (!G.tall) y += 32 * k;
       if (d.drops.length) {
-        row(() => Kt.text(g, '手に入れた物', x0, y, { size: 11.5 * k, weight: 700, color: Kt.COL.text3, raw: true, track: 2 }));
+        row(() => Kt.text(g, R.T('battle.result.drawVictory.text_2'), x0, y, { size: 11.5 * k, weight: 700, color: Kt.COL.text3, raw: true, track: 2 }));
         y += 20 * k;
         for (const dr of lay.shown) { const ry = y; row(() => drawItem(g, dr, x0, ry, G.lw, k)); y += 30 * k; }
-        if (lay.more) { const ry = y; row(() => Kt.text(g, `ほか ${lay.more} 品`, x0 + 26 * k, ry + 2 * k, { size: 13 * k, color: Kt.COL.text2, raw: true, shadow: true })); y += 30 * k; }
+        if (lay.more) { const ry = y; row(() => Kt.text(g, R.T('battle.result.drawVictory.text_3', { more: lay.more }), x0 + 26 * k, ry + 2 * k, { size: 13 * k, color: Kt.COL.text2, raw: true, shadow: true })); y += 30 * k; }
       } else {
-        row(() => Kt.text(g, '手に入れた物はない', x0, y, { size: 12 * k, color: Kt.COL.text3, raw: true, shadow: true }));
+        row(() => Kt.text(g, R.T('battle.result.drawVictory.text_4'), x0, y, { size: 12 * k, color: Kt.COL.text3, raw: true, shadow: true }));
         y += 24 * k;
       }
       y += 8 * k;
@@ -347,7 +347,7 @@
     // 仲間（16:9 は右の列）
     let my = G.tall ? y : memTop;
     const mx = G.tall ? x0 : G.rx;
-    row(() => Kt.text(g, '仲間', mx, my, { size: 11.5 * k, weight: 700, color: Kt.COL.text3, raw: true, track: 2 }));
+    row(() => Kt.text(g, R.T('battle.result.drawVictory.text_5'), mx, my, { size: 11.5 * k, weight: 700, color: Kt.COL.text3, raw: true, track: 2 }));
     my += 20 * k;
     const sc = G.memScale || 1;
     g.save();
@@ -382,7 +382,7 @@
   Rs.escape = async function (st) {
     st.phase = 'result';
     st.ui = null; st.tele = null;
-    st.head = { name: 'うまく逃げきれた！', t0: R.Engine.time };
+    st.head = { name: R.T('battle.result.escape.head.name'), t0: R.Engine.time };
     Bt.lastEnd = { result: 'escape', at: R.Engine.time };
     try { R.Audio.sfx('escape'); } catch (e) { /* ignore */ }
     const reduce = _.trans.reduce();
@@ -399,7 +399,7 @@
   Rs.lose = async function (st) {
     st.phase = 'result';
     st.ui = null; st.tele = null;
-    st.head = { name: '一行は力尽きた……。', t0: R.Engine.time };
+    st.head = { name: R.T('battle.result.lose.head.name'), t0: R.Engine.time };
     Bt.lastEnd = { result: 'lose', at: R.Engine.time };
     await st.pwait(700);
     await headConfirm(st);

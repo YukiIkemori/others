@@ -19,7 +19,7 @@
   const Leads = (R.Leads = R.Leads || {});
   const KIND_ORDER = { main: 0, rumor: 1, map: 2, region: 3, side: 4 };
   const SHOW_MS = 4500;
-  const PROMPT = [{ btn: 'y', label: '目印を付ける' }];
+  const PROMPT = [{ btn: 'y', label: R.T('sys.leads.PROMPT.0.label') }];
 
   const G = () => R.Game;
   const def = (id) => (R.DB.leads && R.DB.leads[id]) || null;
@@ -160,8 +160,8 @@
 
   /** 地方の見出しの名前（行ったことのない地方は方角で。MENUS が使う） */
   Leads.regionName = function (rid) {
-    if (!rid || rid === '-' || rid === 'world') return '世界のうわさ';
-    if (rid === 'main') return '本筋';
+    if (!rid || rid === '-' || rid === 'world') return R.T('sys.leads.regionName.ret');
+    if (rid === 'main') return R.T('sys.leads.regionName.ret_2');
     const r = R.DB.regions && R.DB.regions[rid];
     return (r && r.name) || rid;
   };
@@ -325,13 +325,13 @@
     g.fillStyle = 'rgba(236,201,124,0.85)';
     g.fillRect(x + U(1), y + U(12), U(2), h - U(24));
     R.UIK.icon(g, 'journal', x + U(16), y + U(13), U(16), C.gold);
-    R.UIK.text(g, cur.pinned ? '目印を付けた' : '新しい手がかり', x + U(38), y + U(14), { size: U(11.5), weight: 700, color: C.gold, track: U(1.5) });
+    R.UIK.text(g, cur.pinned ? R.T('sys.leads.draw.text') : R.T('sys.leads.draw.text_2'), x + U(38), y + U(14), { size: U(11.5), weight: 700, color: C.gold, track: U(1.5) });
     const from = d.from ? String(d.from) : '';
     if (from) R.UIK.text(g, from, x + w - U(16), y + U(15), { size: U(11), color: C.text3, align: 'right', maxW: w * 0.42 });
     R.UIK.text(g, d.title || cur.id, x + U(16), y + U(36), { size: U(16.5), weight: 700, color: C.text, maxW: w - U(32) });
     if (cur.pinned) {
       R.UIK.icon(g, 'pin', x + U(16), y + h - U(24), U(13), C.gold);
-      R.UIK.text(g, '右上の札と地図に印が出る', x + U(34), y + h - U(24), { size: U(11.5), color: C.text2 });
+      R.UIK.text(g, R.T('sys.leads.draw.text_3'), x + U(34), y + h - U(24), { size: U(11.5), color: C.text2 });
     } else R.UIK.prompts(g, PROMPT, { x: x + w - U(14), y: y + h - U(17), align: 'right' }, { size: 11.5 });
     g.restore();
   }

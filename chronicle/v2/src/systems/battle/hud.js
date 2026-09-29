@@ -183,7 +183,7 @@
       g.fillStyle = back ? 'rgba(30,50,80,0.8)' : 'rgba(70,44,20,0.8)'; g.fill();
       g.strokeStyle = c; g.lineWidth = 1; g.stroke();
       g.restore();
-      K.text(g, back ? '後' : '前', x + s / 2, y + s * 0.12, { size: s * 0.72, weight: 700, color: c, align: 'center', raw: true });
+      K.text(g, back ? R.T('battle.hud.K.rowTag.text') : R.T('battle.hud.K.rowTag.text_2'), x + s / 2, y + s * 0.12, { size: s * 0.72, weight: 700, color: c, align: 'center', raw: true });
     },
     prompts(g, list) {
       if (fn('prompts')) return R.UIK.prompts(g, list);
@@ -250,7 +250,7 @@
       // 状態の印（名前の右）
       let sx = x0 + 21 * k + K.measure(u.name, { size: nameSize, weight: 700 }) + 6 * k;
       for (const s of (v.status || []).slice(0, 4)) { R.BFX && R.BFX.statusMark && R.BFX.statusMark(g, s, sx, ty + nameSize * 0.55, 6 * k); sx += 14 * k; }
-      if (!v.alive) K.text(g, '戦闘不能', sx + 2 * k, ty + 2 * k, { size: 10.5 * k, weight: 700, color: COL.down, raw: true, shadow: true });
+      if (!v.alive) K.text(g, R.T('battle.hud.party.text'), sx + 2 * k, ty + 2 * k, { size: 10.5 * k, weight: 700, color: COL.down, raw: true, shadow: true });
       // HP / MP
       const bw = L.tall ? (r.w - 30 * k) / 2 : (r.w - 36 * k) / 2;
       const bx1 = L.tall ? r.x + 10 * k : r.x + 32 * k, bx2 = bx1 + bw + 8 * k;
@@ -340,14 +340,14 @@
     if (L.tall) {
       let x = 16 * k;
       const y = L.chipsY;
-      const w1 = speedChip(g, x, y, sp, 12 * k, '速さ：');
+      const w1 = speedChip(g, x, y, sp, 12 * k, R.T('battle.hud.chips.w1.speedChip'));
       st.chipRects.speed = { x, y, w: w1, h: 22 * k }; x += w1 + 10 * k;
       const po = st.partyOpts || [];
       const on = !!(st.B && st.B.repeatOn);
-      const w2 = K.chip(g, x, y, on ? 'リピート中：タップでやめる' : 'リピート', { icon: 'repeat', size: 12 * k, color: on ? COL.gold : po.includes('repeat') && st.phase === 'input' ? COL.text2 : COL.disabled, line: on ? 'rgba(236,201,124,0.7)' : undefined });
+      const w2 = K.chip(g, x, y, on ? R.T('battle.hud.chips.w2.chip') : R.T('battle.hud.chips.w2.chip_2'), { icon: 'repeat', size: 12 * k, color: on ? COL.gold : po.includes('repeat') && st.phase === 'input' ? COL.text2 : COL.disabled, line: on ? 'rgba(236,201,124,0.7)' : undefined });
       st.chipRects.repeat = { x, y, w: w2, h: 22 * k }; x += w2 + 10 * k;
       if (!st.setup.noEscape && !(st.info && st.info.boss)) {   // ボス戦は逃げられない（BATTLE 34-11）: 札を出さない
-        const w3 = K.chip(g, x, y, '逃げる', { icon: 'exit', size: 12 * k, color: po.includes('escape') ? COL.text2 : COL.disabled });
+        const w3 = K.chip(g, x, y, R.T('battle.hud.chips.w3.chip'), { icon: 'exit', size: 12 * k, color: po.includes('escape') ? COL.text2 : COL.disabled });
         st.chipRects.escape = { x, y, w: w3, h: 22 * k };
       }
       return;

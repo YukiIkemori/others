@@ -46,7 +46,7 @@
     O.push(K.chest('elder_1_c3', 6, 12, { pool: 'p_T' }));
     O.push(K.chest('elder_1_c4', 2, 31, { pool: 'p_rare' }));               // 隠し通路の先（小部屋の奥）
     O.push(K.chest('elder_1_c5', 30, 6, { gold: 160 }));
-    O.push(K.sign(28, 44, '――千年樹。\n森の主の眠る木。根を踏むべからず。'));
+    O.push(K.sign(28, 44, R.T('map.elder_1.sign')));
     O.push(K.exam(26, 4, 'elder_carving'));                                  // 幹の内側の古い刻み
     O.push(K.prop('crystal', 25, 4));
     for (const [x, y] of [[21, 42], [31, 40], [38, 30], [46, 17], [38, 12], [14, 12], [6, 18], [14, 30], [6, 35], [21, 25], [31, 26], [22, 7], [31, 8]]) O.push(K.prop('mushroom_glow', x, y, { variant: (x + y) % 4 }));
@@ -89,11 +89,11 @@
     O.push(K.exam(26, 33, 'elder_root_gate', { cond: '!forest_sw1' }));   // 道は x 26 の 1 マス（2026-09-29）
 
     const N = [
-      K.npc('fine', 'fine', 26, 38, { name: 'フィーネ', dir: 'n', talk: 'elder_fine', cond: ['!forest_fine', '!cleared_r_forest'], pushable: false }),
+      K.npc('fine', 'fine', 26, 38, { name: R.T('map.elder_1.N.0.fine.name'), dir: 'n', talk: 'elder_fine', cond: ['!forest_fine', '!cleared_r_forest'], pushable: false }),
     ];
 
     K.def('elder_1', {
-      name: '千年樹', kind: 'dungeon', region: 'r_forest', location: 'elder', theme: 'tree_inside',
+      name: R.T('map.elder_1.name'), kind: 'dungeon', region: 'r_forest', location: 'elder', theme: 'tree_inside',
       legend: {
         B: { mat: 'wall_bark', solid: true, rise: 1 },
         '.': { mat: 'bark_floor' },
@@ -124,7 +124,7 @@
       light: { ambient: '#60709a', k: 0.57, mood: 'tree' },
       dark: false,
       bgm: 'eldertree', bbg: 'tree',
-      meta: { chestsInfo: true, floor: '1 階', sub: '幹の中のらせん' },
+      meta: { chestsInfo: true, floor: R.T('map.elder_1.meta.floor'), sub: R.T('map.elder_1.meta.sub') },
     });
   });
 })(window.RPG);

@@ -152,7 +152,7 @@
 
   // ================================================================ 大灯火の演出（E20）
   const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
-  const KANJI = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+  const KANJI = ['', R.T('sys.tier.KANJI.1'), R.T('sys.tier.KANJI.2'), R.T('sys.tier.KANJI.3'), R.T('sys.tier.KANJI.4'), R.T('sys.tier.KANJI.5'), R.T('sys.tier.KANJI.6'), R.T('sys.tier.KANJI.7'), R.T('sys.tier.KANJI.8'), R.T('sys.tier.KANJI.9')];
 
   function regionInfo(rid) {
     const reg = (R.DB.regions && R.DB.regions[rid]) || {};
@@ -265,17 +265,17 @@
     R.UIK.hline && R.UIK.hline(g, x + U(40), x + w - U(40), y + U(30), 0.3, [236, 201, 124]);
     R.UIK.diamond(g, cx, y + U(30), U(6), C.gold, C.goldHi, 1);
     R.UIK.text(g, 'CHAPTER ' + (ROMAN[st.n] || st.n), cx, y + U(46), { size: U(12), family: 'en', color: C.gold, align: 'center', track: U(4) });
-    R.UIK.text(g, '第' + (KANJI[st.n] || st.n) + '章', cx, y + U(70), { size: U(15), weight: 700, color: C.text2, align: 'center', track: U(3) });
+    R.UIK.text(g, R.T('sys.tier.drawStage.text', { p0: KANJI[st.n] || st.n }), cx, y + U(70), { size: U(15), weight: 700, color: C.text2, align: 'center', track: U(3) });
     R.UIK.text(g, st.title, cx, y + U(96), { size: U(tall ? 26 : 30), weight: 700, align: 'center', grad: [C.goldHi, C.gold, C.goldLo], shadow: 'rgba(236,180,90,0.35)', blur: 10, maxW: w - U(48) });
     R.UIK.rule(g, x + U(56), x + w - U(56), y + U(146), 0.16);
     if (st.page) {
-      const line = st.page + 'を年代記にとじた';
+      const line = R.T('sys.tier.drawStage.line', { page: st.page });
       const tw = R.UIK.measure(line, { size: U(13.5) }) + U(24);
       R.UIK.icon(g, 'book', cx - tw / 2, y + U(160), U(17), C.gold);
       R.UIK.text(g, line, cx - tw / 2 + U(24), y + U(160), { size: U(13.5), color: C.text });
     }
-    R.UIK.text(g, st.region + 'に灯りがもどった', cx, y + U(186), { size: U(12), color: C.text3, align: 'center' });
-    if (ct > 900) R.UIK.prompts(g, [{ btn: 'a', label: 'つづける' }], { x: x + w - U(20), y: y + h - U(22), align: 'right' });
+    R.UIK.text(g, R.T('sys.tier.drawStage.text_2', { region: st.region }), cx, y + U(186), { size: U(12), color: C.text3, align: 'center' });
+    if (ct > 900) R.UIK.prompts(g, [{ btn: 'a', label: R.T('sys.tier.drawStage.0.label') }], { x: x + w - U(20), y: y + h - U(22), align: 'right' });
     g.restore();
   }
 

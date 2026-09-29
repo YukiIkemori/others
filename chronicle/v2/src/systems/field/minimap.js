@@ -200,10 +200,10 @@
   function legend(g, x, y, z) {
     const U = R.UIK.u, T = R.UIK.T, m = S.map;
     // 回復の場所の名前: ダンジョンの中は女神の像（R.MapUtil.springLook）、町・井戸・オアシスは泉
-    const heal = m && (m.objects || []).some((o) => o.type === 'spring' && R.MapUtil.springLook(m, o) === 'goddess') ? '女神の像' : '泉';
+    const heal = m && (m.objects || []).some((o) => o.type === 'spring' && R.MapUtil.springLook(m, o) === 'goddess') ? R.T('sys.minimap.legend.heal') : R.T('sys.minimap.legend.heal_2');
     const size = U(10 * z), gap = U(12 * z);
     let cx = x + U(2 * z);
-    for (const [t, color] of [[heal, '#8fe8f0'], ['宝箱', T.color.gold], ['階段', T.color.text2]]) {
+    for (const [t, color] of [[heal, '#8fe8f0'], [R.T('sys.minimap.legend.1.0'), T.color.gold], [R.T('sys.minimap.legend.2.0'), T.color.text2]]) {
       R.UIK.text(g, t, cx, y, { size, color, shadow: true });
       cx += (R.UIK.measure ? R.UIK.measure(t, { size }) : size * t.length) + gap;
     }

@@ -8,16 +8,16 @@
   'use strict';
   const U = (slot, name, o) => Object.assign({ name, slot, grade: 'rare', tier: 0, src: 'unique', grow: 'tier', price: 0 }, o);
   R.defs('items', {
-    u_hans_axe: U('weapon', 'きこりの大斧', { wtype: 'greatsword', art: 'axe', units: 's1v1', mult: 1.4, crit: 2, vs: { plant: 1.5 }, icon: 'greatsword',
-      desc: '植物に大きなダメージ。\n持ち主とともに強くなる大斧。' }),
-    u_ben_whistle: U('acc', 'ベンの呼び笛', { mods: { preemptPct: 10, escapePct: 25, spd: 4 }, icon: 'ring',
-      desc: '先制しやすくなる。逃げやすくなる。\nすばやく動ける。' }),
-    u_roy_charm: U('acc', 'ロイのお守り', { mods: { hpPct: 6, statusResist: { poison: 0.5, sleep: 0.5 } }, icon: 'ring',
-      desc: '最大HPが上がる。\n毒・眠りにかかりにくい。' }),
-    u_pim_cap: U('head', 'ピムの帽子', { weight: 'light', mods: { glimPct: { tech: 10, spell: 10 } }, icon: 'helm',
-      desc: '技と術を閃きやすい。\n小さな語り部の帽子。' }),
+    u_hans_axe: U('weapon', R.T('items.u_hans_axe.weapon'), { wtype: 'greatsword', art: 'axe', units: 's1v1', mult: 1.4, crit: 2, vs: { plant: 1.5 }, icon: 'greatsword',
+      desc: R.T('items.u_hans_axe.weapon.desc') }),
+    u_ben_whistle: U('acc', R.T('items.u_ben_whistle.acc'), { mods: { preemptPct: 10, escapePct: 25, spd: 4 }, icon: 'ring',
+      desc: R.T('items.u_ben_whistle.acc.desc') }),
+    u_roy_charm: U('acc', R.T('items.u_roy_charm.acc'), { mods: { hpPct: 6, statusResist: { poison: 0.5, sleep: 0.5 } }, icon: 'ring',
+      desc: R.T('items.u_roy_charm.acc.desc') }),
+    u_pim_cap: U('head', R.T('items.u_pim_cap.head'), { weight: 'light', mods: { glimPct: { tech: 10, spell: 10 } }, icon: 'helm',
+      desc: R.T('items.u_pim_cap.head.desc') }),
     // 寄り道の一品物（縦切りでは「あとで」の場所。WORLD_REDESIGN §2.7 #2・#5）
-    u_windchime: U('acc', '風の鈴', { mods: { encounterPct: -15 }, icon: 'ring', desc: '魔物に出会いにくい。\n風が歌うように鳴る鈴。' }),
-    u_twin_bow: U('weapon', '見張りの長弓', { wtype: 'bow', units: 'd2', hit: 5, crit: 4, icon: 'bow', desc: 'よく当たる。会心が出やすい。\n見張り塔に伝わる長弓。' }),
+    u_windchime: U('acc', R.T('items.u_windchime.acc'), { mods: { encounterPct: -15 }, icon: 'ring', desc: R.T('items.u_windchime.acc.desc') }),
+    u_twin_bow: U('weapon', R.T('items.u_twin_bow.weapon'), { wtype: 'bow', units: 'd2', hit: 5, crit: 4, icon: 'bow', desc: R.T('items.u_twin_bow.weapon.desc') }),
   });
 })(window.RPG);

@@ -102,7 +102,7 @@
     autosave(reason) {
       const ok = Save.save('auto');
       if (ok) {
-        try { if (R.UIK && R.UIK.toast) R.UIK.toast('オートセーブ', { icon: 'save', ms: 2400, anchor: 'bl' }); } catch (e) { console.error(e); }
+        try { if (R.UIK && R.UIK.toast) R.UIK.toast(R.T('ui.save.Save.autosave.toast'), { icon: 'save', ms: 2400, anchor: 'bl' }); } catch (e) { console.error(e); }
         R.emit('autosave', { reason });
       }
       return ok;

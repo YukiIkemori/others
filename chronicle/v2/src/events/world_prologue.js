@@ -18,17 +18,17 @@
       const w = R.DB.maps[(ctx && ctx.map) || 'world'] || R.DB.maps.world, lamp = w && ctx && ctx.x != null ? (w.objects || []).find((o) => o.type === 'waylamp' && o.x === ctx.x && o.y === ctx.y && /^wl_pen_/.test(o.id || '')) : null;
       const lookout = lamp ? lamp.id === 'wl_pen_lookout' : !!(ctx && ctx.y != null && ctx.y < 88);
       const flag = lookout ? 'prologue_lamp_lookout' : 'prologue_lamp_road';
-      if (ev.flag(flag)) { await E.narr(ev, '道しるべの灯籠に、\n火がともっている。\nまわりの闇が、少しやわらいだ。'); return; }
+      if (ev.flag(flag)) { await E.narr(ev, R.T('ev.world_prologue.world_pen_lamp.run.narr')); return; }
       if (!ev.flag('prologue_lamp_quest')) {
-        await E.narr(ev, lookout ? '見晴らし台の古い灯籠は、\n火が消えたままだ。' : '道しるべの灯籠の火が\n消えている。');
-        await E.narr(ev, '火種があれば、\nともせそうだ。');
+        await E.narr(ev, lookout ? R.T('ev.world_prologue.world_pen_lamp.run.narr_2') : R.T('ev.world_prologue.world_pen_lamp.run.narr_3'));
+        await E.narr(ev, R.T('ev.world_prologue.world_pen_lamp.run.narr_4'));
         return;
       }
-      await E.narr(ev, '組合の火種を、\n灯籠に移した。');
+      await E.narr(ev, R.T('ev.world_prologue.world_pen_lamp.run.narr_5'));
       ev.setFlag(flag);
       try { R.Audio.sfx('lamp'); } catch (e) { /* */ }
-      await E.narr(ev, '灯籠に、火がともった！\nこのあたりには、もう\n魔物が寄りつかないだろう。');
-      if (ev.flag('prologue_lamp_road') && ev.flag('prologue_lamp_lookout')) await E.narr(ev, 'タデオに知らせに行こう。');
+      await E.narr(ev, R.T('ev.world_prologue.world_pen_lamp.run.narr_6'));
+      if (ev.flag('prologue_lamp_road') && ev.flag('prologue_lamp_lookout')) await E.narr(ev, R.T('ev.world_prologue.world_pen_lamp.run.narr_7'));
     },
   };
 
@@ -37,9 +37,9 @@
     run: async (ev) => {
       const E = X();
       await E.say(ev, 'bridge_guard', E.pick([
-        { cond: 'cleared_r_forest', text: '西の森の上に、光の柱が\n見えるだろう？\nあれが大灯火ってやつかね。' },
-        { cond: 'prologue_done', text: ['跳ね橋は下ろしてある。\n北の野を抜ければ、\n西の森へ続く街道だ。', '東と北の峠は、崖崩れで\n通れないそうだ。気をつけてな。'] },
-        { text: ['跳ね橋は、上げたままだ。\n灯台の火が消えてから、\n夜の魔物が橋を渡ってくるんでな。', '灯台に火が戻るまでは、\n下ろせんよ。'] },
+        { cond: 'cleared_r_forest', text: R.T('ev.world_prologue.world_bridge_guard.run.pick.0.text') },
+        { cond: 'prologue_done', text: R.T('ev.world_prologue.world_bridge_guard.run.pick.1.text') },
+        { text: R.T('ev.world_prologue.world_bridge_guard.run.pick.2.text') },
       ]));
     },
   };
@@ -49,8 +49,8 @@
     run: async (ev) => {
       const E = X();
       await E.say(ev, 'traveler_plains', E.pick([
-        { cond: 'cleared_r_forest', text: '森の灯が戻ってから、\n夜道の樹脂の松明が\nよく売れるんだ。' },
-        { text: ['よい灯りを。\n東の峠が崖崩れでね、\n山の町へ荷が運べないんだ。', 'しばらくは、ここで\n野宿さ。たき火にあたって\nいくかい？'] },
+        { cond: 'cleared_r_forest', text: R.T('ev.world_prologue.world_traveler_plains.run.pick.0.text') },
+        { text: R.T('ev.world_prologue.world_traveler_plains.run.pick.1.text') },
       ]));
     },
   };
@@ -59,8 +59,8 @@
     run: async (ev) => {
       const E = X();
       await E.say(ev, 'woodcutter_road', E.pick([
-        { cond: 'cleared_r_forest', text: '仲間たちが、みんな\n村へ帰ってきたよ。\n森の道も、もう迷わない。' },
-        { text: ['森が道を変えるんで、\n奥へは入れないんだ。', '街道の道しるべの灯籠が\n三つも消えててな。\n夜は、それが怖い。'] },
+        { cond: 'cleared_r_forest', text: R.T('ev.world_prologue.world_woodcutter.run.pick.0.text') },
+        { text: R.T('ev.world_prologue.world_woodcutter.run.pick.1.text') },
       ]));
     },
   };
@@ -69,8 +69,8 @@
     run: async (ev) => {
       const E = X();
       await E.say(ev, 'shepherd', E.pick([
-        { cond: 'cleared_r_forest', text: '近ごろ、空がほんの少し\n明るくないかい？\n羊たちも落ち着いておる。' },
-        { text: ['灯台が戻ってから、\n羊が夜に鳴かなくなった。', 'わしの若いころは……\nはて、昼というのが\nあったような、なかったような。'] },
+        { cond: 'cleared_r_forest', text: R.T('ev.world_prologue.world_shepherd.run.pick.0.text') },
+        { text: R.T('ev.world_prologue.world_shepherd.run.pick.1.text') },
       ]));
     },
   };

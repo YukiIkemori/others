@@ -186,17 +186,17 @@
   }
   function ago(t) {
     const m = Math.max(0, Math.floor((Date.now() - (t || 0)) / 60000));
-    if (m < 1) return 'たった今';
-    if (m < 60) return m + '分前';
+    if (m < 1) return R.T('ui.title.ago.ret');
+    if (m < 60) return R.T('ui.title.ago.ret_2', { m });
     const h = Math.floor(m / 60);
-    if (h < 24) return h + '時間前';
-    return Math.floor(h / 24) + '日前';
+    if (h < 24) return R.T('ui.title.ago.ret_3', { h });
+    return R.T('ui.title.ago.ret_4', { Math: Math.floor(h / 24) });
   }
-  S.slotName = (slot) => ({ auto: 'オートセーブ', suspend: '中断', s1: '記録 1', s2: '記録 2', s3: '記録 3' })[slot] || slot;
+  S.slotName = (slot) => ({ auto: R.T('ui.title.slotName.auto'), suspend: R.T('ui.title.slotName.suspend'), s1: R.T('ui.title.slotName.s1'), s2: R.T('ui.title.slotName.s2'), s3: R.T('ui.title.slotName.s3') })[slot] || slot;
   S.playTimeJa = function (ms) {
     const m = Math.floor((ms || 0) / 60000);
     const h = Math.floor(m / 60);
-    return h ? `${h}時間${String(m % 60).padStart(2, '0')}分` : `${m % 60}分`;
+    return h ? R.T('ui.title.playTimeJa.ret', { h, padStart: String(m % 60).padStart(2, '0') }) : R.T('ui.title.playTimeJa.ret_2', { p0: m % 60 });
   };
 
   // ================================================================ 描いた一枚絵（design/TITLE_ART.md）
@@ -462,9 +462,20 @@
     g.restore();
     return { s, m, k, A, readyAt: s.readyAt };
   }
+  /**
+   * 題字の画像の id。日本語は 'logo'、ほかの言語は 'logo_<言語>'（例 logo_en・logo_zh-hans）が素材にあればそれ、無ければ null
+   * （日本語の題字の絵は出さず、下の文字の題字にする。core/i18n.js）
+   */
+  function logoId() {
+    const l = R.I18n ? R.I18n.lang() : 'ja';
+    if (l === 'ja') return 'logo';
+    const id = 'logo_' + l.toLowerCase();
+    return R.Media && R.Media.entry && R.Media.entry('title', id) ? id : null;
+  }
   /** 題字の画像（logo_safe の左上、幅 w × R.W。下に暗い楕円、8 つの炎の光）。描けたら true */
   function drawLogo(g, m, A, alpha) {
-    const rec = loadImg('logo');
+    if (!logoId()) return false;
+    const rec = loadImg(logoId());
     if (!rec.ready || !(A.logo > 0)) return rec.ready;
     const lm = meta('logo'), ls = m.logo_safe, sf = R.safe || { l: 0, t: 0 };
     const w = ls.w * R.W, h = w * (lm.size[1] / lm.size[0]);
@@ -497,13 +508,13 @@
       this.cont = newest();
       const any = R.Save.cards().some((e) => e.card && !e.card.bad);
       const rows = [];
-      if (this.cont) rows.push({ label: 'つづきから', value: 'continue' });
-      rows.push({ label: 'はじめから', value: 'new' });
-      if (!this.cont) rows.push({ label: 'つづきから', value: 'continue', disabled: true });
-      if (any) rows.push({ label: '記録を選ぶ', value: 'load' });
-      rows.push({ label: '冒険の合言葉', value: 'passphrase' });
-      rows.push({ label: '設定', value: 'settings' });
-      rows.push({ label: 'クレジット', value: 'credits' });
+      if (this.cont) rows.push({ label: R.T('ui.title.continue.label'), value: 'continue' });
+      rows.push({ label: R.T('ui.title.new.label'), value: 'new' });
+      if (!this.cont) rows.push({ label: R.T('ui.title.continue.label'), value: 'continue', disabled: true });
+      if (any) rows.push({ label: R.T('ui.title.load.label'), value: 'load' });
+      rows.push({ label: R.T('ui.title.passphrase.label'), value: 'passphrase' });
+      rows.push({ label: R.T('ui.title.settings.label'), value: 'settings' });
+      rows.push({ label: R.T('ui.title.credits.label'), value: 'credits' });
       this.rows = rows;
       this.list = new R.UIK.List({ rows, rowH: 44, tall: true });
       this.list.onSelect = (row) => this.pick(row);
@@ -517,7 +528,7 @@
       this.flare = null;
       this.fx = null;
       this.codeShown = false;
-      loadImg('logo');
+      if (logoId()) loadImg(logoId());
       artSet(R.layout === 'tall' ? 'phone' : 'wide');
     },
     /** 開いてからの時刻（とばした後・戻ったときは出そろった後） */
@@ -542,11 +553,11 @@
         else if (v === 'passphrase') { const ok = await S.open('passphrase', { mode: 'enter' }); if (ok) { this.close({ cmd: 'passphrase' }); return; } }
         else if (v === 'settings') await S.open('settings');
         else if (v === 'credits') {
-          await S.note(this, { title: 'クレジット', lines: [
-            { text: 'ルミナス・クロニクル 〜八つの灯火〜', color: T().color.goldHi },
+          await S.note(this, { title: R.T('ui.title.pick.title'), lines: [
+            { text: R.T('ui.title.pick.lines.0.text'), color: T().color.goldHi },
             // 持ち主 2026-09-28「企画・制作 Studio Metem でいい。書体とか音楽とかの項目は要らない」
             //   （書体の OFL の文は、配布物の中の v2/assets/fonts/OFL_*.txt で満たす）
-            '企画・制作　Studio Metem',
+            R.T('ui.title.pick.lines.1'),
           ] });
         }
       } finally { this.busy = false; }
@@ -575,7 +586,7 @@
       // 読み終わるまでは暗いまま待つ（オーナー 2026-09-27: 古いコードの背景が一瞬出てから絵に替わるのをやめる）。
       // 出てくる順（§4）は絵が読めてから始める。ART_WAIT ms たっても読めない・読めないと分かったときだけコードの背景
       this.artWait = false;
-      const logoRec = loadImg('logo'), logoWait = !logoRec.ready && !logoRec.failed;
+      const logoRec = logoId() ? loadImg(logoId()) : { ready: false, failed: true }, logoWait = !logoRec.ready && !logoRec.failed;
       if ((logoWait || (!art && artSet(tall ? 'phone' : 'wide').mode === 'wait')) && R.Engine.time - this.openedAt < ART_WAIT) {
         this.artWait = true;
         if (this.intro && !this.skipped) this.t0 = R.Engine.time;
@@ -600,13 +611,15 @@
           R.UIK.text(g, 'LUMINOUS CHRONICLE', x, y, { size: u(15), family: 'en', weight: 700, align: 'center', color: C.gold, track: u(4), shadow: true });
           R.UIK.text(g, R.TITLE, x, y + u(28), { size: u(38), weight: 700, align: 'center', grad: [C.goldHi, C.gold, C.goldLo], shadow: 'rgba(10,8,20,0.8)', blur: 8, maxW: R.W - u(30) });
           R.UIK.hline(g, x - u(170), x + u(170), y + u(82), 0.4, '236,201,124');
-          R.UIK.text(g, '〜 八つの灯火 〜', x, y + u(96), { size: u(18), weight: 700, align: 'center', color: C.gold, track: u(6), shadow: true });
+          R.UIK.text(g, R.T('ui.title.draw.text'), x, y + u(96), { size: u(18), weight: 700, align: 'center', color: C.gold, track: u(6), shadow: true });
         } else {
           x = s.l + R.W * 0.065; y = s.t + R.H * 0.17;
-          R.UIK.text(g, 'LUMINOUS CHRONICLE', x + u(4), y, { size: u(19), family: 'en', weight: 700, color: C.gold, track: u(7), shadow: true });
-          R.UIK.text(g, R.TITLE, x, y + u(30), { size: u(48), weight: 700, grad: [C.goldHi, C.gold, C.goldLo], shadow: 'rgba(10,8,20,0.8)', blur: 8, track: u(4) });
+          // ラテン字の言語は題名そのものを飾りの書体（Cinzel）で。上の小さな英字の行は重なるので出さない
+          const latin = R.I18n && R.I18n.isLatin();
+          if (!latin) R.UIK.text(g, 'LUMINOUS CHRONICLE', x + u(4), y, { size: u(19), family: 'en', weight: 700, color: C.gold, track: u(7), shadow: true });
+          R.UIK.text(g, latin ? R.TITLE.toUpperCase() : R.TITLE, x, y + u(latin ? 22 : 30), { size: u(latin ? 44 : 48), family: latin ? 'en' : undefined, weight: 700, grad: [C.goldHi, C.gold, C.goldLo], shadow: 'rgba(10,8,20,0.8)', blur: 8, track: u(4) });
           R.UIK.hline(g, x, x + u(420), y + u(96), 0.45, '236,201,124');
-          R.UIK.text(g, '〜 八つの灯火 〜', x + u(2), y + u(112), { size: u(20), weight: 700, color: C.gold, track: u(10), shadow: true });
+          R.UIK.text(g, R.T('ui.title.draw.text'), x + u(2), y + u(112), { size: u(20), weight: 700, color: C.gold, track: u(10), shadow: true });
         }
         g.restore();
       }
@@ -654,15 +667,15 @@
             : { x: Math.max(cs.x * R.W, lr.x + lr.w + u(12)), y: lr.y - u(4), w: cw, h: ch };
           const cd = this.cont.card;
           R.UIK.panel(g, cr, { dense: true });
-          R.UIK.text(g, '最後の記録', cr.x + u(16), cr.y + u(14), { size: u(12.5), weight: 700, color: C.gold, track: u(2) });
+          R.UIK.text(g, R.T('ui.title.draw.text_2'), cr.x + u(16), cr.y + u(14), { size: u(12.5), weight: 700, color: C.gold, track: u(2) });
           R.UIK.text(g, `${S.slotName(this.cont.slot)}　${ago(cd.date)}`, cr.x + cr.w - u(16), cr.y + u(15), { size: u(11.5), color: C.text3, align: 'right' });
           R.UIK.text(g, cd.place || '', cr.x + u(16), cr.y + u(36), { size: u(17), weight: 700, color: C.text, maxW: cr.w - u(32) });
-          R.UIK.text(g, `${cd.chapter ? '第' + cd.chapter + '章' : '序章'}　・　${S.playTimeJa(cd.playMs)}`, cr.x + u(16), cr.y + u(62), { size: u(13), color: C.text2 });
+          R.UIK.text(g, R.T('ui.title.draw.text_3', { p0: cd.chapter ? R.T('ui.title.draw.text_4', { chapter: cd.chapter }) : R.T('ui.title.draw.text_5'), playTimeJa: S.playTimeJa(cd.playMs) }), cr.x + u(16), cr.y + u(62), { size: u(13), color: C.text2 });
           (cd.faces || []).slice(0, 4).forEach((look, i) => S.faceCircle(g, look, cr.x + u(32) + i * u(38), cr.y + u(102), u(16)));
         }
         // 左下・右下（縦持ちは R.safe.b の分だけ上げてある）
-        R.UIK.text(g, `${R.COPYRIGHT || '© Studio Metem'}      ver ${R.VERSION || ''}${R.DB.config && R.DB.config.slice ? '　体験版' : ''}`, s.l + u(18), footY, { size: u(11.5), color: C.text3, shadow: true });
-        if (!tall) S.prompts(g, [{ btn: 'a', label: '決定' }, { btn: 'up', label: '選ぶ' }]);
+        R.UIK.text(g, `${R.COPYRIGHT || '© Studio Metem'}      ver ${R.VERSION || ''}${R.DB.config && R.DB.config.slice ? R.T('ui.title.draw.text_6') : ''}`, s.l + u(18), footY, { size: u(11.5), color: C.text3, shadow: true });
+        if (!tall) S.prompts(g, [{ btn: 'a', label: R.T('ui.title.draw.0.label') }, { btn: 'up', label: R.T('ui.title.draw.1.label') }]);
         g.restore();
       } else this.list.rect = lr;
       // ほかの画面から戻ったとき: 全体を 0.6 秒のフェード

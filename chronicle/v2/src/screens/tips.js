@@ -10,27 +10,27 @@
 
   // 文の中の {btn:x} は今の入力のボタンの字（キーボード Q・パッド L など。R.Input.prompt）。1〜3 行（オーナー 2026-09-28「短く」）
   R.defs('tips', {
-    glimmer: { title: '閃き', text: '戦いの最中、仲間が新しい技や術を閃くことがある。\n閃いた技と術は、メニューの「技・術」で見られる。\n強い相手ほど、閃きやすい。' },
-    prof: { title: '熟練度', text: '武器の技や術は、使うほど熟練度が上がる。\n熟練度が高いほど、その武器や属性がよく効く。\n上がった所は「強さ」の画面に ▲ で出る。' },
-    row: { title: '前列と後列', text: '後列は狙われにくいが、弓と杖のほかは前まで届かない。\n並びはメニューの「隊列」で変えられる。' },
-    leads: { title: '手がかり帳', text: '聞いた話は、手がかり帳に書き留められる。\n「年代記・手がかり」で目印を付けると、右上の札と地図に印が出る。\n次にやることは、メニューの上とフィールドの {btn:l} で見られる。' },
-    spring: { title: '女神の像', text: '女神の像に祈ると、控えも含めて全員の HP と MP が戻り、\n倒れた人も起き上がる。何度でも使える。\n町やオアシスの泉で休んでも同じ。' },
-    chest: { title: '宝箱', text: '開けていない宝箱は、地図にも印が出る。' },
-    secret: { title: '隠し通路', text: '壁の中には、通り抜けられる所がある。\n一度見つけた通路は、壁の縁に細い印が付く。' },
-    fullheal: { title: '満タン', text: 'メニューで {btn:x} を押すと、回復の術を効きのよい順に使って HP を満たす。\n足りなければ、確かめてから安い回復の道具を使う。' },
-    repeat: { title: 'リピートと速さ', text: '{btn:l} で「リピート」: 前のラウンドと同じ手を、みんなでくり返す。\nもう一度 {btn:l} か {btn:b} でやめる。\n{btn:r} で戦闘の速さを切り替えられる。' },
-    speed: { title: '戦闘の速さ', text: '戦闘中に {btn:r} で速さを切り替えられる。\n敵の構え（予告）からは目を離さないように。' },
-    telegraph: { title: '大技の予告', text: '強い敵は、大技の前に構えを見せる。\n画面の端の言葉を読んで、守りや並びで備えよう。' },
-    steal: { title: '盗む', text: '短剣の技などで、敵から品を盗める。\nめったに手に入らない品を持つ魔物もいる。\n盗んだ品は図鑑にも載る。' },
-    equip: { title: '装備', text: '武器・盾・頭・体・手・足と、アクセサリ 2 つの 8 か所に付けられる。\n{btn:x} で「いちばん強く」をまとめて選べる（アクセサリは変えない）。\n{btn:l}・{btn:r} で仲間を切り替える。' },
-    tavern: { title: '仲間', text: '潮風亭には 20 人の腕利きがいて、一緒に旅するのは 3 人。\n仲間は、あとで潮風亭のマスターに頼めば入れ替えられる。\n控えの仲間も、戦いのあとの伸びを少し分けてもらえる。' },
-    zonelock: { title: '魔物の強さ', text: '地方の事件を解決すると、その地方の魔物はそのときの強さのまま。\nまだ解決していない地方の魔物は、旅が進むほど手ごわくなる。' },
-    stone: { title: '魔石', text: '魔石を仲間に使うと、その属性の最初の術を覚える。\nメニューの「道具」から、覚えさせたい仲間を選んで使う。\nもう覚えている人には使えない（石は減らない）。' },
-    warp: { title: 'ワープと脱出', text: 'メニューの「ワープ」で、行ったことのある町やダンジョンの入口へ飛べる。\nダンジョンの中では「脱出」で入口へ戻れる。' },
-    bestiary: { title: '図鑑', text: '出会った魔物は図鑑に載る。\n落とし物や盗んだ品は、手に入れると名前が埋まる。' },
-    save: { title: 'セーブ', text: '戦闘の外なら、いつでも記録できる。\n町やダンジョンの階に入ったとき、戦闘に勝ったときは\nオートセーブの枠にも書かれる。' },
-    dark: { title: '暗がり', text: '暗がりでは、ランタンの届く所しか見えない。\nしょく台に火をともすと、周りが明るくなる。' },
-    waylamp: { title: '道しるべの灯籠', text: '火のともった灯籠の周りには、\n魔物が寄ってこない。' },
+    glimmer: { title: R.T('tips.glimmer.title'), text: R.T('tips.glimmer.text') },
+    prof: { title: R.T('tips.prof.title'), text: R.T('tips.prof.text') },
+    row: { title: R.T('tips.row.title'), text: R.T('tips.row.text') },
+    leads: { title: R.T('tips.leads.title'), text: R.T('tips.leads.text') },
+    spring: { title: R.T('tips.spring.title'), text: R.T('tips.spring.text') },
+    chest: { title: R.T('tips.chest.title'), text: R.T('tips.chest.text') },
+    secret: { title: R.T('tips.secret.title'), text: R.T('tips.secret.text') },
+    fullheal: { title: R.T('tips.fullheal.title'), text: R.T('tips.fullheal.text') },
+    repeat: { title: R.T('tips.repeat.title'), text: R.T('tips.repeat.text') },
+    speed: { title: R.T('tips.speed.title'), text: R.T('tips.speed.text') },
+    telegraph: { title: R.T('tips.telegraph.title'), text: R.T('tips.telegraph.text') },
+    steal: { title: R.T('tips.steal.title'), text: R.T('tips.steal.text') },
+    equip: { title: R.T('tips.equip.title'), text: R.T('tips.equip.text') },
+    tavern: { title: R.T('tips.tavern.title'), text: R.T('tips.tavern.text') },
+    zonelock: { title: R.T('tips.zonelock.title'), text: R.T('tips.zonelock.text') },
+    stone: { title: R.T('tips.stone.title'), text: R.T('tips.stone.text') },
+    warp: { title: R.T('tips.warp.title'), text: R.T('tips.warp.text') },
+    bestiary: { title: R.T('tips.bestiary.title'), text: R.T('tips.bestiary.text') },
+    save: { title: R.T('tips.save.title'), text: R.T('tips.save.text') },
+    dark: { title: R.T('tips.dark.title'), text: R.T('tips.dark.text') },
+    waylamp: { title: R.T('tips.waylamp.title'), text: R.T('tips.waylamp.text') },
   });
 
   /** 説明の札の文（{btn:x} をボタンの字に） */
@@ -149,7 +149,7 @@
   S.def('tip', {
     opaque: false, dim: 0.5,
     init(p) {
-      this.tip = (R.DB.tips || {})[p.id] || { title: '説明', text: '' };
+      this.tip = (R.DB.tips || {})[p.id] || { title: R.T('ui.tips.tip.init.tip.title'), text: '' };
       if (R.Game && R.Game.flags && p.id) R.Game.flags['tip_' + p.id] = true;
     },
     update() {
@@ -168,13 +168,13 @@
       this.rect = { x, y, w, h };
       R.UIK.panel(g, this.rect, { dense: true, frost: true });
       R.UIK.icon(g, 'bulb', x + u(26), y + u(24), u(20), C.teal);
-      R.UIK.text(g, 'はじめての説明', x + u(54), y + u(27), { size: u(11.5), weight: 700, color: C.teal, track: u(2) });
+      R.UIK.text(g, R.T('ui.tips.tip.draw.text'), x + u(54), y + u(27), { size: u(11.5), weight: 700, color: C.teal, track: u(2) });
       R.UIK.text(g, t.title, x + u(26), y + u(48), { size: u(20), weight: 700, color: C.goldHi });
       R.UIK.rule(g, x + u(26), x + w - u(26), y + u(80), 0.16);
       let cy = y + u(92);
       for (const l of lines) { R.UIK.text(g, l, x + u(28), cy, { size: u(15), color: C.text }); cy += u(27); }
-      R.UIK.text(g, 'あとで「設定 › 遊び方」から読み直せる', x + u(26), y + h - u(30), { size: u(11.5), color: C.text3 });
-      R.UIK.prompts(g, [{ btn: 'a', label: '閉じる' }], { x: x + w - u(22), y: y + h - u(24), align: 'right' });
+      R.UIK.text(g, R.T('ui.tips.tip.draw.text_2'), x + u(26), y + h - u(30), { size: u(11.5), color: C.text3 });
+      R.UIK.prompts(g, [{ btn: 'a', label: R.T('ui.tips.tip.draw.0.label') }], { x: x + w - u(22), y: y + h - u(24), align: 'right' });
     },
   });
 
@@ -182,7 +182,7 @@
   S.def('letter', {
     opaque: false, dim: 0.55,
     init(p) {
-      const L = (R.DB.letters || {})[p.id] || { title: '手紙', text: '' };
+      const L = (R.DB.letters || {})[p.id] || { title: R.T('ui.tips.letter.init.L.title'), text: '' };
       this.L = L;
       this.text = Array.isArray(L.text) ? L.text.join('\n') : String(L.text || '');
     },
@@ -205,9 +205,9 @@
       const ink = C.ink || '#3a2a1a', ink2 = C.ink2 || '#6b5638';
       let cy = y + u(38);
       if (face) { R.UIK.portraitFrame(g, { x: x + w - u(44) - u(72), y: y + u(28), w: u(72), h: u(72) }, L.face, { bg: ['#d8c6a0', '#b89c70'] }); }
-      R.UIK.text(g, L.title || '手紙', x + u(44), cy, { size: u(21), weight: 700, color: C.inkName || '#9a5a1a', maxW: w - u(88) - (face ? u(84) : 0) });
+      R.UIK.text(g, L.title || R.T('ui.tips.letter.draw.text'), x + u(44), cy, { size: u(21), weight: 700, color: C.inkName || '#9a5a1a', maxW: w - u(88) - (face ? u(84) : 0) });
       cy += u(34);
-      if (L.from) R.UIK.text(g, L.from + ' より', x + u(46), cy, { size: u(13), color: ink2 });
+      if (L.from) R.UIK.text(g, R.T('ui.tips.letter.draw.text_2', { from: L.from }), x + u(46), cy, { size: u(13), color: ink2 });
       cy += u(30);
       R.UIK.rule(g, x + u(40), x + w - u(40), cy - u(8), 0, C.inkLine || 'rgba(70,50,26,0.35)');
       cy += u(8);
@@ -215,7 +215,7 @@
       // 送りの菱形
       const t = (R.Engine.time % 1200) / 1200;
       R.UIK.diamond(g, x + w - u(40), y + h - u(34) + Math.sin(t * Math.PI * 2) * u(1.5), u(5), '#a8672a');
-      R.UIK.prompts(g, [{ btn: 'a', label: '閉じる' }], { x: x + w - u(58), y: y + h - u(34), align: 'right' }, { color: ink, shadow: false });
+      R.UIK.prompts(g, [{ btn: 'a', label: R.T('ui.tips.letter.draw.0.label') }], { x: x + w - u(58), y: y + h - u(34), align: 'right' }, { color: ink, shadow: false });
     },
   });
 })(window.RPG);

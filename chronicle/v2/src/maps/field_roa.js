@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("f_roa", {
-    name: "ロアの丘", region: "prologue", outside: "forest_dark",
+    name: R.T('map.field_roa.f_roa.name'), region: "prologue", outside: "forest_dark",
     rows: [
       "FFFFFFFFFFFFFFFFFFFFF,rrrrrrrr;..;;;;;,,wwrrrrrrrrrr",
       "FFFFFFFFFFFFFFFFFFFFF,,,,rrrrr...;;;;;,Twwwrrrrrrrrr",
@@ -50,17 +50,17 @@
     ],
     objects: [
       {"type":"stairs","x":23,"y":16,"to":{"map":"well","spawn":"entrance"}},
-      {"type":"sign","x":21,"y":15,"text":"旅人の古井戸\n枯れ井戸。底へ下りる縄ばしごがある。"},
+      {"type":"sign","x":21,"y":15,"text":R.T('map.field_roa.f_roa.objects.1.text')},
       {"type":"examine","x":14,"y":10,"event":"world_poi_stones"},
       {"type":"examine","x":29,"y":21,"event":"world_poi_shrine"},
       {"type":"waylamp","id":"wl_pen_road","x":34,"y":24,"lit":"prologue_lamp_road","event":"world_pen_lamp"},
-      {"type":"sign","x":5,"y":17,"text":"ロアの里\n語り部の里。"},
-      {"type":"sign","x":43,"y":27,"text":"東 → 港町ファロス・灯台の岬\n北 → 見晴らし台・跳ね橋"},
+      {"type":"sign","x":5,"y":17,"text":R.T('map.field_roa.f_roa.objects.5.text')},
+      {"type":"sign","x":43,"y":27,"text":R.T('map.field_roa.f_roa.objects.6.text')},
       {"type":"chest","id":"f_roa_c1","x":49,"y":11,"item":"i_potion","n":1},
       {"type":"examine","x":46,"y":16,"event":"world_poi_windmill"},
     ],
     npcs: [
-      {"id":"shepherd","look":"npc_old_m_2","name":"羊飼いの年寄り","x":14,"y":31,"dir":"w","move":"still","cond":"prologue_done","talk":"world_shepherd","reward":"news","key":"world_shepherd"},
+      {"id":"shepherd","look":"npc_old_m_2","name":R.T('map.field_roa.f_roa.shepherd.name'),"x":14,"y":31,"dir":"w","move":"still","cond":"prologue_done","talk":"world_shepherd","reward":"news","key":"world_shepherd"},
     ],
     spawns: {"roa":{"x":1,"y":19,"dir":"e"},"north":{"x":31,"y":1,"dir":"s"},"east":{"x":50,"y":29,"dir":"w"},"well":{"x":22,"y":17,"dir":"s"}},
     exits: [{"x":0,"y":19,"w":1,"h":2,"to":{"map":"roa","spawn":"gate"}},{"x":31,"y":0,"w":2,"h":1,"to":{"map":"f_lookout","spawn":"south"}},{"x":51,"y":29,"w":1,"h":2,"to":{"map":"f_cape","spawn":"west"}}],
@@ -68,7 +68,7 @@
     tilePatches: [],
     zones: [{"rect":null,"zone":"zw_prologue"}],
     art: {"image":"field/under/f_roa","painted":["stairs_down@23,16"],"overlay":"field/under/f_roa_over"},
-    meta: {"sub":"羊の丘と古井戸","worldRect":[222,246,70,60]},
+    meta: {"sub":R.T('map.field_roa.f_roa.meta.sub'),"worldRect":[222,246,70,60]},
     links: {"roa":{"map":"f_roa","spawn":"roa"},"well":{"map":"f_roa","spawn":"well"}},
   });
 })(window.RPG);

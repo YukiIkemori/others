@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("f_fern", {
-    name: "森の街道", region: "r_forest", outside: "forest_dark",
+    name: R.T('map.field_fern.f_fern.name'), region: "r_forest", outside: "forest_dark",
     rows: [
       "TTTFFFFFTTTT,,FFFFFFFFFFFFXX...XFTTTTTTTTTTFTTFFFFFFFFFF",
       "TTTFFFFFTTTT,,FFFFFFFFFFFFXT...XFTTTrTTTTTTTTTTFFFFFFFFF",
@@ -56,8 +56,8 @@
       {"type":"waylamp","id":"wl_forest_2","x":40,"y":18,"lit":"q_forest_fireflies_2","event":"forest_waylamp"},
       {"type":"waylamp","id":"wl_forest_3","x":30,"y":20,"lit":"q_forest_fireflies_3","event":"forest_waylamp"},
       {"type":"examine","x":21,"y":15,"event":"world_poi_shrine"},
-      {"type":"sign","x":30,"y":4,"text":"森の村フェルン"},
-      {"type":"sign","x":33,"y":21,"text":"北 → フェルン\n西 → 風鳴りの丘\n南 → 森の南"},
+      {"type":"sign","x":30,"y":4,"text":R.T('map.field_fern.f_fern.objects.3.text')},
+      {"type":"sign","x":33,"y":21,"text":R.T('map.field_fern.f_fern.objects.4.text')},
       {"type":"prop","id":"mushroom_glow","x":43,"y":27},
       {"type":"prop","id":"mushroom_glow","x":44,"y":24},
       {"type":"chest","id":"f_fern_c1","x":46,"y":26,"item":"i_ether","n":1},
@@ -71,7 +71,7 @@
     tilePatches: [],
     zones: [{"rect":null,"zone":"zw_forest_road"}],
     art: {"image":"field/under/f_fern","painted":[],"overlay":"field/under/f_fern_over"},
-    meta: {"sub":"フェルンへの森の道","worldRect":[112,188,90,74]},
+    meta: {"sub":R.T('map.field_fern.f_fern.meta.sub'),"worldRect":[112,188,90,74]},
     links: {"fern":{"map":"f_fern","spawn":"fern"}},
   });
 })(window.RPG);

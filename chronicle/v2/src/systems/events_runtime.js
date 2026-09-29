@@ -103,7 +103,7 @@
     if (!r || !r.n) return;
     const it = R.DB.items[r.item];
     const icon = it ? (it.slot === 'key' ? 'key' : it.icon && R.UIK.hasIcon && R.UIK.hasIcon(it.icon) ? it.icon : 'bag') : 'bag';
-    const txt = `${r.name || r.item}${r.n > 1 ? ' ×' + r.n : ''}を手に入れた`;
+    const txt = R.T('sys.events_runtime.toastGain.txt', { p0: r.name || r.item, p1: r.n > 1 ? ' ×' + r.n : '' });
     try { if (R.Field && R.Field.hud && R.Field.hud.toast && R.Engine.has('field')) R.Field.hud.toast(txt, { icon }); else R.UIK.toast(txt, { icon, anchor: 'tr' }); } catch (e) { /* */ }
     try { (it && it.slot === 'key' ? R.Audio.jingle('keyitem') : R.Audio.sfx('item')); } catch (e) { /* */ }
   }
@@ -217,7 +217,7 @@
         guard();
         const v = R.State.gold(n || 0);
         if (n > 0 && !(o && o.silent)) {
-          try { if (R.Engine.has('field')) R.Field.hud.toast(`${n} Gを手に入れた`, { icon: 'coin' }); else R.UIK.toast(`${n} Gを手に入れた`, { icon: 'coin', anchor: 'tr' }); } catch (e) { /* */ }
+          try { if (R.Engine.has('field')) R.Field.hud.toast(R.T('sys.events_runtime.makeEv.ev.gold.toast', { n }), { icon: 'coin' }); else R.UIK.toast(R.T('sys.events_runtime.makeEv.ev.gold.toast', { n }), { icon: 'coin', anchor: 'tr' }); } catch (e) { /* */ }
           try { R.Audio.sfx('gold'); } catch (e) { /* */ }
         }
         return v;
@@ -274,7 +274,7 @@
         guard();
         let h = null;
         for (let i = 0; i < 20 && !h; i++) { h = await R.Screens.open('charcreate'); guard(); }
-        if (!h) h = (R.DB.config && R.DB.config.defaultHero) || { type: 'warrior', sex: 'm', name: 'アルン' };
+        if (!h) h = (R.DB.config && R.DB.config.defaultHero) || { type: 'warrior', sex: 'm', name: R.T('sys.events_runtime.makeEv.ev.createHero.h.name') };
         R.State.setHero(h);
         return h;
       },
@@ -284,7 +284,7 @@
         const first = !G().flags[id];
         if (first) { G().flags[id] = true; R.emit('flag', { id, v: true }); }
         const d = R.DB.lore && R.DB.lore[id];
-        const txt = '書庫に書き写した' + (d && d.title ? '：' + d.title : '');
+        const txt = R.T('sys.events_runtime.makeEv.ev.lore.txt', { p0: d && d.title ? R.T('sys.events_runtime.makeEv.ev.lore.txt_2', { title: d.title }) : '' });
         try { if (R.Field && R.Field.hud && R.Field.hud.toast && R.Engine.has('field')) R.Field.hud.toast(txt, { icon: 'book' }); else R.UIK.toast(txt, { icon: 'book', anchor: 'tr' }); } catch (e) { /* */ }
         try { R.Audio.sfx('quill'); } catch (e) { /* */ }
         return first;

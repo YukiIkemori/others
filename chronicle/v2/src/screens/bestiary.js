@@ -8,7 +8,7 @@
   if (!S.def) S.def = function (id, v) { (S._defs = S._defs || {})[id] = v; };
   const u = (v) => R.UIK.u(v);
   const T = () => R.UIK.T;
-  const REGION = { prologue: 'ファロス半島', forest: '森の地方', snow: '雪の地方', desert: '砂の地方', marsh: '沼の地方', isles: '島の地方', mine: '鉱山の地方', ash: '灰の地方', star: '星の地方', finale: '終わりの地', postgame: '遠い地' };
+  const REGION = { prologue: R.T('ui.bestiary.REGION.prologue'), forest: R.T('ui.bestiary.REGION.forest'), snow: R.T('ui.bestiary.REGION.snow'), desert: R.T('ui.bestiary.REGION.desert'), marsh: R.T('ui.bestiary.REGION.marsh'), isles: R.T('ui.bestiary.REGION.isles'), mine: R.T('ui.bestiary.REGION.mine'), ash: R.T('ui.bestiary.REGION.ash'), star: R.T('ui.bestiary.REGION.star'), finale: R.T('ui.bestiary.REGION.finale'), postgame: R.T('ui.bestiary.REGION.postgame') };
 
   function isBoss(m) { return !!(m && (m.bossType || (m.flags || []).includes('boss'))); }
   S.bestiaryList = function () {
@@ -16,7 +16,7 @@
     for (const L of Object.values(R.DB.lineages || {})) for (const st of L.stages || []) {
       if (M[st.mon] && !isBoss(M[st.mon]) && !seen.has(st.mon)) { seen.add(st.mon); out.push({ id: st.mon, lineage: L.name }); }
     }
-    for (const id of Object.keys(M)) if (!seen.has(id) && !isBoss(M[id]) && !/^stub_/.test(id)) { seen.add(id); out.push({ id, lineage: M[id].rare ? 'めずらしい魔物' : 'そのほか' }); }
+    for (const id of Object.keys(M)) if (!seen.has(id) && !isBoss(M[id]) && !/^stub_/.test(id)) { seen.add(id); out.push({ id, lineage: M[id].rare ? R.T('ui.bestiary.bestiaryList.lineage') : R.T('ui.bestiary.bestiaryList.lineage_2') }); }
     return out;
   };
   function book(id) { const b = R.Game && R.Game.book && R.Game.book.mon; return (b && b[id]) || null; }
@@ -28,7 +28,7 @@
         regs.add((rg && rg.name) || REGION[z.region] || '');
       }
     }
-    return [...regs].filter(Boolean).join('・');
+    return [...regs].filter(Boolean).join(R.T('ui.bestiary.habitat.join'));
   }
 
   S.def('bestiary', {
@@ -47,14 +47,14 @@
       const lw = tall ? b.w : Math.min(u(380), b.w * 0.4);
       const lp = { x: b.x, y: b.y, w: lw, h: tall ? b.h * 0.42 : b.h };
       R.UIK.panel(g, lp, { frost: true });
-      S.heading(g, '図鑑', lp.x + u(20), lp.y + u(16), 0, { size: 15, track: 4 });
-      R.UIK.text(g, `出会った ${seenN} / ${this.all.length}`, lp.x + lp.w - u(20), lp.y + u(17), { size: u(13), color: C.text2, align: 'right' });
+      S.heading(g, R.T('ui.bestiary.draw.heading'), lp.x + u(20), lp.y + u(16), 0, { size: 15, track: 4 });
+      R.UIK.text(g, R.T('ui.bestiary.draw.text', { seenN, length: this.all.length }), lp.x + lp.w - u(20), lp.y + u(17), { size: u(13), color: C.text2, align: 'right' });
       R.UIK.gauge(g, { x: lp.x + u(20), y: lp.y + u(46), w: lp.w - u(40), h: u(3) }, seenN, this.all.length, ['#8a6a2a', '#f0cf7c']);
       this.list.render = (gg, row, rect, f) => {
         const bk = book(row.value), m = R.DB.monsters[row.value], known = bk && bk.seen;
         const sz = u(14.5), cy = rect.y + (rect.h - sz) / 2 - u(1);
         R.UIK.text(gg, String(row.no).padStart(3, '0'), rect.x + u(14), cy + u(1), { size: u(12), color: f ? C.text2 : C.text3 });   // 選んだ行の明るい地の上は一段明るく（コントラスト 4.5）
-        R.UIK.text(gg, known ? m.name : '？？？', rect.x + u(56), cy, { size: sz, weight: f ? 700 : 500, color: known ? (f ? C.goldHi : C.text) : f ? C.text2 : C.disabled, maxW: rect.w - u(110) });
+        R.UIK.text(gg, known ? m.name : R.T('ui.bestiary.draw.render.text'), rect.x + u(56), cy, { size: sz, weight: f ? 700 : 500, color: known ? (f ? C.goldHi : C.text) : f ? C.text2 : C.disabled, maxW: rect.w - u(110) });
         if (bk && bk.kills) R.UIK.text(gg, String(bk.kills), rect.x + rect.w - u(14), cy + u(1), { size: u(12.5), color: C.text3, align: 'right' });
       };
       this.list.draw(g, { x: lp.x + u(8), y: lp.y + u(60), w: lp.w - u(16), h: lp.h - u(70) });
@@ -85,20 +85,20 @@
           drew = true;
         }
       }
-      if (!drew) R.UIK.text(g, known ? '' : '？', stage.x + stage.w / 2, stage.y + stage.h / 2 - u(20), { size: u(40), weight: 700, color: C.disabled, align: 'center' });
+      if (!drew) R.UIK.text(g, known ? '' : R.T('ui.bestiary.draw.text_2'), stage.x + stage.w / 2, stage.y + stage.h / 2 - u(20), { size: u(40), weight: 700, color: C.disabled, align: 'center' });
       g.restore();
       let y = stage.y + stage.h + u(16);
       const px = dp.x + u(22), pw = dp.w - u(44);
-      R.UIK.text(g, known ? m.name : '？？？', px, y, { size: u(21), weight: 700, color: known ? C.goldHi : C.disabled, maxW: pw * 0.7 });
-      R.UIK.text(g, known ? `倒した数　${(bk && bk.kills) || 0}` : '', px + pw, y + u(4), { size: u(13), color: C.text2, align: 'right' });
+      R.UIK.text(g, known ? m.name : R.T('ui.bestiary.draw.text_3'), px, y, { size: u(21), weight: 700, color: known ? C.goldHi : C.disabled, maxW: pw * 0.7 });
+      R.UIK.text(g, known ? R.T('ui.bestiary.draw.text_4', { p0: (bk && bk.kills) || 0 }) : '', px + pw, y + u(4), { size: u(13), color: C.text2, align: 'right' });
       y += u(34);
-      if (!known) { R.UIK.text(g, 'まだ出会っていない。', px, y, { size: u(14.5), color: C.text3 }); S.prompts(g, [{ btn: 'b', label: '戻る' }]); return; }
+      if (!known) { R.UIK.text(g, R.T('ui.bestiary.draw.text_5'), px, y, { size: u(14.5), color: C.text3 }); S.prompts(g, [{ btn: 'b', label: R.T('ui.bestiary.draw.0.label') }]); return; }
       const hab = habitat(id);
-      if (hab) { R.UIK.text(g, '住む所　' + hab, px, y, { size: u(13), color: C.text2, maxW: pw }); y += u(24); }
+      if (hab) { R.UIK.text(g, R.T('ui.bestiary.draw.text_6', { hab }), px, y, { size: u(13), color: C.text2, maxW: pw }); y += u(24); }
       for (const l of R.UIK.wrap(String(m.desc || '').replace(/\n/g, ''), pw, { size: u(14) }).slice(0, 2)) { R.UIK.text(g, l, px, y, { size: u(14), color: C.text }); y += u(23); }
       y += u(6);
       R.UIK.rule(g, px, px + pw, y, 0.14); y += u(12);
-      S.label(g, '落とす物', px, y); y += u(26);
+      S.label(g, R.T('ui.bestiary.draw.label'), px, y); y += u(26);
       const D = m.drops || {};
       const line = (lab, key, col) => {
         const d = D[key];
@@ -106,12 +106,12 @@
         const got = bk && bk[key];
         R.UIK.text(g, lab, px, y, { size: u(12.5), color: col || C.text3 });
         if (d.item && got) S.itemLabel(g, d.item, px + u(96), y - u(1), { size: u(14), maxW: pw - u(96) });
-        else R.UIK.text(g, '？？？', px + u(96), y - u(1), { size: u(14), color: C.disabled });
+        else R.UIK.text(g, R.T('ui.bestiary.draw.line.text'), px + u(96), y - u(1), { size: u(14), color: C.disabled });
         y += u(24);
       };
-      line('通常', 'normal'); line('レア', 'rare', C.rare); line('超レア', 'super', C.superRare);
-      if (D.steal) line('盗み', 'steal', C.teal);
-      S.prompts(g, [{ btn: 'up', label: '選ぶ' }, { btn: 'b', label: '戻る' }]);
+      line(R.T('ui.bestiary.draw.line'), 'normal'); line(R.T('ui.bestiary.draw.line_2'), 'rare', C.rare); line(R.T('ui.bestiary.draw.line_3'), 'super', C.superRare);
+      if (D.steal) line(R.T('ui.bestiary.draw.line_4'), 'steal', C.teal);
+      S.prompts(g, [{ btn: 'up', label: R.T('ui.bestiary.draw.0.label_2') }, { btn: 'b', label: R.T('ui.bestiary.draw.1.label') }]);
     },
   });
 })(window.RPG);

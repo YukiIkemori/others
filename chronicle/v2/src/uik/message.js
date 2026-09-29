@@ -22,7 +22,7 @@
   let lastShown = null;  // {name, title, face, page, t}
   const logs = [];       // [{name, text}]
   const readSet = new Set();
-  const SPEED_LABEL = { slow: 'ゆっくり', normal: 'ふつう', fast: '速い', instant: '一瞬' };
+  const SPEED_LABEL = { slow: R.T('ui.message.SPEED_LABEL.slow'), normal: R.T('ui.message.SPEED_LABEL.normal'), fast: R.T('ui.message.SPEED_LABEL.fast'), instant: R.T('ui.message.SPEED_LABEL.instant') };
 
   // ---------------------------------------------------------------- ふりがな {漢字|かんじ}
   function parseRuby(s) {
@@ -292,7 +292,7 @@
       st.log.rect = rect;
       UIK.panel(g, rect, { a: 0.9 });
       UIK.icon(g, 'log', x + 20 * k, y + 16 * k, 18 * k, T.color.gold);
-      UIK.text(g, 'ログ', x + 46 * k, y + 16 * k, { size: T.size.h2 * k, weight: 700, color: T.color.gold });
+      UIK.text(g, R.T('ui.message.msgScene.drawLog.text'), x + 46 * k, y + 16 * k, { size: T.size.h2 * k, weight: 700, color: T.color.gold });
       UIK.hline(g, x + 16 * k, x + w - 16 * k, y + 48 * k, 0.3);
       // 下から新しい順に積む
       const size = T.size.body * k, lh = size * 1.75, tw = w - 150 * k;
@@ -313,7 +313,7 @@
         UIK.text(g, r.s, x + 132 * k, yy, { size, color: T.color.text });
       }
       g.restore();
-      UIK.prompts(g, [{ btn: 'x', label: '閉じる' }, { btn: 'up', label: 'さかのぼる' }], { x: x + w, y: y + h + 18 * k, align: 'right' });
+      UIK.prompts(g, [{ btn: 'x', label: R.T('ui.message.msgScene.drawLog.0.label') }, { btn: 'up', label: R.T('ui.message.msgScene.drawLog.1.label') }], { x: x + w, y: y + h + 18 * k, align: 'right' });
     }
 
     // ---------------------------------------------------------------- 会話の札
@@ -340,7 +340,7 @@
       }
       // 本文（出ている字まで）
       let left = Math.floor(st.shown);
-      const rubyOn = UIK.setting('ruby', false);
+      const rubyOn = UIK.setting('ruby', false) && (!R.I18n || R.I18n.lang() === 'ja');   // ふりがなは日本語だけ
       for (let i = 0; i < pg.lines.length && left > 0; i++) {
         const ln = pg.lines[i];
         const n = Math.min(ln.n, left);
@@ -361,7 +361,7 @@
       drawButtons(g, L);
       if (last && hasChoices && full) drawChoices(g, L);
       if (L.tall) {
-        const hint = 'タップで次へ　・　長押しで早送り';
+        const hint = R.T('ui.message.msgScene.drawTalk.hint');
         UIK.text(g, hint, R.W / 2, L.y + L.h + 8 * k, { size: T.size.caption * k, color: T.color.text2, align: 'center', shadow: true });
       }
     }
@@ -382,7 +382,7 @@
       st.btns = [];
       const spd = UIK.setting('textSpeed', 'normal');
       if (touch) {
-        const defs = [{ id: 'log', icon: 'log', label: 'ログ' }, { id: 'auto', icon: 'repeat', label: '自動送り' }, { id: 'ff', icon: 'ff', label: '早送り' }];
+        const defs = [{ id: 'log', icon: 'log', label: R.T('ui.message.msgScene.log.label') }, { id: 'auto', icon: 'repeat', label: R.T('ui.message.msgScene.auto.label') }, { id: 'ff', icon: 'ff', label: R.T('ui.message.msgScene.ff.label') }];
         let x = L.x + L.w;
         const y = L.tall ? L.btnY - 6 * k : L.btnY - 12 * k;
         for (let i = defs.length - 1; i >= 0; i--) {
@@ -397,9 +397,9 @@
           x -= 10 * k;
         }
       } else {
-        UIK.prompts(g, [{ btn: 'x', label: 'ログ' }, { btn: 'y', label: autoOn ? '自動送り　入' : '自動送り' }, { btn: 'r', label: '早送り' }], { x: L.x + L.w - 8 * k, y: L.btnY, align: 'right' });
+        UIK.prompts(g, [{ btn: 'x', label: R.T('ui.message.msgScene.drawButtons.0.label') }, { btn: 'y', label: autoOn ? R.T('ui.message.msgScene.drawButtons.1.label') : R.T('ui.message.msgScene.drawButtons.1.label_2') }, { btn: 'r', label: R.T('ui.message.msgScene.drawButtons.2.label') }], { x: L.x + L.w - 8 * k, y: L.btnY, align: 'right' });
         // 文字の速さ（左上）
-        const lbl = autoOn ? '自動送り　中' : '文字の速さ  ' + (SPEED_LABEL[spd] || SPEED_LABEL.normal);
+        const lbl = autoOn ? R.T('ui.message.msgScene.drawButtons.lbl') : R.T('ui.message.msgScene.drawButtons.lbl_2', { p0: SPEED_LABEL[spd] || SPEED_LABEL.normal });
         UIK.chip(g, L.x + 2 * k, L.btnY - UIK.chipH(11) / 2, lbl, { size: 11, kind: autoOn ? 'gold' : 'plain', bg: autoOn ? undefined : 'rgba(14,16,26,0.6)', color: autoOn ? undefined : T.color.text2 });
       }
     }

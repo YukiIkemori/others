@@ -146,26 +146,26 @@
     for (const [x, y] of [[6, 30], [47, 31], [17, 4], [37, 4], [11, 40], [44, 40]]) O.push(K.prop('iron_brazier', x, y));
     for (const [x, y] of [[22, 15], [32, 15], [17, 19], [37, 19], [16, 23], [38, 30], [17, 35], [37, 35], [22, 38], [32, 38]]) O.push(K.prop('lava_glow', x, y));
     // 門の看板（門のわきの岩）
-    O.push(K.sign(2, 25, '炎の町カルデラ\n西の門 → 灰の荒野・カシムの峠'), K.sign(51, 25, '東の門 → 灰の火山・潮見橋'));
+    O.push(K.sign(2, 25, R.T('map.ash_caldera.sign')), K.sign(51, 25, R.T('map.ash_caldera.sign_2')));
 
     // ---------------------------------------------------------------- 人
     const N = [
-      K.npc('guard_w', 'npc_ash_fighter', 4, 28, { name: '西の門番', dir: 'n', talk: 'caldera_gate_w', reward: 'news' }),
-      K.npc('guard_e', 'npc_ash_fighter', 50, 28, { name: '東の門番', dir: 'n', talk: 'caldera_gate_e', reward: 'boss' }),
-      K.npc('apprentice', 'npc_ash_acolyte', 31, 5, { name: '火守りの見習いのトト', dir: 's', talk: 'caldera_apprentice', reward: 'side' }),
-      K.npc('oldman', 'npc_ash_old_m', 12, 29, { name: '段々の年寄り', dir: 'e', talk: 'caldera_oldman', reward: 'lead' }),
-      K.npc('woman', 'npc_ash_woman', 39, 14, { name: '水くみの女', dir: 's', talk: 'caldera_woman', reward: 'news' }),
-      K.npc('child', 'npc_ash_child', 21, 41, { name: '闘士になりたい子', dir: 'e', talk: 'caldera_child', reward: 'hint' }),
-      K.npc('spa_keeper', 'npc_ash_old_f', 33, 42, { name: '湯守りのばあさま', dir: 'w', talk: 'caldera_spa_keeper', reward: 'side' }),
+      K.npc('guard_w', 'npc_ash_fighter', 4, 28, { name: R.T('map.ash_caldera.N.0.guard_w.name'), dir: 'n', talk: 'caldera_gate_w', reward: 'news' }),
+      K.npc('guard_e', 'npc_ash_fighter', 50, 28, { name: R.T('map.ash_caldera.N.1.guard_e.name'), dir: 'n', talk: 'caldera_gate_e', reward: 'boss' }),
+      K.npc('apprentice', 'npc_ash_acolyte', 31, 5, { name: R.T('map.ash_caldera.N.2.apprentice.name'), dir: 's', talk: 'caldera_apprentice', reward: 'side' }),
+      K.npc('oldman', 'npc_ash_old_m', 12, 29, { name: R.T('map.ash_caldera.N.3.oldman.name'), dir: 'e', talk: 'caldera_oldman', reward: 'lead' }),
+      K.npc('woman', 'npc_ash_woman', 39, 14, { name: R.T('map.ash_caldera.N.4.woman.name'), dir: 's', talk: 'caldera_woman', reward: 'news' }),
+      K.npc('child', 'npc_ash_child', 21, 41, { name: R.T('map.ash_caldera.N.5.child.name'), dir: 'e', talk: 'caldera_child', reward: 'hint' }),
+      K.npc('spa_keeper', 'npc_ash_old_f', 33, 42, { name: R.T('map.ash_caldera.N.6.spa_keeper.name'), dir: 'w', talk: 'caldera_spa_keeper', reward: 'side' }),
       // 闘技場の前の列（大会のあいだ）・空気だけ
-      K.npc('queue_a', 'npc_ash_fighter', 25, 36, { name: '出場を待つ闘士', dir: 'n', talk: [L('受付は中だ。\n列に並びな。'), L('ash_champion', '優勝者か！\n……来年は、負けねえぞ。')], reward: null, cond: '!cleared_r_ash' }),
-      K.npc('queue_b', 'npc_ash_man', 29, 36, { name: '見物の男', dir: 'n', talk: [L('今年の決勝は、よそ者どうしか。\nこりゃ見ものだ。'), L('cleared_r_ash', '火の鳥が、闘技場の上を\n回っていったんだ。……見たか？')], reward: null }),
-      K.npc('dog', 'ani_dog', 40, 36, { name: '闘技場の犬', dir: 'w', move: 'wander', talk: [L('ワン！')], reward: null }),
+      K.npc('queue_a', 'npc_ash_fighter', 25, 36, { name: R.T('map.ash_caldera.N.7.queue_a.name'), dir: 'n', talk: [L(R.T('map.ash_caldera.N.talk.0.L')), L('ash_champion', R.T('map.ash_caldera.N.talk.1.ash_champion'))], reward: null, cond: '!cleared_r_ash' }),
+      K.npc('queue_b', 'npc_ash_man', 29, 36, { name: R.T('map.ash_caldera.N.8.queue_b.name'), dir: 'n', talk: [L(R.T('map.ash_caldera.N.talk.0.L_2')), L('cleared_r_ash', R.T('map.ash_caldera.N.talk.1.cleared_r_ash'))], reward: null }),
+      K.npc('dog', 'ani_dog', 40, 36, { name: R.T('map.ash_caldera.N.9.dog.name'), dir: 'w', move: 'wander', talk: [L(R.T('map.ash_caldera.N.talk.0.L_3'))], reward: null }),
     ];
 
     const sp = AK.doorSpawn;
     K.def('caldera', {
-      name: '炎の町カルデラ', kind: 'town', region: 'r_ash', location: 'caldera', theme: 'desert_town',
+      name: R.T('map.ash_caldera.caldera.name'), kind: 'town', region: 'r_ash', location: 'caldera', theme: 'desert_town',
       legend: AK.TOWN(),
       rows: g, outside: 'rock',
       objects: O, npcs: N,
@@ -185,7 +185,7 @@
       light: AK.LIGHT_TOWN,
       dark: false,
       bgm: 'town',
-      meta: { sub: '火口の段々と闘技場の町', chestsInfo: false },
+      meta: { sub: R.T('map.ash_caldera.caldera.meta.sub'), chestsInfo: false },
       // 町ぜんたいを 1 枚に描いた下絵（v2/assets/env/ash/under/caldera*、design/ENV_ASSETS.md §7）。崖・段・溶岩の堀・建物・闘技場・大卵殻・湯はこの絵、
       // 当たり・戸口・人・灯り・働く物は上のデータ。lava_glow は光だけ（絵を持たない）
       art: { image: 'ash/under/caldera', emit: 'ash/under/caldera_emit', painted: ['lava_glow'] },

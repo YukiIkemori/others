@@ -21,7 +21,7 @@
     async pick(row) {
       if (this.busy) return;
       this.busy = true;
-      const k = await S.ask(this, { title: 'ワープ', text: row.label + ' へ飛ぶ？', choices: ['飛ぶ', 'やめる'], cancel: 1 });
+      const k = await S.ask(this, { title: R.T('ui.warp.pick.k.ask.title'), text: R.T('ui.warp.pick.k.ask.text', { label: row.label }), choices: R.T('ui.warp.pick.k.ask.choices'), cancel: 1 });
       this.busy = false;
       if (k === 0) this.close({ warp: row.value });
     },
@@ -29,7 +29,7 @@
     draw(g) {
       const b = S.box(), C = T().color;
       const w = Math.min(b.w, u(520)), x = b.x + (b.w - w) / 2;
-      S.heading(g, 'ワープ', x + u(8), b.y + u(6), 0, { size: 15, track: 4 });
+      S.heading(g, R.T('ui.warp.draw.heading'), x + u(8), b.y + u(6), 0, { size: 15, track: 4 });
       const h = Math.min(b.h - u(44), u(60) + Math.max(1, this.list.rows.length) * this.list.rowPx());
       const p = { x, y: b.y + u(44), w, h };
       R.UIK.panel(g, p, { frost: true });
@@ -37,11 +37,11 @@
         const sz = u(16), cy = rect.y + (rect.h - sz) / 2 - u(1);
         R.UIK.icon(gg, row.w.kind === 'town' ? 'inn' : 'door', rect.x + u(16), cy, sz, row.disabled ? C.disabled : f ? C.gold : C.text2);
         R.UIK.text(gg, row.label, rect.x + u(44), cy, { size: sz, weight: f ? 700 : 500, color: row.disabled ? (f ? C.text2 : C.disabled) : f ? C.goldHi : C.text, maxW: rect.w * 0.55 });
-        R.UIK.text(gg, row.disabled ? 'いまいる所' : S.regionName(row.w.region), rect.x + rect.w - u(14), cy + u(2), { size: u(12.5), color: C.text3, align: 'right' });
+        R.UIK.text(gg, row.disabled ? R.T('ui.warp.draw.render.text') : S.regionName(row.w.region), rect.x + rect.w - u(14), cy + u(2), { size: u(12.5), color: C.text3, align: 'right' });
       };
       this.list.draw(g, { x: p.x + u(10), y: p.y + u(12), w: p.w - u(20), h: p.h - u(24) });
-      if (!this.list.rows.length) R.UIK.text(g, 'まだ飛べる所がない。', p.x + u(24), p.y + u(20), { size: u(15), color: C.text3 });
-      S.prompts(g, [{ btn: 'a', label: '飛ぶ' }, { btn: 'b', label: '戻る' }]);
+      if (!this.list.rows.length) R.UIK.text(g, R.T('ui.warp.draw.text'), p.x + u(24), p.y + u(20), { size: u(15), color: C.text3 });
+      S.prompts(g, [{ btn: 'a', label: R.T('ui.warp.draw.0.label') }, { btn: 'b', label: R.T('ui.warp.draw.1.label') }]);
     },
   });
 })(window.RPG);

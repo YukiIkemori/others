@@ -127,7 +127,7 @@
       O.push(K.prop('board', 24, 19), K.exam(24, 19, 'yule_board'));
       O.push(K.prop('stall', 33, 25, { cond: '!snow_gate_n_broken' }));
       O.push(K.prop('bench', 25, 31), K.prop('bench', 31, 31));
-      O.push(K.sign(31, 32, 'ユール――竜の背の村\n冬至に、火と物語を峰へ'));
+      O.push(K.sign(31, 32, R.T('map.snow_yule.build.sign')));
       // 北: 凍った池と釣り
       for (const [x, y] of [[13, 8], [5, 9], [15, 10]]) O.push(K.prop('ice_hole', x, y));
       O.push(K.exam(13, 9, 'yule_pond'), K.exam(14, 9, 'yule_pond'));
@@ -165,37 +165,37 @@
 
     // ---------------------------------------------------------------- 人（昼）
     const DAY = [
-      K.npc('jorn', 'npc_jorn', 30, 21, { name: 'ヨルン', title: 'ユールの村長', dir: 's', talk: 'yule_jorn', reward: 'lead', pushable: false }),
-      K.npc('sonja', 'npc_sonja', 26, 27, { name: 'ソーニャ', title: '火守りの娘', dir: 'n', talk: 'yule_sonja', reward: 'lead' }),
-      K.npc('hald', 'npc_hald', 32, 2, { name: 'ハルド', title: '見張りの老人', dir: 'n', talk: 'yule_hald', reward: 'lead', pushable: false }),
-      K.npc('fine', 'fine', 31, 1, { name: '灰色のマントの少女', dir: 'n', talk: [L('……')], cond: ['snow_siege_done', '!snow_fine_seen'], reward: null, pushable: false }),
-      K.npc('watch_e', 'npc_snow_watch', 50, 27, { name: '見張りの若者', dir: 'w', talk: 'yule_watch_e', reward: 'boss' }),
-      K.npc('sled_man', 'npc_snow_man', 8, 42, { name: 'ニルス', title: 'そり犬の世話係', dir: 'e', talk: 'yule_sled', reward: 'side' }),
-      K.npc('sled_dog', 'ani_dog', 6, 43, { name: 'そり犬', dir: 'e', talk: 'yule_dog', cond: 'snow_dog_home', reward: null }),
-      K.npc('sculptor', 'npc_snow_woman', 26, 40, { name: 'リーサ', title: '雪像づくりの娘', dir: 'e', talk: 'yule_sculptor', reward: 'side' }),
-      K.npc('base_kid', 'npc_snow_child', 36, 41, { name: 'ペッカ', title: '秘密基地の番', dir: 's', talk: 'yule_base_kid', reward: 'side', pushable: false, cond: '!snow_base_open' }),
-      K.npc('kid_a', 'npc_snow_child', 24, 28, { name: '村の子', dir: 'e', move: 'wander', talk: 'yule_kid_a', reward: 'hint' }),
-      K.npc('kid_b', 'npc_snow_child', 32, 40, { name: '村の子', dir: 'w', talk: 'yule_kid_b', reward: 'hint' }),
-      K.npc('soup_woman', 'npc_snow_woman', 22, 28, { name: 'スープ売りのおかみ', dir: 'e', talk: 'yule_soup', reward: 'item' }),
-      K.npc('fur_peddler', 'npc_merchant_2', 34, 25, { name: '毛皮の行商', dir: 'w', talk: 'yule_fur', reward: null, pushable: false, cond: '!snow_gate_n_broken' }),
-      K.npc('traveler', 'npc_traveler', 21, 25, { name: '旅の商人', dir: 'e', talk: 'yule_traveler', reward: 'lead' }),
-      K.npc('tadeo', 'npc_oil_carrier', 46, 26, { name: 'タデオ', title: '灯守組合の油売り', dir: 's', talk: 'yule_tadeo', reward: 'news' }),
-      K.npc('villager_m', 'npc_snow_man', 49, 19, { name: '薪割りの男', dir: 'w', talk: 'yule_woodsman', reward: 'lead' }),
-      K.npc('old_m', 'npc_snow_old_m', 25, 20, { name: '村の年寄り', dir: 's', talk: 'yule_oldman', reward: 'news' }),
-      K.npc('scribe', 'npc_scribe', 45, 44, { name: '記録院の書記', dir: 'e', talk: 'yule_scribe', reward: 'news', cond: { tier: { gte: 4 } } }),
+      K.npc('jorn', 'npc_jorn', 30, 21, { name: R.T('map.snow_yule.DAY.0.jorn.name'), title: R.T('map.snow_yule.DAY.0.jorn.title'), dir: 's', talk: 'yule_jorn', reward: 'lead', pushable: false }),
+      K.npc('sonja', 'npc_sonja', 26, 27, { name: R.T('map.snow_yule.DAY.1.sonja.name'), title: R.T('map.snow_yule.DAY.1.sonja.title'), dir: 'n', talk: 'yule_sonja', reward: 'lead' }),
+      K.npc('hald', 'npc_hald', 32, 2, { name: R.T('map.snow_yule.DAY.2.hald.name'), title: R.T('map.snow_yule.DAY.2.hald.title'), dir: 'n', talk: 'yule_hald', reward: 'lead', pushable: false }),
+      K.npc('fine', 'fine', 31, 1, { name: R.T('map.snow_yule.DAY.3.fine.name'), dir: 'n', talk: [L('……')], cond: ['snow_siege_done', '!snow_fine_seen'], reward: null, pushable: false }),
+      K.npc('watch_e', 'npc_snow_watch', 50, 27, { name: R.T('map.snow_yule.DAY.4.watch_e.name'), dir: 'w', talk: 'yule_watch_e', reward: 'boss' }),
+      K.npc('sled_man', 'npc_snow_man', 8, 42, { name: R.T('map.snow_yule.DAY.5.sled_man.name'), title: R.T('map.snow_yule.DAY.5.sled_man.title'), dir: 'e', talk: 'yule_sled', reward: 'side' }),
+      K.npc('sled_dog', 'ani_dog', 6, 43, { name: R.T('map.snow_yule.DAY.6.sled_dog.name'), dir: 'e', talk: 'yule_dog', cond: 'snow_dog_home', reward: null }),
+      K.npc('sculptor', 'npc_snow_woman', 26, 40, { name: R.T('map.snow_yule.DAY.7.sculptor.name'), title: R.T('map.snow_yule.DAY.7.sculptor.title'), dir: 'e', talk: 'yule_sculptor', reward: 'side' }),
+      K.npc('base_kid', 'npc_snow_child', 36, 41, { name: R.T('map.snow_yule.DAY.8.base_kid.name'), title: R.T('map.snow_yule.DAY.8.base_kid.title'), dir: 's', talk: 'yule_base_kid', reward: 'side', pushable: false, cond: '!snow_base_open' }),
+      K.npc('kid_a', 'npc_snow_child', 24, 28, { name: R.T('map.snow_yule.DAY.9.kid_a.name'), dir: 'e', move: 'wander', talk: 'yule_kid_a', reward: 'hint' }),
+      K.npc('kid_b', 'npc_snow_child', 32, 40, { name: R.T('map.snow_yule.DAY.10.kid_b.name'), dir: 'w', talk: 'yule_kid_b', reward: 'hint' }),
+      K.npc('soup_woman', 'npc_snow_woman', 22, 28, { name: R.T('map.snow_yule.DAY.11.soup_woman.name'), dir: 'e', talk: 'yule_soup', reward: 'item' }),
+      K.npc('fur_peddler', 'npc_merchant_2', 34, 25, { name: R.T('map.snow_yule.DAY.12.fur_peddler.name'), dir: 'w', talk: 'yule_fur', reward: null, pushable: false, cond: '!snow_gate_n_broken' }),
+      K.npc('traveler', 'npc_traveler', 21, 25, { name: R.T('map.snow_yule.DAY.13.traveler.name'), dir: 'e', talk: 'yule_traveler', reward: 'lead' }),
+      K.npc('tadeo', 'npc_oil_carrier', 46, 26, { name: R.T('map.snow_yule.DAY.14.tadeo.name'), title: R.T('map.snow_yule.DAY.14.tadeo.title'), dir: 's', talk: 'yule_tadeo', reward: 'news' }),
+      K.npc('villager_m', 'npc_snow_man', 49, 19, { name: R.T('map.snow_yule.DAY.15.villager_m.name'), dir: 'w', talk: 'yule_woodsman', reward: 'lead' }),
+      K.npc('old_m', 'npc_snow_old_m', 25, 20, { name: R.T('map.snow_yule.DAY.16.old_m.name'), dir: 's', talk: 'yule_oldman', reward: 'news' }),
+      K.npc('scribe', 'npc_scribe', 45, 44, { name: R.T('map.snow_yule.DAY.17.scribe.name'), dir: 'e', talk: 'yule_scribe', reward: 'news', cond: { tier: { gte: 4 } } }),
       // 空気だけ（4 人まで）
-      K.npc('dog', 'ani_dog', 30, 43, { name: '犬', dir: 'w', move: 'wander', talk: [L('ワフッ！　ワン！')], reward: null }),
-      K.npc('child_c', 'npc_snow_child', 46, 15, { name: '村の子', dir: 's', move: 'wander', talk: [L('雪のトンネルはね、\n走るとすべるの。\n……でも走るの！'), L('cleared_r_snow', '吹雪がやんだら、\n空がこんなに広かったんだ！')], reward: null }),
-      K.npc('woman_b', 'npc_snow_woman', 20, 23, { name: '宿の前の女', dir: 'n', talk: [L('祭の支度で、どの家も\n獣脂を大かまどへ運んでるの。\nうちの灯りも、今夜は細いわ。'), L('cleared_r_snow', '冬至の火のおかげで、\n今年は脂を配り直せるわ。')], reward: null }),
+      K.npc('dog', 'ani_dog', 30, 43, { name: R.T('map.snow_yule.DAY.18.dog.name'), dir: 'w', move: 'wander', talk: [L(R.T('map.snow_yule.DAY.talk.0.L'))], reward: null }),
+      K.npc('child_c', 'npc_snow_child', 46, 15, { name: R.T('map.snow_yule.DAY.19.child_c.name'), dir: 's', move: 'wander', talk: [L(R.T('map.snow_yule.DAY.talk.0.L_2')), L('cleared_r_snow', R.T('map.snow_yule.DAY.talk.1.cleared_r_snow'))], reward: null }),
+      K.npc('woman_b', 'npc_snow_woman', 20, 23, { name: R.T('map.snow_yule.DAY.20.woman_b.name'), dir: 'n', talk: [L(R.T('map.snow_yule.DAY.talk.0.L_3')), L('cleared_r_snow', R.T('map.snow_yule.DAY.talk.1.cleared_r_snow_2'))], reward: null }),
     ];
     // 籠城の夜（守り手だけ）
     const NIGHT = [
-      K.npc('jorn', 'npc_jorn', 30, 28, { name: 'ヨルン', title: 'ユールの村長', dir: 'w', talk: 'yule_siege_jorn', pushable: false }),
-      K.npc('sonja', 'npc_sonja', 26, 27, { name: 'ソーニャ', title: '火守りの娘', dir: 'e', talk: 'yule_siege_sonja', pushable: false }),
-      K.npc('hald', 'npc_hald', 28, 5, { name: 'ハルド', title: '見張りの老人', dir: 'n', talk: 'yule_siege_hald', pushable: false }),
-      K.npc('guard_w', 'npc_snow_man', 3, 30, { name: '村の猟師', dir: 'w', talk: 'yule_siege_guard', pushable: false }),
-      K.npc('guard_e', 'npc_snow_watch', 52, 29, { name: '見張りの若者', dir: 'e', talk: 'yule_siege_guard', pushable: false }),
-      K.npc('olaf_n', 'npc_snow_old_m', 26, 5, { name: 'オラフ', title: '年寄りの猟師', dir: 'n', talk: 'yule_siege_guard', pushable: false, cond: { choice: 'ch_snow_tale', is: 'hunter' } }),
+      K.npc('jorn', 'npc_jorn', 30, 28, { name: R.T('map.snow_yule.NIGHT.0.jorn.name'), title: R.T('map.snow_yule.NIGHT.0.jorn.title'), dir: 'w', talk: 'yule_siege_jorn', pushable: false }),
+      K.npc('sonja', 'npc_sonja', 26, 27, { name: R.T('map.snow_yule.NIGHT.1.sonja.name'), title: R.T('map.snow_yule.NIGHT.1.sonja.title'), dir: 'e', talk: 'yule_siege_sonja', pushable: false }),
+      K.npc('hald', 'npc_hald', 28, 5, { name: R.T('map.snow_yule.NIGHT.2.hald.name'), title: R.T('map.snow_yule.NIGHT.2.hald.title'), dir: 'n', talk: 'yule_siege_hald', pushable: false }),
+      K.npc('guard_w', 'npc_snow_man', 3, 30, { name: R.T('map.snow_yule.NIGHT.3.guard_w.name'), dir: 'w', talk: 'yule_siege_guard', pushable: false }),
+      K.npc('guard_e', 'npc_snow_watch', 52, 29, { name: R.T('map.snow_yule.NIGHT.4.guard_e.name'), dir: 'e', talk: 'yule_siege_guard', pushable: false }),
+      K.npc('olaf_n', 'npc_snow_old_m', 26, 5, { name: R.T('map.snow_yule.NIGHT.5.olaf_n.name'), title: R.T('map.snow_yule.NIGHT.5.olaf_n.title'), dir: 'n', talk: 'yule_siege_guard', pushable: false, cond: { choice: 'ch_snow_tale', is: 'hunter' } }),
     ];
 
     const common = (night) => ({
@@ -224,19 +224,19 @@
 
     const D1 = build(false);
     K.def('yule', Object.assign(common(false), {
-      name: '雪の村ユール', rows: D1.g, objects: D1.O, npcs: DAY,
+      name: R.T('map.snow_yule.yule.name'), rows: D1.g, objects: D1.O, npcs: DAY,
       triggers: [{ id: 'arrival', on: 'enter', event: 'yule_arrival' }],
       light: { ambient: '#5a66a8', k: 0.5, poolK: 0.8, spillR: 0.9, mood: 'town_night' },
       bgm: 'yule', weather: 'snow', weatherCond: '!cleared_r_snow',
-      meta: { sub: '竜の背の村', chestsInfo: false },
+      meta: { sub: R.T('map.snow_yule.yule.meta.sub'), chestsInfo: false },
     }));
     const D2 = build(true);
     K.def('yule_night', Object.assign(common(true), {
-      name: '雪の村ユール', rows: D2.g, objects: D2.O, npcs: NIGHT,
+      name: R.T('map.snow_yule.yule_night.name'), rows: D2.g, objects: D2.O, npcs: NIGHT,
       triggers: [],
       light: { ambient: '#3e4684', k: 0.42, poolK: 0.85, spillR: 0.9, mood: 'town_night' },
       bgm: 'siege', weather: 'blizzard',
-      meta: { sub: '籠城の夜', chestsInfo: false, noWarp: true },
+      meta: { sub: R.T('map.snow_yule.yule_night.meta.sub'), chestsInfo: false, noWarp: true },
     }));
   });
 })(window.RPG);

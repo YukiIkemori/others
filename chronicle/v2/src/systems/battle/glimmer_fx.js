@@ -39,7 +39,7 @@
     try { R.Audio.sfx('glimmer'); } catch (err) { /* ignore */ }
     if (u && sp < 2) _.voice.play(u, 'glimmer', { speed: 1, force: true });
     const hold = Math.round(G.DERIVE_MS / sp);
-    st.banner = { name: (e.name || '') + 'を編み出した！', head: (e.fromName || '') + 'から、', kind: e.kind, derive: true, t0: R.Engine.time, dimTo, hold, fade: Math.max(80, Math.round(200 / sp)) };
+    st.banner = { name: R.T('battle.glimmer_fx.playDerive.banner.name', { p0: e.name || '' }), head: R.T('battle.glimmer_fx.playDerive.banner.head', { p0: e.fromName || '' }), kind: e.kind, derive: true, t0: R.Engine.time, dimTo, hold, fade: Math.max(80, Math.round(200 / sp)) };
     st.banner.release = st.banner.t0;
     await R.until(() => !st.banner || st.dead);
   };
@@ -115,7 +115,7 @@
     gl.addColorStop(0, 'rgba(255,214,130,0.22)'); gl.addColorStop(1, 'rgba(255,214,130,0)');
     g.fillStyle = gl; g.fillRect(cx - 200 * k, cy - 60 * k, 400 * k, 120 * k);
     g.globalCompositeOperation = 'source-over';
-    Kt.text(g, b.head || '閃き', cx, cy - 30 * k, { size: (b.head ? 15 : 13) * k, weight: 700, color: Kt.COL.gold, align: 'center', raw: true, shadow: true, track: b.head ? 2 : 6 });
+    Kt.text(g, b.head || R.T('battle.glimmer_fx.drawBanner.text'), cx, cy - 30 * k, { size: (b.head ? 15 : 13) * k, weight: 700, color: Kt.COL.gold, align: 'center', raw: true, shadow: true, track: b.head ? 2 : 6 });
     // 技名（金のグラデーション）
     const size = Math.min(34 * k, (x2 - x1 - 20 * k) / Math.max(1, [...b.name].length) / 1.1);
     const sc = R.Settings.get('reduceMotion') ? 1 : 1 + 0.08 * Math.max(0, 1 - t / 180);

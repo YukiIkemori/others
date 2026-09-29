@@ -14,7 +14,7 @@
     ta.readOnly = !!readOnly;
     ta.value = value || '';
     ta.spellcheck = false;
-    ta.setAttribute('aria-label', '冒険の合言葉');
+    ta.setAttribute('aria-label', R.T('ui.passphrase.makeArea.aria-label'));
     ta.style.cssText = 'position:fixed;z-index:10;resize:none;border:1px solid rgba(236,201,124,0.5);border-radius:8px;background:rgba(10,11,20,0.92);color:#f6f0e3;font:14px/1.5 monospace;padding:8px;box-sizing:border-box;word-break:break-all;outline:none;';
     document.body.appendChild(ta);
     return ta;
@@ -26,7 +26,7 @@
       this.code = '';
       if (this.mode === 'show') { try { this.code = R.Save.passphrase(); } catch (e) { this.code = ''; } }
       this.ta = makeArea(this.mode === 'show', this.code);
-      const rows = this.mode === 'show' ? [{ label: '写す', value: 'copy' }, { label: 'とじる', value: 'close' }] : [{ label: 'この合言葉で読み込む', value: 'load' }, { label: '貼り付ける', value: 'paste' }, { label: 'やめる', value: 'close' }];
+      const rows = this.mode === 'show' ? [{ label: R.T('ui.passphrase.copy.label'), value: 'copy' }, { label: R.T('ui.passphrase.close.label'), value: 'close' }] : [{ label: R.T('ui.passphrase.load.label'), value: 'load' }, { label: R.T('ui.passphrase.paste.label'), value: 'paste' }, { label: R.T('ui.passphrase.close.label_2'), value: 'close' }];
       this.list = new R.UIK.List({ rows, rowH: 40 });
       this.list.onSelect = (row) => this.act(row.value);
       this.list.onCancel = () => this.close(false);
@@ -39,27 +39,27 @@
         let ok = false;
         try { if (navigator.clipboard && navigator.clipboard.writeText) { await navigator.clipboard.writeText(this.code); ok = true; } } catch (e) { ok = false; }
         if (!ok && this.ta) { try { this.ta.select(); ok = document.execCommand && document.execCommand('copy'); } catch (e) { ok = false; } }
-        this.msg = ok ? '写し取った。' : '文字の欄から選んで写してください。';
+        this.msg = ok ? R.T('ui.passphrase.act.msg') : R.T('ui.passphrase.act.msg_2');
         return;
       }
       if (v === 'paste') {
-        try { if (navigator.clipboard && navigator.clipboard.readText) { const s = await navigator.clipboard.readText(); if (this.ta) this.ta.value = s; this.msg = '貼り付けた。'; } } catch (e) { this.msg = '文字の欄に貼り付けてください。'; }
+        try { if (navigator.clipboard && navigator.clipboard.readText) { const s = await navigator.clipboard.readText(); if (this.ta) this.ta.value = s; this.msg = R.T('ui.passphrase.act.msg_3'); } } catch (e) { this.msg = R.T('ui.passphrase.act.msg_4'); }
         return;
       }
       if (v === 'load') {
         const s = this.ta ? this.ta.value : '';
         if (R.Save.fromPassphrase(s)) { R.UIK.sfx('confirm'); this.close(true); }
-        else { R.UIK.sfx('buzzer'); this.msg = '読み込めない合言葉だ。'; }
+        else { R.UIK.sfx('buzzer'); this.msg = R.T('ui.passphrase.act.msg_5'); }
       }
     },
     update() { this.list.update(); },
     draw(g) {
       const b = S.box(), C = T().color;
       const w = Math.min(b.w, u(620)), x = b.x + (b.w - w) / 2;
-      S.heading(g, '冒険の合言葉', x + u(8), b.y + u(6), 0, { size: 15, track: 3 });
+      S.heading(g, R.T('ui.passphrase.draw.heading'), x + u(8), b.y + u(6), 0, { size: 15, track: 3 });
       const p = { x, y: b.y + u(44), w, h: Math.min(b.h - u(44), u(96) + R.UIK.wrap(this.mode === 'show' ? 'x'.repeat(40) : 'x', w - u(48), { size: u(14.5) }).length * u(24) + u(150) + this.list.rows.length * this.list.rowPx() + u(50)) };
       R.UIK.panel(g, p, { frost: true });
-      const info = this.mode === 'show' ? '今の旅を 1 行の文字にした。ほかの端末の「冒険の合言葉」で、ここから続けられる。' : 'ほかの端末で写した合言葉を、下の欄に貼り付けてください。';
+      const info = this.mode === 'show' ? R.T('ui.passphrase.draw.info') : R.T('ui.passphrase.draw.info_2');
       let y = p.y + u(20);
       for (const l of R.UIK.wrap(info, w - u(48), { size: u(14.5) })) { R.UIK.text(g, l, x + u(24), y, { size: u(14.5), color: C.text2 }); y += u(24); }
       const box = { x: x + u(24), y: y + u(8), w: w - u(48), h: u(130) };
@@ -70,11 +70,11 @@
         R.UIK.card(g, box, {});
         R.UIK.text(g, this.code ? this.code.slice(0, 60) + '…' : '', box.x + u(10), box.y + u(10), { size: u(13), color: C.text, maxW: box.w - u(20) });
       }
-      if (this.mode === 'show') R.UIK.text(g, `全 ${this.code.length} 文字`, box.x + box.w, box.y + box.h + u(6), { size: u(12), color: C.text3, align: 'right' });
+      if (this.mode === 'show') R.UIK.text(g, R.T('ui.passphrase.draw.text', { length: this.code.length }), box.x + box.w, box.y + box.h + u(6), { size: u(12), color: C.text3, align: 'right' });
       y = box.y + box.h + u(28);
       this.list.draw(g, { x: x + u(14), y, w: w - u(28), h: this.list.rows.length * this.list.rowPx() });
       if (this.msg) R.UIK.text(g, this.msg, x + u(24), p.y + p.h - u(30), { size: u(13.5), color: C.teal });
-      S.prompts(g, [{ btn: 'a', label: '決定' }, { btn: 'b', label: '戻る' }]);
+      S.prompts(g, [{ btn: 'a', label: R.T('ui.passphrase.draw.0.label') }, { btn: 'b', label: R.T('ui.passphrase.draw.1.label') }]);
     },
   });
 })(window.RPG);

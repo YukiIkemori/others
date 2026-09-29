@@ -8,9 +8,9 @@
   const Go = (_.gameover = {});
 
   Go.CHOICES = [
-    { key: 'retry', label: '直前の戦闘からやり直す', sub: '失う物はない' },
-    { key: 'inn', label: '最後に泊まった宿から', sub: '所持金が半分になる' },
-    { key: 'title', label: 'タイトルへ', sub: '' },
+    { key: 'retry', label: R.T('battle.gameover.CHOICES.retry.label'), sub: R.T('battle.gameover.CHOICES.retry.sub') },
+    { key: 'inn', label: R.T('battle.gameover.CHOICES.inn.label'), sub: R.T('battle.gameover.CHOICES.inn.sub') },
+    { key: 'title', label: R.T('battle.gameover.CHOICES.title.label'), sub: '' },
   ];
 
   Go.run = async function (st) {
@@ -33,7 +33,7 @@
     const t1 = R.Engine.time;
     const i = await _.cmd.menu(st, {
       rows: Go.CHOICES, sel: def, cancel: false, t0: R.Engine.time,
-      prompts: [{ btn: 'a', label: '決定' }],
+      prompts: [{ btn: 'a', label: R.T('battle.gameover.run.i.prompts.0.label') }],
       desc: (j) => ({ text: Go.CHOICES[j].sub }),
       draw(g, w) { go.menu = Math.min(1, (R.Engine.time - t1) / 200); Go.drawMenu(g, st, w); },
     });
@@ -71,7 +71,7 @@
       g.stroke();
     }
     if (go.text > 0) {
-      Kt.text(g, '灯が消えた……。', x, y + 40 * k, { size: 22 * k, weight: 700, color: `rgba(236,226,206,${go.text})`, align: 'center', raw: true, shadow: true, track: 4 });
+      Kt.text(g, R.T('battle.gameover.draw.text'), x, y + 40 * k, { size: 22 * k, weight: 700, color: `rgba(236,226,206,${go.text})`, align: 'center', raw: true, shadow: true, track: 4 });
     }
     g.restore();
   };

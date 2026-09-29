@@ -74,7 +74,7 @@
   const glimTierNow = () => (R.Tier && R.Tier.effective ? R.Tier.effective() : tierNow());
   const abilMul = (a, k) => (R.Mon && R.Mon.abilMul ? R.Mon.abilMul(a, k) : Math.max(0.5, 1 + k * ((a == null ? 16 : a) - 16)));
   const BUFF_STATS = ['atk', 'def', 'mag', 'mdef', 'agi'];
-  const LETTERS = 'ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ';   // 同じ種類が何体いても（呼び出しで増えても）文字を付ける
+  const LETTERS = R.T('sys.battle_core.LETTERS');   // 同じ種類が何体いても（呼び出しで増えても）文字を付ける
   const EMPTY = Object.freeze({});
   const PARTY_KEYS = { goldPct: 1, dropPct: 1, rarePct: 1, superPct: 1, rareEncPct: 1, goldenPct: 1, escapePct: 1 };
 
@@ -99,21 +99,21 @@
 
   // ------------------------------------------------------------ 状態（§4.8.1。DB.statuses が正、これは予備）
   const ST = {
-    poison: { name: '毒', bad: true, turns: null, on: '{name}は毒におかされた！', off: '{name}の毒が消えた。' },
-    burn: { name: 'やけど', bad: true, turns: [3, 3], on: '{name}はやけどを負った！', off: '{name}のやけどが治った。' },
-    sleep: { name: '眠り', bad: true, turns: [2, 4], bossTurns: [1, 1], disable: true, on: '{name}は眠ってしまった！', off: '{name}は目を覚ました！' },
-    paralyze: { name: 'まひ', bad: true, turns: [1, 3], bossTurns: [1, 1], disable: true, on: '{name}は体がしびれて動けない！', off: '{name}のまひが治った。' },
-    freeze: { name: '凍結', bad: true, turns: [1, 2], bossTurns: [1, 1], disable: true, on: '{name}は凍りついた！', off: '{name}の氷が溶けた。' },
-    stun: { name: '気絶', bad: true, turns: [1, 1], disable: true, on: '{name}は気を失った！', off: '{name}は気がついた。' },
-    confuse: { name: '混乱', bad: true, turns: [2, 4], bossTurns: [1, 2], on: '{name}は混乱した！', off: '{name}は正気に戻った。' },
-    silence: { name: '沈黙', bad: true, turns: [3, 5], on: '{name}は術を封じられた！', off: '{name}は術を使えるようになった。' },
-    blind: { name: '暗闇', bad: true, turns: [3, 5], on: '{name}は目が見えなくなった！', off: '{name}の目が見えるようになった。' },
-    death: { name: '即死', bad: true, instant: true, on: '{name}は息絶えた！', off: '' },
-    regen: { name: '再生', bad: false, turns: [5, 5], on: '{name}は再生の力に包まれた！', off: '{name}の再生の力が消えた。' },
-    veil: { name: '加護', bad: false, turns: [3, 3], on: '{name}は加護に守られた！', off: '{name}の加護が消えた。' },
-    counter: { name: '反撃の構え', bad: false, turns: 'next', on: '{name}は反撃の構えをとった！', off: '' },
-    nimble: { name: '身軽', bad: false, turns: [3, 3], on: '{name}は身軽になった！', off: '{name}の身軽さが消えた。' },
-    cover: { name: 'かばう', bad: false, turns: 'next', on: '{name}は仲間の前に立ちはだかった！', off: '' },
+    poison: { name: R.T('sys.battle_core.ST.poison.name'), bad: true, turns: null, on: R.T('sys.battle_core.ST.poison.on'), off: R.T('sys.battle_core.ST.poison.off') },
+    burn: { name: R.T('sys.battle_core.ST.burn.name'), bad: true, turns: [3, 3], on: R.T('sys.battle_core.ST.burn.on'), off: R.T('sys.battle_core.ST.burn.off') },
+    sleep: { name: R.T('sys.battle_core.ST.sleep.name'), bad: true, turns: [2, 4], bossTurns: [1, 1], disable: true, on: R.T('sys.battle_core.ST.sleep.on'), off: R.T('sys.battle_core.ST.sleep.off') },
+    paralyze: { name: R.T('sys.battle_core.ST.paralyze.name'), bad: true, turns: [1, 3], bossTurns: [1, 1], disable: true, on: R.T('sys.battle_core.ST.paralyze.on'), off: R.T('sys.battle_core.ST.paralyze.off') },
+    freeze: { name: R.T('sys.battle_core.ST.freeze.name'), bad: true, turns: [1, 2], bossTurns: [1, 1], disable: true, on: R.T('sys.battle_core.ST.freeze.on'), off: R.T('sys.battle_core.ST.freeze.off') },
+    stun: { name: R.T('sys.battle_core.ST.stun.name'), bad: true, turns: [1, 1], disable: true, on: R.T('sys.battle_core.ST.stun.on'), off: R.T('sys.battle_core.ST.stun.off') },
+    confuse: { name: R.T('sys.battle_core.ST.confuse.name'), bad: true, turns: [2, 4], bossTurns: [1, 2], on: R.T('sys.battle_core.ST.confuse.on'), off: R.T('sys.battle_core.ST.confuse.off') },
+    silence: { name: R.T('sys.battle_core.ST.silence.name'), bad: true, turns: [3, 5], on: R.T('sys.battle_core.ST.silence.on'), off: R.T('sys.battle_core.ST.silence.off') },
+    blind: { name: R.T('sys.battle_core.ST.blind.name'), bad: true, turns: [3, 5], on: R.T('sys.battle_core.ST.blind.on'), off: R.T('sys.battle_core.ST.blind.off') },
+    death: { name: R.T('sys.battle_core.ST.death.name'), bad: true, instant: true, on: R.T('sys.battle_core.ST.death.on'), off: '' },
+    regen: { name: R.T('sys.battle_core.ST.regen.name'), bad: false, turns: [5, 5], on: R.T('sys.battle_core.ST.regen.on'), off: R.T('sys.battle_core.ST.regen.off') },
+    veil: { name: R.T('sys.battle_core.ST.veil.name'), bad: false, turns: [3, 3], on: R.T('sys.battle_core.ST.veil.on'), off: R.T('sys.battle_core.ST.veil.off') },
+    counter: { name: R.T('sys.battle_core.ST.counter.name'), bad: false, turns: 'next', on: R.T('sys.battle_core.ST.counter.on'), off: '' },
+    nimble: { name: R.T('sys.battle_core.ST.nimble.name'), bad: false, turns: [3, 3], on: R.T('sys.battle_core.ST.nimble.on'), off: R.T('sys.battle_core.ST.nimble.off') },
+    cover: { name: R.T('sys.battle_core.ST.cover.name'), bad: false, turns: 'next', on: R.T('sys.battle_core.ST.cover.on'), off: '' },
   };
   function stDef(s) { const d = DB.statuses && DB.statuses[s]; return d ? Object.assign({}, ST[s], d) : ST[s] || { name: s, bad: true, turns: [3, 3], on: '', off: '' }; }
   const isDisabling = (s) => { const d = stDef(s); return !!(d.disable || s === 'sleep' || s === 'paralyze' || s === 'freeze' || s === 'stun'); };
@@ -127,20 +127,20 @@
   }
   const fmtName = (text, name) => String(text || '').replace(/\{name\}/g, name);
   const SKIP_MSG = {
-    sleep: (n) => `${n}は眠っている。`,
-    paralyze: (n) => `${n}は体がしびれて動けない！`,
-    freeze: (n) => `${n}は凍りついて動けない！`,
-    stun: (n) => `${n}は気を失っている。`,
+    sleep: (n) => R.T('sys.battle_core.SKIP_MSG.sleep', { n }),
+    paralyze: (n) => R.T('sys.battle_core.SKIP_MSG.paralyze', { n }),
+    freeze: (n) => R.T('sys.battle_core.SKIP_MSG.freeze', { n }),
+    stun: (n) => R.T('sys.battle_core.SKIP_MSG.stun', { n }),
   };
   const NAMES = {
-    elem: { fire: '火', water: '水', wind: '風', earth: '土', light: '光', dark: '闇' },
-    buff: { atk: '攻撃力', def: '守備力', mag: '術力', mdef: '術防', agi: '素早さ' },
+    elem: { fire: R.T('sys.battle_core.NAMES.elem.fire'), water: R.T('sys.battle_core.NAMES.elem.water'), wind: R.T('sys.battle_core.NAMES.elem.wind'), earth: R.T('sys.battle_core.NAMES.elem.earth'), light: R.T('sys.battle_core.NAMES.elem.light'), dark: R.T('sys.battle_core.NAMES.elem.dark') },
+    buff: { atk: R.T('sys.battle_core.NAMES.buff.atk'), def: R.T('sys.battle_core.NAMES.buff.def'), mag: R.T('sys.battle_core.NAMES.buff.mag'), mdef: R.T('sys.battle_core.NAMES.buff.mdef'), agi: R.T('sys.battle_core.NAMES.buff.agi') },
   };
   const elemName = (e) => (DB.elements && DB.elements[e] && DB.elements[e].name) || NAMES.elem[e] || e;
   // 選べない理由 → 説明の文（§11.5.3、STYLE_JA §9）
   const UNUSABLE_TEXT = {
-    mp: 'MPが足りない！', silence: '術を封じられている！', reach: '後列からは届かない。', field: '戦闘中は使えない。',
-    noescape: 'この戦いからは逃げられない！', seal: 'この武器では技が使えない。', noweapon: 'この技を使う武器を持っていない。', none: '今は使えない。',
+    mp: R.T('sys.battle_core.UNUSABLE_TEXT.mp'), silence: R.T('sys.battle_core.UNUSABLE_TEXT.silence'), reach: R.T('sys.battle_core.UNUSABLE_TEXT.reach'), field: R.T('sys.battle_core.UNUSABLE_TEXT.field'),
+    noescape: R.T('sys.battle_core.UNUSABLE_TEXT.noescape'), seal: R.T('sys.battle_core.UNUSABLE_TEXT.seal'), noweapon: R.T('sys.battle_core.UNUSABLE_TEXT.noweapon'), none: R.T('sys.battle_core.UNUSABLE_TEXT.none'),
   };
 
   // 通常攻撃の絵（魔物は系統、味方は武器の系統。品の art が上書き。STATS_REWORK §8.6）
@@ -543,7 +543,7 @@
       for (const g of this.groups()) {
         const u0 = g.units[0];
         if (u0.golden) yield { t: 'golden', u: u0 };
-        yield this.m(g.n > 1 ? `${g.name}が${g.n}匹現れた！` : `${g.name}が現れた！`);
+        yield this.m(g.n > 1 ? R.T('sys.battle_core.begin.m', { name: g.name, n: g.n }) : R.T('sys.battle_core.begin.m_2', { name: g.name }));
         if (g.n === 1 && u0.d.appear) yield this.m(u0.d.appear.replace(/\{user\}/g, u0.name));
       }
       if (this.o.surprise !== undefined && this.o.surprise !== null) this.surprise = this.o.surprise;
@@ -551,9 +551,9 @@
         if (this.dark && chance(K('DARK').ambush)) this.surprise = 'ambush';
         else if (chance(this.preemptChance())) this.surprise = 'pre';
       }
-      if (this.surprise === 'pre') yield this.m('魔物たちは、まだこちらに気づいていない。\n先手を取った！');
-      if (this.surprise === 'ambush') yield this.m('暗がりから、魔物たちが襲いかかってきた！');
-      if (this.dark && this.mons.some((m) => m.d.darkBoost)) yield this.m('闇の中で、魔物たちの力が増している……。');
+      if (this.surprise === 'pre') yield this.m(R.T('sys.battle_core.begin.m_3'));
+      if (this.surprise === 'ambush') yield this.m(R.T('sys.battle_core.begin.m_4'));
+      if (this.dark && this.mons.some((m) => m.d.darkBoost)) yield this.m(R.T('sys.battle_core.begin.m_5'));
       for (const p of this.party) {
         const sb = p.mods.startBuffs;
         if (!p.alive || !sb) continue;
@@ -633,7 +633,7 @@
       yield { t: 'actor', u };
       const dis = u.disabled();
       if (dis) {
-        yield this.m(SKIP_MSG[dis] ? SKIP_MSG[dis](u.name) : `${u.name}は動けない！`);
+        yield this.m(SKIP_MSG[dis] ? SKIP_MSG[dis](u.name) : R.T('sys.battle_core.turn.m', { name: u.name }));
         const left = (typeof u.turns[dis] === 'number' ? u.turns[dis] : 1) - 1;
         if (left <= 0) yield* this.clearStatus(u, dis);
         else u.turns[dis] = left;
@@ -643,13 +643,13 @@
         return;
       }
       if (u.status.confuse) {
-        yield this.m(`${u.name}は混乱している！`);
+        yield this.m(R.T('sys.battle_core.turn.m_2', { name: u.name }));
         cmd = this.confusedCommand(u);
         if (!u.isParty && u.reserved) { u.reserved = null; yield { t: 'telegraph', u, text: '', pose: 'idle', tint: '', next: '', cancel: true }; }
       } else if (!u.isParty) {
         if (this.monFlees(u)) {
           u.gone = true;
-          yield this.m(`${u.name}は逃げ出した！`);
+          yield this.m(R.T('sys.battle_core.turn.m_3', { name: u.name }));
           yield { t: 'flee', u };
           this.checkEnd();
           return;
@@ -712,7 +712,7 @@
         case 'attack': {
           if (u.isParty && !cmd.confused && !this.canReach(u)) {
             u.defending = true;
-            yield this.m(`${u.name}は守りを固めている。`);
+            yield this.m(R.T('sys.battle_core.execute.m', { name: u.name }));
             return;
           }
           const r = yield* this.attack(u, cmd.target, { confused: cmd.confused });
@@ -721,16 +721,16 @@
         }
         case 'defend':
           u.defending = true;
-          yield { t: 'fx', fx: 'defend', user: u, targets: [u], kind: 'defend', cmd: 'defend', id: 'defend', name: '防御' };
-          yield this.m(`${u.name}は守りを固めている。`);
+          yield { t: 'fx', fx: 'defend', user: u, targets: [u], kind: 'defend', cmd: 'defend', id: 'defend', name: R.T('sys.battle_core.execute.defend.name') };
+          yield this.m(R.T('sys.battle_core.execute.m', { name: u.name }));
           return;
         case 'wait':
-          yield this.m(`${u.name}はじっとこちらを見ている。`);
+          yield this.m(R.T('sys.battle_core.execute.m_2', { name: u.name }));
           return;
         case 'flee':
           if (!u.isParty && !u.boss) {
             u.gone = true;
-            yield this.m(`${u.name}は逃げ出した！`);
+            yield this.m(R.T('sys.battle_core.execute.m_3', { name: u.name }));
             yield { t: 'flee', u };
           }
           return;
@@ -782,7 +782,7 @@
       const kind = a.kind === 'spell' ? 'spell' : 'tech';
       this.learn(u, id, a);
       yield { t: 'glimmer', u, id, kind, name: a.name };
-      yield this.m(`${u.name}は${a.name}を閃いた！`);
+      yield this.m(R.T('sys.battle_core.glimmerStep.m', { name: u.name, name2: a.name }));
       this.glimmers.push({ char: c.id, id, kind });
       const target = this.glimTarget(u, cmd, a);
       if (kind === 'spell' && !this.targets(u, a, target).length) return { replace: false };
@@ -806,7 +806,7 @@
       try { fresh = R.Glimmer.learnDerived(u.c, res.id, used, { quiet: true }); } catch (e) { R.warn('battle: R.Glimmer.learnDerived failed', e && e.message); }
       if (!fresh) return;
       yield { t: 'glimmer', u, id: res.id, kind: 'tech', name: a.name, from: used, fromName: from.name };
-      yield this.m(`${u.name}は${from.name}から、${a.name}を編み出した！`);
+      yield this.m(R.T('sys.battle_core.deriveStep.m', { name: u.name, name2: from.name, name3: a.name }));
       this.glimmers.push({ char: u.c.id, id: res.id, kind: 'tech', from: used });
     }
     /** glimmerForce の予備: 今の武器の系統のまだ知らない技で glim.lv が最も低い物 */
@@ -877,11 +877,11 @@
       const taken = u.isParty ? Math.max(0, 1 + (u.mods.takenPct || 0) / 100) : 1;
       const dot = (div, bossDiv) => Math.min(999, Math.max(1, Math.floor((u.mhp / (u.boss ? bossDiv : div)) * taken)));
       if (u.status.poison) {
-        yield* this.dotDamage(u, dot(16, 64), 'poison', '毒');
+        yield* this.dotDamage(u, dot(16, 64), 'poison', R.T('sys.battle_core.endTurn.dotDamage'));
         if (!u.alive) return;
       }
       if (u.status.burn) {
-        yield* this.dotDamage(u, dot(10, 40), 'burn', 'やけど');
+        yield* this.dotDamage(u, dot(10, 40), 'burn', R.T('sys.battle_core.endTurn.dotDamage_2'));
         if (!u.alive) return;
       }
       if (u.status.regen && u.hp < u.mhp) yield* this.restore(u, Math.max(1, Math.floor(u.mhp / (u.isParty ? 10 : 20))), 'hp', 'regen');
@@ -904,7 +904,7 @@
       u.hp = Math.max(0, u.hp - n);
       if (u.isParty) this.stats.taken += n; else this.stats.dealt += n;
       yield { t: 'dmg', u, n, kind };
-      yield this.m(`${label}で${u.name}に${n}のダメージ！`);
+      yield this.m(R.T('sys.battle_core.dotDamage.m', { label, name: u.name, n }));
       if (u.hp <= 0) yield* this.die(u, null);
     }
     *clearStatus(u, s, quiet) {
@@ -945,10 +945,10 @@
       yield { t: 'actor', u: null };
       if (this.noEscape) {
         yield { t: 'escape', ok: false };
-        yield this.m('この戦いからは逃げられない！');
+        yield this.m(R.T('sys.battle_core.tryEscape.m'));
         return false;
       }
-      yield this.m('{hero}たちは逃げ出した。');
+      yield this.m(R.T('sys.battle_core.tryEscape.m_2'));
       if (sure || (R.Tester && R.Tester.opt('flee')) || chance(this.escapeChance())) {   // テスト用メニュー: 逃げるが必ず成功
         this.result = 'escape';
         yield { t: 'escape', ok: true };
@@ -956,7 +956,7 @@
       }
       this.escapeFails++;
       yield { t: 'escape', ok: false };
-      yield this.m('しかし行く手をふさがれた！');
+      yield this.m(R.T('sys.battle_core.tryEscape.m_3'));
       return false;
     }
     escapeChance() {
@@ -1032,11 +1032,11 @@
     *attack(u, target, o) {
       o = o || {};
       const res = { done: true, landed: false, target: null, killed: false };
-      yield this.m(o.counter ? `${u.name}の反撃！` : `${u.name}の攻撃！`);
+      yield this.m(o.counter ? R.T('sys.battle_core.attack.m', { name: u.name }) : R.T('sys.battle_core.attack.m_2', { name: u.name }));
       let t;
       if (o.confused) t = target && target.alive && target !== u ? target : pick(this.units().filter((x) => x.alive && x !== u));
       else t = this.pickFoe(u, target);
-      if (!t || !u.alive) { yield this.m('しかし効き目がなかった。'); return res; }
+      if (!t || !u.alive) { yield this.m(R.T('sys.battle_core.attack.m_3')); return res; }
       let mul = 1;
       if (!o.counter && !o.confused) {
         const g = yield* this.guard(u, t);
@@ -1044,7 +1044,7 @@
         t = g.t; mul = g.mul;
       }
       res.target = t;
-      yield { t: 'fx', fx: this.weaponFx(u), user: u, targets: [t], kind: o.counter ? 'counter' : 'attack', cmd: 'attack', id: 'attack', name: o.counter ? '反撃' : '攻撃' };
+      yield { t: 'fx', fx: this.weaponFx(u), user: u, targets: [t], kind: o.counter ? 'counter' : 'attack', cmd: 'attack', id: 'attack', name: o.counter ? R.T('sys.battle_core.attack.attack.name') : R.T('sys.battle_core.attack.attack.name_2') };
       const W = u.isParty ? u.weapon() : null;
       const eff = { type: 'damage', formula: 'phys', power: o.power || 1, critBonus: o.critBonus || 0 };
       const r = this.roll(u, t, eff, { W, attack: true, coverMul: mul });
@@ -1067,7 +1067,7 @@
           .sort((a, b) => (a.status.cover.seq || 0) - (b.status.cover.seq || 0))[0];
         if (cov) {
           yield { t: 'cover', u: cov, ally: t };
-          yield this.m(`${cov.name}は${t.name}をかばった！`);
+          yield this.m(R.T('sys.battle_core.guard.m', { name: cov.name, name2: t.name }));
           out.t = cov;
           out.mul = cov.status.cover.mul != null ? cov.status.cover.mul : 1;
         }
@@ -1076,7 +1076,7 @@
       const ct = d.status.counter;
       if (ct && ct.parry > 0 && d.canAct() && !d.status.confuse && chance(ct.parry)) {
         yield { t: 'miss', u: d, att, parry: true };
-        yield this.m(`${d.name}は攻撃を受け流した！`);
+        yield this.m(R.T('sys.battle_core.guard.m_2', { name: d.name }));
         out.parried = true;
         this.queueCounter(d, att);
       }
@@ -1228,12 +1228,12 @@
       if (R.Tester && R.Tester.enabled) R.Tester.hitFix(tgt, r, info);
       if (r.miss) {
         yield { t: 'miss', u: tgt, att };
-        yield this.m(`${tgt.name}は攻撃をかわした！`);
+        yield this.m(R.T('sys.battle_core.hit.m', { name: tgt.name }));
         return false;
       }
       if (r.crit) {
         yield { t: 'crit', u: att };
-        yield this.m(att.isParty ? '会心の手ごたえ！' : '強烈な一撃！');
+        yield this.m(att.isParty ? R.T('sys.battle_core.hit.m_2') : R.T('sys.battle_core.hit.m_3'));
       }
       if (r.dmg < 0) {
         yield* this.restore(tgt, Math.min(9999, Math.max(1, Math.round(-r.dmg))), 'hp');
@@ -1245,8 +1245,8 @@
         const n = Math.min(tgt.mp || 0, dmg);
         if (tgt.isParty) tgt.mp -= n;
         yield { t: 'dmg', u: tgt, n, mp: true, kind };
-        if (n <= 0) { yield this.m('しかし効き目がなかった。'); return false; }
-        yield this.m(`${tgt.name}のMPが${n}減った！`);
+        if (n <= 0) { yield this.m(R.T('sys.battle_core.hit.m_4')); return false; }
+        yield this.m(R.T('sys.battle_core.hit.m_5', { name: tgt.name, n }));
         if (info.drain && att.alive) {
           const g = Math.round(n * info.drain);
           if (att.isParty) yield* this.restore(att, g, 'mp', 'drain');
@@ -1256,14 +1256,14 @@
       }
       if (dmg <= 0) {
         yield { t: 'dmg', u: tgt, n: 0, kind };
-        yield this.m(`${tgt.name}には傷ひとつない！`);
+        yield this.m(R.T('sys.battle_core.hit.m_6', { name: tgt.name }));
         return false;
       }
       const dealt = Math.min(tgt.hp, dmg);
       tgt.hp = Math.max(0, tgt.hp - dmg);
       if (tgt.isParty) this.stats.taken += dealt; else this.stats.dealt += dealt;
       yield { t: 'dmg', u: tgt, n: dmg, crit: !!r.crit, weak: !!r.weak, kind, src: att, el: info.element || null };
-      yield this.m(`${tgt.name}に${dmg}のダメージ！`);
+      yield this.m(R.T('sys.battle_core.hit.m_7', { name: tgt.name, dmg }));
       if (tgt.hp <= 0) yield* this.die(tgt, att, info.element || null);
       else {
         if (tgt.status.sleep && chance(0.5)) yield* this.clearStatus(tgt, 'sleep');
@@ -1301,7 +1301,7 @@
       u.defending = false;
       if (!u.isParty) u.reserved = null;
       yield { t: 'die', u, killer };
-      yield this.m(`${u.name}は倒れた！`);
+      yield this.m(R.T('sys.battle_core.die.m', { name: u.name }));
       if (u.isParty) {
         this.stats.deaths++;
         const x = u.mods.autoRevive;
@@ -1310,7 +1310,7 @@
           u.hp = Math.max(1, Math.floor(u.mhp * Math.min(1, x)));
           yield { t: 'react', u, kind: 'revive' };
           yield { t: 'revive', u };
-          yield this.m(`${u.name}は立ち上がった！`);
+          yield this.m(R.T('sys.battle_core.die.m_2', { name: u.name }));
         }
         return;
       }
@@ -1327,7 +1327,7 @@
       if (u.d.leader) {
         const rest = this.mons.filter((m) => m.alive && m !== u && (!m.boss || m.d.bossType === 'add'));
         if (rest.length) {
-          yield this.m(u.d.leader.msg || '残った群れは、散り散りに逃げていった！');
+          yield this.m(u.d.leader.msg || R.T('sys.battle_core.die.m_3'));
           for (const m of rest) { m.gone = true; yield { t: 'flee', u: m }; }
         }
       }
@@ -1343,8 +1343,8 @@
       yield { t: 'heal', u: t, n: got, mp: kind === 'mp' };
       if (how === 'quiet') return got;
       const L = kind === 'mp' ? 'MP' : 'HP';
-      if (got > 0) yield this.m(`${t.name}の${L}が${got}回復した！`);
-      else yield this.m('しかし効き目がなかった。');
+      if (got > 0) yield this.m(R.T('sys.battle_core.restore.m', { name: t.name, L, got }));
+      else yield this.m(R.T('sys.battle_core.restore.m_2'));
       return got;
     }
 
@@ -1370,7 +1370,7 @@
       o = o || {};
       if (!t || !t.alive || !s) return false;
       const def = stDef(s);
-      const fail = () => (o.quiet ? null : this.m(o.multi ? `${t.name}には効き目がなかった。` : 'しかし効き目がなかった。'));
+      const fail = () => (o.quiet ? null : this.m(o.multi ? R.T('sys.battle_core.inflict.fail.m', { name: t.name }) : R.T('sys.battle_core.inflict.fail.m_2')));
       if (s !== 'death' && def.bad === false) {
         t.status[s] = o.data || true;
         const n = this.rollTurns(def, t);
@@ -1409,9 +1409,9 @@
 
     // ------------------------------------------------------- 技・術・道具・魔物の行動
     announce(u, a, item) {
-      if (item) return `${u.name}は${item.name}を使った！`;
+      if (item) return R.T('sys.battle_core.announce.ret', { name: u.name, name2: item.name });
       if (a.msg) return a.msg.replace(/\{user\}/g, u.name).replace(/\{name\}/g, a.name);
-      return a.kind === 'spell' ? `${u.name}は${a.name}を唱えた！` : `${u.name}の${a.name}！`;
+      return a.kind === 'spell' ? R.T('sys.battle_core.announce.ret_2', { name: u.name, name2: a.name }) : R.T('sys.battle_core.announce.ret_3', { name: u.name, name2: a.name });
     }
     /** 行動: 払う（MP・道具）→ 知らせる → 効果を相手ごとに順に。o: {item, free, glimmed} → {done, landed, target, targets, killed} */
     *useAction(u, id, a, chosen, o) {
@@ -1422,22 +1422,22 @@
       const refuse = function* (eng, text) { yield eng.m(eng.announce(u, a, null)); yield eng.m(text); };
       if (!item && !o.free) {
         if (u.isParty && kind === 'tech') {
-          if (u.wtype !== a.wtype) { yield* refuse(this, 'しかしこの技を使う武器を持っていない！'); return res; }
-          if (a.magic && u.status.silence) { yield* refuse(this, 'しかし術を封じられている！'); return res; }
-          if (!a.reach && this.effRow(u) === 'back') { yield* refuse(this, 'しかし後列からは届かない！'); return res; }
+          if (u.wtype !== a.wtype) { yield* refuse(this, R.T('sys.battle_core.useAction.refuse')); return res; }
+          if (a.magic && u.status.silence) { yield* refuse(this, R.T('sys.battle_core.useAction.refuse_2')); return res; }
+          if (!a.reach && this.effRow(u) === 'back') { yield* refuse(this, R.T('sys.battle_core.useAction.refuse_3')); return res; }
           const cost = this.mpCost(u, id);
-          if (u.mp < cost) { yield* refuse(this, 'しかしMPが足りない！'); return res; }
+          if (u.mp < cost) { yield* refuse(this, R.T('sys.battle_core.useAction.refuse_4')); return res; }
           u.mp -= cost; this.stats.mpUsed += cost;
         } else if (u.isParty && kind === 'spell') {
-          if (u.status.silence) { yield* refuse(this, 'しかし術を封じられている！'); return res; }
+          if (u.status.silence) { yield* refuse(this, R.T('sys.battle_core.useAction.refuse_2')); return res; }
           const cost = this.mpCost(u, id);
-          if (u.mp < cost) { yield* refuse(this, 'しかしMPが足りない！'); return res; }
+          if (u.mp < cost) { yield* refuse(this, R.T('sys.battle_core.useAction.refuse_4')); return res; }
           u.mp -= cost; this.stats.mpUsed += cost;
-        } else if (!u.isParty && isMagicAct(a) && u.status.silence) { yield* refuse(this, 'しかし術を封じられている！'); return res; }
+        } else if (!u.isParty && isMagicAct(a) && u.status.silence) { yield* refuse(this, R.T('sys.battle_core.useAction.refuse_2')); return res; }
       } else if (item && !o.free) {
         if (!this.takeItem(id)) {
-          yield this.m(`${u.name}は${item.name}を使おうとした！`);
-          yield this.m(`しかし${item.name}はもう残っていない。`);
+          yield this.m(R.T('sys.battle_core.useAction.m', { name: u.name, name2: item.name }));
+          yield this.m(R.T('sys.battle_core.useAction.m_2', { name: item.name }));
           return res;
         }
         this.stats.items++;
@@ -1483,7 +1483,7 @@
         }
       } else {
         let targets = this.targets(u, a, chosen);
-        if (!targets.length && !onFx.length) { yield this.m('しかし効き目がなかった。'); return res; }
+        if (!targets.length && !onFx.length) { yield this.m(R.T('sys.battle_core.useAction.m_3')); return res; }
         if (targets.length === 1 && !u.isParty && isPhysSingle(a)) {
           const g = yield* this.guard(u, targets[0]);
           if (g.parried) { res.target = g.t; return res; }
@@ -1494,7 +1494,7 @@
         res.target = targets[0] || null;
         ctx.multi = targets.length > 1;
         if (targets.length) yield { t: 'fx', fx: ctx.fx, user: u, targets, ab: a, kind: 'ability', cmd: cmdName, id, name: actName };
-        else if (a.target === 'front' && !u.isParty) yield this.m('しかし前列には誰もいなかった！');
+        else if (a.target === 'front' && !u.isParty) yield this.m(R.T('sys.battle_core.useAction.m_4'));
         for (const t of targets) {
           if (this.result === 'escape') return res;
           yield* this.applyEffects(u, t, main, ctx, res);
@@ -1505,7 +1505,7 @@
         const list = eff.on === 'self' ? [u] : this.friends(u);
         for (const f of list) yield* this.effect(u, f, eff, Object.assign({}, ctx, { multi: list.length > 1 }));
       }
-      if (this.said === said) yield this.m('しかし効き目がなかった。');
+      if (this.said === said) yield this.m(R.T('sys.battle_core.useAction.m_3'));
       res.killed = res.targets.some((t) => !t.isParty && !t.alive);
       return res;
     }
@@ -1536,7 +1536,7 @@
         if (!r.miss) missed = false;
         if (r.immune) {
           yield { t: 'miss', u: t, att: u };
-          yield this.m(ctx.multi ? `${t.name}には効き目がなかった。` : 'しかし効き目がなかった。');
+          yield this.m(ctx.multi ? R.T('sys.battle_core.damageEffect.m', { name: t.name }) : R.T('sys.battle_core.damageEffect.m_2'));
           break;
         }
         if (yield* this.hit(u, t, r, { kind: f === 'phys' ? 'phys' : f, mp: !!eff.mp, drain, element: r.el })) landed = true;
@@ -1569,7 +1569,7 @@
           const i = this.killed.indexOf(t);
           if (i >= 0) this.killed.splice(i, 1);
           yield { t: 'revive', u: t };
-          yield this.m(`${t.name}は生き返った！`);
+          yield this.m(R.T('sys.battle_core.effect.m', { name: t.name }));
           return;
         }
         case 'cure': {
@@ -1600,19 +1600,19 @@
           if (!u.isParty) {
             if (u.boss) return;
             u.gone = true;
-            yield this.m(`${u.name}は逃げ出した！`);
+            yield this.m(R.T('sys.battle_core.effect.m_2', { name: u.name }));
             yield { t: 'flee', u };
             return;
           }
           if (this.result) return;
-          if (this.noEscape) { yield this.m('この戦いからは逃げられない！'); return; }
+          if (this.noEscape) { yield this.m(R.T('sys.battle_core.effect.m_3')); return; }
           this.result = 'escape';
           yield { t: 'escape', ok: true };
-          yield this.m('{hero}たちは逃げ出した。');
+          yield this.m(R.T('sys.battle_core.effect.m_4'));
           return;
         }
         case 'teleport': case 'exit': case 'repel': case 'encounter':
-          yield this.m('ここでは使えない。');
+          yield this.m(R.T('sys.battle_core.effect.m_5'));
           return;
         case 'special': {
           const fn = BC.specials && BC.specials[eff.id];
@@ -1627,7 +1627,7 @@
       const st = eff.stages || 1;
       const name = NAMES.buff[eff.stat];
       const quiet = !!(ctx && ctx.quietExtra);
-      const fail = () => (quiet ? { t: 'noop' } : this.m(ctx && ctx.multi ? `${t.name}には効き目がなかった。` : 'しかし効き目がなかった。'));
+      const fail = () => (quiet ? { t: 'noop' } : this.m(ctx && ctx.multi ? R.T('sys.battle_core.buff.fail.m', { name: t.name }) : R.T('sys.battle_core.buff.fail.m_2')));
       if (st < 0 && u.side !== t.side) {
         if (t.metal || t.status.veil) { yield fail(); return; }
         const KS = K('STATUS');
@@ -1637,10 +1637,10 @@
         if (!chance(p)) { yield fail(); return; }
       }
       const cur = t.buffs[eff.stat], nv = clamp(cur + st, -2, 2), d = nv - cur;
-      if (!d) { yield this.m(`しかし${t.name}の${name}はもう${st > 0 ? '上がらない' : '下がらない'}！`); return; }
+      if (!d) { yield this.m(R.T('sys.battle_core.buff.m', { name: t.name, name2: name, p2: st > 0 ? R.T('sys.battle_core.buff.m_2') : R.T('sys.battle_core.buff.m_3') })); return; }
       t.buffs[eff.stat] = nv;
       yield { t: 'buff', u: t, stat: eff.stat, d, stage: nv };
-      yield this.m(`${t.name}の${name}が${d > 0 ? '上がった' : '下がった'}！`);
+      yield this.m(R.T('sys.battle_core.buff.m_4', { name: t.name, name2: name, p2: d > 0 ? R.T('sys.battle_core.buff.m_5') : R.T('sys.battle_core.buff.m_6') }));
     }
     *dispel(u, t, eff, ctx) {
       if (!t.alive) return;
@@ -1650,8 +1650,8 @@
         if ((side === 'good' && t.buffs[k] > 0) || (side === 'bad' && t.buffs[k] < 0)) { t.buffs[k] = 0; changed = true; yield { t: 'buff', u: t, stat: k, d: 0, stage: 0, dispel: side }; }
       }
       if (side === 'good') for (const s of GOOD) if (t.status[s]) { yield* this.clearStatus(t, s, true); changed = true; }
-      if (!changed) { if (!(ctx && ctx.multi)) yield this.m('しかし効き目がなかった。'); return; }
-      yield this.m(side === 'good' ? `${t.name}の強化の効果が消えた！` : `${t.name}の弱体の効果が消えた！`);
+      if (!changed) { if (!(ctx && ctx.multi)) yield this.m(R.T('sys.battle_core.dispel.m')); return; }
+      yield this.m(side === 'good' ? R.T('sys.battle_core.dispel.m_2', { name: t.name }) : R.T('sys.battle_core.dispel.m_3', { name: t.name }));
     }
 
     // ------------------------------------------------------- 盗む（§4.10.1、STATS_REWORK §7.3）
@@ -1703,7 +1703,7 @@
       this.stolen.push({ mon: t.id, item: pick0.item, grade: pick0.grade, char: u.c.id, stealOnly: !!stealOnly });
       const it = DB.items[pick0.item] || {};
       yield { t: 'gain', item: pick0.item, grade: pick0.grade, stolen: true, stealOnly: !!stealOnly, u, target: t, mon: t.id };
-      yield this.m(`${u.name}は${pick0.grade !== 'normal' ? '★' : ''}${it.name || pick0.item}を盗んだ！`);
+      yield this.m(R.T('sys.battle_core.takeStolen.m', { name: u.name, p1: pick0.grade !== 'normal' ? '★' : '', p2: it.name || pick0.item }));
     }
     /** 1 回の成功のあと: 盗み専用を先に判定 → 外れたら旧の stealPick（STATS_REWORK §7.3 の 2〜3） */
     pickOnSuccess(u, t, auto) {
@@ -1717,13 +1717,13 @@
     *steal(u, t) {
       if (!u.isParty) {
         const g = Math.min(Math.max(0, this.gold0 - this.goldLost), (u.level || 1) * 5);
-        if (!g) { yield this.m('しかし何も盗めなかった。'); return; }
+        if (!g) { yield this.m(R.T('sys.battle_core.steal.m')); return; }
         this.goldLost += g;
-        yield this.m(`{hero}たちは${g}ゴールドを盗まれた！`);
+        yield this.m(R.T('sys.battle_core.steal.m_2', { g }));
         return;
       }
       if (t.isParty) return;
-      const fail = function* (eng) { yield { t: 'steal', u, target: t, item: null }; yield eng.m('しかし何も盗めなかった。'); };
+      const fail = function* (eng) { yield { t: 'steal', u, target: t, item: null }; yield eng.m(R.T('sys.battle_core.steal.fail.m')); };
       if (!this.canSteal(t) || !chance(this.stealChance(u, t))) { yield* fail(this); return; }
       const r = this.pickOnSuccess(u, t, false);
       if (!r || !this.canCarry(r.pick.item, r.pick.n)) { yield* fail(this); return; }
@@ -1751,8 +1751,8 @@
       const keys = order.filter((e) => el[e] != null).concat(Object.keys(el).filter((e) => !order.includes(e)));
       const weak = keys.filter((e) => el[e] >= 1.5).map(elemName);
       const absorb = keys.filter((e) => el[e] < 0).map(elemName);
-      yield this.m(weak.length ? `弱点：${weak.join('・')}` : '弱点は見つからない。');
-      if (absorb.length) yield this.m(`吸収：${absorb.join('・')}`);
+      yield this.m(weak.length ? R.T('sys.battle_core.scan.m', { join: weak.join(R.T('sys.battle_core.scan.join')) }) : R.T('sys.battle_core.scan.m_2'));
+      if (absorb.length) yield this.m(R.T('sys.battle_core.scan.m_3', { join: absorb.join(R.T('sys.battle_core.scan.join')) }));
     }
     *summon(u, eff) {
       const max = Math.min(8, eff.max != null ? eff.max : 8);
@@ -1767,10 +1767,10 @@
           added.push(m);
         }
       }
-      if (!added.length) { yield this.m('しかし、誰も来なかった。'); return; }
+      if (!added.length) { yield this.m(R.T('sys.battle_core.summon.m')); return; }
       this.relabel();
       yield { t: 'summon', units: added.map((m) => m.idx), by: u };
-      for (const m of added) yield this.m(`${m.name}が現れた！`);
+      for (const m of added) yield this.m(R.T('sys.battle_core.summon.m_2', { name: m.name }));
     }
 
     // ------------------------------------------------------- リピート（§11.5.3a、A6）
@@ -1902,7 +1902,7 @@
     /** 勝ったときの出来事（ドロップの gain）。旧の文の順（§3.3.8）は BSCENE の勝利の画面が持つ */
     *rewards() {
       const rw = this.computeRewards();
-      if (!this.killed.length) { yield this.m('魔物たちはいなくなった。'); return; }
+      if (!this.killed.length) { yield this.m(R.T('sys.battle_core.rewards.m')); return; }
       yield { t: 'victory' };
       for (const d of rw.drops) yield { t: 'drop', mon: d.mon, name: d.name, item: d.item, grade: d.grade, slot: d.slot, n: d.n, kept: d.kept };
     }
@@ -2187,7 +2187,7 @@
         if (!u || !u.isParty) return [];
         const out = [];
         const reach = eng.canReach(u);
-        const atk = { cmd: 'attack', target: 'enemy', wtype: u.wtype, name: u.wtype === 'fist' ? '素手' : wtypeInfo(u.wtype).name };
+        const atk = { cmd: 'attack', target: 'enemy', wtype: u.wtype, name: u.wtype === 'fist' ? R.T('sys.battle_core.create.B.options.atk.name') : wtypeInfo(u.wtype).name };
         if (!reach) { atk.usable = false; atk.reason = 'reach'; } else atk.usable = true;
         out.push(atk);
         const techs = (u.c.techs || []).map((id) => [id, ACT(id)]).filter(([, a]) => a && a.kind === 'tech' && a.wtype === u.wtype && hasBattleEffect(a));

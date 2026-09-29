@@ -329,7 +329,7 @@
     const nm = u(o.compact ? 16 : 18);
     const nw = R.UIK.text(g, c.name, x + tw + u(8), y - u(1), { size: nm, weight: 700, color: dead ? C.disabled : o.focused ? C.goldHi : C.text, maxW: w * 0.5 });
     if (!o.noTitle) R.UIK.text(g, S.title(c), x + tw + u(16) + nw, y + nm * 0.28, { size: u(12.5), color: C.text2, maxW: Math.max(0, w - tw - nw - u(20)) });
-    if (dead) R.UIK.chip(g, x + w - u(60), y, '戦闘不能', { kind: 'plain', size: 10, color: C.down });
+    if (dead) R.UIK.chip(g, x + w - u(60), y, R.T('ui.screens.charCard.chip'), { kind: 'plain', size: 10, color: C.down });
     if (o.note) R.UIK.text(g, o.note, x + w, y + (dead ? u(20) : u(1)), { size: u(12), color: C.text3, align: 'right' });   // 選べないわけ（魔石の「もう覚えている」など）
     if (o.extra) o.extra(g, x, y, w);
     y += nm + (o.compact ? u(10) : u(18));
@@ -363,7 +363,7 @@
   };
   /** 出どころの言葉 */
   S.srcName = function (it) {
-    return ({ shop: '店の品', drop: '魔物の落とし物', mdrop: '魔物の落とし物', super: '魔物の落とし物', relic: '古い遺物', reward: 'お礼の品', steal: '盗んだ品', unique: '一品物', chest: '宝箱' })[it && it.src] || '';
+    return ({ shop: R.T('ui.screens.srcName.shop'), drop: R.T('ui.screens.srcName.drop'), mdrop: R.T('ui.screens.srcName.mdrop'), super: R.T('ui.screens.srcName.super'), relic: R.T('ui.screens.srcName.relic'), reward: R.T('ui.screens.srcName.reward'), steal: R.T('ui.screens.srcName.steal'), unique: R.T('ui.screens.srcName.unique'), chest: R.T('ui.screens.srcName.chest') })[it && it.src] || '';
   };
   /** 種類の言葉（「剣 ・ 片手」「体 ・ 重い鎧」…） */
   S.kindLine = function (it) {
@@ -372,14 +372,14 @@
     if (it.slot === 'weapon') {
       parts.push(S.wname(it.wtype));
       const two = it.twoHanded != null ? it.twoHanded : !!(R.DB.weaponTypes[it.wtype] || {}).twoHanded;
-      parts.push(two ? '両手' : '片手');
+      parts.push(two ? R.T('ui.screens.kindLine') : R.T('ui.screens.kindLine_2'));
     } else {
       parts.push((R.Rules.GROUP_NAMES || {})[it.slot] || it.slot);
-      if (it.weight) parts.push({ heavy: '重い防具', light: '軽い防具', cloth: '布の防具' }[it.weight] || '');
+      if (it.weight) parts.push({ heavy: R.T('ui.screens.kindLine.heavy'), light: R.T('ui.screens.kindLine.light'), cloth: R.T('ui.screens.kindLine.cloth') }[it.weight] || '');
     }
     const s = S.srcName(it);
-    if (s && s !== '店の品') parts.push(s);
-    return parts.filter(Boolean).join('　・　');
+    if (s && s !== R.T('ui.screens.srcName.shop')) parts.push(s);
+    return parts.filter(Boolean).join(R.T('ui.screens.kindLine.join'));
   };
   /** 品の主な値（攻撃 58 など。品の値だけ）→ [{key, name, v}] */
   S.mainStats = function (it) {
@@ -483,7 +483,7 @@
   }
   /** 選択の札。o = {title, text, choices:[label | {label, disabled, right}], cancel: index（B の値、既定 -1）, index} → Promise<index|-1> */
   S.ask = function (v, o) {
-    const rows = (o.choices || ['はい', 'いいえ']).map((c, i) => (typeof c === 'string' ? { label: c, value: i } : Object.assign({ value: i }, c)));
+    const rows = (o.choices || R.T('ui.screens.ask.rows')).map((c, i) => (typeof c === 'string' ? { label: c, value: i } : Object.assign({ value: i }, c)));
     const list = new R.UIK.List({ rows, rowH: 36, index: o.index || 0 });
     const m = { kind: 'ask', o, list };
     list.onSelect = (row) => modalEnd(v, row.value);
@@ -532,7 +532,7 @@
     }
     if (lines.length) cy += u(10);
     if (m.kind === 'ask') m.list.draw(g, { x: x + u(12), y: cy, w: w - u(24), h: listH });
-    else R.UIK.prompts(g, [{ btn: 'a', label: '閉じる' }], { x: x + w - u(20), y: y + h - u(22), align: 'right' });
+    else R.UIK.prompts(g, [{ btn: 'a', label: R.T('ui.screens.modalDraw.0.label') }], { x: x + w - u(20), y: y + h - u(22), align: 'right' });
     g.restore();
   };
 
@@ -576,15 +576,15 @@
         if (e.type === 'revive' && dead) { c.hp = e.amount != null ? Math.max(1, Math.min(st.maxHp, Math.floor(e.amount))) : Math.max(1, Math.floor(st.maxHp * (e.pct || 0.3))); c.status = []; }
         else if (e.type === 'heal' && c.hp > 0) c.hp = Math.min(st.maxHp, c.hp + Math.max(1, Math.floor((e.amount != null ? e.amount : st.maxHp * (e.pct || 0)) * mul)));
         else if (e.type === 'healMp' && c.hp > 0) c.mp = Math.min(st.maxMp, c.mp + Math.max(1, Math.floor(e.amount != null ? e.amount : st.maxMp * (e.pct || 0))));
-        else if (e.type === 'cure' && c.hp > 0 && (c.status || []).length) { c.status = []; changed = true; lines.push(c.name + 'の状態が治った。'); }
+        else if (e.type === 'cure' && c.hp > 0 && (c.status || []).length) { c.status = []; changed = true; lines.push(R.T('ui.screens.applyField', { name: c.name })); }
         else if (e.type === 'learnSpell' && R.Glimmer && R.Glimmer.useStone) { const r = R.Glimmer.useStone(c, a); if (r.ok) { changed = true; lines.push(r.line); } }
       }
-      if (c.hp !== hp0) { changed = true; lines.push(dead ? `${c.name}が起き上がった。` : `${c.name}のHPが ${c.hp - hp0} 回復した。`); }
-      if (c.mp !== mp0) { changed = true; lines.push(`${c.name}のMPが ${c.mp - mp0} 回復した。`); }
+      if (c.hp !== hp0) { changed = true; lines.push(dead ? R.T('ui.screens.applyField_2', { name: c.name }) : R.T('ui.screens.applyField_3', { name: c.name, p1: c.hp - hp0 })); }
+      if (c.mp !== mp0) { changed = true; lines.push(R.T('ui.screens.applyField_4', { name: c.name, p1: c.mp - mp0 })); }
     }
     for (const e of use.effects || []) {
       if (e.type === 'encounter' && (e.pct || 0) < 0 && R.Field && R.Field.encounter && R.Field.encounter.ward) {
-        R.Field.encounter.ward(e.steps || 100); changed = true; lines.push('弱い魔物が寄ってこなくなった。');
+        R.Field.encounter.ward(e.steps || 100); changed = true; lines.push(R.T('ui.screens.applyField_5'));
       }
     }
     return { changed, lines };

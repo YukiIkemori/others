@@ -80,14 +80,14 @@
         K.chest('volcano_1_c6', 51, 12, { item: 'i_panacea', n: 2 }));
       // 光: 溶岩の照り返し（光だけ。溶岩のマスの上）。かがり火は置かない（溶岩が照らす）
       for (const [x, y] of [[17, 34], [17, 45], [20, 31], [38, 32], [28, 22], [44, 22], [35, 41], [13, 31]]) O.push(K.prop('lava_glow', x, y));
-      O.push(K.sign(30, 44, '――灰の火山。\n火の鳥の眠る山。\n試練の勝者のほか、入るべからず。'));
+      O.push(K.sign(30, 44, R.T('map.ash_volcano.sign')));
       K.def('ash_volcano_1', {
-        name: '灰の火山', kind: 'dungeon', region: 'r_ash', location: 'volcano', theme: 'cave',
+        name: R.T('map.ash_volcano.ash_volcano_1.name'), kind: 'dungeon', region: 'r_ash', location: 'volcano', theme: 'cave',
         legend: AK.VOLCANO(), rows: g, outside: 'wall_cave',
         objects: O,
         npcs: [
-          K.npc('copyist_a', 'npc_scribe', 9, 13, { name: '記録院の写し手', dir: 'n', talk: [L('……。')], cond: ['ash_copyists', '!ash_copy_done'] }),
-          K.npc('copyist_b', 'npc_scribe', 12, 13, { name: '記録院の写し手', dir: 'n', talk: [L('……。')], cond: ['ash_copyists', '!ash_copy_done'] }),
+          K.npc('copyist_a', 'npc_scribe', 9, 13, { name: R.T('map.ash_volcano.ash_volcano_1.npcs.0.copyist_a.name'), dir: 'n', talk: [L('……。')], cond: ['ash_copyists', '!ash_copy_done'] }),
+          K.npc('copyist_b', 'npc_scribe', 12, 13, { name: R.T('map.ash_volcano.ash_volcano_1.npcs.1.copyist_b.name'), dir: 'n', talk: [L('……。')], cond: ['ash_copyists', '!ash_copy_done'] }),
         ],
         spawns: { entrance: { x: 27, y: 45, dir: 'n' }, stairs: { x: 28, y: 5, dir: 's' } },
         exits: [{ x: 26, y: 47, w: 4, h: 1, to: { map: 'world', spawn: 'volcano' } }],
@@ -104,7 +104,7 @@
         zones: [{ rect: [0, 0, 56, 48], zone: 'z_ash_volcano' }],
         light: AK.LIGHT_VOLCANO, dark: false,
         bgm: 'cave', bbg: 'ash',
-        meta: { chestsInfo: true, floor: '1階', sub: '溶岩の流れる洞', live: [{ cells: crossA, cond: '!ash_sluice' }, { cells: crossB, cond: 'ash_sluice' }] },
+        meta: { chestsInfo: true, floor: R.T('map.ash_volcano.ash_volcano_1.meta.floor'), sub: R.T('map.ash_volcano.ash_volcano_1.meta.sub'), live: [{ cells: crossA, cond: '!ash_sluice' }, { cells: crossB, cond: 'ash_sluice' }] },
         // 1 枚の下絵（両方の渡り場が冷えた形）。流れている方の渡り場は閉じた絵（溶岩）をそのマスに置く。壁画・岩戸・溶岩は絵、lava_glow は光だけ
         art: { image: 'ash/under/ash_volcano_1', closed: 'ash/under/ash_volcano_1_closed', emit: 'ash/under/ash_volcano_1_emit', painted: ['lava_glow'] },
       });
@@ -137,11 +137,11 @@
       O.push(K.chest('volcano_2_c1', 33, 30, { pool: 'p_rare' }), K.chest('volcano_2_c2', 39, 12, { pool: 'p_heal' }), K.chest('volcano_2_c3', 5, 9, { pool: 'p_T' }));
       for (const [x, y] of [[12, 12], [32, 12], [14, 22], [30, 22], [22, 25], [10, 17], [34, 17]]) O.push(K.prop('lava_glow', x, y));
       K.def('ash_volcano_2', {
-        name: '灰の火山', kind: 'dungeon', region: 'r_ash', location: 'volcano', theme: 'cave',
+        name: R.T('map.ash_volcano.ash_volcano_2.name'), kind: 'dungeon', region: 'r_ash', location: 'volcano', theme: 'cave',
         legend: AK.VOLCANO(), rows: g, outside: 'wall_cave',
         objects: O,
         npcs: [
-          K.npc('fine', 'fine', 27, 4, { name: '灰色のマントの少女', dir: 's', talk: 'ash_crater_fine', reward: null, pushable: false, cond: ['ash_lavabeast', '!ash_fine_seen'] }),
+          K.npc('fine', 'fine', 27, 4, { name: R.T('map.ash_volcano.ash_volcano_2.npcs.0.fine.name'), dir: 's', talk: 'ash_crater_fine', reward: null, pushable: false, cond: ['ash_lavabeast', '!ash_fine_seen'] }),
         ],
         spawns: { stairs: { x: 21, y: 32, dir: 'n' }, rim: { x: 22, y: 5, dir: 's' }, egg: { x: 22, y: 15, dir: 's' } },
         exits: [],
@@ -152,7 +152,7 @@
         zones: [{ rect: [16, 3, 12, 14], zone: null }, { rect: [0, 0, 44, 36], zone: 'z_ash_crater' }].filter((z) => z.zone),
         light: AK.LIGHT_VOLCANO, dark: false,
         bgm: 'cave', bbg: 'ash',
-        meta: { chestsInfo: true, floor: '火口', sub: '火の鳥の卵の眠る所' },
+        meta: { chestsInfo: true, floor: R.T('map.ash_volcano.ash_volcano_2.meta.floor'), sub: R.T('map.ash_volcano.ash_volcano_2.meta.sub') },
         // 1 枚の下絵（溶岩の湖・岩棚・土手道・卵の島と卵）。lava_glow は光だけ
         art: { image: 'ash/under/ash_volcano_2', emit: 'ash/under/ash_volcano_2_emit', painted: ['lava_glow'] },
       });

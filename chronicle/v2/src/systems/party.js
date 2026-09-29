@@ -37,7 +37,7 @@
         const type = DB.heroTypes[h.type] ? h.type : 'warrior';
         const T = DB.heroTypes[type];
         const sex = h.sex === 'f' ? 'f' : 'm';
-        c = R.State.blankChar('hero', { name: h.name || 'アルン', look: `hero_${sex}_${type}`, type });
+        c = R.State.blankChar('hero', { name: h.name || R.T('sys.party.makeChar.c.hero.name'), look: `hero_${sex}_${type}`, type });
         c.sex = sex;
         const fav = h.fav && (Rules().WTYPES.includes(h.fav) || Rules().ELEMENTS.includes(h.fav)) ? h.fav : null;
         if (fav) c.fav = fav;

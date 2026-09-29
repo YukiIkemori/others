@@ -54,16 +54,16 @@
         ['broken_pillar', 16, 26], ['bones', 27, 31], ['sand_mound', 24, 32], ['thorn_bush', 18, 33], ['rock_small', 27, 27], ['weapon_rack', 24, 10],
         ['bones', 6, 29], ['sand_mound', 38, 28]]);
       for (const [x, y] of [[18, 28], [25, 28], [18, 10], [25, 14], [8, 16], [34, 15], [22, 7], [37, 27], [8, 29]]) O.push(K.prop('torch', x, y));
-      O.push(K.sign(23, 33, '――ここより砂の鷹の巣\n名のある者は帰れ'));
+      O.push(K.sign(23, 33, R.T('map.desert_hawks.sign')));
       const N = [
-        K.npc('sentry', 'npc_hawk', 21, 24, { name: '見張りの男', dir: 's', talk: 'desert_hawks_sentry', pushable: false, reward: 'hint', cond: '!desert_hawk_met' }),
-        K.npc('hawk_door', 'npc_hawk', 23, 27, { name: '鷹団の見張り', dir: 'w', talk: 'desert_hawks_member', reward: 'news', cond: FRIEND }),
-        K.npc('hawk_shop', 'npc_hawk', 10, 12, { name: '鷹団の闇市', title: '闇市', dir: 's', talk: 'desert_hawks_shop', pushable: false, reward: 'discount', cond: FRIEND }),
-        K.npc('hawk_cook', 'npc_desert_woman', 12, 16, { name: '鷹団の炊き手', dir: 'w', talk: 'desert_hawks_member', reward: 'news', cond: FRIEND }),
-        K.npc('hawk_old', 'npc_desert_old_m', 34, 13, { name: '年寄りの鷹', dir: 's', talk: 'desert_hawks_old', reward: 'news', cond: FRIEND }),
+        K.npc('sentry', 'npc_hawk', 21, 24, { name: R.T('map.desert_hawks.N.0.sentry.name'), dir: 's', talk: 'desert_hawks_sentry', pushable: false, reward: 'hint', cond: '!desert_hawk_met' }),
+        K.npc('hawk_door', 'npc_hawk', 23, 27, { name: R.T('map.desert_hawks.N.1.hawk_door.name'), dir: 'w', talk: 'desert_hawks_member', reward: 'news', cond: FRIEND }),
+        K.npc('hawk_shop', 'npc_hawk', 10, 12, { name: R.T('map.desert_hawks.N.2.hawk_shop.name'), title: R.T('map.desert_hawks.N.2.hawk_shop.title'), dir: 's', talk: 'desert_hawks_shop', pushable: false, reward: 'discount', cond: FRIEND }),
+        K.npc('hawk_cook', 'npc_desert_woman', 12, 16, { name: R.T('map.desert_hawks.N.3.hawk_cook.name'), dir: 'w', talk: 'desert_hawks_member', reward: 'news', cond: FRIEND }),
+        K.npc('hawk_old', 'npc_desert_old_m', 34, 13, { name: R.T('map.desert_hawks.N.4.hawk_old.name'), dir: 's', talk: 'desert_hawks_old', reward: 'news', cond: FRIEND }),
       ];
       K.def('desert_hawks_1', {
-        name: '砂の鷹団のアジト', kind: 'dungeon', optional: true, region: 'r_desert', location: 'hawks', theme: 'cave',
+        name: R.T('map.desert_hawks.desert_hawks_1.name'), kind: 'dungeon', optional: true, region: 'r_desert', location: 'hawks', theme: 'cave',
         legend: LEG(), rows: g, outside: 'rock', objects: O, npcs: N,
         spawns: { mouth: { x: 21, y: 33, dir: 'n' }, down: { x: 21, y: 5, dir: 's' } },
         exits: [{ x: 20, y: 35, w: 3, h: 1, to: { map: 'world', spawn: 'hawks' } }],
@@ -71,7 +71,7 @@
         zones: [{ rect: null, zone: 'z_desert_hawks', cond: FIGHT }],
         light: DK.LIGHT_TOMB, dark: false, bgm: 'cave', bbg: 'cave',
         art: { image: 'desert/under/hawks_1', painted: [] },   // 1 枚の下絵（design/ENV_ASSETS.md「Painted dungeons」・_tools/under/desert2）
-        meta: { chestsInfo: true, floor: '1 階', sub: '見張りの洞' },
+        meta: { chestsInfo: true, floor: R.T('map.desert_hawks.desert_hawks_1.meta.floor'), sub: R.T('map.desert_hawks.desert_hawks_1.meta.sub') },
       });
     }
 
@@ -96,13 +96,13 @@
         ['copper_brazier', 15, 3], ['copper_brazier', 21, 3], ['tomb_urn', 9, 12], ['sack', 31, 18], ['crate', 32, 20], ['bones', 5, 22], ['table', 24, 5]]);
       for (const [x, y] of [[12, 7], [24, 11], [17, 18], [9, 20], [30, 17]]) O.push(K.prop('torch', x, y));
       const N = [
-        K.npc('rashid', 'npc_rashid', 18, 4, { name: 'ラシード', title: '砂の鷹団の頭', dir: 's', talk: 'desert_hawks_rashid', pushable: false, reward: 'item',
+        K.npc('rashid', 'npc_rashid', 18, 4, { name: R.T('map.desert_hawks.N.0.rashid.name'), title: R.T('map.desert_hawks.N.0.rashid.title'), dir: 's', talk: 'desert_hawks_rashid', pushable: false, reward: 'item',
           cond: 'desert_hawk_met' }),   // 戦う道でも広間の奥に立っている（戦いの前後で出し消ししない）
-        K.npc('hawk_guard_l', 'npc_hawk', 14, 7, { name: '鷹団の弓手', dir: 'e', talk: 'desert_hawks_member', reward: 'news', cond: FRIEND }),
-        K.npc('hawk_guard_r', 'npc_hawk', 22, 7, { name: '鷹団の弓手', dir: 'w', talk: 'desert_hawks_member', reward: 'news', cond: FRIEND }),
+        K.npc('hawk_guard_l', 'npc_hawk', 14, 7, { name: R.T('map.desert_hawks.N.1.hawk_guard_l.name'), dir: 'e', talk: 'desert_hawks_member', reward: 'news', cond: FRIEND }),
+        K.npc('hawk_guard_r', 'npc_hawk', 22, 7, { name: R.T('map.desert_hawks.N.2.hawk_guard_r.name'), dir: 'w', talk: 'desert_hawks_member', reward: 'news', cond: FRIEND }),
       ];
       K.def('desert_hawks_2', {
-        name: '砂の鷹団のアジト', kind: 'dungeon', optional: true, region: 'r_desert', location: 'hawks', theme: 'cave',
+        name: R.T('map.desert_hawks.desert_hawks_2.name'), kind: 'dungeon', optional: true, region: 'r_desert', location: 'hawks', theme: 'cave',
         legend: LEG(), rows: g, outside: 'rock', objects: O, npcs: N,
         spawns: { top: { x: 17, y: 23, dir: 'n' } },
         exits: [],
@@ -110,7 +110,7 @@
         zones: [{ rect: null, zone: 'z_desert_hawks', cond: [FIGHT, '!desert_hawkhold_done'] }],
         light: DK.LIGHT_TOMB, dark: false, bgm: 'cave', bbg: 'cave',
         art: { image: 'desert/under/hawks_2', painted: [] },   // 1 枚の下絵（_tools/under/desert2）
-        meta: { chestsInfo: true, floor: '2 階', sub: '頭の広間' },
+        meta: { chestsInfo: true, floor: R.T('map.desert_hawks.desert_hawks_2.meta.floor'), sub: R.T('map.desert_hawks.desert_hawks_2.meta.sub') },
       });
     }
   });

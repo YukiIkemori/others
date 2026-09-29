@@ -49,9 +49,9 @@
       O.push(K.prop('dining_table', 8, 32, { w: 2 }), K.exam(8, 33, 'manor_dining'));
       // 燭台（部屋の隅。通り道に置かない）
       for (const [x, y] of [[3, 29], [14, 29], [16, 29], [31, 29], [33, 36], [3, 13], [44, 13], [44, 3]]) O.push(K.prop('candelabra', x, y));
-      O.push(K.sign(21, 36, '――霧の館。\n主なき館に、夜ごと楽の音が響く。\n（誰かの書き付け）'));
+      O.push(K.sign(21, 36, R.T('map.marsh_manor.sign')));
       K.def('marsh_manor_1', {
-        name: '霧の館', kind: 'dungeon', region: 'r_marsh', location: 'manor', theme: 'lighthouse',
+        name: R.T('map.marsh_manor.marsh_manor_1.name'), kind: 'dungeon', region: 'r_marsh', location: 'manor', theme: 'lighthouse',
         legend: MK.MANOR(), rows: g, outside: 'wall_stone',
         objects: O, npcs: [],
         spawns: { entrance: { x: 23, y: 37, dir: 'n' }, stairs: { x: 23, y: 5, dir: 's' } },
@@ -60,7 +60,7 @@
         zones: [{ rect: [0, 0, 48, 36], zone: 'z_marsh_manor' }],
         light: MK.LIGHT_MANOR, dark: false,
         bgm: 'ghost', bbg: 'tower',
-        meta: { chestsInfo: true, floor: '1階', sub: '主なき館' },
+        meta: { chestsInfo: true, floor: R.T('map.marsh_manor.marsh_manor_1.meta.floor'), sub: R.T('map.marsh_manor.marsh_manor_1.meta.sub') },
         art: { image: 'lighthouse/under/manor_1', painted: [] },
       });
     }
@@ -96,13 +96,13 @@
       O.push(K.exam(24, 12, 'manor_stand'));
       O.push(K.prop('dresser', 43, 7), K.exam(43, 8, 'manor_mirror'));
       for (const [x, y] of [[3, 25], [44, 25], [19, 28], [28, 28], [14, 17], [33, 17], [36, 17], [44, 17]]) O.push(K.prop('candelabra', x, y));
-      O.push(K.sign(26, 27, '――楽団の指揮者、倒れし楽士を起こす。\n先に指揮者を。棒が上がれば、身を固めよ。\n（誰かの書き付け）'));
+      O.push(K.sign(26, 27, R.T('map.marsh_manor.sign_2')));
       K.def('marsh_manor_2', {
-        name: '霧の館', kind: 'dungeon', region: 'r_marsh', location: 'manor', theme: 'lighthouse',
+        name: R.T('map.marsh_manor.marsh_manor_2.name'), kind: 'dungeon', region: 'r_marsh', location: 'manor', theme: 'lighthouse',
         legend: MK.MANOR(), rows: g, outside: 'wall_stone',
         objects: O,
         npcs: [
-          K.npc('melda', 'npc_melda', 40, 9, { name: 'メルダ', title: '霧の館の魔女', dir: 's', talk: 'manor_melda', reward: 'lead', pushable: false, cond: ['marsh_dolls', '!marsh_melda_gone'] }),
+          K.npc('melda', 'npc_melda', 40, 9, { name: R.T('map.marsh_manor.marsh_manor_2.npcs.0.melda.name'), title: R.T('map.marsh_manor.marsh_manor_2.npcs.0.melda.title'), dir: 's', talk: 'manor_melda', reward: 'lead', pushable: false, cond: ['marsh_dolls', '!marsh_melda_gone'] }),
         ],
         spawns: { stairs: { x: 23, y: 31, dir: 'n' }, melda: { x: 40, y: 12, dir: 'n' } },
         exits: [],
@@ -114,7 +114,7 @@
         zones: [{ rect: [0, 18, 48, 18], zone: 'z_marsh_manor' }],
         light: MK.LIGHT_MANOR, dark: false,
         bgm: 'ghost', bbg: 'tower',
-        meta: { chestsInfo: true, floor: '2階', sub: '楽の音の響く階' },
+        meta: { chestsInfo: true, floor: R.T('map.marsh_manor.marsh_manor_2.meta.floor'), sub: R.T('map.marsh_manor.marsh_manor_2.meta.sub') },
         art: { image: 'lighthouse/under/manor_2', painted: [] },
       });
     }

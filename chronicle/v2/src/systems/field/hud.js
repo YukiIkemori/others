@@ -15,14 +15,14 @@
   const H = (F.hud = F.hud || {});
   const TWO_H = 2 * 3600 * 1000;
   const FAC = { inn: 'inn', shop: 'shop', tavern: 'chat', item: 'bag', weapon: 'sword', armor: 'shield', church: 'light', guild: 'journal', records: 'book', record: 'book' };
-  const PROMPTS_TOWN = [{ btn: 'y', label: 'メニュー' }, { btn: 'x', label: '地図' }, { btn: 'l', label: '目標' }, { btn: 'b', label: '走る' }];   // 町の X は「町の地図」（draw で）
-  const PROMPTS_DUN = [{ btn: 'y', label: 'メニュー' }, { btn: 'x', label: '地図' }, { btn: 'l', label: '目標' }, { btn: 'b', label: '走る' }];
+  const PROMPTS_TOWN = [{ btn: 'y', label: R.T('sys.hud.PROMPTS_TOWN.0.label') }, { btn: 'x', label: R.T('sys.hud.PROMPTS_TOWN.1.label') }, { btn: 'l', label: R.T('sys.hud.PROMPTS_TOWN.2.label') }, { btn: 'b', label: R.T('sys.hud.PROMPTS_TOWN.3.label') }];   // 町の X は「町の地図」（draw で）
+  const PROMPTS_DUN = [{ btn: 'y', label: R.T('sys.hud.PROMPTS_DUN.0.label') }, { btn: 'x', label: R.T('sys.hud.PROMPTS_DUN.1.label') }, { btn: 'l', label: R.T('sys.hud.PROMPTS_DUN.2.label') }, { btn: 'b', label: R.T('sys.hud.PROMPTS_DUN.3.label') }];
   // ダンジョンの地図（設定 fieldMap）: X で 小地図 → 大きな地図 → 出さない → 小地図。ボタン表示は「次に押すと何になるか」
   const MAP_NEXT = { mini: 'big', big: 'off', off: 'mini' };
-  const MAP_LABEL = { mini: '大きな地図', big: '地図を消す', off: '小地図' };
-  const MAP_TOAST = { mini: '地図：小さく', big: '地図：大きく', off: '地図：出さない' };
+  const MAP_LABEL = { mini: R.T('sys.hud.MAP_LABEL.mini'), big: R.T('sys.hud.MAP_LABEL.big'), off: R.T('sys.hud.MAP_LABEL.off') };
+  const MAP_TOAST = { mini: R.T('sys.hud.MAP_TOAST.mini'), big: R.T('sys.hud.MAP_TOAST.big'), off: R.T('sys.hud.MAP_TOAST.off') };
   const DIR_ANGLE = { n: 0, ne: Math.PI / 4, e: Math.PI / 2, se: Math.PI * 0.75, s: Math.PI, sw: -Math.PI * 0.75, w: -Math.PI / 2, nw: -Math.PI / 4 };
-  const DIR_JA = { n: '北', ne: '北東', e: '東', se: '南東', s: '南', sw: '南西', w: '西', nw: '北西' };
+  const DIR_JA = { n: R.T('sys.hud.DIR_JA.n'), ne: R.T('sys.hud.DIR_JA.ne'), e: R.T('sys.hud.DIR_JA.e'), se: R.T('sys.hud.DIR_JA.se'), s: R.T('sys.hud.DIR_JA.s'), sw: R.T('sys.hud.DIR_JA.sw'), w: R.T('sys.hud.DIR_JA.w'), nw: R.T('sys.hud.DIR_JA.nw') };
   const B = [{ btn: 'a', label: '' }];
 
   // ---------------------------------------------------------------- 次にやること（L。オーナーの依頼 2026-09-28）
@@ -74,7 +74,7 @@
     const kin = Math.min(1, age / 200), kout = Math.min(1, (goal.ms - age) / 360);
     const a = Math.max(0, Math.min(kin, kout));
     if (a <= 0) return;
-    const ts = U(15), lab = '次にやること';
+    const ts = U(15), lab = R.T('sys.hud.drawGoal.lab');
     const tw = R.UIK.measure(goal.text, { size: ts, weight: 700 });
     const maxW = Math.min(R.W - s.l - s.r - U(tall ? 32 : 40), U(460));
     const w = Math.min(maxW, Math.max(U(240), tw + U(64)));
@@ -128,7 +128,7 @@
     const chests = (m.objects || []).filter((o) => o.type === 'chest');
     const showChests = false && chests.length;
     const opened = G ? chests.filter((o) => ((G.chests[m.id] || []).includes(o.id))).length : 0;
-    c.chests = showChests ? `宝箱 ${opened}/${chests.length}` : '';
+    c.chests = showChests ? R.T('sys.hud.refresh.chests', { opened, length: chests.length }) : '';
     c.chestsDone = showChests && opened === chests.length;
     // 新しい話（E19。ハッシュは EVENTS）
     let nNew = 0;
@@ -138,13 +138,13 @@
       try { n.isNew = !!R.Events.isNew(m, n.def); } catch (e) { n.isNew = false; }
       if (n.isNew) nNew++;
     }
-    c.newTalk = m.kind === 'town' && nNew ? `新しい話 ${nNew}人` : '';
+    c.newTalk = m.kind === 'town' && nNew ? R.T('sys.hud.refresh.newTalk', { nNew }) : '';
     // 目印の手がかり
     c.lead = null;
     try {
       const id = G && R.Leads.pinned();
       const L = id && R.DB.leads[id];
-      if (L) c.lead = { title: L.title, where: [L.dir ? DIR_JA[L.dir] : '', L.place || ''].filter(Boolean).join('・'), ang: L.dir != null && DIR_ANGLE[L.dir] != null ? DIR_ANGLE[L.dir] : null };
+      if (L) c.lead = { title: L.title, where: [L.dir ? DIR_JA[L.dir] : '', L.place || ''].filter(Boolean).join(R.T('sys.hud.refresh.lead.where.join')), ang: L.dir != null && DIR_ANGLE[L.dir] != null ? DIR_ANGLE[L.dir] : null };
     } catch (e) { c.lead = null; }
     c.showMini = m.kind === 'dungeon' && meta.minimap !== false;
   };
@@ -211,7 +211,7 @@
       const sub = c.sub;
       if (sub) { R.UIK.text(g, sub, sx, sy, { size: U(11.5), color: T.color.text2, shadow: true }); sx += R.UIK.measure(sub, { size: U(11.5) }) + U(14); }
       if (c.chests) { R.UIK.text(g, c.chests, sx, sy, { size: U(11.5), color: c.chestsDone ? gold : T.color.text2, shadow: true }); sx += R.UIK.measure(c.chests, { size: U(11.5) }) + U(12); }
-      if (F.dark.on() && R.MapUtil.darkAt(S.map, S.x, S.y)) R.UIK.chip(g, sx, sy - U(2), '暗い', { color: '#b8b0e8', bg: 'rgba(90,80,160,0.25)' });
+      if (F.dark.on() && R.MapUtil.darkAt(S.map, S.x, S.y)) R.UIK.chip(g, sx, sy - U(2), R.T('sys.hud.draw.chip'), { color: '#b8b0e8', bg: 'rgba(90,80,160,0.25)' });
       if (sub || c.chests) sy += U(18);
       if (c.icons.length) { for (let i = 0; i < c.icons.length; i++) R.UIK.icon(g, c.icons[i], x + U(28) + i * U(20), sy, U(14), T.color.text2); sy += U(20); }
       if (c.newTalk) { R.UIK.chip(g, x + U(28), sy, c.newTalk, {}); sy += U(22); }
@@ -252,8 +252,8 @@
     if (top) drawGoal(g);
     // ---- 右下: ボタン表示
     if (top && showPrompts()) {
-      PROMPTS_DUN[1].label = mode ? MAP_LABEL[mode] : '地図';
-      PROMPTS_TOWN[1].label = S.map.kind === 'town' ? '町の地図' : '地図';
+      PROMPTS_DUN[1].label = mode ? MAP_LABEL[mode] : R.T('sys.hud.draw.label');
+      PROMPTS_TOWN[1].label = S.map.kind === 'town' ? R.T('sys.hud.draw.label_2') : R.T('sys.hud.draw.label');
       R.UIK.prompts(g, S.map.kind === 'dungeon' ? PROMPTS_DUN : PROMPTS_TOWN, 'br');
     }
   };
@@ -262,7 +262,7 @@
     const U = R.UIK.u, T = R.UIK.T;
     R.UIK.panel(g, { x, y, w, h: U(54) }, { r: U(10) });
     R.UIK.icon(g, 'quest', x + U(10), y + U(10), U(16), T.color.gold);
-    R.UIK.text(g, '手がかり', x + U(32), y + U(10), { size: U(10), weight: 700, color: T.color.gold });
+    R.UIK.text(g, R.T('sys.hud.leadCard.text'), x + U(32), y + U(10), { size: U(10), weight: 700, color: T.color.gold });
     R.UIK.text(g, R.UIK.fit(L.title, w - U(70), { size: U(13.5), weight: 700 }), x + U(32), y + U(28), { size: U(13.5), weight: 700 });
     if (L.where) R.UIK.text(g, L.where, x + w - U(12), y + U(10), { size: U(10), color: T.color.text3, align: 'right' });
     if (L.ang != null) {

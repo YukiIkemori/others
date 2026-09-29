@@ -24,8 +24,8 @@
   const T = () => R.UIK.T;
   const EQUIP = ['weapon', 'shield', 'head', 'body', 'hands', 'feet', 'acc'];
   const MAX = 99;
-  const TABS = [{ key: 'weapon', label: '武器' }, { key: 'armor', label: '防具' }, { key: 'item', label: '道具' }, { key: 'sell', label: '売る' }];
-  const SORTS = ['種類順', '値段順', '強さ順'];
+  const TABS = [{ key: 'weapon', label: R.T('ui.shop.TABS.weapon.label') }, { key: 'armor', label: R.T('ui.shop.TABS.armor.label') }, { key: 'item', label: R.T('ui.shop.TABS.item.label') }, { key: 'sell', label: R.T('ui.shop.TABS.sell.label') }];
+  const SORTS = R.T('ui.shop.SORTS');
   const pref = { sort: 0, onlyUsable: false };   // 並びとしぼり込みは店を出ても覚えておく（遊んでいる間だけ）
 
   const catOf = (it) => (!it ? 'item' : it.slot === 'weapon' ? 'weapon' : EQUIP.includes(it.slot) ? 'armor' : 'item');
@@ -79,7 +79,7 @@
 
   S.def('shop', {
     init(p) {
-      this.shop = (R.DB.shops || {})[p.id] || { name: '店', items: [] };
+      this.shop = (R.DB.shops || {})[p.id] || { name: R.T('ui.shop.init.shop.name'), items: [] };
       this.stock = (R.Rules.shopItems ? R.Rules.shopItems(p.id) : this.shop.items || []).filter((id) => S.item(id));
       const has = (k) => this.stock.some((id) => catOf(S.item(id)) === k);
       this.tabs = TABS.filter((t) => (t.key === 'sell' ? this.shop.sell !== false : has(t.key)));
@@ -150,8 +150,8 @@
         this.doSell(id, 1);
         return;
       }
-      if (this.price(id) > S.gold()) { R.UIK.sfx('buzzer'); R.UIK.toast('お金が足りない', { anchor: 'bl' }); return; }
-      if (S.count(id) >= MAX) { R.UIK.sfx('buzzer'); R.UIK.toast('これ以上は持てない', { anchor: 'bl' }); return; }
+      if (this.price(id) > S.gold()) { R.UIK.sfx('buzzer'); R.UIK.toast(R.T('ui.shop.pick.toast'), { anchor: 'bl' }); return; }
+      if (S.count(id) >= MAX) { R.UIK.sfx('buzzer'); R.UIK.toast(R.T('ui.shop.pick.toast_2'), { anchor: 'bl' }); return; }
       this.openQty(id, 'buy');
     },
     openQty(id, mode) {
@@ -161,14 +161,14 @@
     async doBuy(id, n) {
       if (this.busy) return;
       const it = S.item(id), total = this.price(id) * n;
-      if (total > S.gold()) { R.UIK.sfx('buzzer'); R.UIK.toast('お金が足りない', { anchor: 'bl' }); return; }
-      if (S.count(id) + n > MAX) { R.UIK.sfx('buzzer'); R.UIK.toast('これ以上は持てない', { anchor: 'bl' }); return; }
+      if (total > S.gold()) { R.UIK.sfx('buzzer'); R.UIK.toast(R.T('ui.shop.doBuy.toast'), { anchor: 'bl' }); return; }
+      if (S.count(id) + n > MAX) { R.UIK.sfx('buzzer'); R.UIK.toast(R.T('ui.shop.doBuy.toast_2'), { anchor: 'bl' }); return; }
       this.busy = true;
       try {
         R.Game.gold -= total;
         gain(id, n);
         R.UIK.sfx('coin');
-        R.UIK.toast(`${it.name}${n > 1 ? ' ×' + n : ''} を買った`, { anchor: 'tr', icon: S.iconOf(it) });
+        R.UIK.toast(R.T('ui.shop.doBuy.toast_3', { name: it.name, p1: n > 1 ? ' ×' + n : '' }), { anchor: 'tr', icon: S.iconOf(it) });
         // 装備は買った数だけ続けて聞く（「装備しない」・付けられる人がいない でやめる）
         if (isEquip(id)) for (let i = 0; i < n; i++) if (!(await this.offerEquip(id, n - i))) break;
         this.refresh(true);
@@ -180,13 +180,13 @@
       this.busy = true;
       try {
         if (it.grade === 'rare' || it.grade === 'super' || it.unique || it.stealOnly) {
-          const k = await S.ask(this, { title: it.name, text: `めずらしい品だ。${R.UIK.num(sp)} G で売る？`, choices: ['売る', 'やめる'], cancel: 1 });
+          const k = await S.ask(this, { title: it.name, text: R.T('ui.shop.doSell.k.ask.text', { sp: R.UIK.num(sp) }), choices: R.T('ui.shop.doSell.k.ask.choices'), cancel: 1 });
           if (k !== 0) return;
         }
         if (!take(id, n)) { R.UIK.sfx('buzzer'); return; }
         R.Game.gold += sp;
         R.UIK.sfx('coin');
-        R.UIK.toast(`${it.name}${n > 1 ? ' ×' + n : ''} を ${R.UIK.num(sp)} G で売った`, { anchor: 'bl', icon: 'coin' });
+        R.UIK.toast(R.T('ui.shop.doSell.toast', { name: it.name, p1: n > 1 ? ' ×' + n : '', sp: R.UIK.num(sp) }), { anchor: 'bl', icon: 'coin' });
         this.refresh(true);
       } finally { this.busy = false; }
     },
@@ -201,17 +201,17 @@
       let best = mem.findIndex((c, i) => can[i] && !wearing(c));
       if (best < 0) best = can.indexOf(true);
       const choices = mem.map((c, i) => {
-        if (!can[i]) return { label: c.name, right: '装備できない', disabled: true };
+        if (!can[i]) return { label: c.name, right: R.T('ui.shop.offerEquip.choices.right'), disabled: true };
         const d = S.bestDelta(S.statDiff(c, slotOf(c, id), id));
         return { label: c.name, right: d ? `${d.name} ${d.d > 0 ? '+' : '−'}${Math.abs(d.d)}` : '±0' };
       });
-      const title = left > 1 ? `今すぐ装備する？（あと ${left} 個）` : '今すぐ装備する？';
-      const k = await S.ask(this, { title, text: S.item(id).name, choices: choices.concat([{ label: '装備しない' }]), cancel: mem.length, index: best });
+      const title = left > 1 ? R.T('ui.shop.offerEquip.title', { left }) : R.T('ui.shop.offerEquip.title_2');
+      const k = await S.ask(this, { title, text: S.item(id).name, choices: choices.concat([{ label: R.T('ui.shop.offerEquip.choices.0.label') }]), cancel: mem.length, index: best });
       if (k < 0 || k >= mem.length || !can[k]) return false;
       const c = mem[k];
       const r = R.Rules.equip(c, slotOf(c, id), id);
-      if (r.ok) { R.UIK.sfx('equip'); R.UIK.toast(`${c.name} が ${S.item(id).name} を付けた`, { anchor: 'bl', icon: 'equip' }); return true; }
-      R.UIK.toast(r.reason || '付けられない', { anchor: 'bl' });
+      if (r.ok) { R.UIK.sfx('equip'); R.UIK.toast(R.T('ui.shop.offerEquip.toast', { name: c.name, name2: S.item(id).name }), { anchor: 'bl', icon: 'equip' }); return true; }
+      R.UIK.toast(r.reason || R.T('ui.shop.offerEquip.toast_2'), { anchor: 'bl' });
       return false;
     },
     // ---------------------------------------------------------------- 使わない物をまとめて売る
@@ -219,8 +219,8 @@
     openJunk() {
       if (this.busy) return false;
       const rows = S.shopJunk(this.stock).map((r) => Object.assign(r, { on: true }));
-      if (!rows.length) { R.UIK.sfx('buzzer'); R.UIK.toast('使わない物は見当たらない', { anchor: 'bl' }); return false; }
-      const list = new R.UIK.List({ rows: rows.map((r) => ({ value: r.id, label: S.item(r.id).name })).concat([{ value: '__ok', label: 'まとめて売る' }, { value: '__cancel', label: 'やめる' }]), rowH: 38, wrap: true });
+      if (!rows.length) { R.UIK.sfx('buzzer'); R.UIK.toast(R.T('ui.shop.openJunk.toast'), { anchor: 'bl' }); return false; }
+      const list = new R.UIK.List({ rows: rows.map((r) => ({ value: r.id, label: S.item(r.id).name })).concat([{ value: '__ok', label: R.T('ui.shop.ok.label') }, { value: '__cancel', label: R.T('ui.shop.cancel.label') }]), rowH: 38, wrap: true });
       list.onSelect = (row) => {
         if (row.value === '__ok') { this.sellJunk(); return; }
         if (row.value === '__cancel') { this.junk = null; return; }
@@ -238,13 +238,13 @@
       const j = this.junk;
       if (!j || this.busy) return 0;
       const pick = j.rows.filter((r) => r.on);
-      if (!pick.length) { R.UIK.sfx('buzzer'); R.UIK.toast('売る物が選ばれていない', { anchor: 'bl' }); return 0; }
+      if (!pick.length) { R.UIK.sfx('buzzer'); R.UIK.toast(R.T('ui.shop.sellJunk.toast'), { anchor: 'bl' }); return 0; }
       let got = 0, kinds = 0;
       for (const r of pick) if (take(r.id, r.n)) { got += r.unit * r.n; kinds++; }
       this.junk = null;
       R.Game.gold += got;
       R.UIK.sfx('coin');
-      R.UIK.toast(`${kinds} 種類をまとめて ${R.UIK.num(got)} G で売った`, { anchor: 'bl', icon: 'coin' });
+      R.UIK.toast(R.T('ui.shop.sellJunk.toast_2', { kinds, got: R.UIK.num(got) }), { anchor: 'bl', icon: 'coin' });
       this.refresh(true);
       return got;
     },
@@ -304,17 +304,17 @@
         const gs = u(17), amt = R.UIK.num(S.gold()) + ' G';
         const aw = R.UIK.text(g, amt, goldX, hp.y + u(12), { size: gs, weight: 700, color: C.gold, align: 'right' });
         R.UIK.icon(g, 'coin', goldX - aw - u(22), hp.y + u(13), u(16), C.gold);
-        R.UIK.text(g, '所持金', goldX, hp.y + u(36), { size: u(13), color: C.text2, align: 'right' });
-        goldX -= Math.max(aw + u(26), R.UIK.measure('所持金', { size: u(13) })) + u(14);
+        R.UIK.text(g, R.T('ui.shop.draw.text'), goldX, hp.y + u(36), { size: u(13), color: C.text2, align: 'right' });
+        goldX -= Math.max(aw + u(26), R.UIK.measure(R.T('ui.shop.draw.goldX.measure'), { size: u(13) })) + u(14);
       }
       const nameW = goldX - tx;
       R.UIK.text(g, this.shop.name, tx, hp.y + (tall ? u(10) : u(13)), { size: u(tall ? 17 : 18), weight: 700, color: C.text, maxW: nameW });
-      R.UIK.text(g, this.p.line ? '「' + this.p.line + '」' : (this.shop.kind === 'weapon' ? '「いい品がそろってるよ」' : '「旅の支度はここで」'), tx, hp.y + (tall ? u(36) : u(42)), { size: u(13), color: C.text2, maxW: nameW });
+      R.UIK.text(g, this.p.line ? '「' + this.p.line + '」' : (this.shop.kind === 'weapon' ? R.T('ui.shop.draw.text_2') : R.T('ui.shop.draw.text_3')), tx, hp.y + (tall ? u(36) : u(42)), { size: u(13), color: C.text2, maxW: nameW });
       if (!tall) {
         const gp = { x: b.x + b.w - gw, y: b.y, w: gw, h: hh };
         R.UIK.panel(g, gp, { frost: true });
         R.UIK.icon(g, 'coin', gp.x + u(14), gp.y + (gp.h - u(17)) / 2, u(17), C.gold);
-        R.UIK.text(g, '所持金', gp.x + u(40), gp.y + (gp.h - u(13)) / 2, { size: u(13), color: C.text2 });
+        R.UIK.text(g, R.T('ui.shop.draw.text'), gp.x + u(40), gp.y + (gp.h - u(13)) / 2, { size: u(13), color: C.text2 });
         R.UIK.text(g, R.UIK.num(S.gold()) + ' G', gp.x + gp.w - u(14), gp.y + (gp.h - u(18)) / 2 - u(1), { size: u(18), weight: 700, color: C.gold, align: 'right' });
       }
       // タブ（L/R・Q/E・タップ）
@@ -343,7 +343,7 @@
       this.list.render = (gg, row, rect, f) => this.drawRow(gg, row, rect, f, sell);
       this.list.draw(g, { x: lp.x + u(8), y: lp.y + barH, w: lp.w - u(16), h: lp.h - barH - u(8) });
       if (!this.list.rows.length) {
-        const msg = sell ? '売れる物を持っていない。' : this.onlyUsable && this.canFilter() ? '一行の誰も付けられる品がない。' : '並んでいる品がない。';
+        const msg = sell ? R.T('ui.shop.draw.msg') : this.onlyUsable && this.canFilter() ? R.T('ui.shop.draw.msg_2') : R.T('ui.shop.draw.msg_3');
         R.UIK.text(g, msg, lp.x + u(22), lp.y + barH + u(10), { size: u(14.5), color: C.text3, maxW: lp.w - u(44) });
       }
       // 詳しい所
@@ -354,17 +354,17 @@
       // 下のボタン表示
       if (this.qtyPick) {
         this.drawQty(g);
-        S.prompts(g, [{ btn: 'a', label: this.qtyPick.mode === 'buy' ? '買う' : '売る' }, { btn: 'b', label: 'やめる' }]);
+        S.prompts(g, [{ btn: 'a', label: this.qtyPick.mode === 'buy' ? R.T('ui.shop.draw.0.label') : R.T('ui.shop.draw.0.label_2') }, { btn: 'b', label: R.T('ui.shop.draw.1.label') }]);
       } else if (this.junk) {
         this.drawJunk(g);
         const cur = this.junk.list.current(), onItem = cur && cur.value !== '__ok' && cur.value !== '__cancel';
-        S.prompts(g, [{ btn: 'a', label: onItem ? '外す・戻す' : '決める' }, { btn: 'b', label: 'やめる' }]);
+        S.prompts(g, [{ btn: 'a', label: onItem ? R.T('ui.shop.draw.0.label_3') : R.T('ui.shop.draw.0.label_4') }, { btn: 'b', label: R.T('ui.shop.draw.1.label') }]);
       } else if (row) {
-        const pr = [{ btn: 'a', label: sell ? '売る' : '買う' }, { btn: 'b', label: '戻る' }, { btn: 'x', label: '並べ方' }, { btn: 'y', label: '詳しく' }];
-        if (!tall && this.canFilter()) pr.push({ btn: 'start', label: 'しぼり込み' });
-        if (!tall && sell) pr.push({ btn: 'start', label: 'まとめて売る' });
+        const pr = [{ btn: 'a', label: sell ? R.T('ui.shop.draw.pr.0.label') : R.T('ui.shop.draw.pr.0.label_2') }, { btn: 'b', label: R.T('ui.shop.draw.pr.1.label') }, { btn: 'x', label: R.T('ui.shop.draw.pr.2.label') }, { btn: 'y', label: R.T('ui.shop.draw.pr.3.label') }];
+        if (!tall && this.canFilter()) pr.push({ btn: 'start', label: R.T('ui.shop.draw.label') });
+        if (!tall && sell) pr.push({ btn: 'start', label: R.T('ui.shop.draw.label_2') });
         S.prompts(g, pr);
-      } else S.prompts(g, [{ btn: 'b', label: '戻る' }, { btn: 'x', label: '並べ方' }]);
+      } else S.prompts(g, [{ btn: 'b', label: R.T('ui.shop.draw.0.label_5') }, { btn: 'x', label: R.T('ui.shop.draw.1.label_2') }]);
     },
     /** 一覧の上の札: 並び・しぼり込み（押せる） */
     drawBar(g, lp, barH) {
@@ -373,13 +373,13 @@
       let x = lp.x + u(16);
       const gw = R.UIK.glyph(g, 'x', x + u(8), y + h / 2, { size: u(12) });
       x += gw + u(6);
-      const sLabel = '並び：' + SORTS[this.sortMode];
+      const sLabel = R.T('ui.shop.drawBar.sLabel', { p0: SORTS[this.sortMode] });
       const w1 = R.UIK.chip(g, x, y, sLabel, { kind: 'plain', size: sz });
       this.hot.sort = { x: x - u(6), y: y - u(8), w: w1 + u(12), h: h + u(16) };
       x += w1 + u(16);
       if (this.canFilter()) {
         const on = this.onlyUsable;
-        const fLabel = on ? '装備できる物だけ' : '全部の品';
+        const fLabel = on ? R.T('ui.shop.drawBar.fLabel') : R.T('ui.shop.drawBar.fLabel_2');
         const fw = chipW(fLabel, sz);
         const gx = x;
         const gw2 = S.tall() ? 0 : R.UIK.glyph(g, 'start', gx + u(8), y + h / 2, { size: u(12) }) + u(6);
@@ -390,7 +390,7 @@
         }
       } else if (this.selling()) {
         // 売るタブ: 「使わない物をまとめて売る」（START）
-        const jLabel = '使わない物をまとめて売る';
+        const jLabel = R.T('ui.shop.drawBar.jLabel');
         const fw = chipW(jLabel, sz);
         const gw2 = S.tall() ? 0 : R.UIK.glyph(g, 'start', x + u(8), y + h / 2, { size: u(12) }) + u(6);
         if (x + gw2 + fw <= lp.x + lp.w - u(12)) {
@@ -415,8 +415,8 @@
         mx -= sw + u(10);
       }
       if (eqN) {
-        const cw = chipW('装備中', 11.5);
-        R.UIK.chip(g, mx - cw, rect.y + (rect.h - R.UIK.chipH(11.5)) / 2, '装備中', { kind: 'plain', size: 11.5 });
+        const cw = chipW(R.T('ui.shop.drawRow.cw.chipW'), 11.5);
+        R.UIK.chip(g, mx - cw, rect.y + (rect.h - R.UIK.chipH(11.5)) / 2, R.T('ui.shop.drawRow.chip'), { kind: 'plain', size: 11.5 });
         mx -= cw + u(10);
       }
       S.itemLabel(g, id, rect.x + u(12), cy, { focused: f, size: sz, maxW: mx - rect.x - u(4), disabled: nobody && !f });
@@ -440,23 +440,23 @@
       R.UIK.stars(g, it.grade, px + Math.min(nw, nmW) + u(8), y + u(4), u(14));
       y += u(32);
       const pr = sell ? R.Rules.sellPrice(id) : this.price(id);
-      const pLine = (sell ? '売値 ' : '値段 ') + R.UIK.num(pr) + ' G';
+      const pLine = (sell ? R.T('ui.shop.drawDetail.pLine') : R.T('ui.shop.drawDetail.pLine_2')) + R.UIK.num(pr) + ' G';
       const plw = R.UIK.text(g, pLine, px + pw, y, { size: u(14), weight: 700, color: sell ? C.gold : pr > S.gold() ? C.down : C.gold, align: 'right' });
-      R.UIK.text(g, it.slot === 'use' ? '道具' : S.kindLine(it), px, y, { size: u(13), color: C.text2, maxW: pw - plw - u(16) });
+      R.UIK.text(g, it.slot === 'use' ? R.T('ui.shop.drawDetail.text') : S.kindLine(it), px, y, { size: u(13), color: C.text2, maxW: pw - plw - u(16) });
       y += u(26);
       const dl = R.UIK.wrap(String(it.desc || '').replace(/\n/g, ''), pw, { size: u(14) }).slice(0, 2);
       for (const l of dl) { R.UIK.text(g, l, px, y, { size: u(14), color: C.text }); y += u(22); }
       y += u(6); R.UIK.rule(g, px, px + pw, y, 0.14); y += u(12);
       const bagN = S.count(id), eqN = equipped(id);
-      const own = (bagN ? '持っている ×' + bagN : '持っていない') + (eqN ? '（装備中 ' + eqN + '）' : '');
+      const own = (bagN ? R.T('ui.shop.drawDetail.own', { bagN }) : R.T('ui.shop.drawDetail.own_2')) + (eqN ? R.T('ui.shop.drawDetail.own_3', { eqN }) : '');
       if (isEquip(id)) {
-        S.label(g, sell ? '仲間が付けると（売る前に）' : '仲間が付けると', px, y);
+        S.label(g, sell ? R.T('ui.shop.drawDetail.label') : R.T('ui.shop.drawDetail.label_2'), px, y);
         y += u(26);
         const stripH = dp.y + dp.h - u(12) - y - (tall ? 0 : u(30));
         this.drawStrip(g, id, px, y, pw, stripH);
         if (!tall) R.UIK.text(g, own, px, dp.y + dp.h - u(34), { size: u(13), color: C.text2, maxW: pw });
       } else {
-        if (it.slot === 'use') { R.UIK.text(g, it.use && it.use.field ? (it.use.battle === false ? 'フィールドで使う。' : 'フィールドでも戦闘でも使える。') : '戦闘で使う。', px, y, { size: u(13.5), color: C.teal, maxW: pw }); y += u(26); }
+        if (it.slot === 'use') { R.UIK.text(g, it.use && it.use.field ? (it.use.battle === false ? R.T('ui.shop.drawDetail.text_2') : R.T('ui.shop.drawDetail.text_3')) : R.T('ui.shop.drawDetail.text_4'), px, y, { size: u(13.5), color: C.teal, maxW: pw }); y += u(26); }
         R.UIK.text(g, own, px, y, { size: u(13), color: C.text2, maxW: pw });
       }
     },
@@ -506,11 +506,11 @@
         ty += u(21);
         if (extra) {
           const cur = can ? S.item(c.equip[slot]) : null;
-          if (can) R.UIK.text(g, 'いま：' + (cur ? cur.name : 'なし'), cx, ty, { size: u(12), color: C.text2, align: 'center', maxW: cw - u(10) });
+          if (can) R.UIK.text(g, R.T('ui.shop.drawStrip.text', { p0: cur ? cur.name : R.T('ui.shop.drawStrip.text_2') }), cx, ty, { size: u(12), color: C.text2, align: 'center', maxW: cw - u(10) });
           ty += extra;
         }
-        if (!can) { R.UIK.text(g, '装備できない', cx, ty, { size: u(13), weight: 700, color: C.disabled, align: 'center', maxW: cw - u(8) }); return; }
-        if (wearing) { R.UIK.text(g, '装備中', cx, ty, { size: u(13), weight: 700, color: C.gold, align: 'center', maxW: cw - u(8) }); return; }
+        if (!can) { R.UIK.text(g, R.T('ui.shop.drawStrip.text_3'), cx, ty, { size: u(13), weight: 700, color: C.disabled, align: 'center', maxW: cw - u(8) }); return; }
+        if (wearing) { R.UIK.text(g, R.T('ui.shop.drawStrip.text_4'), cx, ty, { size: u(13), weight: 700, color: C.gold, align: 'center', maxW: cw - u(8) }); return; }
         for (const rr of cmp[i].show) {
           this.deltaLine(g, rr, cx, ty, cw - u(4));
           ty += lh;
@@ -541,28 +541,28 @@
       q.panel = { x, y, w, h };
       R.UIK.panel(g, q.panel, { dense: true, frost: true });
       const px = x + u(24), pw = w - u(48);
-      R.UIK.text(g, buy ? 'いくつ買う？' : 'いくつ売る？', px, y + u(18), { size: u(18), weight: 700, color: C.gold });
+      R.UIK.text(g, buy ? R.T('ui.shop.drawQty.text') : R.T('ui.shop.drawQty.text_2'), px, y + u(18), { size: u(18), weight: 700, color: C.gold });
       S.itemLabel(g, q.id, px, y + u(52), { size: u(15), maxW: pw - u(120) });
-      R.UIK.text(g, (buy ? '1 つ ' : '売値 ') + R.UIK.num(unit) + ' G', px + pw, y + u(52), { size: u(14), color: C.text2, align: 'right' });
+      R.UIK.text(g, (buy ? R.T('ui.shop.drawQty.text_3') : R.T('ui.shop.drawQty.text_4')) + R.UIK.num(unit) + ' G', px + pw, y + u(52), { size: u(14), color: C.text2, align: 'right' });
       // −10 −1 [数] ＋1 ＋10
       const ry = y + u(86), bw = Math.min(u(64), (pw - u(90)) / 4);
       const nx = px + pw / 2;
       q.rects.m10 = button(g, { x: px, y: ry, w: bw, h: bh }, '−10', { disabled: q.n <= 1 });
       q.rects.m1 = button(g, { x: px + bw + u(8), y: ry, w: bw, h: bh }, '−1', { disabled: q.n <= 1 });
-      q.rects.p1 = button(g, { x: px + pw - bw * 2 - u(8), y: ry, w: bw, h: bh }, '＋1', { disabled: q.n >= q.max });
-      q.rects.p10 = button(g, { x: px + pw - bw, y: ry, w: bw, h: bh }, '＋10', { disabled: q.n >= q.max });
+      q.rects.p1 = button(g, { x: px + pw - bw * 2 - u(8), y: ry, w: bw, h: bh }, R.T('ui.shop.drawQty.p1.button'), { disabled: q.n >= q.max });
+      q.rects.p10 = button(g, { x: px + pw - bw, y: ry, w: bw, h: bh }, R.T('ui.shop.drawQty.p10.button'), { disabled: q.n >= q.max });
       R.UIK.text(g, '×' + q.n, nx, ry + (bh - u(28)) / 2, { size: u(28), weight: 700, color: C.goldHi, align: 'center' });
-      const capLine = q.n >= q.max ? (q.cap === 'gold' ? '（所持金で買えるのはここまで）' : q.cap === 'stack' ? `（持てるのは ${MAX} 個まで）` : '（持っているのはここまで）') : '';
-      R.UIK.text(g, '←→で1つ、↑↓で10ずつ、L・Rで最小・最大' + capLine, nx, ry + bh + u(8), { size: u(12.5), color: capLine ? C.text2 : C.text3, align: 'center', maxW: pw });
+      const capLine = q.n >= q.max ? (q.cap === 'gold' ? R.T('ui.shop.drawQty.capLine') : q.cap === 'stack' ? R.T('ui.shop.drawQty.capLine_2', { MAX }) : R.T('ui.shop.drawQty.capLine_3')) : '';
+      R.UIK.text(g, R.T('ui.shop.drawQty.text_5', { capLine }), nx, ry + bh + u(8), { size: u(12.5), color: capLine ? C.text2 : C.text3, align: 'center', maxW: pw });
       // 合計と所持金
       const ty = ry + bh + u(36);
-      R.UIK.text(g, (buy ? '合計 ' : '受け取り ') + R.UIK.num(total) + ' G', px, ty, { size: u(17), weight: 700, color: C.gold });
+      R.UIK.text(g, (buy ? R.T('ui.shop.drawQty.text_6') : R.T('ui.shop.drawQty.text_7')) + R.UIK.num(total) + ' G', px, ty, { size: u(17), weight: 700, color: C.gold });
       const after = buy ? S.gold() - total : S.gold() + total;
-      R.UIK.text(g, '所持金 ' + R.UIK.num(S.gold()) + ' → ' + R.UIK.num(after) + ' G', px + pw, ty + u(3), { size: u(13), color: C.text2, align: 'right', maxW: pw * 0.55 });
+      R.UIK.text(g, R.T('ui.shop.drawQty.text_8', { UIK: R.UIK.num(S.gold()), after: R.UIK.num(after) }), px + pw, ty + u(3), { size: u(13), color: C.text2, align: 'right', maxW: pw * 0.55 });
       // 決める・やめる
       const oy = y + h - bh - u(16), ow = (pw - u(12)) / 2;
-      q.rects.ok = button(g, { x: px, y: oy, w: ow, h: bh }, buy ? '買う' : '売る', { primary: true, size: 16 });
-      q.rects.cancel = button(g, { x: px + ow + u(12), y: oy, w: ow, h: bh }, 'やめる', { size: 16 });
+      q.rects.ok = button(g, { x: px, y: oy, w: ow, h: bh }, buy ? R.T('ui.shop.drawQty.ok.button') : R.T('ui.shop.drawQty.ok.button_2'), { primary: true, size: 16 });
+      q.rects.cancel = button(g, { x: px + ow + u(12), y: oy, w: ow, h: bh }, R.T('ui.shop.drawQty.cancel.button'), { size: 16 });
     },
     /** 「使わない物をまとめて売る」の札: 候補（✓・名前・わけ・×n・売値）→ 合計 → まとめて売る・やめる */
     drawJunk(g) {
@@ -573,14 +573,14 @@
       R.UIK.dim(g, 0.5);
       R.UIK.panel(g, { x, y, w, h }, { dense: true, frost: true });
       const px = x + u(24), pw = w - u(48);
-      R.UIK.text(g, '使わない物をまとめて売る', px, y + u(18), { size: u(18), weight: 700, color: C.gold });
-      R.UIK.text(g, '大事な物・めずらしい装備・付けている物は入れていない', px, y + u(50), { size: u(12.5), color: C.text3, maxW: pw });
+      R.UIK.text(g, R.T('ui.shop.drawJunk.text'), px, y + u(18), { size: u(18), weight: 700, color: C.gold });
+      R.UIK.text(g, R.T('ui.shop.drawJunk.text_2'), px, y + u(50), { size: u(12.5), color: C.text3, maxW: pw });
       L.render = (gg, row, rect, f) => {
         const cy = rect.y + (rect.h - u(15)) / 2 - u(1);
         if (row.value === '__ok' || row.value === '__cancel') {
           const ok = row.value === '__ok';
           R.UIK.text(gg, row.label, rect.x + u(14), cy, { size: u(15.5), weight: 700, color: ok ? C.goldHi : C.text });
-          if (ok) R.UIK.text(gg, '合計 ' + R.UIK.num(this.junkTotal()) + ' G', rect.x + rect.w - u(12), cy, { size: u(15.5), weight: 700, color: C.gold, align: 'right' });
+          if (ok) R.UIK.text(gg, R.T('ui.shop.drawJunk.render.text', { UIK: R.UIK.num(this.junkTotal()) }), rect.x + rect.w - u(12), cy, { size: u(15.5), weight: 700, color: C.gold, align: 'right' });
           return;
         }
         const r = j.rows.find((z) => z.id === row.value);
@@ -596,8 +596,8 @@
       };
       L.draw(g, { x: x + u(12), y: y + u(78), w: w - u(24), h: shown * rp });
       const got = this.junkTotal();
-      R.UIK.text(g, '所持金 ' + R.UIK.num(S.gold()) + ' → ' + R.UIK.num(S.gold() + got) + ' G', px + pw, y + h - u(34), { size: u(13.5), color: C.text2, align: 'right' });
-      R.UIK.text(g, j.rows.filter((r) => r.on).length + ' / ' + j.rows.length + ' 種類', px, y + h - u(34), { size: u(13.5), color: C.text2 });
+      R.UIK.text(g, R.T('ui.shop.drawJunk.text_3', { UIK: R.UIK.num(S.gold()), UIK2: R.UIK.num(S.gold() + got) }), px + pw, y + h - u(34), { size: u(13.5), color: C.text2, align: 'right' });
+      R.UIK.text(g, R.T('ui.shop.drawJunk.text_4', { length: j.rows.filter((r) => r.on).length, length2: j.rows.length }), px, y + h - u(34), { size: u(13.5), color: C.text2 });
     },
   });
 })(window.RPG);

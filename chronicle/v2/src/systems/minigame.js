@@ -16,11 +16,11 @@
   const DIRS = ['up', 'right', 'down', 'left', 'a'];
   const PITCH = [72, 76, 79, 81, 84];                 // ド ミ ソ ラ ド（明るい五音）
   const THEMES = {
-    forest: { tint: [110, 200, 150], glow: ['#b7f0c8', '#7fd6a0', '#e8d58a', '#9fd8f0', '#f0b8d8'], sub: '森の歌' },
-    harbor: { tint: [120, 170, 220], glow: ['#a8d8ff', '#8fd6d8', '#ecc97c', '#c8b8f0', '#f0c8a0'], sub: '港の歌' },
-    night: { tint: [140, 130, 210], glow: ['#c8c0ff', '#8fd6d8', '#ecc97c', '#f0b8d8', '#b8f0c8'], sub: '夜の歌' },
+    forest: { tint: [110, 200, 150], glow: ['#b7f0c8', '#7fd6a0', '#e8d58a', '#9fd8f0', '#f0b8d8'], sub: R.T('sys.minigame.THEMES.forest.sub') },
+    harbor: { tint: [120, 170, 220], glow: ['#a8d8ff', '#8fd6d8', '#ecc97c', '#c8b8f0', '#f0c8a0'], sub: R.T('sys.minigame.THEMES.harbor.sub') },
+    night: { tint: [140, 130, 210], glow: ['#c8c0ff', '#8fd6d8', '#ecc97c', '#f0b8d8', '#b8f0c8'], sub: R.T('sys.minigame.THEMES.night.sub') },
   };
-  const NOTE_NAME = ['高い音', '明るい音', '低い音', 'やさしい音', 'ひびく音'];
+  const NOTE_NAME = R.T('sys.minigame.NOTE_NAME');
 
   // 音（R.DB.sfx の mini_n0〜n4。音の担当の物が無ければここで足す）
   R.onData(function () {
@@ -74,7 +74,7 @@
     const total = phrases.reduce((a, p) => a + p.length, 0);
     return new Promise((resolve) => {
       const st = {
-        kind: 'sequence', title: o.title || '歌あわせ', teacher: o.teacher || null, th, n, tempo, phrases, rounds,
+        kind: 'sequence', title: o.title || R.T('sys.minigame.sequence.st.title'), teacher: o.teacher || null, th, n, tempo, phrases, rounds,
         round: 0, phase: 'intro', t0: 0, seq: phrases[0], input: [], hits: 0, total, lit: -1, litT: 0, press: -1, pressT: -1e9,
         flash: null, resultT: 0, rank: null, score: 0, rects: [],
       };
@@ -189,12 +189,12 @@
   function drawSeq(g, st) {
     const U = R.UIK.u, T = R.UIK.T, C = T.color;
     const now = R.Engine.time, dt = now - st.phaseT;
-    const P = frame(g, st, st.title, st.th.sub + ' · 歌あわせ');
+    const P = frame(g, st, st.title, R.T('sys.minigame.drawSeq.P.frame', { sub: st.th.sub }));
     const { x, y, w, h, tall } = P;
     g.save();
     g.globalAlpha = P.a;
     // 右上: 節の数
-    const rtxt = `第 ${Math.min(st.round + 1, st.rounds)} 節 / ${st.rounds}`;
+    const rtxt = R.T('sys.minigame.drawSeq.rtxt', { Math: Math.min(st.round + 1, st.rounds), rounds: st.rounds });
     R.UIK.text(g, rtxt, x + w - U(22), y + U(46), { size: U(13), weight: 700, color: C.text2, align: 'right' });
     // 歌の石: 菱形に並べる（↑→↓←、5 つ目は中央 = A）
     const cx = x + w / 2, cy = y + (tall ? U(262) : U(212));
@@ -261,10 +261,10 @@
     }
     // 言葉
     let msg = '', mc = C.text;
-    if (st.phase === 'intro') msg = st.round === 0 ? '歌の石が歌いはじめる。よく聞いて……。' : 'つぎの節。音がひとつ増える……。';
-    else if (st.phase === 'play') msg = '聞いて……。';
-    else if (st.phase === 'input') msg = `同じ順にくり返して（${st.input.length} / ${L}）`;
-    else if (st.phase === 'judge') { msg = st.flash === 'ok' ? 'きれいに重なった！' : 'あっ、ちがう音……。'; mc = st.flash === 'ok' ? C.up : C.down; }
+    if (st.phase === 'intro') msg = st.round === 0 ? R.T('sys.minigame.drawSeq.msg') : R.T('sys.minigame.drawSeq.msg_2');
+    else if (st.phase === 'play') msg = R.T('sys.minigame.drawSeq.msg_3');
+    else if (st.phase === 'input') msg = R.T('sys.minigame.drawSeq.msg_4', { length: st.input.length, L });
+    else if (st.phase === 'judge') { msg = st.flash === 'ok' ? R.T('sys.minigame.drawSeq.msg_5') : R.T('sys.minigame.drawSeq.msg_6'); mc = st.flash === 'ok' ? C.up : C.down; }
     if (st.phase !== 'result') R.UIK.text(g, msg, cx, dotsY + U(24), { size: U(15), weight: 700, color: mc, align: 'center', maxW: w - U(40) });
     // 結果
     if (st.phase === 'result') {
@@ -274,16 +274,16 @@
       const halo = g.createRadialGradient(cx, y + U(178), 0, cx, y + U(178), U(120));
       halo.addColorStop(0, rgba(st.th.tint, 0.18)); halo.addColorStop(1, rgba(st.th.tint, 0));
       g.fillStyle = halo; g.fillRect(x + U(40), y + U(96), w - U(80), U(200));
-      R.UIK.text(g, '歌あわせのひょうか', cx, y + U(116), { size: U(13), weight: 700, color: C.text2, align: 'center', track: U(2) });
+      R.UIK.text(g, R.T('sys.minigame.drawSeq.text'), cx, y + U(116), { size: U(13), weight: 700, color: C.text2, align: 'center', track: U(2) });
       const rc = st.rank === 'S' ? C.superRare : st.rank === 'A' ? C.goldHi : st.rank === 'B' ? C.rare : C.text2;
       R.UIK.text(g, st.rank, cx, y + U(142), { size: U(64), weight: 700, family: 'en', color: rc, align: 'center', shadow: 'rgba(236,180,90,0.35)', blur: 12 });
-      R.UIK.text(g, `重なった音　${st.hits} / ${st.total}`, cx, y + U(226), { size: U(15), color: C.text, align: 'center' });
-      const words = { S: '森じゅうが耳をすませていた。', A: 'きれいな歌だった。', B: 'もう少しで覚えられそう。', C: 'まだ歌がばらばらだ。' };
+      R.UIK.text(g, R.T('sys.minigame.drawSeq.text_2', { hits: st.hits, total: st.total }), cx, y + U(226), { size: U(15), color: C.text, align: 'center' });
+      const words = { S: R.T('sys.minigame.drawSeq.words.S'), A: R.T('sys.minigame.drawSeq.words.A'), B: R.T('sys.minigame.drawSeq.words.B'), C: R.T('sys.minigame.drawSeq.words.C') };
       R.UIK.text(g, words[st.rank] || '', cx, y + U(254), { size: U(13), color: C.text3, align: 'center' });
       g.restore();
     }
     // ボタン
-    const pr = st.phase === 'result' ? [{ btn: 'a', label: 'とじる' }] : [{ btn: 'up', label: '音を鳴らす' }, { btn: 'b', label: 'やめる' }];
+    const pr = st.phase === 'result' ? [{ btn: 'a', label: R.T('sys.minigame.drawSeq.pr.0.label') }] : [{ btn: 'up', label: R.T('sys.minigame.drawSeq.pr.0.label_2') }, { btn: 'b', label: R.T('sys.minigame.drawSeq.pr.1.label') }];
     if (st.phase !== 'result' || dt > 600) R.UIK.prompts(g, pr, { x: x + w - U(20), y: y + h - U(22), align: 'right' });
     g.restore();
   }
@@ -308,7 +308,7 @@
     const speed = Math.max(500, o.speed || 1400);
     const th = THEMES[o.theme] || THEMES.harbor;
     return new Promise((resolve) => {
-      const st = { kind: 'timing', title: o.title || '間合い', th, zones, tries, speed, phase: 'input', t0: 0, phaseT: 0, hits: 0, n: 0, marks: [], lit: -1 };
+      const st = { kind: 'timing', title: o.title || R.T('sys.minigame.timing.st.title'), th, zones, tries, speed, phase: 'input', t0: 0, phaseT: 0, hits: 0, n: 0, marks: [], lit: -1 };
       live = st;
       const scene = {
         id: 'mini:timing', opaque: false,
@@ -347,7 +347,7 @@
   }
   function drawTiming(g, st) {
     const U = R.UIK.u, C = R.UIK.T.color;
-    const P = frame(g, st, st.title, st.th.sub + ' · 間合い');
+    const P = frame(g, st, st.title, R.T('sys.minigame.drawTiming.P.frame', { sub: st.th.sub }));
     const { x, y, w, h } = P;
     g.save(); g.globalAlpha = P.a;
     const bx = x + U(40), bw = w - U(80), by = y + h / 2 - U(10), bh = U(20);
@@ -357,7 +357,7 @@
     g.fillStyle = C.goldHi; g.fillRect(Math.round(bx + p * bw) - U(2), by - U(8), U(4), bh + U(16));
     R.UIK.text(g, `${st.hits} / ${st.tries}`, x + w / 2, by + U(44), { size: U(15), weight: 700, color: C.text, align: 'center' });
     if (st.phase === 'result') R.UIK.text(g, rankOf(Math.round((st.hits / st.tries) * 100)), x + w / 2, by - U(90), { size: U(48), weight: 700, family: 'en', color: C.goldHi, align: 'center' });
-    R.UIK.prompts(g, st.phase === 'result' ? [{ btn: 'a', label: 'とじる' }] : [{ btn: 'a', label: 'とめる' }, { btn: 'b', label: 'やめる' }], { x: x + w - U(20), y: y + h - U(22), align: 'right' });
+    R.UIK.prompts(g, st.phase === 'result' ? [{ btn: 'a', label: R.T('sys.minigame.drawTiming.0.label') }] : [{ btn: 'a', label: R.T('sys.minigame.drawTiming.0.label_2') }, { btn: 'b', label: R.T('sys.minigame.drawTiming.1.label') }], { x: x + w - U(20), y: y + h - U(22), align: 'right' });
     g.restore();
   }
 })(window.RPG);

@@ -31,11 +31,11 @@
   R.onData(function () {
     const arms = (sh) => ({ items: gear(WEAPON_LINES, Math.max(0, sh)).concat(gear(ARMOR_LINES, Math.max(0, sh))), tier: byTier((t) => gear(WEAPON_LINES, Math.max(0, t + sh)).concat(gear(ARMOR_LINES, Math.max(0, t + sh)))) });
     R.defs('shops', {
-      shop_yule_items: { name: 'ユールの道具屋', kind: 'item', keepOld: true, sell: true, items: items(0).concat(ACC(0)), tier: { 1: items(1), 2: items(2).concat(ACC(1)), 3: items(3), 5: (ACC(2).length ? ACC(2) : items(3)).concat(items(5)) } },
-      shop_yule_arms: Object.assign({ name: 'ユールの武具屋', kind: 'weapon', keepOld: false, sell: true }, arms(0)),
-      shop_yule_arms_low: Object.assign({ name: 'ユールの武具屋（荒らされた倉）', kind: 'weapon', keepOld: false, sell: true }, arms(-1)),
-      shop_yule_fur: { name: '毛皮の行商', kind: 'weapon', keepOld: false, sell: true, items: gear(ARMOR_LINES, 0), tier: byTier((t) => gear(ARMOR_LINES, t)) },
-      shop_pass_inn: { name: '峠の宿の売店', kind: 'item', keepOld: true, sell: true, items: items(0).concat(items(1)), tier: { 2: items(2), 3: items(3), 5: items(5) } },
+      shop_yule_items: { name: R.T('shops.shop_yule_items.name'), kind: 'item', keepOld: true, sell: true, items: items(0).concat(ACC(0)), tier: { 1: items(1), 2: items(2).concat(ACC(1)), 3: items(3), 5: (ACC(2).length ? ACC(2) : items(3)).concat(items(5)) } },
+      shop_yule_arms: Object.assign({ name: R.T('shops.shop_yule_arms.name'), kind: 'weapon', keepOld: false, sell: true }, arms(0)),
+      shop_yule_arms_low: Object.assign({ name: R.T('shops.shop_yule_arms_low.name'), kind: 'weapon', keepOld: false, sell: true }, arms(-1)),
+      shop_yule_fur: { name: R.T('shops.shop_yule_fur.name'), kind: 'weapon', keepOld: false, sell: true, items: gear(ARMOR_LINES, 0), tier: byTier((t) => gear(ARMOR_LINES, t)) },
+      shop_pass_inn: { name: R.T('shops.shop_pass_inn.name'), kind: 'item', keepOld: true, sell: true, items: items(0).concat(items(1)), tier: { 2: items(2), 3: items(3), 5: items(5) } },
     });
   });
 })(window.RPG);

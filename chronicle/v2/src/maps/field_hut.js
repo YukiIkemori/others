@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("f_hut", {
-    name: "きこりの野", region: "r_forest", outside: "forest_dark",
+    name: R.T('map.field_hut.f_hut.name'), region: "r_forest", outside: "forest_dark",
     rows: [
       "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwwwwwFFFFFFFFFFFF",
       "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFwFFFFFFFFFFFFFTFF",
@@ -52,7 +52,7 @@
       {"type":"door","x":23,"y":19,"look":"none","to":{"map":"hut","spawn":"door"}},
       {"type":"examine","x":45,"y":10,"event":"world_poi_shrine"},
       {"type":"waylamp","id":"wl_forest_1","x":32,"y":23,"lit":"q_forest_fireflies_1","event":"forest_waylamp"},
-      {"type":"sign","x":21,"y":21,"text":"きこりの休み小屋\n旅の人も、ひと休みを。"},
+      {"type":"sign","x":21,"y":21,"text":R.T('map.field_hut.f_hut.objects.3.text')},
       {"type":"prop","id":"lantern","x":26,"y":20},
       {"type":"chest","id":"f_hut_c1","x":17,"y":13,"item":"i_potion","n":2},
     ],
@@ -65,7 +65,7 @@
     tilePatches: [],
     zones: [{"rect":null,"zone":"zw_forest"}],
     art: {"image":"field/under/f_hut","painted":[],"overlay":"field/under/f_hut_over"},
-    meta: {"sub":"森の手前の切り株の野","worldRect":[170,160,70,60]},
+    meta: {"sub":R.T('map.field_hut.f_hut.meta.sub'),"worldRect":[170,160,70,60]},
     links: {"hut":{"map":"f_hut","spawn":"hut"}},
   });
 })(window.RPG);

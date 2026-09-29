@@ -120,9 +120,9 @@
     O.push(K.prop('bench', 30, 32), K.prop('bench', 38, 32), K.prop('well', 31, 34));
     O.push(K.prop('songstone', 34, 30, { variant: 0 }), K.exam(35, 30, 'fern_monument'));            // 千年樹の歌の碑
     O.push(K.prop('lantern', 32, 29), K.prop('lantern', 36, 31), K.prop('bench', 34, 35), K.prop('crate', 38, 26));   // 木箱は屋台の裏だけ
-    O.push(K.sign(32, 36, '森の村フェルン\n――歌は森の道しるべ'));
-    O.push(K.sign(23, 46, '↑ フェルン　↓ 森の道'));
-    O.push(K.sign(31, 6, '↑ 迷いの森\n（捜索隊の許しなく入るべからず）'));
+    O.push(K.sign(32, 36, R.T('map.fern_village.sign')));
+    O.push(K.sign(23, 46, R.T('map.fern_village.sign_2')));
+    O.push(K.sign(31, 6, R.T('map.fern_village.sign_3')));
     // 蛍の籠（灯り）: 門・道・橋・広場のまわり
     for (const [x, y] of [[28, 7], [31, 5], [23, 9], [26, 16], [22, 19], [26, 25], [29, 26], [39, 33], [30, 35], [36, 38], [33, 42], [28, 44],
       [37, 46], [23, 48], [8, 20], [11, 24], [46, 19], [49, 23], [2, 36], [11, 39], [18, 36], [24, 36], [13, 45], [20, 42], [43, 42], [50, 10], [55, 17], [45, 30]]) O.push(K.prop('lantern', x, y));
@@ -152,30 +152,30 @@
     const L = K.L;
     const N = [
       // 広場
-      K.npc('hanna', 'npc_hanna', 31, 31, { name: 'ハンナ', title: '村の年寄り', dir: 's', talk: 'fern_hanna', reward: 'item' }),
-      K.npc('search_lead', 'npc_guard_2', 35, 27, { name: '捜索隊の男', dir: 's', talk: 'fern_search_lead', reward: 'lead', cond: '!cleared_r_forest' }),
-      K.npc('search_a', 'npc_woodcutter_2', 37, 31, { name: '捜索隊の男', dir: 'w', talk: [L('森が道を変えちまうんだ。\n三歩で元の場所さ。\nどうやって探せってんだ。'), L({ var: 'forest_verses', gte: 1 }, '歌の石？　ああ、ばあさまたちの\n昔話だと思ってたよ。\n……本当にあったのか。')], cond: '!cleared_r_forest', reward: 'hint' }),
-      K.npc('peddler', 'npc_merchant_2', 37, 28, { name: '行商人', title: '広場の行商', dir: 's', talk: 'fern_peddler', reward: null, pushable: false }),
-      K.npc('herbalist', 'npc_old_f_1', 6, 50, { name: '薬草園のばあさま', dir: 'e', talk: 'fern_herbalist', reward: 'side' }),
-      K.npc('postmaster', 'npc_woman_3', 27, 36, { name: 'ニナ', title: '村の手紙番', dir: 's', talk: 'fern_postmaster', reward: 'side' }),
-      K.npc('lampkeeper', 'npc_old_m_2', 27, 19, { name: '灯籠番のじいさま', dir: 'w', talk: 'fern_lampkeeper', reward: 'side' }),
-      K.npc('hunter', 'npc_woodcutter_3', 42, 31, { name: '狩人のオルト', dir: 'w', talk: 'fern_hunter', reward: 'boss' }),
-      K.npc('kid', 'npc_child_2', 38, 36, { name: '村の子', dir: 'n', talk: 'fern_kid', reward: 'hint' }),
-      K.npc('traveler', 'npc_merchant_1', 26, 32, { name: '旅の商人', dir: 'w', talk: 'fern_traveler', reward: 'lead' }),
-      K.npc('acorn_boy', 'npc_child_1', 41, 44, { name: '木の実拾いの子', dir: 'w', talk: 'fern_acorn_boy', reward: 'side' }),
-      K.npc('elder_m', 'npc_old_m_1', 44, 47, { name: '年寄りのきこり', dir: 'e', talk: 'fern_old_woodcutter', reward: 'news' }),
-      K.npc('yura_miller', 'npc_yura_folk_2', 30, 29, { name: 'エダ', title: '粉ひき', dir: 'e', talk: 'fern_yura_miller', reward: 'item', cond: 'yura_miller_home' }),
-      K.npc('pim_after', 'npc_pim', 33, 33, { name: 'ピム', dir: 's', talk: 'fern_pim_after', reward: 'side', cond: 'cleared_r_forest' }),
+      K.npc('hanna', 'npc_hanna', 31, 31, { name: R.T('map.fern_village.N.0.hanna.name'), title: R.T('map.fern_village.N.0.hanna.title'), dir: 's', talk: 'fern_hanna', reward: 'item' }),
+      K.npc('search_lead', 'npc_guard_2', 35, 27, { name: R.T('map.fern_village.N.1.search_lead.name'), dir: 's', talk: 'fern_search_lead', reward: 'lead', cond: '!cleared_r_forest' }),
+      K.npc('search_a', 'npc_woodcutter_2', 37, 31, { name: R.T('map.fern_village.N.2.search_a.name'), dir: 'w', talk: [L(R.T('map.fern_village.N.talk.0.L')), L({ var: 'forest_verses', gte: 1 }, R.T('map.fern_village.N.talk.1.L'))], cond: '!cleared_r_forest', reward: 'hint' }),
+      K.npc('peddler', 'npc_merchant_2', 37, 28, { name: R.T('map.fern_village.N.3.peddler.name'), title: R.T('map.fern_village.N.3.peddler.title'), dir: 's', talk: 'fern_peddler', reward: null, pushable: false }),
+      K.npc('herbalist', 'npc_old_f_1', 6, 50, { name: R.T('map.fern_village.N.4.herbalist.name'), dir: 'e', talk: 'fern_herbalist', reward: 'side' }),
+      K.npc('postmaster', 'npc_woman_3', 27, 36, { name: R.T('map.fern_village.N.5.postmaster.name'), title: R.T('map.fern_village.N.5.postmaster.title'), dir: 's', talk: 'fern_postmaster', reward: 'side' }),
+      K.npc('lampkeeper', 'npc_old_m_2', 27, 19, { name: R.T('map.fern_village.N.6.lampkeeper.name'), dir: 'w', talk: 'fern_lampkeeper', reward: 'side' }),
+      K.npc('hunter', 'npc_woodcutter_3', 42, 31, { name: R.T('map.fern_village.N.7.hunter.name'), dir: 'w', talk: 'fern_hunter', reward: 'boss' }),
+      K.npc('kid', 'npc_child_2', 38, 36, { name: R.T('map.fern_village.N.8.kid.name'), dir: 'n', talk: 'fern_kid', reward: 'hint' }),
+      K.npc('traveler', 'npc_merchant_1', 26, 32, { name: R.T('map.fern_village.N.9.traveler.name'), dir: 'w', talk: 'fern_traveler', reward: 'lead' }),
+      K.npc('acorn_boy', 'npc_child_1', 41, 44, { name: R.T('map.fern_village.N.10.acorn_boy.name'), dir: 'w', talk: 'fern_acorn_boy', reward: 'side' }),
+      K.npc('elder_m', 'npc_old_m_1', 44, 47, { name: R.T('map.fern_village.N.11.elder_m.name'), dir: 'e', talk: 'fern_old_woodcutter', reward: 'news' }),
+      K.npc('yura_miller', 'npc_yura_folk_2', 30, 29, { name: R.T('map.fern_village.N.12.yura_miller.name'), title: R.T('map.fern_village.N.12.yura_miller.title'), dir: 'e', talk: 'fern_yura_miller', reward: 'item', cond: 'yura_miller_home' }),
+      K.npc('pim_after', 'npc_pim', 33, 33, { name: R.T('map.fern_village.N.13.pim_after.name'), dir: 's', talk: 'fern_pim_after', reward: 'side', cond: 'cleared_r_forest' }),
       // 樹上（lv 1）: 手紙配りの 5 軒の住人（幹の莢の家の前の足場に立つ）
-      K.npc('deck_1', 'npc_woman_1', 10, 12, { name: '樹上の家の女', dir: 's', lv: 1, talk: 'fern_deck', reward: 'item' }),
-      K.npc('deck_2', 'npc_old_m_3', 15, 11, { name: '樹上の家の老人', dir: 's', lv: 1, talk: 'fern_deck', reward: 'item' }),
-      K.npc('deck_3', 'npc_man_2', 44, 12, { name: '樹上の家の男', dir: 'w', lv: 1, talk: 'fern_deck', reward: 'item' }),
-      K.npc('deck_4', 'npc_woman_2', 37, 11, { name: '樹上の家の娘', dir: 's', lv: 1, talk: 'fern_deck', reward: 'item' }),
-      K.npc('deck_5', 'npc_man_3', 4, 43, { name: '樹上の家の若者', dir: 's', lv: 1, talk: 'fern_deck', reward: 'item' }),
+      K.npc('deck_1', 'npc_woman_1', 10, 12, { name: R.T('map.fern_village.N.14.deck_1.name'), dir: 's', lv: 1, talk: 'fern_deck', reward: 'item' }),
+      K.npc('deck_2', 'npc_old_m_3', 15, 11, { name: R.T('map.fern_village.N.15.deck_2.name'), dir: 's', lv: 1, talk: 'fern_deck', reward: 'item' }),
+      K.npc('deck_3', 'npc_man_2', 44, 12, { name: R.T('map.fern_village.N.16.deck_3.name'), dir: 'w', lv: 1, talk: 'fern_deck', reward: 'item' }),
+      K.npc('deck_4', 'npc_woman_2', 37, 11, { name: R.T('map.fern_village.N.17.deck_4.name'), dir: 's', lv: 1, talk: 'fern_deck', reward: 'item' }),
+      K.npc('deck_5', 'npc_man_3', 4, 43, { name: R.T('map.fern_village.N.18.deck_5.name'), dir: 's', lv: 1, talk: 'fern_deck', reward: 'item' }),
       // 空気だけ（4 人まで）
-      K.npc('dog', 'ani_dog', 32, 45, { name: '犬', dir: 'w', move: 'wander', talk: [L('ワン！　ワンワン！')], reward: null }),
-      K.npc('hen', 'ani_hen', 9, 50, { name: 'にわとり', dir: 's', move: 'wander', talk: [L('コッコッ。')], reward: null }),
-      K.npc('singer', 'npc_bard_1', 34, 20, { name: '吟遊詩人', dir: 's', talk: [L('千年樹の歌？\n……おれも探しているんだ。\n吟遊詩人の名折れだよ。'), L('cleared_r_forest', 'リタの歌を聞いたかい？\nあれこそ、この森の歌さ。\n吟遊詩人も、かなわないよ。')], reward: null }),
+      K.npc('dog', 'ani_dog', 32, 45, { name: R.T('map.fern_village.N.19.dog.name'), dir: 'w', move: 'wander', talk: [L(R.T('map.fern_village.N.talk.0.L_2'))], reward: null }),
+      K.npc('hen', 'ani_hen', 9, 50, { name: R.T('map.fern_village.N.20.hen.name'), dir: 's', move: 'wander', talk: [L(R.T('map.fern_village.N.talk.0.L_3'))], reward: null }),
+      K.npc('singer', 'npc_bard_1', 34, 20, { name: R.T('map.fern_village.N.21.singer.name'), dir: 's', talk: [L(R.T('map.fern_village.N.talk.0.L_4')), L('cleared_r_forest', R.T('map.fern_village.N.talk.1.cleared_r_forest'))], reward: null }),
     ];
 
     // 人の立つマスと、その前後左右には飾りを置かない（話しかけられるように）
@@ -184,7 +184,7 @@
     for (let i = O.length - 1; i >= 0; i--) { const o = O[i]; if (o.type === 'prop' && o.id !== 'roots' && near.has(o.x + ',' + o.y + ',' + (o.lv || 0))) O.splice(i, 1); }
 
     K.def('fern', {
-      name: '森の村フェルン', kind: 'town', region: 'r_forest', location: 'fern', theme: 'treetop',
+      name: R.T('map.fern_village.fern.name'), kind: 'town', region: 'r_forest', location: 'fern', theme: 'treetop',
       legend: K.FOREST_LEGEND({
         '=': { mat: 'deck', deck: true },
         ':': { mat: 'ladder', ladder: true },
@@ -221,7 +221,7 @@
       light: { ambient: '#5662a2', k: 0.46, poolK: 1.6, spillR: 1.6, mood: 'forest_night' },
       dark: false,
       bgm: 'village',
-      meta: { sub: '樹上の村', underDeck: 'moss_earth', chestsInfo: false },
+      meta: { sub: R.T('map.fern_village.fern.meta.sub'), underDeck: 'moss_earth', chestsInfo: false },
       // 村ぜんたいを 1 枚に描いた下絵（v2/assets/env/treetop/under/fern*、design/ENV_ASSETS.md §7）。地面・大木・家・足場・つり橋・はしご・根のアーチはこの絵、
       // つり橋と根のアーチと木の葉の張り出しは overlay（地面の人より上）、窓と光るきのこ・こけは emit。当たり・戸口・人・灯り・ほかの物は上のデータのまま。
       // 絵が無ければマスから焼く。roots（橋の下の当たり）は絵に描いてあるので物としては描かない。@40 は無い（2048 の atlas に入らない。@32 を拡大）

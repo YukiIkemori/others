@@ -24,7 +24,8 @@ function walk(dir) {
   const out = [];
   for (const f of fs.readdirSync(dir)) {
     const p = path.join(dir, f);
-    if (fs.statSync(p).isDirectory()) { if (!/stubs|dev/.test(f)) out.push(...walk(p)); } else if (/\.js$/.test(f)) out.push(p);
+    // 文の表（src/i18n）は日本語（ja）だけを見る（訳の表の中国語などは常用漢字の決まりの外）
+    if (fs.statSync(p).isDirectory()) { if (!/stubs|dev/.test(f) && !(path.basename(dir) === 'i18n' && f !== 'ja')) out.push(...walk(p)); } else if (/\.js$/.test(f)) out.push(p);
   }
   return out;
 }
@@ -75,7 +76,8 @@ function run() {
     const lines = src.split('\n');
     // 素材の name（src/art/terrain/materials.js）は一覧表の見出しだけで画面に出ない（地名・物の名は maps の方）
     if (/^src\/art\/terrain\/materials\.js$/.test(rel)) continue;
-    const talk = /^src\/(events|maps)\//.test(rel);   // 会話・キャプション・看板（20 字の窓）
+    // 会話・キャプション・看板（20 字の窓）。文の表に移した物は src/i18n/ja/events_*・maps_*
+    const talk = /^src\/(events|maps)\//.test(rel) || /^src\/i18n\/ja\/(events|maps)_/.test(rel);
     for (const { s, line } of OLD.strings(src)) {
       if (!JP.test(s)) continue;
       const L = lines[line - 1] || '';
@@ -84,7 +86,9 @@ function run() {
       if (/nameentry|kana/.test(rel) && s.length > 30) continue;
       n++;
       const where = `${rel}:${line}`;
-      const t = s.replace(/\u0000/g, 'X');   // テンプレートの ${…} は ASCII の 1 字として数える（空白の検査で誤らない）
+      let t = s.replace(/\u0000/g, 'X');   // テンプレートの ${…} は ASCII の 1 字として数える（空白の検査で誤らない）
+      // 文の表の差し込み {name}（R.T の params）も前の ${…} と同じく 1 字（{hero} など表の外で入る物はそのまま）
+      if (/^src\/i18n\//.test(rel)) t = t.replace(/\{(?!hero\})[A-Za-z_$][\w$]*\}/g, 'X');
       // 他社の名前は data の名前だけでなく、画面に出す文字列（戦闘の見本の台本など）でも使わない（「かしの」などの一般の語は除く）
       if (!/^src\/core\/stubs\//.test(rel)) for (const w of partial) if (w.length >= 3 && !/^[ぁ-ゖ]+$/.test(w) && t.includes(w)) E('T1', `${where} '${w}' in a string (STYLE_JA §7.1): ${clip(t)}`);
       for (const w of srcBanned) if (t.includes(w) && !SRC_EXC.some((e) => e.includes(w) && t.includes(e))) E('T2', `${where} '${w}' (§7.3): ${clip(t)}`);
@@ -101,7 +105,8 @@ function run() {
         if (w > 20) E('T6', `${where} a line is ${w} wide (max 20): ${clip(ln)}`);
         else if (w > 18) over18++;
       }
-      if (!/^src\/data\/(config|herotypes|companions)\.js$/.test(rel) && !/^src\/(screens|art)\//.test(rel)) for (const hn of heroNames) if (t.includes(hn) && t.trim() !== hn) E('T7', `${where} hero name '${hn}' written directly: ${clip(t)}`);
+      // 表に移した物: companions・rules（herotypes）・misc（config）・ui（screens）・art
+      if (!/^src\/data\/(config|herotypes|companions)\.js$/.test(rel) && !/^src\/(screens|art)\//.test(rel) && !/^src\/i18n\/ja\/(companions|rules|misc|ui|tips|art)\.js$/.test(rel)) for (const hn of heroNames) if (t.includes(hn) && t.trim() !== hn) E('T7', `${where} hero name '${hn}' written directly: ${clip(t)}`);
       if (/\{(yuki|non|metem)\}/.test(t)) E('T7', `${where} Crest placeholder`);
       for (const st of STATUS) if (t.includes(st + 'にする')) E('T8', `${where} '${st}にする': ${clip(t)}`);
       const nm = t.match(/(毒|眠り|まひ|凍結|気絶|混乱|沈黙|暗闇|やけど|即死)にならない/);

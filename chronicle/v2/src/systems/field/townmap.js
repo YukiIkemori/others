@@ -13,14 +13,14 @@
   const ANG = { n: 0, ne: Math.PI / 4, e: Math.PI / 2, se: Math.PI * 0.75, s: Math.PI, sw: -Math.PI * 0.75, w: -Math.PI / 2, nw: -Math.PI / 4 };
   // 凡例の呼び名（看板の種類 → 町の地図での名前）
   const NAME = {
-    weapon: '武器屋', armor: '防具屋', item: '道具屋', inn: '宿屋', tavern: '酒場・仲間', church: '教会', save: 'セーブ', guild: '詰所',
-    record: '記録院', records: '記録院', hall: '集会所', map: '地図屋', special: '店', shop: '店',
+    weapon: R.T('sys.townmap.NAME.weapon'), armor: R.T('sys.townmap.NAME.armor'), item: R.T('sys.townmap.NAME.item'), inn: R.T('sys.townmap.NAME.inn'), tavern: R.T('sys.townmap.NAME.tavern'), church: R.T('sys.townmap.NAME.church'), save: R.T('sys.townmap.NAME.save'), guild: R.T('sys.townmap.NAME.guild'),
+    record: R.T('sys.townmap.NAME.record'), records: R.T('sys.townmap.NAME.records'), hall: R.T('sys.townmap.NAME.hall'), map: R.T('sys.townmap.NAME.map'), special: R.T('sys.townmap.NAME.special'), shop: R.T('sys.townmap.NAME.shop'),
   };
   const ORDER = ['weapon', 'armor', 'item', 'special', 'shop', 'map', 'inn', 'tavern', 'church', 'save', 'guild', 'record', 'records', 'hall'];
 
   function nameOf(s) {
-    if (s.kind === 'guild') return /詰所/.test(s.name || '') ? '詰所' : 'ギルド';
-    return NAME[s.kind] || s.name || '店';
+    if (s.kind === 'guild') return /詰所/.test(s.name || '') ? R.T('sys.townmap.nameOf.ret') : R.T('sys.townmap.nameOf.ret_2');
+    return NAME[s.kind] || s.name || R.T('sys.townmap.nameOf.ret_3');
   }
   /** 地図の施設の一覧（看板と同じ。wayfind.js が無ければ空） */
   function signs(m) {
@@ -150,8 +150,8 @@
     const I = signs(m), seen = new Map();
     for (const sg of I.signs) { const n = nameOf(sg); if (!seen.has(n)) seen.set(n, sg.kind); }
     const items = [...seen.entries()].sort((a, b) => ORDER.indexOf(a[1]) - ORDER.indexOf(b[1])).map(([n, k]) => ({ kind: k, name: n }));
-    if (I.exits.length) items.push({ exit: true, name: '出口' });
-    items.push({ here: true, name: 'いま' });
+    if (I.exits.length) items.push({ exit: true, name: R.T('sys.townmap.legendItems.name') });
+    items.push({ here: true, name: R.T('sys.townmap.legendItems.name_2') });
     return items;
   }
   /** 凡例の並べ方（幅 width で折り返す）→ [{it, x, row}]、rows */

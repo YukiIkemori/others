@@ -62,22 +62,22 @@
     O.push(K.prop('grave', 5, 5), K.prop('grave', 6, 5), K.prop('grave', 7, 5));
     O.push(K.prop('songstone', 20, 13, { variant: 3 }), K.exam(20, 14, 'yura_stone'));   // 水車池のほとりの、名を削った石
     O.push(K.chest('yura_c1', 2, 19, { pool: 'p_T' }));
-    O.push(K.sign(13, 25, '――ここはユラ。\n名を置いてきた者の里。'));
+    O.push(K.sign(13, 25, R.T('map.yura_village.sign')));
     K.scatter(g, O, 'firefly', 4, [2, 13, 26, 13], ',', 'yff', { gap: 4 });
 
     const N = [
-      K.npc('yura_elder', 'npc_yura_elder', 15, 8, { name: '長老', title: '――名を忘れた長', dir: 's', talk: 'yura_elder', reward: 'side' }),
-      K.npc('yura_miller', 'npc_yura_folk_2', 22, 8, { name: '粉ひき', dir: 'n', talk: 'yura_miller', reward: 'side', cond: '!yura_miller_home' }),
-      K.npc('yura_nanny', 'npc_yura_folk_1', 18, 23, { name: '子守', dir: 's', talk: 'yura_nanny', reward: 'hint' }),
-      K.npc('yura_grave', 'npc_yura_folk_3', 5, 6, { name: '墓守', dir: 'e', talk: 'yura_gravekeeper', reward: 'news' }),
-      K.npc('yura_lamp', 'npc_yura_folk_4', 12, 19, { name: '灯守', dir: 's', talk: 'yura_lampkeeper', reward: 'item' }),
-      K.npc('yura_seller', 'npc_yura_folk_1', 11, 21, { name: '店番', dir: 's', talk: 'yura_seller', reward: null, pushable: false }),
-      K.npc('yura_child', 'npc_child_4', 16, 23, { name: '名のない子', dir: 'e', move: 'wander', talk: 'yura_child', reward: 'hint' }),
-      K.npc('yura_cat', 'ani_cat', 24, 21, { name: '猫', dir: 'w', move: 'wander', talk: [L('ニャア。')], reward: null }),
+      K.npc('yura_elder', 'npc_yura_elder', 15, 8, { name: R.T('map.yura_village.N.0.yura_elder.name'), title: R.T('map.yura_village.N.0.yura_elder.title'), dir: 's', talk: 'yura_elder', reward: 'side' }),
+      K.npc('yura_miller', 'npc_yura_folk_2', 22, 8, { name: R.T('map.yura_village.N.1.yura_miller.name'), dir: 'n', talk: 'yura_miller', reward: 'side', cond: '!yura_miller_home' }),
+      K.npc('yura_nanny', 'npc_yura_folk_1', 18, 23, { name: R.T('map.yura_village.N.2.yura_nanny.name'), dir: 's', talk: 'yura_nanny', reward: 'hint' }),
+      K.npc('yura_grave', 'npc_yura_folk_3', 5, 6, { name: R.T('map.yura_village.N.3.yura_grave.name'), dir: 'e', talk: 'yura_gravekeeper', reward: 'news' }),
+      K.npc('yura_lamp', 'npc_yura_folk_4', 12, 19, { name: R.T('map.yura_village.N.4.yura_lamp.name'), dir: 's', talk: 'yura_lampkeeper', reward: 'item' }),
+      K.npc('yura_seller', 'npc_yura_folk_1', 11, 21, { name: R.T('map.yura_village.N.5.yura_seller.name'), dir: 's', talk: 'yura_seller', reward: null, pushable: false }),
+      K.npc('yura_child', 'npc_child_4', 16, 23, { name: R.T('map.yura_village.N.6.yura_child.name'), dir: 'e', move: 'wander', talk: 'yura_child', reward: 'hint' }),
+      K.npc('yura_cat', 'ani_cat', 24, 21, { name: R.T('map.yura_village.N.7.yura_cat.name'), dir: 'w', move: 'wander', talk: [L(R.T('map.yura_village.N.talk.0.L'))], reward: null }),
     ];
 
     K.def('yura', {
-      name: '隠れ里ユラ', kind: 'town', optional: true, region: 'r_forest', location: 'yura', theme: 'moss_village',
+      name: R.T('map.yura_village.yura.name'), kind: 'town', optional: true, region: 'r_forest', location: 'yura', theme: 'moss_village',
       legend: K.FOREST_LEGEND({
         s: { mat: 'stone_floor', name: 'stepping_stones' },
         h: { mat: 'cliff', solid: true },
@@ -97,7 +97,7 @@
       zones: [],
       light: { ambient: '#56609a', k: 0.45, mood: 'forest_night' },
       bgm: 'sorrow',
-      meta: { sub: '名を置いてきた者の里' },
+      meta: { sub: R.T('map.yura_village.yura.meta.sub') },
       // 里ぜんたいを 1 枚に描いた下絵（地面・小屋・水車・小山・川・森）。当たり・戸口・人・灯り・墓石ほかの物は上のデータのまま。絵が無ければマスから焼く
       art: { image: 'moss_village/under/yura', overlay: 'moss_village/under/yura_over', emit: 'moss_village/under/yura_emit', painted: ['barrel@16,5', 'flower_pot@11,6', 'sack@18,8', 'stump@2,13', 'bench@12,16', 'crate@10,20', 'bench@17,21', 'rock@27,21'] },
     });
@@ -106,7 +106,7 @@
     const room = K.room(11, 9, {});
     K.rect(room.g, 3, 5, 3, 2, 'c');
     K.def('yura_inn', {
-      name: 'ユラの宿', kind: 'interior', optional: true, region: 'r_forest', location: 'yura',
+      name: R.T('map.yura_village.yura_inn.name'), kind: 'interior', optional: true, region: 'r_forest', location: 'yura',
       legend: K.ROOM_LEGEND('wall_moss', 'wood_floor'),
       rows: room.g, outside: 'wall_moss',
       objects: R.ContentP.kit.furnish([
@@ -117,8 +117,8 @@
         'P.......b',
         'pk......x'], '..yc...w.'),
       npcs: [
-        K.npc('yura_innkeeper', 'npc_yura_folk_3', 2, 3, { name: '宿番', dir: 's', talk: 'yura_inn_keeper', pushable: false }),
-        K.npc('yura_guest', 'npc_yura_folk_4', 8, 5, { name: '泊まり客', dir: 'w', talk: [L('ここに来た日のことは、\nよく覚えているの。\n……自分の名前のほかは。')], reward: null }),
+        K.npc('yura_innkeeper', 'npc_yura_folk_3', 2, 3, { name: R.T('map.yura_village.yura_inn.npcs.0.yura_innkeeper.name'), dir: 's', talk: 'yura_inn_keeper', pushable: false }),
+        K.npc('yura_guest', 'npc_yura_folk_4', 8, 5, { name: R.T('map.yura_village.yura_inn.npcs.1.yura_guest.name'), dir: 'w', talk: [L(R.T('map.yura_village.yura_inn.talk.0.L'))], reward: null }),
       ],
       spawns: { door: { x: room.door.x, y: 7, dir: 'n' } },
       exits: [{ x: room.door.x, y: 8, w: 1, h: 1, to: { map: 'yura', spawn: 'inn' } }],

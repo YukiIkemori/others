@@ -17,25 +17,21 @@
   // ---------------------------------------------------------------- 大会の 5 回戦（WORLD §4.7 の流れ 1）
   X.BOUTS = [
     null,
-    { n: 1, troop: 'tr_ash_r1', name: '一回戦', foe: '一族の若者たち', intro: '一族の若者が四人、\n砂の上にずらりと並んだ。', npcs: ['opp_1a', 'opp_1b'] },
-    { n: 2, troop: 'tr_b_ash_r2', name: '二回戦', foe: '獣使いのガロ', intro: '獣使いのガロが口笛を吹くと、\n岩の獣と火トカゲの子が\n砂を蹴って飛び出してきた。', npcs: ['opp_2'] },
-    { n: 3, troop: 'tr_b_ash_r3', name: '三回戦', foe: '術師の姉妹', intro: '術師の姉妹が、杖を交差させて\n一礼した。「姉のヒノエ」「妹のスミ」', npcs: ['opp_3a', 'opp_3b'] },
-    { n: 4, troop: 'tr_b_ash_r4', name: '四回戦', foe: '鉄鎧のバルガ', intro: '鉄鎧のバルガが、大斧を\n砂に突き立てた。\n鎧の中から、低い笑い声がする。', npcs: ['opp_4'] },
-    { n: 5, troop: 'tr_b_zakuro', name: '決勝', foe: 'ザクロ', intro: '「記録院付き」の名札を下げた闘士が、\n刀の柄に手を置いて立っている。', npcs: ['opp_5'] },
+    { n: 1, troop: 'tr_ash_r1', name: R.T('ev.ash_00_common.BOUTS.1.name'), foe: R.T('ev.ash_00_common.BOUTS.1.foe'), intro: R.T('ev.ash_00_common.BOUTS.1.intro'), npcs: ['opp_1a', 'opp_1b'] },
+    { n: 2, troop: 'tr_b_ash_r2', name: R.T('ev.ash_00_common.BOUTS.2.name'), foe: R.T('ev.ash_00_common.BOUTS.2.foe'), intro: R.T('ev.ash_00_common.BOUTS.2.intro'), npcs: ['opp_2'] },
+    { n: 3, troop: 'tr_b_ash_r3', name: R.T('ev.ash_00_common.BOUTS.3.name'), foe: R.T('ev.ash_00_common.BOUTS.3.foe'), intro: R.T('ev.ash_00_common.BOUTS.3.intro'), npcs: ['opp_3a', 'opp_3b'] },
+    { n: 4, troop: 'tr_b_ash_r4', name: R.T('ev.ash_00_common.BOUTS.4.name'), foe: R.T('ev.ash_00_common.BOUTS.4.foe'), intro: R.T('ev.ash_00_common.BOUTS.4.intro'), npcs: ['opp_4'] },
+    { n: 5, troop: 'tr_b_zakuro', name: R.T('ev.ash_00_common.BOUTS.5.name'), foe: R.T('ev.ash_00_common.BOUTS.5.foe'), intro: R.T('ev.ash_00_common.BOUTS.5.intro'), npcs: ['opp_5'] },
   ];
   // 壁画の物語（v1 の文のまま）。3 つ目は、写し手に白くされると後半が消える
   X.MURALS = {
-    1: '壁画には、灰の中から\n小さな炎が生まれる姿が\n描かれている。',
-    2: '炎は鳥の姿になり、\n山の火を静めながら\n大地を温めている。',
-    3: '年老いた鳥は灰に還り、\n巫女の語る物語で、\nふたたび卵から生まれる。',
-    3.5: '年老いた鳥は灰に還り……\nその先は、白く塗りこめられている。',
+    1: R.T('ev.ash_00_common.MURALS.1'),
+    2: R.T('ev.ash_00_common.MURALS.2'),
+    3: R.T('ev.ash_00_common.MURALS.3'),
+    3.5: R.T('ev.ash_00_common.MURALS.3_5'),
   };
-  X.TELL = [
-    '灰の中から、\n小さな炎が生まれた。',
-    '炎は鳥の姿になり、\n山の火を静めながら\n大地を温めた。',
-    '年老いた鳥は灰に還り、\n巫女の語る物語で、\nふたたび卵から生まれる。',
-  ];
-  X.TELL_BLANK = '年老いた鳥は灰に還り……。';
+  X.TELL = R.T('ev.ash_00_common.TELL');
+  X.TELL_BLANK = R.T('ev.ash_00_common.TELL_BLANK');
   X.tier = () => (R.Tier && R.Tier.get ? R.Tier.get() : 0);
   X.cleared = (ev) => ev.flag('cleared_r_ash');
   X.round = (ev) => ev.var('ash_round');
@@ -52,9 +48,9 @@
   /** STORY_BIBLE §3.5 の世代と、ティアの近況（WORLD §1.3 の表） */
   X.skyLine = function () {
     const t = X.tier();
-    if (t >= 6) return '朝の鐘って、ほんとうは\n何の合図だったんだろうね。';
-    if (t >= 4) return '近ごろ、噴煙の上の空が\nうす紫に見えるんだ。';
-    if (t >= 2) return '近ごろ、夜の色が\nちょっと薄くないかい？';
+    if (t >= 6) return R.T('ev.ash_00_common.skyLine.ret');
+    if (t >= 4) return R.T('ev.ash_00_common.skyLine.ret_2');
+    if (t >= 2) return R.T('ev.ash_00_common.skyLine.ret_3');
     return null;
   };
 
@@ -64,50 +60,50 @@
     if (!n) { n = 2; while (n < 8 && ev.flag('lo_lz_' + n)) n++; ev.setVar('ash_lz', n); }
     await X.lore(ev, 'lo_lz_' + n);
     if (R.DB.letters['letter_lz_' + n] && X.tier() >= n - 1) await ev.letter('letter_lz_' + n);
-    else await ev.say(null, ['封を切ると、字が白く抜けていた。\n「ミラへ」――宛名のほかは、\n読めない。', '（灯がもう少し戻れば、\n読めるようになるかもしれない）']);
+    else await ev.say(null, R.T('ev.ash_00_common.lz.say'));
     return n;
   };
 
   // ---------------------------------------------------------------- 手がかり（K.lead）
   const lead = (id, o) => R.def('leads', id, Object.assign({ region: 'r_ash' }, o));
-  lead('l_ash_trial', { kind: 'region', title: '炎の試練', text: '火口に入れるのは、年に一度の\n闘技大会「炎の試練」の勝者だけ。\n闘技場の受付で、よそ者も出られる。', from: 'カルデラの門番', place: 'caldera', done: 'ash_champion' });
-  lead('l_ash_egg', { kind: 'region', title: '冷えていく卵', text: '火口に眠る火の鳥の卵が、\n冷えていく。巫女カヤは、卵に\n語る物語を思い出せないという。', from: '火の神殿のカヤ', place: 'caldera', done: 'cleared_r_ash' });
-  lead('l_ash_stranger', { kind: 'region', title: '見かけない闘士', text: '今年の大会に、「記録院付き」の\n名札を下げた闘士がいる。\n酒場で水ばかり飲んでいるという。', from: '酒場「殻の中」', place: 'caldera', done: 'ash_champion' });
-  lead('l_ash_volcano', { kind: 'region', title: '灰の火山', text: '優勝した。族長ドルガが、\n町の東の火山の岩戸を開けた。\n火口に、火の鳥の卵が眠る。', from: '族長ドルガ', place: 'volcano', dir: '東', done: 'ash_lavabeast' });
-  lead('l_ash_murals', { kind: 'region', title: '壁画の物語', text: '火山の壁に、昔の巫女たちが\n火の鳥の物語を描き残した。\n三つ読めば、火口への岩戸が開く。', from: 'カヤ', place: 'volcano', done: { var: 'ash_murals', gte: 3 } });
-  lead('l_main_recorder_ash', { kind: 'main', region: 'world', title: '記録院付きの闘士', text: '大会の名簿に「記録院付き」の\n闘士ザクロ。去年は記録官が\n火口の壁画を写しに来ていた。', from: '闘技場の名簿', place: 'caldera' });
+  lead('l_ash_trial', { kind: 'region', title: R.T('leads.l_ash_trial.title'), text: R.T('leads.l_ash_trial.text'), from: R.T('leads.l_ash_trial.from'), place: 'caldera', done: 'ash_champion' });
+  lead('l_ash_egg', { kind: 'region', title: R.T('leads.l_ash_egg.title'), text: R.T('leads.l_ash_egg.text'), from: R.T('leads.l_ash_egg.from'), place: 'caldera', done: 'cleared_r_ash' });
+  lead('l_ash_stranger', { kind: 'region', title: R.T('leads.l_ash_stranger.title'), text: R.T('leads.l_ash_stranger.text'), from: R.T('leads.l_ash_stranger.from'), place: 'caldera', done: 'ash_champion' });
+  lead('l_ash_volcano', { kind: 'region', title: R.T('leads.l_ash_volcano.title'), text: R.T('leads.l_ash_volcano.text'), from: R.T('leads.l_ash_volcano.from'), place: 'volcano', dir: R.T('leads.l_ash_volcano.dir'), done: 'ash_lavabeast' });
+  lead('l_ash_murals', { kind: 'region', title: R.T('leads.l_ash_murals.title'), text: R.T('leads.l_ash_murals.text'), from: R.T('leads.l_ash_murals.from'), place: 'volcano', done: { var: 'ash_murals', gte: 3 } });
+  lead('l_main_recorder_ash', { kind: 'main', region: 'world', title: R.T('leads.l_main_recorder_ash.title'), text: R.T('leads.l_main_recorder_ash.text'), from: R.T('leads.l_main_recorder_ash.from'), place: 'caldera' });
   // 依頼（side。id は依頼と同じ q_*）
-  lead('q_ash_bet', { kind: 'side', title: '闘技場の賭け', text: '賭け屋のボッツが、ほかの試合の\n勝ち負けに賭けないかという。\n当てるたびに、段が上がる。', from: '賭け屋のボッツ', place: 'caldera', done: 'ash_bet_done' });
-  lead('q_ash_lanterns', { kind: 'side', title: '【灯りを守る】火守りの見習い', text: '神殿の種火を、火口の段々の\n灯籠へ分けて回る。灯籠は三つ。\n崖の上の、消えた灯籠だ。', from: '火守りの見習いのトト', place: 'caldera', done: 'ash_lanterns_done' });
-  lead('q_ash_spa', { kind: 'side', title: '温泉の番', text: '町の湯が灰でにごった。\n湯の郷の岩の割れ目で採れる\n湯の花があれば、澄むという。', from: '湯守りのばあさま', place: 'caldera', done: 'ash_spa_done' });
-  lead('q_ash_challenge', { kind: 'side', title: '挑戦者の間', text: '大会のあと、闘技場で腕試しの\n勝ち抜きができる。相手は五組。\n勝ち抜くたびに、品が出る。', from: '受付のミラン', place: 'caldera', done: 'ash_challenge_done' });
+  lead('q_ash_bet', { kind: 'side', title: R.T('leads.q_ash_bet.title'), text: R.T('leads.q_ash_bet.text'), from: R.T('leads.q_ash_bet.from'), place: 'caldera', done: 'ash_bet_done' });
+  lead('q_ash_lanterns', { kind: 'side', title: R.T('leads.q_ash_lanterns.title'), text: R.T('leads.q_ash_lanterns.text'), from: R.T('leads.q_ash_lanterns.from'), place: 'caldera', done: 'ash_lanterns_done' });
+  lead('q_ash_spa', { kind: 'side', title: R.T('leads.q_ash_spa.title'), text: R.T('leads.q_ash_spa.text'), from: R.T('leads.q_ash_spa.from'), place: 'caldera', done: 'ash_spa_done' });
+  lead('q_ash_challenge', { kind: 'side', title: R.T('leads.q_ash_challenge.title'), text: R.T('leads.q_ash_challenge.text'), from: R.T('leads.q_ash_challenge.from'), place: 'caldera', done: 'ash_challenge_done' });
   // 寄り道のうわさ（rumor）
-  lead('l_opt_spa', { kind: 'rumor', title: '溶岩洞の湯の郷', text: '荒野の北の岩の間から、湯気が\n噴き出している。奥の湯につかると、\n疲れがすっかり取れるという。', from: '湯治の行商', dir: '北西', done: 'ash_spa_bathed' });
-  lead('l_opt_turtle', { kind: 'rumor', title: '動く岩の浜', text: '南の黒い砂浜で、岩が動いた。\n火山ガメという、甲羅の硬い\n珍しい魔物らしい。', from: '古参の闘士', dir: '南', done: { var: 'ash_turtle_seen', gte: 1 } });
-  lead('l_opt_battlefield', { kind: 'rumor', title: '折れた剣の碑', text: '荒野の西に、折れた剣の碑が\n立っている。夜ごと、ときの声が\n聞こえるという。', from: '湯治の行商', dir: '西', done: 'ash_battlefield_seen' });
+  lead('l_opt_spa', { kind: 'rumor', title: R.T('leads.l_opt_spa.title'), text: R.T('leads.l_opt_spa.text'), from: R.T('leads.l_opt_spa.from'), dir: R.T('leads.l_opt_spa.dir'), done: 'ash_spa_bathed' });
+  lead('l_opt_turtle', { kind: 'rumor', title: R.T('leads.l_opt_turtle.title'), text: R.T('leads.l_opt_turtle.text'), from: R.T('leads.l_opt_turtle.from'), dir: R.T('leads.l_opt_turtle.dir'), done: { var: 'ash_turtle_seen', gte: 1 } });
+  lead('l_opt_battlefield', { kind: 'rumor', title: R.T('leads.l_opt_battlefield.title'), text: R.T('leads.l_opt_battlefield.text'), from: R.T('leads.l_opt_battlefield.from'), dir: R.T('leads.l_opt_battlefield.dir'), done: 'ash_battlefield_seen' });
 
   // ---------------------------------------------------------------- 読み物（STORY_BIBLE §10.2 の 29〜31 ほか）
   const lore = (id, o) => R.def('lore', id, Object.assign({ region: 'r_ash' }, o));
-  lore('lo_ev_ash', { title: '大会の名簿', kind: 'main', must: true, text: '炎の試練、出場者名簿。\n若者組・獣使い・術師の姉妹・鉄鎧……。\n「十六番、ザクロ（記録院付き）」' });
-  lore('lo_time_ash', { title: '最後の代理試合の銘板', kind: 'main', must: true, text: '西の観客席の柱の銘板。\n「光暦二九二年、冬至の前夜\n最後の代理試合」\nその下の二つの名は、削れて読めない。\n神殿の「火の鳥の巡り」の記録も、\nその夜の欄で止まっている。' });
-  lore('lo_war_ash', { title: 'ドルガの記憶', kind: 'region', must: false, text: '二十年前、族長ドルガは\n火の鳥同盟の代理の闘士だった。\n試合の最中、娘が二人、砂の上に\n下りてきて歌った。敵も味方も、\n剣を止めた。' });
-  lore('lo_ash_firebird', { title: '火の鳥の物語', kind: 'region', must: false, text: '灰の中から、小さな炎が生まれた。\n炎は鳥の姿になり、山の火を静め、\n大地を温めた。年老いた鳥は灰に還り、\n巫女の語る物語で、ふたたび\n卵から生まれる。' });
+  lore('lo_ev_ash', { title: R.T('lore.lo_ev_ash.title'), kind: 'main', must: true, text: R.T('lore.lo_ev_ash.text') });
+  lore('lo_time_ash', { title: R.T('lore.lo_time_ash.title'), kind: 'main', must: true, text: R.T('lore.lo_time_ash.text') });
+  lore('lo_war_ash', { title: R.T('lore.lo_war_ash.title'), kind: 'region', must: false, text: R.T('lore.lo_war_ash.text') });
+  lore('lo_ash_firebird', { title: R.T('lore.lo_ash_firebird.title'), kind: 'region', must: false, text: R.T('lore.lo_ash_firebird.text') });
 
   // ---------------------------------------------------------------- 年代記の章（E14。選択で文が変わる）
   R.def('chronicle', 'r_ash', {
-    title: '火の鳥の眠る山',
+    title: R.T('chronicle.r_ash.title'),
     get text() {
       const ok = (c) => c == null || (R.Game && R.State && R.State.check ? R.State.check(c) : false);
       return this.parts.filter((p) => ok(p.cond)).map((p) => p.text).join('\n');
     },
     parts: [
-      { text: '火口の卵が冷え、\n灰の荒野の赤が鈍っていった。' },
-      { cond: { choice: 'ch_ash_bribe', is: 'refuse' }, text: '語り部の見習いは、決勝の前夜の\n誘いを断り、炎の試練を勝ち抜いた。' },
-      { cond: { choice: 'ch_ash_bribe', is: 'accept' }, text: '語り部の見習いは、決勝の前夜の\n金を一度は受け取った。\n偽らずに、そのことも記す。' },
-      { cond: 'ash_unbeaten', text: '一度も砂に膝をつかなかった。' },
-      { cond: { choice: 'ch_ash_write', is: 'rebirth' }, text: '火の鳥は、語りを聞いて\n卵からかえり……。' },
-      { cond: { choice: 'ch_ash_write', is: 'pain' }, text: '……この砂の上で、名も知れぬ\n二人の歌い手が死んだ。\nその夜のことも、ここに記す。' },
-      { cond: 'cleared_r_ash', text: '火の鳥は火の粉の尾を引いて、\n町の上をひとめぐりした。' },
+      { text: R.T('chronicle.r_ash.parts.0.text') },
+      { cond: { choice: 'ch_ash_bribe', is: 'refuse' }, text: R.T('chronicle.r_ash.parts.1.text') },
+      { cond: { choice: 'ch_ash_bribe', is: 'accept' }, text: R.T('chronicle.r_ash.parts.2.text') },
+      { cond: 'ash_unbeaten', text: R.T('chronicle.r_ash.parts.3.text') },
+      { cond: { choice: 'ch_ash_write', is: 'rebirth' }, text: R.T('chronicle.r_ash.parts.4.text') },
+      { cond: { choice: 'ch_ash_write', is: 'pain' }, text: R.T('chronicle.r_ash.parts.5.text') },
+      { cond: 'cleared_r_ash', text: R.T('chronicle.r_ash.parts.6.text') },
     ],
   });
 })(window.RPG);

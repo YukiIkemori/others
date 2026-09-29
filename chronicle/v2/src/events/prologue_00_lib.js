@@ -18,7 +18,7 @@
 
   E.heroName = function () {
     const h = R.Game && R.Game.chars && R.Game.chars.hero;
-    return (h && h.name) || '語り部';
+    return (h && h.name) || R.T('ev.prologue_00_lib.heroName.ret');
   };
   E.t = function (s) {
     if (Array.isArray(s)) return s.map(E.t);
@@ -36,16 +36,16 @@
     const cnt = (n || 1) > 1 ? ' ×' + n : '';
     const key = /^k_/.test(id);
     // 語り（say）や、その場の地の文で入手を言うときは通知を出さない（持ち主 2026-09-28「受け取った／手に入れたが二重に出る」）
-    if (!(o && (o.say || o.quiet))) E.toast(name + cnt + ' を手に入れた', key ? 'key' : 'bag');
-    if (o && o.say) await E.narr(ev, '{hero}は ' + name + cnt + ' を\n手に入れた！');
+    if (!(o && (o.say || o.quiet))) E.toast(R.T('ev.prologue_00_lib.give.toast', { p0: name + cnt }), key ? 'key' : 'bag');
+    if (o && o.say) await E.narr(ev, R.T('ev.prologue_00_lib.give.narr', { name, cnt }));
     return r;
   };
-  E.gold = function (ev, n, o) { ev.gold(n, { silent: true }); if (!(o && o.quiet)) E.toast(n + ' ゴールドを受け取った', 'coin'); };   // 通知は 1 つだけ（ev.gold の分は出さない）
+  E.gold = function (ev, n, o) { ev.gold(n, { silent: true }); if (!(o && o.quiet)) E.toast(R.T('ev.prologue_00_lib.gold.toast', { n }), 'coin'); };   // 通知は 1 つだけ（ev.gold の分は出さない）
   E.lore = function (ev, id) {
     if (ev.flag(id)) return false;
     ev.setFlag(id);
     const d = R.DB.lore && R.DB.lore[id];
-    E.toast('書庫に書き写した' + (d ? '：' + d.title : ''), 'book');
+    E.toast(R.T('ev.prologue_00_lib.lore.toast', { p0: d ? R.T('ev.prologue_00_lib.lore.toast_2', { title: d.title }) : '' }), 'book');
     return true;
   };
   /** pick の項目ごと（{text, voice?}）。合う物が無ければ {text: null} */
@@ -59,7 +59,7 @@
   };
   E.stay = async function (ev, o) {
     o = o || {};
-    const i = await ev.choose([o.yes || '泊まる', o.no || 'やめておく'], { cancel: 1, text: E.t(o.ask || '泊まっていくかい？') });
+    const i = await ev.choose([o.yes || R.T('ev.prologue_00_lib.stay.i.choose.0'), o.no || R.T('ev.prologue_00_lib.stay.i.choose.1')], { cancel: 1, text: E.t(o.ask || R.T('ev.prologue_00_lib.stay.i.choose.text.t')) });
     if (i !== 0) { if (o.bye) await E.say(ev, o.who || null, o.bye); return false; }
     const p = R.Field.pos;
     // 暗転とジングル（飛ばせるのは 2.5 秒から。明ける前にジングルを閉じて BGM を戻す）は ev.inn と同じ R.Events.night
@@ -80,8 +80,8 @@
   };
   /** STORY_BIBLE §3.5: young = 二十歳より下（朝を知らない）、mid = 二十〜四十（少し明るかった気がする）、old = 年寄り（食い違う記憶） */
   E.AGE = {
-    young: '朝の鐘って、なんで\n『朝』っていうの？\n……だれも知らないんだって。',
-    mid: '子どものころは、もう少し\n空が明るかった気がするんだ。\n……気のせいかな。',
-    old: ['わしの祖父の代から、\nずっと夜じゃったよ。', '……いや、戦のころまでは、\nもう少し……。\nはて、何の戦じゃったか。'],
+    young: R.T('ev.prologue_00_lib.AGE.young'),
+    mid: R.T('ev.prologue_00_lib.AGE.mid'),
+    old: R.T('ev.prologue_00_lib.AGE.old'),
   };
 })(window.RPG);

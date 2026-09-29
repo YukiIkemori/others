@@ -10,56 +10,58 @@
   if (!S.def) S.def = function (id, v) { (S._defs = S._defs || {})[id] = v; };
   const u = (v) => R.UIK.u(v);
   const T = () => R.UIK.T;
-  const ONOFF = { false: 'オフ', true: 'オン' };
-  const VOL = (v) => (v === 0 ? 'オフ' : String(v));
+  const ONOFF = { false: R.T('ui.settings.ONOFF.false'), true: R.T('ui.settings.ONOFF.true') };
+  const VOL = (v) => (v === 0 ? R.T('ui.settings.VOL') : String(v));
 
   const TABS = [
-    { label: '遊び方', items: [
-      { key: 'textSpeed', name: '文字の速さ', names: { slow: 'ゆっくり', normal: 'ふつう', fast: '速い', instant: '一瞬' }, desc: '会話の文字が出る速さ。' },
-      { key: 'battleSpeed', name: '戦闘の速さ', names: { 1: '通常', 2: '＋1', 3: '＋2', 5: '＋4' }, desc: '戦闘の演出の速さ。戦闘中もRボタンで「通常→＋1→＋2→＋4」と切り替えられ、次の戦闘も同じ速さで始まる。' },
-      { key: 'alwaysDash', name: '常にダッシュ', names: ONOFF, desc: 'オンにすると、B を押している間だけ歩く。' },
-      { key: 'cursorMemory', name: 'カーソル記憶', names: { true: 'する', false: 'しない' }, desc: '戦闘で、前に選んだ行動と相手を覚えておく。' },
-      { key: 'fieldZoom', name: 'フィールドの広さ', names: { near: 'ちかい', normal: 'ふつう', far: 'ひろい' }, desc: 'フィールドを映す広さ。' },
+    { label: R.T('ui.settings.TABS.0.label'), items: [
+      // 言語（どの言語で見ても分かるように、名前はその言語の字で。A か ←→ で選ぶ窓を開き、選んだら起こし直す）
+      { key: 'lang', act: 'lang', name: R.T('ui.settings.lang.name'), names: R.I18n.NATIVE, desc: R.T('ui.settings.lang.desc') },
+      { key: 'textSpeed', name: R.T('ui.settings.TABS.textSpeed.name'), names: { slow: R.T('ui.settings.TABS.textSpeed.names.slow'), normal: R.T('ui.settings.TABS.textSpeed.names.normal'), fast: R.T('ui.settings.TABS.textSpeed.names.fast'), instant: R.T('ui.settings.TABS.textSpeed.names.instant') }, desc: R.T('ui.settings.TABS.textSpeed.desc') },
+      { key: 'battleSpeed', name: R.T('ui.settings.TABS.battleSpeed.name'), names: { 1: R.T('ui.settings.TABS.battleSpeed.names.1'), 2: R.T('ui.settings.TABS.battleSpeed.names.2'), 3: R.T('ui.settings.TABS.battleSpeed.names.3'), 5: R.T('ui.settings.TABS.battleSpeed.names.5') }, desc: R.T('ui.settings.TABS.battleSpeed.desc') },
+      { key: 'alwaysDash', name: R.T('ui.settings.TABS.alwaysDash.name'), names: ONOFF, desc: R.T('ui.settings.TABS.alwaysDash.desc') },
+      { key: 'cursorMemory', name: R.T('ui.settings.TABS.cursorMemory.name'), names: { true: R.T('ui.settings.TABS.cursorMemory.names.true'), false: R.T('ui.settings.TABS.cursorMemory.names.false') }, desc: R.T('ui.settings.TABS.cursorMemory.desc') },
+      { key: 'fieldZoom', name: R.T('ui.settings.TABS.fieldZoom.name'), names: { near: R.T('ui.settings.TABS.fieldZoom.names.near'), normal: R.T('ui.settings.TABS.fieldZoom.names.normal'), far: R.T('ui.settings.TABS.fieldZoom.names.far') }, desc: R.T('ui.settings.TABS.fieldZoom.desc') },
       // 「フィールドの仲間（後ろに並ぶ）」の設定は無くした（持ち主 2026-09-28「歩くモーションを 20 人分は作っていない」）
-      { key: 'fieldMap', name: 'ダンジョンの地図', names: { mini: '小さく', big: '大きく', off: '出さない' }, desc: 'ダンジョンで出す地図。フィールドで X を押しても切り替わる。' },
-      { key: 'wipe', name: '全滅したとき', names: { retry: '直前の戦闘から', inn: '最後に泊まった宿から' }, desc: '全滅の画面で先に選んでおく物。' },
-      { act: 'tips', name: '説明の札を読み直す', desc: 'これまでに見た、仕組みの説明の札を読み直す。' },
+      { key: 'fieldMap', name: R.T('ui.settings.TABS.fieldMap.name'), names: { mini: R.T('ui.settings.TABS.fieldMap.names.mini'), big: R.T('ui.settings.TABS.fieldMap.names.big'), off: R.T('ui.settings.TABS.fieldMap.names.off') }, desc: R.T('ui.settings.TABS.fieldMap.desc') },
+      { key: 'wipe', name: R.T('ui.settings.TABS.wipe.name'), names: { retry: R.T('ui.settings.TABS.wipe.names.retry'), inn: R.T('ui.settings.TABS.wipe.names.inn') }, desc: R.T('ui.settings.TABS.wipe.desc') },
+      { act: 'tips', name: R.T('ui.settings.TABS.0.items.7.name'), desc: R.T('ui.settings.TABS.0.items.7.desc') },
     ] },
-    { label: '画面', items: [
-      { key: 'uiSize', name: '字の大きさ', names: { 1: '標準', 1.15: '大', 1.3: '特大' }, desc: '文字と窓の大きさ。' },
-      { key: 'panel', name: '窓の濃さ', names: { normal: 'ふつう', dense: '濃い' }, desc: '窓の地を濃くして、字を読みやすくする。' },
-      { key: 'brightness', name: '明るさ', names: { 0.85: '暗め', 1: 'ふつう', 1.25: '明るめ' }, desc: '画面全体の明るさ。' },
-      { key: 'fx', name: '効果', names: { high: '高', low: '低', off: '切' }, desc: '光のにじみなどの仕上げ。重いときは下げる。' },
-      { key: 'display', name: '画面の出し方', names: { window: 'ウィンドウ', fullscreen: '全画面' }, desc: 'F11 か Alt+Enter でも切り替わる。' },
-      { key: 'scaleMode', name: '拡大のしかた', names: { fit: '画面に合わせる', integer: '整数倍' }, desc: '整数倍は、点がそろう大きさだけで映し、余りは黒い帯にする。' },
-      { key: 'prompts', name: '操作の表示', names: { always: '出す', first2h: '最初の2時間', never: '出さない' }, desc: 'フィールドの右下のボタン表示。' },
+    { label: R.T('ui.settings.TABS.1.label'), items: [
+      { key: 'uiSize', name: R.T('ui.settings.TABS.uiSize.name'), names: { 1: R.T('ui.settings.TABS.uiSize.names.1'), 1.15: R.T('ui.settings.TABS.uiSize.names.1_15'), 1.3: R.T('ui.settings.TABS.uiSize.names.1_3') }, desc: R.T('ui.settings.TABS.uiSize.desc') },
+      { key: 'panel', name: R.T('ui.settings.TABS.panel.name'), names: { normal: R.T('ui.settings.TABS.panel.names.normal'), dense: R.T('ui.settings.TABS.panel.names.dense') }, desc: R.T('ui.settings.TABS.panel.desc') },
+      { key: 'brightness', name: R.T('ui.settings.TABS.brightness.name'), names: { 0.85: R.T('ui.settings.TABS.brightness.names.0_85'), 1: R.T('ui.settings.TABS.brightness.names.1'), 1.25: R.T('ui.settings.TABS.brightness.names.1_25') }, desc: R.T('ui.settings.TABS.brightness.desc') },
+      { key: 'fx', name: R.T('ui.settings.TABS.fx.name'), names: { high: R.T('ui.settings.TABS.fx.names.high'), low: R.T('ui.settings.TABS.fx.names.low'), off: R.T('ui.settings.TABS.fx.names.off') }, desc: R.T('ui.settings.TABS.fx.desc') },
+      { key: 'display', name: R.T('ui.settings.TABS.display.name'), names: { window: R.T('ui.settings.TABS.display.names.window'), fullscreen: R.T('ui.settings.TABS.display.names.fullscreen') }, desc: R.T('ui.settings.TABS.display.desc') },
+      { key: 'scaleMode', name: R.T('ui.settings.TABS.scaleMode.name'), names: { fit: R.T('ui.settings.TABS.scaleMode.names.fit'), integer: R.T('ui.settings.TABS.scaleMode.names.integer') }, desc: R.T('ui.settings.TABS.scaleMode.desc') },
+      { key: 'prompts', name: R.T('ui.settings.TABS.prompts.name'), names: { always: R.T('ui.settings.TABS.prompts.names.always'), first2h: R.T('ui.settings.TABS.prompts.names.first2h'), never: R.T('ui.settings.TABS.prompts.names.never') }, desc: R.T('ui.settings.TABS.prompts.desc') },
     ] },
-    { label: '音', items: [
-      { key: 'vol.bgm', name: 'BGM', vol: true, desc: '音楽の大きさ。0 で消える。' },
-      { key: 'vol.sfx', name: '効果音', vol: true, desc: '効果音の大きさ。0 で消える。' },
-      { key: 'vol.voice', name: 'ボイス', vol: true, desc: '声の大きさ。0 で消える。' },
-      { key: 'battleVoice', name: '戦闘ボイス', names: { on: 'あり', big: '大技だけ', off: 'なし' }, desc: '戦闘で仲間と主人公が話す声。' },
+    { label: R.T('ui.settings.TABS.2.label'), items: [
+      { key: 'vol.bgm', name: 'BGM', vol: true, desc: R.T('ui.settings.TABS.vol_bgm.desc') },
+      { key: 'vol.sfx', name: R.T('ui.settings.TABS.vol_sfx.name'), vol: true, desc: R.T('ui.settings.TABS.vol_sfx.desc') },
+      { key: 'vol.voice', name: R.T('ui.settings.TABS.vol_voice.name'), vol: true, desc: R.T('ui.settings.TABS.vol_voice.desc') },
+      { key: 'battleVoice', name: R.T('ui.settings.TABS.battleVoice.name'), names: { on: R.T('ui.settings.TABS.battleVoice.names.on'), big: R.T('ui.settings.TABS.battleVoice.names.big'), off: R.T('ui.settings.TABS.battleVoice.names.off') }, desc: R.T('ui.settings.TABS.battleVoice.desc') },
     ] },
-    { label: '操作', items: [
-      { act: 'kb', name: 'キーボードの割り当て', desc: '操作ごとに、キーボードのキーを 2 つまで決める。' },
-      { act: 'pad', name: 'パッドの割り当て', desc: '操作ごとに、パッドのボタンを決める。' },
-      { key: 'confirmButton', name: '決定ボタンの位置', names: { right: '右', down: '下' }, desc: 'パッドで決定に使うボタンの位置。' },
-      { key: 'padGlyphs', name: 'ボタンの印', names: { auto: '自動', xbox: 'A が下', ps: '○×△□', nintendo: 'A が右' }, desc: '画面に出すパッドのボタンの印。自動は、最後に触ったパッドに合わせる。' },
-      { key: 'touchPad', name: 'タッチの操作パッド', names: { auto: '自動', on: '出す', off: '出さない' }, desc: '画面に出すスティックとボタン。' },
+    { label: R.T('ui.settings.TABS.3.label'), items: [
+      { act: 'kb', name: R.T('ui.settings.TABS.3.items.0.name'), desc: R.T('ui.settings.TABS.3.items.0.desc') },
+      { act: 'pad', name: R.T('ui.settings.TABS.3.items.1.name'), desc: R.T('ui.settings.TABS.3.items.1.desc') },
+      { key: 'confirmButton', name: R.T('ui.settings.TABS.confirmButton.name'), names: { right: R.T('ui.settings.TABS.confirmButton.names.right'), down: R.T('ui.settings.TABS.confirmButton.names.down') }, desc: R.T('ui.settings.TABS.confirmButton.desc') },
+      { key: 'padGlyphs', name: R.T('ui.settings.TABS.padGlyphs.name'), names: { auto: R.T('ui.settings.TABS.padGlyphs.names.auto'), xbox: R.T('ui.settings.TABS.padGlyphs.names.xbox'), ps: '○×△□', nintendo: R.T('ui.settings.TABS.padGlyphs.names.nintendo') }, desc: R.T('ui.settings.TABS.padGlyphs.desc') },
+      { key: 'touchPad', name: R.T('ui.settings.TABS.touchPad.name'), names: { auto: R.T('ui.settings.TABS.touchPad.names.auto'), on: R.T('ui.settings.TABS.touchPad.names.on'), off: R.T('ui.settings.TABS.touchPad.names.off') }, desc: R.T('ui.settings.TABS.touchPad.desc') },
     ] },
-    { label: '読みやすさ', items: [
-      { key: 'colorAssist', name: '色覚の補助', names: ONOFF, desc: 'HP のゲージを青に。上がる／下がるは形でも見分けられる。' },
-      { key: 'lessFlash', name: '点滅を減らす', names: ONOFF, desc: '光の点滅と脈動を止める。' },
-      { key: 'shake', name: '画面の揺れ', names: { on: 'あり', weak: '弱い', off: 'なし' }, desc: '戦闘などで画面を揺らす強さ。' },
-      { key: 'reduceMotion', name: '動きを減らす', names: ONOFF, desc: '窓の動きや弾みを減らす。' },
-      { key: 'ruby', name: 'ふりがな', names: ONOFF, desc: '人の名前と地名の初めての所に、ふりがなを付ける。' },
+    { label: R.T('ui.settings.TABS.4.label'), items: [
+      { key: 'colorAssist', name: R.T('ui.settings.TABS.colorAssist.name'), names: ONOFF, desc: R.T('ui.settings.TABS.colorAssist.desc') },
+      { key: 'lessFlash', name: R.T('ui.settings.TABS.lessFlash.name'), names: ONOFF, desc: R.T('ui.settings.TABS.lessFlash.desc') },
+      { key: 'shake', name: R.T('ui.settings.TABS.shake.name'), names: { on: R.T('ui.settings.TABS.shake.names.on'), weak: R.T('ui.settings.TABS.shake.names.weak'), off: R.T('ui.settings.TABS.shake.names.off') }, desc: R.T('ui.settings.TABS.shake.desc') },
+      { key: 'reduceMotion', name: R.T('ui.settings.TABS.reduceMotion.name'), names: ONOFF, desc: R.T('ui.settings.TABS.reduceMotion.desc') },
+      { key: 'ruby', name: R.T('ui.settings.TABS.ruby.name'), names: ONOFF, desc: R.T('ui.settings.TABS.ruby.desc') },
     ] },
   ];
 
   // 割り当ての表の行（操作の名前）
   const ACT_NAMES = {
-    a: '決定・話す', b: '戻る・やめる', x: '地図・サブ', y: 'メニュー・詳しく', l: 'L（前のタブなど）', r: 'R（次のタブなど）', start: 'スタート',
-    up: '上', down: '下', left: '左', right: '右', dash: 'ダッシュ',
+    a: R.T('ui.settings.ACT_NAMES.a'), b: R.T('ui.settings.ACT_NAMES.b'), x: R.T('ui.settings.ACT_NAMES.x'), y: R.T('ui.settings.ACT_NAMES.y'), l: R.T('ui.settings.ACT_NAMES.l'), r: R.T('ui.settings.ACT_NAMES.r'), start: R.T('ui.settings.ACT_NAMES.start'),
+    up: R.T('ui.settings.ACT_NAMES.up'), down: R.T('ui.settings.ACT_NAMES.down'), left: R.T('ui.settings.ACT_NAMES.left'), right: R.T('ui.settings.ACT_NAMES.right'), dash: R.T('ui.settings.ACT_NAMES.dash'),
   };
   const KB_ROWS = ['a', 'b', 'y', 'x', 'l', 'r', 'start', 'dash', 'up', 'down', 'left', 'right'];
   const PAD_ROWS = ['a', 'b', 'y', 'x', 'l', 'r', 'start', 'dash'];
@@ -83,6 +85,7 @@
       return n != null ? n : String(v);
     },
     shift(it, d) {
+      if (it.act === 'lang') { if (!this.busy) this.act(it, d); return; }
       const ch = R.Settings.CHOICES[it.key];
       if (!ch) return;
       const i = Math.max(0, ch.indexOf(R.Settings.get(it.key)));
@@ -92,16 +95,38 @@
       R.UIK.sfx('cursor');
     },
     async act(row, d) {
+      if (row.act === 'lang') { R.UIK.sfx('confirm'); this.busy = true; try { await this.chooseLang(); } finally { this.busy = false; } return; }
       if (row.act === 'kb' || row.act === 'pad') { R.UIK.sfx('confirm'); this.openRemap(row.act); return; }
       if (row.act === 'tips') { this.busy = true; try { await this.tips(); } finally { this.busy = false; } return; }
       this.shift(row, d);
     },
+    /**
+     * 言語を選ぶ → 確かめ → 設定に覚えて起こし直す（データの名前は読み込みの時に決まるため。core/i18n.js）。
+     * 旅の途中なら中断の記録を作り、起こし直した後にそこから続ける（main.js の R.Flow.langResume）。
+     */
+    async chooseLang() {
+      const L = R.I18n.LANGS, cur = R.I18n.lang();
+      const k = await S.ask(this, { title: R.T('ui.settings.lang.title'), choices: L.map((l) => R.I18n.NATIVE[l]).concat([R.T('ui.settings.lang.cancel')]), cancel: L.length, index: Math.max(0, L.indexOf(cur)) });
+      if (k < 0 || k >= L.length || L[k] === cur) return;
+      const to = L[k];
+      const inGame = !!(R.Game && R.Field && R.Engine.has && R.Engine.has('field'));
+      const key = inGame ? 'ui.settings.lang.restartGame' : 'ui.settings.lang.restart';
+      // 確かめの文は今の言語と選んだ言語の両方で（選んだ言語の訳が無ければ今の言語だけ）
+      const there = R.I18n.table(to)[key];
+      const text = R.T(key) + (there && there !== R.T(key) ? '\n' + R.I18n.format(there, {}, to) : '');
+      const ok = await S.ask(this, { title: R.I18n.NATIVE[to], text, choices: [R.T('ui.settings.lang.yes'), R.T('ui.settings.lang.no')], cancel: 1, index: 0 });
+      if (ok !== 0) return;
+      R.Settings.set('lang', to);
+      if (inGame && R.Save && R.Save.suspend()) { try { window.sessionStorage.setItem(R.SAVE_PREFIX + 'lang_resume', '1'); } catch (e) { /* 起こし直した後はタイトルから */ } }
+      if (R.Storage && R.Storage.flush) { try { await R.Storage.flush(); } catch (e) { /* 書けなくても起こし直す */ } }
+      R.I18n.restart();
+    },
     async tips() {
       const G = R.Game;
       const ids = Object.keys(R.DB.tips || {}).filter((id) => !G || (G.flags && G.flags['tip_' + id]));
-      if (!ids.length) { await S.note(this, { title: '説明の札', lines: ['まだ見た説明の札はない。'] }); return; }
+      if (!ids.length) { await S.note(this, { title: R.T('ui.settings.tips.title'), lines: [R.T('ui.settings.tips.lines.0')] }); return; }
       for (;;) {
-        const k = await S.ask(this, { title: '説明の札を読み直す', choices: ids.map((id) => R.DB.tips[id].title).concat(['やめる']), cancel: ids.length });
+        const k = await S.ask(this, { title: R.T('ui.settings.tips.k.ask.title'), choices: ids.map((id) => R.DB.tips[id].title).concat([R.T('ui.settings.tips.k.ask.choices.0')]), cancel: ids.length });
         if (k < 0 || k >= ids.length) return;
         await S.tip(ids[k], { force: true });
       }
@@ -109,7 +134,7 @@
     // ---------------------------------------------------------------- 割り当ての表
     openRemap(kind) {
       const rows = (kind === 'kb' ? KB_ROWS : PAD_ROWS).map((b) => ({ value: b, label: ACT_NAMES[b], btn: b }));
-      rows.push({ value: 'reset', label: '既定に戻す', act: 'reset' });
+      rows.push({ value: 'reset', label: R.T('ui.settings.reset.label'), act: 'reset' });
       const list = new R.UIK.List({ rows, rowH: 34 });
       this.rm = { kind, list, col: 0, listen: null, msg: null, cells: [] };
       list.onSelect = (row) => this.remapAct(row);
@@ -123,8 +148,8 @@
       if (row.act === 'reset') {
         this.busy = true;
         let k = -1;
-        try { k = await S.ask(this, { title: '既定に戻す', text: (rm.kind === 'kb' ? 'キーボード' : 'パッド') + 'の割り当てを、はじめの形に戻す。', choices: ['戻す', 'やめる'], cancel: 1, index: 1 }); } finally { this.busy = false; }
-        if (k === 0) { R.Input.resetBinds(rm.kind); R.UIK.sfx('confirm'); this.say('はじめの割り当てに戻した。'); }
+        try { k = await S.ask(this, { title: R.T('ui.settings.remapAct.k.ask.title'), text: R.T('ui.settings.remapAct.k.ask.text', { p0: rm.kind === 'kb' ? R.T('ui.settings.remapAct.k.ask.text_2') : R.T('ui.settings.remapAct.k.ask.text_3') }), choices: R.T('ui.settings.remapAct.k.ask.choices'), cancel: 1, index: 1 }); } finally { this.busy = false; }
+        if (k === 0) { R.Input.resetBinds(rm.kind); R.UIK.sfx('confirm'); this.say(R.T('ui.settings.remapAct.say')); }
         return;
       }
       this.listen(row.btn);
@@ -138,21 +163,21 @@
       R.Input.capture(rm.kind, (e) => {
         if (this.rm !== rm) return;
         rm.listen = null;
-        if (e.cancel) { R.UIK.sfx('cancel'); this.say('やめた。'); return; }
+        if (e.cancel) { R.UIK.sfx('cancel'); this.say(R.T('ui.settings.listen.say')); return; }
         const res = rm.kind === 'kb' ? R.Input.bindKey(btn, slot, e.code) : R.Input.bindPad(btn, e.index);
         const lab = rm.kind === 'kb' ? keyName(e.code) : R.Input.padLabel(e.index);
         if (!res.ok) {
           R.UIK.sfx('buzzer');
-          this.say(res.reason === 'reserved' ? `「${lab}」は割り当てられない。` : res.reason === 'need' ? `「${ACT_NAMES[res.other] || res.other}」には 1 つは要る。` : '割り当てられない。', true);
+          this.say(res.reason === 'reserved' ? R.T('ui.settings.listen.say_2', { lab }) : res.reason === 'need' ? R.T('ui.settings.listen.say_3', { p0: ACT_NAMES[res.other] || res.other }) : R.T('ui.settings.listen.say_4'), true);
           return;
         }
         R.UIK.sfx('confirm');
-        let t = `「${lab}」を「${ACT_NAMES[btn]}」に。`;
+        let t = R.T('ui.settings.listen.t', { lab, p1: ACT_NAMES[btn] });
         const mv = res.moved;
         if (mv && mv.btn !== btn) {
           const old = rm.kind === 'kb' ? mv.code : mv.index >= 0 ? mv.index : null;
           const on = old != null ? (rm.kind === 'kb' ? keyName(old) : R.Input.padLabel(old)) : null;
-          t += on ? `「${ACT_NAMES[mv.btn]}」には「${on}」を回した。` : `「${ACT_NAMES[mv.btn]}」からは外した。`;
+          t += on ? R.T('ui.settings.listen.t_2', { p0: ACT_NAMES[mv.btn], on }) : R.T('ui.settings.listen.t_3', { p0: ACT_NAMES[mv.btn] });
         }
         this.say(t);
       });
@@ -172,8 +197,8 @@
       }
       if (row && row.btn && I.pressed('x')) {
         const res = rm.kind === 'kb' ? R.Input.clearKey(row.btn, rm.col) : R.Input.bindPad(row.btn, -1);
-        if (res.ok) { R.UIK.sfx('cancel'); this.say(`「${ACT_NAMES[row.btn]}」の${rm.kind === 'kb' ? (rm.col ? '2 つ目の' : '1 つ目の') + 'キー' : 'ボタン'}を外した。`); }
-        else { R.UIK.sfx('buzzer'); if (res.reason === 'need') this.say(`「${ACT_NAMES[row.btn]}」には 1 つは要る。`, true); }
+        if (res.ok) { R.UIK.sfx('cancel'); this.say(R.T('ui.settings.remapUpdate.say', { p0: ACT_NAMES[row.btn], p1: rm.kind === 'kb' ? R.T('ui.settings.remapUpdate.say_2', { p0: rm.col ? R.T('ui.settings.remapUpdate.say_3') : R.T('ui.settings.remapUpdate.say_4') }) : R.T('ui.settings.remapUpdate.say_5') })); }
+        else { R.UIK.sfx('buzzer'); if (res.reason === 'need') this.say(R.T('ui.settings.remapUpdate.say_6', { p0: ACT_NAMES[row.btn] }), true); }
         return;
       }
       rm.list.update();
@@ -183,11 +208,11 @@
       const style = R.Input.padStyle();
       const head = u(30);
       const c1 = p.x + p.w * 0.5, c2 = p.x + p.w * 0.75;
-      R.UIK.text(g, rm.kind === 'kb' ? 'キーボードの割り当て' : 'パッドの割り当て', p.x + u(28), p.y + u(12), { size: u(14), weight: 700, color: C.gold, track: u(1.5) });
+      R.UIK.text(g, rm.kind === 'kb' ? R.T('ui.settings.remapDraw.text') : R.T('ui.settings.remapDraw.text_2'), p.x + u(28), p.y + u(12), { size: u(14), weight: 700, color: C.gold, track: u(1.5) });
       if (rm.kind === 'kb') {
-        R.UIK.text(g, '1 つ目', c1, p.y + u(12), { size: u(13), color: C.text3, align: 'center' });
-        R.UIK.text(g, '2 つ目', c2, p.y + u(12), { size: u(13), color: C.text3, align: 'center' });
-      } else R.UIK.text(g, 'ボタン', (c1 + c2) / 2, p.y + u(12), { size: u(13), color: C.text3, align: 'center' });
+        R.UIK.text(g, R.T('ui.settings.remapDraw.text_3'), c1, p.y + u(12), { size: u(13), color: C.text3, align: 'center' });
+        R.UIK.text(g, R.T('ui.settings.remapDraw.text_4'), c2, p.y + u(12), { size: u(13), color: C.text3, align: 'center' });
+      } else R.UIK.text(g, R.T('ui.settings.remapDraw.text_5'), (c1 + c2) / 2, p.y + u(12), { size: u(13), color: C.text3, align: 'center' });
       rm.cells = [];
       rm.list.render = (gg, row, rect, f) => {
         const sz = u(15), cy = rect.y + (rect.h - sz) / 2 - u(1);
@@ -205,7 +230,7 @@
           const L = rm.listen;
           if (L && L.btn === row.btn && L.slot === col) {
             const blink = 0.55 + 0.45 * Math.sin(R.Engine.time / 180);
-            R.UIK.text(gg, rm.kind === 'kb' ? 'キーを押してください' : 'ボタンを押してください', cx, cy, { size: u(13.5), weight: 700, color: `rgba(236,201,124,${blink.toFixed(2)})`, align: 'center', maxW: cw - u(10) });
+            R.UIK.text(gg, rm.kind === 'kb' ? R.T('ui.settings.remapDraw.render.text') : R.T('ui.settings.remapDraw.render.text_2'), cx, cy, { size: u(13.5), weight: 700, color: `rgba(236,201,124,${blink.toFixed(2)})`, align: 'center', maxW: cw - u(10) });
             continue;
           }
           if (rm.kind === 'kb') {
@@ -216,7 +241,7 @@
             R.UIK.glyph(gg, row.btn, cx - gw / 2 + gs * 0.64, mid, { size: gs, kind: 'kb', label: lab });
           } else {
             const idx = B.pad[row.btn];
-            if (!(idx >= 0)) { R.UIK.text(gg, row.btn === 'dash' ? 'なし（戻るを押しながら）' : '—', cx, cy, { size: u(13.5), color: C.text3, align: 'center' }); continue; }
+            if (!(idx >= 0)) { R.UIK.text(gg, row.btn === 'dash' ? R.T('ui.settings.remapDraw.render.text_3') : '—', cx, cy, { size: u(13.5), color: C.text3, align: 'center' }); continue; }
             const gs = u(14), o = { size: gs, kind: 'pad', label: R.Input.padLabel(idx, style), style, index: idx };
             const gw = R.UIK.glyphWidth ? R.UIK.glyphWidth(row.btn, gs, o) : gs * 1.3;
             R.UIK.glyph(gg, row.btn, cx - gw / 2 + gs * 0.64, mid, o);
@@ -242,7 +267,7 @@
     draw(g) {
       const b = S.box(), C = T().color, tall = S.tall();
       const w = Math.min(b.w, u(760)), x = b.x + (tall ? 0 : (b.w - w) / 2);
-      S.heading(g, '設定', x + u(8), b.y + u(6), 0, { size: 15, track: 4 });
+      S.heading(g, R.T('ui.settings.draw.heading'), x + u(8), b.y + u(6), 0, { size: 15, track: 4 });
       // タブ（縦持ちは 2 段になり得るので小さめ）
       this.tabRects = S.tabs(g, TABS.map((t) => t.label), this.tab, x, b.y + u(40), { size: tall ? 13.5 : 15, min: tall ? 60 : 84 });
       const p = { x, y: b.y + u(88), w, h: b.h - u(88) - u(64) };
@@ -251,18 +276,18 @@
         this.remapDraw(g, p);
         const rm = this.rm, dy = p.y + p.h + u(14);
         const m = rm.msg && R.Engine.time - rm.msg.t < 6000 ? rm.msg : null;
-        const text = rm.listen ? (rm.kind === 'kb' ? '割り当てるキーを押す。Esc でやめる。' : '割り当てるボタンを押す。キーボードの Esc でやめる。')
-          : m ? m.text : rm.kind === 'kb' ? 'ぶつかったキーは入れ替わる。Esc と F11 は割り当てられない。' : 'ぶつかったボタンは入れ替わる。十字ボタンとスティックは変えられない。';
+        const text = rm.listen ? (rm.kind === 'kb' ? R.T('ui.settings.draw.text') : R.T('ui.settings.draw.text_2'))
+          : m ? m.text : rm.kind === 'kb' ? R.T('ui.settings.draw.text_3') : R.T('ui.settings.draw.text_4');
         R.UIK.icon(g, 'bulb', x + u(8), dy, u(15), m && m.bad ? C.down : C.teal);
         R.UIK.text(g, text, x + u(30), dy, { size: u(14), color: m && m.bad ? C.down : C.text2, maxW: w - u(30) });
-        if (!rm.listen) S.prompts(g, [{ btn: 'a', label: '変える' }, { btn: 'x', label: '外す' }, { btn: 'b', label: '戻る' }]);
+        if (!rm.listen) S.prompts(g, [{ btn: 'a', label: R.T('ui.settings.draw.0.label') }, { btn: 'x', label: R.T('ui.settings.draw.1.label') }, { btn: 'b', label: R.T('ui.settings.draw.2.label') }]);
         return;
       }
       this.arrows = [];
       this.list.render = (gg, row, rect, f) => {
         const sz = u(15.5), cy = rect.y + (rect.h - sz) / 2 - u(1);
         R.UIK.text(gg, row.name, rect.x + u(18), cy, { size: sz, weight: f ? 700 : 500, color: f ? C.goldHi : C.text, maxW: rect.w * 0.45 });
-        if (row.act) { R.UIK.icon(gg, row.act === 'tips' ? 'book' : 'gear', rect.x + rect.w - u(36), cy, sz, f ? C.gold : C.text2); return; }
+        if (row.act && row.act !== 'lang') { R.UIK.icon(gg, row.act === 'tips' ? 'book' : 'gear', rect.x + rect.w - u(36), cy, sz, f ? C.gold : C.text2); return; }
         const v = R.Settings.get(row.key);
         const vx = rect.x + rect.w * (tall ? 0.72 : 0.7);
         const i = this.list.rows.indexOf(row);
@@ -290,7 +315,7 @@
         R.UIK.icon(g, 'bulb', x + u(8), dy, u(15), C.teal);
         R.UIK.text(g, row.desc || '', x + u(30), dy, { size: u(14), color: C.text2, maxW: w - u(30) });
       }
-      S.prompts(g, [{ btn: 'left', label: '変える' }, { btn: 'l', label: 'タブ' }, { btn: 'b', label: '戻る' }]);
+      S.prompts(g, [{ btn: 'left', label: R.T('ui.settings.draw.0.label') }, { btn: 'l', label: R.T('ui.settings.draw.1.label_2') }, { btn: 'b', label: R.T('ui.settings.draw.2.label') }]);
     },
   });
 })(window.RPG);

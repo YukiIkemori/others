@@ -57,11 +57,11 @@
       ...PS('rock_small', [[21, 5], [6, 11], [31, 13], [16, 12], [11, 21], [24, 26], [28, 21]]),
       ...PS('firefly', [[25, 24], [29, 26], [26, 22]]),
       P('grave', 20, 16), P('log', 9, 21), P('stump', 31, 14), P('bush', 34, 24),
-      K.sign(16, 4, '旅人の古井戸\n底は、思ったより広い。'),
+      K.sign(16, 4, R.T('map.optional_well.objects.sign')),
       K.exam(20, 16, 'well_grave'),
     ];
     K.def('well', {
-      name: '旅人の古井戸', kind: 'dungeon', optional: true, region: 'prologue', location: 'well', theme: 'cave',
+      name: R.T('map.optional_well.well.name'), kind: 'dungeon', optional: true, region: 'prologue', location: 'well', theme: 'cave',
       legend, rows: g, outside: 'wall_cave', objects,
       // 描いた一枚絵（design/ENV_ASSETS.md §8）。隠し通路の先は closed の絵で、見つけるまで岩のまま
       art: { image: 'cave/under/well', closed: 'cave/under/well_closed', emit: 'cave/under/well_emit', painted: ['rock_small@32,10', 'rock_small@6,11', 'rock_small@16,12', 'rock_small@17,13', 'rock_small@31,13', 'stump@31,14', 'log@9,21', 'rock_small@11,21', 'rock_small@28,21', 'bush@34,24', 'rock_small@24,26'] },
@@ -69,7 +69,7 @@
       triggers: [{ id: 'nest', x: 22, y: 21, w: 3, h: 5, on: 'step', event: 'well_nest', once: true }],
       zones: [{ rect: null, zone: 'z_well' }],
       light: { ambient: '#5e5890', k: 0.66, mood: 'cave' }, bgm: 'cave', bbg: 'cave',
-      meta: { chestsInfo: true, floor: '地下', sub: '寄り道' },
+      meta: { chestsInfo: true, floor: R.T('map.optional_well.well.meta.floor'), sub: R.T('map.optional_well.well.meta.sub') },
     });
   });
 })(window.RPG);

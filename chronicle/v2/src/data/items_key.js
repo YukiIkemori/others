@@ -7,38 +7,38 @@
   'use strict';
   const K = (name, desc, o) => Object.assign({ name, slot: 'key', grade: 'normal', tier: 0, price: 0, src: 'key', desc, icon: 'key' }, o || {});
   const FIELD = (effect) => ({ target: 'self', effects: [{ type: effect }], field: true, battle: false });
-  const PAGE = '始まりの年代記から\n破り取られた1枚。';
+  const PAGE = R.T('data.items_key.PAGE');
 
   const KEYS = {
     // 序章（P7・P10）
-    k_chronicle: K('年代記', '語り部の本。集めた伝承が\n章になって記されていく。', { icon: 'book' }),
-    k_quill: K('語り部の羽ペン', '行ったことのある町や\nダンジョンの入口へ一瞬で移動できる。', { icon: 'warp', use: FIELD('warp') }),
-    k_bell: K('帰り道の鈴', 'ダンジョンの中から\n外へ脱出できる。', { icon: 'exit', use: FIELD('escape') }),
-    k_lighthouse_key: K('灯台の鍵', 'ファロス灯台の扉の鍵。'),
-    k_leadbook: K('手がかり帳', '聞いた話を書き留める帳面。\n目印を付けた話は地図に出る。', { icon: 'journal' }),
+    k_chronicle: K(R.T('data.items_key.KEYS.k_chronicle.K'), R.T('data.items_key.KEYS.k_chronicle.K_2'), { icon: 'book' }),
+    k_quill: K(R.T('data.items_key.KEYS.k_quill.K'), R.T('data.items_key.KEYS.k_quill.K_2'), { icon: 'warp', use: FIELD('warp') }),
+    k_bell: K(R.T('data.items_key.KEYS.k_bell.K'), R.T('data.items_key.KEYS.k_bell.K_2'), { icon: 'exit', use: FIELD('escape') }),
+    k_lighthouse_key: K(R.T('data.items_key.KEYS.k_lighthouse_key.K'), R.T('data.items_key.KEYS.k_lighthouse_key.K_2')),
+    k_leadbook: K(R.T('data.items_key.KEYS.k_leadbook.K'), R.T('data.items_key.KEYS.k_leadbook.K_2'), { icon: 'journal' }),
     // 年代記のページ 8（地方の順）
-    k_page_forest: K('森のページ', PAGE, { icon: 'journal' }),
-    k_page_desert: K('砂のページ', PAGE, { icon: 'journal' }),
-    k_page_snow: K('氷のページ', PAGE, { icon: 'journal' }),
-    k_page_marsh: K('霧のページ', PAGE, { icon: 'journal' }),
-    k_page_isles: K('潮のページ', PAGE, { icon: 'journal' }),
-    k_page_mine: K('鉄のページ', PAGE, { icon: 'journal' }),
-    k_page_ash: K('灰のページ', PAGE, { icon: 'journal' }),
-    k_page_star: K('星のページ', PAGE, { icon: 'journal' }),
+    k_page_forest: K(R.T('data.items_key.KEYS.k_page_forest.K'), PAGE, { icon: 'journal' }),
+    k_page_desert: K(R.T('data.items_key.KEYS.k_page_desert.K'), PAGE, { icon: 'journal' }),
+    k_page_snow: K(R.T('data.items_key.KEYS.k_page_snow.K'), PAGE, { icon: 'journal' }),
+    k_page_marsh: K(R.T('data.items_key.KEYS.k_page_marsh.K'), PAGE, { icon: 'journal' }),
+    k_page_isles: K(R.T('data.items_key.KEYS.k_page_isles.K'), PAGE, { icon: 'journal' }),
+    k_page_mine: K(R.T('data.items_key.KEYS.k_page_mine.K'), PAGE, { icon: 'journal' }),
+    k_page_ash: K(R.T('data.items_key.KEYS.k_page_ash.K'), PAGE, { icon: 'journal' }),
+    k_page_star: K(R.T('data.items_key.KEYS.k_page_star.K'), PAGE, { icon: 'journal' }),
     // 森（V2_PLAN §3.3 F2・§3.4）
-    k_pim_hat: K('ピムの帽子', 'ピムがかぶっていた帽子の片方。\n持っていると、森でピムの足あとが光る。', { icon: 'search' }),
-    k_moss_ember: K('光るこけの火種', '千年樹のこけから分けてもらった火種。\n消えた道しるべの灯籠にともせる。', { icon: 'lamp' }),
-    k_fern_herbs: K('薬草の包み', '迷いの森の広場で摘んだ薬草。\nフェルンの薬草園に届ける。', { icon: 'bag' }),
-    k_fern_letters: K('樹上の家への手紙', 'フェルンの樹上の家々に\n届ける手紙の束。', { icon: 'journal' }),
+    k_pim_hat: K(R.T('data.items_key.KEYS.k_pim_hat.K'), R.T('data.items_key.KEYS.k_pim_hat.K_2'), { icon: 'search' }),
+    k_moss_ember: K(R.T('data.items_key.KEYS.k_moss_ember.K'), R.T('data.items_key.KEYS.k_moss_ember.K_2'), { icon: 'lamp' }),
+    k_fern_herbs: K(R.T('data.items_key.KEYS.k_fern_herbs.K'), R.T('data.items_key.KEYS.k_fern_herbs.K_2'), { icon: 'bag' }),
+    k_fern_letters: K(R.T('data.items_key.KEYS.k_fern_letters.K'), R.T('data.items_key.KEYS.k_fern_letters.K_2'), { icon: 'journal' }),
     // ファロス（§3.4）
-    k_ship_parcel: K('造船所の届け物', '造船所の見習いから預かった包み。\nフェルンのきこり頭ゴードへ届ける。', { icon: 'bag' }),
+    k_ship_parcel: K(R.T('data.items_key.KEYS.k_ship_parcel.K'), R.T('data.items_key.KEYS.k_ship_parcel.K_2'), { icon: 'bag' }),
     // 地方の鍵（残り 7 地方。縦切りでは使わないが id は残す）
-    k_winter_flame: K('冬至の火種', 'ユールのかまどでともした火。\n氷をとかす。', { icon: 'fire' }),
-    k_marsh_key: K('鐘の鍵', '鐘沈みの沼の鐘の鎖を\n引くための鍵。'),
-    k_shanty: K('舟歌の貝がら', 'グレン船長の舟歌が\n刻まれた貝がら。'),
-    k_oath_hammer: K('誓いのハンマー', '鍛冶神の誓いが彫られた\n古いハンマー。'),
-    k_star_chart: K('星図', '賢者カペラが星の名を\n書き込んだ星図。', { icon: 'map' }),
-    k_rowell_note: K('ロウェルの手帳', '大書庫の封印を開ける\n言葉が書いてある。', { icon: 'journal' }),
+    k_winter_flame: K(R.T('data.items_key.KEYS.k_winter_flame.K'), R.T('data.items_key.KEYS.k_winter_flame.K_2'), { icon: 'fire' }),
+    k_marsh_key: K(R.T('data.items_key.KEYS.k_marsh_key.K'), R.T('data.items_key.KEYS.k_marsh_key.K_2')),
+    k_shanty: K(R.T('data.items_key.KEYS.k_shanty.K'), R.T('data.items_key.KEYS.k_shanty.K_2')),
+    k_oath_hammer: K(R.T('data.items_key.KEYS.k_oath_hammer.K'), R.T('data.items_key.KEYS.k_oath_hammer.K_2')),
+    k_star_chart: K(R.T('data.items_key.KEYS.k_star_chart.K'), R.T('data.items_key.KEYS.k_star_chart.K_2'), { icon: 'map' }),
+    k_rowell_note: K(R.T('data.items_key.KEYS.k_rowell_note.K'), R.T('data.items_key.KEYS.k_rowell_note.K_2'), { icon: 'journal' }),
   };
 
   const IDS = Object.keys(KEYS);

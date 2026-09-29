@@ -46,14 +46,14 @@
       if (I.pressed('b') || I.pressed('a') || I.pressed('x')) { R.UIK.sfx('cancel'); this.close(undefined); }
     },
     promptList() {
-      const pan = this.view === 'world' && this.pm ? [{ btn: 'l', label: '縮小' }, { btn: 'r', label: '拡大' }] : [];
-      if (!this.town) return pan.concat([{ btn: 'b', label: '戻る' }]);
-      return pan.concat([{ btn: 'y', label: this.view === 'town' ? '世界の地図' : '町の地図' }, { btn: 'b', label: '閉じる' }]);
+      const pan = this.view === 'world' && this.pm ? [{ btn: 'l', label: R.T('ui.map.promptList.pan.0.label') }, { btn: 'r', label: R.T('ui.map.promptList.pan.1.label') }] : [];
+      if (!this.town) return pan.concat([{ btn: 'b', label: R.T('ui.map.promptList.0.label') }]);
+      return pan.concat([{ btn: 'y', label: this.view === 'town' ? R.T('ui.map.promptList.0.label_2') : R.T('ui.map.promptList.0.label_3') }, { btn: 'b', label: R.T('ui.map.promptList.1.label') }]);
     },
     /** 町の地図（R.Field.townmap が描く）: 町の名前・地図・凡例 */
     drawTown(g) {
       const b = S.box(), C = T().color, tall = S.tall(), m = R.DB.maps[this.town];
-      S.heading(g, '町の地図', b.x + u(8), b.y + u(6), 0, { size: 15, track: 4 });
+      S.heading(g, R.T('ui.map.drawTown.heading'), b.x + u(8), b.y + u(6), 0, { size: 15, track: 4 });
       R.UIK.text(g, m.name || m.id, b.x + u(8), b.y + u(26), { size: u(19), weight: 700, color: C.text });
       const lw = tall ? b.w : Math.min(b.w, u(900));
       const lh = R.Field.townmap.legendHeight(m.id, lw);
@@ -97,9 +97,9 @@
       const rec = R.Media.image(WM.image, 'env');
       if (!rec || rec.failed) return false;
       const b = S.box(), C = T().color, G = R.Game || {}, t = R.Engine.time;
-      S.heading(g, '地図', b.x + u(8), b.y + u(6), 0, { size: 15, track: 4 });
+      S.heading(g, R.T('ui.map.drawParchment.heading'), b.x + u(8), b.y + u(6), 0, { size: 15, track: 4 });
       const area = { x: b.x, y: b.y + u(44), w: b.w, h: b.h - u(44) };
-      if (!rec.ready) { R.UIK.text(g, '地図をひろげている……。', area.x + area.w / 2, area.y + area.h / 2, { size: u(18), color: C.text2, align: 'center' }); S.prompts(g, this.promptList()); return true; }
+      if (!rec.ready) { R.UIK.text(g, R.T('ui.map.drawParchment.text'), area.x + area.w / 2, area.y + area.h / 2, { size: u(18), color: C.text2, align: 'center' }); S.prompts(g, this.promptList()); return true; }
       const [IW, IH] = WM.size, fit = Math.min(area.w / IW, area.h / IH);
       // 今いる所
       const pos = (R.Field && R.Field.pos) || G.pos || {};
@@ -218,7 +218,7 @@
       if (this.view === 'town') { this.drawTown(g); return; }
       if (this.drawParchment(g)) return;
       const b = S.box(), C = T().color, tall = S.tall(), G = R.Game || {};
-      S.heading(g, '地図', b.x + u(8), b.y + u(6), 0, { size: 15, track: 4 });
+      S.heading(g, R.T('ui.map.draw.heading'), b.x + u(8), b.y + u(6), 0, { size: 15, track: 4 });
       const w = worldMap();
       if (!this.tried) { this.tried = true; try { this.thumb = R.Terrain && R.Terrain.worldThumb ? R.Terrain.worldThumb(R.Tier ? R.Tier.get() : G.tier) : null; } catch (e) { this.thumb = null; } }
       const area = { x: b.x, y: b.y + u(44), w: b.w, h: b.h - u(44) - u(tall ? 90 : 46) };
@@ -227,15 +227,15 @@
       const pinL = pinned && R.DB.leads ? R.DB.leads[pinned] : null;
       if (!w || !this.thumb) {
         R.UIK.panel(g, area, { frost: true });
-        R.UIK.text(g, 'まだ知らない土地', area.x + area.w / 2, area.y + u(40), { size: u(20), weight: 700, color: C.text2, align: 'center' });
+        R.UIK.text(g, R.T('ui.map.draw.text'), area.x + area.w / 2, area.y + u(40), { size: u(20), weight: 700, color: C.text2, align: 'center' });
         let y = area.y + u(90);
-        S.label(g, '行った場所', area.x + u(30), y); y += u(30);
+        S.label(g, R.T('ui.map.draw.label'), area.x + u(30), y); y += u(30);
         for (const p of places.filter((q) => q.been)) {
           R.UIK.icon(g, p.kind === 'dungeon' ? 'door' : 'inn', area.x + u(30), y, u(16), C.gold);
           R.UIK.text(g, p.name, area.x + u(56), y, { size: u(15), color: C.text }); y += u(28);
         }
         const here = S.placeName();
-        if (here) { R.UIK.icon(g, 'pin', area.x + u(30), y + u(8), u(16), C.teal); R.UIK.text(g, '今いる所：' + here, area.x + u(56), y + u(8), { size: u(15), color: C.teal }); }
+        if (here) { R.UIK.icon(g, 'pin', area.x + u(30), y + u(8), u(16), C.teal); R.UIK.text(g, R.T('ui.map.draw.text_2', { here }), area.x + u(56), y + u(8), { size: u(15), color: C.teal }); }
         S.prompts(g, this.promptList());
         return;
       }
@@ -280,7 +280,7 @@
       // 凡例
       const lg = tall ? { x: b.x, y: dy + dh + u(20), w: b.w, h: u(76) } : { x: b.x, y: area.y + area.h + u(8), w: Math.min(b.w - u(140), u(560)), h: u(36) };
       R.UIK.panel(g, lg, { dense: true });
-      const items = [['diamond', '町'], ['dot', 'ダンジョン'], ['pin', '目印の手がかり'], ['arrow', 'いま']];
+      const items = [['diamond', R.T('ui.map.draw.items.0.1')], ['dot', R.T('ui.map.draw.items.1')], ['pin', R.T('ui.map.draw.items.2.1')], ['arrow', R.T('ui.map.draw.items.3.1')]];
       items.forEach(([kind, lab], i) => {
         const cols = tall ? 2 : 4;
         const x = lg.x + u(18) + (i % cols) * ((lg.w - u(18)) / cols), y = lg.y + (tall ? u(14) : u(10)) + Math.floor(i / cols) * u(26);

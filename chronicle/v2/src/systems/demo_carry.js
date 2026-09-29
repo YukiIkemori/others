@@ -181,7 +181,7 @@
     const t = R.Screens && R.Screens.playTimeJa ? R.Screens.playTimeJa(rec.card && rec.card.playMs) : '';
     let i = 1;
     try {
-      i = await R.UIK.Message.say({ text: '体験版の冒険の記録が\n見つかりました' + (t ? '（' + t + '）' : '') + '。\n引き継いで始めますか？', choices: ['引き継ぐ', '新しく始める'], cancel: 1, face: false });
+      i = await R.UIK.Message.say({ text: R.T('sys.demo_carry.offer.i.say.text', { p0: t ? R.T('sys.demo_carry.offer.i.say.text_2', { t }) : '' }), choices: R.T('sys.demo_carry.offer.i.say.choices'), cancel: 1, face: false });
     } catch (e) { return false; }
     if (i !== 0) return false;
     const how = DC.importRec(rec);

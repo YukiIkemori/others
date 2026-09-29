@@ -76,7 +76,7 @@
    * 戦闘の速さ（2026-09-27 の持ち主の決まり）: 1 つのボタン（R・縦持ちは札のタップ）で 通常 → ＋1 → ＋2 → ＋4 → 通常。
    * 設定 battleSpeed（1 | 2 | 3 | 5）に書くので、次の戦闘も読み込み直した後も同じ速さ。A の押しっぱなしの早送りは無くした（A は決定）。
    */
-  Bt.SPEED_LABEL = { 1: '通常', 2: '＋1', 3: '＋2', 5: '＋4' };
+  Bt.SPEED_LABEL = { 1: R.T('battle.scene.SPEED_LABEL.1'), 2: R.T('battle.scene.SPEED_LABEL.2'), 3: R.T('battle.scene.SPEED_LABEL.3'), 5: R.T('battle.scene.SPEED_LABEL.5') };
   Bt.SPEEDS = SPEEDS;
   /** 札の ▶ の数（通常 1・＋1 2・＋2 3・＋4 4） */
   Bt.speedArrows = (s) => SPEEDS.indexOf(norm(s)) + 1;
@@ -87,7 +87,7 @@
     R.Settings.set('battleSpeed', n);
     try { if (R.Audio.sfx) R.Audio.sfx('cursor'); } catch (e) { /* ignore */ }
     if (current) current.speedFx = R.Engine.time;
-    try { if (R.UIK && R.UIK.toast) R.UIK.toast('戦闘の速さ：' + Bt.speedLabel(n), { anchor: 'bl' }); } catch (e) { /* ignore */ }
+    try { if (R.UIK && R.UIK.toast) R.UIK.toast(R.T('battle.scene.cycleSpeed.toast', { speedLabel: Bt.speedLabel(n) }), { anchor: 'bl' }); } catch (e) { /* ignore */ }
     return n;
   };
 
@@ -233,13 +233,13 @@
       const bu = foes.find((a) => a.boss) || foes[0];
       if (R.Audio.sfx) R.Audio.sfx('roar');
       if (!reduce && R.Settings.get('shake') !== 'off') st.shake = { t0: R.Engine.time, ms: 520, amp: 5 };
-      st.bossCard = { name: bu ? bu.name : '', sub: (st.info.troop && st.info.troop.title) || '強敵', t0: R.Engine.time, ms: 1700 };
+      st.bossCard = { name: bu ? bu.name : '', sub: (st.info.troop && st.info.troop.title) || R.T('battle.scene.intro.bossCard.sub'), t0: R.Engine.time, ms: 1700 };
       await R.until(() => st.dead || R.Engine.time - st.bossCard.t0 >= st.bossCard.ms * (st.speed() > 1 ? 0.6 : 1));
       st.bossCard = null;
     }
     const names = [...new Set(foes.map((a) => a.name))];
-    st.head = { name: names.length ? `${names.slice(0, 3).join('・')}${names.length > 3 ? 'たち' : ''}があらわれた！` : '戦闘', t0: R.Engine.time };
-    if (foes.some((a) => a.golden)) { try { R.Audio.jingle('rare'); } catch (e) { /* ignore */ } st.head.sub = 'めったに出会えない魔物だ！'; }
+    st.head = { name: names.length ? R.T('battle.scene.intro.head.name', { join: names.slice(0, 3).join(R.T('battle.scene.intro.head.name.join')), p1: names.length > 3 ? R.T('battle.scene.intro.head.name_2') : '' }) : R.T('battle.scene.intro.head.name_3'), t0: R.Engine.time };
+    if (foes.some((a) => a.golden)) { try { R.Audio.jingle('rare'); } catch (e) { /* ignore */ } st.head.sub = R.T('battle.scene.intro.sub'); }
     tw(st, st, 'hudIn', 1, 260);
     await st.pwait(boss ? 380 : 520);
     st.hudIn = 1;
@@ -257,16 +257,16 @@
     const live = st.phase === 'input' || st.phase === 'play' || st.phase === 'intro';
     const repeatOn = !!(live && st.B && st.B.repeatOn);
     if (live && !st.L.tall) {
-      if (repeatOn) list = [{ btn: 'l', label: 'でやめる', repeat: true }].concat(list.filter((p) => p.btn !== 'b' && p.btn !== 'l'));
-      else list = list.concat([{ btn: 'l', label: 'リピート' }]);
-      list = list.concat([{ btn: 'r', label: '速さ：' + Bt.speedLabel(speed()) }]);
+      if (repeatOn) list = [{ btn: 'l', label: R.T('battle.scene.prompts.list.0.label'), repeat: true }].concat(list.filter((p) => p.btn !== 'b' && p.btn !== 'l'));
+      else list = list.concat([{ btn: 'l', label: R.T('battle.scene.prompts.list.0.label_2') }]);
+      list = list.concat([{ btn: 'r', label: R.T('battle.scene.prompts.list.0.label_3', { speedLabel: Bt.speedLabel(speed()) }) }]);
     }
     return { list, repeatOn: repeatOn && !st.L.tall };
   };
   /** 「リピート中：」の金の札（案内の [L]でやめる の左） */
   function drawRepeatTag(g, rect) {
     const k = R.uiScale || 1, Kt = _.K, s = 12 * k;
-    const label = 'リピート中：';
+    const label = R.T('battle.scene.drawRepeatTag.label');
     const w = Kt.measure(label, { size: s, weight: 700 }) + 22 * k;
     const x = rect.x - w - 2 * k, y = rect.y + rect.h / 2;
     const pulse = R.Settings.get('reduceMotion') ? 1 : 0.6 + 0.4 * Math.sin(R.Engine.time / 240);
@@ -398,10 +398,10 @@
         // リピートの ON／OFF（L。持ち主 2026-09-28「L でリピートの切り替え」）。命令の窓では今すぐ始め、動いている間は次のラウンドから
         if (I.pressed('l') && st.B && (st.phase === 'input' || st.phase === 'play' || st.phase === 'intro')) {
           const can = (st.partyOpts || []).includes('repeat');
-          if (st.B.repeatOn) { st.B.setRepeat(false); if (R.UIK && R.UIK.toast) R.UIK.toast('リピート：OFF', { anchor: 'bl' }); }
+          if (st.B.repeatOn) { st.B.setRepeat(false); if (R.UIK && R.UIK.toast) R.UIK.toast(R.T('battle.scene.makeScene.battle.update.toast'), { anchor: 'bl' }); }
           else if (can && st.phase === 'input') st.chipTap = 'repeat';
           // 繰り返す命令がまだ無い（最初のラウンド）: ON だけ先に立て、このラウンドの命令を次から繰り返す（持ち主 2026-09-28「最初のターンでも ON に」）
-          else { st.B.setRepeat(true); if (R.UIK && R.UIK.toast) R.UIK.toast(can ? 'リピート：ON（次のラウンドから）' : 'リピート：ON（このラウンドの命令を次から繰り返す）', { anchor: 'bl' }); }
+          else { st.B.setRepeat(true); if (R.UIK && R.UIK.toast) R.UIK.toast(can ? R.T('battle.scene.makeScene.battle.update.toast_2') : R.T('battle.scene.makeScene.battle.update.toast_3'), { anchor: 'bl' }); }
         }
         // 縦持ちの札（タップ）
         const p = I.pointer;
@@ -420,7 +420,7 @@
         // リピート中は B で止める（A6: 止めるまで毎ラウンド続く）
         if (st.phase === 'play' && st.B && st.B.repeatOn && I.pressed('b')) {
           st.B.setRepeat(false);
-          if (R.UIK && R.UIK.toast) R.UIK.toast('リピートを止めた', { anchor: 'bl' });
+          if (R.UIK && R.UIK.toast) R.UIK.toast(R.T('battle.scene.makeScene.battle.update.toast_4'), { anchor: 'bl' });
         }
         repeatWatch(st);
         _.play.tick(st, dt);

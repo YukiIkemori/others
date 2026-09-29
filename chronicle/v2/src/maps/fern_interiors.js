@@ -29,7 +29,7 @@
     }
 
     // ---------------------------------------------------------------- 宿「木漏れ日亭」13×10: 寝台 4 つ・暖炉・右の受付
-    interior('fern_inn', '木漏れ日亭', 13, 10, {
+    interior('fern_inn', R.T('map.fern_interiors.fern_inn'), 13, 10, {
       back: 'inn', carpet: [5, 3, 3, 4],
       objects: FU([
         'B.B.F-.C.JK',
@@ -40,13 +40,13 @@
         '...........',
         'pV........b'], '.w.h..c.w..'),
       npcs: [
-        K.npc('inn_keeper', 'npc_woman_4', 9, 3, { name: '宿のおかみ', dir: 's', talk: 'fern_inn_keeper', pushable: false }),
-        K.npc('inn_guest', 'npc_man_4', 9, 6, { name: '泊まり客', dir: 'w', talk: 'fern_inn_guest', reward: 'lead' }),
+        K.npc('inn_keeper', 'npc_woman_4', 9, 3, { name: R.T('map.fern_interiors.fern_inn.npcs.0.inn_keeper.name'), dir: 's', talk: 'fern_inn_keeper', pushable: false }),
+        K.npc('inn_guest', 'npc_man_4', 9, 6, { name: R.T('map.fern_interiors.fern_inn.npcs.1.inn_guest.name'), dir: 'w', talk: 'fern_inn_guest', reward: 'lead' }),
       ],
     });
 
     // ---------------------------------------------------------------- 道具屋 11×9: 右の台・薬瓶の棚・干した香草
-    interior('fern_shop', 'フェルンの道具屋', 11, 9, {
+    interior('fern_shop', R.T('map.fern_interiors.fern_shop'), 11, 9, {
       back: 'shop', carpet: [3, 4, 3, 3],
       objects: FU([
         'VY.l.O.JO',
@@ -56,12 +56,12 @@
         'x.......P',
         'xk.....pp'], 'h..s..h..'),
       npcs: [
-        K.npc('shop_keeper', 'npc_merchant_3', 8, 3, { name: '道具屋の主人', dir: 's', talk: 'fern_shop_keeper', pushable: false }),
+        K.npc('shop_keeper', 'npc_merchant_3', 8, 3, { name: R.T('map.fern_interiors.fern_shop.npcs.0.shop_keeper.name'), dir: 's', talk: 'fern_shop_keeper', pushable: false }),
       ],
     });
 
     // ---------------------------------------------------------------- リタの歌の家 12×10（歌あわせ）: まん中に歌い石、本棚と書き物机
-    interior('fern_rita', 'リタの歌の家', 12, 10, {
+    interior('fern_rita', R.T('map.fern_interiors.fern_rita'), 12, 10, {
       back: 'rita', carpet: [4, 4, 5, 3], wall: 'wall_bark', floor: 'wood_floor',
       objects: FU([
         'SS.P...P.B',
@@ -75,14 +75,14 @@
         K.chest('fern_rita_c1', 10, 8, { item: 'i_potion', n: 1 }),
       ]),
       npcs: [
-        K.npc('rita', 'npc_rita', 4, 5, { name: 'リタ', title: '歌い手', dir: 's', talk: 'fern_rita', reward: 'lead' }),
-        K.npc('rita_pupil', 'npc_child_3', 8, 5, { name: 'リタの弟子', dir: 'w', talk: 'fern_song_game', reward: 'side' }),
+        K.npc('rita', 'npc_rita', 4, 5, { name: R.T('map.fern_interiors.fern_rita.npcs.0.rita.name'), title: R.T('map.fern_interiors.fern_rita.npcs.0.rita.title'), dir: 's', talk: 'fern_rita', reward: 'lead' }),
+        K.npc('rita_pupil', 'npc_child_3', 8, 5, { name: R.T('map.fern_interiors.fern_rita.npcs.1.rita_pupil.name'), dir: 'w', talk: 'fern_song_game', reward: 'side' }),
       ],
       light: { ambient: '#80729c' },   // 夜の環境光の倍率を上げた分（RENDER ambientGain）だけ下げた。宝箱が床に溶けないように（check_chests）
     });
 
     // ---------------------------------------------------------------- 捜索隊の詰所 12×9: 地図の卓・掲示・武器と盾の棚
-    interior('fern_search', '捜索隊の詰所', 12, 9, {
+    interior('fern_search', R.T('map.fern_interiors.fern_search'), 12, 9, {
       back: 'search', floor: 'wood_floor', wall: 'wall_wood',
       objects: FU([
         '.q..C.WZ-b',
@@ -92,13 +92,13 @@
         'k.....g...',
         'kb.......l'], '..m..t....').concat([K.exam(2, 3, 'fern_search_map')]),
       npcs: [
-        K.npc('search_chief', 'npc_guard_1', 6, 3, { name: '捜索隊の頭', dir: 's', talk: 'fern_search_chief', reward: 'hint' }),
-        K.npc('search_b', 'npc_woodcutter_4', 9, 6, { name: '捜索隊の若者', dir: 'w', talk: [L('ゴードの親方が足をくじいてな。\nおれたちだけじゃ、\n森の奥までは行けねえ。'), L('forest_found_ben', 'ベンが見つかったって？\n……よかった。本当によかった。'), L('cleared_r_forest', '詰所も今夜でおしまいだ。\n今度は祭りの支度だな！')], reward: 'news' }),
+        K.npc('search_chief', 'npc_guard_1', 6, 3, { name: R.T('map.fern_interiors.fern_search.npcs.0.search_chief.name'), dir: 's', talk: 'fern_search_chief', reward: 'hint' }),
+        K.npc('search_b', 'npc_woodcutter_4', 9, 6, { name: R.T('map.fern_interiors.fern_search.npcs.1.search_b.name'), dir: 'w', talk: [L(R.T('map.fern_interiors.fern_search.talk.0.L')), L('forest_found_ben', R.T('map.fern_interiors.fern_search.talk.1.forest_found_ben')), L('cleared_r_forest', R.T('map.fern_interiors.fern_search.talk.2.cleared_r_forest'))], reward: 'news' }),
       ],
     });
 
     // ---------------------------------------------------------------- きこり頭ゴードの家 10×8: 大きな寝台・暖炉・斧の棚・薪
-    interior('fern_gord', 'ゴードの家', 10, 8, {
+    interior('fern_gord', R.T('map.fern_interiors.fern_gord'), 10, 8, {
       back: 'gord', floor: 'wood_floor', wall: 'wall_wood', carpet: [3, 3, 4, 2],
       objects: FU([
         'D-.F-.W.',
@@ -107,12 +107,12 @@
         's.....xb',
         'k.....bb'], '..a....o'),
       npcs: [
-        K.npc('gord', 'npc_gord', 5, 4, { name: 'ゴード', title: 'きこり頭', dir: 's', talk: 'fern_gord', reward: 'lead', pushable: false }),
+        K.npc('gord', 'npc_gord', 5, 4, { name: R.T('map.fern_interiors.fern_gord.npcs.0.gord.name'), title: R.T('map.fern_interiors.fern_gord.npcs.0.gord.title'), dir: 's', talk: 'fern_gord', reward: 'lead', pushable: false }),
       ],
     });
 
     // ---------------------------------------------------------------- ピムの家（母カトリ）10×8: ピムの寝台・かまど・糸車
-    interior('fern_pim_home', 'ピムの家', 10, 8, {
+    interior('fern_pim_home', R.T('map.fern_interiors.fern_pim_home'), 10, 8, {
       back: 'pim_home', floor: 'wood_floor', wall: 'wall_wood', carpet: [3, 3, 4, 2],
       objects: FU([
         'B.p.H.JB',
@@ -121,7 +121,7 @@
         'S.......',
         'Vk....lP'], '.w.h.w..').concat([K.exam(1, 3, 'fern_pim_bed')]),
       npcs: [
-        K.npc('katri', 'npc_pim_mother', 6, 4, { name: 'カトリ', title: 'ピムの母', dir: 's', talk: 'fern_pim_mother', reward: 'lead', pushable: false }),
+        K.npc('katri', 'npc_pim_mother', 6, 4, { name: R.T('map.fern_interiors.fern_pim_home.npcs.0.katri.name'), title: R.T('map.fern_interiors.fern_pim_home.npcs.0.katri.title'), dir: 's', talk: 'fern_pim_mother', reward: 'lead', pushable: false }),
       ],
     });
   });

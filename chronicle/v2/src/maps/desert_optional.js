@@ -32,22 +32,22 @@
       for (const [x, y] of [[7, 19], [12, 19], [23, 19], [28, 19]]) O.push(K.prop('desert_stall', x, y));
       for (const [x, y] of [[16, 23], [20, 23]]) O.push(K.prop('lantern', x, y));
       const N = [
-        K.npc('m_seller_a', 'npc_desert_old_f', 8, 10, { name: '陽炎の売り手', title: '一品物', dir: 's', talk: 'desert_mirage_seller', pushable: false, reward: 'item' }),
-        K.npc('m_seller_b', 'npc_desert_man', 24, 10, { name: '砂うたの売り手', title: '一品物', dir: 's', talk: 'desert_mirage_seller', pushable: false, reward: 'item' }),
-        K.npc('m_seller_c', 'npc_merchant_2', 13, 14, { name: '幻の灯の売り手', title: '一品物', dir: 'n', talk: 'desert_mirage_seller', pushable: false, reward: 'item' }),
-        K.npc('m_old', 'npc_desert_old_m', 22, 13, { name: '市の古老', dir: 'w', talk: 'desert_mirage_elder', reward: 'news' }),
-        K.npc('m_child', 'npc_desert_child', 15, 18, { name: '砂色の子', dir: 'n', talk: 'desert_mirage_child', reward: 'news' }),
-        K.npc('m_dancer', 'npc_desert_woman', 27, 13, { name: '揺れる踊り子', dir: 'w', talk: 'desert_mirage_dancer', reward: 'news' }),
-        K.npc('m_camel', 'ani_camel', 30, 15, { name: 'ラクダの影', dir: 'w', talk: [L('ラクダの影は、手をのばすと\n砂の粒になって揺れた。')], reward: null }),
+        K.npc('m_seller_a', 'npc_desert_old_f', 8, 10, { name: R.T('map.desert_optional.N.0.m_seller_a.name'), title: R.T('map.desert_optional.N.0.m_seller_a.title'), dir: 's', talk: 'desert_mirage_seller', pushable: false, reward: 'item' }),
+        K.npc('m_seller_b', 'npc_desert_man', 24, 10, { name: R.T('map.desert_optional.N.1.m_seller_b.name'), title: R.T('map.desert_optional.N.1.m_seller_b.title'), dir: 's', talk: 'desert_mirage_seller', pushable: false, reward: 'item' }),
+        K.npc('m_seller_c', 'npc_merchant_2', 13, 14, { name: R.T('map.desert_optional.N.2.m_seller_c.name'), title: R.T('map.desert_optional.N.2.m_seller_c.title'), dir: 'n', talk: 'desert_mirage_seller', pushable: false, reward: 'item' }),
+        K.npc('m_old', 'npc_desert_old_m', 22, 13, { name: R.T('map.desert_optional.N.3.m_old.name'), dir: 'w', talk: 'desert_mirage_elder', reward: 'news' }),
+        K.npc('m_child', 'npc_desert_child', 15, 18, { name: R.T('map.desert_optional.N.4.m_child.name'), dir: 'n', talk: 'desert_mirage_child', reward: 'news' }),
+        K.npc('m_dancer', 'npc_desert_woman', 27, 13, { name: R.T('map.desert_optional.N.5.m_dancer.name'), dir: 'w', talk: 'desert_mirage_dancer', reward: 'news' }),
+        K.npc('m_camel', 'ani_camel', 30, 15, { name: R.T('map.desert_optional.N.6.m_camel.name'), dir: 'w', talk: [L(R.T('map.desert_optional.N.talk.0.L'))], reward: null }),
       ];
       K.def('desert_mirage', {
-        name: 'しんきろうの市', kind: 'town', optional: true, region: 'r_desert', location: 'mirage', theme: 'desert',
+        name: R.T('map.desert_optional.desert_mirage.name'), kind: 'town', optional: true, region: 'r_desert', location: 'mirage', theme: 'desert',
         legend: DK.LEGEND(), rows: g, outside: 'dune_sand', objects: O, npcs: N,
         spawns: { road: { x: 18, y: 23, dir: 'n' } },
         exits: [{ x: 17, y: 25, w: 3, h: 1, to: { map: 'world', spawn: 'mirage' } }],
         triggers: [{ id: 'arrive', on: 'enter', event: 'desert_mirage_arrive' }],
         zones: [], light: { ambient: '#4c4a90', k: 0.45, poolK: 1.15, spillR: 1.3, mood: 'town_night' }, dark: false, bgm: 'desert', bbg: 'desert',
-        meta: { sub: '消灯の刻の市', chestsInfo: false },
+        meta: { sub: R.T('map.desert_optional.desert_mirage.meta.sub'), chestsInfo: false },
       });
     }
 
@@ -61,20 +61,20 @@
       K.rect(g, 16, 24, 3, 4, 'd');
       const O = [];
       O.push(K.chest('desert_rocks_c1', 22, 6, { pool: 'p_T' }), K.chest('desert_rocks_c2', 5, 19, { item: 'i_stone_earth', n: 3 }), K.chest('desert_rocks_c3', 29, 19, { pool: 'p_rare' }));
-      O.push(K.sign(19, 24, '金剛トカゲの岩場\n――岩が動いても、驚かぬこと。'));
+      O.push(K.sign(19, 24, R.T('map.desert_optional.sign')));
       O.push(K.exam(12, 21, 'desert_rocks_scales'));
       // 小物は岩壁の際にだけ（道と入口は空ける。岩・砂の起伏は下絵に描いてある）
       deco(O, [['bones', 20, 6], ['cactus', 28, 13], ['thorn_bush', 30, 16], ['bones', 26, 22]]);
-      const N = [K.npc('watcher', 'npc_naturalist', 18, 20, { name: 'トカゲ見の学者', dir: 'n', talk: 'desert_rocks_watcher', reward: 'hint' })];
+      const N = [K.npc('watcher', 'npc_naturalist', 18, 20, { name: R.T('map.desert_optional.N.0.watcher.name'), dir: 'n', talk: 'desert_rocks_watcher', reward: 'hint' })];
       K.def('desert_rocks', {
-        name: '金剛トカゲの岩場', kind: 'dungeon', optional: true, region: 'r_desert', location: 'rocks', theme: 'desert',
+        name: R.T('map.desert_optional.desert_rocks.name'), kind: 'dungeon', optional: true, region: 'r_desert', location: 'rocks', theme: 'desert',
         legend: DK.LEGEND(), rows: g, outside: 'rock', objects: O, npcs: N,
         spawns: { mouth: { x: 17, y: 25, dir: 'n' } },
         exits: [{ x: 16, y: 27, w: 3, h: 1, to: { map: 'world', spawn: 'rocks' } }],
         triggers: [], zones: [{ rect: null, zone: 'z_desert_rocks' }],
         light: DK.LIGHT_OUT, dark: false, bgm: 'desert', bbg: 'desert',
         art: { image: 'desert/under/rocks', painted: [] },   // 1 枚の下絵（_tools/under/desert2）
-        meta: { chestsInfo: true, sub: 'レア魔物の巣' },
+        meta: { chestsInfo: true, sub: R.T('map.desert_optional.desert_rocks.meta.sub') },
       });
     }
 
@@ -94,14 +94,14 @@
       O.push(K.prop('broken_pillar', 17, 9), K.exam(11, 11, 'desert_oldcamp_notes'), K.prop('cart_barrels', 7, 16), K.prop('clay_jars', 22, 13));
       O.push(K.prop('thorn_bush', 3, 11), K.prop('bones', 8, 7));
       K.def('desert_oldcamp', {
-        name: '古い野営跡', kind: 'dungeon', optional: true, region: 'r_desert', location: 'camp2', theme: 'desert',
+        name: R.T('map.desert_optional.desert_oldcamp.name'), kind: 'dungeon', optional: true, region: 'r_desert', location: 'camp2', theme: 'desert',
         legend: DK.LEGEND(), rows: g, outside: 'dune_sand', objects: O, npcs: [],
         spawns: { road: { x: 25, y: 10, dir: 'w' } },
         exits: [{ x: 27, y: 10, w: 1, h: 2, to: { map: 'world', spawn: 'oldcamp' } }],
         triggers: [{ id: 'arrive', on: 'enter', event: 'desert_oldcamp_arrive', once: true }],
         zones: [], light: DK.LIGHT_OUT, dark: false, bgm: 'caravan', bbg: 'desert',
         art: { image: 'desert/under/oldcamp', painted: [] },   // 1 枚の下絵（_tools/under/desert2）
-        meta: { chestsInfo: true, sub: '砂嵐の岩陰' },
+        meta: { chestsInfo: true, sub: R.T('map.desert_optional.desert_oldcamp.meta.sub') },
       });
     }
 
@@ -110,14 +110,14 @@
       const { g, door } = K.room(16, 12, {});
       K.rect(g, 2, 6, 4, 3, 'c');
       K.def('desert_wellroom', {
-        name: '古い井戸の小屋', kind: 'interior', optional: true, region: 'r_desert', location: 'camp2',
+        name: R.T('map.desert_optional.desert_wellroom.name'), kind: 'interior', optional: true, region: 'r_desert', location: 'camp2',
         legend: K.ROOM_LEGEND('wall_sandstone', 'sandstone_floor'), rows: g, outside: 'wall_sandstone',
         objects: [
           K.spring('desert_wellroom_s1', 10, 4),
           K.prop('bed', 1, 2), K.prop('table', 5, 4), K.prop('stool', 4, 4), K.prop('clay_jars', 14, 2), K.prop('wash_tub', 14, 7), K.prop('lantern', 7, 2), K.prop('sack', 1, 9),
           K.exam(13, 2, 'desert_wellroom_journal'),
         ],
-        npcs: [K.npc('wellkeeper', 'npc_desert_old_f', 6, 6, { name: '井戸守りのばあさま', dir: 's', talk: 'desert_wellroom_keeper', reward: 'news' })],
+        npcs: [K.npc('wellkeeper', 'npc_desert_old_f', 6, 6, { name: R.T('map.desert_optional.desert_wellroom.npcs.0.wellkeeper.name'), dir: 's', talk: 'desert_wellroom_keeper', reward: 'news' })],
         spawns: { road: { x: door.x, y: 10, dir: 'n' } },
         exits: [{ x: door.x, y: 11, w: 1, h: 1, to: { map: 'world', spawn: 'wellroom' } }],
         triggers: [], light: DK.LIGHT_ROOM, bgm: 'caravan', meta: { minimap: false },

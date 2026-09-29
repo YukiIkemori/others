@@ -11,34 +11,34 @@
   const ALL_FOUND = ['forest_found_hans', 'forest_found_ben', 'forest_found_roy', 'forest_found_pim'];
   R.defs('goals', {
     // ---------------------------------------------------------------- 序章（ロア → ファロス → 灯台）
-    g_berna: { n: 10, at: true, text: '師匠ベルナと話そう' },
-    g_pharos: { n: 20, at: 'prologue_berna', text: '里を出て、南東の港町ファロスへ向かおう' },
+    g_berna: { n: 10, at: true, text: R.T('goals.g_berna.text') },
+    g_pharos: { n: 20, at: 'prologue_berna', text: R.T('goals.g_pharos.text') },
     g_tavern: { n: 30, at: 'prologue_pharos', text: [
-      { when: '!prologue_berna', text: 'ロアの里の師匠ベルナと話そう' },
-      { text: 'ファロスの酒場「潮風亭」で、旅の仲間を探そう' },
+      { when: '!prologue_berna', text: R.T('goals.g_tavern.text.0.text') },
+      { text: R.T('goals.g_tavern.text.1.text') },
     ] },
-    g_otto: { n: 40, at: 'prologue_party', text: '港にいる灯台守オットーを訪ねよう' },
-    g_lighthouse: { n: 50, at: 'prologue_key', text: '町の南、岬の先のファロス灯台へ向かおう' },
-    g_climb: { n: 60, at: 'prologue_tutorial', text: '灯台を上って、てっぺんの灯室を目指そう' },
-    g_return: { n: 70, at: 'prologue_boss', text: 'ファロスの町へ戻ろう' },
+    g_otto: { n: 40, at: 'prologue_party', text: R.T('goals.g_otto.text') },
+    g_lighthouse: { n: 50, at: 'prologue_key', text: R.T('goals.g_lighthouse.text') },
+    g_climb: { n: 60, at: 'prologue_tutorial', text: R.T('goals.g_climb.text') },
+    g_return: { n: 70, at: 'prologue_boss', text: R.T('goals.g_return.text') },
     // ---------------------------------------------------------------- 旅立ち（うわさ → 森）
-    g_rumors: { n: 80, at: 'prologue_done', lead: 'l_main_rumors', text: '潮風亭で、うわさを聞いてみよう' },
-    g_fern: { n: 90, at: { lead: 'l_rumor_forest' }, lead: 'l_rumor_forest', text: '西の森の村フェルンへ向かおう' },
+    g_rumors: { n: 80, at: 'prologue_done', lead: 'l_main_rumors', text: R.T('goals.g_rumors.text') },
+    g_fern: { n: 90, at: { lead: 'l_rumor_forest' }, lead: 'l_rumor_forest', text: R.T('goals.g_fern.text') },
     g_gord: { n: 100, at: 'forest_start', lead: 'l_forest_board', text: [
-      { when: { any: ['forest_board', { lead: 'l_forest_board' }] }, text: 'フェルンのきこり頭ゴードの家を訪ねよう' },
-      { text: 'フェルンの広場の掲示板を見てみよう' },
+      { when: { any: ['forest_board', { lead: 'l_forest_board' }] }, text: R.T('goals.g_gord.text.0.text') },
+      { text: R.T('goals.g_gord.text.1.text') },
     ] },
     g_search: { n: 110, at: 'forest_gord_talked', lead: 'l_forest_woodcutters', text: [
-      { when: { not: { any: ['forest_found_pim', { lead: 'l_forest_pim' }] } }, text: 'ゴードの女房カトリに、息子のことを聞こう' },
-      { text: `迷いの森で、行方知れずの四人を探そう（{flags:${FOUR}}/4 人）` },
+      { when: { not: { any: ['forest_found_pim', { lead: 'l_forest_pim' }] } }, text: R.T('goals.g_search.text.0.text') },
+      { text: R.T('goals.g_search.text.1.text', { FOUR }) },
     ] },
-    g_song: { n: 120, at: ALL_FOUND, lead: 'l_forest_song', text: '迷いの森の歌の石を探そう（{var:forest_verses}/3）' },
-    g_elder: { n: 130, at: ALL_FOUND.concat([{ var: 'forest_verses', gte: 3 }]), text: '森の奥、千年樹のもとへ向かおう' },
-    g_rest: { n: 140, at: 'cleared_r_forest', text: '村か里に戻って、ひと休みしよう' },
+    g_song: { n: 120, at: ALL_FOUND, lead: 'l_forest_song', text: R.T('goals.g_song.text') },
+    g_elder: { n: 130, at: ALL_FOUND.concat([{ var: 'forest_verses', gte: 3 }]), text: R.T('goals.g_elder.text') },
+    g_rest: { n: 140, at: 'cleared_r_forest', text: R.T('goals.g_rest.text') },
     // ---------------------------------------------------------------- 体験版の終わりのあと（製品版は次のうわさへ）
     g_free: { n: 150, at: { any: ['story_t1', 'world_demo_end'] }, text: [
-      { when: { slice: true }, text: '体験版はここまで。森と半島の依頼や寄り道をどうぞ' },
-      { text: '潮風亭で、次のうわさを聞いてみよう' },
+      { when: { slice: true }, text: R.T('goals.g_free.text.0.text') },
+      { text: R.T('goals.g_free.text.1.text') },
     ] },
   });
 })(window.RPG);

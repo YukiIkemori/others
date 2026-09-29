@@ -4,9 +4,9 @@
 (function (R) {
   'use strict';
   R.defs('items', {
-  ac_st_rooteater: { name: '千年樹の若芽', slot: 'acc', grade: 'super', tier: 5, src: 'steal', stealOnly: true, mods: { regen: 1, hpPct: 10 }, abil: { mnd: 1 }, icon: 'ring' },
+  ac_st_rooteater: { name: R.T('items.ac_st_rooteater.name'), slot: 'acc', grade: 'super', tier: 5, src: 'steal', stealOnly: true, mods: { regen: 1, hpPct: 10 }, abil: { mnd: 1 }, icon: 'ring' },
   ac_st_sandking: {
-    name: '名を返した王の指輪',
+    name: R.T('items.ac_st_sandking.name'),
     slot: 'acc',
     grade: 'super',
     tier: 5,
@@ -17,7 +17,7 @@
     icon: 'ring',
   },
   ac_st_whitedragon: {
-    name: '白竜の逆うろこ',
+    name: R.T('items.ac_st_whitedragon.name'),
     slot: 'acc',
     grade: 'super',
     tier: 5,
@@ -28,7 +28,7 @@
     icon: 'ring',
   },
   ac_st_mistbeast: {
-    name: '霧の核',
+    name: R.T('items.ac_st_mistbeast.name'),
     slot: 'acc',
     grade: 'super',
     tier: 5,
@@ -39,7 +39,7 @@
     icon: 'ring',
   },
   ac_st_captain: {
-    name: '船長の羅針盤',
+    name: R.T('items.ac_st_captain.name'),
     slot: 'acc',
     grade: 'super',
     tier: 5,
@@ -50,7 +50,7 @@
     icon: 'ring',
   },
   hn_st_ironwarden: {
-    name: '番人の鍵束',
+    name: R.T('items.hn_st_ironwarden.name'),
     slot: 'hands',
     grade: 'super',
     tier: 5,
@@ -61,7 +61,7 @@
     icon: 'glove',
   },
   ac_st_lavabeast: {
-    name: '溶岩の心臓',
+    name: R.T('items.ac_st_lavabeast.name'),
     slot: 'acc',
     grade: 'super',
     tier: 5,
@@ -72,7 +72,7 @@
     icon: 'ring',
   },
   ac_st_stareater: {
-    name: '星のしずく',
+    name: R.T('items.ac_st_stareater.name'),
     slot: 'acc',
     grade: 'super',
     tier: 5,
@@ -83,7 +83,7 @@
     icon: 'ring',
   },
   ac_st_rowell: {
-    name: '記録院の金筆',
+    name: R.T('items.ac_st_rowell.name'),
     slot: 'acc',
     grade: 'super',
     tier: 6,
@@ -94,7 +94,7 @@
     icon: 'ring',
   },
   ac_st_lazaro: {
-    name: '大書記のしおり',
+    name: R.T('items.ac_st_lazaro.name'),
     slot: 'acc',
     grade: 'super',
     tier: 8,
@@ -105,7 +105,7 @@
     icon: 'ring',
   },
   ac_st_shade_star: {
-    name: '杖の勇者の指輪',
+    name: R.T('items.ac_st_shade_star.name'),
     slot: 'acc',
     grade: 'super',
     tier: 8,
@@ -116,7 +116,7 @@
     icon: 'ring',
   },
   bd_st_ouroboros: {
-    name: '円環竜の逆うろこ鎧',
+    name: R.T('items.bd_st_ouroboros.name'),
     slot: 'body',
     grade: 'super',
     tier: 9,
@@ -128,7 +128,7 @@
     icon: 'armor',
   },
   ft_st_jewel_hare: {
-    name: '宝石ウサギの靴',
+    name: R.T('items.ft_st_jewel_hare.name'),
     slot: 'feet',
     grade: 'super',
     tier: 3,
@@ -139,7 +139,7 @@
     icon: 'boots',
   },
   hn_st_gold_idol: {
-    name: '黄金の手袋',
+    name: R.T('items.hn_st_gold_idol.name'),
     slot: 'hands',
     grade: 'super',
     tier: 3,
@@ -150,7 +150,7 @@
     icon: 'glove',
   },
   sh_st_treasure_crab: {
-    name: 'ヤドカリの宝殻',
+    name: R.T('items.sh_st_treasure_crab.name'),
     slot: 'shield',
     grade: 'super',
     tier: 3,
@@ -161,7 +161,7 @@
     icon: 'shield',
   },
   bd_st_star_whale: {
-    name: '星くじらの衣',
+    name: R.T('items.bd_st_star_whale.name'),
     slot: 'body',
     grade: 'super',
     tier: 3,
@@ -173,7 +173,7 @@
     icon: 'armor',
   },
   ft_st_clock_bird: {
-    name: 'ぜんまいの靴',
+    name: R.T('items.ft_st_clock_bird.name'),
     slot: 'feet',
     grade: 'super',
     tier: 3,
@@ -184,7 +184,7 @@
     icon: 'boots',
   },
   ac_st_ghost_teapot: {
-    name: '幽霊の茶さじ',
+    name: R.T('items.ac_st_ghost_teapot.name'),
     slot: 'acc',
     grade: 'super',
     tier: 3,
@@ -195,7 +195,7 @@
     icon: 'ring',
   },
   sh_st_volcano_turtle: {
-    name: '火山ガメの大甲',
+    name: R.T('items.sh_st_volcano_turtle.name'),
     slot: 'shield',
     grade: 'super',
     tier: 3,
@@ -206,7 +206,7 @@
     icon: 'shield',
   },
   w_staff_st_prisma: {
-    name: '虹のかけらの杖',
+    name: R.T('items.w_staff_st_prisma.name'),
     slot: 'weapon',
     grade: 'super',
     tier: 3,
@@ -218,7 +218,7 @@
     icon: 'staff',
   },
   sh_st_bookworm: {
-    name: '虫食いの魔導書',
+    name: R.T('items.sh_st_bookworm.name'),
     slot: 'shield',
     grade: 'super',
     tier: 8,
@@ -229,7 +229,7 @@
     icon: 'shield',
   },
   ac_st_dream_tapir: {
-    name: '夢食いの角笛',
+    name: R.T('items.ac_st_dream_tapir.name'),
     slot: 'acc',
     grade: 'super',
     tier: 9,
@@ -240,7 +240,7 @@
     icon: 'ring',
   },
   ac_st_thief_gull: {
-    name: '盗人カモメの羽',
+    name: R.T('items.ac_st_thief_gull.name'),
     slot: 'acc',
     grade: 'super',
     tier: 4,
@@ -251,7 +251,7 @@
     icon: 'ring',
   },
   ac_st_rat_boss: {
-    name: '頭領の合い鍵',
+    name: R.T('items.ac_st_rat_boss.name'),
     slot: 'acc',
     grade: 'super',
     tier: 6,
@@ -262,7 +262,7 @@
     icon: 'ring',
   },
   ac_st_abyss_gem: {
-    name: '奈落の底の宝石',
+    name: R.T('items.ac_st_abyss_gem.name'),
     slot: 'acc',
     grade: 'super',
     tier: 6,
@@ -273,7 +273,7 @@
     icon: 'ring',
   },
   hd_st_fairy_queen: {
-    name: '妖精姫の髪飾り',
+    name: R.T('items.hd_st_fairy_queen.name'),
     slot: 'head',
     grade: 'super',
     tier: 6,
@@ -284,7 +284,7 @@
     icon: 'helm',
   },
   ac_st_lady_fan: {
-    name: '貴婦人の扇',
+    name: R.T('items.ac_st_lady_fan.name'),
     slot: 'acc',
     grade: 'super',
     tier: 6,
@@ -295,7 +295,7 @@
     icon: 'ring',
   },
   w_greatsword_st_stoneaxe: {
-    name: '族長の石斧',
+    name: R.T('items.w_greatsword_st_stoneaxe.name'),
     slot: 'weapon',
     grade: 'super',
     tier: 6,
@@ -309,7 +309,7 @@
     icon: 'greatsword',
   },
   bd_st_royal_linen: {
-    name: '王家の聖布',
+    name: R.T('items.bd_st_royal_linen.name'),
     slot: 'body',
     grade: 'super',
     tier: 8,
@@ -321,7 +321,7 @@
     icon: 'armor',
   },
   w_dagger_st_wolfking: {
-    name: '氷牙の王爪',
+    name: R.T('items.w_dagger_st_wolfking.name'),
     slot: 'weapon',
     grade: 'super',
     tier: 8,
@@ -334,7 +334,7 @@
     icon: 'dagger',
   },
   ac_st_admiral: {
-    name: '提督の遠眼鏡',
+    name: R.T('items.ac_st_admiral.name'),
     slot: 'acc',
     grade: 'super',
     tier: 8,
@@ -345,7 +345,7 @@
     icon: 'ring',
   },
   hd_st_goblin_king: {
-    name: '小鬼王の冠',
+    name: R.T('items.hd_st_goblin_king.name'),
     slot: 'head',
     grade: 'super',
     tier: 8,
@@ -356,7 +356,7 @@
     icon: 'helm',
   },
   w_staff_st_strategist: {
-    name: '軍師の采配',
+    name: R.T('items.w_staff_st_strategist.name'),
     slot: 'weapon',
     grade: 'super',
     tier: 8,
@@ -368,7 +368,7 @@
     icon: 'staff',
   },
   ac_st_heaven_eye: {
-    name: '天の瞳',
+    name: R.T('items.ac_st_heaven_eye.name'),
     slot: 'acc',
     grade: 'super',
     tier: 8,
@@ -379,7 +379,7 @@
     icon: 'ring',
   },
   ac_st_librarian: {
-    name: '司書長の眼鏡',
+    name: R.T('items.ac_st_librarian.name'),
     slot: 'acc',
     grade: 'super',
     tier: 8,
@@ -390,7 +390,7 @@
     icon: 'ring',
   },
   ac_st_demon_heart: {
-    name: '魔神の心臓',
+    name: R.T('items.ac_st_demon_heart.name'),
     slot: 'acc',
     grade: 'super',
     tier: 9,
@@ -402,13 +402,13 @@
   },
   // 縦切りの盗み専用 7（BATTLE、2026-09-27。オーナー「レアがめっきり減ったねえ……」）: 縦切りの 11 系統の段 1〜2 の約 3 分の 1 に drops.steal（率 32）。
   // T2（縦切りのレアの帯 T1 の 1 つ上）。効果はどれも今ある mods の組み合わせ
-  ac_st_rat_pouch: { name: '野ネズミの隠し袋', slot: 'acc', grade: 'super', tier: 2, src: 'steal', stealOnly: true, mods: { goldPct: 15 }, abil: { agi: 1 }   /* ドロップ率アップは中盤以降（持ち主 2026-09-27） */, icon: 'ring' },
-  hd_st_beach_crab: { name: '浜ガニの甲の兜', slot: 'head', grade: 'super', tier: 2, src: 'steal', stealOnly: true, weight: 'heavy', mods: { def: 4, elemResist: { water: 0.5 } }, icon: 'helm' },
-  ft_st_storm_gull: { name: '嵐カモメの羽靴', slot: 'feet', grade: 'super', tier: 2, src: 'steal', stealOnly: true, weight: 'light', mods: { spd: 10, eva: 5 }, icon: 'boots' },   // 先制アップは体験版では出さない（持ち主 2026-09-27）
-  ac_st_royal_jelly: { name: '女王の蜜のしずく', slot: 'acc', grade: 'super', tier: 2, src: 'steal', stealOnly: true, mods: { regen: 1 }, abil: { mnd: 1 }, icon: 'ring' },
-  ac_st_spore_sachet: { name: '眠りだけの胞子袋', slot: 'acc', grade: 'super', tier: 2, src: 'steal', stealOnly: true, mods: { statusResist: { sleep: 0.5, poison: 0.5 } }, abil: { vit: 1 }, icon: 'ring' },   // レア率アップは中盤以降（持ち主 2026-09-27）
-  w_staff_st_petal: { name: '花びらの杖', slot: 'weapon', grade: 'super', tier: 2, src: 'steal', stealOnly: true, wtype: 'staff', mods: { healPct: 20, mpRegen: 1 }, abil: { mnd: 1 }, icon: 'staff' },
-  w_dagger_st_frostfang: { name: '霜牙の短剣', slot: 'weapon', grade: 'super', tier: 2, src: 'steal', stealOnly: true, wtype: 'dagger', element: 'water', crit: 10, abil: { dex: 1 }, icon: 'dagger' },
+  ac_st_rat_pouch: { name: R.T('items.ac_st_rat_pouch.name'), slot: 'acc', grade: 'super', tier: 2, src: 'steal', stealOnly: true, mods: { goldPct: 15 }, abil: { agi: 1 }   /* ドロップ率アップは中盤以降（持ち主 2026-09-27） */, icon: 'ring' },
+  hd_st_beach_crab: { name: R.T('items.hd_st_beach_crab.name'), slot: 'head', grade: 'super', tier: 2, src: 'steal', stealOnly: true, weight: 'heavy', mods: { def: 4, elemResist: { water: 0.5 } }, icon: 'helm' },
+  ft_st_storm_gull: { name: R.T('items.ft_st_storm_gull.name'), slot: 'feet', grade: 'super', tier: 2, src: 'steal', stealOnly: true, weight: 'light', mods: { spd: 10, eva: 5 }, icon: 'boots' },   // 先制アップは体験版では出さない（持ち主 2026-09-27）
+  ac_st_royal_jelly: { name: R.T('items.ac_st_royal_jelly.name'), slot: 'acc', grade: 'super', tier: 2, src: 'steal', stealOnly: true, mods: { regen: 1 }, abil: { mnd: 1 }, icon: 'ring' },
+  ac_st_spore_sachet: { name: R.T('items.ac_st_spore_sachet.name'), slot: 'acc', grade: 'super', tier: 2, src: 'steal', stealOnly: true, mods: { statusResist: { sleep: 0.5, poison: 0.5 } }, abil: { vit: 1 }, icon: 'ring' },   // レア率アップは中盤以降（持ち主 2026-09-27）
+  w_staff_st_petal: { name: R.T('items.w_staff_st_petal.name'), slot: 'weapon', grade: 'super', tier: 2, src: 'steal', stealOnly: true, wtype: 'staff', mods: { healPct: 20, mpRegen: 1 }, abil: { mnd: 1 }, icon: 'staff' },
+  w_dagger_st_frostfang: { name: R.T('items.w_dagger_st_frostfang.name'), slot: 'weapon', grade: 'super', tier: 2, src: 'steal', stealOnly: true, wtype: 'dagger', element: 'water', crit: 10, abil: { dex: 1 }, icon: 'dagger' },
 });
   R.DB.stealSources = {
   ac_st_rooteater: { mon: 'b_rooteater', rate: 16 },

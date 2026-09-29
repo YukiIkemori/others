@@ -5,15 +5,15 @@
   'use strict';
   const W = 'prologue_done';
   R.defs('locations', {
-    kasim: { name: 'オアシスの町カシム', region: 'r_desert', kind: 'town', map: 'kasim', spawn: 'warp', warp: W },
-    sandedge: { name: '宿場「砂の縁」', region: 'r_desert', kind: 'town', map: 'sandedge', spawn: 'gate', warp: W },
-    tomb: { name: '砂の王墓', region: 'r_desert', kind: 'dungeon', map: 'desert_tomb_1', spawn: 'entrance', warp: W },
-    hawks: { name: '砂の鷹団のアジト', region: 'r_desert', kind: 'dungeon', map: 'desert_hawks_1', spawn: 'mouth', warp: W },
-    rocks: { name: '金剛トカゲの岩場', region: 'r_desert', kind: 'dungeon', map: 'desert_rocks', spawn: 'mouth', warp: W },
-    temple: { name: '砂に沈んだ神殿', region: 'r_desert', kind: 'dungeon', map: 'desert_temple_1', spawn: 'entrance', warp: W },
-    camp1: { name: '野営地「岩の井戸」', region: 'r_desert', kind: 'place', map: 'desert_camp1', spawn: 'road', warp: W },
-    camp2: { name: '野営地「星の石」', region: 'r_desert', kind: 'place', map: 'desert_camp2', spawn: 'road', warp: W },
-    oasis: { name: '王墓のオアシス', region: 'r_desert', kind: 'place', map: 'desert_camp3', spawn: 'road', warp: W },
-    mirage: { name: 'しんきろうの市', region: 'r_desert', kind: 'place', map: 'desert_mirage', spawn: 'road', warp: W },
+    kasim: { name: R.T('locations.kasim.name'), region: 'r_desert', kind: 'town', map: 'kasim', spawn: 'warp', warp: W },
+    sandedge: { name: R.T('locations.sandedge.name'), region: 'r_desert', kind: 'town', map: 'sandedge', spawn: 'gate', warp: W },
+    tomb: { name: R.T('locations.tomb.name'), region: 'r_desert', kind: 'dungeon', map: 'desert_tomb_1', spawn: 'entrance', warp: W },
+    hawks: { name: R.T('locations.hawks.name'), region: 'r_desert', kind: 'dungeon', map: 'desert_hawks_1', spawn: 'mouth', warp: W },
+    rocks: { name: R.T('locations.rocks.name'), region: 'r_desert', kind: 'dungeon', map: 'desert_rocks', spawn: 'mouth', warp: W },
+    temple: { name: R.T('locations.temple.name'), region: 'r_desert', kind: 'dungeon', map: 'desert_temple_1', spawn: 'entrance', warp: W },
+    camp1: { name: R.T('locations.camp1.name'), region: 'r_desert', kind: 'place', map: 'desert_camp1', spawn: 'road', warp: W },
+    camp2: { name: R.T('locations.camp2.name'), region: 'r_desert', kind: 'place', map: 'desert_camp2', spawn: 'road', warp: W },
+    oasis: { name: R.T('locations.oasis.name'), region: 'r_desert', kind: 'place', map: 'desert_camp3', spawn: 'road', warp: W },
+    mirage: { name: R.T('locations.mirage.name'), region: 'r_desert', kind: 'place', map: 'desert_mirage', spawn: 'road', warp: W },
   });
 })(window.RPG);

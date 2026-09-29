@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("f_cape", {
-    name: "灯台の岬", region: "prologue", outside: "sea",
+    name: R.T('map.field_cape.f_cape.name'), region: "prologue", outside: "sea",
     rows: [
       "FFFFFFFFFFFFFFFFFFFFFT,,,,,,,,,;;;;;,;;;,;TTTXXrrrTTXXXX",
       "FFFFFFFFFFFFFTTTTTTTTT,,,,,,,,,;;;;;,,,,,TTTTXXXXXrXXXXX",
@@ -54,17 +54,17 @@
     ],
     objects: [
       {"type":"door","x":31,"y":36,"w":1,"look":"none","to":{"map":"lighthouse_1","spawn":"entrance"}},
-      {"type":"sign","x":28,"y":38,"text":"ファロス灯台"},
-      {"type":"sign","x":50,"y":11,"text":"港町ファロス"},
-      {"type":"sign","x":26,"y":13,"text":"南 → ファロス灯台"},
+      {"type":"sign","x":28,"y":38,"text":R.T('map.field_cape.f_cape.objects.1.text')},
+      {"type":"sign","x":50,"y":11,"text":R.T('map.field_cape.f_cape.objects.2.text')},
+      {"type":"sign","x":26,"y":13,"text":R.T('map.field_cape.f_cape.objects.3.text')},
       {"type":"examine","x":36,"y":14,"event":"world_poi_pen_wall"},
       {"type":"waylamp","id":"wl_rest_2","x":42,"y":7,"lit":true},
       {"type":"prop","id":"tent","x":43,"y":6},
       {"type":"prop","id":"lantern","x":44,"y":6},
       {"type":"chest","id":"f_cape_c1","x":12,"y":31,"item":"i_salve","n":2},
       {"type":"prop","id":"lighthouse_glow","x":31,"y":28,"cond":"prologue_boss"},
-      {"type":"door","x":55,"y":8,"look":"none","locked":"ファロスの町へは、北の門から入ろう。"},
-      {"type":"door","x":55,"y":9,"look":"none","locked":"ファロスの町へは、北の門から入ろう。"},
+      {"type":"door","x":55,"y":8,"look":"none","locked":R.T('map.field_cape.f_cape.objects.10.locked')},
+      {"type":"door","x":55,"y":9,"look":"none","locked":R.T('map.field_cape.f_cape.objects.11.locked')},
     ],
     npcs: [
 
@@ -75,7 +75,7 @@
     tilePatches: [],
     zones: [{"rect":[0,0,56,16],"zone":"zw_prologue"},{"rect":null,"zone":"zw_peninsula"}],
     art: {"image":"field/under/f_cape","painted":["lighthouse_glow@31,28"],"overlay":"field/under/f_cape_over"},
-    meta: {"sub":"ファロス街道と灯台","worldRect":[272,300,72,92]},
+    meta: {"sub":R.T('map.field_cape.f_cape.meta.sub'),"worldRect":[272,300,72,92]},
     links: {"pharos":{"map":"f_cape","spawn":"pharos"},"lighthouse":{"map":"f_cape","spawn":"lighthouse"}},
   });
 })(window.RPG);

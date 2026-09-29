@@ -30,19 +30,19 @@
   const GRADES = ['normal', 'rare', 'super'];
   const CAPS = { hp: 999, mp: 250, stat: 40, eva: 60, crit: 60 };
 
-  const STAT_NAMES = { str: '腕力', vit: '体力', dex: '器用さ', agi: '素早さ', int: '知力', mnd: '精神', hp: '最大HP', mp: '最大MP' };
-  const SLOT_NAMES = { weapon1: '武器', shield: '盾', head: '頭', body: '体', hands: '手', feet: '足', acc1: 'アクセ1', acc2: 'アクセ2' };
-  const GROUP_NAMES = { weapon: '武器', shield: '盾', head: '頭', body: '体', hands: '手', feet: '足', acc: 'アクセサリ', use: '道具', key: '大事なもの' };
-  const WTYPE_NAMES = { sword: '剣', greatsword: '大剣', dagger: '短剣', bow: '弓', staff: '杖' };
-  const UNARMED_NAME = '素手';
-  const ELEMENT_NAMES = { fire: '火', water: '水', wind: '風', earth: '土', light: '光', dark: '闇' };
-  const GRADE_NAMES = { normal: '通常', rare: 'レア', super: '超レア' };
-  const ROW_NAMES = { front: '前列', back: '後列' };
-  const WEIGHT_NAMES = { heavy: '重装', light: '軽装', cloth: '布' };
+  const STAT_NAMES = { str: R.T('sys.rules.STAT_NAMES.str'), vit: R.T('sys.rules.STAT_NAMES.vit'), dex: R.T('sys.rules.STAT_NAMES.dex'), agi: R.T('sys.rules.STAT_NAMES.agi'), int: R.T('sys.rules.STAT_NAMES.int'), mnd: R.T('sys.rules.STAT_NAMES.mnd'), hp: R.T('sys.rules.STAT_NAMES.hp'), mp: R.T('sys.rules.STAT_NAMES.mp') };
+  const SLOT_NAMES = { weapon1: R.T('sys.rules.SLOT_NAMES.weapon1'), shield: R.T('sys.rules.SLOT_NAMES.shield'), head: R.T('sys.rules.SLOT_NAMES.head'), body: R.T('sys.rules.SLOT_NAMES.body'), hands: R.T('sys.rules.SLOT_NAMES.hands'), feet: R.T('sys.rules.SLOT_NAMES.feet'), acc1: R.T('sys.rules.SLOT_NAMES.acc1'), acc2: R.T('sys.rules.SLOT_NAMES.acc2') };
+  const GROUP_NAMES = { weapon: R.T('sys.rules.GROUP_NAMES.weapon'), shield: R.T('sys.rules.GROUP_NAMES.shield'), head: R.T('sys.rules.GROUP_NAMES.head'), body: R.T('sys.rules.GROUP_NAMES.body'), hands: R.T('sys.rules.GROUP_NAMES.hands'), feet: R.T('sys.rules.GROUP_NAMES.feet'), acc: R.T('sys.rules.GROUP_NAMES.acc'), use: R.T('sys.rules.GROUP_NAMES.use'), key: R.T('sys.rules.GROUP_NAMES.key') };
+  const WTYPE_NAMES = { sword: R.T('sys.rules.WTYPE_NAMES.sword'), greatsword: R.T('sys.rules.WTYPE_NAMES.greatsword'), dagger: R.T('sys.rules.WTYPE_NAMES.dagger'), bow: R.T('sys.rules.WTYPE_NAMES.bow'), staff: R.T('sys.rules.WTYPE_NAMES.staff') };
+  const UNARMED_NAME = R.T('sys.rules.UNARMED_NAME');
+  const ELEMENT_NAMES = { fire: R.T('sys.rules.ELEMENT_NAMES.fire'), water: R.T('sys.rules.ELEMENT_NAMES.water'), wind: R.T('sys.rules.ELEMENT_NAMES.wind'), earth: R.T('sys.rules.ELEMENT_NAMES.earth'), light: R.T('sys.rules.ELEMENT_NAMES.light'), dark: R.T('sys.rules.ELEMENT_NAMES.dark') };
+  const GRADE_NAMES = { normal: R.T('sys.rules.GRADE_NAMES.normal'), rare: R.T('sys.rules.GRADE_NAMES.rare'), super: R.T('sys.rules.GRADE_NAMES.super') };
+  const ROW_NAMES = { front: R.T('sys.rules.ROW_NAMES.front'), back: R.T('sys.rules.ROW_NAMES.back') };
+  const WEIGHT_NAMES = { heavy: R.T('sys.rules.WEIGHT_NAMES.heavy'), light: R.T('sys.rules.WEIGHT_NAMES.light'), cloth: R.T('sys.rules.WEIGHT_NAMES.cloth') };
   // 比べる値 15（§8.2: atk1/atk2 → atk）。装備の画面・店の ▲▼ の並び
   const DIFF_KEYS = ['atk', 'mag', 'def', 'mdef', 'hit', 'eva', 'crit', 'str', 'vit', 'dex', 'agi', 'int', 'mnd', 'hp', 'mp'];
-  const DIFF_NAMES = { atk: '攻撃', mag: '術力', def: '守備', mdef: '術防', hit: '命中', eva: '回避', crit: '会心',
-    str: '腕力', vit: '体力', dex: '器用さ', agi: '素早さ', int: '知力', mnd: '精神', hp: '最大HP', mp: '最大MP' };
+  const DIFF_NAMES = { atk: R.T('sys.rules.DIFF_NAMES.atk'), mag: R.T('sys.rules.DIFF_NAMES.mag'), def: R.T('sys.rules.DIFF_NAMES.def'), mdef: R.T('sys.rules.DIFF_NAMES.mdef'), hit: R.T('sys.rules.DIFF_NAMES.hit'), eva: R.T('sys.rules.DIFF_NAMES.eva'), crit: R.T('sys.rules.DIFF_NAMES.crit'),
+    str: R.T('sys.rules.DIFF_NAMES.str'), vit: R.T('sys.rules.DIFF_NAMES.vit'), dex: R.T('sys.rules.DIFF_NAMES.dex'), agi: R.T('sys.rules.DIFF_NAMES.agi'), int: R.T('sys.rules.DIFF_NAMES.int'), mnd: R.T('sys.rules.DIFF_NAMES.mnd'), hp: R.T('sys.rules.DIFF_NAMES.hp'), mp: R.T('sys.rules.DIFF_NAMES.mp') };
 
   // ------------------------------------------------------------ 定数（DESIGN §4.18.1 ＋ STATS_REWORK §2.1・§5.2・§7.3・§9.3）
   const Wt = [8, 14, 21, 30, 40, 51, 64, 78, 94, 112];                 // 旧の K.W: 道具の formula:'tier' と値段・sim の目安だけ
@@ -524,24 +524,24 @@
             const list = e.statuses === 'all' || !e.statuses ? null : e.statuses;
             const before = c.status.length;
             c.status = list ? c.status.filter((s) => !list.includes(s)) : [];
-            if (c.status.length !== before) { changed = true; lines.push(c.name + 'の状態が治った。'); }
+            if (c.status.length !== before) { changed = true; lines.push(R.T('sys.rules.fieldUse', { name: c.name })); }
           } else if (e.type === 'learnSpell' && R.Glimmer && R.Glimmer.useStone) {
             // 魔石: その属性の最初の術を覚える（覚えている人・術を使えない人には効かない。R.Glimmer.useStone）
             const r = R.Glimmer.useStone(c, a);
             if (r.ok) { changed = true; lines.push(r.line); }
           }
         }
-        if (c.hp !== hp0) { changed = true; lines.push(dead ? `${c.name}が起き上がった。` : `${c.name}のHPが ${c.hp - hp0} 回復した。`); }
-        if (c.mp !== mp0) { changed = true; lines.push(`${c.name}のMPが ${c.mp - mp0} 回復した。`); }
+        if (c.hp !== hp0) { changed = true; lines.push(dead ? R.T('sys.rules.fieldUse_2', { name: c.name }) : R.T('sys.rules.fieldUse_3', { name: c.name, p1: c.hp - hp0 })); }
+        if (c.mp !== mp0) { changed = true; lines.push(R.T('sys.rules.fieldUse_4', { name: c.name, p1: c.mp - mp0 })); }
       }
       const F = R.Field;
       for (const e of use.effects || []) {
         if (e.type === 'encounter' && (e.pct || 0) < 0 && F && F.encounter && F.encounter.ward) {
-          F.encounter.ward(e.steps || 100); changed = true; lines.push('弱い魔物が寄ってこなくなった。');
+          F.encounter.ward(e.steps || 100); changed = true; lines.push(R.T('sys.rules.fieldUse_5'));
         } else if (e.type === 'encounter' && (e.pct || 0) > 0 && F && F.encounter && F.encounter.lure) {
-          F.encounter.lure(e.steps || 100, e.pct); changed = true; lines.push('魔物が寄ってくるようになった。');
+          F.encounter.lure(e.steps || 100, e.pct); changed = true; lines.push(R.T('sys.rules.fieldUse_6'));
         } else if (e.type === 'light' && F && F.light) {
-          F.light(e.r || 6, e.steps || 200); changed = true; lines.push('あたりが明るくなった。');
+          F.light(e.r || 6, e.steps || 200); changed = true; lines.push(R.T('sys.rules.fieldUse_7'));
         }
       }
       return { changed, lines };
@@ -703,12 +703,12 @@
     equipIssue(c, itemOrId, slot) {
       const id = typeof itemOrId === 'string' ? itemOrId : itemOrId && itemOrId.id;
       const it = typeof itemOrId === 'string' ? itemOf(itemOrId) : itemOrId;
-      if (!it || !EQUIP_GROUPS.includes(it.slot)) return 'これは装備できない。';
+      if (!it || !EQUIP_GROUPS.includes(it.slot)) return R.T('sys.rules.equipIssue.ret');
       slot = slot ? Rules.charSlot(slot, c, id) : (id ? Rules.defaultSlot(c, id) : Rules.charSlot(it.slot, c));
-      if (!SLOTS.includes(slot) || Rules.groupOfSlot(slot) !== it.slot) return 'この枠には付けられない。';
-      if (it.only && !it.only.includes(c.id)) return c.name + 'には装備できない。';
-      if (it.gender && c.sex && it.gender !== c.sex) return c.name + 'には装備できない。';
-      if (slot === 'shield' && Rules.hasTwoHanded(c)) return '両手持ちの武器を装備している。';
+      if (!SLOTS.includes(slot) || Rules.groupOfSlot(slot) !== it.slot) return R.T('sys.rules.equipIssue.ret_2');
+      if (it.only && !it.only.includes(c.id)) return R.T('sys.rules.equipIssue.ret_3', { name: c.name });
+      if (it.gender && c.sex && it.gender !== c.sex) return R.T('sys.rules.equipIssue.ret_3', { name: c.name });
+      if (slot === 'shield' && Rules.hasTwoHanded(c)) return R.T('sys.rules.equipIssue.ret_4');
       return null;
     },
     /** 装備できるか（item は id か品の定義） */
@@ -721,7 +721,7 @@
       const inv = (opts && opts.inv) || gameInv();
       const fail = (reason) => ({ ok: false, removed: [], shieldRemoved: null, reason });
       slot = Rules.charSlot(slot, c, itemId);
-      if (!SLOTS.includes(slot)) return fail('この枠には付けられない。');
+      if (!SLOTS.includes(slot)) return fail(R.T('sys.rules.equip.fail'));
       itemId = itemId || null;
       if (itemId && !DB.items[itemId] && DB.itemAlias && DB.itemAlias[itemId]) itemId = DB.itemAlias[itemId];   // 消した品の id → 残した品
       const old = c.equip[slot] || null;
@@ -729,7 +729,7 @@
       if (itemId) {
         const issue = Rules.equipIssue(c, itemId, slot);
         if (issue) return fail(issue);
-        if (!((inv[itemId] || 0) >= 1)) return fail('持ち物にない。');
+        if (!((inv[itemId] || 0) >= 1)) return fail(R.T('sys.rules.equip.fail_2'));
       }
       const back = [];
       if (old) back.push(old);
@@ -739,7 +739,7 @@
       for (const id of back) cnt[id] = (cnt[id] || 0) + 1;
       for (const id in cnt) {
         const after = (inv[id] || 0) - (id === itemId ? 1 : 0) + cnt[id];
-        if (after > K.MAX_ITEM) return fail('これ以上は持てない。');
+        if (after > K.MAX_ITEM) return fail(R.T('sys.rules.equip.fail_3'));
       }
       if (itemId) invTake(inv, itemId);
       c.equip[slot] = itemId;
@@ -1026,13 +1026,13 @@
     autoDesc(it) {
       if (!it) return '';
       const statKeys = STATS.filter((k) => it.stats && it.stats[k] > 0);
-      const statLine = statKeys.length ? joinTo(statKeys.map((k) => STAT_NAMES[k])) + 'が上がる。' : '';
+      const statLine = statKeys.length ? R.T('sys.rules.autoDesc.statLine', { joinTo: joinTo(statKeys.map((k) => STAT_NAMES[k])) }) : '';
       const fx = effectSentences(it);
       if (!fx.good.length && !fx.bad.length) {
         let first = '';
-        if (it.slot === 'weapon') first = (DB.weaponTypes[it.wtype] && DB.weaponTypes[it.wtype].desc) || (wtypeName(it.wtype) + 'の武器。');
-        else if (K.SLOT_SHARE[it.slot] !== undefined) first = { heavy: '重くて守りが固い。', light: '軽くて動きやすい。', cloth: '術から身を守る。' }[it.weight] || '身を守る防具。';
-        else if (it.slot === 'acc') first = '身につける飾り。';
+        if (it.slot === 'weapon') first = (DB.weaponTypes[it.wtype] && DB.weaponTypes[it.wtype].desc) || (R.T('sys.rules.autoDesc.first', { wtypeName: wtypeName(it.wtype) }));
+        else if (K.SLOT_SHARE[it.slot] !== undefined) first = { heavy: R.T('sys.rules.autoDesc.first.heavy'), light: R.T('sys.rules.autoDesc.first.light'), cloth: R.T('sys.rules.autoDesc.first.cloth') }[it.weight] || R.T('sys.rules.autoDesc.first_2');
+        else if (it.slot === 'acc') first = R.T('sys.rules.autoDesc.first_3');
         return [first, statLine].filter(Boolean).join('\n');
       }
       const d = packDesc(fx.good, fx.bad, statLine);
@@ -1150,14 +1150,14 @@
     const ord = (id) => { const a = actionOf(id); if (a && a.order != null) return a.order; return 1e6 + (actIdx[id] || 0); };
     return uniq(ids).sort((x, y) => ord(x) - ord(y) || (actIdx[x] || 0) - (actIdx[y] || 0));
   }
-  function joinTo(names) { return names.length <= 1 ? names.join('') : names.slice(0, -1).join('、') + 'と' + names[names.length - 1]; }
-  function joinDot(names) { return names.join('・'); }
+  function joinTo(names) { return names.length <= 1 ? names.join('') : R.T('sys.rules.joinTo.ret', { join: names.slice(0, -1).join('、'), p1: names[names.length - 1] }); }
+  function joinDot(names) { return names.join(R.T('sys.rules.joinDot.join')); }
 
   // ------------------------------------------------------------ 効果の文（DESIGN §8.2.7）
-  const STATUS_NAMES = { poison: '毒', burn: 'やけど', sleep: '眠り', paralyze: 'まひ', freeze: '凍結', stun: '気絶', confuse: '混乱', silence: '沈黙', blind: '暗闇', death: '即死' };
-  const STATUS_VERB = { poison: '毒にする', burn: 'やけどを負わせる', sleep: '眠らせる', paralyze: 'まひさせる', freeze: '凍らせる', stun: '気絶させる', confuse: '混乱させる', silence: '術を封じる', blind: '目をくらませる', death: '一撃で倒す' };
-  const RACE_NAMES = { beast: '獣', bird: '鳥', insect: '虫', plant: '植物', aquatic: '水生の魔物', dragon: '竜', undead: '不死の魔物', demon: '魔族', spirit: '霊体', construct: '魔造の魔物', slime: '軟体の魔物', humanoid: '人型の魔物', fairy: '妖精', boss: 'ボス', rare: 'めずらしい魔物', metal: '鋼の魔物', flying: '飛ぶ魔物' };
-  const BUFF_NAMES = { atk: '攻撃力', def: '守備力', mag: '術力', mdef: '術防', agi: '素早さ' };
+  const STATUS_NAMES = { poison: R.T('sys.rules.STATUS_NAMES.poison'), burn: R.T('sys.rules.STATUS_NAMES.burn'), sleep: R.T('sys.rules.STATUS_NAMES.sleep'), paralyze: R.T('sys.rules.STATUS_NAMES.paralyze'), freeze: R.T('sys.rules.STATUS_NAMES.freeze'), stun: R.T('sys.rules.STATUS_NAMES.stun'), confuse: R.T('sys.rules.STATUS_NAMES.confuse'), silence: R.T('sys.rules.STATUS_NAMES.silence'), blind: R.T('sys.rules.STATUS_NAMES.blind'), death: R.T('sys.rules.STATUS_NAMES.death') };
+  const STATUS_VERB = { poison: R.T('sys.rules.STATUS_VERB.poison'), burn: R.T('sys.rules.STATUS_VERB.burn'), sleep: R.T('sys.rules.STATUS_VERB.sleep'), paralyze: R.T('sys.rules.STATUS_VERB.paralyze'), freeze: R.T('sys.rules.STATUS_VERB.freeze'), stun: R.T('sys.rules.STATUS_VERB.stun'), confuse: R.T('sys.rules.STATUS_VERB.confuse'), silence: R.T('sys.rules.STATUS_VERB.silence'), blind: R.T('sys.rules.STATUS_VERB.blind'), death: R.T('sys.rules.STATUS_VERB.death') };
+  const RACE_NAMES = { beast: R.T('sys.rules.RACE_NAMES.beast'), bird: R.T('sys.rules.RACE_NAMES.bird'), insect: R.T('sys.rules.RACE_NAMES.insect'), plant: R.T('sys.rules.RACE_NAMES.plant'), aquatic: R.T('sys.rules.RACE_NAMES.aquatic'), dragon: R.T('sys.rules.RACE_NAMES.dragon'), undead: R.T('sys.rules.RACE_NAMES.undead'), demon: R.T('sys.rules.RACE_NAMES.demon'), spirit: R.T('sys.rules.RACE_NAMES.spirit'), construct: R.T('sys.rules.RACE_NAMES.construct'), slime: R.T('sys.rules.RACE_NAMES.slime'), humanoid: R.T('sys.rules.RACE_NAMES.humanoid'), fairy: R.T('sys.rules.RACE_NAMES.fairy'), boss: R.T('sys.rules.RACE_NAMES.boss'), rare: R.T('sys.rules.RACE_NAMES.rare'), metal: R.T('sys.rules.RACE_NAMES.metal'), flying: R.T('sys.rules.RACE_NAMES.flying') };
+  const BUFF_NAMES = { atk: R.T('sys.rules.BUFF_NAMES.atk'), def: R.T('sys.rules.BUFF_NAMES.def'), mag: R.T('sys.rules.BUFF_NAMES.mag'), mdef: R.T('sys.rules.BUFF_NAMES.mdef'), agi: R.T('sys.rules.BUFF_NAMES.agi') };
   const elName = (e) => (DB.elements[e] && DB.elements[e].name) || ELEMENT_NAMES[e] || e;
   const stName = (s) => (DB.statuses[s] && DB.statuses[s].name) || STATUS_NAMES[s] || s;
   const keyName = (k) => (ELEMENT_NAMES[k] ? elName(k) : WTYPE_NAMES[k] ? wtypeName(k) : k);
@@ -1167,118 +1167,118 @@
     const G = (l, s) => good.push([l, s || l]);
     const B = (l, s) => bad.push([l, s || l]);
     if (it.slot === 'weapon') {
-      if (it.element) G(elName(it.element) + 'の属性で攻撃する。', elName(it.element) + 'の属性。');
-      if (it.onHit && it.onHit.status) { const v = STATUS_VERB[it.onHit.status] || stName(it.onHit.status) + 'にする'; G(v + 'ことがある。', v + '。'); }
-      if (it.vs) { const ks = Object.keys(it.vs).filter((k) => it.vs[k] > 1); if (ks.length) G(joinDot(ks.map((k) => RACE_NAMES[k] || stName(k))) + 'に大きなダメージ。'); }
-      if (it.drain) G('与えた傷の一部を吸い取る。', '傷を吸う。');
-      if (it.metalHit) G('鋼の魔物にも傷を与える。');
-      if (it.crit > 0) G('会心が出やすい。');
-      if (it.hit > 0 && !(it.art === 'club' || it.art === 'rapier')) G('よく当たる。');
-      if (it.hit < 0) B('ただし当たりにくい。');
-      if (it.sealTech) B('ただし技が使えない。');
+      if (it.element) G(R.T('sys.rules.effectSentences.G', { elName: elName(it.element) }), R.T('sys.rules.effectSentences.G_2', { elName: elName(it.element) }));
+      if (it.onHit && it.onHit.status) { const v = STATUS_VERB[it.onHit.status] || R.T('sys.rules.effectSentences.v', { stName: stName(it.onHit.status) }); G(R.T('sys.rules.effectSentences.G_3', { v }), v + '。'); }
+      if (it.vs) { const ks = Object.keys(it.vs).filter((k) => it.vs[k] > 1); if (ks.length) G(R.T('sys.rules.effectSentences.G_4', { joinDot: joinDot(ks.map((k) => RACE_NAMES[k] || stName(k))) })); }
+      if (it.drain) G(R.T('sys.rules.effectSentences.G_5'), R.T('sys.rules.effectSentences.G_6'));
+      if (it.metalHit) G(R.T('sys.rules.effectSentences.G_7'));
+      if (it.crit > 0) G(R.T('sys.rules.effectSentences.G_8'));
+      if (it.hit > 0 && !(it.art === 'club' || it.art === 'rapier')) G(R.T('sys.rules.effectSentences.G_9'));
+      if (it.hit < 0) B(R.T('sys.rules.effectSentences.B'));
+      if (it.sealTech) B(R.T('sys.rules.effectSentences.B_2'));
     }
-    if (it.quirk && K.SLOT_SHARE[it.slot] !== undefined && it.def === 0 && it.mdef === 0) B('ただし守備力と術防は0。', 'ただし守りは0。');
+    if (it.quirk && K.SLOT_SHARE[it.slot] !== undefined && it.def === 0 && it.mdef === 0) B(R.T('sys.rules.effectSentences.B_3'), R.T('sys.rules.effectSentences.B_4'));
     if (m.elemResist) {
       const by = {};
       for (const e of ELEMENTS) if (m.elemResist[e] != null) (by[m.elemResist[e]] = by[m.elemResist[e]] || []).push(elName(e));
       for (const v of Object.keys(by).map(Number).sort((a, b) => a - b)) {
         const n = joinDot(by[v]);
-        if (v < 0) G(n + 'の攻撃を吸い取る。', n + 'を吸う。');
-        else if (v === 0) G(n + 'の攻撃を受けない。', n + 'が効かない。');
-        else if (v < 1) G(n + 'のダメージを減らす。', n + 'に強い。');
-        else if (v > 1) B('ただし' + n + 'に弱くなる。', 'ただし' + n + 'に弱い。');
+        if (v < 0) G(R.T('sys.rules.effectSentences.G_10', { n }), R.T('sys.rules.effectSentences.G_11', { n }));
+        else if (v === 0) G(R.T('sys.rules.effectSentences.G_12', { n }), R.T('sys.rules.effectSentences.G_13', { n }));
+        else if (v < 1) G(R.T('sys.rules.effectSentences.G_14', { n }), R.T('sys.rules.effectSentences.G_15', { n }));
+        else if (v > 1) B(R.T('sys.rules.effectSentences.B_5', { n }), R.T('sys.rules.effectSentences.B_6', { n }));
       }
     }
-    if (m.elemBoost) { const ks = ELEMENTS.filter((e) => m.elemBoost[e] > 0); if (ks.length) { const n = joinDot(ks.map(elName)); G(n + 'の攻撃が強くなる。', n + 'が強くなる。'); } }
-    if (m.statusImmune && m.statusImmune.length) G(joinDot(m.statusImmune.map(stName)) + 'が効かない。');
+    if (m.elemBoost) { const ks = ELEMENTS.filter((e) => m.elemBoost[e] > 0); if (ks.length) { const n = joinDot(ks.map(elName)); G(R.T('sys.rules.effectSentences.G_16', { n }), R.T('sys.rules.effectSentences.G_17', { n })); } }
+    if (m.statusImmune && m.statusImmune.length) G(R.T('sys.rules.effectSentences.G_18', { joinDot: joinDot(m.statusImmune.map(stName)) }));
     if (m.statusResist) {
       const pos = Object.keys(m.statusResist).filter((s) => m.statusResist[s] > 0);
       const neg = Object.keys(m.statusResist).filter((s) => m.statusResist[s] < 0);
-      if (pos.length) G(joinDot(pos.map(stName)) + 'にかかりにくい。');
-      if (neg.length) B('ただし' + joinDot(neg.map(stName)) + 'にかかりやすい。');
+      if (pos.length) G(R.T('sys.rules.effectSentences.G_19', { joinDot: joinDot(pos.map(stName)) }));
+      if (neg.length) B(R.T('sys.rules.effectSentences.B_7', { joinDot: joinDot(neg.map(stName)) }));
     }
-    if (it.statsAdd) { const ks = STATS.filter((k) => it.statsAdd[k] < 0); if (ks.length) B('ただし' + joinTo(ks.map((k) => STAT_NAMES[k])) + 'が下がる。'); }
-    for (const k of ['hp', 'mp']) { const v = m[k + 'Pct'], nm = STAT_NAMES[k]; if (v > 0) G(nm + 'が上がる。'); else if (v < 0) B('ただし' + nm + 'が下がる。'); }
-    if (m.regen) G('戦闘中、HPが少しずつ戻る。', 'HPが戻る。');
-    if (m.mpRegen > 0) G('戦闘中、MPが少しずつ戻る。', 'MPが戻る。');
+    if (it.statsAdd) { const ks = STATS.filter((k) => it.statsAdd[k] < 0); if (ks.length) B(R.T('sys.rules.effectSentences.B_8', { joinTo: joinTo(ks.map((k) => STAT_NAMES[k])) })); }
+    for (const k of ['hp', 'mp']) { const v = m[k + 'Pct'], nm = STAT_NAMES[k]; if (v > 0) G(R.T('sys.rules.effectSentences.G_20', { nm })); else if (v < 0) B(R.T('sys.rules.effectSentences.B_9', { nm })); }
+    if (m.regen) G(R.T('sys.rules.effectSentences.G_21'), R.T('sys.rules.effectSentences.G_22'));
+    if (m.mpRegen > 0) G(R.T('sys.rules.effectSentences.G_23'), R.T('sys.rules.effectSentences.G_24'));
     if (m.startBuffs) {
       const ks = Object.keys(m.startBuffs).filter((k) => m.startBuffs[k] > 0);
-      if (ks.length) { const n = joinTo(ks.map((k) => BUFF_NAMES[k] || k)); G('戦闘の始めに' + n + 'が上がる。', '始めに' + n + 'が上がる。'); }
+      if (ks.length) { const n = joinTo(ks.map((k) => BUFF_NAMES[k] || k)); G(R.T('sys.rules.effectSentences.G_25', { n }), R.T('sys.rules.effectSentences.G_26', { n })); }
     }
-    if (m.atk > 0) G('攻撃力が上がる。');
-    if (m.mag > 0) G('術力が上がる。');
-    if (m.def > 0) G('守備力が上がる。');
-    if (m.mdef > 0) G('術防が上がる。');
-    if (m.defPct > 0) G('守備力が割合で上がる。', '守備力が上がる。');
-    if (m.mdefPct > 0) G('術防が割合で上がる。', '術防が上がる。');
-    if (m.physPct > 0) G('物理攻撃の威力が上がる。', '物理が強くなる。');
+    if (m.atk > 0) G(R.T('sys.rules.effectSentences.G_27'));
+    if (m.mag > 0) G(R.T('sys.rules.effectSentences.G_28'));
+    if (m.def > 0) G(R.T('sys.rules.effectSentences.G_29'));
+    if (m.mdef > 0) G(R.T('sys.rules.effectSentences.G_30'));
+    if (m.defPct > 0) G(R.T('sys.rules.effectSentences.G_31'), R.T('sys.rules.effectSentences.G_29'));
+    if (m.mdefPct > 0) G(R.T('sys.rules.effectSentences.G_32'), R.T('sys.rules.effectSentences.G_30'));
+    if (m.physPct > 0) G(R.T('sys.rules.effectSentences.G_33'), R.T('sys.rules.effectSentences.G_34'));
     // magicPct は術のダメージだけに効く（battle_core の magic。回復は healPct）ので「攻撃の術」と書く
-    if (m.magicPct > 0) G('攻撃の術の威力が上がる。', '攻撃の術が強くなる。');
-    if (m.physPct < 0) B('ただし物理攻撃が弱くなる。', 'ただし物理が弱い。');
-    if (m.magicPct < 0) B('ただし攻撃の術が弱くなる。', 'ただし術が弱くなる。');
-    if (m.healPct > 0) G('回復の術がよく効く。', '回復がよく効く。');
-    if (m.itemPct > 0) G('回復の道具がよく効く。');
-    if (m.mpCostPct < 0 && m.techCostPct < 0) G('術と技のMPの消費が減る。', 'MPの消費が減る。');
-    else if (m.mpCostPct < 0) G('術のMPの消費が減る。', 'MPの消費が減る。');
-    else if (m.techCostPct < 0) G('技のMPの消費が減る。', '技のMPが減る。');
-    if (m.mpCostPct > 0 && m.techCostPct > 0) B('ただし術と技のMPの消費が増える。', 'ただしMPの消費が増える。');
-    else if (m.mpCostPct > 0) B('ただし術のMPの消費が増える。', 'ただしMPの消費が増える。');
-    else if (m.techCostPct > 0) B('ただし技のMPの消費が増える。', 'ただし技のMPが増える。');
+    if (m.magicPct > 0) G(R.T('sys.rules.effectSentences.G_35'), R.T('sys.rules.effectSentences.G_36'));
+    if (m.physPct < 0) B(R.T('sys.rules.effectSentences.B_10'), R.T('sys.rules.effectSentences.B_11'));
+    if (m.magicPct < 0) B(R.T('sys.rules.effectSentences.B_12'), R.T('sys.rules.effectSentences.B_13'));
+    if (m.healPct > 0) G(R.T('sys.rules.effectSentences.G_37'), R.T('sys.rules.effectSentences.G_38'));
+    if (m.itemPct > 0) G(R.T('sys.rules.effectSentences.G_39'));
+    if (m.mpCostPct < 0 && m.techCostPct < 0) G(R.T('sys.rules.effectSentences.G_40'), R.T('sys.rules.effectSentences.G_41'));
+    else if (m.mpCostPct < 0) G(R.T('sys.rules.effectSentences.G_42'), R.T('sys.rules.effectSentences.G_41'));
+    else if (m.techCostPct < 0) G(R.T('sys.rules.effectSentences.G_43'), R.T('sys.rules.effectSentences.G_44'));
+    if (m.mpCostPct > 0 && m.techCostPct > 0) B(R.T('sys.rules.effectSentences.B_14'), R.T('sys.rules.effectSentences.B_15'));
+    else if (m.mpCostPct > 0) B(R.T('sys.rules.effectSentences.B_16'), R.T('sys.rules.effectSentences.B_15'));
+    else if (m.techCostPct > 0) B(R.T('sys.rules.effectSentences.B_17'), R.T('sys.rules.effectSentences.B_18'));
     if (m.glimPct) {
       const pos = Object.keys(m.glimPct).filter((k) => m.glimPct[k] > 0);
       const neg = Object.keys(m.glimPct).filter((k) => m.glimPct[k] < 0);
       if (pos.length) {
         const t = pos.includes('tech'), s = pos.includes('spell');
         const rest = pos.filter((k) => k !== 'tech' && k !== 'spell');
-        if (t && s) G('技と術を閃きやすい。', '閃きやすい。');
-        else if (t) G('技を閃きやすい。', '閃きやすい。');
-        else if (s) G('術を閃きやすい。', '閃きやすい。');
+        if (t && s) G(R.T('sys.rules.effectSentences.G_45'), R.T('sys.rules.effectSentences.G_46'));
+        else if (t) G(R.T('sys.rules.effectSentences.G_47'), R.T('sys.rules.effectSentences.G_46'));
+        else if (s) G(R.T('sys.rules.effectSentences.G_48'), R.T('sys.rules.effectSentences.G_46'));
         if (rest.length) {
           const ws = rest.filter((k) => WTYPE_NAMES[k]), es = rest.filter((k) => ELEMENT_NAMES[k]);
-          if (ws.length) G(joinDot(ws.map(keyName)) + 'の技を閃きやすい。', '閃きやすい。');
-          if (es.length) G(joinDot(es.map(keyName)) + 'の術を閃きやすい。', '閃きやすい。');
+          if (ws.length) G(R.T('sys.rules.effectSentences.G_49', { joinDot: joinDot(ws.map(keyName)) }), R.T('sys.rules.effectSentences.G_46'));
+          if (es.length) G(R.T('sys.rules.effectSentences.G_50', { joinDot: joinDot(es.map(keyName)) }), R.T('sys.rules.effectSentences.G_46'));
         }
       }
-      if (neg.length) B('ただし閃きにくい。');
+      if (neg.length) B(R.T('sys.rules.effectSentences.B_19'));
     }
-    if (m.profPct) { const ks = Object.keys(m.profPct).filter((k) => m.profPct[k] > 0); if (ks.length) G(joinDot(ks.map(keyName)) + 'の熟練度が伸びやすい。', '熟練度が伸びやすい。'); }
-    if (m.dropPct > 0) G('魔物がアイテムを落としやすい。', 'アイテムをよく落とす。');
-    if (m.rarePct > 0 && m.superPct > 0) G('レアと超レアのアイテムを落としやすい。', 'レア・超レアをよく落とす。');
-    else if (m.rarePct > 0) G('レアアイテムを落としやすい。', 'レアをよく落とす。');
-    else if (m.superPct > 0) G('超レアアイテムを落としやすい。', '超レアをよく落とす。');
-    if (m.goldPct > 0) G('手に入るお金が増える。', 'お金が増える。');
-    if (m.goldPct < 0) B('ただしお金が減る。');
-    if (m.growPct > 0) G('HPとMPが伸びやすい。');
-    if (m.growPct <= -100) B('ただしHPとMPが伸びなくなる。');
-    else if (m.growPct < 0) B('ただしHPとMPが伸びにくい。');
-    if (m.goldenPct > 0) G('金色の魔物に出会いやすい。');
-    if (m.rareEncPct > 0) G('めずらしい魔物に出会いやすい。');
-    if (m.encounterPct < 0) G('魔物に出会いにくい。', '魔物に会いにくい。');
-    if (m.encounterPct > 0) { if (it.quirk) B('ただし魔物を呼ぶ。'); else G('魔物に出会いやすい。'); }
-    if (m.stealPct > 0) G('盗みが成功しやすい。');
-    if (m.autoSteal > 0) G('攻撃が当たると、ついでに盗むことがある。', 'ついでに盗む。');
-    if (m.escapePct > 0) G('逃げやすくなる。');
-    if (m.preemptPct > 0) G('先制しやすくなる。');
-    if (m.spd > 0) G('すばやく動ける。', 'すばやい。');
-    if (m.spd < 0) B('ただし動きが遅くなる。', 'ただし遅くなる。');
-    if (m.eva > 0) G('攻撃をかわしやすい。', 'かわしやすい。');
-    if (m.eva < 0) B('ただしかわしにくい。');
-    if (m.hit > 0 && it.slot !== 'weapon') G('よく当たる。');
-    if (m.hit < 0) B('ただし当たりにくい。');
-    if (m.crit > 0 && it.slot !== 'weapon') G('会心が出やすい。');
-    if (m.autoRevive > 0) G('倒れても一度だけ起き上がる。');
-    if (m.autoCounter > 0) G('攻撃を受けると反撃する。', '反撃する。');
-    if (m.noFloorDamage) G('毒の沼や熱い床で傷つかない。');
-    if (m.walkHeal > 0) G('歩くとHPが少しずつ戻る。', '歩くとHPが戻る。');
-    if (m.defPct < 0) B('ただし守備力が下がる。', 'ただし守備が下がる。');
-    if (m.mdefPct < 0) B('ただし術防が下がる。');
-    if (m.takenPct < 0) G('受けるダメージを減らす。', '傷が減る。');
-    if (m.takenPct > 0) B('ただし受けるダメージが増える。', 'ただし傷が増える。');
-    if (m.noSpell) B('ただし術が使えない。');
-    if (m.hpLoss > 0) B('ただし戦闘中にHPが減る。', 'ただしHPが減る。');
+    if (m.profPct) { const ks = Object.keys(m.profPct).filter((k) => m.profPct[k] > 0); if (ks.length) G(R.T('sys.rules.effectSentences.G_51', { joinDot: joinDot(ks.map(keyName)) }), R.T('sys.rules.effectSentences.G_52')); }
+    if (m.dropPct > 0) G(R.T('sys.rules.effectSentences.G_53'), R.T('sys.rules.effectSentences.G_54'));
+    if (m.rarePct > 0 && m.superPct > 0) G(R.T('sys.rules.effectSentences.G_55'), R.T('sys.rules.effectSentences.G_56'));
+    else if (m.rarePct > 0) G(R.T('sys.rules.effectSentences.G_57'), R.T('sys.rules.effectSentences.G_58'));
+    else if (m.superPct > 0) G(R.T('sys.rules.effectSentences.G_59'), R.T('sys.rules.effectSentences.G_60'));
+    if (m.goldPct > 0) G(R.T('sys.rules.effectSentences.G_61'), R.T('sys.rules.effectSentences.G_62'));
+    if (m.goldPct < 0) B(R.T('sys.rules.effectSentences.B_20'));
+    if (m.growPct > 0) G(R.T('sys.rules.effectSentences.G_63'));
+    if (m.growPct <= -100) B(R.T('sys.rules.effectSentences.B_21'));
+    else if (m.growPct < 0) B(R.T('sys.rules.effectSentences.B_22'));
+    if (m.goldenPct > 0) G(R.T('sys.rules.effectSentences.G_64'));
+    if (m.rareEncPct > 0) G(R.T('sys.rules.effectSentences.G_65'));
+    if (m.encounterPct < 0) G(R.T('sys.rules.effectSentences.G_66'), R.T('sys.rules.effectSentences.G_67'));
+    if (m.encounterPct > 0) { if (it.quirk) B(R.T('sys.rules.effectSentences.B_23')); else G(R.T('sys.rules.effectSentences.G_68')); }
+    if (m.stealPct > 0) G(R.T('sys.rules.effectSentences.G_69'));
+    if (m.autoSteal > 0) G(R.T('sys.rules.effectSentences.G_70'), R.T('sys.rules.effectSentences.G_71'));
+    if (m.escapePct > 0) G(R.T('sys.rules.effectSentences.G_72'));
+    if (m.preemptPct > 0) G(R.T('sys.rules.effectSentences.G_73'));
+    if (m.spd > 0) G(R.T('sys.rules.effectSentences.G_74'), R.T('sys.rules.effectSentences.G_75'));
+    if (m.spd < 0) B(R.T('sys.rules.effectSentences.B_24'), R.T('sys.rules.effectSentences.B_25'));
+    if (m.eva > 0) G(R.T('sys.rules.effectSentences.G_76'), R.T('sys.rules.effectSentences.G_77'));
+    if (m.eva < 0) B(R.T('sys.rules.effectSentences.B_26'));
+    if (m.hit > 0 && it.slot !== 'weapon') G(R.T('sys.rules.effectSentences.G_9'));
+    if (m.hit < 0) B(R.T('sys.rules.effectSentences.B'));
+    if (m.crit > 0 && it.slot !== 'weapon') G(R.T('sys.rules.effectSentences.G_8'));
+    if (m.autoRevive > 0) G(R.T('sys.rules.effectSentences.G_78'));
+    if (m.autoCounter > 0) G(R.T('sys.rules.effectSentences.G_79'), R.T('sys.rules.effectSentences.G_80'));
+    if (m.noFloorDamage) G(R.T('sys.rules.effectSentences.G_81'));
+    if (m.walkHeal > 0) G(R.T('sys.rules.effectSentences.G_82'), R.T('sys.rules.effectSentences.G_83'));
+    if (m.defPct < 0) B(R.T('sys.rules.effectSentences.B_27'), R.T('sys.rules.effectSentences.B_28'));
+    if (m.mdefPct < 0) B(R.T('sys.rules.effectSentences.B_29'));
+    if (m.takenPct < 0) G(R.T('sys.rules.effectSentences.G_84'), R.T('sys.rules.effectSentences.G_85'));
+    if (m.takenPct > 0) B(R.T('sys.rules.effectSentences.B_30'), R.T('sys.rules.effectSentences.B_31'));
+    if (m.noSpell) B(R.T('sys.rules.effectSentences.B_32'));
+    if (m.hpLoss > 0) B(R.T('sys.rules.effectSentences.B_33'), R.T('sys.rules.effectSentences.B_34'));
     const downs = [];
     const rest = bad.filter((p) => { const mt = /^ただし(.+)が下がる。$/.exec(p[0]); if (!mt || /と/.test(mt[1])) return true; downs.push(mt[1]); return false; });
-    if (downs.length >= 2) { rest.push(['ただし' + (downs.length === 2 ? downs.join('と') : joinDot(downs)) + 'が下がる。']); return { good, bad: rest }; }
+    if (downs.length >= 2) { rest.push([R.T('sys.rules.effectSentences.0', { p0: downs.length === 2 ? downs.join(R.T('sys.rules.effectSentences.0.join')) : joinDot(downs) })]); return { good, bad: rest }; }
     return { good, bad };
   }
   function packDesc(good, bad, statLine) {

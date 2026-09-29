@@ -6,11 +6,11 @@
 (function (R) {
   'use strict';
   Object.assign(R.DB.elements, {
-    fire:  { name: '火', color: '#ff7038', fx: 'fire',  sfx: 'fire',  icon: 'fire',  weakTo: 'water' },
-    water: { name: '水', color: '#48a8ff', fx: 'water', sfx: 'water', icon: 'ice', weakTo: 'earth' },
-    wind:  { name: '風', color: '#68dc88', fx: 'wind',  sfx: 'wind',  icon: 'wind',  weakTo: 'fire' },
-    earth: { name: '土', color: '#c89850', fx: 'earth', sfx: 'earth', icon: 'earth', weakTo: 'wind' },
-    light: { name: '光', color: '#fff0a0', fx: 'holy',  sfx: 'light', icon: 'light', weakTo: 'dark' },
-    dark:  { name: '闇', color: '#a068e0', fx: 'dark',  sfx: 'dark',  icon: 'dark',  weakTo: 'light' },
+    fire:  { name: R.T('elements.fire.name'), color: '#ff7038', fx: 'fire',  sfx: 'fire',  icon: 'fire',  weakTo: 'water' },
+    water: { name: R.T('elements.water.name'), color: '#48a8ff', fx: 'water', sfx: 'water', icon: 'ice', weakTo: 'earth' },
+    wind:  { name: R.T('elements.wind.name'), color: '#68dc88', fx: 'wind',  sfx: 'wind',  icon: 'wind',  weakTo: 'fire' },
+    earth: { name: R.T('elements.earth.name'), color: '#c89850', fx: 'earth', sfx: 'earth', icon: 'earth', weakTo: 'wind' },
+    light: { name: R.T('elements.light.name'), color: '#fff0a0', fx: 'holy',  sfx: 'light', icon: 'light', weakTo: 'dark' },
+    dark:  { name: R.T('elements.dark.name'), color: '#a068e0', fx: 'dark',  sfx: 'dark',  icon: 'dark',  weakTo: 'light' },
   });
 })(window.RPG);

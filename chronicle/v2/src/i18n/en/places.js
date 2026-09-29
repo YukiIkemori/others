@@ -1,0 +1,73 @@
+// 英語の文の表（places）。key は日本語の表（src/i18n/ja/places.js）と同じ。無い key は日本語が出る
+// 差し込み {name} は日本語と同じ名前を残す。数の言い分けは {n, plural, one {…} other {…}}（core/i18n.js）
+(function (R) {
+  'use strict';
+  R.I18n.add('en', {
+    // ---- src/data/locations.js
+    'locations.roa.name': 'Roa',
+    'locations.pharos.name': 'Port Pharos',
+    'locations.lighthouse.name': 'Pharos Lighthouse',
+    'locations.well.name': 'Old Travelers\' Well',
+    'locations.fern.name': 'Fern',
+    'locations.yura.name': 'Yura, the Hidden Village',
+    'locations.verda.name': 'Wandering Woods',
+    'locations.elder.name': 'Millennial Tree',
+    'locations.hut.name': 'Woodcutters\' Hut',
+    // ---- src/data/locations_ash.js
+    'locations.caldera.name': 'Caldera',
+    'locations.haimi.name': 'Ashview Inn',
+    'locations.volcano.name': 'Ash Volcano',
+    // ---- src/data/locations_desert.js
+    'locations.kasim.name': 'Kasim',
+    'locations.sandedge.name': 'Sandedge Inn',
+    'locations.tomb.name': 'Sand King\'s Tomb',
+    'locations.hawks.name': 'Sand Hawks\' Hideout',
+    'locations.rocks.name': 'Diamond Lizard Rocks',
+    'locations.temple.name': 'Sunken Temple',
+    'locations.camp1.name': 'Rock Well Camp',
+    'locations.camp2.name': 'Star Stone Camp',
+    'locations.oasis.name': 'Tomb Oasis',
+    'locations.mirage.name': 'Mirage Market',
+    // ---- src/data/locations_marsh.js
+    'locations.loch.name': 'Loch',
+    'locations.manor.name': 'Mist Manor',
+    'locations.bog.name': 'Sunken Bell Bog',
+    // ---- src/data/locations_snow.js
+    'locations.yule.name': 'Yule',
+    'locations.pass_inn.name': 'Pass Inn',
+    'locations.snow_woods.name': 'Snowy Woods',
+    'locations.peak.name': 'White Dragon Peak',
+    'locations.icicle.name': 'Icicle Corridor',
+    'locations.aurora.name': 'Aurora Cliffs',
+    'locations.frost_ship.name': 'Icebound Galleon',
+    // ---- src/data/regions.js
+    'regions.prologue.name': 'Pharos Peninsula',
+    'regions.prologue.chapter.title': 'The Lighthouse Keeper\'s Song',
+    'regions.prologue.beacon': 'Pharos Lighthouse',
+    'regions.r_forest.name': 'Verda Forest',
+    'regions.r_forest.chapter.title': 'Song of the Millennial Tree',
+    'regions.r_forest.beacon': 'Song Light of the Millennial Tree',
+    'regions.r_desert.name': 'Zahara Desert',
+    'regions.r_desert.chapter.title': 'The King Who Sold His Name',
+    'regions.r_desert.beacon': 'Sun Wheel Flame',
+    'regions.r_snow.name': 'Norden Snowfields',
+    'regions.r_snow.chapter.title': 'The White Dragon and the Solstice Fire',
+    'regions.r_snow.beacon': 'Solstice Fire',
+    'regions.r_marsh.name': 'Graymoor Marsh',
+    'regions.r_marsh.chapter.title': 'The Mist Witch and the Seven Bells',
+    'regions.r_marsh.beacon': 'Lights of the Seven Belfries',
+    'regions.r_isles.name': 'Marea Isles',
+    'regions.r_isles.chapter.title': 'The Captain Who Never Returned',
+    'regions.r_isles.beacon': 'Unreturning Light',
+    'regions.r_mine.name': 'Gald Highlands',
+    'regions.r_mine.chapter.title': 'The Smith God\'s Oath',
+    'regions.r_mine.beacon': 'Smith God\'s Forge',
+    'regions.r_ash.name': 'Ashen Wastes',
+    'regions.r_ash.chapter.title': 'The Mountain Where the Firebird Sleeps',
+    'regions.r_ash.beacon': 'Firebird',
+    'regions.r_star.name': 'Orbis Plateau',
+    'regions.r_star.chapter.title': 'The Sage Who Counted Stars',
+    'regions.r_star.beacon': 'Stars',
+    'regions.world.name': 'World Rumors',
+  });
+})(window.RPG);

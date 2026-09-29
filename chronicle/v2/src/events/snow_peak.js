@@ -8,13 +8,13 @@
   const E = (id, run, o) => R.def('events', id, Object.assign({ run, meta: { needs: [], gives: [] } }, o || {}));
   const X = () => R.Snow.ev;
   const objAt = (ctx, event) => { const m = R.DB.maps[ctx && ctx.map]; return m && (m.objects || []).find((o) => o.type === 'examine' && o.event === event && o.x === ctx.x && o.y === ctx.y); };
-  const NEVE = { name: '白竜ネーヴェ', face: false };
-  const GIANT = { name: '氷壁の巨人', face: false };
+  const NEVE = { name: R.T('ev.snow_peak.NEVE.name'), face: false };
+  const GIANT = { name: R.T('ev.snow_peak.GIANT.name'), face: false };
 
   E('peak_arrive', async (ev) => {
     if (X().cleared(ev)) return;
-    await ev.caption('白竜の峰。\n吹雪が、横なぐりに吹きつける。', { ms: 2200 });
-    if (!ev.has('k_winter_flame')) await ev.caption('……この先は、厚い氷が\n道をふさいでいるらしい。', { ms: 2000 });
+    await ev.caption(R.T('events.peak_arrive.caption'), { ms: 2200 });
+    if (!ev.has('k_winter_flame')) await ev.caption(R.T('events.peak_arrive.caption_2'), { ms: 2000 });
   }, { meta: { needs: [], gives: [] } });
 
   // 氷の壁（冬至の火の火種でとける）
@@ -22,46 +22,46 @@
     const o = objAt(ctx, 'peak_icewall');
     const n = (o && o.wall) || 1;
     const f = 'snow_ice_' + n;
-    if (ev.flag(f)) { await ev.say(null, 'とけた氷の水が、\n足もとで凍りかけている。'); return; }
+    if (ev.flag(f)) { await ev.say(null, R.T('events.peak_icewall.say')); return; }
     if (!ev.has('k_winter_flame')) {
-      await ev.say(null, ['分厚い氷の壁が、道をふさいでいる。\nたたいても、びくともしない。', 'ただの火では、とけそうにない。\n……冬至の火のような、\n強い火でなければ。']);
+      await ev.say(null, R.T('events.peak_icewall.say_2'));
       return;
     }
-    await ev.say(null, '冬至の火の火種を、\n氷の壁にかざした。');
+    await ev.say(null, R.T('events.peak_icewall.say_3'));
     ev.sfx('fire');
     try { R.Field.flash('#ffc070', 300); } catch (e) { /* */ }
     ev.setFlag(f);
-    await ev.caption('氷の壁が、音を立ててとけていく……！', { ms: 1800 });
+    await ev.caption(R.T('events.peak_icewall.caption'), { ms: 1800 });
   }, { meta: { needs: ['item:k_winter_flame'], gives: ['flag:snow_ice_1', 'flag:snow_ice_2', 'flag:snow_ice_3'] } });
 
   E('peak_overlook', async (ev) => {
-    await ev.say(null, X().cleared(ev) ? ['岩棚から、雪原が見渡せる。\nユールの冬至の火が、\n赤い点のように見える。'] : ['岩棚から、吹雪の雪原を\n見下ろした。', 'ずっと下に、ユールの\n大かまどの火が、かすかに見える。']);
+    await ev.say(null, X().cleared(ev) ? [R.T('events.peak_overlook.say.0')] : R.T('events.peak_overlook.say'));
   });
 
   // 氷壁の巨人（中ボス）
   E('peak_giant', async (ev) => {
     if (ev.flag('snow_giant')) return;
     ev.bgm('omen');
-    await ev.say(null, 'ズシン……ズシン……。\n氷の壁そのものが、立ち上がった。');
-    await ev.say('icegiant', '……ここより上へは、\n誰も通さぬ……。', Object.assign({ voice: 'v_giant_peak_01' }, GIANT));
+    await ev.say(null, R.T('events.peak_giant.say'));
+    await ev.say('icegiant', R.T('events.peak_giant.say_2'), Object.assign({ voice: 'v_giant_peak_01' }, GIANT));
     ev.sfx('roar');
     const r = await ev.battle('tr_b_icegiant', { boss: true });
     ev.mapBgm();
     if (r !== 'win') return;
     ev.setFlag('snow_giant');
-    await ev.say(null, ['巨人の体が、ひび割れて崩れた。\n氷のかけらが、吹雪に散っていく。', 'その奥に、頂へ続く\n石段が現れた。']);
+    await ev.say(null, R.T('events.peak_giant.say_3'));
   }, { meta: { needs: ['flag:snow_ice_2'], gives: ['flag:snow_giant'] } });
 
   E('peak_top_arrive', async (ev) => {
     if (X().cleared(ev)) return;
-    await ev.caption('白竜の峰の頂。\n吹きさらしの岩の上に、\n吹雪が渦を巻いている。', { ms: 2600 });
+    await ev.caption(R.T('events.peak_top_arrive.caption'), { ms: 2600 });
   });
   E('peak_epitaph', async (ev) => {
-    await ev.say(null, ['大きな岩に、古い字が彫られている。\n爪で刻んだような、深い字だ。', '「いつか朝が来なくなっても、\n朝は壊れたのではない。\nめくられなくなっただけ」']);
+    await ev.say(null, R.T('events.peak_epitaph.say'));
     await X().lore(ev, 'lo_snow_epitaph');
   }, { meta: { needs: [], gives: ['flag:lo_snow_epitaph'] } });
   E('peak_altar', async (ev) => {
-    await ev.say(null, X().cleared(ev) ? ['氷の祭壇に、冬至の火が燃えている。\n吹雪は、もう吹かない。', 'ネーヴェの気配が、\n峰じゅうに満ちている。'] : '氷の祭壇。\n火を置く台が、空いている。');
+    await ev.say(null, X().cleared(ev) ? R.T('events.peak_altar.say') : R.T('events.peak_altar.say_2'));
   });
 
   // 頂で白竜ネーヴェ（語る／戦う）
@@ -70,31 +70,31 @@
     if (!ev.has('k_winter_flame')) return;
     ev.bgm('omen');
     try { R.Field.shake(6, 900); } catch (e) { /* */ }
-    await ev.caption('吹雪を裂いて、白い竜が\n祭壇に舞い降りた。', { ms: 2400 });
-    await ev.say('neve', '……去れ……人の子よ……。\nこの峰に、もはや\n語るべき物語はない……！', Object.assign({ voice: 'v_neve_peak_01' }, NEVE));
+    await ev.caption(R.T('events.peak_neve.caption'), { ms: 2400 });
+    await ev.say('neve', R.T('events.peak_neve.say'), Object.assign({ voice: 'v_neve_peak_01' }, NEVE));
     const canTalk = ev.flag('snow_logs_done') && ev.flag('snow_ice_done') && ev.flag('snow_tales_done') && ev.choiceOf('ch_snow_tale') === 'dragon';
     let how = 'fight';
     if (canTalk) {
-      const i = await ev.choose(['物語を語る', '戦う'], { text: 'ネーヴェが、翼を広げた。' });
+      const i = await ev.choose(R.T('events.peak_neve.i.choose'), { text: R.T('events.peak_neve.i.choose.text') });
       how = i === 0 ? 'talk' : 'fight';
     } else {
-      await ev.say(null, '竜の目は、凍りついたように\n冷たい。……言葉は届きそうにない。');
+      await ev.say(null, R.T('events.peak_neve.say_2'));
     }
     if (how === 'talk') {
-      await ev.say(null, ['{hero}は、冬至の火を掲げ、\n祭で語った話を、もう一度語った。', '竜と、火を運んだ娘の約束の話を。']);
+      await ev.say(null, R.T('events.peak_neve.say_3'));
       ev.bgm('legend');
       for (const l of X().TALES.dragon.lines) await ev.caption(l, { ms: 3000 });
-      await ev.caption('ネーヴェの目の奥で、\n何かがゆっくりと、とけていく。', { ms: 2600 });
+      await ev.caption(R.T('events.peak_neve.caption_2'), { ms: 2600 });
     } else {
       ev.sfx('roar');
       const r = await ev.battle('tr_b_whitedragon', { boss: true });
       if (r !== 'win') { ev.mapBgm(); return; }
-      await ev.say(null, '白竜は膝を折り、\n吹雪がふっと弱まった。');
+      await ev.say(null, R.T('events.peak_neve.say_4'));
     }
     ev.choice('ch_snow_neve', how);
     ev.bgm('dawn');
-    await ev.say('neve', '……あたたかい。人の子らは、\nわたしを忘れてはいなかったのか。', Object.assign({ voice: 'v_neve_peak_02' }, NEVE));
-    await ev.say('neve', '吹雪は、わたしが鎮めよう。\n語り部よ、礼を言う。', Object.assign({ voice: 'v_neve_peak_03' }, NEVE));
+    await ev.say('neve', R.T('events.peak_neve.say_5'), Object.assign({ voice: 'v_neve_peak_02' }, NEVE));
+    await ev.say('neve', R.T('events.peak_neve.say_6'), Object.assign({ voice: 'v_neve_peak_03' }, NEVE));
     ev.setFlag('snow_neve');
     await ev.call('snow_finale');
   }, {
@@ -111,41 +111,41 @@
     const x = X();
     // 竜の品（戦う: 竜の牙の剣／語る: 竜のうろこのお守り。同じ強さの別の品）
     if (ev.choiceOf('ch_snow_neve') === 'talk') {
-      await ev.say('neve', '……これを持っていくがよい。\nわたしの、うろこの一枚だ。', Object.assign({ voice: 'v_neve_peak_04' }, NEVE));
+      await ev.say('neve', R.T('events.snow_finale.say'), Object.assign({ voice: 'v_neve_peak_04' }, NEVE));
       ev.item('u_dragon_scale', 1);
     } else {
-      await ev.say(null, '戦いで折れた竜の牙が、\n雪の上に落ちていた。');
+      await ev.say(null, R.T('events.snow_finale.say_2'));
       ev.item('u_dragon_fang', 1);
     }
-    await ev.say(null, '{hero}は、冬至の火を\n氷の祭壇に置いた。');
+    await ev.say(null, R.T('events.snow_finale.say_3'));
     ev.take('k_winter_flame', 1);
     ev.sfx('fire');
     // 大灯火（冬至の火）: ページ・ティア・光の柱・章の札（EVENTS の共通の筋）
     await ev.clearRegion('r_snow');
     ev.bgm('dawn');
     ev.sfx('light');
-    await ev.caption('吹雪が、止んだ。', { ms: 2000 });
-    await ev.caption('雲が割れて、空いっぱいに\nオーロラが揺れた。\n緑と、薄紅と、青。', { ms: 3200 });
-    await ev.caption('地平が、ほんの少しだけ、\n白んだ気がした。', { ms: 2600 });
+    await ev.caption(R.T('events.snow_finale.caption'), { ms: 2000 });
+    await ev.caption(R.T('events.snow_finale.caption_2'), { ms: 3200 });
+    await ev.caption(R.T('events.snow_finale.caption_3'), { ms: 2600 });
     ev.setFlag('snow_aurora_seen');
     // ユールへ: 夜数えの板・日継ぎの主張
     await ev.fade('out', 800);
     await ev.warp('yule', 'hearth');
-    await ev.caption('ユール。\n吹雪のやんだ広場に、\n村じゅうの人が空を見上げていた。', { ms: 2600 });
-    await ev.say('sonja', ['{hero}！　おかえりなさい。', '夜数えの板に、今夜の刻みを\n入れようとしたの。\n……でも、手が止まっちゃった。', '……今夜は、いつもより\n空が明るい。'], { voice: ['v_sonja_snow_05', 'v_sonja_snow_06', 'v_sonja_snow_07'] });   // 1 つ目は名前を読まない
+    await ev.caption(R.T('events.snow_finale.caption_4'), { ms: 2600 });
+    await ev.say('sonja', R.T('events.snow_finale.say_4'), { voice: ['v_sonja_snow_05', 'v_sonja_snow_06', 'v_sonja_snow_07'] });   // 1 つ目は名前を読まない
     ev.setFlag('snow_board_stop');
-    await ev.say('old_m', ['冬至に火を峰へ運ぶから、\nいつか太陽が戻ってくる。', '……わしのじいさまは、\nそう言っておったよ。'], { name: '村の年寄り' });
+    await ev.say('old_m', R.T('events.snow_finale.say_5'), { name: R.T('events.snow_finale.say.name') });
     // 年代記に書く選択（ch_snow_write。痛みの側は pain_count を足す）
     const broken = ['n', 'e', 'w'].filter((g) => ev.flag('snow_gate_' + g + '_broken'));
-    await ev.say(null, '{hero}は、年代記を開いた。\nこの村のことを、どう書こう。');
-    const i = await ev.choose(['勝ったことだけを書く', broken.length ? '守れなかった門のことも書く' : '村が震えた夜のことも書く'], { text: '年代記に何を書く？' });
+    await ev.say(null, R.T('events.snow_finale.say_6'));
+    const i = await ev.choose([R.T('events.snow_finale.i.choose.0'), broken.length ? R.T('events.snow_finale.i.choose.1') : R.T('events.snow_finale.i.choose.1_2')], { text: R.T('events.snow_finale.i.choose.text') });
     if (i === 1) {
       ev.choice('ch_snow_write', 'pain');
       ev.addVar('pain_count', 1);
-      await ev.say(null, '「……守れなかった門があった。\nそこで壊れたもののことも、\nここに記す」');
+      await ev.say(null, R.T('events.snow_finale.say_7'));
     } else {
       ev.choice('ch_snow_write', 'glory');
-      await ev.say(null, '「ユールの人々は大火祭の夜、\n氷の狼を退け……」');
+      await ev.say(null, R.T('events.snow_finale.say_8'));
     }
     ev.sfx('quill');
     ev.setFlag('snow_finale_done');
@@ -159,17 +159,17 @@
     if (ev.flag('snow_day2') || !ev.flag('snow_finale_done')) return;
     ev.setFlag('snow_day2');
     ev.bgm('bonfire');
-    await ev.caption('遅れた大火祭の、二日目。\n広場に屋台が並び、\n子どもたちが雪の中を走り回る。', { ms: 2800 });
+    await ev.caption(R.T('events.snow_day2.caption'), { ms: 2800 });
     const broken = ['n', 'e', 'w'].filter((g) => ev.flag('snow_gate_' + g + '_broken'));
     if (ev.choiceOf('ch_snow_write') === 'pain' && broken.length) {
-      await ev.say('jorn', ['……祭の前に、ひとつ。', broken.map((g) => X().GATES[g]).join('と') + 'のそばで、\n家を壊された者がいる。\n名を読み上げさせてくれ。']);
-      await ev.caption('ヨルンは、壊れた門のそばで、\n家の名をひとつずつ読み上げた。\n広場は、しばらく静かだった。', { ms: 3200 });
+      await ev.say('jorn', [R.T('events.snow_day2.say.0'), R.T('events.snow_day2.say.1', { join: broken.map((g) => X().GATES[g]).join(R.T('events.snow_day2.say.1.join')) })]);
+      await ev.caption(R.T('events.snow_day2.caption_2'), { ms: 3200 });
     }
-    await ev.say('sonja', ['{hero}、冬至の火をね、\n分けておいたの。', '峠の道の灯籠が、三つ\n消えたままなんだって。\nこれで、ともしてあげて。']);
+    await ev.say('sonja', R.T('events.snow_day2.say'));
     ev.item('k_yule_ember', 1);
     ev.lead('q_snow_lamps');
     const ok = ['n', 'e', 'w'].filter((g) => !ev.flag('snow_gate_' + g + '_broken'));
-    if (ok.length) await ev.caption('守りきった門の家の前に、\n礼の箱が置かれている。', { ms: 2000 });
+    if (ok.length) await ev.caption(R.T('events.snow_day2.caption_3'), { ms: 2000 });
     ev.mapBgm();
   }, { meta: { needs: ['flag:snow_finale_done'], gives: ['flag:snow_day2', 'item:k_yule_ember', 'lead:q_snow_lamps'] } });
 })(window.RPG);

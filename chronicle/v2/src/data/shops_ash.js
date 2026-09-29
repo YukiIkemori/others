@@ -31,11 +31,11 @@
   R.onData(function () {
     const arms = { items: gear(WEAPON_LINES, 0).concat(gear(ARMOR_LINES, 0)), tier: byTier((t) => gear(WEAPON_LINES, t).concat(gear(ARMOR_LINES, t))) };
     R.defs('shops', {
-      shop_caldera_items: { name: '殻の道具屋', kind: 'item', keepOld: true, sell: true, items: items(0).concat(ACC(0)), tier: { 1: items(1), 2: items(2).concat(ACC(1)), 3: items(3), 5: (ACC(2).length ? ACC(2) : items(3)).concat(items(5)) } },
-      shop_caldera_arms: Object.assign({ name: '殻の武具屋', kind: 'weapon', keepOld: false, sell: true }, arms),
-      shop_arena: { name: '闘技場の売り台', kind: 'special', priceMul: trust, keepOld: true, sell: true,
+      shop_caldera_items: { name: R.T('shops.shop_caldera_items.name'), kind: 'item', keepOld: true, sell: true, items: items(0).concat(ACC(0)), tier: { 1: items(1), 2: items(2).concat(ACC(1)), 3: items(3), 5: (ACC(2).length ? ACC(2) : items(3)).concat(items(5)) } },
+      shop_caldera_arms: Object.assign({ name: R.T('shops.shop_caldera_arms.name'), kind: 'weapon', keepOld: false, sell: true }, arms),
+      shop_arena: { name: R.T('shops.shop_arena.name'), kind: 'special', priceMul: trust, keepOld: true, sell: true,
         items: items(1).concat(ACC(0)), tier: { 2: items(2).concat(ACC(1)), 4: items(3).concat(ACC(2)), 5: items(5), 6: ACC(3) } },
-      shop_haimi: { name: '灰見の宿の売り台', kind: 'item', keepOld: true, sell: true, items: items(0).concat(['i_potion', 'i_ether'].filter(has)), tier: { 2: items(2), 4: items(3), 5: items(5) } },
+      shop_haimi: { name: R.T('shops.shop_haimi.name'), kind: 'item', keepOld: true, sell: true, items: items(0).concat(['i_potion', 'i_ether'].filter(has)), tier: { 2: items(2), 4: items(3), 5: items(5) } },
     });
   });
 })(window.RPG);

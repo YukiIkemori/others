@@ -132,7 +132,7 @@
     if (!def) return '';
     if (def.goldName) return def.goldName;
     const n = def.name || '';
-    return fwLen(n) <= 5 ? '金色の' + n : '金の' + n;
+    return fwLen(n) <= 5 ? R.T('sys.mon.goldenName.ret', { n }) : R.T('sys.mon.goldenName.ret_2', { n });
   }
   /** 金色になれる魔物（鋼・レア・ボス・呼ばれた物でない） */
   function canBeGolden(d) { return !!d && !has(d, 'metal') && !has(d, 'rare') && !has(d, 'boss') && !d.summoned; }

@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("f_south", {
-    name: "森の南", region: "r_forest", outside: "forest_dark",
+    name: R.T('map.field_south.f_south.name'), region: "r_forest", outside: "forest_dark",
     rows: [
       ",TTTTTF,,,FFFFFTTTTTTTTTTTT;;...;;TTTFFFTTTTTTTTTTTTTTTT",
       ",,,,,,,,,,FFFFTTTTTTTTTTTTTT;...;;TTTTTTTTwTTTTTTTTTrTTb",
@@ -58,8 +58,8 @@
     ],
     objects: [
       {"type":"examine","x":42,"y":21,"event":"world_poi_forest_ring"},
-      {"type":"sign","x":40,"y":24,"text":"森の南の広場"},
-      {"type":"sign","x":34,"y":26,"text":"双子の見張り塔\n修理中につき、立ち入り禁止。"},
+      {"type":"sign","x":40,"y":24,"text":R.T('map.field_south.f_south.objects.1.text')},
+      {"type":"sign","x":34,"y":26,"text":R.T('map.field_south.f_south.objects.2.text')},
       {"type":"examine","x":6,"y":12,"event":"world_poi_forest_tower"},
       {"type":"examine","x":7,"y":12,"event":"world_poi_cache","item":"i_ether","key":"world_poi_forest_tower"},
       {"type":"examine","x":30,"y":30,"event":"world_poi_stones"},
@@ -68,11 +68,11 @@
       {"type":"prop","id":"lantern","x":20,"y":24},
       {"type":"waylamp","id":"wl_17","x":31,"y":9,"lit":true},
       {"type":"waylamp","id":"wl_18","x":21,"y":39,"lit":true},
-      {"type":"sign","x":23,"y":42,"text":"南の峠\n南 → ザハラ砂漠"},
+      {"type":"sign","x":23,"y":42,"text":R.T('map.field_south.f_south.objects.11.text')},
     ],
     npcs: [
-      {"id":"woodcutter_road","look":"npc_woodcutter_1","name":"きこり","x":21,"y":25,"dir":"w","move":"still","talk":"world_woodcutter","reward":"hint","key":"world_woodcutter"},
-      {"id":"guard_south","look":"npc_guard_1","name":"番人","x":21,"y":42,"dir":"n","move":"still","pushable":false,"cond":{"slice":true},"talk":{"lines":[{"text":["南の峠は、砂嵐で\n道が埋まってしまったんだ。","砂漠へ行くのは、\n嵐がやむまで待ってくれ。"]}]},"reward":"news","key":"world_guard_south"},
+      {"id":"woodcutter_road","look":"npc_woodcutter_1","name":R.T('map.field_south.f_south.woodcutter_road.name'),"x":21,"y":25,"dir":"w","move":"still","talk":"world_woodcutter","reward":"hint","key":"world_woodcutter"},
+      {"id":"guard_south","look":"npc_guard_1","name":R.T('map.field_south.f_south.guard_south.name'),"x":21,"y":42,"dir":"n","move":"still","pushable":false,"cond":{"slice":true},"talk":{"lines":[{"text":R.T('map.field_south.f_south.lines.0.text')}]},"reward":"news","key":"world_guard_south"},
     ],
     spawns: {"north":{"x":30,"y":1,"dir":"s"},"south":{"x":20,"y":46,"dir":"n"}},
     exits: [{"x":30,"y":0,"w":2,"h":1,"to":{"map":"f_fern","spawn":"south"}},{"x":20,"y":47,"w":2,"h":1,"to":{"map":"world","spawn":"f_south_s"},"cond":{"not":{"slice":true}}}],
@@ -80,7 +80,7 @@
     tilePatches: [{"cond":{"slice":true},"rect":[19,44,4,2],"rows":["rrrr","rrrr"]}],
     zones: [{"rect":null,"zone":"zw_forest"}],
     art: {"image":"field/under/f_south","painted":[],"overlay":"field/under/f_south_over","closed":"field/under/f_south_closed"},
-    meta: {"sub":"きこりの野営地と古い塔","worldRect":[84,262,110,100]},
+    meta: {"sub":R.T('map.field_south.f_south.meta.sub'),"worldRect":[84,262,110,100]},
     links: {},
   });
 })(window.RPG);

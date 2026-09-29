@@ -28,26 +28,26 @@
       const x = (R.W - w) / 2;
       const pw = w - u(48);
       const lines = [];
-      if (!d) lines.push({ t: '？？？', c: C.text3 });
+      if (!d) lines.push({ t: R.T('ui.detail.draw.t'), c: C.text3 });
       const desc = d ? String(d.desc || '').replace(/\n/g, '') : '';
       const stats = [];
       let sub = '';
       if (d && this.kind === 'item') {
-        sub = d.slot === 'use' ? (d.use && d.use.field ? (d.use.battle === false ? 'フィールドで使う道具' : 'フィールドでも戦闘でも使える道具') : '戦闘で使う道具') : d.slot === 'key' ? '大事な物' : S.kindLine(d);
+        sub = d.slot === 'use' ? (d.use && d.use.field ? (d.use.battle === false ? R.T('ui.detail.draw.sub') : R.T('ui.detail.draw.sub_2')) : R.T('ui.detail.draw.sub_3')) : d.slot === 'key' ? R.T('ui.detail.draw.sub_4') : S.kindLine(d);
         const N = R.Rules.DIFF_NAMES || {};
         for (const k of RAW) if (d[k]) stats.push([N[k] || k, d[k]]);
         for (const k of Object.keys(d.stats || {})) if (d.stats[k]) stats.push([N[k] || k, (d.stats[k] > 0 ? '+' : '') + d.stats[k]]);
       } else if (d && (this.kind === 'tech' || this.kind === 'spell')) {
-        sub = this.kind === 'tech' ? S.wname(d.wtype) + 'の技' + (this.from ? '・' + this.from + 'から派生' : '') : (d.elements || []).map(S.ename).join('・') + 'の術';
-        stats.push(['MP', d.mp || 0], ['範囲', S.rangeName(d) || '―']);
-      } else if (d && this.kind === 'mon') sub = '魔物';
+        sub = this.kind === 'tech' ? R.T('ui.detail.draw.sub_5', { wname: S.wname(d.wtype), p1: this.from ? R.T('ui.detail.draw.sub_6', { from: this.from }) : '' }) : R.T('ui.detail.draw.sub_7', { join: (d.elements || []).map(S.ename).join(R.T('ui.detail.draw.sub.join')) });
+        stats.push(['MP', d.mp || 0], [R.T('ui.detail.draw.0'), S.rangeName(d) || '―']);
+      } else if (d && this.kind === 'mon') sub = R.T('ui.detail.draw.sub_8');
       const dl = R.UIK.wrap(desc, pw, { size: u(15) });
       const h = u(24) + u(34) + (sub ? u(28) : 0) + (stats.length ? Math.ceil(stats.length / 2) * u(28) + u(14) : 0) + dl.length * u(26) + u(58);
       const y = (R.H - h) / 2;
       this.rect = { x, y, w, h };
       R.UIK.panel(g, this.rect, { dense: true, frost: true });
       let cy = y + u(22);
-      const nw = R.UIK.text(g, d ? d.name : '？？？', x + u(24), cy, { size: u(21), weight: 700, color: (d && S.gradeColor(d)) || C.goldHi, maxW: pw - u(40) });
+      const nw = R.UIK.text(g, d ? d.name : R.T('ui.detail.draw.text'), x + u(24), cy, { size: u(21), weight: 700, color: (d && S.gradeColor(d)) || C.goldHi, maxW: pw - u(40) });
       if (d && d.grade) R.UIK.stars(g, d.grade, x + u(32) + Math.min(nw, pw - u(40)), cy + u(4), u(15));
       if (d && this.kind === 'item') R.UIK.icon(g, S.iconOf(d), x + w - u(46), cy, u(22), C.text2);
       cy += u(34);
@@ -62,7 +62,7 @@
         cy += Math.ceil(stats.length / 2) * u(28) + u(4);
       }
       for (const l of dl) { R.UIK.text(g, l, x + u(24), cy, { size: u(15), color: C.text }); cy += u(26); }
-      R.UIK.prompts(g, [{ btn: 'b', label: '閉じる' }], { x: x + w - u(20), y: y + h - u(22), align: 'right' });
+      R.UIK.prompts(g, [{ btn: 'b', label: R.T('ui.detail.draw.0.label') }], { x: x + w - u(20), y: y + h - u(22), align: 'right' });
     },
   });
 })(window.RPG);

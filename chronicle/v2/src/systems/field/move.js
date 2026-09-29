@@ -61,7 +61,7 @@
     const now = R.Engine.time;
     if (S.lockedAt && now - S.lockedAt < 1500) return;
     S.lockedAt = now;
-    F.hud.toast(msg || '戸には鍵がかかっている', { icon: 'search', anchor: 'bl' });
+    F.hud.toast(msg || R.T('sys.move.lockedBump.toast'), { icon: 'search', anchor: 'bl' });
   }
 
   /** 1 歩を始める。→ true（動いた） */
@@ -208,8 +208,8 @@
       F.lock('confirm');
       let yes = false;
       try {
-        if (shut) await R.UIK.Message.say({ text: gate.text || 'この先へは、まだ行けない。', face: false });
-        else yes = (await R.UIK.Message.say({ text, choices: ['はい', 'いいえ'], cancel: 1, face: false })) === 0;
+        if (shut) await R.UIK.Message.say({ text: gate.text || R.T('sys.move.confirmGo.say.text'), face: false });
+        else yes = (await R.UIK.Message.say({ text, choices: R.T('sys.move.confirmGo.yes.say.choices'), cancel: 1, face: false })) === 0;
       } finally { F.unlock('confirm'); }
       if (yes) return go();
       F._stepBack();
@@ -249,7 +249,7 @@
   F._arrive = function () {
     const m = S.map, G = R.Game;
     S.stat.arrive++;
-    if (S.torch && S.torch.steps > 0 && --S.torch.steps <= 0) { S.torch = null; F.hud.toast('松明の火が消えた', { icon: 'lamp', anchor: 'bl' }); }
+    if (S.torch && S.torch.steps > 0 && --S.torch.steps <= 0) { S.torch = null; F.hud.toast(R.T('sys.move.arrive.toast'), { icon: 'lamp', anchor: 'bl' }); }
     if (G) {
       G.steps = (G.steps || 0) + 1;
       const p = G.pos || (G.pos = {});
@@ -265,7 +265,7 @@
       if (F._secretFound) F._secretFound(m, S.x, S.y);   // ひと続きの通路と先の部屋を出す（やわらかく浮かび上がる。secrets.js）
       else { (G.secrets[m.id] = G.secrets[m.id] || []).push(S.x + ',' + S.y); F.chunks.dirtyAt(S.x, S.y); }
       try { R.Audio.sfx('secret'); } catch (e) { /* */ }
-      F.hud.toast('隠し通路を見つけた！', { icon: 'secret' });
+      F.hud.toast(R.T('sys.move.arrive.toast_2'), { icon: 'secret' });
       R.emit('secret:found', { map: m.id, x: S.x, y: S.y });
     }
     // 床のスイッチ・階段・扉・建物の入口
@@ -379,15 +379,15 @@
     let n = F._npcAt(tx, ty, S.lv);
     // 店の台の向こうの人にも話せる（台が solid の物で、その先に人）
     if (!n && F._objBlocks(S.map, tx, ty, S.lv) && !frontObj(tx, ty, S.lv)) n = F._npcAt(tx + d[0], ty + d[1], S.lv);
-    if (n) return { kind: 'npc', npc: n, x: n.x, y: n.y, label: '話す' };
+    if (n) return { kind: 'npc', npc: n, x: n.x, y: n.y, label: R.T('sys.move.front.label') };
     const o = frontObj(tx, ty, S.lv) || frontObj(S.x, S.y, S.lv);
     if (!o) return null;
-    let label = '調べる';
+    let label = R.T('sys.move.front.label_2');
     const G = R.Game;
-    if (o.type === 'chest') { if (G && (G.chests[S.map.id] || []).includes(o.id)) return null; label = '開ける'; }
-    else if (o.type === 'spring') label = R.MapUtil.springLook(S.map, o) === 'goddess' ? '女神の像に祈る' : '泉で休む';
-    else if (o.type === 'sign') label = '読む';
-    else if (o.type === 'brazier') { if (G && (G.lit[S.map.id] || []).includes(o.id)) return null; label = '火をともす'; }
+    if (o.type === 'chest') { if (G && (G.chests[S.map.id] || []).includes(o.id)) return null; label = R.T('sys.move.front.label_3'); }
+    else if (o.type === 'spring') label = R.MapUtil.springLook(S.map, o) === 'goddess' ? R.T('sys.move.front.label_4') : R.T('sys.move.front.label_5');
+    else if (o.type === 'sign') label = R.T('sys.move.front.label_6');
+    else if (o.type === 'brazier') { if (G && (G.lit[S.map.id] || []).includes(o.id)) return null; label = R.T('sys.move.front.label_7'); }
     else if (o.type === 'waylamp') { if (G && G.lamps[o.id]) return null; }
     return { kind: 'obj', obj: o, x: o.x, y: o.y, label };
   };
@@ -419,16 +419,16 @@
     const loot = R.Rules.chestLoot(o, R.Tier.get(), R.rng(G.seed + ':' + m.id + ':' + o.id)) || {};
     try { R.Audio.sfx('chest'); } catch (e) { /* */ }
     // 手に入れた物は画面下の文の窓で出す（持ち主の決まり 2026-09-27: 右上の通知だと気づきにくい）
-    let text = '宝箱は、からっぽだった。';
+    let text = R.T('sys.move.openChest.text');
     if (loot.gold) {
       G.gold += loot.gold;
-      text = `宝箱を開けた！\n${loot.gold} ゴールドを手に入れた！`;
+      text = R.T('sys.move.openChest.text_2', { gold: loot.gold });
     } else if (loot.item) {
       const r = R.State.gain(loot.item, loot.n || 1) || {};
       const it = R.DB.items[loot.item] || {};
       const nm = r.name || it.name || loot.item;
       const star = it.grade === 'super' ? '★★' : it.grade === 'rare' ? '★' : '';
-      text = `宝箱を開けた！\n${star}${nm}${(loot.n || 1) > 1 ? ' ×' + loot.n : ''}を手に入れた！`;
+      text = R.T('sys.move.openChest.text_3', { star, nm, p2: (loot.n || 1) > 1 ? ' ×' + loot.n : '' });
     }
     F.chunks.dirtyAt(o.x, o.y);
     F.hud.refresh();
@@ -445,11 +445,11 @@
     F.flash(goddess ? '#ffe8b8' : '#8fe8f0', 420);
     F.hud.refresh();
     R.emit('spring:use', { map: m.id, id: o.id });
-    if (!goddess) { F.hud.toast('泉の水で元気になった', { icon: 'spring' }); return; }
+    if (!goddess) { F.hud.toast(R.T('sys.move.spring.toast'), { icon: 'spring' }); return; }
     // 女神の像: 祈りの文（画面下の窓）を読んでから、回復の知らせ（全快そのものは上で済んでいる）
     F._run(async () => {
-      await R.UIK.Message.say({ text: '女神の像に祈りをささげた。\n……体に力が満ちていく。', face: false });
-      F.hud.toast('女神の像の加護で HP・MP が回復した', { icon: 'spring' });
+      await R.UIK.Message.say({ text: R.T('sys.move.spring.say.text'), face: false });
+      F.hud.toast(R.T('sys.move.spring.toast_2'), { icon: 'spring' });
     });
   };
   F._brazier = function (o) {
@@ -467,7 +467,7 @@
     const G = R.Game, m = S.map;
     if (!G || !o.flag) return;
     if (o.by === 'guest' && !S.guest) {
-      if (how === 'act') F.hud.toast('小さな穴だ。ここを通れる人がいれば……。', { icon: 'search', anchor: 'bl' });
+      if (how === 'act') F.hud.toast(R.T('sys.move.switch.toast'), { icon: 'search', anchor: 'bl' });
       return;
     }
     const on = o.look === 'plate' ? true : !G.flags[o.flag];

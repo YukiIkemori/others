@@ -108,8 +108,8 @@
   PU.has = (d) => !!(d && d.members && d.members.length);
   /** 覚えた行の文（名前が分からない閃きは「新技『…』を覚えた！」だけ） */
   PU.learnText = function (m, l) {
-    const what = l.kind === 'spell' ? `新しい術『${l.name}』` : `新技『${l.name}』`;
-    return m.name ? `✦ ${m.name}は ${what}を覚えた！` : `✦ ${what}を覚えた！`;
+    const what = l.kind === 'spell' ? R.T('battle.result_prof.learnText.what', { name: l.name }) : R.T('battle.result_prof.learnText.what_2', { name: l.name });
+    return m.name ? R.T('battle.result_prof.learnText.ret', { name: m.name, what }) : R.T('battle.result_prof.learnText.ret_2', { what });
   };
 
   // ---------------------------------------------------------------- 戦闘の中の「剣+1」
@@ -185,7 +185,7 @@
     if (!PU.has(data) || st.dead) return;
     const view = (st.prof = { data, page: 0, t0: R.Engine.time, start: R.Engine.time, played: {} });
     st.ui = {
-      prompts: [{ btn: 'a', label: '決定で進む' }],
+      prompts: [{ btn: 'a', label: R.T('battle.result_prof.show.ui.prompts.0.label') }],
       update() {},
       draw(g) { PU.draw(g, st); },
     };
@@ -304,9 +304,9 @@
     if ('letterSpacing' in g) g.letterSpacing = 4 * k + 'px';
     g.shadowColor = 'rgba(0,0,0,0.8)'; g.shadowBlur = 8;
     const hg = g.createLinearGradient(0, y, 0, y + 28 * k); hg.addColorStop(0, '#fffdf2'); hg.addColorStop(1, '#f2d08a');
-    g.fillStyle = hg; g.fillText('熟練度', x0, y);
+    g.fillStyle = hg; g.fillText(R.T('battle.result_prof.draw.fillText'), x0, y);
     g.restore();
-    Kt.text(g, '戦いで上がった熟練度', x0 + 112 * k, y + 12 * k, { size: 12 * k, color: Kt.COL.text3, raw: true, shadow: true });
+    Kt.text(g, R.T('battle.result_prof.draw.text'), x0 + 112 * k, y + 12 * k, { size: 12 * k, color: Kt.COL.text3, raw: true, shadow: true });
     if (pages.length > 1) Kt.text(g, `${Math.min(view.page, pages.length - 1) + 1} / ${pages.length}`, x0 + G.colW, y + 10 * k, { size: 13 * k, weight: 700, color: Kt.COL.text2, align: 'right', raw: true, shadow: true });
     Kt.hline(g, x0 - 8 * k, x0 + G.colW + 60 * k, y + 42 * k, 0.5, '255,226,160');
     y += 62 * k;

@@ -285,6 +285,7 @@ async function backTo(p, id, max) {
     // 設定: ←→ ですぐ変わる
     await openScreen(p, 'settings');
     const ts0 = await B.ev(p, 'RPG.Settings.get("textSpeed")');
+    await B.press(p, 'down');   // 1 行目は言語の行（i18n）
     await B.press(p, 'right');
     ok('settings: → changes textSpeed', (await B.ev(p, 'RPG.Settings.get("textSpeed")')) !== ts0);
     await B.press(p, 'left');
@@ -361,7 +362,8 @@ async function backTo(p, id, max) {
     await B.pressUntil(p, 'b', `${TOP}==='field'`, 4);
     await openScreen(p, 'settings');
     const ts1 = await B.ev(p, 'RPG.Settings.get("textSpeed")');
-    const ar = await B.ev(p, `(() => { const a = RPG.Engine.top().view.arrows.find(a => a.i === 0 && a.d === 1); return {x: a.r.x + a.r.w/2, y: a.r.y + a.r.h/2}; })()`);
+    // 1 行目は言語の行（i18n。選ぶ窓を開く）なので、文字の速さの行の ▶ を押す
+    const ar = await B.ev(p, `(() => { const v = RPG.Engine.top().view, ti = v.list.rows.findIndex(r => r.key === 'textSpeed'); const a = v.arrows.find(a => a.i === ti && a.d === 1); return {x: a.r.x + a.r.w/2, y: a.r.y + a.r.h/2}; })()`);
     await tap(ar.x, ar.y);
     ok('touch: tap the ▶ arrow changes a setting', (await B.ev(p, 'RPG.Settings.get("textSpeed")')) !== ts1);
     const tab = await B.ev(p, `(() => { const r = RPG.Engine.top().view.tabRects[2]; return {x: r.x + r.w/2, y: r.y + r.h/2}; })()`);

@@ -7,14 +7,14 @@
   const K = (name, desc, o) => Object.assign({ name, slot: 'key', grade: 'normal', tier: 0, price: 0, src: 'key', desc, icon: 'key' }, o || {});
   const U = (slot, name, o) => Object.assign({ name, slot, grade: 'rare', tier: 0, src: 'unique', grow: 'tier', price: 0 }, o);
   R.defs('items', {
-    u_champion_belt: U('acc', '闘士の帯', { mods: { statusResist: { burn: 1, stun: 0.5 }, hpPct: 5 }, icon: 'ring',
-      desc: 'やけどしない。気絶しにくい。\n最大HPが上がる。炎の試練の勝者の帯。' }),
-    u_mural_ember: U('acc', '壁画の残り火', { mods: { statusResist: { burn: 1, silence: 0.5 }, hpPct: 5 }, icon: 'ring',
-      desc: 'やけどしない。沈黙しにくい。\n最大HPが上がる。白くならずに済んだ\n壁画の、赤い顔料のかけら。' }),
+    u_champion_belt: U('acc', R.T('items.u_champion_belt.acc'), { mods: { statusResist: { burn: 1, stun: 0.5 }, hpPct: 5 }, icon: 'ring',
+      desc: R.T('items.u_champion_belt.acc.desc') }),
+    u_mural_ember: U('acc', R.T('items.u_mural_ember.acc'), { mods: { statusResist: { burn: 1, silence: 0.5 }, hpPct: 5 }, icon: 'ring',
+      desc: R.T('items.u_mural_ember.acc.desc') }),
     // 大事な物
-    k_arena_token: K('出場の札', '炎の試練（闘技大会）の出場の札。\n裏に、受付の焼き印。', { icon: 'key' }),
-    k_seed_fire: K('神殿の種火', '火の神殿の種火を分けた、\n小さな素焼きの火つぼ。', { icon: 'lamp' }),
-    k_phoenix_plume: K('火の鳥の羽', 'かえった火の鳥の、赤金の羽。\n神殿の止まり木で、火の鳥の背に\n乗せてもらえる。', { icon: 'fire' }),
-    k_spa_salt: K('湯の花', '湯の郷の岩の割れ目で採れる、\n白い湯の花。', { icon: 'bag' }),
+    k_arena_token: K(R.T('items.k_arena_token.K'), R.T('items.k_arena_token.K_2'), { icon: 'key' }),
+    k_seed_fire: K(R.T('items.k_seed_fire.K'), R.T('items.k_seed_fire.K_2'), { icon: 'lamp' }),
+    k_phoenix_plume: K(R.T('items.k_phoenix_plume.K'), R.T('items.k_phoenix_plume.K_2'), { icon: 'fire' }),
+    k_spa_salt: K(R.T('items.k_spa_salt.K'), R.T('items.k_spa_salt.K_2'), { icon: 'bag' }),
   });
 })(window.RPG);

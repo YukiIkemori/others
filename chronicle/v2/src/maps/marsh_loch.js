@@ -120,41 +120,41 @@
     // 町の宝箱 2（見える所だけ）
     O.push(K.chest('loch_c1', 51, 15, { pool: 'p_T' }), K.chest('loch_c2', 12, 32, { item: 'i_ether', n: 2 }));
     // 門の看板
-    O.push(K.sign(1, 23, '水辺の町ロッホ\n西の板の道 → 湿原の道'), K.sign(53, 22, '東の橋 → 霧の館'));
+    O.push(K.sign(1, 23, R.T('map.marsh_loch.sign')), K.sign(53, 22, R.T('map.marsh_loch.sign_2')));
 
     // ---------------------------------------------------------------- 人
     const N = [
       // 広場（大鐘の前）: 松明を持った人だかり（着いたとき。集会が済むまで）
-      K.npc('mob_leader', 'npc_marsh_man', 27, 14, { name: '怒った町人', dir: 's', talk: 'loch_mob', reward: null, cond: '!marsh_assembly_done' }),
-      K.npc('mob_a', 'npc_marsh_woman', 25, 15, { name: '松明を持った女', dir: 'e', talk: 'loch_mob', reward: null, cond: '!marsh_assembly_done' }),
-      K.npc('mob_b', 'npc_marsh_old_m', 30, 15, { name: '松明を持った年寄り', dir: 'w', talk: 'loch_mob', reward: null, cond: '!marsh_assembly_done' }),
-      K.npc('bard', 'npc_bard', 34, 17, { name: '広場の吟遊詩人', dir: 'w', talk: 'loch_bard', reward: 'lead' }),
-      K.npc('child_plaza', 'npc_marsh_child', 21, 15, { name: '広場の子', dir: 'e', talk: 'loch_child', reward: 'hint', cond: 'cleared_r_marsh' }),
+      K.npc('mob_leader', 'npc_marsh_man', 27, 14, { name: R.T('map.marsh_loch.N.0.mob_leader.name'), dir: 's', talk: 'loch_mob', reward: null, cond: '!marsh_assembly_done' }),
+      K.npc('mob_a', 'npc_marsh_woman', 25, 15, { name: R.T('map.marsh_loch.N.1.mob_a.name'), dir: 'e', talk: 'loch_mob', reward: null, cond: '!marsh_assembly_done' }),
+      K.npc('mob_b', 'npc_marsh_old_m', 30, 15, { name: R.T('map.marsh_loch.N.2.mob_b.name'), dir: 'w', talk: 'loch_mob', reward: null, cond: '!marsh_assembly_done' }),
+      K.npc('bard', 'npc_bard', 34, 17, { name: R.T('map.marsh_loch.N.3.bard.name'), dir: 'w', talk: 'loch_bard', reward: 'lead' }),
+      K.npc('child_plaza', 'npc_marsh_child', 21, 15, { name: R.T('map.marsh_loch.N.4.child_plaza.name'), dir: 'e', talk: 'loch_child', reward: 'hint', cond: 'cleared_r_marsh' }),
       // 門
-      K.npc('guard_w', 'npc_marsh_man', 4, 19, { name: '西の門番', dir: 's', talk: 'loch_gate_w', reward: 'news' }),
-      K.npc('guard_e', 'npc_marsh_man', 52, 18, { name: '東の門番', dir: 's', talk: 'loch_gate_e', reward: 'boss' }),
+      K.npc('guard_w', 'npc_marsh_man', 4, 19, { name: R.T('map.marsh_loch.N.5.guard_w.name'), dir: 's', talk: 'loch_gate_w', reward: 'news' }),
+      K.npc('guard_e', 'npc_marsh_man', 52, 18, { name: R.T('map.marsh_loch.N.6.guard_e.name'), dir: 's', talk: 'loch_gate_e', reward: 'boss' }),
       // 鐘楼の前（トビアスは鐘楼の中）・町の人
-      K.npc('fisher', 'npc_marsh_old_m', 42, 18, { name: '釣り人のオットマー', dir: 's', talk: 'loch_fisher', reward: 'hint' }),
-      K.npc('laundress', 'npc_marsh_woman', 29, 36, { name: '洗濯の女', dir: 's', talk: 'loch_laundress', reward: 'news' }),
-      K.npc('ferryman', 'npc_marsh_old_m', 7, 24, { name: '渡し守のグンター', dir: 's', talk: 'loch_ferryman', reward: 'side', pushable: false }),
-      K.npc('boy_south', 'npc_marsh_child', 29, 38, { name: '町長の孫', dir: 'n', talk: 'loch_boy', reward: 'hint' }),
-      K.npc('lamp_keeper', 'npc_marsh_man', 36, 39, { name: '灯籠守のヨスト', dir: 'w', talk: 'loch_lampkeeper', reward: 'side' }),
-      K.npc('yena', 'npc_yena', 18, 46, { name: 'イェナ', title: '静夜会', dir: 'n', talk: 'loch_yena', reward: 'news', cond: ['marsh_emma_met', '!marsh_yena_done', '!cleared_r_marsh'] }),
-      K.npc('klaus_out', 'npc_klaus', 40, 47, { name: 'クラウス', title: '記録院の記録官', dir: 'n', talk: 'loch_klaus', reward: 'lead', cond: 'cleared_r_marsh' }),
+      K.npc('fisher', 'npc_marsh_old_m', 42, 18, { name: R.T('map.marsh_loch.N.7.fisher.name'), dir: 's', talk: 'loch_fisher', reward: 'hint' }),
+      K.npc('laundress', 'npc_marsh_woman', 29, 36, { name: R.T('map.marsh_loch.N.8.laundress.name'), dir: 's', talk: 'loch_laundress', reward: 'news' }),
+      K.npc('ferryman', 'npc_marsh_old_m', 7, 24, { name: R.T('map.marsh_loch.N.9.ferryman.name'), dir: 's', talk: 'loch_ferryman', reward: 'side', pushable: false }),
+      K.npc('boy_south', 'npc_marsh_child', 29, 38, { name: R.T('map.marsh_loch.N.10.boy_south.name'), dir: 'n', talk: 'loch_boy', reward: 'hint' }),
+      K.npc('lamp_keeper', 'npc_marsh_man', 36, 39, { name: R.T('map.marsh_loch.N.11.lamp_keeper.name'), dir: 'w', talk: 'loch_lampkeeper', reward: 'side' }),
+      K.npc('yena', 'npc_yena', 18, 46, { name: R.T('map.marsh_loch.N.12.yena.name'), title: R.T('map.marsh_loch.N.12.yena.title'), dir: 'n', talk: 'loch_yena', reward: 'news', cond: ['marsh_emma_met', '!marsh_yena_done', '!cleared_r_marsh'] }),
+      K.npc('klaus_out', 'npc_klaus', 40, 47, { name: R.T('map.marsh_loch.N.13.klaus_out.name'), title: R.T('map.marsh_loch.N.13.klaus_out.title'), dir: 'n', talk: 'loch_klaus', reward: 'lead', cond: 'cleared_r_marsh' }),
       // 夜（消灯の刻）だけ: 夜市の売り子・運河の灯籠守・迷い猫
-      K.npc('night_vendor', 'npc_marsh_woman', 30, 46, { name: '夜市の売り子', dir: 'n', talk: 'loch_night_market', reward: 'discount', cond: 'marsh_night', pushable: false }),
-      K.npc('night_owl', 'npc_marsh_old_f', 34, 46, { name: '夜更かしのばあさま', dir: 'n', talk: 'loch_night_owl', reward: 'hint', cond: 'marsh_night' }),
-      K.npc('lost_cat', 'ani_cat', 44, 38, { name: '猫', dir: 'w', talk: 'loch_cat', reward: 'side', cond: ['marsh_night', 'q_marsh_cat_on', '!marsh_cat_found'] }),
+      K.npc('night_vendor', 'npc_marsh_woman', 30, 46, { name: R.T('map.marsh_loch.N.14.night_vendor.name'), dir: 'n', talk: 'loch_night_market', reward: 'discount', cond: 'marsh_night', pushable: false }),
+      K.npc('night_owl', 'npc_marsh_old_f', 34, 46, { name: R.T('map.marsh_loch.N.15.night_owl.name'), dir: 'n', talk: 'loch_night_owl', reward: 'hint', cond: 'marsh_night' }),
+      K.npc('lost_cat', 'ani_cat', 44, 38, { name: R.T('map.marsh_loch.N.16.lost_cat.name'), dir: 'w', talk: 'loch_cat', reward: 'side', cond: ['marsh_night', 'q_marsh_cat_on', '!marsh_cat_found'] }),
       // 夜の運河の橋: 灰色のマントの少女（証拠が 2 つ以上、消灯の刻）
-      K.npc('fine', 'fine', 27, 25, { name: '灰色のマントの少女', dir: 'n', talk: 'loch_bridge_fine', reward: null, cond: ['marsh_night', '!marsh_fine_seen', { var: 'marsh_evidence', gte: 2 }], pushable: false }),
+      K.npc('fine', 'fine', 27, 25, { name: R.T('map.marsh_loch.N.17.fine.name'), dir: 'n', talk: 'loch_bridge_fine', reward: null, cond: ['marsh_night', '!marsh_fine_seen', { var: 'marsh_evidence', gte: 2 }], pushable: false }),
       // 空気だけ
-      K.npc('heron', 'ani_hen', 50, 16, { name: '白いアヒル', dir: 'w', move: 'wander', talk: [L('ガァ。')], reward: null }),
-      K.npc('woman_air', 'npc_marsh_woman', 11, 20, { name: '集会所の前の女', dir: 'e', talk: [L('霧の晩には、子どもを\n外に出しちゃいけないよ。'), L('cleared_r_marsh', '霧が晴れたら、湖って\nこんなに広かったんだね。')], reward: null }),
+      K.npc('heron', 'ani_hen', 50, 16, { name: R.T('map.marsh_loch.N.18.heron.name'), dir: 'w', move: 'wander', talk: [L(R.T('map.marsh_loch.N.talk.0.L'))], reward: null }),
+      K.npc('woman_air', 'npc_marsh_woman', 11, 20, { name: R.T('map.marsh_loch.N.19.woman_air.name'), dir: 'e', talk: [L(R.T('map.marsh_loch.N.talk.0.L_2')), L('cleared_r_marsh', R.T('map.marsh_loch.N.talk.1.cleared_r_marsh'))], reward: null }),
     ];
 
     const sp = MK.doorSpawn;
     K.def('loch', {
-      name: '水辺の町ロッホ', kind: 'town', region: 'r_marsh', location: 'loch', theme: 'moss_village',
+      name: R.T('map.marsh_loch.loch.name'), kind: 'town', region: 'r_marsh', location: 'loch', theme: 'moss_village',
       legend: MK.LEGEND(),
       rows: g, outside: 'marsh_water',
       objects: O, npcs: N,
@@ -180,7 +180,7 @@
       light: MK.LIGHT_TOWN,
       dark: false,
       bgm: 'town',
-      meta: { sub: '湖の上の、鐘の町', chestsInfo: false },
+      meta: { sub: R.T('map.marsh_loch.loch.meta.sub'), chestsInfo: false },
       // 町ぜんたいを 1 枚に描いた下絵（v2/assets/env/moss_village/under/loch*、design/ENV_ASSETS.md §7）。湖・葦・板の道・小島・建物・大鐘・くいの鐘楼はこの絵、
       // 当たり・戸口・人・灯り・ほかの物は上のデータのまま。絵が無ければマスから焼く
       art: { image: 'moss_village/under/loch', emit: 'moss_village/under/loch_emit', painted: [] },

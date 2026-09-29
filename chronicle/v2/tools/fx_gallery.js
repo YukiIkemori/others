@@ -1,0 +1,169 @@
+#!/usr/bin/env node
+// 技・術の演出の見本を書き出す（dev.html の RPG.FxGallery を使う。ビルドは先に: node v2/tools/build.js）
+//   node v2/tools/fx_gallery.js --out <dir> --shot t_sword_first [--at 300,700]   1 コマの PNG（見せ場の時間 ms、既定は当たる瞬間の少し後）
+//   node v2/tools/fx_gallery.js --out <dir> --sheet <名前> id id …                 並べた一覧（見せ場の 1 コマずつ、5 列）
+//   node v2/tools/fx_gallery.js --out <dir> --clip <名前> id id …                  mp4（30 fps、1280×720。ffmpeg に直接流す）
+//   node v2/tools/fx_gallery.js --out <dir> --plan <FX_PLAN.md>                    表の考え（c）を FX_PLAN.md の「技・術ごとの表」に書き出す
+//   選び方: id の代わりに @tech:sword（剣の技を段の順に）・@tier:6・@spell:single・@spell:combo・@spell:triple も書ける
+//   --speed 1|2|3|5（戦闘の速さ）、--glimmer（閃きの帯つき）、--seen（2 回目の短い版）
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const { spawn } = require('child_process');
+const B = require('./lib/browser');
+
+const args = process.argv.slice(2);
+const opt = (k, d) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : d; };
+const has = (k) => args.includes(k);
+const OUT = path.resolve(opt('--out', path.join(B.V2, 'design', 'shots', 'fx')));
+const FFMPEG = process.env.FFMPEG || '/usr/local/lib/python3.11/dist-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v7.0.2';
+const FPS = 30;
+
+function idsFrom(list, all) {
+  const out = [];
+  for (const a of list) {
+    if (a.startsWith('@')) {
+      const [k, v] = a.slice(1).split(':');
+      for (const x of all) {
+        if (k === 'tech' && x.tech && x.wtype === v) out.push(x.id);
+        else if (k === 'tier' && x.tier === +v) out.push(x.id);
+        else if (k === 'spell' && !x.tech && x.cls === v) out.push(x.id);
+        else if (k === 'element' && !x.tech && x.cls === 'single' && x.el === v) out.push(x.id);
+      }
+    } else out.push(a);
+  }
+  return out;
+}
+
+async function main() {
+  // 表の書き出しはブラウザ無しで（node に読み込む）
+  if (has('--plan')) {
+    const R = require('./lib/load')({ quiet: true });
+    const Sq = R.BFX.seq;
+    const all = Object.keys(Sq.table).map((id) => { const d = R.DB.techs[id] || R.DB.spells[id]; const s = Sq.get('sq:' + id); return { id, tech: !!R.DB.techs[id], wtype: d.wtype, cls: d.cls, el: d.elements && d.elements[0], tier: s.tier, dur: Math.max(s.dur, s.lead + s.hitDur), name: d.name, c: s.c, rank: d.rank || d.step || 0 }; });
+    writePlan(opt('--plan'), all);
+    if (!has('--sheet') && !has('--clip') && !has('--shot')) return;
+  }
+  fs.mkdirSync(OUT, { recursive: true });
+  const S = await B.start();
+  const P = await B.open(S, 'dev.html?fixture=core_stub_road');
+  const p = P.page;
+  await B.waitFor(p, `${B.TOP}==='field'`, 20000);
+  await B.ev(p, `RPG.Settings.set('battleSpeed', ${+opt('--speed', 1)})`);
+  await B.ev(p, "RPG.Settings.set('fx', 'high')");
+  await B.ev(p, 'RPG.FxGallery.open({ demo: "normal" })');
+  await B.waitFor(p, "RPG.Battle.debug() && RPG.Battle.debug().phase === 'gallery'", 30000);
+  await p.waitForTimeout(1500);
+  const all = await B.ev(p, `RPG.FxGallery.list().map((id) => { const d = RPG.DB.techs[id] || RPG.DB.spells[id]; const s = RPG.BFX.seq.get('sq:' + id); return { id, tech: !!RPG.DB.techs[id], wtype: d.wtype, cls: d.cls, el: d.elements && d.elements[0], tier: s.tier, lead: s.lead, dur: s.dur, name: d.name, c: s.c, rank: d.rank || d.step || 0 }; }).sort((a, b) => a.tier - b.tier || a.rank - b.rank)`);
+  const info = Object.fromEntries(all.map((x) => [x.id, x]));
+  await B.ev(p, 'RPG.Engine.pause(); RPG.FxGallery.interactive = false;');
+
+  const seen = has('--seen');
+  if (seen) await B.ev(p, "RPG.Game.vars.fx_seen = RPG.FxGallery.list().join(',')"); else await B.ev(p, "RPG.Game.vars.fx_seen = ''");
+  const grab = (q) => p.evaluate((q) => RPG.Gfx.canvas.toDataURL('image/jpeg', q), q || 0.9);
+  /** 1 つ流して、frames を (t, dataURL) で呼ぶ。t は流し始めからの戦闘の時計 */
+  async function run(id, onFrame, every) {
+    const o = has('--glimmer') ? '{ glimmer: true }' : '{}';
+    const c0 = (await p.evaluate(() => RPG.FxGallery.step(1))).clock;
+    await p.evaluate(`RPG.FxGallery.begin(${JSON.stringify(id)}, ${o})`);
+    let t = 0, n = 0, done = false;
+    for (;;) {
+      const r = await p.evaluate((ms) => RPG.FxGallery.step(ms), every);
+      t = r.clock - c0; n++; done = r.done;
+      const stop = await onFrame(t, r.done, r);
+      if (stop || (r.done && n > 3) || n > 900) break;
+    }
+    // 流し終わるまで進めてから静める（次の begin が空振りしないように）
+    for (let i = 0; i < 300 && !done; i++) done = (await p.evaluate(() => RPG.FxGallery.step(1000 / 30))).done;
+    for (let i = 0; i < 10; i++) await p.evaluate(() => RPG.FxGallery.step(1000 / 30));
+  }
+
+  if (has('--shot')) {
+    const id = opt('--shot');
+    const ats = (opt('--at', '') || '').split(',').filter(Boolean).map(Number);
+    const x = info[id];
+    const want = ats.length ? ats : [x.lead + 260 + (x.tech ? 200 : 460)];
+    let wi = 0;
+    await run(id, async (t) => {
+      while (wi < want.length && t >= want[wi]) {
+        const d = await grab(0.92);
+        const f = path.join(OUT, `${id}_${want[wi]}.jpg`);
+        fs.writeFileSync(f, Buffer.from(d.split(',')[1], 'base64'));
+        console.log(f);
+        wi++;
+      }
+      return wi >= want.length;
+    }, 1000 / 60);
+  }
+
+  if (has('--perf')) {
+    // 1 コマの描画の時間（R.Engine.render、ソフトの描画）: 静かな時と、演出の間
+    const i0 = args.indexOf('--perf') + 1;
+    const ids = idsFrom(args.slice(i0).filter((a) => !a.startsWith('--')), all).filter((id) => info[id]);
+    const time = () => p.evaluate(() => { const t0 = performance.now(); RPG.Engine.render(); return performance.now() - t0; });
+    const base = [];
+    for (let i = 0; i < 20; i++) base.push(await time());
+    const med = (a) => a.slice().sort((x, y) => x - y)[a.length >> 1];
+    console.log(`idle: median ${med(base).toFixed(1)} ms  max ${Math.max(...base).toFixed(1)} ms`);
+    for (const id of ids) {
+      const ms = [];
+      await run(id, async (t, done, r) => { if (r.seqT >= 0 || r.hitT >= 0) ms.push(await time()); return false; }, 1000 / 30);
+      console.log(`${id} (tier ${info[id].tier}): median ${med(ms).toFixed(1)} ms  max ${Math.max(...ms).toFixed(1)} ms  frames ${ms.length}`);
+    }
+  }
+
+  if (has('--sheet') || has('--clip')) {
+    const name = opt(has('--sheet') ? '--sheet' : '--clip');
+    const i0 = args.indexOf(has('--sheet') ? '--sheet' : '--clip') + 2;
+    const ids = idsFrom(args.slice(i0).filter((a) => !a.startsWith('--') && !/^\d+$/.test(a)), all).filter((id) => info[id]);
+    const clip = has('--clip');
+    const cols = 5, cw = 384, ch = 216;
+    const file = path.join(OUT, name + (clip ? '.mp4' : '.jpg'));
+    const ff = clip
+      ? spawn(FFMPEG, ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(FPS), '-c:v', 'mjpeg', '-i', '-', '-vf', 'scale=1280:720', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '24', '-preset', 'veryfast', file], { stdio: ['pipe', 'inherit', 'inherit'] })
+      : spawn(FFMPEG, ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-c:v', 'mjpeg', '-i', '-', '-vf', `scale=${cw}:${ch},tile=${cols}x${Math.ceil(ids.length / cols)}:padding=4:color=0x101018`, '-frames:v', '1', '-q:v', '3', file], { stdio: ['pipe', 'inherit', 'inherit'] });
+    const write = (d) => new Promise((res) => { if (!ff.stdin.write(Buffer.from(d.split(',')[1], 'base64'))) ff.stdin.once('drain', res); else res(); });
+    for (const id of ids) {
+      const x = info[id];
+      console.log(`${id}  tier ${x.tier}  ${x.name}`);
+      if (clip) {
+        let last = null;
+        await run(id, async (t, done) => { last = await grab(0.85); await write(last); return done && t > x.dur + 300; }, 1000 / FPS);
+        for (let i = 0; i < 6; i++) await write(last);   // 区切りの間
+      } else {
+        // 見せ場: 段 1–2 は最初の当たりの少し後、段 3 以上は当たる瞬間の少し後（主役の見える所）
+        let got = false;
+        await run(id, async (t, done, r) => {
+          const ready = x.tier <= 2 ? r.hitT >= 70 : r.seqT >= x.lead + (x.tier >= 5 ? 160 : 90);
+          if (!got && (ready || done)) { await write(await grab(0.9)); got = true; }
+          return got;
+        }, 1000 / 60);
+      }
+    }
+    ff.stdin.end();
+    await new Promise((res) => ff.on('close', res));
+    console.log('->', file);
+  }
+
+  if (P.errors.length) console.log('page errors:', P.errors.slice(0, 5));
+  await B.stop(S);
+}
+function writePlan(f, all) {
+  {
+    const src = fs.readFileSync(f, 'utf8');
+    const head = src.split('## 技・術ごとの表')[0];
+    const W = { sword: '剣', greatsword: '大剣', dagger: '短剣', bow: '弓', staff: '杖' };
+    const rows = [];
+    const group = (title, list) => {
+      rows.push(`\n### ${title}\n`, '| id | 名前 | 段 | 長さ (ms) | 演出 |', '|---|---|---|---|---|');
+      for (const x of list) rows.push(`| ${x.id} | ${x.name} | ${x.tier} | ${Math.round(x.dur)} | ${x.c.replace(/\|/g, '／')} |`);
+    };
+    for (const w of Object.keys(W)) group(`${W[w]}の技`, all.filter((x) => x.tech && x.wtype === w).sort((a, b) => a.rank - b.rank || a.tier - b.tier));
+    group('術（単属性）', all.filter((x) => !x.tech && x.cls === 'single').sort((a, b) => (a.el < b.el ? -1 : a.el > b.el ? 1 : a.rank - b.rank)));
+    group('術（2 属性の合成）', all.filter((x) => !x.tech && /combo/.test(x.cls)));
+    group('術（3 属性の合成）', all.filter((x) => !x.tech && x.cls === 'triple'));
+    fs.writeFileSync(f, head + '## 技・術ごとの表\n（tools/fx_gallery.js --plan が src/art/fx/fx_seq_table.js の c から書き出した物）\n' + rows.join('\n') + '\n');
+    console.log('plan ->', f, all.length, 'rows');
+  }
+}
+main().catch((e) => { console.error(e); process.exit(1); });

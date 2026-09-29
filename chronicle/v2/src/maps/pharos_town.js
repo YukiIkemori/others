@@ -138,9 +138,9 @@
       ...PS('rock_small', [[27, 20], [5, 25]]), P('bollard', 60, 19), P('lantern', 54, 21),
 
       // ---------------------------------------------------------------- 調べる物・看板・宝箱
-      K.sign(3, 9, '港町ファロス\n西へ出れば、半島の街道。'),
-      K.sign(48, 30, '造船所\n小舟の修理、承ります。'),
-      K.sign(27, 41, '定期船の桟橋\n「しばらく欠航いたします。」'),
+      K.sign(3, 9, R.T('map.pharos_town.objects.sign')),
+      K.sign(48, 30, R.T('map.pharos_town.objects.sign_2')),
+      K.sign(27, 41, R.T('map.pharos_town.objects.sign_3')),
       K.exam(11, 22, 'pharos_oilboard'),       // 油の相場の札（STORY_BIBLE §10.2 lo_pharos_oilboard）
       K.exam(21, 21, 'pharos_board'),          // 町の掲示板（依頼と張り紙）
       K.exam(61, 21, 'pharos_tract'),          // 静夜会の刷り物（lo_silent_tract）。上の crate
@@ -150,27 +150,27 @@
 
     // ---------------------------------------------------------------- 人
     const npcs = [
-      { id: 'otto', look: 'otto', name: 'オットー', title: '灯台守', x: 21, y: 30, dir: 's', move: 'still', pushable: false, talk: 'pharos_otto', reward: 'item', key: 'pharos_otto' },
-      { id: 'gateguard', look: 'npc_guard_1', name: '門番', x: 2, y: 12, dir: 'e', move: 'still', pushable: false, talk: 'pharos_gateguard', reward: 'news', key: 'pharos_gateguard' },
+      { id: 'otto', look: 'otto', name: R.T('map.pharos_town.npcs.otto.name'), title: R.T('map.pharos_town.npcs.otto.title'), x: 21, y: 30, dir: 's', move: 'still', pushable: false, talk: 'pharos_otto', reward: 'item', key: 'pharos_otto' },
+      { id: 'gateguard', look: 'npc_guard_1', name: R.T('map.pharos_town.npcs.gateguard.name'), x: 2, y: 12, dir: 'e', move: 'still', pushable: false, talk: 'pharos_gateguard', reward: 'news', key: 'pharos_gateguard' },
       { id: 'well_child', look: 'npc_child_2', x: 18, y: 22, dir: 's', move: { route: [[18, 22], [18, 24], [14, 24], [14, 22]], wait: 1400 }, talk: 'pharos_well_child', reward: 'side', key: 'pharos_well_child' },
-      { id: 'tadeo', look: 'npc_tadeo', name: 'タデオ', title: '灯守組合の油売り', x: 11, y: 23, dir: 'n', move: 'still', talk: 'pharos_tadeo', reward: 'side', key: 'pharos_tadeo' },
+      { id: 'tadeo', look: 'npc_tadeo', name: R.T('map.pharos_town.npcs.tadeo.name'), title: R.T('map.pharos_town.npcs.tadeo.title'), x: 11, y: 23, dir: 'n', move: 'still', talk: 'pharos_tadeo', reward: 'side', key: 'pharos_tadeo' },
       { id: 'fishwife', look: 'npc_woman_3', x: 17, y: 30, dir: 's', move: 'still', talk: 'pharos_fishwife', reward: 'item', key: 'pharos_fishwife' },
       { id: 'old_sailor', look: 'npc_sailor_2', x: 53, y: 11, dir: 'e', move: 'still', talk: 'pharos_old_sailor', reward: 'hint', key: 'pharos_old_sailor' },
       { id: 'ship_sailor', look: 'npc_sailor_1', x: 56, y: 22, dir: 'e', move: 'wander', talk: 'pharos_ship_sailor', reward: 'news', key: 'pharos_ship_sailor' },
       { id: 'plaza_woman', look: 'npc_woman_1', x: 19, y: 23, dir: 's', move: 'wander', talk: 'pharos_plaza_woman', reward: 'news', key: 'pharos_plaza_woman' },
       { id: 'bench_old', look: 'npc_old_m_2', x: 31, y: 7, dir: 's', move: 'still', talk: 'pharos_bench_old', reward: 'news', key: 'pharos_bench_old' },
       { id: 'merchant', look: 'npc_merchant_1', x: 31, y: 12, dir: 's', move: { route: [[30, 12], [38, 12]], wait: 1800 }, talk: 'pharos_merchant', reward: 'discount', key: 'pharos_merchant' },
-      { id: 'yena', look: 'npc_yena', name: 'イェナ', title: '静夜会', x: 60, y: 22, dir: 'e', move: 'still', talk: 'pharos_yena', reward: null, key: 'pharos_yena' },
+      { id: 'yena', look: 'npc_yena', name: R.T('map.pharos_town.npcs.yena.name'), title: R.T('map.pharos_town.npcs.yena.title'), x: 60, y: 22, dir: 'e', move: 'still', talk: 'pharos_yena', reward: null, key: 'pharos_yena' },
       { id: 'kid_pier', look: 'npc_child_4', x: 13, y: 41, dir: 's', move: 'still', talk: 'pharos_kid_pier', reward: 'news', key: 'pharos_kid_pier' },
-      { id: 'dog', look: 'ani_dog', name: 'いぬ', x: 35, y: 31, dir: 'e', move: 'wander', talk: { lines: [{ text: 'いぬが、しっぽをふっている。' }] } },
+      { id: 'dog', look: 'ani_dog', name: R.T('map.pharos_town.npcs.dog.name'), x: 35, y: 31, dir: 'e', move: 'wander', talk: { lines: [{ text: R.T('map.pharos_town.npcs.lines.0.text') }] } },
       // P10 の朝の場面だけの人（prologue_boss の後、prologue_done の前）。宿の前（inn_front 6,10）に集まる
-      { id: 'berna', look: 'berna', name: 'ベルナ', x: 7, y: 11, dir: 'n', move: 'still', pushable: false, cond: ['prologue_boss', '!prologue_done'], talk: 'pharos_departure' },
+      { id: 'berna', look: 'berna', name: R.T('map.pharos_town.npcs.berna.name'), x: 7, y: 11, dir: 'n', move: 'still', pushable: false, cond: ['prologue_boss', '!prologue_done'], talk: 'pharos_departure' },
       { id: 'cheer_a', look: 'npc_man_1', x: 4, y: 10, dir: 'e', move: 'still', cond: ['prologue_boss', '!prologue_done'], talk: 'pharos_departure' },
       { id: 'cheer_b', look: 'npc_woman_1', x: 9, y: 10, dir: 'w', move: 'still', cond: ['prologue_boss', '!prologue_done'], talk: 'pharos_departure' },
     ];
 
     K.def('pharos', {
-      name: '港町ファロス', name_ruby: 'みなとまちふぁろす', kind: 'town', region: 'prologue', location: 'pharos', theme: 'harbor',
+      name: R.T('map.pharos_town.pharos.name'), name_ruby: R.T('map.pharos_town.pharos.name_ruby'), kind: 'town', region: 'prologue', location: 'pharos', theme: 'harbor',
       legend, rows: g, outside: 'sea', objects, npcs,
       spawns: {
         gate_w: { x: 2, y: 10, dir: 'e' }, harbor: { x: 24, y: 31, dir: 's' }, warp: { x: 18, y: 24, dir: 's' }, inn_front: { x: 6, y: 10, dir: 's' },
@@ -182,7 +182,7 @@
       exits: [{ x: 0, y: 10, w: 1, h: 2, to: { map: 'world', spawn: 'pharos' } }],
       triggers: [{ id: 'arrival', on: 'enter', event: 'pharos_arrival' }],
       light: { ambient: '#5c5aa0', k: 0.45, mood: 'town_night' }, bgm: 'town',
-      meta: { sub: '潮風と灯台の町', chestsInfo: true },
+      meta: { sub: R.T('map.pharos_town.pharos.meta.sub'), chestsInfo: true },
       // 町ぜんたいを 1 枚に描いた下絵（v2/assets/env/harbor/under/pharos*、design/ENV_ASSETS.md §7）。地面・崖・建物・橋・桟橋はこの絵、
       // 当たり・戸口・人・灯り・ほかの物は上のデータのまま。over = 吊り橋の手前の綱（人より上）。絵が無ければマスから焼く
       art: { image: 'harbor/under/pharos', overlay: 'harbor/under/pharos_over', emit: 'harbor/under/pharos_emit', painted: ['crate@17,7', 'bench@32,7', 'planter@20,8', 'flower_pot@25,8', 'flower_pot@8,9', 'barrel@10,9', 'barrel@47,9', 'flower_pot@51,9', 'net@29,11', 'table@36,11', 'chair@37,11', 'net@54,12', 'stump@26,17', 'flower_pot@12,18', 'bollard@60,19', 'rock_small@27,20', 'bench@17,21', 'flower_pot@31,21', 'net@25,22', 'well@16,23', 'net@59,24', 'rock_small@5,25', 'bench@8,25', 'crate@33,26', 'net@35,26', 'barrel@3,29', 'net@7,29', 'flower_pot@19,29', 'crate@26,29', 'net@32,29', 'crate@50,30', 'net@54,30', 'bollard@27,31', 'bollard@59,31', 'bollard@4,32', 'bollard@14,32', 'bollard@37,32', 'bollard@43,32', 'bollard@52,32', 'rowboat@15,35', 'rowboat@44,35', 'rowboat@6,36', 'rowboat@26,36', 'bollard@29,37', 'bollard@9,38', 'bollard@13,42', 'bollard@19,42', 'bollard@27,42'] },

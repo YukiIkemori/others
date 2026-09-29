@@ -11,8 +11,8 @@
     meta: { needs: [], gives: ['flag:prologue_well_nest'] },
     run: async (ev) => {
       const E = X();
-      await E.narr(ev, '花の咲くくぼみに、\n光る毛並みの小さなけものの\n巣がある。');
-      await E.narr(ev, '宝石ウサギの巣だ……！\nきらきらした音の正体は、\nこれだったのか。');
+      await E.narr(ev, R.T('ev.optional_well.well_nest.run.narr'));
+      await E.narr(ev, R.T('ev.optional_well.well_nest.run.narr_2'));
       ev.setFlag('prologue_well_nest');
       if (R.Game.leads && R.Game.leads.q_pharos_well) ev.leadDone('q_pharos_well');
       if (R.Game.leads && R.Game.leads.l_opt_well) ev.leadDone('l_opt_well');
@@ -22,8 +22,8 @@
     meta: { needs: [], gives: [] },
     run: async (ev) => {
       const E = X();
-      await E.narr(ev, '古い旅人の墓標がある。');
-      await E.narr(ev, '「井戸の底の花を、\nいつか娘に見せたかった。」');
+      await E.narr(ev, R.T('ev.optional_well.well_grave.run.narr'));
+      await E.narr(ev, R.T('ev.optional_well.well_grave.run.narr_2'));
     },
   };
 })(window.RPG);

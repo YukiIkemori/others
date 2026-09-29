@@ -8,18 +8,25 @@
   const u = (v) => R.UIK.u(v);
   const T = () => R.UIK.T;
 
-  // 列ごと（上から ア イ ウ エ オ の段）
-  const A = ['アイウエオ', 'カキクケコ', 'サシスセソ', 'タチツテト', 'ナニヌネノ', 'ハヒフヘホ', 'マミムメモ', 'ヤ ユ ヨ', 'ラリルレロ', 'ワヲンー '];
-  const B = ['ガギグゲゴ', 'ザジズゼゾ', 'ダヂヅデド', 'バビブベボ', 'パピプペポ', 'ァィゥェォ', 'ャュョッヴ'];
-  const hira = (ch) => { const c = ch.charCodeAt(0); return c >= 0x30a1 && c <= 0x30f6 && ch !== 'ヴ' ? String.fromCharCode(c - 0x60) : ch; };
+  // 字の表は言語ごと（src/i18n/<言語>/ui.js の ui.nameentry.*）。日本語は五十音（列ごと、上から ア イ ウ エ オ の段）、
+  //   英語などラテン字の言語は A〜Z（行ごとの表を列に並べ直す）。中国語・韓国語の名前は IME が要る（今はラテン字の表。core/i18n.js）
+  const latin = () => R.I18n.isLatin() || R.I18n.lang() === 'ko' || /^zh/.test(R.I18n.lang());
+  /** 行の配列 → 列の配列（ラテン字の表は行で書く方が読みやすい） */
+  const cols = (rows) => { const out = []; const w = Math.max(...rows.map((r) => [...r].length)); for (let c = 0; c < w; c++) out.push(rows.map((r) => [...r][c] || ' ').join('')); return out; };
+  const gridA = () => (latin() ? cols(R.T('ui.nameentry.latinA')) : R.T('ui.nameentry.kanaA'));
+  const gridB = () => (latin() ? cols(R.T('ui.nameentry.latinB')) : R.T('ui.nameentry.kanaB'));
+  // カタカナ → ひらがな（ヴは同じ）。ラテン字は大文字 → 小文字
+  const hira = (ch) => { if (latin()) return ch.toLowerCase(); const c = ch.charCodeAt(0); return c >= 0x30a1 && c <= 0x30f6 && ch !== '\u30f4' ? String.fromCharCode(c - 0x60) : ch; };   // i18n:ignore（字の処理）
 
   function cells(tall) {
     const out = [];
     const put = (cols, gx0, gy0) => cols.forEach((col, ci) => [...col].forEach((ch, ri) => { if (ch !== ' ') out.push({ ch, gx: gx0 + ci, gy: gy0 + ri, w: 1 }); }));
     if (tall) {
+      const A = gridA(), B = gridB();
       put(A, 0, 0); put(B, 1.5, 5.4);
       out.push({ act: 'kana', gx: 0, gy: 10.8, w: 3.2 }, { act: 'del', gx: 3.4, gy: 10.8, w: 3.2 }, { act: 'ok', gx: 6.8, gy: 10.8, w: 3.2 });
     } else {
+      const A = gridA(), B = gridB();
       put(A, 0, 0); put(B, 10.6, 0);
       out.push({ act: 'kana', gx: 0, gy: 5.4, w: 5.6 }, { act: 'del', gx: 5.9, gy: 5.4, w: 5.6 }, { act: 'ok', gx: 11.8, gy: 5.4, w: 5.8 });
     }
@@ -29,7 +36,8 @@
   S.def('nameentry', {
     opaque: true,
     init(p) {
-      this.max = p.max || 5;
+      // ラテン字の名前は字が細いので 2 倍まで（5 → 10）
+      this.max = latin() ? Math.max(p.maxLatin || 0, (p.max || 5) * 2) : p.max || 5;
       this.value = [...String(p.value || '')].slice(0, this.max);
       this.kata = true;
       this.tall = S.tall();
@@ -40,9 +48,9 @@
     },
     layout() { const c = this.cells[this.cur]; this.tall = S.tall(); this.cells = cells(this.tall); this.cur = Math.max(0, this.cells.findIndex((x) => (c.act ? x.act === c.act : x.ch === c.ch))); },
     label(c) {
-      if (c.act === 'kana') return this.kata ? 'ひらがなへ' : 'カタカナへ';
-      if (c.act === 'del') return '1 字消す';
-      if (c.act === 'ok') return '決定';
+      if (c.act === 'kana') return this.kata ? R.T('ui.nameentry.toHira') : R.T('ui.nameentry.toKata');
+      if (c.act === 'del') return R.T('ui.nameentry.del');
+      if (c.act === 'ok') return R.T('ui.nameentry.ok');
       return this.kata ? c.ch : hira(c.ch);
     },
     press(c) {
@@ -105,9 +113,9 @@
       const px = b.x + (b.w - gw) / 2 - u(20);
       const p = { x: px, y: b.y + u(4), w: gw + u(40), h: gh + u(160) };
       R.UIK.panel(g, p, {});
-      S.heading(g, this.p.title || '名前の入力', p.x + u(24), p.y + u(20), 0, { size: 15, track: 3 });
+      S.heading(g, this.p.title || R.T('ui.nameentry.title'), p.x + u(24), p.y + u(20), 0, { size: 15, track: 3 });
       // 名前の枠
-      const bw = u(46), bx0 = p.x + (p.w - bw * this.max) / 2, by = p.y + u(58);
+      const bw = latin() ? u(34) : u(46), bx0 = p.x + (p.w - bw * this.max) / 2, by = p.y + u(58);
       for (let i = 0; i < this.max; i++) {
         const x = bx0 + i * bw;
         R.UIK.rule(g, x + u(6), x + bw - u(6), by + u(44), 0.5, i === this.value.length ? C.gold : undefined);
@@ -131,7 +139,7 @@
           R.UIK.text(g, this.label(c), r.x + r.w / 2, r.y + (r.h - u(20)) / 2 - u(1), { size: u(20), weight: f ? 700 : 500, color: f ? C.goldHi : C.text, align: 'center' });
         }
       });
-      S.prompts(g, [{ btn: 'a', label: '入れる' }, { btn: 'b', label: this.value.length ? '1 字消す・戻る' : '戻る' }, { btn: 'x', label: 'かな／カナ' }]);
+      S.prompts(g, [{ btn: 'a', label: R.T('ui.nameentry.put') }, { btn: 'b', label: this.value.length ? R.T('ui.nameentry.delBack') : R.T('ui.nameentry.back') }, { btn: 'x', label: R.T('ui.nameentry.kanaToggle') }]);
     },
   });
 })(window.RPG);

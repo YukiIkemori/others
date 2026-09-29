@@ -11,7 +11,7 @@
 //   R.DemoGate.regionOf(mapId) / isOpen(mapId) / TEXT。止めた数は R.DemoGate.stats（テストが読む）。
 (function (R) {
   'use strict';
-  const TEXT = '体験版では、ここから先へは\n行けません。';
+  const TEXT = R.T('data.demo_gate.TEXT');
   const DG = (R.DemoGate = R.DemoGate || {});
   DG.TEXT = TEXT;
   DG.stats = { gated: 0, mirrored: 0 };

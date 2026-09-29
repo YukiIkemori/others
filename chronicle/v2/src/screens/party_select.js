@@ -17,7 +17,7 @@
     const fav = S.favorites(c || fake);
     let st = null;
     try { st = R.Rules.baseStats(c || fake); } catch (e) { st = cp.stats || {}; }
-    const about = [cp.age ? cp.age + '歳' : '', cp.kin || ''].filter(Boolean).join('・');
+    const about = [cp.age ? R.T('ui.party_select.companion.about.0', { age: cp.age }) : '', cp.kin || ''].filter(Boolean).join(R.T('ui.party_select.companion.about.join'));
     return { id, name: cp.name || id, title: cp.title || '', look: cp.look || id, row: cp.row || 'front', fav, stats: st || cp.stats || {}, c,
       about, from: cp.from || '', profile: cp.profile || '' };
   };
@@ -50,9 +50,9 @@
     R.UIK.text(g, info.name, tx, y, { size: u(24), weight: 700, color: C.goldHi, maxW: tw }); y += u(36);
     R.UIK.text(g, info.title, tx, y, { size: u(15), weight: 700, color: C.text, maxW: tw }); y += u(26);
     if (info.about) { R.UIK.text(g, info.about, tx, y, { size: u(12.5), color: C.text2, maxW: tw }); y += u(21); }
-    if (info.from) { R.UIK.text(g, info.from + 'の出身', tx, y, { size: u(12.5), color: C.text2, maxW: tw }); y += u(24); }
+    if (info.from) { R.UIK.text(g, R.T('ui.party_select.companionDetail.text', { from: info.from }), tx, y, { size: u(12.5), color: C.text2, maxW: tw }); y += u(24); }
     R.UIK.tag(g, info.row, tx, y, u(12));
-    R.UIK.text(g, info.row === 'back' ? '後列が得意' : '前列が得意', tx + u(26), y, { size: u(12.5), color: C.text3 });
+    R.UIK.text(g, info.row === 'back' ? R.T('ui.party_select.companionDetail.text_2') : R.T('ui.party_select.companionDetail.text_3'), tx + u(26), y, { size: u(12.5), color: C.text3 });
     y = Math.max(y + u(28), p.y + pad + fh + u(14));
     // 紹介（2〜3 行）
     const lines = R.UIK.wrap(info.profile, p.w - pad * 2, { size: u(13.5) }).slice(0, 4);
@@ -60,16 +60,16 @@
     if (lines.length) y += u(8);
     R.UIK.rule(g, p.x + pad, p.x + p.w - pad, y - u(4), 0.14);
     y += u(6);
-    const fw = info.fav.w.map(S.wname).join('・') || '―', fe = info.fav.e.map(S.ename).join('・') || '―';
+    const fw = info.fav.w.map(S.wname).join(R.T('ui.party_select.companionDetail.fw.join')) || '―', fe = info.fav.e.map(S.ename).join(R.T('ui.party_select.companionDetail.fe.join')) || '―';
     const lx = p.x + pad, vx = p.x + pad + u(100);
-    R.UIK.text(g, '得意な武器', lx, y, { size: u(13), color: C.text2 });
+    R.UIK.text(g, R.T('ui.party_select.companionDetail.text_4'), lx, y, { size: u(13), color: C.text2 });
     R.UIK.text(g, fw, vx, y - u(1), { size: u(15), weight: 700, color: C.text, maxW: p.x + p.w - pad - vx }); y += u(25);
-    R.UIK.text(g, '得意な属性', lx, y, { size: u(13), color: C.text2 });
+    R.UIK.text(g, R.T('ui.party_select.companionDetail.text_5'), lx, y, { size: u(13), color: C.text2 });
     R.UIK.text(g, fe, vx, y - u(1), { size: u(15), weight: 700, color: C.teal, maxW: p.x + p.w - pad - vx }); y += u(30);
     R.UIK.rule(g, p.x + pad, p.x + p.w - pad, y - u(8), 0.14);
     const room = p.y + p.h - pad - y;
     if (room >= u(3 * 24 + 26)) {
-      S.label(g, '能力値', lx, y);
+      S.label(g, R.T('ui.party_select.companionDetail.label'), lx, y);
       S.abilBars(g, info.stats, lx, y + u(26), p.w - pad * 2, { cols: 2, lh: 24 });
     } else S.abilBars(g, info.stats, lx, y + u(2), p.w - pad * 2, { cols: 2, lh: Math.max(20, Math.floor(room / R.UIK.u(1) / 3)) });
   };
@@ -101,8 +101,8 @@
       this.picks.push(id);
       if (this.picks.length === this.count) {
         this.busy = true;
-        const names = this.picks.map((x) => this.info[x].name).join('・');
-        const k = await S.ask(this, { title: '旅の仲間', text: names + '　の ' + this.count + ' 人で旅立つ？', choices: ['旅立つ', '選び直す'], cancel: 1 });
+        const names = this.picks.map((x) => this.info[x].name).join(R.T('ui.party_select.partySelect.toggle.names.join'));
+        const k = await S.ask(this, { title: R.T('ui.party_select.partySelect.toggle.k.ask.title'), text: R.T('ui.party_select.partySelect.toggle.k.ask.text', { names, count: this.count }), choices: R.T('ui.party_select.partySelect.toggle.k.ask.choices'), cancel: 1 });
         this.busy = false;
         if (k === 0) this.close(this.picks.slice());
         else this.picks.pop();
@@ -113,14 +113,14 @@
       const b = S.box(), C = T().color, tall = S.tall();
       const cur = this.ids[this.list.index];
       // 上: 見出しと選んだ人
-      S.heading(g, '仲間を選ぶ', b.x + u(8), b.y + u(6), 0, { size: 15, track: 3 });
+      S.heading(g, R.T('ui.party_select.partySelect.draw.heading'), b.x + u(8), b.y + u(6), 0, { size: 15, track: 3 });
       const hx = b.x + b.w;
       for (let i = this.count - 1; i >= 0; i--) {
         const id = this.picks[i], cx = hx - u(22) - (this.count - 1 - i) * u(48);
         if (id) S.faceCircle(g, this.info[id].look, cx, b.y + u(16), u(18), { ring: C.teal });
         else { g.save(); g.beginPath(); g.arc(cx, b.y + u(16), u(18), 0, Math.PI * 2); g.setLineDash([u(3), u(3)]); g.strokeStyle = 'rgba(240,228,200,0.3)'; g.stroke(); g.restore(); }
       }
-      R.UIK.text(g, `あと ${this.count - this.picks.length} 人`, hx - u(22) - this.count * u(48) + u(4), b.y + u(8), { size: u(14), color: C.text2, align: 'right' });
+      R.UIK.text(g, R.T('ui.party_select.partySelect.draw.text', { p0: this.count - this.picks.length }), hx - u(22) - this.count * u(48) + u(4), b.y + u(8), { size: u(14), color: C.text2, align: 'right' });
       const top = b.y + u(48);
       let gr, dp;
       if (tall) {
@@ -135,11 +135,11 @@
       gr.h = Math.floor(gr.h / rh) * rh;
       this.list.render = (gg, row, rect, f) => {
         const id = row.value, k = this.picks.indexOf(id);
-        S.companionCard(gg, this.info[id], { x: rect.x + u(3), y: rect.y + u(3), w: rect.w - u(6), h: rect.h - u(6) }, { focused: f, picked: k >= 0, chip: k >= 0 ? `${k + 1} 人目` : null });
+        S.companionCard(gg, this.info[id], { x: rect.x + u(3), y: rect.y + u(3), w: rect.w - u(6), h: rect.h - u(6) }, { focused: f, picked: k >= 0, chip: k >= 0 ? R.T('ui.party_select.partySelect.draw.render.chip', { p0: k + 1 }) : null });
       };
       this.list.draw(g, gr);
       if (cur) S.companionDetail(g, this.info[cur], dp);
-      S.prompts(g, [{ btn: 'a', label: this.picks.includes(cur) ? '外す' : '選ぶ' }, { btn: 'b', label: 'ひとつ戻る' }]);
+      S.prompts(g, [{ btn: 'a', label: this.picks.includes(cur) ? R.T('ui.party_select.partySelect.draw.0.label') : R.T('ui.party_select.partySelect.draw.0.label_2') }, { btn: 'b', label: R.T('ui.party_select.partySelect.draw.1.label') }]);
     },
   });
 })(window.RPG);

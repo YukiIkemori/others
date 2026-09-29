@@ -16,7 +16,7 @@
 //     --minify / --no-minify   遊ぶ版の JS をファイルごとに esbuild で縮める（--release の既定。esbuild が無ければ警告して縮めない）
 //                          （既定のビルドと pack_web.py の公開のテスト版にはテスト用メニューが入る。?tester=1 を付けない限り眠っている）
 //
-// 読み込みの順（§2.4）: core（ns util bus engine fit gfx の順、残りは名前順・再帰）→ render → uik → data → art → audio
+// 読み込みの順（§2.4）: core（ns util bus engine fit gfx i18n の順 → 文の表 src/i18n/** → 残りの core は名前順・再帰）→ render → uik → data → art → audio
 //   → maps → events → systems → screens →（--release でなければ tester）→（dev.html だけ dev）→ main.js。各ディレクトリの中は名前順（再帰）。
 // 構文の壊れたファイルは警告して外す（誰かの作業中の壊れでほかの人が止まらない）。
 // 書体: 使う字を src/** とフィクスチャから集め、Zen Maru Gothic（Medium・Bold）を pyftsubset で woff2 に切り出して埋め込む。
@@ -35,8 +35,9 @@ const V2 = path.resolve(__dirname, '..');
 const CHRONICLE = path.resolve(V2, '..');
 const SRC = path.join(V2, 'src');
 const TITLE = 'ルミナス・クロニクル 〜八つの灯火〜';
-const DIRS = ['core', 'render', 'uik', 'data', 'art', 'audio', 'maps', 'events', 'systems', 'screens'];
-const CORE_FIRST = ['ns.js', 'util.js', 'bus.js', 'engine.js', 'fit.js', 'gfx.js'];
+// i18n（src/i18n/<言語>/*.js の文の表）は core の先頭 6 つと core/i18n.js の直後（残りの core より前）: 読み込みの時に R.T で表を引く物がある
+const DIRS = ['core', 'i18n', 'render', 'uik', 'data', 'art', 'audio', 'maps', 'events', 'systems', 'screens'];
+const CORE_FIRST = ['ns.js', 'util.js', 'bus.js', 'engine.js', 'fit.js', 'gfx.js', 'i18n.js'];
 // 縦切りの BGM（§3.10 の 17 曲＋ design/bgm_changes.md の新しい 5 曲）
 const SLICE_BGM = ['title', 'home', 'town', 'tavern', 'overworld', 'tower', 'battle', 'boss', 'boss2', 'rarebattle', 'village', 'forest',
   'shrine', 'cave', 'sorrow', 'legend', 'tension', 'lostwood', 'eldertree', 'dawn', 'omen', 'fine_theme'];
@@ -65,6 +66,7 @@ function order(o) {
   o = o || {};
   const out = [];
   for (const d of DIRS) {
+    if (d === 'i18n') continue;   // core の中で入れる（下）
     const list = walk(path.join(SRC, d)).sort((a, b) => {
       if (d === 'core') {
         const ia = path.dirname(a) === path.join(SRC, 'core') ? CORE_FIRST.indexOf(path.basename(a)) : -1;
@@ -73,7 +75,11 @@ function order(o) {
       }
       return byName(a, b);
     });
-    out.push(...list);
+    if (d === 'core') {
+      // 先頭の 7 つ（ns … gfx・i18n）→ 文の表（src/i18n/**）→ 残りの core
+      const n = list.filter((f) => path.dirname(f) === path.join(SRC, 'core') && CORE_FIRST.includes(path.basename(f))).length;
+      out.push(...list.slice(0, n), ...walk(path.join(SRC, 'i18n')).sort(byName), ...list.slice(n));
+    } else out.push(...list);
   }
   // テスト用メニュー（src/tester/）: 製品版（--release・--no-tester）では入れない
   if (o.tester !== false) out.push(...walk(path.join(SRC, 'tester')).sort(byName));
@@ -149,6 +155,58 @@ function fontCss(texts, cacheDir) {
   }
   const bytes = faces.reduce((s, f) => s + f.length, 0);
   return { css: faces.join('\n'), chars: text.length, bytes, ok: subsetOk };
+}
+
+// 言語ごとの書体（英語 Nunito・中国語（簡体・繁体）と韓国語 Noto Sans SC/TC/KR）: Noto Sans SC/TC/KR（OFL、v2/assets/fonts/cjk/OFL_NotoSansCJK.txt）の可変の書体から、
+//   その言語の表（src/i18n/<言語>/*.js）で使う字と言語の名前（設定の言語の行。どの言語で見ても出す）だけを切り出し、
+//   太さ 500 と 700 に固めて woff2 で埋め込む。表が無い言語は言語の名前の字だけ（数 KB）。書体のファイルが無ければ飛ばす（system の書体に落ちる）。
+// 英語は Nunito（OFL、v2/assets/fonts/OFL_Nunito.txt。丸みのあるラテン字。Zen Maru Gothic のラテン字は字幅が等幅に近く、英文では字の間が空いて見える）
+const CJK_FONTS = [
+  { lang: 'en', family: 'Nunito', file: '../Nunito-VF.ttf', own: 'English', latin: true },
+  { lang: 'zh-Hans', family: 'Noto Sans SC', file: 'NotoSansSC-VF.ttf', own: '简体中文' },
+  { lang: 'zh-Hant', family: 'Noto Sans TC', file: 'NotoSansTC-VF.ttf', own: '繁體中文' },
+  { lang: 'ko', family: 'Noto Sans KR', file: 'NotoSansKR-VF.ttf', own: '한국어' },
+];
+function cjkFontCss(files, cacheDir) {
+  const faces = [];
+  let bytes = 0;
+  fs.mkdirSync(cacheDir, { recursive: true });
+  const keep = new Set();
+  for (const F of CJK_FONTS) {
+    const src = path.join(FONT_DIR, 'cjk', F.file);
+    if (!fs.existsSync(src)) continue;
+    const chars = new Set(F.own);
+    const dir = path.join(SRC, 'i18n', F.lang) + path.sep;
+    const mine = files.filter((f) => f.startsWith(dir));
+    // 表のある言語だけ英数も（無い言語は言語の名前の数字だけ。英数は Zen Maru Gothic が描く）
+    if (mine.length) for (let c = 0x20; c < 0x7f; c++) chars.add(String.fromCharCode(c));
+    if (mine.length && F.latin) { for (let c = 0xa0; c < 0x180; c++) chars.add(String.fromCharCode(c)); for (const ch of '‘’“”–—…•·×→←↑↓▲▼') chars.add(ch); }
+    for (const f of mine) for (const ch of fs.readFileSync(f, 'utf8')) chars.add(ch);
+    const text = [...chars].filter((ch) => ch.codePointAt(0) >= 0x20).sort().join('');
+    const hash = crypto.createHash('sha1').update(F.file + text).digest('hex').slice(0, 12);
+    keep.add(hash + '.txt'); keep.add(hash + '-sub.ttf');
+    for (const weight of [500, 700]) {
+      const out = path.join(cacheDir, `${hash}-${weight}.woff2`);
+      keep.add(path.basename(out));
+      try {
+        if (!fs.existsSync(out)) {
+          const txt = path.join(cacheDir, hash + '.txt');
+          const sub = path.join(cacheDir, hash + '-sub.ttf');
+          fs.writeFileSync(txt, text);
+          if (!fs.existsSync(sub)) execFileSync('pyftsubset', [src, '--text-file=' + txt, '--output-file=' + sub, '--layout-features=*', '--no-hinting'], { stdio: 'pipe' });
+          // 可変の書体を太さ 1 つに固める（fontTools の instancer）→ woff2
+          execFileSync('python3', ['-c', 'import sys\nfrom fontTools.ttLib import TTFont\nfrom fontTools.varLib import instancer\nf=TTFont(sys.argv[1])\ni=instancer.instantiateVariableFont(f,{"wght":int(sys.argv[3])})\ni.flavor="woff2"\ni.save(sys.argv[2])', sub, out, String(weight)], { stdio: 'pipe' });
+        }
+        const b64 = fs.readFileSync(out).toString('base64');
+        bytes += b64.length;
+        faces.push(`@font-face{font-family:"${F.family}";font-weight:${weight};font-style:normal;font-display:block;src:url(data:font/woff2;base64,${b64}) format("woff2")}`);
+      } catch (e) {
+        console.warn(`[build] !!!!! CJK font subset failed for ${F.file}: ${String(e.message || e).split('\n')[0]}`);
+      }
+    }
+  }
+  for (const f of fs.readdirSync(cacheDir)) if (!keep.has(f)) fs.unlinkSync(path.join(cacheDir, f));
+  return { css: faces.join('\n'), bytes };
 }
 
 // ------------------------------------------------------------------ 媒体
@@ -438,8 +496,13 @@ function main(argv) {
   const withDir = argVal(argv, '--with', null);
   const fxDirs = [path.join(V2, 'tools', 'fixtures')].concat(withDir ? [path.resolve(withDir)] : []);
   const fx = fixtures(fxDirs);
-  const texts = ok.map((f) => fs.readFileSync(f, 'utf8')).concat([JSON.stringify(fx)]);
+  // 中国語・韓国語の表（src/i18n/zh-*/・ko/）の字は Zen Maru Gothic には入れない（Noto の各地域版に切り出す。cjkFontCss）
+  const cjkRe = /[\\/]src[\\/]i18n[\\/](zh-Hans|zh-Hant|ko)[\\/]/;
+  const texts = ok.filter((f) => !cjkRe.test(f)).map((f) => fs.readFileSync(f, 'utf8')).concat([JSON.stringify(fx)]);
   const font = fontCss(texts, path.join(OUT, '.fontcache'));
+  const cjk = cjkFontCss(ok, path.join(OUT, '.fontcache_cjk'));
+  font.css += (font.css ? '\n' : '') + cjk.css;
+  font.bytes += cjk.bytes;
   const stamp = new Date().toISOString().slice(0, 19) + 'Z';
 
   // 遊ぶ版

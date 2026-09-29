@@ -10,15 +10,15 @@
     meta: { needs: ['flag:prologue_done'], gives: ['item:u_windchime', 'flag:prologue_windhill'] },
     run: async (ev) => {
       const E = X();
-      if (ev.flag('prologue_windhill')) { await E.narr(ev, '風が、歌のように鳴っている。'); return; }
-      await ev.caption('……風が、歌のように鳴っている。', { ms: 2600 });
-      await E.narr(ev, '岩のくぼみに、古い書き付けが\nはさまっている。');
-      await E.narr(ev, '「風の丘で、灰色のマントの\n人を見た。風は、昔の歌を\n覚えているのだという。\n――ロアの語り部」');
+      if (ev.flag('prologue_windhill')) { await E.narr(ev, R.T('ev.optional_windhill.windhill_notes.run.narr')); return; }
+      await ev.caption(R.T('ev.optional_windhill.windhill_notes.run.caption'), { ms: 2600 });
+      await E.narr(ev, R.T('ev.optional_windhill.windhill_notes.run.narr_2'));
+      await E.narr(ev, R.T('ev.optional_windhill.windhill_notes.run.narr_3'));
       R.Audio.pushBgm('fine_theme');
       try {
-        await E.narr(ev, '丘の上に、灰色のマントの人影が\n見えた気がした。');
-        await ev.say('fine', '……風も、歌を覚えているのね。', { voice: 'v_fine_windhill_01', name: '灰色のマントの少女', face: 'fine:smile' });
-        await E.narr(ev, '振り向くと、だれもいなかった。\n岩のくぼみに、小さな鈴が\n残されている。');
+        await E.narr(ev, R.T('ev.optional_windhill.windhill_notes.run.narr_4'));
+        await ev.say('fine', R.T('ev.optional_windhill.windhill_notes.run.say'), { voice: 'v_fine_windhill_01', name: R.T('ev.optional_windhill.windhill_notes.run.say.name'), face: 'fine:smile' });
+        await E.narr(ev, R.T('ev.optional_windhill.windhill_notes.run.narr_5'));
       } finally { R.Audio.popBgm(); }
       await E.give(ev, 'u_windchime', 1, { say: true });
       ev.setFlag('prologue_windhill');

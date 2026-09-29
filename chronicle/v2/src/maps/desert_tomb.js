@@ -46,7 +46,7 @@
       // 封じの扉（壁 y 19〜20・x 27〜29 はそのまま）: 扉の絵は中ほどに大きな 1 枚（いつも）。開くまでは押すと一言。
       // 開いた後（踏み板 2 つ）は扉のマスで向こう側へ（南 y 20 → 北 y 18、北 y 19 → 南 y 21）
       const SEAL = {};
-      O.push({ type: 'door', id: 'desert_tomb_1_seal', x: 27, y: 20, w: 3, scale: 1.7, locked: '金の印の扉は、びくともしない' });
+      O.push({ type: 'door', id: 'desert_tomb_1_seal', x: 27, y: 20, w: 3, scale: 1.7, locked: R.T('map.desert_tomb.desert_tomb_1_seal.locked') });
       for (let i = 0; i < 3; i++) {
         const x = 27 + i;
         O.push({ type: 'door', id: 'desert_tomb_1_seal_s' + i, x, y: 20, look: 'none', cond: DOOR, to: { map: 'desert_tomb_1', spawn: 'seal_n' + i } });
@@ -59,17 +59,17 @@
       O.push(K.chest('desert_tomb_1_c1', 4, 25, { pool: 'p_T' }), K.chest('desert_tomb_1_c2', 13, 8, { item: 'i_stone_earth', n: 2 }),
         K.chest('desert_tomb_1_c3', 52, 36, { pool: 'p_T' }), K.chest('desert_tomb_1_c4', 42, 8, { gold: 150 }),
         K.chest('desert_tomb_1_c5', 22, 31, { pool: 'p_rare' }), K.chest('desert_tomb_1_c6', 38, 7, { pool: 'p_T' }));
-      O.push(K.sign(26, 33, '――名を捨てし王の墓\n王を呼ぶ者は、墓守の像の\n足もとを見よ。'));
+      O.push(K.sign(26, 33, R.T('map.desert_tomb.sign')));
       // 壺は 4 つまで・角と壁ぎわだけ（持ち主 2026-09-28「樽とか木箱みたいに移動通り抜け不可のはあまり置かないで」）
       deco(O, [['broken_pillar', 24, 44], ['bones', 34, 44],
         ['obelisk', 19, 7], ['obelisk', 38, 12], ['tomb_urn', 17, 18], ['tomb_urn', 39, 18], ['bones', 5, 30], ['bones', 51, 31], ['sand_mound', 22, 7],
         ['clay_jars', 14, 12], ['clay_jars', 51, 12], ['sand_mound', 48, 8], ['broken_pillar', 16, 36], ['broken_pillar', 40, 36]]);
       for (const [x, y] of [[24, 36], [32, 44], [27, 25], [29, 30], [21, 12], [35, 12], [10, 25], [46, 25], [5, 8], [50, 8], [4, 42]]) O.push(K.prop('torch', x, y));
       K.def('desert_tomb_1', {
-        name: '砂の王墓', kind: 'dungeon', region: 'r_desert', location: 'tomb', theme: 'tomb',
+        name: R.T('map.desert_tomb.desert_tomb_1.name'), kind: 'dungeon', region: 'r_desert', location: 'tomb', theme: 'tomb',
         legend: DK.TOMB_LEGEND({ G: { mat: 'wall_sandstone', solid: true, rise: 2, name: 'seal_door' }, O: { mat: 'wall_sandstone', solid: true, rise: 2, name: 'seal_door_open' } }),
         rows: g, outside: 'wall_sandstone', objects: O,
-        npcs: [K.npc('tomb_ghost', 'npc_desert_old_m', 32, 40, { name: '墓の番の影', dir: 'w', talk: 'desert_tomb_ghost', reward: 'hint', cond: '!cleared_r_desert' })],
+        npcs: [K.npc('tomb_ghost', 'npc_desert_old_m', 32, 40, { name: R.T('map.desert_tomb.desert_tomb_1.npcs.0.tomb_ghost.name'), dir: 'w', talk: 'desert_tomb_ghost', reward: 'hint', cond: '!cleared_r_desert' })],
         spawns: Object.assign({ entrance: { x: 28, y: 44, dir: 'n' }, down: { x: 28, y: 9, dir: 's' } }, SEAL),
         exits: [],
         triggers: [{ id: 'arrive', on: 'enter', event: 'desert_tomb_arrive', once: true },
@@ -80,7 +80,7 @@
         zones: [{ rect: null, zone: 'z_desert_tomb' }],
         light: DK.LIGHT_TOMB, dark: false, bgm: 'pyramid', bbg: 'cave',
         art: { image: 'desert/under/tomb_1', closed: 'desert/under/tomb_1_closed', painted: [] },   // 1 枚の下絵（隠し部屋は閉じた形の層）
-        meta: { chestsInfo: true, floor: '1 階', sub: '墓守の回廊' },
+        meta: { chestsInfo: true, floor: R.T('map.desert_tomb.desert_tomb_1.meta.floor'), sub: R.T('map.desert_tomb.desert_tomb_1.meta.sub') },
       });
     }
 
@@ -117,16 +117,16 @@
       BZ.forEach(([x, y], i) => O.push({ type: 'brazier', id: 'desert_tomb_2_b' + (i + 1), x, y }));
       O.push(K.prop('obelisk', 5, 36), K.exam(5, 37, 'desert_tomb_glyph', { glyph: 'za' }));
       O.push(K.exam(28, 36, 'desert_tomb_quicksand'), K.exam(39, 40, 'desert_tomb_quicksand'), K.exam(41, 27, 'desert_tomb_quicksand'));
-      O.push(K.sign(26, 30, '――流砂の主、ここに眠る。\n砂にもぐるものは、土を嫌う。\n槍は砂を突き通す。\n（誰かの書き付け）'));
+      O.push(K.sign(26, 30, R.T('map.desert_tomb.sign_2')));
       O.push(K.chest('desert_tomb_2_c1', 5, 4, { pool: 'p_T' }), K.chest('desert_tomb_2_c2', 50, 6, { pool: 'p_T' }), K.chest('desert_tomb_2_c3', 38, 11, { item: 'i_torch', n: 2 }),
         K.chest('desert_tomb_2_c4', 11, 41, { gold: 220 }), K.chest('desert_tomb_2_c5', 52, 30, { pool: 'p_rare' }), K.chest('desert_tomb_2_c6', 12, 12, { item: 'i_potion', n: 2 }));
       deco(O, [['bones', 5, 22], ['bones', 12, 32], ['sand_mound', 20, 44], ['sand_mound', 36, 44], ['bones', 30, 44],
         ['broken_pillar', 38, 5], ['tomb_urn', 51, 12], ['clay_jars', 45, 43], ['obelisk', 47, 27], ['tomb_urn', 53, 43], ['bones', 24, 45], ['sand_mound', 22, 37]]);
       const N = [
-        K.npc('worm_track', 'npc_desert_old_m', 25, 33, { name: '倒れた墓荒らし', dir: 'e', talk: 'desert_tomb_robber', reward: 'boss', cond: '!desert_robber_gone' }),   // 砂もぐりの後、起きて帰る場面で消える（desert_tomb_robber_leave）
+        K.npc('worm_track', 'npc_desert_old_m', 25, 33, { name: R.T('map.desert_tomb.N.0.worm_track.name'), dir: 'e', talk: 'desert_tomb_robber', reward: 'boss', cond: '!desert_robber_gone' }),   // 砂もぐりの後、起きて帰る場面で消える（desert_tomb_robber_leave）
       ];
       K.def('desert_tomb_2', {
-        name: '砂の王墓', kind: 'dungeon', region: 'r_desert', location: 'tomb', theme: 'tomb',
+        name: R.T('map.desert_tomb.desert_tomb_2.name'), kind: 'dungeon', region: 'r_desert', location: 'tomb', theme: 'tomb',
         legend: DK.TOMB_LEGEND(),
         rows: g, outside: 'wall_sandstone', objects: O, npcs: N,
         spawns: { top: { x: 28, y: 5, dir: 's' }, up: { x: 49, y: 39, dir: 'n' }, lair: { x: 28, y: 37, dir: 'n' } },
@@ -142,7 +142,7 @@
         zones: [{ rect: [18, 35, 21, 11], zone: 'z_desert_tomb' }, { rect: null, zone: 'z_desert_tomb' }],
         light: { ambient: '#4c4a7e', k: 0.62, mood: 'dark' }, dark: true, bgm: 'pyramid', bbg: 'cave',
         art: { image: 'desert/under/tomb_2', closed: 'desert/under/tomb_2_closed', painted: [] },   // 1 枚の下絵（_tools/under/desert2）
-        meta: { chestsInfo: true, floor: '2 階', sub: '流砂の間' },
+        meta: { chestsInfo: true, floor: R.T('map.desert_tomb.desert_tomb_2.meta.floor'), sub: R.T('map.desert_tomb.desert_tomb_2.meta.sub') },
       });
     }
 
@@ -173,15 +173,15 @@
       O.push(K.prop('crystal', 26, 3), K.exam(26, 4, 'desert_tomb_throne'));
       O.push(K.chest('desert_tomb_3_c1', 4, 21, { pool: 'p_T' }), K.chest('desert_tomb_3_c2', 10, 36, { pool: 'p_heal' }), K.chest('desert_tomb_3_c3', 47, 36, { pool: 'p_T' }),
         K.chest('desert_tomb_3_c4', 4, 36, { pool: 'p_rare' }));
-      O.push(K.sign(31, 14, '――王に名を返す者よ。\n日の玉は火と光を、月の玉は水と闇を\n王に与える。玉を先に砕け。\n（墓守の書き付け）'));
+      O.push(K.sign(31, 14, R.T('map.desert_tomb.sign_3')));
       for (const [x, y] of [[21, 34], [31, 34], [20, 13], [32, 13], [16, 8], [36, 8], [5, 25], [46, 25], [26, 25]]) O.push(K.prop('torch', x, y));
       deco(O, [['tomb_urn', 11, 20], ['bones', 6, 30], ['sand_mound', 44, 33], ['bones', 47, 22], ['tomb_urn', 20, 41], ['tomb_urn', 32, 41],
         ['clay_jars', 48, 18], ['broken_pillar', 40, 30], ['obelisk', 9, 27]]);   // 壺は 4 つまで、崩れた柱は壁ぎわ（持ち主 2026-09-28）
       const N = [
-        K.npc('hazal_king', 'npc_hazal', 26, 6, { name: 'ハザル王', dir: 's', talk: 'desert_hazal_after', reward: 'news', cond: 'desert_king' }),
+        K.npc('hazal_king', 'npc_hazal', 26, 6, { name: R.T('map.desert_tomb.N.0.hazal_king.name'), dir: 's', talk: 'desert_hazal_after', reward: 'news', cond: 'desert_king' }),
       ];
       K.def('desert_tomb_3', {
-        name: '砂の王墓', kind: 'dungeon', region: 'r_desert', location: 'tomb', theme: 'tomb',
+        name: R.T('map.desert_tomb.desert_tomb_3.name'), kind: 'dungeon', region: 'r_desert', location: 'tomb', theme: 'tomb',
         legend: DK.TOMB_LEGEND(),
         rows: g, outside: 'wall_sandstone', objects: O, npcs: N,
         spawns: { up: { x: 26, y: 38, dir: 'n' }, throne: { x: 26, y: 8, dir: 'n' } },
@@ -193,7 +193,7 @@
         zones: [{ rect: [0, 12, 52, 32], zone: 'z_desert_tomb_deep' }],
         light: DK.LIGHT_TOMB, dark: false, bgm: 'pyramid', bbg: 'cave',
         art: { image: 'desert/under/tomb_3', painted: [] },   // 1 枚の下絵（_tools/under/desert2）
-        meta: { chestsInfo: true, floor: '3 階', sub: '王の間' },
+        meta: { chestsInfo: true, floor: R.T('map.desert_tomb.desert_tomb_3.meta.floor'), sub: R.T('map.desert_tomb.desert_tomb_3.meta.sub') },
       });
     }
   });

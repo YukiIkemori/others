@@ -10,7 +10,7 @@
   const u = (v) => R.UIK.u(v);
   const T = () => R.UIK.T;
   const act = (id) => (R.Rules.actionOf ? R.Rules.actionOf(id) : (R.DB.techs[id] || R.DB.spells[id])) || null;
-  const RANGE = { enemy: '敵ひとり', enemies: '敵みんな', ally: '味方ひとり', allies: '味方みんな', self: '自分', ally_dead: '倒れた味方ひとり', party: '味方みんな', all: 'みんな' };
+  const RANGE = { enemy: R.T('ui.skills.RANGE.enemy'), enemies: R.T('ui.skills.RANGE.enemies'), ally: R.T('ui.skills.RANGE.ally'), allies: R.T('ui.skills.RANGE.allies'), self: R.T('ui.skills.RANGE.self'), ally_dead: R.T('ui.skills.RANGE.ally_dead'), party: R.T('ui.skills.RANGE.party'), all: R.T('ui.skills.RANGE.all') };
 
   S.rangeName = (a) => RANGE[(a && (a.target || (a.use && a.use.target))) || ''] || '';
   /** 派生で覚えた技の元の技の名前（R.Glimmer.derivedFrom。派生でなければ null） */
@@ -56,17 +56,17 @@
       const c = this.char();
       if (!row.a || !S.fieldUsable(row.a)) { R.UIK.sfx('buzzer'); return; }
       if (!(c.hp > 0)) { R.UIK.sfx('buzzer'); return; }
-      if (R.Rules.mpCost(c, row.value) > c.mp) { R.UIK.sfx('buzzer'); R.UIK.toast('MP が足りない', { anchor: 'bl' }); return; }
+      if (R.Rules.mpCost(c, row.value) > c.mp) { R.UIK.sfx('buzzer'); R.UIK.toast(R.T('ui.skills.pick.toast'), { anchor: 'bl' }); return; }
       S.targetStart(this, row.a, c, row.value);
     },
     use(targets) {
       const c = this.char(), id = this.tgt.id, a = this.tgt.a;
       const cost = R.Rules.mpCost(c, id);
-      if (cost > c.mp) { R.UIK.sfx('buzzer'); R.UIK.toast('MP が足りない', { anchor: 'bl' }); this.tgt = null; return; }
+      if (cost > c.mp) { R.UIK.sfx('buzzer'); R.UIK.toast(R.T('ui.skills.use.toast'), { anchor: 'bl' }); this.tgt = null; return; }
       const ok = targets.filter((t) => S.canTarget(a, t));
       if (!ok.length) { R.UIK.sfx('buzzer'); return; }
       const res = S.applyField(a, c, ok);
-      if (!res.changed) { R.UIK.sfx('buzzer'); R.UIK.toast('効き目がなかった', { anchor: 'bl' }); return; }
+      if (!res.changed) { R.UIK.sfx('buzzer'); R.UIK.toast(R.T('ui.skills.use.toast_2'), { anchor: 'bl' }); return; }
       c.mp -= cost;
       R.UIK.sfx('heal');
       for (const l of res.lines.slice(0, 2)) R.UIK.toast(l, { anchor: 'bl', icon: 'heal' });
@@ -88,7 +88,7 @@
       R.UIK.portraitFrame(g, { x: hp.x + u(10), y: hp.y + u(9), w: u(52), h: u(52) }, c.look, {});
       R.UIK.text(g, c.name, hp.x + u(74), hp.y + u(12), { size: u(18), weight: 700, color: C.text });
       const wt = R.Rules.weaponType ? R.Rules.weaponType(c) : null;
-      R.UIK.text(g, `${S.title(c)}　・　いまの武器：${wt && wt !== 'fist' ? S.wname(wt) : '素手'}`, hp.x + u(74), hp.y + u(40), { size: u(12.5), color: C.text2, maxW: hp.w - u(160) });
+      R.UIK.text(g, R.T('ui.skills.draw.text', { title: S.title(c), p1: wt && wt !== 'fist' ? S.wname(wt) : R.T('ui.skills.draw.text_2') }), hp.x + u(74), hp.y + u(40), { size: u(12.5), color: C.text2, maxW: hp.w - u(160) });
       R.UIK.text(g, `MP ${c.mp}`, hp.x + hp.w - u(16), hp.y + u(40), { size: u(13), weight: 700, color: C.text2, align: 'right' });
       const lx = S.lrChips(g, hp.x + hp.w - u(14), hp.y + u(20));
       this.lr = { l: { x: lx - u(4), y: hp.y, w: u(28), h: u(40) }, r: { x: hp.x + hp.w - u(34), y: hp.y, w: u(34), h: u(40) } };
@@ -108,7 +108,7 @@
         R.UIK.text(gg, 'M ' + mp, rect.x + rect.w - u(14), rect.y + (rect.h - sz) / 2, { size: sz, weight: 700, color: mp === 0 ? C.teal : wrong ? C.disabled : C.text2, align: 'right' });
       };
       this.list.draw(g, lr);
-      if (!this.list.rows.length) R.UIK.text(g, 'まだ何も覚えていない。', lr.x + u(16), lr.y + u(8), { size: u(15), color: C.text3 });
+      if (!this.list.rows.length) R.UIK.text(g, R.T('ui.skills.draw.text_3'), lr.x + u(16), lr.y + u(8), { size: u(15), color: C.text3 });
       // 右: 説明と人の札
       const rx = tall ? b.x : lp.x + lp.w + u(18), rw = tall ? b.w : b.x + b.w - rx;
       const dp = { x: rx, y: tall ? lp.y + lp.h + u(10) : b.y, w: rw, h: u(tall ? 124 : 150) };
@@ -117,21 +117,21 @@
       if (row && row.a) {
         const a = row.a;
         R.UIK.text(g, a.name, dp.x + u(20), dp.y + u(16), { size: u(19), weight: 700, color: C.goldHi, maxW: dp.w * 0.6 });
-        const sub = row.kind === 'tech' ? S.wname(a.wtype) + 'の技' : (a.elements || []).map(S.ename).join('・') + 'の術';
+        const sub = row.kind === 'tech' ? R.T('ui.skills.draw.sub', { wname: S.wname(a.wtype) }) : R.T('ui.skills.draw.sub_2', { join: (a.elements || []).map(S.ename).join(R.T('ui.skills.draw.sub.join')) });
         R.UIK.text(g, sub, dp.x + dp.w - u(20), dp.y + u(20), { size: u(12.5), color: C.text3, align: 'right' });
         let yy = dp.y + u(50);
         for (const l of R.UIK.wrap(String(a.desc || '').replace(/\n/g, ''), dp.w - u(40), { size: u(14.5) }).slice(0, 2)) { R.UIK.text(g, l, dp.x + u(20), yy, { size: u(14.5), color: C.text }); yy += u(24); }
         let cx = dp.x + u(20);
         cx += R.UIK.chip(g, cx, yy + u(4), S.rangeName(a) || '―', { kind: 'plain', size: 11 }) + u(8);
         const from = row.kind === 'tech' ? S.derivedFromName(c, row.value) : null;
-        if (from) cx += R.UIK.chip(g, cx, yy + u(4), from + 'から派生', { kind: 'plain', size: 11, color: C.gold }) + u(8);
-        if (row.kind === 'tech' && a.wtype !== wt) R.UIK.chip(g, cx, yy + u(4), S.wname(a.wtype) + 'を持つと使える', { kind: 'plain', size: 11, color: C.text3 });
-        else if (S.fieldUsable(a)) R.UIK.chip(g, cx, yy + u(4), 'フィールドで使える', { kind: 'teal', size: 11, icon: 'heal' });
+        if (from) cx += R.UIK.chip(g, cx, yy + u(4), R.T('ui.skills.draw.cx.chip', { from }), { kind: 'plain', size: 11, color: C.gold }) + u(8);
+        if (row.kind === 'tech' && a.wtype !== wt) R.UIK.chip(g, cx, yy + u(4), R.T('ui.skills.draw.chip', { wname: S.wname(a.wtype) }), { kind: 'plain', size: 11, color: C.text3 });
+        else if (S.fieldUsable(a)) R.UIK.chip(g, cx, yy + u(4), R.T('ui.skills.draw.chip_2'), { kind: 'teal', size: 11, icon: 'heal' });
       }
       const cp = { x: rx, y: dp.y + dp.h + u(12), w: rw, h: b.y + b.h - (dp.y + dp.h + u(12)) };
-      if (this.tgt) R.UIK.text(g, this.tgt.kind === 'all' ? 'みんなに唱える' : '誰に唱える？', cp.x + u(4), cp.y - u(2), { size: u(13), weight: 700, color: C.gold });
+      if (this.tgt) R.UIK.text(g, this.tgt.kind === 'all' ? R.T('ui.skills.draw.text_4') : R.T('ui.skills.draw.text_5'), cp.x + u(4), cp.y - u(2), { size: u(13), weight: 700, color: C.gold });
       this.cards = S.memberCards(this, g, { x: cp.x, y: cp.y + (this.tgt ? u(20) : 0), w: cp.w, h: cp.h - (this.tgt ? u(20) : 0) });
-      S.prompts(g, this.tgt ? [{ btn: 'a', label: '唱える' }, { btn: 'b', label: '戻る' }] : [{ btn: 'a', label: '使う' }, { btn: 'y', label: '詳しく' }, { btn: 'r', label: '次の仲間' }, { btn: 'b', label: '戻る' }]);
+      S.prompts(g, this.tgt ? [{ btn: 'a', label: R.T('ui.skills.draw.0.label') }, { btn: 'b', label: R.T('ui.skills.draw.1.label') }] : [{ btn: 'a', label: R.T('ui.skills.draw.0.label_2') }, { btn: 'y', label: R.T('ui.skills.draw.1.label_2') }, { btn: 'r', label: R.T('ui.skills.draw.2.label') }, { btn: 'b', label: R.T('ui.skills.draw.3.label') }]);
     },
   });
 })(window.RPG);

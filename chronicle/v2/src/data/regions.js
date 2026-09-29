@@ -8,29 +8,29 @@
   // beaconAt の world の場所は論理の座標 L（lx, ly。tools/gen_world*.js と同じ座標）。W の x, y は R.WorldXform.fill がデータの後処理で足す（WORLD v3）
   R.defs('regions', {
     prologue: {
-      name: 'ファロス半島', short: 'prologue', n: 0,
-      chapter: { title: '灯台守の歌', summary: '言葉を失った灯台に、\n語り部の見習いが\n守り歌を取り戻した。\n夜の世界で最初の灯りが、\n海を照らした。' },
-      town: 'pharos', dungeons: ['lighthouse'], bossTroop: 'tr_b_pageeater', zone: 'zw_peninsula', beacon: 'ファロス灯台', beaconAt: { map: 'world', lx: 106, ly: 120 },
+      name: R.T('regions.prologue.name'), short: 'prologue', n: 0,
+      chapter: { title: R.T('regions.prologue.chapter.title'), summary: R.T('regions.prologue.chapter.summary') },
+      town: 'pharos', dungeons: ['lighthouse'], bossTroop: 'tr_b_pageeater', zone: 'zw_peninsula', beacon: R.T('regions.prologue.beacon'), beaconAt: { map: 'world', lx: 106, ly: 120 },
     },
     r_forest: {
-      name: 'ヴェルダの森', short: 'forest', n: 1,
-      chapter: { title: '千年樹の歌', summary: '歌を忘れた森は\n人を迷わせた。\n語り部が歌をつなぐと、\n森の主は目を覚まし、\nこずえに歌の灯がともった。' },
-      page: 'k_page_forest', town: 'fern', dungeons: ['verda', 'elder'], bossTroop: 'tr_b_rooteater', zone: 'zw_forest', beacon: '千年樹の歌の灯', beaconAt: { map: 'world', lx: 24, ly: 82 },
+      name: R.T('regions.r_forest.name'), short: 'forest', n: 1,
+      chapter: { title: R.T('regions.r_forest.chapter.title'), summary: R.T('regions.r_forest.chapter.summary') },
+      page: 'k_page_forest', town: 'fern', dungeons: ['verda', 'elder'], bossTroop: 'tr_b_rooteater', zone: 'zw_forest', beacon: R.T('regions.r_forest.beacon'), beaconAt: { map: 'world', lx: 24, ly: 82 },
     },
     r_desert: {
-      name: 'ザハラ砂漠', short: 'desert', n: 2,
-      chapter: { title: '名を売った王', summary: '泉が枯れ、隊商は\n出られなくなった。\n語り部が王の名を取り戻すと、\n古い泉の底に\n日輪の火がともった。' },
-      page: 'k_page_desert', town: 'kasim', dungeons: ['tomb'], bossTroop: 'tr_b_sandking', zone: 'zw_desert', beacon: '日輪の火', beaconAt: { map: 'desert_camp3', x: 13, y: 8 },
+      name: R.T('regions.r_desert.name'), short: 'desert', n: 2,
+      chapter: { title: R.T('regions.r_desert.chapter.title'), summary: R.T('regions.r_desert.chapter.summary') },
+      page: 'k_page_desert', town: 'kasim', dungeons: ['tomb'], bossTroop: 'tr_b_sandking', zone: 'zw_desert', beacon: R.T('regions.r_desert.beacon'), beaconAt: { map: 'desert_camp3', x: 13, y: 8 },
     },
-    r_snow: { name: 'ノルデン雪原', short: 'snow', n: 3, chapter: { title: '白竜と冬至の火', summary: '吹雪のやまない冬至に、\nユールの人々は大火祭を開き、\n氷の狼から村を守った。\n冬至の火が峰に届き、\n白竜の心がとけた。' },
-      page: 'k_page_snow', town: 'yule', dungeons: ['snow_woods', 'peak'], bossTroop: 'tr_b_whitedragon', zone: 'zw_snow', beacon: '冬至の火', beaconAt: { map: 'world', lx: 62, ly: 5 } },   // 雪原は開いた（snow_*.js）
-    r_marsh: { name: 'グレイモア湿原', short: 'marsh', n: 4, chapter: { title: '霧の魔女と七つの鐘', summary: '霧の晩ごとに、\nロッホから子どもが消えた。\n語り部が町の顔を見つめ、\n沼の鐘を鳴らすと、\n七つの鐘楼に灯がともった。' },
-      page: 'k_page_marsh', town: 'loch', dungeons: ['manor', 'bog'], bossTroop: 'tr_b_mistbeast', zone: 'zw_marsh', beacon: '七つの鐘楼の灯', beaconAt: { map: 'world', lx: 183, ly: 69 } },   // 湿原は開いた（marsh_*.js）
-    r_isles: { name: 'マレア諸島', short: 'isles', n: 5, chapter: { title: '帰らずの船長', summary: '' }, page: 'k_page_isles', town: 'coral', beacon: '帰らずの灯', slice: 'locked' },
-    r_mine: { name: 'ガルド山地', short: 'mine', n: 6, chapter: { title: '鍛冶神の誓い', summary: '' }, page: 'k_page_mine', town: 'dovan', beacon: '鍛冶神の炉', slice: 'locked' },
-    r_ash: { name: '灰の荒野', short: 'ash', n: 7, chapter: { title: '火の鳥の眠る山', summary: '火口の卵が冷え、\n灰の荒野の赤が鈍っていった。\n語り部が炎の試練を勝ち抜き、\n壁画の物語を卵に語ると、\n火の鳥がかえった。' },
-      page: 'k_page_ash', town: 'caldera', dungeons: ['volcano'], bossTroop: 'tr_b_lavabeast', zone: 'zw_ash_plain', beacon: '火の鳥', beaconAt: { map: 'world', x: 193, y: 136 } },   // 灰の荒野は開いた（ash_*.js）
-    r_star: { name: 'オルビス高原', short: 'star', n: 8, chapter: { title: '星を数えた賢者', summary: '' }, page: 'k_page_star', town: 'orbis', beacon: '星', slice: 'locked' },
-    world: { name: '世界のうわさ', short: 'world', n: 9, chapter: { title: '', summary: '' } },
+    r_snow: { name: R.T('regions.r_snow.name'), short: 'snow', n: 3, chapter: { title: R.T('regions.r_snow.chapter.title'), summary: R.T('regions.r_snow.chapter.summary') },
+      page: 'k_page_snow', town: 'yule', dungeons: ['snow_woods', 'peak'], bossTroop: 'tr_b_whitedragon', zone: 'zw_snow', beacon: R.T('regions.r_snow.beacon'), beaconAt: { map: 'world', lx: 62, ly: 5 } },   // 雪原は開いた（snow_*.js）
+    r_marsh: { name: R.T('regions.r_marsh.name'), short: 'marsh', n: 4, chapter: { title: R.T('regions.r_marsh.chapter.title'), summary: R.T('regions.r_marsh.chapter.summary') },
+      page: 'k_page_marsh', town: 'loch', dungeons: ['manor', 'bog'], bossTroop: 'tr_b_mistbeast', zone: 'zw_marsh', beacon: R.T('regions.r_marsh.beacon'), beaconAt: { map: 'world', lx: 183, ly: 69 } },   // 湿原は開いた（marsh_*.js）
+    r_isles: { name: R.T('regions.r_isles.name'), short: 'isles', n: 5, chapter: { title: R.T('regions.r_isles.chapter.title'), summary: '' }, page: 'k_page_isles', town: 'coral', beacon: R.T('regions.r_isles.beacon'), slice: 'locked' },
+    r_mine: { name: R.T('regions.r_mine.name'), short: 'mine', n: 6, chapter: { title: R.T('regions.r_mine.chapter.title'), summary: '' }, page: 'k_page_mine', town: 'dovan', beacon: R.T('regions.r_mine.beacon'), slice: 'locked' },
+    r_ash: { name: R.T('regions.r_ash.name'), short: 'ash', n: 7, chapter: { title: R.T('regions.r_ash.chapter.title'), summary: R.T('regions.r_ash.chapter.summary') },
+      page: 'k_page_ash', town: 'caldera', dungeons: ['volcano'], bossTroop: 'tr_b_lavabeast', zone: 'zw_ash_plain', beacon: R.T('regions.r_ash.beacon'), beaconAt: { map: 'world', x: 193, y: 136 } },   // 灰の荒野は開いた（ash_*.js）
+    r_star: { name: R.T('regions.r_star.name'), short: 'star', n: 8, chapter: { title: R.T('regions.r_star.chapter.title'), summary: '' }, page: 'k_page_star', town: 'orbis', beacon: R.T('regions.r_star.beacon'), slice: 'locked' },
+    world: { name: R.T('regions.world.name'), short: 'world', n: 9, chapter: { title: '', summary: '' } },
   });
 })(window.RPG);

@@ -48,7 +48,7 @@
     O.push(K.chest('snow_woods_c2', 42, 25, { item: 'i_firepot', n: 2 }));
     O.push(K.chest('snow_woods_c3', 44, 6, { pool: 'p_T' }));
     O.push(K.chest('snow_woods_c4', 13, 26, { gold: 110 }));
-    O.push(K.sign(27, 35, '雪の林\n倒木は薪になる。――ユールの薪割り'));
+    O.push(K.sign(27, 35, R.T('map.snow_woods.sign')));
     O.push(K.prop('snow_lamp', 20, 34), K.prop('snow_lamp', 30, 34));   // 入口の広場の両端（道の口をふさがない）
     const keep = new Set();
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (K.at(g, x, y) === ',') keep.add(x + ',' + y);
@@ -60,11 +60,11 @@
       [3, 24], [29, 25], [3, 26], [3, 27], [43, 27], [4, 28], [6, 28], [23, 28], [26, 28], [9, 29], [10, 29], [26, 29], [7, 30]]) K.put(g, x, y, '.');
 
     const N = [
-      K.npc('woods_hunter', 'npc_snow_man', 26, 25, { name: '薪割りの男', dir: 'w', talk: 'snow_woods_camp', reward: 'hint' }),
-      K.npc('lost_dog', 'ani_dog', 43, 8, { name: 'そり犬', dir: 's', talk: 'snow_woods_dog', cond: ['!snow_dog_found', '!snow_dog_home'], reward: 'side' }),
+      K.npc('woods_hunter', 'npc_snow_man', 26, 25, { name: R.T('map.snow_woods.N.0.woods_hunter.name'), dir: 'w', talk: 'snow_woods_camp', reward: 'hint' }),
+      K.npc('lost_dog', 'ani_dog', 43, 8, { name: R.T('map.snow_woods.N.1.lost_dog.name'), dir: 's', talk: 'snow_woods_dog', cond: ['!snow_dog_found', '!snow_dog_home'], reward: 'side' }),
     ];
     K.def('snow_woods', {
-      name: '雪の林', kind: 'dungeon', region: 'r_snow', location: 'snow_woods', theme: 'snow',
+      name: R.T('map.snow_woods.name'), kind: 'dungeon', region: 'r_snow', location: 'snow_woods', theme: 'snow',
       legend: S.LEGEND(), rows: g, outside: 'snow',
       objects: O, npcs: N,
       spawns: { south: { x: 24, y: 38, dir: 'n' }, camp: { x: 25, y: 26, dir: 'n' } },
@@ -79,7 +79,7 @@
       light: { ambient: '#5a64a4', k: 0.55, poolK: 0.7, spillR: 0.9, mood: 'night' },
       dark: false,
       bgm: 'ice', bbg: 'snow', weather: 'snow', weatherCond: '!cleared_r_snow',
-      meta: { chestsInfo: true, sub: '倒木の林' },
+      meta: { chestsInfo: true, sub: R.T('map.snow_woods.meta.sub') },
     });
   });
 })(window.RPG);

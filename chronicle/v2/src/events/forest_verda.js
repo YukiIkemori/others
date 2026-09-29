@@ -13,113 +13,113 @@
 
   // ---------------------------------------------------------------- 入るとき・森が道を変える
   E('verda_arrive', async (ev) => {
-    await ev.caption('木々のあいだに、蛍が漂っている。\n……けれど、森の奥は\n墨を流したように暗い。', { ms: 2600 });
-    if (ev.has('k_pim_hat')) await ev.caption('ピムの帽子のこけの粉が、\nかすかに光った。', { ms: 1800 });
+    await ev.caption(R.T('events.verda_arrive.caption'), { ms: 2600 });
+    if (ev.has('k_pim_hat')) await ev.caption(R.T('events.verda_arrive.caption_2'), { ms: 1800 });
   });
   E('verda_2_arrive', async (ev) => {
-    await ev.caption('森が、いっそう深くなった。\nどこかで、歌の切れ端のような\n風の音がする。', { ms: 2400 });
+    await ev.caption(R.T('events.verda_2_arrive.caption'), { ms: 2400 });
   });
   E('verda_mist', async (ev) => {
     if (ev.var('forest_verses') >= 3) return;
     ev.bgm('lostwood', { fade: 800 });   // 霧の曲（design/bgm_changes.md）。歌の石が 3 つそろったらマップの曲へ戻す
     ev.sfx('wind');
-    await ev.caption('足元から、白い霧が\nわき上がった……。\n森が、道を変えようとしている。', { ms: 2200 });
+    await ev.caption(R.T('events.verda_mist.caption'), { ms: 2200 });
   });
 
   // ---------------------------------------------------------------- F8 歌の石
   async function songStone(ev, key, verse, extra) {
     const f = F();
     if (ev.flag(key)) {
-      await ev.say(null, '歌の刻まれた、\n道しるべの石だ。');
+      await ev.say(null, R.T('ev.forest_verda.songStone.say'));
       await ev.caption(extra ? verse + '\n' + extra : verse, { ms: 2400 });
       return;
     }
-    await ev.say(null, 'コケむした道しるべの石だ。\n表に、歌が刻まれている……。');
+    await ev.say(null, R.T('ev.forest_verda.songStone.say_2'));
     ev.sfx('bell');
     await ev.caption(verse, { ms: 3000 });
     if (extra) {
-      await ev.say(null, 'その下に、ほかの石には無い\n一節が続いている。');
+      await ev.say(null, R.T('ev.forest_verda.songStone.say_3'));
       await ev.caption(extra, { ms: 3200 });
     }
     ev.setFlag(key);
     const n = ev.addVar('forest_verses', 1);
     ev.sfx('quill');
-    await ev.say(null, '{hero}は、歌の一節を\n年代記に書き留めた。');
+    await ev.say(null, R.T('ev.forest_verda.songStone.say_4'));
     if (n >= 3) {
       ev.sfx('unlock');
-      await ev.caption('三つの石の歌がつながった。\n森の奥で、つるがほどけていく\n音がする……。', { ms: 2800 });
-      await ev.caption('森はもう、道を変えない。', { ms: 1800 });
+      await ev.caption(R.T('ev.forest_verda.songStone.caption'), { ms: 2800 });
+      await ev.caption(R.T('ev.forest_verda.songStone.caption_2'), { ms: 1800 });
       mapBgm(ev, { fade: 800 });
       ev.leadDone('l_forest_song');
     } else {
-      await ev.say(null, n === 1 ? '歌の石は、あとふたつ……。' : '歌の石は、あとひとつ……。');
+      await ev.say(null, n === 1 ? R.T('ev.forest_verda.songStone.say_5') : R.T('ev.forest_verda.songStone.say_6'));
     }
     void f;
   }
   E('verda_stone_a', (ev) => songStone(ev, 'forest_stone_a', F().VERSES[0]), { meta: { needs: [], gives: ['var:forest_verses+1', 'flag:forest_stone_a'] } });
   E('verda_stone_b', (ev) => songStone(ev, 'forest_stone_b', F().VERSES[1]), { meta: { needs: [], gives: ['var:forest_verses+1', 'flag:forest_stone_b'] } });
   E('verda_stone_c', async (ev) => {
-    if (!ev.flag('forest_moth')) { await ev.say(null, '石のまわりに、白い粉が\n厚く積もっている……。'); return; }
+    if (!ev.flag('forest_moth')) { await ev.say(null, R.T('events.verda_stone_c.say')); return; }
     await songStone(ev, 'forest_stone_c', F().VERSES[2], F().EXTRA);
   }, { meta: { needs: ['flag:forest_moth'], gives: ['var:forest_verses+1', 'flag:forest_stone_c'] } });
 
   E('verda_vines', async (ev) => {
     if (ev.var('forest_verses') >= 3) return;
-    await ev.say(null, ['太いつるが、網のように\n道をふさいでいる。', ev.var('forest_verses') > 0
-      ? '千年樹の歌がそろえば、\nほどけるかもしれない……。'
-      : 'つるの向こうに、とてつもなく\n大きな木の幹が見える。']);
+    await ev.say(null, [R.T('events.verda_vines.say.0'), ev.var('forest_verses') > 0
+      ? R.T('events.verda_vines.say.1')
+      : R.T('events.verda_vines.say.1_2')]);
   });
 
   // ---------------------------------------------------------------- F9 ダストウィング（歌の石 c を守る）
   E('verda_moth', async (ev) => {
     if (ev.flag('forest_moth')) return;
     ev.bgm('omen');   // ボスの予告（1 回だけ鳴る）。戦闘の後は R.Audio が予告の前の曲に戻す
-    await ev.say(null, 'バサッ……バサッ……。\n重い羽音が、森の空気を\nふるわせている。');
+    await ev.say(null, R.T('events.verda_moth.say'));
     ev.sfx('roar');
-    await ev.say(null, '白い粉をまき散らしながら、\n巨大な羽虫が舞い降りた！');
+    await ev.say(null, R.T('events.verda_moth.say_2'));
     const r = await ev.battle('tr_b_moth', { boss: true });
     if (r !== 'win') return;
     ev.setFlag('forest_moth');
-    await ev.say(null, ['ダストウィングは、白い粉に\nなって、消えていった。', '粉の積もった石が、\n月の光に浮かび上がった。']);
+    await ev.say(null, R.T('events.verda_moth.say_3'));
   }, { meta: { needs: [], gives: ['flag:forest_moth'] } });
 
   // ---------------------------------------------------------------- 持ち物（斧・笛）
   E('verda_axe', async (ev) => {
-    if (ev.flag('forest_got_axe')) { await ev.say(null, '古い切り株だ。\n斧の跡が、いくつも残っている。'); return; }
-    await ev.say(null, ['切り株に、斧が一本\n突き立ててある。', '柄に焼き印。「ハンス」……\nきこりの目印の置き方だ。']);
+    if (ev.flag('forest_got_axe')) { await ev.say(null, R.T('events.verda_axe.say')); return; }
+    await ev.say(null, R.T('events.verda_axe.say_2'));
     ev.setFlag('forest_got_axe');
-    await ev.caption('ハンスの斧を預かった', { ms: 1600 });
-    await ev.say(null, '持ち主は、この先の\nどこかにいるはずだ。');
+    await ev.caption(R.T('events.verda_axe.caption'), { ms: 1600 });
+    await ev.say(null, R.T('events.verda_axe.say_3'));
   }, { meta: { needs: [], gives: ['flag:forest_got_axe'] } });
 
   E('verda_flute', async (ev) => {
-    if (ev.flag('forest_got_flute')) { await ev.say(null, 'こけむした石だ。'); return; }
-    await ev.say(null, ['石のかげに、木の呼び笛が\n落ちている。', 'きこりどうしが呼び合う笛だ。\n吹き口に「ベン」と彫ってある。']);
+    if (ev.flag('forest_got_flute')) { await ev.say(null, R.T('events.verda_flute.say')); return; }
+    await ev.say(null, R.T('events.verda_flute.say_2'));
     ev.setFlag('forest_got_flute');
-    await ev.caption('ベンの呼び笛を預かった', { ms: 1600 });
+    await ev.caption(R.T('events.verda_flute.caption'), { ms: 1600 });
   }, { meta: { needs: [], gives: ['flag:forest_got_flute'] } });
 
   // ---------------------------------------------------------------- F5 ハンス（倒木の先）
   E('verda_log', async (ev) => {
     if (ev.flag('forest_log_cut')) return;
     if (!ev.flag('forest_got_axe')) {
-      await ev.say(null, ['大きな倒木が、道をふさいでいる。', '向こうから、かすかに\nうめき声が聞こえる……。']);
+      await ev.say(null, R.T('events.verda_log.say'));
       return;
     }
-    await ev.say(null, '大きな倒木が、道をふさいでいる。\nハンスの斧なら、払えそうだ。');
-    const i = await ev.choose(['斧で払う', 'やめておく'], { cancel: 1 });
+    await ev.say(null, R.T('events.verda_log.say_2'));
+    const i = await ev.choose(R.T('events.verda_log.i.choose'), { cancel: 1 });
     if (i !== 0) return;
     ev.sfx('hit');
     await ev.fade('out', 300);
     ev.setFlag('forest_log_cut');
     await ev.fade('in', 300);
-    await ev.say(null, '倒木を払うと、その先に\n小さなくぼ地が見えた。');
+    await ev.say(null, R.T('events.verda_log.say_3'));
   }, { meta: { needs: ['flag:forest_got_axe'], gives: ['flag:forest_log_cut'] } });
 
   E('verda_hans', async (ev) => {
     if (ev.flag('forest_found_hans')) return;
-    await ev.say('hans', ['……おお、人か！\n倒れた木に道をふさがれて、\n出られなくなってたんだ。', 'おれはハンス。\nフェルンのきこりだ。\nその斧、おれのだな。']);
-    await ev.say('hans', ['森の奥で、歌が聞こえた気がして\n追いかけたら、このざまさ。', '……入口の近くの蛍だまりで、\n火をたいて待ってるよ。\n森が、帰り道をくれないんでな。']);
+    await ev.say('hans', R.T('events.verda_hans.say'));
+    await ev.say('hans', R.T('events.verda_hans.say_2'));
     await F().rescue(ev, 'hans');
   }, { meta: { needs: ['flag:forest_log_cut'], gives: ['flag:forest_found_hans'] } });
 
@@ -127,83 +127,83 @@
   E('verda_ben', async (ev) => {
     if (ev.flag('forest_found_ben')) return;
     ev.bgm('omen');
-    await ev.say(null, '低いうなり声。\n狼の群れが、誰かを\n取り囲んでいる！');
-    await ev.say('ben', '助けてくれ！\n群れの頭が、仲間を\n呼んでやがる！');
+    await ev.say(null, R.T('events.verda_ben.say'));
+    await ev.say('ben', R.T('events.verda_ben.say_2'));
     const r = await ev.battle('tr_a21_forest_wolves');
     if (r !== 'win') return;
-    await ev.say(null, '群れの頭が倒れると、\n狼たちは森の奥へ散っていった。');
-    await ev.say('ben', ['助かった……。おれはベン。\nハンスとロイと、三人で\n森に入ったんだ。', '逃げるときに、呼び笛を\n落としちまった。ロイは笛の音で\n仲間を呼ぶ約束なんだが……。']);
-    await ev.say('ben', '蛍だまりの野営地で待ってる。\nあそこなら、狼も来ない。');
+    await ev.say(null, R.T('events.verda_ben.say_3'));
+    await ev.say('ben', R.T('events.verda_ben.say_4'));
+    await ev.say('ben', R.T('events.verda_ben.say_5'));
     await F().rescue(ev, 'ben');
   }, { meta: { needs: [], gives: ['flag:forest_found_ben'] } });
 
   // ---------------------------------------------------------------- F5 ロイ（木のうろ。笛の音で出てくる）
   E('verda_hollow', async (ev) => {
-    if (ev.flag('forest_found_roy')) { await ev.say(null, '大木の、大きなうろだ。\n中に、弁当箱のふたが\n転がっている。'); return; }
+    if (ev.flag('forest_found_roy')) { await ev.say(null, R.T('events.verda_hollow.say')); return; }
     if (!ev.flag('forest_got_flute')) {
-      await ev.say(null, ['大木の根元に、大きなうろがある。', '奥で、何かがふるえている……。\n呼びかけても、返事がない。', 'うろの前に、弁当のくずが\n点々と落ちている。']);
+      await ev.say(null, R.T('events.verda_hollow.say_2'));
       return;
     }
-    await ev.say(null, '大木の根元に、大きなうろがある。\n奥で、何かがふるえている……。');
-    const i = await ev.choose(['ベンの呼び笛を吹く', 'やめておく'], { cancel: 1 });
+    await ev.say(null, R.T('events.verda_hollow.say_3'));
+    const i = await ev.choose(R.T('events.verda_hollow.i.choose'), { cancel: 1 });
     if (i !== 0) return;
     ev.sfx('whistle');
-    await ev.caption('ピィ――……。', { ms: 1400 });
+    await ev.caption(R.T('events.verda_hollow.caption'), { ms: 1400 });
     ev.setFlag('forest_roy_out');
     await ev.wait(300);
-    await ev.say('roy', ['……その笛、ベンのか！？\nよかった、仲間が来たのかと……。', 'おれはロイ。\n狼から逃げて、ここに\n隠れてたんだ。']);
-    await ev.say('roy', ['弁当も、とうとう空っぽさ。\n……蛍だまりへ行けばいいんだな。', 'ありがとう。\nこの恩は、忘れねえ。']);
+    await ev.say('roy', R.T('events.verda_hollow.say_4'));
+    await ev.say('roy', R.T('events.verda_hollow.say_5'));
     await F().rescue(ev, 'roy');
   }, { meta: { needs: ['flag:forest_got_flute'], gives: ['flag:forest_found_roy', 'flag:forest_roy_out'] } });
 
   // ---------------------------------------------------------------- F5・F6・F7 ピム（こけの語り石の前）と小鹿
   E('verda_pim', async (ev) => {
     if (ev.flag('forest_found_pim')) return;
-    await ev.say('pim', ['あっ……！\nしーっ、静かにして。\nこの子、けがしてるんだ。', 'ぼくはピム。父ちゃんを\n探しに来たんだけど……\nこの子が倒れてて。']);
-    await ev.say('pim', ['この石、ぼくの名前を\n知ってるみたいな顔してる。', '……へんなこと言って、ごめん。']);
+    await ev.say('pim', R.T('events.verda_pim.say'));
+    await ev.say('pim', R.T('events.verda_pim.say_2'));
     await F().rescue(ev, 'pim', { hide: false, quiet: true });
     // F6 ピムの選択（ch_forest_pim）
-    const i = await ev.choose(['野営地へ送り届ける', '連れて進む'], { text: 'ピムをどうする？' });
+    const i = await ev.choose(R.T('events.verda_pim.i.choose'), { text: R.T('events.verda_pim.i.choose.text') });
     if (i === 0) {
       ev.choice('ch_forest_pim', 'send');
-      await ev.say('pim', ['……わかった。野営地で\n待ってる。父ちゃんの仲間も\nいるんでしょ？', 'あのね、南西の広場の大きな木。\nうろの奥の壁、抜けられるんだ。\nぼくの秘密のうろ！']);
+      await ev.say('pim', R.T('events.verda_pim.say_3'));
     } else {
       ev.choice('ch_forest_pim', 'take');
-      await ev.say('pim', ['ほんと！？　ぼく、役に立つよ！\n小さい穴なら、ぼくが\nくぐってあげる。', '千年樹には、ぼくしか通れない\n抜け穴があるんだ。']);
+      await ev.say('pim', R.T('events.verda_pim.say_4'));
     }
     // F7 小鹿の選択（ch_forest_fawn）
     await ev.call('verda_fawn_choice');
     if (ev.choiceOf('ch_forest_pim') === 'take') {
       ev.setFlag('forest_pim_guest');
       ev.guest('npc_pim');
-      await ev.caption('ピムが、うしろからついてくる。', { ms: 1600 });
+      await ev.caption(R.T('events.verda_pim.caption'), { ms: 1600 });
     } else {
       try { await ev.leave('pim'); } catch (e) { /* */ }
-      await ev.caption('ピムは、蛍だまりの野営地へ向かった。', { ms: 2000 });
+      await ev.caption(R.T('events.verda_pim.caption_2'), { ms: 2000 });
     }
   }, { meta: { needs: [], gives: ['flag:forest_found_pim', 'choice:ch_forest_pim', 'choice:ch_forest_fawn'], calls: ['verda_fawn_choice'] } });
 
   E('verda_fawn_choice', async (ev) => {
     if (ev.flag('forest_fawn_done')) return;
-    await ev.say(null, '花のような角の小鹿が、\n足を引きずっている。');
+    await ev.say(null, R.T('events.verda_fawn_choice.say'));
     const heal = ['i_salve', 'i_potion', 'i_elixir'].find((id) => ev.has(id));
-    const i = await ev.choose([heal ? '手当てする（' + (R.DB.items[heal] ? R.DB.items[heal].name : heal) + 'を使う）' : '手当てする', 'そっとしておく'], { cancel: 1 });
+    const i = await ev.choose([heal ? R.T('events.verda_fawn_choice.i.choose.0', { p0: R.DB.items[heal] ? R.DB.items[heal].name : heal }) : R.T('events.verda_fawn_choice.i.choose.0_2'), R.T('events.verda_fawn_choice.i.choose.1')], { cancel: 1 });
     if (i === 0) {
-      if (!heal) { await ev.say(null, '手当てに使える品を\n持っていない……。'); return; }
+      if (!heal) { await ev.say(null, R.T('events.verda_fawn_choice.say_2')); return; }
       ev.take(heal, 1);
       ev.choice('ch_forest_fawn', 'heal');
       ev.setFlag('forest_fawn_done');
-      await ev.say(null, ['傷に薬をぬると、小鹿は\nゆっくり立ち上がった。', '小鹿は一度ふり返り、\nつじの北のやぶへ消えた。\n……獣道が、できている。']);
+      await ev.say(null, R.T('events.verda_fawn_choice.say_3'));
     } else {
       ev.choice('ch_forest_fawn', 'leave');
       ev.setFlag('forest_fawn_done');
-      await ev.say(null, '小鹿は、しばらくこちらを見て、\n森の奥へ歩いていった。');
+      await ev.say(null, R.T('events.verda_fawn_choice.say_4'));
     }
     try { await ev.leave('fawn'); } catch (e) { /* */ }
   }, { meta: { needs: ['flag:forest_found_pim'], gives: ['choice:ch_forest_fawn', 'flag:forest_fawn_done'] } });
 
   E('verda_fawn_after', async (ev) => {
-    await ev.say(null, ['あの花角の小鹿だ。\n傷は、すっかり治っている。', '小鹿のうしろの茂みに、\n小さな足あとがたくさん……。\nここは、花角の鹿の巣らしい。']);
+    await ev.say(null, R.T('events.verda_fawn_after.say'));
   });
 
   // ---------------------------------------------------------------- 野営地（蛍だまり）
@@ -212,24 +212,24 @@
     const f = F();
     const n = f.count(ev);
     const lines = {
-      hans: ['たき火のそばは、あったかいな。\n森が帰り道をくれるまで、\nここで待つさ。', 'ゴードの親父さんはな、二十年前、\n戦ののろしの木を運ぶ途中で\n死んだんだ。'],
-      ben: ['狼の群れ頭は、もう\n出てこねえだろう。\nあんたのおかげだ。', '伐り跡の原を見るたびに、\nゴードは黙っちまう。\n……親父さんのことを思い出すんだ。'],
-      roy: ['腹が減ったなあ。\n弁当箱、どこに置いてきたっけ。', '森の奥の空き小屋に、\n知らない男が入っていくのを\n見たんだ。記録院の服だった。'],
-      pim: ['父ちゃんの仲間と、たき火で\nお話ししてるんだ。', 'あのこけの石、ロアの里にも\n同じのがあるんだって。\nハンスさんが言ってた。'],
+      hans: R.T('events.verda_camp_talk.lines.hans'),
+      ben: R.T('events.verda_camp_talk.lines.ben'),
+      roy: R.T('events.verda_camp_talk.lines.roy'),
+      pim: R.T('events.verda_camp_talk.lines.pim'),
     };
     const L = lines[who] || ['……。'];
-    await ev.say(ctx && ctx.npc, n >= 4 && who !== 'pim' ? [L[0], L[1], '四人そろったな。\nあとは、森が歌を思い出せば……。'] : L);
+    await ev.say(ctx && ctx.npc, n >= 4 && who !== 'pim' ? [L[0], L[1], R.T('events.verda_camp_talk.say.2')] : L);
   });
 
   // ---------------------------------------------------------------- 読み物と調べる物
   E('verda_moss_stone', async (ev) => {
-    await ev.say(null, ['こけに埋もれた、古い語り石だ。\nロアの里の語り石と、\nそっくりの形をしている。', 'こけの下に文字が見えるが、\nどうしても読めない。']);
+    await ev.say(null, R.T('events.verda_moss_stone.say'));
     await F().lore(ev, 'lo_forest_moss_stone');
   }, { meta: { needs: [], gives: ['flag:lo_forest_moss_stone'] } });
 
   E('verda_empty_hut', async (ev) => {
-    if (ev.flag('lo_lz_1')) { await ev.say(null, '戸の壊れた空き小屋だ。\nもう、何も残っていない。'); return; }
-    await ev.say(null, ['戸の壊れた、空き小屋だ。\n中に、革のかばんが一つ\n置き忘れられている。', '記録院の印の入ったかばんだ。\n底に、封をしたままの\n手紙が一通……。']);
+    if (ev.flag('lo_lz_1')) { await ev.say(null, R.T('events.verda_empty_hut.say')); return; }
+    await ev.say(null, R.T('events.verda_empty_hut.say_2'));
     await ev.letter('letter_lz_1');
     await F().lore(ev, 'lo_lz_1');
     ev.leadDone('l_forest_hut');

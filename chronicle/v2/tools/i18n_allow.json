@@ -1,0 +1,12 @@
+{
+ "note": "i18n_audit.js が数えない物（画面に出ない・開発用）。ファイルは glob（** と *）。strings は {file, text | re, reason}。訳すべき物はここに入れない（残りとして数える）",
+ "files": {
+  "src/core/stubs/**": "P0 の仮の実装（本物があれば使われない。製品版でも呼ばれないことを check_stubs が確かめる）",
+  "src/dev/**": "dev.html だけ（フィクスチャ・開発の道具）",
+  "src/tester/**": "テスト用メニュー（?tester=1。製品版 --release では外す）",
+  "src/core/contracts.js": "契約の説明の文（画面に出ない）",
+  "src/art/terrain/materials.js": "素材の一覧の見出し（画面に出ない。check_text と同じ）",
+  "src/art/fx/fx_seq_table.js": "演出の設計の説明（技ごとの見た目のメモ。画面に出ない。演出の担当の持ち物）"
+ },
+ "strings": []
+}

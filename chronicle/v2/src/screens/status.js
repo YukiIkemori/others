@@ -49,10 +49,10 @@
       const tg = R.UIK.tag(g, c.row, x, y + u(1), u(12));
       R.UIK.text(g, S.title(c), x + tg + u(10), y, { size: u(14), color: C.text2, maxW: tw - tg }); y += u(34);
       const fav = S.favorites(c);
-      R.UIK.text(g, '得意な武器', x, y, { size: u(12.5), color: C.text3 });
-      R.UIK.text(g, fav.w.map(S.wname).join('・') || '―', x + u(96), y - u(1), { size: u(15), weight: 700, color: C.text, maxW: tw - u(96) }); y += u(28);
-      R.UIK.text(g, '得意な属性', x, y, { size: u(12.5), color: C.text3 });
-      R.UIK.text(g, fav.e.map(S.ename).join('・') || '―', x + u(96), y - u(1), { size: u(15), weight: 700, color: C.teal, maxW: tw - u(96) });
+      R.UIK.text(g, R.T('ui.status.draw.text'), x, y, { size: u(12.5), color: C.text3 });
+      R.UIK.text(g, fav.w.map(S.wname).join(R.T('ui.status.draw.text.join')) || '―', x + u(96), y - u(1), { size: u(15), weight: 700, color: C.text, maxW: tw - u(96) }); y += u(28);
+      R.UIK.text(g, R.T('ui.status.draw.text_2'), x, y, { size: u(12.5), color: C.text3 });
+      R.UIK.text(g, fav.e.map(S.ename).join(R.T('ui.status.draw.text.join')) || '―', x + u(96), y - u(1), { size: u(15), weight: 700, color: C.teal, maxW: tw - u(96) });
       // 右
       const rp = tall ? { x: b.x, y: lp.y + lp.h + u(12), w: b.w, h: b.y + b.h - (lp.y + lp.h + u(12)) } : { x: lp.x + lp.w + u(18), y: b.y, w: b.x + b.w - (lp.x + lp.w + u(18)), h: b.h };
       R.UIK.panel(g, rp, { frost: true });
@@ -70,10 +70,10 @@
       if (tall) { y += u(46); hm('MP', c.mp, st.maxMp, 'mp', px, y); } else hm('MP', c.mp, st.maxMp, 'mp', px + half + u(28), y);
       y += u(54);
       R.UIK.rule(g, px, px + pw, y, 0.14); y += u(14);
-      S.label(g, '能力値', px, y); y += u(28);
+      S.label(g, R.T('ui.status.draw.label'), px, y); y += u(28);
       y = S.abilBars(g, st, px, y, pw, { cols: 2, lh: 28 }) + u(8);
       R.UIK.rule(g, px, px + pw, y, 0.14); y += u(14);
-      S.label(g, '熟練', px, y); y += u(28);
+      S.label(g, R.T('ui.status.draw.label_2'), px, y); y += u(28);
       const Rl = R.Rules;
       const items = [];
       for (const w of Rl.WTYPES || []) items.push({ key: w, name: S.wname(w), icon: w, r: Rl.rankOf(c, 'w', w) });
@@ -103,7 +103,7 @@
       y += Math.ceil(items.length / cols) * u(28) + u(10);
       if (y + u(60) < rp.y + rp.h) {
         R.UIK.rule(g, px, px + pw, y, 0.14); y += u(14);
-        S.label(g, '装備', px, y); y += u(28);
+        S.label(g, R.T('ui.status.draw.label_3'), px, y); y += u(28);
         const N = Rl.SLOT_NAMES || {};
         const slots = Rl.SLOTS || [];
         const ec = 2, ew = (pw - u(18)) / ec;
@@ -114,10 +114,10 @@
           const id = c.equip[s];
           if (id && tall) R.UIK.text(g, S.item(id).name, xx + u(60), yy, { size: u(14), color: S.gradeColor(S.item(id)) || C.text, maxW: ew - u(60) });
           else if (id) S.itemLabel(g, id, xx + u(60), yy, { size: u(14), maxW: ew - u(60) });
-          else R.UIK.text(g, 'なし', xx + u(60), yy, { size: u(14), color: C.disabled });
+          else R.UIK.text(g, R.T('ui.status.draw.text_3'), xx + u(60), yy, { size: u(14), color: C.disabled });
         });
       }
-      S.prompts(g, [{ btn: 'r', label: '次の仲間' }, { btn: 'b', label: '戻る' }]);
+      S.prompts(g, [{ btn: 'r', label: R.T('ui.status.draw.0.label') }, { btn: 'b', label: R.T('ui.status.draw.1.label') }]);
     },
   });
 })(window.RPG);

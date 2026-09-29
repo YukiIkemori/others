@@ -4,8 +4,8 @@
   'use strict';
   const W = 'prologue_done';
   R.defs('locations', {
-    loch: { name: '水辺の町ロッホ', region: 'r_marsh', kind: 'town', map: 'loch', spawn: 'warp', warp: W },
-    manor: { name: '霧の館', region: 'r_marsh', kind: 'dungeon', map: 'marsh_manor_1', spawn: 'entrance', warp: W },
-    bog: { name: '鐘沈みの沼', region: 'r_marsh', kind: 'dungeon', map: 'marsh_bog', spawn: 'entrance', warp: 'marsh_assembly_done' },
+    loch: { name: R.T('locations.loch.name'), region: 'r_marsh', kind: 'town', map: 'loch', spawn: 'warp', warp: W },
+    manor: { name: R.T('locations.manor.name'), region: 'r_marsh', kind: 'dungeon', map: 'marsh_manor_1', spawn: 'entrance', warp: W },
+    bog: { name: R.T('locations.bog.name'), region: 'r_marsh', kind: 'dungeon', map: 'marsh_bog', spawn: 'entrance', warp: 'marsh_assembly_done' },
   });
 })(window.RPG);

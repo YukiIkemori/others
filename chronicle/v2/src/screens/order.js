@@ -51,7 +51,7 @@
     },
     draw(g) {
       const b = S.box(), C = T().color, tall = S.tall();
-      S.heading(g, '並びと隊列', b.x + u(8), b.y + u(6), 0, { size: 15, track: 3 });
+      S.heading(g, R.T('ui.order.draw.heading'), b.x + u(8), b.y + u(6), 0, { size: 15, track: 3 });
       const mem = S.party(), n = mem.length;
       const cols = tall ? 2 : Math.max(1, n), gap = u(14);
       const top = b.y + u(56);
@@ -69,7 +69,7 @@
         if (i === this.held) { g.save(); R.UIK.rr(g, r.x, r.y, r.w, r.h, u(8)); g.strokeStyle = C.teal; g.lineWidth = 1.5; g.stroke(); g.restore(); }
         const tr = { x: r.x + u(12), y: r.y + u(12), w: u(64), h: u(26) };
         this.tagRects.push(tr);
-        R.UIK.chip(g, tr.x, tr.y, back ? '後列' : '前列', { size: 12, color: back ? C.back : C.front, bg: back ? 'rgba(169,210,242,0.14)' : 'rgba(242,194,138,0.16)', line: back ? 'rgba(169,210,242,0.5)' : 'rgba(242,194,138,0.55)' });
+        R.UIK.chip(g, tr.x, tr.y, back ? R.T('ui.order.draw.chip') : R.T('ui.order.draw.chip_2'), { size: 12, color: back ? C.back : C.front, bg: back ? 'rgba(169,210,242,0.14)' : 'rgba(242,194,138,0.16)', line: back ? 'rgba(169,210,242,0.5)' : 'rgba(242,194,138,0.55)' });
         R.UIK.text(g, String(i + 1), r.x + r.w - u(14), r.y + u(12), { size: u(13), color: C.text3, align: 'right' });
         const fs = Math.min(r.w - u(40), r.h * 0.46);
         R.UIK.portraitFrame(g, { x: r.x + (r.w - fs) / 2, y: r.y + u(48), w: fs, h: fs }, c.look, { dim: !(c.hp > 0) });
@@ -78,15 +78,15 @@
         R.UIK.text(g, S.title(c), r.x + r.w / 2, y, { size: u(12.5), color: C.text2, align: 'center', maxW: r.w - u(16) }); y += u(26);
         const wid = c.equip && c.equip.weapon1, it = S.item(wid);
         const reach = wid ? R.Rules.reach(wid) : 'front';
-        const wname = it ? it.name : '素手';
+        const wname = it ? it.name : R.T('ui.order.draw.wname');
         R.UIK.text(g, wname, r.x + r.w / 2, y, { size: u(13), color: C.text, align: 'center', maxW: r.w - u(16) }); y += u(22);
-        if (back && reach !== 'any') R.UIK.text(g, '前まで届かない', r.x + r.w / 2, y, { size: u(12), color: C.down, align: 'center', maxW: r.w - u(12) });
-        else if (back) R.UIK.text(g, '後ろから届く', r.x + r.w / 2, y, { size: u(12), color: C.teal, align: 'center', maxW: r.w - u(12) });
+        if (back && reach !== 'any') R.UIK.text(g, R.T('ui.order.draw.text'), r.x + r.w / 2, y, { size: u(12), color: C.down, align: 'center', maxW: r.w - u(12) });
+        else if (back) R.UIK.text(g, R.T('ui.order.draw.text_2'), r.x + r.w / 2, y, { size: u(12), color: C.teal, align: 'center', maxW: r.w - u(12) });
       });
       const hy = b.y + b.h - u(26);
       R.UIK.icon(g, 'bulb', b.x + u(8), hy, u(15), C.teal);
-      R.UIK.text(g, '後列は狙われにくいが、弓と杖のほかは前まで届かない。', b.x + u(30), hy, { size: u(13.5), color: C.text2, maxW: b.w - u(30) });
-      S.prompts(g, this.held >= 0 ? [{ btn: 'left', label: '動かす' }, { btn: 'a', label: '置く' }] : tall ? [{ btn: 'a', label: '持ち上げる' }, { btn: 'x', label: '前列／後列' }, { btn: 'b', label: '戻る' }] : [{ btn: 'a', label: '持ち上げる' }, { btn: 'up', label: '前列／後列' }, { btn: 'b', label: '戻る' }]);
+      R.UIK.text(g, R.T('ui.order.draw.text_3'), b.x + u(30), hy, { size: u(13.5), color: C.text2, maxW: b.w - u(30) });
+      S.prompts(g, this.held >= 0 ? [{ btn: 'left', label: R.T('ui.order.draw.0.label') }, { btn: 'a', label: R.T('ui.order.draw.1.label') }] : tall ? [{ btn: 'a', label: R.T('ui.order.draw.0.label_2') }, { btn: 'x', label: R.T('ui.order.draw.1.label_2') }, { btn: 'b', label: R.T('ui.order.draw.2.label') }] : [{ btn: 'a', label: R.T('ui.order.draw.0.label_2') }, { btn: 'up', label: R.T('ui.order.draw.1.label_2') }, { btn: 'b', label: R.T('ui.order.draw.2.label') }]);
     },
   });
 })(window.RPG);

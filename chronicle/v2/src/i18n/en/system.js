@@ -1,0 +1,71 @@
+// 英語の文の表（system）。key は日本語の表（src/i18n/ja/system.js）と同じ。無い key は日本語が出る
+// 差し込み {name} は日本語と同じ名前を残す。数の言い分けは {n, plural, one {…} other {…}}（core/i18n.js）
+(function (R) {
+  'use strict';
+  R.I18n.add('en', {
+    // ---- src/systems/demo_carry.js
+    'sys.demo_carry.offer.i.say.text': 'A save from the demo was found{p0}.\nCarry it over and start?',
+    'sys.demo_carry.offer.i.say.text_2': ' ({t})',
+    'sys.demo_carry.offer.i.say.choices': ['Carry Over', 'Start Fresh'],
+    // ---- src/systems/events_runtime.js
+    'sys.events_runtime.toastGain.txt': 'Got {p0}{p1}',
+    'sys.events_runtime.makeEv.ev.gold.toast': 'Got {n} G',
+    'sys.events_runtime.makeEv.ev.createHero.h.name': 'Arun',
+    'sys.events_runtime.makeEv.ev.lore.txt': 'Copied into the library{p0}',
+    'sys.events_runtime.makeEv.ev.lore.txt_2': ': {title}',
+    // ---- src/systems/leads.js
+    'sys.leads.PROMPT.0.label': 'Mark',
+    'sys.leads.regionName.ret': 'World Rumors',
+    'sys.leads.regionName.ret_2': 'Main Story',
+    'sys.leads.draw.text': 'Marked',
+    'sys.leads.draw.text_2': 'New Clue',
+    'sys.leads.draw.text_3': 'Shown on the top-right card and the map',
+    // ---- src/systems/minigame.js
+    'sys.minigame.THEMES.forest.sub': 'Forest Song',
+    'sys.minigame.THEMES.harbor.sub': 'Harbor Song',
+    'sys.minigame.THEMES.night.sub': 'Night Song',
+    'sys.minigame.NOTE_NAME': ['High', 'Bright', 'Low', 'Gentle', 'Echoing'],
+    'sys.minigame.sequence.st.title': 'Song Echo',
+    'sys.minigame.drawSeq.P.frame': '{sub} · Song Echo',
+    'sys.minigame.drawSeq.rtxt': 'Verse {Math} / {rounds}',
+    'sys.minigame.drawSeq.msg': 'The singing stone begins to sing. Listen closely...',
+    'sys.minigame.drawSeq.msg_2': 'Next verse. One more note...',
+    'sys.minigame.drawSeq.msg_3': 'Listen...',
+    'sys.minigame.drawSeq.msg_4': 'Repeat it in the same order ({length} / {L})',
+    'sys.minigame.drawSeq.msg_5': 'In perfect harmony!',
+    'sys.minigame.drawSeq.msg_6': 'Oh, a wrong note...',
+    'sys.minigame.drawSeq.text': 'Song Echo Rating',
+    'sys.minigame.drawSeq.text_2': 'Notes matched  {hits} / {total}',
+    'sys.minigame.drawSeq.words.S': 'The whole forest was listening.',
+    'sys.minigame.drawSeq.words.A': 'A beautiful song.',
+    'sys.minigame.drawSeq.words.B': 'Almost got it.',
+    'sys.minigame.drawSeq.words.C': 'The song is still all over the place.',
+    'sys.minigame.drawSeq.pr.0.label': 'Close',
+    'sys.minigame.drawSeq.pr.0.label_2': 'Play Note',
+    'sys.minigame.drawSeq.pr.1.label': 'Quit',
+    'sys.minigame.timing.st.title': 'Timing',
+    'sys.minigame.drawTiming.P.frame': '{sub} · Timing',
+    'sys.minigame.drawTiming.0.label': 'Close',
+    'sys.minigame.drawTiming.0.label_2': 'Stop',
+    'sys.minigame.drawTiming.1.label': 'Quit',
+    // ---- src/systems/mon.js
+    'sys.mon.goldenName.ret': 'Golden {n}',
+    'sys.mon.goldenName.ret_2': 'Gold {n}',
+    // ---- src/systems/state.js
+    'sys.state.setHero.h.name': 'Arun',
+    // ---- src/systems/tier.js
+    'sys.tier.KANJI.1': '1',
+    'sys.tier.KANJI.2': '2',
+    'sys.tier.KANJI.3': '3',
+    'sys.tier.KANJI.4': '4',
+    'sys.tier.KANJI.5': '5',
+    'sys.tier.KANJI.6': '6',
+    'sys.tier.KANJI.7': '7',
+    'sys.tier.KANJI.8': '8',
+    'sys.tier.KANJI.9': '9',
+    'sys.tier.drawStage.text': 'Chapter {p0}',
+    'sys.tier.drawStage.line': '"{page}" was bound into the Chronicle',
+    'sys.tier.drawStage.text_2': 'Light has returned to {region}',
+    'sys.tier.drawStage.0.label': 'Continue',
+  });
+})(window.RPG);

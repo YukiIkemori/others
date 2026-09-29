@@ -158,14 +158,14 @@
       if (cur) ids.push(cur);
       ids.sort((a, b) => score(c, s, b) - score(c, s, a) || (a === cur ? -1 : b === cur ? 1 : 0));
       const rows = ids.map((id) => ({ value: id, label: S.item(id).name, cur: id === cur }));
-      if (cur) rows.push({ value: null, label: '外す' });
+      if (cur) rows.push({ value: null, label: R.T('ui.equip.candidates.label') });
       return rows;
     },
     openSlot(s) {
       const c = this.char();
       if (this.blocked(c, s)) { R.UIK.sfx('buzzer'); return; }
       const rows = this.candidates(c, s);
-      if (!rows.length) { R.UIK.sfx('buzzer'); R.UIK.toast('付けられる物を持っていない', { anchor: 'bl' }); return; }
+      if (!rows.length) { R.UIK.sfx('buzzer'); R.UIK.toast(R.T('ui.equip.openSlot.toast'), { anchor: 'bl' }); return; }
       this.clist.setRows(rows, false);
       const ci = rows.findIndex((r) => r.cur);
       this.clist.focusIndex(Math.max(0, ci));
@@ -175,21 +175,21 @@
       const c = this.char(), s = this.slot();
       if ((c.equip[s] || null) === (id || null)) { this.mode = 'slot'; return; }
       const r = R.Rules.equip(c, s, id);
-      if (!r.ok) { R.UIK.sfx('buzzer'); R.UIK.toast(r.reason || '付けられない', { anchor: 'bl' }); return; }
+      if (!r.ok) { R.UIK.sfx('buzzer'); R.UIK.toast(r.reason || R.T('ui.equip.put.toast'), { anchor: 'bl' }); return; }
       R.UIK.sfx('equip');
-      if (r.shieldRemoved) R.UIK.toast('両手持ちなので盾を外した', { anchor: 'bl', icon: 'shield' });
+      if (r.shieldRemoved) R.UIK.toast(R.T('ui.equip.put.toast_2'), { anchor: 'bl', icon: 'shield' });
       this.mode = 'slot';
     },
     async best() {
       const c = this.char();
       const plan = R.Rules.optimize(c, loadoutMode(c));
-      if (!plan.changes.length) { await S.note(this, { title: 'いちばん強く', lines: ['いまの装備が、いちばん強い。'] }); return; }
+      if (!plan.changes.length) { await S.note(this, { title: R.T('ui.equip.best.title'), lines: [R.T('ui.equip.best.lines.0')] }); return; }
       const N = R.Rules.SLOT_NAMES || {};
-      const lines = plan.changes.map((ch) => ({ text: `${N[ch.slot] || ch.slot}：${ch.from ? S.item(ch.from).name : 'なし'} → ${ch.to ? S.item(ch.to).name : 'なし'}`, icon: S.iconOf(S.item(ch.to || ch.from)) }));
-      const k = await S.ask(this, { title: 'いちばん強く', lines: lines.concat(['アクセサリは変えない。']), choices: ['付け替える', 'やめる'], cancel: 1, w: 520 });
+      const lines = plan.changes.map((ch) => ({ text: R.T('ui.equip.best.lines.text', { p0: N[ch.slot] || ch.slot, p1: ch.from ? S.item(ch.from).name : R.T('ui.equip.best.lines.text_2'), p2: ch.to ? S.item(ch.to).name : R.T('ui.equip.best.lines.text_2') }), icon: S.iconOf(S.item(ch.to || ch.from)) }));
+      const k = await S.ask(this, { title: R.T('ui.equip.best.k.ask.title'), lines: lines.concat([R.T('ui.equip.best.k.ask.lines.0')]), choices: R.T('ui.equip.best.k.ask.choices'), cancel: 1, w: 520 });
       if (k !== 0) return;
       const r = R.Rules.applyLoadout(c, plan);
-      if (r.ok) R.UIK.sfx('equip'); else { R.UIK.sfx('buzzer'); R.UIK.toast(r.reason || '付け替えられなかった', { anchor: 'bl' }); }
+      if (r.ok) R.UIK.sfx('equip'); else { R.UIK.sfx('buzzer'); R.UIK.toast(r.reason || R.T('ui.equip.best.toast'), { anchor: 'bl' }); }
     },
     update() {
       if (this.busy) return;
@@ -224,16 +224,16 @@
       if (!tall) sp.h = b.y + b.h - sp.y;
       const drawSlots = () => {
         R.UIK.panel(g, sp, { frost: true });
-        S.label(g, '装備', sp.x + u(20), sp.y + u(16));
+        S.label(g, R.T('ui.equip.draw.drawSlots.label'), sp.x + u(20), sp.y + u(16));
         this.slist.active = this.mode === 'slot';
         this.slist.render = (gg, row, rect, f) => {
           const s = row.value, id = c.equip[s], it = S.item(id), blk = this.blocked(c, s), sz = u(15.5);
           const cy = rect.y + (rect.h - sz) / 2 - u(1);
           R.UIK.text(gg, N[s] || s, rect.x + u(14), cy + u(2), { size: u(12.5), color: f ? C.text2 : C.text3 });
           const x0 = rect.x + u(74);
-          if (blk) { R.UIK.icon(gg, 'shield', x0, cy, sz * 1.1, C.disabled); R.UIK.text(gg, '両手持ち', x0 + sz * 1.1 + u(9), cy, { size: sz, color: C.disabled }); }
+          if (blk) { R.UIK.icon(gg, 'shield', x0, cy, sz * 1.1, C.disabled); R.UIK.text(gg, R.T('ui.equip.draw.drawSlots.render.text'), x0 + sz * 1.1 + u(9), cy, { size: sz, color: C.disabled }); }
           else if (it) S.itemLabel(gg, id, x0, cy, { focused: f, size: sz, maxW: rect.w - u(80) });
-          else { R.UIK.icon(gg, { weapon1: 'sword', shield: 'shield', head: 'helm', body: 'armor', hands: 'glove', feet: 'boots' }[s] || 'ring', x0, cy, sz * 1.1, C.disabled); R.UIK.text(gg, 'なし', x0 + sz * 1.1 + u(9), cy, { size: sz, color: C.disabled }); }
+          else { R.UIK.icon(gg, { weapon1: 'sword', shield: 'shield', head: 'helm', body: 'armor', hands: 'glove', feet: 'boots' }[s] || 'ring', x0, cy, sz * 1.1, C.disabled); R.UIK.text(gg, R.T('ui.equip.draw.drawSlots.render.text_2'), x0 + sz * 1.1 + u(9), cy, { size: sz, color: C.disabled }); }
         };
         this.slist.draw(g, { x: sp.x + u(8), y: sp.y + u(46), w: sp.w - u(16), h: this.slots.length * this.slist.rowPx() });
       };
@@ -253,14 +253,14 @@
       if (showSlots) drawSlots();
       if (!tall || this.mode === 'cand') {
         R.UIK.panel(g, cp, { frost: true });
-        S.label(g, (N[s] || s) + ' の候補', cp.x + u(20), cp.y + u(16));
+        S.label(g, R.T('ui.equip.draw.label', { p0: N[s] || s }), cp.x + u(20), cp.y + u(16));
         if (this.mode === 'cand') {
           this.clist.active = true;
           this.clist.render = (gg, row, rect, f) => {
             const sz = u(15.5), cy = rect.y + (rect.h - sz) / 2 - u(1);
-            if (!row.value) { R.UIK.icon(gg, 'exit', rect.x + u(14), cy, sz * 1.1, f ? C.gold : C.text3); R.UIK.text(gg, '外す', rect.x + u(14) + sz * 1.1 + u(9), cy, { size: sz, color: f ? C.goldHi : C.text2 }); return; }
+            if (!row.value) { R.UIK.icon(gg, 'exit', rect.x + u(14), cy, sz * 1.1, f ? C.gold : C.text3); R.UIK.text(gg, R.T('ui.equip.draw.render.text'), rect.x + u(14) + sz * 1.1 + u(9), cy, { size: sz, color: f ? C.goldHi : C.text2 }); return; }
             S.itemLabel(gg, row.value, rect.x + u(14), cy, { focused: f, size: sz, maxW: rect.w - u(row.cur ? 90 : 20) });
-            if (row.cur) R.UIK.chip(gg, rect.x + rect.w - u(72), rect.y + (rect.h - R.UIK.chipH(10.5)) / 2, '装備中', { kind: 'plain', size: 10.5 });
+            if (row.cur) R.UIK.chip(gg, rect.x + rect.w - u(72), rect.y + (rect.h - R.UIK.chipH(10.5)) / 2, R.T('ui.equip.draw.render.chip'), { kind: 'plain', size: 10.5 });
           };
           this.clist.draw(g, { x: cp.x + u(8), y: cp.y + u(46), w: cp.w - u(16), h: cp.h - u(56) });
         } else {
@@ -268,17 +268,17 @@
           let yy = cp.y + u(50);
           for (const row of rows.slice(0, Math.floor((cp.h - u(60)) / u(36)))) {
             if (row.value) S.itemLabel(g, row.value, cp.x + u(22), yy, { size: u(15), maxW: cp.w - u(90), disabled: false });
-            else R.UIK.text(g, '外す', cp.x + u(22) + u(25), yy, { size: u(15), color: C.text3 });
-            if (row.cur) R.UIK.chip(g, cp.x + cp.w - u(80), yy - u(2), '装備中', { kind: 'plain', size: 10.5 });
+            else R.UIK.text(g, R.T('ui.equip.draw.text'), cp.x + u(22) + u(25), yy, { size: u(15), color: C.text3 });
+            if (row.cur) R.UIK.chip(g, cp.x + cp.w - u(80), yy - u(2), R.T('ui.equip.draw.chip'), { kind: 'plain', size: 10.5 });
             yy += u(36);
           }
-          if (!rows.length) R.UIK.text(g, this.blocked(c, s) ? '両手持ちの武器を持っている。' : '付けられる物を持っていない。', cp.x + u(22), yy, { size: u(14), color: C.text3 });
+          if (!rows.length) R.UIK.text(g, this.blocked(c, s) ? R.T('ui.equip.draw.text_2') : R.T('ui.equip.draw.text_3'), cp.x + u(22), yy, { size: u(14), color: C.text3 });
         }
       }
       // 詳しい所と比べ
       const focusId = this.mode === 'cand' ? (this.clist.current() || {}).value : c.equip[s];
       const dp = tall ? { x: b.x, y: (this.mode === 'cand' ? cp.y + cp.h : sp.y + sp.h) + u(12), w: b.w, h: this.mode === 'cand' ? dpCandH : u(170) } : { x: cp.x + cp.w + u(16), y: b.y, w: rightX0 - (cp.x + cp.w + u(16)), h: cp.h };
-      S.prompts(g, this.mode === 'cand' ? [{ btn: 'a', label: '付ける' }, { btn: 'b', label: '戻る' }, { btn: 'y', label: '詳しく' }] : (S.tall() ? [{ btn: 'a', label: '選ぶ' }, { btn: 'b', label: '戻る' }, { btn: 'r', label: '次の仲間' }] : [{ btn: 'a', label: '選ぶ' }, { btn: 'b', label: '戻る' }, { btn: 'x', label: 'いちばん強く' }, { btn: 'r', label: '次の仲間' }]));
+      S.prompts(g, this.mode === 'cand' ? [{ btn: 'a', label: R.T('ui.equip.draw.0.label') }, { btn: 'b', label: R.T('ui.equip.draw.1.label') }, { btn: 'y', label: R.T('ui.equip.draw.2.label') }] : (S.tall() ? [{ btn: 'a', label: R.T('ui.equip.draw.0.label_2') }, { btn: 'b', label: R.T('ui.equip.draw.1.label') }, { btn: 'r', label: R.T('ui.equip.draw.2.label_2') }] : [{ btn: 'a', label: R.T('ui.equip.draw.0.label_2') }, { btn: 'b', label: R.T('ui.equip.draw.1.label') }, { btn: 'x', label: R.T('ui.equip.draw.2.label_3') }, { btn: 'r', label: R.T('ui.equip.draw.3.label') }]));
       // 縦持ちの小さな画面（8 枠の一覧だけで埋まる）では、詳しい所と仲間を出さない（下の操作の札に重ねない）
       if (tall && dp.y + dp.h > b.y + b.h + u(4)) return;
       R.UIK.panel(g, dp, { frost: true });
@@ -290,8 +290,8 @@
         y += u(34);
         R.UIK.text(g, S.kindLine(it), dp.x + u(22), y, { size: u(13), color: C.text2, maxW: dp.w - u(44) });
         y += u(28);
-      } else if (this.mode === 'cand') { R.UIK.text(g, '外す', dp.x + u(22), y, { size: u(21), weight: 700, color: C.text2 }); y += u(62); }
-      else { R.UIK.text(g, 'なし', dp.x + u(22), y, { size: u(21), weight: 700, color: C.disabled }); y += u(62); }
+      } else if (this.mode === 'cand') { R.UIK.text(g, R.T('ui.equip.draw.text'), dp.x + u(22), y, { size: u(21), weight: 700, color: C.text2 }); y += u(62); }
+      else { R.UIK.text(g, R.T('ui.equip.draw.text_4'), dp.x + u(22), y, { size: u(21), weight: 700, color: C.disabled }); y += u(62); }
       R.UIK.rule(g, dp.x + u(22), dp.x + dp.w - u(22), y, 0.14);
       y += u(12);
       if (this.mode !== 'cand' && it) {
@@ -305,12 +305,12 @@
         R.UIK.rule(g, dp.x + u(22), dp.x + dp.w - u(22), y, 0.14); y += u(12);
       }
       if (this.mode === 'cand') {
-        S.label(g, 'いまの装備と比べる', dp.x + u(22), y); y += u(28);
+        S.label(g, R.T('ui.equip.draw.label_2'), dp.x + u(22), y); y += u(28);
         // 行の数は詳しい所の高さに入るだけ（説明 1 行の分を残す）
         const all = S.statDiff(c, s, focusId || null), same = !all.some((r) => r.d);
         const fit = Math.floor((dp.y + dp.h - u(12) - u(28) - (same ? u(30) : 0) - y) / u(30));
         const rows = all.slice(0, Math.max(1, Math.min(tall ? tier[1] : 5, fit)));
-        if (same) { R.UIK.text(g, '変わらない', dp.x + u(22), y, { size: u(15), color: C.same }); y += u(30); }
+        if (same) { R.UIK.text(g, R.T('ui.equip.draw.text_5'), dp.x + u(22), y, { size: u(15), color: C.same }); y += u(30); }
         // 列は右から測って置く: 増減（いちばん広い物の幅）→ 後の値 → → → 前の値。狭い画面でも数字が重ならない
         const rx = dp.x + dp.w - u(22);
         const dcw = rows.reduce((m, r) => Math.max(m, S.deltaW(r.d, u(15))), 0);
@@ -329,13 +329,13 @@
       }
       if (it) {
         for (const l of R.UIK.wrap(String(it.desc || '').replace(/\n/g, ''), dp.w - u(44), { size: u(14.5) }).slice(0, 2)) { if (y + u(20) > dp.y + dp.h - u(6)) break; R.UIK.text(g, l, dp.x + u(22), y, { size: u(14.5), color: C.text }); y += u(24); }   // 詳しい所からはみ出さない
-        if (it.element && y + u(28) <= dp.y + dp.h - u(6)) { y += u(4); R.UIK.chip(g, dp.x + u(22), y, S.ename(it.element) + 'の力を帯びる', { kind: 'teal', size: 11 }); }
+        if (it.element && y + u(28) <= dp.y + dp.h - u(6)) { y += u(4); R.UIK.chip(g, dp.x + u(22), y, R.T('ui.equip.draw.chip_2', { ename: S.ename(it.element) }), { kind: 'teal', size: 11 }); }
       }
       // ほかの仲間
       const op = tall ? { x: b.x, y: dp.y + dp.h + u(12), w: b.w, h: b.y + b.h - (dp.y + dp.h + u(12)) } : { x: cp.x, y: cp.y + cp.h + u(14), w: rightX0 - cp.x, h: b.y + b.h - (cp.y + cp.h + u(14)) };
       if (op.h >= u(40) + Math.max(1, S.party().length - 1) * u(24)) {   // 1 人 u(24) の行が入らない高さなら出さない（重ねない）
         R.UIK.panel(g, op, { frost: true });
-        S.label(g, 'ほかの仲間が付けると', op.x + u(20), op.y + u(14));
+        S.label(g, R.T('ui.equip.draw.label_3'), op.x + u(20), op.y + u(14));
         // 1 人 1 行: [顔（決まった幅）][名前（決まった幅）][増減の札を入るだけ]。札は S.deltaCells が幅を測って並べるので重ならない
         const others = S.party().filter((x) => x !== c);
         const top = op.y + u(40), oh = Math.min(u(46), (op.y + op.h - u(8) - top) / Math.max(1, others.length));
@@ -349,9 +349,9 @@
           R.UIK.text(g, o.name, x + ICON, cy - u(14.5) / 2 - u(1), { size: u(14.5), weight: 700, color: can ? C.text : C.disabled, maxW: NW });
           if (!focusId) return;
           const ty = cy - u(13.5) / 2 - u(1);
-          if (!can) { R.UIK.text(g, '付けられない', tx, ty, { size: u(13), color: C.disabled }); return; }
+          if (!can) { R.UIK.text(g, R.T('ui.equip.draw.text_6'), tx, ty, { size: u(13), color: C.disabled }); return; }
           const ds = S.statDiff(o, R.Rules.defaultSlot(o, focusId), focusId).filter((r) => r.d).sort((a, b2) => Math.abs(b2.d) - Math.abs(a.d) || (b2.d > 0) - (a.d > 0));
-          if (!ds.length) R.UIK.text(g, '変わらない', tx, ty, { size: u(13), color: C.same });
+          if (!ds.length) R.UIK.text(g, R.T('ui.equip.draw.text_5'), tx, ty, { size: u(13), color: C.same });
           else S.deltaCells(g, ds, tx, 0, tw, { size: u(13.5), cy, lines: oh >= u(44) ? 2 : 1, lh: u(19) });
         });
       }

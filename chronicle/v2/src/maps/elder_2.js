@@ -38,7 +38,7 @@
     O.push(K.chest('elder_2_c2', 46, 13, { pool: 'p_T' }));
     O.push(K.chest('elder_2_c3', 9, 12, { item: 'i_ether', n: 2 }));
     O.push(K.chest('elder_2_c4', 30, 20, { gold: 200 }));
-    O.push(K.sign(22, 29, '――根を食むものあり。\n根は地にもぐり、前に立つ者を打つ。\n火をいとい、うしろには届かず。\n（誰かの書き付け）'));
+    O.push(K.sign(22, 29, R.T('map.elder_2.sign')));
     for (const [x, y] of [[21, 7], [31, 5], [8, 15], [12, 20], [40, 14], [45, 19], [22, 23], [31, 21], [21, 31], [33, 30], [19, 41], [33, 41], [23, 38], [29, 38]]) O.push(K.prop('mushroom_glow', x, y, { variant: (x * 3 + y) % 4 }));
     K.scatter(g, O, ['rock_small', 'mushroom_glow'], 8, [1, 1, 50, 46], 'r', 'e2rk', { gap: 4, variant: true, keep: new Set(['26,38', '27,38', '26,37', '27,37']) });
 
@@ -70,11 +70,11 @@
     O.push(K.exam(26, 14, 'elder_root_gate', { cond: '!forest_sw2' }), K.exam(27, 14, 'elder_root_gate', { cond: '!forest_sw2' }));
 
     const N = [
-      K.npc('elm', 'elm', 26, 42, { name: '森の主エルム', dir: 's', talk: 'elder_elm', cond: 'forest_boss', pushable: false, reward: 'news' }),
+      K.npc('elm', 'elm', 26, 42, { name: R.T('map.elder_2.N.0.elm.name'), dir: 's', talk: 'elder_elm', cond: 'forest_boss', pushable: false, reward: 'news' }),
     ];
 
     K.def('elder_2', {
-      name: '千年樹', kind: 'dungeon', region: 'r_forest', location: 'elder', theme: 'tree_inside',
+      name: R.T('map.elder_2.name'), kind: 'dungeon', region: 'r_forest', location: 'elder', theme: 'tree_inside',
       legend: {
         B: { mat: 'wall_bark', solid: true, rise: 1 },
         '.': { mat: 'bark_floor' },
@@ -103,7 +103,7 @@
       light: { ambient: '#5e6e96', k: 0.57, mood: 'tree' },
       dark: false,
       bgm: 'eldertree', bbg: 'tree',
-      meta: { chestsInfo: true, floor: '2 階', sub: '根の間' },
+      meta: { chestsInfo: true, floor: R.T('map.elder_2.meta.floor'), sub: R.T('map.elder_2.meta.sub') },
     });
   });
 })(window.RPG);

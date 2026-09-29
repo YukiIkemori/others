@@ -7,20 +7,20 @@
 (function (R) {
   'use strict';
   Object.assign(R.DB.statuses, {
-    poison:   { name: '毒',        bad: true,  persists: false, turns: null,       icon: '毒', on: '{name}は毒におかされた！',     off: '{name}の毒が消えた。' },
-    burn:     { name: 'やけど',    bad: true,  persists: false, turns: [3, 3],     icon: '焼', on: '{name}はやけどを負った！',      off: '{name}のやけどが治った。' },
-    sleep:    { name: '眠り',      bad: true,  persists: false, turns: [2, 4], bossTurns: [1, 1], disable: true, icon: '眠', on: '{name}は眠ってしまった！', off: '{name}は目を覚ました！' },
-    paralyze: { name: 'まひ',      bad: true,  persists: false, turns: [1, 3], bossTurns: [1, 1], disable: true, icon: '麻', on: '{name}は体がしびれて動けない！', off: '{name}のまひが治った。' },
-    freeze:   { name: '凍結',      bad: true,  persists: false, turns: [1, 2], bossTurns: [1, 1], disable: true, icon: '凍', on: '{name}は凍りついた！', off: '{name}の氷が溶けた。' },
-    stun:     { name: '気絶',      bad: true,  persists: false, turns: [1, 1], disable: true, icon: '気', on: '{name}は気を失った！', off: '{name}は気がついた。' },
-    confuse:  { name: '混乱',      bad: true,  persists: false, turns: [2, 4], bossTurns: [1, 2], icon: '混', on: '{name}は混乱した！', off: '{name}は正気に戻った。' },
-    silence:  { name: '沈黙',      bad: true,  persists: false, turns: [3, 5],     icon: '黙', on: '{name}は術を封じられた！',     off: '{name}は術を使えるようになった。' },
-    blind:    { name: '暗闇',      bad: true,  persists: false, turns: [3, 5],     icon: '暗', on: '{name}は目が見えなくなった！', off: '{name}の目が見えるようになった。' },
-    death:    { name: '即死',      bad: true,  persists: false, instant: true,     icon: '',   on: '{name}は息絶えた！',           off: '' },
-    regen:    { name: '再生',      bad: false, persists: false, turns: [5, 5],     icon: '再', on: '{name}は再生の力に包まれた！', off: '{name}の再生の力が消えた。' },
-    veil:     { name: '加護',      bad: false, persists: false, turns: [3, 3],     icon: '護', on: '{name}は加護に守られた！',     off: '{name}の加護が消えた。' },
-    counter:  { name: '反撃の構え', bad: false, persists: false, turns: 'next',    icon: '構', on: '{name}は反撃の構えをとった！', off: '' },
-    nimble:   { name: '身軽',      bad: false, persists: false, turns: [3, 3],     icon: '軽', on: '{name}は身軽になった！',       off: '{name}の身軽さが消えた。' },
-    cover:    { name: 'かばう',    bad: false, persists: false, turns: 'next',    icon: '守', on: '{name}は仲間の前に立ちはだかった！', off: '' },   // §6.2.4-B（編集で足した。批評 22）
+    poison:   { name: R.T('statuses.poison.name'),        bad: true,  persists: false, turns: null,       icon: R.T('statuses.poison.icon'), on: R.T('statuses.poison.on'),     off: R.T('statuses.poison.off') },
+    burn:     { name: R.T('statuses.burn.name'),    bad: true,  persists: false, turns: [3, 3],     icon: R.T('statuses.burn.icon'), on: R.T('statuses.burn.on'),      off: R.T('statuses.burn.off') },
+    sleep:    { name: R.T('statuses.sleep.name'),      bad: true,  persists: false, turns: [2, 4], bossTurns: [1, 1], disable: true, icon: R.T('statuses.sleep.icon'), on: R.T('statuses.sleep.on'), off: R.T('statuses.sleep.off') },
+    paralyze: { name: R.T('statuses.paralyze.name'),      bad: true,  persists: false, turns: [1, 3], bossTurns: [1, 1], disable: true, icon: R.T('statuses.paralyze.icon'), on: R.T('statuses.paralyze.on'), off: R.T('statuses.paralyze.off') },
+    freeze:   { name: R.T('statuses.freeze.name'),      bad: true,  persists: false, turns: [1, 2], bossTurns: [1, 1], disable: true, icon: R.T('statuses.freeze.icon'), on: R.T('statuses.freeze.on'), off: R.T('statuses.freeze.off') },
+    stun:     { name: R.T('statuses.stun.name'),      bad: true,  persists: false, turns: [1, 1], disable: true, icon: R.T('statuses.stun.icon'), on: R.T('statuses.stun.on'), off: R.T('statuses.stun.off') },
+    confuse:  { name: R.T('statuses.confuse.name'),      bad: true,  persists: false, turns: [2, 4], bossTurns: [1, 2], icon: R.T('statuses.confuse.icon'), on: R.T('statuses.confuse.on'), off: R.T('statuses.confuse.off') },
+    silence:  { name: R.T('statuses.silence.name'),      bad: true,  persists: false, turns: [3, 5],     icon: R.T('statuses.silence.icon'), on: R.T('statuses.silence.on'),     off: R.T('statuses.silence.off') },
+    blind:    { name: R.T('statuses.blind.name'),      bad: true,  persists: false, turns: [3, 5],     icon: R.T('statuses.blind.icon'), on: R.T('statuses.blind.on'), off: R.T('statuses.blind.off') },
+    death:    { name: R.T('statuses.death.name'),      bad: true,  persists: false, instant: true,     icon: '',   on: R.T('statuses.death.on'),           off: '' },
+    regen:    { name: R.T('statuses.regen.name'),      bad: false, persists: false, turns: [5, 5],     icon: R.T('statuses.regen.icon'), on: R.T('statuses.regen.on'), off: R.T('statuses.regen.off') },
+    veil:     { name: R.T('statuses.veil.name'),      bad: false, persists: false, turns: [3, 3],     icon: R.T('statuses.veil.icon'), on: R.T('statuses.veil.on'),     off: R.T('statuses.veil.off') },
+    counter:  { name: R.T('statuses.counter.name'), bad: false, persists: false, turns: 'next',    icon: R.T('statuses.counter.icon'), on: R.T('statuses.counter.on'), off: '' },
+    nimble:   { name: R.T('statuses.nimble.name'),      bad: false, persists: false, turns: [3, 3],     icon: R.T('statuses.nimble.icon'), on: R.T('statuses.nimble.on'),       off: R.T('statuses.nimble.off') },
+    cover:    { name: R.T('statuses.cover.name'),    bad: false, persists: false, turns: 'next',    icon: R.T('statuses.cover.icon'), on: R.T('statuses.cover.on'), off: '' },   // §6.2.4-B（編集で足した。批評 22）
   });
 })(window.RPG);

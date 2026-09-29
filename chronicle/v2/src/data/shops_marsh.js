@@ -28,9 +28,9 @@
   R.onData(function () {
     const arms = { items: gear(WEAPON_LINES, 0).concat(gear(ARMOR_LINES, 0)), tier: byTier((t) => gear(WEAPON_LINES, t).concat(gear(ARMOR_LINES, t))) };
     R.defs('shops', {
-      shop_loch_items: { name: '大鐘の道具屋', kind: 'item', keepOld: true, sell: true, items: items(0).concat(ACC(0)), tier: { 1: items(1), 2: items(2).concat(ACC(1)), 3: items(3), 5: (ACC(2).length ? ACC(2) : items(3)).concat(items(5)) } },
-      shop_loch_arms: Object.assign({ name: '大鐘の武具屋', kind: 'weapon', keepOld: false, sell: true }, arms),
-      shop_loch_night: { name: '夜市の屋台', kind: 'item', keepOld: true, sell: true, items: items(1).concat(['i_lotus_dew'].filter(has)), tier: { 2: items(2).concat(ACC(1)), 4: items(3).concat(ACC(2)), 5: items(5) } },
+      shop_loch_items: { name: R.T('shops.shop_loch_items.name'), kind: 'item', keepOld: true, sell: true, items: items(0).concat(ACC(0)), tier: { 1: items(1), 2: items(2).concat(ACC(1)), 3: items(3), 5: (ACC(2).length ? ACC(2) : items(3)).concat(items(5)) } },
+      shop_loch_arms: Object.assign({ name: R.T('shops.shop_loch_arms.name'), kind: 'weapon', keepOld: false, sell: true }, arms),
+      shop_loch_night: { name: R.T('shops.shop_loch_night.name'), kind: 'item', keepOld: true, sell: true, items: items(1).concat(['i_lotus_dew'].filter(has)), tier: { 2: items(2).concat(ACC(1)), 4: items(3).concat(ACC(2)), 5: items(5) } },
     });
   });
 })(window.RPG);

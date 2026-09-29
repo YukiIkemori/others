@@ -90,31 +90,31 @@
         ...PS('firefly', [[13, 27], [31, 31], [22, 23 + 9]]),
         P('mushroom_glow', 11, 29), P('rock_small', 34, 26),
         K.exam(21, 15, 'roa_stone'),
-        K.sign(37, 13, 'ロアの里\n語り部の里。東へ出れば、半島の街道。'),
+        K.sign(37, 13, R.T('map.prologue_roa.objects.sign')),
         K.chest('roa_c1', 5, 17, { item: 'i_salve', n: 2 }),
       ];
       const npcs = [
         // 門番のおかみ: 師匠にあいさつするまでは門の前に立つ（押してもどかない）
-        { id: 'gatewoman', look: 'npc_woman_2', name: '門番のおかみ', x: 40, y: 15, dir: 'w', move: 'still', pushable: false, cond: '!prologue_berna', talk: 'roa_gate', key: 'roa_gatewoman' },
-        { id: 'gatewoman2', look: 'npc_woman_2', name: '門番のおかみ', x: 38, y: 16, dir: 's', move: 'still', cond: 'prologue_berna', talk: 'roa_gatewoman', reward: 'news', key: 'roa_gatewoman2' },
+        { id: 'gatewoman', look: 'npc_woman_2', name: R.T('map.prologue_roa.npcs.gatewoman.name'), x: 40, y: 15, dir: 'w', move: 'still', pushable: false, cond: '!prologue_berna', talk: 'roa_gate', key: 'roa_gatewoman' },
+        { id: 'gatewoman2', look: 'npc_woman_2', name: R.T('map.prologue_roa.npcs.gatewoman2.name'), x: 38, y: 16, dir: 's', move: 'still', cond: 'prologue_berna', talk: 'roa_gatewoman', reward: 'news', key: 'roa_gatewoman2' },
         // 動き（npc.js の wander・route。自分で歩く人は戸口・出口・門の trigger に入らない）。門番・年寄り（子どもの話に加わる）・
         // 門番のおかみ（あと）は立ったまま。道順は戸口の前（y 10・y 20・y 31）・門の道・ベルナの家への石段と小道（x 27〜28）を通らない
         // 子ども 2 人: 語り石のまわりを走って追いかけっこ（広場の石畳、ワープの着く所 (21,19) と長椅子の行 y 19 には入らない）
         { id: 'child_a', look: 'npc_child_1', x: 19, y: 14, dir: 'e', move: { route: [[23, 14], [23, 17], [19, 17], [19, 14]], wait: 250, speed: 1.9 }, talk: 'roa_children', reward: 'news', key: 'roa_children' },
         { id: 'child_b', look: 'npc_child_3', x: 23, y: 17, dir: 'w', move: { route: [[19, 17], [19, 14], [23, 14], [23, 17]], wait: 450, speed: 1.7 }, talk: 'roa_children' },
-        { id: 'elder', look: 'npc_old_m_1', name: '里の年寄り', x: 24, y: 16, dir: 'w', move: 'still', talk: 'roa_elder', reward: 'news', key: 'roa_elder' },
+        { id: 'elder', look: 'npc_old_m_1', name: R.T('map.prologue_roa.npcs.elder.name'), x: 24, y: 16, dir: 'w', move: 'still', talk: 'roa_elder', reward: 'news', key: 'roa_elder' },
         // 畑の人: 畝に沿って行ったり来たり（柵の内。宝箱 (5,17) の横 (5,16) は通らない）
         { id: 'farmer', look: 'npc_man_2', x: 6, y: 13, dir: 'e', move: { route: [[10, 13], [10, 15], [6, 15], [6, 17], [10, 17], [10, 13], [6, 13]], wait: 1500 }, talk: 'roa_farmer', reward: 'item', key: 'roa_farmer' },
         // 機織りのばあさん: 井戸 (30,13) の北で、行ったり来たり（水くみの順番待ち）
         { id: 'weaver', look: 'npc_old_f_1', x: 29, y: 12, dir: 's', move: { route: [[32, 12], [29, 12]], wait: 2200 }, talk: 'roa_weaver', reward: 'news', key: 'roa_weaver' },
         // 家々のあいだを歩く人: 北の小道の南の行（y 11）だけ。戸口の前の行（y 10）は空ける
         { id: 'youth', look: 'npc_man_1', x: 14, y: 11, dir: 'e', move: { route: [[19, 11], [8, 11], [14, 11]], wait: 2600 }, talk: 'roa_youth', reward: 'hint', key: 'roa_youth' },
-        { id: 'stroller', look: 'npc_woman_1', name: '里の娘', x: 34, y: 11, dir: 'w', move: { route: [[24, 11], [36, 11]], wait: 3000 },
-          talk: { lines: [{ text: '夕方になると、みんな\n語り石のまわりに集まるの。\n里の、いちばんの楽しみよ。' }] } },
-        { id: 'cat', look: 'ani_cat', name: 'ねこ', x: 32, y: 27, dir: 's', move: 'wander', radius: 2, talk: { lines: [{ text: 'ねこが、のびをしている。' }] } },   // 前庭の東（ベルナの家への小道 x 27〜28 には届かない）
+        { id: 'stroller', look: 'npc_woman_1', name: R.T('map.prologue_roa.npcs.stroller.name'), x: 34, y: 11, dir: 'w', move: { route: [[24, 11], [36, 11]], wait: 3000 },
+          talk: { lines: [{ text: R.T('map.prologue_roa.npcs.lines.0.text') }] } },
+        { id: 'cat', look: 'ani_cat', name: R.T('map.prologue_roa.npcs.cat.name'), x: 32, y: 27, dir: 's', move: 'wander', radius: 2, talk: { lines: [{ text: R.T('map.prologue_roa.npcs.lines.0.text_2') }] } },   // 前庭の東（ベルナの家への小道 x 27〜28 には届かない）
       ];
       K.def('roa', {
-        name: 'ロアの里', name_ruby: 'ろあのさと', kind: 'town', region: 'prologue', location: 'roa', theme: 'hill_village',
+        name: R.T('map.prologue_roa.roa.name'), name_ruby: R.T('map.prologue_roa.roa.name_ruby'), kind: 'town', region: 'prologue', location: 'roa', theme: 'hill_village',
         legend, rows: g, outside: 'tree', objects, npcs,
         spawns: {
           gate: { x: 42, y: 15, dir: 'w' }, house: { x: 20, y: 31, dir: 's' }, warp: { x: 21, y: 19, dir: 's' },
@@ -127,7 +127,7 @@
           { id: 'enter', on: 'enter', event: 'roa_enter' },
         ],
         light: { ambient: '#5c5aa0', k: 0.45, mood: 'town_night', vignette: 0.66 }, bgm: 'home',
-        meta: { sub: '語り部の里', chestsInfo: true },
+        meta: { sub: R.T('map.prologue_roa.roa.meta.sub'), chestsInfo: true },
         // 里ぜんたいを 1 枚に描いた下絵（v2/assets/env/hill_village/under/roa*、design/ENV_ASSETS.md §7）。地面・建物・木・柵はこの絵、
         // 当たり・戸口・人・灯り・ほかの物は上のデータのまま。絵が無ければマスから焼く
         art: { image: 'hill_village/under/roa', overlay: 'hill_village/under/roa_over', emit: 'hill_village/under/roa_emit', painted: ['fence', 'barrel@4,10', 'flower_pot@9,10', 'flower_pot@29,10', 'flower_pot@36,10', 'well@30,13', 'hay@3,16', 'log@36,17', 'sack@9,19', 'bench@19,19', 'bench@23,19', 'rock_small@35,19', 'log@12,24', 'rock_small@34,26', 'chair@29,28', 'table@30,28', 'chair@31,28', 'flower_pot@15,29', 'flower_pot@26,29'] },
@@ -156,16 +156,16 @@
         K.exam(10, 2, 'roa_shelf'),
       ];
       const npcs = [
-        { id: 'berna', look: 'berna', name: 'ベルナ', x: 3, y: 5, dir: 'n', move: 'still', pushable: false, cond: '!prologue_start', talk: 'roa_berna' },
-        { id: 'berna_desk', look: 'berna', name: 'ベルナ', x: 12, y: 5, dir: 's', move: 'still', pushable: false, cond: ['prologue_start', { any: ['!prologue_boss', 'prologue_done'] }], talk: 'roa_berna', key: 'roa_berna' },
+        { id: 'berna', look: 'berna', name: R.T('map.prologue_roa.npcs.berna.name'), x: 3, y: 5, dir: 'n', move: 'still', pushable: false, cond: '!prologue_start', talk: 'roa_berna' },
+        { id: 'berna_desk', look: 'berna', name: R.T('map.prologue_roa.npcs.berna_desk.name'), x: 12, y: 5, dir: 's', move: 'still', pushable: false, cond: ['prologue_start', { any: ['!prologue_boss', 'prologue_done'] }], talk: 'roa_berna', key: 'roa_berna' },
       ];
       K.def('roa_house', {
-        name: 'ベルナの家', kind: 'interior', region: 'prologue', location: 'roa',
+        name: R.T('map.prologue_roa.roa_house.name'), kind: 'interior', region: 'prologue', location: 'roa',
         legend: K.ROOM_LEGEND('wall_wood', 'wood_floor'), rows: g, outside: 'wall_wood', objects, npcs,
         spawns: { bed: { x: 3, y: 4, dir: 's' }, door: { x: door.x, y: door.y - 1, dir: 'n' } },
         exits: [{ x: door.x, y: door.y, w: 1, h: 1, to: { map: 'roa', spawn: 'house' } }],
         light: { ambient: '#8a6a58', k: 0.85, mood: 'interior' }, bgm: 'home',
-        meta: { sub: '語り部の家', minimap: false },
+        meta: { sub: R.T('map.prologue_roa.roa_house.meta.sub'), minimap: false },
       });
     })();
   });

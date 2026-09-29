@@ -82,11 +82,41 @@
 
   function waitFonts() {
     if (typeof document === 'undefined' || !document.fonts || !document.fonts.load) return Promise.resolve();
-    const loads = ['500 16px "Zen Maru Gothic"', '700 16px "Zen Maru Gothic"', '400 16px "Cinzel"', '700 16px "Cinzel"']
-      .map((f) => document.fonts.load(f, 'あ灯A').catch(() => null));
+    const fams = ['500 16px "Zen Maru Gothic"', '700 16px "Zen Maru Gothic"', '400 16px "Cinzel"', '700 16px "Cinzel"'];
+    // 中国語・韓国語の本文の書体（R.I18n.FAMILY。埋め込みは build.js の cjkFontCss）
+    const fam = R.I18n && R.I18n.FAMILY[R.I18n.lang()];
+    if (fam && fam !== 'Zen Maru Gothic') fams.push(`500 16px "${fam}"`, `700 16px "${fam}"`);
+    const loads = fams.map((f) => document.fonts.load(f, 'あ灯A').catch(() => null));   // i18n:ignore（書体の読み込みの見本の字）
     // 起動の待ちだけは実時間で数える（Engine はまだ回っていない）
     return Promise.race([Promise.all(loads), new Promise((res) => setTimeout(res, 2500))]);
   }
+
+  /**
+   * 言語（core/i18n.js）: 文の表は読み込みの時に引くので、設定の言語（デスクトップ版はファイルにある）と読み込みの時の言語が
+   * 違えば、覚え直して 1 回だけ起こし直す（URL の ?lang= で開いた時は URL が勝つ）。→ 起こし直すなら true
+   */
+  function langCheck() {
+    if (!R.I18n || typeof location === 'undefined') return false;
+    if (typeof document !== 'undefined') document.title = R.TITLE + ' ' + R.SUBTITLE;
+    if (/[?&]lang=/.test(location.search || '')) return false;
+    const want = R.Settings.get('lang');
+    if (!want || want === R.I18n.lang()) return false;
+    let again = false;
+    try { const ss = window.sessionStorage; again = ss.getItem(R.SAVE_PREFIX + 'lang_restart') === want; ss.setItem(R.SAVE_PREFIX + 'lang_restart', want); } catch (e) { again = true; }
+    R.I18n.setLang(want);
+    return !again && R.I18n.restart();
+  }
+  /** 設定で言語を変えて起こし直した後: 中断の記録から続ける（settings.js の chooseLang）→ 続けたら true */
+  function langResume() {
+    let on = false;
+    try { const ss = window.sessionStorage; on = ss.getItem(R.SAVE_PREFIX + 'lang_resume') === '1'; ss.removeItem(R.SAVE_PREFIX + 'lang_resume'); } catch (e) { on = false; }
+    return on;
+  }
+  Flow.langResume = async function () {
+    await Flow.ready();
+    if (R.Save.load('suspend')) return Flow.resume();
+    return Flow.title();
+  };
 
   R.boot = async function () {
     if (R._booted) return;
@@ -97,6 +127,7 @@
     // 記録と設定の置き場（デスクトップ版はファイルを先に全部読む。core/storage.js）
     try { if (R.Storage && R.Storage.init) await R.Storage.init(); } catch (e) { console.error('storage init failed', e); }
     R.Settings.load();
+    if (langCheck()) return;
     R.Gfx.init(canvas);
     R.fit(true);
     window.addEventListener('resize', () => R.fit());
@@ -123,8 +154,9 @@
     if (R.Loading) R.Loading.bootDone();
     R.Engine.start(canvas);
     if (R.loadErrors.length) console.error('LOAD ERRORS:\n' + R.loadErrors.join('\n'));
+    const resume = langResume();
     if (early) {
-      Flow.title();   // タイトルの絵の読み込みを先に頼む（下の先読みより前に並ぶ）
+      if (resume) Flow.langResume(); else Flow.title();   // タイトルの絵の読み込みを先に頼む（下の先読みより前に並ぶ）
       // 裏では並べて読む（原画・素材・魔物の読み込みと解きが重なる。1 つずつ待つより早く揃う）。
       // 始めるのはタイトルの一枚絵が読めてから（最長 3 秒）: 先に始めると絵の読み込みと解きが遅れ、暗いままの待ちが延びる
       let go = null;
@@ -141,7 +173,7 @@
     }
     R.emit('booted');
     if (R.devBoot && (await R.devBoot())) return; // dev.html だけ: ?fixture= / ?scene=（src/dev/fixtures.js）
-    Flow.title();
+    if (resume) Flow.langResume(); else Flow.title();
   };
 
   if (typeof document !== 'undefined' && document.getElementById) {

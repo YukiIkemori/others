@@ -1,0 +1,71 @@
+// 日本語の文の表（system）。元は tools/i18n_extract.js がソースから移した。以後はここが正（訳は src/i18n/<言語>/system.js に同じ key で）
+// 文の中の {name} は R.T(key, {name}) の差し込み。{hero} など params に無い名前は、そのまま（イベントの側で入る）。
+(function (R) {
+  'use strict';
+  R.I18n.add('ja', {
+    // ---- src/systems/demo_carry.js
+    'sys.demo_carry.offer.i.say.text': '体験版の冒険の記録が\n見つかりました{p0}。\n引き継いで始めますか？',
+    'sys.demo_carry.offer.i.say.text_2': '（{t}）',
+    'sys.demo_carry.offer.i.say.choices': ['引き継ぐ', '新しく始める'],
+    // ---- src/systems/events_runtime.js
+    'sys.events_runtime.toastGain.txt': '{p0}{p1}を手に入れた',
+    'sys.events_runtime.makeEv.ev.gold.toast': '{n} Gを手に入れた',
+    'sys.events_runtime.makeEv.ev.createHero.h.name': 'アルン',
+    'sys.events_runtime.makeEv.ev.lore.txt': '書庫に書き写した{p0}',
+    'sys.events_runtime.makeEv.ev.lore.txt_2': '：{title}',
+    // ---- src/systems/leads.js
+    'sys.leads.PROMPT.0.label': '目印を付ける',
+    'sys.leads.regionName.ret': '世界のうわさ',
+    'sys.leads.regionName.ret_2': '本筋',
+    'sys.leads.draw.text': '目印を付けた',
+    'sys.leads.draw.text_2': '新しい手がかり',
+    'sys.leads.draw.text_3': '右上の札と地図に印が出る',
+    // ---- src/systems/minigame.js
+    'sys.minigame.THEMES.forest.sub': '森の歌',
+    'sys.minigame.THEMES.harbor.sub': '港の歌',
+    'sys.minigame.THEMES.night.sub': '夜の歌',
+    'sys.minigame.NOTE_NAME': ['高い音', '明るい音', '低い音', 'やさしい音', 'ひびく音'],
+    'sys.minigame.sequence.st.title': '歌あわせ',
+    'sys.minigame.drawSeq.P.frame': '{sub} · 歌あわせ',
+    'sys.minigame.drawSeq.rtxt': '第 {Math} 節 / {rounds}',
+    'sys.minigame.drawSeq.msg': '歌の石が歌いはじめる。よく聞いて……。',
+    'sys.minigame.drawSeq.msg_2': 'つぎの節。音がひとつ増える……。',
+    'sys.minigame.drawSeq.msg_3': '聞いて……。',
+    'sys.minigame.drawSeq.msg_4': '同じ順にくり返して（{length} / {L}）',
+    'sys.minigame.drawSeq.msg_5': 'きれいに重なった！',
+    'sys.minigame.drawSeq.msg_6': 'あっ、ちがう音……。',
+    'sys.minigame.drawSeq.text': '歌あわせのひょうか',
+    'sys.minigame.drawSeq.text_2': '重なった音　{hits} / {total}',
+    'sys.minigame.drawSeq.words.S': '森じゅうが耳をすませていた。',
+    'sys.minigame.drawSeq.words.A': 'きれいな歌だった。',
+    'sys.minigame.drawSeq.words.B': 'もう少しで覚えられそう。',
+    'sys.minigame.drawSeq.words.C': 'まだ歌がばらばらだ。',
+    'sys.minigame.drawSeq.pr.0.label': 'とじる',
+    'sys.minigame.drawSeq.pr.0.label_2': '音を鳴らす',
+    'sys.minigame.drawSeq.pr.1.label': 'やめる',
+    'sys.minigame.timing.st.title': '間合い',
+    'sys.minigame.drawTiming.P.frame': '{sub} · 間合い',
+    'sys.minigame.drawTiming.0.label': 'とじる',
+    'sys.minigame.drawTiming.0.label_2': 'とめる',
+    'sys.minigame.drawTiming.1.label': 'やめる',
+    // ---- src/systems/mon.js
+    'sys.mon.goldenName.ret': '金色の{n}',
+    'sys.mon.goldenName.ret_2': '金の{n}',
+    // ---- src/systems/state.js
+    'sys.state.setHero.h.name': 'アルン',
+    // ---- src/systems/tier.js
+    'sys.tier.KANJI.1': '一',
+    'sys.tier.KANJI.2': '二',
+    'sys.tier.KANJI.3': '三',
+    'sys.tier.KANJI.4': '四',
+    'sys.tier.KANJI.5': '五',
+    'sys.tier.KANJI.6': '六',
+    'sys.tier.KANJI.7': '七',
+    'sys.tier.KANJI.8': '八',
+    'sys.tier.KANJI.9': '九',
+    'sys.tier.drawStage.text': '第{p0}章',
+    'sys.tier.drawStage.line': '{page}を年代記にとじた',
+    'sys.tier.drawStage.text_2': '{region}に灯りがもどった',
+    'sys.tier.drawStage.0.label': 'つづける',
+  });
+})(window.RPG);

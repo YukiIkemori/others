@@ -138,8 +138,10 @@ section('技・術: 派生で覚えた技は「〇〇から派生」（design/BA
   ok('derivedFromName: a derived tech → the parent tech name (返し刃 ← 連ね斬り)', S.derivedFromName(c, 't_sword_swallow') === '連ね斬り');
   ok('derivedFromName: a normal tech is never tagged → null', S.derivedFromName(c, 't_sword_draw') === null && S.derivedFromName(c, 't_sword_twin') === null);
   const src = fs.readFileSync(path.join(SRC, 'skills.js'), 'utf8'), det = fs.readFileSync(path.join(SRC, 'detail.js'), 'utf8');
-  ok('skills.js shows 「から派生」 on the detail chips and passes the char to the detail screen', /'から派生'/.test(src) && /S\.detail\(\{ kind: row\.kind, id: row\.value, c: this\.char\(\) \}\)/.test(src));
-  ok('detail.js adds 「〇〇から派生」 to the sub line of a derived tech', /'から派生'/.test(det) && /derivedFromName/.test(det));
+  // 画面の文は文の表（src/i18n/ja）にある: ソースの R.T('key') の日本語の文で確かめる
+  const usesText = (code, re) => [...code.matchAll(/R\.T\('([^']+)'/g)].some((m) => re.test([].concat(R.I18n.table('ja')[m[1]] || '').join('')));
+  ok('skills.js shows 「から派生」 on the detail chips and passes the char to the detail screen', usesText(src, /\{from\}から派生/) && /S\.detail\(\{ kind: row\.kind, id: row\.value, c: this\.char\(\) \}\)/.test(src));
+  ok('detail.js adds 「〇〇から派生」 to the sub line of a derived tech', usesText(det, /\{from\}から派生/) && /derivedFromName/.test(det));
 }
 
 section('魔石: 道具の画面で仲間に使う → その属性の最初の術を覚える');

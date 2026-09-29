@@ -72,7 +72,7 @@
 
   State.setHero = function (h) {
     const G = R.Game;
-    h = h || (R.DB.config && R.DB.config.defaultHero) || { type: 'warrior', sex: 'm', name: 'アルン' };
+    h = h || (R.DB.config && R.DB.config.defaultHero) || { type: 'warrior', sex: 'm', name: R.T('sys.state.setHero.h.name') };
     const c = R.Party.makeChar('hero', { hero: h, tier: G.tier || 0 });
     if (h.fav) c.fav = h.fav;
     if (h.sex) c.sex = h.sex;

@@ -7,7 +7,7 @@
   if (!S.def) S.def = function (id, v) { (S._defs = S._defs || {})[id] = v; };
   const u = (v) => R.UIK.u(v);
   const T = () => R.UIK.T;
-  const TABS = [{ label: '使う物', slots: ['use'] }, { label: '装備品', slots: ['weapon', 'shield', 'head', 'body', 'hands', 'feet', 'acc'] }, { label: '大事な物', slots: ['key'] }];
+  const TABS = [{ label: R.T('ui.items.TABS.0.label'), slots: ['use'] }, { label: R.T('ui.items.TABS.1.label'), slots: ['weapon', 'shield', 'head', 'body', 'hands', 'feet', 'acc'] }, { label: R.T('ui.items.TABS.2.label'), slots: ['key'] }];
 
   // ---------------------------------------------------------------- 相手を選ぶ（道具と術の共通）
   /** 相手選びを始める。v.tgt = {a, caster, kind, i}。a は品か術の定義 */
@@ -85,11 +85,11 @@
       if (targets.length && !ok.length) {
         R.UIK.sfx('buzzer');
         const why = S.targetReason(it, targets[0]);   // 魔石: 使えないわけを出す（品は減らない）
-        if (why) R.UIK.toast(`${targets[0].name}は ${why}`, { anchor: 'bl' });
+        if (why) R.UIK.toast(R.T('ui.items.use.toast', { name: targets[0].name, why }), { anchor: 'bl' });
         return;
       }
       const res = S.applyField(it, null, ok);
-      if (!res.changed) { R.UIK.sfx('buzzer'); R.UIK.toast('効き目がなかった', { anchor: 'bl' }); return; }
+      if (!res.changed) { R.UIK.sfx('buzzer'); R.UIK.toast(R.T('ui.items.use.toast_2'), { anchor: 'bl' }); return; }
       R.Game.items[id]--;
       if (R.Game.items[id] <= 0) delete R.Game.items[id];
       const learned = (it.use.effects || []).some((e) => e.type === 'learnSpell');
@@ -118,7 +118,7 @@
         R.UIK.text(gg, '× ' + S.count(row.value), rect.x + rect.w - u(14), rect.y + (rect.h - sz) / 2, { size: sz, color: row.disabled ? C.disabled : C.text2, align: 'right' });
       };
       this.list.draw(g, lr);
-      if (!this.list.rows.length) R.UIK.text(g, '何も持っていない。', lr.x + u(16), lr.y + u(8), { size: u(15), color: C.text3 });
+      if (!this.list.rows.length) R.UIK.text(g, R.T('ui.items.draw.text'), lr.x + u(16), lr.y + u(8), { size: u(15), color: C.text3 });
       // 右（縦持ちは下）: 説明と人の札
       const rx = tall ? b.x : lp.x + lp.w + u(18), rw = tall ? b.w : b.x + b.w - rx;
       const dy = tall ? lp.y + lp.h + u(10) : b.y + u(4);
@@ -128,15 +128,15 @@
       const it = S.item(cur);
       if (it) {
         R.UIK.text(g, it.name, dp.x + u(20), dp.y + u(16), { size: u(19), weight: 700, color: S.gradeColor(it) || C.goldHi, maxW: dp.w - u(40) });
-        const kind = it.slot === 'use' ? (it.use && it.use.field ? (S.fieldUsable(it) ? 'フィールドで使える' : '戦闘で使う') : '戦闘で使う') : it.slot === 'key' ? '大事な物' : S.kindLine(it);
+        const kind = it.slot === 'use' ? (it.use && it.use.field ? (S.fieldUsable(it) ? R.T('ui.items.draw.kind') : R.T('ui.items.draw.kind_2')) : R.T('ui.items.draw.kind_2')) : it.slot === 'key' ? R.T('ui.items.draw.kind_3') : S.kindLine(it);
         R.UIK.text(g, kind, dp.x + dp.w - u(20), dp.y + u(20), { size: u(12.5), color: C.text3, align: 'right' });
         let yy = dp.y + u(50);
         for (const l of R.UIK.wrap(String(it.desc || '').replace(/\n/g, ''), dp.w - u(40), { size: u(14.5) }).slice(0, 3)) { R.UIK.text(g, l, dp.x + u(20), yy, { size: u(14.5), color: C.text }); yy += u(24); }
       }
       const cp = { x: rx, y: dp.y + dp.h + u(12), w: rw, h: b.y + b.h - (dp.y + dp.h + u(12)) };
-      if (this.tgt) R.UIK.text(g, this.tgt.kind === 'all' ? 'みんなに使う' : '誰に使う？', cp.x + u(4), cp.y - u(2), { size: u(13), weight: 700, color: C.gold });
+      if (this.tgt) R.UIK.text(g, this.tgt.kind === 'all' ? R.T('ui.items.draw.text_2') : R.T('ui.items.draw.text_3'), cp.x + u(4), cp.y - u(2), { size: u(13), weight: 700, color: C.gold });
       this.cards = S.memberCards(this, g, { x: cp.x, y: cp.y + (this.tgt ? u(20) : 0), w: cp.w, h: cp.h - (this.tgt ? u(20) : 0) });
-      S.prompts(g, this.tgt ? [{ btn: 'a', label: '使う' }, { btn: 'b', label: '戻る' }] : [{ btn: 'a', label: '使う' }, { btn: 'y', label: '詳しく' }, { btn: 'l', label: '種類' }, { btn: 'b', label: '戻る' }]);
+      S.prompts(g, this.tgt ? [{ btn: 'a', label: R.T('ui.items.draw.0.label') }, { btn: 'b', label: R.T('ui.items.draw.1.label') }] : [{ btn: 'a', label: R.T('ui.items.draw.0.label') }, { btn: 'y', label: R.T('ui.items.draw.1.label_2') }, { btn: 'l', label: R.T('ui.items.draw.2.label') }, { btn: 'b', label: R.T('ui.items.draw.3.label') }]);
     },
   });
 })(window.RPG);

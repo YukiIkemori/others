@@ -22,7 +22,7 @@
       if (ev.flag('prologue_boss') && !ev.flag('prologue_done')) { await ev.call('pharos_departure'); return; }
       if (ev.flag('prologue_pharos')) return;
       ev.setFlag('prologue_pharos');
-      await E.narr(ev, '港町ファロス。\n桟橋の灯りの向こうで、\n岬の灯台は暗いままだった。');
+      await E.narr(ev, R.T('ev.pharos_story.pharos_arrival.run.narr'));
     },
   };
 
@@ -32,16 +32,16 @@
     run: async (ev) => {
       const E = X();
       if (!ev.flag('prologue_rowell')) {
-        await E.narr(ev, '机の上に、白紙の束が\n積んである。若い記録官の\n手が、かすかに震えている。');
-        await ev.say('rowell', '……語り部の見習いか。灯台の伝承なら、\nきのう記録院が写し取った。', { voice: 'v_rowell_prologue_01', face: 'rowell:neutral' });
-        await ev.say('rowell', '伝承は記録院が責任をもって保管する。\n語り部の出る幕じゃない。', { voice: 'v_rowell_prologue_02', face: 'rowell:angry' });
+        await E.narr(ev, R.T('ev.pharos_story.pharos_rowell.run.narr'));
+        await ev.say('rowell', R.T('ev.pharos_story.pharos_rowell.run.say'), { voice: 'v_rowell_prologue_01', face: 'rowell:neutral' });
+        await ev.say('rowell', R.T('ev.pharos_story.pharos_rowell.run.say_2'), { voice: 'v_rowell_prologue_02', face: 'rowell:angry' });
         ev.setFlag('prologue_rowell');
         return;
       }
       const pk = E.pickEntry([
-        { cond: 'prologue_done', text: '灯台に火が戻っただと？\n……写し取ったはずの歌が、\nどうして。' },
-        { cond: 'prologue_key', text: '灯台守から鍵を借りたそうだな。\n……火をともせるものなら、\nともしてみるがいい。' },
-        { text: 'まだいたのか。\n写し取った伝承は、本院で\n大切に保管される。' },
+        { cond: 'prologue_done', text: R.T('ev.pharos_story.pharos_rowell.run.pk.0.text') },
+        { cond: 'prologue_key', text: R.T('ev.pharos_story.pharos_rowell.run.pk.1.text') },
+        { text: R.T('ev.pharos_story.pharos_rowell.run.pk.2.text') },
       ]);
       await E.say(ev, 'rowell', pk.text, { voice: pk.voice, face: 'rowell:neutral' });
     },
@@ -50,8 +50,8 @@
     meta: { needs: [], gives: ['lore:lo_ev_prologue'] },
     run: async (ev) => {
       const E = X();
-      await E.narr(ev, '掲示が貼ってある。');
-      await E.narr(ev, '「ファロス灯台の守り歌、\n保管のため写し取り済み。\n――記録院ファロス出張所」');
+      await E.narr(ev, R.T('ev.pharos_story.pharos_record_notice.run.narr'));
+      await E.narr(ev, R.T('ev.pharos_story.pharos_record_notice.run.narr_2'));
       E.lore(ev, 'lo_ev_prologue');
     },
   };
@@ -59,7 +59,7 @@
     meta: { needs: [], gives: [] },
     run: async (ev) => {
       const E = X();
-      await E.narr(ev, '白紙の束だ。\n写し取ったはずの紙なのに、\n一文字も書かれていない。');
+      await E.narr(ev, R.T('ev.pharos_story.pharos_record_papers.run.narr'));
     },
   };
 
@@ -70,33 +70,29 @@
       const E = X();
       const who = (ctx && ctx.npc) || 'master';
       if (!ev.flag('prologue_party')) {
-        if (!ev.flag('prologue_berna')) { await E.say(ev, who, 'いらっしゃい。……おや、\nまだ子どもじゃないか。\n夜道は危ないよ。'); return; }
-        await E.say(ev, who, 'いらっしゃい。……おや、\n語り部さんかい。灯台へ行くなら、\n守り手がいるね。');
-        await E.say(ev, who, '今夜ここにいるのは、\n腕の立つ連中ばかりだよ。\n気に入った 3 人を選んでごらん。');
+        if (!ev.flag('prologue_berna')) { await E.say(ev, who, R.T('ev.pharos_story.pharos_tavern_master.run.say')); return; }
+        await E.say(ev, who, R.T('ev.pharos_story.pharos_tavern_master.run.say_2'));
+        await E.say(ev, who, R.T('ev.pharos_story.pharos_tavern_master.run.say_3'));
         const ids = await ev.chooseCompanions({ count: 3 });
-        if (!ids || !ids.length) { await E.say(ev, who, '……おや、決まらなかったかい。\nまたいつでも声をかけとくれ。'); return; }
-        await E.say(ev, who, 'いい顔ぶれだね。\n……ああ、そうだ。');
-        await E.say(ev, who, '灯台守のオットーじいさんが、\n港で途方に暮れてたよ。');
+        if (!ids || !ids.length) { await E.say(ev, who, R.T('ev.pharos_story.pharos_tavern_master.run.say_4')); return; }
+        await E.say(ev, who, R.T('ev.pharos_story.pharos_tavern_master.run.say_5'));
+        await E.say(ev, who, R.T('ev.pharos_story.pharos_tavern_master.run.say_6'));
         ev.setFlag('prologue_party');
         return;
       }
-      const i = await ev.choose(['仲間を入れ替える', '話を聞く', 'やめておく'], { cancel: 2, text: E.t('いらっしゃい、{hero}。\n仲間の入れ替えなら、\nいつでも言っとくれ。') });
+      const i = await ev.choose(R.T('ev.pharos_story.pharos_tavern_master.run.i.choose'), { cancel: 2, text: E.t(R.T('ev.pharos_story.pharos_tavern_master.choose.text.t')) });
       if (i === 0) { await ev.tavern({ swap: true }); return; }
       if (i === 1) {
         await E.say(ev, who, E.pick([
-          { cond: 'prologue_done', text: 'うわさなら、うちの客に\n聞いてごらん。\n酒場にはうわさが集まるものさ。' },
-          { text: '灯台の火が消えてから、\n船乗りたちは陸で\n飲んでばかりさ。' },
+          { cond: 'prologue_done', text: R.T('ev.pharos_story.pharos_tavern_master.run.pick.0.text') },
+          { text: R.T('ev.pharos_story.pharos_tavern_master.run.pick.1.text') },
         ]));
       }
     },
   };
 
   // ------------------------------------------------------------ P7 灯台守オットー
-  const OTTO_TIPS = [
-    '仲間は前列と後列に並ぶんじゃ。\n後列は狙われにくいが、弓と杖の\nほかは、前まで届かんぞ。',
-    '迷ったら『リピート』じゃ。\nさっきと同じ手を、みなで\nくり返してくれる。',
-    '急ぐときは倍速にすればよい。\nただし、敵の構えには\n目を離すでないぞ。',
-  ];
+  const OTTO_TIPS = R.T('ev.pharos_story.OTTO_TIPS');
   async function tips(ev) { for (const t of OTTO_TIPS) await ev.say('otto', t, { face: 'otto:neutral' }); }
   D.pharos_otto = {
     meta: { needs: ['flag:prologue_party'], gives: ['flag:prologue_key', 'item:k_lighthouse_key'], calls: ['pharos_otto_reward'] },
@@ -104,24 +100,24 @@
       const E = X();
       if (ev.flag('prologue_boss')) { await ev.call('pharos_otto_reward'); return; }
       if (!ev.flag('prologue_party')) {
-        await ev.say('otto', 'わしは灯台守のオットー。\n灯台の火が消えてしまって、\nゆうべは眠れんかった。', { voice: 'v_otto_pharos_01', face: 'otto:sad' });
-        await ev.say('otto', '……なに、灯台へ行くと？\nひとりで？ とんでもない。\n酒場「潮風亭」で仲間を見つけておいで。', { voice: 'v_otto_pharos_02', face: 'otto:surprise' });
+        await ev.say('otto', R.T('ev.pharos_story.pharos_otto.run.say'), { voice: 'v_otto_pharos_01', face: 'otto:sad' });
+        await ev.say('otto', R.T('ev.pharos_story.pharos_otto.run.say_2'), { voice: 'v_otto_pharos_02', face: 'otto:surprise' });
         return;
       }
       if (!ev.flag('prologue_key')) {
-        await ev.say('otto', 'おお、仲間を連れてきたか。\nそれなら話は別じゃ。', { voice: 'v_otto_pharos_03', face: 'otto:smile' });
-        await ev.say('otto', '灯台の守り歌が、\nどうしても思い出せんのじゃ。\nあの歌がなけりゃ、火はつかん。', { voice: 'v_otto_pharos_04', face: 'otto:sad' });
-        await ev.say('otto', '……頼む。\nこれが灯台の鍵じゃ。', { voice: 'v_otto_pharos_05', face: 'otto:neutral' });
+        await ev.say('otto', R.T('ev.pharos_story.pharos_otto.run.say_3'), { voice: 'v_otto_pharos_03', face: 'otto:smile' });
+        await ev.say('otto', R.T('ev.pharos_story.pharos_otto.run.say_4'), { voice: 'v_otto_pharos_04', face: 'otto:sad' });
+        await ev.say('otto', R.T('ev.pharos_story.pharos_otto.run.say_5'), { voice: 'v_otto_pharos_05', face: 'otto:neutral' });
         await E.give(ev, 'k_lighthouse_key', 1, { say: true });
         ev.setFlag('prologue_key');
-        await ev.say('otto', '灯台は、町を出て南の\n岬の先じゃ。行く前に、\n戦いの心得を教えておこう。', { voice: 'v_otto_pharos_06', face: 'otto:neutral' });
+        await ev.say('otto', R.T('ev.pharos_story.pharos_otto.run.say_6'), { voice: 'v_otto_pharos_06', face: 'otto:neutral' });
         await tips(ev);
         return;
       }
-      await ev.say('otto', ev.flag('prologue_tutorial') ? 'ネズミどもを追い払って\nくれたか。上の灯室を頼む。\n……気をつけてな。' : '灯台は、町を出て南の\n岬の先じゃ。鍵があれば、\n扉は開くはずじゃ。', { face: 'otto:neutral' });
-      const i = await ev.choose(['もう一度聞く', 'だいじょうぶ'], { cancel: 1, text: '戦いの心得を、もう一度\n聞いていくかね？' });
+      await ev.say('otto', ev.flag('prologue_tutorial') ? R.T('ev.pharos_story.pharos_otto.run.say_7') : R.T('ev.pharos_story.pharos_otto.run.say_8'), { face: 'otto:neutral' });
+      const i = await ev.choose(R.T('ev.pharos_story.pharos_otto.run.i.choose'), { cancel: 1, text: R.T('ev.pharos_story.pharos_otto.run.i.choose.text') });
       if (i === 0) await tips(ev);
-      else await ev.say('otto', 'そうか。頼んだぞ。', { face: 'otto:smile' });
+      else await ev.say('otto', R.T('ev.pharos_story.pharos_otto.run.say_9'), { face: 'otto:smile' });
     },
   };
   D.pharos_otto_reward = {
@@ -129,18 +125,18 @@
     run: async (ev) => {
       const E = X();
       if (!ev.flag('prologue_otto_reward')) {
-        await E.say(ev, 'otto', 'おお、{hero}！\n灯台に火が戻ったぞ！\n守り歌も、思い出せた。', { voice: 'v_otto_reward_05', face: 'otto:smile' });   // 声は名前を読まない
-        await ev.say('otto', '♪　海の果てまで、灯よ届け\n帰る舟に、道を照らせ……。', { voice: 'v_otto_reward_01', face: 'otto:smile' });
-        await ev.say('otto', 'これは、わしが若いころから\n使ってきたランタンじゃ。\n持っていっておくれ。', { voice: 'v_otto_reward_02', face: 'otto:neutral' });
+        await E.say(ev, 'otto', R.T('ev.pharos_story.pharos_otto_reward.run.say'), { voice: 'v_otto_reward_05', face: 'otto:smile' });   // 声は名前を読まない
+        await ev.say('otto', R.T('ev.pharos_story.pharos_otto_reward.run.say_2'), { voice: 'v_otto_reward_01', face: 'otto:smile' });
+        await ev.say('otto', R.T('ev.pharos_story.pharos_otto_reward.run.say_3'), { voice: 'v_otto_reward_02', face: 'otto:neutral' });
         await E.give(ev, 'ac_keeper_lantern', 1, { say: true });
         ev.setFlag('prologue_otto_reward');
-        await ev.say('otto', '若いころ、灯台には\n『朝番』というのがあってな。\n火が戻ったら、また立てるつもりじゃ。', { voice: 'v_otto_reward_03', face: 'otto:smile' });
-        await ev.say('otto', '……はて。何を見張る番\nじゃったかのう。\nどうしても思い出せん。', { voice: 'v_otto_reward_04', face: 'otto:sad' });
+        await ev.say('otto', R.T('ev.pharos_story.pharos_otto_reward.run.say_4'), { voice: 'v_otto_reward_03', face: 'otto:smile' });
+        await ev.say('otto', R.T('ev.pharos_story.pharos_otto_reward.run.say_5'), { voice: 'v_otto_reward_04', face: 'otto:sad' });
         return;
       }
       await E.say(ev, 'otto', E.pick([
-        { cond: 'cleared_r_forest', text: '西の森にも灯が戻ったか。\n灯台から見ると、森の上に\n細い光の柱が立っておるよ。' },
-        { text: '灯台の光は、今夜も\n海を照らしておる。\n{hero}のおかげじゃ。' },
+        { cond: 'cleared_r_forest', text: R.T('ev.pharos_story.pharos_otto_reward.run.pick.0.text') },
+        { text: R.T('ev.pharos_story.pharos_otto_reward.run.pick.1.text') },
       ]), { face: 'otto:smile' });
     },
   };
@@ -157,37 +153,37 @@
       if (ev.flag('prologue_done') || !ev.flag('prologue_boss')) return;
       ev.bgm('dawn');   // 朝の鐘（最後の R.Audio.bgm('town') で町の曲へ）
       try { R.Audio.sfx('bell'); } catch (e) { /* */ }
-      await ev.caption('――朝の鐘が、港に鳴りわたった。', { ms: 2800 });
-      await E.say(ev, 'cheer_a', '灯台に火が戻ったぞ！\nゆうべ、岬が真っ白に\n光ったんだ！');
+      await ev.caption(R.T('ev.pharos_story.pharos_departure.run.caption'), { ms: 2800 });
+      await E.say(ev, 'cheer_a', R.T('ev.pharos_story.pharos_departure.run.say'));
       await ev.npc('berna').move([[7, 11], [6, 11]]);
       // 仲間は出さない（持ち主 2026-09-27: 急に皆が出るのは違和感。フィールドは主人公だけ）
-      await E.say(ev, 'berna', '夜通し歩いてきたよ。\n……よくやったね、{hero}。', { face: 'berna:smile' });
-      await ev.say('berna', 'これは、あなたの年代記だよ。\n語り部はみんな、自分の\n年代記を持って旅に出るんだ。', { voice: 'v_berna_lute_01', face: 'berna:smile' });
+      await E.say(ev, 'berna', R.T('ev.pharos_story.pharos_departure.run.say_2'), { face: 'berna:smile' });
+      await ev.say('berna', R.T('ev.pharos_story.pharos_departure.run.say_3'), { voice: 'v_berna_lute_01', face: 'berna:smile' });
       await E.give(ev, 'k_chronicle', 1, { say: true });
-      await ev.say('berna', 'それから、これもお持ち。\n語り部の羽ペンと、\n帰り道の鈴だよ。', { voice: 'v_berna_lute_02', face: 'berna:neutral' });
+      await ev.say('berna', R.T('ev.pharos_story.pharos_departure.run.say_4'), { voice: 'v_berna_lute_02', face: 'berna:neutral' });
       await E.give(ev, 'k_quill', 1, { quiet: true });
       await E.give(ev, 'k_bell', 1, { quiet: true });
-      await E.narr(ev, '{hero}は、語り部の羽ペンと\n帰り道の鈴を手に入れた！');
-      await ev.say('berna', ['羽ペンで年代記の地図をなぞれば、\n行ったことのある町へ飛べる。', '鈴を鳴らせば、ダンジョンの\n奥からでも外へ帰れるよ。', 'メニューの『ワープ』と『脱出』が、\nその力のことだよ。'], { face: 'berna:neutral' });
+      await E.narr(ev, R.T('ev.pharos_story.pharos_departure.run.narr'));
+      await ev.say('berna', R.T('ev.pharos_story.pharos_departure.run.say_5'), { face: 'berna:neutral' });
       try { R.Audio.sfx('quill'); } catch (e) { /* */ }
       E.chapter('prologue');
-      await Promise.all([ev.caption('年代記に序章\n『灯台守の歌』が記された。', { ms: 3000 }), ev.jingle('chapter')]);
-      await ev.say('berna', 'この大陸には八つの大きな伝承がある。\nその全部が、いま白紙になりかけている。', { voice: 'v_berna_lute_03', face: 'berna:sad' });
-      await ev.say('berna', '全部を語り直して、\n年代記を書き上げなさい。それが、\nあなたの修業の仕上げだよ。', { voice: 'v_berna_lute_04', face: 'berna:neutral' });
-      await ev.say('berna', 'うわさは酒場に集まるものさ。\nまずは港の酒場で\n聞いてごらん。', { voice: 'v_berna_depart_01', face: 'berna:smile' });
+      await Promise.all([ev.caption(R.T('ev.pharos_story.pharos_departure.run.caption_2'), { ms: 3000 }), ev.jingle('chapter')]);
+      await ev.say('berna', R.T('ev.pharos_story.pharos_departure.run.say_6'), { voice: 'v_berna_lute_03', face: 'berna:sad' });
+      await ev.say('berna', R.T('ev.pharos_story.pharos_departure.run.say_7'), { voice: 'v_berna_lute_04', face: 'berna:neutral' });
+      await ev.say('berna', R.T('ev.pharos_story.pharos_departure.run.say_8'), { voice: 'v_berna_depart_01', face: 'berna:smile' });
       ev.lead('l_main_rumors');
-      await E.narr(ev, '{hero}は、手がかり帳を\n受け取った。');
+      await E.narr(ev, R.T('ev.pharos_story.pharos_departure.run.narr_2'));
       try { if (R.DB.tips && R.DB.tips.leads) await R.Screens.tip('leads'); } catch (e) { /* 札が無くても止めない */ }
-      await ev.say('berna', 'どこから回ってもいい。\nあなたの足で、あなたの順番で\n語り直していけばいいのさ。', { voice: 'v_berna_lute_05', face: 'berna:smile' });
+      await ev.say('berna', R.T('ev.pharos_story.pharos_departure.run.say_9'), { voice: 'v_berna_lute_05', face: 'berna:smile' });
       // 最初の物忘れの影（STORY_BIBLE §9.1 P10）
-      await ev.say('berna', 'わたしは里へ帰るよ。\n……いってらっしゃい、', { voice: 'v_berna_depart_02', face: 'berna:smile' });
-      await E.narr(ev, 'ベルナは、何か言いかけて、\n笑ってごまかした。');
-      await E.say(ev, 'berna', '……{hero}。\n気をつけてお行き。', { face: 'berna:smile' });
+      await ev.say('berna', R.T('ev.pharos_story.pharos_departure.run.say_10'), { voice: 'v_berna_depart_02', face: 'berna:smile' });
+      await E.narr(ev, R.T('ev.pharos_story.pharos_departure.run.narr_3'));
+      await E.say(ev, 'berna', R.T('ev.pharos_story.pharos_departure.run.say_11'), { face: 'berna:smile' });
       // 立ち去る（持ち主 2026-09-27: 話が終わったら背を向けて数歩歩き、薄れて消える）。ベルナは西の門から里へ
       await ev.leave('berna', { path: [[5, 11], [4, 11], [3, 11]] });
-      await E.narr(ev, '港のほうから、オットーが\n駆けてきた。');
+      await E.narr(ev, R.T('ev.pharos_story.pharos_departure.run.narr_4'));
       await ev.call('pharos_otto_reward');
-      await E.say(ev, 'cheer_b', '領主さまが、北の跳ね橋を\n下ろしてくださったそうよ！\nこれで北の野へ出られるわ！');
+      await E.say(ev, 'cheer_b', R.T('ev.pharos_story.pharos_departure.run.say_12'));
       await ev.leave(['cheer_b', 'cheer_a']);   // 集まっていた町の人も、それぞれ歩いて去る
       ev.setFlag('prologue_done');
       try { R.Audio.bgm('town'); } catch (e) { /* */ }

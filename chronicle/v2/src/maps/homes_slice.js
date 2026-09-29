@@ -40,7 +40,7 @@
     // ---------------------------------------------------------------- ロア（丘の上の里）
     const ROA = { town: 'roa', region: 'prologue', location: 'roa', bgm: 'home' };
     // 家族の家（10×8）: 大きな寝台・食卓・台所の石の床
-    home('roa_home1', Object.assign({}, ROA, { name: '里の家', back: 'h1_door', w: 10, h: 8,
+    home('roa_home1', Object.assign({}, ROA, { name: R.T('map.homes_slice.roa_home1.name'), back: 'h1_door', w: 10, h: 8,
       wall: '..w..h..',
       floor: [
         'D-.R.lHJ',
@@ -49,9 +49,9 @@
         'P......b',
         'p......x'],
       rugs: [[2, 3, 5, 3]], stone: [[6, 2, 3, 2]],
-      npcs: [npc('mother', 'npc_woman_1', 6, 4, ['いらっしゃい。\nうちの子なら、広場で\n遊んでいるよ。', 'ベルナさんの話は、\nいつ聞いても\n胸があたたかくなるね。'], { name: '里の母親' })] }));
+      npcs: [npc('mother', 'npc_woman_1', 6, 4, R.T('map.homes_slice.roa_home1.npcs.0.mother'), { name: R.T('map.homes_slice.roa_home1.npcs.0.mother.name') })] }));
     // 木こりの家（9×8）: 暖炉と薪、角の飾り・道具
-    home('roa_home2', Object.assign({}, ROA, { name: '木こりの家', back: 'h2_door', w: 9, h: 8,
+    home('roa_home2', Object.assign({}, ROA, { name: R.T('map.homes_slice.roa_home2.name'), back: 'h2_door', w: 9, h: 8,
       wall: '.a....o',
       floor: [
         'B.KF-g.',
@@ -60,9 +60,9 @@
         's......',
         'k.....b'],
       rugs: [[2, 3, 3, 2]],
-      npcs: [npc('woodman', 'npc_man_3', 4, 4, ['薪は十分に割ってある。\n今夜も冷えるからな。'], { name: '里の木こり' })] }));
+      npcs: [npc('woodman', 'npc_man_3', 4, 4, [R.T('map.homes_slice.roa_home2.npcs.0.woodman.0')], { name: R.T('map.homes_slice.roa_home2.npcs.0.woodman.name') })] }));
     // おばあさんの家（9×8）: 糸車・本棚・暖炉・絵
-    home('roa_home3', Object.assign({}, ROA, { name: '里の家', back: 'h3_door', w: 9, h: 8,
+    home('roa_home3', Object.assign({}, ROA, { name: R.T('map.homes_slice.roa_home3.name'), back: 'h3_door', w: 9, h: 8,
       wall: '..p..w.',
       floor: [
         'SJ.F-.B',
@@ -71,9 +71,9 @@
         '.......',
         'pk....V'],
       rugs: [[2, 3, 5, 3]],
-      npcs: [npc('granny', 'npc_old_f_2', 5, 4, ['お茶でも飲んでいくかい。', 'おや、旅に出るのかい。\n気をつけて行くんだよ。'], { name: '里のおばあさん' })] }));
+      npcs: [npc('granny', 'npc_old_f_2', 5, 4, R.T('map.homes_slice.roa_home3.npcs.0.granny'), { name: R.T('map.homes_slice.roa_home3.npcs.0.granny.name') })] }));
     // 里の男の家（10×8）: 寝台 2 つ・燭台・壁掛け・かまど
-    home('roa_home4', Object.assign({}, ROA, { name: '里の家', back: 'h4_door', w: 10, h: 8,
+    home('roa_home4', Object.assign({}, ROA, { name: R.T('map.homes_slice.roa_home4.name'), back: 'h4_door', w: 10, h: 8,
       wall: 'w..y.w..',
       floor: [
         '.BB.C.KR',
@@ -82,18 +82,18 @@
         'J......P',
         'b.....lp'],
       rugs: [[4, 3, 4, 3]], stone: [[7, 3, 2, 2]],
-      npcs: [npc('father', 'npc_man_4', 2, 4, ['外の森は深い。\n門を出たら、道から\n外れないことだ。'], { name: '里の男' })] }));
+      npcs: [npc('father', 'npc_man_4', 2, 4, [R.T('map.homes_slice.roa_home4.npcs.0.father.0')], { name: R.T('map.homes_slice.roa_home4.npcs.0.father.name') })] }));
     // 畑の番小屋（8×7、板の間）: 干し草・道具・野菜かご
-    home('roa_home5', Object.assign({}, ROA, { name: '畑の番小屋', back: 'h5_door', w: 8, h: 7, plank: true,
+    home('roa_home5', Object.assign({}, ROA, { name: R.T('map.homes_slice.roa_home5.name'), back: 'h5_door', w: 8, h: 7, plank: true,
       wall: '..o..h',
       floor: [
         'hh.bx.',
         'k....V',
         'sT...g',
         'l....k'],
-      npcs: [npc('fieldkeeper', 'npc_old_m_3', 4, 3, ['畑の番をして四十年。\n土は正直だよ。\n手をかけた分だけ育つ。'], { name: '畑の番人' })] }));
+      npcs: [npc('fieldkeeper', 'npc_old_m_3', 4, 3, [R.T('map.homes_slice.roa_home5.npcs.0.fieldkeeper.0')], { name: R.T('map.homes_slice.roa_home5.npcs.0.fieldkeeper.name') })] }));
     // 池のそばの家（9×7）: 大きな寝台・絵・窓 2 つ
-    home('roa_home6', Object.assign({}, ROA, { name: '池のそばの家', back: 'h6_door', w: 9, h: 7,
+    home('roa_home6', Object.assign({}, ROA, { name: R.T('map.homes_slice.roa_home6.name'), back: 'h6_door', w: 9, h: 7,
       wall: 'w..p..w',
       floor: [
         '.D-.KJ.',
@@ -101,9 +101,9 @@
         '...cTc.',
         'pl....V'],
       rugs: [[2, 3, 5, 2]],
-      npcs: [npc('pondwife', 'npc_woman_4', 2, 4, ['池のほとりには、\n夜になると光る\nきのこが生えるの。'], { name: '里の女' })] }));
+      npcs: [npc('pondwife', 'npc_woman_4', 2, 4, [R.T('map.homes_slice.roa_home6.npcs.0.pondwife.0')], { name: R.T('map.homes_slice.roa_home6.npcs.0.pondwife.name') })] }));
     // 語り石の間（12×9、石の壁）: 奥の壁ぎわに語り板。まん中の 2 枚を調べると roa_hall（語り直した伝承の文）
-    home('roa_hall_in', Object.assign({}, ROA, { name: '語り石の間', sub: '語り部の里', back: 'hall_door', w: 12, h: 9, wallMat: 'wall_stone', floorMat: 'stone_floor',
+    home('roa_hall_in', Object.assign({}, ROA, { name: R.T('map.homes_slice.roa_hall_in.name'), sub: R.T('map.homes_slice.roa_hall_in.sub'), back: 'hall_door', w: 12, h: 9, wallMat: 'wall_stone', floorMat: 'stone_floor',
       ambient: '#5e5e7e',
       wall: '.y.c..c.y.',
       floor: [
@@ -119,7 +119,7 @@
     // ---------------------------------------------------------------- ファロス（港町）
     const PH = { town: 'pharos', region: 'prologue', location: 'pharos', bgm: 'town' };
     // 船乗りの妻の家（9×8）: 海図・網・食卓
-    home('pharos_home1', Object.assign({}, PH, { name: '港の家', back: 'house1_door', w: 9, h: 8,
+    home('pharos_home1', Object.assign({}, PH, { name: R.T('map.homes_slice.pharos_home1.name'), back: 'house1_door', w: 9, h: 8,
       wall: '.m..w..',
       floor: [
         'B.K..HJ',
@@ -128,9 +128,9 @@
         'P.....b',
         'm.....x'],
       rugs: [[2, 3, 4, 3]], stone: [[6, 2, 2, 2]],
-      npcs: [npc('sailorwife', 'npc_woman_2', 6, 4, ['夫の船は、灯台が\n消えてから港を\n出られないの。'], { name: '船乗りの妻' })] }));
+      npcs: [npc('sailorwife', 'npc_woman_2', 6, 4, [R.T('map.homes_slice.pharos_home1.npcs.0.sailorwife.0')], { name: R.T('map.homes_slice.pharos_home1.npcs.0.sailorwife.name') })] }));
     // 網引きのおじいさんの家（9×8）: 暖炉・舵輪の飾り・網
-    home('pharos_home2', Object.assign({}, PH, { name: '港の家', back: 'house2_door', w: 9, h: 8,
+    home('pharos_home2', Object.assign({}, PH, { name: R.T('map.homes_slice.pharos_home2.name'), back: 'house2_door', w: 9, h: 8,
       wall: '..wv...',
       floor: [
         'SJ..F-B',
@@ -139,9 +139,9 @@
         'b......',
         'bx....r'],
       rugs: [[2, 3, 5, 2]],
-      npcs: [npc('oldnet', 'npc_old_m_1', 6, 3, ['若いころは、わしも\n灯台の下で\n網を引いたもんじゃ。'], { name: '港のおじいさん' })] }));
+      npcs: [npc('oldnet', 'npc_old_m_1', 6, 3, [R.T('map.homes_slice.pharos_home2.npcs.0.oldnet.0')], { name: R.T('map.homes_slice.pharos_home2.npcs.0.oldnet.name') })] }));
     // 船乗りの家（10×7）: 樽と酒樽の台・海図・網
-    home('pharos_home3', Object.assign({}, PH, { name: '船乗りの家', back: 'house3_door', w: 10, h: 7,
+    home('pharos_home3', Object.assign({}, PH, { name: R.T('map.homes_slice.pharos_home3.name'), back: 'house3_door', w: 10, h: 7,
       wall: '.w...m..',
       floor: [
         'B.bb..G-',
@@ -149,9 +149,9 @@
         'cT....x.',
         'mr....kl'],
       rugs: [[1, 3, 3, 2]],
-      npcs: [npc('landsailor', 'npc_sailor_3', 6, 3, ['陸の上は、どうも\n落ち着かねえな。\n早く海に出てえ。'], { name: '船乗り' })] }));
+      npcs: [npc('landsailor', 'npc_sailor_3', 6, 3, [R.T('map.homes_slice.pharos_home3.npcs.0.landsailor.0')], { name: R.T('map.homes_slice.pharos_home3.npcs.0.landsailor.name') })] }));
     // 母と子の家（10×8）: 寝台 2 つ・かまど・絵・かご
-    home('pharos_home4', Object.assign({}, PH, { name: '港の家', back: 'house4_door', w: 10, h: 8,
+    home('pharos_home4', Object.assign({}, PH, { name: R.T('map.homes_slice.pharos_home4.name'), back: 'house4_door', w: 10, h: 8,
       wall: '..w...p.',
       floor: [
         'BB.K.H.J',
@@ -160,10 +160,10 @@
         'V......P',
         'Y......p'],
       rugs: [[2, 3, 6, 3]], stone: [[5, 2, 3, 1]],
-      npcs: [npc('mom', 'npc_woman_3', 3, 3, ['潮の香りがする\n町でしょう。\nわたしは好きよ。'], { name: '港の女' }),
-        npc('kid', 'npc_child_1', 7, 5, ['灯台がまた光ったら、\nぼくも船に\n乗せてもらうんだ。'], { name: '港の子ども', dir: 'w', move: 'wander' })] }));
+      npcs: [npc('mom', 'npc_woman_3', 3, 3, [R.T('map.homes_slice.pharos_home4.npcs.0.mom.0')], { name: R.T('map.homes_slice.pharos_home4.npcs.0.mom.name') }),
+        npc('kid', 'npc_child_1', 7, 5, [R.T('map.homes_slice.pharos_home4.npcs.1.kid.0')], { name: R.T('map.homes_slice.pharos_home4.npcs.1.kid.name'), dir: 'w', move: 'wander' })] }));
     // 書き物の好きな男の家（11×8）: 書き物机・本棚・暖炉
-    home('pharos_home5', Object.assign({}, PH, { name: '港の家', back: 'house5_door', w: 11, h: 8,
+    home('pharos_home5', Object.assign({}, PH, { name: R.T('map.homes_slice.pharos_home5.name'), back: 'house5_door', w: 11, h: 8,
       wall: '..w....p.',
       floor: [
         'SS.E.F-.K',
@@ -172,9 +172,9 @@
         'P........',
         'pb.....xk'],
       rugs: [[5, 3, 4, 3]],
-      npcs: [npc('clerkfriend', 'npc_man_1', 4, 3, ['記録院の人たちが\n来てから、町が\n少し静かになった。'], { name: '港の男' })] }));
+      npcs: [npc('clerkfriend', 'npc_man_1', 4, 3, [R.T('map.homes_slice.pharos_home5.npcs.0.clerkfriend.0')], { name: R.T('map.homes_slice.pharos_home5.npcs.0.clerkfriend.name') })] }));
     // 果物好きのおばあさんの家（10×7）: 干した香草・野菜とパンのかご
-    home('pharos_home6', Object.assign({}, PH, { name: '港の家', back: 'house6_door', w: 10, h: 7,
+    home('pharos_home6', Object.assign({}, PH, { name: R.T('map.homes_slice.pharos_home6.name'), back: 'house6_door', w: 10, h: 7,
       wall: 'w.h...w.',
       floor: [
         '.J.H.K.B',
@@ -182,11 +182,11 @@
         'Y...cT..',
         'p.....Pl'],
       rugs: [[5, 3, 4, 2]], stone: [[3, 2, 3, 1]],
-      npcs: [npc('fruitgran', 'npc_old_f_3', 6, 3, ['夜市の果物は、\n朝に買うより\n安いんだよ。'], { name: '港のおばあさん' })] }));
+      npcs: [npc('fruitgran', 'npc_old_f_3', 6, 3, [R.T('map.homes_slice.pharos_home6.npcs.0.fruitgran.0')], { name: R.T('map.homes_slice.pharos_home6.npcs.0.fruitgran.name') })] }));
 
     // ---------------------------------------------------------------- フェルン（木の上の村）
     const FE = { town: 'fern', region: 'r_forest', location: 'fern', bgm: 'village', ambient: '#76688a', floorMat: 'bark_floor' };
-    home('fern_home1', Object.assign({}, FE, { name: '村の家', back: 'house1', w: 10, h: 7,
+    home('fern_home1', Object.assign({}, FE, { name: R.T('map.homes_slice.fern_home1.name'), back: 'house1', w: 10, h: 7,
       wall: '..w.h.w.',
       floor: [
         'D-.J.H.K',
@@ -194,8 +194,8 @@
         'P...cL-c',
         'pQ.....l'],
       rugs: [[5, 3, 4, 2]],
-      npcs: [npc('worrier', 'npc_woman_2', 7, 4, ['森で帰らない人が\nいるの。無事だと\nいいのだけど。'], { name: '村の女' })] }));
-    home('fern_home2', Object.assign({}, FE, { name: '村の家', back: 'house2_door', w: 9, h: 8, wallMat: 'wall_bark',
+      npcs: [npc('worrier', 'npc_woman_2', 7, 4, [R.T('map.homes_slice.fern_home1.npcs.0.worrier.0')], { name: R.T('map.homes_slice.fern_home1.npcs.0.worrier.name') })] }));
+    home('fern_home2', Object.assign({}, FE, { name: R.T('map.homes_slice.fern_home2.name'), back: 'house2_door', w: 9, h: 8, wallMat: 'wall_bark',
       wall: '.a..c..',
       floor: [
         'S.F-.BB',
@@ -204,8 +204,8 @@
         'E......',
         'g.....b'],
       rugs: [[2, 3, 5, 2]],
-      npcs: [npc('rootold', 'npc_old_m_2', 6, 4, ['千年樹の根は、\nこの村の下まで\n伸びているそうじゃ。'], { name: '村のおじいさん' })] }));
-    home('fern_home3', Object.assign({}, FE, { name: '村の家', back: 'house3_door', w: 10, h: 7,
+      npcs: [npc('rootold', 'npc_old_m_2', 6, 4, [R.T('map.homes_slice.fern_home2.npcs.0.rootold.0')], { name: R.T('map.homes_slice.fern_home2.npcs.0.rootold.name') })] }));
+    home('fern_home3', Object.assign({}, FE, { name: R.T('map.homes_slice.fern_home3.name'), back: 'house3_door', w: 10, h: 7,
       wall: '.w....y.',
       floor: [
         'B.K.HJ.x',
@@ -213,19 +213,19 @@
         '...cTc..',
         'bk.....P'],
       rugs: [[4, 3, 3, 2]],
-      npcs: [npc('swayman', 'npc_man_2', 2, 4, ['木の上の家は、\n風の日によく揺れる。\nもう慣れたがね。'], { name: '村の男' })] }));
-    home('fern_shed', Object.assign({}, FE, { name: '物置小屋', back: 'shed_door', w: 8, h: 7, plank: true,
+      npcs: [npc('swayman', 'npc_man_2', 2, 4, [R.T('map.homes_slice.fern_home3.npcs.0.swayman.0')], { name: R.T('map.homes_slice.fern_home3.npcs.0.swayman.name') })] }));
+    home('fern_shed', Object.assign({}, FE, { name: R.T('map.homes_slice.fern_shed.name'), back: 'shed_door', w: 8, h: 7, plank: true,
       wall: '...o..',
       floor: [
         'xxb.hh',
         'k....l',
         'g....x',
         'r....b'],
-      npcs: [npc('hider', 'npc_child_2', 5, 3, ['しーっ。\nかくれんぼの\n最中なんだ。'], { name: '村の子ども', dir: 'w' })] }));
+      npcs: [npc('hider', 'npc_child_2', 5, 3, [R.T('map.homes_slice.fern_shed.npcs.0.hider.0')], { name: R.T('map.homes_slice.fern_shed.npcs.0.hider.name'), dir: 'w' })] }));
 
     // ---------------------------------------------------------------- ユラ（名を置いてきた者の里）
     const YU = { town: 'yura', region: 'r_forest', location: 'yura', bgm: 'sorrow', wallMat: 'wall_moss', ambient: '#6e6282', optional: true };
-    home('yura_home_elder', Object.assign({}, YU, { name: '長老の家', back: 'elder_door', w: 10, h: 8,
+    home('yura_home_elder', Object.assign({}, YU, { name: R.T('map.homes_slice.yura_home_elder.name'), back: 'elder_door', w: 10, h: 8,
       wall: '..y.c.y.',
       floor: [
         'SS.C.E.K',
@@ -234,8 +234,8 @@
         '........',
         'pk....bp'],
       rugs: [[3, 3, 4, 3]],
-      npcs: [npc('aide', 'npc_yura_folk_2', 7, 3, ['長老さまは、名を\n忘れても、里の者の\n顔は忘れない。'], { name: '長老の付き人' })] }));
-    home('yura_home1', Object.assign({}, YU, { name: 'ユラの家', back: 'h1_door', w: 9, h: 7,
+      npcs: [npc('aide', 'npc_yura_folk_2', 7, 3, [R.T('map.homes_slice.yura_home_elder.npcs.0.aide.0')], { name: R.T('map.homes_slice.yura_home_elder.npcs.0.aide.name') })] }));
+    home('yura_home1', Object.assign({}, YU, { name: R.T('map.homes_slice.yura_home1.name'), back: 'h1_door', w: 9, h: 7,
       wall: '.w.c..w',
       floor: [
         'B.K.HJ.',
@@ -243,8 +243,8 @@
         'Q...cT.',
         'l.....p'],
       rugs: [[2, 3, 4, 2]],
-      npcs: [npc('long', 'npc_yura_folk_1', 4, 3, ['この家に住んで\nどれだけたつのか、\nもう分からないの。'], { name: 'ユラの人' })] }));
-    home('yura_home2', Object.assign({}, YU, { name: 'ユラの家', back: 'h2_door', w: 9, h: 8,
+      npcs: [npc('long', 'npc_yura_folk_1', 4, 3, [R.T('map.homes_slice.yura_home1.npcs.0.long.0')], { name: R.T('map.homes_slice.yura_home1.npcs.0.long.name') })] }));
+    home('yura_home2', Object.assign({}, YU, { name: R.T('map.homes_slice.yura_home2.name'), back: 'h2_door', w: 9, h: 8,
       wall: '..p..w.',
       floor: [
         'D-.F-.J',
@@ -253,8 +253,8 @@
         '.......',
         'Vp...kb'],
       rugs: [[2, 3, 4, 3]],
-      npcs: [npc('uncalled', 'npc_yura_folk_3', 6, 4, ['名前を呼ばれない\n暮らしにも、\nもう慣れました。'], { name: 'ユラの人' })] }));
-    home('yura_home3', Object.assign({}, YU, { name: 'ユラの家', back: 'h3_door', w: 9, h: 7,
+      npcs: [npc('uncalled', 'npc_yura_folk_3', 6, 4, [R.T('map.homes_slice.yura_home2.npcs.0.uncalled.0')], { name: R.T('map.homes_slice.yura_home2.npcs.0.uncalled.name') })] }));
+    home('yura_home3', Object.assign({}, YU, { name: R.T('map.homes_slice.yura_home3.name'), back: 'h3_door', w: 9, h: 7,
       wall: '.w.c..w',
       floor: [
         'B.B.KR.',
@@ -262,8 +262,8 @@
         'P...cT.',
         'p.....l'],
       rugs: [[1, 3, 4, 2]],
-      npcs: [npc('dreamer', 'npc_yura_folk_4', 2, 3, ['夢の中でだけ、\nだれかがわたしの\n名を呼ぶんです。'], { name: 'ユラの人' })] }));
-    home('yura_home4', Object.assign({}, YU, { name: 'ユラの家', back: 'h4_door', w: 10, h: 8,
+      npcs: [npc('dreamer', 'npc_yura_folk_4', 2, 3, [R.T('map.homes_slice.yura_home3.npcs.0.dreamer.0')], { name: R.T('map.homes_slice.yura_home3.npcs.0.dreamer.name') })] }));
+    home('yura_home4', Object.assign({}, YU, { name: R.T('map.homes_slice.yura_home4.name'), back: 'h4_door', w: 10, h: 8,
       wall: '..w.p.w.',
       floor: [
         'BB.H.J.K',
@@ -272,6 +272,6 @@
         'V.......',
         'rk....pP'],
       rugs: [[2, 3, 5, 3]],
-      npcs: [npc('namekid', 'npc_child_3', 5, 4, ['ねえ、きみの名前は\nなんていうの？\nいいなあ。'], { name: '名のない子' })] }));
+      npcs: [npc('namekid', 'npc_child_3', 5, 4, [R.T('map.homes_slice.yura_home4.npcs.0.namekid.0')], { name: R.T('map.homes_slice.yura_home4.npcs.0.namekid.name') })] }));
   });
 })(window.RPG);

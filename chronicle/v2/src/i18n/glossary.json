@@ -1,0 +1,1162 @@
+{
+ "note": "用語集（i18n）。訳の案。訳す人はこの語をそろえる。tools/i18n_audit.js は使わない（読むだけの資料）。md は design の外（作業のメモ）",
+ "langs": [
+  "ja",
+  "en",
+  "zh-Hans",
+  "zh-Hant",
+  "ko"
+ ],
+ "terms": [
+  {
+   "id": "title.title",
+   "category": "title",
+   "ja": "ルミナス・クロニクル",
+   "en": "Luminous Chronicle",
+   "zh-Hans": "光之编年史",
+   "zh-Hant": "光之編年史",
+   "ko": "루미너스 크로니클",
+   "note": "Title logo. zh could also keep the transliteration 路米纳斯编年史; decide with publisher."
+  },
+  {
+   "id": "title.subtitle",
+   "category": "title",
+   "ja": "〜八つの灯火〜",
+   "en": "~ The Eight Beacons ~",
+   "zh-Hans": "～八盏灯火～",
+   "zh-Hant": "～八盞燈火～",
+   "ko": "~여덟 개의 등불~",
+   "note": "灯火 = Beacon in EN throughout (lighthouse motif, 大灯火 = Great Beacon)."
+  },
+  {
+   "id": "core.storyteller",
+   "category": "core",
+   "ja": "語り部",
+   "en": "Storyteller",
+   "zh-Hans": "讲述者",
+   "zh-Hant": "講述者",
+   "ko": "이야기꾼",
+   "note": "The hero's calling. 語り部の見習い = apprentice storyteller. Avoid 说书人 (stage performer)."
+  },
+  {
+   "id": "core.beacon",
+   "category": "core",
+   "ja": "灯火",
+   "en": "Beacon",
+   "zh-Hans": "灯火",
+   "zh-Hant": "燈火",
+   "ko": "등불",
+   "note": "大灯火 = Great Beacon (大灯火 / 大燈火 / 큰 등불)."
+  },
+  {
+   "id": "core.great_beacon",
+   "category": "core",
+   "ja": "大灯火",
+   "en": "Great Beacon",
+   "zh-Hans": "大灯火",
+   "zh-Hant": "大燈火",
+   "ko": "큰 등불"
+  },
+  {
+   "id": "core.spark",
+   "category": "core",
+   "ja": "閃き",
+   "en": "Spark",
+   "zh-Hans": "灵光",
+   "zh-Hant": "靈光",
+   "ko": "번뜩임",
+   "note": "Learning a new tech mid-battle. Verb: 'sparked' (灵光一闪 / 靈光一閃 / 번뜩였다). Do not use other games' trademarked terms."
+  },
+  {
+   "id": "core.proficiency",
+   "category": "core",
+   "ja": "熟練度",
+   "en": "Proficiency",
+   "zh-Hans": "熟练度",
+   "zh-Hant": "熟練度",
+   "ko": "숙련도",
+   "note": "Per weapon type / element. Short label: Prof."
+  },
+  {
+   "id": "core.clue_book",
+   "category": "core",
+   "ja": "手がかり帳",
+   "en": "Clue Journal",
+   "zh-Hans": "线索簿",
+   "zh-Hant": "線索簿",
+   "ko": "단서 수첩",
+   "note": "Menu of leads (R.Leads). A single entry = Clue."
+  },
+  {
+   "id": "core.clue",
+   "category": "core",
+   "ja": "手がかり",
+   "en": "Clue",
+   "zh-Hans": "线索",
+   "zh-Hant": "線索",
+   "ko": "단서"
+  },
+  {
+   "id": "core.chronicle",
+   "category": "core",
+   "ja": "年代記",
+   "en": "Chronicle",
+   "zh-Hans": "编年史",
+   "zh-Hant": "編年史",
+   "ko": "연대기",
+   "note": "The book the hero writes in. 年代記に書く = write in the Chronicle."
+  },
+  {
+   "id": "core.blank",
+   "category": "core",
+   "ja": "白紙",
+   "en": "the Blank",
+   "zh-Hans": "空白",
+   "zh-Hant": "空白",
+   "ko": "백지",
+   "note": "Memories/stories turning blank. Treat as a proper noun in EN (capital B)."
+  },
+  {
+   "id": "core.archive",
+   "category": "core",
+   "ja": "記録院",
+   "en": "the Archive",
+   "zh-Hans": "记录院",
+   "zh-Hant": "記錄院",
+   "ko": "기록원",
+   "note": "Institution. 記録院付き = attached to the Archive."
+  },
+  {
+   "id": "core.copyist",
+   "category": "core",
+   "ja": "写し手",
+   "en": "Copyist",
+   "zh-Hans": "抄录者",
+   "zh-Hant": "抄錄者",
+   "ko": "필사자",
+   "note": "Archive agents who copy (and blank) murals/records."
+  },
+  {
+   "id": "core.still_night",
+   "category": "core",
+   "ja": "静夜会",
+   "en": "Order of the Still Night",
+   "zh-Hans": "静夜会",
+   "zh-Hant": "靜夜會",
+   "ko": "정야회"
+  },
+  {
+   "id": "core.lampkeeper",
+   "category": "core",
+   "ja": "灯守",
+   "en": "Lampkeeper",
+   "zh-Hans": "守灯人",
+   "zh-Hant": "守燈人",
+   "ko": "등지기",
+   "note": "灯守組合 = Lampkeepers' Guild."
+  },
+  {
+   "id": "core.spellstone",
+   "category": "core",
+   "ja": "魔石",
+   "en": "Spellstone",
+   "zh-Hans": "魔石",
+   "zh-Hant": "魔石",
+   "ko": "마석",
+   "note": "Style rule: avoid '魔法'. EN avoids 'magic' in system terms."
+  },
+  {
+   "id": "core.tech",
+   "category": "core",
+   "ja": "技",
+   "en": "Art",
+   "zh-Hans": "技",
+   "zh-Hant": "技",
+   "ko": "기술",
+   "note": "Weapon techniques (R.DB.techs). Menu: Arts."
+  },
+  {
+   "id": "core.spell",
+   "category": "core",
+   "ja": "術",
+   "en": "Spell",
+   "zh-Hans": "术",
+   "zh-Hant": "術",
+   "ko": "술법",
+   "note": "R.DB.spells. Pair/Triple spells = Duo Spell / Trio Spell."
+  },
+  {
+   "id": "core.gokui",
+   "category": "core",
+   "ja": "極意",
+   "en": "Secret Art",
+   "zh-Hans": "极意",
+   "zh-Hant": "極意",
+   "ko": "극의"
+  },
+  {
+   "id": "core.ougi",
+   "category": "core",
+   "ja": "奥義",
+   "en": "Ultimate Art",
+   "zh-Hans": "奥义",
+   "zh-Hant": "奧義",
+   "ko": "오의"
+  },
+  {
+   "id": "core.passphrase",
+   "category": "core",
+   "ja": "冒険の合言葉",
+   "en": "Adventure Passphrase",
+   "zh-Hans": "冒险口令",
+   "zh-Hant": "冒險口令",
+   "ko": "모험의 암호"
+  },
+  {
+   "id": "core.tip_card",
+   "category": "core",
+   "ja": "説明の札",
+   "en": "Tip",
+   "zh-Hans": "说明卡",
+   "zh-Hant": "說明卡",
+   "ko": "설명 카드",
+   "note": "Tutorial cards (R.DB.tips)."
+  },
+  {
+   "id": "core.gold",
+   "category": "core",
+   "ja": "ゴールド（G）",
+   "en": "Gold (G)",
+   "zh-Hans": "金币（G）",
+   "zh-Hant": "金幣（G）",
+   "ko": "골드(G)",
+   "note": "Currency suffix stays 'G' in all languages."
+  },
+  {
+   "id": "stats.str",
+   "category": "stats",
+   "ja": "腕力",
+   "en": "Strength (STR)",
+   "zh-Hans": "力量",
+   "zh-Hant": "力量",
+   "ko": "힘"
+  },
+  {
+   "id": "stats.vit",
+   "category": "stats",
+   "ja": "体力",
+   "en": "Vitality (VIT)",
+   "zh-Hans": "体力",
+   "zh-Hant": "體力",
+   "ko": "체력"
+  },
+  {
+   "id": "stats.dex",
+   "category": "stats",
+   "ja": "器用さ",
+   "en": "Dexterity (DEX)",
+   "zh-Hans": "灵巧",
+   "zh-Hant": "靈巧",
+   "ko": "재주"
+  },
+  {
+   "id": "stats.agi",
+   "category": "stats",
+   "ja": "素早さ",
+   "en": "Agility (AGI)",
+   "zh-Hans": "敏捷",
+   "zh-Hant": "敏捷",
+   "ko": "민첩"
+  },
+  {
+   "id": "stats.int",
+   "category": "stats",
+   "ja": "知力",
+   "en": "Intellect (INT)",
+   "zh-Hans": "智力",
+   "zh-Hant": "智力",
+   "ko": "지력"
+  },
+  {
+   "id": "stats.mnd",
+   "category": "stats",
+   "ja": "精神",
+   "en": "Spirit (SPR)",
+   "zh-Hans": "精神",
+   "zh-Hant": "精神",
+   "ko": "정신"
+  },
+  {
+   "id": "stats.hp",
+   "category": "stats",
+   "ja": "HP",
+   "en": "HP",
+   "zh-Hans": "HP",
+   "zh-Hant": "HP",
+   "ko": "HP"
+  },
+  {
+   "id": "stats.mp",
+   "category": "stats",
+   "ja": "MP",
+   "en": "MP",
+   "zh-Hans": "MP",
+   "zh-Hant": "MP",
+   "ko": "MP"
+  },
+  {
+   "id": "stats.atk",
+   "category": "stats",
+   "ja": "攻撃力",
+   "en": "Attack",
+   "zh-Hans": "攻击力",
+   "zh-Hant": "攻擊力",
+   "ko": "공격력"
+  },
+  {
+   "id": "stats.mag",
+   "category": "stats",
+   "ja": "術力",
+   "en": "Spell Power",
+   "zh-Hans": "术力",
+   "zh-Hant": "術力",
+   "ko": "술력"
+  },
+  {
+   "id": "stats.def",
+   "category": "stats",
+   "ja": "防御",
+   "en": "Defense",
+   "zh-Hans": "防御",
+   "zh-Hant": "防禦",
+   "ko": "방어"
+  },
+  {
+   "id": "stats.mdef",
+   "category": "stats",
+   "ja": "術防",
+   "en": "Spell Defense",
+   "zh-Hans": "术防",
+   "zh-Hant": "術防",
+   "ko": "술법 방어"
+  },
+  {
+   "id": "elements.fire",
+   "category": "elements",
+   "ja": "火",
+   "en": "Fire",
+   "zh-Hans": "火",
+   "zh-Hant": "火",
+   "ko": "불"
+  },
+  {
+   "id": "elements.water",
+   "category": "elements",
+   "ja": "水",
+   "en": "Water",
+   "zh-Hans": "水",
+   "zh-Hant": "水",
+   "ko": "물"
+  },
+  {
+   "id": "elements.wind",
+   "category": "elements",
+   "ja": "風",
+   "en": "Wind",
+   "zh-Hans": "风",
+   "zh-Hant": "風",
+   "ko": "바람"
+  },
+  {
+   "id": "elements.earth",
+   "category": "elements",
+   "ja": "土",
+   "en": "Earth",
+   "zh-Hans": "土",
+   "zh-Hant": "土",
+   "ko": "땅"
+  },
+  {
+   "id": "elements.light",
+   "category": "elements",
+   "ja": "光",
+   "en": "Light",
+   "zh-Hans": "光",
+   "zh-Hant": "光",
+   "ko": "빛"
+  },
+  {
+   "id": "elements.dark",
+   "category": "elements",
+   "ja": "闇",
+   "en": "Dark",
+   "zh-Hans": "暗",
+   "zh-Hant": "闇",
+   "ko": "어둠"
+  },
+  {
+   "id": "elements.ice",
+   "category": "elements",
+   "ja": "氷",
+   "en": "Ice",
+   "zh-Hans": "冰",
+   "zh-Hant": "冰",
+   "ko": "얼음",
+   "note": "Proficiency category."
+  },
+  {
+   "id": "elements.thunder",
+   "category": "elements",
+   "ja": "雷",
+   "en": "Thunder",
+   "zh-Hans": "雷",
+   "zh-Hant": "雷",
+   "ko": "번개",
+   "note": "Proficiency category."
+  },
+  {
+   "id": "elements.heal",
+   "category": "elements",
+   "ja": "癒し",
+   "en": "Healing",
+   "zh-Hans": "治愈",
+   "zh-Hant": "治癒",
+   "ko": "치유",
+   "note": "Proficiency category."
+  },
+  {
+   "id": "weapons.sword",
+   "category": "weapons",
+   "ja": "剣",
+   "en": "Sword",
+   "zh-Hans": "剑",
+   "zh-Hant": "劍",
+   "ko": "검"
+  },
+  {
+   "id": "weapons.greatsword",
+   "category": "weapons",
+   "ja": "大剣",
+   "en": "Greatsword",
+   "zh-Hans": "大剑",
+   "zh-Hant": "大劍",
+   "ko": "대검"
+  },
+  {
+   "id": "weapons.dagger",
+   "category": "weapons",
+   "ja": "短剣",
+   "en": "Dagger",
+   "zh-Hans": "短剑",
+   "zh-Hant": "短劍",
+   "ko": "단검"
+  },
+  {
+   "id": "weapons.bow",
+   "category": "weapons",
+   "ja": "弓",
+   "en": "Bow",
+   "zh-Hans": "弓",
+   "zh-Hant": "弓",
+   "ko": "활"
+  },
+  {
+   "id": "weapons.staff",
+   "category": "weapons",
+   "ja": "杖",
+   "en": "Staff",
+   "zh-Hans": "杖",
+   "zh-Hant": "杖",
+   "ko": "지팡이"
+  },
+  {
+   "id": "weapons.unarmed",
+   "category": "weapons",
+   "ja": "素手",
+   "en": "Unarmed",
+   "zh-Hans": "空手",
+   "zh-Hant": "空手",
+   "ko": "맨손"
+  },
+  {
+   "id": "weapons.shield",
+   "category": "weapons",
+   "ja": "盾",
+   "en": "Shield",
+   "zh-Hans": "盾",
+   "zh-Hant": "盾",
+   "ko": "방패"
+  },
+  {
+   "id": "status.poison",
+   "category": "status",
+   "ja": "毒",
+   "en": "Poison",
+   "zh-Hans": "中毒",
+   "zh-Hant": "中毒",
+   "ko": "독"
+  },
+  {
+   "id": "status.burn",
+   "category": "status",
+   "ja": "やけど",
+   "en": "Burn",
+   "zh-Hans": "烧伤",
+   "zh-Hant": "燒傷",
+   "ko": "화상"
+  },
+  {
+   "id": "status.sleep",
+   "category": "status",
+   "ja": "眠り",
+   "en": "Sleep",
+   "zh-Hans": "睡眠",
+   "zh-Hant": "睡眠",
+   "ko": "수면"
+  },
+  {
+   "id": "status.paralyze",
+   "category": "status",
+   "ja": "まひ",
+   "en": "Paralysis",
+   "zh-Hans": "麻痹",
+   "zh-Hant": "麻痺",
+   "ko": "마비"
+  },
+  {
+   "id": "status.freeze",
+   "category": "status",
+   "ja": "凍結",
+   "en": "Frozen",
+   "zh-Hans": "冻结",
+   "zh-Hant": "凍結",
+   "ko": "동결"
+  },
+  {
+   "id": "status.stun",
+   "category": "status",
+   "ja": "気絶",
+   "en": "Stun",
+   "zh-Hans": "昏厥",
+   "zh-Hant": "昏厥",
+   "ko": "기절"
+  },
+  {
+   "id": "status.confuse",
+   "category": "status",
+   "ja": "混乱",
+   "en": "Confusion",
+   "zh-Hans": "混乱",
+   "zh-Hant": "混亂",
+   "ko": "혼란"
+  },
+  {
+   "id": "status.silence",
+   "category": "status",
+   "ja": "沈黙",
+   "en": "Silence",
+   "zh-Hans": "沉默",
+   "zh-Hant": "沉默",
+   "ko": "침묵"
+  },
+  {
+   "id": "status.blind",
+   "category": "status",
+   "ja": "暗闇",
+   "en": "Blind",
+   "zh-Hans": "失明",
+   "zh-Hant": "失明",
+   "ko": "실명"
+  },
+  {
+   "id": "status.death",
+   "category": "status",
+   "ja": "即死",
+   "en": "Instant Death",
+   "zh-Hans": "即死",
+   "zh-Hant": "即死",
+   "ko": "즉사"
+  },
+  {
+   "id": "status.regen",
+   "category": "status",
+   "ja": "再生",
+   "en": "Regen",
+   "zh-Hans": "再生",
+   "zh-Hant": "再生",
+   "ko": "재생"
+  },
+  {
+   "id": "status.veil",
+   "category": "status",
+   "ja": "加護",
+   "en": "Ward",
+   "zh-Hans": "加护",
+   "zh-Hant": "加護",
+   "ko": "가호"
+  },
+  {
+   "id": "status.counter",
+   "category": "status",
+   "ja": "反撃の構え",
+   "en": "Counter Stance",
+   "zh-Hans": "反击架势",
+   "zh-Hant": "反擊架勢",
+   "ko": "반격 자세"
+  },
+  {
+   "id": "status.nimble",
+   "category": "status",
+   "ja": "身軽",
+   "en": "Nimble",
+   "zh-Hans": "轻身",
+   "zh-Hant": "輕身",
+   "ko": "경쾌"
+  },
+  {
+   "id": "status.cover",
+   "category": "status",
+   "ja": "かばう",
+   "en": "Cover",
+   "zh-Hans": "掩护",
+   "zh-Hant": "掩護",
+   "ko": "감싸기"
+  },
+  {
+   "id": "classes.warrior",
+   "category": "classes",
+   "ja": "戦士",
+   "en": "Warrior",
+   "zh-Hans": "战士",
+   "zh-Hant": "戰士",
+   "ko": "전사"
+  },
+  {
+   "id": "classes.ranger",
+   "category": "classes",
+   "ja": "狩人",
+   "en": "Hunter",
+   "zh-Hans": "猎人",
+   "zh-Hant": "獵人",
+   "ko": "사냥꾼"
+  },
+  {
+   "id": "classes.mage",
+   "category": "classes",
+   "ja": "術師",
+   "en": "Spellcaster",
+   "zh-Hans": "术师",
+   "zh-Hant": "術師",
+   "ko": "술사"
+  },
+  {
+   "id": "classes.spellblade",
+   "category": "classes",
+   "ja": "術剣士",
+   "en": "Spellblade",
+   "zh-Hans": "术剑士",
+   "zh-Hant": "術劍士",
+   "ko": "술검사"
+  },
+  {
+   "id": "classes.wanderer",
+   "category": "classes",
+   "ja": "旅人",
+   "en": "Wanderer",
+   "zh-Hans": "旅人",
+   "zh-Hant": "旅人",
+   "ko": "나그네"
+  },
+  {
+   "id": "ui.row_front",
+   "category": "ui",
+   "ja": "前列",
+   "en": "Front Row",
+   "zh-Hans": "前排",
+   "zh-Hant": "前排",
+   "ko": "전열"
+  },
+  {
+   "id": "ui.row_back",
+   "category": "ui",
+   "ja": "後列",
+   "en": "Back Row",
+   "zh-Hans": "后排",
+   "zh-Hant": "後排",
+   "ko": "후열"
+  },
+  {
+   "id": "ui.formation",
+   "category": "ui",
+   "ja": "隊列",
+   "en": "Formation",
+   "zh-Hans": "队列",
+   "zh-Hant": "隊列",
+   "ko": "대열"
+  },
+  {
+   "id": "ui.bestiary",
+   "category": "ui",
+   "ja": "図鑑",
+   "en": "Bestiary",
+   "zh-Hans": "图鉴",
+   "zh-Hant": "圖鑑",
+   "ko": "도감"
+  },
+  {
+   "id": "ui.inn",
+   "category": "ui",
+   "ja": "宿屋",
+   "en": "Inn",
+   "zh-Hans": "旅店",
+   "zh-Hant": "旅店",
+   "ko": "여관"
+  },
+  {
+   "id": "ui.tavern",
+   "category": "ui",
+   "ja": "酒場",
+   "en": "Tavern",
+   "zh-Hans": "酒馆",
+   "zh-Hant": "酒館",
+   "ko": "주점"
+  },
+  {
+   "id": "ui.suspend",
+   "category": "ui",
+   "ja": "中断",
+   "en": "Suspend",
+   "zh-Hans": "中断",
+   "zh-Hant": "中斷",
+   "ko": "중단"
+  },
+  {
+   "id": "ui.autosave",
+   "category": "ui",
+   "ja": "オートセーブ",
+   "en": "Autosave",
+   "zh-Hans": "自动存档",
+   "zh-Hant": "自動存檔",
+   "ko": "자동 저장"
+  },
+  {
+   "id": "regions.prologue",
+   "category": "regions",
+   "ja": "ファロス半島",
+   "en": "Pharos Peninsula",
+   "zh-Hans": "法罗斯半岛",
+   "zh-Hant": "法羅斯半島",
+   "ko": "파로스 반도"
+  },
+  {
+   "id": "regions.r_forest",
+   "category": "regions",
+   "ja": "ヴェルダの森",
+   "en": "Verda Forest",
+   "zh-Hans": "维尔达森林",
+   "zh-Hant": "維爾達森林",
+   "ko": "베르다 숲"
+  },
+  {
+   "id": "regions.r_desert",
+   "category": "regions",
+   "ja": "ザハラ砂漠",
+   "en": "Zahara Desert",
+   "zh-Hans": "扎哈拉沙漠",
+   "zh-Hant": "札哈拉沙漠",
+   "ko": "자하라 사막"
+  },
+  {
+   "id": "regions.r_snow",
+   "category": "regions",
+   "ja": "ノルデン雪原",
+   "en": "Norden Snowfields",
+   "zh-Hans": "诺尔登雪原",
+   "zh-Hant": "諾爾登雪原",
+   "ko": "노르덴 설원"
+  },
+  {
+   "id": "regions.r_marsh",
+   "category": "regions",
+   "ja": "グレイモア湿原",
+   "en": "Graymoor Marsh",
+   "zh-Hans": "格雷摩尔湿原",
+   "zh-Hant": "格雷摩爾濕原",
+   "ko": "그레이모어 습원"
+  },
+  {
+   "id": "regions.r_isles",
+   "category": "regions",
+   "ja": "マレア諸島",
+   "en": "Marea Isles",
+   "zh-Hans": "马雷亚群岛",
+   "zh-Hant": "馬雷亞群島",
+   "ko": "마레아 제도"
+  },
+  {
+   "id": "regions.r_mine",
+   "category": "regions",
+   "ja": "ガルド山地",
+   "en": "Gald Highlands",
+   "zh-Hans": "加尔德山地",
+   "zh-Hant": "加爾德山地",
+   "ko": "갈드 산지"
+  },
+  {
+   "id": "regions.r_ash",
+   "category": "regions",
+   "ja": "灰の荒野",
+   "en": "Ashen Wastes",
+   "zh-Hans": "灰之荒野",
+   "zh-Hant": "灰之荒野",
+   "ko": "잿빛 황야"
+  },
+  {
+   "id": "regions.r_star",
+   "category": "regions",
+   "ja": "オルビス高原",
+   "en": "Orbis Plateau",
+   "zh-Hans": "奥尔比斯高原",
+   "zh-Hant": "奧爾比斯高原",
+   "ko": "오르비스 고원"
+  },
+  {
+   "id": "places.roa",
+   "category": "places",
+   "ja": "ロアの里",
+   "en": "Roa",
+   "zh-Hans": "罗亚村",
+   "zh-Hant": "羅亞村",
+   "ko": "로아 마을",
+   "note": "Hero's home village."
+  },
+  {
+   "id": "places.pharos",
+   "category": "places",
+   "ja": "港町ファロス",
+   "en": "Pharos",
+   "zh-Hans": "法罗斯港",
+   "zh-Hant": "法羅斯港",
+   "ko": "항구 도시 파로스",
+   "note": "EN drops 港町 except in first mention ('the port town of Pharos')."
+  },
+  {
+   "id": "places.lighthouse",
+   "category": "places",
+   "ja": "ファロス灯台",
+   "en": "Pharos Lighthouse",
+   "zh-Hans": "法罗斯灯塔",
+   "zh-Hant": "法羅斯燈塔",
+   "ko": "파로스 등대"
+  },
+  {
+   "id": "places.fern",
+   "category": "places",
+   "ja": "森の村フェルン",
+   "en": "Fern",
+   "zh-Hans": "森林村落芬恩",
+   "zh-Hant": "森林村落芬恩",
+   "ko": "숲 마을 펀"
+  },
+  {
+   "id": "places.yura",
+   "category": "places",
+   "ja": "隠れ里ユラ",
+   "en": "Yura, the Hidden Village",
+   "zh-Hans": "隐村尤拉",
+   "zh-Hant": "隱村尤拉",
+   "ko": "숨은 마을 유라"
+  },
+  {
+   "id": "places.verda",
+   "category": "places",
+   "ja": "迷いの森",
+   "en": "Wandering Woods",
+   "zh-Hans": "迷失之森",
+   "zh-Hant": "迷失之森",
+   "ko": "미혹의 숲"
+  },
+  {
+   "id": "places.elder",
+   "category": "places",
+   "ja": "千年樹",
+   "en": "Millennial Tree",
+   "zh-Hans": "千年树",
+   "zh-Hant": "千年樹",
+   "ko": "천년수"
+  },
+  {
+   "id": "places.caldera",
+   "category": "places",
+   "ja": "炎の町カルデラ",
+   "en": "Caldera",
+   "zh-Hans": "炎之城卡尔德拉",
+   "zh-Hant": "炎之城卡爾德拉",
+   "ko": "불꽃의 도시 칼데라"
+  },
+  {
+   "id": "places.volcano",
+   "category": "places",
+   "ja": "灰の火山",
+   "en": "Ash Volcano",
+   "zh-Hans": "灰之火山",
+   "zh-Hant": "灰之火山",
+   "ko": "잿빛 화산"
+  },
+  {
+   "id": "places.kasim",
+   "category": "places",
+   "ja": "オアシスの町カシム",
+   "en": "Kasim",
+   "zh-Hans": "绿洲之城卡西姆",
+   "zh-Hant": "綠洲之城卡西姆",
+   "ko": "오아시스 도시 카심"
+  },
+  {
+   "id": "places.tomb",
+   "category": "places",
+   "ja": "砂の王墓",
+   "en": "Sand King's Tomb",
+   "zh-Hans": "沙之王墓",
+   "zh-Hant": "沙之王墓",
+   "ko": "모래의 왕묘"
+  },
+  {
+   "id": "places.loch",
+   "category": "places",
+   "ja": "水辺の町ロッホ",
+   "en": "Loch",
+   "zh-Hans": "水边小镇洛赫",
+   "zh-Hant": "水邊小鎮洛赫",
+   "ko": "물가 마을 로흐"
+  },
+  {
+   "id": "places.manor",
+   "category": "places",
+   "ja": "霧の館",
+   "en": "Mist Manor",
+   "zh-Hans": "雾之馆",
+   "zh-Hant": "霧之館",
+   "ko": "안개 저택"
+  },
+  {
+   "id": "places.yule",
+   "category": "places",
+   "ja": "雪の村ユール",
+   "en": "Yule",
+   "zh-Hans": "雪之村尤尔",
+   "zh-Hant": "雪之村尤爾",
+   "ko": "눈의 마을 율"
+  },
+  {
+   "id": "places.peak",
+   "category": "places",
+   "ja": "白竜の峰",
+   "en": "White Dragon Peak",
+   "zh-Hans": "白龙峰",
+   "zh-Hant": "白龍峰",
+   "ko": "백룡의 봉우리"
+  },
+  {
+   "id": "people.arun",
+   "category": "people",
+   "ja": "アルン",
+   "en": "Arun",
+   "zh-Hans": "阿伦",
+   "zh-Hant": "阿倫",
+   "ko": "아룬",
+   "note": "Default hero name (player can rename)."
+  },
+  {
+   "id": "people.berna",
+   "category": "people",
+   "ja": "ベルナ",
+   "en": "Berna",
+   "zh-Hans": "贝尔娜",
+   "zh-Hant": "貝爾娜",
+   "ko": "베르나",
+   "note": "The storyteller mentor."
+  },
+  {
+   "id": "people.selma",
+   "category": "people",
+   "ja": "セルマ",
+   "en": "Selma",
+   "zh-Hans": "塞尔玛",
+   "zh-Hant": "塞爾瑪",
+   "ko": "셀마"
+  },
+  {
+   "id": "people.hagen",
+   "category": "people",
+   "ja": "ハーゲン",
+   "en": "Hagen",
+   "zh-Hans": "哈根",
+   "zh-Hant": "哈根",
+   "ko": "하겐"
+  },
+  {
+   "id": "people.dokka",
+   "category": "people",
+   "ja": "ドッカ",
+   "en": "Dokka",
+   "zh-Hans": "多卡",
+   "zh-Hant": "多卡",
+   "ko": "도카"
+  },
+  {
+   "id": "people.basil",
+   "category": "people",
+   "ja": "バジル",
+   "en": "Basil",
+   "zh-Hans": "巴西尔",
+   "zh-Hant": "巴西爾",
+   "ko": "바질"
+  },
+  {
+   "id": "people.bartolo",
+   "category": "people",
+   "ja": "バルトロ",
+   "en": "Bartolo",
+   "zh-Hans": "巴托罗",
+   "zh-Hant": "巴托羅",
+   "ko": "바르톨로"
+  },
+  {
+   "id": "people.viola",
+   "category": "people",
+   "ja": "ヴィオラ",
+   "en": "Viola",
+   "zh-Hans": "维奥拉",
+   "zh-Hant": "維奧拉",
+   "ko": "비올라"
+  },
+  {
+   "id": "people.shigure",
+   "category": "people",
+   "ja": "シグレ",
+   "en": "Shigure",
+   "zh-Hans": "时雨",
+   "zh-Hant": "時雨",
+   "ko": "시구레",
+   "note": "Japanese-style name: zh uses the kanji 時雨."
+  },
+  {
+   "id": "people.rouga",
+   "category": "people",
+   "ja": "ロウガ",
+   "en": "Rouga",
+   "zh-Hans": "狼牙",
+   "zh-Hant": "狼牙",
+   "ko": "로우가"
+  },
+  {
+   "id": "people.titta",
+   "category": "people",
+   "ja": "ティッタ",
+   "en": "Titta",
+   "zh-Hans": "蒂塔",
+   "zh-Hant": "蒂塔",
+   "ko": "티타"
+  },
+  {
+   "id": "people.brigitta",
+   "category": "people",
+   "ja": "ブリギッタ",
+   "en": "Brigitta",
+   "zh-Hans": "布丽吉塔",
+   "zh-Hant": "布麗吉塔",
+   "ko": "브리기타"
+  },
+  {
+   "id": "people.sylvain",
+   "category": "people",
+   "ja": "シルヴァン",
+   "en": "Sylvain",
+   "zh-Hans": "西尔万",
+   "zh-Hant": "西爾萬",
+   "ko": "실뱅"
+  },
+  {
+   "id": "people.zafira",
+   "category": "people",
+   "ja": "ザフィラ",
+   "en": "Zafira",
+   "zh-Hans": "扎菲拉",
+   "zh-Hant": "札菲拉",
+   "ko": "자피라"
+  },
+  {
+   "id": "people.ferno",
+   "category": "people",
+   "ja": "フェルノ",
+   "en": "Ferno",
+   "zh-Hans": "费尔诺",
+   "zh-Hant": "費爾諾",
+   "ko": "페르노"
+  },
+  {
+   "id": "people.belladonna",
+   "category": "people",
+   "ja": "ベラドナ",
+   "en": "Belladonna",
+   "zh-Hans": "贝拉多娜",
+   "zh-Hant": "貝拉多娜",
+   "ko": "벨라도나"
+  },
+  {
+   "id": "people.boden",
+   "category": "people",
+   "ja": "ボーデン",
+   "en": "Boden",
+   "zh-Hans": "博登",
+   "zh-Hant": "博登",
+   "ko": "보덴"
+  },
+  {
+   "id": "people.teo",
+   "category": "people",
+   "ja": "テオ",
+   "en": "Teo",
+   "zh-Hans": "提奥",
+   "zh-Hant": "提奧",
+   "ko": "테오"
+  },
+  {
+   "id": "people.ilse",
+   "category": "people",
+   "ja": "イルゼ",
+   "en": "Ilse",
+   "zh-Hans": "伊尔泽",
+   "zh-Hant": "伊爾澤",
+   "ko": "일제"
+  },
+  {
+   "id": "people.morga",
+   "category": "people",
+   "ja": "モルガ",
+   "en": "Morga",
+   "zh-Hans": "莫尔加",
+   "zh-Hant": "莫爾加",
+   "ko": "모르가"
+  },
+  {
+   "id": "people.marta",
+   "category": "people",
+   "ja": "マルタ",
+   "en": "Marta",
+   "zh-Hans": "玛尔塔",
+   "zh-Hant": "瑪爾塔",
+   "ko": "마르타"
+  },
+  {
+   "id": "people.noela",
+   "category": "people",
+   "ja": "ノエラ",
+   "en": "Noela",
+   "zh-Hans": "诺艾拉",
+   "zh-Hant": "諾艾拉",
+   "ko": "노엘라"
+  }
+ ]
+}

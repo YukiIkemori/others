@@ -7,7 +7,7 @@
     const { g, door } = K.room(12, 9);
     K.rect(g, 4, 5, 4, 2, 'c');
     K.def('hut', {
-      name: 'きこりの休み小屋', kind: 'interior', optional: true, region: 'r_forest', location: 'hut',
+      name: R.T('map.optional_hut.hut.name'), kind: 'interior', optional: true, region: 'r_forest', location: 'hut',
       legend: K.ROOM_LEGEND('wall_wood', 'wood_floor'),
       rows: g, outside: 'forest_dark',
       objects: R.ContentP.kit.furnish([      // 家具は文字の絵（prologue_00_kit.js）
@@ -28,7 +28,7 @@
       triggers: [{ id: 'arrive', on: 'enter', event: 'hut_arrive', once: true }],
       light: { ambient: '#7a6c90', k: 0.7, mood: 'interior' },
       bgm: 'village',
-      meta: { minimap: false, sub: '森の街道の脇' },
+      meta: { minimap: false, sub: R.T('map.optional_hut.hut.meta.sub') },
     });
   });
 })(window.RPG);

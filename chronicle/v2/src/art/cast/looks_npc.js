@@ -15,39 +15,39 @@
   };
   const T = {};
   // --- 物語の人（顔あり）
-  T.berna = { name: 'ベルナ', body: f('normal', 'old'), skin: 'fair', eyes: '#5a4a3a', hair: { style: 'bun', color: '#b8b0a8', ears: 'hidden' },
+  T.berna = { name: R.T('art.looks_npc.berna.name'), body: f('normal', 'old'), skin: 'fair', eyes: '#5a4a3a', hair: { style: 'bun', color: '#b8b0a8', ears: 'hidden' },
     outfit: { type: 'coat', main: '#7a3c34', sub: '#e0d4bc', trim: '#c8a860' }, mantle: '#4a3a44', extras: ['glasses'], silhouette: 'bun_glasses' };
-  T.rowell = { name: 'ロウェル', body: m('slim'), skin: 'fair', eyes: '#3a4a5a', hair: { style: 'swept', color: '#3a3440', ears: 'hidden' },
+  T.rowell = { name: R.T('art.looks_npc.rowell.name'), body: m('slim'), skin: 'fair', eyes: '#3a4a5a', hair: { style: 'swept', color: '#3a3440', ears: 'hidden' },
     outfit: { type: 'robe', main: '#2c3a54', sub: '#1c2436', trim: '#c8b070' }, mantle: { color: '#262c40', long: true }, extras: ['glasses'], silhouette: 'swept' };
-  T.fine = { name: 'フィーネ', body: f('slim', 'youth'), skin: 'pale', eyes: '#6a7a8a', hair: { style: 'long', color: '#c8ccd4', ears: 'hidden' },
+  T.fine = { name: R.T('art.looks_npc.fine.name'), body: f('slim', 'youth'), skin: 'pale', eyes: '#6a7a8a', hair: { style: 'long', color: '#c8ccd4', ears: 'hidden' },
     outfit: { type: 'coat', main: '#6a6c74', sub: '#4a4c54', trim: '#a8aab0' }, mantle: { color: '#5c5e66', long: true }, headwear: { type: 'hood', color: '#5c5e66' }, silhouette: 'grey_hood' };
-  T.otto = { name: 'オットー', body: m('sturdy', 'old'), skin: 'tan', eyes: '#3a4a5a', hair: { style: 'crop', color: '#d0ccc4', ears: 'hidden' },
+  T.otto = { name: R.T('art.looks_npc.otto.name'), body: m('sturdy', 'old'), skin: 'tan', eyes: '#3a4a5a', hair: { style: 'crop', color: '#d0ccc4', ears: 'hidden' },
     outfit: { type: 'coat', main: '#2c4a64', sub: '#e0d8c4', trim: '#c8a048' }, headwear: { type: 'cap', color: '#2a3a50' }, extras: ['beard'], beard: '#d8d4cc', silhouette: 'cap_beard' };
-  T.elm = { name: 'エルム', body: m('slim', 'old'), skin: 'spirit', eyes: '#a8e0ff', hair: { style: 'long', color: '#c8e4f0', ears: 'elf' },
+  T.elm = { name: R.T('art.looks_npc.elm.name'), body: m('slim', 'old'), skin: 'spirit', eyes: '#a8e0ff', hair: { style: 'long', color: '#c8e4f0', ears: 'elf' },
     outfit: { type: 'robe', main: '#6a9ab8', sub: '#4a7090', trim: '#d8f0ff' }, extras: ['beard'], beard: '#d8ecf4', spirit: true, silhouette: 'spirit' };
   // --- 名前のある町の人（顔あり）
-  T.npc_hanna = { name: 'ハンナ', body: f('normal'), skin: 'fair', eyes: '#4a5a3a', hair: { style: 'ponytail', color: '#8a5a30', ears: 'hidden' },
+  T.npc_hanna = { name: R.T('art.looks_npc.npc_hanna.name'), body: f('normal'), skin: 'fair', eyes: '#4a5a3a', hair: { style: 'ponytail', color: '#8a5a30', ears: 'hidden' },
     outfit: { type: 'tunic', main: '#a05840', sub: '#e8e0cc', trim: '#e0b860' }, headwear: { type: 'bandana', color: '#e8e0cc' }, silhouette: 'bandana_tail' };
-  T.npc_rita = { name: 'リタ', body: f('slim', 'youth'), skin: 'fair', eyes: '#3a5a6a', hair: { style: 'bob', color: '#c89048', ears: 'hidden' },
+  T.npc_rita = { name: R.T('art.looks_npc.npc_rita.name'), body: f('slim', 'youth'), skin: 'fair', eyes: '#3a5a6a', hair: { style: 'bob', color: '#c89048', ears: 'hidden' },
     outfit: { type: 'light', main: '#3c7a8a', sub: '#4a4034', trim: '#e0d0a0' }, silhouette: 'bob' };
-  T.npc_gord = { name: 'ゴード', body: m('sturdy'), skin: 'tan', eyes: '#3a3024', hair: { style: 'short', color: '#4a3020', ears: 'hidden' },
+  T.npc_gord = { name: R.T('art.looks_npc.npc_gord.name'), body: m('sturdy'), skin: 'tan', eyes: '#3a3024', hair: { style: 'short', color: '#4a3020', ears: 'hidden' },
     outfit: { type: 'tunic', main: '#7a4a2c', sub: '#3c4a30', trim: '#a88a50' }, extras: ['beard'], silhouette: 'woodsman_beard' };
-  T.npc_pim_mother = { name: 'ピムの母', body: f('normal'), skin: 'fair', eyes: '#4a3a2c', hair: { style: 'bun', color: '#5a3a24', ears: 'hidden' },
+  T.npc_pim_mother = { name: R.T('art.looks_npc.npc_pim_mother.name'), body: f('normal'), skin: 'fair', eyes: '#4a3a2c', hair: { style: 'bun', color: '#5a3a24', ears: 'hidden' },
     outfit: { type: 'robe', main: '#6a7a4a', sub: '#e0d8c0', trim: '#c89a5a' }, headwear: { type: 'bandana', color: '#c8b890' }, silhouette: 'bun_scarf' };
-  T.npc_pim = { name: 'ピム', body: m('slim', 'short'), skin: 'fair', eyes: '#4a3a2c', hair: { style: 'wild', color: '#6a4228', ears: 'hidden' },
+  T.npc_pim = { name: R.T('art.looks_npc.npc_pim.name'), body: m('slim', 'short'), skin: 'fair', eyes: '#4a3a2c', hair: { style: 'wild', color: '#6a4228', ears: 'hidden' },
     outfit: { type: 'light', main: '#6a8a3c', sub: '#5a4630', trim: '#d8c890' }, silhouette: 'child_wild' };
-  T.npc_hans = { name: 'ハンス', body: m('sturdy'), skin: 'tan', eyes: '#3a3024', hair: { style: 'crop', color: '#7a5a38', ears: 'show' },
+  T.npc_hans = { name: R.T('art.looks_npc.npc_hans.name'), body: m('sturdy'), skin: 'tan', eyes: '#3a3024', hair: { style: 'crop', color: '#7a5a38', ears: 'show' },
     outfit: { type: 'tunic', main: '#5a6a3c', sub: '#4a3a2c', trim: '#a88a50' }, headwear: { type: 'cap', color: '#6a4a30' }, silhouette: 'cap' };
-  T.npc_ben = { name: 'ベン', body: m('normal'), skin: 'fair', eyes: '#3a4a3a', hair: { style: 'spiky', color: '#a8702c', ears: 'hidden' },
+  T.npc_ben = { name: R.T('art.looks_npc.npc_ben.name'), body: m('normal'), skin: 'fair', eyes: '#3a4a3a', hair: { style: 'spiky', color: '#a8702c', ears: 'hidden' },
     outfit: { type: 'tunic', main: '#8a5c30', sub: '#3c4a30', trim: '#c8a860' }, extras: ['beard'], silhouette: 'spiky_beard' };
-  T.npc_roy = { name: 'ロイ', body: m('slim', 'youth'), skin: 'fair', eyes: '#3a4a5a', hair: { style: 'short', color: '#3a2c20', ears: 'hidden' },
+  T.npc_roy = { name: R.T('art.looks_npc.npc_roy.name'), body: m('slim', 'youth'), skin: 'fair', eyes: '#3a4a5a', hair: { style: 'short', color: '#3a2c20', ears: 'hidden' },
     outfit: { type: 'tunic', main: '#4a6a5a', sub: '#4a3a2c', trim: '#c0a060' }, headwear: { type: 'headband', color: '#a8402e' }, silhouette: 'headband' };
   // ファロス（CONTENT-P の依頼）: 灯守組合の油売り・静夜会の説き手（顔は neutral だけ使う）
-  T.npc_tadeo = { name: 'タデオ', body: m('sturdy'), skin: 'tan', eyes: '#4a3a2c', hair: { style: 'short', color: '#5a3c24', ears: 'show' },
+  T.npc_tadeo = { name: R.T('art.looks_npc.npc_tadeo.name'), body: m('sturdy'), skin: 'tan', eyes: '#4a3a2c', hair: { style: 'short', color: '#5a3c24', ears: 'show' },
     outfit: { type: 'coat', main: '#a0582c', sub: '#e0cfa8', trim: '#d8a040' }, headwear: { type: 'cap', color: '#6a4228' }, extras: ['beard'], beard: '#5a3c24', silhouette: 'cap_oilseller' };
-  T.npc_yena = { name: 'イェナ', body: f('slim'), skin: 'fair', eyes: '#5a6a7a', hair: { style: 'long', color: '#4a4454', ears: 'hidden' },
+  T.npc_yena = { name: R.T('art.looks_npc.npc_yena.name'), body: f('slim'), skin: 'fair', eyes: '#5a6a7a', hair: { style: 'long', color: '#4a4454', ears: 'hidden' },
     outfit: { type: 'robe', main: '#5a6a84', sub: '#3c4658', trim: '#b8c0cc' }, mantle: { color: '#4c5a70', long: true }, headwear: { type: 'hood', color: '#4c5a70' }, silhouette: 'blue_hood' };
-  T.npc_yura_elder = { name: 'ユラの長老', body: f('slim', 'old'), skin: 'forest', eyes: '#6a7a5a', hair: { style: 'long', color: '#e0dcd0', ears: 'hidden' },
+  T.npc_yura_elder = { name: R.T('art.looks_npc.npc_yura_elder.name'), body: f('slim', 'old'), skin: 'forest', eyes: '#6a7a5a', hair: { style: 'long', color: '#e0dcd0', ears: 'hidden' },
     outfit: { type: 'robe', main: '#5a6c4c', sub: '#3a4a34', trim: '#d8c890' }, headwear: { type: 'veil', color: '#8a9a78' }, silhouette: 'elder_veil' };
 
   // --- 町の人の型（色の組 1〜4。顔なし）。[体, 髪の型, かぶり物, 服の型, 色の組[main, sub, trim, hair]×4]
@@ -75,8 +75,8 @@
     });
   }
   // 町の人の型の呼び名（話者の名前が npc.name に無いとき）
-  const NAME = { man: '町の人', woman: '町の人', old_m: 'おじいさん', old_f: 'おばあさん', child: '子ども', sailor: '船乗り', merchant: '商人', woodcutter: 'きこり',
-    guard: '兵士', keeper: '店の人', bard: '吟遊詩人', yura_folk: 'ユラの人' };
+  const NAME = { man: R.T('art.looks_npc.NAME.man'), woman: R.T('art.looks_npc.NAME.woman'), old_m: R.T('art.looks_npc.NAME.old_m'), old_f: R.T('art.looks_npc.NAME.old_f'), child: R.T('art.looks_npc.NAME.child'), sailor: R.T('art.looks_npc.NAME.sailor'), merchant: R.T('art.looks_npc.NAME.merchant'), woodcutter: R.T('art.looks_npc.NAME.woodcutter'),
+    guard: R.T('art.looks_npc.NAME.guard'), keeper: R.T('art.looks_npc.NAME.keeper'), bard: R.T('art.looks_npc.NAME.bard'), yura_folk: R.T('art.looks_npc.NAME.yura_folk') };
   for (const id of Object.keys(T)) {
     const mm = /^npc_([a-z_]+)_\d$/.exec(id);
     if (mm && NAME[mm[1]]) T[id].name = NAME[mm[1]];

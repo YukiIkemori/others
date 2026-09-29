@@ -6,16 +6,16 @@
 (function (R) {
   'use strict';
   R.defs('weaponTypes', {
-    sword: { name: '剣', order: 0, twoHanded: false, reach: false, kind: 'slash', icon: 'sword', fx: 'slash', pose: 'slash',
-      desc: '片手持ち。盾と合わせて攻守に強い。' },
-    greatsword: { name: '大剣', order: 1, twoHanded: true, reach: false, kind: 'slash', icon: 'greatsword', fx: 'slash2', pose: 'smash',
-      desc: '両手持ち。大剣・大斧・大槌の重い一撃。' },
-    dagger: { name: '短剣', order: 2, twoHanded: false, reach: false, kind: 'pierce', icon: 'dagger', fx: 'pierce', pose: 'thrust',
-      desc: '器用さで戦う。会心が出やすい。' },
-    bow: { name: '弓', order: 3, twoHanded: true, reach: true, kind: 'pierce', icon: 'bow', fx: 'arrow', pose: 'shoot',
-      desc: '両手持ち。後列から確実に射る。' },
-    staff: { name: '杖', order: 4, twoHanded: false, reach: true, kind: 'blunt', icon: 'staff', fx: 'strike', pose: 'smash',
-      desc: '術力が高く、後列からも届く。' },
+    sword: { name: R.T('weaponTypes.sword.name'), order: 0, twoHanded: false, reach: false, kind: 'slash', icon: 'sword', fx: 'slash', pose: 'slash',
+      desc: R.T('weaponTypes.sword.desc') },
+    greatsword: { name: R.T('weaponTypes.greatsword.name'), order: 1, twoHanded: true, reach: false, kind: 'slash', icon: 'greatsword', fx: 'slash2', pose: 'smash',
+      desc: R.T('weaponTypes.greatsword.desc') },
+    dagger: { name: R.T('weaponTypes.dagger.name'), order: 2, twoHanded: false, reach: false, kind: 'pierce', icon: 'dagger', fx: 'pierce', pose: 'thrust',
+      desc: R.T('weaponTypes.dagger.desc') },
+    bow: { name: R.T('weaponTypes.bow.name'), order: 3, twoHanded: true, reach: true, kind: 'pierce', icon: 'bow', fx: 'arrow', pose: 'shoot',
+      desc: R.T('weaponTypes.bow.desc') },
+    staff: { name: R.T('weaponTypes.staff.name'), order: 4, twoHanded: false, reach: true, kind: 'blunt', icon: 'staff', fx: 'strike', pose: 'smash',
+      desc: R.T('weaponTypes.staff.desc') },
   });
 
   // 技・術をひとつの表 R.DB.actions にもまとめる（今の木の戦闘・閃きのコードが DB.actions を読むため。

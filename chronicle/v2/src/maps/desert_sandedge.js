@@ -64,21 +64,21 @@
     O.push(K.prop('lantern', 19, 11), K.prop('lantern', 21, 11), K.prop('lantern', 17, 24), K.prop('lantern', 22, 24), K.prop('lantern', 9, 12));
     // 壁・根の際の少しの物
     O.push(K.prop('table', 25, 13), K.prop('stool', 26, 13), K.prop('clay_jars', 13, 11), K.prop('cart_barrels', 27, 11), K.prop('sack', 33, 21));
-    O.push(K.sign(23, 26, '宿場「砂の縁」\n北 → ヴェルダの森　南 → カシム\n東の峠 → 灰の荒野（崩れで通れない）'));
+    O.push(K.sign(23, 26, R.T('map.desert_sandedge.sign')));
     O.push(K.exam(15, 10, 'sandedge_notice'));                                   // 石の根に打ちつけた掲示
     O.push(K.chest('sandedge_c1', 5, 19, { item: 'i_potion', n: 2 }));          // 見える宝箱（うまやの隅）
     const N = [
-      K.npc('lotta', 'npc_lotta', 33, 14, { name: '行商人ロッタ', title: '背負い籠の店', dir: 'w', talk: 'sandedge_lotta', pushable: false, reward: 'side' }),
-      K.npc('stall', 'npc_desert_man', 33, 18, { name: '売り台の男', title: '道具', dir: 'w', talk: 'sandedge_shop', pushable: false, reward: null }),
-      K.npc('stable', 'npc_desert_child', 8, 16, { name: 'うまやの子', dir: 'e', talk: 'sandedge_stable', reward: 'news' }),
-      K.npc('camel_a', 'ani_camel', 5, 14, { name: 'ラクダ', dir: 'e', talk: [L('ラクダが、長いまつげの下から\nこちらを見ている。')], reward: null }),
-      K.npc('camel_b', 'ani_camel', 5, 18, { name: 'ラクダ', dir: 'e', talk: [L('ラクダは、干し草を\nもぐもぐかんでいる。')], reward: null }),
-      K.npc('forest_trav', 'npc_traveler', 14, 16, { name: '森から来た木こり', dir: 'e', talk: 'sandedge_forest_traveler', reward: 'news' }),
-      K.npc('ash_trav', 'npc_ash_fighter', 26, 16, { name: '灰まみれの兵', dir: 'w', talk: 'sandedge_ash_traveler', reward: 'lead' }),
-      K.npc('well_girl', 'npc_desert_child', 21, 18, { name: '水くみの娘', dir: 'n', talk: 'sandedge_well_girl', reward: 'hint' }),
+      K.npc('lotta', 'npc_lotta', 33, 14, { name: R.T('map.desert_sandedge.N.0.lotta.name'), title: R.T('map.desert_sandedge.N.0.lotta.title'), dir: 'w', talk: 'sandedge_lotta', pushable: false, reward: 'side' }),
+      K.npc('stall', 'npc_desert_man', 33, 18, { name: R.T('map.desert_sandedge.N.1.stall.name'), title: R.T('map.desert_sandedge.N.1.stall.title'), dir: 'w', talk: 'sandedge_shop', pushable: false, reward: null }),
+      K.npc('stable', 'npc_desert_child', 8, 16, { name: R.T('map.desert_sandedge.N.2.stable.name'), dir: 'e', talk: 'sandedge_stable', reward: 'news' }),
+      K.npc('camel_a', 'ani_camel', 5, 14, { name: R.T('map.desert_sandedge.N.3.camel_a.name'), dir: 'e', talk: [L(R.T('map.desert_sandedge.N.talk.0.L'))], reward: null }),
+      K.npc('camel_b', 'ani_camel', 5, 18, { name: R.T('map.desert_sandedge.N.4.camel_b.name'), dir: 'e', talk: [L(R.T('map.desert_sandedge.N.talk.0.L_2'))], reward: null }),
+      K.npc('forest_trav', 'npc_traveler', 14, 16, { name: R.T('map.desert_sandedge.N.5.forest_trav.name'), dir: 'e', talk: 'sandedge_forest_traveler', reward: 'news' }),
+      K.npc('ash_trav', 'npc_ash_fighter', 26, 16, { name: R.T('map.desert_sandedge.N.6.ash_trav.name'), dir: 'w', talk: 'sandedge_ash_traveler', reward: 'lead' }),
+      K.npc('well_girl', 'npc_desert_child', 21, 18, { name: R.T('map.desert_sandedge.N.7.well_girl.name'), dir: 'n', talk: 'sandedge_well_girl', reward: 'hint' }),
     ];
     K.def('sandedge', {
-      name: '宿場「砂の縁」', kind: 'town', region: 'r_desert', location: 'sandedge', theme: 'desert_town',
+      name: R.T('map.desert_sandedge.sandedge.name'), kind: 'town', region: 'r_desert', location: 'sandedge', theme: 'desert_town',
       legend: DK.LEGEND({
         D: { mat: 'dune_sand', solid: true, rise: 1, name: 'dune' },
         P: { mat: 'grass', solid: true, name: 'scrub' },
@@ -89,7 +89,7 @@
       exits: [{ x: 18, y: 29, w: 4, h: 1, to: { map: 'world', spawn: 'sandedge' } }],
       triggers: [{ id: 'arrive', on: 'enter', event: 'sandedge_arrive' }],
       zones: [], light: DK.LIGHT_TOWN, dark: false, bgm: 'kasim', bbg: 'desert',
-      meta: { sub: '石になった大樹の宿場', chestsInfo: false },
+      meta: { sub: R.T('map.desert_sandedge.sandedge.meta.sub'), chestsInfo: false },
       // 宿場ぜんたいを 1 枚に描いた下絵（v2/assets/env/desert/under/sandedge*、design/ENV_ASSETS.md §7）。当たり・戸口・人・灯り・物は上のデータ
       art: { image: 'desert/under/sandedge', emit: 'desert/under/sandedge_emit', painted: [] },
     });
@@ -98,7 +98,7 @@
     const { g: gi, door } = K.room(18, 12, {});
     K.rect(gi, 3, 6, 6, 3, 'c'); K.rect(gi, 12, 5, 4, 3, 'c');
     K.def('sandedge_inn', {
-      name: '砂の縁の宿', kind: 'interior', region: 'r_desert', location: 'sandedge',
+      name: R.T('map.desert_sandedge.sandedge_inn.name'), kind: 'interior', region: 'r_desert', location: 'sandedge',
       legend: K.ROOM_LEGEND('wall_sandstone', 'sandstone_floor'), rows: gi, outside: 'wall_sandstone',
       objects: [
         K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('shelf_jars', 1, 2), K.prop('barrel', 7, 2),
@@ -106,9 +106,9 @@
         K.prop('lantern', 9, 2), K.prop('lantern', 16, 8), K.prop('clay_jars', 1, 9), K.prop('rug_roll', 16, 5), K.prop('house_plant', 10, 9),
       ],
       npcs: [
-        K.npc('keeper', 'npc_desert_old_m', 4, 2, { name: '宿の主人', title: '砂の縁', dir: 's', talk: 'sandedge_innkeeper', pushable: false, reward: null }),
-        K.npc('drinker', 'npc_caravan', 7, 8, { name: '隊商の男', dir: 'n', talk: 'sandedge_rumor', reward: 'lead' }),
-        K.npc('bard', 'npc_bard', 14, 7, { name: '旅の楽士', dir: 'w', talk: 'sandedge_bard', reward: 'news' }),
+        K.npc('keeper', 'npc_desert_old_m', 4, 2, { name: R.T('map.desert_sandedge.sandedge_inn.npcs.0.keeper.name'), title: R.T('map.desert_sandedge.sandedge_inn.npcs.0.keeper.title'), dir: 's', talk: 'sandedge_innkeeper', pushable: false, reward: null }),
+        K.npc('drinker', 'npc_caravan', 7, 8, { name: R.T('map.desert_sandedge.sandedge_inn.npcs.1.drinker.name'), dir: 'n', talk: 'sandedge_rumor', reward: 'lead' }),
+        K.npc('bard', 'npc_bard', 14, 7, { name: R.T('map.desert_sandedge.sandedge_inn.npcs.2.bard.name'), dir: 'w', talk: 'sandedge_bard', reward: 'news' }),
       ],
       spawns: { door: { x: door.x, y: 10, dir: 'n' } },
       exits: [{ x: door.x, y: 11, w: 1, h: 1, to: { map: 'sandedge', spawn: 'inn' } }],

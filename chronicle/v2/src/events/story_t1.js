@@ -10,12 +10,8 @@
   const X = () => R.ContentP.ev;
 
   R.def('letters', 'berna_t1', {
-    from: 'ベルナ', title: '師匠からの手紙', face: 'berna:smile',
-    text: [
-      '第一章、おめでとう。\nあなたの声は、きっと\nあの土地の人たちに届いたよ。',
-      'ただね、里の語り石の文字が\nまた一つ消えたの。',
-      '急がなくていい。でも、\n立ち止まらないで。',
-    ],
+    from: R.T('letters.berna_t1.from'), title: R.T('letters.berna_t1.title'), face: 'berna:smile',
+    text: R.T('letters.berna_t1.text'),
   });
 
   // 体験版の終わり（DB.config.slice の間だけ。T1 の場面の後に 1 回）: 前置き・お礼・記録の案内・引き継ぎの記録・終わりの画面 → タイトル。
@@ -29,23 +25,23 @@
     meta: { needs: ['cleared:r_forest'], gives: ['flag:story_t1', 'lead:l_main_margin_1', 'flag:world_demo_end'] },
     run: async (ev) => {
       const E = X();
-      await E.narr(ev, '{hero}に、師匠ベルナから\n手紙が届いていた。');
+      await E.narr(ev, R.T('ev.story_t1.run.narr'));
       try { R.Audio.sfx('page'); } catch (e) { /* */ }
       await ev.letter('berna_t1');
       R.Audio.pushBgm('fine_theme');
       try {
-        await E.narr(ev, '手紙をたたむと、灯りの下に\n灰色のマントの少女が\n立っていた。');
-        const o = { name: '灰色のマントの少女' };
-        await ev.say('fine', '一つ目……。\nあと、七つね。', Object.assign({ voice: 'v_fine_t1_01', face: 'fine:smile' }, o));
-        await ev.say('fine', 'わたし？　ただの、\n通りすがりよ。', Object.assign({ voice: 'v_fine_t1_02', face: 'fine:neutral' }, o));
+        await E.narr(ev, R.T('ev.story_t1.run.narr_2'));
+        const o = { name: R.T('ev.story_t1.run.o.name') };
+        await ev.say('fine', R.T('ev.story_t1.run.say'), Object.assign({ voice: 'v_fine_t1_01', face: 'fine:smile' }, o));
+        await ev.say('fine', R.T('ev.story_t1.run.say_2'), Object.assign({ voice: 'v_fine_t1_02', face: 'fine:neutral' }, o));
         try { R.Audio.sfx('magic'); R.Field.flash('#e8ecff', 300); } catch (e) { /* */ }
-        await E.narr(ev, '少女の姿は、灯りの中に\n溶けるように消えた。');
+        await E.narr(ev, R.T('ev.story_t1.run.narr_3'));
       } finally { R.Audio.popBgm(); }
       ev.setFlag('story_t1');
       // 手がかり帳の余白（STORY_BIBLE §4.1-3・§4.3 の灯の数 1）。羽ペンの音とともに書き足される
       try { R.Audio.sfx('quill'); } catch (e) { /* */ }
       ev.lead('l_main_margin_1');
-      await E.narr(ev, '手がかり帳の余白に、\nひとりでに一行が書き足された。');
+      await E.narr(ev, R.T('ev.story_t1.run.narr_4'));
       await demoEnd(ev);
       // TODO(MENUS・EVENTS): 手がかり帳の「余白」のページ（STORY_BIBLE §12.2 の R.DB.margin）ができたら、l_main_margin_1 をそちらへ移す。
     },

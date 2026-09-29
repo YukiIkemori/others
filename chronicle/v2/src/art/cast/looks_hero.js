@@ -15,26 +15,26 @@
   }
   R.defs('looks', {
     // --- 男
-    hero_m_warrior: hero('m', { name: '旅の剣士', hair: { style: 'spiky', color: '#b89c7c', ears: 'hidden' },
+    hero_m_warrior: hero('m', { name: R.T('looks.hero_m_warrior.m.name'), hair: { style: 'spiky', color: '#b89c7c', ears: 'hidden' },
       outfit: { type: 'coat', main: '#3a4458', sub: '#b8a888', trim: '#8a6a44' }, pauldron: true, hue: 220, silhouette: 'spiky' }),
-    hero_m_ranger: hero('m', { spriteOf: 'hero_m_warrior', name: '旅の狩人', hair: { style: 'swept', color: '#a88c6c', ears: 'hidden' },
+    hero_m_ranger: hero('m', { spriteOf: 'hero_m_warrior', name: R.T('looks.hero_m_ranger.m.name'), hair: { style: 'swept', color: '#a88c6c', ears: 'hidden' },
       outfit: { type: 'light', main: '#4a5e3a', sub: '#5a4a38', trim: '#a08a5c' }, mantle: '#3e4a34', headwear: { type: 'hood', color: '#4a5a3c' }, hue: 95, silhouette: 'hood' }),
-    hero_m_mage: hero('m', { spriteOf: 'hero_m_warrior', name: '旅の術師', hair: { style: 'short', color: '#b89c7c', ears: 'hidden' },
+    hero_m_mage: hero('m', { spriteOf: 'hero_m_warrior', name: R.T('looks.hero_m_mage.m.name'), hair: { style: 'short', color: '#b89c7c', ears: 'hidden' },
       outfit: { type: 'robe', main: '#3c3e6c', sub: '#2c2c48', trim: '#b89a5c' }, hue: 238, silhouette: 'short' }),
-    hero_m_spellblade: hero('m', { spriteOf: 'hero_m_warrior', name: '旅の術剣士', hair: { style: 'wild', color: '#a8906c', ears: 'hidden' },
+    hero_m_spellblade: hero('m', { spriteOf: 'hero_m_warrior', name: R.T('looks.hero_m_spellblade.m.name'), hair: { style: 'wild', color: '#a8906c', ears: 'hidden' },
       outfit: { type: 'coat', main: '#2e5a60', sub: '#3a3a44', trim: '#c0a060' }, mantle: '#2a3a44', hue: 186, silhouette: 'wild' }),
-    hero_m_wanderer: hero('m', { spriteOf: 'hero_m_warrior', name: '旅人', hair: { style: 'tail', color: '#a88c6c', ears: 'hidden' },
+    hero_m_wanderer: hero('m', { spriteOf: 'hero_m_warrior', name: R.T('looks.hero_m_wanderer.m.name'), hair: { style: 'tail', color: '#a88c6c', ears: 'hidden' },
       outfit: { type: 'tunic', main: '#6a5238', sub: '#4a4034', trim: '#a88c5c' }, mantle: { color: '#5a4a3a', long: true }, hue: 32, silhouette: 'tail' }),
     // --- 女
-    hero_f_warrior: hero('f', { name: '旅の剣士', hair: { style: 'ponytail', color: '#b89c7c', ears: 'hidden' },
+    hero_f_warrior: hero('f', { name: R.T('looks.hero_f_warrior.f.name'), hair: { style: 'ponytail', color: '#b89c7c', ears: 'hidden' },
       outfit: { type: 'coat', main: '#3a4458', sub: '#b8a888', trim: '#8a6a44' }, pauldron: true, hue: 220, silhouette: 'ponytail' }),
-    hero_f_ranger: hero('f', { spriteOf: 'hero_f_warrior', name: '旅の狩人', hair: { style: 'braid', color: '#a88c6c', ears: 'hidden' },
+    hero_f_ranger: hero('f', { spriteOf: 'hero_f_warrior', name: R.T('looks.hero_f_ranger.f.name'), hair: { style: 'braid', color: '#a88c6c', ears: 'hidden' },
       outfit: { type: 'light', main: '#4a5e3a', sub: '#5a4a38', trim: '#a08a5c' }, mantle: '#3e4a34', hue: 95, silhouette: 'braid' }),
-    hero_f_mage: hero('f', { spriteOf: 'hero_f_warrior', name: '旅の術師', hair: { style: 'long', color: '#b89c7c', ears: 'hidden' },
+    hero_f_mage: hero('f', { spriteOf: 'hero_f_warrior', name: R.T('looks.hero_f_mage.f.name'), hair: { style: 'long', color: '#b89c7c', ears: 'hidden' },
       outfit: { type: 'robe', main: '#3c3e6c', sub: '#2c2c48', trim: '#b89a5c' }, hue: 238, silhouette: 'long' }),
-    hero_f_spellblade: hero('f', { spriteOf: 'hero_f_warrior', name: '旅の術剣士', hair: { style: 'bob', color: '#a8906c', ears: 'hidden' },
+    hero_f_spellblade: hero('f', { spriteOf: 'hero_f_warrior', name: R.T('looks.hero_f_spellblade.f.name'), hair: { style: 'bob', color: '#a8906c', ears: 'hidden' },
       outfit: { type: 'coat', main: '#2e5a60', sub: '#3a3a44', trim: '#c0a060' }, mantle: '#2a3a44', hue: 186, silhouette: 'bob' }),
-    hero_f_wanderer: hero('f', { spriteOf: 'hero_f_warrior', name: '旅人', hair: { style: 'bun', color: '#a88c6c', ears: 'hidden' },
+    hero_f_wanderer: hero('f', { spriteOf: 'hero_f_warrior', name: R.T('looks.hero_f_wanderer.f.name'), hair: { style: 'bun', color: '#a88c6c', ears: 'hidden' },
       outfit: { type: 'tunic', main: '#6a5238', sub: '#4a4034', trim: '#a88c5c' }, mantle: { color: '#5a4a3a', long: true }, hue: 32, silhouette: 'bun' }),
   });
 })(window.RPG);

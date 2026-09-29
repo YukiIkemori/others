@@ -12,8 +12,8 @@
   // TODO(オーナー): Steam のストアのページができたら、ここに URL を入れる（例 'https://store.steampowered.com/app/<AppID>/'）。
   //   空のままなら終わりの画面は「Steamでウィッシュリスト登録をお願いします」の一行だけを出す（仮のページは作らない）。
   const STORE_URL = '';
-  const CREDIT = '企画・制作　Studio Metem';
-  const TEASER = '峠の向こうで、残る七つの灯が\n語り部を待っている。';
+  const CREDIT = R.T('ev.demo_end.CREDIT');
+  const TEASER = R.T('ev.demo_end.TEASER');
 
   const Demo = (R.Demo = R.Demo || {});
   Demo.STORE_URL = STORE_URL;
@@ -27,13 +27,13 @@
     ev.setFlag('world_demo_end');
     const G = R.Game;
     // 前置き（世界の中の地の文）
-    await narr(ev, '夜風が、峠のほうから\nかすかな歌を運んできた。');
-    await narr(ev, '残る七つの灯は、\nまだ語られていない土地で\n{hero}を待っている。');
-    await ev.caption('体験版は、ここまでです。\n遊んでくださって、\nありがとうございました。');
-    await narr(ev, '記録から再開すれば、\n森と半島はこのまま\n歩き回れます。');
+    await narr(ev, R.T('ev.demo_end.end.narr'));
+    await narr(ev, R.T('ev.demo_end.end.narr_2'));
+    await ev.caption(R.T('ev.demo_end.end.caption'));
+    await narr(ev, R.T('ev.demo_end.end.narr_3'));
     // 再開で T1 をくり返さない（once の印は場面の終わりに立つので、記録の前に立てておく）
     if (G && G.flags) G.flags.ev_story_t1 = true;
-    const i = await ev.choose(['記録する', 'あとで'], { text: 'ここまでの冒険を、\n記録しますか？', cancel: 1 });
+    const i = await ev.choose(R.T('ev.demo_end.end.i.choose'), { text: R.T('ev.demo_end.end.i.choose.text'), cancel: 1 });
     if (i === 0) { try { await R.Screens.open('save', {}); } catch (e) { /* */ } }
     try { if (R.Save && R.Save.save) R.Save.save('auto'); } catch (e) { /* */ }
     try { if (R.DemoCarry) R.DemoCarry.write(); } catch (e) { console.error(e); }
@@ -50,7 +50,7 @@
   const playTime = (ms) => {
     if (R.Screens && R.Screens.playTimeJa) return R.Screens.playTimeJa(ms);
     const m = Math.floor((ms || 0) / 60000), h = Math.floor(m / 60);
-    return h ? `${h}時間${String(m % 60).padStart(2, '0')}分` : `${m % 60}分`;
+    return h ? R.T('ev.demo_end.playTime.ret', { h, padStart: String(m % 60).padStart(2, '0') }) : R.T('ev.demo_end.playTime.ret_2', { p0: m % 60 });
   };
   let scene = null;
   Demo.isOpen = () => !!scene && R.Engine.stack.includes(scene);
@@ -122,11 +122,11 @@
     }
     const txt = (s, y, o, at) => R.UIK.text(g, s, W / 2, y, Object.assign({ align: 'center', shadow: true, alpha: ease(at, 700) }, o));
     let y = H * 0.29;
-    txt('体験版はここまで', y, { size: u(38), weight: 700, grad: [C.goldHi, C.gold, C.goldLo], track: u(2) }, 500);
+    txt(R.T('ev.demo_end.draw.txt'), y, { size: u(38), weight: 700, grad: [C.goldHi, C.gold, C.goldLo], track: u(2) }, 500);
     y += u(66);
-    txt('遊んでくださって、ありがとうございました。', y, { size: u(18), color: C.text }, 900);
+    txt(R.T('ev.demo_end.draw.txt_2'), y, { size: u(18), color: C.text }, 900);
     y += u(36);
-    txt('プレイ時間　' + playTime(v.playMs), y, { size: u(14), color: C.text2 }, 1100);
+    txt(R.T('ev.demo_end.draw.txt_3', { playTime: playTime(v.playMs) }), y, { size: u(14), color: C.text2 }, 1100);
     // 区切りの線
     y += u(46);
     g.save(); g.globalAlpha = ease(1300, 700) * 0.6;
@@ -137,7 +137,7 @@
     y += u(26);
     for (const line of TEASER.split('\n')) { txt(line, y, { size: u(17), color: C.teal }, 1500); y += u(28); }
     y += u(30);
-    txt('Steamでウィッシュリスト登録をお願いします', y, { size: u(19), weight: 700, color: C.gold }, 1900);
+    txt(R.T('ev.demo_end.draw.txt_4'), y, { size: u(19), weight: 700, color: C.gold }, 1900);
     y += u(34);
     if (STORE_URL) { txt(STORE_URL, y, { size: u(13), color: C.text2, family: 'en' }, 2000); y += u(26); }
     // クレジット（下）
@@ -145,8 +145,8 @@
     if (e > 2600 && !v.done) {
       const a = 0.55 + 0.45 * Math.sin((e - 2600) / 500);
       g.save(); g.globalAlpha = Math.min(1, (e - 2600) / 400) * (0.7 + 0.3 * a);
-      if (R.Screens && R.Screens.prompts) R.Screens.prompts(g, [{ btn: 'a', label: 'タイトルへ' }]);
-      else R.UIK.text(g, 'A　タイトルへ', W - u(24), H - u(30), { align: 'right', size: u(13), color: C.text2 });
+      if (R.Screens && R.Screens.prompts) R.Screens.prompts(g, [{ btn: 'a', label: R.T('ev.demo_end.draw.0.label') }]);
+      else R.UIK.text(g, R.T('ev.demo_end.draw.text'), W - u(24), H - u(30), { align: 'right', size: u(13), color: C.text2 });
       g.restore();
     }
   }

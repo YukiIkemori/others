@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("f_windhill", {
-    name: "風鳴りの丘", region: "r_forest", outside: "forest_dark",
+    name: R.T('map.field_windhill.f_windhill.name'), region: "r_forest", outside: "forest_dark",
     rows: [
       "FTFFFFFTT;;...;;;;;;;;;,T;;;;;;;;;RRRRT..RRRRRRRRRRR",
       "FTFFFFFTT;;..,;;;;;;;;;;;;;;;;;;;;RRRRr..RRRRRRRRRRR",
@@ -54,18 +54,18 @@
     ],
     objects: [
       {"type":"examine","x":34,"y":13,"event":"windhill_notes"},
-      {"type":"sign","x":30,"y":19,"text":"風鳴りの丘\n風が歌のように鳴るという。"},
+      {"type":"sign","x":30,"y":19,"text":R.T('map.field_windhill.f_windhill.objects.1.text')},
       {"type":"examine","x":10,"y":31,"event":"world_poi_forest_statue"},
       {"type":"prop","id":"tent","x":20,"y":13},
       {"type":"prop","id":"lantern","x":22,"y":13},
-      {"type":"sign","x":15,"y":6,"text":"北 → こけの村ユーラ"},
-      {"type":"sign","x":42,"y":6,"text":"北の峠を越えて\n↑ 雪の村ユール"},
+      {"type":"sign","x":15,"y":6,"text":R.T('map.field_windhill.f_windhill.objects.5.text')},
+      {"type":"sign","x":42,"y":6,"text":R.T('map.field_windhill.f_windhill.objects.6.text')},
       {"type":"prop","id":"beacon","x":3,"y":40,"cond":"cleared_r_forest"},
       {"type":"waylamp","id":"wl_15","x":17,"y":25,"lit":true},
       {"type":"chest","id":"f_windhill_c1","x":47,"y":15,"item":"i_ether","n":1},
     ],
     npcs: [
-      {"id":"guard_north","look":"npc_guard_1","name":"番人","x":41,"y":4,"dir":"s","move":"still","pushable":false,"cond":{"slice":true},"talk":{"lines":[{"text":["北の峠は、雪崩で\nふさがってしまったんだ。","雪原へ行くのは、\n雪が落ちつくまで待ってくれ。"]}]},"reward":"news","key":"world_guard_north"},
+      {"id":"guard_north","look":"npc_guard_1","name":R.T('map.field_windhill.f_windhill.guard_north.name'),"x":41,"y":4,"dir":"s","move":"still","pushable":false,"cond":{"slice":true},"talk":{"lines":[{"text":R.T('map.field_windhill.f_windhill.lines.0.text')}]},"reward":"news","key":"world_guard_north"},
     ],
     spawns: {"east":{"x":50,"y":30,"dir":"w"},"yura":{"x":12,"y":2,"dir":"s"},"pass":{"x":39,"y":1,"dir":"s"}},
     exits: [{"x":51,"y":30,"w":1,"h":2,"to":{"map":"f_fern","spawn":"west"}},{"x":12,"y":0,"w":2,"h":1,"to":{"map":"yura","spawn":"gate"}},{"x":39,"y":0,"w":2,"h":1,"to":{"map":"world","spawn":"f_windhill_n"},"cond":{"not":{"slice":true}}}],
@@ -73,7 +73,7 @@
     tilePatches: [{"cond":{"slice":true},"rect":[38,1,4,2],"rows":["rrrr","rrrr"]}],
     zones: [{"rect":null,"zone":"zw_forest"}],
     art: {"image":"field/under/f_windhill","painted":[],"overlay":"field/under/f_windhill_over","closed":"field/under/f_windhill_closed"},
-    meta: {"sub":"ユーラと北の峠への道","worldRect":[40,128,92,124]},
+    meta: {"sub":R.T('map.field_windhill.f_windhill.meta.sub'),"worldRect":[40,128,92,124]},
     links: {"yura":{"map":"f_windhill","spawn":"yura"}},
   });
 })(window.RPG);

@@ -88,7 +88,7 @@
     // ピムの足あと（帽子の片方を持つと光る）: 北の広場から 2 階へ
     O.push({ type: 'trail', id: 'verda_1_pim', path: [[36, 12], [34, 11], [32, 10], [30, 9], [29, 7], [30, 5], [29, 3], [30, 1]], cond: { item: 'k_pim_hat' } });
     // 道しるべ
-    O.push(K.sign(26, 44, '← 西の広場　　東の広場 →\n（文字の半分が、こけに埋もれている）'));
+    O.push(K.sign(26, 44, R.T('map.verda_1.sign')));
 
     // 散らす: 野営地のまわりの蛍ときのこ、広場の石と切り株
     const keep = new Set();
@@ -118,16 +118,16 @@
 
     // ---------------------------------------------------------------- 人（救い出した人は野営地で待つ。STORY_BIBLE §7.1 の 1）
     const N = [
-      K.npc('ben', 'npc_ben', 48, 24, { name: 'ベン', dir: 'w', talk: 'verda_ben', cond: '!forest_found_ben', pushable: false, reward: 'side' }),
-      K.npc('camp_hans', 'npc_hans', 28, 30, { name: 'ハンス', dir: 'e', talk: 'verda_camp_talk', cond: ['forest_found_hans', '!forest_finale_done'], reward: 'news' }),
-      K.npc('camp_ben', 'npc_ben', 29, 32, { name: 'ベン', dir: 'n', talk: 'verda_camp_talk', cond: ['forest_found_ben', '!forest_finale_done'], reward: 'news' }),
-      K.npc('camp_roy', 'npc_roy', 34, 31, { name: 'ロイ', dir: 'w', talk: 'verda_camp_talk', cond: ['forest_found_roy', '!forest_finale_done'], reward: 'news' }),
-      K.npc('camp_pim', 'npc_pim', 32, 29, { name: 'ピム', dir: 's', talk: 'verda_camp_talk', cond: ['forest_found_pim', '!forest_pim_guest', '!forest_finale_done'], reward: 'news' }),
-      K.npc('fawn_after', 'ani_fawn', 47, 41, { name: '花角の小鹿', dir: 'w', talk: 'verda_fawn_after', cond: ['cleared_r_forest', { choice: 'ch_forest_fawn', is: 'heal' }], reward: 'hint' }),
+      K.npc('ben', 'npc_ben', 48, 24, { name: R.T('map.verda_1.N.0.ben.name'), dir: 'w', talk: 'verda_ben', cond: '!forest_found_ben', pushable: false, reward: 'side' }),
+      K.npc('camp_hans', 'npc_hans', 28, 30, { name: R.T('map.verda_1.N.1.camp_hans.name'), dir: 'e', talk: 'verda_camp_talk', cond: ['forest_found_hans', '!forest_finale_done'], reward: 'news' }),
+      K.npc('camp_ben', 'npc_ben', 29, 32, { name: R.T('map.verda_1.N.2.camp_ben.name'), dir: 'n', talk: 'verda_camp_talk', cond: ['forest_found_ben', '!forest_finale_done'], reward: 'news' }),
+      K.npc('camp_roy', 'npc_roy', 34, 31, { name: R.T('map.verda_1.N.3.camp_roy.name'), dir: 'w', talk: 'verda_camp_talk', cond: ['forest_found_roy', '!forest_finale_done'], reward: 'news' }),
+      K.npc('camp_pim', 'npc_pim', 32, 29, { name: R.T('map.verda_1.N.4.camp_pim.name'), dir: 's', talk: 'verda_camp_talk', cond: ['forest_found_pim', '!forest_pim_guest', '!forest_finale_done'], reward: 'news' }),
+      K.npc('fawn_after', 'ani_fawn', 47, 41, { name: R.T('map.verda_1.N.5.fawn_after.name'), dir: 'w', talk: 'verda_fawn_after', cond: ['cleared_r_forest', { choice: 'ch_forest_fawn', is: 'heal' }], reward: 'hint' }),
     ];
 
     K.def('verda_1', {
-      name: '迷いの森', kind: 'dungeon', region: 'r_forest', location: 'verda', theme: 'forest_dungeon',
+      name: R.T('map.verda_1.name'), kind: 'dungeon', region: 'r_forest', location: 'verda', theme: 'forest_dungeon',
       legend: K.FOREST_LEGEND({ S: { mat: 'forest_dark', solid: true, secret: true, floor: 'grass' } }),
       rows: g, outside: 'forest_dark',
       // 描いた一枚絵（design/ENV_ASSETS.md §8）。隠し通路（うろ）は closed の絵で、見つけるまで森のまま
@@ -157,7 +157,7 @@
       light: { ambient: '#5460a0', k: 0.52, mood: 'forest_night' },
       dark: false,
       bgm: 'forest', bbg: 'forest',
-      meta: { chestsInfo: true, floor: '1 階', sub: '蛍だまりの森' },
+      meta: { chestsInfo: true, floor: R.T('map.verda_1.meta.floor'), sub: R.T('map.verda_1.meta.sub') },
     });
   });
 })(window.RPG);

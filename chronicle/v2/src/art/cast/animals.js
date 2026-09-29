@@ -7,10 +7,10 @@
   const base = (name, animal, main, sub, hue) => ({ name, animal, body: { sex: 'm', build: 'slim', age: 'short' }, skin: 'fair', eyes: '#2a2a30',
     hair: { style: 'bald', color: main, ears: 'show' }, outfit: { type: 'light', main, sub, trim: sub }, extras: [], hue, silhouette: 'ani_' + animal, face: false });
   R.defs('looks', {
-    ani_cat: base('ねこ', 'cat', '#8a6448', '#e0d0b8', 24),
-    ani_dog: base('いぬ', 'dog', '#8a6038', '#e0d0b0', 30),
-    ani_hen: base('にわとり', 'hen', '#e8e0d4', '#c83a2c', 40),
-    ani_fawn: base('子じか', 'fawn', '#a86a3c', '#f0e4d0', 25),
+    ani_cat: base(R.T('looks.ani_cat.base'), 'cat', '#8a6448', '#e0d0b8', 24),
+    ani_dog: base(R.T('looks.ani_dog.base'), 'dog', '#8a6038', '#e0d0b0', 30),
+    ani_hen: base(R.T('looks.ani_hen.base'), 'hen', '#e8e0d4', '#c83a2c', 40),
+    ani_fawn: base(R.T('looks.ani_fawn.base'), 'fawn', '#a86a3c', '#f0e4d0', 25),
   });
 
   // 形: [胴の半径 rx, ry, 胴の高さ, 頭の半径, 頭の前の位置, 脚の長さ, しっぽ]

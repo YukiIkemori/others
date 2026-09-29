@@ -7,8 +7,8 @@
   const R = (window.RPG = window.RPG || {});
 
   R.VERSION = '2.0.0-p0';
-  R.TITLE = 'ルミナス・クロニクル';
-  R.SUBTITLE = '〜八つの灯火〜';
+  R.TITLE = 'ルミナス・クロニクル';   // i18n:ignore（core/i18n.js が R.T('ui.game.title') を返す getter に置き換える）
+  R.SUBTITLE = '〜八つの灯火〜';   // i18n:ignore（同じく R.T('ui.game.subtitle')）
   R.COPYRIGHT = '© Studio Metem';
   R.PARTY_MAX = 4;
   R.SAVE_PREFIX = 'luminous_chronicle_v2_';

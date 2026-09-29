@@ -8,13 +8,13 @@
   if (!S.def) S.def = function (id, v) { (S._defs = S._defs || {})[id] = v; };
   const u = (v) => R.UIK.u(v);
   const T = () => R.UIK.T;
-  const KIND = { main: '本筋', region: '地方', side: '依頼', rumor: 'うわさ', map: '地図' };
+  const KIND = { main: R.T('ui.chronicle.KIND.main'), region: R.T('ui.chronicle.KIND.region'), side: R.T('ui.chronicle.KIND.side'), rumor: R.T('ui.chronicle.KIND.rumor'), map: R.T('ui.chronicle.KIND.map') };
   const REGION_ORDER = ['prologue', 'r_forest', 'r_snow', 'r_desert', 'r_marsh', 'r_isles', 'r_mine', 'r_ash', 'r_star'];
 
   S.regionName = function (rid) {
     const rg = R.DB.regions && R.DB.regions[rid];
     if (rg && rg.name) return rg.name;
-    return ({ prologue: 'ファロス半島', r_forest: 'ヴェルダの森', r_snow: '雪の地方', r_desert: '砂の地方', r_marsh: '沼の地方', r_isles: '島の地方', r_mine: '鉱山の地方', r_ash: '灰の地方', r_star: '星の地方', main: '本筋', '-': '' })[rid] || '';
+    return ({ prologue: R.T('ui.chronicle.regionName.prologue'), r_forest: R.T('ui.chronicle.regionName.r_forest'), r_snow: R.T('ui.chronicle.regionName.r_snow'), r_desert: R.T('ui.chronicle.regionName.r_desert'), r_marsh: R.T('ui.chronicle.regionName.r_marsh'), r_isles: R.T('ui.chronicle.regionName.r_isles'), r_mine: R.T('ui.chronicle.regionName.r_mine'), r_ash: R.T('ui.chronicle.regionName.r_ash'), r_star: R.T('ui.chronicle.regionName.r_star'), main: R.T('ui.chronicle.regionName.main'), '-': '' })[rid] || '';
   };
 
   S.def('chronicle', {
@@ -50,7 +50,7 @@
         const txt = (R.DB.chronicle && (R.DB.chronicle[c.summaryKey] || R.DB.chronicle[c.id])) ||
           (reg.chapter && reg.chapter.summary ? { title: reg.chapter.title, text: reg.chapter.summary } : cfg.summary ? { title: cfg.title, text: cfg.summary } : null);
         const pro = c.id === 'prologue';
-        const title = (txt && txt.title) || (pro ? '序章' : S.regionName(c.id));
+        const title = (txt && txt.title) || (pro ? R.T('ui.chronicle.chapterRows.title') : S.regionName(c.id));
         return { value: c.id, label: title, no: pro ? -1 : n++, text: txt ? (Array.isArray(txt.text) ? txt.text.join('\n') : txt.text || '') : '', songs: this.songsOf(c.id) };
       });
     },
@@ -67,7 +67,7 @@
       if (R.Audio.voiceId === sg.voice) { R.Audio.stopVoice(); this.songOn = null; return; }
       const h = R.Audio.playVoice ? R.Audio.playVoice(sg.voice) : null;
       this.songOn = h ? sg.voice : null;
-      if (!h) R.UIK.toast('ボイスの音量が 0 です（設定）', { anchor: 'bl' });
+      if (!h) R.UIK.toast(R.T('ui.chronicle.playSong.toast'), { anchor: 'bl' });
     },
     exit() { if (this.songOn && R.Audio && R.Audio.voiceId === this.songOn) R.Audio.stopVoice(); },
     refresh(keep) { this.list.setRows(this.tab === 0 ? this.chapterRows() : this.leadRows(), keep); },
@@ -75,8 +75,8 @@
       if (this.tab !== 1) { this.playSong(row); return; }
       if (row.locked) { R.UIK.sfx('buzzer'); return; }
       if (row.st === 'done') { R.UIK.sfx('buzzer'); return; }
-      if (row.pinned) { R.Leads.unpin(); R.UIK.toast('目印を外した', { anchor: 'bl', icon: 'pin' }); }
-      else { R.Leads.pin(row.value); R.UIK.toast('目印を付けた：' + row.label, { anchor: 'bl', icon: 'pin' }); }
+      if (row.pinned) { R.Leads.unpin(); R.UIK.toast(R.T('ui.chronicle.pick.toast'), { anchor: 'bl', icon: 'pin' }); }
+      else { R.Leads.pin(row.value); R.UIK.toast(R.T('ui.chronicle.pick.toast_2', { label: row.label }), { anchor: 'bl', icon: 'pin' }); }
       this.refresh(true);
     },
     update() {
@@ -91,7 +91,7 @@
     },
     draw(g) {
       const b = S.box(), C = T().color, tall = S.tall();
-      this.tabRects = S.tabs(g, ['年代記', '手がかり'], this.tab, b.x + u(4), b.y + u(4));
+      this.tabRects = S.tabs(g, R.T('ui.chronicle.draw.tabRects.tabs'), this.tab, b.x + u(4), b.y + u(4));
       const lw = tall ? b.w : Math.min(u(400), b.w * 0.42);
       const lp = { x: b.x, y: b.y + u(48), w: lw, h: tall ? b.h * 0.42 : b.h - u(48) };
       R.UIK.panel(g, lp, { frost: true });
@@ -111,14 +111,14 @@
         R.UIK.text(gg, S.regionName(row.region), rect.x + rect.w - u(12), cy + u(2), { size: u(11.5), color: C.text3, align: 'right', maxW: u(84) });
       };
       this.list.draw(g, lr);
-      if (!this.list.rows.length) R.UIK.text(g, this.tab === 0 ? 'まだ何も書かれていない。' : 'まだ何も聞いていない。', lr.x + u(16), lr.y + u(8), { size: u(15), color: C.text3 });
+      if (!this.list.rows.length) R.UIK.text(g, this.tab === 0 ? R.T('ui.chronicle.draw.text') : R.T('ui.chronicle.draw.text_2'), lr.x + u(16), lr.y + u(8), { size: u(15), color: C.text3 });
       // 右
       const dp = tall ? { x: b.x, y: lp.y + lp.h + u(12), w: b.w, h: b.y + b.h - (lp.y + lp.h + u(12)) } : { x: lp.x + lp.w + u(18), y: b.y, w: b.x + b.w - (lp.x + lp.w + u(18)), h: b.h };
       R.UIK.panel(g, dp, { frost: true });
       const row = this.list.current(), px = dp.x + u(26), pw = dp.w - u(52);
       let y = dp.y + u(24);
       if (row && this.tab === 0) {
-        R.UIK.text(g, row.no < 0 ? '序章' : `第 ${row.no + 1} 章`, px, y, { size: u(13), weight: 700, color: C.gold, track: u(2) }); y += u(26);
+        R.UIK.text(g, row.no < 0 ? R.T('ui.chronicle.draw.text_3') : R.T('ui.chronicle.draw.text_4', { p0: row.no + 1 }), px, y, { size: u(13), weight: 700, color: C.gold, track: u(2) }); y += u(26);
         R.UIK.text(g, row.label, px, y, { size: u(22), weight: 700, color: C.goldHi, maxW: pw }); y += u(40);
         for (const l of R.UIK.wrap(row.text || '', pw, { size: u(15.5) })) { R.UIK.text(g, l, px, y, { size: u(15.5), color: C.text }); y += u(28); if (y > dp.y + dp.h - u(30)) break; }
         // 書き写した歌（A で聞き直す）
@@ -132,20 +132,20 @@
       } else if (row) {
         const L = row.L;
         let cx = px;
-        cx += R.UIK.chip(g, cx, y, KIND[L.kind] || '手がかり', { kind: L.kind === 'main' ? 'gold' : 'plain', size: 11 }) + u(8);
-        if (row.pinned) R.UIK.chip(g, cx, y, '目印', { kind: 'gold', size: 11, icon: 'pin' });
+        cx += R.UIK.chip(g, cx, y, KIND[L.kind] || R.T('ui.chronicle.draw.cx.chip'), { kind: L.kind === 'main' ? 'gold' : 'plain', size: 11 }) + u(8);
+        if (row.pinned) R.UIK.chip(g, cx, y, R.T('ui.chronicle.draw.chip'), { kind: 'gold', size: 11, icon: 'pin' });
         y += u(32);
         R.UIK.text(g, L.title, px, y, { size: u(22), weight: 700, color: row.locked || row.st === 'done' ? C.text2 : C.goldHi, maxW: pw }); y += u(40);
         const meta = [];
-        if (L.from) meta.push(['聞いた所', S.locName(L.from)]);
-        if (L.place || L.dir) meta.push(['場所', [S.locName(L.place), L.dir].filter(Boolean).join('　・　')]);
+        if (L.from) meta.push([R.T('ui.chronicle.draw.0'), S.locName(L.from)]);
+        if (L.place || L.dir) meta.push([R.T('ui.chronicle.draw.0_2'), [S.locName(L.place), L.dir].filter(Boolean).join(R.T('ui.chronicle.draw.1.join'))]);
         for (const [k, v] of meta) { R.UIK.text(g, k, px, y, { size: u(12.5), color: C.text3 }); R.UIK.text(g, v, px + u(84), y - u(1), { size: u(14.5), color: C.text, maxW: pw - u(84) }); y += u(26); }
         y += u(6); R.UIK.rule(g, px, px + pw, y, 0.14); y += u(14);
-        const text = row.locked ? 'この先は、まだ語られていない。' : String(L.text || '');
+        const text = row.locked ? R.T('ui.chronicle.draw.text_5') : String(L.text || '');
         for (const l of R.UIK.wrap(text, pw, { size: u(15.5) })) { R.UIK.text(g, l, px, y, { size: u(15.5), color: row.locked ? C.text3 : C.text }); y += u(28); if (y > dp.y + dp.h - u(30)) break; }
-        if (row.st === 'done') R.UIK.chip(g, px, dp.y + dp.h - u(40), '解決した', { kind: 'plain', size: 11, icon: 'check' });
+        if (row.st === 'done') R.UIK.chip(g, px, dp.y + dp.h - u(40), R.T('ui.chronicle.draw.chip_2'), { kind: 'plain', size: 11, icon: 'check' });
       }
-      S.prompts(g, this.tab === 1 ? [{ btn: 'a', label: '目印' }, { btn: 'l', label: '年代記' }, { btn: 'b', label: '戻る' }] : [].concat(row && row.songs && row.songs.length ? [{ btn: 'a', label: R.Audio && R.Audio.voiceId === row.songs[0].voice ? '歌を止める' : '歌を聞く' }] : [], [{ btn: 'r', label: '手がかり' }, { btn: 'b', label: '戻る' }]));
+      S.prompts(g, this.tab === 1 ? [{ btn: 'a', label: R.T('ui.chronicle.draw.0.label') }, { btn: 'l', label: R.T('ui.chronicle.draw.1.label') }, { btn: 'b', label: R.T('ui.chronicle.draw.2.label') }] : [].concat(row && row.songs && row.songs.length ? [{ btn: 'a', label: R.Audio && R.Audio.voiceId === row.songs[0].voice ? R.T('ui.chronicle.draw.0.label_2') : R.T('ui.chronicle.draw.0.label_3') }] : [], [{ btn: 'r', label: R.T('ui.chronicle.draw.0.label_4') }, { btn: 'b', label: R.T('ui.chronicle.draw.1.label_2') }]));
     },
   });
 })(window.RPG);

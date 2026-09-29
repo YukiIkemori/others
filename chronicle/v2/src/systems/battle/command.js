@@ -8,8 +8,8 @@
   const _ = (Bt._ = Bt._ || {});
   const C = (_.cmd = {});
 
-  const WNAME = { sword: '剣', greatsword: '大剣', dagger: '短剣', bow: '弓', staff: '杖' };
-  const TARGET_JA = { enemy: 'ひとりに', group: '同じ群れに', enemies: '敵全体に', random: '敵のだれかに', ally: '味方ひとりに', ally_other: 'ほかの味方ひとりに', ally_any: '味方ひとりに', ally_dead: '倒れた味方ひとりに', allies: '味方全体に', party: '味方全体に', self: '自分に' };
+  const WNAME = { sword: R.T('battle.command.WNAME.sword'), greatsword: R.T('battle.command.WNAME.greatsword'), dagger: R.T('battle.command.WNAME.dagger'), bow: R.T('battle.command.WNAME.bow'), staff: R.T('battle.command.WNAME.staff') };
+  const TARGET_JA = { enemy: R.T('battle.command.TARGET_JA.enemy'), group: R.T('battle.command.TARGET_JA.group'), enemies: R.T('battle.command.TARGET_JA.enemies'), random: R.T('battle.command.TARGET_JA.random'), ally: R.T('battle.command.TARGET_JA.ally'), ally_other: R.T('battle.command.TARGET_JA.ally_other'), ally_any: R.T('battle.command.TARGET_JA.ally_any'), ally_dead: R.T('battle.command.TARGET_JA.ally_dead'), allies: R.T('battle.command.TARGET_JA.allies'), party: R.T('battle.command.TARGET_JA.party'), self: R.T('battle.command.TARGET_JA.self') };
   C.WNAME = WNAME;
   C.TARGET_JA = TARGET_JA;
   const sfx = (id) => { try { R.Audio.sfx(id); } catch (e) { /* ignore */ } };
@@ -141,10 +141,10 @@
     // 右上に「戻る」（ひとつ前の人へ。縦持ちはボタン表示を出さないので、ここで見せる）
     w.backRect = null;
     if (who && w.o.cancel !== false) {
-      const bs = Math.max(12 * k, R.minFont || 0), bw = Kt.measure('戻る', { size: bs, weight: 700 }) + 30 * k, bh = 22 * k;
+      const bs = Math.max(12 * k, R.minFont || 0), bw = Kt.measure(R.T('battle.command.tallCards.bw.measure'), { size: bs, weight: 700 }) + 30 * k, bh = 22 * k;
       const br = { x: R.W - pad - bw, y: L.cmdY - 4 * k, w: bw, h: bh };
       Kt.box(g, br, { a: 0.5, r: 8 * k, edge: 'rgba(240,228,200,0.35)' });
-      Kt.text(g, '戻る', br.x + br.w / 2, br.y + (bh - bs) / 2, { size: bs, weight: 700, align: 'center', color: Kt.COL.text, raw: true });
+      Kt.text(g, R.T('battle.command.tallCards.text'), br.x + br.w / 2, br.y + (bh - bs) / 2, { size: bs, weight: 700, align: 'center', color: Kt.COL.text, raw: true });
       const hh = Math.max(bh, R.minTouch || 0);
       w.backRect = { x: br.x - 6 * k, y: br.y + bh - hh, w: bw + 12 * k, h: hh };
     }
@@ -180,10 +180,10 @@
     w.backRect = null;
     if (w.o.cancel !== false) {
       // 見た目は見出しの行の右の小さな札、押せる所は上下へ広げて 44 CSS px 以上
-      const bs = Math.max(12 * k, R.minFont || 0), bw = Kt.measure('戻る', { size: bs, weight: 700 }) + 30 * k, bh = 24 * k;
+      const bs = Math.max(12 * k, R.minFont || 0), bw = Kt.measure(R.T('battle.command.tallList.bw.measure'), { size: bs, weight: 700 }) + 30 * k, bh = 24 * k;
       const br = { x: r.x + r.w - bw - 8 * k, y: r.y + 4 * k, w: bw, h: bh };
       Kt.box(g, br, { a: 0.5, r: 8 * k, edge: 'rgba(240,228,200,0.35)' });
-      Kt.text(g, '戻る', br.x + br.w / 2, br.y + (bh - bs) / 2, { size: bs, weight: 700, align: 'center', color: Kt.COL.text, raw: true });
+      Kt.text(g, R.T('battle.command.tallList.text'), br.x + br.w / 2, br.y + (bh - bs) / 2, { size: bs, weight: 700, align: 'center', color: Kt.COL.text, raw: true });
       const hh = Math.max(bh, R.minTouch || 0);
       w.backRect = { x: br.x - 6 * k, y: br.y + bh - hh, w: bw + 12 * k, h: hh };   // 上へ広げる（下の行に掛からない）
     }
@@ -207,7 +207,7 @@
   function tallHint(g, st) {
     const k = R.uiScale || 1, Kt = K();
     const dev = R.Input.lastDevice;
-    const s = dev === 'touch' || !dev ? 'タップで決定　・　長押しで説明' : '';
+    const s = dev === 'touch' || !dev ? R.T('battle.command.tallHint.s') : '';
     if (s) Kt.text(g, s, R.W / 2, R.H - (R.safe.b || 0) - 34 * k, { size: 11.5 * k, color: Kt.COL.text3, align: 'center', raw: true });
   }
 
@@ -224,7 +224,7 @@
   // ---------------------------------------------------------------- 一行の命令（戦う／リピート／逃げる）
   C.partyMenu = async function (st) {
     const po = st.partyOpts || ['fight'];
-    const NAMES = { fight: ['戦う', 'sword'], repeat: ['リピート', 'repeat'], escape: ['逃げる', 'exit'] };
+    const NAMES = { fight: [R.T('battle.command.partyMenu.NAMES.fight.0'), 'sword'], repeat: [R.T('battle.command.partyMenu.NAMES.repeat.0'), 'repeat'], escape: [R.T('battle.command.partyMenu.NAMES.escape.0'), 'exit'] };
     const all = ['fight', 'repeat', 'escape'].filter((c) => c !== 'escape' || !st.setup.noEscape);
     const rows = all.map((c) => ({ key: c, label: NAMES[c][0], icon: NAMES[c][1], disabled: !po.includes(c) }));
     const m = st.localMem = st.localMem || {};
@@ -232,11 +232,11 @@
     const memOn = R.Settings.get('cursorMemory') !== false;
     const start = memOn && G && G.battle && G.battle.cursor && G.battle.cursor._party != null ? G.battle.cursor._party : (m._party || 0);
     st.activeUid = null;
-    st.head = { name: '一行の命令', sub: po.includes('repeat') ? 'リピートは前のラウンドと同じ行動（動いている間は B でやめる）。' : 'どうする？' };
+    st.head = { name: R.T('battle.command.partyMenu.head.name'), sub: po.includes('repeat') ? R.T('battle.command.partyMenu.head.sub') : R.T('battle.command.partyMenu.head.sub_2') };
     const k = R.uiScale || 1;
     const i = await menu(st, {
       rows, sel: rows[start] && !rows[start].disabled ? start : 0, t0: R.Engine.time, cancel: false,
-      prompts: [{ btn: 'a', label: '決定' }, { btn: 'r', label: '速さ' }],
+      prompts: [{ btn: 'a', label: R.T('battle.command.partyMenu.i.prompts.0.label') }, { btn: 'r', label: R.T('battle.command.partyMenu.i.prompts.1.label') }],
       onChip: (c) => { const j = rows.findIndex((r) => r.key === c && !r.disabled); return j >= 0 ? j : undefined; },   // L・札のリピート
       draw(g, w) {
         const n = st.partyUnits().length;
@@ -288,28 +288,28 @@
     const opts = B.options(u.uid) || [];
     const find = (c) => opts.find((o) => o.cmd === c);
     const atk = find('attack'), sk = find('skill'), sp = find('spell'), df = find('defend'), it = find('item');
-    const wname = WNAME[u.wtype] || '攻撃';
+    const wname = WNAME[u.wtype] || R.T('battle.command.member.wname');
     const top = [];
     if (atk || sk) top.push({ key: 'weapon', label: wname, icon: u.wtype || 'sword' });
-    if (sp) top.push({ key: 'spell', label: '術', icon: 'arts', disabled: !(sp.list && sp.list.length) });
-    if (df) top.push({ key: 'defend', label: '防御', icon: 'shield' });
-    if (it) top.push({ key: 'item', label: '道具', icon: 'bag', disabled: !(it.list && it.list.length) });
+    if (sp) top.push({ key: 'spell', label: R.T('battle.command.member.spell.label'), icon: 'arts', disabled: !(sp.list && sp.list.length) });
+    if (df) top.push({ key: 'defend', label: R.T('battle.command.member.defend.label'), icon: 'shield' });
+    if (it) top.push({ key: 'item', label: R.T('battle.command.member.item.label'), icon: 'bag', disabled: !(it.list && it.list.length) });
     for (const o of opts) if (!['attack', 'skill', 'spell', 'defend', 'item'].includes(o.cmd)) top.push({ key: o.cmd, label: o.name || o.cmd, icon: 'star', opt: o });
     const M = mem(u.uid, st);
     st.activeUid = u.uid;
     const DESC = {
-      weapon: `${wname === '攻撃' ? '武器' : wname}の技と通常の攻撃。`, spell: '覚えた術を使う。', defend: 'このラウンドは身を守る。', item: '持っている道具を使う。',
+      weapon: R.T('battle.command.member.DESC.weapon', { p0: wname === R.T('battle.command.member.wname') ? R.T('battle.command.member.DESC.weapon_2') : wname }), spell: R.T('battle.command.member.DESC.spell'), defend: R.T('battle.command.member.DESC.defend'), item: R.T('battle.command.member.DESC.item'),
     };
     const onChip = (c) => (c === 'repeat' && st.partyOpts.includes('repeat')) || (c === 'escape' && st.partyOpts.includes('escape')) ? { party: c } : undefined;
     for (;;) {
-      st.head = { name: `${u.name}の番`, sub: '行動を選ぶ。' };
+      st.head = { name: R.T('battle.command.member.head.name', { name: u.name }), sub: R.T('battle.command.member.head.sub') };
       const topSel = Math.min(top.length - 1, M.top || 0);
       const ti = await menu(st, {
         rows: top, sel: top[topSel] && !top[topSel].disabled ? topSel : 0, t0: R.Engine.time, onChip,
-        prompts: [{ btn: 'a', label: '決定' }, { btn: 'b', label: 'ひとつ戻る' }, { btn: 'r', label: '速さ' }],
+        prompts: [{ btn: 'a', label: R.T('battle.command.member.ti.prompts.0.label') }, { btn: 'b', label: R.T('battle.command.member.ti.prompts.1.label') }, { btn: 'r', label: R.T('battle.command.member.ti.prompts.2.label') }],
         tallPrompts: false,
-        onFocus(i) { st.head.sub = (DESC[top[i].key] || '') + (top[i].key === 'weapon' ? '敵をひとり選ぶ。' : ''); },
-        desc: (i) => ({ text: (DESC[top[i].key] || '') + (top[i].key === 'weapon' ? '敵をひとり選ぶ。' : '') }),
+        onFocus(i) { st.head.sub = (DESC[top[i].key] || '') + (top[i].key === 'weapon' ? R.T('battle.command.member.ti.onFocus.sub') : ''); },
+        desc: (i) => ({ text: (DESC[top[i].key] || '') + (top[i].key === 'weapon' ? R.T('battle.command.member.ti.desc.text') : '') }),
         draw(g, w) {
           if (st.L.tall) { tallCards(g, w, st, u.name); return; }
           const h = (28 + top.length * 26 + 8) * k;
@@ -324,12 +324,12 @@
       if (sel.key === 'defend') res = { cmd: 'defend', id: 'defend', target: u.uid };
       else if (sel.key === 'weapon') {
         const rows = [];
-        if (atk) rows.push({ id: 'attack', label: '攻撃', cmd: 'attack', target: atk.target || 'enemy', usable: true });
+        if (atk) rows.push({ id: 'attack', label: R.T('battle.command.member.attack.label'), cmd: 'attack', target: atk.target || 'enemy', usable: true });
         for (const s of (sk && sk.list) || []) rows.push(skillRow(s, 'skill', sk.target));
         if (rows.length === 1 && atk) res = await targetFor(st, u, rows[0], M);
         else res = await subList(st, u, rows, `${u.name} › ${wname}`, 'weapon', M);
-      } else if (sel.key === 'spell') res = await subList(st, u, sp.list.map((s) => skillRow(s, 'spell', sp.target)), `${u.name} › 術`, 'spell', M);
-      else if (sel.key === 'item') res = await subList(st, u, it.list.map((s) => skillRow(s, 'item', it.target)), `${u.name} › 道具`, 'item', M);
+      } else if (sel.key === 'spell') res = await subList(st, u, sp.list.map((s) => skillRow(s, 'spell', sp.target)), R.T('battle.command.member.res.subList', { name: u.name }), 'spell', M);
+      else if (sel.key === 'item') res = await subList(st, u, it.list.map((s) => skillRow(s, 'item', it.target)), R.T('battle.command.member.res.subList_2', { name: u.name }), 'item', M);
       else if (sel.opt) res = await targetFor(st, u, { id: sel.key, cmd: sel.key, target: sel.opt.target || 'self' }, M);
       if (res && res !== 'back') return res;
     }
@@ -362,10 +362,10 @@
     const shown = new Set();
     for (;;) {
       const start = Math.min(rows.length - 1, M[memKey] || 0);
-      st.head = { name: `${u.name}の番`, sub: memKey === 'weapon' ? `${C.WNAME[u.wtype] || '武器'}の技を選ぶ（ねらいは前回の相手を覚えている）` : memKey === 'spell' ? '術を選ぶ。' : '道具を選ぶ。' };
+      st.head = { name: R.T('battle.command.subList.head.name', { name: u.name }), sub: memKey === 'weapon' ? R.T('battle.command.subList.head.sub', { p0: C.WNAME[u.wtype] || R.T('battle.command.subList.head.sub_2') }) : memKey === 'spell' ? R.T('battle.command.subList.head.sub_3') : R.T('battle.command.subList.head.sub_4') };
       const i = await menu(st, {
         rows, sel: Math.max(0, start), t0: R.Engine.time,
-        prompts: st.L.tall ? null : [{ btn: 'a', label: '決定' }, { btn: 'b', label: 'ひとつ戻る' }, { btn: 'x', label: '詳しく' }, { btn: 'r', label: '速さ' }],
+        prompts: st.L.tall ? null : [{ btn: 'a', label: R.T('battle.command.subList.i.prompts.0.label') }, { btn: 'b', label: R.T('battle.command.subList.i.prompts.1.label') }, { btn: 'x', label: R.T('battle.command.subList.i.prompts.2.label') }, { btn: 'r', label: R.T('battle.command.subList.i.prompts.3.label') }],
         tallPrompts: false,
         onFocus(i) { shown.add(i); },
         onClose() { markSeen([...shown].map((i) => rows[i]).filter(Boolean)); },
@@ -373,9 +373,9 @@
         desc(i) {
           const r = rows[i];
           if (!r) return null;
-          const text = r.reason === 'reach' ? '後列からは届かない。' : r.disabled && r.reason === 'mp' ? 'MP が足りない。' : r.disabled && r.reason === 'nodead' ? '倒れた仲間がいない。' : r.id === 'attack' ? '武器でふつうに攻撃する。' : r.desc || '';
+          const text = r.reason === 'reach' ? R.T('battle.command.subList.i.desc.text') : r.disabled && r.reason === 'mp' ? R.T('battle.command.subList.i.desc.text_2') : r.disabled && r.reason === 'nodead' ? R.T('battle.command.subList.i.desc.text_3') : r.id === 'attack' ? R.T('battle.command.subList.i.desc.text_4') : r.desc || '';
           const tn = targetName(st, M, r);
-          return { text, sub: (TARGET_JA[r.target] || '') + (tn ? '　・　ねらい：' + tn : '') };
+          return { text, sub: (TARGET_JA[r.target] || '') + (tn ? R.T('battle.command.subList.i.desc.sub', { tn }) : '') };
         },
         draw(g, w) {
           if (st.L.tall) { tallList(g, w, st, title); return; }

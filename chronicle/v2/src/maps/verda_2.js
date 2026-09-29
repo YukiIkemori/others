@@ -82,7 +82,7 @@
     O.push(K.chest('verda_2_c7', 9, 20, { item: 'i_antidote', n: 2 }));
     // ピムの足あと: 入口 → 遠回りの道 → 西の広場
     O.push({ type: 'trail', id: 'verda_2_pim', path: [[29, 49], [28, 47], [26, 46], [23, 47], [20, 46], [17, 47], [15, 45], [14, 43], [14, 41], [14, 39], [15, 38]], cond: { item: 'k_pim_hat' } });
-    O.push(K.sign(27, 29, 'この先、森の奥。\n――ひとりで入るべからず（きこり組）'));
+    O.push(K.sign(27, 29, R.T('map.verda_2.sign')));
     O.push(K.prop('lantern', 27, 41));
 
     const keep = new Set();
@@ -113,14 +113,14 @@
     // ---------------------------------------------------------------- 人
     // ピムと小鹿・ロイは描いた大木の根もと（木の上に立って見えた。持ち主 2026-09-28）を避けて、広場の空いた所
     const N = [
-      K.npc('pim', 'npc_pim', 15, 37, { name: 'ピム', dir: 'w', talk: 'verda_pim', cond: '!forest_found_pim', pushable: false, reward: 'side' }),
-      K.npc('fawn', 'ani_fawn', 14, 37, { name: '花角の小鹿', dir: 'e', talk: 'verda_fawn_choice', cond: '!forest_fawn_done', pushable: false }),
-      K.npc('hans', 'npc_hans', 52, 46, { name: 'ハンス', dir: 'n', talk: 'verda_hans', cond: '!forest_found_hans', pushable: false }),
-      K.npc('roy', 'npc_roy', 52, 13, { name: 'ロイ', dir: 's', talk: 'verda_hollow', cond: ['forest_roy_out', '!forest_found_roy'], pushable: false }),
+      K.npc('pim', 'npc_pim', 15, 37, { name: R.T('map.verda_2.N.0.pim.name'), dir: 'w', talk: 'verda_pim', cond: '!forest_found_pim', pushable: false, reward: 'side' }),
+      K.npc('fawn', 'ani_fawn', 14, 37, { name: R.T('map.verda_2.N.1.fawn.name'), dir: 'e', talk: 'verda_fawn_choice', cond: '!forest_fawn_done', pushable: false }),
+      K.npc('hans', 'npc_hans', 52, 46, { name: R.T('map.verda_2.N.2.hans.name'), dir: 'n', talk: 'verda_hans', cond: '!forest_found_hans', pushable: false }),
+      K.npc('roy', 'npc_roy', 52, 13, { name: R.T('map.verda_2.N.3.roy.name'), dir: 's', talk: 'verda_hollow', cond: ['forest_roy_out', '!forest_found_roy'], pushable: false }),
     ];
 
     K.def('verda_2', {
-      name: '迷いの森', kind: 'dungeon', region: 'r_forest', location: 'verda', theme: 'forest_dungeon',
+      name: R.T('map.verda_2.name'), kind: 'dungeon', region: 'r_forest', location: 'verda', theme: 'forest_dungeon',
       legend: K.FOREST_LEGEND({
         S: { mat: 'forest_dark', solid: true, secret: true, floor: 'grass' },
         v: { mat: 'bush', solid: true, name: 'vines' },
@@ -155,7 +155,7 @@
       // 奥の広場は歌の灯が消えかけた暗がり（E6）。解決のあとは明るい
       dark: [{ rect: [21, 8, 19, 14], cond: '!cleared_r_forest' }],
       bgm: 'forest', bbg: 'forest',
-      meta: { chestsInfo: true, floor: '2 階', sub: '歌の石の森' },
+      meta: { chestsInfo: true, floor: R.T('map.verda_2.meta.floor'), sub: R.T('map.verda_2.meta.sub') },
     });
   });
 })(window.RPG);

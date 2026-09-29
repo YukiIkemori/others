@@ -259,9 +259,9 @@
   /** この人に使えないわけ（使えるなら null）: 'もう覚えている' | '術を使えない' */
   function stoneBlock(u, it) {
     const c = charOf(u), s = stoneOf(it);
-    if (!c || !s) return '使えない';
-    if (s.spells.every((id) => has(c.spells, id))) return 'もう覚えている';
-    if (R.Rules && R.Rules.mods && R.Rules.mods(c).noSpell) return '術を使えない';
+    if (!c || !s) return R.T('sys.glimmer.stoneBlock.ret');
+    if (s.spells.every((id) => has(c.spells, id))) return R.T('sys.glimmer.stoneBlock.ret_2');
+    if (R.Rules && R.Rules.mods && R.Rules.mods(c).noSpell) return R.T('sys.glimmer.stoneBlock.ret_3');
     return null;
   }
   /** 魔石を使う（品の数は呼ぶ側）→ {ok, id, reason, line} */
@@ -270,9 +270,9 @@
     const reason = stoneBlock(c, it);
     if (reason) return { ok: false, id: s && s.spell, reason, line: '' };
     const got = s.spells.filter((id) => !has(c.spells, id) && learn(c, id, opts));
-    if (!got.length) return { ok: false, id: s.spell, reason: 'もう覚えている', line: '' };
+    if (!got.length) return { ok: false, id: s.spell, reason: R.T('sys.glimmer.useStone.reason'), line: '' };
     const el = DB.elements && DB.elements[s.element];
-    const line = `${c.name}は ${el ? el.name : ''}の術${got.map((id) => `『${DB.spells[id].name}』`).join('と')}を覚えた！`;
+    const line = R.T('sys.glimmer.useStone.line', { name: c.name, p1: el ? el.name : '', join: got.map((id) => `『${DB.spells[id].name}』`).join(R.T('sys.glimmer.useStone.line.join')) });
     return { ok: true, id: got[0], ids: got, reason: null, line };
   }
 
@@ -419,16 +419,16 @@
   /** 閃きの札の見出しと名前の色（§11.5.7） */
   function banner(a) {
     if (typeof a === 'string') a = act(a);
-    if (!a) return { title: '閃き！', color: '#fff8d0' };
+    if (!a) return { title: R.T('sys.glimmer.banner.title'), color: '#fff8d0' };
     if (a.kind === 'spell') {
       const el = orderEls(a.elements || [])[0];
       const color = (el && DB.elements[el] && DB.elements[el].color) || '#fff8d0';
-      return { title: (a.elements || []).length > 1 ? '合成術' : '閃き！', color };
+      return { title: (a.elements || []).length > 1 ? R.T('sys.glimmer.banner.title_2') : R.T('sys.glimmer.banner.title'), color };
     }
     const lv = a.glim ? a.glim.lv : 1;
-    if (lv >= 10) return { title: '極意', color: '#ff88d0' };
-    if (lv === 9) return { title: '奥義', color: '#f8d838' };
-    return { title: '閃き！', color: '#fff8d0' };
+    if (lv >= 10) return { title: R.T('sys.glimmer.banner.title_3'), color: '#ff88d0' };
+    if (lv === 9) return { title: R.T('sys.glimmer.banner.title_4'), color: '#f8d838' };
+    return { title: R.T('sys.glimmer.banner.title'), color: '#fff8d0' };
   }
 
   const Glimmer = (R.Glimmer = R.Glimmer || {});

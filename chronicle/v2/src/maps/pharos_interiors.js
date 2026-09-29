@@ -27,7 +27,7 @@
     }
 
     // ---------------------------------------------------------------- 宿（13×10）: 受付の台・寝台 4 つ・暖炉・食卓
-    room('pharos_inn', 'ファロスの宿', 13, 10, 'inn_door', {
+    room('pharos_inn', R.T('map.pharos_interiors.pharos_inn'), 13, 10, 'inn_door', {
       carpet: [5, 3, 3, 6],
       map: {
         objects: [
@@ -40,13 +40,13 @@
             '...........',
             'Vb.l..e...b'], '..s.c..w.w.'),
         ],
-        npcs: [{ id: 'innkeeper', look: 'npc_woman_4', name: '宿のおかみ', x: 2, y: 3, dir: 's', move: 'still', pushable: false, talk: 'pharos_innkeeper' }],
+        npcs: [{ id: 'innkeeper', look: 'npc_woman_4', name: R.T('map.pharos_interiors.pharos_inn.innkeeper.name'), x: 2, y: 3, dir: 's', move: 'still', pushable: false, talk: 'pharos_innkeeper' }],
         bgm: 'town',
       },
     });
 
     // ---------------------------------------------------------------- 潮風亭（16×11）: 酒樽の台と酒瓶の棚・長い台・卓 3 つ・暖炉
-    room('pharos_tavern', '酒場「潮風亭」', 16, 11, 'tavern_door', {
+    room('pharos_tavern', R.T('map.pharos_interiors.pharos_tavern'), 16, 11, 'tavern_door', {
       carpet: [7, 5, 4, 3], floor: 'wood_floor',
       map: {
         objects: [
@@ -61,18 +61,18 @@
             'bx........e.bk'], '....y..w.c..c.'),
         ],
         npcs: [
-          { id: 'master', look: 'npc_merchant_2', name: '潮風亭のマスター', x: 3, y: 3, dir: 's', move: 'still', pushable: false, talk: 'pharos_tavern_master', key: 'pharos_master' },
-          { id: 'gossip', look: 'npc_woman_3', name: 'うわさ好きのおかみ', x: 7, y: 5, dir: 'e', move: 'still', talk: 'pharos_rumor_gossip', reward: 'lead', key: 'pharos_gossip' },
-          { id: 'bard', look: 'npc_bard_1', name: '吟遊詩人', x: 13, y: 3, dir: 's', move: 'still', talk: 'pharos_rumor_bard', reward: 'lead', key: 'pharos_bard' },
-          { id: 'trader', look: 'npc_merchant_3', name: '旅の商人', x: 12, y: 6, dir: 's', move: 'still', talk: 'pharos_rumor_trader', reward: 'lead', key: 'pharos_trader' },
-          { id: 'swordsman', look: 'npc_man_3', name: '旅の剣士', x: 4, y: 7, dir: 'w', move: 'still', talk: 'pharos_swordsman', reward: 'boss', key: 'pharos_swordsman' },
+          { id: 'master', look: 'npc_merchant_2', name: R.T('map.pharos_interiors.pharos_tavern.master.name'), x: 3, y: 3, dir: 's', move: 'still', pushable: false, talk: 'pharos_tavern_master', key: 'pharos_master' },
+          { id: 'gossip', look: 'npc_woman_3', name: R.T('map.pharos_interiors.pharos_tavern.gossip.name'), x: 7, y: 5, dir: 'e', move: 'still', talk: 'pharos_rumor_gossip', reward: 'lead', key: 'pharos_gossip' },
+          { id: 'bard', look: 'npc_bard_1', name: R.T('map.pharos_interiors.pharos_tavern.bard.name'), x: 13, y: 3, dir: 's', move: 'still', talk: 'pharos_rumor_bard', reward: 'lead', key: 'pharos_bard' },
+          { id: 'trader', look: 'npc_merchant_3', name: R.T('map.pharos_interiors.pharos_tavern.trader.name'), x: 12, y: 6, dir: 's', move: 'still', talk: 'pharos_rumor_trader', reward: 'lead', key: 'pharos_trader' },
+          { id: 'swordsman', look: 'npc_man_3', name: R.T('map.pharos_interiors.pharos_tavern.swordsman.name'), x: 4, y: 7, dir: 'w', move: 'still', talk: 'pharos_swordsman', reward: 'boss', key: 'pharos_swordsman' },
         ],
         bgm: 'tavern',
       },
     });
 
     // ---------------------------------------------------------------- 道具屋（11×9）: 薬瓶の棚・台・品物のかご
-    room('pharos_shop', 'ファロスの道具屋', 11, 9, 'shop_door', {
+    room('pharos_shop', R.T('map.pharos_interiors.pharos_shop'), 11, 9, 'shop_door', {
       carpet: [3, 5, 4, 2],
       map: {
         objects: [
@@ -84,12 +84,12 @@
             'bk.....VY',
             'px.....bb'], '...w.h...'),
         ],
-        npcs: [{ id: 'shopkeeper', look: 'npc_merchant_1', name: '道具屋の主人', x: 5, y: 3, dir: 's', move: 'still', pushable: false, talk: 'pharos_shopkeeper' }],
+        npcs: [{ id: 'shopkeeper', look: 'npc_merchant_1', name: R.T('map.pharos_interiors.pharos_shop.shopkeeper.name'), x: 5, y: 3, dir: 's', move: 'still', pushable: false, talk: 'pharos_shopkeeper' }],
       },
     });
 
     // ---------------------------------------------------------------- 武具屋（11×9）: 武器の棚・鎧の人台・盾の棚・炉
-    room('pharos_smith', 'ファロスの武具屋', 11, 9, 'smith_door', {
+    room('pharos_smith', R.T('map.pharos_interiors.pharos_smith'), 11, 9, 'smith_door', {
       wall: 'wall_brick', floor: 'stone_floor',
       map: {
         objects: [
@@ -101,12 +101,12 @@
             'A.......x',
             'Z-.....bk'], '....o..t.'),
         ],
-        npcs: [{ id: 'smith', look: 'npc_man_4', name: '武具屋の親方', x: 5, y: 3, dir: 's', move: 'still', pushable: false, talk: 'pharos_smithy' }],
+        npcs: [{ id: 'smith', look: 'npc_man_4', name: R.T('map.pharos_interiors.pharos_smith.smith.name'), x: 5, y: 3, dir: 's', move: 'still', pushable: false, talk: 'pharos_smithy' }],
       },
     });
 
     // ---------------------------------------------------------------- 記録院の出張所（12×9）: 本棚・掲示・書き物机
-    room('pharos_record', '記録院ファロス出張所', 12, 9, 'record_door', {
+    room('pharos_record', R.T('map.pharos_interiors.pharos_record'), 12, 9, 'record_door', {
       wall: 'wall_stone', floor: 'stone_floor', carpet: [4, 3, 4, 4],
       map: {
         objects: [
@@ -121,14 +121,14 @@
           K.exam(4, 4, 'pharos_record_papers'),   // 若い記録官の机（白紙の束）
         ],
         npcs: [
-          { id: 'rowell', look: 'rowell', name: '若い記録官', x: 4, y: 5, dir: 's', move: 'still', pushable: false, talk: 'pharos_rowell', key: 'pharos_rowell' },
-          { id: 'clerk', look: 'npc_man_2', name: '書記', x: 10, y: 5, dir: 'w', move: 'still', talk: 'pharos_clerk', reward: 'news', key: 'pharos_clerk' },
+          { id: 'rowell', look: 'rowell', name: R.T('map.pharos_interiors.pharos_record.rowell.name'), x: 4, y: 5, dir: 's', move: 'still', pushable: false, talk: 'pharos_rowell', key: 'pharos_rowell' },
+          { id: 'clerk', look: 'npc_man_2', name: R.T('map.pharos_interiors.pharos_record.clerk.name'), x: 10, y: 5, dir: 'w', move: 'still', talk: 'pharos_clerk', reward: 'news', key: 'pharos_clerk' },
         ],
       },
     });
 
     // ---------------------------------------------------------------- 造船所の小屋（12×9、板の間）: 台の上の小舟・材木・道具
-    room('pharos_shipyard', '造船所の小屋', 12, 9, 'shipyard_door', {
+    room('pharos_shipyard', R.T('map.pharos_interiors.pharos_shipyard'), 12, 9, 'shipyard_door', {
       floor: 'plank',
       map: {
         objects: [
@@ -142,8 +142,8 @@
             'kh......xl'], 'o...v..m..'),
         ],
         npcs: [
-          { id: 'shipwright', look: 'npc_old_m_3', name: '造船所の職人', x: 5, y: 5, dir: 's', move: 'still', pushable: false, talk: 'pharos_shipwright', reward: 'news', key: 'pharos_shipwright' },
-          { id: 'apprentice', look: 'npc_man_1', name: '見習い', x: 2, y: 6, dir: 'e', move: 'still', talk: 'pharos_apprentice', reward: 'side', key: 'pharos_apprentice' },
+          { id: 'shipwright', look: 'npc_old_m_3', name: R.T('map.pharos_interiors.pharos_shipyard.shipwright.name'), x: 5, y: 5, dir: 's', move: 'still', pushable: false, talk: 'pharos_shipwright', reward: 'news', key: 'pharos_shipwright' },
+          { id: 'apprentice', look: 'npc_man_1', name: R.T('map.pharos_interiors.pharos_shipyard.apprentice.name'), x: 2, y: 6, dir: 'e', move: 'still', talk: 'pharos_apprentice', reward: 'side', key: 'pharos_apprentice' },
         ],
       },
     });

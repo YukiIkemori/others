@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("f_cross", {
-    name: "北の野", region: "r_forest", outside: "forest_dark",
+    name: R.T('map.field_cross.f_cross.name'), region: "r_forest", outside: "forest_dark",
     rows: [
       "rrrFFrrrFFFFFFFFrrrrrrrrrrFrFFrFFFFrFrrrrrrrFFFrrrrrrFFFrrrr",
       "rrFFFrrrFFFFFFrrrrrrrrrrrrrFrFrFFFFFrrrrrrrrrFFrrrrrrFFFrrrr",
@@ -49,7 +49,7 @@
       "~~~~~~~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
     ],
     objects: [
-      {"type":"sign","x":31,"y":19,"text":"北の野の分かれ道\n西 → ヴェルダの森・フェルン\n東 → ガルド山地\n南 → 跳ね橋・ファロス半島"},
+      {"type":"sign","x":31,"y":19,"text":R.T('map.field_cross.f_cross.objects.0.text')},
       {"type":"examine","x":24,"y":10,"event":"world_poi_plains_found"},
       {"type":"examine","x":25,"y":10,"event":"world_poi_cache","item":"i_potion","key":"world_poi_plains_found"},
       {"type":"examine","x":44,"y":23,"event":"world_poi_stones"},
@@ -61,8 +61,8 @@
       {"type":"chest","id":"f_cross_c1","x":47,"y":11,"item":"i_potion","n":2},
     ],
     npcs: [
-      {"id":"traveler_plains","look":"npc_merchant_2","name":"旅の行商人","x":42,"y":17,"dir":"s","move":"still","talk":"world_traveler_plains","reward":"news","key":"world_traveler_plains"},
-      {"id":"guard_east","look":"npc_guard_1","name":"番人","x":54,"y":18,"dir":"w","move":"still","pushable":false,"cond":{"slice":true},"talk":{"lines":[{"text":["東の峠は、ゆうべの\n崖崩れで通れないんだ。","山地の鉱山町へ行くなら、\nしばらく待ってくれ。"]}]},"reward":"news","key":"world_guard_east"},
+      {"id":"traveler_plains","look":"npc_merchant_2","name":R.T('map.field_cross.f_cross.traveler_plains.name'),"x":42,"y":17,"dir":"s","move":"still","talk":"world_traveler_plains","reward":"news","key":"world_traveler_plains"},
+      {"id":"guard_east","look":"npc_guard_1","name":R.T('map.field_cross.f_cross.guard_east.name'),"x":54,"y":18,"dir":"w","move":"still","pushable":false,"cond":{"slice":true},"talk":{"lines":[{"text":R.T('map.field_cross.f_cross.lines.0.text')}]},"reward":"news","key":"world_guard_east"},
     ],
     spawns: {"bridge":{"x":28,"y":38,"dir":"n"},"west":{"x":1,"y":22,"dir":"e"},"east":{"x":58,"y":18,"dir":"w"}},
     exits: [{"x":28,"y":39,"w":2,"h":1,"to":{"map":"f_lookout","spawn":"bridge"}},{"x":0,"y":22,"w":1,"h":2,"to":{"map":"f_hut","spawn":"east"}},{"x":59,"y":18,"w":1,"h":2,"to":{"map":"world","spawn":"f_cross_e"},"cond":{"not":{"slice":true}}}],
@@ -70,7 +70,7 @@
     tilePatches: [{"cond":{"slice":true},"rect":[55,17,3,4],"rows":["rrr","rrr","rrr","rrr"]}],
     zones: [{"rect":null,"zone":"zw_forest"}],
     art: {"image":"field/under/f_cross","painted":[],"overlay":"field/under/f_cross_over","closed":"field/under/f_cross_closed"},
-    meta: {"sub":"三つの道の分かれ道","worldRect":[232,124,120,96]},
+    meta: {"sub":R.T('map.field_cross.f_cross.meta.sub'),"worldRect":[232,124,120,96]},
     links: {},
   });
 })(window.RPG);

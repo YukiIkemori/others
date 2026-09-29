@@ -11,17 +11,17 @@
 
   // 並び（持ち主の決まり 2026-09-27）: 道具・装備・技・術・隊列・ワープ（脱出）・図鑑・年代記・手がかり・設定・セーブ。地図はフィールドの X で開く
   const CMDS = [
-    { value: 'items', label: '道具', icon: 'bag', desc: '薬や大事な物を見る。使う。' },
-    { value: 'equip', label: '装備', icon: 'equip', desc: '武器・防具・アクセサリを付け替える。' },
-    { value: 'skills', label: '技・術', icon: 'arts', desc: '覚えた技と術を見る。フィールドで使える術を唱える。' },
-    { value: 'order', label: '隊列', short: '隊列', icon: 'order', desc: '並びと、前列・後列を決める。' },
-    { value: 'bestiary', label: '図鑑', icon: 'beast', desc: '出会った魔物と、手に入れた品を見る。' },
-    { value: 'chronicle', label: '年代記・手がかり', short: '年代記', icon: 'journal', desc: '旅の年代記と、手がかり帳を読む。' },
-    { value: 'settings', label: '設定', icon: 'gear', desc: '文字・画面・音・操作を変える。' },
-    { value: 'save', label: 'セーブ', icon: 'save', desc: '旅を記録する。中断もここから。' },
+    { value: 'items', label: R.T('ui.hub.CMDS.items.label'), icon: 'bag', desc: R.T('ui.hub.CMDS.items.desc') },
+    { value: 'equip', label: R.T('ui.hub.CMDS.equip.label'), icon: 'equip', desc: R.T('ui.hub.CMDS.equip.desc') },
+    { value: 'skills', label: R.T('ui.hub.CMDS.skills.label'), icon: 'arts', desc: R.T('ui.hub.CMDS.skills.desc') },
+    { value: 'order', label: R.T('ui.hub.CMDS.order.label'), short: R.T('ui.hub.CMDS.order.short'), icon: 'order', desc: R.T('ui.hub.CMDS.order.desc') },
+    { value: 'bestiary', label: R.T('ui.hub.CMDS.bestiary.label'), icon: 'beast', desc: R.T('ui.hub.CMDS.bestiary.desc') },
+    { value: 'chronicle', label: R.T('ui.hub.CMDS.chronicle.label'), short: R.T('ui.hub.CMDS.chronicle.short'), icon: 'journal', desc: R.T('ui.hub.CMDS.chronicle.desc') },
+    { value: 'settings', label: R.T('ui.hub.CMDS.settings.label'), icon: 'gear', desc: R.T('ui.hub.CMDS.settings.desc') },
+    { value: 'save', label: R.T('ui.hub.CMDS.save.label'), icon: 'save', desc: R.T('ui.hub.CMDS.save.desc') },
   ];
-  const WARP = { value: 'warp', label: 'ワープ', icon: 'warp', desc: '行ったことのある町やダンジョンの入口へ飛ぶ。' };
-  const ESCAPE = { value: 'escape', label: '脱出', icon: 'exit', desc: 'このダンジョンの入口へ戻る。' };
+  const WARP = { value: 'warp', label: R.T('ui.hub.WARP.warp.label'), icon: 'warp', desc: R.T('ui.hub.WARP.warp.desc') };
+  const ESCAPE = { value: 'escape', label: R.T('ui.hub.ESCAPE.escape.label'), icon: 'exit', desc: R.T('ui.hub.ESCAPE.escape.desc') };
 
   function commands() {
     const rows = CMDS.map((c) => Object.assign({}, c));
@@ -53,7 +53,7 @@
       if (this.busy) return;
       const id = row.value;
       if (id === 'escape') {
-        const i = await S.ask(this, { title: '脱出', text: 'ダンジョンの入口へ戻る？', choices: ['戻る', 'やめる'], cancel: 1 });
+        const i = await S.ask(this, { title: R.T('ui.hub.menu.pick.i.ask.title'), text: R.T('ui.hub.menu.pick.i.ask.text'), choices: R.T('ui.hub.menu.pick.i.ask.choices'), cancel: 1 });
         if (i === 0) this.close({ escape: true });
         return;
       }
@@ -81,22 +81,22 @@
       if (!P || !P.fullHeal) return;
       let plan;
       try { plan = P.fullHeal({ dry: true }); } catch (e) { console.error(e); return; }
-      if (!plan.healed.length) { R.UIK.sfx('buzzer'); await S.note(this, { title: '満タン', lines: ['みんな元気だ。'] }); return; }
-      const nameOf = (id) => { if (id === 'bag') return '袋'; const c = S.char(id); return c ? c.name : id; };
+      if (!plan.healed.length) { R.UIK.sfx('buzzer'); await S.note(this, { title: R.T('ui.hub.menu.fullHeal.title'), lines: [R.T('ui.hub.menu.fullHeal.lines.0')] }); return; }
+      const nameOf = (id) => { if (id === 'bag') return R.T('ui.hub.menu.fullHeal.nameOf.ret'); const c = S.char(id); return c ? c.name : id; };
       const what = (id) => { const a = (R.DB.spells || {})[id] || (R.DB.techs || {})[id] || (R.DB.items || {})[id]; return a ? a.name : id; };
       const usesItems = plan.used.some((x) => x.who === 'bag');
-      if (!plan.used.length) { R.UIK.sfx('buzzer'); await S.note(this, { title: '満タン', lines: ['回復の術も、使える薬もない。'] }); return; }
+      if (!plan.used.length) { R.UIK.sfx('buzzer'); await S.note(this, { title: R.T('ui.hub.menu.fullHeal.title'), lines: [R.T('ui.hub.menu.fullHeal.lines.0_2')] }); return; }
       if (usesItems) {
-        const lines = plan.used.map((x) => ({ text: (x.who === 'bag' ? '' : nameOf(x.who) + '：') + what(x.what), right: '× ' + x.n, icon: x.who === 'bag' ? 'potion' : 'arts', color: x.who === 'bag' ? T().color.gold : undefined }));
-        const i = await S.ask(this, { title: '満タン', lines: ['術が足りないので、道具も使う。'].concat(lines), choices: ['使う', 'やめる'], cancel: 1 });
+        const lines = plan.used.map((x) => ({ text: (x.who === 'bag' ? '' : R.T('ui.hub.menu.fullHeal.lines.text', { nameOf: nameOf(x.who) })) + what(x.what), right: '× ' + x.n, icon: x.who === 'bag' ? 'potion' : 'arts', color: x.who === 'bag' ? T().color.gold : undefined }));
+        const i = await S.ask(this, { title: R.T('ui.hub.menu.fullHeal.i.ask.title'), lines: [R.T('ui.hub.menu.ask.lines.0')].concat(lines), choices: R.T('ui.hub.menu.fullHeal.i.ask.choices'), cancel: 1 });
         if (i !== 0) return;
       }
       const res = P.fullHeal();
       R.UIK.sfx('heal');
-      const lines = res.used.map((x) => ({ text: (x.who === 'bag' ? '' : nameOf(x.who) + '：') + what(x.what), right: '× ' + x.n, icon: x.who === 'bag' ? 'potion' : 'arts' }));
-      lines.push({ text: res.healed.map(nameOf).join('・') + ' の HP が戻った。', icon: 'heal', color: T().color.up });
-      if (res.short) lines.push({ text: 'まだ回復しきれていない人がいる。', color: T().color.gold });
-      await S.note(this, { title: '満タン', lines });
+      const lines = res.used.map((x) => ({ text: (x.who === 'bag' ? '' : R.T('ui.hub.menu.fullHeal.lines.text', { nameOf: nameOf(x.who) })) + what(x.what), right: '× ' + x.n, icon: x.who === 'bag' ? 'potion' : 'arts' }));
+      lines.push({ text: R.T('ui.hub.menu.fullHeal.text', { join: res.healed.map(nameOf).join(R.T('ui.hub.menu.fullHeal.text.join')) }), icon: 'heal', color: T().color.up });
+      if (res.short) lines.push({ text: R.T('ui.hub.menu.fullHeal.text_2'), color: T().color.gold });
+      await S.note(this, { title: R.T('ui.hub.menu.fullHeal.title'), lines });
     },
     update() {
       const I = R.Input, n = S.party().length;
@@ -124,7 +124,7 @@
       const b = S.box(), C = T().color;
       const lw = Math.min(u(230), b.w * 0.24);
       const lx = b.x + u(8);
-      let y = S.heading(g, 'メニュー', lx + u(10), b.y + u(14), lw - u(20));
+      let y = S.heading(g, R.T('ui.hub.menu.drawWide.y.heading'), lx + u(10), b.y + u(14), lw - u(20));
       const lr = { x: lx, y: y + u(4), w: lw, h: this.rows.length * this.list.rowPx() };
       this.list.active = this.focus === 'cmd';
       this.list.render = (gg, row, rect, f) => {
@@ -160,9 +160,9 @@
       const pr = { x: rx, y: top, w: rw, h: u(128) };
       R.UIK.panel(g, pr, { frost: true });
       const rowsR = [
-        ['coin', 'ゴールド', R.UIK.num(G.gold || 0) + ' G', C.gold],
-        ['clock', 'プレイ時間', R.U.playTime(G.playMs || 0), C.text],
-        ['pin', '現在地', S.placeName(), C.text],
+        ['coin', R.T('ui.hub.menu.drawWide.rowsR.0.1'), R.UIK.num(G.gold || 0) + ' G', C.gold],
+        ['clock', R.T('ui.hub.menu.drawWide.rowsR.1'), R.U.playTime(G.playMs || 0), C.text],
+        ['pin', R.T('ui.hub.menu.drawWide.rowsR.2.1'), S.placeName(), C.text],
       ];
       rowsR.forEach(([ic, lab, val, col], i) => {
         const yy = pr.y + u(18) + i * u(36);
@@ -171,20 +171,20 @@
         R.UIK.text(g, val, pr.x + pr.w - u(18), yy - u(2), { size: u(i === 2 ? 16 : 17), weight: 700, color: col, align: 'right', maxW: pr.w - u(150) });
       });
       S.leadCard(g, { x: rx, y: pr.y + pr.h + u(14), w: rw, h: u(110) });
-      const pp = [{ btn: 'a', label: '決定' }, { btn: 'b', label: '閉じる' }, { btn: 'x', label: '満タン' }];
-      if (this.focus === 'cmd') pp.push({ btn: 'right', label: '仲間を選ぶと強さ' });
+      const pp = [{ btn: 'a', label: R.T('ui.hub.menu.drawWide.pp.0.label') }, { btn: 'b', label: R.T('ui.hub.menu.drawWide.pp.1.label') }, { btn: 'x', label: R.T('ui.hub.menu.drawWide.pp.2.label') }];
+      if (this.focus === 'cmd') pp.push({ btn: 'right', label: R.T('ui.hub.menu.drawWide.label') });
       S.prompts(g, pp);
     },
     drawTall(g) {
       const b = S.box(), C = T().color, G = R.Game || {};
       let y = b.y + u(4);
-      S.heading(g, 'メニュー', b.x + u(4), y, 0);
+      S.heading(g, R.T('ui.hub.menu.drawTall.heading'), b.x + u(4), y, 0);
       // 右上に「閉じる」（縦持ちはボタン表示の行が無いので、押せる札で。44 CSS px 以上）
-      const cs = u(14), cwid = R.UIK.measure('閉じる', { size: cs, weight: 700 }) + u(26), chh = Math.max(u(30), R.minTouch || 0);
+      const cs = u(14), cwid = R.UIK.measure(R.T('ui.hub.menu.drawTall.cwid.measure'), { size: cs, weight: 700 }) + u(26), chh = Math.max(u(30), R.minTouch || 0);
       this.closeRect = { x: b.x + b.w - cwid, y: y + u(10) - chh / 2, w: cwid, h: chh };
       R.UIK.card(g, this.closeRect, { frost: true });
-      R.UIK.text(g, '閉じる', this.closeRect.x + cwid / 2, this.closeRect.y + (chh - cs) / 2, { size: cs, weight: 700, color: C.text, align: 'center' });
-      R.UIK.text(g, `${R.UIK.num(G.gold || 0)} G   ・   ${R.U.playTime(G.playMs || 0)}`, this.closeRect.x - u(12), y + u(1), { size: u(14), color: C.text2, align: 'right' });
+      R.UIK.text(g, R.T('ui.hub.menu.drawTall.text'), this.closeRect.x + cwid / 2, this.closeRect.y + (chh - cs) / 2, { size: cs, weight: 700, color: C.text, align: 'center' });
+      R.UIK.text(g, R.T('ui.hub.menu.drawTall.text_2', { UIK: R.UIK.num(G.gold || 0), playTime: R.U.playTime(G.playMs || 0) }), this.closeRect.x - u(12), y + u(1), { size: u(14), color: C.text2, align: 'right' });
       y += u(34);
       if (S.goalBar(g, { x: b.x, y, w: b.w, h: u(40) }, { compact: true })) y += u(48);
       const mem = S.party();
@@ -219,7 +219,7 @@
         R.UIK.icon(g, row.icon, r.x + (r.w - isz) / 2, r.y + r.h * 0.2, isz, f ? C.gold : C.text2);
         R.UIK.text(g, row.short || row.label, r.x + r.w / 2, r.y + r.h * 0.62, { size: u(15), weight: 700, color: f ? C.goldHi : C.text, align: 'center', maxW: r.w - u(8) });
       }
-      R.UIK.text(g, '仲間をタップすると強さ', R.W / 2, b.y + b.h + u(2), { size: u(13), color: C.text3, align: 'center' });
+      R.UIK.text(g, R.T('ui.hub.menu.drawTall.text_3'), R.W / 2, b.y + b.h + u(2), { size: u(13), color: C.text3, align: 'center' });
     },
   });
 
@@ -253,7 +253,7 @@
     g.fillRect(r.x + u(1), r.y + u(10), u(2), r.h - u(20));
     const isz = u(16), my = r.y + r.h / 2;
     R.UIK.icon(g, 'star', r.x + u(16), my - isz / 2, isz, C.gold);
-    const lab = '次にやること', ls = u(o.compact ? 11 : 12);
+    const lab = R.T('ui.hub.goalBar.lab'), ls = u(o.compact ? 11 : 12);
     R.UIK.text(g, lab, r.x + u(40), my - ls / 2 - u(1), { size: ls, weight: 700, color: C.gold, track: u(1.5) });
     const lx = r.x + u(40) + R.UIK.measure(lab, { size: ls, weight: 700 }) + u(1.5) * lab.length + u(18);
     const ts = u(o.compact ? 14 : 16.5);
@@ -280,15 +280,15 @@
     if (o.compact) {
       R.UIK.icon(g, 'pin', r.x + u(14), r.y + u(14), u(16), C.gold);
       R.UIK.text(g, L.title, r.x + u(38), r.y + u(12), { size: u(16), weight: 700, color: C.text, maxW: r.w * 0.62 });
-      const where = [L.dir, S.locName(L.place)].filter(Boolean).join('・');
+      const where = [L.dir, S.locName(L.place)].filter(Boolean).join(R.T('ui.hub.leadCard.where.join'));
       if (where) R.UIK.text(g, where, r.x + r.w - u(14), r.y + u(15), { size: u(13), color: C.text2, align: 'right' });
-      if (L.from) R.UIK.text(g, S.locName(L.from) + 'で聞いた', r.x + u(38), r.y + u(40), { size: u(12.5), color: C.text3, maxW: r.w - u(52) });
+      if (L.from) R.UIK.text(g, R.T('ui.hub.leadCard.text', { locName: S.locName(L.from) }), r.x + u(38), r.y + u(40), { size: u(12.5), color: C.text3, maxW: r.w - u(52) });
       return true;
     }
     R.UIK.icon(g, 'pin', r.x + u(18), r.y + u(18), u(16), C.gold);
-    R.UIK.text(g, '目印を付けた手がかり', r.x + u(44), r.y + u(18), { size: u(13), weight: 700, color: C.gold, track: u(1) });
+    R.UIK.text(g, R.T('ui.hub.leadCard.text_2'), r.x + u(44), r.y + u(18), { size: u(13), weight: 700, color: C.gold, track: u(1) });
     R.UIK.text(g, L.title, r.x + u(18), r.y + u(48), { size: u(18), weight: 700, color: C.text, maxW: r.w - u(36) });
-    const sub = [L.from ? S.locName(L.from) + 'で聞いた' : '', L.dir || ''].filter(Boolean).join('　・　');
+    const sub = [L.from ? R.T('ui.hub.leadCard.sub.0', { locName: S.locName(L.from) }) : '', L.dir || ''].filter(Boolean).join(R.T('ui.hub.leadCard.sub.join'));
     if (sub) R.UIK.text(g, sub, r.x + u(18), r.y + u(80), { size: u(13), color: C.text2, maxW: r.w - u(36) });
     return true;
   };

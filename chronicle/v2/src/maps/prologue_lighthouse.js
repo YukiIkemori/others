@@ -68,8 +68,8 @@
         // 岬
         ...PS('lamp_post', [[16, 23], [19, 23]]), P('bollard', 11, 29), P('bollard', 24, 29),
         ...PS('rock_small', [[8, 23], [28, 23], [12, 27], [23, 26]]), ...PS('rock', capeRocks.filter(([x, y]) => g[y][x] === ',')), P('stump', 6, 24),
-        K.sign(21, 25, 'ファロス灯台\n灯台守のほか、立ち入りを禁ず。'),
-        { type: 'door', id: 'lh1_door', x: 17, y: 22, w: 2, scale: 1.55, locked: '扉には、鍵がかかっている', unlock: { cond: 'prologue_key', event: 'lighthouse_1_door' } },
+        K.sign(21, 25, R.T('map.prologue_lighthouse.objects.sign')),
+        { type: 'door', id: 'lh1_door', x: 17, y: 22, w: 2, scale: 1.55, locked: R.T('map.prologue_lighthouse.objects.lh1_door.locked'), unlock: { cond: 'prologue_key', event: 'lighthouse_1_door' } },
         { type: 'door', id: 'lh1_door_w', x: 17, y: 22, look: 'none', cond: LH_OPEN, to: { map: 'lighthouse_1', spawn: 'hall_w' } },
         { type: 'door', id: 'lh1_door_e', x: 18, y: 22, look: 'none', cond: LH_OPEN, to: { map: 'lighthouse_1', spawn: 'hall_e' } },
         { type: 'door', id: 'lh1_door_out_w', x: 17, y: 21, look: 'none', to: { map: 'lighthouse_1', spawn: 'door_w' } },
@@ -78,10 +78,10 @@
         K.exam(18, 22, 'lighthouse_1_door', { cond: { not: LH_OPEN } }),
       ];
       const npcs = [
-        { id: 'otto', look: 'otto', name: 'オットー', title: '灯台守', x: 15, y: 18, dir: 'e', move: 'still', pushable: false, cond: ['prologue_key', '!prologue_tutorial'], talk: 'lighthouse_1_tutorial' },
+        { id: 'otto', look: 'otto', name: R.T('map.prologue_lighthouse.npcs.otto.name'), title: R.T('map.prologue_lighthouse.npcs.otto.title'), x: 15, y: 18, dir: 'e', move: 'still', pushable: false, cond: ['prologue_key', '!prologue_tutorial'], talk: 'lighthouse_1_tutorial' },
       ];
       K.def('lighthouse_1', Object.assign({}, BASE, {
-        name: 'ファロス灯台', legend: LEG, rows: g, outside: 'sea', objects, npcs, tilePatches,
+        name: R.T('map.prologue_lighthouse.lighthouse_1.name'), legend: LEG, rows: g, outside: 'sea', objects, npcs, tilePatches,
         art: { image: 'lighthouse/under/lighthouse_1', painted: ['sack@9,3', 'sack@15,3', 'bookshelf@20,3', 'bookshelf@21,3', 'barrel@22,3', 'sack@10,6', 'rock_small@11,7', 'sack@18,10', 'chair@24,10', 'table@25,10', 'sack@11,14', 'crate@24,15', 'crate@25,15', 'barrel@6,16', 'sack@24,18', 'net@20,19', 'rock_small@8,23', 'rock_small@28,23', 'stump@6,24', 'rock@31,24', 'rock_small@23,26', 'rock_small@12,27', 'rock@30,28', 'bollard@11,29', 'bollard@24,29', 'rock@9,30', 'rock@26,30'] },   // 描いた一枚絵（design/ENV_ASSETS.md §8）
         spawns: {
           entrance: { x: 17, y: 29, dir: 'n' }, from_next: { x: 27, y: 4, dir: 'w' },
@@ -91,7 +91,7 @@
         // 扉から入ると y 20 に立つ。そこから 1 歩で（y 18〜19）
         triggers: [{ id: 'tutorial', x: 16, y: 18, w: 4, h: 2, on: 'step', event: 'lighthouse_1_tutorial', cond: ['prologue_key', '!prologue_tutorial'] }],
         zones: [{ rect: [6, 3, 24, 18], zone: 'z_lighthouse' }],
-        meta: { chestsInfo: true, floor: '1階', sub: '岬の倉庫' },
+        meta: { chestsInfo: true, floor: R.T('map.prologue_lighthouse.lighthouse_1.meta.floor'), sub: R.T('map.prologue_lighthouse.lighthouse_1.meta.sub') },
       }));
     })();
 
@@ -130,15 +130,15 @@
         P('bookshelf', 20, 5), P('bookshelf', 21, 5), P('table', 18, 21), P('rock_small', 5, 20), P('net', 3, 8),
         // 物置の中（見つけるまで描かない）と、つき当たりの崩れた石・すきま風
         P('crate', 23, 24), P('sack', 19, 27),
-        P('rock_small', 17, 24), K.exam(17, 25, 'field_secret_hint', { text: '石でふさいだ古い戸口だ。\n目地が崩れて、すきま風が\n抜けてくる……。' }),
+        P('rock_small', 17, 24), K.exam(17, 25, 'field_secret_hint', { text: R.T('map.prologue_lighthouse.objects.22.text') }),
       ];
       K.def('lighthouse_2', Object.assign({}, BASE, {
-        name: 'ファロス灯台', legend: LEG, rows: g, outside: 'wall_stone', objects,
+        name: R.T('map.prologue_lighthouse.lighthouse_2.name'), legend: LEG, rows: g, outside: 'wall_stone', objects,
         // 描いた一枚絵（ENV_ASSETS.md §8）。ふさいだ物置は closed の絵で、見つけるまで石の壁のまま
         art: { image: 'lighthouse/under/lighthouse_2', closed: 'lighthouse/under/lighthouse_2_closed', painted: ['crate@5,5', 'crate@6,5', 'barrel@14,5', 'bookshelf@20,5', 'bookshelf@21,5', 'sack@14,6', 'rock_small@15,7', 'sack@28,7', 'net@3,8', 'sack@22,12', 'rock_small@5,20', 'sack@10,20'] },
         spawns: { from_prev: { x: 28, y: 26, dir: 'n' }, from_next: { x: 17, y: 16, dir: 's' } },
         zones: [{ rect: null, zone: 'z_lighthouse' }],
-        meta: { chestsInfo: true, floor: '2階', sub: 'らせん階段' },
+        meta: { chestsInfo: true, floor: R.T('map.prologue_lighthouse.lighthouse_2.meta.floor'), sub: R.T('map.prologue_lighthouse.lighthouse_2.meta.sub') },
       }));
     })();
 
@@ -162,17 +162,17 @@
         K.exam(12, 6, 'lighthouse_3_lamp'),
       ];
       const npcs = [
-        { id: 'fine', look: 'fine', name: '灰色のマントの少女', x: 12, y: 13, dir: 's', move: 'still', pushable: false, cond: '!prologue_fine', talk: 'lighthouse_3_fine' },
+        { id: 'fine', look: 'fine', name: R.T('map.prologue_lighthouse.npcs.fine.name'), x: 12, y: 13, dir: 's', move: 'still', pushable: false, cond: '!prologue_fine', talk: 'lighthouse_3_fine' },
       ];
       K.def('lighthouse_3', Object.assign({}, BASE, {
-        name: 'ファロス灯台', legend: LEG, rows: g, outside: 'wall_stone', objects, npcs,
+        name: R.T('map.prologue_lighthouse.lighthouse_3.name'), legend: LEG, rows: g, outside: 'wall_stone', objects, npcs,
         art: { image: 'lighthouse/under/lighthouse_3', painted: ['rock_small@7,4', 'rock_small@17,10', 'bookshelf@8,13', 'sack@18,16', 'barrel@9,19', 'crate@15,19'] },   // 描いた一枚絵（ENV_ASSETS.md §8）
         spawns: { from_prev: { x: 12, y: 18, dir: 'n' }, lamp: { x: 12, y: 9, dir: 'n' } },
         triggers: [
           { id: 'fine', x: 10, y: 16, w: 6, h: 1, on: 'step', event: 'lighthouse_3_fine', cond: '!prologue_fine' },
           { id: 'boss', x: 9, y: 9, w: 7, h: 2, on: 'step', event: 'lighthouse_3_boss', cond: '!prologue_boss' },
         ],
-        meta: { chestsInfo: true, floor: '3階', sub: '灯室' },
+        meta: { chestsInfo: true, floor: R.T('map.prologue_lighthouse.lighthouse_3.meta.floor'), sub: R.T('map.prologue_lighthouse.lighthouse_3.meta.sub') },
       }));
     })();
   });

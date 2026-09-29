@@ -15,61 +15,61 @@
   // ---------------------------------------------------------------- 行動
   Object.assign(R.DB.bossActions, {
     // 吹雪の大狼
-    eb_bw_howl: { name: '吹雪の遠吠え', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は天を仰ぎ、長く遠吠えした……！',
-      telegraph: { text: '大狼のまわりに、吹雪が渦を巻きはじめた……。', pose: 'tele', tint: '#d8e4ff', next: 'eb_bw_storm', guard: 'defend' } },
-    eb_bw_storm: { name: '吹雪の牙', kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'phys', power: 6.0, element: 'water', sure: true }, { type: 'status', status: 'freeze', chance: 0.1 }], fx: 'breath_ice', msg: '吹雪をまとった牙が、一行を次々に襲った！' },
-    eb_bw_bite: { name: '大狼の牙', kind: 'enemy', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.35 }], fx: 'bite2', msg: '{user}は低くうなって飛びかかった！' },
-    eb_bw_call_0: { name: '群れを呼ぶ', kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_siegewolf', n: 1, max: 3 }], fx: 'song', msg: '{user}の声に、狼が\n一匹駆けつけた！' },
-    eb_bw_call_1: { name: '群れを呼ぶ', kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_siegewolf', n: 1, max: 4 }], fx: 'song', msg: '守りの手薄な門から、\n狼が駆けつけた！' },
-    eb_bw_call_2: { name: '群れを呼ぶ', kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_siegewolf', n: 2, max: 5 }], fx: 'song', msg: '守りの手薄な門から、\n狼の群れが駆けつけた！' },
+    eb_bw_howl: { name: R.T('bossActions.eb_bw_howl.name'), kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: R.T('bossActions.eb_bw_howl.msg'),
+      telegraph: { text: R.T('bossActions.eb_bw_howl.telegraph.text'), pose: 'tele', tint: '#d8e4ff', next: 'eb_bw_storm', guard: 'defend' } },
+    eb_bw_storm: { name: R.T('bossActions.eb_bw_storm.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'phys', power: 6.0, element: 'water', sure: true }, { type: 'status', status: 'freeze', chance: 0.1 }], fx: 'breath_ice', msg: R.T('bossActions.eb_bw_storm.msg') },
+    eb_bw_bite: { name: R.T('bossActions.eb_bw_bite.name'), kind: 'enemy', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.35 }], fx: 'bite2', msg: R.T('bossActions.eb_bw_bite.msg') },
+    eb_bw_call_0: { name: R.T('bossActions.eb_bw_call_0.name'), kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_siegewolf', n: 1, max: 3 }], fx: 'song', msg: R.T('bossActions.eb_bw_call_0.msg') },
+    eb_bw_call_1: { name: R.T('bossActions.eb_bw_call_1.name'), kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_siegewolf', n: 1, max: 4 }], fx: 'song', msg: R.T('bossActions.eb_bw_call_1.msg') },
+    eb_bw_call_2: { name: R.T('bossActions.eb_bw_call_2.name'), kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_siegewolf', n: 2, max: 5 }], fx: 'song', msg: R.T('bossActions.eb_bw_call_2.msg') },
     // 氷壁の巨人
-    eb_frost_glow: { name: '白い光', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は胸の前で両腕を組んだ。',
-      telegraph: { text: '巨人の体が、白く光りはじめた……。', pose: 'tele', tint: '#e8f4ff', next: 'eb_ice_armor', guard: 'element:fire',
-        cancel: { element: 'fire', msg: '炎が、張りかけた氷を溶かした！' } } },
-    eb_ice_armor: { name: '氷の鎧', kind: 'enemy', target: 'self', effects: [{ type: 'buff', stat: 'def', stages: 4 }, { type: 'buff', stat: 'mdef', stages: 2 }, { type: 'buff', stat: 'atk', stages: 2 }, { type: 'heal', pct: 0.25 }, { type: 'status', status: 'regen' }], fx: 'buff', msg: '{user}の体が、分厚い氷の鎧に覆われた！\n傷も氷でふさがっていく……。' },
+    eb_frost_glow: { name: R.T('bossActions.eb_frost_glow.name'), kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: R.T('bossActions.eb_frost_glow.msg'),
+      telegraph: { text: R.T('bossActions.eb_frost_glow.telegraph.text'), pose: 'tele', tint: '#e8f4ff', next: 'eb_ice_armor', guard: 'element:fire',
+        cancel: { element: 'fire', msg: R.T('bossActions.eb_frost_glow.telegraph.cancel.msg') } } },
+    eb_ice_armor: { name: R.T('bossActions.eb_ice_armor.name'), kind: 'enemy', target: 'self', effects: [{ type: 'buff', stat: 'def', stages: 4 }, { type: 'buff', stat: 'mdef', stages: 2 }, { type: 'buff', stat: 'atk', stages: 2 }, { type: 'heal', pct: 0.25 }, { type: 'status', status: 'regen' }], fx: 'buff', msg: R.T('bossActions.eb_ice_armor.msg') },
     // 白竜ネーヴェ
-    eb_dragon_inhale: { name: '深く息を吸う', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は首を高くもたげた。',
-      telegraph: { text: 'ネーヴェが、深く息を吸いこんでいる……。', pose: 'tele', tint: '#dff0ff', next: 'eb_dragon_whiteout', guard: 'defend' } },
-    eb_dragon_whiteout: { name: '白の大吹雪', kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'breath', power: 2.0, element: 'water', sure: true }, { type: 'status', status: 'freeze', chance: 0.2 }], fx: 'breath_ice', msg: '{user}の口から、あたり一面を白く塗りつぶす\n大吹雪が吹き出した！' },
-    eb_dragon_remember: { name: '昔話の一節', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}の動きが、ふと止まった。\n……祭で語られた昔話の一節が、\n胸の氷の奥で響いたようだ。' },
+    eb_dragon_inhale: { name: R.T('bossActions.eb_dragon_inhale.name'), kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: R.T('bossActions.eb_dragon_inhale.msg'),
+      telegraph: { text: R.T('bossActions.eb_dragon_inhale.telegraph.text'), pose: 'tele', tint: '#dff0ff', next: 'eb_dragon_whiteout', guard: 'defend' } },
+    eb_dragon_whiteout: { name: R.T('bossActions.eb_dragon_whiteout.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'breath', power: 2.0, element: 'water', sure: true }, { type: 'status', status: 'freeze', chance: 0.2 }], fx: 'breath_ice', msg: R.T('bossActions.eb_dragon_whiteout.msg') },
+    eb_dragon_remember: { name: R.T('bossActions.eb_dragon_remember.name'), kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: R.T('bossActions.eb_dragon_remember.msg') },
     // 氷の船団長
-    eb_admiral_order: { name: '号令', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}はサーベルを高く掲げた！',
-      telegraph: { text: '凍った大砲が、一行に向けられた……。', pose: 'tele', tint: '#c8e0ff', next: 'eb_admiral_cannon', guard: 'defend' } },
-    eb_admiral_cannon: { name: '氷の砲撃', kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'phys', power: 2.0, element: 'water', sure: true }], fx: 'ice3', msg: '氷の砲弾が、甲板ごと一行を打ち砕いた！' },
-    eb_admiral_crew: { name: '総員集合', kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_frost_sailor', n: 2, max: 4 }], fx: 'magic', msg: '氷の中から、凍った水兵たちが起き上がった！' },
-    eb_admiral_flag: { name: '凍てつく旗', kind: 'enemy', target: 'enemies', effects: [{ type: 'buff', stat: 'agi', stages: -1, chance: 0.6 }, { type: 'status', status: 'freeze', chance: 0.2 }], fx: 'debuff', msg: '{user}の旗が、凍える風にはためいた！' },
-    eb_admiral_slash: { name: '氷のサーベル', kind: 'enemy', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.5, element: 'water', hits: 2 }], fx: 'slash2', msg: '{user}の氷のサーベルがひらめいた！' },
+    eb_admiral_order: { name: R.T('bossActions.eb_admiral_order.name'), kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: R.T('bossActions.eb_admiral_order.msg'),
+      telegraph: { text: R.T('bossActions.eb_admiral_order.telegraph.text'), pose: 'tele', tint: '#c8e0ff', next: 'eb_admiral_cannon', guard: 'defend' } },
+    eb_admiral_cannon: { name: R.T('bossActions.eb_admiral_cannon.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'phys', power: 2.0, element: 'water', sure: true }], fx: 'ice3', msg: R.T('bossActions.eb_admiral_cannon.msg') },
+    eb_admiral_crew: { name: R.T('bossActions.eb_admiral_crew.name'), kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_frost_sailor', n: 2, max: 4 }], fx: 'magic', msg: R.T('bossActions.eb_admiral_crew.msg') },
+    eb_admiral_flag: { name: R.T('bossActions.eb_admiral_flag.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'buff', stat: 'agi', stages: -1, chance: 0.6 }, { type: 'status', status: 'freeze', chance: 0.2 }], fx: 'debuff', msg: R.T('bossActions.eb_admiral_flag.msg') },
+    eb_admiral_slash: { name: R.T('bossActions.eb_admiral_slash.name'), kind: 'enemy', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.5, element: 'water', hits: 2 }], fx: 'slash2', msg: R.T('bossActions.eb_admiral_slash.msg') },
   });
 
   // ---------------------------------------------------------------- ボス
   const def = (id, d) => { L[id] = d; R.DB.bosses[id] = d; };
   const base = {
-    name: '吹雪の大狼', sprite: 'boss_wolflord', bossType: 'mid', lv: 9, actsPerTurn: 1, size: 'l',
+    name: R.T('data.bosses_snow.base.name'), sprite: 'boss_wolflord', bossType: 'mid', lv: 9, actsPerTurn: 1, size: 'l',
     race: 'beast', affinity: 'water', flags: ['boss'], eva: 10,
     elem: { fire: 1.5, water: 0.25, earth: 1.25 }, phys: {}, statusRes: { sleep: 0.25, freeze: 1 },
     s: { hp: 1.15, atk: 0.9, mag: 0.9 },
-    leader: { msg: '大狼が倒れると、狼の群れは\n吹雪の中へ散り散りに逃げていった！' },
+    leader: { msg: R.T('data.bosses_snow.base.leader.msg') },
     drops: MID('i_ether'),
-    desc: '吹雪にまぎれて村を囲む狼の群れの頭。\n遠吠えひとつで吹雪を呼ぶ。',
+    desc: R.T('data.bosses_snow.base.desc'),
   };
   const bwActs = (call) => A([['attack', 3], ['eb_bw_bite', 2], ['eb_bw_howl', 200, { every: [3, 1] }]].concat(call ? [[call, 200, { every: [3, 0], countBelow: call === 'eb_bw_call_2' ? 5 : call === 'eb_bw_call_1' ? 4 : 3 }]] : []));
   def('b_blizzardwolf', Object.assign({}, base, { actions: bwActs('eb_bw_call_0') }));
   def('b_blizzardwolf_1', Object.assign({}, base, { actions: bwActs('eb_bw_call_1') }));
   def('b_blizzardwolf_2', Object.assign({}, base, { actions: bwActs('eb_bw_call_2') }));
   def('b_siegewolf', {
-    name: '吹雪の狼', sprite: 'wolf_1', artKind: 'mon', bossType: 'add', addOf: 'b_blizzardwolf', lv: 9, hpShare: 3, actsPerTurn: 1, size: 's',
+    name: R.T('data.bosses_snow.b_siegewolf.name'), sprite: 'wolf_1', artKind: 'mon', bossType: 'add', addOf: 'b_blizzardwolf', lv: 9, hpShare: 3, actsPerTurn: 1, size: 's',
     race: 'beast', flags: ['boss'], eva: 10, elem: { fire: 1.5, water: 0.25 }, phys: {}, statusRes: {},
     actions: A([['attack', 3], ['e_bite', 1]]), s: { hp: 0.8, atk: 0.4, mag: 0.4 }, drops: {},
-    desc: '大狼に従う白い狼。\n頭がいなくなると散っていく。',
+    desc: R.T('data.bosses_snow.b_siegewolf.desc'),
   });
 
   // 氷壁の巨人（今の数値と行動に予告と融ける氷を足す）
   const G = L.b_icegiant;
   if (G) {
     G.actions = A([['attack', 3], ['eb_ice_hammer', 2], ['eb_avalanche_drop', 2], ['eb_frost_glow', 200, { every: [2, 1] }], ['eb_frost_exhale', 1]]);
-    G.melt = { element: 'fire', to: -2, clear: 'regen', reset: ['atk'], msg: '炎が氷の鎧を砕いた！\n巨人の体がむき出しになった！' };
+    G.melt = { element: 'fire', to: -2, clear: 'regen', reset: ['atk'], msg: R.T('data.bosses_snow.melt.msg') };
     G.s = { hp: 1.0, atk: 1.6, mag: 1.6 };
-    G.desc = '白竜の峰の中腹を守る氷の巨人。\n氷の鎧を張るが、火に弱い。';
+    G.desc = R.T('data.bosses_snow.desc');
   }
   // 白竜ネーヴェ（予告の大吹雪・昔話の一節）
   const D = L.b_whitedragon;
@@ -81,20 +81,20 @@
 
   // 氷の船団長（隠しボス。強さ固定）と凍った水兵
   def('b_frost_admiral', {
-    name: '氷の船団長', sprite: 'frostling_5', artKind: 'mon', bossType: 'fmid', lv: 9, actsPerTurn: 2, size: 'l',
+    name: R.T('data.bosses_snow.b_frost_admiral.name'), sprite: 'frostling_5', artKind: 'mon', bossType: 'fmid', lv: 9, actsPerTurn: 2, size: 'l',
     race: 'undead', affinity: 'water', flags: ['boss'], eva: 10,
     elem: { fire: 1.5, water: 0, light: 1.25 }, phys: {}, statusRes: { death: 1, freeze: 1, sleep: 0.5 },
     actions: A([['attack', 2], ['eb_admiral_slash', 2], ['eb_admiral_flag', 1, { every: [4, 3] }], ['eb_admiral_order', 200, { every: [3, 1] }],
       ['eb_admiral_crew', 200, { every: [4, 2], countBelow: 3 }]]),
-    phases: [{ hpBelow: 0.4, msg: '船団長の氷の鎧がはがれ落ちた！\n――帰りたい、と声がした。', set: { buffs: { atk: 1 } } }],
+    phases: [{ hpBelow: 0.4, msg: R.T('data.bosses_snow.b_frost_admiral.phases.0.msg'), set: { buffs: { atk: 1 } } }],
     s: { hp: 0.6, atk: 0.5, mag: 0.5 },
     drops: { normal: { pool: 'p_boss', rate: 1 }, bonus: { pool: 'p_heal', rate: 1 } },   // 確定の 2 つ目: 終盤の前は癒やしの水（pools.js p_heal）
-    desc: '氷に閉じこめられた帆船の船団長。\n百年、帰る港を探している。',
+    desc: R.T('data.bosses_snow.b_frost_admiral.desc'),
   });
   def('b_frost_sailor', {
-    name: '凍った水兵', sprite: 'frostling_4', artKind: 'mon', bossType: 'add', addOf: 'b_frost_admiral', lv: 9, hpShare: 3, actsPerTurn: 1, size: 's',
+    name: R.T('data.bosses_snow.b_frost_sailor.name'), sprite: 'frostling_4', artKind: 'mon', bossType: 'add', addOf: 'b_frost_admiral', lv: 9, hpShare: 3, actsPerTurn: 1, size: 's',
     race: 'undead', flags: ['boss'], eva: 5, elem: { fire: 1.5, water: 0 }, phys: {}, statusRes: { death: 1 },
     actions: A([['attack', 3], ['e_icicle', 1]]), s: { atk: 0.6, mag: 0.6 }, drops: {},
-    desc: '船団長に従う、凍りついた水兵。',
+    desc: R.T('data.bosses_snow.b_frost_sailor.desc'),
   });
 })(window.RPG);

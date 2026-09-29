@@ -38,17 +38,17 @@
   R.onData(function () {
     const f = (a) => a.filter(has);
     R.defs('shops', {
-      shop_kasim_items: { name: 'カシムの道具屋', kind: 'item', priceMul: guild, keepOld: true, sell: true, items: f(S0.concat(S1, ['i_stone_earth', 'i_stone_wind'])), tier: { 2: f(S2), 4: f(S3), 5: f(S5) } },
-      shop_kasim_arms: { name: '市場の武具の屋台', kind: 'weapon', priceMul: guild, keepOld: false, sell: true,
+      shop_kasim_items: { name: R.T('shops.shop_kasim_items.name'), kind: 'item', priceMul: guild, keepOld: true, sell: true, items: f(S0.concat(S1, ['i_stone_earth', 'i_stone_wind'])), tier: { 2: f(S2), 4: f(S3), 5: f(S5) } },
+      shop_kasim_arms: { name: R.T('shops.shop_kasim_arms.name'), kind: 'weapon', priceMul: guild, keepOld: false, sell: true,
         items: gear(WEAPON_LINES, 0).concat(gear(WEAPON_LINES, 1), gear(ARMOR_LINES, 0)),
         tier: tiers((t) => gear(WEAPON_LINES, t).concat(gear(WEAPON_LINES, t + 1), gear(ARMOR_LINES, t)), 1, 8) },
-      shop_kasim_bazaar: { name: '市場の屋台', kind: 'special', priceMul: bazaar, keepOld: false, sell: true,
+      shop_kasim_bazaar: { name: R.T('shops.shop_kasim_bazaar.name'), kind: 'special', priceMul: bazaar, keepOld: false, sell: true,
         items: f(STONES.concat(WARDS.slice(0, 4), ACC(0))), tier: tiers((t) => f(STONES.concat(WARDS, ACC(Math.min(t, 8)))), 1, 8) },
-      shop_sandedge: { name: '砂の縁の売り台', kind: 'item', keepOld: true, sell: true, items: f(S0.concat(['i_potion', 'i_ether'])), tier: { 2: f(['i_incense', 'i_thaw']), 5: f(S5) } },
-      shop_lotta: { name: 'ロッタの背負い籠', kind: 'special', keepOld: false, sell: true,
+      shop_sandedge: { name: R.T('shops.shop_sandedge.name'), kind: 'item', keepOld: true, sell: true, items: f(S0.concat(['i_potion', 'i_ether'])), tier: { 2: f(['i_incense', 'i_thaw']), 5: f(S5) } },
+      shop_lotta: { name: R.T('shops.shop_lotta.name'), kind: 'special', keepOld: false, sell: true,
         // 砂漠は序盤〜中盤: 先制・ドロップ率・レア率の品（見張りの角笛・目利きの片眼鏡・四つ葉）は置かない（持ち主の決まり）
         items: f(['ac_quiet', 'i_lure', 'i_lens']), tier: { 1: f(['ac_quiet', 'ac_ward_poison', 'ac_purse', 'i_lure', 'i_lens']), 2: f(['ac_quiet', 'ac_ward_poison', 'ac_ward_blind', 'ac_purse', 'i_lure', 'i_lens']) } },
-      shop_hawks: { name: '鷹団の闇市', kind: 'weapon', priceMul: hawks, keepOld: false, sell: true,
+      shop_hawks: { name: R.T('shops.shop_hawks.name'), kind: 'weapon', priceMul: hawks, keepOld: false, sell: true,
         items: f(gear(['w_dagger', 'w_bow'], 1).concat(['i_smoke', 'i_lure', 'ac_quickhand'])),
         tier: tiers((t) => f(gear(['w_dagger', 'w_bow'], t + 1).concat(['i_smoke', 'i_lure', 'ac_quickhand', 'ac_purse'])), 1, 8) },
     });

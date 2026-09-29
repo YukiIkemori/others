@@ -7,82 +7,82 @@
   const cleared = (ev) => ev.flag('cleared_r_forest');
 
   E('yura_arrival', async (ev) => {
-    await ev.caption('まるい石の小屋が、\n大きな水車のまわりに寄りそっている。', { ms: 2200 });
-    await ev.caption('……誰も、名を呼び合っていない。', { ms: 1800 });
+    await ev.caption(R.T('events.yura_arrival.caption'), { ms: 2200 });
+    await ev.caption(R.T('events.yura_arrival.caption_2'), { ms: 1800 });
   });
 
   E('yura_elder', async (ev) => {
     if (!ev.flag('yura_elder_talked')) {
-      await ev.say('yura_elder', ['旅の方か。ここはユラ。\n名を置いてきた者の里じゃ。', 'わしらは皆、自分の名を\n思い出せん。だから役目で\n呼び合っておる。']);
-      await ev.say('yura_elder', ['この地の灯りが戻るたび、\n誰かが名を思い出すという\n言い伝えがある。', '……もし、どこかの大灯火を\n灯したなら、また来ておくれ。']);
+      await ev.say('yura_elder', R.T('events.yura_elder.say'));
+      await ev.say('yura_elder', R.T('events.yura_elder.say_2'));
       ev.setFlag('yura_elder_talked');
       ev.lead('q_yura_names');
       return;
     }
     if (cleared(ev) && !ev.flag('yura_miller_home')) {
-      await ev.say('yura_elder', ['森の歌が戻ったな。\n風の匂いでわかる。', '粉ひきが、何か思い出しかけて\nおるようじゃ。話してやっておくれ。']);
+      await ev.say('yura_elder', R.T('events.yura_elder.say_3'));
       return;
     }
     if (ev.flag('yura_miller_home')) {
-      await ev.say('yura_elder', ['粉ひきは、名を思い出して\n森の村へ帰っていった。', '……次は誰かのう。\nわしの番は、いちばん最後で\nよいのじゃが。']);
+      await ev.say('yura_elder', R.T('events.yura_elder.say_4'));
       return;
     }
-    await ev.say('yura_elder', '灯りが戻るたび、\n誰かが名を思い出す。\n……言い伝えじゃよ。');
+    await ev.say('yura_elder', R.T('events.yura_elder.say_5'));
   }, { meta: { needs: [], gives: ['lead:q_yura_names', 'flag:yura_elder_talked'] } });
 
   E('yura_miller', async (ev) => {
     if (cleared(ev) && !ev.flag('yura_miller_home')) {
-      await ev.say('yura_miller', ['……森の歌が、聞こえたの。\n木の上の家、つり橋、\n粉ひきの小屋……。', 'フェルン。わたし、フェルンの\n粉ひきだった。名前は……\nエダ。そう、エダ！']);
-      await ev.say('yura_miller', '帰らなきゃ。\n待ってる人がいるかもしれない。\n……ありがとう、旅の方。');
+      await ev.say('yura_miller', R.T('events.yura_miller.say'));
+      await ev.say('yura_miller', R.T('events.yura_miller.say_2'));
       ev.setFlag('yura_miller_home');
       await ev.fade('out', 300);
       try { await ev.npc('yura_miller').hide(); } catch (e) { /* */ }
       await ev.fade('in', 300);
-      await ev.caption('粉ひきのエダは、\n森の村フェルンへ帰っていった。', { ms: 2200 });
+      await ev.caption(R.T('events.yura_miller.caption'), { ms: 2200 });
       return;
     }
-    await ev.say('yura_miller', ['粉をひく音を聞くと、\nどこか懐かしいの。', '木の上に家があって……\nつり橋が揺れて……。\n……だめ、思い出せない。']);
+    await ev.say('yura_miller', R.T('events.yura_miller.say_3'));
   }, { meta: { needs: ['region:r_forest'], gives: ['flag:yura_miller_home'] } });
 
   E('yura_nanny', async (ev) => {
     // ② ほのめかし（寄り道で先に知れること、STORY_BIBLE §4.5）
-    await ev.say('yura_nanny', ['子守唄を歌うとね、\nいつも灰色のマントの\n女の子が聞きに来るの。', '名前を聞くと、笑って\n「わたしは、古いお話よ」って。\n……へんな子。']);
+    await ev.say('yura_nanny', R.T('events.yura_nanny.say'));
   });
 
   E('yura_gravekeeper', async (ev) => {
     // ⑦ 近況
     await ev.say('yura_gravekeeper', cleared(ev)
-      ? ['森の歌が戻ったそうだね。\n墓のこけまで、光って見えるよ。']
-      : ['墓守をしている。\n墓石には、名前が無いんだ。', '名を置いてきた者は、\n名の無いまま眠る。\n……さびしいことさ。']);
+      ? [R.T('events.yura_gravekeeper.say.0')]
+      : R.T('events.yura_gravekeeper.say'));
   });
 
   E('yura_lampkeeper', async (ev) => {
     // ⑤ 一度だけの品（ティアで量が変わる）
     if (!ev.flag('yura_lamp_gift')) {
-      await ev.say('yura_lampkeeper', ['灯守だよ。水辺の灯籠を\n守ってる。', '旅の人が来るのは久しぶりだ。\nこれ、持っておいき。']);
+      await ev.say('yura_lampkeeper', R.T('events.yura_lampkeeper.say'));
       R.ContentF.forest.small(ev, [['i_ether', 1], ['i_ether', 2], ['i_ether2', 1], ['i_ether2', 2]]);
       ev.setFlag('yura_lamp_gift');
       return;
     }
-    await ev.say('yura_lampkeeper', '灯りを絶やさないこと。\nそれだけは、忘れずに\n覚えていられるんだ。');
+    await ev.say('yura_lampkeeper', R.T('events.yura_lampkeeper.say_2'));
   }, { meta: { needs: [], gives: ['flag:yura_lamp_gift'] } });
 
   E('yura_child', async (ev) => {
     // ④ ダンジョンの中の隠し通路のほのめかし（千年樹 1 階）
-    await ev.say('yura_child', ['千年樹の中にね、\n風の鳴る壁があるんだって。', '西の回廊の、いちばん西。\n……だれに聞いたか、\nわすれちゃった。']);
+    await ev.say('yura_child', R.T('events.yura_child.say'));
   });
 
   E('yura_seller', async (ev) => {
-    await ev.say('yura_seller', '森の灯りで、品が変わるの。\n……どこで仕入れたのかは、\n覚えていないけれど。');
+    await ev.say('yura_seller', R.T('events.yura_seller.say'));
     await ev.shop('shop_yura');
   });
 
   E('yura_inn_keeper', async (ev) => {
-    await ev.say('yura_innkeeper', 'ようこそ。名は聞かないよ。\nここは、そういう宿だから。');
+    await ev.say('yura_innkeeper', R.T('events.yura_inn_keeper.say'));
     await ev.inn();
   });
 
   E('yura_stone', async (ev) => {
-    await ev.say(null, ['池のほとりの、こけむした石。\n表面が、名前を削り取った\nように平らになっている。', 'そばに、小さな字で\n「名は、呼ばれるためにある」\nと刻まれている。']);
+    await ev.say(null, R.T('events.yura_stone.say'));
   });
 })(window.RPG);

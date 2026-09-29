@@ -55,8 +55,8 @@
       const it = S.item(id), have = S.count(id), unit = R.Rules.sellPrice(id);
       if (!it || it.slot === 'key' || unit <= 0 || have <= 0) continue;
       let n = 0, why = '';
-      if (S.isSellOnly(it)) { n = have; why = '売るための品'; }
-      else if (S.isWorseForAll(id)) { n = buyable.has(id) ? have : have - 1; why = buyable.has(id) ? '全員の装備より弱い' : '全員の装備より弱い（1 つ残す）'; }
+      if (S.isSellOnly(it)) { n = have; why = R.T('ui.shop_junk.shopJunk.why'); }
+      else if (S.isWorseForAll(id)) { n = buyable.has(id) ? have : have - 1; why = buyable.has(id) ? R.T('ui.shop_junk.shopJunk.why_2') : R.T('ui.shop_junk.shopJunk.why_3'); }
       if (n > 0) out.push({ id, n, unit, total: unit * n, why });
     }
     return out.sort((a, b) => b.total - a.total || (it0(a).sort || 0) - (it0(b).sort || 0));

@@ -139,42 +139,42 @@
     // 町の宝箱 2（見える所だけ）
     O.push(K.chest('kasim_c1', 58, 16, { pool: 'p_T' }), K.chest('kasim_c2', 14, 44, { item: 'i_ether', n: 2 }));
     // 門の看板
-    O.push(K.sign(4, 29, 'オアシスの町カシム\n西の門 → 隊商路・王墓'), K.sign(57, 29, '東の門 → 灰の荒野'));
+    O.push(K.sign(4, 29, R.T('map.desert_kasim.sign')), K.sign(57, 29, R.T('map.desert_kasim.sign_2')));
 
     // ---------------------------------------------------------------- 人（話す見返り: 手がかり・依頼・値引き・ほのめかし・品・ボスの癖・近況）
     const L = K.L;
     const N = [
       // 広場（石の手のまわり）
-      K.npc('fara', 'npc_fara', 34, 20, { name: 'ファラ', title: '泉の番人の娘', dir: 's', talk: 'kasim_fara', reward: 'lead', cond: '!cleared_r_desert' }),
-      K.npc('fara_after', 'npc_fara', 33, 31, { name: 'ファラ', title: '泉の番人の娘', dir: 'n', talk: 'kasim_fara', reward: 'lead', cond: 'cleared_r_desert' }),
-      K.npc('nadia', 'npc_nadia', 27, 32, { name: 'ナディア', title: '踊り子', dir: 's', talk: 'kasim_nadia', reward: 'lead' }),
-      K.npc('zaid_plaza', 'npc_zaid', 36, 31, { name: 'ザイード', title: '隊商の長', dir: 's', talk: 'kasim_zaid', reward: 'lead', cond: ['!desert_caravan_on', '!desert_camp3_done'] }),
-      K.npc('zaid_after', 'npc_zaid', 36, 31, { name: 'ザイード', title: '隊商の長', dir: 's', talk: 'kasim_zaid', reward: 'discount', cond: 'cleared_r_desert' }),
-      K.npc('child_dates', 'npc_desert_child', 21, 29, { name: '市場の子', dir: 'e', talk: 'kasim_child', reward: 'side', move: 'still' }),
-      K.npc('sundial_old', 'npc_desert_old_m', 24, 32, { name: '日時計のじいさま', dir: 'e', talk: 'kasim_old_man', reward: 'news' }),
+      K.npc('fara', 'npc_fara', 34, 20, { name: R.T('map.desert_kasim.N.0.fara.name'), title: R.T('map.desert_kasim.N.0.fara.title'), dir: 's', talk: 'kasim_fara', reward: 'lead', cond: '!cleared_r_desert' }),
+      K.npc('fara_after', 'npc_fara', 33, 31, { name: R.T('map.desert_kasim.N.1.fara_after.name'), title: R.T('map.desert_kasim.N.1.fara_after.title'), dir: 'n', talk: 'kasim_fara', reward: 'lead', cond: 'cleared_r_desert' }),
+      K.npc('nadia', 'npc_nadia', 27, 32, { name: R.T('map.desert_kasim.N.2.nadia.name'), title: R.T('map.desert_kasim.N.2.nadia.title'), dir: 's', talk: 'kasim_nadia', reward: 'lead' }),
+      K.npc('zaid_plaza', 'npc_zaid', 36, 31, { name: R.T('map.desert_kasim.N.3.zaid_plaza.name'), title: R.T('map.desert_kasim.N.3.zaid_plaza.title'), dir: 's', talk: 'kasim_zaid', reward: 'lead', cond: ['!desert_caravan_on', '!desert_camp3_done'] }),
+      K.npc('zaid_after', 'npc_zaid', 36, 31, { name: R.T('map.desert_kasim.N.4.zaid_after.name'), title: R.T('map.desert_kasim.N.4.zaid_after.title'), dir: 's', talk: 'kasim_zaid', reward: 'discount', cond: 'cleared_r_desert' }),
+      K.npc('child_dates', 'npc_desert_child', 21, 29, { name: R.T('map.desert_kasim.N.5.child_dates.name'), dir: 'e', talk: 'kasim_child', reward: 'side', move: 'still' }),
+      K.npc('sundial_old', 'npc_desert_old_m', 24, 32, { name: R.T('map.desert_kasim.N.6.sundial_old.name'), dir: 'e', talk: 'kasim_old_man', reward: 'news' }),
       // 巨像の台座の脇の屋台
-      K.npc('arms_vendor', 'npc_desert_man', 19, 15, { name: '武具売りのハミド', title: '市場の武具の屋台', dir: 's', talk: 'kasim_arms', pushable: false, reward: null }),
-      K.npc('bazaar', 'npc_desert_woman', 43, 15, { name: '屋台のサルマ', title: '市場の屋台', dir: 's', talk: 'kasim_bazaar', pushable: false, reward: 'discount' }),
+      K.npc('arms_vendor', 'npc_desert_man', 19, 15, { name: R.T('map.desert_kasim.N.7.arms_vendor.name'), title: R.T('map.desert_kasim.N.7.arms_vendor.title'), dir: 's', talk: 'kasim_arms', pushable: false, reward: null }),
+      K.npc('bazaar', 'npc_desert_woman', 43, 15, { name: R.T('map.desert_kasim.N.8.bazaar.name'), title: R.T('map.desert_kasim.N.8.bazaar.title'), dir: 's', talk: 'kasim_bazaar', pushable: false, reward: 'discount' }),
       // 小道
-      K.npc('dates_vendor', 'npc_desert_old_f', 17, 30, { name: 'なつめやし売り', dir: 'e', talk: 'kasim_dates', reward: 'side' }),
-      K.npc('salt_vendor', 'npc_caravan', 44, 30, { name: '塩売りのカリム', dir: 'w', talk: 'kasim_salt', reward: 'side' }),
-      K.npc('tadeo', 'npc_tadeo', 45, 22, { name: 'タデオ', title: '灯守組合の油売り', dir: 's', talk: 'kasim_tadeo', reward: 'side' }),
-      K.npc('guard_w', 'npc_desert_man', 4, 25, { name: '西の門番', dir: 's', talk: 'kasim_gate_w', reward: 'boss' }),
-      K.npc('guard_e', 'npc_desert_man', 57, 25, { name: '東の門番', dir: 's', talk: 'kasim_gate_e', reward: 'news' }),
-      K.npc('woman_mid', 'npc_desert_woman', 22, 24, { name: '水売りの女', dir: 'e', talk: 'kasim_water_woman', reward: 'item' }),
-      K.npc('hawk_friend', 'npc_desert_man', 11, 23, { name: '日焼けした男', dir: 'e', talk: 'kasim_hawk_friend', reward: 'hint' }),
-      K.npc('rashid_memorial', 'npc_rashid', 54, 31, { name: 'ラシード', title: '砂の鷹団の頭', dir: 'n', talk: 'kasim_rashid_memorial', reward: 'news', cond: ['cleared_r_desert', { choice: 'ch_desert_write', is: 'pain' }] }),
-      K.npc('yura_returnee', 'npc_yura_woman', 38, 21, { name: 'ライラ', title: '藍染め職人', dir: 's', talk: 'kasim_yura_dyer', reward: 'side' }),
-      K.npc('pilgrim_kid', 'npc_desert_child', 38, 28, { name: '泉で遊ぶ子', dir: 'w', move: 'wander', talk: 'kasim_kid', reward: 'hint' }),
+      K.npc('dates_vendor', 'npc_desert_old_f', 17, 30, { name: R.T('map.desert_kasim.N.9.dates_vendor.name'), dir: 'e', talk: 'kasim_dates', reward: 'side' }),
+      K.npc('salt_vendor', 'npc_caravan', 44, 30, { name: R.T('map.desert_kasim.N.10.salt_vendor.name'), dir: 'w', talk: 'kasim_salt', reward: 'side' }),
+      K.npc('tadeo', 'npc_tadeo', 45, 22, { name: R.T('map.desert_kasim.N.11.tadeo.name'), title: R.T('map.desert_kasim.N.11.tadeo.title'), dir: 's', talk: 'kasim_tadeo', reward: 'side' }),
+      K.npc('guard_w', 'npc_desert_man', 4, 25, { name: R.T('map.desert_kasim.N.12.guard_w.name'), dir: 's', talk: 'kasim_gate_w', reward: 'boss' }),
+      K.npc('guard_e', 'npc_desert_man', 57, 25, { name: R.T('map.desert_kasim.N.13.guard_e.name'), dir: 's', talk: 'kasim_gate_e', reward: 'news' }),
+      K.npc('woman_mid', 'npc_desert_woman', 22, 24, { name: R.T('map.desert_kasim.N.14.woman_mid.name'), dir: 'e', talk: 'kasim_water_woman', reward: 'item' }),
+      K.npc('hawk_friend', 'npc_desert_man', 11, 23, { name: R.T('map.desert_kasim.N.15.hawk_friend.name'), dir: 'e', talk: 'kasim_hawk_friend', reward: 'hint' }),
+      K.npc('rashid_memorial', 'npc_rashid', 54, 31, { name: R.T('map.desert_kasim.N.16.rashid_memorial.name'), title: R.T('map.desert_kasim.N.16.rashid_memorial.title'), dir: 'n', talk: 'kasim_rashid_memorial', reward: 'news', cond: ['cleared_r_desert', { choice: 'ch_desert_write', is: 'pain' }] }),
+      K.npc('yura_returnee', 'npc_yura_woman', 38, 21, { name: R.T('map.desert_kasim.N.17.yura_returnee.name'), title: R.T('map.desert_kasim.N.17.yura_returnee.title'), dir: 's', talk: 'kasim_yura_dyer', reward: 'side' }),
+      K.npc('pilgrim_kid', 'npc_desert_child', 38, 28, { name: R.T('map.desert_kasim.N.18.pilgrim_kid.name'), dir: 'w', move: 'wander', talk: 'kasim_kid', reward: 'hint' }),
       // 空気だけ（4 人まで）
-      K.npc('camel_1', 'ani_camel', 43, 47, { name: 'ラクダ', dir: 'w', talk: [L('ラクダは、つまらなそうに\n砂をかんでいる。')], reward: null }),
-      K.npc('cat', 'ani_cat', 28, 42, { name: '猫', dir: 's', move: 'wander', talk: [L('ニャア。')], reward: null }),
-      K.npc('woman_air', 'npc_desert_woman', 8, 27, { name: '市場の女', dir: 'e', talk: [L('泉が枯れてから、\n水は油と同じ値段さ。\n……油の値も上がってるけどね。'), L('cleared_r_desert', '水の値が、半分になったよ！\n今夜はお茶を三杯飲むんだ。')], reward: null }),
+      K.npc('camel_1', 'ani_camel', 43, 47, { name: R.T('map.desert_kasim.N.19.camel_1.name'), dir: 'w', talk: [L(R.T('map.desert_kasim.N.talk.0.L'))], reward: null }),
+      K.npc('cat', 'ani_cat', 28, 42, { name: R.T('map.desert_kasim.N.20.cat.name'), dir: 's', move: 'wander', talk: [L(R.T('map.desert_kasim.N.talk.0.L_2'))], reward: null }),
+      K.npc('woman_air', 'npc_desert_woman', 8, 27, { name: R.T('map.desert_kasim.N.21.woman_air.name'), dir: 'e', talk: [L(R.T('map.desert_kasim.N.talk.0.L_3')), L('cleared_r_desert', R.T('map.desert_kasim.N.talk.1.cleared_r_desert'))], reward: null }),
     ];
 
     const sp = (b) => ({ x: b.door.x, y: b.door.y + 1, dir: 's' });
     K.def('kasim', {
-      name: 'オアシスの町カシム', kind: 'town', region: 'r_desert', location: 'kasim', theme: 'desert_town',
+      name: R.T('map.desert_kasim.kasim.name'), kind: 'town', region: 'r_desert', location: 'kasim', theme: 'desert_town',
       legend: DK.LEGEND({
         D: { mat: 'dune_sand', solid: true, rise: 1, name: 'dune' },
         P: { mat: 'grass', solid: true, name: 'palms' },
@@ -202,7 +202,7 @@
       light: DK.LIGHT_TOWN,
       dark: false,
       bgm: 'kasim',
-      meta: { sub: '名の削れた巨像の足もとの泉の町', chestsInfo: false },
+      meta: { sub: R.T('map.desert_kasim.kasim.meta.sub'), chestsInfo: false },
       // 町ぜんたいを 1 枚に描いた下絵（v2/assets/env/desert/under/kasim*、design/ENV_ASSETS.md §7）。地面・砂丘・巨像・石の手・建物・なつめやしはこの絵、
       // 当たり・戸口・人・灯り・ほかの物は上のデータのまま。絵が無ければマスから焼く
       art: { image: 'desert/under/kasim', emit: 'desert/under/kasim_emit', painted: [] },

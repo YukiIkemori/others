@@ -16,10 +16,10 @@
 
   // 看板の種類 → アイコン（UIK.icon）と短い呼び名
   const KIND = {
-    weapon: { icon: 'sword', ja: '武具屋' }, armor: { icon: 'shield', ja: '防具屋' }, item: { icon: 'potion', ja: '道具屋' },
-    special: { icon: 'gem', ja: '店' }, shop: { icon: 'shop', ja: '店' }, inn: { icon: 'inn', ja: '宿屋' }, tavern: { icon: 'chat', ja: '酒場' },
-    church: { icon: 'light', ja: '教会' }, save: { icon: 'save', ja: 'セーブ' }, guild: { icon: 'journal', ja: 'ギルド' },
-    record: { icon: 'book', ja: '記録院' }, records: { icon: 'book', ja: '記録院' }, hall: { icon: 'book', ja: '集会所' }, map: { icon: 'map', ja: '地図屋' },
+    weapon: { icon: 'sword', ja: R.T('sys.wayfind.KIND.weapon.ja') }, armor: { icon: 'shield', ja: R.T('sys.wayfind.KIND.armor.ja') }, item: { icon: 'potion', ja: R.T('sys.wayfind.KIND.item.ja') },
+    special: { icon: 'gem', ja: R.T('sys.wayfind.KIND.special.ja') }, shop: { icon: 'shop', ja: R.T('sys.wayfind.KIND.shop.ja') }, inn: { icon: 'inn', ja: R.T('sys.wayfind.KIND.inn.ja') }, tavern: { icon: 'chat', ja: R.T('sys.wayfind.KIND.tavern.ja') },
+    church: { icon: 'light', ja: R.T('sys.wayfind.KIND.church.ja') }, save: { icon: 'save', ja: R.T('sys.wayfind.KIND.save.ja') }, guild: { icon: 'journal', ja: R.T('sys.wayfind.KIND.guild.ja') },
+    record: { icon: 'book', ja: R.T('sys.wayfind.KIND.record.ja') }, records: { icon: 'book', ja: R.T('sys.wayfind.KIND.records.ja') }, hall: { icon: 'book', ja: R.T('sys.wayfind.KIND.hall.ja') }, map: { icon: 'map', ja: R.T('sys.wayfind.KIND.map.ja') },
   };
   // 屋内の名前からの見当（中の人から決まらないときだけ）
   const BY_NAME = [[/教会|礼拝|聖堂/, 'church'], [/酒場|亭」?$/, 'tavern'], [/宿/, 'inn'], [/武具|武器|鍛冶/, 'weapon'], [/防具/, 'armor'],

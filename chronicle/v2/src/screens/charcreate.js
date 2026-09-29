@@ -9,7 +9,7 @@
   const u = (v) => R.UIK.u(v);
   const T = () => R.UIK.T;
   const TYPES = ['warrior', 'ranger', 'mage', 'spellblade', 'wanderer'];
-  const ABIL_NAMES = { str: '腕力', vit: '体力', dex: '器用さ', agi: '素早さ', int: '知力', mnd: '精神' };
+  const ABIL_NAMES = { str: R.T('ui.charcreate.ABIL_NAMES.str'), vit: R.T('ui.charcreate.ABIL_NAMES.vit'), dex: R.T('ui.charcreate.ABIL_NAMES.dex'), agi: R.T('ui.charcreate.ABIL_NAMES.agi'), int: R.T('ui.charcreate.ABIL_NAMES.int'), mnd: R.T('ui.charcreate.ABIL_NAMES.mnd') };
 
   /** 能力値 6 つの棒（0〜25）。→ 下端の y */
   S.abilBars = function (g, st, x, y, w, o) {
@@ -33,7 +33,7 @@
     const o = ht.favorOptions || {};
     return (o.weapon || []).concat(o.element || []);
   }
-  S.favName = (f) => ((R.Rules.WTYPES || []).includes(f) ? S.wname(f) : S.ename(f) + 'の術');
+  S.favName = (f) => ((R.Rules.WTYPES || []).includes(f) ? S.wname(f) : R.T('ui.charcreate.favName', { ename: S.ename(f) }));
 
   S.def('charcreate', {
     opaque: true, frost: false,
@@ -44,8 +44,8 @@
       this.name = (p && p.name) || this.defaultName();
       this.named = false;
       this.rows = [
-        { key: 'sex', label: '性別' }, { key: 'type', label: 'タイプ' }, { key: 'fav', label: '得意' }, { key: 'name', label: '名前' },
-        { key: 'go', label: 'この主人公で旅立つ' },
+        { key: 'sex', label: R.T('ui.charcreate.sex.label') }, { key: 'type', label: R.T('ui.charcreate.type.label') }, { key: 'fav', label: R.T('ui.charcreate.fav.label') }, { key: 'name', label: R.T('ui.charcreate.name.label') },
+        { key: 'go', label: R.T('ui.charcreate.go.label') },
       ];
       this.list = new R.UIK.List({ rows: this.rows, rowH: 46, wrap: false });
       this.list.onSelect = (row, i) => this.pick(row, i);
@@ -54,7 +54,7 @@
     },
     defaultName() {
       const kit = R.DB.starterKit || {};
-      const names = (kit.heroNames && kit.heroNames[this.sex]) || [this.sex === 'f' ? 'リーネ' : 'アルン'];
+      const names = (kit.heroNames && kit.heroNames[this.sex]) || [this.sex === 'f' ? R.T('ui.charcreate.defaultName.names.0') : R.T('ui.charcreate.defaultName.names.0_2')];
       return names[0];
     },
     values(key) {
@@ -64,7 +64,7 @@
       return null;
     },
     show(key, v) {
-      if (key === 'sex') return v === 'f' ? '女' : '男';
+      if (key === 'sex') return v === 'f' ? R.T('ui.charcreate.show.ret') : R.T('ui.charcreate.show.ret_2');
       if (key === 'type') return (R.DB.heroTypes[v] || {}).name || v;
       if (key === 'fav') return S.favName(v);
       return v;
@@ -83,7 +83,7 @@
       if (row.key === 'name') {
         this.busy = true;
         try {
-          const s = await S.open('nameentry', { value: this.name, max: 5, title: '主人公の名前' });
+          const s = await S.open('nameentry', { value: this.name, max: 5, title: R.T('ui.charcreate.pick.s.nameentry.title') });
           if (s) { this.name = s; this.named = true; this.list._move(4, false); }
         } finally { this.busy = false; }
         return;
@@ -112,7 +112,7 @@
       const lh = u(58) + this.rows.length * this.list.rowPx() + u(20);
       const lp = tall ? { x: b.x, y: b.y + b.h - lh, w: lw, h: lh } : { x: b.x + u(8), y: b.y + u(8), w: lw, h: lh };
       R.UIK.panel(g, lp, {});
-      S.heading(g, '主人公の作成', lp.x + u(22), lp.y + u(18), 0, { size: 15, track: 4 });
+      S.heading(g, R.T('ui.charcreate.draw.heading'), lp.x + u(22), lp.y + u(18), 0, { size: 15, track: 4 });
       const lr = { x: lp.x + u(10), y: lp.y + u(52), w: lp.w - u(20), h: this.rows.length * this.list.rowPx() };
       this.arrows = [];
       this.list.render = (gg, row, rect, f) => {
@@ -149,21 +149,21 @@
       const tx = fr.x + fs + u(22), tw = rp.x + rp.w - u(24) - tx;
       R.UIK.text(g, this.name, tx, ty, { size: u(26), weight: 700, color: C.goldHi, maxW: tw });
       ty += u(40);
-      R.UIK.text(g, `${ht.name || ''}　・　${this.sex === 'f' ? '女' : '男'}`, tx, ty, { size: u(15), color: C.text2 });
+      R.UIK.text(g, R.T('ui.charcreate.draw.text', { p0: ht.name || '', p1: this.sex === 'f' ? R.T('ui.charcreate.draw.text_2') : R.T('ui.charcreate.draw.text_3') }), tx, ty, { size: u(15), color: C.text2 });
       ty += u(30);
-      R.UIK.chip(g, tx, ty, '得意　' + S.favName(this.fav), { kind: 'gold', size: 12.5 });
+      R.UIK.chip(g, tx, ty, R.T('ui.charcreate.draw.chip', { favName: S.favName(this.fav) }), { kind: 'gold', size: 12.5 });
       ty = fr.y + fs + u(22);
       const dw = rp.w - u(48);
       for (const l of R.UIK.wrap(ht.desc || '', dw, { size: u(15) })) { R.UIK.text(g, l, rp.x + u(24), ty, { size: u(15), color: C.text }); ty += u(26); }
       const fd = ((R.DB.starterKit || {}).favorDesc || {})[this.fav];
-      if (fd) { ty += u(6); R.UIK.text(g, S.favName(this.fav) + '：' + fd, rp.x + u(24), ty, { size: u(13.5), color: C.teal, maxW: dw }); ty += u(28); }
+      if (fd) { ty += u(6); R.UIK.text(g, R.T('ui.charcreate.draw.text_4', { favName: S.favName(this.fav), fd }), rp.x + u(24), ty, { size: u(13.5), color: C.teal, maxW: dw }); ty += u(28); }
       ty += u(10);
       R.UIK.rule(g, rp.x + u(24), rp.x + rp.w - u(24), ty, 0.14);
       ty += u(14);
-      S.label(g, '能力値', rp.x + u(24), ty);
+      S.label(g, R.T('ui.charcreate.draw.label'), rp.x + u(24), ty);
       ty += u(28);
       S.abilBars(g, ht.stats || {}, rp.x + u(24), ty, rp.w - u(48), { cols: tall ? 2 : 2 });
-      S.prompts(g, [{ btn: 'a', label: '決定' }, { btn: 'left', label: '変える' }, { btn: 'b', label: '戻る' }]);
+      S.prompts(g, [{ btn: 'a', label: R.T('ui.charcreate.draw.0.label') }, { btn: 'left', label: R.T('ui.charcreate.draw.1.label') }, { btn: 'b', label: R.T('ui.charcreate.draw.2.label') }]);
     },
   });
 })(window.RPG);

@@ -20,15 +20,15 @@
       const E = X();
       if (ev.flag('prologue_lh_door') || ev.flag('prologue_tutorial')) return;
       if (!ev.flag('prologue_key')) {
-        await E.narr(ev, '灯台の扉には、がっしりと\n鍵がかかっている。');
-        await E.narr(ev, '灯台守なら、鍵を\n持っているかもしれない。');
+        await E.narr(ev, R.T('ev.prologue_lighthouse.lighthouse_1_door.run.narr'));
+        await E.narr(ev, R.T('ev.prologue_lighthouse.lighthouse_1_door.run.narr_2'));
         return;
       }
-      await E.narr(ev, '{hero}は、オットーから預かった\n灯台の鍵を、鍵穴に差しこんだ。');
+      await E.narr(ev, R.T('ev.prologue_lighthouse.lighthouse_1_door.run.narr_3'));
       ev.sfx('unlock');
       await ev.wait(450);
       ev.setFlag('prologue_lh_door');
-      await E.narr(ev, 'ガチャリ……。\n灯台の鍵で、扉を開けた！');
+      await E.narr(ev, R.T('ev.prologue_lighthouse.lighthouse_1_door.run.narr_4'));
     },
   };
 
@@ -39,21 +39,21 @@
     run: async (ev) => {
       const E = X();
       if (ev.flag('prologue_tutorial') || !ev.flag('prologue_key')) return;
-      await ev.say('otto', '中から、ネズミの鳴き声が……\n気をつけるんじゃ！', { voice: 'v_otto_tower_01', face: 'otto:surprise' });
+      await ev.say('otto', R.T('ev.prologue_lighthouse.lighthouse_1_tutorial.run.say'), { voice: 'v_otto_tower_01', face: 'otto:surprise' });
       try { R.Field.shake(6, 400); R.Audio.sfx('roar'); } catch (e) { /* */ }
-      await E.say(ev, 'otto', 'ネズミ 2 匹なら、{hero}ひとりで\n十分じゃろう。\n仲間は後ろで見ておれ。', { face: 'otto:neutral' });
+      await E.say(ev, 'otto', R.T('ev.prologue_lighthouse.lighthouse_1_tutorial.run.say_2'), { face: 'otto:neutral' });
       const hero = () => R.Game.chars.hero || {};
       const t0 = (hero().techs || []).length, s0 = (hero().spells || []).length;
       for (let i = 0; i < 10; i++) {
         const r = await ev.battle(TUTORIAL);
         if (r === 'win') break;
-        await ev.say('otto', '……危なかったのう。\nひと息ついて、もう一度じゃ。', { voice: 'v_otto_tower_02', face: 'otto:sad' });
+        await ev.say('otto', R.T('ev.prologue_lighthouse.lighthouse_1_tutorial.run.say_3'), { voice: 'v_otto_tower_02', face: 'otto:sad' });
         ev.heal();
       }
       const spell = (hero().techs || []).length <= t0 && (hero().spells || []).length > s0;
-      await ev.say('otto', spell ? '今のは……『閃き』じゃな。\n戦いの中で、ふいに\n新しい術を思いつくことがある。' : '今のは……『閃き』じゃな。\n戦いの中で、ふいに\n新しい技を思いつくことがある。', { voice: spell ? 'v_otto_tower_04' : 'v_otto_tower_03', face: 'otto:surprise' });
-      await ev.say('otto', spell ? '閃いた術は、もう忘れん。\nメニューの『技・術』で\n見られるぞ。' : '閃いた技は、もう忘れん。\nメニューの『技・術』で\n見られるぞ。', { face: 'otto:smile' });
-      await ev.say('otto', 'わしは港へ戻っておる。\n上の灯室を、頼んだぞ。', { voice: 'v_otto_tower_05', face: 'otto:neutral' });
+      await ev.say('otto', spell ? R.T('ev.prologue_lighthouse.lighthouse_1_tutorial.run.say_4') : R.T('ev.prologue_lighthouse.lighthouse_1_tutorial.run.say_5'), { voice: spell ? 'v_otto_tower_04' : 'v_otto_tower_03', face: 'otto:surprise' });
+      await ev.say('otto', spell ? R.T('ev.prologue_lighthouse.lighthouse_1_tutorial.run.say_6') : R.T('ev.prologue_lighthouse.lighthouse_1_tutorial.run.say_7'), { face: 'otto:smile' });
+      await ev.say('otto', R.T('ev.prologue_lighthouse.lighthouse_1_tutorial.run.say_8'), { voice: 'v_otto_tower_05', face: 'otto:neutral' });
       ev.setFlag('prologue_tutorial');
       // 去り方（持ち主の決まり 2026-09-27: その場でパッと消さない）。入口の扉まで歩き、扉の音を鳴らして外へ出る
       try {
@@ -61,7 +61,7 @@
         ev.sfx('door');
         await ev.leave('otto', { path: [[17, 21]], ms: 520 });   // 戸口へ 1 歩、薄れて外へ（パッと消さない）
         await ev.wait(200);
-        await E.narr(ev, 'オットーは、港へ帰っていった。');
+        await E.narr(ev, R.T('ev.prologue_lighthouse.lighthouse_1_tutorial.run.narr'));
       } catch (e) { /* */ }
     },
   };
@@ -76,13 +76,13 @@
       try {
         await ev.wait(300);
         await ev.npc('fine').face('s');
-        await ev.say('fine', '言葉を失った灯は、\n言葉で取り戻すの。', { voice: 'v_fine_lighthouse_01', face: 'fine:neutral' });
-        await ev.say('fine', '……あなたなら、できるわ。', { voice: 'v_fine_lighthouse_02', face: 'fine:smile' });
+        await ev.say('fine', R.T('ev.prologue_lighthouse.lighthouse_3_fine.run.say'), { voice: 'v_fine_lighthouse_01', face: 'fine:neutral' });
+        await ev.say('fine', R.T('ev.prologue_lighthouse.lighthouse_3_fine.run.say_2'), { voice: 'v_fine_lighthouse_02', face: 'fine:smile' });
         try { R.Audio.sfx('magic'); R.Field.flash('#e8ecff', 300); } catch (e) { /* */ }
         await ev.npc('fine').hide();
         ev.setFlag('prologue_fine');
         await ev.wait(400);
-        await E.narr(ev, '灰色のマントの少女は、\nかき消すようにいなくなった……。');
+        await E.narr(ev, R.T('ev.prologue_lighthouse.lighthouse_3_fine.run.narr'));
       } finally { R.Audio.popBgm(); }
     },
   };
@@ -99,28 +99,28 @@
       const E = X();
       if (ev.flag('prologue_boss')) return;
       ev.bgm('omen');   // ボスの予告（1 回だけ鳴る）
-      await E.narr(ev, '……シャリ、シャリ……。\n紙をかみ切るような音がする。');
-      await E.narr(ev, '冷えきった灯の火皿のそばで、\n白い紙の化け物が、\n何かを食べている……！');
+      await E.narr(ev, R.T('ev.prologue_lighthouse.lighthouse_3_boss.run.narr'));
+      await E.narr(ev, R.T('ev.prologue_lighthouse.lighthouse_3_boss.run.narr_2'));
       try { R.Field.shake(8, 500); R.Audio.sfx('roar'); } catch (e) { /* */ }
       const r = await ev.battle('tr_b_pageeater', { boss: true });
       mapBgm(ev);   // 予告の曲は鳴り終わっている: マップの曲へ
       if (r !== 'win') return;
-      await E.narr(ev, 'ページ食らいの体から、\n白い紙切れが舞い上がった。');
+      await E.narr(ev, R.T('ev.prologue_lighthouse.lighthouse_3_boss.run.narr_3'));
       try { R.Audio.sfx('page'); R.Field.flash('#ffffff', 200); } catch (e) { /* */ }
-      await E.narr(ev, '紙切れに、少しずつ\n文字が浮かんでくる……。');
-      await ev.caption('♪　海の果てまで、灯よ届け\n帰る舟に、道を照らせ', { ms: 4200, voice: 'v_fine_song_02' });   // 守り歌はフィーネの声（声の終わりまで待つ）
+      await E.narr(ev, R.T('ev.prologue_lighthouse.lighthouse_3_boss.run.narr_4'));
+      await ev.caption(R.T('ev.prologue_lighthouse.lighthouse_3_boss.run.caption'), { ms: 4200, voice: 'v_fine_song_02' });   // 守り歌はフィーネの声（声の終わりまで待つ）
       try { R.Audio.sfx('quill'); } catch (e) { /* */ }
-      await ev.caption(E.t('{hero}は、守り歌を\n年代記に書き記した。'), { ms: 2600 });
+      await ev.caption(E.t(R.T('ev.prologue_lighthouse.lighthouse_3_boss.run.caption.t')), { ms: 2600 });
       E.lore(ev, 'lo_lighthouse_song');
       ev.setFlag('prologue_boss');
       ev.bgm('dawn');
       try { R.Audio.sfx('light'); R.Field.flash('#fffbe0', 700); R.Field.shake(4, 600); } catch (e) { /* */ }
-      await E.narr(ev, '灯台に、火がともった！');
-      await E.narr(ev, '暗い灯室が白く満ち、\n光が、夜の海を\nまっすぐに掃いていく。');
+      await E.narr(ev, R.T('ev.prologue_lighthouse.lighthouse_3_boss.run.narr_5'));
+      await E.narr(ev, R.T('ev.prologue_lighthouse.lighthouse_3_boss.run.narr_6'));
       await ev.wait(500);
       await ev.fade('out', 800);
       ev.rest();
-      await ev.caption(E.t('その夜、{hero}たちは\nファロスの宿で眠った。'), { ms: 2600 });
+      await ev.caption(E.t(R.T('ev.prologue_lighthouse.lighthouse_3_boss.run.caption.t_2')), { ms: 2600 });
       await ev.warp('pharos', 'inn_front');
       await ev.call('pharos_departure');
     },
@@ -130,7 +130,7 @@
     meta: { needs: [], gives: [] },
     run: async (ev) => {
       const E = X();
-      await E.narr(ev, ev.flag('prologue_boss') ? '灯台の大きな灯が、\n白く燃えている。\n光が、ゆっくりと海を掃く。' : '大きな灯の火皿は、\n冷えきっている。');
+      await E.narr(ev, ev.flag('prologue_boss') ? R.T('ev.prologue_lighthouse.lighthouse_3_lamp.run.narr') : R.T('ev.prologue_lighthouse.lighthouse_3_lamp.run.narr_2'));
     },
   };
 })(window.RPG);

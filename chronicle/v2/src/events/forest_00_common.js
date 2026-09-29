@@ -12,16 +12,16 @@
   const F = (C.forest = C.forest || {});
 
   // 千年樹の歌（歌の石 3 つ。3 つ目の石だけにある一節は STORY_BIBLE §7.1 の 3）
-  F.VERSES = ['♪　眠れ森の主、千の年輪に', '♪　約束の歌を、葉ずれに乗せて', '♪　火の夜を忘れず、緑を守れ'];
-  F.EXTRA = '♪　語り部の火が、森をこえ\n♪　木の主が、それを抱いて眠る';
+  F.VERSES = R.T('ev.forest_00_common.VERSES');
+  F.EXTRA = R.T('ev.forest_00_common.EXTRA');
   F.SONG = F.VERSES.join('\n');
 
   // 探す 4 人（順番は自由）。最後に見つけた人が一品物を渡す（どれも同じ強さ、V2_PLAN §3.3 F12）
   F.PEOPLE = {
-    hans: { name: 'ハンス', look: 'npc_hans', unique: 'u_hans_axe' },
-    ben: { name: 'ベン', look: 'npc_ben', unique: 'u_ben_whistle' },
-    roy: { name: 'ロイ', look: 'npc_roy', unique: 'u_roy_charm' },
-    pim: { name: 'ピム', look: 'npc_pim', unique: 'u_pim_cap' },
+    hans: { name: R.T('ev.forest_00_common.PEOPLE.hans.name'), look: 'npc_hans', unique: 'u_hans_axe' },
+    ben: { name: R.T('ev.forest_00_common.PEOPLE.ben.name'), look: 'npc_ben', unique: 'u_ben_whistle' },
+    roy: { name: R.T('ev.forest_00_common.PEOPLE.roy.name'), look: 'npc_roy', unique: 'u_roy_charm' },
+    pim: { name: R.T('ev.forest_00_common.PEOPLE.pim.name'), look: 'npc_pim', unique: 'u_pim_cap' },
   };
   F.found = (ev, who) => ev.flag('forest_found_' + who);
   F.count = (ev) => ['hans', 'ben', 'roy', 'pim'].filter((w) => ev.flag('forest_found_' + w)).length;
@@ -43,8 +43,8 @@
     if (o.hide !== false) {
       try { await ev.leave(o.npc || who); } catch (e) { /* */ }   // 背を向けて数歩歩き、薄れて消える（持ち主 2026-09-27）
     }
-    if (!o.quiet) await ev.caption(`${F.PEOPLE[who].name}は、\n蛍だまりの野営地へ向かった。`, { ms: 2200 });
-    if (n >= 4) await ev.caption('探していた四人が、そろった。\nあとは、森の歌を取り戻すだけだ。', { ms: 2600 });
+    if (!o.quiet) await ev.caption(R.T('ev.forest_00_common.rescue.caption', { name: F.PEOPLE[who].name }), { ms: 2200 });
+    if (n >= 4) await ev.caption(R.T('ev.forest_00_common.rescue.caption_2'), { ms: 2600 });
     if (['hans', 'ben', 'roy'].every((w) => ev.flag('forest_found_' + w))) ev.leadDone('l_forest_woodcutters');
     if (who === 'pim') ev.leadDone('l_forest_pim');
   };
@@ -56,7 +56,7 @@
     if (typeof ev.lore === 'function') { await ev.lore(id); return true; }
     const d = R.DB.lore && R.DB.lore[id];
     try { ev.sfx('quill'); } catch (e) { /* */ }
-    await ev.caption(`書庫に書き写した。\n「${d ? d.title : id}」`, { ms: 1800 });
+    await ev.caption(R.T('ev.forest_00_common.lore.caption', { p0: d ? d.title : id }), { ms: 1800 });
     return true;
   };
 
@@ -71,57 +71,57 @@
 
   // ---------------------------------------------------------------- 手がかり（K.lead）
   const lead = (id, o) => R.def('leads', id, Object.assign({ region: 'r_forest' }, o));
-  lead('l_forest_board', { kind: 'region', title: '捜索隊、求む', text: 'きこりが三人、森から戻らない。\nきこり頭ゴードが、捜索の手を\n求めているらしい。', from: 'フェルンの掲示板', place: 'fern', done: 'cleared_r_forest' });
-  lead('l_forest_pim', { kind: 'region', title: 'ピムを探して', text: 'ゴードの息子ピムが、父を探して\nひとりで迷いの森へ入った。\n帽子の片方を持つと、足あとが光る。', from: 'カトリ（ピムの母）', place: 'verda', done: 'forest_found_pim' });
-  lead('l_forest_woodcutters', { kind: 'region', title: 'きこりの三人', text: 'ハンス・ベン・ロイ。斧、笛、\n弁当箱。落ちた持ち物が、\n行き先を教えてくれるかもしれない。', from: 'ゴード', place: 'verda', done: ['forest_found_hans', 'forest_found_ben', 'forest_found_roy'] });
-  lead('l_forest_song', { kind: 'region', title: '森の歌の石', text: '迷いの森に、千年樹の歌を\n分けて刻んだ石が三つあるという。\n歌がそろえば、森は迷わせない。', from: 'リタ', place: 'verda', done: { var: 'forest_verses', gte: 3 } });
-  lead('l_forest_hut', { kind: 'region', title: '途切れたきこりの日誌', text: '休み小屋の日誌に、記録院の男が\n「森の奥の空き小屋」へ入った、\nと書いてあった。', from: 'きこりの休み小屋', place: 'verda', done: 'lo_lz_1', hideWhen: 'cleared_r_forest' });
+  lead('l_forest_board', { kind: 'region', title: R.T('leads.l_forest_board.title'), text: R.T('leads.l_forest_board.text'), from: R.T('leads.l_forest_board.from'), place: 'fern', done: 'cleared_r_forest' });
+  lead('l_forest_pim', { kind: 'region', title: R.T('leads.l_forest_pim.title'), text: R.T('leads.l_forest_pim.text'), from: R.T('leads.l_forest_pim.from'), place: 'verda', done: 'forest_found_pim' });
+  lead('l_forest_woodcutters', { kind: 'region', title: R.T('leads.l_forest_woodcutters.title'), text: R.T('leads.l_forest_woodcutters.text'), from: R.T('leads.l_forest_woodcutters.from'), place: 'verda', done: ['forest_found_hans', 'forest_found_ben', 'forest_found_roy'] });
+  lead('l_forest_song', { kind: 'region', title: R.T('leads.l_forest_song.title'), text: R.T('leads.l_forest_song.text'), from: R.T('leads.l_forest_song.from'), place: 'verda', done: { var: 'forest_verses', gte: 3 } });
+  lead('l_forest_hut', { kind: 'region', title: R.T('leads.l_forest_hut.title'), text: R.T('leads.l_forest_hut.text'), from: R.T('leads.l_forest_hut.from'), place: 'verda', done: 'lo_lz_1', hideWhen: 'cleared_r_forest' });
   // 依頼（side。id は依頼と同じ q_*）
-  lead('q_fern_letters', { kind: 'side', title: '樹上の手紙配り', text: '手紙番のニナから、樹上の家\n五軒への手紙を預かった。\nつり橋を渡って届けよう。', from: 'フェルンの手紙番', place: 'fern', done: 'forest_letters_done' });
-  lead('q_fern_herbs', { kind: 'side', title: '薬草五種', text: '薬草園のばあさまが、迷いの森の\n広場ごとに生える薬草を\n一種ずつ欲しがっている。', from: '薬草園のばあさま', place: 'verda', done: 'forest_herbs_done' });
-  lead('q_fern_song', { kind: 'side', title: '歌あわせ', text: 'リタの弟子が、歌の節あての\n相手を探している。\n三段まであるらしい。', from: 'リタの弟子', place: 'fern', done: 'forest_song_3' });
-  lead('q_forest_fireflies', { kind: 'side', title: '蛍の灯籠', text: '森の街道の道しるべの灯籠が\n三つ消えている。光るこけの火種を\n運べば、また灯るという。', from: '灯籠番のじいさま', place: 'fern', dir: '南', done: 'forest_fireflies_done' });
-  lead('q_forest_acorn', { kind: 'side', title: 'どんぐり王子', text: '迷いの森の南東の広場で、\n冠をかぶったどんぐりを見た、\nと子どもが言っている。', from: '木の実拾いの子', place: 'verda', done: 'forest_acorn_won' });
-  lead('q_yura_names', { kind: 'side', title: '名を忘れた人々', text: '隠れ里ユラの人々は、自分の名を\n思い出せない。灯りが戻るたび、\n誰かが思い出すという。', from: 'ユラの長老', place: 'yura', done: 'yura_miller_thanked' });
-  lead('q_pim_poet', { kind: 'side', title: 'ピムの語り部修行', text: 'ピムが語り部になると言い出した。\n旅の話を手紙で送ってほしい\nらしい。', from: 'ピム', place: 'fern', hideWhen: false });
+  lead('q_fern_letters', { kind: 'side', title: R.T('leads.q_fern_letters.title'), text: R.T('leads.q_fern_letters.text'), from: R.T('leads.q_fern_letters.from'), place: 'fern', done: 'forest_letters_done' });
+  lead('q_fern_herbs', { kind: 'side', title: R.T('leads.q_fern_herbs.title'), text: R.T('leads.q_fern_herbs.text'), from: R.T('leads.q_fern_herbs.from'), place: 'verda', done: 'forest_herbs_done' });
+  lead('q_fern_song', { kind: 'side', title: R.T('leads.q_fern_song.title'), text: R.T('leads.q_fern_song.text'), from: R.T('leads.q_fern_song.from'), place: 'fern', done: 'forest_song_3' });
+  lead('q_forest_fireflies', { kind: 'side', title: R.T('leads.q_forest_fireflies.title'), text: R.T('leads.q_forest_fireflies.text'), from: R.T('leads.q_forest_fireflies.from'), place: 'fern', dir: R.T('leads.q_forest_fireflies.dir'), done: 'forest_fireflies_done' });
+  lead('q_forest_acorn', { kind: 'side', title: R.T('leads.q_forest_acorn.title'), text: R.T('leads.q_forest_acorn.text'), from: R.T('leads.q_forest_acorn.from'), place: 'verda', done: 'forest_acorn_won' });
+  lead('q_yura_names', { kind: 'side', title: R.T('leads.q_yura_names.title'), text: R.T('leads.q_yura_names.text'), from: R.T('leads.q_yura_names.from'), place: 'yura', done: 'yura_miller_thanked' });
+  lead('q_pim_poet', { kind: 'side', title: R.T('leads.q_pim_poet.title'), text: R.T('leads.q_pim_poet.text'), from: R.T('leads.q_pim_poet.from'), place: 'fern', hideWhen: false });
   // 寄り道のうわさ（rumor）。古井戸（l_opt_well）は CONTENT-P
-  lead('l_opt_hut', { kind: 'rumor', title: '街道脇の休み小屋', text: '森の街道の脇に、きこりたちの\n休み小屋がある。寝床は\n誰が使ってもいいらしい。', from: 'フェルンの旅の商人', place: 'hut', done: { visited: 'hut' } });
-  lead('l_opt_yura', { kind: 'rumor', title: '森の奥の隠れ里', text: '森の北のくぼ地に、名を持たない\n人たちの里があるという。\n珍しい飾りを売っているとか。', from: 'フェルンの旅の商人', place: 'yura', done: { visited: 'yura' } });
+  lead('l_opt_hut', { kind: 'rumor', title: R.T('leads.l_opt_hut.title'), text: R.T('leads.l_opt_hut.text'), from: R.T('leads.l_opt_hut.from'), place: 'hut', done: { visited: 'hut' } });
+  lead('l_opt_yura', { kind: 'rumor', title: R.T('leads.l_opt_yura.title'), text: R.T('leads.l_opt_yura.text'), from: R.T('leads.l_opt_yura.from'), place: 'yura', done: { visited: 'yura' } });
 
   // ---------------------------------------------------------------- 手紙（K.letter）
   R.def('letters', 'letter_forest_pim_poem', {
-    from: 'ピム', title: 'ぼくの、はじめての詩',
-    text: ['森の主は、ねぼすけで\n千年ねても、まだねむい\n', 'でも、歌をきくとおきるんだ\nぼくの歌でも、おきるんだ\n', '（すみに小さく）\nこんど、旅の話をきかせてね。\nぼくが詩にするから。'],
+    from: R.T('letters.letter_forest_pim_poem.from'), title: R.T('letters.letter_forest_pim_poem.title'),
+    text: R.T('letters.letter_forest_pim_poem.text'),
   });
   R.def('letters', 'letter_lz_1', {
-    from: '（差出人の名はない）', title: 'くべられなかった手紙',
-    text: 'ミラへ。朝が来なくなって、町は静かです。誰も、戦の理由を口にしない。……おまえの歌を止めた矢が、どちらの陣のものだったのか、もう誰にも分からない。それでいいのだと思います。',
+    from: R.T('letters.letter_lz_1.from'), title: R.T('letters.letter_lz_1.title'),
+    text: R.T('letters.letter_lz_1.text'),
   });
 
   // ---------------------------------------------------------------- 読み物（STORY_BIBLE §10.2 の 9〜12・35）
   const lore = (id, o) => R.def('lore', id, Object.assign({ region: 'r_forest' }, o));
-  lore('lo_ev_forest', { title: '記録官の帳面', kind: 'main', must: true, text: '「歌の石の歌を写した。\n写したあと、村の子が歌えなくなった。\n報告すべきか」' });
-  lore('lo_time_forest', { title: '伸びない年輪', kind: 'main', must: true, text: '千年樹の根の切り口。\n外側の二十本の年輪だけが、\n糸のように細い。日が当たらなかった年の輪だ。' });
-  lore('lo_war_forest', { title: '伐り跡の原', kind: 'region', must: false, text: '村はずれの切り株の原。\n二十年前、戦ののろしのために、\n森の東半分が伐られたという。' });
-  lore('lo_forest_moss_stone', { title: 'こけの語り石', kind: 'region', must: false, text: 'ロアの語り石と同じ形の石。\nこけの下の文字は、\nどうしても読めない。' });
-  lore('lo_lz_1', { title: 'くべられなかった手紙', kind: 'main', must: false, order: 1, letter: 'letter_lz_1', text: '記録官のかばんの底にあった手紙。\n差出人の名はない。' });
+  lore('lo_ev_forest', { title: R.T('lore.lo_ev_forest.title'), kind: 'main', must: true, text: R.T('lore.lo_ev_forest.text') });
+  lore('lo_time_forest', { title: R.T('lore.lo_time_forest.title'), kind: 'main', must: true, text: R.T('lore.lo_time_forest.text') });
+  lore('lo_war_forest', { title: R.T('lore.lo_war_forest.title'), kind: 'region', must: false, text: R.T('lore.lo_war_forest.text') });
+  lore('lo_forest_moss_stone', { title: R.T('lore.lo_forest_moss_stone.title'), kind: 'region', must: false, text: R.T('lore.lo_forest_moss_stone.text') });
+  lore('lo_lz_1', { title: R.T('lore.lo_lz_1.title'), kind: 'main', must: false, order: 1, letter: 'letter_lz_1', text: R.T('lore.lo_lz_1.text') });
 
   // ---------------------------------------------------------------- 年代記の章（E14。選択で文が変わる）
   //   MENUS は R.DB.chronicle[summaryKey].text を読む（requests.jsonl の MENUS → lead）。text は parts の cond の合う文をつないだもの
   R.def('chronicle', 'r_forest', {
-    title: '千年樹の歌',
+    title: R.T('chronicle.r_forest.title'),
     get text() {
       const ok = (c) => c == null || (R.Game && R.State && R.State.check ? R.State.check(c) : false);
       return this.parts.filter((p) => ok(p.cond)).map((p) => p.text).join('\n');
     },
     parts: [
-      { text: '森が歌を忘れ、道を変えた年のこと。\n語り部の見習いは、迷いの森で\n四人を探した。' },
-      { cond: { choice: 'ch_forest_pim', is: 'send' }, text: '幼い子を家へ帰し、ひとり森の奥へ進んだ。' },
-      { cond: { choice: 'ch_forest_pim', is: 'take' }, text: '幼い子とともに森を進み、千年樹の抜け穴をくぐった。' },
-      { cond: { choice: 'ch_forest_fawn', is: 'heal' }, text: '傷ついた小鹿を手当てし、獣道を教わった。' },
-      { cond: { choice: 'ch_forest_write', is: 'pain' }, text: '千年前、語り部のともした火が森を焼いた。\n森の主はその火を抱いて眠り、\n村は歌でその眠りを守ってきた。' },
-      { cond: { choice: 'ch_forest_write', is: 'oath' }, text: '森の主は火を封じ、\n村は歌でその眠りを守った。' },
-      { cond: 'cleared_r_forest', text: '千年樹のこずえに、歌の灯がともった。' },
+      { text: R.T('chronicle.r_forest.parts.0.text') },
+      { cond: { choice: 'ch_forest_pim', is: 'send' }, text: R.T('chronicle.r_forest.parts.1.text') },
+      { cond: { choice: 'ch_forest_pim', is: 'take' }, text: R.T('chronicle.r_forest.parts.2.text') },
+      { cond: { choice: 'ch_forest_fawn', is: 'heal' }, text: R.T('chronicle.r_forest.parts.3.text') },
+      { cond: { choice: 'ch_forest_write', is: 'pain' }, text: R.T('chronicle.r_forest.parts.4.text') },
+      { cond: { choice: 'ch_forest_write', is: 'oath' }, text: R.T('chronicle.r_forest.parts.5.text') },
+      { cond: 'cleared_r_forest', text: R.T('chronicle.r_forest.parts.6.text') },
     ],
   });
 })(window.RPG);

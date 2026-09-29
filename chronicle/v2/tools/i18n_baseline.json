@@ -1,0 +1,7 @@
+{
+ "note": "i18n_audit.js: ファイルごとの残りの直書きの数（これより増えたら test_i18n が失敗）。減ったら --update-baseline で書き直す",
+ "files": {
+  "src/art/fx/fx_status.js": 36,
+  "src/systems/battle/playback.js": 18
+ }
+}

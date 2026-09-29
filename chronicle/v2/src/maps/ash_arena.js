@@ -50,24 +50,24 @@
     O.push(K.prop('lantern', 11, 30), K.prop('lantern', 28, 30), K.prop('lantern', 2, 22), K.prop('lantern', 37, 22));
 
     const N = [
-      K.npc('receptionist', 'npc_ash_woman', 15, 23, { name: '受付のミラン', dir: 's', talk: 'caldera_arena_reception', reward: 'lead', pushable: false }),
-      K.npc('bookie', 'npc_ash_bookie', 25, 23, { name: '賭け屋のボッツ', dir: 's', talk: 'caldera_arena_bookie', reward: 'side', pushable: false }),
-      K.npc('caldera_arena_fan', 'npc_ash_child', 20, 27, { name: '闘技好きの子', dir: 'n', talk: 'caldera_arena_fan', reward: 'hint' }),
-      K.npc('caldera_arena_vet', 'npc_ash_old_m', 12, 27, { name: '古参の闘士', dir: 'e', talk: 'caldera_arena_vet', reward: 'boss' }),
-      K.npc('zakuro', 'npc_zakuro', 34, 27, { name: 'ザクロ', title: '記録院付きの闘士', dir: 'w', talk: 'caldera_arena_zakuro', reward: 'lead', cond: ['ash_champion', '!ash_zakuro_gone'] }),
-      K.npc('dorga_plaque', 'npc_dorga', 6, 12, { name: 'ドルガ', title: '族長', dir: 'w', talk: 'caldera_arena_dorga', reward: 'news', pushable: false, cond: 'ash_plaque_scene' }),
+      K.npc('receptionist', 'npc_ash_woman', 15, 23, { name: R.T('map.ash_arena.N.0.receptionist.name'), dir: 's', talk: 'caldera_arena_reception', reward: 'lead', pushable: false }),
+      K.npc('bookie', 'npc_ash_bookie', 25, 23, { name: R.T('map.ash_arena.N.1.bookie.name'), dir: 's', talk: 'caldera_arena_bookie', reward: 'side', pushable: false }),
+      K.npc('caldera_arena_fan', 'npc_ash_child', 20, 27, { name: R.T('map.ash_arena.N.2.caldera_arena_fan.name'), dir: 'n', talk: 'caldera_arena_fan', reward: 'hint' }),
+      K.npc('caldera_arena_vet', 'npc_ash_old_m', 12, 27, { name: R.T('map.ash_arena.N.3.caldera_arena_vet.name'), dir: 'e', talk: 'caldera_arena_vet', reward: 'boss' }),
+      K.npc('zakuro', 'npc_zakuro', 34, 27, { name: R.T('map.ash_arena.N.4.zakuro.name'), title: R.T('map.ash_arena.N.4.zakuro.title'), dir: 'w', talk: 'caldera_arena_zakuro', reward: 'lead', cond: ['ash_champion', '!ash_zakuro_gone'] }),
+      K.npc('dorga_plaque', 'npc_dorga', 6, 12, { name: R.T('map.ash_arena.N.5.dorga_plaque.name'), title: R.T('map.ash_arena.N.5.dorga_plaque.title'), dir: 'w', talk: 'caldera_arena_dorga', reward: 'news', pushable: false, cond: 'ash_plaque_scene' }),
       // 大会の相手（回ごとに砂の場に現れる。ash_bout = 回の番号）
-      K.npc('opp_1a', 'npc_ash_fighter', 18, 8, { name: '一族の若者', dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 1 } }),
-      K.npc('opp_1b', 'npc_ash_fighter', 22, 8, { name: '一族の若者', dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 1 } }),
-      K.npc('opp_2', 'npc_drake', 20, 8, { name: '獣使いのガロ', dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 2 } }),
-      K.npc('opp_3a', 'npc_desert_woman', 18, 8, { name: '術師の姉ヒノエ', dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 3 } }),
-      K.npc('opp_3b', 'npc_star_woman', 22, 8, { name: '術師の妹スミ', dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 3 } }),
-      K.npc('opp_4', 'npc_pen_guard', 20, 8, { name: '鉄鎧のバルガ', dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 4 } }),
-      K.npc('opp_5', 'npc_zakuro', 20, 8, { name: 'ザクロ', dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 5 } }),
+      K.npc('opp_1a', 'npc_ash_fighter', 18, 8, { name: R.T('map.ash_arena.N.6.opp_1a.name'), dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 1 } }),
+      K.npc('opp_1b', 'npc_ash_fighter', 22, 8, { name: R.T('map.ash_arena.N.7.opp_1b.name'), dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 1 } }),
+      K.npc('opp_2', 'npc_drake', 20, 8, { name: R.T('map.ash_arena.N.8.opp_2.name'), dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 2 } }),
+      K.npc('opp_3a', 'npc_desert_woman', 18, 8, { name: R.T('map.ash_arena.N.9.opp_3a.name'), dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 3 } }),
+      K.npc('opp_3b', 'npc_star_woman', 22, 8, { name: R.T('map.ash_arena.N.10.opp_3b.name'), dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 3 } }),
+      K.npc('opp_4', 'npc_pen_guard', 20, 8, { name: R.T('map.ash_arena.N.11.opp_4.name'), dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 4 } }),
+      K.npc('opp_5', 'npc_zakuro', 20, 8, { name: R.T('map.ash_arena.N.12.opp_5.name'), dir: 's', talk: [L('……。')], cond: { var: 'ash_bout', eq: 5 } }),
     ];
 
     K.def('caldera_arena', {
-      name: 'カルデラの闘技場', kind: 'interior', region: 'r_ash', location: 'caldera', theme: 'desert_town',
+      name: R.T('map.ash_arena.caldera_arena.name'), kind: 'interior', region: 'r_ash', location: 'caldera', theme: 'desert_town',
       legend: AK.ARENA(), rows: g, outside: 'wall_stone',
       objects: O, npcs: N,
       spawns: {
@@ -82,7 +82,7 @@
       zones: [],
       light: AK.LIGHT_ARENA, dark: false,
       bgm: 'town',
-      meta: { sub: '火口の底の闘技場', minimap: false },
+      meta: { sub: R.T('map.ash_arena.caldera_arena.meta.sub'), minimap: false },
     });
   });
 })(window.RPG);

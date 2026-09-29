@@ -27,12 +27,12 @@
     sliceOpen: ['prologue', 'r_forest', 'world'],
     startGold: 0,
     startItems: {},
-    defaultHero: { type: 'warrior', sex: 'm', name: 'アルン', fav: 'sword' },
+    defaultHero: { type: 'warrior', sex: 'm', name: R.T('data.config.defaultHero.name'), fav: 'sword' },
     innPrice: [10, 16, 24, 32, 42, 54, 66, 80, 96, 112],
     chronicle: {
       prologue: {
-        title: '灯台守の歌', flag: 'prologue_done',
-        summary: '港町ファロスの灯台は、\n守り歌が忘れられて\n火を失っていた。\n語り部の見習いが歌を\n取り戻し、灯はふたたび\n海を照らした。',
+        title: R.T('data.config.chronicle.prologue.title'), flag: 'prologue_done',
+        summary: R.T('data.config.chronicle.prologue.summary'),
       },
     },
   });

@@ -7,14 +7,14 @@
   'use strict';
   const W = 'prologue_done';
   R.defs('locations', {
-    roa: { name: 'ロアの里', region: 'prologue', kind: 'town', map: 'roa', spawn: 'warp', warp: W },
-    pharos: { name: '港町ファロス', region: 'prologue', kind: 'town', map: 'pharos', spawn: 'warp', warp: W },
-    lighthouse: { name: 'ファロス灯台', region: 'prologue', kind: 'dungeon', map: 'lighthouse_1', spawn: 'entrance', warp: W },
-    well: { name: '旅人の古井戸', region: 'prologue', kind: 'dungeon', map: 'well', spawn: 'entrance', warp: W },
-    fern: { name: '森の村フェルン', region: 'r_forest', kind: 'town', map: 'fern', spawn: 'plaza', warp: W },
-    yura: { name: '隠れ里ユラ', region: 'r_forest', kind: 'town', map: 'yura', spawn: 'gate', warp: W },
-    verda: { name: '迷いの森', region: 'r_forest', kind: 'dungeon', map: 'verda_1', spawn: 'south', warp: W },
-    elder: { name: '千年樹', region: 'r_forest', kind: 'dungeon', map: 'elder_1', spawn: 'south', warp: W },
-    hut: { name: 'きこりの休み小屋', region: 'r_forest', kind: 'place', map: 'hut', spawn: 'door', warp: W },
+    roa: { name: R.T('locations.roa.name'), region: 'prologue', kind: 'town', map: 'roa', spawn: 'warp', warp: W },
+    pharos: { name: R.T('locations.pharos.name'), region: 'prologue', kind: 'town', map: 'pharos', spawn: 'warp', warp: W },
+    lighthouse: { name: R.T('locations.lighthouse.name'), region: 'prologue', kind: 'dungeon', map: 'lighthouse_1', spawn: 'entrance', warp: W },
+    well: { name: R.T('locations.well.name'), region: 'prologue', kind: 'dungeon', map: 'well', spawn: 'entrance', warp: W },
+    fern: { name: R.T('locations.fern.name'), region: 'r_forest', kind: 'town', map: 'fern', spawn: 'plaza', warp: W },
+    yura: { name: R.T('locations.yura.name'), region: 'r_forest', kind: 'town', map: 'yura', spawn: 'gate', warp: W },
+    verda: { name: R.T('locations.verda.name'), region: 'r_forest', kind: 'dungeon', map: 'verda_1', spawn: 'south', warp: W },
+    elder: { name: R.T('locations.elder.name'), region: 'r_forest', kind: 'dungeon', map: 'elder_1', spawn: 'south', warp: W },
+    hut: { name: R.T('locations.hut.name'), region: 'r_forest', kind: 'place', map: 'hut', spawn: 'door', warp: W },
   });
 })(window.RPG);

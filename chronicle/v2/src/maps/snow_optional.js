@@ -38,11 +38,11 @@
       O.push(K.chest('icicle_1_c1', 17, 6, { pool: 'p_rare' }), K.exam(17, 8, 'icicle_frozen', { box: 1 }));
       O.push(K.prop('ice_crystal', 17, 7, { cond: '!snow_icicle_box_1' }));
       O.push(K.chest('icicle_1_c2', 25, 30, { pool: 'p_T' }), K.chest('icicle_1_c3', 28, 6, { item: 'i_thaw', n: 2 }), K.chest('icicle_1_c4', 8, 21, { gold: 180 }));
-      O.push(K.sign(38, 14, 'つららの回廊\n氷はとけない。火のつぼなら、少しは……\n（古い字）'));
+      O.push(K.sign(38, 14, R.T('map.snow_optional.sign')));
       for (const [x, y] of [[20, 7], [26, 9], [24, 28], [19, 26], [36, 19], [9, 16], [25, 17]]) O.push(K.prop('ice_crystal', x, y, { variant: (x * 3 + y) % 3 }));
       K.scatter(g, O, ['snow_rock', 'ice_crystal'], 8, [2, 2, 40, 30], '.n', 'ic1deco', { gap: 5, variant: true, roomy: '.,ni' });
       K.def('icicle_1', {
-        name: 'つららの回廊', kind: 'dungeon', optional: true, region: 'r_snow', location: 'icicle', theme: 'ice_cave',
+        name: R.T('map.snow_optional.icicle_1.name'), kind: 'dungeon', optional: true, region: 'r_snow', location: 'icicle', theme: 'ice_cave',
         legend: CAVE(), rows: g, outside: 'wall_snow', objects: O, npcs: [],
         spawns: { entrance: { x: 41, y: 17, dir: 'w' }, up: { x: 8, y: 18, dir: 'e' } },
         exits: [{ x: 43, y: 16, w: 1, h: 3, to: { map: 'world', spawn: 'icicle' } }],
@@ -51,7 +51,7 @@
         zones: [{ rect: null, zone: 'z_snow_icicle' }],
         light: { ambient: '#4c5c98', k: 0.6, poolK: 0.6, spillR: 0.8, mood: 'cave' },
         dark: false, bgm: 'cave', bbg: 'snow',
-        meta: { chestsInfo: true, floor: '1 階', sub: '氷の洞' },
+        meta: { chestsInfo: true, floor: R.T('map.snow_optional.icicle_1.meta.floor'), sub: R.T('map.snow_optional.icicle_1.meta.sub') },
       });
     }
     // ================================================================ #11 つららの回廊 2 階（暗がり）40×32
@@ -78,11 +78,11 @@
       for (let i = 0; i < 3; i++) O.push(K.prop('ice_crystal', 19 + i, 6, { cond: '!snow_icicle_box_2', variant: i }));
       O.push(K.chest('icicle_2_c2', 35, 16, { pool: 'p_T' }), K.chest('icicle_2_c3', 4, 11, { pool: 'p_T' }), K.chest('icicle_2_c4', 24, 24, { pool: 'p_heal' }));
       O.push(K.prop('talestone', 7, 9), K.exam(7, 10, 'icicle_seal'));             // 宝の地図 その2 の封じの扉（地図は縦切りの外）
-      O.push(K.sign(22, 12, '――つらら番、眠りを破る者を打つ。\n火のある所では、やつは目が利かぬ。\n（誰かの書き付け）'));
+      O.push(K.sign(22, 12, R.T('map.snow_optional.sign_2')));
       for (const [x, y] of [[12, 22], [28, 13], [33, 18], [24, 7], [9, 13]]) O.push(K.prop('ice_crystal', x, y, { variant: (x + y) % 3 }));
       K.put(g, 11, 7, '#');   // 描いた下絵の岩（v2/assets/env/snow/under/icicle_2*）
       K.def('icicle_2', {
-        name: 'つららの回廊', kind: 'dungeon', optional: true, region: 'r_snow', location: 'icicle', theme: 'ice_cave',
+        name: R.T('map.snow_optional.icicle_2.name'), kind: 'dungeon', optional: true, region: 'r_snow', location: 'icicle', theme: 'ice_cave',
         legend: CAVE(), rows: g, outside: 'wall_snow', objects: O, npcs: [],
         spawns: { up: { x: 8, y: 26, dir: 'e' } },
         exits: [],
@@ -95,7 +95,7 @@
         zones: [{ rect: null, zone: 'z_snow_icicle_deep' }],
         light: { ambient: '#3e4a82', k: 0.66, poolK: 0.6, spillR: 0.8, mood: 'cave' },
         dark: [{ rect: [0, 0, 40, 32] }], bgm: 'cave', bbg: 'snow',
-        meta: { chestsInfo: true, floor: '2 階', sub: '暗い氷の洞' },
+        meta: { chestsInfo: true, floor: R.T('map.snow_optional.icicle_2.meta.floor'), sub: R.T('map.snow_optional.icicle_2.meta.sub') },
       });
     }
 
@@ -151,30 +151,30 @@
       // 小物は壁の際に少しだけ（町の小物は当たらない。道・戸口の前には置かない）
       O.push(K.prop('tent', 5, 14), K.prop('firewood', 3, 17), K.prop('sled', 7, 20));
       O.push(K.prop('board', 12, 11), K.exam(12, 11, 'pass_inn_board'));
-      O.push(K.sign(18, 23, '宿場「峠の宿」\n関所の跡の宿。湯あり。'));
+      O.push(K.sign(18, 23, R.T('map.snow_optional.sign_3')));
       O.push(K.chest('pass_inn_c1', 4, 20, { pool: 'p_T' }));
       K.def('pass_inn', {
-        name: '峠の宿', kind: 'town', optional: true, region: 'r_snow', location: 'pass_inn', theme: 'snow_town',
+        name: R.T('map.snow_optional.pass_inn.name'), kind: 'town', optional: true, region: 'r_snow', location: 'pass_inn', theme: 'snow_town',
         legend: S.LEGEND({ c: { mat: 'cobble' }, '~': { mat: 'water', walk: false, name: 'hot_spring' } }), rows: g, outside: 'wall_snow', objects: O,
         npcs: [
-          K.npc('bath_keeper', 'npc_snow_old_m', 23, 15, { name: '湯の番', dir: 'e', talk: 'pass_inn_bath_keeper', reward: 'side' }),
-          K.npc('pass_inn_scout', 'npc_snow_watch', 16, 8, { name: '峠の見張り', dir: 'n', talk: 'pass_inn_scout', reward: 'news' }),
-          K.npc('pass_inn_fox_man', 'npc_snow_man', 9, 15, { name: '毛皮取り', dir: 'e', talk: 'pass_inn_fox_man', reward: 'hint' }),
-          K.npc('pass_dog', 'ani_dog', 6, 18, { name: '犬', dir: 'e', move: 'wander', talk: [L('ワフ。')], reward: null }),
+          K.npc('bath_keeper', 'npc_snow_old_m', 23, 15, { name: R.T('map.snow_optional.pass_inn.npcs.0.bath_keeper.name'), dir: 'e', talk: 'pass_inn_bath_keeper', reward: 'side' }),
+          K.npc('pass_inn_scout', 'npc_snow_watch', 16, 8, { name: R.T('map.snow_optional.pass_inn.npcs.1.pass_inn_scout.name'), dir: 'n', talk: 'pass_inn_scout', reward: 'news' }),
+          K.npc('pass_inn_fox_man', 'npc_snow_man', 9, 15, { name: R.T('map.snow_optional.pass_inn.npcs.2.pass_inn_fox_man.name'), dir: 'e', talk: 'pass_inn_fox_man', reward: 'hint' }),
+          K.npc('pass_dog', 'ani_dog', 6, 18, { name: R.T('map.snow_optional.pass_inn.npcs.3.pass_dog.name'), dir: 'e', move: 'wander', talk: [L(R.T('map.snow_optional.pass_inn.talk.0.L'))], reward: null }),
         ],
         spawns: { gate: { x: 16, y: 23, dir: 'n' }, inn: { x: 7, y: 8, dir: 's' }, shop: { x: 25, y: 8, dir: 's' }, bath: { x: 23, y: 16, dir: 'n' } },
         exits: [{ x: 15, y: 25, w: 3, h: 1, to: { map: 'world', spawn: 'pass_inn' } }],
         triggers: [{ id: 'arrive', on: 'enter', event: 'pass_inn_arrive', once: true }],
         zones: [], light: { ambient: '#5c66a6', k: 0.5, poolK: 0.8, spillR: 0.9, mood: 'town_night' },
         bgm: 'yule', weather: 'snow', weatherCond: '!cleared_r_snow',
-        meta: { sub: '関所の跡の湯の宿', chestsInfo: false },
+        meta: { sub: R.T('map.snow_optional.pass_inn.meta.sub'), chestsInfo: false },
         art: { image: 'snow/under/pass_inn', emit: 'snow/under/pass_inn_emit', painted: [] },
       });
       // 宿（西の塔の中）: おかみと、うわさ好きの泊まり客 3 人
       const r = K.room(18, 12, {});
       K.rect(r.g, 6, 6, 6, 3, 'c');
       K.def('pass_inn_in', {
-        name: '峠の宿', kind: 'interior', optional: true, region: 'r_snow', location: 'pass_inn',
+        name: R.T('map.snow_optional.pass_inn_in.name'), kind: 'interior', optional: true, region: 'r_snow', location: 'pass_inn',
         legend: S.ROOM(), rows: r.g, outside: 'wall_wood',
         // 描いた下絵（v2/assets/env/snow/under/pass_inn_in*）: 北の壁の西に大きな石の暖炉（火は光だけの物 fireplace = art.painted）。帳場は東へ
         objects: [K.prop('fireplace', 3, 2), K.prop('counter', 11, 3), K.prop('counter', 12, 3), K.prop('counter', 13, 3), K.prop('shelf_jars', 14, 2),
@@ -182,10 +182,10 @@
           K.prop('table', 11, 8), K.prop('chair', 10, 8), K.prop('chair', 12, 8),
           K.prop('stove', 1, 6), K.prop('lantern', 9, 3), K.prop('firewood', 1, 9), K.prop('snow_barrel', 15, 10)],
         npcs: [
-          K.npc('pass_inn_innkeeper', 'npc_snow_woman', 12, 2, { name: '峠の宿のおかみ', dir: 's', talk: 'pass_inn_innkeeper', pushable: false }),
-          K.npc('rumor_gossip', 'npc_snow_woman', 6, 8, { name: 'うわさ好きの湯治客', dir: 'e', talk: 'pass_inn_rumor_gossip', reward: 'lead' }),
-          K.npc('rumor_bard', 'npc_bard_3', 11, 7, { name: '吟遊詩人', dir: 's', talk: 'pass_inn_rumor_bard', reward: 'lead' }),
-          K.npc('rumor_merchant', 'npc_traveler', 13, 9, { name: '旅の商人', dir: 'w', talk: 'pass_inn_rumor_merchant', reward: 'lead' }),
+          K.npc('pass_inn_innkeeper', 'npc_snow_woman', 12, 2, { name: R.T('map.snow_optional.pass_inn_in.npcs.0.pass_inn_innkeeper.name'), dir: 's', talk: 'pass_inn_innkeeper', pushable: false }),
+          K.npc('rumor_gossip', 'npc_snow_woman', 6, 8, { name: R.T('map.snow_optional.pass_inn_in.npcs.1.rumor_gossip.name'), dir: 'e', talk: 'pass_inn_rumor_gossip', reward: 'lead' }),
+          K.npc('rumor_bard', 'npc_bard_3', 11, 7, { name: R.T('map.snow_optional.pass_inn_in.npcs.2.rumor_bard.name'), dir: 's', talk: 'pass_inn_rumor_bard', reward: 'lead' }),
+          K.npc('rumor_merchant', 'npc_traveler', 13, 9, { name: R.T('map.snow_optional.pass_inn_in.npcs.3.rumor_merchant.name'), dir: 'w', talk: 'pass_inn_rumor_merchant', reward: 'lead' }),
         ],
         spawns: { door: { x: r.door.x, y: 10, dir: 'n' } },
         exits: [{ x: r.door.x, y: 11, w: 1, h: 1, to: { map: 'pass_inn', spawn: 'inn' } }],
@@ -195,11 +195,11 @@
       // 売店（東の塔の中）
       const r2 = K.room(10, 8, {});
       K.def('pass_inn_shop', {
-        name: '峠の宿の売店', kind: 'interior', optional: true, region: 'r_snow', location: 'pass_inn',
+        name: R.T('map.snow_optional.pass_inn_shop.name'), kind: 'interior', optional: true, region: 'r_snow', location: 'pass_inn',
         legend: S.ROOM(), rows: r2.g, outside: 'wall_wood',
         objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('counter', 6, 3), K.prop('shelf_jars', 1, 2), K.prop('shelf_jars', 8, 2),
           K.prop('snow_barrel', 8, 5), K.prop('sack', 1, 5), K.prop('lantern', 7, 4)],
-        npcs: [K.npc('pass_shop', 'npc_snow_man', 5, 2, { name: '売店の主人', dir: 's', talk: 'pass_inn_shopkeeper', pushable: false })],
+        npcs: [K.npc('pass_shop', 'npc_snow_man', 5, 2, { name: R.T('map.snow_optional.pass_inn_shop.npcs.0.pass_shop.name'), dir: 's', talk: 'pass_inn_shopkeeper', pushable: false })],
         spawns: { door: { x: r2.door.x, y: 6, dir: 'n' } },
         exits: [{ x: r2.door.x, y: 7, w: 1, h: 1, to: { map: 'pass_inn', spawn: 'shop' } }],
         art: { image: 'snow/under/pass_inn_shop', painted: [] },
@@ -229,7 +229,7 @@
       for (const [x, y] of [[14, 20], [27, 22], [17, 11], [25, 12], [9, 18]]) O.push(K.prop('ice_crystal', x, y, { variant: (x + y) % 3 }));
       K.scatter(g, O, ['snow_rock', 'snow_bank'], 10, [2, 2, 36, 24], 'n', 'audeco', { gap: 4, variant: true, roomy: '.,ni' });
       K.def('aurora', {
-        name: 'オーロラの崖', kind: 'dungeon', optional: true, region: 'r_snow', location: 'aurora', theme: 'snow',
+        name: R.T('map.snow_optional.aurora.name'), kind: 'dungeon', optional: true, region: 'r_snow', location: 'aurora', theme: 'snow',
         legend: S.LEGEND({ n: { mat: 'snow' } }), rows: g, outside: 'wall_snow', objects: O, npcs: [],
         spawns: { south: { x: 19, y: 27, dir: 'n' } },
         exits: [{ x: 18, y: 29, w: 4, h: 1, to: { map: 'world', spawn: 'aurora' } }],
@@ -238,7 +238,7 @@
         zones: [{ rect: null, zone: 'z_snow_floe' }],
         light: { ambient: '#6a64b0', k: 0.58, poolK: 0.7, spillR: 0.9, mood: 'night' },
         dark: false, bgm: 'ice', bbg: 'snow', weather: 'snow',
-        meta: { chestsInfo: true, sub: '空が七色に揺れる崖' },
+        meta: { chestsInfo: true, sub: R.T('map.snow_optional.aurora.meta.sub') },
       });
     }
 
@@ -267,10 +267,10 @@
       // 樽・木箱は甲板の奥（北の舷）の壁ぎわ（持ち主 2026-09-28「通路真ん中にはおかないで」）
       O.push(K.prop('barrel', 11, 8), K.prop('crate', 26, 8), K.prop('snow_barrel', 15, 8), K.prop('net', 29, 10), K.prop('rowboat', 5, 18));
       O.push(K.chest('frost_ship_1_c1', 9, 14, { pool: 'p_T' }), K.chest('frost_ship_1_c2', 31, 10, { pool: 'p_T' }));
-      O.push(K.sign(22, 19, '――この船に入るべからず。\n百年、帰らぬ船団。凍てつく長あり。\n（峠の宿の組合の札）'));
+      O.push(K.sign(22, 19, R.T('map.snow_optional.sign_4')));
       O.push(K.exam(20, 9, 'frost_ship_log'));
       K.def('frost_ship_1', {
-        name: '氷に閉じた帆船', kind: 'dungeon', optional: true, region: 'r_snow', location: 'frost_ship', theme: 'snow',
+        name: R.T('map.snow_optional.frost_ship_1.name'), kind: 'dungeon', optional: true, region: 'r_snow', location: 'frost_ship', theme: 'snow',
         legend: S.LEGEND({ '.': { mat: 'ice' }, p: { mat: 'plank' }, W: { mat: 'wall_wood', solid: true, rise: 2 }, R: { mat: 'wall_wood', solid: true, rise: 1, name: 'hull' } }), rows: g, outside: 'ice', objects: O, npcs: [],
         spawns: { entrance: { x: 19, y: 22, dir: 'n' }, up: { x: 32, y: 13, dir: 'w' } },
         art: { image: 'snow/under/frost_ship_1', painted: [] },   // 描いた下絵（design/ENV_ASSETS.md §7）
@@ -279,7 +279,7 @@
         zones: [{ rect: null, zone: 'z_snow_ship' }],
         light: { ambient: '#56629c', k: 0.58, poolK: 0.7, spillR: 0.9, mood: 'night' },
         dark: false, bgm: 'ghost', bbg: 'snow', weather: 'snow',
-        meta: { chestsInfo: true, floor: '甲板', sub: '氷の中の帆柱' },
+        meta: { chestsInfo: true, floor: R.T('map.snow_optional.frost_ship_1.meta.floor'), sub: R.T('map.snow_optional.frost_ship_1.meta.sub') },
       });
       const g2 = K.grid(36, 22, 'W');
       K.rect(g2, 3, 3, 30, 16, 'p');
@@ -295,7 +295,7 @@
       O2.push(K.chest('frost_ship_2_c2', 30, 16, { item: 'u_frost_compass', n: 1, cond: 'snow_admiral' }));
       O2.push(K.exam(28, 13, 'frost_ship_chart'));
       K.def('frost_ship_2', {
-        name: '氷に閉じた帆船', kind: 'dungeon', optional: true, region: 'r_snow', location: 'frost_ship', theme: 'snow',
+        name: R.T('map.snow_optional.frost_ship_2.name'), kind: 'dungeon', optional: true, region: 'r_snow', location: 'frost_ship', theme: 'snow',
         legend: S.LEGEND({ W: { mat: 'wall_wood', solid: true, rise: 2 }, p: { mat: 'wood_floor' }, c: { mat: 'carpet' } }), rows: g2, outside: 'wall_wood', objects: O2, npcs: [],
         spawns: { up: { x: 5, y: 5, dir: 's' } },
         exits: [],
@@ -304,7 +304,7 @@
         zones: [{ rect: [0, 0, 14, 22], zone: 'z_snow_ship' }],
         light: { ambient: '#4e5890', k: 0.62, poolK: 0.6, spillR: 0.8, mood: 'cave' },
         dark: false, bgm: 'ghost', bbg: 'snow',
-        meta: { chestsInfo: true, floor: '船倉', sub: '凍りついた船長室' },
+        meta: { chestsInfo: true, floor: R.T('map.snow_optional.frost_ship_2.meta.floor'), sub: R.T('map.snow_optional.frost_ship_2.meta.sub') },
       });
     }
   });

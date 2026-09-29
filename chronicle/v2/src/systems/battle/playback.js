@@ -120,9 +120,29 @@
     for (const f of st.fxs) {
       const t = st.clock - f.t0;
       if (t < 0) { out.push(f); continue; }
+      if (f.seq) {
+        // 技・術の演出（R.BFX.seq）。表の揺れは、前のコマから今のコマの間に来た物を起こす
+        const S = R.BFX.seq;
+        if (!S.draw(g, f, t)) continue;
+        if (f.part !== 'hit') {
+          const tt = t * (f.rate || 1), spec = S.get(f.seq);
+          if (spec) for (const s of S.shakesBetween(spec, f.lastT == null ? -1 : f.lastT, tt)) P.seqShake(st, s[1], s[2] / (f.rate || 1));
+          f.lastT = tt;
+        }
+        out.push(f);
+        continue;
+      }
       if (R.BFX.draw(g, f.id, f.x, f.y, t, f)) out.push(f);
     }
     st.fxs = out;
+  };
+  /** 演出の揺れ（設定 shake・reduceMotion に従う。ms は戦闘の時計の長さ → 実時間） */
+  P.seqShake = function (st, amp, ms) {
+    if (R.Settings.get('shake') === 'off' || R.Settings.get('reduceMotion')) return;
+    const real = ms / Math.max(1, st.speed ? st.speed() : 1);
+    const cur = st.shake && R.Engine.time - st.shake.t0 < st.shake.ms ? st.shake : null;
+    if (cur && cur.amp * (1 - (R.Engine.time - cur.t0) / cur.ms) > amp) return;
+    st.shake = { t0: R.Engine.time, ms: Math.max(120, real), amp };
   };
   const NUM = {
     dmg: { fill: ['#ffffff', '#f4f0e8'], stroke: 'rgba(24,18,30,0.95)', size: 22 },
@@ -319,7 +339,79 @@
     const h = [...String(e.id || e.name || '')].reduce((s, c) => s + c.charCodeAt(0), 0);
     return ['claw', 'bite', 'hit'][h % 3];
   }
+  // ---------------------------------------------------------------- 技・術の演出（R.BFX.seq。段で派手になる）
+  const SEQ = () => (R.BFX && R.BFX.seq) || null;
+  /** 技・術の行動 → 演出の id（表に無い・効果の品質「切」は null。古い fx に戻る） */
+  function seqOf(e) {
+    const S = SEQ();
+    if (!S || !(e.cmd === 'skill' || e.cmd === 'spell')) return null;
+    if (R.Hd && R.Hd.quality && R.Hd.quality() === 'off') return null;
+    const sid = S.idFor(e.cmd === 'skill' ? 'techs' : 'spells', e.id);
+    return sid && S.get(sid) ? sid : null;
+  }
+  P.seqOf = seqOf;
+  /** 人・敵の場所（体の中ほど x,y・足もと fy・高さ h） */
+  function spot(st, uid) {
+    const a = st.actor(uid);
+    if (!a) return null;
+    const v = st.vis[uid] || {}, h = _.actors.height(a);
+    return { x: a.x + (v.dx || 0), y: a.y - h * 0.5, fy: a.y, h };
+  }
+  /** この行動で当たる的（act の targets と、次の act までの出来事の uid） */
+  function seqTargets(st, e) {
+    const out = (e.targets || []).slice();
+    if (st._evs) {
+      for (let i = st._evi + 1; i < st._evs.length; i++) {
+        const x = st._evs[i];
+        if (!x || x.t === 'act' || x.t === 'turn') break;
+        if ((x.t === 'dmg' || x.t === 'heal' || x.t === 'status' || x.t === 'revive' || x.t === 'miss') && x.uid != null && !out.includes(x.uid)) out.push(x.uid);
+      }
+    }
+    return out;
+  }
+  function seqCtx(st, e, uids, base) {
+    const S = SEQ();
+    const u = st.unit(e.uid) || {};
+    const src = (base && base.src) || spot(st, e.uid) || { x: R.W * 0.7, y: (st.L.stageH || R.H) * 0.62, fy: (st.L.stageH || R.H) * 0.72, h: 60 };
+    const tgts = uids.map((id) => spot(st, id)).filter(Boolean);
+    let dir = base ? base.dir : u.side === 'party' ? -1 : 1;
+    if (!base && tgts.length) { const tx = tgts.reduce((s, t) => s + t.x, 0) / tgts.length; if (Math.abs(tx - src.x) > 60) dir = tx < src.x ? -1 : 1; }
+    const q = R.Hd && R.Hd.quality && R.Hd.quality() === 'low' ? 0.55 : 1;
+    return S.ctx({ src, tgts, dir, W: R.W, H: st.L.tall ? st.L.stageH : R.H, q, rm: !!R.Settings.get('reduceMotion'), lf: !!R.Settings.get('lessFlash'), name: e.name || '', seed: base ? base.seed : S.hs(String(e.id) + ':' + (st.clock | 0)), noBanner: !!st.banner });
+  }
+  /** 行動の始まり: 画面・範囲の演出を置き、当たる瞬間（lead）までの戦闘の時計の ms を返す */
+  function seqStart(st, e, ctx) {
+    const S = SEQ(), sid = ctx.seq, spec = S.get(sid);
+    const u = st.unit(e.uid) || {};
+    const rate = S.rateFor(spec, u.side === 'party' && S.seen(sid));
+    const c = seqCtx(st, e, seqTargets(st, e));
+    ctx.seqC = c; ctx.seqRate = rate; ctx.seqHit = {};
+    st.fxs.push({ seq: sid, part: 'main', c, rate, t0: st.clock });
+    ctx.seqEnd = st.clock + Math.max(0, spec.dur - 160) / rate;
+    if (u.side === 'party' && spec.tier >= 4) S.markSeen(sid);
+    st.log.push({ t: 'seq', id: sid, tier: spec.tier, lead: Math.round(spec.lead / rate), dur: Math.round(spec.dur / rate) });
+    return spec.lead / rate;
+  }
+  /** 当たった的に、その技・術の当たりの効果（連撃は hitIdx で毎回少し変わる） */
+  function seqHit(st, ctx, uid) {
+    const sp = spot(st, uid);
+    if (!sp || !ctx.seqC) return;
+    const S = SEQ(), c0 = ctx.seqC;
+    const c = S.ctx(Object.assign({}, c0, { tgts: [sp], tc: null }));
+    st.fxs.push({ seq: ctx.seq, part: 'hit', c, rate: 1, t0: st.clock, hitIdx: ctx.hits || 0 });
+    ctx.seqHit[uid] = 1;
+  }
+  /** 回復・強化・蘇生など、当たり（dmg）の無い的に 1 回だけ当たりの効果を出す → 出したら true */
+  function seqHitOnce(st, ctx, uid) {
+    if (!ctx || !ctx.seq || !ctx.seqC) return false;
+    if (!ctx.seqHit[uid]) seqHit(st, ctx, uid);
+    return true;
+  }
+
   async function returnActor(st, ctx) {
+    // 演出の残り（爆ぜた後の余韻）を見届けてから戻る
+    if (ctx.seqEnd) { const end = ctx.seqEnd; ctx.seqEnd = 0; if (st.clock < end) await R.until(() => st.clock >= end || st.dead); }
+    ctx.seq = null; ctx.seqC = null;
     const uid = ctx.actor;
     if (uid && st.banner && st.glim && st.glim.uid === uid) _.glimmer.release(st);
     ctx.actor = null; ctx.act = null; ctx.fx = null; ctx.fxs = null;
@@ -338,6 +430,7 @@
     const u = st.unit(e.uid);
     if (!u) return;
     ctx.actor = e.uid; ctx.act = e; ctx.fx = fxFor(st, e); ctx.fxs = fxsFor(e); ctx.hits = 0;
+    ctx.seq = seqOf(e); ctx.seqC = null; ctx.seqEnd = 0;
     const an = u.name;
     st.head = e.cmd === 'attack' ? { name: `${an}の攻撃`, t0: R.Engine.time } : { name: e.name || '', sub: an, t0: R.Engine.time };
     if (st.tele && st.tele.uid === e.uid) { st.tele = null; }
@@ -352,9 +445,11 @@
       if (kind) _.voice.play(u, kind, { speed: sp, force: big, rng: st.vrng });
       if (e.cmd === 'spell') {
         setPose(st, e.uid, 'cast');
-        P.fx(st, 'cast', st.actor(e.uid).x, st.actor(e.uid).y - 34, {});
+        // 術の演出（足もとの魔法陣は演出の表が属性の色で出す）。当たる瞬間まで待つ
+        const lead = ctx.seq ? seqStart(st, e, ctx) : 0;
+        if (!ctx.seq) P.fx(st, 'cast', st.actor(e.uid).x, st.actor(e.uid).y - 34, {});
         sfx('magic');
-        await st.pwait(460);
+        await st.pwait(Math.max(460, lead));
       } else if (e.cmd === 'item') {
         setPose(st, e.uid, 'item'); sfx('item'); await st.pwait(300);
       } else if (e.cmd === 'defend') {
@@ -373,21 +468,34 @@
         setPose(st, e.uid, _.actors.ATTACK_POSE[u.wtype] || 'slash');
         P.smear(st, v, 160);
         sfx('attack');
-        await st.pwait(ranged ? 260 : 200);
+        const lead = ctx.seq ? seqStart(st, e, ctx) : 0;
+        await st.pwait(Math.max(ranged ? 260 : 200, lead));
       }
     } else {
       if (e.cmd === 'defend') { await st.pwait(200); return; }
-      if (e.cmd === 'spell') { setPose(st, e.uid, 'attack'); P.fx(st, 'cast', st.actor(e.uid).x, st.actor(e.uid).y - 30, {}); sfx('magic'); await st.pwait(420); return; }
+      if (e.cmd === 'spell') {
+        setPose(st, e.uid, 'attack');
+        const lead = ctx.seq ? seqStart(st, e, ctx) : 0;
+        if (!ctx.seq) P.fx(st, 'cast', st.actor(e.uid).x, st.actor(e.uid).y - 30, {});
+        sfx('magic'); await st.pwait(Math.max(420, lead)); return;
+      }
       await P.squash(st, v, 1.05, 0.95, 70, 'out');
       P.smear(st, v, 180);
       P.squash(st, v, 0.96, 1.05, 80, 'out');
       await P.tween(st, v, 'dx', 26, 130, 'inOut');
       P.unsquash(st, v, 150);
       setPose(st, e.uid, 'attack'); sfx('enemy_attack');
-      await st.pwait(160);
+      const lead = ctx.seq ? seqStart(st, e, ctx) : 0;
+      await st.pwait(Math.max(160, lead));
     }
   };
   function hitFx(st, e, ctx) {
+    if (ctx.seq && ctx.seqC) {
+      seqHit(st, ctx, e.uid);
+      const ES0 = { fire: 'fire', ice: 'ice', thunder: 'thunder', wind: 'wind', earth: 'earth', light: 'holy', dark: 'dark', shoot: 'arrow' };
+      if (ES0[ctx.fx] && ctx.hits === 0) sfx(ES0[ctx.fx]);
+      return;
+    }
     const c = centerOf(st, e.uid);
     const tgt = st.unit(e.uid) || {};
     const flip = tgt.side === 'enemy';   // 右向きで描いた効果: 味方→敵は反転（左向き）
@@ -436,12 +544,12 @@
     await st.pwait(170);
     if (v.alive && v.pose === 'hit') setPose(st, e.uid, 'idle');
   };
-  H.heal = async (st, e) => {
+  H.heal = async (st, e, ctx) => {
     const v = st.vis[e.uid];
     if (!v) return;
     if (e.mp) v.mp = Math.min(v.maxMp || v.mp + e.n, v.mp + e.n); else v.hp = Math.min(v.maxHp || v.hp + e.n, v.hp + e.n);
     const a = st.actor(e.uid);
-    if (a) P.fx(st, e.mp ? 'mp' : 'heal', a.x, a.y - 40, {});
+    if (a && !seqHitOnce(st, ctx, e.uid)) P.fx(st, e.mp ? 'mp' : 'heal', a.x, a.y - 40, {});
     P.pop(st, e.uid, '+' + (e.n | 0).toLocaleString('en-US'), e.mp ? 'mp' : 'heal');
     sfx('heal');
     await st.pwait(220);
@@ -453,9 +561,11 @@
     if (v && u) { const d = u.side === 'party' ? 16 : -16; P.smear(st, v, 120); await P.tween(st, v, 'dx', (v.dx || 0) + d, 110, 'out3'); await P.tween(st, v, 'dx', 0, 170, 'inOut'); }
     else await st.pwait(200);
   };
-  H.status = async (st, e) => {
+  H.status = async (st, e, ctx) => {
     const v = st.vis[e.uid];
     if (!v) return;
+    // 技・術の演出の当たり（まだ当たりの効果の出ていない的だけ。強化・構え・弱体の術）
+    const seqd = !!(ctx && ctx.seq && ctx.seqC && !ctx.seqHit[e.uid] && e.on && seqHitOnce(st, ctx, e.uid));
     // 強化・弱体（BATTLE 34-3）: {id:'buff_<atk|def|mag|mdef|agi>', on, stage:-2..2}
     const bm = /^buff_(atk|def|mag|mdef|agi)$/.exec(e.id || '');
     if (bm) {
@@ -465,7 +575,7 @@
       v.status = v.status.filter((x) => (x.id || x) !== e.id);
       if (e.on && stg) v.status.push(e.id);
       const a0 = st.actor(e.uid);
-      if (a0 && e.on && stg) P.fx(st, up ? 'buff' : 'debuff', a0.x, a0.y - 40, {});
+      if (a0 && e.on && stg && !seqd) P.fx(st, up ? 'buff' : 'debuff', a0.x, a0.y - 40, {});
       P.pop(st, e.uid, !e.on || !stg ? `${BN[bm[1]]}が元に戻った` : `${BN[bm[1]]}${up ? '↑' : '↓'}${Math.abs(stg) > 1 ? '↑↓'[up ? 0 : 1] : ''}`, 'status');
       sfx(e.on && stg ? (up ? 'buff' : 'debuff') : 'heal');
       await st.pwait(240);
@@ -477,7 +587,7 @@
     if (!e.on) v.status = v.status.filter((s) => (s.id || s) !== e.id);
     const a = st.actor(e.uid);
     const good = /haste|regen|protect|shell|guard|buff|up/.test(e.id);
-    if (a && e.on) P.fx(st, good ? 'buff' : 'status', a.x, a.y - 40, {});
+    if (a && e.on && !seqd) P.fx(st, good ? 'buff' : 'status', a.x, a.y - 40, {});
     P.pop(st, e.uid, e.on ? name : `${name}が治った`, 'status');
     sfx(e.on ? (good ? 'buff' : 'debuff') : 'heal');
     await st.pwait(260);
@@ -498,9 +608,10 @@
       await st.pwait(u.boss ? 600 : 240);
     }
   };
-  H.revive = async (st, e) => {
+  H.revive = async (st, e, ctx) => {
     const v = st.vis[e.uid];
     if (!v) return;
+    if (ctx && ctx.seq && ctx.seqC) seqHitOnce(st, ctx, e.uid);
     v.alive = true; v.gone = 0;
     // 起き上がった後の HP（e.hp）。無い古い出来事は 1 にしておく（立っているのに HP 0 にしない）
     v.hp = e.hp > 0 ? Math.min(v.maxHp || e.hp, e.hp) : Math.max(1, v.hp || 0);
@@ -592,7 +703,7 @@
     st.activeUid = null;
     st.ui = null;
     st.vrng = st.vrng || R.rng('bvoice:' + ((R.Game && R.Game.seed) || 0));
-    const ctx = { actor: null, act: null, fx: null, hits: 0 };
+    const ctx = { actor: null, act: null, fx: null, hits: 0, seq: null, seqC: null, seqEnd: 0, seqHit: {} };
     const C = R.Contract;
     st._evs = evs;
     for (let ei = 0; ei < evs.length; ei++) {

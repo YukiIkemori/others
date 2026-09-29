@@ -32,6 +32,7 @@
     padGlyphs: 'auto',   // ボタンの印: 自動（最後に触ったパッドの名前で）／A が下（Xbox 系）／○×△□（PlayStation 系）／A が右（Nintendo 系）
     display: 'window',   // ウィンドウ／全画面（F11・Alt+Enter でも。core/display.js）
     scaleMode: 'fit',    // 拡大: 画面に合わせる（実画面の画素に 1:1 で描く）／整数倍（余りは帯）。core/fit.js
+    lang: 'ja',          // 言語（core/i18n.js）。変えたら R.I18n.setLang。データの名前まで変えるには起こし直す（設定の画面が R.I18n.restart）
   };
   const VOL = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const CHOICES = {
@@ -57,6 +58,7 @@
     padGlyphs: ['auto', 'xbox', 'ps', 'nintendo'],
     display: ['window', 'fullscreen'],
     scaleMode: ['fit', 'integer'],
+    lang: ['ja', 'en', 'zh-Hans', 'zh-Hant', 'ko'],
   };
   const KEY = 'settings';
   let cur = Object.assign({}, DEFAULTS);
@@ -117,6 +119,7 @@
     }
     if ((key === 'uiSize' || key === 'scaleMode') && R.fit) R.fit(true);
     if (key === 'display' && R.Display && R.Display.apply) R.Display.apply();
+    if (key === 'lang' && R.I18n) R.I18n.setLang(S.get('lang'));
   }
   /** 読んだ割り当ての形を整える（知らない名前・変な値は落とす） */
   function cleanBinds(b) {

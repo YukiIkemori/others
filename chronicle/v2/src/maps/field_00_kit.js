@@ -30,13 +30,13 @@
   //   灯台は仲間を連れてオットーの鍵をもらってから（pharos_otto）なので、ひとりの間は閉じてよい
   const SOLO_WHEN = '!prologue_party';
   const SOLO_GATES = [
-    ['f_roa', 'well', 'ひとりで古井戸の底へ降りるのは危険だ。\nまずは東の港町ファロスで、\n仲間を集めよう。'],
-    ['f_roa', 'f_lookout', 'ひとりで遠くへ行くのは、まだ心細い。\nまずは東の港町ファロスで、\n仲間を集めよう。'],
-    ['f_cape', 'lighthouse_1', 'ひとりで灯台へ入るのは危険だ。\nまずは港町ファロスの酒場で、\n仲間を集めよう。'],
+    ['f_roa', 'well', R.T('map.field_00_kit.SOLO_GATES.0.2')],
+    ['f_roa', 'f_lookout', R.T('map.field_00_kit.SOLO_GATES.1.2')],
+    ['f_cape', 'lighthouse_1', R.T('map.field_00_kit.SOLO_GATES.2')],
   ];
   const CONFIRM = {
-    well: '縄ばしごを伝って、\n古井戸の底へ降りますか？',
-    lighthouse_1: '重い扉の向こうは、灯台の中だ。\n中へ入りますか？',
+    well: R.T('map.field_00_kit.CONFIRM.well'),
+    lighthouse_1: R.T('map.field_00_kit.CONFIRM.lighthouse_1'),
   };
   // 絵の無い光だけの物（描いた絵の上に光だけ置く。art.painted に入れて絵は出さない、ENV_ASSETS.md §8）
   const PROPS = { lighthouse_glow: { soft: true, glow: true, light: { kind: 'lamp', r: 170 } } };

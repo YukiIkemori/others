@@ -29,17 +29,17 @@
 
   R.defs('shops', {
     // ファロスの道具屋（薬・毒消し・目覚まし・目薬・魔除けの香・松明…）
-    shop_pharos_items: { name: 'ファロスの道具屋', kind: 'item', keepOld: true, sell: true, items: ITEMS_T0.concat(ACC_T0), tier: { 1: ITEMS_T1.concat(STONES) } },
+    shop_pharos_items: { name: R.T('shops.shop_pharos_items.name'), kind: 'item', keepOld: true, sell: true, items: ITEMS_T0.concat(ACC_T0), tier: { 1: ITEMS_T1.concat(STONES) } },
     // ファロスの武具屋（5 系統の T0 の武器・盾・頭・体・手・足）
-    shop_pharos_arms: { name: 'ファロスの武具屋', kind: 'weapon', keepOld: false, sell: true,
+    shop_pharos_arms: { name: R.T('shops.shop_pharos_arms.name'), kind: 'weapon', keepOld: false, sell: true,
       items: gear(WEAPON_LINES, 0).concat(['w_sword_uchi'], gear(ARMOR_LINES, 0)), tier: { 1: gear(WEAPON_LINES, 1).concat(gear(ARMOR_LINES, 1)) } },
     // フェルンの道具屋
-    shop_fern_items: { name: 'フェルンの道具屋', kind: 'item', keepOld: true, sell: true, items: ITEMS_T0.concat(ACC_T0, STONES), tier: { 1: ITEMS_T1 } },
+    shop_fern_items: { name: R.T('shops.shop_fern_items.name'), kind: 'item', keepOld: true, sell: true, items: ITEMS_T0.concat(ACC_T0, STONES), tier: { 1: ITEMS_T1 } },
     // フェルンの広場の行商（T0〜T1 の武器）
-    shop_fern_peddler: { name: '広場の行商', kind: 'weapon', keepOld: false, sell: true,
+    shop_fern_peddler: { name: R.T('shops.shop_fern_peddler.name'), kind: 'weapon', keepOld: false, sell: true,
       items: gear(WEAPON_LINES, 0).concat(gear(WEAPON_LINES, 1)), tier: { 1: gear(WEAPON_LINES, 1).concat(gear(WEAPON_LINES, 2)) } },
     // 隠れ里ユラ（ティアで入れ替わる珍しいアクセサリ 3 品）
-    shop_yura: { name: 'ユラの店', kind: 'special', keepOld: false, sell: true,
+    shop_yura: { name: R.T('shops.shop_yura.name'), kind: 'special', keepOld: false, sell: true,
       items: ['ac_flee', 'ac_quiet', 'ac_sachet'], tier: { 1: ['ac_sachet', 'ac_flee', 'ac_quiet'],   // 先制（ac_watch）・レア率（ac_clover）・ドロップ率（ac_loupe）は中盤以降（持ち主 2026-09-27）
       2: ['ac_purse', 'ac_float', 'ac_quickhand'] } },
   });

@@ -32,7 +32,7 @@
     },
     choose(id) {
       if (!this.canSwap) { R.UIK.sfx('buzzer'); return; }
-      if (this.state(id) === 'party') { R.UIK.sfx('buzzer'); R.UIK.toast('もう一緒に旅をしている', { anchor: 'bl' }); return; }
+      if (this.state(id) === 'party') { R.UIK.sfx('buzzer'); R.UIK.toast(R.T('ui.tavern.choose.toast'), { anchor: 'bl' }); return; }
       this.mode = 'swap'; this.pick = id;
       const mem = S.party();
       this.mi = Math.max(0, mem.findIndex((c) => c.id !== 'hero'));
@@ -44,7 +44,7 @@
         if (!R.Party.isRecruited(id)) R.Party.join(id, { joinFrom: 'tavern' });
         R.Party.swap(member.id, id);
         R.UIK.sfx('confirm');
-        R.UIK.toast(`${member.name} と ${S.char(id).name} が入れ替わった`, { anchor: 'bl', icon: 'person' });
+        R.UIK.toast(R.T('ui.tavern.doSwap.toast', { name: member.name, name2: S.char(id).name }), { anchor: 'bl', icon: 'person' });
       } catch (e) { console.error(e); R.UIK.sfx('buzzer'); }
       this.mode = 'pick';
     },
@@ -63,8 +63,8 @@
     },
     draw(g) {
       const b = S.box(), C = T().color, tall = S.tall();
-      S.heading(g, '仲間の入れ替え', b.x + u(8), b.y + u(6), 0, { size: 15, track: 3 });
-      R.UIK.text(g, '潮風亭', b.x + b.w - u(8), b.y + u(6), { size: u(14), color: C.text2, align: 'right' });
+      S.heading(g, R.T('ui.tavern.draw.heading'), b.x + u(8), b.y + u(6), 0, { size: 15, track: 3 });
+      R.UIK.text(g, R.T('ui.tavern.draw.text'), b.x + b.w - u(8), b.y + u(6), { size: u(14), color: C.text2, align: 'right' });
       const top = b.y + u(46), memH = u(88);
       let gr, dp, mp;
       if (tall) {
@@ -83,7 +83,7 @@
       this.list.render = (gg, row, rect, f) => {
         const id = row.value, st = this.state(id);
         S.companionCard(gg, S.companion(id), { x: rect.x + u(3), y: rect.y + u(3), w: rect.w - u(6), h: rect.h - u(6) },
-          { focused: f && this.mode === 'pick', picked: this.mode === 'swap' && this.pick === id, chip: st === 'party' ? '出撃中' : st === 'reserve' ? '控え' : null, chipKind: st === 'party' ? 'gold' : 'teal' });
+          { focused: f && this.mode === 'pick', picked: this.mode === 'swap' && this.pick === id, chip: st === 'party' ? R.T('ui.tavern.draw.render.chip') : st === 'reserve' ? R.T('ui.tavern.draw.render.chip_2') : null, chipKind: st === 'party' ? 'gold' : 'teal' });
       };
       this.list.draw(g, gr);
       const cur = this.mode === 'swap' ? this.pick : this.ids[this.list.index];
@@ -91,7 +91,7 @@
       // 今の 4 人
       R.UIK.panel(g, mp, { frost: true });
       const mem = S.party(), n = Math.max(1, mem.length), cw = (mp.w - u(20)) / n;
-      R.UIK.text(g, this.mode === 'swap' ? '誰と入れ替える？' : 'いまの仲間', mp.x + u(14), mp.y + u(8), { size: u(12), weight: 700, color: C.gold, track: u(1) });
+      R.UIK.text(g, this.mode === 'swap' ? R.T('ui.tavern.draw.text_2') : R.T('ui.tavern.draw.text_3'), mp.x + u(14), mp.y + u(8), { size: u(12), weight: 700, color: C.gold, track: u(1) });
       this.mrects = [];
       mem.forEach((c, i) => {
         const r = { x: mp.x + u(10) + i * cw, y: mp.y + u(28), w: cw - u(6), h: mp.h - u(36) };
@@ -101,7 +101,7 @@
         S.faceCircle(g, c.look, r.x + u(24), r.y + r.h / 2, u(20), { dim: this.mode === 'swap' && c.id === 'hero' });
         if (!tall) R.UIK.text(g, c.name, r.x + u(52), r.y + r.h / 2 - u(9), { size: u(14), weight: 700, color: c.id === 'hero' && this.mode === 'swap' ? C.disabled : f ? C.goldHi : C.text, maxW: r.w - u(56) });
       });
-      S.prompts(g, this.mode === 'swap' ? [{ btn: 'a', label: '交代' }, { btn: 'b', label: '戻る' }] : [{ btn: 'a', label: '選ぶ' }, { btn: 'b', label: '戻る' }]);
+      S.prompts(g, this.mode === 'swap' ? [{ btn: 'a', label: R.T('ui.tavern.draw.0.label') }, { btn: 'b', label: R.T('ui.tavern.draw.1.label') }] : [{ btn: 'a', label: R.T('ui.tavern.draw.0.label_2') }, { btn: 'b', label: R.T('ui.tavern.draw.1.label') }]);
     },
   });
 })(window.RPG);

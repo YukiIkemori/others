@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("f_lookout", {
-    name: "見晴らし台", region: "prologue", outside: "sea",
+    name: R.T('map.field_lookout.f_lookout.name'), region: "prologue", outside: "sea",
     rows: [
       "~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~~~~~~~~~~~~~~",
       "~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~~~~~~~~~~~~~~",
@@ -51,15 +51,15 @@
     objects: [
       {"type":"waylamp","id":"wl_pen_lookout","x":38,"y":13,"lit":"prologue_lamp_lookout","event":"world_pen_lamp"},
       {"type":"examine","x":41,"y":11,"event":"world_poi_pen_lookout"},
-      {"type":"sign","x":39,"y":17,"text":"見晴らし台\n半島の北の海を見わたす。"},
+      {"type":"sign","x":39,"y":17,"text":R.T('map.field_lookout.f_lookout.objects.2.text')},
       {"type":"prop","id":"lamp_post","x":20,"y":13},
       {"type":"prop","id":"lamp_post","x":25,"y":13},
       {"type":"prop","id":"bollard","x":21,"y":10},
-      {"type":"sign","x":26,"y":13,"text":"跳ね橋\n北 → 北の野"},
+      {"type":"sign","x":26,"y":13,"text":R.T('map.field_lookout.f_lookout.objects.6.text')},
       {"type":"chest","id":"f_lookout_c1","x":45,"y":7,"item":"i_ether","n":1},
     ],
     npcs: [
-      {"id":"bridge_guard","look":"npc_guard_2","name":"橋番","x":24,"y":11,"dir":"w","move":"still","pushable":false,"talk":"world_bridge_guard","reward":"news","key":"world_bridge_guard"},
+      {"id":"bridge_guard","look":"npc_guard_2","name":R.T('map.field_lookout.f_lookout.bridge_guard.name'),"x":24,"y":11,"dir":"w","move":"still","pushable":false,"talk":"world_bridge_guard","reward":"news","key":"world_bridge_guard"},
     ],
     spawns: {"south":{"x":24,"y":38,"dir":"n"},"bridge":{"x":22,"y":1,"dir":"s"}},
     exits: [{"x":24,"y":39,"w":2,"h":1,"to":{"map":"f_roa","spawn":"north"}},{"x":22,"y":0,"w":2,"h":1,"to":{"map":"f_cross","spawn":"bridge"},"cond":"prologue_done"}],
@@ -67,7 +67,7 @@
     tilePatches: [{"cond":"!prologue_done","rect":[22,1,2,8],"rows":["~~","~~","~~","~~","~~","~~","~~","~~"]}],
     zones: [{"rect":null,"zone":"zw_peninsula"}],
     art: {"image":"field/under/f_lookout","painted":[],"overlay":"field/under/f_lookout_over","closed":"field/under/f_lookout_closed"},
-    meta: {"sub":"跳ね橋と北の海","worldRect":[238,214,70,46]},
+    meta: {"sub":R.T('map.field_lookout.f_lookout.meta.sub'),"worldRect":[238,214,70,46]},
     links: {},
   });
 })(window.RPG);

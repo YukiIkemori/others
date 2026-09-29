@@ -67,8 +67,8 @@
       O.push(K.chest('peak_1_c6', 8, 8, { pool: 'p_rare' }));
       O.push(K.chest('peak_1_c7', 46, 10, { gold: 260 }));
       // 書き付け（ボスのほのめかし）・景色
-      O.push(K.sign(31, 9, '――氷の巨人、白く光りて鎧をまとう。\n光る間に火をかざせ。\n鎧は張れず、張っても砕ける。\n（誰かの書き付け）'));
-      O.push(K.sign(29, 43, '白竜の峰\nここより上、吹雪やまず。'));
+      O.push(K.sign(31, 9, R.T('map.snow_peak.sign')));
+      O.push(K.sign(29, 43, R.T('map.snow_peak.sign_2')));
       O.push(K.exam(46, 40, 'peak_overlook'));
       for (const [x, y] of [[22, 40], [34, 40], [24, 26], [34, 27], [37, 9], [45, 5]]) O.push(K.prop('ice_crystal', x, y));
       for (const [x, y] of [[26, 38], [30, 38], [41, 9]]) O.push(K.prop('snow_lamp', x, y));   // 41,9: 上の段の縁（下り口の通路をふさがない）
@@ -79,7 +79,7 @@
       for (const [x, y] of [[25, 24], [25, 26]]) K.put(g, x, y, 'w');   // 描いた下絵の湯だまりの縁（v2/assets/env/snow/under/peak_1*）
 
       K.def('peak_1', {
-        name: '白竜の峰', kind: 'dungeon', region: 'r_snow', location: 'peak', theme: 'snow',
+        name: R.T('map.snow_peak.peak_1.name'), kind: 'dungeon', region: 'r_snow', location: 'peak', theme: 'snow',
         legend: S.LEGEND({
           I: { mat: 'ice', solid: true, name: 'ice_wall' },
           w: { mat: 'water', walk: false },
@@ -100,7 +100,7 @@
         light: { ambient: '#56629e', k: 0.56, poolK: 0.7, spillR: 0.9, mood: 'night' },
         dark: false,
         bgm: 'ice', bbg: 'snow', weather: 'blizzard', weatherCond: '!cleared_r_snow', weatherElse: 'snow',
-        meta: { chestsInfo: true, floor: '峰の道', sub: '吹雪の峰' },
+        meta: { chestsInfo: true, floor: R.T('map.snow_peak.peak_1.meta.floor'), sub: R.T('map.snow_peak.peak_1.meta.sub') },
       });
     }
 
@@ -124,10 +124,10 @@
       O.push(K.exam(20, 8, 'peak_altar'));
       O.push(K.chest('peak_top_c1', 30, 14, { pool: 'p_T' }));
       O.push(K.chest('peak_top_c2', 9, 16, { pool: 'p_heal' }));
-      O.push(K.sign(22, 22, '――竜は、火と物語を受け取る。\n吹雪の息をためたら、身を伏せよ。\n（誰かの書き付け）'));
+      O.push(K.sign(22, 22, R.T('map.snow_peak.sign_3')));
       K.scatter(g, O, ['snow_rock', 'snow_bank'], 8, [4, 4, 32, 18], '.', 'ptdeco', { gap: 4, variant: true, roomy: '.,ni', keep: new Set(['19,18', '20,18', '21,18', '20,9', '20,10', '19,10', '21,10']) });
       K.def('peak_top', {
-        name: '白竜の峰', kind: 'dungeon', region: 'r_snow', location: 'peak', theme: 'snow',
+        name: R.T('map.snow_peak.peak_top.name'), kind: 'dungeon', region: 'r_snow', location: 'peak', theme: 'snow',
         legend: S.LEGEND({}),
         rows: g, outside: 'wall_snow',
         objects: O,
@@ -143,7 +143,7 @@
         light: { ambient: '#5a64a4', k: 0.55, poolK: 0.7, spillR: 0.9, mood: 'night' },
         dark: false,
         bgm: 'ice', bbg: 'snow', weather: 'blizzard', weatherCond: '!cleared_r_snow',
-        meta: { chestsInfo: true, floor: '頂', sub: '吹きさらしの頂' },
+        meta: { chestsInfo: true, floor: R.T('map.snow_peak.peak_top.meta.floor'), sub: R.T('map.snow_peak.peak_top.meta.sub') },
       });
     }
   });

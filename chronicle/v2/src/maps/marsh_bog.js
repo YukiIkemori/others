@@ -88,15 +88,15 @@
     for (const [x, y] of [[22, 46], [41, 46], [26, 37], [34, 37], [12, 26], [48, 26], [27, 8]]) O.push(K.prop('wisp_lamp', x, y));
     // 霧の中心（まん中の小島）と、子どもたちの小島
     O.push(K.prop('pale_mushrooms', 32, 19), K.prop('pale_mushrooms', 27, 21));
-    O.push(K.sign(31, 43, '鐘沈みの沼\n――鐘の鳴る所、霧は沈む。'));
+    O.push(K.sign(31, 43, R.T('map.marsh_bog.sign')));
 
     K.def('marsh_bog', {
-      name: '鐘沈みの沼', kind: 'dungeon', region: 'r_marsh', location: 'bog', theme: 'forest_dungeon',
+      name: R.T('map.marsh_bog.name'), kind: 'dungeon', region: 'r_marsh', location: 'bog', theme: 'forest_dungeon',
       legend: MK.BOG(), rows: g, outside: 'marsh_water',
       objects: O,
       npcs: [
-        K.npc('bog_kid_a', 'npc_marsh_child', 38, 47, { name: '眠っていた子', dir: 'w', talk: 'bog_kids', reward: null, cond: ['marsh_mistbeast', '!marsh_finale_done'] }),
-        K.npc('bog_kid_b', 'npc_marsh_child', 39, 47, { name: '眠っていた子', dir: 'w', talk: 'bog_kids', reward: null, cond: ['marsh_mistbeast', '!marsh_finale_done'] }),
+        K.npc('bog_kid_a', 'npc_marsh_child', 38, 47, { name: R.T('map.marsh_bog.npcs.0.bog_kid_a.name'), dir: 'w', talk: 'bog_kids', reward: null, cond: ['marsh_mistbeast', '!marsh_finale_done'] }),
+        K.npc('bog_kid_b', 'npc_marsh_child', 39, 47, { name: R.T('map.marsh_bog.npcs.1.bog_kid_b.name'), dir: 'w', talk: 'bog_kids', reward: null, cond: ['marsh_mistbeast', '!marsh_finale_done'] }),
       ],
       spawns: { entrance: { x: 29, y: 49, dir: 'n' }, center: { x: 30, y: 22, dir: 'n' } },
       exits: [{ x: 28, y: 51, w: 4, h: 1, to: { map: 'world', spawn: 'bog' } }],
@@ -111,7 +111,7 @@
       zones: [{ rect: [24, 16, 13, 8], zone: null }, { rect: [0, 0, 60, 52], zone: 'z_marsh_bog' }].filter((z) => z.zone),
       light: MK.LIGHT_BOG, dark: false,
       bgm: 'ghost', bbg: 'marsh',
-      meta: { chestsInfo: true, floor: '沼', sub: '鐘の沈んだ沼', live: [{ cells: pA.cells, patch: 0 }, { cells: pB.cells, patch: 1 }] },
+      meta: { chestsInfo: true, floor: R.T('map.marsh_bog.meta.floor'), sub: R.T('map.marsh_bog.meta.sub'), live: [{ cells: pA.cells, patch: 0 }, { cells: pB.cells, patch: 1 }] },
       art: { image: 'forest_dungeon/under/bog', closed: 'forest_dungeon/under/bog_closed', painted: [] },
     });
   });

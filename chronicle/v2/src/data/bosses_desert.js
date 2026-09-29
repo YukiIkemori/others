@@ -23,18 +23,18 @@
   // ------------------------------------------------------------ 雑魚: 砂の鷹団（アジトが敵のとき）
   const MOBS = {
     desert_hawk_blade: {
-      name: '鷹団の曲刀使い', sprite: 'desert_hawk_blade', size: 'm', lv: 8, race: 'humanoid', flags: [],
+      name: R.T('data.bosses_desert.MOBS.desert_hawk_blade.name'), sprite: 'desert_hawk_blade', size: 'm', lv: 8, race: 'humanoid', flags: [],
       s: { hp: 1.35, atk: 1.1, agi: 1.1 }, elem: {}, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_slash', w: 2 }, { id: 'e_double', w: 1 }],
       drops: { normal: { item: 'i_potion', rate: 8 } },
-      desc: '黒い布で顔をおおった\n砂の鷹団の団員。曲刀が速い。',
+      desc: R.T('data.bosses_desert.MOBS.desert_hawk_blade.desc'),
     },
     desert_hawk_bow: {
-      name: '鷹団の弓使い', sprite: 'desert_hawk_bow', size: 'm', lv: 8, race: 'humanoid', flags: [],
+      name: R.T('data.bosses_desert.MOBS.desert_hawk_bow.name'), sprite: 'desert_hawk_bow', size: 'm', lv: 8, race: 'humanoid', flags: [],
       s: { hp: 1.1, atk: 1.05, agi: 1.2 }, elem: {}, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_arrow', w: 4 }],
       drops: { normal: { item: 'i_antidote', rate: 8 } },
-      desc: '岩の上から矢を射かける\n砂の鷹団の見張り。',
+      desc: R.T('data.bosses_desert.MOBS.desert_hawk_bow.desc'),
     },
   };
   for (const id in MOBS) R.DB.monsters[id] = MOBS[id];
@@ -42,39 +42,39 @@
   // ------------------------------------------------------------ ボス
   const LIST = {
     b_hawk_chief: {
-      name: '鷹団の頭ラシード', sprite: 'b_hawk_chief', bossType: 'mid', lv: 8, actsPerTurn: 1, size: 'l',
+      name: R.T('data.bosses_desert.LIST.b_hawk_chief.name'), sprite: 'b_hawk_chief', bossType: 'mid', lv: 8, actsPerTurn: 1, size: 'l',
       race: 'humanoid', flags: ['boss'], eva: 10,
       // 弓兵に守られている間の倍率（desert_guard_down で elemBase・physBase＝ふだんの値に戻す）
       elem: ALL(0.2), phys: { slash: 0.2, blunt: 0.2, pierce: 0.2 }, elemBase: {}, physBase: {}, guarded: true, statusRes: { sleep: 0.5 },
       actions: A([['attack', 3], ['eb_hawk_cut', 2], ['eb_hawk_dust', SCHED, { every: [3, 0] }], ['eb_hawk_rally', SCHED, { flag: 'hawk_guard_down', once: true }]]),
       s: { hp: 0.85 },
       drops: MID('i_ether'),
-      desc: '砂の鷹団の頭。もとは日輪同盟の兵。\n手下の弓に守られて戦う。',
+      desc: R.T('data.bosses_desert.LIST.b_hawk_chief.desc'),
     },
     b_hawk_bow: {
-      name: '鷹団の弓兵', sprite: 'desert_hawk_bow', artKind: 'mon', bossType: 'add', addOf: 'b_hawk_chief', lv: 8, hpShare: 1.0, actsPerTurn: 1, size: 's',
+      name: R.T('data.bosses_desert.LIST.b_hawk_bow.name'), sprite: 'desert_hawk_bow', artKind: 'mon', bossType: 'add', addOf: 'b_hawk_chief', lv: 8, hpShare: 1.0, actsPerTurn: 1, size: 's',
       race: 'humanoid', flags: ['boss'], eva: 10, elem: {}, phys: {}, statusRes: {},
       actions: A([['e_arrow', 3], ['eb_hawk_volley', 1]]),
       onDeath: 'desert_guard_down',
       s: { atk: 0.7, mag: 0.7 },
       drops: {},
-      desc: '頭の前に矢を並べる弓兵。\n弓兵がいるかぎり、頭に刃は届かない。',
+      desc: R.T('data.bosses_desert.LIST.b_hawk_bow.desc'),
     },
     b_sun_orb: {
-      name: '日の玉', sprite: 'desert_sun_orb', artKind: 'mon', bossType: 'add', addOf: 'b_sandking', lv: 7, hpShare: 0.8, actsPerTurn: 1, size: 's',
+      name: R.T('data.bosses_desert.LIST.b_sun_orb.name'), sprite: 'desert_sun_orb', artKind: 'mon', bossType: 'add', addOf: 'b_sandking', lv: 7, hpShare: 0.8, actsPerTurn: 1, size: 's',
       race: 'spirit', flags: ['boss'], eva: 0, elem: { water: 1.5, fire: 0.25, light: 0.25 }, phys: {}, statusRes: { poison: 1, sleep: 1, death: 1 },
       actions: A([['eb_orb_flare', 3]]), orb: 'sun', onDeath: 'desert_orb_break',
       s: { atk: 0.6, mag: 0.6 },
       drops: {},
-      desc: '王の杖が呼んだ日の光の玉。\n玉があるうち、王は火と光を吸う。',
+      desc: R.T('data.bosses_desert.LIST.b_sun_orb.desc'),
     },
     b_moon_orb: {
-      name: '月の玉', sprite: 'desert_moon_orb', artKind: 'mon', bossType: 'add', addOf: 'b_sandking', lv: 7, hpShare: 0.8, actsPerTurn: 1, size: 's',
+      name: R.T('data.bosses_desert.LIST.b_moon_orb.name'), sprite: 'desert_moon_orb', artKind: 'mon', bossType: 'add', addOf: 'b_sandking', lv: 7, hpShare: 0.8, actsPerTurn: 1, size: 's',
       race: 'spirit', flags: ['boss'], eva: 0, elem: { fire: 1.5, water: 0.25, dark: 0.25 }, phys: {}, statusRes: { poison: 1, sleep: 1, death: 1 },
       actions: A([['eb_orb_moonlight', 3]]), orb: 'moon', onDeath: 'desert_orb_break',
       s: { atk: 0.6, mag: 0.6 },
       drops: {},
-      desc: '王の杖が呼んだ月の光の玉。\n玉があるうち、王は水と闇を吸う。',
+      desc: R.T('data.bosses_desert.LIST.b_moon_orb.desc'),
     },
   };
   for (const id in LIST) { R.DB.monsters[id] = LIST[id]; R.DB.bosses[id] = LIST[id]; }
@@ -88,16 +88,16 @@
         ['eb_worm_rear', SCHED, { every: [3, 0], noFlag: 'worm_sunk' }], ['eb_worm_surface', SCHED, { flag: 'worm_sunk' }]]);
       W.sunk = { phys: { slash: 0.15, blunt: 0.15, pierce: 1 }, elem: { fire: 0.15, water: 0.15, wind: 0.15, light: 0.15, dark: 0.15, earth: 1.5 } };
       W.drops = Object.assign({}, W.drops);
-      W.desc = '王墓の流砂にひそむ大ミミズ。\n砂にもぐると、刃も術も届かない。';
+      W.desc = R.T('data.bosses_desert.desc');
     }
     if (K) {
       K.actions = A([['attack', 2], ['eb_steal_name', 2], ['eb_king_sand', 2],
         ['eb_king_sun', SCHED, { every: [12, 1], countBelow: 5, noFlag: 'orb_out' }], ['eb_king_moon', SCHED, { every: [12, 7], countBelow: 5, noFlag: 'orb_out' }],
         ['eb_raise_guard', 1, { every: [5, 2], countBelow: 3 }], ['eb_withering', 2],
         ['eb_king_raise', SCHED, { hpBelow: 0.65, every: [6, 5] }]]);
-      K.phases = [{ hpBelow: 0.4, msg: '王の顔の包帯がほどけ、\nうつろな目がのぞいた……。', set: { buffs: { atk: 1, mag: 1 } } }];
+      K.phases = [{ hpBelow: 0.4, msg: R.T('data.bosses_desert.phases.0.msg'), set: { buffs: { atk: 1, mag: 1 } } }];
       K.orbHost = true;
-      K.desc = '名を砂の精霊に差し出した王。\n日と月の玉を呼び、忘れた名を探す。';
+      K.desc = R.T('data.bosses_desert.desc_2');
     }
     if (K) K.s = Object.assign({}, K.s, DS.b_sandking);
     if (W) W.s = Object.assign({}, W.s, DS.b_sandworm);
@@ -106,31 +106,31 @@
   // ------------------------------------------------------------ 行動（予告は E18。効果の無い予告は構えるだけ）
   Object.assign(R.DB.bossActions, {
     // 鷹団の頭
-    eb_hawk_cut: { name: '鷹の爪', kind: 'enemy', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.5, kind: 'slash' }], fx: 'slash2', msg: '{user}は曲刀を低く走らせた！' },
-    eb_hawk_dust: { name: '砂を巻き上げる', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は足で砂をすくい上げた！',
-      telegraph: { text: 'ラシードが砂を巻き上げている……。', pose: 'tele', tint: '#e8cf98', next: 'eb_hawk_storm', guard: 'defend', lethal: true } },
-    eb_hawk_storm: { name: '砂けむりの舞', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.9, guardPct: 0.12, kind: 'slash' }, { type: 'status', status: 'blind', chance: 0.3 }], fx: 'slash2', msg: '砂けむりの中から、曲刀が四方へ走った！' },
-    eb_hawk_rally: { name: 'ひとり立つ', kind: 'enemy', target: 'self', effects: [{ type: 'buff', stat: 'atk', stages: 1 }], fx: 'buff', msg: '{user}は曲刀を構え直した。「……最後は、おれ一人か」' },
-    eb_hawk_volley: { name: '一斉射ち', kind: 'enemy', target: 'random', effects: [{ type: 'damage', formula: 'phys', power: 0.6, hits: 2, kind: 'pierce' }], fx: 'arrow', msg: '{user}は続けざまに矢を放った！' },
+    eb_hawk_cut: { name: R.T('bossActions.eb_hawk_cut.name'), kind: 'enemy', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.5, kind: 'slash' }], fx: 'slash2', msg: R.T('bossActions.eb_hawk_cut.msg') },
+    eb_hawk_dust: { name: R.T('bossActions.eb_hawk_dust.name'), kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: R.T('bossActions.eb_hawk_dust.msg'),
+      telegraph: { text: R.T('bossActions.eb_hawk_dust.telegraph.text'), pose: 'tele', tint: '#e8cf98', next: 'eb_hawk_storm', guard: 'defend', lethal: true } },
+    eb_hawk_storm: { name: R.T('bossActions.eb_hawk_storm.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.9, guardPct: 0.12, kind: 'slash' }, { type: 'status', status: 'blind', chance: 0.3 }], fx: 'slash2', msg: R.T('bossActions.eb_hawk_storm.msg') },
+    eb_hawk_rally: { name: R.T('bossActions.eb_hawk_rally.name'), kind: 'enemy', target: 'self', effects: [{ type: 'buff', stat: 'atk', stages: 1 }], fx: 'buff', msg: R.T('bossActions.eb_hawk_rally.msg') },
+    eb_hawk_volley: { name: R.T('bossActions.eb_hawk_volley.name'), kind: 'enemy', target: 'random', effects: [{ type: 'damage', formula: 'phys', power: 0.6, hits: 2, kind: 'pierce' }], fx: 'arrow', msg: R.T('bossActions.eb_hawk_volley.msg') },
     // 砂もぐり
-    eb_worm_rear: { name: '身を沈める', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は、ずぶずぶと砂に身を沈めはじめた……。',
-      telegraph: { text: '砂もぐりが砂に身を沈めはじめた……。', pose: 'tele', tint: '#d8b878', next: 'eb_worm_sink', guard: 'element:earth' } },
-    eb_worm_sink: { name: '砂にもぐる', kind: 'enemy', target: 'self', effects: [{ type: 'special', id: 'desert_worm_sink' }], fx: 'earth', msg: '{user}は砂の中へ消えた！',
-      telegraph: { text: '砂の下で、何かがはいまわっている……。', pose: 'idle', tint: '#b89868', next: 'eb_worm_burst', guard: 'defend', lethal: true } },
-    eb_worm_burst: { name: '砂中の一撃', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 1.0, guardPct: 0.12, kind: 'blunt' }, { type: 'special', id: 'desert_worm_surface' }], fx: 'strike3', msg: '足もとの砂が裂け、{user}が飛び出した！' },
-    eb_worm_surface: { name: '顔を出す', kind: 'enemy', target: 'self', effects: [{ type: 'special', id: 'desert_worm_surface' }], fx: 'earth', msg: '{user}が、砂の上に顔を出した。' },
+    eb_worm_rear: { name: R.T('bossActions.eb_worm_rear.name'), kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: R.T('bossActions.eb_worm_rear.msg'),
+      telegraph: { text: R.T('bossActions.eb_worm_rear.telegraph.text'), pose: 'tele', tint: '#d8b878', next: 'eb_worm_sink', guard: 'element:earth' } },
+    eb_worm_sink: { name: R.T('bossActions.eb_worm_sink.name'), kind: 'enemy', target: 'self', effects: [{ type: 'special', id: 'desert_worm_sink' }], fx: 'earth', msg: R.T('bossActions.eb_worm_sink.msg'),
+      telegraph: { text: R.T('bossActions.eb_worm_sink.telegraph.text'), pose: 'idle', tint: '#b89868', next: 'eb_worm_burst', guard: 'defend', lethal: true } },
+    eb_worm_burst: { name: R.T('bossActions.eb_worm_burst.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 1.0, guardPct: 0.12, kind: 'blunt' }, { type: 'special', id: 'desert_worm_surface' }], fx: 'strike3', msg: R.T('bossActions.eb_worm_burst.msg') },
+    eb_worm_surface: { name: R.T('bossActions.eb_worm_surface.name'), kind: 'enemy', target: 'self', effects: [{ type: 'special', id: 'desert_worm_surface' }], fx: 'earth', msg: R.T('bossActions.eb_worm_surface.msg') },
     // 名なき砂の王
-    eb_king_sun: { name: '日の玉', kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_sun_orb', n: 1, max: 5 }, { type: 'special', id: 'desert_orb_absorb', orb: 'sun' }], fx: 'fire2',
-      msg: '{user}の杖に、日の光が集まった！\n王の体を、光の膜が包む……。' },
-    eb_king_moon: { name: '月の玉', kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_moon_orb', n: 1, max: 5 }, { type: 'special', id: 'desert_orb_absorb', orb: 'moon' }], fx: 'water2',
-      msg: '{user}の杖に、月の光が集まった！\n王の体を、光の膜が包む……。' },
-    eb_king_raise: { name: '杖を掲げる', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は砂の杖を高く掲げた……。',
-      telegraph: { text: '王が杖を掲げた。砂が空へ昇っていく……。', pose: 'tele', tint: '#f0d890', next: 'eb_king_judgment', guard: 'defend', lethal: true,
-        cancel: { element: 'fire', msg: '炎が杖の砂を焼き固めた！\n砂の滝は、降ってこない。' } } },
-    eb_king_judgment: { name: '砂の審判', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 1.0, guardPct: 0.1, kind: 'earth', element: 'earth' }], fx: 'earth2',
-      msg: '空から、砂の滝が降りそそいだ！' },
-    eb_orb_flare: { name: '日輪の炎', kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'magic', power: 1.0, element: 'fire' }], fx: 'fire2', msg: '{user}が燃え上がった！' },
-    eb_orb_moonlight: { name: '月の癒やし', kind: 'enemy', target: 'ally_other', effects: [{ type: 'heal', pct: 0.1 }], fx: 'heal', msg: '{user}の冷たい光が、王の傷をふさいだ。' },
+    eb_king_sun: { name: R.T('bossActions.eb_king_sun.name'), kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_sun_orb', n: 1, max: 5 }, { type: 'special', id: 'desert_orb_absorb', orb: 'sun' }], fx: 'fire2',
+      msg: R.T('bossActions.eb_king_sun.msg') },
+    eb_king_moon: { name: R.T('bossActions.eb_king_moon.name'), kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_moon_orb', n: 1, max: 5 }, { type: 'special', id: 'desert_orb_absorb', orb: 'moon' }], fx: 'water2',
+      msg: R.T('bossActions.eb_king_moon.msg') },
+    eb_king_raise: { name: R.T('bossActions.eb_king_raise.name'), kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: R.T('bossActions.eb_king_raise.msg'),
+      telegraph: { text: R.T('bossActions.eb_king_raise.telegraph.text'), pose: 'tele', tint: '#f0d890', next: 'eb_king_judgment', guard: 'defend', lethal: true,
+        cancel: { element: 'fire', msg: R.T('bossActions.eb_king_raise.telegraph.cancel.msg') } } },
+    eb_king_judgment: { name: R.T('bossActions.eb_king_judgment.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 1.0, guardPct: 0.1, kind: 'earth', element: 'earth' }], fx: 'earth2',
+      msg: R.T('bossActions.eb_king_judgment.msg') },
+    eb_orb_flare: { name: R.T('bossActions.eb_orb_flare.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'magic', power: 1.0, element: 'fire' }], fx: 'fire2', msg: R.T('bossActions.eb_orb_flare.msg') },
+    eb_orb_moonlight: { name: R.T('bossActions.eb_orb_moonlight.name'), kind: 'enemy', target: 'ally_other', effects: [{ type: 'heal', pct: 0.1 }], fx: 'heal', msg: R.T('bossActions.eb_orb_moonlight.msg') },
   });
 
   // ------------------------------------------------------------ 特別な効果（battle_core の effect 'special' と d.onDeath）
@@ -147,14 +147,14 @@
     // 鷹団の弓兵が倒れた: 残りの弓兵がいなければ頭の守りが解ける
     SP.desert_guard_down = function* (eng, u) {
       const left = eng.mons.filter((m) => m !== u && m.alive && m.d.onDeath === 'desert_guard_down');
-      if (left.length) { yield eng.m(`弓兵はあと ${left.length} 人。頭はまだ、矢の陰にいる。`); return; }
+      if (left.length) { yield eng.m(R.T('data.bosses_desert.desert_guard_down.m', { length: left.length })); return; }
       const chief = eng.mons.find((m) => m.alive && m.d.guarded);
       if (!chief) return;
       const d = chief.ownDef();
       d.elem = Object.assign({}, d.elemBase || {});
       d.phys = Object.assign({}, d.physBase || {});
       eng.flags.hawk_guard_down = true;
-      yield eng.m('守りの矢が途絶えた！\nラシードの前が、がら空きになった！');
+      yield eng.m(R.T('data.bosses_desert.desert_guard_down.m_2'));
     };
     // 砂もぐりが砂にもぐる／顔を出す
     SP.desert_worm_sink = function* (eng, u) {
@@ -163,7 +163,7 @@
       d.elem = Object.assign({}, d.elemBase, (d.sunk || {}).elem || {});
       d.phys = Object.assign({}, d.physBase, (d.sunk || {}).phys || {});
       eng.flags.worm_sunk = true;
-      yield eng.m('砂の中の相手には、刃も術も\nほとんど届かない。突くか、土で……！');
+      yield eng.m(R.T('data.bosses_desert.desert_worm_sink.m'));
     };
     SP.desert_worm_surface = function* (eng, u) {
       if (!eng.flags.worm_sunk) return;
@@ -194,21 +194,21 @@
     SP.desert_orb_break = function* (eng, u) {
       const king = recompute(eng);
       if (!king) return;
-      yield eng.m(u.d.orb === 'sun' ? '日の玉が砕けた！\n王を包む光の膜が消えた。' : '月の玉が砕けた！\n王を包む光の膜が消えた。');
+      yield eng.m(u.d.orb === 'sun' ? R.T('data.bosses_desert.desert_orb_break.m') : R.T('data.bosses_desert.desert_orb_break.m_2'));
     };
     // 王の名を呼ぶ（道具 i_desert_kingname）。第 2 の姿の後だけ効く。早すぎたら道具は戻る
     SP.desert_call_name = function* (eng, u, t, eff, ctx) {
       const king = eng.mons.find((m) => m.alive && m.d.orbHost);
       const id = (ctx && ctx.id) || 'i_desert_kingname';
-      if (!king) { eng.inv[id] = (eng.inv[id] || 0) + 1; yield eng.m('呼ぶべき相手が、ここにはいない。'); return; }
+      if (!king) { eng.inv[id] = (eng.inv[id] || 0) + 1; yield eng.m(R.T('data.bosses_desert.desert_call_name.m')); return; }
       if (!(king.hpRate() < 0.4 || (king.phaseDone && king.phaseDone[0]))) {
         eng.inv[id] = (eng.inv[id] || 0) + 1;
-        yield eng.m('{hero}は王の名を呼んだ。\n……砂のうなりが、声をかき消した。');
-        yield eng.m('王の包帯の奥の耳には、\nまだ届かないようだ。');
+        yield eng.m(R.T('data.bosses_desert.desert_call_name.m_2'));
+        yield eng.m(R.T('data.bosses_desert.desert_call_name.m_3'));
         return;
       }
-      yield eng.m('{hero}は、三つの文字をつないで\n王の名を呼んだ。――ハザル。');
-      yield eng.m('名なき砂の王の動きが、止まった。');
+      yield eng.m(R.T('data.bosses_desert.desert_call_name.m_4'));
+      yield eng.m(R.T('data.bosses_desert.desert_call_name.m_5'));
       eng.flags.king_named = true;
       if (R.Game && R.Game.flags) R.Game.flags.desert_named = true;
       for (const m of eng.mons) if (m !== king && m.alive) { m.gone = true; yield { t: 'flee', u: m }; }

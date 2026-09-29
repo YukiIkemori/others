@@ -36,8 +36,8 @@
       // 奥の扉（壁 y 30〜31・x 21〜26 はそのまま）: 扉の絵は中ほどに大きな 1 枚（いつも）。開くまでは押すと一言。
       // 三つの盤がそろった後は扉のマスで向こう側へ（北 y 30 → 南 y 32、南 y 31 → 北 y 29）
       const SEAL = {}, OPEN = { all: DISCS };
-      O.push({ type: 'door', id: 'desert_temple_1_seal', x: 21, y: 31, w: 6, scale: 1.8, locked: '日輪の紋の扉は、かたく閉ざされている' });
-      O.push({ type: 'door', id: 'desert_temple_1_seal_top', x: 21, y: 30, w: 6, look: 'none', locked: '日輪の紋の扉は、かたく閉ざされている' });   // 北から押したとき
+      O.push({ type: 'door', id: 'desert_temple_1_seal', x: 21, y: 31, w: 6, scale: 1.8, locked: R.T('map.desert_temple.desert_temple_1_seal.locked') });
+      O.push({ type: 'door', id: 'desert_temple_1_seal_top', x: 21, y: 30, w: 6, look: 'none', locked: R.T('map.desert_temple.desert_temple_1_seal_top.locked') });   // 北から押したとき
       for (let i = 0; i < 6; i++) {
         const x = 21 + i;
         O.push({ type: 'door', id: 'desert_temple_1_seal_n' + i, x, y: 30, look: 'none', cond: OPEN, to: { map: 'desert_temple_1', spawn: 'seal_s' + i } });
@@ -47,13 +47,13 @@
       O.push(K.prop('rock_small', 30, 27), K.prop('rock_small', 31, 28));   // 崩れた石（泉は置かない。WORLD §6.2）
       O.push(K.chest('desert_temple_1_c1', 3, 24, { pool: 'p_T' }), K.chest('desert_temple_1_c2', 45, 19, { pool: 'p_T' }), K.chest('desert_temple_1_c3', 14, 9, { gold: 400 }),
         K.chest('desert_temple_1_c4', 39, 28, { pool: 'p_rare' }), K.chest('desert_temple_1_c5', 17, 36, { item: 'i_stone_light', n: 2 }));
-      O.push(K.sign(27, 9, '――日輪の民の宮\n三つの盤に、日を置け'));
+      O.push(K.sign(27, 9, R.T('map.desert_temple.sign')));
       // 通れない小物は角と壁ぎわだけ（持ち主 2026-09-28「通路真ん中にはおかないで」）
       deco(O, [['broken_pillar', 18, 2], ['broken_pillar', 29, 2], ['obelisk', 18, 8], ['obelisk', 29, 8], ['tomb_urn', 7, 15], ['tomb_urn', 40, 15], ['sand_mound', 12, 28],
         ['bones', 30, 16], ['broken_pillar', 31, 36], ['obelisk', 16, 33], ['sand_mound', 38, 9], ['bones', 9, 9], ['clay_jars', 2, 18], ['clay_jars', 45, 25]]);
       for (const [x, y] of [[20, 5], [27, 5], [7, 21], [40, 21], [19, 33], [29, 33], [33, 5], [12, 5]]) O.push(K.prop('torch', x, y));
       K.def('desert_temple_1', {
-        name: '砂に沈んだ神殿', kind: 'dungeon', optional: true, region: 'r_desert', location: 'temple', theme: 'tomb',
+        name: R.T('map.desert_temple.desert_temple_1.name'), kind: 'dungeon', optional: true, region: 'r_desert', location: 'temple', theme: 'tomb',
         legend: DK.TOMB_LEGEND({ G: { mat: 'wall_sandstone', solid: true, rise: 2, name: 'seal_door' }, O: { mat: 'wall_sandstone', solid: true, rise: 2, name: 'seal_door_open' } }),
         rows: g, outside: 'wall_sandstone', objects: O, npcs: [],
         spawns: Object.assign({ entrance: { x: 24, y: 5, dir: 's' }, down: { x: 24, y: 33, dir: 'n' } }, SEAL),
@@ -67,7 +67,7 @@
         zones: [{ rect: null, zone: 'z_desert_temple' }],
         light: DK.LIGHT_TOMB, dark: false, bgm: 'pyramid', bbg: 'cave',
         art: { image: 'desert/under/temple_1', painted: [] },   // 1 枚の下絵（_tools/under/desert2）
-        meta: { chestsInfo: true, floor: '1 階', sub: '柱の間' },
+        meta: { chestsInfo: true, floor: R.T('map.desert_temple.desert_temple_1.meta.floor'), sub: R.T('map.desert_temple.desert_temple_1.meta.sub') },
       });
     }
 
@@ -93,7 +93,7 @@
         ['sand_mound', 13, 28], ['bones', 33, 26]]);   // 階段の前の崩れた柱・東の小部屋の口の壺はどけた（通路をふさがない）
       for (const [x, y] of [[10, 9], [29, 9], [18, 20], [21, 22], [7, 25], [27, 23]]) O.push(K.prop('torch', x, y));
       K.def('desert_temple_2', {
-        name: '砂に沈んだ神殿', kind: 'dungeon', optional: true, region: 'r_desert', location: 'temple', theme: 'tomb',
+        name: R.T('map.desert_temple.desert_temple_2.name'), kind: 'dungeon', optional: true, region: 'r_desert', location: 'temple', theme: 'tomb',
         legend: DK.TOMB_LEGEND(), rows: g, outside: 'wall_sandstone', objects: O, npcs: [],
         spawns: { top: { x: 20, y: 28, dir: 'n' } },
         exits: [],
@@ -101,7 +101,7 @@
         zones: [{ rect: null, zone: 'z_desert_temple' }],
         light: DK.LIGHT_TOMB, dark: false, bgm: 'pyramid', bbg: 'cave',
         art: { image: 'desert/under/temple_2', painted: [] },   // 1 枚の下絵（_tools/under/desert2）
-        meta: { chestsInfo: true, floor: '2 階', sub: '日輪の奥殿' },
+        meta: { chestsInfo: true, floor: R.T('map.desert_temple.desert_temple_2.meta.floor'), sub: R.T('map.desert_temple.desert_temple_2.meta.sub') },
       });
     }
   });

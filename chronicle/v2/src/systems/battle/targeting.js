@@ -72,14 +72,14 @@
     }
     const prevHead = st.head;
     return new Promise((resolve) => {
-      const w = { prompts: [{ btn: 'a', label: '決定' }, { btn: 'b', label: 'ひとつ戻る' }, { btn: 'left', label: '相手を変える' }], tallPrompts: false };
-      if (group) w.prompts = [{ btn: 'a', label: '決定' }, { btn: 'b', label: 'ひとつ戻る' }];
+      const w = { prompts: [{ btn: 'a', label: R.T('battle.targeting.pick.w.prompts.0.label') }, { btn: 'b', label: R.T('battle.targeting.pick.w.prompts.1.label') }, { btn: 'left', label: R.T('battle.targeting.pick.w.prompts.2.label') }], tallPrompts: false };
+      if (group) w.prompts = [{ btn: 'a', label: R.T('battle.targeting.pick.prompts.0.label') }, { btn: 'b', label: R.T('battle.targeting.pick.prompts.1.label') }];
       const setHot = () => {
         st.hot = {};
         if (group) for (const a of list) st.hot[a.uid] = true;
         else st.hot[list[sel].uid] = true;
         const name = row.label || '';
-        st.head = { name: `${u.name}の番`, sub: group ? `${name} → ${party ? '味方全体' : '敵全体'}` : `${name} → ${list[sel].name}` };
+        st.head = { name: R.T('battle.targeting.pick.setHot.head.name', { name: u.name }), sub: group ? `${name} → ${party ? R.T('battle.targeting.pick.setHot.head.sub') : R.T('battle.targeting.pick.setHot.head.sub_2')}` : `${name} → ${list[sel].name}` };
       };
       setHot();
       const done = (v) => {
@@ -129,7 +129,7 @@
           const pad = 12 * k, by = st.L.cmdY + 20 * k;
           Kt.box(g, { x: pad, y: by, w: R.W - pad * 2, h: 52 * k }, { a: 0.72, r: 12 * k, edge: 'rgba(236,201,124,0.5)' });
           Kt.text(g, Kt.fit(st.head.sub || '', R.W - pad * 2 - 32 * k, { size: 15 * k, weight: 700 }), pad + 16 * k, by + 16 * k, { size: 15 * k, weight: 700, raw: true });
-          Kt.text(g, group ? 'タップで決定' : '相手をタップ　・　B で戻る', R.W / 2, by + 64 * k, { size: 11.5 * k, color: Kt.COL.text3, align: 'center', raw: true });
+          Kt.text(g, group ? R.T('battle.targeting.pick.draw.text') : R.T('battle.targeting.pick.draw.text_2'), R.W / 2, by + 64 * k, { size: 11.5 * k, color: Kt.COL.text3, align: 'center', raw: true });
         }
       };
       st.ui = w;

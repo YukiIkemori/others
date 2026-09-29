@@ -219,8 +219,8 @@
 
   /** 隊列の札「前」「後」。size は掛けた後。→ 幅 */
   UIK.tag = function (g, row, x, y, size) {
-    const T = UIK.T, front = row === 'front' || row === '前';
-    const label = front ? '前' : '後';
+    const T = UIK.T, front = row === 'front' || row === R.T('ui.panel.tag.label');
+    const label = front ? R.T('ui.panel.tag.label') : R.T('ui.panel.tag.label_2');
     const s = size || UIK.u(11), w = s + UIK.u(6), h = s + UIK.u(4);
     g.save();
     UIK.rr(g, x, y, w, h, UIK.u(3));
