@@ -7,7 +7,7 @@ L.reset()
 cut, sub, cap, tag, big = L.cut, L.sub, L.cap, L.tag, L.big
 
 # つかみ: 灯台の光 ＋ 一行
-cut('hook_beam', 0.0, 3.2, src=2.2, zoom=(1.1, 1.0))
+cut('nf_cape_pan', 0.0, 3.2, src=3.2, zoom=(1.1, 1.0))
 L.SFX.append(dict(id='bell', at=0.05, gain=-3))
 tag('この世界は、朝を知らない。', 0.25, 3.0)
 # 題字
@@ -30,13 +30,13 @@ sub('セルマ「この剣、曲げはしない！」', T1 + 0.5, T1 + 2.6, y=80
 B1 = T1 + 4.3
 L.SFX.append(dict(id='crit', at=B1 - 0.03, gain=-5))
 cut('bt_glimmer', B1, 1.15, src=6.6, gamesfx=-7)
-cut('bt_glimmer', B1 + 1.15, 1.4, src=7.75, freeze=True, zoom=(1.06, 1.14), center=(0.62, 0.5), grade=dict(sat=0.75, bright=0.8))
+cut('bt_glimmer', B1 + 1.15, 1.4, src=7.75, freeze=True, grade=dict(sat=0.75, bright=0.8))
 L.FLASH.append((B1 + 1.15, 0.05, 0.3, 0.5))
 big('閃き', B1 + 1.17, B1 + 2.55, y=520, band=420)
 L.VOICE.append(dict(file='v_hero_m_glimmer_1', at=B1 + 1.2))
 L.SFX.append(dict(id='glimmer', at=B1 + 1.15, gain=-5))
 S1 = B1 + 2.55
-cut('bt_spell', S1, 2.6, src=5.8, zoom=(1.05, 1.22), center=(0.36, 0.62), gamesfx=-6)
+cut('bt_spell', S1, 2.6, src=5.8, gamesfx=-6)   # 戦闘は固定の画面
 T_ = S1 + 0.4
 L.T.append(dict(kind='big_sub', text='属性を重ねて', t0=T_, t1=S1 + 2.55, x=960, y=720, anim='rise', fin=0.25, fout=0.3, band=330))
 big('合成術', T_ + 0.15, S1 + 2.55, y=840, size=150)

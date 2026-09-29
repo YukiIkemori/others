@@ -6,7 +6,7 @@ import edit_lib as L  # noqa: E402
 L.reset()
 cut, sub, cap, tag, big = L.cut, L.sub, L.cap, L.tag, L.big
 
-cut('hook_beam', 0.0, 2.4, src=2.6, zoom=(1.08, 1.0))
+cut('nf_cape_pan', 0.0, 2.4, src=4.0, zoom=(1.08, 1.0))
 L.SFX.append(dict(id='bell', at=0.05, gain=-3))
 tag('この世界は、朝を知らない。', 0.15, 2.3)
 L.FLASH.append((2.4, 0.15, 0.5, 0.9))
@@ -20,7 +20,7 @@ cap('FIELD', '一枚絵のフィールド', X0 + 0.1, X0 + 2.95)
 B1 = X0 + 3.0
 L.SFX.append(dict(id='crit', at=B1 - 0.03, gain=-5))
 cut('bt_glimmer', B1, 0.8, src=6.95, gamesfx=-7)
-cut('bt_glimmer', B1 + 0.8, 1.4, src=7.75, freeze=True, zoom=(1.06, 1.14), center=(0.62, 0.5), grade=dict(sat=0.75, bright=0.8))
+cut('bt_glimmer', B1 + 0.8, 1.4, src=7.75, freeze=True, grade=dict(sat=0.75, bright=0.8))
 L.FLASH.append((B1 + 0.8, 0.05, 0.3, 0.5))
 big('閃き', B1 + 0.82, B1 + 2.2, y=520, band=420)
 L.VOICE.append(dict(file='v_hero_m_glimmer_1', at=B1 + 0.85))

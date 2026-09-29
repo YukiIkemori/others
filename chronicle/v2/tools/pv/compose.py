@@ -356,15 +356,19 @@ def render(edit, clips, out, t_from=None, t_to=None, stills=None, stills_dir=Non
         enc = subprocess.Popen([FF, '-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', '%dx%d' % (W, H), '-framerate', str(FPS), '-i', '-',
                                 '-c:v', 'libx264', '-preset', 'medium', '-crf', '14', '-pix_fmt', 'yuv420p', out], stdin=subprocess.PIPE)
     still_frames = set(int(round(s * FPS)) for s in (stills or []))
+    prev_base = None
     for fi in range(f_from, f_to):
         if not enc and fi not in still_frames:
             continue
         t = fi / FPS
         frame = np.zeros((H, W, 3), np.float32)
         active = [s for s in segs if s.f0 <= fi < s.f0 + s.n]
-        for s in active:
+        for j, s in enumerate(active):
             x = s.d.get('xin', 0)
             img = s.frame(fi)
+            # 溶けの下地: 前のカットがもう終わっていれば、直前のコマ（黒ではなく）から溶かす
+            if j == 0 and x and prev_base is not None:
+                frame = prev_base
             if s.d.get('box'):   # 分割の画面の 1 枠（x, y, w, h）
                 bx, by, bw, bh = s.d['box']
                 small = np.asarray(Image.fromarray((img * 255).astype(np.uint8)).resize((bw, bh), Image.BILINEAR), np.float32) / 255.0
@@ -376,6 +380,7 @@ def render(edit, clips, out, t_from=None, t_to=None, stills=None, stills_dir=Non
                 frame = frame * (1 - a) + img * a
             else:
                 frame = img.copy() if isinstance(img, np.ndarray) else img
+        prev_base = frame.copy() if isinstance(frame, np.ndarray) and not any(s.d.get('box') for s in active) else prev_base
         for s in segs:   # 終わったカットの読み手を閉じる
             if s.reader and fi >= s.f0 + s.n:
                 s.close()

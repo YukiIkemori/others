@@ -137,6 +137,17 @@ const SHOTS = {
   ex_lh2: { prep: async (T) => { await T.js(FX('content_p_lighthouse_2')); await T.idle(150); await T.settle(); }, n: sec(4), each: at({ 0: `PV.btn({up: 1, b: 1})` }) },
   ex_world: { prep: async (T) => { await T.js(FX('content_p_world_forest')); await T.idle(150); await T.settle(); }, n: sec(4), each: at({ 0: `PV.btn({left: 1, b: 1})` }) },
   ex_pharos_run: { prep: async (T) => { await T.js(FIELD('content_p_pharos', {}, 'pharos', 'gate_w')); await T.idle(150); await T.settle(); }, n: sec(4), each: at({ 0: `PV.btn({right: 1, b: 1})` }) },
+  // 一枚絵のフィールド（f_*）を走る（古いマス目のワールド・フィールドの代わり）
+  nf_roa: { prep: async (T) => { await T.js(`PV.clean(); PV.noEnc(); PV.state(${FOREST()}); PV.enter('f_roa', 'east')`); await T.idle(150); await T.settle(); }, n: sec(4.5), each: at({ 0: `PV.btn({left: 1, b: 1})` }) },
+  nf_south: { prep: async (T) => { await T.js(`PV.clean(); PV.noEnc(); PV.state(${FOREST()}); PV.enter('f_south', 'north')`); await T.idle(150); await T.settle(); }, n: sec(4.5), each: at({ 0: `PV.btn({down: 1, b: 1})` }) },
+  nf_hut: { prep: async (T) => { await T.js(`PV.clean(); PV.noEnc(); PV.state(${FOREST()}); PV.enter('f_hut', 'west')`); await T.idle(150); await T.settle(); }, n: sec(4.5), each: at({ 0: `PV.btn({right: 1, b: 1})` }) },
+  nf_lookout: { prep: async (T) => { await T.js(`PV.clean(); PV.noEnc(); PV.state(${FOREST()}); PV.enter('f_lookout', 'south')`); await T.idle(150); await T.settle(); }, n: sec(4.5), each: at({ 0: `PV.btn({up: 1, b: 1})` }) },
+  nf_cross: { prep: async (T) => { await T.js(`PV.clean(); PV.noEnc(); PV.state(${FOREST()}); PV.enter('f_cross', 'west')`); await T.idle(150); await T.settle(); }, n: sec(4.5), each: at({ 0: `PV.btn({right: 1, b: 1})` }) },
+  // つかみ: 灯台の岬（灯った後）をゆっくり見渡す（ワールドの灯台の代わり）
+  nf_cape_pan: {
+    prep: async (T) => { await T.js(FIELD('content_p_roa', { prologue_done: true, prologue_boss: true }, 'f_cape', 'lighthouse')); await T.idle(150); await T.settle(); await T.js(`PV.pan(18, 14, 31, 30, 6500)`); },
+    n: sec(6.5),
+  },
   ex_map: { url: 'dev.html?scene=menus_map', prep: async (T) => { await T.idle(90); }, n: sec(5) },
 
   // ---------------------------------------------------------------- 6 戦闘

@@ -33,8 +33,8 @@ SFX.append(dict(id='bell', at=0.25, gain=-2))
 T.append(dict(kind='tag', text='この世界は、朝を知らない。', t0=0.7, t1=3.5, x=960, y=540, anim='rise', fin=0.8, fout=0.5))
 # ロアの年寄り（本物の会話の窓。E.AGE.old）
 cut('hook_elder', 3.6, 3.9, src=0.15, zoom=(1.18, 1.24), center=(0.5, 0.8))
-# ワールドの灯台の光が夜の海を掃く ＋ フィーネの声「……ねえ、聞こえる？」
-cut('hook_beam', 7.5, 4.7, src=1.8, zoom=(1.12, 1.0), xin=0.5)
+# 灯台の岬を見渡す ＋ フィーネの声「……ねえ、聞こえる？」
+cut('nf_cape_pan', 7.5, 4.7, src=1.8, zoom=(1.12, 1.0), xin=0.5)   # 灯台の岬（一枚絵のフィールド）
 VOICE.append(dict(file='v_fine_opening_01', at=8.1))
 sub('……ねえ、聞こえる？', 8.15, 11.6)
 BARS += [(7.4, 0), (8.6, 130)]
@@ -52,7 +52,9 @@ VOICE.append(dict(file='v_berna_lute_03', at=22.2))
 cut('berna_lute', 22.8, 3.6, src=0.35, zoom=(1.18, 1.24), center=(0.5, 0.8))
 cut('lh_climb', 26.4, 1.9, src=1.2)
 # 灯室: 灯台に火がともる（カットの 8.52 秒で光る）
-cut('lamp_lit', 28.3, 3.0, src=7.2, zoom=(1.0, 1.1), center=(0.5, 0.45), gamesfx=-4)
+cut('lamp_lit', 28.3, 2.15, src=7.2, zoom=(1.0, 1.0717), center=(0.5, 0.45), gamesfx=-4)
+# カットの 9.40 秒に撮りの乱れた 1 コマがあるので、その手前（9.35 秒）で止め絵にする
+cut('lamp_lit', 30.45, 0.85, src=9.35, freeze=True, zoom=(1.0717, 1.1), center=(0.5, 0.45))
 
 # ================================================================== 3 題字
 FLASH.append((31.3, 0.35, 0.9, 1.0))
@@ -67,18 +69,15 @@ SFX.append(dict(id='glimmer', at=34.2, gain=-10))
 T0_OW = 37.2
 EXP = [  # (カット, src, 明るさ)
     ('ex_windhill', 0.3, 1.18), ('ex_cape', 0.6, 1.2), ('ex_pharos_run', 0.4, 1.05), ('ex_fern', 0.4, 1.0),
-    ('ex_verda_stone', 0.2, 1.15), ('ex_verda_dark', 0.6, 1.3), ('ex_elder', 0.0, 1.1), ('ex_elder2', 0.2, 1.1),
-    ('ex_lh2', 0.3, 1.05), ('ex_world', 0.3, 1.15),
+    ('ex_verda_stone', 0.2, 1.15), ('ex_verda_dark', 0.6, 1.3), ('ex_elder2', 0.2, 1.1),
+    ('nf_south', 0.3, 1.15), ('nf_hut', 0.3, 1.1), ('nf_cross', 0.3, 1.1),   # 一枚絵のフィールド（古いマス目のワールドは使わない）
 ]
 for i, (c, src, br) in enumerate(EXP):
     at = T0_OW + i * BAR_OW
-    dur = BAR_OW if c != 'ex_elder' else BAR_OW * 0.75   # 千年樹の入口は会話が出る前まで
-    cut(c, at, dur, src=src, zoom=(1.0, 1.07) if i % 2 == 0 else (1.07, 1.0), grade=dict(bright=br))
-    if c == 'ex_elder':
-        cut('ex_well', at + dur, BAR_OW - dur, src=0.1, grade=dict(bright=1.1))
+    cut(c, at, BAR_OW, src=src, zoom=(1.0, 1.07) if i % 2 == 0 else (1.07, 1.0), grade=dict(bright=br))
 cap('FIELD', '一枚絵のフィールド', T0_OW + 0.3, T0_OW + 2 * BAR_OW - 0.15)
 cap('TOWN', '夜の街並み', T0_OW + 2 * BAR_OW + 0.15, T0_OW + 4 * BAR_OW - 0.15)
-cap('DUNGEON', 'ダンジョン探索', T0_OW + 4 * BAR_OW + 0.15, T0_OW + 6 * BAR_OW - 0.15)   # 千年樹の入口で会話の窓が出る前に消す
+cap('DUNGEON', 'ダンジョン探索', T0_OW + 4 * BAR_OW + 0.15, T0_OW + 7 * BAR_OW - 0.15)
 T_TAV = T0_OW + 10 * BAR_OW
 
 # ================================================================== 5 仲間（潮風亭の 20 人）
@@ -108,9 +107,9 @@ T_SHATTER = T_ENC + 0.6          # カットの 0.9 秒で画面が砕ける
 SFX.append(dict(id='crit', at=T_SHATTER - 0.05, gain=-4))
 # 閃き: 主人公の頭に電球 → 止めて大きく「閃き」
 G0 = T_ENC + 2.8
-cut('bt_glimmer', G0, 1.55, src=6.2, zoom=(1.0, 1.06), center=(0.62, 0.55), gamesfx=-6)
+cut('bt_glimmer', G0, 1.55, src=6.2, gamesfx=-6)   # 戦闘は固定の画面（寄らない）
 T_FRZ = G0 + 1.55
-cut('bt_glimmer', T_FRZ, 1.4, src=7.75, freeze=True, zoom=(1.06, 1.14), center=(0.62, 0.5), grade=dict(sat=0.75, bright=0.8))
+cut('bt_glimmer', T_FRZ, 1.4, src=7.75, freeze=True, grade=dict(sat=0.75, bright=0.8))
 FLASH.append((T_FRZ, 0.06, 0.35, 0.55))
 big('閃き', T_FRZ + 0.02, T_FRZ + 1.9, y=520, subtext='戦いの中で、技がひらめく。', band=420)
 VOICE.append(dict(file='v_hero_m_glimmer_1', at=T_FRZ + 0.05))
@@ -118,12 +117,12 @@ SFX.append(dict(id='glimmer', at=T_FRZ, gain=-4))
 cut('bt_glimmer', T_FRZ + 1.4, 1.7, src=7.75, gamesfx=-6)
 # 派生技:「連ね斬りから、返し刃を編み出した！」（カットの 18.8 秒ごろ）
 D0 = T_FRZ + 3.1
-cut('bt_derive', D0, 4.9, src=15.3, zoom=(1.0, 1.05), center=(0.5, 0.45), gamesfx=-6)
+cut('bt_derive', D0, 4.9, src=15.3, gamesfx=-6)
 big('技は、派生する。', D0 + 3.3, D0 + 4.85, y=870, size=120, band=250)
 # 合成術（2 属性）: ヴィオラの 野を焼く風
 S0 = D0 + 4.9
 SPELL_SRC = 4.9   # カットの 5.2 秒で「ヴィオラは野を焼く風を唱えた！」、6.0〜8.0 秒で術の光
-cut('bt_spell', S0, 4.6, src=SPELL_SRC, zoom=(1.0, 1.22), center=(0.36, 0.62), gamesfx=-5)
+cut('bt_spell', S0, 4.6, src=SPELL_SRC, gamesfx=-5)
 FLASH.append((S0 + 1.15, 0.08, 0.4, 0.35, (1.0, 0.8, 0.55)))
 VOICE.append(dict(file='b_viola_bigtech_1', at=S0 + 0.2))
 sub('ヴィオラ「炎よ、風よ、舞いなさい！」', S0 + 0.2, S0 + 2.9, y=990)
@@ -150,17 +149,17 @@ BOSS_SUMMON = 40.2   # bt_boss: 40〜44 秒「群れの遠吠え」→ 狼 C・D
 BOSS_KILL = 16.4     # bt_boss_kill: 18 秒ごろ炎の旋風で倒れる → 21 秒「勝利」
 cut('bt_boss', B0, 3.0, src=2.0, gamesfx=-6)
 SFX.append(dict(id='roar', at=B0 + 0.1, gain=-4))
-cut('bt_boss', B0 + 3.0, 3.8, src=BOSS_SUMMON, zoom=(1.0, 1.12), center=(0.3, 0.6), gamesfx=-6)
+cut('bt_boss', B0 + 3.0, 3.8, src=BOSS_SUMMON, gamesfx=-6)
 cap('BOSS', '仲間を呼ぶ強敵', B0 + 3.2, B0 + 6.6)
 cut('bt_boss_kill', B0 + 6.8, 5.4, src=BOSS_KILL, gamesfx=-4)
 C0 = B0 + 12.2
 
 # ================================================================== 8 山場: 千年樹のこずえに歌の灯
 FLASH.append((C0, 0.25, 0.8, 0.9))
-cut('fin_beacon', C0, 3.6, src=2.5, zoom=(1.0, 1.08), center=(0.5, 0.35))
+cut('fin_beacon', C0, 3.6, src=2.5)
 SFX.append(dict(id='light', at=C0 + 0.3, gain=-3))
-cut('fin_beacon', C0 + 3.6, 3.0, src=5.6, zoom=(1.12, 1.16), center=(0.5, 0.42), xin=0.3)
-cut('fin_beacon', C0 + 6.6, 3.0, src=12.9, zoom=(1.1, 1.14), center=(0.5, 0.8), xin=0.3)
+cut('fin_beacon', C0 + 3.6, 3.0, src=5.6, xin=0.3)
+cut('fin_beacon', C0 + 6.6, 3.0, src=12.4, xin=0.3)   # 15.6 秒で会話の窓が出る。その前で切る
 L0 = C0 + 9.6
 cut('fin_lights', L0, 5.6, src=0.2, zoom=(1.6, 1.72), center=(0.5, 0.24), xin=0.6)
 T.append(dict(kind='tag', text='峠の向こうで、残る七つの灯が\n語り部を待っている。', style=dict(size=66), t0=L0 + 1.4, t1=L0 + 5.4, x=960, y=700, anim='rise', fin=0.7, fout=0.5))
