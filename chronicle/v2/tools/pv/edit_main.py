@@ -57,8 +57,8 @@ cut('lamp_lit', 28.3, 3.0, src=7.2, zoom=(1.0, 1.1), center=(0.5, 0.45), gamesfx
 # ================================================================== 3 題字
 FLASH.append((31.3, 0.35, 0.9, 1.0))
 BARS += [(31.2, 130), (31.5, 0)]
-cut('title_screen', 31.3, 2.6, src=0.25, speed=0.6)
-cut('title_screen', 33.9, 3.3, src=1.82, freeze=True, zoom=(1.0, 1.05), center=(0.3, 0.3))
+cut('title_screen', 31.3, 3.3, src=0.25, speed=0.6)
+cut('title_screen', 34.6, 2.6, src=2.23, zoom=(1.0, 1.03), center=(0.3, 0.3))
 SFX.append(dict(id='light', at=31.25, gain=-3))
 SFX.append(dict(id='glimmer', at=34.2, gain=-10))
 
@@ -89,8 +89,94 @@ VOICE.append(dict(file='b_selma_bigtech_1', at=T_TAV + 0.8))
 sub('セルマ「この剣、曲げはしない！」', T_TAV + 0.8, T_TAV + 3.0, y=80)
 VOICE.append(dict(file='b_titta_bigtech_2', at=T_TAV + 3.6))
 sub('ティッタ「ちょろいちょろい！」', T_TAV + 3.6, T_TAV + 5.4, y=80)
-VOICE.append(dict(file='b_viola_bigtech_1', at=T_TAV + 5.9))
-sub('ヴィオラ「炎よ、風よ、舞いなさい！」', T_TAV + 5.9, T_TAV + 8.6, y=80)
+VOICE.append(dict(file='b_teo_bigtech_1', at=T_TAV + 6.0))
+sub('テオ「見たか、天才の実力！」', T_TAV + 6.0, T_TAV + 8.6, y=80)
 T_ENC = T_TAV + 8.8
 
-DURATION = T_ENC
+
+def big(text, t0, t1, y=500, size=None, subtext=None, band=None):
+    """大きな一語（金・光の帯）＋ 下に小さい説明"""
+    st = dict(size=size) if size else {}
+    T.append(dict(kind='big', text=text, style=st, t0=t0, t1=t1, x=960, y=y, anim='pop', move=0.35, fin=0.2, fout=0.35, sweep=0.9, sweep_at=0.25, band=band))
+    if subtext:
+        T.append(dict(kind='big_sub', text=subtext, t0=t0 + 0.25, t1=t1, x=960, y=y + (size or 210) * 0.5 + 60, anim='rise', fin=0.3, fout=0.35))
+
+
+# ================================================================== 6 戦闘（迷いの森）
+cut('bt_enc', T_ENC, 2.8, src=0.3, gamesfx=-6)
+T_SHATTER = T_ENC + 0.6          # カットの 0.9 秒で画面が砕ける
+SFX.append(dict(id='crit', at=T_SHATTER - 0.05, gain=-4))
+# 閃き: 主人公の頭に電球 → 止めて大きく「閃き」
+G0 = T_ENC + 2.8
+cut('bt_glimmer', G0, 1.55, src=6.2, zoom=(1.0, 1.06), center=(0.62, 0.55), gamesfx=-6)
+T_FRZ = G0 + 1.55
+cut('bt_glimmer', T_FRZ, 1.4, src=7.75, freeze=True, zoom=(1.06, 1.14), center=(0.62, 0.5), grade=dict(sat=0.75, bright=0.8))
+FLASH.append((T_FRZ, 0.06, 0.35, 0.55))
+big('閃き', T_FRZ + 0.02, T_FRZ + 1.9, y=520, subtext='戦いの中で、技がひらめく。', band=420)
+VOICE.append(dict(file='v_hero_m_glimmer_1', at=T_FRZ + 0.05))
+SFX.append(dict(id='glimmer', at=T_FRZ, gain=-4))
+cut('bt_glimmer', T_FRZ + 1.4, 1.7, src=7.75, gamesfx=-6)
+# 派生技:「連ね斬りから、返し刃を編み出した！」（カットの 18.8 秒ごろ）
+D0 = T_FRZ + 3.1
+cut('bt_derive', D0, 4.9, src=15.3, zoom=(1.0, 1.05), center=(0.5, 0.45), gamesfx=-6)
+big('技は、派生する。', D0 + 3.1, D0 + 4.85, y=820, size=120, band=260)
+# 合成術（2 属性）: ヴィオラの 野を焼く風
+S0 = D0 + 4.9
+SPELL_SRC = 7.4
+cut('bt_spell', S0, 4.6, src=SPELL_SRC, zoom=(1.0, 1.05), center=(0.4, 0.55), gamesfx=-5)
+VOICE.append(dict(file='b_viola_bigtech_1', at=S0 + 0.2))
+sub('ヴィオラ「炎よ、風よ、舞いなさい！」', S0 + 0.2, S0 + 2.9, y=990)
+big('属性を重ねて ― 合成術', S0 + 2.3, S0 + 4.55, y=820, size=110, band=240)
+# 速さ（戦闘の速さを切り替える）
+P0 = S0 + 4.6
+cut('bt_speed', P0, 3.2, src=0.35, gamesfx=-7)
+cap('SPEED', '速さも自由に', P0 + 0.2, P0 + 3.1)
+
+# ================================================================== 7 寄り道（4 分割）
+X0 = P0 + 3.2
+BOX = [(0, 0), (964, 0), (0, 544), (964, 544)]
+EXTRA = [('ex_golden', 1.4, '金色の魔物'), ('ex_steal', 8.0, '盗む'), ('ex_shop', 0.9, 'まとめ買い'), ('ex_bestiary', 0.3, '図鑑')]
+for i, (c, src, label) in enumerate(EXTRA):
+    bx, by = BOX[i]
+    cut(c, X0 + i * 0.2, 7.8 - i * 0.2, src=src, box=(bx, by, 956, 536), xin=0.3, gamesfx=-9 if i < 2 else None)
+    T.append(dict(kind='cap_k', text=label, style=dict(size=40, track=4), t0=X0 + i * 0.2 + 0.2, t1=X0 + 7.7, x=bx + 40, y=by + 490, anchor=(0, 0.5), anim='slide', fin=0.3))
+big('寄り道も、たっぷり。', X0 + 1.2, X0 + 7.6, y=540, size=100, band=230)
+
+# ================================================================== 6' 強敵（狼の群れ頭）
+B0 = X0 + 8.0
+BOSS_SUMMON, BOSS_KILL = 41.0, 60.0   # 撮り直しの後に合わせる
+cut('bt_boss', B0, 3.0, src=2.0, gamesfx=-6)
+SFX.append(dict(id='roar', at=B0 + 0.1, gain=-4))
+cut('bt_boss', B0 + 3.0, 3.0, src=BOSS_SUMMON, gamesfx=-6)
+cut('bt_boss', B0 + 6.0, 4.0, src=BOSS_KILL, gamesfx=-4)
+cap('BOSS', '仲間を呼ぶ強敵', B0 + 3.2, B0 + 5.9)
+C0 = B0 + 10.0
+
+# ================================================================== 8 山場: 千年樹のこずえに歌の灯
+FLASH.append((C0, 0.25, 0.8, 0.9))
+cut('fin_beacon', C0, 3.6, src=2.5, zoom=(1.0, 1.08), center=(0.5, 0.35))
+SFX.append(dict(id='light', at=C0 + 0.3, gain=-3))
+cut('fin_beacon', C0 + 3.6, 3.0, src=5.6, zoom=(1.12, 1.16), center=(0.5, 0.42), xin=0.3)
+cut('fin_beacon', C0 + 6.6, 3.0, src=12.9, zoom=(1.1, 1.14), center=(0.5, 0.8), xin=0.3)
+L0 = C0 + 9.6
+cut('fin_lights', L0, 5.6, src=0.2, zoom=(1.35, 1.45), center=(0.5, 0.3), xin=0.6)
+T.append(dict(kind='tag', text='峠の向こうで、残る七つの灯が\n語り部を待っている。', style=dict(size=66), t0=L0 + 1.4, t1=L0 + 5.4, x=960, y=640, anim='rise', fin=0.7, fout=0.5))
+
+# ================================================================== 9 終わりの札
+E0 = L0 + 5.6
+cut('title_screen', E0, 11.0, src=2.4, xin=0.8)
+T.append(dict(kind='end_main', text='体験版テスター募集中', t0=E0 + 1.2, t1=E0 + 10.6, x=478, y=640, anim='rise', fin=0.6, fout=0.8, sweep=1.1, sweep_at=0.6))
+T.append(dict(kind='end_sub', text='Steamにて配信予定', t0=E0 + 1.8, t1=E0 + 10.6, x=478, y=760, anim='rise', fin=0.6, fout=0.8))
+T.append(dict(kind='end_credit', text='Studio Metem', style=dict(font=FONT_EN_PATH), t0=E0 + 2.4, t1=E0 + 10.6, x=478, y=960, anim='fade', fin=0.8, fout=0.8))
+DIP.append((E0 + 11.0, 0.9))
+DURATION = E0 + 11.0
+
+# ================================================================== 音
+MUSIC += [
+    dict(file='title', at=0.0, src=0.0, dur=31.4, fout=0.4, gain=0),
+    dict(file='title', at=31.1, src=48.9, dur=6.4, fin=0.25, fout=0.6, gain=0),
+    dict(file='overworld', at=T0_OW - 0.05, src=0.0, dur=T_SHATTER - T0_OW + 0.1, fin=0.1, fout=0.5, gain=-1),
+    dict(file='battle', at=T_SHATTER, src=0.711, dur=B0 - T_SHATTER + 0.3, fout=0.4, gain=-1),
+    dict(file='boss', at=B0, src=0.03, dur=C0 - B0 + 0.2, fin=0.05, fout=0.4, gain=-1),
+    dict(file='dawn', at=C0 - 0.1, src=21.375, dur=DURATION - C0 + 0.1, fin=0.3, fout=3.0, gain=0),
+]

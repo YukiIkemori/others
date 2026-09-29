@@ -200,6 +200,14 @@ class Item:
         ax, ay = d.get('anchor', (0.5, 0.5))
         x = int(round(d['x'] - w * ax + dx))
         y = int(round(d['y'] - h * ay + dy))
+        if d.get('band'):   # 文字の後ろの横長の暗い帯（読みやすく）
+            bh = d['band']
+            by0 = int(d['y'] - bh / 2)
+            ys = np.arange(bh, dtype=np.float32)
+            prof = np.clip(np.minimum(ys, bh - 1 - ys) / (bh * 0.3), 0, 1)
+            band_a = (prof * d.get('band_k', 0.6) * a)[:, None]
+            y0c, y1c = max(0, by0), min(frame.shape[0], by0 + bh)
+            frame[y0c:y1c] *= (1 - band_a[y0c - by0:y1c - by0])[..., None] if band_a.ndim == 2 else 1
         rgb = img[..., :3].copy()
         al = img[..., 3] * a
         # 光の帯（左から右へ、斜めに）

@@ -134,6 +134,8 @@ async function main() {
   ok('invariants after talk', invOk(await ev(p, INVARIANTS)), await ev(p, INVARIANTS));
   // 戦闘: 本物の R.Battle.start（BSCENE）に本物のデータの編成を渡す（序章の最初の戦闘と同じ tr_tutorial）
   await ev(p, "RPG.Settings.set('battleSpeed', 3); 0");   // 設定「戦闘の速さ ×3」（ヘッドレスは遅いので）
+  // 初めての仕組みの説明の札（screen:tip、遊ぶ版では初めての戦闘の後などに 1 回）は見たことにしておく（この通しでは札を確かめない）
+  await ev(p, "(() => { for (const id of Object.keys(RPG.DB.tips || {})) RPG.Game.flags['tip_' + id] = true; return 0; })()");
   await ev(p, "window.__bres = null; void RPG.Battle.start({troop:'tr_tutorial'}).then((r) => { window.__bres = r; }); 0");
   ok('battle scene opens', await waitFor(p, `${top}==='battle'`, 15000));   // 入る移り（約 0.8 秒）の後
   await p.waitForTimeout(600);
