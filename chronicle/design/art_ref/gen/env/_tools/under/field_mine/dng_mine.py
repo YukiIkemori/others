@@ -57,19 +57,21 @@ def dovan():
     a.rect(11, 12, 3, 13, 'c', force=True, keep=True)            # the long ramp to the lower tier (west)
     a.mark('ramp', [(x, y) for x in range(11, 14) for y in range(13, 19)], 'a long sloping RAMP of stone slabs down the rock face', (176, 166, 150), solid=False)
     a.rect(6, 11, 42, 2, 'c', force=True, keep=True)             # lower street
-    # ---- buildings
-    bld(a, 'dovan_guild', 6, 36, 9, 6, 4, "the MINERS' GUILD OFFICE: a solid two-storey house of dark timber on a stone base, a big slate roof, a sign bracket with crossed picks")
-    bld(a, 'dovan_inn', 16, 37, 7, 5, 3, 'the INN: a cosy timber house with a steep slate roof, a lantern bracket by the door')
-    bld(a, 'dovan_tavern', 31, 36, 9, 6, 4, 'the TAVERN: a wide timber hall with a slate roof, barrels stacked by the wall')
-    a.mark('house_u', [(x, y) for x in range(45, 49) for y in range(38, 42)], 'a small miners\' house of timber and stone with a slate roof', HOUSE)
-    bld(a, 'dovan_items', 6, 19, 8, 6, 4, 'the ITEM SHOP: a timber house with a slate roof and a wide shop window')
-    bld(a, 'dovan_house', 17, 19, 6, 5, 3, "a MINER'S HOUSE of timber and stone with a slate roof and a small chimney")
-    bld(a, 'dovan_hall', 26, 17, 11, 7, 5, 'the ASSEMBLY HALL: a long stone hall with a steep timber roof and two chimneys, a wide double door')
-    bld(a, 'dovan_forge', 5, 3, 12, 8, 6, "the GREAT FORGE of the smiths: a big open-fronted stone smithy under a heavy timber roof, a tall brick chimney, the red glow of a furnace mouth inside, anvils and a water trough in front")
+    # ---- buildings (re-measured on the painting dovan/gen1.png: the painter gave the big hall at the back the banners of the assembly
+    #      hall, the crossed picks to the plaza hall (the guild), the furnace and the anvil to the building at the entrance (the forge),
+    #      so the roles follow the picture; the guide of the generation had forge / guild / tavern in other places)
+    bld(a, 'dovan_hall', 5, 3, 12, 8, 6, "the ASSEMBLY HALL: a long two-storey timber hall on a stone base with banners by the door")
+    bld(a, 'dovan_guild', 26, 17, 11, 7, 4, "the MINERS' GUILD OFFICE: a wide timber hall with the crossed picks over the door")
+    bld(a, 'dovan_tavern', 6, 19, 8, 6, 4, 'the TAVERN: a timber house with a slate roof, barrels by the wall')
+    bld(a, 'dovan_house', 17, 19, 6, 5, 3, "a MINER'S HOUSE of timber and stone with a slate roof")
+    bld(a, 'dovan_items', 6, 36, 9, 6, 4, 'the ITEM SHOP: a timber house with a striped awning over the counter')
+    bld(a, 'dovan_inn', 16, 36, 7, 6, 3, 'the INN: a timber house with a green awning')
+    bld(a, 'dovan_forge', 30, 36, 10, 6, 4, "the SMITHS' FORGE: a stone and timber smithy, the red mouth of a furnace, an anvil on a table in front")
+    bld(a, 'dovan_house2', 45, 37, 4, 5, 1, "a small miners' house of timber with a steep slate roof")
     # ---- the lift tower on the east (spans the rock face between the upper and middle tiers)
     a.rect(41, 30, 6, 6, 'R', force=True)
-    a.mark('lift', [(x, y) for x in range(43, 46) for y in range(29, 36)], 'the LIFT TOWER: a tall frame of heavy timbers against the rock face with a winch wheel on top and a wooden cage platform, ropes and a counterweight', TIMBER)
-    a.rect(43, 36, 3, 1, '=', force=True, keep=True); a.rect(43, 28, 3, 1, '=', force=True, keep=True)
+    a.mark('lift', [(x, y) for x in range(43, 46) for y in range(28, 36)], 'the LIFT TOWER: a tall frame of heavy timbers against the rock face with a winch wheel on top and a wooden cage platform, ropes and a counterweight', TIMBER)
+    a.rect(43, 36, 3, 1, 'k', force=True, keep=True); a.rect(43, 27, 3, 1, 'k', force=True, keep=True)
     # ---- the mine mouth (north wall), the rails down to the cart station
     a.mark('minemouth', [(x, y) for x in range(29, 34) for y in range(1, 3)], 'the MINE MOUTH: a great timbered portal in the rock wall, heavy beams and props, the rails run into the dark', DARK)
     door(a, 31, 3, 'k')
@@ -78,12 +80,9 @@ def dovan():
     rail(a, [(31.5, 3.2), (32.5, 7), (37, 10), (40.5, 12.6), (41.3, 17), (41, 22.5), (40.5, 26.6)], ground='k')
     a.mark('station', [(x, y) for x in range(40, 44) for y in (27,)], 'the CART STATION: a timber platform with a buffer stop at the end of the rails', TIMBER, solid=False)
     a.rect(40, 27, 4, 1, '=', force=True, keep=True)
-    # ---- the oath stone and the smiths' tunnel
-    a.rect(20, 5, 5, 4, 'c', force=True, keep=True)
-    a.mark('oath', [(21, 5), (22, 5), (23, 5), (21, 6), (22, 6), (23, 6)], 'the OATH STONE: a tall slab of dark stone carved with an anvil, a hammer and lines of old letters (half of them worn away), on a low stepped dais', (96, 92, 100))
-    a.rect(17, 1, 3, 2, 'R', force=True)
-    a.mark('tunnel', [(17, 2), (18, 2), (19, 2)], 'a small old TUNNEL MOUTH in the rock wall, timber-framed, boarded up with planks', DARK)
-    door(a, 18, 3, 'k')
+    # ---- the oath stone (the painter put no tunnel mouth in the back wall: the smiths' way to the pass starts behind the forge)
+    a.rect(19, 4, 6, 5, 'c', force=True, keep=True)
+    a.mark('oath', [(x, y) for x in range(20, 24) for y in range(4, 7)], 'the OATH STONE: a tall slab of dark stone carved with an anvil, a hammer and lines of old letters (half of them worn away), on a low stepped dais', (96, 92, 100))
     # ---- water: the cistern (north-east), the chasm (east of the middle tier)
     a.blob(46, 7, 3.2, 2.6, 'w', rough=0.25, seed=6, force=True)
     a.region([(48.5, 17), (54, 17), (54, 32), (49, 31.5), (48, 24)], 'l', rough=0.6, seed=7, force=True)
@@ -93,10 +92,10 @@ def dovan():
     # glowing ore veins in the rock (scenery only)
     a.mark('veins', [(2, 20), (51, 40), (2, 8), (52, 2)], 'veins of glowing pale-blue ORE CRYSTALS growing out of the rock', (120, 170, 210))
     a.tidy()
-    a.spawns = {'gate': dict(x=26, y=46, dir='n'), 'warp': dict(x=27, y=27, dir='s'), 'mine': dict(x=31, y=4, dir='s'), 'tunnel': dict(x=18, y=4, dir='s'),
-                'lift_u': dict(x=44, y=37, dir='s'), 'lift_m': dict(x=44, y=27, dir='n'), 'station': dict(x=39, y=27, dir='w'), 'oath': dict(x=22, y=9, dir='n')}
+    a.spawns = {'gate': dict(x=26, y=46, dir='n'), 'warp': dict(x=27, y=27, dir='s'), 'mine': dict(x=31, y=4, dir='s'),
+                'lift_u': dict(x=44, y=36, dir='s'), 'lift_m': dict(x=44, y=27, dir='n'), 'station': dict(x=39, y=27, dir='w'), 'oath': dict(x=22, y=8, dir='n')}
     a.exits = [dict(x=26, y=47, w=2, h=1, to={'map': 'g_valley', 'spawn': 'gate'}, edge='s')]
-    keep = [(22, 8), (21, 9), (23, 9), (44, 37), (44, 27), (39, 27), (43, 37), (26, 27), (28, 27), (12, 11), (30, 4), (32, 4)]
+    keep = [(22, 7), (21, 7), (22, 8), (44, 36), (44, 27), (39, 27), (43, 36), (26, 27), (28, 27), (12, 11), (30, 4), (32, 4)]
     keepcells(a, keep, 'c')
     a.objects = [dict(type='o', x=x, y=y) for (x, y) in keep]
     a.meta.update(name='鉱山都市ドヴァン', region='r_mine', zones=[], worldRect=[330, 60, 54, 48], look='town', smooth=0.6)

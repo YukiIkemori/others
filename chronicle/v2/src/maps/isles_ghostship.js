@@ -1,5 +1,5 @@
 // CONTENT（マレア諸島）: 幽霊船 3 階（WORLD_REDESIGN §4.5 の流れ 6・7・§6.5、STORY_BIBLE §7.5 の 3・4）。
-//   1 階 ghost_ship_1（56×30）甲板: 霧の海に浮かぶ船。南の渡り板の下に自分の外洋船（調べると舵）。折れた帆柱 3 本・船長室の天窓・下へのはしご。
+//   1 階 ghost_ship_1（56×30）甲板: 霧の海に浮かぶ船。南の渡り板の下に自分の外洋船（調べると舵）。折れた帆柱 4 本・倒れた帆桁・船尾楼（舵輪・船長室の天窓）と船首楼（巻き上げ機）・下へのはしご。海に霧（下絵に焼いた）。
 //   2 階 ghost_ship_2（48×28）船室: まん中の通路の南北に船員の船室 8 つ。寝台・ハンモックの柱に船員の名札（6 枚、任意）。
 //        水夫の水樽のそばに休息の灯（幽霊船は 3 階の長いダンジョン: 泉はここの 1 つだけ。WORLD §6.2 の持ち主の決まり）。
 //   3 階 ghost_ship_3（52×30）船倉と船長室: 暗がりの船倉（壁のランタンに火をともすと明るいまま）。西の隔壁の向こうが船長室。
@@ -23,10 +23,10 @@
       // 渡り板の下の外洋船（乗ると、ネレイの夜の桟橋へ戻る。島々へは桟橋の舵から）
       for (const x of [28, 29]) O.push({ type: 'door', x, y: 25, look: 'none', to: { map: 'nerei', spawn: 'pier_end' }, confirm: R.T('map.isles_ghostship.confirm') });
       O.push(K.prop('ship', 31, 26));
-      for (const [x, y] of [[18, 15], [30, 15], [41, 15]]) O.push(K.exam(x, y, 'isles_ghost_mast'));
+      for (const [x, y] of [[18, 15], [32, 14], [42, 14]]) O.push(K.exam(x, y, 'isles_ghost_mast'));   // 描いた折れた帆柱（下絵 gen3 の位置）
       O.push(K.exam(10, 14, 'isles_ghost_skylight'));
       O.push(K.chest('ghost_ship_1_c1', 8, 9, { pool: 'p_T' }), K.chest('ghost_ship_1_c2', 46, 15, { pool: 'p_T' }));
-      [[12, 7], [24, 7], [36, 7], [12, 22], [22, 22], [36, 22], [49, 13]].forEach(([x, y], i) => O.push({ type: 'brazier', id: 'ghost_ship_1_g' + (i + 1), x, y, on: true, cond: WISP }));
+      [[12, 6], [24, 6], [36, 6], [12, 21], [22, 21], [36, 21], [47, 10]].forEach(([x, y], i) => O.push({ type: 'brazier', id: 'ghost_ship_1_g' + (i + 1), x, y, on: true, cond: WISP }));
       // 渡り板の脇の船のランタン（解決の後も）
       O.push({ type: 'brazier', id: 'ghost_ship_1_l1', x: 26, y: 21, on: true }, { type: 'brazier', id: 'ghost_ship_1_l2', x: 31, y: 21, on: true });
       K.def('ghost_ship_1', {

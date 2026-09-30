@@ -1,0 +1,19 @@
+{
+ "id": "mine_2",
+ "kind": "under",
+ "map": "mine_2",
+ "tile": 32,
+ "size32": [
+  1792,
+  1472
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.9,
+ "files": {
+  "24": "mine_2@24.png",
+  "32": "mine_2@32.png"
+ },
+ "src": "generated"
+}

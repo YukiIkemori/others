@@ -1,0 +1,19 @@
+{
+ "id": "dovan",
+ "kind": "under",
+ "map": "dovan",
+ "tile": 32,
+ "size32": [
+  1728,
+  1536
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.9,
+ "files": {
+  "24": "dovan@24.png",
+  "32": "dovan@32.png"
+ },
+ "src": "generated"
+}

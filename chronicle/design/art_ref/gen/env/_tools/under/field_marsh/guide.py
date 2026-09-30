@@ -35,9 +35,39 @@ def draw(T, sym=True):
                     if nb.count(gc) >= 2: base = C[gc]; break
             g.rectangle(R(x, y), fill=markc.get((x, y), base))
     if not sym: return im
+    SM = float(__import__('os').environ.get('SM', 0) or (d.get('meta') or {}).get('smooth') or 0)
+    SMC = None
+    if SM:
+        # (2026-09-30 見直し、isles の guide.py と同じ考え) 境をなめらかな曲線に: 字ごとの塊（地面・葦・水・崖）をぼかして、
+        # いちばん濃い字をその画素の字にする（マスの段々もぼかしの段々も残らない）。柳・岩は下の地面、目印の塊は後でそのまま重ねる
+        import numpy as np
+        from scipy import ndimage
+        gch = [[ch(x, y) for x in range(W)] for y in range(H)]
+        for y in range(H):
+            for x in range(W):
+                if gch[y][x] in 'rT':
+                    nb = [ch(i, j) for i, j in ((x - 1, y), (x + 1, y), (x, y + 1), (x, y - 1))]
+                    gch[y][x] = next((gc for gc in ',;s' if nb.count(gc) >= 2), ',')
+        mkm = np.zeros((H, W), bool)
+        for (mx, my) in markc: mkm[my, mx] = True
+        if mkm.any():
+            _, (iy, ix) = ndimage.distance_transform_edt(mkm, return_indices=True)
+            gch = [[gch[iy[y, x]][ix[y, x]] for x in range(W)] for y in range(H)]
+        keys = sorted(set(c for r in gch for c in r))
+        stack = []
+        for kk in keys:
+            m = np.kron(np.array([[1.0 if c == kk else 0.0 for c in r] for r in gch]), np.ones((T, T)))
+            stack.append(ndimage.gaussian_filter(m, T * SM, mode='nearest'))
+        am = np.argmax(np.stack(stack), 0)
+        SMC = np.array(keys)[am]   # 画素ごとのなめらかな字
+        pal = np.array([C.get(kk, (255, 0, 255)) for kk in keys], np.uint8)
+        base = Image.fromarray(pal[am], 'RGB')
+        mk = Image.new('L', im.size, 0); mkd = ImageDraw.Draw(mk)
+        for (mx, my) in markc: mkd.rectangle(R(mx, my), fill=255)
+        im = Image.composite(im, base, mk)
     # 湿原: 地面・水・崖の境を丸める（マスの段々をなぞらせない）。目印（marks）の塊だけはくっきり残す
     from PIL import ImageFilter
-    soft = im.filter(ImageFilter.GaussianBlur(T * 0.45))
+    soft = im.filter(ImageFilter.GaussianBlur(T * (0.12 if SM else 0.45)))
     keep = Image.new('L', im.size, 0); kd = ImageDraw.Draw(keep)
     for (mx, my) in markc: kd.rectangle(R(mx, my), fill=255)
     im = Image.composite(im, soft, keep); g = ImageDraw.Draw(im)
@@ -46,6 +76,15 @@ def draw(T, sym=True):
             c = ch(x, y); cx, cy = x * T + T // 2, y * T + T // 2
             if (x, y) in markc:
                 continue
+            if SMC is not None and c not in 'TrFR':   # なめらかな字（マスの中心）で記号を描く
+                c = SMC[cy, cx]
+                if c == 'b':   # 葦: マスの格子に並べず、なめらかな葦原の内側にばらまく
+                    for _ in range(5):
+                        px, py = x * T + rnd.randint(0, T - 1), y * T + rnd.randint(T // 6, T - 1)
+                        if SMC[py, px] != 'b' or SMC[max(0, py - T * 2 // 3), px] != 'b': continue
+                        g.line([px, py, px + rnd.randint(-2, 2), py - T * 2 // 3], fill=(120, 100, 50), width=max(1, lw))
+                        g.ellipse([px - 2, py - T * 2 // 3 - 3, px + 2, py - T * 2 // 3 + 5], fill=(96, 64, 34))
+                    continue
             if c == ';':
                 for q in range(T // 6, T, T // 4): g.line([x * T + q, y * T + T - T // 6, x * T + q + T // 12, y * T + T // 2], fill=(50, 104, 40), width=lw)
             elif c == '"':
