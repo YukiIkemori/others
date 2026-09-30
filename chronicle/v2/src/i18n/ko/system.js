@@ -1,0 +1,70 @@
+// 韓国語の文の表（system）。key は日本語の表（src/i18n/ja/system.js）と同じ。無い key は日本語が出る
+(function (R) {
+  'use strict';
+  R.I18n.add('ko', {
+    // ---- src/systems/demo_carry.js
+    'sys.demo_carry.offer.i.say.text': '체험판의 모험 기록을\n찾았습니다{p0}.\n이어받아 시작할까요?',
+    'sys.demo_carry.offer.i.say.text_2': '({t})',
+    'sys.demo_carry.offer.i.say.choices': ['이어받는다', '새로 시작한다'],
+    // ---- src/systems/events_runtime.js
+    'sys.events_runtime.toastGain.txt': '{p0}{p1}을(를) 손에 넣었다',
+    'sys.events_runtime.makeEv.ev.gold.toast': '{n} G를 손에 넣었다',
+    'sys.events_runtime.makeEv.ev.createHero.h.name': '아룬',
+    'sys.events_runtime.makeEv.ev.lore.txt': '서고에 베껴 적었다{p0}',
+    'sys.events_runtime.makeEv.ev.lore.txt_2': ': {title}',
+    // ---- src/systems/leads.js
+    'sys.leads.PROMPT.0.label': '표시하기',
+    'sys.leads.regionName.ret': '세상의 소문',
+    'sys.leads.regionName.ret_2': '본편',
+    'sys.leads.draw.text': '표시를 붙였다',
+    'sys.leads.draw.text_2': '새 단서',
+    'sys.leads.draw.text_3': '오른쪽 위 카드와 지도에 표시가 나온다',
+    // ---- src/systems/minigame.js
+    'sys.minigame.THEMES.forest.sub': '숲의 노래',
+    'sys.minigame.THEMES.harbor.sub': '항구의 노래',
+    'sys.minigame.THEMES.night.sub': '밤의 노래',
+    'sys.minigame.NOTE_NAME': ['높은 소리', '밝은 소리', '낮은 소리', '부드러운 소리', '울리는 소리'],
+    'sys.minigame.sequence.st.title': '노래 맞추기',
+    'sys.minigame.drawSeq.P.frame': '{sub} · 노래 맞추기',
+    'sys.minigame.drawSeq.rtxt': '제 {Math} 절 / {rounds}',
+    'sys.minigame.drawSeq.msg': '노래의 돌이 노래하기 시작한다. 잘 들어……',
+    'sys.minigame.drawSeq.msg_2': '다음 절. 소리가 하나 늘어난다…….',
+    'sys.minigame.drawSeq.msg_3': '들어 봐…….',
+    'sys.minigame.drawSeq.msg_4': '같은 순서로 따라 해({length} / {L})',
+    'sys.minigame.drawSeq.msg_5': '예쁘게 겹쳤다!',
+    'sys.minigame.drawSeq.msg_6': '앗, 틀린 소리…….',
+    'sys.minigame.drawSeq.text': '노래 맞추기 평가',
+    'sys.minigame.drawSeq.text_2': '겹친 소리　{hits} / {total}',
+    'sys.minigame.drawSeq.words.S': '숲 전체가 귀를 기울이고 있었다.',
+    'sys.minigame.drawSeq.words.A': '아름다운 노래였다.',
+    'sys.minigame.drawSeq.words.B': '조금만 더 하면 외울 수 있을 것 같다.',
+    'sys.minigame.drawSeq.words.C': '아직 노래가 제각각이다.',
+    'sys.minigame.drawSeq.pr.0.label': '닫기',
+    'sys.minigame.drawSeq.pr.0.label_2': '소리 내기',
+    'sys.minigame.drawSeq.pr.1.label': '그만두기',
+    'sys.minigame.timing.st.title': '타이밍',
+    'sys.minigame.drawTiming.P.frame': '{sub} · 타이밍',
+    'sys.minigame.drawTiming.0.label': '닫기',
+    'sys.minigame.drawTiming.0.label_2': '멈추기',
+    'sys.minigame.drawTiming.1.label': '그만두기',
+    // ---- src/systems/mon.js
+    'sys.mon.goldenName.ret': '금빛 {n}',
+    'sys.mon.goldenName.ret_2': '황금 {n}',
+    // ---- src/systems/state.js
+    'sys.state.setHero.h.name': '아룬',
+    // ---- src/systems/tier.js
+    'sys.tier.KANJI.1': '1',
+    'sys.tier.KANJI.2': '2',
+    'sys.tier.KANJI.3': '3',
+    'sys.tier.KANJI.4': '4',
+    'sys.tier.KANJI.5': '5',
+    'sys.tier.KANJI.6': '6',
+    'sys.tier.KANJI.7': '7',
+    'sys.tier.KANJI.8': '8',
+    'sys.tier.KANJI.9': '9',
+    'sys.tier.drawStage.text': '제{p0}장',
+    'sys.tier.drawStage.line': '{page}을(를) 연대기에 엮었다',
+    'sys.tier.drawStage.text_2': '{region}에 등불이 돌아왔다',
+    'sys.tier.drawStage.0.label': '계속하기',
+  });
+})(window.RPG);
