@@ -40,5 +40,10 @@
     'shops.shop_dovan_items.name': 'ドヴァンの道具屋',
     'shops.shop_dovan_forge.name': '鍛冶衆の売り台',
     'shops.shop_dovan_guild.name': '鉱夫組合の売り台',
+    'shops.shop_volk_arms.name': 'ヴォルクの大鍛冶場',
+    // ---- src/data/shops_star.js
+    'shops.shop_orbis_items.name': 'オルビスの道具屋',
+    'shops.shop_orbis_arms.name': 'オルビスの武具屋',
+    'shops.shop_orbis_magic.name': '学院の術具店',
   });
 })(window.RPG);

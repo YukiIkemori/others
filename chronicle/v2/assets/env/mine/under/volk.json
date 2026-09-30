@@ -1,0 +1,20 @@
+{
+ "id": "volk",
+ "kind": "under",
+ "map": "volk",
+ "tile": 32,
+ "size32": [
+  1024,
+  896
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.8,
+ "files": {
+  "24": "volk@24.png",
+  "32": "volk@32.png",
+  "40": "volk@40.png"
+ },
+ "src": "generated"
+}

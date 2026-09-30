@@ -23,8 +23,9 @@
     forge_glow: { soft: true, glow: true, light: { kind: 'fire', r: 200 } },
     white_glow: { soft: true, glow: true, light: { kind: 'lamp', r: 150 } },
     // (2026-09-30) 岩の中の青い鉱石の脈（描いた結晶の上）と、町の家の窓明かり（描いた窓の前の光だまり）
-    crystal_glow: { soft: true, glow: true, light: { kind: 'crystal', r: 96 } },
-    window_glow: { soft: true, glow: true, light: { kind: 'lamp', r: 66 } },
+    crystal_glow: { soft: true, glow: true, light: { kind: 'crystal', r: 52 } },
+    window_glow: { soft: true, glow: true, light: { kind: 'lamp', r: 42 } },
+    ember_glow: { soft: true, glow: true, light: { kind: 'fire', r: 64 } },   // 炉の口の赤（町の鍛冶場・谷底の村の大鍛冶場）
   };
   for (const id of Object.keys(PROPS)) if (!R.DB.props[id]) R.def('props', id, PROPS[id]);
   // (2026-09-30) 灯りの一覧（terrain/props_light.js）は R.Terrain._PROP_META の light を見る。env の起動の登録は light を持たない
@@ -66,7 +67,9 @@
   K.LIGHT_TOWN = { ambient: '#6e6490', k: 0.58, poolK: 1.5, spillR: 1.6, mood: 'town_night' };
   K.LIGHT_TOWN_LIT = { ambient: '#9a8478', k: 0.66, poolK: 1.6, spillR: 1.7, mood: 'town_night' };   // 炉に火が戻ったあと（町の灯りがいっせいに明るく）
   K.LIGHT_ROOM = { ambient: '#8a8298', k: 0.8, mood: 'interior' };
-  K.LIGHT_CAVE = { ambient: '#5e5a84', k: 0.64, poolK: 1.25, spillR: 1.3, mood: 'cave' };
+  K.LIGHT_VILLAGE = { ambient: '#5e6698', k: 0.6, poolK: 1.5, spillR: 1.6, mood: 'town_night' };   // 谷底の隠れ村ヴォルク（外の夜。炉と窓の灯り）
+  K.LIGHT_VEIN = { ambient: '#5a5c88', k: 0.66, poolK: 1.3, spillR: 1.3, mood: 'cave' };           // 深淵の鉱脈（光る鉱石の青。暗がりの階は灯りの輪）
+  K.LIGHT_CAVE = { ambient: '#6c6890', k: 0.7, poolK: 1.2, spillR: 1.3, mood: 'cave' };
   K.LIGHT_DEEP = { ambient: '#4c4c70', k: 0.64, mood: 'dark' };
 
   /** 下絵に合わせた当たり（mine_painted_rows.js）。無ければ岩だけの小さな四角（node の読み込みの順が崩れても落ちない） */

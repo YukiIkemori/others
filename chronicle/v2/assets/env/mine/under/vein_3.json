@@ -1,0 +1,20 @@
+{
+ "id": "vein_3",
+ "kind": "under",
+ "map": "vein_3",
+ "tile": 32,
+ "size32": [
+  1152,
+  960
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.9,
+ "files": {
+  "24": "vein_3@24.png",
+  "32": "vein_3@32.png",
+  "40": "vein_3@40.png"
+ },
+ "src": "generated"
+}

@@ -1,0 +1,49 @@
+{
+ "id": "waylamp__star",
+ "kind": "props",
+ "theme": "star",
+ "frames": [
+  "off",
+  "on"
+ ],
+ "cell": {
+  "24": [
+   12,
+   40
+  ],
+  "32": [
+   16,
+   53
+  ],
+  "40": [
+   20,
+   66
+  ]
+ },
+ "feet": {
+  "24": [
+   6,
+   39
+  ],
+  "32": [
+   8,
+   52
+  ],
+  "40": [
+   10,
+   65
+  ]
+ },
+ "files": {
+  "24": "waylamp__star@24.png",
+  "32": "waylamp__star@32.png",
+  "40": "waylamp__star@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/star_b.png",
+ "set": "star",
+ "base": "waylamp",
+ "light32": [
+  0,
+  -40
+ ]
+}

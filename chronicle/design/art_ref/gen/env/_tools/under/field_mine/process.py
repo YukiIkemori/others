@@ -137,7 +137,7 @@ if cm.any():
     hot = ndimage.binary_opening(hot, iterations=1)
     emit_px = int(hot.sum())
     if hot.any():
-        e = np.zeros((H * T, W * T, 4), np.float32); e[..., :3] = np.clip(A0 * 1.08, 0, 255); e[..., 3] = hot * 235
+        e = np.zeros((H * T, W * T, 4), np.float32); e[..., :3] = np.clip(A0 * 1.0, 0, 255); e[..., 3] = hot * 175
         e[..., :3] *= (e[..., 3:4] > 0)
         save_set(aid + '_emit', e, True)
 print('crystal emit px', emit_px)

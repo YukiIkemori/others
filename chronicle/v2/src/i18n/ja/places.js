@@ -77,6 +77,7 @@
     'regions.world.name': '世界のうわさ',
     'regions.r_isles.chapter.summary': '霧の晩の幽霊船を自分の船で追い、帰らずの船長に舟歌の続きを届けた。灯はだいだい色に戻り、沖の灯台島にともった。',
     'regions.r_mine.chapter.summary': '地の底の町ドヴァンで、鍛冶神の炉の火が細り、七の層の下を掘った坑道が崩れた。組合と鍛冶衆が割れる中、{hero}は鉄の番人の前で町の道を決めた。',
+    'regions.r_star.chapter.summary': '消灯後の学院に忍びこんで星図を取り戻し、星読みの塔の頂で星の名を読み上げた。消えた星は戻り、高原は星明かりに照らされた。',
     // ---- src/data/locations_isles.js
     'locations.coral.name': '港町コーラル',
     'locations.nerei.name': '岬の村ネレイ',
@@ -87,5 +88,12 @@
     'locations.dovan.name': '鉱山都市ドヴァン',
     'locations.deepmine.name': '深き坑道',
     'locations.hermit.name': '山の隠者の小屋',
+    'locations.volk.name': '鍛冶衆の隠れ村ヴォルク',
+    'locations.vein.name': '深淵の鉱脈',
+    // ---- src/data/locations_star.js
+    'locations.orbis.name': '学術都市オルビス',
+    'locations.academy.name': '消灯後の学院',
+    'locations.startower.name': '星読みの塔',
+    'locations.starfall.name': '星降りのくぼ地',
   });
 })(window.RPG);

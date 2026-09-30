@@ -54,7 +54,7 @@
       {"type":"sign","x":15,"y":17,"text":R.T('map.field_star_crater.s_crater.objects.0.text')},
       {"type":"examine","x":28,"y":26,"event":"star_crater_altar"},
       {"type":"chest","id":"s_crater_c1","x":34,"y":25,"item":"i_clear","n":2},
-      {"type":"chest","id":"s_crater_c2","x":21,"y":24,"gold":160},
+      {"type":"chest","id":"s_crater_c2","x":23,"y":22,"gold":160},
       {"type":"waylamp","id":"wl_s_crater_1","x":7,"y":16,"lit":true},
       {"type":"waylamp","id":"wl_s_crater_2","x":21,"y":8,"lit":true},
     ],

@@ -47,6 +47,11 @@ KEY = {'field': """- green = short ALPINE GRASS (walkable, flat): tough mountain
 - brown with vertical lines = BUILDINGS of the cavern town (not walkable): houses and halls of dark timber and stone built against the rock, slate and timber roofs seen from above with their south faces visible, small warm windows (unlit in this layer), chimneys.
 - very dark grey = the solid ROCK of the great cavern (not walkable): the cavern walls and the rock faces between the tiers, dark and jagged, veins of glowing blue ore, their sheer faces visible where a tier drops to the one below; natural rounded outlines, never square or stepped."""}
 
+# (2026-09-30) 谷底の隠れ村: 野の色の約束 + 建物と石畳
+KEY['village'] = KEY['field'] + """
+- light grey-beige with block lines = STONE PAVING of the work yard (walkable, flat): worn flagstones.
+- brown with vertical lines = BUILDINGS of the village (not walkable): smithies and cottages of fieldstone and dark timber with slate roofs seen from above with their south faces visible, small warm windows (unlit in this layer), chimneys."""
+
 marks = []
 seen = set()
 for m in d['marks']:
@@ -58,9 +63,9 @@ for m in d['marks']:
         continue
     marks.append(f"- the blocks in colour rgb({c[0]},{c[1]},{c[2]}) = {m['text']}.")
 cell = T * 48 // 32
-WHAT = {'field': 'one outdoor area of rugged mining mountains', 'town': 'a whole mining town built inside a huge cavern under a mountain',
+WHAT = {'village': 'a small hidden village at the bottom of a mountain gorge', 'field': 'one outdoor area of rugged mining mountains', 'town': 'a whole mining town built inside a huge cavern under a mountain',
         'cave': 'one floor of an old mine dungeon (timbered galleries dug into a mountain)'}[LOOK]
-STYLE = os.environ.get('STYLE') or ('style_mine.png' if LOOK == 'field' else 'style_mine_cave.png')   # (2026-09-30) 坑道の描き直しは STYLE=style_mine_cave2.png（ドヴァンの岩と土の床を明るくした切り抜き）
+STYLE = os.environ.get('STYLE') or ('style_mine.png' if LOOK in ('field', 'village') else 'style_mine_cave.png')   # (2026-09-30) 坑道の描き直しは STYLE=style_mine_cave2.png（ドヴァンの岩と土の床を明るくした切り抜き）
 P = f"""Paint the COMPLETE top-down map of {WHAT} in a fantasy JRPG world as ONE finished game map image, in rich premium modern hi-bit pixel art (hand-placed crisp square pixels, hue-shifted colour ramps, dark warm outlines, lush natural detail), classic top-down RPG map view seen from above with a slight 3/4 tilt (tree crowns, rocks and buildings seen from above with their south-facing sides visible; NOT an isometric view, NOT a diorama, no depth-of-field, no tilt-shift, no 3D render, no perspective).
 
 THE PLACE: {SCENE[aid]}

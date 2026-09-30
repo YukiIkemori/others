@@ -113,11 +113,18 @@
     }
     const s = X().skyLine();
     await ev.say('station_old', s || R.T('events.dovan_station_old.say_4'));
-  });
+    // (2026-09-30) 寄り道 #17 のうわさ（七の層の下の光る鉱脈）
+    if (!ev.flag('vein_seen')) ev.lead('l_opt_vein');
+  }, { meta: { needs: [], gives: ['lead:l_opt_vein'] } });
   E('dovan_street_woman', async (ev) => {
-    if (cleared(ev)) { await ev.say('street_woman', R.T('events.dovan_street_woman.say')); return; }
-    await ev.say('street_woman', R.T('events.dovan_street_woman.say_2'));
-  });
+    if (cleared(ev)) await ev.say('street_woman', R.T('events.dovan_street_woman.say'));
+    else await ev.say('street_woman', R.T('events.dovan_street_woman.say_2'));
+    // (2026-09-30) 寄り道 #16 のうわさ（鉱石の谷の古い吊り橋の下の鍛冶衆の村）
+    if (!ev.flag('volk_seen')) {
+      await ev.say('street_woman', R.T('events.dovan_street_woman.say_3'));
+      ev.lead('l_opt_volk');
+    }
+  }, { meta: { needs: [], gives: ['lead:l_opt_volk'] } });
   E('dovan_hall_old', async (ev) => {
     if (cleared(ev)) { await ev.say('hall_old', R.T('events.dovan_hall_old.say')); return; }
     await ev.say('hall_old', R.T('events.dovan_hall_old.say_2'));

@@ -116,7 +116,7 @@ def s_plateau():
     a.exit('n', 27, 28, {'map': 'orbis', 'spawn': 'gate_s'}, 'north')
     a.exit('e', 22, 23, {'map': 's_crater', 'spawn': 'west'}, 'east')
     a.objects += [
-        dict(type='sign', x=31, y=14, text='列柱の高原\n北 → 学術都市オルビス\n東 → 星降りの窪地・星読みの尾根'),
+        dict(type='sign', x=31, y=14, text='列柱の高原\n北 → 学術都市オルビス\n東 → 星降りのくぼ地・星読みの尾根'),
         dict(type='examine', x=20, y=21, event='star_column_ring'),
         dict(type='chest', id='s_plateau_c1', x=48, y=30, item='i_ether', n=1),
         dict(type='waylamp', id='wl_s_plateau_1', x=10, y=14, lit=True),
@@ -129,7 +129,7 @@ def s_plateau():
 
 
 def s_crater():
-    """星降りの窪地: a great round METEOR CRATER sunk in the plateau: a rim of grey rock, steep inner slopes, a floor of dark flat rock
+    """星降りのくぼ地: a great round METEOR CRATER sunk in the plateau: a rim of grey rock, steep inner slopes, a floor of dark flat rock
     with clusters of glowing pale-blue CRYSTALS; a path goes down into it from the west rim to a small ruined altar at the bottom; the road
     runs round the crater's north rim from the west edge to the north edge."""
     a = Area('s_crater', 52, 40, 7303, base=',')
@@ -162,14 +162,14 @@ def s_crater():
     a.exit('w', 20, 21, {'map': 's_plateau', 'spawn': 'east'}, 'west')
     a.exit('n', 25, 26, {'map': 's_ridge', 'spawn': 'south'}, 'north')
     a.objects += [
-        dict(type='sign', x=15, y=17, text='星降りの窪地\n窪地の底へ下りる道'),
+        dict(type='sign', x=15, y=17, text='星降りのくぼ地\nくぼ地の底へ下りる道'),
         dict(type='examine', x=28, y=26, event='star_crater_altar'),
         dict(type='chest', id='s_crater_c1', x=34, y=25, item='i_clear', n=2),
         dict(type='chest', id='s_crater_c2', x=21, y=24, gold=160),
         dict(type='waylamp', id='wl_s_crater_1', x=9, y=16, lit=True),
         dict(type='waylamp', id='wl_s_crater_2', x=22, y=8, lit=True),
     ]
-    a.meta = dict(name='星降りの窪地', sub='高原に落ちた星の跡', region='r_star', worldRect=[640, 78, 52, 40], outside='rock',
+    a.meta = dict(name='星降りのくぼ地', sub='高原に落ちた星の跡', region='r_star', worldRect=[640, 78, 52, 40], outside='rock',
                   zones=[{'rect': None, 'zone': ZONE}], links={'starfall': {'map': 's_crater', 'spawn': 'west'}}, npcs=[])
     return a
 
@@ -204,7 +204,7 @@ def s_ridge():
     a.exit('w', 24, 25, {'map': 'orbis', 'spawn': 'gate_e'}, 'west')
     a.spawns['tower'] = dict(x=24, y=7, dir='s')
     a.objects += [
-        dict(type='sign', x=20, y=27, text='星読みの尾根\n北 → 星読みの塔\n西 → 学術都市オルビス 東門'),
+        dict(type='sign', x=20, y=27, text='星読みの尾根\n北 → 星読みの塔\n西 → 学術都市オルビスの東門'),
         dict(type='examine', x=25, y=8, event='star_tower_seal'),
         dict(type='waylamp', id='wl_s_ridge_1', x=28, y=26, lit=True),
         dict(type='waylamp', id='wl_s_ridge_2', x=21, y=10, lit=True),

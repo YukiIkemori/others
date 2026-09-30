@@ -1,0 +1,20 @@
+{
+ "id": "star_tower_top",
+ "kind": "under",
+ "map": "star_tower_top",
+ "tile": 32,
+ "size32": [
+  1280,
+  1088
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.833,
+ "files": {
+  "24": "star_tower_top@24.png",
+  "32": "star_tower_top@32.png",
+  "40": "star_tower_top@40.png"
+ },
+ "src": "generated"
+}

@@ -32,9 +32,9 @@
   R.onData(function () {
     const arms = { items: gear(WEAPON_LINES, 0).concat(gear(ARMOR_LINES, 0)), tier: byTier((t) => gear(WEAPON_LINES, t).concat(gear(ARMOR_LINES, t))) };
     R.defs('shops', {
-      shop_orbis_items: { name: 'オルビスの道具屋', kind: 'item', keepOld: true, sell: true, items: items(0).concat(ACC(0)), tier: { 1: items(1), 2: items(2).concat(ACC(1)), 3: items(3), 5: (ACC(2).length ? ACC(2) : items(3)).concat(items(5)) } },
-      shop_orbis_arms: Object.assign({ name: 'オルビスの武具屋', kind: 'weapon', keepOld: false, sell: true }, arms),
-      shop_orbis_magic: { name: '学院の術具店', kind: 'special', priceMul: academy, keepOld: false, sell: true,
+      shop_orbis_items: { name: R.T('shops.shop_orbis_items.name'), kind: 'item', keepOld: true, sell: true, items: items(0).concat(ACC(0)), tier: { 1: items(1), 2: items(2).concat(ACC(1)), 3: items(3), 5: (ACC(2).length ? ACC(2) : items(3)).concat(items(5)) } },
+      shop_orbis_arms: Object.assign({ name: R.T('shops.shop_orbis_arms.name'), kind: 'weapon', keepOld: false, sell: true }, arms),
+      shop_orbis_magic: { name: R.T('shops.shop_orbis_magic.name'), kind: 'special', priceMul: academy, keepOld: false, sell: true,
         items: MAGIC(0).concat(['i_ether', 'i_lens'].filter(has)), tier: byTier((t) => MAGIC(t)) },
     });
   });

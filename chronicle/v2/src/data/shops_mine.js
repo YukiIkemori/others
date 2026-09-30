@@ -23,6 +23,8 @@
     3: ['i_potion2', 'i_ether2', 'i_panacea'],
     5: ['i_elixir'],
   };
+  // 珍しい武器（items_weapons_rare.js の段 1・3・5・7。一本ずつ打つので 4 品だけ）
+  const RARE = (t) => ['w_sword_r' + t, 'w_greatsword_r' + t + 'm', 'w_bow_r' + t, 'w_staff_r' + t].filter(has);
   const items = (t) => (IT[t] || []).filter(has);
   const ACC = (t) => ['str', 'vit', 'dex', 'agi', 'int', 'mnd'].map((s) => `ac_${s}_${t}`).filter(has);
   // 選んだ道で一段上の品を先取り（ティアの段を 1 つ前へ）
@@ -35,6 +37,9 @@
       shop_dovan_items: { name: R.T('shops.shop_dovan_items.name'), kind: 'item', keepOld: true, sell: true, items: items(0).concat(ACC(0)), tier: { 1: items(1), 2: items(2).concat(ACC(1)), 3: items(3), 5: (ACC(2).length ? ACC(2) : items(3)).concat(items(5)) } },
       shop_dovan_forge: { name: R.T('shops.shop_dovan_forge.name'), kind: 'weapon', keepOld: false, sell: true, items: gear(WEAPON_LINES, 0).concat(gear(ARMOR_LINES, 0)),
         get tier() { const s = side(); return s === 'smiths' || s === 'accord' ? ahead(forgeTier) : forgeTier; } },
+      // (2026-09-30) 鍛冶衆の隠れ村ヴォルクの大鍛冶場（ティアで入れ替わる珍しい武器 3〜4 品。WORLD §2.7 #16）
+      shop_volk_arms: { name: R.T('shops.shop_volk_arms.name'), kind: 'weapon', keepOld: false, sell: true, items: RARE(1),
+        tier: { 2: RARE(1).concat(RARE(3).slice(0, 1)), 3: RARE(3), 5: RARE(5), 7: RARE(7) } },
       shop_dovan_guild: { name: R.T('shops.shop_dovan_guild.name'), kind: 'special', keepOld: true, sell: true, items: items(0).concat(['i_potion', 'i_ether'].filter(has)),
         get tier() { const s = side(); return s === 'guild' || s === 'accord' ? ahead(guild) : guild; } },
     });

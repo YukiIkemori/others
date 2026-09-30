@@ -947,9 +947,9 @@
 {
 "id": "volk_inn",
 "x": 3,
-"y": 7,
-"w": 7,
-"h": 5,
+"y": 4,
+"w": 8,
+"h": 8,
 "door": [
 6,
 11
@@ -959,33 +959,33 @@
 "id": "volk_forge",
 "x": 12,
 "y": 7,
-"w": 8,
-"h": 6,
+"w": 9,
+"h": 7,
 "door": [
-16,
-12
+17,
+13
 ]
 },
 {
 "id": "volk_house",
 "x": 3,
 "y": 17,
-"w": 5,
-"h": 4,
+"w": 6,
+"h": 5,
 "door": [
 5,
-20
+21
 ]
 },
 {
 "id": "volk_elder",
 "x": 23,
 "y": 16,
-"w": 5,
-"h": 4,
+"w": 6,
+"h": 5,
 "door": [
-25,
-19
+26,
+20
 ]
 }
 ],
@@ -1000,5 +1000,35 @@
 ],
 "look": "village",
 "smooth": 0.6
-}
+},
+"rows_fit": [
+"RRRRRRXRRRRRRRRRRRRRRRRXXXXRRRRR",
+"RRRRRRXRRRRRRRRRRRRRRRRXXXXRRRRR",
+"RRRRRRXRRRRRRRRRRRRRRRRXXXXRRRRR",
+"RRRRRRc,,,,,,,,,,,,,,,RXXXXRRRRR",
+"RR,XXXXXXXX,,,,,,,,,,,wwwwwwRRRR",
+"RR,XXXXXXXX,,,,,,,,,,,wwwwwwRRRR",
+"RR,XXXXXXXX,,,,,,,,,,,wwwwwwTRRR",
+"RR,XXXXXXXX,XXXXXXXXX,wwwwwwTRRR",
+"RR,XXXXXXXX,XXXXXXXXX,wwwwwwTRRR",
+"RR,XXXXXXXX,XXXXXXXXXwwwr,,,TTRR",
+"RR,XXXXXXXX,XXXXXXXXXwwwr,,,,,RR",
+"RR,XXXcXXXX,XXXXXXXXXwwwr,,XX,RR",
+"RR,,,,,,,,,,XXXXXXXXXwwwr,,,,,RR",
+"RR,r,,,,,,r,XXXXXcXXXwww,,,,,,RR",
+"RR,,,,,,,,,,,,cccccc====,,,,,,RR",
+"RR,,,,,,,,,,,,ccccccXwww,,,,,,RR",
+"RR,,,,,,,,,,,,cXccccXwwXXXXXX,RR",
+"RR,XXXXXX,,,,,cccccccwwXXXXXX,RR",
+"RR,XXXXXX,,,,,cccccccwwXXXXXX,RR",
+"RR,XXXXXX,,,,,,,,,,,wwwXXXXXX,RR",
+"RR,XXXXXX,,,,,,,,,wwww,XXXcXX,RR",
+"RR,XXcXXX,,,,,,,,,wwww,,,,,,,,RR",
+"RR,,,,,,,,,,,,,,wwwww,,,,,,TTTRR",
+"RR,,,TTTT,,,,,,,wwwww,,,,,,TTTRR",
+"RR,,,TTTT,,,,,wwww,,,,,,,,,TTTRR",
+"RRRRRRRRR==RRwwwRRRRRRRRRRRRRRRR",
+"RRRRRRRRR==RRwwwRRRRRRRRRRRRRRRR",
+"RRRRRRRRR==RRwwwRRRRRRRRRRRRRRRR"
+]
 }

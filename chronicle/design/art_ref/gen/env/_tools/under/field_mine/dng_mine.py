@@ -181,6 +181,11 @@ def mine_1():
     # rubble: the cave-in pinning miner 1 (west end), the ore room's heaps
     for (x, y) in [(4, 8), (3, 9), (5, 7), (8, 8)]: a.put(x, y, 'r', True)
     for (x, y) in [(22, 7), (32, 7), (23, 10)]: a.put(x, y, 'r', True)
+    # (2026-09-30 描き直し) 壁ぞいの飾り
+    dress(a, crystals=[(1, 10), (10, 6), (19, 5), (35, 8), (33, 21), (23, 17), (20, 37), (35, 35), (51, 3), (52, 20), (51, 28), (15, 21)],
+          frames=[(24, 30), (30, 28), (21, 21), (33, 18), (24, 12), (8, 15), (46, 9), (51, 16), (43, 35), (22, 41)],
+          junk=[(34, 10), (31, 38)], tools=[(19, 9), (37, 19)])
+    a.mark('cavein', [(3, 8), (4, 8), (3, 9)], 'a CAVE-IN: a heap of fallen rock and splintered timber props blocking the end of the drift', (120, 104, 88))
     keep = [(26, 42), (27, 42), (6, 11), (6, 12), (12, 16), (12, 17), (27, 7), (30, 9), (40, 21), (41, 21), (48, 21), (47, 21), (47, 3), (47, 4),
             (22, 20), (23, 19), (48, 27), (36, 37), (20, 38), (33, 18), (49, 6)]
     keepcells(a, keep)
@@ -261,6 +266,9 @@ def mine_3():
     a.mark('breach', [(x, y) for x in range(23, 32) for y in range(7, 11)], 'the BREACH: a jagged oval hole broken through the floor, and inside it no rock and no darkness, only a pale featureless WHITE (no bottom, no detail)', (236, 236, 240))
     a.marks[-1]['shape'] = 'round'
     for (x, y) in [(21, 21), (34, 21), (34, 13)]: a.put(x, y, 'r', True)
+    # (2026-09-30 描き直し) 壁ぞいの飾り（古い坑道は坑木、七の層の広間は青い鉱石の脈）
+    dress(a, crystals=[(4, 3), (11, 9), (2, 18), (12, 26), (20, 37), (35, 35), (18, 14), (37, 17), (20, 21), (35, 23)],
+          frames=[(11, 5), (5, 11), (9, 18), (4, 22), (14, 30), (19, 34), (22, 37), (33, 32)], tools=[(35, 37)])
     keep = [(8, 3), (8, 5), (3, 13), (14, 22), (9, 26), (27, 30), (27, 28), (29, 34), (30, 34), (29, 35), (30, 35), (27, 32), (27, 31), (27, 26), (27, 25), (27, 17), (26, 17), (28, 17), (21, 17), (34, 17)]
     keepcells(a, keep)
     a.scatter('r', 0.008, only='k', seed=41, clear=1)

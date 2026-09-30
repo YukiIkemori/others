@@ -44,6 +44,7 @@ for (const T of [0, 1, 3]) {
   BOSSES['tr_b_whitedragon' + k] = { troop: 'tr_b_whitedragon', tier: T, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 12], note: '息を吸う → 白い息（守る）。半分で思い出す間' };
 }
 BOSSES['tr_b_frost_admiral@6'] = { troop: 'tr_b_frost_admiral', tier: 6, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 85, diff: 40, rounds: [8, 13], note: '氷に閉じた帆船（隠しボス。ティア 6 から）' };
+BOSSES['tr_b_vein_lord@6'] = { troop: 'tr_b_vein_lord', tier: 6, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 85, diff: 40, rounds: [8, 13], note: '深淵の鉱脈の底（隠しボス。ティア 6 から）。脈打ったら守る、かけらは後回し、水が効く' };
 // 湿原（グレイモア湿原、src/data/bosses_marsh.js）。好きな順に遊ぶので、ティア 1・3 で測る（湿原は縦切りの後）
 for (const T of [1, 3]) {
   const k = '@' + T;

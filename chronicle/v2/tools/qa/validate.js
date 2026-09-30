@@ -35,6 +35,7 @@ BBG.push('marsh');   // 湿原（marsh_*.js。BGM は縦切りの town・ghost�
 BBG.push('ash');   // 灰の荒野（ash_*.js。BGM は縦切りの town・cave・battle・boss）
 BBG.push('isles');   // マレア諸島（isles_*.js。BGM は縦切りの town・village・cave・ghost・overworld）
 BBG.push('mine');   // ガルド山地（mine_*.js・field_mine_*.js。BGM は縦切りの town・cave・overworld・tavern）
+BBG.push('star');   // オルビス高原（star_*.js・field_star_*.js。BGM は縦切りの town・tension・tower・omen・overworld）
 const maps = M.sliceMaps();
 const EV_SRC = i18nInline(fs.readdirSync(path.join(V2, 'src', 'events')).map((f) => fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8')).join('\n'));
 

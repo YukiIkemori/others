@@ -22,7 +22,7 @@ const argv = process.argv.slice(2);
 const VERBOSE = argv.includes('--verbose');
 let R = null, M = null;
 /** 縦切り（slice）では峠の番人の先にある地方（3b） */
-const SLICE_OUT = ['r_desert', 'r_snow', 'r_marsh', 'r_ash', 'r_isles', 'r_mine'];
+const SLICE_OUT = ['r_desert', 'r_snow', 'r_marsh', 'r_ash', 'r_isles', 'r_mine', 'r_star'];
 let SLICE0 = null;
 /** 縦切りの錠を外す（同じ R の中だけ。本物の config のファイルは変えない） */
 function sliceOff() { if (SLICE0 === null) SLICE0 = !!(R.DB.config && R.DB.config.slice); if (R.DB.config) R.DB.config.slice = false; R.MapUtil.invalidate(); }
@@ -279,6 +279,16 @@ function main() {
         ok(`道=${side} 年代記=${write}${restricted ? '（隠し通路・寄り道・依頼なし）' : ''}: 3 人の救出 → 誓いのハンマー → 岩戸 → 集会所 → 番人 → 炉の火 → clearRegion('r_mine')`,
           !!(r.flags.mine_rescued_all && r.flags.mine_door_seen && r.flags.mine_choice && r.flags.mine_warden_done && r.flags.cleared_r_mine && r.flags.mine_finale_done),
           { rescued: !!r.flags.mine_rescued_all, door: !!r.flags.mine_door_seen, choice: !!r.flags.mine_choice, warden: !!r.flags.mine_warden_done, cleared: !!r.flags.cleared_r_mine });
+      }
+    }
+    // オルビス高原（作った地方。regions の slice:'locked' は体験版の錠として残す）: 命令書（公に・黙る）× 年代記。寄り道・依頼なしも 1 本
+    if (R.DB.regions.r_star && (R.DB.regions.r_star.dungeons || []).length) {
+      section('2h. オルビス高原の閉包（clearRegion(\'r_star\')）');
+      for (const [order, write, restricted] of [['public', 'pain', false], ['silent', 'story', false], ['silent', 'pain', true]]) {
+        const r = closure({ variant: Object.assign({}, variants[0], { ch_star_order: order, ch_star_write: write, ch_star_way: 'sneak' }), restricted });
+        ok(`命令書=${order} 年代記=${write}${restricted ? '（隠し通路・寄り道・依頼なし）' : ''}: 学長の伝言 → 潜入の準備 → 消灯後の学院 → 保管庫の星図 → 学長 → 塔 → 番人 → 星食らい → 名を読む → clearRegion('r_star')`,
+          !!(r.flags.star_message && r.flags.star_ready && r.flags.star_night_seen && r.flags.star_chart_got && r.flags.star_octavia_done && r.flags.star_tower_open && r.flags.star_sentinel && r.flags.star_stareater && r.flags.cleared_r_star && r.flags.star_finale_done),
+          { message: !!r.flags.star_message, ready: !!r.flags.star_ready, night: !!r.flags.star_night_seen, chart: !!r.flags.star_chart_got, tower: !!r.flags.star_tower_open, sentinel: !!r.flags.star_sentinel, eater: !!r.flags.star_stareater, cleared: !!r.flags.cleared_r_star });
       }
     }
     section('3. 全マップの到達（縦切りの錠を外した全体の筋）');

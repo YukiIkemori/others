@@ -1,0 +1,626 @@
+{
+"id": "mine_3",
+"w": 50,
+"h": 42,
+"rows": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRkkkkkkRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRkkkkkkkRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRkkkkkkkRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRkkkkkkRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRkkkkRRRRRRRRRRRRlXXXXXXXXXlRRRRRRRRRRRRRRRRR",
+"RRRRRRRkkkRRRRRRRRRRRRlXXXXXXXXXlRRRRRRRRRRRRRRRRR",
+"RRRRRRRkkkRRRRRRRRRRRRRXXXXXXXXXRRRRRRRRRRRRRRRRRR",
+"RRRRRRRkkkRRRRRRRRRRRRRXXXXXXXXXRRRRRRRRRRRRRRRRRR",
+"RRRRRRRkkkRRRRRRRRRRRRkkkkkkkkkkkkkRRRRRRRRRRRRRRR",
+"RRRkkkkkkkRRRRRRRRRRRkkkkXXXXXXkkkkRRRRRRRRRRRRRRR",
+"RRkkkkkkkRRRRRRRRRRRRkkkkXXXXXXkkkrkRRRRRRRRRRRRRR",
+"RRkkkkkkkRRRRRRRRRRRRkkkkXXXXXXkkkkkRRRRRRRRRRRRRR",
+"RRRkkkkkkRRRRRRRRRRRkkkkkXXXXXXkkkkkRRRRRRRRRRRRRR",
+"RRRRRkkkkRRRRRRRRRRRkkkkkkkkkkkkkkkkRRRRRRRRRRRRRR",
+"RRRRRkkkRRRRRRRRRRRRkkkkkkkkkkkkkkkkRRRRRRRRRRRRRR",
+"RRRRRkkkRRRRRRRRRRRRkkkkkkkkkkkkkkkkRRRRRRRRRRRRRR",
+"RRRRkkkRRRRRRRRRRRRRkkkkkkkkkkkkkkkkRRRRRRRRRRRRRR",
+"RRRRkkkRRRRRRRRRRRRRRkkkkkkkkkkkkkkkRRRRRRRRRRRRRR",
+"RRRRkkkkkkkkkkkkRRRRRrkkkkkkkkkkkkrRRRRRRRRRRRRRRR",
+"RRRRkkkkkkkkkkkkkRRRRRRkkkkkkkkkkkkRRRRRRRRRRRRRRR",
+"RRRRRkkkkRRRkkkkRRRRRRRRkkkkkkkkrRRRRRRRRRRRRRRRRR",
+"RRRRRkkkkRRRRkkRRRRRRRRRRRkkkRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRkkkkRRRRRRRRRRRRRRRRkkkRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRkkkkkRRRRRRRRRRRRRRRkkkRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRkkkkkRRRRRRRRRRRRRRkkkRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRkkkkkkRRRRRRRRRRRXXkXXXRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRkkkkkkkRRRRRRRRRXXRXXXRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRkkkkkkRRRRRRRRXXkXXXRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRkkkkkkRRRRkkkkkkkkkRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRkkkkkkkRRkkkkkkkkkRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRkkkkkkkkkkkkkkkkkRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRkkkkkkkkkkkkkkkkRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRkkkkkkkkkkkkkRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRkkkkkkkkkkkkkRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRkkkkkkkkkkRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRkkkkkkRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
+],
+"marks": [
+{
+"kind": "rockdoor",
+"cells": [
+[
+25,
+28
+],
+[
+25,
+29
+],
+[
+25,
+30
+],
+[
+26,
+28
+],
+[
+26,
+29
+],
+[
+26,
+30
+],
+[
+27,
+28
+],
+[
+27,
+29
+],
+[
+27,
+30
+],
+[
+28,
+28
+],
+[
+28,
+29
+],
+[
+28,
+30
+],
+[
+29,
+28
+],
+[
+29,
+29
+],
+[
+29,
+30
+],
+[
+30,
+28
+],
+[
+30,
+29
+],
+[
+30,
+30
+]
+],
+"text": "the great ROCK DOOR of the seventh layer: two huge slabs of dark stone carved with an anvil and a hammer, iron bands, sealed shut",
+"color": [
+84,
+80,
+90
+],
+"solid": true
+},
+{
+"kind": "vestibule",
+"cells": [
+[
+26,
+25
+],
+[
+26,
+26
+],
+[
+26,
+27
+],
+[
+27,
+25
+],
+[
+27,
+26
+],
+[
+27,
+27
+],
+[
+28,
+25
+],
+[
+28,
+26
+],
+[
+28,
+27
+]
+],
+"text": "a short passage of worn stone slabs leading to the back of the rock door",
+"color": [
+140,
+130,
+116
+],
+"solid": false
+},
+{
+"kind": "guardian",
+"cells": [
+[
+25,
+12
+],
+[
+25,
+13
+],
+[
+25,
+14
+],
+[
+25,
+15
+],
+[
+26,
+12
+],
+[
+26,
+13
+],
+[
+26,
+14
+],
+[
+26,
+15
+],
+[
+27,
+12
+],
+[
+27,
+13
+],
+[
+27,
+14
+],
+[
+27,
+15
+],
+[
+28,
+12
+],
+[
+28,
+13
+],
+[
+28,
+14
+],
+[
+28,
+15
+],
+[
+29,
+12
+],
+[
+29,
+13
+],
+[
+29,
+14
+],
+[
+29,
+15
+],
+[
+30,
+12
+],
+[
+30,
+13
+],
+[
+30,
+14
+],
+[
+30,
+15
+]
+],
+"text": "the IRON GUARDIAN: a giant armoured figure of dark riveted iron, seated on a stone throne-dais with a great hammer across its knees, head bowed",
+"color": [
+70,
+72,
+80
+],
+"solid": true
+},
+{
+"kind": "breach",
+"cells": [
+[
+23,
+7
+],
+[
+23,
+8
+],
+[
+23,
+9
+],
+[
+23,
+10
+],
+[
+24,
+7
+],
+[
+24,
+8
+],
+[
+24,
+9
+],
+[
+24,
+10
+],
+[
+25,
+7
+],
+[
+25,
+8
+],
+[
+25,
+9
+],
+[
+25,
+10
+],
+[
+26,
+7
+],
+[
+26,
+8
+],
+[
+26,
+9
+],
+[
+26,
+10
+],
+[
+27,
+7
+],
+[
+27,
+8
+],
+[
+27,
+9
+],
+[
+27,
+10
+],
+[
+28,
+7
+],
+[
+28,
+8
+],
+[
+28,
+9
+],
+[
+28,
+10
+],
+[
+29,
+7
+],
+[
+29,
+8
+],
+[
+29,
+9
+],
+[
+29,
+10
+],
+[
+30,
+7
+],
+[
+30,
+8
+],
+[
+30,
+9
+],
+[
+30,
+10
+],
+[
+31,
+7
+],
+[
+31,
+8
+],
+[
+31,
+9
+],
+[
+31,
+10
+]
+],
+"text": "the BREACH: a jagged oval hole broken through the floor, and inside it no rock and no darkness, only a pale featureless WHITE (no bottom, no detail)",
+"color": [
+236,
+236,
+240
+],
+"solid": true,
+"shape": "round"
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 8,
+"y": 3
+},
+{
+"type": "o",
+"x": 8,
+"y": 5
+},
+{
+"type": "o",
+"x": 3,
+"y": 13
+},
+{
+"type": "o",
+"x": 14,
+"y": 22
+},
+{
+"type": "o",
+"x": 9,
+"y": 26
+},
+{
+"type": "o",
+"x": 27,
+"y": 30
+},
+{
+"type": "o",
+"x": 27,
+"y": 28
+},
+{
+"type": "o",
+"x": 29,
+"y": 34
+},
+{
+"type": "o",
+"x": 30,
+"y": 34
+},
+{
+"type": "o",
+"x": 29,
+"y": 35
+},
+{
+"type": "o",
+"x": 30,
+"y": 35
+},
+{
+"type": "o",
+"x": 27,
+"y": 32
+},
+{
+"type": "o",
+"x": 27,
+"y": 31
+},
+{
+"type": "o",
+"x": 27,
+"y": 26
+},
+{
+"type": "o",
+"x": 27,
+"y": 25
+},
+{
+"type": "o",
+"x": 27,
+"y": 17
+},
+{
+"type": "o",
+"x": 26,
+"y": 17
+},
+{
+"type": "o",
+"x": 28,
+"y": 17
+},
+{
+"type": "o",
+"x": 21,
+"y": 17
+},
+{
+"type": "o",
+"x": 34,
+"y": 17
+}
+],
+"spawns": {
+"up": {
+"x": 8,
+"y": 5,
+"dir": "s"
+},
+"ante": {
+"x": 27,
+"y": 31,
+"dir": "s"
+},
+"hall": {
+"x": 27,
+"y": 26,
+"dir": "n"
+}
+},
+"exits": [],
+"notes": [],
+"meta": {
+"name": "深き坑道",
+"region": "r_mine",
+"zones": [],
+"worldRect": [
+0,
+0,
+1,
+1
+],
+"look": "cave",
+"smooth": 0.6
+},
+"rows_fit": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRllkkkkRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRkkkkkkkRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRkkkkkkksRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRkkkkkksRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRkkkksRRRRRRRRRRRlXXXXXXXXXlRRRRRRRRRRRRRRRRR",
+"RRRRRRRlkksRRRRRRRRRRRlXXXXXXXXXlRRRRRRRRRRRRRRRRR",
+"RRRRRRRlkksRRRRRRRRRRRRXXXXXXXXXRRRRRRRRRRRRRRRRRR",
+"RRRRRRRlkksRRRRRRRRRRRRXXXXXXXXXRRRRRRRRRRRRRRRRRR",
+"RRRRRRRkkksRRRRRRRRRRRkkkkkkkkkkkkkRRRRRRRRRRRRRRR",
+"RRRkkkkkkksRRRRRRRRRRlkkkXXXXXXkkkksRRRRRRRRRRRRRR",
+"RRkkkkkkksRRRRRRRRRRRkkkkXXXXXXkkksksRRRRRRRRRRRRR",
+"RRrkkkkkksRRRRRRRRRRRkkkkXXXXXXkkkkksRRRRRRRRRRRRR",
+"RRRrkkkkksRRRRRRRRRRkkkkkXXXXXXkkkkksRRRRRRRRRRRRR",
+"RRRRRrkkksRRRRRRRRRRkkkkkkkkkkkkkkkksRRRRRRRRRRRRR",
+"RRRRRrkksRRRRRRRRRRRkkkkkkkkkkkkkkkksRRRRRRRRRRRRR",
+"RRRRRrkksRRRRRRRRRRRlkkkkkkkkkkkkkkksRRRRRRRRRRRRR",
+"RRRRrkksRRRRRRRRRRRRlkkkkkkkkkkkkkkksRRRRRRRRRRRRR",
+"RRRRlkksRRRRRRRRRRRRRkkkkkkkkkkkkkkksRRRRRRRRRRRRR",
+"RRRRrkkkkkkkkkkkRRRRRrkkkkkkkkkkkkssRRRRRRRRRRRRRR",
+"RRRRrkkkkkkkkkkkksRRRRRkkkkkkkkkkkksRRRRRRRRRRRRRR",
+"RRRRRlkkkssRkkkksRRRRRRRlkkkkkkksssRRRRRRRRRRRRRRR",
+"RRRRRrkkksRRRrksRRRRRRRRRRkkkssRRRRRRRRRRRRRRRRRRR",
+"RRRRRRrkkksRRRRRRRRRRRRRRRkkksRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRrkkkksRRRRRRRRRRRRRRkkksRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRrkkkksRRRRRRRRRRRRRlkksRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRlkkkkkRRRRRRRRRRRXXXXXXRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRrkkkkkksRRRRRRRRXXXXXXsRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRlkkkkkRRRRRRRRXXXXXXsRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRkkkkkkRRRRrlXXkXXXkRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRlkkkkkkRRlkkkkkkkksRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRkkkkkkklkkkkkkkkkRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRskkkkkkkkkkkkkkklRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRskkkkkkkkkkkkksRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRkkkkkkkkkkkkksRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRlkkkkkkkkkssssRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRskkkkkksssRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRssssssRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
+]
+}

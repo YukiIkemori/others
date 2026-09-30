@@ -1,0 +1,44 @@
+{
+ "id": "board__star",
+ "kind": "props",
+ "theme": "star",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   30,
+   28
+  ],
+  "32": [
+   40,
+   38
+  ],
+  "40": [
+   50,
+   48
+  ]
+ },
+ "feet": {
+  "24": [
+   15,
+   28
+  ],
+  "32": [
+   20,
+   37
+  ],
+  "40": [
+   25,
+   46
+  ]
+ },
+ "files": {
+  "24": "board__star@24.png",
+  "32": "board__star@32.png",
+  "40": "board__star@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/star_b.png",
+ "set": "star",
+ "base": "boar"
+}

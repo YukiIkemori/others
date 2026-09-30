@@ -1,0 +1,44 @@
+{
+ "id": "signboard__star",
+ "kind": "props",
+ "theme": "star",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   14,
+   21
+  ],
+  "32": [
+   19,
+   28
+  ],
+  "40": [
+   24,
+   35
+  ]
+ },
+ "feet": {
+  "24": [
+   7,
+   20
+  ],
+  "32": [
+   10,
+   27
+  ],
+  "40": [
+   12,
+   34
+  ]
+ },
+ "files": {
+  "24": "signboard__star@24.png",
+  "32": "signboard__star@32.png",
+  "40": "signboard__star@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/star_b.png",
+ "set": "star",
+ "base": "signboar"
+}

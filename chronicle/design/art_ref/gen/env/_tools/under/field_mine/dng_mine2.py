@@ -34,6 +34,7 @@ def volk():
     a.stroke([(22, 15.5), (26, 13.5)], 1.6, '.', seed=7)
     a.stroke([(11, 15), (6, 13), (5, 6)], 1.6, '.', seed=8)
     # buildings
+    # (描いた絵は案より大きい。当たりは volk_rows.py が絵から作る: 宿 3,4 8x8 戸 6,11・大鍛冶場 12,7 9x7 戸 17,13・家 3,17 6x5 戸 5,21・老鍛冶の家 23,16 6x5 戸 26,20)
     bld(a, 'volk_inn', 3, 7, 7, 5, 3, "the INN of the smiths' village: a sturdy timber lodge on a stone base with a mossy slate roof and a smoking chimney")
     bld(a, 'volk_forge', 12, 7, 8, 6, 4, "the GREAT SMITHY: a long open-fronted stone forge with a tall brick chimney, the red mouth of a big furnace, anvils under the eaves")
     a.mark('wheel', [(20, 9), (20, 10), (20, 11)], 'a big wooden WATER WHEEL turning in the stream beside the smithy, driving its bellows', TIMBER)
@@ -127,7 +128,10 @@ def vein_3():
     B(18, 26, 3.4, 2.2, seed=1)
     S([(18, 25), (18, 20)], 2.8, seed=2, wob=0.2)
     B(18, 12.5, 9.5, 7.0, seed=3)
-    a.mark('seam', [(x, y) for x in range(12, 25) for y in (3, 4)], 'the HEART OF THE VEIN: one huge seam of big glowing pale-blue and violet CRYSTALS filling the north wall of the hall', CRYSTAL)
+    # (gen2) 鉱脈は四角い帯でなく、壁から盛り上がるぎざぎざの塊（gen1 はまっすぐな帯に描かれた）
+    seam = [(x, y) for x in range(11, 26) for y in range(2, 6) if abs(x - 18) * 0.42 + (5 - y) * 0.9 < 3.4 + ((x * 7) % 3) * 0.4]
+    a.mark('seam', seam, 'the HEART OF THE VEIN: a huge ragged, bulging mass of big glowing pale-blue and violet CRYSTALS of many sizes growing out of the north wall of the hall, irregular outline (never a straight band)', CRYSTAL)
+    a.marks[-1]['shape'] = 'round'
     for (x, y) in [(11, 9), (25, 9), (12, 16), (24, 16)]:
         a.put(x, y, 'X', True); a.keep[y, x] = True
     a.mark('pillar', [(11, 9), (25, 9), (12, 16), (24, 16)], 'a tall PILLAR of glowing pale-blue crystal', CRYSTAL)

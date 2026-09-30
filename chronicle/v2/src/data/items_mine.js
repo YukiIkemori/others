@@ -30,5 +30,11 @@
     // 坑夫のカンテラ（灯りを守る）の礼
     u_miner_lamp: U('acc', R.T('items.u_miner_lamp.acc'), { mods: { encounterPct: -10, statusResist: { blind: 1 } }, icon: 'ring',
       desc: R.T('items.u_miner_lamp.acc.desc') }),
+    // (2026-09-30) 深淵の鉱脈（#17）の隠しボス「鉱脈の主」の礼（強さ固定の隠しボスの品）
+    u_vein_axe: U('weapon', R.T('items.u_vein_axe.weapon'), { wtype: 'greatsword', art: 'axe', units: 's1v1', kind: 'slash', mult: 1.45, crit: 5, vs: { construct: 1.5 }, mods: { elemBoost: { earth: 15 } }, icon: 'greatsword',
+      desc: R.T('items.u_vein_axe.weapon.desc') }),
+    // (2026-09-30) トロッコ競走（ドヴァンの乗り場）の上の段の礼
+    u_cart_bell: U('acc', R.T('items.u_cart_bell.acc'), { mods: { spd: 2, encounterPct: -5 }, icon: 'ring',
+      desc: R.T('items.u_cart_bell.acc.desc') }),
   });
 })(window.RPG);

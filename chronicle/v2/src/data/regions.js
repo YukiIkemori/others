@@ -32,7 +32,8 @@
       page: 'k_page_mine', town: 'dovan', dungeons: ['deepmine'], bossTroop: 'tr_b_ironwarden', zone: 'zw_mine', beacon: R.T('regions.r_mine.beacon'), beaconAt: { map: 'dovan', x: 22, y: 5 }, slice: 'locked' },   // 山地は作った（mine_*.js・field_mine_*.js）。体験版の錠は持ち主の決まりで残す（slice: 'locked'）
     r_ash: { name: R.T('regions.r_ash.name'), short: 'ash', n: 7, chapter: { title: R.T('regions.r_ash.chapter.title'), summary: R.T('regions.r_ash.chapter.summary') },
       page: 'k_page_ash', town: 'caldera', dungeons: ['volcano'], bossTroop: 'tr_b_lavabeast', zone: 'zw_ash_plain', beacon: R.T('regions.r_ash.beacon'), beaconAt: { map: 'ash_volcano_2', x: 22, y: 16 } },   // 灰の荒野は開いた（ash_*.js）。光の柱は火口の卵の上（大灯火は火口で灯る）
-    r_star: { name: R.T('regions.r_star.name'), short: 'star', n: 8, chapter: { title: R.T('regions.r_star.chapter.title'), summary: '' }, page: 'k_page_star', town: 'orbis', beacon: R.T('regions.r_star.beacon'), slice: 'locked' },
+    r_star: { name: R.T('regions.r_star.name'), short: 'star', n: 8, chapter: { title: R.T('regions.r_star.chapter.title'), summary: R.T('regions.r_star.chapter.summary') }, page: 'k_page_star', town: 'orbis',
+      dungeons: ['academy', 'startower'], bossTroop: 'tr_b_stareater', zone: 'zw_star', beacon: R.T('regions.r_star.beacon'), beaconAt: { map: 'star_tower_top', x: 19, y: 16 }, slice: 'locked' },   // 高原は作った（star_*.js・field_star_*.js）。体験版の錠は持ち主の決まりで残す（slice: 'locked'）
     world: { name: R.T('regions.world.name'), short: 'world', n: 9, chapter: { title: '', summary: '' } },
   });
 })(window.RPG);

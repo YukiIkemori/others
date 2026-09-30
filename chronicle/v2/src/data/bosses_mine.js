@@ -29,4 +29,34 @@
     W.desc = R.T('data.bosses_mine.desc_2');
     W.s = { hp: 0.5, atk: 0.3, mag: 0.3 };
   }
+
+  // ---------------------------------------------------------------- (2026-09-30) 鉱脈の主（隠しボス、#17 深淵の鉱脈の底。強さ固定 = ティア 6 相当）
+  //   鉱脈が脈打つ（予告）→ 次の手番に結晶の嵐（全体、守る）。結晶のかけらを呼ぶ（かけらがいる間は鉱脈から力を吸って固い）。
+  //   半分を切ると結晶の鎧がひび割れて、速く・強くなる。水と風が効き、土はほとんど効かない。
+  Object.assign(R.DB.bossActions, {
+    eb_vein_pulse: { name: R.T('bossActions.eb_vein_pulse.name'), kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: R.T('bossActions.eb_vein_pulse.msg'),
+      telegraph: { text: R.T('bossActions.eb_vein_pulse.telegraph.text'), pose: 'tele', tint: '#a8e8ff', next: 'eb_vein_storm', guard: 'defend' } },
+    eb_vein_storm: { name: R.T('bossActions.eb_vein_storm.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'phys', power: 2.1, element: 'earth', sure: true }], fx: 'earth', msg: R.T('bossActions.eb_vein_storm.msg') },
+    eb_vein_fist: { name: R.T('bossActions.eb_vein_fist.name'), kind: 'enemy', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.6 }], fx: 'explosion', msg: R.T('bossActions.eb_vein_fist.msg') },
+    eb_vein_glare: { name: R.T('bossActions.eb_vein_glare.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'status', status: 'blind', chance: 0.35 }, { type: 'buff', stat: 'agi', stages: -1, chance: 0.4 }], fx: 'debuff', msg: R.T('bossActions.eb_vein_glare.msg') },
+    eb_vein_shards: { name: R.T('bossActions.eb_vein_shards.name'), kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_vein_shard', n: 2, max: 3 }], fx: 'magic', msg: R.T('bossActions.eb_vein_shards.msg') },
+  });
+  const def = (id, d) => { L[id] = d; R.DB.bosses[id] = d; };
+  def('b_vein_lord', {
+    name: R.T('data.bosses_mine.b_vein_lord.name'), sprite: 'golem_3', artKind: 'mon', bossType: 'fmid', lv: 9, actsPerTurn: 2, size: 'l',
+    race: 'construct', affinity: 'earth', flags: ['boss'], eva: 4,
+    elem: { water: 1.5, wind: 1.25, earth: 0.1 }, phys: { blunt: 1.25, pierce: 0.75 }, statusRes: { death: 1, poison: 1, sleep: 0.7, confuse: 1 },
+    actions: A([['attack', 2], ['eb_vein_fist', 2], ['eb_vein_glare', 1, { every: [4, 2] }], ['eb_vein_pulse', SCHED, { every: [3, 1] }],
+      ['eb_vein_shards', SCHED, { every: [4, 3], countBelow: 3 }]]),
+    phases: [{ hpBelow: 0.5, msg: R.T('data.bosses_mine.b_vein_lord.phases.0.msg'), set: { buffs: { atk: 1, agi: 1 } } }],
+    s: { hp: 0.42, atk: 0.5, mag: 0.5 },
+    drops: { normal: { pool: 'p_boss', rate: 1 }, bonus: { pool: 'p_heal', rate: 1 } },
+    desc: R.T('data.bosses_mine.b_vein_lord.desc'),
+  });
+  def('b_vein_shard', {
+    name: R.T('data.bosses_mine.b_vein_shard.name'), sprite: 'crystal_3', artKind: 'mon', bossType: 'add', addOf: 'b_vein_lord', lv: 9, hpShare: 4, actsPerTurn: 1, size: 's',
+    race: 'construct', flags: ['boss'], eva: 6, elem: { water: 1.5, earth: 0.1 }, phys: { blunt: 1.5 }, statusRes: { death: 1, poison: 1 },
+    actions: A([['attack', 3], ['eb_vein_glare', 1]]), s: { atk: 0.55, mag: 0.55 }, drops: {},
+    desc: R.T('data.bosses_mine.b_vein_shard.desc'),
+  });
 })(window.RPG);

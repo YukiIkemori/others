@@ -14,4 +14,13 @@
       }
     }
   }
+  // (2026-09-30) 深淵の鉱脈（#17）: 坑道の表（z_r_mine_mine）の組のまま一段深く（lvOff 2）。2 階の西の岩屋は宝石ハリネズミの巣（レアの率が高い）
+  R.onData(function () {
+    const src = R.DB.encounters.z_r_mine_mine;
+    if (!src) return;
+    const copy = (o) => Object.assign(JSON.parse(JSON.stringify(src)), { region: 'r_mine', lvOff: 2 }, o || {});
+    if (!R.DB.encounters.z_mine_vein) R.DB.encounters.z_mine_vein = copy();
+    if (!R.DB.encounters.z_mine_vein_nest) R.DB.encounters.z_mine_vein_nest = copy();
+    Object.assign(R.DB.rareEncounters, { z_mine_vein: { mon: 'rm_gem_hedgehog', rate: 60 }, z_mine_vein_nest: { mon: 'rm_gem_hedgehog', rate: 12 } });
+  });
 })(window.RPG);

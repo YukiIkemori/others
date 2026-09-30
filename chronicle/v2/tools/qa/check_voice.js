@@ -72,6 +72,7 @@ const REGION = ['v_hazal_tomb_01', 'v_hazal_tomb_02', 'v_hazal_tomb_03', 'v_haza
 section('地方のボイス（script.csv の録音済みの行）');
 REGION.push('v_fine_ash_01'); // 2026-09-28: 灰の荒野の火口のフィーネ（script.csv の録音済みの行のまま）
 REGION.push('v_marina_nerei_01', 'v_marina_pier_01', 'v_marina_dawn_01', 'v_marina_dawn_02', 'v_glen_ship_01', 'v_glen_ship_02', 'v_glen_ship_03', 'v_glen_ship_04', 'v_glen_dawn_01', 'v_fine_isles_01'); // 2026-09-30: マレア諸島（isles_*.js）
+REGION.push('v_sentinel_star_01'); // 2026-09-30: オルビス高原の天球の番人（star_tower.js。script.csv の録音済みの行のまま）
 REGION.push('v_guardian_mine_01', 'v_guardian_mine_02', 'v_guardian_mine_03'); // 2026-09-30: ガルド山地（mine_*.js）の鉄の番人
 for (const id of REGION) {
   const u = used[id] || [];

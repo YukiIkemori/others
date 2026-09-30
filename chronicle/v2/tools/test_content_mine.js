@@ -22,7 +22,7 @@ const MY_MAPS = Object.keys(D.maps).filter((id) => D.maps[id].region === 'r_mine
 const EV_FILES = fs.readdirSync(path.join(V2, 'src', 'events')).filter((f) => /^mine_/.test(f));
 const SRC = i18nInline(EV_FILES.map((f) => fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8')).join('\n'));
 const MAP_SRC = i18nInline(fs.readdirSync(path.join(V2, 'src', 'maps')).filter((f) => /^(mine_|field_mine_)/.test(f) && !/painted_rows/.test(f)).map((f) => fs.readFileSync(path.join(V2, 'src', 'maps', f), 'utf8')).join('\n'));
-const PAINTED = ['dovan', 'mine_1', 'mine_2', 'mine_3', 'g_pass', 'g_valley', 'g_rail'];
+const PAINTED = ['dovan', 'mine_1', 'mine_2', 'mine_3', 'g_pass', 'g_valley', 'g_rail', 'volk', 'vein_1', 'vein_2', 'vein_3'];
 
 // ================================================================ 1
 section('1. 形と参照');
@@ -100,7 +100,7 @@ section('2. 置き場所（泉・宝箱・戸口・灯り）');
   const fieldChests = MY_MAPS.filter((id) => D.maps[id].kind === 'field').flatMap((id) => (D.maps[id].objects || []).filter((o) => o.type === 'chest' && o.cond == null).map((o) => id + ':' + o.id));
   ok(`山地のエリアの宝箱は 1 エリアに 1 つまで（${fieldChests.length} 個）`, MY_MAPS.filter((id) => D.maps[id].kind === 'field').every((id) => (D.maps[id].objects || []).filter((o) => o.type === 'chest' && o.cond == null).length <= 1), fieldChests);
   const townChests = MY_MAPS.filter((id) => D.maps[id].kind === 'town').flatMap((id) => (D.maps[id].objects || []).filter((o) => o.type === 'chest').map((o) => id + ':' + o.id));
-  ok(`町の宝箱は見える物だけ（${townChests.length} 個）`, townChests.length <= 3, townChests);
+  ok(`町の宝箱は見える物だけ、1 つの町に 3 つまで（${townChests.length} 個）`, MY_MAPS.filter((id) => D.maps[id].kind === 'town').every((id) => (D.maps[id].objects || []).filter((o) => o.type === 'chest').length <= 3), townChests);
   const bad = [];
   for (const id of MY_MAPS) {
     const m = D.maps[id];
@@ -127,12 +127,12 @@ section('2. 置き場所（泉・宝箱・戸口・灯り）');
   }
   ok('坑夫のカンテラ（hook_lamp）は岩壁の際（歩けるマスに無い）', onWalk.length === 0, onWalk);
   const deco = [];
-  for (const id of ['dovan', 'mine_1', 'mine_2', 'mine_3']) for (const o of (D.maps[id].objects || []).filter((q) => q.type === 'prop')) if (!/^(hook_lamp|forge_glow|white_glow|mine_cart|board|lantern)$/.test(o.id)) deco.push(`${id} ${o.id}`);
+  for (const id of ['dovan', 'mine_1', 'mine_2', 'mine_3']) for (const o of (D.maps[id].objects || []).filter((q) => q.type === 'prop')) if (!/^(hook_lamp|forge_glow|white_glow|crystal_glow|window_glow|ember_glow|mine_cart|board|lantern)$/.test(o.id)) deco.push(`${id} ${o.id}`);
   ok('下絵の町とダンジョンの物のスプライトは、働く物だけ（飾りは絵の中）', deco.length === 0, deco);
   const lamps = ['mine_1', 'mine_2', 'mine_3'].map((id) => (D.maps[id].objects || []).filter((o) => o.type === 'waylamp' && /^wl_mine_\d$/.test(o.id)).length);
   ok('坑夫のカンテラ（灯りを守る）は各階に 1 つ、油でともる（lit の旗）', lamps.join() === '1,1,1' && ['mine_1', 'mine_2', 'mine_3'].every((id) => (D.maps[id].objects || []).filter((o) => o.type === 'waylamp').every((o) => /^mine_lamp_\d$/.test(o.lit))));
   const m3 = D.maps.mine_3;
-  ok('七の層は暗がり（しょく台 6 つ）', m3.dark === true && (m3.objects || []).filter((o) => o.type === 'brazier').length === 6);
+  ok('七の層は暗がり（岩戸の手前の坑道。しょく台 6 つ）', (m3.dark === true || (Array.isArray(m3.dark) && m3.dark.length > 0)) && (m3.objects || []).filter((o) => o.type === 'brazier').length === 6);
   const m1 = D.maps.mine_1;
   ok('1 階: 縦穴の架台は歩けない（トロッコで渡る）、東の坂は一方通行', [42, 43, 44, 45, 46].every((x) => { const c = R.MapUtil.cell(m1, x, 21); return !!(c && (c.solid || c.walk === false)); }) &&
     (m1.oneway || []).length >= 1 && (m1.oneway || []).every((o) => o.dir === 's'));
@@ -289,6 +289,66 @@ function clearing() {
   });
 }
 
+// ================================================================ 6（2026-09-30）寄り道 #16 ヴォルク・#17 深淵の鉱脈・トロッコ競走
+async function optional() {
+  section('6. 寄り道（鍛冶衆の隠れ村ヴォルク・深淵の鉱脈）とトロッコ競走');
+  const M = D.maps;
+  const NEW = ['volk', 'vein_1', 'vein_2', 'vein_3'];
+  for (const id of NEW) {
+    const m = M[id], f = path.join(V2, 'assets', 'env', 'mine', 'under', id + '.json');
+    let j = null;
+    try { j = JSON.parse(fs.readFileSync(f, 'utf8')); } catch (e) { /* */ }
+    ok(`${id}: 描いた下絵があり、大きさがマップと同じ`, !!(m && j && j.size32 && j.size32[0] === m.w * 32 && j.size32[1] === m.h * 32), j && j.size32);
+  }
+  ok('ヴォルクの屋内 4 つ（宿・大鍛冶場・家・老鍛冶の家）', ['volk_inn', 'volk_forge', 'volk_house', 'volk_elder'].every((id) => M[id] && M[id].kind === 'interior'));
+  ok('鉱石の谷の南西の端 → 古い吊り橋 → ヴォルク（いつでも。見える道 A27）', (M.g_valley.exits || []).some((e) => e.to.map === 'volk' && !e.cond) && M.g_valley.spawns.volk);
+  const dv = (M.dovan.objects || []).find((o) => o.to && o.to.map === 'volk');
+  const vs = (M.volk.objects || []).find((o) => o.to && o.to.map === 'dovan');
+  ok('ドヴァン ⇔ ヴォルクの鍛冶衆の下り道は mine_volk_open で開く（B・C）', dv && dv.cond === 'mine_volk_open' && vs && vs.cond === 'mine_volk_open' && M.dovan.spawns.volkpath);
+  const sh = (M.mine_3.objects || []).find((o) => o.type === 'stairs' && o.to.map === 'vein_1');
+  R.State.newGame({ seed: 7 });
+  let G = R.Game;
+  const open = () => R.State.check(sh.cond);
+  const c0 = open();
+  G.flags.mine_vein_open = true; const c1 = open(); G.flags.mine_vein_open = false;
+  G.tier = 6; const c2 = open(); G.tier = 0;
+  ok('七の層の広間の縦穴 → 深淵の鉱脈: 組合・仲裁の旗か、ティア 6 で開く', sh && !c0 && c1 && c2);
+  ok('深淵の鉱脈の 1・2 階は暗がり（A25）、しょく台がある', ['vein_1', 'vein_2'].every((id) => Array.isArray(M[id].dark) && M[id].objects.some((o) => o.type === 'brazier')));
+  ok('2 階に宝石ハリネズミの巣（レアの率が高い区画）と休息の灯', M.vein_2.zones[0].zone === 'z_mine_vein_nest' && D.rareEncounters.z_mine_vein_nest.mon === 'rm_gem_hedgehog' && D.rareEncounters.z_mine_vein_nest.rate < D.rareEncounters.z_mine_vein.rate && M.vein_2.objects.some((o) => o.type === 'spring'));
+  ok('泉は七の層と深淵の鉱脈 2 階だけ', MY_MAPS.filter((id) => (M[id].objects || []).some((o) => o.type === 'spring')).sort().join() === 'mine_3,vein_2');
+  const T = D.troops.tr_b_vein_lord, A = D.bossActions;
+  ok('隠しボス 鉱脈の主: 強さ固定（ティア 6）、予告（脈動 → 結晶の嵐、守る）', T && T.tier === 6 && !T.scale && A.eb_vein_pulse.telegraph.guard === 'defend' && A[A.eb_vein_pulse.telegraph.next]);
+  ok('手前の看板で「危険」を知らせる', M.vein_3.objects.some((o) => o.type === 'sign' && /鉱脈の主/.test(i18nInline(JSON.stringify(o.text)))));
+  const axe = M.vein_3.objects.find((o) => o.type === 'chest' && o.item === 'u_vein_axe');
+  ok('鉱脈の斧は主を倒したあとの宝箱（cond mine_vein_lord）', axe && axe.cond === 'mine_vein_lord');
+  let f = await run('vein_lord', { choose: [1] });
+  ok('鉱脈の主: 引き返せる（戦わない）', !G.flags.mine_vein_lord);
+  f = await run('vein_lord', { choose: [0], battles: ['win'] });
+  ok('鉱脈の主: 勝つと旗', G.flags.mine_vein_lord && f.said.some((s) => s[0] === 'battle' && s[1] === 'tr_b_vein_lord'));
+  // 住人は選び方で変わる
+  const who = (id) => (M.volk_forge.npcs.find((n) => n.id === id) || {}).cond;
+  G.choices.ch_mine_side = 'guild';
+  ok('組合につくと、町を去ったヘルガがヴォルクの大鍛冶場に', R.State.check(who('volk_helga')));
+  G.choices.ch_mine_side = 'smiths';
+  ok('鍛冶衆につくと、ヘルガは町のまま（ピップが村へ来る）', !R.State.check(who('volk_helga')) && R.State.check(M.volk.npcs.find((n) => n.id === 'volk_pip').cond));
+  const shop = D.shops.shop_volk_arms;
+  ok('ヴォルクの大鍛冶場: ティアで入れ替わる珍しい武器', shop && shop.items.length >= 3 && Object.keys(shop.tier).length >= 3 && shop.items.every((id) => D.items[id] && D.items[id].grade === 'rare'));
+  // トロッコ競走（R.Mini.timing。段ごとに 1 回だけの礼）
+  R.State.newGame({ seed: 8 });
+  G = R.Game;
+  f = await run('dovan_race_keeper', { choose: [2] });
+  ok('トロッコ競走: 下の段で勝つまで上の段は走れない', !G.flags.mine_race_3 && G.leads && f.said.some((s) => s[0] === 'choose'));
+  await run('dovan_race_keeper', { choose: [0] });
+  ok('トロッコ競走 初級: 分かれ道とカーブを抜けて記録やぶり → 礼', G.flags.mine_race_1 && (G.items.i_potion || 0) >= 3);
+  await run('dovan_race_keeper', { choose: [1] });
+  await run('dovan_race_keeper', { choose: [2] });
+  ok('上級まで勝つと トロッコ乗りの鈴 と依頼の終わり', G.flags.mine_race_done && (G.items.u_cart_bell || 0) > 0);
+  const n = G.items.u_cart_bell;
+  await run('dovan_race_keeper', { choose: [2] });
+  ok('礼は段ごとに 1 回だけ', G.items.u_cart_bell === n);
+  ok('競走の区間は R.Mini.timing（分かれ道 = 梃子・カーブ = ブレーキ）', /mini\.timing/.test(SRC) && /梃子/.test(SRC) && /ブレーキ/.test(SRC));
+}
+
 // ================================================================ 5
 function battle() {
   section('5. 戦闘（予告・出現表）');
@@ -306,4 +366,4 @@ function battle() {
   done('test_content_mine');
 }
 
-story().then(clearing).then(battle).catch((e) => { console.error(e); process.exit(1); });
+story().then(clearing).then(optional).then(battle).catch((e) => { console.error(e); process.exit(1); });

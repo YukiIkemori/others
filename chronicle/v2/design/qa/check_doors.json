@@ -1,388 +1,328 @@
 {
- "date": "2026-09-30T02:37:30.712Z",
+ "date": "2026-09-30T03:41:36.742Z",
  "fixture": "content_p_pharos",
  "walked": [
   {
-   "map": "loch",
+   "map": "dovan",
    "kind": "door",
-   "id": "loch_bell_items",
-   "at": "loch_items",
-   "to": "loch_items",
+   "id": "dovan_hall",
+   "at": "dovan_hall",
+   "to": "dovan_hall",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
-    20,
-    15
+    11,
+    14
    ],
-   "ms": 8267
+   "ms": 10285
   },
   {
-   "map": "loch",
+   "map": "dovan",
    "kind": "door",
-   "id": "loch_bell_arms",
-   "at": "loch_arms",
-   "to": "loch_arms",
+   "id": "dovan_guild",
+   "at": "dovan_guild",
+   "to": "dovan_guild",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    35,
-    15
+    30,
+    27
    ],
-   "ms": 8464
+   "ms": 12477
   },
   {
-   "map": "loch",
+   "map": "dovan",
    "kind": "door",
-   "id": "loch_bell_tavern",
-   "at": "loch_tavern",
-   "to": "loch_tavern",
-   "ok": true,
-   "steps": 6,
-   "why": null,
-   "start": [
-    27,
-    15
-   ],
-   "ms": 9118
-  },
-  {
-   "map": "loch",
-   "kind": "door",
-   "id": "loch_hall",
-   "at": "loch_hall",
-   "to": "loch_hall",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    7,
-    21
-   ],
-   "ms": 2269
-  },
-  {
-   "map": "loch",
-   "kind": "door",
-   "id": "loch_tower",
-   "at": "loch_tower",
-   "to": "loch_tower",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    43,
-    19
-   ],
-   "ms": 2378
-  },
-  {
-   "map": "loch",
-   "kind": "door",
-   "id": "loch_inn",
-   "at": "loch_inn",
-   "to": "loch_inn",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    41
-   ],
-   "ms": 2331
-  },
-  {
-   "map": "loch",
-   "kind": "door",
-   "id": "loch_mayor",
-   "at": "loch_mayor",
-   "to": "loch_mayor",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    32,
-    39
-   ],
-   "ms": 2006
-  },
-  {
-   "map": "loch",
-   "kind": "door",
-   "id": "loch_emma",
-   "at": "loch_emma",
-   "to": "loch_emma",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    19,
-    46
-   ],
-   "ms": 2109
-  },
-  {
-   "map": "loch",
-   "kind": "door",
-   "id": "loch_beppo",
-   "at": "loch_beppo",
-   "to": "loch_beppo",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    47,
-    38
-   ],
-   "ms": 2269
-  },
-  {
-   "map": "loch",
-   "kind": "door",
-   "id": "loch_klaus",
-   "at": "loch_klaus",
-   "to": "loch_klaus",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    39,
-    48
-   ],
-   "ms": 2097
-  },
-  {
-   "map": "loch",
-   "kind": "exit",
-   "id": "0,21",
-   "at": "m_west",
-   "to": "m_west",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    3,
-    20
-   ],
-   "ms": 2762
-  },
-  {
-   "map": "loch",
-   "kind": "exit",
-   "id": "55,20",
-   "at": "m_manor",
-   "to": "m_manor",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    53,
-    18
-   ],
-   "ms": 3083
-  },
-  {
-   "map": "loch_beppo",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "loch",
-   "to": "loch",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    5
-   ],
-   "ms": 4812
-  },
-  {
-   "map": "loch_emma",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "loch",
-   "to": "loch",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    5
-   ],
-   "ms": 3884
-  },
-  {
-   "map": "loch_arms",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "loch",
-   "to": "loch",
-   "ok": true,
-   "steps": 5,
-   "why": null,
-   "start": [
-    5,
-    5
-   ],
-   "ms": 6763
-  },
-  {
-   "map": "loch_items",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "loch",
-   "to": "loch",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    5
-   ],
-   "ms": 2685
-  },
-  {
-   "map": "loch_hall",
-   "kind": "exit",
-   "id": "10,13",
-   "at": "loch",
-   "to": "loch",
+   "id": "dovan_tavern",
+   "at": "dovan_tavern",
+   "to": "dovan_tavern",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
     10,
-    9
+    28
    ],
-   "ms": 2837
+   "ms": 4507
   },
   {
-   "map": "loch_inn",
-   "kind": "exit",
-   "id": "7,11",
-   "at": "loch",
-   "to": "loch",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    7,
-    7
-   ],
-   "ms": 2794
-  },
-  {
-   "map": "loch_klaus",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "loch",
-   "to": "loch",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    5
-   ],
-   "ms": 3339
-  },
-  {
-   "map": "loch_tavern",
-   "kind": "exit",
-   "id": "7,11",
-   "at": "loch",
-   "to": "loch",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    7,
-    7
-   ],
-   "ms": 3648
-  },
-  {
-   "map": "loch_mayor",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "loch",
-   "to": "loch",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    5
-   ],
-   "ms": 3803
-  },
-  {
-   "map": "loch_tower",
-   "kind": "exit",
-   "id": "5,11",
-   "at": "loch",
-   "to": "loch",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    7
-   ],
-   "ms": 2848
-  },
-  {
-   "map": "m_fen",
-   "kind": "exit",
-   "id": "20,0",
-   "at": "m_west",
-   "to": "m_west",
+   "map": "dovan",
+   "kind": "door",
+   "id": "dovan_house",
+   "at": "dovan_house",
+   "to": "dovan_house",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
     20,
-    4
+    27
    ],
-   "ms": 2542
+   "ms": 4358
   },
   {
-   "map": "m_bog",
-   "kind": "exit",
-   "id": "25,0",
-   "at": "m_fen",
-   "to": "m_fen",
+   "map": "dovan",
+   "kind": "door",
+   "id": "dovan_items",
+   "at": "dovan_items",
+   "to": "dovan_items",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    25,
-    4
+    9,
+    44
    ],
-   "ms": 3407
+   "ms": 4061
   },
   {
-   "map": "m_fen",
-   "kind": "exit",
-   "id": "55,30",
-   "at": "m_lotus",
-   "to": "m_lotus",
+   "map": "dovan",
+   "kind": "door",
+   "id": "dovan_inn",
+   "at": "dovan_inn",
+   "to": "dovan_inn",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    55,
-    26
+    19,
+    45
    ],
-   "ms": 2037
+   "ms": 3497
   },
   {
-   "map": "m_lotus",
+   "map": "dovan",
+   "kind": "door",
+   "id": "dovan_forge",
+   "at": "dovan_forge",
+   "to": "dovan_forge",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    34,
+    45
+   ],
+   "ms": 4163
+  },
+  {
+   "map": "dovan",
+   "kind": "door",
+   "id": "dovan_house2",
+   "at": "dovan_house2",
+   "to": "dovan_house2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    45,
+    44
+   ],
+   "ms": 3801
+  },
+  {
+   "map": "dovan",
+   "kind": "exit",
+   "id": "26,47",
+   "at": "g_valley",
+   "to": "g_valley",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    26,
+    43
+   ],
+   "ms": 3705
+  },
+  {
+   "map": "dovan_forge",
+   "kind": "exit",
+   "id": "8,11",
+   "at": "dovan",
+   "to": "dovan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    8,
+    7
+   ],
+   "ms": 2533
+  },
+  {
+   "map": "dovan_guild",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "dovan",
+   "to": "dovan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 2982
+  },
+  {
+   "map": "dovan_hall",
+   "kind": "exit",
+   "id": "8,11",
+   "at": "dovan",
+   "to": "dovan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    8,
+    7
+   ],
+   "ms": 2722
+  },
+  {
+   "map": "dovan",
+   "kind": "door",
+   "id": "",
+   "at": "mine_1",
+   "to": "mine_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    31,
+    7
+   ],
+   "ms": 15781
+  },
+  {
+   "map": "dovan_house",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "dovan",
+   "to": "dovan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    6
+   ],
+   "ms": 2629
+  },
+  {
+   "map": "dovan_inn",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "dovan",
+   "to": "dovan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 2346
+  },
+  {
+   "map": "dovan_house2",
+   "kind": "exit",
+   "id": "4,8",
+   "at": "dovan",
+   "to": "dovan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    4
+   ],
+   "ms": 3006
+  },
+  {
+   "map": "dovan_items",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "dovan",
+   "to": "dovan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 3054
+  },
+  {
+   "map": "dovan_tavern",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "dovan",
+   "to": "dovan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 2907
+  },
+  {
+   "map": "g_pass",
+   "kind": "exit",
+   "id": "0,18",
+   "at": "f_passinn",
+   "to": "f_passinn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    0,
+    14
+   ],
+   "ms": 3173
+  },
+  {
+   "map": "g_pass",
+   "kind": "exit",
+   "id": "49,19",
+   "at": "g_valley",
+   "to": "g_valley",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    49,
+    15
+   ],
+   "ms": 3553
+  },
+  {
+   "map": "g_rail",
+   "kind": "door",
+   "id": "",
+   "at": "mine_hermit",
+   "to": "mine_hermit",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    40,
+    10
+   ],
+   "ms": 2883
+  },
+  {
+   "map": "g_rail",
    "kind": "exit",
    "id": "0,20",
-   "at": "m_fen",
-   "to": "m_fen",
+   "at": "g_valley",
+   "to": "g_valley",
    "ok": true,
    "steps": 4,
    "why": null,
@@ -390,533 +330,791 @@
     0,
     16
    ],
-   "ms": 2165
+   "ms": 2461
   },
   {
-   "map": "m_fen",
-   "kind": "exit",
-   "id": "26,43",
-   "at": "m_bog",
-   "to": "m_bog",
+   "map": "g_valley",
+   "kind": "door",
+   "id": "",
+   "at": "dovan",
+   "to": "dovan",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    26,
-    39
+    27,
+    12
    ],
-   "ms": 3253
+   "ms": 2639
   },
   {
-   "map": "m_lotus",
-   "kind": "exit",
-   "id": "30,0",
-   "at": "m_manor",
-   "to": "m_manor",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    30,
-    4
-   ],
-   "ms": 3197
-  },
-  {
-   "map": "m_manor",
+   "map": "g_valley",
    "kind": "exit",
    "id": "0,20",
-   "at": "loch",
-   "to": "loch",
+   "at": "g_pass",
+   "to": "g_pass",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    4,
-    20
+    0,
+    16
    ],
-   "ms": 3161
+   "ms": 2239
   },
   {
-   "map": "m_manor",
+   "map": "g_valley",
    "kind": "exit",
-   "id": "23,43",
-   "at": "m_lotus",
-   "to": "m_lotus",
+   "id": "53,22",
+   "at": "g_rail",
+   "to": "g_rail",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    23,
-    39
+    53,
+    18
    ],
-   "ms": 2365
+   "ms": 2316
   },
   {
-   "map": "m_north",
+   "map": "g_valley",
    "kind": "exit",
-   "id": "25,39",
-   "at": "m_west",
-   "to": "m_west",
+   "id": "0,29",
+   "at": "volk",
+   "to": "volk",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    0,
+    25
+   ],
+   "ms": 4312
+  },
+  {
+   "map": "mine_1",
+   "kind": "exit",
+   "id": "25,43",
+   "at": "dovan",
+   "to": "dovan",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
     25,
-    35
-   ],
-   "ms": 3880
-  },
-  {
-   "map": "m_north",
-   "kind": "exit",
-   "id": "24,0",
-   "at": "world",
-   "to": "world",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    24,
-    4
-   ],
-   "ms": 5378
-  },
-  {
-   "map": "m_west",
-   "kind": "exit",
-   "id": "19,0",
-   "at": "m_north",
-   "to": "m_north",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    19,
-    4
-   ],
-   "ms": 3238
-  },
-  {
-   "map": "m_west",
-   "kind": "exit",
-   "id": "20,43",
-   "at": "m_fen",
-   "to": "m_fen",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    20,
     39
    ],
-   "ms": 3622
+   "ms": 2636
   },
   {
-   "map": "m_west",
-   "kind": "exit",
-   "id": "55,20",
-   "at": "loch",
-   "to": "loch",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    51,
-    20
-   ],
-   "ms": 7227
-  },
-  {
-   "map": "m_manor",
-   "kind": "door",
-   "id": "",
-   "at": "marsh_manor_1",
-   "to": "marsh_manor_1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    38,
-    13
-   ],
-   "ms": 17283
-  },
-  {
-   "map": "marsh_manor_1",
-   "kind": "exit",
-   "id": "22,39",
-   "at": "m_manor",
-   "to": "m_manor",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    22,
-    35
-   ],
-   "ms": 3633
-  },
-  {
-   "map": "marsh_bog",
-   "kind": "exit",
-   "id": "28,51",
-   "at": "m_bog",
-   "to": "m_bog",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    28,
-    47
-   ],
-   "ms": 8368
-  },
-  {
-   "map": "marsh_manor_1",
+   "map": "mine_1",
    "kind": "stairs",
-   "id": "manor_1_up",
-   "at": "marsh_manor_2",
-   "to": "marsh_manor_2",
+   "id": "mine_1_down",
+   "at": "mine_2",
+   "to": "mine_2",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    23,
+    47,
+    6
+   ],
+   "ms": 7435
+  },
+  {
+   "map": "mine_2",
+   "kind": "stairs",
+   "id": "mine_2_up",
+   "at": "mine_1",
+   "to": "mine_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    48,
     7
    ],
-   "ms": 8395
+   "ms": 5529
   },
   {
-   "map": "marsh_manor_2",
+   "map": "mine_2",
    "kind": "stairs",
-   "id": "manor_2_down",
-   "at": "marsh_manor_1",
-   "to": "marsh_manor_1",
+   "id": "mine_2_down",
+   "at": "mine_3",
+   "to": "mine_3",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    23,
+    9,
+    37
+   ],
+   "ms": 3848
+  },
+  {
+   "map": "mine_hermit",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "g_rail",
+   "to": "g_rail",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 1764
+  },
+  {
+   "map": "mine_3",
+   "kind": "stairs",
+   "id": "mine_3_up",
+   "at": "mine_2",
+   "to": "mine_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    8,
+    7
+   ],
+   "ms": 6641
+  },
+  {
+   "map": "vein_1",
+   "kind": "stairs",
+   "id": "vein_1_up",
+   "at": "mine_3",
+   "to": "mine_3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    6
+   ],
+   "ms": 6896
+  },
+  {
+   "map": "vein_1",
+   "kind": "stairs",
+   "id": "vein_1_down",
+   "at": "vein_2",
+   "to": "vein_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    40,
+    33
+   ],
+   "ms": 8310
+  },
+  {
+   "map": "vein_2",
+   "kind": "stairs",
+   "id": "vein_2_up",
+   "at": "vein_1",
+   "to": "vein_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    37,
+    7
+   ],
+   "ms": 6592
+  },
+  {
+   "map": "vein_2",
+   "kind": "stairs",
+   "id": "vein_2_down",
+   "at": "vein_3",
+   "to": "vein_3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
     29
    ],
-   "ms": 5129
+   "ms": 3136
+  },
+  {
+   "map": "volk",
+   "kind": "door",
+   "id": "volk_inn",
+   "at": "volk_inn",
+   "to": "volk_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
+    15
+   ],
+   "ms": 2321
+  },
+  {
+   "map": "vein_3",
+   "kind": "stairs",
+   "id": "vein_3_up",
+   "at": "vein_2",
+   "to": "vein_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    18,
+    23
+   ],
+   "ms": 5540
+  },
+  {
+   "map": "volk",
+   "kind": "door",
+   "id": "volk_forge",
+   "at": "volk_forge",
+   "to": "volk_forge",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    17,
+    17
+   ],
+   "ms": 2479
+  },
+  {
+   "map": "volk",
+   "kind": "door",
+   "id": "volk_elder",
+   "at": "volk_elder",
+   "to": "volk_elder",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    26,
+    24
+   ],
+   "ms": 2358
+  },
+  {
+   "map": "volk",
+   "kind": "exit",
+   "id": "9,27",
+   "at": "g_valley",
+   "to": "g_valley",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    9,
+    23
+   ],
+   "ms": 2423
+  },
+  {
+   "map": "volk",
+   "kind": "door",
+   "id": "volk_house",
+   "at": "volk_house",
+   "to": "volk_house",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    24
+   ],
+   "ms": 6961
+  },
+  {
+   "map": "volk_elder",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "volk",
+   "to": "volk",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    6
+   ],
+   "ms": 2546
+  },
+  {
+   "map": "volk_forge",
+   "kind": "exit",
+   "id": "8,11",
+   "at": "volk",
+   "to": "volk",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    8,
+    7
+   ],
+   "ms": 2837
+  },
+  {
+   "map": "volk_house",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "volk",
+   "to": "volk",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    6
+   ],
+   "ms": 2565
+  },
+  {
+   "map": "volk_inn",
+   "kind": "exit",
+   "id": "6,10",
+   "at": "volk",
+   "to": "volk",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    7
+   ],
+   "ms": 2691
   }
  ],
  "looks": [
   {
-   "map": "loch",
-   "npc": "mob_leader",
-   "look": "npc_marsh_man",
-   "art": "npc_marsh_man",
+   "map": "dovan",
+   "npc": "mouth_watch",
+   "look": "npc_miner",
+   "art": "npc_miner",
    "ok": true
   },
   {
-   "map": "loch",
-   "npc": "mob_a",
-   "look": "npc_marsh_woman",
-   "art": "npc_marsh_woman",
+   "map": "dovan",
+   "npc": "glare_guild",
+   "look": "npc_miner",
+   "art": "npc_miner",
    "ok": true
   },
   {
-   "map": "loch",
-   "npc": "mob_b",
-   "look": "npc_marsh_old_m",
-   "art": "npc_marsh_old_m",
+   "map": "dovan",
+   "npc": "glare_smith",
+   "look": "npc_smith",
+   "art": "npc_smith",
    "ok": true
   },
   {
-   "map": "loch",
-   "npc": "bard",
-   "look": "npc_bard",
-   "art": "npc_bard",
+   "map": "dovan",
+   "npc": "toast_guild",
+   "look": "npc_miner",
+   "art": "npc_miner",
    "ok": true
   },
   {
-   "map": "loch",
-   "npc": "child_plaza",
-   "look": "npc_marsh_child",
-   "art": "npc_marsh_child",
+   "map": "dovan",
+   "npc": "station_old",
+   "look": "npc_mine_old_m",
+   "art": "npc_mine_old_m",
    "ok": true
   },
   {
-   "map": "loch",
-   "npc": "guard_w",
-   "look": "npc_marsh_man",
-   "art": "npc_marsh_man",
+   "map": "dovan",
+   "npc": "tadeo",
+   "look": "npc_tadeo",
+   "art": "npc_tadeo",
    "ok": true
   },
   {
-   "map": "loch",
-   "npc": "guard_e",
-   "look": "npc_marsh_man",
-   "art": "npc_marsh_man",
+   "map": "dovan",
+   "npc": "cat_kid",
+   "look": "npc_mine_child",
+   "art": "npc_mine_child",
    "ok": true
   },
   {
-   "map": "loch",
-   "npc": "fisher",
-   "look": "npc_marsh_old_m",
-   "art": "npc_marsh_old_m",
+   "map": "dovan",
+   "npc": "street_woman",
+   "look": "npc_mine_woman",
+   "art": "npc_mine_woman",
    "ok": true
   },
   {
-   "map": "loch",
-   "npc": "laundress",
-   "look": "npc_marsh_woman",
-   "art": "npc_marsh_woman",
+   "map": "dovan",
+   "npc": "hall_old",
+   "look": "npc_mine_old_f",
+   "art": "npc_mine_old_f",
    "ok": true
   },
   {
-   "map": "loch",
-   "npc": "ferryman",
-   "look": "npc_marsh_old_m",
-   "art": "npc_marsh_old_m",
-   "ok": true
-  },
-  {
-   "map": "loch",
-   "npc": "boy_south",
-   "look": "npc_marsh_child",
-   "art": "npc_marsh_child",
-   "ok": true
-  },
-  {
-   "map": "loch",
-   "npc": "lamp_keeper",
-   "look": "npc_marsh_man",
-   "art": "npc_marsh_man",
-   "ok": true
-  },
-  {
-   "map": "loch",
-   "npc": "yena",
-   "look": "npc_yena",
-   "art": "npc_yena",
-   "ok": true
-  },
-  {
-   "map": "loch",
-   "npc": "klaus_out",
-   "look": "npc_klaus",
-   "art": "npc_klaus",
-   "ok": true
-  },
-  {
-   "map": "loch",
-   "npc": "night_vendor",
-   "look": "npc_marsh_woman",
-   "art": "npc_marsh_woman",
-   "ok": true
-  },
-  {
-   "map": "loch",
-   "npc": "night_owl",
-   "look": "npc_marsh_old_f",
-   "art": "npc_marsh_old_f",
-   "ok": true
-  },
-  {
-   "map": "loch",
-   "npc": "lost_cat",
+   "map": "dovan",
+   "npc": "kitten",
    "look": "ani_cat",
    "art": "ani_cat",
    "ok": true
   },
   {
-   "map": "loch",
-   "npc": "fine",
-   "look": "fine",
-   "art": "fine",
+   "map": "dovan",
+   "npc": "relight_borg",
+   "look": "npc_borg",
+   "art": "npc_borg",
    "ok": true
   },
   {
-   "map": "loch",
-   "npc": "heron",
-   "look": "ani_hen",
-   "art": "ani_hen",
+   "map": "dovan",
+   "npc": "relight_helga",
+   "look": "npc_helga",
+   "art": "npc_helga",
    "ok": true
   },
   {
-   "map": "loch",
-   "npc": "woman_air",
-   "look": "npc_marsh_woman",
-   "art": "npc_marsh_woman",
+   "map": "dovan",
+   "npc": "relight_pip",
+   "look": "npc_pip",
+   "art": "npc_pip",
    "ok": true
   },
   {
-   "map": "loch_arms",
-   "npc": "smith",
-   "look": "npc_marsh_man",
-   "art": "npc_marsh_man",
+   "map": "dovan",
+   "npc": "race_keeper",
+   "look": "npc_miner",
+   "art": "npc_miner",
    "ok": true
   },
   {
-   "map": "loch_beppo",
-   "npc": "beppo",
-   "look": "npc_beppo",
-   "art": "npc_beppo",
+   "map": "dovan_forge",
+   "npc": "helga",
+   "look": "npc_helga",
+   "art": "npc_helga",
    "ok": true
   },
   {
-   "map": "loch_emma",
-   "npc": "emma_home",
-   "look": "npc_emma",
-   "art": "npc_emma",
+   "map": "dovan_forge",
+   "npc": "forge_seller",
+   "look": "npc_smith",
+   "art": "npc_smith",
    "ok": true
   },
   {
-   "map": "loch_emma",
-   "npc": "lina",
-   "look": "npc_marsh_child",
-   "art": "npc_marsh_child",
+   "map": "dovan_forge",
+   "npc": "forge_boy",
+   "look": "npc_mine_child",
+   "art": "npc_mine_child",
    "ok": true
   },
   {
-   "map": "loch_hall",
-   "npc": "mayor",
-   "look": "npc_loch_mayor",
-   "art": "npc_loch_mayor",
+   "map": "dovan_guild",
+   "npc": "borg",
+   "look": "npc_borg",
+   "art": "npc_borg",
    "ok": true
   },
   {
-   "map": "loch_hall",
-   "npc": "hall_clerk",
-   "look": "npc_marsh_old_f",
-   "art": "npc_marsh_old_f",
+   "map": "dovan_guild",
+   "npc": "guild_clerk",
+   "look": "npc_clerk",
+   "art": "npc_clerk",
    "ok": true
   },
   {
-   "map": "loch_inn",
+   "map": "dovan_hall",
+   "npc": "hall_chair",
+   "look": "npc_mine_old_m",
+   "art": "npc_mine_old_m",
+   "ok": true
+  },
+  {
+   "map": "dovan_hall",
+   "npc": "hall_borg",
+   "look": "npc_borg",
+   "art": "npc_borg",
+   "ok": true
+  },
+  {
+   "map": "dovan_hall",
+   "npc": "hall_helga",
+   "look": "npc_helga",
+   "art": "npc_helga",
+   "ok": true
+  },
+  {
+   "map": "dovan_house",
+   "npc": "dag_wife",
+   "look": "npc_mine_woman",
+   "art": "npc_mine_woman",
+   "ok": true
+  },
+  {
+   "map": "dovan_house",
+   "npc": "dag_kid",
+   "look": "npc_mine_child",
+   "art": "npc_mine_child",
+   "ok": true
+  },
+  {
+   "map": "dovan_house",
+   "npc": "dag",
+   "look": "npc_miner",
+   "art": "npc_miner",
+   "ok": true
+  },
+  {
+   "map": "dovan_house2",
+   "npc": "rolf_mother",
+   "look": "npc_mine_old_f",
+   "art": "npc_mine_old_f",
+   "ok": true
+  },
+  {
+   "map": "dovan_house2",
+   "npc": "rolf",
+   "look": "npc_miner",
+   "art": "npc_miner",
+   "ok": true
+  },
+  {
+   "map": "dovan_inn",
    "npc": "inn_keeper",
-   "look": "npc_marsh_woman",
-   "art": "npc_marsh_woman",
+   "look": "npc_mine_old_f",
+   "art": "npc_mine_old_f",
    "ok": true
   },
   {
-   "map": "loch_inn",
-   "npc": "emma_inn",
-   "look": "npc_emma",
-   "art": "npc_emma",
-   "ok": true
-  },
-  {
-   "map": "loch_inn",
+   "map": "dovan_inn",
    "npc": "inn_guest",
    "look": "npc_traveler",
    "art": "npc_traveler",
    "ok": true
   },
   {
-   "map": "loch_items",
+   "map": "dovan_items",
    "npc": "item_keeper",
-   "look": "npc_marsh_woman",
-   "art": "npc_marsh_woman",
+   "look": "npc_mine_woman",
+   "art": "npc_mine_woman",
    "ok": true
   },
   {
-   "map": "loch_klaus",
-   "npc": "klaus",
-   "look": "npc_klaus",
-   "art": "npc_klaus",
-   "ok": true
-  },
-  {
-   "map": "loch_mayor",
-   "npc": "mayor_wife",
-   "look": "npc_marsh_old_f",
-   "art": "npc_marsh_old_f",
-   "ok": true
-  },
-  {
-   "map": "loch_tavern",
+   "map": "dovan_tavern",
    "npc": "barkeep",
-   "look": "npc_marsh_old_m",
-   "art": "npc_marsh_old_m",
+   "look": "npc_mine_woman",
+   "art": "npc_mine_woman",
    "ok": true
   },
   {
-   "map": "loch_tavern",
-   "npc": "tav_bard",
-   "look": "npc_bard",
-   "art": "npc_bard",
+   "map": "dovan_tavern",
+   "npc": "tav_miner",
+   "look": "npc_miner",
+   "art": "npc_miner",
    "ok": true
   },
   {
-   "map": "loch_tavern",
-   "npc": "tav_sailor",
-   "look": "npc_marsh_man",
-   "art": "npc_marsh_man",
+   "map": "dovan_tavern",
+   "npc": "tav_old",
+   "look": "npc_mine_old_m",
+   "art": "npc_mine_old_m",
    "ok": true
   },
   {
-   "map": "loch_tavern",
-   "npc": "tav_match",
-   "look": "npc_marsh_woman",
-   "art": "npc_marsh_woman",
+   "map": "g_valley",
+   "npc": "gate_guard",
+   "look": "npc_miner",
+   "art": "npc_miner",
    "ok": true
   },
   {
-   "map": "loch_tower",
-   "npc": "tobias",
-   "look": "npc_tobias",
-   "art": "npc_tobias",
+   "map": "mine_1",
+   "npc": "miner1",
+   "look": "npc_miner",
+   "art": "npc_miner",
    "ok": true
   },
   {
-   "map": "m_north",
-   "npc": "peat_cutter",
-   "look": "npc_marsh_woman",
-   "art": "npc_marsh_woman",
+   "map": "mine_1",
+   "npc": "kitten",
+   "look": "ani_cat",
+   "art": "ani_cat",
    "ok": true
   },
   {
-   "map": "m_west",
-   "npc": "shore_fisher",
-   "look": "npc_marsh_old_m",
-   "art": "npc_marsh_old_m",
+   "map": "mine_2",
+   "npc": "miner2",
+   "look": "npc_miner",
+   "art": "npc_miner",
    "ok": true
   },
   {
-   "map": "marsh_bog",
-   "npc": "bog_kid_a",
-   "look": "npc_marsh_child",
-   "art": "npc_marsh_child",
+   "map": "mine_2",
+   "npc": "pip",
+   "look": "npc_pip",
+   "art": "npc_pip",
    "ok": true
   },
   {
-   "map": "marsh_bog",
-   "npc": "bog_kid_b",
-   "look": "npc_marsh_child",
-   "art": "npc_marsh_child",
+   "map": "mine_2",
+   "npc": "ghost",
+   "look": "npc_mine_old_m",
+   "art": "npc_mine_old_m",
    "ok": true
   },
   {
-   "map": "marsh_manor_2",
-   "npc": "melda",
-   "look": "npc_melda",
-   "art": "npc_melda",
+   "map": "mine_hermit",
+   "npc": "hermit",
+   "look": "npc_hermit",
+   "art": "npc_hermit",
+   "ok": true
+  },
+  {
+   "map": "volk",
+   "npc": "bridge_old",
+   "look": "npc_mine_old_m",
+   "art": "npc_mine_old_m",
+   "ok": true
+  },
+  {
+   "map": "volk",
+   "npc": "yard_smith",
+   "look": "npc_smith",
+   "art": "npc_smith",
+   "ok": true
+  },
+  {
+   "map": "volk",
+   "npc": "volk_child",
+   "look": "npc_mine_child",
+   "art": "npc_mine_child",
+   "ok": true
+  },
+  {
+   "map": "volk",
+   "npc": "volk_pip",
+   "look": "npc_pip",
+   "art": "npc_pip",
+   "ok": true
+  },
+  {
+   "map": "volk",
+   "npc": "volk_trader",
+   "look": "npc_miner",
+   "art": "npc_miner",
+   "ok": true
+  },
+  {
+   "map": "volk",
+   "npc": "volk_apprentice",
+   "look": "npc_mine_child",
+   "art": "npc_mine_child",
+   "ok": true
+  },
+  {
+   "map": "volk_elder",
+   "npc": "volk_gunnar",
+   "look": "npc_mine_old_m",
+   "art": "npc_mine_old_m",
+   "ok": true
+  },
+  {
+   "map": "volk_forge",
+   "npc": "volk_master",
+   "look": "npc_smith",
+   "art": "npc_smith",
+   "ok": true
+  },
+  {
+   "map": "volk_forge",
+   "npc": "volk_helga",
+   "look": "npc_helga",
+   "art": "npc_helga",
+   "ok": true
+  },
+  {
+   "map": "volk_forge",
+   "npc": "volk_dovan_seller",
+   "look": "npc_smith",
+   "art": "npc_smith",
+   "ok": true
+  },
+  {
+   "map": "volk_house",
+   "npc": "volk_wife",
+   "look": "npc_mine_woman",
+   "art": "npc_mine_woman",
+   "ok": true
+  },
+  {
+   "map": "volk_inn",
+   "npc": "volk_innkeep",
+   "look": "npc_mine_woman",
+   "art": "npc_mine_woman",
+   "ok": true
+  },
+  {
+   "map": "volk_inn",
+   "npc": "volk_guest",
+   "look": "npc_traveler",
+   "art": "npc_traveler",
    "ok": true
   }
  ],
  "skipped": [
   {
-   "map": "m_bog",
+   "map": "dovan",
    "kind": "door",
    "id": "",
-   "to": "marsh_bog",
-   "cond": "marsh_assembly_done"
+   "to": "volk",
+   "cond": "mine_volk_open"
   },
   {
-   "map": "m_bog",
-   "kind": "exit",
-   "id": "25,43",
-   "to": "a_bridge",
+   "map": "g_pass",
+   "kind": "door",
+   "id": "",
+   "to": "dovan",
+   "cond": "mine_smithpath"
+  },
+  {
+   "map": "mine_3",
+   "kind": "door",
+   "id": "",
+   "to": "mine_3",
+   "cond": "mine_door_open"
+  },
+  {
+   "map": "mine_3",
+   "kind": "door",
+   "id": "",
+   "to": "mine_3",
+   "cond": "mine_door_open"
+  },
+  {
+   "map": "mine_3",
+   "kind": "stairs",
+   "id": "mine_3_vein",
+   "to": "vein_1",
    "cond": {
-    "not": {
-     "slice": true
-    }
+    "any": [
+     "mine_vein_open",
+     {
+      "tier": 6
+     }
+    ]
    }
+  },
+  {
+   "map": "volk",
+   "kind": "door",
+   "id": "",
+   "to": "dovan",
+   "cond": "mine_volk_open"
   }
  ],
  "errors": []

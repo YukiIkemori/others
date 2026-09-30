@@ -1,0 +1,48 @@
+{
+ "id": "lantern__star",
+ "kind": "props",
+ "theme": "star",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   9,
+   14
+  ],
+  "32": [
+   12,
+   18
+  ],
+  "40": [
+   15,
+   22
+  ]
+ },
+ "feet": {
+  "24": [
+   4,
+   13
+  ],
+  "32": [
+   6,
+   17
+  ],
+  "40": [
+   8,
+   21
+  ]
+ },
+ "files": {
+  "24": "lantern__star@24.png",
+  "32": "lantern__star@32.png",
+  "40": "lantern__star@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/star_b.png",
+ "set": "star",
+ "base": "lanter",
+ "light32": [
+  0,
+  -9
+ ]
+}

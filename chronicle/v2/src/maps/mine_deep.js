@@ -27,8 +27,10 @@
       O.push(K.sign(28, 36, R.T('map.mine_deep.sign')));
       O.push(K.exam(4, 8, 'mine_cavein'));
       O.push(lamp(1, 33, 18));
-      O.push(K.chest('mine_1_c1', 27, 6, { pool: 'p_T' }), K.chest('mine_1_c2', 31, 9, { gold: 150 }), K.chest('mine_1_c3', 8, 10, { item: 'i_ether', n: 1 }), K.chest('mine_1_c4', 45, 4, { pool: 'p_T' }));
-      for (const [x, y] of [[24, 33], [29, 32], [21, 18], [34, 18], [26, 4], [9, 14], [46, 12], [47, 28]]) O.push(K.prop('hook_lamp', x, y));
+      O.push(K.chest('mine_1_c1', 27, 6, { pool: 'p_T' }), K.chest('mine_1_c2', 31, 9, { gold: 150 }), K.chest('mine_1_c3', 8, 10, { item: 'i_ether', n: 1 }), K.chest('mine_1_c4', 49, 5, { pool: 'p_T' }));
+      // (2026-09-30 描き直した下絵) 坑夫のカンテラは描いた坑木の枠に、青い鉱石の脈には光だけの物
+      for (const [x, y] of [[24, 30], [29, 28], [20, 22], [34, 18], [24, 12], [8, 15], [46, 9], [50, 16], [42, 34], [22, 41]]) O.push(K.prop('hook_lamp', x, y));
+      for (const [x, y] of [[2, 10], [9, 8], [21, 7], [33, 8], [34, 23], [24, 16], [19, 36], [35, 35], [51, 3], [51, 20], [50, 28], [14, 21]]) O.push(K.prop('crystal_glow', x, y));
       const N = [
         // 落盤の奥の鉱夫ダグ（1 人目）
         K.npc('miner1', 'npc_miner', 6, 10, { name: R.T('map.mine_deep.N.0.miner1.name'), dir: 's', talk: 'mine_miner1', reward: null, pushable: false, cond: '!mine_miner1' }),
@@ -57,13 +59,16 @@
       O.push(K.stairs(48, 3, { map: 'mine_1', spawn: 'from2' }, { id: 'mine_2_up', look: 'up' }));
       O.push(K.stairs(9, 41, { map: 'mine_3', spawn: 'up' }, { id: 'mine_2_down', look: 'down' }));
       // 坑夫の休み場: 交代表（lo_time_mine）・長いす・古いカンテラ（【灯りを守る】）・壁の古いカンテラの下の封筒（ラザロの手紙）
-      O.push(K.exam(31, 29, 'mine_shift_board'), K.exam(24, 31, 'mine_rest_bench'), K.exam(25, 31, 'mine_rest_bench'));
-      O.push(lamp(2, 31, 35));
-      O.push(K.prop('lantern', 22, 33), K.exam(22, 33, 'mine_lz'));
+      // (2026-09-30 描き直した下絵に合わせた) 休み場の道具かけの長いす・交代表の机・壁ぎわの古いカンテラの下の封筒（ラザロの手紙）
+      O.push(K.exam(28, 33, 'mine_shift_board'), K.exam(24, 33, 'mine_rest_bench'), K.exam(25, 33, 'mine_rest_bench'));
+      O.push(lamp(2, 29, 37));
+      O.push(K.prop('lantern', 23, 32), K.exam(23, 32, 'mine_lz'));
       O.push(K.chest('mine_2_c1', 4, 21, { pool: 'p_T' }), K.chest('mine_2_c2', 51, 34, { pool: 'p_T' }), K.chest('mine_2_c3', 36, 17, { gold: 220 }));
       // 坑道の幽霊が教える宝箱（話を最後まで聞くと出る）
       O.push(K.chest('mine_2_c4', 11, 37, { pool: 'p_rare', cond: 'mine_ghost_done' }));
-      for (const [x, y] of [[43, 8], [30, 13], [19, 23], [33, 30], [46, 31], [7, 35], [17, 29]]) O.push(K.prop('hook_lamp', x, y));
+      // 坑夫のカンテラは描いた坑木の枠に掛ける。青い鉱石の脈は光だけの物（下絵の光る層 _emit の上に光だまり）
+      for (const [x, y] of [[43, 9], [35, 14], [23, 24], [31, 24], [20, 26], [13, 34], [44, 20], [46, 29]]) O.push(K.prop('hook_lamp', x, y));
+      for (const [x, y] of [[51, 4], [39, 16], [22, 17], [35, 22], [2, 19], [46, 22], [53, 34], [15, 32], [5, 38], [30, 37]]) O.push(K.prop('crystal_glow', x, y));
       const N = [
         // 水びたしの坑道の奥の鉱夫ロルフ（2 人目）
         K.npc('miner2', 'npc_miner', 4, 19, { name: R.T('map.mine_deep.N.0.miner2.name'), dir: 'e', talk: 'mine_miner2', reward: null, pushable: false, cond: '!mine_miner2' }),
@@ -94,7 +99,7 @@
       const O = [];
       O.push(K.stairs(8, 3, { map: 'mine_2', spawn: 'from3' }, { id: 'mine_3_up', look: 'up' }));
       // しょく台（暗がり。火をともすと周りが明るいまま）
-      for (const [i, x, y] of [[1, 6, 12], [2, 12, 21], [3, 12, 29], [4, 21, 33], [5, 21, 17], [6, 34, 17]]) O.push({ type: 'brazier', id: 'mine_3_b' + i, x, y });
+      for (const [i, x, y] of [[1, 6, 12], [2, 13, 24], [3, 12, 29], [4, 21, 33], [5, 21, 17], [6, 34, 17]]) O.push({ type: 'brazier', id: 'mine_3_b' + i, x, y });
       O.push(K.chest('mine_3_c1', 3, 13, { pool: 'p_T' }), K.chest('mine_3_c2', 33, 36, { gold: 300 }));
       O.push(lamp(3, 15, 21));
       // 休息の灯（岩戸の前の間）
@@ -105,11 +110,18 @@
       O.push({ type: 'door', x: 27, y: 27, look: 'none', to: { map: 'mine_3', spawn: 'ante' }, cond: 'mine_door_open' });
       // 番人（玉座）と破れ目（白い）
       O.push(K.exam(27, 15, 'mine_guardian_throne'), K.exam(27, 10, 'mine_breach'), K.prop('white_glow', 27, 9));
+      // (2026-09-30) 前の間の坑木の枠のカンテラと、広間の青い鉱石の脈（光だけの物）。暗がりの坑道には置かない（しょく台で照らす）
+      for (const [x, y] of [[32, 32], [22, 38], [18, 34]]) O.push(K.prop('hook_lamp', x, y));
+      for (const [x, y] of [[19, 15], [36, 17], [20, 20], [35, 22], [35, 35], [21, 36]]) O.push(K.prop('crystal_glow', x, y));
+      // 深淵の鉱脈（#17）への縦穴（広間の東のすみ）。組合 A・仲裁 C で縄ばしごが掛かる。選ばなくてもティア 6 で下りられる
+      const VEIN = { any: ['mine_vein_open', { tier: 6 }] };
+      O.push(K.stairs(34, 14, { map: 'vein_1', spawn: 'up' }, { id: 'mine_3_vein', look: 'down', cond: VEIN }));
+      O.push(K.exam(34, 14, 'mine_vein_shaft', { cond: { not: VEIN } }));
       const N = [];
       K.def('mine_3', {
         name: R.T('map.mine_deep.mine_3.name'), kind: 'dungeon', region: 'r_mine', location: 'deepmine', theme: 'mine',
         legend: MK.CAVE(), rows: P.rows, outside: 'wall_cave', objects: O, npcs: N,
-        spawns: { up: { x: 8, y: 4, dir: 's' }, ante: { x: 27, y: 32, dir: 's' }, hall: { x: 27, y: 25, dir: 'n' } },
+        spawns: { up: { x: 8, y: 4, dir: 's' }, ante: { x: 27, y: 32, dir: 's' }, hall: { x: 27, y: 25, dir: 'n' }, vein: { x: 33, y: 14, dir: 'w' } },
         exits: [],
         // 岩戸が閉じている間は、前のマスも岩（描いた岩戸の下の段）
         tilePatches: [{ cond: '!mine_door_open', rect: [27, 31, 1, 1], rows: ['X'] }],

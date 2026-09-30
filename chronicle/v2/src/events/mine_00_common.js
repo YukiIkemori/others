@@ -79,6 +79,10 @@
   lead('q_mine_kitten', { kind: 'side', title: R.T('leads.q_mine_kitten.title'), text: R.T('leads.q_mine_kitten.text'), from: R.T('leads.q_mine_kitten.from'), place: 'deepmine', done: 'mine_kitten_home' });
   lead('q_mine_bellows', { kind: 'side', title: R.T('leads.q_mine_bellows.title'), text: R.T('leads.q_mine_bellows.text'), from: R.T('leads.q_mine_bellows.from'), place: 'dovan', done: 'mine_bellows_done' });
   lead('q_mine_ghost', { kind: 'side', title: R.T('leads.q_mine_ghost.title'), text: R.T('leads.q_mine_ghost.text'), from: R.T('leads.q_mine_ghost.from'), place: 'deepmine', done: 'mine_ghost_done' });
+  // (2026-09-30) 寄り道 #16・#17 と、トロッコ競走（§5.10）
+  lead('l_opt_volk', { kind: 'rumor', title: R.T('leads.l_opt_volk.title'), text: R.T('leads.l_opt_volk.text'), from: R.T('leads.l_opt_volk.from'), place: 'volk', dir: R.T('leads.l_opt_volk.dir'), done: 'volk_seen' });
+  lead('l_opt_vein', { kind: 'rumor', title: R.T('leads.l_opt_vein.title'), text: R.T('leads.l_opt_vein.text'), from: R.T('leads.l_opt_vein.from'), place: 'vein', done: 'vein_seen' });
+  lead('q_mine_trolley', { kind: 'side', title: R.T('leads.q_mine_trolley.title'), text: R.T('leads.q_mine_trolley.text'), from: R.T('leads.q_mine_trolley.from'), place: 'dovan', done: 'mine_race_done' });
   // 寄り道のうわさ（rumor）
   lead('l_opt_hermit', { kind: 'rumor', title: R.T('leads.l_opt_hermit.title'), text: R.T('leads.l_opt_hermit.text'), from: R.T('leads.l_opt_hermit.from'), dir: R.T('leads.l_opt_hermit.dir'), done: 'mine_hermit_met' });
 
