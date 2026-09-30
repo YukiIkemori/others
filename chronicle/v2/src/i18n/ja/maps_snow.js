@@ -154,7 +154,7 @@
     'map.snow_field.passinn.name': '湯けむりの峠',
     'map.snow_field.passinn.objects.0.text': '宿場「峠の宿」\n湯気の立つ峠の宿。',
     'map.snow_field.passinn.objects.1.text': '東 → ガルド山地\n西 → ユール',
-    'map.snow_field.peakfoot.meta.sub': '竜の骨と冬至の祠',
+    'map.snow_field.peakfoot.meta.sub': '竜の骨と冬至のほこら',
     'map.snow_field.peakfoot.name': '白竜の峰のふもと',
     'map.snow_field.peakfoot.objects.1.text': '白竜の峰\n吹雪の奥に、竜が眠るという。',
     'map.snow_field.peakfoot.snow_scout.name': '見回りの若者',

@@ -125,8 +125,8 @@
     'map.mine_volk.volk_elder': '老鍛冶の家',
     'map.mine_volk.volk_elder.meta.sub': '村でいちばん古い鍛冶の家',
     'map.mine_volk.volk_elder.npcs.0.volk_gunnar.name': '老鍛冶グンナル',
-    'map.mine_volk.link.text': '← 古い吊り橋\n谷底の鍛冶衆の村へ',
-    'map.mine_volk.link.confirm': '岩壁の古い階段を下りて、谷底の村へ行きますか？',
+    'map.mine_volk.link.text': '← 古いつり橋\n谷底の鍛冶衆の村へ',
+    'map.mine_volk.link.confirm': '岩壁の古い階段を下りて、\n谷底の村へ行きますか？',
     'map.mine_volk.link.race_keeper.name': 'トロッコの競走番',
     // ---- src/maps/mine_vein.js
     'map.mine_vein.vein_1.name': '深淵の鉱脈',

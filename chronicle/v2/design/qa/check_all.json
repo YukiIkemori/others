@@ -1,230 +1,267 @@
 {
- "date": "2026-09-27T17:22:19.951Z",
+ "date": "2026-09-30T06:26:33.239Z",
  "browser": false,
  "full": false,
  "results": [
   {
    "name": "build",
    "code": 0,
-   "ms": 8233,
-   "summary": "[build] media (external): 31 BGM (slice), 416 voice, 0 portraits, 239 sprite sheets, 1317 env images, 11 title images, 143.7 MB  [7507 ms]"
+   "ms": 4163,
+   "summary": "[build] media (external): 31 BGM (slice), 485 voice, 0 portraits, 248 sprite sheets, 2373 env images, 12 title images, 998.0 MB  [4047 ms]"
   },
   {
    "name": "test_core",
-   "code": 1,
-   "ms": 13157,
-   "summary": "76/77 passed  (1 FAILED)",
-   "tail": "pass  battle object names\npass  units shape\npass  battle runs to an end with valid events\npass  rewards shape\npass  ev names (§2.5.10)\npass  fixtures: 1 state + 2 scenes, valid\npass  core first 6 in order\npass  main.js last, dev before it\npass  index order has no dev files\nFAIL  no API keys / model identifiers in v2 sources  [\"/home/user/others/chronicle/v2/design/bgm_changes.md\"]\n\n76/77 passed  (1 FAILED)"
+   "code": 0,
+   "ms": 413204,
+   "summary": "104/104 passed"
   },
   {
    "name": "test_core_contract",
    "code": 0,
-   "ms": 14452,
+   "ms": 2059,
    "summary": "test_core_contract: 51/51 passed"
   },
   {
    "name": "test_render",
-   "code": 1,
-   "ms": 13051,
-   "summary": "test_render: 144/145 passed",
-   "tail": "\n== draw\npass  draw rounds and puts (ox, oy) on the point\npass  flip mirrors around the point\npass  alpha restored after draw\npass  draw a Sheet picks frame i\npass  draw(null) is a no-op\npass  frameAt walks the pose by time\n\ntest_render: 144/145 passed\nfailed:\n  real clock: median pump 22.73 ms ≤ 3"
+   "code": 0,
+   "ms": 1771,
+   "summary": "test_render: 145/145 passed"
   },
   {
    "name": "test_uik",
    "code": 0,
-   "ms": 14493,
+   "ms": 2022,
    "summary": "test_uik: 37/37 passed"
   },
   {
    "name": "test_cast",
    "code": 0,
-   "ms": 12429,
-   "summary": "test_cast: 865/865 passed"
+   "ms": 1959,
+   "summary": "test_cast: 894/894 passed"
   },
   {
    "name": "test_beast",
    "code": 0,
-   "ms": 11453,
+   "ms": 1834,
    "summary": "test_beast: 94/94 passed"
   },
   {
    "name": "test_terrain",
-   "code": 0,
-   "ms": 61397,
-   "summary": "test_terrain: 76/76 passed"
+   "code": 1,
+   "ms": 11882,
+   "summary": "test_terrain: 75/76 passed",
+   "tail": "pass  R.emit('terrain:dirty', {map, chunks})\npass  takeDirty で受け取って空になる\npass  燭台（光が隣へ届く）はそのチャンクと届く範囲のチャンク\npass  chunkOf\n\n== 仕事の形（node では焼かない）\npass  bakeChunk → K.bakeJob（kind chunk、まだ done でない）\npass  prewarm → K.bakeJob\n\ntest_terrain: 75/76 passed\nfailed:\n  全物に hd:prop の登録"
   },
   {
    "name": "test_field",
    "code": 0,
-   "ms": 29266,
-   "summary": "test_field: 102/102 passed"
+   "ms": 3195,
+   "summary": "test_field: 163/163 passed"
   },
   {
    "name": "test_events",
    "code": 0,
-   "ms": 23293,
-   "summary": "test_events: 164/164 passed"
+   "ms": 1687,
+   "summary": "test_events: 182/182 passed"
   },
   {
    "name": "test_rules",
    "code": 0,
-   "ms": 11224,
-   "summary": "test_rules: 199/199 passed"
+   "ms": 1744,
+   "summary": "test_rules: 323/323 passed"
   },
   {
    "name": "test_battle",
    "code": 0,
-   "ms": 54348,
-   "summary": "test_battle: 125/125 passed"
+   "ms": 8760,
+   "summary": "test_battle: 199/199 passed"
   },
   {
    "name": "test_bscene",
    "code": 0,
-   "ms": 11131,
-   "summary": "test_bscene: 49/49 passed"
+   "ms": 2475,
+   "summary": "test_bscene: 92/92 passed"
   },
   {
    "name": "test_screens",
-   "code": 1,
-   "ms": 13544,
-   "summary": "test_screens: 395/396 passed",
-   "tail": "pass  menus_skills.json is K.fixtureScene and opens a known screen\npass  menus_status.json is K.fixtureScene and opens a known screen\npass  menus_tavern.json is K.fixtureScene and opens a known screen\npass  menus_tip.json is K.fixtureScene and opens a known screen\npass  menus_title.json is K.fixtureScene and opens a known screen\npass  menus_warp.json is K.fixtureScene and opens a known screen\npass  a scene fixture for every screen\npass  menus_party is K.fixtureState\n\ntest_screens: 395/396 passed\nfailed:\n  shop.js: no ctx.filter / setTimeout"
+   "code": 0,
+   "ms": 2004,
+   "summary": "test_screens: 428/428 passed"
   },
   {
    "name": "test_content_p",
-   "code": 0,
-   "ms": 149524,
-   "summary": "test_content_p: 545/545 passed"
+   "code": 1,
+   "ms": 201545,
+   "summary": "test_content_p: 623/624 passed",
+   "tail": "pass  依頼 q_pharos_lamp: 2 つの灯籠をともして礼\npass  依頼 q_pharos_well: 巣を見つけて解決\npass  依頼 q_pharos_delivery: 包みを受け取る\npass  風鳴りの丘: 風の鈴\npass  {hero} が名前に置き換わる\npass  T1: 手紙 → 少女（v_fine_t1_01・02）→ 余白の一行\npass  体験版（DB.config.slice）: T1 の後に「体験版の終わり」（お礼の字幕・記録の案内、フラグ world_demo_end）\npass  T1 は 1 回だけ\n\ntest_content_p: 623/624 passed\nfailed:\n  峠の崖崩れと番人は DB.config.slice の間だけ（6 か所・どの崖崩れにも番人）"
   },
   {
    "name": "test_content_f",
    "code": 0,
-   "ms": 76116,
-   "summary": "CONTENT-F: 655/655 passed"
+   "ms": 9850,
+   "summary": "CONTENT-F: 667/667 passed"
   },
   {
    "name": "test_content_desert",
    "code": 0,
-   "ms": 1714424,
-   "summary": "test_content_desert: 34/34 passed"
+   "ms": 176181,
+   "summary": "test_content_desert: 37/37 passed"
   },
   {
    "name": "validate",
    "code": 0,
-   "ms": 18226,
-   "summary": "validate: 57/57 passed"
+   "ms": 1829,
+   "summary": "validate: 59/59 passed"
   },
   {
    "name": "progress",
    "code": 0,
-   "ms": 3313736,
-   "summary": "progress: 31/31 passed"
+   "ms": 704355,
+   "summary": "progress: 50/50 passed"
   },
   {
    "name": "check_text",
    "code": 1,
-   "ms": 24694,
-   "summary": "check_text: 7 error(s), 1 warning(s) in 8093 Japanese strings of 288 files — T3 1, T4 3, T2 2, T1 1",
-   "tail": "ERROR T3 src/events/desert_tomb.js:108 '這' is not 常用漢字 nor in STYLE_JA §2: もらった水のおかげで、⏎這ってでも帰れそうだ。⏎……この恩は、忘れねえ。\nERROR T4 src/events/prologue_lighthouse.js:31 DQ-style word spacing (half-width space between Japanese words): ガチャリ……。⏎灯台の鍵で 扉を開けた！\nERROR T4 src/screens/settings.js:16 DQ-style word spacing (half-width space between Japanese words): 戦闘の演出の速さ。戦闘中も R で 通常 → ＋1 → ＋2 と切り替え…\nERROR T2 src/screens/shop.js:309 '並び替え' (§7.3): 並び替え\nERROR T2 src/screens/shop.js:312 '並び替え' (§7.3): 並び替え\nERROR T4 src/screens/shop.js:474 DQ-style word spacing (half-width space between Japanese words): ←→ 1 つ ・ ↑↓ 10 ずつ\nERROR T1 src/systems/battle/demo.js:203 '影縫い' in a string (STYLE_JA §7.1): 影縫い\n\ncheck_text: 7 error(s), 1 warning(s) in 8093 Japanese strings of 288 files — T3 1, T4 3, T2 2, T1 1"
+   "ms": 2546,
+   "summary": "check_text: 20 error(s), 1 warning(s) in 11720 Japanese strings of 494 files — T6 10, T3 9, T4 1",
+   "tail": "ERROR T6 src/i18n/ja/events_mine.js:433 a line is 22 wide (max 20): 鉱脈の主と戦いますか？（とても強い相手です）\nERROR T6 src/i18n/ja/events_mine.js:435 a line is 21 wide (max 20): 鉱脈の主は、ばらばらの結晶に戻って崩れた。\nERROR T3 src/i18n/ja/events_mine.js:441 '梃' is not 常用漢字 nor in STYLE_JA §2: 分かれ道だ！　近道の線路へ、⏎切り替えの梃子を引け！\nERROR T6 src/i18n/ja/events_snow.js:360 a line is 22 wide (max 20): 吹雪の夜は、旅人がここで身を寄せるのだろう。\nERROR T3 src/i18n/ja/events_snow.js:365 '杭' is not 常用漢字 nor in STYLE_JA §2: 杭の垣に囲まれた、丸い狩り小屋。\nERROR T3 src/i18n/ja/maps_field.js:424 '窪' is not 常用漢字 nor in STYLE_JA §2: 折れた剣の眠る窪地\nERROR T3 src/i18n/ja/maps_mine.js:128 '吊' is not 常用漢字 nor in STYLE_JA §2: ← 古い吊り橋⏎谷底の鍛冶衆の村へ\nERROR T6 src/i18n/ja/maps_mine.js:129 a line is 23 wide (max 20): 岩壁の古い階段を下りて、谷底の村へ行きますか？\nERROR T3 src/i18n/ja/maps_snow.js:157 '祠' is not 常用漢字 nor in STYLE_JA §2: 竜の骨と冬至の祠\nERROR T4 src/i18n/ja/ui.js:752 DQ-style word spacing (half-width space between Japanese words): ヤ ユ ヨ\n\ncheck_text: 20 error(s), 1 warning(s) in 11720 Japanese strings of 494 files — T6 10, T3 9, T4 1"
   },
   {
    "name": "check_voice",
    "code": 0,
-   "ms": 2851,
-   "summary": "check_voice: 216/216 passed"
+   "ms": 677,
+   "summary": "check_voice: 498/498 passed"
   },
   {
    "name": "check_leads",
    "code": 0,
-   "ms": 11414,
+   "ms": 1448,
    "summary": "check_leads: 34/34 passed"
   },
   {
    "name": "check_springs",
    "code": 0,
-   "ms": 848857,
-   "summary": "check_springs: 35/35 passed"
+   "ms": 35562,
+   "summary": "check_springs: 53/53 passed"
   },
   {
    "name": "check_density",
+   "code": 1,
+   "ms": 1382,
+   "summary": "check_density: 41/60 passed",
+   "tail": "  kasim: いちばん少ない画面も 12 以上（5）\n  loch: 1 画面の飾りの中央値 25〜40（24 画面: 最小 7・中央 9・最大 12）\n  loch: いちばん少ない画面も 12 以上（7）\n  nerei: 1 画面の飾りの中央値 25〜40（1 画面: 最小 18・中央 18・最大 18）\n  orbis: 1 画面の飾りの中央値 25〜40（38 画面: 最小 4・中央 9・最大 14）\n  orbis: いちばん少ない画面も 12 以上（4）\n  pass_inn: 1 画面の飾りの中央値 25〜40（3 画面: 最小 15・中央 17・最大 20）\n  sandedge: 1 画面の飾りの中央値 25〜40（9 画面: 最小 20・中央 23・最大 26）\n  yule: 1 画面の飾りの中央値 25〜40（47 画面: 最小 8・中央 18・最大 28）\n  yule: いちばん少ない画面も 12 以上（8）\n  yule_night: 1 画面の飾りの中央値 25〜40（47 画面: 最小 9・中央 15・最大 23）\n  yule_night: いちばん少ない画面も 12 以上（9）"
+  },
+  {
+   "name": "check_dungeon_clutter",
    "code": 0,
-   "ms": 30917,
-   "summary": "check_density: 39/39 passed"
+   "ms": 1746,
+   "summary": "check_dungeon_clutter: 161/161 passed"
   },
   {
    "name": "check_world",
    "code": 0,
-   "ms": 476262,
+   "ms": 10637,
    "summary": "check_world: 7/7 passed"
   },
   {
+   "name": "check_world_zones",
+   "code": 0,
+   "ms": 23198,
+   "summary": "check_world_zones: 18/18 passed"
+  },
+  {
+   "name": "test_field_areas",
+   "code": 0,
+   "ms": 6105,
+   "summary": "test_field_areas: 242/242 passed"
+  },
+  {
+   "name": "test_worldmap",
+   "code": 0,
+   "ms": 827,
+   "summary": "test_worldmap: 69/69 passed"
+  },
+  {
    "name": "check_chests",
-   "code": 2,
-   "ms": 56633,
-   "summary": "pass  縦切りの宝箱 127 個: 床の上・重なる物の下でない・id が一つ・中身あり",
-   "tail": "== データ\npass  world: ワールドに宝箱 0（A27）\npass  縦切りの宝箱 127 個: 床の上・重なる物の下でない・id が一つ・中身あり\n\n== 焼いた床との明るさの差（ブラウザ）\npage.waitForFunction: Timeout 15000ms exceeded.\n    at Object.open (/home/user/others/chronicle/v2/tools/lib/browser.js:51:11)\n    at async /home/user/others/chronicle/v2/tools/qa/check_chests.js:41:13 {\n  name: 'TimeoutError'\n}"
+   "code": 1,
+   "ms": 28896,
+   "summary": "check_chests: 3/5 passed",
+   "tail": "pass  world: ワールドに宝箱 0（A27）\npass  縦切りの宝箱 228 個: 床の上・重なる物の下でない・id が一つ・中身あり\n\n== 焼いた床との明るさの差（ブラウザ）\nFAIL  caldera.caldera_c1: 明るさの差 -0.033（箱 0.346・床 0.379）・色の差 0.101  {\"map\":\"caldera\",\"id\":\"caldera_c1\",\"pose\":\"closed\",\"chest\":0.346,\"floor\":0.379,\"diff\":-0.033,\"color\":0.101}\nFAIL  228 個の宝箱すべてで 床との明るさの差 ≧ 0.08 か色の差 ≧ 0.15（明るさの差がいちばん小さい aurora.aurora_c1 -0.189／色 0.568）\npass  ページのエラー 0\n\ncheck_chests: 3/5 passed\nfailed:\n  caldera.caldera_c1: 明るさの差 -0.033（箱 0.346・床 0.379）・色の差 0.101\n  228 個の宝箱すべてで 床との明るさの差 ≧ 0.08 か色の差 ≧ 0.15（明るさの差がいちばん小さい aurora.aurora_c1 -0.189／色 0.568）"
   },
   {
    "name": "check_secrets",
-   "code": 2,
-   "ms": 66071,
-   "summary": "pass  well 通路 2,26: 見つけた後は先の宝箱 1 個の隣に歩いて届く",
-   "tail": "pass  well 通路 2,26: 見つけた後（通路の 1 マス）は先の部屋が出る\npass  well 通路 2,26: 通路のひと続きは 1 マスで全部開く\npass  well 通路 2,26: 見つけた後は先の部屋が小地図に載る\npass  well 通路 2,26: 見つけた後は通路に歩いて入れる\npass  well 通路 2,26: 見つけた後は先の宝箱 1 個の隣に歩いて届く\n\n== 見つける前は周りの壁と同じ画素（ブラウザ）\npage.waitForFunction: Timeout 15000ms exceeded.\n    at Object.open (/home/user/others/chronicle/v2/tools/lib/browser.js:51:11)\n    at async /home/user/others/chronicle/v2/tools/qa/check_secrets.js:157:13 {\n  name: 'TimeoutError'\n}"
+   "code": 0,
+   "ms": 25993,
+   "summary": "check_secrets: 168/168 passed"
   },
   {
    "name": "check_stubs",
-   "code": 2,
-   "ms": 54487,
-   "summary": "pass  始まりの場所は本物（roa_house の roa_house_intro）",
-   "tail": "== 1. node: 埋まった仮の関数\npass  仮の実装で埋まった名前空間の関数 0\n    仮のデータ（id が stub_、使わない物）: DB.materials: stub_grass,stub_road,stub_tree,stub_water ／ DB.maps: stub_road ／ DB.events: stub_guard_talk ／ DB.troops: tr_stub ／ DB.monsters: stub_slime ／ DB.encounters: z_stub ／ DB.locations: stub_road\npass  縦切りのデータ・イベントが stub_ の id を参照しない\npass  始まりの場所は本物（roa_house の roa_house_intro）\n\n== 2. ブラウザ: 起動 → はじめから → ロアの里\npage.waitForFunction: Timeout 15000ms exceeded.\n    at Object.open (/home/user/others/chronicle/v2/tools/lib/browser.js:51:11)\n    at async /home/user/others/chronicle/v2/tools/qa/check_stubs.js:38:15 {\n  name: 'TimeoutError'\n}"
+   "code": 0,
+   "ms": 30354,
+   "summary": "check_stubs: 16/16 passed"
   },
   {
    "name": "check_reach",
    "code": 0,
-   "ms": 62696,
+   "ms": 33459,
    "summary": "check_reach: 1/1 passed"
+  },
+  {
+   "name": "check_lamps",
+   "code": 0,
+   "ms": 3835,
+   "summary": "check_lamps: 1/1 passed"
   },
   {
    "name": "check_stairs",
    "code": 0,
-   "ms": 20738,
-   "summary": "check_stairs: 234/234 passed"
+   "ms": 1087,
+   "summary": "check_stairs: 500/500 passed"
+  },
+  {
+   "name": "check_doors --layout",
+   "code": 0,
+   "ms": 1096,
+   "summary": "check_doors --layout: 674/674 passed"
   },
   {
    "name": "sim_zones",
-   "code": 0,
-   "ms": 706524,
-   "summary": "all zones: HP loss 9.0%, rounds 2.98 pass"
+   "code": 1,
+   "ms": 106754,
+   "summary": "all zones: HP loss 8.7%, rounds 2.98 pass",
+   "tail": "zw_marsh_road    100.0   2.94    7.5  13.6    0.0   0.00    8.6  pass\nzw_marsh_lotus   100.0   2.82    7.2  13.7    0.0   0.00    9.5  pass\nz_marsh_manor    100.0   2.55    8.8  17.4    0.0   0.00    9.1  pass\nz_marsh_bog      100.0   3.15    9.4  17.5    0.0   0.00   10.4  pass\nzw_ash_plain     100.0   2.96    8.8  17.9    0.0   0.00   10.8  pass\nzw_ash_road      100.0   2.87    7.2  11.9    0.0   0.00   10.3  pass\nzw_ash_spa       100.0   2.85    7.6  12.3    0.0   0.00   11.2  pass\nzw_ash_beach     100.0   2.84    6.9  14.0    0.0   0.00    9.4  pass\nz_ash_volcano    100.0   2.97    8.2  13.7    0.0   0.00   10.5  pass\nz_ash_crater     100.0   2.98    9.3  15.9    0.0   0.00   10.4  pass\nall zones: HP loss 8.7%, rounds 2.98 pass\nparty: hero(gl 14, HP 204, sword) bartolo(gl 14, HP 190, greatsword) marta(gl 14, HP 157, staff) sylvain(gl 14, HP 142, bow)"
   },
   {
    "name": "sim_zones --segments",
    "code": 0,
-   "ms": 3497864,
-   "summary": "segments: 12/12 pass"
+   "ms": 331327,
+   "summary": "segments: 20/20 pass"
   },
   {
    "name": "sim_bosses",
-   "code": 0,
-   "ms": 3859472,
-   "summary": "tr_b_frost_admiral@6      0       0      100   100   12.2   0.03  pass"
+   "code": 1,
+   "ms": 431325,
+   "summary": "tr_b_stareater@3          0       2       99    97   10.2   0.25  pass",
+   "tail": "tr_b_octopus@1            2      31      100    69    6.9   0.01  FAIL repeat 31 > 30\ntr_b_captain@1            0       1       90    89    8.9   0.51  FAIL script 90 < 90\ntr_b_octopus@3            0      15       98    83    7.4   0.10  pass\ntr_b_captain@3            0       2       99    98    9.1   0.18  pass\ntr_b_rockeater@1          0      26      100    74    8.7   0.00  pass\ntr_b_ironwarden@1         0      14       98    84    8.3   0.12  pass\ntr_b_rockeater@3          0      10      100    90    9.6   0.00  pass\ntr_b_ironwarden@3         0      22       99    77    8.8   0.12  pass\ntr_b_orrery@1             0       2      100    98   10.0   0.16  pass\ntr_b_stareater@1          0       5       95    91    8.8   0.27  pass\ntr_b_orrery@3             0      33      100    67    8.6   0.00  pass\ntr_b_stareater@3          0       2       99    97   10.2   0.25  pass"
   },
   {
    "name": "sim_growth",
    "code": 0,
-   "ms": 123783,
+   "ms": 4730,
    "summary": "sim_growth: 8/8 passed (runs 20, seed 1)"
   },
   {
    "name": "sim_glimmer",
    "code": 0,
-   "ms": 769515,
-   "summary": "NOTE (above/below the estimate) slice scope near the V2_PLAN §3.9 estimate (glimmered techs lv1–3 ≈ 20: 28 + starters 8, max lv 3; spells step 1–2 ≈ 12: 18)"
+   "ms": 105737,
+   "summary": "NOTE (above/below the estimate) slice scope near the V2_PLAN §3.9 estimate (glimmered techs lv1–3 ≈ 20: 28 + starters 8, max lv 3; spells step 1–2 ≈ 12: 20)"
   },
   {
    "name": "sim_loot",
-   "code": 0,
-   "ms": 157587,
-   "summary": "H5 倒しても落ちない: 30000 体、盗み専用のドロップ 0  pass"
+   "code": 1,
+   "ms": 9287,
+   "summary": "H5 倒しても落ちない: 30000 体、盗み専用のドロップ 0  pass",
+   "tail": "H4 盗み専用の当たり（成功の後）: 式との差 ±10%、上限 0.5\n  seabird_3 stealPct 0                 want   3.13%  got   3.06%  pass\n  seabird_3 stealPct 50                want   4.69%  got   4.59%  pass\n  seabird_3 stealPct 100               want   6.25%  got   6.26%  pass\n  seabird_3 stealPct 0 auto            want   1.56%  got   1.60%  pass\n  seabird_3 stealPct 0 golden          want   6.25%  got   6.12%  pass\n  rm_jewel_hare stealPct 50            want   9.38%  got   9.26%  pass\n  b_rooteater stealPct 0               want   6.25%  got   6.11%  pass\n  b_rooteater stealPct 5000            want  50.00%  got  49.98%  pass\nH5 倒しても落ちない: 30000 体、盗み専用のドロップ 0  pass\nH6（参考）stealPct +50: 通常の魔物（ぬすみカモメ）を取るまで 中央値 26 戦（目安 30〜60）、根食らい 1 戦 10 回で 27.0%（率 16 の読み替えで目安 35〜55）\nH7 縦切り 1 周のレアのドロップ（目安 3〜6）: 最短の道 28 戦・83 体 → レア 2.9 回（1 度も出ない 6%）、R1 の通し 134 戦・413 体 → レア 14.0 回（1 度も出ない 0%）  FAIL"
   }
  ]
 }

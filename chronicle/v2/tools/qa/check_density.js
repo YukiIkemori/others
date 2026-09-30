@@ -5,7 +5,7 @@
 //
 // 町（kind 'town'）ごとに、1 画面（広さ「ふつう」の 16:9 = 30×17 マス）を 5 マスずつずらして並べ、画面の半分以上が歩ける所の
 // 画面だけ数える。飾り = 物（prop・建物・看板・宝箱・灯籠・燭台）と、いつもいる人（cond の無い NPC）。
-//  - 1 画面の飾りの中央値が 25〜40、いちばん少ない画面も 12 以上（何もない画面を作らない）
+//  - 1 画面の飾りの中央値が 25〜40、いちばん少ない画面も 12 以上（何もない画面を作らない）。描いた下絵の町（art.image）は飾りが絵の中なので数だけ出す
 //  - 通りの中央（道の素材が左右か上下に 3 マス以上続く所のまん中）に硬い物（solid で soft でない prop・建物・看板・宝箱）が無い
 'use strict';
 const { ok, section, done } = require('../lib/testkit');
@@ -50,8 +50,12 @@ for (const id of towns) {
   counts.sort((a, b) => a - b);
   const med = counts[counts.length >> 1];
   summary[id] = { screens: counts.length, min: counts[0], median: med, max: counts[counts.length - 1] };
-  ok(`${id}: 1 画面の飾りの中央値 25〜40（${counts.length} 画面: 最小 ${counts[0]}・中央 ${med}・最大 ${counts[counts.length - 1]}）`, med >= 25 && med <= 40);
-  ok(`${id}: いちばん少ない画面も 12 以上（${counts[0]}）`, counts[0] >= 12);
+  // 描いた下絵の町（map.art.image）: 飾りの小物（樽・木箱・花…）は下絵に描く（持ち主の決まり 2026-09-28）ので、物の数は飾りの数にならない。数は参考に出すだけ
+  if (m.art && m.art.image) console.log(`  info ${id}: 描いた下絵の町（飾りは絵の中）— 物と人 ${counts.length} 画面: 最小 ${counts[0]}・中央 ${med}・最大 ${counts[counts.length - 1]}`);
+  else {
+    ok(`${id}: 1 画面の飾りの中央値 25〜40（${counts.length} 画面: 最小 ${counts[0]}・中央 ${med}・最大 ${counts[counts.length - 1]}）`, med >= 25 && med <= 40);
+    ok(`${id}: いちばん少ない画面も 12 以上（${counts[0]}）`, counts[0] >= 12);
+  }
   // 通りの中央
   const isRoad = (x, y) => { const c = R.MapUtil.cell(m, x, y); return !!(c && ROAD.test(c.mat || '')); };
   const hard = (x, y) => (m.objects || []).filter((o) => (o.lv || 0) === 0 && o.x != null && (o.cond == null || R.State.check(o.cond)) && R.MapUtil.inRect(x, y, R.MapUtil.footprint(o)) &&

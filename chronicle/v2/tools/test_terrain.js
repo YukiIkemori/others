@@ -37,7 +37,18 @@ ok('meta: 仕掛けの物のコマ（宝箱 closed/open/rare_*、燭台・灯籠
 ok('meta: 泉は 2×2・光る・solid', P.spring.footprint.join() === '2,2' && P.spring.solid && P.spring.light && P.spring.glow);
 ok('meta: 灯りを持つ物は light に半径（r > 0）', Object.keys(P).filter((id) => P[id].light).every((id) => P[id].light.r > 0), Object.keys(P).filter((id) => P[id].light && !(P[id].light.r > 0)));
 ok('meta: 通り抜けの小物（椅子・袋・花・小石）は soft、人より上の物は overChars', ['chair', 'sack', 'flower_pot', 'rock_small', 'bench'].every((id) => P[id].soft) && P.rope_bridge.overChars && P.leaves_over.overChars);
-ok('全物に hd:prop の登録', Object.keys(P).every((id) => R.Hd.has('hd:prop:' + id)), Object.keys(P).filter((id) => !R.Hd.has('hd:prop:' + id)));
+// 地方の組（ash_00_kit・isles_00_kit…）が R.DB.props に置く物は、画像（v2/assets/env/<組>/props/<id>.json）を起動のとき env.js が hd:prop に登録する（node では読まない）。
+//   光だけの物（*_glow・star_fire・glow_plankton。絵を持たず灯りだけ）も登録は要らない
+const ENV_PROPS = new Set();
+{
+  const envDir = require('path').join(__dirname, '..', 'assets', 'env');
+  for (const set of require('fs').readdirSync(envDir)) {
+    const d = require('path').join(envDir, set, 'props');
+    if (require('fs').existsSync(d)) for (const f of require('fs').readdirSync(d)) if (/\.json$/.test(f)) ENV_PROPS.add(f.replace(/\.json$/, ''));
+  }
+}
+const noHd = Object.keys(P).filter((id) => !R.Hd.has('hd:prop:' + id) && !ENV_PROPS.has(id) && !(P[id].soft && P[id].light && /_glow$|_fire$|plankton/.test(id)));
+ok('全物に hd:prop の登録（画像にしかない物は env の画像がある・光だけの物 *_glow は除く）', !noHd.length, noHd);
 ok('隠し通路の絵 hd:secret:<壁> の登録', ['rock', 'wall_stone', 'wall_moss', 'wall_bark', 'wall_cave', 'forest_dark'].every((id) => R.Hd.has('hd:secret:' + id)));
 
 section('建物のキー');

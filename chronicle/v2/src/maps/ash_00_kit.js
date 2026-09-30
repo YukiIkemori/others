@@ -25,7 +25,7 @@
   //   env の起動の登録は {solid, shadow} だけ。山地（mine_00_kit.js）と同じく、ここで先に META に置く（env は META が有れば上書きしない）。
   //   溶岩の照り返し（lava_glow）は置かない（光だまりで溶岩の堀のマスの段が四角く浮く。今の見た目のまま）
   const T = R.Terrain;
-  if (T && T._PROP_META) T._PROP_META.iron_brazier = Object.assign({}, T._PROP_META.iron_brazier || {}, { solid: true, glow: true, shadow: 'blob', light: { kind: 'fire', r: 110 } });
+  if (T && T._PROP_META) T._PROP_META.iron_brazier = Object.assign({}, T._PROP_META.iron_brazier || {}, { solid: true, glow: true, shadow: 'blob', light: { kind: 'fire', r: 72, k: 0.8 } });   // 小さめ（そばの宝箱が床に沈まない。check_chests）
 
   K.TOWN = function (extra) {
     return Object.assign({

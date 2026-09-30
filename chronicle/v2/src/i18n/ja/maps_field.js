@@ -421,7 +421,7 @@
     // ---- src/maps/field_ash_battle.js
     'map.field_ash_battle.a_battle.name': '灰の古戦場',
     'map.field_ash_battle.a_battle.objects.1.text': '灰の古戦場\n折れた剣の碑',
-    'map.field_ash_battle.a_battle.meta.sub': '折れた剣の眠る窪地',
+    'map.field_ash_battle.a_battle.meta.sub': '折れた剣の眠るくぼ地',
     // ---- src/maps/field_ash_beach.js
     'map.field_ash_beach.a_beach.name': '火山ガメの浜',
     'map.field_ash_beach.a_beach.objects.1.text': '黒い砂浜\n動く岩に注意。',
