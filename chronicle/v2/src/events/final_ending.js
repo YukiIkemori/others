@@ -220,6 +220,8 @@
       G.pos = { map: 'roa', x: sp.x, y: sp.y, dir: sp.dir || 's' };
       G.lastInn = { map: 'roa', x: sp.x, y: sp.y, dir: sp.dir || 's' };
     }
+    // 「おしまい」の後の暗転を明ける（選択とセーブの画面が暗転の下に隠れないように。後ろは朝のロアの丘）
+    try { await ev.fade('in', 700); } catch (e) { /* */ }
     const i = await ev.choose(R.T('ev.final_ending.clearSave.i.choose'), { cancel: 1, text: R.T('ev.final_ending.clearSave.i.choose.text') });
     if (i === 0) {
       try { await R.Screens.open('save', { ending: true }); } catch (e) { R.warn('ending save', e && e.message); }

@@ -46,7 +46,7 @@
     def('archive_2', {
       objects: [
         K.stairs(5, 26, { map: 'archive_1', spawn: 'from2' }, { id: 'archive_2_down', look: 'down' }), K.stairs(6, 26, { map: 'archive_1', spawn: 'from2' }, { look: 'down' }),
-        K.stairs(37, 2, { map: 'archive_3', spawn: 'from2' }, { id: 'archive_2_up', look: 'up' }), K.stairs(38, 2, { map: 'archive_3', spawn: 'from2' }, { look: 'up' }),
+        K.stairs(37, 2, { map: 'archive_3', spawn: 'from2' }, { id: 'archive_2_up', look: 'up', cond: 'final_golem' }), K.stairs(38, 2, { map: 'archive_3', spawn: 'from2' }, { look: 'up', cond: 'final_golem' }),   // 番人を倒すまで上がれない（手前の段で戦いになる）
         K.chest('archive_2_c1', 39, 23, { pool: 'p_T' }), K.chest('archive_2_c2', 4, 13, { item: 'i_potion2', n: 3 }), K.chest('archive_2_c3', 22, 3, { pool: 'p_T' }),
         K.exam(15, 17, 'archive_copy_desk'), K.exam(28, 25, 'archive_copy_desk'),
         ...glow([[8, 6], [35, 6], [8, 16], [36, 16], [10, 29], [35, 29]]),
@@ -68,7 +68,7 @@
     def('archive_3', {
       objects: [
         K.stairs(9, 31, { map: 'archive_2', spawn: 'from3' }, { id: 'archive_3_down', look: 'down' }),
-        K.stairs(21, 2, { map: 'archive_4', spawn: 'from3' }, { id: 'archive_3_up', look: 'up' }), K.stairs(22, 2, { map: 'archive_4', spawn: 'from3' }, { look: 'up' }),
+        K.stairs(21, 2, { map: 'archive_4', spawn: 'from3' }, { id: 'archive_3_up', look: 'up', cond: 'final_rowell' }), K.stairs(22, 2, { map: 'archive_4', spawn: 'from3' }, { look: 'up', cond: 'final_rowell' }),   // 封印の扉が開くまで上がれない
         K.exam(21, 5, 'archive_3_door', { cond: '!final_rowell' }), K.exam(22, 5, 'archive_3_door', { cond: '!final_rowell' }),
         ...TALES.map(([x, y, rid]) => K.exam(x, y, 'archive_tale', { region: rid })),
         K.spring('archive_3_spring', 21, 30),
@@ -96,7 +96,7 @@
     def('archive_4', {
       objects: [
         K.stairs(38, 31, { map: 'archive_3', spawn: 'from4' }, { id: 'archive_4_down', look: 'down' }), K.stairs(39, 31, { map: 'archive_3', spawn: 'from4' }, { look: 'down' }),
-        K.stairs(21, 2, { map: 'archive_5', spawn: 'from4' }, { id: 'archive_4_up', look: 'up' }), K.stairs(22, 2, { map: 'archive_5', spawn: 'from4' }, { look: 'up' }),
+        K.stairs(21, 2, { map: 'archive_5', spawn: 'from4' }, { id: 'archive_4_up', look: 'up', cond: 'final_shades' }), K.stairs(22, 2, { map: 'archive_5', spawn: 'from4' }, { look: 'up', cond: 'final_shades' }),   // 三英雄の影を越えるまで上がれない
         ...PICS.map(([x, y, n]) => K.exam(x, y, 'archive_4_painting', { pic: n })),
         K.spring('archive_4_spring', 7, 24),
         K.exam(5, 9, 'archive_4_statue'), K.exam(9, 14, 'archive_4_statue'),
