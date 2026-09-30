@@ -138,8 +138,8 @@
     // 飾りの小物（樽・岩・布など）は下絵に描く（持ち主の決まり 2026-09-28）。ここに置くのは働く物（調べる物・宝箱・灯り）だけ
     O.push(K.prop('board', 23, 33), K.exam(23, 33, 'caldera_board'));                  // 闘技場の壁の掲示板
     O.push(K.exam(26, 42, 'caldera_spa'), K.exam(27, 42, 'caldera_spa'), K.exam(28, 42, 'caldera_spa'));   // 町の湯（温泉。描いた湯の北の縁）
-    // 【灯りを守る】崖の上の灯籠 3（冷えた灯籠 = 灰の道しるべの柱の消えた絵を下絵に描きこみ。ともすと、かがり火の灯り）
-    for (const [n, x, y] of [[1, 9, 16], [2, 44, 16], [3, 20, 46]]) O.push(K.exam(x, y, 'caldera_lantern', { lamp: n }), K.prop('iron_brazier', x, y, { cond: 'ash_lantern_' + n }));
+    // 【灯りを守る】崖の上の灯籠 3（冷えた灯籠 = 灰の道しるべの柱の消えた絵を下絵に描きこみ。ともすと、柱の上にかがり火の灯り。lift で柱の頭へ持ち上げる）
+    for (const [n, x, y] of [[1, 9, 16], [2, 44, 16], [3, 20, 46]]) O.push(K.exam(x, y, 'caldera_lantern', { lamp: n }), K.prop('iron_brazier', x, y, { cond: 'ash_lantern_' + n, lift: 34 }));
     // 町の宝箱 2（見える所だけ）
     O.push(K.chest('caldera_c1', 35, 5, { pool: 'p_T' }), K.chest('caldera_c2', 14, 42, { item: 'i_ether', n: 2 }));
     // かがり火（崖・岩の上。道・戸口の前・出入り口には置かない）と、溶岩の堀の照り返し（光だけ）

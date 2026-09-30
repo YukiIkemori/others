@@ -74,6 +74,15 @@
     if (cond == null) return false;
     try { return !(R.State && R.Game && R.State.check(cond)); } catch (e) { return true; }
   }
+  /** 変わるマスを n マス広げた一覧（liveSoft。一度作って L に覚える） */
+  function softCells(L, n) {
+    if (!n) return L.cells;
+    if (L._soft && L._softN === n) return L._soft;
+    const seen = new Set(), out = [];
+    for (const [x, y] of L.cells) for (let j = -n; j <= n; j++) for (let i = -n; i <= n; i++) { const k = (x + i) + ',' + (y + j); if (!seen.has(k)) { seen.add(k); out.push([x + i, y + j]); } }
+    L._soft = out; L._softN = n;
+    return out;
+  }
   /** 下絵の窓の灯り（emit の絵をこのマスの大きさの canvas に）と窓ごとの光（meta.windows32） */
   function underLights(map, und, tile, v) {
     const s = tile / 32, SL = (R.Hd && R.Hd.STYLE && R.Hd.STYLE.light) || {}, wc = SL.windowColor || '#ffcf86';
@@ -531,8 +540,9 @@
       if (u.closed && u.j.live) {   // 閉じている変わるマス（隠し通路の壁・根の戸・つるの壁…）
         const t = this.tile, [x0, y0, x1, y1] = this.cells, ck = u.closed.k;
         for (const L of u.j.live) {
-          if (!L.cells.some(([x, y]) => x >= x0 && x < x1 && y >= y0 && y < y1) || !liveClosed(this.map, L, this.st)) continue;
-          for (const [x, y] of L.cells) if (x >= x0 && x < x1 && y >= y0 && y < y1) bg.drawImage(u.closed.img, (x * t) / ck, (y * t) / ck, t / ck, t / ck, x * t - this.X0, y * t - this.Y0, t, t);
+          if (!softCells(L, u.j.liveSoft).some(([x, y]) => x >= x0 && x < x1 && y >= y0 && y < y1) || !liveClosed(this.map, L, this.st)) continue;
+          // liveSoft = n: 閉じた絵のふちがやわらかい（透明のにじみ）ので、マスの外 n マスまで描く（鐘沈みの沼の泥の道: 描いた曲がった道に沿う水）
+          for (const [x, y] of softCells(L, u.j.liveSoft)) if (x >= x0 && x < x1 && y >= y0 && y < y1) bg.drawImage(u.closed.img, (x * t) / ck, (y * t) / ck, t / ck, t / ck, x * t - this.X0, y * t - this.Y0, t, t);
         }
       }
     }

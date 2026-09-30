@@ -21,9 +21,10 @@
     lift_cage: { solid: true }, oath_stone: { solid: true },
     // 光だけの物（絵を持たない）: 鍛冶神の炉の赤い光（鍛冶場の奥・町の灯り直す場面）と、七の層の破れ目の白い光
     forge_glow: { soft: true, glow: true, light: { kind: 'fire', r: 200 } },
-    white_glow: { soft: true, glow: true, light: { kind: 'lamp', r: 150 } },
+    white_glow: { soft: true, glow: true, light: { kind: 'lamp', r: 96, colors: ['#c8c4ff'], k: 0.45, glow: 0 } },   // 七の層の破れ目（白く飛ばさない淡い藤色）
     // (2026-09-30) 岩の中の青い鉱石の脈（描いた結晶の上）と、町の家の窓明かり（描いた窓の前の光だまり）
-    crystal_glow: { soft: true, glow: true, light: { kind: 'crystal', r: 52 } },
+    // (2026-09-30 見直し) 白い大きな雲に見えた → 小さく、青と紫に色を付けて控えめに（colors は位置で選ぶ。props_light.js）
+    crystal_glow: { soft: true, glow: true, light: { kind: 'crystal', r: 34, colors: ['#4fc8ff', '#9a7cff', '#5ad8f0'], k: 0.55, glow: 9 } },
     window_glow: { soft: true, glow: true, light: { kind: 'lamp', r: 42 } },
     ember_glow: { soft: true, glow: true, light: { kind: 'fire', r: 64 } },   // 炉の口の赤（町の鍛冶場・谷底の村の大鍛冶場）
   };
@@ -37,7 +38,7 @@
       const p = PROPS[id];
       const m = Object.assign({}, T._PROP_META[id] || {});
       for (const k of ['solid', 'soft', 'glow', 'shadow']) if (p[k] !== undefined) m[k] = p[k];
-      if (p.light) m.light = { kind: p.light.kind, r: p.light.r };
+      if (p.light) m.light = Object.assign({}, p.light);
       T._PROP_META[id] = m;
       if (/_glow$/.test(id) && T._PROP_DRAW && !T._PROP_DRAW[id]) { T._PROP_DRAW[id] = function () { return null; }; T._PROP_DRAW[id].envOnly = true; }
     }

@@ -28,7 +28,8 @@
   /** 物の描く点（足もと、マップの論理 px） */
   T._objFeet = function (o, tile) {
     if (o.type === 'spring') return [(o.x + 1) * tile, (o.y + 1.8) * tile];
-    return [(o.x + 0.5) * tile, (o.y + 0.84) * tile];
+    // lift = 下絵の柱・台の上に載せる物の持ち上げ（32 の論理 px。灰の町の崖の上の灯籠の柱に載るかがり火など）
+    return [(o.x + 0.5) * tile, (o.y + 0.84) * tile - (o.lift ? o.lift * tile / 32 : 0)];
   };
 
   /**
@@ -134,13 +135,17 @@
           const a = (T._setAnchor && T._setAnchor(map, o.id, s)) || anchorOf(o.id, s);   // テーマの描き直した物は絵の灯りの芯（props.js）
           const lx = fx + a[0], ly = fy + a[1];
           const fire = !!(T._setFire && T._setFire(map, o.id));   // テーマの描き直しが火（砂漠の置きかがり火 lantern__desert）
-          const color = /crystal|mushroom|songstone/.test(o.id) ? S.crystalColor : fire ? S.fireColor : spec.color;
+          // meta.light.colors = 色の一覧（位置で選ぶ。山地の鉱石の脈の青・紫）、meta.light.k = 濃さの倍率、meta.light.glow = 芯のにじみの半径（32 の px）
+          const LC = meta.light.colors;
+          const color = LC && LC.length ? LC[(o.x * 7 + o.y * 13) % LC.length] : /crystal|mushroom|songstone/.test(o.id) ? S.crystalColor : fire ? S.fireColor : spec.color;
+          const km = meta.light.k != null ? meta.light.k : 1;
           // 火の描き直し（砂漠の置きかがり火）は光だまりを控えめに・芯の点の光は無し（足もとに焼いた小さな絵が白く飛ばない）
-          L(lx, fy - 4 * s, spec.r, color, spec.k * (fire ? 0.6 : 1.2), 'pool', spec.kind, o.id + '@' + o.x + ',' + o.y);
+          L(lx, fy - 4 * s, spec.r, color, spec.k * (fire ? 0.6 : 1.2) * km, 'pool', spec.kind, o.id + '@' + o.x + ',' + o.y);
           if (!fire && /lamp|lantern|beacon|torch|crystal|stove|fireplace|candelabra|sconce/.test(o.id)) L(lx, ly, 24, color, 0.7, 'point', spec.kind, o.id);
           const soft = /crystal|mushroom|songstone/.test(o.id);
           if (fire) { G(lx, ly, { r: 14 * s, core: 1.5 * s, halo: 14 * s, color, k: 0.6, type: 'fire', flick: FIRE_FLICK }); break; }   // 小さな火: にじみは炎のまわりだけ（鉢と脚の絵を白く飛ばさない）
-          G(lx, ly, { r: (o.id === 'beacon' ? 60 : soft ? 18 : 22) * s, core: (o.id === 'beacon' ? 9 : soft ? 1.5 : 3) * s, halo: (o.id === 'beacon' ? 60 : soft ? 18 : 22) * s, color, k: soft ? 0.55 : 0.9, type: spec.kind });
+          const gr = meta.light.glow != null ? meta.light.glow : o.id === 'beacon' ? 60 : soft ? 18 : 22;
+          if (gr > 0) G(lx, ly, { r: gr * s, core: (o.id === 'beacon' ? 9 : soft ? 1.5 : 3) * s, halo: gr * s, color, k: (soft ? 0.55 : 0.9) * Math.min(1, km), type: spec.kind });
           break;
         }
         default: break;

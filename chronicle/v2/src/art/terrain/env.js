@@ -375,6 +375,7 @@
     if (T._faceReset) T._faceReset();
     // 画像にしかない物の登録（家具・木の変化などの新しい id）。R.DB.props にも足す（CONTENT が置ける）
     if (T._envRegisterProps) T._envRegisterProps();
+    if (T._syncPropLights) T._syncPropLights();   // 地方の組の R.DB.props の灯りを META へ（props.js）
     // WORLD v3: 画像が読めるまでに焼いたワールドのチャンク（コードの絵・大きな景色なし）を焼き直す（フィクスチャですぐワールドに入ったとき）
     try { const F = R.Field; if (F && F.chunks && F.chunks.reset && F._s && F._s.map && F._s.map.splat && !F._s.entering) F.chunks.reset(); } catch (e) { /* 次に入ったときに焼く */ }
     // 入ったマップの隣（出口・扉・階段・建物の入口の行き先）の下絵と、このマップの戦闘背景を先に読む。
