@@ -1,6 +1,6 @@
 """Painted dungeon floor: generation -> global shift (DX, DY in 1x px) -> 1x map image (+@24/@32/@40) + meta json.
 Optional closed image for the live cells (bog): LIVE=<json [{cells:[[x,y]..], patch:i}]> -> <name>_closed: the live cells repainted as water sampled from the painting.
-usage: python3 process_dun.py <layout.json> <gen.png> <name> <outdir>   env DX DY GAIN LIVE WATER=<x0,y0,x1,y1 1x px water sample box>"""
+usage: python3 process_dun.py <layout.json> <gen.png> <name> <outdir>   env DX DY GAIN WALKLIFT WALKCH LIVE WATER=<x0,y0,x1,y1 1x px water sample box>"""
 import sys, json, os, numpy as np
 from PIL import Image
 from scipy import ndimage
@@ -13,6 +13,13 @@ if DY: A = np.roll(A, DY, 0); (A.__setitem__(slice(DY, None) if DY < 0 else slic
 if DX: A = np.roll(A, DX, 1)
 gain = float(os.environ.get('GAIN', 0.92))
 A = np.clip(A * gain, 0, 255)
+# 歩ける所を持ち上げる（2026-09-30: 沼の床・道が暗い水と見分けにくかった）。WALKLIFT=<倍率> WALKCH=<歩ける字>（layout.json の rows_fit）。境はぼかす
+WL = float(os.environ.get('WALKLIFT', 1.0))
+if WL != 1.0:
+    rows = d.get('rows_fit') or d['rows']
+    wm = np.kron(np.array([[c in os.environ.get('WALKCH', 'gp=') for c in r] for r in rows], np.float32), np.ones((T, T), np.float32))
+    wm = np.clip(ndimage.gaussian_filter(wm, 6.0) * 1.3, 0, 1)[..., None]
+    A = np.clip(A * (1 + (WL - 1) * wm), 0, 255)
 base = np.rint(A).astype(np.uint8)
 def save_set(name, arr, rgba=False):
     im = Image.fromarray(arr.astype(np.uint8), 'RGBA' if rgba else 'RGB')
