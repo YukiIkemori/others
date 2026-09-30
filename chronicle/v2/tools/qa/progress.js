@@ -118,7 +118,8 @@ function closure(o) {
   if (s.event) { applyGives(s.event, variant, trace, 0); ran.add(s.event); }
   // イベントの warp（meta.warp）で着く所も、そこから歩ける始まりに足す（出口の無い夜の村・野営地など）
   const extra = [];
-  const addWarp = (id) => { const w = R.DB.events[id] && R.DB.events[id].meta && R.DB.events[id].meta.warp; const d = w && M.dest({ map: w.to || w.map, spawn: w.spawn, x: w.x, y: w.y }); if (d && R.DB.maps[d.map]) extra.push({ map: d.map, x: d.x, y: d.y, lv: d.lv }); };
+  // meta.warp は 1 つか一覧（行き先を選ぶトロッコ線など）
+  const addWarp = (id) => { const ws = [].concat((R.DB.events[id] && R.DB.events[id].meta && R.DB.events[id].meta.warp) || []); for (const w of ws) { const d = w && M.dest({ map: w.to || w.map, spawn: w.spawn, x: w.x, y: w.y }); if (d && R.DB.maps[d.map]) extra.push({ map: d.map, x: d.x, y: d.y, lv: d.lv }); } };
   const visited = new Set();
   const portalsOpen = new Set();
   const optionalEv = (id) => /^(q_|mini_)/.test(id) || /_quest|_herb|_acorn|_song_|_letters|_fireflies|_delivery|_lamp/.test(id);

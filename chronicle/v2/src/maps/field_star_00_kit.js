@@ -36,6 +36,12 @@
       w.npcs.push({ id: 'guard_star', look: 'npc_guard_1', name: R.T('map.field_star_00_kit.guard.name'), x: 478, y: 147, dir: 's', move: 'still', pushable: false, cond: { slice: true },
         talk: { lines: [{ text: [R.T('map.field_star_00_kit.guard.text'), R.T('map.field_star_00_kit.guard.text_2')] }] }, reward: 'news', key: 'world_guard_star' });
     }
+    // トロッコ線の高原の終点（WORLD_REDESIGN §2.5: 組合につくか仲裁で ドヴァン ⇔ 高原）。坂の西の崖の下にトロッコと車止め（events/mine_field.js の star_rail_stop）
+    const ST = M.s_steps;
+    if (!(ST.objects || []).some((o) => o.event === 'star_rail_stop')) {
+      ST.objects.push({ type: 'prop', id: 'mine_cart', x: 6, y: 24 }, { type: 'examine', x: 6, y: 24, event: 'star_rail_stop' });
+      ST.spawns.rail = { x: 6, y: 25, dir: 's' };
+    }
     // 星読みの尾根の塔の扉（生成したエリアのファイルは書き換えない）: 星図で開けるまでは閉じた扉（当たり）、開けたら塔の 1 階へ
     const G = M.s_ridge;
     if (G && M.star_tower_1 && !(G.objects || []).some((o) => o.to && o.to.map === 'star_tower_1')) {
