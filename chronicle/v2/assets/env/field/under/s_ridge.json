@@ -1,0 +1,20 @@
+{
+ "id": "s_ridge",
+ "kind": "under",
+ "map": "s_ridge",
+ "tile": 32,
+ "size32": [
+  1600,
+  1216
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.8,
+ "files": {
+  "24": "s_ridge@24.png",
+  "32": "s_ridge@32.png",
+  "40": "s_ridge@40.png"
+ },
+ "src": "generated"
+}
