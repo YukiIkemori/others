@@ -74,7 +74,9 @@ function nodePart() {
   const ids = sliceMaps(R);
   section(`node: 縦切りのマップ ${ids.length} 枚を FIELD の当たりで歩く`);
   ok('縦切りのマップが 28 枚以上（§3.2）', only || ids.length >= 28, ids.length);
-  for (const id of ids) {
+  // 物の索引（lib/maps.js の withIndex）: ワールドのような大きなマップで MapUtil.objectsAt が全部の物を毎回なめない
+  const MX = require('./lib/maps').create(R);
+  for (const id of ids) MX.withIndex(() => {
     const m = R.DB.maps[id];
     const bad = [];
     const c = R.Contract.check('map', m);
@@ -131,7 +133,7 @@ function nodePart() {
       if (!near(n.x, n.y, lv, 1, 1) && !at(n.x, n.y, lv) && !across) bad.push(`npc ${n.id} (${n.x},${n.y}) cannot be reached`);
     }
     ok(`${id}: FIELD で歩ける（spawn・出口・扉・階段・宝箱・泉・調べる物・人に届く）`, bad.length === 0, bad.slice(0, 6));
-  }
+  });
 }
 
 // ================================================================ ブラウザ: 入る（暗転 260 ms）・歩く・撮る
