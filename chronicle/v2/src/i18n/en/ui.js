@@ -749,6 +749,11 @@
     'ui.panel.tag.label': 'F',
     'ui.panel.tag.label_2': 'B',
     // ---- src/screens/nameentry.js（手で移した: 言語ごとの字の表）
+    // 字の表は日本語と同じ（英語はラテン字の表だけを使う。かなの表は言語を ja に戻したときのための写し）
+    'ui.nameentry.kanaA': ['アイウエオ', 'カキクケコ', 'サシスセソ', 'タチツテト', 'ナニヌネノ', 'ハヒフヘホ', 'マミムメモ', 'ヤ ユ ヨ', 'ラリルレロ', 'ワヲンー '],
+    'ui.nameentry.kanaB': ['ガギグゲゴ', 'ザジズゼゾ', 'ダヂヅデド', 'バビブベボ', 'パピプペポ', 'ァィゥェォ', 'ャュョッヴ'],
+    'ui.nameentry.latinA': ['ABCDEFGHIJ', 'KLMNOPQRST', 'UVWXYZ-\'. ', '0123456789', '&!?,:;()~ '],
+    'ui.nameentry.latinB': ['ÀÁÂÄÇÈÉ', 'ÊËÌÍÎÏÑ', 'ÒÓÔÖÙÚÛ', 'ÜÝŸÆŒØÅ', 'ẞÞÐ+=#*'],
     'ui.nameentry.title': 'Enter Name',
     'ui.nameentry.toHira': 'lowercase',
     'ui.nameentry.toKata': 'UPPERCASE',

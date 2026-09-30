@@ -43,7 +43,12 @@ section('言語の切り替え（設定の lang・英語の表・日本語へ落
   R.Settings.set('lang', 'en');
   ok('Settings.set(lang) switches R.I18n', R.I18n.lang() === 'en');
   ok('English UI string', R.T('ui.hub.CMDS.items.label') === 'Items', R.T('ui.hub.CMDS.items.label'));
-  ok('untranslated key falls back to Japanese', R.I18n.has('ui.nameentry.kanaA', 'ja') && !R.I18n.has('ui.nameentry.kanaA', 'en') && Array.isArray(R.T('ui.nameentry.kanaA')));
+  {
+    // 訳の無い key は日本語へ落ちる（本物の表は全部訳してあるので、日本語だけの試しの key で確かめる）
+    const k = 'ui.__test_i18n.ja_only_rows';
+    R.I18n.add('ja', { [k]: ['アイウ', 'カキク'] });
+    ok('untranslated key falls back to Japanese', R.I18n.has(k, 'ja') && !R.I18n.has(k, 'en') && Array.isArray(R.T(k)) && R.T(k)[0] === 'アイウ');
+  }
   ok('language is remembered for the next load (localStorage <prefix>lang)', R._localStorage[R.SAVE_PREFIX + 'lang'] === 'en');
   ok('font stack follows the language', /Nunito/.test(R.Gfx.font(16, 500)) && R.I18n.isLatin());
   R.Settings.set('lang', 'ko');
