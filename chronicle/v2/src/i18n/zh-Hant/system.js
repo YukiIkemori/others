@@ -1,0 +1,70 @@
+// 繁体中国語（台湾）の文の表（system）。key は日本語の表（src/i18n/ja/system.js）と同じ。無い key は日本語が出る
+(function (R) {
+  'use strict';
+  R.I18n.add('zh-Hant', {
+    // ---- src/systems/demo_carry.js
+    'sys.demo_carry.offer.i.say.text': '找到了試玩版的\n冒險記錄{p0}。\n要繼承後開始嗎？',
+    'sys.demo_carry.offer.i.say.text_2': '（{t}）',
+    'sys.demo_carry.offer.i.say.choices': ['繼承', '重新開始'],
+    // ---- src/systems/events_runtime.js
+    'sys.events_runtime.toastGain.txt': '獲得了{p0}{p1}',
+    'sys.events_runtime.makeEv.ev.gold.toast': '獲得了 {n} G',
+    'sys.events_runtime.makeEv.ev.createHero.h.name': '阿倫',
+    'sys.events_runtime.makeEv.ev.lore.txt': '已抄錄進書庫{p0}',
+    'sys.events_runtime.makeEv.ev.lore.txt_2': '：{title}',
+    // ---- src/systems/leads.js
+    'sys.leads.PROMPT.0.label': '做標記',
+    'sys.leads.regionName.ret': '世界傳聞',
+    'sys.leads.regionName.ret_2': '主線',
+    'sys.leads.draw.text': '已做標記',
+    'sys.leads.draw.text_2': '新線索',
+    'sys.leads.draw.text_3': '右上方的卡片和地圖上會顯示記號',
+    // ---- src/systems/minigame.js
+    'sys.minigame.THEMES.forest.sub': '森之歌',
+    'sys.minigame.THEMES.harbor.sub': '港之歌',
+    'sys.minigame.THEMES.night.sub': '夜之歌',
+    'sys.minigame.NOTE_NAME': ['高音', '明亮之音', '低音', '柔和之音', '迴響之音'],
+    'sys.minigame.sequence.st.title': '對歌',
+    'sys.minigame.drawSeq.P.frame': '{sub} · 對歌',
+    'sys.minigame.drawSeq.rtxt': '第 {Math} 節 / {rounds}',
+    'sys.minigame.drawSeq.msg': '歌石開始歌唱。仔細聽……。',
+    'sys.minigame.drawSeq.msg_2': '下一節。多了一個音……。',
+    'sys.minigame.drawSeq.msg_3': '聽……。',
+    'sys.minigame.drawSeq.msg_4': '按相同順序重複（{length} / {L}）',
+    'sys.minigame.drawSeq.msg_5': '完美地合上了！',
+    'sys.minigame.drawSeq.msg_6': '啊，音不對……。',
+    'sys.minigame.drawSeq.text': '對歌評價',
+    'sys.minigame.drawSeq.text_2': '合上的音　{hits} / {total}',
+    'sys.minigame.drawSeq.words.S': '整座森林都在側耳傾聽。',
+    'sys.minigame.drawSeq.words.A': '真是動聽的歌。',
+    'sys.minigame.drawSeq.words.B': '再努力一點就能記住了。',
+    'sys.minigame.drawSeq.words.C': '歌聲還是七零八落的。',
+    'sys.minigame.drawSeq.pr.0.label': '關閉',
+    'sys.minigame.drawSeq.pr.0.label_2': '發出聲音',
+    'sys.minigame.drawSeq.pr.1.label': '放棄',
+    'sys.minigame.timing.st.title': '時機',
+    'sys.minigame.drawTiming.P.frame': '{sub} · 時機',
+    'sys.minigame.drawTiming.0.label': '關閉',
+    'sys.minigame.drawTiming.0.label_2': '停',
+    'sys.minigame.drawTiming.1.label': '取消',
+    // ---- src/systems/mon.js
+    'sys.mon.goldenName.ret': '金色{n}',
+    'sys.mon.goldenName.ret_2': '金{n}',
+    // ---- src/systems/state.js
+    'sys.state.setHero.h.name': '阿倫',
+    // ---- src/systems/tier.js
+    'sys.tier.KANJI.1': '一',
+    'sys.tier.KANJI.2': '二',
+    'sys.tier.KANJI.3': '三',
+    'sys.tier.KANJI.4': '四',
+    'sys.tier.KANJI.5': '五',
+    'sys.tier.KANJI.6': '六',
+    'sys.tier.KANJI.7': '七',
+    'sys.tier.KANJI.8': '八',
+    'sys.tier.KANJI.9': '九',
+    'sys.tier.drawStage.text': '第{p0}章',
+    'sys.tier.drawStage.line': '將{page}裝訂進了編年史',
+    'sys.tier.drawStage.text_2': '{region}的燈火重新亮起',
+    'sys.tier.drawStage.0.label': '繼續',
+  });
+})(window.RPG);

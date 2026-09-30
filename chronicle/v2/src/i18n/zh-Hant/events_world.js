@@ -1,0 +1,40 @@
+// 繁体中国語（台湾）の文の表（events_world）。key は日本語の表（src/i18n/ja/events_world.js）と同じ。無い key は日本語が出る
+// 差し込み {name} は日本語と同じ名前を残す
+(function (R) {
+  'use strict';
+  R.I18n.add('zh-Hant', {
+    'ev.world_poi.world_poi_shrine.run.narr': '路邊的小祠堂。\n供奉著祈求旅途平安的\n石像。',
+    'ev.world_poi.world_poi_shrine.run.narr_2': '你在祠堂前雙手合十。',
+    'ev.world_poi.world_poi_shrine.run.narr_3': ['供奉的野花，\n還很新鮮。', '有人點過蠟燭的痕跡，\n留在石頭上。', '風似乎變得\n柔和了一些。'],
+    'ev.world_poi.lines.0': '風車的門緊緊關著。\n現在似乎進不去。',
+    'ev.world_poi.lines': ['古老的立石圍成了一圈。', '石面上隱約刻著\n無法辨認的文字。\n……很像燈火的印記。'],
+    'ev.world_poi.lines_2': ['一座快要倒塌的瞭望塔。', '石階深處，\n被樹根和泥土堵住了。\n從前大概能從這裡眺望森林吧。'],
+    'ev.world_poi.lines_3': ['長滿青苔的石柱，圍成一圈。', '正中的地磚上，\n刻著千年樹的葉紋。'],
+    'ev.world_poi.lines_4': ['倒下的巨大石像。\n是一個身披長衣的人。', '面容早已磨平，\n認不出來了。'],
+    'ev.world_poi.lines_5': ['埋在草叢裡的石基。\n只剩下三級石階。', '也許是從前驛站的遺蹟吧。'],
+    'ev.world_poi.lines_6': ['俯瞰大海的古老石牆。', '透過窗洞，\n能望見遠處的燈塔之光。'],
+    'ev.world_poi.lines_7': ['木頭搭的瞭望台。', '從上面望去，半島的牧場\n和北方的海盡收眼底。'],
+    'ev.world_poi.lines_8': ['埋在雪裡的石塔。', '朝著北方浮冰原的方向，\n只開著一扇窗。'],
+    'ev.world_poi.lines_9': ['一半埋在沙中的神殿門面。', '兩根石柱之間，\n吹來陣陣冷風。'],
+    'ev.world_poi.lines_10': ['從沼澤裡探出的古老鐘樓。', '青苔之中，一口生鏽的鐘\n歪斜地掛著。\n……不會響了。'],
+    'ev.world_poi.lines_11': ['高腳小屋的遺蹟。', '地板早已脫落，只剩屋頂\n斜斜地罩在沼澤上。'],
+    'ev.world_poi.world_poi_cache.run.narr': '石縫裡，已經什麼都沒有了。',
+    'ev.world_poi.world_poi_cache.run.narr_2': '石縫裡，塞著一個\n旅人的小包裹。',
+    'ev.world_prologue.world_pen_lamp.run.narr': '路標燈籠裡，\n亮著火光。\n周圍的黑暗淡了一些。',
+    'ev.world_prologue.world_pen_lamp.run.narr_2': '瞭望台的舊燈籠，\n火還是熄著的。',
+    'ev.world_prologue.world_pen_lamp.run.narr_3': '路標燈籠的火\n熄滅了。',
+    'ev.world_prologue.world_pen_lamp.run.narr_4': '要是有火種，\n應該能點燃。',
+    'ev.world_prologue.world_pen_lamp.run.narr_5': '把公會的火種，\n移進了燈籠。',
+    'ev.world_prologue.world_pen_lamp.run.narr_6': '燈籠點亮了！\n這一帶，魔物應該\n再也不會靠近了。',
+    'ev.world_prologue.world_pen_lamp.run.narr_7': '去告訴塔德奧吧。',
+    'ev.world_prologue.world_bridge_guard.run.pick.0.text': '看得見西邊森林上空\n那道光柱吧？\n那就是所謂的大燈火啊。',
+    'ev.world_prologue.world_bridge_guard.run.pick.1.text': ['吊橋已經放下來了。\n穿過北邊的原野，\n就是通往西邊森林的大道。', '聽說東邊和北邊的山口\n因為塌方過不去。當心點。'],
+    'ev.world_prologue.world_bridge_guard.run.pick.2.text': ['吊橋一直收著。\n自從燈塔的火熄了，\n夜裡的魔物就會過橋來。', '燈塔的火沒回來之前，\n可放不下來啊。'],
+    'ev.world_prologue.world_traveler_plains.run.pick.0.text': '森林的燈火回來以後，\n夜路用的樹脂火把\n賣得可好了。',
+    'ev.world_prologue.world_traveler_plains.run.pick.1.text': ['願燈火常明。\n東邊山口塌方了，\n貨物運不進山裡的鎮子。', '所以這陣子只好\n在這兒露宿。要不要\n過來烤烤火？'],
+    'ev.world_prologue.world_woodcutter.run.pick.0.text': '夥伴們，都已經\n回到村子裡了。\n森林的路，也不會再迷了。',
+    'ev.world_prologue.world_woodcutter.run.pick.1.text': ['森林的路老是變，\n沒法往深處走。', '大道上的路標燈籠\n滅了足足三盞。\n夜裡，最怕的就是這個。'],
+    'ev.world_prologue.world_shepherd.run.pick.0.text': '最近，天空是不是\n亮了那麼一點點？\n羊兒們也安穩多了。',
+    'ev.world_prologue.world_shepherd.run.pick.1.text': ['燈塔回來以後，\n羊夜裡不再叫了。', '我年輕的時候……\n咦，所謂的白天，\n好像有過，又好像沒有。'],
+  });
+})(window.RPG);

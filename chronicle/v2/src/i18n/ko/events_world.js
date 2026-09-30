@@ -1,0 +1,40 @@
+// 韓国語の文の表（events_world）。key は日本語の表（src/i18n/ja/events_world.js）と同じ。無い key は日本語が出る
+// 差し込み {name} は日本語と同じ名前を残す
+(function (R) {
+  'use strict';
+  R.I18n.add('ko', {
+    'ev.world_poi.world_poi_shrine.run.narr': '길가의 작은 사당.\n나그네의 무사를 비는\n돌상이 모셔져 있다.',
+    'ev.world_poi.world_poi_shrine.run.narr_2': '사당에 두 손을 모았다.',
+    'ev.world_poi.world_poi_shrine.run.narr_3': ['바쳐 놓은 들꽃이\n아직 싱싱하다.', '누군가 켜 두었던 촛불 자국이\n돌에 남아 있다.', '바람이 조금\n누그러진 것 같았다.'],
+    'ev.world_poi.lines.0': '풍차의 문은 굳게 닫혀 있다.\n지금은 들어갈 수 없는 것 같다.',
+    'ev.world_poi.lines': ['오래된 선돌이 둥글게 늘어서 있다.', '돌 표면에 읽을 수 없는 글자가\n희미하게 새겨져 있다.\n……등불의 문양과 닮았다.'],
+    'ev.world_poi.lines_2': ['무너져 가는 망루.', '돌계단 안쪽은 뿌리와 흙으로\n막혀 있다.\n옛날에는 여기서 숲을 내려다보았겠지.'],
+    'ev.world_poi.lines_3': ['이끼 낀 기둥들이 둥글게 서 있다.', '한가운데 바닥돌에\n천년수 잎사귀 무늬.'],
+    'ev.world_poi.lines_4': ['쓰러진 커다란 석상.\n옷자락을 두른 사람의 모습이다.', '얼굴은 이미 닳아서\n알아볼 수 없다.'],
+    'ev.world_poi.lines_5': ['풀에 묻힌 돌 토대.\n세 단짜리 돌계단만 남아 있다.', '옛 역참의 터일까.'],
+    'ev.world_poi.lines_6': ['바다를 내려다보는 오래된 돌담.', '창 구멍 너머로 등대의 불빛이\n멀리 보인다.'],
+    'ev.world_poi.lines_7': ['나무로 짠 망대.', '위에서 보면 반도의 목초지와\n북쪽 바다가 한눈에 들어온다.'],
+    'ev.world_poi.lines_8': ['눈에 파묻힌 돌탑.', '북쪽 유빙 들판 쪽으로\n창이 딱 하나 나 있다.'],
+    'ev.world_poi.lines_9': ['모래에 반쯤 묻힌 신전의 얼굴.', '두 기둥 사이로\n차가운 바람이 불어온다.'],
+    'ev.world_poi.lines_10': ['늪에서 솟아 있는 오래된 종루.', '이끼 속에 녹슨 종이\n기울어진 채 매달려 있다.\n……울리지 않는다.'],
+    'ev.world_poi.lines_11': ['기둥 위에 지은 오두막의 터.', '마룻바닥은 빠지고 지붕만\n늪 위로 기울어 있다.'],
+    'ev.world_poi.world_poi_cache.run.narr': '돌 틈에는 이제 아무것도 없다.',
+    'ev.world_poi.world_poi_cache.run.narr_2': '돌 틈에 나그네의\n작은 보따리가 쑤셔 넣어져 있다.',
+    'ev.world_prologue.world_pen_lamp.run.narr': '길잡이 등롱에\n불이 켜져 있다.\n주위의 어둠이 조금 누그러졌다.',
+    'ev.world_prologue.world_pen_lamp.run.narr_2': '전망대의 낡은 등롱은\n불이 꺼진 그대로다.',
+    'ev.world_prologue.world_pen_lamp.run.narr_3': '길잡이 등롱의 불이\n꺼져 있다.',
+    'ev.world_prologue.world_pen_lamp.run.narr_4': '불씨가 있으면\n켤 수 있을 것 같다.',
+    'ev.world_prologue.world_pen_lamp.run.narr_5': '조합의 불씨를\n등롱에 옮겼다.',
+    'ev.world_prologue.world_pen_lamp.run.narr_6': '등롱에 불이 켜졌다!\n이제 이 근처에는\n마물이 다가오지 않을 것이다.',
+    'ev.world_prologue.world_pen_lamp.run.narr_7': '타데오에게 알리러 가자.',
+    'ev.world_prologue.world_bridge_guard.run.pick.0.text': '서쪽 숲 위로 빛의 기둥이\n보이지?\n저게 큰 등불이라는 건가.',
+    'ev.world_prologue.world_bridge_guard.run.pick.1.text': ['도개교는 내려 두었어.\n북쪽 들판을 지나면\n서쪽 숲으로 이어지는 가도야.', '동쪽과 북쪽 고개는 산사태로\n못 지나간다더군. 조심하게.'],
+    'ev.world_prologue.world_bridge_guard.run.pick.2.text': ['도개교는 올려 둔 채야.\n등대 불이 꺼진 뒤로\n밤의 마물이 다리를 건너오거든.', '등대에 불이 돌아올 때까진\n내릴 수 없네.'],
+    'ev.world_prologue.world_traveler_plains.run.pick.0.text': '숲의 등불이 돌아온 뒤로\n밤길에 쓰는 송진 횃불이\n잘 팔린다니까.',
+    'ev.world_prologue.world_traveler_plains.run.pick.1.text': ['좋은 등불이 함께하길.\n동쪽 고개가 산사태로 막혀서\n산골 마을로 짐을 못 날라.', '한동안은 여기서\n노숙이야. 모닥불 좀\n쬐고 갈래?'],
+    'ev.world_prologue.world_woodcutter.run.pick.0.text': '동료들이 모두\n마을로 돌아왔어.\n이제 숲길에서 헤매지도 않아.',
+    'ev.world_prologue.world_woodcutter.run.pick.1.text': ['숲이 길을 바꾸는 바람에\n안쪽으로는 못 들어가.', '가도의 길잡이 등롱이\n세 개나 꺼져 있어서 말이야.\n밤엔 그게 무서워.'],
+    'ev.world_prologue.world_shepherd.run.pick.0.text': '요즘 하늘이 아주 조금\n밝아지지 않았는가?\n양들도 차분해졌구먼.',
+    'ev.world_prologue.world_shepherd.run.pick.1.text': ['등대가 돌아온 뒤로\n양이 밤에 울지 않게 됐지.', '내가 젊었을 적엔……\n글쎄, 낮이라는 게\n있었던가, 없었던가.'],
+  });
+})(window.RPG);
