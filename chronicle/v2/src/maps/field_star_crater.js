@@ -1,0 +1,73 @@
+// 生成物（design/art_ref/gen/env/_tools/under/field_star/ の areas_star.py → fit.py → tomap.py）。手で直さない: 配置は areas_star.py、当たりは fit.py で作り直す。
+// エリア s_crater「星降りの窪地」（高原に落ちた星の跡、52×40）。エリア切り替えのフィールド（maps/field_00_kit.js、高原の凡例は field_star_00_kit.js）。
+//   出口: w → s_plateau.east, n → s_ridge.south
+//   絵: field/under/s_crater（v2/assets/env/field/under/。無ければマスから焼く）
+(function (R) {
+  'use strict';
+  R.FieldArea.def("s_crater", {
+    name: R.T('map.field_star_crater.s_crater.name'), region: "r_star", outside: "rock",
+    legend: R.FieldArea.STAR_LEGEND, theme: 'field', bgm: 'overworld', bbg: 'star', propSet: 'star', propSetBase: 'village',
+    light: R.FieldArea.STAR_LIGHT,
+    rows: [
+      ",,,\"\"\"\";;;\",,,,,,,,,;,,,,..;;;;;;;;;;,;,,,,,,,RRRRRR",
+      ",,,\"\"\"\";;;,,,b,,,,,,,,,,;..;;;;;;;;;;,,,,,,,,,RRRRRR",
+      ",,,,\"\"\",,,,,,,,,,,,,,,,;;..;;;T,;;;;;,,,,,,,,,RRRRRR",
+      ",,,,,\",,,,,,,,,,,,,,,,,,,..;;;;;;;;;,,,,,,,,,,RRRRRR",
+      ",,,b;;;r,,;;;,,,,,,\"\",,,,..,,,,,,,,,,,,,,,,,,,RRRRRR",
+      "\",,,,,,,,,;b;,,,,,,\"\"\",,,..,,,,,,,,,,TTTT,,,,,RRRRRR",
+      "\"r,,,,,,,,,,,,,,,;;\"\"\",,,..,,,,,,,,,TTTTT,,,,,,RRRRR",
+      ",,,,,,TTTTT,,,,;;;;,,,,,,..,,,,,,,,,,TTT\",,,,,;RRRRR",
+      ",,,,TTTTTTTTT,,;;;;,,,,,,..,,,,,,,,,,\"\"\"\",,,,,;,RRRR",
+      ",,,,,\"TTTTTT,,,;;;;,,,,...,,,,,,,,,\"\"\"\"\"\",,,,,bRRRRR",
+      ",,,\"\",\",,,,,,,,;;;;,......,,r,,,,,,,\"\"\"\"\",,,,,,RRRRR",
+      ",,,,,b,,,,,,,,,,........,,,,,,,,,,,\"\"\"\"\",,,,,,,RRRRR",
+      ",,,,,,,,,,,,,.......,,,,,,,,,,,,,,,,,\"\",,,,,,,,RRRRR",
+      ";;;;,,,,,,,......,,,,,,,,,,,,,,,,,,,\"\"\",,,,,,;,RRRRR",
+      ";;;;,,,,,,...,,,,,,,;;;;;,,,,r,,,,\"\"\"\",,,,,,;;RRRRRR",
+      ";;;;,,,,,...,,,,,,,;;;;;;;,,,,,\"\"\"\"\"\"\",,;,,,;;RRRRRR",
+      ";;;;,,,,...,,,,,,,;;;;;;;;;,,,,,,,,\"\",,,;,,,,;RRRRRR",
+      ";;;,,,....,,,,,,,,,;;;;;rrrrrrr,,,,,,,,,;,,,,,,RRRRR",
+      ";;;,,...,,,,,,,,,,,,;;,RRRRRRRRRRrrr,,,;;,,,,,,RRRRR",
+      ".......::,,,,,,,,,,,,,RRRRRRRRRRRRRRr,,,,,,,,,,RRRRR",
+      ".....,,,::,,,,,,,,,,RRrrrrrrrrrXkRRRRr,,,,\"\",,\",RRRR",
+      ";;,,,,,,,::,,,,,,,,RRrXXkkkkkkkkkXrrRRr,,,,,,,,,RRRR",
+      ",,;,,,,,,,:::,,,,,RRrrkkkkkkkkkkkkXrrRRr,,,r,,,,RRRR",
+      ",,,,,,,,,,,:::,,,,RRrkkkkkkkkkkkkkkrkrRRr,,rr,,,RRRR",
+      ",,,,,;;,,,,,::::::::kkkkkkkkrrkkkkkkkkrRRr,,,,,,RRRR",
+      ",,,,,,,,,,,,,:::::::rkkkkkkkXXrkkkkkkkkRRr,,,,,,,RRR",
+      ",,,,,,,,,,,,,,,,,rrrrkkkkkkkkkkkkkkkkkkrRRr,,,,\",RRR",
+      ";,,,,,,,,,,,,,,,,RRrXkkkkkkkkkkkkkkkXkkkRRr,,,,,,RRR",
+      ";;,,,,,,,,,,,,,,,RRrkkkkkkkkkkkkkkkkXkkrRR,,,,,,,RRR",
+      ";;,,,,,,TTT,,,,,,,RrrkkkXkkkkkkkkkkkkkrRR,,,,,,,,RRR",
+      "\"\";,,,,T,,,,T,,,,,,RrrkkkXkkkkXkkkkkkkRRr,,,,,,,,RRR",
+      "\"\"\",,,,,TTTTTT,,b,,RrrkkkkkkkkkkkkkkkRR,,,,,,,,,,RRR",
+      ";;\"\",,,,,TTTT,,,;,,,RRrrrkrrrrkrkkkRRR,\"\"\"b,,,,,RRRR",
+      ";;,,,,,,,TTTT,,,,,,,r,RrRRRRRRRRrrRRR,,,\",,,,,,,RRRR",
+      ";;,,,,,,,,,,,,,,;,,,,,,RRRRRRRRRRRR,,,,,,,,,,,,,RRRR",
+      ",,,,,,,,,,,,,,,,\";,,,,,,rRRRRRRRRR,,,,,,,,,,,,,,RRRR",
+      "RRR,,,,,,,,,,,,;r;,,b,,,RRRRRRRRRRRR,,,,,,;,,,,,,RRR",
+      "RRRR,RRRRRRRRRR,,,,,,RRRRRRRRRRRRRRRR,RRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+    ],
+    objects: [
+      {"type":"sign","x":15,"y":17,"text":R.T('map.field_star_crater.s_crater.objects.0.text')},
+      {"type":"examine","x":28,"y":26,"event":"star_crater_altar"},
+      {"type":"chest","id":"s_crater_c1","x":34,"y":25,"item":"i_clear","n":2},
+      {"type":"chest","id":"s_crater_c2","x":21,"y":24,"gold":160},
+      {"type":"waylamp","id":"wl_s_crater_1","x":7,"y":16,"lit":true},
+      {"type":"waylamp","id":"wl_s_crater_2","x":21,"y":8,"lit":true},
+    ],
+    npcs: [
+
+    ],
+    spawns: {"west":{"x":1,"y":20,"dir":"e"},"north":{"x":25,"y":1,"dir":"s"}},
+    exits: [{"x":0,"y":20,"w":1,"h":2,"to":{"map":"s_plateau","spawn":"east"}},{"x":25,"y":0,"w":2,"h":1,"to":{"map":"s_ridge","spawn":"south"}}],
+    triggers: [],
+    tilePatches: [],
+    zones: [{"rect":null,"zone":"zw_star"}],
+    art: {"image":"field/under/s_crater","painted":[],"overlay":"field/under/s_crater_over"},
+    meta: {"sub":R.T('map.field_star_crater.s_crater.meta.sub'),"worldRect":[640,78,52,40]},
+    links: {"starfall":{"map":"s_crater","spawn":"west"}},
+  });
+})(window.RPG);

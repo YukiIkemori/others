@@ -1,0 +1,371 @@
+{
+"id": "s_steps",
+"w": 52,
+"h": 38,
+"rows": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR\"\",",
+",,,RRRRRRRRRRRRRRRR,,,,,,,,,,b,,,,,b,,,RRR,,,,,,\"\"\",",
+"\",,,,,,,b,,,,,,,,,,,,;;;,,,,,,,,,,,,,,,\"\"\",,,,,,,,,,",
+"\"\",,,,,,,,,,,,,,,,,,,;;;;,,,,,,,,,,,,,\"\"\"\"\"\",,\"\",,,,",
+"\"\",,,,,,,,,,,,,,,,,,,,;;;;,,,,,,,,,,,,\"T\"T,,,,,,,,\",",
+"\",,,,,,,,,,,,,,,,,,,,,,;;;,,,,X,,,,,,,XTTT,,,,X,,,\",",
+",,,,,,,TTTT,,,,;;,,,........................,,,,..,,",
+",,,,,,TTTTT,,,,,,,..................................",
+",,,,,,,TTTT,,,,,,...,,,,\",,,,,,,,,,,,,,,,..........,",
+",,,,,,,,,,,,,,,,,...,,,,,\",,,,,,,,XXX,,,,,,,,,,,,,,,",
+",,,,,,,,,,,,,,,,,,...,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
+",,,,,,,,,,,,,,,,,,,....c,,,,,RRR,,,,,,,,,,,,,,,,,RRR",
+",,,,,,,,,,,,r,,\",,,,,.cccccRRRRRRRRRRRRRRRRRRRRRRRRR",
+"\",,,,,,,,,,,\"\"\"\",RRRRRRccccRRRRRRRRRRRRRRRRRRRRRRRRR",
+"\",,,,,,,,,,RRRRRRRRRRRRRRccccRRRRRRRRRRRRRRRRRRRRRRR",
+"\",,,,,,RRRRRRRRRRRRRRRRRRRRcc.RRRRRRRRRRRRRRRRRRRRRR",
+",,,,RRRRRRRRRRRRRRRRRRRRRRRcccRRRRRRRRRRRRRRRRRRRRR,",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRR;cc,,,,,,,,,RRRR,,,,,,,,,",
+"RRRRRRRRRRRRRRRRRRRRRRRR;;;;cc,,,,,,,,,\"\",,,,,,,,,,,",
+"RRRRRRRRRRRRRRRRRR,,,;;;;;;ccc,,,,,,,,,,b,,,,,,,,,,,",
+"RRRRRRRRRRRR;;;;;;;;;;;;;;..c,\",,,,;;;;;;;;;;;;;;;;,",
+"RRRRRRR,,,,,;;;;;;;;;;;;....,\"\",,,;;;;;;;;;;;;;;;;;,",
+"R,,,,,,,,,r,;;;;;;;.......;;,\"\",,,;;;;;;;;;T;;;;;;;,",
+",,,,,,,,,,,,............;;;;\"\"\",,,;;;;;;;;TTTTT;;;;,",
+"...................;;;;;;;;;;\"\"\",,,;;;;b;;;TTTTT;;;,",
+".............,;;;;;,,b,;;;,;;,\",,,,,;;;;;;TTTTT,,,,,",
+",,;;;TTTT,,,,,,,,,,,,,,,,,,,,,,,TTT,;;,;;,,,,,,,,,,,",
+",;;;TTTTTT,,,,,,,TTT,,,,,,,,,,,,TTT,,,,,,,,,\",,,,,,,",
+";;;,TTTT,,,,,,,TTTTTT,,,,,,,,,,,TTT,,,,,,,\"\"\"\",,,,,,",
+",,,,,,,,,,,,,,,,,TTT,,,,,,,,,,,,,,,,,,,,,,,,,,\",,,,,",
+",,,,,b,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,;,,,,,,,,,,,,,",
+";,,,,,,,,,,,,,,,,,,,,,,,FFb,,,,,,,,,,,,,,,,,,,,,,,,,",
+"FFFFFF,,,,,,,,,FFFFF,FFFFFFF,,,,,,,,,,,,,,,,,,FFFFFF",
+"FFFFFFFFFF\"\"FFFFFFFFFFFFFFFFFFF,FFF,FFF,,FFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+],
+"marks": [
+{
+"kind": "steps",
+"cells": [
+[
+29,
+20
+],
+[
+22,
+14
+],
+[
+23,
+13
+],
+[
+28,
+18
+],
+[
+27,
+16
+],
+[
+28,
+21
+],
+[
+25,
+16
+],
+[
+24,
+14
+],
+[
+29,
+19
+],
+[
+23,
+15
+],
+[
+28,
+17
+],
+[
+27,
+21
+],
+[
+28,
+20
+],
+[
+25,
+15
+],
+[
+26,
+16
+],
+[
+29,
+18
+],
+[
+29,
+21
+],
+[
+23,
+14
+],
+[
+28,
+16
+],
+[
+28,
+19
+],
+[
+27,
+17
+],
+[
+28,
+22
+],
+[
+25,
+14
+],
+[
+24,
+15
+],
+[
+26,
+15
+]
+],
+"text": "worn STONE STEPS cut into the grey rock, climbing the cliff (walkable)",
+"color": [
+190,
+186,
+176
+],
+"solid": false
+},
+{
+"kind": "fallen34_11",
+"cells": [
+[
+34,
+11
+],
+[
+35,
+11
+],
+[
+36,
+11
+]
+],
+"text": "a FALLEN MARBLE COLUMN lying in the grass, broken into drums, moss on it",
+"color": [
+226,
+224,
+216
+],
+"solid": true
+},
+{
+"kind": "col30_7",
+"cells": [
+[
+30,
+7
+]
+],
+"text": "a single weathered STANDING COLUMN of pale marble, broken at the top, seen from above (a round pale disc with a shadow)",
+"color": [
+226,
+224,
+216
+],
+"solid": true
+},
+{
+"kind": "col38_7",
+"cells": [
+[
+38,
+7
+]
+],
+"text": "a single weathered STANDING COLUMN of pale marble, broken at the top, seen from above (a round pale disc with a shadow)",
+"color": [
+226,
+224,
+216
+],
+"solid": true
+},
+{
+"kind": "col46_7",
+"cells": [
+[
+46,
+7
+]
+],
+"text": "a single weathered STANDING COLUMN of pale marble, broken at the top, seen from above (a round pale disc with a shadow)",
+"color": [
+226,
+224,
+216
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "sign",
+"x": 11,
+"y": 25,
+"text": "星見の坂\n東へ上る → 列柱の高原・学術都市オルビス"
+},
+{
+"type": "examine",
+"x": 35,
+"y": 12,
+"event": "star_fallen_column"
+},
+{
+"type": "chest",
+"id": "s_steps_c1",
+"x": 42,
+"y": 28,
+"item": "i_potion",
+"n": 2
+},
+{
+"type": "waylamp",
+"id": "wl_s_steps_1",
+"x": 14,
+"y": 24,
+"lit": true
+},
+{
+"type": "waylamp",
+"id": "wl_s_steps_2",
+"x": 26,
+"y": 7,
+"lit": true
+},
+{
+"type": "waylamp",
+"id": "wl_s_steps_3",
+"x": 44,
+"y": 12,
+"lit": true
+}
+],
+"spawns": {
+"west": {
+"x": 1,
+"y": 27,
+"dir": "e"
+},
+"east": {
+"x": 50,
+"y": 9,
+"dir": "w"
+}
+},
+"exits": [
+{
+"x": 0,
+"y": 27,
+"w": 1,
+"h": 2,
+"to": {
+"map": "world",
+"spawn": "star_w"
+},
+"edge": "w"
+},
+{
+"x": 51,
+"y": 9,
+"w": 1,
+"h": 2,
+"to": {
+"map": "s_plateau",
+"spawn": "west"
+},
+"edge": "e"
+}
+],
+"notes": [],
+"meta": {
+"name": "星見の坂",
+"sub": "高原へ上る古い石段の道",
+"region": "r_star",
+"worldRect": [
+548,
+92,
+52,
+38
+],
+"outside": "rock",
+"zones": [
+{
+"rect": null,
+"zone": "zw_star"
+}
+],
+"links": {},
+"npcs": []
+},
+"rows_fit": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR\"\",",
+",,,RRRRRRRRRR,RRRRR,,,,,,,,,,b,,,,,b,,,RRRr,,,rr\"\"\",",
+"\",,,,,,,b,,,,,,,,,,,,;;;,,,,,,,,,,,,,,,\"\"\",,,,,,,,,,",
+"\"\",,,,,,,,,,,,,,,,,,,;;;;,,,,,,,,,,,,,\"\"\"\"\"\",,\"\",,,,",
+"\"\",,,,,,,,,,,,,,,,,,,,;;;;,,,,,,,,,,,,\"T\"TT,,,,,,,\",",
+"\",,,,,,,,,,,,,,,,,,,,,,;;;,,,,X,,,,,,,XT,T,,,,X,,,\",",
+",,,,,,,TTTTT,,,;;,,,........................,,,,..,,",
+",,,,,,TTTTTT,,,,,,..................................",
+",,,,,,,TTTTT,,,,,...,,,,\",,,,,,,,,,,,,,,,..........,",
+",,,,,,,,,,,,,,,,,...,,,,,\",,,,,,,,XXX,,,,,,,,,,,,,,,",
+",,,,,,,,,,,,,,,,,,...,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
+",,,,,,,,,,,,,,,,,,,....c,,,,,RRRr,,,,,,,rr,,,,r,,RRR",
+",,,,,,,,,,,,r,,\",,,,,.cccccRRRRRRRRRRRRRRRRRRRRRRRRR",
+"\",,,,,,,,,,,\"\"\"\",RRRRRRcccc,RRRRRRRRRRRRRRRRRRRRRRRR",
+"\",,,,,,,,,,RRRRRRRRRRRRRRcccc,RRRRRRRRRRRRRRRRRRRRRR",
+"\",,,,,,RRRRRRRRRRRRRRRRRRRRcc..RRRRRRRRRRRRRRRRRRRRR",
+",,,,RRRRRRRRRRRRRRRRRRRRRRRccc.R,,,,,RrRRRRRRRrrRRR,",
+"RRRRRRRRRRRRRRRRRRRRRRRRR,R;cc,,,,,,,,,,,,,,,,,,,,,,",
+"RRRRRRRRRRRRRRRRRRR,,,,,;;;;cc,,,,,,,,,\"\",,,,,,,,,,,",
+"RRRRRRRRRRRRRrr,r,,,,;;;;;;ccc,,,,,,,,,,,,,,,,,,,,,,",
+"RRRRRRRR,,Rr;;;;;;;;;;;;;;..c,\",,,,;;;;;;;;;;;;;;;;,",
+"RRRRRRR,,,,,;;;;;;;;;;;;....,\"\",,,;;;;;;;;;;;;;;;;;,",
+"r,,,,,,,,,r,;;;;;;;.......;;,\"\",,,;;;;;;;;;T;;;;;;;,",
+",,,,,,,,,,,,............;;;;\"\"\",,,;;;;;;;;TTTTT;;;;,",
+"...................;;;;;;;;;;\"\"\",,,;;;;b;;;TTTTT;;;,",
+".............,;;;;;,,b,;;;,;;,\",,,,,;;;;;;TTTTTT,,,,",
+",,;;;TTTT,,,,,,,,,,,,,,,,,,,,,,,TTTT;;,;;,,,,,,,,,,,",
+",;;;TTTTTT,,,,,,,TTT,,,,,,,,,,,,TTT,,,,,,,,,\",,,,,,,",
+";;;,,TT,,,,,,,,,TTTTT,,,,,,,,,,,TTT,,,,,,,\"\"\"\",,,,,,",
+",T,,,,,,,,,,,,,,,,TT,,,r,T,,,,,,,,,,,,,,,,,,,,\",,,,,",
+"TTT,TbT,,,,,,,,,,,,,,,,,,,,TT,,,,,,,,,;,,,,,,,TT,TTT",
+";,,,,,TTTT,,,,T,,,,,T,,,FFbTTTTT,TT,,,,,TTTTTT,,,,,,",
+"FFFFFFFFFTT,,,,FFFFFFFFFFFFFFFTT,,,T,,,TTTTTTTFFFFFF",
+"FFFFFFFFFF\"\"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+]
+}

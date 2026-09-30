@@ -1,0 +1,71 @@
+// 生成物（design/art_ref/gen/env/_tools/under/field_star/ の areas_star.py → fit.py → tomap.py）。手で直さない: 配置は areas_star.py、当たりは fit.py で作り直す。
+// エリア s_steps「星見の坂」（高原へ上る古い石段の道、52×38）。エリア切り替えのフィールド（maps/field_00_kit.js、高原の凡例は field_star_00_kit.js）。
+//   出口: w → world.star_w, e → s_plateau.west
+//   絵: field/under/s_steps（v2/assets/env/field/under/。無ければマスから焼く）
+(function (R) {
+  'use strict';
+  R.FieldArea.def("s_steps", {
+    name: R.T('map.field_star_steps.s_steps.name'), region: "r_star", outside: "rock",
+    legend: R.FieldArea.STAR_LEGEND, theme: 'field', bgm: 'overworld', bbg: 'star', propSet: 'star', propSetBase: 'village',
+    light: R.FieldArea.STAR_LIGHT,
+    rows: [
+      "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR\"\",",
+      ",,,RRRRRRRRRR,RRRRR,,,,,,,,,,b,,,,,b,,,RRRr,,,rr\"\"\",",
+      "\",,,,,,,b,,,,,,,,,,,,;;;,,,,,,,,,,,,,,,\"\"\",,,,,,,,,,",
+      "\"\",,,,,,,,,,,,,,,,,,,;;;;,,,,,,,,,,,,,\"\"\"\"\"\",,\"\",,,,",
+      "\"\",,,,,,,,,,,,,,,,,,,,;;;;,,,,,,,,,,,,\"T\"TT,,,,,,,\",",
+      "\",,,,,,,,,,,,,,,,,,,,,,;;;,,,,X,,,,,,,XT,T,,,,X,,,\",",
+      ",,,,,,,TTTTT,,,;;,,,........................,,,,..,,",
+      ",,,,,,TTTTTT,,,,,,..................................",
+      ",,,,,,,TTTTT,,,,,...,,,,\",,,,,,,,,,,,,,,,..........,",
+      ",,,,,,,,,,,,,,,,,...,,,,,\",,,,,,,,XXX,,,,,,,,,,,,,,,",
+      ",,,,,,,,,,,,,,,,,,...,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
+      ",,,,,,,,,,,,,,,,,,,....c,,,,,RRRr,,,,,,,rr,,,,r,,RRR",
+      ",,,,,,,,,,,,r,,\",,,,,.cccccRRRRRRRRRRRRRRRRRRRRRRRRR",
+      "\",,,,,,,,,,,\"\"\"\",RRRRRRcccc,RRRRRRRRRRRRRRRRRRRRRRRR",
+      "\",,,,,,,,,,RRRRRRRRRRRRRRcccc,RRRRRRRRRRRRRRRRRRRRRR",
+      "\",,,,,,RRRRRRRRRRRRRRRRRRRRcc..RRRRRRRRRRRRRRRRRRRRR",
+      ",,,,RRRRRRRRRRRRRRRRRRRRRRRccc.R,,,,,RrRRRRRRRrrRRR,",
+      "RRRRRRRRRRRRRRRRRRRRRRRRR,R;cc,,,,,,,,,,,,,,,,,,,,,,",
+      "RRRRRRRRRRRRRRRRRRR,,,,,;;;;cc,,,,,,,,,\"\",,,,,,,,,,,",
+      "RRRRRRRRRRRRRrr,r,,,,;;;;;;ccc,,,,,,,,,,,,,,,,,,,,,,",
+      "RRRRRRRR,,Rr;;;;;;;;;;;;;;..c,\",,,,;;;;;;;;;;;;;;;;,",
+      "RRRRRRR,,,,,;;;;;;;;;;;;....,\"\",,,;;;;;;;;;;;;;;;;;,",
+      "r,,,,,,,,,r,;;;;;;;.......;;,\"\",,,;;;;;;;;;T;;;;;;;,",
+      ",,,,,,,,,,,,............;;;;\"\"\",,,;;;;;;;;TTTTT;;;;,",
+      "...................;;;;;;;;;;\"\"\",,,;;;;b;;;TTTTT;;;,",
+      ".............,;;;;;,,b,;;;,;;,\",,,,,;;;;;;TTTTTT,,,,",
+      ",,;;;TTTT,,,,,,,,,,,,,,,,,,,,,,,TTTT;;,;;,,,,,,,,,,,",
+      ",;;;TTTTTT,,,,,,,TTT,,,,,,,,,,,,TTT,,,,,,,,,\",,,,,,,",
+      ";;;,,TT,,,,,,,,,TTTTT,,,,,,,,,,,TTT,,,,,,,\"\"\"\",,,,,,",
+      ",T,,,,,,,,,,,,,,,,TT,,,r,T,,,,,,,,,,,,,,,,,,,,\",,,,,",
+      "TTT,TbT,,,,,,,,,,,,,,,,,,,,TT,,,,,,,,,;,,,,,,,TT,TTT",
+      ";,,,,,TTTT,,,,T,,,,,T,,,FFbTTTTT,TT,,,,,TTTTTT,,,,,,",
+      "FFFFFFFFFTT,,,,FFFFFFFFFFFFFFFTT,,,T,,,TTTTTTTFFFFFF",
+      "FFFFFFFFFF\"\"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+      "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+      "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+    ],
+    objects: [
+      {"type":"sign","x":11,"y":25,"text":R.T('map.field_star_steps.s_steps.objects.0.text')},
+      {"type":"examine","x":35,"y":12,"event":"star_fallen_column"},
+      {"type":"chest","id":"s_steps_c1","x":42,"y":28,"item":"i_potion","n":2},
+      {"type":"waylamp","id":"wl_s_steps_1","x":15,"y":24,"lit":true},
+      {"type":"waylamp","id":"wl_s_steps_2","x":25,"y":7,"lit":true},
+      {"type":"waylamp","id":"wl_s_steps_3","x":40,"y":10,"lit":true},
+    ],
+    npcs: [
+
+    ],
+    spawns: {"west":{"x":1,"y":27,"dir":"e"},"east":{"x":50,"y":9,"dir":"w"}},
+    exits: [{"x":0,"y":27,"w":1,"h":2,"to":{"map":"world","spawn":"star_w"}},{"x":51,"y":9,"w":1,"h":2,"to":{"map":"s_plateau","spawn":"west"}}],
+    triggers: [],
+    tilePatches: [],
+    zones: [{"rect":null,"zone":"zw_star"}],
+    art: {"image":"field/under/s_steps","painted":[],"overlay":"field/under/s_steps_over"},
+    meta: {"sub":R.T('map.field_star_steps.s_steps.meta.sub'),"worldRect":[548,92,52,38]},
+    links: {},
+  });
+})(window.RPG);

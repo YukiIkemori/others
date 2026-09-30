@@ -1,0 +1,642 @@
+{
+"id": "star_academy_1",
+"w": 48,
+"h": 40,
+"rows": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~~",
+"~~XXXXXXXXXXXXXXXXccccccccccccXXXXXXXXXXXXXXXX~~",
+"~~XXuuXXXuuXXXXXXXcckkkkkkkkccXXXXXXXuuXXXuuXX~~",
+"~~XXuuuuuuuXXXXXXXcckkkkkkkkccXXXXXXXuuuuuuuXX~~",
+"~~XXuuuuuuucXXXXXXcckkkkkkkkccXXXXXXcuuuuuuuXX~~",
+"~~XXurrurruXXXXXXXccccccccccccXXXXXXXurrurruXX~~",
+"~~XXuuuuuuuXccccccccccccccccccccccccXuuuuuuuXX~~",
+"~~XXuuuuuuuXccccccccccccccccccccccccXuuuuuuuXX~~",
+"~~XXurrurruXccccccccccccccccccccccccXurrurruXX~~",
+"~~XXuuuuuuuccccXXXXXXXXccXXXXXXXXccccuuuuuuuXX~~",
+"~~XXuuuuuuuXcccXccccccccccccccccXcccXuuuuuuuXX~~",
+"~~XXuuuuuuuXcccXc\"\",,,,,,,,,,,\"cXcccXuuuuuuuXX~~",
+"~~XXXXXXXXXXcccXc\"\"\",,,,,,,,,,\"cXcccXXXXXXXXXX~~",
+"~~XXXXXXXXXXcccXc\"\",,,,,,,,,,\"\"cXcccXXXXXXXXXX~~",
+"~~XXuuXXXuuXcccXc\"\",,,,,,,,,,\",cXcccXuuXXXuuXX~~",
+"~~XXuuuuuuuXcccXc\"\",,,,\",\"\"\"\",,cXcccXuuuuuuuXX~~",
+"~~XXuuuuuuuccccXc\"\",,,XXXX\"\"\",,cXccccuuuuuuuXX~~",
+"~~XXurrurruXccccc,,,,\"XXXX\",\",,cccccXurrurruXX~~",
+"~~XXuuuuuuuXccccc,,,,\"XXXX\",\",\"cccccXuuuuuuuXX~~",
+"~~XXuuuuuuuXcccXc,,,\"\",\"\"\",\"\"\"\"cXcccXuuuuuuuXX~~",
+"~~XXurrucruXcccXc,,,\"\"\",,\"\",,\",cXcccXurrurruXX~~",
+"~~XXuuuuuuuXcccXc,,,\"\"\",,,,\"\",,cXcccXuuuuuuuXX~~",
+"~~XXuuuuuuuccccXc,,,\"\"\",,,,,,\"\"cXccccuuuuuuuXX~~",
+"~~XXuuuuuuuXcccXc,,,\"\"\",,,,,,,,cXcccXuuuuuuuXX~~",
+"~~XXuuuuuuuXcccXc,,,,\",,,,,,,,,cXcccXuuuuuuuXX~~",
+"~~XXXXXcXXXXcccXccccccccccccccccXcccXXXXcXXXXX~~",
+"~~XXXXXcXXXXcccXXXXXXXXccXXXXXXXXcccXXXXcXXXXX~~",
+"~~XXccccccccccccccccccccccccccccccccccccccccXX~~",
+"~~XXccccccccccccccccccccccccccccccccccccccccXX~~",
+"~~XXccccccccccccccccccccccccccccccccccccccccXX~~",
+"~~XXcccccXXXXXXXXXXXXXccccXXXXXXXXXXXXXXXXXXXX~~",
+"~~XXcccccXXXXXXXXXXXXXccccXXXXXXXXXXXXXXXXXXXX~~",
+"~~XXcccccXXXXXXXXXXXXXccccXXXXXXXXXXXXXXXXXXXX~~",
+"~~XXcccccXXXXXXXXXXXXXccccXXXXXXXXXXXXXXXXXXXX~~",
+"~~XXXXcXXXXXXXXXXXXXXXccccXXXXXXXXXXXXXXXXXXXX~~",
+"~~XXXXcXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+],
+"marks": [
+{
+"kind": "fountain",
+"cells": [
+[
+22,
+18
+],
+[
+22,
+19
+],
+[
+22,
+20
+],
+[
+23,
+18
+],
+[
+23,
+19
+],
+[
+23,
+20
+],
+[
+24,
+18
+],
+[
+24,
+19
+],
+[
+24,
+20
+],
+[
+25,
+18
+],
+[
+25,
+19
+],
+[
+25,
+20
+]
+],
+"text": "a round marble FOUNTAIN with a small bronze star on a column in the middle of its basin",
+"color": [
+130,
+150,
+180
+],
+"solid": true
+},
+{
+"kind": "balustrade",
+"cells": [
+[
+15,
+11
+],
+[
+15,
+12
+],
+[
+15,
+13
+],
+[
+15,
+14
+],
+[
+15,
+15
+],
+[
+15,
+16
+],
+[
+15,
+17
+],
+[
+15,
+18
+],
+[
+15,
+21
+],
+[
+15,
+22
+],
+[
+15,
+23
+],
+[
+15,
+24
+],
+[
+15,
+25
+],
+[
+15,
+26
+],
+[
+15,
+27
+],
+[
+15,
+28
+],
+[
+32,
+11
+],
+[
+32,
+12
+],
+[
+32,
+13
+],
+[
+32,
+14
+],
+[
+32,
+15
+],
+[
+32,
+16
+],
+[
+32,
+17
+],
+[
+32,
+18
+],
+[
+32,
+21
+],
+[
+32,
+22
+],
+[
+32,
+23
+],
+[
+32,
+24
+],
+[
+32,
+25
+],
+[
+32,
+26
+],
+[
+32,
+27
+],
+[
+32,
+28
+],
+[
+15,
+11
+],
+[
+16,
+11
+],
+[
+17,
+11
+],
+[
+18,
+11
+],
+[
+19,
+11
+],
+[
+20,
+11
+],
+[
+21,
+11
+],
+[
+22,
+11
+],
+[
+25,
+11
+],
+[
+26,
+11
+],
+[
+27,
+11
+],
+[
+28,
+11
+],
+[
+29,
+11
+],
+[
+30,
+11
+],
+[
+31,
+11
+],
+[
+32,
+11
+],
+[
+15,
+28
+],
+[
+16,
+28
+],
+[
+17,
+28
+],
+[
+18,
+28
+],
+[
+19,
+28
+],
+[
+20,
+28
+],
+[
+21,
+28
+],
+[
+22,
+28
+],
+[
+25,
+28
+],
+[
+26,
+28
+],
+[
+27,
+28
+],
+[
+28,
+28
+],
+[
+29,
+28
+],
+[
+30,
+28
+],
+[
+31,
+28
+],
+[
+32,
+28
+]
+],
+"text": "a low white stone BALUSTRADE round the courtyard garden (the cloister rail)",
+"color": [
+200,
+198,
+190
+],
+"solid": true
+},
+{
+"kind": "board6_4",
+"cells": [
+[
+6,
+4
+],
+[
+7,
+4
+],
+[
+8,
+4
+]
+],
+"text": "a dark green BLACKBOARD on the wall with chalk star diagrams on it",
+"color": [
+40,
+70,
+60
+],
+"solid": true
+},
+{
+"kind": "board6_16",
+"cells": [
+[
+6,
+16
+],
+[
+7,
+16
+],
+[
+8,
+16
+]
+],
+"text": "a dark green BLACKBOARD on the wall with chalk star diagrams on it",
+"color": [
+40,
+70,
+60
+],
+"solid": true
+},
+{
+"kind": "board39_4",
+"cells": [
+[
+39,
+4
+],
+[
+40,
+4
+],
+[
+41,
+4
+]
+],
+"text": "a dark green BLACKBOARD on the wall with chalk star diagrams on it",
+"color": [
+40,
+70,
+60
+],
+"solid": true
+},
+{
+"kind": "board39_16",
+"cells": [
+[
+39,
+16
+],
+[
+40,
+16
+],
+[
+41,
+16
+]
+],
+"text": "a dark green BLACKBOARD on the wall with chalk star diagrams on it",
+"color": [
+40,
+70,
+60
+],
+"solid": true
+},
+{
+"kind": "stairs",
+"cells": [
+[
+23,
+3
+],
+[
+24,
+3
+]
+],
+"text": "a broad marble STAIRCASE going up (walkable)",
+"color": [
+190,
+186,
+176
+],
+"solid": false
+},
+{
+"kind": "greatdoor",
+"cells": [
+[
+23,
+37
+],
+[
+24,
+37
+]
+],
+"text": "the great double DOOR of the academy, shut and barred from inside",
+"color": [
+90,
+60,
+40
+],
+"solid": true
+},
+{
+"kind": "service",
+"cells": [
+[
+6,
+37
+]
+],
+"text": "a small plain SERVICE DOOR in the outer wall",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 6,
+"y": 36
+},
+{
+"type": "o",
+"x": 6,
+"y": 35
+},
+{
+"type": "o",
+"x": 23,
+"y": 4
+},
+{
+"type": "o",
+"x": 24,
+"y": 4
+},
+{
+"type": "o",
+"x": 23,
+"y": 35
+},
+{
+"type": "o",
+"x": 24,
+"y": 36
+},
+{
+"type": "o",
+"x": 7,
+"y": 29
+},
+{
+"type": "o",
+"x": 41,
+"y": 29
+},
+{
+"type": "o",
+"x": 34,
+"y": 9
+},
+{
+"type": "o",
+"x": 34,
+"y": 28
+},
+{
+"type": "o",
+"x": 13,
+"y": 9
+},
+{
+"type": "o",
+"x": 34,
+"y": 9
+},
+{
+"type": "o",
+"x": 8,
+"y": 22
+},
+{
+"type": "o",
+"x": 40,
+"y": 10
+},
+{
+"type": "o",
+"x": 23,
+"y": 26
+},
+{
+"type": "o",
+"x": 21,
+"y": 19
+},
+{
+"type": "o",
+"x": 13,
+"y": 24
+}
+],
+"spawns": {
+"service": {
+"x": 6,
+"y": 35,
+"dir": "n"
+},
+"from2": {
+"x": 23,
+"y": 4,
+"dir": "s"
+}
+},
+"exits": [],
+"notes": [],
+"meta": {
+"name": "消灯後の学院",
+"region": "r_star",
+"zones": [],
+"worldRect": [
+0,
+0,
+1,
+1
+],
+"look": "int"
+}
+}

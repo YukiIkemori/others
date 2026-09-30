@@ -1,0 +1,272 @@
+{
+"id": "s_crater",
+"w": 52,
+"h": 40,
+"rows": [
+",,,\"\"\"\";;;\",,,,,,,,,;,,,,..;;;;;;;;;;b;,,,,,,,RRRRRR",
+",,,\"\"\"\";;;,,,b,,,,,,,,,,;..;;;;;;;;;;,,,,,,,,,RRRRRR",
+",,,,\"\"\",,,,,,,,,,,,,,,,;;..;;;;b;;;;;,,,,,,,,,RRRRRR",
+",,,,,\",,,,,,,,,,,,,,,,,,,..;;;;;;;;;,,,,,,,,,,RRRRRR",
+",,,b;;;r,,;;;,,,,,,\"\",,,,..,,,,,,,,,,,,,,,,,,,RRRRRR",
+"\",,,,,,,,,;b;,,,,,,\"\"\",,,..,,,,,,,,,,TTT,,,,,,RRRRRR",
+"\"r,,,,,,,,,,,,,,,;;\"\"\",,,..,,,,,,,,,,TTT\",,,,,,RRRRR",
+",,,,,,TTTTT,,,,;;;;,,,,,,..,,,,,,,,,,TTT\",,,,,;RRRRR",
+",,,,,TTTTTTT,,,;;;;,,,,,,..,,,,,,,,,,\"\"\"\",,,,,;RRRRR",
+",,,,,\"TTTTT,,,,;;;;,,,,...,,,,,,,,,\"\"\"\"\"\",,,,,bRRRRR",
+",,,\"\",\",,,,,,,,;;;;,......,,r,,,,,,,\"\"\"\"\",,,,,RRRRRR",
+",,,,,b,,,,,,,,,,........,,,,,,,,,,,\"\"\"\"\",,,,,,RRRRRR",
+",,,,,,,,,,,,,.......,,,,,,,,,,,,,,,,,\"\",,,,,,,RRRRRR",
+";;;;,,,,,,,......,,,,,,,,,,,,,,,,,,,\"\"\",,,,,,;RRRRRR",
+";;;;,,,,,,...,,,,,,,;;;;;,,,,r,,,,\"\"\"\",,,,,,;;RRRRRR",
+";;;;,,,,,...,,,,,,,;;;;;;;,,,,,\"\"\"\"\"\"\",,;,,,;;RRRRRR",
+";;;;,,,,...,,,,,,,;;;;;;;;;,,,,,,,,\"\",,,;,,,,;RRRRRR",
+";;;,,,....,,,,,,,,,;;;;;;;,,,,,,,,,,,,,,;,,,,,RRRRRR",
+";;;,,...,,,,,,,,,,,,;;RRRRRRRRRRR,,,,,,;;,,,,,RRRRRR",
+".......::,,,,,,,,,,,,RRRRRRRRRRRRRRR,,,,,,,,,,RRRRRR",
+".....,,,::,,,,,,,,,,RRkkkkkkkkkXkRRRR,,,,,\"\",,\"RRRRR",
+";;,,,,,,,::,,,,,,,,RRkXXkkkkkkkkkXkkRR,,,,,,,,,RRRRR",
+",,;,,,,,,,:::,,,,,RRkkkkkkkkkkkkkkXkkRR,,,,,,,,RRRRR",
+",,,,,,,,,,,:::,,,,RRkkkkkkkkkkkkkkkkkkRR,,,,,,,RRRRR",
+",,,,,;;,,,,,::::::::kkkkkkkkkkkkkkkkkkkRR,,,,,,RRRRR",
+",,,,,,,,,,,,,:::::::kkkkkkkkXXkkkkkkkkkRR,,,,,,RRRRR",
+",,,,,,,,,,,,,,,,,kkkkkkkkkkkkkkkkkkkkkkkRR,,,,,\"RRRR",
+";,,,,,,,,,,,,,,,,RRkXkkkkkkkkkkkkkkkXkkkRR,,,,,,RRRR",
+";;,,,,,,,,,,,,,,,RRkkkkkkkkkkkkkkkkkXkkkRR,,,,,,RRRR",
+";;,,,,,,,,,,,,,,,RRkkkkkXkkkkkkkkkkkkkkRR,,,,,,,RRRR",
+"\"\";,,,,,,,,,,,,,,,RRkkkkkXkkkkXkkkkkkkRR,,,,,,,,RRRR",
+"\"\"\",,,,,TTTT,,,,b,RRkkkkkkkkkkkkkkkkkRR,,,,,,,,rRRRR",
+";;\"\",,,,,TTTT,,,;,,RRRkkkkkkkkkkkkkRRR,\"\"\"b,,,,,RRRR",
+";;,,,,,,,TTT,,,,,,,,RRRkRRRRRRRRkkRRR,,,\",,,,,,,RRRR",
+";;,,,,,,,,,,,,,,;,,,,,RRRRRRRRRRRRR,,,,,,,,,,,,,RRRR",
+",,,,,,,,,,,,,,,,\";,,,,,RrRRRRRRRRR,,,,,,,,,,,,,,RRRR",
+"RRR,,,,,,,,,,,,;r;,,b,,,RRRRRRRRRRRR,,,,,,;,,,,,RRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
+],
+"marks": [
+{
+"kind": "crystals",
+"cells": [
+[
+22,
+21
+],
+[
+23,
+21
+],
+[
+33,
+21
+],
+[
+34,
+22
+],
+[
+36,
+27
+],
+[
+36,
+28
+],
+[
+24,
+29
+],
+[
+25,
+30
+],
+[
+30,
+30
+],
+[
+31,
+20
+],
+[
+20,
+27
+]
+],
+"text": "clusters of glowing pale BLUE CRYSTALS growing from the dark rock, sharp and faceted",
+"color": [
+140,
+200,
+250
+],
+"solid": true
+},
+{
+"kind": "altar",
+"cells": [
+[
+28,
+25
+],
+[
+29,
+25
+]
+],
+"text": "a small RUINED ALTAR of pale stone at the crater bottom, cracked, a star carved on its top",
+"color": [
+180,
+176,
+190
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "sign",
+"x": 15,
+"y": 17,
+"text": "星降りの窪地\n窪地の底へ下りる道"
+},
+{
+"type": "examine",
+"x": 28,
+"y": 26,
+"event": "star_crater_altar"
+},
+{
+"type": "chest",
+"id": "s_crater_c1",
+"x": 34,
+"y": 25,
+"item": "i_clear",
+"n": 2
+},
+{
+"type": "chest",
+"id": "s_crater_c2",
+"x": 21,
+"y": 24,
+"gold": 160
+},
+{
+"type": "waylamp",
+"id": "wl_s_crater_1",
+"x": 9,
+"y": 16,
+"lit": true
+},
+{
+"type": "waylamp",
+"id": "wl_s_crater_2",
+"x": 22,
+"y": 8,
+"lit": true
+}
+],
+"spawns": {
+"west": {
+"x": 1,
+"y": 20,
+"dir": "e"
+},
+"north": {
+"x": 25,
+"y": 1,
+"dir": "s"
+}
+},
+"exits": [
+{
+"x": 0,
+"y": 20,
+"w": 1,
+"h": 2,
+"to": {
+"map": "s_plateau",
+"spawn": "east"
+},
+"edge": "w"
+},
+{
+"x": 25,
+"y": 0,
+"w": 2,
+"h": 1,
+"to": {
+"map": "s_ridge",
+"spawn": "south"
+},
+"edge": "n"
+}
+],
+"notes": [],
+"meta": {
+"name": "星降りの窪地",
+"sub": "高原に落ちた星の跡",
+"region": "r_star",
+"worldRect": [
+640,
+78,
+52,
+40
+],
+"outside": "rock",
+"zones": [
+{
+"rect": null,
+"zone": "zw_star"
+}
+],
+"links": {
+"starfall": {
+"map": "s_crater",
+"spawn": "west"
+}
+},
+"npcs": []
+},
+"rows_fit": [
+",,,\"\"\"\";;;\",,,,,,,,,;,,,,..;;;;;;;;;;,;,,,,,,,RRRRRR",
+",,,\"\"\"\";;;,,,b,,,,,,,,,,;..;;;;;;;;;;,,,,,,,,,RRRRRR",
+",,,,\"\"\",,,,,,,,,,,,,,,,;;..;;;T,;;;;;,,,,,,,,,RRRRRR",
+",,,,,\",,,,,,,,,,,,,,,,,,,..;;;;;;;;;,,,,,,,,,,RRRRRR",
+",,,b;;;r,,;;;,,,,,,\"\",,,,..,,,,,,,,,,,,,,,,,,,RRRRRR",
+"\",,,,,,,,,;b;,,,,,,\"\"\",,,..,,,,,,,,,,TTTT,,,,,RRRRRR",
+"\"r,,,,,,,,,,,,,,,;;\"\"\",,,..,,,,,,,,,TTTTT,,,,,,RRRRR",
+",,,,,,TTTTT,,,,;;;;,,,,,,..,,,,,,,,,,TTT\",,,,,;RRRRR",
+",,,,TTTTTTTTT,,;;;;,,,,,,..,,,,,,,,,,\"\"\"\",,,,,;,RRRR",
+",,,,,\"TTTTTT,,,;;;;,,,,...,,,,,,,,,\"\"\"\"\"\",,,,,bRRRRR",
+",,,\"\",\",,,,,,,,;;;;,......,,r,,,,,,,\"\"\"\"\",,,,,,RRRRR",
+",,,,,b,,,,,,,,,,........,,,,,,,,,,,\"\"\"\"\",,,,,,,RRRRR",
+",,,,,,,,,,,,,.......,,,,,,,,,,,,,,,,,\"\",,,,,,,,RRRRR",
+";;;;,,,,,,,......,,,,,,,,,,,,,,,,,,,\"\"\",,,,,,;,RRRRR",
+";;;;,,,,,,...,,,,,,,;;;;;,,,,r,,,,\"\"\"\",,,,,,;;RRRRRR",
+";;;;,,,,,...,,,,,,,;;;;;;;,,,,,\"\"\"\"\"\"\",,;,,,;;RRRRRR",
+";;;;,,,,...,,,,,,,;;;;;;;;;,,,,,,,,\"\",,,;,,,,;RRRRRR",
+";;;,,,....,,,,,,,,,;;;;;rrrrrrr,,,,,,,,,;,,,,,,RRRRR",
+";;;,,...,,,,,,,,,,,,;;,RRRRRRRRRRrrr,,,;;,,,,,,RRRRR",
+".......::,,,,,,,,,,,,,RRRRRRRRRRRRRRr,,,,,,,,,,RRRRR",
+".....,,,::,,,,,,,,,,RRrrrrrrrrrXkRRRRr,,,,\"\",,\",RRRR",
+";;,,,,,,,::,,,,,,,,RRrXXkkkkkkkkkXrrRRr,,,,,,,,,RRRR",
+",,;,,,,,,,:::,,,,,RRrrkkkkkkkkkkkkXrrRRr,,,r,,,,RRRR",
+",,,,,,,,,,,:::,,,,RRrkkkkkkkkkkkkkkrkrRRr,,rr,,,RRRR",
+",,,,,;;,,,,,::::::::kkkkkkkkrrkkkkkkkkrRRr,,,,,,RRRR",
+",,,,,,,,,,,,,:::::::rkkkkkkkXXrkkkkkkkkRRr,,,,,,,RRR",
+",,,,,,,,,,,,,,,,,rrrrkkkkkkkkkkkkkkkkkkrRRr,,,,\",RRR",
+";,,,,,,,,,,,,,,,,RRrXkkkkkkkkkkkkkkkXkkkRRr,,,,,,RRR",
+";;,,,,,,,,,,,,,,,RRrkkkkkkkkkkkkkkkkXkkrRR,,,,,,,RRR",
+";;,,,,,,TTT,,,,,,,RrrkkkXkkkkkkkkkkkkkrRR,,,,,,,,RRR",
+"\"\";,,,,T,,,,T,,,,,,RrrkkkXkkkkXkkkkkkkRRr,,,,,,,,RRR",
+"\"\"\",,,,,TTTTTT,,b,,RrrkkkkkkkkkkkkkkkRR,,,,,,,,,,RRR",
+";;\"\",,,,,TTTT,,,;,,,RRrrrkrrrrkrkkkRRR,\"\"\"b,,,,,RRRR",
+";;,,,,,,,TTTT,,,,,,,r,RrRRRRRRRRrrRRR,,,\",,,,,,,RRRR",
+";;,,,,,,,,,,,,,,;,,,,,,RRRRRRRRRRRR,,,,,,,,,,,,,RRRR",
+",,,,,,,,,,,,,,,,\";,,,,,,rRRRRRRRRR,,,,,,,,,,,,,,RRRR",
+"RRR,,,,,,,,,,,,;r;,,b,,,RRRRRRRRRRRR,,,,,,;,,,,,,RRR",
+"RRRR,RRRRRRRRRR,,,,,,RRRRRRRRRRRRRRRR,RRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
+]
+}

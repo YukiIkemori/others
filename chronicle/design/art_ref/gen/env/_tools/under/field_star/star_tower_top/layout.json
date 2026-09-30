@@ -1,0 +1,235 @@
+{
+"id": "star_tower_top",
+"w": 40,
+"h": 34,
+"rows": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~XXXXXXXXXX~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~XXXXXccccccXXXXX~~~~~~~~~~~~",
+"~~~~~~~~~~XXXccccccXXccccccXXX~~~~~~~~~~",
+"~~~~~~~~~XXccccccccccccccccccXX~~~~~~~~~",
+"~~~~~~~XXXccccccccccccccccccccXXX~~~~~~~",
+"~~~~~~XXccccccccccccccccccccccccXX~~~~~~",
+"~~~~~XXcccXccccccccccccccccccXcccXX~~~~~",
+"~~~~~XccccccccccccccccccccccccccccX~~~~~",
+"~~~~XXccccccccckkkkkkkkkkcccccccccXX~~~~",
+"~~~~XccccccccckkkkkkkkkkkkcccccccccX~~~~",
+"~~~XXcccccccckkkkkkkkkkkkkkccccccccXX~~~",
+"~~~XcccccccckkkkkkkkkkkkkkkkccccccccX~~~",
+"~~~XccccccckkkkkkkkkkkkkkkkkkcccccccX~~~",
+"~~~XccccccckkkkkkkkkkkkkkkkkkcccccccX~~~",
+"~~XXccccccckkkkkkkkkkkkkkkkkkcccccccXX~~",
+"~~~XccccccckkkkkkkkkkkkkkkkkkcccccccX~~~",
+"~~~XccccccckkkkkkkkkkkkkkkkkkcccccccX~~~",
+"~~~XcccccccckkkkkkkkkkkkkkkkccccccccX~~~",
+"~~~XXcccXcccckkkkkkkkkkkkkkccccXcccXX~~~",
+"~~~~XccccccccckkkkkkkkkkkkcccccccccX~~~~",
+"~~~~XXccccccccckkkkkkkkkkcccccccccXX~~~~",
+"~~~~~XccccccccccccccccccccccccccccX~~~~~",
+"~~~~~XXccccccccccccccccccccccccccXX~~~~~",
+"~~~~~~XXccccccccccccccccccccccccXX~~~~~~",
+"~~~~~~~XXXccccccccccccccccccccXXX~~~~~~~",
+"~~~~~~~~~XXccccccccccccccccccXX~~~~~~~~~",
+"~~~~~~~~~~XXXccccccccccccccXXX~~~~~~~~~~",
+"~~~~~~~~~~~~XXXXXccccccXXXXX~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~XXXXXXXXXX~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+],
+"marks": [
+{
+"kind": "stairs",
+"cells": [
+[
+19,
+27
+],
+[
+20,
+27
+]
+],
+"text": "the top of a stone STAIRCASE coming up through the roof floor, an opening with steps going down (walkable)",
+"color": [
+190,
+186,
+176
+],
+"solid": false
+},
+{
+"kind": "lectern",
+"cells": [
+[
+19,
+4
+],
+[
+20,
+4
+]
+],
+"text": "a bronze STAR-READING LECTERN on a raised round dais, brass sighting arms around it pointing at the sky",
+"color": [
+190,
+150,
+70
+],
+"solid": true
+},
+{
+"kind": "brazier10",
+"cells": [
+[
+10,
+8
+]
+],
+"text": "a tall bronze STAR BRAZIER (unlit) on a tripod",
+"color": [
+190,
+150,
+70
+],
+"solid": true
+},
+{
+"kind": "brazier29",
+"cells": [
+[
+29,
+8
+]
+],
+"text": "a tall bronze STAR BRAZIER (unlit) on a tripod",
+"color": [
+190,
+150,
+70
+],
+"solid": true
+},
+{
+"kind": "brazier8",
+"cells": [
+[
+8,
+20
+]
+],
+"text": "a tall bronze STAR BRAZIER (unlit) on a tripod",
+"color": [
+190,
+150,
+70
+],
+"solid": true
+},
+{
+"kind": "brazier31",
+"cells": [
+[
+31,
+20
+]
+],
+"text": "a tall bronze STAR BRAZIER (unlit) on a tripod",
+"color": [
+190,
+150,
+70
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 19,
+"y": 26
+},
+{
+"type": "o",
+"x": 20,
+"y": 26
+},
+{
+"type": "o",
+"x": 19,
+"y": 5
+},
+{
+"type": "o",
+"x": 20,
+"y": 5
+},
+{
+"type": "o",
+"x": 20,
+"y": 6
+},
+{
+"type": "o",
+"x": 19,
+"y": 16
+},
+{
+"type": "o",
+"x": 11,
+"y": 23
+},
+{
+"type": "o",
+"x": 12,
+"y": 23
+},
+{
+"type": "o",
+"x": 11,
+"y": 24
+},
+{
+"type": "o",
+"x": 12,
+"y": 24
+},
+{
+"type": "o",
+"x": 19,
+"y": 12
+},
+{
+"type": "o",
+"x": 20,
+"y": 12
+},
+{
+"type": "o",
+"x": 27,
+"y": 23
+}
+],
+"spawns": {
+"from1": {
+"x": 19,
+"y": 26,
+"dir": "n"
+}
+},
+"exits": [],
+"notes": [],
+"meta": {
+"name": "星読みの塔",
+"region": "r_star",
+"zones": [],
+"worldRect": [
+0,
+0,
+1,
+1
+],
+"look": "int"
+}
+}

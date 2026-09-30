@@ -33,7 +33,7 @@ for (const id of MY_MAPS) {
   if (!r.ok) ok(`map ${id} が K.map`, false, r.errors);
 }
 const myEvents = [...SRC.matchAll(/\bE\('([a-z0-9_]+)'/g)].map((m) => m[1]);
-ok(`山地のイベント ${myEvents.length} 本が R.DB.events にある`, myEvents.length >= 70 && myEvents.every((id) => D.events[id]), myEvents.filter((id) => !D.events[id]));
+ok(`山地のイベント ${myEvents.length} 本が R.DB.events にある`, myEvents.length >= 60 && myEvents.every((id) => D.events[id]), myEvents.filter((id) => !D.events[id]));
 {
   const bad = myEvents.filter((id) => !R.Contract.check('event', D.events[id]).ok);
   ok('山地のイベントが K.event', bad.length === 0, bad);

@@ -1,0 +1,19 @@
+{
+ "id": "s_plateau",
+ "kind": "under",
+ "map": "s_plateau",
+ "tile": 32,
+ "size32": [
+  1792,
+  1280
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.8,
+ "files": {
+  "24": "s_plateau@24.png",
+  "32": "s_plateau@32.png"
+ },
+ "src": "generated"
+}

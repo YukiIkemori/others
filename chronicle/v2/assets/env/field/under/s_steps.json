@@ -1,0 +1,19 @@
+{
+ "id": "s_steps",
+ "kind": "under",
+ "map": "s_steps",
+ "tile": 32,
+ "size32": [
+  1664,
+  1216
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.8,
+ "files": {
+  "24": "s_steps@24.png",
+  "32": "s_steps@32.png"
+ },
+ "src": "generated"
+}

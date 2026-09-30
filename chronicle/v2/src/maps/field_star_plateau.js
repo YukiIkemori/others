@@ -1,0 +1,73 @@
+// 生成物（design/art_ref/gen/env/_tools/under/field_star/ の areas_star.py → fit.py → tomap.py）。手で直さない: 配置は areas_star.py、当たりは fit.py で作り直す。
+// エリア s_plateau「列柱の高原」（学術都市オルビスの南の台地、56×40）。エリア切り替えのフィールド（maps/field_00_kit.js、高原の凡例は field_star_00_kit.js）。
+//   出口: w → s_steps.east, n → orbis.gate_s, e → s_crater.west
+//   絵: field/under/s_plateau（v2/assets/env/field/under/。無ければマスから焼く）
+(function (R) {
+  'use strict';
+  R.FieldArea.def("s_plateau", {
+    name: R.T('map.field_star_plateau.s_plateau.name'), region: "r_star", outside: "rock",
+    legend: R.FieldArea.STAR_LEGEND, theme: 'field', bgm: 'overworld', bbg: 'star', propSet: 'star', propSetBase: 'village',
+    light: R.FieldArea.STAR_LIGHT,
+    rows: [
+      "XXXXXXXXXXXXXXXXXXXXXXXXXXXccXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+      "XXXXXXXXXXXXXXXXXXXXXXXXXXXccXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+      "XXXXXXXXXXXXXXXXXXXXXXXXXXXccXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+      "XXXXXXXXXXXXXXXXXXXXXXXXXXXccXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+      "XXXXXXXXXXXXXXXXXXXXXXXXXXXwcXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+      "TTTTTTTTTTTTTTTTTTTTTTTTTTTwwTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+      "TTTTTTTTTwwwwTTTTTTTTTTTTTTwwTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+      "wwTTTTTTTwrwwTTTTTTTTTTTTTTwwTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+      "wwwwwwTTTwwwwTTTTTTTTTrTTTTwwTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+      "..TwwwwwwwwwwwwwwTTTwwwwwwwwwTTTTTTTTTrTTTTTTTTTTTTTTTTT",
+      "..TTTTwwwwwwwwwwwwwwwwwwwwwwwwTTTTTTTTTTTTTTTTTTTTTTTTTT",
+      "rrrrTTTTTTTTTTTTTTTTTTTwTTTTwwwwTTTTTTTTTTTTTTTTTTTTTrTT",
+      "rrrrTTTTTTTTTTTTTTTTTTTwTTTTTTTwwwrbTTTTTTTTTTTTTTTTTTTT",
+      "RRRRTTTTTTTTTTTTTTTTTTTTTTTTTTTwwwwwTTTTTTTTTTTTTTTTTTTT",
+      "RRRRTTTTTTTTbTTTTTTTTTTTTTTTTTTTTTwwwTTTTTTTTTTTTTTTTTTT",
+      "RRRRTTTTTTTTTTTTTTTTXTTTTTTTTTTTTTTTwwwwTTTTTTTTTTTTTTTT",
+      "RRRRTTTTTTTTTTTTTXTTTTTXTTTTTTTTTTTTTTTwwwTTTTTTTTTTTTTT",
+      "RRRRrTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTwwwwwTTTTTTTTTTT",
+      "RRRRrTTTTTTTTTTXTTTTTTTTTXTTTTTTTTTTTTTTTTTTwwwwwwrTTTTT",
+      "RRRRRTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTwwwwwwwwwww",
+      "RRRRRTTTTTTTTTXTTTTXXXTTTTXTTTTTTTTTTTTTTTTTTTTTwwwwwwww",
+      "RRRRTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+      "RRRRTTTTTTTTTTTXTTTTTTTTTXTTTTTTTTTTTTTTTTTTTTTTTTTTTT..",
+      "RRRRTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTbTTTTTTTTTTT,",
+      "RRRTTTTTTTTTTTTTTXTTTTTXTTTTTrTTTTTTTTTTTTTbTTTTTTTTTTTT",
+      "RRRTTTTTTTTTTrTTTTTTXTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+      "RRRTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+      "RRRTTTTTTTTTTTTTTTTTTTTTTTTTTTrrTTTTTTTTTTTTTTTTTTTTTTTT",
+      "RTTTTTTTTTTTTTTTTTTTTTTTTTTTTTrrTTTTTTTTTTTTbTTTTTTTTTTT",
+      "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTbTTTTTTTTTTTTT",
+      "rrrTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+      "rrrrrrrTTTTTTTTTTTTrrrrrrTTTTTTTTTTTTTTTTTTrrrrrrrrrrrrr",
+      "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrTTTTTTTTTrrrrrrrrrrrrrrrrr",
+      "RRRrrrrrrrrrrrrrrrrRRRRRrrrrrrrrrrrrrrrrrrrrRRRRRrrrrrrr",
+      "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRrrrrrrrrrrrRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+    ],
+    objects: [
+      {"type":"sign","x":31,"y":14,"text":R.T('map.field_star_plateau.s_plateau.objects.0.text')},
+      {"type":"examine","x":20,"y":21,"event":"star_column_ring"},
+      {"type":"chest","id":"s_plateau_c1","x":48,"y":30,"item":"i_ether","n":1},
+      {"type":"waylamp","id":"wl_s_plateau_1","x":10,"y":14,"lit":true},
+      {"type":"waylamp","id":"wl_s_plateau_2","x":30,"y":8,"lit":true},
+      {"type":"waylamp","id":"wl_s_plateau_3","x":42,"y":22,"lit":true},
+    ],
+    npcs: [
+
+    ],
+    spawns: {"west":{"x":1,"y":9,"dir":"e"},"north":{"x":27,"y":1,"dir":"s"},"east":{"x":54,"y":22,"dir":"w"}},
+    exits: [{"x":0,"y":9,"w":1,"h":2,"to":{"map":"s_steps","spawn":"east"}},{"x":27,"y":0,"w":2,"h":1,"to":{"map":"orbis","spawn":"gate_s"}},{"x":55,"y":22,"w":1,"h":2,"to":{"map":"s_crater","spawn":"west"}}],
+    triggers: [],
+    tilePatches: [],
+    zones: [{"rect":null,"zone":"zw_star"}],
+    art: {"image":"field/under/s_plateau","painted":[],"overlay":"field/under/s_plateau_over"},
+    meta: {"sub":R.T('map.field_star_plateau.s_plateau.meta.sub'),"worldRect":[596,62,56,40]},
+    links: {},
+  });
+})(window.RPG);

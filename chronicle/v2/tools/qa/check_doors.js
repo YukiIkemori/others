@@ -268,7 +268,9 @@ async function worker(S, jobs, results, shots) {
       if (!st) r = { ok: false, why: 'no cell to stand before it' };
       else {
         await p.evaluate(async ([map, x, y, lv]) => {
-          await RPG.Field.enter(map, { x, y, dir: 's', lv }, { fade: 0, noAutosave: true });
+          // 着いたときの場面（on: 'enter' の文など）は入力を待つので、enter の終わりは待ち切らない（下の settle が文を送る）
+          const pr = RPG.Field.enter(map, { x, y, dir: 's', lv }, { fade: 0, noAutosave: true });
+          await Promise.race([pr, new Promise((r) => setTimeout(r, 3000))]);
           RPG.Field.encounter.suppress(100000);
         }, [d.map, st.x, st.y, st.lv]);
         await p.waitForTimeout(250);

@@ -28,7 +28,7 @@
       O.push(K.exam(4, 8, 'mine_cavein'));
       O.push(lamp(1, 33, 18));
       O.push(K.chest('mine_1_c1', 27, 6, { pool: 'p_T' }), K.chest('mine_1_c2', 31, 9, { gold: 150 }), K.chest('mine_1_c3', 8, 10, { item: 'i_ether', n: 1 }), K.chest('mine_1_c4', 45, 4, { pool: 'p_T' }));
-      for (const [x, y] of [[25, 34], [29, 34], [21, 19], [34, 20], [26, 8], [5, 13], [47, 12], [48, 30]]) O.push(K.prop('hook_lamp', x, y));
+      for (const [x, y] of [[24, 33], [29, 32], [21, 18], [34, 18], [26, 4], [9, 14], [46, 12], [47, 28]]) O.push(K.prop('hook_lamp', x, y));
       const N = [
         // 落盤の奥の鉱夫ダグ（1 人目）
         K.npc('miner1', 'npc_miner', 6, 10, { name: R.T('map.mine_deep.N.0.miner1.name'), dir: 's', talk: 'mine_miner1', reward: null, pushable: false, cond: '!mine_miner1' }),
@@ -63,7 +63,7 @@
       O.push(K.chest('mine_2_c1', 4, 21, { pool: 'p_T' }), K.chest('mine_2_c2', 51, 34, { pool: 'p_T' }), K.chest('mine_2_c3', 36, 17, { gold: 220 }));
       // 坑道の幽霊が教える宝箱（話を最後まで聞くと出る）
       O.push(K.chest('mine_2_c4', 11, 37, { pool: 'p_rare', cond: 'mine_ghost_done' }));
-      for (const [x, y] of [[44, 9], [30, 14], [20, 23], [34, 28], [45, 31], [7, 35], [17, 29]]) O.push(K.prop('hook_lamp', x, y));
+      for (const [x, y] of [[43, 8], [30, 13], [19, 23], [33, 30], [46, 31], [7, 35], [17, 29]]) O.push(K.prop('hook_lamp', x, y));
       const N = [
         // 水びたしの坑道の奥の鉱夫ロルフ（2 人目）
         K.npc('miner2', 'npc_miner', 4, 19, { name: R.T('map.mine_deep.N.0.miner2.name'), dir: 'e', talk: 'mine_miner2', reward: null, pushable: false, cond: '!mine_miner2' }),

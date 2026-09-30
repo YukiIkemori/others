@@ -1,0 +1,645 @@
+{
+"id": "star_tower_1",
+"w": 52,
+"h": 46,
+"rows": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~XXXXXXXXXX~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~XXXXXXXXccXXXXXXXX~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~XXXXXccccccccccccXXXXX~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~XXXXXccccccccccccccccXXXXX~~~~~~~~~~~~~",
+"~~~~~~~~~~~XXXXcXXccccccccccccccccXXcXXXX~~~~~~~~~~~",
+"~~~~~~~~~~XXXcccXXccccccccccccccccXXcccXXX~~~~~~~~~~",
+"~~~~~~~~~XXXccccXXccccccccccccccccXXccccXXX~~~~~~~~~",
+"~~~~~~~~XXccccccXXccccccccccccccccXXccccccXX~~~~~~~~",
+"~~~~~~~XXcccccccXXccccccccccccccccXXcccccccXX~~~~~~~",
+"~~~~~~XXccccccccXXccccXXXccXXXccccXXccccccccXX~~~~~~",
+"~~~~~XXXccccccccXXcXXXXXXccXXXXXXcXXccccccccXXX~~~~~",
+"~~~~XXXccccccccccXXXXXccccccccXXXXXccccccccccXXX~~~~",
+"~~~~XXccccccccccXXXccccccccccccccXXXccccccccccXX~~~~",
+"~~~XXXcccccccccXXXccccccccccccccccXXXcccccccccXXX~~~",
+"~~~XXcccccXcccXXXccccccccccccccccccXXXccccXccccXX~~~",
+"~~~XXccccccccXXXccccccccccccccccccccXXXccccccccXX~~~",
+"~~XXcccccccccXXccccccccccccccccccccccXXcccccccccXX~~",
+"~~XXccccccccXXXccccccccXXXXXXccccccccXXXccccccccXX~~",
+"~~XXccccccccXXccccccccXXXXXXXXccccccccXXccccccccXX~~",
+"~~XXccccccccXXcccccccXXXXXXXXXXcccccccXXccccccccXX~~",
+"~~XXccccccccXXccccccXXXXXXXXXXXXccccccXXccccccccXX~~",
+"~~XXccccccccccccccccXXXXXXXXXXXXccccccXXccccccccXX~~",
+"~~XXccccXcccccccccccXXXXXXXXXXXXccccccXXccccXcccXX~~",
+"~~XXccccccccXXccccccXXXXXXXXXXXXccccccXXccccccccXX~~",
+"~~XXccccccccXXcccccccXXXXXXXXXXcccccccXXccccccccXX~~",
+"~~XXccccccccXXccccccccXXXXXXXXccccccccXXccccccccXX~~",
+"~~XXccccccccXXXccccccccXXXXXXccccccccXXXccccccccXX~~",
+"~~XXcccccccccXXccccccccccccccccccccccXXcccccccccXX~~",
+"~~~XXccccccccXXXccccccccccccccccccccXXXccccccccXX~~~",
+"~~~XXcccccccccXXXccccccccccccccccccXXXcccccccccXX~~~",
+"~~~XXXccccXccccXXXccccccccccccccccXXXcccccXcccXXX~~~",
+"~~~~XXccccccccccXXXccccccccccccccXXXccccccccccXX~~~~",
+"~~~~XXXccccccccccXXXXXccccccccXXXXXccccccccccXXX~~~~",
+"~~~~~XXXcccccccccccXXXXXXXXXXXXXXcccccccccccXXX~~~~~",
+"~~~~~~XXccccccccccccccXXXXXXXXccccccccccccccXX~~~~~~",
+"~~~~~~~XXccccccccccccccccccccccccccccccccccXX~~~~~~~",
+"~~~~~~~~XXcccccccXcccccccccccccccccXccccccXX~~~~~~~~",
+"~~~~~~~~~XXXccccccccccccccccccccccccccccXXX~~~~~~~~~",
+"~~~~~~~~~~XXXccccccccccccccccccccccccccXXX~~~~~~~~~~",
+"~~~~~~~~~~~XXXXccccccccccccccccccccccXXXX~~~~~~~~~~~",
+"~~~~~~~~~~~~~XXXXccccccccccccccccccXXXX~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~XXXXXccccccccccccXXXXX~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~XXXXXXXXccXXXXXXXX~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~XXXXccXXXX~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~cc~~~~~~~~~~~~~~~~~~~~~~~~~"
+],
+"marks": [
+{
+"kind": "orrery",
+"cells": [
+[
+23,
+18
+],
+[
+24,
+18
+],
+[
+25,
+18
+],
+[
+26,
+18
+],
+[
+27,
+18
+],
+[
+28,
+18
+],
+[
+22,
+19
+],
+[
+23,
+19
+],
+[
+24,
+19
+],
+[
+25,
+19
+],
+[
+26,
+19
+],
+[
+27,
+19
+],
+[
+28,
+19
+],
+[
+29,
+19
+],
+[
+21,
+20
+],
+[
+22,
+20
+],
+[
+23,
+20
+],
+[
+24,
+20
+],
+[
+25,
+20
+],
+[
+26,
+20
+],
+[
+27,
+20
+],
+[
+28,
+20
+],
+[
+29,
+20
+],
+[
+30,
+20
+],
+[
+20,
+21
+],
+[
+21,
+21
+],
+[
+22,
+21
+],
+[
+23,
+21
+],
+[
+24,
+21
+],
+[
+25,
+21
+],
+[
+26,
+21
+],
+[
+27,
+21
+],
+[
+28,
+21
+],
+[
+29,
+21
+],
+[
+30,
+21
+],
+[
+31,
+21
+],
+[
+20,
+22
+],
+[
+21,
+22
+],
+[
+22,
+22
+],
+[
+23,
+22
+],
+[
+24,
+22
+],
+[
+25,
+22
+],
+[
+26,
+22
+],
+[
+27,
+22
+],
+[
+28,
+22
+],
+[
+29,
+22
+],
+[
+30,
+22
+],
+[
+31,
+22
+],
+[
+20,
+23
+],
+[
+21,
+23
+],
+[
+22,
+23
+],
+[
+23,
+23
+],
+[
+24,
+23
+],
+[
+25,
+23
+],
+[
+26,
+23
+],
+[
+27,
+23
+],
+[
+28,
+23
+],
+[
+29,
+23
+],
+[
+30,
+23
+],
+[
+31,
+23
+],
+[
+20,
+24
+],
+[
+21,
+24
+],
+[
+22,
+24
+],
+[
+23,
+24
+],
+[
+24,
+24
+],
+[
+25,
+24
+],
+[
+26,
+24
+],
+[
+27,
+24
+],
+[
+28,
+24
+],
+[
+29,
+24
+],
+[
+30,
+24
+],
+[
+31,
+24
+],
+[
+21,
+25
+],
+[
+22,
+25
+],
+[
+23,
+25
+],
+[
+24,
+25
+],
+[
+25,
+25
+],
+[
+26,
+25
+],
+[
+27,
+25
+],
+[
+28,
+25
+],
+[
+29,
+25
+],
+[
+30,
+25
+],
+[
+22,
+26
+],
+[
+23,
+26
+],
+[
+24,
+26
+],
+[
+25,
+26
+],
+[
+26,
+26
+],
+[
+27,
+26
+],
+[
+28,
+26
+],
+[
+29,
+26
+],
+[
+23,
+27
+],
+[
+24,
+27
+],
+[
+25,
+27
+],
+[
+26,
+27
+],
+[
+27,
+27
+],
+[
+28,
+27
+]
+],
+"text": "the great ORRERY: a round raised dais with huge interlocking brass rings, a golden sun sphere in the centre and silver planet spheres on arms",
+"color": [
+190,
+150,
+70
+],
+"solid": true,
+"shape": "round"
+},
+{
+"kind": "entry",
+"cells": [
+[
+25,
+45
+],
+[
+26,
+45
+]
+],
+"text": "the arched tower DOOR (open), leading outside",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+},
+{
+"kind": "stairs",
+"cells": [
+[
+25,
+2
+],
+[
+26,
+2
+]
+],
+"text": "a narrow stone STAIRCASE going up along the wall (walkable)",
+"color": [
+190,
+186,
+176
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 25,
+"y": 44
+},
+{
+"type": "o",
+"x": 26,
+"y": 44
+},
+{
+"type": "o",
+"x": 25,
+"y": 43
+},
+{
+"type": "o",
+"x": 25,
+"y": 3
+},
+{
+"type": "o",
+"x": 26,
+"y": 3
+},
+{
+"type": "o",
+"x": 25,
+"y": 5
+},
+{
+"type": "o",
+"x": 26,
+"y": 7
+},
+{
+"type": "o",
+"x": 20,
+"y": 30
+},
+{
+"type": "o",
+"x": 12,
+"y": 30
+},
+{
+"type": "o",
+"x": 8,
+"y": 22
+},
+{
+"type": "o",
+"x": 26,
+"y": 17
+},
+{
+"type": "o",
+"x": 26,
+"y": 30
+},
+{
+"type": "o",
+"x": 40,
+"y": 30
+},
+{
+"type": "o",
+"x": 43,
+"y": 22
+},
+{
+"type": "o",
+"x": 22,
+"y": 5
+},
+{
+"type": "o",
+"x": 30,
+"y": 5
+},
+{
+"type": "o",
+"x": 13,
+"y": 22
+},
+{
+"type": "o",
+"x": 13,
+"y": 23
+},
+{
+"type": "o",
+"x": 25,
+"y": 10
+},
+{
+"type": "o",
+"x": 26,
+"y": 10
+},
+{
+"type": "o",
+"x": 18,
+"y": 15
+},
+{
+"type": "o",
+"x": 34,
+"y": 15
+},
+{
+"type": "o",
+"x": 6,
+"y": 16
+},
+{
+"type": "o",
+"x": 45,
+"y": 16
+},
+{
+"type": "o",
+"x": 26,
+"y": 36
+}
+],
+"spawns": {
+"entrance": {
+"x": 25,
+"y": 43,
+"dir": "n"
+},
+"from_top": {
+"x": 25,
+"y": 3,
+"dir": "s"
+}
+},
+"exits": [],
+"notes": [],
+"meta": {
+"name": "星読みの塔",
+"region": "r_star",
+"zones": [],
+"worldRect": [
+0,
+0,
+1,
+1
+],
+"look": "int"
+}
+}

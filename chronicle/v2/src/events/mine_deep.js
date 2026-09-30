@@ -142,7 +142,7 @@
   // ピップ（3 人目。誓いのハンマー）
   E('mine_pip', async (ev) => {
     const x = X();
-    if (ev.flag('mine_pip')) return;
+    if (ev.flag('mine_pip') || !ev.flag('mine_rockeater')) return;
     await ev.say('pip', R.T('events.mine_pip.say'));
     await ev.say('pip', R.T('events.mine_pip.say_2'));
     await ev.say('pip', R.T('events.mine_pip.say_3'));

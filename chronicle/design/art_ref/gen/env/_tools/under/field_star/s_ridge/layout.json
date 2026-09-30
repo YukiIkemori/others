@@ -1,0 +1,367 @@
+{
+"id": "s_ridge",
+"w": 50,
+"h": 38,
+"rows": [
+"FFFFFFFFFFFFFFFFRFFFFFRRRRFFRRRFFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFRRRRRRXXXXXXXXRRRRRFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFRRRRRRXXXXXXXX,,RRRRFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFRR,,,,XXXXXXXX,,,,RRFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFRR,,,,,XXXXXXXX;,,,,RRFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFRR,,,,,XXXXXXXX;,,,,RRFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFRR,,,,,XXXccXXX;,,,,RRFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFRR,,,;;;c.cc;;;;;;;RRFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFRR,,,;;;...c;;;;;;RRFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFRR,,,;;...;;;;;;RRFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFRR,,,,;...;;;;;RRFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFRR,,,,...;;;;;RRFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFRR,,,,...,;;;RRFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFRR\",,,...,;;,RRFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFRR\"T\",...,,,,RRFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFRRTTT,,..,,,,RRFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFRR\"T\",,..;,,,RRFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFRR,\",,,..,,TTRRFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFRR,,,,,..,,TTTRRFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFRR,,,,,..,,,TTRRFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFRR,,,,,..,,,,,RRFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFRRFFRR,,,,,,..,,,,,RRFFFFFFFFFFFFFFFFF",
+"FFFFFFFRRRRRRRRRR,,,,,,,..,,,,,RRFFFFFFFFFFFFFFFFF",
+"RRRRRRRRRRRR,,RR..........,,,,;RRFFFFFFFFFFFFFFFFF",
+"..........................,,,,;RRFFFFFFFFFFFFFFFFF",
+"................,,,,,,,...,,,,;RRFFFFFFFFFFFFFFFFF",
+"RRRRRRRRR,,,,,,,,,,,,,,..,,,,,;;RRFFFFFFFFFFFFFFFF",
+"RRRRRRRRRRRRR,\"\"\",,,,,\"..,,,,,,,RRFFFFFFFFFFFFFFFF",
+"FFFFFFFFFRRRRRRRRR,,,\"\"..,,,,,,,RRFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFRRRRRR\"\"\",..,,,,,,,RRFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFRR\"\",..,,TTT,,RRFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFRR\"\",..;;TTT,,RRFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFRR,,,;..;;TTT,RRFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFRR,,,,..\";\"\"\"\"RRFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFRR,,,,..\"\"\"\"\"\"RRFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFRR,,,,..\"\"\"\"\"RRFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFRRRRRR..RRRRRRRFFFFFFFFFFFFFFFFFF",
+"FFFFFFFFFFFFFFFFFFRRRRR..RRRRRRRFFFFFFFFFFFFFFFFFF"
+],
+"marks": [
+{
+"kind": "tower",
+"cells": [
+[
+21,
+1
+],
+[
+21,
+2
+],
+[
+21,
+3
+],
+[
+21,
+4
+],
+[
+21,
+5
+],
+[
+21,
+6
+],
+[
+22,
+1
+],
+[
+22,
+2
+],
+[
+22,
+3
+],
+[
+22,
+4
+],
+[
+22,
+5
+],
+[
+22,
+6
+],
+[
+23,
+1
+],
+[
+23,
+2
+],
+[
+23,
+3
+],
+[
+23,
+4
+],
+[
+23,
+5
+],
+[
+23,
+6
+],
+[
+24,
+1
+],
+[
+24,
+2
+],
+[
+24,
+3
+],
+[
+24,
+4
+],
+[
+24,
+5
+],
+[
+24,
+6
+],
+[
+25,
+1
+],
+[
+25,
+2
+],
+[
+25,
+3
+],
+[
+25,
+4
+],
+[
+25,
+5
+],
+[
+25,
+6
+],
+[
+26,
+1
+],
+[
+26,
+2
+],
+[
+26,
+3
+],
+[
+26,
+4
+],
+[
+26,
+5
+],
+[
+26,
+6
+],
+[
+27,
+1
+],
+[
+27,
+2
+],
+[
+27,
+3
+],
+[
+27,
+4
+],
+[
+27,
+5
+],
+[
+27,
+6
+],
+[
+28,
+1
+],
+[
+28,
+2
+],
+[
+28,
+3
+],
+[
+28,
+4
+],
+[
+28,
+5
+],
+[
+28,
+6
+]
+],
+"text": "the base of a tall ROUND TOWER of pale grey stone seen from above: a round stone roof ringed by a parapet with a brass dome, its door facing south",
+"color": [
+190,
+188,
+196
+],
+"solid": true,
+"shape": "round"
+},
+{
+"kind": "door",
+"cells": [
+[
+24,
+6
+],
+[
+25,
+6
+]
+],
+"text": "a dark ENTRANCE",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "sign",
+"x": 20,
+"y": 27,
+"text": "星読みの尾根\n北 → 星読みの塔\n西 → 学術都市オルビス 東門"
+},
+{
+"type": "examine",
+"x": 25,
+"y": 8,
+"event": "star_tower_seal"
+},
+{
+"type": "waylamp",
+"id": "wl_s_ridge_1",
+"x": 28,
+"y": 26,
+"lit": true
+},
+{
+"type": "waylamp",
+"id": "wl_s_ridge_2",
+"x": 21,
+"y": 10,
+"lit": true
+}
+],
+"spawns": {
+"south": {
+"x": 24,
+"y": 36,
+"dir": "n"
+},
+"west": {
+"x": 1,
+"y": 24,
+"dir": "e"
+},
+"tower": {
+"x": 24,
+"y": 7,
+"dir": "s"
+}
+},
+"exits": [
+{
+"x": 24,
+"y": 37,
+"w": 2,
+"h": 1,
+"to": {
+"map": "s_crater",
+"spawn": "north"
+},
+"edge": "s"
+},
+{
+"x": 0,
+"y": 24,
+"w": 1,
+"h": 2,
+"to": {
+"map": "orbis",
+"spawn": "gate_e"
+},
+"edge": "w"
+}
+],
+"notes": [],
+"meta": {
+"name": "星読みの尾根",
+"sub": "星読みの塔へ続く細い尾根",
+"region": "r_star",
+"worldRect": [
+636,
+30,
+50,
+38
+],
+"outside": "forest_dark",
+"zones": [
+{
+"rect": null,
+"zone": "zw_star"
+}
+],
+"links": {
+"startower": {
+"map": "s_ridge",
+"spawn": "tower"
+}
+},
+"npcs": []
+}
+}
