@@ -40,11 +40,11 @@
     'map.star_orbis.orbis.name': '학술 도시 오르비스',
     'map.star_orbis.orbis.meta.sub': '성벽과 구획의 학술 도시',
     // ---- src/maps/star_orbis_interiors.js
-    'map.star_orbis_interiors.orbis_inn': '여관 「별빛」',
+    'map.star_orbis_interiors.orbis_inn': '여관 ‘별빛’',
     'map.star_orbis_interiors.orbis_inn.meta.sub': '별빛 여관',
     'map.star_orbis_interiors.orbis_inn.npcs.0.inn_keeper.name': '여관 안주인',
     'map.star_orbis_interiors.orbis_inn.npcs.1.student_letter.name': '학생 티모',
-    'map.star_orbis_interiors.orbis_tavern': '주점 「별 보는 잔」',
+    'map.star_orbis_interiors.orbis_tavern': '주점 ‘별 보는 잔’',
     'map.star_orbis_interiors.orbis_tavern.meta.sub': '별 보는 잔 주점',
     'map.star_orbis_interiors.orbis_tavern.npcs.0.barkeep.name': '주인',
     'map.star_orbis_interiors.orbis_tavern.npcs.1.old_watch.name': '야경꾼 노인',

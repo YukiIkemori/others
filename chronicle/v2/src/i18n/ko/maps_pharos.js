@@ -5,7 +5,7 @@
     // ---- src/maps/pharos_interiors.js
     'map.pharos_interiors.pharos_inn': '파로스 여관',
     'map.pharos_interiors.pharos_inn.innkeeper.name': '여관 안주인',
-    'map.pharos_interiors.pharos_tavern': '주점 「바닷바람」',
+    'map.pharos_interiors.pharos_tavern': '주점 ‘바닷바람’',
     'map.pharos_interiors.pharos_tavern.master.name': '바닷바람 주점 주인',
     'map.pharos_interiors.pharos_tavern.gossip.name': '소문을 좋아하는 아주머니',
     'map.pharos_interiors.pharos_tavern.bard.name': '음유시인',
@@ -24,7 +24,7 @@
     // ---- src/maps/pharos_town.js
     'map.pharos_town.objects.sign': '항구 도시 파로스\n서쪽으로 나가면 반도의 가도.',
     'map.pharos_town.objects.sign_2': '조선소\n작은 배 수리 받습니다.',
-    'map.pharos_town.objects.sign_3': '정기선 선착장\n「당분간 결항합니다.」',
+    'map.pharos_town.objects.sign_3': '정기선 선착장\n“당분간 결항합니다.”',
     'map.pharos_town.npcs.otto.name': '오토',
     'map.pharos_town.npcs.otto.title': '등대지기',
     'map.pharos_town.npcs.gateguard.name': '문지기',

@@ -6,7 +6,7 @@
     'goals.g_berna.text': '스승 베르나와 이야기하자',
     'goals.g_pharos.text': '마을을 나서 남동쪽 항구 도시 파로스로 가자',
     'goals.g_tavern.text.0.text': '로아 마을의 스승 베르나와 이야기하자',
-    'goals.g_tavern.text.1.text': '파로스의 주점 「바닷바람」에서 여행 동료를 찾자',
+    'goals.g_tavern.text.1.text': '파로스의 주점 ‘바닷바람’에서 여행 동료를 찾자',
     'goals.g_otto.text': '항구에 있는 등대지기 오토를 찾아가자',
     'goals.g_lighthouse.text': '도시 남쪽, 곶 끝에 있는 파로스 등대로 가자',
     'goals.g_climb.text': '등대를 올라 꼭대기의 등실로 가자',

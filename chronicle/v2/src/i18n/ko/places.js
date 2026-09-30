@@ -14,17 +14,17 @@
     'locations.hut.name': '나무꾼 쉼터',
     // ---- src/data/locations_ash.js
     'locations.caldera.name': '불꽃의 도시 칼데라',
-    'locations.haimi.name': '역참 「재 보는 여관」',
+    'locations.haimi.name': '역참 ‘재 보는 여관’',
     'locations.volcano.name': '잿빛 화산',
     // ---- src/data/locations_desert.js
     'locations.kasim.name': '오아시스 도시 카심',
-    'locations.sandedge.name': '역참 「모래 끝」',
+    'locations.sandedge.name': '역참 ‘모래 끝’',
     'locations.tomb.name': '모래의 왕묘',
     'locations.hawks.name': '모래매단의 은신처',
     'locations.rocks.name': '금강 도마뱀의 바위터',
     'locations.temple.name': '모래에 잠긴 신전',
-    'locations.camp1.name': '야영지 「바위 우물」',
-    'locations.camp2.name': '야영지 「별의 돌」',
+    'locations.camp1.name': '야영지 ‘바위 우물’',
+    'locations.camp2.name': '야영지 ‘별의 돌’',
     'locations.oasis.name': '왕묘의 오아시스',
     'locations.mirage.name': '신기루 시장',
     // ---- src/data/locations_marsh.js
