@@ -445,5 +445,37 @@
 ],
 "look": "ship",
 "smooth": 0.4
-}
+},
+"rows_fit": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~Xuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu~~~~~~~~~~~~~~~~~~",
+"~~~~~~uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu~~~~~~~~~~~~~~~",
+"~~~~~~uuuuuuuuXXuuuuuuuuuuuuuuuuuuuuuuuuuuu~~~~~~~~~~~~~",
+"~~~~~~uuuuuuuuXXuuuuuuuuXXXuuuuuuuuuuuuuuuuuuu~~~~~~~~~~",
+"~~~~~~uuuuuuuuXXuuuuuuuuuXXuuuuuuuuuuuuuuuuuuuuu~~~~~~~~",
+"~~~~~~uuuuuuuuXXuuuuuuXuuuuuuuuuuuuuuuuuuuuuuuuuu~~~~~~~",
+"~~~~~~uuuuuuuuXXuuuuuuXuuuuuuuuuXuuuuuuuuuXuXXuuuuu~~~~~",
+"~~~~~~uXXuXXuuXXuuXuuuuuuuuuuuuuXXuuuuuuuuXuXXuuXuu~~~~~",
+"~~~~~~uuuuuuuuXXuuXXuuuuuuuuuuuuuuuuuuuuuuuuXXuuuu~~~~~~",
+"~~~~~~uuuuuuuuXXuuuuuuuuuuuuuuuuuuXXXXuuuuuuXXuu~~~~~~~~",
+"~~~~~~uuuuuuuuXXuuuuuuuuuuuuuuuuuuXXXXuuuuuuXXu~~~~~~~~~",
+"~~~~~~uuuuuuuuXXuuuuuuuuuuuuuuuuuuuuuuuuuuuuu~~~~~~~~~~~",
+"~~~~~~uuuuuuuuuuuuuuXXXXXXXXuuuuuuuuuuuuuuu~~~~~~~~~~~~~",
+"~~~~~~Xuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu~~~~~~~~~~~~~~~~~~",
+"~~~~~~XXXXXXXXXXXXXXXXXXXXXXuuXXXXXXXX~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+]
 }

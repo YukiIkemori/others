@@ -38,5 +38,9 @@
   "32": "hook_lamp@32.png",
   "40": "hook_lamp@40.png"
  },
- "src": "design/art_ref/gen/env/props/mine_a.png"
+ "src": "design/art_ref/gen/env/props/mine_a.png",
+ "light32": [
+  6,
+  -19
+ ]
 }
