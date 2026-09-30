@@ -84,6 +84,12 @@ const FINALE = ['v_fine_t8_01', 'v_fine_t8_02', 'v_fine_t8_03', 'v_fine_t8_04', 
   'v_nemrea_ending_01', 'v_nemrea_ending_02', 'v_fine_ending_01', 'v_fine_ending_02', 'v_lazaro_ending_01', 'v_rowell_ending_01', 'v_noa_ending_01',
   'v_berna_ending_01', 'v_berna_ending_02', 'v_berna_ending_03'];
 REGION.push(...FINALE);
+// 2026-09-30: ティアの場面 T2〜T7（story_t2〜t7.js。STORY_BIBLE §11.1・§11.2 のロウェル 27 行とフィーネの T3・T6 の 4 行）
+const TIERS = ['v_rowell_t2_01', 'v_rowell_t2_02', 'v_rowell_t2_03', 'v_rowell_t2_04', 'v_rowell_t2_05', 'v_rowell_t2_06', 'v_rowell_t2_07',
+  'v_rowell_t4_01', 'v_rowell_t4_02', 'v_rowell_t4_03', 'v_rowell_t5_01', 'v_rowell_t5_02', 'v_rowell_t5_03', 'v_rowell_t5_04', 'v_rowell_t5_05',
+  'v_rowell_t7_01', 'v_rowell_t7_02', 'v_rowell_t7_03', 'v_rowell_t7_04', 'v_rowell_t7_05', 'v_rowell_t7_06', 'v_rowell_t7_07',
+  'v_fine_t3_01', 'v_fine_t3_02', 'v_fine_t6_01', 'v_fine_t6_02'];
+REGION.push(...TIERS);
 for (const id of REGION) {
   const u = used[id] || [];
   ok(`${id}: イベントで 1 回`, u.length === 1, u.map((x) => x.file));

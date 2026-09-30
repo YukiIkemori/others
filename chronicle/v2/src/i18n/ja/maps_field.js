@@ -452,5 +452,13 @@
     'map.field_ash_spa.a_spa.name': '湯けむりの谷',
     'map.field_ash_spa.a_spa.objects.1.text': '溶岩洞の湯の郷\n岩の割れ目から、湯が湧く。',
     'map.field_ash_spa.a_spa.meta.sub': '溶岩洞の湯の郷',
+    // ---- src/maps/story_links.js
+    'map.story_links.name': 'うわさ好き',
+    'map.story_links.name_2': '記録院の書記',
+    'map.story_links.name_3': '町の子ども',
+    'map.story_links.talk.0.L': 'ねえ、「あかつき」ってなに？\nばあちゃんが寝言で\n言ってた。',
+    'map.story_links.talk.1.L': 'あかつきって、夜の\nおしまいのことなんだって！\nほんとかなあ。',
+    'map.story_links.talk.2.L': '見て！　空のはしっこが、\nほんのり赤いよ。\nあれが、あかつき？',
+    'map.story_links.story_rowell_roa.name': 'ロウェル',
   });
 })(window.RPG);

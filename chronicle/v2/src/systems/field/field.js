@@ -63,8 +63,14 @@
     },
     update() {
       if (!S.map) return;
-      if (S.mv || S.arriving || S.entering || F._locked() || R.Engine.fade.a > 0.01 || R.Events.busy()) return;
       const I = R.Input;
+      // 暗転の間に押した A（勝利の画面を送る早押しなど）を、明けた瞬間のフィールドが「話す・調べる」に拾わない:
+      //   暗い間は押したままの A を飲み込み、明けてから 100 ms（2 フレーム以上）は新しい A も拾わない。重いフレームでも同じ
+      if (R.Engine.fade.a > 0.01) { I.consume('a'); S.litAt = null; return; }
+      if (S.litAt === null) S.litAt = { t: R.Engine.time, f: R.Engine.frame };
+      if (S.litAt && (R.Engine.frame - S.litAt.f < 2 || (!R.Engine.frozen && R.Engine.time - S.litAt.t < 100))) I.consume('a');
+      else if (S.litAt) S.litAt = undefined;
+      if (S.mv || S.arriving || S.entering || F._locked() || R.Events.busy()) return;
       if (I.pressed('y') || I.pressed('start')) { F._openHub('menu'); return; }
       if (I.pressed('x')) { if (!F.hud.cycleMap()) F._openHub('map', S.map.kind === 'town' ? { town: S.map.id } : undefined); return; }   // ダンジョン: 小地図 → 大きな地図 → 出さない（hud.js）。町: 町の地図（Y・R で世界の地図）。世界: 世界の地図（X・B で閉じる。Y のメニューの「地図」からも）
       if (I.pressed('a')) { F._act(); return; }

@@ -90,6 +90,9 @@ BOSSES['tr_b_heroshades@8'] = { troop: 'tr_b_heroshades', tier: 8, kind: 'mid', 
 BOSSES['tr_b_lazaro@8'] = { troop: 'tr_b_lazaro', tier: 8, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 13], note: 'ラザロ（大書庫 5 階）' };
 BOSSES['tr_b_nemrea1@8'] = { troop: 'tr_b_nemrea1', tier: 8, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 13], note: '名のない王（虚ろの間、名を呼ぶ前）' };
 BOSSES['tr_b_nemrea2@8'] = { troop: 'tr_b_nemrea2', tier: 8, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 85, diff: 40, rounds: [8, 15], note: 'ネムレア（名を呼んだあと。最後の戦い）' };
+// ライバル ロウェル（ティアの場面 T2・T5。events/story_t2.js・story_t5.js。町で戦い、負けても続く。編成の固定ティア 2・5 で測る）
+BOSSES['tr_b_rowell1@2'] = { troop: 'tr_b_rowell1', tier: 2, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 10], note: 'ロウェル 1 戦目（T2。負けても続く）' };
+BOSSES['tr_b_rowell2@5'] = { troop: 'tr_b_rowell2', tier: 5, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 10], note: 'ロウェル 2 戦目（T5。負けても続く）' };
 
 function loadR() { return require('./lib/load')({ quiet: true }); }
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : 0);

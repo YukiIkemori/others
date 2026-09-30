@@ -222,7 +222,9 @@ section('4. 数');
   const sliceLeads = Object.entries(D.leads).filter(([, l]) => l.region === 'r_forest' || l.region === 'prologue' || l.region === 'world' || l.kind === 'rumor');
   // 縦切りの後に作った地方（regions の slice が外れ、森・序章・世界でない地方）の手がかりは数えない
   const builtR = (r) => r && D.regions[r] && (!D.regions[r].slice || !!(D.regions[r].dungeons || []).length) && !['r_forest', 'prologue', 'world'].includes(r);   // 錠を残したまま作った地方（諸島: dungeons がある）も作った地方
-  const nLeads = Object.values(D.leads).filter((l) => !builtR(l.region) && !builtR(l.opens)).length;
+  // ティアの場面 T2〜T7 の本筋（events/story_*.js）も縦切りの後に作った物
+  const TIER_LEADS = /^(l_main_margin_[2-7]|l_main_roa_t[36]|l_rumor_mira)$/;
+  const nLeads = Object.entries(D.leads).filter(([id, l]) => !builtR(l.region) && !builtR(l.opens) && !TIER_LEADS.test(id)).length;
   ok(`手がかり 約 28 件（${nLeads}）`, nLeads >= 24 && nLeads <= 40, nLeads);
   const want = ['l_main_rumors', 'l_main_recorder_forest', 'l_rumor_forest', 'l_rumor_snow', 'l_rumor_desert', 'l_rumor_marsh', 'l_rumor_isles', 'l_rumor_mine', 'l_rumor_ash', 'l_rumor_star',
     'l_forest_board', 'l_forest_pim', 'l_forest_woodcutters', 'l_forest_song', 'l_forest_hut', 'q_fern_letters', 'q_fern_herbs', 'q_fern_song', 'q_forest_fireflies', 'q_forest_acorn',

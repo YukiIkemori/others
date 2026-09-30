@@ -144,6 +144,9 @@
             const to = can(x, y, lv, dx, dy, dn);
             if (to < 0) continue;
             if (dx && dy && (can(x, y, lv, dx, 0, dx > 0 ? 'e' : 'w') < 0 || can(x, y, lv, 0, dy, dy > 0 ? 's' : 'n') < 0)) continue;
+            // FIELD の斜め（move.js の _step）: 片方の軸の先が戸口・階段・出口なら、斜めではなくそちらへ入る。その斜めは道にしない
+            //   （千年樹 2 階の着いたマス 23,5 → 22,6 の斜めが、隣の上り階段 22,5 に入って 1 階へ戻り、行き来し続けていた）
+            if (dx && dy && F._warpAt && (F._warpAt(map, x + dx, y, lv) || F._warpAt(map, x, y + dy, lv))) continue;
             const k = key(x + dx, y + dy, to);
             if (dist.has(k)) continue;
             dist.set(k, d + 1);

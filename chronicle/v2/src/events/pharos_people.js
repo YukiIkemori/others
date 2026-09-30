@@ -61,7 +61,8 @@
     meta: { needs: [], gives: ['lore:lo_pharos_oilboard'] },
     run: async (ev) => {
       const E = X();
-      const k = [1.0, 1.0, 0.9, 0.9, 0.8, 0.8, 0.7, 0.7, 0.6][Math.min(8, (R.Game && R.Game.tier) || 0)];
+      // 灯油の倍率（STORY_BIBLE §3.1。表は events/story_00_tiers.js の R.Tier.oil）
+      const k = R.Tier && R.Tier.oil ? R.Tier.oil() : [1.0, 1.0, 0.9, 0.9, 0.8, 0.8, 0.7, 0.7, 0.6][Math.min(8, (R.Game && R.Game.tier) || 0)];
       const p = (n) => Math.round(n * k);
       await E.narr(ev, R.T('ev.pharos_people.pharos_oilboard.run.narr'));
       await E.narr(ev, R.T('ev.pharos_people.pharos_oilboard.run.narr_2', { p: p(12), p2: p(15), p3: p(30), p4: p(40) }));

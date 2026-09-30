@@ -1482,5 +1482,8 @@
     'items.u_star_compass.acc.desc': '針のかわりに小さな星が北を指す。\n逃げやすく、魔物に会いにくい。',
     'items.u_exam_ribbon.head': '試験の飾りひも',
     'items.u_exam_ribbon.head.desc': '試験に通った学生が髪に結ぶひも。\n技と術を閃きやすい。',
+    // ---- src/data/items_story.js
+    'data.items_story.KEYS.k_berna_sealed.K': 'ベルナの封書',
+    'data.items_story.KEYS.k_berna_sealed.K_2': '表に、ベルナの字で\n「ロアに帰ったら開けて」とある。',
   });
 })(window.RPG);

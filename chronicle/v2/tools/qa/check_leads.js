@@ -58,7 +58,9 @@ for (const m of MAP_SRC.matchAll(/lead:\s*'([\w]+)'/g)) given.add(m[1]);
 const all = Object.keys(D.leads);
 // 縦切りの後に作った地方（錠の外れた地方）の手がかりは目安の数に入れない
 const builtR = (r) => r && D.regions[r] && (!D.regions[r].slice || !!(D.regions[r].dungeons || []).length) && !['r_forest', 'prologue', 'world'].includes(r);   // 錠を残したまま作った地方（諸島: dungeons がある）も作った地方
-const nSlice = all.filter((id) => !builtR(D.leads[id].region)).length;
+// ティアの場面 T2〜T7 の本筋（余白の 2〜7 段目・ロアの寄り道・ミラのうわさ。events/story_*.js）も縦切りの後に作った物
+const TIER_LEADS = /^(l_main_margin_[2-7]|l_main_roa_t[36]|l_rumor_mira)$/;
+const nSlice = all.filter((id) => !builtR(D.leads[id].region) && !TIER_LEADS.test(id)).length;
 ok(`手がかり ${nSlice} 件（目安 約 28。ほかに作った地方の ${all.length - nSlice} 件）`, nSlice >= 26 && nSlice <= 40);
 const never = all.filter((id) => !given.has(id) && D.leads[id].slice !== 'locked');
 // 酒場の噂（森以外は locked）は、噂の 3 人がまとめて渡す（R.Leads の一覧か、手がかりの配列）

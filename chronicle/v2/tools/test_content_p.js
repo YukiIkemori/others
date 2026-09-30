@@ -21,7 +21,8 @@ const R = require('./lib/load')({ quiet: true, fixtures: true });
 
 const MY_MAPS = ['world', 'roa', 'roa_house', 'pharos', 'pharos_inn', 'pharos_tavern', 'pharos_shop', 'pharos_smith', 'pharos_record', 'pharos_shipyard',
   'lighthouse_1', 'lighthouse_2', 'lighthouse_3', 'well'];
-const MY_FILES = fs.readdirSync(path.join(V2, 'src', 'events')).filter((f) => /^(prologue_|pharos_|world_|story_|leads_main|optional_well|optional_windhill)/.test(f));
+// ティアの場面 T2〜T7（story_00_tiers・story_t2〜t7・story_roa・story_world）は tools/test_story_tiers.js が見る
+const MY_FILES = fs.readdirSync(path.join(V2, 'src', 'events')).filter((f) => /^(prologue_|pharos_|world_|story_t1\.|leads_main|optional_well|optional_windhill)/.test(f));
 const SRC = i18nInline(MY_FILES.map((f) => fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8')).join('\n'));
 const MAP_SRC = i18nInline(fs.readdirSync(path.join(V2, 'src', 'maps')).filter((f) => /^(prologue_|pharos_|optional_well|optional_windhill|world)/.test(f))
   .map((f) => fs.readFileSync(path.join(V2, 'src', 'maps', f), 'utf8')).join('\n'));

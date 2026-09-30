@@ -112,6 +112,9 @@
     'events.final_ferry_back.i.choose': ['ファロスへ戻る', 'やめておく'],
     'events.final_ferry_back.i.choose.text': 'ファロスの港へ戻るかい？',
     'events.final_ferry_back.caption': '船は、内海を渡っていく……。',
+    'ev.final_story.confession.narr_2': 'ロアの門をくぐったところで、\n{hero}は、ベルナの封書を\n思い出した。',
+    'events.story_final_roa.narr_7': '里に身を寄せていたロウェルも、\n語り石の前へやってきた。',
+    'events.story_final_roa.narr_8': 'ロウェルは、古い手帳を差し出した。\n大書庫の封印の扉を開ける言葉が、\n書いてあるという。',
     // ---- src/events/final_biblia.js
     'events.biblia_arrival.say': '……あなたは、誰？\nわたしは……誰だったかしら。',
     'events.biblia_arrival.say_2': '……ひどいな。町じゅうが、\n白紙になりかけている。',

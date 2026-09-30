@@ -1,6 +1,7 @@
 // FIELD: 天気の層（map.weather）。雪原（snow_*.js）が使う。地面と人の上・暗がりの膜の下に、画面の座標で降る雪を描く。
 //   'snow'     しんしんと降る雪（ゆっくり、少し横に流れる）
 //   'blizzard' 吹雪（多く、速く、横に流れる。うすい白い幕）
+//   'mist'     内海の白い霧（少なく大きい粒がゆっくり流れる。うすい白い幕）
 //   map.weatherCond があれば、その条件（R.State.check）が真の間だけ。設定の reduceMotion か効果 off なら描かない。
 (function (R) {
   'use strict';
@@ -8,6 +9,8 @@
   const KIND = {
     snow: { n: 70, vy: 26, vx: 8, sway: 10, r: [1.2, 2.6], a: 0.75, veil: 0 },
     blizzard: { n: 170, vy: 70, vx: 120, sway: 18, r: [1, 2.8], a: 0.8, veil: 0.1 },
+    // 内海の白い霧（STORY_BIBLE §4.3 の T4〜T7。maps/story_links.js）: 粒は少なく、ゆっくり横に流れる白いもや
+    mist: { n: 26, vy: 2, vx: 10, sway: 6, r: [10, 22], a: 0.08, veil: 0.09 },
   };
   function h(i, k) { const x = Math.sin(i * 127.1 + k * 311.7) * 43758.5453; return x - Math.floor(x); }
   F._weather = function (g, m, cx, cy, t) {

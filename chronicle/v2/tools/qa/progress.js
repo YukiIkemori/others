@@ -157,6 +157,14 @@ function closure(o) {
     }
     // T1: 宿か町に入ったとき（E17）
     if (G.cleared.r_forest && !G.flags.story_t1 && R.DB.events.story_t1 && reach.has('fern')) { applyGives('story_t1', variant, trace, 0); ran.add('story_t1'); changed = true; }
+    // T2〜T7: 解いた地方の数（ティア）が届けば、次の宿・町で番号の順に（E17。events/story_t2〜t7.js。飛ばしたティアも story_tiers が順に）
+    {
+      const nCl = Object.keys(R.DB.regions).filter((r) => /^r_/.test(r) && G.cleared[r]).length;
+      for (let k = 2; k <= 7; k++) {
+        const id = 'story_t' + k;
+        if (R.DB.events[id] && nCl >= k && G.flags['story_t' + (k - 1)] && !G.flags[id]) { applyGives(id, variant, trace, 0); ran.add(id); changed = true; }
+      }
+    }
     // T8: 8 つの地方を解決した後、宿か町に入ったとき（E17。events/final_story.js）→ 終盤（ロア → ビブリア → 白の大書庫 → エンディング）
     if (R.DB.events.story_t8 && !G.flags.story_t8 && needsOk(R.DB.events.story_t8)) { applyGives('story_t8', variant, trace, 0); ran.add('story_t8'); changed = true; }
     if (!changed) break;
@@ -308,6 +316,18 @@ function main() {
       const unv = fin.filter((id) => !r.visited.has(id));
       ok(`終盤のマップ ${fin.length} 枚にすべて入る（エンディングの朝の写しを含む）`, !unv.length, unv);
       report.finale = { miss, unvisited: unv };
+      // ティアの場面 T2〜T7（events/story_*.js）: 全体の筋の中で番号の順に起き、ロアの寄り道（T3・T6 の封書）とロウェルの手帳（T7）に着く
+      section('2j. ティアの場面 T2〜T7（E17）');
+      const tiers = ['story_t1', 'story_t2', 'story_t3', 'story_t4', 'story_t5', 'story_t6', 'story_t7', 'story_t8'];
+      const tmiss = tiers.filter((f) => !r.flags[f]);
+      ok('T1〜T8 の場面がすべて起きる', !tmiss.length, tmiss);
+      const order = tiers.map((f) => r.trace.indexOf(f));
+      ok('T2〜T7 は番号の順（T8 の前）', order.slice(1).every((v, i) => v > order[i] || (i === 0 && order[0] < 0)), order);
+      const beats = ['story_rowell_duel1', 'story_rowell_duel2', 'lo_decree', 'lo_berna_confession', 'story_roa_t3', 'story_roa_t6', 'lo_rowell_cover', 'story_rowell_defect'];
+      const bmiss = beats.filter((f) => !r.flags[f]);
+      ok('ロウェルの 2 戦・布告・ロアの寄り道（T3・T6 の封書）・T7 の手帳の表紙の裏', !bmiss.length, bmiss);
+      ok('T7 の手帳（k_rowell_note）を終盤の前に持つ', r.trace.indexOf('story_t7') >= 0 && r.trace.indexOf('story_t7') < r.trace.indexOf('story_final_roa'));
+      report.tiers = { miss: tmiss, beats: bmiss };
     }
     section('3. 全マップの到達（縦切りの錠を外した全体の筋）');
     open = closure({ variant: Object.assign({}, variants[0], { ch_snow_tale: 'dragon', ch_snow_write: 'pain', ch_desert_hawk: 'water', ch_desert_route: 'long', ch_desert_write: 'pain' }) });

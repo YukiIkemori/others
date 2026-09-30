@@ -45,10 +45,17 @@
 
   // ================================================================ 終盤のロア
   const SCENE_VOICES = ['v_fine_roa_01', 'v_berna_roa_01', 'v_fine_roa_02', 'v_berna_roa_02', 'v_rowell_roa_01', 'v_berna_roa_03', 'v_berna_roa_04', 'v_fine_roa_03', 'v_rowell_roa_02'];
-  /** ベルナの封書（T5 の二通目の封書。T6 のうちにロアへ寄らなかったので、終盤のロアに着いた所で開ける。§6.3） */
+  /** ベルナの封書（T5 の二通目の封書。T6 のうちにロアへ寄らなかったので、終盤のロアに着いた所で開ける。§6.3）
+   *  T6 のロア（story_roa.js）で開けていれば何もしない。持っていれば（T5 の封書）自分で開ける。
+   *  持っていないとき（T5 を見ていない古い記録）だけ、門のおかみが預かっていた物を渡す */
   async function confession(ev) {
     const x = X();
     if (ev.flag('lo_berna_confession')) return;
+    if (ev.has('k_berna_sealed') && R.Story && R.Story.openSealed) {
+      await x.narr(ev, R.T('ev.final_story.confession.narr_2'));
+      await R.Story.openSealed(ev);
+      return;
+    }
     await ev.say('gatewoman2', R.T('ev.final_story.confession.say'), { name: R.T('ev.final_story.confession.say.name') });
     await x.narr(ev, R.T('ev.final_story.confession.narr'));
     ev.sfx('page');
@@ -69,6 +76,8 @@
     await x.narr(ev, R.T('events.story_final_roa.narr'));
     ev.setFlag('final_roa_scene');
     try { await ev.appear('fin_fine', { from: [26, 18], ms: 900 }); } catch (e) { /* */ }
+    // T7 の後、ロウェルはロアに身を寄せていた（story_t7。§6.3）
+    if (ev.flag('story_t7')) await x.narr(ev, R.T('events.story_final_roa.narr_7'));
     try { await ev.appear('fin_rowell', { from: [27, 18], ms: 900 }); } catch (e) { /* */ }
     await ev.say('fin_fine', R.T('events.story_final_roa.say_2'), { voice: 'v_fine_roa_01', face: 'fine:smile' });
     await ev.say('fin_berna', R.T('events.story_final_roa.say_3'), { voice: 'v_berna_roa_01', face: 'berna:surprise' });
@@ -88,6 +97,12 @@
     await ev.say('fin_berna', R.T('events.story_final_roa.say_6'), { voice: 'v_berna_roa_02', face: 'berna:smile' });
     if (x.pain() >= 4) await ev.say('fin_berna', R.T('events.story_final_roa.say_7'), { face: 'berna:sad' });
     await ev.say('fin_rowell', R.T('events.story_final_roa.say_8'), { voice: 'v_rowell_roa_01', face: 'rowell:neutral' });
+    // T7 を見ていないとき（古い記録）だけ: 封印の扉の言葉の手帳をここで渡す（T7 の声の行は流さない）
+    if (!ev.has('k_rowell_note')) {
+      await x.narr(ev, R.T('events.story_final_roa.narr_8'));
+      ev.item('k_rowell_note', 1);
+      x.lore(ev, 'lo_rowell_cover');
+    }
     // ロウェルの母の名（§6.4 の弧: 名を得る者）
     await x.breath(ev, 300);
     await ev.say('fin_berna', R.T('events.story_final_roa.say_9'), { face: 'berna:surprise' });
@@ -114,7 +129,7 @@
     ev.leadDone('l_main_final_roa');
     ev.lead('l_main_final_ferry');
     ev.mapBgm();
-  }, { meta: { needs: ['flag:story_t8'], gives: ['flag:final_roa', 'flag:final_open', 'lore:lo_berna_confession', 'item:ac_berna_charm', 'lead:l_main_final_ferry'], warp: { to: 'roa', spawn: 'fin_stone' } } });
+  }, { meta: { needs: ['flag:story_t8'], gives: ['flag:final_roa', 'flag:final_open', 'lore:lo_berna_confession', 'item:ac_berna_charm', 'lead:l_main_final_ferry', 'item:k_rowell_note', 'lore:lo_rowell_cover'], warp: { to: 'roa', spawn: 'fin_stone' } } });
 
   // ================================================================ ビブリアへの船（記録院の船。ファロスの桟橋）
   async function voyage(ev, first) {

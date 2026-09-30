@@ -70,7 +70,7 @@
   // P2 のボイス（design/voice_story_map.json。{hero} の入る P2[7] は名前を読まない v_berna_p2_10）
   const P2_VOICE = ['v_berna_p2_01', 'v_berna_p2_02', 'v_berna_p2_03', 'v_berna_p2_04', 'v_berna_p2_05', 'v_berna_p2_06', 'v_berna_p2_07', 'v_berna_p2_10', 'v_berna_p2_08', 'v_berna_p2_09'];   // p2_10 は名前を読まない（「行っておくれ。……」）
   D.roa_berna = {
-    meta: { needs: ['flag:prologue_start'], gives: ['flag:prologue_berna', 'item:i_salve', 'gold'] },
+    meta: { needs: ['flag:prologue_start'], gives: ['flag:prologue_berna', 'item:i_salve', 'gold'], calls: ['story_roa_tales', 'story_roa_t6'] },
     run: async (ev, ctx) => {
       const E = X();
       const who = (ctx && ctx.npc) || 'berna';
@@ -87,7 +87,9 @@
         ev.setFlag('prologue_berna');
         return;
       }
-      // 序章の後: 近況と、ただの宿（STORY_BIBLE §6.3。T3 以降の物忘れは TODO: T3・T6 のロアの寄り道で）
+      // 序章の後: 近況と、ただの宿（STORY_BIBLE §6.3）。T3 以降のロアの寄り道・T6 のロア（主人公を忘れている）は story_roa.js
+      if (ev.flag('prologue_done') && !ev.flag('final_roa') && R.DB.events.story_roa_t6 && ev.flag('story_t6')) { await ev.call('story_roa_t6', { npc: who }); return; }
+      if (ev.flag('prologue_done') && !ev.flag('final_roa') && R.DB.events.story_roa_tales && ev.flag('story_t3')) { await ev.call('story_roa_tales', { npc: who }); return; }
       if (ev.flag('prologue_done')) {
         const pk = E.pickEntry([
           { cond: 'cleared_r_forest', text: R.T('ev.prologue_roa.roa_berna.run.pk.0.text') },
@@ -254,7 +256,7 @@
   D.roa_enter = {
     meta: { needs: [], gives: [], calls: ['story_final_roa'] },
     run: async (ev) => {
-      // TODO(CONTENT-P・STORY_BIBLE §6.3・§12.2): T3 以降のロアの寄り道（ベルナが旅の話をせがむ）、T6 のロア（封書・客として迎える）。縦切り（ティア 0〜1）では何もしない。
+      // T3 以降のロアの寄り道・T6 のロア（封書・客として迎える）はベルナの家の roa_berna → story_roa.js。縦切り（ティア 0〜1）では何もしない。
       // 終盤のロア（T8 の後、1 回。events/final_story.js）
       if (ev.flag('story_t8') && !ev.flag('final_roa') && R.DB.events.story_final_roa) await ev.call('story_final_roa');
     },

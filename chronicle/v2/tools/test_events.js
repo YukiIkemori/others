@@ -549,10 +549,14 @@ R.DB.events.story_t1 = { async run(ev, ctx) { ran.push('t1:' + ctx.reason); } };
   await drive(pi, 10000);
   await frames(8);
   ok('inn: story_t1 after the inn event (reason inn)', ran.includes('t1:inn') && G().pendingTier === null, ran);
+  // 書かれていない場面は pending のまま（CONTENT-P の story_t2 は外して確かめる。T1 は見た扱い）
+  const keepT2 = R.DB.events.story_t2; delete R.DB.events.story_t2; G().flags.story_t1 = true;
   G().pendingTier = 2;
   R.emit('map:enter', { map: 'ev_town' });
   await frames(5);
-  ok('story_t2 not written → pending stays', G().pendingTier === 2);
+  ok('story_t2 not written → pending stays', G().pendingTier === 2, [G().pendingTier, ran]);
+  if (keepT2) R.DB.events.story_t2 = keepT2;
+  delete G().flags.story_t1;
   G().pendingTier = null;
   ok('Tier.get/effective/pending/consumePending', R.Tier.get() === 1 && R.Tier.effective() === 1 && R.Tier.pending() === null && (G().pendingTier = 3, R.Tier.consumePending() === 3 && R.Tier.pending() === null));
   ok('Tier.pick array / object', R.Tier.pick([1, 2, 3], 5) === 3 && R.Tier.pick({ 0: 'a', 3: 'b' }, 4) === 'b' && R.Tier.pick({ 3: 'b' }, 1) === undefined);
