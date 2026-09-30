@@ -29,7 +29,7 @@
     O.push(K.exam(28, 29, 'orbis_fountain'));
     O.push(K.sign(26, 46, R.T('map.star_orbis.sign')));
     // 延滞の本（図書館の返却: 5 冊。見つけた本は消える）
-    const BOOKS = [[34, 26], [3, 20], [47, 20], [3, 47], [54, 46]];
+    const BOOKS = [[34, 26], [3, 20], [54, 20], [3, 47], [54, 46]];
     BOOKS.forEach(([x, y], i) => O.push(K.prop('book_stack', x, y, { cond: `!star_book_${i + 1}` }), K.exam(x, y, 'star_book', { book: i + 1, cond: `!star_book_${i + 1}` })));
     // 学生の落とし物（天文台区の庭の草の中。頼まれてから）
     O.push(K.exam(33, 11, 'star_pen_spot', { cond: 'star_pen_asked' }));

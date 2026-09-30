@@ -121,5 +121,8 @@
     'map.star_tower.star_tower_top.meta.sub': '星図のモザイクの屋上',
     // ---- src/maps/field_star_00_kit.js
     'map.field_star_00_kit.star_tower_1': '星読みの塔に入りますか？',
+    'map.field_star_00_kit.guard.name': '番人',
+    'map.field_star_00_kit.guard.text': 'この先の高原への坂は、\n崖崩れでふさがってるんだ。',
+    'map.field_star_00_kit.guard.text_2': 'オルビスへ行くのは、\n道が片づくまで待ってくれ。',
   });
 })(window.RPG);

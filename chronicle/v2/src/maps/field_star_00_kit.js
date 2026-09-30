@@ -29,6 +29,13 @@
     if (!w || !M.s_steps) return;
     if (w.spawns && !w.spawns.star_w) w.spawns.star_w = Object.assign({}, W.spawn);
     if (w.exits && !w.exits.some((e) => e.to && e.to.map === 's_steps')) w.exits.push(JSON.parse(JSON.stringify(W.exit)));
+    // 体験版のあいだの表の止め（ほかの峠と同じ）: 峠の口の崖崩れ（cond {slice:true} の tilePatch）と番人
+    if (!(w.npcs || []).some((n) => n.id === 'guard_star')) {
+      w.tilePatches = (w.tilePatches || []).concat([{ cond: { slice: true }, rect: [476, 146, 2, 1], rows: ['mm'] }]);
+      w.npcs = w.npcs || [];
+      w.npcs.push({ id: 'guard_star', look: 'npc_guard_1', name: R.T('map.field_star_00_kit.guard.name'), x: 478, y: 147, dir: 's', move: 'still', pushable: false, cond: { slice: true },
+        talk: { lines: [{ text: [R.T('map.field_star_00_kit.guard.text'), R.T('map.field_star_00_kit.guard.text_2')] }] }, reward: 'news', key: 'world_guard_star' });
+    }
     // 星読みの尾根の塔の扉（生成したエリアのファイルは書き換えない）: 星図で開けるまでは閉じた扉（当たり）、開けたら塔の 1 階へ
     const G = M.s_ridge;
     if (G && M.star_tower_1 && !(G.objects || []).some((o) => o.to && o.to.map === 'star_tower_1')) {

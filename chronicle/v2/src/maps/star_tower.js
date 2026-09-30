@@ -2,7 +2,7 @@
 //   1 階 star_tower_1（52×46）: 丸い塔。南の扉 → 外の輪の広間（柱の台座）→ 内の丸い壁の口（西・北の格子）→ 真ん中の天球儀。
 //        内の輪の真ちゅうのハンドルで天球儀の輪を回すと、北の口の格子が上がる（star_orrery_rot。一度きりで戻らない。
 //        入口の近くの文字盤は輪の向きを示すだけ）。西の口はいつも開いている。北の口の石段の上が奥の間:
-//        天球の番人（v_sentinel_star_01 → tr_b_orrery）→ 壁ぞいの石段 → 頂。
+//        格子の口を上がったすぐの所で天球の番人（v_sentinel_star_01 → tr_b_orrery）→ 壁ぞいの石段 → 頂。
 //        泉は置かない（外から 2 階までの短いダンジョン）。宝箱は見える所。隠し通路なし（A27）。
 //   頂 star_tower_top（40×34）: 丸い屋上。星図のモザイクの上で星食らい（tr_b_stareater）→
 //        北の書見台で星の名を読み上げる（star_naming → 灯り直す場面）。名を読んだ後は、青銅の星のかがり火に火が入る。
@@ -33,7 +33,7 @@
         ],
         triggers: [
           { id: 'arrive', on: 'enter', event: 'star_tower_arrive' },
-          { id: 'sentinel', x: 19, y: 4, w: 14, h: 1, on: 'step', event: 'star_sentinel', cond: '!star_sentinel' },
+          { id: 'sentinel', x: 25, y: 10, w: 2, h: 1, on: 'step', event: 'star_sentinel', cond: '!star_sentinel' },
         ],
         zones: [{ rect: null, zone: 'z_r_star_tower' }],
         light: SK.LIGHT_TOWER, dark: false, bgm: 'tower', bbg: 'tower',
