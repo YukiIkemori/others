@@ -15,7 +15,7 @@
     'map.elder_2.meta.floor': '2 层',
     'map.elder_2.meta.sub': '根之间',
     // ---- src/maps/fern_interiors.js
-    'map.fern_interiors.fern_inn': '林隙阳光亭',
+    'map.fern_interiors.fern_inn': '叶隙光亭',
     'map.fern_interiors.fern_inn.npcs.0.inn_keeper.name': '旅店老板娘',
     'map.fern_interiors.fern_inn.npcs.1.inn_guest.name': '住店的客人',
     'map.fern_interiors.fern_shop': '芬恩道具店',

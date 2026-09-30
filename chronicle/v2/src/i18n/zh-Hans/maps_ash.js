@@ -41,7 +41,7 @@
     'map.ash_caldera.caldera.name': '炎之城卡尔德拉',
     'map.ash_caldera.caldera.meta.sub': '火山口梯田与斗技场之城',
     // ---- src/maps/ash_caldera_interiors.js
-    'map.ash_caldera_interiors.caldera_items': '甲壳道具店',
+    'map.ash_caldera_interiors.caldera_items': '壳之道具店',
     'map.ash_caldera_interiors.caldera_items.meta.sub': '大蛋壳的西侧裂缝',
     'map.ash_caldera_interiors.caldera_items.npcs.0.item_keeper.name': '道具店老板娘',
     'map.ash_caldera_interiors.caldera_tavern': '酒馆「壳中」',
@@ -50,7 +50,7 @@
     'map.ash_caldera_interiors.caldera_tavern.npcs.1.zakuro_tav.name': '面生的斗士',
     'map.ash_caldera_interiors.caldera_tavern.npcs.2.tav_fighter.name': '一族的年轻斗士',
     'map.ash_caldera_interiors.caldera_tavern.npcs.3.tav_bookie.name': '赌坊的博茨',
-    'map.ash_caldera_interiors.caldera_arms': '甲壳武具店',
+    'map.ash_caldera_interiors.caldera_arms': '壳之武具店',
     'map.ash_caldera_interiors.caldera_arms.meta.sub': '大蛋壳的东侧裂缝',
     'map.ash_caldera_interiors.caldera_arms.npcs.0.smith.name': '武具店老板',
     'map.ash_caldera_interiors.caldera_inn': '旅店「汤烟亭」',

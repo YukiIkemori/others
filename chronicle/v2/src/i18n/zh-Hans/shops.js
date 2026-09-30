@@ -9,8 +9,8 @@
     'shops.shop_fern_peddler.name': '广场的行商',
     'shops.shop_yura.name': '尤拉的店',
     // ---- src/data/shops_ash.js
-    'shops.shop_caldera_items.name': '甲壳道具店',
-    'shops.shop_caldera_arms.name': '甲壳武具店',
+    'shops.shop_caldera_items.name': '壳之道具店',
+    'shops.shop_caldera_arms.name': '壳之武具店',
     'shops.shop_arena.name': '斗技场柜台',
     'shops.shop_haimi.name': '望灰旅店柜台',
     // ---- src/data/shops_desert.js

@@ -88,9 +88,9 @@
     'map.desert_kasim.kasim.name': '绿洲之城卡西姆',
     'map.desert_kasim.kasim.meta.sub': '名字被磨去的巨像脚下的泉之城',
     // ---- src/maps/desert_kasim_interiors.js
-    'map.desert_kasim_interiors.kasim_inn': '旅店「泉之星亭」',
+    'map.desert_kasim_interiors.kasim_inn': '旅店「泉星亭」',
     'map.desert_kasim_interiors.kasim_inn.npcs.0.inn_keeper.name': '旅店老板娘',
-    'map.desert_kasim_interiors.kasim_inn.npcs.0.inn_keeper.title': '泉之星亭',
+    'map.desert_kasim_interiors.kasim_inn.npcs.0.inn_keeper.title': '泉星亭',
     'map.desert_kasim_interiors.kasim_inn.npcs.1.inn_guest.name': '住店的客人',
     'map.desert_kasim_interiors.kasim_tavern': '酒馆「沙漏」',
     'map.desert_kasim_interiors.kasim_tavern.npcs.0.tavern_master.name': '酒馆老板',

@@ -18,7 +18,7 @@
     'ev.optional_windhill.windhill_notes.run.narr': '风声，像歌一样在回响。',
     'ev.optional_windhill.windhill_notes.run.caption': '……风声，像歌一样在回响。',
     'ev.optional_windhill.windhill_notes.run.narr_2': '岩石的凹处，\n夹着一张旧字条。',
-    'ev.optional_windhill.windhill_notes.run.narr_3': '“在风之丘，我见到一个\n披灰斗篷的人。她说，\n风记得古老的歌。\n——罗亚的讲述者”',
+    'ev.optional_windhill.windhill_notes.run.narr_3': '“在风之丘，我见到一个披灰斗篷的人。\n她说，风记得古老的歌。\n——罗亚的讲述者”',
     'ev.optional_windhill.windhill_notes.run.narr_4': '山丘上，似乎有个\n披灰斗篷的身影。',
     'ev.optional_windhill.windhill_notes.run.say': '……原来风，也记得歌呢。',
     'ev.optional_windhill.windhill_notes.run.say.name': '灰斗篷少女',
