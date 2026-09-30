@@ -271,7 +271,7 @@
     'events.kasim_inn_keeper.i.choose.2': '算了',
     'events.kasim_inn_keeper.caption': '熄灯时分。窗外，\n一轮大大的月亮把沙地照得雪白。\n……今晚是满月。',
     'events.kasim_inn_keeper.caption_2': '熄灯时分。镇上的灯熄了。\n窗外的沙漠正中，\n一列灯火在摇曳……。',
-    'events.kasim_inn_keeper.say_2': '早上好。……话虽如此，\n天空还是老样子。',
+    'events.kasim_inn_keeper.say_2': '早安。……话虽如此，\n天空还是老样子。',
     'events.kasim_inn_guest.say': ['我是走森林那边的大道来的。\n半路有个驿站「沙之缘」。\n那里的泉水可甜了。', '有个叫洛塔的行商姑娘，\n背着些有意思的货。'],
     'events.kasim_inn_window.say': ['窗外是熄灯时分的沙漠。\n西门外，沙漠正中，\n一列灯火在摇曳。', '……隐约能听见\n集市的喧闹声。'],
     'events.kasim_inn_window.say_2': '从窗口能看到广场的泉。\n水面上，映着金色的火\n轻轻摇晃。',
