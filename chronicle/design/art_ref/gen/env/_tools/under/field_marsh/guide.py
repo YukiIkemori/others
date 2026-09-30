@@ -1,7 +1,9 @@
 """(marsh copy of ../field_desert/guide.py: peat, sedge, reeds, teal water, willows) Layout guide for a painted FIELD area, from <id>/layout.json (areas.py).
 usage: python3 guide.py <id> [T=48]  -> <id>/guide_<T>.png (sent to the model) and <id>/guide_16.png (small preview)
 Flat colour-coding the model traces: symbols (circles for tree crowns, strata for cliff faces, block lines for stone) tell it the material.
-Landmarks (marks) are drawn as their own colour blocks and described in the prompt (mkjob.py)."""
+Landmarks (marks) are drawn as their own colour blocks and described in the prompt (mkjob.py).
+SM=<sigma in tiles> (env): smooth class boundaries (argmax of blurred class masks, as ../field_isles/guide.py). 2026-09-30: m_north, m_fen,
+m_lotus gen2 were made with SM=0.55 (gen1 had stair-stepped reed beds and pools)."""
 import json, sys, random, math
 from PIL import Image, ImageDraw
 
