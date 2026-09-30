@@ -187,7 +187,7 @@
     'events.caldera_arena_zakuro_bag.say': '行李被重新捆得整整齊齊。',
     'events.caldera_arena_zakuro_bag.say.0_2': '石榴的行李。\n先跟本人打個招呼吧。',
     'events.caldera_arena_zakuro.say': ['我要往北走。\n已經跟僱主說不幹了。', '……下次見面，\n希望不是以僱工的身份。'],
-    'events.caldera_arena_zakuro.say_2': ['我輸了。好身手。', '我受僱於記錄院，\n來抄火山口的畫。\n據說抄下來，這片土地\n爭鬥的種子就會消失。'],
+    'events.caldera_arena_zakuro.say_2': ['我輸了。好身手。', '我受僱於記錄院，來抄火山口的畫。\n據說抄下來，這片土地\n爭鬥的種子就會消失。'],
     'events.caldera_arena_zakuro.say_3': '……抄寫的活，不幹了。\n心裡不舒坦。',
     'events.caldera_arena_zakuro.say_4': ['還有，這個。混在僱主\n托我保管的行李裡。', '收信人不對。……我可沒拆。'],
     'events.caldera_arena_zakuro.say_5': '別人的信，我不看。\n我是按這個規矩活的。',

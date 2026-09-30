@@ -22,7 +22,7 @@
   };
   E.t = function (s) {
     if (Array.isArray(s)) return s.map(E.t);
-    return String(s).replace(/\{hero\}/g, E.heroName());
+    return R.I18n && R.I18n.fillName ? R.I18n.fillName(s, 'hero', E.heroName()) : String(s).replace(/\{hero\}/g, E.heroName());   // 韓国語の助詞も選ぶ
   };
   E.say = function (ev, who, text, o) { return ev.say(who, E.t(text), o); };
   E.narr = function (ev, text) { return ev.say(null, E.t(text), { face: false }); };

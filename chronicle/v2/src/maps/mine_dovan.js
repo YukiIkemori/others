@@ -23,7 +23,7 @@
     O.push({ type: 'door', x: 31, y: 3, look: 'none', to: { map: 'mine_1', spawn: 'entrance' }, confirm: R.T('map.mine_dovan.confirm') });
     // 誓いの碑（下の段の台の上。文字が半分消えている）
     O.push(K.exam(21, 6, 'dovan_oath_stone'), K.exam(22, 6, 'dovan_oath_stone'));
-    // 昇降機の櫓（上の段の足もと ⇔ 中の段の上の口）
+    // 昇降機の櫓（上の段の足もと ⇔ 中の段の上の口）。上の段から中の段へは下り、中の段から上の段へは上り
     O.push(K.exam(44, 35, 'dovan_lift', { stop: 'u' }), K.exam(44, 28, 'dovan_lift', { stop: 'm' }));
     // トロッコ乗り場（線路の終わり。組合につくと、トロッコ線の崖の終点まで走る）
     O.push(K.prop('mine_cart', 41, 26), K.exam(41, 26, 'dovan_cart_station'));

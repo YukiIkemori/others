@@ -127,5 +127,6 @@
     'ev.pharos_story.pharos_departure.run.say_11': '……{hero}。\n気をつけてお行き。',
     'ev.pharos_story.pharos_departure.run.narr_4': '港のほうから、オットーが\n駆けてきた。',
     'ev.pharos_story.pharos_departure.run.say_12': '領主さまが、北の跳ね橋を\n下ろしてくださったそうよ！\nこれで北の野へ出られるわ！',
+    'ev.pharos_story.pharos_departure.run.townsfolk': '町の人',
   });
 })(window.RPG);

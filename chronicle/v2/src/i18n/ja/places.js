@@ -75,9 +75,9 @@
     'regions.r_star.chapter.title': '星を数えた賢者',
     'regions.r_star.beacon': '星',
     'regions.world.name': '世界のうわさ',
-    'regions.r_isles.chapter.summary': '霧の晩の幽霊船を自分の船で追い、帰らずの船長に舟歌の続きを届けた。灯はだいだい色に戻り、沖の灯台島にともった。',
-    'regions.r_mine.chapter.summary': '地の底の町ドヴァンで、鍛冶神の炉の火が細り、七の層の下を掘った坑道が崩れた。組合と鍛冶衆が割れる中、{hero}は鉄の番人の前で町の道を決めた。',
-    'regions.r_star.chapter.summary': '消灯後の学院に忍びこんで星図を取り戻し、星読みの塔の頂で星の名を読み上げた。消えた星は戻り、高原は星明かりに照らされた。',
+    'regions.r_isles.chapter.summary': '霧の晩の幽霊船を\n語り部は自分の船で追い、\n帰らずの船長に\n舟歌の続きを届けた。\n沖の灯台島に、灯がともった。',
+    'regions.r_mine.chapter.summary': '地の底の町ドヴァンで\n鍛冶神の炉の火が細った。\n組合と鍛冶衆が割れる中、\n語り部は鉄の番人の前で\n町の行く道を決めた。',
+    'regions.r_star.chapter.summary': '消灯後の学院に忍びこみ、\n語り部は星図を取り戻した。\n星読みの塔の頂で\n星の名を読み上げると、\n消えた星が空に戻った。',
     // ---- src/data/locations_isles.js
     'locations.coral.name': '港町コーラル',
     'locations.nerei.name': '岬の村ネレイ',

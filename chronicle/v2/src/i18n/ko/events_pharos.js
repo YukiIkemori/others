@@ -125,5 +125,6 @@
     'ev.pharos_story.pharos_departure.run.say_11': '……{hero}.\n조심해서 다녀오렴.',
     'ev.pharos_story.pharos_departure.run.narr_4': '항구 쪽에서 오토가\n달려왔다.',
     'ev.pharos_story.pharos_departure.run.say_12': '영주님이 북쪽 도개교를\n내려 주셨대요!\n이제 북쪽 들판으로 나갈 수 있어요!',
+    'ev.pharos_story.pharos_departure.run.townsfolk': '마을 사람',
   });
 })(window.RPG);

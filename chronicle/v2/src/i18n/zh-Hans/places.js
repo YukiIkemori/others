@@ -74,9 +74,9 @@
     'regions.r_star.chapter.title': '数星星的贤者',
     'regions.r_star.beacon': '星辰',
     'regions.world.name': '世界传闻',
-    'regions.r_isles.chapter.summary': '驾着自己的船追赶雾夜里的幽灵船，把船歌的后半段带给了不归的船长。灯火重新变回橙色，点亮在海上的灯塔岛。',
-    'regions.r_mine.chapter.summary': '在地底之城多凡，锻冶神之炉的火日渐微弱，挖到第七层之下的坑道崩塌了。在公会与锻冶众分裂之际，{hero}在钢铁守卫面前决定了这座城的去路。',
-    'regions.r_star.chapter.summary': '潜入熄灯后的学院夺回星图，在观星塔之巅念出星辰的名字。消失的星星回来了，高原沐浴在星光之下。',
+    'regions.r_isles.chapter.summary': '雾夜里的幽灵船，\n讲述者驾着自己的船追赶，\n把船歌的后半段\n带给了不归的船长。\n海上的灯塔岛亮起了灯火。',
+    'regions.r_mine.chapter.summary': '地底之城多凡，\n锻冶神之炉的火日渐微弱。\n公会与锻冶众分裂之际，\n讲述者在钢铁守卫面前\n决定了这座城的去路。',
+    'regions.r_star.chapter.summary': '潜入熄灯后的学院，\n讲述者夺回了星图。\n在观星塔之巅\n念出星辰的名字，\n消失的星星回到了夜空。',
     // ---- src/data/locations_isles.js
     'locations.coral.name': '科拉尔港',
     'locations.nerei.name': '海角村涅雷',

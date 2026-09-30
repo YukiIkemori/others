@@ -272,7 +272,7 @@
     const got = s.spells.filter((id) => !has(c.spells, id) && learn(c, id, opts));
     if (!got.length) return { ok: false, id: s.spell, reason: R.T('sys.glimmer.useStone.reason'), line: '' };
     const el = DB.elements && DB.elements[s.element];
-    const line = R.T('sys.glimmer.useStone.line', { name: c.name, p1: el ? el.name : '', join: got.map((id) => `『${DB.spells[id].name}』`).join(R.T('sys.glimmer.useStone.line.join')) });
+    const line = R.T('sys.glimmer.useStone.line', { name: c.name, p1: el ? el.name : '', join: got.map((id) => R.T('sys.glimmer.useStone.line.name', { name: DB.spells[id].name })).join(R.T('sys.glimmer.useStone.line.join')) });
     return { ok: true, id: got[0], ids: got, reason: null, line };
   }
 

@@ -154,7 +154,7 @@
       ev.bgm('dawn');   // 朝の鐘（最後の R.Audio.bgm('town') で町の曲へ）
       try { R.Audio.sfx('bell'); } catch (e) { /* */ }
       await ev.caption(R.T('ev.pharos_story.pharos_departure.run.caption'), { ms: 2800 });
-      await E.say(ev, 'cheer_a', R.T('ev.pharos_story.pharos_departure.run.say'));
+      await E.say(ev, 'cheer_a', R.T('ev.pharos_story.pharos_departure.run.say'), { name: R.T('ev.pharos_story.pharos_departure.run.townsfolk') });
       await ev.npc('berna').move([[7, 11], [6, 11]]);
       // 仲間は出さない（持ち主 2026-09-27: 急に皆が出るのは違和感。フィールドは主人公だけ）
       await E.say(ev, 'berna', R.T('ev.pharos_story.pharos_departure.run.say_2'), { face: 'berna:smile' });
@@ -183,7 +183,8 @@
       await ev.leave('berna', { path: [[5, 11], [4, 11], [3, 11]] });
       await E.narr(ev, R.T('ev.pharos_story.pharos_departure.run.narr_4'));
       await ev.call('pharos_otto_reward');
-      await E.say(ev, 'cheer_b', R.T('ev.pharos_story.pharos_departure.run.say_12'));
+      // オットーの礼の後、集まっていた町の娘が跳ね橋の知らせ（旧版では朝の場面の頭。名札で話し手を分ける）
+      await E.say(ev, 'cheer_b', R.T('ev.pharos_story.pharos_departure.run.say_12'), { name: R.T('ev.pharos_story.pharos_departure.run.townsfolk') });
       await ev.leave(['cheer_b', 'cheer_a']);   // 集まっていた町の人も、それぞれ歩いて去る
       ev.setFlag('prologue_done');
       try { R.Audio.bgm('town'); } catch (e) { /* */ }

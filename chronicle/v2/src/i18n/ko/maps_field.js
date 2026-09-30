@@ -57,11 +57,11 @@
     // ---- src/maps/field_windhill.js
     'map.field_windhill.f_windhill.name': '바람 우는 언덕',
     'map.field_windhill.f_windhill.objects.1.text': '바람 우는 언덕\n바람이 노래처럼 운다고 한다.',
-    'map.field_windhill.f_windhill.objects.5.text': '북 → 이끼 마을 유라',
+    'map.field_windhill.f_windhill.objects.5.text': '북 → 이끼 마을 율라',
     'map.field_windhill.f_windhill.objects.6.text': '북쪽 고개를 넘어\n↑ 눈의 마을 율',
     'map.field_windhill.f_windhill.guard_north.name': '파수꾼',
     'map.field_windhill.f_windhill.lines.0.text': ['북쪽 고개는 눈사태로\n막혀 버렸어.', '설원으로 가려면\n눈이 잠잠해질 때까지 기다려 줘.'],
-    'map.field_windhill.f_windhill.meta.sub': '유라와 북쪽 고개로 가는 길',
+    'map.field_windhill.f_windhill.meta.sub': '율라와 북쪽 고개로 가는 길',
     // ---- src/maps/homes_slice.js
     'map.homes_slice.roa_home1.name': '마을 집',
     'map.homes_slice.roa_home1.npcs.0.mother': ['어서 오렴.\n우리 애라면 광장에서\n놀고 있단다.', '베르나 씨 이야기는\n언제 들어도\n가슴이 따뜻해져.'],

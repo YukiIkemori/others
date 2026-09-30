@@ -2020,7 +2020,7 @@
   /** 中の出来事 1 つ → 契約の出来事の列（0 個以上）。heroName は '{hero}' の置き換え */
   function toEvents(ev, heroName, out, eng) {
     switch (ev.t) {
-      case 'msg': out.push({ t: 'msg', text: String(ev.text).replace(/\{hero\}/g, heroName) }); break;
+      case 'msg': out.push({ t: 'msg', text: R.I18n && R.I18n.fillName ? R.I18n.fillName(ev.text, 'hero', heroName) : String(ev.text).replace(/\{hero\}/g, heroName) }); break;   // 韓国語の助詞も選ぶ
       case 'actor': if (ev.u) out.push({ t: 'turn', uid: ev.u.uid }); break;
       case 'fx':
         if (ev.again) break;

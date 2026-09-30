@@ -762,6 +762,8 @@
     'ui.nameentry.delBack': '1 字消す・戻る',
     'ui.nameentry.back': '戻る',
     'ui.nameentry.kanaToggle': 'かな／カナ',
+    'ui.nameentry.kbToggle': 'キーボードで入力',
+    'ui.nameentry.kbHint': 'キーボードで入力中　Enter 決定　Esc 表に戻る',
     // ---- src/core/ns.js（題名。R.TITLE・R.SUBTITLE の getter）
     'ui.game.title': 'ルミナス・クロニクル',
     'ui.game.subtitle': '〜八つの灯火〜',

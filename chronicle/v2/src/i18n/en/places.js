@@ -76,9 +76,9 @@
     'regions.r_star.beacon': 'Stars',
     'regions.world.name': 'World Rumors',
     // ---- 追加の訳（2026-09-30）
-    'regions.r_isles.chapter.summary': 'On a foggy night, the storyteller chased the ghost ship in a ship of their own and brought the captain who never came home the rest of his shanty. The light turned orange again and was kindled on Lighthouse Isle, out at sea.',
-    'regions.r_mine.chapter.summary': 'In Dovan, the town beneath the earth, the fire of the Smith God\'s forge grew thin, and the shafts dug below the Seventh Level caved in. With the guild and the smiths divided, {hero} chose the town\'s path before the Iron Warden.',
-    'regions.r_star.chapter.summary': 'The storyteller slipped into the Academy after lights-out, recovered the star chart, and read the stars\' names aloud atop the Starreading Tower. The lost stars returned, and the plateau shone under starlight.',
+    'regions.r_isles.chapter.summary': 'On a foggy night, the\nstoryteller chased the ghost\nship in a ship of their own\nand brought the lost captain\nthe rest of his shanty, and a\nlight was kindled on\nLighthouse Isle.',
+    'regions.r_mine.chapter.summary': 'In Dovan, the town beneath\nthe earth, the Smith God\'s\nforge fire grew thin. With the\nguild and the smiths divided,\nthe storyteller chose the\ntown\'s path before the\nIron Warden.',
+    'regions.r_star.chapter.summary': 'The storyteller slipped into\nthe Academy after lights-out\nand recovered the star chart.\nAtop the Starreading Tower,\nthe stars\' names were read\naloud, and the lost stars\nreturned to the sky.',
     'locations.coral.name': 'Port Coral',
     'locations.nerei.name': 'Nerei',
     'locations.tidecave.name': 'Tideroar Cave',

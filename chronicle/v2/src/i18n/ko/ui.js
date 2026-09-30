@@ -1,5 +1,5 @@
 // 韓国語の文の表（ui）。key は日本語の表（src/i18n/ja/ui.js）と同じ。無い key は日本語が出る
-// 題名は「루미너스 크로니클 ~여덟 개의 등불~」（glossary.json の title.title）
+// 題名は“루미너스 크로니클 ~여덟 개의 등불~”（glossary.json の title.title）
 (function (R) {
   'use strict';
   R.I18n.add('ko', {
@@ -679,7 +679,7 @@
     'ui.status.draw.1.label': '뒤로',
     // ---- src/screens/tavern.js
     'ui.tavern.choose.toast': '이미 함께 여행하고 있다',
-    'ui.tavern.doSwap.toast': '{name}와(과) {name2}이(가) 교대했다',
+    'ui.tavern.doSwap.toast': '{name}과(와) {name2}이(가) 교대했다',
     'ui.tavern.draw.heading': '동료 교체',
     'ui.tavern.draw.text': '바닷바람 주점',
     'ui.tavern.draw.render.chip': '출전 중',
@@ -762,7 +762,9 @@
     'ui.nameentry.delBack': '1자 지우기·뒤로',
     'ui.nameentry.back': '뒤로',
     'ui.nameentry.kanaToggle': 'Aa',
-    // ---- src/core/ns.js（題名。R.TITLE・R.SUBTITLE の getter）
+    'ui.nameentry.kbToggle': '키보드로 입력',
+    'ui.nameentry.kbHint': '키보드로 입력 중　Enter 결정　Esc 글자판으로',
+    // ---- src/core/ns.js（題名。R.TITLE·R.SUBTITLE の getter）
     'ui.game.title': '루미너스 크로니클',
     'ui.game.subtitle': '~여덟 개의 등불~',
     // ---- src/screens/settings.js（言語の行）

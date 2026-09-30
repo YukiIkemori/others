@@ -265,7 +265,7 @@
     'events.kasim_arms.say_2': ['我是卖武具的哈米德。\n商队不来，货架上\n全是旧东西。', '沙漠的魔物，大多\n有硬壳。最好也带上\n一件打击用的武器。'],
     'events.kasim_shop_keeper.say': '欢迎光临。\n公会的客人打九折。',
     'events.kasim_shop_keeper.say_2': '欢迎光临。\n要穿越沙漠的话，药和\n土之魔石要多备些。',
-    'events.kasim_inn_keeper.say': ['欢迎光临「泉星亭」。', '要休息到晨钟响吗？\n还是休息到熄灯时分？\n……熄灯时分的沙漠，\n能看到奇妙的东西哦。'],
+    'events.kasim_inn_keeper.say': ['欢迎光临「泉星亭」。', '要休息到晨钟响吗？还是休息到熄灯时分？\n……熄灯时分的沙漠，\n能看到奇妙的东西哦。'],
     'events.kasim_inn_keeper.i.choose.0': '住宿（{price} G）',
     'events.kasim_inn_keeper.i.choose.1': '休息到熄灯时分（{price} G）',
     'events.kasim_inn_keeper.i.choose.2': '算了',

@@ -125,5 +125,6 @@
     'ev.pharos_story.pharos_departure.run.say_11': '...{hero}.\nTake care of yourself.',
     'ev.pharos_story.pharos_departure.run.narr_4': 'Otto came running\nfrom the harbor.',
     'ev.pharos_story.pharos_departure.run.say_12': 'The lord has lowered the\nnorth drawbridge, they say!\nNow we can get to the North Fields!',
+    'ev.pharos_story.pharos_departure.run.townsfolk': 'Townsperson',
   });
 })(window.RPG);

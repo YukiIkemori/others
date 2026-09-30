@@ -326,6 +326,8 @@
     'events.yule_sculptor.say_2': ['我叫莉薩。在做祭典的\n雪像。……可是，\n裝飾的材料不夠。', '清透的冰塊、\n大灶的炭、\n雪林的紅果。'],
     'events.yule_sculptor.say_3': '三樣湊齊了，我就照你\n喜歡的樣子來做！',
     'events.yule_sculptor.say.0': '還差 {p0} 樣！',
+    'events.yule_sculptor.say.1': '{list}。',
+    'events.yule_sculptor.say.1.join': '、',
     'events.yule_sculptor.i.choose': ['龍', '狼與獵人', '大灶'],
     'events.yule_sculptor.i.choose.text': '要做成什麼樣的雪像？',
     'events.yule_sculptor.caption': '莉薩和孩子們一起，\n把雪壓實、雕刻、裝飾……。',

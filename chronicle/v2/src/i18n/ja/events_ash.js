@@ -189,7 +189,7 @@
     'events.caldera_arena_zakuro_bag.say': '荷は、きちんと縛り直されている。',
     'events.caldera_arena_zakuro_bag.say.0_2': 'ザクロの荷だ。\n本人に断ってからにしよう。',
     'events.caldera_arena_zakuro.say': ['俺は北へ行く。\n雇い主には、降りたと伝えた。', '……次に会うときは、\n雇われじゃなく会いたいもんだ。'],
-    'events.caldera_arena_zakuro.say_2': ['負けたよ。いい腕だ。', '記録院に雇われて、\n火口の絵を写す仕事だった。\n写せば、この土地の争いの種が\nなくなるらしい。'],
+    'events.caldera_arena_zakuro.say_2': ['負けたよ。いい腕だ。', '記録院に雇われて、火口の絵を\n写す仕事だった。写せば、この土地の\n争いの種がなくなるらしい。'],
     'events.caldera_arena_zakuro.say_3': '……写す仕事は降りる。\n後味が悪い。',
     'events.caldera_arena_zakuro.say_4': ['それと、これだ。雇い主から\n預かった荷に、まぎれてた。', '宛名が違う。……俺は開けてねえ。'],
     'events.caldera_arena_zakuro.say_5': '人の手紙は読まねえ。\nそういう決まりで生きてる。',

@@ -125,5 +125,6 @@
     'ev.pharos_story.pharos_departure.run.say_11': '……{hero}。\n路上當心。',
     'ev.pharos_story.pharos_departure.run.narr_4': '奧托從港口那邊\n跑了過來。',
     'ev.pharos_story.pharos_departure.run.say_12': '聽說領主大人把北邊的吊橋\n放下來了！\n這下能去北方原野了！',
+    'ev.pharos_story.pharos_departure.run.townsfolk': '鎮上的人',
   });
 })(window.RPG);

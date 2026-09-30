@@ -74,9 +74,9 @@
     'regions.r_star.chapter.title': '별을 센 현자',
     'regions.r_star.beacon': '별',
     'regions.world.name': '세상의 소문',
-    'regions.r_isles.chapter.summary': '안개 낀 밤의 유령선을 제 배로 쫓아가, 돌아오지 않는 선장에게 뱃노래의 뒷부분을 전했다. 등불은 다시 주황빛으로 돌아와 먼바다의 등대섬에 켜졌다.',
-    'regions.r_mine.chapter.summary': '땅속 도시 도반에서 대장장이 신의 화로 불이 사그라들고, 제7층 아래를 판 갱도가 무너졌다. 조합과 대장장이들이 갈라선 가운데, {hero}는 강철 파수꾼 앞에서 도시가 갈 길을 정했다.',
-    'regions.r_star.chapter.summary': '소등 후의 학원에 숨어들어 성도를 되찾고, 별읽기의 탑 꼭대기에서 별의 이름을 읽어 올렸다. 사라진 별이 돌아오고, 고원은 별빛으로 물들었다.',
+    'regions.r_isles.chapter.summary': '안개 낀 밤의 유령선을\n이야기꾼은 제 배로 쫓아가,\n돌아오지 않는 선장에게\n뱃노래의 뒷부분을 전했다.\n먼바다의 등대섬에 등불이 켜졌다.',
+    'regions.r_mine.chapter.summary': '땅속 도시 도반에서\n대장장이 신의 화로 불이 사그라들었다.\n조합과 대장장이들이 갈라선 가운데\n이야기꾼은 강철 파수꾼 앞에서\n도시가 갈 길을 정했다.',
+    'regions.r_star.chapter.summary': '소등 후의 학원에 숨어들어\n이야기꾼은 성도를 되찾았다.\n별읽기의 탑 꼭대기에서\n별의 이름을 읽어 올리자,\n사라진 별이 하늘로 돌아왔다.',
     // ---- src/data/locations_isles.js
     'locations.coral.name': '항구 도시 코랄',
     'locations.nerei.name': '곶 마을 네레이',

@@ -909,6 +909,16 @@
    "note": "EN name localized (not romanized Japanese); see w_names/names_en.md. Yarrow = a meadow herb; quiet, old-English village sound. Short form: Yarrow."
   },
   {
+   "id": "places.yula_moss",
+   "category": "places",
+   "ja": "こけの村ユーラ",
+   "en": "Yula, Village of Moss",
+   "zh-Hans": "苔之村悠拉",
+   "zh-Hant": "苔之村悠拉",
+   "ko": "이끼 마을 율라",
+   "note": "Only on the Windsong Hill signpost. Not 隠れ里ユラ (Yarrow / 유라): ko uses 율라 so the two stay distinct (decided 2026-09-30)."
+  },
+  {
    "id": "places.verda",
    "category": "places",
    "ja": "迷いの森",
@@ -1015,7 +1025,7 @@
    "en": "Sunken Bell Marsh",
    "zh-Hans": "沉钟沼泽",
    "zh-Hant": "沉鐘沼澤",
-   "ko": "종이 가라앉은 늪"
+   "ko": "가라앉은 종의 늪"
   },
   {
    "id": "places.tidewatch",
@@ -1878,7 +1888,7 @@
    "zh-Hans": "承日之战",
    "zh-Hant": "承日之戰",
    "ko": "해잇기 전쟁",
-   "note": "Aligned with w_en_B/C.; The war 23-20 years ago over whose Beacon was the sun's rightful heir. w_en_C also uses Sunheir; w_en_A glossary_add proposed 'Sun-Succession War' but no en text uses it.; Followed w_en_B ('Sunheir'); w_en_A proposed 'Sun-Succession War'. Owner should pick one."
+   "note": "DECIDED: the Sunheir War everywhere (the war 23-20 years ago over whose Beacon was the sun's rightful heir). Lazaro's 伝承戦争 was unified into 日継ぎの戦 2026-09-30."
   },
   {
    "id": "core.champions_bout",
@@ -1889,16 +1899,6 @@
    "zh-Hant": "代理比試",
    "ko": "대리 시합",
    "note": "Aligned with w_en_B (最後の代理試合 = the last champions' bout).; The proxy duels that decided the Sunheir War, held in Caldera's arena. Same as w_en_A's actual events_final text (their glossary_add still lists 'proxy match')."
-  },
-  {
-   "id": "core.war_of_legends",
-   "category": "core",
-   "ja": "伝承戦争",
-   "en": "the War of Legends",
-   "zh-Hans": "传说战争",
-   "zh-Hant": "傳說戰爭",
-   "ko": "전승 전쟁",
-   "note": "Lazaro's own name for the war (events_final).; Lazaro's wording; JA to be unified with 日継ぎの戦 (the Sunheir War)."
   },
   {
    "id": "core.telling_stone",
@@ -2046,7 +2046,17 @@
    "zh-Hans": "约翰",
    "zh-Hant": "約翰",
    "ko": "요한",
-   "note": "（ビブリアの老人） Same spelling as w_en_B's Johann (a different person: JA reuses the name).; Emma's son; JA uses ヨハン for two people (Emma's son in the marsh, the old man in Biblia) — JA rename pending."
+   "note": "Emma's son in the marsh (Loch) only."
+  },
+  {
+   "id": "people.georg",
+   "category": "people",
+   "ja": "ゲオルク",
+   "en": "Georg",
+   "zh-Hans": "格奥尔格",
+   "zh-Hant": "格奧爾格",
+   "ko": "게오르크",
+   "note": "The old man in Biblia (renamed from ヨハン 2026-09-30; ヨハン/Johann is Emma's son)."
   },
   {
    "id": "people.eda",
@@ -2809,7 +2819,7 @@
    "category": "people",
    "ja": "学長",
    "en": "Chancellor",
-   "zh-Hans": "学长",
+   "zh-Hans": "校长",
    "zh-Hant": "校長",
    "ko": "학장",
    "note": "Aligned with w_en_A."
@@ -2913,7 +2923,7 @@
    "zh-Hans": "卢卡",
    "zh-Hant": "盧卡",
    "ko": "루카",
-   "note": "JA uses ルカ for two people: the astronomer (Luca) and Glen's sailhand (EN Lucas) — JA rename of the crewman pending."
+   "note": "The astronomer only. Glen's sailhand is a different person: 帆手のルーカス = Lucas (zh 卢卡斯/盧卡斯, ko 루카스), renamed 2026-09-30."
   },
   {
    "id": "people.capella",
@@ -2968,7 +2978,7 @@
    "zh-Hans": "承日之说",
    "zh-Hant": "承日之說",
    "ko": "해잇기의 주장",
-   "note": "Followed w_en_B ('Sunheir'); w_en_A proposed 'Sun-Succession War'. Owner should pick one."
+   "note": "DECIDED: Sunheir."
   },
   {
    "id": "core.there_was_night_and_morning_came",
@@ -3046,7 +3056,7 @@
   {
    "ja": "グレンの船員",
    "en": "Tobias the Boatswain, Lucas the Sailhand, Sam the Lookout, Owen the Helmsman, Jonas the Carpenter, Beppo the Ship's Boy",
-   "note": "帆手のルカ rendered 'Lucas' so he is not confused with the astronomer ルカ = Luca (see JA issues)."
+   "note": "帆手のルーカス = Lucas (JA renamed from ルカ 2026-09-30 so he is not confused with the astronomer ルカ = Luca)."
   },
   {
    "ja": "岬の宿",

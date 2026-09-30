@@ -331,6 +331,8 @@
     'events.yule_sculptor.say_2': ['わたしはリーサ。祭の雪像を\n作ってるの。……でも、\n飾りの材料が足りなくて。', '澄んだ氷のかけら、\n大かまどの炭、\n雪の林の赤い実。'],
     'events.yule_sculptor.say_3': '三つそろったら、あなたの\n好きな形にしてあげる！',
     'events.yule_sculptor.say.0': 'あと {p0} つ！',
+    'events.yule_sculptor.say.1': '{list}。',
+    'events.yule_sculptor.say.1.join': '、',
     'events.yule_sculptor.i.choose': ['竜', '狼と猟師', '大かまど'],
     'events.yule_sculptor.i.choose.text': 'どんな像にする？',
     'events.yule_sculptor.caption': 'リーサと子どもたちが、\n雪をかため、削り、飾りをつけた……。',

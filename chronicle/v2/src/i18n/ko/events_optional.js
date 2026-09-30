@@ -18,7 +18,7 @@
     'ev.optional_windhill.windhill_notes.run.narr': '바람이 노래처럼 울리고 있다.',
     'ev.optional_windhill.windhill_notes.run.caption': '……바람이 노래처럼 울리고 있다.',
     'ev.optional_windhill.windhill_notes.run.narr_2': '바위 틈에 오래된 쪽지가\n끼워져 있다.',
-    'ev.optional_windhill.windhill_notes.run.narr_3': '“바람의 언덕에서 회색 망토를 두른\n사람을 보았다. 바람은 옛 노래를\n기억하고 있다고 한다.\n――로아의 이야기꾼”',
+    'ev.optional_windhill.windhill_notes.run.narr_3': '“바람의 언덕에서 회색 망토를 두른\n사람을 보았다. 바람은 옛 노래를\n기억하고 있다고 한다. ――로아의 이야기꾼”',
     'ev.optional_windhill.windhill_notes.run.narr_4': '언덕 위에 회색 망토를 두른 사람의\n그림자가 보인 것 같았다.',
     'ev.optional_windhill.windhill_notes.run.say': '……바람도 노래를 기억하고 있구나.',
     'ev.optional_windhill.windhill_notes.run.say.name': '회색 망토의 소녀',

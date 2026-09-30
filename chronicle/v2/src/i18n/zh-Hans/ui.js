@@ -762,6 +762,8 @@
     'ui.nameentry.delBack': '删除 1 字・返回',
     'ui.nameentry.back': '返回',
     'ui.nameentry.kanaToggle': 'Aa',
+    'ui.nameentry.kbToggle': '用键盘输入',
+    'ui.nameentry.kbHint': '正在用键盘输入　Enter 确定　Esc 返回字表',
     // ---- src/core/ns.js（題名。R.TITLE・R.SUBTITLE の getter）
     'ui.game.title': '流光编年史',
     'ui.game.subtitle': '～八盏灯火～',

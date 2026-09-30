@@ -1,5 +1,5 @@
 // 韓国語の文の表（events_desert）。key は日本語の表（src/i18n/ja/events_desert.js）と同じ。無い key は日本語が出る
-// 差し込み {hero} {name} などは日本語と同じ。人名・地名は scratchpad の ko_names.json・glossary.json の訳にそろえる
+// 差し込み {hero} {name} などは日本語と同じ。人名·地名は scratchpad の ko_names.json·glossary.json の訳にそろえる
 (function (R) {
   'use strict';
   R.I18n.add('ko', {
@@ -265,7 +265,7 @@
     'events.kasim_arms.say_2': ['무구 장수 하미드다.\n대상이 안 오는 통에 물건은\n낡은 것뿐이지만.', '사막 마물은 껍데기가 단단한\n놈이 많아. 때리는 무기도\n하나 갖춰 두면 좋지.'],
     'events.kasim_shop_keeper.say': '어서 와.\n길드 손님은 10퍼센트 할인이야.',
     'events.kasim_shop_keeper.say_2': '어서 와.\n사막을 걸을 거면 약이랑\n땅의 돌은 넉넉히 챙겨.',
-    'events.kasim_inn_keeper.say': ['‘샘별 여관’에 어서 와요.', '아침 종까지 쉬겠어요?\n아니면 소등의 시각까지?\n……소등의 시각의 사막에선\n신기한 게 보인답니다.'],
+    'events.kasim_inn_keeper.say': ['‘샘별 여관’에 어서 와요.', '아침 종까지 쉬겠어요? 아니면 소등의 시각까지?\n……소등의 시각의 사막에선\n신기한 게 보인답니다.'],
     'events.kasim_inn_keeper.i.choose.0': '묵는다({price} G)',
     'events.kasim_inn_keeper.i.choose.1': '소등의 시각까지 쉰다({price} G)',
     'events.kasim_inn_keeper.i.choose.2': '그만둔다',

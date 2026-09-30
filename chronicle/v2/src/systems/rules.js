@@ -1150,7 +1150,7 @@
     const ord = (id) => { const a = actionOf(id); if (a && a.order != null) return a.order; return 1e6 + (actIdx[id] || 0); };
     return uniq(ids).sort((x, y) => ord(x) - ord(y) || (actIdx[x] || 0) - (actIdx[y] || 0));
   }
-  function joinTo(names) { return names.length <= 1 ? names.join('') : R.T('sys.rules.joinTo.ret', { join: names.slice(0, -1).join('、'), p1: names[names.length - 1] }); }
+  function joinTo(names) { return names.length <= 1 ? names.join('') : R.T('sys.rules.joinTo.ret', { join: names.slice(0, -1).join(R.T('sys.rules.joinTo.join')), p1: names[names.length - 1] }); }
   function joinDot(names) { return names.join(R.T('sys.rules.joinDot.join')); }
 
   // ------------------------------------------------------------ 効果の文（DESIGN §8.2.7）
@@ -1168,7 +1168,7 @@
     const B = (l, s) => bad.push([l, s || l]);
     if (it.slot === 'weapon') {
       if (it.element) G(R.T('sys.rules.effectSentences.G', { elName: elName(it.element) }), R.T('sys.rules.effectSentences.G_2', { elName: elName(it.element) }));
-      if (it.onHit && it.onHit.status) { const v = STATUS_VERB[it.onHit.status] || R.T('sys.rules.effectSentences.v', { stName: stName(it.onHit.status) }); G(R.T('sys.rules.effectSentences.G_3', { v }), v + '。'); }
+      if (it.onHit && it.onHit.status) { const v = STATUS_VERB[it.onHit.status] || R.T('sys.rules.effectSentences.v', { stName: stName(it.onHit.status) }); G(R.T('sys.rules.effectSentences.G_3', { v }), R.T('sys.rules.effectSentences.G_3s', { v })); }
       if (it.vs) { const ks = Object.keys(it.vs).filter((k) => it.vs[k] > 1); if (ks.length) G(R.T('sys.rules.effectSentences.G_4', { joinDot: joinDot(ks.map((k) => RACE_NAMES[k] || stName(k))) })); }
       if (it.drain) G(R.T('sys.rules.effectSentences.G_5'), R.T('sys.rules.effectSentences.G_6'));
       if (it.metalHit) G(R.T('sys.rules.effectSentences.G_7'));

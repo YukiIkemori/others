@@ -18,7 +18,7 @@
     'ev.optional_windhill.windhill_notes.run.narr': 'The wind is singing.',
     'ev.optional_windhill.windhill_notes.run.caption': '...The wind is singing.',
     'ev.optional_windhill.windhill_notes.run.narr_2': 'An old note is tucked\ninto a hollow in the rock.',
-    'ev.optional_windhill.windhill_notes.run.narr_3': '"On Windsong Hill I saw someone\nin a gray cloak. The wind, she\nsaid, remembers the old songs.\n-- A storyteller of Roa"',
+    'ev.optional_windhill.windhill_notes.run.narr_3': '"On Windsong Hill I saw someone\nin a gray cloak. The wind, she\nsaid, remembers the old songs. -- A storyteller of Roa"',
     'ev.optional_windhill.windhill_notes.run.narr_4': 'You thought you saw a figure\nin a gray cloak atop the hill.',
     'ev.optional_windhill.windhill_notes.run.say': '...So the wind remembers the song, too.',
     'ev.optional_windhill.windhill_notes.run.say.name': 'Girl in a Gray Cloak',

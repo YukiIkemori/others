@@ -758,6 +758,8 @@
     'ui.nameentry.delBack': 'Delete / Back',
     'ui.nameentry.back': 'Back',
     'ui.nameentry.kanaToggle': 'Aa',
+    'ui.nameentry.kbToggle': 'Type with keyboard',
+    'ui.nameentry.kbHint': 'Typing with keyboard — Enter: OK   Esc: back to the grid',
     // ---- src/core/ns.js（題名。R.TITLE・R.SUBTITLE の getter）
     'ui.game.title': 'Luminous Chronicle',
     'ui.game.subtitle': '~ The Eight Beacons ~',

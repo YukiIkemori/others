@@ -101,7 +101,7 @@
     await X().narr(ev, R.T('events.star_naming.narr_2'));
     ev.bgm('legend');
     for (let i = 0; i < NAMES.length; i += 2) {
-      await ev.caption(`「${NAMES[i]}」「${NAMES[i + 1]}」`, { ms: 1800 });
+      await ev.caption(R.T('events.star_naming.pair', { a: NAMES[i], b: NAMES[i + 1] }), { ms: 1800 });   // かぎかっこは言語の表で
       ev.sfx('light');
       try { R.Field.flash && R.Field.flash('#dbe8ff', 250); } catch (e) { /* */ }
     }

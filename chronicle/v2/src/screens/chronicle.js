@@ -51,7 +51,9 @@
           (reg.chapter && reg.chapter.summary ? { title: reg.chapter.title, text: reg.chapter.summary } : cfg.summary ? { title: cfg.title, text: cfg.summary } : null);
         const pro = c.id === 'prologue';
         const title = (txt && txt.title) || (pro ? R.T('ui.chronicle.chapterRows.title') : S.regionName(c.id));
-        return { value: c.id, label: title, no: pro ? -1 : n++, text: txt ? (Array.isArray(txt.text) ? txt.text.join('\n') : txt.text || '') : '', songs: this.songsOf(c.id) };
+        // 章の文の {hero} は主人公の名前に（韓国語は助詞も選ぶ）
+        const body = txt ? (Array.isArray(txt.text) ? txt.text.join('\n') : txt.text || '') : '';
+        return { value: c.id, label: title, no: pro ? -1 : n++, text: R.Events && R.Events.fill ? R.Events.fill(body) : body, songs: this.songsOf(c.id) };
       });
     },
     /** その章で書き写した、声のある読み物（R.DB.lore の voice。灯台の守り歌 v_fine_song_02 など）→ [{id, title, text, voice}] */

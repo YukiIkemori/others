@@ -131,7 +131,7 @@
     'ev.story_00_tiers.KOSOU.6': 'The eight verses of its body\nI gave to the fires of eight lands.\nWhile they are told, the dark will not wake.',
     'ev.story_00_tiers.KOSOU.7': 'But forget the title, and morning won\'t come.\nForget the verses,\nand the dark will open its eyes again.',
     'ev.story_00_tiers.MARGIN.2': 'Every town says its own beacon is a shard\nof the sun. Each tells it a little differently.',
-    'ev.story_00_tiers.MARGIN.3': 'The back of the third page says "morning comes."\nPerhaps the "morning" in morning bell\nwas never about the bell.',
+    'ev.story_00_tiers.MARGIN.3': 'The back of page {p0} says "morning comes."\nPerhaps the "morning" in morning bell\nwas never about the bell.',
     'ev.story_00_tiers.MARGIN.4': 'Every land\'s customs broke off the same winter.\n...Something ended that winter.{p0}',
     'ev.story_00_tiers.MARGIN.4_2': '\nIn every town, a war wound no one can explain.',
     'ev.story_00_tiers.MARGIN.5': 'The old layer says "my village." The title became\na greeting... Roa\'s "good morning"?{p0}',

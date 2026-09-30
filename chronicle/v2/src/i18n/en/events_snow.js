@@ -331,6 +331,8 @@
     'events.yule_sculptor.say_2': ['I\'m Liisa. I\'m making the snow statue\nfor the festival. ...But I don\'t have\nenough things to decorate it.', 'A shard of clear ice,\ncharcoal from the great hearth,\nand red berries from the snowy woods.'],
     'events.yule_sculptor.say_3': 'Once you\'ve got all three, I\'ll make it\nany shape you like!',
     'events.yule_sculptor.say.0': '{p0} more to go!',
+    'events.yule_sculptor.say.1': '{list}.',
+    'events.yule_sculptor.say.1.join': ', ',
     'events.yule_sculptor.i.choose': ['A dragon', 'The wolf and the hunter', 'The great hearth'],
     'events.yule_sculptor.i.choose.text': 'What kind of statue shall it be?',
     'events.yule_sculptor.caption': 'Liisa and the children packed the snow,\ncarved it, and decorated it...',

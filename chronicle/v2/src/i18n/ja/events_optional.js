@@ -21,7 +21,7 @@
     'ev.optional_windhill.windhill_notes.run.narr': '風が、歌のように鳴っている。',
     'ev.optional_windhill.windhill_notes.run.caption': '……風が、歌のように鳴っている。',
     'ev.optional_windhill.windhill_notes.run.narr_2': '岩のくぼみに、古い書き付けが\nはさまっている。',
-    'ev.optional_windhill.windhill_notes.run.narr_3': '「風の丘で、灰色のマントの\n人を見た。風は、昔の歌を\n覚えているのだという。\n――ロアの語り部」',
+    'ev.optional_windhill.windhill_notes.run.narr_3': '「風の丘で、灰色のマントの人を見た。\n風は、昔の歌を覚えているのだという。\n――ロアの語り部」',
     'ev.optional_windhill.windhill_notes.run.narr_4': '丘の上に、灰色のマントの人影が\n見えた気がした。',
     'ev.optional_windhill.windhill_notes.run.say': '……風も、歌を覚えているのね。',
     'ev.optional_windhill.windhill_notes.run.say.name': '灰色のマントの少女',

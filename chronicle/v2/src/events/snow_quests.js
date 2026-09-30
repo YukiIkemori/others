@@ -112,7 +112,7 @@
       return;
     }
     const got = Object.keys(MATS).filter((k) => ev.flag(k));
-    if (got.length < 3) { await ev.say('sculptor', [R.T('events.yule_sculptor.say.0', { p0: 3 - got.length }), Object.keys(MATS).filter((k) => !ev.flag(k)).map((k) => MATS[k]).join('、') + '。']); return; }
+    if (got.length < 3) { await ev.say('sculptor', [R.T('events.yule_sculptor.say.0', { p0: 3 - got.length }), R.T('events.yule_sculptor.say.1', { list: Object.keys(MATS).filter((k) => !ev.flag(k)).map((k) => MATS[k]).join(R.T('events.yule_sculptor.say.1.join')) })]); return; }
     const i = await ev.choose(R.T('events.yule_sculptor.i.choose'), { text: R.T('events.yule_sculptor.i.choose.text') });
     const c = ['dragon', 'wolf', 'hearth'][i] || 'dragon';
     ev.choice('ch_snow_statue', c);

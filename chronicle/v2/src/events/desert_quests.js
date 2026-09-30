@@ -5,7 +5,7 @@
 //   q_kasim_beacons  灯守組合のタデオ → 隊商路ののろし台 3 つに黒い泉の油（ワールドの waylamp）→ u_signal_mirror
 //   q_kasim_salt     塩売りのカリム → 宿場「砂の縁」の行商人ロッタへ塩の包み → お金（ロッタの籠の品が増える）
 //   q_kasim_maps     地図屋のヤズ → 宝の地図（ティアで 1 枚ずつ。行き先は地方をまたぐ = data だけ）
-//   q_kasim_indigo   藍染めのライラ → 森の村ユールの母へ藍の布（地方をまたぐ依頼。ユールに人を 1 人足す）→ u_caravan_scarf
+//   q_kasim_indigo   藍染めのライラ → 隠れ里ユラの母へ藍の布（地方をまたぐ依頼。ユラに人を 1 人足す）→ u_caravan_scarf
 //   占い（まだ聞いていないうわさを 1 つ）・市場の屋台の値切り（R.Mini.timing。勝つと屋台が 15% 安い）
 (function (R) {
   'use strict';
@@ -14,12 +14,12 @@
   const cleared = (ev) => ev.flag('cleared_r_desert');
   const objAt = (ctx, type, event) => { const m = R.DB.maps[ctx && ctx.map]; return m && (m.objects || []).find((o) => o.type === type && (!event || o.event === event) && o.x === ctx.x && o.y === ctx.y); };
 
-  // 依頼の lead（side）とユールへの品
+  // 依頼の lead（side）とユラへの品
   R.def('leads', 'q_kasim_indigo', { kind: 'side', region: 'r_desert', title: R.T('leads.q_kasim_indigo.title'), from: R.T('leads.q_kasim_indigo.from'), place: 'yura', dir: R.T('leads.q_kasim_indigo.dir'),
     text: R.T('leads.q_kasim_indigo.text'), done: 'desert_indigo_done' });
   R.def('items', 'k_desert_indigo', { name: R.T('items.k_desert_indigo.name'), slot: 'key', grade: 'normal', tier: 0, price: 0, src: 'key', icon: 'bag', sort: 9420,
     desc: R.T('items.k_desert_indigo.desc') });
-  // ユールの村に、ライラの母を足す（地方をまたぐ依頼。村のファイルは編集しない）
+  // ユラの村に、ライラの母を足す（地方をまたぐ依頼。村のファイルは編集しない）
   R.onData(function () {
     const m = R.DB.maps.yura;
     if (m && !(m.npcs || []).some((n) => n.id === 'laila_mother')) {
@@ -304,7 +304,7 @@
     await ev.shop('shop_kasim_bazaar');
   }, { meta: { needs: [], gives: ['flag:desert_haggled'] } });
 
-  // ---------------------------------------------------------------- 藍の布（ユールへ）
+  // ---------------------------------------------------------------- 藍の布（ユラへ）
   E('kasim_yura_dyer', async (ev) => {
     if (ev.flag('desert_indigo_done')) { await ev.say('yura_returnee', R.T('events.kasim_yura_dyer.say')); return; }
     if (ev.flag('yura_dyer_home')) {

@@ -125,5 +125,6 @@
     'ev.pharos_story.pharos_departure.run.say_11': '……{hero}。\n路上当心。',
     'ev.pharos_story.pharos_departure.run.narr_4': '奥托从港口那边\n跑了过来。',
     'ev.pharos_story.pharos_departure.run.say_12': '听说领主大人把北边的吊桥\n放下来了！\n这下能去北方原野了！',
+    'ev.pharos_story.pharos_departure.run.townsfolk': '镇上的人',
   });
 })(window.RPG);

@@ -212,7 +212,7 @@
   };
   const MARGIN = {
     2: () => R.T('ev.story_00_tiers.MARGIN.2'),
-    3: () => R.T('ev.story_00_tiers.MARGIN.3'),
+    3: () => R.T('ev.story_00_tiers.MARGIN.3', { p0: NUM[3] }),   // 何枚目かは題と同じ NUM（呼ぶのは読み込みの後）
     4: () => R.T('ev.story_00_tiers.MARGIN.4', { p0: count(/^lo_war_/) >= 2 ? R.T('ev.story_00_tiers.MARGIN.4_2') : '' }),
     5: () => R.T('ev.story_00_tiers.MARGIN.5', { p0: count(/^lo_lz_/) >= 1 ? R.T('ev.story_00_tiers.MARGIN.5_2') : '' }),
     6: () => {

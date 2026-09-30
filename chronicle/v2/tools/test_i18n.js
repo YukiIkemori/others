@@ -82,6 +82,41 @@ section('折り返し: 英語は語で、日本語は今までどおり字で');
   ok('unwrap (ja): newline is removed', R.I18n.unwrap('味方1人のHPを\n30回復する。', 'ja') === '味方1人のHPを30回復する。');
 }
 
+section('韓国語の助詞（받침で 은/는・이/가・을/를・과/와・(으)로・아/야・(이)라… を選ぶ）');
+{
+  const R = load({ quiet: true, globals: { location: { search: '?lang=ko' } } });
+  const I = R.I18n;
+  const f = (s, v) => I.format(s, { x: v });
+  ok('ko: 이(가) after a batchim / no batchim', f('{x}이(가) 나타났다!', '더스트윙') === '더스트윙이 나타났다!' && f('{x}이(가) 나타났다!', '루카') === '루카가 나타났다!');
+  ok('ko: 은(는) / 을(를) / 과(와) / 아(야)', f('{x}은(는)', '카일') === '카일은' && f('{x}은(는)', '미라') === '미라는' && f('{x}을(를)', '별') === '별을' && f('{x}을(를)', '나무') === '나무를' &&
+    f('{x}과(와)', '곰') === '곰과' && f('{x}과(와)', '새') === '새와' && f('{x}아(야)', '민준') === '민준아' && f('{x}아(야)', '지우') === '지우야');
+  ok('ko: (으)로 uses 로 after ㄹ and after no batchim', f('{x}(으)로', '북문') === '북문으로' && f('{x}(으)로', '마을') === '마을로' && f('{x}(으)로', '바다') === '바다로');
+  ok('ko: (이)라 / (이)여 / (이)나', f('{x}(이)라고', '곰') === '곰이라고' && f('{x}(이)라고', '새') === '새라고' && f('{x}(이)여', '별') === '별이여' && f('{x}(이)나', '나무') === '나무나');
+  ok('ko: closing quotes between the word and the particle are skipped', f('‘{x}’을(를) 익혔다', '빛의 화살') === '‘빛의 화살’을 익혔다' && f('‘{x}’을(를)', '해') === '‘해’를');
+  ok('ko: digits and Latin names are read', f('{x}이(가)', '3') === '3이' && f('{x}이(가)', '2') === '2가' && f('{x}(으)로', '7') === '7로' && f('{x}은(는)', 'Tom') === 'Tom은' && f('{x}은(는)', 'Alice') === 'Alice는' && f('{x}(으)로', 'Paul') === 'Paul로');
+  ok('ko: an unreadable last letter keeps the marker', f('{x}은(는)', 'ルカ') === 'ルカ은(는)');
+  ok('ko: the older notation (은)는 / 와(과) is still resolved', f('{x}(은)는', '곰') === '곰은' && f('{x}와(과)', '새') === '새와');
+  ok('ko: {hero} (filled later) keeps the marker until fillName', I.format('{hero}은(는) {x}을(를) 봤다', { x: '별' }) === '{hero}은(는) 별을 봤다' &&
+    I.fillName('{hero}은(는) 떠났다', 'hero', '하늘') === '하늘은 떠났다' && I.fillName('{hero}은(는) 떠났다', 'hero', '바다') === '바다는 떠났다');
+  ok('ko: R.T resolves markers after fixed nouns too', /나타났다/.test(R.T('battle.scene.intro.head.name', { join: '', p1: '슬라임' })) && R.T('battle.scene.intro.head.name', { join: '', p1: '슬라임' }) === '슬라임이 나타났다!', R.T('battle.scene.intro.head.name', { join: '', p1: '슬라임' }));
+  R.State.newGame({ hero: { type: 'warrior', sex: 'm', name: '카일' } });
+  const f1 = R.Events.fill('{hero}이(가) 왔다');
+  R.Game.chars.hero.name = '루카';
+  const f2 = R.Events.fill(['{hero}은(는) 웃었다', '{hero}(으)로']);
+  ok('ko: R.Events.fill picks the particle for the hero name', f1 === '카일이 왔다' && f2[0] === '루카는 웃었다' && f2[1] === '루카로', [f1, f2]);
+  ok('ja/en: markers are left alone (no Korean rules)', I.josa('{x}이(가)', 'ja') === '{x}이(가)' && I.format('A이(가)', { y: 1 }, 'en') === 'A이(가)');
+  // 表の書き方はひとつ（받침の形が先の 은(는)・이(가)・을(를)・과(와)・아(야)、(으)로・(이)라…）。古い (은)는・와(과) や、差し込みの後の決め打ちの助詞は残さない
+  const { T } = A.readTables();
+  const bad = [];
+  for (const [k, v] of Object.entries(T.ko)) {
+    for (const s of [].concat(v)) {
+      if (/\(은\)는|\(이\)가|\(을\)를|와\(과\)|\(와\)과|\(과\)와|는\(은\)|가\(이\)|를\(을\)|야\(아\)/.test(s)) bad.push(k);
+      else if (/\{[A-Za-z_$][\w$]*\}[’”」』)]?(은|는|이|가|을|를|과|와|으로|아|야)(?![(가-힣])/.test(s)) bad.push(k);
+    }
+  }
+  ok('ko tables: one canonical particle notation after placeholders', bad.length === 0, bad.slice(0, 10));
+}
+
 section('表と監査（tools/i18n_audit.js）');
 {
   const r = A.audit();

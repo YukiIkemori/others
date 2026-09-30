@@ -9,13 +9,14 @@
 //   - データの名前（道具・魔物…）は読み込みの時に表を引くので、言語を変えたら起こし直す（設定の言語の行。旅の途中は中断の記録から続ける）。
 //   - 書体: 英語 Nunito、中国語・韓国語 Noto Sans SC/TC/KR（build.js が表の字だけ切り出す）。英語・韓国語は語で折り返す（UIK.wrap）。
 //   - 題字の絵は言語ごと（title の 'logo_<言語>'。無ければ文字の題字）。名前の入力は日本語が五十音、ほかはラテン字の表
-//     （中国語・韓国語の名前は IME か Steam の文字入力が要る。今はラテン字）。
+//     （中国語・韓国語の名前はキーボードの IME で打つ: screens/nameentry.js の「キーボードで入力」。パッドはラテン字の表）。
 //
 //   R.T(key, params)            → 今の言語の文（無ければ日本語 → それも無ければ key。配列の文は写しの配列）
 //   R.I18n.add(lang, table)     src/i18n/<lang>/*.js が登録する（同じ key の二度目は警告して上書きしない）
 //   R.I18n.lang()               今の言語（'ja' | 'en' | 'zh-Hans' | 'zh-Hant' | 'ko'）
 //   R.I18n.setLang(l)           言語を覚える。データの名前（道具・魔物…）は読み込みの時に決まるので、画面は R.I18n.restart() で起こし直す
 //   R.I18n.has(key, lang) / keys(lang) / table(lang) / script() / isLatin() / fontStack() / format(s, params) / unwrap(s)（改行をほどく）
+//   R.I18n.josa(s) / fillName(s, 'hero', 名前)   韓国語の助詞の印（은(는)・이(가)・을(를)・과(와)・아(야)・(으)로・(이)라…）を前の語の받침で選ぶ
 //
 // 文の中の差し込み: {name} は params.name に置き換える（params に無い名前はそのまま残す = {hero} はイベントの側で入る）。
 //   数の言い分け（英語などの単数・複数）: {n, plural, one {# item} other {# items}}（# は数。Intl.PluralRules で選ぶ。日本語は other だけ書けばよい）
@@ -125,6 +126,54 @@
     return out;
   }
 
+  // ---------------------------------------------------------------- 韓国語の助詞（조사）
+  // 表の書き方（ひとつに決める）: 받침のある形を先に「은(는)・이(가)・을(를)・과(와)・아(야)」、あってもなくてもよい字は「(으)로・(이)라・(이)여・(이)나…」。
+  // 差し込み（{name}・{hero}…）のあとの印を、入った語の最後の字の받침で選ぶ（더스트윙이 나타났다! / 슬라임이… / 루카는）。
+  // 閉じの記号（’ ” 」 』 ) ]）は飛ばして前の字を見る。まだ入っていない {hero} の後（前の字が }）は、{hero} を入れる側（R.Events.fill など）が選ぶ。
+  // 前の字がハングル・数字・ラテン字でない（かな・漢字の名前など）ときは印のまま（은(는)）。
+  const JOSA_PAIR = { '은(는)': ['은', '는'], '는(은)': ['은', '는'], '(은)는': ['은', '는'], '이(가)': ['이', '가'], '가(이)': ['이', '가'], '(이)가': ['이', '가'],   // check_text:ignore i18n:ignore（韓国語の助詞の印）
+    '을(를)': ['을', '를'], '를(을)': ['을', '를'], '(을)를': ['을', '를'], '과(와)': ['과', '와'], '와(과)': ['과', '와'], '(과)와': ['과', '와'], '(와)과': ['과', '와'],   // check_text:ignore i18n:ignore（韓国語の助詞の印）
+    '아(야)': ['아', '야'], '야(아)': ['아', '야'] };   // check_text:ignore i18n:ignore（韓国語の助詞の印）
+  const JOSA_RE = /은\(는\)|는\(은\)|\(은\)는|이\(가\)|가\(이\)|\(이\)가|을\(를\)|를\(을\)|\(을\)를|과\(와\)|와\(과\)|\(과\)와|\(와\)과|아\(야\)|야\(아\)|\(으\)로|\(이\)(?=[라여나야다지며고든란랑에었])/g;
+  const JOSA_CLOSE = /[’”」』)\]'"》〉]/;
+  // 数字の読み（0 영 1 일 2 이 3 삼 4 사 5 오 6 육 7 칠 8 팔 9 구）: 0 받침なし 1 받침 2 ㄹ받침
+  const JOSA_DIGIT = [1, 2, 0, 1, 0, 0, 1, 2, 2, 0];
+  // ラテン字 1 字の読み（L 엘・M 엠・N 엔・R 알 のほかは받침なし）
+  const JOSA_LETTER = { l: 2, m: 1, n: 1, r: 2 };
+  /** s の終わりの語の받침 → 0 なし・1 あり・2 ㄹ・-1 分からない */
+  function batchim(s) {
+    const ch = s[s.length - 1];
+    if (!ch) return -1;
+    const c = ch.charCodeAt(0);
+    if (c >= 0xac00 && c <= 0xd7a3) { const j = (c - 0xac00) % 28; return j === 0 ? 0 : j === 8 ? 2 : 1; }
+    if (c >= 48 && c <= 57) return JOSA_DIGIT[c - 48];
+    const m = /[A-Za-z]+$/.exec(s);
+    if (m) {
+      const w = m[0].toLowerCase();
+      if (w.length === 1) return JOSA_LETTER[w] || 0;
+      if (/(ng|m|n)$/.test(w)) return 1;
+      if (/l$/.test(w)) return 2;
+      if (/(ck|[aeiou][kpb])$/.test(w)) return 1;
+      return 0;
+    }
+    return -1;
+  }
+  /** 韓国語の文の助詞の印を選ぶ（ほかの言語はそのまま） */
+  function josa(s, lang) {
+    if ((lang || cur || I18n.lang()) !== 'ko' || typeof s !== 'string' || s.indexOf('(') < 0) return s;
+    return s.replace(JOSA_RE, (mk, at, all) => {
+      let j = at;
+      while (j > 0 && JOSA_CLOSE.test(all[j - 1])) j--;
+      if (j === 0 || all[j - 1] === '}') return mk;   // 前に語が無い・まだ入っていない差し込み
+      const b = batchim(all.slice(Math.max(0, j - 24), j));
+      if (b < 0) return mk;
+      if (mk === '(으)로') return b === 1 ? '으로' : '로';   // check_text:ignore i18n:ignore（韓国語の助詞の印）
+      if (mk === '(이)') return b > 0 ? '이' : '';   // check_text:ignore i18n:ignore
+      const p = JOSA_PAIR[mk];
+      return b > 0 ? p[0] : p[1];
+    });
+  }
+
   const I18n = (R.I18n = {
     LANGS,
     NATIVE,
@@ -161,6 +210,7 @@
         if (!missing.has(key)) { missing.add(key); if (R.warn) R.warn('i18n: missing key ' + key); }
         return key;
       }
+      if (l === 'ko') return Array.isArray(v) ? v.map((s) => josa(format(s, params, l), l)) : josa(format(v, params, l), l);
       if (Array.isArray(v)) return v.map((s) => format(s, params, l));
       return format(v, params, l);
     },
@@ -168,7 +218,14 @@
     keys(lang) { return Object.keys(tables[lang || 'ja']); },
     table(lang) { return tables[lang || 'ja']; },
     missing() { return [...missing]; },
-    format(s, p, lang) { return format(s, p, lang); },
+    format(s, p, lang) { return josa(format(s, p, lang), lang); },
+    /** 韓国語の助詞の印（은(는)・이(가)・(으)로…）を前の語の받침で選ぶ。{hero} を入れたあとに呼ぶ（R.Events.fill など）。ほかの言語はそのまま */
+    josa(s, lang) { return Array.isArray(s) ? s.map((x) => josa(x, lang)) : josa(s, lang); },
+    /** 文の中の {name} を value に置き換えて、韓国語なら助詞を選ぶ（{hero} を入れる所の共通の道具） */
+    fillName(s, name, value, lang) {
+      const one = (x) => josa(String(x == null ? '' : x).split('{' + name + '}').join(value == null ? '' : String(value)), lang);
+      return Array.isArray(s) ? s.map(one) : one(s);
+    },
     /** 'latin'（空白で語を分ける: en）| 'cjk'（字ごとに折り返せる: ja zh ko。韓国語は語の間に空白があるが、字ごとでも読める。語で折る方を選ぶ） */
     script(lang) { const l = lang || I18n.lang(); return l === 'en' ? 'latin' : l === 'ko' ? 'hangul' : 'cjk'; },
     isLatin(lang) { return I18n.script(lang) === 'latin'; },

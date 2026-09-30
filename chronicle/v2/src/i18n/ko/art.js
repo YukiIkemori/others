@@ -86,7 +86,7 @@
     'art.looks_sprite.T.npc_beppo.name': '베포',
     'art.looks_sprite.T.npc_klaus.name': '클라우스',
     'art.looks_sprite.T.npc_melda.name': '멜다',
-    'art.looks_sprite.T.npc_loch_mayor.name': '로흐의 촌장',
+    'art.looks_sprite.T.npc_loch_mayor.name': '로흐의 읍장',
     'art.looks_sprite.T.npc_marina.name': '마리나',
     'art.looks_sprite.T.npc_glen.name': '글렌',
     'art.looks_sprite.T.npc_drake.name': '드레이크',

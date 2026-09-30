@@ -77,7 +77,8 @@
   }
   function fill(text) {
     const name = R.State && R.State.heroName ? R.State.heroName() : '';
-    const one = (s) => String(s == null ? '' : s).replace(/\{hero\}/g, name || '');
+    // 韓国語は {hero} の後の助詞の印（은(는)・이(가)…）を名前の받침で選ぶ（R.I18n.fillName）
+    const one = (s) => (R.I18n && R.I18n.fillName ? R.I18n.fillName(s, 'hero', name || '') : String(s == null ? '' : s).replace(/\{hero\}/g, name || ''));
     return Array.isArray(text) ? text.map(one) : one(text);
   }
   Events.fill = fill;

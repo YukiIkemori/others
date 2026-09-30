@@ -1,5 +1,5 @@
 // 韓国語の文の表（events_snow）。key は日本語の表（src/i18n/ja/events_snow.js）と同じ。無い key は日本語が出る
-// 差し込み {hero} {name} などは日本語と同じ。人名・地名は scratchpad の ko_names.json・glossary.json の訳にそろえる
+// 差し込み {hero} {name} などは日本語と同じ。人名·地名は scratchpad の ko_names.json·glossary.json の訳にそろえる
 (function (R) {
   'use strict';
   R.I18n.add('ko', {
@@ -150,11 +150,11 @@
     'events.snow_siege_wave.i.choose.text': '제{w}파. 어느 문을 지킬까?',
     'events.snow_siege_wave.say': '채비가 되면 내게\n말을 걸게.\n큰 화덕 곁에 있겠네.',
     'events.snow_siege_wave.say.name_2': '요른',
-    'events.snow_siege_wave.caption': '{p0}으로 달려갔다.\n눈보라 너머에 빛나는 눈들이 늘어서 있다.',
+    'events.snow_siege_wave.caption': '{p0}(으)로 달려갔다.\n눈보라 너머에 빛나는 눈들이 늘어서 있다.',
     'events.snow_siege_wave.wins.caption': '다음 무리가 온다!',
     'events.snow_siege_wave.say_2': '올라프와 마을 사냥꾼들이\n먼저 화살을 쏘았다!\n늑대 한 마리가 달아난다.',
-    'events.snow_siege_wave.caption_2': '{p0}을 끝까지 지켰다!\n다른 문도 마을 사람들이\n간신히 버텨 냈다.',
-    'events.snow_siege_wave.caption_3': '{p0}은 지켜 냈다.\n……하지만 {p1}이 뚫렸다!',
+    'events.snow_siege_wave.caption_2': '{p0}을(를) 끝까지 지켰다!\n다른 문도 마을 사람들이\n간신히 버텨 냈다.',
+    'events.snow_siege_wave.caption_3': '{p0}은(는) 지켜 냈다.\n……하지만 {p1}이(가) 뚫렸다!',
     'events.snow_siege_wave.caption.n': '북문 앞 노점이 쓰러지고\n늑대가 광장까지 들어왔다.',
     'events.snow_siege_wave.caption.e': '동쪽 창고가 털렸다.\n대장간 물건이 흩어져 있다.',
     'events.snow_siege_wave.caption.w': '서쪽 썰매개 우리의 울타리가\n부서졌다.',
@@ -162,7 +162,7 @@
     'events.snow_siege_wave.say_3': '아직 온다.\n채비가 되면 말을 걸게.',
     'events.snow_siege_wave.say_4': '다음엔 무리의 우두머리가 온다.\n……큰늑대야.\n채비가 되면 말을 걸게.',
     'events.snow_siege_wave.caption_5': '읽어 냈다!\n눈보라 속에서 큰늑대가\n모습을 드러냈다!',
-    'events.snow_siege_wave.caption_6': '울음소리! 큰늑대가 {p0}을 뚫었다!\n광장의 큰 화덕으로 향하고 있다!',
+    'events.snow_siege_wave.caption_6': '울음소리! 큰늑대가 {p0}을(를) 뚫었다!\n광장의 큰 화덕으로 향하고 있다!',
     'events.snow_siege_wave.say_5': '하얀 털빛의 거대한 늑대.\n눈보라가 그 몸에 휘감겨 있다.',
     'events.snow_siege_wave.say_6': '수비가 허술한 문으로\n늑대 무리가 연이어\n뛰어든다……!',
     'events.snow_siege_wave.say_7': '수비가 허술한 문으로\n늑대가 뛰어든다……!',
@@ -178,7 +178,7 @@
     'events.snow_dawn.caption_2': '소녀의 모습은 눈보라 속으로\n녹아들 듯 사라졌다.',
     'events.snow_dawn.say_3': ['{hero}! 큰 화덕 불이\n어젯밤보다 세졌어.', '동지의 불을 불씨로 나눠 담았어.\n봉우리로 가져가.\n얼음 벽도 이 불이라면 녹아.'],
     'events.snow_dawn.say_4': ['그리고 말이야, 파수꾼이 그러는데\n봉우리 입구의 얼음 벽이\n간밤에 녹았대.', '……그 이야기 속 아이의 불이\n먼저 닿았나 봐.'],
-    'events.snow_dawn.say.0': '{join}은 크게 당했네.\n……하지만 아무도 죽지 않았어.',
+    'events.snow_dawn.say.0': '{join}은(는) 크게 당했네.\n……하지만 아무도 죽지 않았어.',
     'events.snow_dawn.say.0.join': '과 ',
     'events.snow_dawn.say.1': '봉우리의 용은 부탁하네.',
     'events.snow_dawn.say.name_2': '요른',
@@ -326,6 +326,8 @@
     'events.yule_sculptor.say_2': ['나는 리사. 축제의 눈 조각을\n만들고 있어. ……그런데\n장식 재료가 모자라.', '맑은 얼음 조각,\n큰 화덕의 숯,\n눈 숲의 빨간 열매.'],
     'events.yule_sculptor.say_3': '셋 다 모이면 네가\n좋아하는 모양으로 만들어 줄게!',
     'events.yule_sculptor.say.0': '앞으로 {p0}개!',
+    'events.yule_sculptor.say.1': '{list}.',
+    'events.yule_sculptor.say.1.join': ', ',
     'events.yule_sculptor.i.choose': ['용', '늑대와 사냥꾼', '큰 화덕'],
     'events.yule_sculptor.i.choose.text': '어떤 조각으로 할까?',
     'events.yule_sculptor.caption': '리사와 아이들이\n눈을 다지고, 깎고, 장식을 달았다…….',

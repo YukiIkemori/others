@@ -1,5 +1,5 @@
 // 韓国語の文の表（events_ash）。key は日本語の表（src/i18n/ja/events_ash.js）と同じ。無い key は日本語が出る
-// 差し込み {hero} {name} などは日本語と同じ。人名・地名は scratchpad の ko_names.json・glossary.json の訳にそろえる
+// 差し込み {hero} {name} などは日本語と同じ。人名·地名は scratchpad の ko_names.json·glossary.json の訳にそろえる
 (function (R) {
   'use strict';
   R.I18n.add('ko', {
@@ -187,7 +187,7 @@
     'events.caldera_arena_zakuro_bag.say': '짐은 단단히 다시 묶여 있다.',
     'events.caldera_arena_zakuro_bag.say.0_2': '자쿠로의 짐이다.\n본인에게 허락을 받고 나서 하자.',
     'events.caldera_arena_zakuro.say': ['난 북쪽으로 간다.\n고용주에겐 그만뒀다고 전했어.', '……다음에 만날 땐\n고용된 몸이 아니었으면 좋겠군.'],
-    'events.caldera_arena_zakuro.say_2': ['졌다. 좋은 솜씨야.', '기록원에 고용돼서\n화구의 그림을 베끼는 일이었지.\n베끼면 이 땅의 싸움의 불씨가\n없어진다나.'],
+    'events.caldera_arena_zakuro.say_2': ['졌다. 좋은 솜씨야.', '기록원에 고용돼서\n화구의 그림을 베끼는 일이었지.\n베끼면 이 땅의 싸움의 불씨가 없어진다나.'],
     'events.caldera_arena_zakuro.say_3': '……베끼는 일은 그만둔다.\n뒷맛이 개운치 않아.',
     'events.caldera_arena_zakuro.say_4': ['그리고 이거다. 고용주한테서\n맡은 짐에 섞여 있었어.', '받는 사람이 달라. ……난 안 열어 봤다.'],
     'events.caldera_arena_zakuro.say_5': '남의 편지는 안 읽어.\n그런 규칙으로 살고 있거든.',

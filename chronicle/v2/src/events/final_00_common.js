@@ -64,11 +64,11 @@
     }
     return out;
   };
-  /** 文の最初の一文（「。」まで。改行はそのまま） */
+  /** 文の最初の一文（「。」まで。英語・韓国語は空白か終わりの前の . ! ?（… の点は除く）まで。改行はそのまま） */
   X.sentence = function (t) {
     const s = String(t || '');
-    const i = s.indexOf('。');
-    return i >= 0 ? s.slice(0, i + 1) : s;
+    const m = /[。！？]|[^.][.!?](?=\s|$)/.exec(s);   // i18n:ignore（文の区切りの記号）
+    return m ? s.slice(0, m.index + m[0].length) : s;
   };
   /** ボイスの先読み（まとめた版は束を読む。無くても進む） */
   X.preload = async function (ids) {
