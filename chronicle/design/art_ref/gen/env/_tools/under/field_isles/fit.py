@@ -122,6 +122,11 @@ if APPLY:
     # hand fits read off check.png (<id>/fix.json: solid [[x, y, ch?]], open [[x, y, ch?]])
     import os
     fx = json.load(open(aid + '/fix.json')) if os.path.exists(aid + '/fix.json') else {}
+    # retype (before the hand fixes below) {'T': 'r'}: a class the painting has no use for (islets without trees: the dark rock rim reads as 'tree')
+    for a_, b_ in (fx.get('retype') or {}).items():
+        for row in fit:
+            for i_, ch_ in enumerate(row):
+                if ch_ == a_: row[i_] = b_
     for r in fx.get('open_rect', []):
         for j in range(r[1], r[1] + r[3]):
             for i in range(r[0], r[0] + r[2]): fit[j][i] = r[4] if len(r) > 4 else ','

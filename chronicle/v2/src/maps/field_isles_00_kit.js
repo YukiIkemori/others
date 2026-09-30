@@ -35,8 +35,20 @@
         { type: 'examine', x: PH.door.x, y: PH.door.y, event: 'isles_ferry_closed', cond: { slice: true } });
     }
     ph.npcs = ph.npcs || [];
+    // 島々（生成したエリアのファイルは書き換えない）: 灯台島に着いたとき・座礁した商船の船長と、積荷を拾ったときのティア宝箱 3
+    const L = M.i_light, W = M.i_wreck;
+    if (L && !(L.triggers || []).some((t) => t.event === 'isles_light_arrive')) L.triggers = (L.triggers || []).concat([{ id: 'arrive', on: 'enter', event: 'isles_light_arrive' }]);
+    if (W) {
+      W.npcs = W.npcs || [];
+      if (!W.npcs.some((n) => n.id === 'wreck_captain')) {
+        W.npcs.push({ id: 'wreck_captain', look: 'npc_merchant_captain', name: '商船の船長', x: 22, y: 18, dir: 's', move: 'still', pushable: false, talk: 'isles_wreck', reward: null, key: 'wreck_captain', cond: '!isles_wreck_done' });
+        const CARGO = { choice: 'ch_isles_wreck', is: 'cargo' };
+        W.objects.push({ type: 'chest', id: 'i_wreck_cargo1', x: 18, y: 19, pool: 'p_T', cond: CARGO }, { type: 'chest', id: 'i_wreck_cargo2', x: 27, y: 18, pool: 'p_T', cond: CARGO },
+          { type: 'chest', id: 'i_wreck_cargo3', x: 29, y: 19, pool: 'p_T', cond: CARGO });
+      }
+    }
     if (!ph.npcs.some((n) => n.id === 'ferry_hand')) {
-      ph.npcs.push({ id: 'ferry_hand', look: 'npc_isles_sailor', name: '定期船の水夫', x: PH.hand.x, y: PH.hand.y, dir: 'w', move: 'still', pushable: false, talk: 'isles_ferry_hand', reward: 'lead', cond: OFF });
+      ph.npcs.push({ id: 'ferry_hand', look: 'npc_isles_sailor', name: '定期船の水夫', x: PH.hand.x, y: PH.hand.y, dir: 'w', move: 'still', pushable: false, talk: 'isles_ferry_hand', reward: 'lead', key: 'ferry_hand', cond: OFF });
     }
   }
   if (R.onData) R.onData(() => R.onData(link));

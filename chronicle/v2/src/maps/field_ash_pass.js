@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("a_pass", {
-    name: "灰かぶりの峠", region: "r_ash", outside: "rock",
+    name: R.T('map.field_ash_pass.a_pass.name'), region: "r_ash", outside: "rock",
     legend: R.FieldArea.ASH_LEGEND, theme: 'ash', bgm: 'overworld', bbg: 'ash', propSet: 'ash', propSetBase: 'village',
     light: R.FieldArea.ASH_LIGHT,
     rows: [
@@ -51,23 +51,23 @@
       "RRRRRRRRRRRRussssssssssss.sssssssssssssssssuuuuuuuus",
     ],
     objects: [
-      {"type":"sign","x":6,"y":22,"text":"灰の荒野\n東 → 炎の町カルデラ"},
-      {"type":"sign","x":29,"y":22,"text":"南 → 灰の古戦場\n折れた剣の碑"},
+      {"type":"sign","x":6,"y":22,"text":R.T('map.field_ash_pass.a_pass.objects.0.text')},
+      {"type":"sign","x":29,"y":22,"text":R.T('map.field_ash_pass.a_pass.objects.1.text')},
       {"type":"waylamp","id":"wl_a_pass_1","x":12,"y":21,"lit":true},
       {"type":"waylamp","id":"wl_a_pass_2","x":31,"y":20,"lit":true},
       {"type":"prop","id":"tent","x":14,"y":10},
       {"type":"prop","id":"lantern","x":12,"y":11},
     ],
     npcs: [
-      {"id":"ash_traveler","look":"npc_traveler","name":"灰の荒野の旅人","x":14,"y":12,"dir":"s","move":"still","talk":"ash_world_traveler","reward":"news","key":"world_ash_traveler"},
+      {"id":"ash_traveler","look":"npc_traveler","name":R.T('map.field_ash_pass.a_pass.ash_traveler.name'),"x":14,"y":12,"dir":"s","move":"still","talk":"ash_world_traveler","reward":"news","key":"world_ash_traveler"},
     ],
     spawns: {"west":{"x":1,"y":19,"dir":"e"},"east":{"x":50,"y":18,"dir":"w"},"south":{"x":25,"y":38,"dir":"n"}},
     exits: [{"x":0,"y":19,"w":1,"h":2,"to":{"map":"d_east","spawn":"pass"}},{"x":51,"y":18,"w":1,"h":2,"to":{"map":"a_lava","spawn":"west"}},{"x":25,"y":39,"w":2,"h":1,"to":{"map":"a_battle","spawn":"north"}}],
     triggers: [],
     tilePatches: [],
     zones: [{"rect":[0,15,55,7],"zone":"zw_ash_road"},{"rect":null,"zone":"zw_ash_plain"}],
-    art: {"image":"field/under/a_pass","painted":[],"overlay":"field/under/a_pass_over"},
-    meta: {"sub":"砂漠から灰の荒野へ抜ける峠","worldRect":[285,393,96,48]},
+    art: {"image":"field/under/a_pass","painted":[]},
+    meta: {"sub":R.T('map.field_ash_pass.a_pass.meta.sub'),"worldRect":[285,393,96,48]},
     links: {},
   });
 })(window.RPG);

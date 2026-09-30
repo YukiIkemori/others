@@ -22,7 +22,7 @@ const argv = process.argv.slice(2);
 const VERBOSE = argv.includes('--verbose');
 let R = null, M = null;
 /** 縦切り（slice）では峠の番人の先にある地方（3b） */
-const SLICE_OUT = ['r_desert', 'r_snow', 'r_marsh', 'r_ash'];
+const SLICE_OUT = ['r_desert', 'r_snow', 'r_marsh', 'r_ash', 'r_isles'];
 let SLICE0 = null;
 /** 縦切りの錠を外す（同じ R の中だけ。本物の config のファイルは変えない） */
 function sliceOff() { if (SLICE0 === null) SLICE0 = !!(R.DB.config && R.DB.config.slice); if (R.DB.config) R.DB.config.slice = false; R.MapUtil.invalidate(); }
@@ -259,6 +259,16 @@ function main() {
         ok(`八百長=${bribe} 年代記=${write}${restricted ? '（隠し通路・寄り道・依頼なし）' : ''}: 大会 5 回戦 → 優勝 → 壁画 3 つ → 番犬 → 巨獣 → 卵 → clearRegion('r_ash')`,
           !!(r.flags.ash_champion && r.flags.ash_hound && r.flags.ash_mural_3 && r.flags.ash_lavabeast && r.flags.cleared_r_ash && r.flags.ash_finale_done),
           { champion: !!r.flags.ash_champion, hound: !!r.flags.ash_hound, murals: [1, 2, 3].map((n) => !!r.flags['ash_mural_' + n]), beast: !!r.flags.ash_lavabeast, cleared: !!r.flags.cleared_r_ash });
+      }
+    }
+    // マレア諸島（作った地方。regions の slice:'locked' は体験版の錠として残す）: 商船の選択 × 年代記。寄り道・依頼なしも 1 本
+    if (R.DB.regions.r_isles && (R.DB.regions.r_isles.dungeons || []).length) {
+      section('2f. マレア諸島の閉包（clearRegion(\'r_isles\')）');
+      for (const [wreck, write, restricted] of [['help', 'pain', false], ['cargo', 'story', false], ['help', 'story', true]]) {
+        const r = closure({ variant: Object.assign({}, variants[0], { ch_isles_wreck: wreck, ch_isles_write: write }), restricted });
+        ok(`商船=${wreck} 年代記=${write}${restricted ? '（隠し通路・寄り道・依頼なし）' : ''}: 洞窟の貝がら → 外洋船 → 海図 → マリナの舟歌 → 幽霊船 → 船長 → 夜明け → clearRegion('r_isles')`,
+          !!(r.flags.isles_shell && r.flags.isles_ship && r.flags.isles_fog_found && r.flags.isles_song_done && r.flags.isles_captain && r.flags.cleared_r_isles && r.flags.isles_finale_done),
+          { shell: !!r.flags.isles_shell, ship: !!r.flags.isles_ship, fog: !!r.flags.isles_fog_found, song: !!r.flags.isles_song_done, captain: !!r.flags.isles_captain, cleared: !!r.flags.cleared_r_isles });
       }
     }
     section('3. 全マップの到達（縦切りの錠を外した全体の筋）');

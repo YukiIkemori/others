@@ -61,6 +61,13 @@ for (const T of [1, 3]) {
   BOSSES['tr_b_lavabeast' + k] = { troop: 'tr_b_lavabeast', tier: T, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 13], note: '背の火口がふくれたら守る。半分で冷えて硬くなる' };
 }
 
+// マレア諸島（src/data/bosses_isles.js）。好きな順に遊ぶので、ティア 1・3 で測る
+for (const T of [1, 3]) {
+  const k = '@' + T;
+  BOSSES['tr_b_octopus' + k] = { troop: 'tr_b_octopus', tier: T, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 10], note: '水面が渦を巻いたら守る。足は生えてくる' };
+  BOSSES['tr_b_captain' + k] = { troop: 'tr_b_captain', tier: T, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 13], note: '大砲に火縄を回したら守る。光と火が効く。半分で怒る' };
+}
+
 function loadR() { return require('./lib/load')({ quiet: true }); }
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : 0);
 

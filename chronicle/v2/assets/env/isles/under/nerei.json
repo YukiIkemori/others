@@ -1,0 +1,20 @@
+{
+ "id": "nerei",
+ "kind": "under",
+ "map": "nerei",
+ "tile": 32,
+ "size32": [
+  1280,
+  1408
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.8,
+ "files": {
+  "24": "nerei@24.png",
+  "32": "nerei@32.png",
+  "40": "nerei@40.png"
+ },
+ "src": "generated"
+}

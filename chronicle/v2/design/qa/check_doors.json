@@ -1,377 +1,394 @@
 {
- "date": "2026-09-29T23:04:59.431Z",
+ "date": "2026-09-30T00:33:00.492Z",
  "fixture": "content_p_pharos",
  "walked": [
   {
-   "map": "a_battle",
-   "kind": "exit",
-   "id": "25,0",
-   "at": "a_pass",
-   "to": "a_pass",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    25,
-    4
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_inn",
+   "at": [
+    8,
+    24
    ],
-   "ms": 3773
+   "to": "coral_inn",
+   "ok": false,
+   "steps": 4,
+   "why": "no path from 8,24",
+   "start": [
+    6,
+    26
+   ],
+   "ms": 39178
   },
   {
-   "map": "a_beach",
-   "kind": "exit",
-   "id": "7,0",
-   "at": "a_lava",
-   "to": "a_lava",
-   "ok": true,
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_harbormaster",
+   "at": [
+    9,
+    9
+   ],
+   "to": "coral_harbormaster",
+   "ok": false,
    "steps": 4,
-   "why": null,
+   "why": "no path from 9,9",
    "start": [
     7,
-    4
+    11
    ],
-   "ms": 3436
+   "ms": 44228
   },
   {
-   "map": "a_bridge",
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_house1",
+   "at": [
+    30,
+    9
+   ],
+   "to": "coral_house1",
+   "ok": false,
+   "steps": 4,
+   "why": "no path from 30,9",
+   "start": [
+    28,
+    11
+   ],
+   "ms": 43339
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_house2",
+   "at": [
+    30,
+    24
+   ],
+   "to": "coral_house2",
+   "ok": false,
+   "steps": 4,
+   "why": "no path from 30,24",
+   "start": [
+    28,
+    26
+   ],
+   "ms": 20039
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_tavern",
+   "at": [
+    16,
+    24
+   ],
+   "to": "coral_tavern",
+   "ok": false,
+   "steps": 4,
+   "why": "no path from 16,24",
+   "start": [
+    14,
+    26
+   ],
+   "ms": 21536
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_house3",
+   "at": [
+    39,
+    24
+   ],
+   "to": "coral_house3",
+   "ok": false,
+   "steps": 4,
+   "why": "no path from 39,24",
+   "start": [
+    37,
+    26
+   ],
+   "ms": 20524
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_items",
+   "at": [
+    9,
+    37
+   ],
+   "to": "coral_items",
+   "ok": false,
+   "steps": 4,
+   "why": "no path from 9,37",
+   "start": [
+    7,
+    39
+   ],
+   "ms": 22524
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_arms",
+   "at": [
+    15,
+    37
+   ],
+   "to": "coral_arms",
+   "ok": false,
+   "steps": 4,
+   "why": "no path from 15,37",
+   "start": [
+    13,
+    39
+   ],
+   "ms": 22380
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_guild",
+   "at": [
+    33,
+    38
+   ],
+   "to": "coral_guild",
+   "ok": false,
+   "steps": 4,
+   "why": "no path from 33,38",
+   "start": [
+    30,
+    39
+   ],
+   "ms": 21499
+  },
+  {
+   "map": "coral",
    "kind": "exit",
-   "id": "22,0",
-   "at": "m_bog",
-   "to": "m_bog",
+   "id": "21,0",
+   "at": "i_cliff",
+   "to": "i_cliff",
    "ok": true,
    "steps": 3,
    "why": null,
    "start": [
-    22,
-    4
-   ],
-   "ms": 3847
-  },
-  {
-   "map": "a_beach",
-   "kind": "exit",
-   "id": "48,0",
-   "at": "a_foot",
-   "to": "a_foot",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    48,
-    4
-   ],
-   "ms": 4684
-  },
-  {
-   "map": "a_bridge",
-   "kind": "exit",
-   "id": "21,39",
-   "at": "a_foot",
-   "to": "a_foot",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
     21,
-    35
-   ],
-   "ms": 2099
-  },
-  {
-   "map": "a_bridge",
-   "kind": "exit",
-   "id": "15,22",
-   "at": "haimi_inn",
-   "to": "haimi_inn",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    15,
-    26
-   ],
-   "ms": 2508
-  },
-  {
-   "map": "a_foot",
-   "kind": "exit",
-   "id": "20,0",
-   "at": "a_bridge",
-   "to": "a_bridge",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    20,
     4
    ],
-   "ms": 1999
+   "ms": 3964
   },
   {
-   "map": "a_foot",
+   "map": "i_cape",
    "kind": "exit",
-   "id": "0,21",
-   "at": "caldera",
-   "to": "caldera",
+   "id": "0,25",
+   "at": "i_cove",
+   "to": "i_cove",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
-    3,
+    1,
     22
    ],
-   "ms": 3167
+   "ms": 6930
   },
   {
-   "map": "a_foot",
+   "map": "i_cliff",
    "kind": "exit",
-   "id": "14,43",
-   "at": "a_beach",
-   "to": "a_beach",
+   "id": "12,37",
+   "at": "coral",
+   "to": "coral",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    14,
-    39
+    13,
+    33
    ],
-   "ms": 1561
+   "ms": 5094
   },
   {
-   "map": "a_lava",
+   "map": "i_cliff",
    "kind": "exit",
-   "id": "0,20",
-   "at": "a_pass",
-   "to": "a_pass",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    0,
-    16
-   ],
-   "ms": 1790
-  },
-  {
-   "map": "a_lava",
-   "kind": "exit",
-   "id": "15,0",
-   "at": "a_spa",
-   "to": "a_spa",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    15,
-    4
-   ],
-   "ms": 1744
-  },
-  {
-   "map": "a_lava",
-   "kind": "exit",
-   "id": "59,20",
-   "at": "caldera",
-   "to": "caldera",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    56,
-    19
-   ],
-   "ms": 3338
-  },
-  {
-   "map": "a_lava",
-   "kind": "exit",
-   "id": "48,43",
-   "at": "a_beach",
-   "to": "a_beach",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    47,
-    40
-   ],
-   "ms": 1805
-  },
-  {
-   "map": "a_pass",
-   "kind": "exit",
-   "id": "51,18",
-   "at": "a_lava",
-   "to": "a_lava",
+   "id": "51,19",
+   "at": "i_cove",
+   "to": "i_cove",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
     51,
-    14
+    15
    ],
-   "ms": 1493
+   "ms": 5024
   },
   {
-   "map": "a_pass",
+   "map": "coral",
+   "kind": "door",
+   "id": "",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    36,
+    56
+   ],
+   "ms": 22151
+  },
+  {
+   "map": "i_cove",
    "kind": "exit",
-   "id": "0,19",
-   "at": "d_east",
-   "to": "d_east",
+   "id": "0,10",
+   "at": "i_cliff",
+   "to": "i_cliff",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
     0,
-    15
+    6
    ],
-   "ms": 2579
+   "ms": 6945
   },
   {
-   "map": "a_pass",
+   "map": "i_cove",
    "kind": "exit",
-   "id": "25,39",
-   "at": "a_battle",
-   "to": "a_battle",
+   "id": "55,11",
+   "at": "i_cape",
+   "to": "i_cape",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    25,
-    35
+    55,
+    7
    ],
-   "ms": 1767
+   "ms": 4332
   },
   {
-   "map": "a_spa",
-   "kind": "exit",
-   "id": "23,39",
-   "at": "a_lava",
-   "to": "a_lava",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    23,
-    35
-   ],
-   "ms": 2110
-  },
-  {
-   "map": "ash_volcano_2",
+   "map": "i_cove",
    "kind": "stairs",
-   "id": "volcano_2_down",
-   "at": "ash_volcano_1",
-   "to": "ash_volcano_1",
-   "ok": true,
+   "id": "",
+   "at": [
+    47,
+    25
+   ],
+   "to": "isles_cave_1",
+   "ok": false,
+   "steps": 3,
+   "why": "no path from 47,25",
+   "start": [
+    47,
+    29
+   ],
+   "ms": 22587
+  },
+  {
+   "map": "i_light",
+   "kind": "exit",
+   "id": "20,9",
+   "at": [
+    20,
+    9
+   ],
+   "to": "isles_lamproom",
+   "ok": false,
    "steps": 4,
-   "why": null,
+   "why": "no path from 20,9",
+   "start": [
+    20,
+    13
+   ],
+   "ms": 23099
+  },
+  {
+   "map": "i_cape",
+   "kind": "exit",
+   "id": "21,0",
+   "at": [
+    21,
+    0
+   ],
+   "to": "nerei",
+   "ok": false,
+   "steps": 10,
+   "why": "timeout 90 s",
    "start": [
     21,
-    30
+    4
    ],
-   "ms": 7053
-  },
-  {
-   "map": "ash_volcano_1",
-   "kind": "exit",
-   "id": "26,47",
-   "at": "a_foot",
-   "to": "a_foot",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    26,
-    43
-   ],
-   "ms": 8024
-  },
-  {
-   "map": "haimi_inn",
-   "kind": "exit",
-   "id": "7,11",
-   "at": "a_bridge",
-   "to": "a_bridge",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    6,
-    8
-   ],
-   "ms": 1447
+   "ms": 95469
   }
  ],
  "looks": [
   {
-   "map": "a_pass",
-   "npc": "ash_traveler",
-   "look": "npc_traveler",
-   "art": "npc_traveler",
+   "map": "coral",
+   "npc": "drake",
+   "look": "npc_drake",
+   "art": "npc_drake",
    "ok": true
   },
   {
-   "map": "ash_volcano_1",
-   "npc": "copyist_a",
-   "look": "npc_scribe",
-   "art": "npc_scribe",
+   "map": "coral",
+   "npc": "gate_sailor",
+   "look": "npc_isles_sailor",
+   "art": "npc_isles_sailor",
    "ok": true
   },
   {
-   "map": "ash_volcano_1",
-   "npc": "copyist_b",
-   "look": "npc_scribe",
-   "art": "npc_scribe",
+   "map": "coral",
+   "npc": "widow",
+   "look": "npc_isles_old_f",
+   "art": "npc_isles_old_f",
    "ok": true
   },
   {
-   "map": "ash_volcano_2",
-   "npc": "fine",
-   "look": "fine",
-   "art": "fine",
+   "map": "coral",
+   "npc": "shell_kid",
+   "look": "npc_isles_child",
+   "art": "npc_isles_child",
    "ok": true
   },
   {
-   "map": "haimi_inn",
-   "npc": "haimi_keeper",
-   "look": "npc_ash_old_f",
-   "art": "npc_ash_old_f",
+   "map": "coral",
+   "npc": "idle_sailor",
+   "look": "npc_isles_man",
+   "art": "npc_isles_man",
    "ok": true
   },
   {
-   "map": "haimi_inn",
-   "npc": "haimi_bridgeman",
-   "look": "npc_ash_old_m",
-   "art": "npc_ash_old_m",
+   "map": "coral",
+   "npc": "child",
+   "look": "npc_isles_child",
+   "art": "npc_isles_child",
    "ok": true
   },
   {
-   "map": "haimi_inn",
-   "npc": "haimi_guest",
-   "look": "npc_traveler",
-   "art": "npc_traveler",
+   "map": "coral",
+   "npc": "ferry_hand",
+   "look": "npc_isles_sailor",
+   "art": "npc_isles_sailor",
+   "ok": true
+  },
+  {
+   "map": "coral",
+   "npc": "pier_fisher",
+   "look": "npc_isles_old_m",
+   "art": "npc_isles_old_m",
+   "ok": true
+  },
+  {
+   "map": "coral",
+   "npc": "dog",
+   "look": "ani_dog",
+   "art": "ani_dog",
    "ok": true
   }
  ],
- "skipped": [
-  {
-   "map": "a_foot",
-   "kind": "stairs",
-   "id": "",
-   "to": "ash_volcano_1",
-   "cond": "ash_champion"
-  },
-  {
-   "map": "ash_volcano_1",
-   "kind": "stairs",
-   "id": "volcano_1_up",
-   "to": "ash_volcano_2",
-   "cond": {
-    "var": "ash_murals",
-    "gte": 3
-   }
-  }
- ],
+ "skipped": [],
  "errors": []
 }

@@ -2,7 +2,7 @@ import json, sys, numpy as np
 from PIL import Image
 from scipy import ndimage
 src = sys.argv[1]
-d = json.load(open('layout_data.json')); W, H = d['w'], d['h']; T = 32
+d = json.load(open('layout.json')); W, H = d['w'], d['h']; T = 32
 A = np.asarray(Image.open(src).convert('RGB').resize((W * T, H * T), Image.BOX)).astype(float)
 L = A.mean(2)
 dark = ndimage.uniform_filter((L < 40).astype(float), (22, 14))

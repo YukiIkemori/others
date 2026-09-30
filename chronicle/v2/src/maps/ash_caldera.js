@@ -74,77 +74,77 @@
     // 戸の前（出て着く所）
     for (const b of [bItems, bTav, bArms, bTemple, bInn, bDorga, bHouse, bArena, bForge, bStore, bHut]) if ('FMX%h'.includes(g[b.door.y + 1][b.door.x])) g[b.door.y + 1][b.door.x] = 'a';
 
-    // ---------------------------------------------------------------- 下絵に合わせた当たり（design/ENV_ASSETS.md §7 の 6）: 描いた輪は円より四角いので、
-    //   縁の道・段の崖・外の岩のマスを絵に合わせる（' ' = そのまま。scratchpad の fit_town.py が絵から作った）
+    // ---------------------------------------------------------------- 下絵に合わせた当たり（design/ENV_ASSETS.md §7 の 6）: 描いた輪（2026-09-29 に丸い輪で描き直し）の
+    //   縁の道・段の崖・外の岩・溶岩の堀・湯のマスを絵に合わせる（' ' = そのまま。design/art_ref/gen/env/_tools/under/field_ash/caldera.py fit が絵から作った）
     const FIT = [
       "                                                      ",
       "                                                      ",
-      "                                                      ",
-      "                   a M          MMaa                  ",
-      "                  MMM            MMM                  ",
-      "                MMM      FFFF       MM                ",
-      "              MMM     aa     aaaa    MMMM             ",
-      "              MM   aaaaa       aaaa    MMM            ",
-      "             F   aa                      M            ",
-      "           FF    a                       MMM          ",
-      "          F                                MM         ",
-      "        MM                                  MMM       ",
-      "        M                                    MM       ",
-      "        M                                             ",
-      "       MM                                     F M     ",
-      "      MM                                       MM     ",
-      "      M                                         MM    ",
-      "     M                                       aa MM    ",
-      "     M                                           MM   ",
-      "    MM                                         a MM   ",
-      "    M                                          a  M   ",
-      "   MM                                             M   ",
-      "   MM                                             MM  ",
-      "   M                                               M  ",
-      "   M                                               M  ",
-      "      a                                         a     ",
-      "                                                      ",
-      "                                                      ",
-      "   M                                              MM  ",
-      "   M  a                                         a  M  ",
-      "   M                                               M  ",
-      "   M                                               M  ",
-      "   M                                              MM  ",
-      "   M                                               M  ",
-      "    M                                             M   ",
-      "    M                                            MM   ",
-      "                                                 M    ",
-      "     M                                           M    ",
-      "     M                                           M    ",
-      "      M                                         M     ",
-      "      M                                        MM     ",
-      "       M                                       M      ",
-      "        M                                     M       ",
-      "        MM                                    M       ",
-      "         M                                   M        ",
-      "          M                                 M         ",
-      "          aM                                a         ",
-      "            aF        aa       aa       F a           ",
-      "             aF       aaaaaaaaaaa       Fa            ",
-      "              aaF                      aa             ",
-      "                aaF                 Faa               ",
-      "                  a a             aaa                 ",
-      "                            a                         ",
-      "                                                      ",
+      "                 aaa            a aaa                 ",
+      "              aaa  aaM            a  aaa              ",
+      "            aaa  a       F             aa             ",
+      "           aaa a        FMM MM          aaa           ",
+      "          aa a        aa MMMMMaaa       M aa          ",
+      "         aa a     Maaaaa       aaaaMF      a          ",
+      "        aa      MMM                MMM      a         ",
+      "       aa      MMa                   aMM   M aa       ",
+      "      aa      Ma                       MM   M a       ",
+      "     aa M   FMM                         M    M a      ",
+      "     aa     Ma                                Maa     ",
+      "    aa     Ma                              a  M a     ",
+      "    aaM   M                               FMa  M a    ",
+      "    a    aM           a         a          Maa  Ma    ",
+      "   aaM   M              cc                  Ma  M a   ",
+      "   a    a          M  c            a    M  FFMa  Ma   ",
+      "   aMF  a         M              %  a            M a a",
+      "  a  F           a       XXXX        a  M      a  Ma a",
+      "  a  F                 X                M      a  Maaa",
+      "  a  F            %   X             % a M      a   Maa",
+      "aa   F         a     X                 a       aa  M a",
+      "a    F           %                   % a        a  M a",
+      "a a  F                            c           MMa    a",
+      "a a  FMM        c                              Fa     ",
+      "                                   M                  ",
+      "                   M               M                  ",
+      "     F             M               M    M          M  ",
+      "  a  MM         c                  M    %%%     M     ",
+      "  a  FM                                         M     ",
+      "  a  FMa            M             M             M     ",
+      "  a   MM       a     M                 a       MM     ",
+      "      MM              M                      M MM     ",
+      "   a  MM                                MM MMMMM      ",
+      "   a   MM     M  a                            MM      ",
+      "       MM     M   a  %                        MF      ",
+      "    a   MMM        a   %        c            MM   a   ",
+      "        MM           a     a%     %          MF       ",
+      "     a   MM           aaa           %%      MM   a    ",
+      "          MM                                MM        ",
+      "      a    MM                             aMM   a     ",
+      "       a    MM          hhhhh            aMMF  a      ",
+      "             MMM      hh                a MM   a      ",
+      "        a     aMMM   h         aa      aMMM   a       ",
+      "         a     aaMMM             a    aMMM   a        ",
+      "                 aaMM              aaaMMM   aa        ",
+      "            a      aaaaM       hhaaaMMMM  aaa         ",
+      "                      aaaaaahhhhhFMMMM   aaa          ",
+      "                               M  M    aaaa           ",
+      "                  M                  aaaaa            ",
+      "                     M            aaaaaa              ",
+      "                        aaaaaaaaaaaaaa                ",
+      "                            aaaaaaa                   ",
     ];
     FIT.forEach((r, y) => [...r].forEach((ch, x) => { if (ch !== ' ') g[y][x] = ch; }));
 
     // ---------------------------------------------------------------- 物: 掲示板・湯・灯籠（依頼）・宝箱・かがり火・溶岩の照り返し
     // 飾りの小物（樽・岩・布など）は下絵に描く（持ち主の決まり 2026-09-28）。ここに置くのは働く物（調べる物・宝箱・灯り）だけ
     O.push(K.prop('board', 23, 33), K.exam(23, 33, 'caldera_board'));                  // 闘技場の壁の掲示板
-    O.push(K.exam(26, 43, 'caldera_spa'), K.exam(27, 43, 'caldera_spa'), K.exam(28, 43, 'caldera_spa'));   // 町の湯（温泉）
-    // 【灯りを守る】崖の上の灯籠 3（冷えた石灯籠は下絵。ともすと、かがり火の灯り）
-    for (const [n, x, y] of [[1, 9, 16], [2, 45, 16], [3, 21, 47]]) O.push(K.exam(x, y, 'caldera_lantern', { lamp: n }), K.prop('iron_brazier', x, y, { cond: 'ash_lantern_' + n }));
+    O.push(K.exam(26, 42, 'caldera_spa'), K.exam(27, 42, 'caldera_spa'), K.exam(28, 42, 'caldera_spa'));   // 町の湯（温泉。描いた湯の北の縁）
+    // 【灯りを守る】崖の上の灯籠 3（冷えた灯籠 = 灰の道しるべの柱の消えた絵を下絵に描きこみ。ともすと、かがり火の灯り）
+    for (const [n, x, y] of [[1, 9, 16], [2, 44, 16], [3, 20, 46]]) O.push(K.exam(x, y, 'caldera_lantern', { lamp: n }), K.prop('iron_brazier', x, y, { cond: 'ash_lantern_' + n }));
     // 町の宝箱 2（見える所だけ）
     O.push(K.chest('caldera_c1', 35, 5, { pool: 'p_T' }), K.chest('caldera_c2', 14, 42, { item: 'i_ether', n: 2 }));
     // かがり火（崖・岩の上。道・戸口の前・出入り口には置かない）と、溶岩の堀の照り返し（光だけ）
-    for (const [x, y] of [[6, 30], [47, 31], [17, 4], [37, 4], [11, 40], [44, 40]]) O.push(K.prop('iron_brazier', x, y));
-    for (const [x, y] of [[22, 15], [32, 15], [17, 19], [37, 19], [16, 23], [38, 30], [17, 35], [37, 35], [22, 38], [32, 38]]) O.push(K.prop('lava_glow', x, y));
+    for (const [x, y] of [[6, 30], [47, 31], [16, 4], [37, 4], [11, 40], [44, 40]]) O.push(K.prop('iron_brazier', x, y));
+    for (const [x, y] of [[23, 15], [31, 15], [18, 19], [36, 19], [16, 23], [38, 30], [17, 34], [37, 35], [22, 38], [32, 38]]) O.push(K.prop('lava_glow', x, y));
     // 門の看板（門のわきの岩）
     O.push(K.sign(2, 25, R.T('map.ash_caldera.sign')), K.sign(51, 25, R.T('map.ash_caldera.sign_2')));
 

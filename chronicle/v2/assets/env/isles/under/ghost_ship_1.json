@@ -1,0 +1,19 @@
+{
+ "id": "ghost_ship_1",
+ "kind": "under",
+ "map": "ghost_ship_1",
+ "tile": 32,
+ "size32": [
+  1792,
+  960
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 1.0,
+ "files": {
+  "24": "ghost_ship_1@24.png",
+  "32": "ghost_ship_1@32.png"
+ },
+ "src": "generated"
+}

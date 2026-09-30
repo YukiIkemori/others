@@ -29,68 +29,60 @@ def bld(a, bid, x, y, w, h, dx, text, color=WHITE):
 
 # ======================================================================== towns
 def coral():
-    """港町コーラル: white houses on terraces stacked up a sea cliff (WORLD §5.8). Top: the north gate (bridge to the cliff road), the harbour
-    master's house, the lookout. Middle tiers: inn, tavern, houses; shops and the sailors' guild. Bottom: the quay with the shipyard and
-    its slipway, the widows' wall on the terrace face, the own ship's pier and the ferry's T-pier; two masts of sunken warships in the
-    harbour water."""
-    a = Area('coral', 48, 64, 6101, base=',')
+    """港町コーラル (48 x 64), re-measured on the painting coral/gen1.png (the painter moved the terraces and doors by 1-3 cells from the
+    first guide, so the layout below follows the picture; the guide of the generation was the first version, kept in guide_48.png).
+    Terraces (white retaining walls with planters) = 'X' (fit.py leaves 'X' and 'c' alone), gardens = grass for fit.py to settle.
+    Top: the north bridge (x 21-24) and tier 1 (harbour master, house1). Tier 2: inn, tavern, house2, house3. Tier 3: item shop, weapon
+    shop, the sailors' guild (house4 has no painted door: solid). Bottom: the quay (rows 44-50) with the shipyard shed (solid, the boat
+    on its slip is scenery), the widows' wall on the lowest terrace face (x 27-37, row 42), the middle pier (the own ship) and the
+    ferry's T-pier; two sunken masts in the water. Main stairs x 21-24 on every terrace, side stairs x 41-42 (tier 3 -> quay) and a small
+    stair nook at x 11 (tier 2 -> an alley between the shops, a shell to find at its end)."""
+    a = Area('coral', 48, 64, 6101, base='X')
     W, H = a.W, a.H
-    a.mask_fill(fbm(3, W, H, 7) > 0.62, ';', only=',')
-    # the sea (S and the shipyard's inlet W)
     a.rect(0, 51, W, H - 51, '~', force=True)
-    a.rect(0, 49, 13, 2, '~', force=True)
-    # cliffs on the map edges, the north cliff with the gate gap
-    a.rect(0, 0, W, 3, 'R', force=True); a.rect(0, 0, 2, 49, 'R', force=True); a.rect(46, 0, 2, 51, 'R', force=True)
-    # terrace faces (white retaining walls) with stair gaps
-    for (y, gaps) in [(14, [(22, 25)]), (27, [(11, 13), (22, 25)]), (40, [(22, 25), (41, 43)])]:
-        for x in range(2, 46):
-            if not any(g0 <= x <= g1 for g0, g1 in gaps):
-                a.put(x, y, 'R', True); a.put(x, y + 1, 'R', True)
-        for g0, g1 in gaps:
-            a.rect(g0, y, g1 - g0 + 1, 2, 'c', force=True, keep=True)
-            a.mark('stairs%d_%d' % (y, g0), [(x, yy) for x in range(g0, g1 + 1) for yy in (y, y + 1)], 'long flights of white STONE STEPS going down the terrace wall (walkable)', (214, 212, 204), solid=False)
-    # the main street (N-S) and the terrace walks
-    a.rect(22, 0, 4, 51, 'c', force=True, keep=True)
-    a.rect(22, 0, 4, 3, '=', force=True, keep=True)
-    for y0 in (10, 23, 36):
-        a.rect(2, y0, 44, 3, 'c', force=True)
-    # the quay
-    a.rect(13, 42, 33, 9, 'c', force=True)
-    a.rect(2, 42, 11, 7, 'c', force=True)
-    # buildings
-    bld(a, 'coral_harbormaster', 5, 4, 7, 6, 3, "a whitewashed HOUSE with a blue flat roof edge and a flagpole (the harbour master's house)")
-    bld(a, 'coral_house1', 30, 5, 6, 5, 2, 'a small whitewashed HOUSE with a blue door and a flat roof')
-    bld(a, 'coral_inn', 3, 16, 8, 7, 3, 'the INN: a long two-storey whitewashed house with blue shutters and a roof terrace')
-    bld(a, 'coral_tavern', 13, 16, 8, 7, 3, 'the TAVERN: a whitewashed house with a big blue door, barrels by the wall, a hanging anchor emblem')
-    bld(a, 'coral_house2', 29, 18, 6, 5, 2, 'a small whitewashed HOUSE with a blue flat roof edge')
-    bld(a, 'coral_house3', 37, 17, 7, 6, 3, 'a whitewashed HOUSE with a little blue dome')
-    bld(a, 'coral_items', 3, 30, 7, 6, 3, 'the ITEM SHOP: a whitewashed house with a striped blue awning')
-    bld(a, 'coral_arms', 12, 30, 7, 6, 3, 'the WEAPON SHOP: a whitewashed house with a crossed-swords sign board and an iron-banded door')
-    bld(a, 'coral_guild', 29, 29, 9, 7, 4, "the SAILORS' GUILD HALL: the biggest white building, a blue tiled roof, a signal mast with coloured flags on top")
-    bld(a, 'coral_house4', 40, 31, 5, 5, 2, 'a small whitewashed HOUSE')
-    bld(a, 'coral_shipyard', 2, 42, 10, 6, 5, "the SHIPYARD: a wide timber shed with a sloping roof open towards the sea, piles of planks, ropes, a half-built boat's ribs inside")
-    # the slipway from the shipyard into the inlet (walkable planks)
-    a.rect(4, 48, 4, 5, '=', force=True, keep=True)
-    a.mark('slip', [(x, y) for x in range(4, 8) for y in range(48, 53)], 'a wooden SLIPWAY of greased planks and rails sloping from the shipyard down into the water (walkable)', (150, 104, 60), solid=False)
-    # the widows' wall: names carved on the face of the lowest terrace
-    a.mark('widows', [(x, 41) for x in range(28, 36)], "a long stretch of the white terrace wall covered in CARVED NAMES in neat rows, a few faded ribbons and dried flowers tucked into the joints (the widows' wall)", (206, 196, 176))
+    # tier 1 (rows 3-9) gardens and the walk (rows 10-11)
+    a.rect(2, 3, 44, 7, ',', force=True)
+    a.rect(2, 10, 44, 2, 'c', force=True, keep=True)
+    # tier 2 walk (rows 25-26), tier 3 walk (rows 38-39), the quay (rows 44-50)
+    a.rect(2, 25, 44, 2, 'c', force=True, keep=True)
+    a.rect(2, 38, 44, 2, 'c', force=True, keep=True)
+    a.rect(13, 44, 33, 7, 'c', force=True, keep=True)
+    # the main street and its stairs; the bridge
+    a.rect(21, 0, 4, 51, 'c', force=True, keep=True)
+    a.rect(21, 0, 4, 3, '=', force=True, keep=True)
+    for y0, y1 in ((12, 15), (27, 29), (40, 43)):
+        a.mark('stairs%d' % y0, [(x, y) for x in range(21, 25) for y in range(y0, y1 + 1)], 'white STONE STEPS', (214, 212, 204), solid=False)
+    # side stairs (tier 3 -> quay) and the nook at x 11 (tier 2 -> the alley between the item and weapon shops)
+    a.rect(41, 40, 2, 4, 'c', force=True, keep=True)
+    a.rect(11, 27, 1, 7, 'c', force=True, keep=True)
+    # buildings (door = the painted door; the cell below it is the walk)
+    bld(a, 'coral_harbormaster', 5, 3, 8, 7, 4, "the harbour master's house")
+    bld(a, 'coral_house1', 28, 4, 7, 6, 2, 'house1')
+    bld(a, 'coral_inn', 3, 16, 9, 9, 5, 'the inn')
+    bld(a, 'coral_tavern', 13, 16, 7, 9, 3, 'the tavern')
+    bld(a, 'coral_house2', 28, 18, 7, 7, 2, 'house2')
+    bld(a, 'coral_house3', 36, 17, 8, 8, 3, 'house3')
+    bld(a, 'coral_items', 3, 30, 8, 8, 6, 'the item shop')
+    bld(a, 'coral_arms', 12, 30, 8, 8, 3, 'the weapon shop')
+    bld(a, 'coral_guild', 26, 29, 13, 10, 7, "the sailors' guild")
+    a.rect(40, 32, 5, 6, 'X', force=True, keep=True)          # house4 (no door)
+    # the painted pots, barrels, signs and racks in front of the tier-3 shops stand on the first walk row (38): solid
+    for x in [1, 2, 3, 4, 5, 6, 7, 10, 12, 13, 17, 19] + list(range(25, 46)):
+        if (x, 38) != (33, 38): a.put(x, 38, 'X', True); a.keep[38, x] = True
+    # tier 1 garden scenery the painter put in (palms, the flag pole, barrels, the parasol, rocks)
+    for (x, y) in [(3, 5), (3, 6), (3, 7), (13, 3), (13, 4), (13, 7), (14, 7), (13, 8), (14, 8), (15, 5), (16, 5), (16, 6), (17, 6), (17, 7), (18, 6),
+                   (26, 5), (26, 6), (26, 7), (35, 5), (35, 6), (35, 7), (36, 6), (41, 3), (41, 4), (42, 3), (43, 6), (44, 6), (43, 7), (44, 7), (20, 8), (20, 9)]:
+        a.put(x, y, 'T', True)
+    # the widows' wall (examined from the quay)
+    a.mark('widows', [(x, 43) for x in range(27, 38)], "the widows' wall", (206, 196, 176))
     # piers
-    a.rect(18, 51, 2, 7, '=', force=True, keep=True)
-    a.rect(36, 51, 2, 8, '=', force=True, keep=True)
-    a.rect(32, 58, 10, 2, '=', force=True, keep=True)
-    a.mark('pier', [(x, y) for x in (18, 19) for y in range(51, 58)] + [(x, y) for x in (36, 37) for y in range(51, 58)] + [(x, y) for x in range(32, 42) for y in (58, 59)],
-           'wooden PIERS of weathered planks on posts running out over the water (walkable)', (150, 104, 60), solid=False)
-    # masts of two sunken warships sticking out of the harbour water
-    a.mark('masts', [(26, 56), (27, 60)], 'the top of a broken MAST of a sunken warship sticking out of the water, a torn yard and rotten rope on it', (80, 60, 44))
-    # planters and trees on the terraces
-    for (x, y) in [(15, 5), (40, 12), (44, 25), (26, 32), (20, 37), (44, 37)]:
-        if a.g[y, x] in ',;': a.put(x, y, 'T')
-    a.scatter('b', 0.02, only=',;', seed=41, clear=1)
-    a.tidy()
-    a.spawns = {'north': dict(x=23, y=1, dir='s'), 'warp': dict(x=24, y=24, dir='s'), 'ferry': dict(x=37, y=57, dir='n'),
-                'ship': dict(x=19, y=56, dir='n'), 'harbor': dict(x=24, y=44, dir='s')}
-    a.exits = [dict(x=22, y=0, w=4, h=1, to={'map': 'i_cliff', 'spawn': 'south'}, edge='n')]
-    keep = [(18, 57), (19, 57), (36, 59), (37, 59), (31, 42), (34, 43), (9, 48), (40, 8), (42, 5)]
+    a.rect(18, 51, 2, 8, '=', force=True, keep=True)
+    a.rect(36, 51, 2, 7, '=', force=True, keep=True)
+    a.rect(32, 58, 10, 3, '=', force=True, keep=True)
+    a.spawns = {'north': dict(x=22, y=1, dir='s'), 'warp': dict(x=23, y=46, dir='s'), 'ferry': dict(x=36, y=57, dir='n'),
+                'ship': dict(x=19, y=56, dir='n'), 'harbor': dict(x=23, y=45, dir='s'), 'nook': dict(x=11, y=28, dir='s')}
+    a.exits = [dict(x=21, y=0, w=4, h=1, to={'map': 'i_cliff', 'spawn': 'south'}, edge='n')]
+    keep = [(18, 57), (19, 57), (36, 59), (37, 59), (32, 44), (11, 33), (14, 47), (40, 45), (30, 10)]
     a.objects = [dict(type='o', x=x, y=y) for (x, y) in keep]
     a.meta.update(name='港町コーラル', region='r_isles', zones=[], worldRect=[600, 530, 48, 64], look='town')
     return a
@@ -109,27 +101,24 @@ def nerei():
     # sand coves on the shore
     for (x, y) in [(11, 26), (29, 22)]: a.blob(x, y, 1.6, 2.4, 's', rough=0.3, seed=x, force=True, only='R,;')
     # the path along the ridge and the village green
-    a.rect(19, 5, 2, 39, ':', force=True, keep=True)
-    a.blob(20, 5, 3.5, 2.2, 'c', rough=0.2, seed=5, force=True)
-    a.mark('capelamp', [(20, 3)], "a stone LAMP HOUSING on a short white pillar at the very tip of the cape (the cape's lamp, unlit)", STONE)
-    bld(a, 'nerei_lampkeeper', 12, 8, 6, 5, 3, "the LAMP-KEEPER'S cottage: a small round-ended whitewashed house with a blue door")
-    bld(a, 'nerei_marina', 22, 13, 6, 5, 2, "Marina's COTTAGE: a small whitewashed cottage with blue shutters, fishing nets hung on the wall, a bench by the door")
-    bld(a, 'nerei_house', 12, 19, 6, 5, 3, 'a small whitewashed fisher COTTAGE with drying nets')
-    bld(a, 'nerei_store', 22, 25, 6, 5, 2, 'the GENERAL STORE: a whitewashed cottage with a striped awning')
-    bld(a, 'nerei_inn', 11, 30, 7, 6, 3, 'the village INN: a long whitewashed house with a blue roof ridge')
-    for (bx, by) in [(15, 12), (15, 23), (24, 17), (24, 29), (14, 35)]:
-        a.stroke([(bx, by + 0.5), (19.5, by + 0.5)], 1.0, ':', seed=bx, force=True, keep=True)
-    # the night pier on the east shore (planks out into the sea)
-    a.rect(21, 8, 9, 2, ':', force=True, keep=True)
-    a.rect(29, 8, 7, 2, '=', force=True, keep=True)
-    a.rect(34, 6, 2, 6, '=', force=True, keep=True)
-    a.mark('pier', [(x, y) for x in range(29, 36) for y in (8, 9)] + [(x, y) for x in (34, 35) for y in range(6, 12)], 'a long wooden PIER on posts out into the dark sea, a T at its end (walkable)', (150, 104, 60), solid=False)
-    for (x, y) in [(14, 16), (25, 22), (25, 34), (15, 27)]:
-        if a.g[y, x] in ',;': a.put(x, y, 'b')
+    # (re-measured on the painting nerei/gen1.png) the path along the ridge (x 20) and the cape plaza (x 17-24, rows 3-7)
+    a.rect(20, 5, 1, 39, ':', force=True, keep=True)
+    a.rect(17, 3, 8, 5, 'c', force=True, keep=True)
+    a.mark('capelamp', [(21, 2), (21, 3)], "the cape's stone LAMP HOUSING on a white pillar", STONE)
+    bld(a, 'nerei_lampkeeper', 12, 8, 6, 5, 3, "the lamp-keeper's cottage")
+    bld(a, 'nerei_marina', 22, 13, 6, 5, 3, "Marina's cottage")
+    bld(a, 'nerei_store', 12, 19, 6, 5, 4, 'the general store')
+    bld(a, 'nerei_house', 22, 25, 6, 5, 3, 'a fisher cottage')
+    bld(a, 'nerei_inn', 11, 30, 7, 7, 3, 'the village inn')
+    # the path to the night pier (rows 8-9) and the pier (x 29-33) with its T (x 34-35, rows 6-12)
+    a.rect(21, 8, 8, 2, ':', force=True, keep=True)
+    a.rect(29, 8, 5, 2, '=', force=True, keep=True)
+    a.rect(34, 6, 2, 7, '=', force=True, keep=True)
     a.tidy()
-    a.spawns = {'gate': dict(x=19, y=42, dir='n'), 'warp': dict(x=20, y=22, dir='s'), 'pier': dict(x=33, y=9, dir='e'), 'tip': dict(x=21, y=6, dir='n')}
-    a.exits = [dict(x=19, y=43, w=2, h=1, to={'map': 'i_cape', 'spawn': 'north'}, edge='s')]
-    a.objects = [dict(type='o', x=x, y=y) for (x, y) in [(35, 8), (35, 9), (22, 4), (20, 4), (21, 21), (23, 38)]]
+    a.spawns = {'gate': dict(x=20, y=42, dir='n'), 'warp': dict(x=20, y=21, dir='s'), 'pier': dict(x=33, y=9, dir='e'), 'tip': dict(x=21, y=5, dir='n'),
+                'pier_end': dict(x=34, y=11, dir='s')}
+    a.exits = [dict(x=20, y=43, w=1, h=1, to={'map': 'i_cape', 'spawn': 'north'}, edge='s')]
+    a.objects = [dict(type='o', x=x, y=y) for (x, y) in [(35, 7), (34, 7), (22, 4), (20, 4), (21, 20), (23, 38), (18, 17), (26, 11)]]
     a.meta.update(name='岬の村ネレイ', region='r_isles', zones=[], worldRect=[706, 440, 40, 44], look='town')
     return a
 
@@ -154,9 +143,9 @@ def isles_cave_1():
     S([(14, 11.2), (24, 10.8), (34, 11.3)], 2.2, 'w', seed=17, wob=0.4)
     B(27.5, 18.5, 2.6, 1.8, 'w', 18); B(40, 18.5, 1.8, 1.2, 'w', 19); B(20, 36, 1.4, 1.0, 'w', 24)
     # the fords (both painted as wet rock shelves; the flooded one gets the closed layer)
-    for x in range(22, 27):
-        for y in (25, 26, 27): a.put(x, y, 'k', True); a.keep[y, x] = True
-        for y in (10, 11, 12): a.put(x, y, 'k', True); a.keep[y, x] = True
+    for x in range(22, 26):
+        for y in (25, 26): a.put(x, y, 'k', True); a.keep[y, x] = True
+        for y in (10, 11): a.put(x, y, 'k', True); a.keep[y, x] = True
     a.mark('stone', [(20, 16)], 'a waist-high STANDING STONE carved with wave lines and a moon, crusted with barnacles (the tide stone)', (150, 150, 160))
     keep = [(23, 38), (24, 38), (24, 5), (24, 3), (20, 17), (8, 15), (6, 19), (42, 21), (38, 22), (30, 33), (18, 32), (11, 20), (44, 19)]
     for (x, y) in keep:
@@ -167,6 +156,11 @@ def isles_cave_1():
     a.spawns = {'entrance': dict(x=24, y=37, dir='n'), 'up': dict(x=24, y=5, dir='s')}
     a.exits = [dict(x=22, y=39, w=4, h=1, to={}, edge='s')]
     a.objects = [dict(type='o', x=x, y=y) for (x, y) in keep]
+    # the tide (re-measured on the painting: the passage x 22-25 crosses the channels at rows 25-26 (ford A) and 10-11 (ford B)).
+    # The painting shows both fords dry; the closed layer (process.py) clones the channel water over the flooded one:
+    # low tide (default) = ford B under water, high tide (isles_tide_high, the tide stone) = ford A under water
+    a.meta['tilePatches'] = [{'cond': '!isles_tide_high', 'rect': [22, 10, 4, 2], 'rows': ['wwww', 'wwww']},
+                             {'cond': 'isles_tide_high', 'rect': [22, 25, 4, 2], 'rows': ['wwww', 'wwww']}]
     a.meta.update(name='潮鳴りの洞窟', region='r_isles', zones=[], worldRect=[0, 0, 1, 1], look='cave')
     return a
 

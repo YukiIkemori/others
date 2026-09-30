@@ -1,0 +1,19 @@
+{
+ "id": "coral",
+ "kind": "under",
+ "map": "coral",
+ "tile": 32,
+ "size32": [
+  1536,
+  2048
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.8,
+ "files": {
+  "24": "coral@24.png",
+  "32": "coral@32.png"
+ },
+ "src": "generated"
+}

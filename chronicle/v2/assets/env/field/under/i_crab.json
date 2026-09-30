@@ -1,0 +1,20 @@
+{
+ "id": "i_crab",
+ "kind": "under",
+ "map": "i_crab",
+ "tile": 32,
+ "size32": [
+  1280,
+  960
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.8,
+ "files": {
+  "24": "i_crab@24.png",
+  "32": "i_crab@32.png",
+  "40": "i_crab@40.png"
+ },
+ "src": "generated"
+}

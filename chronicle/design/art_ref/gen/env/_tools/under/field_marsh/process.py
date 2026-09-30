@@ -33,6 +33,15 @@ gain = float(os.environ.get('GAIN', 1.0))   # 湿原: 絵のままの明るさ�
 A = np.clip(A * gain, 0, 255)
 print('gain', round(gain, 3), 'target', round(target, 1))
 
+# ---- 明るさの仕上げ（2026-09-29 の見直し: 砂漠・雪原のエリアより暗く濁って、人と道が沈んでいた）:
+#      全体を持ち上げ、平均の明るさのまわりでコントラストを広げ、道（泥・小道・板の道・敷石・泥の原）を少し明るく。霧の青みは夜の光（ambient）のまま
+LIFT, CON, PATH = float(os.environ.get('LIFT', 1.32)), float(os.environ.get('CON', 1.30)), float(os.environ.get('PATHLIFT', 1.2))
+_m = float(lum(A).mean()) * LIFT
+A = np.clip(_m + (A * LIFT - _m) * CON, 0, 255)
+_pm = ndimage.gaussian_filter(kron(np.isin(g, list('.:=cs'))).astype(np.float32), T * 0.35)
+A = np.clip(A * (1 + (PATH - 1) * _pm[..., None]), 0, 255)
+print('grade lift', LIFT, 'con', CON, 'path', PATH, 'mean', round(float(lum(A).mean()), 1))
+
 # ---- overlay: crowns over the walkable row north of tree cells
 tree = np.isin(g, list('TF'))
 band = np.zeros((H * T, W * T), bool)

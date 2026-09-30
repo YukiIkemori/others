@@ -132,6 +132,11 @@ if over.any():
     o = np.zeros((H * T, W * T, 4), np.float32); o[..., :3] = A; o[..., 3] = over * 255
     o[..., :3] *= (o[..., 3:4] > 0)
     save_set(aid + '_over', o, True)
+elif not os.environ.get('KEEP_OVER'):
+    # (2026-09-29) 描き直しで木の冠が無くなったら、前の絵の冠の層を残さない（古い絵の画素が上に出てしまう）
+    for t in (24, 32, 40):
+        f = os.path.join(OUT, '%s_over@%d.png' % (aid, t))
+        if os.path.exists(f): os.remove(f)
 if live:
     am = np.zeros((H * T, W * T), np.uint8)
     for Lr in live:

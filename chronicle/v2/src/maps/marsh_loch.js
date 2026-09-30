@@ -18,60 +18,64 @@
   R.onData(function () {
     const K = R.ContentF.kit, MK = R.Marsh.kit, L = K.L;
     const W = 56, H = 52;
-    const g = K.grid(W, H, '~');
-    const ell = (cx, cy, rx, ry, ch, only) => {
-      for (let y = Math.floor(cy - ry - 1); y <= cy + ry + 1; y++) for (let x = Math.floor(cx - rx - 1); x <= cx + rx + 1; x++) {
-        if (((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 < 1 && (!only || only.includes(K.at(g, x, y)))) K.put(g, x, y, ch);
-      }
-    };
-    // ---------------------------------------------------------------- 湖のふちの葦原（外まわり。出入り口の所は空く）
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-      const d = Math.min(x, y, W - 1 - x, H - 1 - y);
-      const wob = ((x * 7 + y * 13) % 5) / 5;
-      if (d === 0 || (d === 1 && wob > 0.3) || (d === 2 && wob > 0.75)) g[y][x] = 'r';
-    }
-    // ---------------------------------------------------------------- 運河（深い水。町を東西に横切る）
-    for (let x = 0; x < W; x++) for (let y = 26; y <= 28; y++) g[y][x] = '=';
-    // ---------------------------------------------------------------- 小島
-    ell(27.5, 16, 10, 4.2, 'c');                // 大鐘の前の石畳の広場
-    ell(9, 16.5, 6.5, 4.2, 'g');                // 集会所の小島
-    ell(46.5, 16, 5.5, 4.4, 'g');               // 鐘楼の小島
-    ell(32.5, 36.5, 6.5, 3.6, 'g');             // 町長の柳の小島
-    ell(41, 45.5, 5.5, 3.2, 'g');               // 出張所の小島
-    ell(48.5, 35.5, 4.5, 3.2, 'g');             // ベッポの小島
-    ell(13, 31.5, 3.5, 1.6, 'g');               // 運河の南岸の小さな泥の岸（夜の足あと）
-    // 下絵に合わせる: 描いた岸が水になっている所
-    for (const [x, y] of [[48, 12], [50, 38], [51, 38]]) K.put(g, x, y, '~');
-    // 柳（大きな木。町長の家の上の柳の枝は絵の中）
-    for (const [x, y] of [[37, 36], [26, 37], [50, 13], [3, 15]]) K.put(g, x, y, 'T');
-    // ---------------------------------------------------------------- 板の道（くねくねと。幅 2）
-    const walk = (pts, wd) => K.path(g, pts, 'p', wd || 2, ['~', 'r', 'g']);
-    walk([[0, 21], [4, 21], [4, 20]]);                                    // 西の門 → 集会所の前
-    walk([[4, 20], [8, 20], [8, 19]]);
-    walk([[13, 19], [16, 19], [16, 18], [18, 18]]);                        // 集会所 → 広場
-    walk([[37, 18], [40, 18], [40, 19], [43, 19]]);                        // 広場 → 鐘楼
-    walk([[50, 19], [53, 19], [53, 20], [56, 20]]);                        // 鐘楼 → 東の門
-    walk([[6, 21], [6, 25]]);                                              // 集会所 → 渡し舟の北の舟着き
-    walk([[6, 29], [6, 31], [8, 31], [8, 33]]);                            // 渡し舟の南 → 宿へ（宿の戸の前は下で）
-    walk([[27, 30], [27, 32], [24, 32], [24, 34], [20, 34], [20, 37], [17, 37], [17, 39]]);   // 橋のたもと → エマの家の方
-    walk([[17, 39], [12, 39], [12, 41], [7, 41], [7, 40]]);               // → 宿の前
-    walk([[13, 34], [13, 33], [11, 33]]);                                  // 運河の南岸の泥の岸へ
-    walk([[13, 34], [13, 39]]);                                            // 泥の岸 → 宿の前の道
-    walk([[27, 32], [27, 30]]);
-    walk([[28, 31], [31, 31], [31, 33]]);                                  // 橋のたもと → 町長の家
-    walk([[35, 38], [37, 38], [37, 41]]);                                  // 町長の小島 → 出張所の小島
-    walk([[29, 40], [29, 43], [31, 43]]);                                  // 町長の小島 → 夜市のいかだ
-    walk([[36, 33], [40, 33], [40, 32], [44, 32], [44, 37], [46, 37]]);    // → ベッポの店
-    walk([[20, 37], [20, 45], [17, 45]]);                                  // → エマの家の前
-    // 夜市のいかだ（板の台）
-    K.rect(g, 27, 44, 10, 4, 'p');
-    // 石の太鼓橋（運河を渡る。広場から南へ）
-    K.rect(g, 26, 21, 3, 3, 'c');
-    K.rect(g, 26, 24, 3, 7, 'b');
-    // 西の渡し舟の舟着き（北と南。さおの舟で運河を渡る）
-    K.rect(g, 5, 24, 3, 2, 'p'); K.rect(g, 5, 29, 3, 2, 'p');
-    // ---------------------------------------------------------------- 7 つの鐘楼のうち、くいの上の小さな 6 本（湖の中。通れない）
-    for (const [x, y] of [[2, 6], [51, 4], [14, 23], [52, 29], [23, 48], [51, 44]]) K.rect(g, x, y, 2, 2, 'X');
+    // 当たり（2026-09-29 の描き直し: 岸・小島・板の道をなめらかな形にした下絵に合わせた行。design/art_ref/gen/env/_tools/under/marsh/loch2/ の
+    //   layout.py（形）→ 絵 → warp.py（縦のずれ）→ refit.py（絵の水に合わせる）の rows_fit。手で直すときは refit.py の方で）
+    //   '~' 浅い湖・'=' 運河・'r' 葦原・'g' 小島・'c' 石畳・'p' 板の道・'b' 石の太鼓橋・'X' 大鐘とくいの鐘楼・'T' 柳
+    const ROWS = [
+      "rrrrrrrrrrrrrrrrrrrrrrrrrXXXXXXrrrrrrrrrrrrrrrrrrrrrrrrr",
+      "rr~~rrrrrrrrrrrrrrr~~rXXXXXXXXXXXXrrrr~~rrrrrrrrr~rrrrrr",
+      "rr~~~~~~~~~~~~~~~~~~~XXXXXXXXXXXXXX~~~~~~~~~~~~~~~~~~~rr",
+      "rr~~~~~~~~~~~~~~~~~~~XXXXXXXXXXXXXX~~~~~~~~~~~~~~~~~~~rr",
+      "rr~~~~~~~~~~~~~~~~~~XXXXXXXXXXXXXXXX~~~~~~~~~~~~~~~XX~rr",
+      "rr~~~~~~~~~~~~~~~~~~XXXXXXXXXXXXXXXX~~~~~~~~~~~~~~~XX~rr",
+      "rrXX~~~~~~~~~~~~~~~~XXXXXXXXXXXXXXXX~~~~~~~~~~~~~~~~~~rr",
+      "rrXX~~~~~~~~~~~~~~~~XXXXXXXXXXXXXXXX~~~~~~~~~~~~~~~~~~rr",
+      "rr~~~~~~~~~~~~~~~~gggggggggggggggggggg~~~~~~~~~~~~~~~~rr",
+      "rr~~~~~~~~~~~~~~~~gggggggggggggggggggg~~~~~ggggg~~~~~~rr",
+      "rr~~~~~~~~~~~~~~~~gggggggggggggggggggg~~~~~gggggggg~~~rr",
+      "rr~~gggggggggg~~~~ggpggggggpgggggggpgg~~~~~ggggggggg~~rr",
+      "rr~gggggggggggg~~~cccccccccccccccccccc~~~~gggggggggg~~rr",
+      "rrggggggggggggg~~~cccccccccccccccccccc~~~~ggggggggTgg~rr",
+      "rggggggggggggggg~~cccccccccccccccccccc~~~gggggggggggg~rr",
+      "rggTgggggggggggg~~cccccccccccccccccccc~~~gggggggggggg~rr",
+      "rggggggggggggggg~~cccccccccccccccccccc~~~ggggggggggg~~rr",
+      "rgggggggggggggg~~~cccccccccccccccccccc~~~~gggpgggggg~~rr",
+      "rgggggggpgggggg~ppppcccccccccccccccccpppppppgggggppppgrr",
+      "r~~ggpppggppppppppppcccccccccccccccccpppppppgggggppppppr",
+      "rr~pppppgppppppp~~~~~ccccccccccccc~~~~~~~~~~~~~~~~~ppppp",
+      "pppppppp~~~~~~~~~~~~~~~~~~ccc~~~~~~~~~~~~~~~~~~~~~~~~ppp",
+      "pppp~ppp~~~~~~~~~~~~~~~~~~ccc~~~~~~~~~~~~~~~~~~~~~~~~ggr",
+      "rgg~~~pp~~~~~~XX~~~~~~~~~~ccc~~~~~~~~~~~~~~~~~~~~~~~~ggr",
+      "rgg~~ppp~~~~~~XX~~~~~~~~~~bbb~~~~~~~~~~~~~~~~~~~~~~~~~gr",
+      "rr~~~~pp~~~~~~~~~~~~~~~~~~bbb~~~~~~~~~~~~~~~~~~~~~~~~~rr",
+      "==========================bbb===========================",
+      "==========================bbb===========================",
+      "==========================bbb===========================",
+      "rr~~~~pp~~~~~~~~~~~~~~~~~~bbb~~~~~~~~~~~~~~~~~~~~~~~XXrr",
+      "rr~~~~pp~~~gggg~~~~~~~~~~~bbbp~~~~~~~~~~~~~~~~ggggg~XXrr",
+      "r~~~~~ppppppggggg~~~~~~~~pppppgggggg~~~~~~~~~~ggggg~~~rr",
+      "r~~~~~gpppppggggg~~~~~~~ppp~~pgggggg~~~pppppp~ggggg~~~rr",
+      "r~gggggggggggppgg~~~~~pppp~~~gggggggppppppppppggggggg~rr",
+      "rggggggggggggpp~~~~~~pppp~~~ggggggggppp~~~~~ppggggggggrr",
+      "rggggggggggggpp~~~~~ppp~~~~gggggpggggggg~~~~ppggpgggggrr",
+      "rggggggggggggpp~~~pppp~~~~gggggggggggTg~~~~~ppggggggggrr",
+      "rggggggggggggpp~~ppppp~~~~Tgggggggggggg~~~~~pppgggggg~rr",
+      "rggggggggggggpppppp~pp~~~~~ggggggggppp~~~~~~pppp~~~~~~rr",
+      "rrgggggpggggpppppp~~pp~~~~~~gppgggggppp~~~~~~~~~~~~~~~rr",
+      "r~~gppppppppppppggggpp~~~~~~~pp~gg~~~ppp~~~~~~~~~~~~~~rr",
+      "r~~~ppppppppppggggggpp~~~~~~~pp~~~~~~~gggggg~~~~~~~~~~rr",
+      "rr~~~~~~~~~~~~ggggggpp~~~~~~~pp~~~~~~ggggggg~~~~~~~~~~rr",
+      "rr~~~~~~~~~~~~ggggggpp~~~~~~~~pp~~~~gggggggggg~~~~~~~~rr",
+      "rr~~~~~~~~~~~~gggpggpp~~~~~ppppppppppggggggggg~~~~~XX~rr",
+      "rr~~~~~~~~~~~~~gggppp~~~~~~ppppppppppgggpgggggg~~~~XX~rr",
+      "rr~~~~~~~~~~~~~~~ppp~~~~~~~ppppppppppgggggggggg~~~~~~~rr",
+      "rr~~~~~~~~~~~~~~~~~~~~~~~~~ppppppppppggggggggg~~~~~~~~rr",
+      "rr~~~~~~~~~~~~~~~~~~~~~XX~~~~~~~~~~~~~~gggggg~~~~~~~~~rr",
+      "rr~~~~~~~~~~~~~~~~~~~~~XX~~~~~~~~~~~~~~~~~~~~~~~~~~~~~rr",
+      "rrrrrrrrrrr~~rrrrrrrrrrr~~~rrrrrrrrrrrrr~~~~rrrrrrrrrrrr",
+      "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
+    ];
+    const g = ROWS.map((r) => r.split(''));
 
     // ---------------------------------------------------------------- 建物（戸口は 1 マス、敷地のいちばん下の行。出て着くのはその真下）
     const O = [];
@@ -84,8 +88,6 @@
       return b;
     };
     // 大鐘の館（横倒しの巨大な鐘。口の輪に 3 つの戸）: 西の肩 = 道具屋、まん中 = 酒場、東の肩 = 武具屋
-    for (let y = 1; y <= 8; y++) for (let x = 20; x <= 35; x++) if (((x - 27.5) / (6.5 + (y - 1) * 0.35)) ** 2 < 1) g[y][x] = 'X';   // 鐘の胴（上ほど細い）
-    K.rect(g, 25, 0, 6, 2, 'X');                                                                                               // 鐘の頭の吊り手
     const bItems = bld('loch_bell_items', 18, 8, 6, 4, { wall: 3, windows: 1, sign: 'item', door: door(20, 11, 'loch_items') });
     const bTav = bld('loch_bell_tavern', 24, 8, 8, 4, { wall: 3, windows: 2, sign: 'tavern', door: door(27, 11, 'loch_tavern') });
     const bArms = bld('loch_bell_arms', 32, 8, 6, 4, { wall: 3, windows: 1, sign: 'weapon', door: door(35, 11, 'loch_arms') });
@@ -96,14 +98,6 @@
     const bEmma = bld('loch_emma', 15, 41, 5, 4, { wall: 2, windows: 1, door: door(17, 44, 'loch_emma') });
     const bBeppo = bld('loch_beppo', 46, 30, 5, 6, { wall: 3, windows: 2, sign: 'shop', door: door(48, 35, 'loch_beppo') });
     const bKlaus = bld('loch_klaus', 38, 41, 6, 5, { wall: 2, windows: 2, door: door(40, 45, 'loch_klaus') });
-    // 戸の前は板の道（出て着く所）
-    for (const b of [bItems, bTav, bArms]) K.put(g, b.door.x, b.door.y + 1, 'c');
-    K.put(g, bKlaus.door.x, bKlaus.door.y + 1, 'p');
-    // 大鐘の戸の前の石畳（広場の北の縁）
-    K.rect(g, 19, 12, 18, 1, 'c');
-    // 出入り口の口（外の板の道）と、西の門の看板の小さな岸
-    K.rect(g, 1, 23, 2, 1, 'g');
-    K.rect(g, 0, 21, 2, 2, 'p'); K.rect(g, 54, 20, 2, 2, 'p');
 
     // ---------------------------------------------------------------- 物: 掲示板・鐘の舌・渡し舟・宝箱
     O.push(K.prop('crooked_sign', 23, 18), K.exam(23, 19, 'loch_board'));                 // 町の掲示板（広場の西の端）
@@ -111,7 +105,7 @@
     O.push(K.prop('mud_boat', 4, 27), K.exam(6, 26, 'loch_ferry', { side: 'n' }), K.exam(6, 28, 'loch_ferry', { side: 's' }));   // さおの渡し舟（運河の西）
     O.push(K.exam(14, 31, 'loch_footprints', { cond: 'marsh_night' }));                    // 夜: 光るこけを踏んだ小さな足あと（証拠 1）
     // 湖のくいの鬼火の灯（道・戸口の前・出入り口に置かない。消灯の刻には落ちる）
-    const lamps = [[17, 14], [38, 14], [9, 23], [11, 21], [42, 21], [51, 22], [29, 25], [25, 25], [23, 36], [36, 42], [44, 40], [26, 47], [37, 48], [14, 45], [53, 35]];
+    const lamps = [[17, 14], [38, 14], [9, 23], [11, 21], [42, 21], [51, 22], [29, 25], [25, 25], [23, 36], [36, 42], [44, 40], [26, 47], [37, 48], [14, 45], [53, 38]];
     for (const [x, y] of lamps) O.push(K.prop('wisp_lamp', x, y, { cond: '!marsh_night' }));
     // 夜市の屋台（消灯の刻だけ）と、その灯り
     for (const [x, y] of [[26, 45], [33, 43], [36, 43]]) O.push(K.prop('lantern', x, y, { cond: 'marsh_night' }));   // いかだのまわりのくい

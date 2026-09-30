@@ -1,0 +1,20 @@
+{
+ "id": "i_wreck",
+ "kind": "under",
+ "map": "i_wreck",
+ "tile": 32,
+ "size32": [
+  1408,
+  1024
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.8,
+ "files": {
+  "24": "i_wreck@24.png",
+  "32": "i_wreck@32.png",
+  "40": "i_wreck@40.png"
+ },
+ "src": "generated"
+}

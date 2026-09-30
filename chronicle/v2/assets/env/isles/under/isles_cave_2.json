@@ -1,0 +1,20 @@
+{
+ "id": "isles_cave_2",
+ "kind": "under",
+ "map": "isles_cave_2",
+ "tile": 32,
+ "size32": [
+  1408,
+  1152
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 1.0,
+ "files": {
+  "24": "isles_cave_2@24.png",
+  "32": "isles_cave_2@32.png",
+  "40": "isles_cave_2@40.png"
+ },
+ "src": "generated"
+}

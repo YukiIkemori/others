@@ -20,7 +20,8 @@
     T: { mat: 'tree', solid: true, under: 'ash', tree: ['charred_tree'] }, F: { mat: 'rock', solid: true }, b: { mat: 'bush', solid: true },
     r: { mat: 'rock', solid: true }, R: { mat: 'cliff', solid: true, rise: 1 }, X: { mat: 'wall_stone', solid: true },
   };
-  FA.ASH_LIGHT = { ambient: '#4e4a80', k: 0.5, mood: 'night' };
+  // (2026-09-29 見直し) 砂漠・雪原のエリアの夜と同じくらいの明るさに（前の '#4e4a80' は灰の地面が沈んで見えた）
+  FA.ASH_LIGHT = { ambient: '#5a5892', k: 0.5, mood: 'night' };
   // エリアからダンジョンへ入る所の確かめの文（field_00_kit.js の CONFIRM に足す）
   if (FA.CONFIRM) FA.CONFIRM.ash_volcano_1 = R.T('map.field_ash_00_kit.ash_volcano_1');
   function link() {

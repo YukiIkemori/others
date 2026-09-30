@@ -6,7 +6,7 @@ from scipy import ndimage
 src, outdir = sys.argv[1], sys.argv[2]
 NAME = os.environ.get('NAME', 'loch')
 os.makedirs(outdir, exist_ok=True)
-d = json.load(open('layout_data.json')); W, H = d['w'], d['h']; T = 32
+d = json.load(open('layout.json')); W, H = d['w'], d['h']; T = 32
 blds = json.load(open('blds.json'))
 S = np.asarray(Image.open(src).convert('RGB'))
 k = S.shape[1] / (W * T)

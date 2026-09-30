@@ -1,0 +1,20 @@
+{
+ "id": "i_siren",
+ "kind": "under",
+ "map": "i_siren",
+ "tile": 32,
+ "size32": [
+  1152,
+  896
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.8,
+ "files": {
+  "24": "i_siren@24.png",
+  "32": "i_siren@32.png",
+  "40": "i_siren@40.png"
+ },
+ "src": "generated"
+}

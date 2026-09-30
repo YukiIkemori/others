@@ -10,70 +10,77 @@
   R.onData(function () {
     const K = R.ContentF.kit, MK = R.Marsh.kit;
     const W = 60, H = 52;
-    const g = K.grid(W, H, '~');
-    const ell = (cx, cy, rx, ry, ch, only) => {
-      for (let y = Math.floor(cy - ry - 1); y <= cy + ry + 1; y++) for (let x = Math.floor(cx - rx - 1); x <= cx + rx + 1; x++) {
-        const wob = (((x * 17 + y * 31) % 7) / 7 - 0.5) * 0.25;
-        if (((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 < 1 + wob && (!only || only.includes(K.at(g, x, y)))) K.put(g, x, y, ch);
-      }
-    };
-    // ---------------------------------------------------------------- まわり: 葦原と枯れ木の林（通れない）
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-      const d = Math.min(x, y, W - 1 - x, H - 1 - y);
-      const wob = ((x * 11 + y * 7) % 6) / 6;
-      if (d <= 1 || (d === 2 && wob > 0.4) || (d === 3 && wob > 0.8)) g[y][x] = d <= 1 && wob > 0.5 ? 'T' : 'r';
-    }
-    // 深みの淵（深い水）
-    ell(30, 27, 6, 3.2, '=');
-    ell(18, 18, 4, 3, '='); ell(44, 16, 5, 3, '='); ell(46, 44, 4, 2.5, '=');
-    // ---------------------------------------------------------------- 小島（泥炭）
-    ell(30, 46, 7, 3.6, 'g');          // 南の入口の岸
-    K.rect(g, 28, 49, 4, 3, 'g');
-    ell(30, 35, 4.2, 2.2, 'g');        // 分かれ道の小島
-    ell(10, 29, 5, 4, 'g');            // 西の鐘の小島
-    ell(50, 29, 5, 4, 'g');            // 東の鐘の小島
-    ell(30, 9, 6, 4, 'g');             // 北の鐘の小島
-    ell(30, 20, 5, 3.4, 'g');          // まん中の小島（霧の集まる所）
-    ell(19, 42, 3, 2, 'g'); ell(42, 42, 3, 2, 'g');   // 宝箱の小島
-    ell(48, 11, 3, 2, 'g');            // 北東の小島（北の鐘の小島から）
-    ell(38, 47, 2.4, 1.6, 'g');        // 子どもたちの眠っていた小島（南東）
-    ell(7, 16, 1.6, 1.3, 'g');         // 泥の道の脇の小さな岸（宝箱）
-    // 枯れ木（小島の縁）
-    for (const [x, y] of [[6, 27], [14, 32], [54, 27], [46, 32], [25, 7], [35, 11], [26, 47], [16, 42], [45, 41]]) if (K.at(g, x, y) === 'g') K.put(g, x, y, 'T');
-    // ---------------------------------------------------------------- 板の道（幅 2）
-    const walk = (pts, wd, ch) => K.path(g, pts, ch || 'p', wd || 2, ['~', 'r', 'g', '=']);
-    walk([[29, 43], [29, 37]]);                                   // 入口 → 分かれ道
-    walk([[26, 35], [22, 35], [22, 33], [15, 33], [15, 31]]);     // → 西の鐘
-    walk([[33, 35], [38, 35], [38, 33], [45, 33], [45, 31]]);     // → 東の鐘
-    walk([[25, 44], [21, 44], [21, 43]]);                         // → 西の宝箱の小島
-    walk([[34, 44], [40, 44], [40, 43]]);                         // → 東の宝箱の小島
-    walk([[35, 47], [36, 47]]);                                   // → 子どもたちの小島（いつでも渡れる）
-    // 水が引くと現れる泥の道（tilePatches で閉じる。下絵は開いた形）
-    const A = [[9, 25], [9, 14], [14, 14], [14, 10], [24, 10]];  // 西の小島 → 北の鐘（西と東の鐘を鳴らした後）
-    const B = [[29, 13], [29, 17]];                               // 北の鐘の小島 → まん中の小島（北の鐘を鳴らした後）
-    const before = g.map((r) => r.slice());
-    walk(A, 2, 'm');
-    walk(B, 2, 'm');
-    walk([[34, 9], [46, 9], [46, 10]]);                           // 北の鐘の小島 → 北東の小島（板の道）
-    const patchOf = (pts) => {
+    // 当たり（2026-09-29 の描き直し: 岸・小島・淵・板の道・泥の道をなめらかな形にした下絵に合わせた行。design/art_ref/gen/env/_tools/under/marsh/bog2/ の
+    //   layout.py（形）→ 絵 → prep.py（縦のずれ・水の色）→ refit.py（絵の水に合わせる）の rows_fit。手で直すときは refit.py の方で）
+    //   '~' 沼の水・'=' 深みの淵・'g' 泥炭の小島・'p' 板の道・'r' 葦原・'T' 枯れ木。まわりは葦原と枯れ木の林（通れない）
+    //   'A' = 西と東の鐘を鳴らすと現れる泥の道（西の小島 → 北の鐘）、'B' = 北の鐘を鳴らすと現れる泥の道（北の鐘の小島 → まん中の小島）
+    const ROWS = [
+      "rrrrrrTrrrrrrrrrrrTrrrTTTTTrrrrrTTTTTTrrTTTrrrTrrrrrTrrTTTTT",
+      "rrTrrrrrrrrrrrrrrrTrrrrrTTTrrrrrTTTTTTrrTTTTrrrrrrrrrrrrTrTT",
+      "rTrrrrrrr~r~~~~~~~~~rr~~~~rrr~~rrrrrrrrrrr~~rrrrrrrrrrrr~rrr",
+      "rrr~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~rrr",
+      "TTr~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~rrr",
+      "Trr~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~rrT",
+      "TTr~~~~~~~~~~~~~~~~~~~~~~~~ggggggg~~~~~~~~~~~~~~~~~~~~~~~~rr",
+      "TTr~~~~~~~~~~~~~~~~~~~~~~Tgggggggggg~~~~~~~~~~~~~~~~~~~~~rrr",
+      "TTT~~~~~~~~~~~~~~~~~~~~~ggggggggggggg~~~~~~~~~~~~~~~~~~~~rrr",
+      "TT~~~~~~~~~~~~~~~~~~~~~~ggggggggggpppppppppppp~gg~~~~~~~~rrr",
+      "TTr~~~~~~~~~~~~~~AAAAAAAAAAggggggggppppppppppppgggg~~~~~~rrr",
+      "rrr~~~~~~~~~~~~AAAAAAAAAAAgggggggggT~~~~~~~~~ppggggg~~~~~rrr",
+      "rrr~~~~~~~~~~~AAA~~~~~~~~~~gggggggg~~~~~~~~~~~ggggg~~~~~~rTT",
+      "rrr~~~~~~~~~AAAA~~~~~~~~~~~~~BB~~~~~~~~~~~===~~~gg~~~~~~~rTT",
+      "TT~~~~~~~~~AAA~~~~~~~~~~~~~~~BB~~~~~~~~~~=======~~~~~~~~~rrr",
+      "TT~~~~ggg~AAA~~~~~~~~~~~~~~~~BB~~~~~~~~~=========~~~~~~~~rrr",
+      "TT~~~~gggAAA~~~======~~~~~~~~BB~~~~~~~~~=========~~~~~~~~rrr",
+      "rr~~~~gggAA~~~========~~~~~ggBBg~~~~~~~~=========~~~~~~~~~rr",
+      "rr~~~~~~~AA~~~=========~~~ggggggggg~~~~~~=======~~~~~~~~~~Tr",
+      "rr~~~~~~~AA~~~~=======~~~gggggggggg~~~~~~~====~~~~~~~~~~~rTT",
+      "rr~~~~~~~AA~~~~~======~~~~gggggggggg~~~~~~~~~~~~~~~~~~~~~rrT",
+      "rr~~~~~~~AA~~~~~~~~~~~~~~~gggggggggg~~~~~~~~~~~~~~~~~~~~~rTT",
+      "rrr~~~~~~AA~~~~~~~~~~~~~~~~gggggggg~~~~~~~~~~~~~~~~~~~~~~rTr",
+      "TTr~~~~~~AA~~~~~~~~~~~~~~~~~ggggg~~~~~~~~~~~~~~~~~~~~~~~~~Tr",
+      "TTr~~~~~~AA~~~~~~~~~~~~~~~~~=====~~~~~~~~~~~~~~~~~~~~~~~~~Tr",
+      "TTr~~~~~~AAgg~~~~~~~~~~~~==========~~~~~~~~~~~~~~~~~~~~~~~rT",
+      "TTr~~~~ggAAggg~~~~~~~~~~=============~~~~~~~~~gggggggg~~~rrr",
+      "Tr~~~~Tgggggggg~~~~~~~~~=============~~~~~~~~~ggggggggT~~rrT",
+      "TT~~~~gggggggggg~~~~~~~~=============~~~~~~~~~ggggggggg~~rrr",
+      "TT~~~ggggggggggg~~~~~~~~~===========~~~~~~~~~ggggggggggg~~rT",
+      "TTr~~ggggggggggpp~~~~~~~~~~~~~===~~~~~~~~~~~ppgggggggggg~~Tr",
+      "TTr~~~gggggggggpp~~~~~~~~~~~~~~~~~~~~~~~~~~~pp~gggggggg~~~rr",
+      "TTr~~~~ggggggg~ppp~~~~~~~~~~~~~~~~~~~~~~~~~ppp~~gggggg~~~~rT",
+      "TTr~~~~~~~gg~~~~ppppp~~~~~~~~gggg~~~~~~~ppppp~~~~~gg~~~~~~rr",
+      "rrr~~~~~~~~~~~~~~~ppppppp~~gggggggg~ppppppp~~~~~~~~~~~~~~~Tr",
+      "rrr~~~~~~~~~~~~~~~~~ppppppppgggggpppppppp~~~~~~~~~~~~~~~~rTr",
+      "Trr~~~~~~~~~~~~~~~~~~~~~ppppgppggpppp~~~~~~~~~~~~~~~~~~~~rrr",
+      "Trr~~~~~~~~~~~~~~~~~~~~~~~~~gpp~~~~~~~~~~~~~~~~~~~~~~~~~~rTr",
+      "rr~~~~~~~~~~~~~~~~~~~~~~~~~~~pp~~~~~~~~~~~~~~~~~~~~~~~~~~rTr",
+      "rr~~~~~~~~~~~~~~~~~~~~~~~~~~~pp~~~~~~~~~~~~~~~~~~~~~~~~~~rTT",
+      "rr~~~~~~~~~~~~~~~~~g~~~~~~~~~pp~~~~~~~~~~ggg~~~~~~~~~~~~~rrT",
+      "rrr~~~~~~~~~~~~~gggggg~~~~~~~pp~~~~~~~~~ggggg~~~~~~~~~~~~rrr",
+      "TTr~~~~~~~~~~~~~Tggggpg~~~~~~pp~~~~~~~~pggggg=====~~~~~~~~rr",
+      "rrr~~~~~~~~~~~~~~gggppp~~~~ggppggggg~~pppggggg====~~~~~~~~rr",
+      "rrr~~~~~~~~~~~~~~~~~~pppppgggggggggppppp~~gg======~~~~~~~~TT",
+      "rr~~~~~~~~~~~~~~~~~~~~~pppgggggggggpppp~~~~=======~~~~~~~rrr",
+      "rT~~~~~~~~~~~~~~~~~~~~~ggggggggggggggggg~~~~=====~~~~~~~~rrr",
+      "rT~~~~~~~~~~~~~~~~~~~~~gggTgggggggppppggg~~~~~~~~~~~~~~~~rrT",
+      "TT~~~~~~~~~~~~~~~~~~~~~~gggggggggggppgggg~~~~~~~~~~~~~~~~rTT",
+      "TTr~~~~~~~r~~rrrrrrrrrr~~rggggggggrrrr~~~rrr~r~~rrrrrrrrrrTT",
+      "rTTTTTTrrTTTrrrrrrrrTTTTTTTrggggrrTTrrrrTTTrrrrrrrrrTTTrrrTr",
+      "rrrTTTrrTTrrrrrrrrrrTTrTTTTrggggrrTrrrrTTTrTrrrrrrrrTTTTrrrr",
+    ];
+    const g = ROWS.map((r) => r.split(''));
+    // 泥の道のマス → tilePatches（'m' 泥）。地面は水のある形（閉じた形）。下絵は開いた形（ENV_ASSETS.md §8 の決まり）
+    const patchOf = (ch) => {
       const cells = [];
-      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (g[y][x] === 'm' && before[y][x] !== 'm' && onPath(pts, x, y)) cells.push([x, y, before[y][x]]);
+      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (g[y][x] === ch) cells.push([x, y]);
       const xs = cells.map((c) => c[0]), ys = cells.map((c) => c[1]);
       const x0 = Math.min(...xs), y0 = Math.min(...ys), x1 = Math.max(...xs), y1 = Math.max(...ys);
       const rows = [];
-      for (let y = y0; y <= y1; y++) { let s = ''; for (let x = x0; x <= x1; x++) { const c = cells.find((q) => q[0] === x && q[1] === y); s += c ? 'm' : ' '; } rows.push(s); }
-      return { rect: [x0, y0, x1 - x0 + 1, y1 - y0 + 1], rows, cells: cells.map((c) => [c[0], c[1]]) };
+      for (let y = y0; y <= y1; y++) { let t = ''; for (let x = x0; x <= x1; x++) t += g[y][x] === ch ? 'm' : ' '; rows.push(t); }
+      return { rect: [x0, y0, x1 - x0 + 1, y1 - y0 + 1], rows, cells };
     };
-    function onPath(pts, x, y) {
-      for (let i = 0; i < pts.length - 1; i++) {
-        const [ax, ay] = pts[i], [bx, by] = pts[i + 1];
-        if (x >= Math.min(ax, bx) && x <= Math.max(ax, bx) + 1 && y >= Math.min(ay, by) && y <= Math.max(ay, by) + 1) return true;
-      }
-      return false;
-    }
-    const pA = patchOf(A), pB = patchOf(B);
-    // 地面は水のある形（閉じた形）。泥の道は鐘を鳴らした後の tilePatches で現れる（下絵は開いた形。ENV_ASSETS.md §8 の決まり）
-    for (const [x, y] of pA.cells.concat(pB.cells)) g[y][x] = before[y][x] === 'g' ? '~' : before[y][x];
+    const pA = patchOf('A'), pB = patchOf('B');
+    for (const [x, y] of pA.cells.concat(pB.cells)) g[y][x] = '~';
 
     const O = [];
     // 3 つの鐘（沈んだ鐘楼の頭。鐘の枠の描いた物と、鳴らす所）

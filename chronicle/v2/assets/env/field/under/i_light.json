@@ -1,0 +1,20 @@
+{
+ "id": "i_light",
+ "kind": "under",
+ "map": "i_light",
+ "tile": 32,
+ "size32": [
+  1280,
+  1024
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.852,
+ "files": {
+  "24": "i_light@24.png",
+  "32": "i_light@32.png",
+  "40": "i_light@40.png"
+ },
+ "src": "generated"
+}

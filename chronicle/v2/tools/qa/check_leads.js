@@ -57,7 +57,7 @@ for (const m of EV_SRC.matchAll(/\.lead\('([\w]+)'\)/g)) given.add(m[1]);
 for (const m of MAP_SRC.matchAll(/lead:\s*'([\w]+)'/g)) given.add(m[1]);
 const all = Object.keys(D.leads);
 // 縦切りの後に作った地方（錠の外れた地方）の手がかりは目安の数に入れない
-const builtR = (r) => r && D.regions[r] && !D.regions[r].slice && !['r_forest', 'prologue', 'world'].includes(r);
+const builtR = (r) => r && D.regions[r] && (!D.regions[r].slice || !!(D.regions[r].dungeons || []).length) && !['r_forest', 'prologue', 'world'].includes(r);   // 錠を残したまま作った地方（諸島: dungeons がある）も作った地方
 const nSlice = all.filter((id) => !builtR(D.leads[id].region)).length;
 ok(`手がかり ${nSlice} 件（目安 約 28。ほかに作った地方の ${all.length - nSlice} 件）`, nSlice >= 26 && nSlice <= 40);
 const never = all.filter((id) => !given.has(id) && D.leads[id].slice !== 'locked');
