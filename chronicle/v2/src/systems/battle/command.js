@@ -13,6 +13,8 @@
   C.WNAME = WNAME;
   C.TARGET_JA = TARGET_JA;
   const sfx = (id) => { try { R.Audio.sfx(id); } catch (e) { /* ignore */ } };
+  /** 今の入力のボタンの字（キーボード Q・パッド LB など。割り当ての変更も反映。R.Input.prompt） */
+  const glyphLabel = (btn) => { try { const p = R.Input.prompt(btn); return (p && p.label) || String(btn).toUpperCase(); } catch (e) { return String(btn).toUpperCase(); } };
 
   function mem(uid, st) {
     const G = R.Game;
@@ -232,7 +234,7 @@
     const memOn = R.Settings.get('cursorMemory') !== false;
     const start = memOn && G && G.battle && G.battle.cursor && G.battle.cursor._party != null ? G.battle.cursor._party : (m._party || 0);
     st.activeUid = null;
-    st.head = { name: R.T('battle.command.partyMenu.head.name'), sub: po.includes('repeat') ? R.T('battle.command.partyMenu.head.sub') : R.T('battle.command.partyMenu.head.sub_2') };
+    st.head = { name: R.T('battle.command.partyMenu.head.name'), sub: po.includes('repeat') ? R.T('battle.command.partyMenu.head.sub', { l: glyphLabel('l'), b: glyphLabel('b') }) : R.T('battle.command.partyMenu.head.sub_2') };
     const k = R.uiScale || 1;
     const i = await menu(st, {
       rows, sel: rows[start] && !rows[start].disabled ? start : 0, t0: R.Engine.time, cancel: false,
@@ -262,6 +264,8 @@
     let i = 0;
     while (i < members.length) {
       const u = members[i];
+      // 選び直す人の前の命令は取り消す（取り置いた道具の数を戻す。1-7）
+      if (typeof B.unsubmit === 'function') { try { B.unsubmit(u.uid); } catch (e) { /* ignore */ } }
       const r = await C.member(st, u, i);
       if (r && r.party) { st.activeUid = null; return r; }
       if (r === 'back') {
@@ -342,7 +346,8 @@
     const isNew = !!s.isNew && !(G && G.seenSkill && G.seenSkill[s.id]);
     let right = '';
     if (cmd !== 'item' && s.mp != null) right = 'M ' + s.mp;
-    if (cmd === 'item') { const n = G && G.items ? G.items[s.id] : null; if (n != null) right = '×' + n; }
+    // 道具の数は戦闘の袋から（このラウンドにほかの仲間が選んだ分は引いてある。1-7）。無ければ R.Game の袋
+    if (cmd === 'item') { const n = typeof s.n === 'number' ? s.n : G && G.items ? G.items[s.id] : null; if (n != null) right = '×' + n; }
     return {
       id: s.id, label: s.name || d.name || s.id, cmd, right, free: cmd === 'spell' && s.mp === 0, disabled: s.usable === false,
       reason: s.reason || null, isNew, target: s.target || d.target || target || 'enemy', desc: d.desc || s.desc || '', element: d.element,

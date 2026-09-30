@@ -29,7 +29,7 @@
     'battle.command.partyMenu.NAMES.repeat.0': 'Repeat',
     'battle.command.partyMenu.NAMES.escape.0': 'Escape',
     'battle.command.partyMenu.head.name': 'Party Orders',
-    'battle.command.partyMenu.head.sub': 'Repeat uses the same actions as last round (press B while running to stop).',
+    'battle.command.partyMenu.head.sub': 'Repeat uses the same actions as last round (press {l} or {b} while running to stop).',
     'battle.command.partyMenu.head.sub_2': 'What will you do?',
     'battle.command.partyMenu.i.prompts.0.label': 'Select',
     'battle.command.partyMenu.i.prompts.1.label': 'Speed',

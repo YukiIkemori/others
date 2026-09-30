@@ -331,6 +331,43 @@
     }
   }
 
+  /** やり直しで残す物を写す（B.finish() の後の R.Game から）: 人ごとの技・術・派生の元、NEW の印、初めての説明の既読（flags.tip_*） */
+  function retryKeep() {
+    const G = R.Game;
+    if (!G) return null;
+    const chars = {};
+    for (const id of Object.keys(G.chars || {})) {
+      const c = G.chars[id];
+      if (!c) continue;
+      chars[id] = { techs: (c.techs || []).slice(), spells: (c.spells || []).slice(), derived: Object.assign({}, c.derived || {}) };
+    }
+    const tips = Object.keys(G.flags || {}).filter((k) => /^tip_/.test(k) && G.flags[k]);
+    return { chars, tips, seen: Object.assign({}, G.seenSkill || {}) };
+  }
+  /** 戻した R.Game に足す（減らさない。戻した後に無い人は飛ばす） */
+  function retryApply(keep) {
+    const G = R.Game;
+    if (!keep || !G) return;
+    try {
+      for (const id of Object.keys(keep.chars)) {
+        const c = G.chars && G.chars[id], k = keep.chars[id];
+        if (!c) continue;
+        for (const key of ['techs', 'spells']) {
+          c[key] = c[key] || [];
+          for (const x of k[key]) {
+            if (c[key].includes(x)) continue;
+            c[key].push(x);
+            const sk = id + ':' + x;
+            if (keep.seen[sk] === false) { G.seenSkill = G.seenSkill || {}; G.seenSkill[sk] = false; }   // NEW の印も残す
+          }
+        }
+        for (const t of Object.keys(k.derived)) if (c.techs.includes(t)) { c.derived = c.derived || {}; if (!c.derived[t]) c.derived[t] = k.derived[t]; }
+      }
+      G.flags = G.flags || {};
+      for (const f of keep.tips) G.flags[f] = true;
+    } catch (e) { console.error('[battle retry keep]', e); }
+  }
+
   async function outcome(st) {
     const B = st.B, over = B.over;
     st.over = over;
@@ -343,7 +380,10 @@
     const ch = await _.gameover.run(st);
     if (ch === 'retry') {
       await R.Engine.fadeTo(1, _.trans.reduce() ? Bt.FADE.reduce : 420);
+      // 「失う物はない」（2026-09-30 テスター 1-5・1-6）: 戦闘の前に戻しても、負けた戦闘で閃いた技・術と、読んだ初めての説明は残す
+      const keep = retryKeep();
       R.Save.restore('battle');
+      retryApply(keep);
       st.retry++;
       initCore(st);
       st.cover = 1; st.go = null;

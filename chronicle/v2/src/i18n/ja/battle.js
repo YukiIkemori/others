@@ -29,7 +29,7 @@
     'battle.command.partyMenu.NAMES.repeat.0': 'リピート',
     'battle.command.partyMenu.NAMES.escape.0': '逃げる',
     'battle.command.partyMenu.head.name': '一行の命令',
-    'battle.command.partyMenu.head.sub': 'リピートは前のラウンドと同じ行動（動いている間は B でやめる）。',
+    'battle.command.partyMenu.head.sub': 'リピートは前のラウンドと同じ行動（動いている間は {l} か {b} でやめる）。',
     'battle.command.partyMenu.head.sub_2': 'どうする？',
     'battle.command.partyMenu.i.prompts.0.label': '決定',
     'battle.command.partyMenu.i.prompts.1.label': '速さ',

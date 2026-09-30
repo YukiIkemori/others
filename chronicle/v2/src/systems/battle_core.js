@@ -2208,8 +2208,12 @@
         const spells = u.mods.noSpell ? [] : (u.c.spells || []).map((id) => [id, ACT(id)]).filter(([, a]) => a && a.kind === 'spell' && hasBattleEffect(a));
         if (spells.length) out.push({ cmd: 'spell', target: 'enemy', list: spells.map(([id, a]) => reasonRow(u, id, a)) });
         out.push({ cmd: 'defend', target: 'self' });
-        const items = Object.keys(eng.inv).filter((id) => { const it = DB.items[id]; return isUseItem(it) && it.use && it.use.battle && hasBattleEffect(it.use) && eng.count(id) > 0; });
-        out.push({ cmd: 'item', target: 'ally', list: items.map((id) => { const it = DB.items[id]; const why = eng.unusable(u, id); return { id, name: it.name, n: eng.count(id), usable: !why, reason: why || null, isNew: false, target: it.use.target || 'ally' }; }) });
+        // このラウンドにほかの仲間が先に選んだ道具は取り置く（テスター 2026-09-30 1-7: 2 人が火炎つぼを選ぶと 3 人目の残りが減っていなかった）
+        const held = {};
+        for (const p of eng.party) { const x = pending[p.idx]; if (p.uid !== u.uid && x && x.type === 'item' && x.id) held[x.id] = (held[x.id] || 0) + 1; }
+        const left = (id) => eng.count(id) - (held[id] || 0);
+        const items = Object.keys(eng.inv).filter((id) => { const it = DB.items[id]; return isUseItem(it) && it.use && it.use.battle && hasBattleEffect(it.use) && left(id) > 0; });
+        out.push({ cmd: 'item', target: 'ally', list: items.map((id) => { const it = DB.items[id]; const why = eng.unusable(u, id); return { id, name: it.name, n: left(id), usable: !why, reason: why || null, isNew: false, target: it.use.target || 'ally' }; }) });
         return out;
       },
       /** ラウンドの初めの一行の命令（MODERN_UI §6.17） */
@@ -2228,6 +2232,14 @@
         if (!['attack', 'tech', 'spell', 'defend', 'item'].includes(type)) return false;
         pending[u.idx] = { type, id: c.id, target: t };
         return true;
+      },
+      /** 1 人分の命令を取り消す（命令の窓で「ひとつ戻る」で選び直すとき。取り置いた道具も戻る） */
+      unsubmit(uid) {
+        const u = byUid(uid);
+        if (!u || !u.isParty) return false;
+        const had = !!pending[u.idx];
+        pending[u.idx] = undefined;
+        return had;
       },
       /** リピート: 前のラウンドの全員の行動（相手が倒れていたら同じ列の次）。命令を埋める */
       repeat() {

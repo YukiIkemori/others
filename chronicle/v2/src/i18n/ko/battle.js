@@ -28,7 +28,7 @@
     'battle.command.partyMenu.NAMES.repeat.0': '반복',
     'battle.command.partyMenu.NAMES.escape.0': '도망친다',
     'battle.command.partyMenu.head.name': '일행의 명령',
-    'battle.command.partyMenu.head.sub': '반복은 이전 라운드와 같은 행동(진행 중에는 B로 멈춘다).',
+    'battle.command.partyMenu.head.sub': '반복은 이전 라운드와 같은 행동(진행 중에는 {l}(이)나 {b}(으)로 멈춘다).',
     'battle.command.partyMenu.head.sub_2': '어떻게 할까?',
     'battle.command.partyMenu.i.prompts.0.label': '결정',
     'battle.command.partyMenu.i.prompts.1.label': '속도',
