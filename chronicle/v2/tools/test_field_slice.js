@@ -58,9 +58,12 @@ function variants(map) {
   const opens = objs.filter((o) => o.type === 'door' && o.to && o.cond != null);
   const covers = (a, b) => b.x >= a.x && b.x < a.x + (a.w || 1) && b.y >= a.y && b.y < a.y + (a.h || 1) && (a.lv || 0) === (b.lv || 0);
   const shut = objs.filter((o) => o.type === 'door' && !o.to && opens.some((d) => covers(o, d)));
-  if (!shut.length) return [off, on, open];
+  // 開いた後の形: tilePatches を外し、条件つきの物（封じの札・倒木）を除き、条件つきの行き先のある扉は開いた扉に
+  //   （鍛冶衆の村の石段: 札 cond '!mine_volk_open' と扉 cond 'mine_volk_open' が同じマス。2026-09-30）
+  const after = Object.assign({}, off, { id: map.id + '__after', objects: objs.filter((o) => o.cond == null || o.type === 'trail' || opens.includes(o)).map((o) => (opens.includes(o) ? Object.assign({}, o, { cond: null }) : o)) });
+  if (!shut.length) return opens.length ? [off, on, open, after] : [off, on, open];
   const unlocked = Object.assign({}, on, { id: map.id + '__unlocked', objects: objs.filter((o) => !shut.includes(o)).map((o) => (opens.includes(o) ? Object.assign({}, o, { cond: null }) : o)) });
-  return [off, on, open, unlocked];
+  return opens.length ? [off, on, open, unlocked, after] : [off, on, open, unlocked];
 }
 
 function nodePart() {
