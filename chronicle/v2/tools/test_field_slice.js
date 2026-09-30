@@ -33,8 +33,9 @@ function reach(R, map, starts) {
     if (!F._canEnter(map, x, y, x + dx, y + dy, lv, dn)) return -1;
     return F._lvAfter(map, x, y, x + dx, y + dy, lv);
   };
-  while (q.length) {
-    const [x, y, lv] = q.shift();
+  // q.shift() はワールド（672×576）で 2 乗の遅さになるので、読む位置を進める
+  for (let qi = 0; qi < q.length; qi++) {
+    const [x, y, lv] = q[qi];
     for (const [dx, dy, dn] of DIR8) {
       let to = can(x, y, lv, dx, dy, dn);
       if (to < 0) continue;
