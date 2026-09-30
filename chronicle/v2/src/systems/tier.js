@@ -10,8 +10,9 @@
 //   地方ごとの出現の固定: forZone(zoneId, t?) → 出現表のティア / lockOf(rid) → 解決した地方の固定ティア|null /
 //     lockRegion(rid, t?)（ev.clearRegion）/ migrateLocks(G)（R.State.deserialize）。R.Game.regionTier = {rid: T}
 //
-// E17（ティアの場面の遅らせ）: 'inn'（ev.inn）と町（map.kind 'town'）の 'map:enter' で pending() があれば、
-//   走っているイベントが終わってから story_t<N>（中身は CONTENT-P）を ctx {map, reason:'inn'|'enter', tier:N} で走らせる。
+// E17（ティアの場面の遅らせ）: 'inn'（ev.inn）と町（map.kind 'town'）の 'map:enter'、町から外へ出た 'leave'（Tier.wakeOnLeave が真のとき）で pending() があれば、
+//   走っているイベントが終わってから story_t<N>（中身は CONTENT-P）を ctx {map, reason:'inn'|'enter'|'leave', tier:N, from} で走らせる。
+//   Tier.sceneFor(N) があればその id（CONTENT-P の story_tiers: まだ見ていない T1〜TN を順に。null = もう全部見た → pending を消す）。
 //   地方を解決した同じイベントの中の宿・町（締めの演出でフェルンへ戻るなど）では起こさない（次の宿・町で）。
 //   story_t<N> がまだ無いときは pending のまま（R.warn を 1 回）。
 //
@@ -122,13 +123,17 @@
   const warned = {};
   /** ev.clearRegion が呼ぶ: 今走っているイベントの中では起こさない */
   Tier._arm = function () { armedRun = (R.Events && R.Events.runId) ? R.Events.runId() : 0; };
-  function wake(reason, mapId) {
+  function wake(reason, mapId, from) {
     const p = Tier.pending();
     if (p == null || waiting) return;
     if (reason === 'enter') { const m = R.DB.maps[mapId]; if (!m || m.kind !== 'town') return; }
+    // 'leave'（町から外へ出た。ロウェルの 2 戦は町の出口で。起こすかは CONTENT-P の Tier.wakeOnLeave(p) が決める）
+    if (reason === 'leave' && !(Tier.wakeOnLeave && Tier.wakeOnLeave(p, mapId, from))) return;
     const busy = R.Events && R.Events.busy && R.Events.busy();
     if (busy && armedRun && R.Events.runId && R.Events.runId() === armedRun) return;
-    const id = 'story_t' + p;
+    // 走らせる場面: Tier.sceneFor(p)（CONTENT-P。飛ばしたティアも順に走らせる束 story_tiers）。無ければ story_t<p>
+    const id = Tier.sceneFor ? Tier.sceneFor(p) : 'story_t' + p;
+    if (id === null) { Tier.consumePending(); return; }
     if (!R.DB.events[id]) { if (!warned[id]) { warned[id] = true; R.warn('R.Tier: ' + id + ' is not written yet (pendingTier stays)'); } return; }
     waiting = true;
     const ready = () => {
@@ -141,13 +146,18 @@
       if (Tier.pending() !== p) return;
       Tier.consumePending();
       armedRun = 0;
-      R.Events.run(id, { map: mapId || (R.Field.pos || {}).map, reason, tier: p });
+      R.Events.run(id, { map: mapId || (R.Field.pos || {}).map, reason, tier: p, from: from || null });
     });
   }
   Tier._wake = wake;
   R.onData(function () {
     R.on('inn', (e) => wake('inn', e && e.map));
-    R.on('map:enter', (e) => wake('enter', e && e.map));
+    R.on('map:enter', (e) => {
+      // 町（town）から、町でも屋内でもない所（ワールド・エリア・ダンジョン）へ出た → 'leave'
+      const f = e && e.from && R.DB.maps[e.from], m = e && R.DB.maps[e.map];
+      if (f && f.kind === 'town' && m && m.kind !== 'town' && m.kind !== 'interior') wake('leave', e.map, e.from);
+      else wake('enter', e && e.map);
+    });
   });
 
   // ================================================================ 大灯火の演出（E20）
