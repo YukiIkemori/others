@@ -125,7 +125,7 @@
     }
     switch (name) {
       case 'title': {
-        const want = (task && task.title) || 'new';
+        const want = (task && task.title) || (B.demoEndAt ? 'continue' : 'new');
         if (task && task.title) task.stage = 'title';
         if (!selectRow(list, (r) => r.value === want)) tap('a');
         return;
@@ -598,6 +598,8 @@
     B.phaseAt.start = { f: 0, t: now(), steps: 0, chars: 0, ops: 0, battles: 0, playMs: 0 };
     // R5 の台本のメニュー: 成り行きを画面から見る
     R.on('scene:push', (e) => {
+      // 体験版の終わりの画面（demo_end.js）→ タイトル: 遊ぶ人と同じく「つづきから」で終わりの記録（T1 の後のフェルン）へ戻る
+      if (e.id === 'demo_end' && !B.demoEndAt) { B.demoEndAt = B.frames; note('demo end screen'); }
       const t = B.task;
       if (!t) return;
       if (e.id === 'screen:title' && t.kind === 'suspend') t.stage = 'title-open';

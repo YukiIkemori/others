@@ -32,7 +32,7 @@
     'map.final_biblia_interiors.biblia_inn.meta.sub': 'ノアの宿',
     'map.final_biblia_interiors.biblia_inn.npcs.0.noa.name': 'ノア',
     'map.final_biblia_interiors.biblia_inn.npcs.0.noa.title': '宿のおかみ',
-    'map.final_biblia_interiors.biblia_records': '記録院 本院',
+    'map.final_biblia_interiors.biblia_records': '記録院の本院',
     'map.final_biblia_interiors.biblia_records.meta.sub': '白紙の帳面の広間',
     'map.final_biblia_interiors.biblia_records.npcs.0.clerk.name': '記録院の書記',
     'map.final_biblia_interiors.biblia_study': '院長の書斎',

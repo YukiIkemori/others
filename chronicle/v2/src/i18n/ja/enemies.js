@@ -582,6 +582,11 @@
     'bossActions.eb_nemrea2_open.telegraph.text': 'ページの文字が、終わりから逆さに流れていく……。',
     'bossActions.eb_nemrea2_end.name': '物語の終わり',
     'bossActions.eb_nemrea2_end.msg': '「おしまい」の一文が、すべてを閉じようとした！',
+    'bossActions.eb_rowell_gather.name': '記録の光',
+    'bossActions.eb_rowell_gather.msg': '{user}は銀のペン先を高く構えた……！',
+    'bossActions.eb_rowell_gather.telegraph.text': 'ペン先に、記録の光が集まっていく……。',
+    'bossActions.eb_rowell_verdict.name': '記録の断罪',
+    'bossActions.eb_rowell_verdict.msg': '光の一文が、一行を書き消そうとした！',
     'data.bosses_ash.desc': '火口の壁画を守る二つ頭の犬。\n深く息を吸ったら、身を固めよ。',
     'data.bosses_ash.desc_2': '守り手を失った山の火の獣。\n背の火口がふくれたら、身を固めよ。',
     // ---- src/data/bosses_desert.js

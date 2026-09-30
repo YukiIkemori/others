@@ -86,6 +86,8 @@ function run() {
       if (/check_text:ignore/.test(L) || /\bR\.warn\(|console\.(log|warn|error|info)\(|throw new Error|loadErrors\.push/.test(L)) continue;
       if ((s.match(/[ぁぃぅぇぉっゃゅょァィゥェォッャュョ]/g) || []).length >= 6) continue;   // 禁則の表・五十音表
       if (/nameentry|kana/.test(rel) && s.length > 30) continue;
+      // 名前の入力の字の表（文の表 ui.js に移した。空白は空きのマス）
+      if (/'ui\.nameentry\.kana/.test(L)) continue;
       n++;
       const where = `${rel}:${line}`;
       let t = s.replace(/\u0000/g, 'X');   // テンプレートの ${…} は ASCII の 1 字として数える（空白の検査で誤らない）
@@ -102,7 +104,10 @@ function run() {
       }
       if (!/nameentry/.test(rel)) OLD.checkSpacing(t, (m) => E('T4', `${where} ${m}: ${clip(t)}`));
       OLD.checkEllipsis(t, (m) => E('T5', `${where} ${m}: ${clip(t)}`));
-      if (talk && !READ.has(s)) for (const ln of t.split(/[\n\f]/)) {
+      // 会話の窓でない物: 文の表で events_ に同居する画面の文（ui.* = 終わりのクレジットの行）と、終わりの地方のカードの字幕の帯
+      //   （ending.js の画面の幅いっぱいの帯。3 行まで。20 字の窓ではない）、体験版の終わりの画面に描く行（demo_end.js の draw）
+      const band = /^\s*'(ui\.|ev\.final_ending\.cards\.|ev\.demo_end\.draw\.)/.test(L);
+      if (talk && !band && !READ.has(s)) for (const ln of t.split(/[\n\f]/)) {
         const w = OLD.width(ln);
         if (w > 20) E('T6', `${where} a line is ${w} wide (max 20): ${clip(ln)}`);
         else if (w > 18) over18++;

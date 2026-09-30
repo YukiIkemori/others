@@ -582,6 +582,11 @@
     'bossActions.eb_nemrea2_open.telegraph.text': 'The words flow backwards from the ending...',
     'bossActions.eb_nemrea2_end.name': 'The End of the Story',
     'bossActions.eb_nemrea2_end.msg': 'A single line, "The End," tried to close everything!',
+    'bossActions.eb_rowell_gather.name': 'Light of Record',
+    'bossActions.eb_rowell_gather.msg': '{user} raised a silver pen high...!',
+    'bossActions.eb_rowell_gather.telegraph.text': 'The light of record gathers at the pen tip...',
+    'bossActions.eb_rowell_verdict.name': 'Verdict of Record',
+    'bossActions.eb_rowell_verdict.msg': 'A line of light tried to strike the party from the record!',
     'data.bosses_ash.desc': 'A two-headed dog guarding the crater mural.\nWhen it draws a deep breath, brace yourself.',
     'data.bosses_ash.desc_2': 'A beast of the mountain\'s fire, its guardian lost.\nWhen the crater on its back swells, brace yourself.',
     // ---- src/data/bosses_desert.js
