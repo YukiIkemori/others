@@ -3,3 +3,15 @@ __pycache__/
 *.pyc
 # raw image-generation outputs (kept locally, not versioned)
 chronicle/design/art_ref/gen/**/raw/
+# build output (rebuilt by tools/build.js; deploy builds its own) — kept out of history, it churned several GB
+chronicle/v2/dist/index.html
+chronicle/v2/dist/dev.html
+# QA screenshots (local only)
+chronicle/v2/design/shots/
+# image-pipeline check/fit/overlay previews (regenerable)
+chronicle/design/art_ref/gen/**/check*.png
+chronicle/design/art_ref/gen/**/fit*.png
+chronicle/design/art_ref/gen/**/rocks*.png
+chronicle/design/art_ref/gen/**/ov*.png
+chronicle/design/art_ref/gen/**/cmp*.png
+chronicle/design/art_ref/gen/**/chk*.png
