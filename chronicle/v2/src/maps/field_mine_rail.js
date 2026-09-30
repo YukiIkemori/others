@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("g_rail", {
-    name: "トロッコ線の崖", region: "r_mine", outside: "rock",
+    name: R.T('map.field_mine_rail.g_rail.name'), region: "r_mine", outside: "rock",
     legend: R.FieldArea.MINE_LEGEND, theme: 'field', bgm: 'overworld', bbg: 'mine', propSet: 'mine', propSetBase: 'village',
     light: R.FieldArea.MINE_LIGHT,
     rows: [
@@ -50,8 +50,8 @@
       {"type":"door","x":40,"y":6,"to":{"map":"mine_hermit","spawn":"door"}},
       {"type":"examine","x":47,"y":17,"event":"mine_rail_tunnel"},
       {"type":"examine","x":37,"y":22,"event":"mine_cliff_lift"},
-      {"type":"sign","x":8,"y":22,"text":"トロッコ線\n東の果ては、高原への古いトンネル。\n尾根の上に、隠者の庵。"},
-      {"type":"chest","id":"g_rail_c1","x":14,"y":6,"pool":"p_T"},
+      {"type":"sign","x":8,"y":22,"text":R.T('map.field_mine_rail.g_rail.objects.3.text')},
+      {"type":"chest","id":"g_rail_c1","x":15,"y":6,"pool":"p_T"},
       {"type":"waylamp","id":"wl_g_rail_1","x":12,"y":21,"lit":true},
       {"type":"waylamp","id":"wl_g_rail_2","x":31,"y":22,"lit":true},
     ],
@@ -64,7 +64,7 @@
     tilePatches: [],
     zones: [{"rect":null,"zone":"zw_mine"}],
     art: {"image":"field/under/g_rail","painted":[],"overlay":"field/under/g_rail_over"},
-    meta: {"sub":"崖の棚を走る古いトロッコの線","worldRect":[388,80,50,36]},
+    meta: {"sub":R.T('map.field_mine_rail.g_rail.meta.sub'),"worldRect":[388,80,50,36]},
     links: {},
   });
 })(window.RPG);

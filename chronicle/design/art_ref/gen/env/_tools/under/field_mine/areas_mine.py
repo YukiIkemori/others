@@ -180,7 +180,7 @@ def g_rail():
         dict(type='door', x=41, y=7, to={'map': 'mine_hermit', 'spawn': 'door'}),
         dict(type='examine', x=47, y=17, event='mine_rail_tunnel'),
         dict(type='examine', x=37, y=22, event='mine_cliff_lift'),
-        dict(type='sign', x=8, y=22, text='トロッコ線\n東の果ては、高原への古いトンネル。\n尾根の上に、隠者の庵。'),
+        dict(type='sign', x=8, y=22, text='トロッコ線\n東の果ては、高原への古いトンネル。\n尾根の上に、隠者の小屋。'),
         dict(type='chest', id='g_rail_c1', x=14, y=6, pool='p_T'),
         dict(type='waylamp', id='wl_g_rail_1', x=12, y=23, lit=True),
         dict(type='waylamp', id='wl_g_rail_2', x=30, y=23, lit=True),

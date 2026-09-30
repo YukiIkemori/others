@@ -1,0 +1,44 @@
+{
+ "id": "signboard__mine",
+ "kind": "props",
+ "theme": "mine",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   15,
+   21
+  ],
+  "32": [
+   20,
+   28
+  ],
+  "40": [
+   25,
+   35
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   20
+  ],
+  "32": [
+   10,
+   27
+  ],
+  "40": [
+   12,
+   34
+  ]
+ },
+ "files": {
+  "24": "signboard__mine@24.png",
+  "32": "signboard__mine@32.png",
+  "40": "signboard__mine@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/mine_b.png",
+ "set": "mine",
+ "base": "signboard"
+}

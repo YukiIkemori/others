@@ -6,8 +6,8 @@
 //        船長室に入ると、グレン（亡霊船長）。戦いのあと、机の上の航海日誌（途中から白い）→ 夜明けのネレイの桟橋。
 //   解決の後も、霧の晴れた海に古い船として残る（外洋船の舵の「霧の海」から）。当たりは下絵に合わせた isles_painted_rows.js。
 //   灯り（2026-09-30 見直し）: 船の灯り = 木の柱に吊った船のランタン（type 'brazier'、組 'ship' の絵 brazier__ship）。
-//     解決の前は船べりのランタンに亡霊の火がともっている（on: true、cond !cleared_r_isles）。甲板の渡り板の脇・船室の通路にもともった灯り。
-//     3 階の暗がり（E6）は船倉だけ（船長室は明るいまま、ランタン 2 つがともっている）。階段の脇の 1 つもはじめからともる。
+//     解決の前は船べりのランタンに亡霊の火がともっている（on: true、cond !cleared_r_isles）。甲板の渡り板の脇・船室の階段の脇にもともった灯り。
+//     3 階の暗がり（E6）は船倉のまん中だけで膜は薄め（darkAlpha。船長室は明るいまま、ランタン 2 つがともっている）。階段の脇の 1 つもはじめからともる。
 //   下絵は歩ける所の明るさを WALK_TARGET 96 に上げた（process.py）。
 (function (R) {
   'use strict';
@@ -26,9 +26,9 @@
       for (const [x, y] of [[18, 15], [32, 14], [42, 14]]) O.push(K.exam(x, y, 'isles_ghost_mast'));   // 描いた折れた帆柱（下絵 gen3 の位置）
       O.push(K.exam(10, 14, 'isles_ghost_skylight'));
       O.push(K.chest('ghost_ship_1_c1', 8, 9, { pool: 'p_T' }), K.chest('ghost_ship_1_c2', 46, 15, { pool: 'p_T' }));
-      [[12, 6], [24, 6], [36, 6], [12, 21], [22, 21], [36, 21], [47, 10]].forEach(([x, y], i) => O.push({ type: 'brazier', id: 'ghost_ship_1_g' + (i + 1), x, y, on: true, cond: WISP }));
-      // 渡り板の脇の船のランタン（解決の後も）
-      O.push({ type: 'brazier', id: 'ghost_ship_1_l1', x: 26, y: 21, on: true }, { type: 'brazier', id: 'ghost_ship_1_l2', x: 31, y: 21, on: true });
+      [[12, 6], [24, 6], [36, 6], [12, 20], [17, 20], [36, 20], [47, 10]].forEach(([x, y], i) => O.push({ type: 'brazier', id: 'ghost_ship_1_g' + (i + 1), x, y, on: true, cond: WISP }));
+      // 渡り板の脇の船のランタン 1 つ（解決の後も）
+      O.push({ type: 'brazier', id: 'ghost_ship_1_l1', x: 31, y: 20, on: true });   // 下の船べりは壁の段（rise）なので、その内側の甲板に立てる
       K.def('ghost_ship_1', {
         name: R.T('map.isles_ghostship.ghost_ship_1.name'), kind: 'dungeon', region: 'r_isles', location: 'ghostship', theme: 'harbor', propSet: 'ship', propSetBase: 'harbor',
         legend: IK.SHIP(), rows: P.rows, outside: 'sea', objects: O, npcs: [],
@@ -55,8 +55,8 @@
       O.push(K.spring('ghost_ship_2_spring', 25, 6));
       O.push(K.chest('ghost_ship_2_c1', 42, 9, { pool: 'p_T' }), K.chest('ghost_ship_2_c2', 9, 22, { item: 'i_potion', n: 2 }), K.chest('ghost_ship_2_c3', 24, 21, { pool: 'p_rare' }));
       [[12, 11], [28, 11], [12, 16], [28, 16]].forEach(([x, y], i) => O.push({ type: 'brazier', id: 'ghost_ship_2_g' + (i + 1), x, y, on: true, cond: WISP }));
-      // 通路の船のランタン（解決の後も。船室の床と壁が読めるように）
-      [[20, 12], [36, 15], [6, 15]].forEach(([x, y], i) => O.push({ type: 'brazier', id: 'ghost_ship_2_l' + (i + 1), x, y, on: true }));
+      // 階段の脇の船のランタン（解決の後も）
+      O.push({ type: 'brazier', id: 'ghost_ship_2_l1', x: 38, y: 15, on: true });
       K.def('ghost_ship_2', {
         name: R.T('map.isles_ghostship.ghost_ship_2.name'), kind: 'dungeon', region: 'r_isles', location: 'ghostship', theme: 'harbor', propSet: 'ship', propSetBase: 'harbor',
         legend: IK.SHIP(), rows: P.rows, outside: 'wall_wood', objects: O, npcs: [],
@@ -94,7 +94,7 @@
           { id: 'captain', x: 11, y: 12, w: 3, h: 7, on: 'step', event: 'isles_captain', cond: '!isles_captain' },
         ],
         zones: [{ rect: null, zone: 'z_r_isles_ship', cond: WISP }],
-        light: IK.LIGHT_HOLD, dark: [{ rect: [15, 0, 37, 30] }], bgm: 'ghost', bbg: 'isles',   // 暗がりは船倉だけ（x 15 から東）
+        light: IK.LIGHT_HOLD, dark: [{ rect: [15, 0, 26, 30] }], darkAlpha: 0.78, bgm: 'ghost', bbg: 'isles',   // 暗がりは船倉のまん中だけ（x 15〜40。階段の脇と船長室は明るい）。膜は少し薄く（床と壁の形が読める）
         art: P.art,
         meta: { chestsInfo: true, floor: R.T('map.isles_ghostship.ghost_ship_3.meta.floor'), sub: R.T('map.isles_ghostship.ghost_ship_3.meta.sub') },
       });

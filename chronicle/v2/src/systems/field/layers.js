@@ -617,7 +617,10 @@
       }
       case 'brazier': {
         const on = ((G.lit && G.lit[m.id]) || []).includes(o.id);
-        if (hdProp(g, 'brazier', on ? 'on' : 'off', fx, fy)) return;
+        // マップの組に描き直したしょく台（brazier__<set>、例: 幽霊船の船のランタン）はチャンクの絵と同じ opts で（2026-09-30 追加）
+        const bset = R.Terrain && R.Terrain._propSetOf ? R.Terrain._propSetOf(m) : null;
+        const bso = bset && R.Terrain.Env && R.Terrain.Env.prop && R.Terrain.Env.prop('brazier__' + bset, 0, {}) ? (u !== 1 ? { s: u, set: bset } : { set: bset }) : undefined;
+        if (hdProp(g, 'brazier', on ? 'on' : 'off', fx, fy, bso)) return;
         g.fillStyle = '#3a3448'; g.fillRect(fx - 2 * u, fy - 16 * u, 4 * u, 16 * u);
         R.Gfx.roundRect(fx - 8 * u, fy - 22 * u, 16 * u, 7 * u, 3 * u, '#5a5068', '#1c1a2a', 1);
         if (on) { const fl = Math.sin(tm / 90 + o.x) * 1.5 * u; g.fillStyle = '#ff9a4a'; g.beginPath(); g.ellipse(fx, fy - 27 * u + fl * 0.3, 5 * u, 8 * u + fl, 0, 0, 7); g.fill(); g.fillStyle = '#ffe2a0'; g.beginPath(); g.ellipse(fx, fy - 25 * u, 2.4 * u, 4 * u, 0, 0, 7); g.fill(); }

@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("g_valley", {
-    name: "鉱石の谷", region: "r_mine", outside: "rock",
+    name: R.T('map.field_mine_valley.g_valley.name'), region: "r_mine", outside: "rock",
     legend: R.FieldArea.MINE_LEGEND, theme: 'field', bgm: 'overworld', bbg: 'mine', propSet: 'mine', propSetBase: 'village',
     light: R.FieldArea.MINE_LIGHT,
     rows: [
@@ -52,7 +52,7 @@
     ],
     objects: [
       {"type":"door","x":27,"y":8,"to":{"map":"dovan","spawn":"gate"}},
-      {"type":"sign","x":24,"y":12,"text":"鉱山都市ドヴァン\n地の底の町。門の奥へ。"},
+      {"type":"sign","x":24,"y":12,"text":R.T('map.field_mine_valley.g_valley.objects.1.text')},
       {"type":"examine","x":38,"y":13,"event":"mine_sorting_shed"},
       {"type":"chest","id":"g_valley_c1","x":8,"y":16,"item":"i_ether","n":1},
       {"type":"waylamp","id":"wl_g_valley_1","x":14,"y":21,"lit":true},
@@ -68,7 +68,7 @@
     tilePatches: [],
     zones: [{"rect":null,"zone":"zw_mine"}],
     art: {"image":"field/under/g_valley","painted":[],"overlay":"field/under/g_valley_over"},
-    meta: {"sub":"鉱山都市ドヴァンの門の谷","worldRect":[334,76,54,40]},
+    meta: {"sub":R.T('map.field_mine_valley.g_valley.meta.sub'),"worldRect":[334,76,54,40]},
     links: {"dovan":{"map":"g_valley","spawn":"gate"}},
   });
 })(window.RPG);

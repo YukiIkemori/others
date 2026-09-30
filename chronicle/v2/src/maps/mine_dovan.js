@@ -20,7 +20,7 @@
     });
     // ---------------------------------------------------------------- 働く物
     // 坑道の入口（下の段の奥の岩壁。深き坑道 1 階へ。入る前にはい／いいえ）
-    O.push({ type: 'door', x: 31, y: 3, look: 'none', to: { map: 'mine_1', spawn: 'entrance' }, confirm: '深き坑道に入りますか？' });
+    O.push({ type: 'door', x: 31, y: 3, look: 'none', to: { map: 'mine_1', spawn: 'entrance' }, confirm: R.T('map.mine_dovan.confirm') });
     // 誓いの碑（下の段の台の上。文字が半分消えている）
     O.push(K.exam(21, 6, 'dovan_oath_stone'), K.exam(22, 6, 'dovan_oath_stone'));
     // 昇降機の櫓（上の段の足もと ⇔ 中の段の上の口）
@@ -28,9 +28,9 @@
     // トロッコ乗り場（線路の終わり。組合につくと、トロッコ線の崖の終点まで走る）
     O.push(K.prop('mine_cart', 41, 26), K.exam(41, 26, 'dovan_cart_station'));
     // 入口の看板（トンネルの出口のわき）
-    O.push(K.sign(24, 44, '鉱山都市ドヴァン\n上の段 → 宿・道具屋・鍛冶場\n石段と昇降機 → 広場・組合\n西の坂 → 集会所・誓いの碑・坑道'));
+    O.push(K.sign(24, 44, R.T('map.mine_dovan.sign')));
     // 宝箱（見える所だけ）: 下の段の東の隅・中の段の西の隅
-    O.push(K.chest('dovan_c1', 48, 9, { pool: 'p_T' }), K.chest('dovan_c2', 5, 27, { item: 'i_potion', n: 2 }));
+    O.push(K.chest('dovan_c1', 48, 10, { pool: 'p_T' }), K.chest('dovan_c2', 5, 27, { item: 'i_potion', n: 2 }));
     // 坑夫のカンテラ（岩壁の際）
     for (const [x, y] of [[18, 13], [36, 13], [24, 17], [47, 17], [4, 18], [23, 31], [30, 31], [15, 35], [41, 35], [5, 44], [48, 44]]) O.push(K.prop('hook_lamp', x, y));
     // 灯り直したあと: 町じゅうの炉と窓に火が入る（光だけの物）
@@ -42,32 +42,32 @@
     const NO_CHOICE = '!mine_choice';
     const N = [
       // 坑道の入口の見張り（閉じ込められた鉱夫の手がかり）
-      K.npc('mouth_watch', 'npc_miner', 33, 4, { name: '坑道の見張り', dir: 'w', talk: 'dovan_mouth_watch', reward: 'lead', pushable: false }),
+      K.npc('mouth_watch', 'npc_miner', 33, 4, { name: R.T('map.mine_dovan.N.0.mouth_watch.name'), dir: 'w', talk: 'dovan_mouth_watch', reward: 'lead', pushable: false }),
       // 昇降機の前のにらみ合い（組合の鉱夫と鍛冶衆。選ぶまで）
-      K.npc('glare_guild', 'npc_miner', 42, 25, { name: '組合の鉱夫', dir: 'e', talk: 'dovan_glare_guild', reward: 'news', pushable: false, cond: NO_CHOICE }),
-      K.npc('glare_smith', 'npc_smith', 46, 25, { name: '鍛冶衆の男', dir: 'w', talk: 'dovan_glare_smith', reward: 'news', pushable: false, cond: NO_CHOICE }),
+      K.npc('glare_guild', 'npc_miner', 42, 25, { name: R.T('map.mine_dovan.N.1.glare_guild.name'), dir: 'e', talk: 'dovan_glare_guild', reward: 'news', pushable: false, cond: NO_CHOICE }),
+      K.npc('glare_smith', 'npc_smith', 46, 25, { name: R.T('map.mine_dovan.N.2.glare_smith.name'), dir: 'w', talk: 'dovan_glare_smith', reward: 'news', pushable: false, cond: NO_CHOICE }),
       // 選んだあとの広場（A: 組合の祝杯・B: 鍛冶場の火入れ・C: 同じ卓）
-      K.npc('toast_guild', 'npc_miner', 28, 26, { name: '広場の鉱夫', dir: 's', talk: 'dovan_after_guild', reward: 'news', cond: 'mine_choice' }),
+      K.npc('toast_guild', 'npc_miner', 28, 26, { name: R.T('map.mine_dovan.N.3.toast_guild.name'), dir: 's', talk: 'dovan_after_guild', reward: 'news', cond: 'mine_choice' }),
       // トロッコ乗り場の古い坑夫（坑夫のカンテラの油売りの話・宝石ハリネズミのうわさ）
-      K.npc('station_old', 'npc_mine_old_m', 38, 28, { name: '乗り場の古い坑夫', dir: 'e', talk: 'dovan_station_old', reward: 'boss' }),
+      K.npc('station_old', 'npc_mine_old_m', 38, 28, { name: R.T('map.mine_dovan.N.4.station_old.name'), dir: 'e', talk: 'dovan_station_old', reward: 'boss' }),
       // タデオ（灯守組合の油売り。坑夫のカンテラの依頼）
-      K.npc('tadeo', 'npc_tadeo', 22, 44, { name: 'タデオ', title: '灯守組合の油売り', dir: 'n', talk: 'dovan_tadeo', reward: 'side' }),
+      K.npc('tadeo', 'npc_tadeo', 22, 44, { name: R.T('map.mine_dovan.N.5.tadeo.name'), title: R.T('map.mine_dovan.N.5.tadeo.title'), dir: 'n', talk: 'dovan_tadeo', reward: 'side' }),
       // 広場の子（落盤の子猫）
-      K.npc('cat_kid', 'npc_mine_child', 19, 27, { name: '広場の子', dir: 's', talk: 'dovan_cat_kid', reward: 'side' }),
+      K.npc('cat_kid', 'npc_mine_child', 19, 27, { name: R.T('map.mine_dovan.N.6.cat_kid.name'), dir: 's', talk: 'dovan_cat_kid', reward: 'side' }),
       // 上の段の通りの女・下の段の年寄り
-      K.npc('street_woman', 'npc_mine_woman', 13, 43, { name: '通りの女', dir: 'n', move: 'wander', talk: 'dovan_street_woman', reward: 'hint' }),
-      K.npc('hall_old', 'npc_mine_old_f', 14, 12, { name: '集会所の前の老婆', dir: 's', talk: 'dovan_hall_old', reward: 'news' }),
+      K.npc('street_woman', 'npc_mine_woman', 13, 43, { name: R.T('map.mine_dovan.N.7.street_woman.name'), dir: 'n', move: 'wander', talk: 'dovan_street_woman', reward: 'hint' }),
+      K.npc('hall_old', 'npc_mine_old_f', 14, 12, { name: R.T('map.mine_dovan.N.8.hall_old.name'), dir: 's', talk: 'dovan_hall_old', reward: 'news' }),
       // 子猫（助けたあと、子のそばに）
-      K.npc('kitten', 'ani_cat', 20, 28, { name: '子猫', dir: 'w', move: 'wander', talk: [L('ミャア。')], reward: null, cond: 'mine_kitten_home' }),
+      K.npc('kitten', 'ani_cat', 20, 28, { name: R.T('map.mine_dovan.N.9.kitten.name'), dir: 'w', move: 'wander', talk: [L(R.T('map.mine_dovan.N.talk.0.L'))], reward: null, cond: 'mine_kitten_home' }),
       // 灯り直す場面（炉の前の広場に町の人が集まる。場面の間だけ）
-      K.npc('relight_borg', 'npc_borg', 21, 9, { name: 'ボルグ', dir: 'n', talk: [L('……。')], reward: null, pushable: false, cond: 'mine_relight_scene' }),
-      K.npc('relight_helga', 'npc_helga', 23, 9, { name: 'ヘルガ', dir: 'n', talk: [L('……。')], reward: null, pushable: false, cond: 'mine_relight_scene' }),
-      K.npc('relight_pip', 'npc_pip', 25, 9, { name: 'ピップ', dir: 'n', talk: [L('……。')], reward: null, pushable: false, cond: 'mine_relight_scene' }),
+      K.npc('relight_borg', 'npc_borg', 21, 9, { name: R.T('map.mine_dovan.N.10.relight_borg.name'), dir: 'n', talk: [L('……。')], reward: null, pushable: false, cond: 'mine_relight_scene' }),
+      K.npc('relight_helga', 'npc_helga', 23, 9, { name: R.T('map.mine_dovan.N.11.relight_helga.name'), dir: 'n', talk: [L('……。')], reward: null, pushable: false, cond: 'mine_relight_scene' }),
+      K.npc('relight_pip', 'npc_pip', 25, 9, { name: R.T('map.mine_dovan.N.12.relight_pip.name'), dir: 'n', talk: [L('……。')], reward: null, pushable: false, cond: 'mine_relight_scene' }),
     ];
 
     const sp = (bid) => MK.doorSpawn('dovan', bid);
     K.def('dovan', {
-      name: '鉱山都市ドヴァン', kind: 'town', region: 'r_mine', location: 'dovan', theme: 'mine',
+      name: R.T('map.mine_dovan.dovan.name'), kind: 'town', region: 'r_mine', location: 'dovan', theme: 'mine',
       legend: MK.TOWN(), rows: P.rows, outside: 'wall_cave',
       objects: O, npcs: N,
       spawns: {
@@ -80,7 +80,7 @@
       triggers: [{ id: 'arrival', on: 'enter', event: 'dovan_arrival' }],
       zones: [],
       light: MK.LIGHT_TOWN, dark: false, bgm: 'town', bbg: 'mine', propSet: 'mine',
-      meta: { sub: '山の中の洞窟の町', chestsInfo: false },
+      meta: { sub: R.T('map.mine_dovan.dovan.meta.sub'), chestsInfo: false },
       art: P.art,
     });
   });

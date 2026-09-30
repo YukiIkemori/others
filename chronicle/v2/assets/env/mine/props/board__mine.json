@@ -1,0 +1,44 @@
+{
+ "id": "board__mine",
+ "kind": "props",
+ "theme": "mine",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   34,
+   28
+  ],
+  "32": [
+   46,
+   38
+  ],
+  "40": [
+   58,
+   48
+  ]
+ },
+ "feet": {
+  "24": [
+   17,
+   28
+  ],
+  "32": [
+   23,
+   37
+  ],
+  "40": [
+   29,
+   46
+  ]
+ },
+ "files": {
+  "24": "board__mine@24.png",
+  "32": "board__mine@32.png",
+  "40": "board__mine@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/mine_b.png",
+ "set": "mine",
+ "base": "board"
+}

@@ -14,6 +14,8 @@
   let mask = null, mg = null, hole = null;
   const vis = { px: 0, py: 0 };
 
+  /** 膜の濃さ（既定 0.93）。map.darkAlpha でマップごとに薄くできる（幽霊船の船倉: 床と壁の形がうっすら読める。2026-09-30 追加） */
+  D.alphaOf = function (m) { return m && typeof m.darkAlpha === 'number' ? m.darkAlpha : 0.93; };
   D.on = function () { return !!(S.map && S.map.dark); };
   /** 一行の灯りの半径（マス）: 松明の間は広い */
   D.partyR = function () { return S.torch && S.torch.steps > 0 ? Math.max(D.PARTY_R, S.torch.r) : D.PARTY_R; };
@@ -95,7 +97,7 @@
         if (k > a) a = k;
       }
       const q = (y * W + x) * 4;
-      px[q] = 5; px[q + 1] = 6; px[q + 2] = 18; px[q + 3] = Math.round(a * 0.93 * 255);
+      px[q] = 5; px[q + 1] = 6; px[q + 2] = 18; px[q + 3] = Math.round(a * D.alphaOf(m) * 255);
     }
     g.putImageData(img, 0, 0);
     fieldCache = { sig, c, q: Q, pad: PAD };
@@ -108,7 +110,7 @@
     const m = S.map, t = cam.t, cx = cam.cx, cy = cam.cy, G = R.Game || {};
     mg.globalCompositeOperation = 'source-over';
     mg.clearRect(0, 0, mask.width, mask.height);
-    mg.fillStyle = 'rgba(5,6,18,0.93)';
+    mg.fillStyle = 'rgba(5,6,18,' + D.alphaOf(m) + ')';
     const d = m.dark;
     if (d === true) mg.fillRect(0, 0, mask.width, mask.height);
     else {

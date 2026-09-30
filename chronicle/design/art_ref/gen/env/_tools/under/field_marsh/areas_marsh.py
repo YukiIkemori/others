@@ -244,7 +244,7 @@ def m_fen():
     reeds_along(a, water, 2, seed=2, thr=0.45)
     # the chapel nave (an island of flagstones) and its broken arches / pillars in the water
     a.rect(26, 15, 7, 5, 'c', force=True, keep=True)
-    for (x, y) in [(25, 14), (33, 14), (25, 20), (33, 20), (29, 13), (35, 17), (23, 17)]:
+    for (x, y) in [(25, 14), (33, 14), (25, 20), (33, 20), (29, 13), (35, 17)]:   # (23, 17) は板の道の上なので描かせない
         a.mark('pillar', [(x, y)], 'broken PILLAR STUMPS and a fallen pointed ARCH of a drowned stone CHAPEL standing in the water, mossy grey stone', STONE)
     apse = [(x, y) for x in range(28, 31) for y in (11, 12)]
     a.mark('apse', apse, 'the broken APSE wall of the drowned chapel, a tall pointed ARCH window frame still standing, grey stone with moss', STONE)

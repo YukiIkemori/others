@@ -22,7 +22,7 @@ const argv = process.argv.slice(2);
 const VERBOSE = argv.includes('--verbose');
 let R = null, M = null;
 /** 縦切り（slice）では峠の番人の先にある地方（3b） */
-const SLICE_OUT = ['r_desert', 'r_snow', 'r_marsh', 'r_ash', 'r_isles'];
+const SLICE_OUT = ['r_desert', 'r_snow', 'r_marsh', 'r_ash', 'r_isles', 'r_mine'];
 let SLICE0 = null;
 /** 縦切りの錠を外す（同じ R の中だけ。本物の config のファイルは変えない） */
 function sliceOff() { if (SLICE0 === null) SLICE0 = !!(R.DB.config && R.DB.config.slice); if (R.DB.config) R.DB.config.slice = false; R.MapUtil.invalidate(); }
@@ -269,6 +269,16 @@ function main() {
         ok(`商船=${wreck} 年代記=${write}${restricted ? '（隠し通路・寄り道・依頼なし）' : ''}: 洞窟の貝がら → 外洋船 → 海図 → マリナの舟歌 → 幽霊船 → 船長 → 夜明け → clearRegion('r_isles')`,
           !!(r.flags.isles_shell && r.flags.isles_ship && r.flags.isles_fog_found && r.flags.isles_song_done && r.flags.isles_captain && r.flags.cleared_r_isles && r.flags.isles_finale_done),
           { shell: !!r.flags.isles_shell, ship: !!r.flags.isles_ship, fog: !!r.flags.isles_fog_found, song: !!r.flags.isles_song_done, captain: !!r.flags.isles_captain, cleared: !!r.flags.cleared_r_isles });
+      }
+    }
+    // ガルド山地（作った地方。regions の slice:'locked' は体験版の錠として残す）: 選ぶ道（組合・鍛冶衆・仲裁）× 年代記。寄り道・依頼なしも 1 本
+    if (R.DB.regions.r_mine && (R.DB.regions.r_mine.dungeons || []).length) {
+      section('2g. ガルド山地の閉包（clearRegion(\'r_mine\')）');
+      for (const [side, write, restricted] of [['guild', 'pain', false], ['smiths', 'story', false], ['accord', 'pain', false], ['smiths', 'story', true]]) {
+        const r = closure({ variant: Object.assign({}, variants[0], { ch_mine_side: side, ch_mine_write: write }), restricted });
+        ok(`道=${side} 年代記=${write}${restricted ? '（隠し通路・寄り道・依頼なし）' : ''}: 3 人の救出 → 誓いのハンマー → 岩戸 → 集会所 → 番人 → 炉の火 → clearRegion('r_mine')`,
+          !!(r.flags.mine_rescued_all && r.flags.mine_door_seen && r.flags.mine_choice && r.flags.mine_warden_done && r.flags.cleared_r_mine && r.flags.mine_finale_done),
+          { rescued: !!r.flags.mine_rescued_all, door: !!r.flags.mine_door_seen, choice: !!r.flags.mine_choice, warden: !!r.flags.mine_warden_done, cleared: !!r.flags.cleared_r_mine });
       }
     }
     section('3. 全マップの到達（縦切りの錠を外した全体の筋）');

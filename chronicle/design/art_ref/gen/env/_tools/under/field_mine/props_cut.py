@@ -22,7 +22,20 @@ cans = []
 for c in (off, on):
     can = np.zeros((hh, hw, 4), np.float32); ox = (hw - c.shape[1]) // 2; oy = hh - c.shape[0]
     can[oy:oy + c.shape[0], ox:ox + c.shape[1]] = c; cans.append(can)
-print(write_sprite_set(cans, 'mine', 'props', 'waylamp__mine', ['off', 'on'], (W, H), (W / 2, H - 1), dict(src, set='mine', base='waylamp', light32=[0, -40]))['cell'])
+# 灯りの芯: 書き出した 32 px の灯った絵の、明るい黄の画素の重心（足もとから。下で書き直す）
+lx, ly = 0, -40
+print(write_sprite_set(cans, 'mine', 'props', 'waylamp__mine', ['off', 'on'], (W, H), (W / 2, H - 1), dict(src, set='mine', base='waylamp', light32=[round(lx), round(ly)]))['cell'])
+import json as _json
+_d = os.path.join('/home/user/others/chronicle/v2/assets/env/mine/props/')
+_j = _json.load(open(_d + 'waylamp__mine.json')); _w = _j['cell']['32'][0]
+_on = np.asarray(__import__('PIL.Image', fromlist=['Image']).open(_d + 'waylamp__mine@32.png').convert('RGBA')).astype(int)[:, _w:2 * _w]
+_m = (_on[..., 0] > 220) & (_on[..., 1] > 150) & (_on[..., 3] > 0); _ys, _xs = np.nonzero(_m)
+if len(_xs): lx, ly = _xs.mean() - _j['feet']['32'][0], _ys.mean() - _j['feet']['32'][1]
+_j['light32'] = [round(lx), round(ly)]; _json.dump(_j, open(_d + 'waylamp__mine.json', 'w'), indent=1)
+print('light', _j['light32'])
+# しょく台（暗がりで火をともす物）も同じ坑夫のカンテラの柱（少し小さく）
+g2 = 42 / 52; W2, H2 = int(round(W * g2)), int(round(H * g2))
+print(write_sprite_set(cans, 'mine', 'props', 'brazier__mine', ['off', 'on'], (W2, H2), (W2 / 2, H2 - 1), dict(src, set='mine', base='brazier', light32=[round(lx * g2), round(ly * g2)]))['cell'])
 for c, sid, h, ex in ((parts[2], 'signboard__mine', 28, {}), (parts[5], 'lantern__mine', 18, dict(light32=[0, -9])), (parts[4], 'board__mine', 38, {})):
     a = crop(c); w = max(1, round(a.shape[1] * h / a.shape[0]))
     print(write_sprite_set([a], 'mine', 'props', sid, ['default'], (w, h), (w / 2, h - 1), dict(src, set='mine', base=sid.split('__')[0], **ex))['cell'])

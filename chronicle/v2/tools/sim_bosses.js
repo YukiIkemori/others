@@ -68,6 +68,13 @@ for (const T of [1, 3]) {
   BOSSES['tr_b_captain' + k] = { troop: 'tr_b_captain', tier: T, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 13], note: '大砲に火縄を回したら守る。光と火が効く。半分で怒る' };
 }
 
+// ガルド山地（src/data/bosses_mine.js）。好きな順に遊ぶので、ティア 1・3 で測る。鉄の番人は組合につく道だけ
+for (const T of [1, 3]) {
+  const k = '@' + T;
+  BOSSES['tr_b_rockeater' + k] = { troop: 'tr_b_rockeater', tier: T, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 10], note: '床にもぐったら守る。風が効く' };
+  BOSSES['tr_b_ironwarden' + k] = { troop: 'tr_b_ironwarden', tier: T, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 13], note: '大槌を振りかぶったら守る。水が効く。3/4 で二度動く' };
+}
+
 function loadR() { return require('./lib/load')({ quiet: true }); }
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : 0);
 

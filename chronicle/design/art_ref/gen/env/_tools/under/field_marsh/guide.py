@@ -85,6 +85,11 @@ def draw(T, sym=True):
                         g.line([px, py, px + rnd.randint(-2, 2), py - T * 2 // 3], fill=(120, 100, 50), width=max(1, lw))
                         g.ellipse([px - 2, py - T * 2 // 3 - 3, px + 2, py - T * 2 // 3 + 5], fill=(96, 64, 34))
                     continue
+                if c == ';':   # 菅の株: 列に並べず、ばらばらの小さな株
+                    for _ in range(3):
+                        px, py = x * T + rnd.randint(2, T - 3), y * T + rnd.randint(T // 3, T - 3)
+                        for k in (-1, 0, 1): g.line([px, py, px + k * T // 10, py - T // 4], fill=(50, 104, 40), width=lw)
+                    continue
             if c == ';':
                 for q in range(T // 6, T, T // 4): g.line([x * T + q, y * T + T - T // 6, x * T + q + T // 12, y * T + T // 2], fill=(50, 104, 40), width=lw)
             elif c == '"':

@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("g_pass", {
-    name: "ガルドの峠道", region: "r_mine", outside: "rock",
+    name: R.T('map.field_mine_pass.g_pass.name'), region: "r_mine", outside: "rock",
     legend: R.FieldArea.MINE_LEGEND, theme: 'field', bgm: 'overworld', bbg: 'mine', propSet: 'mine', propSetBase: 'village',
     light: R.FieldArea.MINE_LIGHT,
     rows: [
@@ -48,8 +48,8 @@
     ],
     objects: [
       {"type":"examine","x":9,"y":19,"event":"mine_pass_cairn"},
-      {"type":"sign","x":10,"y":21,"text":"ガルドの峠道\n西 → 湯けむりの峠\n東 → 鉱石の谷・鉱山都市ドヴァン"},
-      {"type":"chest","id":"g_pass_c1","x":44,"y":24,"item":"i_potion","n":2},
+      {"type":"sign","x":10,"y":21,"text":R.T('map.field_mine_pass.g_pass.objects.1.text')},
+      {"type":"chest","id":"g_pass_c1","x":43,"y":24,"item":"i_potion","n":2},
       {"type":"waylamp","id":"wl_g_pass_1","x":20,"y":17,"lit":true},
       {"type":"waylamp","id":"wl_g_pass_2","x":40,"y":21,"lit":true},
     ],
@@ -62,7 +62,7 @@
     tilePatches: [],
     zones: [{"rect":null,"zone":"zw_mine"}],
     art: {"image":"field/under/g_pass","painted":[],"overlay":"field/under/g_pass_over"},
-    meta: {"sub":"雪原から山地へ越える峠","worldRect":[284,78,50,36]},
+    meta: {"sub":R.T('map.field_mine_pass.g_pass.meta.sub'),"worldRect":[284,78,50,36]},
     links: {},
   });
 })(window.RPG);

@@ -1,0 +1,49 @@
+{
+ "id": "waylamp__mine",
+ "kind": "props",
+ "theme": "mine",
+ "frames": [
+  "off",
+  "on"
+ ],
+ "cell": {
+  "24": [
+   26,
+   40
+  ],
+  "32": [
+   34,
+   53
+  ],
+  "40": [
+   42,
+   66
+  ]
+ },
+ "feet": {
+  "24": [
+   13,
+   39
+  ],
+  "32": [
+   17,
+   52
+  ],
+  "40": [
+   21,
+   65
+  ]
+ },
+ "files": {
+  "24": "waylamp__mine@24.png",
+  "32": "waylamp__mine@32.png",
+  "40": "waylamp__mine@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/mine_b.png",
+ "set": "mine",
+ "base": "waylamp",
+ "light32": [
+  11,
+  -30
+ ]
+}

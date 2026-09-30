@@ -1438,5 +1438,20 @@
     'items.u_shell_charm.acc.desc': '夜光虫で光る12の貝がらを\n糸でつないだお守り。',
     'items.u_flag_scarf.head': '信号旗の襟巻き',
     'items.u_flag_scarf.head.desc': '旗信号の試験に受かった見習いが\n首に巻く、赤と白の襟巻き。',
+    // ---- src/data/items_mine.js
+    'data.items_mine.KEYS.k_mine_oil.K': '坑夫の灯油',
+    'data.items_mine.KEYS.k_mine_oil.K_2': '坑道の古いカンテラに\n足す油。3か所ぶん。',
+    'data.items_mine.KEYS.k_oath_copy.K': '碑文の古い写し',
+    'data.items_mine.KEYS.k_oath_copy.K_2': '誓いの碑の文字の写し。\n隠者が若いころ写した。',
+    'items.u_guild_pick.weapon': '組合のつるはし',
+    'items.u_guild_pick.weapon.desc': '組合の鉱夫の重いつるはし。\n石や鉄の魔物によく効く。',
+    'items.u_oath_hammer.weapon': '誓いの槌',
+    'items.u_oath_hammer.weapon.desc': '鍛冶衆が誓い直して打った槌。\n火の技と術が強くなる。',
+    'items.u_accord_ring.acc': '和解の指輪',
+    'items.u_accord_ring.acc.desc': '組合と鍛冶衆が半分ずつ出した\n鉄と銀の指輪。混乱しにくい。',
+    'items.u_hermit_beads.acc': '隠者の数珠',
+    'items.u_hermit_beads.acc.desc': '山の隠者の古い数珠。\n技と術を少し閃きやすい。',
+    'items.u_miner_lamp.acc': '坑夫の守り灯',
+    'items.u_miner_lamp.acc.desc': '腰に下げる小さなカンテラ。\n魔物が寄りにくく、暗闇が効かない。',
   });
 })(window.RPG);

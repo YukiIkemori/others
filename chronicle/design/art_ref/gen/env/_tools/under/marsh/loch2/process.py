@@ -32,6 +32,21 @@ for sh in SHIFT:
     a[Y0:Y1, X0:X1] = np.rint(orig[Y0:Y1, X0:X1] * (1 - al) + a[Y0:Y1, X0:X1] * al).astype(np.uint8)
     orig = a.copy()
 A = np.asarray(Image.fromarray(a).resize((W * T, H * T), Image.BOX)).astype(np.float32)
+# 描かれた看板を板壁で塗りつぶす（2026-09-30: 町の吊り看板（道具・酒場・武具の印）と二重になっていた。絵の看板は魚・鐘・花で店の印として読めない）
+#   PAINTOUT=[[x0,y0,x1,y1,wx0,wx1],...]（1x px）: 看板の四角を、同じ行の板壁（wx0..wx1 の中、板の周期ずらし）の列で埋める。灯りの列は使わない
+PO = json.loads(os.environ.get('PAINTOUT', '[]'))
+if PO:
+    Lw = A @ np.array([0.299, 0.587, 0.114], np.float32)
+    for x0, y0, x1, y1, wx0, wx1 in PO:
+        row = Lw[y1 + 2:y1 + 8, wx0:wx1].mean(0); row = row - row.mean()
+        P = min(range(8, 25), key=lambda s_: np.mean((row[s_:] - row[:-s_]) ** 2))   # 板の周期
+        warm = (A[..., 0] > 190) & (A[..., 1] > 160) & (A[..., 2] < 140)   # 灯り（明るい黄）。金具の暗い縁ごと避ける
+        warm = ndimage.binary_dilation(warm, np.ones((9, 13), bool))
+        for x in range(x0, x1):
+            cand = [x + sg * P * n for n in range(1, 12) for sg in (-1, 1)]
+            cand = [c for c in sorted(cand, key=lambda c: abs(c - x)) if wx0 <= c < wx1 and not (x0 - 2 <= c < x1 + 2) and not warm[y0:y1, max(0, c - 2):c + 3].any()]
+            if cand: A[y0:y1, x] = A[y0:y1, cand[0]]
+    print('paintout', len(PO), 'period', P)
 A0 = A.copy()
 gain = float(os.environ.get('GAIN', 0.9))
 A = np.clip(A * gain, 0, 255)

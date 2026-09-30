@@ -1,0 +1,49 @@
+{
+ "id": "brazier__mine",
+ "kind": "props",
+ "theme": "mine",
+ "frames": [
+  "off",
+  "on"
+ ],
+ "cell": {
+  "24": [
+   20,
+   32
+  ],
+  "32": [
+   27,
+   43
+  ],
+  "40": [
+   34,
+   54
+  ]
+ },
+ "feet": {
+  "24": [
+   10,
+   32
+  ],
+  "32": [
+   14,
+   42
+  ],
+  "40": [
+   17,
+   52
+  ]
+ },
+ "files": {
+  "24": "brazier__mine@24.png",
+  "32": "brazier__mine@32.png",
+  "40": "brazier__mine@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/mine_b.png",
+ "set": "mine",
+ "base": "brazier",
+ "light32": [
+  9,
+  -24
+ ]
+}

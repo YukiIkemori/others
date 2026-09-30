@@ -29,6 +29,17 @@
     for (const e of p.exits || []) {
       if (e.to && e.to.map === FROM.map && e.to.spawn === FROM.spawn) { e.to.map = TO.map; e.to.spawn = TO.spawn; }
     }
+    // 生成したエリアのファイルは書き換えない: 働く物と人をここで足す
+    const G = M.g_pass, V = M.g_valley;
+    if (G && !(G.objects || []).some((o) => o.event === 'mine_pass_tunnel')) {
+      // 峠道の板でふさいだ古い坑道 = 鍛冶衆の抜け道（鍛冶衆につくか仲裁で開く。ドヴァンの鍛冶場の前へ）
+      G.objects.push({ type: 'examine', x: 33, y: 8, event: 'mine_pass_tunnel' },
+        { type: 'door', x: 33, y: 9, look: 'none', to: { map: 'dovan', spawn: 'forge' }, cond: 'mine_smithpath', confirm: R.T('map.field_mine_00_kit.link.confirm') });
+    }
+    if (V && !(V.npcs || []).some((n) => n.id === 'gate_guard')) {
+      V.npcs = V.npcs || [];
+      V.npcs.push({ id: 'gate_guard', look: 'npc_miner', name: R.T('map.field_mine_00_kit.link.gate_guard.name'), x: 29, y: 10, dir: 'w', move: 'still', pushable: false, talk: 'mine_gate_guard', reward: 'news', key: 'mine_gate_guard' });
+    }
   }
   if (R.onData) R.onData(() => R.onData(link));
 })(window.RPG);

@@ -79,15 +79,16 @@ function domainOf(rel) {
   return 'misc';
 }
 function eventRegion(b) {
-  const m = /^(ash|desert|forest|marsh|snow|pharos|prologue|optional|world|yura|isles)_?/.exec(b);
+  const m = /^(ash|desert|forest|marsh|snow|pharos|prologue|optional|world|yura|isles|mine)_?/.exec(b);
   if (m) return m[1] === 'yura' ? 'forest' : m[1] === 'world' ? 'world' : m[1];
   return 'main';   // demo_end・leads_main・secret_hints・story_t1
 }
 function mapRegion(b) {
   if (/^(elder|verda|fern)_/.test(b) || b === 'yura_village') return 'forest';
   if (/^field_isles_/.test(b)) return 'isles';   // 諸島のエリア（field_isles_*）は諸島の表
+  if (/^field_mine_/.test(b)) return 'mine';     // 山地のエリア（field_mine_*）は山地の表
   if (/^(field|homes_slice|world$|optional_)/.test(b) || b === 'world') return 'field';
-  const m = /^(ash|desert|marsh|snow|pharos|prologue|isles)_/.exec(b);
+  const m = /^(ash|desert|marsh|snow|pharos|prologue|isles|mine)_/.exec(b);
   return m ? m[1] : 'field';
 }
 function prefixOf(rel) {

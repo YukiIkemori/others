@@ -76,11 +76,16 @@
     'regions.r_star.beacon': '星',
     'regions.world.name': '世界のうわさ',
     'regions.r_isles.chapter.summary': '霧の晩の幽霊船を自分の船で追い、帰らずの船長に舟歌の続きを届けた。灯はだいだい色に戻り、沖の灯台島にともった。',
+    'regions.r_mine.chapter.summary': '地の底の町ドヴァンで、鍛冶神の炉の火が細り、七の層の下を掘った坑道が崩れた。組合と鍛冶衆が割れる中、{hero}は鉄の番人の前で町の道を決めた。',
     // ---- src/data/locations_isles.js
     'locations.coral.name': '港町コーラル',
     'locations.nerei.name': '岬の村ネレイ',
     'locations.tidecave.name': '潮鳴りの洞窟',
     'locations.ghostship.name': '幽霊船',
     'locations.lighthouse_isle.name': '灯台島',
+    // ---- src/data/locations_mine.js
+    'locations.dovan.name': '鉱山都市ドヴァン',
+    'locations.deepmine.name': '深き坑道',
+    'locations.hermit.name': '山の隠者の小屋',
   });
 })(window.RPG);

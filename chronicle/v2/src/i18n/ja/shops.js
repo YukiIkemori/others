@@ -36,5 +36,9 @@
     'shops.shop_coral_arms.name': 'コーラルの武具屋',
     'shops.shop_coral_guild.name': '船乗り組合の売り台',
     'shops.shop_nerei.name': 'ネレイの雑貨屋',
+    // ---- src/data/shops_mine.js
+    'shops.shop_dovan_items.name': 'ドヴァンの道具屋',
+    'shops.shop_dovan_forge.name': '鍛冶衆の売り台',
+    'shops.shop_dovan_guild.name': '鉱夫組合の売り台',
   });
 })(window.RPG);

@@ -1076,5 +1076,18 @@
     'bossActions.eb_broadside.msg': '青い火の砲弾が、船室をなぎはらった！',
     'data.bosses_isles.desc': '潮鳴りの洞窟の深みにすむ大ダコ。\n水面が渦を巻いたら、次の手番に大渦が来る。守って耐えよう。\n足を切っても、すぐに生やしてくる。',
     'data.bosses_isles.desc_2': '六十年前に帰らなかった船長の亡霊。舟歌の続きを思い出せずにいる。\n大砲へ火縄を回したら、次の手番に一斉砲火。守って耐えよう。\n光と火がよく効く。',
+    // ---- src/data/bosses_mine.js
+    'bossActions.eb_rock_burrow.name': '土もぐり',
+    'bossActions.eb_rock_burrow.msg': '岩食らいは、ずぶずぶと床の下へもぐっていく……！',
+    'bossActions.eb_rock_burrow.telegraph.text': '足もとが、ごろごろと鳴っている……！',
+    'bossActions.eb_rock_upheaval.name': '突き上げ',
+    'bossActions.eb_rock_upheaval.msg': '岩食らいが床を突き破って飛び出した！',
+    'bossActions.eb_warden_raise.name': '大槌の構え',
+    'bossActions.eb_warden_raise.msg': '鉄の番人は、大槌を高く振りかぶった……！',
+    'bossActions.eb_warden_raise.telegraph.text': '大槌の頭が、炉の色に赤く光っている……！',
+    'bossActions.eb_warden_anvil.name': '誓いの金床',
+    'bossActions.eb_warden_anvil.msg': '大槌が床を打ち、金床のような衝撃が広がった！',
+    'data.bosses_mine.desc': '坑道の岩をかじって太った虫。\n床にもぐったら、守りを固めよ。',
+    'data.bosses_mine.desc_2': '七の層を守る鉄の巨人。\n大槌を構えたら、守りを固めよ。',
   });
 })(window.RPG);

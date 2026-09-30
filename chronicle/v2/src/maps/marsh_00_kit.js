@@ -65,7 +65,7 @@
   K.LIGHT_TOWN = { ambient: '#56629a', k: 0.46, poolK: 1.6, spillR: 1.6, mood: 'town_night' };
   K.LIGHT_ROOM = { ambient: '#7c7896', k: 0.8, mood: 'interior' };
   K.LIGHT_MANOR = { ambient: '#4e5286', k: 0.6, poolK: 1.2, spillR: 1.2, mood: 'tower' };
-  K.LIGHT_BOG = { ambient: '#4c5c86', k: 0.56, poolK: 1.0, spillR: 1.0, mood: 'forest_night' };
+  K.LIGHT_BOG = { ambient: '#6a7cae', k: 0.5, poolK: 1.25, spillR: 1.2, mood: 'forest_night' };   // 2026-09-30: 暗すぎて床・道が読めなかった → 環境光を明るく、灯りの輪を少し広く
   /** 戸口の前（door.y + 1）の spawn */
   K.doorSpawn = (b, dir) => ({ x: b.door.x, y: b.door.y + 1, dir: dir || 's' });
 })(window.RPG);
