@@ -89,6 +89,18 @@
   // 寄り道のうわさ（rumor）
   lead('l_opt_siren', { kind: 'rumor', title: R.T('leads.l_opt_siren.title'), text: R.T('leads.l_opt_siren.text'), from: R.T('leads.l_opt_siren.from'), dir: R.T('leads.l_opt_siren.dir'), done: 'isles_siren_heard' });
   lead('l_opt_crab', { kind: 'rumor', title: R.T('leads.l_opt_crab.title'), text: R.T('leads.l_opt_crab.text'), from: R.T('leads.l_opt_crab.from'), dir: R.T('leads.l_opt_crab.dir'), done: 'isles_crab_seen' });
+  // 星くじら（まれな魔物 rm_star_whale、島々の出現表 zw_isles）: ネレイの漁師のうわさ。一度倒すと isles_whale_met（下の battle:finish）
+  lead('l_opt_whale', { kind: 'rumor', title: R.T('leads.l_opt_whale.title'), text: R.T('leads.l_opt_whale.text'), from: R.T('leads.l_opt_whale.from'), dir: R.T('leads.l_opt_whale.dir'), done: 'isles_whale_met' });
+  // 戦闘の後（battle_core.js の battle:finish）: 図鑑に星くじらを倒した数があれば旗を立てる（うわさの手がかりを終える）
+  if (R.on) {
+    R.on('battle:finish', () => {
+      const G = R.Game;
+      if (!G || !G.flags || G.flags.isles_whale_met) return;
+      const b = G.book && G.book.mon && G.book.mon.rm_star_whale;
+      const setFlag = (id) => { G.flags[id] = true; if (R.emit) R.emit('flag', { id, v: true }); };
+      if (b && b.kills > 0) setFlag('isles_whale_met');
+    });
+  }
 
   // ---------------------------------------------------------------- 読み物（STORY_BIBLE §10.2 の 23〜25 ほか）
   const lore = (id, o) => R.def('lore', id, Object.assign({ region: 'r_isles' }, o));

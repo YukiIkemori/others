@@ -5,7 +5,10 @@
 //   3 階 ghost_ship_3（52×30）船倉と船長室: 暗がりの船倉（壁のランタンに火をともすと明るいまま）。西の隔壁の向こうが船長室。
 //        船長室に入ると、グレン（亡霊船長）。戦いのあと、机の上の航海日誌（途中から白い）→ 夜明けのネレイの桟橋。
 //   解決の後も、霧の晴れた海に古い船として残る（外洋船の舵の「霧の海」から）。当たりは下絵に合わせた isles_painted_rows.js。
-//   灯り: 解決の前は船べりに青い鬼火（wisp_lamp）。
+//   灯り（2026-09-30 見直し）: 船の灯り = 木の柱に吊った船のランタン（type 'brazier'、組 'ship' の絵 brazier__ship）。
+//     解決の前は船べりのランタンに亡霊の火がともっている（on: true、cond !cleared_r_isles）。甲板の渡り板の脇・船室の通路にもともった灯り。
+//     3 階の暗がり（E6）は船倉だけ（船長室は明るいまま、ランタン 2 つがともっている）。階段の脇の 1 つもはじめからともる。
+//   下絵は歩ける所の明るさを WALK_TARGET 96 に上げた（process.py）。
 (function (R) {
   'use strict';
   R.onData(function () {
@@ -23,9 +26,11 @@
       for (const [x, y] of [[18, 15], [30, 15], [41, 15]]) O.push(K.exam(x, y, 'isles_ghost_mast'));
       O.push(K.exam(10, 14, 'isles_ghost_skylight'));
       O.push(K.chest('ghost_ship_1_c1', 8, 9, { pool: 'p_T' }), K.chest('ghost_ship_1_c2', 46, 15, { pool: 'p_T' }));
-      for (const [x, y] of [[12, 7], [24, 7], [36, 7], [12, 22], [22, 22], [36, 22], [49, 13]]) O.push(K.prop('wisp_lamp', x, y, { cond: WISP }));
+      [[12, 7], [24, 7], [36, 7], [12, 22], [22, 22], [36, 22], [49, 13]].forEach(([x, y], i) => O.push({ type: 'brazier', id: 'ghost_ship_1_g' + (i + 1), x, y, on: true, cond: WISP }));
+      // 渡り板の脇の船のランタン（解決の後も）
+      O.push({ type: 'brazier', id: 'ghost_ship_1_l1', x: 26, y: 21, on: true }, { type: 'brazier', id: 'ghost_ship_1_l2', x: 31, y: 21, on: true });
       K.def('ghost_ship_1', {
-        name: R.T('map.isles_ghostship.ghost_ship_1.name'), kind: 'dungeon', region: 'r_isles', location: 'ghostship', theme: 'harbor',
+        name: R.T('map.isles_ghostship.ghost_ship_1.name'), kind: 'dungeon', region: 'r_isles', location: 'ghostship', theme: 'harbor', propSet: 'ship', propSetBase: 'harbor',
         legend: IK.SHIP(), rows: P.rows, outside: 'sea', objects: O, npcs: [],
         spawns: { board: { x: 28, y: 21, dir: 'n' }, hatch: { x: 24, y: 12, dir: 's' } },
         exits: [],
@@ -49,9 +54,11 @@
       // 休息の灯（水夫の水樽のそば。幽霊船でただ 1 つ）
       O.push(K.spring('ghost_ship_2_spring', 25, 6));
       O.push(K.chest('ghost_ship_2_c1', 42, 9, { pool: 'p_T' }), K.chest('ghost_ship_2_c2', 9, 22, { item: 'i_potion', n: 2 }), K.chest('ghost_ship_2_c3', 24, 21, { pool: 'p_rare' }));
-      for (const [x, y] of [[12, 11], [28, 11], [12, 16], [28, 16]]) O.push(K.prop('wisp_lamp', x, y, { cond: WISP }));
+      [[12, 11], [28, 11], [12, 16], [28, 16]].forEach(([x, y], i) => O.push({ type: 'brazier', id: 'ghost_ship_2_g' + (i + 1), x, y, on: true, cond: WISP }));
+      // 通路の船のランタン（解決の後も。船室の床と壁が読めるように）
+      [[20, 12], [36, 15], [6, 15]].forEach(([x, y], i) => O.push({ type: 'brazier', id: 'ghost_ship_2_l' + (i + 1), x, y, on: true }));
       K.def('ghost_ship_2', {
-        name: R.T('map.isles_ghostship.ghost_ship_2.name'), kind: 'dungeon', region: 'r_isles', location: 'ghostship', theme: 'harbor',
+        name: R.T('map.isles_ghostship.ghost_ship_2.name'), kind: 'dungeon', region: 'r_isles', location: 'ghostship', theme: 'harbor', propSet: 'ship', propSetBase: 'harbor',
         legend: IK.SHIP(), rows: P.rows, outside: 'wall_wood', objects: O, npcs: [],
         spawns: { up: { x: 6, y: 13, dir: 'e' }, down: { x: 40, y: 13, dir: 'w' } },
         exits: [],
@@ -72,10 +79,12 @@
       O.push(K.exam(14, 14, 'isles_cabin_door', { cond: '!isles_captain' }));
       // 船倉のランタン（火をともすと周りが明るいまま、E6）
       const BZ = [[46, 12], [44, 8], [33, 4], [24, 4], [16, 5], [20, 14], [30, 12], [16, 24], [26, 24], [37, 22], [3, 6], [12, 20]];
-      BZ.forEach(([x, y], i) => O.push({ type: 'brazier', id: 'ghost_ship_3_b' + (i + 1), x, y }));
+      // 階段の脇（46,12）と船長室の 2 つ（3,6）（12,20）ははじめからともっている
+      const ON = ['46,12', '3,6', '12,20'];
+      BZ.forEach(([x, y], i) => O.push(Object.assign({ type: 'brazier', id: 'ghost_ship_3_b' + (i + 1), x, y }, ON.includes(x + ',' + y) ? { on: true } : {})));
       O.push(K.chest('ghost_ship_3_c1', 48, 11, { pool: 'p_T' }), K.chest('ghost_ship_3_c2', 22, 6, { gold: 260 }), K.chest('ghost_ship_3_c3', 4, 21, { pool: 'p_T' }));
       K.def('ghost_ship_3', {
-        name: R.T('map.isles_ghostship.ghost_ship_3.name'), kind: 'dungeon', region: 'r_isles', location: 'ghostship', theme: 'harbor',
+        name: R.T('map.isles_ghostship.ghost_ship_3.name'), kind: 'dungeon', region: 'r_isles', location: 'ghostship', theme: 'harbor', propSet: 'ship', propSetBase: 'harbor',
         legend: IK.SHIP(), rows: P.rows, outside: 'wall_wood', objects: O,
         npcs: [K.npc('glen', 'npc_glen', 7, 12, { name: R.T('map.isles_ghostship.ghost_ship_3.npcs.0.glen.name'), dir: 's', talk: 'isles_captain', reward: null, pushable: false, cond: '!isles_captain' })],
         spawns: { up: { x: 46, y: 15, dir: 'w' }, cabin: { x: 12, y: 15, dir: 'w' } },
@@ -85,7 +94,7 @@
           { id: 'captain', x: 11, y: 12, w: 3, h: 7, on: 'step', event: 'isles_captain', cond: '!isles_captain' },
         ],
         zones: [{ rect: null, zone: 'z_r_isles_ship', cond: WISP }],
-        light: IK.LIGHT_HOLD, dark: true, bgm: 'ghost', bbg: 'isles',
+        light: IK.LIGHT_HOLD, dark: [{ rect: [15, 0, 37, 30] }], bgm: 'ghost', bbg: 'isles',   // 暗がりは船倉だけ（x 15 から東）
         art: P.art,
         meta: { chestsInfo: true, floor: R.T('map.isles_ghostship.ghost_ship_3.meta.floor'), sub: R.T('map.isles_ghostship.ghost_ship_3.meta.sub') },
       });

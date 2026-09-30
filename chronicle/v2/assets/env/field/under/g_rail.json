@@ -1,0 +1,20 @@
+{
+ "id": "g_rail",
+ "kind": "under",
+ "map": "g_rail",
+ "tile": 32,
+ "size32": [
+  1600,
+  1152
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.8,
+ "files": {
+  "24": "g_rail@24.png",
+  "32": "g_rail@32.png",
+  "40": "g_rail@40.png"
+ },
+ "src": "generated"
+}

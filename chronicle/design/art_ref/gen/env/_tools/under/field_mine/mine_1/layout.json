@@ -1,0 +1,270 @@
+{
+"id": "mine_1",
+"w": 54,
+"h": 44,
+"rows": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRkkkkRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRkkkkkkkRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRkkkkkkkkRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRRRRRRRRkkkkkkkRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRkkkkkkkkRRRRRRRRRRRRRkkkkkkRRR",
+"RRRRRrRRRRRRRRRRRRRRRRrkkkkkkkkkrRRRRRRRRRRRRRkkkkRRRR",
+"RRRRrkkkrRRRRRRRRRRRRkkkkkkkkkkkkRRRRRRRRRRllRRkkkRRRR",
+"RRRrkkkkkkRRRRRRRRRRRkkkkkkkkkkkkRRRRRRRRRRllRRkkkRRRR",
+"RRRkkkkkkkRRRRRRRRRRRkkrkkkkkkkkkkRRRRRRRRRllRRkkkRRRR",
+"RRRkkkkkkkRRRRRRRRRRRRkkkkkkkkkkkRRRRRRRRRRllRRkkkRRRR",
+"RRRRkkkkkRRRRRRRRRRRRRRRRkkkRRRRRRRRRRRRRRRlllRkkkRRRR",
+"RRRRRkkkRRRRRRRRRRRRRRRRRRkkRRRRRRRRRRRRRRllllRkkkRRRR",
+"RRRRRkkkRRRRRRRRRRRRRRRRRRkkRRRRRRRRRRRRRRllllRkkkRRRR",
+"RRRRRRkkRRRRRRRRRRRRRRRRRRkkRRRRRRRRRRRRRRllllRkkkRRRR",
+"RRRRRRkkkkRRkkRRRRRRRRRRRRkkRRRRRRRRRRRRRRllllRkkkRRRR",
+"RRRRRRRkkkkkkkRRRRRRRRRkkkkkkkkRRRRRRRRRRRllllRkkkRRRR",
+"RRRRRRRRkkkkkkRRRRRRRRkkkkkkkkkkkkRRRRRRRRllllRkkkRRRR",
+"RRRRRRRRRkkkkkkkkkkRRkkkkkkkkkkkkkkkkkkkkklllRRkkkkRRR",
+"RRRRRRRRRRRRkkkkkkkkkkkkkkkkkkkkkkkkkkkkkklllRRkkkkRRR",
+"RRRRRRRRRRRRRRRkkkkkkkkkkkkkkkkkkkkkkkkkkkXXXXXkkkkRRR",
+"RRRRRRRRRRRRRRRRRRRRRkkkkkkkkkkkkkkkkkkkkkllllRkkkkRRR",
+"RRRRRRRRRRRRRRRRRRRRRRkkkkkkkkkkkRRRRRRkkkllllRkkkRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRkkkkkkkkRRRRRRRRkRllllRkkkRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRRRRRRRllllRkkkRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRRRRRRRllllRRkkRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRRRRRRRllllRRkkRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRRRRRRRllllRRkkRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRRRRRRRllllRRkkRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRRRRRRRllllRRkkRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRRRRRRRllllRkkkRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRRRRRRRRRRRkkkkRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRRRRRRRRRRkkkkRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRkkkkkkkkRRRRRRRRRRRkkkkkRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRkkkkkkkkkkkkRRRRRRkkkkkkkRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRkkkkkkkkkkkkkkkkkkkkkkkkkRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRkkkkkkkkkkkkkkkkkkkkkkRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRkkkkkkkkkkkkkkkkkRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRkkkkkkkkkkkkkkkkRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRkkkkkkkkkkkkkRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRkkkkkkkRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRkkkRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRkkkRRRRRRRRRRRRRRRRRRRRRRRRRR"
+],
+"marks": [
+{
+"kind": "trestle",
+"cells": [
+[
+42,
+21
+],
+[
+43,
+21
+],
+[
+44,
+21
+],
+[
+45,
+21
+],
+[
+46,
+21
+]
+],
+"text": "a narrow timber RAIL TRESTLE across the dark shaft: two rails on sleepers and a few beams, no planks to walk on",
+"color": [
+140,
+100,
+62
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 26,
+"y": 42
+},
+{
+"type": "o",
+"x": 27,
+"y": 42
+},
+{
+"type": "o",
+"x": 6,
+"y": 11
+},
+{
+"type": "o",
+"x": 6,
+"y": 12
+},
+{
+"type": "o",
+"x": 12,
+"y": 16
+},
+{
+"type": "o",
+"x": 12,
+"y": 17
+},
+{
+"type": "o",
+"x": 27,
+"y": 7
+},
+{
+"type": "o",
+"x": 30,
+"y": 9
+},
+{
+"type": "o",
+"x": 40,
+"y": 21
+},
+{
+"type": "o",
+"x": 41,
+"y": 21
+},
+{
+"type": "o",
+"x": 48,
+"y": 21
+},
+{
+"type": "o",
+"x": 47,
+"y": 21
+},
+{
+"type": "o",
+"x": 47,
+"y": 3
+},
+{
+"type": "o",
+"x": 47,
+"y": 4
+},
+{
+"type": "o",
+"x": 22,
+"y": 20
+},
+{
+"type": "o",
+"x": 23,
+"y": 19
+},
+{
+"type": "o",
+"x": 48,
+"y": 27
+},
+{
+"type": "o",
+"x": 36,
+"y": 37
+},
+{
+"type": "o",
+"x": 20,
+"y": 38
+},
+{
+"type": "o",
+"x": 33,
+"y": 18
+},
+{
+"type": "o",
+"x": 49,
+"y": 6
+}
+],
+"spawns": {
+"entrance": {
+"x": 26,
+"y": 42,
+"dir": "n"
+},
+"from2": {
+"x": 47,
+"y": 5,
+"dir": "s"
+},
+"cart_w": {
+"x": 40,
+"y": 21,
+"dir": "e"
+},
+"cart_e": {
+"x": 48,
+"y": 21,
+"dir": "w"
+}
+},
+"exits": [
+{
+"x": 25,
+"y": 43,
+"w": 3,
+"h": 1,
+"to": {},
+"edge": "s"
+}
+],
+"notes": [],
+"meta": {
+"rails": [
+[
+[
+26.5,
+44.5
+],
+[
+26.6,
+38.0
+],
+[
+27.0,
+30.0
+],
+[
+27.2,
+24.0
+],
+[
+29.0,
+21.6
+],
+[
+35.0,
+21.5
+],
+[
+47.5,
+21.5
+]
+]
+],
+"name": "深き坑道",
+"region": "r_mine",
+"zones": [],
+"worldRect": [
+0,
+0,
+1,
+1
+],
+"look": "cave",
+"smooth": 0.6
+}
+}

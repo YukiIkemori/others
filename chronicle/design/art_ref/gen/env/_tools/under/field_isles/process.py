@@ -31,7 +31,18 @@ target = float(os.environ.get('TARGET', lum(roa[green(roa)]).mean()))
 gm = kron(walk) & green(A)
 gain = float(np.clip(target / lum(A[gm]).mean(), 0.8, 1.0)) if gm.sum() > 5000 else 0.9
 gain = float(os.environ.get('GAIN', gain))
-A = np.clip(A * gain, 0, 255)
+if os.environ.get('WALK_TARGET'):
+    # (2026-09-30 見直し、灰の地方の process.py と同じ) 暗い船・洞窟: 掛け算ではなく明るさの曲線 L' = 255 (L/255)^gam で、
+    # 歩ける所の平均を WALK_TARGET に（暗い所を持ち上げ、明るい所はほぼそのまま。夜の光の下で床と壁が読めるように）
+    WT = float(os.environ['WALK_TARGET'])
+    L0 = np.maximum(lum(A), 1.0)
+    wm = float(L0[kron(walk)].mean())
+    gam = float(np.clip(np.log(WT / 255) / np.log(wm / 255), 0.45, 1.1))
+    A = np.clip(A * ((255 * (L0 / 255) ** gam) / L0)[..., None], 0, 255)
+    print('walk mean', round(wm, 1), '-> gam', round(gam, 3), 'walk now', round(float(lum(A)[kron(walk)].mean()), 1))
+    gain = round(gam, 3)
+else:
+    A = np.clip(A * gain, 0, 255)
 print('gain', round(gain, 3), 'target', round(target, 1))
 
 # ---- overlay: crowns over the walkable row north of tree cells

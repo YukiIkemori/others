@@ -236,13 +236,15 @@
     { id: 'k_tmap_3', lead: 'l_tmap_3', tier: 1, price: 600, pitch: R.T('ev.desert_quests.MAPS.k_tmap_3.pitch') },
     { id: 'k_tmap_5', lead: 'l_tmap_5', tier: 3, price: 1500, pitch: R.T('ev.desert_quests.MAPS.k_tmap_5.pitch') },
     { id: 'k_tmap_6', lead: 'l_tmap_6', tier: 5, price: 3000, pitch: R.T('ev.desert_quests.MAPS.k_tmap_6.pitch') },
+    // マレア諸島の座礁した商船で「積荷を拾う」を選んだ人にだけ: 船長がヤズに売っていった地図 その4（助けた人は船長から直にもらう）
+    { id: 'k_tmap_4', lead: null, tier: 1, price: 1200, pitch: R.T('ev.desert_quests.MAPS.k_tmap_4.pitch'), cond: (ev) => ev.choiceOf('ch_isles_wreck') === 'cargo' },
   ];
   E('kasim_mapmaker', async (ev) => {
     ev.lead('q_kasim_maps');
     const t = T();
-    const can = MAPS.filter((m) => t >= m.tier && !ev.has(m.id));
+    const can = MAPS.filter((m) => t >= m.tier && !ev.has(m.id) && (!m.cond || m.cond(ev)));
     if (!can.length) {
-      const next = MAPS.find((m) => t < m.tier && !ev.has(m.id));
+      const next = MAPS.find((m) => t < m.tier && !ev.has(m.id) && (!m.cond || m.cond(ev)));
       await ev.say('mapmaker', next ? R.T('events.kasim_mapmaker.say') : R.T('events.kasim_mapmaker.say_2'));
       return;
     }
@@ -253,9 +255,9 @@
     if (ev.gold(0) < m.price) { await ev.say('mapmaker', R.T('events.kasim_mapmaker.say_3')); return; }
     ev.gold(-m.price);
     ev.item(m.id, 1);
-    ev.lead(m.lead);
+    if (m.lead) ev.lead(m.lead);
     await ev.say('mapmaker', R.T('events.kasim_mapmaker.say_4'));
-  }, { meta: { needs: [], gives: ['lead:q_kasim_maps', 'item:k_tmap_3', 'item:k_tmap_5', 'item:k_tmap_6', 'lead:l_tmap_3', 'lead:l_tmap_5', 'lead:l_tmap_6'] } });
+  }, { meta: { needs: [], gives: ['lead:q_kasim_maps', 'item:k_tmap_3', 'item:k_tmap_4', 'item:k_tmap_5', 'item:k_tmap_6', 'lead:l_tmap_3', 'lead:l_tmap_5', 'lead:l_tmap_6'] } });
   E('kasim_mapshop_wall', async (ev) => {
     await ev.say(null, R.T('events.kasim_mapshop_wall.say'));
   });

@@ -1,0 +1,50 @@
+{
+ "id": "brazier__ship",
+ "kind": "props",
+ "theme": "isles",
+ "frames": [
+  "off",
+  "on"
+ ],
+ "cell": {
+  "24": [
+   18,
+   36
+  ],
+  "32": [
+   24,
+   48
+  ],
+  "40": [
+   30,
+   60
+  ]
+ },
+ "feet": {
+  "24": [
+   7,
+   35
+  ],
+  "32": [
+   10,
+   47
+  ],
+  "40": [
+   12,
+   59
+  ]
+ },
+ "files": {
+  "24": "brazier__ship@24.png",
+  "32": "brazier__ship@32.png",
+  "40": "brazier__ship@40.png"
+ },
+ "src": "design/art_ref/gen/env/_tools/under/field_isles/props_ship/ship_lantern.py",
+ "set": "ship",
+ "base": "brazier",
+ "fire": true,
+ "light32": [
+  10,
+  -23
+ ]
+}

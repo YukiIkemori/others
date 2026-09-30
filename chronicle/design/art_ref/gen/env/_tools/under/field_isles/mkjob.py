@@ -56,10 +56,12 @@ for m in d['marks']:
 cell = T * 48 // 32
 WHAT = {'field': 'one outdoor area of a sunny archipelago of white islands', 'town': 'a whole small town of a sunny archipelago of white islands',
         'cave': 'one floor of a sea-cave dungeon', 'ship': 'one level of a derelict ghost ship (a dungeon)'}[LOOK]
+# 地図ごとの足し書き（scenes.json の _extra[id]: 灯台・歌う岩・難破船・甲板など、目印をはっきり描かせる）
+EXTRA = ("\n" + SCENE["_extra"][aid] + "\n") if aid in SCENE.get("_extra", {}) else ""
 P = f"""Paint the COMPLETE top-down map of {WHAT} in a fantasy JRPG world as ONE finished game map image, in rich premium modern hi-bit pixel art (hand-placed crisp square pixels, hue-shifted colour ramps, dark warm outlines, lush natural detail), classic top-down RPG map view seen from above with a slight 3/4 tilt (tree crowns, rocks and buildings seen from above with their south-facing sides visible; NOT an isometric view, NOT a diorama, no depth-of-field, no tilt-shift, no 3D render, no perspective).
 
 THE PLACE: {SCENE[aid]}
-
+{EXTRA}
 The FIRST attached image is an exact LAYOUT GUIDE drawn on a {W} x {H} tile grid (each tile = {T} x {T} px of the output; the output is {W * T} x {H * T} px). Trace over it: your painting is laid pixel-for-pixel on top of it and used directly as the walkable game map, so every road, shore, cliff, wall, tree mass, water body and landmark must sit exactly where it is in the guide at the same size (keep every edge within a few pixels of the guide; do not shift, shrink, mirror or re-arrange anything; keep the exact width of the roads and of the one- and two-tile gaps).
 
 The SECOND attached image is only a STYLE REFERENCE from the same game: match its pixel-art rendering (pixel size, clusters, outlines, colour ramps, level of detail). Do NOT copy anything from it (no houses, piers, ships or objects from it).

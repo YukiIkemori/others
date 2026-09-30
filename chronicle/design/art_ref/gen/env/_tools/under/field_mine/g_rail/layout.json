@@ -1,0 +1,389 @@
+{
+"id": "g_rail",
+"w": 50,
+"h": 36,
+"rows": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR;;TTRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRR,,,,TT;;;;;;;TTT;,,,,,,,,,,,,",
+"RRRRRRRRRRRRRR,,bbbb,,,,;TTTT;;;;;;T;;;,,,,,,,,,,,",
+"RRRRRRRRRRRRRR;;bbbbb,,,,;TTTbbb;;,,,,;XXXXX,,,,,,",
+"RRRRRRRRRRRRRRR;bbbbb\",,,,,,bbbb,,,,,,,XXXXX,,,,,,",
+"RRRRRRRRRRRRRRR;;;b,\",,,,,,,,bbb,,,,,,,XXXXX;;;;,;",
+"RRRRRRRRRRRRRRR;;r,,,,,,,,,,,,,,,,,,,,\"XX:XX;;;;;;",
+"RRRRRRRRRRRRRRR;;,,,,,,,,,,,,,,,r,,,,,\"\"\",,,;;bbb;",
+"RRRRRRRRRRRRRRRR;;,,,,,,,,,,,,,,,,,,,\"\"\":,,,;;;b;;",
+"RRRRRRRRRRRRRRRRRRR;,,,,,,,,,,,,,RR\"\":::,,,,,;;RRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR::::RRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR::::RRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR:::RRRRRRRRRRRRRRRR",
+"RRRRkkkkk,,kkRRRRRRRllllRRRRRR::::RRRRRRRRRRRRRRRR",
+"r,,,kkkkkk,,kkkkkkRlllllkkkkk,::,,kkkkkkkkkkkkkRRR",
+",,,,kkkkk,,,,kk,k,,,llllkkkkk,,:,,kkkkkkkkkkkkkRXX",
+",,kk,,kkk,,,,,,,,,,k====kkkk,,,::kkkkkkkkkkkkkkkXR",
+",,,,,,,,,,,,,,,,,,,XXXXXXX,,,,,,::kkkkkkkkkkkkkRRR",
+",,,,,,.,,..........=======.....................RRR",
+"...................=======.....................RRR",
+",..........,,,,,,kk=======,,,..,,,,,,,kk,,,kkkkRRR",
+",,,,,,,,,,,,,,,,,,kkllll,,,,,,,,,,,,,,,,,,,,kkkRRR",
+",,,,kk,,,,,,,,,,,,kkllll,,,,,,,,,,,,XXX,,,,,,,,RRR",
+"R,RRRRRRRRRRRRRRRRRRllll,,,,,,,,,,,,,,,,,,,,RRRRRR",
+"RRRRRRRRRRRRRRRRRRRRllllRRRRRRRR,,,,RRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRllllRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRllllRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRllllllllllllllRRRllllRRRRRRRRRRRRRllllllRRRRRRR",
+"llllllllllllllllllllllllRRRRRRRRRlllllllllllllllll",
+"llllllllllllllllllllllllllllllllllllllllllllllllll",
+"llllllllllllllllllllllllllllllllllllllllllllllllll",
+"llllllllllllllllllllllllllllllllllllllllllllllllll",
+"llllllllllllllllllllllllllllllllllllllllllllllllll",
+"llllllllllllllllllllllllllllllllllllllllllllllllll",
+"llllllllllllllllllllllllllllllllllllllllllllllllll"
+],
+"marks": [
+{
+"kind": "trestle",
+"cells": [
+[
+19,
+18
+],
+[
+20,
+18
+],
+[
+21,
+18
+],
+[
+22,
+18
+],
+[
+23,
+18
+],
+[
+24,
+18
+],
+[
+25,
+18
+]
+],
+"text": "the timber TRESTLE of the bridge: a lattice of heavy beams under the deck, the rails on top",
+"color": [
+140,
+100,
+62
+],
+"solid": true
+},
+{
+"kind": "lift",
+"cells": [
+[
+36,
+23
+],
+[
+37,
+23
+],
+[
+38,
+23
+]
+],
+"text": "a CLIFF LIFT: a tall timber frame with a winch drum and ropes, an iron cage hanging over the drop",
+"color": [
+140,
+100,
+62
+],
+"solid": true
+},
+{
+"kind": "tunnel",
+"cells": [
+[
+48,
+16
+],
+[
+49,
+16
+],
+[
+48,
+17
+],
+[
+49,
+17
+],
+[
+48,
+18
+],
+[
+49,
+18
+]
+],
+"text": "the MOUTH OF A RAIL TUNNEL in the east cliff: a timber portal, the rails run into it; a barrier of crossed beams closes it",
+"color": [
+40,
+26,
+16
+],
+"solid": true
+},
+{
+"kind": "hut",
+"cells": [
+[
+39,
+4
+],
+[
+39,
+5
+],
+[
+39,
+6
+],
+[
+39,
+7
+],
+[
+40,
+4
+],
+[
+40,
+5
+],
+[
+40,
+6
+],
+[
+40,
+7
+],
+[
+41,
+4
+],
+[
+41,
+5
+],
+[
+41,
+6
+],
+[
+42,
+4
+],
+[
+42,
+5
+],
+[
+42,
+6
+],
+[
+42,
+7
+],
+[
+43,
+4
+],
+[
+43,
+5
+],
+[
+43,
+6
+],
+[
+43,
+7
+]
+],
+"text": "a small HERMIT'S HUT of fieldstone and timber with a mossy turf roof and a crooked chimney, a bench and herb pots beside the door",
+"color": [
+118,
+96,
+72
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+41,
+7
+]
+],
+"text": "a dark ENTRANCE",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "door",
+"x": 41,
+"y": 7,
+"to": {
+"map": "mine_hermit",
+"spawn": "door"
+}
+},
+{
+"type": "examine",
+"x": 47,
+"y": 17,
+"event": "mine_rail_tunnel"
+},
+{
+"type": "examine",
+"x": 37,
+"y": 22,
+"event": "mine_cliff_lift"
+},
+{
+"type": "sign",
+"x": 8,
+"y": 22,
+"text": "トロッコ線\n東の果ては、高原への古いトンネル。\n尾根の上に、隠者の庵。"
+},
+{
+"type": "chest",
+"id": "g_rail_c1",
+"x": 14,
+"y": 6,
+"pool": "p_T"
+},
+{
+"type": "waylamp",
+"id": "wl_g_rail_1",
+"x": 12,
+"y": 23,
+"lit": true
+},
+{
+"type": "waylamp",
+"id": "wl_g_rail_2",
+"x": 30,
+"y": 23,
+"lit": true
+}
+],
+"spawns": {
+"west": {
+"x": 1,
+"y": 20,
+"dir": "e"
+},
+"hut": {
+"x": 41,
+"y": 8,
+"dir": "s"
+},
+"railend": {
+"x": 46,
+"y": 18,
+"dir": "w"
+}
+},
+"exits": [
+{
+"x": 0,
+"y": 20,
+"w": 1,
+"h": 2,
+"to": {
+"map": "g_valley",
+"spawn": "east"
+},
+"edge": "w"
+}
+],
+"notes": [],
+"meta": {
+"name": "トロッコ線の崖",
+"sub": "崖の棚を走る古いトロッコの線",
+"region": "r_mine",
+"worldRect": [
+388,
+80,
+50,
+36
+],
+"outside": "rock",
+"zones": [
+{
+"rect": null,
+"zone": "zw_mine"
+}
+],
+"links": {},
+"npcs": [],
+"smooth": 0.6
+},
+"rows_fit": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRT;,TRXXXXXXRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRr,,TTTTr;;;;TT,,;XXXXXXrrrrrr",
+"RRRRRRRRRRRRRRRTbbb,,,,,;TTTT;;;;T;,;;XXXXXXrrrrrr",
+"RRRRRRRRRRRRRRRTbbb,,,,,,;,TTbb,;;,,,,XXXXXXrrrrrr",
+"RRRRRRRRRRRRRRR;,bbb,\",,,,,,bbb,,,,,,,XXXXXX,,,rrr",
+"RRRRRRRRRRRRRRR;;;,,\",,,,,,,,,b,,,,,,,XX:XXX;;;;,;",
+"RRRRRRRRRRRRRRR;;,,,,,,,,,,,,,,,,,,,,,\"X:,XX;;;;;;",
+"RRRRRRRRRRRRRRRr;,,,,,,,,,,,,,,,,,,,,,\"\"\",,,;;,,,;",
+"RRRRRRRRRRRRRRRRr;r,,,,,,,,,,,,,,,,,,\"\"\":,,,;;;brr",
+"RRRRRRRRRRRRRRRRRRRrrrr,,rr,rrrrrR.\"\":::,rrrrrrRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR,..::rrRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR..:::rRRRRRRRRRRRRR",
+"RRRR,,RRR,RRRRRRRRRRRRRRRRRRRR.:::RRRRRRRRRRRRRRRR",
+"RR,,krrrr,,krRRRRRRRllllRRRRR,::::RRRRRRRRRRRRRRRR",
+",,,,rrrrkk,,krrrrk,lllllrrrrk,::,,krrrrrrrrrrrrRRR",
+",,,,kkkkk,,,,kk,k,,,sllskkkkk,,:,,kkkkkkkkkkkkkRXX",
+",,kk,,kkk,,,,,,,,,,k====kkkk,,,::kkkkkkkkkkkkkkkXR",
+",,,,,,,,r,,,,,,,,,,======X,,,,,,::kkkkkkkkkkkkkRRR",
+",,,,,,.,,..........=======.....................RRR",
+"...................=======.....................RRR",
+",..........,,,,,rkrllllll=,,,..,,,,,,,rk,,,kkkkRRR",
+",,,,,,,,,,,,,,,,,,rrllll,,,,,,,,,,,,,,,,,,,,rrkRRR",
+",,,rkk,,,,,,,,,,,rrrllll,,,,,,,,,,,,XXX,,,,,,,,RRR",
+"RrRRRRRRRRRRRRRRRRRRllll,,,,r,,,,,,,,r,,,,,,RRRRRR",
+"RRRRRRRRRRRRRRRRRRRRllllRRRRRRRR,,,rsRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRllllRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRllllRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRllllllllllllllRRRllllRRRRRRRRRRRRRllllllRRRRRRR",
+"llllllllllllllllllllllllRRRRRRRRRlllllllllllllllll",
+"llllllllllllllllllllllllllllllllllllllllllllllllll",
+"llllllllllllllllllllllllllllllllllllllllllllllllll",
+"llllllllllllllllllllllllllllllllllllllllllllllllll",
+"llllllllllllllllllllllllllllllllllllllllllllllllll",
+"llllllllllllllllllllllllllllllllllllllllllllllllll",
+"llllllllllllllllllllllllllllllllllllllllllllllllll"
+]
+}

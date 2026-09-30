@@ -1,0 +1,294 @@
+{
+"id": "mine_2",
+"w": 56,
+"h": 46,
+"rows": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRkRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRkkkkkkRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRkkkkkkkRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRkkkkkkkkkRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRkkkkkkkkkRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRkkkkkkkkRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRkkkkRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRkkkkkRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRkkkkkRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRkkkkkRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRkkkkkkRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRkkkkkkkRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRkkkRRRkkkkkkkRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRkRRRRkkkkkkrRkkkkkkRRRRRRRRRRRRRRRRR",
+"RRRRRRRRwwwwwwwwwwwwkRRRkkrkkkkkkkkkkkRRRRRRRRRRRRRRRRRR",
+"RRRRkkkkwwwwwwwwwwwwkkkkkkkkkkkkkkkkkkRRRRRRRRRRRRRRRRRR",
+"RRRkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkRRRRRRRRRRRRRRRRRR",
+"RRkkkkkk=============kkkkkkkkkkkkkkkkkkkkkkRRRRRRRRRRRRR",
+"RRkkkkkk=============kkkkkkkkkkkkkkkkkkkkkkkkRRRRRRRRRRR",
+"RRRkkkkkwwwwwwwwwwwwkkkkkkkkkkkkkkkRRRRRRkkkkkRRRRRRRRRR",
+"RRRRkkkkwwwwwwwwwwwwkkkkkkkkkkkkkRRRRRRRRRRkkkkRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRkkkkRRkkkkRRRRRRRRRRRRRRRRkkkRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRkkkRRRRRRkkRRRRRRRRRRRRRRRRRkkkRRRRRRR",
+"RRRRRRRRRRRRRRRRkkkkRRRRRRRkkRRRRRRRRRRRRRRRRRkkkRRRRRRR",
+"RRRRRRRRRRRRRRRkkkkRRRRRRRRkkRRRRRRRRRRRRRRRRRRkkkRRRRRR",
+"RRRRRRRRRRRRRRkkkkRRRRRRRRRkkRRRRRRRRRRRRRRRRRRkkkRRRRRR",
+"RRRRRRRRRRRRRRkkkRRRRRRRRRkkkkRRRRRRRRRRRRRRRRRkkkRRRRRR",
+"RRRRRRRRRRRRRkkkkRRRRRRRRRkkkkRXRRRRRRRRRRRRRRRRkkRRRRRR",
+"RRRRRRRRRRRRkkkkRRRRRRRRkkkkkkkkkRRRRRRRRRRRRRRRkkkRRRRR",
+"RRRRRRRRRRRkkkkRRRRRRRRkXXkkkkkkkkRRRRRRRRRRRRRkkkkkrRRR",
+"RRRRRRRRRRkkkkRRRRRRRkkkkkkkkkkkrkkRRRRRRRRRRRRkkkkkkRRR",
+"RRRRRRRRRRkkkRRRRRRRRRkkkkkkkkkkkkkRRRRRRRRRRRRkkkkkkRRR",
+"RRRRRRRRRRkrkRRRRRRRRRRkkkkkkkkkwwRRRRRRRRRRRRRrkkkkkRRR",
+"RRRRRRRkkkkkkkRRRRRRRRRRRkkkkkkkwwRRRRRRRRRRRRRRkkkkRRRR",
+"RRRRRRkkkkkkkkRRRRRRRRRRRRkkkRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRkkkkkkkkRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRkkkkkkkkRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRkkkkkkRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRkkkkkRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
+],
+"marks": [
+{
+"kind": "walk",
+"cells": [
+[
+8,
+20
+],
+[
+9,
+20
+],
+[
+10,
+20
+],
+[
+11,
+20
+],
+[
+12,
+20
+],
+[
+13,
+20
+],
+[
+14,
+20
+],
+[
+15,
+20
+],
+[
+16,
+20
+],
+[
+17,
+20
+],
+[
+18,
+20
+],
+[
+19,
+20
+],
+[
+20,
+20
+]
+],
+"text": "a WALKWAY of timber planks laid over the flooded floor",
+"color": [
+140,
+100,
+62
+],
+"solid": false
+},
+{
+"kind": "bench",
+"cells": [
+[
+24,
+32
+],
+[
+25,
+32
+]
+],
+"text": "a long rough timber BENCH against the rock",
+"color": [
+140,
+100,
+62
+],
+"solid": true
+},
+{
+"kind": "board",
+"cells": [
+[
+31,
+30
+]
+],
+"text": "a wooden SHIFT BOARD with rows of pegs nailed to a timber prop",
+"color": [
+140,
+100,
+62
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 48,
+"y": 5
+},
+{
+"type": "o",
+"x": 48,
+"y": 7
+},
+{
+"type": "o",
+"x": 5,
+"y": 20
+},
+{
+"type": "o",
+"x": 4,
+"y": 20
+},
+{
+"type": "o",
+"x": 6,
+"y": 20
+},
+{
+"type": "o",
+"x": 28,
+"y": 32
+},
+{
+"type": "o",
+"x": 27,
+"y": 32
+},
+{
+"type": "o",
+"x": 30,
+"y": 31
+},
+{
+"type": "o",
+"x": 31,
+"y": 31
+},
+{
+"type": "o",
+"x": 29,
+"y": 35
+},
+{
+"type": "o",
+"x": 41,
+"y": 21
+},
+{
+"type": "o",
+"x": 42,
+"y": 21
+},
+{
+"type": "o",
+"x": 43,
+"y": 22
+},
+{
+"type": "o",
+"x": 50,
+"y": 33
+},
+{
+"type": "o",
+"x": 49,
+"y": 34
+},
+{
+"type": "o",
+"x": 9,
+"y": 41
+},
+{
+"type": "o",
+"x": 9,
+"y": 39
+},
+{
+"type": "o",
+"x": 20,
+"y": 16
+},
+{
+"type": "o",
+"x": 37,
+"y": 18
+},
+{
+"type": "o",
+"x": 13,
+"y": 37
+},
+{
+"type": "o",
+"x": 24,
+"y": 35
+},
+{
+"type": "o",
+"x": 34,
+"y": 33
+}
+],
+"spawns": {
+"up": {
+"x": 48,
+"y": 7,
+"dir": "s"
+},
+"from3": {
+"x": 9,
+"y": 39,
+"dir": "n"
+}
+},
+"exits": [],
+"notes": [],
+"meta": {
+"name": "深き坑道",
+"region": "r_mine",
+"zones": [],
+"worldRect": [
+0,
+0,
+1,
+1
+],
+"look": "cave",
+"smooth": 0.6
+}
+}

@@ -188,9 +188,11 @@
 
   // ---------------------------------------------------------------- 村の人
   E('nerei_fisher', async (ev) => {
-    if (cleared(ev)) { await ev.say('nerei_fisher', R.T('events.nerei_fisher.say')); return; }
-    await ev.say('nerei_fisher', R.T('events.nerei_fisher.say_2'));
-  });
+    if (cleared(ev)) await ev.say('nerei_fisher', R.T('events.nerei_fisher.say'));
+    else await ev.say('nerei_fisher', R.T('events.nerei_fisher.say_2'));
+    // 星くじらのうわさ（まれな魔物。島々の浜で夜に出る）
+    if (!ev.flag('isles_whale_met')) { await ev.say('nerei_fisher', R.T('events.nerei_fisher.say_3')); ev.lead('l_opt_whale'); }
+  }, { meta: { needs: [], gives: ['lead:l_opt_whale'] } });
   E('nerei_child', async (ev) => {
     await ev.say('nerei_child', cleared(ev) ? R.T('events.nerei_child.say') : R.T('events.nerei_child.say_2'));
   });

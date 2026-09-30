@@ -1,0 +1,2 @@
+{"solid": [[9, 18, "X"], [9, 19, "X"]], "open": [[10, 18, "."]],
+ "objects": [{"match": {"event": "mine_pass_cairn"}, "set": {"x": 9, "y": 19}}]}

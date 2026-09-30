@@ -465,6 +465,7 @@
     'events.sandedge_lotta.say_3': 'カシムの泉が戻ったって！\n砂漠の塩、また高く売れるわ。',
     'events.sandedge_lotta.say_4': 'いらっしゃい。今日は何を？',
     'ev.desert_quests.MAPS.k_tmap_3.pitch': '灰の荒野の地図だ。\n折れた剣の碑の下の段に、\n封じの扉があるという。',
+    'ev.desert_quests.MAPS.k_tmap_4.pitch': '南の島の商船の船長が\n置いていった地図だ。\n水に沈んだ礼拝堂の絵がある。',
     'ev.desert_quests.MAPS.k_tmap_5.pitch': '西の海の霧の地図だ。\n百の帆柱が立つ船の墓場。\n……船が要るな。',
     'ev.desert_quests.MAPS.k_tmap_6.pitch': 'にじんで読めない地図だ。\n星のかけらがあれば読める、と\n前の持ち主は言っていた。',
     'events.kasim_mapmaker.say': ['地図屋のヤズだ。\n古い宝の地図を集めとる。', '今、読める地図は無いな。\n……灯が戻るたびに、\nにじんだ線が読めるようになる。'],

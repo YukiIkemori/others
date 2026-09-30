@@ -27,7 +27,7 @@
     for (const [x, y] of [[14, 5], [27, 5], [28, 11], [10, 18], [29, 25], [36, 6], [33, 12]]) O.push(K.prop('lamp_pillar', x, y));
 
     const N = [
-      K.npc('nerei_fisher', 'npc_isles_man', 24, 20, { name: R.T('map.isles_nerei.N.0.nerei_fisher.name'), dir: 'w', talk: 'nerei_fisher', reward: 'news' }),
+      K.npc('nerei_fisher', 'npc_isles_man', 24, 20, { name: R.T('map.isles_nerei.N.0.nerei_fisher.name'), dir: 'w', talk: 'nerei_fisher', reward: 'lead' }),
       K.npc('nerei_child', 'npc_isles_child', 17, 27, { name: R.T('map.isles_nerei.N.1.nerei_child.name'), dir: 's', move: 'wander', talk: 'nerei_child', reward: 'hint' }),
       K.npc('nerei_oldman', 'npc_isles_old_m', 23, 6, { name: R.T('map.isles_nerei.N.2.nerei_oldman.name'), dir: 's', talk: 'nerei_oldman', reward: 'boss' }),
       // 岬の先の少女（マリナに会ってから、マリナが歌う前）

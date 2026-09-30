@@ -1,0 +1,238 @@
+{
+"id": "g_pass",
+"w": 50,
+"h": 36,
+"rows": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR,;RRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRR;;;RRRRRRRRXXX,,,;;;;;;b;,,,,",
+"ssssssssssbRRRRRR,,;;;;;;;,,,RR,,:,,,,;b;;;;;;,,,,",
+"ssTTTTTsss,,,,,,,,,,;;;;;\",,,,,,,:,,,,,,;;;,,,,,;,",
+"ssTTTTTsss,,,,,,,,,,;;;;;;,,,,,,,:,,,,,,,TTTT,,,,,",
+"ssTTTTTssss,,,,,TTTT;;;;;;,,,,,,,:,,,,,,,TTTTT,,,,",
+"sTTTTTTsss,,,,,,TTTT;;;;;;;,,,,,,:,,,,,,,,TTT,,,,,",
+"sssTTTssss,,,,,,TTTT;;;;;;;,,,,,,:,,,,,,,,,,,,,,,,",
+"sssssssssss,,,,\",,,,;;;;;;;,,,,,,:,,,,,,,,,,,,,,,,",
+"sssssssss,ss,,,.,,,,;;;;;;,,,,,,::,,,,,,,,,,,,,,,,",
+"....sss.............;;;;;;,,,,..::....,,,,,,,b,,,,",
+"..........................................,,,,,,..",
+"........s,sss,,,,,,;...........,,,,,,.............",
+"sssssssss,ssss,,,,,;;;;...;;;;,;;;;,,,,,,,........",
+"sssssssss,sssssX;;;;;;;;;;;;;;;;;;;,,,,,,,;;;;;;;;",
+"sssssssssssssss;;;;;;;;;;;;;;;\";,,;;;;;;;;;;;;;;;;",
+"sssssssssssssss;;;;;;;;;;;;;;;\",,,;;;;;;;;;;;;;;;;",
+"sssssTTTTTssss;;;;;;;;;;;;r;;;T\",;;;;;;;;;;;TTTTT;",
+"sssrTTTTTTTsss;;;;;;;;r;;;;;TTTT,;;;;;;;;;;;TTTTT;",
+"ssssTTTTTTTsss;;;;;r;;;;;;;;TTTTTb;;,;;;;;;;;TTTT;",
+"sssssTTTTTTss;;,,,,,,,,,r,;;;TTT;;;,,,;;;;;;;;,,,,",
+"sssssTTTsssss;,,,,,,,r,,,,,r;b;;T;;,,,;;,,;;;,,,,,",
+"ssssssssssssssss,,,,,,,,,,,,,;;;;;,,,,,,,,,RRRR,,,",
+"RRRRRRRRRssssssss,,,,,,,RRR,,,,,,,,,,,,RRRRRRRRRRR",
+"RRRRRRRRRRRRsssss,,,,RRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRs,RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRlllllllllRRRRR",
+"llllllllllllllllllllllllllllllllllllllllllllllllll",
+"llllllllllllllllllllllllllllllllllllllllllllllllll"
+],
+"marks": [
+{
+"kind": "tunnel",
+"cells": [
+[
+32,
+8
+],
+[
+33,
+8
+],
+[
+34,
+8
+]
+],
+"text": "the boarded-up MOUTH OF AN OLD TUNNEL cut into the cliff: a heavy timber frame, planks nailed across the dark opening, a rusty lantern hook above it",
+"color": [
+40,
+26,
+16
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+33,
+9
+]
+],
+"text": "a dark ENTRANCE",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+},
+{
+"kind": "cairn",
+"cells": [
+[
+15,
+21
+]
+],
+"text": "a tall stone CAIRN of piled grey stones with a rusty iron marker plate on top",
+"color": [
+150,
+144,
+136
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "examine",
+"x": 15,
+"y": 22,
+"event": "mine_pass_cairn"
+},
+{
+"type": "sign",
+"x": 10,
+"y": 21,
+"text": "ガルドの峠道\n西 → 湯けむりの峠\n東 → 鉱石の谷・鉱山都市ドヴァン"
+},
+{
+"type": "chest",
+"id": "g_pass_c1",
+"x": 44,
+"y": 24,
+"item": "i_potion",
+"n": 2
+},
+{
+"type": "waylamp",
+"id": "wl_g_pass_1",
+"x": 20,
+"y": 16,
+"lit": true
+},
+{
+"type": "waylamp",
+"id": "wl_g_pass_2",
+"x": 40,
+"y": 22,
+"lit": true
+}
+],
+"spawns": {
+"west": {
+"x": 1,
+"y": 18,
+"dir": "e"
+},
+"east": {
+"x": 48,
+"y": 19,
+"dir": "w"
+},
+"tunnel": {
+"x": 33,
+"y": 10,
+"dir": "s"
+}
+},
+"exits": [
+{
+"x": 0,
+"y": 18,
+"w": 1,
+"h": 2,
+"to": {
+"map": "f_passinn",
+"spawn": "east"
+},
+"edge": "w"
+},
+{
+"x": 49,
+"y": 19,
+"w": 1,
+"h": 2,
+"to": {
+"map": "g_valley",
+"spawn": "west"
+},
+"edge": "e"
+}
+],
+"notes": [],
+"meta": {
+"name": "ガルドの峠道",
+"sub": "雪原から山地へ越える峠",
+"region": "r_mine",
+"worldRect": [
+284,
+78,
+50,
+36
+],
+"outside": "rock",
+"zones": [
+{
+"rect": null,
+"zone": "zw_mine"
+}
+],
+"links": {},
+"npcs": [],
+"smooth": 0.6
+},
+"rows_fit": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRR,,,,,RRRRRRRRRR,,RRRRR,RR,,,",
+"ssRRRRRsssRRRRRRR,,,,,,,,,,RRRRRRRRR,,;RR,,,,,,,R,",
+"ssRRRRRRss,,,,,,,,,,,;;;,,RRR,,,XXX,,,;;;;;TbT,,,,",
+"sssssssTTss,,,,RRTTT;;;;;;,,,,,,,:,,,,;,;rTTTTr,,,",
+"ssTTTTTTTs,,,,,TTTTTr;;;;\",,,,,,,:,,,,,,;;;,,TTT;,",
+"sTTTTTTTTs,,,,,rTTTTT;;;;;,,,,,,,:,,,,,,,,TTTTr,,,",
+"ssTTTTTTsss,,,,rTTTTr;;;;;,,,,,,,:,,,,,,,,,TTTr,,,",
+"sssTTTTsss,,,,,,,TTTr;;;;;;,,,,,,:,,,,,,,,,,,,,,,,",
+"ssssssssss,,,,,,,,TT;;;;;;;,,,,,,:,,,,,,,,,,,,,,,,",
+"sssssssssss,,,,\",,,,;;;;;;;,,,,,,:,,,,,,,,,,,T,,,,",
+"sssssssss,ss,,,.,,,,;;;;;;,,,,,,::,,,,,,,,,,,,,,,,",
+"....sss.............;;;;;;,,,,..::....,,,,,,,,,,,,",
+".........X................................,,,,,,..",
+"........sXsss,,,,,,;...........,,,,,,.............",
+"sssssssss,ssss,,,,,;;;;...;;;;,;;;;,,,,,,,........",
+"sssssssss,sssssXr;;;;;;;;;;;;;;;;;;,,,,,,,;;;;;;;;",
+"ssssssTTTTsssss;;;;;;;;;;;;;;rr;,,;;;;;;;;;;;;;;;;",
+"ssssssssssTTsss;;;;;;;;;;;rr;T\",,,;;;;;;;;;;;;;;r;",
+"sssssTTTTTTTss;;;;;;;;;r;;,;;;T\",;;;;;;;;;;;TTTTT;",
+"sTssTTTTTTTTTsr;;;;r;;r;;;;rTTTTr;;;;;;;;;;;TTTTTr",
+"TsssTTTTTTTTss;;;;;,;;;;;;;;TTTTT,r;,;;;;;;;;,T,,;",
+"ssssTTTTTTTTs;;,,,,,,,,,,,;;;T,TTr;,,,;;;;;;;;,,rr",
+"sssssTTTTTsss;,,,,,,,r,,,,,r;b;;Tr;,,,;;,,;;;,,rrr",
+"ssssssTTTsssssss,,,,,,,,,,,,,;;;;;,,,,,,,rrRRRRrrr",
+"RRRRRRRRRssTTssss,,,,,,rRRR,,,,,,,,,,,,RRRRRRRRRRR",
+"RRRRRRRRRRRRTssss,,,,RRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRs,RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRlllllllllRRRRR",
+"llllllllllllllllllllllllllllllllllllllllllllllllll",
+"llllllllllllllllllllllllllllllllllllllllllllllllll"
+]
+}

@@ -1428,7 +1428,7 @@
     'data.items_isles.KEYS.k_guild_parcel.K': '組合の荷',
     'data.items_isles.KEYS.k_guild_parcel.K_2': '船乗り組合から預かった、\nネレイの雑貨屋あての包み。',
     'data.items_isles.KEYS.k_tmap_4.K': '宝の地図・その4',
-    'data.items_isles.KEYS.k_tmap_4.K_2': '商船の船長がくれた古い地図。\n水に沈んだ礼拝堂の絵がある。',
+    'data.items_isles.KEYS.k_tmap_4.K_2': '座礁した商船の船長の古い地図。\n水に沈んだ礼拝堂の絵がある。',
     'data.items_isles.KEYS.k_tmap_4.tmap.hint': '沈んだ礼拝堂。祭壇の裏の、\n封じの扉の奥。',
     'items.u_siren_comb.acc': '人魚のくし',
     'items.u_siren_comb.acc.desc': '人魚の歌う岩にはさまっていた、\n真珠色のくし。かすかに歌が聞こえる。',

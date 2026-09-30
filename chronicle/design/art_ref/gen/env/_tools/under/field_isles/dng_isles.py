@@ -194,31 +194,48 @@ def isles_cave_2():
 
 # ======================================================================== the ghost ship
 def ghost_ship_1():
-    """幽霊船 甲板: the derelict ship lies in the fog, bow east; its deck with three broken masts, the raised stern deck (the captain's
-    skylight), hatches; the own ship alongside on the south, a gangplank across."""
+    """幽霊船 甲板（2026-09-30 描き直し）: 霧の海に浮かぶ大きな帆船、船首は東。なめらかな船体の線と船べりの手すり、長さの向きの甲板板。
+    船尾に一段高い船尾楼（舵輪・船長室の天窓・手すりと左右の階段）、船首に一段高い船首楼（揚げ錨の巻き上げ機）。
+    まん中に折れた帆柱 3 本（裂けた帆と索具）、下へのはしごの口、格子の昇降口、倒れた帆桁。南の船べりから渡り板（下に自分の外洋船）。"""
     a = Area('ghost_ship_1', 56, 30, 6501, base='~')
     ys, xs = np.mgrid[0:a.H, 0:a.W] + 0.5
-    # the hull: a long rounded shape with a pointed bow (E) and a flat stern (W)
-    t = (xs - 6) / 44.0
-    half = np.where(t < 0.75, 8.0, 8.0 * np.sqrt(np.clip((1.0 - t) / 0.25, 0, 1)))
-    hull = (xs >= 6) & (t <= 1.0) & (np.abs(ys - 15) <= half)
+    # 船体: 船尾（西）は丸みのある角、腰は少しふくらみ、船首（東）は一つのなめらかな尖り（x 51.5 で y 14.5）
+    t = (xs - 5.0) / 46.5
+    ub = np.clip((t - 0.6) / 0.4, 0, 1)
+    half = 7.9 * np.where(t < 0.6, 1.0, np.cos(ub * np.pi / 2) ** 0.75)
+    hull = (t >= 0) & (t <= 1.0) & (np.abs(ys - 14.8) <= half)
+    # 船尾の角を丸める
+    hull &= ~((xs < 6.2) & (np.abs(ys - 14.8) > 6.4))
     a.mask_fill(hull, 'u', force=True)
     from scipy import ndimage
     edge = hull & ~ndimage.binary_erosion(hull, iterations=1)
     a.mask_fill(edge, 'X', force=True)
+    # 船尾楼の手すり（x 14、階段 y 10・11 と 18・19）と船首楼の手すり（x 44、階段 y 12・13 と 16・17）
+    for y in range(8, 22):
+        if y not in (10, 11, 18, 19) and a.g[y, 14] == 'u': a.put(14, y, 'X', True)
+    for y in range(9, 21):
+        if y not in (12, 13, 16, 17) and a.g[y, 44] == 'u': a.put(44, y, 'X', True)
+    a.mark('qdeck_stairs', [(14, 10), (14, 11), (14, 18), (14, 19)], 'short wooden STEPS up from the main deck onto the raised stern deck (walkable)', (150, 104, 60), solid=False)
+    a.mark('fdeck_stairs', [(44, 12), (44, 13), (44, 16), (44, 17)], 'short wooden STEPS up onto the raised bow deck (walkable)', (150, 104, 60), solid=False)
     for (x, y) in [(18, 15), (30, 15), (41, 15)]:
-        a.mark('mast%d' % x, [(x, y), (x + 1, y)], 'the stump of a broken MAST wrapped in rotten rigging and torn grey sails', (70, 50, 38))
-    a.mark('skylight', [(10, 14), (11, 14), (10, 15), (11, 15)], "the captain's cabin SKYLIGHT of cracked glass panes in a wooden frame on the stern deck", (90, 110, 120))
+        a.mark('mast%d' % x, [(x, y), (x + 1, y)], 'the thick stump of a broken MAST snapped a man\'s height above the deck, splintered at the top, wrapped in rotten rigging and shreds of torn grey sail, ropes running from it to the rails', (70, 50, 38))
+    a.mark('skylight', [(10, 14), (11, 14), (10, 15), (11, 15)], "the captain's cabin SKYLIGHT on the raised stern deck: a small wooden frame with cracked glass panes", (90, 110, 120))
+    a.mark('wheel', [(7, 14), (7, 15)], "the ship's WHEEL: a big spoked wooden steering wheel on its post at the stern, facing east", (110, 80, 50))
+    a.mark('capstan', [(47, 14), (47, 15)], 'a round wooden CAPSTAN with bars, an anchor chain running from it to the bow', (110, 80, 50))
     a.mark('hatch', [(24, 11), (25, 11)], 'an open square HATCH in the deck with a ladder going down into darkness', DARK, solid=False)
+    a.mark('grating', [(x, y) for x in range(34, 37) for y in range(17, 19)], 'a closed cargo HATCH covered by a wooden grating', (96, 70, 50))
+    a.mark('yard', [(x, 19) for x in range(19, 24)], 'a fallen YARD (a long wooden spar) lying on the deck with a torn grey sail draped over it', (120, 110, 96))
     # the gangplank to the own ship (S)
     for y in range(22, 26):
         a.put(28, y, '=', True); a.put(29, y, '=', True); a.keep[y, 28] = a.keep[y, 29] = True
     a.mark('plank', [(x, y) for x in (28, 29) for y in range(22, 26)], 'a wide wooden GANGPLANK laid from the rail across the gap to a boat below (walkable)', (150, 104, 60), solid=False)
-    keep = [(28, 21), (24, 12), (25, 12), (36, 18), (14, 11), (46, 15), (20, 19)]
-    for (x, y) in keep: a.keep[y, x] = True
+    keep = [(28, 21), (24, 12), (25, 12), (36, 16), (8, 9), (14, 11), (46, 15), (20, 18), (10, 13), (18, 16), (30, 16), (41, 16), (41, 14)]
+    for (x, y) in keep:
+        if a.g[y, x] != 'u': a.put(x, y, 'u', True)
+        a.keep[y, x] = True
     a.spawns = {'board': dict(x=28, y=21, dir='n'), 'up': dict(x=24, y=12, dir='s')}
     a.objects = [dict(type='o', x=x, y=y) for (x, y) in keep]
-    a.meta.update(name='幽霊船', region='r_isles', zones=[], worldRect=[0, 0, 1, 1], look='ship')
+    a.meta.update(name='幽霊船', region='r_isles', zones=[], worldRect=[0, 0, 1, 1], look='ship', smooth=0.4)
     return a
 
 

@@ -40,11 +40,64 @@ def draw(T, sym=True):
                     if nb.count(gc) >= 2: base = C[gc]; break
             g.rectangle(R(x, y), fill=markc.get((x, y), base))
     if not sym: return im
+    SM = (d.get('meta') or {}).get('smooth')
+    GROUND = None
+    if SM:
+        # (2026-09-30 見直し) 境をなめらかな曲線に: 地面の字ごとの塊をぼかして、いちばん濃い字をその画素の地面にする
+        # （マスの段々も、ぼかしの段々も残らない。岸・岩棚・砂浜が自然な曲線でくっきり分かれる）。目印の塊は後でそのまま重ねる
+        import numpy as np
+        from scipy import ndimage
+        gch = [[ch(x, y) for x in range(W)] for y in range(H)]
+        for y in range(H):
+            for x in range(W):
+                if gch[y][x] in 'rTb':
+                    nb = [ch(i, j) for i, j in ((x - 1, y), (x + 1, y), (x, y + 1), (x, y - 1))]
+                    gch[y][x] = next((gc for gc in ',;sk_u' if nb.count(gc) >= 2), ',')
+        # 目印のマスの下の地面 = いちばん近い目印でないマスの地面（なめらかな目印の角から地面がのぞく）
+        mkm = np.zeros((H, W), bool)
+        for (mx, my) in markc: mkm[my, mx] = True
+        if mkm.any():
+            _, (iy, ix) = ndimage.distance_transform_edt(mkm, return_indices=True)
+            gch = [[gch[iy[y, x]][ix[y, x]] for x in range(W)] for y in range(H)]
+        keys = sorted(set(c for r in gch for c in r))
+        stack = []
+        for kk in keys:
+            m = np.kron(np.array([[1.0 if c == kk else 0.0 for c in r] for r in gch]), np.ones((T, T)))
+            stack.append(ndimage.gaussian_filter(m, T * float(SM), mode='nearest'))
+        am = np.argmax(np.stack(stack), 0)
+        pal = np.array([C.get(kk, (255, 0, 255)) for kk in keys], np.uint8)
+        base = Image.fromarray(pal[am], 'RGB')
+        mk = Image.new('L', im.size, 0); mkd = ImageDraw.Draw(mk)
+        for (mx, my) in markc: mkd.rectangle(R(mx, my), fill=255)
+        im = Image.composite(im, base, mk)
+        GROUND = base
     # 境を丸める（マスの段々をなぞらせない）。目印（marks）の塊と船の床・壁だけはくっきり残す
-    soft = im.filter(ImageFilter.GaussianBlur(T * (0.2 if LOOK == 'ship' else 0.45)))
+    soft = im.filter(ImageFilter.GaussianBlur(T * (0.2 if LOOK == 'ship' else 0.12 if SM else 0.45)))
     keep = Image.new('L', im.size, 0); kd = ImageDraw.Draw(keep)
     for (mx, my) in markc: kd.rectangle(R(mx, my), fill=255)
     im = Image.composite(im, soft, keep); g = ImageDraw.Draw(im)
+    # 目印の形（mark 'shape'）: round = 丸い塔・岩（外接の四角の角を海・地面の色に戻して楕円に）
+    for m in d['marks']:
+        if m.get('shape') == 'smooth' and m['cells']:
+            # smooth = 塊をぼかして半分で切った、角の丸いなめらかな形（船体・塔）
+            import numpy as np
+            from scipy import ndimage
+            mm = np.zeros((H * T, W * T))
+            for (mx, my) in m['cells']: mm[my * T:(my + 1) * T, mx * T:(mx + 1) * T] = 1
+            sm = ndimage.gaussian_filter(mm, T * 0.6) > 0.5
+            col = Image.new('RGB', im.size, tuple(m['color']))
+            gr = (GROUND or soft).filter(ImageFilter.GaussianBlur(T * 0.12))
+            cur = Image.composite(gr, im, Image.fromarray((mm * 255).astype('uint8')))   # 塊のマスはいったん地面に
+            im = Image.composite(col, cur, Image.fromarray((sm * 255).astype('uint8')))
+            continue
+        if m.get('shape') != 'round' or not m['cells']: continue
+        xs_ = [c_[0] for c_ in m['cells']]; ys_ = [c_[1] for c_ in m['cells']]
+        bx0, by0, bx1, by1 = min(xs_) * T, min(ys_) * T, (max(xs_) + 1) * T - 1, (max(ys_) + 1) * T - 1
+        box = (bx0, by0, bx1 + 1, by1 + 1)
+        el = Image.new('L', (bx1 - bx0 + 1, by1 - by0 + 1), 0); ImageDraw.Draw(el).ellipse([0, 0, bx1 - bx0, by1 - by0], fill=255)
+        under = soft.crop(box); cur = im.crop(box)
+        im.paste(Image.composite(cur, under, el), box[:2])
+    g = ImageDraw.Draw(im)
     for y in range(H):
         for x in range(W):
             c = ch(x, y); cx, cy = x * T + T // 2, y * T + T // 2

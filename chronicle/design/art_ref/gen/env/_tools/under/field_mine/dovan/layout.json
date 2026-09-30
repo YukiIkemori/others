@@ -1,0 +1,2635 @@
+{
+"id": "dovan",
+"w": 54,
+"h": 48,
+"rows": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRXXXXXRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRXXXRRRRRRRRRXXXXXRRRRRRRRRRRRRRRRRRXR",
+"RRRRRXXXXXXXXXXXXkkkkkRRRRRRRRRkkkkkkkkkkkkkkkkkkkRRRR",
+"RRRkkXXXXXXXXXXXXkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkRRRR",
+"RRRkkXXXXXXXXXXXXkkkcXXXckkkkkkkkkkkrrkkkkkkwwwwkkkRRR",
+"RRRkkXXXXXXXXXXXXkkkcXXXckkkkkkkkkkkkkkkkkkwwwwwwwRRRR",
+"RRRkkXXXXXXXXXXXXkkkccccckkkkkkkkkkkkkkkkkkwwwwwwwRRRR",
+"RRXkkXXXXXXXXXXXXkkkccccckkkkkkkkkkkkkkkkkkkwwwwwwRRRR",
+"RRRkkXXXXXXXXXXXXkkkkkkkkkkkkkkkkkkkkkkkkkkkkwwwwkRRRR",
+"RRRkkXXXXXXcXXXXXkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkRRRR",
+"RRRkkkcccccccccccccccccccccccccccccccccccccccccckkRRRR",
+"RRRkkkcccccccccccccccccccccccccccccccccccccccccckkRRRR",
+"RRRRRkkkkkkcccRRRRRRRkRRRRRRRRkkRRRRRkkkkkkkkkkkkRRRRR",
+"RRRRRRRRRRRcccRRRRRRRRRRRRRRRRRRRRRRRRRRkkkRRRRRRRRRRR",
+"RRRRRRRRRRRcccRRRRRRRRRRRRRRRRRRRRRRRRRRkkkRRRRRRRRRRR",
+"RRRRRRRRRRRcccRRRRRRRRRRRRRRRRRRRRRRRRRRkkkRRRRRRRRRRR",
+"RRRRRRRRRRRcccRRRRRRRRRRRRXXXXXXXXXXXRRRkkkRRRRRllllll",
+"RRRRRRRkkkkccckkkkkkkkRRRRXXXXXXXXXXXkkkkkkkkkkRllllll",
+"RRRRkkXXXXXXXXkkkXXXXXXkkkXXXXXXXXXXXkkkkkkkkkkRllllll",
+"RRXRkkXXXXXXXXkkkXXXXXXkkkXXXXXXXXXXXkkkkkkkkkkRllllll",
+"RRRRkkXXXXXXXXkkkXXXXXXkkkXXXXXXXXXXXkkkkkkkkkkRllllll",
+"RRRRkkXXXXXXXXkkkXXXXXXkkkXXXXXXXXXXXkkkkkkkkkkRllllll",
+"RRRRkkXXXXXXXXkkkXXXcXXkkkXXXXXcXXXXXkkkkkkkkkkRllllll",
+"RRRRkkXXXXcXXXkkccccccccccccccccccccccckkkkkkkkkllllll",
+"RRRRkkccccccccccccccccccccccccccccccccckkkkkkkkkllllll",
+"RRRRkkccccccccccccccccccccccccccccccccckkkkkkkkkllllll",
+"RRRRkkkkkkkkkkkkccccccccccccccccccccccck====kkkRllllll",
+"RRRRRkkkkkkkkkkkccccccccccccccccccccccckkkk===kRllllll",
+"RRRRRkkkkrrkkkkkccccccccccccccccccccccckkkkXXXkRRlllll",
+"RRRRRkkkkkkkkkkkkkkkkkkkkcccckkkkkkkkkkkkRRXXXRRRlllll",
+"RRRRRRRRRkkkkkkkkkkRRRRRRccccRRRRRRRRRRkkRRXXXRRRlllll",
+"RRRRRRRRRRRRRRRRRRRRRRRRRccccRRRRRRRRRRRRRRXXXRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRccccRRRRRRRRRRRRRRXXXRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRccccRRRRRRRRRRRRRRXXXRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRccccRRRRRRRRRRRRRRXXXRRRRRRRR",
+"RRRRRkXXXXXXXXXkkkkkkkkkkcccckkXXXXXXXXXkkk===kkkRRRRR",
+"RRRRRkXXXXXXXXXkXXXXXXXkkcccckkXXXXXXXXXkkkkkkkkkRRRRR",
+"RRRRRkXXXXXXXXXkXXXXXXXkkcccckkXXXXXXXXXkkkkkXXXXRRRRR",
+"RRRRRkXXXXXXXXXkXXXXXXXkkcccckkXXXXXXXXXkkkkkXXXXRRRRR",
+"RRRRRkXXXXXXXXXkXXXXXXXkkcccckkXXXXXXXXXkkkkkXXXXRRXRR",
+"RRRRRkXXXXcXXXXkXXXcXXXkkcccckkXXXXcXXXXkkkkkXXXXRRRRR",
+"RRRRRkcccccccccccccccccccccccccccccccccccccccccckRRRRR",
+"RRRRRkcccccccccccccccccccccccccccccccccccccccccckRRRRR",
+"RRRRrkkkkkkkkkkkkkkkkkkkkcccckkkkkkkkkkkkkkkkkrkkRRRRR",
+"RRRRRRRRRRRRRRRRRRkkkkkkkcccckkkkkkkkkkkkkkkkkRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRccccRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRccccRRRRRRRRRRRRRRRRRRRRRRRRR"
+],
+"marks": [
+{
+"kind": "stair_u",
+"cells": [
+[
+25,
+32
+],
+[
+25,
+33
+],
+[
+25,
+34
+],
+[
+25,
+35
+],
+[
+26,
+32
+],
+[
+26,
+33
+],
+[
+26,
+34
+],
+[
+26,
+35
+],
+[
+27,
+32
+],
+[
+27,
+33
+],
+[
+27,
+34
+],
+[
+27,
+35
+],
+[
+28,
+32
+],
+[
+28,
+33
+],
+[
+28,
+34
+],
+[
+28,
+35
+]
+],
+"text": "a broad flight of worn STONE STEPS cut into the rock face",
+"color": [
+176,
+166,
+150
+],
+"solid": false
+},
+{
+"kind": "ramp",
+"cells": [
+[
+11,
+13
+],
+[
+11,
+14
+],
+[
+11,
+15
+],
+[
+11,
+16
+],
+[
+11,
+17
+],
+[
+11,
+18
+],
+[
+12,
+13
+],
+[
+12,
+14
+],
+[
+12,
+15
+],
+[
+12,
+16
+],
+[
+12,
+17
+],
+[
+12,
+18
+],
+[
+13,
+13
+],
+[
+13,
+14
+],
+[
+13,
+15
+],
+[
+13,
+16
+],
+[
+13,
+17
+],
+[
+13,
+18
+]
+],
+"text": "a long sloping RAMP of stone slabs down the rock face",
+"color": [
+176,
+166,
+150
+],
+"solid": false
+},
+{
+"kind": "b_dovan_guild",
+"cells": [
+[
+6,
+36
+],
+[
+6,
+37
+],
+[
+6,
+38
+],
+[
+6,
+39
+],
+[
+6,
+40
+],
+[
+6,
+41
+],
+[
+7,
+36
+],
+[
+7,
+37
+],
+[
+7,
+38
+],
+[
+7,
+39
+],
+[
+7,
+40
+],
+[
+7,
+41
+],
+[
+8,
+36
+],
+[
+8,
+37
+],
+[
+8,
+38
+],
+[
+8,
+39
+],
+[
+8,
+40
+],
+[
+8,
+41
+],
+[
+9,
+36
+],
+[
+9,
+37
+],
+[
+9,
+38
+],
+[
+9,
+39
+],
+[
+9,
+40
+],
+[
+9,
+41
+],
+[
+10,
+36
+],
+[
+10,
+37
+],
+[
+10,
+38
+],
+[
+10,
+39
+],
+[
+10,
+40
+],
+[
+11,
+36
+],
+[
+11,
+37
+],
+[
+11,
+38
+],
+[
+11,
+39
+],
+[
+11,
+40
+],
+[
+11,
+41
+],
+[
+12,
+36
+],
+[
+12,
+37
+],
+[
+12,
+38
+],
+[
+12,
+39
+],
+[
+12,
+40
+],
+[
+12,
+41
+],
+[
+13,
+36
+],
+[
+13,
+37
+],
+[
+13,
+38
+],
+[
+13,
+39
+],
+[
+13,
+40
+],
+[
+13,
+41
+],
+[
+14,
+36
+],
+[
+14,
+37
+],
+[
+14,
+38
+],
+[
+14,
+39
+],
+[
+14,
+40
+],
+[
+14,
+41
+]
+],
+"text": "the MINERS' GUILD OFFICE: a solid two-storey house of dark timber on a stone base, a big slate roof, a sign bracket with crossed picks",
+"color": [
+128,
+96,
+70
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+10,
+41
+]
+],
+"text": "a dark ENTRANCE",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+},
+{
+"kind": "b_dovan_inn",
+"cells": [
+[
+16,
+37
+],
+[
+16,
+38
+],
+[
+16,
+39
+],
+[
+16,
+40
+],
+[
+16,
+41
+],
+[
+17,
+37
+],
+[
+17,
+38
+],
+[
+17,
+39
+],
+[
+17,
+40
+],
+[
+17,
+41
+],
+[
+18,
+37
+],
+[
+18,
+38
+],
+[
+18,
+39
+],
+[
+18,
+40
+],
+[
+18,
+41
+],
+[
+19,
+37
+],
+[
+19,
+38
+],
+[
+19,
+39
+],
+[
+19,
+40
+],
+[
+20,
+37
+],
+[
+20,
+38
+],
+[
+20,
+39
+],
+[
+20,
+40
+],
+[
+20,
+41
+],
+[
+21,
+37
+],
+[
+21,
+38
+],
+[
+21,
+39
+],
+[
+21,
+40
+],
+[
+21,
+41
+],
+[
+22,
+37
+],
+[
+22,
+38
+],
+[
+22,
+39
+],
+[
+22,
+40
+],
+[
+22,
+41
+]
+],
+"text": "the INN: a cosy timber house with a steep slate roof, a lantern bracket by the door",
+"color": [
+128,
+96,
+70
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+19,
+41
+]
+],
+"text": "a dark ENTRANCE",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+},
+{
+"kind": "b_dovan_tavern",
+"cells": [
+[
+31,
+36
+],
+[
+31,
+37
+],
+[
+31,
+38
+],
+[
+31,
+39
+],
+[
+31,
+40
+],
+[
+31,
+41
+],
+[
+32,
+36
+],
+[
+32,
+37
+],
+[
+32,
+38
+],
+[
+32,
+39
+],
+[
+32,
+40
+],
+[
+32,
+41
+],
+[
+33,
+36
+],
+[
+33,
+37
+],
+[
+33,
+38
+],
+[
+33,
+39
+],
+[
+33,
+40
+],
+[
+33,
+41
+],
+[
+34,
+36
+],
+[
+34,
+37
+],
+[
+34,
+38
+],
+[
+34,
+39
+],
+[
+34,
+40
+],
+[
+34,
+41
+],
+[
+35,
+36
+],
+[
+35,
+37
+],
+[
+35,
+38
+],
+[
+35,
+39
+],
+[
+35,
+40
+],
+[
+36,
+36
+],
+[
+36,
+37
+],
+[
+36,
+38
+],
+[
+36,
+39
+],
+[
+36,
+40
+],
+[
+36,
+41
+],
+[
+37,
+36
+],
+[
+37,
+37
+],
+[
+37,
+38
+],
+[
+37,
+39
+],
+[
+37,
+40
+],
+[
+37,
+41
+],
+[
+38,
+36
+],
+[
+38,
+37
+],
+[
+38,
+38
+],
+[
+38,
+39
+],
+[
+38,
+40
+],
+[
+38,
+41
+],
+[
+39,
+36
+],
+[
+39,
+37
+],
+[
+39,
+38
+],
+[
+39,
+39
+],
+[
+39,
+40
+],
+[
+39,
+41
+]
+],
+"text": "the TAVERN: a wide timber hall with a slate roof, barrels stacked by the wall",
+"color": [
+128,
+96,
+70
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+35,
+41
+]
+],
+"text": "a dark ENTRANCE",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+},
+{
+"kind": "house_u",
+"cells": [
+[
+45,
+38
+],
+[
+45,
+39
+],
+[
+45,
+40
+],
+[
+45,
+41
+],
+[
+46,
+38
+],
+[
+46,
+39
+],
+[
+46,
+40
+],
+[
+46,
+41
+],
+[
+47,
+38
+],
+[
+47,
+39
+],
+[
+47,
+40
+],
+[
+47,
+41
+],
+[
+48,
+38
+],
+[
+48,
+39
+],
+[
+48,
+40
+],
+[
+48,
+41
+]
+],
+"text": "a small miners' house of timber and stone with a slate roof",
+"color": [
+128,
+96,
+70
+],
+"solid": true
+},
+{
+"kind": "b_dovan_items",
+"cells": [
+[
+6,
+19
+],
+[
+6,
+20
+],
+[
+6,
+21
+],
+[
+6,
+22
+],
+[
+6,
+23
+],
+[
+6,
+24
+],
+[
+7,
+19
+],
+[
+7,
+20
+],
+[
+7,
+21
+],
+[
+7,
+22
+],
+[
+7,
+23
+],
+[
+7,
+24
+],
+[
+8,
+19
+],
+[
+8,
+20
+],
+[
+8,
+21
+],
+[
+8,
+22
+],
+[
+8,
+23
+],
+[
+8,
+24
+],
+[
+9,
+19
+],
+[
+9,
+20
+],
+[
+9,
+21
+],
+[
+9,
+22
+],
+[
+9,
+23
+],
+[
+9,
+24
+],
+[
+10,
+19
+],
+[
+10,
+20
+],
+[
+10,
+21
+],
+[
+10,
+22
+],
+[
+10,
+23
+],
+[
+11,
+19
+],
+[
+11,
+20
+],
+[
+11,
+21
+],
+[
+11,
+22
+],
+[
+11,
+23
+],
+[
+11,
+24
+],
+[
+12,
+19
+],
+[
+12,
+20
+],
+[
+12,
+21
+],
+[
+12,
+22
+],
+[
+12,
+23
+],
+[
+12,
+24
+],
+[
+13,
+19
+],
+[
+13,
+20
+],
+[
+13,
+21
+],
+[
+13,
+22
+],
+[
+13,
+23
+],
+[
+13,
+24
+]
+],
+"text": "the ITEM SHOP: a timber house with a slate roof and a wide shop window",
+"color": [
+128,
+96,
+70
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+10,
+24
+]
+],
+"text": "a dark ENTRANCE",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+},
+{
+"kind": "b_dovan_house",
+"cells": [
+[
+17,
+19
+],
+[
+17,
+20
+],
+[
+17,
+21
+],
+[
+17,
+22
+],
+[
+17,
+23
+],
+[
+18,
+19
+],
+[
+18,
+20
+],
+[
+18,
+21
+],
+[
+18,
+22
+],
+[
+18,
+23
+],
+[
+19,
+19
+],
+[
+19,
+20
+],
+[
+19,
+21
+],
+[
+19,
+22
+],
+[
+19,
+23
+],
+[
+20,
+19
+],
+[
+20,
+20
+],
+[
+20,
+21
+],
+[
+20,
+22
+],
+[
+21,
+19
+],
+[
+21,
+20
+],
+[
+21,
+21
+],
+[
+21,
+22
+],
+[
+21,
+23
+],
+[
+22,
+19
+],
+[
+22,
+20
+],
+[
+22,
+21
+],
+[
+22,
+22
+],
+[
+22,
+23
+]
+],
+"text": "a MINER'S HOUSE of timber and stone with a slate roof and a small chimney",
+"color": [
+128,
+96,
+70
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+20,
+23
+]
+],
+"text": "a dark ENTRANCE",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+},
+{
+"kind": "b_dovan_hall",
+"cells": [
+[
+26,
+17
+],
+[
+26,
+18
+],
+[
+26,
+19
+],
+[
+26,
+20
+],
+[
+26,
+21
+],
+[
+26,
+22
+],
+[
+26,
+23
+],
+[
+27,
+17
+],
+[
+27,
+18
+],
+[
+27,
+19
+],
+[
+27,
+20
+],
+[
+27,
+21
+],
+[
+27,
+22
+],
+[
+27,
+23
+],
+[
+28,
+17
+],
+[
+28,
+18
+],
+[
+28,
+19
+],
+[
+28,
+20
+],
+[
+28,
+21
+],
+[
+28,
+22
+],
+[
+28,
+23
+],
+[
+29,
+17
+],
+[
+29,
+18
+],
+[
+29,
+19
+],
+[
+29,
+20
+],
+[
+29,
+21
+],
+[
+29,
+22
+],
+[
+29,
+23
+],
+[
+30,
+17
+],
+[
+30,
+18
+],
+[
+30,
+19
+],
+[
+30,
+20
+],
+[
+30,
+21
+],
+[
+30,
+22
+],
+[
+30,
+23
+],
+[
+31,
+17
+],
+[
+31,
+18
+],
+[
+31,
+19
+],
+[
+31,
+20
+],
+[
+31,
+21
+],
+[
+31,
+22
+],
+[
+32,
+17
+],
+[
+32,
+18
+],
+[
+32,
+19
+],
+[
+32,
+20
+],
+[
+32,
+21
+],
+[
+32,
+22
+],
+[
+32,
+23
+],
+[
+33,
+17
+],
+[
+33,
+18
+],
+[
+33,
+19
+],
+[
+33,
+20
+],
+[
+33,
+21
+],
+[
+33,
+22
+],
+[
+33,
+23
+],
+[
+34,
+17
+],
+[
+34,
+18
+],
+[
+34,
+19
+],
+[
+34,
+20
+],
+[
+34,
+21
+],
+[
+34,
+22
+],
+[
+34,
+23
+],
+[
+35,
+17
+],
+[
+35,
+18
+],
+[
+35,
+19
+],
+[
+35,
+20
+],
+[
+35,
+21
+],
+[
+35,
+22
+],
+[
+35,
+23
+],
+[
+36,
+17
+],
+[
+36,
+18
+],
+[
+36,
+19
+],
+[
+36,
+20
+],
+[
+36,
+21
+],
+[
+36,
+22
+],
+[
+36,
+23
+]
+],
+"text": "the ASSEMBLY HALL: a long stone hall with a steep timber roof and two chimneys, a wide double door",
+"color": [
+128,
+96,
+70
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+31,
+23
+]
+],
+"text": "a dark ENTRANCE",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+},
+{
+"kind": "b_dovan_forge",
+"cells": [
+[
+5,
+3
+],
+[
+5,
+4
+],
+[
+5,
+5
+],
+[
+5,
+6
+],
+[
+5,
+7
+],
+[
+5,
+8
+],
+[
+5,
+9
+],
+[
+5,
+10
+],
+[
+6,
+3
+],
+[
+6,
+4
+],
+[
+6,
+5
+],
+[
+6,
+6
+],
+[
+6,
+7
+],
+[
+6,
+8
+],
+[
+6,
+9
+],
+[
+6,
+10
+],
+[
+7,
+3
+],
+[
+7,
+4
+],
+[
+7,
+5
+],
+[
+7,
+6
+],
+[
+7,
+7
+],
+[
+7,
+8
+],
+[
+7,
+9
+],
+[
+7,
+10
+],
+[
+8,
+3
+],
+[
+8,
+4
+],
+[
+8,
+5
+],
+[
+8,
+6
+],
+[
+8,
+7
+],
+[
+8,
+8
+],
+[
+8,
+9
+],
+[
+8,
+10
+],
+[
+9,
+3
+],
+[
+9,
+4
+],
+[
+9,
+5
+],
+[
+9,
+6
+],
+[
+9,
+7
+],
+[
+9,
+8
+],
+[
+9,
+9
+],
+[
+9,
+10
+],
+[
+10,
+3
+],
+[
+10,
+4
+],
+[
+10,
+5
+],
+[
+10,
+6
+],
+[
+10,
+7
+],
+[
+10,
+8
+],
+[
+10,
+9
+],
+[
+10,
+10
+],
+[
+11,
+3
+],
+[
+11,
+4
+],
+[
+11,
+5
+],
+[
+11,
+6
+],
+[
+11,
+7
+],
+[
+11,
+8
+],
+[
+11,
+9
+],
+[
+12,
+3
+],
+[
+12,
+4
+],
+[
+12,
+5
+],
+[
+12,
+6
+],
+[
+12,
+7
+],
+[
+12,
+8
+],
+[
+12,
+9
+],
+[
+12,
+10
+],
+[
+13,
+3
+],
+[
+13,
+4
+],
+[
+13,
+5
+],
+[
+13,
+6
+],
+[
+13,
+7
+],
+[
+13,
+8
+],
+[
+13,
+9
+],
+[
+13,
+10
+],
+[
+14,
+3
+],
+[
+14,
+4
+],
+[
+14,
+5
+],
+[
+14,
+6
+],
+[
+14,
+7
+],
+[
+14,
+8
+],
+[
+14,
+9
+],
+[
+14,
+10
+],
+[
+15,
+3
+],
+[
+15,
+4
+],
+[
+15,
+5
+],
+[
+15,
+6
+],
+[
+15,
+7
+],
+[
+15,
+8
+],
+[
+15,
+9
+],
+[
+15,
+10
+],
+[
+16,
+3
+],
+[
+16,
+4
+],
+[
+16,
+5
+],
+[
+16,
+6
+],
+[
+16,
+7
+],
+[
+16,
+8
+],
+[
+16,
+9
+],
+[
+16,
+10
+]
+],
+"text": "the GREAT FORGE of the smiths: a big open-fronted stone smithy under a heavy timber roof, a tall brick chimney, the red glow of a furnace mouth inside, anvils and a water trough in front",
+"color": [
+128,
+96,
+70
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+11,
+10
+]
+],
+"text": "a dark ENTRANCE",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+},
+{
+"kind": "lift",
+"cells": [
+[
+43,
+29
+],
+[
+43,
+30
+],
+[
+43,
+31
+],
+[
+43,
+32
+],
+[
+43,
+33
+],
+[
+43,
+34
+],
+[
+43,
+35
+],
+[
+44,
+29
+],
+[
+44,
+30
+],
+[
+44,
+31
+],
+[
+44,
+32
+],
+[
+44,
+33
+],
+[
+44,
+34
+],
+[
+44,
+35
+],
+[
+45,
+29
+],
+[
+45,
+30
+],
+[
+45,
+31
+],
+[
+45,
+32
+],
+[
+45,
+33
+],
+[
+45,
+34
+],
+[
+45,
+35
+]
+],
+"text": "the LIFT TOWER: a tall frame of heavy timbers against the rock face with a winch wheel on top and a wooden cage platform, ropes and a counterweight",
+"color": [
+140,
+100,
+62
+],
+"solid": true
+},
+{
+"kind": "minemouth",
+"cells": [
+[
+29,
+1
+],
+[
+29,
+2
+],
+[
+30,
+1
+],
+[
+30,
+2
+],
+[
+31,
+1
+],
+[
+31,
+2
+],
+[
+32,
+1
+],
+[
+32,
+2
+],
+[
+33,
+1
+],
+[
+33,
+2
+]
+],
+"text": "the MINE MOUTH: a great timbered portal in the rock wall, heavy beams and props, the rails run into the dark",
+"color": [
+40,
+26,
+16
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+31,
+3
+]
+],
+"text": "a dark ENTRANCE",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+},
+{
+"kind": "railcut",
+"cells": [
+[
+40,
+14
+],
+[
+40,
+15
+],
+[
+40,
+16
+],
+[
+40,
+17
+],
+[
+41,
+14
+],
+[
+41,
+15
+],
+[
+41,
+16
+],
+[
+41,
+17
+],
+[
+42,
+14
+],
+[
+42,
+15
+],
+[
+42,
+16
+],
+[
+42,
+17
+]
+],
+"text": "a steep CUTTING through the rock face where the rails run down, shored with timber",
+"color": [
+120,
+100,
+80
+],
+"solid": false
+},
+{
+"kind": "station",
+"cells": [
+[
+40,
+27
+],
+[
+41,
+27
+],
+[
+42,
+27
+],
+[
+43,
+27
+]
+],
+"text": "the CART STATION: a timber platform with a buffer stop at the end of the rails",
+"color": [
+140,
+100,
+62
+],
+"solid": false
+},
+{
+"kind": "oath",
+"cells": [
+[
+21,
+5
+],
+[
+22,
+5
+],
+[
+23,
+5
+],
+[
+21,
+6
+],
+[
+22,
+6
+],
+[
+23,
+6
+]
+],
+"text": "the OATH STONE: a tall slab of dark stone carved with an anvil, a hammer and lines of old letters (half of them worn away), on a low stepped dais",
+"color": [
+96,
+92,
+100
+],
+"solid": true
+},
+{
+"kind": "tunnel",
+"cells": [
+[
+17,
+2
+],
+[
+18,
+2
+],
+[
+19,
+2
+]
+],
+"text": "a small old TUNNEL MOUTH in the rock wall, timber-framed, boarded up with planks",
+"color": [
+40,
+26,
+16
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+18,
+3
+]
+],
+"text": "a dark ENTRANCE",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+},
+{
+"kind": "veins",
+"cells": [
+[
+2,
+20
+],
+[
+51,
+40
+],
+[
+2,
+8
+],
+[
+52,
+2
+]
+],
+"text": "veins of glowing pale-blue ORE CRYSTALS growing out of the rock",
+"color": [
+120,
+170,
+210
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 22,
+"y": 8
+},
+{
+"type": "o",
+"x": 21,
+"y": 9
+},
+{
+"type": "o",
+"x": 23,
+"y": 9
+},
+{
+"type": "o",
+"x": 44,
+"y": 37
+},
+{
+"type": "o",
+"x": 44,
+"y": 27
+},
+{
+"type": "o",
+"x": 39,
+"y": 27
+},
+{
+"type": "o",
+"x": 43,
+"y": 37
+},
+{
+"type": "o",
+"x": 26,
+"y": 27
+},
+{
+"type": "o",
+"x": 28,
+"y": 27
+},
+{
+"type": "o",
+"x": 12,
+"y": 11
+},
+{
+"type": "o",
+"x": 30,
+"y": 4
+},
+{
+"type": "o",
+"x": 32,
+"y": 4
+}
+],
+"spawns": {
+"gate": {
+"x": 26,
+"y": 46,
+"dir": "n"
+},
+"warp": {
+"x": 27,
+"y": 27,
+"dir": "s"
+},
+"mine": {
+"x": 31,
+"y": 4,
+"dir": "s"
+},
+"tunnel": {
+"x": 18,
+"y": 4,
+"dir": "s"
+},
+"lift_u": {
+"x": 44,
+"y": 37,
+"dir": "s"
+},
+"lift_m": {
+"x": 44,
+"y": 27,
+"dir": "n"
+},
+"station": {
+"x": 39,
+"y": 27,
+"dir": "w"
+},
+"oath": {
+"x": 22,
+"y": 9,
+"dir": "n"
+}
+},
+"exits": [
+{
+"x": 26,
+"y": 47,
+"w": 2,
+"h": 1,
+"to": {
+"map": "g_valley",
+"spawn": "gate"
+},
+"edge": "s"
+}
+],
+"notes": [],
+"meta": {
+"blds": [
+{
+"id": "dovan_guild",
+"x": 6,
+"y": 36,
+"w": 9,
+"h": 6,
+"door": [
+10,
+41
+]
+},
+{
+"id": "dovan_inn",
+"x": 16,
+"y": 37,
+"w": 7,
+"h": 5,
+"door": [
+19,
+41
+]
+},
+{
+"id": "dovan_tavern",
+"x": 31,
+"y": 36,
+"w": 9,
+"h": 6,
+"door": [
+35,
+41
+]
+},
+{
+"id": "dovan_items",
+"x": 6,
+"y": 19,
+"w": 8,
+"h": 6,
+"door": [
+10,
+24
+]
+},
+{
+"id": "dovan_house",
+"x": 17,
+"y": 19,
+"w": 6,
+"h": 5,
+"door": [
+20,
+23
+]
+},
+{
+"id": "dovan_hall",
+"x": 26,
+"y": 17,
+"w": 11,
+"h": 7,
+"door": [
+31,
+23
+]
+},
+{
+"id": "dovan_forge",
+"x": 5,
+"y": 3,
+"w": 12,
+"h": 8,
+"door": [
+11,
+10
+]
+}
+],
+"rails": [
+[
+[
+31.5,
+3.2
+],
+[
+32.5,
+7.0
+],
+[
+37.0,
+10.0
+],
+[
+40.5,
+12.6
+],
+[
+41.3,
+17.0
+],
+[
+41.0,
+22.5
+],
+[
+40.5,
+26.6
+]
+]
+],
+"name": "鉱山都市ドヴァン",
+"region": "r_mine",
+"zones": [],
+"worldRect": [
+330,
+60,
+54,
+48
+],
+"look": "town",
+"smooth": 0.6
+}
+}

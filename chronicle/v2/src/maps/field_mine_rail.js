@@ -1,0 +1,70 @@
+// 生成物（design/art_ref/gen/env/_tools/under/field_mine/ の areas_mine.py → fit.py → tomap.py）。手で直さない: 配置は areas_mine.py、当たりは fit.py で作り直す。
+// エリア g_rail「トロッコ線の崖」（崖の棚を走る古いトロッコの線、50×36）。エリア切り替えのフィールド（maps/field_00_kit.js、山地の凡例は field_mine_00_kit.js）。
+//   出口: w → g_valley.east
+//   絵: field/under/g_rail（v2/assets/env/field/under/。無ければマスから焼く）
+(function (R) {
+  'use strict';
+  R.FieldArea.def("g_rail", {
+    name: "トロッコ線の崖", region: "r_mine", outside: "rock",
+    legend: R.FieldArea.MINE_LEGEND, theme: 'field', bgm: 'overworld', bbg: 'mine', propSet: 'mine', propSetBase: 'village',
+    light: R.FieldArea.MINE_LIGHT,
+    rows: [
+      "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRT;,TRXXXXXXRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRRr,,TTTTr;;;;TT,,;XXXXXXrrrrrr",
+      "RRRRRRRRRRRRRRRTbbb,,,,,;TTTT;;;;T;,;;XXXXXXrrrrrr",
+      "RRRRRRRRRRRRRRRTbbb,,,,,,;,TTbb,;;,,,,XXXXXXrrrrrr",
+      "RRRRRRRRRRRRRRR;,bbb,\",,,,,,bbb,,,,,,,XXXXXX,,,rrr",
+      "RRRRRRRRRRRRRRR;;;,,\",,,,,,,,,b,,,,,,,XX:XXX;;;;,;",
+      "RRRRRRRRRRRRRRR;;,,,,,,,,,,,,,,,,,,,,,\"X:,XX;;;;;;",
+      "RRRRRRRRRRRRRRRr;,,,,,,,,,,,,,,,,,,,,,\"\"\",,,;;,,,;",
+      "RRRRRRRRRRRRRRRRr;r,,,,,,,,,,,,,,,,,,\"\"\":,,,;;;brr",
+      "RRRRRRRRRRRRRRRRRRRrrrr,,rr,rrrrrR.\"\":::,rrrrrrRRR",
+      "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR,..::rrRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR..:::rRRRRRRRRRRRRR",
+      "RRRR,,RRR,RRRRRRRRRRRRRRRRRRRR.:::RRRRRRRRRRRRRRRR",
+      "RR,,krrrr,,krRRRRRRRllllRRRRR,::::RRRRRRRRRRRRRRRR",
+      ",,,,rrrrkk,,krrrrk,lllllrrrrk,::,,krrrrrrrrrrrrRRR",
+      ",,,,kkkkk,,,,kk,k,,,sllskkkkk,,:,,kkkkkkkkkkkkkRXX",
+      ",,kk,,kkk,,,,,,,,,,k====kkkk,,,::kkkkkkkkkkkkkkkXR",
+      ",,,,,,,,r,,,,,,,,,,======X,,,,,,::kkkkkkkkkkkkkRRR",
+      ",,,,,,.,,..........=======.....................RRR",
+      "...................=======.....................RRR",
+      ",..........,,,,,rkrllllll=,,,..,,,,,,,rk,,,kkkkRRR",
+      ",,,,,,,,,,,,,,,,,,rrllll,,,,,,,,,,,,,,,,,,,,rrkRRR",
+      ",,,rkk,,,,,,,,,,,rrrllll,,,,,,,,,,,,XXX,,,,,,,,RRR",
+      "RrRRRRRRRRRRRRRRRRRRllll,,,,r,,,,,,,,r,,,,,,RRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRllllRRRRRRRR,,,rsRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRllllRRRRRRRRRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRllllRRRRRRRRRRRRRRRRRRRRRRRRRR",
+      "RRRllllllllllllllRRRllllRRRRRRRRRRRRRllllllRRRRRRR",
+      "llllllllllllllllllllllllRRRRRRRRRlllllllllllllllll",
+      "llllllllllllllllllllllllllllllllllllllllllllllllll",
+      "llllllllllllllllllllllllllllllllllllllllllllllllll",
+      "llllllllllllllllllllllllllllllllllllllllllllllllll",
+      "llllllllllllllllllllllllllllllllllllllllllllllllll",
+      "llllllllllllllllllllllllllllllllllllllllllllllllll",
+      "llllllllllllllllllllllllllllllllllllllllllllllllll",
+    ],
+    objects: [
+      {"type":"door","x":40,"y":6,"to":{"map":"mine_hermit","spawn":"door"}},
+      {"type":"examine","x":47,"y":17,"event":"mine_rail_tunnel"},
+      {"type":"examine","x":37,"y":22,"event":"mine_cliff_lift"},
+      {"type":"sign","x":8,"y":22,"text":"トロッコ線\n東の果ては、高原への古いトンネル。\n尾根の上に、隠者の庵。"},
+      {"type":"chest","id":"g_rail_c1","x":14,"y":6,"pool":"p_T"},
+      {"type":"waylamp","id":"wl_g_rail_1","x":12,"y":21,"lit":true},
+      {"type":"waylamp","id":"wl_g_rail_2","x":31,"y":22,"lit":true},
+    ],
+    npcs: [
+
+    ],
+    spawns: {"west":{"x":1,"y":20,"dir":"e"},"hut":{"x":40,"y":7,"dir":"s"},"railend":{"x":46,"y":18,"dir":"w"}},
+    exits: [{"x":0,"y":20,"w":1,"h":2,"to":{"map":"g_valley","spawn":"east"}}],
+    triggers: [],
+    tilePatches: [],
+    zones: [{"rect":null,"zone":"zw_mine"}],
+    art: {"image":"field/under/g_rail","painted":[],"overlay":"field/under/g_rail_over"},
+    meta: {"sub":"崖の棚を走る古いトロッコの線","worldRect":[388,80,50,36]},
+    links: {},
+  });
+})(window.RPG);

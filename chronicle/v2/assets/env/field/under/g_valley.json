@@ -1,0 +1,19 @@
+{
+ "id": "g_valley",
+ "kind": "under",
+ "map": "g_valley",
+ "tile": 32,
+ "size32": [
+  1728,
+  1280
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.8,
+ "files": {
+  "24": "g_valley@24.png",
+  "32": "g_valley@32.png"
+ },
+ "src": "generated"
+}

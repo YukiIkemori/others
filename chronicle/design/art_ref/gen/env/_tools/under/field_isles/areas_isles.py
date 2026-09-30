@@ -201,51 +201,117 @@ def shore_ring(a, isl, sand=True):
     a.mask_fill(ndimage.binary_dilation(isl, iterations=2) & ~isl, '_', only='~')
 
 
+def organic(a, cx, cy, rx, ry, seed, harm=0.13, bays=(), capes=()):
+    """(2026-09-30 見直し) 自然な島の形: 楕円の半径を、いくつかの波（2〜7 周）と入り江（bays）・岬（capes）でゆがめる。
+    bays/capes = [(角度 度（東 0・南 90）, 幅 度, 深さ（半径の割合）)]。多角形の島のような大きな角が出ない"""
+    rnd = np.random.RandomState(seed)
+    ys, xs = np.mgrid[0:a.H, 0:a.W] + 0.5
+    th = np.arctan2((ys - cy) / ry, (xs - cx) / rx)
+    rr = np.hypot((xs - cx) / rx, (ys - cy) / ry)
+    lim = np.ones_like(th)
+    for k in range(2, 8):
+        lim += harm / (k ** 0.8) * rnd.uniform(0.5, 1.0) * np.cos(k * th + rnd.uniform(0, 2 * math.pi))
+    def bump(deg, wdeg):
+        dd = np.angle(np.exp(1j * (th - math.radians(deg))))
+        return np.exp(-(dd / math.radians(wdeg)) ** 2)
+    lim += 0.16 * (fbm(seed + 5, a.W, a.H, 3.5, 2) - 0.5)   # 小さな出入り
+    for (deg, wdeg, depth) in bays: lim -= depth * bump(deg, wdeg)
+    for (deg, wdeg, depth) in capes: lim += depth * bump(deg, wdeg)
+    return rr < lim
+
+
+def shallows(a, isl, dist=2.3):
+    """島のまわりの浅瀬（ユークリッドの距離で。十字のふくらましだと 45° の角ができる）"""
+    from scipy import ndimage
+    dd = ndimage.distance_transform_edt(~isl)
+    n = fbm(a.seed + 77, a.W, a.H, 3, 2)
+    a.mask_fill((dd > 0) & (dd <= dist + (n - 0.5) * 1.2), '_', only='~')
+
+
+def islet2(aid, W, H, seed, cx, cy, rx, ry, **kw):
+    a = Area(aid, W, H, seed, base='~')
+    isl = organic(a, cx, cy, rx, ry, seed, **kw)
+    a.mask_fill(isl, ',', force=True)
+    a.meta['smooth'] = 0.55
+    return a, isl
+
+
 def i_light():
-    """灯台島: a small rocky island; a jetty on the south shore; a path climbs over short turf and white rocks to the round LIGHTHOUSE of
-    white and red-banded stone on the north crag (dark doorway facing south); the roofless ruin of the keeper's cottage beside it."""
-    a, isl = islet('i_light', 40, 32, 5404, [(8, 25), (6, 16), (10, 8), (18, 4), (28, 5), (34, 11), (33, 20), (28, 26), (18, 27.5)])
-    shore_ring(a, isl, sand=False)
-    a.mask_fill(fbm(3, a.W, a.H, 6) > 0.6, ';', only=',')
-    a.region([(12, 11), (16, 5.5), (26, 6), (29, 11)], 'k', rough=0.5, seed=4, only=',;')
-    lh = [(x, y) for x in range(19, 23) for y in range(5, 10) if (x, y) != (20, 9)]
-    a.mark('lighthouse', lh, 'a tall round LIGHTHOUSE tower of whitewashed stone with two faded red bands, a glass lamp room on top (dark, unlit), a small arched door at its foot facing south (the dark block)', (230, 226, 220))
+    """灯台島（2026-09-30 描き直し）: 岩がちの小島。北の岩山の上に、白い石に赤い帯 2 本の高い丸い灯台（戸口は南、灯室は暗い）と、
+    その足もとの白い敷石の広場。東に屋根の落ちた灯台守の小屋。西の入り江に白い砂浜、北の岸は岩と波。南の桟橋から小道が灯台へ登る。"""
+    a, isl = islet2('i_light', 40, 32, 5404, 20.5, 15.2, 14.2, 11.6, harm=0.12,
+                    bays=[(180, 16, 0.26), (60, 12, 0.10), (-150, 10, 0.08)], capes=[(-40, 14, 0.12), (120, 12, 0.08), (-95, 16, 0.06)])
+    from scipy import ndimage
+    ring = isl & ~ndimage.binary_erosion(isl, iterations=1)
+    a.mask_fill(ring, 'k')
+    shallows(a, isl)
+    # 北の岩山（灯台の立つ平らな岩棚）
+    a.blob(20.5, 6.5, 8.5, 4.2, 'k', rough=0.35, seed=4, only=',')
+    a.mask_fill(isl & (fbm(3, a.W, a.H, 6) > 0.6), ';', only=',')
+    a.mask_fill(isl & (fbm(13, a.W, a.H, 4) > 0.74), '"', only=',')
+    # 西の入り江の砂浜
+    a.blob(7.6, 15.5, 2.6, 4.2, 's', rough=0.3, seed=7, only=',;"k')
+    # 灯台（高い丸い塔、戸口 20,9）と足もとの敷石の広場
+    lh = [(x, y) for x in range(18, 23) for y in range(2, 10) if (x, y) != (20, 9)]
+    a.mark('lighthouse', lh, 'a TALL ROUND LIGHTHOUSE TOWER, the landmark of the island, seen from above with its south side visible: a whitewashed stone cylinder with two broad faded red bands, a black iron gallery with a railing near the top and a glass lamp room with a domed dark-copper roof (the lamp is dark, unlit); a small arched wooden door at its foot facing south (the dark block)', (230, 226, 220))
+    a.marks[-1]['shape'] = 'smooth'
+    a.blob(20.5, 10.6, 4.6, 1.5, 'c', rough=0.25, seed=5, only=',;"k')
     door(a, 20, 9, 1, 'c')
-    a.mark('cottage', [(x, y) for x in range(26, 30) for y in range(12, 15)], 'the roofless RUIN of a small keeper\'s cottage of white stone, collapsed rafters inside', STONE)
+    a.mark('cottage', [(x, y) for x in range(26, 30) for y in range(10, 13)], "the roofless RUIN of a small keeper's cottage of white stone: broken walls, collapsed grey rafters and weeds inside, a fallen chimney", STONE)
     jetty(a, 18, 27, 5, 's')
-    a.stroke([(18.5, 27), (18, 20), (20.5, 12), (20.5, 10)], 1.4, ':', seed=6, force=True)
-    for (x, y, rx, ry, s_) in [(10, 17, 1.6, 1.2, 11), (30, 19, 1.8, 1.3, 12)]:
-        a.blob(x, y, rx, ry, 'r', rough=0.3, seed=s_, only=',;')
+    a.stroke([(18.5, 27), (17.5, 23), (19.5, 18), (19.2, 14), (20.5, 11.2)], 1.4, ':', seed=6, force=True)
+    # 北の岸の岩・波、東の岩の岬、松
+    for (x, y, rx, ry, s_) in [(10, 18.5, 1.3, 1.0, 11), (31, 19, 1.5, 1.1, 12), (13, 5.6, 1.4, 1.0, 13), (28, 5.8, 1.5, 1.0, 14), (33.5, 11, 1.2, 1.0, 15)]:
+        a.blob(x, y, rx, ry, 'r', rough=0.3, seed=s_, only=',;"k')
+    for (x, y) in [(11, 11), (27, 22), (13, 23), (31, 15)]:
+        a.put(x, y, 'T', True)
+    a.blob(24.5, 21.5, 1.5, 1.0, 'w', rough=0.2, seed=16, only=',;"k')
     a.tidy()
     a.spawns = {'boat': dict(x=18, y=28, dir='n')}
     a.objects += [
         dict(type='examine', x=19, y=31, event='isles_boat'),
-        dict(type='examine', x=24, y=10, event='isles_light_plaque'),
-        dict(type='chest', id='i_light_c1', x=28, y=16, item='i_ether', n=1),
+        dict(type='examine', x=22, y=10, event='isles_light_plaque'),
+        dict(type='chest', id='i_light_c1', x=28, y=15, item='i_ether', n=1),
     ]
+    for o in a.objects:
+        if a.g[o['y'], o['x']] not in WALK: a.put(o['x'], o['y'], ',', True)
+        a.keep[o['y'], o['x']] = True
     a.exits.append(dict(x=20, y=9, w=1, h=1, to={'map': 'isles_lamproom', 'spawn': 'door'}))
     a.spawns['lamproom'] = dict(x=20, y=10, dir='s')
-    a.meta = dict(name='灯台島', sub='灯台守のいない灯台', region='r_isles', worldRect=[560, 540, 40, 32], outside='sea', look='field',
+    a.meta.update(name='灯台島', sub='灯台守のいない灯台', region='r_isles', worldRect=[560, 540, 40, 32], outside='sea', look='field',
                   zones=[{'rect': None, 'zone': ZONE, 'cond': '!isles_light_lit'}], links={}, npcs=[])
     return a
 
 
 def i_siren():
-    """人魚の歌う岩: a tiny islet of dark rocks and white sand; in its middle a tall weathered SEA STACK pierced by holes, around which the
-    wind sings; tide pools; a jetty on the east."""
-    a, isl = islet('i_siren', 36, 28, 5505, [(8, 20), (7, 12), (12, 6), (22, 5), (29, 10), (28, 19), (20, 23)])
-    shore_ring(a, isl)
-    a.mask_fill(isl & (fbm(5, a.W, a.H, 5) > 0.5), 'k', only=',')
-    a.mask_fill(isl & (fbm(6, a.W, a.H, 6) > 0.62), 's', only=',')
-    a.mark('stack', [(x, y) for x in range(16, 19) for y in range(10, 13)], 'a tall weathered SEA STACK of dark grey rock, smooth and pierced by several round holes the wind blows through, shells and pale coral clinging to its foot', (96, 100, 110))
-    for (x, y, rx, ry, s_) in [(12, 16, 1.6, 1.0, 21), (23, 15, 1.4, 1.0, 22)]:
-        a.blob(x, y, rx, ry, 'w', rough=0.2, seed=s_, only=',ks')
+    """人魚の歌う岩（2026-09-30 描き直し）: 小島のまん中に、風の穴のあいた高い岩の柱（歌う岩）。まわりは濡れた黒い岩棚と潮だまり、
+    南に三日月の白い砂浜、北東に少しの草。東の桟橋から小道が岩の前へ。"""
+    a, isl = islet2('i_siren', 36, 28, 5505, 17.6, 14.0, 12.4, 10.0, harm=0.2,
+                    bays=[(150, 14, 0.14), (-60, 10, 0.10)], capes=[(0, 10, 0.12), (-150, 14, 0.10), (95, 12, 0.08)])
+    from scipy import ndimage
+    ring = isl & ~ndimage.binary_erosion(isl, iterations=1)
+    a.mask_fill(ring, 'k')
+    shallows(a, isl)
+    a.mask_fill(isl & (fbm(5, a.W, a.H, 5) > 0.47), 'k', only=',')
+    a.blob(18.0, 20.5, 7.5, 2.8, 's', rough=0.3, seed=9, only=',k')
+    a.blob(24.5, 8.5, 4.0, 3.0, ';', rough=0.35, seed=10, only=',k')
+    a.mask_fill(isl & (fbm(15, a.W, a.H, 4) > 0.7), '"', only=',;')
+    st = [(x, y) for x in range(14, 20) for y in range(5, 13)]
+    a.mark('stack', st, 'the SINGING ROCK: one tall, striking sea stack of dark slate-grey rock rising high above the islet, seen from above with its south face visible: smooth wind-carved curves, pierced right through by five or six round holes and a narrow arch like the pipes of an organ, streaks of pale salt and green weed, white shells, pale coral and mother-of-pearl clinging to its foot', (96, 100, 110))
+    a.marks[-1]['shape'] = 'smooth'
+    for (x, y, rx, ry, s_) in [(10.5, 12, 1.6, 1.2, 21), (23.5, 15.5, 1.4, 1.0, 22), (12.5, 17.5, 1.0, 0.8, 23)]:
+        a.blob(x, y, rx, ry, 'w', rough=0.2, seed=s_, only=',ks;')
+    for (x, y, rx, ry, s_) in [(8.5, 8.5, 1.2, 1.0, 31), (26.5, 19.5, 1.2, 0.9, 32), (21.5, 5.2, 1.0, 0.8, 33)]:
+        a.blob(x, y, rx, ry, 'r', rough=0.3, seed=s_, only=',ks;')
     jetty(a, 29, 14, 5, 'e')
-    a.stroke([(29, 14.5), (22, 14.5), (18, 13.5)], 1.3, ':', seed=6, force=True)
+    a.stroke([(29, 14.5), (24, 14.2), (20, 13.6), (17.5, 13.5)], 1.3, ':', seed=6, force=True)
     a.tidy()
     a.spawns = {'boat': dict(x=29, y=14, dir='w')}
     a.objects += [dict(type='examine', x=17, y=13, event='isles_siren_rock'), dict(type='examine', x=33, y=15, event='isles_boat')]
-    a.meta = dict(name='人魚の歌う岩', sub='風が歌う岩の小島', region='r_isles', worldRect=[570, 450, 36, 28], outside='sea', look='field',
+    for o in a.objects:
+        if a.g[o['y'], o['x']] not in WALK: a.put(o['x'], o['y'], ':', True)
+        a.keep[o['y'], o['x']] = True
+    a.meta.update(name='人魚の歌う岩', sub='風が歌う岩の小島', region='r_isles', worldRect=[570, 450, 36, 28], outside='sea', look='field',
                   zones=[{'rect': None, 'zone': ZONE}], links={}, npcs=[])
     return a
 
@@ -273,23 +339,38 @@ def i_crab():
 
 
 def i_wreck():
-    """座礁した商船: a reef of dark rocks and a long sandbar; on the reef a big two-masted MERCHANT SHIP run aground and heeled over, its
-    hull holed, sails torn; crates spilled on the sand; a jetty of driftwood for the own ship on the south."""
-    a, isl = islet('i_wreck', 44, 32, 5707, [(6, 20), (9, 12), (18, 9), (30, 8), (38, 13), (37, 21), (26, 25), (14, 25)], rough=1.0)
-    shore_ring(a, isl)
+    """座礁した商船（2026-09-30 描き直し）: 黒い岩礁と長い白い砂州。岩礁に乗り上げて傾いた大きな二本マストの商船（船首は東、
+    船腹に穴、帆は裂けて垂れる）。南の砂に散った木箱と、折れて倒れた帆桁。南の流木の桟橋に自分の船。"""
+    a, isl = islet2('i_wreck', 44, 32, 5707, 22.0, 14.6, 17.8, 9.8, harm=0.16,
+                    bays=[(90, 10, 0.06), (-120, 12, 0.12), (40, 12, 0.10), (165, 10, 0.12)], capes=[(0, 12, 0.08), (130, 12, 0.08)])
+    from scipy import ndimage
+    ring = isl & ~ndimage.binary_erosion(isl, iterations=1)
     a.mask_fill(isl, 's', only=',')
-    a.mask_fill(isl & (fbm(9, a.W, a.H, 5) > 0.5), 'k', only='s')
-    ship = [(x, y) for x in range(14, 34) for y in range(10, 18) if abs(y + 0.5 - 13.8) <= 2.9 * math.sqrt(max(0.0, 1 - ((x + 0.5 - 24) / 10.0) ** 2)) * (1.0 if x < 28 else max(0.2, (34 - x) / 6.0))]
-    a.mark('wreck', ship, 'a big two-masted wooden MERCHANT SHIP run aground on the rocks, lying heeled over, its bow pointing east, the hull holed and the sails torn, seen from above (its deck faces the viewer)', (130, 92, 58))
-    a.rect(20, 17, 6, 2, 's', force=True, keep=True)
-    jetty(a, 22, 25, 5, 's')
-    a.stroke([(22.5, 25), (22.5, 18.5)], 1.3, ':', seed=6, force=True)
-    for (x, y, rx, ry, s_) in [(10, 17, 1.6, 1.2, 11), (35, 16, 1.4, 1.0, 12), (30, 21, 1.2, 1.0, 13)]:
+    a.mask_fill(ring, 'k')
+    shallows(a, isl)
+    a.mask_fill(isl & (fbm(9, a.W, a.H, 5) > 0.52), 'k', only='s')
+    # 南の砂州は歩ける白い砂（難破船の前）
+    a.blob(23.0, 19.5, 11.0, 3.2, 's', rough=0.25, seed=17, only='k')
+    ship = [(x, y) for x in range(8, 37) for y in range(5, 17)
+            if abs(y + 0.5 - 11.6) <= 4.6 * math.sqrt(max(0.0, 1 - ((x + 0.5 - 22.5) / 14.2) ** 2)) * (1.0 if x < 30 else max(0.25, (37 - x) / 7.0))]
+    a.mark('wreck', ship, 'a BIG two-masted wooden MERCHANT SHIP, clearly a ship, run aground on the reef and heeled over to the south, seen from above: a long curved hull of weathered brown planks with a pointed bow to the east and a squared stern castle with windows to the west, its deck and hatches visible, two masts (one snapped off halfway), yards and rigging, torn off-white sails hanging and draped over the rail, a big splintered hole in the side of the hull with cargo spilling out, barnacles and seaweed along the waterline', (130, 92, 58))
+    a.marks[-1]['shape'] = 'smooth'
+    a.mark('mast', [(x, 20) for x in range(33, 38)], 'a broken MAST lying on the sand with its yard, tangled ropes and a torn sail', (96, 70, 50))
+    for (x, y, rx, ry, s_) in [(15.5, 18.2, 1.0, 0.8, 11), (31.2, 17.3, 1.0, 0.7, 12)]:
+        a.blob(x, y, rx, ry, 'r', rough=0.2, seed=s_, only='sk')
+    for (x, y, rx, ry, s_) in [(6.5, 16, 1.4, 1.1, 21), (39, 13, 1.3, 1.0, 22), (12, 21.5, 1.2, 0.9, 23), (35, 22.5, 1.2, 0.9, 24)]:
         a.blob(x, y, rx, ry, 'r', rough=0.3, seed=s_, only='sk')
+    jetty(a, 22, 25, 5, 's')
+    a.stroke([(22.5, 25), (22.5, 18)], 1.3, ':', seed=6, force=True)
     a.tidy()
     a.spawns = {'boat': dict(x=22, y=26, dir='n')}
     a.objects += [dict(type='examine', x=23, y=17, event='isles_wreck'), dict(type='examine', x=23, y=30, event='isles_boat')]
-    a.meta = dict(name='座礁した商船', sub='岩礁に乗り上げた船', region='r_isles', worldRect=[612, 540, 44, 32], outside='sea', look='field',
+    # 船長（22,18）と積荷の宝箱 3（18,19 / 27,18 / 29,19）は field_isles_00_kit.js が足す: そのマスを砂で空けておく
+    for (x, y) in [(22, 18), (18, 19), (27, 18), (29, 19), (23, 17)]:
+        if a.g[y, x] not in WALK: a.put(x, y, 's', True)
+        a.keep[y, x] = True
+        if (x, y) != (23, 17): a.objects.append(dict(type='none_removed', x=x, y=y))   # fit.py が空けておく（地図には書かない）
+    a.meta.update(name='座礁した商船', sub='岩礁に乗り上げた船', region='r_isles', worldRect=[612, 540, 44, 32], outside='sea', look='field',
                   zones=[{'rect': None, 'zone': ZONE}], links={}, npcs=[])
     return a
 

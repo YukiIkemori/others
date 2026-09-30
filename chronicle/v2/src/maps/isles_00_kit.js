@@ -58,8 +58,8 @@
   K.LIGHT_VILLAGE = { ambient: '#50609e', k: 0.5, poolK: 1.5, spillR: 1.5, mood: 'town_night' };
   K.LIGHT_ROOM = { ambient: '#8a8298', k: 0.8, mood: 'interior' };
   K.LIGHT_CAVE = { ambient: '#3e5a86', k: 0.6, poolK: 1.2, spillR: 1.2, mood: 'cave' };
-  K.LIGHT_SHIP = { ambient: '#4c5a7c', k: 0.58, poolK: 1.3, spillR: 1.3, mood: 'cave' };
-  K.LIGHT_HOLD = { ambient: '#3a4264', k: 0.64, mood: 'dark' };
+  K.LIGHT_SHIP = { ambient: '#56628a', k: 0.58, poolK: 1.4, spillR: 1.4, mood: 'cave' };   // (2026-09-30) 甲板・船室を少し明るく
+  K.LIGHT_HOLD = { ambient: '#4a5482', k: 0.6, mood: 'dark' };   // (2026-09-30) 船倉: 灯りの外でも床と壁の形が読める明るさに
 
   /** 下絵に合わせた当たり（isles_painted_rows.js）。無ければ海だけの小さな四角（node の読み込みの順が崩れても落ちない） */
   K.painted = function (id) {

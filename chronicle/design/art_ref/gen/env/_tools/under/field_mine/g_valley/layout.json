@@ -1,0 +1,467 @@
+{
+"id": "g_valley",
+"w": 54,
+"h": 40,
+"rows": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRXXXXXRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRR,,RRRRRRRRXXXXXRRRRRR,;;;;RRRRRRRRRRRRR",
+",,RRRRRRRRRR,,,;;,,RRRXXRXXXXXRXXR,,;;;;;;;;;,,,,,,,,,",
+",,,,,,,,,,,,,,;;;;,,,,XXRRR.RR:XX,,,;;;;;;;;;,,,,,,,,,",
+",,,,,\",,,,,,,,,;;;,,\",,\"\"\"c..,,,,,,,;;;;;;;;;,,,,\"\"www",
+",,,,\"\"\",,,,,,,,;;;;,\",,\"\"\"c..,,,,,,,XXXXXX\"\",,,,,wwwww",
+",,,,\"\"\",,,,,,,;;;;TTT,,,,\",..,,,,,,,XXXXXX,,,,wwwwwww,",
+",,,,,,,,,,,,,,;;;;TTT,,,,,,..,,,,,,\"XXXXXX,,,wwwww,,,,",
+",,,,,,,,,rrrr,;;;;TTT,,,,,..,,,,,,,\",,,,,,,wwww,,,,,,,",
+",,;,,,;,rrrrr,;,,,,\",\"\",,...,,,,,,,,,,,,,,,www,,,,,,,,",
+";;;,,,;,rrrr,,,,,\"\"\"\"\"\",.....,,,,,,,,,,,,===,,,,,,,,,,",
+";;;,,,,;;;;,,,,,,,,,,,,...,....,,,,,,,,,ww,,,,,,,,,,,,",
+";;TT,,T;,,,,,,,,,,.......,,,,....,,,,,,www,,,,,,,,T,,,",
+";,TTTTT;;,,,,..........,,,,,,,,....,,,www,,,,,,,TTTTT,",
+"..TTTTT;...........,,,,,,,,,,,,,,...==ww,,,,\",,,TTTTT,",
+"..............,,,,,,,,,,,,,,,,,,,,,====..,\"\"\"\",,TTTT,,",
+"........;;;,,,,,,,,,,,,,,,,,,,,,,,ww..................",
+";;;TTTT;;;;,,,,,,,,,,,,,,,,,,,,,,www,,,,,.............",
+";;;TTTT;;;;,,,,,,,,,,,,,,,,,,,,,www,,,,,,,;;;\";;,,T,,.",
+";;;;;;;;;;;;,,,,,,,,,,,,,,,,,,,www,,,,,,,,;;;\"\";;,,,,,",
+";;;;;;;;;;;;,rrrr,,,,,,,,,,,,,www,,,,,,,,,;;rrr\";,,,,,",
+";;;;;;;;;;;;,rrrrr,,,,,,,,,,wwww,,,,,,;;,;rrrrr\";,,,,,",
+",,;;;;;;;;;;;;rrr,,,,,,,,,wwwww,,,,,,,;;;;rrrrrr;;,,,,",
+",,,;;;;;;;;;;;;,,,,,,,,,wwwwww,,,,,,,,;;;;rrrrr;;;,,,,",
+",,,,;;;;;;;;;;;,,,,,wwwwwww,,,,,,,,,,;;;;;;\"rr;;;;;,,,",
+",,,,,,,;;;;,,,,,,wwwwwww;;;,,,,,,,,,,;;;;;;\"\";;;;;;;;;",
+",,,,,,,;;;,,,wwwwwww\";;;;;;;;,,,,,,,,;;;;;;\";;;TTTT;;;",
+",,,,,,,;;;wwwwwww;;;;;;;;;;;;,,,,,,,;;;;;;;;\"\"\"TTTT;;;",
+",,,,,,,Rwwwwww,,;;;;;;;;;;;;;,,,,,,,,;;;;;;;\"\"\"TTT;;;R",
+"RRRRRRwwwwwRR,,;;;;;;;;;;\"RRR,,,,,,,,;;;;;;;\"\";;RRRRRR",
+"RRRRRwwwwRRRRRRRRRRR;RRRRRRRRRRRRRRRRRRRR;;;RRRRRRRRRR",
+"RRRRwwwRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRwwRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRwwRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRwwRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
+],
+"marks": [
+{
+"kind": "gate",
+"cells": [
+[
+25,
+5
+],
+[
+25,
+6
+],
+[
+25,
+7
+],
+[
+26,
+5
+],
+[
+26,
+6
+],
+[
+26,
+7
+],
+[
+27,
+5
+],
+[
+27,
+6
+],
+[
+27,
+7
+],
+[
+28,
+5
+],
+[
+28,
+6
+],
+[
+28,
+7
+],
+[
+29,
+5
+],
+[
+29,
+6
+],
+[
+29,
+7
+]
+],
+"text": "the great GATE of the cavern town: a tall arched opening cut into the cliff, closed by huge double doors of dark timber bound with iron, a carved stone lintel with an anvil emblem above",
+"color": [
+92,
+70,
+52
+],
+"solid": true
+},
+{
+"kind": "door",
+"cells": [
+[
+27,
+8
+]
+],
+"text": "a dark ENTRANCE",
+"color": [
+40,
+26,
+16
+],
+"solid": false
+},
+{
+"kind": "tower_w",
+"cells": [
+[
+22,
+7
+],
+[
+23,
+7
+],
+[
+22,
+8
+],
+[
+23,
+8
+]
+],
+"text": "a tall square timber WATCHTOWER on stone footings with a small shingled roof",
+"color": [
+140,
+100,
+62
+],
+"solid": true
+},
+{
+"kind": "tower_e",
+"cells": [
+[
+31,
+7
+],
+[
+32,
+7
+],
+[
+31,
+8
+],
+[
+32,
+8
+]
+],
+"text": "a tall square timber WATCHTOWER on stone footings with a small shingled roof",
+"color": [
+140,
+100,
+62
+],
+"solid": true
+},
+{
+"kind": "shed",
+"cells": [
+[
+36,
+10
+],
+[
+36,
+11
+],
+[
+36,
+12
+],
+[
+37,
+10
+],
+[
+37,
+11
+],
+[
+37,
+12
+],
+[
+38,
+10
+],
+[
+38,
+11
+],
+[
+38,
+12
+],
+[
+39,
+10
+],
+[
+39,
+11
+],
+[
+39,
+12
+],
+[
+40,
+10
+],
+[
+40,
+11
+],
+[
+40,
+12
+],
+[
+41,
+10
+],
+[
+41,
+11
+],
+[
+41,
+12
+]
+],
+"text": "an open ORE-SORTING SHED: a slate roof on thick timber posts over wooden sorting tables and heaps of grey ore",
+"color": [
+104,
+96,
+92
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "door",
+"x": 27,
+"y": 8,
+"to": {
+"map": "dovan",
+"spawn": "gate"
+}
+},
+{
+"type": "sign",
+"x": 24,
+"y": 12,
+"text": "鉱山都市ドヴァン\n地の底の町。門の奥へ。"
+},
+{
+"type": "examine",
+"x": 38,
+"y": 13,
+"event": "mine_sorting_shed"
+},
+{
+"type": "chest",
+"id": "g_valley_c1",
+"x": 8,
+"y": 16,
+"item": "i_ether",
+"n": 1
+},
+{
+"type": "waylamp",
+"id": "wl_g_valley_1",
+"x": 14,
+"y": 22,
+"lit": true
+},
+{
+"type": "waylamp",
+"id": "wl_g_valley_2",
+"x": 24,
+"y": 12,
+"lit": true
+},
+{
+"type": "waylamp",
+"id": "wl_g_valley_3",
+"x": 44,
+"y": 24,
+"lit": true
+}
+],
+"spawns": {
+"west": {
+"x": 1,
+"y": 20,
+"dir": "e"
+},
+"east": {
+"x": 52,
+"y": 22,
+"dir": "w"
+},
+"gate": {
+"x": 27,
+"y": 9,
+"dir": "s"
+}
+},
+"exits": [
+{
+"x": 0,
+"y": 20,
+"w": 1,
+"h": 2,
+"to": {
+"map": "g_pass",
+"spawn": "east"
+},
+"edge": "w"
+},
+{
+"x": 53,
+"y": 22,
+"w": 1,
+"h": 2,
+"to": {
+"map": "g_rail",
+"spawn": "west"
+},
+"edge": "e"
+}
+],
+"notes": [],
+"meta": {
+"rails": [
+[
+[
+30.6,
+8.9
+],
+[
+32.5,
+10.4
+],
+[
+34.0,
+13.6
+],
+[
+38.0,
+15.4
+],
+[
+46.0,
+15.9
+],
+[
+54.8,
+16.0
+]
+]
+],
+"name": "鉱石の谷",
+"sub": "鉱山都市ドヴァンの門の谷",
+"region": "r_mine",
+"worldRect": [
+334,
+76,
+54,
+40
+],
+"outside": "rock",
+"zones": [
+{
+"rect": null,
+"zone": "zw_mine"
+}
+],
+"links": {
+"dovan": {
+"map": "g_valley",
+"spawn": "gate"
+}
+},
+"npcs": [],
+"smooth": 0.6
+},
+"rows_fit": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRXXXXXRRRRRRRRRRRRRRRRRRRRRRRR",
+",,RRRRRRRRRRRRR,,,RRRRRRRXXXXXRRRRR,r;;;;,,,RRRRR,RRRR",
+",,,,,,,,,,,,,,,;;,,,RRXXRXXXXXRXXR,,;r;;;;;;;,,,,,,,,,",
+",,,,,,,,,,,,,,;;;;,,,,XX,,R.R,:XX,,,;;;;;;;;;,,,,,wwww",
+",,,,,\",,,,,,,,,;;;,,\",,\"\"\"c..,,,,,,rrrrrrr;;;,,,wwwwww",
+",,,,\"\"\",,,,,,,,;;;;,\",,\"\"\"c..,,,r,,TXXXXXX\"\",,wwwwwwww",
+",,,,\"\"\",,,,,,,;;;TTTT,,,,\",..,,,,,,,XXXXXX,,wwwwwww,,,",
+",,,,,,,,,,w,r,;;;rTTT,,,,,,..,,,,,,\"XXXXXX,wwwww,,,,,,",
+",,,,,,,,rrrrr,;;;;,,,,,,,,..,,,,,,,\",,,,,,wwww,,,,,,,,",
+",,;,,,;,rrrr,,;,,,,\",\"\",,...,,,,,,,,,,,,,Trww,,,,,,,,,",
+";;;,,,;,rrr,,,,,,\"\"\"\"\"\",.....,,,,,,,,,,ww===,,,,,,,,,,",
+";;;,T,,;;;;,,,,,,,,,,,,...,....,,,,,,,wwww,,,,,,,T,T,,",
+";;TT,,TT,,,,,,,,,,.......,,,,....,,,,wwww,,,,,,T,,T,,,",
+";,TTTTTT;,,,,..........,,,,,,,,....====w,,,,,,,TTTTTT,",
+".......;...........,,,,,,,,,,,,,,..====.,,,,\",,TTTTT,,",
+"..............,,,,,,,,,,,,,,,,,,,,wwww=..,\"\"\"\",,....,,",
+".......T;;;,,,,,,,,,,,,,,,,,,,,,,wwww.................",
+";;;TTTTT;;;,,,,,,,,,,,,,,,,,,,,,wwww,,,,,........T....",
+";;;TTTTT;;;,,,,,,,,,,,,,,,,,,,,wwww,,,,,,,;;;\";;,TT,,.",
+";;;;;;;;;;;;,,wr,,,,,,,,,,,,,,wwww,,,,,,,,;;;\"\";;,,,,,",
+";;;;;;;;;;;;,rrrrr,,,,,,,,,wwwwww,,,,,,,,r;rrrr\";,,,,,",
+";;;;;;;;;;;;,rrrr,,,,,,,,,wwwwww,,,,,,;;,;rrrrrr;,,,,,",
+",,;;;;;;;;;;;;,,,,,,,,,,wwwwww,,,,,,,,;;;;rrrrrr;;,,,,",
+",,,;;;;;;;;;;;;,,,,wwwwwwwww,,,,,,,,,,;;;;rrrr,;;;,,,,",
+",,,,;;;;;;;;;;;,wwwwwwwwww,,,,,,,,,,,;;;;;;\",,;r;T;,,,",
+",,,,,,,;;;;,,wwwwwwwwww,;;;,,,,,,,,,,;;;;;;\"\";r;;;;;;;",
+",,,,,,,;;wwwwwwwwww,\";;;;;;;;,,,,,,,,;;;;;;\";;TTTTT;;;",
+",,,,,,,wwwwwwww,,;;;;;;;;;;;;,,,,,,,;;;;;;;;\"\"TTTTT;;r",
+"rrrrrrwRwwwww,,,;;;;;;;;;;rrr,,,,,,,,;;;;;;;\"\"\",TTrrrR",
+"RRRRRRwwwwwRRrrrrrrrrrrrrrRRRrrrrrrrrrrrr;;;rrrrRRRRRR",
+"RRRRRwwwwRRRRRRRRRRRrRRRRRRRRRRRRRRRRRRRRr;rRRRRRRRRRR",
+"RRRRwwwRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRwwRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRwwRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRwwRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
+]
+}

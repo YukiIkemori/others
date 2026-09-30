@@ -10,22 +10,22 @@
 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"~~~~~~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~~~~~~~~~~~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXXX~~~~~~~~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXX~~~~~~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXX~~~~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~",
-"~~~~~~XuuuXXuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~",
-"~~~~~~XuuuXXuuuuuuXXuuuuuuuuuuXXuuuuuuuuuXXuuuuuuX~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXX~~~~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXX~~~~~~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXXX~~~~~~~~~~~~~",
-"~~~~~~XXXXXXXXXXXXXXXXXXXXXX==XXXXXXXXXX~~~~~~~~~~~~~~~~",
+"~~~~~~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~~~~~~~~~~~~~~~~~~",
+"~~~~~XuuuuuuuuXuuuuuuuuuuuuuuuuuuuuuuuXXXX~~~~~~~~~~~~~~",
+"~~~~~XuuuuuuuuXuuuuuuuuuuuuuuuuuuuuuuuuuuuXX~~~~~~~~~~~~",
+"~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXX~~~~~~~~~~",
+"~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXuXX~~~~~~~~",
+"~~~~~XuuuuuuuuXuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~~",
+"~~~~~XuuuuuuuuXuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~",
+"~~~~~XuXuuXXuuXuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXuuXuuX~~~~~",
+"~~~~~XuXuuXXuuXuuuXXuuuuuuuuuuXXuuuuuuuuuXXuXuuXuuX~~~~~",
+"~~~~~XuuuuuuuuXuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~",
+"~~~~~XuuuuuuuuXuuuuuuuuuuuuuuuuuuuXXXuuuuuuuuuuXX~~~~~~~",
+"~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuXXXuuuuuuuXXX~~~~~~~~~",
+"~~~~~XuuuuuuuuuuuuuXXXXXuuuuuuuuuuuuuuuuuuuXX~~~~~~~~~~~",
+"~~~~~XuuuuuuuuXuuuuuuuuuuuuuuuuuuuuuuuuuXXX~~~~~~~~~~~~~",
+"~~~~~~XuuuuuuuXuuuuuuuuuuuuuuuuuuuuuXXXX~~~~~~~~~~~~~~~~",
+"~~~~~~XXXXXXXXXXXXXXXXXXXXXX==XXXXXX~~~~~~~~~~~~~~~~~~~~",
 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~~~~~~~~~~~~~~~~",
 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~~~~~~~~~~~~~~~~",
 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~~~~~~~~~~~~~~~~",
@@ -35,6 +35,62 @@
 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 ],
 "marks": [
+{
+"kind": "qdeck_stairs",
+"cells": [
+[
+14,
+10
+],
+[
+14,
+11
+],
+[
+14,
+18
+],
+[
+14,
+19
+]
+],
+"text": "short wooden STEPS up from the main deck onto the raised stern deck (walkable)",
+"color": [
+150,
+104,
+60
+],
+"solid": false
+},
+{
+"kind": "fdeck_stairs",
+"cells": [
+[
+44,
+12
+],
+[
+44,
+13
+],
+[
+44,
+16
+],
+[
+44,
+17
+]
+],
+"text": "short wooden STEPS up onto the raised bow deck (walkable)",
+"color": [
+150,
+104,
+60
+],
+"solid": false
+},
 {
 "kind": "mast18",
 "cells": [
@@ -47,7 +103,7 @@
 15
 ]
 ],
-"text": "the stump of a broken MAST wrapped in rotten rigging and torn grey sails",
+"text": "the thick stump of a broken MAST snapped a man's height above the deck, splintered at the top, wrapped in rotten rigging and shreds of torn grey sail, ropes running from it to the rails",
 "color": [
 70,
 50,
@@ -67,7 +123,7 @@
 15
 ]
 ],
-"text": "the stump of a broken MAST wrapped in rotten rigging and torn grey sails",
+"text": "the thick stump of a broken MAST snapped a man's height above the deck, splintered at the top, wrapped in rotten rigging and shreds of torn grey sail, ropes running from it to the rails",
 "color": [
 70,
 50,
@@ -87,7 +143,7 @@
 15
 ]
 ],
-"text": "the stump of a broken MAST wrapped in rotten rigging and torn grey sails",
+"text": "the thick stump of a broken MAST snapped a man's height above the deck, splintered at the top, wrapped in rotten rigging and shreds of torn grey sail, ropes running from it to the rails",
 "color": [
 70,
 50,
@@ -115,11 +171,51 @@
 15
 ]
 ],
-"text": "the captain's cabin SKYLIGHT of cracked glass panes in a wooden frame on the stern deck",
+"text": "the captain's cabin SKYLIGHT on the raised stern deck: a small wooden frame with cracked glass panes",
 "color": [
 90,
 110,
 120
+],
+"solid": true
+},
+{
+"kind": "wheel",
+"cells": [
+[
+7,
+14
+],
+[
+7,
+15
+]
+],
+"text": "the ship's WHEEL: a big spoked wooden steering wheel on its post at the stern, facing east",
+"color": [
+110,
+80,
+50
+],
+"solid": true
+},
+{
+"kind": "capstan",
+"cells": [
+[
+47,
+14
+],
+[
+47,
+15
+]
+],
+"text": "a round wooden CAPSTAN with bars, an anchor chain running from it to the bow",
+"color": [
+110,
+80,
+50
 ],
 "solid": true
 },
@@ -142,6 +238,74 @@
 16
 ],
 "solid": false
+},
+{
+"kind": "grating",
+"cells": [
+[
+34,
+17
+],
+[
+34,
+18
+],
+[
+35,
+17
+],
+[
+35,
+18
+],
+[
+36,
+17
+],
+[
+36,
+18
+]
+],
+"text": "a closed cargo HATCH covered by a wooden grating",
+"color": [
+96,
+70,
+50
+],
+"solid": true
+},
+{
+"kind": "yard",
+"cells": [
+[
+19,
+19
+],
+[
+20,
+19
+],
+[
+21,
+19
+],
+[
+22,
+19
+],
+[
+23,
+19
+]
+],
+"text": "a fallen YARD (a long wooden spar) lying on the deck with a torn grey sail draped over it",
+"color": [
+120,
+110,
+96
+],
+"solid": true
 },
 {
 "kind": "plank",
@@ -207,7 +371,12 @@
 {
 "type": "o",
 "x": 36,
-"y": 18
+"y": 16
+},
+{
+"type": "o",
+"x": 8,
+"y": 9
 },
 {
 "type": "o",
@@ -222,7 +391,32 @@
 {
 "type": "o",
 "x": 20,
-"y": 19
+"y": 18
+},
+{
+"type": "o",
+"x": 10,
+"y": 13
+},
+{
+"type": "o",
+"x": 18,
+"y": 16
+},
+{
+"type": "o",
+"x": 30,
+"y": 16
+},
+{
+"type": "o",
+"x": 41,
+"y": 16
+},
+{
+"type": "o",
+"x": 41,
+"y": 14
 }
 ],
 "spawns": {
@@ -249,38 +443,7 @@
 1,
 1
 ],
-"look": "ship"
-},
-"rows_fit": [
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"~~~~~~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~~~~~~~~~~~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXXXX~~~~~~~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXXX~~~~~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXXX~~~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXX~~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXX~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~",
-"~~~~~~XuuuXXuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~",
-"~~~~~~XuuuXXuuuuuuXXuuuuuuuuuuXXuuuuuuuuuXXuuuuuuX~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuX~~~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXX~~~~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXX~~~~~~~~~~~",
-"~~~~~~XuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuXXX~~~~~~~~~~~~~",
-"~~~~~~XXXXXXXXXXXXXXXXXXXXXX==XXXXXXXXXX~~~~~~~~~~~~~~~~",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~==~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-]
+"look": "ship",
+"smooth": 0.4
+}
 }

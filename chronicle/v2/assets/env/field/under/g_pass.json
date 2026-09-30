@@ -1,0 +1,20 @@
+{
+ "id": "g_pass",
+ "kind": "under",
+ "map": "g_pass",
+ "tile": 32,
+ "size32": [
+  1600,
+  1152
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.8,
+ "files": {
+  "24": "g_pass@24.png",
+  "32": "g_pass@32.png",
+  "40": "g_pass@40.png"
+ },
+ "src": "generated"
+}

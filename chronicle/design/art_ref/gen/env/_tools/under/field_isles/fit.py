@@ -127,6 +127,13 @@ if APPLY:
         for row in fit:
             for i_, ch_ in enumerate(row):
                 if ch_ == a_: row[i_] = b_
+    # rim {'k': 'r'} (2026-09-30): 海・浅瀬に接する岩棚のふち（描いた岸の岩）は岩に。中の平らな岩棚は歩ける
+    for a_, b_ in (fx.get('rim') or {}).items():
+        wet = set('~_')
+        for y_ in range(H):
+            for x_ in range(W):
+                if fit[y_][x_] == a_ and (x_, y_) not in protect and any(0 <= x_ + dx < W and 0 <= y_ + dy < H and g[y_ + dy, x_ + dx] in wet for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))):
+                    fit[y_][x_] = b_
     for r in fx.get('open_rect', []):
         for j in range(r[1], r[1] + r[3]):
             for i in range(r[0], r[0] + r[2]): fit[j][i] = r[4] if len(r) > 4 else ','
