@@ -32,6 +32,16 @@
     if (M.a_bridge) re(M.m_bog, 'marsh_s', { map: 'a_bridge', spawn: 'north' });
     // 湿原のエリアがまだ無いとき（潮見橋の北は前のワールドの橋の上へ）
     if (M.a_bridge && !M.m_bog) for (const e of M.a_bridge.exits || []) if (e.to && e.to.map === 'm_bog') e.to = { map: 'world', spawn: 'ash_bridge' };
+    // (2026-09-30) 潮見橋のたもとの南の灰の原が広く空いていた: 灰の小道具で目印を足す（道・出口・看板・灯籠のそばには置かない。生成したエリアのファイルは書き換えない）
+    //   西: 捨てられた旅人の野営（灰の天幕・水がめ・焼けた切り株）、東: 焼けた木・火山岩・湯気の噴き出し口・硫黄・黒曜石のかけら
+    const B = M.a_bridge;
+    if (B && !(B.objects || []).some((o) => o.decor === 'ash_south')) {
+      const P = (id, x, y) => ({ type: 'prop', id, x, y, decor: 'ash_south' });
+      B.objects.push(P('tent', 12, 31), P('water_urn', 14, 31), P('charred_stump', 13, 33), P('ash_bush', 16, 33),
+        P('charred_tree', 12, 27), P('sulphur', 16, 28), P('volcanic_rocks', 17, 35), P('ash_bush', 18, 38),
+        P('charred_tree', 35, 33), P('charred_stump', 28, 36), P('volcanic_rocks', 34, 29), P('lava_rock', 34, 37),
+        P('steam_vent', 36, 26), P('sulphur', 29, 30), P('obsidian_shards', 26, 35), P('steam_vent', 31, 34));
+    }
   }
   if (R.onData) R.onData(() => R.onData(link));
 })(window.RPG);

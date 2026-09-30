@@ -21,6 +21,11 @@
     lava_glow: { soft: true, glow: true, light: { kind: 'fire', r: 120 } },
   };
   for (const id of Object.keys(PROPS)) if (!R.DB.props[id]) R.def('props', id, PROPS[id]);
+  // (2026-09-30) ともした灯籠・崖のかがり火（iron_brazier）が光らなかった: 灯りの一覧（terrain/props_light.js）は R.Terrain._PROP_META の light を見るが、
+  //   env の起動の登録は {solid, shadow} だけ。山地（mine_00_kit.js）と同じく、ここで先に META に置く（env は META が有れば上書きしない）。
+  //   溶岩の照り返し（lava_glow）は置かない（光だまりで溶岩の堀のマスの段が四角く浮く。今の見た目のまま）
+  const T = R.Terrain;
+  if (T && T._PROP_META) T._PROP_META.iron_brazier = Object.assign({}, T._PROP_META.iron_brazier || {}, { solid: true, glow: true, shadow: 'blob', light: { kind: 'fire', r: 110 } });
 
   K.TOWN = function (extra) {
     return Object.assign({

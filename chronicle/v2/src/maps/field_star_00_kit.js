@@ -40,7 +40,7 @@
     const ST = M.s_steps;
     if (!(ST.objects || []).some((o) => o.event === 'star_rail_stop')) {
       ST.objects.push({ type: 'prop', id: 'mine_cart', x: 6, y: 24 }, { type: 'examine', x: 6, y: 24, event: 'star_rail_stop' });
-      ST.spawns.rail = { x: 6, y: 25, dir: 's' };
+      ST.spawns.rail = { x: 7, y: 25, dir: 'e' };
     }
     // 星読みの尾根の塔の扉（生成したエリアのファイルは書き換えない）: 星図で開けるまでは閉じた扉（当たり）、開けたら塔の 1 階へ
     const G = M.s_ridge;

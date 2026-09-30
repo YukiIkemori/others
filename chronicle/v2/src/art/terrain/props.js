@@ -351,22 +351,6 @@
     return { frames, poses, fps, anchors: { feet: [0, 0], light: lt }, w, h, meta };
   }
   T._envProp = envProp;
-  // 地方の小道具の灯り（2026-09-30）: 地方の組（ash_00_kit・marsh・isles・star の R.DB.props）が light を書いても、灯りの一覧（props_light.js）が
-  //   見る META には env の起動の登録（{solid, shadow} だけ）しか入らず、灰の町のかがり火・溶岩の照り返し・鬼火の灯・星の灯りが光らなかった。
-  //   データの後処理の後に、R.DB.props の light・glow を META へ写す（META にもう light がある物はそのまま。山地は mine_00_kit.js が先に置く）
-  //   溶岩の照り返し（lava_glow）は写さない: 下絵の溶岩の堀のマスの段が光だまりで四角く浮く（今の見た目のまま）
-  const NO_SYNC = { lava_glow: 1 };
-  T._syncPropLights = function () {
-    for (const id of Object.keys(R.DB.props || {})) {
-      const d = R.DB.props[id];
-      if (!d || !d.light || (META[id] && META[id].light) || NO_SYNC[id]) continue;
-      const m = Object.assign({}, META[id] || { soft: !!d.soft, solid: !!d.solid, shadow: d.shadow });
-      m.light = Object.assign({}, d.light);
-      if (d.glow) m.glow = true;
-      META[id] = m;
-    }
-  };
-  if (R.onData) R.onData(() => R.onData(() => R.onData(T._syncPropLights)));
   /** 画像にしかない物（家具・木の変化など）も hd:prop:<id> として登録し、R.DB.props に足す（env.js が起動のときに呼ぶ） */
   T._envRegisterProps = function () {
     if (!T.Env || !T.Env.propIds) return;
