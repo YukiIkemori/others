@@ -34,7 +34,7 @@
     'map.ash_caldera.N.talk.0.L': '报名在里面。\n去排队吧。',
     'map.ash_caldera.N.talk.1.ash_champion': '是冠军啊！\n……明年我可不会输。',
     'map.ash_caldera.N.8.queue_b.name': '看热闹的男人',
-    'map.ash_caldera.N.talk.0.L_2': '今年的决赛，是外来人之间的对决吗。\n这下有好戏看了。',
+    'map.ash_caldera.N.talk.0.L_2': '今年的决赛，是外来人对决吗。\n这下有好戏看了。',
     'map.ash_caldera.N.talk.1.cleared_r_ash': '火鸟在斗技场上空\n盘旋了一圈呢。……你看到了吗？',
     'map.ash_caldera.N.9.dog.name': '斗技场的狗',
     'map.ash_caldera.N.talk.0.L_3': '汪！',

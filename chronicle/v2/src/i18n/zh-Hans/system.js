@@ -46,7 +46,7 @@
     'sys.minigame.drawTiming.P.frame': '{sub} · 时机',
     'sys.minigame.drawTiming.0.label': '关闭',
     'sys.minigame.drawTiming.0.label_2': '停',
-    'sys.minigame.drawTiming.1.label': '放弃',
+    'sys.minigame.drawTiming.1.label': '取消',
     // ---- src/systems/mon.js
     'sys.mon.goldenName.ret': '金色{n}',
     'sys.mon.goldenName.ret_2': '金{n}',

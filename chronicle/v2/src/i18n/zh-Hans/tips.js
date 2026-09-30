@@ -13,7 +13,7 @@
     'tips.leads.text': '听到的消息会记在线索簿里。\n在「编年史・线索」中做标记后，右上方的卡片和地图上会显示记号。\n接下来要做的事，可以在菜单顶部和野外按 {btn:l} 查看。',
     'tips.spring.title': '女神像',
     'tips.spring.text': '向女神像祈祷，包括后备在内全员的 HP 与 MP 都会恢复，\n倒下的人也会站起来。可以无限次使用。\n在城镇或绿洲的泉水边休息也一样。',
-    'tips.chest.title': '宝箱怪',
+    'tips.chest.title': '宝箱',
     'tips.chest.text': '尚未打开的宝箱，也会在地图上标出记号。',
     'tips.secret.title': '隐藏通道',
     'tips.secret.text': '有些墙壁是可以穿过去的。\n找到过一次的通道，墙边会留下细细的记号。',

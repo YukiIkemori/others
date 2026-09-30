@@ -36,7 +36,7 @@
     // ---- src/systems/field/minimap.js
     'sys.minimap.legend.heal': '女神像',
     'sys.minimap.legend.heal_2': '泉',
-    'sys.minimap.legend.1.0': '宝箱怪',
+    'sys.minimap.legend.1.0': '宝箱',
     'sys.minimap.legend.2.0': '楼梯',
     // ---- src/systems/field/move.js
     'sys.move.lockedBump.toast': '门上了锁',
