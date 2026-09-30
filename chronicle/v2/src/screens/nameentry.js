@@ -40,6 +40,14 @@
   const hasDom = () => typeof document !== 'undefined' && !!document.body && typeof document.createElement === 'function';
   /** 名前に入れない字を除く（{hero} の差し込みの印・制御文字・改行） */
   const clean = (t) => String(t || '').replace(/[\u0000-\u001f\u007f{}<>\\]/g, '');
+  // 名前の長さは枠の数で数える。ラテン字の表の言語（英語・韓国語・中国語。枠は 10）では、ハングル・漢字・かななど幅の広い字は 2 枠
+  //   （韓国語・中国語の名前がラテン字の 10 字ぶんまで伸びて、窓の名前の欄からはみ出さないように。幅の広い字は 5 字まで）
+  const WIDE = /[\u1100-\u115f\u2e80-\ua4cf\uac00-\ud7a3\uf900-\ufaff\ufe30-\ufe4f\uff00-\uff60\uffe0-\uffe6\u{20000}-\u{3fffd}]/u;
+  const units = (ch) => (latin() && WIDE.test(ch) ? 2 : 1);
+  const UIK_measure = (s, size) => R.UIK.measure(s, { size, weight: 500 });
+  const used = (arr) => arr.reduce((n, ch) => n + units(ch), 0);
+  /** 枠の数 max に入るだけの字（頭から） */
+  const fit = (arr, max) => { const out = []; let n = 0; for (const ch of arr) { const k = units(ch); if (n + k > max) break; out.push(ch); n += k; } return out; };
   /** 表の操作に割り当てたキー（押しても「キーボードで入力」にしない） */
   function boundCodes() {
     const set = new Set(['Space', 'Enter', 'NumpadEnter', 'Escape', 'Backspace', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']);
@@ -52,7 +60,7 @@
     init(p) {
       // ラテン字の名前は字が細いので 2 倍まで（5 → 10）
       this.max = latin() ? Math.max(p.maxLatin || 0, (p.max || 5) * 2) : p.max || 5;
-      this.value = [...String(p.value || '')].slice(0, this.max);
+      this.value = fit([...clean(p.value)], this.max);
       this.kata = true;
       this.tall = S.tall();
       this.cells = cells(this.tall);
@@ -115,7 +123,7 @@
     kbSync(noWrite) {
       const K = this.kb;
       if (!K || !K.el) return;
-      const v = [...clean(K.el.value)].slice(0, this.max);
+      const v = fit([...clean(K.el.value)], this.max);
       this.value = v;
       if (!noWrite && K.el.value !== v.join('')) K.el.value = v.join('');
     },
@@ -151,9 +159,9 @@
         if (!s) { R.UIK.sfx('buzzer'); return; }
         R.UIK.sfx('confirm'); if (this.kb && this.kb.on) { this.kb.on = false; try { this.kb.el.blur(); } catch (e) { /* */ } } this.close(s); return;
       }
-      if (this.value.length >= this.max) { R.UIK.sfx('buzzer'); return; }
+      if (used(this.value) + units(this.label(c)) > this.max) { R.UIK.sfx('buzzer'); return; }
       this.value.push(this.label(c)); R.UIK.sfx('cursor');
-      if (this.value.length >= this.max) this.cur = this.cells.findIndex((x) => x.act === 'ok');
+      if (used(this.value) >= this.max) this.cur = this.cells.findIndex((x) => x.act === 'ok');
     },
     move(dx, dy) {
       const c = this.cells[this.cur];
@@ -215,19 +223,21 @@
       // 名前の枠
       const bw = latin() ? u(34) : u(46), bx0 = p.x + (p.w - bw * this.max) / 2, by = p.y + u(58);
       this.box = { x: bx0, y: by, w: bw * this.max, h: u(48) };
-      // IME の変換中の字（まだ決まっていない字）は枠の続きに薄く出す
-      const comp = this.kb && this.kb.on ? [...this.kb.comp].slice(0, Math.max(0, this.max - this.value.length)) : [];
-      const at = this.value.length + comp.length;
+      // 決まった字は枠に（幅の広い字は 2 枠の真ん中）。IME の変換中の字（まだ決まっていない字）は続きに一続きで薄く出す（拼音などの綴りも読めるように）
+      const n = used(this.value);
+      const comp = this.kb && this.kb.on ? this.kb.comp : '';
+      let x = bx0;
+      for (const ch of this.value) { const w = bw * units(ch); R.UIK.text(g, ch, x + w / 2, by + u(6), { size: u(30), weight: 700, color: C.goldHi, align: 'center' }); x += w; }
+      const cw = comp ? UIK_measure(comp, u(26)) : 0;
       for (let i = 0; i < this.max; i++) {
-        const x = bx0 + i * bw;
-        const ci = i - this.value.length;
-        R.UIK.rule(g, x + u(6), x + bw - u(6), by + u(44), ci >= 0 && ci < comp.length ? 1.5 : 0.5, i === at ? C.gold : ci >= 0 && ci < comp.length ? C.goldHi : undefined);
-        if (this.value[i]) R.UIK.text(g, this.value[i], x + bw / 2, by + u(6), { size: u(30), weight: 700, color: C.goldHi, align: 'center' });
-        else if (ci >= 0 && ci < comp.length) R.UIK.text(g, comp[ci], x + bw / 2, by + u(6), { size: u(30), weight: 500, color: C.text2 || C.text, align: 'center' });
-        else if (i === at && Math.floor(R.Engine.time / 500) % 2 === 0) R.UIK.diamond(g, x + bw / 2, by + u(24), u(4), C.gold);
+        const sx = bx0 + i * bw;
+        const inComp = comp && i >= n && sx < x + cw + u(4);
+        R.UIK.rule(g, sx + u(6), sx + bw - u(6), by + u(44), inComp ? 1.5 : 0.5, !comp && i === n ? C.gold : inComp ? C.goldHi : undefined);
+        if (!comp && i === n && Math.floor(R.Engine.time / 500) % 2 === 0) R.UIK.diamond(g, sx + bw / 2, by + u(24), u(4), C.gold);
       }
+      if (comp) R.UIK.text(g, comp, x + u(4), by + u(9), { size: u(26), weight: 500, color: C.text2 || C.text, align: 'left' });
       if (this.kb && this.kb.on) R.UIK.text(g, R.T('ui.nameentry.kbHint'), p.x + p.w / 2, by + u(52), { size: u(12.5), color: C.gold, align: 'center' });
-      R.UIK.text(g, `${this.value.length} / ${this.max}`, p.x + p.w - u(24), by + u(22), { size: u(12.5), color: C.text3, align: 'right' });
+      R.UIK.text(g, `${n} / ${this.max}`, p.x + p.w - u(24), by + u(22), { size: u(12.5), color: C.text3, align: 'right' });
       // 表
       const gx = p.x + u(20), gy = p.y + u(126);
       this.rects = [];
