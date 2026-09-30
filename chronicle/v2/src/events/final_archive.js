@@ -14,7 +14,7 @@
   'use strict';
   const E = (id, run, o) => R.def('events', id, Object.assign({ run, meta: { needs: [], gives: [] } }, o || {}));
   const X = () => R.Final.ev;
-  const clear = (ev) => ev.flag('game_clear');
+  const clear = (ev) => ev.flag('final_clear');
   const KING = { name: R.T('ev.final_archive.KING.name'), face: false };
 
   // ================================================================ 1 階
@@ -226,7 +226,7 @@
   }
   E('archive_6_boss', async (ev) => {
     const x = X();
-    if (ev.flag('game_clear')) return;
+    if (ev.flag('final_clear')) return;
     await x.preload(KING_VOICES);
     const retry = ev.flag('final_nemrea1');
     if (!retry) {
@@ -248,7 +248,7 @@
     const r2 = await ev.battle('tr_b_nemrea2', { boss: true, noEscape: true });
     if (r2 !== 'win') { ev.setFlag('final_naming_scene', false); ev.mapBgm(); return; }
     await ev.call('final_ending');
-  }, { meta: { needs: ['flag:final_lazaro'], gives: ['flag:final_nemrea1', 'flag:game_clear'], calls: ['final_ending'] } });
+  }, { meta: { needs: ['flag:final_lazaro'], gives: ['flag:final_nemrea1', 'flag:final_clear'], calls: ['final_ending'] } });
   E('archive_6_altar', async (ev) => {
     const x = X();
     if (clear(ev)) { await x.narr(ev, R.T('events.archive_6_altar.narr')); await ev.caption(x.TITLE_LINE, { ms: 2400 }); return; }

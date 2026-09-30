@@ -84,6 +84,13 @@ for (const T of [1, 3]) {
   BOSSES['tr_b_stareater' + k] = { troop: 'tr_b_stareater', tier: T, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 13], note: '大口を開けたら守る。弱ると光が効く' };
 }
 
+// 終盤 白の大書庫（src/data/bosses.js の b_bookgolem 〜 b_nemrea2）。八つの地方を解いたあとなので、ティア 8 で測る
+BOSSES['tr_b_bookgolem@8'] = { troop: 'tr_b_bookgolem', tier: 8, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 10], note: '書架の番人（大書庫 2 階）' };
+BOSSES['tr_b_heroshades@8'] = { troop: 'tr_b_heroshades', tier: 8, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 11], note: '三英雄の影（大書庫 4 階）' };
+BOSSES['tr_b_lazaro@8'] = { troop: 'tr_b_lazaro', tier: 8, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 13], note: 'ラザロ（大書庫 5 階）' };
+BOSSES['tr_b_nemrea1@8'] = { troop: 'tr_b_nemrea1', tier: 8, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 13], note: '名のない王（虚ろの間、名を呼ぶ前）' };
+BOSSES['tr_b_nemrea2@8'] = { troop: 'tr_b_nemrea2', tier: 8, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 85, diff: 40, rounds: [8, 15], note: 'ネムレア（名を呼んだあと。最後の戦い）' };
+
 function loadR() { return require('./lib/load')({ quiet: true }); }
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : 0);
 

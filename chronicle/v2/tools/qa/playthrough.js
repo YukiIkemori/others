@@ -81,7 +81,9 @@ function forest(o) {
     { id: 'stone_b', ev: 'verda_stone_b', done: 'forest_stone_b' },
     // ダストウィングの前にフェルンの道具屋で目覚ましをそろえる（眠りのりん粉の答えは風か目覚まし。シルヴァンは風の術をまだ知らないことが多い）。
     // 2026-09-30: 目覚まし 0 個・風の術なしで挑み、全員が眠ったまま 30 ラウンド負け続けていた（R1 の負けの元。敵の強さは変えない）
-    { id: 'shop_fern_items_moth', ev: 'fern_shop_keeper', shop: true, optional: true },
+    { id: 'shop_fern_items_moth', ev: 'fern_shop_keeper', shop: true, optional: true, buy: { i_stone_wind: 1, i_waker: 6 } },
+    // 風の魔石を風の得意な人（いなければ使える最初の人）に使う（覚えた術で羽の光を吹き飛ばす）
+    { id: 'wind_stone', task: { kind: 'use', item: 'i_stone_wind', who: ['sylvain', 'selma', 'zafira', 'ilse'] }, doneJs: "!(G().items.i_stone_wind > 0)" },
     { id: 'moth', ev: 'verda_moth', done: 'forest_moth' },
     { id: 'stone_c', ev: 'verda_stone_c', done: 'forest_stone_c' },
     { id: 'shop_fern_peddler2', ev: 'fern_peddler', shop: true, optional: true },

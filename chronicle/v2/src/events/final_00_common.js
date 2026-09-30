@@ -4,9 +4,9 @@
 //   R.DB.letters    ベルナの封書（§10.4）
 //   R.DB.chronicle  終章「語り部の旅」（エンディングの E9 で章に入る）
 //   R.Final.ev      イベントが使う小道具（narr・lore・pain・chapters・speakers…）
-// 旗（§2.4 の決まり）: story_t8・st_fine_reveal（T8）／ final_roa_scene・final_roa・final_open（終盤のロア）／ final_sailed・final_arrived（ビブリア）／
-//   final_golem（2 階）・final_rowell（3 階の封印）・final_shades（4 階）・final_lazaro（5 階）・final_nemrea1（6 階の第 1 形態）・game_clear（クリア）／
-//   選択 ch_lazaro_write（sin | father）。痛みの数は var pain_count（地方の年代記の選択で「痛みも書く」を選んだ数）。
+// 旗（§2.4 の決まり）: story_t8・story_fine_reveal（T8）／ final_roa_scene・final_roa・final_open（終盤のロア）／ final_sailed・final_arrived（ビブリア）／
+//   final_golem（2 階）・final_rowell（3 階の封印）・final_shades（4 階）・final_lazaro（5 階）・final_nemrea1（6 階の第 1 形態）・final_clear（クリア）／
+//   選択 ch_final_lazaro（sin | father）。痛みの数は var pain_count（地方の年代記の選択で「痛みも書く」を選んだ数）。
 // 仲間 20 人は物語に出ない（A36）。主人公はしゃべらない。ボイスは design/voice/script.csv の文のまま（§11）。
 (function (R) {
   'use strict';
@@ -99,7 +99,7 @@
     l_main_final_archive: {
       title: R.T('leads.l_main_final_archive.title'), kind: 'main', region: 'world', from: R.T('leads.l_main_final_archive.from'), place: 'biblia', dir: R.T('leads.l_main_final_archive.dir'),
       text: R.T('leads.l_main_final_archive.text'),
-      done: 'game_clear',
+      done: 'final_clear',
     },
     l_main_margin_noa: {
       title: R.T('leads.l_main_margin_noa.title'), kind: 'main', region: 'world', from: R.T('leads.l_main_margin_noa.from'),
@@ -152,8 +152,8 @@
     parts: [
       { text: R.T('chronicle.finale.parts.0.text') },
       { text: R.T('chronicle.finale.parts.1.text') },
-      { cond: { choice: 'ch_lazaro_write', is: 'sin' }, text: R.T('chronicle.finale.parts.2.text') },
-      { cond: { choice: 'ch_lazaro_write', is: 'father' }, text: R.T('chronicle.finale.parts.3.text') },
+      { cond: { choice: 'ch_final_lazaro', is: 'sin' }, text: R.T('chronicle.finale.parts.2.text') },
+      { cond: { choice: 'ch_final_lazaro', is: 'father' }, text: R.T('chronicle.finale.parts.3.text') },
       { text: R.T('chronicle.finale.parts.4.text') },
     ],
   });

@@ -80,22 +80,31 @@
   };
   /**
    * エンディングの朝の写し: src のマップ（登録済み）と同じ当たり・絵・戸口で、光だけ朝にした id のマップ。
-   * o.npcs（人の差し替え。無ければ人なし）・o.objects（足す物）・o.light・o.name・o.spawns（足す spawn）。出口と戸口は無い（場面の間だけ使う）
+   * o.npcs（人の差し替え。無ければ人なし）・o.objects（足す物）・o.light・o.name・o.spawns（足す spawn）。町の端の出口は無く、戸口と屋内の出口は写しの中に戻る（場面の間だけ使う）
    */
   K.dawnCopy = function (src, id, o) {
     o = o || {};
     const m = R.DB.maps[src];
     if (!m) { R.warn && R.warn('Final.kit.dawnCopy: no map ' + src); return null; }
+    const selfSp = {};
     const keep = (m.objects || []).filter((ob) => ob.type === 'building' || ob.type === 'prop').map((ob) => {
       const c = Object.assign({}, ob);
-      delete c.door;   // 戸口は無い（場面の間だけの写し。どこへもつながない）
       delete c.cond;
+      // 戸口は写しの中だけで閉じる（ほかの地方の家へはつながない。押すと戸の前に戻るだけ = 場面の間だけの写し）
+      if (c.door) {
+        const sp = 'dawn_' + (c.id || (c.door.x + '_' + c.door.y));
+        selfSp[sp] = { x: c.door.x, y: c.door.y + 1, dir: 's' };
+        c.door = { x: c.door.x, y: c.door.y, to: { map: id, spawn: sp } };
+      }
       return c;
     });
+    // 屋内の出口は写しの中に戻す（出口の戸口の絵を残すため。外へはつながない）。町・エリアの端の出口は無い
+    const back = (m.spawns && (m.spawns.door ? 'door' : Object.keys(m.spawns)[0])) || null;
+    const selfExits = m.kind === 'interior' && back ? (m.exits || []).map((e) => Object.assign({}, e, { to: { map: id, spawn: back } })) : [];
     const def = {
       id, name: o.name || m.name, kind: m.kind, region: 'finale', location: m.location, theme: m.theme, propSet: m.propSet, propSetBase: m.propSetBase,
       legend: m.legend, rows: m.rows.slice(), outside: m.outside, objects: keep.concat(o.objects || []), npcs: o.npcs || [],
-      spawns: Object.assign({}, m.spawns, o.spawns || {}), exits: [], triggers: [], zones: [],
+      spawns: Object.assign({}, m.spawns, selfSp, o.spawns || {}), exits: selfExits, triggers: [], zones: [],
       light: o.light || K.LIGHT_DAWN, dark: false, bgm: o.bgm || 'dawn', bbg: m.bbg,
       meta: Object.assign({}, m.meta || {}, { sub: o.sub || (m.meta && m.meta.sub), minimap: false, dawn: true, chestsInfo: false }),
       art: m.art ? Object.assign({}, m.art) : undefined,

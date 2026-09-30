@@ -29,7 +29,7 @@
       date: Date.now(),
       faces: (G.party || []).map((id) => (chars[id] && chars[id].look) || id).slice(0, 4),
     };
-    if (G.flags && G.flags.game_clear) card.clear = true;   // クリアの記録（エンディングの後。札に「クリア」の印。つづきはロアの里から）
+    if (G.flags && G.flags.final_clear) card.clear = true;   // クリアの記録（エンディングの後。札に「クリア」の印。つづきはロアの里から）
     if (G.testerUsed) card.test = true;   // テスト用メニュー（src/tester/）を使った旅: 札に「TEST」の印（使っていなければ項目も無い）
     return card;
   }

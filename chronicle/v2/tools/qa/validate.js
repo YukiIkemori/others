@@ -36,6 +36,7 @@ BBG.push('ash');   // 灰の荒野（ash_*.js。BGM は縦切りの town・cave�
 BBG.push('isles');   // マレア諸島（isles_*.js。BGM は縦切りの town・village・cave・ghost・overworld）
 BBG.push('mine');   // ガルド山地（mine_*.js・field_mine_*.js。BGM は縦切りの town・cave・overworld・tavern）
 BBG.push('star');   // オルビス高原（star_*.js・field_star_*.js。BGM は縦切りの town・tension・tower・omen・overworld）
+SLICE_BGM.push('lastdungeon', 'hollowking'); BBG.push('library');   // 終盤（final_*.js。ビブリア島と白の大書庫。BGM はほかに縦切りの sorrow・dawn・tension）
 const maps = M.sliceMaps();
 const EV_SRC = i18nInline(fs.readdirSync(path.join(V2, 'src', 'events')).map((f) => fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8')).join('\n'));
 
@@ -210,7 +211,7 @@ section('3. id の付け方（§2.4）');
   ok('盗み専用 <枠>_st_<名>', stBad.length === 0, stBad.map((x) => x[0]));
   const uBad = ['u_hans_axe', 'u_ben_whistle', 'u_roy_charm', 'u_pim_cap'].filter((id) => !item(id));
   ok('伸びる一品物 u_*（ハンス・ベン・ロイ・ピム）がある', uBad.length === 0, uBad);
-  ok('地方 r_<rs>（縦切り r_forest・序章 prologue）', !!D.regions.r_forest && !!D.regions.prologue && Object.keys(D.regions).every((id) => /^(r_[a-z]+|prologue|world)$/.test(id)));
+  ok('地方 r_<rs>（縦切り r_forest・序章 prologue。ほかに world と終盤の finale）', !!D.regions.r_forest && !!D.regions.prologue && Object.keys(D.regions).every((id) => /^(r_[a-z]+|prologue|world|finale)$/.test(id)));
 }
 
 // ================================================================ 4. 数

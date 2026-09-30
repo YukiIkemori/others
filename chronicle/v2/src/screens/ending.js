@@ -25,8 +25,15 @@
   }
   async function run(L, body) {
     if (headless()) return;
+    // 暗転（ev.fade('out')）の上では層が見えないので、層を出している間だけ暗転を外す（層は自分の a で暗い所から浮かぶ）。
+    // 閉じたら暗転を戻す（続く ev.fade('in') がそこから明ける）
+    const F = R.Engine.fade;
+    const stop = () => { if (F && F.anim) { const r = F.anim.resolve; F.anim = null; r(); } };
+    stop();
+    const fa = F ? F.a : 0;
+    if (F) F.a = 0;
     R.Engine.push(L);
-    try { await body(L); } finally { R.Engine.remove(L); }
+    try { await body(L); } finally { R.Engine.remove(L); stop(); if (F) F.a = fa; }
   }
   /** ms だけ待つ（A で先へ。o.hold = 押し続けで早送り） */
   function hold(ms, o) {
@@ -117,11 +124,11 @@
       if (st.glow > 0) {
         const gr = g.createRadialGradient(b.rx + b.pw / 2, fy + u(22), 2, b.rx + b.pw / 2, fy + u(22), b.pw * 0.8);
         gr.addColorStop(0, `rgba(255,220,150,${0.45 * st.glow})`); gr.addColorStop(1, 'rgba(255,220,150,0)');
-        g.fillStyle = gr; g.fillRect(b.rx - u(40), fy - u(80), b.pw + u(80), u(200));
+        g.fillStyle = gr; g.beginPath(); g.arc(b.rx + b.pw / 2, fy + u(22), b.pw * 0.8, 0, Math.PI * 2); g.fill();
       }
       const chars = [...line];
       const s = chars.slice(0, Math.floor(st.shown)).join('');
-      if (s) text(g, s, b.rx + b.pw / 2, fy + u(6), { size: u(26), weight: 700, color: C.ink, align: 'center', maxW: b.pw - u(10) });
+      if (s) text(g, s, b.rx + b.pw / 2, fy + u(8), { size: u(chars.length > 11 ? 21 : 23), weight: 700, color: C.ink, align: 'center' });
       g.restore();
     });
     await run(L, async () => {

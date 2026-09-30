@@ -4,7 +4,7 @@
 //     E2 同: フィーネが物語に還る（v_fine_ending_01・02）。消える前、声なしで「題を、お願い」
 //     E3 同: 白紙の題のページ → {hero}が羽ペンを取る → 「夜があって、朝が来た。」（R.Ending.titlePage）。年代記の扉にも同じ一行
 //     E4 大書庫の入口（ビブリア、まだ夜）: ラザロが目を覚ます（v_lazaro_ending_01）→ ロウェルが肩を貸す（v_rowell_ending_01）
-//     E5 同: ラザロの章を書く（ch_lazaro_write: sin 罪として ／ father 父として）→ 後日談は字幕だけ
+//     E5 同: ラザロの章を書く（ch_final_lazaro: sin 罪として ／ father 父として）→ 後日談は字幕だけ
 //     E6 ビブリアの広場: 町の人が名を思い出す → ノア（v_noa_ending_01）→ ミラの節で題の一行を歌う → 東の空が白み、日が昇る（biblia_dawn）→
 //        「{hero}は、はじめて朝を見た。」→ イェナが「エステル」と名乗り直す
 //     E7 年代記の朗読（章の題と選んだ版の一文）→ 地方のカード 8 枚（朝日が差していく順）→ タデオのカード（ファロス）
@@ -97,7 +97,7 @@
     await R.Ending.titlePage(x.TITLE_LINE);
     const G = R.Game;
     if (G) { G.chronicle = G.chronicle || { chapters: [] }; G.chronicle.title = x.TITLE_LINE; }
-    ev.setFlag('game_clear');
+    ev.setFlag('final_clear');
     // ================================================================ E4 大書庫の入口（まだ夜）
     ev.setFlag('final_ending_gate');
     await ev.warp('biblia', 'e_gate');
@@ -111,12 +111,12 @@
     await x.narr(ev, R.T('events.final_ending.narr_9'));
     const i = await ev.choose(R.T('events.final_ending.i.choose'), { text: R.T('events.final_ending.i.choose.text') });
     if (i === 0) {
-      ev.choice('ch_lazaro_write', 'sin');
+      ev.choice('ch_final_lazaro', 'sin');
       ev.sfx('quill');
       await ev.caption(R.T('events.final_ending.caption_2'), { ms: 3200 });
       await ev.caption(R.T('events.final_ending.caption_3'), { ms: 3600 });
     } else {
-      ev.choice('ch_lazaro_write', 'father');
+      ev.choice('ch_final_lazaro', 'father');
       ev.sfx('quill');
       await ev.caption(R.T('events.final_ending.caption_4'), { ms: 3200 });
       await ev.caption(R.T('events.final_ending.caption_5'), { ms: 3600 });
@@ -205,7 +205,7 @@
     await clearSave(ev);
   }, {
     meta: {
-      needs: ['flag:final_nemrea1'], gives: ['flag:game_clear', 'choice:ch_lazaro_write'],
+      needs: ['flag:final_nemrea1'], gives: ['flag:final_clear', 'choice:ch_final_lazaro'],
       warp: [{ to: 'biblia', spawn: 'e_gate' }, { to: 'biblia_dawn', spawn: 'e_plaza' }, { to: 'roa_dawn', spawn: 'e_hill' }, { to: 'roa_house_dawn', spawn: 'bed' }, { to: 'roa_dawn', spawn: 'e_stone' }],
     },
   });
@@ -214,7 +214,7 @@
   async function clearSave(ev) {
     const G = R.Game;
     if (G) {
-      G.flags.game_clear = true;
+      G.flags.final_clear = true;
       G.flags.final_ending_plaza = false; G.flags.final_ending_gate = false;
       const sp = (R.DB.maps.roa && R.DB.maps.roa.spawns.warp) || { x: 21, y: 19, dir: 's' };
       G.pos = { map: 'roa', x: sp.x, y: sp.y, dir: sp.dir || 's' };

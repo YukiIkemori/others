@@ -298,12 +298,12 @@ function main() {
     if (R.DB.events.story_t8) {
       section('2i. 終盤の閉包（T8 → エンディング）');
       const ALL8 = Object.assign({}, variants[0], { ch_snow_tale: 'dragon', ch_desert_hawk: 'water', ch_desert_route: 'long', ch_marsh_accuse: 'first', ch_ash_bribe: 'refuse',
-        ch_isles_wreck: 'help', ch_mine_side: 'accord', ch_star_order: 'public', ch_star_way: 'sneak', ch_lazaro_write: 'father' });
+        ch_isles_wreck: 'help', ch_mine_side: 'accord', ch_star_order: 'public', ch_star_way: 'sneak', ch_final_lazaro: 'father' });
       for (const rs of ['forest', 'desert', 'snow', 'marsh', 'isles', 'mine', 'ash', 'star']) ALL8['ch_' + rs + '_write'] = 'pain';
       const r = closure({ variant: ALL8 });
-      const need = ['story_t8', 'st_fine_reveal', 'final_roa', 'final_open', 'final_sailed', 'final_arrived', 'final_golem', 'final_rowell', 'final_shades', 'final_lazaro', 'final_nemrea1', 'game_clear'];
+      const need = ['story_t8', 'story_fine_reveal', 'final_roa', 'final_open', 'final_sailed', 'final_arrived', 'final_golem', 'final_rowell', 'final_shades', 'final_lazaro', 'final_nemrea1', 'final_clear'];
       const miss = need.filter((f) => !r.flags[f]);
-      ok(`T8 → 終盤のロア → ファロスの船 → ビブリア → 大書庫 1〜6 階（本の巨人・封印の扉・三つの影・ラザロ・虚ろの王）→ エンディング（game_clear）`, !miss.length, miss);
+      ok(`T8 → 終盤のロア → ファロスの船 → ビブリア → 大書庫 1〜6 階（本の巨人・封印の扉・三つの影・ラザロ・虚ろの王）→ エンディング（final_clear）`, !miss.length, miss);
       const fin = Object.keys(R.DB.maps).filter((id) => R.DB.maps[id].region === 'finale');
       const unv = fin.filter((id) => !r.visited.has(id));
       ok(`終盤のマップ ${fin.length} 枚にすべて入る（エンディングの朝の写しを含む）`, !unv.length, unv);

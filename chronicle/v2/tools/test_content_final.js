@@ -5,7 +5,7 @@
 //        ビブリアと大書庫 1〜6 階は 1 枚の下絵（絵のファイルがあり、大きさがマップと同じ）。戦闘背景 library がある
 //   2 置き場所: spawn・宝箱・泉・調べる物が歩ける所（調べる物は歩ける所から向ける所）、階段の行き先と戻りがそろう、泉は 1・3・4・5・6 階
 //   3 文: ボイスは script.csv の行を 1 字も変えずに 1 回ずつ（v_berna_prologue_01 の流し直しだけは定数）、仲間 20 人の名前を出さない（A36）、主人公はしゃべらない
-//   4 筋: 閉包で T8 → 終盤のロア → ビブリア → 大書庫 → エンディング（game_clear）。終盤のマップにすべて入る。体験版（slice）では終盤へ行けない
+//   4 筋: 閉包で T8 → 終盤のロア → ビブリア → 大書庫 → エンディング（final_clear）。終盤のマップにすべて入る。体験版（slice）では終盤へ行けない
 //   5 戦闘: 終盤のボスの編成（ティア 8）・ラザロのためらい（setup.hesitate）
 //   6 エンディング: 地方のカード（§7.9。解決した順 8 枚＋ファロス）・朗読の章・クレジット（仲間は「旅の仲間たち」の一行だけ）・朝の写し・クリアの記録
 'use strict';
@@ -70,7 +70,7 @@ ok(`終盤のイベント ${myEvents.length} 本が R.DB.events にある`, myEv
   ok('ラザロの手紙 lo_lz_1〜8 が書斎の箱で読める（letter_lz_n がある）', [1, 2, 3, 4, 5, 6, 7, 8].every((n) => D.lore['lo_lz_' + n] && D.letters['letter_lz_' + n]));
   ok('場所 biblia・archive（終盤。体験版のワープの一覧から外れる）', ['biblia', 'archive'].every((id) => D.locations[id] && D.locations[id].region === 'finale' && D.maps[D.locations[id].map].spawns[D.locations[id].spawn]));
   ok('店 shop_biblia・shop_biblia_arms（品がそろう）', ['shop_biblia', 'shop_biblia_arms'].every((id) => D.shops[id] && R.Contract.check('shop', D.shops[id]).ok && D.shops[id].items.length && D.shops[id].items.every((it) => D.items[it])));
-  ok('終章の年代記 finale（ラザロの章の選択 2 通り）', !!(D.chronicle.finale && D.chronicle.finale.parts.filter((p) => p.cond && p.cond.choice === 'ch_lazaro_write').length === 2));
+  ok('終章の年代記 finale（ラザロの章の選択 2 通り）', !!(D.chronicle.finale && D.chronicle.finale.parts.filter((p) => p.cond && p.cond.choice === 'ch_final_lazaro').length === 2));
 }
 {
   const miss = [];
@@ -164,10 +164,10 @@ section('4. 筋（閉包）と体験版の錠');
   const SL = R.DB.config.slice;
   R.DB.config.slice = false; R.MapUtil.invalidate();
   const v = { ch_forest_pim: 'send', ch_forest_fawn: 'heal', ch_snow_tale: 'dragon', ch_desert_hawk: 'water', ch_desert_route: 'long', ch_marsh_accuse: 'first',
-    ch_ash_bribe: 'refuse', ch_isles_wreck: 'help', ch_mine_side: 'accord', ch_star_order: 'public', ch_star_way: 'sneak', ch_lazaro_write: 'sin' };
+    ch_ash_bribe: 'refuse', ch_isles_wreck: 'help', ch_mine_side: 'accord', ch_star_order: 'public', ch_star_way: 'sneak', ch_final_lazaro: 'sin' };
   for (const rs of ['forest', 'desert', 'snow', 'marsh', 'isles', 'mine', 'ash', 'star']) v['ch_' + rs + '_write'] = 'pain';
   const r = P.closure({ variant: v });
-  const need = ['story_t8', 'final_roa', 'final_open', 'final_sailed', 'final_arrived', 'final_golem', 'final_rowell', 'final_shades', 'final_lazaro', 'final_nemrea1', 'game_clear'];
+  const need = ['story_t8', 'final_roa', 'final_open', 'final_sailed', 'final_arrived', 'final_golem', 'final_rowell', 'final_shades', 'final_lazaro', 'final_nemrea1', 'final_clear'];
   ok('閉包: T8 → 終盤のロア → 船 → ビブリア → 本の巨人 → 封印の扉 → 三つの影 → ラザロ → 虚ろの王 → エンディング', need.every((f) => r.flags[f]), need.filter((f) => !r.flags[f]));
   const unv = MY_MAPS.filter((id) => !r.visited.has(id));
   ok('閉包で終盤のマップにすべて入る', unv.length === 0, unv);
@@ -215,8 +215,9 @@ section('6. エンディング');
   const ev = D.events.final_ending;
   const wv = [].concat(ev.meta.warp || []).map((w) => w.to);
   ok('エンディングの朝の写し（biblia_dawn・roa_dawn・roa_house_dawn）へ着く（meta.warp）', DAWN.every((id) => wv.includes(id)));
-  ok('朝の写しは光だけ朝（明るさ k ≥ 0.9）で、出口と人の話は無い', DAWN.every((id) => D.maps[id].light.k >= 0.9 && !(D.maps[id].exits || []).length && !(D.maps[id].triggers || []).length));
-  ok('クリアの記録: game_clear・つづきはロアの里（G.pos）・札に「クリア」', /G\.pos = \{ map: 'roa'/.test(SRC) && /card\.clear = true/.test(fs.readFileSync(path.join(V2, 'src', 'core', 'save.js'), 'utf8')));
+  const selfOnly = (m) => (m.exits || []).every((e) => e.to && e.to.map === m.id) && (m.objects || []).every((o) => !o.door || (o.door.to && o.door.to.map === m.id));
+  ok('朝の写しは光だけ朝（明るさ k ≥ 0.9）で、出口と戸口は写しの中に戻り、人の話の仕掛けは無い', DAWN.every((id) => D.maps[id].light.k >= 0.9 && selfOnly(D.maps[id]) && !(D.maps[id].triggers || []).length));
+  ok('クリアの記録: final_clear・つづきはロアの里（G.pos）・札に「クリア」', /G\.pos = \{ map: 'roa'/.test(SRC) && /card\.clear = true/.test(fs.readFileSync(path.join(V2, 'src', 'core', 'save.js'), 'utf8')));
   ok('題の一行は「夜があって、朝が来た。」（§9.4 の E3）', X.TITLE_LINE === '夜があって、朝が来た。');
   void G;
 }

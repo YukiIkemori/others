@@ -1,7 +1,35 @@
 {
- "date": "2026-09-30T09:32:49.637Z",
+ "date": "2026-09-30T11:04:44.813Z",
  "fixture": "content_p_pharos",
  "walked": [
+  {
+   "map": "a_beach",
+   "kind": "exit",
+   "id": "48,0",
+   "at": [
+    48,
+    0
+   ],
+   "to": "a_foot",
+   "ok": false,
+   "why": "setup: not on a_beach (on pharos)",
+   "ms": 4695
+  },
+  {
+   "map": "a_beach",
+   "kind": "exit",
+   "id": "7,0",
+   "at": "a_lava",
+   "to": "a_lava",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    7,
+    4
+   ],
+   "ms": 9528
+  },
   {
    "map": "a_battle",
    "kind": "exit",
@@ -15,37 +43,7 @@
     25,
     4
    ],
-   "ms": 5702
-  },
-  {
-   "map": "a_beach",
-   "kind": "exit",
-   "id": "7,0",
-   "at": "a_lava",
-   "to": "a_lava",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    7,
-    4
-   ],
-   "ms": 6643
-  },
-  {
-   "map": "a_beach",
-   "kind": "exit",
-   "id": "48,0",
-   "at": "a_foot",
-   "to": "a_foot",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    48,
-    4
-   ],
-   "ms": 6697
+   "ms": 13920
   },
   {
    "map": "a_bridge",
@@ -54,28 +52,13 @@
    "at": "m_bog",
    "to": "m_bog",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     22,
     4
    ],
-   "ms": 6866
-  },
-  {
-   "map": "a_bridge",
-   "kind": "exit",
-   "id": "15,22",
-   "at": "haimi_inn",
-   "to": "haimi_inn",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    15,
-    26
-   ],
-   "ms": 6718
+   "ms": 10294
   },
   {
    "map": "a_bridge",
@@ -90,22 +73,22 @@
     21,
     35
    ],
-   "ms": 7201
+   "ms": 11479
   },
   {
-   "map": "a_foot",
+   "map": "a_bridge",
    "kind": "exit",
-   "id": "14,43",
-   "at": "a_beach",
-   "to": "a_beach",
+   "id": "15,22",
+   "at": "haimi_inn",
+   "to": "haimi_inn",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
-    14,
-    39
+    15,
+    26
    ],
-   "ms": 4659
+   "ms": 10350
   },
   {
    "map": "a_foot",
@@ -114,28 +97,28 @@
    "at": "a_bridge",
    "to": "a_bridge",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     20,
     4
    ],
-   "ms": 5474
+   "ms": 6592
   },
   {
-   "map": "a_lava",
+   "map": "a_foot",
    "kind": "exit",
-   "id": "0,20",
-   "at": "a_pass",
-   "to": "a_pass",
+   "id": "14,43",
+   "at": "a_beach",
+   "to": "a_beach",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
-    0,
-    16
+    14,
+    39
    ],
-   "ms": 3864
+   "ms": 5674
   },
   {
    "map": "a_foot",
@@ -144,28 +127,28 @@
    "at": "caldera",
    "to": "caldera",
    "ok": true,
-   "steps": 4,
+   "steps": 2,
    "why": null,
    "start": [
     2,
     19
    ],
-   "ms": 10022
+   "ms": 11010
   },
   {
    "map": "a_lava",
    "kind": "exit",
-   "id": "48,43",
-   "at": "a_beach",
-   "to": "a_beach",
+   "id": "0,20",
+   "at": "a_pass",
+   "to": "a_pass",
    "ok": true,
    "steps": 3,
    "why": null,
    "start": [
-    47,
-    40
+    0,
+    16
    ],
-   "ms": 3922
+   "ms": 4641
   },
   {
    "map": "a_lava",
@@ -180,7 +163,22 @@
     15,
     4
    ],
-   "ms": 5574
+   "ms": 7643
+  },
+  {
+   "map": "a_lava",
+   "kind": "exit",
+   "id": "48,43",
+   "at": "a_beach",
+   "to": "a_beach",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    47,
+    40
+   ],
+   "ms": 5674
   },
   {
    "map": "a_lava",
@@ -195,7 +193,22 @@
     56,
     19
    ],
-   "ms": 10339
+   "ms": 10828
+  },
+  {
+   "map": "a_pass",
+   "kind": "exit",
+   "id": "51,18",
+   "at": "a_lava",
+   "to": "a_lava",
+   "ok": true,
+   "steps": 2,
+   "why": null,
+   "start": [
+    51,
+    14
+   ],
+   "ms": 4598
   },
   {
    "map": "a_pass",
@@ -210,22 +223,7 @@
     1,
     16
    ],
-   "ms": 4463
-  },
-  {
-   "map": "a_pass",
-   "kind": "exit",
-   "id": "51,18",
-   "at": "a_lava",
-   "to": "a_lava",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    51,
-    14
-   ],
-   "ms": 3630
+   "ms": 8932
   },
   {
    "map": "a_pass",
@@ -240,7 +238,7 @@
     25,
     35
    ],
-   "ms": 4727
+   "ms": 7407
   },
   {
    "map": "a_spa",
@@ -255,7 +253,247 @@
     23,
     35
    ],
-   "ms": 5755
+   "ms": 8804
+  },
+  {
+   "map": "archive_1",
+   "kind": "stairs",
+   "id": "archive_1_up",
+   "at": "archive_2",
+   "to": "archive_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    21,
+    6
+   ],
+   "ms": 14928
+  },
+  {
+   "map": "archive_1",
+   "kind": "stairs",
+   "id": "",
+   "at": "archive_2",
+   "to": "archive_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    22,
+    6
+   ],
+   "ms": 15190
+  },
+  {
+   "map": "archive_2",
+   "kind": "stairs",
+   "id": "",
+   "at": "archive_1",
+   "to": "archive_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
+    22
+   ],
+   "ms": 5790
+  },
+  {
+   "map": "archive_2",
+   "kind": "stairs",
+   "id": "archive_2_down",
+   "at": "archive_1",
+   "to": "archive_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    22
+   ],
+   "ms": 7902
+  },
+  {
+   "map": "archive_1",
+   "kind": "exit",
+   "id": "21,34",
+   "at": "biblia",
+   "to": "biblia",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    21,
+    30
+   ],
+   "ms": 20266
+  },
+  {
+   "map": "archive_3",
+   "kind": "stairs",
+   "id": "archive_3_down",
+   "at": "archive_2",
+   "to": "archive_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    9,
+    27
+   ],
+   "ms": 7869
+  },
+  {
+   "map": "archive_3",
+   "kind": "stairs",
+   "id": "archive_3_up",
+   "at": "archive_4",
+   "to": "archive_4",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    22,
+    4
+   ],
+   "ms": 4660
+  },
+  {
+   "map": "archive_3",
+   "kind": "stairs",
+   "id": "",
+   "at": "archive_4",
+   "to": "archive_4",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    21,
+    4
+   ],
+   "ms": 3460
+  },
+  {
+   "map": "archive_4",
+   "kind": "stairs",
+   "id": "archive_4_down",
+   "at": "archive_3",
+   "to": "archive_3",
+   "ok": true,
+   "steps": 2,
+   "why": null,
+   "start": [
+    38,
+    27
+   ],
+   "ms": 3115
+  },
+  {
+   "map": "archive_4",
+   "kind": "stairs",
+   "id": "",
+   "at": "archive_3",
+   "to": "archive_3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    39,
+    27
+   ],
+   "ms": 4091
+  },
+  {
+   "map": "archive_4",
+   "kind": "stairs",
+   "id": "archive_4_up",
+   "at": "archive_5",
+   "to": "archive_5",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    21,
+    6
+   ],
+   "ms": 4569
+  },
+  {
+   "map": "archive_4",
+   "kind": "stairs",
+   "id": "",
+   "at": "archive_5",
+   "to": "archive_5",
+   "ok": true,
+   "steps": 2,
+   "why": null,
+   "start": [
+    22,
+    6
+   ],
+   "ms": 4201
+  },
+  {
+   "map": "archive_5",
+   "kind": "stairs",
+   "id": "archive_5_down",
+   "at": "archive_4",
+   "to": "archive_4",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    19,
+    27
+   ],
+   "ms": 7453
+  },
+  {
+   "map": "archive_5",
+   "kind": "stairs",
+   "id": "",
+   "at": "archive_4",
+   "to": "archive_4",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    20,
+    27
+   ],
+   "ms": 3797
+  },
+  {
+   "map": "archive_6",
+   "kind": "stairs",
+   "id": "archive_6_down",
+   "at": "archive_5",
+   "to": "archive_5",
+   "ok": true,
+   "steps": 2,
+   "why": null,
+   "start": [
+    17,
+    25
+   ],
+   "ms": 4780
+  },
+  {
+   "map": "archive_6",
+   "kind": "stairs",
+   "id": "",
+   "at": "archive_5",
+   "to": "archive_5",
+   "ok": true,
+   "steps": 2,
+   "why": null,
+   "start": [
+    18,
+    25
+   ],
+   "ms": 5429
   },
   {
    "map": "ash_volcano_1",
@@ -270,7 +508,395 @@
     26,
     43
    ],
-   "ms": 8688
+   "ms": 13404
+  },
+  {
+   "map": "ash_volcano_2",
+   "kind": "stairs",
+   "id": "volcano_2_down",
+   "at": "ash_volcano_1",
+   "to": "ash_volcano_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    21,
+    30
+   ],
+   "ms": 9584
+  },
+  {
+   "map": "biblia",
+   "kind": "door",
+   "id": "biblia_archive",
+   "at": "archive_1",
+   "to": "archive_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    28,
+    13
+   ],
+   "ms": 6745
+  },
+  {
+   "map": "biblia",
+   "kind": "door",
+   "id": "biblia_records",
+   "at": "biblia_records",
+   "to": "biblia_records",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    9,
+    13
+   ],
+   "ms": 4866
+  },
+  {
+   "map": "biblia",
+   "kind": "door",
+   "id": "biblia_library",
+   "at": "biblia_library",
+   "to": "biblia_library",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    46,
+    13
+   ],
+   "ms": 4040
+  },
+  {
+   "map": "biblia",
+   "kind": "door",
+   "id": "biblia_inn",
+   "at": "biblia_inn",
+   "to": "biblia_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    8,
+    30
+   ],
+   "ms": 6757
+  },
+  {
+   "map": "biblia",
+   "kind": "door",
+   "id": "biblia_tavern",
+   "at": "biblia_tavern",
+   "to": "biblia_tavern",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    47,
+    30
+   ],
+   "ms": 6165
+  },
+  {
+   "map": "biblia",
+   "kind": "door",
+   "id": "biblia_shop",
+   "at": "biblia_shop",
+   "to": "biblia_shop",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    36
+   ],
+   "ms": 7262
+  },
+  {
+   "map": "biblia",
+   "kind": "door",
+   "id": "biblia_house3",
+   "at": "biblia_house3",
+   "to": "biblia_house3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    15,
+    36
+   ],
+   "ms": 6374
+  },
+  {
+   "map": "biblia",
+   "kind": "door",
+   "id": "biblia_house5",
+   "at": "biblia_house5",
+   "to": "biblia_house5",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    44,
+    36
+   ],
+   "ms": 4570
+  },
+  {
+   "map": "biblia_dawn",
+   "kind": "door",
+   "id": "biblia_archive",
+   "at": "biblia_dawn",
+   "to": "biblia_dawn",
+   "ok": true,
+   "steps": 4,
+   "start": [
+    28,
+    13
+   ],
+   "ms": 9850
+  },
+  {
+   "map": "biblia_dawn",
+   "kind": "door",
+   "id": "biblia_records",
+   "at": "biblia_dawn",
+   "to": "biblia_dawn",
+   "ok": true,
+   "steps": 4,
+   "start": [
+    9,
+    13
+   ],
+   "ms": 6095
+  },
+  {
+   "map": "biblia_dawn",
+   "kind": "door",
+   "id": "biblia_library",
+   "at": "biblia_dawn",
+   "to": "biblia_dawn",
+   "ok": true,
+   "steps": 2,
+   "start": [
+    46,
+    13
+   ],
+   "ms": 4347
+  },
+  {
+   "map": "biblia_dawn",
+   "kind": "door",
+   "id": "biblia_inn",
+   "at": "biblia_dawn",
+   "to": "biblia_dawn",
+   "ok": true,
+   "steps": 2,
+   "start": [
+    8,
+    30
+   ],
+   "ms": 3859
+  },
+  {
+   "map": "biblia_dawn",
+   "kind": "door",
+   "id": "biblia_tavern",
+   "at": "biblia_dawn",
+   "to": "biblia_dawn",
+   "ok": true,
+   "steps": 4,
+   "start": [
+    47,
+    30
+   ],
+   "ms": 5912
+  },
+  {
+   "map": "biblia_dawn",
+   "kind": "door",
+   "id": "biblia_shop",
+   "at": "biblia_dawn",
+   "to": "biblia_dawn",
+   "ok": true,
+   "steps": 4,
+   "start": [
+    5,
+    36
+   ],
+   "ms": 6388
+  },
+  {
+   "map": "biblia_dawn",
+   "kind": "door",
+   "id": "biblia_house3",
+   "at": "biblia_dawn",
+   "to": "biblia_dawn",
+   "ok": true,
+   "steps": 5,
+   "start": [
+    15,
+    36
+   ],
+   "ms": 8769
+  },
+  {
+   "map": "biblia_dawn",
+   "kind": "door",
+   "id": "biblia_house5",
+   "at": "biblia_dawn",
+   "to": "biblia_dawn",
+   "ok": true,
+   "steps": 3,
+   "start": [
+    44,
+    36
+   ],
+   "ms": 3337
+  },
+  {
+   "map": "biblia_house3",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "biblia",
+   "to": "biblia",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 6741
+  },
+  {
+   "map": "biblia_house5",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "biblia",
+   "to": "biblia",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 8213
+  },
+  {
+   "map": "biblia_inn",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "biblia",
+   "to": "biblia",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 5203
+  },
+  {
+   "map": "biblia_library",
+   "kind": "exit",
+   "id": "8,11",
+   "at": "biblia",
+   "to": "biblia",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    8,
+    7
+   ],
+   "ms": 6644
+  },
+  {
+   "map": "biblia_records",
+   "kind": "exit",
+   "id": "9,11",
+   "at": "biblia",
+   "to": "biblia",
+   "ok": true,
+   "steps": 2,
+   "why": null,
+   "start": [
+    9,
+    7
+   ],
+   "ms": 6690
+  },
+  {
+   "map": "archive_2",
+   "kind": "stairs",
+   "id": "archive_2_up",
+   "at": [
+    37,
+    2
+   ],
+   "to": "archive_3",
+   "ok": false,
+   "steps": 3,
+   "why": "timeout 90 s",
+   "start": [
+    37,
+    6
+   ],
+   "ms": 210567
+  },
+  {
+   "map": "archive_2",
+   "kind": "stairs",
+   "id": "",
+   "at": [
+    38,
+    2
+   ],
+   "to": "archive_3",
+   "ok": false,
+   "steps": 3,
+   "why": "timeout 90 s",
+   "start": [
+    38,
+    6
+   ],
+   "ms": 213944
+  },
+  {
+   "map": "biblia_records",
+   "kind": "exit",
+   "id": "10,1",
+   "at": "biblia_study",
+   "to": "biblia_study",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    10,
+    5
+   ],
+   "ms": 5371
+  },
+  {
+   "map": "biblia_tavern",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "biblia",
+   "to": "biblia",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 6079
   },
   {
    "map": "caldera_arms",
@@ -285,7 +911,22 @@
     5,
     5
    ],
-   "ms": 5213
+   "ms": 13127
+  },
+  {
+   "map": "caldera_dorga",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "caldera",
+   "to": "caldera",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 6336
   },
   {
    "map": "caldera_granary",
@@ -300,22 +941,7 @@
     5,
     5
    ],
-   "ms": 3813
-  },
-  {
-   "map": "caldera_dorga",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "caldera",
-   "to": "caldera",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    5
-   ],
-   "ms": 9133
+   "ms": 6442
   },
   {
    "map": "caldera_house",
@@ -330,37 +956,7 @@
     5,
     5
    ],
-   "ms": 3999
-  },
-  {
-   "map": "ash_volcano_2",
-   "kind": "stairs",
-   "id": "volcano_2_down",
-   "at": "ash_volcano_1",
-   "to": "ash_volcano_1",
-   "ok": true,
-   "steps": 5,
-   "why": null,
-   "start": [
-    21,
-    30
-   ],
-   "ms": 15514
-  },
-  {
-   "map": "caldera_smithy",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "caldera",
-   "to": "caldera",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    5
-   ],
-   "ms": 3323
+   "ms": 5328
   },
   {
    "map": "caldera_inn",
@@ -375,10 +971,25 @@
     7,
     7
    ],
-   "ms": 3974
+   "ms": 5530
   },
   {
    "map": "caldera_items",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "caldera",
+   "to": "caldera",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 6990
+  },
+  {
+   "map": "caldera_smithy",
    "kind": "exit",
    "id": "5,9",
    "at": "caldera",
@@ -390,7 +1001,7 @@
     5,
     5
    ],
-   "ms": 3755
+   "ms": 6612
   },
   {
    "map": "caldera_tavern",
@@ -399,13 +1010,28 @@
    "at": "caldera",
    "to": "caldera",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     7,
     7
    ],
-   "ms": 3668
+   "ms": 6688
+  },
+  {
+   "map": "caldera_temple",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "caldera",
+   "to": "caldera",
+   "ok": true,
+   "steps": 1,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 3978
   },
   {
    "map": "caldera_toto",
@@ -420,52 +1046,7 @@
     4,
     6
    ],
-   "ms": 3441
-  },
-  {
-   "map": "caldera_temple",
-   "kind": "exit",
-   "id": "7,11",
-   "at": "caldera",
-   "to": "caldera",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    7,
-    7
-   ],
-   "ms": 4084
-  },
-  {
-   "map": "coral",
-   "kind": "door",
-   "id": "coral_house1",
-   "at": "coral_house1",
-   "to": "coral_house1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    28,
-    11
-   ],
-   "ms": 9277
-  },
-  {
-   "map": "coral",
-   "kind": "door",
-   "id": "coral_inn",
-   "at": "coral_inn",
-   "to": "coral_inn",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    6,
-    26
-   ],
-   "ms": 8780
+   "ms": 4988
   },
   {
    "map": "coral",
@@ -480,22 +1061,37 @@
     7,
     11
    ],
-   "ms": 10475
+   "ms": 11883
   },
   {
    "map": "coral",
    "kind": "door",
-   "id": "coral_house2",
-   "at": "coral_house2",
-   "to": "coral_house2",
+   "id": "coral_house1",
+   "at": "coral_house1",
+   "to": "coral_house1",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
     28,
+    11
+   ],
+   "ms": 7166
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_inn",
+   "at": "coral_inn",
+   "to": "coral_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
     26
    ],
-   "ms": 3738
+   "ms": 6384
   },
   {
    "map": "coral",
@@ -510,7 +1106,22 @@
     14,
     26
    ],
-   "ms": 3838
+   "ms": 5976
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_house2",
+   "at": "coral_house2",
+   "to": "coral_house2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    28,
+    26
+   ],
+   "ms": 3943
   },
   {
    "map": "coral",
@@ -525,7 +1136,7 @@
     37,
     26
    ],
-   "ms": 3245
+   "ms": 5410
   },
   {
    "map": "coral",
@@ -540,7 +1151,22 @@
     7,
     39
    ],
-   "ms": 3690
+   "ms": 4690
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_arms",
+   "at": "coral_arms",
+   "to": "coral_arms",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    13,
+    39
+   ],
+   "ms": 4245
   },
   {
    "map": "coral",
@@ -555,142 +1181,7 @@
     30,
     39
    ],
-   "ms": 3619
-  },
-  {
-   "map": "coral",
-   "kind": "door",
-   "id": "coral_arms",
-   "at": "coral_arms",
-   "to": "coral_arms",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    13,
-    39
-   ],
-   "ms": 4271
-  },
-  {
-   "map": "coral_arms",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "coral",
-   "to": "coral",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    5
-   ],
-   "ms": 3924
-  },
-  {
-   "map": "coral",
-   "kind": "exit",
-   "id": "21,0",
-   "at": "i_cliff",
-   "to": "i_cliff",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    21,
-    4
-   ],
-   "ms": 5344
-  },
-  {
-   "map": "coral_guild",
-   "kind": "exit",
-   "id": "8,11",
-   "at": "coral",
-   "to": "coral",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    8,
-    7
-   ],
-   "ms": 4129
-  },
-  {
-   "map": "coral_harbormaster",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "coral",
-   "to": "coral",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    5
-   ],
-   "ms": 4404
-  },
-  {
-   "map": "coral_house1",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "coral",
-   "to": "coral",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    5
-   ],
-   "ms": 3174
-  },
-  {
-   "map": "coral_house2",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "coral",
-   "to": "coral",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    4,
-    6
-   ],
-   "ms": 2879
-  },
-  {
-   "map": "coral_house3",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "coral",
-   "to": "coral",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    5
-   ],
-   "ms": 4628
-  },
-  {
-   "map": "coral_inn",
-   "kind": "exit",
-   "id": "7,11",
-   "at": "coral",
-   "to": "coral",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    7,
-    7
-   ],
-   "ms": 3765
+   "ms": 6420
   },
   {
    "map": "coral",
@@ -705,10 +1196,25 @@
     36,
     56
    ],
-   "ms": 18784
+   "ms": 29300
   },
   {
-   "map": "coral_items",
+   "map": "coral",
+   "kind": "exit",
+   "id": "21,0",
+   "at": "i_cliff",
+   "to": "i_cliff",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    21,
+    4
+   ],
+   "ms": 10211
+  },
+  {
+   "map": "coral_arms",
    "kind": "exit",
    "id": "5,9",
    "at": "coral",
@@ -720,7 +1226,112 @@
     5,
     5
    ],
-   "ms": 3907
+   "ms": 6147
+  },
+  {
+   "map": "coral_guild",
+   "kind": "exit",
+   "id": "8,11",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    8,
+    7
+   ],
+   "ms": 7687
+  },
+  {
+   "map": "coral_harbormaster",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 6001
+  },
+  {
+   "map": "coral_house1",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 4847
+  },
+  {
+   "map": "coral_house2",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    6
+   ],
+   "ms": 5463
+  },
+  {
+   "map": "coral_house3",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 6119
+  },
+  {
+   "map": "coral_inn",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "coral",
+   "to": "coral",
+   "ok": false,
+   "steps": 4,
+   "why": "arrived at coral 8,26 s (want 8,25 s)",
+   "start": [
+    7,
+    7
+   ],
+   "ms": 5869
+  },
+  {
+   "map": "coral_items",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 6001
   },
   {
    "map": "coral_tavern",
@@ -735,7 +1346,7 @@
     7,
     7
    ],
-   "ms": 4772
+   "ms": 7280
   },
   {
    "map": "dovan",
@@ -744,13 +1355,13 @@
    "at": "dovan_hall",
    "to": "dovan_hall",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     11,
     14
    ],
-   "ms": 10899
+   "ms": 15248
   },
   {
    "map": "dovan",
@@ -759,13 +1370,13 @@
    "at": "dovan_guild",
    "to": "dovan_guild",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     30,
     27
    ],
-   "ms": 10350
+   "ms": 5553
   },
   {
    "map": "dovan",
@@ -780,7 +1391,7 @@
     10,
     28
    ],
-   "ms": 10220
+   "ms": 5606
   },
   {
    "map": "dovan",
@@ -789,13 +1400,13 @@
    "at": "dovan_house",
    "to": "dovan_house",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     20,
     27
    ],
-   "ms": 3557
+   "ms": 6334
   },
   {
    "map": "dovan",
@@ -804,13 +1415,13 @@
    "at": "dovan_items",
    "to": "dovan_items",
    "ok": true,
-   "steps": 5,
+   "steps": 2,
    "why": null,
    "start": [
     9,
     44
    ],
-   "ms": 4583
+   "ms": 5220
   },
   {
    "map": "dovan",
@@ -819,13 +1430,13 @@
    "at": "dovan_inn",
    "to": "dovan_inn",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     19,
     45
    ],
-   "ms": 4584
+   "ms": 5700
   },
   {
    "map": "dovan",
@@ -834,13 +1445,13 @@
    "at": "dovan_forge",
    "to": "dovan_forge",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     34,
     45
    ],
-   "ms": 3480
+   "ms": 4086
   },
   {
    "map": "dovan",
@@ -855,7 +1466,22 @@
     45,
     44
    ],
-   "ms": 4270
+   "ms": 5199
+  },
+  {
+   "map": "dovan",
+   "kind": "door",
+   "id": "",
+   "at": "mine_1",
+   "to": "mine_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    31,
+    7
+   ],
+   "ms": 31247
   },
   {
    "map": "dovan",
@@ -864,13 +1490,13 @@
    "at": "g_valley",
    "to": "g_valley",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     26,
     43
    ],
-   "ms": 3624
+   "ms": 5898
   },
   {
    "map": "dovan_forge",
@@ -879,13 +1505,13 @@
    "at": "dovan",
    "to": "dovan",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     8,
     7
    ],
-   "ms": 3882
+   "ms": 6677
   },
   {
    "map": "dovan_guild",
@@ -894,28 +1520,13 @@
    "at": "dovan",
    "to": "dovan",
    "ok": true,
-   "steps": 4,
+   "steps": 2,
    "why": null,
    "start": [
     7,
     7
    ],
-   "ms": 3676
-  },
-  {
-   "map": "dovan_house",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "dovan",
-   "to": "dovan",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    4,
-    6
-   ],
-   "ms": 2871
+   "ms": 6282
   },
   {
    "map": "dovan_hall",
@@ -930,7 +1541,22 @@
     8,
     7
    ],
-   "ms": 4363
+   "ms": 6867
+  },
+  {
+   "map": "dovan_house",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "dovan",
+   "to": "dovan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    6
+   ],
+   "ms": 5350
   },
   {
    "map": "dovan_house2",
@@ -945,7 +1571,7 @@
     4,
     4
    ],
-   "ms": 3110
+   "ms": 6428
   },
   {
    "map": "dovan_inn",
@@ -954,13 +1580,13 @@
    "at": "dovan",
    "to": "dovan",
    "ok": true,
-   "steps": 4,
+   "steps": 2,
    "why": null,
    "start": [
     7,
     7
    ],
-   "ms": 4481
+   "ms": 4664
   },
   {
    "map": "dovan_items",
@@ -975,7 +1601,7 @@
     5,
     5
    ],
-   "ms": 4060
+   "ms": 13922
   },
   {
    "map": "dovan_tavern",
@@ -990,48 +1616,7 @@
     7,
     7
    ],
-   "ms": 5063
-  },
-  {
-   "map": "dovan",
-   "kind": "door",
-   "id": "",
-   "at": "mine_1",
-   "to": "mine_1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    31,
-    7
-   ],
-   "ms": 21170
-  },
-  {
-   "map": "elder_2",
-   "kind": "stairs",
-   "id": "elder_2_up",
-   "at": [
-    22,
-    5
-   ],
-   "to": "elder_1",
-   "ok": false,
-   "why": "setup: not on elder_2 (on mine_1)",
-   "ms": 4897
-  },
-  {
-   "map": "f_cape",
-   "kind": "door",
-   "id": "",
-   "at": [
-    31,
-    36
-   ],
-   "to": "lighthouse_1",
-   "ok": false,
-   "why": "setup: not on f_cape (on elder_2)",
-   "ms": 4325
+   "ms": 5144
   },
   {
    "map": "elder_1",
@@ -1040,13 +1625,13 @@
    "at": "elder_2",
    "to": "elder_2",
    "ok": true,
-   "steps": 5,
+   "steps": 3,
    "why": null,
    "start": [
     25,
     26
    ],
-   "ms": 13139
+   "ms": 8856
   },
   {
    "map": "elder_1",
@@ -1061,22 +1646,73 @@
     25,
     43
    ],
-   "ms": 17140
+   "ms": 11197
   },
   {
-   "map": "f_cape",
-   "kind": "exit",
-   "id": "48,6",
-   "at": "pharos",
-   "to": "pharos",
+   "map": "elder_2",
+   "kind": "stairs",
+   "id": "elder_2_up",
+   "at": "elder_1",
+   "to": "elder_1",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    48,
-    10
+    24,
+    7
    ],
-   "ms": 11838
+   "ms": 8726
+  },
+  {
+   "map": "biblia_study",
+   "kind": "exit",
+   "id": "6,9",
+   "at": [
+    6,
+    9
+   ],
+   "to": "biblia_records",
+   "ok": false,
+   "steps": 1,
+   "why": "timeout 90 s",
+   "start": [
+    6,
+    5
+   ],
+   "ms": 398057
+  },
+  {
+   "map": "biblia_shop",
+   "kind": "exit",
+   "id": "6,9",
+   "at": [
+    6,
+    9
+   ],
+   "to": "biblia",
+   "ok": false,
+   "steps": 1,
+   "why": "timeout 90 s",
+   "start": [
+    6,
+    5
+   ],
+   "ms": 402666
+  },
+  {
+   "map": "f_cape",
+   "kind": "door",
+   "id": "",
+   "at": "lighthouse_1",
+   "to": "lighthouse_1",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    30,
+    39
+   ],
+   "ms": 27931
   },
   {
    "map": "f_cross",
@@ -1085,13 +1721,13 @@
    "at": "f_lookout",
    "to": "f_lookout",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     28,
     35
    ],
-   "ms": 12146
+   "ms": 12845
   },
   {
    "map": "f_cross",
@@ -1106,7 +1742,7 @@
     1,
     19
    ],
-   "ms": 9689
+   "ms": 6688
   },
   {
    "map": "f_fern",
@@ -1121,7 +1757,7 @@
     51,
     12
    ],
-   "ms": 12886
+   "ms": 6692
   },
   {
    "map": "f_fern",
@@ -1136,7 +1772,7 @@
     29,
     4
    ],
-   "ms": 14239
+   "ms": 12600
   },
   {
    "map": "f_fern",
@@ -1145,13 +1781,13 @@
    "at": "f_windhill",
    "to": "f_windhill",
    "ok": true,
-   "steps": 4,
+   "steps": 2,
    "why": null,
    "start": [
     4,
     16
    ],
-   "ms": 5290
+   "ms": 6649
   },
   {
    "map": "f_fern",
@@ -1166,7 +1802,7 @@
     30,
     39
    ],
-   "ms": 8925
+   "ms": 8376
   },
   {
    "map": "f_hut",
@@ -1175,28 +1811,13 @@
    "at": "hut",
    "to": "hut",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     23,
     23
    ],
-   "ms": 7946
-  },
-  {
-   "map": "f_hut",
-   "kind": "exit",
-   "id": "0,24",
-   "at": "f_fern",
-   "to": "f_fern",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    4,
-    24
-   ],
-   "ms": 4742
+   "ms": 9474
   },
   {
    "map": "f_hut",
@@ -1211,22 +1832,22 @@
     51,
     19
    ],
-   "ms": 9018
+   "ms": 6186
   },
   {
-   "map": "f_cape",
+   "map": "f_hut",
    "kind": "exit",
-   "id": "0,8",
-   "at": "f_roa",
-   "to": "f_roa",
+   "id": "0,24",
+   "at": "f_fern",
+   "to": "f_fern",
    "ok": true,
-   "steps": 56,
+   "steps": 4,
    "why": null,
    "start": [
-    1,
-    5
+    4,
+    24
    ],
-   "ms": 56884
+   "ms": 5843
   },
   {
    "map": "f_lookout",
@@ -1241,97 +1862,7 @@
     24,
     35
    ],
-   "ms": 9258
-  },
-  {
-   "map": "f_roa",
-   "kind": "exit",
-   "id": "0,19",
-   "at": "roa",
-   "to": "roa",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    3,
-    18
-   ],
-   "ms": 7142
-  },
-  {
-   "map": "f_roa",
-   "kind": "exit",
-   "id": "31,0",
-   "at": "f_lookout",
-   "to": "f_lookout",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    31,
-    4
-   ],
-   "ms": 7192
-  },
-  {
-   "map": "f_roa",
-   "kind": "exit",
-   "id": "51,29",
-   "at": "f_cape",
-   "to": "f_cape",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    51,
-    25
-   ],
-   "ms": 6560
-  },
-  {
-   "map": "f_south",
-   "kind": "exit",
-   "id": "30,0",
-   "at": "f_fern",
-   "to": "f_fern",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    30,
-    4
-   ],
-   "ms": 8508
-  },
-  {
-   "map": "f_windhill",
-   "kind": "exit",
-   "id": "51,30",
-   "at": "f_fern",
-   "to": "f_fern",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    49,
-    28
-   ],
-   "ms": 11698
-  },
-  {
-   "map": "f_windhill",
-   "kind": "exit",
-   "id": "12,0",
-   "at": "yura",
-   "to": "yura",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    12,
-    4
-   ],
-   "ms": 13339
+   "ms": 8987
   },
   {
    "map": "f_roa",
@@ -1346,7 +1877,97 @@
     23,
     20
    ],
-   "ms": 36772
+   "ms": 27788
+  },
+  {
+   "map": "f_roa",
+   "kind": "exit",
+   "id": "0,19",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    18
+   ],
+   "ms": 6925
+  },
+  {
+   "map": "f_roa",
+   "kind": "exit",
+   "id": "31,0",
+   "at": "f_lookout",
+   "to": "f_lookout",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    31,
+    4
+   ],
+   "ms": 7616
+  },
+  {
+   "map": "f_roa",
+   "kind": "exit",
+   "id": "51,29",
+   "at": "f_cape",
+   "to": "f_cape",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    51,
+    25
+   ],
+   "ms": 7876
+  },
+  {
+   "map": "f_south",
+   "kind": "exit",
+   "id": "30,0",
+   "at": "f_fern",
+   "to": "f_fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    30,
+    4
+   ],
+   "ms": 8833
+  },
+  {
+   "map": "f_windhill",
+   "kind": "exit",
+   "id": "51,30",
+   "at": "f_fern",
+   "to": "f_fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    49,
+    28
+   ],
+   "ms": 7953
+  },
+  {
+   "map": "f_windhill",
+   "kind": "exit",
+   "id": "12,0",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    12,
+    4
+   ],
+   "ms": 10217
   },
   {
    "map": "fern",
@@ -1355,28 +1976,13 @@
    "at": "fern_inn",
    "to": "fern_inn",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     15,
     39
    ],
-   "ms": 18134
-  },
-  {
-   "map": "fern",
-   "kind": "door",
-   "id": "fern_u_search",
-   "at": "fern_search",
-   "to": "fern_search",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    7,
-    36
-   ],
-   "ms": 10895
+   "ms": 5754
   },
   {
    "map": "fern",
@@ -1391,7 +1997,22 @@
     22,
     37
    ],
-   "ms": 14772
+   "ms": 3612
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_u_search",
+   "at": "fern_search",
+   "to": "fern_search",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    36
+   ],
+   "ms": 3564
   },
   {
    "map": "fern",
@@ -1406,7 +2027,7 @@
     52,
     19
    ],
-   "ms": 4742
+   "ms": 4341
   },
   {
    "map": "fern",
@@ -1421,7 +2042,7 @@
     50,
     11
    ],
-   "ms": 6668
+   "ms": 3559
   },
   {
    "map": "fern",
@@ -1436,7 +2057,7 @@
     16,
     47
    ],
-   "ms": 6125
+   "ms": 4232
   },
   {
    "map": "fern",
@@ -1451,7 +2072,7 @@
     40,
     44
    ],
-   "ms": 5926
+   "ms": 4165
   },
   {
    "map": "fern",
@@ -1466,7 +2087,7 @@
     3,
     22
    ],
-   "ms": 5648
+   "ms": 4229
   },
   {
    "map": "fern",
@@ -1475,13 +2096,13 @@
    "at": "fern_home3",
    "to": "fern_home3",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     45,
     31
    ],
-   "ms": 7260
+   "ms": 3716
   },
   {
    "map": "fern",
@@ -1496,7 +2117,7 @@
     22,
     44
    ],
-   "ms": 6724
+   "ms": 2213
   },
   {
    "map": "fern",
@@ -1505,13 +2126,28 @@
    "at": "f_fern",
    "to": "f_fern",
    "ok": true,
-   "steps": 3,
+   "steps": 4,
    "why": null,
    "start": [
     28,
     51
    ],
-   "ms": 6632
+   "ms": 2492
+  },
+  {
+   "map": "fern",
+   "kind": "exit",
+   "id": "28,0",
+   "at": "verda_1",
+   "to": "verda_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    28,
+    4
+   ],
+   "ms": 4000
   },
   {
    "map": "fern_gord",
@@ -1520,13 +2156,13 @@
    "at": "fern",
    "to": "fern",
    "ok": true,
-   "steps": 3,
+   "steps": 4,
    "why": null,
    "start": [
     4,
     3
    ],
-   "ms": 5379
+   "ms": 2700
   },
   {
    "map": "fern_home1",
@@ -1541,22 +2177,7 @@
     3,
     3
    ],
-   "ms": 6471
-  },
-  {
-   "map": "fern",
-   "kind": "exit",
-   "id": "28,0",
-   "at": "verda_1",
-   "to": "verda_1",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
-    28,
-    4
-   ],
-   "ms": 10695
+   "ms": 2509
   },
   {
    "map": "fern_home2",
@@ -1571,7 +2192,7 @@
     3,
     3
    ],
-   "ms": 6917
+   "ms": 2639
   },
   {
    "map": "fern_home3",
@@ -1586,22 +2207,7 @@
     4,
     2
    ],
-   "ms": 4132
-  },
-  {
-   "map": "fern_pim_home",
-   "kind": "exit",
-   "id": "4,7",
-   "at": "fern",
-   "to": "fern",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    3,
-    4
-   ],
-   "ms": 4311
+   "ms": 2590
   },
   {
    "map": "fern_inn",
@@ -1616,7 +2222,22 @@
     5,
     5
    ],
-   "ms": 8132
+   "ms": 2546
+  },
+  {
+   "map": "fern_pim_home",
+   "kind": "exit",
+   "id": "4,7",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    4
+   ],
+   "ms": 2795
   },
   {
    "map": "fern_rita",
@@ -1631,7 +2252,7 @@
     5,
     5
    ],
-   "ms": 4936
+   "ms": 2959
   },
   {
    "map": "fern_search",
@@ -1646,7 +2267,7 @@
     4,
     5
    ],
-   "ms": 4300
+   "ms": 2962
   },
   {
    "map": "fern_shed",
@@ -1661,7 +2282,7 @@
     2,
     3
    ],
-   "ms": 4567
+   "ms": 2494
   },
   {
    "map": "fern_shop",
@@ -1676,7 +2297,7 @@
     4,
     4
    ],
-   "ms": 6508
+   "ms": 2695
   },
   {
    "map": "g_pass",
@@ -1691,22 +2312,7 @@
     0,
     14
    ],
-   "ms": 10738
-  },
-  {
-   "map": "g_rail",
-   "kind": "door",
-   "id": "",
-   "at": "mine_hermit",
-   "to": "mine_hermit",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
-    40,
-    10
-   ],
-   "ms": 9950
+   "ms": 4420
   },
   {
    "map": "g_pass",
@@ -1721,7 +2327,22 @@
     49,
     15
    ],
-   "ms": 12700
+   "ms": 3189
+  },
+  {
+   "map": "g_rail",
+   "kind": "door",
+   "id": "",
+   "at": "mine_hermit",
+   "to": "mine_hermit",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    40,
+    10
+   ],
+   "ms": 2094
   },
   {
    "map": "g_rail",
@@ -1736,7 +2357,22 @@
     0,
     16
    ],
-   "ms": 7747
+   "ms": 2491
+  },
+  {
+   "map": "g_valley",
+   "kind": "door",
+   "id": "",
+   "at": "dovan",
+   "to": "dovan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    27,
+    12
+   ],
+   "ms": 2532
   },
   {
    "map": "g_valley",
@@ -1751,22 +2387,7 @@
     0,
     16
    ],
-   "ms": 6170
-  },
-  {
-   "map": "g_valley",
-   "kind": "door",
-   "id": "",
-   "at": "dovan",
-   "to": "dovan",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    27,
-    12
-   ],
-   "ms": 7050
+   "ms": 2309
   },
   {
    "map": "g_valley",
@@ -1781,7 +2402,7 @@
     53,
     18
    ],
-   "ms": 5398
+   "ms": 2484
   },
   {
    "map": "g_valley",
@@ -1796,7 +2417,43 @@
     0,
     25
    ],
-   "ms": 8768
+   "ms": 5297
+  },
+  {
+   "map": "f_cape",
+   "kind": "exit",
+   "id": "48,6",
+   "at": [
+    48,
+    6
+   ],
+   "to": "pharos",
+   "ok": false,
+   "steps": 1,
+   "why": "timeout 90 s",
+   "start": [
+    48,
+    10
+   ],
+   "ms": 291472
+  },
+  {
+   "map": "f_cape",
+   "kind": "exit",
+   "id": "0,8",
+   "at": [
+    0,
+    8
+   ],
+   "to": "f_roa",
+   "ok": false,
+   "steps": 1,
+   "why": "timeout 90 s",
+   "start": [
+    1,
+    5
+   ],
+   "ms": 292843
   },
   {
    "map": "ghost_ship_1",
@@ -1811,7 +2468,7 @@
     24,
     15
    ],
-   "ms": 16952
+   "ms": 7048
   },
   {
    "map": "ghost_ship_2",
@@ -1820,13 +2477,13 @@
    "at": "ghost_ship_1",
    "to": "ghost_ship_1",
    "ok": true,
-   "steps": 5,
+   "steps": 4,
    "why": null,
    "start": [
     7,
     15
    ],
-   "ms": 9491
+   "ms": 2566
   },
   {
    "map": "ghost_ship_2",
@@ -1841,7 +2498,7 @@
     41,
     17
    ],
-   "ms": 7482
+   "ms": 4338
   },
   {
    "map": "ghost_ship_3",
@@ -1856,22 +2513,7 @@
     47,
     18
    ],
-   "ms": 3963
-  },
-  {
-   "map": "ghost_ship_1",
-   "kind": "door",
-   "id": "",
-   "at": "nerei",
-   "to": "nerei",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    28,
-    21
-   ],
-   "ms": 39111
+   "ms": 2795
   },
   {
    "map": "haimi_inn",
@@ -1886,52 +2528,7 @@
     6,
     8
    ],
-   "ms": 4371
-  },
-  {
-   "map": "ghost_ship_1",
-   "kind": "door",
-   "id": "",
-   "at": "nerei",
-   "to": "nerei",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    29,
-    21
-   ],
-   "ms": 38057
-  },
-  {
-   "map": "i_cape",
-   "kind": "exit",
-   "id": "0,25",
-   "at": "i_cove",
-   "to": "i_cove",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    1,
-    22
-   ],
-   "ms": 7942
-  },
-  {
-   "map": "i_cape",
-   "kind": "exit",
-   "id": "21,0",
-   "at": "nerei",
-   "to": "nerei",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    21,
-    4
-   ],
-   "ms": 4495
+   "ms": 2314
   },
   {
    "map": "hut",
@@ -1946,7 +2543,37 @@
     5,
     4
    ],
-   "ms": 10850
+   "ms": 3093
+  },
+  {
+   "map": "i_cape",
+   "kind": "exit",
+   "id": "0,25",
+   "at": "i_cove",
+   "to": "i_cove",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    1,
+    22
+   ],
+   "ms": 4332
+  },
+  {
+   "map": "i_cape",
+   "kind": "exit",
+   "id": "21,0",
+   "at": "nerei",
+   "to": "nerei",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    21,
+    4
+   ],
+   "ms": 4122
   },
   {
    "map": "i_cliff",
@@ -1961,7 +2588,7 @@
     13,
     33
    ],
-   "ms": 7679
+   "ms": 2689
   },
   {
    "map": "i_cliff",
@@ -1976,7 +2603,22 @@
     51,
     15
    ],
-   "ms": 8976
+   "ms": 2553
+  },
+  {
+   "map": "i_cove",
+   "kind": "stairs",
+   "id": "",
+   "at": "isles_cave_1",
+   "to": "isles_cave_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    47,
+    29
+   ],
+   "ms": 14878
   },
   {
    "map": "i_cove",
@@ -1991,7 +2633,7 @@
     0,
     6
    ],
-   "ms": 6076
+   "ms": 2502
   },
   {
    "map": "i_cove",
@@ -2006,7 +2648,7 @@
     55,
     7
    ],
-   "ms": 4437
+   "ms": 2362
   },
   {
    "map": "i_light",
@@ -2021,7 +2663,7 @@
     20,
     13
    ],
-   "ms": 7907
+   "ms": 5490
   },
   {
    "map": "isles_cave_1",
@@ -2030,28 +2672,13 @@
    "at": "isles_cave_2",
    "to": "isles_cave_2",
    "ok": true,
-   "steps": 3,
+   "steps": 4,
    "why": null,
    "start": [
     23,
     5
    ],
-   "ms": 13119
-  },
-  {
-   "map": "isles_cave_2",
-   "kind": "stairs",
-   "id": "isles_cave_2_down",
-   "at": "isles_cave_1",
-   "to": "isles_cave_1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    22,
-    30
-   ],
-   "ms": 5460
+   "ms": 3749
   },
   {
    "map": "isles_cave_1",
@@ -2066,22 +2693,22 @@
     22,
     35
    ],
-   "ms": 11310
+   "ms": 2837
   },
   {
-   "map": "i_cove",
+   "map": "isles_cave_2",
    "kind": "stairs",
-   "id": "",
+   "id": "isles_cave_2_down",
    "at": "isles_cave_1",
    "to": "isles_cave_1",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    47,
-    29
+    22,
+    30
    ],
-   "ms": 33938
+   "ms": 4243
   },
   {
    "map": "isles_lamproom",
@@ -2090,13 +2717,13 @@
    "at": "i_light",
    "to": "i_light",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     4,
     5
    ],
-   "ms": 7513
+   "ms": 2838
   },
   {
    "map": "lighthouse_1",
@@ -2111,7 +2738,7 @@
     28,
     8
    ],
-   "ms": 9279
+   "ms": 5544
   },
   {
    "map": "lighthouse_1",
@@ -2125,22 +2752,7 @@
     17,
     17
    ],
-   "ms": 11000
-  },
-  {
-   "map": "lighthouse_1",
-   "kind": "exit",
-   "id": "15,31",
-   "at": "f_cape",
-   "to": "f_cape",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
-    15,
-    27
-   ],
-   "ms": 6143
+   "ms": 3821
   },
   {
    "map": "lighthouse_1",
@@ -2154,7 +2766,22 @@
     18,
     17
    ],
-   "ms": 8712
+   "ms": 2800
+  },
+  {
+   "map": "lighthouse_1",
+   "kind": "exit",
+   "id": "15,31",
+   "at": "f_cape",
+   "to": "f_cape",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    15,
+    27
+   ],
+   "ms": 2378
   },
   {
    "map": "lighthouse_2",
@@ -2169,7 +2796,7 @@
     26,
     27
    ],
-   "ms": 4728
+   "ms": 2373
   },
   {
    "map": "lighthouse_2",
@@ -2184,7 +2811,7 @@
     16,
     20
    ],
-   "ms": 5511
+   "ms": 2612
   },
   {
    "map": "lighthouse_3",
@@ -2199,7 +2826,7 @@
     12,
     15
    ],
-   "ms": 11021
+   "ms": 6631
   },
   {
    "map": "loch",
@@ -2214,7 +2841,7 @@
     20,
     15
    ],
-   "ms": 10654
+   "ms": 7084
   },
   {
    "map": "loch",
@@ -2223,43 +2850,13 @@
    "at": "loch_tavern",
    "to": "loch_tavern",
    "ok": true,
-   "steps": 5,
+   "steps": 6,
    "why": null,
    "start": [
     27,
     15
    ],
-   "ms": 12231
-  },
-  {
-   "map": "loch",
-   "kind": "door",
-   "id": "loch_hall",
-   "at": "loch_hall",
-   "to": "loch_hall",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    7,
-    21
-   ],
-   "ms": 4945
-  },
-  {
-   "map": "loch",
-   "kind": "door",
-   "id": "loch_tower",
-   "at": "loch_tower",
-   "to": "loch_tower",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    43,
-    19
-   ],
-   "ms": 2620
+   "ms": 3687
   },
   {
    "map": "loch",
@@ -2274,7 +2871,37 @@
     35,
     15
    ],
-   "ms": 10333
+   "ms": 2661
+  },
+  {
+   "map": "loch",
+   "kind": "door",
+   "id": "loch_hall",
+   "at": "loch_hall",
+   "to": "loch_hall",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    21
+   ],
+   "ms": 3232
+  },
+  {
+   "map": "loch",
+   "kind": "door",
+   "id": "loch_tower",
+   "at": "loch_tower",
+   "to": "loch_tower",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    43,
+    19
+   ],
+   "ms": 2211
   },
   {
    "map": "loch",
@@ -2289,7 +2916,7 @@
     5,
     41
    ],
-   "ms": 3261
+   "ms": 2633
   },
   {
    "map": "loch",
@@ -2304,7 +2931,7 @@
     32,
     39
    ],
-   "ms": 4728
+   "ms": 3013
   },
   {
    "map": "loch",
@@ -2319,7 +2946,7 @@
     19,
     46
    ],
-   "ms": 4099
+   "ms": 2412
   },
   {
    "map": "loch",
@@ -2334,7 +2961,7 @@
     47,
     38
    ],
-   "ms": 3605
+   "ms": 2265
   },
   {
    "map": "loch",
@@ -2349,7 +2976,7 @@
     39,
     48
    ],
-   "ms": 3220
+   "ms": 2179
   },
   {
    "map": "loch",
@@ -2364,7 +2991,7 @@
     3,
     20
    ],
-   "ms": 4257
+   "ms": 2771
   },
   {
    "map": "loch",
@@ -2379,7 +3006,7 @@
     53,
     18
    ],
-   "ms": 5394
+   "ms": 3455
   },
   {
    "map": "loch_arms",
@@ -2388,13 +3015,13 @@
    "at": "loch",
    "to": "loch",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     5,
     5
    ],
-   "ms": 4392
+   "ms": 2708
   },
   {
    "map": "loch_beppo",
@@ -2403,13 +3030,13 @@
    "at": "loch",
    "to": "loch",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     5,
     5
    ],
-   "ms": 3990
+   "ms": 3608
   },
   {
    "map": "loch_emma",
@@ -2424,22 +3051,7 @@
     5,
     5
    ],
-   "ms": 3960
-  },
-  {
-   "map": "loch_inn",
-   "kind": "exit",
-   "id": "7,11",
-   "at": "loch",
-   "to": "loch",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    7,
-    7
-   ],
-   "ms": 2768
+   "ms": 4228
   },
   {
    "map": "loch_hall",
@@ -2454,7 +3066,22 @@
     10,
     9
    ],
-   "ms": 4536
+   "ms": 3174
+  },
+  {
+   "map": "loch_inn",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 2383
   },
   {
    "map": "loch_items",
@@ -2469,7 +3096,7 @@
     5,
     5
    ],
-   "ms": 3327
+   "ms": 2818
   },
   {
    "map": "loch_klaus",
@@ -2484,7 +3111,7 @@
     5,
     5
    ],
-   "ms": 4176
+   "ms": 2657
   },
   {
    "map": "loch_mayor",
@@ -2499,7 +3126,7 @@
     5,
     5
    ],
-   "ms": 4878
+   "ms": 2356
   },
   {
    "map": "loch_tavern",
@@ -2514,7 +3141,7 @@
     7,
     7
    ],
-   "ms": 4029
+   "ms": 3078
   },
   {
    "map": "loch_tower",
@@ -2529,7 +3156,7 @@
     5,
     7
    ],
-   "ms": 3969
+   "ms": 2921
   },
   {
    "map": "m_bog",
@@ -2544,22 +3171,7 @@
     25,
     4
    ],
-   "ms": 7199
-  },
-  {
-   "map": "m_fen",
-   "kind": "exit",
-   "id": "26,43",
-   "at": "m_bog",
-   "to": "m_bog",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    26,
-    39
-   ],
-   "ms": 4689
+   "ms": 3530
   },
   {
    "map": "m_fen",
@@ -2574,7 +3186,22 @@
     20,
     4
    ],
-   "ms": 7013
+   "ms": 2445
+  },
+  {
+   "map": "m_fen",
+   "kind": "exit",
+   "id": "26,43",
+   "at": "m_bog",
+   "to": "m_bog",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    26,
+    39
+   ],
+   "ms": 2495
   },
   {
    "map": "m_fen",
@@ -2589,22 +3216,7 @@
     55,
     26
    ],
-   "ms": 3834
-  },
-  {
-   "map": "m_lotus",
-   "kind": "exit",
-   "id": "30,0",
-   "at": "m_manor",
-   "to": "m_manor",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
-    30,
-    4
-   ],
-   "ms": 3302
+   "ms": 2815
   },
   {
    "map": "m_lotus",
@@ -2619,37 +3231,73 @@
     0,
     16
    ],
-   "ms": 4663
+   "ms": 2156
   },
   {
-   "map": "m_manor",
+   "map": "m_lotus",
    "kind": "exit",
-   "id": "0,20",
-   "at": "loch",
-   "to": "loch",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
-    4,
-    20
-   ],
-   "ms": 2927
-  },
-  {
-   "map": "m_manor",
-   "kind": "exit",
-   "id": "23,43",
-   "at": "m_lotus",
-   "to": "m_lotus",
+   "id": "30,0",
+   "at": "m_manor",
+   "to": "m_manor",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    23,
-    39
+    30,
+    4
    ],
-   "ms": 4636
+   "ms": 2500
+  },
+  {
+   "map": "ghost_ship_1",
+   "kind": "door",
+   "id": "",
+   "at": [
+    28,
+    25
+   ],
+   "to": "nerei",
+   "ok": false,
+   "steps": 1,
+   "why": "timeout 90 s",
+   "start": [
+    28,
+    21
+   ],
+   "ms": 191594
+  },
+  {
+   "map": "ghost_ship_1",
+   "kind": "door",
+   "id": "",
+   "at": [
+    29,
+    25
+   ],
+   "to": "nerei",
+   "ok": false,
+   "steps": 1,
+   "why": "timeout 90 s",
+   "start": [
+    29,
+    21
+   ],
+   "ms": 191146
+  },
+  {
+   "map": "m_manor",
+   "kind": "door",
+   "id": "",
+   "at": "marsh_manor_1",
+   "to": "marsh_manor_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    38,
+    13
+   ],
+   "ms": 13720
   },
   {
    "map": "m_north",
@@ -2664,7 +3312,7 @@
     24,
     4
    ],
-   "ms": 7736
+   "ms": 5956
   },
   {
    "map": "m_north",
@@ -2679,7 +3327,22 @@
     25,
     35
    ],
-   "ms": 5845
+   "ms": 4058
+  },
+  {
+   "map": "m_west",
+   "kind": "exit",
+   "id": "19,0",
+   "at": "m_north",
+   "to": "m_north",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    19,
+    4
+   ],
+   "ms": 4438
   },
   {
    "map": "m_west",
@@ -2694,22 +3357,7 @@
     51,
     20
    ],
-   "ms": 4558
-  },
-  {
-   "map": "m_west",
-   "kind": "exit",
-   "id": "19,0",
-   "at": "m_north",
-   "to": "m_north",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
-    19,
-    4
-   ],
-   "ms": 6915
+   "ms": 6052
   },
   {
    "map": "m_west",
@@ -2724,37 +3372,7 @@
     20,
     39
    ],
-   "ms": 4318
-  },
-  {
-   "map": "m_manor",
-   "kind": "door",
-   "id": "",
-   "at": "marsh_manor_1",
-   "to": "marsh_manor_1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    38,
-    13
-   ],
-   "ms": 22008
-  },
-  {
-   "map": "marsh_manor_1",
-   "kind": "exit",
-   "id": "22,39",
-   "at": "m_manor",
-   "to": "m_manor",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
-    22,
-    35
-   ],
-   "ms": 4531
+   "ms": 4478
   },
   {
    "map": "marsh_bog",
@@ -2763,13 +3381,13 @@
    "at": "m_bog",
    "to": "m_bog",
    "ok": true,
-   "steps": 3,
+   "steps": 4,
    "why": null,
    "start": [
     28,
     47
    ],
-   "ms": 10901
+   "ms": 9757
   },
   {
    "map": "marsh_manor_1",
@@ -2784,7 +3402,22 @@
     23,
     7
    ],
-   "ms": 10130
+   "ms": 7337
+  },
+  {
+   "map": "marsh_manor_1",
+   "kind": "exit",
+   "id": "22,39",
+   "at": "m_manor",
+   "to": "m_manor",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    22,
+    35
+   ],
+   "ms": 5271
   },
   {
    "map": "marsh_manor_2",
@@ -2793,13 +3426,13 @@
    "at": "marsh_manor_1",
    "to": "marsh_manor_1",
    "ok": true,
-   "steps": 3,
+   "steps": 4,
    "why": null,
    "start": [
     23,
     29
    ],
-   "ms": 7392
+   "ms": 4780
   },
   {
    "map": "mine_1",
@@ -2814,7 +3447,7 @@
     47,
     6
    ],
-   "ms": 9485
+   "ms": 8591
   },
   {
    "map": "mine_1",
@@ -2829,22 +3462,7 @@
     25,
     39
    ],
-   "ms": 9725
-  },
-  {
-   "map": "mine_2",
-   "kind": "stairs",
-   "id": "mine_2_down",
-   "at": "mine_3",
-   "to": "mine_3",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    9,
-    37
-   ],
-   "ms": 4961
+   "ms": 4596
   },
   {
    "map": "mine_2",
@@ -2859,22 +3477,22 @@
     48,
     7
    ],
-   "ms": 9775
+   "ms": 3974
   },
   {
-   "map": "mine_hermit",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "g_rail",
-   "to": "g_rail",
+   "map": "mine_2",
+   "kind": "stairs",
+   "id": "mine_2_down",
+   "at": "mine_3",
+   "to": "mine_3",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    5,
-    5
+    9,
+    37
    ],
-   "ms": 4267
+   "ms": 6714
   },
   {
    "map": "mine_3",
@@ -2889,7 +3507,22 @@
     8,
     7
    ],
-   "ms": 9815
+   "ms": 4621
+  },
+  {
+   "map": "mine_hermit",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "g_rail",
+   "to": "g_rail",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 4106
   },
   {
    "map": "nerei",
@@ -2898,13 +3531,13 @@
    "at": "nerei_lampkeeper",
    "to": "nerei_lampkeeper",
    "ok": true,
-   "steps": 3,
+   "steps": 4,
    "why": null,
    "start": [
     15,
     16
    ],
-   "ms": 7215
+   "ms": 5384
   },
   {
    "map": "nerei",
@@ -2913,28 +3546,13 @@
    "at": "nerei_marina",
    "to": "nerei_marina",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     25,
     21
    ],
-   "ms": 5960
-  },
-  {
-   "map": "nerei",
-   "kind": "door",
-   "id": "nerei_house",
-   "at": "nerei_house",
-   "to": "nerei_house",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    25,
-    33
-   ],
-   "ms": 3357
+   "ms": 3319
   },
   {
    "map": "nerei",
@@ -2949,7 +3567,22 @@
     16,
     27
    ],
-   "ms": 5374
+   "ms": 3913
+  },
+  {
+   "map": "nerei",
+   "kind": "door",
+   "id": "nerei_house",
+   "at": "nerei_house",
+   "to": "nerei_house",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    33
+   ],
+   "ms": 4835
   },
   {
    "map": "nerei",
@@ -2964,7 +3597,7 @@
     15,
     39
    ],
-   "ms": 4293
+   "ms": 2930
   },
   {
    "map": "nerei",
@@ -2973,13 +3606,13 @@
    "at": "i_cape",
    "to": "i_cape",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     20,
     39
    ],
-   "ms": 4592
+   "ms": 3406
   },
   {
    "map": "nerei_house",
@@ -2994,7 +3627,7 @@
     4,
     6
    ],
-   "ms": 4012
+   "ms": 4153
   },
   {
    "map": "nerei_inn",
@@ -3009,7 +3642,7 @@
     5,
     6
    ],
-   "ms": 4392
+   "ms": 3618
   },
   {
    "map": "nerei_lampkeeper",
@@ -3018,13 +3651,13 @@
    "at": "nerei",
    "to": "nerei",
    "ok": true,
-   "steps": 4,
+   "steps": 2,
    "why": null,
    "start": [
     5,
     5
    ],
-   "ms": 3729
+   "ms": 4470
   },
   {
    "map": "nerei_marina",
@@ -3039,7 +3672,7 @@
     4,
     6
    ],
-   "ms": 4001
+   "ms": 4589
   },
   {
    "map": "nerei_store",
@@ -3054,7 +3687,7 @@
     5,
     5
    ],
-   "ms": 4370
+   "ms": 4218
   },
   {
    "map": "orbis",
@@ -3069,7 +3702,7 @@
     23,
     14
    ],
-   "ms": 10815
+   "ms": 10854
   },
   {
    "map": "orbis",
@@ -3084,37 +3717,7 @@
     38,
     15
    ],
-   "ms": 11128
-  },
-  {
-   "map": "orbis",
-   "kind": "door",
-   "id": "orbis_house5",
-   "at": "orbis_house5",
-   "to": "orbis_house5",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    46,
-    20
-   ],
-   "ms": 4194
-  },
-  {
-   "map": "orbis",
-   "kind": "door",
-   "id": "orbis_guardroom",
-   "at": "orbis_guardroom",
-   "to": "orbis_guardroom",
-   "ok": true,
-   "steps": 5,
-   "why": null,
-   "start": [
-    9,
-    20
-   ],
-   "ms": 3331
+   "ms": 3626
   },
   {
    "map": "orbis",
@@ -3129,7 +3732,37 @@
     47,
     15
    ],
-   "ms": 11902
+   "ms": 3919
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_house5",
+   "at": "orbis_house5",
+   "to": "orbis_house5",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    46,
+    20
+   ],
+   "ms": 3730
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_guardroom",
+   "at": "orbis_guardroom",
+   "to": "orbis_guardroom",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    9,
+    20
+   ],
+   "ms": 3029
   },
   {
    "map": "orbis",
@@ -3144,7 +3777,7 @@
     20,
     20
    ],
-   "ms": 3208
+   "ms": 4275
   },
   {
    "map": "orbis",
@@ -3159,7 +3792,7 @@
     7,
     36
    ],
-   "ms": 3214
+   "ms": 3473
   },
   {
    "map": "orbis",
@@ -3174,7 +3807,7 @@
     16,
     36
    ],
-   "ms": 3292
+   "ms": 4104
   },
   {
    "map": "orbis",
@@ -3189,7 +3822,7 @@
     6,
     47
    ],
-   "ms": 2772
+   "ms": 2694
   },
   {
    "map": "orbis",
@@ -3204,7 +3837,7 @@
     16,
     47
    ],
-   "ms": 3830
+   "ms": 3797
   },
   {
    "map": "orbis",
@@ -3219,7 +3852,7 @@
     38,
     31
    ],
-   "ms": 4595
+   "ms": 4517
   },
   {
    "map": "orbis",
@@ -3234,7 +3867,7 @@
     46,
     31
    ],
-   "ms": 5174
+   "ms": 4689
   },
   {
    "map": "orbis",
@@ -3249,7 +3882,7 @@
     37,
     37
    ],
-   "ms": 4282
+   "ms": 3430
   },
   {
    "map": "orbis",
@@ -3264,22 +3897,7 @@
     46,
     37
    ],
-   "ms": 4483
-  },
-  {
-   "map": "orbis",
-   "kind": "door",
-   "id": "orbis_house3",
-   "at": "orbis_house3",
-   "to": "orbis_house3",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    49,
-    47
-   ],
-   "ms": 4360
+   "ms": 3851
   },
   {
    "map": "orbis",
@@ -3294,7 +3912,22 @@
     39,
     47
    ],
-   "ms": 5494
+   "ms": 4481
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_house3",
+   "at": "orbis_house3",
+   "to": "orbis_house3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    49,
+    47
+   ],
+   "ms": 3139
   },
   {
    "map": "orbis",
@@ -3309,22 +3942,7 @@
     27,
     47
    ],
-   "ms": 4965
-  },
-  {
-   "map": "orbis_arms",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "orbis",
-   "to": "orbis",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    5
-   ],
-   "ms": 3763
+   "ms": 2696
   },
   {
    "map": "orbis",
@@ -3339,7 +3957,22 @@
     55,
     30
    ],
-   "ms": 6163
+   "ms": 2648
+  },
+  {
+   "map": "orbis_arms",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2381
   },
   {
    "map": "orbis_guardroom",
@@ -3354,7 +3987,7 @@
     4,
     6
    ],
-   "ms": 4523
+   "ms": 2538
   },
   {
    "map": "orbis_house",
@@ -3369,7 +4002,22 @@
     4,
     6
    ],
-   "ms": 3717
+   "ms": 3366
+  },
+  {
+   "map": "orbis_house2",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 3387
   },
   {
    "map": "orbis_house3",
@@ -3384,22 +4032,7 @@
     5,
     5
    ],
-   "ms": 2941
-  },
-  {
-   "map": "orbis_house2",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "orbis",
-   "to": "orbis",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    5
-   ],
-   "ms": 5004
+   "ms": 3716
   },
   {
    "map": "orbis_house4",
@@ -3414,7 +4047,7 @@
     5,
     5
    ],
-   "ms": 5840
+   "ms": 3827
   },
   {
    "map": "orbis_house5",
@@ -3423,13 +4056,13 @@
    "at": "orbis",
    "to": "orbis",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     5,
     5
    ],
-   "ms": 7168
+   "ms": 3462
   },
   {
    "map": "orbis_inn",
@@ -3444,7 +4077,7 @@
     7,
     7
    ],
-   "ms": 6901
+   "ms": 3949
   },
   {
    "map": "orbis_items",
@@ -3453,13 +4086,13 @@
    "at": "orbis",
    "to": "orbis",
    "ok": true,
-   "steps": 3,
+   "steps": 4,
    "why": null,
    "start": [
     5,
     5
    ],
-   "ms": 5086
+   "ms": 3160
   },
   {
    "map": "orbis_laundry",
@@ -3474,22 +4107,7 @@
     6,
     5
    ],
-   "ms": 4342
-  },
-  {
-   "map": "orbis_magic",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "orbis",
-   "to": "orbis",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    5
-   ],
-   "ms": 5233
+   "ms": 3347
   },
   {
    "map": "orbis_library",
@@ -3504,7 +4122,40 @@
     9,
     9
    ],
-   "ms": 5877
+   "ms": 5195
+  },
+  {
+   "map": "orbis_magic",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 5151
+  },
+  {
+   "map": "m_manor",
+   "kind": "exit",
+   "id": "23,43",
+   "at": [
+    23,
+    43
+   ],
+   "to": "m_lotus",
+   "ok": false,
+   "steps": 1,
+   "why": "timeout 90 s",
+   "start": [
+    23,
+    39
+   ],
+   "ms": 251143
   },
   {
    "map": "orbis_observatory",
@@ -3519,22 +4170,25 @@
     8,
     9
    ],
-   "ms": 5074
+   "ms": 5344
   },
   {
-   "map": "orbis_records",
+   "map": "m_manor",
    "kind": "exit",
-   "id": "5,9",
-   "at": "orbis",
-   "to": "orbis",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    5
+   "id": "0,20",
+   "at": [
+    0,
+    20
    ],
-   "ms": 4732
+   "to": "loch",
+   "ok": false,
+   "steps": 1,
+   "why": "timeout 90 s",
+   "start": [
+    4,
+    20
+   ],
+   "ms": 252498
   },
   {
    "map": "orbis_tailor",
@@ -3549,22 +4203,7 @@
     5,
     5
    ],
-   "ms": 5122
-  },
-  {
-   "map": "orbis_tavern",
-   "kind": "exit",
-   "id": "7,11",
-   "at": "orbis",
-   "to": "orbis",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    7,
-    7
-   ],
-   "ms": 5466
+   "ms": 3565
   },
   {
    "map": "pharos",
@@ -3579,7 +4218,7 @@
     6,
     12
    ],
-   "ms": 10361
+   "ms": 7228
   },
   {
    "map": "pharos",
@@ -3594,7 +4233,7 @@
     11,
     12
    ],
-   "ms": 11684
+   "ms": 4762
   },
   {
    "map": "pharos",
@@ -3609,337 +4248,345 @@
     19,
     8
    ],
-   "ms": 11225
+   "ms": 4118
+  },
+  {
+   "map": "orbis_records",
+   "kind": "exit",
+   "id": "5,9",
+   "at": [
+    5,
+    9
+   ],
+   "to": "orbis",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 21486
+  },
+  {
+   "map": "orbis_tavern",
+   "kind": "exit",
+   "id": "7,11",
+   "at": [
+    7,
+    11
+   ],
+   "to": "orbis",
+   "ok": false,
+   "why": "keyboard.up: Target page, context or browser has been closed",
+   "ms": 20162
   },
   {
    "map": "pharos",
    "kind": "door",
    "id": "ph_record",
-   "at": "pharos_record",
+   "at": [
+    28,
+    7
+   ],
    "to": "pharos_record",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    25,
-    8
-   ],
-   "ms": 5556
-  },
-  {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_house5",
-   "at": "pharos_home5",
-   "to": "pharos_home5",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    15,
-    32
-   ],
-   "ms": 5338
+   "ok": false,
+   "why": "page.waitForTimeout: Target page, context or browser has been closed",
+   "ms": 530
   },
   {
    "map": "pharos",
    "kind": "door",
    "id": "ph_house3",
-   "at": "pharos_home3",
-   "to": "pharos_home3",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
+   "at": [
     49,
-    12
+    8
    ],
-   "ms": 7013
+   "to": "pharos_home3",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 39
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_house5",
+   "at": [
+    15,
+    28
+   ],
+   "to": "pharos_home5",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 24
   },
   {
    "map": "pharos",
    "kind": "door",
    "id": "ph_tavern",
-   "at": "pharos_tavern",
+   "at": [
+    24,
+    16
+   ],
    "to": "pharos_tavern",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    22,
-    18
-   ],
-   "ms": 8039
-  },
-  {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_shop",
-   "at": "pharos_shop",
-   "to": "pharos_shop",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    33,
-    26
-   ],
-   "ms": 5504
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 2
   },
   {
    "map": "pharos",
    "kind": "door",
    "id": "ph_smith",
-   "at": "pharos_smith",
-   "to": "pharos_smith",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
+   "at": [
     30,
-    23
+    19
    ],
-   "ms": 7047
+   "to": "pharos_smith",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
   },
   {
    "map": "pharos",
    "kind": "door",
-   "id": "ph_house6",
-   "at": "pharos_home6",
-   "to": "pharos_home6",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    32,
-    37
+   "id": "ph_shop",
+   "at": [
+    34,
+    23
    ],
-   "ms": 4877
+   "to": "pharos_shop",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 6
   },
   {
    "map": "pharos",
    "kind": "door",
    "id": "ph_house4",
-   "at": "pharos_home4",
-   "to": "pharos_home4",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    8,
-    25
+   "at": [
+    6,
+    23
    ],
-   "ms": 6948
+   "to": "pharos_home4",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 6
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_house6",
+   "at": [
+    30,
+    35
+   ],
+   "to": "pharos_home6",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 6
   },
   {
    "map": "pharos",
    "kind": "door",
    "id": "ph_shipyard",
-   "at": "pharos_shipyard",
+   "at": [
+    44,
+    30
+   ],
    "to": "pharos_shipyard",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    42,
-    32
-   ],
-   "ms": 6774
-  },
-  {
-   "map": "pharos_home1",
-   "kind": "exit",
-   "id": "3,7",
-   "at": "pharos",
-   "to": "pharos",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    2,
-    4
-   ],
-   "ms": 5273
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 2
   },
   {
    "map": "pharos",
    "kind": "exit",
    "id": "0,10",
-   "at": "f_cape",
-   "to": "f_cape",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    4,
+   "at": [
+    0,
     10
    ],
-   "ms": 8200
+   "to": "f_cape",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
+  },
+  {
+   "map": "pharos_home1",
+   "kind": "exit",
+   "id": "3,7",
+   "at": [
+    3,
+    7
+   ],
+   "to": "pharos",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 12
   },
   {
    "map": "pharos_home2",
    "kind": "exit",
    "id": "3,7",
-   "at": "pharos",
-   "to": "pharos",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
+   "at": [
     3,
-    3
+    7
    ],
-   "ms": 6023
+   "to": "pharos",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 11
   },
   {
    "map": "pharos_home3",
    "kind": "exit",
    "id": "4,6",
-   "at": "pharos",
-   "to": "pharos",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    3,
-    3
+   "at": [
+    4,
+    6
    ],
-   "ms": 3891
-  },
-  {
-   "map": "pharos_home5",
-   "kind": "exit",
-   "id": "4,7",
-   "at": "pharos",
    "to": "pharos",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    3,
-    4
-   ],
-   "ms": 4751
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 12
   },
   {
    "map": "pharos_home4",
    "kind": "exit",
    "id": "4,7",
-   "at": "pharos",
-   "to": "pharos",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    3,
-    4
+   "at": [
+    4,
+    7
    ],
-   "ms": 6462
+   "to": "pharos",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
+  },
+  {
+   "map": "pharos_home5",
+   "kind": "exit",
+   "id": "4,7",
+   "at": [
+    4,
+    7
+   ],
+   "to": "pharos",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
   },
   {
    "map": "pharos_home6",
    "kind": "exit",
    "id": "4,6",
-   "at": "pharos",
-   "to": "pharos",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    3,
-    3
+   "at": [
+    4,
+    6
    ],
-   "ms": 6077
-  },
-  {
-   "map": "pharos_record",
-   "kind": "exit",
-   "id": "5,8",
-   "at": "pharos",
    "to": "pharos",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
-    6,
-    5
-   ],
-   "ms": 3986
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
   },
   {
    "map": "pharos_inn",
    "kind": "exit",
    "id": "5,9",
-   "at": "pharos",
-   "to": "pharos",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
+   "at": [
     5,
-    5
+    9
    ],
-   "ms": 4836
+   "to": "pharos",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 5
+  },
+  {
+   "map": "pharos_record",
+   "kind": "exit",
+   "id": "5,8",
+   "at": [
+    5,
+    8
+   ],
+   "to": "pharos",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 5
   },
   {
    "map": "pharos_shipyard",
    "kind": "exit",
    "id": "5,8",
-   "at": "pharos",
-   "to": "pharos",
-   "ok": true,
-   "steps": 6,
-   "why": null,
-   "start": [
+   "at": [
     5,
-    4
+    8
    ],
-   "ms": 5266
-  },
-  {
-   "map": "pharos_smith",
-   "kind": "exit",
-   "id": "4,8",
-   "at": "pharos",
    "to": "pharos",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    3,
-    5
-   ],
-   "ms": 4037
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 6
   },
   {
    "map": "pharos_shop",
    "kind": "exit",
    "id": "4,8",
-   "at": "pharos",
-   "to": "pharos",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    3,
-    5
+   "at": [
+    4,
+    8
    ],
-   "ms": 7487
+   "to": "pharos",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
+  },
+  {
+   "map": "pharos_smith",
+   "kind": "exit",
+   "id": "4,8",
+   "at": [
+    4,
+    8
+   ],
+   "to": "pharos",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 2
   },
   {
    "map": "pharos_tavern",
    "kind": "exit",
    "id": "7,10",
-   "at": "pharos",
-   "to": "pharos",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
+   "at": [
     7,
-    6
+    10
    ],
-   "ms": 7696
+   "to": "pharos",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h1",
+   "at": [
+    7,
+    9
+   ],
+   "to": "roa_home1",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h2",
+   "at": [
+    14,
+    9
+   ],
+   "to": "roa_home2",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 0
   },
   {
    "map": "roa",
@@ -3951,248 +4598,320 @@
    ],
    "to": "roa_hall_in",
    "ok": false,
-   "why": "setup: not on roa (on pharos)",
-   "ms": 4728
-  },
-  {
-   "map": "roa",
-   "kind": "door",
-   "id": "roa_h1",
-   "at": "roa_home1",
-   "to": "roa_home1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    11
-   ],
-   "ms": 15791
-  },
-  {
-   "map": "roa",
-   "kind": "door",
-   "id": "roa_h2",
-   "at": "roa_home2",
-   "to": "roa_home2",
-   "ok": true,
-   "steps": 6,
-   "why": null,
-   "start": [
-    14,
-    13
-   ],
-   "ms": 15154
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
   },
   {
    "map": "roa",
    "kind": "door",
    "id": "roa_h3",
-   "at": "roa_home3",
-   "to": "roa_home3",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    31,
-    12
+   "at": [
+    30,
+    9
    ],
-   "ms": 8876
+   "to": "roa_home3",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
   },
   {
    "map": "roa",
    "kind": "door",
    "id": "roa_h4",
-   "at": "roa_home4",
-   "to": "roa_home4",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
-    36,
-    12
+   "at": [
+    37,
+    9
    ],
-   "ms": 6998
+   "to": "roa_home4",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 0
   },
   {
    "map": "roa",
    "kind": "door",
    "id": "roa_h5",
-   "at": "roa_home5",
-   "to": "roa_home5",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
+   "at": [
     5,
-    25
+    21
    ],
-   "ms": 7035
-  },
-  {
-   "map": "roa",
-   "kind": "door",
-   "id": "roa_berna",
-   "at": "roa_house",
-   "to": "roa_house",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    17,
-    31
-   ],
-   "ms": 7132
+   "to": "roa_home5",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 5
   },
   {
    "map": "roa",
    "kind": "door",
    "id": "roa_h6",
-   "at": "roa_home6",
-   "to": "roa_home6",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    30,
-    21
+   "at": [
+    32,
+    19
    ],
-   "ms": 10476
+   "to": "roa_home6",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 5
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_berna",
+   "at": [
+    20,
+    30
+   ],
+   "to": "roa_house",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 6
   },
   {
    "map": "roa",
    "kind": "exit",
    "id": "43,15",
-   "at": "f_roa",
-   "to": "f_roa",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    39,
+   "at": [
+    43,
     15
    ],
-   "ms": 8448
+   "to": "f_roa",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
+  },
+  {
+   "map": "roa_dawn",
+   "kind": "door",
+   "id": "roa_h1",
+   "at": [
+    7,
+    9
+   ],
+   "to": "roa_dawn",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 2
+  },
+  {
+   "map": "roa_dawn",
+   "kind": "door",
+   "id": "roa_h2",
+   "at": [
+    14,
+    9
+   ],
+   "to": "roa_dawn",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
+  },
+  {
+   "map": "roa_dawn",
+   "kind": "door",
+   "id": "roa_hall",
+   "at": [
+    21,
+    9
+   ],
+   "to": "roa_dawn",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 7
+  },
+  {
+   "map": "roa_dawn",
+   "kind": "door",
+   "id": "roa_h3",
+   "at": [
+    30,
+    9
+   ],
+   "to": "roa_dawn",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 6
+  },
+  {
+   "map": "roa_dawn",
+   "kind": "door",
+   "id": "roa_h4",
+   "at": [
+    37,
+    9
+   ],
+   "to": "roa_dawn",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 7
+  },
+  {
+   "map": "roa_dawn",
+   "kind": "door",
+   "id": "roa_h5",
+   "at": [
+    5,
+    21
+   ],
+   "to": "roa_dawn",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
+  },
+  {
+   "map": "roa_dawn",
+   "kind": "door",
+   "id": "roa_h6",
+   "at": [
+    32,
+    19
+   ],
+   "to": "roa_dawn",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 2
+  },
+  {
+   "map": "roa_dawn",
+   "kind": "door",
+   "id": "roa_berna",
+   "at": [
+    20,
+    30
+   ],
+   "to": "roa_dawn",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
   },
   {
    "map": "roa_hall_in",
    "kind": "exit",
    "id": "5,8",
-   "at": "roa",
-   "to": "roa",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
+   "at": [
     5,
-    4
+    8
    ],
-   "ms": 7107
+   "to": "roa",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
   },
   {
    "map": "roa_home1",
    "kind": "exit",
    "id": "4,7",
-   "at": "roa",
-   "to": "roa",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    2,
-    5
+   "at": [
+    4,
+    7
    ],
-   "ms": 8000
+   "to": "roa",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
   },
   {
    "map": "roa_home2",
    "kind": "exit",
    "id": "3,7",
-   "at": "roa",
-   "to": "roa",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
+   "at": [
     3,
-    3
+    7
    ],
-   "ms": 6522
+   "to": "roa",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
   },
   {
    "map": "roa_home3",
    "kind": "exit",
    "id": "3,7",
-   "at": "roa",
-   "to": "roa",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
+   "at": [
     3,
-    3
+    7
    ],
-   "ms": 6974
+   "to": "roa",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 2
   },
   {
    "map": "roa_home4",
    "kind": "exit",
    "id": "4,7",
-   "at": "roa",
-   "to": "roa",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
+   "at": [
     4,
-    3
+    7
    ],
-   "ms": 7375
+   "to": "roa",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 2
   },
   {
    "map": "roa_home5",
    "kind": "exit",
    "id": "3,6",
-   "at": "roa",
-   "to": "roa",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
+   "at": [
     3,
-    2
+    6
    ],
-   "ms": 6562
-  },
-  {
-   "map": "roa_house",
-   "kind": "exit",
-   "id": "6,9",
-   "at": "roa",
    "to": "roa",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
-    6,
-    5
-   ],
-   "ms": 6209
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 2
   },
   {
    "map": "roa_home6",
    "kind": "exit",
    "id": "3,6",
-   "at": "roa",
-   "to": "roa",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    2,
-    3
+   "at": [
+    3,
+    6
    ],
-   "ms": 8749
+   "to": "roa",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
+  },
+  {
+   "map": "roa_house",
+   "kind": "exit",
+   "id": "6,9",
+   "at": [
+    6,
+    9
+   ],
+   "to": "roa",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
+  },
+  {
+   "map": "roa_house_dawn",
+   "kind": "exit",
+   "id": "6,9",
+   "at": [
+    6,
+    9
+   ],
+   "to": "roa_house_dawn",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 2
+  },
+  {
+   "map": "s_crater",
+   "kind": "exit",
+   "id": "0,20",
+   "at": [
+    0,
+    20
+   ],
+   "to": "s_plateau",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
   },
   {
    "map": "s_crater",
@@ -4204,8 +4923,8 @@
    ],
    "to": "s_ridge",
    "ok": false,
-   "why": "setup: not on s_crater (on roa)",
-   "ms": 3905
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 6
   },
   {
    "map": "s_plateau",
@@ -4217,587 +4936,502 @@
    ],
    "to": "s_steps",
    "ok": false,
-   "why": "setup: not on s_plateau (on roa)",
-   "ms": 3690
-  },
-  {
-   "map": "s_crater",
-   "kind": "exit",
-   "id": "0,20",
-   "at": "s_plateau",
-   "to": "s_plateau",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    0,
-    16
-   ],
-   "ms": 16210
-  },
-  {
-   "map": "s_plateau",
-   "kind": "exit",
-   "id": "55,22",
-   "at": "s_crater",
-   "to": "s_crater",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    55,
-    18
-   ],
-   "ms": 10177
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 5
   },
   {
    "map": "s_plateau",
    "kind": "exit",
    "id": "27,0",
-   "at": "orbis",
-   "to": "orbis",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
+   "at": [
     27,
-    4
+    0
    ],
-   "ms": 10778
+   "to": "orbis",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 9
+  },
+  {
+   "map": "s_plateau",
+   "kind": "exit",
+   "id": "55,22",
+   "at": [
+    55,
+    22
+   ],
+   "to": "s_crater",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 4
   },
   {
    "map": "s_ridge",
    "kind": "exit",
    "id": "24,37",
-   "at": "s_crater",
-   "to": "s_crater",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
+   "at": [
     24,
-    33
+    37
    ],
-   "ms": 6469
-  },
-  {
-   "map": "s_steps",
-   "kind": "exit",
-   "id": "51,9",
-   "at": "s_plateau",
-   "to": "s_plateau",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    51,
-    5
-   ],
-   "ms": 4040
+   "to": "s_crater",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 5
   },
   {
    "map": "s_ridge",
    "kind": "exit",
    "id": "0,24",
-   "at": "orbis",
-   "to": "orbis",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    3,
-    26
+   "at": [
+    0,
+    24
    ],
-   "ms": 6883
+   "to": "orbis",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
   },
   {
    "map": "s_steps",
    "kind": "exit",
    "id": "0,27",
-   "at": "world",
-   "to": "world",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    1,
-    24
+   "at": [
+    0,
+    27
    ],
-   "ms": 11019
+   "to": "world",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
+  },
+  {
+   "map": "s_steps",
+   "kind": "exit",
+   "id": "51,9",
+   "at": [
+    51,
+    9
+   ],
+   "to": "s_plateau",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
   },
   {
    "map": "star_academy_1",
-   "kind": "stairs",
+   "kind": "door",
    "id": "",
    "at": [
-    24,
-    3
+    6,
+    36
    ],
-   "to": "star_academy_2",
+   "to": "orbis",
    "ok": false,
-   "why": "setup: not on star_academy_1 (on world)",
-   "ms": 3711
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
   },
   {
    "map": "star_academy_1",
    "kind": "stairs",
    "id": "star_academy_1_up",
-   "at": "star_academy_2",
-   "to": "star_academy_2",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
+   "at": [
     23,
-    7
+    3
    ],
-   "ms": 15558
+   "to": "star_academy_2",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 2
   },
   {
-   "map": "star_academy_2",
+   "map": "star_academy_1",
    "kind": "stairs",
    "id": "",
-   "at": "star_academy_1",
-   "to": "star_academy_1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
+   "at": [
     24,
-    32
+    3
    ],
-   "ms": 6046
+   "to": "star_academy_2",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
   },
   {
    "map": "star_academy_2",
    "kind": "stairs",
    "id": "star_academy_2_down",
-   "at": "star_academy_1",
-   "to": "star_academy_1",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
+   "at": [
     23,
-    32
+    36
    ],
-   "ms": 15945
+   "to": "star_academy_1",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 11
   },
   {
-   "map": "star_academy_1",
-   "kind": "door",
+   "map": "star_academy_2",
+   "kind": "stairs",
    "id": "",
-   "at": "orbis",
-   "to": "orbis",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    6,
-    32
+   "at": [
+    24,
+    36
    ],
-   "ms": 34557
+   "to": "star_academy_1",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 11
   },
   {
    "map": "star_tower_1",
    "kind": "stairs",
    "id": "star_tower_1_up",
-   "at": "star_tower_top",
-   "to": "star_tower_top",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
+   "at": [
     25,
-    6
+    2
    ],
-   "ms": 14411
-  },
-  {
-   "map": "star_tower_top",
-   "kind": "stairs",
-   "id": "star_tower_top_down",
-   "at": "star_tower_1",
-   "to": "star_tower_1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    17,
-    29
-   ],
-   "ms": 4980
+   "to": "star_tower_top",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 12
   },
   {
    "map": "star_tower_1",
    "kind": "stairs",
    "id": "",
-   "at": "star_tower_top",
-   "to": "star_tower_top",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
+   "at": [
     26,
-    6
+    2
    ],
-   "ms": 18044
+   "to": "star_tower_top",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
   },
   {
    "map": "star_tower_1",
    "kind": "exit",
    "id": "25,45",
-   "at": "s_ridge",
-   "to": "s_ridge",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
+   "at": [
     25,
-    41
+    45
    ],
-   "ms": 12019
+   "to": "s_ridge",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 2
+  },
+  {
+   "map": "star_tower_top",
+   "kind": "stairs",
+   "id": "star_tower_top_down",
+   "at": [
+    19,
+    27
+   ],
+   "to": "star_tower_1",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
   },
   {
    "map": "star_tower_top",
    "kind": "stairs",
    "id": "",
-   "at": "star_tower_1",
-   "to": "star_tower_1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    18,
+   "at": [
+    20,
     27
    ],
-   "ms": 5719
+   "to": "star_tower_1",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 2
   },
   {
    "map": "vein_1",
    "kind": "stairs",
    "id": "vein_1_up",
-   "at": "mine_3",
-   "to": "mine_3",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
+   "at": [
     5,
-    6
+    2
    ],
-   "ms": 19415
+   "to": "mine_3",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
   },
   {
    "map": "vein_1",
    "kind": "stairs",
    "id": "vein_1_down",
-   "at": "vein_2",
-   "to": "vein_2",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    40,
-    33
+   "at": [
+    37,
+    32
    ],
-   "ms": 24889
+   "to": "vein_2",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 2
   },
   {
    "map": "vein_2",
    "kind": "stairs",
    "id": "vein_2_up",
-   "at": "vein_1",
-   "to": "vein_1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    37,
-    7
+   "at": [
+    38,
+    4
    ],
-   "ms": 27388
+   "to": "vein_1",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
   },
   {
    "map": "vein_2",
    "kind": "stairs",
    "id": "vein_2_down",
-   "at": "vein_3",
-   "to": "vein_3",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    6,
-    29
+   "at": [
+    5,
+    32
    ],
-   "ms": 15650
+   "to": "vein_3",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 5
   },
   {
    "map": "vein_3",
    "kind": "stairs",
    "id": "vein_3_up",
-   "at": "vein_2",
-   "to": "vein_2",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
+   "at": [
     18,
-    23
+    27
    ],
-   "ms": 9047
+   "to": "vein_2",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 5
   },
   {
    "map": "verda_1",
    "kind": "exit",
    "id": "28,51",
-   "at": "fern",
-   "to": "fern",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    29,
-    47
+   "at": [
+    28,
+    51
    ],
-   "ms": 18483
+   "to": "fern",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 7
   },
   {
    "map": "verda_1",
    "kind": "exit",
    "id": "28,0",
-   "at": "verda_2",
-   "to": "verda_2",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    30,
-    4
+   "at": [
+    28,
+    0
    ],
-   "ms": 16228
+   "to": "verda_2",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 2
   },
   {
-   "map": "verda_2",
+   "map": "verda_1",
    "kind": "exit",
-   "id": "28,51",
-   "at": "verda_1",
-   "to": "verda_1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    29,
-    47
+   "id": "40,28",
+   "at": [
+    40,
+    28
    ],
-   "ms": 6624
+   "to": "verda_1",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 4
   },
   {
    "map": "verda_1",
    "kind": "exit",
    "id": "11,20",
-   "at": "verda_1",
-   "to": "verda_1",
-   "ok": true,
-   "steps": 5,
-   "start": [
+   "at": [
     11,
-    24
+    20
    ],
-   "ms": 11456
+   "to": "verda_1",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 3
+  },
+  {
+   "map": "verda_2",
+   "kind": "exit",
+   "id": "28,51",
+   "at": [
+    28,
+    51
+   ],
+   "to": "verda_1",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 3
   },
   {
    "map": "verda_2",
    "kind": "exit",
    "id": "28,0",
-   "at": "elder_1",
+   "at": [
+    28,
+    0
+   ],
    "to": "elder_1",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
-    29,
-    3
-   ],
-   "ms": 5495
-  },
-  {
-   "map": "volk",
-   "kind": "door",
-   "id": "volk_inn",
-   "at": "volk_inn",
-   "to": "volk_inn",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    6,
-    15
-   ],
-   "ms": 9840
-  },
-  {
-   "map": "volk",
-   "kind": "door",
-   "id": "volk_forge",
-   "at": "volk_forge",
-   "to": "volk_forge",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
-    17,
-    17
-   ],
-   "ms": 6011
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 5
   },
   {
    "map": "verda_2",
    "kind": "exit",
    "id": "20,32",
-   "at": "verda_2",
-   "to": "verda_2",
-   "ok": true,
-   "steps": 5,
-   "start": [
-    24,
+   "at": [
+    20,
     32
    ],
-   "ms": 20857
+   "to": "verda_2",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 4
+  },
+  {
+   "map": "volk",
+   "kind": "door",
+   "id": "volk_inn",
+   "at": [
+    6,
+    11
+   ],
+   "to": "volk_inn",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 5
+  },
+  {
+   "map": "volk",
+   "kind": "door",
+   "id": "volk_forge",
+   "at": [
+    17,
+    13
+   ],
+   "to": "volk_forge",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
   },
   {
    "map": "volk",
    "kind": "door",
    "id": "volk_house",
-   "at": "volk_house",
+   "at": [
+    5,
+    21
+   ],
    "to": "volk_house",
-   "ok": true,
-   "steps": 5,
-   "why": null,
-   "start": [
-    4,
-    24
-   ],
-   "ms": 3907
-  },
-  {
-   "map": "volk",
-   "kind": "exit",
-   "id": "9,27",
-   "at": "g_valley",
-   "to": "g_valley",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    9,
-    23
-   ],
-   "ms": 7015
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 2
   },
   {
    "map": "volk",
    "kind": "door",
    "id": "volk_elder",
-   "at": "volk_elder",
-   "to": "volk_elder",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
+   "at": [
     26,
-    24
+    20
    ],
-   "ms": 12640
+   "to": "volk_elder",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
+  },
+  {
+   "map": "volk",
+   "kind": "exit",
+   "id": "9,27",
+   "at": [
+    9,
+    27
+   ],
+   "to": "g_valley",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 2
   },
   {
    "map": "volk_elder",
    "kind": "exit",
    "id": "5,9",
-   "at": "volk",
-   "to": "volk",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    4,
-    6
+   "at": [
+    5,
+    9
    ],
-   "ms": 5555
+   "to": "volk",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
   },
   {
    "map": "volk_forge",
    "kind": "exit",
    "id": "8,11",
-   "at": "volk",
-   "to": "volk",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
+   "at": [
     8,
-    7
+    11
    ],
-   "ms": 4297
+   "to": "volk",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 37
   },
   {
    "map": "volk_house",
    "kind": "exit",
    "id": "5,9",
-   "at": "volk",
-   "to": "volk",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    4,
-    6
+   "at": [
+    5,
+    9
    ],
-   "ms": 4851
+   "to": "volk",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 37
   },
   {
    "map": "volk_inn",
    "kind": "exit",
    "id": "6,10",
-   "at": "volk",
-   "to": "volk",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    7
+   "at": [
+    6,
+    10
    ],
-   "ms": 5535
+   "to": "volk",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 37
   },
   {
    "map": "well",
    "kind": "stairs",
    "id": "",
-   "at": "f_roa",
-   "to": "f_roa",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    18,
-    7
-   ],
-   "ms": 8760
-  },
-  {
-   "map": "world",
-   "kind": "stairs",
-   "id": "",
    "at": [
-    235,
-    266
+    18,
+    3
    ],
-   "to": "well",
+   "to": "f_roa",
    "ok": false,
-   "why": "page.waitForTimeout: Target page, context or browser has been closed",
-   "ms": 4021
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
   },
   {
    "map": "world",
@@ -4810,7 +5444,20 @@
    "to": "lighthouse_1",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 8153
+   "ms": 1
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": [
+    235,
+    266
+   ],
+   "to": "well",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 2
   },
   {
    "map": "world",
@@ -4823,20 +5470,7 @@
    "to": "sandedge",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 68
-  },
-  {
-   "map": "verda_1",
-   "kind": "exit",
-   "id": "40,28",
-   "at": [
-    40,
-    28
-   ],
-   "to": "verda_1",
-   "ok": false,
-   "why": "keyboard.up: Target page, context or browser has been closed",
-   "ms": 75015
+   "ms": 1
   },
   {
    "map": "world",
@@ -4849,7 +5483,7 @@
    "to": "snow_woods",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 2
+   "ms": 1
   },
   {
    "map": "world",
@@ -4862,7 +5496,7 @@
    "to": "peak_1",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 2
+   "ms": 0
   },
   {
    "map": "world",
@@ -4927,7 +5561,7 @@
    "to": "roa",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 3
+   "ms": 2
   },
   {
    "map": "world",
@@ -4940,7 +5574,7 @@
    "to": "pharos",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 3
+   "ms": 2
   },
   {
    "map": "world",
@@ -4953,7 +5587,7 @@
    "to": "fern",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 3
+   "ms": 2
   },
   {
    "map": "world",
@@ -5057,7 +5691,7 @@
    "to": "yura_home2",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 5
+   "ms": 1
   },
   {
    "map": "yura",
@@ -5070,7 +5704,7 @@
    "to": "yura_home3",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 5
+   "ms": 0
   },
   {
    "map": "yura",
@@ -5083,7 +5717,7 @@
    "to": "yura_home4",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 6
+   "ms": 1
   },
   {
    "map": "yura",
@@ -5109,7 +5743,7 @@
    "to": "yura",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 2
+   "ms": 1
   },
   {
    "map": "yura_home2",
@@ -5161,7 +5795,7 @@
    "to": "yura",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ms": 0
   },
   {
    "map": "yura_inn",
@@ -5174,7 +5808,7 @@
    "to": "yura",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ms": 0
   }
  ],
  "looks": [
@@ -5183,6 +5817,48 @@
    "npc": "ash_traveler",
    "look": "npc_traveler",
    "art": "npc_traveler",
+   "ok": true
+  },
+  {
+   "map": "archive_3",
+   "npc": "seal_rowell",
+   "look": "rowell",
+   "art": "rowell",
+   "ok": true
+  },
+  {
+   "map": "archive_3",
+   "npc": "seal_scribe_a",
+   "look": "npc_scribe",
+   "art": "npc_scribe",
+   "ok": true
+  },
+  {
+   "map": "archive_3",
+   "npc": "seal_scribe_b",
+   "look": "npc_scribe",
+   "art": "npc_scribe",
+   "ok": true
+  },
+  {
+   "map": "archive_3",
+   "npc": "seal_scribe_c",
+   "look": "npc_scribe",
+   "art": "npc_scribe",
+   "ok": true
+  },
+  {
+   "map": "archive_5",
+   "npc": "lazaro",
+   "look": "lazaro",
+   "art": "lazaro",
+   "ok": true
+  },
+  {
+   "map": "archive_6",
+   "npc": "naming_fine",
+   "look": "fine",
+   "art": "fine",
    "ok": true
   },
   {
@@ -5204,6 +5880,258 @@
    "npc": "fine",
    "look": "fine",
    "art": "fine",
+   "ok": true
+  },
+  {
+   "map": "biblia",
+   "npc": "white_woman",
+   "look": "npc_woman_1",
+   "art": "npc_forest_woman_1",
+   "ok": true
+  },
+  {
+   "map": "biblia",
+   "npc": "noa_quay",
+   "look": "noa",
+   "art": "noa",
+   "ok": true
+  },
+  {
+   "map": "biblia",
+   "npc": "rowell_quay",
+   "look": "rowell",
+   "art": "rowell",
+   "ok": true
+  },
+  {
+   "map": "biblia",
+   "npc": "rowell",
+   "look": "rowell",
+   "art": "rowell",
+   "ok": true
+  },
+  {
+   "map": "biblia",
+   "npc": "ship_hand",
+   "look": "npc_sailor_1",
+   "art": "npc_forest_man_1",
+   "ok": true
+  },
+  {
+   "map": "biblia",
+   "npc": "scribe_a",
+   "look": "npc_scribe",
+   "art": "npc_scribe",
+   "ok": true
+  },
+  {
+   "map": "biblia",
+   "npc": "scribe_b",
+   "look": "npc_scribe",
+   "art": "npc_scribe",
+   "ok": true
+  },
+  {
+   "map": "biblia",
+   "npc": "old_man",
+   "look": "npc_old_m_1",
+   "art": "npc_forest_old_m_1",
+   "ok": true
+  },
+  {
+   "map": "biblia",
+   "npc": "board_woman",
+   "look": "npc_woman_2",
+   "art": "npc_forest_woman_2",
+   "ok": true
+  },
+  {
+   "map": "biblia",
+   "npc": "child",
+   "look": "npc_child_1",
+   "art": "npc_forest_child_1",
+   "ok": true
+  },
+  {
+   "map": "biblia",
+   "npc": "sailor_old",
+   "look": "npc_sailor_1",
+   "art": "npc_forest_man_1",
+   "ok": true
+  },
+  {
+   "map": "biblia",
+   "npc": "youth",
+   "look": "npc_man_1",
+   "art": "npc_forest_man_1",
+   "ok": true
+  },
+  {
+   "map": "biblia",
+   "npc": "e_lazaro",
+   "look": "lazaro",
+   "art": "lazaro",
+   "ok": true
+  },
+  {
+   "map": "biblia",
+   "npc": "e_rowell",
+   "look": "rowell",
+   "art": "rowell",
+   "ok": true
+  },
+  {
+   "map": "biblia",
+   "npc": "e_noa",
+   "look": "noa",
+   "art": "noa",
+   "ok": true
+  },
+  {
+   "map": "biblia",
+   "npc": "e_mother",
+   "look": "npc_woman_2",
+   "art": "npc_forest_woman_2",
+   "ok": true
+  },
+  {
+   "map": "biblia",
+   "npc": "e_boy",
+   "look": "npc_child_3",
+   "art": "npc_forest_child_3",
+   "ok": true
+  },
+  {
+   "map": "biblia",
+   "npc": "cat",
+   "look": "ani_cat",
+   "art": "ani_cat",
+   "ok": true
+  },
+  {
+   "map": "biblia_dawn",
+   "npc": "e_noa",
+   "look": "noa",
+   "art": "noa",
+   "ok": true
+  },
+  {
+   "map": "biblia_dawn",
+   "npc": "e_mother",
+   "look": "npc_woman_2",
+   "art": "npc_forest_woman_2",
+   "ok": true
+  },
+  {
+   "map": "biblia_dawn",
+   "npc": "e_boy",
+   "look": "npc_child_3",
+   "art": "npc_forest_child_3",
+   "ok": true
+  },
+  {
+   "map": "biblia_dawn",
+   "npc": "e_old",
+   "look": "npc_old_m_1",
+   "art": "npc_forest_old_m_1",
+   "ok": true
+  },
+  {
+   "map": "biblia_dawn",
+   "npc": "e_woman",
+   "look": "npc_woman_1",
+   "art": "npc_forest_woman_1",
+   "ok": true
+  },
+  {
+   "map": "biblia_dawn",
+   "npc": "e_yena",
+   "look": "npc_yena",
+   "art": "npc_yena",
+   "ok": true
+  },
+  {
+   "map": "biblia_house3",
+   "npc": "mother",
+   "look": "npc_woman_2",
+   "art": "npc_forest_woman_2",
+   "ok": true
+  },
+  {
+   "map": "biblia_house3",
+   "npc": "boy",
+   "look": "npc_child_3",
+   "art": "npc_forest_child_3",
+   "ok": true
+  },
+  {
+   "map": "biblia_house5",
+   "npc": "old_wife",
+   "look": "npc_old_f_1",
+   "art": "npc_forest_old_f_1",
+   "ok": true
+  },
+  {
+   "map": "biblia_house5",
+   "npc": "old_husband",
+   "look": "npc_old_m_2",
+   "art": "npc_forest_old_m_2",
+   "ok": true
+  },
+  {
+   "map": "biblia_inn",
+   "npc": "noa",
+   "look": "noa",
+   "art": "noa",
+   "ok": true
+  },
+  {
+   "map": "biblia_library",
+   "npc": "librarian",
+   "look": "npc_old_f_1",
+   "art": "npc_forest_old_f_1",
+   "ok": true
+  },
+  {
+   "map": "biblia_records",
+   "npc": "clerk",
+   "look": "npc_scribe",
+   "art": "npc_scribe",
+   "ok": true
+  },
+  {
+   "map": "biblia_shop",
+   "npc": "shopkeeper",
+   "look": "npc_merchant_1",
+   "art": "npc_traveler_1",
+   "ok": true
+  },
+  {
+   "map": "biblia_tavern",
+   "npc": "barkeep",
+   "look": "npc_man_2",
+   "art": "npc_forest_man_2",
+   "ok": true
+  },
+  {
+   "map": "biblia_tavern",
+   "npc": "rumor_a",
+   "look": "npc_old_m_2",
+   "art": "npc_forest_old_m_2",
+   "ok": true
+  },
+  {
+   "map": "biblia_tavern",
+   "npc": "rumor_b",
+   "look": "npc_woman_1",
+   "art": "npc_forest_woman_1",
+   "ok": true
+  },
+  {
+   "map": "biblia_tavern",
+   "npc": "rumor_c",
+   "look": "npc_man_1",
+   "art": "npc_forest_man_1",
    "ok": true
   },
   {
@@ -6943,6 +7871,20 @@
    "ok": true
   },
   {
+   "map": "pharos",
+   "npc": "fin_rowell_pier",
+   "look": "rowell",
+   "art": "rowell",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "fin_ship_hand",
+   "look": "npc_sailor_1",
+   "art": "npc_pen_sailor_1",
+   "ok": true
+  },
+  {
    "map": "pharos_home1",
    "npc": "sailorwife",
    "look": "npc_woman_2",
@@ -7143,6 +8085,48 @@
    "npc": "cat",
    "look": "ani_cat",
    "art": "ani_cat",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "fin_berna",
+   "look": "berna",
+   "art": "berna",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "fin_fine",
+   "look": "fine",
+   "art": "fine",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "fin_rowell",
+   "look": "rowell",
+   "art": "rowell",
+   "ok": true
+  },
+  {
+   "map": "roa_dawn",
+   "npc": "e_berna",
+   "look": "berna",
+   "art": "berna",
+   "ok": true
+  },
+  {
+   "map": "roa_dawn",
+   "npc": "e_child_a",
+   "look": "npc_child_1",
+   "art": "npc_forest_child_1",
+   "ok": true
+  },
+  {
+   "map": "roa_dawn",
+   "npc": "e_child_b",
+   "look": "npc_child_3",
+   "art": "npc_forest_child_3",
    "ok": true
   },
   {
@@ -7671,6 +8655,20 @@
    "id": "",
    "to": "ash_volcano_1",
    "cond": "ash_champion"
+  },
+  {
+   "map": "archive_5",
+   "kind": "stairs",
+   "id": "archive_5_up",
+   "to": "archive_6",
+   "cond": "final_lazaro"
+  },
+  {
+   "map": "archive_5",
+   "kind": "stairs",
+   "id": "",
+   "to": "archive_6",
+   "cond": "final_lazaro"
   },
   {
    "map": "ash_volcano_1",

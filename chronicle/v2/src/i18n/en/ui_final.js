@@ -1,0 +1,37 @@
+// 英語の文の表（終盤のエンディングの画面 src/screens/ending.js と、セーブの札の「クリア」）。key は日本語の表（src/i18n/ja/events_final.js）と同じ
+// 名前は glossary.json の英語の形。無い物はかなの読みのまま
+(function (R) {
+  'use strict';
+  R.I18n.add('en', {
+    'ui.ending.titlePage.L.title.text': 'The First Chronicle',
+    'ui.ending.titlePage.L.title.lines': 'In the beginning there were no words,\nonly a white dark.\n……\nI lit a fire,\nand told the first story.',
+    'ui.ending.titlePage.L.title.text_2': 'Title',
+    'ui.ending.reading.L.reading.text': 'Chapter {p0}',
+    'ui.ending.creditRows.1': 'The People of the Story',
+    'ui.ending.creditRows.1_2': 'Apprentice Storyteller',
+    'ui.ending.creditRows.0': ['Berna', 'Storyteller of Roa'],
+    'ui.ending.creditRows.1_3': ['Fina', 'The Girl in the Gray Cloak'],
+    'ui.ending.creditRows.2': ['Rowell', 'Recorder'],
+    'ui.ending.creditRows.3': ['Lazaro', 'Grand Scribe'],
+    'ui.ending.creditRows.4': ['Noa', 'Keeper of the Bookmark Inn'],
+    'ui.ending.creditRows.5': ['Mira', 'The Girl Who Loved to Sing'],
+    'ui.ending.creditRows.1_4': 'The People of the Eight Lands',
+    'ui.ending.creditRows.0_2': ['Verda Forest', 'Gord　Katri　Pim　Rita　Hanna'],
+    'ui.ending.creditRows.1_5': ['Zahara Desert', 'Zaid　Nadia　Abul　Fara　Rashid'],
+    'ui.ending.creditRows.2_2': ['Norden Snowfields', 'Jorn　Sonja　Hald'],
+    'ui.ending.creditRows.3_2': ['Graymoor Marsh', 'Emma　Tobias　Beppo　Klaus'],
+    'ui.ending.creditRows.4_2': ['Marea Isles', 'Marina　Drake'],
+    'ui.ending.creditRows.5_2': ['Gald Highlands', 'Borg　Helga　Pip'],
+    'ui.ending.creditRows.6': ['Ashen Wastes', 'Dorga　Tessa　Garnet'],
+    'ui.ending.creditRows.7': ['Orbis Plateau', 'Octavia　Luca'],
+    'ui.ending.creditRows.1_6': 'Fellow Travelers',
+    'ui.ending.creditRows.1_7': 'Otto　Tadeo　Yena',
+    'ui.ending.creditRows.1_8': 'Those Who Live in the Legends',
+    'ui.ending.creditRows.1_9': 'Elm　King Hazar　Neve the White Dragon　Melda　Glen',
+    'ui.ending.creditRows.1_10': 'Companions on the Road',
+    'ui.ending.creditRows.1_11': 'Everyone who carried the light with us',
+    'ui.ending.creditRows.1_12': 'Created by',
+    'ui.ending.fin.L.fin.text': '―― The End',
+    'ui.saveload.saveCard.clear': 'Cleared',
+  });
+})(window.RPG);

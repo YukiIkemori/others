@@ -34,14 +34,14 @@
       await x.narr(ev, R.T('events.story_t8.narr_3'));
     } finally { R.Audio.popBgm(); }
     ev.setFlag('story_t8');
-    ev.setFlag('st_fine_reveal');
+    ev.setFlag('story_fine_reveal');
     // 手がかり帳の余白（§4.2 の 8 行目のあと、破れ目をつなぐと読める名）
     ev.sfx('quill');
     ev.lead('l_main_margin_8');
     await x.narr(ev, R.T('events.story_t8.narr_4'));
     await ev.caption(R.T('events.story_t8.caption'), { ms: 3400 });
     ev.lead('l_main_final_roa');
-  }, { meta: { needs: REGIONS8.map((r) => 'cleared:' + r), gives: ['flag:story_t8', 'flag:st_fine_reveal', 'lead:l_main_margin_8', 'lead:l_main_final_roa'] } });
+  }, { meta: { needs: REGIONS8.map((r) => 'cleared:' + r), gives: ['flag:story_t8', 'flag:story_fine_reveal', 'lead:l_main_margin_8', 'lead:l_main_final_roa'] } });
 
   // ================================================================ 終盤のロア
   const SCENE_VOICES = ['v_fine_roa_01', 'v_berna_roa_01', 'v_fine_roa_02', 'v_berna_roa_02', 'v_rowell_roa_01', 'v_berna_roa_03', 'v_berna_roa_04', 'v_fine_roa_03', 'v_rowell_roa_02'];

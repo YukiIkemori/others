@@ -25,10 +25,10 @@
     for (const [x, y] of [[20, 22], [36, 22], [3, 17], [52, 17], [24, 36], [31, 36], [22, 12], [34, 12]]) O.push(K.prop('lantern', x, y));
 
     // ---------------------------------------------------------------- 人
-    const pre = '!game_clear';
+    const pre = '!final_clear';
     const N = [
       // 着いたときの桟橋の場面（biblia_arrival）
-      K.npc('white_woman', 'npc_woman_1', 24, 36, { name: R.T('map.final_biblia.N.0.white_woman.name'), dir: 'e', talk: [L(R.T('map.final_biblia.N.talk.0.L'))], reward: null, pushable: false, cond: ['final_sailed', '!final_arrived'] }),
+      K.npc('white_woman', 'npc_woman_1', 25, 36, { name: R.T('map.final_biblia.N.0.white_woman.name'), dir: 'e', talk: [L(R.T('map.final_biblia.N.talk.0.L'))], reward: null, pushable: false, cond: ['final_sailed', '!final_arrived'] }),
       K.npc('noa_quay', 'noa', 22, 36, { name: R.T('map.final_biblia.N.1.noa_quay.name'), dir: 'e', talk: [L(R.T('map.final_biblia.N.talk.0.L_2'))], reward: null, pushable: false, cond: ['final_sailed', '!final_arrived'] }),
       K.npc('rowell_quay', 'rowell', 28, 37, { name: R.T('map.final_biblia.N.2.rowell_quay.name'), dir: 'n', talk: [L('……。')], reward: null, pushable: false, cond: ['final_sailed', '!final_arrived'] }),
       // 北の門のロウェル（封印の扉を開ける前まで）
@@ -42,7 +42,7 @@
       K.npc('old_man', 'npc_old_m_1', 23, 23, { name: R.T('map.final_biblia.N.7.old_man.name'), dir: 'e', talk: 'biblia_old_man', reward: 'news' }),
       K.npc('board_woman', 'npc_woman_2', 22, 19, { name: R.T('map.final_biblia.N.8.board_woman.name'), dir: 'n', talk: 'biblia_board_woman', reward: 'news' }),
       K.npc('child', 'npc_child_1', 33, 26, { name: R.T('map.final_biblia.N.9.child.name'), dir: 's', move: 'wander', radius: 2, talk: 'biblia_child', reward: 'news' }),
-      K.npc('sailor_old', 'npc_sailor_1', 44, 36, { name: R.T('map.final_biblia.N.10.sailor_old.name'), dir: 'w', talk: 'biblia_sailor', reward: 'news' }),
+      K.npc('sailor_old', 'npc_sailor_1', 42, 36, { name: R.T('map.final_biblia.N.10.sailor_old.name'), dir: 'w', talk: 'biblia_sailor', reward: 'news' }),
       K.npc('youth', 'npc_man_1', 11, 29, { name: R.T('map.final_biblia.N.11.youth.name'), dir: 'e', move: { route: [[18, 29], [6, 29], [11, 29]], wait: 2600 }, talk: 'biblia_youth', reward: 'news' }),
       // エンディング（final_ending）: E4 大書庫の入口（まだ夜）・E6 広場（日の出の前）
       K.npc('e_lazaro', 'lazaro', 28, 11, { name: R.T('map.final_biblia.N.12.e_lazaro.name'), dir: 's', talk: [L('……。')], reward: null, pushable: false, cond: 'final_ending_gate' }),

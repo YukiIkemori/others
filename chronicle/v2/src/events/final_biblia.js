@@ -9,7 +9,7 @@
   'use strict';
   const E = (id, run, o) => R.def('events', id, Object.assign({ run, meta: { needs: [], gives: [] } }, o || {}));
   const X = () => R.Final.ev;
-  const clear = (ev) => ev.flag('game_clear');
+  const clear = (ev) => ev.flag('final_clear');
   const after = (ev) => ev.flag('final_lazaro');
 
   // ================================================================ 着いたとき（桟橋）

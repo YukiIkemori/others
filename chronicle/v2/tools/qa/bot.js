@@ -153,6 +153,7 @@
         return;
       }
       case 'menu': case 'hub': {
+        if (task && task.kind === 'use') { if (task.stage === 'used') tap('b'); else selectRow(list, (r) => r.value === 'items') || tap('b'); return; }
         if (task && task.stage === 'saved') { tap('b'); return; }
         if (task && (task.kind === 'save' || task.kind === 'suspend')) { selectRow(list, (r) => r.value === 'save') || tap('b'); return; }
         tap('b');
@@ -180,6 +181,22 @@
         return;
       }
       case 'shop': return onShop(v, list);
+      case 'items': {
+        // 台本の道具（task.kind 'use'）: 品を選び、task.who（無ければ使える最初の人）に使う。数が減ったら閉じる
+        if (!task || task.kind !== 'use' || task.stage === 'used') { tap('b'); return; }
+        if (task.n0 == null) task.n0 = G().items[task.item] || 0;
+        if ((G().items[task.item] || 0) < task.n0) { task.stage = 'used'; note('used ' + task.item); tap('b'); return; }
+        if (v.tgt) {
+          const mem = R.Party.members(), it = R.DB.items[task.item];
+          let want = mem.findIndex((c) => [].concat(task.who || []).includes(c.id) && R.Screens.canTarget(it, c));
+          if (want < 0) want = mem.findIndex((c) => R.Screens.canTarget(it, c));
+          if (want < 0) { task.stage = 'used'; note('use ' + task.item + ': nobody can'); tap('b'); return; }
+          if (v.tgt.i !== want) tap('down'); else tap('a');
+          return;
+        }
+        if (!selectRow(list, (r) => r.value === task.item)) { task.stage = 'used'; tap('b'); }
+        return;
+      }
       case 'letter': case 'tip': case 'detail': tap('a'); return;
       default:
         // 店・装備など（台本では使わない）: 閉じる
@@ -198,14 +215,16 @@
     // 数を選ぶ札（道具）: 目安の数まで、所持金の残り reserve を割らない数を選んで買う
     if (v.qtyPick) {
       const q = v.qtyPick, it = R.DB.items[q.id];
-      const want = q.mode === 'buy' ? Math.max(1, Math.min(q.max, (STOCK[q.id] || 1) - (G0.items[q.id] || 0), Math.floor((gold - reserve) / Math.max(1, it.price)))) : 1;
+      const want = q.mode === 'buy' ? Math.max(1, Math.min(q.max, ((g.buy && g.buy[q.id]) || STOCK[q.id] || 1) - (G0.items[q.id] || 0), Math.floor((gold - reserve) / Math.max(1, it.price)))) : 1;
       if (q.n < want) tap('right'); else if (q.n > want) tap('left'); else tap('a');
       return;
     }
     // 店の品すべて（タブは武器・防具・道具に分かれる）から選び、その品のタブへ L/R で移ってから選ぶ
     const stock = v.stock || list.rows.map((r) => r.value);
     let best = null, bestV = 0;
-    stock.forEach((id) => {
+    // g.buy = {品: 数}: 目標の前にそろえる消耗品（装備より先。ダストウィングの前の目覚まし）
+    if (g.buy) for (const id of Object.keys(g.buy)) { const it = R.DB.items[id]; if (!best && stock.includes(id) && it && it.price <= gold - reserve && (G0.items[id] || 0) < g.buy[id]) best = id; }
+    if (!best) stock.forEach((id) => {
       const it = R.DB.items[id];
       if (!it || !(it.price > 0) || it.price > gold - reserve) return;
       if (['weapon', 'shield', 'head', 'body', 'hands', 'feet', 'acc'].includes(it.slot) && !/^ac_ward_/.test(id)) {   // 状態よけより能力値のアクセサリ
@@ -415,6 +434,7 @@
       if (B.task.stage === 'done') { g._done = true; B.task = null; return; }
       if (B.task.stage === 'title' || B.task.stage === 'loaded') { B.task.stage = 'done'; return; }
       if (B.task.kind === 'save' && B.task.stage === 'saved') { B.task.stage = 'done'; return; }
+      if (B.task.kind === 'use' && B.task.stage === 'used') { B.task.stage = 'done'; return; }
       tap('y');
       return;
     }

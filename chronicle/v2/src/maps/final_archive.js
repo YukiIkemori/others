@@ -148,7 +148,7 @@
       painted: ['stairs_down'],
       spawns: { from5: { x: 17, y: 27, dir: 'n' }, altar: { x: 17, y: 6, dir: 'n' }, e_altar: { x: 17, y: 7, dir: 'n' } },
       exits: [],
-      triggers: [{ id: 'king', x: 11, y: 12, w: 14, h: 1, on: 'step', event: 'archive_6_boss', cond: '!game_clear' }],
+      triggers: [{ id: 'king', x: 11, y: 12, w: 14, h: 1, on: 'step', event: 'archive_6_boss', cond: '!final_clear' }],
       zones: [],
       light: FK.LIGHT_VOID, bgm: 'hollowking',
       meta: { chestsInfo: false, floor: floor(6), sub: R.T('map.final_archive.archive_6.meta.sub') },
