@@ -28,7 +28,7 @@ KEY = {'field': """- green = short ALPINE GRASS (walkable, flat): tough mountain
 - all colour areas are LEVEL GROUND unless listed as not walkable; only the cliffs below are raised.
 - grey-brown with horizontal strata and a green top edge = MOUNTAIN CLIFFS / rock faces (not walkable): sheer layered grey-brown rock, cracked ledges, grass overhanging the top edge, scree at the foot; their outlines are natural and rounded, never square or stepped.
 - black = a deep CHASM (not walkable): a sheer drop into darkness.""",
-       'cave': """- light brown with arcs = the walkable mine FLOOR: packed earth and grey-brown rock of the galleries, cart ruts, small stones and ore crumbs, organic edges (never square or stepped).
+       'cave': """- light brown with arcs = the walkable mine FLOOR: WARM LIGHT tan and ochre packed earth, clearly LIGHTER than the rock walls around it, with cart ruts, footprints, small stones, ore crumbs, spilled coal and puddles, organic edges (never square or stepped).
 - grey-brown with arcs = patches of loose GRAVEL / slag on the floor (walkable, flat).
 - brown with steel lines = a RAIL TRACK for mine carts (walkable): dark wooden sleepers, two steel rails.
 - brown with plank lines = TIMBER PLANKS: a boardwalk or a bridge of beams over a drop (walkable deck).
@@ -36,7 +36,7 @@ KEY = {'field': """- green = short ALPINE GRASS (walkable, flat): tough mountain
 - black = a deep CHASM / shaft (not walkable): a sheer drop into darkness.
 - grey circles = BOULDERS, heaps of ore and rubble (not walkable).
 - brown with vertical lines = TIMBER structures (not walkable): heavy wooden beams and props, scaffolds, sheds.
-- very dark grey = solid ROCK (not walkable): the mountain's rock around the galleries, dark and jagged, seen from above, the sheer faces showing where it rises above the floor, streaked with ore veins; the gallery walls are shored with timber frames here and there; the outlines are natural and rounded, NEVER square, stepped or staircase-shaped; everything outside the floors is solid rock.""",
+- very dark grey = solid ROCK (not walkable): the mountain's rock around the galleries, mid grey-brown and jagged with lit top faces (readable, not black), seen from above, the sheer faces showing where it rises above the floor, streaked with ore veins; the gallery walls are shored with timber frames here and there; the outlines are natural and rounded, NEVER square, stepped or staircase-shaped; everything outside the floors is solid rock.""",
        'town': """- light grey-beige with block lines = STONE PAVING of the streets and terraces (walkable, flat): worn flagstones.
 - light brown with arcs = packed EARTH floor of the cavern (walkable, flat).
 - brown with steel lines = a RAIL TRACK for mine carts running through the town (walkable): dark sleepers, two steel rails.
@@ -60,7 +60,7 @@ for m in d['marks']:
 cell = T * 48 // 32
 WHAT = {'field': 'one outdoor area of rugged mining mountains', 'town': 'a whole mining town built inside a huge cavern under a mountain',
         'cave': 'one floor of an old mine dungeon (timbered galleries dug into a mountain)'}[LOOK]
-STYLE = 'style_mine.png' if LOOK == 'field' else 'style_mine_cave.png'
+STYLE = os.environ.get('STYLE') or ('style_mine.png' if LOOK == 'field' else 'style_mine_cave.png')   # (2026-09-30) 坑道の描き直しは STYLE=style_mine_cave2.png（ドヴァンの岩と土の床を明るくした切り抜き）
 P = f"""Paint the COMPLETE top-down map of {WHAT} in a fantasy JRPG world as ONE finished game map image, in rich premium modern hi-bit pixel art (hand-placed crisp square pixels, hue-shifted colour ramps, dark warm outlines, lush natural detail), classic top-down RPG map view seen from above with a slight 3/4 tilt (tree crowns, rocks and buildings seen from above with their south-facing sides visible; NOT an isometric view, NOT a diorama, no depth-of-field, no tilt-shift, no 3D render, no perspective).
 
 THE PLACE: {SCENE[aid]}

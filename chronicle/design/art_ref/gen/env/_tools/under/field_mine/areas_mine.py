@@ -196,6 +196,8 @@ if __name__ == '__main__':
     import json
     import dng_mine
     AREAS.update(dng_mine.MAPS)
+    import dng_mine2
+    AREAS.update(dng_mine2.MAPS2)
     for aid in sys.argv[1:]:
         a = AREAS[aid]()
         seen0 = np.zeros((a.H, a.W), bool)

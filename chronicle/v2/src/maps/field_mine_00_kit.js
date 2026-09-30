@@ -19,7 +19,7 @@
     r: { mat: 'rock', solid: true }, R: { mat: 'cliff', solid: true, rise: 1 }, X: { mat: 'wall_stone', solid: true },
     l: { mat: 'rock', solid: true, name: 'chasm' },
   };
-  FA.MINE_LIGHT = { ambient: '#48508a', k: 0.52, mood: 'night' };
+  FA.MINE_LIGHT = { ambient: '#5c6498', k: 0.6, poolK: 1.1, spillR: 1.2, mood: 'night' };   // (2026-09-30) 岩の絵が暗いので夜の明るさを上げる
   // 雪原の湯けむりの峠（f_passinn）の東の端 → ガルドの峠道（g_pass）の西の端
   const FROM = { map: 'world', spawn: 'snow_east' }, TO = { map: 'g_pass', spawn: 'west' };
   function link() {

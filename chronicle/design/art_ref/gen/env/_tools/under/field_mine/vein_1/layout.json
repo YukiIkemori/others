@@ -1,0 +1,407 @@
+{
+"id": "vein_1",
+"w": 44,
+"h": 36,
+"rows": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRkRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRkkkkkkXRRRRRRRRRRRRRRRRRllllRRRRRkkkkXRR",
+"RRXkkkkkkkXRRRRRRRRRRRRRRRRRllllRRRRkkkkkkRR",
+"RRXkkkkkkkRRRRRRRRRRRRRRRRRRllllRRRRkkkkkkRR",
+"RRRRkkkkkXRRRRRRRRRRRRRRRRRRllllRRRkkkkkkRRR",
+"RRRRRkkkRRRRRRRRRRRRRRRRRRRRllllRRRkkkRXXRRR",
+"RRRRRkkkRRRRRRRRRRRRRRRRRRRRllllRRkkkRRRRRRR",
+"RRRRRkkkRRRRRRRRRRRRRRRRRRRRllllRRkkkRRRRRRR",
+"RRRRXkkkRRRRRRRRRRRRRRRRRRRRllllRRkkkRRRRRRR",
+"RRRRXkkkRRRRRRRRRRRRRRRRRRRRllllRRkrkXRRRRRR",
+"RRRRRRkkkXXRRRRRRRRRRRRRRRRRllllRRkkkXRRRRRR",
+"RRRRRRkkkkkRRRkkkkRXXRRRRXXRllllRRkkRRRRRRRR",
+"RRRRRRRkkkkkkkkkkkkkkXXRRkkRllllRRkkRRRRRRRR",
+"RRRRRRRRRkkkkkkkkkkkkkkkkkkkllllRRkkkkRRRRRR",
+"RRRRRRRRRRkkkkkkkkkkkkkkkkkkllllRkkkkkRRRRRR",
+"RRRRRRRRRRkkkkkkkkkkkkkkkkkkXXXXXkkkkkRRRRRR",
+"RRRRRRRRRRkkkkkkkkkkkkkkkkkkllllRkkkkkRRRRRR",
+"RRRRRRRRRRRkkkkkkkkkkkkXkkkkllllRkkkkRRRRRRR",
+"RRRRRRRRRRRkkkkkkkkkkkXXkkRRllllRRkkkRRRRRRR",
+"RRRRRRRRRRkkkkkkkkkXXRRRRRRRllllRXkkkRRRRRRR",
+"RRRRRRRRRkkkXRRRRRRRRRRRRRRRllllRXkkkRRRRRRR",
+"RRRRRRRRkkkRRRRRRRRRRRRRRRRRllllRRkkkRRRRRRR",
+"RRRRRRRkkkkRRRRRRRRRRRRRRRRRllllRXkkkRRRRRRR",
+"RRRRRRRkkkRRRRRRRRRRRRRRRRRRllllRXkkkRRRRRRR",
+"RRRRRRRkkRRRRRRRRRRRRRRRRRRRllllRRRkkkRRRRRR",
+"RRRRRRXkkRRRRRRRRRRRRRRRRRRllllllRRkkkRRRRRR",
+"RRRRRRXkkRRRRRRRRRRRRRRRRRRllllllRRRkkkXXRRR",
+"RRRRRRRkkkkRRRRRRRRRRRRRRRRlllllRRRRkkkkkRRR",
+"RRRRRRRkkkkkRRRRRRRRRRRRRRRRllllRRRkkkkkkkRR",
+"RRRRRRRkkkkkkXRRRRRRRRRRRRRRllllRRRkkkkkkkRR",
+"RRRRRRkkkkkkkXRRRRRRRRRRRRRlllllRRRkkkkkkkRR",
+"RRRRRRRkkkkkRRRRRRRRRRRRRRRRRRRRRRRXkkkkkRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
+],
+"marks": [
+{
+"kind": "trestle",
+"cells": [
+[
+28,
+17
+],
+[
+29,
+17
+],
+[
+30,
+17
+],
+[
+31,
+17
+],
+[
+32,
+17
+]
+],
+"text": "a narrow timber RAIL TRESTLE across the glowing chasm: two rails on sleepers, no planks to walk on",
+"color": [
+140,
+100,
+62
+],
+"solid": true
+},
+{
+"kind": "crystal",
+"cells": [
+[
+2,
+4
+],
+[
+2,
+5
+],
+[
+10,
+3
+],
+[
+10,
+4
+],
+[
+4,
+10
+],
+[
+4,
+11
+],
+[
+10,
+12
+],
+[
+9,
+12
+],
+[
+20,
+13
+],
+[
+19,
+13
+],
+[
+22,
+20
+],
+[
+23,
+20
+],
+[
+12,
+22
+],
+[
+6,
+27
+],
+[
+6,
+28
+],
+[
+13,
+32
+],
+[
+13,
+31
+],
+[
+25,
+13
+],
+[
+26,
+13
+],
+[
+37,
+12
+],
+[
+37,
+11
+],
+[
+40,
+7
+],
+[
+39,
+7
+],
+[
+41,
+3
+],
+[
+33,
+24
+],
+[
+33,
+25
+],
+[
+40,
+28
+],
+[
+39,
+28
+],
+[
+35,
+33
+]
+],
+"text": "VEINS OF GLOWING PALE-BLUE ORE CRYSTALS: clusters of bright cyan-white crystal points growing out of the rock face at the gallery edge",
+"color": [
+120,
+200,
+235
+],
+"solid": true
+},
+{
+"kind": "frame",
+"cells": [
+[
+9,
+6
+],
+[
+21,
+14
+],
+[
+22,
+14
+],
+[
+23,
+19
+],
+[
+33,
+21
+],
+[
+33,
+22
+]
+],
+"text": "heavy TIMBER SHORING FRAMES against the rock face: two upright props and a cross beam, old and dark",
+"color": [
+150,
+108,
+64
+],
+"solid": true
+},
+{
+"kind": "junk",
+"cells": [
+[
+19,
+21
+],
+[
+20,
+21
+]
+],
+"text": "against the rock face: an old broken MINE CART tipped on its side with spilled ore, rusty rails and planks stacked",
+"color": [
+112,
+92,
+70
+],
+"solid": true
+},
+{
+"kind": "chasmglow",
+"cells": [
+[
+29,
+8
+],
+[
+30,
+25
+]
+],
+"text": "deep in the chasm, far below, a faint glow of crystal",
+"color": [
+120,
+200,
+235
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 6,
+"y": 4
+},
+{
+"type": "o",
+"x": 6,
+"y": 5
+},
+{
+"type": "o",
+"x": 9,
+"y": 32
+},
+{
+"type": "o",
+"x": 25,
+"y": 17
+},
+{
+"type": "o",
+"x": 26,
+"y": 17
+},
+{
+"type": "o",
+"x": 35,
+"y": 17
+},
+{
+"type": "o",
+"x": 34,
+"y": 17
+},
+{
+"type": "o",
+"x": 38,
+"y": 4
+},
+{
+"type": "o",
+"x": 38,
+"y": 31
+},
+{
+"type": "o",
+"x": 38,
+"y": 30
+},
+{
+"type": "o",
+"x": 16,
+"y": 17
+},
+{
+"type": "o",
+"x": 14,
+"y": 19
+},
+{
+"type": "o",
+"x": 19,
+"y": 15
+},
+{
+"type": "o",
+"x": 26,
+"y": 19
+},
+{
+"type": "o",
+"x": 36,
+"y": 25
+}
+],
+"spawns": {
+"up": {
+"x": 6,
+"y": 5,
+"dir": "s"
+},
+"from2": {
+"x": 38,
+"y": 30,
+"dir": "n"
+},
+"cart_w": {
+"x": 26,
+"y": 17,
+"dir": "e"
+},
+"cart_e": {
+"x": 34,
+"y": 17,
+"dir": "w"
+}
+},
+"exits": [],
+"notes": [],
+"meta": {
+"rails": [
+[
+[
+24.5,
+17.5
+],
+[
+36.0,
+17.5
+]
+]
+],
+"name": "深淵の鉱脈",
+"region": "r_mine",
+"zones": [],
+"worldRect": [
+0,
+0,
+1,
+1
+],
+"look": "cave",
+"smooth": 0.6
+}
+}

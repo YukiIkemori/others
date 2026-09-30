@@ -15,5 +15,9 @@
     'map.field_star_crater.s_crater.name': '星降りの窪地',
     'map.field_star_crater.s_crater.objects.0.text': '星降りの窪地\n窪地の底へ下りる道',
     'map.field_star_crater.s_crater.meta.sub': '高原に落ちた星の跡',
+    // ---- src/maps/field_star_ridge.js
+    'map.field_star_ridge.s_ridge.name': '星読みの尾根',
+    'map.field_star_ridge.s_ridge.objects.0.text': '星読みの尾根\n北 → 星読みの塔\n西 → 学術都市オルビス 東門',
+    'map.field_star_ridge.s_ridge.meta.sub': '星読みの塔へ続く細い尾根',
   });
 })(window.RPG);

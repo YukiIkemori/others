@@ -34,6 +34,18 @@ gain = float(os.environ.get('GAIN', gain))
 A = np.clip(A * gain, 0, 255)
 print('gain', round(gain, 3), 'target', round(target, 1))
 
+# ---- grade (2026-09-30 見直し: 山地の絵が暗すぎた): grade.json[id] = {gamma, floor, wall, warm}
+#      gamma で暗部を持ち上げ、歩ける床（rows の歩けるマスをぼかした重み）は floor 倍、岩壁などは wall 倍。床と壁の差で道が読めるように。
+GR = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'grade.json'))).get(aid) if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'grade.json')) else None
+if GR:
+    wmask = ndimage.gaussian_filter(kron(walk).astype(np.float32), T * 0.35)[..., None]
+    A = 255 * (A / 255) ** GR.get('gamma', 1.0)
+    A = A * (GR.get('wall', 1.0) * (1 - wmask) + GR.get('floor', 1.0) * wmask)
+    wa = GR.get('warm', 0)
+    if wa: A = A * np.array([1 + wa, 1 + wa * 0.4, 1 - wa * 0.5], np.float32)
+    A = np.clip(A, 0, 255)
+    print('grade', GR, 'mean lum', round(float(lum(A).mean()) / 255, 3), 'floor', round(float(lum(A[kron(walk)]).mean()) / 255, 3))
+
 # ---- overlay: crowns over the walkable row north of tree cells
 tree = np.isin(g, list('TF'))
 band = np.zeros((H * T, W * T), bool)

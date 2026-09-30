@@ -1,0 +1,348 @@
+{
+"id": "vein_3",
+"w": 36,
+"h": 30,
+"rows": [
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRXXXXXXXXXXXXXRRRRRRRXXRR",
+"RRRRRRRRRRRRXXXXXXXXXXXXXRRRRRRkkkRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRkkkkkRR",
+"RRRRRRRRRRRRRRRkkkkkkRRRRRRkkkkkkkRR",
+"RRRRRRRRRRRRkkkkkkkkkkRRRkkkkkkkkRRR",
+"RRRRRRRRRRRkkkkkkkkkkkkkkkkkRRRRRRRR",
+"RRRRRRRRRRkXkkkkkkkkkkkkkXkkRRRRRRRR",
+"RRRRRRRRRkkkkkkkkkkkkkkkkkkkRRRRRRRR",
+"RRRRRRRRRkkkkkkkkkkkkkkkkkkkkXRRRRRR",
+"RRRRRRRRXkkkkkkkkkkkkkkkkkkkkXRRRRRR",
+"RRRRRRRRXkkkkkkkkkkkkkkkkkkkRRRRRRRR",
+"RRRRRRRRRkkkkkkkkkkkkkkkkkkkRRRRRRRR",
+"RRRRRRRRRXkkkkkkkkkkkkkkkkkkRRRRRRRR",
+"RRRRRRRRRXkkXkkkkkkkkkkkXkkkRRRRRRRR",
+"RRRRRRRRRRRkkkkkkkkkkkkkkkkXRRRRRRRR",
+"RRRRRRRRRRRRRkkkkkkkkkkkkkRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRkkkkkRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRXkkRXXRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRXkkRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRXkkRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRXkkRRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRkkkRRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRkkkkkkRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRXkkkkkkRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRXkkkkkkXRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRkkkRRRRRRRRRRRRRRR",
+"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
+],
+"marks": [
+{
+"kind": "seam",
+"cells": [
+[
+12,
+3
+],
+[
+12,
+4
+],
+[
+13,
+3
+],
+[
+13,
+4
+],
+[
+14,
+3
+],
+[
+14,
+4
+],
+[
+15,
+3
+],
+[
+15,
+4
+],
+[
+16,
+3
+],
+[
+16,
+4
+],
+[
+17,
+3
+],
+[
+17,
+4
+],
+[
+18,
+3
+],
+[
+18,
+4
+],
+[
+19,
+3
+],
+[
+19,
+4
+],
+[
+20,
+3
+],
+[
+20,
+4
+],
+[
+21,
+3
+],
+[
+21,
+4
+],
+[
+22,
+3
+],
+[
+22,
+4
+],
+[
+23,
+3
+],
+[
+23,
+4
+],
+[
+24,
+3
+],
+[
+24,
+4
+]
+],
+"text": "the HEART OF THE VEIN: one huge seam of big glowing pale-blue and violet CRYSTALS filling the north wall of the hall",
+"color": [
+120,
+200,
+235
+],
+"solid": true
+},
+{
+"kind": "pillar",
+"cells": [
+[
+11,
+9
+],
+[
+25,
+9
+],
+[
+12,
+16
+],
+[
+24,
+16
+]
+],
+"text": "a tall PILLAR of glowing pale-blue crystal",
+"color": [
+120,
+200,
+235
+],
+"solid": true
+},
+{
+"kind": "crystal",
+"cells": [
+[
+8,
+12
+],
+[
+8,
+13
+],
+[
+9,
+16
+],
+[
+9,
+15
+],
+[
+29,
+12
+],
+[
+29,
+11
+],
+[
+27,
+17
+],
+[
+16,
+22
+],
+[
+16,
+23
+],
+[
+21,
+20
+],
+[
+20,
+20
+],
+[
+15,
+27
+],
+[
+15,
+26
+],
+[
+22,
+27
+],
+[
+33,
+3
+],
+[
+32,
+3
+]
+],
+"text": "VEINS OF GLOWING PALE-BLUE ORE CRYSTALS: clusters of bright cyan-white crystal points growing out of the rock face at the gallery edge",
+"color": [
+120,
+200,
+235
+],
+"solid": true
+},
+{
+"kind": "frame",
+"cells": [
+[
+16,
+21
+],
+[
+16,
+20
+]
+],
+"text": "heavy TIMBER SHORING FRAMES against the rock face: two upright props and a cross beam, old and dark",
+"color": [
+150,
+108,
+64
+],
+"solid": true
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 18,
+"y": 27
+},
+{
+"type": "o",
+"x": 18,
+"y": 26
+},
+{
+"type": "o",
+"x": 18,
+"y": 10
+},
+{
+"type": "o",
+"x": 17,
+"y": 10
+},
+{
+"type": "o",
+"x": 19,
+"y": 10
+},
+{
+"type": "o",
+"x": 31,
+"y": 5
+},
+{
+"type": "o",
+"x": 18,
+"y": 19
+},
+{
+"type": "o",
+"x": 14,
+"y": 13
+},
+{
+"type": "o",
+"x": 22,
+"y": 13
+}
+],
+"spawns": {
+"up": {
+"x": 18,
+"y": 26,
+"dir": "n"
+}
+},
+"exits": [],
+"notes": [],
+"meta": {
+"name": "深淵の鉱脈",
+"region": "r_mine",
+"zones": [],
+"worldRect": [
+0,
+0,
+1,
+1
+],
+"look": "cave",
+"smooth": 0.6
+}
+}

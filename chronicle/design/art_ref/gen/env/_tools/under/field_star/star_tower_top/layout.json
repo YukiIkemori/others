@@ -230,6 +230,7 @@
 1,
 1
 ],
-"look": "int"
+"look": "int",
+"smooth": 0.45
 }
 }

@@ -118,7 +118,8 @@
           { id: 'warden', x: 21, y: 18, w: 14, h: 2, on: 'step', event: 'mine_warden', cond: ['mine_choice', '!mine_warden_done'] },
         ],
         zones: ZONE,
-        light: MK.LIGHT_DEEP, dark: true, bgm: 'cave', bbg: 'mine', propSet: 'mine',
+        light: MK.LIGHT_DEEP, dark: [{ rect: [0, 0, 22, 31] }], darkAlpha: 0.74,   // (2026-09-30) 暗がりは岩戸の手前の曲がりくねった坑道だけ（前の間・番人の広間は形が読める）
+        bgm: 'cave', bbg: 'mine', propSet: 'mine',
         art: Object.assign({}, P.art, { painted: ['white_glow'] }),
         meta: { chestsInfo: true, floor: R.T('map.mine_deep.mine_3.meta.floor'), sub: R.T('map.mine_deep.mine_3.meta.sub') },
       });

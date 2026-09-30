@@ -1,0 +1,20 @@
+{
+ "id": "star_academy_1",
+ "kind": "under",
+ "map": "star_academy_1",
+ "tile": 32,
+ "size32": [
+  1536,
+  1280
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.813,
+ "files": {
+  "24": "star_academy_1@24.png",
+  "32": "star_academy_1@32.png",
+  "40": "star_academy_1@40.png"
+ },
+ "src": "generated"
+}

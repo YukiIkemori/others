@@ -1,0 +1,19 @@
+{
+ "id": "orbis",
+ "kind": "under",
+ "map": "orbis",
+ "tile": 32,
+ "size32": [
+  1920,
+  1664
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.948,
+ "files": {
+  "24": "orbis@24.png",
+  "32": "orbis@32.png"
+ },
+ "src": "generated"
+}

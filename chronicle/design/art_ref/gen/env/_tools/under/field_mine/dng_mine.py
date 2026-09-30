@@ -33,6 +33,47 @@ def keepcells(a, cells, ch='k'):
         a.keep[y, x] = True
 
 
+# ---- (2026-09-30 描き直し) 坑道の飾り: 床に面した岩壁のマスに、青く光る鉱石の脈・坑木の枠・古いトロッコ・道具を描かせる（壁のマスなので当たりは変わらない）
+CRYSTAL = (120, 200, 235)
+FRAME = (150, 108, 64)
+JUNK = (112, 92, 70)
+
+
+def wall_spot(a, x, y, n=2):
+    """(x, y) にいちばん近い「床に面した岩壁」のマスから、壁ぞいに n マス"""
+    WK = ',;".:s_=cuk'
+    best = None
+    for j in range(a.H):
+        for i in range(a.W):
+            if a.g[j, i] != 'R' or a.keep[j, i]: continue
+            if not any(a.inb(i + dx, j + dy) and a.g[j + dy, i + dx] in WK for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))): continue
+            d = (i - x) ** 2 + (j - y) ** 2
+            if best is None or d < best[0]: best = (d, i, j)
+    if best is None: return []
+    out = [(best[1], best[2])]
+    while len(out) < n:
+        cx, cy = out[-1]; nxt = None
+        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            i, j = cx + dx, cy + dy
+            if (i, j) in out or not a.inb(i, j) or a.g[j, i] != 'R' or a.keep[j, i]: continue
+            if any(a.inb(i + ex, j + ey) and a.g[j + ey, i + ex] in WK for ex, ey in ((1, 0), (-1, 0), (0, 1), (0, -1))): nxt = (i, j); break
+        if not nxt: break
+        out.append(nxt)
+    return out
+
+
+def dress(a, crystals=(), frames=(), junk=(), tools=()):
+    """坑道の壁ぞいの飾り（どれも岩壁のマスの上。印の色ごとに 1 行の説明）"""
+    c = [q for (x, y) in crystals for q in wall_spot(a, x, y, 2)]
+    if c: a.mark('crystal', c, 'VEINS OF GLOWING PALE-BLUE ORE CRYSTALS: clusters of bright cyan-white crystal points growing out of the rock face at the gallery edge', CRYSTAL)
+    f = [q for (x, y) in frames for q in wall_spot(a, x, y, 2)]
+    if f: a.mark('frame', f, 'heavy TIMBER SHORING FRAMES against the rock face: two upright props and a cross beam, old and dark', FRAME)
+    j = [q for (x, y) in junk for q in wall_spot(a, x, y, 2)]
+    if j: a.mark('junk', j, 'against the rock face: an old broken MINE CART tipped on its side with spilled ore, rusty rails and planks stacked', JUNK)
+    t = [q for (x, y) in tools for q in wall_spot(a, x, y, 1)]
+    if t: a.mark('tools', t, 'against the rock face: a rack of old PICKS AND SHOVELS, a coil of rope and a water barrel', (130, 110, 90))
+
+
 # ======================================================================== the cavern town
 def dovan():
     """鉱山都市ドヴァン (54 x 48): a mining town inside a huge cavern (WORLD §5.10). The tunnel from the surface gate comes in at the south
@@ -180,6 +221,9 @@ def mine_2():
     S([(22, 23), (16, 29), (11, 35)], 2.8, seed=13)
     B(9.5, 38.5, 4.2, 3.2, seed=14)
     for (x, y) in [(52, 32), (47, 35), (26, 17), (31, 16)]: a.put(x, y, 'r', True)
+    dress(a, crystals=[(52, 4), (38, 15), (22, 16), (34, 22), (2, 20), (46, 22), (54, 34), (14, 32), (5, 38), (33, 37)],
+          frames=[(44, 9), (35, 16), (22, 21), (26, 25), (30, 25), (19, 26), (12, 34), (43, 20), (48, 28)],
+          junk=[(21, 23), (46, 36)], tools=[(22, 34), (47, 3)])
     keep = [(48, 5), (48, 7), (5, 20), (4, 20), (6, 20), (28, 32), (27, 32), (30, 31), (31, 31), (29, 35), (41, 21), (42, 21), (43, 22), (50, 33), (49, 34),
             (9, 41), (9, 39), (20, 16), (37, 18), (13, 37), (24, 35), (34, 33)]
     keepcells(a, keep)

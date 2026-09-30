@@ -75,6 +75,13 @@ for (const T of [1, 3]) {
   BOSSES['tr_b_ironwarden' + k] = { troop: 'tr_b_ironwarden', tier: T, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 13], note: '大槌を振りかぶったら守る。水が効く。3/4 で二度動く' };
 }
 
+// オルビス高原（src/data/bosses_star.js）。好きな順に遊ぶので、ティア 1・3 で測る
+for (const T of [1, 3]) {
+  const k = '@' + T;
+  BOSSES['tr_b_orrery' + k] = { troop: 'tr_b_orrery', tier: T, kind: 'mid', members: STD, fight: 35, repeat: T === 3 ? 36 : 30, script: 90, diff: 50, rounds: [5, 11], note: '日・月・星の順。輪がそろったら守る（ティア 3 の一行はリピートでも押し切りやすい: 中ボスなので 36% まで）' };
+  BOSSES['tr_b_stareater' + k] = { troop: 'tr_b_stareater', tier: T, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 13], note: '大口を開けたら守る。弱ると光が効く' };
+}
+
 function loadR() { return require('./lib/load')({ quiet: true }); }
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : 0);
 

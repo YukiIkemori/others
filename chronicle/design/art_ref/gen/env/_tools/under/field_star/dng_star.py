@@ -39,7 +39,7 @@ def keepcells(a, cells, ch='c'):
 
 
 # ======================================================================== the town
-def orbis():
+def orbis_guide():
     """学術都市オルビス (60 x 52): a walled university town on the plateau (WORLD §5.12). Outer wall ring; an inner wall across (rows 21-22)
     with two gates (academy gate x 14-15, observatory gate x 44-45) and a wall between the two northern districts (x 29-30).
     Market (south): plaza with a star fountain, inn, tavern, item shop, arms, magic shop, tailor, laundry, a house. Academy district (NW):
@@ -111,6 +111,58 @@ def orbis():
     return a
 
 
+def orbis():
+    """学術都市オルビス (60 x 52), re-measured on the painting orbis/gen1.png (the painter moved the walls and buildings from the first guide,
+    kept as orbis_guide(); the guide of the generation is guide_48.png). Outer walls: rows 0-2, x 0-2, x 55-59, rows 48-51 (outside the
+    walls is solid). Inner wall row 21 (the rows 20 and 22 on either side are walkable strips) with gates x 14 and x 42 and the open main
+    street x 27-30; the walls between the north districts x 26 and x 31 (rows 3-13). The main street runs north to a shut north gate
+    (iron gate props at row 2). South gate x 27-29 (rows 48-51), east gate rows 30-31 (x 55-59, a small bridge)."""
+    a = Area('orbis', 60, 52, 8101, base=',')
+    W, H = a.W, a.H
+    X = lambda x0, y0, x1, y1, ch='X': a.rect(x0, y0, x1 - x0 + 1, y1 - y0 + 1, ch, force=True)
+    X(0, 0, 59, 2); X(0, 0, 2, 51); X(55, 0, 59, 51); X(0, 48, 59, 51)
+    X(3, 21, 54, 21)
+    X(26, 3, 26, 13); X(31, 3, 31, 13)
+    # paving
+    for (x0, y0, x1, y1) in [(27, 3, 30, 47), (3, 14, 54, 15), (3, 22, 54, 23), (22, 25, 34, 37), (3, 36, 27, 37), (35, 30, 54, 31),
+                             (9, 11, 12, 13), (22, 11, 23, 13), (39, 13, 39, 13), (13, 16, 14, 20), (41, 16, 42, 20), (39, 13, 39, 13), (7, 33, 7, 35), (16, 33, 16, 35)]:
+        X(x0, y0, x1, y1, 'c')
+    X(14, 21, 14, 21, 'c'); X(42, 21, 42, 21, 'c'); X(27, 21, 30, 21, 'c')
+    X(27, 48, 29, 51, 'c'); X(55, 30, 59, 31, 'c')
+    # buildings (door on the bottom row)
+    B = [('orbis_academy', 3, 3, 17, 10, 11), ('orbis_library', 20, 3, 25, 10, 23), ('orbis_observatory', 35, 2, 43, 12, 39),
+         ('orbis_house4', 46, 9, 52, 13, 49), ('orbis_house5', 46, 16, 52, 19, 49),
+         ('orbis_guardroom', 3, 16, 9, 19, 6), ('orbis_records', 20, 16, 25, 19, 23),
+         ('orbis_inn', 3, 25, 11, 32, 7), ('orbis_tavern', 12, 25, 20, 32, 16), ('orbis_tailor', 4, 38, 11, 44, 7), ('orbis_laundry', 13, 38, 20, 44, 17),
+         ('orbis_items', 36, 25, 43, 29, 40), ('orbis_arms', 45, 25, 52, 29, 48), ('orbis_magic', 36, 32, 43, 36, 40), ('orbis_house', 45, 32, 52, 36, 49),
+         ('orbis_house2', 36, 38, 43, 44, 40), ('orbis_house3', 45, 38, 53, 44, 50)]
+    for (bid, x0, y0, x1, y1, dx) in B:
+        X(x0, y0, x1, y1)
+        a.put(dx, y1, 'c', True)
+        if a.g[y1 + 1, dx] not in 'c': a.put(dx, y1 + 1, 'c', True)
+        a.meta.setdefault('blds', []).append(dict(id=bid, x=x0, y=y0, w=x1 - x0 + 1, h=y1 - y0 + 1, door=[dx, y1]))
+    X(44, 1, 46, 5)                                   # the star-lamp tower
+    X(47, 3, 52, 8)                                   # a researcher's house (no door: the painter drew its door onto the roof behind)
+    # trees
+    for (x0, y0, x1, y1) in [(18, 2, 18, 11), (3, 11, 4, 13), (17, 11, 17, 11), (10, 17, 10, 19), (17, 16, 18, 19),
+                             (32, 2, 33, 5), (32, 7, 33, 10), (53, 2, 54, 5), (53, 7, 54, 9), (53, 10, 54, 12), (43, 9, 44, 11),
+                             (36, 16, 37, 19), (33, 18, 34, 19), (39, 16, 40, 19), (43, 16, 44, 19), (53, 16, 54, 19),
+                             (5, 33, 5, 34), (3, 33, 4, 35), (10, 33, 10, 35), (13, 33, 14, 35), (19, 33, 19, 35),
+                             (8, 45, 8, 46), (11, 45, 12, 46), (21, 40, 22, 46), (24, 42, 24, 45), (25, 38, 25, 42),
+                             (35, 33, 35, 36), (53, 33, 54, 36), (43, 25, 44, 28), (53, 25, 54, 27),
+                             (33, 39, 34, 46), (36, 45, 36, 46), (41, 45, 41, 46), (45, 45, 46, 46), (51, 45, 51, 46)]:
+        X(x0, y0, x1, y1, 'T')
+    # the star fountain
+    X(26, 29, 31, 33, 'w'); a.put(26, 29, 'c', True); a.put(31, 29, 'c', True); a.put(26, 33, 'c', True); a.put(31, 33, 'c', True)
+    a.spawns = {'gate_s': dict(x=28, y=47, dir='n'), 'gate_e': dict(x=54, y=30, dir='w'), 'warp': dict(x=29, y=38, dir='s'),
+                'academy': dict(x=11, y=12, dir='s'), 'plaza': dict(x=25, y=34, dir='n')}
+    a.exits = [dict(x=27, y=H - 1, w=3, h=1, to={'map': 's_plateau', 'spawn': 'north'}, edge='s'),
+               dict(x=W - 1, y=30, w=1, h=2, to={'map': 's_ridge', 'spawn': 'west'}, edge='e')]
+    a.objects = []
+    a.meta.update(name='学術都市オルビス', region='r_star', zones=[], worldRect=[602, 16, 60, 52], look='town')
+    return a
+
+
 # ======================================================================== the academy after lights-out
 def _hall(a, x0, y0, x1, y1, ch='c'):
     a.rect(x0, y0, x1 - x0 + 1, y1 - y0 + 1, ch, force=True)
@@ -127,23 +179,21 @@ def star_academy_1():
     _hall(a, 33, 8, 35, 31)                 # east corridor
     _hall(a, 12, 8, 35, 10)                 # north corridor
     _hall(a, 18, 3, 29, 7)                  # the stair hall
-    _hall(a, 16, 12, 31, 27, ',')           # the courtyard garden
+    # the courtyard (re-measured on the painting star_academy_1/gen1.png): the cloister rail at x 16 / 31 and rows 11 / 27, the lawn x 17-30
+    # rows 12-26, openings only in the middle of the north and south rails (x 23-24); x 15, x 32 and row 28 are corridor floor; the fountain
+    # x 22-25 rows 18-21
+    a.rect(15, 11, 18, 18, 'c', force=True)
+    a.rect(17, 12, 14, 15, ',', force=True)
     a.mask_fill(fbm(5, a.W, a.H, 3) > 0.62, '"', only=',')
-    a.rect(16, 12, 16, 1, 'c', force=True); a.rect(16, 27, 16, 1, 'c', force=True)
-    a.rect(16, 12, 1, 16, 'c', force=True); a.rect(31, 12, 1, 16, 'c', force=True)   # the cloister walk round the garden
-    a.rect(22, 18, 4, 3, 'w', force=True)
-    a.mark('fountain', [(x, y) for x in range(22, 26) for y in range(18, 21)], 'a round marble FOUNTAIN with a small bronze star on a column in the middle of its basin', (130, 150, 180))
-    # the courtyard's openings into the corridors (the rest of the cloister is a low stone balustrade)
-    bal = [(15, y) for y in range(11, 29) if y not in (19, 20)] + [(32, y) for y in range(11, 29) if y not in (19, 20)] + \
-          [(x, 11) for x in range(15, 33) if x not in (23, 24)] + [(x, 28) for x in range(15, 33) if x not in (23, 24)]
-    for (x, y) in bal: a.put(x, y, 'X', True)
-    for (x, y) in [(15, 19), (15, 20), (32, 19), (32, 20), (23, 11), (24, 11), (23, 28), (24, 28)]: a.put(x, y, 'c', True)   # 中庭への口
+    a.rect(22, 18, 4, 4, 'w', force=True)
+    a.mark('fountain', [(x, y) for x in range(22, 26) for y in range(18, 22)], 'a round marble FOUNTAIN with a small bronze star on a column in the middle of its basin', (130, 150, 180))
+    bal = [(16, y) for y in range(11, 28)] + [(31, y) for y in range(11, 28)] + [(x, 11) for x in range(17, 31) if x not in (23, 24)] + [(x, 27) for x in range(17, 31) if x not in (23, 24)]
     a.mark('balustrade', bal, 'a low white stone BALUSTRADE round the courtyard garden (the cloister rail)', (200, 198, 190))
     # classrooms (wood floors): W1 x 4-10 rows 4-13, W2 x 4-10 rows 16-26, E1 x 37-43 rows 4-13, E2 x 37-43 rows 16-26
     for (x0, y0, x1, y1) in [(4, 4, 10, 13), (4, 16, 10, 26), (37, 4, 43, 13), (37, 16, 43, 26)]:
         _hall(a, x0, y0, x1, y1, 'u')
     # doors between the classrooms and the corridors (2 per room)
-    for (x, y) in [(11, 6), (11, 11), (11, 18), (11, 24), (36, 6), (36, 11), (36, 18), (36, 24), (7, 27), (40, 27), (7, 28), (40, 28)]:
+    for (x, y) in [(11, 6), (11, 10), (11, 18), (11, 22), (36, 6), (36, 10), (36, 18), (36, 22), (7, 27), (40, 27), (7, 28), (40, 28)]:
         a.put(x, y, 'c', True)
     # desks (rows of benches) and blackboards
     for (x0, y0) in [(5, 7), (5, 19), (38, 7), (38, 19)]:
@@ -163,7 +213,8 @@ def star_academy_1():
     a.put(6, 37, 'c', True); a.keep[37, 6] = True
     # carpets
     a.rect(20, 4, 8, 3, 'k', force=True)
-    keep = [(6, 36), (6, 35), (23, 4), (24, 4), (23, 35), (24, 36), (7, 29), (41, 29), (34, 9), (34, 28), (13, 9), (34, 9), (8, 22), (40, 10), (23, 26), (21, 19), (13, 24)]
+    a.rect(23, 35, 2, 2, 'X', force=True)   # 閉じた大扉（絵の扉の板）
+    keep = [(6, 36), (6, 35), (23, 4), (24, 4), (7, 29), (41, 29), (34, 9), (34, 28), (13, 9), (34, 9), (8, 22), (40, 10), (23, 26), (21, 19), (13, 24), (23, 34)]
     keepcells(a, keep)
     a.spawns = {'service': dict(x=6, y=35, dir='n'), 'from2': dict(x=23, y=4, dir='s')}
     a.meta.update(name='消灯後の学院', region='r_star', zones=[], worldRect=[0, 0, 1, 1], look='int')
@@ -191,7 +242,8 @@ def star_academy_2():
     for (x, y) in [(27, 10), (28, 10), (29, 10), (27, 22), (28, 22), (29, 22)]: a.put(x, y, 'c', True)
     a.mark('desk', [(36, 6), (37, 6), (38, 6)], "the headmaster's big writing DESK with a lamp, an astrolabe and piles of papers", WOOD)
     a.mark('globe', [(42, 5)], 'a big celestial GLOBE on a brass stand', BRASS)
-    a.mark('shelf', [(31, 4), (32, 4), (33, 4)], 'a tall BOOKCASE', WOOD)
+    a.mark('shelf', [(31, 4), (32, 4), (33, 4), (31, 5), (32, 5), (33, 5)], 'a small writing DESK with books', WOOD)
+    a.mark('bookcase', [(37, 4), (38, 4), (39, 4), (40, 4)], 'a low BOOKCASE', WOOD)
     for y in (19, 22, 25):
         a.rect(32, y, 10, 1, 'r', force=True)
     a.mark('benches', [(x, y) for y in (19, 22, 25) for x in range(32, 42)], 'long wooden BENCHES of a lecture room', WOOD)
@@ -259,7 +311,7 @@ def star_tower_1():
             (13, 22), (13, 23), (25, 10), (26, 10), (18, 15), (34, 15), (6, 16), (45, 16), (26, 36)]
     keepcells(a, keep)
     a.spawns = {'entrance': dict(x=25, y=43, dir='n'), 'from_top': dict(x=25, y=3, dir='s')}
-    a.meta.update(name='星読みの塔', region='r_star', zones=[], worldRect=[0, 0, 1, 1], look='int')
+    a.meta.update(name='星読みの塔', region='r_star', zones=[], worldRect=[0, 0, 1, 1], look='int', smooth=0.45)
     return a
 
 
@@ -282,7 +334,7 @@ def star_tower_top():
     keep = [(19, 26), (20, 26), (19, 5), (20, 5), (20, 6), (19, 16), (11, 23), (12, 23), (11, 24), (12, 24), (19, 12), (20, 12), (27, 23)]
     keepcells(a, keep)
     a.spawns = {'from1': dict(x=19, y=26, dir='n')}
-    a.meta.update(name='星読みの塔', region='r_star', zones=[], worldRect=[0, 0, 1, 1], look='int')
+    a.meta.update(name='星読みの塔', region='r_star', zones=[], worldRect=[0, 0, 1, 1], look='int', smooth=0.45)
     return a
 
 
