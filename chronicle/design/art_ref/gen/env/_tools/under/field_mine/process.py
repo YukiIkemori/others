@@ -121,7 +121,26 @@ def save_set(name, arr, rgba=False):
 
 
 save_set(aid, A)
-# ---- (山地: 'l' は溶岩でなく裂け目・縦穴なので、光る層 _emit は作らない)
+# ---- (山地: 'l' は溶岩でなく裂け目・縦穴なので、溶岩の光る層は作らない)
+# ---- (2026-09-30) 青く光る鉱石: 印（crystal・veins・isle・seam・pillar）のまわりの明るい青白い画素だけを光る層 <id>_emit に（光の後に描く = 夜でも光る）
+CK = {'crystal', 'veins', 'isle', 'seam', 'pillar', 'chasmglow'}
+cm = np.zeros((H, W), bool)
+for m in d.get('marks', []):
+    if m['kind'] in CK:
+        for x, y in m['cells']:
+            if 0 <= x < W and 0 <= y < H: cm[y, x] = True
+emit_px = 0
+if cm.any():
+    near = ndimage.binary_dilation(kron(cm), iterations=T)
+    r_, g_, b_ = A0[..., 0], A0[..., 1], A0[..., 2]
+    hot = near & (b_ > 120) & (b_ - r_ > 28) & (g_ > 90) & (lum(A0) > 105)
+    hot = ndimage.binary_opening(hot, iterations=1)
+    emit_px = int(hot.sum())
+    if hot.any():
+        e = np.zeros((H * T, W * T, 4), np.float32); e[..., :3] = np.clip(A0 * 1.08, 0, 255); e[..., 3] = hot * 235
+        e[..., :3] *= (e[..., 3:4] > 0)
+        save_set(aid + '_emit', e, True)
+print('crystal emit px', emit_px)
 
 if over.any():
     o = np.zeros((H * T, W * T, 4), np.float32); o[..., :3] = A; o[..., 3] = over * 255

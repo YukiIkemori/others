@@ -18,6 +18,7 @@ for mid in sys.argv[1:]:
     art = {'image': 'mine/under/' + mid, 'painted': []}
     if os.path.exists(und + mid + '_over@32.png'): art['overlay'] = 'mine/under/' + mid + '_over'
     if os.path.exists(und + mid + '_closed@32.png'): art['closed'] = 'mine/under/' + mid + '_closed'
+    if os.path.exists(und + mid + '_emit@32.png'): art['emit'] = 'mine/under/' + mid + '_emit'   # 光る鉱石（process.py）
     cur[mid] = dict(rows=[''.join(r) for r in rows], art=art, blds=(d.get('meta') or {}).get('blds', []))
 out = """// 生成物（design/art_ref/gen/env/_tools/under/field_mine/ の areas_mine.py・dng_mine.py → fit.py → put_rows.py）。手で直さない。
 // 描いた下絵に合わせた鉱山都市ドヴァンと深き坑道の当たり（rows、字は field_mine/lib.py と同じ）・絵（art）・建物の敷地と戸口（blds）。
