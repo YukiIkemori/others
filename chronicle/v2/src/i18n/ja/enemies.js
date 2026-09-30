@@ -1063,5 +1063,18 @@
     'data.rare.LIST.rm_dream_tapir.name': '夢食いバク',
     'data.rare.LIST.rm_dream_tapir.appear': '七色の夢の泡が、ふわりと浮かんだ……。',
     'data.rare.LIST.rm_dream_tapir.desc': '忘却の底で、忘れられた夢を\n食べて生きるという幻の獣。',
+    // ---- src/data/bosses_isles.js
+    'bossActions.eb_octo_dive.name': 'もぐる',
+    'bossActions.eb_octo_dive.msg': '大ダコが、深みへ沈んでいく……！',
+    'bossActions.eb_octo_dive.telegraph.text': '水面が大きく渦を巻きはじめた。',
+    'bossActions.eb_octo_surge.name': '大渦',
+    'bossActions.eb_octo_surge.msg': '洞窟の水が、渦になって押し寄せた！',
+    'bossActions.eb_captain_aim.name': '火縄',
+    'bossActions.eb_captain_aim.msg': '船長が、船べりの大砲へ青い火縄を回した……！',
+    'bossActions.eb_captain_aim.telegraph.text': '大砲の口が、いっせいにこちらを向いた。',
+    'bossActions.eb_broadside.name': '一斉砲火',
+    'bossActions.eb_broadside.msg': '青い火の砲弾が、船室をなぎはらった！',
+    'data.bosses_isles.desc': '潮鳴りの洞窟の深みにすむ大ダコ。\n水面が渦を巻いたら、次の手番に大渦が来る。守って耐えよう。\n足を切っても、すぐに生やしてくる。',
+    'data.bosses_isles.desc_2': '六十年前に帰らなかった船長の亡霊。舟歌の続きを思い出せずにいる。\n大砲へ火縄を回したら、次の手番に一斉砲火。守って耐えよう。\n光と火がよく効く。',
   });
 })(window.RPG);

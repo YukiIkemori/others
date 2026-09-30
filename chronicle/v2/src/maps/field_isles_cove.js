@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("i_cove", {
-    name: "夜光虫の入り江", region: "r_isles", outside: "sea",
+    name: R.T('map.field_isles_cove.i_cove.name'), region: "r_isles", outside: "sea",
     legend: R.FieldArea.ISLE_LEGEND, theme: 'field', bgm: 'overworld', bbg: 'isles', propSet: 'isles', propSetBase: 'harbor',
     light: R.FieldArea.ISLE_LIGHT,
     rows: [
@@ -52,7 +52,7 @@
     ],
     objects: [
       {"type":"stairs","x":47,"y":25,"to":{"map":"isles_cave_1","spawn":"entrance"},"look":"none"},
-      {"type":"sign","x":24,"y":14,"text":"夜光虫の入り江\n下の浜の東に、潮鳴りの洞窟。"},
+      {"type":"sign","x":24,"y":14,"text":R.T('map.field_isles_cove.i_cove.objects.1.text')},
       {"type":"examine","x":26,"y":30,"event":"isles_cove_glow"},
       {"type":"chest","id":"i_cove_c1","x":8,"y":28,"item":"i_ether","n":1},
       {"type":"waylamp","id":"wl_i_cove_1","x":17,"y":13,"lit":true},
@@ -67,7 +67,7 @@
     tilePatches: [],
     zones: [{"rect":null,"zone":"zw_isles"}],
     art: {"image":"field/under/i_cove","painted":[],"overlay":"field/under/i_cove_over"},
-    meta: {"sub":"白い砂の入り江と潮鳴りの洞窟","worldRect":[650,492,56,40]},
+    meta: {"sub":R.T('map.field_isles_cove.i_cove.meta.sub'),"worldRect":[630,470,56,40]},
     links: {"tidecave":{"map":"i_cove","spawn":"cave"}},
   });
 })(window.RPG);

@@ -71,6 +71,7 @@ const REGION = ['v_hazal_tomb_01', 'v_hazal_tomb_02', 'v_hazal_tomb_03', 'v_haza
   'v_fine_snow_01', 'v_melda_manor_01', 'v_melda_manor_02', 'v_melda_manor_03', 'v_melda_manor_04', 'v_melda_manor_05', 'v_mistwitch_marsh_01', 'v_melda_marsh_01', 'v_fine_marsh_01'];
 section('地方のボイス（script.csv の録音済みの行）');
 REGION.push('v_fine_ash_01'); // 2026-09-28: 灰の荒野の火口のフィーネ（script.csv の録音済みの行のまま）
+REGION.push('v_marina_nerei_01', 'v_marina_pier_01', 'v_marina_dawn_01', 'v_marina_dawn_02', 'v_glen_ship_01', 'v_glen_ship_02', 'v_glen_ship_03', 'v_glen_ship_04', 'v_glen_dawn_01', 'v_fine_isles_01'); // 2026-09-30: マレア諸島（isles_*.js）
 for (const id of REGION) {
   const u = used[id] || [];
   ok(`${id}: イベントで 1 回`, u.length === 1, u.map((x) => x.file));

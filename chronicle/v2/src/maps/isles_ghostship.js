@@ -18,14 +18,14 @@
       const O = [];
       O.push(K.stairs(24, 11, { map: 'ghost_ship_2', spawn: 'up' }, { id: 'ghost_ship_1_down', look: 'down' }));
       // 渡り板の下の外洋船（乗ると、ネレイの夜の桟橋へ戻る。島々へは桟橋の舵から）
-      for (const x of [28, 29]) O.push({ type: 'door', x, y: 25, look: 'none', to: { map: 'nerei', spawn: 'pier_end' }, confirm: '外洋船に戻って、ネレイの桟橋へ帰りますか？' });
+      for (const x of [28, 29]) O.push({ type: 'door', x, y: 25, look: 'none', to: { map: 'nerei', spawn: 'pier_end' }, confirm: R.T('map.isles_ghostship.confirm') });
       O.push(K.prop('ship', 31, 26));
       for (const [x, y] of [[18, 15], [30, 15], [41, 15]]) O.push(K.exam(x, y, 'isles_ghost_mast'));
       O.push(K.exam(10, 14, 'isles_ghost_skylight'));
       O.push(K.chest('ghost_ship_1_c1', 8, 9, { pool: 'p_T' }), K.chest('ghost_ship_1_c2', 46, 15, { pool: 'p_T' }));
       for (const [x, y] of [[12, 7], [24, 7], [36, 7], [12, 22], [22, 22], [36, 22], [49, 13]]) O.push(K.prop('wisp_lamp', x, y, { cond: WISP }));
       K.def('ghost_ship_1', {
-        name: '幽霊船', kind: 'dungeon', region: 'r_isles', location: 'ghostship', theme: 'cave',
+        name: R.T('map.isles_ghostship.ghost_ship_1.name'), kind: 'dungeon', region: 'r_isles', location: 'ghostship', theme: 'harbor',
         legend: IK.SHIP(), rows: P.rows, outside: 'sea', objects: O, npcs: [],
         spawns: { board: { x: 28, y: 21, dir: 'n' }, hatch: { x: 24, y: 12, dir: 's' } },
         exits: [],
@@ -33,7 +33,7 @@
         zones: [{ rect: null, zone: 'z_r_isles_ship', cond: WISP }],
         light: IK.LIGHT_SHIP, dark: false, bgm: 'ghost', bbg: 'isles',
         art: P.art,
-        meta: { chestsInfo: true, floor: '甲板', sub: '霧の中の船' },
+        meta: { chestsInfo: true, floor: R.T('map.isles_ghostship.ghost_ship_1.meta.floor'), sub: R.T('map.isles_ghostship.ghost_ship_1.meta.sub') },
       });
     }
 
@@ -43,7 +43,7 @@
       const O = [];
       O.push(K.stairs(5, 13, { map: 'ghost_ship_1', spawn: 'hatch' }, { id: 'ghost_ship_2_up', look: 'up' }));
       O.push(K.stairs(41, 13, { map: 'ghost_ship_3', spawn: 'up' }, { id: 'ghost_ship_2_down', look: 'down' }));
-      // 船員の名札（寝台・ハンモックの柱。任意。1 甲板長 2 帆手 3 見張り 4 舵取り 5 船大工 6 見習いベッポ）
+      // 船員の名札（寝台・ハンモックの柱。任意。1 甲板長 2 帆手 3 見張り 4 かじ取り 5 船大工 6 見習いベッポ）
       for (const [n, x, y] of [[1, 29, 5], [2, 34, 5], [3, 37, 5], [4, 5, 20], [5, 11, 4], [6, 14, 19]]) O.push(K.exam(x, y, 'isles_nametag', { tag: n }));
       O.push(K.exam(13, 19, 'isles_ghost_doll'));
       // 休息の灯（水夫の水樽のそば。幽霊船でただ 1 つ）
@@ -51,7 +51,7 @@
       O.push(K.chest('ghost_ship_2_c1', 42, 9, { pool: 'p_T' }), K.chest('ghost_ship_2_c2', 9, 22, { item: 'i_potion', n: 2 }), K.chest('ghost_ship_2_c3', 24, 21, { pool: 'p_rare' }));
       for (const [x, y] of [[12, 11], [28, 11], [12, 16], [28, 16]]) O.push(K.prop('wisp_lamp', x, y, { cond: WISP }));
       K.def('ghost_ship_2', {
-        name: '幽霊船', kind: 'dungeon', region: 'r_isles', location: 'ghostship', theme: 'cave',
+        name: R.T('map.isles_ghostship.ghost_ship_2.name'), kind: 'dungeon', region: 'r_isles', location: 'ghostship', theme: 'harbor',
         legend: IK.SHIP(), rows: P.rows, outside: 'wall_wood', objects: O, npcs: [],
         spawns: { up: { x: 6, y: 13, dir: 'e' }, down: { x: 40, y: 13, dir: 'w' } },
         exits: [],
@@ -59,7 +59,7 @@
         zones: [{ rect: null, zone: 'z_r_isles_ship', cond: WISP }],
         light: IK.LIGHT_SHIP, dark: false, bgm: 'ghost', bbg: 'isles',
         art: P.art,
-        meta: { chestsInfo: true, floor: '船室', sub: '船員たちの寝床' },
+        meta: { chestsInfo: true, floor: R.T('map.isles_ghostship.ghost_ship_2.meta.floor'), sub: R.T('map.isles_ghostship.ghost_ship_2.meta.sub') },
       });
     }
 
@@ -75,9 +75,9 @@
       BZ.forEach(([x, y], i) => O.push({ type: 'brazier', id: 'ghost_ship_3_b' + (i + 1), x, y }));
       O.push(K.chest('ghost_ship_3_c1', 48, 11, { pool: 'p_T' }), K.chest('ghost_ship_3_c2', 22, 6, { gold: 260 }), K.chest('ghost_ship_3_c3', 4, 21, { pool: 'p_T' }));
       K.def('ghost_ship_3', {
-        name: '幽霊船', kind: 'dungeon', region: 'r_isles', location: 'ghostship', theme: 'cave',
+        name: R.T('map.isles_ghostship.ghost_ship_3.name'), kind: 'dungeon', region: 'r_isles', location: 'ghostship', theme: 'harbor',
         legend: IK.SHIP(), rows: P.rows, outside: 'wall_wood', objects: O,
-        npcs: [K.npc('glen', 'npc_glen', 7, 12, { name: 'グレン船長', dir: 's', talk: 'isles_captain', reward: null, pushable: false, cond: '!isles_captain' })],
+        npcs: [K.npc('glen', 'npc_glen', 7, 12, { name: R.T('map.isles_ghostship.ghost_ship_3.npcs.0.glen.name'), dir: 's', talk: 'isles_captain', reward: null, pushable: false, cond: '!isles_captain' })],
         spawns: { up: { x: 46, y: 15, dir: 'w' }, cabin: { x: 12, y: 15, dir: 'w' } },
         exits: [],
         triggers: [
@@ -87,7 +87,7 @@
         zones: [{ rect: null, zone: 'z_r_isles_ship', cond: WISP }],
         light: IK.LIGHT_HOLD, dark: true, bgm: 'ghost', bbg: 'isles',
         art: P.art,
-        meta: { chestsInfo: true, floor: '船倉', sub: '船倉と船長室' },
+        meta: { chestsInfo: true, floor: R.T('map.isles_ghostship.ghost_ship_3.meta.floor'), sub: R.T('map.isles_ghostship.ghost_ship_3.meta.sub') },
       });
     }
   });

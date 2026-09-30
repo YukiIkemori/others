@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("i_cliff", {
-    name: "白崖の道", region: "r_isles", outside: "sea",
+    name: R.T('map.field_isles_cliff.i_cliff.name'), region: "r_isles", outside: "sea",
     legend: R.FieldArea.ISLE_LEGEND, theme: 'field', bgm: 'overworld', bbg: 'isles', propSet: 'isles', propSetBase: 'harbor',
     light: R.FieldArea.ISLE_LIGHT,
     rows: [
@@ -50,7 +50,7 @@
     ],
     objects: [
       {"type":"examine","x":22,"y":9,"event":"isles_watchtower"},
-      {"type":"sign","x":15,"y":27,"text":"白崖の道\n南 → 港町コーラル\n東 → 夜光虫の入り江・岬の村ネレイ"},
+      {"type":"sign","x":15,"y":27,"text":R.T('map.field_isles_cliff.i_cliff.objects.1.text')},
       {"type":"chest","id":"i_cliff_c1","x":45,"y":23,"item":"i_potion","n":2},
       {"type":"waylamp","id":"wl_i_cliff_1","x":15,"y":28,"lit":true},
       {"type":"waylamp","id":"wl_i_cliff_2","x":38,"y":21,"lit":true},
@@ -64,7 +64,7 @@
     tilePatches: [],
     zones: [{"rect":null,"zone":"zw_isles"}],
     art: {"image":"field/under/i_cliff","painted":[],"overlay":"field/under/i_cliff_over"},
-    meta: {"sub":"港町コーラルの北の崖の上","worldRect":[600,492,50,36]},
+    meta: {"sub":R.T('map.field_isles_cliff.i_cliff.meta.sub'),"worldRect":[596,468,50,36]},
     links: {},
   });
 })(window.RPG);

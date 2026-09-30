@@ -21,14 +21,14 @@
     // 見晴らし台の石の看板（上の段の東の庭の角）
     O.push(K.prop('map_sign', 44, 4), K.exam(44, 4, 'coral_lookout'));
     // 北の橋の看板（橋のわきの崖）
-    O.push(K.sign(20, 2, '港町コーラル\n北の橋 → 白崖の道・岬の村ネレイ'));
+    O.push(K.sign(20, 2, R.T('map.isles_coral.sign')));
     // 後家の壁（いちばん下の段の擁壁。岸壁から調べる）
     for (const x of [28, 31, 34, 37]) O.push(K.exam(x, 43, 'coral_widows_wall'));
     // 真ん中の桟橋: 外洋船の舵（船が無いうちは空の桟橋）と、つないだ船
     for (const x of [18, 19]) O.push(K.exam(x, 58, 'isles_helm'));
     O.push(K.prop('ship', 21, 56, { cond: 'isles_ship' }));
     // 定期船の T 字の桟橋の先: ファロスへ戻る乗り場（はい／いいえ）
-    O.push({ type: 'door', x: 36, y: 60, look: 'none', to: { map: 'pharos', spawn: 'ferry' }, confirm: '定期船で、ファロスへ戻りますか？' });
+    O.push({ type: 'door', x: 36, y: 60, look: 'none', to: { map: 'pharos', spawn: 'ferry' }, confirm: R.T('map.isles_coral.confirm') });
     O.push(K.prop('ship', 38, 62));
     // 光る貝がら（町の浜 = 岸壁の東の隅・西の路地の奥）
     O.push(K.exam(45, 49, 'isles_shell', { shell: 1 }), K.exam(11, 33, 'isles_shell', { shell: 2 }));
@@ -39,20 +39,20 @@
 
     // ---------------------------------------------------------------- 人
     const N = [
-      K.npc('drake', 'npc_drake', 14, 46, { name: 'ドレイク', title: '造船所の親方', dir: 'w', talk: 'coral_drake', reward: 'lead', pushable: false }),
-      K.npc('gate_sailor', 'npc_isles_sailor', 25, 4, { name: '橋のそばの水夫', dir: 's', talk: 'coral_gate_sailor', reward: 'news' }),
-      K.npc('widow', 'npc_isles_old_f', 32, 45, { name: '後家の壁の前の人', dir: 'n', talk: 'coral_widow', reward: 'news' }),
-      K.npc('shell_kid', 'npc_isles_child', 40, 47, { name: '貝がら好きの子', dir: 'w', talk: 'coral_shell_kid', reward: 'side' }),
-      K.npc('idle_sailor', 'npc_isles_man', 27, 48, { name: '陸の水夫', dir: 's', talk: 'coral_idle_sailor', reward: 'boss' }),
-      K.npc('child', 'npc_isles_child', 30, 26, { name: '港の子', dir: 's', move: 'wander', talk: 'coral_child', reward: 'hint' }),
-      K.npc('ferry_hand', 'npc_isles_sailor', 39, 59, { name: '定期船の水夫', dir: 'w', talk: 'coral_ferry_hand', reward: 'news', pushable: false }),
-      K.npc('pier_fisher', 'npc_isles_old_m', 19, 53, { name: '桟橋の釣り人', dir: 'e', talk: [L('船が出ねえから、桟橋で釣りさ。\n……釣れねえがな。'), L('cleared_r_isles', '霧が晴れたら、よく釣れる。\n魚も、朝を待ってたのかもな。')], reward: null, cond: '!isles_ship' }),
-      K.npc('dog', 'ani_dog', 17, 47, { name: '港の犬', dir: 'e', move: 'wander', talk: [L('ワン！')], reward: null }),
+      K.npc('drake', 'npc_drake', 14, 46, { name: R.T('map.isles_coral.N.0.drake.name'), title: R.T('map.isles_coral.N.0.drake.title'), dir: 'w', talk: 'coral_drake', reward: 'lead', pushable: false }),
+      K.npc('gate_sailor', 'npc_isles_sailor', 25, 4, { name: R.T('map.isles_coral.N.1.gate_sailor.name'), dir: 's', talk: 'coral_gate_sailor', reward: 'news' }),
+      K.npc('widow', 'npc_isles_old_f', 32, 45, { name: R.T('map.isles_coral.N.2.widow.name'), dir: 'n', talk: 'coral_widow', reward: 'news' }),
+      K.npc('shell_kid', 'npc_isles_child', 40, 47, { name: R.T('map.isles_coral.N.3.shell_kid.name'), dir: 'w', talk: 'coral_shell_kid', reward: 'side' }),
+      K.npc('idle_sailor', 'npc_isles_man', 27, 48, { name: R.T('map.isles_coral.N.4.idle_sailor.name'), dir: 's', talk: 'coral_idle_sailor', reward: 'boss' }),
+      K.npc('child', 'npc_isles_child', 30, 26, { name: R.T('map.isles_coral.N.5.child.name'), dir: 's', move: 'wander', talk: 'coral_child', reward: 'hint' }),
+      K.npc('ferry_hand', 'npc_isles_sailor', 39, 59, { name: R.T('map.isles_coral.N.6.ferry_hand.name'), dir: 'w', talk: 'coral_ferry_hand', reward: 'news', pushable: false }),
+      K.npc('pier_fisher', 'npc_isles_old_m', 19, 53, { name: R.T('map.isles_coral.N.7.pier_fisher.name'), dir: 'e', talk: [L(R.T('map.isles_coral.N.talk.0.L')), L('cleared_r_isles', R.T('map.isles_coral.N.talk.1.cleared_r_isles'))], reward: null, cond: '!isles_ship' }),
+      K.npc('dog', 'ani_dog', 17, 47, { name: R.T('map.isles_coral.N.8.dog.name'), dir: 'e', move: 'wander', talk: [L(R.T('map.isles_coral.N.talk.0.L_2'))], reward: null }),
     ];
 
     const sp = (bid) => IK.doorSpawn('coral', bid);
     K.def('coral', {
-      name: '港町コーラル', kind: 'town', region: 'r_isles', location: 'coral', theme: 'harbor',
+      name: R.T('map.isles_coral.coral.name'), kind: 'town', region: 'r_isles', location: 'coral', theme: 'harbor',
       legend: IK.TOWN(), rows: P.rows, outside: 'sea',
       objects: O, npcs: N,
       spawns: {
@@ -65,7 +65,7 @@
       triggers: [{ id: 'arrival', on: 'enter', event: 'coral_arrival' }],
       zones: [],
       light: IK.LIGHT_TOWN, dark: false, bgm: 'town', bbg: 'isles',
-      meta: { sub: '段々の白い港町', chestsInfo: false },
+      meta: { sub: R.T('map.isles_coral.coral.meta.sub'), chestsInfo: false },
       art: P.art,
     });
   });

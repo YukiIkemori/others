@@ -26,7 +26,7 @@
       page: 'k_page_snow', town: 'yule', dungeons: ['snow_woods', 'peak'], bossTroop: 'tr_b_whitedragon', zone: 'zw_snow', beacon: R.T('regions.r_snow.beacon'), beaconAt: { map: 'world', lx: 62, ly: 5 } },   // 雪原は開いた（snow_*.js）
     r_marsh: { name: R.T('regions.r_marsh.name'), short: 'marsh', n: 4, chapter: { title: R.T('regions.r_marsh.chapter.title'), summary: R.T('regions.r_marsh.chapter.summary') },
       page: 'k_page_marsh', town: 'loch', dungeons: ['manor', 'bog'], bossTroop: 'tr_b_mistbeast', zone: 'zw_marsh', beacon: R.T('regions.r_marsh.beacon'), beaconAt: { map: 'world', lx: 183, ly: 69 } },   // 湿原は開いた（marsh_*.js）
-    r_isles: { name: R.T('regions.r_isles.name'), short: 'isles', n: 5, chapter: { title: R.T('regions.r_isles.chapter.title'), summary: '霧の晩の幽霊船を自分の船で追い、帰らずの船長に舟歌の続きを届けた。灯は橙に戻り、沖の灯台島にともった。' },
+    r_isles: { name: R.T('regions.r_isles.name'), short: 'isles', n: 5, chapter: { title: R.T('regions.r_isles.chapter.title'), summary: R.T('regions.r_isles.chapter.summary') },
       page: 'k_page_isles', town: 'coral', dungeons: ['tidecave', 'ghostship'], bossTroop: 'tr_b_captain', zone: 'zw_isles', beacon: R.T('regions.r_isles.beacon'), beaconAt: { map: 'i_light', x: 20, y: 6 }, slice: 'locked' },   // 諸島は作った（isles_*.js）。体験版の錠は持ち主の決まりで残す（slice: 'locked'）
     r_mine: { name: R.T('regions.r_mine.name'), short: 'mine', n: 6, chapter: { title: R.T('regions.r_mine.chapter.title'), summary: '' }, page: 'k_page_mine', town: 'dovan', beacon: R.T('regions.r_mine.beacon'), slice: 'locked' },
     r_ash: { name: R.T('regions.r_ash.name'), short: 'ash', n: 7, chapter: { title: R.T('regions.r_ash.chapter.title'), summary: R.T('regions.r_ash.chapter.summary') },

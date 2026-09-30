@@ -19,7 +19,7 @@
     r: { mat: 'rock', solid: true }, R: { mat: 'cliff', solid: true, rise: 1 }, X: { mat: 'wall_stone', solid: true },
   };
   FA.ISLE_LIGHT = { ambient: '#4c5c9a', k: 0.5, mood: 'night' };
-  if (FA.CONFIRM) FA.CONFIRM.isles_cave_1 = '潮鳴りの洞窟に入りますか？';
+  if (FA.CONFIRM) FA.CONFIRM.isles_cave_1 = R.T('map.field_isles_00_kit.isles_cave_1');
   // ファロスの定期船の乗り場（T 字の桟橋の南の縁）と、着く所
   const PH = { door: { x: 23, y: 42 }, spawn: { x: 23, y: 41, dir: 'n' }, hand: { x: 25, y: 41 } };
   const OFF = { not: { slice: true } };
@@ -31,7 +31,7 @@
     ph.objects = ph.objects || [];
     if (!ph.objects.some((o) => o.to && o.to.map === 'coral')) {
       ph.objects.push(
-        { type: 'door', x: PH.door.x, y: PH.door.y, look: 'none', to: { map: 'coral', spawn: 'ferry' }, cond: OFF, confirm: '定期船で、マレア諸島の港町コーラルへ渡りますか？' },
+        { type: 'door', x: PH.door.x, y: PH.door.y, look: 'none', to: { map: 'coral', spawn: 'ferry' }, cond: OFF, confirm: R.T('map.field_isles_00_kit.link.confirm') },
         { type: 'examine', x: PH.door.x, y: PH.door.y, event: 'isles_ferry_closed', cond: { slice: true } });
     }
     ph.npcs = ph.npcs || [];
@@ -41,14 +41,14 @@
     if (W) {
       W.npcs = W.npcs || [];
       if (!W.npcs.some((n) => n.id === 'wreck_captain')) {
-        W.npcs.push({ id: 'wreck_captain', look: 'npc_merchant_captain', name: '商船の船長', x: 22, y: 18, dir: 's', move: 'still', pushable: false, talk: 'isles_wreck', reward: null, key: 'wreck_captain', cond: '!isles_wreck_done' });
+        W.npcs.push({ id: 'wreck_captain', look: 'npc_merchant_captain', name: R.T('map.field_isles_00_kit.link.wreck_captain.name'), x: 22, y: 18, dir: 's', move: 'still', pushable: false, talk: 'isles_wreck', reward: null, key: 'wreck_captain', cond: '!isles_wreck_done' });
         const CARGO = { choice: 'ch_isles_wreck', is: 'cargo' };
         W.objects.push({ type: 'chest', id: 'i_wreck_cargo1', x: 18, y: 19, pool: 'p_T', cond: CARGO }, { type: 'chest', id: 'i_wreck_cargo2', x: 27, y: 18, pool: 'p_T', cond: CARGO },
           { type: 'chest', id: 'i_wreck_cargo3', x: 29, y: 19, pool: 'p_T', cond: CARGO });
       }
     }
     if (!ph.npcs.some((n) => n.id === 'ferry_hand')) {
-      ph.npcs.push({ id: 'ferry_hand', look: 'npc_isles_sailor', name: '定期船の水夫', x: PH.hand.x, y: PH.hand.y, dir: 'w', move: 'still', pushable: false, talk: 'isles_ferry_hand', reward: 'lead', key: 'ferry_hand', cond: OFF });
+      ph.npcs.push({ id: 'ferry_hand', look: 'npc_isles_sailor', name: R.T('map.field_isles_00_kit.link.ferry_hand.name'), x: PH.hand.x, y: PH.hand.y, dir: 'w', move: 'still', pushable: false, talk: 'isles_ferry_hand', reward: 'lead', key: 'ferry_hand', cond: OFF });
     }
   }
   if (R.onData) R.onData(() => R.onData(link));

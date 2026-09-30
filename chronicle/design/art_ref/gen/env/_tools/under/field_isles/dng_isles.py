@@ -84,7 +84,7 @@ def coral():
     a.exits = [dict(x=21, y=0, w=4, h=1, to={'map': 'i_cliff', 'spawn': 'south'}, edge='n')]
     keep = [(18, 57), (19, 57), (36, 59), (37, 59), (32, 44), (11, 33), (14, 47), (40, 45), (30, 10)]
     a.objects = [dict(type='o', x=x, y=y) for (x, y) in keep]
-    a.meta.update(name='港町コーラル', region='r_isles', zones=[], worldRect=[600, 530, 48, 64], look='town')
+    a.meta.update(name='港町コーラル', region='r_isles', zones=[], worldRect=[590, 500, 48, 64], look='town')
     return a
 
 
@@ -119,7 +119,7 @@ def nerei():
                 'pier_end': dict(x=34, y=11, dir='s')}
     a.exits = [dict(x=20, y=43, w=1, h=1, to={'map': 'i_cape', 'spawn': 'north'}, edge='s')]
     a.objects = [dict(type='o', x=x, y=y) for (x, y) in [(35, 7), (34, 7), (22, 4), (20, 4), (21, 20), (23, 38), (18, 17), (26, 11)]]
-    a.meta.update(name='岬の村ネレイ', region='r_isles', zones=[], worldRect=[706, 440, 40, 44], look='town')
+    a.meta.update(name='岬の村ネレイ', region='r_isles', zones=[], worldRect=[676, 440, 40, 44], look='town')
     return a
 
 
@@ -160,7 +160,8 @@ def isles_cave_1():
     # The painting shows both fords dry; the closed layer (process.py) clones the channel water over the flooded one:
     # low tide (default) = ford B under water, high tide (isles_tide_high, the tide stone) = ford A under water
     a.meta['tilePatches'] = [{'cond': '!isles_tide_high', 'rect': [22, 10, 4, 2], 'rows': ['wwww', 'wwww']},
-                             {'cond': 'isles_tide_high', 'rect': [22, 25, 4, 2], 'rows': ['wwww', 'wwww']}]
+                             {'cond': 'isles_tide_high', 'rect': [30, 17, 2, 4], 'rows': ['ww', 'ww', 'ww', 'ww']}]
+    # (ford A stays dry: the tide only trades ford B (north) against the way into the east grotto, so the entrance is never cut off)
     a.meta.update(name='潮鳴りの洞窟', region='r_isles', zones=[], worldRect=[0, 0, 1, 1], look='cave')
     return a
 

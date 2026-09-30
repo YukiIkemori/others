@@ -170,14 +170,16 @@
 {
 "cond": "isles_tide_high",
 "rect": [
-22,
-25,
-4,
-2
+30,
+17,
+2,
+4
 ],
 "rows": [
-"wwww",
-"wwww"
+"ww",
+"ww",
+"ww",
+"ww"
 ]
 }
 ],

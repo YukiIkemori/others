@@ -1,6 +1,6 @@
 // CONTENT（マレア諸島）: 岬の村ネレイ（nerei、40×44）と屋内 5・灯台島の灯室。WORLD_REDESIGN §5.9・§4.5、STORY_BIBLE §7.5・§8.6。
 //   岬の細い尾根に家がひと筋。北の先に石畳の広場と岬の石の灯、東へ小道を下りると夜の桟橋（T 字）。南の端から岬道（i_cape）へ。
-//   家（下絵の敷地）: 灯り守りの家（北西）・マリナの家（北東）・雑貨屋（中の西、縞のひさし）・漁師の家（中の東）・宿（南西）。
+//   家（下絵の敷地）: 灯り守りの家（北西）・マリナの家（北東）・雑貨屋（中の西、しまのひさし）・漁師の家（中の東）・宿（南西）。
 //   場面: 岬の先の灰色のマントの少女（マリナが歌う前）・夜の桟橋のマリナ（isles_song_scene）・地平が白むころの桟橋のマリナとグレン（isles_dawn_scene）。
 //   灯り: 港の灯（lamp_pillar）を、岬の崖の縁（歩けないマス）と桟橋の先の杭に。町の絵は 1 枚の下絵（v2/assets/env/isles/under/nerei*）。
 (function (R) {
@@ -15,7 +15,7 @@
     });
     // 岬の石の灯（調べる）・南の入口の看板
     O.push(K.exam(21, 3, 'nerei_cape_lamp'), K.prop('lamp_pillar', 22, 2));
-    O.push(K.sign(15, 42, '岬の村ネレイ\n南 → ネレイの岬道・港町コーラル'));
+    O.push(K.sign(15, 42, R.T('map.isles_nerei.sign')));
     // 夜の桟橋の先: 外洋船の舵（桟橋に船をつなぐ）
     for (const [x, y] of [[34, 12], [35, 12]]) O.push(K.exam(x, y, 'isles_helm'));
     O.push(K.prop('ship', 37, 11, { cond: 'isles_ship' }));
@@ -27,21 +27,21 @@
     for (const [x, y] of [[14, 5], [27, 5], [28, 11], [10, 18], [29, 25], [36, 6], [33, 12]]) O.push(K.prop('lamp_pillar', x, y));
 
     const N = [
-      K.npc('nerei_fisher', 'npc_isles_man', 24, 20, { name: '網をつくろう漁師', dir: 'w', talk: 'nerei_fisher', reward: 'news' }),
-      K.npc('nerei_child', 'npc_isles_child', 17, 27, { name: '村の子', dir: 's', move: 'wander', talk: 'nerei_child', reward: 'hint' }),
-      K.npc('nerei_oldman', 'npc_isles_old_m', 23, 6, { name: '広場の年寄り', dir: 's', talk: 'nerei_oldman', reward: 'boss' }),
+      K.npc('nerei_fisher', 'npc_isles_man', 24, 20, { name: R.T('map.isles_nerei.N.0.nerei_fisher.name'), dir: 'w', talk: 'nerei_fisher', reward: 'news' }),
+      K.npc('nerei_child', 'npc_isles_child', 17, 27, { name: R.T('map.isles_nerei.N.1.nerei_child.name'), dir: 's', move: 'wander', talk: 'nerei_child', reward: 'hint' }),
+      K.npc('nerei_oldman', 'npc_isles_old_m', 23, 6, { name: R.T('map.isles_nerei.N.2.nerei_oldman.name'), dir: 's', talk: 'nerei_oldman', reward: 'boss' }),
       // 岬の先の少女（マリナに会ってから、マリナが歌う前）
-      K.npc('fine', 'fine', 20, 3, { name: '灰色のマントの少女', dir: 'n', talk: 'isles_fine_cape', reward: null, pushable: false, cond: ['isles_marina_met', '!isles_fine_seen', '!isles_song_done'] }),
+      K.npc('fine', 'fine', 20, 3, { name: R.T('map.isles_nerei.N.3.fine.name'), dir: 'n', talk: 'isles_fine_cape', reward: null, pushable: false, cond: ['isles_marina_met', '!isles_fine_seen', '!isles_song_done'] }),
       // 夜の桟橋のマリナ（歌う場面）
-      K.npc('marina_pier', 'npc_marina', 34, 7, { name: 'マリナ', dir: 'n', talk: [L('……。')], reward: null, pushable: false, cond: 'isles_song_scene' }),
+      K.npc('marina_pier', 'npc_marina', 34, 7, { name: R.T('map.isles_nerei.N.4.marina_pier.name'), dir: 'n', talk: [L('……。')], reward: null, pushable: false, cond: 'isles_song_scene' }),
       // 地平が白むころの桟橋（マリナとグレン・日継ぎの主張を口にする漁師）
-      K.npc('marina_dawn', 'npc_marina', 34, 9, { name: 'マリナ', dir: 'n', talk: [L('……。')], reward: null, pushable: false, cond: 'isles_dawn_scene' }),
-      K.npc('glen_dawn', 'npc_glen', 35, 7, { name: 'グレン船長', dir: 's', talk: [L('……。')], reward: null, pushable: false, cond: ['isles_dawn_scene', '!isles_dawn_done'] }),
-      K.npc('dawn_fisher', 'npc_isles_man', 32, 9, { name: '網をつくろう漁師', dir: 'e', talk: [L('……。')], reward: null, pushable: false, cond: 'isles_dawn_scene' }),
+      K.npc('marina_dawn', 'npc_marina', 34, 9, { name: R.T('map.isles_nerei.N.5.marina_dawn.name'), dir: 'n', talk: [L('……。')], reward: null, pushable: false, cond: 'isles_dawn_scene' }),
+      K.npc('glen_dawn', 'npc_glen', 35, 7, { name: R.T('map.isles_nerei.N.6.glen_dawn.name'), dir: 's', talk: [L('……。')], reward: null, pushable: false, cond: ['isles_dawn_scene', '!isles_dawn_done'] }),
+      K.npc('dawn_fisher', 'npc_isles_man', 32, 9, { name: R.T('map.isles_nerei.N.7.dawn_fisher.name'), dir: 'e', talk: [L('……。')], reward: null, pushable: false, cond: 'isles_dawn_scene' }),
     ];
     const sp = (bid) => IK.doorSpawn('nerei', bid);
     K.def('nerei', {
-      name: '岬の村ネレイ', kind: 'town', region: 'r_isles', location: 'nerei', theme: 'harbor',
+      name: R.T('map.isles_nerei.nerei.name'), kind: 'town', region: 'r_isles', location: 'nerei', theme: 'harbor',
       legend: IK.TOWN(), rows: P.rows, outside: 'sea',
       objects: O, npcs: N,
       spawns: {
@@ -56,7 +56,7 @@
       ],
       zones: [],
       light: IK.LIGHT_VILLAGE, dark: false, bgm: 'village', bbg: 'isles',
-      meta: { sub: '岬の先の小さな漁村', chestsInfo: false },
+      meta: { sub: R.T('map.isles_nerei.nerei.meta.sub'), chestsInfo: false },
       art: P.art,
     });
 
@@ -76,43 +76,43 @@
         meta: Object.assign({ minimap: false }, o.meta || {}),
       });
     }
-    interior('nerei_lampkeeper', '灯り守りの家', 12, 10, {
-      back: 'lampkeeper', meta: { sub: '油のにおいのする家' },
+    interior('nerei_lampkeeper', R.T('map.isles_nerei.nerei_lampkeeper'), 12, 10, {
+      back: 'lampkeeper', meta: { sub: R.T('map.isles_nerei.nerei_lampkeeper.meta.sub') },
       objects: [K.prop('bed', 9, 2), K.prop('table', 4, 5), K.prop('chair', 3, 5), K.prop('barrel', 1, 2), K.prop('barrel', 2, 2), K.prop('shelf_jars', 6, 2),
         K.prop('lantern', 5, 3), K.prop('lantern', 10, 6)],
-      npcs: [K.npc('lampkeeper', 'npc_isles_old_m', 7, 4, { name: '灯り守り', dir: 's', talk: 'nerei_lampkeeper', reward: 'side' })],
+      npcs: [K.npc('lampkeeper', 'npc_isles_old_m', 7, 4, { name: R.T('map.isles_nerei.nerei_lampkeeper.npcs.0.lampkeeper.name'), dir: 's', talk: 'nerei_lampkeeper', reward: 'side' })],
     });
-    interior('nerei_marina', 'マリナの家', 12, 10, {
-      back: 'marina', carpet: [4, 5, 4, 2], meta: { sub: '窓から岬の灯が見える' },
+    interior('nerei_marina', R.T('map.isles_nerei.nerei_marina'), 12, 10, {
+      back: 'marina', carpet: [4, 5, 4, 2], meta: { sub: R.T('map.isles_nerei.nerei_marina.meta.sub') },
       objects: [K.prop('bed', 9, 2), K.prop('bookshelf', 1, 2), K.prop('bookshelf', 2, 2), K.exam(1, 3, 'nerei_marina_shelf'), K.prop('table', 5, 5), K.prop('chair', 4, 5),
         K.prop('net', 10, 6), K.prop('flower_pot', 1, 7), K.prop('lantern', 7, 3)],
-      npcs: [K.npc('marina', 'npc_marina', 6, 4, { name: 'マリナ', title: '待つ人', dir: 's', talk: 'nerei_marina', reward: 'lead', pushable: false, cond: '!isles_dawn_scene' })],
+      npcs: [K.npc('marina', 'npc_marina', 6, 4, { name: R.T('map.isles_nerei.nerei_marina.npcs.0.marina.name'), title: R.T('map.isles_nerei.nerei_marina.npcs.0.marina.title'), dir: 's', talk: 'nerei_marina', reward: 'lead', pushable: false, cond: '!isles_dawn_scene' })],
     });
-    interior('nerei_store', 'ネレイの雑貨屋', 12, 10, {
-      back: 'store', meta: { sub: '縞のひさしの小さな店' },
+    interior('nerei_store', R.T('map.isles_nerei.nerei_store'), 12, 10, {
+      back: 'store', meta: { sub: R.T('map.isles_nerei.nerei_store.meta.sub') },
       objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('shelf_jars', 1, 2), K.prop('potion_shelf', 9, 2), K.prop('crate', 10, 6),
         K.prop('fish_barrel', 1, 6), K.prop('lantern', 7, 3)],
-      npcs: [K.npc('store_keeper', 'npc_isles_woman', 4, 2, { name: '雑貨屋のおかみ', dir: 's', talk: 'nerei_store_keeper', pushable: false })],
+      npcs: [K.npc('store_keeper', 'npc_isles_woman', 4, 2, { name: R.T('map.isles_nerei.nerei_store.npcs.0.store_keeper.name'), dir: 's', talk: 'nerei_store_keeper', pushable: false })],
     });
-    interior('nerei_house', '漁師の家', 12, 10, {
-      back: 'house', meta: { sub: '網のかかった壁' },
+    interior('nerei_house', R.T('map.isles_nerei.nerei_house'), 12, 10, {
+      back: 'house', meta: { sub: R.T('map.isles_nerei.nerei_house.meta.sub') },
       objects: [K.prop('bed', 1, 2), K.prop('bed', 9, 2), K.prop('table', 5, 6), K.prop('chair', 4, 6), K.prop('net', 10, 6), K.prop('lantern', 7, 3)],
-      npcs: [K.npc('house_wife', 'npc_isles_woman', 6, 4, { name: '漁師のおかみさん', dir: 's', talk: 'nerei_house_wife', reward: 'news' })],
+      npcs: [K.npc('house_wife', 'npc_isles_woman', 6, 4, { name: R.T('map.isles_nerei.nerei_house.npcs.0.house_wife.name'), dir: 's', talk: 'nerei_house_wife', reward: 'news' })],
     });
-    interior('nerei_inn', '岬の宿', 14, 10, {
-      back: 'inn', carpet: [5, 5, 4, 2], meta: { sub: '岬の小さな宿' },
+    interior('nerei_inn', R.T('map.isles_nerei.nerei_inn'), 14, 10, {
+      back: 'inn', carpet: [5, 5, 4, 2], meta: { sub: R.T('map.isles_nerei.nerei_inn.meta.sub') },
       objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('bed', 9, 2), K.prop('bed', 11, 2), K.prop('bed', 11, 5), K.prop('table', 6, 6), K.prop('chair', 5, 6),
         K.prop('lantern', 7, 3)],
       npcs: [
-        K.npc('nerei_inn_keeper', 'npc_isles_old_f', 3, 2, { name: '宿のおかみ', dir: 's', talk: 'nerei_inn_keeper', pushable: false }),
-        K.npc('nerei_inn_guest', 'npc_isles_sailor', 9, 7, { name: '泊まりの漁師', dir: 'w', talk: 'nerei_inn_guest', reward: 'lead' }),
+        K.npc('nerei_inn_keeper', 'npc_isles_old_f', 3, 2, { name: R.T('map.isles_nerei.nerei_inn.npcs.0.nerei_inn_keeper.name'), dir: 's', talk: 'nerei_inn_keeper', pushable: false }),
+        K.npc('nerei_inn_guest', 'npc_isles_sailor', 9, 7, { name: R.T('map.isles_nerei.nerei_inn.npcs.1.nerei_inn_guest.name'), dir: 'w', talk: 'nerei_inn_guest', reward: 'lead' }),
       ],
       spawns: { bed: { x: 10, y: 4, dir: 's' } },
     });
 
     // ---------------------------------------------------------------- 灯台島の灯室（i_light の灯台の戸口から）
-    interior('isles_lamproom', '灯台の灯室', 10, 10, {
-      back: 'lamproom', backMap: 'i_light', location: 'lighthouse_isle', bgm: 'sea', meta: { sub: '灯台守のいない灯台' },
+    interior('isles_lamproom', R.T('map.isles_nerei.isles_lamproom'), 10, 10, {
+      back: 'lamproom', backMap: 'i_light', location: 'lighthouse_isle', bgm: 'overworld', meta: { sub: R.T('map.isles_nerei.isles_lamproom.meta.sub') },
       objects: [K.prop('lantern', 4, 2), K.exam(4, 2, 'isles_lamp'), K.prop('beacon_glow', 4, 2, { cond: { any: ['isles_light_lit', 'cleared_r_isles'] } }),
         K.prop('writing_desk', 1, 5), K.exam(1, 5, 'isles_lamproom_letter'), K.prop('bookshelf', 8, 2), K.exam(8, 2, 'isles_keeper_log'), K.prop('barrel', 8, 6)],
       light: { ambient: '#7a7a92', k: 0.72 },

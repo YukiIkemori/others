@@ -5,10 +5,10 @@
   'use strict';
   const W = 'prologue_done';
   R.defs('locations', {
-    coral: { name: '港町コーラル', region: 'r_isles', kind: 'town', map: 'coral', spawn: 'warp', warp: W },
-    nerei: { name: '岬の村ネレイ', region: 'r_isles', kind: 'town', map: 'nerei', spawn: 'warp', warp: W },
-    tidecave: { name: '潮鳴りの洞窟', region: 'r_isles', kind: 'dungeon', map: 'isles_cave_1', spawn: 'entrance', warp: 'isles_cave_seen' },
-    ghostship: { name: '幽霊船', region: 'r_isles', kind: 'dungeon', map: 'ghost_ship_1', spawn: 'board', warp: 'isles_fog_open' },
-    lighthouse_isle: { name: '灯台島', region: 'r_isles', kind: 'place', map: 'i_light', spawn: 'boat', warp: 'isles_chart_light' },
+    coral: { name: R.T('locations.coral.name'), region: 'r_isles', kind: 'town', map: 'coral', spawn: 'warp', warp: W },
+    nerei: { name: R.T('locations.nerei.name'), region: 'r_isles', kind: 'town', map: 'nerei', spawn: 'warp', warp: W },
+    tidecave: { name: R.T('locations.tidecave.name'), region: 'r_isles', kind: 'dungeon', map: 'isles_cave_1', spawn: 'entrance', warp: 'isles_cave_seen' },
+    ghostship: { name: R.T('locations.ghostship.name'), region: 'r_isles', kind: 'dungeon', map: 'ghost_ship_1', spawn: 'board', warp: 'isles_fog_open' },
+    lighthouse_isle: { name: R.T('locations.lighthouse_isle.name'), region: 'r_isles', kind: 'place', map: 'i_light', spawn: 'boat', warp: 'isles_chart_light' },
   });
 })(window.RPG);

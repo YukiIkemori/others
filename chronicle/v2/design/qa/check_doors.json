@@ -1,168 +1,141 @@
 {
- "date": "2026-09-30T00:33:00.492Z",
+ "date": "2026-09-30T00:55:22.511Z",
  "fixture": "content_p_pharos",
  "walked": [
   {
    "map": "coral",
    "kind": "door",
-   "id": "coral_inn",
-   "at": [
-    8,
-    24
-   ],
-   "to": "coral_inn",
-   "ok": false,
+   "id": "coral_house1",
+   "at": "coral_house1",
+   "to": "coral_house1",
+   "ok": true,
    "steps": 4,
-   "why": "no path from 8,24",
+   "why": null,
    "start": [
-    6,
-    26
+    28,
+    11
    ],
-   "ms": 39178
+   "ms": 37543
   },
   {
    "map": "coral",
    "kind": "door",
    "id": "coral_harbormaster",
-   "at": [
-    9,
-    9
-   ],
+   "at": "coral_harbormaster",
    "to": "coral_harbormaster",
-   "ok": false,
+   "ok": true,
    "steps": 4,
-   "why": "no path from 9,9",
+   "why": null,
    "start": [
     7,
     11
    ],
-   "ms": 44228
-  },
-  {
-   "map": "coral",
-   "kind": "door",
-   "id": "coral_house1",
-   "at": [
-    30,
-    9
-   ],
-   "to": "coral_house1",
-   "ok": false,
-   "steps": 4,
-   "why": "no path from 30,9",
-   "start": [
-    28,
-    11
-   ],
-   "ms": 43339
+   "ms": 39201
   },
   {
    "map": "coral",
    "kind": "door",
    "id": "coral_house2",
-   "at": [
-    30,
-    24
-   ],
+   "at": "coral_house2",
    "to": "coral_house2",
-   "ok": false,
+   "ok": true,
    "steps": 4,
-   "why": "no path from 30,24",
+   "why": null,
    "start": [
     28,
     26
    ],
-   "ms": 20039
+   "ms": 6184
   },
   {
    "map": "coral",
    "kind": "door",
    "id": "coral_tavern",
-   "at": [
-    16,
-    24
-   ],
+   "at": "coral_tavern",
    "to": "coral_tavern",
-   "ok": false,
+   "ok": true,
    "steps": 4,
-   "why": "no path from 16,24",
+   "why": null,
    "start": [
     14,
     26
    ],
-   "ms": 21536
+   "ms": 7549
   },
   {
    "map": "coral",
    "kind": "door",
    "id": "coral_house3",
-   "at": [
-    39,
-    24
-   ],
+   "at": "coral_house3",
    "to": "coral_house3",
-   "ok": false,
+   "ok": true,
    "steps": 4,
-   "why": "no path from 39,24",
+   "why": null,
    "start": [
     37,
     26
    ],
-   "ms": 20524
+   "ms": 5744
   },
   {
    "map": "coral",
    "kind": "door",
    "id": "coral_items",
-   "at": [
-    9,
-    37
-   ],
+   "at": "coral_items",
    "to": "coral_items",
-   "ok": false,
+   "ok": true,
    "steps": 4,
-   "why": "no path from 9,37",
+   "why": null,
    "start": [
     7,
     39
    ],
-   "ms": 22524
+   "ms": 10559
   },
   {
    "map": "coral",
    "kind": "door",
    "id": "coral_arms",
-   "at": [
-    15,
-    37
-   ],
+   "at": "coral_arms",
    "to": "coral_arms",
-   "ok": false,
+   "ok": true,
    "steps": 4,
-   "why": "no path from 15,37",
+   "why": null,
    "start": [
     13,
     39
    ],
-   "ms": 22380
+   "ms": 6736
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_inn",
+   "at": "coral_inn",
+   "to": "coral_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
+    26
+   ],
+   "ms": 46448
   },
   {
    "map": "coral",
    "kind": "door",
    "id": "coral_guild",
-   "at": [
-    33,
-    38
-   ],
+   "at": "coral_guild",
    "to": "coral_guild",
-   "ok": false,
+   "ok": true,
    "steps": 4,
-   "why": "no path from 33,38",
+   "why": null,
    "start": [
     30,
     39
    ],
-   "ms": 21499
+   "ms": 3111
   },
   {
    "map": "coral",
@@ -171,13 +144,223 @@
    "at": "i_cliff",
    "to": "i_cliff",
    "ok": true,
-   "steps": 3,
+   "steps": 4,
    "why": null,
    "start": [
     21,
     4
    ],
-   "ms": 3964
+   "ms": 4574
+  },
+  {
+   "map": "coral_arms",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 5298
+  },
+  {
+   "map": "coral_harbormaster",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 4799
+  },
+  {
+   "map": "coral_guild",
+   "kind": "exit",
+   "id": "8,11",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    8,
+    7
+   ],
+   "ms": 7785
+  },
+  {
+   "map": "coral_house1",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 4348
+  },
+  {
+   "map": "coral_house2",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    6
+   ],
+   "ms": 5492
+  },
+  {
+   "map": "coral_inn",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 5525
+  },
+  {
+   "map": "coral_house3",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 6777
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    36,
+    56
+   ],
+   "ms": 23590
+  },
+  {
+   "map": "coral_tavern",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 4207
+  },
+  {
+   "map": "coral_items",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 4614
+  },
+  {
+   "map": "ghost_ship_1",
+   "kind": "stairs",
+   "id": "ghost_ship_1_down",
+   "at": "ghost_ship_2",
+   "to": "ghost_ship_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    24,
+    15
+   ],
+   "ms": 19403
+  },
+  {
+   "map": "ghost_ship_2",
+   "kind": "stairs",
+   "id": "ghost_ship_2_up",
+   "at": "ghost_ship_1",
+   "to": "ghost_ship_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    15
+   ],
+   "ms": 2910
+  },
+  {
+   "map": "ghost_ship_2",
+   "kind": "stairs",
+   "id": "ghost_ship_2_down",
+   "at": "ghost_ship_3",
+   "to": "ghost_ship_3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    41,
+    17
+   ],
+   "ms": 4239
+  },
+  {
+   "map": "ghost_ship_3",
+   "kind": "stairs",
+   "id": "ghost_ship_3_up",
+   "at": "ghost_ship_2",
+   "to": "ghost_ship_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    47,
+    18
+   ],
+   "ms": 3511
   },
   {
    "map": "i_cape",
@@ -186,13 +369,58 @@
    "at": "i_cove",
    "to": "i_cove",
    "ok": true,
-   "steps": 3,
+   "steps": 4,
    "why": null,
    "start": [
     1,
     22
    ],
-   "ms": 6930
+   "ms": 3740
+  },
+  {
+   "map": "ghost_ship_1",
+   "kind": "door",
+   "id": "",
+   "at": "nerei",
+   "to": "nerei",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    29,
+    21
+   ],
+   "ms": 30465
+  },
+  {
+   "map": "ghost_ship_1",
+   "kind": "door",
+   "id": "",
+   "at": "nerei",
+   "to": "nerei",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    28,
+    21
+   ],
+   "ms": 31900
+  },
+  {
+   "map": "i_cape",
+   "kind": "exit",
+   "id": "21,0",
+   "at": "nerei",
+   "to": "nerei",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    21,
+    4
+   ],
+   "ms": 3452
   },
   {
    "map": "i_cliff",
@@ -207,7 +435,7 @@
     13,
     33
    ],
-   "ms": 5094
+   "ms": 2416
   },
   {
    "map": "i_cliff",
@@ -222,22 +450,7 @@
     51,
     15
    ],
-   "ms": 5024
-  },
-  {
-   "map": "coral",
-   "kind": "door",
-   "id": "",
-   "at": "pharos",
-   "to": "pharos",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
-    36,
-    56
-   ],
-   "ms": 22151
+   "ms": 2992
   },
   {
    "map": "i_cove",
@@ -252,7 +465,7 @@
     0,
     6
    ],
-   "ms": 6945
+   "ms": 2272
   },
   {
    "map": "i_cove",
@@ -267,61 +480,262 @@
     55,
     7
    ],
-   "ms": 4332
-  },
-  {
-   "map": "i_cove",
-   "kind": "stairs",
-   "id": "",
-   "at": [
-    47,
-    25
-   ],
-   "to": "isles_cave_1",
-   "ok": false,
-   "steps": 3,
-   "why": "no path from 47,25",
-   "start": [
-    47,
-    29
-   ],
-   "ms": 22587
+   "ms": 2379
   },
   {
    "map": "i_light",
    "kind": "exit",
    "id": "20,9",
-   "at": [
-    20,
-    9
-   ],
+   "at": "isles_lamproom",
    "to": "isles_lamproom",
-   "ok": false,
+   "ok": true,
    "steps": 4,
-   "why": "no path from 20,9",
+   "why": null,
    "start": [
     20,
     13
    ],
-   "ms": 23099
+   "ms": 5346
   },
   {
-   "map": "i_cape",
-   "kind": "exit",
-   "id": "21,0",
-   "at": [
-    21,
-    0
-   ],
-   "to": "nerei",
-   "ok": false,
-   "steps": 10,
-   "why": "timeout 90 s",
+   "map": "isles_cave_1",
+   "kind": "stairs",
+   "id": "isles_cave_1_up",
+   "at": "isles_cave_2",
+   "to": "isles_cave_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
    "start": [
-    21,
-    4
+    23,
+    5
    ],
-   "ms": 95469
+   "ms": 9464
+  },
+  {
+   "map": "i_cove",
+   "kind": "stairs",
+   "id": "",
+   "at": "isles_cave_1",
+   "to": "isles_cave_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    47,
+    29
+   ],
+   "ms": 14378
+  },
+  {
+   "map": "isles_cave_2",
+   "kind": "stairs",
+   "id": "isles_cave_2_down",
+   "at": "isles_cave_1",
+   "to": "isles_cave_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    22,
+    30
+   ],
+   "ms": 2488
+  },
+  {
+   "map": "isles_cave_1",
+   "kind": "exit",
+   "id": "22,39",
+   "at": "i_cove",
+   "to": "i_cove",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    22,
+    35
+   ],
+   "ms": 8687
+  },
+  {
+   "map": "isles_lamproom",
+   "kind": "exit",
+   "id": "4,9",
+   "at": "i_light",
+   "to": "i_light",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    5
+   ],
+   "ms": 3000
+  },
+  {
+   "map": "nerei",
+   "kind": "door",
+   "id": "nerei_lampkeeper",
+   "at": "nerei_lampkeeper",
+   "to": "nerei_lampkeeper",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    15,
+    16
+   ],
+   "ms": 2121
+  },
+  {
+   "map": "nerei",
+   "kind": "door",
+   "id": "nerei_marina",
+   "at": "nerei_marina",
+   "to": "nerei_marina",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    21
+   ],
+   "ms": 2063
+  },
+  {
+   "map": "nerei",
+   "kind": "door",
+   "id": "nerei_store",
+   "at": "nerei_store",
+   "to": "nerei_store",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    16,
+    27
+   ],
+   "ms": 2118
+  },
+  {
+   "map": "nerei",
+   "kind": "door",
+   "id": "nerei_inn",
+   "at": "nerei_inn",
+   "to": "nerei_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    15,
+    39
+   ],
+   "ms": 2028
+  },
+  {
+   "map": "nerei",
+   "kind": "door",
+   "id": "nerei_house",
+   "at": "nerei_house",
+   "to": "nerei_house",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    33
+   ],
+   "ms": 2363
+  },
+  {
+   "map": "nerei",
+   "kind": "exit",
+   "id": "20,43",
+   "at": "i_cape",
+   "to": "i_cape",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    20,
+    39
+   ],
+   "ms": 2484
+  },
+  {
+   "map": "nerei_house",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "nerei",
+   "to": "nerei",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    6
+   ],
+   "ms": 2625
+  },
+  {
+   "map": "nerei_inn",
+   "kind": "exit",
+   "id": "6,9",
+   "at": "nerei",
+   "to": "nerei",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    6
+   ],
+   "ms": 2668
+  },
+  {
+   "map": "nerei_lampkeeper",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "nerei",
+   "to": "nerei",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2545
+  },
+  {
+   "map": "nerei_marina",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "nerei",
+   "to": "nerei",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    6
+   ],
+   "ms": 1977
+  },
+  {
+   "map": "nerei_store",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "nerei",
+   "to": "nerei",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2532
   }
  ],
  "looks": [
@@ -386,6 +800,230 @@
    "npc": "dog",
    "look": "ani_dog",
    "art": "ani_dog",
+   "ok": true
+  },
+  {
+   "map": "coral_arms",
+   "npc": "smith",
+   "look": "npc_isles_man",
+   "art": "npc_isles_man",
+   "ok": true
+  },
+  {
+   "map": "coral_guild",
+   "npc": "guild_master",
+   "look": "npc_isles_old_m",
+   "art": "npc_isles_old_m",
+   "ok": true
+  },
+  {
+   "map": "coral_guild",
+   "npc": "flag_officer",
+   "look": "npc_isles_sailor",
+   "art": "npc_isles_sailor",
+   "ok": true
+  },
+  {
+   "map": "coral_harbormaster",
+   "npc": "harbormaster",
+   "look": "npc_isles_old_m",
+   "art": "npc_isles_old_m",
+   "ok": true
+  },
+  {
+   "map": "coral_harbormaster",
+   "npc": "hm_wife",
+   "look": "npc_isles_old_f",
+   "art": "npc_isles_old_f",
+   "ok": true
+  },
+  {
+   "map": "coral_house1",
+   "npc": "house1_widow",
+   "look": "npc_isles_old_f",
+   "art": "npc_isles_old_f",
+   "ok": true
+  },
+  {
+   "map": "coral_house1",
+   "npc": "house1_kid",
+   "look": "npc_isles_child",
+   "art": "npc_isles_child",
+   "ok": true
+  },
+  {
+   "map": "coral_house2",
+   "npc": "sailor_wife",
+   "look": "npc_isles_woman",
+   "art": "npc_isles_woman",
+   "ok": true
+  },
+  {
+   "map": "coral_house3",
+   "npc": "fisher",
+   "look": "npc_isles_man",
+   "art": "npc_isles_man",
+   "ok": true
+  },
+  {
+   "map": "coral_inn",
+   "npc": "inn_keeper",
+   "look": "npc_isles_woman",
+   "art": "npc_isles_woman",
+   "ok": true
+  },
+  {
+   "map": "coral_inn",
+   "npc": "inn_guest",
+   "look": "npc_traveler",
+   "art": "npc_traveler",
+   "ok": true
+  },
+  {
+   "map": "coral_items",
+   "npc": "item_keeper",
+   "look": "npc_isles_woman",
+   "art": "npc_isles_woman",
+   "ok": true
+  },
+  {
+   "map": "coral_tavern",
+   "npc": "barkeep",
+   "look": "npc_isles_man",
+   "art": "npc_isles_man",
+   "ok": true
+  },
+  {
+   "map": "coral_tavern",
+   "npc": "old_sailor",
+   "look": "npc_isles_old_m",
+   "art": "npc_isles_old_m",
+   "ok": true
+  },
+  {
+   "map": "coral_tavern",
+   "npc": "tav_sailor",
+   "look": "npc_isles_sailor",
+   "art": "npc_isles_sailor",
+   "ok": true
+  },
+  {
+   "map": "coral_tavern",
+   "npc": "merchant",
+   "look": "npc_merchant_captain",
+   "art": "npc_merchant_captain",
+   "ok": true
+  },
+  {
+   "map": "ghost_ship_3",
+   "npc": "glen",
+   "look": "npc_glen",
+   "art": "npc_glen",
+   "ok": true
+  },
+  {
+   "map": "i_wreck",
+   "npc": "wreck_captain",
+   "look": "npc_merchant_captain",
+   "art": "npc_merchant_captain",
+   "ok": true
+  },
+  {
+   "map": "nerei",
+   "npc": "nerei_fisher",
+   "look": "npc_isles_man",
+   "art": "npc_isles_man",
+   "ok": true
+  },
+  {
+   "map": "nerei",
+   "npc": "nerei_child",
+   "look": "npc_isles_child",
+   "art": "npc_isles_child",
+   "ok": true
+  },
+  {
+   "map": "nerei",
+   "npc": "nerei_oldman",
+   "look": "npc_isles_old_m",
+   "art": "npc_isles_old_m",
+   "ok": true
+  },
+  {
+   "map": "nerei",
+   "npc": "fine",
+   "look": "fine",
+   "art": "fine",
+   "ok": true
+  },
+  {
+   "map": "nerei",
+   "npc": "marina_pier",
+   "look": "npc_marina",
+   "art": "npc_marina",
+   "ok": true
+  },
+  {
+   "map": "nerei",
+   "npc": "marina_dawn",
+   "look": "npc_marina",
+   "art": "npc_marina",
+   "ok": true
+  },
+  {
+   "map": "nerei",
+   "npc": "glen_dawn",
+   "look": "npc_glen",
+   "art": "npc_glen",
+   "ok": true
+  },
+  {
+   "map": "nerei",
+   "npc": "dawn_fisher",
+   "look": "npc_isles_man",
+   "art": "npc_isles_man",
+   "ok": true
+  },
+  {
+   "map": "nerei_house",
+   "npc": "house_wife",
+   "look": "npc_isles_woman",
+   "art": "npc_isles_woman",
+   "ok": true
+  },
+  {
+   "map": "nerei_inn",
+   "npc": "nerei_inn_keeper",
+   "look": "npc_isles_old_f",
+   "art": "npc_isles_old_f",
+   "ok": true
+  },
+  {
+   "map": "nerei_inn",
+   "npc": "nerei_inn_guest",
+   "look": "npc_isles_sailor",
+   "art": "npc_isles_sailor",
+   "ok": true
+  },
+  {
+   "map": "nerei_lampkeeper",
+   "npc": "lampkeeper",
+   "look": "npc_isles_old_m",
+   "art": "npc_isles_old_m",
+   "ok": true
+  },
+  {
+   "map": "nerei_marina",
+   "npc": "marina",
+   "look": "npc_marina",
+   "art": "npc_marina",
+   "ok": true
+  },
+  {
+   "map": "nerei_store",
+   "npc": "store_keeper",
+   "look": "npc_isles_woman",
+   "art": "npc_isles_woman",
    "ok": true
   }
  ],

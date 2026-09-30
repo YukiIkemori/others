@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("i_light", {
-    name: "灯台島", region: "r_isles", outside: "sea",
+    name: R.T('map.field_isles_light.i_light.name'), region: "r_isles", outside: "sea",
     legend: R.FieldArea.ISLE_LEGEND, theme: 'field', bgm: 'overworld', bbg: 'isles', propSet: 'isles', propSetBase: 'harbor',
     light: R.FieldArea.ISLE_LIGHT,
     rows: [
@@ -56,7 +56,7 @@
     tilePatches: [],
     zones: [{"rect":null,"zone":"zw_isles","cond":"!isles_light_lit"}],
     art: {"image":"field/under/i_light","painted":[],"overlay":"field/under/i_light_over"},
-    meta: {"sub":"灯台守のいない灯台","worldRect":[640,560,40,32]},
+    meta: {"sub":R.T('map.field_isles_light.i_light.meta.sub'),"worldRect":[560,540,40,32]},
     links: {},
   });
 })(window.RPG);

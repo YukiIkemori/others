@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("i_wreck", {
-    name: "座礁した商船", region: "r_isles", outside: "sea",
+    name: R.T('map.field_isles_wreck.i_wreck.name'), region: "r_isles", outside: "sea",
     legend: R.FieldArea.ISLE_LEGEND, theme: 'field', bgm: 'overworld', bbg: 'isles', propSet: 'isles', propSetBase: 'harbor',
     light: R.FieldArea.ISLE_LIGHT,
     rows: [
@@ -55,7 +55,7 @@
     tilePatches: [],
     zones: [{"rect":null,"zone":"zw_isles"}],
     art: {"image":"field/under/i_wreck","painted":[]},
-    meta: {"sub":"岩礁に乗り上げた船","worldRect":[600,580,44,32]},
+    meta: {"sub":R.T('map.field_isles_wreck.i_wreck.meta.sub'),"worldRect":[612,540,44,32]},
     links: {},
   });
 })(window.RPG);

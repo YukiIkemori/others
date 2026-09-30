@@ -31,11 +31,11 @@
     const helped = () => { const G = R.Game; return !!(G && G.choices && G.choices.ch_isles_wreck === 'help'); };
     const guild = { 1: items(1).concat(ACC(0)), 2: items(2).concat(ACC(1)), 4: items(3).concat(ACC(2)), 5: items(5), 6: ACC(3) };
     R.defs('shops', {
-      shop_coral_items: { name: 'コーラルの道具屋', kind: 'item', keepOld: true, sell: true, items: items(0).concat(ACC(0)), tier: { 1: items(1), 2: items(2).concat(ACC(1)), 3: items(3), 5: (ACC(2).length ? ACC(2) : items(3)).concat(items(5)) } },
-      shop_coral_arms: Object.assign({ name: 'コーラルの武具屋', kind: 'weapon', keepOld: false, sell: true }, arms),
-      shop_coral_guild: { name: '船乗り組合の売り台', kind: 'special', keepOld: true, sell: true, items: items(0).concat(['i_potion', 'i_ether'].filter(has)),
+      shop_coral_items: { name: R.T('shops.shop_coral_items.name'), kind: 'item', keepOld: true, sell: true, items: items(0).concat(ACC(0)), tier: { 1: items(1), 2: items(2).concat(ACC(1)), 3: items(3), 5: (ACC(2).length ? ACC(2) : items(3)).concat(items(5)) } },
+      shop_coral_arms: Object.assign({ name: R.T('shops.shop_coral_arms.name'), kind: 'weapon', keepOld: false, sell: true }, arms),
+      shop_coral_guild: { name: R.T('shops.shop_coral_guild.name'), kind: 'special', keepOld: true, sell: true, items: items(0).concat(['i_potion', 'i_ether'].filter(has)),
         get tier() { if (!helped()) return guild; const up = {}; for (const [t, v] of Object.entries(guild)) up[Math.max(0, +t - 1)] = (up[Math.max(0, +t - 1)] || []).concat(v); return up; } },
-      shop_nerei: { name: 'ネレイの雑貨屋', kind: 'item', keepOld: true, sell: true, items: items(0).concat(['i_potion'].filter(has)), tier: { 2: items(1), 4: items(3), 5: items(5) } },
+      shop_nerei: { name: R.T('shops.shop_nerei.name'), kind: 'item', keepOld: true, sell: true, items: items(0).concat(['i_potion'].filter(has)), tier: { 2: items(1), 4: items(3), 5: items(5) } },
     });
   });
 })(window.RPG);

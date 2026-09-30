@@ -75,5 +75,12 @@
     'regions.r_star.chapter.title': '星を数えた賢者',
     'regions.r_star.beacon': '星',
     'regions.world.name': '世界のうわさ',
+    'regions.r_isles.chapter.summary': '霧の晩の幽霊船を自分の船で追い、帰らずの船長に舟歌の続きを届けた。灯はだいだい色に戻り、沖の灯台島にともった。',
+    // ---- src/data/locations_isles.js
+    'locations.coral.name': '港町コーラル',
+    'locations.nerei.name': '岬の村ネレイ',
+    'locations.tidecave.name': '潮鳴りの洞窟',
+    'locations.ghostship.name': '幽霊船',
+    'locations.lighthouse_isle.name': '灯台島',
   });
 })(window.RPG);

@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("i_siren", {
-    name: "人魚の歌う岩", region: "r_isles", outside: "sea",
+    name: R.T('map.field_isles_siren.i_siren.name'), region: "r_isles", outside: "sea",
     legend: R.FieldArea.ISLE_LEGEND, theme: 'field', bgm: 'overworld', bbg: 'isles', propSet: 'isles', propSetBase: 'harbor',
     light: R.FieldArea.ISLE_LIGHT,
     rows: [
@@ -51,7 +51,7 @@
     tilePatches: [],
     zones: [{"rect":null,"zone":"zw_isles"}],
     art: {"image":"field/under/i_siren","painted":[]},
-    meta: {"sub":"風が歌う岩の小島","worldRect":[560,470,36,28]},
+    meta: {"sub":R.T('map.field_isles_siren.i_siren.meta.sub'),"worldRect":[570,450,36,28]},
     links: {},
   });
 })(window.RPG);

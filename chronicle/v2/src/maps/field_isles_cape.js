@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("i_cape", {
-    name: "ネレイの岬道", region: "r_isles", outside: "sea",
+    name: R.T('map.field_isles_cape.i_cape.name'), region: "r_isles", outside: "sea",
     legend: R.FieldArea.ISLE_LEGEND, theme: 'field', bgm: 'overworld', bbg: 'isles', propSet: 'isles', propSetBase: 'harbor',
     light: R.FieldArea.ISLE_LIGHT,
     rows: [
@@ -52,7 +52,7 @@
     ],
     objects: [
       {"type":"examine","x":24,"y":18,"event":"isles_signal_mast"},
-      {"type":"sign","x":11,"y":28,"text":"ネレイの岬道\n北 → 岬の村ネレイ"},
+      {"type":"sign","x":11,"y":28,"text":R.T('map.field_isles_cape.i_cape.objects.1.text')},
       {"type":"chest","id":"i_cape_c1","x":28,"y":22,"item":"i_clear","n":2},
       {"type":"waylamp","id":"wl_i_cape_1","x":13,"y":21,"lit":true},
       {"type":"waylamp","id":"wl_i_cape_2","x":23,"y":8,"lit":true},
@@ -66,7 +66,7 @@
     tilePatches: [],
     zones: [{"rect":null,"zone":"zw_isles"}],
     art: {"image":"field/under/i_cape","painted":[],"overlay":"field/under/i_cape_over"},
-    meta: {"sub":"二つの海にはさまれた細い尾根","worldRect":[706,480,48,40]},
+    meta: {"sub":R.T('map.field_isles_cape.i_cape.meta.sub'),"worldRect":[660,480,48,40]},
     links: {},
   });
 })(window.RPG);

@@ -31,5 +31,10 @@
     'shops.shop_yule_arms_low.name': 'ユールの武具屋（荒らされた倉）',
     'shops.shop_yule_fur.name': '毛皮の行商',
     'shops.shop_pass_inn.name': '峠の宿の売店',
+    // ---- src/data/shops_isles.js
+    'shops.shop_coral_items.name': 'コーラルの道具屋',
+    'shops.shop_coral_arms.name': 'コーラルの武具屋',
+    'shops.shop_coral_guild.name': '船乗り組合の売り台',
+    'shops.shop_nerei.name': 'ネレイの雑貨屋',
   });
 })(window.RPG);

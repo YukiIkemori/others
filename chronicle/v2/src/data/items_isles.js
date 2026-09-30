@@ -10,26 +10,26 @@
   const U = (slot, name, o) => Object.assign({ name, slot, grade: 'rare', tier: 0, src: 'unique', grow: 'tier', price: 0 }, o);
   let n = 0;
   const KEYS = {
-    k_glow_shell: K('光る貝がら', '夜光虫の光をためた白い貝がら。\n船首に付けると、霧でも帆が張れる。', { icon: 'gem' }),
-    k_sea_chart: K('港の親方の海図', '幽霊船の出る海のまわりに、空白が\n4つある海図。船で行くと埋まる。', { icon: 'map' }),
-    k_ink_copy: K('墨の写し', 'グレン船長の航海日誌を、六十年前に\n墨で写した控え。写し手はアルノ。', { icon: 'journal' }),
-    k_lamp_oil: K('灯台の油', 'ネレイの灯り守りの魚油のつぼ。\n灯台島の灯室のランプにさす。', { icon: 'lamp' }),
-    k_guild_parcel: K('組合の荷', '船乗り組合から預かった、\nネレイの雑貨屋あての包み。', { icon: 'bag' }),
-    k_tmap_4: K('宝の地図・その4', '商船の船長がくれた古い地図。\n水に沈んだ礼拝堂の絵がある。', { icon: 'map', tmap: { n: 4, place: 'sunken_chapel', region: 'r_marsh', hint: '沈んだ礼拝堂。祭壇の裏の、\n封じの扉の奥。' } }),
+    k_glow_shell: K(R.T('data.items_isles.KEYS.k_glow_shell.K'), R.T('data.items_isles.KEYS.k_glow_shell.K_2'), { icon: 'gem' }),
+    k_sea_chart: K(R.T('data.items_isles.KEYS.k_sea_chart.K'), R.T('data.items_isles.KEYS.k_sea_chart.K_2'), { icon: 'map' }),
+    k_ink_copy: K(R.T('data.items_isles.KEYS.k_ink_copy.K'), R.T('data.items_isles.KEYS.k_ink_copy.K_2'), { icon: 'journal' }),
+    k_lamp_oil: K(R.T('data.items_isles.KEYS.k_lamp_oil.K'), R.T('data.items_isles.KEYS.k_lamp_oil.K_2'), { icon: 'lamp' }),
+    k_guild_parcel: K(R.T('data.items_isles.KEYS.k_guild_parcel.K'), R.T('data.items_isles.KEYS.k_guild_parcel.K_2'), { icon: 'bag' }),
+    k_tmap_4: K(R.T('data.items_isles.KEYS.k_tmap_4.K'), R.T('data.items_isles.KEYS.k_tmap_4.K_2'), { icon: 'map', tmap: { n: 4, place: 'sunken_chapel', region: 'r_marsh', hint: R.T('data.items_isles.KEYS.k_tmap_4.tmap.hint') } }),
   };
   for (const id of Object.keys(KEYS)) { KEYS[id].sort = 9500 + n++; R.def('items', id, KEYS[id]); }
 
   R.defs('items', {
     // 人魚の歌う岩（#34）と、その対の品（岩の節を聞いてからマリナに会うと。同じ強さの別の品ではなく、並べて着けられる対）
-    u_siren_comb: U('acc', '人魚のくし', { mods: { mpRegen: 1, statusResist: { sleep: 0.5 } }, icon: 'ring',
-      desc: '人魚の歌う岩にはさまっていた、\n真珠色のくし。かすかに歌が聞こえる。' }),
-    u_shore_comb: U('acc', '待つ人のくし', { mods: { hpPct: 5, statusResist: { confuse: 0.5 } }, icon: 'ring',
-      desc: 'マリナが若いころに使った木のくし。\n人魚のくしと同じ波の模様がある。' }),
+    u_siren_comb: U('acc', R.T('items.u_siren_comb.acc'), { mods: { mpRegen: 1, statusResist: { sleep: 0.5 } }, icon: 'ring',
+      desc: R.T('items.u_siren_comb.acc.desc') }),
+    u_shore_comb: U('acc', R.T('items.u_shore_comb.acc'), { mods: { hpPct: 5, statusResist: { confuse: 0.5 } }, icon: 'ring',
+      desc: R.T('items.u_shore_comb.acc.desc') }),
     // 貝がら集め（12 種）の礼
-    u_shell_charm: U('acc', '夜光貝の守り', { mods: { spd: 3, encounterPct: -10 }, icon: 'ring',
-      desc: '夜光虫で光る12の貝がらを\n糸でつないだお守り。' }),
+    u_shell_charm: U('acc', R.T('items.u_shell_charm.acc'), { mods: { spd: 3, encounterPct: -10 }, icon: 'ring',
+      desc: R.T('items.u_shell_charm.acc.desc') }),
     // 旗信号の見習い試験（3 段）の礼
-    u_flag_scarf: U('head', '信号旗の襟巻き', { weight: 'light', mods: { escapePct: 15, spd: 2 }, icon: 'helm',
-      desc: '旗信号の試験に受かった見習いが\n首に巻く、赤と白の襟巻き。' }),
+    u_flag_scarf: U('head', R.T('items.u_flag_scarf.head'), { weight: 'light', mods: { escapePct: 15, spd: 2 }, icon: 'helm',
+      desc: R.T('items.u_flag_scarf.head.desc') }),
   });
 })(window.RPG);

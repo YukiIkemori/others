@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("i_crab", {
-    name: "財宝ヤドカリの島", region: "r_isles", outside: "sea",
+    name: R.T('map.field_isles_crab.i_crab.name'), region: "r_isles", outside: "sea",
     legend: R.FieldArea.ISLE_LEGEND, theme: 'field', bgm: 'overworld', bbg: 'isles', propSet: 'isles', propSetBase: 'harbor',
     light: R.FieldArea.ISLE_LIGHT,
     rows: [
@@ -54,7 +54,7 @@
     tilePatches: [],
     zones: [{"rect":null,"zone":"zw_isles"}],
     art: {"image":"field/under/i_crab","painted":[],"overlay":"field/under/i_crab_over"},
-    meta: {"sub":"貝がらの光る小島","worldRect":[700,560,40,30]},
+    meta: {"sub":R.T('map.field_isles_crab.i_crab.meta.sub'),"worldRect":[676,530,40,30]},
     links: {},
   });
 })(window.RPG);

@@ -85,7 +85,7 @@ def i_cliff():
         dict(type='waylamp', id='wl_i_cliff_1', x=16, y=28, lit=True),
         dict(type='waylamp', id='wl_i_cliff_2', x=38, y=22, lit=True),
     ]
-    a.meta = dict(name='白崖の道', sub='港町コーラルの北の崖の上', region='r_isles', worldRect=[600, 492, 50, 36], outside='sea',
+    a.meta = dict(name='白崖の道', sub='港町コーラルの北の崖の上', region='r_isles', worldRect=[596, 468, 50, 36], outside='sea',
                   zones=[{'rect': None, 'zone': ZONE}], links={}, npcs=[])
     return a
 
@@ -141,7 +141,7 @@ def i_cove():
         dict(type='waylamp', id='wl_i_cove_1', x=18, y=14, lit=True),
         dict(type='waylamp', id='wl_i_cove_2', x=44, y=26, lit=True),
     ]
-    a.meta = dict(name='夜光虫の入り江', sub='白い砂の入り江と潮鳴りの洞窟', region='r_isles', worldRect=[650, 492, 56, 40], outside='sea',
+    a.meta = dict(name='夜光虫の入り江', sub='白い砂の入り江と潮鳴りの洞窟', region='r_isles', worldRect=[630, 470, 56, 40], outside='sea',
                   zones=[{'rect': None, 'zone': ZONE}], links={'tidecave': {'map': 'i_cove', 'spawn': 'cave'}}, npcs=[])
     return a
 
@@ -182,7 +182,7 @@ def i_cape():
         dict(type='waylamp', id='wl_i_cape_1', x=12, y=22, lit=True),
         dict(type='waylamp', id='wl_i_cape_2', x=24, y=8, lit=True),
     ]
-    a.meta = dict(name='ネレイの岬道', sub='二つの海にはさまれた細い尾根', region='r_isles', worldRect=[706, 480, 48, 40], outside='sea',
+    a.meta = dict(name='ネレイの岬道', sub='二つの海にはさまれた細い尾根', region='r_isles', worldRect=[660, 480, 48, 40], outside='sea',
                   zones=[{'rect': None, 'zone': ZONE}], links={}, npcs=[])
     return a
 
@@ -225,7 +225,7 @@ def i_light():
     ]
     a.exits.append(dict(x=20, y=9, w=1, h=1, to={'map': 'isles_lamproom', 'spawn': 'door'}))
     a.spawns['lamproom'] = dict(x=20, y=10, dir='s')
-    a.meta = dict(name='灯台島', sub='灯台守のいない灯台', region='r_isles', worldRect=[640, 560, 40, 32], outside='sea', look='field',
+    a.meta = dict(name='灯台島', sub='灯台守のいない灯台', region='r_isles', worldRect=[560, 540, 40, 32], outside='sea', look='field',
                   zones=[{'rect': None, 'zone': ZONE, 'cond': '!isles_light_lit'}], links={}, npcs=[])
     return a
 
@@ -245,7 +245,7 @@ def i_siren():
     a.tidy()
     a.spawns = {'boat': dict(x=29, y=14, dir='w')}
     a.objects += [dict(type='examine', x=17, y=13, event='isles_siren_rock'), dict(type='examine', x=33, y=15, event='isles_boat')]
-    a.meta = dict(name='人魚の歌う岩', sub='風が歌う岩の小島', region='r_isles', worldRect=[560, 470, 36, 28], outside='sea', look='field',
+    a.meta = dict(name='人魚の歌う岩', sub='風が歌う岩の小島', region='r_isles', worldRect=[570, 450, 36, 28], outside='sea', look='field',
                   zones=[{'rect': None, 'zone': ZONE}], links={}, npcs=[])
     return a
 
@@ -267,7 +267,7 @@ def i_crab():
     a.spawns = {'boat': dict(x=7, y=15, dir='e')}
     a.objects += [dict(type='examine', x=19, y=15, event='isles_crab_nest'), dict(type='examine', x=3, y=16, event='isles_boat'),
                   dict(type='chest', id='i_crab_c1', x=30, y=11, pool='p_T')]
-    a.meta = dict(name='財宝ヤドカリの島', sub='貝がらの光る小島', region='r_isles', worldRect=[700, 560, 40, 30], outside='sea', look='field',
+    a.meta = dict(name='財宝ヤドカリの島', sub='貝がらの光る小島', region='r_isles', worldRect=[676, 530, 40, 30], outside='sea', look='field',
                   zones=[{'rect': None, 'zone': ZONE}], links={}, npcs=[])
     return a
 
@@ -289,7 +289,7 @@ def i_wreck():
     a.tidy()
     a.spawns = {'boat': dict(x=22, y=26, dir='n')}
     a.objects += [dict(type='examine', x=23, y=17, event='isles_wreck'), dict(type='examine', x=23, y=30, event='isles_boat')]
-    a.meta = dict(name='座礁した商船', sub='岩礁に乗り上げた船', region='r_isles', worldRect=[600, 580, 44, 32], outside='sea', look='field',
+    a.meta = dict(name='座礁した商船', sub='岩礁に乗り上げた船', region='r_isles', worldRect=[612, 540, 44, 32], outside='sea', look='field',
                   zones=[{'rect': None, 'zone': ZONE}], links={}, npcs=[])
     return a
 
