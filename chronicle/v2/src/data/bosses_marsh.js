@@ -29,6 +29,6 @@
     M.actions = A([['attack', 2], ['eb_mist_hand', 2], ['eb_mist_breath', 1], ['eb_mist_gather', 200, { every: [4, 1] }],
       ['eb_call_double', 1, { every: [5, 2], countBelow: 3 }], ['eb_witch_mimic', 2], ['eb_inhale_mist', 1, { every: [5, 4] }]]);
     M.desc = R.T('data.bosses_marsh.desc_2');
-    M.s = { hp: 0.45, atk: 0.3, mag: 0.3 };
+    M.s = { hp: 0.47, atk: 0.3, mag: 0.3 };   // hp 0.45 → 0.47（2026-09-30: ティア 1 のリピートが 32% で目安 30% を越えた。sim_bosses）
   }
 })(window.RPG);

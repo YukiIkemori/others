@@ -287,7 +287,9 @@
         let d = null;
         const lose = B.cur && B.cur.lose;
         if (lose) d = { cmd: 'defend', id: 'defend', target: uid };
-        else { try { d = R.BattleAI.partyCommand(st.B, uid, 'script'); } catch (e) { d = null; } }
+        // 台本の手（sim_bosses の script）はボス・話の中の戦い（troop）だけ。道中の雑魚は sim_zones と同じ控えめな手（thrift）で、
+        // MP を使い切らずに進む（2026-09-30: 雑魚にも技を撃ち続け、ダストウィングの前で MP が 1 割を切っていた。R1 の負けの元）
+        else { try { d = R.BattleAI.partyCommand(st.B, uid, (eng && eng.boss) || (B.cur && B.cur.troop) ? 'script' : 'auto'); } catch (e) { d = null; } }
         B.dec = d || { cmd: 'attack', id: 'attack', target: null };
       }
       let k = TOPKEY[B.dec.cmd] || B.dec.cmd;

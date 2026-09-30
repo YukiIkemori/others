@@ -1,4 +1,4 @@
-// BEAST: 戦闘背景（地方 7 つ: desert snow marsh isles mine ash star）。本体は描いた画像（v2/assets/env/bbg/<id>、ENV_ASSETS.md の K.envLayers）。
+// BEAST: 戦闘背景（地方 7 つ: desert snow marsh isles mine ash star ＋ 終盤の library）。本体は描いた画像（v2/assets/env/bbg/<id>、ENV_ASSETS.md の K.envLayers）。
 // 画像が無いとき（node・読めなかった）の控えは、夜空と平らな地面だけの簡単な絵。
 (function (R) {
   'use strict';
@@ -12,6 +12,8 @@
     mine: { mood: 'cave', ambient: 'rgb(122,106,188)', ground: ['#2a2830', '#46404a'] },
     ash: { mood: 'cave', ambient: 'rgb(150,96,120)', ground: ['#2c2626', '#4a3a36'] },
     star: { mood: 'tower', ambient: 'rgb(108,98,172)', ground: ['#3a3a4c', '#5a5a70'] },
+    // 終盤（白の大書庫。描いた絵は v2/assets/env/bbg/library、design/art_ref/gen/env/bbg/library.png）
+    library: { mood: 'tower', ambient: 'rgb(116,112,184)', ground: ['#6a6878', '#9a98a8'] },
   };
   for (const id of Object.keys(REG)) {
     const r = REG[id];

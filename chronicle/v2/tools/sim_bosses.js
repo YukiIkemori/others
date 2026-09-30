@@ -38,10 +38,11 @@ const BOSSES = {
 const SITEMS = Object.assign({}, ITEMS, { i_firepot: 6 });
 for (const T of [0, 1, 3]) {
   const k = T === 0 ? '' : '@' + T;
+  // ラウンドの幅はほかの地方と同じ（中ボス 5〜9、地方ボス 8〜13。2026-09-30: 雪原だけ 5〜8・8〜12 と狭く、ティア 1 の台本が 8.6・13.1 で外れた）
   // ティア 0（森を解く前に北へ来た一行）は籠城の山場として重め: 台本 65%・倒れる 1.6 人・12 ラウンドまで（宿で整え直せる）
-  BOSSES['tr_b_blizzardwolf_0' + k] = { troop: 'tr_b_blizzardwolf_0', tier: T, kind: 'mid', members: STD, fight: 35, repeat: 30, script: T ? 90 : 65, down: T ? 1.0 : 1.6, diff: 50, rounds: T ? [5, 8] : [5, 12], note: '籠城の最後の波。遠吠え → 吹雪（守る）、手下を呼ぶ → 頭を先に' };
+  BOSSES['tr_b_blizzardwolf_0' + k] = { troop: 'tr_b_blizzardwolf_0', tier: T, kind: 'mid', members: STD, fight: 35, repeat: 30, script: T ? 90 : 65, down: T ? 1.0 : 1.6, diff: 50, rounds: T ? [5, 9] : [5, 12], note: '籠城の最後の波。遠吠え → 吹雪（守る）、手下を呼ぶ → 頭を先に' };
   BOSSES['tr_b_icegiant' + k] = { troop: 'tr_b_icegiant', tier: T, kind: 'mid', members: STD, items: SITEMS, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 8], note: '白く光る → 氷の鎧（火で消す・張っても火でとける）' };
-  BOSSES['tr_b_whitedragon' + k] = { troop: 'tr_b_whitedragon', tier: T, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 12], note: '息を吸う → 白い息（守る）。半分で思い出す間' };
+  BOSSES['tr_b_whitedragon' + k] = { troop: 'tr_b_whitedragon', tier: T, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 13], note: '息を吸う → 白い息（守る）。半分で思い出す間' };
 }
 BOSSES['tr_b_frost_admiral@6'] = { troop: 'tr_b_frost_admiral', tier: 6, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 85, diff: 40, rounds: [8, 13], note: '氷に閉じた帆船（隠しボス。ティア 6 から）' };
 BOSSES['tr_b_vein_lord@6'] = { troop: 'tr_b_vein_lord', tier: 6, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 85, diff: 40, rounds: [8, 13], note: '深淵の鉱脈の底（隠しボス。ティア 6 から）。脈打ったら守る、かけらは後回し、水が効く' };

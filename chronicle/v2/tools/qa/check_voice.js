@@ -74,12 +74,31 @@ REGION.push('v_fine_ash_01'); // 2026-09-28: 灰の荒野の火口のフィー�
 REGION.push('v_marina_nerei_01', 'v_marina_pier_01', 'v_marina_dawn_01', 'v_marina_dawn_02', 'v_glen_ship_01', 'v_glen_ship_02', 'v_glen_ship_03', 'v_glen_ship_04', 'v_glen_dawn_01', 'v_fine_isles_01'); // 2026-09-30: マレア諸島（isles_*.js）
 REGION.push('v_sentinel_star_01'); // 2026-09-30: オルビス高原の天球の番人（star_tower.js。script.csv の録音済みの行のまま）
 REGION.push('v_guardian_mine_01', 'v_guardian_mine_02', 'v_guardian_mine_03'); // 2026-09-30: ガルド山地（mine_*.js）の鉄の番人
+// 2026-09-30: 終盤とエンディング（final_*.js。STORY_BIBLE §11 の T8・終盤のロア・ビブリア・大書庫・エンディングの行）
+const FINALE = ['v_fine_t8_01', 'v_fine_t8_02', 'v_fine_t8_03', 'v_fine_t8_04', 'v_fine_t8_05', 'v_fine_t8_06',
+  'v_fine_roa_01', 'v_fine_roa_02', 'v_fine_roa_03', 'v_berna_roa_01', 'v_berna_roa_02', 'v_berna_roa_03', 'v_berna_roa_04', 'v_rowell_roa_01', 'v_rowell_roa_02',
+  'v_rowell_biblia_01', 'v_rowell_biblia_02', 'v_rowell_biblia_03', 'v_rowell_biblia_04', 'v_noa_biblia_01', 'v_noa_biblia_02', 'v_noa_biblia_03', 'v_noa_biblia_04', 'v_noa_biblia_05', 'v_noa_biblia_06',
+  'v_rowell_seal_01', 'v_rowell_seal_02', 'v_rowell_seal_03', 'v_rowell_seal_04', 'v_king_shades_01', 'v_fine_shades_01', 'v_fine_shades_02',
+  'v_lazaro_archive_01', 'v_lazaro_archive_02', 'v_lazaro_archive_03', 'v_lazaro_archive_04', 'v_lazaro_archive_05', 'v_lazaro_archive_06', 'v_lazaro_archive_07', 'v_king_archive_01',
+  'v_king_altar_01', 'v_king_altar_02', 'v_king_altar_03', 'v_king_naming_01', 'v_fine_naming_01',
+  'v_nemrea_ending_01', 'v_nemrea_ending_02', 'v_fine_ending_01', 'v_fine_ending_02', 'v_lazaro_ending_01', 'v_rowell_ending_01', 'v_noa_ending_01',
+  'v_berna_ending_01', 'v_berna_ending_02', 'v_berna_ending_03'];
+REGION.push(...FINALE);
 for (const id of REGION) {
   const u = used[id] || [];
   ok(`${id}: イベントで 1 回`, u.length === 1, u.map((x) => x.file));
   if (u[0] && u[0].text != null) ok(`${id}: 文面が script.csv と同じ`, u[0].text === script[id], [u[0].text, script[id]]);
   else if (u[0]) ok(`${id}: 文面が読める形で書かれている（ev.say の 2 つ目の文字列）`, false, u[0].file);
   ok(`${id}: 音のファイルがある`, fs.existsSync(path.join(CHRON, 'assets', 'voice', id + '.ogg')));
+}
+// 2026-09-30: エンディングの E8 で序章の 1 行目（v_berna_prologue_01）をもう一度流す（STORY_BIBLE §11.3「同＋再」）。ev.say の 1 回は序章のまま、
+// 2 度目は final_ending.js の定数 FIRST_MORNING から（文面は序章と同じ R.T の key）
+section('エンディングの流し直し（v_berna_prologue_01 の 2 度目）');
+{
+  const src = i18nInline(fs.readFileSync(path.join(V2, 'src', 'events', 'final_ending.js'), 'utf8'));
+  ok('final_ending.js: FIRST_MORNING = v_berna_prologue_01', /const FIRST_MORNING = 'v_berna_prologue_01'/.test(src));
+  const m = /\.say\('e_berna',\s*'([^']*)',\s*\{\s*voice:\s*FIRST_MORNING/.exec(src);
+  ok('E8 のベルナの台詞に FIRST_MORNING の声がつき、文面が script.csv と同じ', !!m && m[1].replace(/\\n/g, '') === script.v_berna_prologue_01, m && m[1]);
 }
 // 2026-09-27: 町の人と物語のボイス（design/voice_story_map.json。文面は node chronicle/tools/story_voice.js --check が見る）
 section('物語のボイスとあいさつ（voice_story_map.json）');

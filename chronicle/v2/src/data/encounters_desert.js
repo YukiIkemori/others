@@ -21,7 +21,7 @@
       G(8, [['@scorpion', 2, 3]]),
       G(8, [['@snake', 2, 3]]),
       G(7, [['@cactus', 2, 3]]),
-      G(6, [['@scorpion', 1, 2], ['@snake', 1, 2]]),
+      G(6, [['@scorpion', 1, 2], ['@snake', 1, 1]]),   // ヘビは 1 匹（4 体の組で p95 が 20 を越えた。sim_zones）
       G(5, [['@cactus', 1, 2], ['@scorpion', 1, 1]]),
       G(4, [['@sandworm', 1, 1], ['@snake', 1, 1]]),
       G(2, [['@sandworm', 1, 1], ['@scorpion', 1, 2]], { tierMin: 1 }),

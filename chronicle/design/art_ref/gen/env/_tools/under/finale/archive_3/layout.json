@@ -1,0 +1,305 @@
+{
+"id": "archive_3",
+"w": 44,
+"h": 36,
+"rows": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXccccXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXccccXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXccccXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXccccccccccXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXccccccccccXXXXXXXXXXXXXXXX~",
+"~XXXXXXccccccccccccccccccccccccccccccXXXXXX~",
+"~XXccccccccccccccccccccccccccccccccccccccXX~",
+"~XXXccccccccccccccccccccccccccccccccccccXXX~",
+"~XXccccccccccccccccccccccccccccccccccccccXX~",
+"~XXXXXXccccXXXXXXXXXXXXXXXXXXXXXXccccXXXXXX~",
+"~XXXXXXccccXXXXXXXXXXXXXXXXXXXXXXccccXXXXXX~",
+"~XXccccccccXXXXXXXXXXXXXXXXXXXXXXccccccccXX~",
+"~XXXcccccccXXXXXXXXXXXXXXXXXXXXXXcccccccXXX~",
+"~XXccccccccXXXXXXXXXXXXXXXXXXXXXXccccccccXX~",
+"~XXXXXXccccXXXXXXXXXXXXXXXXXXXXXXccccXXXXXX~",
+"~XXXXXXccccXXXXXXXXXXXXXXXXXXXXXXccccXXXXXX~",
+"~XXccccccccXXXXXXXXXXXXXXXXXXXXXXccccccccXX~",
+"~XXXcccccccXXXXXXXXXXXXXXXXXXXXXXcccccccXXX~",
+"~XXccccccccXXXXXXXXXXXXXXXXXXXXXXccccccccXX~",
+"~XXXXXXccccXXXXXXXXXXXXXXXXXXXXXXccccXXXXXX~",
+"~XXXXXXccccXXXXXXXXXXXXXXXXXXXXXXccccXXXXXX~",
+"~XXccccccccXXXXXXXXXXXXXXXXXXXXXXccccccccXX~",
+"~XXXcccccccXXXXXXXXXXXXXXXXXXXXXXcccccccXXX~",
+"~XXccccccccccccccccccccccccccccccccccccccXX~",
+"~XXXXXXccccccccccccccccccccccccccccccXXXXXX~",
+"~XXXXXXccccccccccccccccccccccccccccccXXXXXX~",
+"~XXXXXXccccccccccccccccccccccccccccccXXXXXX~",
+"~XXXXXXXccXXXXXXXccccccccccXXXXXXXXXXXXXXXX~",
+"~XXXXXXXccXXXXXXXccccccccccXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXccccccccccXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+],
+"marks": [
+{
+"kind": "sealdoor",
+"cells": [
+[
+21,
+5
+],
+[
+22,
+5
+]
+],
+"text": "a tall double DOOR of white stone covered in pale glowing script and a round seal (closed)",
+"color": [
+214,
+218,
+236
+],
+"solid": true
+},
+{
+"kind": "stairs",
+"cells": [
+[
+21,
+2
+],
+[
+22,
+2
+]
+],
+"text": "a white marble STAIRCASE going up (walkable)",
+"color": [
+200,
+196,
+186
+],
+"solid": false
+},
+{
+"kind": "lecterns",
+"cells": [
+[
+3,
+10
+],
+[
+40,
+10
+],
+[
+3,
+15
+],
+[
+40,
+15
+],
+[
+3,
+20
+],
+[
+40,
+20
+],
+[
+3,
+25
+],
+[
+40,
+25
+]
+],
+"text": "a small wooden LECTERN with an open book, lit by a faint glow",
+"color": [
+170,
+130,
+80
+],
+"solid": true
+},
+{
+"kind": "stairsdown",
+"cells": [
+[
+8,
+31
+],
+[
+9,
+31
+]
+],
+"text": "a white marble STAIRCASE going down (walkable)",
+"color": [
+200,
+196,
+186
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 8,
+"y": 30
+},
+{
+"type": "o",
+"x": 9,
+"y": 30
+},
+{
+"type": "o",
+"x": 21,
+"y": 7
+},
+{
+"type": "o",
+"x": 22,
+"y": 7
+},
+{
+"type": "o",
+"x": 21,
+"y": 3
+},
+{
+"type": "o",
+"x": 22,
+"y": 3
+},
+{
+"type": "o",
+"x": 21,
+"y": 31
+},
+{
+"type": "o",
+"x": 22,
+"y": 31
+},
+{
+"type": "o",
+"x": 5,
+"y": 10
+},
+{
+"type": "o",
+"x": 5,
+"y": 15
+},
+{
+"type": "o",
+"x": 5,
+"y": 20
+},
+{
+"type": "o",
+"x": 5,
+"y": 25
+},
+{
+"type": "o",
+"x": 38,
+"y": 10
+},
+{
+"type": "o",
+"x": 38,
+"y": 15
+},
+{
+"type": "o",
+"x": 38,
+"y": 20
+},
+{
+"type": "o",
+"x": 38,
+"y": 25
+},
+{
+"type": "o",
+"x": 21,
+"y": 9
+},
+{
+"type": "o",
+"x": 34,
+"y": 28
+}
+],
+"spawns": {
+"from2": {
+"x": 9,
+"y": 29,
+"dir": "n"
+},
+"from4": {
+"x": 21,
+"y": 3,
+"dir": "s"
+}
+},
+"exits": [],
+"notes": [],
+"meta": {
+"name": "白の大書庫",
+"region": "finale",
+"zones": [],
+"worldRect": [
+0,
+0,
+1,
+1
+],
+"look": "int"
+},
+"rows_fit": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXccXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXccXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXccXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXccccccccccXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXccccccccccXXXXXXXXXXXXXXXX~",
+"~XXXXXXccccccccccccccccccccccccccccccXXXXXX~",
+"~XXXcccccccccccccccccccccccccccccccccccXXXX~",
+"~XXXXccccccccccccccccccccccccccccccccccXXXX~",
+"~XXXcccccccccccccccccccccccccccccccccccXXXX~",
+"~XXXXXXccccXXXXXXXXXXXXXXXXXXXXXXccccXXXXXX~",
+"~XXXXXXccccXXXXXXXXXXXXXXXXXXXXXXccccXXXXXX~",
+"~XXXXXXccccXXXXXXXXXXXXXXXXXXXXXXccccXXXXXX~",
+"~XXXXccccccXXXXXXXXXXXXXXXXXXXXXXccccccXXXX~",
+"~XXXcccccccXXXXXXXXXXXXXXXXXXXXXXccccccXXXX~",
+"~XXXXXXccccXXXXXXXXXXXXXXXXXXXXXXccccXXXXXX~",
+"~XXXXXXccccXXXXXXXXXXXXXXXXXXXXXXccccXXXXXX~",
+"~XXXXXXccccXXXXXXXXXXXXXXXXXXXXXXccccXXXXXX~",
+"~XXXcccccccXXXXXXXXXXXXXXXXXXXXXXccccccXXXX~",
+"~XXXXccccccXXXXXXXXXXXXXXXXXXXXXXccccccXXXX~",
+"~XXXcccccccXXXXXXXXXXXXXXXXXXXXXXccccccXXXX~",
+"~XXXXXXccccXXXXXXXXXXXXXXXXXXXXXXccccXXXXXX~",
+"~XXXXXXccccXXXXXXXXXXXXXXXXXXXXXXccccXXXXXX~",
+"~XXXcccccccccccccccccccccccccccccccccccXXXX~",
+"~XXXXccccccccccccccccccccccccccccccccccXXXX~",
+"~XXXcccccccccccccccccccccccccccccccccccXXXX~",
+"~XXXXXXccccccccccccccccccccccccccccccXXXXXX~",
+"~XXXXXXccccccccccccccccccccccccccccccXXXXXX~",
+"~XXXXXXXXcXXXXXXXXcccccccccXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXcXXXXXXXXcccccccccXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXcXXXXXXXXcccccccccXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXcccccccccXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+]
+}

@@ -1,0 +1,514 @@
+{
+"id": "archive_4",
+"w": 44,
+"h": 36,
+"rows": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXccccccXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXccccccXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXccccccXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXccccccXXXXXXXXXXXXXXXXXX~",
+"~XXcccccccccXXXXXXXccccccXXXXXXXXXXXXXXXXXX~",
+"~XXcccccccccXXXXXXXckkkkcXXXXXXXXXXXXXXXXXX~",
+"~XXccccccccccccccccckkkkcccccccccccccccXXXX~",
+"~XXccccccccccccccccckkkkcccccccccccccccXXXX~",
+"~XXccXcccXcccccXcccckkkkcccccccccccXcccXXXX~",
+"~XXccccccccccccccccckkkkcccccccccccccccXXXX~",
+"~XXccccccccccccccccckkkkcccccccccccccccXXXX~",
+"~XXccccccccccccccccXkkkkcXcccccccccccccXXXX~",
+"~XXccccccccccccccccckkkkcccccccccccccccXXXX~",
+"~XXccccccccccccccccckkkkcccccccccccccccXXXX~",
+"~XXccXcccXcccccXcccckkkkcccccccccccXcccXXXX~",
+"~XXccccccccccccccccckkkkcccccccccccccccXXXX~",
+"~XXccccccccccccccccckkkkcccccccccccccccXXXX~",
+"~XXcccccccccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXcccccccccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXcccccccccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXccXcccXccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXcccccccccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXcccccccccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXcccccccccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXcccccccccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXcccccccccccccccccccccccccccccccccccccXXX~",
+"~XXcccccccccccccccccccccccccccccccccccccXXX~",
+"~XXcccccccccccccccccccccccccccccccccccccXXX~",
+"~XXcccccccccccccccccccccccccccccccccccccXXX~",
+"~XXcccccccccccccccccccccccccccccccccccccXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+],
+"marks": [
+{
+"kind": "painting12",
+"cells": [
+[
+12,
+26
+],
+[
+13,
+26
+],
+[
+14,
+26
+]
+],
+"text": "a great framed PAINTING hanging on the wall (a legend of heroes, faded)",
+"color": [
+160,
+120,
+70
+],
+"solid": true
+},
+{
+"kind": "painting19",
+"cells": [
+[
+19,
+26
+],
+[
+20,
+26
+],
+[
+21,
+26
+]
+],
+"text": "a great framed PAINTING hanging on the wall (a legend of heroes, faded)",
+"color": [
+160,
+120,
+70
+],
+"solid": true
+},
+{
+"kind": "painting26",
+"cells": [
+[
+26,
+26
+],
+[
+27,
+26
+],
+[
+28,
+26
+]
+],
+"text": "a great framed PAINTING hanging on the wall (a legend of heroes, faded)",
+"color": [
+160,
+120,
+70
+],
+"solid": true
+},
+{
+"kind": "painting33",
+"cells": [
+[
+33,
+26
+],
+[
+34,
+26
+],
+[
+35,
+26
+]
+],
+"text": "a great framed PAINTING hanging on the wall (a legend of heroes, faded)",
+"color": [
+160,
+120,
+70
+],
+"solid": true
+},
+{
+"kind": "statue5_10",
+"cells": [
+[
+5,
+10
+]
+],
+"text": "a white marble STATUE of a robed figure on a square plinth",
+"color": [
+224,
+222,
+216
+],
+"solid": true
+},
+{
+"kind": "statue9_10",
+"cells": [
+[
+9,
+10
+]
+],
+"text": "a white marble STATUE of a robed figure on a square plinth",
+"color": [
+224,
+222,
+216
+],
+"solid": true
+},
+{
+"kind": "statue5_16",
+"cells": [
+[
+5,
+16
+]
+],
+"text": "a white marble STATUE of a robed figure on a square plinth",
+"color": [
+224,
+222,
+216
+],
+"solid": true
+},
+{
+"kind": "statue9_16",
+"cells": [
+[
+9,
+16
+]
+],
+"text": "a white marble STATUE of a robed figure on a square plinth",
+"color": [
+224,
+222,
+216
+],
+"solid": true
+},
+{
+"kind": "statue5_22",
+"cells": [
+[
+5,
+22
+]
+],
+"text": "a white marble STATUE of a robed figure on a square plinth",
+"color": [
+224,
+222,
+216
+],
+"solid": true
+},
+{
+"kind": "statue9_22",
+"cells": [
+[
+9,
+22
+]
+],
+"text": "a white marble STATUE of a robed figure on a square plinth",
+"color": [
+224,
+222,
+216
+],
+"solid": true
+},
+{
+"kind": "pillar15_10",
+"cells": [
+[
+15,
+10
+]
+],
+"text": "a round white marble PILLAR",
+"color": [
+228,
+226,
+220
+],
+"solid": true
+},
+{
+"kind": "pillar15_16",
+"cells": [
+[
+15,
+16
+]
+],
+"text": "a round white marble PILLAR",
+"color": [
+228,
+226,
+220
+],
+"solid": true
+},
+{
+"kind": "pillar35_10",
+"cells": [
+[
+35,
+10
+]
+],
+"text": "a round white marble PILLAR",
+"color": [
+228,
+226,
+220
+],
+"solid": true
+},
+{
+"kind": "pillar35_16",
+"cells": [
+[
+35,
+16
+]
+],
+"text": "a round white marble PILLAR",
+"color": [
+228,
+226,
+220
+],
+"solid": true
+},
+{
+"kind": "pillar19_13",
+"cells": [
+[
+19,
+13
+]
+],
+"text": "a round white marble PILLAR",
+"color": [
+228,
+226,
+220
+],
+"solid": true
+},
+{
+"kind": "pillar25_13",
+"cells": [
+[
+25,
+13
+]
+],
+"text": "a round white marble PILLAR",
+"color": [
+228,
+226,
+220
+],
+"solid": true
+},
+{
+"kind": "stairs",
+"cells": [
+[
+21,
+2
+],
+[
+22,
+2
+]
+],
+"text": "a white marble STAIRCASE going up (walkable)",
+"color": [
+200,
+196,
+186
+],
+"solid": false
+},
+{
+"kind": "stairsdown",
+"cells": [
+[
+38,
+31
+],
+[
+39,
+31
+]
+],
+"text": "a white marble STAIRCASE going down (walkable)",
+"color": [
+200,
+196,
+186
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 38,
+"y": 30
+},
+{
+"type": "o",
+"x": 39,
+"y": 30
+},
+{
+"type": "o",
+"x": 21,
+"y": 3
+},
+{
+"type": "o",
+"x": 22,
+"y": 3
+},
+{
+"type": "o",
+"x": 21,
+"y": 8
+},
+{
+"type": "o",
+"x": 22,
+"y": 8
+},
+{
+"type": "o",
+"x": 21,
+"y": 17
+},
+{
+"type": "o",
+"x": 7,
+"y": 28
+},
+{
+"type": "o",
+"x": 13,
+"y": 27
+},
+{
+"type": "o",
+"x": 20,
+"y": 27
+},
+{
+"type": "o",
+"x": 27,
+"y": 27
+},
+{
+"type": "o",
+"x": 34,
+"y": 27
+},
+{
+"type": "o",
+"x": 7,
+"y": 13
+},
+{
+"type": "o",
+"x": 7,
+"y": 25
+},
+{
+"type": "o",
+"x": 37,
+"y": 9
+}
+],
+"spawns": {
+"from3": {
+"x": 37,
+"y": 30,
+"dir": "w"
+},
+"from5": {
+"x": 21,
+"y": 3,
+"dir": "s"
+}
+},
+"exits": [],
+"notes": [],
+"meta": {
+"name": "白の大書庫",
+"region": "finale",
+"zones": [],
+"worldRect": [
+0,
+0,
+1,
+1
+],
+"look": "int"
+},
+"rows_fit": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXccccccXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXccccccXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXccccccXXXXXXXXXXXXXXXXXX~",
+"~XXXccccccccXXXXXXXccccccXXXXXXXXXXXXXXXXXX~",
+"~XXXccccccccXXXXXXXckkkkcXXXXXXXXXXXXXXXXXX~",
+"~XXXcccccccccccccccckkkkcccccccccccccccXXXX~",
+"~XXXcXcccXcccccccccckkkkcccccccccccccccXXXX~",
+"~XXXcXcccXcccccXcccckkkkccccccccccXccccXXXX~",
+"~XXXcccccccccccccccckkkkcccccccccccccccXXXX~",
+"~XXXcccccccccccccccckkkkcccccccccccccccXXXX~",
+"~XXXcccccccccccccccckkkkcccccccccccccccXXXX~",
+"~XXXcXcccXcccccccccXkkkkXccccccccccccccXXXX~",
+"~XXXcXcccXcccccccccckkkkcccccccccccccccXXXX~",
+"~XXXcccccccccccccccckkkkcccccccccccccccXXXX~",
+"~XXXcccccccccccccccckkkkcccccccccccccccXXXX~",
+"~XXXcXcccXcccccXcccckkkkccccccccccXccccXXXX~",
+"~XXXcXcccXcccccccccckkkkcccccccccccccccXXXX~",
+"~XXXcccccccccccccccckkkkcccccccccccccccXXXX~",
+"~XXXccccccccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXccccccccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXccccccccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXccccccccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXccccccccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXccccccccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXccccccccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXcccccccccXXXcccXXXccccXXXccccXXXXcccXXX~",
+"~XXXccccccccccccccccccccccccccccccccccccXXX~",
+"~XXXccccccccccccccccccccccccccccccccccccXXX~",
+"~XXXccccccccccccccccccccccccccccccccccccXXX~",
+"~XXXccccccccccccccccccccccccccccccccccccXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+]
+}

@@ -1,0 +1,19 @@
+{
+ "id": "biblia",
+ "kind": "under",
+ "map": "biblia",
+ "tile": 32,
+ "size32": [
+  1792,
+  1472
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.8,
+ "files": {
+  "24": "biblia@24.png",
+  "32": "biblia@32.png"
+ },
+ "src": "generated"
+}

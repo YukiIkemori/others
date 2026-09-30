@@ -22,19 +22,19 @@
   "wipeRetryPageeater": true
  },
  "errors": [],
- "started": "2026-09-30T07:50:25.090Z",
+ "started": "2026-09-30T09:55:43.508Z",
  "status": {
-  "frames": 125064,
-  "time": 6257950,
+  "frames": 74363,
+  "time": 3722302,
   "goal": "moth",
   "done": false,
-  "fail": "goal moth timed out",
-  "top": "field",
-  "pos": "fern 29,3",
-  "steps": 5349,
-  "gold": 440,
-  "battles": 132,
-  "wipes": 5,
+  "fail": "dbg stop after moth",
+  "top": "battle",
+  "pos": "verda_2 11,9",
+  "steps": 3163,
+  "gold": 707,
+  "battles": 84,
+  "wipes": 3,
   "round": null,
   "hp": 1,
   "engineError": null
@@ -79,27 +79,27 @@
   ],
   "stubs": [],
   "loadErrors": [],
-  "playMs": 5382650,
-  "steps": 5349,
-  "gold": 440,
+  "playMs": 3490850,
+  "steps": 3163,
+  "gold": 707,
   "stats": {
    "tops": {
     "screen:title": 16,
-    "cp_curtain": 120,
-    "caption": 327,
-    "message": 284,
+    "cp_curtain": 119,
+    "caption": 340,
+    "message": 276,
     "screen:charcreate": 13,
-    "field": 21988,
-    "battle": 102071,
+    "field": 13878,
+    "battle": 59532,
     "screen:partySelect": 38,
     "screen:tip": 30,
-    "screen:shop": 177
+    "screen:shop": 121
    },
-   "taps": 13142,
-   "screenOps": 133,
-   "choices": 5,
-   "chars": 4660,
-   "captions": 26,
+   "taps": 7741,
+   "screenOps": 105,
+   "choices": 6,
+   "chars": 4551,
+   "captions": 27,
    "battles": [
     {
      "troop": null,
@@ -109,414 +109,547 @@
      "gold": 50,
      "rounds": 1,
      "lose": false,
-     "f": 739,
-     "t0": 41749.518775000004,
+     "f": 744,
+     "t0": 41401.94217881108,
      "result": "win",
-     "ms": 5950
+     "ms": 6050
     },
     {
      "troop": null,
-     "zone": "zw_peninsula",
+     "zone": "zw_prologue",
      "boss": false,
-     "map": "f_cape",
+     "map": "f_roa",
      "gold": 52,
-     "rounds": 3,
+     "rounds": 1,
      "lose": false,
-     "f": 2092,
-     "t0": 109399.518775,
+     "f": 916,
+     "t0": 50001.94217881108,
      "result": "win",
-     "ms": 28650
+     "ms": 6050
     },
     {
      "troop": "tr_tutorial",
      "zone": null,
      "boss": false,
      "map": "lighthouse_1",
-     "gold": 65,
+     "gold": 54,
      "rounds": 3,
      "lose": false,
-     "f": 2825,
-     "t0": 145999.518775,
+     "f": 2370,
+     "t0": 122651.94217881108,
      "result": "win",
-     "ms": 18450
+     "ms": 17549.999999999985
     },
     {
      "troop": null,
      "zone": "z_lighthouse",
      "boss": false,
      "map": "lighthouse_1",
-     "gold": 69,
-     "rounds": 2,
-     "lose": false,
-     "f": 3339,
-     "t0": 171749.518775,
-     "result": "win",
-     "ms": 24650
-    },
-    {
-     "troop": null,
-     "zone": "z_lighthouse",
-     "boss": false,
-     "map": "lighthouse_1",
-     "gold": 85,
-     "rounds": 2,
-     "lose": false,
-     "f": 4019,
-     "t0": 205749.518775,
-     "result": "win",
-     "ms": 23500
-    },
-    {
-     "troop": null,
-     "zone": "z_lighthouse",
-     "boss": false,
-     "map": "lighthouse_1",
-     "gold": 99,
-     "rounds": 4,
-     "lose": false,
-     "f": 4582,
-     "t0": 233899.518775,
-     "result": "win",
-     "ms": 43450
-    },
-    {
-     "troop": null,
-     "zone": "z_lighthouse",
-     "boss": false,
-     "map": "lighthouse_1",
-     "gold": 128,
+     "gold": 58,
      "rounds": 3,
      "lose": false,
-     "f": 5575,
-     "t0": 283549.518775,
+     "f": 2840,
+     "t0": 146201.94217881106,
      "result": "win",
-     "ms": 29650
+     "ms": 31250
     },
     {
      "troop": null,
      "zone": "z_lighthouse",
      "boss": false,
      "map": "lighthouse_1",
-     "gold": 144,
+     "gold": 74,
      "rounds": 3,
      "lose": false,
-     "f": 6421,
-     "t0": 325849.518775,
+     "f": 3543,
+     "t0": 181351.94217881106,
      "result": "win",
-     "ms": 22550
+     "ms": 38500
     },
     {
      "troop": null,
      "zone": "z_lighthouse",
      "boss": false,
-     "map": "lighthouse_1",
-     "gold": 154,
-     "rounds": 4,
-     "lose": false,
-     "f": 7046,
-     "t0": 357099.518775,
-     "result": "win",
-     "ms": 30600
-    },
-    {
-     "troop": null,
-     "zone": "z_lighthouse",
-     "boss": false,
-     "map": "lighthouse_1",
-     "gold": 170,
+     "map": "lighthouse_2",
+     "gold": 94,
      "rounds": 6,
      "lose": false,
-     "f": 8251,
-     "t0": 417349.518775,
+     "f": 4498,
+     "t0": 229101.94217881106,
      "result": "win",
-     "ms": 52550
-    },
-    {
-     "troop": null,
-     "zone": "z_lighthouse",
-     "boss": false,
-     "map": "lighthouse_1",
-     "gold": 190,
-     "rounds": 2,
-     "lose": false,
-     "f": 9540,
-     "t0": 481799.518775,
-     "result": "win",
-     "ms": 18350
-    },
-    {
-     "troop": null,
-     "zone": "z_lighthouse",
-     "boss": false,
-     "map": "lighthouse_1",
-     "gold": 202,
-     "rounds": 4,
-     "lose": false,
-     "f": 9965,
-     "t0": 503049.518775,
-     "result": "win",
-     "ms": 31650
+     "ms": 59350
     },
     {
      "troop": null,
      "zone": "z_lighthouse",
      "boss": false,
      "map": "lighthouse_2",
-     "gold": 218,
-     "rounds": 4,
+     "gold": 123,
+     "rounds": 6,
      "lose": false,
-     "f": 10726,
-     "t0": 541099.518775,
+     "f": 5796,
+     "t0": 294001.94217881106,
      "result": "win",
-     "ms": 37000
+     "ms": 51500
     },
     {
      "troop": null,
      "zone": "z_lighthouse",
      "boss": false,
      "map": "lighthouse_2",
-     "gold": 234,
+     "gold": 143,
+     "rounds": 4,
+     "lose": false,
+     "f": 6875,
+     "t0": 347951.94217881106,
+     "result": "win",
+     "ms": 36300
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_2",
+     "gold": 161,
+     "rounds": 8,
+     "lose": false,
+     "f": 7763,
+     "t0": 392351.94217881106,
+     "result": "win",
+     "ms": 54500
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_2",
+     "gold": 180,
      "rounds": 5,
      "lose": false,
-     "f": 11561,
-     "t0": 582849.518775,
+     "f": 8898,
+     "t0": 449101.94217881106,
      "result": "win",
-     "ms": 47700
+     "ms": 38100
     },
     {
      "troop": null,
      "zone": "z_lighthouse",
      "boss": false,
      "map": "lighthouse_2",
-     "gold": 254,
+     "gold": 198,
      "rounds": 3,
      "lose": false,
-     "f": 12646,
-     "t0": 637099.518775,
+     "f": 9732,
+     "t0": 490801.94217881106,
+     "lost": 2,
+     "wiped": true,
+     "result": "abort",
+     "to": "inn",
+     "ms": 36450
+    },
+    {
+     "troop": null,
+     "zone": "zw_prologue",
+     "boss": false,
+     "map": "f_cape",
+     "gold": 99,
+     "rounds": 1,
+     "lose": false,
+     "f": 10700,
+     "t0": 539201.9421788111,
      "result": "win",
-     "ms": 27500
+     "ms": 6900
+    },
+    {
+     "troop": null,
+     "zone": "zw_prologue",
+     "boss": false,
+     "map": "f_cape",
+     "gold": 102,
+     "rounds": 1,
+     "lose": false,
+     "f": 11181,
+     "t0": 563251.9421788111,
+     "result": "win",
+     "ms": 6700
+    },
+    {
+     "troop": null,
+     "zone": "zw_prologue",
+     "boss": false,
+     "map": "f_cape",
+     "gold": 105,
+     "rounds": 1,
+     "lose": false,
+     "f": 11378,
+     "t0": 573101.9421788111,
+     "result": "win",
+     "ms": 12700
+    },
+    {
+     "troop": null,
+     "zone": "zw_prologue",
+     "boss": false,
+     "map": "f_cape",
+     "gold": 109,
+     "rounds": 1,
+     "lose": false,
+     "f": 11787,
+     "t0": 593551.9421788111,
+     "result": "win",
+     "ms": 9150
+    },
+    {
+     "troop": null,
+     "zone": "zw_peninsula",
+     "boss": false,
+     "map": "f_cape",
+     "gold": 112,
+     "rounds": 2,
+     "lose": false,
+     "f": 12084,
+     "t0": 608401.9421788111,
+     "result": "win",
+     "ms": 23600
+    },
+    {
+     "troop": null,
+     "zone": "zw_peninsula",
+     "boss": false,
+     "map": "f_cape",
+     "gold": 124,
+     "rounds": 2,
+     "lose": false,
+     "f": 12637,
+     "t0": 636051.9421788111,
+     "result": "win",
+     "ms": 21350
+    },
+    {
+     "troop": null,
+     "zone": "zw_peninsula",
+     "boss": false,
+     "map": "f_cape",
+     "gold": 136,
+     "rounds": 1,
+     "lose": false,
+     "f": 13191,
+     "t0": 663751.9421788111,
+     "result": "win",
+     "ms": 16450
+    },
+    {
+     "troop": null,
+     "zone": "zw_prologue",
+     "boss": false,
+     "map": "f_cape",
+     "gold": 148,
+     "rounds": 1,
+     "lose": false,
+     "f": 13646,
+     "t0": 686501.9421788111,
+     "result": "win",
+     "ms": 9100
+    },
+    {
+     "troop": null,
+     "zone": "zw_prologue",
+     "boss": false,
+     "map": "f_cape",
+     "gold": 152,
+     "rounds": 1,
+     "lose": false,
+     "f": 13985,
+     "t0": 703451.9421788111,
+     "result": "win",
+     "ms": 9150
+    },
+    {
+     "troop": null,
+     "zone": "zw_prologue",
+     "boss": false,
+     "map": "f_cape",
+     "gold": 155,
+     "rounds": 1,
+     "lose": false,
+     "f": 14460,
+     "t0": 727201.9421788111,
+     "result": "win",
+     "ms": 8650
+    },
+    {
+     "troop": null,
+     "zone": "zw_prologue",
+     "boss": false,
+     "map": "f_cape",
+     "gold": 159,
+     "rounds": 1,
+     "lose": false,
+     "f": 14707,
+     "t0": 739551.9421788111,
+     "result": "win",
+     "ms": 8300
+    },
+    {
+     "troop": null,
+     "zone": "zw_prologue",
+     "boss": false,
+     "map": "f_cape",
+     "gold": 161,
+     "rounds": 1,
+     "lose": false,
+     "f": 14937,
+     "t0": 751051.9421788111,
+     "result": "win",
+     "ms": 9850
     },
     {
      "troop": null,
      "zone": "z_lighthouse",
      "boss": false,
      "map": "lighthouse_2",
-     "gold": 266,
-     "rounds": 3,
+     "gold": 165,
+     "rounds": 2,
      "lose": false,
-     "f": 13635,
-     "t0": 686549.518775,
+     "f": 15420,
+     "t0": 775201.9421788111,
      "result": "win",
-     "ms": 26800
-    },
-    {
-     "troop": null,
-     "zone": "z_lighthouse",
-     "boss": false,
-     "map": "lighthouse_2",
-     "gold": 278,
-     "rounds": 3,
-     "lose": false,
-     "f": 14233,
-     "t0": 716449.518775,
-     "result": "win",
-     "ms": 21900
+     "ms": 24100
     },
     {
      "troop": "tr_b_pageeater",
      "zone": null,
      "boss": true,
      "map": "lighthouse_3",
-     "gold": 290,
-     "rounds": 11,
+     "gold": 177,
+     "rounds": 12,
      "lose": false,
-     "f": 14896,
-     "t0": 749549.518775,
+     "f": 16284,
+     "t0": 818351.9421788111,
      "forced": true,
      "lost": 1,
      "wiped": true,
      "result": "win",
-     "ms": 127850
-    },
-    {
-     "troop": null,
-     "zone": "zw_peninsula",
-     "boss": false,
-     "map": "f_cape",
-     "gold": 47,
-     "rounds": 2,
-     "lose": false,
-     "f": 18563,
-     "t0": 932949.518775,
-     "result": "win",
-     "ms": 21100
+     "ms": 141600
     },
     {
      "troop": null,
      "zone": "zw_prologue",
      "boss": false,
      "map": "f_cape",
-     "gold": 59,
+     "gold": 44,
      "rounds": 1,
      "lose": false,
-     "f": 19558,
-     "t0": 982699.518775,
+     "f": 19988,
+     "t0": 1003601.9421788111,
      "result": "win",
-     "ms": 9200
-    },
-    {
-     "troop": null,
-     "zone": "zw_peninsula",
-     "boss": false,
-     "map": "f_cape",
-     "gold": 63,
-     "rounds": 2,
-     "lose": false,
-     "f": 19897,
-     "t0": 999649.518775,
-     "result": "win",
-     "ms": 24450
-    },
-    {
-     "troop": null,
-     "zone": "zw_prologue",
-     "boss": false,
-     "map": "f_cape",
-     "gold": 78,
-     "rounds": 1,
-     "lose": false,
-     "f": 20634,
-     "t0": 1036499.518775,
-     "result": "win",
-     "ms": 9600
-    },
-    {
-     "troop": null,
-     "zone": "zw_peninsula",
-     "boss": false,
-     "map": "f_cape",
-     "gold": 82,
-     "rounds": 2,
-     "lose": false,
-     "f": 21472,
-     "t0": 1078399.518775,
-     "result": "win",
-     "ms": 22400
-    },
-    {
-     "troop": null,
-     "zone": "zw_peninsula",
-     "boss": false,
-     "map": "f_cape",
-     "gold": 97,
-     "rounds": 2,
-     "lose": false,
-     "f": 22046,
-     "t0": 1107099.518775,
-     "result": "win",
-     "ms": 25150
+     "ms": 10400
     },
     {
      "troop": null,
      "zone": "zw_forest",
      "boss": false,
-     "map": "f_hut",
-     "gold": 113,
-     "rounds": 2,
-     "lose": false,
-     "f": 23137,
-     "t0": 1161649.518775,
-     "result": "win",
-     "ms": 17300
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 49,
-     "rounds": 2,
-     "lose": false,
-     "f": 24928,
-     "t0": 1251199.518775,
-     "result": "win",
-     "ms": 21650
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 61,
-     "rounds": 2,
-     "lose": false,
-     "f": 25571,
-     "t0": 1283349.518775,
-     "result": "win",
-     "ms": 16550
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 79,
+     "map": "f_cross",
+     "gold": 48,
      "rounds": 3,
      "lose": false,
-     "f": 26257,
-     "t0": 1317649.518775,
+     "f": 20591,
+     "t0": 1033751.9421788111,
      "result": "win",
-     "ms": 32600
+     "ms": 23349.999999999884
+    },
+    {
+     "troop": null,
+     "zone": "zw_forest_road",
+     "boss": false,
+     "map": "f_fern",
+     "gold": 48,
+     "rounds": 3,
+     "lose": false,
+     "f": 21247,
+     "t0": 1066551.942178811,
+     "result": "win",
+     "ms": 31150
     },
     {
      "troop": null,
      "zone": "z_verda",
      "boss": false,
      "map": "verda_1",
-     "gold": 103,
-     "rounds": 2,
+     "gold": 48,
+     "rounds": 3,
      "lose": false,
-     "f": 26949,
-     "t0": 1352249.518775,
+     "f": 23273,
+     "t0": 1167851.942178811,
      "result": "win",
-     "ms": 22100
+     "ms": 33350
     },
     {
      "troop": null,
      "zone": "z_verda",
      "boss": false,
      "map": "verda_1",
-     "gold": 130,
+     "gold": 66,
      "rounds": 2,
      "lose": false,
-     "f": 27433,
-     "t0": 1376449.518775,
+     "f": 24058,
+     "t0": 1207101.942178811,
      "result": "win",
-     "ms": 24300
+     "ms": 21550
     },
     {
      "troop": null,
      "zone": "z_verda",
      "boss": false,
      "map": "verda_1",
-     "gold": 148,
+     "gold": 84,
      "rounds": 2,
      "lose": false,
-     "f": 27980,
-     "t0": 1403799.518775,
+     "f": 24585,
+     "t0": 1233451.942178811,
      "result": "win",
-     "ms": 17300
+     "ms": 23350
     },
     {
      "troop": null,
      "zone": "z_verda",
      "boss": false,
      "map": "verda_1",
-     "gold": 166,
+     "gold": 105,
+     "rounds": 3,
+     "lose": false,
+     "f": 25242,
+     "t0": 1266301.942178811,
+     "result": "win",
+     "ms": 32150
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 123,
+     "rounds": 5,
+     "lose": false,
+     "f": 25978,
+     "t0": 1303101.942178811,
+     "result": "win",
+     "ms": 53850
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 147,
+     "rounds": 4,
+     "lose": false,
+     "f": 27101,
+     "t0": 1359251.942178811,
+     "result": "win",
+     "ms": 48700
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 177,
+     "rounds": 6,
+     "lose": false,
+     "f": 28136,
+     "t0": 1411001.942178811,
+     "result": "win",
+     "ms": 65500
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 207,
      "rounds": 2,
      "lose": false,
-     "f": 28508,
-     "t0": 1430199.518775,
+     "f": 29482,
+     "t0": 1478301.942178811,
+     "result": "win",
+     "ms": 16600
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 225,
+     "rounds": 3,
+     "lose": false,
+     "f": 29851,
+     "t0": 1496751.942178811,
+     "result": "win",
+     "ms": 35650
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 249,
+     "rounds": 4,
+     "lose": false,
+     "f": 30614,
+     "t0": 1534901.942178811,
+     "result": "win",
+     "ms": 40150
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 273,
+     "rounds": 3,
+     "lose": false,
+     "f": 31453,
+     "t0": 1576851.942178811,
+     "result": "win",
+     "ms": 33700
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 297,
+     "rounds": 3,
+     "lose": false,
+     "f": 32165,
+     "t0": 1612451.942178811,
+     "result": "win",
+     "ms": 27400
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 318,
+     "rounds": 3,
+     "lose": false,
+     "f": 32744,
+     "t0": 1641401.942178811,
+     "result": "win",
+     "ms": 29200
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 345,
+     "rounds": 2,
+     "lose": false,
+     "f": 33390,
+     "t0": 1673701.942178811,
      "result": "win",
      "ms": 23700
     },
@@ -525,768 +658,102 @@
      "zone": "z_verda",
      "boss": false,
      "map": "verda_1",
-     "gold": 184,
+     "gold": 360,
      "rounds": 2,
      "lose": false,
-     "f": 29047,
-     "t0": 1457149.518775,
+     "f": 33912,
+     "t0": 1699801.942178811,
      "result": "win",
-     "ms": 23450
+     "ms": 27150
     },
     {
      "troop": null,
      "zone": "z_verda",
      "boss": false,
      "map": "verda_1",
-     "gold": 202,
+     "gold": 381,
      "rounds": 2,
      "lose": false,
-     "f": 29558,
-     "t0": 1482699.518775,
+     "f": 34520,
+     "t0": 1730201.942178811,
      "result": "win",
-     "ms": 22300
+     "ms": 22200
     },
     {
      "troop": null,
      "zone": "z_verda",
      "boss": false,
      "map": "verda_1",
-     "gold": 220,
-     "rounds": 2,
-     "lose": false,
-     "f": 30197,
-     "t0": 1514649.518775,
-     "result": "win",
-     "ms": 19000
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 238,
+     "gold": 399,
      "rounds": 3,
      "lose": false,
-     "f": 30629,
-     "t0": 1536249.518775,
+     "f": 35033,
+     "t0": 1755851.942178811,
      "result": "win",
-     "ms": 37050
+     "ms": 33950
     },
     {
      "troop": null,
      "zone": "z_verda",
      "boss": false,
      "map": "verda_1",
-     "gold": 262,
+     "gold": 429,
+     "rounds": 2,
+     "lose": false,
+     "f": 35756,
+     "t0": 1792001.942178811,
+     "result": "win",
+     "ms": 21400
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 447,
+     "rounds": 3,
+     "lose": false,
+     "f": 36272,
+     "t0": 1817801.942178811,
+     "result": "win",
+     "ms": 30000
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 474,
      "rounds": 4,
      "lose": false,
-     "f": 31456,
-     "t0": 1577599.518775,
+     "f": 36982,
+     "t0": 1853301.942178811,
      "result": "win",
-     "ms": 38350
+     "ms": 38600
     },
     {
      "troop": null,
      "zone": "z_verda",
      "boss": false,
      "map": "verda_1",
-     "gold": 280,
+     "gold": 498,
+     "rounds": 2,
+     "lose": false,
+     "f": 37895,
+     "t0": 1898951.942178811,
+     "result": "win",
+     "ms": 23500
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 516,
      "rounds": 3,
      "lose": false,
-     "f": 32264,
-     "t0": 1617999.518775,
-     "result": "win",
-     "ms": 33250
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 310,
-     "rounds": 2,
-     "lose": false,
-     "f": 33335,
-     "t0": 1671549.518775,
-     "result": "win",
-     "ms": 23800
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 353,
-     "rounds": 2,
-     "lose": false,
-     "f": 34003,
-     "t0": 1704949.518775,
-     "result": "win",
-     "ms": 23250
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 374,
-     "rounds": 3,
-     "lose": false,
-     "f": 34503,
-     "t0": 1729949.518775,
-     "result": "win",
-     "ms": 40700
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 398,
-     "rounds": 2,
-     "lose": false,
-     "f": 35430,
-     "t0": 1776299.518775,
-     "result": "win",
-     "ms": 23400
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 425,
-     "rounds": 2,
-     "lose": false,
-     "f": 36052,
-     "t0": 1807399.518775,
-     "result": "win",
-     "ms": 21850
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 452,
-     "rounds": 5,
-     "lose": false,
-     "f": 36576,
-     "t0": 1833599.518775,
-     "result": "win",
-     "ms": 49400
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 500,
-     "rounds": 2,
-     "lose": false,
-     "f": 37624,
-     "t0": 1885999.518775,
-     "result": "win",
-     "ms": 17600
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 521,
-     "rounds": 3,
-     "lose": false,
-     "f": 38003,
-     "t0": 1904949.518775,
-     "result": "win",
-     "ms": 27950
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 539,
-     "rounds": 3,
-     "lose": false,
-     "f": 38635,
-     "t0": 1936549.518775,
-     "result": "win",
-     "ms": 35500
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 563,
-     "rounds": 3,
-     "lose": false,
-     "f": 39386,
-     "t0": 1974099.518775,
-     "result": "win",
-     "ms": 29250
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 581,
-     "rounds": 3,
-     "lose": false,
-     "f": 39999,
-     "t0": 2004749.518775,
-     "result": "win",
-     "ms": 35400
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 605,
-     "rounds": 2,
-     "lose": false,
-     "f": 40799,
-     "t0": 2044749.518775,
-     "result": "win",
-     "ms": 24550
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 617,
-     "rounds": 3,
-     "lose": false,
-     "f": 41359,
-     "t0": 2072749.518775,
-     "result": "win",
-     "ms": 40100.00000000023
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 644,
-     "rounds": 3,
-     "lose": false,
-     "f": 42207,
-     "t0": 2115149.5187750002,
-     "result": "win",
-     "ms": 33550
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 662,
-     "rounds": 2,
-     "lose": false,
-     "f": 42920,
-     "t0": 2150799.5187750002,
-     "result": "win",
-     "ms": 26750
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 680,
-     "rounds": 2,
-     "lose": false,
-     "f": 43506,
-     "t0": 2180099.5187750002,
-     "result": "win",
-     "ms": 24250
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 692,
-     "rounds": 2,
-     "lose": false,
-     "f": 44152,
-     "t0": 2212399.5187750002,
-     "result": "win",
-     "ms": 22600
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 710,
-     "rounds": 2,
-     "lose": false,
-     "f": 44693,
-     "t0": 2239449.5187750002,
-     "result": "win",
-     "ms": 22050
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 728,
-     "rounds": 2,
-     "lose": false,
-     "f": 45228,
-     "t0": 2266199.5187750002,
-     "result": "win",
-     "ms": 21650
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 746,
-     "rounds": 2,
-     "lose": false,
-     "f": 45728,
-     "t0": 2291199.5187750002,
-     "result": "win",
-     "ms": 24550
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 789,
-     "rounds": 3,
-     "lose": false,
-     "f": 46294,
-     "t0": 2319499.5187750002,
-     "result": "win",
-     "ms": 35050
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 816,
-     "rounds": 2,
-     "lose": false,
-     "f": 47155,
-     "t0": 2362549.5187750002,
-     "result": "win",
-     "ms": 23550
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 834,
-     "rounds": 2,
-     "lose": false,
-     "f": 47791,
-     "t0": 2394349.5187750002,
-     "result": "win",
-     "ms": 20900
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_2",
-     "gold": 861,
-     "rounds": 3,
-     "lose": false,
-     "f": 48694,
-     "t0": 2439499.5187750002,
-     "result": "win",
-     "ms": 36150
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 879,
-     "rounds": 2,
-     "lose": false,
-     "f": 49515,
-     "t0": 2480549.5187750002,
-     "result": "win",
-     "ms": 17800
-    },
-    {
-     "troop": "tr_a21_forest_wolves",
-     "zone": null,
-     "boss": false,
-     "map": "verda_1",
-     "gold": 900,
-     "rounds": 9,
-     "lose": false,
-     "f": 49989,
-     "t0": 2504199.5187750002,
-     "result": "win",
-     "ms": 121450
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 1034,
-     "rounds": 2,
-     "lose": false,
-     "f": 52511,
-     "t0": 2630349.5187750002,
-     "result": "win",
-     "ms": 20500
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_2",
-     "gold": 1046,
-     "rounds": 3,
-     "lose": false,
-     "f": 53118,
-     "t0": 2660699.5187750002,
-     "result": "win",
-     "ms": 32950
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_2",
-     "gold": 1073,
-     "rounds": 2,
-     "lose": false,
-     "f": 53860,
-     "t0": 2697799.5187750002,
-     "result": "win",
-     "ms": 26650
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_2",
-     "gold": 1097,
-     "rounds": 3,
-     "lose": false,
-     "f": 54557,
-     "t0": 2732649.5187750002,
-     "result": "win",
-     "ms": 40000
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_2",
-     "gold": 1121,
-     "rounds": 3,
-     "lose": false,
-     "f": 55435,
-     "t0": 2776549.5187750002,
-     "result": "win",
-     "ms": 32850
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_2",
-     "gold": 1148,
-     "rounds": 3,
-     "lose": false,
-     "f": 56175,
-     "t0": 2813549.5187750002,
-     "result": "win",
-     "ms": 32200
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 1166,
-     "rounds": 3,
-     "lose": false,
-     "f": 57159,
-     "t0": 2862749.5187750002,
-     "result": "win",
-     "ms": 31700
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 1187,
-     "rounds": 2,
-     "lose": false,
-     "f": 57884,
-     "t0": 2898999.5187750002,
-     "result": "win",
-     "ms": 18350
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 1199,
-     "rounds": 2,
-     "lose": false,
-     "f": 58446,
-     "t0": 2927099.5187750002,
-     "result": "win",
-     "ms": 26500
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 1223,
-     "rounds": 5,
-     "lose": false,
-     "f": 59076,
-     "t0": 2958599.5187750002,
-     "result": "win",
-     "ms": 53650
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 1241,
-     "rounds": 3,
-     "lose": false,
-     "f": 60176,
-     "t0": 3013599.5187750002,
-     "result": "win",
-     "ms": 33250
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 1268,
-     "rounds": 4,
-     "lose": false,
-     "f": 60964,
-     "t0": 3052999.5187750002,
-     "result": "win",
-     "ms": 39200
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_2",
-     "gold": 1295,
-     "rounds": 3,
-     "lose": false,
-     "f": 61943,
-     "t0": 3101949.5187750002,
-     "result": "win",
-     "ms": 28850
-    },
-    {
-     "troop": "tr_b_moth",
-     "zone": null,
-     "boss": true,
-     "map": "verda_2",
-     "gold": 1313,
-     "rounds": 30,
-     "lose": false,
-     "f": 62577,
-     "t0": 3133599.5187750002,
-     "lost": 2,
-     "wiped": true,
-     "result": "abort",
-     "to": "inn",
-     "ms": 447500
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 656,
-     "rounds": 2,
-     "lose": false,
-     "f": 71663,
-     "t0": 3587949.5187750002,
-     "result": "win",
-     "ms": 21850
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 674,
-     "rounds": 2,
-     "lose": false,
-     "f": 72172,
-     "t0": 3613399.5187750002,
-     "result": "win",
-     "ms": 19750
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 692,
-     "rounds": 2,
-     "lose": false,
-     "f": 72642,
-     "t0": 3636899.5187750002,
-     "result": "win",
-     "ms": 20700
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 710,
-     "rounds": 3,
-     "lose": false,
-     "f": 73106,
-     "t0": 3660099.5187750002,
-     "result": "win",
-     "ms": 33850
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 734,
-     "rounds": 1,
-     "lose": false,
-     "f": 73821,
-     "t0": 3695849.5187750002,
-     "result": "win",
-     "ms": 17200
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 746,
-     "rounds": 2,
-     "lose": false,
-     "f": 74204,
-     "t0": 3714999.5187750002,
-     "result": "win",
-     "ms": 21200
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 764,
-     "rounds": 2,
-     "lose": false,
-     "f": 74736,
-     "t0": 3741599.5187750002,
-     "result": "win",
-     "ms": 21150
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 791,
-     "rounds": 3,
-     "lose": false,
-     "f": 75277,
-     "t0": 3768649.5187750002,
-     "result": "win",
-     "ms": 33850
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 809,
-     "rounds": 2,
-     "lose": false,
-     "f": 76092,
-     "t0": 3809399.5187750002,
-     "result": "win",
-     "ms": 22700
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 827,
-     "rounds": 3,
-     "lose": false,
-     "f": 76576,
-     "t0": 3833599.5187750002,
-     "result": "win",
-     "ms": 31250
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 851,
-     "rounds": 2,
-     "lose": false,
-     "f": 77339,
-     "t0": 3871749.5187750002,
-     "result": "win",
-     "ms": 24100
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 869,
-     "rounds": 2,
-     "lose": false,
-     "f": 78002,
-     "t0": 3904899.5187750002,
-     "result": "win",
-     "ms": 25000
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 887,
-     "rounds": 2,
-     "lose": false,
-     "f": 78558,
-     "t0": 3932699.5187750002,
+     "f": 38605,
+     "t0": 1934451.942178811,
      "result": "win",
      "ms": 27650
     },
@@ -1295,316 +762,115 @@
      "zone": "z_verda",
      "boss": false,
      "map": "verda_1",
-     "gold": 905,
-     "rounds": 2,
-     "lose": false,
-     "f": 79142,
-     "t0": 3961899.5187750002,
-     "result": "win",
-     "ms": 19550
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 932,
-     "rounds": 2,
-     "lose": false,
-     "f": 79574,
-     "t0": 3983499.5187750002,
-     "result": "win",
-     "ms": 22250
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_2",
-     "gold": 950,
-     "rounds": 2,
-     "lose": false,
-     "f": 80222,
-     "t0": 4015899.5187750002,
-     "result": "win",
-     "ms": 24250
-    },
-    {
-     "troop": "tr_b_moth",
-     "zone": null,
-     "boss": true,
-     "map": "verda_2",
-     "gold": 968,
-     "rounds": 32,
-     "lose": false,
-     "f": 80820,
-     "t0": 4045749.5187750002,
-     "lost": 2,
-     "wiped": true,
-     "result": "abort",
-     "to": "inn",
-     "ms": 397600
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 484,
-     "rounds": 2,
-     "lose": false,
-     "f": 88838,
-     "t0": 4446699.518775,
-     "result": "win",
-     "ms": 32100
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 502,
-     "rounds": 2,
-     "lose": false,
-     "f": 89529,
-     "t0": 4481249.518775,
-     "result": "win",
-     "ms": 16650
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 514,
-     "rounds": 2,
-     "lose": false,
-     "f": 89889,
-     "t0": 4499249.518775,
-     "result": "win",
-     "ms": 27450
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 538,
-     "rounds": 3,
-     "lose": false,
-     "f": 90528,
-     "t0": 4531199.518775,
-     "result": "win",
-     "ms": 41900
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 562,
-     "rounds": 2,
-     "lose": false,
-     "f": 91445,
-     "t0": 4577049.518775,
-     "result": "win",
-     "ms": 21250
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 616,
+     "gold": 534,
      "rounds": 4,
      "lose": false,
-     "f": 91905,
-     "t0": 4600049.518775,
+     "f": 39231,
+     "t0": 1965751.942178811,
      "result": "win",
-     "ms": 45900
+     "ms": 39600
     },
     {
      "troop": null,
      "zone": "z_verda",
      "boss": false,
      "map": "verda_1",
-     "gold": 640,
+     "gold": 555,
      "rounds": 2,
      "lose": false,
-     "f": 92876,
-     "t0": 4648599.518775,
+     "f": 40083,
+     "t0": 2008351.942178811,
      "result": "win",
-     "ms": 19750
+     "ms": 21400
     },
     {
      "troop": null,
      "zone": "z_verda",
      "boss": false,
      "map": "verda_1",
-     "gold": 652,
-     "rounds": 2,
+     "gold": 573,
+     "rounds": 3,
      "lose": false,
-     "f": 93305,
-     "t0": 4670049.518775,
+     "f": 40568,
+     "t0": 2032601.942178811,
      "result": "win",
-     "ms": 19850
+     "ms": 33950
     },
     {
      "troop": null,
      "zone": "z_verda",
      "boss": false,
      "map": "verda_1",
-     "gold": 670,
-     "rounds": 1,
+     "gold": 597,
+     "rounds": 6,
      "lose": false,
-     "f": 93786,
-     "t0": 4694099.518775,
+     "f": 41404,
+     "t0": 2074401.942178811,
      "result": "win",
-     "ms": 14850
+     "ms": 62400
     },
     {
      "troop": null,
      "zone": "z_verda",
      "boss": false,
      "map": "verda_1",
-     "gold": 688,
-     "rounds": 2,
-     "lose": false,
-     "f": 94170,
-     "t0": 4713299.518775,
-     "result": "win",
-     "ms": 25000
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 706,
+     "gold": 621,
      "rounds": 4,
      "lose": false,
-     "f": 94850,
-     "t0": 4747299.518775,
+     "f": 42691,
+     "t0": 2138751.942178811,
      "result": "win",
-     "ms": 45200
+     "ms": 50100
     },
     {
      "troop": null,
      "zone": "z_verda",
      "boss": false,
      "map": "verda_1",
-     "gold": 730,
-     "rounds": 3,
-     "lose": false,
-     "f": 95841,
-     "t0": 4796849.518775,
-     "result": "win",
-     "ms": 32550
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 748,
-     "rounds": 3,
-     "lose": false,
-     "f": 96603,
-     "t0": 4834949.518775,
-     "result": "win",
-     "ms": 33550
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 775,
-     "rounds": 2,
-     "lose": false,
-     "f": 97434,
-     "t0": 4876499.518775,
-     "result": "win",
-     "ms": 23650
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_2",
-     "gold": 796,
+     "gold": 651,
      "rounds": 4,
      "lose": false,
-     "f": 97954,
-     "t0": 4902499.518775,
+     "f": 43783,
+     "t0": 2193351.942178811,
      "result": "win",
-     "ms": 39200
+     "ms": 36100
     },
     {
      "troop": null,
      "zone": "z_verda",
      "boss": false,
-     "map": "verda_2",
-     "gold": 859,
+     "map": "verda_1",
+     "gold": 669,
      "rounds": 3,
      "lose": false,
-     "f": 98872,
-     "t0": 4948399.518775,
+     "f": 44559,
+     "t0": 2232151.942178811,
      "result": "win",
-     "ms": 39000
-    },
-    {
-     "troop": "tr_b_moth",
-     "zone": null,
-     "boss": true,
-     "map": "verda_2",
-     "gold": 877,
-     "rounds": 30,
-     "lose": false,
-     "f": 99706,
-     "t0": 4990049.518775,
-     "lost": 2,
-     "wiped": true,
-     "result": "abort",
-     "to": "inn",
-     "ms": 346900
+     "ms": 26400
     },
     {
      "troop": null,
      "zone": "z_verda",
      "boss": false,
      "map": "verda_1",
-     "gold": 438,
-     "rounds": 2,
+     "gold": 690,
+     "rounds": 4,
      "lose": false,
-     "f": 106675,
-     "t0": 5338549.518775,
+     "f": 45194,
+     "t0": 2263901.942178811,
      "result": "win",
-     "ms": 24100
+     "ms": 40250
     },
     {
      "troop": null,
      "zone": "z_verda",
      "boss": false,
      "map": "verda_1",
-     "gold": 465,
-     "rounds": 2,
+     "gold": 708,
+     "rounds": 3,
      "lose": false,
-     "f": 107210,
-     "t0": 5365299.518775,
-     "result": "win",
-     "ms": 23650
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 492,
-     "rounds": 2,
-     "lose": false,
-     "f": 108027,
-     "t0": 5406149.518775,
+     "f": 46045,
+     "t0": 2306451.942178811,
      "result": "win",
      "ms": 25400
     },
@@ -1613,295 +879,375 @@
      "zone": "z_verda",
      "boss": false,
      "map": "verda_1",
-     "gold": 516,
-     "rounds": 2,
-     "lose": false,
-     "f": 108573,
-     "t0": 5433449.518775,
-     "result": "win",
-     "ms": 20600
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 537,
-     "rounds": 2,
-     "lose": false,
-     "f": 109039,
-     "t0": 5456749.518775,
-     "result": "win",
-     "ms": 17950
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 558,
+     "gold": 726,
      "rounds": 3,
      "lose": false,
-     "f": 109594,
-     "t0": 5484499.518775,
+     "f": 46666,
+     "t0": 2337501.942178811,
      "result": "win",
-     "ms": 29100
+     "ms": 28950
     },
     {
      "troop": null,
      "zone": "z_verda",
      "boss": false,
      "map": "verda_1",
-     "gold": 576,
+     "gold": 747,
+     "rounds": 2,
+     "lose": false,
+     "f": 47286,
+     "t0": 2368501.942178811,
+     "result": "win",
+     "ms": 21400
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 765,
+     "rounds": 2,
+     "lose": false,
+     "f": 47749,
+     "t0": 2391651.942178811,
+     "result": "win",
+     "ms": 23700
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 783,
+     "rounds": 2,
+     "lose": false,
+     "f": 48281,
+     "t0": 2418251.942178811,
+     "result": "win",
+     "ms": 21750
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 810,
+     "rounds": 4,
+     "lose": false,
+     "f": 49107,
+     "t0": 2459551.942178811,
+     "result": "win",
+     "ms": 45000
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 834,
+     "rounds": 5,
+     "lose": false,
+     "f": 50060,
+     "t0": 2507201.942178811,
+     "result": "win",
+     "ms": 51900
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 864,
+     "rounds": 4,
+     "lose": false,
+     "f": 51173,
+     "t0": 2562851.942178811,
+     "result": "win",
+     "ms": 46050
+    },
+    {
+     "troop": "tr_a21_forest_wolves",
+     "zone": null,
+     "boss": false,
+     "map": "verda_1",
+     "gold": 888,
+     "rounds": 7,
+     "lose": false,
+     "f": 52244,
+     "t0": 2616351.942178811,
+     "result": "win",
+     "ms": 88050
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 1022,
      "rounds": 3,
      "lose": false,
-     "f": 110267,
-     "t0": 5518149.518775,
+     "f": 54135,
+     "t0": 2710951.942178811,
      "result": "win",
-     "ms": 29950
+     "ms": 34450
     },
     {
      "troop": null,
      "zone": "z_verda",
      "boss": false,
      "map": "verda_1",
-     "gold": 594,
-     "rounds": 2,
-     "lose": false,
-     "f": 110944,
-     "t0": 5551999.518775,
-     "result": "win",
-     "ms": 23800
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 612,
-     "rounds": 2,
-     "lose": false,
-     "f": 111522,
-     "t0": 5580899.518775,
-     "result": "win",
-     "ms": 27500
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 639,
-     "rounds": 2,
-     "lose": false,
-     "f": 112106,
-     "t0": 5610099.518775,
-     "result": "win",
-     "ms": 24900
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 657,
-     "rounds": 1,
-     "lose": false,
-     "f": 112667,
-     "t0": 5638149.518775,
-     "result": "win",
-     "ms": 14750
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 675,
-     "rounds": 2,
-     "lose": false,
-     "f": 113045,
-     "t0": 5657049.518775,
-     "result": "win",
-     "ms": 23650
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 718,
-     "rounds": 2,
-     "lose": false,
-     "f": 113586,
-     "t0": 5684099.518775,
-     "result": "win",
-     "ms": 27100
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 745,
-     "rounds": 2,
-     "lose": false,
-     "f": 114194,
-     "t0": 5714499.518775,
-     "result": "win",
-     "ms": 23650
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_1",
-     "gold": 763,
-     "rounds": 2,
-     "lose": false,
-     "f": 114716,
-     "t0": 5740599.518775,
-     "result": "win",
-     "ms": 27800
-    },
-    {
-     "troop": null,
-     "zone": "z_verda",
-     "boss": false,
-     "map": "verda_2",
-     "gold": 790,
+     "gold": 1052,
      "rounds": 3,
      "lose": false,
-     "f": 115406,
-     "t0": 5775099.518775,
+     "f": 54895,
+     "t0": 2748951.942178811,
      "result": "win",
-     "ms": 30850
+     "ms": 36900
     },
     {
      "troop": null,
      "zone": "z_verda",
      "boss": false,
      "map": "verda_2",
-     "gold": 820,
-     "rounds": 2,
+     "gold": 1076,
+     "rounds": 3,
      "lose": false,
-     "f": 116057,
-     "t0": 5807649.518775,
+     "f": 55684,
+     "t0": 2788401.942178811,
      "result": "win",
-     "ms": 18900
+     "ms": 29250
     },
     {
      "troop": null,
      "zone": "z_verda",
      "boss": false,
      "map": "verda_2",
-     "gold": 841,
+     "gold": 1094,
      "rounds": 2,
      "lose": false,
-     "f": 116487,
-     "t0": 5829149.518775,
+     "f": 56319,
+     "t0": 2820151.942178811,
      "result": "win",
-     "ms": 20600
+     "ms": 21150
     },
     {
      "troop": null,
      "zone": "z_verda",
      "boss": false,
      "map": "verda_2",
-     "gold": 862,
+     "gold": 1112,
+     "rounds": 3,
+     "lose": false,
+     "f": 56838,
+     "t0": 2846101.942178811,
+     "result": "win",
+     "ms": 36050
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 1136,
      "rounds": 2,
      "lose": false,
-     "f": 116935,
-     "t0": 5851549.518775,
+     "f": 57727,
+     "t0": 2890551.942178811,
      "result": "win",
-     "ms": 24800
+     "ms": 19550
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 1157,
+     "rounds": 3,
+     "lose": false,
+     "f": 58219,
+     "t0": 2915151.942178811,
+     "result": "win",
+     "ms": 40300
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 1181,
+     "rounds": 3,
+     "lose": false,
+     "f": 59077,
+     "t0": 2958051.942178811,
+     "result": "win",
+     "ms": 35850
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 1211,
+     "rounds": 3,
+     "lose": false,
+     "f": 59977,
+     "t0": 3003051.942178811,
+     "result": "win",
+     "ms": 36850
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 1235,
+     "rounds": 3,
+     "lose": false,
+     "f": 60768,
+     "t0": 3042601.942178811,
+     "result": "win",
+     "ms": 32550
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 1262,
+     "rounds": 4,
+     "lose": false,
+     "f": 61583,
+     "t0": 3083351.942178811,
+     "result": "win",
+     "ms": 41950
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 1292,
+     "rounds": 3,
+     "lose": false,
+     "f": 62617,
+     "t0": 3135051.942178811,
+     "result": "win",
+     "ms": 32400
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 1319,
+     "rounds": 4,
+     "lose": false,
+     "f": 63396,
+     "t0": 3174001.942178811,
+     "result": "win",
+     "ms": 42150
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 1349,
+     "rounds": 3,
+     "lose": false,
+     "f": 64441,
+     "t0": 3226251.942178811,
+     "result": "win",
+     "ms": 34550
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 1373,
+     "rounds": 3,
+     "lose": false,
+     "f": 65165,
+     "t0": 3262451.942178811,
+     "result": "win",
+     "ms": 35050
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 1397,
+     "rounds": 3,
+     "lose": false,
+     "f": 65962,
+     "t0": 3302301.942178811,
+     "result": "win",
+     "ms": 28450
     },
     {
      "troop": "tr_b_moth",
      "zone": null,
      "boss": true,
      "map": "verda_2",
-     "gold": 880,
-     "rounds": 29,
+     "gold": 1415,
+     "rounds": 26,
      "lose": false,
-     "f": 117474,
-     "t0": 5878449.518775,
+     "f": 66585,
+     "t0": 3333401.942178811,
      "lost": 2,
      "wiped": true,
      "result": "abort",
      "to": "inn",
-     "ms": 379150
+     "ms": 388900
     }
    ],
    "wipes": [
     {
+     "battle": "z_lighthouse",
+     "map": "lighthouse_2",
+     "to": "retry",
+     "gold": 198,
+     "round": 2,
+     "f": 10048,
+     "after": {
+      "gold": 99,
+      "map": "pharos"
+     }
+    },
+    {
      "battle": "tr_b_pageeater",
      "map": "lighthouse_3",
      "to": "retry",
-     "gold": 290,
-     "round": 11,
-     "f": 15862
+     "gold": 177,
+     "round": 8,
+     "f": 17120
     },
     {
      "battle": "tr_b_moth",
      "map": "verda_2",
      "to": "retry",
-     "gold": 1313,
-     "round": 29,
-     "f": 66921,
-     "after": {
-      "gold": 656,
-      "map": "fern"
-     }
-    },
-    {
-     "battle": "tr_b_moth",
-     "map": "verda_2",
-     "to": "retry",
-     "gold": 968,
-     "round": 32,
-     "f": 85702,
-     "after": {
-      "gold": 484,
-      "map": "fern"
-     }
-    },
-    {
-     "battle": "tr_b_moth",
-     "map": "verda_2",
-     "to": "retry",
-     "gold": 877,
-     "round": 17,
-     "f": 102564,
-     "after": {
-      "gold": 438,
-      "map": "fern"
-     }
-    },
-    {
-     "battle": "tr_b_moth",
-     "map": "verda_2",
-     "to": "retry",
-     "gold": 880,
-     "round": 29,
-     "f": 121764
+     "gold": 1415,
+     "round": 21,
+     "f": 69931
     }
    ],
-   "talks": 129,
-   "plans": 489,
-   "planMs": 52180.89999999665,
+   "talks": 124,
+   "plans": 242,
+   "planMs": 34211.39999996126,
    "forced": [
     {
      "battle": "tr_b_pageeater",
      "round": 6,
-     "f": 15452
+     "f": 16840
     }
    ]
   },
   "phaseAt": {
    "start": {
     "f": 0,
-    "t": 4749.518775,
+    "t": 4151.94217881108,
     "steps": 0,
     "chars": 0,
     "ops": 0,
@@ -1909,619 +1255,1489 @@
     "playMs": 0
    },
    "prologue_done": {
-    "f": 17700,
-    "t": 889749.518775,
-    "steps": 1274,
-    "chars": 2336,
-    "ops": 48,
-    "battles": 18,
-    "playMs": 835350
+    "f": 19350,
+    "t": 971651.9421788111,
+    "steps": 1337,
+    "chars": 2359,
+    "ops": 49,
+    "battles": 25,
+    "playMs": 908050
    },
    "forest_start": {
-    "f": 23670,
-    "t": 1188249.518775,
-    "steps": 2198,
-    "chars": 2441,
-    "ops": 114,
-    "battles": 25,
-    "playMs": 1133850
+    "f": 22020,
+    "t": 1105151.942178811,
+    "steps": 1673,
+    "chars": 2464,
+    "ops": 99,
+    "battles": 28,
+    "playMs": 1041550
    }
   },
   "log": [
    {
-    "f": 284,
-    "t": 18950,
+    "f": 283,
+    "t": 18302,
     "msg": "goal berna"
    },
    {
-    "f": 343,
-    "t": 21900,
+    "f": 342,
+    "t": 21252,
     "msg": "act berna at roa_house 11,5"
    },
    {
-    "f": 368,
-    "t": 23150,
+    "f": 367,
+    "t": 22502,
     "msg": "goal farmer"
    },
    {
-    "f": 573,
-    "t": 33400,
+    "f": 572,
+    "t": 32752,
     "msg": "act farmer at roa 7,13"
    },
    {
-    "f": 576,
-    "t": 33550,
+    "f": 575,
+    "t": 32902,
     "msg": "goal party"
    },
    {
-    "f": 1271,
-    "t": 68300,
+    "f": 1404,
+    "t": 74352,
     "msg": "act party at pharos_tavern 3,5"
    },
    {
-    "f": 1322,
-    "t": 70850,
+    "f": 1455,
+    "t": 76902,
     "msg": "goal rowell"
    },
    {
-    "f": 1554,
-    "t": 82450,
+    "f": 1687,
+    "t": 88502,
     "msg": "act rowell at pharos_record 4,6"
    },
    {
-    "f": 1561,
-    "t": 82800,
+    "f": 1694,
+    "t": 88852,
     "msg": "goal otto"
    },
    {
-    "f": 1726,
-    "t": 91050,
+    "f": 1859,
+    "t": 97102,
     "msg": "act otto at pharos 21,29"
    },
    {
-    "f": 1743,
-    "t": 91900,
+    "f": 1876,
+    "t": 97952,
     "msg": "goal shop_pharos_arms0"
    },
    {
-    "f": 1856,
-    "t": 97550,
+    "f": 1989,
+    "t": 103602,
     "msg": "act shop_pharos_arms0 at pharos_smith 5,5"
    },
    {
-    "f": 1864,
-    "t": 97950,
-    "msg": "shop done shop_pharos_arms0 gold 52"
+    "f": 1997,
+    "t": 104002,
+    "msg": "shop done shop_pharos_arms0 gold 54"
    },
    {
-    "f": 1864,
-    "t": 97950,
+    "f": 1997,
+    "t": 104002,
     "msg": "goal lh_door"
    },
    {
-    "f": 2727,
-    "t": 141100,
+    "f": 2272,
+    "t": 117752,
     "msg": "choose \"はい\" for \"重い扉の向こうは、灯台の中だ。\\n中へ入りますか？\""
    },
    {
-    "f": 2793,
-    "t": 144400,
+    "f": 2338,
+    "t": 121052,
     "msg": "act lh_door at lighthouse_1 17,23"
    },
    {
-    "f": 2806,
-    "t": 145050,
+    "f": 2351,
+    "t": 121702,
     "msg": "goal tutorial"
    },
    {
-    "f": 3256,
-    "t": 167550,
+    "f": 2783,
+    "t": 143302,
     "msg": "goal grind_prologue"
    },
    {
-    "f": 3256,
-    "t": 167550,
+    "f": 2783,
+    "t": 143302,
     "msg": "grind to 24 battles on lighthouse_1"
    },
    {
-    "f": 14781,
-    "t": 743800,
+    "f": 10048,
+    "t": 506552,
+    "msg": "gameover → retry"
+   },
+   {
+    "f": 10448,
+    "t": 526552,
+    "msg": "lost again (2) z_lighthouse"
+   },
+   {
+    "f": 10448,
+    "t": 526552,
+    "msg": "lost twice to z_lighthouse → inn and grind 12 battles"
+   },
+   {
+    "f": 10468,
+    "t": 527552,
     "msg": "goal fine_lh"
    },
    {
-    "f": 14808,
-    "t": 745150,
-    "msg": "goal spring_lh"
+    "f": 10468,
+    "t": 527552,
+    "msg": "after wipe: gold 198 → 99 at pharos"
    },
    {
-    "f": 14866,
-    "t": 748050,
-    "msg": "act spring_lh at lighthouse_3 9,15"
-   },
-   {
-    "f": 14869,
-    "t": 748200,
-    "msg": "goal boss_pageeater"
-   },
-   {
-    "f": 14896,
-    "t": 749550,
-    "msg": "lose mode: tr_b_pageeater"
-   },
-   {
-    "f": 15452,
-    "t": 777350,
-    "msg": "lose mode: party HP set to 1 at round 6"
-   },
-   {
-    "f": 15862,
-    "t": 797850,
-    "msg": "gameover → retry"
-   },
-   {
-    "f": 17681,
-    "t": 888800,
-    "msg": "goal shop_pharos_arms"
-   },
-   {
-    "f": 17843,
-    "t": 896900,
-    "msg": "act shop_pharos_arms at pharos_smith 5,5"
-   },
-   {
-    "f": 17872,
-    "t": 898350,
-    "msg": "buy ft_greave_0 (447 G)"
-   },
-   {
-    "f": 17873,
-    "t": 898400,
-    "msg": "buy ft_greave_0 (447 G)"
-   },
-   {
-    "f": 17881,
-    "t": 898800,
-    "msg": "buy ft_greave_0 (407 G)"
-   },
-   {
-    "f": 17889,
-    "t": 899200,
-    "msg": "buy ft_greave_0 (367 G)"
-   },
-   {
-    "f": 17897,
-    "t": 899600,
-    "msg": "buy ft_greave_0 (327 G)"
-   },
-   {
-    "f": 17910,
-    "t": 900250,
-    "msg": "buy hn_gauntlet_0 (287 G)"
-   },
-   {
-    "f": 17911,
-    "t": 900300,
-    "msg": "buy hn_gauntlet_0 (287 G)"
-   },
-   {
-    "f": 17919,
-    "t": 900700,
-    "msg": "buy hn_gauntlet_0 (247 G)"
-   },
-   {
-    "f": 17927,
-    "t": 901100,
-    "msg": "buy hn_gauntlet_0 (207 G)"
-   },
-   {
-    "f": 17936,
-    "t": 901550,
-    "msg": "buy hn_gauntlet_0 (167 G)"
-   },
-   {
-    "f": 17937,
-    "t": 901600,
-    "msg": "buy hn_gauntlet_0 (167 G)"
-   },
-   {
-    "f": 17938,
-    "t": 901650,
-    "msg": "buy hn_gauntlet_0 (167 G)"
-   },
-   {
-    "f": 17939,
-    "t": 901700,
-    "msg": "shop done shop_pharos_arms gold 167"
-   },
-   {
-    "f": 17939,
-    "t": 901700,
-    "msg": "goal shop_pharos_items"
-   },
-   {
-    "f": 18046,
-    "t": 907050,
-    "msg": "act shop_pharos_items at pharos_shop 5,5"
-   },
-   {
-    "f": 18069,
-    "t": 908200,
-    "msg": "buy ac_mnd_0 (167 G)"
-   },
-   {
-    "f": 18070,
-    "t": 908250,
-    "msg": "buy ac_mnd_0 (167 G)"
-   },
-   {
-    "f": 18079,
-    "t": 908700,
-    "msg": "buy i_salve (87 G)"
-   },
-   {
-    "f": 18080,
-    "t": 908750,
-    "msg": "buy i_salve (87 G)"
-   },
-   {
-    "f": 18090,
-    "t": 909250,
-    "msg": "shop done shop_pharos_items gold 47"
-   },
-   {
-    "f": 18090,
-    "t": 909250,
-    "msg": "goal fern"
-   },
-   {
-    "f": 18263,
-    "t": 917900,
+    "f": 10595,
+    "t": 533902,
     "msg": "goal grind_prologue"
    },
    {
-    "f": 22559,
-    "t": 1132700,
-    "msg": "grind goal grind_prologue done (24 battles)"
+    "f": 15144,
+    "t": 761352,
+    "msg": "grind done"
    },
    {
-    "f": 22560,
-    "t": 1132750,
+    "f": 15144,
+    "t": 761352,
+    "msg": "unreachable grind_prologue (optional, skipped)"
+   },
+   {
+    "f": 15145,
+    "t": 761402,
+    "msg": "goal fine_lh"
+   },
+   {
+    "f": 15254,
+    "t": 766852,
+    "msg": "choose \"はい\" for \"重い扉の向こうは、灯台の中だ。\\n中へ入りますか？\""
+   },
+   {
+    "f": 16196,
+    "t": 813952,
+    "msg": "goal spring_lh"
+   },
+   {
+    "f": 16254,
+    "t": 816852,
+    "msg": "act spring_lh at lighthouse_3 9,15"
+   },
+   {
+    "f": 16257,
+    "t": 817002,
+    "msg": "goal boss_pageeater"
+   },
+   {
+    "f": 16284,
+    "t": 818352,
+    "msg": "lose mode: tr_b_pageeater"
+   },
+   {
+    "f": 16840,
+    "t": 846152,
+    "msg": "lose mode: party HP set to 1 at round 6"
+   },
+   {
+    "f": 17120,
+    "t": 860152,
+    "msg": "gameover → retry"
+   },
+   {
+    "f": 19344,
+    "t": 971352,
+    "msg": "goal shop_pharos_arms"
+   },
+   {
+    "f": 19506,
+    "t": 979452,
+    "msg": "act shop_pharos_arms at pharos_smith 5,5"
+   },
+   {
+    "f": 19535,
+    "t": 980902,
+    "msg": "buy ft_greave_0 (334 G)"
+   },
+   {
+    "f": 19536,
+    "t": 980952,
+    "msg": "buy ft_greave_0 (334 G)"
+   },
+   {
+    "f": 19544,
+    "t": 981352,
+    "msg": "buy ft_greave_0 (294 G)"
+   },
+   {
+    "f": 19552,
+    "t": 981752,
+    "msg": "buy ft_greave_0 (254 G)"
+   },
+   {
+    "f": 19560,
+    "t": 982152,
+    "msg": "buy ft_greave_0 (214 G)"
+   },
+   {
+    "f": 19569,
+    "t": 982602,
+    "msg": "buy hn_longglove_0 (174 G)"
+   },
+   {
+    "f": 19570,
+    "t": 982652,
+    "msg": "buy hn_longglove_0 (174 G)"
+   },
+   {
+    "f": 19578,
+    "t": 983052,
+    "msg": "buy hn_longglove_0 (134 G)"
+   },
+   {
+    "f": 19586,
+    "t": 983452,
+    "msg": "buy hn_longglove_0 (94 G)"
+   },
+   {
+    "f": 19598,
+    "t": 984052,
+    "msg": "shop done shop_pharos_arms gold 54"
+   },
+   {
+    "f": 19598,
+    "t": 984052,
+    "msg": "goal shop_pharos_items"
+   },
+   {
+    "f": 19705,
+    "t": 989402,
+    "msg": "act shop_pharos_items at pharos_shop 5,5"
+   },
+   {
+    "f": 19712,
+    "t": 989752,
+    "msg": "buy i_antidote (54 G)"
+   },
+   {
+    "f": 19713,
+    "t": 989802,
+    "msg": "buy i_antidote (54 G)"
+   },
+   {
+    "f": 19721,
+    "t": 990202,
+    "msg": "shop done shop_pharos_items gold 44"
+   },
+   {
+    "f": 19721,
+    "t": 990202,
     "msg": "goal fern"
    },
    {
-    "f": 23674,
-    "t": 1188450,
+    "f": 22026,
+    "t": 1105452,
     "msg": "goal board"
    },
    {
-    "f": 23745,
-    "t": 1192000,
+    "f": 22097,
+    "t": 1109002,
     "msg": "act board at fern 32,27"
    },
    {
-    "f": 23775,
-    "t": 1193500,
+    "f": 22127,
+    "t": 1110502,
     "msg": "act board at fern 32,27"
    },
    {
-    "f": 23784,
-    "t": 1193950,
+    "f": 22136,
+    "t": 1110952,
     "msg": "goal gord"
    },
    {
-    "f": 23929,
-    "t": 1201200,
+    "f": 22281,
+    "t": 1118202,
     "msg": "act gord at fern_gord 5,5"
    },
    {
-    "f": 23942,
-    "t": 1201850,
+    "f": 22294,
+    "t": 1118852,
     "msg": "goal katri"
    },
    {
-    "f": 24171,
-    "t": 1213300,
+    "f": 22523,
+    "t": 1130302,
     "msg": "act katri at fern_pim_home 6,5"
    },
    {
-    "f": 24180,
-    "t": 1213750,
+    "f": 22532,
+    "t": 1130752,
     "msg": "goal rita"
    },
    {
-    "f": 24431,
-    "t": 1226300,
+    "f": 22783,
+    "t": 1143302,
     "msg": "act rita at fern_rita 4,6"
    },
    {
-    "f": 24444,
-    "t": 1226950,
+    "f": 22796,
+    "t": 1143952,
     "msg": "goal shop_fern_peddler"
    },
    {
-    "f": 24537,
-    "t": 1231600,
+    "f": 22889,
+    "t": 1148602,
     "msg": "act shop_fern_peddler at fern 38,28"
    },
    {
-    "f": 24567,
-    "t": 1233100,
+    "f": 22919,
+    "t": 1150102,
     "msg": "act shop_fern_peddler at fern 38,28"
    },
    {
-    "f": 24575,
-    "t": 1233500,
-    "msg": "shop done shop_fern_peddler gold 129"
+    "f": 22927,
+    "t": 1150502,
+    "msg": "shop done shop_fern_peddler gold 68"
    },
    {
-    "f": 24575,
-    "t": 1233500,
+    "f": 22927,
+    "t": 1150502,
     "msg": "goal shop_fern_items"
    },
    {
-    "f": 24694,
-    "t": 1239450,
+    "f": 23046,
+    "t": 1156452,
     "msg": "act shop_fern_items at fern_shop 8,5"
    },
    {
-    "f": 24717,
-    "t": 1240600,
-    "msg": "buy ac_mnd_0 (129 G)"
+    "f": 23049,
+    "t": 1156602,
+    "msg": "buy i_salve (68 G)"
    },
    {
-    "f": 24718,
-    "t": 1240650,
-    "msg": "buy ac_mnd_0 (129 G)"
+    "f": 23050,
+    "t": 1156652,
+    "msg": "buy i_salve (68 G)"
    },
    {
-    "f": 24730,
-    "t": 1241250,
-    "msg": "shop done shop_fern_items gold 49"
+    "f": 23058,
+    "t": 1157052,
+    "msg": "shop done shop_fern_items gold 48"
    },
    {
-    "f": 24730,
-    "t": 1241250,
+    "f": 23058,
+    "t": 1157052,
     "msg": "goal axe"
    },
    {
-    "f": 25971,
-    "t": 1303300,
+    "f": 25121,
+    "t": 1260202,
     "msg": "act axe at verda_1 13,10"
    },
    {
-    "f": 25990,
-    "t": 1304250,
+    "f": 25140,
+    "t": 1261152,
     "msg": "goal grind_forest"
    },
    {
-    "f": 25990,
-    "t": 1304250,
+    "f": 25140,
+    "t": 1261152,
     "msg": "grind to 60 battles on verda_1"
    },
    {
-    "f": 45185,
-    "t": 2264000,
-    "msg": "goal log"
-   },
-   {
-    "f": 45201,
-    "t": 2264800,
-    "msg": "goal grind_forest"
-   },
-   {
-    "f": 47636,
-    "t": 2386550,
+    "f": 47255,
+    "t": 2366902,
     "msg": "grind goal grind_forest done (60 battles)"
    },
    {
-    "f": 47637,
-    "t": 2386600,
+    "f": 47256,
+    "t": 2366952,
     "msg": "goal log"
    },
    {
-    "f": 48461,
-    "t": 2427800,
+    "f": 48926,
+    "t": 2450452,
     "msg": "act log at verda_2 50,40"
    },
    {
-    "f": 48465,
-    "t": 2428000,
+    "f": 48930,
+    "t": 2450652,
     "msg": "choose \"斧で払う\" for \"\""
    },
    {
-    "f": 48479,
-    "t": 2428700,
+    "f": 48944,
+    "t": 2451352,
     "msg": "goal hans"
    },
    {
-    "f": 48537,
-    "t": 2431600,
+    "f": 49002,
+    "t": 2454252,
     "msg": "act hans at verda_2 52,45"
    },
    {
-    "f": 48571,
-    "t": 2433300,
+    "f": 49036,
+    "t": 2455952,
     "msg": "goal ben"
    },
    {
-    "f": 49954,
-    "t": 2502450,
+    "f": 52209,
+    "t": 2614602,
     "msg": "act ben at verda_1 48,23"
    },
    {
-    "f": 49984,
-    "t": 2503950,
+    "f": 52239,
+    "t": 2616102,
     "msg": "act ben at verda_1 48,23"
    },
    {
-    "f": 52475,
-    "t": 2628500,
+    "f": 52309,
+    "t": 2619602,
+    "msg": "DBG r0 p_hero -> {\"cmd\":\"skill\",\"id\":\"t_sword_stepcut\",\"target\":\"e_1\"} | p_hero:87/147 mp24/24[] p_bartolo:73/134 mp24/24[] p_marta:97/102 mp29/29[] p_sylvain:38/90 mp23/25[] | e_0:68/68[] e_1:310/310[] e_2:68/68[]"
+   },
+   {
+    "f": 52321,
+    "t": 2620202,
+    "msg": "DBG r0 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_1\"} | p_hero:87/147 mp24/24[] p_bartolo:73/134 mp24/24[] p_marta:97/102 mp29/29[] p_sylvain:38/90 mp23/25[] | e_0:68/68[] e_1:310/310[] e_2:68/68[]"
+   },
+   {
+    "f": 52333,
+    "t": 2620802,
+    "msg": "DBG r0 p_marta -> {\"cmd\":\"spell\",\"id\":\"s_light_1\",\"target\":\"p_sylvain\"} | p_hero:87/147 mp24/24[] p_bartolo:73/134 mp24/24[] p_marta:97/102 mp29/29[] p_sylvain:38/90 mp23/25[] | e_0:68/68[] e_1:310/310[] e_2:68/68[]"
+   },
+   {
+    "f": 52343,
+    "t": 2621302,
+    "msg": "DBG r0 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_rapid\",\"target\":\"e_1\"} | p_hero:87/147 mp24/24[] p_bartolo:73/134 mp24/24[] p_marta:97/102 mp29/29[] p_sylvain:38/90 mp23/25[] | e_0:68/68[] e_1:310/310[] e_2:68/68[]"
+   },
+   {
+    "f": 52568,
+    "t": 2632552,
+    "msg": "DBG r1 p_hero -> {\"cmd\":\"skill\",\"id\":\"t_sword_stepcut\",\"target\":\"e_1\"} | p_hero:78/147 mp22/24[] p_bartolo:73/134 mp21/24[] p_marta:90/102 mp26/29[] p_sylvain:88/90 mp23/25[] | e_0:68/68[] e_1:283/310 R=eb_pack_howl[] e_2:68/68[]"
+   },
+   {
+    "f": 52574,
+    "t": 2632852,
+    "msg": "DBG r1 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_1\"} | p_hero:78/147 mp22/24[] p_bartolo:73/134 mp21/24[] p_marta:90/102 mp26/29[] p_sylvain:88/90 mp23/25[] | e_0:68/68[] e_1:283/310 R=eb_pack_howl[] e_2:68/68[]"
+   },
+   {
+    "f": 52580,
+    "t": 2633152,
+    "msg": "DBG r1 p_marta -> {\"cmd\":\"skill\",\"id\":\"t_staff_mind\",\"target\":\"e_1\"} | p_hero:78/147 mp22/24[] p_bartolo:73/134 mp21/24[] p_marta:90/102 mp26/29[] p_sylvain:88/90 mp23/25[] | e_0:68/68[] e_1:283/310 R=eb_pack_howl[] e_2:68/68[]"
+   },
+   {
+    "f": 52594,
+    "t": 2633852,
+    "msg": "DBG r1 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_rapid\",\"target\":\"e_1\"} | p_hero:78/147 mp22/24[] p_bartolo:73/134 mp21/24[] p_marta:90/102 mp26/29[] p_sylvain:88/90 mp23/25[] | e_0:68/68[] e_1:283/310 R=eb_pack_howl[] e_2:68/68[]"
+   },
+   {
+    "f": 52785,
+    "t": 2643402,
+    "msg": "DBG r2 p_hero -> {\"cmd\":\"skill\",\"id\":\"t_sword_stepcut\",\"target\":\"e_1\"} | p_hero:78/147 mp20/24[] p_bartolo:64/134 mp18/24[] p_marta:84/102 mp24/29[] p_sylvain:88/90 mp21/25[] | e_0:68/68[] e_1:231/310[] e_2:68/68[] e_3:68/68[] e_4:68/68[]"
+   },
+   {
+    "f": 52791,
+    "t": 2643702,
+    "msg": "DBG r2 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_1\"} | p_hero:78/147 mp20/24[] p_bartolo:64/134 mp18/24[] p_marta:84/102 mp24/29[] p_sylvain:88/90 mp21/25[] | e_0:68/68[] e_1:231/310[] e_2:68/68[] e_3:68/68[] e_4:68/68[]"
+   },
+   {
+    "f": 52797,
+    "t": 2644002,
+    "msg": "DBG r2 p_marta -> {\"cmd\":\"spell\",\"id\":\"s_light_1\",\"target\":\"p_bartolo\"} | p_hero:78/147 mp20/24[] p_bartolo:64/134 mp18/24[] p_marta:84/102 mp24/29[] p_sylvain:88/90 mp21/25[] | e_0:68/68[] e_1:231/310[] e_2:68/68[] e_3:68/68[] e_4:68/68[]"
+   },
+   {
+    "f": 52809,
+    "t": 2644602,
+    "msg": "DBG r2 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_rapid\",\"target\":\"e_1\"} | p_hero:78/147 mp20/24[] p_bartolo:64/134 mp18/24[] p_marta:84/102 mp24/29[] p_sylvain:88/90 mp21/25[] | e_0:68/68[] e_1:231/310[] e_2:68/68[] e_3:68/68[] e_4:68/68[]"
+   },
+   {
+    "f": 53043,
+    "t": 2656302,
+    "msg": "DBG r3 p_hero -> {\"cmd\":\"skill\",\"id\":\"t_sword_stepcut\",\"target\":\"e_1\"} | p_hero:78/147 mp18/24[] p_bartolo:131/134 mp15/24[] p_marta:75/102 mp21/29[] p_sylvain:88/90 mp19/25[] | e_0:68/68[] e_1:184/310 R=eb_pack_howl[] e_2:68/68[] e_3:68/68[] e_4:68/68[]"
+   },
+   {
+    "f": 53049,
+    "t": 2656602,
+    "msg": "DBG r3 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_1\"} | p_hero:78/147 mp18/24[] p_bartolo:131/134 mp15/24[] p_marta:75/102 mp21/29[] p_sylvain:88/90 mp19/25[] | e_0:68/68[] e_1:184/310 R=eb_pack_howl[] e_2:68/68[] e_3:68/68[] e_4:68/68[]"
+   },
+   {
+    "f": 53055,
+    "t": 2656902,
+    "msg": "DBG r3 p_marta -> {\"cmd\":\"skill\",\"id\":\"t_staff_mind\",\"target\":\"e_1\"} | p_hero:78/147 mp18/24[] p_bartolo:131/134 mp15/24[] p_marta:75/102 mp21/29[] p_sylvain:88/90 mp19/25[] | e_0:68/68[] e_1:184/310 R=eb_pack_howl[] e_2:68/68[] e_3:68/68[] e_4:68/68[]"
+   },
+   {
+    "f": 53063,
+    "t": 2657302,
+    "msg": "DBG r3 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_rapid\",\"target\":\"e_1\"} | p_hero:78/147 mp18/24[] p_bartolo:131/134 mp15/24[] p_marta:75/102 mp21/29[] p_sylvain:88/90 mp19/25[] | e_0:68/68[] e_1:184/310 R=eb_pack_howl[] e_2:68/68[] e_3:68/68[] e_4:68/68[]"
+   },
+   {
+    "f": 53318,
+    "t": 2670052,
+    "msg": "DBG r4 p_hero -> {\"cmd\":\"skill\",\"id\":\"t_sword_stepcut\",\"target\":\"e_1\"} | p_hero:69/147 mp16/24[] p_bartolo:124/134 mp12/24[] p_marta:61/102 mp19/29[] p_sylvain:82/90 mp19/25[] | e_0:68/68[] e_1:146/310[] e_2:68/68[] e_3:68/68[] e_4:68/68[] e_5:68/68[]"
+   },
+   {
+    "f": 53324,
+    "t": 2670352,
+    "msg": "DBG r4 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_1\"} | p_hero:69/147 mp16/24[] p_bartolo:124/134 mp12/24[] p_marta:61/102 mp19/29[] p_sylvain:82/90 mp19/25[] | e_0:68/68[] e_1:146/310[] e_2:68/68[] e_3:68/68[] e_4:68/68[] e_5:68/68[]"
+   },
+   {
+    "f": 53330,
+    "t": 2670652,
+    "msg": "DBG r4 p_marta -> {\"cmd\":\"spell\",\"id\":\"s_light_1\",\"target\":\"p_hero\"} | p_hero:69/147 mp16/24[] p_bartolo:124/134 mp12/24[] p_marta:61/102 mp19/29[] p_sylvain:82/90 mp19/25[] | e_0:68/68[] e_1:146/310[] e_2:68/68[] e_3:68/68[] e_4:68/68[] e_5:68/68[]"
+   },
+   {
+    "f": 53344,
+    "t": 2671352,
+    "msg": "DBG r4 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_rapid\",\"target\":\"e_1\"} | p_hero:69/147 mp16/24[] p_bartolo:124/134 mp12/24[] p_marta:61/102 mp19/29[] p_sylvain:82/90 mp19/25[] | e_0:68/68[] e_1:146/310[] e_2:68/68[] e_3:68/68[] e_4:68/68[] e_5:68/68[]"
+   },
+   {
+    "f": 53601,
+    "t": 2684202,
+    "msg": "DBG r5 p_hero -> {\"cmd\":\"skill\",\"id\":\"t_sword_stepcut\",\"target\":\"e_1\"} | p_hero:136/147 mp14/24[] p_bartolo:114/134 mp9/24[] p_marta:54/102 mp16/29[] p_sylvain:64/90 mp17/25[] | e_0:68/68[] e_1:80/310[] e_2:68/68[] e_3:68/68[] e_4:68/68[] e_5:68/68[]"
+   },
+   {
+    "f": 53607,
+    "t": 2684502,
+    "msg": "DBG r5 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_1\"} | p_hero:136/147 mp14/24[] p_bartolo:114/134 mp9/24[] p_marta:54/102 mp16/29[] p_sylvain:64/90 mp17/25[] | e_0:68/68[] e_1:80/310[] e_2:68/68[] e_3:68/68[] e_4:68/68[] e_5:68/68[]"
+   },
+   {
+    "f": 53613,
+    "t": 2684802,
+    "msg": "DBG r5 p_marta -> {\"cmd\":\"skill\",\"id\":\"t_staff_mind\",\"target\":\"e_1\"} | p_hero:136/147 mp14/24[] p_bartolo:114/134 mp9/24[] p_marta:54/102 mp16/29[] p_sylvain:64/90 mp17/25[] | e_0:68/68[] e_1:80/310[] e_2:68/68[] e_3:68/68[] e_4:68/68[] e_5:68/68[]"
+   },
+   {
+    "f": 53621,
+    "t": 2685202,
+    "msg": "DBG r5 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_rapid\",\"target\":\"e_1\"} | p_hero:136/147 mp14/24[] p_bartolo:114/134 mp9/24[] p_marta:54/102 mp16/29[] p_sylvain:64/90 mp17/25[] | e_0:68/68[] e_1:80/310[] e_2:68/68[] e_3:68/68[] e_4:68/68[] e_5:68/68[]"
+   },
+   {
+    "f": 53881,
+    "t": 2698202,
+    "msg": "DBG r6 p_hero -> {\"cmd\":\"attack\",\"id\":null,\"target\":\"e_1\"} | p_hero:122/147 mp12/24[] p_bartolo:84/134 mp6/24[] p_marta:54/102 mp14/29[] p_sylvain:58/90 mp15/25[] | e_0:68/68[] e_1:7/310[] e_2:68/68[] e_3:68/68[] e_4:68/68[] e_5:68/68[]"
+   },
+   {
+    "f": 53889,
+    "t": 2698602,
+    "msg": "DBG r6 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_1\"} | p_hero:122/147 mp12/24[] p_bartolo:84/134 mp6/24[] p_marta:54/102 mp14/29[] p_sylvain:58/90 mp15/25[] | e_0:68/68[] e_1:7/310[] e_2:68/68[] e_3:68/68[] e_4:68/68[] e_5:68/68[]"
+   },
+   {
+    "f": 53895,
+    "t": 2698902,
+    "msg": "DBG r6 p_marta -> {\"cmd\":\"skill\",\"id\":\"t_staff_mind\",\"target\":\"e_1\"} | p_hero:122/147 mp12/24[] p_bartolo:84/134 mp6/24[] p_marta:54/102 mp14/29[] p_sylvain:58/90 mp15/25[] | e_0:68/68[] e_1:7/310[] e_2:68/68[] e_3:68/68[] e_4:68/68[] e_5:68/68[]"
+   },
+   {
+    "f": 53901,
+    "t": 2699202,
+    "msg": "DBG r6 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_rapid\",\"target\":\"e_1\"} | p_hero:122/147 mp12/24[] p_bartolo:84/134 mp6/24[] p_marta:54/102 mp14/29[] p_sylvain:58/90 mp15/25[] | e_0:68/68[] e_1:7/310[] e_2:68/68[] e_3:68/68[] e_4:68/68[] e_5:68/68[]"
+   },
+   {
+    "f": 54062,
+    "t": 2707252,
     "msg": "goal flute"
    },
    {
-    "f": 52990,
-    "t": 2654250,
+    "f": 54108,
+    "t": 2709552,
     "msg": "act flute at verda_1 47,12"
    },
    {
-    "f": 53007,
-    "t": 2655100,
+    "f": 54125,
+    "t": 2710402,
     "msg": "goal roy"
    },
    {
-    "f": 54466,
-    "t": 2728050,
+    "f": 57628,
+    "t": 2885552,
     "msg": "act roy at verda_2 52,13"
    },
    {
-    "f": 54470,
-    "t": 2728250,
+    "f": 57632,
+    "t": 2885752,
     "msg": "choose \"ベンの呼び笛を吹く\" for \"\""
    },
    {
-    "f": 54537,
-    "t": 2731600,
+    "f": 57699,
+    "t": 2889102,
     "msg": "goal pim"
    },
    {
-    "f": 56888,
-    "t": 2849150,
+    "f": 59863,
+    "t": 2997302,
     "msg": "act pim at verda_2 15,36"
    },
    {
-    "f": 56910,
-    "t": 2850250,
+    "f": 59885,
+    "t": 2998402,
     "msg": "choose \"野営地へ送り届ける\" for \"ピムをどうする？\""
    },
    {
-    "f": 56918,
-    "t": 2850650,
+    "f": 59893,
+    "t": 2998802,
     "msg": "choose \"手当てする（傷薬を使う）\" for \"\""
    },
    {
-    "f": 56984,
-    "t": 2853950,
+    "f": 59959,
+    "t": 3002102,
     "msg": "goal stone_a"
    },
    {
-    "f": 58320,
-    "t": 2920750,
+    "f": 62531,
+    "t": 3130702,
     "msg": "act stone_a at verda_1 11,29"
    },
    {
-    "f": 58350,
-    "t": 2922250,
+    "f": 62561,
+    "t": 3132202,
     "msg": "act stone_a at verda_1 11,29"
    },
    {
-    "f": 58369,
-    "t": 2923200,
+    "f": 62580,
+    "t": 3133152,
     "msg": "goal stone_b"
    },
    {
-    "f": 60910,
-    "t": 3050250,
+    "f": 64308,
+    "t": 3219552,
     "msg": "act stone_b at verda_1 51,11"
    },
    {
-    "f": 60929,
-    "t": 3051200,
+    "f": 64327,
+    "t": 3220502,
     "msg": "goal moth"
    },
    {
-    "f": 66921,
-    "t": 3350800,
+    "f": 66585,
+    "t": 3333402,
+    "msg": "DBG items {\"i_tonic\":2,\"k_lighthouse_key\":1,\"i_antidote\":4,\"i_bomb\":1,\"sh_crab_shell\":1,\"i_clear\":1,\"hn_gauntlet_0\":1,\"i_ether\":2,\"k_chronicle\":1,\"k_quill\":1,\"k_bell\":1,\"ac_keeper_lantern\":1,\"k_pim_hat\":1,\"i_salve\":17,\"i_horn\":1,\"i_incense\":2,\"bd_iron_cuirass\":1} gl hero:10.29 {\"weapon1\":\"w_sword_iron\",\"shield\":\"sh_iron_buckler\",\"head\":\"hd_helm_0\",\"body\":\"bd_iron_cuirass\",\"hands\":\"hn_longglove_0\",\"feet\":\"ft_greave_0\",\"acc1\":null,\"acc2\":null} | bartolo:10.05 {\"weapon1\":\"w_greatsword_iron\",\"shield\":null,\"head\":\"hd_helm_0\",\"body\":\"bd_iron_cuirass\",\"hands\":\"hn_longglove_0\",\"feet\":\"ft_greave_0\",\"acc1\":null,\"acc2\":null} | marta:9.802 {\"weapon1\":\"w_staff_prayer_0\",\"shield\":\"sh_primer\",\"head\":\"hd_wool_hood\",\"body\":\"bd_hemp_robe\",\"hands\":\"hn_longglove_0\",\"feet\":\"ft_greave_0\",\"acc1\":null,\"acc2\":null} | sylvain:10.042 {\"weapon1\":\"w_bow_short\",\"shield\":null,\"head\":\"hd_leather_cap\",\"body\":\"bd_leather_vest\",\"hands\":null,\"feet\":\"ft_greave_0\",\"acc1\":null,\"acc2\":null}"
+   },
+   {
+    "f": 66650,
+    "t": 3336652,
+    "msg": "DBG r0 p_hero -> {\"cmd\":\"skill\",\"id\":\"t_sword_stepcut\",\"target\":\"e_0\"} | p_hero:138/156 mp25/25[] p_bartolo:123/142 mp22/25[] p_marta:61/116 mp30/32[] p_sylvain:81/106 mp23/29[] | e_0:299/299[]"
+   },
+   {
+    "f": 66658,
+    "t": 3337052,
+    "msg": "DBG r0 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_0\"} | p_hero:138/156 mp25/25[] p_bartolo:123/142 mp22/25[] p_marta:61/116 mp30/32[] p_sylvain:81/106 mp23/29[] | e_0:299/299[]"
+   },
+   {
+    "f": 66666,
+    "t": 3337452,
+    "msg": "DBG r0 p_marta -> {\"cmd\":\"skill\",\"id\":\"t_staff_mind\",\"target\":\"e_0\"} | p_hero:138/156 mp25/25[] p_bartolo:123/142 mp22/25[] p_marta:61/116 mp30/32[] p_sylvain:81/106 mp23/29[] | e_0:299/299[]"
+   },
+   {
+    "f": 66674,
+    "t": 3337852,
+    "msg": "DBG r0 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_twin\",\"target\":\"e_0\"} | p_hero:138/156 mp25/25[] p_bartolo:123/142 mp22/25[] p_marta:61/116 mp30/32[] p_sylvain:81/106 mp23/29[] | e_0:299/299[]"
+   },
+   {
+    "f": 66836,
+    "t": 3345952,
+    "msg": "DBG r1 p_hero -> {\"cmd\":\"skill\",\"id\":\"t_sword_guard\",\"target\":\"p_hero\"} | p_hero:138/156 mp23/25[] p_bartolo:123/142 mp19/25[] p_marta:61/116 mp28/32[] p_sylvain:81/106 mp20/29[] | e_0:262/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 66842,
+    "t": 3346252,
+    "msg": "DBG r1 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_0\"} | p_hero:138/156 mp23/25[] p_bartolo:123/142 mp19/25[] p_marta:61/116 mp28/32[] p_sylvain:81/106 mp20/29[] | e_0:262/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 66848,
+    "t": 3346552,
+    "msg": "DBG r1 p_marta -> {\"cmd\":\"skill\",\"id\":\"t_staff_mind\",\"target\":\"e_0\"} | p_hero:138/156 mp23/25[] p_bartolo:123/142 mp19/25[] p_marta:61/116 mp28/32[] p_sylvain:81/106 mp20/29[] | e_0:262/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 66854,
+    "t": 3346852,
+    "msg": "DBG r1 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_twin\",\"target\":\"e_0\"} | p_hero:138/156 mp23/25[] p_bartolo:123/142 mp19/25[] p_marta:61/116 mp28/32[] p_sylvain:81/106 mp20/29[] | e_0:262/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 67021,
+    "t": 3355202,
+    "msg": "DBG r2 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:124/156 mp20/25[counter,sleep] p_bartolo:110/142 mp19/25[sleep] p_marta:51/116 mp28/32[sleep] p_sylvain:68/106 mp17/29[] | e_0:245/299[]"
+   },
+   {
+    "f": 67025,
+    "t": 3355402,
+    "msg": "DBG r2 p_bartolo -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:124/156 mp20/25[counter,sleep] p_bartolo:110/142 mp19/25[sleep] p_marta:51/116 mp28/32[sleep] p_sylvain:68/106 mp17/29[] | e_0:245/299[]"
+   },
+   {
+    "f": 67029,
+    "t": 3355602,
+    "msg": "DBG r2 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:124/156 mp20/25[counter,sleep] p_bartolo:110/142 mp19/25[sleep] p_marta:51/116 mp28/32[sleep] p_sylvain:68/106 mp17/29[] | e_0:245/299[]"
+   },
+   {
+    "f": 67035,
+    "t": 3355902,
+    "msg": "DBG r2 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_twin\",\"target\":\"e_0\"} | p_hero:124/156 mp20/25[counter,sleep] p_bartolo:110/142 mp19/25[sleep] p_marta:51/116 mp28/32[sleep] p_sylvain:68/106 mp17/29[] | e_0:245/299[]"
+   },
+   {
+    "f": 67137,
+    "t": 3361002,
+    "msg": "DBG r3 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:101/156 mp20/25[sleep] p_bartolo:110/142 mp19/25[] p_marta:51/116 mp28/32[sleep] p_sylvain:68/106 mp14/29[] | e_0:227/299[]"
+   },
+   {
+    "f": 67139,
+    "t": 3361102,
+    "msg": "DBG r3 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_0\"} | p_hero:101/156 mp20/25[sleep] p_bartolo:110/142 mp19/25[] p_marta:51/116 mp28/32[sleep] p_sylvain:68/106 mp14/29[] | e_0:227/299[]"
+   },
+   {
+    "f": 67147,
+    "t": 3361502,
+    "msg": "DBG r3 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:101/156 mp20/25[sleep] p_bartolo:110/142 mp19/25[] p_marta:51/116 mp28/32[sleep] p_sylvain:68/106 mp14/29[] | e_0:227/299[]"
+   },
+   {
+    "f": 67149,
+    "t": 3361602,
+    "msg": "DBG r3 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_twin\",\"target\":\"e_0\"} | p_hero:101/156 mp20/25[sleep] p_bartolo:110/142 mp19/25[] p_marta:51/116 mp28/32[sleep] p_sylvain:68/106 mp14/29[] | e_0:227/299[]"
+   },
+   {
+    "f": 67271,
+    "t": 3367702,
+    "msg": "DBG r4 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:101/156 mp20/25[sleep] p_bartolo:110/142 mp16/25[] p_marta:51/116 mp28/32[sleep] p_sylvain:68/106 mp11/29[] | e_0:176/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 67273,
+    "t": 3367802,
+    "msg": "DBG r4 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_0\"} | p_hero:101/156 mp20/25[sleep] p_bartolo:110/142 mp16/25[] p_marta:51/116 mp28/32[sleep] p_sylvain:68/106 mp11/29[] | e_0:176/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 67279,
+    "t": 3368102,
+    "msg": "DBG r4 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:101/156 mp20/25[sleep] p_bartolo:110/142 mp16/25[] p_marta:51/116 mp28/32[sleep] p_sylvain:68/106 mp11/29[] | e_0:176/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 67281,
+    "t": 3368202,
+    "msg": "DBG r4 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_twin\",\"target\":\"e_0\"} | p_hero:101/156 mp20/25[sleep] p_bartolo:110/142 mp16/25[] p_marta:51/116 mp28/32[sleep] p_sylvain:68/106 mp11/29[] | e_0:176/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 67440,
+    "t": 3376152,
+    "msg": "DBG r5 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:88/156 mp20/25[sleep] p_bartolo:97/142 mp16/25[sleep] p_marta:40/116 mp28/32[sleep] p_sylvain:55/106 mp8/29[sleep] | e_0:160/299[]"
+   },
+   {
+    "f": 67442,
+    "t": 3376252,
+    "msg": "DBG r5 p_bartolo -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:88/156 mp20/25[sleep] p_bartolo:97/142 mp16/25[sleep] p_marta:40/116 mp28/32[sleep] p_sylvain:55/106 mp8/29[sleep] | e_0:160/299[]"
+   },
+   {
+    "f": 67446,
+    "t": 3376452,
+    "msg": "DBG r5 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:88/156 mp20/25[sleep] p_bartolo:97/142 mp16/25[sleep] p_marta:40/116 mp28/32[sleep] p_sylvain:55/106 mp8/29[sleep] | e_0:160/299[]"
+   },
+   {
+    "f": 67448,
+    "t": 3376552,
+    "msg": "DBG r5 p_sylvain -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:88/156 mp20/25[sleep] p_bartolo:97/142 mp16/25[sleep] p_marta:40/116 mp28/32[sleep] p_sylvain:55/106 mp8/29[sleep] | e_0:160/299[]"
+   },
+   {
+    "f": 67530,
+    "t": 3380652,
+    "msg": "DBG r6 p_hero -> {\"cmd\":\"item\",\"id\":\"i_incense\",\"target\":\"p_hero\"} | p_hero:88/156 mp20/25[] p_bartolo:97/142 mp16/25[sleep] p_marta:40/116 mp28/32[sleep] p_sylvain:31/106 mp8/29[] | e_0:160/299[]"
+   },
+   {
+    "f": 67538,
+    "t": 3381052,
+    "msg": "DBG r6 p_bartolo -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:88/156 mp20/25[] p_bartolo:97/142 mp16/25[sleep] p_marta:40/116 mp28/32[sleep] p_sylvain:31/106 mp8/29[] | e_0:160/299[]"
+   },
+   {
+    "f": 67540,
+    "t": 3381152,
+    "msg": "DBG r6 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:88/156 mp20/25[] p_bartolo:97/142 mp16/25[sleep] p_marta:40/116 mp28/32[sleep] p_sylvain:31/106 mp8/29[] | e_0:160/299[]"
+   },
+   {
+    "f": 67542,
+    "t": 3381252,
+    "msg": "DBG r6 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_twin\",\"target\":\"e_0\"} | p_hero:88/156 mp20/25[] p_bartolo:97/142 mp16/25[sleep] p_marta:40/116 mp28/32[sleep] p_sylvain:31/106 mp8/29[] | e_0:160/299[]"
+   },
+   {
+    "f": 67701,
+    "t": 3389202,
+    "msg": "DBG r7 p_hero -> {\"cmd\":\"skill\",\"id\":\"t_sword_stepcut\",\"target\":\"e_0\"} | p_hero:128/156 mp20/25[] p_bartolo:137/142 mp16/25[] p_marta:80/116 mp28/32[sleep] p_sylvain:71/106 mp5/29[] | e_0:142/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 67713,
+    "t": 3389802,
+    "msg": "DBG r7 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_0\"} | p_hero:128/156 mp20/25[] p_bartolo:137/142 mp16/25[] p_marta:80/116 mp28/32[sleep] p_sylvain:71/106 mp5/29[] | e_0:142/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 67721,
+    "t": 3390202,
+    "msg": "DBG r7 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:128/156 mp20/25[] p_bartolo:137/142 mp16/25[] p_marta:80/116 mp28/32[sleep] p_sylvain:71/106 mp5/29[] | e_0:142/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 67723,
+    "t": 3390302,
+    "msg": "DBG r7 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_twin\",\"target\":\"e_0\"} | p_hero:128/156 mp20/25[] p_bartolo:137/142 mp16/25[] p_marta:80/116 mp28/32[sleep] p_sylvain:71/106 mp5/29[] | e_0:142/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 67940,
+    "t": 3401152,
+    "msg": "DBG r8 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:114/156 mp20/25[sleep] p_bartolo:123/142 mp16/25[sleep] p_marta:69/116 mp28/32[sleep] p_sylvain:56/106 mp2/29[sleep] | e_0:110/299[]"
+   },
+   {
+    "f": 67944,
+    "t": 3401352,
+    "msg": "DBG r8 p_bartolo -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:114/156 mp20/25[sleep] p_bartolo:123/142 mp16/25[sleep] p_marta:69/116 mp28/32[sleep] p_sylvain:56/106 mp2/29[sleep] | e_0:110/299[]"
+   },
+   {
+    "f": 67948,
+    "t": 3401552,
+    "msg": "DBG r8 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:114/156 mp20/25[sleep] p_bartolo:123/142 mp16/25[sleep] p_marta:69/116 mp28/32[sleep] p_sylvain:56/106 mp2/29[sleep] | e_0:110/299[]"
+   },
+   {
+    "f": 67950,
+    "t": 3401652,
+    "msg": "DBG r8 p_sylvain -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:114/156 mp20/25[sleep] p_bartolo:123/142 mp16/25[sleep] p_marta:69/116 mp28/32[sleep] p_sylvain:56/106 mp2/29[sleep] | e_0:110/299[]"
+   },
+   {
+    "f": 68053,
+    "t": 3406802,
+    "msg": "DBG r9 p_hero -> {\"cmd\":\"skill\",\"id\":\"t_sword_stepcut\",\"target\":\"e_0\"} | p_hero:114/156 mp20/25[] p_bartolo:81/142 mp16/25[sleep] p_marta:69/116 mp28/32[sleep] p_sylvain:56/106 mp2/29[sleep] | e_0:110/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 68061,
+    "t": 3407202,
+    "msg": "DBG r9 p_bartolo -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:114/156 mp20/25[] p_bartolo:81/142 mp16/25[sleep] p_marta:69/116 mp28/32[sleep] p_sylvain:56/106 mp2/29[sleep] | e_0:110/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 68063,
+    "t": 3407302,
+    "msg": "DBG r9 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:114/156 mp20/25[] p_bartolo:81/142 mp16/25[sleep] p_marta:69/116 mp28/32[sleep] p_sylvain:56/106 mp2/29[sleep] | e_0:110/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 68065,
+    "t": 3407402,
+    "msg": "DBG r9 p_sylvain -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:114/156 mp20/25[] p_bartolo:81/142 mp16/25[sleep] p_marta:69/116 mp28/32[sleep] p_sylvain:56/106 mp2/29[sleep] | e_0:110/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 68216,
+    "t": 3414952,
+    "msg": "DBG r10 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:101/156 mp20/25[sleep] p_bartolo:68/142 mp16/25[sleep] p_marta:58/116 mp28/32[sleep] p_sylvain:42/106 mp2/29[sleep] | e_0:110/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 68220,
+    "t": 3415152,
+    "msg": "DBG r10 p_bartolo -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:101/156 mp20/25[sleep] p_bartolo:68/142 mp16/25[sleep] p_marta:58/116 mp28/32[sleep] p_sylvain:42/106 mp2/29[sleep] | e_0:110/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 68222,
+    "t": 3415252,
+    "msg": "DBG r10 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:101/156 mp20/25[sleep] p_bartolo:68/142 mp16/25[sleep] p_marta:58/116 mp28/32[sleep] p_sylvain:42/106 mp2/29[sleep] | e_0:110/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 68224,
+    "t": 3415352,
+    "msg": "DBG r10 p_sylvain -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:101/156 mp20/25[sleep] p_bartolo:68/142 mp16/25[sleep] p_marta:58/116 mp28/32[sleep] p_sylvain:42/106 mp2/29[sleep] | e_0:110/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 68440,
+    "t": 3426152,
+    "msg": "DBG r11 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:69/156 mp20/25[sleep] p_bartolo:33/142 mp16/25[] p_marta:32/116 mp28/32[sleep] p_sylvain:5/106 mp2/29[sleep] | e_0:110/299[]"
+   },
+   {
+    "f": 68442,
+    "t": 3426252,
+    "msg": "DBG r11 p_bartolo -> {\"cmd\":\"item\",\"id\":\"i_incense\",\"target\":\"p_hero\"} | p_hero:69/156 mp20/25[sleep] p_bartolo:33/142 mp16/25[] p_marta:32/116 mp28/32[sleep] p_sylvain:5/106 mp2/29[sleep] | e_0:110/299[]"
+   },
+   {
+    "f": 68464,
+    "t": 3427352,
+    "msg": "DBG r11 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:69/156 mp20/25[sleep] p_bartolo:33/142 mp16/25[] p_marta:32/116 mp28/32[sleep] p_sylvain:5/106 mp2/29[sleep] | e_0:110/299[]"
+   },
+   {
+    "f": 68466,
+    "t": 3427452,
+    "msg": "DBG r11 p_sylvain -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:69/156 mp20/25[sleep] p_bartolo:33/142 mp16/25[] p_marta:32/116 mp28/32[sleep] p_sylvain:5/106 mp2/29[sleep] | e_0:110/299[]"
+   },
+   {
+    "f": 68641,
+    "t": 3436202,
+    "msg": "DBG r12 p_hero -> {\"cmd\":\"skill\",\"id\":\"t_sword_stepcut\",\"target\":\"e_0\"} | p_hero:109/156 mp20/25[] p_bartolo:73/142 mp16/25[] p_marta:65/116 mp28/32[sleep,poison] p_sylvain:45/106 mp2/29[sleep] | e_0:110/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 68649,
+    "t": 3436602,
+    "msg": "DBG r12 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_0\"} | p_hero:109/156 mp20/25[] p_bartolo:73/142 mp16/25[] p_marta:65/116 mp28/32[sleep,poison] p_sylvain:45/106 mp2/29[sleep] | e_0:110/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 68659,
+    "t": 3437102,
+    "msg": "DBG r12 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:109/156 mp20/25[] p_bartolo:73/142 mp16/25[] p_marta:65/116 mp28/32[sleep,poison] p_sylvain:45/106 mp2/29[sleep] | e_0:110/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 68661,
+    "t": 3437202,
+    "msg": "DBG r12 p_sylvain -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:109/156 mp20/25[] p_bartolo:73/142 mp16/25[] p_marta:65/116 mp28/32[sleep,poison] p_sylvain:45/106 mp2/29[sleep] | e_0:110/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 68840,
+    "t": 3446152,
+    "msg": "DBG r13 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:96/156 mp20/25[sleep] p_bartolo:60/142 mp13/25[] p_marta:47/116 mp28/32[sleep,poison] p_sylvain:31/106 mp2/29[sleep] | e_0:93/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 68844,
+    "t": 3446352,
+    "msg": "DBG r13 p_bartolo -> {\"cmd\":\"item\",\"id\":\"i_salve\",\"target\":\"p_sylvain\"} | p_hero:96/156 mp20/25[sleep] p_bartolo:60/142 mp13/25[] p_marta:47/116 mp28/32[sleep,poison] p_sylvain:31/106 mp2/29[sleep] | e_0:93/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 68860,
+    "t": 3447152,
+    "msg": "DBG r13 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:96/156 mp20/25[sleep] p_bartolo:60/142 mp13/25[] p_marta:47/116 mp28/32[sleep,poison] p_sylvain:31/106 mp2/29[sleep] | e_0:93/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 68862,
+    "t": 3447252,
+    "msg": "DBG r13 p_sylvain -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:96/156 mp20/25[sleep] p_bartolo:60/142 mp13/25[] p_marta:47/116 mp28/32[sleep,poison] p_sylvain:31/106 mp2/29[sleep] | e_0:93/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 69042,
+    "t": 3456252,
+    "msg": "DBG r14 p_hero -> {\"cmd\":\"item\",\"id\":\"i_salve\",\"target\":\"p_bartolo\"} | p_hero:83/156 mp20/25[] p_bartolo:46/142 mp13/25[] p_marta:60/116 mp28/32[poison,sleep] p_sylvain:0/106 mp2/29[] | e_0:93/299[]"
+   },
+   {
+    "f": 69054,
+    "t": 3456852,
+    "msg": "DBG r14 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_0\"} | p_hero:83/156 mp20/25[] p_bartolo:46/142 mp13/25[] p_marta:60/116 mp28/32[poison,sleep] p_sylvain:0/106 mp2/29[] | e_0:93/299[]"
+   },
+   {
+    "f": 69064,
+    "t": 3457352,
+    "msg": "DBG r14 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:83/156 mp20/25[] p_bartolo:46/142 mp13/25[] p_marta:60/116 mp28/32[poison,sleep] p_sylvain:0/106 mp2/29[] | e_0:93/299[]"
+   },
+   {
+    "f": 69200,
+    "t": 3464152,
+    "msg": "DBG r15 p_hero -> {\"cmd\":\"skill\",\"id\":\"t_sword_stepcut\",\"target\":\"e_0\"} | p_hero:83/156 mp20/25[] p_bartolo:76/142 mp10/25[] p_marta:53/116 mp28/32[poison,sleep] p_sylvain:0/106 mp2/29[] | e_0:73/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 69210,
+    "t": 3464652,
+    "msg": "DBG r15 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_0\"} | p_hero:83/156 mp20/25[] p_bartolo:76/142 mp10/25[] p_marta:53/116 mp28/32[poison,sleep] p_sylvain:0/106 mp2/29[] | e_0:73/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 69216,
+    "t": 3464952,
+    "msg": "DBG r15 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:83/156 mp20/25[] p_bartolo:76/142 mp10/25[] p_marta:53/116 mp28/32[poison,sleep] p_sylvain:0/106 mp2/29[] | e_0:73/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 69378,
+    "t": 3473052,
+    "msg": "DBG r16 p_hero -> {\"cmd\":\"item\",\"id\":\"i_salve\",\"target\":\"p_marta\"} | p_hero:69/156 mp18/25[] p_bartolo:63/142 mp10/25[sleep] p_marta:35/116 mp28/32[poison,sleep] p_sylvain:0/106 mp2/29[] | e_0:60/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 69390,
+    "t": 3473652,
+    "msg": "DBG r16 p_bartolo -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:69/156 mp18/25[] p_bartolo:63/142 mp10/25[sleep] p_marta:35/116 mp28/32[poison,sleep] p_sylvain:0/106 mp2/29[] | e_0:60/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 69394,
+    "t": 3473852,
+    "msg": "DBG r16 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:69/156 mp18/25[] p_bartolo:63/142 mp10/25[sleep] p_marta:35/116 mp28/32[poison,sleep] p_sylvain:0/106 mp2/29[] | e_0:60/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 69530,
+    "t": 3480652,
+    "msg": "DBG r17 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:28/156 mp18/25[sleep] p_bartolo:49/142 mp10/25[sleep] p_marta:17/116 mp28/32[poison,sleep] p_sylvain:0/106 mp2/29[] | e_0:60/299[]"
+   },
+   {
+    "f": 69534,
+    "t": 3480852,
+    "msg": "DBG r17 p_bartolo -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:28/156 mp18/25[sleep] p_bartolo:49/142 mp10/25[sleep] p_marta:17/116 mp28/32[poison,sleep] p_sylvain:0/106 mp2/29[] | e_0:60/299[]"
+   },
+   {
+    "f": 69536,
+    "t": 3480952,
+    "msg": "DBG r17 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:28/156 mp18/25[sleep] p_bartolo:49/142 mp10/25[sleep] p_marta:17/116 mp28/32[poison,sleep] p_sylvain:0/106 mp2/29[] | e_0:60/299[]"
+   },
+   {
+    "f": 69680,
+    "t": 3488152,
+    "msg": "DBG r18 p_bartolo -> {\"cmd\":\"item\",\"id\":\"i_salve\",\"target\":\"p_bartolo\"} | p_hero:0/156 mp18/25[] p_bartolo:28/142 mp10/25[] p_marta:0/116 mp28/32[] p_sylvain:0/106 mp2/29[] | e_0:60/299[]"
+   },
+   {
+    "f": 69769,
+    "t": 3492602,
+    "msg": "DBG r19 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_0\"} | p_hero:0/156 mp18/25[] p_bartolo:58/142 mp10/25[] p_marta:0/116 mp28/32[] p_sylvain:0/106 mp2/29[] | e_0:60/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 69849,
+    "t": 3496602,
+    "msg": "DBG r20 p_bartolo -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:0/156 mp18/25[] p_bartolo:19/142 mp10/25[sleep] p_marta:0/116 mp28/32[] p_sylvain:0/106 mp2/29[] | e_0:60/299[]"
+   },
+   {
+    "f": 69931,
+    "t": 3500702,
     "msg": "gameover → retry"
    },
    {
-    "f": 71513,
-    "t": 3580400,
+    "f": 69977,
+    "t": 3503002,
+    "msg": "DBG r0 p_hero -> {\"cmd\":\"skill\",\"id\":\"t_sword_guard\",\"target\":\"p_hero\"} | p_hero:138/156 mp25/25[] p_bartolo:123/142 mp22/25[] p_marta:61/116 mp30/32[] p_sylvain:81/106 mp23/29[] | e_0:299/299[]"
+   },
+   {
+    "f": 69985,
+    "t": 3503402,
+    "msg": "DBG r0 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_0\"} | p_hero:138/156 mp25/25[] p_bartolo:123/142 mp22/25[] p_marta:61/116 mp30/32[] p_sylvain:81/106 mp23/29[] | e_0:299/299[]"
+   },
+   {
+    "f": 69993,
+    "t": 3503802,
+    "msg": "DBG r0 p_marta -> {\"cmd\":\"skill\",\"id\":\"t_staff_mind\",\"target\":\"e_0\"} | p_hero:138/156 mp25/25[] p_bartolo:123/142 mp22/25[] p_marta:61/116 mp30/32[] p_sylvain:81/106 mp23/29[] | e_0:299/299[]"
+   },
+   {
+    "f": 70001,
+    "t": 3504202,
+    "msg": "DBG r0 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_twin\",\"target\":\"e_0\"} | p_hero:138/156 mp25/25[] p_bartolo:123/142 mp22/25[] p_marta:61/116 mp30/32[] p_sylvain:81/106 mp23/29[] | e_0:299/299[]"
+   },
+   {
+    "f": 70163,
+    "t": 3512302,
+    "msg": "DBG r1 p_hero -> {\"cmd\":\"skill\",\"id\":\"t_sword_stepcut\",\"target\":\"e_0\"} | p_hero:138/156 mp22/25[counter] p_bartolo:123/142 mp19/25[] p_marta:61/116 mp28/32[] p_sylvain:81/106 mp20/29[] | e_0:255/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 70171,
+    "t": 3512702,
+    "msg": "DBG r1 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_0\"} | p_hero:138/156 mp22/25[counter] p_bartolo:123/142 mp19/25[] p_marta:61/116 mp28/32[] p_sylvain:81/106 mp20/29[] | e_0:255/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 70177,
+    "t": 3513002,
+    "msg": "DBG r1 p_marta -> {\"cmd\":\"skill\",\"id\":\"t_staff_mind\",\"target\":\"e_0\"} | p_hero:138/156 mp22/25[counter] p_bartolo:123/142 mp19/25[] p_marta:61/116 mp28/32[] p_sylvain:81/106 mp20/29[] | e_0:255/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 70183,
+    "t": 3513302,
+    "msg": "DBG r1 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_twin\",\"target\":\"e_0\"} | p_hero:138/156 mp22/25[counter] p_bartolo:123/142 mp19/25[] p_marta:61/116 mp28/32[] p_sylvain:81/106 mp20/29[] | e_0:255/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 70352,
+    "t": 3521752,
+    "msg": "DBG r2 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:125/156 mp22/25[sleep] p_bartolo:110/142 mp19/25[sleep] p_marta:50/116 mp28/32[sleep] p_sylvain:67/106 mp17/29[sleep] | e_0:224/299[]"
+   },
+   {
+    "f": 70356,
+    "t": 3521952,
+    "msg": "DBG r2 p_bartolo -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:125/156 mp22/25[sleep] p_bartolo:110/142 mp19/25[sleep] p_marta:50/116 mp28/32[sleep] p_sylvain:67/106 mp17/29[sleep] | e_0:224/299[]"
+   },
+   {
+    "f": 70360,
+    "t": 3522152,
+    "msg": "DBG r2 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:125/156 mp22/25[sleep] p_bartolo:110/142 mp19/25[sleep] p_marta:50/116 mp28/32[sleep] p_sylvain:67/106 mp17/29[sleep] | e_0:224/299[]"
+   },
+   {
+    "f": 70366,
+    "t": 3522452,
+    "msg": "DBG r2 p_sylvain -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:125/156 mp22/25[sleep] p_bartolo:110/142 mp19/25[sleep] p_marta:50/116 mp28/32[sleep] p_sylvain:67/106 mp17/29[sleep] | e_0:224/299[]"
+   },
+   {
+    "f": 70459,
+    "t": 3527102,
+    "msg": "DBG r3 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:125/156 mp22/25[sleep] p_bartolo:110/142 mp19/25[] p_marta:50/116 mp28/32[sleep,confuse] p_sylvain:67/106 mp17/29[sleep] | e_0:224/299[]"
+   },
+   {
+    "f": 70461,
+    "t": 3527202,
+    "msg": "DBG r3 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_0\"} | p_hero:125/156 mp22/25[sleep] p_bartolo:110/142 mp19/25[] p_marta:50/116 mp28/32[sleep,confuse] p_sylvain:67/106 mp17/29[sleep] | e_0:224/299[]"
+   },
+   {
+    "f": 70469,
+    "t": 3527602,
+    "msg": "DBG r3 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:125/156 mp22/25[sleep] p_bartolo:110/142 mp19/25[] p_marta:50/116 mp28/32[sleep,confuse] p_sylvain:67/106 mp17/29[sleep] | e_0:224/299[]"
+   },
+   {
+    "f": 70471,
+    "t": 3527702,
+    "msg": "DBG r3 p_sylvain -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:125/156 mp22/25[sleep] p_bartolo:110/142 mp19/25[] p_marta:50/116 mp28/32[sleep,confuse] p_sylvain:67/106 mp17/29[sleep] | e_0:224/299[]"
+   },
+   {
+    "f": 70577,
+    "t": 3533002,
+    "msg": "DBG r4 p_hero -> {\"cmd\":\"skill\",\"id\":\"t_sword_stepcut\",\"target\":\"e_0\"} | p_hero:125/156 mp22/25[] p_bartolo:110/142 mp16/25[] p_marta:50/116 mp28/32[sleep] p_sylvain:67/106 mp17/29[sleep] | e_0:224/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 70585,
+    "t": 3533402,
+    "msg": "DBG r4 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_0\"} | p_hero:125/156 mp22/25[] p_bartolo:110/142 mp16/25[] p_marta:50/116 mp28/32[sleep] p_sylvain:67/106 mp17/29[sleep] | e_0:224/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 70591,
+    "t": 3533702,
+    "msg": "DBG r4 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:125/156 mp22/25[] p_bartolo:110/142 mp16/25[] p_marta:50/116 mp28/32[sleep] p_sylvain:67/106 mp17/29[sleep] | e_0:224/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 70593,
+    "t": 3533802,
+    "msg": "DBG r4 p_sylvain -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:125/156 mp22/25[] p_bartolo:110/142 mp16/25[] p_marta:50/116 mp28/32[sleep] p_sylvain:67/106 mp17/29[sleep] | e_0:224/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 70733,
+    "t": 3540802,
+    "msg": "DBG r5 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:111/156 mp22/25[sleep] p_bartolo:97/142 mp16/25[sleep] p_marta:39/116 mp28/32[] p_sylvain:53/106 mp17/29[sleep] | e_0:224/299[]"
+   },
+   {
+    "f": 70737,
+    "t": 3541002,
+    "msg": "DBG r5 p_bartolo -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:111/156 mp22/25[sleep] p_bartolo:97/142 mp16/25[sleep] p_marta:39/116 mp28/32[] p_sylvain:53/106 mp17/29[sleep] | e_0:224/299[]"
+   },
+   {
+    "f": 70741,
+    "t": 3541202,
+    "msg": "DBG r5 p_marta -> {\"cmd\":\"item\",\"id\":\"i_incense\",\"target\":\"p_hero\"} | p_hero:111/156 mp22/25[sleep] p_bartolo:97/142 mp16/25[sleep] p_marta:39/116 mp28/32[] p_sylvain:53/106 mp17/29[sleep] | e_0:224/299[]"
+   },
+   {
+    "f": 70763,
+    "t": 3542302,
+    "msg": "DBG r5 p_sylvain -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:111/156 mp22/25[sleep] p_bartolo:97/142 mp16/25[sleep] p_marta:39/116 mp28/32[] p_sylvain:53/106 mp17/29[sleep] | e_0:224/299[]"
+   },
+   {
+    "f": 70916,
+    "t": 3549952,
+    "msg": "DBG r6 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:141/156 mp22/25[sleep] p_bartolo:126/142 mp16/25[] p_marta:74/116 mp28/32[] p_sylvain:81/106 mp17/29[] | e_0:224/299[]"
+   },
+   {
+    "f": 70918,
+    "t": 3550052,
+    "msg": "DBG r6 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_0\"} | p_hero:141/156 mp22/25[sleep] p_bartolo:126/142 mp16/25[] p_marta:74/116 mp28/32[] p_sylvain:81/106 mp17/29[] | e_0:224/299[]"
+   },
+   {
+    "f": 70926,
+    "t": 3550452,
+    "msg": "DBG r6 p_marta -> {\"cmd\":\"skill\",\"id\":\"t_staff_mind\",\"target\":\"e_0\"} | p_hero:141/156 mp22/25[sleep] p_bartolo:126/142 mp16/25[] p_marta:74/116 mp28/32[] p_sylvain:81/106 mp17/29[] | e_0:224/299[]"
+   },
+   {
+    "f": 70938,
+    "t": 3551052,
+    "msg": "DBG r6 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_twin\",\"target\":\"e_0\"} | p_hero:141/156 mp22/25[sleep] p_bartolo:126/142 mp16/25[] p_marta:74/116 mp28/32[] p_sylvain:81/106 mp17/29[] | e_0:224/299[]"
+   },
+   {
+    "f": 71080,
+    "t": 3558152,
+    "msg": "DBG r7 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:141/156 mp22/25[sleep] p_bartolo:126/142 mp13/25[] p_marta:74/116 mp26/32[] p_sylvain:81/106 mp14/29[] | e_0:169/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 71082,
+    "t": 3558252,
+    "msg": "DBG r7 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_0\"} | p_hero:141/156 mp22/25[sleep] p_bartolo:126/142 mp13/25[] p_marta:74/116 mp26/32[] p_sylvain:81/106 mp14/29[] | e_0:169/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 71088,
+    "t": 3558552,
+    "msg": "DBG r7 p_marta -> {\"cmd\":\"skill\",\"id\":\"t_staff_mind\",\"target\":\"e_0\"} | p_hero:141/156 mp22/25[sleep] p_bartolo:126/142 mp13/25[] p_marta:74/116 mp26/32[] p_sylvain:81/106 mp14/29[] | e_0:169/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 71094,
+    "t": 3558852,
+    "msg": "DBG r7 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_twin\",\"target\":\"e_0\"} | p_hero:141/156 mp22/25[sleep] p_bartolo:126/142 mp13/25[] p_marta:74/116 mp26/32[] p_sylvain:81/106 mp14/29[] | e_0:169/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 71268,
+    "t": 3567552,
+    "msg": "DBG r8 p_hero -> {\"cmd\":\"skill\",\"id\":\"t_sword_stepcut\",\"target\":\"e_0\"} | p_hero:127/156 mp22/25[] p_bartolo:113/142 mp13/25[sleep] p_marta:64/116 mp24/32[] p_sylvain:67/106 mp11/29[sleep] | e_0:142/299[]"
+   },
+   {
+    "f": 71276,
+    "t": 3567952,
+    "msg": "DBG r8 p_bartolo -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:127/156 mp22/25[] p_bartolo:113/142 mp13/25[sleep] p_marta:64/116 mp24/32[] p_sylvain:67/106 mp11/29[sleep] | e_0:142/299[]"
+   },
+   {
+    "f": 71280,
+    "t": 3568152,
+    "msg": "DBG r8 p_marta -> {\"cmd\":\"skill\",\"id\":\"t_staff_mind\",\"target\":\"e_0\"} | p_hero:127/156 mp22/25[] p_bartolo:113/142 mp13/25[sleep] p_marta:64/116 mp24/32[] p_sylvain:67/106 mp11/29[sleep] | e_0:142/299[]"
+   },
+   {
+    "f": 71286,
+    "t": 3568452,
+    "msg": "DBG r8 p_sylvain -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:127/156 mp22/25[] p_bartolo:113/142 mp13/25[sleep] p_marta:64/116 mp24/32[] p_sylvain:67/106 mp11/29[sleep] | e_0:142/299[]"
+   },
+   {
+    "f": 71455,
+    "t": 3576902,
+    "msg": "DBG r9 p_hero -> {\"cmd\":\"skill\",\"id\":\"t_sword_stepcut\",\"target\":\"e_0\"} | p_hero:106/156 mp20/25[] p_bartolo:93/142 mp13/25[sleep] p_marta:49/116 mp22/32[] p_sylvain:47/106 mp11/29[] | e_0:120/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 71461,
+    "t": 3577202,
+    "msg": "DBG r9 p_bartolo -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:106/156 mp20/25[] p_bartolo:93/142 mp13/25[sleep] p_marta:49/116 mp22/32[] p_sylvain:47/106 mp11/29[] | e_0:120/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 71463,
+    "t": 3577302,
+    "msg": "DBG r9 p_marta -> {\"cmd\":\"spell\",\"id\":\"s_light_1\",\"target\":\"p_marta\"} | p_hero:106/156 mp20/25[] p_bartolo:93/142 mp13/25[sleep] p_marta:49/116 mp22/32[] p_sylvain:47/106 mp11/29[] | e_0:120/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 71473,
+    "t": 3577802,
+    "msg": "DBG r9 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_twin\",\"target\":\"e_0\"} | p_hero:106/156 mp20/25[] p_bartolo:93/142 mp13/25[sleep] p_marta:49/116 mp22/32[] p_sylvain:47/106 mp11/29[] | e_0:120/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 71739,
+    "t": 3591102,
+    "msg": "DBG r10 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:72/156 mp20/25[sleep] p_bartolo:60/142 mp13/25[sleep] p_marta:87/116 mp19/32[] p_sylvain:13/106 mp8/29[] | e_0:90/299[]"
+   },
+   {
+    "f": 71743,
+    "t": 3591302,
+    "msg": "DBG r10 p_bartolo -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:72/156 mp20/25[sleep] p_bartolo:60/142 mp13/25[sleep] p_marta:87/116 mp19/32[] p_sylvain:13/106 mp8/29[] | e_0:90/299[]"
+   },
+   {
+    "f": 71745,
+    "t": 3591402,
+    "msg": "DBG r10 p_marta -> {\"cmd\":\"item\",\"id\":\"i_incense\",\"target\":\"p_hero\"} | p_hero:72/156 mp20/25[sleep] p_bartolo:60/142 mp13/25[sleep] p_marta:87/116 mp19/32[] p_sylvain:13/106 mp8/29[] | e_0:90/299[]"
+   },
+   {
+    "f": 71755,
+    "t": 3591902,
+    "msg": "DBG r10 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_twin\",\"target\":\"e_0\"} | p_hero:72/156 mp20/25[sleep] p_bartolo:60/142 mp13/25[sleep] p_marta:87/116 mp19/32[] p_sylvain:13/106 mp8/29[] | e_0:90/299[]"
+   },
+   {
+    "f": 71931,
+    "t": 3600702,
+    "msg": "DBG r11 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:122/156 mp20/25[sleep] p_bartolo:82/142 mp13/25[] p_marta:116/116 mp19/32[] p_sylvain:63/106 mp5/29[] | e_0:73/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 71933,
+    "t": 3600802,
+    "msg": "DBG r11 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_0\"} | p_hero:122/156 mp20/25[sleep] p_bartolo:82/142 mp13/25[] p_marta:116/116 mp19/32[] p_sylvain:63/106 mp5/29[] | e_0:73/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 71941,
+    "t": 3601202,
+    "msg": "DBG r11 p_marta -> {\"cmd\":\"skill\",\"id\":\"t_staff_mind\",\"target\":\"e_0\"} | p_hero:122/156 mp20/25[sleep] p_bartolo:82/142 mp13/25[] p_marta:116/116 mp19/32[] p_sylvain:63/106 mp5/29[] | e_0:73/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 71953,
+    "t": 3601802,
+    "msg": "DBG r11 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_twin\",\"target\":\"e_0\"} | p_hero:122/156 mp20/25[sleep] p_bartolo:82/142 mp13/25[] p_marta:116/116 mp19/32[] p_sylvain:63/106 mp5/29[] | e_0:73/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 72133,
+    "t": 3610802,
+    "msg": "DBG r12 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:109/156 mp20/25[sleep] p_bartolo:68/142 mp13/25[sleep] p_marta:105/116 mp19/32[sleep] p_sylvain:50/106 mp2/29[sleep] | e_0:55/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 72135,
+    "t": 3610902,
+    "msg": "DBG r12 p_bartolo -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:109/156 mp20/25[sleep] p_bartolo:68/142 mp13/25[sleep] p_marta:105/116 mp19/32[sleep] p_sylvain:50/106 mp2/29[sleep] | e_0:55/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 72139,
+    "t": 3611102,
+    "msg": "DBG r12 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:109/156 mp20/25[sleep] p_bartolo:68/142 mp13/25[sleep] p_marta:105/116 mp19/32[sleep] p_sylvain:50/106 mp2/29[sleep] | e_0:55/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 72145,
+    "t": 3611402,
+    "msg": "DBG r12 p_sylvain -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:109/156 mp20/25[sleep] p_bartolo:68/142 mp13/25[sleep] p_marta:105/116 mp19/32[sleep] p_sylvain:50/106 mp2/29[sleep] | e_0:55/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 72323,
+    "t": 3620302,
+    "msg": "DBG r13 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:96/156 mp20/25[sleep] p_bartolo:55/142 mp13/25[] p_marta:60/116 mp19/32[] p_sylvain:36/106 mp2/29[sleep] | e_0:55/299[]"
+   },
+   {
+    "f": 72325,
+    "t": 3620402,
+    "msg": "DBG r13 p_bartolo -> {\"cmd\":\"item\",\"id\":\"i_salve\",\"target\":\"p_sylvain\"} | p_hero:96/156 mp20/25[sleep] p_bartolo:55/142 mp13/25[] p_marta:60/116 mp19/32[] p_sylvain:36/106 mp2/29[sleep] | e_0:55/299[]"
+   },
+   {
+    "f": 72347,
+    "t": 3621502,
+    "msg": "DBG r13 p_marta -> {\"cmd\":\"spell\",\"id\":\"s_light_1\",\"target\":\"p_bartolo\"} | p_hero:96/156 mp20/25[sleep] p_bartolo:55/142 mp13/25[] p_marta:60/116 mp19/32[] p_sylvain:36/106 mp2/29[sleep] | e_0:55/299[]"
+   },
+   {
+    "f": 72361,
+    "t": 3622202,
+    "msg": "DBG r13 p_sylvain -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:96/156 mp20/25[sleep] p_bartolo:55/142 mp13/25[] p_marta:60/116 mp19/32[] p_sylvain:36/106 mp2/29[sleep] | e_0:55/299[]"
+   },
+   {
+    "f": 72480,
+    "t": 3628152,
+    "msg": "DBG r14 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:96/156 mp20/25[sleep] p_bartolo:90/142 mp13/25[] p_marta:60/116 mp16/32[] p_sylvain:66/106 mp2/29[sleep] | e_0:55/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 72482,
+    "t": 3628252,
+    "msg": "DBG r14 p_bartolo -> {\"cmd\":\"skill\",\"id\":\"t_greatsword_overhead\",\"target\":\"e_0\"} | p_hero:96/156 mp20/25[sleep] p_bartolo:90/142 mp13/25[] p_marta:60/116 mp16/32[] p_sylvain:66/106 mp2/29[sleep] | e_0:55/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 72492,
+    "t": 3628752,
+    "msg": "DBG r14 p_marta -> {\"cmd\":\"skill\",\"id\":\"t_staff_mind\",\"target\":\"e_0\"} | p_hero:96/156 mp20/25[sleep] p_bartolo:90/142 mp13/25[] p_marta:60/116 mp16/32[] p_sylvain:66/106 mp2/29[sleep] | e_0:55/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 72500,
+    "t": 3629152,
+    "msg": "DBG r14 p_sylvain -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:96/156 mp20/25[sleep] p_bartolo:90/142 mp13/25[] p_marta:60/116 mp16/32[] p_sylvain:66/106 mp2/29[sleep] | e_0:55/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 72681,
+    "t": 3638202,
+    "msg": "DBG r15 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:82/156 mp20/25[sleep] p_bartolo:77/142 mp13/25[sleep] p_marta:49/116 mp16/32[sleep] p_sylvain:52/106 mp2/29[sleep] | e_0:55/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 72683,
+    "t": 3638302,
+    "msg": "DBG r15 p_bartolo -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:82/156 mp20/25[sleep] p_bartolo:77/142 mp13/25[sleep] p_marta:49/116 mp16/32[sleep] p_sylvain:52/106 mp2/29[sleep] | e_0:55/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 72687,
+    "t": 3638502,
+    "msg": "DBG r15 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:82/156 mp20/25[sleep] p_bartolo:77/142 mp13/25[sleep] p_marta:49/116 mp16/32[sleep] p_sylvain:52/106 mp2/29[sleep] | e_0:55/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 72693,
+    "t": 3638802,
+    "msg": "DBG r15 p_sylvain -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:82/156 mp20/25[sleep] p_bartolo:77/142 mp13/25[sleep] p_marta:49/116 mp16/32[sleep] p_sylvain:52/106 mp2/29[sleep] | e_0:55/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 72933,
+    "t": 3650802,
+    "msg": "DBG r16 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:48/156 mp20/25[sleep] p_bartolo:42/142 mp13/25[] p_marta:22/116 mp16/32[] p_sylvain:17/106 mp2/29[] | e_0:55/299[]"
+   },
+   {
+    "f": 72935,
+    "t": 3650902,
+    "msg": "DBG r16 p_bartolo -> {\"cmd\":\"item\",\"id\":\"i_salve\",\"target\":\"p_sylvain\"} | p_hero:48/156 mp20/25[sleep] p_bartolo:42/142 mp13/25[] p_marta:22/116 mp16/32[] p_sylvain:17/106 mp2/29[] | e_0:55/299[]"
+   },
+   {
+    "f": 72943,
+    "t": 3651302,
+    "msg": "DBG r16 p_marta -> {\"cmd\":\"spell\",\"id\":\"s_light_1\",\"target\":\"p_marta\"} | p_hero:48/156 mp20/25[sleep] p_bartolo:42/142 mp13/25[] p_marta:22/116 mp16/32[] p_sylvain:17/106 mp2/29[] | e_0:55/299[]"
+   },
+   {
+    "f": 72953,
+    "t": 3651802,
+    "msg": "DBG r16 p_sylvain -> {\"cmd\":\"item\",\"id\":\"i_salve\",\"target\":\"p_bartolo\"} | p_hero:48/156 mp20/25[sleep] p_bartolo:42/142 mp13/25[] p_marta:22/116 mp16/32[] p_sylvain:17/106 mp2/29[] | e_0:55/299[]"
+   },
+   {
+    "f": 73105,
+    "t": 3659402,
+    "msg": "DBG r17 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:48/156 mp20/25[sleep] p_bartolo:43/142 mp13/25[] p_marta:87/116 mp13/32[] p_sylvain:47/106 mp2/29[] | e_0:55/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 73107,
+    "t": 3659502,
+    "msg": "DBG r17 p_bartolo -> {\"cmd\":\"item\",\"id\":\"i_salve\",\"target\":\"p_bartolo\"} | p_hero:48/156 mp20/25[sleep] p_bartolo:43/142 mp13/25[] p_marta:87/116 mp13/32[] p_sylvain:47/106 mp2/29[] | e_0:55/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 73117,
+    "t": 3660002,
+    "msg": "DBG r17 p_marta -> {\"cmd\":\"spell\",\"id\":\"s_light_1\",\"target\":\"p_hero\"} | p_hero:48/156 mp20/25[sleep] p_bartolo:43/142 mp13/25[] p_marta:87/116 mp13/32[] p_sylvain:47/106 mp2/29[] | e_0:55/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 73127,
+    "t": 3660502,
+    "msg": "DBG r17 p_sylvain -> {\"cmd\":\"skill\",\"id\":\"t_bow_rapid\",\"target\":\"e_0\"} | p_hero:48/156 mp20/25[sleep] p_bartolo:43/142 mp13/25[] p_marta:87/116 mp13/32[] p_sylvain:47/106 mp2/29[] | e_0:55/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 73313,
+    "t": 3669802,
+    "msg": "DBG r18 p_hero -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:35/156 mp20/25[sleep] p_bartolo:29/142 mp13/25[sleep] p_marta:76/116 mp13/32[sleep] p_sylvain:33/106 mp0/29[] | e_0:42/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 73315,
+    "t": 3669902,
+    "msg": "DBG r18 p_bartolo -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:35/156 mp20/25[sleep] p_bartolo:29/142 mp13/25[sleep] p_marta:76/116 mp13/32[sleep] p_sylvain:33/106 mp0/29[] | e_0:42/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 73319,
+    "t": 3670102,
+    "msg": "DBG r18 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:35/156 mp20/25[sleep] p_bartolo:29/142 mp13/25[sleep] p_marta:76/116 mp13/32[sleep] p_sylvain:33/106 mp0/29[] | e_0:42/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 73323,
+    "t": 3670302,
+    "msg": "DBG r18 p_sylvain -> {\"cmd\":\"item\",\"id\":\"i_salve\",\"target\":\"p_bartolo\"} | p_hero:35/156 mp20/25[sleep] p_bartolo:29/142 mp13/25[sleep] p_marta:76/116 mp13/32[sleep] p_sylvain:33/106 mp0/29[] | e_0:42/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 73504,
+    "t": 3679352,
+    "msg": "DBG r19 p_bartolo -> {\"cmd\":\"item\",\"id\":\"i_salve\",\"target\":\"p_sylvain\"} | p_hero:0/156 mp20/25[] p_bartolo:46/142 mp13/25[] p_marta:65/116 mp13/32[sleep] p_sylvain:18/106 mp0/29[sleep] | e_0:42/299[]"
+   },
+   {
+    "f": 73516,
+    "t": 3679952,
+    "msg": "DBG r19 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:0/156 mp20/25[] p_bartolo:46/142 mp13/25[] p_marta:65/116 mp13/32[sleep] p_sylvain:18/106 mp0/29[sleep] | e_0:42/299[]"
+   },
+   {
+    "f": 73518,
+    "t": 3680052,
+    "msg": "DBG r19 p_sylvain -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:0/156 mp20/25[] p_bartolo:46/142 mp13/25[] p_marta:65/116 mp13/32[sleep] p_sylvain:18/106 mp0/29[sleep] | e_0:42/299[]"
+   },
+   {
+    "f": 73617,
+    "t": 3685002,
+    "msg": "DBG r20 p_bartolo -> {\"cmd\":\"item\",\"id\":\"i_salve\",\"target\":\"p_bartolo\"} | p_hero:0/156 mp20/25[] p_bartolo:46/142 mp13/25[] p_marta:45/116 mp13/32[sleep] p_sylvain:48/106 mp0/29[sleep] | e_0:42/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 73625,
+    "t": 3685402,
+    "msg": "DBG r20 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:0/156 mp20/25[] p_bartolo:46/142 mp13/25[] p_marta:45/116 mp13/32[sleep] p_sylvain:48/106 mp0/29[sleep] | e_0:42/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 73627,
+    "t": 3685502,
+    "msg": "DBG r20 p_sylvain -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:0/156 mp20/25[] p_bartolo:46/142 mp13/25[] p_marta:45/116 mp13/32[sleep] p_sylvain:48/106 mp0/29[sleep] | e_0:42/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 73751,
+    "t": 3691702,
+    "msg": "DBG r21 p_bartolo -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:0/156 mp20/25[] p_bartolo:33/142 mp13/25[sleep] p_marta:35/116 mp13/32[] p_sylvain:34/106 mp0/29[sleep] | e_0:42/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 73755,
+    "t": 3691902,
+    "msg": "DBG r21 p_marta -> {\"cmd\":\"spell\",\"id\":\"s_light_1\",\"target\":\"p_bartolo\"} | p_hero:0/156 mp20/25[] p_bartolo:33/142 mp13/25[sleep] p_marta:35/116 mp13/32[] p_sylvain:34/106 mp0/29[sleep] | e_0:42/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 73767,
+    "t": 3692502,
+    "msg": "DBG r21 p_sylvain -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:0/156 mp20/25[] p_bartolo:33/142 mp13/25[sleep] p_marta:35/116 mp13/32[] p_sylvain:34/106 mp0/29[sleep] | e_0:42/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 73953,
+    "t": 3701802,
+    "msg": "DBG r22 p_marta -> {\"cmd\":\"skill\",\"id\":\"t_staff_mind\",\"target\":\"e_0\"} | p_hero:0/156 mp20/25[] p_bartolo:0/142 mp13/25[] p_marta:73/116 mp10/32[] p_sylvain:0/106 mp0/29[] | e_0:42/299[]"
+   },
+   {
+    "f": 74075,
+    "t": 3707902,
+    "msg": "DBG r23 p_marta -> {\"cmd\":\"skill\",\"id\":\"t_staff_mindcrush\",\"target\":\"e_0\"} | p_hero:0/156 mp20/25[] p_bartolo:0/142 mp13/25[] p_marta:66/116 mp8/32[poison] p_sylvain:0/106 mp0/29[] | e_0:33/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 74173,
+    "t": 3712802,
+    "msg": "DBG r24 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:0/156 mp20/25[] p_bartolo:0/142 mp13/25[] p_marta:49/116 mp8/32[poison,sleep] p_sylvain:0/106 mp0/29[] | e_0:33/299 R=eb_sleep_dust[]"
+   },
+   {
+    "f": 74269,
+    "t": 3717602,
+    "msg": "DBG r25 p_marta -> {\"cmd\":\"defend\",\"id\":null,\"target\":null} | p_hero:0/156 mp20/25[] p_bartolo:0/142 mp13/25[] p_marta:14/116 mp8/32[poison,sleep] p_sylvain:0/106 mp0/29[] | e_0:33/299[]"
+   },
+   {
+    "f": 74349,
+    "t": 3721602,
     "msg": "lost again (2) tr_b_moth"
    },
    {
-    "f": 71513,
-    "t": 3580400,
+    "f": 74349,
+    "t": 3721602,
     "msg": "lost twice to tr_b_moth → inn and grind 12 battles"
    },
    {
-    "f": 71533,
-    "t": 3581400,
-    "msg": "after wipe: gold 1313 → 656 at fern"
+    "f": 74363,
+    "t": 3722302,
+    "msg": "DBG moth end {\"troop\":\"tr_b_moth\",\"zone\":null,\"boss\":true,\"map\":\"verda_2\",\"gold\":1415,\"rounds\":26,\"lose\":false,\"f\":66585,\"t0\":3333401.942178811,\"lost\":2,\"wiped\":true,\"result\":\"abort\",\"to\":\"inn\",\"ms\":388900}"
    },
    {
-    "f": 78512,
-    "t": 3930350,
-    "msg": "grind done"
-   },
-   {
-    "f": 85702,
-    "t": 4289850,
-    "msg": "gameover → retry"
-   },
-   {
-    "f": 88758,
-    "t": 4442650,
-    "msg": "lost again (2) tr_b_moth"
-   },
-   {
-    "f": 88758,
-    "t": 4442650,
-    "msg": "lost twice to tr_b_moth → inn and grind 12 battles"
-   },
-   {
-    "f": 88778,
-    "t": 4443650,
-    "msg": "after wipe: gold 968 → 484 at fern"
-   },
-   {
-    "f": 96502,
-    "t": 4829850,
-    "msg": "grind done"
-   },
-   {
-    "f": 102564,
-    "t": 5132950,
-    "msg": "gameover → retry"
-   },
-   {
-    "f": 106630,
-    "t": 5336250,
-    "msg": "lost again (2) tr_b_moth"
-   },
-   {
-    "f": 106630,
-    "t": 5336250,
-    "msg": "lost twice to tr_b_moth → inn and grind 12 battles"
-   },
-   {
-    "f": 106650,
-    "t": 5337250,
-    "msg": "after wipe: gold 877 → 438 at fern"
-   },
-   {
-    "f": 113528,
-    "t": 5681150,
-    "msg": "grind done"
-   },
-   {
-    "f": 121764,
-    "t": 6092950,
-    "msg": "gameover → retry"
-   },
-   {
-    "f": 125043,
-    "t": 6256900,
-    "msg": "lost again (2) tr_b_moth"
-   },
-   {
-    "f": 125043,
-    "t": 6256900,
-    "msg": "lost twice to tr_b_moth → inn and grind 12 battles"
-   },
-   {
-    "f": 125063,
-    "t": 6257900,
-    "msg": "FAIL goal moth timed out"
+    "f": 74363,
+    "t": 3722302,
+    "msg": "FAIL dbg stop after moth"
    }
   ],
   "dev": false
@@ -2534,12 +2750,12 @@
     "x": 24,
     "y": 16
    },
-   "frames": 1209
+   "frames": 1342
   },
   "party": {
    "map": "pharos_tavern"
   },
-  "moves": 62
+  "moves": 52
  },
  "estimate": {
   "K": {
@@ -2550,15 +2766,15 @@
    "op": 1
   },
   "prologue": {
-   "steps": 1274,
-   "zako": 17,
+   "steps": 1337,
+   "zako": 24,
    "bosses": [
-    "tr_b_pageeater:11r"
+    "tr_b_pageeater:12r"
    ],
-   "chars": 2336,
-   "ops": 48,
-   "hours": 0.38,
-   "playHours": 0.23
+   "chars": 2359,
+   "ops": 49,
+   "hours": 0.47,
+   "playHours": 0.25
   },
   "forest": null,
   "target": {
@@ -2572,5 +2788,5 @@
    ]
   }
  },
- "wallSec": 1196
+ "wallSec": 689
 }

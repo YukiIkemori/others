@@ -51,6 +51,8 @@ function domainOf(rel) {
   const p = rel.replace(/^src\//, '');
   const base = path.basename(p, '.js');
   const [top] = p.split('/');
+  // 終盤（final_*・*_finale・screens/ending）の文は終盤の表へ（地図は maps_final、ほかは events_final）
+  if (/^final_|_finale$/.test(base) || (top === 'screens' && base === 'ending')) return top === 'maps' ? 'maps_final' : 'events_final';
   if (top === 'data') {
     if (/^items_/.test(base)) return 'items';
     if (/^techs_/.test(base)) return 'techs';

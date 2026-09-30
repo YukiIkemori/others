@@ -24,4 +24,6 @@
   });
   if (T.tr_b_icegiant) T.tr_b_icegiant.bg = 'snow';
   if (T.tr_b_whitedragon) T.tr_b_whitedragon.bg = 'snow';
+  // ティア 1（2 つ目の地方）だけ HP を 3% 軽く（2026-09-30: 台本が 13.1 ラウンドで地方ボスの幅 8〜13 を越えた。ティア 0・3 はそのまま。battle_core の troop.hpAt）
+  if (T.tr_b_whitedragon) T.tr_b_whitedragon.hpAt = { 1: 0.97 };
 })(window.RPG);

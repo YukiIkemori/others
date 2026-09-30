@@ -1,0 +1,184 @@
+{
+"id": "archive_6",
+"w": 36,
+"h": 32,
+"rows": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~XXXXXXXXXXXX~~~~~~~~~~~~",
+"~~~~~~~~~XXXXXXXccccXXXXXXX~~~~~~~~~",
+"~~~~~~~XXXXXccccccccccccXXXXX~~~~~~~",
+"~~~~~~XXXccccccccccccccccccXXX~~~~~~",
+"~~~~~XXXcccccccccXXcccccccccXXX~~~~~",
+"~~~~XXXccccccccccccccccccccccXXX~~~~",
+"~~~XXXccccccccccccccccccccccccXXX~~~",
+"~~~XXccccccccccccccccccccccccccXX~~~",
+"~~XXccccccccccccccccccccccccccccXX~~",
+"~~XXccccccccccccccccccccccccccccXX~~",
+"~~XXccccccccccccccccccccccccccccXX~~",
+"~~XXccccccccccccccccccccccccccccXX~~",
+"~~XXccccccccccccccccccccccccccccXX~~",
+"~~XXccccccccccccccccccccccccccccXX~~",
+"~~XXccccccccccccccccccccccccccccXX~~",
+"~~XXccccccccccccccccccccccccccccXX~~",
+"~~~XXccccccccccccccccccccccccccXX~~~",
+"~~~XXXccccccccccccccccccccccccXXX~~~",
+"~~~~XXXccccccccccccccccccccccXXX~~~~",
+"~~~~~XXXccccccccccccccccccccXXX~~~~~",
+"~~~~~~XXXccccccccccccccccccXXX~~~~~~",
+"~~~~~~~XXXXXccccccccccccXXXXX~~~~~~~",
+"~~~~~~~~~XXXXXXXXccXXXXXXXX~~~~~~~~~",
+"~~~~~~~~~~~~XXXccccccXXX~~~~~~~~~~~~",
+"~~~~~~~~~~~~~XXccccccXX~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~XXccccccXX~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~XXccccccXX~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~XXccccccXX~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~XXccccccXX~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~XXXXXXXXXX~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+],
+"marks": [
+{
+"kind": "altar",
+"cells": [
+[
+17,
+5
+],
+[
+18,
+5
+]
+],
+"text": "a white stone ALTAR on a round raised dais of three steps, a huge ancient open BOOK lying on it (the Chronicle of Beginnings)",
+"color": [
+236,
+228,
+200
+],
+"solid": true
+},
+{
+"kind": "stairsdown",
+"cells": [
+[
+17,
+29
+],
+[
+18,
+29
+]
+],
+"text": "a white marble STAIRCASE going down (walkable)",
+"color": [
+200,
+196,
+186
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 17,
+"y": 28
+},
+{
+"type": "o",
+"x": 18,
+"y": 28
+},
+{
+"type": "o",
+"x": 17,
+"y": 7
+},
+{
+"type": "o",
+"x": 18,
+"y": 7
+},
+{
+"type": "o",
+"x": 17,
+"y": 12
+},
+{
+"type": "o",
+"x": 18,
+"y": 16
+},
+{
+"type": "o",
+"x": 16,
+"y": 26
+},
+{
+"type": "o",
+"x": 19,
+"y": 26
+}
+],
+"spawns": {
+"from5": {
+"x": 17,
+"y": 27,
+"dir": "n"
+},
+"altar": {
+"x": 17,
+"y": 6,
+"dir": "n"
+}
+},
+"exits": [],
+"notes": [],
+"meta": {
+"name": "白の大書庫",
+"region": "finale",
+"zones": [],
+"worldRect": [
+0,
+0,
+1,
+1
+],
+"look": "int",
+"smooth": 0.45
+},
+"rows_fit": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXccccXXccccXXXXXXXXXXXX~",
+"~XXXXXXXXXXccccccXXcccccccXXXXXXXXX~",
+"~XXXXXXXXccccccccccccccccccXXXXXXXX~",
+"~XXXXXXccccccccccccccccccccccXXXXXX~",
+"~XXXXXccccccccccccccccccccccccXXXXX~",
+"~XXXXccccccccccccccccccccccccccXXXX~",
+"~XXXXccccccccccccccccccccccccccXXXX~",
+"~XXXccccccccccccccccccccccccccccXXX~",
+"~XXXcccccccccccccccccccccccccccccXX~",
+"~XXccccccccccccccccccccccccccccccXX~",
+"~XXccccccccccccccccccccccccccccccXX~",
+"~XXccccccccccccccccccccccccccccccXX~",
+"~XXccccccccccccccccccccccccccccccXX~",
+"~XXccccccccccccccccccccccccccccccXX~",
+"~XXccccccccccccccccccccccccccccccXX~",
+"~XXXccccccccccccccccccccccccccccXXX~",
+"~XXXXccccccccccccccccccccccccccXXXX~",
+"~XXXXXcccccccccccccccccccccccccXXXX~",
+"~XXXXXXccccccccccccccccccccccXXXXXX~",
+"~XXXXXXXccccccccccccccccccccXXXXXXX~",
+"~XXXXXXXXXXXccccccccccccXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXccccXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXccccccXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXccccccXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXccccccXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXccccccXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXccccccXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXcccccXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+]
+}

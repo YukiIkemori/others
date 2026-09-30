@@ -301,7 +301,7 @@
       this.golden = !!(d.golden || e.golden) && !!d.golden;
       this.summoned = !!e.summoned;
       this.base = d.name; this.name = d.name;
-      this.hp = this.mhp = Math.max(1, d.hp | 0);
+      this.hp = this.mhp = Math.max(1, Math.round((d.hp | 0) * ((eng && eng.hpMul) || 1)));
       this.mp = this.mmp = 0;
       this.status = {};
       this.flags = (d.flags || []).slice();
@@ -363,6 +363,9 @@
       this.inv = o.inv || {};
       this.tier = o.tier != null ? o.tier : tierNow();
       this.dark = !!o.dark;
+      // 編成のティアごとの HP の倍率（troop.hpAt = {ティア: 倍率}）。好きな順に遊ぶ地方のボスを、いちばん早いティアで長引かせない（sim_bosses）
+      const tr = o.troop && DB.troops[o.troop];
+      this.hpMul = (tr && tr.hpAt && tr.hpAt[this.tier]) || 1;
       const entries = (o.mons || []).map((e) => (typeof e === 'string' ? { id: e } : Object.assign({}, e))).filter((e) => {
         if (DB.monsters[e.id]) return true;
         R.warn('battle: unknown monster', e.id);
@@ -631,6 +634,16 @@
         return;
       }
       yield { t: 'actor', u };
+      // 終盤: ためらい（setup.hesitate = {id, msg}。STORY_BIBLE §5.1: 年代記の痛みを見たラザロは、最初の手番だけ何もしない）
+      const hz = this.o.hesitate;
+      if (hz && !u.isParty && u.id === hz.id && this.round === 1 && !u.hesitated) {
+        u.hesitated = true;
+        yield this.m(String(hz.msg || '').replace(/\{name\}/g, u.name));
+        yield* this.afterAction();
+        if (!this.checkEnd()) yield* this.endTurn(u);
+        u.acts++;
+        return;
+      }
       const dis = u.disabled();
       if (dis) {
         yield this.m(SKIP_MSG[dis] ? SKIP_MSG[dis](u.name) : R.T('sys.battle_core.turn.m', { name: u.name }));
@@ -2077,7 +2090,7 @@
     const eng = new Engine({
       party: copies, mons: res.mons, inv: clone((G && G.items) || {}), gold: (G && G.gold) || 0, rng,
       noEscape: !!(setup.noEscape || (troop && troop.noEscape)), canLose: !!(setup.canLose || (troop && troop.canLose)),
-      surprise: setup.surprise, noSurprise: res.kind !== 'zone',
+      surprise: setup.surprise, noSurprise: res.kind !== 'zone', hesitate: setup.hesitate || null,
       tier: res.Tb, lv: res.Lb, glimmerForce: setup.glimmerForce, zone: setup.zone, troop: setup.troop, rare: res.rare, dark: !!setup.dark,
     });
     const heroName = () => {
@@ -2364,7 +2377,7 @@
         party, mons: r0.mons, inv, gold: o.gold || 0, rng,
         noEscape: !!(o.noEscape || (troop && troop.noEscape)), canLose: !!o.canLose,
         surprise: o.surprise, noSurprise: o.surprise === undefined ? r0.kind !== 'zone' : undefined,
-        tier: r0.Tb, lv: r0.Lb, glimTier: o.glimTier != null ? o.glimTier : r0.Tb, glimmerForce: o.glimmerForce, dark: !!o.dark,
+        tier: r0.Tb, lv: r0.Lb, glimTier: o.glimTier != null ? o.glimTier : r0.Tb, glimmerForce: o.glimmerForce, dark: !!o.dark, troop: o.troop,
       });
       const log = o.log ? [] : null;
       const events = o.events ? [] : null;

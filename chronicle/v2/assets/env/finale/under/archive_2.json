@@ -1,0 +1,20 @@
+{
+ "id": "archive_2",
+ "kind": "under",
+ "map": "archive_2",
+ "tile": 32,
+ "size32": [
+  1408,
+  1152
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.9,
+ "files": {
+  "24": "archive_2@24.png",
+  "32": "archive_2@32.png",
+  "40": "archive_2@40.png"
+ },
+ "src": "generated"
+}

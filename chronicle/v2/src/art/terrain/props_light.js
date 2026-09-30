@@ -129,7 +129,7 @@
           L(fx, fy - 8 * s, 44, S.crystalColor, 0.45, 'pool', 'stairs', o.id);
           break;
         case 'prop': {
-          const meta = T._PROP_META[o.id];
+          const meta = T._propLightMeta(o.id);
           if (!meta || !meta.light) break;
           const spec = T._lightSpec(meta.light, false);
           const a = (T._setAnchor && T._setAnchor(map, o.id, s)) || anchorOf(o.id, s);   // テーマの描き直した物は絵の灯りの芯（props.js）
@@ -141,7 +141,7 @@
           const km = meta.light.k != null ? meta.light.k : 1;
           // 火の描き直し（砂漠の置きかがり火）は光だまりを控えめに・芯の点の光は無し（足もとに焼いた小さな絵が白く飛ばない）
           L(lx, fy - 4 * s, spec.r, color, spec.k * (fire ? 0.6 : 1.2) * km, 'pool', spec.kind, o.id + '@' + o.x + ',' + o.y);
-          if (!fire && /lamp|lantern|beacon|torch|crystal|stove|fireplace|candelabra|sconce/.test(o.id)) L(lx, ly, 24, color, 0.7, 'point', spec.kind, o.id);
+          if (!fire && meta.light.point !== false && /lamp|lantern|beacon|torch|crystal|stove|fireplace|candelabra|sconce/.test(o.id)) L(lx, ly, 24, color, 0.7, 'point', spec.kind, o.id);
           const soft = /crystal|mushroom|songstone/.test(o.id);
           if (fire) { G(lx, ly, { r: 14 * s, core: 1.5 * s, halo: 14 * s, color, k: 0.6, type: 'fire', flick: FIRE_FLICK }); break; }   // 小さな火: にじみは炎のまわりだけ（鉢と脚の絵を白く飛ばさない）
           const gr = meta.light.glow != null ? meta.light.glow : o.id === 'beacon' ? 60 : soft ? 18 : 22;
@@ -153,9 +153,35 @@
     }
     return out;
   };
+  // 地方の描いた物（env）と光だけの物（*_glow）の灯り（2026-09-30）: 地方の kit は R.DB.props に light を書くが、灯りの一覧は META の light を見る。
+  //   META に light が無い物は R.DB.props の light を写す。ただし kit の半径そのままでは諸島・高原・湿原が白く飛んだので、物ごとの値をここに持つ
+  //   （r = 光だまりの半径 32 の px、k = 濃さの倍率、glow = 芯のにじみの半径、colors = 色、point: false = 芯の点の光なし。描いた柱が白く飛ぶ）。表に無い物は半径を半分・濃さ 0.5 の控えめな値
+  const ENV_LIGHT = {
+    star_lamp: { r: 50, k: 0.35, glow: 6, point: false, colors: ['#c4dcff'] },                        // 高原の星灯（柱の上の星形のガラス）
+    star_glow: { r: 40, k: 0.16, glow: 0, point: false, colors: ['#9fb4ff'] },                         // 学院・塔の淡い星明かり（絵の無い光）
+    star_fire: { r: 96, k: 0.5, glow: 0, point: false },                                             // 塔の頂の火
+    wisp_lamp: { r: 50, k: 0.4, glow: 6, point: false, colors: ['#d4f4d0'] },                         // 湿原の鬼火のカンテラ
+    lamp_pillar: { r: 46, k: 0.3, glow: 6, point: false },                                           // 諸島の石の灯籠
+    glow_plankton: { r: 46, k: 0.45, glow: 0, point: false, colors: ['#62e0e8', '#7ad0ff'] },         // 洞窟の水の光る夜光虫
+    beacon_glow: { r: 120, k: 0.6, glow: 0, point: false },                                           // 灯台の灯室
+    lighthouse_glow: { r: 110, k: 0.6, glow: 0, point: false },                                       // 岬の灯台の灯
+    lava_glow: { r: 56, k: 0.35, glow: 0, point: false, colors: ['#ff7a3a'] },                        // 溶岩の照り返し（段が四角く浮かないよう、小さく淡く）
+  };
+  const envMeta = {};
+  /** 灯りを見る META（META に light が無ければ R.DB.props の light に ENV_LIGHT を重ねた物。1 回だけ作る） */
+  T._propLightMeta = function (id) {
+    const m = T._PROP_META[id];
+    if (m && m.light) return m;
+    if (envMeta[id] !== undefined) return envMeta[id];
+    const d = R.DB.props && R.DB.props[id];
+    if (!d || !d.light) return (envMeta[id] = m || null);
+    const tune = ENV_LIGHT[id] || { r: Math.round((+d.light.r || 60) * 0.5), k: 0.5, glow: 8 };
+    return (envMeta[id] = Object.assign({}, m || {}, { light: Object.assign({}, d.light, tune) }));
+  };
   // 物の灯りの芯の位置（DRAW の light の値。焼かずに知るため、よく使う物は表で持つ）
   const ANCHOR = { lamp_post: [5, -46], lantern: [0, -7], table: [4, -12], stove: [0, -6], mushroom_glow: [0, -5], crystal: [0, -12], torch: [0, -13], beacon: [0, -50], songstone: [0, -18], ship: [14, -86], firefly: [0, -12], snow_lamp: [7, -32], ice_crystal: [0, -8],
-    candelabra: [0, -35], fireplace: [16, -10], wall_sconce: [-3, -27] };
+    candelabra: [0, -35], fireplace: [16, -10], wall_sconce: [-3, -27],
+    star_lamp: [0, -35], wisp_lamp: [7, -28], lamp_pillar: [0, -29], glow_plankton: [0, -4], lava_glow: [0, -4] };
   function anchorOf(id, s) { const a = ANCHOR[id] || [0, -10]; return [a[0] * s, a[1] * s]; }
 
   /** 光の地図の後: 窓のガラス・開いた戸口・壁の灯りを明るく描き直す（ctx はチャンク、X0, Y0 だけずらして描く） */

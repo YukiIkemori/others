@@ -616,6 +616,9 @@
       const acts = abilityOptions(eng, u);
       const items = itemOptions(eng, u, plan, true, acts);
       const all = acts.concat(items);
+      // 0. 予約された大技を受けると倒れる人は、起こす・治すより先に守る（2026-09-30: 治す番の人が守らずに大技を受けて倒れ、
+      //    守れば 1 割も減らない予告〔lethal〕の地方ボスがティア 1 で 7〜9 割しか勝てなかった。sim_bosses）
+      if (tele.length && guardFor(u)) { cmds[u.idx] = { type: 'defend' }; continue; }
       // 1. 倒れた人・危ない人
       const rev = tryRevive(eng, u, all, plan);
       if (rev) { cmds[u.idx] = rev; continue; }

@@ -11,7 +11,8 @@
 //    年代記の選択 ch_<地方>_write がすべて渡る
 //  5 どの順でも: 森のあと、ほかの地方の解決（clearRegion）を 1 つも使わずに、それぞれの地方を解決できる（--quick で省く）
 //  6 体験版の錠（DB.config.slice）: 行けるのは序章・森・ワールドだけ。ほかの 7 つの地方のマップは R.DemoGate.isOpen が偽
-//  7 終盤（ビブリア島・白の大書庫・エンディング）: マップとイベントがあるか。まだ無ければ「未作成」と数える（失敗にはしない。--strict で失敗）
+//  7 終盤（ビブリア島・白の大書庫・エンディング）: マップとイベントがあり、4 の通しの閉包が T8 → 終盤 → エンディング（game_clear）に着き、終盤のマップにすべて入る。
+//    体験版では終盤のマップが閉じている（無ければ「未作成」と数える。--strict で失敗）
 'use strict';
 const { ok, section, done } = require('./lib/testkit');
 
@@ -225,16 +226,27 @@ ok('本物の設定は体験版（slice: true）', SLICE0 === true);
 // ---------------------------------------------------------------- 7 終盤
 section('7. 終盤（ビブリア島・白の大書庫・エンディング）');
 {
-  const finMaps = Object.keys(MAPS).filter((id) => /biblia|archive|final/.test(id));
-  const finEv = Object.keys(R.DB.events).filter((id) => /biblia|archive|ending|finale_(?!done)|story_t8/.test(id) && !/_finale_done$/.test(id));
-  const t8 = !!R.DB.events.story_t8;
-  const have = finMaps.length && finEv.length && t8;
+  const finMaps = Object.keys(MAPS).filter((id) => MAPS[id].region === 'finale');
+  const need = ['biblia', 'archive_1', 'archive_2', 'archive_3', 'archive_4', 'archive_5', 'archive_6', 'biblia_dawn', 'roa_dawn'];
+  const EVS = ['story_t8', 'story_final_roa', 'final_ferry', 'biblia_arrival', 'archive_2_boss', 'archive_3_rowell', 'archive_4_boss', 'archive_5_lazaro', 'archive_6_boss', 'final_ending'];
+  const have = need.every((id) => MAPS[id]) && EVS.every((id) => R.DB.events[id]);
   if (!have) {
-    const msg = `未作成: マップ ${finMaps.length}（biblia/archive）・イベント ${finEv.length}・story_t8 ${t8 ? 'あり' : 'なし'}（ティア 8 には着くが、その先の終盤とエンディングが v2 にまだ無い）`;
+    const msg = `未作成: マップ ${need.filter((id) => !MAPS[id]).join('・') || '-'}・イベント ${EVS.filter((id) => !R.DB.events[id]).join('・') || '-'}`;
     pending.push(msg);
     if (STRICT) ok('終盤の中身がある', false, msg);
     else console.log('  pending ' + msg);
-  } else ok(`終盤: マップ ${finMaps.join('・')}・イベント ${finEv.length}`, true);
+  } else {
+    ok(`終盤: マップ ${finMaps.length} 枚（${need.join('・')} ほか）・イベント ${EVS.length} 本`, true);
+    // 通し（4 の閉包）の続き: ティア 8 → T8 → 終盤のロア → ビブリア → 大書庫 → エンディング
+    const flags = ['story_t8', 'final_roa', 'final_open', 'final_arrived', 'final_rowell', 'final_shades', 'final_lazaro', 'game_clear'];
+    ok('通しの閉包が T8 から終盤を抜けてエンディングに着く（game_clear）', flags.every((f) => full.flags[f]), flags.filter((f) => !full.flags[f]));
+    ok('終盤のマップにすべて入る', finMaps.every((id) => full.visited.has(id)), finMaps.filter((id) => !full.visited.has(id)));
+    const T = R.DB.troops;
+    ok('終盤のボスの編成（本の巨人・三つの影・ラザロ・虚ろの王 2 形態）はティア 8', ['tr_b_bookgolem', 'tr_b_heroshades', 'tr_b_lazaro', 'tr_b_nemrea1', 'tr_b_nemrea2'].every((t) => T[t] && T[t].tier === 8));
+    // 体験版: 終盤のマップは閉じている（6 は 7 つの地方だけを数える）
+    R.DB.config.slice = SLICE0; R.MapUtil.invalidate();
+    ok('体験版（slice）では終盤のマップが閉じている', finMaps.every((id) => !R.DemoGate.isOpen(id)), finMaps.filter((id) => R.DemoGate.isOpen(id)));
+  }
 }
 
 R.DB.config.slice = SLICE0; R.MapUtil.invalidate();

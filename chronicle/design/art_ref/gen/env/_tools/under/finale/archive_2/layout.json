@@ -1,0 +1,726 @@
+{
+"id": "archive_2",
+"w": 44,
+"h": 36,
+"rows": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXccccccccccccccccccccccccccccccccccccccXX~",
+"~XXccccccccccccccccccccccccccccccccccccccXX~",
+"~XXcccccccccXXXXXXXXXccXXXXXXXXccccccccccXX~",
+"~XXccccccccccccccccccccccccccccccccccccccXX~",
+"~XXccccccccccccccccccccccccccccccccccccccXX~",
+"~XXcccccccccXXXXXXXXXccXXXXXXXXccccccccccXX~",
+"~XXccccccccccccccccccccccccccccccccccccccXX~",
+"~XXccccccccccccccccccccccccccccccccccccccXX~",
+"~XXXXcccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXcccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXccccccccccccccccccccccccccccccccccccccXX~",
+"~XXccccccccccccccccccccccccccccccccccccccXX~",
+"~XXcccccccXXXXXXXXXXXccXXXXXXXXXXXcccccccXX~",
+"~XXccccccccccccccccccccccccccccccccccccccXX~",
+"~XXccccccccccccccccccccccccccccccccccccccXX~",
+"~XXcccccccXXXXXXXXXXXccXXXXXXXXXXXcccccccXX~",
+"~XXccccccccccccccccccccccccccccccccccccccXX~",
+"~XXccccccccccccccccccccccccccccccccccccccXX~",
+"~XXccccccccccccccccccccccccccccccccccccccXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXcccXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXcccXXXX~",
+"~XXccccccccccccccccccccccccccccccccccccccXX~",
+"~XXccccccccccccccccccccccccccccccccccccccXX~",
+"~XXcuuucccXXXXXXXXXXXccXXXXXXXXXXXcccccccXX~",
+"~XXcuuuccccccccccccccccccccccccccccccccccXX~",
+"~XXcuuuccccccccccccccccccccccccccccccccccXX~",
+"~XXcuuucccXXXXXXXXXXXccXXXXXXXXXXXcccccccXX~",
+"~XXcuuuccccccccccccccccccccccccccccccccccXX~",
+"~XXccccccccccccccccccccccccccccccccccccccXX~",
+"~XXccccccccccccccccccccccccccccccccccccccXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+],
+"marks": [
+{
+"kind": "desks",
+"cells": [
+[
+10,
+26
+],
+[
+11,
+26
+],
+[
+12,
+26
+],
+[
+13,
+26
+],
+[
+14,
+26
+],
+[
+15,
+26
+],
+[
+16,
+26
+],
+[
+17,
+26
+],
+[
+18,
+26
+],
+[
+19,
+26
+],
+[
+20,
+26
+],
+[
+23,
+26
+],
+[
+24,
+26
+],
+[
+25,
+26
+],
+[
+26,
+26
+],
+[
+27,
+26
+],
+[
+28,
+26
+],
+[
+29,
+26
+],
+[
+30,
+26
+],
+[
+31,
+26
+],
+[
+32,
+26
+],
+[
+33,
+26
+],
+[
+10,
+29
+],
+[
+11,
+29
+],
+[
+12,
+29
+],
+[
+13,
+29
+],
+[
+14,
+29
+],
+[
+15,
+29
+],
+[
+16,
+29
+],
+[
+17,
+29
+],
+[
+18,
+29
+],
+[
+19,
+29
+],
+[
+20,
+29
+],
+[
+23,
+29
+],
+[
+24,
+29
+],
+[
+25,
+29
+],
+[
+26,
+29
+],
+[
+27,
+29
+],
+[
+28,
+29
+],
+[
+29,
+29
+],
+[
+30,
+29
+],
+[
+31,
+29
+],
+[
+32,
+29
+],
+[
+33,
+29
+],
+[
+10,
+15
+],
+[
+11,
+15
+],
+[
+12,
+15
+],
+[
+13,
+15
+],
+[
+14,
+15
+],
+[
+15,
+15
+],
+[
+16,
+15
+],
+[
+17,
+15
+],
+[
+18,
+15
+],
+[
+19,
+15
+],
+[
+20,
+15
+],
+[
+23,
+15
+],
+[
+24,
+15
+],
+[
+25,
+15
+],
+[
+26,
+15
+],
+[
+27,
+15
+],
+[
+28,
+15
+],
+[
+29,
+15
+],
+[
+30,
+15
+],
+[
+31,
+15
+],
+[
+32,
+15
+],
+[
+33,
+15
+],
+[
+10,
+18
+],
+[
+11,
+18
+],
+[
+12,
+18
+],
+[
+13,
+18
+],
+[
+14,
+18
+],
+[
+15,
+18
+],
+[
+16,
+18
+],
+[
+17,
+18
+],
+[
+18,
+18
+],
+[
+19,
+18
+],
+[
+20,
+18
+],
+[
+23,
+18
+],
+[
+24,
+18
+],
+[
+25,
+18
+],
+[
+26,
+18
+],
+[
+27,
+18
+],
+[
+28,
+18
+],
+[
+29,
+18
+],
+[
+30,
+18
+],
+[
+31,
+18
+],
+[
+32,
+18
+],
+[
+33,
+18
+],
+[
+12,
+5
+],
+[
+13,
+5
+],
+[
+14,
+5
+],
+[
+15,
+5
+],
+[
+16,
+5
+],
+[
+17,
+5
+],
+[
+18,
+5
+],
+[
+19,
+5
+],
+[
+20,
+5
+],
+[
+23,
+5
+],
+[
+24,
+5
+],
+[
+25,
+5
+],
+[
+26,
+5
+],
+[
+27,
+5
+],
+[
+28,
+5
+],
+[
+29,
+5
+],
+[
+30,
+5
+],
+[
+12,
+8
+],
+[
+13,
+8
+],
+[
+14,
+8
+],
+[
+15,
+8
+],
+[
+16,
+8
+],
+[
+17,
+8
+],
+[
+18,
+8
+],
+[
+19,
+8
+],
+[
+20,
+8
+],
+[
+23,
+8
+],
+[
+24,
+8
+],
+[
+25,
+8
+],
+[
+26,
+8
+],
+[
+27,
+8
+],
+[
+28,
+8
+],
+[
+29,
+8
+],
+[
+30,
+8
+]
+],
+"text": "long rows of wooden COPYING DESKS with inkwells, quills and stacks of blank white paper, seen from above",
+"color": [
+96,
+66,
+44
+],
+"solid": true
+},
+{
+"kind": "stairs",
+"cells": [
+[
+38,
+3
+],
+[
+39,
+3
+]
+],
+"text": "a broad white marble STAIRCASE going up (walkable)",
+"color": [
+200,
+196,
+186
+],
+"solid": false
+},
+{
+"kind": "stairsdown",
+"cells": [
+[
+4,
+32
+],
+[
+5,
+32
+]
+],
+"text": "a white marble STAIRCASE going down (walkable)",
+"color": [
+200,
+196,
+186
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 38,
+"y": 4
+},
+{
+"type": "o",
+"x": 39,
+"y": 4
+},
+{
+"type": "o",
+"x": 38,
+"y": 5
+},
+{
+"type": "o",
+"x": 4,
+"y": 31
+},
+{
+"type": "o",
+"x": 5,
+"y": 31
+},
+{
+"type": "o",
+"x": 37,
+"y": 22
+},
+{
+"type": "o",
+"x": 37,
+"y": 23
+},
+{
+"type": "o",
+"x": 6,
+"y": 11
+},
+{
+"type": "o",
+"x": 6,
+"y": 12
+},
+{
+"type": "o",
+"x": 20,
+"y": 17
+},
+{
+"type": "o",
+"x": 21,
+"y": 17
+},
+{
+"type": "o",
+"x": 8,
+"y": 20
+},
+{
+"type": "o",
+"x": 38,
+"y": 30
+},
+{
+"type": "o",
+"x": 4,
+"y": 14
+},
+{
+"type": "o",
+"x": 39,
+"y": 9
+}
+],
+"spawns": {
+"from1": {
+"x": 6,
+"y": 23,
+"dir": "n"
+},
+"from3": {
+"x": 37,
+"y": 3,
+"dir": "s"
+}
+},
+"exits": [],
+"notes": [],
+"meta": {
+"name": "白の大書庫",
+"region": "finale",
+"zones": [],
+"worldRect": [
+0,
+0,
+1,
+1
+],
+"look": "int"
+},
+"rows_fit": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXccXXXX~",
+"~XXXccccccccccccccccccccccccccccccccccccXXX~",
+"~XXXccccccccXXXXXXXXXXcXXXXXXXXXccccccccXXX~",
+"~XXXccccccccXXXXXXXXXXcXXXXXXXXXccccccccXXX~",
+"~XXXccccccccccccccccccccccccccccccccccccXXX~",
+"~XXXccccccccXXXXXXXXXXcXXXXXXXXXccccccccXXX~",
+"~XXXccccccccXXXXXXXXXXcXXXXXXXXXccccccccXXX~",
+"~XXXccccccccccccccccccccccccccccccccccccXXX~",
+"~XXXXccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXccccccccccccccccccccccccccccccccccccXXX~",
+"~XXXccccccXXXXXXXXXXXXcXXXXXXXXXXXccccccXXX~",
+"~XXXccccccXXXXXXXXXXXXcXXXXXXXXXXXccccccXXX~",
+"~XXXccccccccccccccccccccccccccccccccccccXXX~",
+"~XXXccccccXXXXXXXXXXXXcXXXXXXXXXXXccccccXXX~",
+"~XXXccccccccccccccccccccccccccccccccccccXXX~",
+"~XXXccccccccccccccccccccccccccccccccccccXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXccXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXccXXX~",
+"~XXXccccccccccccccccccccccccccccccccccccXXX~",
+"~XXXccccccccccccccccccccccccccccccccccccXXX~",
+"~XXXXccXccXXXXXXXXXXXXcXXXXXXXXXXXccccccXXX~",
+"~XXXXccXccXXXXXXXXXXXXcXXXXXXXXXXXccccccXXX~",
+"~XXXXccXccccccccccccccccccccccccccccccccXXX~",
+"~XXXXXXXccXXXXXXXXXXXXcXXXXXXXXXXXccccccXXX~",
+"~XXXXXXXccXXXXXXXXXXXXcXXXXXXXXXXXccccccXXX~",
+"~XXXXXXXccccccccccccccccccccccccccccccccXXX~",
+"~XXXXXXXccccccccccccccccccccccccccccccccXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+]
+}

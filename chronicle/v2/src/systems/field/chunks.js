@@ -280,7 +280,9 @@
     try {
       const pj = !canBake() ? null : S.stat.adopted && S.preDone ? null : R.Terrain.prewarm(S.map, { tile: S.chTile });
       const t1 = now();
-      while (pj && !pj.done && now() - t1 < 150) pj.step(4);
+      // 暗転の中ではマップ全体の下焼きを 30 ms まで（先頭の素材・面・高さの場）。残りの物の絵は列で焼く（見える範囲のチャンクは要る物をその場で焼く）。
+      // 2026-09-30: 150 ms まで回していた頃は、描いた大きな町（フェルン・コーラル・ユール）の初めての入りが下焼きだけで 150 ms を使い切っていた（test_field_slice）
+      while (pj && !pj.done && now() - t1 < 30) pj.step(4);
       if (pj && !pj.done) R.Hd.schedule(pj, 130);
     } catch (e) { console.error('[field] prewarm', e); }
     const v = CK.view(view), A = all();

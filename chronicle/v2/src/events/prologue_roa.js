@@ -252,10 +252,11 @@
 
   // ------------------------------------------------------------ ロアの onEnter
   D.roa_enter = {
-    meta: { needs: [], gives: [], calls: [] },
-    run: async () => {
-      // TODO(CONTENT-P・STORY_BIBLE §6.3・§12.2): T3 以降のロアの寄り道（ベルナが旅の話をせがむ）、T6 のロア（封書・客として迎える）、
-      // 終盤のロア（story_final_roa）をここから呼ぶ。縦切り（ティア 0〜1）では何もしない。
+    meta: { needs: [], gives: [], calls: ['story_final_roa'] },
+    run: async (ev) => {
+      // TODO(CONTENT-P・STORY_BIBLE §6.3・§12.2): T3 以降のロアの寄り道（ベルナが旅の話をせがむ）、T6 のロア（封書・客として迎える）。縦切り（ティア 0〜1）では何もしない。
+      // 終盤のロア（T8 の後、1 回。events/final_story.js）
+      if (ev.flag('story_t8') && !ev.flag('final_roa') && R.DB.events.story_final_roa) await ev.call('story_final_roa');
     },
   };
 })(window.RPG);

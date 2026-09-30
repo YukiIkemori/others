@@ -21,7 +21,7 @@
     O.actions = A([['attack', 2], ['eb_ink_cloud', 1, { every: [3, 0] }], ['eb_crush_hug', 2], ['eb_regrow', 2, { every: [3, 2], countBelow: 3 }],
       ['eb_whirl', 1], ['eb_octo_dive', SCHED, { every: [4, 1] }]]);
     O.desc = R.T('data.bosses_isles.desc');
-    O.s = { hp: 1.1, atk: 0.72, mag: 0.72 };
+    O.s = { hp: 1.18, atk: 0.72, mag: 0.72 };   // hp 1.1 → 1.18（2026-09-30: ティア 1 のリピートが 31% で目安 30% を越えた。sim_bosses）
   }
   const C = L.b_captain;
   if (C) {

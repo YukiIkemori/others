@@ -22,7 +22,7 @@ const argv = process.argv.slice(2);
 const VERBOSE = argv.includes('--verbose');
 let R = null, M = null;
 /** 縦切り（slice）では峠の番人の先にある地方（3b） */
-const SLICE_OUT = ['r_desert', 'r_snow', 'r_marsh', 'r_ash', 'r_isles', 'r_mine', 'r_star'];
+const SLICE_OUT = ['r_desert', 'r_snow', 'r_marsh', 'r_ash', 'r_isles', 'r_mine', 'r_star', 'finale'];   // finale = 終盤（ビブリア・白の大書庫・エンディングの朝の写し）
 let SLICE0 = null;
 /** 縦切りの錠を外す（同じ R の中だけ。本物の config のファイルは変えない） */
 function sliceOff() { if (SLICE0 === null) SLICE0 = !!(R.DB.config && R.DB.config.slice); if (R.DB.config) R.DB.config.slice = false; R.MapUtil.invalidate(); }
@@ -157,6 +157,8 @@ function closure(o) {
     }
     // T1: 宿か町に入ったとき（E17）
     if (G.cleared.r_forest && !G.flags.story_t1 && R.DB.events.story_t1 && reach.has('fern')) { applyGives('story_t1', variant, trace, 0); ran.add('story_t1'); changed = true; }
+    // T8: 8 つの地方を解決した後、宿か町に入ったとき（E17。events/final_story.js）→ 終盤（ロア → ビブリア → 白の大書庫 → エンディング）
+    if (R.DB.events.story_t8 && !G.flags.story_t8 && needsOk(R.DB.events.story_t8)) { applyGives('story_t8', variant, trace, 0); ran.add('story_t8'); changed = true; }
     if (!changed) break;
   }
   return { trace, cleared: !!G.cleared.r_forest, t1: !!G.flags.story_t1, visited, portalsOpen, ran, flags: Object.assign({}, G.flags), prologue: !!G.flags.prologue_done };
@@ -291,6 +293,21 @@ function main() {
           !!(r.flags.star_message && r.flags.star_ready && r.flags.star_night_seen && r.flags.star_chart_got && r.flags.star_octavia_done && r.flags.star_tower_open && r.flags.star_sentinel && r.flags.star_stareater && r.flags.cleared_r_star && r.flags.star_finale_done),
           { message: !!r.flags.star_message, ready: !!r.flags.star_ready, night: !!r.flags.star_night_seen, chart: !!r.flags.star_chart_got, tower: !!r.flags.star_tower_open, sentinel: !!r.flags.star_sentinel, eater: !!r.flags.star_stareater, cleared: !!r.flags.cleared_r_star });
       }
+    }
+    // 終盤（T8 → ロア → ファロスの船 → ビブリア → 白の大書庫 1〜6 階 → エンディング）: 8 地方を解決した全体の筋の続き
+    if (R.DB.events.story_t8) {
+      section('2i. 終盤の閉包（T8 → エンディング）');
+      const ALL8 = Object.assign({}, variants[0], { ch_snow_tale: 'dragon', ch_desert_hawk: 'water', ch_desert_route: 'long', ch_marsh_accuse: 'first', ch_ash_bribe: 'refuse',
+        ch_isles_wreck: 'help', ch_mine_side: 'accord', ch_star_order: 'public', ch_star_way: 'sneak', ch_lazaro_write: 'father' });
+      for (const rs of ['forest', 'desert', 'snow', 'marsh', 'isles', 'mine', 'ash', 'star']) ALL8['ch_' + rs + '_write'] = 'pain';
+      const r = closure({ variant: ALL8 });
+      const need = ['story_t8', 'st_fine_reveal', 'final_roa', 'final_open', 'final_sailed', 'final_arrived', 'final_golem', 'final_rowell', 'final_shades', 'final_lazaro', 'final_nemrea1', 'game_clear'];
+      const miss = need.filter((f) => !r.flags[f]);
+      ok(`T8 → 終盤のロア → ファロスの船 → ビブリア → 大書庫 1〜6 階（本の巨人・封印の扉・三つの影・ラザロ・虚ろの王）→ エンディング（game_clear）`, !miss.length, miss);
+      const fin = Object.keys(R.DB.maps).filter((id) => R.DB.maps[id].region === 'finale');
+      const unv = fin.filter((id) => !r.visited.has(id));
+      ok(`終盤のマップ ${fin.length} 枚にすべて入る（エンディングの朝の写しを含む）`, !unv.length, unv);
+      report.finale = { miss, unvisited: unv };
     }
     section('3. 全マップの到達（縦切りの錠を外した全体の筋）');
     open = closure({ variant: Object.assign({}, variants[0], { ch_snow_tale: 'dragon', ch_snow_write: 'pain', ch_desert_hawk: 'water', ch_desert_route: 'long', ch_desert_write: 'pain' }) });
