@@ -5,7 +5,7 @@
     // ---- src/data/bosses.js
     'data.bosses.LIST.b_pageeater.name': '噬页者',
     'data.bosses.LIST.b_pageeater.phases.0.msg': '噬页者的身体卷翘了起来！',
-    'data.bosses.LIST.b_pageeater.desc': '吃掉了灯塔守护之歌的\n纸之怪物。身上残留着文字。',
+    'data.bosses.LIST.b_pageeater.desc': '吃掉了灯塔的守望之歌的\n纸之怪物。身上残留着文字。',
     'data.bosses.LIST.b_moth.name': '尘翼',
     'data.bosses.LIST.b_moth.phases.0.msg': '尘翼的翅膀上\n喷出了鳞粉！',
     'data.bosses.LIST.b_moth.desc': '盘踞在迷失之森深处的大蛾。\n散播催眠与剧毒的鳞粉。',
