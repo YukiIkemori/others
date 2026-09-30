@@ -49,7 +49,7 @@
   UIK.wrap = function (s, w, o) {
     if (R.I18n && R.I18n.wrapsByWord()) return wrapWords(s, w, o);
     const out = [];
-    for (const para of String(s == null ? '' : s).split('\n')) {
+    for (const para of String(s == null ? '' : s).split(/[\n\f]/)) {  // '\f'（窓の区切り）は窓の外では改行と同じ
       const ch = [...para];
       let line = '';
       for (let i = 0; i < ch.length; i++) {
@@ -74,7 +74,7 @@
   function wrapWords(s, w, o) {
     const out = [];
     const CJK = /[　-ヿ㐀-鿿豈-﫿＀-￯]/;
-    for (const para of String(s == null ? '' : s).split('\n')) {
+    for (const para of String(s == null ? '' : s).split(/[\n\f]/)) {  // '\f'（窓の区切り）は窓の外では改行と同じ
       // 語（空白を含まない塊）と空白に分ける。CJK の字は 1 字を 1 語に
       const toks = [];
       for (const m of para.matchAll(/\s+|[^\s]+/g)) {

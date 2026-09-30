@@ -88,7 +88,7 @@
     'map.marsh_manor.marsh_manor_1.name': 'Mist Manor',
     'map.marsh_manor.marsh_manor_1.meta.floor': '1F',
     'map.marsh_manor.marsh_manor_1.meta.sub': 'The masterless manor',
-    'map.marsh_manor.sign_2': '-- The orchestra\'s conductor raises fallen musicians.\nThe conductor first. When the baton rises, brace yourself.\n(Someone\'s note)',
+    'map.marsh_manor.sign_2': '-- The orchestra\'s conductor raises the fallen.\nConductor first. When the baton rises, brace.\n(Someone\'s note)',
     'map.marsh_manor.marsh_manor_2.name': 'Mist Manor',
     'map.marsh_manor.marsh_manor_2.npcs.0.melda.name': 'Melda',
     'map.marsh_manor.marsh_manor_2.npcs.0.melda.title': 'Witch of Mist Manor',

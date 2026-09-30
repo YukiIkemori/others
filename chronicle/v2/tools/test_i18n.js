@@ -53,9 +53,10 @@ section('言語の切り替え（設定の lang・英語の表・日本語へ落
   ok('?lang=en: data names at load time (hero types) are English', E.I18n.lang() === 'en' && E.DB.heroTypes.warrior.name === 'Warrior', E.DB.heroTypes.warrior.name);
   ok('?lang=en: translated data (items) is English', E.DB.items.w_sword_iron.name === 'Iron Sword', E.DB.items.w_sword_iron.name);
   {
-    // 訳の無い key（会話はまだ訳さない）は日本語のまま
-    const k = E.I18n.keys('ja').find((x) => /^ev\./.test(x) && !E.I18n.has(x, 'en') && typeof E.I18n.table('ja')[x] === 'string');
-    ok('?lang=en: untranslated dialogue stays Japanese', !!k && E.T(k) === E.I18n.table('ja')[k], k);
+    // 訳の無い key は日本語のまま（本物の表は全部訳してあるので、日本語だけの試しの key を足して確かめる）
+    const k = 'ev.__test_i18n.ja_only.say';
+    E.I18n.add('ja', { [k]: '試しの台詞（日本語だけ）。' });
+    ok('?lang=en: untranslated dialogue stays Japanese', !E.I18n.has(k, 'en') && E.T(k) === '試しの台詞（日本語だけ）。', E.T(k));
   }
   ok('?lang=en: title is English', E.TITLE === 'Luminous Chronicle');
 }

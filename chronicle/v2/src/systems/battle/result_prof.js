@@ -1,6 +1,6 @@
 // BSCENE: 熟練度の見せ方（2026-09-27 の持ち主の報告「誰の何がどれだけ上がったのかが分からなすぎる」）。
 //   - 勝利の札の後の「熟練度」の頁: 上がった仲間ごとに 顔・名前・「剣 12→13 ▲1」（系統・属性の印つき）。
-//     閃いた技・術は その人の行の下に「✦ アルンは 新技『○○』を覚えた！」を光らせて 1 行ずつ。入らなければ頁を分け、頁ごとに決定を待つ。
+//     閃いた技・術は その人の行の下に「★ アルンは 新技『○○』を覚えた！」を光らせて 1 行ずつ。入らなければ頁を分け、頁ごとに決定を待つ。
 //   - 戦闘の中: 段階が上がったら その人の頭の上に小さく「剣+1」（止めない。playback.js の H.prof から pop）。
 //   - 強さの画面の ▲: B.finish が note() で R.Game.profNew[人の id][系統か属性] = 上がる前の段階 を覚える（status.js が見たら消す）。
 // 勝利の後の札は result.js の Rs.addPage（id 'prof'）で足す。playback.js・battle_core.js からは 1 行ずつ呼ぶだけ
@@ -233,7 +233,7 @@
     xx += p.w2 + 8 * k;
     Kt.text(g, '▲' + p.d, xx, y + (h - p.s3) / 2 - 0.5 * k, { size: p.s3, weight: 700, color: Kt.COL.up, raw: true });
   }
-  /** 覚えた行: 金の縁の札＋左から右へ流れる光＋✦ の瞬き（reduceMotion なら止めた光） */
+  /** 覚えた行: 金の縁の札＋左から右へ流れる光＋★ の瞬き（reduceMotion なら止めた光） */
   function drawLearn(g, m, l, x, y, w, t, k, ind) {
     const Kt = _.K, h = 32 * k, reduce = R.Settings.get('reduceMotion');
     const r = { x: x + ind, y, w: w - ind, h };
@@ -255,7 +255,7 @@
       g.fillStyle = gr; g.fillRect(r.x, r.y, r.w, r.h);
     }
     g.restore();
-    // ✦ の光
+    // ★ の光
     const sx = r.x + 16 * k, sy = r.y + h / 2;
     g.save();
     g.globalCompositeOperation = 'lighter';

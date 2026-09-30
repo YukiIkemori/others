@@ -198,8 +198,8 @@
     // ---- src/systems/battle/result_prof.js
     'battle.result_prof.learnText.what': '新术『{name}』',
     'battle.result_prof.learnText.what_2': '新技『{name}』',
-    'battle.result_prof.learnText.ret': '✦ {name}学会了{what}！',
-    'battle.result_prof.learnText.ret_2': '✦ 学会了{what}！',
+    'battle.result_prof.learnText.ret': '★ {name}学会了{what}！',
+    'battle.result_prof.learnText.ret_2': '★ 学会了{what}！',
     'battle.result_prof.show.ui.prompts.0.label': '按决定继续',
     'battle.result_prof.draw.fillText': '熟练度',
     'battle.result_prof.draw.text': '战斗中提升的熟练度',

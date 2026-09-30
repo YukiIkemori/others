@@ -106,6 +106,22 @@
   }
 
   // ================================================================ E3 題の一行
+  /** 題の一行を幅 w に収める → {size, lh, rows}。1 行で 17 まで縮めて入らなければ、折り返して 2 行（さらに縮める） */
+  let fitMemo = null;
+  function fitTitle(line, w) {
+    const key = line + '|' + w;
+    if (fitMemo && fitMemo.key === key) return fitMemo.v;
+    const M = (s, size) => R.UIK.measure(s, { size, weight: 700 });
+    let v = null;
+    for (let px = 23; px >= 17 && !v; px--) if (M(line, u(px)) <= w) v = { size: u(px), lh: u(px) * 1.3, rows: [line] };
+    for (let px = 21; px >= 14 && !v; px--) {
+      const rows = R.UIK.wrap(line, w, { size: u(px), weight: 700 });
+      if (rows.length <= 2 && rows.every((r) => M(r, u(px)) <= w)) v = { size: u(px), lh: u(px) * 1.25, rows };
+    }
+    if (!v) v = { size: u(14), lh: u(14) * 1.25, rows: R.UIK.wrap(line, w, { size: u(14), weight: 700 }).slice(0, 2) };
+    fitMemo = { key, v };
+    return v;
+  }
   Ending.titlePage = async function (line) {
     line = line || (R.Final && R.Final.ev && R.Final.ev.TITLE_LINE) || '';
     const st = { shown: 0, glow: 0 };
@@ -126,19 +142,29 @@
         gr.addColorStop(0, `rgba(255,220,150,${0.45 * st.glow})`); gr.addColorStop(1, 'rgba(255,220,150,0)');
         g.fillStyle = gr; g.beginPath(); g.arc(b.rx + b.pw / 2, fy + u(22), b.pw * 0.8, 0, Math.PI * 2); g.fill();
       }
-      const chars = [...line];
-      const s = chars.slice(0, Math.floor(st.shown)).join('');
-      if (s) text(g, s, b.rx + b.pw / 2, fy + u(8), { size: u(chars.length > 11 ? 21 : 23), weight: 700, color: C.ink, align: 'center' });
+      // 題の欄の幅に収める（全文で決めてから一字ずつ出す）: 23→17 まで縮め、それでも入らなければ 2 行に
+      const fit = fitTitle(line, b.pw - u(16));
+      let left = Math.floor(st.shown);
+      const y0 = fy + u(22) - (fit.rows.length * fit.lh) / 2 + (fit.lh - fit.size) / 2 - u(6);
+      fit.rows.forEach((row, i) => {
+        if (left <= 0) return;
+        const rc = [...row];
+        const s = rc.slice(0, left).join('');
+        left -= rc.length;
+        if (s) text(g, s, b.rx + b.pw / 2, y0 + i * fit.lh, { size: fit.size, weight: 700, color: C.ink, align: 'center' });
+      });
       g.restore();
     });
     await run(L, async () => {
       await tween(L, 'a', 1, 900);
       await hold(1200);
       const n = [...line].length;
+      // 一字の間は 170 ms（長い言語でも 3 秒ほどで書き終える）
+      const step = Math.max(90, Math.min(170, 3000 / Math.max(1, n)));
       for (let i = 1; i <= n; i++) {
         st.shown = i;
-        if (i % 2 === 1) sfx('quill');
-        await hold(170);
+        if (i % Math.max(2, Math.round(340 / step)) === 1) sfx('quill');
+        await hold(step);
       }
       await tween(st, 'glow', 1, 1200);
       sfx('light');

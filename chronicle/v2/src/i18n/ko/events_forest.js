@@ -250,7 +250,7 @@
     'events.fern_song_game.i.choose.text': '3단계 모두 끝냈다. 한 번 더?',
     'events.fern_song_game.i.choose.text_2': '어느 단계를 맞춰 볼까?',
     'events.fern_song_game.say_2': '그 단계는 앞 단계를\n끝내고 나서야.',
-    'events.fern_song_game.r.title': '노래 맞추기・{label}',
+    'events.fern_song_game.r.title': '노래 맞추기·{label}',
     'events.fern_song_game.r.symbols': ['잎', '바람', '달', '물'],
     'events.fern_song_game.say_3': '아깝다! 또\n언제든 와.',
     'events.fern_song_game.say_4': '대단해! {label}, 합격!\n이거, 선생님이 주는 상이야.',

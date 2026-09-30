@@ -199,8 +199,8 @@
     // ---- src/systems/battle/result_prof.js
     'battle.result_prof.learnText.what': 'the new Spell "{name}"',
     'battle.result_prof.learnText.what_2': 'the new Art "{name}"',
-    'battle.result_prof.learnText.ret': '✦ {name} learned {what}!',
-    'battle.result_prof.learnText.ret_2': '✦ Learned {what}!',
+    'battle.result_prof.learnText.ret': '★ {name} learned {what}!',
+    'battle.result_prof.learnText.ret_2': '★ Learned {what}!',
     'battle.result_prof.show.ui.prompts.0.label': 'Continue',
     'battle.result_prof.draw.fillText': 'Proficiency',
     'battle.result_prof.draw.text': 'Proficiency gained in battle',

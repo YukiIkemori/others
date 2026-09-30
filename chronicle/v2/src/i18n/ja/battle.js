@@ -199,8 +199,8 @@
     // ---- src/systems/battle/result_prof.js
     'battle.result_prof.learnText.what': '新しい術『{name}』',
     'battle.result_prof.learnText.what_2': '新技『{name}』',
-    'battle.result_prof.learnText.ret': '✦ {name}は {what}を覚えた！',
-    'battle.result_prof.learnText.ret_2': '✦ {what}を覚えた！',
+    'battle.result_prof.learnText.ret': '★ {name}は {what}を覚えた！',
+    'battle.result_prof.learnText.ret_2': '★ {what}を覚えた！',
     'battle.result_prof.show.ui.prompts.0.label': '決定で進む',
     'battle.result_prof.draw.fillText': '熟練度',
     'battle.result_prof.draw.text': '戦いで上がった熟練度',

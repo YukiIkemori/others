@@ -69,6 +69,8 @@
   const P2 = R.T('ev.prologue_roa.P2');
   // P2 のボイス（design/voice_story_map.json。{hero} の入る P2[7] は名前を読まない v_berna_p2_10）
   const P2_VOICE = ['v_berna_p2_01', 'v_berna_p2_02', 'v_berna_p2_03', 'v_berna_p2_04', 'v_berna_p2_05', 'v_berna_p2_06', 'v_berna_p2_07', 'v_berna_p2_10', 'v_berna_p2_08', 'v_berna_p2_09'];   // p2_10 は名前を読まない（「行っておくれ。……」）
+  // P2 の顔（行ごと。訳文に頼らず番号で決める。0 大事な話・3 白紙・5 灯台の火が消えた・6 守り歌も白紙に は曇り顔）
+  const P2_FACE = ['sad', 'neutral', 'neutral', 'sad', 'neutral', 'sad', 'sad', 'neutral', 'neutral', 'neutral'];
   D.roa_berna = {
     meta: { needs: ['flag:prologue_start'], gives: ['flag:prologue_berna', 'item:i_salve', 'gold'], calls: ['story_roa_tales', 'story_roa_t6'] },
     run: async (ev, ctx) => {
@@ -78,7 +80,7 @@
       if (!ev.flag('prologue_berna')) {
         for (let i = 0; i < P2.length; i++) {
           const t = P2[i];
-          await E.say(ev, who, t, { voice: P2_VOICE[i] || undefined, face: /大事|白紙|消えた/.test(t) ? 'berna:sad' : 'berna:neutral' });
+          await E.say(ev, who, t, { voice: P2_VOICE[i] || undefined, face: 'berna:' + (P2_FACE[i] || 'neutral') });
         }
         await E.give(ev, 'i_salve', 3, { quiet: true });
         E.gold(ev, 50, { quiet: true });

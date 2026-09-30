@@ -125,7 +125,7 @@
     'ev.story_00_tiers.atExit.narr': 'As you tried to leave town,\na voice called out from behind.',
     'ev.story_00_tiers.margin.narr': 'In the margin of the Clue Journal,\na passage wrote itself.',
     'ev.story_00_tiers.KOSOU.2': 'The nameless thing\nenvied all\nthat had a name.',
-    'ev.story_00_tiers.KOSOU.3': 'I lit a fire\nand told the first story:\n-- Night falls, and morning comes.',
+    'ev.story_00_tiers.KOSOU.3': 'I lit a fire\nand told the first story:\n-- There is night, and morning comes.',
     'ev.story_00_tiers.KOSOU.4': 'The white dark feared\na story with an ending,\nand fell into deep sleep.',
     'ev.story_00_tiers.KOSOU.5': 'The story\'s title I made\ninto a greeting for each morning,\nand left it in my village.',
     'ev.story_00_tiers.KOSOU.6': 'The eight verses of its body\nI gave to the fires of eight lands.\nWhile they are told, the dark will not wake.',

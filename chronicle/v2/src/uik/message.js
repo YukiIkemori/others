@@ -1,7 +1,7 @@
 // UIK: 会話（R.UIK.Message、MODERN_UI §6.3・§5.4、V2_PLAN §2.5.6・§2.11）
 //   say({name, title, face, text, voice（id か、元のページごとの id の配列）, choices, cancel}) → Promise<選んだ番号 | undefined>   場面 id 'message'（K.say）
 //     - 羊皮紙の札（下の中央、幅 760・高さ 150）。左に顔の枠 118（顔の無い人は枠ごと出さず文を左に寄せる）、上に話者名（琥珀）と肩書き
-//     - text は文字列か配列（1 つが 1 ページ）。幅で折り返し、3 行ごとに次のページへ。{漢字|かんじ} はふりがな（設定 ruby のときだけ出す）
+//     - text は文字列か配列（1 つが 1 ページ）。幅で折り返し、3 行ごとに次のページへ（'\f' があればそこでも次のページへ）。{漢字|かんじ} はふりがな（設定 ruby のときだけ出す）
 //     - 送り: A・B・下キー・タップ（A3）。送ったら R.Audio.stopVoice()（A9）。途中なら全部を出す
 //     - 早送り R（押している間。読んだ所は一瞬、未読は速い）・ログ X（直近 100 行、話者名つき）・自動送り Y（1 字 60 ms ＋ 1.2 秒。ボイスの終わりも待つ）
 //     - 選択肢の前では自動送り・早送りでも止まる。選択肢は同じ紙の札で右上に重ねる（'\t' の後ろは右寄せ＝値段）。B は o.cancel があればその番号
@@ -45,7 +45,7 @@
   function speed() { return UIK.T.textSpeed[UIK.setting('textSpeed', 'normal')] || UIK.T.textSpeed.normal; }
   function stopVoice() { try { if (R.Audio && R.Audio.stopVoice) R.Audio.stopVoice(); } catch (e) { /* */ } }
   function pushLog(name, text) {
-    logs.push({ name: name || '', text });
+    logs.push({ name: name || '', text: String(text).replace(/\f/g, '\n') });  // 窓の区切り '\f' はログでは改行に
     while (logs.length > UIK.T.log) logs.shift();
   }
 
@@ -135,19 +135,24 @@
       if (st.pages && st.key === key) return st.pages;
       const out = [];
       parsed.forEach((p, si) => {
-        // 行ごとに、元の文（ふりがなを除いた字）の中の位置 a を持つ
-        const withOff = [];
-        let base = 0;
-        for (const para of p.plain.split('\n')) {
-          let off = base;
-          for (const l of UIK.wrap(para, L.tw, { size: L.size })) { const n = [...l].length; withOff.push({ s: l, a: off, n }); off += n; }
-          base += [...para].length + 1;
+        // 行ごとに、元の文（ふりがなを除いた字）の中の位置 a を持つ。'\f' はそこで窓を改める（どの言語でも）
+        let base = 0, any = false;
+        for (const block of p.plain.split('\f')) {
+          const withOff = [];
+          for (const para of block.split('\n')) {
+            let off = base;
+            for (const l of UIK.wrap(para, L.tw, { size: L.size })) { const n = [...l].length; withOff.push({ s: l, a: off, n }); off += n; }
+            base += [...para].length + 1;
+          }
+          // 空の区切り（'\f' が頭・尻・二つ続き）は窓を作らない
+          if (!withOff.some((l) => l.n > 0)) continue;
+          for (let i = 0; i < withOff.length; i += L.lines) {
+            const chunk = withOff.slice(i, i + L.lines);
+            out.push({ src: si, lines: chunk, n: chunk.reduce((a, l) => a + l.n, 0), rubies: p.rubies, text: chunk.map((l) => l.s).join('\n') });
+            any = true;
+          }
         }
-        for (let i = 0; i < withOff.length; i += L.lines) {
-          const chunk = withOff.slice(i, i + L.lines);
-          out.push({ src: si, lines: chunk, n: chunk.reduce((a, l) => a + l.n, 0), rubies: p.rubies, text: chunk.map((l) => l.s).join('\n') });
-        }
-        if (!withOff.length) out.push({ src: si, lines: [], n: 0, rubies: [], text: '' });
+        if (!any) out.push({ src: si, lines: [], n: 0, rubies: [], text: '' });
       });
       if (st.pages) {
         // 同じ元のページの頭へ

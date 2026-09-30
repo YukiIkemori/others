@@ -114,7 +114,7 @@
     'ev.pharos_story.pharos_departure.run.say_4': '그리고 이것도 가져가렴.\n이야기꾼의 깃펜과\n귀갓길 방울이란다.',
     'ev.pharos_story.pharos_departure.run.narr': '{hero}은(는) 이야기꾼의 깃펜과\n귀갓길 방울을 손에 넣었다!',
     'ev.pharos_story.pharos_departure.run.say_5': ['깃펜으로 연대기의 지도를 따라 그리면\n가 본 적 있는 마을로 날아갈 수 있어.', '방울을 울리면 던전\n깊은 곳에서도 밖으로 돌아올 수 있단다.', '메뉴의 ‘워프’와 ‘탈출’이\n바로 그 힘이란다.'],
-    'ev.pharos_story.pharos_departure.run.caption_2': '연대기에 서장\n『등대지기의 노래』가 기록되었다.',
+    'ev.pharos_story.pharos_departure.run.caption_2': '연대기에 서장\n‘등대지기의 노래’가 기록되었다.',
     'ev.pharos_story.pharos_departure.run.say_6': '이 대륙에는 여덟 개의 큰 전승이 있어.\n그 전부가 지금 백지가 되어 가고 있지.',
     'ev.pharos_story.pharos_departure.run.say_7': '전부를 다시 이야기해서\n연대기를 완성하렴. 그게\n네 수행의 마무리란다.',
     'ev.pharos_story.pharos_departure.run.say_8': '소문은 주점에 모이는 법이란다.\n우선 항구의 주점에서\n물어보렴.',

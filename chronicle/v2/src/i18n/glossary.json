@@ -1595,6 +1595,1485 @@
    "zh-Hant": "絡新婦",
    "ko": "무당거미",
    "note": "Monster (gold-and-black spider). EN avoids the romanized yokai name."
+  },
+  {
+   "id": "core.good_light_to_you",
+   "category": "core",
+   "ja": "よい灯りを",
+   "en": "Good light to you.",
+   "zh-Hans": "愿灯火常明",
+   "zh-Hant": "願燈火常明",
+   "ko": "좋은 등불이 함께하길",
+   "note": "Everyday greeting/farewell in the night world."
+  },
+  {
+   "id": "core.words_of_dawn",
+   "category": "core",
+   "ja": "暁の詞",
+   "en": "the Words of Dawn",
+   "zh-Hans": "破晓之词",
+   "zh-Hant": "破曉之詞",
+   "ko": "새벽의 말",
+   "note": "The title of the first story, kept only in the Roa storytellers' mouths."
+  },
+  {
+   "id": "core.white_book",
+   "category": "core",
+   "ja": "白の書",
+   "en": "the White Book",
+   "zh-Hans": "白之书",
+   "zh-Hant": "白之書",
+   "ko": "하얀 책",
+   "note": "Already used in en/enemies.js."
+  },
+  {
+   "id": "places.great_white_archive",
+   "category": "places",
+   "ja": "白の大書庫",
+   "en": "the Great White Archive",
+   "zh-Hans": "白之大书库",
+   "zh-Hant": "白之大書庫",
+   "ko": "하얀 대서고",
+   "note": "Final dungeon (大書庫 = Great Archive in glossary). Floor label 'Great White Archive  {n}F'."
+  },
+  {
+   "id": "places.biblia_city_of_books",
+   "category": "places",
+   "ja": "書の都ビブリア",
+   "en": "Biblia, City of Books",
+   "zh-Hans": "书之都比布利亚",
+   "zh-Hant": "書之都比布利亞",
+   "ko": "책의 도시 비블리아",
+   "note": "Short: Biblia."
+  },
+  {
+   "id": "places.bookmark_inn",
+   "category": "places",
+   "ja": "しおり亭",
+   "en": "the Bookmark Inn",
+   "zh-Hans": "书签亭",
+   "zh-Hant": "書籤亭",
+   "ko": "책갈피 여관",
+   "note": "Noa's inn (matches ending credits)."
+  },
+  {
+   "id": "enemies.hollow_king",
+   "category": "enemies",
+   "ja": "虚ろの王",
+   "en": "the Hollow King",
+   "zh-Hans": "虚无之王",
+   "zh-Hant": "虛無之王",
+   "ko": "텅 빈 왕",
+   "note": "Already used in en tables. 虚ろ = the Hollow.; per glossary note on Nemrea"
+  },
+  {
+   "id": "people.arno",
+   "category": "people",
+   "ja": "アルノ",
+   "en": "Arno",
+   "zh-Hans": "阿尔诺",
+   "zh-Hant": "阿爾諾",
+   "ko": "아르노",
+   "note": "Berna's master (dead).; Same as w_en_A."
+  },
+  {
+   "id": "people.riona",
+   "category": "people",
+   "ja": "リオナ",
+   "en": "Riona",
+   "zh-Hans": "莉奥娜",
+   "zh-Hant": "莉奧娜",
+   "ko": "리오나",
+   "note": "Berna's apprentice, Rowell's mother (dead)."
+  },
+  {
+   "id": "people.mira",
+   "category": "people",
+   "ja": "ミラ",
+   "en": "Mira",
+   "zh-Hans": "米拉",
+   "zh-Hant": "米拉",
+   "ko": "미라",
+   "note": "Lazaro's daughter (as in credits)."
+  },
+  {
+   "id": "people.noa",
+   "category": "people",
+   "ja": "ノア",
+   "en": "Noa",
+   "zh-Hans": "诺亚",
+   "zh-Hant": "諾亞",
+   "ko": "노아"
+  },
+  {
+   "id": "people.yena",
+   "category": "people",
+   "ja": "イェナ",
+   "en": "Yena",
+   "zh-Hans": "耶娜",
+   "zh-Hant": "耶娜",
+   "ko": "예나",
+   "note": "Still Night preacher; her true name Estelle."
+  },
+  {
+   "id": "people.estelle",
+   "category": "people",
+   "ja": "エステル",
+   "en": "Estelle",
+   "zh-Hans": "艾丝黛尔",
+   "zh-Hant": "艾絲黛爾",
+   "ko": "에스텔",
+   "note": "Still Night preacher; her true name Estelle."
+  },
+  {
+   "id": "places.port_coral",
+   "category": "places",
+   "ja": "港町コーラル",
+   "en": "Port Coral",
+   "zh-Hans": "科拉尔港",
+   "zh-Hant": "科拉爾港",
+   "ko": "항구 도시 코랄",
+   "note": "Same as w_en_C maps_isles.; Short: Coral."
+  },
+  {
+   "id": "places.nerei",
+   "category": "places",
+   "ja": "岬の村ネレイ",
+   "en": "Nerei",
+   "zh-Hans": "海角村涅雷",
+   "zh-Hant": "海角村涅雷",
+   "ko": "곶 마을 네레이",
+   "note": "Long form in signs: 'Nerei, Village on the Cape'."
+  },
+  {
+   "id": "places.tideroar_cave",
+   "category": "places",
+   "ja": "潮鳴りの洞窟",
+   "en": "Tideroar Cave",
+   "zh-Hans": "潮鸣洞窟",
+   "zh-Hant": "潮鳴洞窟",
+   "ko": "물울음 동굴",
+   "note": "Same as w_en_C."
+  },
+  {
+   "id": "places.lighthouse_isle",
+   "category": "places",
+   "ja": "灯台島",
+   "en": "Lighthouse Isle",
+   "zh-Hans": "灯塔岛",
+   "zh-Hant": "燈塔島",
+   "ko": "등대섬"
+  },
+  {
+   "id": "places.dovan",
+   "category": "places",
+   "ja": "鉱山都市ドヴァン",
+   "en": "Dovan",
+   "zh-Hans": "矿山都市多凡",
+   "zh-Hant": "礦山都市多凡",
+   "ko": "광산 도시 도반",
+   "note": "Long: 'Dovan, the Mining City'."
+  },
+  {
+   "id": "places.deep_shafts",
+   "category": "places",
+   "ja": "深き坑道",
+   "en": "the Deep Shafts",
+   "zh-Hans": "深坑道",
+   "zh-Hant": "深坑道",
+   "ko": "깊은 갱도",
+   "note": "Aligned with w_en_A places.js."
+  },
+  {
+   "id": "places.volk_the_smiths_hidden_village",
+   "category": "places",
+   "ja": "鍛冶衆の隠れ村ヴォルク",
+   "en": "Volk, the Smiths' Hidden Village",
+   "zh-Hans": "锻冶众隐村沃尔克",
+   "zh-Hant": "鍛冶眾隱村沃爾克",
+   "ko": "대장장이들의 숨은 마을 볼크"
+  },
+  {
+   "id": "places.abyssal_vein",
+   "category": "places",
+   "ja": "深淵の鉱脈",
+   "en": "the Abyssal Vein",
+   "zh-Hans": "深渊矿脉",
+   "zh-Hant": "深淵礦脈",
+   "ko": "심연의 광맥",
+   "note": "Lord of the Vein as in enemies.js."
+  },
+  {
+   "id": "places.seventh_level",
+   "category": "places",
+   "ja": "七の層",
+   "en": "the Seventh Level",
+   "zh-Hans": "第七层",
+   "zh-Hant": "第七層",
+   "ko": "제7층",
+   "note": "en/enemies already had 'below the seventh level'."
+  },
+  {
+   "id": "places.orbis",
+   "category": "places",
+   "ja": "学術都市オルビス",
+   "en": "Orbis",
+   "zh-Hans": "学术都市奥尔比斯",
+   "zh-Hant": "學術都市奧爾比斯",
+   "ko": "학술 도시 오르비스",
+   "note": "Long: 'Orbis, City of Learning'."
+  },
+  {
+   "id": "places.academy_after_dark",
+   "category": "places",
+   "ja": "消灯後の学院",
+   "en": "the Academy After Dark",
+   "zh-Hans": "熄灯后的学院",
+   "zh-Hant": "熄燈後的學院",
+   "ko": "소등 후의 학원"
+  },
+  {
+   "id": "places.starreading_tower",
+   "category": "places",
+   "ja": "星読みの塔",
+   "en": "Starreading Tower",
+   "zh-Hans": "观星塔",
+   "zh-Hant": "觀星塔",
+   "ko": "별읽기의 탑",
+   "note": "Already in en/enemies.js."
+  },
+  {
+   "id": "places.starfall_hollow",
+   "category": "places",
+   "ja": "星降りのくぼ地",
+   "en": "Starfall Hollow",
+   "zh-Hans": "星落洼地",
+   "zh-Hant": "星落窪地",
+   "ko": "별이 내린 분지"
+  },
+  {
+   "id": "core.lights_out",
+   "category": "core",
+   "ja": "消灯の刻",
+   "en": "lights-out",
+   "zh-Hans": "熄灯时分",
+   "zh-Hant": "熄燈時分",
+   "ko": "소등의 시각",
+   "note": "The hour the lamps are dimmed.; already used in en maps ('the hour of lights-out')."
+  },
+  {
+   "id": "core.morning_bell",
+   "category": "core",
+   "ja": "朝の鐘",
+   "en": "the morning bell",
+   "zh-Hans": "晨钟",
+   "zh-Hant": "晨鐘",
+   "ko": "아침 종"
+  },
+  {
+   "id": "core.sunheir_war",
+   "category": "core",
+   "ja": "日継ぎの戦",
+   "en": "the Sunheir War",
+   "zh-Hans": "承日之战",
+   "zh-Hant": "承日之戰",
+   "ko": "해잇기 전쟁",
+   "note": "Aligned with w_en_B/C.; The war 23-20 years ago over whose Beacon was the sun's rightful heir. w_en_C also uses Sunheir; w_en_A glossary_add proposed 'Sun-Succession War' but no en text uses it.; Followed w_en_B ('Sunheir'); w_en_A proposed 'Sun-Succession War'. Owner should pick one."
+  },
+  {
+   "id": "core.champions_bout",
+   "category": "core",
+   "ja": "代理試合",
+   "en": "champions' bout",
+   "zh-Hans": "代理比试",
+   "zh-Hant": "代理比試",
+   "ko": "대리 시합",
+   "note": "Aligned with w_en_B (最後の代理試合 = the last champions' bout).; The proxy duels that decided the Sunheir War, held in Caldera's arena. Same as w_en_A's actual events_final text (their glossary_add still lists 'proxy match')."
+  },
+  {
+   "id": "core.war_of_legends",
+   "category": "core",
+   "ja": "伝承戦争",
+   "en": "the War of Legends",
+   "zh-Hans": "传说战争",
+   "zh-Hant": "傳說戰爭",
+   "ko": "전승 전쟁",
+   "note": "Lazaro's own name for the war (events_final).; Lazaro's wording; JA to be unified with 日継ぎの戦 (the Sunheir War)."
+  },
+  {
+   "id": "core.telling_stone",
+   "category": "core",
+   "ja": "語り石",
+   "en": "the Telling Stone",
+   "zh-Hans": "讲述石",
+   "zh-Hant": "講述石",
+   "ko": "이야기 돌",
+   "note": "Matches en maps_field 'Hall of the Telling Stone'."
+  },
+  {
+   "id": "core.keeper_s_song",
+   "category": "core",
+   "ja": "守り歌",
+   "en": "the Keeper's Song",
+   "zh-Hans": "守望之歌",
+   "zh-Hant": "守望之歌",
+   "ko": "수호의 노래",
+   "note": "（ファロス灯台）"
+  },
+  {
+   "id": "places.morning_seat",
+   "category": "places",
+   "ja": "朝の席",
+   "en": "the morning seat",
+   "zh-Hans": "晨座",
+   "zh-Hant": "晨座",
+   "ko": "아침 자리",
+   "note": "Lore title 'The Morning Seat'."
+  },
+  {
+   "id": "core.lamp_scrip",
+   "category": "core",
+   "ja": "灯札",
+   "en": "lamp scrip",
+   "zh-Hans": "灯票",
+   "zh-Hant": "燈票",
+   "ko": "등패",
+   "note": "Same as w_en_B.; paper money (Tadeo)"
+  },
+  {
+   "id": "core.margin",
+   "category": "core",
+   "ja": "余白",
+   "en": "Margin",
+   "zh-Hans": "页边",
+   "zh-Hant": "頁邊",
+   "ko": "여백",
+   "note": "（手がかり帳の） Clue-book heading: \"Margin, Page {n}\"."
+  },
+  {
+   "id": "places.old_layer",
+   "category": "places",
+   "ja": "古層",
+   "en": "the old layer",
+   "zh-Hans": "古层",
+   "zh-Hant": "古層",
+   "ko": "옛 층"
+  },
+  {
+   "id": "core.good_morning_today_is_an_important_day",
+   "category": "core",
+   "ja": "おはよう。今日は大事な日だよ。",
+   "en": "Good morning. Today is an important day.",
+   "zh-Hans": "早安。今天是很重要的日子哦。",
+   "zh-Hant": "早安。今天是很重要的日子哦。",
+   "ko": "좋은 아침. 오늘은 중요한 날이란다.",
+   "note": "Berna's key line; identical in prologue and ending."
+  },
+  {
+   "id": "core.that_s_another_story",
+   "category": "core",
+   "ja": "それは、また別のお話。",
+   "en": "That's another story.",
+   "zh-Hans": "那是，另一个故事了。",
+   "zh-Hant": "那是，另一個故事了。",
+   "ko": "그건 또 다른 이야기."
+  },
+  {
+   "id": "core.first_chronicle",
+   "category": "core",
+   "ja": "始まりの年代記",
+   "en": "the First Chronicle",
+   "zh-Hans": "最初的编年史",
+   "zh-Hant": "最初的編年史",
+   "ko": "시작의 연대기",
+   "note": "As in en/ui_final.js ending title."
+  },
+  {
+   "id": "people.girl_in_a_gray_cloak",
+   "category": "people",
+   "ja": "灰色のマントの少女",
+   "en": "Girl in a Gray Cloak",
+   "zh-Hans": "灰斗篷少女",
+   "zh-Hant": "灰斗篷少女",
+   "ko": "회색 망토의 소녀",
+   "note": "Name label; 'the girl in the gray cloak' in narration."
+  },
+  {
+   "id": "core.morning_watch",
+   "category": "core",
+   "ja": "朝番",
+   "en": "the morning watch",
+   "zh-Hans": "晨班",
+   "zh-Hant": "晨班",
+   "ko": "아침 당번",
+   "note": "（灯台）"
+  },
+  {
+   "id": "core.sunrise_watch",
+   "category": "core",
+   "ja": "日の出番",
+   "en": "the Sunrise Watch",
+   "zh-Hans": "日出班",
+   "zh-Hant": "日出班",
+   "ko": "일출조",
+   "note": "（鉱山） Shift-roster columns (lo_time_mine)."
+  },
+  {
+   "id": "places.blank_page",
+   "category": "places",
+   "ja": "白紙亭",
+   "en": "The Blank Page",
+   "zh-Hans": "白纸亭",
+   "zh-Hant": "白紙亭",
+   "ko": "백지 주점",
+   "note": "Tavern."
+  },
+  {
+   "id": "places.blank_leaf",
+   "category": "places",
+   "ja": "白紙堂",
+   "en": "The Blank Leaf",
+   "zh-Hans": "白纸堂",
+   "zh-Hant": "白紙堂",
+   "ko": "백지당",
+   "note": "Shop."
+  },
+  {
+   "id": "people.johann",
+   "category": "people",
+   "ja": "ヨハン",
+   "en": "Johann",
+   "zh-Hans": "约翰",
+   "zh-Hant": "約翰",
+   "ko": "요한",
+   "note": "（ビブリアの老人） Same spelling as w_en_B's Johann (a different person: JA reuses the name).; Emma's son; JA uses ヨハン for two people (Emma's son in the marsh, the old man in Biblia) — JA rename pending."
+  },
+  {
+   "id": "people.eda",
+   "category": "people",
+   "ja": "エダ",
+   "en": "Eda",
+   "zh-Hans": "艾达",
+   "zh-Hant": "艾達",
+   "ko": "에다",
+   "note": "Yarrow miller."
+  },
+  {
+   "id": "people.valzard",
+   "category": "people",
+   "ja": "ヴァルザード",
+   "en": "Valzard",
+   "zh-Hans": "瓦尔扎德",
+   "zh-Hant": "瓦爾札德",
+   "ko": "발자드"
+  },
+  {
+   "id": "places.continent_of_crests",
+   "category": "places",
+   "ja": "紋章の大陸",
+   "en": "the Continent of Crests",
+   "zh-Hans": "纹章大陆",
+   "zh-Hant": "紋章大陸",
+   "ko": "문장의 대륙"
+  },
+  {
+   "id": "places.depths_of_oblivion",
+   "category": "places",
+   "ja": "忘却の底",
+   "en": "the Depths of Oblivion",
+   "zh-Hans": "遗忘之底",
+   "zh-Hant": "遺忘之底",
+   "ko": "망각의 밑바닥"
+  },
+  {
+   "id": "people.lamptender",
+   "category": "people",
+   "ja": "灯り守り",
+   "en": "Lamptender",
+   "zh-Hans": "掌灯人",
+   "zh-Hant": "掌燈人",
+   "ko": "등불지기",
+   "note": "（ネレイ） Aligned with w_en_C.; Distinct from 灯守 = Lampkeeper (guild). w_en_A item text writes 'lamp-tender'."
+  },
+  {
+   "id": "core.sun_alliance",
+   "category": "core",
+   "ja": "日輪同盟",
+   "en": "the Sun Alliance",
+   "zh-Hans": "日轮同盟",
+   "zh-Hant": "日輪同盟",
+   "ko": "일륜 동맹",
+   "note": "already used once in en/enemies (Sun Alliance soldier). Wartime league led by Kasim.; Same as w_en_B."
+  },
+  {
+   "id": "core.firebird_alliance",
+   "category": "core",
+   "ja": "火の鳥同盟",
+   "en": "the Firebird Alliance",
+   "zh-Hans": "火鸟同盟",
+   "zh-Hant": "火鳥同盟",
+   "ko": "불새 동맹",
+   "note": "Opposing league led by Caldera.; Same as w_en_B."
+  },
+  {
+   "id": "core.lumen_year",
+   "category": "core",
+   "ja": "光暦",
+   "en": "Lumen Year",
+   "zh-Hans": "光历",
+   "zh-Hant": "光曆",
+   "ko": "광력",
+   "note": "Calendar era.; Same as w_en_B (光暦292年 = Lumen Year 292).; e.g. 光暦292年 = Lumen Year 292."
+  },
+  {
+   "id": "core.lamplit_hours_lamplight",
+   "category": "core",
+   "ja": "灯りの刻",
+   "en": "the lamplit hours / Lamplight",
+   "zh-Hans": "点灯时分",
+   "zh-Hant": "點燈時分",
+   "ko": "등불의 시각",
+   "note": "灯りの刻の始め = the start of Lamplight."
+  },
+  {
+   "id": "enemies.mist_eater",
+   "category": "enemies",
+   "ja": "霧食らい",
+   "en": "Mist Eater",
+   "zh-Hans": "噬雾兽",
+   "zh-Hant": "噬霧獸",
+   "ko": "안개 먹는 자",
+   "note": "marsh boss"
+  },
+  {
+   "id": "people.oswald",
+   "category": "people",
+   "ja": "オスヴァルト",
+   "en": "Oswald",
+   "zh-Hans": "奥斯瓦尔德",
+   "zh-Hant": "奧斯瓦爾德",
+   "ko": "오스발트",
+   "note": "Mayor of Loch"
+  },
+  {
+   "id": "people.mina",
+   "category": "people",
+   "ja": "ミーナ",
+   "en": "Mina",
+   "zh-Hans": "米娜",
+   "zh-Hant": "米娜",
+   "ko": "미나",
+   "note": "the lost cat"
+  },
+  {
+   "id": "people.jost",
+   "category": "people",
+   "ja": "ヨスト",
+   "en": "Jost",
+   "zh-Hans": "约斯特",
+   "zh-Hant": "約斯特",
+   "ko": "요스트",
+   "note": "lanternkeeper (already in en maps_marsh)"
+  },
+  {
+   "id": "places.foghorn",
+   "category": "places",
+   "ja": "霧笛亭",
+   "en": "the Foghorn",
+   "zh-Hans": "雾笛亭",
+   "zh-Hant": "霧笛亭",
+   "ko": "안개피리 여관",
+   "note": "Loch inn (already in en maps_marsh)"
+  },
+  {
+   "id": "places.steamy_rest",
+   "category": "places",
+   "ja": "湯けむり亭",
+   "en": "the Steamy Rest",
+   "zh-Hans": "汤烟亭",
+   "zh-Hant": "湯煙亭",
+   "ko": "온천김 여관",
+   "note": "Caldera inn (already in en maps_ash)."
+  },
+  {
+   "id": "core.firebird_s_round",
+   "category": "core",
+   "ja": "火の鳥の巡り",
+   "en": "the Firebird's Round",
+   "zh-Hans": "火鸟巡回",
+   "zh-Hant": "火鳥巡迴",
+   "ko": "불새의 순환"
+  },
+  {
+   "id": "places.archive_norden_branch",
+   "category": "places",
+   "ja": "記録院ノルデン分室",
+   "en": "Archive Norden Branch",
+   "zh-Hans": "记录院诺尔登分室",
+   "zh-Hant": "記錄院諾爾登分室",
+   "ko": "기록원 노르덴 분실",
+   "note": "写本・記録院ノルデン分室 = 'Copy -- Archive Norden Branch'"
+  },
+  {
+   "id": "places.archive_loch_office",
+   "category": "places",
+   "ja": "記録院ロッホ出張所",
+   "en": "the Archive Loch Office",
+   "zh-Hans": "记录院洛赫办事处",
+   "zh-Hant": "記錄院洛赫辦事處",
+   "ko": "기록원 로흐 출장소",
+   "note": "already in en maps_marsh"
+  },
+  {
+   "id": "items.a_letter_never_burned",
+   "category": "items",
+   "ja": "くべられなかった手紙",
+   "en": "A Letter Never Burned",
+   "zh-Hans": "没被烧掉的信",
+   "zh-Hant": "沒被燒掉的信",
+   "ko": "태우지 못한 편지",
+   "note": "Lazaro's letters to Mira (LZ.2-8)"
+  },
+  {
+   "id": "core.bonfire_festival",
+   "category": "core",
+   "ja": "大火祭",
+   "en": "the Bonfire Festival",
+   "zh-Hans": "大火祭",
+   "zh-Hant": "大火祭",
+   "ko": "큰불 축제",
+   "note": "冬至の大火祭 = the Solstice Bonfire Festival"
+  },
+  {
+   "id": "items.night_counting_board",
+   "category": "items",
+   "ja": "夜数えの板",
+   "en": "the night-counting board",
+   "zh-Hans": "数夜板",
+   "zh-Hant": "數夜板",
+   "ko": "밤 세기 판자"
+  },
+  {
+   "id": "core.great_hearth",
+   "category": "core",
+   "ja": "大かまど",
+   "en": "the great hearth",
+   "zh-Hans": "大灶",
+   "zh-Hant": "大灶",
+   "ko": "큰 화덕"
+  },
+  {
+   "id": "core.solstice_fire",
+   "category": "core",
+   "ja": "冬至の火",
+   "en": "the solstice fire",
+   "zh-Hans": "冬至之火",
+   "zh-Hant": "冬至之火",
+   "ko": "동지의 불"
+  },
+  {
+   "id": "enemies.frozen_fleet_captain",
+   "category": "enemies",
+   "ja": "氷の船団長",
+   "en": "Frozen Fleet Captain",
+   "zh-Hans": "冰之船队长",
+   "zh-Hant": "冰之船隊長",
+   "ko": "얼음 선단장"
+  },
+  {
+   "id": "enemies.ice_wall_giant",
+   "category": "enemies",
+   "ja": "氷壁の巨人",
+   "en": "Ice Wall Giant",
+   "zh-Hans": "冰壁巨人",
+   "zh-Hant": "冰壁巨人",
+   "ko": "빙벽의 거인"
+  },
+  {
+   "id": "enemies.icetail_fox",
+   "category": "enemies",
+   "ja": "氷尾ギツネ",
+   "en": "icetail fox",
+   "zh-Hans": "冰尾狐",
+   "zh-Hant": "冰尾狐",
+   "ko": "얼음꼬리여우"
+  },
+  {
+   "id": "people.blanca",
+   "category": "people",
+   "ja": "ブランカ",
+   "en": "Blanca",
+   "zh-Hans": "布兰卡",
+   "zh-Hant": "布蘭卡",
+   "ko": "블랑카",
+   "note": "lead sled dog"
+  },
+  {
+   "id": "core.sun_fire",
+   "category": "core",
+   "ja": "日輪の火",
+   "en": "the sun-fire",
+   "zh-Hans": "日轮之火",
+   "zh-Hant": "日輪之火",
+   "ko": "일륜의 불",
+   "note": "日輪 = sun-wheel (crest)"
+  },
+  {
+   "id": "enemies.nameless_sand_king",
+   "category": "enemies",
+   "ja": "名なき砂の王",
+   "en": "Nameless Sand King",
+   "zh-Hans": "无名沙王",
+   "zh-Hant": "無名沙王",
+   "ko": "이름 없는 모래의 왕"
+  },
+  {
+   "id": "items.sand_king_s_seal",
+   "category": "items",
+   "ja": "砂王の印章",
+   "en": "Sand King's Seal",
+   "zh-Hans": "沙王印章",
+   "zh-Hant": "沙王印章",
+   "ko": "모래왕의 인장"
+  },
+  {
+   "id": "core.dawn_star",
+   "category": "core",
+   "ja": "夜明けの星",
+   "en": "the dawn star",
+   "zh-Hans": "黎明之星",
+   "zh-Hant": "黎明之星",
+   "ko": "새벽별",
+   "note": "Zaid's star songs"
+  },
+  {
+   "id": "places.star_of_the_spring",
+   "category": "places",
+   "ja": "泉の星亭",
+   "en": "Star of the Spring",
+   "zh-Hans": "泉星亭",
+   "zh-Hant": "泉星亭",
+   "ko": "샘별 여관",
+   "note": "as in en maps_desert"
+  },
+  {
+   "id": "core.hourglass",
+   "category": "core",
+   "ja": "砂時計",
+   "en": "the Hourglass",
+   "zh-Hans": "沙漏",
+   "zh-Hant": "沙漏",
+   "ko": "모래시계",
+   "note": "as in en maps_desert"
+  },
+  {
+   "id": "enemies.sand_burrower",
+   "category": "enemies",
+   "ja": "砂もぐり",
+   "en": "sand burrower",
+   "zh-Hans": "潜沙虫",
+   "zh-Hant": "潛沙蟲",
+   "ko": "모래잠수꾼",
+   "note": "tomb boss"
+  },
+  {
+   "id": "enemies.diamond_lizard",
+   "category": "enemies",
+   "ja": "金剛トカゲ",
+   "en": "diamond lizard",
+   "zh-Hans": "金刚蜥蜴",
+   "zh-Hant": "金剛蜥蜴",
+   "ko": "금강 도마뱀"
+  },
+  {
+   "id": "people.malika",
+   "category": "people",
+   "ja": "マリカ",
+   "en": "Malika",
+   "zh-Hans": "玛丽卡",
+   "zh-Hant": "瑪麗卡",
+   "ko": "마리카",
+   "note": "minor NPCs (Fad, Samir already in en maps_desert)"
+  },
+  {
+   "id": "people.sad",
+   "category": "people",
+   "ja": "サド",
+   "en": "Sad",
+   "zh-Hans": "萨德",
+   "zh-Hant": "薩德",
+   "ko": "사드",
+   "note": "minor NPCs (Fad, Samir already in en maps_desert)"
+  },
+  {
+   "id": "people.fad",
+   "category": "people",
+   "ja": "ファド",
+   "en": "Fad",
+   "zh-Hans": "法德",
+   "zh-Hant": "法德",
+   "ko": "파드",
+   "note": "minor NPCs (Fad, Samir already in en maps_desert)"
+  },
+  {
+   "id": "people.samir",
+   "category": "people",
+   "ja": "サミル",
+   "en": "Samir",
+   "zh-Hans": "萨米尔",
+   "zh-Hant": "薩米爾",
+   "ko": "사미르",
+   "note": "minor NPCs (Fad, Samir already in en maps_desert)"
+  },
+  {
+   "id": "people.den",
+   "category": "people",
+   "ja": "デン",
+   "en": "Den",
+   "zh-Hans": "丹",
+   "zh-Hant": "丹",
+   "ko": "덴",
+   "note": "minor NPCs (Fad, Samir already in en maps_desert)"
+  },
+  {
+   "id": "enemies.flame_hound",
+   "category": "enemies",
+   "ja": "炎の番犬",
+   "en": "flame hound",
+   "zh-Hans": "炎之看门犬",
+   "zh-Hant": "炎之看門犬",
+   "ko": "불꽃의 파수견",
+   "note": "narration only"
+  },
+  {
+   "id": "enemies.lava_behemoth",
+   "category": "enemies",
+   "ja": "溶岩の巨獣",
+   "en": "lava behemoth",
+   "zh-Hans": "熔岩巨兽",
+   "zh-Hant": "熔岩巨獸",
+   "ko": "용암의 거수",
+   "note": "narration only"
+  },
+  {
+   "id": "core.hot_spring_flakes",
+   "category": "core",
+   "ja": "湯の花",
+   "en": "hot spring flakes",
+   "zh-Hans": "汤花",
+   "zh-Hant": "湯花",
+   "ko": "온천 꽃",
+   "note": "item k_spa_salt = 'Hot Spring Flakes' in en/items"
+  },
+  {
+   "id": "places.sea_glow_cove",
+   "category": "places",
+   "ja": "夜光虫の入り江",
+   "en": "Sea-Glow Cove",
+   "zh-Hans": "夜光虫湾",
+   "zh-Hant": "夜光蟲灣",
+   "ko": "야광충의 후미",
+   "note": "夜光虫 = 'sea sparkle' in running text."
+  },
+  {
+   "id": "places.white_cliff_road",
+   "category": "places",
+   "ja": "白崖の道",
+   "en": "White Cliff Road",
+   "zh-Hans": "白崖之路",
+   "zh-Hant": "白崖之路",
+   "ko": "흰 절벽 길"
+  },
+  {
+   "id": "places.nerei_cape_road",
+   "category": "places",
+   "ja": "ネレイの岬道",
+   "en": "Nerei Cape Road",
+   "zh-Hans": "涅雷海角道",
+   "zh-Hant": "涅雷海角道",
+   "ko": "네레이 곶길"
+  },
+  {
+   "id": "places.mermaid_s_song_rock",
+   "category": "places",
+   "ja": "人魚の歌う岩",
+   "en": "Mermaid's Song Rock",
+   "zh-Hans": "人鱼歌岩",
+   "zh-Hant": "人魚歌岩",
+   "ko": "인어가 노래하는 바위"
+  },
+  {
+   "id": "places.treasure_crab_isle",
+   "category": "places",
+   "ja": "財宝ヤドカリの島",
+   "en": "Treasure Crab Isle",
+   "zh-Hans": "宝藏寄居蟹岛",
+   "zh-Hant": "寶藏寄居蟹島",
+   "ko": "보물 소라게 섬"
+  },
+  {
+   "id": "places.stranded_merchant_ship",
+   "category": "places",
+   "ja": "座礁した商船",
+   "en": "Stranded Merchant Ship",
+   "zh-Hans": "触礁的商船",
+   "zh-Hant": "觸礁的商船",
+   "ko": "좌초한 상선"
+  },
+  {
+   "id": "places.widows_wall",
+   "category": "places",
+   "ja": "後家の壁",
+   "en": "the Widows' Wall",
+   "zh-Hans": "遗孀之墙",
+   "zh-Hant": "遺孀之牆",
+   "ko": "과부의 벽"
+  },
+  {
+   "id": "core.unreturning_light",
+   "category": "core",
+   "ja": "帰らずの灯",
+   "en": "the Unreturning Light",
+   "zh-Hans": "不归之灯",
+   "zh-Hant": "不歸之燈",
+   "ko": "돌아오지 않는 등불",
+   "note": "As in places.js regions.r_isles.beacon."
+  },
+  {
+   "id": "people.captain_who_never_returned",
+   "category": "people",
+   "ja": "帰らずの船長",
+   "en": "the Captain Who Never Returned",
+   "zh-Hans": "不归的船长",
+   "zh-Hant": "不歸的船長",
+   "ko": "돌아오지 않는 선장",
+   "note": "Chapter title (places.js)."
+  },
+  {
+   "id": "places.archive_marea_branch",
+   "category": "places",
+   "ja": "記録院マレア分室",
+   "en": "the Archive, Marea Branch",
+   "zh-Hans": "记录院马雷亚分室",
+   "zh-Hant": "記錄院馬雷亞分室",
+   "ko": "기록원 마레아 분실"
+  },
+  {
+   "id": "people.marina",
+   "category": "people",
+   "ja": "マリナ",
+   "en": "Marina",
+   "zh-Hans": "玛丽娜",
+   "zh-Hant": "瑪麗娜",
+   "ko": "마리나"
+  },
+  {
+   "id": "people.drake",
+   "category": "people",
+   "ja": "ドレイク",
+   "en": "Drake",
+   "zh-Hans": "德雷克",
+   "zh-Hant": "德雷克",
+   "ko": "드레이크"
+  },
+  {
+   "id": "places.surfsong_inn",
+   "category": "places",
+   "ja": "潮騒亭",
+   "en": "the Surfsong Inn",
+   "zh-Hans": "潮声亭",
+   "zh-Hant": "潮聲亭",
+   "ko": "파도소리 여관"
+  },
+  {
+   "id": "places.anchor",
+   "category": "places",
+   "ja": "いかり亭",
+   "en": "The Anchor",
+   "zh-Hans": "船锚亭",
+   "zh-Hant": "船錨亭",
+   "ko": "닻 주점"
+  },
+  {
+   "id": "core.smith_god",
+   "category": "core",
+   "ja": "鍛冶神",
+   "en": "the Smith God",
+   "zh-Hans": "锻冶神",
+   "zh-Hant": "鍛冶神",
+   "ko": "대장장이 신"
+  },
+  {
+   "id": "places.smith_god_s_forge",
+   "category": "places",
+   "ja": "鍛冶神の炉",
+   "en": "the Smith God's Forge",
+   "zh-Hans": "锻冶神之炉",
+   "zh-Hant": "鍛冶神之爐",
+   "ko": "대장장이 신의 화로"
+  },
+  {
+   "id": "core.smith_god_s_oath",
+   "category": "core",
+   "ja": "鍛冶神の誓い",
+   "en": "the Smith God's Oath",
+   "zh-Hans": "锻冶神之誓",
+   "zh-Hant": "鍛冶神之誓",
+   "ko": "대장장이 신의 맹세"
+  },
+  {
+   "id": "places.oath_stone",
+   "category": "places",
+   "ja": "誓いの碑",
+   "en": "the Oath Stone",
+   "zh-Hans": "誓约碑",
+   "zh-Hant": "誓約碑",
+   "ko": "맹세의 비석"
+  },
+  {
+   "id": "enemies.iron_warden",
+   "category": "enemies",
+   "ja": "鉄の番人",
+   "en": "the Iron Warden",
+   "zh-Hans": "钢铁守卫",
+   "zh-Hant": "鋼鐵守衛",
+   "ko": "강철 파수꾼",
+   "note": "As in enemies.js."
+  },
+  {
+   "id": "core.smiths",
+   "category": "core",
+   "ja": "鍛冶衆",
+   "en": "the Smiths",
+   "zh-Hans": "锻冶众",
+   "zh-Hant": "鍛冶眾",
+   "ko": "대장장이들",
+   "note": "Faction; capitalized. Aligned with w_en_A ('Volk, the Smiths' Hidden Village')."
+  },
+  {
+   "id": "enemies.lord_of_the_vein",
+   "category": "enemies",
+   "ja": "鉱脈の主",
+   "en": "Lord of the Vein",
+   "zh-Hans": "矿脉之主",
+   "zh-Hant": "礦脈之主",
+   "ko": "광맥의 주인",
+   "note": "Lord of the Vein as in enemies.js."
+  },
+  {
+   "id": "core.first_bell",
+   "category": "core",
+   "ja": "一番鐘",
+   "en": "First Bell",
+   "zh-Hans": "头遍钟",
+   "zh-Hant": "頭遍鐘",
+   "ko": "첫 종조",
+   "note": "Shift-roster columns (lo_time_mine)."
+  },
+  {
+   "id": "core.blade_melting_day",
+   "category": "core",
+   "ja": "刃を溶かす日",
+   "en": "Blade-Melting Day",
+   "zh-Hans": "熔刃之日",
+   "zh-Hant": "熔刃之日",
+   "ko": "칼날을 녹이는 날"
+  },
+  {
+   "id": "people.borg",
+   "category": "people",
+   "ja": "ボルグ",
+   "en": "Borg",
+   "zh-Hans": "博尔格",
+   "zh-Hant": "博爾格",
+   "ko": "보르그",
+   "note": "イルザ = Ilsa (not Ilse, which is the companion イルゼ)."
+  },
+  {
+   "id": "people.helga",
+   "category": "people",
+   "ja": "ヘルガ",
+   "en": "Helga",
+   "zh-Hans": "赫尔加",
+   "zh-Hant": "赫爾加",
+   "ko": "헬가",
+   "note": "イルザ = Ilsa (not Ilse, which is the companion イルゼ)."
+  },
+  {
+   "id": "people.pip",
+   "category": "people",
+   "ja": "ピップ",
+   "en": "Pip",
+   "zh-Hans": "皮普",
+   "zh-Hant": "皮普",
+   "ko": "피프",
+   "note": "イルザ = Ilsa (not Ilse, which is the companion イルゼ)."
+  },
+  {
+   "id": "people.dag",
+   "category": "people",
+   "ja": "ダグ",
+   "en": "Dag",
+   "zh-Hans": "达格",
+   "zh-Hant": "達格",
+   "ko": "다그",
+   "note": "イルザ = Ilsa (not Ilse, which is the companion イルゼ)."
+  },
+  {
+   "id": "people.rolf",
+   "category": "people",
+   "ja": "ロルフ",
+   "en": "Rolf",
+   "zh-Hans": "罗尔夫",
+   "zh-Hant": "羅爾夫",
+   "ko": "롤프",
+   "note": "イルザ = Ilsa (not Ilse, which is the companion イルゼ)."
+  },
+  {
+   "id": "people.gunnar",
+   "category": "people",
+   "ja": "グンナル",
+   "en": "Gunnar",
+   "zh-Hans": "贡纳尔",
+   "zh-Hant": "貢納爾",
+   "ko": "군나르",
+   "note": "イルザ = Ilsa (not Ilse, which is the companion イルゼ)."
+  },
+  {
+   "id": "people.ilsa",
+   "category": "people",
+   "ja": "イルザ",
+   "en": "Ilsa",
+   "zh-Hans": "伊尔莎",
+   "zh-Hant": "伊爾莎",
+   "ko": "일자",
+   "note": "イルザ = Ilsa (not Ilse, which is the companion イルゼ)."
+  },
+  {
+   "id": "people.mimi",
+   "category": "people",
+   "ja": "ミミ",
+   "en": "Mimi",
+   "zh-Hans": "咪咪",
+   "zh-Hant": "咪咪",
+   "ko": "미미",
+   "note": "イルザ = Ilsa (not Ilse, which is the companion イルゼ)."
+  },
+  {
+   "id": "places.gald_pass",
+   "category": "places",
+   "ja": "ガルドの峠道",
+   "en": "Gald Pass",
+   "zh-Hans": "加尔德山道",
+   "zh-Hant": "加爾德山道",
+   "ko": "갈드 고갯길"
+  },
+  {
+   "id": "places.ore_valley",
+   "category": "places",
+   "ja": "鉱石の谷",
+   "en": "Ore Valley",
+   "zh-Hans": "矿石谷",
+   "zh-Hant": "礦石谷",
+   "ko": "광석 골짜기"
+  },
+  {
+   "id": "places.mine_cart_cliffs",
+   "category": "places",
+   "ja": "トロッコ線の崖",
+   "en": "Mine Cart Cliffs",
+   "zh-Hans": "矿车线悬崖",
+   "zh-Hant": "礦車線懸崖",
+   "ko": "광차 선로 절벽"
+  },
+  {
+   "id": "places.pickaxe",
+   "category": "places",
+   "ja": "つるはし亭",
+   "en": "The Pickaxe",
+   "zh-Hans": "鹤嘴亭",
+   "zh-Hant": "鶴嘴亭",
+   "ko": "곡괭이 주점"
+  },
+  {
+   "id": "places.minelamp_inn",
+   "category": "places",
+   "ja": "坑灯亭",
+   "en": "the Minelamp Inn",
+   "zh-Hans": "坑灯亭",
+   "zh-Hant": "坑燈亭",
+   "ko": "갱등 여관"
+  },
+  {
+   "id": "people.chancellor",
+   "category": "people",
+   "ja": "学長",
+   "en": "Chancellor",
+   "zh-Hans": "学长",
+   "zh-Hant": "校長",
+   "ko": "학장",
+   "note": "Aligned with w_en_A."
+  },
+  {
+   "id": "places.starreading_ridge",
+   "category": "places",
+   "ja": "星読みの尾根",
+   "en": "Starreading Ridge",
+   "zh-Hans": "观星岭",
+   "zh-Hant": "觀星嶺",
+   "ko": "별읽기 능선"
+  },
+  {
+   "id": "places.stargazer_s_slope",
+   "category": "places",
+   "ja": "星見の坂",
+   "en": "Stargazer's Slope",
+   "zh-Hans": "望星坡",
+   "zh-Hant": "望星坡",
+   "ko": "별 보는 언덕"
+  },
+  {
+   "id": "places.pillared_plateau",
+   "category": "places",
+   "ja": "列柱の高原",
+   "en": "Pillared Plateau",
+   "zh-Hans": "列柱高原",
+   "zh-Hant": "列柱高原",
+   "ko": "열주 고원"
+  },
+  {
+   "id": "enemies.orrery_warden",
+   "category": "enemies",
+   "ja": "天球の番人",
+   "en": "Orrery Warden",
+   "zh-Hans": "天球守卫",
+   "zh-Hant": "天球守衛",
+   "ko": "천구의 파수꾼",
+   "note": "As in enemies.js."
+  },
+  {
+   "id": "core.starlamp",
+   "category": "core",
+   "ja": "星灯",
+   "en": "starlamp",
+   "zh-Hans": "星灯",
+   "zh-Hant": "星燈",
+   "ko": "별등"
+  },
+  {
+   "id": "people.starlamp_keeper",
+   "category": "people",
+   "ja": "星灯守",
+   "en": "Starlamp Keeper",
+   "zh-Hans": "守星灯人",
+   "zh-Hant": "守星燈人",
+   "ko": "별등지기"
+  },
+  {
+   "id": "core.observation_log",
+   "category": "core",
+   "ja": "観測録",
+   "en": "the Observation Log",
+   "zh-Hans": "观测录",
+   "zh-Hant": "觀測錄",
+   "ko": "관측록"
+  },
+  {
+   "id": "places.starlight_inn",
+   "category": "places",
+   "ja": "星明かり亭",
+   "en": "the Starlight Inn",
+   "zh-Hans": "星光亭",
+   "zh-Hant": "星光亭",
+   "ko": "별빛 여관"
+  },
+  {
+   "id": "places.stargazer_s_cup",
+   "category": "places",
+   "ja": "星見の杯亭",
+   "en": "the Stargazer's Cup",
+   "zh-Hans": "望星杯亭",
+   "zh-Hant": "望星杯亭",
+   "ko": "별 보는 잔 주점"
+  },
+  {
+   "id": "people.octavia",
+   "category": "people",
+   "ja": "オクタヴィア",
+   "en": "Octavia",
+   "zh-Hans": "奥克塔维娅",
+   "zh-Hant": "奧克塔維婭",
+   "ko": "옥타비아"
+  },
+  {
+   "id": "people.luca",
+   "category": "people",
+   "ja": "ルカ",
+   "en": "Luca",
+   "zh-Hans": "卢卡",
+   "zh-Hant": "盧卡",
+   "ko": "루카",
+   "note": "JA uses ルカ for two people: the astronomer (Luca) and Glen's sailhand (EN Lucas) — JA rename of the crewman pending."
+  },
+  {
+   "id": "people.capella",
+   "category": "people",
+   "ja": "カペラ",
+   "en": "Capella",
+   "zh-Hans": "卡佩拉",
+   "zh-Hant": "卡佩拉",
+   "ko": "카펠라"
+  },
+  {
+   "id": "people.milo",
+   "category": "people",
+   "ja": "ミロ",
+   "en": "Milo",
+   "zh-Hans": "米洛",
+   "zh-Hant": "米洛",
+   "ko": "밀로"
+  },
+  {
+   "id": "people.timo",
+   "category": "people",
+   "ja": "ティモ",
+   "en": "Timo",
+   "zh-Hans": "蒂莫",
+   "zh-Hant": "蒂莫",
+   "ko": "티모"
+  },
+  {
+   "id": "people.ida",
+   "category": "people",
+   "ja": "イーダ",
+   "en": "Ida",
+   "zh-Hans": "伊达",
+   "zh-Hant": "伊達",
+   "ko": "이다"
+  },
+  {
+   "id": "people.celes",
+   "category": "people",
+   "ja": "セレス",
+   "en": "Celes",
+   "zh-Hans": "塞蕾丝",
+   "zh-Hant": "塞蕾絲",
+   "ko": "세레스"
+  },
+  {
+   "id": "core.sunheir_claim",
+   "category": "core",
+   "ja": "日継ぎの主張",
+   "en": "the Sunheir claim",
+   "zh-Hans": "承日之说",
+   "zh-Hant": "承日之說",
+   "ko": "해잇기의 주장",
+   "note": "Followed w_en_B ('Sunheir'); w_en_A proposed 'Sun-Succession War'. Owner should pick one."
+  },
+  {
+   "id": "core.there_was_night_and_morning_came",
+   "category": "core",
+   "ja": "夜があって、朝が来た。",
+   "en": "There was night, and morning came.",
+   "zh-Hans": "有了夜，晨来了。",
+   "zh-Hant": "有了夜，晨來了。",
+   "ko": "밤이 있었고, 아침이 왔다.",
+   "note": "The title line of the First Chronicle (ev.final_00_common.TITLE_LINE). Page-back / Roa telling form: 夜があって、朝が来る = \"There is night, and morning comes.\" Noa's song: \"♪ There was night, and morning came\"."
+  },
+  {
+   "id": "items.shanty_shell",
+   "category": "items",
+   "ja": "舟歌の貝がら",
+   "en": "Shanty Shell",
+   "zh-Hans": "船歌贝壳",
+   "zh-Hant": "船歌貝殼",
+   "ko": "뱃노래 조개껍데기",
+   "note": "Key item (isles). Decided by lead 2026-09-30."
+  }
+ ],
+ "pending_note": "EN decided (w_en_A/B/C, 2026-09-30) but not every language has a column yet (names lists, phrases, or no zh/ko entry). Move into terms once zh-Hans/zh-Hant/ko are filled.",
+ "pending": [
+  {
+   "ja": "名簿",
+   "en": "the storytellers' register",
+   "note": "（語り部の）"
+  },
+  {
+   "ja": "歌い手の席",
+   "en": "Seat of the Singers",
+   "zh-Hans": "歌者之席",
+   "note": "Board Dorga nails under the plaque."
+  },
+  {
+   "ja": "無敗の語り部",
+   "en": "the Unbeaten Storyteller",
+   "note": "Name carved on the winners' board."
+  },
+  {
+   "ja": "記録院の写し・第八十二号",
+   "en": "Archive Copy No. 82"
+  },
+  {
+   "ja": "北のくぎ星",
+   "en": "the northern nail-star",
+   "note": "Zaid's star songs"
+  },
+  {
+   "ja": "七つの泉星",
+   "en": "the seven spring-stars",
+   "note": "Zaid's star songs"
+  },
+  {
+   "ja": "野営地「岩の井戸」「星の石」 / 王墓のオアシス",
+   "en": "Rock Well / Star Stone / the Tomb Oasis",
+   "note": "as in en maps_desert"
+  },
+  {
+   "ja": "ハ・ザ・ル",
+   "en": "HA / ZA / R",
+   "note": "（墓守の像の字） glyph fragments that spell Hazar"
+  },
+  {
+   "ja": "挑戦者の間",
+   "en": "the Challengers' Hall",
+   "zh-Hans": "挑战者之间"
+  },
+  {
+   "ja": "舟歌",
+   "en": "shanty",
+   "note": "items.js has 'Boat Song Shell' (舟歌の貝がら); dialogue uses 'shanty'. Suggest renaming the item to 'Shanty Shell'."
+  },
+  {
+   "ja": "グレンの船員",
+   "en": "Tobias the Boatswain, Lucas the Sailhand, Sam the Lookout, Owen the Helmsman, Jonas the Carpenter, Beppo the Ship's Boy",
+   "note": "帆手のルカ rendered 'Lucas' so he is not confused with the astronomer ルカ = Luca (see JA issues)."
+  },
+  {
+   "ja": "岬の宿",
+   "en": "Cape Inn",
+   "zh-Hans": "海角旅店"
+  },
+  {
+   "ja": "組合",
+   "en": "the Guild (Miners' Guild)",
+   "note": "（鉱夫組合）"
+  },
+  {
+   "ja": "滝の音",
+   "en": "the Falls Inn"
+  },
+  {
+   "ja": "学院",
+   "en": "the Academy",
+   "note": "Aligned with w_en_A."
+  },
+  {
+   "ja": "昼の星",
+   "en": "Day Stars"
+  },
+  {
+   "ja": "定説「夜は昔から夜である」",
+   "en": "the doctrine: \"Night has always been night.\""
   }
  ]
 }
