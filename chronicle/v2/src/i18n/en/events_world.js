@@ -1,0 +1,40 @@
+// 英語の文の表（events_world）。key は日本語の表（src/i18n/ja/events_world.js）と同じ。無い key は日本語が出る
+// 差し込み {name} は日本語と同じ名前を残す。数の言い分けは {n, plural, one {…} other {…}}（core/i18n.js）
+(function (R) {
+  'use strict';
+  R.I18n.add('en', {
+    'ev.world_poi.world_poi_shrine.run.narr': 'A small wayside shrine.\nA stone figure praying for safe\ntravels is enshrined here.',
+    'ev.world_poi.world_poi_shrine.run.narr_2': 'You put your hands together at the shrine.',
+    'ev.world_poi.world_poi_shrine.run.narr_3': ['The wildflowers left as an\noffering are still fresh.', 'The stone still bears the marks\nof a candle someone lit.', 'The wind seemed to soften,\njust a little.'],
+    'ev.world_poi.lines.0': 'The windmill door is shut tight.\nIt seems you can\'t go in for now.',
+    'ev.world_poi.lines': ['Old standing stones form a ring.', 'Faint, unreadable letters are\ncarved into the stone.\n...They look like the beacon sign.'],
+    'ev.world_poi.lines_2': ['A crumbling watchtower.', 'Roots and earth block the\nstone stairs inside. Once, they\nmust have watched the forest from here.'],
+    'ev.world_poi.lines_3': ['Moss-covered pillars stand in a circle.', 'On the floor stone at the center,\na pattern of Millennial Tree leaves.'],
+    'ev.world_poi.lines_4': ['A great fallen statue\nof a robed figure.', 'Its face is worn away\nbeyond knowing.'],
+    'ev.world_poi.lines_5': ['A stone foundation buried in grass.\nOnly three stone steps remain.', 'Perhaps an old waystation once stood here.'],
+    'ev.world_poi.lines_6': ['An old stone wall overlooking the sea.', 'Through the window hole, the\nlighthouse beam shows far away.'],
+    'ev.world_poi.lines_7': ['A timber lookout.', 'From the top you can see the whole\npeninsula\'s pastures and the\nnorthern sea.'],
+    'ev.world_poi.lines_8': ['A stone tower buried in snow.', 'A single window opens toward\nthe northern ice floes.'],
+    'ev.world_poi.lines_9': ['A temple\'s face, half buried in sand.', 'A cold wind blows from\nbetween the two pillars.'],
+    'ev.world_poi.lines_10': ['An old bell tower jutting from the marsh.', 'A rusted bell hangs crooked\namid the moss.\n...It doesn\'t ring.'],
+    'ev.world_poi.lines_11': ['The remains of a stilt house.', 'The floorboards are gone; only\nthe roof still leans over\nthe marsh.'],
+    'ev.world_poi.world_poi_cache.run.narr': 'There\'s nothing left in the gap between the stones.',
+    'ev.world_poi.world_poi_cache.run.narr_2': 'A traveler\'s small bundle is\nwedged into a gap in the stones.',
+    'ev.world_prologue.world_pen_lamp.run.narr': 'The waymark lantern is lit.\nThe darkness around it\nhas eased a little.',
+    'ev.world_prologue.world_pen_lamp.run.narr_2': 'The old lantern at the lookout\nis still unlit.',
+    'ev.world_prologue.world_pen_lamp.run.narr_3': 'The waymark lantern\'s\nfire has gone out.',
+    'ev.world_prologue.world_pen_lamp.run.narr_4': 'With an ember, you could\nprobably light it.',
+    'ev.world_prologue.world_pen_lamp.run.narr_5': 'You passed the guild\'s ember\nto the lantern.',
+    'ev.world_prologue.world_pen_lamp.run.narr_6': 'The lantern is lit!\nMonsters shouldn\'t come\nnear here anymore.',
+    'ev.world_prologue.world_pen_lamp.run.narr_7': 'Better go tell Tadeo.',
+    'ev.world_prologue.world_bridge_guard.run.pick.0.text': 'See that pillar of light\nabove the western forest?\nIs that what they call a Great Beacon?',
+    'ev.world_prologue.world_bridge_guard.run.pick.1.text': ['The drawbridge is down.\nCross the North Fields and\nyou\'re on the road to the forest.', 'They say the east and north passes\nare blocked by rockslides. Take care.'],
+    'ev.world_prologue.world_bridge_guard.run.pick.2.text': ['The drawbridge stays up.\nEver since the lighthouse went dark,\nnight monsters cross the bridge.', 'Not lowering it till the\nlighthouse is lit again.'],
+    'ev.world_prologue.world_traveler_plains.run.pick.0.text': 'Since the forest\'s light came back,\nresin torches for the night road\nhave been selling well.',
+    'ev.world_prologue.world_traveler_plains.run.pick.1.text': ['Good light to you.\nA rockslide closed the east pass,\nso no goods reach the mountain towns.', 'So I\'m camping here for now.\nCare to warm yourself\nby the fire?'],
+    'ev.world_prologue.world_woodcutter.run.pick.0.text': 'My mates have all come\nhome to the village.\nNo one gets lost in the forest now.',
+    'ev.world_prologue.world_woodcutter.run.pick.1.text': ['The forest keeps changing its\npaths, so we can\'t go deep.', 'Three of the waymark lanterns\non the road have gone out.\nThat\'s what scares me at night.'],
+    'ev.world_prologue.world_shepherd.run.pick.0.text': 'Doesn\'t the sky seem a touch\nbrighter these days?\nThe sheep have settled down, too.',
+    'ev.world_prologue.world_shepherd.run.pick.1.text': ['Since the lighthouse came back,\nthe sheep don\'t bleat at night.', 'When I was young...\nhmm, was there such a thing as\n\'daytime\'? I can\'t quite recall.'],
+  });
+})(window.RPG);

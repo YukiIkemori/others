@@ -75,5 +75,23 @@
     'regions.r_star.chapter.title': 'The Sage Who Counted Stars',
     'regions.r_star.beacon': 'Stars',
     'regions.world.name': 'World Rumors',
+    // ---- 追加の訳（2026-09-30）
+    'regions.r_isles.chapter.summary': 'On a foggy night, the storyteller chased the ghost ship in a ship of their own and brought the captain who never came home the rest of his shanty. The light turned orange again and was kindled on Lighthouse Isle, out at sea.',
+    'regions.r_mine.chapter.summary': 'In Dovan, the town beneath the earth, the fire of the Smith God\'s forge grew thin, and the shafts dug below the Seventh Level caved in. With the guild and the smiths divided, {hero} chose the town\'s path before the Iron Warden.',
+    'regions.r_star.chapter.summary': 'The storyteller slipped into the Academy after lights-out, recovered the star chart, and read the stars\' names aloud atop the Starreading Tower. The lost stars returned, and the plateau shone under starlight.',
+    'locations.coral.name': 'Port Coral',
+    'locations.nerei.name': 'Nerei',
+    'locations.tidecave.name': 'Tideroar Cave',
+    'locations.ghostship.name': 'Ghost Ship',
+    'locations.lighthouse_isle.name': 'Lighthouse Isle',
+    'locations.dovan.name': 'Dovan',
+    'locations.deepmine.name': 'The Deep Shafts',
+    'locations.hermit.name': 'Mountain Hermit\'s Hut',
+    'locations.volk.name': 'Volk, the Smiths\' Hidden Village',
+    'locations.vein.name': 'The Abyssal Vein',
+    'locations.orbis.name': 'Orbis',
+    'locations.academy.name': 'The Academy After Dark',
+    'locations.startower.name': 'Starreading Tower',
+    'locations.starfall.name': 'Starfall Hollow',
   });
 })(window.RPG);

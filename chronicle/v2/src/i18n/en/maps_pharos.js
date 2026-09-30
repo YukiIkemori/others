@@ -7,7 +7,7 @@
     'map.pharos_interiors.pharos_inn': 'Pharos Inn',
     'map.pharos_interiors.pharos_inn.innkeeper.name': 'Innkeeper',
     'map.pharos_interiors.pharos_tavern': 'Sea Breeze Tavern',
-    'map.pharos_interiors.pharos_tavern.master.name': 'pharos31',
+    'map.pharos_interiors.pharos_tavern.master.name': 'Sea Breeze Tavern Master',
     'map.pharos_interiors.pharos_tavern.gossip.name': 'Gossipy Landlady',
     'map.pharos_interiors.pharos_tavern.bard.name': 'Bard',
     'map.pharos_interiors.pharos_tavern.trader.name': 'Traveling Merchant',

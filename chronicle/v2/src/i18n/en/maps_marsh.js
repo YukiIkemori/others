@@ -94,5 +94,41 @@
     'map.marsh_manor.marsh_manor_2.npcs.0.melda.title': 'Witch of Mist Manor',
     'map.marsh_manor.marsh_manor_2.meta.floor': '2F',
     'map.marsh_manor.marsh_manor_2.meta.sub': 'Floor echoing with music',
+    // ---- src/maps/marsh_field_00_kit.js
+    'map.marsh_field_00_kit.CONFIRM.marsh_manor_1': 'Past the heavy door lies Mist Manor.\nGo inside?',
+    'map.marsh_field_00_kit.CONFIRM.marsh_bog': 'Beyond the fog lies Sunken Bell Marsh.\nStep into the marsh?',
+    // ---- src/maps/marsh_field_north.js
+    'map.marsh_field_north.m_north.name': 'Edge of the Fog',
+    'map.marsh_field_north.m_north.objects.0.text': 'Graymoor Marsh\nSouth → Loch, Town by the Water',
+    'map.marsh_field_north.m_north.peat_cutter.name': 'Peat Cutter',
+    'map.marsh_field_north.m_north.lines.0.text': ['We dig the peat, dry it,\nand sell it in Loch.', 'On foggy nights, mind you\ndon\'t step off the boards.\nThe marsh has no bottom.'],
+    'map.marsh_field_north.m_north.meta.sub': 'Where the mountain road drops into the marsh',
+    // ---- src/maps/marsh_field_west.js
+    'map.marsh_field_west.m_west.name': 'West Shore of Loch',
+    'map.marsh_field_west.m_west.objects.0.text': 'Loch, Town by the Water\n-- The town of bells upon the lake',
+    'map.marsh_field_west.m_west.shore_fisher.name': 'Shore Fisherman',
+    'map.marsh_field_west.m_west.lines.0.text': ['There are seven bell towers\non piles in the lake.\nNot one of them rings now.', 'Since the bells went quiet,\nthe fog comes right into town.'],
+    'map.marsh_field_west.m_west.lines.1.text': 'The morning bell\'s ringing again.\nThe fish are jumping, too.',
+    'map.marsh_field_west.m_west.meta.sub': 'The pier across to the lake town',
+    // ---- src/maps/marsh_field_manor.js
+    'map.marsh_field_manor.m_manor.name': 'Garden of Withered Willows',
+    'map.marsh_field_manor.m_manor.objects.0.text': 'Mist Manor\nMusic is heard here every night.',
+    'map.marsh_field_manor.m_manor.meta.sub': 'Sunken grove leading to Mist Manor',
+    'map.marsh_field_manor.m_manor.objects.1.text': 'Mist Manor\nMusic is heard here every night.',
+    // ---- src/maps/marsh_field_fen.js
+    'map.marsh_field_fen.m_fen.name': 'Sunken Chapel Fen',
+    'map.marsh_field_fen.m_fen.objects.0.text': 'The Sunken Chapel\nThey say singing rises from under the water.',
+    'map.marsh_field_fen.m_fen.meta.sub': 'Peat fen south of Loch',
+    // ---- src/maps/marsh_field_lotus.js
+    'map.marsh_field_lotus.m_lotus.name': 'Lotus Pond',
+    'map.marsh_field_lotus.m_lotus.objects.1.text': 'Lotus Pond\nAt lights-out, they say blue lotuses bloom.',
+    'map.marsh_field_lotus.m_lotus.meta.sub': 'Lotuses that glow at lights-out',
+    // ---- src/maps/marsh_field_bog.js
+    'map.marsh_field_bog.m_bog.name': 'Rim of Sunken Bell Marsh',
+    'map.marsh_field_bog.m_bog.objects.3.text': 'Sunken Bell Marsh\n-- Where the fog comes from',
+    'map.marsh_field_bog.m_bog.objects.4.text': 'South → Tidewatch Bridge, Ashen Wastes',
+    'map.marsh_field_bog.m_bog.meta.sub': 'Where the fog comes from',
+    'map.marsh_field_bog.m_bog.objects.4.text_2': 'Sunken Bell Marsh\n-- Where the fog comes from',
+    'map.marsh_field_bog.m_bog.objects.5.text': 'South → Tidewatch Bridge, Ashen Wastes',
   });
 })(window.RPG);

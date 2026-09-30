@@ -6,7 +6,7 @@
     // ---- src/maps/prologue_lighthouse.js
     'map.prologue_lighthouse.objects.sign': 'Pharos Lighthouse\nNo entry except for the lighthouse keeper.',
     'map.prologue_lighthouse.objects.lh1_door.locked': 'The door is locked.',
-    'map.prologue_lighthouse.npcs.otto.name': 'prologue20',
+    'map.prologue_lighthouse.npcs.otto.name': 'Otto',
     'map.prologue_lighthouse.npcs.otto.title': 'Lighthouse Keeper',
     'map.prologue_lighthouse.lighthouse_1.name': 'Pharos Lighthouse',
     'map.prologue_lighthouse.lighthouse_1.meta.floor': '1F',

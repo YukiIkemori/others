@@ -31,5 +31,17 @@
     'shops.shop_yule_arms_low.name': 'Yule Armory (Looted Storeroom)',
     'shops.shop_yule_fur.name': 'Fur Peddler',
     'shops.shop_pass_inn.name': 'Pass Inn Shop',
+    // ---- 追加の訳（2026-09-30）
+    'shops.shop_coral_items.name': 'Coral Item Shop',
+    'shops.shop_coral_arms.name': 'Coral Armory',
+    'shops.shop_coral_guild.name': 'Sailors\' Guild Counter',
+    'shops.shop_nerei.name': 'Nerei General Store',
+    'shops.shop_dovan_items.name': 'Dovan Item Shop',
+    'shops.shop_dovan_forge.name': 'Smiths\' Counter',
+    'shops.shop_dovan_guild.name': 'Miners\' Guild Counter',
+    'shops.shop_volk_arms.name': 'Great Forge of Volk',
+    'shops.shop_orbis_items.name': 'Orbis Item Shop',
+    'shops.shop_orbis_arms.name': 'Orbis Armory',
+    'shops.shop_orbis_magic.name': 'Academy Spell Shop',
   });
 })(window.RPG);
