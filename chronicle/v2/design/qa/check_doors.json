@@ -1,5 +1,5 @@
 {
- "date": "2026-09-30T02:26:42.920Z",
+ "date": "2026-09-30T02:37:30.712Z",
  "fixture": "content_p_pharos",
  "walked": [
   {
@@ -9,28 +9,13 @@
    "at": "loch_items",
    "to": "loch_items",
    "ok": true,
-   "steps": 3,
+   "steps": 4,
    "why": null,
    "start": [
     20,
     15
    ],
-   "ms": 8592
-  },
-  {
-   "map": "loch",
-   "kind": "door",
-   "id": "loch_bell_tavern",
-   "at": "loch_tavern",
-   "to": "loch_tavern",
-   "ok": true,
-   "steps": 6,
-   "why": null,
-   "start": [
-    27,
-    15
-   ],
-   "ms": 9672
+   "ms": 8267
   },
   {
    "map": "loch",
@@ -45,7 +30,22 @@
     35,
     15
    ],
-   "ms": 2009
+   "ms": 8464
+  },
+  {
+   "map": "loch",
+   "kind": "door",
+   "id": "loch_bell_tavern",
+   "at": "loch_tavern",
+   "to": "loch_tavern",
+   "ok": true,
+   "steps": 6,
+   "why": null,
+   "start": [
+    27,
+    15
+   ],
+   "ms": 9118
   },
   {
    "map": "loch",
@@ -60,7 +60,7 @@
     7,
     21
    ],
-   "ms": 2407
+   "ms": 2269
   },
   {
    "map": "loch",
@@ -75,7 +75,7 @@
     43,
     19
    ],
-   "ms": 2318
+   "ms": 2378
   },
   {
    "map": "loch",
@@ -90,7 +90,7 @@
     5,
     41
    ],
-   "ms": 2123
+   "ms": 2331
   },
   {
    "map": "loch",
@@ -105,7 +105,7 @@
     32,
     39
    ],
-   "ms": 2205
+   "ms": 2006
   },
   {
    "map": "loch",
@@ -120,7 +120,22 @@
     19,
     46
    ],
-   "ms": 2399
+   "ms": 2109
+  },
+  {
+   "map": "loch",
+   "kind": "door",
+   "id": "loch_beppo",
+   "at": "loch_beppo",
+   "to": "loch_beppo",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    47,
+    38
+   ],
+   "ms": 2269
   },
   {
    "map": "loch",
@@ -135,22 +150,7 @@
     39,
     48
    ],
-   "ms": 2487
-  },
-  {
-   "map": "loch",
-   "kind": "door",
-   "id": "loch_beppo",
-   "at": "loch_beppo",
-   "to": "loch_beppo",
-   "ok": true,
-   "steps": 5,
-   "why": null,
-   "start": [
-    47,
-    38
-   ],
-   "ms": 5363
+   "ms": 2097
   },
   {
    "map": "loch",
@@ -165,7 +165,7 @@
     3,
     20
    ],
-   "ms": 2466
+   "ms": 2762
   },
   {
    "map": "loch",
@@ -180,7 +180,427 @@
     53,
     18
    ],
-   "ms": 2367
+   "ms": 3083
+  },
+  {
+   "map": "loch_beppo",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 4812
+  },
+  {
+   "map": "loch_emma",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 3884
+  },
+  {
+   "map": "loch_arms",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 5,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 6763
+  },
+  {
+   "map": "loch_items",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2685
+  },
+  {
+   "map": "loch_hall",
+   "kind": "exit",
+   "id": "10,13",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    10,
+    9
+   ],
+   "ms": 2837
+  },
+  {
+   "map": "loch_inn",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 2794
+  },
+  {
+   "map": "loch_klaus",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 3339
+  },
+  {
+   "map": "loch_tavern",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 3648
+  },
+  {
+   "map": "loch_mayor",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 3803
+  },
+  {
+   "map": "loch_tower",
+   "kind": "exit",
+   "id": "5,11",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    7
+   ],
+   "ms": 2848
+  },
+  {
+   "map": "m_fen",
+   "kind": "exit",
+   "id": "20,0",
+   "at": "m_west",
+   "to": "m_west",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    20,
+    4
+   ],
+   "ms": 2542
+  },
+  {
+   "map": "m_bog",
+   "kind": "exit",
+   "id": "25,0",
+   "at": "m_fen",
+   "to": "m_fen",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    4
+   ],
+   "ms": 3407
+  },
+  {
+   "map": "m_fen",
+   "kind": "exit",
+   "id": "55,30",
+   "at": "m_lotus",
+   "to": "m_lotus",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    55,
+    26
+   ],
+   "ms": 2037
+  },
+  {
+   "map": "m_lotus",
+   "kind": "exit",
+   "id": "0,20",
+   "at": "m_fen",
+   "to": "m_fen",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    0,
+    16
+   ],
+   "ms": 2165
+  },
+  {
+   "map": "m_fen",
+   "kind": "exit",
+   "id": "26,43",
+   "at": "m_bog",
+   "to": "m_bog",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    26,
+    39
+   ],
+   "ms": 3253
+  },
+  {
+   "map": "m_lotus",
+   "kind": "exit",
+   "id": "30,0",
+   "at": "m_manor",
+   "to": "m_manor",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    30,
+    4
+   ],
+   "ms": 3197
+  },
+  {
+   "map": "m_manor",
+   "kind": "exit",
+   "id": "0,20",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    20
+   ],
+   "ms": 3161
+  },
+  {
+   "map": "m_manor",
+   "kind": "exit",
+   "id": "23,43",
+   "at": "m_lotus",
+   "to": "m_lotus",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    23,
+    39
+   ],
+   "ms": 2365
+  },
+  {
+   "map": "m_north",
+   "kind": "exit",
+   "id": "25,39",
+   "at": "m_west",
+   "to": "m_west",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    35
+   ],
+   "ms": 3880
+  },
+  {
+   "map": "m_north",
+   "kind": "exit",
+   "id": "24,0",
+   "at": "world",
+   "to": "world",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    24,
+    4
+   ],
+   "ms": 5378
+  },
+  {
+   "map": "m_west",
+   "kind": "exit",
+   "id": "19,0",
+   "at": "m_north",
+   "to": "m_north",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    19,
+    4
+   ],
+   "ms": 3238
+  },
+  {
+   "map": "m_west",
+   "kind": "exit",
+   "id": "20,43",
+   "at": "m_fen",
+   "to": "m_fen",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    20,
+    39
+   ],
+   "ms": 3622
+  },
+  {
+   "map": "m_west",
+   "kind": "exit",
+   "id": "55,20",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    51,
+    20
+   ],
+   "ms": 7227
+  },
+  {
+   "map": "m_manor",
+   "kind": "door",
+   "id": "",
+   "at": "marsh_manor_1",
+   "to": "marsh_manor_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    38,
+    13
+   ],
+   "ms": 17283
+  },
+  {
+   "map": "marsh_manor_1",
+   "kind": "exit",
+   "id": "22,39",
+   "at": "m_manor",
+   "to": "m_manor",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    22,
+    35
+   ],
+   "ms": 3633
+  },
+  {
+   "map": "marsh_bog",
+   "kind": "exit",
+   "id": "28,51",
+   "at": "m_bog",
+   "to": "m_bog",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    28,
+    47
+   ],
+   "ms": 8368
+  },
+  {
+   "map": "marsh_manor_1",
+   "kind": "stairs",
+   "id": "manor_1_up",
+   "at": "marsh_manor_2",
+   "to": "marsh_manor_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    23,
+    7
+   ],
+   "ms": 8395
+  },
+  {
+   "map": "marsh_manor_2",
+   "kind": "stairs",
+   "id": "manor_2_down",
+   "at": "marsh_manor_1",
+   "to": "marsh_manor_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    23,
+    29
+   ],
+   "ms": 5129
   }
  ],
  "looks": [
@@ -323,8 +743,181 @@
    "look": "npc_marsh_woman",
    "art": "npc_marsh_woman",
    "ok": true
+  },
+  {
+   "map": "loch_arms",
+   "npc": "smith",
+   "look": "npc_marsh_man",
+   "art": "npc_marsh_man",
+   "ok": true
+  },
+  {
+   "map": "loch_beppo",
+   "npc": "beppo",
+   "look": "npc_beppo",
+   "art": "npc_beppo",
+   "ok": true
+  },
+  {
+   "map": "loch_emma",
+   "npc": "emma_home",
+   "look": "npc_emma",
+   "art": "npc_emma",
+   "ok": true
+  },
+  {
+   "map": "loch_emma",
+   "npc": "lina",
+   "look": "npc_marsh_child",
+   "art": "npc_marsh_child",
+   "ok": true
+  },
+  {
+   "map": "loch_hall",
+   "npc": "mayor",
+   "look": "npc_loch_mayor",
+   "art": "npc_loch_mayor",
+   "ok": true
+  },
+  {
+   "map": "loch_hall",
+   "npc": "hall_clerk",
+   "look": "npc_marsh_old_f",
+   "art": "npc_marsh_old_f",
+   "ok": true
+  },
+  {
+   "map": "loch_inn",
+   "npc": "inn_keeper",
+   "look": "npc_marsh_woman",
+   "art": "npc_marsh_woman",
+   "ok": true
+  },
+  {
+   "map": "loch_inn",
+   "npc": "emma_inn",
+   "look": "npc_emma",
+   "art": "npc_emma",
+   "ok": true
+  },
+  {
+   "map": "loch_inn",
+   "npc": "inn_guest",
+   "look": "npc_traveler",
+   "art": "npc_traveler",
+   "ok": true
+  },
+  {
+   "map": "loch_items",
+   "npc": "item_keeper",
+   "look": "npc_marsh_woman",
+   "art": "npc_marsh_woman",
+   "ok": true
+  },
+  {
+   "map": "loch_klaus",
+   "npc": "klaus",
+   "look": "npc_klaus",
+   "art": "npc_klaus",
+   "ok": true
+  },
+  {
+   "map": "loch_mayor",
+   "npc": "mayor_wife",
+   "look": "npc_marsh_old_f",
+   "art": "npc_marsh_old_f",
+   "ok": true
+  },
+  {
+   "map": "loch_tavern",
+   "npc": "barkeep",
+   "look": "npc_marsh_old_m",
+   "art": "npc_marsh_old_m",
+   "ok": true
+  },
+  {
+   "map": "loch_tavern",
+   "npc": "tav_bard",
+   "look": "npc_bard",
+   "art": "npc_bard",
+   "ok": true
+  },
+  {
+   "map": "loch_tavern",
+   "npc": "tav_sailor",
+   "look": "npc_marsh_man",
+   "art": "npc_marsh_man",
+   "ok": true
+  },
+  {
+   "map": "loch_tavern",
+   "npc": "tav_match",
+   "look": "npc_marsh_woman",
+   "art": "npc_marsh_woman",
+   "ok": true
+  },
+  {
+   "map": "loch_tower",
+   "npc": "tobias",
+   "look": "npc_tobias",
+   "art": "npc_tobias",
+   "ok": true
+  },
+  {
+   "map": "m_north",
+   "npc": "peat_cutter",
+   "look": "npc_marsh_woman",
+   "art": "npc_marsh_woman",
+   "ok": true
+  },
+  {
+   "map": "m_west",
+   "npc": "shore_fisher",
+   "look": "npc_marsh_old_m",
+   "art": "npc_marsh_old_m",
+   "ok": true
+  },
+  {
+   "map": "marsh_bog",
+   "npc": "bog_kid_a",
+   "look": "npc_marsh_child",
+   "art": "npc_marsh_child",
+   "ok": true
+  },
+  {
+   "map": "marsh_bog",
+   "npc": "bog_kid_b",
+   "look": "npc_marsh_child",
+   "art": "npc_marsh_child",
+   "ok": true
+  },
+  {
+   "map": "marsh_manor_2",
+   "npc": "melda",
+   "look": "npc_melda",
+   "art": "npc_melda",
+   "ok": true
   }
  ],
- "skipped": [],
+ "skipped": [
+  {
+   "map": "m_bog",
+   "kind": "door",
+   "id": "",
+   "to": "marsh_bog",
+   "cond": "marsh_assembly_done"
+  },
+  {
+   "map": "m_bog",
+   "kind": "exit",
+   "id": "25,43",
+   "to": "a_bridge",
+   "cond": {
+    "not": {
+     "slice": true
+    }
+   }
+  }
+ ],
  "errors": []
 }
