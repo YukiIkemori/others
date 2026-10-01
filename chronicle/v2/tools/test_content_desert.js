@@ -206,9 +206,10 @@ function battle() {
       const seen = [];
       const ex1 = E.execute;
       E.execute = function* (u, cmd) {
-        const before = { sunk: !!this.flags.worm_sunk };
+        const before = { sunk: !!this.flags.worm_sunk }, dealt0 = this.stats.dealt;
         yield* ex1.call(this, u, cmd);
-        if (u.isParty && cmd.target && cmd.target.id === 'b_sandworm' && isEarth(BC.ACT(cmd.id))) seen.push({ before, after: { sunk: !!this.flags.worm_sunk, reserved: cmd.target.reserved && cmd.target.reserved.id, slash: (cmd.target.ownDef().phys || {}).slash } });
+        // 当たった土の一撃だけを見る（唱えられなかった手番は数えない。2026-10-01 ボスの組み直しで手番の並びが変わった）
+        if (u.isParty && cmd.target && cmd.target.id === 'b_sandworm' && isEarth(BC.ACT(cmd.id)) && this.stats.dealt > dealt0) seen.push({ before, after: { sunk: !!this.flags.worm_sunk, reserved: cmd.target.reserved && cmd.target.reserved.id, slash: (cmd.target.ownDef().phys || {}).slash } });
       };
       // 術の人が砂もぐりより遅いと先に大技が来るので、いくつかの種で試す
       try { for (let i = 0; i < 12 && seen.length < 3; i++) BC.simulate({ party: earthParty, troop: 'tr_b_sandworm', tier: 1, seed: 'worm-earth:' + i, inv, maxRounds: 8, ai: earthAI(want) }); } finally { E.execute = ex1; }
