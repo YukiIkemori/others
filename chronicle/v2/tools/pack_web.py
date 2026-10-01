@@ -98,7 +98,24 @@ def locked_themes(v2):
         src = open(os.path.join(v2, 'src', 'data', 'regions.js'), encoding='utf-8').read()
     except OSError:
         return set()
-    return {m.group(1) for line in src.splitlines() if "slice: 'locked'" in line for m in [re.search(r"short: '([a-z_]+)'", line)] if m}
+    # 地方ごとの項目（"r_xxx: { ... short: 'xxx' ... }"）を切り出し、slice: 'locked' か、体験版で行ける地方（config.js の sliceOpen）に無い物を閉じた地方とする。
+    # 前は short と slice: 'locked' が同じ行にある物だけを拾っていたので、書き方が変わると 1 つも拾えず、体験版に全地方の絵が入っていた（2026-10-01）
+    try:
+        cfg = open(os.path.join(v2, 'src', 'data', 'config.js'), encoding='utf-8').read()
+        mo = re.search(r"sliceOpen:\s*\[([^\]]*)\]", cfg)
+        open_ids = set(re.findall(r"'([a-z_]+)'", mo.group(1))) if mo else None
+    except OSError:
+        open_ids = None
+    out = set()
+    starts = [(m.start(), m.group(1)) for m in re.finditer(r"^\s{4}([a-z_]+): \{", src, re.M)]
+    for i, (pos, rid) in enumerate(starts):
+        body = src[pos:starts[i + 1][0] if i + 1 < len(starts) else len(src)]
+        sm = re.search(r"short: '([a-z_]+)'", body)
+        if not sm or rid == 'world':
+            continue
+        if "slice: 'locked'" in body or (open_ids is not None and rid not in open_ids):
+            out.add(sm.group(1))
+    return out
 
 
 def env_group(key):
