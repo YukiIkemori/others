@@ -170,7 +170,7 @@
   }, { meta: { needs: ['item:k_guild_parcel'], gives: ['flag:isles_delivery_done'] } });
   E('nerei_inn_keeper', async (ev) => {
     await ev.say('nerei_inn_keeper', R.T('events.nerei_inn_keeper.say'));
-    const i = await ev.choose(R.T('events.nerei_inn_keeper.i.choose'), { text: R.T('events.nerei_inn_keeper.i.choose.text') });
+    const i = await ev.choose(R.T('events.nerei_inn_keeper.i.choose'), { who: 'nerei_inn_keeper', text: R.T('events.nerei_inn_keeper.i.choose.text') });
     if (i !== 0) return;
     const ok = await ev.inn();
     if (ok === false) return;

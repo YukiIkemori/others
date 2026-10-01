@@ -75,6 +75,16 @@
   };
   /** 仲間の札の行の高さ（掛ける前）と列の数 */
   S.companionGrid = function () { return S.tall() ? { rowH: 70, cols: 2 } : { rowH: 70, cols: 3 }; };
+  /** 一覧の高さ h（掛けた後）に全部の段が入るように、段の高さ（掛ける前）を 70 から minH（既定 50）まで縮める（入らなければ入るだけの段にして送る）。
+   *  テスター 2026-09-30 1-11: 最初の仲間選び（候補 20 人 = 7 段）でマルタとノエラの段だけが下に隠れ、送ると一番上の段が消えて分かりにくかった */
+  S.fitCompanionRows = function (list, h, minH) {
+    const gd = S.companionGrid();
+    const k = R.uiScale || 1, lines = Math.max(1, Math.ceil(list.rows.length / Math.max(1, list.cols)));
+    const lo = minH || 50, room = h / k;
+    // 全部入らなければ、入るだけの段で高さを割り直す（下に半端な空きを残さない）
+    const fit = room / lines >= lo ? lines : Math.max(1, Math.floor(room / lo));
+    list.rowH = Math.min(gd.rowH, Math.floor(room / fit));
+  };
   /** 詳しい札の高さ（縦持ち） */
   S.companionDetailH = function () { return u(392); };
 
@@ -131,8 +141,9 @@
         gr = { x: b.x, y: top, w: gw, h: b.h - (top - b.y) };
         dp = { x: b.x + gw + u(20), y: top, w: b.w - gw - u(20), h: gr.h };
       }
+      if (!tall) S.fitCompanionRows(this.list, gr.h);
       const rh = this.list.rowPx();
-      gr.h = Math.floor(gr.h / rh) * rh;
+      gr.h = Math.floor(gr.h / rh + 1e-6) * rh;
       this.list.render = (gg, row, rect, f) => {
         const id = row.value, k = this.picks.indexOf(id);
         S.companionCard(gg, this.info[id], { x: rect.x + u(3), y: rect.y + u(3), w: rect.w - u(6), h: rect.h - u(6) }, { focused: f, picked: k >= 0, chip: k >= 0 ? R.T('ui.party_select.partySelect.draw.render.chip', { p0: k + 1 }) : null });

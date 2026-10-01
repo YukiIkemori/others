@@ -143,6 +143,7 @@
       triggers: [
         { id: 'arrive', on: 'enter', event: 'verda_2_arrive', once: true },
         { id: 'mist_w', x: 21, y: 32, w: 1, h: 2, on: 'step', event: 'verda_mist', cond: UNSTABLE, once: true },
+        { id: 'moth_hint', x: 10, y: 13, w: 4, h: 1, on: 'step', event: 'verda_moth_hint', cond: '!forest_moth', once: true },   // 泉から北の道（眠りの粉のほのめかし）
         { id: 'moth', x: 8, y: 7, w: 9, h: 3, on: 'step', event: 'verda_moth', cond: '!forest_moth' },
         { id: 'vines', x: 29, y: 7, w: 2, h: 1, on: 'step', event: 'verda_vines', cond: UNSTABLE },
       ],

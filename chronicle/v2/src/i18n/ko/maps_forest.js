@@ -30,6 +30,7 @@
     'map.fern_interiors.fern_search.talk.0.L': '고드 우두머리가 발목을 삐었거든.\n우리끼리만으로는\n숲 깊은 곳까지 못 가.',
     'map.fern_interiors.fern_search.talk.1.forest_found_ben': '벤을 찾았다고?\n……다행이다. 정말 다행이야.',
     'map.fern_interiors.fern_search.talk.2.cleared_r_forest': '초소도 오늘 밤으로 끝이다.\n이번엔 축제 준비로군!',
+    'map.fern_interiors.fern_search.talk.moth': '나도 한 번, 숲 깊은 곳에서\n하얀 가루를 뒤집어쓰고 잠들어 버렸어.\n커다란 나방의 날개 가루야.갈 거면 수면 막이\n부적을 챙겨 가.',
     'map.fern_interiors.fern_gord': '고드의 집',
     'map.fern_interiors.fern_gord.npcs.0.gord.name': '고드',
     'map.fern_interiors.fern_gord.npcs.0.gord.title': '나무꾼 우두머리',

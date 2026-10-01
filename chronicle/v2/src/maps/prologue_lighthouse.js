@@ -77,9 +77,8 @@
         K.exam(17, 22, 'lighthouse_1_door', { cond: { not: LH_OPEN } }),
         K.exam(18, 22, 'lighthouse_1_door', { cond: { not: LH_OPEN } }),
       ];
-      const npcs = [
-        { id: 'otto', look: 'otto', name: R.T('map.prologue_lighthouse.npcs.otto.name'), title: R.T('map.prologue_lighthouse.npcs.otto.title'), x: 15, y: 18, dir: 'e', move: 'still', pushable: false, cond: ['prologue_key', '!prologue_tutorial'], talk: 'lighthouse_1_tutorial' },
-      ];
+      // オットーは中にいない（港で鍵をくれた人が、鍵のかかった塔の中に先回りしていた。テスター 2026-09-30）
+      const npcs = [];
       K.def('lighthouse_1', Object.assign({}, BASE, {
         name: R.T('map.prologue_lighthouse.lighthouse_1.name'), legend: LEG, rows: g, outside: 'sea', objects, npcs, tilePatches,
         art: { image: 'lighthouse/under/lighthouse_1', painted: ['sack@9,3', 'sack@15,3', 'bookshelf@20,3', 'bookshelf@21,3', 'barrel@22,3', 'sack@10,6', 'rock_small@11,7', 'sack@18,10', 'chair@24,10', 'table@25,10', 'sack@11,14', 'crate@24,15', 'crate@25,15', 'barrel@6,16', 'sack@24,18', 'net@20,19', 'rock_small@8,23', 'rock_small@28,23', 'stump@6,24', 'rock@31,24', 'rock_small@23,26', 'rock_small@12,27', 'rock@30,28', 'bollard@11,29', 'bollard@24,29', 'rock@9,30', 'rock@26,30'] },   // 描いた一枚絵（design/ENV_ASSETS.md §8）

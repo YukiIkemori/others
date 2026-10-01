@@ -80,7 +80,7 @@
         ev.setFlag('prologue_party');
         return;
       }
-      const i = await ev.choose(R.T('ev.pharos_story.pharos_tavern_master.run.i.choose'), { cancel: 2, text: E.t(R.T('ev.pharos_story.pharos_tavern_master.choose.text.t')) });
+      const i = await ev.choose(R.T('ev.pharos_story.pharos_tavern_master.run.i.choose'), { cancel: 2, who, text: E.t(R.T('ev.pharos_story.pharos_tavern_master.choose.text.t')) });
       if (i === 0) { await ev.tavern({ swap: true }); return; }
       if (i === 1) {
         await E.say(ev, who, E.pick([
@@ -115,7 +115,7 @@
         return;
       }
       await ev.say('otto', ev.flag('prologue_tutorial') ? R.T('ev.pharos_story.pharos_otto.run.say_7') : R.T('ev.pharos_story.pharos_otto.run.say_8'), { face: 'otto:neutral' });
-      const i = await ev.choose(R.T('ev.pharos_story.pharos_otto.run.i.choose'), { cancel: 1, text: R.T('ev.pharos_story.pharos_otto.run.i.choose.text') });
+      const i = await ev.choose(R.T('ev.pharos_story.pharos_otto.run.i.choose'), { cancel: 1, who: 'otto', face: 'otto:neutral', text: R.T('ev.pharos_story.pharos_otto.run.i.choose.text') });
       if (i === 0) await tips(ev);
       else await ev.say('otto', R.T('ev.pharos_story.pharos_otto.run.say_9'), { face: 'otto:smile' });
     },

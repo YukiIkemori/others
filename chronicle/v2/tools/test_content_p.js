@@ -278,7 +278,7 @@ async function flow() {
       choose: async (labels) => { log.push(['choose', labels]); return 0; },
       caption: async (t) => { log.push(['caption', t]); },
       fade: async () => {}, wait: async () => {}, letter: async (id) => { log.push(['letter', id]); },
-      battle: async (s) => { log.push(['battle', typeof s === 'string' ? s : s.troop]); return 'win'; },
+      battle: async (s) => { log.push(['battle', typeof s === 'string' ? s : s.troop, typeof s === 'string' ? null : s]); return 'win'; },
       warp: async (map, sp) => { log.push(['warp', map, sp]); G.pos = { map, x: 0, y: 0, dir: 's' }; },
       createHero: async () => { const h = { type: 'ranger', sex: 'f', name: 'リズ', fav: 'bow' }; R.State.setHero(h); return h; },
       chooseCompanions: async () => { const ids = ['selma', 'viola', 'marta']; for (const id of ids) R.Party.join(id); return ids; },
@@ -316,7 +316,10 @@ async function flow() {
   ok('P2: 傷薬と 50 G', (G.items.i_salve || 0) >= 3 && G.gold >= 50, [G.items.i_salve, G.gold]);
   ok('P6: 仲間が 3 人', G.party.length === 4, G.party);
   ok('P7: 灯台の鍵', G.flags.prologue_key && (G.items.k_lighthouse_key || 0) >= 1);
-  ok('P8: チュートリアルの戦闘（主人公ひとり・必ず閃く）', log.some((l) => l[0] === 'battle' && l[1] === 'tr_tutorial') && G.flags.prologue_tutorial);
+  // テスター 2026-09-30 の 4-1・4-2: 一行みんなで戦う（members で主人公だけにしない）・オットーは塔の中にいない
+  ok('P8: 入口の間のネズミ（一行で戦う・主人公が必ず閃く）', log.some((l) => l[0] === 'battle' && l[1] === 'tr_tutorial' && l[2] && !l[2].members && l[2].glimmerForce === 'hero') && G.flags.prologue_tutorial,
+    log.filter((l) => l[0] === 'battle' && l[1] === 'tr_tutorial'));
+  ok('P8: オットーは鍵をくれた港に残る（灯台 1 階にいない）', !(R.DB.maps.lighthouse_1.npcs || []).some((n) => n.id === 'otto') && (R.DB.maps.pharos.npcs || []).some((n) => n.id === 'otto' && !n.cond));
   ok('P9: ページ食らい → 灯がともる → ファロスへ', log.some((l) => l[0] === 'battle' && l[1] === 'tr_b_pageeater') && G.flags.prologue_boss && log.some((l) => l[0] === 'warp' && l[1] === 'pharos'));
   ok('P10: 年代記・羽ペン・鈴・手がかり帳・灯台守のランタン・prologue_done', G.flags.prologue_done && ['k_chronicle', 'k_quill', 'k_bell', 'ac_keeper_lantern'].every((k) => (G.items[k] || 0) >= 1) && !!G.leads.l_main_rumors,
     ['k_chronicle', 'k_quill', 'k_bell', 'ac_keeper_lantern'].map((k) => G.items[k]));

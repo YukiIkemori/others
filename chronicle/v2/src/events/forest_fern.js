@@ -237,6 +237,8 @@
   });
   E('fern_shop_keeper', async (ev) => {
     await ev.say('shop_keeper', R.T('events.fern_shop_keeper.say'));
+    // 森の蛾の眠りの粉と、眠りよけのお守り（持ち主 2026-10-01: 戦う前にほのめかす）
+    if (!ev.flag('forest_moth') && !cleared(ev)) await ev.say('shop_keeper', R.T('events.fern_shop_keeper.say_2'));
     await ev.shop('shop_fern_items');
   });
   E('fern_search_chief', async (ev) => {

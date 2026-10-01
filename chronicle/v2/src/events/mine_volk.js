@@ -80,7 +80,7 @@
   // ---------------------------------------------------------------- 屋内
   E('volk_innkeep', async (ev) => {
     await ev.say('volk_innkeep', cleared(ev) ? R.T('events.volk_innkeep.say') : R.T('events.volk_innkeep.say_2'));
-    const i = await ev.choose(R.T('events.volk_innkeep.i.choose'), { text: R.T('events.volk_innkeep.i.choose.text') });
+    const i = await ev.choose(R.T('events.volk_innkeep.i.choose'), { who: 'volk_innkeep', text: R.T('events.volk_innkeep.i.choose.text') });
     if (i !== 0) return;
     await ev.inn();
   });

@@ -1038,8 +1038,11 @@
       const d = packDesc(fx.good, fx.bad, statLine);
       // 通常品の武器: 効果が 1 行に収まれば、2 行目に系統の説明（後列から届く など）を残す。同じ系統の店の品の違いが 1 行目で見える
       //（持ち主「見習いの杖と祈りの杖、効果同じじゃねえかｗ」）
+      // 系統より術力が低い杖（祈りの杖の系列 magMult 0.9）は、系統の説明「術力が高く、〜」の代わりに「術力は控えめで、〜」
+      //（テスター 2026-09-30 1-8: 説明は「術力が高い」なのに、見習いの杖と比べると術力が下がる）
+      const magLow = it.slot === 'weapon' && it.wtype === 'staff' && K.WTYPE.staff && typeof it.magMult === 'number' && it.magMult < K.WTYPE.staff.magMult;
       if (it.slot === 'weapon' && (it.grade || 'normal') === 'normal' && d && !/\n/.test(d)) {
-        const wd = DB.weaponTypes[it.wtype] && DB.weaponTypes[it.wtype].desc;
+        const wd = magLow ? R.T('sys.rules.autoDesc.staffLowMag') : DB.weaponTypes[it.wtype] && DB.weaponTypes[it.wtype].desc;
         if (wd && Rules.textWidth(wd) <= 20) return d + '\n' + wd;
       }
       return d;

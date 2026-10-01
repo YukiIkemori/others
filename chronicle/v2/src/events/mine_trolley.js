@@ -26,7 +26,7 @@
       ev.lead('q_mine_trolley');
     }
     const labels = COURSES.map((c, i) => c.label + (ev.flag('mine_race_' + (i + 1)) ? R.T('events.dovan_race_keeper.labels') : ''));
-    const i = await ev.choose(labels.concat([R.T('events.dovan_race_keeper.i.choose.0')]), { cancel: COURSES.length, text: R.T('events.dovan_race_keeper.i.choose.text') });
+    const i = await ev.choose(labels.concat([R.T('events.dovan_race_keeper.i.choose.0')]), { cancel: COURSES.length, who: 'race_keeper', text: R.T('events.dovan_race_keeper.i.choose.text') });
     if (i < 0 || i >= COURSES.length) return;
     if (i > 0 && !ev.flag('mine_race_' + i)) { await ev.say('race_keeper', R.T('events.dovan_race_keeper.say_2')); return; }
     const c = COURSES[i];

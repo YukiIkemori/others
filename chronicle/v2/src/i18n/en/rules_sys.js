@@ -265,6 +265,7 @@
     'sys.rules.effectSentences.B_32': 'But Spells can\'t be used.',
     'sys.rules.effectSentences.B_33': 'But HP drains during battle.',
     'sys.rules.effectSentences.B_34': 'But HP drains.',
+    'sys.rules.autoDesc.staffLowMag': 'Lower Spell Power; hits from back row.',
     'sys.rules.effectSentences.0': 'But lowers {p0}.',
     'sys.rules.effectSentences.0.join': ' and ',
   });

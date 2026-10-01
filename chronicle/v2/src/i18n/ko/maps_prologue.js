@@ -5,8 +5,6 @@
     // ---- src/maps/prologue_lighthouse.js
     'map.prologue_lighthouse.objects.sign': '파로스 등대\n등대지기 외에는 출입을 금함.',
     'map.prologue_lighthouse.objects.lh1_door.locked': '문이 잠겨 있다',
-    'map.prologue_lighthouse.npcs.otto.name': '오토',
-    'map.prologue_lighthouse.npcs.otto.title': '등대지기',
     'map.prologue_lighthouse.lighthouse_1.name': '파로스 등대',
     'map.prologue_lighthouse.lighthouse_1.meta.floor': '1층',
     'map.prologue_lighthouse.lighthouse_1.meta.sub': '곶의 창고',

@@ -82,7 +82,9 @@
   R.DB.starterKit = Object.assign(R.DB.starterKit || {}, {
   weapon: { sword: 'w_sword_iron', greatsword: 'w_greatsword_iron', dagger: 'w_dagger_iron', bow: 'w_bow_short', staff: 'w_staff_novice' },
   tech: { sword: 't_sword_stepcut', greatsword: 't_greatsword_overhead', dagger: 't_dagger_vital', bow: 't_bow_rapid', staff: 't_staff_mind' },
-  spell: { fire: 's_fire_1', water: 's_water_1', wind: 's_wind_1', earth: 's_earth_1', light: 's_light_1', dark: 's_dark_1' },
+  // 水は「再生と治療」（作成画面の favorDesc.water）なので、攻めの水の刃と癒やしのせせらぎの 2 つから始める
+  //   （前は水の刃だけで、せせらぎは灯台で閃くまで使えず、説明と食い違っていた。テスター 2026-09-30 の 4-3）
+  spell: { fire: 's_fire_1', water: ['s_water_1', 's_water_1h'], wind: 's_wind_1', earth: 's_earth_1', light: 's_light_1', dark: 's_dark_1' },
   pair: { fire: 'wind', wind: 'fire', water: 'light', light: 'water', earth: 'dark', dark: 'earth' },
   prof: { S: 25, A: 11 },
   heroNames: { m: R.T('data.herotypes.starterKit.heroNames.m'), f: R.T('data.herotypes.starterKit.heroNames.f') },

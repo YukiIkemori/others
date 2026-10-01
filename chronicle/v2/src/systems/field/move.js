@@ -3,6 +3,7 @@
 //   斜めは両隣が通れるときだけ。通れない斜めは空いた軸へ壁沿いに滑る（角を切らない）。
 //   タイルに入った瞬間に 1 回だけ判定（隠し通路・スイッチの床・階段と扉・出口・step のトリガー・出現）。出現と歩数は歩いた数。
 //   NPC は押し続けると 1 歩よける・動けなければ入れ替わる（npc.js）。R.Field.encounter.suppress(n) / ward(n) / lure(n)。
+//   主人公ひとりの間（R.Field.soloNoEncounter()）は出会わない。
 //   R.Field.light(r, steps)（松明 i_torch）: 暗がりで一行の灯りの半径を r マスに steps 歩のあいだ広げる（dark.js）。
 (function (R) {
   'use strict';
@@ -318,9 +319,16 @@
     }
     return null;
   };
+  /** 一行が主人公だけ（仲間が 0 人）→ true。この間は歩いても魔物に出会わない */
+  F.soloNoEncounter = function () {
+    const G = R.Game;
+    return !!(G && Array.isArray(G.party) && !G.party.some((id) => id !== 'hero'));
+  };
   F._encounterStep = function () {
     const m = S.map, G = R.Game;
     if (!G || m.kind === 'town' || m.kind === 'interior') return null;
+    // 主人公ひとり（仲間がまだいない）の間は出会わない（持ち主 2026-10-01: ひとりで始めた術師でも、仲間のいる潮風亭まで行けるように）
+    if (F.soloNoEncounter()) return null;
     if (S.suppress > 0) { S.suppress--; return null; }
     const ward = S.ward > 0;
     if (S.ward > 0) S.ward--;

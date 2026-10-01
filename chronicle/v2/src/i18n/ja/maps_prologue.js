@@ -6,8 +6,6 @@
     // ---- src/maps/prologue_lighthouse.js
     'map.prologue_lighthouse.objects.sign': 'ファロス灯台\n灯台守のほか、立ち入りを禁ず。',
     'map.prologue_lighthouse.objects.lh1_door.locked': '扉には、鍵がかかっている',
-    'map.prologue_lighthouse.npcs.otto.name': 'オットー',
-    'map.prologue_lighthouse.npcs.otto.title': '灯台守',
     'map.prologue_lighthouse.lighthouse_1.name': 'ファロス灯台',
     'map.prologue_lighthouse.lighthouse_1.meta.floor': '1階',
     'map.prologue_lighthouse.lighthouse_1.meta.sub': '岬の倉庫',

@@ -3,7 +3,7 @@
 //   node v2/tools/sim_growth.js [--seed 1] [--runs 20] [--k GROW.slope=0.08]
 // 模型（§9.3・§9.5）: 序章 35 戦（Lb 3〜6）＋チュートリアル＋序章のボス → 地方ごと（T0〜T7）95 戦（街道 35 戦 Lb = LZ(T)、
 // ダンジョン 1 階 30 戦 LZ、奥 30 戦 LZ+2）、中ボス（奥の前、+2 ＋ボス 4）と地方ボス（最後、+3 ＋ボス 4）。
-// 金色 1/40（+1）、レア魔物 1/80（+2）。出撃 4 人（標準のパーティ）＋控え 3 人。数値は R.Rules.K.GROW（調整はそこだけ）。
+// 金色 1/40（+1）、レア魔物 1/160（+2。持ち主 2026-10-01 に 1/80 から下げた、R.Mon.K RARE_SCALE）。出撃 4 人（標準のパーティ）＋控え 3 人。数値は R.Rules.K.GROW（調整はそこだけ）。
 'use strict';
 const R = require('./lib/load')({ quiet: true });
 const argv = process.argv.slice(2);
@@ -28,7 +28,7 @@ function battle(run, Lb, o) {
   o = o || {};
   const r = run.rnd();
   const killed = [{}];
-  if (!o.boss) { if (r < 1 / 80) killed[0].rare = true; else if (r < 1 / 80 + 1 / 40) killed[0].golden = true; }
+  if (!o.boss) { if (r < 1 / 160) killed[0].rare = true; else if (r < 1 / 160 + 1 / 40) killed[0].golden = true; }
   else killed[0].boss = true;
   const party = R.Game.party.slice(), reserve = R.Game.reserve.slice();
   return G.afterBattle(party, reserve, { Lb, killed, boss: !!o.boss, rng: run.rnd, tier: R.Game.tier });

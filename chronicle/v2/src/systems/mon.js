@@ -67,6 +67,9 @@
     DROP: { cap: { normal: 0.75, rare: 0.5, super: 0.125 }, modCap: 150, golden: { normal: 2, rare: 8, super: 8 } },
     MODCAP: { party: 150, preempt: 30 },
     RARE_ENC: 80,
+    // レア魔物の出現の分母に掛ける（持ち主 2026-10-01「レア敵が多すぎるのは駄目なので下げる」）: 表の 1/80 → 1/160、巣の 1/40 → 1/80。
+    //   体験版の通し（R1 の 96 戦）で見るレア魔物 約 1.0 回 → 約 0.5 回（tools/sim_loot.js の H8）。金色（GOLDEN）は別で、そのまま
+    RARE_SCALE: 2,
     MON_EVA: { base: 5, flying: 12, fast: 15, fastAgi: 1.3, metal: 30, rare: 15, rareFlying: 20, boss: 5, bossFlying: 10 },
     ABIL: { mid: 16, minMul: 0.5, heal: 0.04 },
     HEALF: { min: 0.6, max: 2.0 },
@@ -562,7 +565,7 @@
       const rr = rareRow(zoneId);
       if (rr && !o.noRare) {
         const mods = partyMods();
-        const p = (1 / Math.max(1, rr.rate || K('RARE_ENC'))) * (1 + Math.min(K('MODCAP').party, mods.rareEncPct || 0) / 100);
+        const p = (1 / Math.max(1, (rr.rate || K('RARE_ENC')) * (K('RARE_SCALE') || 1))) * (1 + Math.min(K('MODCAP').party, mods.rareEncPct || 0) / 100);
         if (o.rare === 'force' || rng().chance(p)) { rare = true; ids = [rr.mon]; Lb += K('RARE_MON').lvOff; }
       }
       if (!ids) {

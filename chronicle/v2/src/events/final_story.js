@@ -156,7 +156,7 @@
     } else {
       await ev.say('fin_ship_hand', R.T('events.final_ferry.say_2'));
     }
-    const i = await ev.choose(R.T('events.final_ferry.i.choose'), { cancel: 1, text: first ? R.T('events.final_ferry.i.choose.text') : R.T('events.final_ferry.i.choose.text_2') });
+    const i = await ev.choose(R.T('events.final_ferry.i.choose'), { cancel: 1, who: first ? 'fin_rowell_pier' : 'fin_ship_hand', face: first ? 'rowell:neutral' : undefined, text: first ? R.T('events.final_ferry.i.choose.text') : R.T('events.final_ferry.i.choose.text_2') });
     if (i !== 0) {
       if (first) await ev.say('fin_rowell_pier', R.T('events.final_ferry.say_3'), { face: 'rowell:neutral' });
       return;
@@ -165,7 +165,7 @@
     void x;
   }, { meta: { needs: ['flag:final_open'], gives: ['flag:final_sailed'], warp: { to: 'biblia', spawn: 'dock' } } });
   E('final_ferry_back', async (ev) => {
-    const i = await ev.choose(R.T('events.final_ferry_back.i.choose'), { cancel: 1, text: R.T('events.final_ferry_back.i.choose.text') });
+    const i = await ev.choose(R.T('events.final_ferry_back.i.choose'), { cancel: 1, who: true, text: R.T('events.final_ferry_back.i.choose.text') });
     if (i !== 0) return;
     await ev.fade('out', 600);
     ev.sfx('ship');

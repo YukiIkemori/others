@@ -1,6 +1,7 @@
 // CONTENT-P: ファロス灯台（V2_PLAN §3.3 P8・P9、STORY_BIBLE §9.1 P8・P9・§10.2 の 5）
 //   lighthouse_1_door      塔の扉（調べる・押す）: 鍵が無ければ閉じたまま、鍵があれば初めの 1 回だけ開ける場面
-//   lighthouse_1_tutorial  P8 入ってすぐ: オットーが見守り、野ネズミ 2 匹と主人公ひとり。必ず閃く。負けてもやり直して続く（canLose）
+//   lighthouse_1_tutorial  P8 入ってすぐ: 野ネズミ 2 匹と一行で戦う。主人公が必ず閃く。負けてもやり直して続く（canLose）。
+//                          オットーは港に残る（鍵をくれた人が鍵のかかった塔の中にいない。テスター 2026-09-30）
 //   lighthouse_3_fine      P9 灯室の手前で灰色のマントの少女（v_fine_lighthouse_01・02。名はまだ無い）
 //   lighthouse_3_boss      P9 ページ食らい → 紙切れから守り歌が戻る（lo_lighthouse_song）→ 灯台に灯がともる（夜の世界で最初の灯り）
 //                          → 朝の鐘のファロスへ（pharos_departure）。序章の灯はページも古層も持たない（STORY_BIBLE §9.1）
@@ -15,7 +16,7 @@
   // 塔の扉: 鍵が無ければ閉じたまま。灯台の鍵があれば、初めての 1 回だけ鍵を開ける場面（→ prologue_lh_door。扉の物が入口の間への扉に替わる）。
   //   扉を調べたとき（K.exam）と、鍵を持って扉を押したとき（扉の物の unlock。FIELD の move.js）に走る
   D.lighthouse_1_door = {
-    meta: { needs: [], gives: ['flag:prologue_lh_door'] },
+    meta: { needs: [], gives: ['flag:prologue_lh_door'], warp: { to: 'lighthouse_1', spawn: 'hall_w' } },
     run: async (ev) => {
       const E = X();
       if (ev.flag('prologue_lh_door') || ev.flag('prologue_tutorial')) return;
@@ -29,40 +30,34 @@
       await ev.wait(450);
       ev.setFlag('prologue_lh_door');
       await E.narr(ev, R.T('ev.prologue_lighthouse.lighthouse_1_door.run.narr_4'));
+      // 開けたらそのまま中へ（前は鍵を開ける場面のあと、もう一度扉へ押さないと入れず「近づくだけでは入れない」と言われた。テスター 2026-09-30 の 1-12）
+      try { R.Audio.sfx('door'); } catch (e) { /* */ }
+      const x = ev.ctx && ev.ctx.x;
+      await ev.warp('lighthouse_1', x === 18 ? 'hall_e' : 'hall_w');
     },
   };
 
-  // ------------------------------------------------------------ P8 チュートリアルの戦闘（必ず閃く）
-  const TUTORIAL = { troop: 'tr_tutorial', members: ['hero'], glimmerForce: 'hero', canLose: true, noEscape: true, noRare: true, noGolden: true };
+  // ------------------------------------------------------------ P8 入口の間のネズミ（一行で戦う。主人公が閃きやすい）
+  // テスター 2026-09-30 の 4-1・4-2: 前は鍵をくれたオットーが鍵のかかった塔の中で先に待っていて、主人公ひとりで戦い、
+  //   閃きの説明をそこでしていた（もう閃いていた人には後追いの説明）。今は オットーは港に残り（pharos_town）、ここは
+  //   一行みんなで戦う。閃きの説明は、初めて閃いたときの説明の札（tips 'glimmer'、MENUS）が出す。
+  //   glimmerForce は残す（主人公が最初に動いたときに必ず閃く）。負けても続く（canLose）
+  const TUTORIAL = { troop: 'tr_tutorial', glimmerForce: 'hero', canLose: true, noEscape: true, noRare: true, noGolden: true };
   D.lighthouse_1_tutorial = {
     meta: { needs: ['flag:prologue_key'], gives: ['flag:prologue_tutorial'] },
     run: async (ev) => {
       const E = X();
       if (ev.flag('prologue_tutorial') || !ev.flag('prologue_key')) return;
-      await ev.say('otto', R.T('ev.prologue_lighthouse.lighthouse_1_tutorial.run.say'), { voice: 'v_otto_tower_01', face: 'otto:surprise' });
+      await E.narr(ev, R.T('ev.prologue_lighthouse.lighthouse_1_tutorial.run.rats'));
       try { R.Field.shake(6, 400); R.Audio.sfx('roar'); } catch (e) { /* */ }
-      await E.say(ev, 'otto', R.T('ev.prologue_lighthouse.lighthouse_1_tutorial.run.say_2'), { face: 'otto:neutral' });
-      const hero = () => R.Game.chars.hero || {};
-      const t0 = (hero().techs || []).length, s0 = (hero().spells || []).length;
       for (let i = 0; i < 10; i++) {
         const r = await ev.battle(TUTORIAL);
         if (r === 'win') break;
-        await ev.say('otto', R.T('ev.prologue_lighthouse.lighthouse_1_tutorial.run.say_3'), { voice: 'v_otto_tower_02', face: 'otto:sad' });
+        await E.narr(ev, R.T('ev.prologue_lighthouse.lighthouse_1_tutorial.run.retry'));
         ev.heal();
       }
-      const spell = (hero().techs || []).length <= t0 && (hero().spells || []).length > s0;
-      await ev.say('otto', spell ? R.T('ev.prologue_lighthouse.lighthouse_1_tutorial.run.say_4') : R.T('ev.prologue_lighthouse.lighthouse_1_tutorial.run.say_5'), { voice: spell ? 'v_otto_tower_04' : 'v_otto_tower_03', face: 'otto:surprise' });
-      await ev.say('otto', spell ? R.T('ev.prologue_lighthouse.lighthouse_1_tutorial.run.say_6') : R.T('ev.prologue_lighthouse.lighthouse_1_tutorial.run.say_7'), { face: 'otto:smile' });
-      await ev.say('otto', R.T('ev.prologue_lighthouse.lighthouse_1_tutorial.run.say_8'), { voice: 'v_otto_tower_05', face: 'otto:neutral' });
       ev.setFlag('prologue_tutorial');
-      // 去り方（持ち主の決まり 2026-09-27: その場でパッと消さない）。入口の扉まで歩き、扉の音を鳴らして外へ出る
-      try {
-        await ev.npc('otto').move([[15, 20], [17, 20]]);
-        ev.sfx('door');
-        await ev.leave('otto', { path: [[17, 21]], ms: 520 });   // 戸口へ 1 歩、薄れて外へ（パッと消さない）
-        await ev.wait(200);
-        await E.narr(ev, R.T('ev.prologue_lighthouse.lighthouse_1_tutorial.run.narr'));
-      } catch (e) { /* */ }
+      await E.narr(ev, R.T('ev.prologue_lighthouse.lighthouse_1_tutorial.run.after'));
     },
   };
 

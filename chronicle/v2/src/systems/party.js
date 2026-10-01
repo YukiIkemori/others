@@ -46,7 +46,7 @@
         Object.assign(equip, T.startEquip || {});
         const on = (T.onFavor && T.onFavor[fw ? 'weapon' : fav ? 'element' : 'weapon']) || {};
         techs = (fw && kit.tech && kit.tech[fav] ? [kit.tech[fav]] : []).concat(on.techs || []);
-        spells = (fav && !fw && kit.spell && kit.spell[fav] ? [kit.spell[fav]] : []).concat(on.spells || []);
+        spells = (fav && !fw && kit.spell && kit.spell[fav] ? [].concat(kit.spell[fav]) : []).concat(on.spells || []);   // 属性の術は 1 つか配列（水は攻めと癒やし）
       } else {
         const D = DB.companions[id];
         if (!D) R.warn('makeChar: unknown companion', id);

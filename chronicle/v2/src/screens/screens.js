@@ -105,6 +105,9 @@
     const m = memoStore.map[key];
     if (!m) return ref;
     try {
+      // memoTab: false の画面（店）はタブを覚えない（毎回その店の最初のタブ。テスター 2026-09-30 2-5: 道具屋が前のアクセサリのタブで開き、
+      // 道具のつもりでアクセサリを買った）。行は同じタブのときだけ戻す
+      if (v.memoTab === false && m.tab != null && m.tab !== v.tab) return ref;
       if (m.tab != null && typeof v.tab === 'number' && m.tab !== v.tab && typeof v.refresh === 'function') {
         const t0 = v.tab, had = v.list ? v.list.rows.length : 0;
         v.tab = m.tab;

@@ -77,8 +77,9 @@
         mp = { x: b.x, y: gr.y + gr.h + u(12), w: gw, h: memH };
         dp = { x: b.x + gw + u(20), y: top, w: b.w - gw - u(20), h: b.h - (top - b.y) };
       }
+      if (!tall && S.fitCompanionRows) S.fitCompanionRows(this.list, gr.h);
       const rh = this.list.rowPx();
-      gr.h = Math.max(rh, Math.floor(gr.h / rh) * rh);
+      gr.h = Math.max(rh, Math.floor(gr.h / rh + 1e-6) * rh);
       this.list.active = this.mode === 'pick';
       this.list.render = (gg, row, rect, f) => {
         const id = row.value, st = this.state(id);
@@ -86,6 +87,15 @@
           { focused: f && this.mode === 'pick', picked: this.mode === 'swap' && this.pick === id, chip: st === 'party' ? R.T('ui.tavern.draw.render.chip') : st === 'reserve' ? R.T('ui.tavern.draw.render.chip_2') : null, chipKind: st === 'party' ? 'gold' : 'teal' });
       };
       this.list.draw(g, gr);
+      // 入り切らない段があるときは、上・下の端に ▲・▼（送れる向き。テスター 2026-09-30 1-11）
+      const L = this.list;
+      if (L.lines > L.visible) {
+        const cx = gr.x + gr.w / 2, s6 = u(6);
+        g.save(); g.fillStyle = C.gold;
+        if (L.top > 0) { g.beginPath(); g.moveTo(cx, gr.y - u(9)); g.lineTo(cx + s6, gr.y - u(2)); g.lineTo(cx - s6, gr.y - u(2)); g.fill(); }
+        if (L.top + L.visible < L.lines) { const by = gr.y + L.visible * rh; g.beginPath(); g.moveTo(cx, by + u(9)); g.lineTo(cx + s6, by + u(2)); g.lineTo(cx - s6, by + u(2)); g.fill(); }
+        g.restore();
+      }
       const cur = this.mode === 'swap' ? this.pick : this.ids[this.list.index];
       if (cur) S.companionDetail(g, S.companion(cur), dp);
       // 今の 4 人

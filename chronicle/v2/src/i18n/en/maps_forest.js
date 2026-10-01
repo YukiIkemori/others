@@ -31,6 +31,7 @@
     'map.fern_interiors.fern_search.talk.0.L': 'Master Gord twisted his ankle.\nWe can\'t make it into the deep\nforest on our own.',
     'map.fern_interiors.fern_search.talk.1.forest_found_ben': 'They found Ben?\n...Thank goodness. Thank goodness.',
     'map.fern_interiors.fern_search.talk.2.cleared_r_forest': 'Tonight\'s the post\'s last night.\nNext up, festival preparations!',
+    'map.fern_interiors.fern_search.talk.moth': 'Once, deep in the forest, I got covered\nin white powder and fell fast asleep.\nWing powder from a huge moth.If you\'re going in,\ntake a Sleep Charm.',
     'map.fern_interiors.fern_gord': 'Gord\'s House',
     'map.fern_interiors.fern_gord.npcs.0.gord.name': 'Gord',
     'map.fern_interiors.fern_gord.npcs.0.gord.title': 'Chief Woodcutter',

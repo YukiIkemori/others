@@ -19,6 +19,7 @@
   let cur = null;        // {scene, resolve}
   let cap = null;        // {scene, resolve}
   let autoOn = false;
+  const CHOICE_GUARD = 450;   // 選択肢が出てから決定を受けるまでの ms（押したままなら離してから）
   let lastShown = null;  // {name, title, face, page, t}
   const logs = [];       // [{name, text}]
   const readSet = new Set();
@@ -266,6 +267,13 @@
       const I = R.Input, n = choices.length;
       if (I.repeat('down')) { st.choice = (st.choice + 1) % n; UIK.sfx('cursor'); }
       if (I.repeat('up')) { st.choice = (st.choice + n - 1) % n; UIK.sfx('cursor'); }
+      // 選択肢が出てすぐの決定・取り消しは受けない（会話を連打で送っていて、選んだと気づかずに決まるのを防ぐ。テスター 2026-09-30）。
+      //   カーソルは動かせる。A・B を押したままなら、離してから数える（st.armed で以後は素通り）
+      if (!st.armed) {
+        if (I.down && (I.down('a') || I.down('b'))) st.guardAt = R.Engine.time;
+        if (R.Engine.time - Math.max(st.fullAt, st.guardAt || 0) < CHOICE_GUARD) return;
+        st.armed = true;
+      }
       const p = I.pointer, C = L.choice;
       let hit = -1;
       if (C && UIK.hit(C, p.x, p.y)) { const i = Math.floor((p.y - C.y - 8 * (R.uiScale || 1)) / C.rh); if (i >= 0 && i < n) hit = i; }

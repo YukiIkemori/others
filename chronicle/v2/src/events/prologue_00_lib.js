@@ -59,7 +59,7 @@
   };
   E.stay = async function (ev, o) {
     o = o || {};
-    const i = await ev.choose([o.yes || R.T('ev.prologue_00_lib.stay.i.choose.0'), o.no || R.T('ev.prologue_00_lib.stay.i.choose.1')], { cancel: 1, text: E.t(o.ask || R.T('ev.prologue_00_lib.stay.i.choose.text.t')) });
+    const i = await ev.choose([o.yes || R.T('ev.prologue_00_lib.stay.i.choose.0'), o.no || R.T('ev.prologue_00_lib.stay.i.choose.1')], { cancel: 1, who: o.who || true, text: E.t(o.ask || R.T('ev.prologue_00_lib.stay.i.choose.text.t')) });
     if (i !== 0) { if (o.bye) await E.say(ev, o.who || null, o.bye); return false; }
     const p = R.Field.pos;
     // 暗転とジングル（飛ばせるのは 2.5 秒から。明ける前にジングルを閉じて BGM を戻す）は ev.inn と同じ R.Events.night

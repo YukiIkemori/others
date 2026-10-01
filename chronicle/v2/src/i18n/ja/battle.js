@@ -31,6 +31,7 @@
     'battle.command.partyMenu.head.name': '一行の命令',
     'battle.command.partyMenu.head.sub': 'リピートは前のラウンドと同じ行動（動いている間は {l} か {b} でやめる）。',
     'battle.command.partyMenu.head.sub_2': 'どうする？',
+    'battle.command.partyMenu.escapeWhy.boss': 'ボス戦では逃げられない。',
     'battle.command.partyMenu.i.prompts.0.label': '決定',
     'battle.command.partyMenu.i.prompts.1.label': '速さ',
     'battle.command.member.wname': '攻撃',

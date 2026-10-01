@@ -33,8 +33,16 @@
   });
 
   // 根の戸（閉じた根。ピムの抜け穴のスイッチで開く）を調べた: 道がふさがれているのを一言で知らせる（持ち主 2026-09-28「上部真ん中から下がいけない」）
+  //   ピムを野営地へ帰した（ch_forest_pim = send）ときも詰まらない: 門を調べると、ピムが野営地から追いかけてきて、ついてくる
+  //   （テスター 2026-09-30「帰すを選ぶと根の門が開かない」）。抜け穴のスイッチは「ついてくる人」で押す（elder_1・elder_2 の switch by:'guest'）
   E('elder_root_gate', async (ev) => {
     await ev.say(null, R.T('events.elder_root_gate.say'));
+    if (!ev.flag('forest_pim_guest') && ev.flag('forest_found_pim') && !ev.flag('forest_boss')) {
+      await ev.say('npc_pim', R.T('events.elder_root_gate.pim_back'), { name: R.T('events.elder_root_gate.say.name') });
+      ev.setFlag('forest_pim_guest');
+      ev.guest('npc_pim');
+      await ev.caption(R.T('events.verda_pim.caption'), { ms: 1600 });
+    }
     if (ev.flag('forest_pim_guest')) await ev.say('npc_pim', R.T('events.elder_root_gate.say_2'), { name: R.T('events.elder_root_gate.say.name') });
     else await ev.say(null, R.T('events.elder_root_gate.say_3'));
   });
@@ -49,6 +57,8 @@
   E('elder_pim_home', async (ev) => {
     if (!ev.flag('forest_pim_guest')) return;
     await ev.say('npc_pim', R.T('events.elder_pim_home.say'), { name: R.T('events.elder_pim_home.say.name') });
+    // 根食らいの前のヒント（テスター 2026-09-30 の 3-3「触手は火で焼くとよいが、戦う前のヒントがほとんどない」）
+    if (!ev.flag('forest_boss')) await ev.say('npc_pim', R.T('events.elder_pim_home.hint'), { name: R.T('events.elder_pim_home.say.name') });
     ev.guest(null);
     ev.setFlag('forest_pim_guest', false);
     await ev.caption(R.T('events.elder_pim_home.caption'), { ms: 1800 });

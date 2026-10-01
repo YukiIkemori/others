@@ -93,7 +93,12 @@
         'kb.......l'], '..m..t....').concat([K.exam(2, 3, 'fern_search_map')]),
       npcs: [
         K.npc('search_chief', 'npc_guard_1', 6, 3, { name: R.T('map.fern_interiors.fern_search.npcs.0.search_chief.name'), dir: 's', talk: 'fern_search_chief', reward: 'hint' }),
-        K.npc('search_b', 'npc_woodcutter_4', 9, 6, { name: R.T('map.fern_interiors.fern_search.npcs.1.search_b.name'), dir: 'w', talk: [L(R.T('map.fern_interiors.fern_search.talk.0.L')), L('forest_found_ben', R.T('map.fern_interiors.fern_search.talk.1.forest_found_ben')), L('cleared_r_forest', R.T('map.fern_interiors.fern_search.talk.2.cleared_r_forest'))], reward: 'news' }),
+        K.npc('search_b', 'npc_woodcutter_4', 9, 6, { name: R.T('map.fern_interiors.fern_search.npcs.1.search_b.name'), dir: 'w', talk: [L(R.T('map.fern_interiors.fern_search.talk.0.L')),
+          // 森の蛾に眠らされた話（蛾を倒すまで。持ち主 2026-10-01: 眠りへの備えをほのめかす）
+          L('!forest_moth', [R.T('map.fern_interiors.fern_search.talk.0.L'), R.T('map.fern_interiors.fern_search.talk.moth')]),
+          L('forest_found_ben', R.T('map.fern_interiors.fern_search.talk.1.forest_found_ben')),
+          L(['forest_found_ben', '!forest_moth'], [R.T('map.fern_interiors.fern_search.talk.1.forest_found_ben'), R.T('map.fern_interiors.fern_search.talk.moth')]),
+          L('cleared_r_forest', R.T('map.fern_interiors.fern_search.talk.2.cleared_r_forest'))], reward: 'news' }),
       ],
     });
 

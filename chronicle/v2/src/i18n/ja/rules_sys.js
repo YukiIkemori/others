@@ -265,6 +265,7 @@
     'sys.rules.effectSentences.B_32': 'ただし術が使えない。',
     'sys.rules.effectSentences.B_33': 'ただし戦闘中にHPが減る。',
     'sys.rules.effectSentences.B_34': 'ただしHPが減る。',
+    'sys.rules.autoDesc.staffLowMag': '術力は控えめで、後列からも届く。',
     'sys.rules.effectSentences.0': 'ただし{p0}が下がる。',
     'sys.rules.effectSentences.0.join': 'と',
   });

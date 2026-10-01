@@ -264,6 +264,7 @@
     'sys.rules.effectSentences.B_32': '단, 술법을 쓸 수 없다.',
     'sys.rules.effectSentences.B_33': '단, 전투 중에 HP가 줄어든다.',
     'sys.rules.effectSentences.B_34': '단, HP가 줄어든다.',
+    'sys.rules.autoDesc.staffLowMag': '술력은 낮은 편이고, 후열에서도 닿는다.',
     'sys.rules.effectSentences.0': '단, {p0} 하락.',
     'sys.rules.effectSentences.0.join': '·',
   });

@@ -2,7 +2,7 @@
 //   R.Portrait.key(look, expr) → 'portrait:<look>:<expr>'
 //   R.Portrait.has(look, expr) → 'painted'|'placeholder'|null      （顔の無い人は null。呼ぶ側は枠ごと出さない）
 //   R.Portrait.draw(g, look, rect, {expr, dim, now})               枠（rect）の下の中央に合わせて描く。描いた顔は枠いっぱい
-//     fit:'bust'（胸から上を枠いっぱい）・fit:'circle'（rect に内接する丸を顔でほぼ埋める。髪のてっぺん〜顎・首。丸で切り抜く。zoom・headroom）
+//     fit:'bust'（胸から上を枠いっぱい）・fit:'fill'（絵のある範囲を枠に収める、整数倍）・fit:'circle'（rect に内接する丸を顔でほぼ埋める。髪のてっぺん〜顎・首。丸で切り抜く。zoom・headroom）
 //   R.Portrait.parse('berna:smile') → {look, expr}                  （無い表情は neutral）
 // 描いた顔の画像は初めて使うときに読み込む（decode の間は仮の顔）。仮の顔・原画の顔はぼかさずに拡大（0.5 刻みの倍率）。
 (function (R) {
@@ -75,6 +75,27 @@
     g.imageSmoothingEnabled = s * px < 1;
     g.beginPath(); g.rect(rect.x, rect.y, rect.w, rect.h); g.clip();
     g.drawImage(c, Math.round((rect.x + rect.w / 2 - cx * s) * px) / px, Math.round(y * px) / px, dw, dh);
+    g.restore();
+    return true;
+  }
+
+  // ------------------------------------------------------------------ 枠に収める（o.fit 'fill'）
+  // 絵のある範囲（透明でない画素の箱）を枠に収まる一番大きな倍率（画面の画素の整数倍）で、箱の中央を枠の中央に、下を枠の下に合わせる。
+  // 既定の描き方はコマ全体（透明の縁ごと）で倍率を 0.5 刻みに丸めるので、歩きの原画から作った顔（女の主人公など。コマに横の余白がある）は
+  // 枠より一回り小さく、右に寄って下に出た（テスター 2026-09-30「女性主人公の顔絵が、作成画面でだけ小さく右下に出る」）。作成画面が使う
+  function drawFill(g, c, rect, alpha) {
+    const b = opaqueBox(c);
+    const px = R.SCALE || 2;
+    const sp = Math.min(rect.w / b.w, rect.h / b.h) * px;
+    const s = sp >= 1 ? Math.floor(sp) / px : sp / px;
+    const dw = c.width * s, dh = c.height * s;
+    const x = rect.x + rect.w / 2 - (b.x + b.w / 2) * s;
+    const y = rect.y + rect.h - (b.y + b.h) * s;
+    g.save();
+    g.globalAlpha = alpha;
+    g.imageSmoothingEnabled = sp < 1;
+    g.beginPath(); g.rect(rect.x, rect.y, rect.w, rect.h); g.clip();
+    g.drawImage(c, Math.round(x * px) / px, Math.round(y * px) / px, dw, dh);
     g.restore();
     return true;
   }
@@ -175,6 +196,7 @@
     const w = fr.c.width, h = fr.c.height;
     if (o.fit === 'bust') return drawBust(g, fr.c, rect, a0 * alpha, o);
     if (o.fit === 'circle') return drawCircle(g, fr, sh.meta, rect, a0 * alpha, o);
+    if (o.fit === 'fill') return drawFill(g, fr.c, rect, a0 * alpha);
     let s = Math.min(rect.w / w, rect.h / h);
     s = s >= 1 ? Math.max(1, Math.floor(s * 2) / 2) : Math.max(0.25, Math.floor(s * 4) / 4);
     const dw = Math.round(w * s), dh = Math.round(h * s);

@@ -42,7 +42,7 @@
 
   // ================================================================ ノアの宿
   async function stay(ev) {
-    const i = await ev.choose(R.T('ev.final_biblia.stay.i.choose'), { cancel: 1, text: R.T('ev.final_biblia.stay.i.choose.text') });
+    const i = await ev.choose(R.T('ev.final_biblia.stay.i.choose'), { cancel: 1, who: true, text: R.T('ev.final_biblia.stay.i.choose.text') });
     if (i !== 0) { await ev.say('noa', R.T('ev.final_biblia.stay.say'), { face: 'noa:smile' }); return; }
     const p = R.Field.pos;
     await R.Events.night({ onDark() {
@@ -218,7 +218,7 @@
     await ev.say('rumor_c', R.T('events.biblia_rumor_c.say_2'));
   });
   E('biblia_shopkeeper', async (ev) => {
-    const i = await ev.choose(R.T('events.biblia_shopkeeper.i.choose'), { cancel: 2, text: clear(ev) ? R.T('events.biblia_shopkeeper.i.choose.text') : R.T('events.biblia_shopkeeper.i.choose.text_2') });
+    const i = await ev.choose(R.T('events.biblia_shopkeeper.i.choose'), { cancel: 2, who: true, text: clear(ev) ? R.T('events.biblia_shopkeeper.i.choose.text') : R.T('events.biblia_shopkeeper.i.choose.text_2') });
     if (i === 0) await ev.shop('shop_biblia');
     else if (i === 1) await ev.shop('shop_biblia_arms');
   });

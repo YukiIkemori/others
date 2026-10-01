@@ -96,7 +96,7 @@
   // ---------------------------------------------------------------- 宿「霧笛亭」: 灯りの刻と消灯の刻（E9）
   E('loch_inn_keeper', async (ev) => {
     await ev.say('inn_keeper', cleared(ev) ? R.T('events.loch_inn_keeper.say') : R.T('events.loch_inn_keeper.say_2'));
-    const i = await ev.choose(R.T('events.loch_inn_keeper.i.choose'), { text: R.T('events.loch_inn_keeper.i.choose.text') });
+    const i = await ev.choose(R.T('events.loch_inn_keeper.i.choose'), { who: 'inn_keeper', text: R.T('events.loch_inn_keeper.i.choose.text') });
     if (i === 2) return;
     const ok = await ev.inn();
     if (!ok) return;

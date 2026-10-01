@@ -264,6 +264,7 @@
     'sys.rules.effectSentences.B_32': '但無法使用術。',
     'sys.rules.effectSentences.B_33': '但戰鬥中HP會減少。',
     'sys.rules.effectSentences.B_34': '但HP會減少。',
+    'sys.rules.autoDesc.staffLowMag': '術力偏低，從後排也能夠到。',
     'sys.rules.effectSentences.0': '但{p0}下降。',
     'sys.rules.effectSentences.0.join': '和',
   });

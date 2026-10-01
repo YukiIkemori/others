@@ -5,8 +5,6 @@
     // ---- src/maps/prologue_lighthouse.js
     'map.prologue_lighthouse.objects.sign': '法羅斯燈塔\n除守塔人外，禁止入內。',
     'map.prologue_lighthouse.objects.lh1_door.locked': '門上了鎖',
-    'map.prologue_lighthouse.npcs.otto.name': '奧托',
-    'map.prologue_lighthouse.npcs.otto.title': '守塔人',
     'map.prologue_lighthouse.lighthouse_1.name': '法羅斯燈塔',
     'map.prologue_lighthouse.lighthouse_1.meta.floor': '1層',
     'map.prologue_lighthouse.lighthouse_1.meta.sub': '海角倉庫',

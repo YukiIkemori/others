@@ -8,6 +8,10 @@
 // H6（参考）: stealPct +50 の盗み手が毎戦 1 回盗むとき、通常の魔物の盗み専用を取るまでの戦闘数の中央値（目安 30〜60）と、
 //             ボス（根食らい）で 1 戦（10 回の盗み）のうちに取れる率（目安 35〜55%、V2_PLAN の率 16 で読み替え）。
 // H7: 縦切り 1 周で見るレアのドロップの回数の見込み（目安 3〜6。オーナー 2026-09-27「レアがめっきり減ったねえ……」）。
+// H8: 縦切り 1 周（R1 の通し）で出会うレア魔物の回数の見込み（目安 0.3〜0.8）。持ち主 2026-10-01「レア敵が多すぎるのは駄目なので下げる」:
+//     前の 1/80（R1 で約 1.0 回 = ほぼ毎回 1 体）を R.Mon.K RARE_SCALE で半分にした。体験版を 2 回遊んで 1 度会うくらいが「たまに」の
+//     感じ。下は 0.3（巣の z_well に寄れば上がる。3 回に 1 度は会える）、上は 0.8（それより多いと毎回の顔なじみになる）。
+//     レアのドロップ（H7）は通常の魔物から数えるので、この変更では動かない
 'use strict';
 
 function loadR() { return require('./lib/load')({ quiet: true }); }
@@ -126,6 +130,24 @@ function h7(R) {
   return { route: sum(route), r1: sum(r1) };
 }
 
+/** H8: 縦切り 1 周で出会うレア魔物の見込み。区画ごとの戦闘数 × 1/(rate × RARE_SCALE)（cond の無い行。巣も含む） */
+function h8(R) {
+  const fs = require('fs');
+  const path = require('path');
+  const QA = path.join(__dirname, '..', 'design', 'qa');
+  let R1 = null;
+  try { R1 = JSON.parse(fs.readFileSync(path.join(QA, 'playthrough', 'R1.json'), 'utf8')); } catch (e) { R1 = null; }
+  const scale = (R.Mon.K && R.Mon.K('RARE_SCALE')) || 1;
+  const pOf = (z) => {
+    let r = R.DB.rareEncounters[z];
+    if (Array.isArray(r)) r = r.find((x) => !x.cond) || r[r.length - 1];
+    return r && R.DB.monsters[r.mon] ? 1 / Math.max(1, (r.rate || R.Mon.K('RARE_ENC')) * scale) : 0;
+  };
+  let battles = 0, rare = 0;
+  for (const b of (R1 && R1.final && R1.final.stats && R1.final.stats.battles) || []) if (b.zone) { battles++; rare += pOf(b.zone); }
+  return { battles, rare, scale };
+}
+
 function main() {
   const argv = process.argv.slice(2);
   const arg = (k, d) => { const i = argv.indexOf(k); return i >= 0 ? argv[i + 1] : d; };
@@ -149,8 +171,12 @@ function main() {
   const ok7 = r7.route.rare >= 3;
   console.log(`H7 縦切り 1 周のレアのドロップ（目安 3〜6）: ${line('最短の道', r7.route)}、${line('R1 の通し', r7.r1)}  ${ok7 ? 'pass' : 'FAIL'}`);
   failed = failed || !ok7;
+  const r8 = h8(R);
+  const ok8 = r8.battles === 0 || (r8.rare >= 0.3 && r8.rare <= 0.8);
+  console.log(`H8 縦切り 1 周で出会うレア魔物（目安 0.3〜0.8、率 ×1/${r8.scale}）: R1 の通し ${r8.battles} 戦 → ${r8.rare.toFixed(2)} 回（1 度も会わない ${(100 * Math.exp(-r8.rare)).toFixed(0)}%）  ${ok8 ? 'pass' : 'FAIL'}`);
+  failed = failed || !ok8;
   if (failed) process.exitCode = 1;
 }
 
-module.exports = { h4, h5, h6, h7 };
+module.exports = { h4, h5, h6, h7, h8 };
 if (require.main === module) main();

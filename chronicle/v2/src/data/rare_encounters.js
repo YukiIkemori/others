@@ -38,5 +38,6 @@
     z_verda: [{ mon: 'rm_bloom_fawn', rate: 40, cond: 'cleared_r_forest' }, { mon: 'rm_acorn_prince', rate: 80 }],
     z_well: { mon: 'rm_jewel_hare', rate: 40 },   // 宝石ウサギの巣
   });
+  // 実際の率はこの rate（分母）に R.Mon.K.RARE_SCALE（2）を掛けた物（持ち主 2026-10-01「レア敵が多すぎるのは駄目なので下げる」。systems/mon.js）
   // @@V2-END
 })(window.RPG);

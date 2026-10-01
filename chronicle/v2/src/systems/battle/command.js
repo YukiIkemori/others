@@ -234,10 +234,15 @@
     const memOn = R.Settings.get('cursorMemory') !== false;
     const start = memOn && G && G.battle && G.battle.cursor && G.battle.cursor._party != null ? G.battle.cursor._party : (m._party || 0);
     st.activeUid = null;
-    st.head = { name: R.T('battle.command.partyMenu.head.name'), sub: po.includes('repeat') ? R.T('battle.command.partyMenu.head.sub', { l: glyphLabel('l'), b: glyphLabel('b') }) : R.T('battle.command.partyMenu.head.sub_2') };
+    const sub0 = po.includes('repeat') ? R.T('battle.command.partyMenu.head.sub', { l: glyphLabel('l'), b: glyphLabel('b') }) : R.T('battle.command.partyMenu.head.sub_2');
+    st.head = { name: R.T('battle.command.partyMenu.head.name'), sub: sub0 };
+    // 灰色の「逃げる」に合わせたら、わけを説明の行に（テスター 2026-09-30 2-3）
+    const boss = !!((st.info && st.info.boss) || (st.B && st.B.engine && st.B.engine.boss));
+    const escWhy = boss ? R.T('battle.command.partyMenu.escapeWhy.boss') : R.T('sys.battle_core.UNUSABLE_TEXT.noescape');
     const k = R.uiScale || 1;
     const i = await menu(st, {
       rows, sel: rows[start] && !rows[start].disabled ? start : 0, t0: R.Engine.time, cancel: false,
+      onFocus(j) { if (st.head) st.head.sub = rows[j] && rows[j].key === 'escape' && rows[j].disabled ? escWhy : sub0; },
       prompts: [{ btn: 'a', label: R.T('battle.command.partyMenu.i.prompts.0.label') }, { btn: 'r', label: R.T('battle.command.partyMenu.i.prompts.1.label') }],
       onChip: (c) => { const j = rows.findIndex((r) => r.key === c && !r.disabled); return j >= 0 ? j : undefined; },   // L・札のリピート
       draw(g, w) {
@@ -322,7 +327,8 @@
         },
       });
       if (ti === 'back' || (ti && ti.party)) return ti;
-      M.top = ti;
+      // 防御だけは覚えない（テスター 2026-09-30 2-1: 決定の連打で防御し続けてしまう）。次のラウンドは既定の命令（先頭）から
+      M.top = top[ti] && top[ti].key === 'defend' ? 0 : ti;
       const sel = top[ti];
       let res = null;
       if (sel.key === 'defend') res = { cmd: 'defend', id: 'defend', target: u.uid };
@@ -362,6 +368,22 @@
     return a ? a.name : (st.aliveEnemies()[0] || {}).name || '';
   }
 
+  /** 技・術・道具の一覧の窓の幅（掛ける前）。いちばん長い名前＋NEW＋右の MP・個数が入る幅（172〜300）。
+   *  テスター 2026-09-30 1-10: 幅が決まっていて、NEW の付いた技の名前が「武器落…」のように切れていた */
+  function subListWidth(rows, title) {
+    const k = R.uiScale || 1, Kt = K();
+    let need = 172;
+    const size = 14 * k;
+    for (const row of rows) {
+      const lw = Kt.measure(row.label || '', { size, weight: 700 }) / k;
+      need = Math.max(need, 36 + lw + (row.isNew ? 40 : 0) + (row.right ? 52 : 12) + 4);
+    }
+    if (title) need = Math.max(need, Kt.measure(title, { size: 11 * k, weight: 700 }) / k + 24);
+    return Math.min(300, Math.ceil(need));
+  }
+
+  C.subListWidth = subListWidth;   // テスト用
+
   async function subList(st, u, rows, title, memKey, M) {
     const k = R.uiScale || 1;
     const shown = new Set();
@@ -385,8 +407,9 @@
         draw(g, w) {
           if (st.L.tall) { tallList(g, w, st, title); return; }
           const h = (28 + Math.min(rows.length, 7) * 26 + 8) * k;
-          const p = anchorFor(st, u.uid, 172 * k, h, -200, -228);
-          const r = listPanel(g, w, { x: p.x, y: p.y, w: 172, rowH: 26, title, size: 14, maxRows: 7 });
+          const pw = C.subListWidth(rows, title);
+          const p = anchorFor(st, u.uid, pw * k, h, -200, -228);
+          const r = listPanel(g, w, { x: p.x, y: p.y, w: pw, rowH: 26, title, size: 14, maxRows: 7 });
           // 説明は右隣（右上の一覧に重ねない。入らなければ一覧の下）
           const pr = _.hud.partyRects(st);
           const limit = pr.length ? pr[0].x - 8 * k : R.W;

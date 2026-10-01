@@ -60,7 +60,7 @@
       return;
     }
     if (ev.flag('snow_dog_home')) {
-      const i = await ev.choose(R.T('events.yule_sled.i.choose'), { cancel: 1, text: R.T('events.yule_sled.i.choose.text') });
+      const i = await ev.choose(R.T('events.yule_sled.i.choose'), { cancel: 1, who: 'sled_man', text: R.T('events.yule_sled.i.choose.text') });
       if (i !== 0) return;
       await ev.fade('out', 500);
       await ev.caption(R.T('events.yule_sled.caption'), { ms: 2400 });

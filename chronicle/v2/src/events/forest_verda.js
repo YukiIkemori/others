@@ -71,6 +71,13 @@
   });
 
   // ---------------------------------------------------------------- F9 ダストウィング（歌の石 c を守る）
+  // 手前のほのめかし（泉 H6 から北の道で 1 回）: 眠りの粉が流れてくる → 眠りへの備えがいる（持ち主 2026-10-01
+  //   「森の蛾は今のままでは駄目。戦う前に眠りへの備えが要ることをほのめかす」。戦闘そのものは変えない）。
+  //   ほかのほのめかし: フェルンの道具屋（fern_shop_keeper）、捜索隊の詰所の若者（fern_interiors の search_b）
+  E('verda_moth_hint', async (ev) => {
+    if (ev.flag('forest_moth')) return;
+    await ev.say(null, R.T('events.verda_moth_hint.say'));
+  });
   E('verda_moth', async (ev) => {
     if (ev.flag('forest_moth')) return;
     ev.bgm('omen');   // ボスの予告（1 回だけ鳴る）。戦闘の後は R.Audio が予告の前の曲に戻す
@@ -129,6 +136,8 @@
     ev.bgm('omen');
     await ev.say(null, R.T('events.verda_ben.say'));
     await ev.say('ben', R.T('events.verda_ben.say_2'));
+    // 頭を狙えば群れは散る（テスター 2026-09-30 の 3-4「どれを狙えばいいかが分かりにくい」）
+    await ev.say('ben', R.T('events.verda_ben.say_2b'));
     const r = await ev.battle('tr_a21_forest_wolves');
     if (r !== 'win') return;
     await ev.say(null, R.T('events.verda_ben.say_3'));
@@ -219,6 +228,8 @@
     };
     const L = lines[who] || ['……。'];
     await ev.say(ctx && ctx.npc, n >= 4 && who !== 'pim' ? [L[0], L[1], R.T('events.verda_camp_talk.say.2')] : L);
+    // 根食らいの前のヒント（きこりのハンス: からみつく根は火で焼け。テスター 2026-09-30 の 3-3）
+    if (who === 'hans' && !ev.flag('forest_boss')) await ev.say(ctx && ctx.npc, R.T('events.verda_camp_talk.hint_roots'));
   });
 
   // ---------------------------------------------------------------- 読み物と調べる物

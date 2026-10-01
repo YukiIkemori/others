@@ -264,6 +264,7 @@
     'sys.rules.effectSentences.B_32': '但无法使用术。',
     'sys.rules.effectSentences.B_33': '但战斗中HP会减少。',
     'sys.rules.effectSentences.B_34': '但HP会减少。',
+    'sys.rules.autoDesc.staffLowMag': '术力偏低，从后排也能够到。',
     'sys.rules.effectSentences.0': '但{p0}下降。',
     'sys.rules.effectSentences.0.join': '和',
   });

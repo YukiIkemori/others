@@ -96,6 +96,7 @@
       }
       await E.say(ev, 'fishwife', E.pick([
         { cond: 'prologue_done', text: R.T('ev.pharos_people.pharos_fishwife.run.pick.0.text') },
+        { cond: ['prologue_party', '!prologue_boss'], text: R.T('ev.pharos_people.pharos_fishwife.run.advice') },   // 灯台の前の備え（宿で休む・暴れたら守る）
         { text: R.T('ev.pharos_people.pharos_fishwife.run.pick.1.text') },
       ]));
     },
@@ -182,6 +183,8 @@
     run: async (ev) => {
       const E = X();
       await E.say(ev, 'shopkeeper', R.T('ev.pharos_people.pharos_shopkeeper.run.say'));
+      // 灯台へ行く前の備え（持ち主 2026-10-01「序章のボスは少し強いので、準備していけと助言する人を置く」。町の中で: 道具屋と港の魚売り）
+      if (ev.flag('prologue_party') && !ev.flag('prologue_boss')) await E.say(ev, 'shopkeeper', R.T('ev.pharos_people.pharos_shopkeeper.run.advice'));
       await ev.shop('shop_pharos_items');
     },
   };

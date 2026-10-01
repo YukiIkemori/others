@@ -30,6 +30,7 @@
     'map.fern_interiors.fern_search.talk.0.L': '戈德头领扭伤了脚。\n光靠我们几个，\n进不了森林深处啊。',
     'map.fern_interiors.fern_search.talk.1.forest_found_ben': '你说本找到了？\n……太好了。真是太好了。',
     'map.fern_interiors.fern_search.talk.2.cleared_r_forest': '值班所今晚就撤了。\n接下来该准备祭典啦！',
+    'map.fern_interiors.fern_search.talk.moth': '我也曾经在森林深处，\n被白色的粉末扑了一身，就睡着了。\n是一只大蛾子翅膀上的粉。要去的话，\n带上避眠护符吧。',
     'map.fern_interiors.fern_gord': '戈德的家',
     'map.fern_interiors.fern_gord.npcs.0.gord.name': '戈德',
     'map.fern_interiors.fern_gord.npcs.0.gord.title': '樵夫头领',

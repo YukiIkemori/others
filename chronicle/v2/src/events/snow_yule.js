@@ -56,10 +56,10 @@
     const logs = ev.flag('snow_logs_done'), ice = ev.flag('snow_ice_done'), tales = ev.flag('snow_tales_done');
     if (logs && tales) {
       if (!ice) {
-        const i = await ev.choose(R.T('events.yule_jorn.i.choose'), { cancel: 1, text: R.T('events.yule_jorn.i.choose.text') });
+        const i = await ev.choose(R.T('events.yule_jorn.i.choose'), { cancel: 1, who: 'jorn', text: R.T('events.yule_jorn.i.choose.text') });
         if (i !== 0) { await ev.say('jorn', R.T('events.yule_jorn.say_8')); return; }
       } else {
-        const i = await ev.choose(R.T('events.yule_jorn.i.choose_2'), { cancel: 1, text: R.T('events.yule_jorn.i.choose.text_2') });
+        const i = await ev.choose(R.T('events.yule_jorn.i.choose_2'), { cancel: 1, who: 'jorn', text: R.T('events.yule_jorn.i.choose.text_2') });
         if (i !== 0) { await ev.say('jorn', R.T('events.yule_jorn.say_9')); return; }
       }
       await ev.call('snow_festival');

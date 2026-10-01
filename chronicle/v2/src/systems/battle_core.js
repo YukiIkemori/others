@@ -1982,7 +1982,7 @@
       Lb = o.lv != null ? o.lv : lb.lo === lb.hi ? lb.lo : ri(lb.lo, lb.hi);
       const rr = !o.noRare && DB.rareEncounters && DB.rareEncounters[o.zone];
       const row = Array.isArray(rr) ? rr[0] : rr;
-      if (row && DB.monsters[row.mon] && (o.rare === 'force' || (o.rare !== false && chance((1 / Math.max(1, row.rate || K('RARE_ENC'))) * (1 + Math.min(150, (mods && mods.rareEncPct) || 0) / 100))))) {
+      if (row && DB.monsters[row.mon] && (o.rare === 'force' || (o.rare !== false && chance((1 / Math.max(1, (row.rate || K('RARE_ENC')) * ((R.Mon && R.Mon.K ? R.Mon.K('RARE_SCALE') : 1) || 1))) * (1 + Math.min(150, (mods && mods.rareEncPct) || 0) / 100))))) {
         rare = true; spec = [[row.mon, 1]]; Lb += K('RARE_MON').lvOff;
       }
       if (!spec) { const g = R.Mon.zoneGroup(o.zone, Tb); spec = g ? g.mons : null; }

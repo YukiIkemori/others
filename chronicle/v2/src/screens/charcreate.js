@@ -144,7 +144,7 @@
       R.UIK.panel(g, rp, {});
       const fs = Math.min(u(tall ? 150 : 180), rp.h * 0.36);
       const fr = { x: rp.x + u(24), y: rp.y + u(24), w: fs, h: fs };
-      R.UIK.portraitFrame(g, fr, look, {});
+      R.UIK.portraitFrame(g, fr, look, { fit: 'fill' });   // 絵のある範囲で枠に合わせる（女の主人公の顔が小さく右下に出ていた。テスター 2026-09-30）
       let ty = rp.y + u(28);
       const tx = fr.x + fs + u(22), tw = rp.x + rp.w - u(24) - tx;
       R.UIK.text(g, this.name, tx, ty, { size: u(26), weight: 700, color: C.goldHi, maxW: tw });

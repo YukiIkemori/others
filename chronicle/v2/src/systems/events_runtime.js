@@ -16,7 +16,8 @@
 //   say(who, text, {voice, face, name, title})   who = 今のマップの NPC の id か、一行の人の id（'hero' など）か look か null（地の文）。
 //        名前は npc.name → 人の名前 → looks[look].name。face を書かなければ look に顔があれば（R.Portrait.has）出す。false で出さない。
 //        face に表情だけ（'smile'）を書いたら話者の look に付ける。文の中の {hero} は主人公の名前
-//   choose(labels, {cancel, text})  → 選んだ番号（B は cancel の番号）
+//   choose(labels, {cancel, text, who, face})  → 選んだ番号（B は cancel の番号）。who（NPC の id か true = 話しかけた NPC）を書くと
+//        問いの窓に say と同じ名前・顔を付ける
 //   caption(text, {ms}) → R.UIK.Message.caption / fade('out'|'in', ms) / wait(ms)
 //   item(id, n, {silent}) → K.gain。右上に「〜を 手に入れた」/ take(id, n) → bool / gold(n, {silent}) / has(id)（袋＋装備）
 //   battle(troop|setup, opts) → 'win'|'lose'|'escape'（全滅して宿・タイトルを選んだら戻らない）
@@ -194,6 +195,16 @@
       async choose(labels, o) {
         guard(); o = o || {};
         const msg = { text: fill(o.text || ''), choices: (labels || []).map((l) => fill(l)), face: false };
+        // 問いを NPC が言うとき（o.who = NPC の id か true = 話しかけた NPC）: say と同じく名前・肩書き・顔を付ける
+        //   （前は選択肢の窓だけ名前と顔が消えて、2 回目の会話で「誰が話しているか分からない」と言われた。テスター 2026-09-30）
+        const w = o.who === true ? ctx.npc : o.who;
+        if (w && o.text) {
+          const sp = speaker(w);
+          const name = o.name || sp.name;
+          if (name) msg.name = fill(name);
+          if (o.title || sp.title) msg.title = o.title || sp.title;
+          msg.face = faceOf(sp, o.face);
+        }
         if (o.cancel != null) msg.cancel = o.cancel;
         const r = await R.UIK.Message.say(msg);
         guard();

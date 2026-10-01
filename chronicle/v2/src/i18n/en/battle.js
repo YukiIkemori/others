@@ -31,6 +31,7 @@
     'battle.command.partyMenu.head.name': 'Party Orders',
     'battle.command.partyMenu.head.sub': 'Repeat uses the same actions as last round (press {l} or {b} while running to stop).',
     'battle.command.partyMenu.head.sub_2': 'What will you do?',
+    'battle.command.partyMenu.escapeWhy.boss': 'You can\'t run from a boss battle.',
     'battle.command.partyMenu.i.prompts.0.label': 'Select',
     'battle.command.partyMenu.i.prompts.1.label': 'Speed',
     'battle.command.member.wname': 'Attack',

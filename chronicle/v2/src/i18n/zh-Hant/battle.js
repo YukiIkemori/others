@@ -30,6 +30,7 @@
     'battle.command.partyMenu.head.name': '全隊指令',
     'battle.command.partyMenu.head.sub': '重複：執行與上一回合相同的行動（執行中按 {l} 或 {b} 停止）。',
     'battle.command.partyMenu.head.sub_2': '要怎麼做？',
+    'battle.command.partyMenu.escapeWhy.boss': '首領戰中無法逃跑。',
     'battle.command.partyMenu.i.prompts.0.label': '決定',
     'battle.command.partyMenu.i.prompts.1.label': '速度',
     'battle.command.member.wname': '攻擊',
