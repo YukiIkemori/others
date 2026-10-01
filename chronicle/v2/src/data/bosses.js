@@ -42,7 +42,7 @@
   // @@S-BEGIN
   const S = {
     b_pageeater: { hp: 1.7 },
-    b_moth: { hp: 1.62 },   // 2026-10-01: K.BOSS_HP（1.05 倍）の分を戻す（台本のラウンド 5〜7 の上の端）
+    b_moth: { hp: 1.7 },
     b_rooteater: { hp: 0.9, atk: 0.6, mag: 0.6 },
     b_root: { hp: 1, atk: 0.5, mag: 0.5 },
     b_sandworm: { hp: 1.1 },
@@ -451,7 +451,7 @@
     // 数値（s）は tools/sim_bosses.js の 3 本立てで合わせた（2026-09-26、標準の一行・そのティアの店の品）
     // 予告の行動は重み 200（その手番なら必ず。§9.11.3 の SCHED と同じ考え）
     P.s = { hp: 1.3, atk: 0.7 };
-    M.s = { hp: 1.35, atk: 1.55, mag: 1.55 };
+    M.s = { hp: 1.29, atk: 1.55, mag: 1.55 };   // 2026-10-01: 1.35 → 1.29（K.BOSS_HP 1.05 倍の分を戻す。台本のラウンド 5〜7 の上の端）
     RE.s = { hp: 1.1, atk: 0.6, mag: 0.6 };
     // ページ食らい: 紙吹雪（ランダム 3 回）を「紙を吸いこむ → 紙吹雪（全体）」の予告に置き換え
     P.actions = A([['attack', 4], ['eb_page_gather', 200, { every: [3, 0] }], ['eb_eat_words', 1, { every: [4, 3] }], ['eb_ink_spit', 1, { every: [4, 1] }], ['eb_devour', 1]]);

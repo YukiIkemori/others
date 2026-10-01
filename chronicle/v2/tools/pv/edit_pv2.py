@@ -357,8 +357,8 @@ for i, (c, src, d) in enumerate(STORY7):
     cut(c, t, d, src=src, xin=0.6 if i else None, ev=True, gamesfx=-12, zoom=(1.0, 1.06) if i % 2 == 0 else (1.06, 1.0))
     t += d
 # 火の鳥の灯がともる（光の柱）
-cut('s7_firebird', t, 3.6, src=20.2, xin=0.5, gamesfx=-6, zoom=(1.0, 1.05))
-FLASH.append((t + 0.85, 0.25, 0.9, 0.55, (1.0, 0.85, 0.6)))
+cut('s7_firebird', t, 3.6, src=21.1, xin=0.6, gamesfx=-6, zoom=(1.0, 1.05))   # 19.8〜21.0 は暗転なので、光が戻る所から
+FLASH.append((t + 0.7, 0.3, 0.9, 0.45, (1.0, 0.85, 0.6)))
 t += 3.6
 
 # ================================================================== 8 戦い（boss2・1 カット 2 小節ほど）
@@ -371,7 +371,7 @@ MUSIC.append(dict(file='boss2', at=T8 - DB_BOSS, src=0.0, dur=0, fin=0.05, gain=
 cut('s8_rowell', T8, 2.95, src=1.5, ev=True, nosub=True, gamesfx=-6)
 SFX.append(dict(id='crit', at=T8 + 1.62, gain=-5))
 cut('s8_rowell', T8 + 2.95, 2.0, src=4.6, gamesfx=-6)
-sub(SUBS['v_rowell_t2_03'], T8 + 1.7, T8 + 4.4, y=1000)   # 会話の窓が消えた後も声は続くので、窓が消える所から字幕
+sub(SUBS['v_rowell_t2_03'], T8 + 1.9, T8 + 4.4, y=1000)   # 会話の窓が消えた後も声は続くので、窓が消える所から字幕
 t = T8 + 4.95
 BOSS = [  # (カット, src, 長さ, 光の時刻（カットの秒）)
     ('s8_white', 7.9, 2.6, 9.28),
@@ -403,8 +403,8 @@ t += 6.3
 
 # ================================================================== 9 結び（白 → 年代記の 1 ページ → 八つの灯 → 題字 → 終わりの札）
 T9 = t
-cut('s9_page', T9, 5.3, src=0.4, xin=1.2, zoom=(1.05, 1.12), center=(0.5, 0.45), grade=dict(bright=1.05))
-vo('v_fine_isles_01', T9 - 0.6, y=1000)   # 白の中から声
+cut('s9_page', T9, 5.3, src=0.4, xin=0.9, zoom=(1.05, 1.12), center=(0.5, 0.45), grade=dict(bright=1.05))
+vo('v_fine_isles_01', T9 + 0.35, y=1000)   # 白からページが浮かぶ所で声（白の上の白い字幕を避ける）
 t = T9 + 5.3
 T_BEACON = t
 MUSIC.append(dict(file='dawn', at=T_BEACON, src=21.375, dur=0, fin=0.2, gain=-1))
