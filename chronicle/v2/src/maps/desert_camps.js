@@ -106,10 +106,10 @@
       K.path(g, [[15, 22], [15, 17], [21, 17], [21, 8]], 'd', 1, 'sukg');
       const O = [];
       camp(O, 17, 14);
-      // 王墓の戸口（描いた下絵の戸口は 2 マス幅、y 5。当たりは desert_painted_rows.js）
-      for (const [x, id] of [[21, 'desert_camp3_tomb'], [22, 'desert_camp3_tomb_b']]) {
-        O.push(K.stairs(x, 5, { map: 'desert_tomb_1', spawn: 'entrance' }, { id, cond: 'desert_camp3_done', look: 'none' }), K.exam(x, 5, 'desert_tomb_sealed', { cond: '!desert_camp3_done' }));
-      }
+      // 王墓の戸口（描いた下絵の戸口は 2 マス幅、x 21〜22・y 5。当たりは desert_painted_rows.js）。1 つの階段を w 2 で置く:
+      //   前は 1 マスの階段を 2 つ並べていて、入口の印（wayfind）が 2 つ出た（持ち主の試遊 2026-10-01「砂の王墓は入口は2個出ちゃってる」）
+      O.push(K.stairs(21, 5, { map: 'desert_tomb_1', spawn: 'entrance' }, { id: 'desert_camp3_tomb', w: 2, cond: 'desert_camp3_done', look: 'none' }),
+        K.exam(21, 5, 'desert_tomb_sealed', { w: 2, cond: '!desert_camp3_done' }));
       O.push(K.prop('obelisk', 19, 6), K.prop('obelisk', 24, 6), K.prop('tomb_urn', 18, 8), K.prop('tomb_urn', 24, 8));   // 壺は墓の崖の際（入口の前 x 20〜23 は空ける）
       O.push(K.spring('desert_camp3_s1', 7, 15));             // 古い泉のほとりの湧き水（回復の泉）
       O.push(K.exam(13, 11, 'desert_camp3_oldspring'));

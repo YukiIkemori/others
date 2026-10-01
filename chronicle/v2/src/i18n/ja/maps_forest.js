@@ -31,7 +31,7 @@
     'map.fern_interiors.fern_search.talk.0.L': 'ゴードの親方が足をくじいてな。\nおれたちだけじゃ、\n森の奥までは行けねえ。',
     'map.fern_interiors.fern_search.talk.1.forest_found_ben': 'ベンが見つかったって？\n……よかった。本当によかった。',
     'map.fern_interiors.fern_search.talk.2.cleared_r_forest': '詰所も今夜でおしまいだ。\n今度は祭りの支度だな！',
-    'map.fern_interiors.fern_search.talk.moth': 'おれも一度、森の奥で\n白い粉をかぶって眠りこんじまった。\nでっかい羽虫の羽の粉さ。行くなら、眠りよけの\nお守りを持ってけ。',
+    'map.fern_interiors.fern_search.talk.moth': 'おれも一度、森の奥で\n白い粉をかぶって眠りこんじまった。\nでっかい羽虫の羽の粉さ。\f行くなら、眠りよけの\nお守りを持ってけ。',
     'map.fern_interiors.fern_gord': 'ゴードの家',
     'map.fern_interiors.fern_gord.npcs.0.gord.name': 'ゴード',
     'map.fern_interiors.fern_gord.npcs.0.gord.title': 'きこり頭',

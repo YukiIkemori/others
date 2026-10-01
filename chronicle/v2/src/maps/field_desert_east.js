@@ -1,6 +1,6 @@
 // 生成物（design/art_ref/gen/env/_tools/under/field_desert/ の areas_desert.py → fit.py → tomap.py）。手で直さない: 配置は areas_desert.py、当たりは fit.py で作り直す。
 // エリア d_east「東の街道」（灰の荒野への古い道、56×36）。エリア切り替えのフィールド（maps/field_00_kit.js、砂漠の凡例は field_desert_00_kit.js）。
-//   出口: w → kasim.gate_e, e → world.d_east_e, s → d_south.north
+//   出口: 門 → kasim.gate_e, e → world.d_east_e, s → d_south.north
 //   絵: field/under/d_east（v2/assets/env/field/under/。無ければマスから焼く）
 (function (R) {
   'use strict';
@@ -58,8 +58,8 @@
       {"id":"oil_camel","look":"ani_camel","name":R.T('map.field_desert_east.d_east.oil_camel.name'),"x":11,"y":25,"dir":"w","move":"still","talk":{"lines":[{"text":R.T('map.field_desert_east.d_east.lines.0.text')}]},"reward":null},
       {"id":"guard_ash","look":"npc_guard_1","name":R.T('map.field_desert_east.d_east.guard_ash.name'),"x":50,"y":16,"dir":"e","move":"still","pushable":false,"cond":{"slice":true},"talk":{"lines":[{"text":R.T('map.field_desert_east.d_east.lines.0.text_2')}]},"reward":"news","key":"world_guard_ash"},
     ],
-    spawns: {"kasim":{"x":1,"y":17,"dir":"e"},"pass":{"x":54,"y":14,"dir":"w"},"south":{"x":12,"y":34,"dir":"n"}},
-    exits: [{"x":0,"y":17,"w":1,"h":2,"to":{"map":"kasim","spawn":"gate_e"}},{"x":55,"y":14,"w":1,"h":2,"to":{"map":"world","spawn":"d_east_e"},"cond":{"not":{"slice":true}}},{"x":12,"y":35,"w":2,"h":1,"to":{"map":"d_south","spawn":"north"}}],
+    spawns: {"kasim":{"x":5,"y":17,"dir":"e"},"pass":{"x":54,"y":14,"dir":"w"},"south":{"x":12,"y":34,"dir":"n"}},
+    exits: [{"x":4,"y":17,"w":1,"h":2,"to":{"map":"kasim","spawn":"gate_e"}},{"x":55,"y":14,"w":1,"h":2,"to":{"map":"world","spawn":"d_east_e"},"cond":{"not":{"slice":true}}},{"x":12,"y":35,"w":2,"h":1,"to":{"map":"d_south","spawn":"north"}}],
     triggers: [],
     tilePatches: [{"cond":{"slice":true},"rect":[52,13,3,3],"rows":["rrr","rrr","rrr"]}],
     zones: [{"rect":[0,10,56,12],"zone":"zw_desert_road"},{"rect":null,"zone":"zw_desert"}],

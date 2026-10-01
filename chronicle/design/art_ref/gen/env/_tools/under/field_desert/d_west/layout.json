@@ -1057,15 +1057,15 @@
 "y": 1,
 "dir": "s"
 },
-"kasim": {
-"x": 58,
-"y": 20,
-"dir": "w"
-},
 "south": {
 "x": 34,
 "y": 42,
 "dir": "n"
+},
+"kasim": {
+"x": 54,
+"y": 20,
+"dir": "w"
 },
 "hawks": {
 "x": 12,
@@ -1091,17 +1091,6 @@
 "edge": "n"
 },
 {
-"x": 59,
-"y": 20,
-"w": 1,
-"h": 2,
-"to": {
-"map": "kasim",
-"spawn": "gate_w"
-},
-"edge": "e"
-},
-{
 "x": 34,
 "y": 43,
 "w": 2,
@@ -1111,6 +1100,16 @@
 "spawn": "north"
 },
 "edge": "s"
+},
+{
+"x": 55,
+"y": 19,
+"w": 1,
+"h": 3,
+"to": {
+"map": "kasim",
+"spawn": "gate_w"
+}
 },
 {
 "x": 12,
@@ -1209,8 +1208,8 @@
 "ssRRRRRRRRRRRRRRRRRRRRRsruusrkksssssssssus....sssssuuuuXXXXX",
 "uusRRRRRRRRRRRRRRRRRRRrskkkkkkkkkkssssuuuuu.....sssuuuuXXXXX",
 "ubsrRRRRRRRRRRRRRRRRRrskkkkkkkkkkkkksssusssss...............",
-"sssrrRRRRRRRRRRRRRRRrskkkkkkkkkkkkkkkssssssssus.........TT..",
-"ssssrRRRRRRRRRRRRRRrsskkkkkkkckkkkkkksssssssuuu..ssssu..TTT.",
+"sssrrRRRRRRRRRRRRRRRrskkkkkkkkkkkkkkkssssssssus.........TTT.",
+"ssssrRRRRRRRRRRRRRRrsskkkkkkkckkkkkkksssssssuuu..ssssu..TTTT",
 "sssssrRRRRRRRRRRRRrusskkkkkkkkkkkkkkuuuuuuusuuu..ssuussXXXXX",
 "ssssssssrRRRRRRRuuuuuuukkkkkkkkkkkkkuuuubuuuuu..ussuuusXXXXX",
 "ssrsssrsssrr:ruuuuuruuukkkkkkkkkkkkuuuuuuuuuuu..uuuuuuuXXXXX",

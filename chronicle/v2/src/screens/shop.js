@@ -472,24 +472,30 @@
     },
     /**
      * 仲間の帯の中身（描くのと同じ数。テストも読む）: 一行の全員について
-     * [{id, name, slot, state: 'cant'（装備できない）| 'wearing'（装備中）| 'diff', show: [{k, name, d}]（上から lines 行。主な値 → 変わる値の大きい順）}]
+     * [{id, name, slot, state: 'cant'（装備できない）| 'wearing'（装備中）| 'diff', show: [{k, name, d}]（上から lines 行）}]
+     * 行は品ごとに決まり、誰の列でも同じ値が同じ順（S.cmpKeys: 武器は攻撃・術力、防具は守備・術防がいつも上。変わらない値は ±0）。
+     *   前は人ごとに変わりの大きい順で、守備と術防の上下が品や人で入れ替わった（オーナー 2026-10-01）
      */
     compare(id, lines) {
       const it = S.item(id);
       if (!it) return [];
-      const mainKeys = it.slot === 'weapon' ? ['atk', 'mag'] : it.slot === 'acc' ? [] : ['def', 'mdef'];
-      return S.party().map((c) => {
+      const out = S.party().map((c) => {
         const slot = slotOf(c, id), can = canWear(c, id);
-        const o = { id: c.id, name: c.name, slot, state: 'diff', show: [] };
+        const o = { id: c.id, name: c.name, slot, state: 'diff', show: [], rows: null };
         if (!can) { o.state = 'cant'; return o; }
         if (c.equip[slot] === id || (it.slot === 'acc' && (c.equip.acc1 === id || c.equip.acc2 === id))) { o.state = 'wearing'; return o; }
-        const rows = S.statDiff(c, slot, id);
-        const main = rows.filter((rr) => mainKeys.includes(rr.k)).sort((a, b2) => Math.abs(b2.d) - Math.abs(a.d))[0] || null;
-        const rest = rows.filter((rr) => rr !== main && rr.d).sort((a, b2) => Math.abs(b2.d) - Math.abs(a.d) || (b2.d > 0) - (a.d > 0));
-        o.show = (main ? [main] : []).concat(rest).slice(0, lines || 2);
-        if (!o.show.length) o.show.push({ name: '', d: 0 });
+        o.rows = S.statDiff(c, slot, id);
         return o;
       });
+      const keys = S.cmpKeys(out.filter((o) => o.rows).map((o) => o.rows), it, lines || 2);
+      for (const o of out) {
+        if (o.rows) {
+          o.show = S.cmpRows(o.rows, keys);
+          if (!o.show.length) o.show.push({ name: '', d: 0 });
+        }
+        delete o.rows;
+      }
+      return out;
     },
     /**
      * 仲間の帯: 一行の全員を 1 人 1 列に。列の中は [顔（丸）] → [名前] → [増減 1〜2 行]（▲+n 緑・▼−n 赤・±0 灰）を縦に積む。
@@ -500,7 +506,7 @@
       const n = Math.max(1, mem.length), gap = u(tall ? 6 : 8), cw = (w - gap * (n - 1)) / n;
       const lh = u(22);
       const extra = tall ? 0 : u(20);   // 横長は名前の下に「いま：…」
-      // 増減の行: 縦持ちは 2 行、横長は入るだけ（2〜4 行。主な値 → 変わる値の大きい順）
+      // 増減の行: 縦持ちは 2 行、横長は入るだけ（2〜4 行。主な値がいつも上、続きは決まった順。S.cmpKeys）
       const lines = tall ? 2 : clamp(Math.floor((h - u(8) - u(40) - u(8) - u(21) - extra - u(10)) / lh), 2, 4);
       const r = clamp(Math.min(cw * 0.2, (h - u(18) - u(22) - extra - lines * lh) / 2), u(10), tall ? u(20) : u(24));
       const cmp = this.compare(id, lines);
@@ -540,7 +546,7 @@
         if (name === '…') { name = ''; nw = 0; }   // 数字だけでも入らないほど狭いときだけ
       }
       const x0 = cx - (nw + dw) / 2;
-      if (nw) R.UIK.text(g, name, x0, y + (sz - ns) / 2, { size: ns, color: C.text2 });
+      if (nw) R.UIK.text(g, name, x0, y + (sz - ns) / 2, { size: ns, color: rr.d ? C.text2 : C.same });   // 変わらない行は名前も薄く
       if (rr.d) S.delta(g, rr.d, x0 + nw + dw, y, { size: sz });
       else R.UIK.text(g, '±0', x0 + nw + dw, y, { size: sz, weight: 700, color: C.same, align: 'right' });
     },

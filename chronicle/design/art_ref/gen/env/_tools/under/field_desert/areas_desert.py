@@ -116,8 +116,12 @@ def d_west():
     a.scatter('b', 0.012, only='su', seed=42, clear=1)
     a.tidy()
     a.exit('n', 30, 31, {'map': 'd_pass', 'spawn': 'south'}, 'north')
-    a.exit('e', 20, 21, {'map': 'kasim', 'spawn': 'gate_w'}, 'kasim')
     a.exit('s', 34, 35, {'map': 'd_caravan', 'spawn': 'north'}, 'south')
+    # カシムの西の門: 入口は描いた門楼の前（道が門に着く x 55、通れる y 19〜21 の 3 マスぜんぶ）。前は東の端（x 59）で、
+    # 門の奥の壁の上まで歩かないと入れなかった（持ち主の試遊 2026-10-01「ワープゾーンが微妙に遠くて入りづらい」）。
+    # 町から出たら門の前の道（x 54。入口のマスの外なので、すぐには入り直さない）
+    a.exits.append(dict(x=55, y=19, w=1, h=3, to={'map': 'kasim', 'spawn': 'gate_w'}))
+    a.spawns['kasim'] = dict(x=54, y=20, dir='w')
     a.spawns['hawks'] = dict(x=12, y=25, dir='s')
     a.spawns['mirage'] = dict(x=29, y=22, dir='s')
     a.exits.append(dict(x=12, y=24, w=1, h=1, to={'map': 'desert_hawks_1', 'spawn': 'mouth'}))
@@ -180,7 +184,10 @@ def d_east():
     a.scatter('r', 0.010, only='suk', seed=31, clear=1)
     a.scatter('b', 0.010, only='su', seed=32, clear=1)
     a.tidy()
-    a.exit('w', 17, 18, {'map': 'kasim', 'spawn': 'gate_e'}, 'kasim')
+    # カシムの東の門: 入口は描いた 2 つの塔のあいだの門の口（x 4、y 17〜18）。前は西の端（x 0）で、門の通路を奥まで歩かないと入れなかった。
+    # 町から出たら門の前（x 5。入口のマスの外）
+    a.exits.append(dict(x=4, y=17, w=1, h=2, to={'map': 'kasim', 'spawn': 'gate_e'}))
+    a.spawns['kasim'] = dict(x=5, y=17, dir='e')
     a.exit('e', 14, 15, {'map': 'world', 'spawn': 'd_east_e'}, 'pass')['cond'] = {'not': {'slice': True}}
     a.exit('s', 12, 13, {'map': 'd_south', 'spawn': 'north'}, 'south')
     a.stroke([(12.5, 18), (12.5, 36)], 1.6, ':', seed=9, only='sukb r')

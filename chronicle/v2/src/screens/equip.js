@@ -69,13 +69,35 @@
     return nz.sort((a, b) => Math.abs(b.d) - Math.abs(a.d))[0];
   };
   /** S.delta で描く「▲+n」の幅（論理 px） */
+  /**
+   * 「仲間が付けると」の行の値（店の仲間の帯・装備画面のほかの仲間で同じ。オーナー 2026-10-01「守備と術防が入れ替わる。上と下の表示は固定で」）:
+   *   品ごとに行を決め、誰の列でも同じ値を同じ順に出す（変わらない人は ±0）。前は人ごとに変わりの大きい順に並べていたので、品や人で上下が入れ替わった。
+   *   主な値（武器: 攻撃・術力、防具: 守備・術防。アクセは無し）はいつも頭に。残りは誰かが変わる値から、変わりの大きい物を n 行まで選んで DIFF_KEYS の順に。
+   *   lists = 付けられる人の S.statDiff の結果の配列。→ [k]
+   */
+  S.cmpKeys = function (lists, it, n) {
+    if (!it) return [];
+    const KEYS = R.Rules.DIFF_KEYS || RAW.concat(ABIL);
+    const main = it.slot === 'weapon' ? ['atk', 'mag'] : it.slot === 'acc' ? [] : ['def', 'mdef'];
+    const big = {};
+    for (const rows of lists || []) for (const r of rows || []) if (r.d && !main.includes(r.k)) big[r.k] = Math.max(big[r.k] || 0, Math.abs(r.d));
+    const room = Math.max(0, (n || 2) - main.length);
+    const extra = Object.keys(big).sort((a, b) => big[b] - big[a] || KEYS.indexOf(a) - KEYS.indexOf(b)).slice(0, room);
+    return main.slice(0, n || 2).concat(KEYS.filter((k) => extra.includes(k)));
+  };
+  /** keys の順の行（無い値は ±0 の行）: rows = S.statDiff の結果 → [{k, name, d}] */
+  S.cmpRows = function (rows, keys) {
+    const N = R.Rules.DIFF_NAMES || {};
+    return (keys || []).map((k) => { const r = (rows || []).find((x) => x.k === k); return r ? { k, name: r.name, d: r.d } : { k, name: N[k] || k, d: 0 }; });
+  };
   S.deltaW = function (d, sz) {
     if (!d) return 0;
     return R.UIK.measure((d > 0 ? '+' : '−') + Math.abs(d), { size: sz, weight: 700 }) + u(6) + sz * 0.6;
   };
   /**
    * 増減の札を横に並べる（ほかの仲間・店の行）: 「値の名前 ▲+n」を左から、w に入る分だけ。札の幅を測って置くので重ならない。
-   * rows = [{name, d}]（大事な順）。o = {size, nameSize, nameColor, align:'left'|'right', gap, lines（行の数、既定 1）, lh（行の間）, cy（縦の中心。無ければ y が 1 行目の上）}。
+   * rows = [{name, d}]（大事な順）。o = {size, nameSize, nameColor, align:'left'|'right', gap, lines（行の数、既定 1）, lh（行の間）, cy（縦の中心。無ければ y が 1 行目の上）,
+   *   cellW（札ごとの決まった幅の配列。人が替わっても札の位置が動かないように）}。d が 0 の札は灰色の「±0」
    * → 描いた数
    */
   S.deltaCells = function (g, rows, x, y, w, o) {
@@ -85,8 +107,9 @@
     const ncol = (r) => o.nameColor || (r.d > 0 ? C.up : r.d < 0 ? C.down : C.same);
     // 並べ方を先に決める（行ごとに入るだけ）
     const lines = [[]], lw = [0];
-    for (const r of rows) {
-      const cw = R.UIK.measure(r.name, { size: ns }) + inner + S.deltaW(r.d, sz);
+    const dW = (d) => (d ? S.deltaW(d, sz) : R.UIK.measure('±0', { size: sz, weight: 700 }));
+    for (const [ri, r] of rows.entries()) {
+      const cw = (o.cellW && o.cellW[ri]) || R.UIK.measure(r.name, { size: ns }) + inner + dW(r.d);
       let L = lines.length - 1;
       const add = (lines[L].length ? gap : 0) + cw;
       if (lw[L] + add > w) {
@@ -101,9 +124,9 @@
     const y0 = o.cy != null ? o.cy - ((Math.max(1, n) - 1) * lh + sz) / 2 : y;
     // 1 つも入らないときは、名前を縮めて（…）最初の 1 つだけ
     if (!n && rows.length) {
-      const r = rows[0], dw = S.deltaW(r.d, sz);
+      const r = rows[0], dw = dW(r.d);
       R.UIK.text(g, r.name, x, y0 + (sz - ns) / 2, { size: ns, color: ncol(r), maxW: Math.max(u(14), w - dw - inner) });
-      S.delta(g, r.d, x + w, y0, { size: sz });
+      S.delta(g, r.d, x + w, y0, { size: sz, zero: '±0' });
       return 1;
     }
     let count = 0;
@@ -112,7 +135,8 @@
       let cx = o.align === 'right' ? x + w - lw[L] : x;
       for (const c of cells) {
         R.UIK.text(g, c.r.name, cx, ly + (sz - ns) / 2, { size: ns, color: ncol(c.r) });   // 名前と数字の縦の中心をそろえる
-        S.delta(g, c.r.d, cx + c.cw, ly, { size: sz });
+        if (c.r.d) S.delta(g, c.r.d, cx + c.cw, ly, { size: sz });
+        else R.UIK.text(g, '±0', cx + c.cw, ly, { size: sz, weight: 700, color: C.same, align: 'right' });
         cx += c.cw + gap; count++;
       }
     });
@@ -342,6 +366,14 @@
         const ICON = u(44), x = op.x + u(20), rx = op.x + op.w - u(20);
         const NW = Math.min(u(112), (rx - x - ICON) * 0.32);
         const tx = x + ICON + NW + u(12), tw = rx - tx;
+        // 行の値はみんな同じ順（S.cmpKeys）。札の幅もみんなで同じ（いちばん広い数字に合わせる）なので、上下・左右の位置が人で変わらない
+        const canOf = (o) => !!(focusId && R.Rules.canEquip(o, focusId, R.Rules.defaultSlot(o, focusId)));
+        const diffs = others.map((o) => (canOf(o) ? S.statDiff(o, R.Rules.defaultSlot(o, focusId), focusId) : null));
+        const cmp = { keys: focusId ? S.cmpKeys(diffs.filter(Boolean), S.item(focusId), 4) : [] };
+        cmp.cellW = cmp.keys.map((k) => {
+          const N = R.Rules.DIFF_NAMES || {};
+          return R.UIK.measure(N[k] || k, { size: u(13.5) }) + u(8) + diffs.reduce((m, rows) => { const r = rows && rows.find((q) => q.k === k); return Math.max(m, r && r.d ? S.deltaW(r.d, u(13.5)) : R.UIK.measure('±0', { size: u(13.5), weight: 700 })); }, 0);
+        });
         others.forEach((o, i) => {
           const cy = top + i * oh + oh / 2;
           const can = focusId && R.Rules.canEquip(o, focusId, R.Rules.defaultSlot(o, focusId));
@@ -350,9 +382,9 @@
           if (!focusId) return;
           const ty = cy - u(13.5) / 2 - u(1);
           if (!can) { R.UIK.text(g, R.T('ui.equip.draw.text_6'), tx, ty, { size: u(13), color: C.disabled }); return; }
-          const ds = S.statDiff(o, R.Rules.defaultSlot(o, focusId), focusId).filter((r) => r.d).sort((a, b2) => Math.abs(b2.d) - Math.abs(a.d) || (b2.d > 0) - (a.d > 0));
+          const ds = S.cmpRows(diffs[i], cmp.keys);
           if (!ds.length) R.UIK.text(g, R.T('ui.equip.draw.text_5'), tx, ty, { size: u(13), color: C.same });
-          else S.deltaCells(g, ds, tx, 0, tw, { size: u(13.5), cy, lines: oh >= u(44) ? 2 : 1, lh: u(19) });
+          else S.deltaCells(g, ds, tx, 0, tw, { size: u(13.5), cy, lines: oh >= u(44) ? 2 : 1, lh: u(19), cellW: cmp.cellW });
         });
       }
     },

@@ -161,6 +161,31 @@ async function main() {
     await p.mouse.click(c.x, c.y); await sleep(150);
     ok('選択肢をクリック → 2', (await ev(p, '__r')) === 2, { r: await ev(p, '__r'), cr });
 
+    // 選択肢だけの窓は直前の会話の名前を借りる。本文もその名前の下に置く（前は名前なしの高さに置かれ、名前に重なって上にずれた。オーナー 2026-10-01「宿で泊まろうとすると 2 個目で文章が上にずれる」）
+    section('Message（続けて出す窓で本文の高さが変わらない）');
+    await ev(p, `window.__r = 'none', RPG.UIK.Message.say({ name: '宿の主人', title: '砂の縁', text: '砂の縁の宿へようこそ。' }).then((v) => { __r = v; }), true`);
+    await B.waitFor(p, 'RPG.UIK.Message.state() && RPG.UIK.Message.state().full', 3000);
+    await sleep(60);
+    const m1 = await ev(p, 'RPG.UIK.Message.state()');
+    await B.press(p, 'a');
+    await ev(p, `window.__r = 'none', RPG.UIK.Message.say({ text: '', choices: ['泊まる', 'やめておく'], cancel: 1, face: false }).then((v) => { __r = v; }), true`);
+    await B.waitFor(p, 'RPG.UIK.Message.state() && RPG.UIK.Message.state().full', 3000);
+    await sleep(60);
+    const m2 = await ev(p, 'RPG.UIK.Message.state()');
+    ok('選択肢だけの窓: 前の名前を借り、本文は 1 つ目と同じ高さ（上にずれない）', m2.name === '宿の主人' && m1.textY != null && m2.textY === m1.textY && m2.rect.y === m1.rect.y, { m1: [m1.name, m1.textY], m2: [m2.name, m2.textY] });
+    await sleep(700); await B.press(p, 'b'); await sleep(80);
+    for (const nm of ['宿の主人', '']) {
+      await ev(p, `RPG.UIK.Message.say({ ${nm ? `name: '${nm}', ` : ''}text: ['一枚目', '二枚目', '三枚目'] }), true`);
+      const ys = [];
+      for (let i = 0; i < 3; i++) {
+        await B.waitFor(p, 'RPG.UIK.Message.state() && RPG.UIK.Message.state().full', 3000);
+        await sleep(40);
+        ys.push(await ev(p, 'RPG.UIK.Message.state().textY'));
+        await B.press(p, 'a');
+      }
+      ok(`続くページで本文の高さが同じ（名前${nm ? 'あり' : 'なし'}）`, ys.length === 3 && ys.every((y) => y === ys[0] && y != null), ys);
+    }
+
     section('Message（連続の say・ログ・自動送り）');
     const chain = await ev(p, `(async () => { const M = RPG.UIK.Message; let a = 'none'; M.say({ name: '丙', text: '一つ目' }).then((v) => { a = v; });
       const p2 = M.say({ name: '丁', text: '二つ目' }); await Promise.resolve(); await Promise.resolve();

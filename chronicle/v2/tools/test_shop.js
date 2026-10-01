@@ -40,6 +40,34 @@ function mk(p) {
     ok('no member ever gets more than 2 lines', mem.length && ['w_sword_2', 'bd_mail_1', 'sh_buckler_1', 'ft_boots_1'].every((id) => v.compare(id, 2).every((c) => c.show.length <= 2)));
   }
 
+  // オーナー 2026-10-01「『仲間がつけると』で守備と術防が入れ替わる。上と下の表示は固定で」: 行は品ごとに決まり、誰の列でも同じ順（変わらない値は ±0）
+  section('仲間の帯: 行の順が決まっている（守備・術防、攻撃・術力が入れ替わらない）');
+  {
+    R.Dev.applyState('menus_party');
+    const v = mk({ id: 'shop_pharos_arms' });
+    const armor = Object.keys(R.DB.items).filter((id) => { const it = R.DB.items[id]; return it.slot && it.slot !== 'weapon' && it.slot !== 'acc' && it.slot !== 'use' && it.slot !== 'key' && (it.def || it.mdef); });
+    const weapons = Object.keys(R.DB.items).filter((id) => R.DB.items[id].slot === 'weapon');
+    const accs = Object.keys(R.DB.items).filter((id) => R.DB.items[id].slot === 'acc');
+    const keysOf = (c) => c.show.map((r) => r.k).join(',');
+    const bad = [];
+    for (const [ids, head] of [[armor, ['def', 'mdef']], [weapons, ['atk', 'mag']], [accs, []]]) {
+      for (const id of ids) for (const lines of [2, 4]) {
+        const diff = v.compare(id, lines).filter((c) => c.state === 'diff');
+        if (!diff.length) continue;
+        const k0 = keysOf(diff[0]);
+        // 主な値が頭に決まった順で・どの人も同じ行・lines を超えない
+        if (head.length && !diff.every((c) => head.every((k, i) => c.show[i] && c.show[i].k === k))) bad.push([id, lines, 'head', diff.map(keysOf)]);
+        else if (!diff.every((c) => keysOf(c) === k0 && c.show.length <= lines)) bad.push([id, lines, 'same', diff.map(keysOf)]);
+      }
+    }
+    ok(`防具 ${armor.length}・武器 ${weapons.length}・アクセ ${accs.length}: 行の順はいつも同じ（防具は守備 → 術防、武器は攻撃 → 術力が頭。人で変わらない）`, !bad.length, bad.slice(0, 4));
+    // 守備が下がって術防が上がる品（綿の頭巾など）でも、守備が上で術防が下
+    const swap = armor.find((id) => v.compare(id, 2).some((c) => c.state === 'diff' && Math.abs(c.show[1].d) > Math.abs(c.show[0].d)));
+    ok('術防の変わりの方が大きい防具でも 守備 → 術防 の順', !!swap && v.compare(swap, 2).filter((c) => c.state === 'diff').every((c) => c.show[0].k === 'def' && c.show[1].k === 'mdef'), swap);
+    const zero = S.cmpRows([{ k: 'def', name: '守備', d: 3 }], ['def', 'mdef']);
+    ok('変わらない値も ±0 の行で残す（行を落とさない）', zero.length === 2 && zero[1].k === 'mdef' && zero[1].d === 0 && !!zero[1].name, zero);
+  }
+
   section('まとめ買い（道具・装備とも数を選ぶ札）');
   {
     R.Dev.applyState('menus_party');

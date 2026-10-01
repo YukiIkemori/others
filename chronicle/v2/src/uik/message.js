@@ -445,6 +445,7 @@
     }
     scene.finish = finish;
     scene.state = st;
+    scene.name = name;
     return scene;
   }
 
@@ -529,11 +530,11 @@
   };
   M.log = function () { return logs.slice(); };
   M.auto = function (v) { if (v != null) autoOn = !!v; return autoOn; };
-  /** 今の会話の中の状態（テスト用）: {page, pages, shown, full, choice, log} | null */
+  /** 今の会話の中の状態（テスト用）: {page, pages, shown, full, choice, log, rect, face, choiceRect, name（描く名前）, textY（本文 1 行目の上）} | null */
   M.state = function () {
     if (!cur) return null;
     const st = cur.scene.state;
     return { page: st.page, pages: st.pages ? st.pages.length : 0, shown: st.shown, full: st.pages ? st.shown >= st.pages[st.page].n : false, choice: st.choice, log: !!st.log,
-      rect: st.L ? { x: st.L.x, y: st.L.y, w: st.L.w, h: st.L.h } : null, face: st.L ? st.L.face : null, choiceRect: st.L && st.L.choice ? { x: st.L.choice.x, y: st.L.choice.y, w: st.L.choice.w, h: st.L.choice.h, rh: st.L.choice.rh } : null };
+      rect: st.L ? { x: st.L.x, y: st.L.y, w: st.L.w, h: st.L.h } : null, face: st.L ? st.L.face : null, name: cur.scene.name, textY: st.L ? st.L.textY : null, choiceRect: st.L && st.L.choice ? { x: st.L.choice.x, y: st.L.choice.y, w: st.L.choice.w, h: st.L.choice.h, rh: st.L.choice.rh } : null };
   };
 })(window.RPG);

@@ -1,6 +1,6 @@
 // 生成物（design/art_ref/gen/env/_tools/under/field_desert/ の areas_desert.py → fit.py → tomap.py）。手で直さない: 配置は areas_desert.py、当たりは fit.py で作り直す。
 // エリア d_west「鷹の台地」（カシムの西の野、60×44）。エリア切り替えのフィールド（maps/field_00_kit.js、砂漠の凡例は field_desert_00_kit.js）。
-//   出口: n → d_pass.south, e → kasim.gate_w, s → d_caravan.north, 門 → desert_hawks_1.mouth, 門 → desert_mirage.road
+//   出口: n → d_pass.south, s → d_caravan.north, 門 → kasim.gate_w, 門 → desert_hawks_1.mouth, 門 → desert_mirage.road
 //   絵: field/under/d_west（v2/assets/env/field/under/。無ければマスから焼く）
 (function (R) {
   'use strict';
@@ -28,8 +28,8 @@
       "ssRRRRRRRRRRRRRRRRRRRRRsruusrkksssssssssus....sssssuuuuXXXXX",
       "uusRRRRRRRRRRRRRRRRRRRrskkkkkkkkkkssssuuuuu.....sssuuuuXXXXX",
       "ubsrRRRRRRRRRRRRRRRRRrskkkkkkkkkkkkksssusssss...............",
-      "sssrrRRRRRRRRRRRRRRRrskkkkkkkkkkkkkkkssssssssus.........TT..",
-      "ssssrRRRRRRRRRRRRRRrsskkkkkkkckkkkkkksssssssuuu..ssssu..TTT.",
+      "sssrrRRRRRRRRRRRRRRRrskkkkkkkkkkkkkkkssssssssus.........TTT.",
+      "ssssrRRRRRRRRRRRRRRrsskkkkkkkckkkkkkksssssssuuu..ssssu..TTTT",
       "sssssrRRRRRRRRRRRRrusskkkkkkkkkkkkkkuuuuuuusuuu..ssuussXXXXX",
       "ssssssssrRRRRRRRuuuuuuukkkkkkkkkkkkkuuuubuuuuu..ussuuusXXXXX",
       "ssrsssrsssrr:ruuuuuruuukkkkkkkkkkkkuuuuuuuuuuu..uuuuuuuXXXXX",
@@ -75,8 +75,8 @@
     npcs: [
 
     ],
-    spawns: {"north":{"x":30,"y":1,"dir":"s"},"kasim":{"x":58,"y":20,"dir":"w"},"south":{"x":34,"y":42,"dir":"n"},"hawks":{"x":12,"y":25,"dir":"s"},"mirage":{"x":29,"y":22,"dir":"s"}},
-    exits: [{"x":30,"y":0,"w":2,"h":1,"to":{"map":"d_pass","spawn":"south"}},{"x":59,"y":20,"w":1,"h":2,"to":{"map":"kasim","spawn":"gate_w"}},{"x":34,"y":43,"w":2,"h":1,"to":{"map":"d_caravan","spawn":"north"}},{"x":12,"y":24,"w":1,"h":1,"to":{"map":"desert_hawks_1","spawn":"mouth"}},{"x":29,"y":21,"w":1,"h":1,"to":{"map":"desert_mirage","spawn":"road"},"cond":"desert_night"}],
+    spawns: {"north":{"x":30,"y":1,"dir":"s"},"south":{"x":34,"y":42,"dir":"n"},"kasim":{"x":54,"y":20,"dir":"w"},"hawks":{"x":12,"y":25,"dir":"s"},"mirage":{"x":29,"y":22,"dir":"s"}},
+    exits: [{"x":30,"y":0,"w":2,"h":1,"to":{"map":"d_pass","spawn":"south"}},{"x":34,"y":43,"w":2,"h":1,"to":{"map":"d_caravan","spawn":"north"}},{"x":55,"y":19,"w":1,"h":3,"to":{"map":"kasim","spawn":"gate_w"}},{"x":12,"y":24,"w":1,"h":1,"to":{"map":"desert_hawks_1","spawn":"mouth"}},{"x":29,"y":21,"w":1,"h":1,"to":{"map":"desert_mirage","spawn":"road"},"cond":"desert_night"}],
     triggers: [{"id":"desert_ambush_1","x":39,"y":32,"w":5,"h":3,"on":"step","event":"desert_ambush_1","cond":["desert_caravan_on","!desert_ambush_1_done"]}],
     tilePatches: [],
     zones: [{"rect":null,"zone":"zw_desert_caravan","cond":"desert_caravan_on"},{"rect":null,"zone":"zw_desert"}],
