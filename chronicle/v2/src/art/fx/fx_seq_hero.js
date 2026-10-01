@@ -111,6 +111,16 @@
         const k = E.in(uj / land);
         const x0 = tx + (L.from || 1) * (e.y + 260), y0 = ty - e.y - 120;
         const x = x0 + (tx - x0) * k, y = y0 + (ty - y0) * k, ang = Math.atan2(ty - y0, tx - x0);
+        const IMG = R.BFX.img;
+        if (IMG && IMG.on && IMG.ready('meteor')) {
+          // 描いた隕石（頭が右下へ向かう絵。向き 0.87 rad）。色が火の系統でなければ塗る
+          const m = IMG.meta('meteor'), pal = IMG.palOf(c, L.col != null ? L.col : 'fire');
+          g.save(); g.translate(x, y);
+          IMG.drawFrame(g, 'meteor', (e.ms * m.fps / 1000) % m.n, { s: (sz * 7) / (m.h * m.scale * 0.9), rot: ang - 0.87, pal: pal[0] === S.PAL.fire[0] ? null : pal });
+          g.restore();
+          S.dot(g, tx, ty + 20, sz * 3 * k, c0, 0.4 * k);
+          continue;
+        }
         g.save(); g.translate(x, y); g.rotate(ang);
         const tl = sz * 9;
         const gr = g.createLinearGradient(-tl, 0, 0, 0);
@@ -127,6 +137,14 @@
         S.dot(g, tx, ty + 20, sz * 3 * k, c0, 0.4 * k);
       } else {
         const k = (uj - land) / (1 - land);
+        const IMG = R.BFX.img;
+        if (IMG && IMG.on && IMG.ready('fire_burst')) {
+          // 落ちた所の爆ぜ（描いた炎の爆発）
+          const m = IMG.meta('fire_burst'), pal = IMG.palOf(c, L.col != null ? L.col : 'fire');
+          g.save(); g.translate(tx, ty - sz * 0.6);
+          IMG.drawFrame(g, 'fire_burst', IMG.frameAt(m, k, {}), { s: (sz * 6) / (m.h * m.scale * 0.9), pal: pal[0] === S.PAL.fire[0] ? null : pal });
+          g.restore();
+        }
         g.save(); g.translate(tx, ty);
         S.dot(g, 0, 0, sz * (2 + 5 * E.out(k)), c0, 0.9 * (1 - k));
         S.dot(g, 0, 0, sz * (1 + 2 * E.out(k)), c1, 1 - k, true);

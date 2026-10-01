@@ -25,7 +25,8 @@
     O.actions = A([['attack', 2], ['eb_crush_hug', 3], ['eb_whirl', 2], ['eb_ink_cloud', 1], ['eb_regrow', 2, { countBelow: 3 }],
       ['eb_octo_dive', 1, { round: 2 }]]);
     O.desc = R.T('data.bosses_isles.desc');
-    O.s = { hp: 1.18, atk: 0.72, mag: 0.72 };   // hp 1.1 → 1.18（2026-09-30: ティア 1 のリピートが 31% で目安 30% を越えた。sim_bosses）
+    O.s = { hp: 1.3, atk: 2.4, mag: 2.4 };   // 2026-10-01（組み直し）: 予告の手番が減り合体技が入った型で、台本 85〜95%・9 ラウンド（前は 100%・7 ラウンド）
+    if (L.b_tentacle) L.b_tentacle.s = { hp: 1.1, atk: 1.7, mag: 1.7 };   // hp 1.1 → 1.18（2026-09-30: ティア 1 のリピートが 31% で目安 30% を越えた。sim_bosses）
   }
   const C = L.b_captain;
   if (C) {
@@ -36,7 +37,7 @@
       ['eb_fire_volley', 2, LT], ['eb_ghost_shanty', 1, LT], ['eb_captain_parry', 1, LT], ['eb_call_crew', 2, { every: [2, 1], countBelow: 3 }],
       ['eb_captain_aim', 2, { every: [4, 3], round: 2 }]]);
     C.desc = R.T('data.bosses_isles.desc_2');
-    C.s = { hp: 0.47, atk: 0.44, mag: 0.44 };   // 2026-10-01: 地方ボスの通常の技が 1 人の最大 HP の 3〜4% しか削らず弱すぎた（オーナー「砂の王が弱すぎる」→ 地方ボス全体を見直し）。atk・mag を約 1.6 倍（sim_bosses）
+    C.s = { hp: 0.5, atk: 1.15, mag: 1.15 };   // 2026-10-01（組み直し）: 毎ラウンド 2 回とも攻める型に。atk 0.44 → 1.15（台本 89〜94%・10〜12 ラウンド）   // 2026-10-01: 地方ボスの通常の技が 1 人の最大 HP の 3〜4% しか削らず弱すぎた（オーナー「砂の王が弱すぎる」→ 地方ボス全体を見直し）。atk・mag を約 1.6 倍（sim_bosses）
   }
   // ---------------------------------------------------------------- 合体技（2026-10-01 ボスの組み直し。決まりは w_combo の R.DB.enemyCombos）
   R.defs('enemyCombos', {

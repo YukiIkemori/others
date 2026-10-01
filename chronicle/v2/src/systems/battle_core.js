@@ -724,7 +724,7 @@
       const C = cp.def, units = cp.units;
       const mem = (this.comboMem = this.comboMem || {});
       const st = (mem[cp.id] = mem[cp.id] || { n: 0 });
-      st.n++; st.last = this.round;
+      st.n = (st.n || 0) + 1; st.last = this.round;
       this.stats.combos = (this.stats.combos || 0) + 1;
       for (const m of units) if (m !== u) this.spendSlot(m);
       const info = { id: cp.id, name: C.name || '', uids: units.map((m) => m.uid) };

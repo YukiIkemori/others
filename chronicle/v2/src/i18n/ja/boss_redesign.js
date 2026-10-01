@@ -16,5 +16,14 @@
     'bossActions.eb_captain_parry.msg': "{user}はカトラスを斜めに構えて笑った。打ちこめば斬り返される！",
     'enemyCombos.c_b_octo_squeeze.name': "締め上げ",
     'enemyCombos.c_b_captain_boarding.name': "斬りこみの号令",
+    'bossActions.eb_warden_guard.name': "鉄の構え",
+    'bossActions.eb_warden_guard.msg': "{user}は両腕の鉄を打ち合わせて構えた。打ちこめば殴り返される！",
+    'enemyCombos.c_b_vein_resonance.name': "結晶の共鳴",
+    'bossActions.eb_barga_counter.name': "返しの構え",
+    'bossActions.eb_barga_counter.msg': "{user}は鉄の盾を前に、どっしりと腰を落とした。打ちこめば殴り返される！",
+    'bossActions.eb_zakuro_guard.name': "後の先",
+    'bossActions.eb_zakuro_guard.msg': "{user}は刀に手をかけたまま、静かに目を細めた。打ちこめば斬り返される！",
+    'enemyCombos.c_b_tamer_charge.name': "鞭と突進",
+    'enemyCombos.c_b_sister_flames.name': "姉妹の連なる火",
   });
 })(window.RPG);

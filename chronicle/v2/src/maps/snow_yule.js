@@ -154,9 +154,10 @@
         O.push({ type: 'brazier', id: 'yule_n_gate_fire', x: 25, y: 4, on: true }, { type: 'brazier', id: 'yule_w_gate_fire', x: 8, y: 28, on: true }, { type: 'brazier', id: 'yule_e_gate_fire', x: 48, y: 27, on: true });
       } else {
         const broken = (gate, pts) => pts.forEach(([id, x, y]) => O.push(K.prop(id, x, y, { cond: 'snow_gate_' + gate + '_broken', variant: (x + y) % 2 })));
-        broken('n', [['log', 26, 3], ['crate', 29, 7]]);
+        // 木箱は道の上（前は 29,7・51,30 = 吹きだまりの上に載って浮いて見えた。tools/qa/check_props.js）
+        broken('n', [['log', 26, 3], ['crate', 29, 6]]);
         broken('w', [['log', 3, 28], ['crate', 6, 31 - 1]]);
-        broken('e', [['log', 52, 27], ['crate', 51, 30]]);
+        broken('e', [['log', 52, 27], ['crate', 51, 29]]);
         // 守りきった門の家から礼（二日目。ティア宝箱）
         O.push(K.chest('yule_thanks_n', 24, 6, { pool: 'p_T', cond: ['snow_day2', '!snow_gate_n_broken'] }));
         O.push(K.chest('yule_thanks_w', 5, 28, { pool: 'p_T', cond: ['snow_day2', '!snow_gate_w_broken'] }));

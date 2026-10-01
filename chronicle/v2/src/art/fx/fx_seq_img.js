@@ -479,6 +479,7 @@
     for (const L of spec.main.concat(spec.hit)) if (L.p === 'img' && !spec.imgParts.includes(L.id)) spec.imgParts.push(L.id);
     // 手続きの部品の中で画像を使う物（巨大な武器: fx_seq_hero.js の giant）
     for (const L of spec.main.concat(spec.hit)) if ((L.p === 'bolt' || L.p0 === 'bolt' || (L.p === 'storm' && L.bolts)) && has('lightning_bolt') && !spec.imgParts.includes('lightning_bolt')) spec.imgParts.push('lightning_bolt');
+    for (const L of spec.main) if (L.p === 'meteor') for (const id of ['meteor', 'fire_burst']) if (has(id) && !spec.imgParts.includes(id)) spec.imgParts.push(id);
     for (const L of spec.main) if (L.p === 'giant') { const id = L.kind === 'hammer' ? 'spectral_hammer' : 'spectral_sword'; if (has(id) && !spec.imgParts.includes(id)) spec.imgParts.push(id); }
     // 読み始め、読めたら技・術の色に塗っておく（当たる瞬間に塗らない）
     for (const id of spec.imgParts) {

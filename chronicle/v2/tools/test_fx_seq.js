@@ -18,9 +18,11 @@ const sids = ids.map(([db, k]) => S.idFor(db, k));
 const missing = ids.filter((x, i) => !sids[i]).map((x) => x[1]);
 ok('every tech / spell resolves to an fx id', !missing.length, missing);
 ok('fx ids are all distinct', new Set(sids).size === sids.length);
-// 表の行は技・術のほか、敵・ボスの行動（合わせ技など。R.BFX.seq.combo で足す。src/data/enemy_combos.js）も持てる
+// 表の行は技・術のほか、敵・ボスの行動・敵の合体技（R.BFX.seq.combo で足す。src/data/enemy_combos.js）も持てる
 const EA = R.DB.enemyActions || {}, BA = R.DB.bossActions || {};
-const extra = Object.keys(S.table).filter((k) => !T[k] && !SP[k] && !EA[k] && !BA[k]);
+// 敵の合体技（R.DB.enemyCombos の merge.seq・steps[].seq が 'sq:<id>' で指す行）も許す
+const comboSeq = new Set((JSON.stringify(R.DB.enemyCombos || {}).match(/"sq:[a-z0-9_]+"/g) || []).map((x) => x.slice(4, -1)));
+const extra = Object.keys(S.table).filter((k) => !T[k] && !SP[k] && !EA[k] && !BA[k] && !comboSeq.has(k));
 ok('no table rows for unknown ids', !extra.length, extra);
 const actRows = Object.keys(S.table).filter((k) => !T[k] && !SP[k]).map((k) => S.get('sq:' + k));
 ok('enemy / boss action rows compile with known parts and a hit effect', actRows.every((s) => s && s.hit.length > 0 && [...s.main, ...s.hit].every((L) => !!S.prims[L.p])), actRows.filter((s) => !s || !s.hit.length).map((s) => s && s.id));

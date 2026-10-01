@@ -36,7 +36,7 @@
       back: 'tavern', carpet: [5, 6, 6, 3], wall: 'wall_stone', floor: 'basalt_floor', meta: { sub: R.T('map.ash_caldera_interiors.caldera_tavern.meta.sub') },
       objects: [K.prop('bar_counter', 3, 3), K.prop('bar_counter', 4, 3), K.prop('bar_counter', 5, 3), K.prop('bar_counter', 6, 3), K.prop('keg_rack', 1, 2, { w: 2 }), K.prop('keg_rack', 13, 2, { w: 2 }),
         K.prop('table', 11, 5), K.prop('chair', 10, 5), K.prop('chair', 12, 5), K.prop('table', 11, 8), K.prop('chair', 10, 8), K.prop('chair', 12, 8),
-        K.prop('table', 3, 8), K.prop('chair', 2, 8), K.prop('lantern', 8, 3), K.prop('lantern', 14, 8), K.prop('arena_banner', 10, 1)],
+        K.prop('table', 3, 8), K.prop('chair', 2, 8), K.prop('lantern', 8, 3), K.prop('lantern', 14, 8), K.prop('arena_banner', 10, 2)],   // 旗は壁の前の床に立てる（壁の立ち上がりの中に立てない）
       npcs: [
         K.npc('barkeep', 'npc_ash_old_m', 5, 2, { name: R.T('map.ash_caldera_interiors.caldera_tavern.npcs.0.barkeep.name'), dir: 's', talk: 'caldera_barkeep', reward: 'lead', pushable: false }),
         K.npc('zakuro_tav', 'npc_zakuro', 12, 9, { name: R.T('map.ash_caldera_interiors.caldera_tavern.npcs.1.zakuro_tav.name'), dir: 'w', talk: 'caldera_zakuro', reward: 'lead', cond: '!ash_champion' }),

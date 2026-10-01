@@ -370,5 +370,22 @@ section('8. 盗み専用（STATS_REWORK §7.6、V2_PLAN §2.6.6）');
     ok('R.DB.stealSources が魔物の drops.steal と同じ', ss.length === 0, ss.map((x) => x[0]));
   }
 }
+// ================================================================ 9. 敵の合体技（DB.enemyCombos、w_combo 2026-10-01）
+section('9. 敵の合体技（仲間の id・系統・行動・技名の文 5 言語）');
+{
+  const bad = [];
+  const ACT = (id) => (D.enemyActions && D.enemyActions[id]) || (D.bossActions && D.bossActions[id]);
+  for (const [id, C] of Object.entries(D.enemyCombos || {})) {
+    if (!(C.members || []).length) bad.push(`${id}: no members`);
+    for (const sp of C.members || []) {
+      for (const m of [].concat(sp.mon || [])) if (!D.monsters[m]) bad.push(`${id}: monster ${m}`);
+      for (const l of [].concat(sp.lin || [])) if (!D.lineages[l]) bad.push(`${id}: lineage ${l}`);
+    }
+    for (const st of C.steps || []) if (!ACT(st.act)) bad.push(`${id}: action ${st.act}`);
+    if (C.merge && !D.monsters[C.merge.mon]) bad.push(`${id}: merge ${C.merge.mon}`);
+    for (const lang of ['ja', 'en', 'zh-Hans', 'zh-Hant', 'ko']) if (!R.I18n.has('enemyCombos.' + id + '.name', lang)) bad.push(`${id}: name (${lang})`);
+  }
+  ok(`合体技 ${Object.keys(D.enemyCombos || {}).length} 個の仲間・行動・技名（5 言語）がそろう`, bad.length === 0, list(bad, 12));
+}
 if (VERBOSE) console.log('maps', maps.join(' '));
 done('validate');

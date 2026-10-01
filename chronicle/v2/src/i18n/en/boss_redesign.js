@@ -16,5 +16,14 @@
     'bossActions.eb_captain_parry.msg': "{user} angles the cutlass and grins. Strike now and it will cut back!",
     'enemyCombos.c_b_octo_squeeze.name': "Crushing Coil",
     'enemyCombos.c_b_captain_boarding.name': "Boarding Order",
+    'bossActions.eb_warden_guard.name': "Iron Stance",
+    'bossActions.eb_warden_guard.msg': "{user} clangs its iron arms together and braces. Strike now and it will hit back!",
+    'enemyCombos.c_b_vein_resonance.name': "Crystal Resonance",
+    'bossActions.eb_barga_counter.name': "Riposte Stance",
+    'bossActions.eb_barga_counter.msg': "{user} plants an iron shield and sinks low. Strike now and it will hit back!",
+    'bossActions.eb_zakuro_guard.name': "Waiting Blade",
+    'bossActions.eb_zakuro_guard.msg': "{user} rests a hand on the hilt and narrows his eyes. Strike now and he will cut back!",
+    'enemyCombos.c_b_tamer_charge.name': "Whip and Charge",
+    'enemyCombos.c_b_sister_flames.name': "Sisters' Linked Flames",
   });
 })(window.RPG);

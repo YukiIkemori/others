@@ -19,7 +19,8 @@
 切り出しの決まり（vfx_parts.json の各部品の値）:
   grid [cols, rows]   原画を等分したマス。左上から右へ、行の順にコマ
   n                   使うコマの数（マスの数以下）
-  bg 'black' | 'clear'  black = 黒地に光る物（明るさ → α。加算で描く）。clear = 透明の地（α はそのまま。ふつうに重ねる）
+  bg 'black' | 'key' | 'clear'  black = 黒地に光る物（明るさ → α。加算で描く。blend 'source-over' なら煙のようにふつうに重ねる）。
+                      key = マゼンタの地を抜く（岩・葉など不透明な物）。clear = 透明の地（使えるモデルの時だけ）
   tint true           白黒で描いた物（明るさだけを残す。実行時に技・術の色の 3 色に塗り分ける）
   out [w, h]          1 コマの大きさ（px。戦闘の論理 1 px = 2 px で見る）
   anchor 'center' | 'bottom' | 'left'   コマの中の基準の点（center = 真ん中、bottom = 下の真ん中、left = 左の真ん中）
@@ -74,7 +75,7 @@ def prompt_of(style, p):
     s.append(p['prompt'])
     if p.get('tint'):
         s.append(style['mono'])
-    s.append(style['black'] if p.get('bg', 'black') == 'black' else style['clear'])
+    s.append({'black': style['black'], 'clear': style['clear'], 'key': style.get('key', '')}[p.get('bg', 'black')])
     s.append(style['neg'])
     return ' '.join(s)
 
@@ -109,7 +110,7 @@ def gen(style, p, force=False):
         sys.exit('OPENAI_API_KEY not set')
     prompt = prompt_of(style, p)
     tool = {'type': 'image_generation', 'size': p['size'], 'quality': p.get('quality', 'high'),
-            'background': 'transparent' if p.get('bg') == 'clear' else 'opaque'}
+            'background': 'transparent' if p.get('bg') == 'clear' else 'opaque'}   # 透明の地は使えないモデルがある → 'key'（マゼンタの地を抜く）
     body = {'model': model(), 'input': [{'role': 'user', 'content': [{'type': 'input_text', 'text': prompt}]}],
             'tools': [tool], 'tool_choice': {'type': 'image_generation'}}
     data = json.dumps(body).encode()
@@ -162,6 +163,21 @@ def cell_alpha(c, p):
         un = rgb / np.maximum(m[..., None], 1e-3) * 255.0
         un = np.clip(un, 0, 255)
         return un, a
+    if p.get('bg') == 'key':
+        # マゼンタの地を抜く: 地の色（縁の中央値）からの色の差 → α、縁に残ったマゼンタの混ざりを落とす（despill）
+        edge = np.concatenate([rgb[0], rgb[-1], rgb[:, 0], rgb[:, -1]])
+        bg = np.median(edge, 0)
+        d = np.sqrt(((rgb - bg) ** 2).sum(2))
+        a = np.clip((d - 60) / 90, 0, 1)
+        r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
+        spill = np.clip(np.minimum(r, b) - g, 0, None)          # マゼンタ = 赤と青が緑より強い分
+        out = rgb.copy()
+        out[..., 0] = r - spill * (1 - a) * 0.9 - spill * 0.35
+        out[..., 2] = b - spill * (1 - a) * 0.9 - spill * 0.35
+        from scipy import ndimage
+        a = ndimage.grey_erosion(a, size=(2, 2)) * 0.5 + a * 0.5   # 縁を 1 px 締める
+        a = np.where(a < 0.06, 0, a)
+        return np.clip(out, 0, 255), a
     a = c[..., 3] / 255.0
     if a.min() > 0.98:
         # 透明の地にならなかった: 縁の色（中央値）からの色の差で抜く
@@ -258,7 +274,7 @@ def process(style, p):
         frames.append(canvas)
     # 時間の整え: 原画のコマが少ない時は間を足さない（そのまま）。強さの正規化: 一番明るいコマの α の最大を 1 に
     amax = max(f[..., 3].max() for f in frames)
-    if amax > 0 and p.get('bg', 'black') == 'black':
+    if amax > 0 and p.get('bg', 'black') == 'black' and not p.get('blend'):
         k = 255.0 / amax
         for f in frames:
             f[..., 3] = np.clip(f[..., 3] * k, 0, 255)

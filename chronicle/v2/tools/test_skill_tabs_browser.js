@@ -156,8 +156,10 @@ async function main() {
   await B.press(p, 'l');
   ok('battle: L again toggles repeat back', await B.waitFor(p, `${D}.B.repeatOn === ${rep0}`, 1500), await B.ev(p, `${D}.B.repeatOn`));
   ok('battle: still in the spell list on 水', await B.ev(p, `${bt} === 'spell:water'`), await B.ev(p, bt));
-  await B.press(p, 'left'); await B.press(p, 'left');
-  ok('battle: ← ← wraps to 合成', await B.waitFor(p, `${bt} === 'spell:combo'`, 1500), await B.ev(p, bt));
+  await B.press(p, 'left');
+  ok('battle: ← back to 火', await B.waitFor(p, `${bt} === 'spell:fire'`, 1500), await B.ev(p, bt));
+  await B.press(p, 'left');
+  ok('battle: ← wraps to 合成', await B.waitFor(p, `${bt} === 'spell:combo'`, 1500), await B.ev(p, bt));
   const comboRows = await B.ev(p, `${D}.ui.o.rows.map((r) => [r.id, r.mp, r.disabled])`);
   ok('battle: 合成 tab MP ascending, unaffordable ones still greyed', comboRows.every((r, i, a) => !i || a[i - 1][1] <= r[1]) && comboRows.some((r) => r[2]), comboRows);
   await p.waitForTimeout(3500);   // 速さ・リピートの知らせが消えてから撮る

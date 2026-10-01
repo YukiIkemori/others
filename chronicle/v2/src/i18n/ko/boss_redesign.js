@@ -16,5 +16,14 @@
     'bossActions.eb_captain_parry.msg': "{user}이(가) 커틀러스를 비스듬히 겨누고 웃었다. 지금 치면 되베인다!",
     'enemyCombos.c_b_octo_squeeze.name': "조여 올리기",
     'enemyCombos.c_b_captain_boarding.name': "돌격 호령",
+    'bossActions.eb_warden_guard.name': "강철 자세",
+    'bossActions.eb_warden_guard.msg': "{user}이(가) 양팔의 쇠를 맞부딪치며 자세를 잡았다. 지금 치면 되받아친다!",
+    'enemyCombos.c_b_vein_resonance.name': "결정의 공명",
+    'bossActions.eb_barga_counter.name': "되받기 자세",
+    'bossActions.eb_barga_counter.msg': "{user}이(가) 쇠 방패를 앞세우고 묵직하게 자세를 낮췄다. 지금 치면 되받아친다!",
+    'bossActions.eb_zakuro_guard.name': "후의 선",
+    'bossActions.eb_zakuro_guard.msg': "{user}이(가) 칼자루에 손을 얹은 채 조용히 눈을 가늘게 떴다. 지금 치면 되베인다!",
+    'enemyCombos.c_b_tamer_charge.name': "채찍과 돌진",
+    'enemyCombos.c_b_sister_flames.name': "자매의 이어지는 불꽃",
   });
 })(window.RPG);

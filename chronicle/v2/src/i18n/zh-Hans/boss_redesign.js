@@ -16,5 +16,14 @@
     'bossActions.eb_captain_parry.msg': "{user}斜握弯刀，咧嘴一笑。此时攻击会遭到反击！",
     'enemyCombos.c_b_octo_squeeze.name': "缠勒绞杀",
     'enemyCombos.c_b_captain_boarding.name': "接舷突击令",
+    'bossActions.eb_warden_guard.name': "钢铁架势",
+    'bossActions.eb_warden_guard.msg': "{user}将双臂的铁块相互一击，摆好了架势。此时攻击会遭到反击！",
+    'enemyCombos.c_b_vein_resonance.name': "结晶共鸣",
+    'bossActions.eb_barga_counter.name': "回击架势",
+    'bossActions.eb_barga_counter.msg': "{user}将铁盾立在身前，稳稳压低了身子。此时攻击会遭到反击！",
+    'bossActions.eb_zakuro_guard.name': "后发先至",
+    'bossActions.eb_zakuro_guard.msg': "{user}手按刀柄，静静眯起了眼。此时攻击会遭到反击！",
+    'enemyCombos.c_b_tamer_charge.name': "鞭击冲撞",
+    'enemyCombos.c_b_sister_flames.name': "姐妹连火",
   });
 })(window.RPG);
