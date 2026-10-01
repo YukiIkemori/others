@@ -1,0 +1,97 @@
+{
+ "raw": "raw/s5_a1.png",
+ "pitch": 8.0,
+ "frames": {
+  "idle_a": {
+   "row": 1,
+   "column": 1,
+   "logical_bbox": [
+    60,
+    67
+   ],
+   "air": 0
+  },
+  "idle_b": {
+   "row": 1,
+   "column": 2,
+   "logical_bbox": [
+    60,
+    65
+   ],
+   "air": 0
+  },
+  "step": {
+   "row": 1,
+   "column": 3,
+   "logical_bbox": [
+    70,
+    65
+   ],
+   "air": 0
+  },
+  "guard": {
+   "row": 1,
+   "column": 4,
+   "logical_bbox": [
+    74,
+    65
+   ],
+   "air": 0
+  },
+  "victory_a": {
+   "row": 2,
+   "column": 3,
+   "logical_bbox": [
+    52,
+    78
+   ],
+   "air": 0
+  },
+  "hit": {
+   "row": 1,
+   "column": 5,
+   "logical_bbox": [
+    60,
+    61
+   ],
+   "air": 0
+  },
+  "weak": {
+   "row": 2,
+   "column": 1,
+   "logical_bbox": [
+    57,
+    55
+   ],
+   "air": 0
+  },
+  "ko": {
+   "row": 2,
+   "column": 2,
+   "logical_bbox": [
+    96,
+    34
+   ],
+   "air": 0
+  },
+  "victory_b": {
+   "row": 2,
+   "column": 4,
+   "logical_bbox": [
+    57,
+    67
+   ],
+   "air": 0
+  },
+  "glimmer": {
+   "row": 2,
+   "column": 5,
+   "logical_bbox": [
+    59,
+    63
+   ],
+   "air": 0
+  }
+ },
+ "notes": []
+}

@@ -1,0 +1,107 @@
+[
+ {
+  "sheet": 5,
+  "file": "rine_sheet_05.png",
+  "layout": "2x5",
+  "logical_cell": [
+   104,
+   96
+  ],
+  "image_px": [
+   4160,
+   1536
+  ],
+  "frames": [
+   {
+    "id": "idle_a",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     60,
+     67
+    ]
+   },
+   {
+    "id": "idle_b",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     60,
+     65
+    ]
+   },
+   {
+    "id": "step",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     70,
+     65
+    ]
+   },
+   {
+    "id": "guard",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     74,
+     65
+    ]
+   },
+   {
+    "id": "hit",
+    "row": 1,
+    "column": 5,
+    "logical_bbox": [
+     60,
+     61
+    ]
+   },
+   {
+    "id": "weak",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     57,
+     55
+    ]
+   },
+   {
+    "id": "ko",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     96,
+     34
+    ]
+   },
+   {
+    "id": "victory_a",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     52,
+     78
+    ]
+   },
+   {
+    "id": "victory_b",
+    "row": 2,
+    "column": 4,
+    "logical_bbox": [
+     57,
+     67
+    ]
+   },
+   {
+    "id": "glimmer",
+    "row": 2,
+    "column": 5,
+    "logical_bbox": [
+     59,
+     63
+    ]
+   }
+  ]
+ }
+]
