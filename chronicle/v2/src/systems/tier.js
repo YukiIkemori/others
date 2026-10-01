@@ -18,6 +18,8 @@
 //
 // R.DB.regions[rid]（CONTENT-P）から読む物: name・chapter.title（章題。無ければ name）・page（ページの品。無ければ k_page_<rs>）・
 //   beaconAt {map, x, y}（光の柱の場所。beacon が {map, x, y} の物でもよい。無ければ今のマップの {type:'prop', id:'beacon'} の物、それも無ければ一行の先頭の上）
+//   x, y はマス（小数でよい）。柱の芯は (x + 0.5, y + 0.8) マス（screenOf のマスの中心 + 根元の 0.3 マス）に落ちる。
+//   だから灯す物の描いた見た目の中心 (vx, vy) に落とすなら x = vx − 0.5、y = vy − 0.8（tools/test_beacon.js が確かめる）
 (function (R) {
   'use strict';
   if (R.Stubs && R.Stubs.claim) R.Stubs.claim('Tier');
@@ -177,15 +179,19 @@
   }
   Tier.regionInfo = regionInfo;
 
+  const BEACON_LIFT = 1;   // beacon の物の足もと → 火の籠（マス）
+  Tier.BEACON_LIFT = BEACON_LIFT;
   /** 光の柱の場所（マス）: regions の beacon → 今のマップの beacon の物 → 先頭の上 */
   function beaconAt(info) {
     const pos = (R.Field && R.Field.pos) || {};
     const b = info.beacon;
     if (b && b.map === pos.map && b.x != null) return { x: b.x, y: b.y, own: true };
     const m = R.DB.maps[pos.map];
-    for (const o of (m && m.objects) || []) if (o.type === 'prop' && (o.id === 'beacon' || o.beacon === true)) return { x: o.x, y: o.y, own: true };
+    // 大灯火の物（beacon）は足もとのマスに置く。柱は足もとではなく火の籠に落とす（1 マス上 = 籠の上の段。持ち主「光の柱が物の中心からずれている」2026-10-01）
+    for (const o of (m && m.objects) || []) if (o.type === 'prop' && (o.id === 'beacon' || o.beacon === true)) return { x: o.x, y: o.y - BEACON_LIFT, own: true };
     return { x: pos.x || 0, y: (pos.y || 0) - 2, own: false };
   }
+  Tier._beaconAt = beaconAt;
 
   /** 演出の場面（id 'celebrate'。フィールドの上に重ねる。A か 7 秒で閉じる） */
   function stageScene(st) {
