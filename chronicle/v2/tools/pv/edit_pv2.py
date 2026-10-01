@@ -318,7 +318,7 @@ cap('EQUIP', '武器301・防具とアクセサリ745', t + 0.3, t + 3.5)
 t += 3.6
 # リピートと速さの切り替え
 cut('s5_speed', t, 3.0, src=1.2, gamesfx=-9)
-cut('s5_speed', t + 3.0, 2.5, src=14.5, gamesfx=-9, ev=True, ev_voice=False, jgain=-7)
+cut('s5_speed', t + 3.0, 2.5, src=9.84, gamesfx=-9, ev=True, ev_voice=False, jgain=-7)
 cap('SPEED', 'リピート・速さ切り替え', t + 0.3, t + 3.0)
 cap('RETRY', '全滅しても、直前からやり直し', t + 3.1, t + 5.4)
 t += 5.5

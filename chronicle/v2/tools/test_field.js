@@ -261,6 +261,10 @@ async function main() {
   await enter('field_lab', 3, 13, 'n');
   await step('up');
   ok('… but not against it', same(at(), [3, 13]), at());
+  // 逆から押すと、そのマップで最初の 1 回だけ一言（2026-10-01 持ち主「行けないのは仕様だとしても」）。閉じると鍵が外れ、1 歩下がる
+  ok('… the first push against it says why (one message)', R.UIK.Message.busy() && !!R.Field.locks().talk, R.Field.locks());
+  R.UIK.Message.close(); await settle(400);
+  ok('… the message closes and the field is unlocked', !R.UIK.Message.busy() && Object.keys(R.Field.locks()).length === 0, R.Field.locks());
   await enter('field_lab', 2, 11, 's');
   await step(['down', 'right']);
   ok('diagonal into a ledge is not allowed (slides)', !same(at(), [3, 12]), at());
