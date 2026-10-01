@@ -39,11 +39,9 @@ const MU = R.MapUtil, F = R.Field;
 // ---------------------------------------------------------------- 他の担当の持ち場（数えるが失敗にしない。報告で渡す）
 const OWNED = [
   [/^caldera/, 'カルデラの絵の描き直しの担当'],
-  [/^(desert_|field_desert_|kasim|sandedge|tomb_|temple_|hawks_|d_)/, '砂漠の担当'],
 ];
-const ownedBy = (id, m) => {
+const ownedBy = (id) => {
   for (const [re, who] of OWNED) if (re.test(id)) return who;
-  if (m && /desert/.test(m.region || '')) return '砂漠の担当';
   return null;
 };
 // 受け入れた例外: map → { 'rule:id@x,y': 理由 }
@@ -125,9 +123,13 @@ function spriteOf(m, key, v) {
 }
 
 // ---------------------------------------------------------------- マス
+// 壁に掛ける物（wall_*）と、壁のマスに据える物（腕木の灯り hook_lamp・壁の暖炉 fireplace は壁のマスに置けば壁の面に付く）
 const WALL_ITEM = /^wall_/;
+const WALL_MOUNT = /^(hook_lamp|fireplace)$/;
+/** 絵の無い物（光だけの物: window_glow・ember_glow…。コードの絵も画像も無い）*/
+const invisible = (m, id) => { const D = R.Terrain && R.Terrain._PROP_DRAW && R.Terrain._PROP_DRAW[id]; return !!(D && D.envOnly && !spriteOf(m, id, 0)); };
 // 歩けないマスに立つのが本来の物（木・岩・柵・水の物・崖の飾り…）
-const ON_SOLID_OK = /^(tree|pine|tree_|bush|roots|rock|snow_rock|lava_rock|volcanic_rocks|snow_fir|desert_palm|coco_palm|palm_|swamp_tree|willow|mangrove_roots|fence|snow_fence|cactus|thorn_bush|charred_|ash_bush|stump|log|log_moss|rotten_stump|reeds|reeds_tall|lily_pads|fern|dec_|ore_|crystal|ice_crystal|obelisk|broken_pillar|coral|stilt_posts|rowboat|mud_boat|buoys|net_frame|driftwood|anchor|ship|rope_bridge|leaves_over|bell_frame|timber_frame|steam_vent|sulphur|hot_spring|lava_glow|obsidian_shards|snow_bank|ice_hole|sand_mound|bones|grave_moss|pale_mushrooms|mushroom_glow|songstone|topiary|blue_flowers|beacon|firefly|tent|hay|lift_cage|rail|scaffold|stove_pipe|phoenix_statue|scholar_statue|telescope|iron_gate|lamp_pillar|hook_lamp|tide_|shells|white_pot)/;
+const ON_SOLID_OK = /^(wisp_lamp|tree|pine|tree_|bush|roots|rock|snow_rock|lava_rock|volcanic_rocks|snow_fir|desert_palm|coco_palm|palm_|swamp_tree|willow|mangrove_roots|fence|snow_fence|cactus|thorn_bush|charred_|ash_bush|stump|log|log_moss|rotten_stump|reeds|reeds_tall|lily_pads|fern|dec_|ore_|crystal|ice_crystal|obelisk|broken_pillar|coral|stilt_posts|rowboat|mud_boat|buoys|net_frame|driftwood|anchor|ship|rope_bridge|leaves_over|bell_frame|timber_frame|steam_vent|sulphur|hot_spring|lava_glow|obsidian_shards|snow_bank|ice_hole|sand_mound|bones|grave_moss|pale_mushrooms|mushroom_glow|songstone|topiary|blue_flowers|beacon|firefly|tent|hay|lift_cage|rail|scaffold|stove_pipe|phoenix_statue|scholar_statue|telescope|iron_gate|lamp_pillar|hook_lamp|tide_|shells|white_pot)/;
 const SOFTISH = /^(firefly|footprint|lava_glow|leaves_over|rope_bridge)$/;
 function cellAt(m, x, y) { return MU.cell(m, x, y); }
 function isWater(c) { return !!(c && (c.water || c.deep || /water|sea|lava|glow_sea|shallow/.test(c.mat || '')) && c.walk === false || (c && c.water && c.solid)); }
@@ -200,9 +202,10 @@ function checkMap(m) {
     const lv = o.lv || 0;
     if (o.type === 'prop' && o.id) {
       counts.props++;
-      const wallItem = WALL_ITEM.test(o.id);
+      if (invisible(m, o.id)) continue;
       const pnt = painted(m, o);
       const c = cellAt(m, o.x, o.y);
+      const wallItem = WALL_ITEM.test(o.id) || (WALL_MOUNT.test(o.id) && wallish(c));
       if (wallItem) {
         counts.wall++;
         const fc = faceAt(m, o.x, o.y);
@@ -227,7 +230,8 @@ function checkMap(m) {
         continue;
       }
       // 1 足もと
-      if (!lv && blocked(c) && !ON_SOLID_OK.test(o.id) && !SOFTISH.test(o.id)) {
+      const barrier = objs.some((q) => q !== o && q.x === o.x && q.y === o.y && (q.type === 'examine' || q.type === 'door' || q.type === 'stairs'));   // 通せんぼ（開くまで道をふさぐ板など）
+      if (!lv && !pnt && !barrier && blocked(c) && !ON_SOLID_OK.test(o.id) && !SOFTISH.test(o.id)) {
         flag(m, 'on-solid', `${o.id} の足もとが歩けないマス（${c ? c.mat : 'マップの外'}${c && c.water ? '・水' : ''}）`, o);
       }
       if (pnt || lv || SOFTISH.test(o.id)) continue;
