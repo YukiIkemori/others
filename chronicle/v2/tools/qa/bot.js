@@ -451,7 +451,8 @@
       }
       if (B.grindAt) {
         if (!B.plan || B.plan.g !== B.grindG || B.plan.map !== s.map.id) {
-          B.grindG = { id: 'grind', go: { map: s.map.id, x: B.grindAt.x, y: B.grindAt.y, lv: B.grindAt.lv } };
+          // _h: 順番の決まった救出の「踏むと始まる範囲」は、腕を磨く歩きでも踏まない（狼の群れに先に入って救出の順が崩れた）
+          B.grindG = { id: 'grind', _h: true, go: { map: s.map.id, x: B.grindAt.x, y: B.grindAt.y, lv: B.grindAt.lv } };
           B.plan = planFor(B.grindG);
           B.pi = 0;
           if (!B.plan) { B.grindAt = null; return; }

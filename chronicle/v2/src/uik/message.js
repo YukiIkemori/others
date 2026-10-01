@@ -19,7 +19,7 @@
   let cur = null;        // {scene, resolve}
   let cap = null;        // {scene, resolve}
   let autoOn = false;
-  const CHOICE_GUARD = 450;   // 選択肢が出てから決定を受けるまでの ms（押したままなら離してから）
+  const CHOICE_GUARD = { min: 450, idle: 300, max: 1500 };   // 選択肢が出てから決定を受けるまでの ms（min 以上、連打が止んで idle、長くても max）
   let lastShown = null;  // {name, title, face, page, t}
   const logs = [];       // [{name, text}]
   const readSet = new Set();
@@ -268,10 +268,13 @@
       if (I.repeat('down')) { st.choice = (st.choice + 1) % n; UIK.sfx('cursor'); }
       if (I.repeat('up')) { st.choice = (st.choice + n - 1) % n; UIK.sfx('cursor'); }
       // 選択肢が出てすぐの決定・取り消しは受けない（会話を連打で送っていて、選んだと気づかずに決まるのを防ぐ。テスター 2026-09-30）。
-      //   カーソルは動かせる。A・B を押したままなら、離してから数える（st.armed で以後は素通り）
+      //   カーソルは動かせる。受けるようになったら（st.armed）以後は素通り
       if (!st.armed) {
-        if (I.down && (I.down('a') || I.down('b'))) st.guardAt = R.Engine.time;
-        if (R.Engine.time - Math.max(st.fullAt, st.guardAt || 0) < CHOICE_GUARD) return;
+        const now = R.Engine.time;
+        if (I.down && (I.down('a') || I.down('b'))) st.guardAt = now;
+        // 連打が続いている間は待つ（離して CHOICE_GUARD.idle ms）。ただし出てから CHOICE_GUARD.max ms で必ず受ける（押しっぱなし・自動の連打でも止まらない）
+        const quiet = now - Math.max(st.fullAt, st.guardAt || 0) >= CHOICE_GUARD.idle;
+        if (now - st.fullAt < CHOICE_GUARD.min || (!quiet && now - st.fullAt < CHOICE_GUARD.max)) return;
         st.armed = true;
       }
       const p = I.pointer, C = L.choice;
