@@ -282,8 +282,10 @@ function clearing() {
 function battle() {
   section('5. 戦闘（予告・出現表・落とし物）');
   const A = D.bossActions;
-  for (const id of ['eb_octo_dive', 'eb_captain_aim']) ok(`${id} は予告（telegraph → next、守る）`, !!(A[id] && A[id].telegraph && A[A[id].telegraph.next] && A[id].telegraph.guard === 'defend'));
-  ok('大ダコ・グレンの行動に予告が入る', D.monsters.b_octopus.actions.some((a) => a.id === 'eb_octo_dive') && D.monsters.b_captain.actions.some((a) => a.id === 'eb_captain_aim'));
+  // 2026-10-01（ボスの組み直し）: 溜め（予告）はやめ、色んな角度から攻める（足ぐせ = 品を奪う、乱れ撃ち・霧笛・受け流しの構え）
+  ok('大ダコ・グレンは予告を使わない', ['b_octopus', 'b_captain'].every((id) => !D.monsters[id].actions.some((a) => D.bossActions[a.id] && D.bossActions[a.id].telegraph)));
+  ok('大ダコ: 足ぐせ（品を奪う、倒すと戻る）・墨・渦・足を生やす', ['eb_octo_snatch', 'eb_ink_cloud', 'eb_whirl', 'eb_regrow'].every((id) => D.monsters.b_octopus.actions.some((a) => a.id === id)) && D.monsters.b_octopus.onDeath === 'boss_return');
+  ok('グレン: 1 ラウンドに 2 回、乱れ撃ち・霧笛・受け流しの構え（反撃）', D.monsters.b_captain.actsPerTurn === 2 && ['eb_captain_barrage', 'eb_captain_foghorn', 'eb_captain_parry'].every((id) => D.monsters.b_captain.actions.some((a) => a.id === id)) && A.eb_captain_parry.effects[0].status === 'counter');
   ok('グレン: 第 2 の姿（hpBelow 0.5）', !!(D.monsters.b_captain.phases || []).length);
   ok('盗み専用: 亡霊船長 ac_st_captain は盗みだけ（イベントで渡さない）', !!(D.items.ac_st_captain && D.items.ac_st_captain.stealOnly) && !SRC.includes('ac_st_captain'));
   const zones = ['zw_isles', 'z_r_isles_cave', 'z_r_isles_ship'];

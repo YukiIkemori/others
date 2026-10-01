@@ -302,9 +302,11 @@ function clearing() {
 function battle() {
   section('5. 戦闘（予告・出現表・落とし物）');
   const A = D.bossActions;
-  for (const id of ['eb_orrery_align', 'eb_star_gulp']) ok(`${id} は予告（telegraph → next、守る）`, !!(A[id] && A[id].telegraph && A[A[id].telegraph.next] && A[id].telegraph.guard === 'defend'));
-  ok('番人・星食らいの行動に予告が入る', D.monsters.b_orrery.actions.some((a) => a.id === 'eb_orrery_align') && D.monsters.b_stareater.actions.some((a) => a.id === 'eb_star_gulp'));
-  ok('番人: 日・月・星の玉の順（読める型）', ['eb_sun_orb', 'eb_moon_orb', 'eb_star_orb'].every((id) => D.monsters.b_orrery.actions.some((a) => a.id === id && a.cond && a.cond.every)));
+  // 2026-10-01（ボスの組み直し）: 溜め（予告）と決まった順はやめ、色んな角度から攻める
+  ok('番人・星食らいは予告を使わない', ['b_orrery', 'b_stareater'].every((id) => !D.monsters[id].actions.some((a) => D.bossActions[a.id] && D.bossActions[a.id].telegraph)));
+  ok('番人: 日・月・星の玉は順を決めない、日食（強化を消す）・逆回り（弱点が入れ替わる）', ['eb_sun_orb', 'eb_moon_orb', 'eb_star_orb'].every((id) => D.monsters.b_orrery.actions.some((a) => a.id === id && !(a.cond && a.cond.every))) &&
+    ['eb_orrery_eclipse', 'eb_orrery_reverse'].every((id) => D.monsters.b_orrery.actions.some((a) => a.id === id)));
+  ok('星食らい: 星を消す夜（場）・名を食む（MP）', ['eb_star_night', 'eb_star_devour'].every((id) => D.monsters.b_stareater.actions.some((a) => a.id === id)));
   ok('星食らい: 第 2 の姿（hpBelow 0.5）', !!(D.monsters.b_stareater.phases || []).length);
   ok('盗み専用: 星食らい ac_st_stareater は盗みだけ（イベントで渡さない）', !!D.items.ac_st_stareater && !SRC.includes('ac_st_stareater'));
   const zones = ['zw_star', 'z_r_star_tower'];

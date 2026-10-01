@@ -192,6 +192,7 @@
     const ls = L.s || 1;
     if (L.foot) y += ((c.tc.fy - c.tc.y) || 0) / ls;
     if (L.dy2) y += L.dy2;
+    if (L.dx2) x += L.dx2;
     if (L.rise) y -= L.rise * E.out(u);
     if (L.fly) {
       const kk = E.win(u, 0, L.fly);
@@ -418,6 +419,16 @@
     maelstrom(L, spec) {
       const id = pick('water_spiral');
       return id ? { add: [{ id, px: lim((L.r || 150) * 2, 200, 900), flat: 0.4, env: 1, a: 0.85, tint: nativeOr('water', spec, L) }], dim: 0.55 } : null;
+    },
+    wave(L, spec) {
+      // 大波: 火の色なら燃える地面の帯を 3 つ横に、水の色なら しぶきを 3 つ横に（手続きの波は薄く下に）
+      const el = L.col && S.PAL[L.col] ? L.col : elemOf(spec);
+      const fire = /^(fire|blood|gold)$/.test(el) || (L.col && /^2[0-9]{2},/.test(String(L.col)) && !/water|ice/.test(el));
+      const id = fire ? pick('fire_ground', 'fire_burst') : pick('water_splash');
+      if (!id) return null;
+      const W = L.w || 400, out = [];
+      for (let j = -1; j <= 1; j++) out.push({ id, pxw: lim(W * 0.55, 160, 600), dy2: 0, rise: 0, u0: 0.08 + (1 - j) * 0.1, env: 1, tint: fire ? nativeOr('fire', spec, L) : nativeOr('water', spec, L), dx2: j * W * 0.33 });
+      return { add: out, dim: 0.35 };
     },
     tendrils(L, spec) {
       const id = pick('dark_spikes');

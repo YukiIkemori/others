@@ -131,5 +131,13 @@
     'bossActions.eb_nemrea2_page.msg': "{user} turns over one enormous page!",
     'bossActions.eb_nemrea2_page.shift': "A page of night opens. Darkness now hits {user} hard; light barely works.",
     'bossActions.eb_nemrea2_page2.shift': "A page of morning opens. Light now hits {user} hard; darkness barely works.",
+    'bossActions.eb_echo_dread.name': "Echo of Dread",
+    'bossActions.eb_echo_dread.msg': "Three-hundred-year-old dread echoes in {user}'s voice...!",
+    'bossActions.eb_echo_soul.name': "Soul Drain",
+    'bossActions.eb_echo_soul.msg': "{user}'s shadow hand sips at a spellcaster's soul!",
+    'bossActions.eb_ouro_mark.name': "Tail Brand",
+    'bossActions.eb_ouro_mark.msg': "{user}'s tail sears a ring-shaped brand onto the strongest!",
+    'bossActions.eb_ouro_end.name': "End of the Ring",
+    'bossActions.eb_ouro_end.msg': "{user} opens its jaws. The branded story is drawn into the ring!",
   });
 })(window.RPG);

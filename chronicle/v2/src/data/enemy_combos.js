@@ -36,6 +36,7 @@
     c_cannon_grapple: { name: R.T('enemyCombos.c_cannon_grapple.name'), members: [{ lin: 'kraken' }, { lin: 'skeleton' }], steps: [{ by: 0, act: 'ec_grapple' }, { by: 1, act: 'ec_point_blank', same: true, seq: 'sq:ec_point_blank' }], tierMin: 3, chance: 0.45, cd: 3 },
     // ---- 山地
     c_goblin_cannon: { name: R.T('enemyCombos.c_goblin_cannon.name'), members: [{ lin: 'golem' }, { lin: 'goblin' }], steps: [{ by: 0, act: 'ec_goblin_cannon', seq: 'sq:s_fire_earth_a' }], tierMin: 1, chance: 0.45, max: 1 },
+    c_goblin_gang: { name: R.T('enemyCombos.c_goblin_gang.name'), members: [{ lin: 'goblin', n: 3 }], steps: [{ each: true, act: 'ec_gang_club', same: true, aim: 'low', seq: 'sq:ec_gang_club' }], tierMin: 1, chance: 0.45, cd: 3, max: 2 },
     c_burrow_strike: { name: R.T('enemyCombos.c_burrow_strike.name'), members: [{ lin: 'mole' }, { lin: 'beetle' }], steps: [{ by: 0, act: 'ec_tunnel' }, { by: 1, act: 'ec_upthrust', seq: 'sq:ec_upthrust' }], tierMin: 5, chance: 0.45, cd: 3 },
     // ---- 灰の荒野
     c_fire_tornado: { name: R.T('enemyCombos.c_fire_tornado.name'), members: [{ lin: 'salamander' }, { lin: 'imp' }], steps: [{ by: 0, act: 'ec_fire_tornado', seq: 'sq:s_fire_wind_b' }], tierMin: 1, chance: 0.45, max: 1 },
@@ -62,6 +63,20 @@
   });
 
   R.onData(function () {
+    // ---- 出現表: 合体技の仲間がそろう組を少し出やすく（序章・森の外の地方だけ 1.5 倍。オーナー「合体技とか使ってきたり」）
+    const DB = R.DB;
+    const linOf = (ref) => (ref[0] === '@' ? ref.slice(1) : (DB.monsters[ref] || {}).lineage);
+    const completes = (g, C) => (C.members || []).every((sp) => {
+      if (!sp.lin) return false;
+      const have = g.mons.filter((m) => [].concat(sp.lin).includes(linOf(m[0]))).reduce((s, m) => s + (m[2] || m[1] || 1), 0);
+      return have >= (sp.n || 1);
+    });
+    const combos = Object.values(DB.enemyCombos).filter((C) => (C.members || []).every((sp) => sp.lin));
+    for (const t of Object.values(DB.encounters)) {
+      if (!t.groups || t.region === 'prologue' || t.region === 'r_forest' || t.comboBoosted) continue;
+      t.comboBoosted = true;
+      for (const g of t.groups) if (g.mons.length > 1 && combos.some((C) => completes(g, C))) g.w = Math.round((g.w || 1) * 15) / 10;
+    }
     // ---- 属性の色変わり（e_elem_shift）: 体の色が変わり、弱点と攻撃の属性が入れ替わる（水晶・鬼火など）
     const BC = R.BattleCore;
     const OPP = { fire: 'water', water: 'fire', wind: 'earth', earth: 'wind', light: 'dark', dark: 'light' };
@@ -97,6 +112,7 @@
     S.combo('ec_pinned_thrust', 'water', 'steel', { c: '舌からめの槍: 舌で捕らえた的を水をまとう槍が貫く', tier: 4, slash: false, hit: [H('thrust', 380, { len: 130, w: 5, through: 90 })] });   // i18n:ignore（c は演出の考えのメモ。画面に出ない）
     S.combo('ec_puppet_strings', 'dark', 'blood', { c: '操り糸: 黒い糸が的に絡みつき、紅い渦の中で心を奪う', tier: 4, slash: false });   // i18n:ignore（c は演出の考えのメモ。画面に出ない）
     S.combo('ec_point_blank', 'fire', 'water', { c: '捕らえて大砲: 触手で押さえた的へ、至近の大砲の炎と煙', tier: 5, slash: false, hit: [H('smoke', 520, { n: 8, r: 18, v: 40, col: '120,110,100', a: 0.5, blend: 'source-over' })] });   // i18n:ignore（c は演出の考えのメモ。画面に出ない）
+    S.combo('ec_gang_club', 'earth', 'blood', { c: '袋だたき: 小鬼たちのこん棒が同じ的へ次々に振り下ろされる', tier: 3, slash: false, hit: [H('sparks', 300, { n: 10, v: 40, star: 1, size: 5, len: 0 })] });   // i18n:ignore（c は演出の考えのメモ。画面に出ない）
     S.combo('ec_upthrust', 'earth', 'steel', { c: '地中からの突き上げ: 後列の足もとが割れ、角が突き上がる', tier: 4, hit: [H('debris', 480, { n: 10, v: 70, size: 5, at: 'tfoot' })] });   // i18n:ignore（c は演出の考えのメモ。画面に出ない）
     S.combo('ec_brute_smash', 'blood', 'dark', { c: '鬼の加勢: 闇の加護で赤く燃えた大鬼の一撃', tier: 5, slash: false, hit: [H('ring', 420, { r: 80, flat: 0.34, w: 4, n: 2, at: 'tfoot' })] });   // i18n:ignore（c は演出の考えのメモ。画面に出ない）
     S.combo('ec_hellfire', 'fire', 'blood', { c: '三つ首の業火: 二つの炎が渦を巻き、敵の側を焼き尽くす', tier: 5, slash: false, main: [L('flames', -300, 700, 'tfoot', { n: 30, w: 300, h: 120, size: 10 })] });   // i18n:ignore（c は演出の考えのメモ。画面に出ない）

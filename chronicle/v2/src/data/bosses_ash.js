@@ -81,7 +81,7 @@
       race: 'humanoid', flags: ['boss'], eva: 0,
       elem: { water: 1.25, wind: 1.25 }, phys: { slash: 0.6, pierce: 0.75, blunt: 1.4 }, statusRes: { stun: 0.5 },
       // 2026-10-01（ボスの組み直し）: 振りかぶる（予告）→ 大なぎ の決まりはやめた。鎧砕き（守りを下げる）・盾打ち（気絶）・固くなる・返しの構え（打ちこむと殴り返す）
-      actions: A([['attack', 2], ['e_armor_break', 2], ['eb_barga_bash', 2], ['e_harden', 1, { once: true }], ['eb_barga_counter', 1]]),
+      actions: A([['attack', 2], ['e_armor_break', 2], ['eb_barga_bash', 2], ['e_harden', 1, { once: true }], ['e_focus', 1, { hpBelow: 0.6, once: true }], ['eb_barga_counter', 1]]),
       drops: MID('i_potion'),
       desc: R.T('data.bosses_ash.LIST.b_armorman.desc'),
     },

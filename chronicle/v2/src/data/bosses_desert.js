@@ -48,7 +48,7 @@
       elem: ALL(0.2), phys: { slash: 0.2, blunt: 0.2, pierce: 0.2 }, elemBase: {}, physBase: {}, guarded: true, statusRes: { sleep: 0.5 },
       // 2026-10-01（ボスの組み直し）: 砂を巻き上げる構え（予告）は 3 手番ごとの決まりをやめ、たまに（2 ラウンド目から）。砂けむりの舞は最大 HP の 4 割（前は 9 割）。
       //   砂つぶて（目つぶし）を足す。弓兵と合わせる合体技「鷹の狩り」がある
-      actions: A([['attack', 3], ['eb_hawk_cut', 3], ['eb_hawk_sand', 2], ['eb_hawk_dust', 1, { round: 2 }], ['eb_hawk_rally', SCHED, { flag: 'hawk_guard_down', once: true }]]),
+      actions: A([['attack', 3], ['eb_hawk_cut', 3], ['eb_hawk_sand', 2], ['eb_hawk_dust', 2, { every: [3, 1], round: 2 }], ['eb_hawk_rally', SCHED, { flag: 'hawk_guard_down', once: true }]]),
       s: { hp: 0.85 },
       drops: MID('i_ether'),
       desc: R.T('data.bosses_desert.LIST.b_hawk_chief.desc'),
@@ -91,7 +91,7 @@
       //   いまは予告の手番のほかは毎回打つ（攻めの手番 4 回に 3 回。岩食らい・大ダコと同じ）
       // 2026-10-01（ボスの組み直し）: 身を沈める（予告）は 4 手番ごとの決まりをやめ、たまに。砂中の一撃は最大 HP の 4 割（前は 10 割）
       W.actions = A([['attack', 3, { noFlag: 'worm_sunk' }], ['eb_quicksand', 2, { noFlag: 'worm_sunk' }], ['eb_swallow_whole', 2, { noFlag: 'worm_sunk' }],
-        ['eb_worm_rear', 2, { noFlag: 'worm_sunk' }], ['eb_worm_surface', SCHED, { flag: 'worm_sunk' }]]);
+        ['eb_worm_rear', 3, { every: [3, 1], noFlag: 'worm_sunk' }], ['eb_worm_surface', SCHED, { flag: 'worm_sunk' }]]);
       W.sunk = { phys: { slash: 0.15, blunt: 0.15, pierce: 1 }, elem: { fire: 0.15, water: 0.15, wind: 0.15, light: 0.15, dark: 0.15, earth: 1.5 } };
       W.drops = Object.assign({}, W.drops);
       W.desc = R.T('data.bosses_desert.desc');
@@ -103,7 +103,7 @@
       K.actions = A([['attack', 2], ['eb_steal_name', 2], ['eb_king_sand', 2], ['eb_withering', 2],
         ['eb_king_sun', SCHED, { every: [10, 1], countBelow: 5, noFlag: 'orb_out' }], ['eb_king_moon', SCHED, { every: [10, 6], countBelow: 5, noFlag: 'orb_out' }],
         ['eb_king_mark', 2, { noFlag: 'king_mark' }], ['eb_king_call', 8, { flag: 'king_mark' }],
-        ['eb_king_raise', 1]]);
+        ['eb_king_raise', 2, { every: [3, 2] }]]);
       K.phases = [{ hpBelow: 0.4, msg: R.T('data.bosses_desert.phases.0.msg'), set: { buffs: { atk: 1, mag: 1 } } }];
       K.orbHost = true;
       K.desc = R.T('data.bosses_desert.desc_2');

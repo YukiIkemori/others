@@ -48,7 +48,7 @@
   Object.assign(R.DB.bossActions, {
     eb_vein_pulse: { name: R.T('bossActions.eb_vein_pulse.name'), kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: R.T('bossActions.eb_vein_pulse.msg'),
       telegraph: { text: R.T('bossActions.eb_vein_pulse.telegraph.text'), pose: 'tele', tint: '#a8e8ff', next: 'eb_vein_storm', guard: 'defend' } },
-    eb_vein_storm: { name: R.T('bossActions.eb_vein_storm.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'phys', power: 2.1, element: 'earth', sure: true }], fx: 'earth', msg: R.T('bossActions.eb_vein_storm.msg') },
+    eb_vein_storm: { name: R.T('bossActions.eb_vein_storm.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'phys', power: 1.4, element: 'earth', sure: true }], fx: 'earth', msg: R.T('bossActions.eb_vein_storm.msg') },
     eb_vein_fist: { name: R.T('bossActions.eb_vein_fist.name'), kind: 'enemy', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.6 }], fx: 'explosion', msg: R.T('bossActions.eb_vein_fist.msg') },
     eb_vein_glare: { name: R.T('bossActions.eb_vein_glare.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'status', status: 'blind', chance: 0.35 }, { type: 'buff', stat: 'agi', stages: -1, chance: 0.4 }], fx: 'debuff', msg: R.T('bossActions.eb_vein_glare.msg') },
     eb_vein_crystal: { name: R.T('bossActions.eb_vein_crystal.name'), kind: 'enemy', target: 'self', effects: [{ type: 'status', status: 'veil' }, { type: 'buff', stat: 'mdef', stages: 1 }], fx: 'buff', msg: R.T('bossActions.eb_vein_crystal.msg') },

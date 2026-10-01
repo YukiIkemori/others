@@ -295,10 +295,12 @@ function clearing() {
 function battle() {
   section('5. 戦闘（予告・出現表・落とし物）');
   const A = D.bossActions;
-  for (const id of ['eb_tamer_whistle', 'eb_sumi_chant', 'eb_barga_raise', 'eb_zakuro_stance', 'eb_hound_inhale', 'eb_beast_swell']) ok(`${id} は予告（telegraph → next、守る）`, !!(A[id] && A[id].telegraph && A[A[id].telegraph.next] && A[id].telegraph.guard === 'defend'));
+  // 2026-10-01（ボスの組み直し）: 溜め（予告）はやめ、色んな角度から攻める
+  ok('大会の相手・番犬・巨獣は予告を使わない', ['b_tamer', 'b_sister_elder', 'b_sister_younger', 'b_armorman', 'b_zakuro', 'b_hellhound', 'b_lavabeast'].every((id) => !D.monsters[id].actions.some((a) => D.bossActions[a.id] && D.bossActions[a.id].telegraph)));
   ok('獣使い・姉ヒノエが群れの頭（倒れると残りが降りる）', !!D.monsters.b_tamer.leader && !!D.monsters.b_sister_elder.leader);
-  ok('ザクロ: 第 2 の姿（hpBelow 0.5）と予告', !!(D.monsters.b_zakuro.phases || []).length && D.monsters.b_zakuro.actions.some((a) => a.id === 'eb_zakuro_stance'));
-  ok('溶岩の巨獣: 第 2 の姿と予告', !!(D.monsters.b_lavabeast.phases || []).length && D.monsters.b_lavabeast.actions.some((a) => a.id === 'eb_beast_swell'));
+  ok('ザクロ: 第 2 の姿（hpBelow 0.5、二本目で 2 回動く）・居合（回復役をねらう）・後の先（反撃）', !!(D.monsters.b_zakuro.phases || []).length && D.monsters.b_zakuro.phases[0].set.actsPerTurn === 2 &&
+    ['eb_zakuro_iai', 'eb_zakuro_guard'].every((id) => D.monsters.b_zakuro.actions.some((a) => a.id === id)) && A.eb_zakuro_iai.aim === 'healer');
+  ok('溶岩の巨獣: 第 2 の姿と灼熱の大地（場）・噴火', !!(D.monsters.b_lavabeast.phases || []).length && ['eb_beast_scorch_ground', 'eb_eruption'].every((id) => D.monsters.b_lavabeast.actions.some((a) => a.id === id)));
   ok('盗み専用: 溶岩の巨獣 ac_st_lavabeast は盗みだけ（イベントで渡さない）', !!(D.items.ac_st_lavabeast && D.items.ac_st_lavabeast.stealOnly) && !SRC.includes('ac_st_lavabeast'));
   const zones = ['zw_ash_plain', 'zw_ash_road', 'zw_ash_spa', 'zw_ash_beach', 'z_ash_volcano', 'z_ash_crater'];
   ok('出現表 6 つ（原・街道・湯の郷・浜・火山・火口）', zones.every((z) => D.encounters[z] && D.encounters[z].region === 'r_ash'));

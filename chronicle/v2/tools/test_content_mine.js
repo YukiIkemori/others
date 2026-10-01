@@ -317,7 +317,7 @@ async function optional() {
   ok('2 階に宝石ハリネズミの巣（レアの率が高い区画）と休息の灯', M.vein_2.zones[0].zone === 'z_mine_vein_nest' && D.rareEncounters.z_mine_vein_nest.mon === 'rm_gem_hedgehog' && D.rareEncounters.z_mine_vein_nest.rate < D.rareEncounters.z_mine_vein.rate && M.vein_2.objects.some((o) => o.type === 'spring'));
   ok('泉は七の層と深淵の鉱脈 2 階だけ', MY_MAPS.filter((id) => (M[id].objects || []).some((o) => o.type === 'spring')).sort().join() === 'mine_3,vein_2');
   const T = D.troops.tr_b_vein_lord, A = D.bossActions;
-  ok('隠しボス 鉱脈の主: 強さ固定（ティア 6）、予告（脈動 → 結晶の嵐、守る）', T && T.tier === 6 && !T.scale && A.eb_vein_pulse.telegraph.guard === 'defend' && A[A.eb_vein_pulse.telegraph.next]);
+  ok('隠しボス 鉱脈の主: 強さ固定（ティア 6）、結晶の嵐・結晶の膜・かけら（2026-10-01 予告はやめた）', T && T.tier === 6 && !T.scale && ['eb_vein_storm', 'eb_vein_crystal', 'eb_vein_shards'].every((id) => D.monsters.b_vein_lord.actions.some((a) => a.id === id)));
   ok('手前の看板で「危険」を知らせる', M.vein_3.objects.some((o) => o.type === 'sign' && /鉱脈の主/.test(i18nInline(JSON.stringify(o.text)))));
   const axe = M.vein_3.objects.find((o) => o.type === 'chest' && o.item === 'u_vein_axe');
   ok('鉱脈の斧は主を倒したあとの宝箱（cond mine_vein_lord）', axe && axe.cond === 'mine_vein_lord');
@@ -353,8 +353,10 @@ async function optional() {
 function battle() {
   section('5. 戦闘（予告・出現表）');
   const A = D.bossActions;
-  for (const id of ['eb_rock_burrow', 'eb_warden_raise']) ok(`${id} は予告（telegraph → next、守る）`, !!(A[id] && A[id].telegraph && A[A[id].telegraph.next] && A[id].telegraph.guard === 'defend'));
-  ok('岩食らい・番人の行動に予告が入る', D.monsters.b_rockeater.actions.some((a) => a.id === 'eb_rock_burrow') && D.monsters.b_ironwarden.actions.some((a) => a.id === 'eb_warden_raise'));
+  // 2026-10-01（ボスの組み直し）: 溜め（予告）はやめ、色んな角度から攻める
+  ok('岩食らい・番人・鉱脈の主は予告を使わない', ['b_rockeater', 'b_ironwarden', 'b_vein_lord'].every((id) => !D.monsters[id].actions.some((a) => D.bossActions[a.id] && D.bossActions[a.id].telegraph)));
+  ok('岩食らい: 酸（守りを下げる・毒）・落盤・砂利吐き', ['eb_rock_acid', 'eb_cave_in', 'eb_gravel_spit'].every((id) => D.monsters.b_rockeater.actions.some((a) => a.id === id)));
+  ok('番人: 最初から 2 回動く、鉄の構え（反撃）・鉄くず散らし', D.monsters.b_ironwarden.actsPerTurn === 2 && ['eb_warden_guard', 'eb_warden_slag'].every((id) => D.monsters.b_ironwarden.actions.some((a) => a.id === id)));
   const zones = ['zw_mine', 'z_r_mine_mine'];
   ok('出現表 2 つ（山地・坑道）', zones.every((z) => D.encounters[z] && D.encounters[z].region === 'r_mine'));
   const big = [];

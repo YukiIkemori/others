@@ -131,5 +131,13 @@
     'bossActions.eb_nemrea2_page.msg': "{user}이(가) 커다란 페이지를 한 장 넘겼다!",
     'bossActions.eb_nemrea2_page.shift': "밤의 페이지가 열렸다. {user}에게 어둠이 잘 듣고 빛은 잘 통하지 않는다.",
     'bossActions.eb_nemrea2_page2.shift': "아침의 페이지가 열렸다. {user}에게 빛이 잘 듣고 어둠은 잘 통하지 않는다.",
+    'bossActions.eb_echo_dread.name': "공포의 잔향",
+    'bossActions.eb_echo_dread.msg': "삼백 년 전의 공포가 {user}의 목소리가 되어 울려 퍼졌다……!",
+    'bossActions.eb_echo_soul.name': "영혼 흡수",
+    'bossActions.eb_echo_soul.msg': "{user}의 그림자 손이 술법을 쓰는 자의 영혼을 빨아들였다!",
+    'bossActions.eb_ouro_mark.name': "꼬리의 각인",
+    'bossActions.eb_ouro_mark.msg': "{user}의 꼬리가 가장 강한 자에게 고리 모양 표식을 새겼다!",
+    'bossActions.eb_ouro_end.name': "고리의 끝",
+    'bossActions.eb_ouro_end.msg': "{user}이(가) 입을 벌린다. 표식이 새겨진 이야기가 고리 속으로 빨려 든다!",
   });
 })(window.RPG);

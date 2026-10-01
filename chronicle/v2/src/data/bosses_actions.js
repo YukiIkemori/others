@@ -209,7 +209,7 @@
     // ページ食らい（序章）: 紙をため込む → 次の手番に全体の紙吹雪 → 防御で半分（教える戦いなので罰は軽く）
     eb_page_gather: {name: R.T('bossActions.eb_page_gather.name'), kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: R.T('bossActions.eb_page_gather.msg'),
       telegraph: {text: R.T('bossActions.eb_page_gather.telegraph.text'), pose: 'tele', tint: '#e8dcb8', next: 'eb_confetti', guard: 'defend'}},
-    eb_confetti: {name: R.T('bossActions.eb_confetti.name'), kind: 'enemy', target: 'enemies', effects: [{type: 'damage', formula: 'phys', power: 3.6, kind: 'slash', sure: true}], fx: 'slash2', msg: R.T('bossActions.eb_confetti.msg')},
+    eb_confetti: {name: R.T('bossActions.eb_confetti.name'), kind: 'enemy', target: 'enemies', effects: [{type: 'damage', formula: 'phys', power: 2.4, kind: 'slash', sure: true}], fx: 'slash2', msg: R.T('bossActions.eb_confetti.msg')},
     // ダストウィング（森の中ボス）: 羽が光る → 次の手番に全員へ眠りのりん粉。風の術・技で打つと吹き飛ぶ（予約が消える）
     eb_wing_glow: {name: R.T('bossActions.eb_wing_glow.name'), kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: R.T('bossActions.eb_wing_glow.msg'),
       telegraph: {text: R.T('bossActions.eb_wing_glow.telegraph.text'), pose: 'tele', tint: '#b8e0ff', next: 'eb_sleep_dust', guard: 'element:wind',

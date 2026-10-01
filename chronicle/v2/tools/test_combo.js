@@ -218,7 +218,7 @@ section('6. データ（仲間・行動・演出・文）');
   }
   ok(`合体技 ${ids.length} 個: 仲間・行動・合体・演出の行がある`, !bad.length && ids.length >= 15, bad);
   const regular = ids.filter((id) => (DB.enemyCombos[id].members || []).every((sp) => sp.lin || /^desert_hawk/.test([].concat(sp.mon)[0] || '')));
-  ok('雑魚の合体技は 15〜25 個', regular.length >= 15 && regular.length <= 25, regular.length);
+  ok('雑魚の合体技は 15〜26 個', regular.length >= 15 && regular.length <= 26, regular.length);
   ok('序盤（tierMin なし・0）は 3〜4 個だけ、ティア 3 から増える', regular.filter((id) => !DB.enemyCombos[id].tierMin).length <= 4 && regular.filter((id) => (DB.enemyCombos[id].tierMin || 0) >= 3).length >= 8);
 }
 {

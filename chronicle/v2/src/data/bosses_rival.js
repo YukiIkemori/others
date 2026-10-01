@@ -18,7 +18,7 @@
   // every は魔物の手番の数え（1 戦目は 1 回、2 戦目は 2 回動く）: どちらもおよそ 3 ラウンドに 1 度の予告
   const add = (id, every) => { const d = L[id]; if (d && d.actions) d.actions = d.actions.concat(A([['eb_rowell_gather', 200, { every }]])); };
   // 2026-10-01（ボスの組み直し）: 1 戦目は序盤の教える戦いなので、光を集める構え（予告、断罪は最大 HP の 4 割）を残す。ただし 3 手番ごとの決まりはやめ、たまに
-  { const d = L.b_rowell1; if (d && d.actions) d.actions = d.actions.concat(A([['eb_rowell_gather', 2]])); }
+  { const d = L.b_rowell1; if (d && d.actions) d.actions = d.actions.concat(A([['eb_rowell_gather', 3, { every: [3, 1], round: 2 }]])); }
   // 2 戦目（ティア 5、中盤）: 1 ラウンドに重い手 1 つ（突き・連続突き・抹消）＋軽い手 1 つ（写し取る・白紙・記録の光・注釈）。溜めはなし
   {
     const d = L.b_rowell2, HV = { every: [2, 0] }, LT = { every: [2, 1] };

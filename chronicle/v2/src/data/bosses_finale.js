@@ -68,6 +68,15 @@
     ['eb_nemrea2_mark', 2, { every: [3, 1], noFlag: 'nemrea_mark' }], ['eb_nemrea2_page', 1, { every: [3, 1], noFlag: 'nemrea_dark' }], ['eb_nemrea2_page2', 1, { every: [3, 1], flag: 'nemrea_dark' }],
     ['eb_dream_sleep', 1, { every: [3, 1], round: 2 }], ['eb_oblivion_breath', 1, N1],
     ['attack', 2, N2], ['eb_oblivion_breath', 1, N2], ['eb_nemrea_rewrite', 3, { every: [3, 2], hpBelow: 0.3, once: true }]]) });
+  // クリア後: 魔王の残影に 恐れの残響（混乱・魔力を下げる）・魂吸い（HP と MP）、円環竜に 尾の刻印（印）→ 輪の終わり（印の人だけ打つ）
+  Object.assign(R.DB.bossActions, {
+    eb_echo_dread: { name: R.T('bossActions.eb_echo_dread.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'status', status: 'confuse', chance: 0.25 }, { type: 'buff', stat: 'mag', stages: -1, chance: 0.4 }], fx: 'dark2', msg: R.T('bossActions.eb_echo_dread.msg') },
+    eb_echo_soul: { name: R.T('bossActions.eb_echo_soul.name'), kind: 'enemy', target: 'enemy', aim: 'caster', effects: [{ type: 'damage', formula: 'magic', power: 1.0, element: 'dark', drain: 0.5 }, { type: 'damage', formula: 'magic', power: 0.6, mp: true }], fx: 'drain', msg: R.T('bossActions.eb_echo_soul.msg') },
+    eb_ouro_mark: { name: R.T('bossActions.eb_ouro_mark.name'), kind: 'enemy', target: 'enemy', aim: 'strong', effects: [{ type: 'special', id: 'boss_mark', flag: 'ouro_mark', pct: 0.35, guardPct: 0.08 }], fx: 'magic', msg: R.T('bossActions.eb_ouro_mark.msg') },
+    eb_ouro_end: { name: R.T('bossActions.eb_ouro_end.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'boss_mark_burst', flag: 'ouro_mark', kind: 'magic' }], fx: 'magic3', msg: R.T('bossActions.eb_ouro_end.msg') },
+  });
+  if (L.b_valzard_echo) L.b_valzard_echo.actions = L.b_valzard_echo.actions.concat(A([['eb_echo_dread', 1, { round: 2 }], ['eb_echo_soul', 2]]));
+  if (L.b_ouroboros) L.b_ouroboros.actions = L.b_ouroboros.actions.concat(A([['eb_ouro_mark', 2, { every: [3, 2], noFlag: 'ouro_mark' }], ['eb_ouro_end', 8, { every: [3, 0], flag: 'ouro_mark' }]]));
   R.defs('enemyCombos', {
     // 三英雄の再演: 祈りの影が剣の影に加護をかけ、杖の影の星が降り、剣の影が弱った人を斬る
     c_b_three_heroes: { name: R.T('enemyCombos.c_b_three_heroes.name'), members: [{ mon: 'b_shade_sword' }, { mon: 'b_shade_prayer' }, { mon: 'b_shade_star' }],

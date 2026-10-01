@@ -94,6 +94,28 @@ BOSSES['tr_b_nemrea2@8'] = { troop: 'tr_b_nemrea2', tier: 8, kind: 'boss', membe
 BOSSES['tr_b_rowell1@2'] = { troop: 'tr_b_rowell1', tier: 2, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 10], note: 'ロウェル 1 戦目（T2。負けても続く）' };
 BOSSES['tr_b_rowell2@5'] = { troop: 'tr_b_rowell2', tier: 5, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 10], note: 'ロウェル 2 戦目（T5。負けても続く）' };
 
+// 2026-10-01 ボスの組み直し（w_boss2）: オーナー「勝率低めでいいよ」「溜めての即死級はもう飽きた」。予告への答え（守る）で勝ち負けが決まる型をやめたので、
+//   「リピートだけ」との差（diff）は見ない。台本の勝率は 序盤 65〜95%・中盤 50〜90%・終盤 45〜85%、長さは 序盤の中ボス 5〜10・地方ボス 8〜14・中盤 6〜13・終盤 10〜16、
+//   倒れる人は 1 戦あたり 2 人まで（負けても準備で取り返せる程度）。リピートだけ（回復も守りもしない）は台本より 10 点以上低いこと
+{
+  const band = (k) => {
+    const T = BOSSES[k].tier, t = (BOSSES[k].troop || k);
+    if (/rowell1|tutorial/.test(t)) return null;
+    if (T >= 8) return 'late';
+    if (/pageeater|forest_wolves|tr_b_moth|rooteater|hawk|sandworm|sandking/.test(t)) return 'early';
+    return 'mid';
+  };
+  const RULE = { early: { script: 65, scriptMax: 95, rounds: { mid: [5, 10], boss: [8, 14], prologue: [6, 11] } }, mid: { script: 50, scriptMax: 90, rounds: [6, 14] }, late: { script: 45, scriptMax: 85, rounds: [10, 16] } };
+  for (const k of Object.keys(BOSSES)) {
+    const b = band(k);
+    if (!b) continue;
+    const cfg = BOSSES[k], r = RULE[b];
+    cfg.script = r.script; cfg.scriptMax = r.scriptMax; cfg.diff = null; cfg.repeatBelow = 10; cfg.down = 2.0;
+    cfg.rounds = Array.isArray(r.rounds) ? r.rounds : r.rounds[cfg.kind] || r.rounds.mid;
+    if (cfg.repeat != null) cfg.repeat = null;
+  }
+}
+
 function loadR() { return require('./lib/load')({ quiet: true }); }
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : 0);
 
@@ -134,6 +156,8 @@ function main() {
     if (cfg.fight != null && f && f.winPct > cfg.fight) fail.push(`fight ${f.winPct.toFixed(0)} > ${cfg.fight}`);
     if (cfg.repeat != null && rp && rp.winPct > cfg.repeat) fail.push(`repeat ${rp.winPct.toFixed(0)} > ${cfg.repeat}`);
     if (cfg.script != null && sc.winPct < cfg.script) fail.push(`script ${sc.winPct.toFixed(0)} < ${cfg.script}`);
+    if (cfg.scriptMax != null && sc.winPct > cfg.scriptMax) fail.push(`script ${sc.winPct.toFixed(0)} > ${cfg.scriptMax}`);
+    if (cfg.repeatBelow != null && rp && rp.winPct > sc.winPct - cfg.repeatBelow) fail.push(`repeat ${rp.winPct.toFixed(0)} ≥ script − ${cfg.repeatBelow}`);
     const diff = rp ? sc.winPct - rp.winPct : 0;
     if (cfg.diff != null && diff < cfg.diff) fail.push(`diff ${diff.toFixed(0)} < ${cfg.diff}`);
     if (cfg.rounds && (sc.rounds < cfg.rounds[0] || sc.rounds > cfg.rounds[1])) fail.push(`rounds ${sc.rounds.toFixed(1)} ∉ ${cfg.rounds.join('–')}`);

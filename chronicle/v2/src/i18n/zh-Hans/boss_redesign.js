@@ -131,5 +131,13 @@
     'bossActions.eb_nemrea2_page.msg': "{user}翻过了一张巨大的书页！",
     'bossActions.eb_nemrea2_page.shift': "夜之页翻开了。暗对{user}更容易奏效，光则难以穿透。",
     'bossActions.eb_nemrea2_page2.shift': "晨之页翻开了。光对{user}更容易奏效，暗则难以穿透。",
+    'bossActions.eb_echo_dread.name': "恐惧残响",
+    'bossActions.eb_echo_dread.msg': "三百年前的恐惧化作{user}的声音回荡开来……！",
+    'bossActions.eb_echo_soul.name': "吸魂",
+    'bossActions.eb_echo_soul.msg': "{user}的影之手吸取了施法者的灵魂！",
+    'bossActions.eb_ouro_mark.name': "尾之刻印",
+    'bossActions.eb_ouro_mark.msg': "{user}的尾巴在最强者身上烙下了环形印记！",
+    'bossActions.eb_ouro_end.name': "环之终结",
+    'bossActions.eb_ouro_end.msg': "{user}张开了嘴。被刻印的故事被吸进了环中！",
   });
 })(window.RPG);

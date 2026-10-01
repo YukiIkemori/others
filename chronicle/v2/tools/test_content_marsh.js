@@ -250,9 +250,10 @@ function clearing() {
 function battle() {
   section('5. 戦闘（予告・出現表・落とし物）');
   const A = D.bossActions;
-  for (const id of ['eb_doll_raise', 'eb_mist_gather']) ok(`${id} は予告（telegraph → next、守る）`, !!(A[id] && A[id].telegraph && A[A[id].telegraph.next] && A[id].telegraph.guard === 'defend'));
-  ok('人形の楽団: 指揮者が群れの頭（倒れると楽士が崩れる）、指揮者が予告を持つ', !!D.monsters.b_doll_conductor.leader && D.monsters.b_doll_conductor.actions.some((a) => a.id === 'eb_doll_raise'));
-  ok('霧食らい: 第 2 の姿（hpBelow 0.5）と予告', !!(D.monsters.b_mistbeast.phases || []).length && D.monsters.b_mistbeast.actions.some((a) => a.id === 'eb_mist_gather'));
+  // 2026-10-01（ボスの組み直し）: 溜め（予告）はやめ、色んな角度から攻める
+  ok('指揮者人形・霧食らいは予告を使わない', ['b_doll_conductor', 'b_mistbeast'].every((id) => !D.monsters[id].actions.some((a) => D.bossActions[a.id] && D.bossActions[a.id].telegraph)));
+  ok('人形の楽団: 指揮者が群れの頭（倒れると楽士が崩れる）、操り糸（回復役を混乱）・円舞・合体技「人形の三重奏」', !!D.monsters.b_doll_conductor.leader && ['eb_doll_strings', 'eb_doll_waltz'].every((id) => D.monsters.b_doll_conductor.actions.some((a) => a.id === id)) && !!D.enemyCombos.c_b_doll_trio);
+  ok('霧食らい: 第 2 の姿（hpBelow 0.5）、濃霧（場）・霧吸い（MP）', !!(D.monsters.b_mistbeast.phases || []).length && ['eb_mist_shroud', 'eb_mist_siphon'].every((id) => D.monsters.b_mistbeast.actions.some((a) => a.id === id)));
   ok('盗み専用: 霧食らい ac_st_mistbeast は盗みだけ（イベントで渡さない）', !!(D.items.ac_st_mistbeast && D.items.ac_st_mistbeast.stealOnly) && !SRC.includes('ac_st_mistbeast'));
   const zones = ['zw_marsh', 'zw_marsh_road', 'zw_marsh_lotus', 'z_marsh_manor', 'z_marsh_bog'];
   ok('出現表 5 つ（原野・街道・はすの池・館・沼）', zones.every((z) => D.encounters[z] && D.encounters[z].region === 'r_marsh'));
