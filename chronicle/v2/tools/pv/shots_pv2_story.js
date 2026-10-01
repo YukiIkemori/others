@@ -630,3 +630,20 @@ SHOTS.s7_firebird = {
 for (const id of ['s7_neve', 's7_glen', 's7_marina', 's7_hazal', 's7_fine_ash']) {
   SHOTS[id + '_clean'] = Object.assign({}, SHOTS[id], { prep: async (T) => { await T.js('PV.hideMsg()'); await SHOTS[id].prep(T); } });
 }
+
+// 白の中のリーネの年代記のページ: 8 つの地方を語り直した後の年代記の画面（章が並ぶ。砂漠の章 = 選んだ版の文）。白く飛ばすのは編集で
+SHOTS.s9_page = {
+  prep: async (T) => {
+    await T.js(FIELD({ flags: Object.assign({}, DESERT_KING), tier: 8 }, 'roa_dawn', 'gate'));
+    await T.idle(150); await T.settle();
+    await T.js(`(() => { const G = RPG.Game; const rs = ${JSON.stringify(REGIONS8)}; G.chronicle.chapters = [{id: 'prologue', summaryKey: 'prologue'}].concat(rs.map((id) => ({id, summaryKey: id})));
+      for (const r of rs) { G.cleared[r] = true; G.flags['cleared_' + r] = true; } G.choices = G.choices || {}; RPG.Game.leads = {}; return true; })()`);
+    await T.js(`RPG.Screens.open('chronicle')`); await T.idle(20);
+  },
+  n: sec(7),
+  each: (i) => ({ 60: `PV.tap('down', 3)`, 120: `PV.tap('down', 3)`, 180: `PV.tap('down', 3)` })[i] || null,
+};
+// 題字（結び）: 第 1 弾と同じ作りの題字をもう 1 本（頭の空・灯火・題字の出方を最初から）
+SHOTS.s9_title = Object.assign({}, SHOTS.s1_title, { n: sec(9) });
+// 題字の出だしをゆっくり（1/5 の速さ）: 一枚絵の大陸に八つの灯火が左の灯台から奥へ 1 つずつともる（§9 の「八つの灯がともる」の別の元）
+SHOTS.s9_title_slow = Object.assign({}, SHOTS.s1_title, { n: sec(12), dt: 1000 / 60 / 5 });
