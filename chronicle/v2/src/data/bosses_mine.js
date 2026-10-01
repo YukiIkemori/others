@@ -27,7 +27,7 @@
     W.actions = A([['attack', 2], ['eb_iron_fist', 2], ['eb_forge_breath', 1], ['eb_iron_wall', 1, { hpBelow: 0.7, once: true }],
       ['eb_warden_raise', SCHED, { every: [4, 3] }]]);
     W.desc = R.T('data.bosses_mine.desc_2');
-    W.s = { hp: 0.5, atk: 0.3, mag: 0.3 };
+    W.s = { hp: 0.5, atk: 0.48, mag: 0.48 };   // 2026-10-01: 地方ボスの通常の技が 1 人の最大 HP の 3〜4% しか削らず弱すぎた（オーナー「砂の王が弱すぎる」→ 地方ボス全体を見直し）。atk・mag を約 1.6 倍（sim_bosses）
   }
 
   // ---------------------------------------------------------------- (2026-09-30) 鉱脈の主（隠しボス、#17 深淵の鉱脈の底。強さ固定 = ティア 6 相当）

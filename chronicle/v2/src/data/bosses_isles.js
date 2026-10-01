@@ -28,6 +28,6 @@
     C.actions = A([['attack', 2], ['eb_cutlass', 2], ['eb_fire_volley', 1], ['eb_ghost_shanty', 1, { every: [6, 5] }],
       ['eb_call_crew', 1, { every: [5, 1], countBelow: 3 }], ['eb_anchor_throw', 1], ['eb_captain_aim', SCHED, { every: [4, 3] }]]);
     C.desc = R.T('data.bosses_isles.desc_2');
-    C.s = { hp: 0.47, atk: 0.27, mag: 0.27 };
+    C.s = { hp: 0.47, atk: 0.44, mag: 0.44 };   // 2026-10-01: 地方ボスの通常の技が 1 人の最大 HP の 3〜4% しか削らず弱すぎた（オーナー「砂の王が弱すぎる」→ 地方ボス全体を見直し）。atk・mag を約 1.6 倍（sim_bosses）
   }
 })(window.RPG);

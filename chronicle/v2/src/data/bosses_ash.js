@@ -133,7 +133,7 @@
     B.actions = A([['attack', 2], ['eb_lava_wave', 2, { hpAbove: 0.5 }], ['eb_magma_fist', 2, { hpAbove: 0.5 }], ['eb_beast_swell', SCHED, { every: [4, 1] }],
       ['eb_obsidian_crush', 3, { hpBelow: 0.5 }], ['eb_ash_storm', 2, { hpBelow: 0.5 }]]);
     B.desc = R.T('data.bosses_ash.desc_2');
-    B.s = { hp: 0.5, atk: 0.36, mag: 0.36 };
+    B.s = { hp: 0.5, atk: 0.58, mag: 0.58 };   // 2026-10-01: 地方ボスの通常の技が 1 人の最大 HP の 3〜4% しか削らず弱すぎた（オーナー「砂の王が弱すぎる」→ 地方ボス全体を見直し）。atk・mag を約 1.6 倍（sim_bosses）
     // 第 2 の姿の絵（冷えた黒い岩）は無いので、同じ絵のまま（b_lavabeast_cold の絵は描いていない）
     for (const p of B.phases || []) if (p.set && p.set.sprite && !(typeof window !== 'undefined' && window.RPG_MEDIA && window.RPG_MEDIA.monsters && window.RPG_MEDIA.monsters[p.set.sprite])) delete p.set.sprite;
   }

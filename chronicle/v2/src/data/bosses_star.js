@@ -27,7 +27,7 @@
   if (S) {
     S.actions = A([['attack', 2], ['eb_swallow_star', 2, { every: [3, 2] }], ['eb_star_spit', 2], ['eb_void_fang', 2], ['eb_star_gulp', SCHED, { every: [4, 3] }]]);
     S.desc = R.T('data.bosses_star.desc_2');
-    S.s = { hp: 0.62, atk: 0.37, mag: 0.37 };
+    S.s = { hp: 0.62, atk: 0.59, mag: 0.59 };   // 2026-10-01: 地方ボスの通常の技が 1 人の最大 HP の 3〜4% しか削らず弱すぎた（オーナー「砂の王が弱すぎる」→ 地方ボス全体を見直し）。atk・mag を約 1.6 倍（sim_bosses）
   }
   const T = R.DB.troops;
   const riot = (mons) => ({ mons, noEscape: true, scale: 'tier', lvOff: 0, bg: 'tower', bgm: 'battle' });
