@@ -95,6 +95,20 @@
     }
     return c;
   };
+  // 塗っておく列: 1 回に 1 本ずつ、手の空いた時に（行動の始まりの 1 コマに塗りを固めない）
+  const warmQ = [];
+  let warming = false;
+  function pump() {
+    const job = warmQ.shift();
+    if (!job) { warming = false; return; }
+    try { I.tinted(job[0], job[1]); } catch (e) { /* ignore */ }
+    if (typeof requestIdleCallback === 'function') requestIdleCallback(pump, { timeout: 60 }); else setTimeout(pump, 16);
+  }
+  I.warm = function (id, pal) {
+    if (tints.has(id + '|' + pal.join('|'))) return;
+    warmQ.push([id, pal]);
+    if (!warming) { warming = true; setTimeout(pump, 0); }
+  };
   I.stats = () => ({ loaded: Object.values(recs).filter((r) => r.ok).length, requested: Object.keys(recs).length, tints: tints.size, tintMPx: +(tintPx / 1e6).toFixed(1) });
 
   /** 1 コマ（fi は 0..n-1。原点に基準の点）→ 描けたら true */
@@ -506,7 +520,7 @@
           if (L.p === 'giant' && id === (L.kind === 'hammer' ? 'spectral_hammer' : 'spectral_sword')) pals.add(JSON.stringify(palOf({ pal: spec.pal }, L.col)));
           if (id === 'lightning_bolt' && (L.p === 'bolt' || L.p === 'storm')) { const p = palOf({ pal: spec.pal }, L.col != null ? L.col : 'thunder'); if (p[0] !== S.PAL.thunder[0]) pals.add(JSON.stringify(p)); }
         }
-        for (const p of pals) I.tinted(id, JSON.parse(p));
+        for (const p of pals) I.warm(id, JSON.parse(p));
       });
     }
     return spec;
