@@ -42,7 +42,9 @@
       O.push({ type: 'switch', id: 'desert_tomb_1_sw_w', x: 9, y: 9, flag: 'desert_t1_sw_w', look: 'plate', color: 'gold' });
       O.push({ type: 'switch', id: 'desert_tomb_1_sw_e', x: 46, y: 9, flag: 'desert_t1_sw_e', look: 'plate', color: 'gold' });
       const DOOR = { all: ['desert_t1_sw_w', 'desert_t1_sw_e'] };
-      O.push(K.prop('switch', 26, 20, { cond: { not: DOOR } }), K.exam(28, 21, 'desert_tomb_door', { cond: { not: DOOR } }));
+      // 扉の前で調べると一言（開くまで）。前は扉の左の壁（26,20）に踏み板の形の印（青い 'switch' の物）を置いていて、壁にめり込んだ変な印に見えた
+      //   （持ち主の試遊 2026-10-01「砂の王墓の一階中央進むと変なマークが壁にめり込んでる」）。回廊は扉と同じ 3 マス幅で、脇に床が無いので置かない
+      O.push(K.exam(28, 21, 'desert_tomb_door', { cond: { not: DOOR } }));
       // 封じの扉（壁 y 19〜20・x 27〜29 はそのまま）: 扉の絵は中ほどに大きな 1 枚（いつも）。開くまでは押すと一言。
       // 開いた後（踏み板 2 つ）は扉のマスで向こう側へ（南 y 20 → 北 y 18、北 y 19 → 南 y 21）
       const SEAL = {};
@@ -59,7 +61,7 @@
       O.push(K.chest('desert_tomb_1_c1', 4, 25, { pool: 'p_T' }), K.chest('desert_tomb_1_c2', 13, 8, { item: 'i_stone_earth', n: 2 }),
         K.chest('desert_tomb_1_c3', 52, 36, { pool: 'p_T' }), K.chest('desert_tomb_1_c4', 42, 8, { gold: 150 }),
         K.chest('desert_tomb_1_c5', 22, 31, { pool: 'p_rare' }), K.chest('desert_tomb_1_c6', 38, 7, { pool: 'p_T' }));
-      O.push(K.sign(26, 33, R.T('map.desert_tomb.sign')));
+      O.push(K.sign(26, 35, R.T('map.desert_tomb.sign')));   // 入口の広間の、中央の回廊の口の左の床（前は 26,33 の壁の中に立っていた）
       // 壺は 4 つまで・角と壁ぎわだけ（持ち主 2026-09-28「樽とか木箱みたいに移動通り抜け不可のはあまり置かないで」）
       deco(O, [['broken_pillar', 24, 44], ['bones', 34, 44],
         ['obelisk', 19, 7], ['obelisk', 38, 12], ['tomb_urn', 17, 18], ['tomb_urn', 39, 18], ['bones', 5, 30], ['bones', 51, 31], ['sand_mound', 22, 7],

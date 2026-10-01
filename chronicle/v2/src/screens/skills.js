@@ -1,5 +1,7 @@
 // MENUS: 技・術（MODERN_UI §6.8、A13b・A15・A29）
 //   人は L/R。覚えた技（武器の系統ごと）と術（属性ごと）だけを出す（覚えていない物・技の書は出さない、A15）。
+//   種類のタブ（剣・短剣 … 火・水 … 合成。R.SkillTabs）を ←→ と札のクリックで切り替える（L/R はほかのメニューと同じく人の切り替えのまま）。
+//   持っている種類だけ。1 つなら帯を出さない。タブは人ごとに覚える（この起動の間）。中は MP の少ない順（同じなら覚えた順）。
 //   行は名前と M n（MP 0 は青緑）、閃いたばかりの物に NEW（R.Game.seenSkill）。右: 説明 1〜2 行と範囲（ひとり／みんな）。
 //   フィールドで使える術は A で相手を選んで唱える。今の武器の系統でない技は「◯を持つと使える」。
 //   派生で覚えた技（c.derived）は説明の札に「〇〇から派生」（design/BACKLOG「派生技の閃き」）。
@@ -9,6 +11,7 @@
   if (!S.def) S.def = function (id, v) { (S._defs = S._defs || {})[id] = v; };
   const u = (v) => R.UIK.u(v);
   const T = () => R.UIK.T;
+  const wtNow = (c) => { const w = R.Rules.weaponType ? R.Rules.weaponType(c) : null; return w && w !== 'fist' ? w : null; };
   const act = (id) => (R.Rules.actionOf ? R.Rules.actionOf(id) : (R.DB.techs[id] || R.DB.spells[id])) || null;
   const RANGE = { enemy: R.T('ui.skills.RANGE.enemy'), enemies: R.T('ui.skills.RANGE.enemies'), ally: R.T('ui.skills.RANGE.ally'), allies: R.T('ui.skills.RANGE.allies'), self: R.T('ui.skills.RANGE.self'), ally_dead: R.T('ui.skills.RANGE.ally_dead'), party: R.T('ui.skills.RANGE.party'), all: R.T('ui.skills.RANGE.all') };
 
@@ -26,6 +29,7 @@
       this.list.onCancel = () => { this.markSeen(); this.close(undefined); };
       this.list.onDetail = (row) => { if (row) S.detail({ kind: row.kind, id: row.value, c: this.char() }); };
       this.seen = {};
+      this.groups = []; this.tab = 0; this.tabRects = []; this.tabCur = {};
       this.refresh();
       this.tgt = null;
       this.cards = [];
@@ -40,9 +44,28 @@
       const rows = techs.concat(spells).map((r) => {
         const a = act(r.value) || {};
         const usable = r.kind === 'spell' && S.fieldUsable(a);
-        return Object.assign(r, { label: a.name || r.value, disabled: !usable, a });
+        return Object.assign(r, { id: r.value, label: a.name || r.value, disabled: !usable, a });
       });
-      this.list.setRows(rows, keep);
+      // 種類のタブ（武器の系統・属性）に分け、中は MP の少ない順（持ち主 2026-10-01）
+      const ST = R.SkillTabs;
+      const prevId = keep && this.groups[this.tab] ? this.groups[this.tab].id : null;
+      this.groups = ST ? ST.group(c, rows) : [{ id: 'all', items: rows }];
+      if (!keep) this.tabCur = {};
+      let ti = prevId ? this.groups.findIndex((gr) => gr.id === prevId) : -1;
+      if (ti < 0) ti = ST ? ST.startIndex(this.groups, c.id, 'field', wtNow(c) ? 'tech:' + wtNow(c) : null) : 0;
+      this.tab = Math.max(0, Math.min(ti, this.groups.length - 1));
+      this.list.setRows(this.groups[this.tab] ? this.groups[this.tab].items : [], keep);
+    },
+    /** タブを替える（今のカーソルはタブごとに覚えておく） */
+    setTab(i) {
+      const gr0 = this.groups[this.tab];
+      if (gr0) this.tabCur[gr0.id] = this.list.index;
+      this.tab = i;
+      const gr = this.groups[i];
+      if (!gr) return;
+      if (R.SkillTabs) R.SkillTabs.remember(this.char().id, 'field', gr.id);
+      this.list.setRows(gr.items, false);
+      this.list.focusIndex(this.tabCur[gr.id] || 0);
     },
     markSeen() {
       const c = this.char();
@@ -76,6 +99,8 @@
       if (this.tgt) { S.targetUpdate(this, (t) => this.use(t), this.cards); return; }
       const k = S.charInput(this.ci, S.party().length, this.lr);
       if (k >= 0) { this.markSeen(); this.ci = k; this.refresh(false); return; }
+      const t = R.SkillTabs ? R.SkillTabs.input(this.groups.length, this.tab, this.tabRects, { arrows: true }) : -1;
+      if (t >= 0) { this.setTab(t); return; }
       this.list.update();
     },
     draw(g) {
@@ -94,7 +119,12 @@
       this.lr = { l: { x: lx - u(4), y: hp.y, w: u(28), h: u(40) }, r: { x: hp.x + hp.w - u(34), y: hp.y, w: u(34), h: u(40) } };
       const lp = { x: b.x, y: hp.y + hp.h + u(10), w: lw, h: tall ? b.h * 0.42 : b.h - hp.h - u(10) };
       R.UIK.panel(g, lp, { frost: true });
-      const lr = { x: lp.x + u(8), y: lp.y + u(10), w: lp.w - u(16), h: lp.h - u(20) };
+      // 種類のタブの帯（2 つ以上のときだけ。←→ の印と札は押せる）
+      const multi = this.groups.length > 1, bh = u(R.SkillTabs ? R.SkillTabs.BAR_H : 28);
+      this.tabRects = multi ? R.SkillTabs.drawBar(g, { x: lp.x + u(10), y: lp.y + u(8), w: lp.w - u(20), h: bh }, this.groups, this.tab, { glyphs: ['left', 'right'], size: 13 }) : [];
+      if (multi) R.UIK.hline(g, lp.x + u(12), lp.x + lp.w - u(12), lp.y + u(12) + bh, 0.2);
+      const top = multi ? u(16) + bh : u(10);
+      const lr = { x: lp.x + u(8), y: lp.y + top, w: lp.w - u(16), h: lp.h - top - u(10) };
       this.list.active = !this.tgt;
       this.list.render = (gg, row, rect, f) => {
         const sz = u(15), a = row.a || {};

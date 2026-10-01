@@ -667,6 +667,9 @@
     'ui.skills.draw.1.label_2': 'Details',
     'ui.skills.draw.2.label': 'Next',
     'ui.skills.draw.3.label': 'Back',
+    // ---- src/systems/skill_tabs.js（技・術の種類のタブ）
+    'ui.skillTabs.combo': 'Combined',
+    'ui.skillTabs.other': 'Other',
     // ---- src/screens/status.js
     'ui.status.draw.text': 'Weapons',
     'ui.status.draw.text.join': ', ',

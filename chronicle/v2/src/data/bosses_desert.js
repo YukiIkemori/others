@@ -14,7 +14,7 @@
   // 数値（sim_bosses の 3 本立てで合わせる）
   const DS = {
     b_sandking: { hp: 0.55, atk: 0.42, mag: 0.42 },
-    b_sandworm: { hp: 1.1 },
+    b_sandworm: { hp: 1.35 },
   };
   const A = (list) => list.map(([id, w, cond]) => (cond ? { id, w, cond } : { id, w }));
   const MID = (seed) => ({ normal: { pool: 'p_boss_mid', rate: 1 }, bonus: { item: seed, rate: 1 } });
@@ -84,8 +84,11 @@
   {
     const W = R.DB.monsters.b_sandworm, K = R.DB.monsters.b_sandking;
     if (W) {
-      W.actions = A([['attack', 3], ['eb_quicksand', 2, { noFlag: 'worm_sunk' }], ['eb_swallow_whole', 1, { noFlag: 'worm_sunk' }],
-        ['eb_worm_rear', SCHED, { every: [3, 0], noFlag: 'worm_sunk' }], ['eb_worm_surface', SCHED, { flag: 'worm_sunk' }]]);
+      // 4 手番で 1 回り: 地上の技 → 身を沈める（予告）→ もぐりざまに食らいつく（もぐる。次の予告）→ 砂中の一撃（全体・顔を出す）。
+      // 2026-10-01: 前は 3 手番ごとに 予告 → もぐる → 一撃 で、ダメージのある手番が 3 回に 1 回しかなかった（弱すぎる）。
+      //   いまは予告の手番のほかは毎回打つ（攻めの手番 4 回に 3 回。岩食らい・大ダコと同じ）
+      W.actions = A([['attack', 3, { noFlag: 'worm_sunk' }], ['eb_quicksand', 2, { noFlag: 'worm_sunk' }], ['eb_swallow_whole', 1, { noFlag: 'worm_sunk' }],
+        ['eb_worm_rear', SCHED, { every: [4, 1], noFlag: 'worm_sunk' }], ['eb_worm_surface', SCHED, { flag: 'worm_sunk' }]]);
       W.sunk = { phys: { slash: 0.15, blunt: 0.15, pierce: 1 }, elem: { fire: 0.15, water: 0.15, wind: 0.15, light: 0.15, dark: 0.15, earth: 1.5 } };
       W.drops = Object.assign({}, W.drops);
       W.desc = R.T('data.bosses_desert.desc');
@@ -114,9 +117,13 @@
     eb_hawk_volley: { name: R.T('bossActions.eb_hawk_volley.name'), kind: 'enemy', target: 'random', effects: [{ type: 'damage', formula: 'phys', power: 0.6, hits: 2, kind: 'pierce' }], fx: 'arrow', msg: R.T('bossActions.eb_hawk_volley.msg') },
     // 砂もぐり
     eb_worm_rear: { name: R.T('bossActions.eb_worm_rear.name'), kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: R.T('bossActions.eb_worm_rear.msg'),
-      telegraph: { text: R.T('bossActions.eb_worm_rear.telegraph.text'), pose: 'tele', tint: '#d8b878', next: 'eb_worm_sink', guard: 'element:earth' } },
-    eb_worm_sink: { name: R.T('bossActions.eb_worm_sink.name'), kind: 'enemy', target: 'self', effects: [{ type: 'special', id: 'desert_worm_sink' }], fx: 'earth', msg: R.T('bossActions.eb_worm_sink.msg'),
-      telegraph: { text: R.T('bossActions.eb_worm_sink.telegraph.text'), pose: 'idle', tint: '#b89868', next: 'eb_worm_burst', guard: 'defend', lethal: true } },
+      telegraph: { text: R.T('bossActions.eb_worm_rear.telegraph.text'), pose: 'tele', tint: '#d8b878', next: 'eb_worm_sink', guard: 'element:earth',
+        cancel: { element: 'earth', msg: R.T('bossActions.eb_worm_rear.telegraph.cancel.msg') } } },
+    // もぐりざまに足もとの 1 人へ食らいつく（もぐっている間も攻める）。もぐっている間に土で打つと引きずり出す（cancel.special）
+    eb_worm_sink: { name: R.T('bossActions.eb_worm_sink.name'), kind: 'enemy', target: 'random',
+      effects: [{ type: 'damage', formula: 'phys', power: 1.6, kind: 'pierce' }, { type: 'special', id: 'desert_worm_sink', on: 'self' }], fx: 'earth', msg: R.T('bossActions.eb_worm_sink.msg'),
+      telegraph: { text: R.T('bossActions.eb_worm_sink.telegraph.text'), pose: 'idle', tint: '#b89868', next: 'eb_worm_burst', guard: 'defend', lethal: true,
+        cancel: { element: 'earth', special: 'desert_worm_surface', msg: R.T('bossActions.eb_worm_sink.telegraph.cancel.msg') } } },
     eb_worm_burst: { name: R.T('bossActions.eb_worm_burst.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 1.0, guardPct: 0.12, kind: 'blunt' }, { type: 'special', id: 'desert_worm_surface' }], fx: 'strike3', msg: R.T('bossActions.eb_worm_burst.msg') },
     eb_worm_surface: { name: R.T('bossActions.eb_worm_surface.name'), kind: 'enemy', target: 'self', effects: [{ type: 'special', id: 'desert_worm_surface' }], fx: 'earth', msg: R.T('bossActions.eb_worm_surface.msg') },
     // 名なき砂の王

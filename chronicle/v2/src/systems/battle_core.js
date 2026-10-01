@@ -1289,6 +1289,8 @@
           tgt.reserved = null;
           yield { t: 'telegraph', u: tgt, text: '', pose: 'idle', tint: '', next: '', cancel: true };
           if (c.msg) yield this.m(c.msg.replace(/\{user\}/g, tgt.name));
+          // 消えたときの特別な効果（cancel.special = BC.specials の名前。砂もぐり: もぐっている間に土で打つと引きずり出す）
+          if (c.special && BC.specials && BC.specials[c.special]) yield* BC.specials[c.special](this, tgt, att, { type: 'special', id: c.special }, { cancel: true, element: info.element });
         }
         // v2（氷壁の巨人・雪原）: 守りの氷（守りの段が上がっている間）をその属性で割る → 守りの段が to（既定 −2）に落ちる
         const mt = !tgt.isParty && tgt.alive && tgt.d.melt;

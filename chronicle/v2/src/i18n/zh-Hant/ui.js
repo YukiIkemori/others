@@ -667,6 +667,9 @@
     'ui.skills.draw.1.label_2': '詳細',
     'ui.skills.draw.2.label': '下一位同伴',
     'ui.skills.draw.3.label': '返回',
+    // ---- src/systems/skill_tabs.js（技・術の種類のタブ）
+    'ui.skillTabs.combo': '合成',
+    'ui.skillTabs.other': '其他',
     // ---- src/screens/status.js
     'ui.status.draw.text': '擅長的武器',
     'ui.status.draw.text.join': '・',

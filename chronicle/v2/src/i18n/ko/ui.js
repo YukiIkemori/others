@@ -667,6 +667,9 @@
     'ui.skills.draw.1.label_2': '자세히',
     'ui.skills.draw.2.label': '다음 동료',
     'ui.skills.draw.3.label': '뒤로',
+    // ---- src/systems/skill_tabs.js（技・術の種類のタブ）
+    'ui.skillTabs.combo': '합성',
+    'ui.skillTabs.other': '기타',
     // ---- src/screens/status.js
     'ui.status.draw.text': '특기 무기',
     'ui.status.draw.text.join': '·',

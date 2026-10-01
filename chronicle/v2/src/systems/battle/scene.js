@@ -256,7 +256,7 @@
     let list = base.filter((p) => p.btn !== 'r');
     const live = st.phase === 'input' || st.phase === 'play' || st.phase === 'intro';
     const repeatOn = !!(live && st.B && st.B.repeatOn);
-    if (live && !st.L.tall) {
+    if (live && !st.L.tall && !(st.ui && st.ui.tabLR)) {
       if (repeatOn) list = [{ btn: 'l', label: R.T('battle.scene.prompts.list.0.label'), repeat: true }].concat(list.filter((p) => p.btn !== 'b' && p.btn !== 'l'));
       else list = list.concat([{ btn: 'l', label: R.T('battle.scene.prompts.list.0.label_2') }]);
       list = list.concat([{ btn: 'r', label: R.T('battle.scene.prompts.list.0.label_3', { speedLabel: Bt.speedLabel(speed()) }) }]);
@@ -433,10 +433,12 @@
         // ヒットストップ（当たった瞬間、実時間で 35〜55 ms だけ戦闘の時計を止める。playback.js の P.hitstop）
         if (!(st.hitstopUntil && R.Engine.time < st.hitstopUntil)) st.clock += dt * st.mul();
         const I = R.Input;
+        // 術の一覧に種類のタブ（2 つ以上）がある間は、L/R はタブの切り替え（command.js の menu。持ち主 2026-10-01）。速さ・リピートは一覧の外で
+        const tabLR = !!(st.ui && st.ui.tabLR);
         // 戦闘の速さ（R）: 通常 → ＋1 → ＋2 → 通常（どの場面でも。勝利の札・全滅の画面では変えない）
-        if (I.pressed('r') && st.phase !== 'result' && st.phase !== 'gameover' && st.phase !== 'closing') Bt.cycleSpeed();
+        if (!tabLR && I.pressed('r') && st.phase !== 'result' && st.phase !== 'gameover' && st.phase !== 'closing') Bt.cycleSpeed();
         // リピートの ON／OFF（L。持ち主 2026-09-28「L でリピートの切り替え」）。命令の窓では今すぐ始め、動いている間は次のラウンドから
-        if (I.pressed('l') && st.B && (st.phase === 'input' || st.phase === 'play' || st.phase === 'intro')) {
+        if (!tabLR && I.pressed('l') && st.B && (st.phase === 'input' || st.phase === 'play' || st.phase === 'intro')) {
           const can = (st.partyOpts || []).includes('repeat');
           if (st.B.repeatOn) { st.B.setRepeat(false); if (R.UIK && R.UIK.toast) R.UIK.toast(R.T('battle.scene.makeScene.battle.update.toast'), { anchor: 'bl' }); }
           else if (can && st.phase === 'input') st.chipTap = 'repeat';

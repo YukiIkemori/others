@@ -667,6 +667,9 @@
     'ui.skills.draw.1.label_2': '詳しく',
     'ui.skills.draw.2.label': '次の仲間',
     'ui.skills.draw.3.label': '戻る',
+    // ---- src/systems/skill_tabs.js（技・術の種類のタブ）
+    'ui.skillTabs.combo': '合成',
+    'ui.skillTabs.other': 'その他',
     // ---- src/screens/status.js
     'ui.status.draw.text': '得意な武器',
     'ui.status.draw.text.join': '・',

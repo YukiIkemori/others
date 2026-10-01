@@ -79,6 +79,17 @@ const { ok, section, done } = require('./lib/testkit');
   const marks = await page.evaluate(() => RPG.Field.wayfind.info(RPG.DB.maps.desert_camp3).exits.filter((e) => e.to.map === 'desert_tomb_1').map((e) => [e.x, e.y, e.w, e.h]));
   ok('王墓の入口の印は 1 つ（2 マス幅）', marks.length === 1 && marks[0][2] === 2, marks);
 
+  section('砂の王墓 1 階の看板（壁の中から床へ）');
+  {
+    await put('desert_tomb_1', 26, 37, 'n');
+    await Bw.press(page, 'up');   // 1 歩北（26,36）へ。看板の前
+    await page.waitForTimeout(400);
+    await Bw.press(page, 'a');
+    const read = await Bw.waitFor(page, 'RPG.UIK.Message.busy() || RPG.Events.busy()', 3000);
+    ok('入口の広間の看板（26,35）を前の床から読める', read, await pos());
+    for (let i = 0; i < 8 && await page.evaluate(() => RPG.UIK.Message.busy() || RPG.Events.busy()); i++) { await Bw.press(page, 'a'); await page.waitForTimeout(250); }
+  }
+
   section('幽霊船の渡り板（同じ形: 2 マス幅の戸口を 1 つに）');
   for (const x of [28, 29]) {
     await put('ghost_ship_1', x, 23, 's');

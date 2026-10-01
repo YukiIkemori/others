@@ -2,6 +2,7 @@
 // 持ち主の製品版の試遊（2026-10-01）の砂漠の報告で直した物の戻りの確かめ: node v2/tools/test_desert_fixes_1001.js
 //   カシムの門の入口（ワープ）は描いた門の前（西 d_west x 55・東 d_east x 4）で、門の口の幅ぜんぶ。町から出て着く所は入口の外。
 //   砂の王墓の入口の印が 2 つ出ていた（1 マスの階段を 2 つ並べていた）→ w 2 の階段 1 つ。同じ形（隣り合う同じ行き先の入口が 2 つ）が他に無いこと。
+//   砂の王墓 1 階の封じの扉の脇の壁に印（switch の物）、入口の広間の壁に看板がめり込んでいた → 印は無し・看板は床へ。
 //   本物の入力で門・王墓へ歩いて入るのは test_desert_fixes_1001_browser.js。
 'use strict';
 const fs = require('fs');
@@ -101,6 +102,25 @@ section('同じ行き先の入口が隣り合って 2 つ（入口の印が 2 �
   ok('隣り合う同じ行き先の入口の組が無い（幅のある入口は w・h の 1 つの物で）', bad.length === 0, bad);
   const gs = (M.ghost_ship_1.objects || []).filter((o) => o.type === 'door' && o.to && o.to.map === 'nerei');
   ok('幽霊船の渡り板（ネレイへ戻る）も 1 つの戸口で w 2', gs.length === 1 && gs[0].x === 28 && gs[0].w === 2, gs);
+}
+
+section('砂の王墓の壁にめり込んだ物（1〜3 階）');
+{
+  // 戸口・階段・出口（壁のマスに置く物）のほかは、床のマスに置く。流砂の「調べる」は流砂（shallow）の上で良い
+  const bad = [];
+  for (const id of ['desert_tomb_1', 'desert_tomb_2', 'desert_tomb_3']) {
+    const m = M[id];
+    for (const o of m.objects || []) {
+      if (['door', 'stairs', 'exit'].includes(o.type) || o.x == null) continue;
+      const c = R.MapUtil.cell(m, o.x, o.y) || {};
+      if ((c.solid || c.walk === false) && !(o.type === 'examine' && c.mat === 'shallow')) bad.push(`${id} ${o.type}:${o.id || o.event || ''}@${o.x},${o.y}`);
+    }
+  }
+  ok('王墓の物はどれも床の上（壁の中に印・看板が立たない）', bad.length === 0, bad);
+  const m = M.desert_tomb_1;
+  ok('1 階の封じの扉の脇の壁に印（switch の物）が無い', !(m.objects || []).some((o) => o.type === 'prop' && o.id === 'switch'));
+  const sg = (m.objects || []).find((o) => o.type === 'sign');
+  ok('1 階の看板は入口の広間の床（26,35）で、前の床から読める', !!sg && sg.x === 26 && sg.y === 35 && pass(m, 26, 36), sg);
 }
 
 done('test_desert_fixes_1001');

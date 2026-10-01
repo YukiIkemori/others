@@ -1,6 +1,8 @@
 // BSCENE: コマンド（MODERN_UI §6.17・§2.3）。ラウンドの初めの一行の命令（戦う／リピート／逃げる）→ 1 人ずつ行動の一覧
 // （持っている武器の系統の名前・術・防御・道具）→ 技・術・道具の一覧（見出し「アルン › 剣」、M n、MP 0 は青緑、足りない物は灰色、NEW）
-// → ねらい（targeting.js）。カーソル記憶は R.Game.battle.cursor[人の id]（設定 cursorMemory）。NEW は一覧を見せたら R.Game.seenSkill に書く。
+// → ねらい（targeting.js）。技・術は MP の少ない順（同じなら覚えた順）。術は属性のタブ（R.SkillTabs。←→ と L/R と札のクリック。
+//   タブが 2 つ以上の間は L/R が速さ・リピートでなくタブになる。scene.js が w.tabLR を見て止める）。技は今の武器の系統だけなのでタブは出ない。
+// カーソル記憶は R.Game.battle.cursor[人の id]（設定 cursorMemory）。NEW は一覧を見せたら R.Game.seenSkill に書く。
 // 縦持ちは親指の届く横一列の大きな札と説明の帯（battle_tall.png）。
 (function (R) {
   'use strict';
@@ -33,6 +35,8 @@
     return new Promise((resolve) => {
       const n = o.rows.length;
       const w = { sel: Math.max(0, Math.min(n - 1, o.sel || 0)), rects: [], prompts: o.prompts, tallPrompts: o.tallPrompts, top: 0, o };
+      w.tabLR = !!(o.tabs && o.tabs.groups.length > 1 && R.SkillTabs);
+      w.tabRects = [];
       let last = -1;
       const done = (v) => { if (st.ui === w) st.ui = null; if (o.onClose) o.onClose(w); resolve(v); };
       const choose = (i) => {
@@ -44,6 +48,8 @@
         const I = R.Input;
         if (st.chipTap && o.onChip) { const c = st.chipTap; st.chipTap = null; const r = o.onChip(c); if (r !== undefined) { done(r); return; } }
         st.chipTap = null;
+        // 種類のタブ（o.tabs = {groups, index}）: ←→・L/R・札のクリックで {tab: i} を返す（呼んだ側が一覧を替えて開き直す）
+        if (w.tabLR) { const j = R.SkillTabs.input(o.tabs.groups.length, o.tabs.index, w.tabRects, { arrows: !o.horizontal, lr: true }); if (j >= 0) { done({ tab: j, sel: w.sel }); return; } }
         if (!n) { if (I.pressed('b')) done('back'); return; }
         const fwd = o.horizontal ? 'right' : 'down', back = o.horizontal ? 'left' : 'up';
         if (I.repeat(fwd)) { w.sel = (w.sel + 1) % n; sfx('cursor'); }
@@ -76,7 +82,7 @@
   const K = () => _.K;
   function listPanel(g, w, geo) {
     const k = R.uiScale || 1, Kt = K(), t = R.Engine.time;
-    const rows = w.o.rows, rowH = geo.rowH * k, head = geo.title ? 28 * k : 6 * k;
+    const rows = w.o.rows, rowH = geo.rowH * k, barH = w.tabLR ? (R.SkillTabs.BAR_H + 4) * k : 0, head = (geo.title ? 28 * k : 6 * k) + barH;
     const vis = Math.min(rows.length, geo.maxRows || 7);
     if (w.sel < w.top) w.top = w.sel;
     if (w.sel >= w.top + vis) w.top = w.sel - vis + 1;
@@ -91,6 +97,7 @@
       Kt.text(g, geo.title, r.x + 12 * k, r.y + 8 * k, { size: 11 * k, weight: 700, color: Kt.COL.gold, raw: true });
       Kt.hline(g, r.x + 8 * k, r.x + r.w - 8 * k, r.y + 25 * k, 0.2);
     }
+    if (w.tabLR) w.tabRects = R.SkillTabs.drawBar(g, { x: r.x + 8 * k, y: r.y + (geo.title ? 28 : 4) * k, w: r.w - 16 * k, h: R.SkillTabs.BAR_H * k }, w.o.tabs.groups, w.o.tabs.index, { glyphs: ['l', 'r'], size: 12 });
     w.rects = [];
     for (let j = 0; j < vis; j++) {
       const i = w.top + j, row = rows[i];
@@ -174,11 +181,12 @@
     const k = R.uiScale || 1, Kt = K(), L = st.L, t = R.Engine.time;
     const rows = w.o.rows, pad = 12 * k;
     const top = L.cmdY - 8 * k, rowH = 34 * k;
-    const maxRows = Math.max(2, Math.floor((L.chipsY - top - 100 * k) / rowH));
+    const barH = w.tabLR ? (R.SkillTabs.BAR_H + 4) * k : 0;
+    const maxRows = Math.max(2, Math.floor((L.chipsY - top - 100 * k - barH) / rowH));
     const vis = Math.min(rows.length, maxRows);
     if (w.sel < w.top) w.top = w.sel;
     if (w.sel >= w.top + vis) w.top = w.sel - vis + 1;
-    const r = { x: pad, y: top, w: R.W - pad * 2, h: 30 * k + vis * rowH + 8 * k };
+    const r = { x: pad, y: top, w: R.W - pad * 2, h: 30 * k + barH + vis * rowH + 8 * k };
     Kt.box(g, r, { a: 0.72, r: 12 * k, edge: 'rgba(240,228,200,0.2)' });
     Kt.text(g, title, r.x + 14 * k, r.y + 9 * k, { size: 13 * k, weight: 700, color: Kt.COL.gold, raw: true });
     // 右上に「戻る」（縦持ちはボタン表示を出さないので、押せる札で）
@@ -192,9 +200,10 @@
       const hh = Math.max(bh, R.minTouch || 0);
       w.backRect = { x: br.x - 6 * k, y: br.y + bh - hh, w: bw + 12 * k, h: hh };   // 上へ広げる（下の行に掛からない）
     }
+    if (w.tabLR) w.tabRects = R.SkillTabs.drawBar(g, { x: r.x + 10 * k, y: r.y + 30 * k, w: r.w - 20 * k, h: R.SkillTabs.BAR_H * k }, w.o.tabs.groups, w.o.tabs.index, { glyphs: ['l', 'r'], size: 13 });
     w.rects = [];
     for (let j = 0; j < vis; j++) {
-      const i = w.top + j, row = rows[i], ry = r.y + 30 * k + j * rowH, f = i === w.sel;
+      const i = w.top + j, row = rows[i], ry = r.y + 30 * k + barH + j * rowH, f = i === w.sel;
       const rr = { x: r.x + 6 * k, y: ry, w: r.w - 12 * k, h: rowH - 2 * k, i };
       w.rects.push(rr);
       if (f) Kt.focus(g, rr, t);
@@ -338,15 +347,30 @@
       else if (sel.key === 'weapon') {
         const rows = [];
         if (atk) rows.push({ id: 'attack', label: R.T('battle.command.member.attack.label'), cmd: 'attack', target: atk.target || 'enemy', usable: true });
-        for (const s of (sk && sk.list) || []) rows.push(skillRow(s, 'skill', sk.target));
+        // 技は MP の少ない順（同じなら覚えた順。持ち主 2026-10-01）。「攻撃」はいつも先頭
+        for (const s of sortByMp(u, (sk && sk.list) || [])) rows.push(skillRow(s, 'skill', sk.target));
         if (rows.length === 1 && atk) res = await targetFor(st, u, rows[0], M);
         else res = await subList(st, u, rows, `${u.name} › ${wname}`, 'weapon', M);
-      } else if (sel.key === 'spell') res = await subList(st, u, sp.list.map((s) => skillRow(s, 'spell', sp.target)), R.T('battle.command.member.res.subList', { name: u.name }), 'spell', M);
+      } else if (sel.key === 'spell') {
+        // 術は属性のタブに分ける（火・水 … 合成）。中は MP の少ない順
+        const srows = sp.list.map((s) => Object.assign(skillRow(s, 'spell', sp.target), { kind: 'spell', mp: s.mp }));
+        const groups = R.SkillTabs ? R.SkillTabs.group({ spells: srows.map((r) => r.id) }, srows, { cost: (id) => (srows.find((r) => r.id === id) || {}).mp || 0 }) : [{ id: 'all', items: srows }];
+        res = await subList(st, u, groups.length === 1 ? groups[0].items : srows, R.T('battle.command.member.res.subList', { name: u.name }), 'spell', M, groups.length > 1 ? groups : null);
+      }
       else if (sel.key === 'item') res = await subList(st, u, it.list.map((s) => skillRow(s, 'item', it.target)), R.T('battle.command.member.res.subList_2', { name: u.name }), 'item', M);
       else if (sel.opt) res = await targetFor(st, u, { id: sel.key, cmd: sel.key, target: sel.opt.target || 'self' }, M);
       if (res && res !== 'back') return res;
     }
   };
+
+  /** 戦闘の一覧の行（{id, mp}）を MP の少ない順に（R.SkillTabs.sortIds。同じなら覚えた順 → id） */
+  function sortByMp(u, list) {
+    if (!R.SkillTabs || !list.length) return list;
+    const by = {}; for (const s of list) by[s.id] = s;
+    const ids = list.map((s) => s.id);
+    return R.SkillTabs.sortIds({ techs: ids, spells: ids }, ids, (id) => by[id].mp || 0).map((id) => by[id]);   // 一覧の並び = 覚えた順
+  }
+  C.sortByMp = sortByMp;   // テスト用
 
   function skillRow(s, cmd, target) {
     const dbk = cmd === 'skill' ? 'techs' : cmd === 'spell' ? 'spells' : 'items';
@@ -389,18 +413,24 @@
 
   C.subListWidth = subListWidth;   // テスト用
 
-  async function subList(st, u, rows, title, memKey, M) {
+  /** groups（R.SkillTabs.group の結果。2 つ以上）があれば種類のタブ。タブは人ごとに覚え（R.SkillTabs.remember、この起動の間）、
+   *  カーソルはタブごとに M[memKey + ':' + タブ] */
+  async function subList(st, u, rows, title, memKey, M, groups) {
     const k = R.uiScale || 1;
     const shown = new Set();
+    const cid = (u && (u.id || (u.c && u.c.id))) || (u && u.uid);
+    let tab = groups ? R.SkillTabs.startIndex(groups, cid, 'battle_' + memKey) : 0, anim = true;
+    const ckey = () => (groups ? memKey + ':' + groups[tab].id : memKey);
     for (;;) {
-      const start = Math.min(rows.length - 1, M[memKey] || 0);
+      if (groups) rows = groups[tab].items;
+      const start = Math.min(rows.length - 1, M[ckey()] || 0);
       st.head = { name: R.T('battle.command.subList.head.name', { name: u.name }), sub: memKey === 'weapon' ? R.T('battle.command.subList.head.sub', { p0: C.WNAME[u.wtype] || R.T('battle.command.subList.head.sub_2') }) : memKey === 'spell' ? R.T('battle.command.subList.head.sub_3') : R.T('battle.command.subList.head.sub_4') };
       const i = await menu(st, {
-        rows, sel: Math.max(0, start), t0: R.Engine.time,
+        rows, sel: Math.max(0, start), t0: anim ? R.Engine.time : null, tabs: groups ? { groups, index: tab } : null,
         prompts: st.L.tall ? null : [{ btn: 'a', label: R.T('battle.command.subList.i.prompts.0.label') }, { btn: 'b', label: R.T('battle.command.subList.i.prompts.1.label') }, { btn: 'x', label: R.T('battle.command.subList.i.prompts.2.label') }, { btn: 'r', label: R.T('battle.command.subList.i.prompts.3.label') }],
         tallPrompts: false,
         onFocus(i) { shown.add(i); },
-        onClose() { markSeen([...shown].map((i) => rows[i]).filter(Boolean)); },
+        onClose() { const rs = rows; markSeen([...shown].map((i) => rs[i]).filter(Boolean)); shown.clear(); },
         detail(i) { const r = rows[i]; if (r && R.Screens && R.Screens.open) R.Screens.open('detail', { kind: r.cmd === 'skill' ? 'tech' : r.cmd, id: r.id }); },
         desc(i) {
           const r = rows[i];
@@ -411,8 +441,9 @@
         },
         draw(g, w) {
           if (st.L.tall) { tallList(g, w, st, title); return; }
-          const h = (28 + Math.min(rows.length, 7) * 26 + 8) * k;
-          const pw = C.subListWidth(rows, title);
+          const h = (28 + (w.tabLR ? R.SkillTabs.BAR_H + 4 : 0) + Math.min(rows.length, 7) * 26 + 8) * k;
+          // タブの帯があるときは、どのタブでも同じ幅（切り替えで窓が揺れない）。帯が入る幅（240）以上
+          const pw = groups ? Math.max(240, ...groups.map((gr) => C.subListWidth(gr.items, title))) : C.subListWidth(rows, title);
           const p = anchorFor(st, u.uid, pw * k, h, -200, -228);
           const r = listPanel(g, w, { x: p.x, y: p.y, w: pw, rowH: 26, title, size: 14, maxRows: 7 });
           // 説明は右隣（右上の一覧に重ねない。入らなければ一覧の下）
@@ -429,8 +460,16 @@
           }
         },
       });
+      if (i && i.tab != null) {
+        // タブを替えた: 今のカーソルを覚え、新しいタブの一覧で開き直す（開く動きはしない）
+        M[ckey()] = i.sel || 0;
+        tab = i.tab; anim = false;
+        R.SkillTabs.remember(cid, 'battle_' + memKey, groups[tab].id);
+        continue;
+      }
+      anim = true;
       if (i === 'back') return 'back';
-      M[memKey] = i;
+      M[ckey()] = i;
       const res = await targetFor(st, u, rows[i], M);
       if (res !== 'back') return res;
     }
