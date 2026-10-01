@@ -84,11 +84,12 @@ def sub(text, t0, t1, y=1015, size=None):
     T.append(dict(kind='sub', text=text, style=st, t0=t0, t1=t1, x=960, y=y, fin=0.2, fout=0.3))
 
 
-def vo(vid, at, gain=0, y=1015, nosub=False, size=None):
-    """声を置いて、字幕も出す"""
+def vo(vid, at, gain=0, y=1015, nosub=False, size=None, tmax=None):
+    """声を置いて、字幕も出す（tmax: 字幕をそこで切る。次のカットの字幕と重ねない）"""
     VOICE.append(dict(file=vid, at=at, gain=gain + VBOOST.get(vid, 0)))
     if not nosub and vid in SUBS and vid not in NOSUB:
-        sub(SUBS[vid], at - 0.05, at + VDUR.get(vid, 3.0) + 0.35, y=y, size=size)
+        t1 = at + VDUR.get(vid, 3.0) + 0.35
+        sub(SUBS[vid], at - 0.05, min(t1, tmax) if tmax else t1, y=y, size=size)
 
 
 def cut(clip, at, dur, src=0.0, ev=False, ev_voice=True, ev_jingle=True, vgain=0, jgain=-5, suby=1015, nosub=False, **k):
@@ -103,7 +104,7 @@ def cut(clip, at, dur, src=0.0, ev=False, ev_voice=True, ev_jingle=True, vgain=0
                 if not (0 <= tc < dur - 0.05) or not e.get('id'):
                     continue
                 if ev_voice and e['fn'] in ('voice', 'battleVoiceId'):
-                    vo(e['id'], at + tc, gain=vgain, y=suby, nosub=nosub)
+                    vo(e['id'], at + tc, gain=vgain, y=suby, nosub=nosub, tmax=at + dur + 0.05)
                 elif ev_jingle and e['fn'] == 'jingle':
                     SFX.append(dict(id='jingle_' + e['id'], at=at + tc, gain=jgain))
 
