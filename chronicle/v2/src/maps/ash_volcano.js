@@ -131,7 +131,7 @@
         ],
         zones: [{ rect: [0, 0, 56, 48], zone: 'z_ash_volcano' }],
         light: AK.LIGHT_VOLCANO, dark: false,
-        bgm: 'cave', bbg: 'ash',
+        bgm: 'cave', bbg: 'volcano',
         meta: { chestsInfo: true, floor: R.T('map.ash_volcano.ash_volcano_1.meta.floor'), sub: R.T('map.ash_volcano.ash_volcano_1.meta.sub'), live: [{ cells: crossA, cond: '!ash_sluice' }, { cells: crossB, cond: 'ash_sluice' }] },
         // 1 枚の下絵（両方の渡り場が冷えた形）。流れている方の渡り場は閉じた絵（溶岩）をそのマスに置く。壁画・岩戸・溶岩は絵、lava_glow は光だけ
         art: { image: 'ash/under/ash_volcano_1', closed: 'ash/under/ash_volcano_1_closed', emit: 'ash/under/ash_volcano_1_emit', painted: ['lava_glow'] },
@@ -204,7 +204,7 @@
         ],
         zones: [{ rect: [16, 3, 12, 14], zone: null }, { rect: [0, 0, 44, 36], zone: 'z_ash_crater' }].filter((z) => z.zone),
         light: AK.LIGHT_VOLCANO, dark: false,
-        bgm: 'cave', bbg: 'ash',
+        bgm: 'cave', bbg: 'volcano',
         meta: { chestsInfo: true, floor: R.T('map.ash_volcano.ash_volcano_2.meta.floor'), sub: R.T('map.ash_volcano.ash_volcano_2.meta.sub') },
         // 1 枚の下絵（溶岩の湖・岩棚・土手道・卵の島と卵）。lava_glow は光だけ
         art: { image: 'ash/under/ash_volcano_2', emit: 'ash/under/ash_volcano_2_emit', painted: ['lava_glow'] },

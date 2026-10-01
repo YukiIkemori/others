@@ -36,7 +36,7 @@
         exits: [],
         triggers: [{ id: 'arrive', on: 'enter', event: 'isles_ghost_arrive' }],
         zones: [{ rect: null, zone: 'z_r_isles_ship', cond: WISP }],
-        light: IK.LIGHT_SHIP, dark: false, bgm: 'ghost', bbg: 'isles',
+        light: IK.LIGHT_SHIP, dark: false, bgm: 'ghost', bbg: 'ship',
         art: P.art,
         meta: { chestsInfo: true, floor: R.T('map.isles_ghostship.ghost_ship_1.meta.floor'), sub: R.T('map.isles_ghostship.ghost_ship_1.meta.sub') },
       });
@@ -64,7 +64,7 @@
         exits: [],
         triggers: [],
         zones: [{ rect: null, zone: 'z_r_isles_ship', cond: WISP }],
-        light: IK.LIGHT_SHIP, dark: false, bgm: 'ghost', bbg: 'isles',
+        light: IK.LIGHT_SHIP, dark: false, bgm: 'ghost', bbg: 'ship',
         art: P.art,
         meta: { chestsInfo: true, floor: R.T('map.isles_ghostship.ghost_ship_2.meta.floor'), sub: R.T('map.isles_ghostship.ghost_ship_2.meta.sub') },
       });
@@ -94,7 +94,7 @@
           { id: 'captain', x: 11, y: 12, w: 3, h: 7, on: 'step', event: 'isles_captain', cond: '!isles_captain' },
         ],
         zones: [{ rect: null, zone: 'z_r_isles_ship', cond: WISP }],
-        light: IK.LIGHT_HOLD, dark: [{ rect: [15, 0, 26, 30] }], darkAlpha: 0.78, bgm: 'ghost', bbg: 'isles',   // 暗がりは船倉のまん中だけ（x 15〜40。階段の脇と船長室は明るい）。膜は少し薄く（床と壁の形が読める）
+        light: IK.LIGHT_HOLD, dark: [{ rect: [15, 0, 26, 30] }], darkAlpha: 0.78, bgm: 'ghost', bbg: 'ship',   // 暗がりは船倉のまん中だけ（x 15〜40。階段の脇と船長室は明るい）。膜は少し薄く（床と壁の形が読める）
         art: P.art,
         meta: { chestsInfo: true, floor: R.T('map.isles_ghostship.ghost_ship_3.meta.floor'), sub: R.T('map.isles_ghostship.ghost_ship_3.meta.sub') },
       });

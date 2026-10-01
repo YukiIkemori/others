@@ -1,5 +1,5 @@
 // 灰の荒野の編成（BATTLE の形。WORLD_REDESIGN §4.7・§4.10・§3.5-1: 地方の話の中の戦いはすべて scale:'tier'）。
-//   炎の試練の 5 回戦（tr_ash_r1〜r4・tr_b_zakuro）、炎の番犬・溶岩の巨獣（背景を灰の荒野に）、記録院の写し手（八百長を受けたとき）。
+//   炎の試練の 5 回戦（tr_ash_r1〜r4・tr_b_zakuro）、炎の番犬・溶岩の巨獣（背景は火口の中 volcano）、記録院の写し手（八百長を受けたとき）。
 (function (R) {
   'use strict';
   const T = R.DB.troops;
@@ -12,6 +12,6 @@
     tr_b_zakuro: bout([['b_zakuro', 1]], { lvOff: 3, bgm: 'boss' }),
     tr_ash_copyists: bout([['ash_copyist', 3]], { lvOff: 1 }),
   });
-  if (T.tr_b_hellhound) Object.assign(T.tr_b_hellhound, { bg: 'ash' });
-  if (T.tr_b_lavabeast) Object.assign(T.tr_b_lavabeast, { bg: 'ash' });
+  if (T.tr_b_hellhound) Object.assign(T.tr_b_hellhound, { bg: 'volcano' });   // 火山の中（描いた絵 bbg/volcano）
+  if (T.tr_b_lavabeast) Object.assign(T.tr_b_lavabeast, { bg: 'volcano' });
 })(window.RPG);

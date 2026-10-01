@@ -34,8 +34,8 @@
     tr_b_orrery: boss([['b_orrery', 1]], { scale: 'tier', lvOff: 6, bg: 'tower', bgm: 'boss' }),
     tr_b_stareater: boss([['b_stareater', 1]], { scale: 'tier', lvOff: 3, bg: 'tower', bgm: 'boss2' }),
     // ライバル（町で戦う。負けても続く）
-    tr_b_rowell1: boss([['b_rowell1', 1]], { tier: 2, lvOff: 2, bgm: 'rival' }),
-    tr_b_rowell2: boss([['b_rowell2', 1]], { tier: 5, lvOff: 2, bgm: 'rival' }),
+    tr_b_rowell1: boss([['b_rowell1', 1]], { tier: 2, lvOff: 2, bg: 'road', bgm: 'rival' }),   // 町の門の外の夜の道（story_t2）
+    tr_b_rowell2: boss([['b_rowell2', 1]], { tier: 5, lvOff: 2, bg: 'road', bgm: 'rival' }),   // 同じ（story_t5）
     // 終盤 白の大書庫
     tr_b_bookgolem: boss([['b_bookgolem', 1]], { tier: 8, lvOff: 2, bg: 'library', bgm: 'boss2' }),
     tr_b_heroshades: boss([['b_shade_sword', 1], ['b_shade_prayer', 1], ['b_shade_star', 1]], { tier: 8, lvOff: 2, bg: 'library', bgm: 'boss2' }),

@@ -32,7 +32,7 @@
       G(6, [['@orc', 1, 1], ['@salamander', 1, 2]]),
       G(3, [['@chimera', 1, 1], ['@salamander', 1, 1]]),
     ] },
-    z_ash_volcano: { region: 'r_ash', tier: 'dyn', lvOff: 1, bg: 'ash', groups: [
+    z_ash_volcano: { region: 'r_ash', tier: 'dyn', lvOff: 1, bg: 'volcano', groups: [
       G(9, [['@salamander', 3, 3]]),
       G(8, [['@gargoyle', 2, 3]]),
       G(7, [['@imp', 3, 4]]),
@@ -40,7 +40,7 @@
       G(4, [['@imp', 4, 5]]),
       G(3, [['@salamander', 4, 4]]),
     ] },
-    z_ash_crater: { region: 'r_ash', tier: 'dyn', lvOff: 1, bg: 'ash', groups: [
+    z_ash_crater: { region: 'r_ash', tier: 'dyn', lvOff: 1, bg: 'volcano', groups: [
       G(8, [['@gargoyle', 2, 3]]),
       G(7, [['@salamander', 3, 4]]),
       G(6, [['@chimera', 1, 1], ['@imp', 2, 2]]),

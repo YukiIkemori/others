@@ -78,7 +78,7 @@
         // 封じの扉は壁に穴を開けずに扉の物で通す（上の SEAL）。開いたら同じ見た目の 'O' に替える（扉のまわりのチャンクを焼き直し、金の印を消す）
         tilePatches: [{ cond: DOOR, rect: [27, 19, 3, 2], rows: ['OOO', 'OOO'] }],
         zones: [{ rect: null, zone: 'z_desert_tomb' }],
-        light: DK.LIGHT_TOMB, dark: false, bgm: 'pyramid', bbg: 'cave',
+        light: DK.LIGHT_TOMB, dark: false, bgm: 'pyramid', bbg: 'pyramid',
         art: { image: 'desert/under/tomb_1', closed: 'desert/under/tomb_1_closed', painted: [] },   // 1 枚の下絵（隠し部屋は閉じた形の層）
         meta: { chestsInfo: true, floor: R.T('map.desert_tomb.desert_tomb_1.meta.floor'), sub: R.T('map.desert_tomb.desert_tomb_1.meta.sub') },
       });
@@ -140,7 +140,7 @@
           { cond: 'desert_worm', rect: [42, 26, 3, 16], rows: new Array(16).fill('sss') },
         ],
         zones: [{ rect: [18, 35, 21, 11], zone: 'z_desert_tomb' }, { rect: null, zone: 'z_desert_tomb' }],
-        light: { ambient: '#4c4a7e', k: 0.62, mood: 'dark' }, dark: true, bgm: 'pyramid', bbg: 'cave',
+        light: { ambient: '#4c4a7e', k: 0.62, mood: 'dark' }, dark: true, bgm: 'pyramid', bbg: 'pyramid',
         art: { image: 'desert/under/tomb_2', closed: 'desert/under/tomb_2_closed', painted: [] },   // 1 枚の下絵（_tools/under/desert2）
         meta: { chestsInfo: true, floor: R.T('map.desert_tomb.desert_tomb_2.meta.floor'), sub: R.T('map.desert_tomb.desert_tomb_2.meta.sub') },
       });
@@ -191,7 +191,7 @@
           { id: 'king', x: 19, y: 7, w: 15, h: 3, on: 'step', event: 'desert_tomb_king', cond: '!desert_king' },
         ],
         zones: [{ rect: [0, 12, 52, 32], zone: 'z_desert_tomb_deep' }],
-        light: DK.LIGHT_TOMB, dark: false, bgm: 'pyramid', bbg: 'cave',
+        light: DK.LIGHT_TOMB, dark: false, bgm: 'pyramid', bbg: 'pyramid',
         art: { image: 'desert/under/tomb_3', painted: [] },   // 1 枚の下絵（_tools/under/desert2）
         meta: { chestsInfo: true, floor: R.T('map.desert_tomb.desert_tomb_3.meta.floor'), sub: R.T('map.desert_tomb.desert_tomb_3.meta.sub') },
       });

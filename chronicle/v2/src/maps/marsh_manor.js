@@ -59,7 +59,7 @@
         triggers: [{ id: 'arrive', on: 'enter', event: 'manor_arrive', once: true }],
         zones: [{ rect: [0, 0, 48, 36], zone: 'z_marsh_manor' }],
         light: MK.LIGHT_MANOR, dark: false,
-        bgm: 'ghost', bbg: 'tower',
+        bgm: 'ghost', bbg: 'manor',
         meta: { chestsInfo: true, floor: R.T('map.marsh_manor.marsh_manor_1.meta.floor'), sub: R.T('map.marsh_manor.marsh_manor_1.meta.sub') },
         art: { image: 'lighthouse/under/manor_1', painted: [] },
       });
@@ -113,7 +113,7 @@
         ],
         zones: [{ rect: [0, 18, 48, 18], zone: 'z_marsh_manor' }],
         light: MK.LIGHT_MANOR, dark: false,
-        bgm: 'ghost', bbg: 'tower',
+        bgm: 'ghost', bbg: 'manor',
         meta: { chestsInfo: true, floor: R.T('map.marsh_manor.marsh_manor_2.meta.floor'), sub: R.T('map.marsh_manor.marsh_manor_2.meta.sub') },
         art: { image: 'lighthouse/under/manor_2', painted: [] },
       });

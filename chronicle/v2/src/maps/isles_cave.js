@@ -33,7 +33,7 @@
           { cond: 'isles_tide_high', rect: [30, 17, 2, 4], rows: ['ww', 'ww', 'ww', 'ww'] },
         ],
         zones: [{ rect: null, zone: 'z_r_isles_cave' }],
-        light: IK.LIGHT_CAVE, dark: false, bgm: 'cave', bbg: 'cave',
+        light: IK.LIGHT_CAVE, dark: false, bgm: 'cave', bbg: 'watercave',
         art: Object.assign({}, P.art, { painted: ['glow_plankton'] }),
         meta: { chestsInfo: true, floor: R.T('map.isles_cave.isles_cave_1.meta.floor'), sub: R.T('map.isles_cave.isles_cave_1.meta.sub') },
       });
@@ -58,7 +58,7 @@
           { id: 'octopus', x: 14, y: 10, w: 18, h: 1, on: 'step', event: 'isles_octopus', cond: '!isles_octopus' },
         ],
         zones: [{ rect: null, zone: 'z_r_isles_cave' }],
-        light: IK.LIGHT_CAVE, dark: false, bgm: 'cave', bbg: 'cave',
+        light: IK.LIGHT_CAVE, dark: false, bgm: 'cave', bbg: 'watercave',
         art: Object.assign({}, P.art, { painted: ['glow_plankton'] }),
         meta: { chestsInfo: true, floor: R.T('map.isles_cave.isles_cave_2.meta.floor'), sub: R.T('map.isles_cave.isles_cave_2.meta.sub') },
       });

@@ -27,7 +27,7 @@
       G(6, [['@wisp', 2, 3]]),
       G(4, [['@jelly', 3, 4]]),
     ] },
-    z_marsh_manor: { region: 'r_marsh', tier: 'dyn', lvOff: 1, bg: 'tower', groups: [
+    z_marsh_manor: { region: 'r_marsh', tier: 'dyn', lvOff: 1, bg: 'manor', groups: [
       G(9, [['@ghost', 2, 3]]),
       G(8, [['@doll', 2, 3]]),
       G(6, [['@spider', 2, 3]]),
@@ -36,7 +36,7 @@
       G(3, [['@wisp', 4, 5]]),
       G(1.5, [['@mimic', 1, 1]], { solo: true }),
     ] },
-    z_marsh_bog: { region: 'r_marsh', tier: 'dyn', lvOff: 1, bg: 'marsh', groups: [
+    z_marsh_bog: { region: 'r_marsh', tier: 'dyn', lvOff: 1, bg: 'swamp', groups: [
       G(9, [['@frog', 2, 3]]),
       G(7, [['@lizardman', 2, 2]]),
       G(6, [['@frog', 1, 2], ['@wisp', 1, 1]]),

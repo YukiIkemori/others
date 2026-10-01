@@ -45,7 +45,7 @@
       G(7, [['@cactus', 2, 3]]),
       G(6, [['@snake', 2, 2]]),
     ] },
-    z_desert_tomb: { region: 'r_desert', tier: 'dyn', lvOff: 1, bg: 'cave', groups: [
+    z_desert_tomb: { region: 'r_desert', tier: 'dyn', lvOff: 1, bg: 'pyramid', groups: [
       G(9, [['@mummy', 2, 3]]),
       G(6, [['@bat', 2, 3]]),
       G(6, [['@scorpion', 2, 3]]),
@@ -55,7 +55,7 @@
       G(3, [['@bat', 4, 4]]),                                   // コウモリの群れ（4 体）
       G(1.5, [['@mimic', 1, 1]], { solo: true }),
     ] },
-    z_desert_tomb_deep: { region: 'r_desert', tier: 'dyn', lvOff: 1, bg: 'cave', groups: [
+    z_desert_tomb_deep: { region: 'r_desert', tier: 'dyn', lvOff: 1, bg: 'pyramid', groups: [
       G(9, [['@mummy', 2, 3]]),
       G(6, [['@bat', 4, 5]]),                                   // コウモリの群れ（4〜5 体）
       G(5, [['@mummy', 1, 1], ['@bat', 3, 3]]),                 // 4 体

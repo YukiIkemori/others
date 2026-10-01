@@ -235,10 +235,10 @@
     tr_desert_ambush2: { mons: [['@cactus', 2], ['@sandworm', 1]], scale: 'tier', lvOff: 0, bg: 'desert', bgm: 'battle', noEscape: true },
     tr_desert_ambush3: { mons: [['@snake', 2], ['@scorpion', 2]], scale: 'tier', lvOff: 1, bg: 'desert', bgm: 'battle', noEscape: true },
   });
-  // 王墓のボスの背景（painted の desert・cave）
+  // 王墓のボスの背景（描いた絵の pyramid＝王墓の王の間）
   R.onData(function () {
     const T = R.DB.troops;
-    if (T.tr_b_sandworm) Object.assign(T.tr_b_sandworm, { bg: 'cave' });
-    if (T.tr_b_sandking) Object.assign(T.tr_b_sandking, { bg: 'cave', mons: [['@mummy', 1], ['b_sandking', 1]] });
+    if (T.tr_b_sandworm) Object.assign(T.tr_b_sandworm, { bg: 'pyramid' });   // 王墓の中（描いた絵 bbg/pyramid）
+    if (T.tr_b_sandking) Object.assign(T.tr_b_sandking, { bg: 'pyramid', mons: [['@mummy', 1], ['b_sandking', 1]] });
   });
 })(window.RPG);

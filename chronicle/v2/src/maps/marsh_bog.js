@@ -117,7 +117,7 @@
       ],
       zones: [{ rect: [24, 16, 13, 8], zone: null }, { rect: [0, 0, 60, 52], zone: 'z_marsh_bog' }].filter((z) => z.zone),
       light: MK.LIGHT_BOG, dark: false,
-      bgm: 'ghost', bbg: 'marsh',
+      bgm: 'ghost', bbg: 'swamp',
       meta: { chestsInfo: true, floor: R.T('map.marsh_bog.meta.floor'), sub: R.T('map.marsh_bog.meta.sub'), live: [{ cells: pA.cells, patch: 0 }, { cells: pB.cells, patch: 1 }] },
       art: { image: 'forest_dungeon/under/bog', closed: 'forest_dungeon/under/bog_closed', painted: [] },
     });
