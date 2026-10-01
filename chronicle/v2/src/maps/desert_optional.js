@@ -66,7 +66,7 @@
       O.push(K.sign(19, 24, R.T('map.desert_optional.sign')));
       O.push(K.exam(12, 21, 'desert_rocks_scales'));
       // 小物は岩壁の際にだけ（道と入口は空ける。岩・砂の起伏は下絵に描いてある）
-      deco(O, [['bones', 20, 6], ['cactus', 28, 13], ['thorn_bush', 30, 16], ['bones', 26, 22]]);
+      deco(O, [['bones', 20, 6], ['cactus', 28, 13], ['thorn_bush', 30, 16], ['bones', 26, 21]]);
       const N = [K.npc('watcher', 'npc_naturalist', 18, 20, { name: R.T('map.desert_optional.N.0.watcher.name'), dir: 'n', talk: 'desert_rocks_watcher', reward: 'hint' })];
       K.def('desert_rocks', {
         name: R.T('map.desert_optional.desert_rocks.name'), kind: 'dungeon', optional: true, region: 'r_desert', location: 'rocks', theme: 'desert',
@@ -94,7 +94,7 @@
       // 小物は岩陰の際にだけ（東の入口からたき火の跡までの道は空ける）
       O.push(K.prop('tent', 12, 7), K.prop('tent', 16, 16, { variant: 1 }), K.prop('log', 14, 12), K.prop('log', 15, 13));
       O.push(K.prop('broken_pillar', 17, 9), K.exam(11, 11, 'desert_oldcamp_notes'), K.prop('cart_barrels', 7, 16), K.prop('clay_jars', 22, 13));
-      O.push(K.prop('thorn_bush', 3, 11), K.prop('bones', 8, 7));
+      O.push(K.prop('thorn_bush', 3, 11), K.prop('bones', 8, 8));
       K.def('desert_oldcamp', {
         name: R.T('map.desert_optional.desert_oldcamp.name'), kind: 'dungeon', optional: true, region: 'r_desert', location: 'camp2', theme: 'desert',
         legend: DK.LEGEND(), rows: g, outside: 'dune_sand', objects: O, npcs: [],

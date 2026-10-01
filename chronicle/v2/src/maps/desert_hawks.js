@@ -49,12 +49,12 @@
         K.chest('desert_hawks_1_c3', 36, 16, { pool: 'p_T' }), K.chest('desert_hawks_1_c4', 5, 10, { gold: 180 }), K.chest('desert_hawks_1_c5', 24, 9, { pool: 'p_rare' }));
       O.push(K.exam(33, 9, 'desert_hawks_water'), K.exam(4, 16, 'desert_hawks_bunks'));
       // 樽・木箱・壺は 4 つまで、壁ぎわと角だけ（持ち主 2026-09-28「通路真ん中にはおかないで」）
-      deco(O, [['tent', 7, 11], ['tent', 11, 17], ['log', 10, 13], ['sack', 13, 9], ['crate', 4, 13], ['weapon_rack', 6, 9], ['bones', 12, 18],
+      deco(O, [['tent', 7, 11], ['tent', 11, 17], ['log', 10, 13], ['sack', 12, 9], ['crate', 4, 13], ['weapon_rack', 6, 9], ['bones', 12, 17],
         ['clay_jars', 31, 8], ['clay_jars', 38, 8], ['sack', 33, 17], ['barrel', 39, 12],
-        ['broken_pillar', 16, 26], ['bones', 27, 31], ['sand_mound', 24, 32], ['thorn_bush', 18, 33], ['rock_small', 27, 27], ['weapon_rack', 24, 10],
-        ['bones', 6, 29], ['sand_mound', 38, 28]]);
+        ['broken_pillar', 16, 27], ['bones', 27, 31], ['sand_mound', 24, 32], ['thorn_bush', 18, 33], ['rock_small', 27, 27], ['weapon_rack', 24, 10],
+        ['bones', 6, 29], ['sand_mound', 38, 27]]);
       for (const [x, y] of [[18, 28], [25, 28], [18, 10], [25, 14], [8, 16], [34, 15], [22, 7], [37, 27], [8, 29]]) O.push(K.prop('torch', x, y));
-      O.push(K.sign(23, 33, R.T('map.desert_hawks.sign')));
+      O.push(K.sign(23, 32, R.T('map.desert_hawks.sign')));
       const N = [
         K.npc('sentry', 'npc_hawk', 21, 24, { name: R.T('map.desert_hawks.N.0.sentry.name'), dir: 's', talk: 'desert_hawks_sentry', pushable: false, reward: 'hint', cond: '!desert_hawk_met' }),
         K.npc('hawk_door', 'npc_hawk', 23, 27, { name: R.T('map.desert_hawks.N.1.hawk_door.name'), dir: 'w', talk: 'desert_hawks_member', reward: 'news', cond: FRIEND }),
@@ -92,8 +92,8 @@
       O.push(K.chest('desert_hawks_2_c1', 31, 21, { pool: 'p_T' }), K.chest('desert_hawks_2_c2', 9, 23, { item: 'i_ether', n: 2 }), K.chest('desert_hawks_2_c3', 26, 6, { pool: 'p_rare' }));
       O.push(K.prop('obelisk', 11, 5, { cond: [FRIEND[0], FRIEND[1], { choice: 'ch_desert_write', is: 'pain' }] }), K.exam(11, 6, 'desert_hawks_memorial', { cond: [FRIEND[0], FRIEND[1], { choice: 'ch_desert_write', is: 'pain' }] }));
       O.push(K.exam(24, 4, 'desert_hawks_map_table'));
-      deco(O, [['carpet_rack', 13, 3], ['carpet_rack', 23, 3], ['clay_jars', 8, 9], ['clay_jars', 27, 10], ['weapon_rack', 8, 10], ['weapon_rack', 28, 7],
-        ['copper_brazier', 15, 3], ['copper_brazier', 21, 3], ['tomb_urn', 9, 12], ['sack', 31, 18], ['crate', 32, 20], ['bones', 5, 22], ['table', 24, 5]]);
+      deco(O, [['carpet_rack', 13, 4], ['carpet_rack', 23, 4], ['clay_jars', 8, 9], ['clay_jars', 27, 10], ['weapon_rack', 9, 10], ['weapon_rack', 28, 7],
+        ['copper_brazier', 15, 3], ['copper_brazier', 21, 3], ['tomb_urn', 10, 11], ['sack', 31, 18], ['crate', 32, 20], ['bones', 5, 22], ['table', 24, 5]]);
       for (const [x, y] of [[12, 7], [24, 11], [17, 18], [9, 20], [30, 17]]) O.push(K.prop('torch', x, y));
       const N = [
         K.npc('rashid', 'npc_rashid', 18, 4, { name: R.T('map.desert_hawks.N.0.rashid.name'), title: R.T('map.desert_hawks.N.0.rashid.title'), dir: 's', talk: 'desert_hawks_rashid', pushable: false, reward: 'item',

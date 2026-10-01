@@ -44,7 +44,7 @@
       O.push(K.prop('dry_well', 11, 7), K.exam(11, 8, 'desert_camp1_well'));
       O.push(K.prop('broken_pillar', 20, 7), K.exam(20, 8, 'desert_camp1_memorial'));
       // 小物は岩の際にだけ（道・たき火のまわりは空ける。持ち主 2026-09-28「野営地の小物も整理して」）
-      O.push(K.prop('tent', 9, 11), K.prop('tent', 21, 12), K.prop('cart_barrels', 22, 16), K.prop('crate', 22, 15), K.prop('clay_jars', 8, 16), K.prop('sack', 8, 15));
+      O.push(K.prop('tent', 9, 11), K.prop('tent', 21, 12), K.prop('cart_barrels', 22, 16), K.prop('crate', 22, 15), K.prop('clay_jars', 9, 16), K.prop('sack', 9, 15));   // 岩・崖に埋まっていた物を床へ（持ち主 2026-10-01「他も全部みてみて」、tools/qa/check_props.js）
       O.push(K.prop('cactus', 8, 14), K.prop('sand_mound', 18, 4), K.prop('desert_palm', 16, 6));
       O.push(K.prop('lantern', 12, 10), K.prop('lantern', 18, 13), K.prop('copper_brazier', 14, 17), K.prop('copper_brazier', 16, 17));
       O.push(K.sign(17, 18, R.T('map.desert_camps.sign')));
@@ -120,7 +120,8 @@
       O.push(K.sign(18, 22, R.T('map.desert_camps.sign_3')), K.sign(25, 9, R.T('map.desert_camps.sign_4')));
       O.push(K.prop('bones', 3, 17), K.prop('sand_mound', 26, 21), K.prop('thorn_bush', 4, 7));
       const wait = [{ any: [['desert_caravan_on', 'desert_camp2_done'], 'desert_camp3_done'] }, '!desert_finale_done'];
-      const N = caravan('c3', wait, { zaid: ['desert_camp3_done', '!desert_finale_done'], zx: 18, zy: 13, zd: 'w', ax: 16, ay: 15, bx: 20, by: 15, c1x: 25, c1y: 14, c2x: 9, c2y: 18 })
+      // 隊の人 man1 は前は (16, 15) = たき火の丸太の上に立っていた。丸太の西へ
+      const N = caravan('c3', wait, { zaid: ['desert_camp3_done', '!desert_finale_done'], zx: 18, zy: 13, zd: 'w', ax: 15, ay: 15, bx: 20, by: 15, c1x: 25, c1y: 14, c2x: 9, c2y: 18 })
         .concat([
           K.npc('abul_oasis', 'npc_abul', 12, 16, { name: R.T('map.desert_camps.N.0.abul_oasis.name'), title: R.T('map.desert_camps.N.0.abul_oasis.title'), dir: 'n', talk: 'desert_abul_oasis', reward: 'boss', cond: ['desert_abul_came', '!cleared_r_desert'] }),
           K.npc('hazal_spirit', 'npc_hazal', 11, 10, { name: R.T('map.desert_camps.N.1.hazal_spirit.name'), dir: 's', talk: 'desert_hazal_after', reward: 'news', cond: 'cleared_r_desert' }),
