@@ -816,4 +816,28 @@ section('element stones: use on an ally → learn the element’s first spell');
   ok('train with an item action does not touch element proficiency', !Ru.train(e2, { kind: 'item', actionId: 'i_stone_fire', elements: ['fire'] }).length && JSON.stringify(e2.eprof) === before);
 }
 
+// ================================================================ 技の役目（持ち主 2026-10-01「MP5 の技はどれも別段強くないし、同じようなのがあって違いも分からん」）
+section('技の役目: 同じ系統・同じ MP の帯で、特徴の言葉か狙いがかぶらない（R.Rules.techTags）');
+{
+  const T = DB.techs;
+  const line = (id) => Ru.techTagLine(T[id]);
+  ok('徹し突き・陽炎斬り・返し刃・疾風の抜き打ち: 守備無視 / 火 / 反撃 / 先制・風', /守備無視/.test(line('t_sword_pierce')) && /火/.test(line('t_sword_haze')) &&
+    /反撃/.test(line('t_sword_swallow')) && /先制/.test(line('t_sword_gale_draw')) && /風/.test(line('t_sword_gale_draw')), ['pierce', 'haze', 'swallow', 'gale_draw'].map((k) => line('t_sword_' + k)));
+  // 攻撃の技（ダメージあり）で、同じ系統・同じ MP・同じ狙い・同じ特徴の言葉の組が無い
+  const seen = {}, dup = [];
+  for (const id of Object.keys(T)) {
+    const a = T[id];
+    if (!(a.effects || []).some((e) => e.type === 'damage')) continue;
+    const k = [a.wtype, a.mp, a.target, line(id)].join('|');
+    if (seen[k]) dup.push(seen[k] + ' = ' + id); else seen[k] = id;
+  }
+  ok('no two damage techs share weapon + MP + target + traits', !dup.length, dup);
+  ok('a tag line is short words joined (no numbers but hit counts)', Object.keys(T).every((id) => !/\d/.test(line(id).replace(/\d+回/g, ''))));
+  // 威力の帯: 技は覚える頃の通常攻撃よりはっきり強い（power × 回数。状態・補助の技は除く）
+  const pw = (a) => a.effects.filter((e) => e.type === 'damage').reduce((s, e) => s + (e.power || 0) * (e.hits || 1), 0);
+  const pure = (a) => a.target === 'enemy' && a.effects.length === 1 && a.effects[0].type === 'damage' && !a.effects[0].formula && !a.effects[0].vs;
+  const band = Object.keys(T).filter((id) => pure(T[id]) && T[id].mp >= 4 && T[id].mp <= 7);
+  ok('single-target pure-damage techs at MP 4–7: power ≥ 1.9 (守備無視は 1.75)（MP5 帯の底上げ）', band.length >= 8 && band.every((id) => pw(T[id]) >= (T[id].effects[0].ignoreDef >= 1 ? 1.75 : 1.9)), band.map((id) => id + ' ' + pw(T[id])));
+}
+
 done('test_rules');

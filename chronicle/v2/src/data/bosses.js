@@ -42,7 +42,7 @@
   // @@S-BEGIN
   const S = {
     b_pageeater: { hp: 1.7 },
-    b_moth: { hp: 1.7 },
+    b_moth: { hp: 1.62 },   // 2026-10-01: K.BOSS_HP（1.05 倍）の分を戻す（台本のラウンド 5〜7 の上の端）
     b_rooteater: { hp: 0.9, atk: 0.6, mag: 0.6 },
     b_root: { hp: 1, atk: 0.5, mag: 0.5 },
     b_sandworm: { hp: 1.1 },
