@@ -95,7 +95,7 @@ BOSSES['tr_b_rowell1@2'] = { troop: 'tr_b_rowell1', tier: 2, kind: 'mid', member
 BOSSES['tr_b_rowell2@5'] = { troop: 'tr_b_rowell2', tier: 5, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 10], note: 'ロウェル 2 戦目（T5。負けても続く）' };
 
 // 2026-10-01 ボスの組み直し（w_boss2）: オーナー「勝率低めでいいよ」「溜めての即死級はもう飽きた」。予告への答え（守る）で勝ち負けが決まる型をやめたので、
-//   「リピートだけ」との差（diff）は見ない。台本の勝率は 序盤 65〜95%・中盤 50〜90%・終盤 45〜85%、長さは 序盤の中ボス 5〜10・地方ボス 8〜14・中盤 6〜13・終盤 10〜16、
+//   「リピートだけ」との差（diff）は見ない。台本の勝率は 序盤 65〜95%・中盤 50〜93%（地方は好きな順に遊ぶので、ティア 3 で来ると楽になる）・終盤 45〜85%、長さは 序盤の中ボス 5〜10・地方ボス 8〜14・中盤 6〜13・終盤 10〜16、
 //   倒れる人は 1 戦あたり 2 人まで（負けても準備で取り返せる程度）。「リピートだけ」の勝率は見ない（予告への答えが無いので、強い技の連打は台本に近くなる）。
 //   「たたかうだけ」は 40% まで
 {
@@ -106,7 +106,7 @@ BOSSES['tr_b_rowell2@5'] = { troop: 'tr_b_rowell2', tier: 5, kind: 'mid', member
     if (/pageeater|forest_wolves|tr_b_moth|rooteater|hawk|sandworm|sandking|rowell1/.test(t)) return 'early';
     return 'mid';
   };
-  const RULE = { early: { script: 65, scriptMax: 95, rounds: { mid: [5, 10], boss: [8, 14], prologue: [6, 11] } }, mid: { script: 50, scriptMax: 90, rounds: [6, 14] }, late: { script: 45, scriptMax: 85, rounds: [10, 16] } };
+  const RULE = { early: { script: 65, scriptMax: 95, rounds: { mid: [5, 10], boss: [8, 14], prologue: [6, 11] } }, mid: { script: 50, scriptMax: 93, rounds: [6, 14] }, late: { script: 45, scriptMax: 85, rounds: [10, 16] } };
   for (const k of Object.keys(BOSSES)) {
     const b = band(k);
     if (!b) continue;
