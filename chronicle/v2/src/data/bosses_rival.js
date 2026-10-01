@@ -10,7 +10,7 @@
     eb_rowell_gather: { name: R.T('bossActions.eb_rowell_gather.name'), kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: R.T('bossActions.eb_rowell_gather.msg'),
       telegraph: { text: R.T('bossActions.eb_rowell_gather.telegraph.text'), pose: 'tele', tint: '#f4ecd0', next: 'eb_rowell_verdict', guard: 'defend', lethal: true } },
     eb_rowell_verdict: { name: R.T('bossActions.eb_rowell_verdict.name'), kind: 'enemy', target: 'enemies',
-      effects: [{ type: 'special', id: 'desert_sweep', pct: 0.4, guardPct: 0.08, kind: 'light', element: 'light' }], fx: 'holy2', msg: R.T('bossActions.eb_rowell_verdict.msg') },
+      effects: [{ type: 'special', id: 'desert_sweep', pct: 0.5, guardPct: 0.08, kind: 'light', element: 'light' }], fx: 'holy2', msg: R.T('bossActions.eb_rowell_verdict.msg') },
     // 2026-10-01（ボスの組み直し）: 2 戦目は溜めをやめ、記録官らしい「注釈 → 抹消」（時間差の呪い。印の人だけ最大 HP の 3 割、守れば 1 割弱）
     eb_rowell_annotate: { name: R.T('bossActions.eb_rowell_annotate.name'), kind: 'enemy', target: 'enemy', aim: 'healer', effects: [{ type: 'damage', formula: 'phys', power: 0.7, kind: 'pierce' }, { type: 'special', id: 'boss_mark', flag: 'rowell_mark', pct: 0.3, guardPct: 0.08 }], fx: 'pierce', msg: R.T('bossActions.eb_rowell_annotate.msg') },
     eb_rowell_redact: { name: R.T('bossActions.eb_rowell_redact.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'boss_mark_burst', flag: 'rowell_mark', kind: 'magic', element: 'light' }], fx: 'holy2', msg: R.T('bossActions.eb_rowell_redact.msg') },

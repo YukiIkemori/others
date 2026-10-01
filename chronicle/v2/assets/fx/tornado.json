@@ -1,1 +1,1 @@
-{"n":6,"peak":1,"w":256,"h":512,"fps":16,"loop":true,"tint":false,"blend":"lighter","anchor":[128.0,491.5],"scale":0.5,"group":"wind"}
+{"n":6,"peak":1,"bb":[[38,141,207,352],[38,139,202,354],[32,142,201,351],[17,143,210,350],[10,146,210,347],[11,141,212,354]],"w":256,"h":512,"fps":16,"loop":true,"tint":false,"blend":"lighter","anchor":[128.0,491.5],"scale":0.5,"group":"wind"}

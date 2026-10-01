@@ -1,1 +1,1 @@
-{"n":8,"peak":4,"w":448,"h":128,"fps":30,"loop":false,"tint":true,"blend":"lighter","anchor":[224.0,64.0],"scale":0.5,"group":"slash"}
+{"n":8,"peak":4,"bb":[[88,71,30,7],[99,70,167,8],[84,62,284,8],[76,56,355,19],[80,55,343,11],[82,54,338,11],[88,52,331,6],[121,54,257,3]],"w":448,"h":128,"fps":30,"loop":false,"tint":true,"blend":"lighter","anchor":[224.0,64.0],"scale":0.5,"group":"slash"}

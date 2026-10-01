@@ -1,1 +1,1 @@
-{"n":8,"peak":2,"w":384,"h":256,"fps":16,"loop":false,"tint":false,"blend":"source-over","anchor":[192.0,245.8],"scale":0.5,"group":"earth"}
+{"n":8,"peak":2,"bb":[[154,183,85,60],[47,127,286,119],[14,98,351,149],[14,105,356,142],[23,78,348,104],[21,78,349,104],[32,73,334,109],[42,92,320,89]],"w":384,"h":256,"fps":16,"loop":false,"tint":false,"blend":"source-over","anchor":[192.0,245.8],"scale":0.5,"group":"earth"}

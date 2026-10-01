@@ -1,1 +1,1 @@
-{"n":6,"peak":2,"w":256,"h":256,"fps":28,"loop":false,"tint":true,"blend":"lighter","anchor":[128.0,128.0],"scale":0.5,"group":"hit"}
+{"n":6,"peak":2,"bb":[[87,83,104,104],[41,60,166,155],[11,37,222,194],[26,14,220,196],[33,28,192,180],[40,40,158,150]],"w":256,"h":256,"fps":28,"loop":false,"tint":true,"blend":"lighter","anchor":[128.0,128.0],"scale":0.5,"group":"hit"}

@@ -96,13 +96,14 @@ BOSSES['tr_b_rowell2@5'] = { troop: 'tr_b_rowell2', tier: 5, kind: 'mid', member
 
 // 2026-10-01 ボスの組み直し（w_boss2）: オーナー「勝率低めでいいよ」「溜めての即死級はもう飽きた」。予告への答え（守る）で勝ち負けが決まる型をやめたので、
 //   「リピートだけ」との差（diff）は見ない。台本の勝率は 序盤 65〜95%・中盤 50〜90%・終盤 45〜85%、長さは 序盤の中ボス 5〜10・地方ボス 8〜14・中盤 6〜13・終盤 10〜16、
-//   倒れる人は 1 戦あたり 2 人まで（負けても準備で取り返せる程度）。リピートだけ（回復も守りもしない）は台本より 10 点以上低いこと
+//   倒れる人は 1 戦あたり 2 人まで（負けても準備で取り返せる程度）。「リピートだけ」の勝率は見ない（予告への答えが無いので、強い技の連打は台本に近くなる）。
+//   「たたかうだけ」は 40% まで
 {
   const band = (k) => {
     const T = BOSSES[k].tier, t = (BOSSES[k].troop || k);
-    if (/rowell1|tutorial/.test(t)) return null;
+    if (/tutorial/.test(t)) return null;
     if (T >= 8) return 'late';
-    if (/pageeater|forest_wolves|tr_b_moth|rooteater|hawk|sandworm|sandking/.test(t)) return 'early';
+    if (/pageeater|forest_wolves|tr_b_moth|rooteater|hawk|sandworm|sandking|rowell1/.test(t)) return 'early';
     return 'mid';
   };
   const RULE = { early: { script: 65, scriptMax: 95, rounds: { mid: [5, 10], boss: [8, 14], prologue: [6, 11] } }, mid: { script: 50, scriptMax: 90, rounds: [6, 14] }, late: { script: 45, scriptMax: 85, rounds: [10, 16] } };
@@ -110,9 +111,10 @@ BOSSES['tr_b_rowell2@5'] = { troop: 'tr_b_rowell2', tier: 5, kind: 'mid', member
     const b = band(k);
     if (!b) continue;
     const cfg = BOSSES[k], r = RULE[b];
-    cfg.script = r.script; cfg.scriptMax = r.scriptMax; cfg.diff = null; cfg.repeatBelow = 10; cfg.down = 2.0;
+    cfg.script = r.script; cfg.scriptMax = r.scriptMax; cfg.diff = null; cfg.down = /blizzardwolf_0$/.test(k) ? 2.5 : 2.0;   // 籠城の山場（ティア 0）は重め
     cfg.rounds = Array.isArray(r.rounds) ? r.rounds : r.rounds[cfg.kind] || r.rounds.mid;
     if (cfg.repeat != null) cfg.repeat = null;
+    if (cfg.fight != null) cfg.fight = Math.max(cfg.fight, 40);
   }
 }
 

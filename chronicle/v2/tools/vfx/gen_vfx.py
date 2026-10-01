@@ -287,7 +287,12 @@ def process(style, p):
     # 山（一番濃いコマ）: 実行時は山まで速く進めて、山を保ってから消す（fx_seq_img.js の DEFSEG）
     energy = [float((f[..., 3] / 255.0 * (lum(f[..., :3]) / 255.0 + 0.3)).sum()) for f in frames]
     peak = int(np.argmax(energy)) if p.get('peak') is None else int(p['peak'])
-    meta = {'n': len(frames), 'peak': peak, 'w': ow, 'h': oh, 'fps': p.get('fps', 24), 'loop': bool(p.get('loop')), 'tint': bool(p.get('tint')),
+    # コマごとの中身の外形 [x, y, w, h]（実行時はこの範囲だけを描く。空の所を重ねない）
+    bb = []
+    for f in frames:
+        ys, xs = np.nonzero(f[..., 3] >= 2)
+        bb.append([int(xs.min()), int(ys.min()), int(xs.max() - xs.min() + 1), int(ys.max() - ys.min() + 1)] if len(xs) else [0, 0, 0, 0])
+    meta = {'n': len(frames), 'peak': peak, 'bb': bb, 'w': ow, 'h': oh, 'fps': p.get('fps', 24), 'loop': bool(p.get('loop')), 'tint': bool(p.get('tint')),
             'blend': p.get('blend') or ('lighter' if p.get('bg', 'black') == 'black' else 'source-over'),
             'anchor': [round(tx, 1), round(ty, 1)], 'scale': p.get('scale', 0.5), 'group': p.get('group', '')}
     json.dump(meta, open(os.path.join(OUT, p['id'] + '.json'), 'w'), ensure_ascii=False, separators=(',', ':'))

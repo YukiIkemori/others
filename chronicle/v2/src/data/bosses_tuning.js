@@ -1,11 +1,11 @@
 // v2（BATTLE、2026-10-01 ボスの組み直し w_boss2）: ボスの数値 s の最後の上書き（bosses*.js の後に読む。fillStats は onData なのでここで効く）。
 //   オーナー「勝率低めでいいよ」: 台本（sim_bosses の script）の勝率が 序盤 75〜85%・中盤 65〜80%・終盤 60〜70%、長さが 中盤 6〜12・終盤 10〜16 ラウンドになるように、
 //   各地方のファイルの s に群ごとの倍率（atk・mag × k、hp × h）を掛けた値。調整は scratch の autotune.js（群は groups.js）。各地方のファイルの s を直すときはここも見ること
-// @@JSON {"wolves":[1.39,1],"moth":[1.64,1],"rooteater":[1.45,1],"bwolf":[2.24,1],"icegiant":[1.18,1],"whitedragon":[1.57,1],"admiral":[1.16,1],"vein":[1.38,1],"dolls":[1.28,1],"mist":[1.12,1],"ash_r2":[3.58,1.44],"ash_r3":[3.2,1.21],"ash_r4":[10,0.9],"zakuro":[3.32,1.2],"hellhound":[3.95,1.44],"lavabeast":[1.96,1.44],"octopus":[1.16,1],"captain":[1.15,1],"rockeater":[1.25,1],"ironwarden":[1.1,1],"orrery":[1.85,1],"stareater":[1.92,1.44],"rowell2":[1.57,1],"bookgolem":[3.2,1.44],"shades":[1.89,1.1],"lazaro":[2,1],"nemrea1":[1.65,1],"nemrea2":[1.7,1.73],"pageeater":[2.4,1],"hawk":[3.5,1.18],"sandworm":[4.06,0.83],"sandking":[3.76,1.64]}
+// @@JSON {"wolves":[1.39,1],"moth":[1.64,1],"rooteater":[1.45,1],"bwolf":[2.24,1],"icegiant":[1.18,1],"whitedragon":[1.57,1],"admiral":[1.16,1],"vein":[1.38,1],"dolls":[1.28,1],"mist":[1.12,1],"ash_r2":[3.58,1.44],"ash_r3":[3.2,1.21],"ash_r4":[10,0.9],"zakuro":[3.32,1.2],"hellhound":[3.95,1.44],"lavabeast":[1.96,1.44],"octopus":[1.16,1],"captain":[1.15,1],"rockeater":[1.25,1],"ironwarden":[1.1,1],"orrery":[1.78,1],"stareater":[1.92,1.44],"rowell2":[1.57,1],"bookgolem":[3.2,1.44],"shades":[1.89,1.1],"lazaro":[2,1],"nemrea1":[1.65,1],"nemrea2":[1.7,1.73],"pageeater":[2.7,1],"hawk":[3.5,1.18],"sandworm":[4.06,0.83],"sandking":[3.76,1.64],"rowell1":[4.5,1]}
 (function (R) {
   'use strict';
   const S = {
-    b_pageeater: { hp: 1.3, atk: 1.68, mag: 2.4 },   // pageeater
+    b_pageeater: { hp: 1.3, atk: 1.89, mag: 2.7 },   // pageeater
     b_wolflord: { hp: 1.6, atk: 2.08, mag: 1.39 },   // wolves
     b_packwolf: { atk: 1.11, mag: 1.11, hp: 1 },   // wolves
     b_moth: { hp: 1.2, atk: 3.61, mag: 3.61 },   // moth
@@ -17,6 +17,7 @@
     b_sandking: { hp: 0.85, atk: 2.26, mag: 2.26 },   // sandking
     b_sun_orb: { atk: 2.26, mag: 2.26, hp: 1.64 },   // sandking
     b_moon_orb: { atk: 2.26, mag: 2.26, hp: 1.64 },   // sandking
+    b_rowell1: { hp: 1.35, atk: 4.5, mag: 4.5 },   // rowell1
     b_blizzardwolf: { hp: 1.6, atk: 3.14, mag: 3.14 },   // bwolf
     b_blizzardwolf_1: { hp: 1.6, atk: 3.14, mag: 3.14 },   // bwolf
     b_blizzardwolf_2: { hp: 1.6, atk: 3.14, mag: 3.14 },   // bwolf
@@ -46,7 +47,7 @@
     b_captain: { hp: 0.5, atk: 1.32, mag: 1.32 },   // captain
     b_rockeater: { hp: 1.2, atk: 4.13, mag: 4.13 },   // rockeater
     b_ironwarden: { hp: 0.52, atk: 0.88, mag: 0.88 },   // ironwarden
-    b_orrery: { hp: 1.15, atk: 2.59, mag: 2.59 },   // orrery
+    b_orrery: { hp: 1.15, atk: 2.49, mag: 2.49 },   // orrery
     b_stareater: { hp: 0.89, atk: 1.13, mag: 1.13 },   // stareater
     b_rowell2: { hp: 1.1, atk: 1.57, mag: 1.57 },   // rowell2
     b_bookgolem: { hp: 0.65, atk: 2.72, mag: 2.72 },   // bookgolem

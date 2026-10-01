@@ -127,7 +127,10 @@
     if (o.my) g.scale(1, -1);
     if (o.mx) g.scale(-1, 1);
     if (o.a != null) g.globalAlpha *= o.a > 1 ? 1 : o.a;
-    g.drawImage(src, i * m.w, 0, m.w, m.h, -m.anchor[0] * sc, -m.anchor[1] * sc, m.w * sc, m.h * sc);
+    // 中身の外形（meta.bb）だけを描く（空の所を合成しない。ソフトの描画では大きく効く）
+    const b = m.bb && m.bb[i];
+    if (b) { if (b[2] > 0) g.drawImage(src, i * m.w + b[0], b[1], b[2], b[3], (b[0] - m.anchor[0]) * sc, (b[1] - m.anchor[1]) * sc, b[2] * sc, b[3] * sc); }
+    else g.drawImage(src, i * m.w, 0, m.w, m.h, -m.anchor[0] * sc, -m.anchor[1] * sc, m.w * sc, m.h * sc);
     g.restore();
     return true;
   };
@@ -160,7 +163,7 @@
   // L.rot 回り、L.spin 回る速さ（rad/s）、L.flat 平たさ、L.my / L.mx 反転、L.a 濃さ、L.env 出入りを柔らかく
   // L.u0 / L.u1 この層の中でコマを流す区間、L.seg [[u, コマ], …] 時間 → コマ（無ければ「山（一番濃いコマ）を保つ」既定）
   // L.fps（ループの部品）、L.fly（使い手から飛んでくる割合）、L.arc（飛ぶ弧の高さ）、L.grow [始まり, 終わり] 大きさの変化
-  // L.foot 的の足もとへ下ろす、L.tint 塗り分けの色（無ければ部品の決まり）、L.dy2 置いた後のずらし、L.rise 上へ流れる px
+  // L.foot 的の足もとへ下ろす、L.tint 塗り分けの色（無ければ部品の決まり）、L.dy2 / L.dx2 置いた後のずらし、L.rise 上へ流れる px、L.hq 品質「低」では描かない飾り
   function frameAt(m, k, L) {
     const n = m.n;
     if (n <= 1) return 0;
@@ -192,6 +195,7 @@
   }
   S.prim('img', (g, u, L, c, e) => {
     if (!I.on) return;
+    if (L.hq && c.q < 1) return;   // 飾りの層（残像・余韻のきらめき）は品質「低」で描かない
     const m = I.meta(L.id);
     if (!m) return;
     const u0 = L.u0 || 0, u1 = L.u1 == null ? 1 : L.u1;
@@ -277,8 +281,7 @@
         const u0 = j * gap, u1 = Math.min(1, j * gap + 0.9);
         out.push({ id, th, rot, my, flat: L.flat, u0, u1, tint: L.col });
         // 残像（少し遅れて、少し回って、薄く大きく）と、芯を重ねて明るく
-        out.push({ id, th: th * 1.12, rot: rot + (my ? -0.22 : 0.22), my, flat: L.flat, u0: Math.min(0.95, u0 + 0.07), u1: Math.min(1, u1 + 0.07), a: 0.45, tint: L.col != null ? L.col : 2 });
-        out.push({ id, th: th * 0.96, rot, my, flat: L.flat, u0, u1, a: 0.55, tint: L.col != null ? L.col : 1 });
+        out.push({ id, th: th * 1.12, rot: rot + (my ? -0.22 : 0.22), my, flat: L.flat, u0: Math.min(0.95, u0 + 0.07), u1: Math.min(1, u1 + 0.07), a: 0.5, tint: L.col != null ? L.col : 2, hq: 1 });
       }
       return { add: out, dim: 0.15 };
     },
@@ -294,7 +297,7 @@
       for (let j = 0; j < n; j++) {
         const rot = (L.ang || 0) + (L.step || 0) * j;
         out.push({ id, pxw: lim((L.len || 80) * 1.9, 120, 900), rot, flat: 2.2, u0: j * gap, u1: Math.min(1, j * gap + 0.85), tint: L.col });
-        out.push({ id, pxw: lim((L.len || 80) * 1.9, 120, 900) * 0.92, rot, flat: 1.4, u0: j * gap, u1: Math.min(1, j * gap + 0.85), a: 0.6, tint: L.col2 != null ? L.col2 : 1 });
+        out.push({ id, hq: 1, pxw: lim((L.len || 80) * 1.9, 120, 900) * 0.92, rot, flat: 1.4, u0: j * gap, u1: Math.min(1, j * gap + 0.85), a: 0.6, tint: L.col2 != null ? L.col2 : 1 });
       }
       return { add: out, dim: 0.3 };
     },
@@ -349,7 +352,7 @@
       const tw = pick('sparkle_twinkle');
       const out = [];
       if (id) out.push({ id, th: 3.4, foot: 1, tint: el === 'heal' ? null : nativeOr('heal', spec, L) });
-      if (tw) out.push({ id: tw, th: 2.6, rise: 60, env: 1, a: 0.95, tint: L.col });
+      if (tw) out.push({ id: tw, th: 2.6, rise: 60, env: 1, a: 0.95, tint: L.col, hq: 1 });
       return out.length ? { add: out, dim: 0.5 } : null;
     },
     runes(L, spec) {
@@ -465,7 +468,7 @@
       if (big) add.hit.push({ p: 'img', id: big, t0: 0, t1: 420, at: 'tgt', th: 1.6 + spec.tier * 0.2, a: 0.9, blend: 'lighter' });
       else if (!spec.hit.some((L) => L.p === 'img' && /^hit_spark/.test(L.id)) && has('hit_spark_a')) add.hit.push({ p: 'img', id: 'hit_spark_a', t0: 0, t1: 360, at: 'tgt', th: 1.7, tint: 1, blend: 'lighter' });
       // 余韻: きらめきがしばらく残る
-      if (has('sparkle_twinkle')) add.hit.push({ p: 'img', id: 'sparkle_twinkle', t0: 90, t1: 700, at: 'tgt', th: 1.8, a: 0.75, rise: 20, env: 1, blend: 'lighter' });
+      if (has('sparkle_twinkle')) add.hit.push({ p: 'img', id: 'sparkle_twinkle', t0: 90, t1: 700, at: 'tgt', th: 1.8, a: 0.75, rise: 20, env: 1, blend: 'lighter', hq: 1 });
     }
     return add;
   }
