@@ -17,7 +17,7 @@
     coral: { rumor: [20, 46], scribe: [23, 49], child: [23, 42], look: 'isles' },
     nerei: { rumor: [20, 18], scribe: [20, 24], child: [23, 23], look: 'isles' },
     dovan: { rumor: [24, 27], scribe: [31, 27], child: [26, 30], look: 'mine' },
-    caldera: { rumor: [32, 35], scribe: [17, 37], child: [34, 33], look: 'ash' },
+    caldera: { rumor: [32, 35], scribe: [21, 36], child: [34, 33], look: 'ash' },   // 書記は敷石の広場の西（2026-10-01 に堀を四角くしたので）
     orbis: { rumor: [30, 35], scribe: [23, 38], child: [25, 25], look: 'star' },
   };
   // 出張所の壁の布告（x, y は壁の下の段。調べる所も同じマス。前のマスは床）。ファロスは床に立てる掲示板
