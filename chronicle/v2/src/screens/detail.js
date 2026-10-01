@@ -32,6 +32,7 @@
       const desc = d ? R.I18n.unwrap(d.desc) : '';
       const stats = [];
       let sub = '';
+      let tagLine = '';   // 技の特徴（先制・2回・火 …。R.Rules.techTagLine）
       if (d && this.kind === 'item') {
         sub = d.slot === 'use' ? (d.use && d.use.field ? (d.use.battle === false ? R.T('ui.detail.draw.sub') : R.T('ui.detail.draw.sub_2')) : R.T('ui.detail.draw.sub_3')) : d.slot === 'key' ? R.T('ui.detail.draw.sub_4') : S.kindLine(d);
         const N = R.Rules.DIFF_NAMES || {};
@@ -40,9 +41,11 @@
       } else if (d && (this.kind === 'tech' || this.kind === 'spell')) {
         sub = this.kind === 'tech' ? R.T('ui.detail.draw.sub_5', { wname: S.wname(d.wtype), p1: this.from ? R.T('ui.detail.draw.sub_6', { from: this.from }) : '' }) : R.T('ui.detail.draw.sub_7', { join: (d.elements || []).map(S.ename).join(R.T('ui.detail.draw.sub.join')) });
         stats.push(['MP', d.mp || 0], [R.T('ui.detail.draw.0'), S.rangeName(d) || '―']);
+        if (this.kind === 'tech' && R.Rules.techTagLine) tagLine = R.Rules.techTagLine(d);
       } else if (d && this.kind === 'mon') sub = R.T('ui.detail.draw.sub_8');
       const dl = R.UIK.wrap(desc, pw, { size: u(15) });
-      const h = u(24) + u(34) + (sub ? u(28) : 0) + (stats.length ? Math.ceil(stats.length / 2) * u(28) + u(14) : 0) + dl.length * u(26) + u(58);
+      const tl = tagLine ? R.UIK.wrap(R.T('sys.techTags.label') + '  ' + tagLine, pw, { size: u(14), weight: 700 }) : [];
+      const h = u(24) + u(34) + (sub ? u(28) : 0) + (stats.length ? Math.ceil(stats.length / 2) * u(28) + u(14) : 0) + tl.length * u(24) + (tl.length ? u(6) : 0) + dl.length * u(26) + u(58);
       const y = (R.H - h) / 2;
       this.rect = { x, y, w, h };
       R.UIK.panel(g, this.rect, { dense: true, frost: true });
@@ -61,6 +64,8 @@
         });
         cy += Math.ceil(stats.length / 2) * u(28) + u(4);
       }
+      for (const l of tl) { R.UIK.text(g, l, x + u(24), cy, { size: u(14), weight: 700, color: C.gold }); cy += u(24); }
+      if (tl.length) cy += u(6);
       for (const l of dl) { R.UIK.text(g, l, x + u(24), cy, { size: u(15), color: C.text }); cy += u(26); }
       R.UIK.prompts(g, [{ btn: 'b', label: R.T('ui.detail.draw.0.label') }], { x: x + w - u(20), y: y + h - u(22), align: 'right' });
     },

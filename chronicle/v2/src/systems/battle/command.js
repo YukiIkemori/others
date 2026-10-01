@@ -126,10 +126,13 @@
     const w = Math.min((maxRight || R.W) - x - 12 * k, 240 * k);
     if (w < 120 * k) return;
     const lines = (R.UIK && R.UIK.wrap ? R.UIK.wrap(d.text, w - 24 * k, { size: 12 * k }) : [d.text]).slice(0, 2);
-    const h = (lines.length * 18 + (d.sub ? 20 : 0) + 18) * k;
+    // 技の特徴の行（金色。説明の文の下、狙いの行の上）
+    const tags = d.tags ? (R.UIK && R.UIK.wrap ? R.UIK.wrap(d.tags, w - 24 * k, { size: 11.5 * k }) : [d.tags]).slice(0, 1) : [];
+    const h = (lines.length * 18 + tags.length * 18 + (d.sub ? 20 : 0) + 18) * k;
     Kt.box(g, { x, y, w, h }, { a: 0.6, r: 8 });
     lines.forEach((l, i) => Kt.text(g, l, x + 12 * k, y + 9 * k + i * 18 * k, { size: 12 * k, color: Kt.COL.text2, raw: true }));
-    if (d.sub) Kt.text(g, d.sub, x + 12 * k, y + 11 * k + lines.length * 18 * k, { size: 10.5 * k, color: Kt.COL.text3, raw: true });
+    if (tags.length) Kt.text(g, tags[0], x + 12 * k, y + 10 * k + lines.length * 18 * k, { size: 11.5 * k, weight: 700, color: Kt.COL.gold || '#e8c87a', raw: true });
+    if (d.sub) Kt.text(g, d.sub, x + 12 * k, y + 11 * k + (lines.length + tags.length) * 18 * k, { size: 10.5 * k, color: Kt.COL.text3, raw: true });
   }
   C.descBox = descBox;
 
@@ -357,6 +360,8 @@
     return {
       id: s.id, label: s.name || d.name || s.id, cmd, right, free: cmd === 'spell' && s.mp === 0, disabled: s.usable === false,
       reason: s.reason || null, isNew, target: s.target || d.target || target || 'enemy', desc: d.desc || s.desc || '', element: d.element,
+      // 技の特徴（先制・2回・火・守備無視 …）。持ち主 2026-10-01「同じようなのがあって違いも分からん」
+      tags: cmd === 'skill' && R.Rules.techTagLine ? R.Rules.techTagLine(d) : '',
     };
   }
 
@@ -402,7 +407,7 @@
           if (!r) return null;
           const text = r.reason === 'reach' ? R.T('battle.command.subList.i.desc.text') : r.disabled && r.reason === 'mp' ? R.T('battle.command.subList.i.desc.text_2') : r.disabled && r.reason === 'nodead' ? R.T('battle.command.subList.i.desc.text_3') : r.id === 'attack' ? R.T('battle.command.subList.i.desc.text_4') : r.desc || '';
           const tn = targetName(st, M, r);
-          return { text, sub: (TARGET_JA[r.target] || '') + (tn ? R.T('battle.command.subList.i.desc.sub', { tn }) : '') };
+          return { text, tags: r.reason === 'reach' || r.id === 'attack' ? '' : r.tags || '', sub: (TARGET_JA[r.target] || '') + (tn ? R.T('battle.command.subList.i.desc.sub', { tn }) : '') };
         },
         draw(g, w) {
           if (st.L.tall) { tallList(g, w, st, title); return; }

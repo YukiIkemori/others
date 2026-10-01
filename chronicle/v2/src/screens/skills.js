@@ -123,6 +123,15 @@
         for (const l of R.UIK.wrap(R.I18n.unwrap(a.desc), dp.w - u(40), { size: u(14.5) }).slice(0, 2)) { R.UIK.text(g, l, dp.x + u(20), yy, { size: u(14.5), color: C.text }); yy += u(24); }
         let cx = dp.x + u(20);
         cx += R.UIK.chip(g, cx, yy + u(4), S.rangeName(a) || '―', { kind: 'plain', size: 11 }) + u(8);
+        // 技の特徴（先制・2回・火・守備無視 …）を金の札で。入りきらない分は出さない（持ち主 2026-10-01「違いも分からん」）
+        if (row.kind === 'tech' && R.Rules.techTags) {
+          const lim = dp.x + dp.w - u(20) - (a.wtype !== wt ? u(110) : 0);
+          for (const t of R.Rules.techTags(a)) {
+            if (cx + R.UIK.measure(t, { size: u(11), weight: 700 }) + u(20) > lim) break;
+            cx += R.UIK.chip(g, cx, yy + u(4), t, { kind: 'plain', size: 11, color: C.gold }) + u(6);
+          }
+          cx += u(2);
+        }
         const from = row.kind === 'tech' ? S.derivedFromName(c, row.value) : null;
         if (from) cx += R.UIK.chip(g, cx, yy + u(4), R.T('ui.skills.draw.cx.chip', { from }), { kind: 'plain', size: 11, color: C.gold }) + u(8);
         if (row.kind === 'tech' && a.wtype !== wt) R.UIK.chip(g, cx, yy + u(4), R.T('ui.skills.draw.chip', { wname: S.wname(a.wtype) }), { kind: 'plain', size: 11, color: C.text3 });
