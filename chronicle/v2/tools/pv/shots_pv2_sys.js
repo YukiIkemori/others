@@ -28,10 +28,17 @@ const PV2LIB = `(() => {
     winAfter: 0, winF: 0,
     autoWin(n) { PV2.winAfter = n || 90; PV2.winF = 0; return true; },
     rareDrop() {
-      const M = R.Mon, dc = M.__pvDc || (M.__pvDc = M.dropChances);
-      M.dropChances = function (d, o) { const r = dc.apply(this, arguments); if (o && o.golden && d && d.drops && d.drops.rare) r.rare = 1; return r; };
+      // 落とし物を振る関数を包む（中の dropChances は外から差し替えられないので rollDrops の結果に足す）: 金色の魔物は必ずレアの枠を落とす
+      const M = R.Mon, rd = M.__pvRd || (M.__pvRd = M.rollDrops);
+      M.rollDrops = function (d, o) {
+        const out = rd.apply(this, arguments);
+        const sl = d && d.drops && d.drops.rare;
+        if (o && o.golden && sl && sl.item && !out.some((x) => x.grade === 'rare')) out.push({ item: sl.item, n: 1, grade: 'rare', slot: 'rare' });
+        return out;
+      };
       return true;
     },
+
     /** 偶然の閃きを止める（台本の技をそのまま出す。テスト用メニューの差し込み口の関数を差し替えるだけで、切り替えは入れない） */
     noGlim() { if (R.Tester) R.Tester.glim = () => 0; return true; },
     /** 魔物の行動の表に「最初の手番で必ずこれ」を足す（DB の写しの上で。戦闘の前に呼ぶ） */
@@ -135,17 +142,17 @@ const SHOTS = {
         DEF, `RPG.Party.restoreAll(); PV2.noGlim(); PV2.autoWin(60); PV2.firstAct('b_sandworm', 'eb_worm_rear')`));
       await INTRO(T);
     },
-    n: sec(44),
+    n: sec(30),
   },
   // 出現表だけの戦闘は setup に出現表の bg を渡す（フィールドの遭遇 R.Mon.encounter と同じ）
-  // 金色の魔物 → 倒して「レア」のジングルと演出（諸島の洞窟の出現表 z_r_isles_cave の魚人＋カニ、背景はゲームのまま watercave）
+  // 金色の魔物 → 倒して「レア」のジングルと演出（諸島の洞窟の出現表 z_r_isles_cave の魚人＋カニ。金色はレアの枠を持つカニ、背景はゲームのまま watercave）
   s5_gold: {
     prep: async (T) => {
-      await T.js(BATTLE({}, 'kasim', 'warp', { zone: 'z_r_isles_cave', mons: [['@merman', 1], ['@crab', 1]], bg: 'watercave', seed: 'pv2-gold', golden: 0, rare: false, surprise: 'pre' },
+      await T.js(BATTLE({}, 'kasim', 'warp', { zone: 'z_r_isles_cave', mons: [['@merman', 1], ['@crab', 1]], bg: 'watercave', seed: 'pv2-gold', golden: 1, rare: false, surprise: 'pre' },
         FOCUS('hero', 'skill', 't_sword_crest'), `PV.teach('hero', ['t_sword_crest']); PV2.rareDrop(); PV2.noGlim(); PV2.autoWin(300); PV.boost(1); PV.kill = true; PV2.sureHit()`));
       await INTRO(T);
     },
-    n: sec(16),
+    n: sec(19),
   },
   // 図鑑: 通常・レア・超レアの枠（見た魔物と手に入れた落とし物を入れてから開く。森の魔物は入れない）
   s5_bestiary: {
@@ -217,11 +224,11 @@ const SHOTS = {
     },
     n: sec(13),
   },
-  // 亡霊船長グレン（背景はゲームのまま ship）: ザフィラの荒波の連撃（b_zafira_bigtech_1）
+  // 亡霊船長グレン（背景はゲームのまま ship）: ザフィラの闇夜の刃（b_zafira_bigtech_1。荒波の連撃は合成術のカットの大波と似るので月の技に）
   s8_captain: {
     prep: async (T) => {
-      await T.js(BATTLE({ tier: 4 }, 'kasim', 'warp', { troop: 'tr_b_captain', boss: true, seed: 'pv2-capt', surprise: 'pre' }, FOCUS('zafira', 'skill', 't_dagger_surge'),
-        `PV.teach('zafira', ['t_dagger_surge']); RPG.Party.restoreAll(); PV2.noGlim(); PV2.voice({b_zafira_bigtech_: 'b_zafira_bigtech_1'})`));
+      await T.js(BATTLE({ tier: 4 }, 'kasim', 'warp', { troop: 'tr_b_captain', boss: true, seed: 'pv2-capt', surprise: 'pre' }, FOCUS('zafira', 'skill', 't_dagger_nightfall'),
+        `PV.teach('zafira', ['t_dagger_nightfall']); RPG.Party.restoreAll(); PV2.noGlim(); PV2.voice({b_zafira_bigtech_: 'b_zafira_bigtech_1'})`));
       await INTRO(T);
     },
     n: sec(13),

@@ -277,27 +277,33 @@ T_FRZ = t + 1.6
 cut('s5_glimmer', T_FRZ, 1.5, src=7.78, freeze=True, grade=dict(sat=0.75, bright=0.8))
 FLASH.append((T_FRZ, 0.06, 0.35, 0.5))
 SFX.append(dict(id='glimmer', at=T_FRZ, gain=-4))
-vo('v_hero_f_glimmer_1', T_FRZ + 0.05, y=1000, until=T_FRZ + 4.75)   # 止め絵から同じ戦闘が続くので、場面の終わりは戦闘の終わり
+vo('v_hero_f_glimmer_1', T_FRZ + 0.05, y=1000, until=T_FRZ + 5.8)   # 止め絵から同じ戦闘が続くので、場面の終わりは戦闘の終わり
 big('閃き', T_FRZ + 0.02, T_FRZ + 2.7, y=480, subtext='技128・術79が、戦いの中でひらめく', band=440)
-cut('s5_glimmer', T_FRZ + 1.5, 3.25, src=7.78, gamesfx=-6, ev=True, ev_jingle=False)   # 抜き打ち → 10.53 で一撃
-t = T_FRZ + 4.75
+cut('s5_glimmer', T_FRZ + 1.5, 4.3, src=7.78, gamesfx=-6, ev=True, ev_jingle=False)   # 日の出の剣: 11.0–11.6 で日輪、11.93 で一撃（新エフェクト）
+FLASH.append((T_FRZ + 1.5 + 11.3 - 7.78, 0.05, 0.35, 0.4, (1.0, 0.9, 0.7)))
+t = T_FRZ + 5.8
 # 合成術
 cut('s5_combo', t, 3.2, src=7.0, gamesfx=-6, ev=True, ev_jingle=False, suby=1000)   # 7.57 唱える → 8.27 当たる
-FLASH.append((t + 1.27, 0.06, 0.4, 0.3, (1.0, 0.8, 0.6)))
+FLASH.append((t + 1.65, 0.06, 0.4, 0.3, (0.7, 0.85, 1.0)))   # 荒れ狂う海: 8.65 で大波の山
 cap('COMBO', '属性を重ねて、合成術。50種', t + 0.2, t + 3.1)
 t += 3.2
+# 敵の合体技（炎の竜巻: 5.80 唱える → 6.0 札 → 6.5–7.6 竜巻、7.17 当たる）
+cut('s5_ecombo', t, 2.6, src=5.5, gamesfx=-6, ev=True, ev_jingle=False, suby=1000)
+FLASH.append((t + 7.17 - 5.5, 0.05, 0.35, 0.35, (1.0, 0.7, 0.4)))
+cap('ENEMY COMBO', '敵も、合体技で襲いかかる', t + 0.2, t + 2.5)
+t += 2.6
 # 大技の予告 → しのぐ
-cut('s5_tell', t, 2.0, src=11.7, gamesfx=-8)          # 「砂に身を沈めはじめた……」
-cut('s5_tell', t + 2.0, 2.8, src=35.5, gamesfx=-6)    # 吹き出す砂 → 全員しのぐ
+cut('s5_tell', t, 2.0, src=5.7, gamesfx=-8)          # 「砂に身を沈めはじめた……」
+cut('s5_tell', t + 2.0, 2.8, src=24.4, gamesfx=-6)    # 吹き出す砂 → 全員しのぐ
 cap('GUARD', '予告を見抜いて、防御', t + 0.2, t + 4.7)
 t += 4.8
 # 金色の魔物 → レアのドロップ（装備の数もここで）
 cut('s5_gold', t, 2.2, src=0.4, gamesfx=-7, ev=True, jgain=-6)
-cut('s5_gold', t + 2.2, 1.2, src=6.25, gamesfx=-6)
-cut('s5_gold', t + 3.4, 2.4, src=13.05, gamesfx=-8, ev=True, jgain=-5)
+cut('s5_gold', t + 2.2, 1.4, src=8.85, gamesfx=-6)   # 光紋剣 8.9 魔法陣 → 9.75 当たる
+cut('s5_gold', t + 3.6, 2.4, src=15.8, gamesfx=-8, ev=True, jgain=-5)   # 16.22 レアのドロップ
 cap('RARE', '金色の魔物。レア・超レアのドロップ', t + 0.3, t + 3.3, size=64)
-cap('EQUIP', '武器301・防具とアクセサリ745', t + 3.45, t + 5.7)
-t += 5.8
+cap('EQUIP', '武器301・防具とアクセサリ745', t + 3.65, t + 5.9)
+t += 6.0
 
 # ================================================================== 6 年代記（sorrow の頭に 1 つだけ）
 T6 = t
@@ -331,8 +337,8 @@ cut('s8_rowell', T8, 1.5, src=4.65, gamesfx=-6)   # 戦闘の頭の名の札「�
 t = T8 + 1.5
 BOSS = [  # (カット, src, 長さ, 光の時刻（カットの秒）)
     ('s8_white', 8.0, 2.4, 9.28),      # シグレ
-    ('s8_captain', 10.3, 2.6, 11.43),  # ザフィラ
-    ('s8_lava', 9.35, 3.1, 10.80),     # ロウガ
+    ('s8_captain', 10.3, 2.6, 11.6),   # ザフィラ（闇夜の刃）
+    ('s8_lava', 9.35, 3.1, 10.52),     # ロウガ（神鳴り打ち）
     ('s8_star', 9.25, 2.7, 10.52),     # イルゼ
 ]
 for c, src, d, hit in BOSS:
