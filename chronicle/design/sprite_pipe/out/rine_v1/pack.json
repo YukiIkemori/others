@@ -1,0 +1,53 @@
+{
+ "registration": {
+  "face_serious": {
+   "to": "face_neutral",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.388
+  },
+  "face_smile": {
+   "to": "face_neutral",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.344
+  },
+  "face_laugh": {
+   "to": "face_neutral",
+   "dx": 1,
+   "dy": 0,
+   "fit": 1.304
+  },
+  "face_surprise": {
+   "to": "face_neutral",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.342
+  },
+  "face_sad": {
+   "to": "face_neutral",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.353
+  },
+  "face_angry": {
+   "to": "face_neutral",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.335
+  },
+  "face_tired": {
+   "to": "face_neutral",
+   "dx": 1,
+   "dy": 0,
+   "fit": 1.289
+  }
+ },
+ "attach": {},
+ "weapons": {},
+ "sets": [
+  "face"
+ ],
+ "colors": 0,
+ "face_colors": 48
+}

@@ -225,6 +225,8 @@ def main():
     ap.add_argument('--dist', default=os.path.join(here, '..', 'dist'))
     ap.add_argument('--out', required=True)
     ap.add_argument('--page', type=int, default=2048)
+    ap.add_argument('--no-size-limits', action='store_true',
+                    help='Firebase などに出すとき: 1 ファイル・1 版の大きさと数の上限（成果物ページの上限）を確かめない（形式の確認はする）')
     ap.add_argument('--voice-pack-mb', type=float, default=2.5)
     ap.add_argument('--scope', choices=('demo', 'all'), default='demo',
                     help="demo: leave out the env themes and battle backgrounds of regions locked in the slice (regions.js slice: 'locked')")
@@ -283,7 +285,7 @@ def main():
         text = ext in ('.html', '.css', '.js', '.json', '.svg', '.txt')
         if ext not in SERVABLE:
             bad.append(f"{f['path']}: type {ext} is not servable")
-        if f['bytes'] > (MAX_TEXT if text else MAX_BIN):
+        if not a.no_size_limits and f['bytes'] > (MAX_TEXT if text else MAX_BIN):
             bad.append(f"{f['path']}: {f['bytes']} bytes is over the per-file limit")
     batches, cur = [], None
     for f in files:
@@ -293,9 +295,9 @@ def main():
         cur['files'].append(f['path'])
         cur['bytes'] += f['bytes']
     total = sum(f['bytes'] for f in files)
-    if len(files) > VERSION_FILES:
+    if not a.no_size_limits and len(files) > VERSION_FILES:
         bad.append(f'{len(files)} files is over the {VERSION_FILES} per version')
-    if total > VERSION_BYTES:
+    if not a.no_size_limits and total > VERSION_BYTES:
         bad.append(f'{total} bytes is over the per-version limit')
     folders = {}
     for f in files:

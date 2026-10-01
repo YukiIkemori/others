@@ -92,11 +92,14 @@ if (argv.includes('--build')) execFileSync('node', [path.join(__dirname, 'build.
         const g = c.getContext('2d');
         RPG.Portrait.draw(g, 'hero_f_mage', { x: 20, y: 20, w: 170, h: 170 }, { fit: 'fill' });
         const d = g.getImageData(0, 0, 400, 400).data;
-        let x0 = 400, x1 = -1, y1 = -1;
-        for (let y = 0; y < 400; y++) for (let x = 0; x < 400; x++) if (d[(y * 400 + x) * 4 + 3] > 24) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y1 = Math.max(y1, y); }
-        return { w: x1 - x0 + 1, cx: (x0 + x1) / 2, bottom: y1 };
+        let x0 = 400, x1 = -1, y0 = 400, y1 = -1;
+        for (let y = 0; y < 400; y++) for (let x = 0; x < 400; x++) if (d[(y * 400 + x) * 4 + 3] > 24) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+        const sh = RPG.Hd.now('hd:face:hero_f_mage'), m = (sh && sh.meta) || {};
+        return { w: x1 - x0 + 1, h: y1 - y0 + 1, cx: (x0 + x1) / 2, bottom: y1, source: m.source, from: m.from || '' };
       });
-      ok('顔の絵の幅が枠の 85% 以上で、横の真ん中にある', r.w >= 170 * 0.85 && Math.abs(r.cx - 105) <= 6, r);
+      // 原画の顔（シート9、胸から上）は縦長なので、縦か横の長い方が枠の 85% 以上なら枠いっぱい（2026-10-01 リーネの顔のシートが入った）
+      ok('顔の絵が枠いっぱい（幅か高さが 85% 以上）で、横の真ん中にある', (r.w >= 170 * 0.85 || r.h >= 170 * 0.85) && r.w >= 170 * 0.7 && Math.abs(r.cx - 105) <= 6, r);
+      ok('女の主人公の顔は描いた顔のシート（歩きの原画の切り抜きではない）', r.source === 'sprite' && r.from !== 'field', r);
       await P.close();
     }
     section('1-12 灯台の鍵を開けたらそのまま中へ');

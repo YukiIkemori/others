@@ -319,7 +319,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "hero_f_warrior の原画の顔を共有（spriteOf）"
  },
  {
   "look": "hero_f_ranger",
@@ -333,7 +333,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "hero_f_warrior の原画の顔を共有（spriteOf）"
  },
  {
   "look": "hero_f_spellblade",
@@ -347,7 +347,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "hero_f_warrior の原画の顔を共有（spriteOf）"
  },
  {
   "look": "hero_f_wanderer",
@@ -361,7 +361,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "hero_f_warrior の原画の顔を共有（spriteOf）"
  },
  {
   "look": "hero_f_warrior",
@@ -375,7 +375,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "原画のシートの表情（sprite_pipe）を使用中（リーネ、シート9）"
  },
  {
   "look": "hero_m_mage",
@@ -389,7 +389,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "hero_m_warrior の原画の顔を共有（spriteOf）"
  },
  {
   "look": "hero_m_ranger",
@@ -403,7 +403,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "hero_m_warrior の原画の顔を共有（spriteOf）"
  },
  {
   "look": "hero_m_spellblade",
@@ -417,7 +417,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "hero_m_warrior の原画の顔を共有（spriteOf）"
  },
  {
   "look": "hero_m_wanderer",
@@ -431,7 +431,7 @@
   ],
   "priority": 2,
   "status": "todo",
-  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+  "note": "hero_m_warrior の原画の顔を共有（spriteOf）"
  },
  {
   "look": "hero_m_warrior",

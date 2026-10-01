@@ -1,0 +1,79 @@
+{
+ "raw": "raw/s9_a1.png",
+ "pitch": 8.0,
+ "frames": {
+  "face_neutral": {
+   "row": 1,
+   "column": 1,
+   "logical_bbox": [
+    72,
+    80
+   ],
+   "air": 0
+  },
+  "face_serious": {
+   "row": 1,
+   "column": 2,
+   "logical_bbox": [
+    71,
+    80
+   ],
+   "air": 0
+  },
+  "face_smile": {
+   "row": 1,
+   "column": 3,
+   "logical_bbox": [
+    71,
+    80
+   ],
+   "air": 0
+  },
+  "face_laugh": {
+   "row": 1,
+   "column": 4,
+   "logical_bbox": [
+    70,
+    80
+   ],
+   "air": 0
+  },
+  "face_surprise": {
+   "row": 2,
+   "column": 1,
+   "logical_bbox": [
+    71,
+    80
+   ],
+   "air": 0
+  },
+  "face_sad": {
+   "row": 2,
+   "column": 2,
+   "logical_bbox": [
+    71,
+    80
+   ],
+   "air": 0
+  },
+  "face_angry": {
+   "row": 2,
+   "column": 3,
+   "logical_bbox": [
+    71,
+    80
+   ],
+   "air": 0
+  },
+  "face_tired": {
+   "row": 2,
+   "column": 4,
+   "logical_bbox": [
+    70,
+    80
+   ],
+   "air": 0
+  }
+ },
+ "notes": []
+}

@@ -1,0 +1,89 @@
+[
+ {
+  "sheet": 9,
+  "file": "rine_sheet_09.png",
+  "layout": "2x4",
+  "logical_cell": [
+   96,
+   96
+  ],
+  "image_px": [
+   3072,
+   1536
+  ],
+  "frames": [
+   {
+    "id": "face_neutral",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     69,
+     80
+    ]
+   },
+   {
+    "id": "face_serious",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     70,
+     80
+    ]
+   },
+   {
+    "id": "face_smile",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     70,
+     80
+    ]
+   },
+   {
+    "id": "face_laugh",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     70,
+     80
+    ]
+   },
+   {
+    "id": "face_surprise",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     69,
+     80
+    ]
+   },
+   {
+    "id": "face_sad",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     70,
+     80
+    ]
+   },
+   {
+    "id": "face_angry",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     70,
+     80
+    ]
+   },
+   {
+    "id": "face_tired",
+    "row": 2,
+    "column": 4,
+    "logical_bbox": [
+     70,
+     80
+    ]
+   }
+  ]
+ }
+]

@@ -1,0 +1,195 @@
+{
+ "char": "rine",
+ "companion": null,
+ "npc": null,
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/hero_f/rine/face_sheet",
+ "sheets": {
+  "9": {
+   "file": "../art_ref/gen/hero_f/rine/face_sheet/rine_sheet_09.png",
+   "size": [
+    3072,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x4",
+    "logical_cell": [
+     96,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 640.0,
+   "native_height_at_period": 80.0,
+   "scale_note": "描かれた格子のまま（80.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "face_neutral": {
+     "size": [
+      72,
+      80
+     ],
+     "box": [
+      80,
+      48,
+      688,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.03,
+     "facing_cues": {
+      "head": 0.06,
+      "upper": -0.04
+     }
+    },
+    "face_serious": {
+     "size": [
+      71,
+      80
+     ],
+     "box": [
+      848,
+      48,
+      1448,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.18,
+     "facing_cues": {
+      "head": 0.04,
+      "upper": -0.21
+     }
+    },
+    "face_smile": {
+     "size": [
+      71,
+      80
+     ],
+     "box": [
+      1616,
+      48,
+      2216,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.13,
+     "facing_cues": {
+      "head": -0.04,
+      "upper": -0.09
+     }
+    },
+    "face_laugh": {
+     "size": [
+      70,
+      80
+     ],
+     "box": [
+      2392,
+      48,
+      2984,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.21,
+     "facing_cues": {
+      "head": 0.25,
+      "upper": -0.03
+     }
+    },
+    "face_surprise": {
+     "size": [
+      71,
+      80
+     ],
+     "box": [
+      80,
+      816,
+      680,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.06,
+     "facing_cues": {
+      "head": 0.04,
+      "upper": -0.1
+     }
+    },
+    "face_sad": {
+     "size": [
+      71,
+      80
+     ],
+     "box": [
+      848,
+      816,
+      1448,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.06,
+     "facing_cues": {
+      "head": 0.07,
+      "upper": -0.13
+     }
+    },
+    "face_angry": {
+     "size": [
+      71,
+      80
+     ],
+     "box": [
+      1616,
+      816,
+      2216,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.06,
+     "facing_cues": {
+      "head": -0.03,
+      "upper": -0.03
+     }
+    },
+    "face_tired": {
+     "size": [
+      70,
+      80
+     ],
+     "box": [
+      2392,
+      816,
+      2984,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.01,
+     "facing_cues": {
+      "head": -0.07,
+      "upper": 0.07
+     }
+    }
+   }
+  }
+ },
+ "items": []
+}
