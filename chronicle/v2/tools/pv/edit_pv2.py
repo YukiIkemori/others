@@ -461,10 +461,9 @@ def lang_line():
     return out
 
 
-T.append(dict(kind='end_main', text='体験版 配信中', style=dict(size=96), t0=E0 + 0.9, t1=E0 + 7.3, x=960, y=400, anim='rise', fin=0.6, fout=0.8, sweep=1.1, sweep_at=0.6))
-T.append(dict(kind='end_sub', text='Steamにて配信予定', t0=E0 + 1.4, t1=E0 + 7.3, x=960, y=530, anim='rise', fin=0.6, fout=0.8))
-T.append(dict(kind='end_sub', image=lang_line(), width=1000, t0=E0 + 1.9, t1=E0 + 7.3, x=960, y=640, anim='rise', fin=0.6, fout=0.8))
-T.append(dict(kind='end_credit', text='Studio Metem', style=dict(font=FONT_EN_PATH, size=46), t0=E0 + 2.5, t1=E0 + 7.3, x=960, y=850, anim='fade', fin=0.8, fout=0.8))
+# 持ち主 2026-10-01「最後、体験版云々はいらない。これで製品の Steam の動画にする」: 体験版・配信予定の札は出さない（言葉の一覧と会社名だけ）
+T.append(dict(kind='end_sub', image=lang_line(), width=1000, t0=E0 + 1.2, t1=E0 + 7.3, x=960, y=560, anim='rise', fin=0.6, fout=0.8))
+T.append(dict(kind='end_credit', text='Studio Metem', style=dict(font=FONT_EN_PATH, size=46), t0=E0 + 1.8, t1=E0 + 7.3, x=960, y=760, anim='fade', fin=0.8, fout=0.8))
 DIP.append((E0 + 7.5, 1.2))
 DURATION = E0 + 7.5
 MUSIC[-1]['dur'] = DURATION - T_BEACON
