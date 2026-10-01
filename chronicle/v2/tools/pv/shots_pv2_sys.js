@@ -212,11 +212,11 @@ const SHOTS = {
     },
     n: sec(20),
   },
-  // 鉄の番人（背景 mine）: ドッカの天崩し（b_dokka_bigtech_2）
+  // 鉄の番人（背景 mine）: ドッカの天崩し（b_dokka_bigtech_2）。大技は外さない（hitFix で敵への空振りを消す）
   s8_iron: {
     prep: async (T) => {
       await T.js(BATTLE({ tier: 5, party: ['hero', 'dokka', 'shigure', 'zafira'] }, 'kasim', 'warp', { troop: 'tr_b_ironwarden', boss: true, seed: 'pv2-iron', surprise: 'pre' }, FOCUS('dokka', 'skill', 't_greatsword_skyfall'),
-        `PV.teach('dokka', ['t_greatsword_skyfall']); RPG.Party.restoreAll(); PV2.noGlim(); PV2.voice({b_dokka_bigtech_: 'b_dokka_bigtech_2'})`));
+        `PV.teach('dokka', ['t_greatsword_skyfall']); RPG.Party.restoreAll(); PV2.noGlim(); PV2.voice({b_dokka_bigtech_: 'b_dokka_bigtech_2'}); PV.boost(1); RPG.Tester.hitFix = (t, r) => { if (t && !t.isParty) r.miss = false; return r; }`));
       await INTRO(T);
     },
     n: sec(13),
