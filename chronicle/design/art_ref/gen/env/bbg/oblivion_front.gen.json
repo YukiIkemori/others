@@ -1,0 +1,12 @@
+{
+ "out": "/home/user/others/chronicle/design/art_ref/gen/env/bbg/oblivion_front.png",
+ "tag": "env_bbgfront_oblivion",
+ "size": "1920x1088",
+ "quality": "high",
+ "background": "opaque",
+ "prompt": "A FOREGROUND OVERLAY layer for a side-on JRPG battle background (16:9), 2D pixel art: only close-up foreground elements hugging the bottom edge and the two bottom corners, silhouetted dark against the night (deep violet-blue, slight rim of moonlight on top edges): drifting torn pages and broken pale slabs with ruled lines. They cover at most the bottom 18% in the centre and rise to about 35% of the height in the left and right corners. Everything else is a flat, solid, pure magenta (#FF00FF) background with no gradient, no texture and no shading (the middle and top of the image are empty magenta); no magenta inside the foreground objects. No characters, no text. Crisp square pixels (4x4 image px each).",
+ "key": "magenta",
+ "refs": [],
+ "revised_prompt": "Generate a 16:9 pixel-art asset, a FOREGROUND OVERLAY for a side-on JRPG night battle scene. Canvas background must be absolutely flat solid chroma-key magenta RGB #FF00FF everywhere outside objects, with no gradient, noise, texture, shadows, stray pixels, or shading. The upper and central canvas are empty pure magenta. Only near-camera foreground silhouettes hugging the bottom edge and bottom-left and bottom-right corners: scattered drifting torn paper pages and jagged broken pale stone slabs or fragments with subtle ruled-line marks (lines only, absolutely no letters or text). Deep violet-blue dark nighttime shadow silhouettes, with restrained pale blue moonlit highlights only on upper-facing edges; readable blocky shapes and clusters. In the center, objects occupy at most the lowest 18% of canvas height; at extreme left and right corners foreground can rise to at most 35% of height, sloping down toward center. All elements connect to or sit immediately above bottom border, with occasional torn pages drifting very close to the bottom clusters, never in the empty upper field. No magenta pixels within any foreground object. Hard clean pixel contours, sharp grid-aligned square pixels with effective 4x4 output-image-pixel blocks, no antialiasing, no smooth gradients. No characters, no typography, no frame, no scenery beyond specified foreground.",
+ "keyed": "magenta -> transparent (key_front.py)"
+}

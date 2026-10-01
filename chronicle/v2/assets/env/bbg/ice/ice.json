@@ -1,0 +1,27 @@
+{
+ "id": "ice",
+ "kind": "bbg",
+ "src": "design/art_ref/gen/env/bbg/ice.png",
+ "prelit": true,
+ "layers": {
+  "front": "front.png",
+  "back": "back.png",
+  "ground": "ground.png",
+  "post": "post.png",
+  "front_tall": "front_tall.png",
+  "back_tall": "back_tall.png",
+  "ground_tall": "ground_tall.png",
+  "post_tall": "post_tall.png"
+ },
+ "horizon": {
+  "wide": 270,
+  "tall": 322
+ },
+ "blend": {
+  "back": "source-over (no light)",
+  "ground": "source-over (prelit; do NOT multiply by the ambient)",
+  "ground_lit": "source-over through a radial mask at the lantern (and other pools)",
+  "front": "source-over, soften r=3.5 like K.softenG",
+  "post": "'lighter'"
+ }
+}

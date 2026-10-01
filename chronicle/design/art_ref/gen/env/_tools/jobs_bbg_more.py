@@ -31,9 +31,10 @@ SCENES = {
  'oblivion': "Setting: the bottom of oblivion, the place under the world where forgotten, endless stories sink. Back (top 42%): an ink-black void with no sky, "
          "torn white tears and rips in the darkness like ripped paper edges, countless loose white pages and open books drifting and sinking slowly in the air, "
          "fragments of forgotten places floating upside down far away (a broken staircase, a door frame, a piece of a town wall, a chair), all pale, grey and drained of colour, "
-         "with faint violet edges. Ground (lower 58%): a vast floating floor made of huge pale paper-white stone slabs with faint ruled lines and torn edges, "
-         "drifts of blank pages, broken quills and a few cracked slabs at the sides, the edges of the floor crumbling into the void far away. "
-         "Light: a cold faint white glow from the pages, ink-black and grey-violet, almost monochrome with one faint violet tint.",
+         "with faint violet edges. Ground (lower 58%): a vast floating floor made of huge dim grey-violet stone slabs like old paper, with faint ruled lines and torn edges, "
+         "in deep night shadow (dark mid-grey, not white, not bright), drifts of blank pages, broken quills and a few cracked slabs at the sides, the edges of the floor crumbling into the void far away. "
+         "Light: only a cold faint glow from the drifting pages, ink-black, slate grey and grey-violet, almost monochrome with a faint violet tint; the scene stays dark. "
+         "Crisp blocky pixel clusters, not a sketch, not ink drawing.",
  'volcano': "Setting: deep inside the crater of a volcano. Back (top 42%): the sheer black crater walls rising all around in a ring, far above them only a small circle of night sky "
          "with a few stars seen through smoke; molten lava falls pour down the crater walls into a wide bright lava lake, glowing orange-yellow, with dark cooled crust plates floating on it, "
          "an island of black rock with jagged spires in the far middle of the lake. Ground (lower 58%): a broad causeway of black basalt and cooled lava crust, "
