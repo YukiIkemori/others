@@ -201,15 +201,15 @@ const SHOTS = {
     },
     n: sec(13),
   },
-  // 霧食らい（背景 marsh。ゲームの swamp は控えの夜の絵）: 1 ラウンド目（不意打ちで敵だけ動く）に魔女の分身が出る → 2 ラウンド目に仲間が分身を割り、ノエラの聖なる炎（光の術。b_noela_bigtech_1）
+  // 霧食らい（背景 marsh。ゲームの swamp は控えの夜の絵）: 分身が 2 体並んだ形で始める（霧食らいの編成に、霧食らいが呼ぶ魔女の分身 b_mist_double を足した撮り用の写し pv2_mist）→ 先手で仲間が分身を割り、ノエラの聖なる炎（光の術。b_noela_bigtech_1）
   s8_mist: {
     prep: async (T) => {
-      await T.js(BATTLE({ tier: 4, party: ['hero', 'noela', 'shigure', 'zafira'] }, 'kasim', 'warp', { troop: 'tr_b_mistbeast', bg: 'marsh', boss: true, seed: 'pv2-mist', surprise: 'ambush' },
+      await T.js(BATTLE({ tier: 4, party: ['hero', 'noela', 'shigure', 'zafira'] }, 'kasim', 'warp', { troop: 'pv2_mist', bg: 'marsh', boss: true, seed: 'pv2-mist', surprise: 'pre' },
         `(st, u, r) => { const d = st.aliveEnemies().find((a) => a.id !== 'b_mistbeast'); if (!d) return {cmd: 'attack', id: 'attack'}; return u.id === 'noela' ? {cmd: 'spell', id: 's_fire_light_a'} : {cmd: 'attack', id: 'attack', target: d.uid}; }`,
-        `PV.teach('noela', null, ['s_fire_light_a']); RPG.Party.restoreAll(); PV2.noGlim(); PV2.voice({b_noela_spell_: 'b_noela_bigtech_1', b_noela_bigtech_: 'b_noela_bigtech_1'}); PV2.dropAct('b_mistbeast', 'eb_mist_gather'); PV2.dropAct('b_mistbeast', 'eb_inhale_mist'); PV2.firstAct('b_mistbeast', 'eb_call_double')`));
+        `PV.teach('noela', null, ['s_fire_light_a']); RPG.Party.restoreAll(); PV2.noGlim(); PV2.voice({b_noela_spell_: 'b_noela_bigtech_1', b_noela_bigtech_: 'b_noela_bigtech_1'}); RPG.DB.troops.pv2_mist = Object.assign({}, RPG.DB.troops.tr_b_mistbeast, {mons: [['b_mistbeast', 1], ['b_mist_double', 1], ['b_mist_double', 1]]}); RPG.Tester.enabled = true; RPG.Tester.hitFix = (t, r) => r; RPG.Tester.dmgFix = (t, d) => (t && t.id === 'b_mist_double' ? Math.max(d, t.hp || 1) : d)`));
       await INTRO(T);
     },
-    n: sec(24),
+    n: sec(20),
   },
   // 鉄の番人（背景 mine）: ドッカの天崩し（b_dokka_bigtech_2）
   s8_iron: {
