@@ -144,7 +144,7 @@ def f_lake():
     a.exit('n', 26, 27, {'map': 'f_floe', 'spawn': 'south'}, 'north')['cond'] = 'cleared_r_snow'
     a.spawns['icicle'] = dict(x=8, y=32, dir='s')
     a.objects += [
-        dict(type='door', x=8, y=30, w=1, look='none', to={'map': 'icicle_1', 'spawn': 'entrance'}),  # 2026-10-01: centred on the cave mouth (marker fix)
+        dict(type='door', x=8, y=31, w=1, look='none', to={'map': 'icicle_1', 'spawn': 'entrance'}),  # 2026-10-01: centred on the cave mouth (marker fix)
         dict(type='sign', x=11, y=33, text='つららの回廊\n氷の中に、何かが閉じこめられている。'),
         dict(type='sign', x=32, y=36, text='凍った湖\n今年は氷が薄い。渡るべからず。'),
         dict(type='examine', x=31, y=34, event='world_snow_lake'),
