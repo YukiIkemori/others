@@ -576,15 +576,23 @@ SHOTS.s6_write = {
 //   地方を解決したときの本物の筋（R.Events._clearRegion = ev.clearRegion: ページ・ティア・章の数 → 光の柱 → 章の札）を、
 //   前の地方を解決済みにした状態で、その地方の大灯火の場所（regions の beaconAt。ワールドの上にある物はワールド）で 1 つずつ撮る。
 //   章の札（CHAPTER n）は柱が立って約 2.4 秒後に出る（柱だけ使うなら頭の 2.4 秒）
+// 2026-10-01: regions の beaconAt を「その地方を解決するマップ」に直したのに合わせ、撮る場所も解決の場所に（柱が灯・火・鐘・卵・球に落ちる）。
+//   一行の位置と旗は scratchpad/w_beacon/probe.js の解決の直前の形（[地方, マップ, 出る所, 足す旗]）
 const BEACONS = [
-  ['r_forest', 'world', null], ['r_desert', 'desert_camp3', 'spring'], ['r_snow', 'peak_top', 'altar'], ['r_marsh', 'world', null],
-  ['r_isles', 'i_light', null], ['r_mine', 'dovan', 'mine'], ['r_ash', 'ash_volcano_2', null], ['r_star', 'star_tower_top', 'lectern'],
+  ['r_forest', 'verda_1', 'camp', ['forest_boss']],
+  ['r_desert', 'desert_camp3', 'spring', ['desert_king', 'desert_camp3_done']],
+  ['r_snow', 'peak_top', { x: 20, y: 10, dir: 'n' }, ['snow_giant', 'snow_neve']],
+  ['r_marsh', 'marsh_bog', { x: 30, y: 19, dir: 'n' }, ['marsh_bell_1', 'marsh_bell_2', 'marsh_bell_3', 'marsh_mistbeast']],
+  ['r_isles', 'nerei', 'pier_end', ['isles_ship', 'isles_captain', 'isles_dawn_scene', 'isles_dawn_done']],
+  ['r_mine', 'dovan', 'oath', ['mine_relight_scene', 'mine_relight_done']],
+  ['r_ash', 'ash_volcano_2', { x: 22, y: 18, dir: 'n' }, ['ash_lavabeast', 'ash_egg']],
+  ['r_star', 'orbis', 'plaza', ['star_dawn_scene', 'star_dawn_done']],
 ];
-BEACONS.forEach(([rid, map, spawn], k) => {
+BEACONS.forEach(([rid, map, spawn, more], k) => {
   SHOTS['s9_beacon_' + (k + 1)] = {
     prep: async (T) => {
       const prev = BEACONS.slice(0, k).map((b) => b[0]);
-      const fl = {}; for (const r of prev) fl['cleared_' + r] = true;
+      const fl = {}; for (const r of prev) fl['cleared_' + r] = true; for (const f of more || []) fl[f] = true;
       await T.js(FIELD({ flags: Object.assign({ cleared_r_forest: k > 0 }, fl), tier: k }, map, spawn));
       await T.idle(150); await T.settle();
       await T.js(`(() => { const G = RPG.Game; G.cleared = {}; for (const r of ${JSON.stringify(prev)}) G.cleared[r] = true; G.flags.cleared_r_forest = ${k > 0};
