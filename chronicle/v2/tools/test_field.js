@@ -435,6 +435,51 @@ async function main() {
   ok('hub result {escape}', R.Field.pos.map === 'field_world');
   R.Screens.open = origOpen;
 
+  section('脱出: すべてのダンジョンが、そのダンジョンの入口へ戻る（オーナー「古井戸で脱出すると街の酒場へ」）');
+  {
+    const M = R.DB.maps, Lc = R.DB.locations;
+    const ways = (m) => {
+      const out = [];
+      for (const e of m.exits || []) if (e.to) out.push({ x: e.x, y: e.y, w: e.w || 1, h: e.h || 1, to: e.to });
+      for (const o of m.objects || []) {
+        if ((o.type === 'stairs' || o.type === 'door') && o.to) out.push({ x: o.x, y: o.y, w: 1, h: 1, to: o.to });
+        else if (o.type === 'building' && o.door && o.door.to) out.push({ x: o.door.x, y: o.door.y, w: 1, h: 1, to: o.door.to });
+      }
+      return out;
+    };
+    const bad = [];
+    let n = 0;
+    for (const m of Object.values(M)) {
+      if (m.kind !== 'dungeon' || /^field_/.test(m.id)) continue;   // field_* は test_field_fx の仮のマップ
+      n++;
+      const t = R.Field.escapeTarget(m), tm = t && M[t.map];
+      if (!tm) { bad.push(m.id + ': no target'); continue; }
+      const sp = typeof t.spawn === 'string' ? tm.spawns && tm.spawns[t.spawn] : t.spawn;
+      if (!sp) { bad.push(m.id + ': no spawn ' + t.map + '/' + t.spawn); continue; }
+      const loc = m.location && Lc[m.location], home = loc && M[loc.map];
+      const entry = home && home.kind === 'dungeon' ? home : m;
+      if (tm.kind === 'dungeon') {
+        // ダンジョンの奥から入るダンジョン（千年樹・深淵の鉱脈）: その場所の入口の spawn（ワープと同じ）
+        if (!(t.map === entry.id && loc && t.spawn === loc.spawn)) bad.push(m.id + ': inside target is not the location entrance ' + JSON.stringify(t));
+        continue;
+      }
+      // 外のマップ: 出た所のすぐ近く（3 マス以内）に、このダンジョンの入口のマップへ入る道がある
+      const near = ways(tm).some((w) => w.to.map === entry.id && sp.x >= w.x - 3 && sp.x < w.x + w.w + 3 && sp.y >= w.y - 3 && sp.y < w.y + w.h + 3);
+      // 船に乗る・夜に忍び込むなど、イベントで入るダンジョン（幽霊船・消灯後の学院）は、外から歩いて入る道が無い: 入口のマップの扉を出た所と同じなら良い
+      const byEvent = !Object.values(M).some((o) => o.kind !== 'dungeon' && ways(o).some((w) => w.to.map === entry.id));
+      const ownDoor = ways(entry).some((w) => w.to.map === t.map && w.to.spawn === t.spawn);
+      if (!near && !(byEvent && ownDoor)) bad.push(m.id + ': ' + t.map + '/' + t.spawn + ' is not by the way into ' + entry.id);
+      if (tm.kind === 'interior' || /tavern|inn/.test(t.map)) bad.push(m.id + ': lands in a building ' + t.map);
+    }
+    ok('every dungeon map has an escape target next to its own entrance (' + n + ' maps)', n > 40 && bad.length === 0, bad);
+    const w = R.Field.escapeTarget(M.well);
+    ok('well: escape goes out by the well on the hill (f_roa/well), not the last town', w && w.map === 'f_roa' && w.spawn === 'well', w);
+    const oc = R.Field.escapeTarget(M.desert_oldcamp);
+    ok('old camp (location camp2 is a town): escape uses its own way out', oc && oc.map === 'd_hollow', oc);
+    const el = R.Field.escapeTarget(M.elder_2);
+    ok('elder_2: the thousand-year tree entrance (elder_1/south)', el && el.map === 'elder_1' && el.spawn === 'south', el);
+  }
+
   section('入口の確かめ（confirm: はい → 入る、いいえ → 1 歩下がる。持ち主 2026-09-28）');
   {
     const sayO = R.UIK.Message.say;

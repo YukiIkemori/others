@@ -64,7 +64,9 @@ for (const [key, st] of [['str', S16({ str: 21 })], ['dex', S16({ dex: 21 })]]) 
   const b = Ru.mpCost(c, 's_fire_1');
   c.eprof.fire = K.PROF_PTS[32];
   const h = Ru.mpCost(c, 's_fire_2'), full = DB.spells.s_fire_2.mp;
-  check(a > 0 && b === 0 && Ru.profMpKind(c, 's_fire_1') === 'free', `rank 14 → the element's step-1 spells cost 0 MP (${a} → ${b})`);
+  check(a > 0 && b === 1 && Ru.profMpKind(c, 's_fire_1') === 'half', `rank 14 → the element's step-1 attack spells cost 1 MP, never 0 (${a} → ${b})`);
+  { c.spells.push('s_water_1h'); c.eprof.water = K.PROF_PTS[14]; const hw = Ru.mpCost(c, 's_water_1h');
+    check(hw === 2, `rank 14 → step-1 heal spells (せせらぎ) cost 2 MP, never 0 (${DB.spells.s_water_1h.mp} → ${hw})`); }
   check(h === Math.max(1, Math.ceil(full / 2)) && Ru.profMpKind(c, 's_fire_2') === 'half', `rank 32 → step-2 spells cost half (${full} → ${h})`);
   const rows = [];
   for (const el of Ru.ELEMENTS) rows.push(el.padEnd(6) + [1, 2, 3, 4, 5].map((st) => { const s = DB.spells[`s_${el}_${st}`]; return s ? String(s.mp).padStart(4) : '   -'; }).join(''));

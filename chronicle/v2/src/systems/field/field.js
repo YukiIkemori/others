@@ -251,19 +251,40 @@
     try { R.Audio.sfx('warp'); } catch (e) { /* */ }
     return F.enter(l.map, l.spawn);
   };
-  /** 脱出（ダンジョンの中だけ）: そのダンジョンの入口のマップの外への出口へ。見つからなければ最後の町 */
+  /**
+   * 脱出の行き先（ダンジョンの中だけ）→ {map, spawn} | null。
+   *   入口のマップ = そのダンジョンの場所（location）の map。場所がダンジョンでない（野営地の脇の旧野営地など）ときは今のマップ。
+   *   入口のマップの外へ出る道（出口・階段・扉・建物の入口。cond が真の物）のうち、行き先がダンジョンでない最初の物 → 入口の外。
+   *   外へ出る道が無い（千年樹・深淵の鉱脈のようにダンジョンの奥から入るダンジョン）→ その場所の入口の spawn（ワープと同じ所）。
+   *   オーナーの報告「古井戸で脱出を選ぶと街の酒場に移動してしまう」: 前は出口（exits）だけを見ていたので、
+   *   階段・扉で外へ出るダンジョン（古井戸・神殿・王墓・幽霊船・学院）は最後の町（lastTown）へ飛んでいた
+   */
+  F.escapeTarget = function (m) {
+    m = m || S.map;
+    if (!m || m.kind !== 'dungeon') return null;
+    const loc = m.location && R.DB.locations[m.location];
+    const home = loc && R.DB.maps[loc.map];
+    const entry = home && home.kind === 'dungeon' ? home : m;
+    const ok = (c) => c == null || R.State.check(c);
+    const outside = (to) => { const t = to && R.DB.maps[to.map]; return !!(t && t.kind !== 'dungeon'); };
+    const ways = [];
+    for (const e of entry.exits || []) if (ok(e.cond)) ways.push(e.to);
+    for (const o of entry.objects || []) {
+      if (o.cond != null && !ok(o.cond)) continue;
+      if ((o.type === 'stairs' || o.type === 'door') && o.to) ways.push(o.to);
+      else if (o.type === 'building' && o.door && o.door.to) ways.push(o.door.to);
+    }
+    const out = ways.find(outside);
+    if (out) return { map: out.map, spawn: out.spawn };
+    if (entry === home && loc.spawn != null) return { map: home.id, spawn: loc.spawn };
+    const sp = Object.keys(entry.spawns || {})[0];
+    return sp ? { map: entry.id, spawn: sp } : null;
+  };
+  /** 脱出（ダンジョンの中だけ）: そのダンジョンの入口へ（F.escapeTarget）。見つからなければ最後の町 */
   F.escape = function () {
     const m = S.map;
     if (!m || m.kind !== 'dungeon') return Promise.resolve(false);
-    const loc = m.location && R.DB.locations[m.location];
-    const entry = loc && R.DB.maps[loc.map];
-    let to = null;
-    if (entry) {
-      for (const e of entry.exits || []) {
-        const t = R.DB.maps[e.to && e.to.map];
-        if (t && t.kind !== 'dungeon' && (!e.cond || R.State.check(e.cond))) { to = e.to; break; }
-      }
-    }
+    const to = F.escapeTarget(m);
     try { R.Audio.sfx('teleport'); } catch (e) { /* */ }
     if (to) return F.enter(to.map, to.spawn).then(() => true);
     const t = R.Game && R.Game.lastTown;

@@ -1130,7 +1130,9 @@
     const els = a.elements || [];
     if (els.length !== 1) return a.mp;
     const P = K.PROF_MP, r = Rules.rankOf(c, 'e', els[0]), step = Number(a.step) || 0;
-    if (step === P.freeStep && r >= P.freeRank) return 0;
+    // いちばん下の段は「ただ」にしない（持ち主 2026-10-01「MP0 になると常時満タンにできてバランスがおかしい。MP は最低 1 か 2 は使う」）:
+    //   攻めの術は 1、回復の術は 2（元の MP より高くはしない）
+    if (step === P.freeStep && r >= P.freeRank) return Math.min(a.mp, (a.effects || []).some((e) => e && (e.type === 'heal' || e.type === 'revive')) ? 2 : 1);
     if (step === P.halfStep && r >= P.halfRank) return Math.max(1, Math.ceil(a.mp / 2));
     return a.mp;
   }
