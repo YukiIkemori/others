@@ -3,6 +3,7 @@
 #   HEAD の中身だけでビルドする（作業中の変更は入れない）→ pack_web で体験版の範囲を固める → GA4 のタグを入れる → deploy
 #   必要な環境変数: FIREBASE_SERVICE_ACCOUNT（サービスアカウントの JSON。Firebase Hosting 管理者）、GA4_ID（G-XXXX、任意）
 #   使い方: bash chronicle/v2/deploy/deploy.sh [--dry] [--full]
+#   pack_web は --no-size-limits（成果物ページの上限は Firebase には無い。5 言語の文と字形で index.html は 16MB を超える）
 #   --full: 製品版（DB.config.slice を偽にし、全地方の絵を入れる）を、公開中の体験版とは別のプレビュー用 URL（チャンネル full、30 日で切れる）に出す。
 #           テストプレイ用なので GA4 のタグは入れない。持ち主 2026-10-01「製品版をテストプレイしたいから、どこかにアップ」
 set -euo pipefail
@@ -23,7 +24,7 @@ if [ -n "$FULL" ]; then
   SCOPE=all
 fi
 node tools/build.js > /dev/null
-python3 tools/pack_web.py --dist dist --out "$WORK/public" --scope "$SCOPE" ${FULL:+--no-size-limits} > "$WORK/pack.log" 2>&1 || { tail -20 "$WORK/pack.log"; exit 1; }
+python3 tools/pack_web.py --dist dist --out "$WORK/public" --scope "$SCOPE" --no-size-limits > "$WORK/pack.log" 2>&1 || { tail -20 "$WORK/pack.log"; exit 1; }
 GA4_ID=${GA4_ID:-G-GKKGJ8PJR8}   # GA4 の測定 ID（Firebase のウェブアプリ Luminous Chronicle）
 if [ -n "${GA4_ID:-}" ] && [ -z "$FULL" ]; then
   python3 - "$WORK/public/index.html" "$GA4_ID" <<'PY'
