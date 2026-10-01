@@ -143,7 +143,8 @@
     MODCAP: { party: 150, partyMin: -100, preempt: 30, grow: 30, growMin: -100, glim: 40, glimMin: -100, prof: 50, profMin: -100, cost: -50, encounter: 50, autoSteal: 100 },
     PARTY_KEYS: ['goldPct', 'dropPct', 'rarePct', 'superPct', 'rareEncPct', 'goldenPct', 'preemptPct', 'escapePct'],
     // §4.11 出現・先制・逃走
-    ENC: { world: 52, dungeon: 22, randLo: 0.6, randHi: 1.4, safeSteps: 6 },   // world: WORLD v3（2026-09-28）でワールドが 3 倍に広がった → 平均の間隔 26 → 52（旅 1 回の戦闘は前の約 1.5 倍。scratchpad worldv3/DESIGN.md §1.4）
+    ENC: { world: 52, dungeon: 22, randLo: 0.6, randHi: 1.4, safeSteps: 6, walkMul: 0.8 },   // walkMul: ダッシュせず歩いている歩は出現の率 ×0.8（持ち主 2026-10-01: 歩くと 2 割減る）
+      // world: WORLD v3（2026-09-28）でワールドが 3 倍に広がった → 平均の間隔 26 → 52（旅 1 回の戦闘は前の約 1.5 倍。scratchpad worldv3/DESIGN.md §1.4）
     DARK: { ambush: 0.08, stat: 1.1 },   // 暗がりの闇の強まり（E6。BATTLE が読む：先手を取られる率・闇の魔物の能力の倍率）
     ENC_ITEM: { repel: { pct: -100, steps: 100, weakOnly: true }, lure: { pct: 100, steps: 100 }, weakMargin: 3 },
     PREEMPT: 1 / 16, PREEMPT_RATIO: [0.5, 2],

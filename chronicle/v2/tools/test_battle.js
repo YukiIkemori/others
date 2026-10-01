@@ -152,6 +152,10 @@ section('出現（R.Mon.encounter: 率・組・魔除けの香・決まった結
   const road = runSteps('zw_forest_road', 60000);
   const ER = (EW - ES + 1) / 0.3 + ES - 1;   // 26 のとき 75
   ok(`forest road ×0.3: mean ≈ ${ER.toFixed(0)} steps (${road.mean.toFixed(1)})`, road.mean > ER * 0.88 && road.mean < ER * 1.12);
+  // 歩き（ダッシュでない）は率 ×K.ENC.walkMul（0.8）: 出会いの数が約 2 割減る（持ち主 2026-10-01）
+  const WM = R.Rules.K.ENC.walkMul;
+  const walk = runSteps('zw_forest', 30000, { rateMul: WM });
+  ok(`walking (rateMul ${WM}): about ${Math.round((1 - WM) * 100)}% fewer encounters (${walk.hits} vs ${w.hits})`, WM === 0.8 && walk.hits < w.hits * 0.88 && walk.hits > w.hits * 0.72);
   // 一行の encounterPct（シルヴァン −25）が率にかかる
   newGame(['sylvain']);
   const sy = runSteps('zw_forest', 30000);

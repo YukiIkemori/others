@@ -74,7 +74,7 @@
     ABIL: { mid: 16, minMul: 0.5, heal: 0.04 },
     HEALF: { min: 0.6, max: 2.0 },
     // 出現（DESIGN §4.11.1。旧は field.js の K.ENC。v2 では R.Mon.encounter が率を持つ）
-    ENC: { world: 52, dungeon: 22, safeSteps: 6 },   // WORLD v3: rules.js の ENC と同じ
+    ENC: { world: 52, dungeon: 22, safeSteps: 6, walkMul: 0.8 },   // WORLD v3: rules.js の ENC と同じ
     ENC_ITEM: { weakMargin: 3 },
     // 闇の強まり（WORLD_REDESIGN E6）: 暗い階の灯りの外で始まった戦闘
     DARK: { ambush: 0.08, stat: 1.1 },
@@ -535,7 +535,7 @@
     return null;
   }
   /**
-   * FIELD が 1 歩ごとに呼ぶ。o = {tier, dark, steps, ward, force}
+   * FIELD が 1 歩ごとに呼ぶ。o = {tier, dark, steps, ward, force, rateMul}
    * → null（出ない）| K.setup {zone, tier, dark, mons:[[id,1]…], lv, golden:<番号|-1>, rare, bg, bgm}
    * 乱数は R.Game.seed と歩数から（同じ歩数なら同じ結果）。安全な歩数（前の戦闘から K.ENC.safeSteps）の間は出ない。
    * ward（魔除けの香）: 弱い表だけ出ない（一行の平均の gl ≥ ゾーンの戦闘レベル + K.ENC_ITEM.weakMargin）
@@ -555,7 +555,7 @@
     if (!o.force) {
       if (encLast.zone === zoneId && steps >= encLast.step && steps - encLast.step < K('ENC').safeSteps) return null;
       const g = mkRng(`${seed}:enc:${zoneId}:${steps}`);
-      if (!g.chance(stepChance(zoneId, z))) return null;
+      if (!g.chance(stepChance(zoneId, z) * (o.rateMul != null ? o.rateMul : 1))) return null;   // rateMul: 歩き（ダッシュでない）は K.ENC.walkMul（FIELD が渡す）
     }
     const saved = RNG;
     RNG = mkRng(`${seed}:encgroup:${zoneId}:${steps}`);

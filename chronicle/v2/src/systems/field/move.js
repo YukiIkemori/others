@@ -369,13 +369,15 @@
     if (S.lure > 0) S.lure--;
     const zone = R.MapUtil.zoneAt(m, S.x, S.y);
     if (!zone || F.safeAt(S.x, S.y)) return null;
-    const o = { tier: R.Tier.get(), dark: F.dark.battleDark(S.x, S.y), steps: G.steps || 0, ward };
+    // ダッシュせずに歩いた歩は出現の率が 2 割減る（持ち主 2026-10-01。K.ENC.walkMul）
+    const rateMul = S.lastDash ? 1 : (R.Rules && R.Rules.K && R.Rules.K.ENC && R.Rules.K.ENC.walkMul) || 1;
+    const o = { tier: R.Tier.get(), dark: F.dark.battleDark(S.x, S.y), steps: G.steps || 0, ward, rateMul };
     let setup = R.Mon.encounter(zone, o);
     // 呼び寄せの香（i_lure、出現 +100%）: 出なかった歩にもう 1 回だけ同じ率で振る（前の戦闘から 6 歩の間は振らない）
     if (!setup && lure && (G.steps || 0) - (S.lastBattleStep || -1e9) >= 6) {
       const z = R.DB.encounters && R.DB.encounters[zone];
       const p = z && R.Mon.stepChance ? R.Mon.stepChance(zone, z) : 0;
-      if (p > 0 && R.rng(G.seed + ':lure:' + zone + ':' + G.steps).next() < p) setup = R.Mon.encounter(zone, Object.assign({}, o, { force: true }));
+      if (p > 0 && R.rng(G.seed + ':lure:' + zone + ':' + G.steps).next() < p * rateMul) setup = R.Mon.encounter(zone, Object.assign({}, o, { force: true }));
     }
     if (!setup) return null;
     if (!setup.bg && S.map.bbg) setup.bg = S.map.bbg;   // 出現表に背景が無ければマップの bbg（BATTLE の依頼）
