@@ -345,6 +345,23 @@ function scanMonsters(root) {
   }
   return out;
 }
+/** 戦闘の効果の部品（画像生成で描いた帯。tools/vfx/gen_vfx.py）。v2/assets/fx/<id>.webp ＋同じ名前の .json（meta: コマの数・大きさ・fps…）
+ *  → RPG_MEDIA.fx['<id>'] = {url, meta}（src/art/fx/fx_seq_img.js が読む。地方に縛られない＝縦切りでも全部入れる） */
+const FX_DIR = path.join(V2, 'assets', 'fx');
+function scanFx(root) {
+  const out = [];
+  if (!fs.existsSync(root)) return out;
+  for (const f of fs.readdirSync(root).sort()) {
+    const m = /^([a-z0-9_]+)\.webp$/.exec(f);
+    if (!m) continue;
+    let meta = null;
+    const js = path.join(root, m[1] + '.json');
+    if (fs.existsSync(js)) { try { meta = JSON.parse(fs.readFileSync(js, 'utf8')); } catch (e) { console.warn(`[build] ${js}: bad JSON (${e.message})`); } }
+    if (!meta) continue;   // meta の無い帯は使えない（コマの数が分からない）
+    out.push({ id: m[1], ext: 'webp', file: path.join(root, f), meta, outName: m[1] + '.webp' });
+  }
+  return out;
+}
 /** 中身で比べて写す（大きさと時刻だけだと、同じ大きさで時刻の古い新しい絵（cp -p で戻した等）を写し損ねる）。→ 中身の sha1 の先頭 10 字 */
 function copyIfChanged(src, dst) {
   const a = fs.readFileSync(src);
@@ -356,15 +373,16 @@ function copyIfChanged(src, dst) {
 }
 /** → {script, embeds, bytes}。mode 'external' は outDir/<kind>/ に写して相対 URL、'embed' は埋め込み、'none' は空 */
 function mediaTable(media, mode, outDir) {
-  const table = { bgm: {}, voice: {}, portraits: {}, sprites: {}, env: {}, title: {}, monsters: {} };
+  const table = { bgm: {}, voice: {}, portraits: {}, sprites: {}, env: {}, title: {}, monsters: {}, fx: {} };
   const embeds = [];
   let bytes = 0;
   media.sprites = media.sprites || [];
   media.env = media.env || [];
   media.title = media.title || [];
   media.monsters = media.monsters || [];
+  media.fx = media.fx || [];
   const base = (e) => e.outName || path.basename(e.file);
-  for (const kind of ['bgm', 'voice', 'portraits', 'sprites', 'env', 'title', 'monsters']) {
+  for (const kind of ['bgm', 'voice', 'portraits', 'sprites', 'env', 'title', 'monsters', 'fx']) {
     const extDir = path.join(outDir, kind);
     if (mode === 'external') {
       fs.mkdirSync(extDir, { recursive: true });
@@ -388,12 +406,12 @@ function mediaTable(media, mode, outDir) {
         // タイトルの絵は webp が読めないときの png も写す（--single には入れない。TITLE_ART §2）
         if (kind === 'title' && e.png) { e.pngV = copyIfChanged(e.png, path.join(extDir, e.id + '.png')); bytes += fs.statSync(e.png).size; }
       } else continue;
-      table[kind][e.id] = kind === 'bgm' ? Object.assign({ url }, e.meta) : kind === 'sprites' || kind === 'env' || kind === 'monsters' ? { url, meta: e.meta }
+      table[kind][e.id] = kind === 'bgm' ? Object.assign({ url }, e.meta) : kind === 'sprites' || kind === 'env' || kind === 'monsters' || kind === 'fx' ? { url, meta: e.meta }
         : kind === 'title' ? (mode === 'external' && e.png ? { url, png: kind + '/' + e.id + '.png' + (e.pngV ? '?v=' + e.pngV : '') } : { url }) : url;
     }
   }
   if (mode !== 'none' && media.titleMeta) table.titleMeta = media.titleMeta;
-  return { script: `<script>window.RPG_MEDIA=${JSON.stringify(table)};</script>`, embeds: embeds.join('\n'), bytes, counts: { bgm: media.bgm.length, voice: media.voice.length, portraits: media.portraits.length, sprites: media.sprites.length, env: media.env.length, title: media.title.length } };
+  return { script: `<script>window.RPG_MEDIA=${JSON.stringify(table)};</script>`, embeds: embeds.join('\n'), bytes, counts: { bgm: media.bgm.length, voice: media.voice.length, portraits: media.portraits.length, sprites: media.sprites.length, env: media.env.length, title: media.title.length, fx: media.fx.length } };
 }
 
 // ------------------------------------------------------------------ HTML
@@ -494,6 +512,7 @@ function main(argv) {
   media.env = scanEnv(ENV_DIR);
   { const t = scanTitle(TITLE_DIR); media.title = t.list; media.titleMeta = t.meta; }
   media.monsters = scanMonsters(MONSTERS_DIR);
+  media.fx = scanFx(FX_DIR);
 
   // 書体（dev のフィクスチャの字も入れる）
   const withDir = argVal(argv, '--with', null);
@@ -546,7 +565,7 @@ function main(argv) {
     (min ? `\n[build] minified: ${(min.stats().inB / 1024).toFixed(0)} KB → ${(min.stats().outB / 1024).toFixed(0)} KB of JS${min.stats().failed ? ` (${min.stats().failed} file(s) kept as is)` : ''}` : '') +
     `\n[build] tester menu: ${has('--no-tester') ? 'EXCLUDED' + (release ? ' (release)' : '') : 'included (?tester=1 + F9)'}` +
     `\n[build] fonts: ${font.chars} chars, ${(font.bytes / 1024).toFixed(0)} KB embedded${font.ok ? '' : ' (SUBSET FAILED)'}` +
-    `\n[build] media (${single ? 'embedded' : 'external'}): ${M.counts.bgm} BGM${has('--all-bgm') ? '' : ' (slice)'}, ${M.counts.voice} voice, ${M.counts.portraits} portraits, ${M.counts.sprites} sprite sheets, ${M.counts.env} env images, ${M.counts.title} title images, ${mb(M.bytes)} MB` +
+    `\n[build] media (${single ? 'embedded' : 'external'}): ${M.counts.bgm} BGM${has('--all-bgm') ? '' : ' (slice)'}, ${M.counts.voice} voice, ${M.counts.portraits} portraits, ${M.counts.sprites} sprite sheets, ${M.counts.env} env images, ${M.counts.title} title images, ${M.counts.fx} fx parts, ${mb(M.bytes)} MB` +
     (bad.length ? `\n[build] ${bad.length} file(s) EXCLUDED (syntax)` : '') + `  [${Date.now() - t0} ms]`);
   if (bad.length) process.exitCode = 1;
 }

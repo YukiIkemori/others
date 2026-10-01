@@ -12,7 +12,7 @@
 
   G.open = async function (o) {
     o = o || {};
-    R.Battle.start({ demo: o.demo || 'normal', mons: [['x', 1]], bg: o.bg || 'forest' });
+    R.Battle.start({ demo: o.demo || 'normal', mons: o.mons || [['x', 1]], bg: o.bg || 'forest' });
     await R.until(() => { const d = R.Battle.debug(); return d && d.phase === 'input' && d.ui; });
     st = R.Battle.debug();
     st.ui = null; st.phase = 'gallery'; st.head = null;

@@ -5,7 +5,9 @@
 //   node v2/tools/fx_gallery.js --out <dir> --clip <名前> id id …                  mp4（30 fps、1280×720。ffmpeg に直接流す）
 //   node v2/tools/fx_gallery.js --out <dir> --plan <FX_PLAN.md>                    表の考え（c）を FX_PLAN.md の「技・術ごとの表」に書き出す
 //   選び方: id の代わりに @tech:sword（剣の技を段の順に）・@tier:6・@spell:single・@spell:combo・@spell:triple も書ける
+//   node v2/tools/fx_gallery.js --out <dir> --strip <名前> id id …                 技・術ごとに 1 行・時間の順に 6 コマ（演出の流れの見本）
 //   --speed 1|2|3|5（戦闘の速さ）、--glimmer（閃きの帯つき）、--seen（2 回目の短い版）
+//   --noimg（画像の効果の部品を使わない＝手続きの効果だけ。前後の比べ用）、--mons goblin_1,wolf_1,imp_1（見本の敵の絵）
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -56,6 +58,11 @@ async function main() {
   await p.waitForTimeout(1500);
   const all = await B.ev(p, `RPG.FxGallery.list().map((id) => { const d = RPG.DB.techs[id] || RPG.DB.spells[id]; const s = RPG.BFX.seq.get('sq:' + id); return { id, tech: !!RPG.DB.techs[id], wtype: d.wtype, cls: d.cls, el: d.elements && d.elements[0], tier: s.tier, lead: s.lead, dur: s.dur, name: d.name, c: s.c, rank: d.rank || d.step || 0 }; }).sort((a, b) => a.tier - b.tier || a.rank - b.rank)`);
   const info = Object.fromEntries(all.map((x) => [x.id, x]));
+  // --mons a,b,c: 見本の敵の絵を描いた魔物（assets/monsters）に替える（見本の敵には絵の無い物があり、当たりの白い光が四角になる）
+  if (opt('--mons')) await p.evaluate((list) => { const st = RPG.FxGallery.state(); const es = st.B.units.filter((u) => u.side === 'enemy'); es.forEach((u, i) => { u.sprite = list[i % list.length]; }); }, opt('--mons').split(','));
+  // 画像の効果の部品（assets/fx）: 先に全部読んでおく（--noimg なら使わない）
+  if (has('--noimg')) await B.ev(p, 'RPG.BFX.img && RPG.BFX.img.set(false)');
+  else await p.evaluate(() => RPG.BFX.img ? RPG.BFX.img.preload(Object.keys((window.RPG_MEDIA && RPG_MEDIA.fx) || {})).then(() => 0) : 0);
   await B.ev(p, 'RPG.Engine.pause(); RPG.FxGallery.interactive = false;');
 
   const seen = has('--seen');
@@ -110,6 +117,35 @@ async function main() {
       await run(id, async (t, done, r) => { if (r.seqT >= 0 || r.hitT >= 0) ms.push(await time()); return false; }, 1000 / 30);
       console.log(`${id} (tier ${info[id].tier}): median ${med(ms).toFixed(1)} ms  max ${Math.max(...ms).toFixed(1)} ms  frames ${ms.length}`);
     }
+  }
+
+  if (has('--strip')) {
+    // 技・術ごとに 1 行: 溜めの終わりから余韻まで 6 コマ（1920×1080 の画面を 480×270 にして並べる）
+    const name = opt('--strip');
+    const i0 = args.indexOf('--strip') + 2;
+    const ids = idsFrom(args.slice(i0).filter((a) => !a.startsWith('--')), all).filter((id) => info[id]);
+    const cols = 6, cw = 480, ch = 270;
+    const file = path.join(OUT, name + '.jpg');
+    const ff = spawn(FFMPEG, ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-c:v', 'mjpeg', '-i', '-', '-vf', `scale=${cw}:${ch},tile=${cols}x${ids.length}:padding=3:color=0x101018`, '-frames:v', '1', '-q:v', '3', file], { stdio: ['pipe', 'inherit', 'inherit'] });
+    const write = (d) => new Promise((res) => { if (!ff.stdin.write(Buffer.from(d.split(',')[1], 'base64'))) ff.stdin.once('drain', res); else res(); });
+    for (const id of ids) {
+      const x = info[id];
+      // 段 1–3: 最初の当たりからの時間（当たりの効果が主役）。段 4 以上: 画面の演出の溜めの終わりから
+      const byHit = x.tier <= 3;
+      const a0 = byHit ? 0 : Math.max(0, x.lead - 300), a1 = byHit ? 420 : x.lead + Math.max(360, Math.min(800, x.dur - x.lead));
+      const want = Array.from({ length: cols }, (_, i) => Math.round(a0 + (a1 - a0) * i / (cols - 1)));
+      let wi = 0, last = null;
+      console.log(`${id}  tier ${x.tier}  ${x.name}  ${byHit ? 'hit+' : ''}${want.join(',')}`);
+      await run(id, async (t, done, r) => {
+        const tt = byHit ? r.hitT : r.seqT;
+        while (wi < want.length && tt >= want[wi]) { last = await grab(0.88); await write(last); wi++; }
+        return wi >= want.length;
+      }, 1000 / 60);
+      while (wi < want.length) { await write(last || await grab(0.88)); wi++; }
+    }
+    ff.stdin.end();
+    await new Promise((res) => ff.on('close', res));
+    console.log('->', file);
   }
 
   if (has('--sheet') || has('--clip')) {

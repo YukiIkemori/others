@@ -1,0 +1,114 @@
+{
+ "note": "戦闘の効果の部品の表（tools/vfx/gen_vfx.py）。prompt は部品ごとの描き方、ほかは切り出しの値（gen_vfx.py の先頭の説明）",
+ "style": {
+  "look": "High-end 2D fantasy RPG battle visual effect for a HD-2D pixel-art game: hand-painted, crisp, clean bold shapes with fine painterly detail, luminous glow, vivid saturated colours, strong value contrast, dynamic anime-style energy shapes, readable silhouette at small size.",
+  "mono": "Render the whole effect in monochrome only: pure white hot core fading through light grey to dark grey at the edges, absolutely no hue, no colour tint, so it can be recoloured later.",
+  "black": "Background: perfectly flat pure black (#000000) everywhere, no gradient, no texture, no vignette, no stars, no ground, no floor, no reflections.",
+  "clear": "Background: fully transparent; the effect has clean edges and no ground plane, no cast shadow, no backdrop.",
+  "neg": "No text, no letters, no numbers, no labels, no grid lines, no borders, no frame outlines, no panels, no characters, no creatures, no weapons, no hands, no UI."
+ },
+ "parts": [
+  {
+   "id": "fire_burst",
+   "group": "fire",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 20,
+   "prompt": "A fire explosion burst animation: frame 1 a small bright yellow-white flash, frames 2-4 a roaring ball of orange and red flame expanding outward with curling flame tongues and flying embers, frames 5-7 the flames breaking apart into licks of fire and dark-red smoky edges, frame 8 faint dying embers. Hot white-yellow core, orange body, deep red rim."
+  },
+  {
+   "id": "ice_shards",
+   "group": "ice",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 22,
+   "prompt": "An ice crystal burst animation: frame 1 a tiny cold blue spark, frames 2-4 sharp translucent ice crystal shards erupting outward in a star-shaped cluster with frosty mist, frames 5-7 the crystals cracking and shattering into glittering fragments flying apart, frame 8 a few fading sparkles of frost. Pale cyan and white highlights, deep blue facets, glossy faceted crystals with bright rim light."
+  },
+  {
+   "id": "lightning_bolt",
+   "group": "thunder",
+   "grid": [
+    6,
+    1
+   ],
+   "cell": "tall narrow",
+   "n": 6,
+   "size": "2304x1024",
+   "out": [
+    192,
+    448
+   ],
+   "anchor": "bottom",
+   "fps": 20,
+   "prompt": "A lightning strike animation: a jagged forked lightning bolt falling from the top of each cell straight down to a bright impact point at the bottom of the cell. Frame 1 a thin leader stroke, frames 2-3 the full blinding bolt with branches and an electric flash ball at the impact point, frame 4 a different jagged shape of the same bolt flickering, frames 5-6 thin fading electric filaments and sparks. White-hot core, electric yellow and violet-blue glow."
+  },
+  {
+   "id": "slash_arc_a",
+   "group": "slash",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 28,
+   "tint": true,
+   "prompt": "A sword slash arc animation: a big sharp crescent-moon shaped blade trail sweeping diagonally from upper-left to lower-right. Frame 1 a thin bright line starting, frames 2-3 the crescent swinging through with a razor-sharp leading edge and a soft motion-blur tail, frame 4 the full crescent at its brightest with a small star glint, frames 5-8 the crescent thinning, breaking into streaks and dissolving."
+  },
+  {
+   "id": "hit_spark_a",
+   "group": "hit",
+   "grid": [
+    3,
+    2
+   ],
+   "n": 6,
+   "size": "1536x1024",
+   "out": [
+    224,
+    224
+   ],
+   "fps": 30,
+   "tint": true,
+   "prompt": "An impact hit spark animation: frame 1 a tiny intense point flash, frame 2 a sharp four-pointed star burst with thin radial spikes, frame 3 the largest burst with a ring of short speed-line sparks flying outward, frames 4-5 the spikes shrinking and scattered spark streaks, frame 6 a few fading specks."
+  },
+  {
+   "id": "heal_sparkles",
+   "group": "heal",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    224,
+    352
+   ],
+   "fps": 20,
+   "loop": false,
+   "prompt": "A healing magic animation: soft emerald-green and mint light rising upward from the bottom of each cell: gentle glowing motes, small four-pointed twinkling stars and a few translucent leaf-shaped light petals spiralling upward around a soft vertical glow. Frame 1 faint, frames 2-5 growing and rising, frames 6-8 drifting higher and fading. Warm white sparkle cores, green and aqua glow.",
+   "anchor": "bottom"
+  }
+ ]
+}

@@ -10,6 +10,7 @@ dist（node v2/tools/build.js の外置きの版）から、次の形の写し�
   index.html               遊ぶ版（RPG_MEDIA をまとめた版に書き換える）
   bgm/<id>.ogg             BGM はそのまま（1 曲 1 ファイル）
   title/<id>.webp|png      タイトルの一枚絵はそのまま（webp。png は読めないときの代わり）
+  fx/<id>.webp             戦闘の効果の部品の帯はそのまま（非可逆 WebP・α つき。scope に関わらず全部）
   env/<group>_NN.webp      地形・戦闘背景の画像を組ごとの地図帳にまとめる（WebP 可逆・exact。{url, rect, meta}）。
                            組 = 下絵はマップ 1 枚×マスの大きさ、戦闘背景は 1 つ、ほかはテーマ×マスの大きさ（env_group。使う時に組だけ読む）
   sprites/atlas_NN.webp    CAST の原画も同じ
@@ -261,7 +262,8 @@ def main():
     os.makedirs(out)
 
     new = dict(media)
-    for kind in ('bgm', 'title', 'portraits'):
+    # fx（戦闘の効果の部品の帯）は非可逆の WebP のまま写す（可逆の地図帳にまとめると大きくなる。地方に縛られない＝demo でも全部）
+    for kind in ('bgm', 'title', 'portraits', 'fx'):
         t = media.get(kind) or {}
         for k, e in t.items():
             urls = [e] if isinstance(e, str) else [e['url']] + ([e['png']] if isinstance(e, dict) and e.get('png') else [])
@@ -333,7 +335,7 @@ def main():
         'total_bytes': total,
         'folders': folders,
         'packed': {'env_atlases': counts.get('env', 0), 'sprite_atlases': counts.get('sprites', 0), 'monster_atlases': counts.get('monsters', 0), 'monster_images': len(media.get('monsters') or {}), 'voice_packs': counts.get('voice', 0),
-                   'env_images': len(media.get('env') or {}), 'sprite_sheets': len(media.get('sprites') or {}), 'voice_clips': len(media.get('voice') or {})},
+                   'env_images': len(media.get('env') or {}), 'sprite_sheets': len(media.get('sprites') or {}), 'voice_clips': len(media.get('voice') or {}), 'fx_parts': len(media.get('fx') or {})},
         'files': files,
         'batches': batches,
         'problems': bad,
