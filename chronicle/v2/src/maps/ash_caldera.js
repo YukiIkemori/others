@@ -59,7 +59,7 @@
     // 段の上の暮らし: 鍛冶場・灰よけの蔵・見習いの家（下絵の戸口に合わせた小さな屋内）
     const bForge = bld('caldera_forge', 40, 30, 5, 4, { wall: 2, windows: 1, door: door(42, 33, 'caldera_smithy') });
     const bStore = bld('caldera_store', 14, 12, 4, 3, { wall: 1, windows: 2, door: door(16, 14, 'caldera_granary') });
-    const bHut = bld('caldera_hut', 36, 40, 4, 4, { wall: 2, windows: 2, door: door(37, 43, 'caldera_toto') });
+    const bHut = bld('caldera_hut', 40, 41, 4, 4, { wall: 2, windows: 2, door: door(41, 44, 'caldera_toto') });
     // 闘技場（丸い石の闘技場。戸は南。丸い壁は描いた物 X、戸のまわりだけ建物）
     const bArena = bld('caldera_arena', 24, 32, 7, 3, { wall: 3, windows: 0, sign: 'guild', door: door(27, 34, 'caldera_arena') });
     // 戸の前（出て着く所）
@@ -68,7 +68,60 @@
     // ---------------------------------------------------------------- 下絵に合わせた当たり（design/ENV_ASSETS.md §7 の 6）: 描いた絵の崖・岩・溶岩・湯の縁のずれを直すマス
     //   （' ' = そのまま。design/art_ref/gen/env/_tools/under/field_ash/caldera.py fit が絵から作った）
     const FIT = [
-@@FIT@@
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
+      "                                                      ",
     ];
     FIT.forEach((r, y) => [...r].forEach((ch, x) => { if (ch !== ' ') g[y][x] = ch; }));
 
@@ -77,14 +130,15 @@
     O.push(K.prop('board', 23, 33), K.exam(23, 33, 'caldera_board'));                  // 闘技場の壁の掲示板
     O.push(K.exam(26, 42, 'caldera_spa'), K.exam(27, 42, 'caldera_spa'), K.exam(28, 42, 'caldera_spa'));   // 町の湯（温泉。描いた湯の北の縁）
     // 【灯りを守る】崖の上の灯籠 3（冷えた灯籠 = 灰の道しるべの柱の消えた絵を下絵に描きこみ。ともすと、柱の上にかがり火の灯り。lift で柱の頭へ持ち上げる）
-    for (const [n, x, y] of [[1, 9, 16], [2, 44, 16], [3, 20, 46]]) O.push(K.exam(x, y, 'caldera_lantern', { lamp: n }), K.prop('iron_brazier', x, y, { cond: 'ash_lantern_' + n, lift: 34 }));
+    //   西と東のまっすぐな崖の上（崖は縦に 1 マスの帯なので、柱の絵が歩けるマスにかからない）。家の段か縁の道から横向きに調べる
+    for (const [n, x, y] of [[1, 5, 13], [2, 48, 13], [3, 5, 40]]) O.push(K.exam(x, y, 'caldera_lantern', { lamp: n }), K.prop('iron_brazier', x, y, { cond: 'ash_lantern_' + n, lift: 34 }));
     // 町の宝箱 2（見える所だけ）
     O.push(K.chest('caldera_c1', 35, 5, { pool: 'p_T' }), K.chest('caldera_c2', 14, 42, { item: 'i_ether', n: 2 }));
     // かがり火（崖・岩の上。道・戸口の前・出入り口には置かない）と、溶岩の堀の照り返し（光だけ）
-    for (const [x, y] of [[6, 30], [47, 31], [16, 4], [37, 4], [11, 40], [44, 40]]) O.push(K.prop('iron_brazier', x, y));
-    for (const [x, y] of [[23, 15], [31, 15], [18, 19], [36, 19], [16, 23], [38, 30], [17, 34], [37, 35], [22, 38], [32, 38]]) O.push(K.prop('lava_glow', x, y));
+    for (const [x, y] of [[5, 33], [48, 33], [16, 3], [37, 3], [48, 40], [5, 20]]) O.push(K.prop('iron_brazier', x, y));
+    for (const [x, y] of [[21, 16], [33, 16], [16, 16], [39, 16], [16, 21], [39, 21], [16, 33], [39, 33], [21, 39], [33, 39]]) O.push(K.prop('lava_glow', x, y));
     // 門の看板（門のわきの岩）
-    O.push(K.sign(2, 25, R.T('map.ash_caldera.sign')), K.sign(51, 25, R.T('map.ash_caldera.sign_2')));
+    O.push(K.sign(1, 25, R.T('map.ash_caldera.sign')), K.sign(52, 25, R.T('map.ash_caldera.sign_2')));
 
     // ---------------------------------------------------------------- 人
     const N = [
