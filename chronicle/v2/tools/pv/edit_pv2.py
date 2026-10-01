@@ -195,6 +195,7 @@ MUSIC[-1]['fout'] = 0.8
 MUSIC.append(dict(file='home', at=T2, src=DB_HOME, dur=0, fin=0.2, gain=-3))
 DIP.append((T2, 0.4))
 cut('s2_berna', T2, 8.9, src=9.0, ev=True, nosub=True)   # v_berna_lute_05「どこから回ってもいい。…」（本物の会話の窓）
+vo('v_berna_lute_05', T2, nosub=True, until=T2 + 8.9)   # 声はクリップの 8.95 秒で始まる（src 9.0 だと ev から落ちる）ので明示で鳴らす
 tag('白紙になりかけた八つの伝承を、\n語り直す旅へ。', T2 + 1.0, T2 + 8.7, y=420, size=66)
 t = T2 + 8.9
 SFX.append(dict(id='page', at=t - 0.05, gain=-6))
