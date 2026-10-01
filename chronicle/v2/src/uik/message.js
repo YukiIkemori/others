@@ -128,7 +128,9 @@
     function lay() {
       let cw = 0;
       for (const [a, b] of choiceParts) cw = Math.max(cw, UIK.measure(a, { size: T.size.body * (R.uiScale || 1), weight: 700 }) + (b ? UIK.measure(b, { size: T.size.body * (R.uiScale || 1) }) + 24 * (R.uiScale || 1) : 0));
-      return layout(o, hasFace, choices.length, cw);
+      // 名前・肩書きは o のではなく、実際に出す物（選択肢だけの窓は直前の会話の名前を借りる）で配置する。
+      //   前は o.name を見ていたので、借りた名前を描くのに本文は「名前なし」の高さに置かれ、名前の上に重なって上にずれた（オーナー 2026-10-01「宿で泊まろうとすると 2 個目で文章が上にずれる」）
+      return layout({ name, title }, hasFace, choices.length, cw);
     }
     /** 表示のページ（折り返して 3 行ずつ）を作る。幅が変わったら作り直す */
     function pages(L) {
