@@ -495,6 +495,24 @@
     const fl = Math.floor(e.ms / (L.flick || 55));
     const k = E.env(u, 0.05, 0.3) * (fl % 3 === 2 ? 0.35 : 1);
     g.lineJoin = 'miter'; g.lineCap = 'round';
+    // 描いた稲妻（lightning_bolt。fx_seq_img.js）があればそれを、落ちる点から始まりの点へ向けて伸ばして描く
+    const IMG = R.BFX.img;
+    if (IMG && IMG.on && IMG.ready('lightning_bolt') && k > 0.004) {
+      const m = IMG.meta('lightning_bolt'), pal = IMG.palOf(c, L.col != null ? L.col : 'thunder');
+      for (let j = 0; j < n; j++) {
+        const s = e.seed + j * 97;
+        let x0, y0;
+        const x1 = (hr(s + 5) - 0.5) * (L.spread || 0), y1 = (hr(s + 6) - 0.5) * (L.spread || 0) * 0.4;
+        if (L.from === 'src') { x0 = e.sx; y0 = e.sy - 20; } else { x0 = x1 + (hr(s) - 0.5) * 80; y0 = -(L.h || e.y + 30); }
+        const dx = x0 - x1, dy = y0 - y1, len = Math.hypot(dx, dy) + 24;
+        g.save();
+        g.translate(x1, y1 + 12);
+        IMG.drawFrame(g, 'lightning_bolt', IMG.frameAt(m, u, {}), { s: len / (m.h * (m.scale || 0.5) * 0.9), rot: Math.atan2(dx, -dy), mx: (fl + j) % 2, a: E.env(u, 0.02, 0.3), pal: pal[0] === S.PAL.thunder[0] ? null : pal });
+        g.restore();
+        S.dot(g, x1, y1, 30, c0, 0.8 * k);
+      }
+      return;
+    }
     for (let j = 0; j < n; j++) {
       const s = e.seed + j * 97 + fl * 13;
       let x0, y0, x1 = (hr(s + 5) - 0.5) * (L.spread || 0), y1 = (hr(s + 6) - 0.5) * (L.spread || 0) * 0.4;

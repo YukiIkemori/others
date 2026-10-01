@@ -1,11 +1,12 @@
-"""(2026-09-29 見直し) 炎の町カルデラの下絵の描き直し（段の輪の縁が階段状に角ばっていたのを、なめらかな丸い輪に）。
+"""(2026-10-01 見直し) 炎の町カルデラの下絵の描き直し: 丸い輪の町を、縦横にまっすぐな四角い段の町に（前の絵は丸い輪を地図へ
+薄板スプラインで引きのばしていたので、全体が歪み建物が斜めに見えた。caldera_warp.py は使わない）。
 usage: python3 caldera.py guide | job | fit <gen.png> | process <gen.png>
-  guide   : caldera/guide_48.png。建物・闘技場・湯・石段・橋・門は今の絵をそのまま貼り、輪（外の岩・縁の道・段の崖・家の段・溶岩の堀・敷石）は
-            ash_caldera.js と同じ半径のなめらかな円で色分けする（ぼかした縁）。
+  guide   : caldera/guide_48.png。地図の字（map_dump.json の rows）をマスごとに色分けし、建物・闘技場は前に描いた gen1.png（引きのばす前）から
+            縦横の拡大と平行移動だけで切り貼りする（回さない・曲げない）。
   job     : caldera/genN.job.json（gen.sh で 1 枚）。
-  fit     : 描いた絵から輪のマスの当たりを読み、ash_caldera.js の FIT（' ' = 円のまま）を caldera/fit.txt に書く ＋ caldera/check.png。
+  fit     : 描いた絵から段の縁の 1 マスのずれを読み、ash_caldera.js の FIT（' ' = そのまま）を caldera/fit.txt に書く。
   process : 下絵 caldera@24/@32、溶岩と窓の emit、caldera.json（戸口 doors32 は前のまま＝建物は動かさない）を v2/assets/env/ash/under/ へ。
-地図のデータは caldera/map_dump.json（node で R.DB.maps.caldera を書き出した物）。"""
+地図のデータは caldera/map_dump.json（node で R.DB.maps.caldera を書き出した物。FIT を空にして書き出す）。"""
 import sys, json, os, numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 from scipy import ndimage
@@ -14,74 +15,84 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 V2 = '/home/user/others/chronicle/v2'
 UNDER = os.path.join(V2, 'assets/env/ash/under')
 D = os.path.join(HERE, 'caldera')
-W = H = 54; CX = CY = 27; RAD = 26
+W = H = 54
 dump = json.load(open(os.path.join(D, 'map_dump.json')))
 blds = [o for o in dump['objects'] if o['type'] == 'building']
+BASE = dump['rows']          # ash_caldera.js の FIT の前の grid（node で書き出す。FIT が空の時の dump）
+G1 = os.path.join(D, 'gen1.png')   # 前に描いた丸い輪の町（引きのばす前の絵）。建物・闘技場はここから切って、まっすぐ貼る
+
+# 建物の絵の切り出し（gen1 のマス）→ 地図のマス: 切る箱 (x0, y0, x1, y1)、合わせる点（gen1 の戸の中・下 → 地図の door.x+0.5, door.y+1）、拡大 sx, sy。
+#   どれも縦横の拡大だけ（回したり曲げたりしない = 建物はまっすぐのまま）。大卵殻は縁の道にかからないよう縦を少しだけ詰める
+PASTE = [
+    ('egg', (17.6, 6.2, 36.2, 15.5), (26.3, 15.0), (26.5, 13.0), 0.873, 0.84),
+    ('temple', (20.8, 0.0, 33.1, 4.8), (26.9, 4.5), (27.5, 4.0), 0.83, 0.83),
+    ('inn', (3.85, 18.9, 11.4, 26.9), (7.6, 26.5), (9.5, 25.0), 0.96, 0.96),
+    ('dorga', (41.8, 18.9, 48.9, 26.9), (45.1, 26.5), (43.5, 24.0), 0.94, 0.94),
+    ('house', (7.7, 34.3, 14.3, 39.5), (10.56, 38.95), (11.5, 37.0), 0.93, 0.93),
+    ('forge', (40.7, 30.6, 47.0, 35.6), (43.7, 35.0), (42.5, 34.0), 0.88, 0.88),
+    ('store', (12.0, 13.0, 17.3, 18.0), (14.6, 17.4), (16.5, 15.0), 0.85, 0.85),
+    ('hut', (36.9, 38.6, 41.6, 43.4), (39.3, 43.0), (41.5, 45.0), 0.98, 0.98),
+    ('arena', (18.8, 20.6, 35.3, 37.3), (27.04, 36.6), (27.5, 35.0), 1.0, 1.0),
+]
 
 
-def ring_char(r):
-    if r <= 0.3: return 'X'
-    if r <= 0.43: return 'c'
-    if r <= 0.5: return '%'
-    if r <= 0.78: return 'a'
-    if r <= 0.84: return 'F'
-    if r <= 0.96: return 'a'
-    return 'M'
+def pasted(T):
+    """gen1 の建物を地図の位置へ（縦横の拡大と平行移動だけ）→ (RGB float, 重み 0..1)"""
+    A = Image.open(G1).convert('RGB'); S = A.size[0] / W
+    out = np.zeros((H * T, W * T, 3), np.float32); wt = np.zeros((H * T, W * T), np.float32)
+    for name, (x0, y0, x1, y1), (ax, ay), (bx, by), sx, sy in PASTE:
+        c = A.crop((round(x0 * S), round(y0 * S), round(x1 * S), round(y1 * S)))
+        X0, Y0 = bx + (x0 - ax) * sx, by + (y0 - ay) * sy
+        w, h = round((x1 - x0) * sx * T), round((y1 - y0) * sy * T)
+        c = np.asarray(c.resize((w, h), Image.LANCZOS)).astype(np.float32)
+        m = np.ones((h, w), np.float32)
+        if name == 'arena':
+            yy, xx = np.mgrid[0:h, 0:w]
+            cx, cy = (27.5 - X0) * T, (27.5 - Y0) * T
+            m = (np.hypot(xx - cx, (yy - cy)) <= 8.55 * T).astype(np.float32)
+        if name == 'egg':   # 殻の丸い頭（上の角の岩は貼らない）＋ 下の石の台
+            yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+            xg, yg = x0 + xx / (sx * T), y0 + yy / (sy * T)   # gen1 のマス
+            m = ((((xg - 26.9) / 9.3) ** 2 + ((yg - 11.8) / 5.5) ** 2 <= 1) | (yg >= 11.6)).astype(np.float32)
+        m = ndimage.gaussian_filter(m, 3)
+        px, py = round(X0 * T), round(Y0 * T)
+        ys, xs = slice(max(0, py), min(H * T, py + h)), slice(max(0, px), min(W * T, px + w))
+        cs = (slice(ys.start - py, ys.stop - py), slice(xs.start - px, xs.stop - px))
+        mm = m[cs]
+        out[ys, xs] = out[ys, xs] * (1 - mm[..., None]) + c[cs] * mm[..., None]
+        wt[ys, xs] = np.maximum(wt[ys, xs], mm)
+    return out, wt
 
 
-def base_rows():
-    """ash_caldera.js の円の輪（FIT の前）。建物・石段・橋・湯・門は今の地図の字"""
-    cur = dump['rows']; g = []
-    for y in range(H):
-        row = ''
-        for x in range(W):
-            r = np.hypot(x + 0.5 - (CX + 0.5), y + 0.5 - (CY + 0.5)) / RAD
-            c = cur[y][x]
-            row += c if c in 'ebhc' and ring_char(r) != 'c' or c == 'b' or c == 'h' or c == 'e' else ring_char(r)
-        g.append(row)
-    return g
-
-
-def keep_mask(T):
-    """今の絵をそのまま貼る所（1 マス T px）: 建物（大卵殻・神殿は絵の大きさ）・闘技場・湯・石段・橋・門"""
-    m = np.zeros((H * T, W * T), bool)
-    def box(x0, y0, x1, y1): m[int(y0 * T):int(y1 * T), int(x0 * T):int(x1 * T)] = True
-    for b in blds:
-        if b['id'] == 'caldera_arena': continue
-        box(b['x'] - 0.4, b['y'] - 0.6, b['x'] + b['w'] + 0.4, b['y'] + b['h'] + 0.5)
-    box(18.6, 5.4, 35.4, 13.4)            # 大卵殻（殻の上は家の段にかかる）
-    box(21.2, 0, 32.8, 4.6)               # 火の神殿
-    yy, xx = np.mgrid[0:H * T, 0:W * T] / T
-    rr = np.hypot(xx - (CX + 0.5), yy - (CY + 0.5)) / RAD
-    m |= rr <= 0.31                        # 闘技場
-    m |= ((xx - 27.5) / 7.6) ** 2 + ((yy - 45.5) / 2.9) ** 2 <= 1   # 湯
-    cur = dump['rows']
-    for y in range(H):
-        for x in range(W):
-            if cur[y][x] in 'eb': box(x - 0.25, y - 0.25, x + 1.25, y + 1.25)   # 石段・橋
-    box(0, 25.6, 4.6, 28.4); box(49.4, 25.6, 54, 28.4)   # 門
-    return m
-
-
-COL = {'M': (60, 54, 52), 'a': (132, 122, 110), 'F': (86, 74, 66), '%': (236, 112, 30), 'c': (92, 92, 100), 'X': (150, 140, 120)}
+COL = {'M': (60, 54, 52), 'a': (132, 122, 110), 'F': (78, 66, 60), '%': (236, 112, 30), 'c': (92, 92, 100), 'X': (150, 140, 120),
+       'h': (70, 200, 200), 'e': (170, 165, 155), 'b': (175, 168, 155)}
 
 
 def guide():
     T = 48
-    cur = Image.open(os.path.join(UNDER, 'caldera@32.png')).convert('RGB').resize((W * T, H * T), Image.LANCZOS)
-    cur = np.asarray(cur).astype(np.float32)
-    yy, xx = np.mgrid[0:H * T, 0:W * T]
-    rr = np.hypot((xx + 0.5) / T - (CX + 0.5), (yy + 0.5) / T - (CY + 0.5)) / RAD
     g = np.zeros((H * T, W * T, 3), np.float32)
-    for lo, hi, c in ((0.96, 9, 'M'), (0.84, 0.96, 'a'), (0.78, 0.84, 'F'), (0.5, 0.78, 'a'), (0.43, 0.5, '%'), (0.3, 0.43, 'c'), (0, 0.3, 'X')):
-        g[(rr > lo) & (rr <= hi)] = COL[c]
-    # 北の神殿へ上る道（縁の岩を切る）
-    g[(yy < 5 * T) & (xx >= 22 * T) & (xx < 32 * T) & (rr > 0.96)] = COL['a']
-    # 段の崖の面: 下（南）向きの面が見えるよう、崖の帯の外側半分を少し明るく
-    g = np.asarray(Image.fromarray(g.astype(np.uint8)).filter(ImageFilter.GaussianBlur(5))).astype(np.float32)
-    k = keep_mask(T)
-    ks = ndimage.gaussian_filter(k.astype(np.float32), 7)[..., None]
-    out = cur * ks + g * (1 - ks)
+    for y in range(H):
+        for x in range(W):
+            c = BASE[y][x]
+            if c == 'h': c = 'a'   # 湯は下でなめらかな楕円に
+            g[y * T:(y + 1) * T, x * T:(x + 1) * T] = COL.get(c, COL['a'])
+            if c == 'e':   # 石段の段の線（北の石段は横の線、西・東は縦の線）
+                for k in range(0, T, 8):
+                    if y == 6: g[y * T + k:y * T + k + 2, x * T:(x + 1) * T] = (110, 104, 96)
+                    else: g[y * T:(y + 1) * T, x * T + k:x * T + k + 2] = (110, 104, 96)
+            if c == 'b':   # 橋の欄干（橋の向きの両側）
+                v = x in (26, 27)
+                if v: g[y * T:(y + 1) * T, x * T + (0 if x == 26 else T - 5):x * T + (5 if x == 26 else T)] = (120, 112, 100)
+                else: g[y * T + (0 if y == 26 else T - 5):y * T + (5 if y == 26 else T), x * T:(x + 1) * T] = (120, 112, 100)
+    # 湯（温泉）: 地図の湯のマスと同じ楕円（マスの階段にしない）
+    yy, xx = np.mgrid[0:H * T, 0:W * T]
+    g[(((xx + 0.5) / T - 27.5) / 6.6) ** 2 + (((yy + 0.5) / T - 45.4) / 2.35) ** 2 <= 1] = COL['h']
+    # 崖の面: 北の崖（南向きの面が見える）は下半分を明るく
+    for x in range(W):
+        if BASE[6][x] == 'F': g[6 * T + T // 2:7 * T, x * T:(x + 1) * T] = (104, 92, 82)
+    g = np.asarray(Image.fromarray(g.astype(np.uint8)).filter(ImageFilter.GaussianBlur(1.5))).astype(np.float32)
+    p, wt = pasted(T)
+    out = g * (1 - wt[..., None]) + p * wt[..., None]
     Image.fromarray(np.clip(out, 0, 255).astype(np.uint8)).save(os.path.join(D, 'guide_48.png'))
     Image.fromarray(np.clip(out, 0, 255).astype(np.uint8)).resize((W * 16, H * 16), Image.LANCZOS).save(os.path.join(D, 'guide_16.png'))
     print('guide', out.shape)
@@ -89,17 +100,20 @@ def guide():
 
 def job(name):
     T = 48
-    P = f"""Paint the COMPLETE top-down map of a fantasy JRPG TOWN as ONE finished game map image, in rich premium modern hi-bit pixel art (hand-placed crisp square pixels, hue-shifted colour ramps, dark warm outlines, lush detail), classic top-down RPG map view seen from above with a slight 3/4 tilt (buildings and cliffs seen from above with their south-facing sides visible; NOT an isometric view, NOT a diorama, no depth-of-field, no perspective).
+    P = f"""Paint the COMPLETE top-down map of a fantasy JRPG TOWN as ONE finished game map image, in rich premium modern hi-bit pixel art (hand-placed crisp square pixels, hue-shifted colour ramps, dark warm outlines, lush detail), classic top-down RPG map view seen from above with a slight 3/4 tilt (buildings and cliffs seen from above with their south-facing sides visible; NOT an isometric view, NOT a diorama, no depth-of-field, no perspective, no fisheye, no lens distortion).
 
-THE PLACE: CALDERA, a town of fire-worshipping fighters built in rings inside an old cold volcanic crater. From the outside in: the dark jagged crater rock all around (outside the town, not walkable); a wide ROUND RIM ROAD of packed grey-brown ash running around the crater's inner edge, with the town gates west and east and, in the north, the fire temple carved into the rock; a ROUND CLIFF STEP (a low ring-shaped cliff of layered grey-brown rock, its sheer face turned toward the centre) with three flights of stone stairs (west, east, north-east) leading down to the HOUSE TERRACE, a wide round ring of ash ground where the houses stand: in the north a gigantic cracked WHITE-GOLD EGGSHELL (hatched by the firebird a century ago) that houses three shops, a red-domed inn in the west, a black stone tower house in the east, small stone houses with red tile roofs, a steaming turquoise HOT SPRING in the south; inside the terrace a ROUND MOAT OF GLOWING MOLTEN LAVA crossed by four stone bridges (north, south, west, east); inside the moat a round ring of dark basalt flagstones, and in the very centre a round stone ARENA with a sand floor and its gate to the south. Small flat details on the ash: cinders, pebbles, ruts, a few dry tufts, scattered barrels and crates only right against house walls.
+THE PLACE: CALDERA, a town of fire-worshipping fighters built in stepped terraces inside an old cold volcanic crater. It is laid out on a strict square grid like a normal RPG town: every road, terrace edge, cliff, moat, bridge and stair runs perfectly HORIZONTAL or VERTICAL. From the outside in: dark jagged crater rock all around (not walkable); a RIM ROAD of packed grey-brown ash that runs around the town as a rectangle, with the town gates in the west and east and, in the north, the fire temple carved into the rock; a low STRAIGHT CLIFF STEP (one tile wide, layered grey-brown rock; along the north side its south-facing rock face is visible) with three flights of stone stairs (west, east and north-east) leading down to the HOUSE TERRACE, a wide square terrace of ash ground where the houses stand: in the north a gigantic cracked WHITE-GOLD EGGSHELL that houses three shops, a red-domed inn in the west, a black stone tower house in the east, small stone houses with red tile roofs, a forge, a steaming turquoise HOT SPRING pool in the south; in the middle a SQUARE MOAT OF GLOWING MOLTEN LAVA, two tiles wide, with straight banks and square corners, crossed by four straight stone bridges (north, south, west, east); inside the moat a square plaza of dark basalt flagstones, and in the very centre the round stone ARENA with a sand floor and its gate to the south. Small flat details on the ash: cinders, pebbles, ruts, a few dry tufts, scattered barrels and crates only right against house walls.
 
-The FIRST attached image is an exact LAYOUT GUIDE on a {W} x {H} tile grid (each tile = {T} x {T} px; the output is {W * T} x {H * T} px). Your painting is laid pixel-for-pixel on top of it and used directly as the game map. Where the guide already shows finished painted pixel art (the eggshell, the temple, every house, the arena, the hot spring, the stairs, the bridges and the gates), keep that art EXACTLY as it is: same place, same size, same shape, same doors in the same spots, same colours (you may only re-render it crisply). Everywhere else the guide is soft colour-coding of perfectly ROUND rings; paint them as real materials whose edges follow those smooth circles:
+The FIRST attached image is an exact LAYOUT GUIDE on a {W} x {H} tile grid (each tile = {T} x {T} px; the output is {W * T} x {H * T} px). Your painting is laid pixel-for-pixel on top of it and used directly as the game map. Where the guide already shows finished painted pixel art (the eggshell, the temple, every house, the arena), keep that art EXACTLY as it is: same place, same size, same shape, same doors in the same spots, same colours, perfectly upright (you may only re-render it crisply). Everywhere else the guide is flat colour-coding on the tile grid; paint each area as real material that fills exactly its area:
 - very dark grey-brown = the crater ROCK outside the town (not walkable): jagged dark volcanic rock seen from above.
 - grey-brown = walkable ASH GROUND of the rim road and the house terrace (flat).
-- darker brown ring = the CLIFF STEP between the rim road and the house terrace (not walkable): layered grey-brown rock, sheer face toward the centre.
-- orange = the molten LAVA MOAT (not walkable): glowing orange-yellow molten rock with dark crust plates, thin dark cooled lip along both banks.
-- slate grey = BASALT FLAGSTONES around the arena (walkable).
-MOST IMPORTANT: every ring edge (the outer crater edge, both edges of the cliff step, both banks of the lava moat, the flagstone ring) must be a SMOOTH, ROUND, ORGANIC curve that follows the guide's circles closely (within a quarter of a tile), with only small natural irregularities. ABSOLUTELY NO stair-stepped, staircase-shaped, jagged-square, pixel-block or tile-grid edges anywhere, no straight segments, no right angles.
+- darker brown one-tile bands = the CLIFF STEP between the rim road and the house terrace (not walkable): layered grey-brown rock wall; straight.
+- light grey striped tiles in the cliff bands = STONE STAIRS (the stripes show the direction of the steps).
+- orange = the molten LAVA MOAT (not walkable): glowing orange-yellow molten rock with dark crust plates, with a thin dark cooled stone lip along both banks.
+- light stone tiles crossing the lava = STONE BRIDGES with low parapets on both sides, straight.
+- slate grey = BASALT FLAGSTONES of the plaza around the arena and of the two gate passages (walkable).
+- turquoise = the HOT SPRING: a natural steaming pool with a rim of rounded stones.
+MOST IMPORTANT: every boundary between these areas is a STRAIGHT horizontal or vertical line exactly on the guide's tile edges, with crisp square corners (only the arena and the hot spring are round). No curves, no rings, no diagonal walls, no slanted or tilted buildings, no warped or bent shapes anywhere. All buildings stand perfectly upright with vertical walls.
 The second attached image is only a STYLE REFERENCE from the same game: match its rendering; do not copy its layout.
 
 Pixel art rules: crisp square pixels, no blur, no anti-aliasing, no painterly strokes, clear clusters, hue-shifted ramps. Characters are about {T * 48 // 32} output px tall.
@@ -112,100 +126,46 @@ Do NOT paint any characters, people, animals, treasure chests, lanterns, lamp po
     print(j['out'], j['size'], len(P))
 
 
-
-
-def js_base():
-    """ash_caldera.js の FIT の前の grid（輪・門・石段・橋・湯・建物）を同じ手順で"""
-    g = [['M'] * W for _ in range(H)]
-    rr = lambda x, y: np.hypot(x + 0.5 - (CX + 0.5), y + 0.5 - (CY + 0.5)) / RAD
-    for y in range(H):
-        for x in range(W):
-            r = rr(x, y); ch = 'M'
-            if r <= 0.3: ch = 'X'
-            elif r <= 0.43: ch = 'c'
-            elif r <= 0.5: ch = '%'
-            elif r <= 0.78: ch = 'a'
-            elif r <= 0.84: ch = 'F'
-            elif r <= 0.96: ch = 'a'
-            g[y][x] = ch
-    for y in (26, 27):
-        for x in list(range(0, 4)) + list(range(50, 54)): g[y][x] = 'c'
-    ang = lambda x, y: np.arctan2(y + 0.5 - (CY + 0.5), x + 0.5 - (CX + 0.5))
-    near = lambda a, b, w: abs(np.arctan2(np.sin(a - b), np.cos(a - b))) <= w
-    for y in range(H):
-        for x in range(W):
-            if g[y][x] == 'F':
-                a = ang(x, y)
-                if near(a, np.pi, 0.05) or near(a, 0, 0.05) or near(a, -np.pi / 4, 0.05): g[y][x] = 'e'
-    for y in range(H):
-        for x in range(W):
-            if g[y][x] == '%' and (x in (26, 27) or y in (26, 27)): g[y][x] = 'b'
-    for y in range(43, 48):
-        for x in range(20, 35):
-            if ((x - 27) / 6.4) ** 2 + ((y - 45) / 2.3) ** 2 < 1 and g[y][x] == 'a': g[y][x] = 'h'
-    for b in blds:
-        for j in range(b['h']):
-            for i in range(b['w']): g[b['y'] + j][b['x'] + i] = 'a'
-        q = b['door']; g[q['y']][q['x']] = 'c'
-        if g[q['y'] + 1][q['x']] in 'FM%': g[q['y'] + 1][q['x']] = 'a'
-    for b in blds:
-        q = b['door']
-        if g[q['y'] + 1][q['x']] in 'FMX%h': g[q['y'] + 1][q['x']] = 'a'
-    return g
-
-
 def fit(src):
+    """描いた絵から、段の縁（崖・岩・溶岩・湯・闘技場）の 1 マスのずれだけを当たりに写す。縁から離れたマス・建物・戸口・石段・橋・門は動かさない"""
     from collections import deque
     T = 32
     A = np.asarray(Image.open(src).convert('RGB').resize((W * T, H * T), Image.BOX)).astype(np.float32)
-    L = A @ np.array([.299, .587, .114], np.float32)
-    g0 = js_base(); G = np.array(g0)
+    G = np.array([list(r) for r in BASE])
     Q = (A // 16).astype(int); qi = Q[..., 0] * 256 + Q[..., 1] * 16 + Q[..., 2]
     kr = lambda m: np.kron(m, np.ones((T, T), bool))
     bmask = np.zeros((H, W), bool)
     for b in blds: bmask[b['y']:b['y'] + b['h'], b['x']:b['x'] + b['w']] = True
-    CLS = ['M', 'a', '%', 'c', 'X', 'h']
+    CLS = ['M', 'a', 'F', '%', 'c', 'X', 'h']
     ll = {}
     for c in CLS:
         m = (G == c) & ~bmask
-        mi = ndimage.binary_erosion(m, iterations=1 if c != 'M' else 2)
+        mi = ndimage.binary_erosion(m, iterations=1) if c not in 'F' else m
         h = np.bincount(qi[kr(mi)], minlength=4096).astype(float) + 0.3
         ll[c] = np.log(h / h.sum())[qi].reshape(H, T, W, T).mean((1, 3))
     stack = np.stack([ll[c] for c in CLS]); cls = np.array(CLS)[stack.argmax(0)]
-    # 段の崖: 家の段と縁の道の間の暗い線（明るさ < 45 の画素が 1/4 以上）
-    yy, xx = np.mgrid[0:H, 0:W]
-    rr = np.hypot(xx + 0.5 - (CX + 0.5), yy + 0.5 - (CY + 0.5)) / RAD
-    dark = (L < 45).reshape(H, T, W, T).mean((1, 3))
-    rows = [r[:] for r in g0]
+    rows = [list(r) for r in BASE]
     prot = set()
     for b in blds:
         for j in range(b['h']):
             for i in range(b['w']): prot.add((b['x'] + i, b['y'] + j))
-        q = b['door']; prot |= {(q['x'], q['y']), (q['x'], q['y'] + 1), (q['x'], q['y'] + 2)}
+        q = b['door']; prot |= {(q['x'], q['y']), (q['x'], q['y'] + 1)}
+    for o in dump['npcs'] + [o for o in dump['objects'] if o['type'] != 'building']: prot.add((o['x'], o['y']))
+    # 変えてよい組（縁のとなりだけ）: 歩ける ↔ 歩けない
+    PAIR = {('a', 'F'), ('F', 'a'), ('a', 'M'), ('M', 'a'), ('a', '%'), ('%', 'a'), ('c', '%'), ('%', 'c'), ('a', 'h'), ('h', 'a'), ('c', 'X'), ('X', 'c')}
     for y in range(H):
         for x in range(W):
-            if (x, y) in prot or g0[y][x] in 'eb' or (y in (26, 27) and (x < 4 or x > 49)): continue
-            c = cls[y, x]
-            if 0.72 <= rr[y, x] <= 0.9 and dark[y, x] >= 0.25 and c != 'M': c = 'F'
-            if c == 'X' and rr[y, x] > 0.36: c = 'a' if rr[y, x] > 0.5 else 'c'
-            if c == 'h' and not (40 <= y <= 51): c = 'a'
-            if c == 'c' and rr[y, x] > 0.56: c = 'a'
-            if c == '%' and not (0.36 <= rr[y, x] <= 0.62): c = 'a'
-            if c == 'a' and rr[y, x] <= 0.3: c = 'X'          # 闘技場の壁（石の色が灰に似る）
-            elif c == 'a' and rr[y, x] < 0.42: c = 'c'
-            rows[y][x] = c
-    for o in dump['npcs'] + [o for o in dump['objects'] if o.get('type') in ('chest',)]:
-        x, y = o['x'], o['y']
-        if rows[y][x] not in 'ac' and (x, y) not in prot: rows[y][x] = 'a' if rr[y, x] > 0.5 else 'c'
+            b0 = BASE[y][x]
+            if (x, y) in prot or b0 in 'ebd' or (y in (26, 27) and (x < 2 or x > 51)): continue
+            nb = {BASE[v][u] for u, v in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)) if 0 <= u < W and 0 <= v < H}
+            c = str(cls[y, x])
+            if c != b0 and (b0, c) in PAIR and c in nb and ll[c][y, x] - ll[b0][y, x] > 0.6: rows[y][x] = c
     fx = json.load(open(os.path.join(D, 'fix.json'))) if os.path.exists(os.path.join(D, 'fix.json')) else {}
     for q in fx.get('set', []): rows[q[1]][q[0]] = q[2]
-    # つながりの直し: 絵の道が斜めに細くなって切れた所（とどかない歩けるかたまり）は、両側に接する岩のマスのうち
-    #   いちばん地面らしい 1 マスを開ける（くり返す）。石段・橋を通らずに輪をまたぐ開け方はしない（半径の帯が同じ所だけ）
-    bl = set(prot)
     bcell = {(b['x'] + i, b['y'] + j) for b in blds for i in range(b['w']) for j in range(b['h'])} - {(b['door']['x'], b['door']['y']) for b in blds}
     WALKC = 'aceb'
     def reach():
-        seen = np.zeros((H, W), bool); q = deque([(2, 26)]); seen[26, 2] = True
+        seen = np.zeros((H, W), bool); q = deque([(1, 26)]); seen[26, 1] = True
         while q:
             x, y = q.popleft()
             for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
@@ -213,27 +173,19 @@ def fit(src):
                 if 0 <= u < W and 0 <= v < H and not seen[v, u] and rows[v][u] in WALKC and (u, v) not in bcell:
                     seen[v, u] = True; q.append((u, v))
         return seen
-    band = lambda r: 0 if r > 0.84 else (1 if r > 0.5 else 2)
-    for it in range(40):
-        seen = reach()
-        miss = np.array([[rows[y][x] in WALKC and not seen[y, x] and (x, y) not in bcell for x in range(W)] for y in range(H)])
-        lab, n = ndimage.label(miss)
-        if not n: break
-        best = None
+    # 閉じて届かなくなった歩ける所は、もとの字へ戻す（くり返す）
+    for it in range(20):
+        seen = reach(); n = 0
         for y in range(H):
             for x in range(W):
-                if rows[y][x] not in 'MF' or (x, y) in set(tuple(q[:2]) for q in fx.get('set', [])): continue
-                nb = [(x + a, y + b) for a, b in ((1, 0), (-1, 0), (0, 1), (0, -1)) if 0 <= x + a < W and 0 <= y + b < H]
-                if any(seen[v, u] for u, v in nb) and any(lab[v, u] for u, v in nb):
-                    bs = {band(rr[v, u]) for u, v in nb if rows[v][u] in WALKC and (u, v) not in bcell}
-                    if len(bs) != 1: continue
-                    sc = ll['a'][y, x] - ll['M'][y, x]
-                    if best is None or sc > best[0]: best = (sc, x, y)
-        if best is None: break
-        rows[best[2]][best[1]] = 'a'; print('open', best[1], best[2], round(best[0], 2))
+                if rows[y][x] in WALKC and not seen[y, x] and (x, y) not in bcell:
+                    for u, v in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                        if 0 <= u < W and 0 <= v < H and rows[v][u] != BASE[v][u] and BASE[v][u] in WALKC: rows[v][u] = BASE[v][u]; n += 1
+        if not n: break
     json.dump([''.join(r) for r in rows], open(os.path.join(D, 'rows_fit.json'), 'w'))
-    FIT = [''.join(rows[y][x] if rows[y][x] != g0[y][x] else ' ' for x in range(W)) for y in range(H)]
+    FIT = [''.join(rows[y][x] if rows[y][x] != BASE[y][x] else ' ' for x in range(W)) for y in range(H)]
     open(os.path.join(D, 'fit.txt'), 'w').write('\n'.join('      ' + json.dumps(r) + ',' for r in FIT) + '\n')
+    print('changed', sum(c != ' ' for r in FIT for c in r))
     for y, r in enumerate(rows): print('%2d %s' % (y, ''.join(r)))
 
 

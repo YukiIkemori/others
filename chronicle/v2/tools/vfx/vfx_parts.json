@@ -900,6 +900,60 @@
    ],
    "tint": true,
    "prompt": "A single glowing ground fissure seen from a low three-quarter angle: jagged branching cracks radiating outward from a centre point across flat ground, the cracks glowing brightly from inside with light seeping up, small floating particles. Only the glowing cracks, no visible ground texture."
+  },
+  {
+   "id": "combo_vortex",
+   "group": "combo",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    384
+   ],
+   "fps": 18,
+   "loop": true,
+   "tint": true,
+   "prompt": "A two-armed energy vortex animation seen at a slight top-down angle: two thick swirling spiral streams of energy wrapping around each other and spiralling into a bright centre, sparks and particles flung off the arms; each frame rotated further; seamless loop."
+  },
+  {
+   "id": "merge_aura",
+   "group": "combo",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    256,
+    384
+   ],
+   "anchor": "bottom",
+   "fps": 16,
+   "loop": true,
+   "tint": true,
+   "prompt": "A merging power aura animation: two twisting ribbons of rising energy flame spiralling around each other upward from a glowing ring at the bottom of each cell, fusing into one bright column at the top, with sparks rising; seamless loop."
+  },
+  {
+   "id": "combo_burst",
+   "group": "combo",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    448,
+    448
+   ],
+   "fps": 18,
+   "tint": true,
+   "prompt": "A huge combination energy explosion animation: frame 1 a bright core point, frames 2-4 a massive spherical blast with a jagged star-shaped shock front, a thick bright shockwave ring and radiating light spikes, frames 5-7 the blast breaking into swirling energy flames and flying fragments, frame 8 fading embers."
   }
  ]
 }

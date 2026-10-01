@@ -124,6 +124,7 @@ function spriteOf(m, key, v) {
 
 // ---------------------------------------------------------------- マス
 // 壁に掛ける物（wall_*）と、壁のマスに据える物（腕木の灯り hook_lamp・壁の暖炉 fireplace は壁のマスに置けば壁の面に付く）
+const TOL = +(arg('--tol', 2));   // 壁に食い込む px（32 の論理 px）の許し
 const WALL_ITEM = /^wall_/;
 const WALL_MOUNT = /^(hook_lamp|fireplace)$/;
 /** 絵の無い物（光だけの物: window_glow・ember_glow…。コードの絵も画像も無い）*/
@@ -252,7 +253,7 @@ function checkMap(m) {
         // 物と同じ行の面でも、面の床（base）が物の行より上なら奥。物の行に床がある面（横の柱の下の面）は横から食い込む
         if (fc && fc.base <= o.y) continue;
         const ox = ovl(x0, x1, cx * 32, cx * 32 + 32), oy = ovl(y0, y1, cy * 32, cy * 32 + 32);
-        if (ox > 4 && oy > 4) hits.push({ x: cx, y: cy, ox: Math.round(ox), oy: Math.round(oy), face: !!fc });
+        if (ox > TOL && oy > 4) hits.push({ x: cx, y: cy, ox: Math.round(ox), oy: Math.round(oy), face: !!fc });
       }
       if (hits.length) {
         const worst = hits.reduce((a, h) => Math.max(a, h.ox), 0);

@@ -8,6 +8,25 @@
   'use strict';
   const E = (id, run, o) => R.def('events', id, Object.assign({ run, meta: { needs: [], gives: [] } }, o || {}));
   const X = () => R.Ash.ev;
+  /** NPC から今のマップの出口（exits[0]）までの道（歩ける所を幅優先で。出口のマスを含む）。見つからなければ undefined（leave は既定の歩き方） */
+  const exitPath = (id) => {
+    const F = R.Field, S = F._s || {}, m = S.map, n = S.npcById && S.npcById[id];
+    const ex = m && (m.exits || [])[0];
+    if (!m || !n || !ex) return undefined;
+    const goal = (x, y) => x >= ex.x && x < ex.x + (ex.w || 1) && y >= ex.y && y < ex.y + (ex.h || 1);
+    const key = (x, y) => x + ',' + y, prev = new Map([[key(n.x, n.y), null]]), q = [[n.x, n.y]];
+    while (q.length) {
+      const [x, y] = q.shift();
+      if (goal(x, y)) { const p = []; let k = key(x, y); while (k && k !== key(n.x, n.y)) { const [a, b] = k.split(',').map(Number); p.unshift([a, b]); k = prev.get(k); } return p; }
+      for (const [dx, dy] of [[0, 1], [-1, 0], [1, 0], [0, -1]]) {
+        const nx = x + dx, ny = y + dy, k = key(nx, ny);
+        if (prev.has(k) || nx < 0 || ny < 0 || nx >= m.w || ny >= m.h) continue;
+        if (!goal(nx, ny) && !(F._walkable && F._walkable(m, nx, ny, null, 0))) continue;
+        prev.set(k, key(x, y)); q.push([nx, ny]);
+      }
+    }
+    return undefined;
+  };
   const cleared = (ev) => ev.flag('cleared_r_ash');
   const champ = (ev) => ev.flag('ash_champion');
   const KAYA = { name: R.T('ev.ash_caldera.KAYA.name') }, DORGA = { name: R.T('ev.ash_caldera.DORGA.name') }, ZAKURO = { name: R.T('ev.ash_caldera.ZAKURO.name') };
@@ -137,7 +156,8 @@
       ev.choice('ch_ash_bribe', 'refuse');
       await ev.say('messenger', R.T('events.ash_eve.say_4'));
     }
-    try { await ev.leave('messenger', { ms: 700 }); } catch (e) { /* */ }
+    // 帰りは宿の出口（下の戸口）へ歩いて消える（持ち主 2026-10-01: 右の壁の方へ歩いて消えていた）
+    try { await ev.leave('messenger', { ms: 900, path: exitPath('messenger') }); } catch (e) { /* */ }
     ev.setFlag('ash_eve_on', false);
     ev.setFlag('ash_eve_done');
   }, { meta: { needs: ['flag:ash_round_4'], gives: ['flag:ash_eve_done', 'choice:ch_ash_bribe'] } });

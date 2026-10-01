@@ -247,6 +247,8 @@
         const id = pick('slash_spin');
         return id ? { add: [{ id, px: (L.r || 40) * 3, flat: L.flat || 0.5, env: 1, tint: L.col }], dim: 0.35 } : null;
       }
+      // 3 本以上の連なる弧は乱れ斬り（slash_multi）
+      if ((L.n || 1) >= 3 && has('slash_multi')) return { add: [{ id: 'slash_multi', th: lim((L.r || 32) / 12, 2.4, 3.6), tint: L.col }], dim: 0.3 };
       const heavy = (L.w || 6) >= 10 || spec.tier >= 5;
       const id = heavy ? pick('slash_heavy', 'slash_arc_a') : pick('slash_arc_a');
       if (!id) return null;
@@ -266,19 +268,24 @@
       return { add: out, dim: 0.15 };
     },
     cut(L) {
+      // 2 本が交わる斬り（X）は slash_x 1 枚で（二等分の向きに合わせる）
+      if ((L.n || 1) === 2 && Math.abs(Math.abs(L.step || 0) - Math.PI / 2) < 0.5 && has('slash_x')) {
+        const rot = (L.ang || 0) + (L.step || 0) / 2 - Math.PI / 2;
+        return { add: [{ id: 'slash_x', th: lim((L.len || 80) / 30, 2.2, 3.6), rot, tint: L.col }, { id: 'slash_x', th: lim((L.len || 80) / 30, 2.2, 3.6) * 0.95, rot, a: 0.5, tint: L.col2 != null ? L.col2 : 1 }], dim: 0.25 };
+      }
       const id = pick('slash_line');
       if (!id) return null;
       const out = [], n = L.n || 1, gap = L.gap || 0.12;
       for (let j = 0; j < n; j++) {
         const rot = (L.ang || 0) + (L.step || 0) * j;
-        out.push({ id, pxw: lim((L.len || 80) * 1.9, 120, 900), rot, u0: j * gap, u1: Math.min(1, j * gap + 0.85), tint: L.col });
-        out.push({ id, pxw: lim((L.len || 80) * 1.9, 120, 900) * 0.92, rot, u0: j * gap, u1: Math.min(1, j * gap + 0.85), a: 0.6, tint: L.col2 != null ? L.col2 : 1 });
+        out.push({ id, pxw: lim((L.len || 80) * 1.9, 120, 900), rot, flat: 2.2, u0: j * gap, u1: Math.min(1, j * gap + 0.85), tint: L.col });
+        out.push({ id, pxw: lim((L.len || 80) * 1.9, 120, 900) * 0.92, rot, flat: 1.4, u0: j * gap, u1: Math.min(1, j * gap + 0.85), a: 0.6, tint: L.col2 != null ? L.col2 : 1 });
       }
       return { add: out, dim: 0.3 };
     },
     bigslash(L) {
       const id = pick('slash_line');
-      return id ? { add: [{ id, pxw: lim((L.len || 900) * 0.9, 300, 1400), rot: L.ang || 0, a: 1, tint: L.col }], dim: 0.5 } : null;
+      return id ? { add: [{ id, pxw: lim((L.len || 900) * 0.9, 300, 1400), rot: L.ang || 0, flat: 3, a: 1, tint: L.col }], dim: 0.5 } : null;
     },
     thrust(L) {
       const id = pick('thrust_streak');
@@ -315,13 +322,10 @@
       return { add: [{ id, px: (L.h || 100) * 1.7, dy2: -(L.dy || 0), seg: [[0, 0], [brk * 0.45, 3], [brk, 4.9], [Math.min(0.98, brk + 0.06), 5], [1, 8]], tint: nativeOr('ice', spec, L) }], dim: 0 };
     },
     bolt(L, spec) {
-      const id = pick('lightning_bolt');
-      if (!id || L.from === 'src') return null;
-      const n = Math.min(3, L.n || 1), out = [];
-      for (let j = 0; j < n; j++) out.push({ id, sky: 1, foot: 1, u0: j * 0.14, u1: Math.min(1, j * 0.14 + 0.85), tint: nativeOr('thunder', spec, L), mx: j % 2, dy2: 0 });
+      // 稲妻そのものは bolt の部品が描いた絵で描く（fx_seq_prims.js）。ここでは落ちた所の電気の爆ぜを足す
       const eb = pick('electric_burst');
-      if (eb) out.push({ id: eb, th: 2.2, tint: nativeOr('thunder', spec, L) });
-      return { add: out, dim: 0.3 };
+      if (!eb || L.from === 'src') return null;
+      return { add: [{ id: eb, th: 2.4, u0: 0.05, tint: nativeOr('thunder', spec, L) }], dim: 1, img: 'lightning_bolt' };
     },
     motes(L, spec) {
       const el = elemOf(spec);
@@ -454,7 +458,8 @@
         const r = rule ? rule(L, spec, part) : null;
         if (!r || !r.add || !r.add.length) { out.push(L); continue; }
         // 手続きの層を下に（薄く）、画像の層を上に
-        out.push(Object.assign({}, L, { p: 'imgdim', p0: L.p, img: r.add[0].id, dimTo: r.dim == null ? 0.4 : r.dim }));
+        if (r.dim !== 1) out.push(Object.assign({}, L, { p: 'imgdim', p0: L.p, img: r.img || r.add[0].id, dimTo: r.dim == null ? 0.4 : r.dim }));
+        else out.push(L);
         for (const A of r.add) {
           const nl = Object.assign({ p: 'img', t0: L.t0, t1: L.t1, at: L.at, s: L.s, dx: L.dx, dy: L.dy, nf: L.nf }, A);
           // 当たりの画像は長めに（山を保って、ゆっくり消える）
@@ -473,6 +478,7 @@
     spec.hitDur = Math.min(Math.max(spec.hitDur, hitCap), Math.max(spec.hitDur, ...spec.hit.map((L) => L.t1)));
     for (const L of spec.main.concat(spec.hit)) if (L.p === 'img' && !spec.imgParts.includes(L.id)) spec.imgParts.push(L.id);
     // 手続きの部品の中で画像を使う物（巨大な武器: fx_seq_hero.js の giant）
+    for (const L of spec.main.concat(spec.hit)) if ((L.p === 'bolt' || L.p0 === 'bolt' || (L.p === 'storm' && L.bolts)) && has('lightning_bolt') && !spec.imgParts.includes('lightning_bolt')) spec.imgParts.push('lightning_bolt');
     for (const L of spec.main) if (L.p === 'giant') { const id = L.kind === 'hammer' ? 'spectral_hammer' : 'spectral_sword'; if (has(id) && !spec.imgParts.includes(id)) spec.imgParts.push(id); }
     // 読み始め、読めたら技・術の色に塗っておく（当たる瞬間に塗らない）
     for (const id of spec.imgParts) {
@@ -483,12 +489,18 @@
         if (!m || !r.ok) return;
         const pals = new Set();
         for (const L of spec.main.concat(spec.hit)) if (L.p === 'img' && L.id === id && (m.tint || L.tint != null)) pals.add(JSON.stringify(palOf({ pal: spec.pal }, L.tint)));
+        for (const L of spec.main.concat(spec.hit)) {
+          // 手続きの部品が使う絵の色（巨大な武器・稲妻）
+          if (L.p === 'giant' && id === (L.kind === 'hammer' ? 'spectral_hammer' : 'spectral_sword')) pals.add(JSON.stringify(palOf({ pal: spec.pal }, L.col)));
+          if (id === 'lightning_bolt' && (L.p === 'bolt' || L.p === 'storm')) { const p = palOf({ pal: spec.pal }, L.col != null ? L.col : 'thunder'); if (p[0] !== S.PAL.thunder[0]) pals.add(JSON.stringify(p)); }
+        }
         for (const p of pals) I.tinted(id, JSON.parse(p));
       });
     }
     return spec;
   }
   I.augment = augment;
+  I.frameAt = frameAt;
   const get0 = S.get;
   S.get = function (sid) {
     const sp = get0(sid);

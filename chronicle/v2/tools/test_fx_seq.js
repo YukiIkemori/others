@@ -18,8 +18,19 @@ const sids = ids.map(([db, k]) => S.idFor(db, k));
 const missing = ids.filter((x, i) => !sids[i]).map((x) => x[1]);
 ok('every tech / spell resolves to an fx id', !missing.length, missing);
 ok('fx ids are all distinct', new Set(sids).size === sids.length);
-const extra = Object.keys(S.table).filter((k) => !T[k] && !SP[k]);
+// 表の行は技・術のほか、敵・ボスの行動（合わせ技など。R.BFX.seq.combo で足す。src/data/enemy_combos.js）も持てる
+const EA = R.DB.enemyActions || {}, BA = R.DB.bossActions || {};
+const extra = Object.keys(S.table).filter((k) => !T[k] && !SP[k] && !EA[k] && !BA[k]);
 ok('no table rows for unknown ids', !extra.length, extra);
+const actRows = Object.keys(S.table).filter((k) => !T[k] && !SP[k]).map((k) => S.get('sq:' + k));
+ok('enemy / boss action rows compile with known parts and a hit effect', actRows.every((s) => s && s.hit.length > 0 && [...s.main, ...s.hit].every((L) => !!S.prims[L.p])), actRows.filter((s) => !s || !s.hit.length).map((s) => s && s.id));
+// 合わせ技の組み立て（S.combo）: 段 5・画像の部品の層と、画像が無い時の手続きの層を持つ（試しの行は表から消す）
+{
+  const sid = S.combo('__combo_probe', 'fire', 'ice');
+  const sp = S.get(sid);
+  ok('S.combo builds a tier-5 row with image parts and code fallbacks', sp.tier === 5 && sp.main.some((L) => L.p === 'img' && L.id === 'combo_vortex') && sp.main.some((L) => L.p === 'vortex') && sp.hit.some((L) => L.p === 'img' && L.id === 'combo_burst') && sp.hit.some((L) => L.p === 'ring'));
+  delete S.table.__combo_probe; delete S.cache[sid];
+}
 const specs = sids.filter(Boolean).map((sid) => S.get(sid));
 ok('every row compiles', specs.every(Boolean));
 const sig = new Map();

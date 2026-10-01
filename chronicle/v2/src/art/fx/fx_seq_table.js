@@ -238,5 +238,36 @@
   def('s_wind_light_dark', mix('light', 'wind'), { c: '【夜明けの風】夜の空に光の帯がいく筋も流れ、花びらと羽が仲間を清める', ally: true, dimCol: '6,4,24', main: [L('sky', -950, 1100, 'scr', { top: '30,20,70', bot: '255,180,160', a: 0.55 }), L('ribbons', -800, 1200, 'tgt', { n: 6, w: 900, h: 220, dy: -40 }), L('petals', -400, 1200, 'scr', { n: 60, w: 1400, h: 800, kind: 'petal', col: '255,200,220', col2: '255,245,250', drift: 200 })], hit: [H('motes', 700, { n: 8, w: 30, h: 60 })] });
   def('s_earth_light_dark', mix('fire', 'light'), { c: '【冥府返し】冥府の炎から不死鳥が舞い降り、翼を広げて仲間を呼び戻す', ally: true, dimCol: '10,4,0', main: [L('gate', -950, 400, 'tfoot', { w: 160, h: 180, col: '255,120,60', col2: '255,230,180', gx: -60 }), L('phoenix', -800, 1200, 'tgt', { s2: 1.2 }), L('rain', -200, 1200, 'tfoot', { n: 16, w: 300, h: 300, kind: 'feather', slant: 0.2, trail: 16, life: 0.5, splash: false, col: '255,160,80' })], hit: [H('pillar', 600, { w: 22, n: 10, col: '255,170,90' })] });
 
+  // ================================================================ 合わせ技（2 属性が混ざる。敵の連携技など）の組み立て
+  // S.combo(id, a, b, o) で表に 1 行を足す。a・b は色の名前（S.PAL: 'fire'・'ice'・'thunder'・'dark' …）。
+  //   o = {c: 考え, tier（既定 5）, slash: true（交差する X の斬り）, ally: true（味方への合わせ）, main: [], hit: []（足す層）}
+  //   画像の部品: merge_aura（使い手に 2 色の気がより合う）・combo_vortex（的に 2 色の渦が逆に回る）・combo_burst（2 色の大きな爆ぜ）・slash_x
+  //   部品が無い・読めていない時は、手続きの層（vortex・ring・sparks・flames）が代わりに見える
+  S.COMBO_PARTS = ['merge_aura', 'combo_vortex', 'combo_burst', 'slash_x'];
+  S.combo = function (id, a, b, o) {
+    o = o || {};
+    const pa = PAL[a] || PAL.fire, pb = PAL[b] || PAL.water;
+    def(id, [pa[0], pb[1], pb[2]], {
+      c: o.c || '合わせ技: 使い手に 2 色の気がより合い、的に 2 色の渦が逆に回って、交差する斬りと大きな爆ぜ',
+      tier: o.tier || 5, ally: !!o.ally,
+      main: [
+        // 溜め: 使い手に 2 色の気（片方は左右を返して、より合わせる）
+        L('img', -680, 0, 'srcfoot', { id: 'merge_aura', tint: a, th: 2.6, env: 1 }),
+        L('img', -640, 0, 'srcfoot', { id: 'merge_aura', tint: b, th: 2.3, env: 1, mx: 1, a: 0.85 }),
+        // 的: 2 色の渦（逆に回る）。手続きの渦は画像が無い時の代わり
+        L('vortex', -420, 520, 'tfoot', { r: 110, n: 40, spin: 6, flat: 0.35, col: a, col2: pb[1] }),
+        L('img', -420, 520, 'tfoot', { id: 'combo_vortex', tint: a, px: 330, flat: 0.45, spin: 3.5, env: 1 }),
+        L('img', -380, 520, 'tfoot', { id: 'combo_vortex', tint: b, px: 280, flat: 0.45, spin: -4.5, env: 1, rot: Math.PI, a: 0.85 }),
+      ].concat(o.main || []),
+      hit: [
+        H('img', 640, { id: 'combo_burst', tint: a, th: 3.4 }),
+        H('img', 640, { id: 'combo_burst', tint: b, th: 2.8, rot: 0.5, a: 0.8 }),
+        H('ring', 420, { r: 70, w: 4, n: 2, col: b }),
+        H('sparks', 380, { n: 16, v: 60, len: 10, col: a }),
+      ].concat(o.slash === false ? [] : [H('img', 520, { id: 'slash_x', tint: b, th: 3 })]).concat(o.hit || []),
+    });
+    return 'sq:' + id;
+  };
+
   function TAUN(n) { return Math.PI * 2 / n; }
 })(window.RPG);
