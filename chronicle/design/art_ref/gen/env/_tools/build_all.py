@@ -218,7 +218,7 @@ if what in ('props', 'all') and (not flt or flt in 'dungeon_a'):
 
 BBG_H = {'coast': 0.40, 'tower': 0.42, 'forest': 0.58, 'tree': 0.46, 'cave': 0.55, 'desert': 0.45, 'snow': 0.5, 'marsh': 0.44, 'isles': 0.47, 'mine': 0.47, 'ash': 0.42, 'star': 0.47,
          # 描いた絵が無くてコードの夜の絵に落ちていた id（jobs_bbg_more.py）
-         'ship': 0.46}
+         'ship': 0.46, 'watercave': 0.42, 'swamp': 0.42, 'manor': 0.56, 'oblivion': 0.5}
 def do_bbg():
     import warnings; warnings.filterwarnings('ignore')
     for b, h in BBG_H.items():

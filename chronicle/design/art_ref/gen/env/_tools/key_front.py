@@ -1,6 +1,6 @@
 """マゼンタの背景で作った手前の層（bbg/<id>_front.png）の背景を抜いて透明にする（その場で書き換え、.gen.json に keyed を記す）。
    python3 key_front.py <id> [...]
-   手前の層は夜の暗い紫青の影絵なので、マゼンタ寄りの画素はつながりに関係なくすべて背景（柵の間・樽の取っ手の穴も抜く）。"""
+   ほぼ純色のマゼンタはつながりに関係なく背景（柵の間・樽の取っ手の穴も抜く）。ふちの混ざりは背景に接する所だけ。"""
 import sys, os, json
 import numpy as np
 from scipy import ndimage
@@ -15,12 +15,11 @@ for bid in sys.argv[1:]:
         pass
     r, g, b = a[..., 0], a[..., 1], a[..., 2]
     mg = np.minimum(r, b) - g
-    # マゼンタ（と、ふちで暗い色と混ざったマゼンタ）: 赤と青がそろって緑よりずっと強い
-    m = ((mg > 70) & (np.abs(r - b) < 90)) | (a[..., 3] < 128)
-    m = ndimage.binary_opening(m, iterations=1) | ((mg > 120) & (np.abs(r - b) < 70)) | (a[..., 3] < 128)
-    # ふちの 1 画素の帯でマゼンタ寄りの色（混ざり）も抜く
-    edge = ndimage.binary_dilation(m, iterations=2) & ~m & (mg > 25) & (r > g + 25) & (b > g + 25)
-    m = m | edge
+    # 背景のマゼンタ: ほぼ純色（赤と青が強く、緑が弱い）。柵の間・取っ手の穴のような閉じた所もこれで抜ける
+    core = ((r > 170) & (b > 170) & (g < 100) & (np.abs(r - b) < 70)) | (a[..., 3] < 128)
+    # ふちの混ざり（暗い色とマゼンタの間の色）は、背景に 2 画素以内で接している所だけ抜く（物の中の桃色の貝などは残す）
+    edge = ndimage.binary_dilation(core, iterations=2) & ~core & (mg > 40) & (np.abs(r - b) < 90)
+    m = core | edge
     a[..., 3] = np.where(m, 0, 255)
     a[m, :3] = 0
     save(a, p)
