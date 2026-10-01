@@ -15,38 +15,38 @@
     // ---- 序盤（森・序章の井戸・湿原の蓮の沼。ティア 0 から）
     c_jelly_merge: { name: R.T('enemyCombos.c_jelly_merge.name'), members: [{ lin: 'jelly', n: 3 }], merge: { mon: 'jelly_big', seq: 'sq:ec_jelly_merge' }, round: 2, chance: 0.3, max: 1 },
     c_pack_hunt: { name: R.T('enemyCombos.c_pack_hunt.name'), members: [{ lin: 'wolf', n: 2 }], steps: [{ each: true, act: 'ec_pack_fang', same: true, seq: 'sq:ec_pack_fang' }], chance: 0.3, cd: 3, max: 2 },
-    c_thorn_cage: { name: R.T('enemyCombos.c_thorn_cage.name'), members: [{ lin: 'treant' }, { lin: 'plant' }], steps: [{ by: 0, act: 'ec_root_snare' }, { by: 1, act: 'ec_thorn_bite', same: true, seq: 'sq:ec_thorn_bite' }], chance: 0.35, cd: 3 },
+    c_thorn_cage: { name: R.T('enemyCombos.c_thorn_cage.name'), members: [{ lin: 'treant' }, { lin: 'plant' }], steps: [{ by: 0, act: 'ec_root_snare' }, { by: 1, act: 'ec_thorn_bite', same: true, seq: 'sq:ec_thorn_bite' }], chance: 0.45, cd: 3 },
     // ---- 森（ティア 2 から: 群れのハチ・妖精とキノコ）
     c_bee_swarm: { name: R.T('enemyCombos.c_bee_swarm.name'), members: [{ lin: 'bee', n: 3 }], steps: [{ by: 0, act: 'ec_bee_storm', seq: 'sq:ec_bee_storm' }], tierMin: 2, chance: 0.3, max: 1 },
     c_spore_dance: { name: R.T('enemyCombos.c_spore_dance.name'), members: [{ lin: 'fairy' }, { lin: 'mushroom' }], steps: [{ by: 0, act: 'ec_spore_dance', seq: 'sq:ec_spore_dance' }], tierMin: 2, chance: 0.3, max: 1 },
     // ---- 砂漠
-    c_venom_pincer: { name: R.T('enemyCombos.c_venom_pincer.name'), members: [{ lin: 'snake' }, { lin: 'scorpion' }], steps: [{ by: 0, act: 'ec_coil' }, { by: 1, act: 'ec_venom_tail', same: true, seq: 'sq:ec_venom_tail' }], tierMin: 1, chance: 0.35, cd: 3 },
+    c_venom_pincer: { name: R.T('enemyCombos.c_venom_pincer.name'), members: [{ lin: 'snake' }, { lin: 'scorpion' }], steps: [{ by: 0, act: 'ec_coil' }, { by: 1, act: 'ec_venom_tail', same: true, seq: 'sq:ec_venom_tail' }], tierMin: 1, chance: 0.45, cd: 3 },
     c_hawk_pincer: { name: R.T('enemyCombos.c_hawk_pincer.name'), members: [{ mon: 'desert_hawk_bow' }, { mon: 'desert_hawk_blade' }], steps: [{ by: 0, act: 'ec_pin_arrow' }, { by: 1, act: 'ec_hawk_slash', same: true, seq: 'sq:ec_hawk_slash' }], chance: 0.4, cd: 3 },
-    c_quicksand: { name: R.T('enemyCombos.c_quicksand.name'), members: [{ lin: 'sandworm' }, { lin: ['scorpion', 'snake'] }], steps: [{ by: 0, act: 'ec_quicksand', seq: 'sq:s_wind_earth_a' }], tierMin: 3, chance: 0.35, max: 1 },
+    c_quicksand: { name: R.T('enemyCombos.c_quicksand.name'), members: [{ lin: 'sandworm' }, { lin: ['scorpion', 'snake'] }], steps: [{ by: 0, act: 'ec_quicksand', seq: 'sq:s_wind_earth_a' }], tierMin: 3, chance: 0.45, cd: 3, max: 2 },
     // ---- 雪原（群れ狩りは上）
-    c_blizzard_fang: { name: R.T('enemyCombos.c_blizzard_fang.name'), members: [{ lin: 'frostling' }, { lin: 'wolf' }], steps: [{ by: 0, act: 'ec_snow_veil' }, { by: 1, act: 'ec_ice_fang', seq: 'sq:ec_ice_fang' }], tierMin: 1, chance: 0.35, cd: 3 },
-    c_avalanche: { name: R.T('enemyCombos.c_avalanche.name'), members: [{ lin: 'yeti' }, { lin: ['frostling', 'wolf'] }], steps: [{ by: 0, act: 'ec_avalanche', seq: 'sq:ec_avalanche' }], tierMin: 3, chance: 0.3, max: 1 },
-    c_stomp_signal: { name: R.T('enemyCombos.c_stomp_signal.name'), members: [{ lin: 'owl' }, { lin: 'mammoth' }], steps: [{ by: 0, act: 'ec_lull_song' }, { by: 1, act: 'ec_crushing_stomp', same: true, seq: 'sq:ec_crushing_stomp' }], tierMin: 5, chance: 0.35, cd: 3 },
+    c_blizzard_fang: { name: R.T('enemyCombos.c_blizzard_fang.name'), members: [{ lin: 'frostling' }, { lin: 'wolf' }], steps: [{ by: 0, act: 'ec_snow_veil' }, { by: 1, act: 'ec_ice_fang', seq: 'sq:ec_ice_fang' }], tierMin: 1, chance: 0.45, cd: 3 },
+    c_avalanche: { name: R.T('enemyCombos.c_avalanche.name'), members: [{ lin: 'yeti' }, { lin: ['frostling', 'wolf'] }], steps: [{ by: 0, act: 'ec_avalanche', seq: 'sq:ec_avalanche' }], tierMin: 3, chance: 0.3, cd: 3, max: 2 },
+    c_stomp_signal: { name: R.T('enemyCombos.c_stomp_signal.name'), members: [{ lin: 'owl' }, { lin: 'mammoth' }], steps: [{ by: 0, act: 'ec_lull_song' }, { by: 1, act: 'ec_crushing_stomp', same: true, seq: 'sq:ec_crushing_stomp' }], tierMin: 5, chance: 0.45, cd: 3 },
     // ---- 湿原（ゼリー合体は上）
-    c_tongue_lance: { name: R.T('enemyCombos.c_tongue_lance.name'), members: [{ lin: 'frog' }, { lin: 'lizardman' }], steps: [{ by: 0, act: 'ec_tongue_grab' }, { by: 1, act: 'ec_pinned_thrust', same: true, seq: 'sq:ec_pinned_thrust' }], tierMin: 1, chance: 0.35, cd: 3 },
-    c_wisp_parade: { name: R.T('enemyCombos.c_wisp_parade.name'), members: [{ lin: 'ghost' }, { lin: 'wisp' }], steps: [{ by: 1, act: 'ec_wisp_parade', seq: 'sq:s_fire_dark_a' }], tierMin: 3, chance: 0.35, max: 1 },
-    c_puppet_strings: { name: R.T('enemyCombos.c_puppet_strings.name'), members: [{ lin: 'doll' }, { lin: 'ghost' }], steps: [{ by: 0, act: 'ec_puppet_strings', seq: 'sq:ec_puppet_strings' }], tierMin: 5, chance: 0.35, max: 1 },
+    c_tongue_lance: { name: R.T('enemyCombos.c_tongue_lance.name'), members: [{ lin: 'frog' }, { lin: 'lizardman' }], steps: [{ by: 0, act: 'ec_tongue_grab' }, { by: 1, act: 'ec_pinned_thrust', same: true, seq: 'sq:ec_pinned_thrust' }], tierMin: 1, chance: 0.45, cd: 3 },
+    c_wisp_parade: { name: R.T('enemyCombos.c_wisp_parade.name'), members: [{ lin: 'ghost' }, { lin: 'wisp' }], steps: [{ by: 1, act: 'ec_wisp_parade', seq: 'sq:s_fire_dark_a' }], tierMin: 3, chance: 0.45, cd: 3, max: 2 },
+    c_puppet_strings: { name: R.T('enemyCombos.c_puppet_strings.name'), members: [{ lin: 'doll' }, { lin: 'ghost' }], steps: [{ by: 0, act: 'ec_puppet_strings', seq: 'sq:ec_puppet_strings' }], tierMin: 5, chance: 0.45, max: 1 },
     // ---- 諸島
-    c_whirlpool: { name: R.T('enemyCombos.c_whirlpool.name'), members: [{ lin: 'merman' }, { lin: 'jelly' }], steps: [{ by: 0, act: 'ec_whirlpool', seq: 'sq:s_water_5' }], tierMin: 1, chance: 0.35, max: 1 },
-    c_cannon_grapple: { name: R.T('enemyCombos.c_cannon_grapple.name'), members: [{ lin: 'kraken' }, { lin: 'skeleton' }], steps: [{ by: 0, act: 'ec_grapple' }, { by: 1, act: 'ec_point_blank', same: true, seq: 'sq:ec_point_blank' }], tierMin: 3, chance: 0.35, cd: 3 },
+    c_whirlpool: { name: R.T('enemyCombos.c_whirlpool.name'), members: [{ lin: 'merman' }, { lin: 'jelly' }], steps: [{ by: 0, act: 'ec_whirlpool', seq: 'sq:s_water_5' }], tierMin: 1, chance: 0.45, max: 1 },
+    c_cannon_grapple: { name: R.T('enemyCombos.c_cannon_grapple.name'), members: [{ lin: 'kraken' }, { lin: 'skeleton' }], steps: [{ by: 0, act: 'ec_grapple' }, { by: 1, act: 'ec_point_blank', same: true, seq: 'sq:ec_point_blank' }], tierMin: 3, chance: 0.45, cd: 3 },
     // ---- 山地
-    c_goblin_cannon: { name: R.T('enemyCombos.c_goblin_cannon.name'), members: [{ lin: 'golem' }, { lin: 'goblin' }], steps: [{ by: 0, act: 'ec_goblin_cannon', seq: 'sq:s_fire_earth_a' }], tierMin: 1, chance: 0.35, max: 1 },
-    c_burrow_strike: { name: R.T('enemyCombos.c_burrow_strike.name'), members: [{ lin: 'mole' }, { lin: 'beetle' }], steps: [{ by: 0, act: 'ec_tunnel' }, { by: 1, act: 'ec_upthrust', seq: 'sq:ec_upthrust' }], tierMin: 5, chance: 0.35, cd: 3 },
+    c_goblin_cannon: { name: R.T('enemyCombos.c_goblin_cannon.name'), members: [{ lin: 'golem' }, { lin: 'goblin' }], steps: [{ by: 0, act: 'ec_goblin_cannon', seq: 'sq:s_fire_earth_a' }], tierMin: 1, chance: 0.45, max: 1 },
+    c_burrow_strike: { name: R.T('enemyCombos.c_burrow_strike.name'), members: [{ lin: 'mole' }, { lin: 'beetle' }], steps: [{ by: 0, act: 'ec_tunnel' }, { by: 1, act: 'ec_upthrust', seq: 'sq:ec_upthrust' }], tierMin: 5, chance: 0.45, cd: 3 },
     // ---- 灰の荒野
-    c_fire_tornado: { name: R.T('enemyCombos.c_fire_tornado.name'), members: [{ lin: 'salamander' }, { lin: 'imp' }], steps: [{ by: 0, act: 'ec_fire_tornado', seq: 'sq:s_fire_wind_b' }], tierMin: 1, chance: 0.35, max: 1 },
-    c_war_cry: { name: R.T('enemyCombos.c_war_cry.name'), members: [{ lin: 'imp' }, { lin: 'orc' }], steps: [{ by: 0, act: 'ec_dark_blessing', to: 1 }, { by: 1, act: 'ec_brute_smash', seq: 'sq:ec_brute_smash' }], tierMin: 3, chance: 0.35, cd: 3 },
-    c_hellfire: { name: R.T('enemyCombos.c_hellfire.name'), members: [{ lin: 'chimera' }, { lin: 'salamander' }], steps: [{ by: 0, act: 'ec_hellfire', seq: 'sq:ec_hellfire' }], tierMin: 5, chance: 0.3, max: 1 },
+    c_fire_tornado: { name: R.T('enemyCombos.c_fire_tornado.name'), members: [{ lin: 'salamander' }, { lin: 'imp' }], steps: [{ by: 0, act: 'ec_fire_tornado', seq: 'sq:s_fire_wind_b' }], tierMin: 1, chance: 0.45, max: 1 },
+    c_war_cry: { name: R.T('enemyCombos.c_war_cry.name'), members: [{ lin: 'imp' }, { lin: 'orc' }], steps: [{ by: 0, act: 'ec_dark_blessing', to: 1 }, { by: 1, act: 'ec_brute_smash', seq: 'sq:ec_brute_smash' }], tierMin: 3, chance: 0.45, cd: 3 },
+    c_hellfire: { name: R.T('enemyCombos.c_hellfire.name'), members: [{ lin: 'chimera' }, { lin: 'salamander' }], steps: [{ by: 0, act: 'ec_hellfire', seq: 'sq:ec_hellfire' }], tierMin: 5, chance: 0.3, cd: 3, max: 2 },
     // ---- 高原・諸島の船（鎧・骸骨の二人組）
-    c_cross_slash: { name: R.T('enemyCombos.c_cross_slash.name'), members: [{ lin: ['armor', 'skeleton'], stage: 2, n: 2 }], steps: [{ by: 0, act: 'ec_cross_slash', seq: 'sq:ec_cross_slash' }], tierMin: 1, chance: 0.35, cd: 3 },
-    c_arcane_cannon: { name: R.T('enemyCombos.c_arcane_cannon.name'), members: [{ lin: 'darkmage' }, { lin: 'automaton' }], steps: [{ by: 0, act: 'ec_charge_core', to: 1 }, { by: 1, act: 'ec_mana_cannon', seq: 'sq:ec_mana_cannon' }], tierMin: 1, chance: 0.35, cd: 3 },
+    c_cross_slash: { name: R.T('enemyCombos.c_cross_slash.name'), members: [{ lin: ['armor', 'skeleton'], stage: 2, n: 2 }], steps: [{ by: 0, act: 'ec_cross_slash', seq: 'sq:ec_cross_slash' }], tierMin: 1, chance: 0.45, cd: 3 },
+    c_arcane_cannon: { name: R.T('enemyCombos.c_arcane_cannon.name'), members: [{ lin: 'darkmage' }, { lin: 'automaton' }], steps: [{ by: 0, act: 'ec_charge_core', to: 1 }, { by: 1, act: 'ec_mana_cannon', seq: 'sq:ec_mana_cannon' }], tierMin: 1, chance: 0.45, cd: 3 },
     // ---- 終盤（白の大書庫）・クリア後
-    c_blank_page: { name: R.T('enemyCombos.c_blank_page.name'), members: [{ lin: 'scribe' }, { lin: 'book' }], steps: [{ by: 0, act: 'ec_blank_page', seq: 'sq:s_light_dark_a' }], tierMin: 8, chance: 0.35, max: 1 },
-    c_void_chaos: { name: R.T('enemyCombos.c_void_chaos.name'), members: [{ lin: 'void' }, { lin: ['chaos', 'demon'] }], steps: [{ by: 0, act: 'ec_void_chaos', seq: 'sq:s_dark_5' }], tierMin: 8, chance: 0.35, cd: 3 },
+    c_blank_page: { name: R.T('enemyCombos.c_blank_page.name'), members: [{ lin: 'scribe' }, { lin: 'book' }], steps: [{ by: 0, act: 'ec_blank_page', seq: 'sq:s_light_dark_a' }], tierMin: 8, chance: 0.45, max: 1 },
+    c_void_chaos: { name: R.T('enemyCombos.c_void_chaos.name'), members: [{ lin: 'void' }, { lin: ['chaos', 'demon'] }], steps: [{ by: 0, act: 'ec_void_chaos', seq: 'sq:s_dark_5' }], tierMin: 8, chance: 0.45, cd: 3 },
   });
 
   // ---- ゼリー合体で生まれる大きなゼリー（段の無い 1 体。強さは戦闘のレベルで決まる）

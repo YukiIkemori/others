@@ -14,12 +14,17 @@
     eb_mist_gather: { name: R.T('bossActions.eb_mist_gather.name'), kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: R.T('bossActions.eb_mist_gather.msg'),
       telegraph: { text: R.T('bossActions.eb_mist_gather.telegraph.text'), pose: 'tele', tint: '#dfe8e8', next: 'eb_mist_wave', guard: 'defend', lethal: true } },
     eb_mist_wave: { name: R.T('bossActions.eb_mist_wave.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.8, guardPct: 0.1, kind: 'blunt' }], fx: 'breath', msg: R.T('bossActions.eb_mist_wave.msg') },
+    // 2026-10-01（ボスの組み直し）: 溜め（予告）の代わりに、館の人形らしい手
+    eb_doll_strings: { name: R.T('bossActions.eb_doll_strings.name'), kind: 'enemy', target: 'enemy', aim: 'healer', effects: [{ type: 'status', status: 'confuse', chance: 0.55 }], fx: 'confuse', msg: R.T('bossActions.eb_doll_strings.msg') },
+    eb_doll_waltz: { name: R.T('bossActions.eb_doll_waltz.name'), kind: 'enemy', target: 'random', effects: [{ type: 'damage', formula: 'phys', power: 0.5, hits: 3, kind: 'slash' }], fx: 'slash', msg: R.T('bossActions.eb_doll_waltz.msg') },
+    eb_mist_shroud: { name: R.T('bossActions.eb_mist_shroud.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'status', status: 'blind', chance: 0.45 }, { type: 'special', id: 'boss_field', flag: 'mist_shroud', msg: R.T('bossActions.eb_mist_shroud.field') }, { type: 'status', status: 'nimble', on: 'self' }], fx: 'smoke', msg: R.T('bossActions.eb_mist_shroud.msg') },
+    eb_mist_siphon: { name: R.T('bossActions.eb_mist_siphon.name'), kind: 'enemy', target: 'enemy', aim: 'caster', effects: [{ type: 'damage', formula: 'magic', power: 0.6, mp: true }, { type: 'damage', formula: 'magic', power: 0.8, element: 'water', drain: 0.5 }], fx: 'drain', msg: R.T('bossActions.eb_mist_siphon.msg') },
   });
   const C = L.b_doll_conductor;
   if (C) {
-    // 2026-10-01（ボスの組み直し）: 前は 4 手番ごとに必ず棒を掲げた（予告）。いまは指揮棒・クレッシェンド（楽団の攻めを上げる）・アンコールが主で、
-    //   強奏の予告はたまに（2 ラウンド目から）。楽士と合わせる合体技「人形の三重奏」もある（下の enemyCombos）
-    C.actions = A([['attack', 2], ['eb_baton', 3], ['eb_encore', 3, { allyDown: true }], ['eb_crescendo', 2], ['eb_doll_raise', 1, { round: 2 }]]);
+    // 2026-10-01（ボスの組み直し）: 前は 4 手番ごとに必ず棒を掲げた（予告）→ 強奏。溜めはやめた。指揮棒・円舞（ばらまきの斬り）・操り糸（回復役を混乱）・
+    //   クレッシェンド（楽団の攻めを上げる）・アンコール（倒れた楽士を起こす）。楽士と合わせる合体技「人形の三重奏」もある（下の enemyCombos）
+    C.actions = A([['attack', 1], ['eb_baton', 3], ['eb_doll_waltz', 2], ['eb_doll_strings', 1, { round: 2 }], ['eb_encore', 3, { allyDown: true }], ['eb_crescendo', 2]]);
     C.leader = { msg: R.T('data.bosses_marsh.leader.msg') };
     // 2026-10-01（組み直し）: 予告の手番が減り、合体技も入った分の調整（hp 2.1 → 2.7・atk 0.55 → 0.82、楽士 0.8/0.5 → 1.05/0.75。台本 90〜94%・7 ラウンド）
     C.s = { hp: 2.7, atk: 0.82, mag: 0.82 };
@@ -29,12 +34,12 @@
   }
   const M = L.b_mistbeast;
   if (M) {
-    // 2026-10-01（ボスの組み直し）: 1 ラウンドに重い手 1 つ（霧の手・魔女のまね）＋軽い手 1 つ（霧の息・分身を呼ぶ・HP が半分を切ってから霧を吸う）。
-    //   前は 2 ラウンドごとに必ず 霧が渦を巻く（予告）→ 霧の大波。いまは予告は軽い手の中からたまに（2 ラウンド目から、続けては来ない）
+    // 2026-10-01（ボスの組み直し）: 1 ラウンドに重い手 1 つ（霧の手・魔女のまね・霧吸い）＋軽い手 1 つ（霧の息・濃霧・分身を呼ぶ・HP が半分を切ってから霧を吸う）。
+    //   前は 2 ラウンドごとに必ず 霧が渦を巻く（予告）→ 霧の大波。溜めはやめた
     const HV = { every: [2, 0] }, LT = { every: [2, 1] };
-    M.actions = A([['eb_mist_hand', 3, HV], ['eb_witch_mimic', 3, HV], ['attack', 1, HV],
-      ['attack', 1, LT], ['eb_mist_breath', 2, LT], ['eb_call_double', 2, { every: [2, 1], countBelow: 3 }], ['eb_inhale_mist', 2, { every: [2, 1], hpBelow: 0.5 }],
-      ['eb_mist_gather', 2, { every: [4, 3], round: 2 }]]);
+    M.actions = A([['eb_mist_hand', 3, HV], ['eb_witch_mimic', 3, HV], ['eb_mist_siphon', 2, HV],
+      ['attack', 1, LT], ['eb_mist_breath', 2, LT], ['eb_mist_shroud', 1, { every: [2, 1], noFlag: 'mist_shroud' }], ['eb_call_double', 2, { every: [2, 1], countBelow: 3 }],
+      ['eb_inhale_mist', 2, { every: [2, 1], hpBelow: 0.5 }]]);
     M.desc = R.T('data.bosses_marsh.desc_2');
     M.s = { hp: 0.47, atk: 1.05, mag: 1.05 };   // 2026-10-01（組み直し）: 毎ラウンド 2 回とも攻める型に。atk 0.48 → 1.05（台本 85〜95%・10 ラウンド）   // hp 0.45 → 0.47（2026-09-30: ティア 1 のリピートが 32% で目安 30% を越えた。sim_bosses）
     // 2026-10-01: 地方ボスの通常の技が 1 人の最大 HP の 3〜4% しか削らず弱すぎた（オーナー「砂の王が弱すぎる」→ 地方ボス全体を見直し）。atk・mag を約 1.6 倍（sim_bosses）

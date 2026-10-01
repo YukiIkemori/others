@@ -454,17 +454,19 @@
     M.s = { hp: 1.2, atk: 2.2, mag: 2.2 };   // 2026-10-01（組み直し）: 半分で二度動くのをやめた分 atk・mag 1.55 → 2.2、hp 1.29 → 1.2（sim_bosses: リピート 29%・台本 99%・6.3 ラウンド）   // 2026-10-01: 1.35 → 1.29（K.BOSS_HP 1.05 倍の分を戻す。台本のラウンド 5〜7 の上の端）
     RE.s = { hp: 0.95, atk: 1.5, mag: 1.5 };   // 2026-10-01（組み直し）: 1 手番 1 回にした分 atk・mag 0.6 → 1.5、hp 1.1 → 0.95（sim_bosses: 台本 100%・10.4 ラウンド・リピート 35%）
     // ページ食らい: 紙吹雪（ランダム 3 回）を「紙を吸いこむ → 紙吹雪（全体）」の予告に置き換え
-    P.actions = A([['attack', 4], ['eb_page_gather', 200, { every: [3, 0] }], ['eb_eat_words', 1, { every: [4, 3] }], ['eb_ink_spit', 1, { every: [4, 1] }], ['eb_devour', 1]]);
+    // 2026-10-01（ボスの組み直し、オーナー「溜めはいらない」）: 序章の教える戦いなので紙を吸いこむ構え（予告）→ 紙吹雪 は残す。ただし 3 手番ごとの決まりはやめ、たまに（2 ラウンド目から）
+    P.actions = A([['attack', 3], ['eb_page_gather', 2, { round: 2 }], ['eb_eat_words', 1], ['eb_ink_spit', 1], ['eb_devour', 2]]);
     // 教える戦い: 半分を切っても手数は増やさない（攻撃力が 1 段上がるだけ）
     P.phases = [{ hpBelow: 0.5, msg: R.T('data.bosses.phases.0.msg'), set: { buffs: { atk: 1 } } }];
     // ダストウィング: 眠りのりん粉を「羽の光 → 眠りのりん粉（全体、強い）」の予告に
-    M.actions = A([['attack', 3], ['eb_wing_glow', 200, { every: [3, 0] }], ['eb_scale_poison', 2], ['eb_wing_gale', 2], ['eb_eye_spots', 1, { every: [4, 2] }], ['eb_moth_dive', 2]]);
+    // 2026-10-01（ボスの組み直し）: 羽の光（予告）→ 眠りのりん粉 は 3 手番ごとの決まりをやめ、たまに（眠りが毎回続かないように）
+    M.actions = A([['attack', 2], ['eb_wing_glow', 2, { round: 2 }], ['eb_scale_poison', 2], ['eb_wing_gale', 2], ['eb_eye_spots', 1], ['eb_moth_dive', 3]]);
     // 2026-10-01（ボスの組み直し）: 序盤のボスは 1 手番に 1 回。半分を切っても二度は動かず、りん粉で攻めと術が 1 段上がる
     M.phases = [{ hpBelow: 0.5, msg: R.T('data.bosses.LIST.b_moth.phases.0.msg'), set: { buffs: { atk: 1, mag: 1 } } }];
     // 根食らい: 根もぐり → 前列へ突き上げ。根を呼ぶのは根を火で焼くまで（戦闘の旗 roots_burned）
-    // 2026-10-01（ボスの組み直し）: 序盤のボスは 1 手番に 1 回（前は 2 回）。予告（根もぐり）は 4 手番に 1 度のまま、ほかの手番は毎回攻めるか根を呼ぶ（決まった順はない）
+    // 2026-10-01（ボスの組み直し）: 序盤のボスは 1 手番に 1 回（前は 2 回）。予告（根もぐり）は 4 手番ごとの決まりをやめ、たまに。ほかの手番は毎回攻めるか根を呼ぶ
     RE.actsPerTurn = 1;
-    RE.actions = A([['attack', 3], ['eb_root_drain', 2], ['eb_root_sink', 200, { every: [4, 1] }], ['eb_rot_breath', 2],
+    RE.actions = A([['attack', 3], ['eb_root_drain', 2], ['eb_root_sink', 2, { round: 2 }], ['eb_rot_breath', 2],
       ['eb_call_roots', 2, { countBelow: 3, noFlag: 'roots_burned' }], ['eb_body_slam', 2]]);
     // 根の子分の絵は hd:mon:b_root（BEAST）。火で倒されると、根食らいはもう根を呼べない
     RT.sprite = 'b_root';
@@ -493,6 +495,15 @@
       drops: {},
       desc: R.T('data.bosses.b_packwolf.desc'),
     };
+    // 合体技（2026-10-01 ボスの組み直し。決まりは w_combo の R.DB.enemyCombos）
+    R.defs('enemyCombos', {
+      // 群れ頭の号令: 群れの狼が弱った人へ飛びかかり、頭が同じ人へ噛みつく
+      c_b_lord_pack: { name: R.T('enemyCombos.c_b_lord_pack.name'), members: [{ mon: 'b_wolflord' }, { mon: 'b_packwolf' }],
+        steps: [{ by: 1, act: 'ec_pack_fang', aim: 'low', seq: 'sq:ec_pack_fang' }, { by: 0, act: 'eb_lord_bite', same: true }], round: 2, chance: 0.3, cd: 3 },
+      // 根の締めつけ: 根が前の人を打ってしびれさせ、根食らいが同じ人へ体当たり
+      c_b_root_bind: { name: R.T('enemyCombos.c_b_root_bind.name'), members: [{ mon: 'b_rooteater' }, { mon: 'b_root' }],
+        steps: [{ by: 1, act: 'eb_root_whip' }, { by: 0, act: 'eb_body_slam', same: true, seq: 'sq:ec_thorn_bite' }], round: 2, chance: 0.3, cd: 3 },
+    });
     for (const id of ['b_wolflord', 'b_packwolf']) {
       if (!R.DB.monsters[id]) R.DB.monsters[id] = LIST[id];
       if (!R.DB.bosses[id]) R.DB.bosses[id] = LIST[id];

@@ -16,25 +16,26 @@
       telegraph: { text: R.T('bossActions.eb_warden_raise.telegraph.text'), pose: 'tele', tint: '#ffb070', next: 'eb_warden_anvil', guard: 'defend', lethal: true } },
     // 2026-10-01（ボスの組み直し）: 番人の鉄の構え（守りが上がり、打ちこむと殴り返す。battle_core の魔物の反撃の構え）
     eb_warden_guard: { name: R.T('bossActions.eb_warden_guard.name'), kind: 'enemy', target: 'self', effects: [{ type: 'status', status: 'counter', power: 1.0 }, { type: 'buff', stat: 'def', stages: 1 }], fx: 'buff', msg: R.T('bossActions.eb_warden_guard.msg') },
+    eb_rock_acid: { name: R.T('bossActions.eb_rock_acid.name'), kind: 'enemy', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 0.8, element: 'earth' }, { type: 'buff', stat: 'def', stages: -1, chance: 0.7 }, { type: 'status', status: 'poison', chance: 0.4 }], fx: 'poison', msg: R.T('bossActions.eb_rock_acid.msg') },
+    eb_warden_slag: { name: R.T('bossActions.eb_warden_slag.name'), kind: 'enemy', target: 'random', effects: [{ type: 'damage', formula: 'phys', power: 0.5, hits: 3, element: 'fire' }, { type: 'status', status: 'burn', chance: 0.2 }], fx: 'fire2', msg: R.T('bossActions.eb_warden_slag.msg') },
     eb_warden_anvil: { name: R.T('bossActions.eb_warden_anvil.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.92, guardPct: 0.08, kind: 'blunt', element: 'fire' }], fx: 'explosion', msg: R.T('bossActions.eb_warden_anvil.msg') },
   });
   const E = L.b_rockeater;
   if (E) {
-    // 2026-10-01（ボスの組み直し）: 前は 4 手番ごとに必ず もぐる（予告）→ 突き上げ、3 手番ごとに岩をかじる の決まった順。
-    //   いまはかみ砕く・砂利・落盤（全体・気絶）から選び、岩をかじって固くなるのは HP が 7 割を切ってから。もぐる予告はたまに（2 ラウンド目から）
-    E.actions = A([['attack', 2], ['eb_grind', 3], ['eb_gravel_spit', 2], ['eb_cave_in', 2], ['eb_rock_crunch', 2, { hpBelow: 0.7 }], ['eb_rock_burrow', 1, { round: 2 }]]);
+    // 2026-10-01（ボスの組み直し）: 前は 4 手番ごとに必ず もぐる（予告）→ 突き上げ、3 手番ごとに岩をかじる の決まった順。溜めはやめた。
+    //   かみ砕く・砂利吐き（ばらまき）・落盤（全体・気絶）・岩溶かしの酸（守りを下げる・毒）。岩をかじって固くなるのは HP が 7 割を切ってから
+    E.actions = A([['attack', 1], ['eb_grind', 3], ['eb_gravel_spit', 2], ['eb_cave_in', 2], ['eb_rock_acid', 2], ['eb_rock_crunch', 2, { hpBelow: 0.7 }]]);
     E.desc = R.T('data.bosses_mine.desc');
     E.s = { hp: 1.2, atk: 3.3, mag: 3.3 };   // 2026-10-01（組み直し）: 毎手番攻める型で台本 85〜95%（前は 100%）。hp 1.7 → 1.2・atk 0.95 → 3.3
   }
   const W = L.b_ironwarden;
   if (W) {
-    // 2026-10-01（ボスの組み直し）: 最初から 1 ラウンドに 2 回（重い手 1 つ: 鉄の拳・金床落とし ＋ 軽い手 1 つ: 炉の息・鉄の壁・鉄の構え）。
-    //   前は 3/4 から二度動き、2 ラウンドごとに必ず 振りかぶる（予告）→ 金床落とし（全体）。いまは予告は軽い手の中からたまに（2 ラウンド目から、続けては来ない）
+    // 2026-10-01（ボスの組み直し）: 最初から 1 ラウンドに 2 回（重い手 1 つ: 鉄の拳・金床落とし・鉄くず散らし ＋ 軽い手 1 つ: 炉の息・鉄の壁・鉄の構え（反撃））。
+    //   前は 3/4 から二度動き、2 ラウンドごとに必ず 振りかぶる（予告）→ 金床落とし（全体）。溜めはやめた
     W.actsPerTurn = 2;
     const HV = { every: [2, 0] }, LT = { every: [2, 1] };
-    W.actions = A([['eb_iron_fist', 3, HV], ['eb_anvil_drop', 2, HV], ['attack', 1, HV],
-      ['eb_forge_breath', 2, LT], ['eb_warden_guard', 1, LT], ['attack', 1, LT], ['eb_iron_wall', 3, { every: [2, 1], hpBelow: 0.7, once: true }],
-      ['eb_warden_raise', 2, { every: [4, 3], round: 2 }]]);
+    W.actions = A([['eb_iron_fist', 3, HV], ['eb_anvil_drop', 2, HV], ['eb_warden_slag', 2, HV],
+      ['eb_forge_breath', 2, LT], ['eb_warden_guard', 1, LT], ['attack', 1, LT], ['eb_iron_wall', 3, { every: [2, 1], hpBelow: 0.7, once: true }]]);
     // 3/4 で二度動く姿はやめ、3 割で水にいっそう弱くなる姿だけ残す（文は前の 2 つ目の姿のまま）
     W.phases = [{ hpBelow: 0.3, msg: R.T('data.bosses.LIST.b_ironwarden.phases.1.msg'), set: { elem: { water: 2 }, buffs: { atk: 1 } } }];
     W.desc = R.T('data.bosses_mine.desc_2');
@@ -50,6 +51,7 @@
     eb_vein_storm: { name: R.T('bossActions.eb_vein_storm.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'phys', power: 2.1, element: 'earth', sure: true }], fx: 'earth', msg: R.T('bossActions.eb_vein_storm.msg') },
     eb_vein_fist: { name: R.T('bossActions.eb_vein_fist.name'), kind: 'enemy', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.6 }], fx: 'explosion', msg: R.T('bossActions.eb_vein_fist.msg') },
     eb_vein_glare: { name: R.T('bossActions.eb_vein_glare.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'status', status: 'blind', chance: 0.35 }, { type: 'buff', stat: 'agi', stages: -1, chance: 0.4 }], fx: 'debuff', msg: R.T('bossActions.eb_vein_glare.msg') },
+    eb_vein_crystal: { name: R.T('bossActions.eb_vein_crystal.name'), kind: 'enemy', target: 'self', effects: [{ type: 'status', status: 'veil' }, { type: 'buff', stat: 'mdef', stages: 1 }], fx: 'buff', msg: R.T('bossActions.eb_vein_crystal.msg') },
     eb_vein_shards: { name: R.T('bossActions.eb_vein_shards.name'), kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_vein_shard', n: 2, max: 3 }], fx: 'magic', msg: R.T('bossActions.eb_vein_shards.msg') },
   });
   const def = (id, d) => { L[id] = d; R.DB.bosses[id] = d; };
@@ -57,10 +59,9 @@
     name: R.T('data.bosses_mine.b_vein_lord.name'), sprite: 'golem_3', artKind: 'mon', bossType: 'fmid', lv: 9, actsPerTurn: 2, size: 'l',
     race: 'construct', affinity: 'earth', flags: ['boss'], eva: 4,
     elem: { water: 1.5, wind: 1.25, earth: 0.1 }, phys: { blunt: 1.25, pierce: 0.75 }, statusRes: { death: 1, poison: 1, sleep: 0.7, confuse: 1 },
-    // 2026-10-01（ボスの組み直し）: 重い手（鉱脈の拳）＋軽い手（にらみ・かけらを呼ぶ）。前は 3 手番ごとに必ず脈打った（予告）。いまはたまに（2 ラウンド目から）
-    actions: A([['eb_vein_fist', 3, { every: [2, 0] }], ['attack', 2, { every: [2, 0] }],
-      ['eb_vein_glare', 2, { every: [2, 1] }], ['attack', 1, { every: [2, 1] }], ['eb_vein_shards', 2, { every: [2, 1], countBelow: 3 }],
-      ['eb_vein_pulse', 2, { every: [4, 3], round: 2 }]]),
+    // 2026-10-01（ボスの組み直し）: 重い手（鉱脈の拳・結晶の嵐）＋軽い手（にらみ・結晶の膜（加護）・かけらを呼ぶ）。前は 3 手番ごとに必ず脈打った（予告）→ 結晶の嵐。溜めはやめた
+    actions: A([['eb_vein_fist', 3, { every: [2, 0] }], ['eb_vein_storm', 1, { every: [2, 0], round: 2 }], ['attack', 1, { every: [2, 0] }],
+      ['eb_vein_glare', 2, { every: [2, 1] }], ['eb_vein_crystal', 1, { every: [2, 1] }], ['eb_vein_shards', 2, { every: [2, 1], countBelow: 3 }], ['attack', 1, { every: [2, 1] }]]),
     phases: [{ hpBelow: 0.5, msg: R.T('data.bosses_mine.b_vein_lord.phases.0.msg'), set: { buffs: { atk: 1, agi: 1 } } }],
     s: { hp: 0.5, atk: 1.0, mag: 1.0 },   // 2026-10-01（組み直し）: 予告が減った分 atk 0.5 → 1.0・hp 0.42 → 0.5（台本 95%・11 ラウンド）
     drops: { normal: { pool: 'p_boss', rate: 1 }, bonus: { pool: 'p_heal', rate: 1 } },

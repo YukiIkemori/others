@@ -54,8 +54,8 @@
     b_tamer: {
       name: R.T('data.bosses_ash.LIST.b_tamer.name'), sprite: 'b_ash_tamer', bossType: 'mid', lv: 8, hpShare: 9, actsPerTurn: 1, size: 'm',
       race: 'humanoid', flags: ['boss'], eva: 5, elem: {}, phys: {}, statusRes: {},
-      // 2026-10-01（ボスの組み直し）: 口笛（予告）は 3 手番ごとの決まりをやめ、たまに（2 ラウンド目から）。鞭と岩の獣の合体技「鞭と突進」がある
-      actions: A([['attack', 2], ['eb_tamer_whip', 3], ['eb_tamer_whistle', 1, { round: 2 }], ['e_howl', 1]]),
+      // 2026-10-01（ボスの組み直し）: 口笛（予告）→ 突進 の決まりはやめた。鞭・投げ縄（後列をまひ）・けしかけ（獣の攻めを上げる）と、岩の獣との合体技「鞭と突進」
+      actions: A([['attack', 2], ['eb_tamer_whip', 3], ['eb_tamer_snare', 2], ['e_howl', 1]]),
       leader: { msg: R.T('data.bosses_ash.LIST.b_tamer.leader.msg') },
       drops: MID('i_potion'),
       desc: R.T('data.bosses_ash.LIST.b_tamer.desc'),
@@ -63,7 +63,7 @@
     b_sister_elder: {
       name: R.T('data.bosses_ash.LIST.b_sister_elder.name'), sprite: 'b_ash_hinoe', bossType: 'mid', lv: 8, hpShare: 9, actsPerTurn: 1, size: 'm',
       race: 'humanoid', flags: ['boss'], eva: 5, elem: { water: 1.25 }, phys: {}, statusRes: {},
-      actions: A([['e_fire_bolt', 2], ['eb_hinoe_mend', 2], ['eb_hinoe_raise', SCHED, { allyDown: true }]]),
+      actions: A([['e_fire_bolt', 2], ['eb_hinoe_mend', 2], ['e_veil_ally', 1], ['eb_hinoe_raise', SCHED, { allyDown: true }]]),   // 2026-10-01: 守りの火（加護）を足した
       leader: { msg: R.T('data.bosses_ash.LIST.b_sister_elder.leader.msg') },
       drops: MID('i_ether'),
       desc: R.T('data.bosses_ash.LIST.b_sister_elder.desc'),
@@ -71,8 +71,8 @@
     b_sister_younger: {
       name: R.T('data.bosses_ash.LIST.b_sister_younger.name'), sprite: 'b_ash_sumi', bossType: 'add', addOf: 'b_sister_elder', lv: 8, hpShare: 5, actsPerTurn: 1, size: 'm',
       race: 'humanoid', flags: ['boss'], eva: 5, elem: { water: 1.25 }, phys: {}, statusRes: {},
-      // 2026-10-01（ボスの組み直し）: 詠唱（予告）は 4 手番ごとの決まりをやめ、たまに（2 ラウンド目から）。姉と合わせる合体技「姉妹の連なる火」がある
-      actions: A([['e_fire_bolt', 3], ['e_fire_rain', 2], ['eb_sumi_chant', 1, { round: 2 }]]),
+      // 2026-10-01（ボスの組み直し）: 詠唱（予告）→ 火柱 の決まりはやめた。火の玉・火の雨・火の粉（やけど）と、姉と合わせる合体技「姉妹の連なる火」
+      actions: A([['e_fire_bolt', 3], ['e_fire_rain', 2], ['eb_sumi_ember', 2]]),
       drops: {},
       desc: R.T('data.bosses_ash.LIST.b_sister_younger.desc'),
     },
@@ -80,17 +80,17 @@
       name: R.T('data.bosses_ash.LIST.b_armorman.name'), sprite: 'b_ash_barga', bossType: 'mid', lv: 8, actsPerTurn: 1, size: 'm',
       race: 'humanoid', flags: ['boss'], eva: 0,
       elem: { water: 1.25, wind: 1.25 }, phys: { slash: 0.6, pierce: 0.75, blunt: 1.4 }, statusRes: { stun: 0.5 },
-      // 2026-10-01（ボスの組み直し）: 振りかぶる（予告）は 3 手番ごとの決まりをやめ、たまに。代わりに鎧砕き・返しの構え（打ちこむと殴り返す）
-      actions: A([['attack', 3], ['e_armor_break', 2], ['e_harden', 1, { once: true }], ['eb_barga_counter', 1], ['eb_barga_raise', 1, { round: 2 }]]),
+      // 2026-10-01（ボスの組み直し）: 振りかぶる（予告）→ 大なぎ の決まりはやめた。鎧砕き（守りを下げる）・盾打ち（気絶）・固くなる・返しの構え（打ちこむと殴り返す）
+      actions: A([['attack', 2], ['e_armor_break', 2], ['eb_barga_bash', 2], ['e_harden', 1, { once: true }], ['eb_barga_counter', 1]]),
       drops: MID('i_potion'),
       desc: R.T('data.bosses_ash.LIST.b_armorman.desc'),
     },
     b_zakuro: {
       name: R.T('data.bosses_ash.LIST.b_zakuro.name'), sprite: 'b_ash_zakuro', bossType: 'mid', lv: 9, actsPerTurn: 1, size: 'm',
       race: 'humanoid', flags: ['boss'], eva: 10, elem: {}, phys: {}, statusRes: { sleep: 0.5, confuse: 0.5 },
-      // 2026-10-01（ボスの組み直し）: 居合の構え（予告）は 3 手番ごとの決まりをやめ、たまに。後の先（打ちこむと斬り返す）を足す。
-      //   半分を切ると二本目の刀を抜き、1 ラウンドに 2 回動く（軽い斬りが増える）
-      actions: A([['attack', 3], ['eb_zakuro_cut', 3], ['eb_zakuro_guard', 1], ['eb_zakuro_stance', 1, { round: 2 }], ['eb_zakuro_draw', SCHED, { hpBelow: 0.5, once: true }]]),
+      // 2026-10-01（ボスの組み直し）: 居合の構え（予告）→ 一閃 の決まりはやめた。斬りつけ・居合（回復役をねらう）・払い（前列、素早さを下げる）・
+      //   後の先（打ちこむと斬り返す）。半分を切ると二本目の刀を抜き、1 ラウンドに 2 回動く
+      actions: A([['attack', 2], ['eb_zakuro_cut', 3], ['eb_zakuro_iai', 1, { round: 2 }], ['eb_zakuro_sweep', 2], ['eb_zakuro_guard', 1], ['eb_zakuro_draw', SCHED, { hpBelow: 0.5, once: true }]]),
       phases: [{ hpBelow: 0.5, msg: R.T('data.bosses_ash.LIST.b_zakuro.phases.0.msg'), set: { buffs: { agi: 1 }, actsPerTurn: 2 } }],
       drops: MID('i_ether'),
       desc: R.T('data.bosses_ash.LIST.b_zakuro.desc'),
@@ -116,6 +116,13 @@
     eb_zakuro_stance: { name: R.T('bossActions.eb_zakuro_stance.name'), kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: R.T('bossActions.eb_zakuro_stance.msg'),
       telegraph: { text: R.T('bossActions.eb_zakuro_stance.telegraph.text'), pose: 'tele', tint: '#e0e8ff', next: 'eb_zakuro_flash', guard: 'defend', lethal: true } },
     eb_zakuro_flash: { name: R.T('bossActions.eb_zakuro_flash.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.95, guardPct: 0.08, kind: 'slash' }], fx: 'slash3', msg: R.T('bossActions.eb_zakuro_flash.msg') },
+    eb_tamer_snare: { name: R.T('bossActions.eb_tamer_snare.name'), kind: 'enemy', target: 'enemy', aim: 'back', effects: [{ type: 'damage', formula: 'phys', power: 0.6 }, { type: 'status', status: 'paralyze', chance: 0.4 }], fx: 'strike', msg: R.T('bossActions.eb_tamer_snare.msg') },
+    eb_sumi_ember: { name: R.T('bossActions.eb_sumi_ember.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'magic', power: 0.35, element: 'fire' }, { type: 'status', status: 'burn', chance: 0.35 }], fx: 'fire', msg: R.T('bossActions.eb_sumi_ember.msg') },
+    eb_barga_bash: { name: R.T('bossActions.eb_barga_bash.name'), kind: 'enemy', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.2, kind: 'blunt' }, { type: 'status', status: 'stun', chance: 0.3 }], fx: 'strike2', msg: R.T('bossActions.eb_barga_bash.msg') },
+    eb_zakuro_iai: { name: R.T('bossActions.eb_zakuro_iai.name'), kind: 'enemy', target: 'enemy', aim: 'healer', effects: [{ type: 'damage', formula: 'phys', power: 1.6, kind: 'slash', critBonus: 15 }], fx: 'slash3', msg: R.T('bossActions.eb_zakuro_iai.msg') },
+    eb_zakuro_sweep: { name: R.T('bossActions.eb_zakuro_sweep.name'), kind: 'enemy', target: 'front', effects: [{ type: 'damage', formula: 'phys', power: 0.9, kind: 'slash' }, { type: 'buff', stat: 'agi', stages: -1, chance: 0.4 }], fx: 'slash2', msg: R.T('bossActions.eb_zakuro_sweep.msg') },
+    eb_hound_scorch: { name: R.T('bossActions.eb_hound_scorch.name'), kind: 'enemy', target: 'enemy', aim: 'low', effects: [{ type: 'damage', formula: 'phys', power: 1.1, element: 'fire' }, { type: 'status', status: 'burn', chance: 0.5 }], fx: 'bite2', msg: R.T('bossActions.eb_hound_scorch.msg') },
+    eb_beast_scorch_ground: { name: R.T('bossActions.eb_beast_scorch_ground.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'status', status: 'burn', chance: 0.45 }, { type: 'special', id: 'boss_field', flag: 'scorched', msg: R.T('bossActions.eb_beast_scorch_ground.field') }, { type: 'buff', stat: 'atk', stages: 1, on: 'self' }], fx: 'fire3', msg: R.T('bossActions.eb_beast_scorch_ground.msg') },
     eb_barga_counter: { name: R.T('bossActions.eb_barga_counter.name'), kind: 'enemy', target: 'self', effects: [{ type: 'status', status: 'counter', power: 1.0 }], fx: 'buff', msg: R.T('bossActions.eb_barga_counter.msg') },
     eb_zakuro_guard: { name: R.T('bossActions.eb_zakuro_guard.name'), kind: 'enemy', target: 'self', effects: [{ type: 'status', status: 'counter', power: 1.1 }], fx: 'buff', msg: R.T('bossActions.eb_zakuro_guard.msg') },
     eb_zakuro_draw: { name: R.T('bossActions.eb_zakuro_draw.name'), kind: 'enemy', target: 'self', effects: [{ type: 'buff', stat: 'atk', stages: 1 }], fx: 'buff', msg: R.T('bossActions.eb_zakuro_draw.msg') },
@@ -130,23 +137,24 @@
   // ------------------------------------------------------------ 炎の番犬・溶岩の巨獣（bosses.js の形に予告を足す）
   const H = L.b_hellhound;
   if (H) {
-    // 2026-10-01（ボスの組み直し）: 二つの頭で 1 ラウンドに 2 回（重い手: ふたつ牙・溶岩の息 ＋ 軽い手: 炎の遠吠え・怒り）。
-    //   前は 2 ラウンドごとに必ず 息を吸う（予告）→ 業火。いまは予告は軽い手の中からたまに（2 ラウンド目から、続けては来ない）
+    // 2026-10-01（ボスの組み直し）: 二つの頭で 1 ラウンドに 2 回（重い手: ふたつ牙・溶岩の息・焦がし咬み（弱った人、やけど） ＋ 軽い手: 炎の遠吠え（やけど）・怒り）。
+    //   前は 2 ラウンドごとに必ず 息を吸う（予告）→ 業火。溜めはやめた
     const HV = { every: [2, 0] }, LT = { every: [2, 1] };
-    H.actions = A([['eb_twin_fang', 3, HV], ['eb_lava_breath', 2, HV], ['attack', 1, HV],
-      ['attack', 2, LT], ['eb_flame_howl', 2, LT], ['eb_hound_fury', 3, { every: [2, 1], hpBelow: 0.5, once: true }], ['eb_hound_inhale', 2, { every: [4, 3], round: 2 }]]);
+    H.actions = A([['eb_twin_fang', 3, HV], ['eb_lava_breath', 2, HV], ['eb_hound_scorch', 2, HV],
+      ['attack', 2, LT], ['eb_flame_howl', 2, LT], ['eb_hound_fury', 3, { every: [2, 1], hpBelow: 0.5, once: true }]]);
     H.desc = R.T('data.bosses_ash.desc');
     H.s = { hp: 0.95, atk: 0.4, mag: 0.4 };
   }
   const B = L.b_lavabeast;
   if (B) {
     // 2026-10-01（ボスの組み直し）: 1 ラウンドに重い手 1 つ＋軽い手 1 つ。燃えている間（HP 半分まで）は マグマの拳・溶岩の波／噴火（ばらまき）、
-    //   冷えて黒い岩になってから は 黒曜の一撃・灰の嵐。前は 2 ラウンドごとに必ず 火口がふくれる（予告）→ 大噴火。いまは予告はたまに（燃えている間だけ）
+    //   冷えて黒い岩になってから は 黒曜の一撃・灰の嵐（目つぶし）。灼熱の大地（全員やけど・自分の攻めが上がる）は 1 戦に 1 度。
+    //   前は 2 ラウンドごとに必ず 火口がふくれる（予告）→ 大噴火。溜めはやめた
     const BH = { every: [2, 0] }, BL = { every: [2, 1] };
     B.actions = A([['eb_magma_fist', 3, { every: [2, 0], hpAbove: 0.5 }], ['eb_lava_wave', 2, { every: [2, 0], hpAbove: 0.5 }], ['attack', 1, BH],
       ['eb_obsidian_crush', 3, { every: [2, 0], hpBelow: 0.5 }], ['eb_ash_storm', 2, { every: [2, 0], hpBelow: 0.5 }],
-      ['eb_eruption', 2, { every: [2, 1], hpAbove: 0.5 }], ['attack', 2, BL], ['eb_ash_storm', 1, { every: [2, 1], hpBelow: 0.5 }],
-      ['eb_beast_swell', 2, { every: [4, 3], round: 2, hpAbove: 0.5 }]]);
+      ['eb_eruption', 2, { every: [2, 1], hpAbove: 0.5 }], ['attack', 1, BL], ['eb_ash_storm', 1, { every: [2, 1], hpBelow: 0.5 }],
+      ['eb_beast_scorch_ground', 2, { every: [2, 1], noFlag: 'scorched' }]]);
     B.desc = R.T('data.bosses_ash.desc_2');
     B.s = { hp: 0.5, atk: 0.58, mag: 0.58 };   // 2026-10-01: 地方ボスの通常の技が 1 人の最大 HP の 3〜4% しか削らず弱すぎた（オーナー「砂の王が弱すぎる」→ 地方ボス全体を見直し）。atk・mag を約 1.6 倍（sim_bosses）
     // 第 2 の姿の絵（冷えた黒い岩）は無いので、同じ絵のまま（b_lavabeast_cold の絵は描いていない）

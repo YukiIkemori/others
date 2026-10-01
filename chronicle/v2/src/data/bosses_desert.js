@@ -46,7 +46,9 @@
       race: 'humanoid', flags: ['boss'], eva: 10,
       // 弓兵に守られている間の倍率（desert_guard_down で elemBase・physBase＝ふだんの値に戻す）
       elem: ALL(0.2), phys: { slash: 0.2, blunt: 0.2, pierce: 0.2 }, elemBase: {}, physBase: {}, guarded: true, statusRes: { sleep: 0.5 },
-      actions: A([['attack', 3], ['eb_hawk_cut', 2], ['eb_hawk_dust', SCHED, { every: [3, 0] }], ['eb_hawk_rally', SCHED, { flag: 'hawk_guard_down', once: true }]]),
+      // 2026-10-01（ボスの組み直し）: 砂を巻き上げる構え（予告）は 3 手番ごとの決まりをやめ、たまに（2 ラウンド目から）。砂けむりの舞は最大 HP の 4 割（前は 9 割）。
+      //   砂つぶて（目つぶし）を足す。弓兵と合わせる合体技「鷹の狩り」がある
+      actions: A([['attack', 3], ['eb_hawk_cut', 3], ['eb_hawk_sand', 2], ['eb_hawk_dust', 1, { round: 2 }], ['eb_hawk_rally', SCHED, { flag: 'hawk_guard_down', once: true }]]),
       s: { hp: 0.85 },
       drops: MID('i_ether'),
       desc: R.T('data.bosses_desert.LIST.b_hawk_chief.desc'),
@@ -87,17 +89,21 @@
       // 4 手番で 1 回り: 地上の技 → 身を沈める（予告）→ もぐりざまに食らいつく（もぐる。次の予告）→ 砂中の一撃（全体・顔を出す）。
       // 2026-10-01: 前は 3 手番ごとに 予告 → もぐる → 一撃 で、ダメージのある手番が 3 回に 1 回しかなかった（弱すぎる）。
       //   いまは予告の手番のほかは毎回打つ（攻めの手番 4 回に 3 回。岩食らい・大ダコと同じ）
-      W.actions = A([['attack', 3, { noFlag: 'worm_sunk' }], ['eb_quicksand', 2, { noFlag: 'worm_sunk' }], ['eb_swallow_whole', 1, { noFlag: 'worm_sunk' }],
-        ['eb_worm_rear', SCHED, { every: [4, 1], noFlag: 'worm_sunk' }], ['eb_worm_surface', SCHED, { flag: 'worm_sunk' }]]);
+      // 2026-10-01（ボスの組み直し）: 身を沈める（予告）は 4 手番ごとの決まりをやめ、たまに。砂中の一撃は最大 HP の 4 割（前は 10 割）
+      W.actions = A([['attack', 3, { noFlag: 'worm_sunk' }], ['eb_quicksand', 2, { noFlag: 'worm_sunk' }], ['eb_swallow_whole', 2, { noFlag: 'worm_sunk' }],
+        ['eb_worm_rear', 2, { noFlag: 'worm_sunk' }], ['eb_worm_surface', SCHED, { flag: 'worm_sunk' }]]);
       W.sunk = { phys: { slash: 0.15, blunt: 0.15, pierce: 1 }, elem: { fire: 0.15, water: 0.15, wind: 0.15, light: 0.15, dark: 0.15, earth: 1.5 } };
       W.drops = Object.assign({}, W.drops);
       W.desc = R.T('data.bosses_desert.desc');
     }
     if (K) {
-      K.actions = A([['attack', 3], ['eb_steal_name', 1], ['eb_king_sand', 2],
-        ['eb_king_sun', SCHED, { every: [12, 1], countBelow: 5, noFlag: 'orb_out' }], ['eb_king_moon', SCHED, { every: [12, 7], countBelow: 5, noFlag: 'orb_out' }],
-        ['eb_raise_guard', 1, { every: [5, 2], countBelow: 3 }], ['eb_withering', 2],
-        ['eb_king_raise', SCHED, { every: [6, 5] }]]);
+      // 2026-10-01（ボスの組み直し）: 序盤の地方ボスは 1 手番に 1 回（前は 2 回）。王らしく「名」で攻める: 名を盗む（沈黙・MP）、名を刻む（呪いの印）→
+      //   のちの手番に 名を呼ぶ声（印の人だけ最大 HP の 3 割。守れば 1 割弱）。日と月の玉・砂の審判の構え（予告、最大 HP の 4 割）は前の考えどころのまま、決まった順はない
+      K.actsPerTurn = 1;
+      K.actions = A([['attack', 2], ['eb_steal_name', 2], ['eb_king_sand', 2], ['eb_withering', 2],
+        ['eb_king_sun', SCHED, { every: [10, 1], countBelow: 5, noFlag: 'orb_out' }], ['eb_king_moon', SCHED, { every: [10, 6], countBelow: 5, noFlag: 'orb_out' }],
+        ['eb_king_mark', 2, { noFlag: 'king_mark' }], ['eb_king_call', 8, { flag: 'king_mark' }],
+        ['eb_king_raise', 1]]);
       K.phases = [{ hpBelow: 0.4, msg: R.T('data.bosses_desert.phases.0.msg'), set: { buffs: { atk: 1, mag: 1 } } }];
       K.orbHost = true;
       K.desc = R.T('data.bosses_desert.desc_2');
@@ -112,7 +118,8 @@
     eb_hawk_cut: { name: R.T('bossActions.eb_hawk_cut.name'), kind: 'enemy', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.5, kind: 'slash' }], fx: 'slash2', msg: R.T('bossActions.eb_hawk_cut.msg') },
     eb_hawk_dust: { name: R.T('bossActions.eb_hawk_dust.name'), kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: R.T('bossActions.eb_hawk_dust.msg'),
       telegraph: { text: R.T('bossActions.eb_hawk_dust.telegraph.text'), pose: 'tele', tint: '#e8cf98', next: 'eb_hawk_storm', guard: 'defend', lethal: true } },
-    eb_hawk_storm: { name: R.T('bossActions.eb_hawk_storm.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.9, guardPct: 0.12, kind: 'slash' }, { type: 'status', status: 'blind', chance: 0.3 }], fx: 'slash2', msg: R.T('bossActions.eb_hawk_storm.msg') },
+    eb_hawk_sand: { name: R.T('bossActions.eb_hawk_sand.name'), kind: 'enemy', target: 'enemy', aim: 'caster', effects: [{ type: 'damage', formula: 'phys', power: 0.8 }, { type: 'status', status: 'blind', chance: 0.5 }], fx: 'earth', msg: R.T('bossActions.eb_hawk_sand.msg') },
+    eb_hawk_storm: { name: R.T('bossActions.eb_hawk_storm.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.4, guardPct: 0.1, kind: 'slash' }, { type: 'status', status: 'blind', chance: 0.3 }], fx: 'slash2', msg: R.T('bossActions.eb_hawk_storm.msg') },
     eb_hawk_rally: { name: R.T('bossActions.eb_hawk_rally.name'), kind: 'enemy', target: 'self', effects: [{ type: 'buff', stat: 'atk', stages: 1 }], fx: 'buff', msg: R.T('bossActions.eb_hawk_rally.msg') },
     eb_hawk_volley: { name: R.T('bossActions.eb_hawk_volley.name'), kind: 'enemy', target: 'random', effects: [{ type: 'damage', formula: 'phys', power: 0.6, hits: 2, kind: 'pierce' }], fx: 'arrow', msg: R.T('bossActions.eb_hawk_volley.msg') },
     // 砂もぐり
@@ -124,7 +131,7 @@
       effects: [{ type: 'damage', formula: 'phys', power: 1.6, kind: 'pierce' }, { type: 'special', id: 'desert_worm_sink', on: 'self' }], fx: 'earth', msg: R.T('bossActions.eb_worm_sink.msg'),
       telegraph: { text: R.T('bossActions.eb_worm_sink.telegraph.text'), pose: 'idle', tint: '#b89868', next: 'eb_worm_burst', guard: 'defend', lethal: true,
         cancel: { element: 'earth', special: 'desert_worm_surface', msg: R.T('bossActions.eb_worm_sink.telegraph.cancel.msg') } } },
-    eb_worm_burst: { name: R.T('bossActions.eb_worm_burst.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 1.0, guardPct: 0.12, kind: 'blunt' }, { type: 'special', id: 'desert_worm_surface' }], fx: 'strike3', msg: R.T('bossActions.eb_worm_burst.msg') },
+    eb_worm_burst: { name: R.T('bossActions.eb_worm_burst.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.4, guardPct: 0.1, kind: 'blunt' }, { type: 'special', id: 'desert_worm_surface' }], fx: 'strike3', msg: R.T('bossActions.eb_worm_burst.msg') },
     eb_worm_surface: { name: R.T('bossActions.eb_worm_surface.name'), kind: 'enemy', target: 'self', effects: [{ type: 'special', id: 'desert_worm_surface' }], fx: 'earth', msg: R.T('bossActions.eb_worm_surface.msg') },
     // 名なき砂の王
     eb_king_sun: { name: R.T('bossActions.eb_king_sun.name'), kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_sun_orb', n: 1, max: 5 }, { type: 'special', id: 'desert_orb_absorb', orb: 'sun' }], fx: 'fire2',
@@ -134,7 +141,9 @@
     eb_king_raise: { name: R.T('bossActions.eb_king_raise.name'), kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: R.T('bossActions.eb_king_raise.msg'),
       telegraph: { text: R.T('bossActions.eb_king_raise.telegraph.text'), pose: 'tele', tint: '#f0d890', next: 'eb_king_judgment', guard: 'defend', lethal: true,
         cancel: { element: 'fire', msg: R.T('bossActions.eb_king_raise.telegraph.cancel.msg') } } },
-    eb_king_judgment: { name: R.T('bossActions.eb_king_judgment.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 1.0, guardPct: 0.1, kind: 'earth', element: 'earth' }], fx: 'earth2',
+    eb_king_mark: { name: R.T('bossActions.eb_king_mark.name'), kind: 'enemy', target: 'enemy', aim: 'strong', effects: [{ type: 'special', id: 'boss_mark', flag: 'king_mark', pct: 0.3, guardPct: 0.08 }], fx: 'dark2', msg: R.T('bossActions.eb_king_mark.msg') },
+    eb_king_call: { name: R.T('bossActions.eb_king_call.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'boss_mark_burst', flag: 'king_mark', kind: 'magic', element: 'dark' }], fx: 'dark3', msg: R.T('bossActions.eb_king_call.msg') },
+    eb_king_judgment: { name: R.T('bossActions.eb_king_judgment.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.4, guardPct: 0.1, kind: 'earth', element: 'earth' }], fx: 'earth2',
       msg: R.T('bossActions.eb_king_judgment.msg') },
     eb_orb_flare: { name: R.T('bossActions.eb_orb_flare.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'magic', power: 1.0, element: 'fire' }], fx: 'fire2', msg: R.T('bossActions.eb_orb_flare.msg') },
     eb_orb_moonlight: { name: R.T('bossActions.eb_orb_moonlight.name'), kind: 'enemy', target: 'ally_other', effects: [{ type: 'heal', pct: 0.1 }], fx: 'heal', msg: R.T('bossActions.eb_orb_moonlight.msg') },
@@ -241,6 +250,11 @@
     tr_desert_ambush: { mons: [['@scorpion', 2], ['@snake', 1]], scale: 'tier', lvOff: 0, bg: 'desert', bgm: 'battle', noEscape: true },
     tr_desert_ambush2: { mons: [['@cactus', 2], ['@sandworm', 1]], scale: 'tier', lvOff: 0, bg: 'desert', bgm: 'battle', noEscape: true },
     tr_desert_ambush3: { mons: [['@snake', 2], ['@scorpion', 2]], scale: 'tier', lvOff: 1, bg: 'desert', bgm: 'battle', noEscape: true },
+  });
+  // 合体技（2026-10-01 ボスの組み直し。決まりは w_combo の R.DB.enemyCombos）: 鷹の狩り（弓兵が矢で縫い止め、頭が同じ人を斬る）
+  R.defs('enemyCombos', {
+    c_b_hawk_hunt: { name: R.T('enemyCombos.c_b_hawk_hunt.name'), members: [{ mon: 'b_hawk_chief' }, { mon: 'b_hawk_bow' }],
+      steps: [{ by: 1, act: 'ec_pin_arrow', aim: 'low' }, { by: 0, act: 'eb_hawk_cut', same: true, seq: 'sq:ec_hawk_slash' }], round: 2, chance: 0.35, cd: 3 },
   });
   // 王墓のボスの背景（描いた絵の pyramid＝王墓の王の間）
   R.onData(function () {

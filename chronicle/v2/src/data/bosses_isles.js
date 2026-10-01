@@ -16,26 +16,30 @@
       telegraph: { text: R.T('bossActions.eb_captain_aim.telegraph.text'), pose: 'tele', tint: '#9fd8ff', next: 'eb_broadside', guard: 'defend', lethal: true } },
     // 2026-10-01（ボスの組み直し）: グレンの受け流しの構え（打ちこむと斬り返す。battle_core の魔物の反撃の構え）
     eb_captain_parry: { name: R.T('bossActions.eb_captain_parry.name'), kind: 'enemy', target: 'self', effects: [{ type: 'status', status: 'counter', power: 1.0 }], fx: 'buff', msg: R.T('bossActions.eb_captain_parry.msg') },
+    eb_octo_snatch: { name: R.T('bossActions.eb_octo_snatch.name'), kind: 'enemy', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 0.7 }, { type: 'special', id: 'boss_snatch' }], fx: 'strike', msg: R.T('bossActions.eb_octo_snatch.msg') },
+    eb_captain_barrage: { name: R.T('bossActions.eb_captain_barrage.name'), kind: 'enemy', target: 'random', effects: [{ type: 'damage', formula: 'phys', power: 0.55, hits: 4, element: 'fire' }], fx: 'explosion', msg: R.T('bossActions.eb_captain_barrage.msg') },
+    eb_captain_foghorn: { name: R.T('bossActions.eb_captain_foghorn.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'status', status: 'blind', chance: 0.35 }, { type: 'buff', stat: 'def', stages: -1, chance: 0.4 }, { type: 'special', id: 'boss_field', flag: 'sea_fog', msg: R.T('bossActions.eb_captain_foghorn.field') }], fx: 'smoke', msg: R.T('bossActions.eb_captain_foghorn.msg') },
     eb_broadside: { name: R.T('bossActions.eb_broadside.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.92, guardPct: 0.08, kind: 'blunt', element: 'fire' }], fx: 'explosion', msg: R.T('bossActions.eb_broadside.msg') },
   });
   const O = L.b_octopus;
   if (O) {
-    // 2026-10-01（ボスの組み直し）: 前は 4 手番ごとに必ず もぐる（予告）→ 大渦、3 手番ごとに墨・足を生やす の決まった順。
-    //   いまは締めつけ・渦・墨・足を生やす（足が減ったとき）から選び、もぐる予告はたまに（2 ラウンド目から）。足と合わせる合体技「締め上げ」もある
-    O.actions = A([['attack', 2], ['eb_crush_hug', 3], ['eb_whirl', 2], ['eb_ink_cloud', 1], ['eb_regrow', 2, { countBelow: 3 }],
-      ['eb_octo_dive', 1, { round: 2 }]]);
+    // 2026-10-01（ボスの組み直し）: 前は 4 手番ごとに必ず もぐる（予告）→ 大渦、3 手番ごとに墨・足を生やす の決まった順。溜めはやめた。
+    //   締めつけ・渦・墨（目つぶし）・足ぐせ（道具を 1 つ奪う。倒すと取り返す）・足を生やす（足が減ったとき）。足と合わせる合体技「締め上げ」もある
+    O.actions = A([['attack', 1], ['eb_crush_hug', 3], ['eb_whirl', 2], ['eb_ink_cloud', 1], ['eb_octo_snatch', 1, { round: 2 }], ['eb_regrow', 2, { countBelow: 3 }]]);
+    O.onDeath = 'boss_return';
     O.desc = R.T('data.bosses_isles.desc');
     O.s = { hp: 1.3, atk: 2.4, mag: 2.4 };   // 2026-10-01（組み直し）: 予告の手番が減り合体技が入った型で、台本 85〜95%・9 ラウンド（前は 100%・7 ラウンド）
     if (L.b_tentacle) L.b_tentacle.s = { hp: 1.1, atk: 1.7, mag: 1.7 };   // hp 1.1 → 1.18（2026-09-30: ティア 1 のリピートが 31% で目安 30% を越えた。sim_bosses）
   }
   const C = L.b_captain;
   if (C) {
-    // 2026-10-01（ボスの組み直し）: 1 ラウンドに重い手 1 つ（カトラス・錨投げ）＋軽い手 1 つ（砲火・舟歌・船員を呼ぶ・受け流しの構え）。
-    //   前は 2 ラウンドごとに必ず 火縄を回す（予告）→ 一斉砲火。いまは予告は軽い手の中からたまに（2 ラウンド目から、続けては来ない）。骨の船員と合わせる合体技もある
+    // 2026-10-01（ボスの組み直し）: 1 ラウンドに重い手 1 つ（カトラス・錨投げ・砲火のばらまき）＋軽い手 1 つ（火矢の斉射・舟歌・霧笛・船員を呼ぶ・受け流しの構え）。
+    //   前は 2 ラウンドごとに必ず 火縄を回す（予告）→ 一斉砲火。骨の船員と合わせる合体技もある
     const HV = { every: [2, 0] }, LT = { every: [2, 1] };
-    C.actions = A([['eb_cutlass', 3, HV], ['eb_anchor_throw', 2, HV], ['attack', 1, HV],
-      ['eb_fire_volley', 2, LT], ['eb_ghost_shanty', 1, LT], ['eb_captain_parry', 1, LT], ['eb_call_crew', 2, { every: [2, 1], countBelow: 3 }],
-      ['eb_captain_aim', 2, { every: [4, 3], round: 2 }]]);
+    //   （2026-10-01 オーナー「溜めはいらない」: 火縄を回す予告 → 一斉砲火 はやめ、砲火はばらまき（4 発）に。霧笛（目つぶし・守りを下げる）を足した）
+    C.actions = A([['eb_cutlass', 3, HV], ['eb_anchor_throw', 2, HV], ['eb_captain_barrage', 2, HV],
+      ['eb_fire_volley', 2, LT], ['eb_ghost_shanty', 1, LT], ['eb_captain_parry', 1, LT], ['eb_captain_foghorn', 1, { every: [2, 1], noFlag: 'sea_fog' }],
+      ['eb_call_crew', 2, { every: [2, 1], countBelow: 3 }]]);
     C.desc = R.T('data.bosses_isles.desc_2');
     C.s = { hp: 0.5, atk: 1.15, mag: 1.15 };   // 2026-10-01（組み直し）: 毎ラウンド 2 回とも攻める型に。atk 0.44 → 1.15（台本 89〜94%・10〜12 ラウンド）   // 2026-10-01: 地方ボスの通常の技が 1 人の最大 HP の 3〜4% しか削らず弱すぎた（オーナー「砂の王が弱すぎる」→ 地方ボス全体を見直し）。atk・mag を約 1.6 倍（sim_bosses）
   }
