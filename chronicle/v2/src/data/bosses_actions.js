@@ -225,5 +225,65 @@
     eb_pack_howl: {name: R.T('bossActions.eb_pack_howl.name'), kind: 'enemy', target: 'self', effects: [{type: 'summon', mon: 'b_packwolf', n: 2, max: 6}], fx: 'song', msg: R.T('bossActions.eb_pack_howl.msg')},
     eb_lord_bite: {name: R.T('bossActions.eb_lord_bite.name'), kind: 'enemy', target: 'enemy', effects: [{type: 'damage', formula: 'phys', power: 1.35}], fx: 'bite2', msg: R.T('bossActions.eb_lord_bite.msg')},
   });
+  // ---- 2026-10-01（ボスの組み直し w_boss2。オーナー「溜めての即死級はもう飽きた。色んな角度から、ボスの見た目・属性に合った技で」）
+  //   ボスの技の道具（effect {type:'special', id}。battle_core の effect 'special' が呼ぶ）。場の効果は旗（eng.flags）で、旗のある間だけ使える技を足す（cond.flag）
+  R.onData(function () {
+    const BC = (R.BattleCore = R.BattleCore || {});
+    const SP = (BC.specials = BC.specials || {});
+    const say = (eng, text, o) => eng.m(String(text || '').replace(/\{user\}/g, (o && o.user) || '').replace(/\{name\}/g, (o && o.name) || ''));
+    // 時間差の呪い: 印をつけ（boss_mark）、のちの手番で印の人だけを最大 HP の割合で打つ（boss_mark_burst）。守っていれば guardPct だけ。印は倒れると消える
+    SP.boss_mark = function* (eng, u, t, eff) {
+      if (!t || !t.alive || !t.isParty) return;
+      const flag = eff.flag || 'boss_mark';
+      t.bossMark = { flag, pct: eff.pct != null ? eff.pct : 0.25, guardPct: eff.guardPct != null ? eff.guardPct : 0.08 };
+      eng.flags[flag] = true;
+      yield say(eng, R.T('data.bosses_kit.mark.m'), { name: t.name });
+    };
+    SP.boss_mark_burst = function* (eng, u, t, eff) {
+      const flag = eff.flag || 'boss_mark';
+      if (t && t.isParty && t.bossMark && t.bossMark.flag === flag) {
+        const mk = t.bossMark;
+        t.bossMark = null;
+        if (t.alive) {
+          yield say(eng, R.T('data.bosses_kit.burst.m'), { name: t.name });
+          yield* eng.hit(u, t, { dmg: Math.max(1, Math.round(t.mhp * (t.defending ? mk.guardPct : mk.pct))) }, { kind: eff.kind || 'magic', element: eff.element || null });
+        }
+      }
+      if (!eng.party.some((p) => p.alive && p.bossMark && p.bossMark.flag === flag)) eng.flags[flag] = false;
+    };
+    // 品を奪う: 戦闘で使える品を 1 つ取る。そのボスを倒すと取り返す（d.onDeath: 'boss_return'）
+    SP.boss_snatch = function* (eng, u, t) {
+      if (!t || !t.isParty || !u.alive) return;
+      const ids = Object.keys(eng.inv || {}).filter((id) => eng.inv[id] > 0 && R.DB.items[id] && R.DB.items[id].use && R.DB.items[id].use.battle);
+      if (!ids.length) { yield say(eng, R.T('data.bosses_kit.snatch.none'), { user: u.name }); return; }
+      const id = ids[R.Mon.rng().ri(0, ids.length - 1)];
+      eng.inv[id] -= 1;
+      (u.bossLoot = u.bossLoot || []).push(id);
+      yield say(eng, R.T('data.bosses_kit.snatch.m', { item: R.DB.items[id].name }), { user: u.name });
+    };
+    SP.boss_return = function* (eng, u) {
+      const loot = u.bossLoot || [];
+      u.bossLoot = [];
+      for (const id of loot) eng.inv[id] = (eng.inv[id] || 0) + 1;
+      if (loot.length) yield say(eng, R.T('data.bosses_kit.return.m', { n: loot.length }), { user: u.name });
+    };
+    // 構え・属性の切り替え: 弱点（elem）と物理の通り（phys）が変わる。base はふだんの値（何度でも切り替えられる）
+    SP.boss_shift = function* (eng, u, t, eff) {
+      const d = u.ownDef();
+      if (!d.elemBase) { d.elemBase = Object.assign({}, d.elem || {}); d.physBase = Object.assign({}, d.phys || {}); }
+      d.elem = Object.assign({}, d.elemBase, eff.elem || {});
+      d.phys = Object.assign({}, d.physBase, eff.phys || {});
+      if (eff.flag) eng.flags[eff.flag] = true;
+      if (eff.clear) eng.flags[eff.clear] = false;
+      if (eff.msg) yield say(eng, eff.msg, { user: u.name });
+    };
+    // 場の効果: 旗を立てる（旗のある間だけ使える技は cond.flag）。同じ技の status・buff が場の始まりの効き目
+    SP.boss_field = function* (eng, u, t, eff) {
+      if (eff.clear) eng.flags[eff.clear] = false;
+      if (eng.flags[eff.flag]) return;
+      eng.flags[eff.flag] = true;
+      if (eff.msg) yield say(eng, eff.msg, { user: u.name });
+    };
+  });
   // @@V2-END
 })(window.RPG);
