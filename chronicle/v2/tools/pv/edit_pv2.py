@@ -201,7 +201,7 @@ SFX.append(dict(id='page', at=t - 0.05, gain=-6))
 cut('s2_rowell', t, 5.15, src=0.05, page=0.45, ev=True, nosub=True)   # v_rowell_prologue_02（本物の会話の窓）
 t += 5.15
 bars(t, LB, 0.3)
-cut('s2_fine', t, 4.9, src=0.2, zoom=(2.3, 2.5), center=(0.6, 0.32))
+cut('s2_fine', t, 4.9, src=0.2, zoom=(3.3, 3.5), center=(0.48, 0.13))   # 少女（灰色のマント）を真ん中に
 vo('v_fine_t1_02', t + 0.15, until=t + 4.9)
 tag('ライバル、謎の少女。', t + 1.0, t + 4.8, y=430, size=62)
 t += 4.9
