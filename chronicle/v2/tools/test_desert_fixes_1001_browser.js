@@ -3,7 +3,7 @@
 //   node v2/tools/test_desert_fixes_1001_browser.js
 //   1. カシムの西の門・東の門: 門の前の道から門へ向かってキーを押したまま歩くと、カシムに入る（門の奥まで回り込まなくてよい）。
 //   2. カシムの門から出ると門の前に着き、そのまま立っていても入り直さない。向きを変えて門へ 1 歩で入れる。
-//   3. 王墓のオアシス: 王墓の戸口の 2 マスのどちらへ歩いても、砂の王墓に入る。
+//   3. 王墓のオアシス: 王墓の戸口の 2 マスのどちらへ歩いても、砂の王墓に入る。幽霊船の渡り板（2 マス幅の戸口 1 つ）も同じ。
 'use strict';
 const Bw = require('./lib/browser');
 const { ok, section, done } = require('./lib/testkit');
@@ -20,7 +20,8 @@ const { ok, section, done } = require('./lib/testkit');
       const R = window.RPG; Object.assign(R.Game.flags, flags || {}); R.MapUtil.invalidate && R.MapUtil.invalidate();
       await R.Field.enter(map, { x, y, dir }, { fade: 0, noAutosave: true });
     }, [map, x, y, dir, flags || {}]);
-    await page.waitForTimeout(400);
+    await page.waitForFunction('RPG.Engine.fade.a < 0.02 && !RPG.Events.busy()', null, { timeout: 10000 }).catch(() => {});
+    await page.waitForTimeout(600);
   };
   // キーを押したまま、行き先のマップに着くまで（会話・確かめが出たら決定で進める）
   const hold = async (key, want, ms) => {
@@ -48,7 +49,7 @@ const { ok, section, done } = require('./lib/testkit');
     { map: 'd_east', from: [9, 18], key: 'left', out: 'gate_e', back: 'right' },
   ]) {
     await put(g.map, g.from[0], g.from[1], g.key === 'right' ? 'e' : 'w');
-    const got = await hold(g.key, 'kasim', 5000);
+    const got = await hold(g.key, 'kasim', 9000);   // 負荷の高い時（ほかのテストと同時）でも足りるように長め
     ok(`${g.map} (${g.from}) から門へ歩くとカシムに入る`, !!got, await pos());
   }
 
@@ -71,12 +72,19 @@ const { ok, section, done } = require('./lib/testkit');
   section('砂の王墓の戸口');
   for (const x of [21, 22]) {
     await put('desert_camp3', x, 8, 'n', { desert_camp3_done: true });
-    const got = await hold('up', 'desert_tomb_1', 5000);
+    const got = await hold('up', 'desert_tomb_1', 9000);
     ok(`王墓のオアシス (${x},8) から北へ歩くと砂の王墓に入る`, !!got, await pos());
   }
   await put('desert_camp3', 21, 8, 'n', { desert_camp3_done: true });
   const marks = await page.evaluate(() => RPG.Field.wayfind.info(RPG.DB.maps.desert_camp3).exits.filter((e) => e.to.map === 'desert_tomb_1').map((e) => [e.x, e.y, e.w, e.h]));
   ok('王墓の入口の印は 1 つ（2 マス幅）', marks.length === 1 && marks[0][2] === 2, marks);
+
+  section('幽霊船の渡り板（同じ形: 2 マス幅の戸口を 1 つに）');
+  for (const x of [28, 29]) {
+    await put('ghost_ship_1', x, 23, 's');
+    const got = await hold('down', 'nerei', 9000);
+    ok(`幽霊船 (${x},23) から渡り板を下りるとネレイへ戻る`, !!got, await pos());
+  }
 
   ok('コンソールのエラーが無い', P.errors.length === 0, P.errors.slice(0, 3));
   await P.close();

@@ -70,7 +70,8 @@
       L.tw = L.x + L.w - 34 * k - L.tx;
       L.nameY = L.y + 18 * k;
       L.lineY = L.nameY + T.size.title * k + 9 * k;
-      L.textY = o.name ? L.lineY + 10 * k : L.y + 22 * k;
+      // 本文の 1 行目は名前の有る無しで変えない（名前の人 → 地の文 → 名前の人と続くと、文が上下に跳ねて「ずれた」と見える。オーナー 2026-10-01）
+      L.textY = L.lineY + 10 * k;
       L.btnY = L.y - 14 * k;
     } else {
       const m = UIK.margin();

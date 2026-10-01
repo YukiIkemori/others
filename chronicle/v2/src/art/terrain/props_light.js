@@ -126,6 +126,7 @@
           if (stt.on) for (const p of o.path || []) G((p[0] + 0.5) * env.tile, (p[1] + 0.7) * env.tile, { r: 10 * s, core: 2 * s, halo: 10 * s, color: '#9af0e0', k: 0.7, type: 'trail' });
           break;
         case 'stairs':
+          if (o.look === 'none') break;   // 描いた下絵の戸口（階段の絵を出さない物。chunks.js）には階段の光も置かない
           L(fx, fy - 8 * s, 44, S.crystalColor, 0.45, 'pool', 'stairs', o.id);
           break;
         case 'prop': {

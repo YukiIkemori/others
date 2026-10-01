@@ -217,6 +217,8 @@
           items.push({ key: 'hd:prop:signboard', opts: optsS({}, s), x: fx, y: fy, ft: o.y * tile, layer: lay || 'split', shadow: 'blob', sortY: fy });
           break;
         case 'stairs':
+          // look 'none' = 描いた下絵の戸口・洞の口（王墓・神殿・洞窟）。扉と同じく階段の絵は重ねない（王墓の戸口に階段の絵が出ていた 2026-10-01）
+          if (o.look === 'none') break;
           items.push({ key: 'hd:prop:' + (o.look === 'up' || o.dir === 'up' ? 'stairs_up' : 'stairs_down'), opts: optsS({}, s), x: fx, y: (o.y + 1) * tile - 2 * s, ft: o.y * tile, layer: lay || 'base', shadow: null, sortY: fy });
           break;
         case 'door': {
