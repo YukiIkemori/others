@@ -17,6 +17,7 @@
     'sys.leads.PROMPT.0.label': 'Mark',
     'sys.leads.regionName.ret': 'World Rumors',
     'sys.leads.regionName.ret_2': 'Main Story',
+    'sys.leads.goal.withPlace': '{title} ({place})',
     'sys.leads.draw.text': 'Marked',
     'sys.leads.draw.text_2': 'New Clue',
     'sys.leads.draw.text_3': 'Shown on the top-right card and the map',

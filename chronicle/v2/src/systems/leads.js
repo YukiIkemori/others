@@ -198,11 +198,38 @@
       let ok = false;
       try { ok = R.State.check(r.at); } catch (e) { ok = false; }
       if (!ok) continue;
+      if (r.fromLeads && !(R.DB.config && R.DB.config.slice)) { const dyn = leadGoal(); if (dyn) return dyn; }
       const text = Leads.goalText(r);
       if (text) return { id: r.id, text, lead: r.lead || null };
     }
     return null;
   };
+  // 製品版の森の後（表の最後の段 fromLeads）: 手がかり帳から今の目標を選ぶ（持ち主 2026-10-01「次にやることが全然更新されない」）。
+  //   聞いていて まだ解けていない手がかりのうち: 目印を付けた物 → 今いる地方の地方の手がかり → 本筋（main）→ ほかの地方の手がかり → うわさ。
+  //   同じ組の中では いちばん新しく聞いた物。寄り道（side）は目印を付けたときだけ。文は「題（場所）」
+  const GOAL_KINDS = ['region', 'main', 'rumor'];
+  function leadGoal() {
+    const g = G();
+    if (!g || !g.leads) return null;
+    const open = Object.keys(g.leads).filter((id) => def(id) && !Leads.isDone(id) && !Leads.locked(id));
+    if (!open.length) return null;
+    const got = (id) => g.leads[id].got || 0;
+    const newest = (ids) => ids.sort((a, b) => got(b) - got(a))[0] || null;
+    const here = ((R.DB.maps || {})[g.pos && g.pos.map] || {}).region;
+    const kind = (id) => def(id).kind || 'region';
+    const pick = open.find((id) => g.leads[id].pin)
+      || newest(open.filter((id) => kind(id) === 'region' && here && def(id).region === here))
+      || newest(open.filter((id) => kind(id) === 'main'))
+      || newest(open.filter((id) => kind(id) === 'region'))
+      || newest(open.filter((id) => kind(id) === 'rumor'));
+    if (!pick || (GOAL_KINDS.indexOf(kind(pick)) < 0 && !g.leads[pick].pin)) return null;
+    const d = def(pick);
+    const m = (R.DB.maps || {})[d.place];
+    const place = m && m.name ? m.name : '';
+    const text = place ? R.T('sys.leads.goal.withPlace', { title: d.title, place }) : d.title;
+    return { id: 'lead:' + pick, text, lead: pick };
+  }
+  Leads._leadGoal = leadGoal;
 
   Leads.list = function (o) {
     const g = G();

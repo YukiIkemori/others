@@ -40,6 +40,8 @@
     'sys.minimap.legend.2.0': '楼梯',
     // ---- src/systems/field/move.js
     'sys.move.lockedBump.toast': '门上了锁',
+    'sys.move.onewayBump.say': '坡太陡了，从这边爬不上去。',
+    'sys.move.onewayBump.snow': '雪坡太陡，爬不上去。',
     'sys.move.confirmGo.say.text': '前面暂时还不能去。',
     'sys.move.confirmGo.yes.say.choices': ['是', '否'],
     'sys.move.arrive.toast': '火把熄灭了',

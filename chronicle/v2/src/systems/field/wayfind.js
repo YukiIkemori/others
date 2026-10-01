@@ -135,7 +135,9 @@
         if ((o.type !== 'door' && o.type !== 'stairs') || !o.to || o.to.map === m.id || !ok(o.cond)) continue;
         const d = R.DB.maps[o.to.map];
         if (!d || d.kind === 'interior' || (m.kind === 'dungeon' && d.kind === 'dungeon')) continue;   // 階段の上り下りは別の話
-        out.exits.push({ x: o.x, y: o.y, w: 1, h: 1, lv: o.lv || 0, dir: exitDir(m, o, 1, 1), label: '', to: o.to, warp: true });
+        // 幅のある入口（door の w・h。f_lake のつららの回廊の口は w 2）は四角ぜんたいの中ほどに印（前は 1 マスとして左のマスの中ほど＝半マスずれていた）
+        const ow = o.w || 1, oh = o.h || 1;
+        out.exits.push({ x: o.x, y: o.y, w: ow, h: oh, lv: o.lv || 0, dir: exitDir(m, o, ow, oh), label: '', to: o.to, warp: true });
       }
       for (const e of out.exits) { const n = W.destName(e.to); e.label = n ? ARROW[e.dir] + ' ' + n : ''; }
     }

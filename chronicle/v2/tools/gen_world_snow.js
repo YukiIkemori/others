@@ -79,7 +79,8 @@ module.exports = function snow(A) {
   objects.push({ type: 'building', id: 'w_passinn', x: 81, y: 27, w: 6, h: 5, wall: 2, roof: 'slate', mat: 'log', windows: 2, lamp: true, chimney: true, art: 'snow_shop_m' });
   exits.push({ x: 84, y: 32, w: 1, h: 1, to: { map: 'pass_inn', spawn: 'gate' } });
   spawns.pass_inn = { x: 84, y: 33, dir: 's' };
-  P('stove_pipe', 87, 29); P('snow_lamp', 80, 31); P('snow_lamp', 87, 31); P('tent', 79, 28);
+  P('snow_lamp', 80, 31);   // 煙突の物（stove_pipe）は野に置かない（2026-10-01 持ち主「氷の世界は至る所に煙突オブジェが」）
+  P('snow_lamp', 87, 31); P('tent', 79, 28);
   S(82, 34, '宿場「峠の宿」\n湯気の立つ峠の宿。');
   // 雪の林（入口）
   objects.push({ type: 'stairs', x: 66, y: 39, to: { map: 'snow_woods', spawn: 'south' } });

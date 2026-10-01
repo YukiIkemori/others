@@ -1,6 +1,7 @@
 // 雪の林（snow_woods）。WORLD_REDESIGN §4.3 の 1「薪集め: 村の外の雪の森で、倒木を 3 本」・小さな依頼 2「迷子のそり犬」。
 //   屋外の小さなダンジョン 50×42（ユールの東の門から南東へ 60 歩ほど）。入口の広場 → 中ほどのきこりの野営地（泉） → 三つの広場に倒木。
 //   倒木 1（西の広場）・倒木 2（北の広場。雪男が寝そべっている → 戦う）・倒木 3（東の広場。凍った小川の丸木橋の先）。
+//   入口は北の口（灯守りの街道から下りて来る。北西の広場の上の氷の崖の切れ目）。南の入口の広場の先の道は雪に埋もれて通れない（ワープはここに着く）。
 //   北東の奥のくぼ地に迷子のそり犬（依頼を受けていれば連れて帰れる）。一方通行: 北の広場から西へ下る雪の斜面（西向きだけ）。
 (function (R) {
   'use strict';
@@ -33,6 +34,9 @@
     for (const [x, y] of [[15, 7], [15, 10]]) K.put(g, x, y, 'T');   // 一方通行の斜面の脇の 1 マス（入ると戻れない）
     for (const [x, y] of [[22, 21], [29, 25], [7, 22], [12, 27], [21, 7], [29, 9], [40, 20], [44, 24], [11, 8]]) if (K.at(g, x, y) === '.') K.put(g, x, y, 'T');
 
+    // 北の口（2026-10-01 持ち主「上から下へ入ったのに、下のスタート地点から始まった」）: 灯守りの街道（f_eastroad）の南の端から下りて来る道は、
+    //   北西の広場の上の氷の崖の切れ目に着く（描いた下絵に道を描き足した。x 8〜10）
+    K.rect(g, 8, 0, 3, 5, ',');
     const O = [];
     O.push(K.prop('rock_small', 24, 21), K.prop('rock_small', 25, 22));   // 小石（泉は置かない。WORLD §6.2）
     O.push({ type: 'brazier', id: 'snow_woods_camp', x: 27, y: 24, on: true });
@@ -67,13 +71,16 @@
       name: R.T('map.snow_woods.name'), kind: 'dungeon', region: 'r_snow', location: 'snow_woods', theme: 'snow',
       legend: S.LEGEND(), rows: g, outside: 'snow',
       objects: O, npcs: N,
-      spawns: { south: { x: 24, y: 38, dir: 'n' }, camp: { x: 25, y: 26, dir: 'n' } },
-      exits: [{ x: 23, y: 41, w: 4, h: 1, to: { map: 'world', spawn: 'snow_woods' } }],
+      spawns: { south: { x: 24, y: 38, dir: 'n' }, north: { x: 9, y: 1, dir: 's' }, camp: { x: 25, y: 26, dir: 'n' } },
+      // 出口は北の口だけ（街道の南の端へ上がる。着く所は北を向く = 来た向きと合う）。南の口の道は雪に埋もれて通れない（通せんぼだけのトリガー: 文を出して 1 歩下がる）
+      exits: [{ x: 8, y: 0, w: 3, h: 1, to: { map: 'f_eastroad', spawn: 'woods' } }],
       triggers: [
         { id: 'arrive', on: 'enter', event: 'snow_woods_arrive', once: true },
+        { id: 'south_end', x: 23, y: 41, w: 4, h: 1, on: 'step', gate: { text: R.T('map.snow_woods.south_end') } },
         { id: 'yeti', x: 22, y: 9, w: 7, h: 4, on: 'step', event: 'snow_woods_yeti', cond: '!snow_woods_yeti' },
       ],
-      oneway: [{ x: 15, y: 8, dir: 'w' }, { x: 15, y: 9, dir: 'w' }],
+      oneway: [{ x: 15, y: 8, dir: 'w', snow: true }, { x: 15, y: 9, dir: 'w', snow: true }],
+      slope: [{ x: 13, y: 8, w: 4, h: 2, dir: 'w' }],   // 北の広場から北西へ下る雪の斜面の印（西へ下りるだけ。doorway.js の F._slopes）
       zones: [{ rect: null, zone: 'z_snow_woods' }],
       art: { image: 'snow/under/snow_woods', overlay: 'snow/under/snow_woods_over', painted: [] },
       light: { ambient: '#5a64a4', k: 0.55, poolK: 0.7, spillR: 0.9, mood: 'night' },

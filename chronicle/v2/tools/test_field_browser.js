@@ -90,6 +90,42 @@ async function main() {
     await P.close();
   }
 
+  section('隠し通路を見つけたら、遅い機械でも先の部屋が出る（オーナー「古井戸左下の隠し部屋が宝箱を開けるまで出ない」）');
+  {
+    // 遅い機械を真似る: 焼く 1 歩を遅く・細かくし、見える範囲を捨てて仮の地面＋続きの仕事にした直後に、実際の入力で隠し通路へ入る。
+    // 見つける前の状態で焼き始めた仕事が後から終わっても、その絵（壁）が当たらないこと（chunks.js の e.gen）。全部の隠し通路で
+    const P = await openFx(S, 'field_verda_dark');
+    const p = P.page;
+    const list = await B.ev(p, `(() => { const out = [], K = { right: [1, 0], left: [-1, 0], down: [0, 1], up: [0, -1] };
+      for (const m of Object.values(RPG.DB.maps)) for (const a of RPG.MapUtil.secretAreas(m)) {
+        if (a.parent != null) continue;
+        for (const g of a.gate) { const [gx, gy] = g.split(',').map(Number); let hit = null;
+          for (const [k, [dx, dy]] of Object.entries(K)) { const x = gx - dx, y = gy - dy, c = RPG.MapUtil.cell(m, x, y);
+            if (c && !c.solid && c.walk !== false && !RPG.MapUtil.secretHidden(m, x, y, []) && !RPG.MapUtil.secretGateAt(m, x, y)) { hit = { map: m.id, x, y, key: k, gate: g, room: a.cells.slice(0, 40) }; break; } }
+          if (hit) { out.push(hit); break; } } }
+      return out; })()`);
+    ok('secret rooms found (' + list.map((c) => c.map).join(' ') + ')', list.length >= 5, list.length);
+    await B.ev(p, `(() => { const T = RPG.Terrain, o = T.bakeChunk; window.__slow = false; window.__made = new WeakMap();
+      T.bakeChunk = function (m, cx, cy, op) { const j = o.apply(this, arguments), sec = ((op && op.state && op.state.secrets) || []).slice(), s = j.step.bind(j);
+        j.step = (ms) => { if (window.__slow) { const t = performance.now(); while (performance.now() - t < 2); s(0.01); } else s(ms); if (j.done && j.result && j.result.base) window.__made.set(j.result.base, sec); return j.done; };
+        return j; }; })()`);
+    for (const c of list) {
+      await B.ev(p, `RPG.Game.secrets = {}; RPG.Field.encounter.suppress(9999); RPG.Field.enter('${c.map}', {x: ${c.x}, y: ${c.y}, dir: 's'}, {fade: 0, noAutosave: true})`);
+      await p.waitForTimeout(1200);
+      await B.ev(p, `window.__slow = true; RPG.Hd.BUDGET.frameBakeMs = 0.4; RPG.Field.chunks.reset()`);
+      await B.press(p, c.key, 140);
+      await p.waitForTimeout(600);
+      const found = await B.ev(p, `!!(RPG.Game.secrets['${c.map}'] || []).length`);
+      await B.ev(p, `window.__slow = false; RPG.Hd.BUDGET.frameBakeMs = 3`);
+      await p.waitForTimeout(2500);
+      const r = await B.ev(p, `(() => { const bad = []; for (const k of ${JSON.stringify(c.room)}) { const [x, y] = k.split(',').map(Number), e = RPG.Field.chunks.at(x, y);
+        if (!e || !e.ready || e.fb || e.next) continue; const sec = window.__made.get(e.base); if (!sec || sec.indexOf('${c.gate}') < 0) bad.push(k); } return bad; })()`);
+      ok(`${c.map}: the room behind ${c.gate} is drawn from the found state`, found && r.length === 0, { found, stale: r.slice(0, 6) });
+    }
+    errors.push(...P.errors);
+    await P.close();
+  }
+
   if (!process.argv.includes('--no-shots')) {
     section('スクショ（§4.4 FIELD: 5 か所 × 3 つの大きさ、広さ 3 段）');
     const SIZES = [['1920', {}], ['phone', { phone: true }], ['land', { size: [844, 390], land: true }]];

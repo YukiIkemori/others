@@ -16,6 +16,7 @@
     'sys.leads.PROMPT.0.label': '做標記',
     'sys.leads.regionName.ret': '世界傳聞',
     'sys.leads.regionName.ret_2': '主線',
+    'sys.leads.goal.withPlace': '「{title}」（{place}）',
     'sys.leads.draw.text': '已做標記',
     'sys.leads.draw.text_2': '新線索',
     'sys.leads.draw.text_3': '右上方的卡片和地圖上會顯示記號',

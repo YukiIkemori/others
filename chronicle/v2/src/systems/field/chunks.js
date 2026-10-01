@@ -60,15 +60,22 @@
     e.job = makeJob(e, prio);
     return e;
   }
-  /** TERRAIN の仕事を包む（K.bakeJob）。終わったら結果を当てる（base が無ければ仮の地面）。捨てたチャンク（dead）には当てない */
+  /**
+   * TERRAIN の仕事を包む（K.bakeJob）。終わったら結果を当てる（base が無ければ仮の地面）。捨てたチャンク（dead）には当てない。
+   * 新しい仕事（焼き直し）を作ったら、同じチャンクの前の仕事は止め、終わっても当てない（e.gen）。オーナーの報告「古井戸左下の隠し部屋が、
+   * 宝箱を開けるまで表示されない」: 遅い機械では、隠し通路を見つける前に始まっていた仕事（見つける前の状態で焼いている。見える範囲に
+   * 焼けていないチャンクが来て仮の地面を出し、続きを列で焼いていた物）が、見つけた後の焼き直しより後に終わって古い絵（壁）を当てていた
+   */
   function makeJob(e, prio, rebake) {
     const m = e.m, tile = e.tile;
+    for (const old of [e.job, e.next]) if (old && !old.done && (rebake || old !== e.job)) old.done = true;   // 前の仕事は要らない
+    const gen = (e.gen = (e.gen || 0) + 1);
     let tj = null;
     const job = {
       kind: 'chunk', done: false, result: null,
       step(ms) {
         if (job.done) return true;
-        if (e.dead) { job.done = true; return true; }
+        if (e.dead || e.gen !== gen) { job.done = true; return true; }
         if (!canBake()) { job.done = true; apply(e, null, rebake); return true; }   // node（キャンバスなし）: 焼かずに済ませる
         try {
           if (!tj) tj = R.Terrain.bakeChunk(m, e.cx, e.cy, { tile, tier: R.Tier.get(), state: state(m) });
@@ -80,7 +87,7 @@
         if (!tj || tj.done) {
           job.done = true;
           job.result = tj ? tj.result : null;
-          if (!e.dead) apply(e, job.result, rebake);
+          if (!e.dead && e.gen === gen) apply(e, job.result, rebake);   // 後から作った仕事があれば、そちらの絵を待つ
         }
         return job.done;
       },

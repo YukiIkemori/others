@@ -40,6 +40,8 @@
     'sys.minimap.legend.2.0': '계단',
     // ---- src/systems/field/move.js
     'sys.move.lockedBump.toast': '문이 잠겨 있다',
+    'sys.move.onewayBump.say': '비탈이 가팔라서 이쪽에서는 오를 수 없을 것 같다.',
+    'sys.move.onewayBump.snow': '눈 비탈이 가팔라서 오를 수 없을 것 같다.',
     'sys.move.confirmGo.say.text': '이 앞으로는 아직 갈 수 없다.',
     'sys.move.confirmGo.yes.say.choices': ['예', '아니요'],
     'sys.move.arrive.toast': '횃불이 꺼졌다',

@@ -105,16 +105,16 @@ const SHOTS = {
     n: sec(6),
     each: (i) => (i >= 40 && i < 330 && (i - 40) % 26 === 0 ? `PV.tap('down', 3)` : null),
   },
-  // 合成術: 煮え湯の雨（火×水）を湿原の魔物に（出現表 zw_marsh、背景 swamp = 沼の控えの夜の絵。marsh は霧食らいに回す）
+  // 合成術: 煮え湯の雨（火×水）を湿原の魔物に（湿原の館の出現表 z_marsh_manor、背景はゲームのまま manor）
   s5_combo: {
     prep: async (T) => {
-      await T.js(BATTLE({}, 'kasim', 'warp', { zone: 'zw_marsh', bg: 'swamp', seed: 'pv2-combo', surprise: 'pre', golden: false, rare: false },
+      await T.js(BATTLE({}, 'kasim', 'warp', { zone: 'z_marsh_manor', bg: 'manor', seed: 'pv2-combo', surprise: 'pre', golden: false, rare: false },
         FOCUS('hero', 'spell', 's_fire_water_a'), `PV.teach('hero', null, ['s_fire_water_a']); PV2.noGlim(); PV2.autoWin(70); PV.boost(1); PV.kill = true`));
       await INTRO(T);
     },
     n: sec(16),
   },
-  // ボスの予告 → 全員で守る → しのぐ（砂の王墓の 砂もぐり tr_b_sandworm、背景 cave）
+  // ボスの予告 → 全員で守る → しのぐ（砂の王墓の 砂もぐり tr_b_sandworm、背景はゲームのまま pyramid）
   s5_tell: {
     prep: async (T) => {
       await T.js(BATTLE({}, 'kasim', 'warp', { troop: 'tr_b_sandworm', boss: true, seed: 'pv2-tell' },
@@ -123,7 +123,8 @@ const SHOTS = {
     },
     n: sec(44),
   },
-  // 金色の魔物 → 倒して「レア」のジングルと演出（諸島の洞窟の出現表 z_r_isles_cave の魚人＋カニ、背景 watercave = ゲームと同じ控えの洞窟の絵）
+  // 出現表だけの戦闘は setup に出現表の bg を渡す（フィールドの遭遇 R.Mon.encounter と同じ）
+  // 金色の魔物 → 倒して「レア」のジングルと演出（諸島の洞窟の出現表 z_r_isles_cave の魚人＋カニ、背景はゲームのまま watercave）
   s5_gold: {
     prep: async (T) => {
       await T.js(BATTLE({}, 'kasim', 'warp', { zone: 'z_r_isles_cave', mons: [['@merman', 1], ['@crab', 1]], bg: 'watercave', seed: 'pv2-gold', golden: 0, rare: false, surprise: 'pre' },
@@ -160,15 +161,15 @@ const SHOTS = {
     n: sec(8),
     each: at({ 60: `PV.tap('down', 3)`, 90: `PV.tap('down', 3)`, 120: `PV.tap('up', 3)`, 150: `PV.tap('up', 3)`, 200: `PV.tap('x', 3)`, 250: `PV.tap('a', 3)` }),
   },
-  // リピートと速さ: 雑魚戦を 3 つ続けて（星の塔の騒ぎ tr_star_riot_1 → _2 → _3、背景 tower）。L でリピート、R で速さ（＋1 → ＋2）
+  // リピートと速さ: 雑魚戦を 3 つ続けて（灰の荒野の出現表 zw_ash_plain、背景 ash。間のフィールドは a_foot）。L でリピート、R で速さ（＋1 → ＋2）
   s5_speed: {
     prep: async (T) => {
-      await T.js(BATTLE({}, 'star_tower_1', 'entrance', { troop: 'tr_star_riot_1', bg: 'tower', seed: 'pv2-speed' },
+      await T.js(BATTLE({}, 'a_foot', 'north', { zone: 'zw_ash_plain', bg: 'ash', seed: 'pv2-speed', golden: false, rare: false },
         `(st, u, r) => ({cmd: 'attack', id: 'attack'})`, `RPG.Settings.set('battleSpeed', 1); PV2.noGlim(); PV2.autoWin(40); PV.boost(1); PV.kill = true; RPG.Battle.repeatMemory().on = false`));
       await INTRO(T);
     },
     n: sec(26),
-    each: (i) => (i === 90 ? `PV.tap('l', 3)` : i === 150 ? `PV.tap('r', 3)` : i === 200 ? `PV.tap('r', 3)` : `(() => { const n = PV2.next || 0; if (n < 2 && RPG.Battle.lastEnd && RPG.Battle.lastEnd.closed && !RPG.Battle.active() && RPG.Engine.fade.a < 0.01) { PV2.next = n + 1; RPG.Battle.start({troop: n ? 'tr_star_riot_3' : 'tr_star_riot_2', bg: 'tower', seed: 'pv2-speed' + n}); } })()`),
+    each: (i) => (i === 90 ? `PV.tap('l', 3)` : i === 150 ? `PV.tap('r', 3)` : i === 200 ? `PV.tap('r', 3)` : `(() => { const n = PV2.next || 0; if (n < 2 && RPG.Battle.lastEnd && RPG.Battle.lastEnd.closed && !RPG.Battle.active() && RPG.Engine.fade.a < 0.01) { PV2.next = n + 1; RPG.Battle.start({zone: 'zw_ash_plain', bg: 'ash', seed: 'pv2-speed' + n, golden: false, rare: false}); } })()`),
   },
 
   // ---------------------------------------------------------------- §8 戦い（1 カット 1 ボス・背景もちがう）
@@ -183,7 +184,7 @@ const SHOTS = {
     n: sec(12),
     each: at({ 1: `PV.autoMsg(60)` }),
   },
-  // 白竜ネーヴェ（背景 snow）: シグレの一の太刀（b_shigure_bigtech_2）
+  // 白竜ネーヴェ（背景はゲームのまま peak）: シグレの一の太刀（b_shigure_bigtech_2）
   s8_white: {
     prep: async (T) => {
       await T.js(BATTLE({ tier: 4 }, 'kasim', 'warp', { troop: 'tr_b_whitedragon', boss: true, seed: 'pv2-white', surprise: 'pre' }, FOCUS('shigure', 'skill', 't_sword_first'),
@@ -192,19 +193,19 @@ const SHOTS = {
     },
     n: sec(13),
   },
-  // 亡霊船長グレン（背景 isles。ゲームの ship は控えの夜の絵でロウェルと同じに見えるので、諸島の絵＝沖に船の影）: ザフィラの影の舞（b_zafira_bigtech_1）
+  // 亡霊船長グレン（背景はゲームのまま ship）: ザフィラの影の舞（b_zafira_bigtech_1）
   s8_captain: {
     prep: async (T) => {
-      await T.js(BATTLE({ tier: 4 }, 'kasim', 'warp', { troop: 'tr_b_captain', bg: 'isles', boss: true, seed: 'pv2-capt', surprise: 'pre' }, FOCUS('zafira', 'skill', 't_dagger_dance'),
+      await T.js(BATTLE({ tier: 4 }, 'kasim', 'warp', { troop: 'tr_b_captain', boss: true, seed: 'pv2-capt', surprise: 'pre' }, FOCUS('zafira', 'skill', 't_dagger_dance'),
         `PV.teach('zafira', ['t_dagger_dance']); RPG.Party.restoreAll(); PV2.noGlim(); PV2.voice({b_zafira_bigtech_: 'b_zafira_bigtech_1'})`));
       await INTRO(T);
     },
     n: sec(13),
   },
-  // 霧食らい（背景 marsh。ゲームの swamp は控えの夜の絵）: 分身が 2 体並んだ形で始める（霧食らいの編成に、霧食らいが呼ぶ魔女の分身 b_mist_double を足した撮り用の写し pv2_mist）→ 先手で仲間が分身を割り、ノエラの聖なる炎（光の術。b_noela_bigtech_1）
+  // 霧食らい（背景はゲームのまま swamp）: 分身が 2 体並んだ形で始める（霧食らいの編成に、霧食らいが呼ぶ魔女の分身 b_mist_double を足した撮り用の写し pv2_mist）→ 先手で仲間が分身を割り、ノエラの聖なる炎（光の術。b_noela_bigtech_1）
   s8_mist: {
     prep: async (T) => {
-      await T.js(BATTLE({ tier: 4, party: ['hero', 'noela', 'shigure', 'zafira'] }, 'kasim', 'warp', { troop: 'pv2_mist', bg: 'marsh', boss: true, seed: 'pv2-mist', surprise: 'pre' },
+      await T.js(BATTLE({ tier: 4, party: ['hero', 'noela', 'shigure', 'zafira'] }, 'kasim', 'warp', { troop: 'pv2_mist', boss: true, seed: 'pv2-mist', surprise: 'pre' },
         `(st, u, r) => { const d = st.aliveEnemies().find((a) => a.id !== 'b_mistbeast'); if (!d) return {cmd: 'attack', id: 'attack'}; return u.id === 'noela' ? {cmd: 'spell', id: 's_fire_light_a'} : {cmd: 'attack', id: 'attack', target: d.uid}; }`,
         `PV.teach('noela', null, ['s_fire_light_a']); RPG.Party.restoreAll(); PV2.noGlim(); PV2.voice({b_noela_spell_: 'b_noela_bigtech_1', b_noela_bigtech_: 'b_noela_bigtech_1'}); RPG.DB.troops.pv2_mist = Object.assign({}, RPG.DB.troops.tr_b_mistbeast, {mons: [['b_mistbeast', 1], ['b_mist_double', 1], ['b_mist_double', 1]]}); RPG.Tester.enabled = true; RPG.Tester.hitFix = (t, r) => r; RPG.Tester.dmgFix = (t, d) => (t && t.id === 'b_mist_double' ? Math.max(d, t.hp || 1) : d)`));
       await INTRO(T);
@@ -220,7 +221,7 @@ const SHOTS = {
     },
     n: sec(13),
   },
-  // 溶岩の巨獣（背景 ash）: ロウガの山河断ち（b_rouga_bigtech_2）
+  // 溶岩の巨獣（背景はゲームのまま volcano）: ロウガの山河断ち（b_rouga_bigtech_2）
   s8_lava: {
     prep: async (T) => {
       await T.js(BATTLE({ tier: 5 }, 'kasim', 'warp', { troop: 'tr_b_lavabeast', boss: true, seed: 'pv2-lava', surprise: 'pre' }, FOCUS('rouga', 'skill', 't_greatsword_rivers'),
@@ -229,10 +230,10 @@ const SHOTS = {
     },
     n: sec(13),
   },
-  // 星食らい（背景 star）: イルゼの合成術 星降らし（火×風×土。b_ilse_bigtech_1）
+  // 星食らい（背景はゲームのまま tower）: イルゼの合成術 星降らし（火×風×土。b_ilse_bigtech_1）
   s8_star: {
     prep: async (T) => {
-      await T.js(BATTLE({ tier: 5, party: ['hero', 'ilse', 'shigure', 'rouga'] }, 'kasim', 'warp', { troop: 'tr_b_stareater', bg: 'star', boss: true, seed: 'pv2-star', surprise: 'pre' }, FOCUS('ilse', 'spell', 's_fire_wind_earth'),
+      await T.js(BATTLE({ tier: 5, party: ['hero', 'ilse', 'shigure', 'rouga'] }, 'kasim', 'warp', { troop: 'tr_b_stareater', boss: true, seed: 'pv2-star', surprise: 'pre' }, FOCUS('ilse', 'spell', 's_fire_wind_earth'),
         `PV.teach('ilse', null, ['s_fire_wind_earth']); RPG.Party.restoreAll(); PV2.noGlim(); PV2.voice({b_ilse_spell_: 'b_ilse_bigtech_1', b_ilse_bigtech_: 'b_ilse_bigtech_1'})`));
       await INTRO(T);
     },

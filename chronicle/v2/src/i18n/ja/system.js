@@ -17,6 +17,7 @@
     'sys.leads.PROMPT.0.label': '目印を付ける',
     'sys.leads.regionName.ret': '世界のうわさ',
     'sys.leads.regionName.ret_2': '本筋',
+    'sys.leads.goal.withPlace': '「{title}」（{place}）',
     'sys.leads.draw.text': '目印を付けた',
     'sys.leads.draw.text_2': '新しい手がかり',
     'sys.leads.draw.text_3': '右上の札と地図に印が出る',

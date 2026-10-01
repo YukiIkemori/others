@@ -218,6 +218,13 @@
   };
 
   const DUMMY = { move: async () => {}, face: async () => {}, act: async () => {}, hide: async () => {}, show: async () => {}, appear: async () => {}, leave: async () => {}, setPos: async () => {} };
+  /** n から一行（主人公）の方の向き（縦横の大きい方。同じ所なら今の向き） */
+  function towardHero(n) {
+    const dx = S.x - n.x, dy = S.y - n.y;
+    if (!dx && !dy) return n.dir;
+    return Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'e' : 'w') : (dy > 0 ? 's' : 'n');
+  }
+  F._towardHero = towardHero;
   F.npc = function (id) {
     const n = S.npcById && S.npcById[id];
     if (!n) { R.warn('Field.npc: no npc ' + id + ' on ' + (S.map && S.map.id)); return DUMMY; }
@@ -239,7 +246,8 @@
           }
         } finally { n.script--; }
       },
-      async face(dir) { if (DIRS[dir]) { n.dir = dir; n.faced = true; n.glance = null; } },   // イベントが向きを決めた人は見回さない
+      // イベントが向きを決めた人は見回さない。dir = 'hero' は一行（主人公）の方（歩いて来た後に話す場面: オーナー「ベルナが横を向いたまま話す」）
+      async face(dir) { if (dir === 'hero') dir = towardHero(n); if (DIRS[dir]) { n.dir = dir; n.faced = true; n.glance = null; } },
       async act(pose, o) { const ms = (o && o.ms) || 700; n.pose = { name: pose, until: R.Engine.time + ms }; await R.wait(ms); },
       async hide() { n.hidden = true; F._npcVis(); },
       async show() { n.hidden = false; n.fade = null; n.fadeDone = null; F._npcVis(); },

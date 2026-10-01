@@ -265,8 +265,12 @@
     const broken = ['n', 'e', 'w'].filter((g) => ev.flag('snow_gate_' + g + '_broken'));
     if (broken.length) await ev.say('jorn', [R.T('events.snow_dawn.say.0', { join: broken.map((g) => X().GATES[g]).join(R.T('events.snow_dawn.say.0.join')) }), R.T('events.snow_dawn.say.1')], { name: R.T('events.snow_dawn.say.name_2') });
     else await ev.say('jorn', R.T('events.snow_dawn.say_5'), { name: R.T('events.snow_dawn.say.name_2') });
+    // 見張り台の上（watch）は高台で、下りる段が無い。場面が終わったら大かまどの前へ戻す
+    // （持ち主 2026-10-01「狼のボスを倒すと村の北のどこからも出られない所から再開して詰む」）
+    await ev.fade('out', 500);
+    await ev.warp('yule', 'hearth');
     ev.mapBgm();
-  }, { meta: { needs: ['flag:snow_siege_done'], gives: ['flag:snow_dawn', 'item:k_winter_flame', 'lead:l_snow_peak', 'flag:snow_fine_seen'], warp: { to: 'yule', spawn: 'watch' } } });
+  }, { meta: { needs: ['flag:snow_siege_done'], gives: ['flag:snow_dawn', 'item:k_winter_flame', 'lead:l_snow_peak', 'flag:snow_fine_seen'], warp: { to: 'yule', spawn: 'hearth' } } });
 
   // 籠城の途中で町を出た（全滅して宿へ・ワープ）: 昼のユールに入ったら夜へ戻す
   E('yule_siege_resume', async (ev) => {

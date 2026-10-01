@@ -154,6 +154,7 @@
     if (R.Terrain && R.Terrain._foamDraw) F.chunks.eachVisible((e) => { if (e.foam) R.Terrain._foamDraw(g, e.foam, e.cx * cs - cx, e.cy * cs - cy, R.Engine.time, REDUCE.on); });
     // 屋内の出口の戸口（柱・敷居・戸板・マット・外からの光。doorway.js）: 地面の上・人の下
     if (F._doorways) F._doorways(g, t, cx, cy);
+    if (F._slopes) F._slopes(g, t, cx, cy);   // 一方通行の斜面の印（doorway.js）
     // 先頭のランタンの光の輪（STYLE_REFERENCE R4。効果 off で消える）: 地面に掛ける（人の絵の上に足すと先頭が白く飛ぶ、CAST の依頼）
     const q = R.Hd.quality();
     F._vis(vis);

@@ -47,6 +47,7 @@
     'map.snow_peak.peak_top.meta.sub': '바람 부는 정상',
     // ---- src/maps/snow_woods.js
     'map.snow_woods.sign': '눈 덮인 숲\n쓰러진 나무는 장작이 된다. ――율의 장작 패기',
+    'map.snow_woods.south_end': '깊은 눈에 길이 묻혀 있어\n더 나아갈 수 없다.',
     'map.snow_woods.N.0.woods_hunter.name': '장작 패는 남자',
     'map.snow_woods.N.1.lost_dog.name': '썰매 개',
     'map.snow_woods.name': '눈 덮인 숲',

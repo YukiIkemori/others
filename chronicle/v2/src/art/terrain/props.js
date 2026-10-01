@@ -106,6 +106,8 @@
     rock(B, o) { const m = mats(), r = R.Hd.RZ.rng((o.v || 0) + 11), s = 10 + r() * 4; B.ell(0, -s * 0.45, s, s * 0.62, m.stone, 0, { bulge: 0.8 }); B.ell(s * 0.55, -s * 0.3, s * 0.6, s * 0.45, m.stone, 0.01, { g: B.group(), bulge: 0.8 }); B.ell(-s * 0.1, -s * 0.85, s * 0.7, s * 0.25, m.moss, 0.02, { bulge: 0.6 }); },
     stump(B) { const m = mats(); B.cap(0, -1, 0, -7, 7, 6.5, m.bark, 0); B.ell(0, -8, 6.2, 2.8, m.barkPale, 0.1, { bulge: 0.2 }); B.ell(0, -8, 3, 1.3, m.bark, 0.12, { bulge: 0.1 }); },
     log(B) { const m = mats(); B.cap(-13, -4, 13, -4, 4.5, 4.5, m.bark, 0); B.ell(13, -4, 2.2, 4.4, m.barkPale, 0.1, { bulge: 0.2 }); },
+    // 屋内の薪の山（雪の無い薪。2026-10-01: 雪をかぶった外の薪 firewood を部屋に置くと、雪の積もった赤い煙突の頭に見えた）: 切り口を 3・2・1 に積み、両脇に杭
+    woodpile(B) { const m = mats(); [-12.5, 12.5].forEach((x) => B.cap(x, 0, x, -17, 1.1, 1.1, m.wood, 0)); [[-7.5, -4, 0.02], [0, -4, 0.03], [7.5, -4, 0.02], [-3.8, -10.4, 0.06], [3.8, -10.4, 0.07], [0, -16.6, 0.1]].forEach(([x, y, z]) => { B.ell(x, y, 3.9, 3.5, m.bark, z, { bulge: 0.5 }); B.ell(x, y - 0.2, 2.8, 2.5, m.barkPale, z + 0.01, { bulge: 0.15 }); B.ell(x, y - 0.2, 1, 0.9, m.bark, z + 0.02, { bulge: 0.1 }); }); },
     mushroom_glow(B, o) { const m = mats(), r = R.Hd.RZ.rng((o.v || 0) + 3); for (let i = 0; i < 3; i++) { const x = (i - 1) * 4 + r() * 2, h = 4 + r() * 4; B.cap(x, 0, x, -h, 0.9, 0.7, m.mushStem, 0.1 + i * 0.01); B.ell(x, -h - 1, 2.6 - i * 0.3, 1.6, m.mush, 0.2 + i * 0.01); } return { light: [0, -5], cyan: true, small: true }; },
     firefly(B) { const m = mats(); B.ell(0, -12, 1.2, 1.2, m.glowW, 0); return { light: [0, -12], small: true }; },
     rope_bridge(B) { const m = mats(); for (let i = 0; i < 8; i++) B.poly([[-14, -i * 4], [14, -i * 4], [14, -i * 4 - 3], [-14, -i * 4 - 3]], m.crate, 0.1, { bevel: 0.8, ny: -0.6 }); [-15, 15].forEach((x) => B.cap(x, 0, x, -32, 0.6, 0.6, m.rope, 0.2)); },
@@ -231,7 +233,7 @@
   const L = (kind, r, extra) => Object.assign({ kind, r }, extra || {});
   const META = {
     barrel: { solid: true, shadow: 'blob' }, crate: { solid: true, shadow: 'blob' }, sack: { soft: true }, bench: { soft: true }, chair: { soft: true },
-    table: { solid: true, light: L('candle', 40) }, bed: { solid: true }, bookshelf: { solid: true }, counter: { solid: true }, stove: { solid: true, light: L('fire', 70) },
+    table: { solid: true, light: L('candle', 40) }, woodpile: { solid: true, shadow: 'blob' }, bed: { solid: true }, bookshelf: { solid: true }, counter: { solid: true }, stove: { solid: true, light: L('fire', 70) },
     lamp_post: { solid: true, light: L('lamp', 'lampR'), glow: true, shadow: 'long' }, lantern: { soft: true, light: L('lamp', 60), glow: true }, fence: { solid: true },
     flower_pot: { soft: true }, well: { solid: true, shadow: 'blob' }, signboard: { solid: true }, rock_small: { soft: true }, stump: { solid: true }, log: { solid: true },
     mushroom_glow: { soft: true, glow: true, light: L('crystal', 34) }, firefly: { soft: true, glow: true },

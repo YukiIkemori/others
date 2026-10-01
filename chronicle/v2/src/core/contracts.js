@@ -109,7 +109,7 @@
     'exits?': [{ x: 'int', y: 'int', w: 'int', h: 'int', to: { map: 'string', spawn: 'string' }, 'cond?': 'any' }],
     'triggers?': [{ id: 'string', 'x?': 'int', 'y?': 'int', 'w?': 'int', 'h?': 'int', on: '"step"|"enter"', 'event?': 'string', 'gate?': 'any', 'cond?': 'any', 'once?': 'bool' }],   // 'enter' は範囲なし（マップに入るたび。once で 1 回）
     'tilePatches?': 'array', 'zones?': [{ rect: 'array|null', zone: 'string', 'cond?': 'any' }], 'light?': { ambient: 'string', k: 'number', mood: 'string' },
-    'dark?': 'bool|array', 'bgm?': 'string', 'bbg?': 'string', 'oneway?': 'array', 'meta?': 'object',
+    'dark?': 'bool|array', 'bgm?': 'string', 'bbg?': 'string', 'oneway?': 'array', 'slope?': 'array', 'meta?': 'object',
     'theme?': 'string', 'name_ruby?': 'string',   // 版 2: theme = TERRAIN のテーマ（THEMES）。無ければ kind と素材から TERRAIN が決める
   };
   K.location = { name: 'string', region: 'string', kind: '"town"|"dungeon"|"place"', map: 'string', spawn: 'string', 'warp?': 'any' };

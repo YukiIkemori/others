@@ -777,7 +777,6 @@
       {"type":"prop","id":"beacon","x":148,"y":73,"cond":"cleared_r_snow"},
       {"type":"sign","x":140,"y":74,"text":R.T('maps.world.world.objects.187.text')},
       {"type":"building","id":"w_passinn","x":255,"y":87,"w":6,"h":5,"wall":2,"roof":"slate","mat":"log","windows":2,"lamp":true,"chimney":true,"art":"snow_shop_m"},
-      {"type":"prop","id":"stove_pipe","x":261,"y":89},
       {"type":"prop","id":"snow_lamp","x":254,"y":91},
       {"type":"prop","id":"snow_lamp","x":261,"y":90},
       {"type":"prop","id":"tent","x":251,"y":89},

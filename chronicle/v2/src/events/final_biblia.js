@@ -23,7 +23,7 @@
     await ev.say('white_woman', R.T('events.biblia_arrival.say'));
     try { await ev.leave('white_woman', { ms: 900, steps: 3 }); } catch (e) { /* */ }
     await ev.say('rowell_quay', R.T('events.biblia_arrival.say_2'), { voice: 'v_rowell_biblia_01', face: 'rowell:sad' });
-    try { await ev.npc('noa_quay').move([[25, 36]]); } catch (e) { /* */ }
+    try { await ev.npc('noa_quay').move([[25, 36]]); await ev.npc('noa_quay').face('hero'); } catch (e) { /* */ }   // 歩いて来た向きのまま話さない
     await ev.say('noa_quay', R.T('events.biblia_arrival.say_3'), { voice: 'v_noa_biblia_01', face: 'noa:surprise' });
     await ev.say('rowell_quay', R.T('events.biblia_arrival.say_4'), { voice: 'v_rowell_biblia_02', face: 'rowell:neutral' });
     await ev.say('noa_quay', R.T('events.biblia_arrival.say_5'), { voice: 'v_noa_biblia_02', face: 'noa:neutral' });

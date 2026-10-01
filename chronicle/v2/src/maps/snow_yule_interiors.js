@@ -1,6 +1,7 @@
 // ユールの屋内 11（V2_PLAN §2.6.1、WORLD_REDESIGN §5.6、STORY_BIBLE §7.3）:
 //   大かまどの集会所（祭の広間・夜数えの板・語り部のイングリッド）・宿「雪あかり亭」・道具屋・武具屋・村長ヨルンの家・火守りの家（ソーニャ）・
 //   ブレンダの家（火を盗んだ子ども）・狩人オラフの家（狼と猟師）・釣り小屋（トーレ）・子どもの秘密基地・ノルデン分室の空き家（村はずれ）
+//   薪は雪の無い薪の山 woodpile（外の雪をかぶった firewood は部屋に置かない。2026-10-01 持ち主「店内に煙突が突き出てる」）。かまど stove は奥の壁ぎわ。
 //   どれも R.ContentF.kit.room（上 2 行が壁の立ち上がり、下の中ほどに 1 マスの戸口）。戸口のマスが出口（ユールの戸の前へ）。
 (function (R) {
   'use strict';
@@ -34,7 +35,7 @@
         K.prop('counter', 19, 3), K.exam(19, 4, 'yule_blank_book'),                                                   // 祭の本の書見台
         K.prop('table', 4, 6), K.prop('table', 4, 9), K.prop('chair', 3, 6), K.prop('chair', 5, 6), K.prop('chair', 3, 9), K.prop('chair', 5, 9),
         K.prop('table', 17, 7), K.prop('chair', 16, 7), K.prop('chair', 18, 7), K.prop('bench', 9, 10), K.prop('bench', 13, 10),
-        K.prop('firewood', 1, 11), K.prop('firewood', 20, 11), K.prop('lantern', 7, 3), K.prop('lantern', 14, 3), K.prop('lantern', 1, 7), K.prop('lantern', 20, 7),
+        K.prop('woodpile', 1, 11), K.prop('woodpile', 20, 11), K.prop('lantern', 7, 3), K.prop('lantern', 14, 3), K.prop('lantern', 1, 7), K.prop('lantern', 20, 7),
         K.prop('snow_barrel', 20, 2), K.prop('sack', 1, 4), K.prop('house_plant', 19, 10),
       ],
       npcs: [
@@ -51,9 +52,9 @@
       objects: [
         K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('bookshelf', 1, 2),
         K.prop('bed', 11, 2), K.prop('bed', 13, 2), K.prop('bed', 11, 5), K.prop('bed', 13, 5),
-        K.prop('table', 6, 7), K.prop('chair', 5, 7), K.prop('chair', 7, 7), K.prop('stove', 1, 6),
+        K.prop('table', 6, 7), K.prop('chair', 5, 7), K.prop('chair', 7, 7), K.prop('stove', 8, 2),   // かまどは奥の壁ぎわ（煙突が壁へ抜ける。部屋のなかほどに立てると煙突が宙に突き出た）
         K.prop('table', 9, 9), K.exam(9, 9, 'yule_inn_desk'),                    // 手紙を書く机（ピムの語り部修行）
-        K.prop('snow_barrel', 1, 9), K.prop('firewood', 14, 9), K.prop('lantern', 8, 3), K.prop('lantern', 14, 8),
+        K.prop('snow_barrel', 1, 9), K.prop('woodpile', 14, 9), K.prop('lantern', 8, 3), K.prop('lantern', 14, 8),
       ],
       npcs: [
         K.npc('inn_keeper', 'npc_snow_woman', 4, 2, { name: R.T('map.snow_yule_interiors.yule_inn.npcs.0.inn_keeper.name'), dir: 's', talk: 'yule_inn_keeper', pushable: false }),
@@ -66,13 +67,13 @@
     interior('yule_items', R.T('map.snow_yule_interiors.yule_items'), 12, 10, {
       back: 'items',
       objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('counter', 6, 3), K.prop('shelf_jars', 1, 2), K.prop('shelf_jars', 9, 2),
-        K.prop('snow_barrel', 10, 4), K.prop('crate', 10, 5), K.prop('sack', 1, 6), K.prop('firewood', 1, 7), K.prop('lantern', 2, 4)],
+        K.prop('snow_barrel', 10, 4), K.prop('crate', 10, 5), K.prop('sack', 1, 6), K.prop('woodpile', 1, 7), K.prop('lantern', 2, 4)],
       npcs: [K.npc('item_keeper', 'npc_snow_old_m', 5, 2, { name: R.T('map.snow_yule_interiors.yule_items.npcs.0.item_keeper.name'), dir: 's', talk: 'yule_item_keeper', pushable: false })],
     });
     interior('yule_arms', R.T('map.snow_yule_interiors.yule_arms'), 12, 10, {
       back: 'arms',
       objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('counter', 6, 3), K.prop('weapon_rack', 1, 2), K.prop('weapon_rack', 9, 2),
-        K.prop('stove', 10, 5), K.prop('crate', 1, 6), K.prop('crate', 1, 7), K.prop('lantern', 8, 4)],
+        K.prop('stove', 10, 2), K.prop('crate', 1, 6), K.prop('crate', 1, 7), K.prop('lantern', 8, 4)],
       npcs: [K.npc('smith', 'npc_snow_man', 5, 2, { name: R.T('map.snow_yule_interiors.yule_arms.npcs.0.smith.name'), dir: 's', talk: 'yule_smith', pushable: false })],
     });
 
@@ -80,7 +81,7 @@
     interior('yule_jorn', R.T('map.snow_yule_interiors.yule_jorn'), 12, 10, {
       back: 'jorn', carpet: [3, 5, 6, 3],
       objects: [K.prop('bed', 9, 2), K.prop('table', 7, 6), K.prop('chair', 6, 6), K.prop('chair', 8, 6), K.prop('stove', 1, 2), K.prop('bookshelf', 3, 2),   // 戸口の列（x 5）は空ける
-        K.exam(3, 3, 'yule_jorn_ledger'), K.prop('firewood', 10, 7), K.prop('lantern', 7, 3)],
+        K.exam(3, 3, 'yule_jorn_ledger'), K.prop('woodpile', 10, 7), K.prop('lantern', 7, 3)],
       npcs: [K.npc('jorn_wife', 'npc_snow_woman', 6, 4, { name: R.T('map.snow_yule_interiors.yule_jorn.npcs.0.jorn_wife.name'), dir: 's', talk: 'yule_jorn_wife', reward: 'item' })],
       art: { image: 'snow/under/yule_jorn', painted: [] },   // 石の塔の家（描いた下絵）
     });
@@ -92,7 +93,7 @@
       paint: (g) => { for (const [x, y] of [[5, 3], [7, 3], [6, 2], [6, 4]]) K.put(g, x, y, 'h'); },
       objects: [{ type: 'brazier', id: 'yule_sonja_hearth', x: 6, y: 3, on: true }, K.exam(6, 4, 'yule_sonja_fire'), K.exam(7, 3, 'snow_mat', { mat: 'snow_mat_coal' }),
         K.prop('bed', 1, 2), K.prop('bed', 10, 2), K.prop('table', 3, 6), K.prop('chair', 2, 6),
-        K.prop('shelf_jars', 9, 5), K.exam(9, 6, 'yule_sonja_note'), K.prop('firewood', 10, 7), K.prop('lantern', 8, 3), K.chest('yule_sonja_c1', 1, 7, { pool: 'p_T' })],
+        K.prop('shelf_jars', 9, 5), K.exam(9, 6, 'yule_sonja_note'), K.prop('woodpile', 10, 7), K.prop('lantern', 8, 3), K.chest('yule_sonja_c1', 1, 7, { pool: 'p_T' })],
       npcs: [K.npc('sonja_gran', 'npc_snow_old_f', 7, 5, { name: R.T('map.snow_yule_interiors.yule_sonja.npcs.0.sonja_gran.name'), dir: 'w', talk: 'yule_sonja_gran', reward: 'news' })],
       art: { image: 'snow/under/yule_sonja', painted: [] },
     });
@@ -108,7 +109,7 @@
     interior('yule_hunter', R.T('map.snow_yule_interiors.yule_hunter'), 12, 10, {
       back: 'hunter',
       objects: [K.prop('stove', 10, 2), K.prop('weapon_rack', 1, 2), K.prop('weapon_rack', 2, 2), K.prop('bed', 8, 2), K.prop('table', 4, 6), K.prop('chair', 3, 6),
-        K.prop('firewood', 10, 7), K.prop('crate', 1, 7), K.prop('lantern', 6, 3), K.exam(1, 3, 'yule_hunter_bow')],
+        K.prop('woodpile', 10, 7), K.prop('crate', 1, 7), K.prop('lantern', 6, 3), K.exam(1, 3, 'yule_hunter_bow')],
       npcs: [K.npc('olaf', 'npc_snow_old_m', 5, 4, { name: R.T('map.snow_yule_interiors.yule_hunter.npcs.0.olaf.name'), title: R.T('map.snow_yule_interiors.yule_hunter.npcs.0.olaf.title'), dir: 's', talk: 'yule_olaf', reward: 'lead' })],
       art: { image: 'snow/under/yule_hunter', painted: [] },   // マンモスの牙の皮の小屋（描いた下絵）
     });

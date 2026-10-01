@@ -53,7 +53,7 @@
       "FFFFFFFFFFFFFFFFFFFFFFFFFFF..FFFFFFFFFFFFFFFFFFFFFFFFFFF",
     ],
     objects: [
-      {"type":"door","x":7,"y":31,"w":2,"look":"none","to":{"map":"icicle_1","spawn":"entrance"}},
+      {"type":"door","x":8,"y":31,"look":"none","to":{"map":"icicle_1","spawn":"entrance"}},   // 描いた洞の口（x 7.9〜9.2）のまん中の 1 マス（2026-10-01 手で直した: 前は x 7・w 2 で入口の印が半マス左にずれた）
       {"type":"sign","x":11,"y":33,"text":R.T('map.snow_field.lake.objects.1.text')},
       {"type":"sign","x":32,"y":36,"text":R.T('map.snow_field.lake.objects.2.text')},
       {"type":"examine","x":31,"y":34,"event":"world_snow_lake"},

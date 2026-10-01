@@ -48,6 +48,7 @@
     'map.snow_peak.peak_top.meta.sub': '吹きさらしの頂',
     // ---- src/maps/snow_woods.js
     'map.snow_woods.sign': '雪の林\n倒木は薪になる。――ユールの薪割り',
+    'map.snow_woods.south_end': '深い雪に道が埋もれていて、\nこの先へは進めない。',
     'map.snow_woods.N.0.woods_hunter.name': '薪割りの男',
     'map.snow_woods.N.1.lost_dog.name': 'そり犬',
     'map.snow_woods.name': '雪の林',

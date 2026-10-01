@@ -157,4 +157,58 @@
       g.restore();
     }
   };
+
+  /**
+   * 地面の上・人の下: 一方通行の斜面の印（2026-10-01 持ち主「白竜の峰、右下の通路から上にいけない。表示がおかしいのかな？」）。
+   *   map.slope = [{x, y, w, h, dir}]（dir = 下る向き）の四角に、上の側の陰・下る向きの滑り跡の筋・下向きの山形の雪の段を重ねて、
+   *   ふつうの道ではなく「下りるだけの急な斜面」に見せる。描いた下絵を描き直さずに付く。当たりは map.oneway（collide.js）
+   */
+  const SLOPE_V = { n: [0, -1], s: [0, 1], e: [1, 0], w: [-1, 0] };
+  F._slopes = function (g, t, cx, cy) {
+    const m = S.map;
+    if (!m || !m.slope || !m.slope.length) return;
+    const u = t / 32;
+    for (const r of m.slope) {
+      const v = SLOPE_V[r.dir] || SLOPE_V.s, along = v[1] !== 0;   // along: 縦に下る
+      const x0 = r.x * t - cx, y0 = r.y * t - cy, w = (r.w || 1) * t, h = (r.h || 1) * t;
+      if (x0 > R.W || y0 > R.H || x0 + w < 0 || y0 + h < 0) continue;
+      g.save();
+      g.beginPath(); g.rect(x0, y0, w, h); g.clip();
+      // マスごとの陰（上の側が暗く、下る側へ明るく抜ける）
+      const n = along ? (r.h || 1) : (r.w || 1);
+      for (let i = 0; i < n; i++) {
+        const cx0 = along ? x0 : (v[0] > 0 ? x0 + i * t : x0 + w - (i + 1) * t), cy0 = along ? (v[1] > 0 ? y0 + i * t : y0 + h - (i + 1) * t) : y0;
+        const gx0 = cx0 + (v[0] < 0 ? t : 0), gy0 = cy0 + (v[1] < 0 ? t : 0);
+        const gr = g.createLinearGradient(gx0, gy0, gx0 + v[0] * t, gy0 + v[1] * t);
+        gr.addColorStop(0, 'rgba(16,24,58,0.34)'); gr.addColorStop(0.55, 'rgba(40,56,100,0.12)'); gr.addColorStop(1, 'rgba(230,240,255,0.10)');
+        g.fillStyle = gr; g.fillRect(cx0, cy0, along ? w : t, along ? t : h);
+      }
+      // 滑り跡の筋（下る向き。とぎれとぎれの短い筋）
+      g.strokeStyle = 'rgba(236,244,255,0.26)'; g.lineWidth = Math.max(1, 1.1 * u); g.lineCap = 'round';
+      const span = along ? w : h, len = along ? h : w, k = Math.max(2, Math.round(span / (11 * u)));
+      for (let j = 0; j < k; j++) {
+        const off = ((j + 0.5) / k) * span + ((j * 37) % 5 - 2) * u;
+        for (let q = 0; q < len; q += 9 * u) {
+          const L = (3 + ((j * 7 + q / u) % 5)) * u, q0 = q + ((j * 13) % 4) * u;
+          if (q0 + L > len) break;
+          g.beginPath();
+          if (along) { const yy = v[1] > 0 ? y0 + q0 : y0 + h - q0; g.moveTo(x0 + off, yy); g.lineTo(x0 + off, yy + v[1] * L); }
+          else { const xx = v[0] > 0 ? x0 + q0 : x0 + w - q0; g.moveTo(xx, y0 + off); g.lineTo(xx + v[0] * L, y0 + off); }
+          g.stroke();
+        }
+      }
+      // 雪の段（下向きの山形）: 1 マスおき
+      g.lineWidth = Math.max(1, 2 * u); g.lineJoin = 'round';
+      for (let i = 0; i < n; i += 1) {
+        const c = along ? [x0 + w / 2, (v[1] > 0 ? y0 + (i + 0.55) * t : y0 + h - (i + 0.55) * t)] : [(v[0] > 0 ? x0 + (i + 0.55) * t : x0 + w - (i + 0.55) * t), y0 + h / 2];
+        const s = Math.min(along ? w : h, 2 * t) * 0.32;
+        const a = [v[0] * s * 0.45, v[1] * s * 0.45], p = [-v[1] * s, v[0] * s];
+        g.beginPath();
+        g.moveTo(c[0] - a[0] + p[0], c[1] - a[1] + p[1]); g.lineTo(c[0] + a[0], c[1] + a[1]); g.lineTo(c[0] - a[0] - p[0], c[1] - a[1] - p[1]);
+        g.strokeStyle = 'rgba(18,26,56,0.45)'; g.stroke();
+        g.save(); g.translate(-v[0] * 1.5 * u, -v[1] * 1.5 * u); g.strokeStyle = 'rgba(244,248,255,0.7)'; g.stroke(); g.restore();
+      }
+      g.restore();
+    }
+  };
 })(window.RPG);

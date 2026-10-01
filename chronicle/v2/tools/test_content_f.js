@@ -221,6 +221,12 @@ ok(`elder_2: 降り口 → 根食らい（${dB} 歩）`, dB > 30 && dB <= 140);
 const rings = R.DB.maps.elder_2.objects.find((o) => o.event === 'elder_rings');
 ok('elder_2: 伸びない年輪（必の読み物）が本筋の道の上', reachObj(res.r, rings) != null && reachObj(res.r, rings) < dB);
 res = reachAll('elder_2', 'top', { flags: { forest_sw2: true } }, 'elder_2（ピムの抜け穴）');
+{ // 持ち主 2026-10-01「地下２F 中央右から中央左へ通路があるように見えるが、通れない」: 東の根の下の道 → 根の滑り（x 33〜34）→ 切り口の間
+  const m = R.DB.maps.elder_2, pass = (x, y) => { const c = R.MapUtil.cell(m, x, y); return !!c && !c.solid && c.walk !== false; };
+  const seen = new Set(['34,26']), q = [[34, 26]];
+  while (q.length) { const [x, y] = q.shift(); for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const nx = x + dx, ny = y + dy, k = nx + ',' + ny; if (ny > 27 || nx < 22 || seen.has(k) || !pass(nx, ny)) continue; seen.add(k); q.push([nx, ny]); } }   // y 28 より下（控えの間）を通らずに
+  ok('elder_2: 根の滑り（描いた絵の床）で東の根の下の道から切り口の間へ上がれる', seen.has('30,22') && ['33,23', '34,23', '33,24', '33,25'].every((k) => seen.has(k)));
+}
 // 必須の物が隠し通路の先に無い（隠し通路のマスを壁にして、本筋の物に届く）
 section('必須の物が隠し通路・寄り道の先に無い');
 for (const id of ['verda_1', 'verda_2', 'elder_1', 'elder_2']) {

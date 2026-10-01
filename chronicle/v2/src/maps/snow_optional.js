@@ -180,7 +180,7 @@
         objects: [K.prop('fireplace', 3, 2), K.prop('counter', 11, 3), K.prop('counter', 12, 3), K.prop('counter', 13, 3), K.prop('shelf_jars', 14, 2),
           K.prop('bed', 16, 5), K.prop('bed', 16, 8), K.prop('table', 6, 7), K.prop('chair', 5, 7), K.prop('chair', 7, 7),   // 戸口の列（x 8）は空ける
           K.prop('table', 11, 8), K.prop('chair', 10, 8), K.prop('chair', 12, 8),
-          K.prop('stove', 1, 6), K.prop('lantern', 9, 3), K.prop('firewood', 1, 9), K.prop('snow_barrel', 15, 10)],
+          K.prop('lantern', 9, 3), K.prop('woodpile', 1, 9), K.prop('snow_barrel', 15, 10)],   // 暖炉のある部屋なので、壁ぎわに立つかまど（煙突が宙に突き出た）は置かない。薪は雪の無い woodpile
         npcs: [
           K.npc('pass_inn_innkeeper', 'npc_snow_woman', 12, 2, { name: R.T('map.snow_optional.pass_inn_in.npcs.0.pass_inn_innkeeper.name'), dir: 's', talk: 'pass_inn_innkeeper', pushable: false }),
           K.npc('rumor_gossip', 'npc_snow_woman', 6, 8, { name: R.T('map.snow_optional.pass_inn_in.npcs.1.rumor_gossip.name'), dir: 'e', talk: 'pass_inn_rumor_gossip', reward: 'lead' }),

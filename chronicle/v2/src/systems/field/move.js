@@ -65,6 +65,37 @@
     F.hud.toast(msg || R.T('sys.move.lockedBump.toast'), { icon: 'search', anchor: 'bl' });
   }
 
+  /**
+   * 一方通行の斜面を逆から押した（2026-10-01 持ち主「白竜の峰、右下の通路から上にいけない。表示がおかしいのかな？」）:
+   *   そのマップで最初の 1 回は一言（雪の斜面なら「雪の斜面が急で、登れそうにない。」）を出して 1 歩下がる。2 回目からは小さな札だけ（1.5 秒に 1 回）。
+   *   map.oneway の {snow: true} は雪の斜面の文。→ true（斜面だった）
+   */
+  function onewayBump(dx, dy) {
+    const m = S.map, nx = S.x + dx, ny = S.y + dy;
+    const ow = F._onewayAt && F._onewayAt(m, nx, ny);
+    if (!ow || ow.dir === dirName(dx, dy) || !F.passable(m, nx, ny, ow.dir, S.lv || 0)) return false;
+    const text = ow.snow ? R.T('sys.move.onewayBump.snow') : R.T('sys.move.onewayBump.say');
+    S.owSaid = S.owSaid || {};
+    if (!S.owSaid[m.id]) {
+      S.owSaid[m.id] = true;
+      F._run(async () => {
+        await R.UIK.Message.say({ text, face: false });
+        // 来た向きへ 1 歩下がる（斜面を向いたまま）
+        const bx = S.x - dx, by = S.y - dy;
+        if (S.map === m && !S.mv && F._canEnter(m, S.x, S.y, bx, by, S.lv || 0, dirName(-dx, -dy)) && !F._npcAt(bx, by, S.lv || 0)) {
+          S.from = { x: bx, y: by, lv: S.lv || 0 };
+          F._stepBack();
+        }
+      });
+      return true;
+    }
+    const now = R.Engine.time;
+    if (S.lockedAt && now - S.lockedAt < 1500) return true;
+    S.lockedAt = now;
+    F.hud.toast(text, { icon: 'search', anchor: 'bl' });
+    return true;
+  }
+
   /** 1 歩を始める。→ true（動いた） */
   F._step = function (dx, dy, dash) {
     const prevDir = S.dir;
@@ -90,7 +121,7 @@
         // 戸口の寄せ: 建物の壁を押していて、戸口がすぐ横（1 マス）なら、戸口の前へ 1 歩ずれる（押し続ければそのまま入る）
         const side = doorAssist(dx, dy);
         if (side) { go = side; S.push = null; }
-        else lockedBump(dx, dy);
+        else if (!onewayBump(dx, dy)) lockedBump(dx, dy);
       }
       else if (r === -2) {
         // NPC を押す: 押し続けると よける／入れ替わる（A3）

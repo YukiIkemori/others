@@ -16,6 +16,7 @@
     'sys.leads.PROMPT.0.label': '표시하기',
     'sys.leads.regionName.ret': '세상의 소문',
     'sys.leads.regionName.ret_2': '본편',
+    'sys.leads.goal.withPlace': '「{title}」({place})',
     'sys.leads.draw.text': '표시를 붙였다',
     'sys.leads.draw.text_2': '새 단서',
     'sys.leads.draw.text_3': '오른쪽 위 카드와 지도에 표시가 나온다',

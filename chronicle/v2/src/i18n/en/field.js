@@ -41,6 +41,8 @@
     'sys.minimap.legend.2.0': 'Stairs',
     // ---- src/systems/field/move.js
     'sys.move.lockedBump.toast': 'The door is locked',
+    'sys.move.onewayBump.say': 'The slope is too steep to climb from here.',
+    'sys.move.onewayBump.snow': 'The snowy slope is too steep to climb.',
     'sys.move.confirmGo.say.text': 'You can\'t go any further yet.',
     'sys.move.confirmGo.yes.say.choices': ['Yes', 'No'],
     'sys.move.arrive.toast': 'The torch went out',

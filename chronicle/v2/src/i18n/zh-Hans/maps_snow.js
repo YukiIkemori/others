@@ -47,6 +47,7 @@
     'map.snow_peak.peak_top.meta.sub': '寒风呼啸的山顶',
     // ---- src/maps/snow_woods.js
     'map.snow_woods.sign': '雪林\n倒木可当柴火。――尤尔劈柴人',
+    'map.snow_woods.south_end': '道路被深雪埋住了，\n没法再往前走。',
     'map.snow_woods.N.0.woods_hunter.name': '劈柴的男人',
     'map.snow_woods.N.1.lost_dog.name': '雪橇犬',
     'map.snow_woods.name': '雪林',

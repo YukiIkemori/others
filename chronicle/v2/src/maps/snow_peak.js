@@ -93,7 +93,8 @@
           { id: 'arrive', on: 'enter', event: 'peak_arrive', once: true },
           { id: 'giant', x: 38, y: 5, w: 7, h: 2, on: 'step', event: 'peak_giant', cond: '!snow_giant' },
         ],
-        oneway: [{ x: 47, y: 30, dir: 's' }, { x: 48, y: 30, dir: 's' }],
+        oneway: [{ x: 47, y: 30, dir: 's', snow: true }, { x: 48, y: 30, dir: 's', snow: true }],
+        slope: [{ x: 47, y: 28, w: 2, h: 10, dir: 's' }],   // 東の雪の斜面の印（下りるだけ。doorway.js の F._slopes）
         // 描いた下絵（design/ENV_ASSETS.md §7・§8）: 隠し通路の壁と奥の小部屋は、見つけるまで closed の絵（meta.live）
         art: { image: 'snow/under/peak_1', overlay: 'snow/under/peak_1_over', closed: 'snow/under/peak_1_closed', painted: [] },
         zones: [{ rect: [0, 0, 58, 17], zone: 'z_snow_peak_high' }, { rect: [0, 0, 58, 44], zone: 'z_snow_peak' }],   // 上の段（氷の壁 2・3 の先、y < 17）は 1 組 5 匹まで

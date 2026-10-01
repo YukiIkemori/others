@@ -48,6 +48,7 @@
     'map.snow_peak.peak_top.meta.sub': 'Windswept summit',
     // ---- src/maps/snow_woods.js
     'map.snow_woods.sign': 'Snowy Woods\nFallen trees make firewood. -- Yule Woodcutters',
+    'map.snow_woods.south_end': 'The path is buried under deep snow.\nThere is no going on this way.',
     'map.snow_woods.N.0.woods_hunter.name': 'Woodsplitter',
     'map.snow_woods.N.1.lost_dog.name': 'Sled Dog',
     'map.snow_woods.name': 'Snowy Woods',

@@ -273,7 +273,7 @@ class Seg:
 
     def __init__(self, d, clips):
         self.d = d
-        self.path = os.path.join(clips, d['clip'] + '.mp4')
+        self.path = os.path.join(clips, d['clip'] + '.mp4') if d.get('clip') else None   # clip=None は単色のカット
         self.at, self.dur = d['at'], d['dur']
         self.n = int(round(self.dur * FPS))
         self.f0 = int(round(self.at * FPS))
@@ -283,6 +283,8 @@ class Seg:
     def frame(self, fi):
         d = self.d
         k = fi - self.f0
+        if d.get('color') is not None:   # 単色のカット（白く飛ばした後の間など）
+            return np.broadcast_to(np.array(d['color'], np.float32), (H, W, 3)).copy()
         if self.reader is None and self.hold is None:
             if d.get('freeze'):
                 r = Reader(self.path, d.get('src', 0), 1)
@@ -320,12 +322,49 @@ class Seg:
             if 'bright' in g:
                 f = f * g['bright']
             f = np.clip(f, 0, 1)
+        if d.get('wash'):   # 白く飛ばす（ホワイトアウト）: カットの頭から終わりへ強さを変える
+            w0, w1 = d['wash'][:2]
+            col = np.array(d['wash'][2] if len(d['wash']) > 2 else (1.0, 1.0, 1.0), np.float32)
+            kk = w0 + (w1 - w0) * ease(k / max(1, self.n - 1))
+            f = f * (1 - kk) + col * kk
         return f
 
     def close(self):
         if self.reader:
             self.reader.close()
             self.reader = None
+
+
+# ------------------------------------------------------------------ ページめくり（台本の page=秒）
+_PG = {}
+
+
+def page_turn(old, new, p):
+    """old（めくられるページ）が右から左へめくれて、new が下から出る。p: 0..1。
+    めくれた紙の裏（明るい紙の色）と、その下の影を描く"""
+    if 'xx' not in _PG:
+        yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+        _PG['xx'], _PG['yy'] = xx, yy
+    xx, yy = _PG['xx'], _PG['yy']
+    e = ease(p)
+    slant = 0.28 * W * (1 - e)   # 下の角から先にめくれる（斜めの縁）
+    edge = 1.35 * W - e * 1.55 * W - yy / H * slant
+    curl = 70 + 110 * math.sin(math.pi * min(1.0, e * 1.2))   # 紙の裏の幅
+    d = xx - edge   # 0 より右は新しいページ
+    out = np.where((d >= 0)[..., None], new, old) if isinstance(new, np.ndarray) else old
+    # 紙の裏: 縁の左側（めくれた紙が折り返して重なる帯）
+    back = (d < 0) & (d > -curl)
+    t = np.clip(-d / curl, 0, 1)
+    shade = (0.78 + 0.2 * np.sin(t * math.pi))[..., None]
+    paper = np.array((0.95, 0.91, 0.82), np.float32) * shade
+    out = np.where(back[..., None], paper, out)
+    # 新しいページに落ちる影（縁の右側）
+    sh = np.clip(1 - d / 140.0, 0, 1) * (d >= 0)
+    out = out * (1 - 0.55 * sh[..., None] * (1 - e * 0.6))
+    # 紙の裏の縁の細い暗い線
+    line = np.exp(-((d + curl) / 3.0) ** 2) * (d < 0)
+    out = out * (1 - 0.35 * line[..., None])
+    return out.astype(np.float32)
 
 
 # ------------------------------------------------------------------ 組み立て
@@ -374,6 +413,9 @@ def render(edit, clips, out, t_from=None, t_to=None, stills=None, stills_dir=Non
                 small = np.asarray(Image.fromarray((img * 255).astype(np.uint8)).resize((bw, bh), Image.BILINEAR), np.float32) / 255.0
                 a = min(1.0, (fi - s.f0) / (x * FPS)) if x else 1.0
                 frame[by:by + bh, bx:bx + bw] = frame[by:by + bh, bx:bx + bw] * (1 - a) + small * a
+                continue
+            if s.d.get('page') and prev_base is not None and j == 0 and fi - s.f0 < s.d['page'] * FPS:
+                frame = page_turn(prev_base, img, (fi - s.f0) / (s.d['page'] * FPS))
                 continue
             if x and fi - s.f0 < x * FPS:
                 a = ease((fi - s.f0) / (x * FPS))

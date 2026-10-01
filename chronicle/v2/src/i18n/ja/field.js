@@ -41,6 +41,8 @@
     'sys.minimap.legend.2.0': '階段',
     // ---- src/systems/field/move.js
     'sys.move.lockedBump.toast': '戸には鍵がかかっている',
+    'sys.move.onewayBump.say': '急な斜面で、こちらからは登れそうにない。',
+    'sys.move.onewayBump.snow': '雪の斜面が急で、登れそうにない。',
     'sys.move.confirmGo.say.text': 'この先へは、まだ行けない。',
     'sys.move.confirmGo.yes.say.choices': ['はい', 'いいえ'],
     'sys.move.arrive.toast': '松明の火が消えた',

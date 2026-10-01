@@ -36,7 +36,8 @@
     g_elder: { n: 130, at: ALL_FOUND.concat([{ var: 'forest_verses', gte: 3 }]), text: R.T('goals.g_elder.text') },
     g_rest: { n: 140, at: 'cleared_r_forest', text: R.T('goals.g_rest.text') },
     // ---------------------------------------------------------------- 体験版の終わりのあと（製品版は次のうわさへ）
-    g_free: { n: 150, at: { any: ['story_t1', 'world_demo_end'] }, text: [
+    // 製品版では fromLeads: 手がかり帳から今の目標を選ぶ（leads.js leadGoal）。手がかりが無いときだけ下の文
+    g_free: { n: 150, at: { any: ['story_t1', 'world_demo_end'] }, fromLeads: true, text: [
       { when: { slice: true }, text: R.T('goals.g_free.text.0.text') },
       { text: R.T('goals.g_free.text.1.text') },
     ] },

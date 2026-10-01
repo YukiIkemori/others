@@ -1,6 +1,6 @@
 // 生成物（design/art_ref/gen/env/_tools/under/snow/field/ の areas.py → fit.py → tomap.py）。手で直さない: 配置は areas.py、当たりは fit.py で作り直す。
 // 雪原のエリア f_eastroad「灯守りの街道」（ユールと峠の宿をむすぶ森の道、56×40）。エリア切り替えのフィールド（maps/field_00_kit.js・snow_field_00_kit.js）。
-//   出口: w → yule.gate_e, e → f_passinn.west, s → snow_woods.south
+//   出口: w → yule.gate_e, e → f_passinn.west, s → snow_woods.north（雪の林の北の口。2026-10-01 手で直した: areas.py の生成でも north に）
 //   絵: field/under/f_eastroad（v2/assets/env/field/under/。無ければマスから焼く）。文は src/i18n/ja/maps_snow.js（map.snow_field.eastroad.*）
 (function (R) {
   'use strict';
@@ -66,7 +66,7 @@
       {"id":"snow_pilgrim","look":"npc_snow_old_m","name":R.T('map.snow_field.eastroad.snow_pilgrim.name'),"x":16,"y":14,"dir":"s","move":"still","talk":"world_snow_pilgrim","reward":"news","key":"world_snow_pilgrim"},
     ],
     spawns: {"yule":{"x":1,"y":16,"dir":"e"},"east":{"x":54,"y":22,"dir":"w"},"woods":{"x":30,"y":38,"dir":"n"}},
-    exits: [{"x":0,"y":16,"w":1,"h":2,"to":{"map":"yule","spawn":"gate_e"}},{"x":55,"y":22,"w":1,"h":2,"to":{"map":"f_passinn","spawn":"west"}},{"x":30,"y":39,"w":2,"h":1,"to":{"map":"snow_woods","spawn":"south"}}],
+    exits: [{"x":0,"y":16,"w":1,"h":2,"to":{"map":"yule","spawn":"gate_e"}},{"x":55,"y":22,"w":1,"h":2,"to":{"map":"f_passinn","spawn":"west"}},{"x":30,"y":39,"w":2,"h":1,"to":{"map":"snow_woods","spawn":"north"}}],
     triggers: [],
     tilePatches: [],
     zones: [{"rect":[31,13,3,7],"zone":"zw_snow_road"},{"rect":[30,14,1,6],"zone":"zw_snow_road"},{"rect":[0,15,11,4],"zone":"zw_snow_road"},{"rect":[29,15,1,5],"zone":"zw_snow_road"},{"rect":[34,15,1,5],"zone":"zw_snow_road"},{"rect":[11,16,3,5],"zone":"zw_snow_road"},{"rect":[26,16,3,5],"zone":"zw_snow_road"},{"rect":[35,16,4,4],"zone":"zw_snow_road"},{"rect":[14,17,3,4],"zone":"zw_snow_road"},{"rect":[23,17,3,6],"zone":"zw_snow_road"},{"rect":[39,17,3,4],"zone":"zw_snow_road"},{"rect":[17,18,6,4],"zone":"zw_snow_road"},{"rect":[42,18,2,5],"zone":"zw_snow_road"},{"rect":[9,19,2,1],"zone":"zw_snow_road"},{"rect":[44,19,3,4],"zone":"zw_snow_road"},{"rect":[37,20,2,1],"zone":"zw_snow_road"},{"rect":[47,20,6,4],"zone":"zw_snow_road"},{"rect":[54,20,2,5],"zone":"zw_snow_road"},{"rect":[15,21,2,1],"zone":"zw_snow_road"},{"rect":[26,21,2,7],"zone":"zw_snow_road"},{"rect":[40,21,2,1],"zone":"zw_snow_road"},{"rect":[53,21,1,4],"zone":"zw_snow_road"},{"rect":[28,22,1,13],"zone":"zw_snow_road"},{"rect":[24,23,2,1],"zone":"zw_snow_road"},{"rect":[45,23,2,1],"zone":"zw_snow_road"},{"rect":[25,24,1,2],"zone":"zw_snow_road"},{"rect":[29,24,1,16],"zone":"zw_snow_road"},{"rect":[51,24,2,1],"zone":"zw_snow_road"},{"rect":[30,26,1,14],"zone":"zw_snow_road"},{"rect":[27,28,1,3],"zone":"zw_snow_road"},{"rect":[31,30,1,10],"zone":"zw_snow_road"},{"rect":null,"zone":"zw_snow"}],

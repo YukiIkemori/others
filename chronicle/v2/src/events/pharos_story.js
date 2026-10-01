@@ -156,6 +156,7 @@
       await ev.caption(R.T('ev.pharos_story.pharos_departure.run.caption'), { ms: 2800 });
       await E.say(ev, 'cheer_a', R.T('ev.pharos_story.pharos_departure.run.say'), { name: R.T('ev.pharos_story.pharos_departure.run.townsfolk') });
       await ev.npc('berna').move([[7, 11], [6, 11]]);
+      await ev.npc('berna').face('hero');   // 歩いて来た向き（西）のまま話さない（オーナー「ベルナがこちらを向かず横を向いている」）
       // 仲間は出さない（持ち主 2026-09-27: 急に皆が出るのは違和感。フィールドは主人公だけ）
       await E.say(ev, 'berna', R.T('ev.pharos_story.pharos_departure.run.say_2'), { face: 'berna:smile' });
       await ev.say('berna', R.T('ev.pharos_story.pharos_departure.run.say_3'), { voice: 'v_berna_lute_01', face: 'berna:smile' });
