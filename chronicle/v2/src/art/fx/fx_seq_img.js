@@ -254,7 +254,7 @@
       const my = sw > 0 ? 1 : 0, base = my ? -ARC_BULGE : ARC_BULGE;
       const out = [];
       const n = L.n || 1, gap = L.gap != null ? L.gap : 0.18;
-      const th = lim((L.r || 32) / 15, 1.9, 3.4) * (heavy ? 1.15 : 1);
+      const th = lim((L.r || 32) / 13, 2.3, 3.6) * (heavy ? 1.15 : 1);
       for (let j = 0; j < n; j++) {
         const rot = mid - base + (L.rot || 0) * j;
         const u0 = j * gap, u1 = Math.min(1, j * gap + 0.9);
@@ -329,8 +329,8 @@
       const id = healish ? pick('heal_sparkles') : null;
       const tw = pick('sparkle_twinkle');
       const out = [];
-      if (id) out.push({ id, th: 2.6, foot: 1, tint: el === 'heal' ? null : nativeOr('heal', spec, L) });
-      if (tw) out.push({ id: tw, th: 2.0, rise: 40, env: 1, a: 0.9, tint: L.col });
+      if (id) out.push({ id, th: 3.4, foot: 1, tint: el === 'heal' ? null : nativeOr('heal', spec, L) });
+      if (tw) out.push({ id: tw, th: 2.6, rise: 60, env: 1, a: 0.95, tint: L.col });
       return out.length ? { add: out, dim: 0.5 } : null;
     },
     runes(L, spec) {

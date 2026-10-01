@@ -8,7 +8,7 @@
 //   node v2/tools/fx_gallery.js --out <dir> --parts <名前>                         画像の効果の部品（assets/fx）を全部動かした一覧を 4 枚（時間をずらして）
 //   node v2/tools/fx_gallery.js --out <dir> --strip <名前> id id …                 技・術ごとに 1 行・時間の順に 6 コマ（演出の流れの見本）
 //   --speed 1|2|3|5（戦闘の速さ）、--glimmer（閃きの帯つき）、--seen（2 回目の短い版）
-//   --noimg（画像の効果の部品を使わない＝手続きの効果だけ。前後の比べ用）、--mons goblin_1,wolf_1,imp_1（見本の敵の絵）、--crop x,y,w,h（--strip の切り出し。1920×1080 の px）
+//   --noimg（画像の効果の部品を使わない＝手続きの効果だけ。前後の比べ用）、--mons goblin_1,wolf_1,imp_1（見本の敵の絵）、--crop x,y,w,h（--strip の切り出し。1920×1080 の px）、--keep（--strip の山の 2 コマを 1920×1080 で残す）
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -155,7 +155,12 @@ async function main() {
       console.log(`${id}  tier ${x.tier}  ${x.name}  ${byHit ? 'hit+' : ''}${want.join(',')}`);
       await run(id, async (t, done, r) => {
         const tt = byHit ? r.hitT : r.seqT;
-        while (wi < want.length && tt >= want[wi]) { last = await grab(0.88); await write(last); wi++; }
+        while (wi < want.length && tt >= want[wi]) {
+          last = await grab(0.88); await write(last);
+          // --keep: 山の 2 コマ（3・4 枚目）は 1920×1080 のまま残す
+          if (has('--keep') && (wi === 2 || wi === 3)) fs.writeFileSync(path.join(OUT, `${name}_${id}_${wi}.jpg`), Buffer.from(last.split(',')[1], 'base64'));
+          wi++;
+        }
         return wi >= want.length;
       }, 1000 / 60);
       while (wi < want.length) { await write(last || await grab(0.88)); wi++; }
