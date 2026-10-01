@@ -219,5 +219,30 @@ function battle() {
     const r2 = probe('eb_worm_burst');
     ok('土で打つ（もぐっている間）: 砂中の一撃が消え、すぐに顔を出す（刃が通る）', r2.length > 0 && r2.some((x) => x.before.sunk) && r2.every((x) => !x.after.sunk && !x.after.reserved && !(x.after.slash < 1)), r2);
   }
+  // 名なき砂の王（2026-10-01 オーナー「攻撃ダメージがなかった」）: 通常の一撃が 1 人の最大 HP の 7% 以上、1 手番あたり一行の HP の 2.8% 以上、
+  // 砂の審判の予告（杖を掲げる）は HP の条件なしで出る
+  {
+    const BC = R.BattleCore, AI = R.BattleAI;
+    const { buildParty, STD } = require('./sim_zones');
+    const inv = { i_salve: 6, i_revive: 2, i_waker: 4, i_antidote: 3, i_clear: 2, i_firepot: 3 };
+    const party = buildParty(R, { tier: 1, kind: 'boss', members: STD, items: inv, seed: 5 });
+    const E = BC.Engine.prototype, exec0 = E.execute;
+    const rec = { acts: 0, dmg: 0, hit: 0, hitN: 0, raise: 0 };
+    let on = false;
+    E.execute = function* (u, cmd) {
+      if (!on || u.isParty || u.id !== 'b_sandking') { yield* exec0.call(this, u, cmd); return; }
+      const t0 = this.stats.taken, mhp = this.party.reduce((s, p) => s + p.mhp, 0), tgt = cmd.target && cmd.target.isParty ? cmd.target : null;
+      yield* exec0.call(this, u, cmd);
+      const d = this.stats.taken - t0;
+      rec.acts++; rec.dmg += d / mhp;
+      if (cmd.type === 'attack' && tgt && d > 0) { rec.hitN++; rec.hit += d / tgt.mhp; }
+      if (cmd.id === 'eb_king_raise' && u.hpRate() >= 0.65) rec.raise++;
+    };
+    try { on = true; for (let i = 0; i < 30; i++) BC.simulate({ party, troop: 'tr_b_sandking', tier: 1, seed: 'king-reg:' + i, inv, maxRounds: 30, ai: AI.styleAI('script') }); } finally { on = false; E.execute = exec0; }
+    const per = (100 * rec.dmg) / rec.acts, hit = (100 * rec.hit) / Math.max(1, rec.hitN);
+    ok(`砂の王: 1 手番あたり一行の HP の 2.8% 以上（${per.toFixed(1)}%）`, per >= 2.8, rec);
+    ok(`砂の王: 通常の一撃が 1 人の最大 HP の 7% 以上（${hit.toFixed(1)}%）`, hit >= 7, rec);
+    ok('砂の王: 砂の審判の予告は HP 65% より上でも出る', rec.raise > 0 && !(D.monsters.b_sandking.actions.find((a) => a.id === 'eb_king_raise').cond || {}).hpBelow, rec.raise);
+  }
   done('test_content_desert');
 }

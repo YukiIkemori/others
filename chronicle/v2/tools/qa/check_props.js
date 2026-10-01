@@ -126,7 +126,7 @@ function spriteOf(m, key, v) {
 // 壁に掛ける物（wall_*）と、壁のマスに据える物（腕木の灯り hook_lamp・壁の暖炉 fireplace は壁のマスに置けば壁の面に付く）
 const TOL = +(arg('--tol', 2));   // 壁に食い込む px（32 の論理 px）の許し
 const WALL_ITEM = /^wall_/;
-const WALL_MOUNT = /^(hook_lamp|fireplace)$/;
+const WALL_MOUNT = /^(hook_lamp|fireplace|board)$/;
 /** 絵の無い物（光だけの物: window_glow・ember_glow…。コードの絵も画像も無い）*/
 const invisible = (m, id) => { const D = R.Terrain && R.Terrain._PROP_DRAW && R.Terrain._PROP_DRAW[id]; return !!(D && D.envOnly && !spriteOf(m, id, 0)); };
 // 歩けないマスに立つのが本来の物（木・岩・柵・水の物・崖の飾り…）
@@ -306,6 +306,7 @@ function checkMap(m) {
     if (l.length < 2) continue;
     const ids = l.map((q) => q.id);
     if (l.every((q) => painted(m, q))) continue;
+    if (l.some((q) => q.cond != null)) continue;   // 条件で入れ替わる物（開く前・後のレバー、壊れる前・後の門）
     flag(m, 'stacked', `同じマス ${k} に ${ids.join(' と ')}`, l[1]);
   }
   // 4 人
@@ -351,7 +352,9 @@ function checkMap(m) {
       const walk = (x, y) => x >= 0 && y >= 0 && x < W0 && y < H0 && F._walkable(m, x, y, null, e.lv || 0);
       const fwdOk = beyond.some(([x, y]) => outOrBlocked(x, y));
       const backOk = behind.some(([x, y]) => walk(x, y));
-      if (!fwdOk || !backOk) flag(m, 'exit-dir', `出口の印 ${e.x},${e.y} (${e.w}×${e.h}) → ${e.to.map}: 矢印 ${e.dir} の${!fwdOk ? '先が歩ける（外へ向いていない）' : '手前に歩ける所が無い'}`, { type: 'exit', id: e.to.map, x: e.x, y: e.y }, { dir: e.dir });
+      const atEdge = e.x === 0 || e.y === 0 || e.x + e.w >= W0 || e.y + e.h >= H0;
+      // 端でない戸口・階段（壁の中の戸口、野原の井戸の口）は向きが決まらない（近い端の向き）。見るのは端の出口と、行き先のある四角（exits）だけ
+      if (e.warp && !atEdge) { /* 戸口・階段 */ } else if (!fwdOk || !backOk) flag(m, 'exit-dir', `出口の印 ${e.x},${e.y} (${e.w}×${e.h}) → ${e.to.map}: 矢印 ${e.dir} の${!fwdOk ? '先が歩ける（外へ向いていない）' : '手前に歩ける所が無い'}`, { type: 'exit', id: e.to.map, x: e.x, y: e.y }, { dir: e.dir });
       // 行き先で戻る出口の向き（エリア・町・ダンジョンの端の出口どうし）
       const d = R.DB.maps[e.to.map];
       if (!d || d.kind === 'world' || !e.to.spawn || !(d.spawns && d.spawns[e.to.spawn])) continue;

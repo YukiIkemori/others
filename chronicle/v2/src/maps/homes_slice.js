@@ -194,7 +194,8 @@
         'P...cL-c',
         'pQ.....l'],
       rugs: [[5, 3, 4, 2]],
-      npcs: [npc('worrier', 'npc_woman_2', 7, 4, [R.T('map.homes_slice.fern_home1.npcs.0.worrier.0')], { name: R.T('map.homes_slice.fern_home1.npcs.0.worrier.name') })] }));
+      // 前は (7, 4) = 食卓（L、2 マス幅の右の半分）の上に立っていた。食卓の手前に立たせる
+      npcs: [npc('worrier', 'npc_woman_2', 7, 5, [R.T('map.homes_slice.fern_home1.npcs.0.worrier.0')], { name: R.T('map.homes_slice.fern_home1.npcs.0.worrier.name'), dir: 'n' })] }));
     home('fern_home2', Object.assign({}, FE, { name: R.T('map.homes_slice.fern_home2.name'), back: 'house2_door', w: 9, h: 8, wallMat: 'wall_bark',
       wall: '.a..c..',
       floor: [

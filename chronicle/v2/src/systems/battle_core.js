@@ -610,13 +610,18 @@
       }
       order.sort((a, b) => b.v - a.v);
       this.pending = order.filter((s) => s.u.isParty && s.cmd);
+      this.slots = order;   // 合体技: まだ動いていない手番（done）と、合体技に使われた手番（spent）
       for (const s of order) {
         if (this.checkEnd()) break;
         if (s.u.isParty) this.pending = this.pending.filter((x) => x !== s);
+        s.done = true;
         if (!s.u.alive) continue;
+        if (s.spent) { yield* this.spentTurn(s.u); continue; }
         yield* this.turn(s.u, s.cmd);
       }
       this.pending = null;
+      this.slots = null;
+      this.guardedLast = this.party.some((p) => p.alive && p.defending);   // 行動の cond.partyGuarded（このラウンドに味方の誰かが守った）
       for (const u of this.units()) u.defending = false;
       this.checkEnd();
     }
@@ -671,7 +676,19 @@
           // E18: 予告した大技（予約）は次のラウンドの最初の手番に。AI は選ばない
           cmd = { type: 'ability', id: u.reserved.id, target: null, reserved: true };
           u.reserved = null;
-        } else cmd = R.BattleAI && R.BattleAI.monster ? R.BattleAI.monster(this, u) : { type: 'attack', target: pick(this.foes(u)) };
+        } else {
+          // 合体技（DB.enemyCombos）: 仲間がそろって動けるとき、2 体以上の手番を使って 1 つの技にする
+          const cp = R.BattleAI && R.BattleAI.comboFor ? R.BattleAI.comboFor(this, u) : null;
+          if (cp) {
+            yield* this.combo(u, cp);
+            yield* this.flushReactions();
+            yield* this.afterAction();
+            if (!this.checkEnd()) yield* this.endTurn(u);
+            u.acts++;
+            return;
+          }
+          cmd = R.BattleAI && R.BattleAI.monster ? R.BattleAI.monster(this, u) : { type: 'attack', target: pick(this.foes(u)) };
+        }
       }
       if (cmd) yield* this.execute(u, cmd);
       yield* this.flushReactions();
@@ -685,6 +702,68 @@
       if (!rate) return false;
       if (this.round < (u.d.fleeFrom || 1)) return false;
       return chance(rate);
+    }
+
+    // ------------------------------------------------------- 合体技（DB.enemyCombos。選ぶのは R.BattleAI.comboFor、決まりは COMBO_SPEC）
+    /** このラウンドで、まだ動いていない u の手番があるか（いま動いている手番は done） */
+    slotLeft(u) { return !!(this.slots && this.slots.some((s) => s.u === u && !s.done && !s.spent)); }
+    /** u の残りの手番を 1 つ、合体技に使ったことにする */
+    spendSlot(u) { const s = this.slots && this.slots.find((x) => x.u === u && !x.done && !x.spent); if (s) s.spent = true; return !!s; }
+    /** 合体技に使われた手番: 行動はしない。毒・再生などの手番の終わりだけ進める */
+    *spentTurn(u) {
+      let first = true;
+      for (const ev of this.endTurn(u)) { if (first) { first = false; yield { t: 'actor', u }; } yield ev; }
+      u.acts++;
+    }
+    /**
+     * cp = {id, def, units}（units[0..] は def.members の順。いま動いている u も入る）。仲間の手番を使い、知らせてから steps を順に。
+     * step: {by: units の番号 | each: true（全員）, act: 行動の id, to: units の番号（仲間へ）, same: true（前の段と同じ的）, aim, seq}
+     * def.merge = {mon}: 全員が消えて、1 体の大きな魔物になる（HP は全員の HP の割合の平均）
+     */
+    *combo(u, cp) {
+      const C = cp.def, units = cp.units;
+      const mem = (this.comboMem = this.comboMem || {});
+      const st = (mem[cp.id] = mem[cp.id] || { n: 0 });
+      st.n++; st.last = this.round;
+      this.stats.combos = (this.stats.combos || 0) + 1;
+      for (const m of units) if (m !== u) this.spendSlot(m);
+      const info = { id: cp.id, name: C.name || '', uids: units.map((m) => m.uid) };
+      yield this.m(R.T('sys.battle_core.combo.m', { names: units.map((m) => m.name).join(R.T('sys.battle_core.combo.join')) }));
+      if (C.merge) return yield* this.comboMerge(u, cp, info);
+      let target = null, first = true;
+      for (const step of C.steps || []) {
+        const who = step.each ? units : [units[step.by | 0] || u];
+        for (const m of who) {
+          if (this.checkEnd()) return;
+          const a = ACT(step.act);
+          if (!m.alive || !a) continue;
+          let t = null;
+          if (step.to != null) t = units[step.to] && units[step.to].alive ? units[step.to] : m;
+          else if (a.target === 'self') t = m;
+          else if (a.target === 'enemy' || a.target === 'group') {
+            t = step.same && target && target.alive ? target : (R.BattleAI && R.BattleAI.pickPartyTarget ? R.BattleAI.pickPartyTarget(this, step.aim || C.aim || a.aim) : pick(this.foes(m)));
+          }
+          const r = yield* this.useAction(m, step.act, a, t, { combo: Object.assign({ first }, info), seq: step.seq || null });
+          if (r && r.target && r.target.isParty) target = r.target;
+          first = false;
+        }
+      }
+    }
+    *comboMerge(u, cp, info) {
+      const C = cp.def;
+      const id = R.Mon.resolve(C.merge.mon, this.tier, u.id);
+      if (!id || !DB.monsters[id]) return;
+      const units = cp.units;
+      const rate = units.reduce((s, m) => s + m.hpRate(), 0) / units.length;
+      yield { t: 'fx', fx: 'magic', user: u, targets: [], kind: 'ability', cmd: 'enemy', id: C.merge.act || cp.id, name: C.name || '', combo: Object.assign({ first: true }, info), seq: C.merge.seq || null };
+      yield this.m(R.T('sys.battle_core.combo.merge', { name: u.base }));
+      for (const m of units) { m.gone = true; m.reserved = null; yield { t: 'flee', u: m }; }
+      const m = new MonUnit({ id }, this.mons.length, this);
+      m.hp = Math.max(1, Math.round(m.mhp * Math.min(1, Math.max(0.2, rate))));
+      this.mons.push(m);
+      this.relabel();
+      yield { t: 'summon', units: [m.idx], by: u };
+      yield this.m(R.T('sys.battle_core.summon.m_2', { name: m.name }));
     }
     *clearNext(u) {
       for (const s of ['counter', 'cover']) {
@@ -1068,7 +1147,7 @@
         if (onHit && t.alive) yield* this.inflict(u, t, onHit.status, onHit.chance, { quiet: true, sf: 'dex' });
         if (u.isParty && !t.isParty && u.mods.autoSteal) yield* this.autoSteal(u, t);
       }
-      if (!o.counter && !o.confused && t.isParty && u.side !== t.side) this.queueCounter(t, u);
+      if (!o.counter && !o.confused && u.side !== t.side && (t.isParty || t.status.counter)) this.queueCounter(t, u);
       res.killed = !t.alive;
       return res;
     }
@@ -1096,7 +1175,7 @@
       return out;
     }
     queueCounter(def, src) {
-      if (!def.isParty || !def.alive) return;
+      if (!def.alive || (!def.isParty && !def.status.counter)) return;   // 魔物は構え（status counter）のときだけ打ち返す
       const kind = def.status.counter ? 'stance' : def.mods.autoCounter > 0 ? 'auto' : null;
       if (!kind || this.reactQ.some((q) => q.u === def)) return;
       this.reactQ.push({ u: def, src, kind });
@@ -1493,7 +1572,7 @@
           if (!foes.length || !u.alive) break;
           const t = pick(foes);
           res.targets.push(t);
-          yield { t: 'fx', fx: ctx.fx, user: u, targets: [t], ab: a, kind: 'ability', cmd: cmdName, id, name: actName, again: i > 0 };
+          yield { t: 'fx', fx: ctx.fx, user: u, targets: [t], ab: a, kind: 'ability', cmd: cmdName, id, name: actName, again: i > 0, combo: o.combo || null, seq: o.seq || a.seq || null };
           yield* this.applyEffects(u, t, main, ctx, res);
         }
       } else {
@@ -1508,12 +1587,12 @@
         res.targets = targets;
         res.target = targets[0] || null;
         ctx.multi = targets.length > 1;
-        if (targets.length) yield { t: 'fx', fx: ctx.fx, user: u, targets, ab: a, kind: 'ability', cmd: cmdName, id, name: actName };
+        if (targets.length) yield { t: 'fx', fx: ctx.fx, user: u, targets, ab: a, kind: 'ability', cmd: cmdName, id, name: actName, combo: o.combo || null, seq: o.seq || a.seq || null };
         else if (a.target === 'front' && !u.isParty) yield this.m(R.T('sys.battle_core.useAction.m_4'));
         for (const t of targets) {
           if (this.result === 'escape') return res;
           yield* this.applyEffects(u, t, main, ctx, res);
-          if (!u.isParty && isPhysSingle(a) && t.isParty) this.queueCounter(t, u);
+          if (isPhysSingle(a) && u.side !== t.side && (t.isParty ? !u.isParty : t.status.counter)) this.queueCounter(t, u);
         }
       }
       for (const eff of onFx) {
@@ -2031,7 +2110,7 @@
           // 払った MP（BSCENE: 行動の始まりで人の札の MP を減らす。2026-09-27 の持ち主の報告「MP がターンの終わりまで減らない」）
           let mp;
           if (eng && ev.user && ev.user.isParty && (cmd === 'skill' || cmd === 'spell') && !ev.again) { try { mp = eng.mpCost(ev.user, id) || undefined; } catch (e) { mp = undefined; } }
-          out.push({ t: 'act', uid: uidOf(ev.user), cmd, id, name: ev.name || (ev.ab && ev.ab.name) || '', targets: (ev.targets || []).map(uidOf), fx: ev.fx || null, counter: ev.kind === 'counter' || undefined, telegraphing: ev.telegraphing || undefined, mp });
+          out.push({ t: 'act', uid: uidOf(ev.user), cmd, id, name: ev.name || (ev.ab && ev.ab.name) || '', targets: (ev.targets || []).map(uidOf), fx: ev.fx || null, counter: ev.kind === 'counter' || undefined, telegraphing: ev.telegraphing || undefined, mp, combo: ev.combo || undefined, seq: ev.seq || undefined });
         }
         break;
       case 'dmg': {
@@ -2422,6 +2501,7 @@
         partyHpPct: pct(hpEnd, mhp0),
         partyMpPct: pct(sum('mp'), sum('mmp')),
         hpLossPct: pct(eng.stats.taken, mhp0),
+        combos: eng.stats.combos || 0,
         deaths: eng.stats.deaths,
         down: eng.party.filter((p) => !p.alive).length,
         damageDealt: eng.stats.dealt,

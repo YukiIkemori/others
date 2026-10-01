@@ -344,8 +344,11 @@
   /** 技・術の行動 → 演出の id（表に無い・効果の品質「切」は null。古い fx に戻る） */
   function seqOf(e) {
     const S = SEQ();
-    if (!S || !(e.cmd === 'skill' || e.cmd === 'spell')) return null;
+    if (!S) return null;
     if (R.Hd && R.Hd.quality && R.Hd.quality() === 'off') return null;
+    // 魔物の行動・合体技は出来事の seq（'sq:<表の id>'）で演出の表を直に指す
+    if (e.seq) return S.has(e.seq) && S.get(e.seq) ? e.seq : null;
+    if (!(e.cmd === 'skill' || e.cmd === 'spell')) return null;
     const sid = S.idFor(e.cmd === 'skill' ? 'techs' : 'spells', e.id);
     return sid && S.get(sid) ? sid : null;
   }
@@ -422,6 +425,36 @@
     if (v.alive && v.pose !== 'ko') setPose(st, uid, 'idle');
   }
 
+  // ---------------------------------------------------------------- 合体技（敵の 2 体以上の連携。battle_core の combo）
+  function comboSub(st, e) {
+    const names = (e.combo.uids || [e.uid]).map((id) => (st.unit(id) || {}).name).filter(Boolean);
+    return R.T('battle.playback.combo.sub', { names: names.join(R.T('sys.battle_core.combo.join')) });
+  }
+  /** 合体技の始まり: 画面が少し暗くなり、技名の帯（閃きと同じ帯）と、加わる魔物がそろって前へ出る */
+  async function comboIntro(st, e) {
+    const sp = Math.max(1, (st.speed && st.speed()) || 1);
+    const dimTo = R.Settings.get('lessFlash') ? 0.2 : 0.38;
+    if (!st.banner) {
+      st.banner = { name: e.combo.name || e.name || '', head: R.T('battle.playback.combo.head'), kind: 'combo', derive: true, t0: R.Engine.time, dimTo, hold: Math.round(1100 / sp), fade: Math.max(80, Math.round(200 / sp)) };
+      st.banner.release = st.banner.t0;
+      st.dim = dimTo;
+    }
+    sfx('magic');
+    st.log.push({ t: 'combo', id: e.combo.id, uids: (e.combo.uids || []).slice() });
+    for (const id of e.combo.uids || []) {
+      const v = st.vis[id];
+      if (!v || !v.alive) continue;
+      v.flash = 0.6;
+      P.squash(st, v, 1.08, 0.92, 90, 'out').then(() => P.unsquash(st, v, 160));
+      if (id !== e.uid) {
+        P.tween(st, v, 'dx', 22, 160, 'inOut');
+        setPose(st, id, 'attack');
+        st.pwait(900).then(() => { P.tween(st, v, 'dx', 0, 200, 'inOut'); if (v.alive && v.pose !== 'ko') setPose(st, id, 'idle'); });
+      }
+    }
+    await st.pwait(420);
+  }
+
   const H = {};
   P._H = H;   // テスト用
   H.turn = async (st, e, ctx) => { if (ctx.actor && ctx.actor !== e.uid) await returnActor(st, ctx); };
@@ -432,7 +465,8 @@
     ctx.actor = e.uid; ctx.act = e; ctx.fx = fxFor(st, e); ctx.fxs = fxsFor(e); ctx.hits = 0;
     ctx.seq = seqOf(e); ctx.seqC = null; ctx.seqEnd = 0;
     const an = u.name;
-    st.head = e.cmd === 'attack' ? { name: R.T('battle.playback.act.head.name', { an }), t0: R.Engine.time } : { name: e.name || '', sub: an, t0: R.Engine.time };
+    if (e.combo && e.combo.first) await comboIntro(st, e);
+    st.head = e.combo ? { name: e.combo.name || e.name || '', sub: comboSub(st, e), t0: R.Engine.time, color: '#ffd68a', tint: 'rgba(255,190,90,0.9)' } : e.cmd === 'attack' ? { name: R.T('battle.playback.act.head.name', { an }), t0: R.Engine.time } : { name: e.name || '', sub: an, t0: R.Engine.time };
     if (st.tele && st.tele.uid === e.uid) { st.tele = null; }
     const v = st.vis[e.uid];
     const sp = st.speed();

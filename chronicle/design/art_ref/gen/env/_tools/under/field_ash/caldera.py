@@ -5,8 +5,8 @@ usage: python3 caldera.py guide | job | fit <gen.png> | process <gen.png>
             縦横の拡大と平行移動だけで切り貼りする（回さない・曲げない）。
   job     : caldera/genN.job.json（gen.sh で 1 枚）。
   fit     : 描いた絵から段の縁の 1 マスのずれを読み、ash_caldera.js の FIT（' ' = そのまま）を caldera/fit.txt に書く。
-  align   : python3 caldera.py align <gen.png> <out.png>: 描いた絵の段の縦・横のずれを、縦横別々の引きのばしだけで地図へ戻す（caldera/align.json）。
-  process : 下絵 caldera@24/@32、溶岩と窓の emit、caldera.json（戸口 doors32 は前のまま＝建物は動かさない）を v2/assets/env/ash/under/ へ。
+  align   : python3 caldera.py align <gen.png> <out.png>: 描いた絵の段の上下のずれを、行の選び直し（縦の引きのばし）だけで地図へ戻す（caldera/align_pts.json）。
+  process : 下絵 caldera@24/@32、溶岩と窓の emit、caldera.json（窓 windows32・戸口 doors32 は地図の戸口から）を v2/assets/env/ash/under/ へ。
 地図のデータは caldera/map_dump.json（node で R.DB.maps.caldera を書き出した物。FIT を空にして書き出す）。"""
 import sys, json, os, numpy as np
 from PIL import Image, ImageDraw, ImageFilter
@@ -161,6 +161,22 @@ def fit(src):
             nb = {BASE[v][u] for u, v in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)) if 0 <= u < W and 0 <= v < H}
             c = str(cls[y, x])
             if c != b0 and (b0, c) in PAIR and c in nb and ll[c][y, x] - ll[b0][y, x] > 0.6: rows[y][x] = c
+    # まっすぐにそろえる: 段の帯（崖・溶岩・岩の縁）はまっすぐなので、帯の 1 本の線（行か列）ごとに多い方の字にそろえる
+    #   （マスごとに読むと、まっすぐな縁の当たりがでこぼこになる）。守るマス（建物・戸口・人・物・石段・橋・門）は変えない
+    def straighten(lines):
+        for cells in lines:
+            cs = [(x, y) for x, y in cells if (x, y) not in prot and BASE[y][x] not in 'ebdh' and not (y in (26, 27) and (x < 2 or x > 51))]
+            if not cs: continue
+            vals = [rows[y][x] for x, y in cs]
+            top = max(set(vals), key=vals.count)
+            for x, y in cs:
+                if rows[y][x] != top and (BASE[y][x] == top or (BASE[y][x], top) in PAIR): rows[y][x] = top
+    L = []
+    for y in list(range(14, 20)) + list(range(36, 42)): L.append([(x, y) for x in range(18, 38) if x not in (26, 27)])      # 溶岩の堀の北・南
+    for x in list(range(14, 20)) + list(range(36, 42)): L.append([(x, y) for y in range(18, 38) if y not in (26, 27)])      # 溶岩の堀の西・東
+    for y in list(range(3, 9)) + list(range(46, 53)): L.append([(x, y) for x in range(7, 47) if not (y < 4 and 21 <= x <= 32)])   # 崖・岩の北・南
+    for x in list(range(1, 8)) + list(range(46, 53)): L.append([(x, y) for y in range(8, 47) if y not in (25, 26, 27, 28)])  # 崖・岩の西・東
+    straighten(L)
     fx = json.load(open(os.path.join(D, 'fix.json'))) if os.path.exists(os.path.join(D, 'fix.json')) else {}
     for q in fx.get('set', []): rows[q[1]][q[0]] = q[2]
     bcell = {(b['x'] + i, b['y'] + j) for b in blds for i in range(b['w']) for j in range(b['h'])} - {(b['door']['x'], b['door']['y']) for b in blds}
@@ -191,69 +207,18 @@ def fit(src):
 
 
 def align(src, out):
-    """描いた絵の縦・横のずれ（描く道具が段をすこし上下にずらして描く）を、行と列ごとの 1 次元の対応（DTW）で地図へ戻す。
-    out(y, x) = 絵(fy(y), fx(x)) の縦横別々の引きのばしだけ（縦の線は縦、横の線は横のまま = 建物は傾かない）。
-    行の対応は「その行の地図の字」と「絵の画素の種類」の一致で決める（建物の所は数えない）"""
-    t = 16; N = W * t
-    A = np.asarray(Image.open(src).convert('RGB').resize((N, N), Image.BOX)).astype(np.float32)
-    Q = (A // 16).astype(int); qi = Q[..., 0] * 256 + Q[..., 1] * 16 + Q[..., 2]
-    G = np.array([list(r) for r in BASE]); G[G == 'e'] = 'F'; G[G == 'b'] = '%'
-    bm = np.zeros((H, W), bool)
-    for b in blds: bm[max(0, b['y'] - 2):b['y'] + b['h'], max(0, b['x'] - 1):b['x'] + b['w'] + 1] = True
-    bm[5:14, 18:36] = True                       # 大卵殻の頭
-    CLS = ['M', 'a', 'F', '%', 'c', 'X', 'h']
-    kr = lambda m: np.kron(m, np.ones((t, t), bool))
-    lab = np.zeros((N, N), int) - 1
-    ll = []
-    for i, c in enumerate(CLS):
-        m = (G == c) & ~bm
-        mi = ndimage.binary_erosion(m, iterations=2) if c not in 'F' else m
-        h = np.bincount(qi[kr(mi)], minlength=4096).astype(float) + 0.5
-        ll.append(np.log(h / h.sum())[qi])
-        lab[kr(m)] = i
-    P = np.argmax(np.stack(ll), 0)                # 絵の画素の種類
-    valid = lab >= 0
-    def dtw(gl, pl, vm):
-        # gl[i] = 地図の i 行目の字の並び、pl[j] = 絵の j 行目の種類の並び。i → j の単調な対応（傾き 0.6..1.6）
-        n = gl.shape[0]
-        C = np.zeros((n, n), np.float32)
-        for i in range(n):
-            v = vm[i]
-            C[i] = (pl[:, v] != gl[i, v][None, :]).mean(1) if v.any() else 0.5
-        D = np.full((n, n), np.inf, np.float32); Bk = np.zeros((n, n), np.int8)
-        D[0, 0] = C[0, 0]
-        for i in range(n):
-            for j in range(max(0, i - 4 * t), min(n, i + 4 * t)):   # ずれは 4 マスまで
-                if i == 0 and j == 0: continue
-                c = [D[i - 1, j - 1] if i and j else np.inf, D[i - 1, j] + 0.05 if i else np.inf, D[i, j - 1] + 0.05 if j else np.inf]
-                k = int(np.argmin(c)); D[i, j] = C[i, j] + c[k]; Bk[i, j] = k
-        i, j = n - 1, n - 1; path = [(i, j)]
-        while i or j:
-            k = Bk[i, j]
-            if k == 0: i, j = i - 1, j - 1
-            elif k == 1: i -= 1
-            else: j -= 1
-            path.append((i, j))
-        f = np.zeros(n, np.float32); cnt = np.zeros(n, np.float32)
-        for i, j in path: f[i] += j; cnt[i] += 1
-        f = f / cnt
-        f = ndimage.gaussian_filter1d(f, 1.5 * t)       # なめらかに（1 マス半）
-        f = np.maximum.accumulate(f)
-        return f
-    fy = dtw(lab, P, valid)
-    fx = dtw(lab.T, P.T, valid.T)
-    for k in range(0, W + 1, 3): print('y %2d -> %.2f   x %2d -> %.2f' % (k, fy[min(N - 1, k * t)] / t, k, fx[min(N - 1, k * t)] / t))
-    json.dump(dict(fy=(fy / t).tolist(), fx=(fx / t).tolist(), t=t), open(os.path.join(D, 'align.json'), 'w'))
-    B = np.asarray(Image.open(src).convert('RGB')).astype(np.float32); S = B.shape[0] / W
-    M = B.shape[0]
-    ty = np.interp((np.arange(M) + 0.5) / S * t - 0.5, np.arange(N), fy) / t * S
-    tx = np.interp((np.arange(M) + 0.5) / S * t - 0.5, np.arange(N), fx) / t * S
-    # 縦横別々の引きのばし（行を選んでから列を選ぶ。最近傍 = 画素の角を保つ）
-    iy = np.clip(np.rint(ty).astype(int), 0, M - 1); ix = np.clip(np.rint(tx).astype(int), 0, M - 1)
-    R = B[iy][:, ix]
-    Image.fromarray(np.clip(R, 0, 255).astype(np.uint8)).save(out)
-    print('aligned ->', out)
-
+    """描いた絵の段の上下のずれ（描く道具が段をすこし下へずらして描いた）を、行ごとの対応 fy だけで地図へ戻す。
+    out(y, x) = 絵(fy(y), fx(x))。縦と横の別々の引きのばしだけ（行と列を選び直すだけなので、縦の線は縦、横の線は横のまま = 建物は傾かない）。
+    対応点は caldera/align_pts.json {"fy": [[地図の y, 絵の y], …], "fx": 同じく列}（マス。戸口の下の端・崖の線・岩の縁を絵で測った物。間は折れ線）"""
+    pts = np.array(json.load(open(os.path.join(D, 'align_pts.json')))['fy'], float)
+    B = np.asarray(Image.open(src).convert('RGB')); M = B.shape[0]; S = M / W
+    yo = (np.arange(M) + 0.5) / S
+    iy = np.clip(np.rint(np.interp(yo, pts[:, 0], pts[:, 1]) * S - 0.5).astype(int), 0, M - 1)
+    px = np.array(json.load(open(os.path.join(D, 'align_pts.json'))).get('fx', [[0, 0], [W, W]]), float)
+    ix = np.clip(np.rint(np.interp(yo, px[:, 0], px[:, 1]) * S - 0.5).astype(int), 0, M - 1)
+    Image.fromarray(B[iy][:, ix]).save(out)
+    sl = np.diff(pts[:, 1]) / np.diff(pts[:, 0])
+    print('aligned ->', out, 'scale range %.2f..%.2f' % (sl.min(), sl.max()))
 
 def process(src):
     """下絵（1 マス 48 px の絵）→ caldera@24/@32 ＋ emit（溶岩・窓）＋ caldera.json。明るさは前の下絵の歩ける地面に合わせる（町の夜の調子を保つ）"""
@@ -287,7 +252,7 @@ def process(src):
     for i, sl in enumerate(ndimage.find_objects(lab)):
         ys, xs = sl; h, w = ys.stop - ys.start, xs.stop - xs.start
         comp = lab[sl] == i + 1
-        if comp.sum() < 30 or w < 6 or h < 6 or w > 24 or h > 24 or comp.sum() < 0.35 * w * h: continue
+        if comp.sum() < 30 or w < 6 or h < 6 or w > 14 or h > 12 or comp.sum() < 0.35 * w * h: continue
         wins.append(dict(kind='win', x=int(xs.start), y=int(ys.start), w=int(w), h=int(h)))
         m = comp & pane[sl]; es = e[sl]
         px = np.clip(A[sl] * 1.12 + np.array([22, 14, 0]), 0, 255)
@@ -309,7 +274,9 @@ def process(src):
     save_set('caldera', A)
     save_set('caldera_emit', e, True)
     meta = json.load(open(os.path.join(UNDER, 'caldera.json')))
-    meta.update(windows32=wins, gain=round(gain, 3), src='generated', files={'24': 'caldera@24.png', '32': 'caldera@32.png'})
+    # 戸口（描いた扉の中・下 = 地図の戸口のマスの中・下。align で絵の扉を戸口のマスへ合わせてある）
+    doors = [dict(x=int((o['door']['x'] + 0.5) * T), y=int((o['door']['y'] + 1) * T - 2), id=o['id']) for o in blds]
+    meta.update(windows32=wins, doors32=doors, gain=round(gain, 3), src='generated', files={'24': 'caldera@24.png', '32': 'caldera@32.png'})
     json.dump(meta, open(os.path.join(UNDER, 'caldera.json'), 'w'), indent=1)
 
 

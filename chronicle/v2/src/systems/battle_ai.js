@@ -46,6 +46,9 @@
     if (c.allyDown && !(u.isParty ? eng.party : eng.mons).some((m) => !m.alive && !m.gone)) return false;
     if (c.flag && !(eng.flags && eng.flags[c.flag])) return false;
     if (c.noFlag && eng.flags && eng.flags[c.noFlag]) return false;
+    if (c.partyGuarded && !eng.guardedLast) return false;   // 前のラウンドに味方の誰かが守った
+    if (c.foesAtLeast != null && eng.living(u.isParty ? 'mon' : 'party').length < c.foesAtLeast) return false;
+    if (c.tierMin != null && (eng.tier || 0) < c.tierMin) return false;
     return true;
   }
   function monUsable(eng, u, id) {
@@ -56,10 +59,21 @@
     return true;
   }
   /** 味方の誰をねらうか（§4.5.3）: 前列 2 : 後列 1、aim 'middle' は 1 : 3、aim 'low' は HP の割合が低い人 */
+  // aim: 'low'（HP の割合が低い人）・'healer'（回復の術を持つ人）・'caster'（魔力の高い人）・'back'（後列の人）・'strong'（攻撃力の高い人）
+  //   当てはまる人がいなければ、ふつうの重み（前列 2 : 後列 1）
+  const healerOf = (p) => !!(p.c && (p.c.spells || []).some((id) => { const a = ACT(id); return a && a.kind === 'spell' && has(a, 'heal'); }));
   function pickPartyTarget(eng, aim) {
     const l = eng.living('party');
     if (!l.length) return null;
     if (aim === 'low') return l.slice().sort((a, b) => a.hpRate() - b.hpRate() || a.idx - b.idx)[0];
+    if (aim === 'healer' || aim === 'back') {
+      const c = l.filter((p) => (aim === 'healer' ? healerOf(p) : eng.effRow(p) === 'back'));
+      if (c.length) return c[R.Mon.rng().ri(0, c.length - 1)];
+    }
+    if (aim === 'caster' || aim === 'strong') {
+      const k = aim === 'caster' ? 'mag' : 'atk';
+      return l.slice().sort((a, b) => b.stat(k) - a.stat(k) || a.idx - b.idx)[0];
+    }
     const K = rowK();
     const W = aim === 'middle' ? K.aimMiddle : K.weight;
     return R.Mon.weighted(l.map((p) => ({ p, w: W[eng.effRow(p)] || 1 }))).p;
@@ -126,6 +140,81 @@
       list = list.filter((x) => x !== a);
     }
     return { type: 'attack', target: pickPartyTarget(eng) };
+  }
+
+  // ------------------------------------------------------------ 合体技（DB.enemyCombos。決まりは design の COMBO_SPEC と同じ）
+  /** 合体技の仲間の決まりに m が合うか: mon（id か配列）・lin（系統か配列）・race・flag・stage（段の下限） */
+  function comboMatch(m, spec) {
+    const d = m.d || {};
+    const any = (v, x) => (Array.isArray(v) ? v.includes(x) : v === x);
+    if (spec.mon != null && !any(spec.mon, m.id)) return false;
+    if (spec.lin != null && !any(spec.lin, d.lineage)) return false;
+    if (spec.race != null && !any(spec.race, d.race)) return false;
+    if (spec.flag != null && !m.flags.includes(spec.flag)) return false;
+    if (spec.stage != null && (d.stage || 0) < spec.stage) return false;
+    return true;
+  }
+  /** 合体技に加われるか: 生きている・動ける（眠り・まひ・凍り・気絶でない）・混乱していない・予告中でない・このラウンドの手番が残っている */
+  function comboReady(eng, m, u) {
+    if (!m.alive || m.isParty || !m.canAct() || m.status.confuse || m.reserved) return false;
+    return m === u || (eng.slotLeft ? eng.slotLeft(m) : false);
+  }
+  /** u（いま動く魔物）を入れて、members の枠を埋める → units（枠の順）| null */
+  function comboUnits(eng, u, C) {
+    const slots = [];
+    for (const sp of C.members || []) for (let i = 0; i < Math.max(1, sp.n || 1); i++) slots.push(sp);
+    if (slots.length < 2) return null;
+    const lead = slots.findIndex((sp) => comboMatch(u, sp));
+    if (lead < 0) return null;
+    const out = new Array(slots.length).fill(null);
+    out[lead] = u;
+    const pool = eng.mons.filter((m) => m !== u && comboReady(eng, m, u));
+    for (let i = 0; i < slots.length; i++) {
+      if (out[i]) continue;
+      const j = pool.findIndex((m) => comboMatch(m, slots[i]));
+      if (j < 0) return null;
+      out[i] = pool.splice(j, 1)[0];
+    }
+    return out;
+  }
+  function combosOf(id) {
+    const tbl = DB.enemyCombos || {};
+    const memo = (combosOf.memo = combosOf.memo || { n: -1, by: {} });
+    const n = Object.keys(tbl).length;
+    if (memo.n !== n) { memo.n = n; memo.by = {}; }
+    if (!memo.by[id]) {
+      const m = DB.monsters[id] || {};
+      const fake = { id, d: m, flags: m.flags || [] };
+      memo.by[id] = Object.keys(tbl).filter((k) => (tbl[k].members || []).some((sp) => comboMatch(fake, sp)));
+    }
+    return memo.by[id];
+  }
+  /**
+   * いま動く魔物 u が合体技を出すか → {id, def, units} | null。決まり: tierMin/tierMax（戦闘のティア）・round（このラウンドから）・
+   * cond（u の行動の条件と同じ形）・cd（使った後に待つラウンド、既定 3）・max（1 戦の回数）・chance（そろったラウンドに 1 回だけ振る、既定 0.35）
+   */
+  function comboFor(eng, u) {
+    if (!u || u.isParty || !u.alive || u.status.confuse || u.reserved || eng.o.noCombo) return null;
+    const list = combosOf(u.id);
+    if (!list.length) return null;
+    const mem = (eng.comboMem = eng.comboMem || {});
+    for (const id of list) {
+      const C = DB.enemyCombos[id];
+      const T = eng.tier || 0;
+      if (!C || (C.tierMin != null && T < C.tierMin) || (C.tierMax != null && T > C.tierMax)) continue;
+      if (C.round != null && eng.round < C.round) continue;
+      const st = mem[id] || {};
+      if (st.tried === eng.round) continue;
+      if (C.max != null && (st.n || 0) >= C.max) continue;
+      if (st.last != null && eng.round - st.last < (C.cd != null ? C.cd : 3)) continue;
+      if (C.cond && !condOk(eng, u, { id: 'combo:' + id, cond: C.cond })) continue;
+      const units = comboUnits(eng, u, C);
+      if (!units) continue;
+      mem[id] = Object.assign(st, { tried: eng.round });
+      if (RN().next() >= (C.chance != null ? C.chance : 0.35)) continue;
+      return { id, def: C, units };
+    }
+    return null;
   }
 
   // ------------------------------------------------------------------ 味方（sim の台本）
@@ -695,7 +784,7 @@
   }
 
   R.BattleAI = Object.assign(R.BattleAI || {}, {
-    AUTO_OPTS, monster, monCommand, condOk, monUsable, pickPartyTarget,
+    AUTO_OPTS, monster, monCommand, condOk, monUsable, pickPartyTarget, comboFor, comboUnits, comboMatch, comboReady,
     partyCommands, partyAction, abilityOptions, itemOptions, newPlan, assess, threat,
     focusOrder, focusTarget, assignTarget, bestAttack, glimCast, candidatesOpen, careOf, FOCUS_COVER, HEAL_RESERVE,
     fightOnly, repeatOnly, scripted, styleAI, pendingTelegraphs, enemyCommand, partyCommand,
