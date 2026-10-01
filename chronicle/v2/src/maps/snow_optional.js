@@ -78,7 +78,7 @@
       for (let i = 0; i < 3; i++) O.push(K.prop('ice_crystal', 19 + i, 6, { cond: '!snow_icicle_box_2', variant: i }));
       O.push(K.chest('icicle_2_c2', 35, 16, { pool: 'p_T' }), K.chest('icicle_2_c3', 4, 11, { pool: 'p_T' }), K.chest('icicle_2_c4', 24, 24, { pool: 'p_heal' }));
       O.push(K.prop('talestone', 7, 9), K.exam(7, 10, 'icicle_seal'));             // 宝の地図 その2 の封じの扉（地図は縦切りの外）
-      O.push(K.sign(22, 12, R.T('map.snow_optional.sign_2')));
+      O.push(K.sign(22, 11, R.T('map.snow_optional.sign_2')));   // 看板・灯りが壁・崖・岩のマスに埋まっていたので床へ（tools/qa/check_props.js、2026-10-01）
       for (const [x, y] of [[12, 22], [28, 13], [33, 18], [24, 7], [9, 13]]) O.push(K.prop('ice_crystal', x, y, { variant: (x + y) % 3 }));
       K.put(g, 11, 7, '#');   // 描いた下絵の岩（v2/assets/env/snow/under/icicle_2*）
       K.def('icicle_2', {

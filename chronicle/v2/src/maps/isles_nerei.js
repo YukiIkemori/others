@@ -15,7 +15,7 @@
     });
     // 岬の石の灯（調べる）・南の入口の看板
     O.push(K.exam(21, 3, 'nerei_cape_lamp'), K.prop('lamp_pillar', 22, 2));
-    O.push(K.sign(15, 42, R.T('map.isles_nerei.sign')));
+    O.push(K.sign(16, 42, R.T('map.isles_nerei.sign')));   // 看板・灯りが壁・崖・岩のマスに埋まっていたので床へ（tools/qa/check_props.js、2026-10-01）
     // 夜の桟橋の先: 外洋船の舵（桟橋に船をつなぐ）
     for (const [x, y] of [[34, 12], [35, 12]]) O.push(K.exam(x, y, 'isles_helm'));
     O.push(K.prop('ship', 37, 11, { cond: 'isles_ship' }));

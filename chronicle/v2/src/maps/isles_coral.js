@@ -21,7 +21,7 @@
     // 見晴らし台の石の看板（上の段の東の庭の角）
     O.push(K.prop('map_sign', 44, 4), K.exam(44, 4, 'coral_lookout'));
     // 北の橋の看板（橋のわきの崖）
-    O.push(K.sign(20, 2, R.T('map.isles_coral.sign')));
+    O.push(K.sign(20, 3, R.T('map.isles_coral.sign')));   // 看板・灯りが壁・崖・岩のマスに埋まっていたので床へ（tools/qa/check_props.js、2026-10-01）
     // 後家の壁（いちばん下の段の擁壁。岸壁から調べる）
     for (const x of [28, 31, 34, 37]) O.push(K.exam(x, 43, 'coral_widows_wall'));
     // 真ん中の桟橋: 外洋船の舵（船が無いうちは空の桟橋）と、つないだ船

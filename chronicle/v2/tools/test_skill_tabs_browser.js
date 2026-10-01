@@ -2,7 +2,8 @@
 // 技・術の一覧の種類のタブと MP の並び（持ち主 2026-10-01「剣なら剣、火なら火で分けて左右か LR で切り替え。MP の少ない順に」）。ブラウザ
 //   - R.SkillTabs: 技は武器の系統、術は属性（2・3 属性は「合成」）に分ける。持っている種類だけ。中は MP の少ない順 → 覚えた順 → id
 //   - メニューの技・術: ←→ と札のクリックでタブ、L/R は人の切り替えのまま。タブは人ごとに覚える（閉じて開いても）
-//   - 戦闘の術: ←→・L/R・札のクリックでタブ（その間 L/R は速さ・リピートにならない）。戻って開き直しても、次の戦闘でも覚えている
+//   - 戦闘の術: ←→・札のクリックでタブ。L/R はタブに使わず、一覧の中でもリピート・速さのまま（持ち主 2026-10-01）。
+//     戻って開き直しても、次の戦闘でも覚えている
 //   - 戦闘の技（今の武器の系統だけ）: タブなし、「攻撃」の後は MP の少ない順
 //   node v2/tools/test_skill_tabs_browser.js [--build] [--shots <dir>]
 'use strict';
@@ -117,7 +118,7 @@ async function main() {
   await B.press(p, 'b');
   await B.waitFor(p, `${B.TOP} === 'field'`, 3000);
 
-  section('戦闘の術: ←→・L/R・クリックでタブ、覚える');
+  section('戦闘の術: ←→・クリックでタブ、L/R はリピート・速さ、覚える');
   await B.ev(p, "RPG.Settings.set('battleSpeed', 1); 0");
   const startBattle = async () => {
     await B.ev(p, `(() => { window.__r = null; RPG.Battle.start({ mons: [['stub_slime', 2]], bg: 'cave' }).then((r) => { window.__r = r; }); return true; })()`);
@@ -129,7 +130,7 @@ async function main() {
     await B.ev(p, `${D}.ui.sel = ${D}.ui.o.rows.findIndex((r) => r.key === 'spell'); 0`);
     await p.waitForTimeout(60);
     await B.press(p, 'a');
-    return B.waitFor(p, `${D}.ui && ${D}.ui.o.tabs && ${D}.ui.tabLR`, 4000);
+    return B.waitFor(p, `${D}.ui && ${D}.ui.o.tabs && ${D}.ui.tabbed`, 4000);
   };
   const bt = `(${D}.ui && ${D}.ui.o.tabs ? ${D}.ui.o.tabs.groups[${D}.ui.o.tabs.index].id : null)`;
   await startBattle();
@@ -142,16 +143,24 @@ async function main() {
   await B.press(p, 'right');
   ok('battle: → next tab (水)', await B.waitFor(p, `${bt} === 'spell:water'`, 1500), await B.ev(p, bt));
   ok('battle: list follows the tab (water spells)', await B.ev(p, `${D}.ui.o.rows.every((r) => RPG.DB.spells[r.id].elements[0] === 'water' && RPG.DB.spells[r.id].elements.length === 1)`));
+  // R: 速さ（タブは動かない）
   await B.press(p, 'r');
-  ok('battle: R → next tab (風)', await B.waitFor(p, `${bt} === 'spell:wind'`, 1500), await B.ev(p, bt));
-  await B.press(p, 'l'); await B.press(p, 'l');
-  ok('battle: L → previous tabs (火)', await B.waitFor(p, `${bt} === 'spell:fire'`, 1500), await B.ev(p, bt));
-  await B.press(p, 'left');
-  ok('battle: ← wraps to 合成', await B.waitFor(p, `${bt} === 'spell:combo'`, 1500), await B.ev(p, bt));
-  ok('battle: L/R in the tabbed list did not change speed or repeat', (await B.ev(p, "RPG.Settings.get('battleSpeed')")) === speed0 && (await B.ev(p, `${D}.B.repeatOn`)) === rep0);
+  ok('battle: R in the spell list cycles speed', await B.waitFor(p, `RPG.Settings.get('battleSpeed') !== ${JSON.stringify(speed0)}`, 1500), await B.ev(p, "RPG.Settings.get('battleSpeed')"));
+  ok('battle: R does not switch tabs (still 水, list open)', await B.ev(p, `${bt} === 'spell:water' && !!${D}.ui.tabbed`), await B.ev(p, bt));
+  for (let i = 1; i < (await B.ev(p, 'RPG.Battle.SPEEDS.length')); i++) await B.press(p, 'r');   // 一回りで元へ
+  ok('battle: speed back to where it was after a full cycle', (await B.ev(p, "RPG.Settings.get('battleSpeed')")) === speed0, await B.ev(p, "RPG.Settings.get('battleSpeed')"));
+  // L: リピートの切り替え（タブは動かない）
+  await B.press(p, 'l');
+  ok('battle: L in the spell list toggles repeat', await B.waitFor(p, `${D}.B.repeatOn !== ${rep0}`, 1500), await B.ev(p, `${D}.B.repeatOn`));
+  ok('battle: L does not switch tabs (still 水)', await B.ev(p, `${bt} === 'spell:water' && !!${D}.ui.tabbed`), await B.ev(p, bt));
+  await B.press(p, 'l');
+  ok('battle: L again toggles repeat back', await B.waitFor(p, `${D}.B.repeatOn === ${rep0}`, 1500), await B.ev(p, `${D}.B.repeatOn`));
+  ok('battle: still in the spell list on 水', await B.ev(p, `${bt} === 'spell:water'`), await B.ev(p, bt));
+  await B.press(p, 'left'); await B.press(p, 'left');
+  ok('battle: ← ← wraps to 合成', await B.waitFor(p, `${bt} === 'spell:combo'`, 1500), await B.ev(p, bt));
   const comboRows = await B.ev(p, `${D}.ui.o.rows.map((r) => [r.id, r.mp, r.disabled])`);
   ok('battle: 合成 tab MP ascending, unaffordable ones still greyed', comboRows.every((r, i, a) => !i || a[i - 1][1] <= r[1]) && comboRows.some((r) => r[2]), comboRows);
-  await p.waitForTimeout(200);
+  await p.waitForTimeout(3500);   // 速さ・リピートの知らせが消えてから撮る
   await shot('battle_viola_combo.png');
   const btr = await B.ev(p, `${D}.ui.tabRects.find((r) => r.i === 4)`);
   await click(btr);
@@ -160,11 +169,11 @@ async function main() {
   await p.waitForTimeout(200);
   await shot('battle_viola_light.png');
   await B.press(p, 'b');
-  ok('battle: back to the command menu', await B.waitFor(p, `${D}.ui && ${D}.ui.o.rows.some((r) => r.key === 'spell') && !${D}.ui.tabLR`, 2000));
-  ok('battle: prompts show speed (R) again outside the tabbed list', await B.ev(p, `RPG.Battle.prompts(${D}).list.some((x) => x.btn === 'r')`));
+  ok('battle: back to the command menu', await B.waitFor(p, `${D}.ui && ${D}.ui.o.rows.some((r) => r.key === 'spell') && !${D}.ui.tabbed`, 2000));
+  ok('battle: prompts show speed (R) outside the tabbed list', await B.ev(p, `RPG.Battle.prompts(${D}).list.some((x) => x.btn === 'r')`));
   await openSpells();
   ok('battle: reopened — still on 光', await B.ev(p, `${bt} === 'spell:light'`), await B.ev(p, `[${bt}, ${D}.ui.sel]`));
-  ok('battle: prompts hide speed/repeat while the tabs own L/R', await B.ev(p, `!RPG.Battle.prompts(${D}).list.some((x) => x.btn === 'r' || x.btn === 'l')`));
+  ok('battle: prompts show speed (R) and repeat (L) inside the tabbed list too', await B.ev(p, `(() => { const l = RPG.Battle.prompts(${D}).list; return l.some((x) => x.btn === 'r') && l.some((x) => x.btn === 'l'); })()`));
   await B.press(p, 'b');
   // ヴィオラは防御 → アルンの技（今の武器の系統だけ。タブなし、攻撃の後は MP の少ない順）
   await B.ev(p, `${D}.ui.sel = ${D}.ui.o.rows.findIndex((r) => r.key === 'defend'); 0`); await p.waitForTimeout(60);
@@ -173,7 +182,7 @@ async function main() {
   await B.ev(p, `${D}.ui.sel = ${D}.ui.o.rows.findIndex((r) => r.key === 'weapon'); 0`); await p.waitForTimeout(60);
   await B.press(p, 'a');
   await B.waitFor(p, `${D}.ui && ${D}.ui.o.rows && ${D}.ui.o.rows.some((r) => r.cmd === 'attack')`, 4000);
-  const wr = await B.ev(p, `(() => { const u = ${D}; return { tabs: !!u.ui.tabLR, rows: u.ui.o.rows.map((r) => [r.id, r.cmd === 'attack' ? -1 : Number(String(r.right).replace(/[^0-9]/g, ''))]) }; })()`);
+  const wr = await B.ev(p, `(() => { const u = ${D}; return { tabs: !!u.ui.tabbed, rows: u.ui.o.rows.map((r) => [r.id, r.cmd === 'attack' ? -1 : Number(String(r.right).replace(/[^0-9]/g, ''))]) }; })()`);
   ok('battle weapon list: no tab bar (one weapon type in battle)', !wr.tabs);
   ok('battle weapon list: 攻撃 first, then techniques MP ascending', wr.rows[0][0] === 'attack' && wr.rows.slice(1).every((r, i, a) => !i || a[i - 1][1] <= r[1]) && wr.rows.length >= 7, wr.rows);
   await p.waitForTimeout(200);

@@ -51,7 +51,8 @@
     },
     chaos_3: {
       name: R.T('monsters.chaos_3.name'), sprite: 'chaos_3', lineage: 'chaos', stage: 3, lv: 61, size: 'l', race: 'beast', affinity: 'dark',
-      flags: [], s: { hp: 1.89, atk: 0.48, mag: 0.44, agi: 0.9 }, eva: 5,
+      flags: [], s: { hp: 1.89, atk: 0.35, mag: 0.32, agi: 0.9 }, actsPerTurn: 2,   // 2 回動く精鋭（w_combo）: 1 回の強さは 0.72 倍
+      eva: 5,
       elem: { fire: 1.25, light: 1.5, dark: 0.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_rampage', w: 2 }, { id: 'e_chaos_breath', w: 2 }, { id: 'e_quake', w: 1 }, { id: 'e_roar', w: 1, cond: { every: [4, 1] } }, { id: 'e_focus', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_phoenix', rate: 8 }, rare: { item: 'ac_chaos_eye', rate: 32 }, super: { item: 'hn_sr_chaos_claw', rate: 256 } },

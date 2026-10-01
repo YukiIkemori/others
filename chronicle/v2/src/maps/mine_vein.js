@@ -71,7 +71,7 @@
       const P = MK.painted('vein_3');
       const O = [];
       O.push(K.stairs(18, 27, { map: 'vein_2', spawn: 'from3' }, { id: 'vein_3_up', look: 'up' }));
-      O.push(K.sign(16, 22, R.T('map.mine_vein.sign')));
+      O.push(K.sign(16, 24, R.T('map.mine_vein.sign')));   // 看板・灯りが壁・崖・岩のマスに埋まっていたので床へ（tools/qa/check_props.js、2026-10-01）
       O.push(K.exam(17, 5, 'vein_heart'), K.exam(18, 5, 'vein_heart'), K.exam(19, 5, 'vein_heart'));
       O.push(K.chest('vein_3_c1', 31, 5, { item: 'u_vein_axe', n: 1, cond: 'mine_vein_lord' }), K.chest('vein_3_c2', 18, 19, { pool: 'p_rare' }));
       glow(O, [[14, 3], [18, 3], [22, 3], [11, 9], [25, 9], [12, 16], [24, 16], [8, 12], [28, 12], [9, 17], [27, 17], [15, 22], [21, 22], [33, 4]]);

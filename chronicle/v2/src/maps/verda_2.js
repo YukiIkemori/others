@@ -83,7 +83,7 @@
     // ピムの足あと: 入口 → 遠回りの道 → 西の広場
     O.push({ type: 'trail', id: 'verda_2_pim', path: [[29, 49], [28, 47], [26, 46], [23, 47], [20, 46], [17, 47], [15, 45], [14, 43], [14, 41], [14, 39], [15, 38]], cond: { item: 'k_pim_hat' } });
     O.push(K.sign(27, 29, R.T('map.verda_2.sign')));
-    O.push(K.prop('lantern', 27, 41));
+    O.push(K.prop('lantern', 27, 42));   // 看板・灯りが壁・崖・岩のマスに埋まっていたので床へ（tools/qa/check_props.js、2026-10-01）
 
     const keep = new Set();
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if ('ree'.includes(K.at(g, x, y))) keep.add(x + ',' + y);

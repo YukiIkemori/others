@@ -451,17 +451,21 @@
     // 数値（s）は tools/sim_bosses.js の 3 本立てで合わせた（2026-09-26、標準の一行・そのティアの店の品）
     // 予告の行動は重み 200（その手番なら必ず。§9.11.3 の SCHED と同じ考え）
     P.s = { hp: 1.3, atk: 0.7 };
-    M.s = { hp: 1.29, atk: 1.55, mag: 1.55 };   // 2026-10-01: 1.35 → 1.29（K.BOSS_HP 1.05 倍の分を戻す。台本のラウンド 5〜7 の上の端）
-    RE.s = { hp: 1.1, atk: 0.6, mag: 0.6 };
+    M.s = { hp: 1.2, atk: 2.2, mag: 2.2 };   // 2026-10-01（組み直し）: 半分で二度動くのをやめた分 atk・mag 1.55 → 2.2、hp 1.29 → 1.2（sim_bosses: リピート 29%・台本 99%・6.3 ラウンド）   // 2026-10-01: 1.35 → 1.29（K.BOSS_HP 1.05 倍の分を戻す。台本のラウンド 5〜7 の上の端）
+    RE.s = { hp: 0.95, atk: 1.5, mag: 1.5 };   // 2026-10-01（組み直し）: 1 手番 1 回にした分 atk・mag 0.6 → 1.5、hp 1.1 → 0.95（sim_bosses: 台本 100%・10.4 ラウンド・リピート 35%）
     // ページ食らい: 紙吹雪（ランダム 3 回）を「紙を吸いこむ → 紙吹雪（全体）」の予告に置き換え
     P.actions = A([['attack', 4], ['eb_page_gather', 200, { every: [3, 0] }], ['eb_eat_words', 1, { every: [4, 3] }], ['eb_ink_spit', 1, { every: [4, 1] }], ['eb_devour', 1]]);
     // 教える戦い: 半分を切っても手数は増やさない（攻撃力が 1 段上がるだけ）
     P.phases = [{ hpBelow: 0.5, msg: R.T('data.bosses.phases.0.msg'), set: { buffs: { atk: 1 } } }];
     // ダストウィング: 眠りのりん粉を「羽の光 → 眠りのりん粉（全体、強い）」の予告に
     M.actions = A([['attack', 3], ['eb_wing_glow', 200, { every: [3, 0] }], ['eb_scale_poison', 2], ['eb_wing_gale', 2], ['eb_eye_spots', 1, { every: [4, 2] }], ['eb_moth_dive', 2]]);
+    // 2026-10-01（ボスの組み直し）: 序盤のボスは 1 手番に 1 回。半分を切っても二度は動かず、りん粉で攻めと術が 1 段上がる
+    M.phases = [{ hpBelow: 0.5, msg: R.T('data.bosses.LIST.b_moth.phases.0.msg'), set: { buffs: { atk: 1, mag: 1 } } }];
     // 根食らい: 根もぐり → 前列へ突き上げ。根を呼ぶのは根を火で焼くまで（戦闘の旗 roots_burned）
-    RE.actions = A([['attack', 3], ['eb_root_drain', 2], ['eb_root_sink', 200, { every: [4, 1] }], ['eb_rot_breath', 2, { every: [3, 2] }],
-      ['eb_call_roots', 1, { every: [4, 3], countBelow: 3, noFlag: 'roots_burned' }], ['eb_body_slam', 2]]);
+    // 2026-10-01（ボスの組み直し）: 序盤のボスは 1 手番に 1 回（前は 2 回）。予告（根もぐり）は 4 手番に 1 度のまま、ほかの手番は毎回攻めるか根を呼ぶ（決まった順はない）
+    RE.actsPerTurn = 1;
+    RE.actions = A([['attack', 3], ['eb_root_drain', 2], ['eb_root_sink', 200, { every: [4, 1] }], ['eb_rot_breath', 2],
+      ['eb_call_roots', 2, { countBelow: 3, noFlag: 'roots_burned' }], ['eb_body_slam', 2]]);
     // 根の子分の絵は hd:mon:b_root（BEAST）。火で倒されると、根食らいはもう根を呼べない
     RT.sprite = 'b_root';
     RT.artKind = 'mon';
@@ -471,8 +475,10 @@
       name: R.T('data.bosses.b_wolflord.name'), sprite: 'boss_wolflord', bossType: 'mid', lv: 8, actsPerTurn: 1, size: 'l',
       race: 'beast', flags: ['boss'], eva: 10,
       elem: { fire: 1.25, earth: 0.75 }, phys: {}, statusRes: { sleep: 0.25 },
-      actions: A([['attack', 3], ['eb_lord_bite', 2], ['eb_lord_breath', 200, { every: [2, 0], countBelow: 6 }]]),
-      s: { hp: 1.6 },
+      // 2026-10-01（ボスの組み直し）: 前は 2 手番ごとに 息を吸う（予告）→ 遠吠え の繰り返しで、攻めるのは 5 手番に 1 度だった。
+      //   いまは予告なしで遠吠え（4 回に 1 度ほど、群れが 5 匹になるまで）、ほかは噛みつく。頭を先に倒せば群れは逃げる（leader）
+      actions: A([['attack', 3], ['eb_lord_bite', 3], ['eb_pack_howl', 2, { countBelow: 5 }]]),
+      s: { hp: 1.6, atk: 1.5 },   // 2026-10-01（組み直し）: atk 1 → 1.5（予告の手番が減って毎手番攻める分。sim_bosses: たたかう 5%・台本 100%・6.5 ラウンド）
       leader: { msg: R.T('data.bosses.b_wolflord.leader.msg') },
       drops: MID('i_ether'),
       desc: R.T('data.bosses.b_wolflord.desc'),
@@ -483,7 +489,7 @@
       race: 'beast', flags: ['boss'], eva: 10,
       elem: { fire: 1.25, earth: 0.75 }, phys: {}, statusRes: {},
       actions: A([['attack', 3], ['e_bite', 1]]),
-      s: { atk: 0.5, mag: 0.5 },
+      s: { atk: 0.8, mag: 0.8 },   // 2026-10-01（組み直し）: 0.5 → 0.8（群れを放っておくと痛い）
       drops: {},
       desc: R.T('data.bosses.b_packwolf.desc'),
     };

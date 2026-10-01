@@ -49,7 +49,7 @@
         K.chest('desert_hawks_1_c3', 36, 16, { pool: 'p_T' }), K.chest('desert_hawks_1_c4', 5, 10, { gold: 180 }), K.chest('desert_hawks_1_c5', 24, 9, { pool: 'p_rare' }));
       O.push(K.exam(33, 9, 'desert_hawks_water'), K.exam(4, 16, 'desert_hawks_bunks'));
       // 樽・木箱・壺は 4 つまで、壁ぎわと角だけ（持ち主 2026-09-28「通路真ん中にはおかないで」）
-      deco(O, [['tent', 7, 11], ['tent', 11, 17], ['log', 10, 13], ['sack', 12, 9], ['crate', 4, 13], ['weapon_rack', 6, 9], ['bones', 12, 17],
+      deco(O, [['tent', 7, 11], ['tent', 11, 17], ['log', 10, 13], ['sack', 12, 9], ['crate', 4, 13], ['weapon_rack', 6, 9], ['bones', 10, 16],
         ['clay_jars', 31, 8], ['clay_jars', 38, 8], ['sack', 33, 17], ['barrel', 39, 12],
         ['broken_pillar', 16, 27], ['bones', 27, 31], ['sand_mound', 24, 32], ['thorn_bush', 18, 33], ['rock_small', 27, 27], ['weapon_rack', 24, 10],
         ['bones', 6, 29], ['sand_mound', 38, 27]]);

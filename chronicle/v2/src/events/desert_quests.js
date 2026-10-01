@@ -22,8 +22,9 @@
   // ユラの村に、ライラの母を足す（地方をまたぐ依頼。村のファイルは編集しない）
   R.onData(function () {
     const m = R.DB.maps.yura;
+    // 宿の前（戸口 6,17 の左）。前は (3, 16) = 宿の小屋の敷地（描いた石壁）の中に立っていた（tools/qa/check_props.js）
     if (m && !(m.npcs || []).some((n) => n.id === 'laila_mother')) {
-      m.npcs.push({ id: 'laila_mother', look: 'npc_old_f_2', name: R.T('ev.desert_quests.laila_mother.name'), x: 3, y: 16, dir: 's', move: 'still', talk: 'desert_yura_mother', reward: 'side', key: 'yura_laila_mother', cond: 'yura_dyer_asked' });
+      m.npcs.push({ id: 'laila_mother', look: 'npc_old_f_2', name: R.T('ev.desert_quests.laila_mother.name'), x: 3, y: 18, dir: 's', move: 'still', talk: 'desert_yura_mother', reward: 'side', key: 'yura_laila_mother', cond: 'yura_dyer_asked' });
     }
   });
 

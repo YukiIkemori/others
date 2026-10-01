@@ -131,6 +131,29 @@ section('2. 置き場所（泉・宝箱・戸口・灯り）');
   const deco = [];
   for (const id of PAINTED) for (const o of (D.maps[id].objects || []).filter((q) => q.type === 'prop')) if (!/^(iron_brazier|lava_glow|board|lever)$/.test(o.id)) deco.push(`${id} ${o.id}`);
   ok('下絵のマップの物のスプライトは、働く物だけ（飾りは絵の中）', deco.length === 0, deco);
+  // 物の絵が壁へめり込まない（2026-10-01 持ち主の報告「カルデラの武器屋の装飾が壁にめり込んでる」）: 描いた物の絵（@32 の cell・feet）の左右・下の端が、
+  //   足もとの行のとなりの壁・当たりのマスへ 2 px より入らない（横に 2 マスの物は { w: 2 } で右のマスまで）
+  const envMeta = (id) => {
+    for (const t of ['ash', 'common', ...fs.readdirSync(path.join(V2, 'assets', 'env'))]) { const f = path.join(V2, 'assets', 'env', t, 'props', id + '.json'); if (fs.existsSync(f)) return JSON.parse(fs.readFileSync(f, 'utf8')); }
+    return null;
+  };
+  const sunk = [];
+  for (const id of MY_MAPS.filter((q) => /^caldera/.test(q))) {
+    const m = D.maps[id];
+    const wallAt = (x, y) => { const c = R.MapUtil.cell(m, x, y); return !c || !!(c.solid && !c.water && !c.lava); };
+    for (const o of (m.objects || []).filter((q) => q.type === 'prop')) {
+      const j = envMeta(o.id), cell = j && j.cell && j.cell['32'];
+      if (!cell) continue;
+      const feet = (j.feet && j.feet['32']) || [cell[0] / 2, cell[1] - 1];
+      const x0 = (o.x + 0.5) * 32 - feet[0], x1 = x0 + cell[0], y1 = (o.y + 0.84) * 32 - (o.lift || 0) - feet[1] + cell[1];
+      const cx0 = Math.floor((x0 + 2) / 32), cx1 = Math.floor((x1 - 3) / 32), cy1 = Math.floor((y1 - 3) / 32);
+      for (let cx = cx0; cx <= cx1; cx++) {
+        if (cx !== o.x && wallAt(cx, o.y)) sunk.push(`${id} ${o.id}@${o.x},${o.y} → ${cx},${o.y}`);
+        if (cy1 > o.y && wallAt(cx, cy1)) sunk.push(`${id} ${o.id}@${o.x},${o.y} → ${cx},${cy1}`);
+      }
+    }
+  }
+  ok('カルデラ（町・屋内）の物の絵が壁・当たりのマスへめり込まない', sunk.length === 0, sunk);
 }
 
 // ================================================================ 3

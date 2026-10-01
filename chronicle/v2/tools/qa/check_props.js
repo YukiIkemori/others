@@ -33,6 +33,7 @@ const ONLY = arg('--map', null);
 const JSON_OUT = arg('--json', null);
 
 const R = require('../lib/load')({ quiet: true });
+R.DB.config.slice = false;   // 製品版（持ち主の試遊は deploy.sh --full）: 体験版の止め（崖崩れ・番人）は無い
 R.State.newGame({ hero: { type: 'fighter', sex: 'm', name: 'テスト' }, seed: 1 });
 const MU = R.MapUtil, F = R.Field;
 
@@ -44,8 +45,28 @@ const ownedBy = (id) => {
   for (const [re, who] of OWNED) if (re.test(id)) return who;
   return null;
 };
-// 受け入れた例外: map → { 'rule:id@x,y': 理由 }
-const EXCEPT = {};
+// 受け入れた例外（1920×1080 の画面で見て、そのままで良いと決めた物）: map → { 'rule:id@x,y': 理由 }
+const J_EDGE = '描いた地図どうしのつなぎ目: 出る端と着く端の向きは絵の道の形で決まる（描き直さないと変えられない）。着いたときの向きは行き先の道に合っている';
+const EXCEPT = {
+  volk: { 'wall-off-face:board@6,3': '石段の口をふさぐ封じの札（開くまでの通せんぼ。石段の上の段に立てる）', 'exit-side:g_valley@9,27': J_EDGE },
+  g_valley: { 'exit-side:volk@0,29': J_EDGE },
+  pharos: { 'exit-side:f_cape@0,10': J_EDGE + '（岬の門楼を北へくぐると港町の西の門）' },
+  f_cape: { 'exit-side:pharos@48,6': J_EDGE + '（岬の門楼を北へくぐると港町の西の門）' },
+  d_caravan: { 'exit-side:desert_camp2@16,30': J_EDGE + '（野営地の口は南の 1 つだけ）' },
+  desert_camp2: { 'exit-side:d_caravan@14,21': J_EDGE + '（野営地の口は南の 1 つだけ）' },
+  d_hollow: { 'exit-side:desert_oldcamp@22,17': J_EDGE + '（岩山の洞の口を北へ入ると、古い野営地の東の口）' },
+  desert_oldcamp: { 'exit-side:d_hollow@27,10': J_EDGE + '（岩山の洞の口を北へ入ると、古い野営地の東の口）' },
+  d_east: { 'exit-dir:kasim@4,17': 'カシムの描いた門の前の出口（門の外の道は絵の続き。矢印は門へ向く）' },
+  orbis: { 'into-wall:iron_gate@27,3': '城壁の切れ目にはめた鉄の門（門の柱が両側の壁に掛かるのが本来）', 'into-wall:iron_gate@29,3': '城壁の切れ目にはめた鉄の門（門の柱が両側の壁に掛かるのが本来）' },
+  star_tower_1: { 'into-wall:iron_gate@25,12': '石段の口にはめた鉄の門（門の柱が両側の壁に掛かるのが本来）' },
+  f_fern: { 'on-solid:sign@33,21': '森の縁の草の上（当たりは木のマスだが、絵では草の上に立つ。生成のエリア）' },
+  f_windhill: { 'on-solid:sign@30,19': '石垣の際の道しるべ（絵では石垣の足もとに立つ。生成のエリア）' },
+  kasim: { 'on-solid:sign@4,29': '西の口の砂丘の際（絵では道の脇）', 'on-solid:sign@57,29': '東の口の砂丘の際（絵では道の脇）' },
+  m_north: { 'on-solid:sign@27,6': '池の縁の草（絵では岸に立つ）' },
+  marsh_manor_2: { 'on-solid:sign@26,27': '壁の際の札（絵では壁の足もと）' },
+  m_west: { 'npc-on-solid:shore_fisher@31,13': '描いた桟橋の上の釣り人（当たりは葦の凡例）' },
+  yule: { 'into-wall:log@3,28': '壊れた西の門の残骸（門の切れ目の中。cond snow_gate_w_broken）', 'into-wall:log@52,27': '壊れた東の門の残骸（門の切れ目の中。cond snow_gate_e_broken）' },
+};
 
 // ---------------------------------------------------------------- PNG（不透明な画素の箱だけ。8 bit・インタレース無し）
 function pngBox(file, thr) {
@@ -126,18 +147,23 @@ function spriteOf(m, key, v) {
 // 壁に掛ける物（wall_*）と、壁のマスに据える物（腕木の灯り hook_lamp・壁の暖炉 fireplace は壁のマスに置けば壁の面に付く）
 const TOL = +(arg('--tol', 2));   // 壁に食い込む px（32 の論理 px）の許し
 const WALL_ITEM = /^wall_/;
-const WALL_MOUNT = /^(hook_lamp|fireplace|board)$/;
+const WALL_MOUNT = /^(fireplace|board)$/;
 /** 絵の無い物（光だけの物: window_glow・ember_glow…。コードの絵も画像も無い）*/
-const invisible = (m, id) => { const D = R.Terrain && R.Terrain._PROP_DRAW && R.Terrain._PROP_DRAW[id]; return !!(D && D.envOnly && !spriteOf(m, id, 0)); };
+const invisible = (m, id) => { const D = R.Terrain && R.Terrain._PROP_DRAW && R.Terrain._PROP_DRAW[id]; return (!D || D.envOnly) && !spriteOf(m, id, 0); };
 // 歩けないマスに立つのが本来の物（木・岩・柵・水の物・崖の飾り…）
 const ON_SOLID_OK = /^(wisp_lamp|tree|pine|tree_|bush|roots|rock|snow_rock|lava_rock|volcanic_rocks|snow_fir|desert_palm|coco_palm|palm_|swamp_tree|willow|mangrove_roots|fence|snow_fence|cactus|thorn_bush|charred_|ash_bush|stump|log|log_moss|rotten_stump|reeds|reeds_tall|lily_pads|fern|dec_|ore_|crystal|ice_crystal|obelisk|broken_pillar|coral|stilt_posts|rowboat|mud_boat|buoys|net_frame|driftwood|anchor|ship|rope_bridge|leaves_over|bell_frame|timber_frame|steam_vent|sulphur|hot_spring|lava_glow|obsidian_shards|snow_bank|ice_hole|sand_mound|bones|grave_moss|pale_mushrooms|mushroom_glow|songstone|topiary|blue_flowers|beacon|firefly|tent|hay|lift_cage|rail|scaffold|stove_pipe|phoenix_statue|scholar_statue|telescope|iron_gate|lamp_pillar|hook_lamp|tide_|shells|white_pot)/;
+const LIGHTS = /^(lantern|lamp_post|snow_lamp|wisp_lamp|lamp_pillar|star_lamp|hook_lamp|torch|brazier|copper_brazier|iron_brazier|waylamp|beacon)$/;
 const SOFTISH = /^(firefly|footprint|lava_glow|leaves_over|rope_bridge)$/;
 function cellAt(m, x, y) { return MU.cell(m, x, y); }
 function isWater(c) { return !!(c && (c.water || c.deep || /water|sea|lava|glow_sea|shallow/.test(c.mat || '')) && c.walk === false || (c && c.water && c.solid)); }
 function blocked(c) { return !c || c.walk === false || (c.solid && !c.secret); }
-function wallish(c) { return !!(c && c.solid && !c.secret && !c.tall && !c.water && !c.deep && !/water|sea|lava/.test(c.mat || '')); }
+function wallish(c) {
+  if (!(c && c.solid && !c.secret && !c.tall && !c.water && !c.deep && !/water|sea|lava/.test(c.mat || ''))) return false;
+  const mi = (R.Terrain && R.Terrain._matInfo && R.Terrain._matInfo(c.mat)) || {};   // 木・森・水の素材は壁でない（chunks.js の cellReader と同じ）
+  return !mi.tall && !mi.water;
+}
 /** (x, y) が見えている壁の面（下の rise マスの内に床がある）→ {base: 床の行, top: 面の上の行} | null */
-function faceAt(m, x, y) {
+function faceAt(m, x, y, minRise) {
   const c = cellAt(m, x, y);
   if (!wallish(c)) return null;
   // 下へ続く壁を数え、その下が床なら、床から rise マス上までが面
@@ -145,7 +171,7 @@ function faceAt(m, x, y) {
   while (wallish(cellAt(m, x, yy + 1)) && yy - y < 6) yy++;
   const below = cellAt(m, x, yy + 1);
   if (!below || blocked(below)) return null;
-  const rise = (cellAt(m, x, yy) || {}).rise || 1;
+  const rise = Math.max((cellAt(m, x, yy) || {}).rise || 1, minRise || 0);
   if (yy + 1 - y > rise) return null;   // 面より上の壁の頭
   return { base: yy + 1, top: yy + 1 - rise };
 }
@@ -160,7 +186,8 @@ function flag(m, rule, what, o, info) {
   flags.push({ map: m.id, kind: m.kind, rule, what, key, obj: o ? { type: o.type, id: o.id, x: o.x, y: o.y } : null, info: info || null, except: exc || null, owned: own });
 }
 const painted = (m, o) => {
-  const a = m.art && m.art.painted;
+  // chunks.js underOf と同じ: map.art.painted、無ければ下絵の json の painted
+  const a = (m.art && m.art.painted) || (m.art && m.art.image && (underMeta(m.art.image) || {}).painted);
   if (!a || !a.length || !(m.art && m.art.image)) return false;
   return a.includes(o.id) || a.includes(o.id + '@' + o.x + ',' + o.y);
 };
@@ -228,9 +255,10 @@ function checkMap(m) {
       const wallItem = WALL_ITEM.test(o.id) || (WALL_MOUNT.test(o.id) && wallish(c));
       if (wallItem) {
         counts.wall++;
-        const fc = faceAt(m, o.x, o.y);
+        // 下絵の地図の崖・岩壁は絵の面が凡例の rise より高い（凡例は当たりだけ）: 面を 3 マスまで見る。坑夫のカンテラ（hook_lamp）は柱ごと壁の際に立つ灯り
+        const fc = faceAt(m, o.x, o.y, m.art && m.art.image ? 3 : 0);
         if (!fc) { flag(m, 'wall-off-face', `${o.id} が見えている壁の面に無い（${c ? (c.solid ? '壁の頭・裏の壁' : '床') : 'マップの外'}）`, o); continue; }
-        if (pnt) continue;
+        if (pnt || o.id === 'hook_lamp') continue;
         const rr = rectOf(m, o);
         if (!rr) continue;
         const [x0, y0, x1, y1] = rr.r;
@@ -250,8 +278,11 @@ function checkMap(m) {
         continue;
       }
       // 1 足もと
-      const barrier = objs.some((q) => q !== o && q.x === o.x && q.y === o.y && (q.type === 'examine' || q.type === 'door' || q.type === 'stairs'));   // 通せんぼ（開くまで道をふさぐ板など）
-      if (!lv && !pnt && !barrier && blocked(c) && !ON_SOLID_OK.test(o.id) && !SOFTISH.test(o.id)) {
+      const mounted = objs.some((q) => q !== o && q.type === 'prop' && q.x === o.x && q.y === o.y && /^(stilt_posts|timber_frame|bell_frame)$/.test(q.id));   // 杭・枠の上の灯り
+      const barrier = mounted || objs.some((q) => q !== o && q.x === o.x && q.y === o.y && (q.type === 'examine' || q.type === 'door' || q.type === 'stairs'));   // 通せんぼ（開くまで道をふさぐ板など）
+      // 下絵の地図の灯り（灯籠・かがり火・街灯…）は、道をふさがないように絵の当たり（崖の際・吹きだまり・植え込み）のマスに立てる（持ち主 2026-09-27）
+      const paintedLight = !!(m.art && m.art.image) && LIGHTS.test(o.id);
+      if (!lv && !pnt && !barrier && !paintedLight && blocked(c) && !ON_SOLID_OK.test(o.id) && !SOFTISH.test(o.id)) {
         flag(m, 'on-solid', `${o.id} の足もとが歩けないマス（${c ? c.mat : 'マップの外'}${c && c.water ? '・水' : ''}）`, o);
       }
       if (pnt || lv || SOFTISH.test(o.id)) continue;
@@ -269,6 +300,8 @@ function checkMap(m) {
         if (out && m.kind !== 'interior') continue;
         const fc = out ? null : faceAt(m, cx, cy);
         if (fc && cy < o.y) continue;   // 奥の壁の面（物より上の行）: 手前に立つ
+        // 物より上の行は、横の壁の列（足もとの行の同じ列も壁）だけ。上の壁の頭・崖・建物の上へ伸びる背の高い絵（街灯・柱）は手前に立っている
+        if (cy < o.y && (cx === o.x || !(out || wallish(cellAt(m, cx, o.y))))) continue;
         // 物と同じ行の面でも、面の床（base）が物の行より上なら奥。物の行に床がある面（横の柱の下の面）は横から食い込む
         if (fc && fc.base <= o.y) continue;
         const ox = ovl(x0, x1, cx * 32, cx * 32 + 32), oy = ovl(y0, y1, cy * 32, cy * 32 + 32);
@@ -283,7 +316,7 @@ function checkMap(m) {
     if (o.type === 'chest' || o.type === 'sign' || o.type === 'brazier' || o.type === 'waylamp' || o.type === 'switch') {
       if (o.type === 'chest') counts.chests++;
       const c = cellAt(m, o.x, o.y);
-      if (!lv && blocked(c) && !(o.type === 'switch' && o.look === 'hole')) flag(m, 'on-solid', `${o.type} ${o.id || ''} の足もとが歩けないマス（${c ? c.mat : 'マップの外'}）`, o);
+      if (!lv && blocked(c) && !(o.type === 'switch' && o.look === 'hole') && !((o.type === 'brazier' || o.type === 'waylamp') && m.art && m.art.image)) flag(m, 'on-solid', `${o.type} ${o.id || ''} の足もとが歩けないマス（${c ? c.mat : 'マップの外'}）`, o);
       const sp = solidProps.get(o.x + ',' + o.y);
       if (sp && sp.length) flag(m, 'stacked', `${o.type} ${o.id || ''} が物（${sp.map((q) => q.id).join(',')}）と同じマス`, o);
       const b = bldAt(o.x, o.y);
@@ -313,6 +346,7 @@ function checkMap(m) {
   for (const n of m.npcs || []) {
     if (n.x == null) continue;
     counts.npcs++;
+    if (n.cond && JSON.stringify(n.cond) === JSON.stringify({ slice: true })) continue;   // 体験版だけの番人
     const lv = n.lv || 0;
     const c = cellAt(m, n.x, n.y);
     if (!lv && blocked(c) && !n.ghost && !n.fly) flag(m, 'npc-on-solid', `人 ${n.id} の足もとが歩けないマス（${c ? c.mat : 'マップの外'}）`, { type: 'npc', id: n.id, x: n.x, y: n.y });
@@ -416,6 +450,6 @@ for (const id of ids) {
   if (!real.length) { if (!ONLY) continue; ok(`${id}: 物の置き場所`, true); continue; }
   for (const f of real) ok(`${id}: [${f.rule}] ${f.what}`, false, f.info || undefined);
 }
-ok(`全マップ ${ids.length}: 持ち場の外（カルデラ・砂漠）の物 ${owned}、受け入れた例外 ${excepted} を除いて失敗なし`, !flags.some((f) => !f.except && !f.owned));
+ok(`全マップ ${ids.length}: 持ち場の外（カルデラ）の物 ${owned}、受け入れた例外 ${excepted} を除いて失敗なし`, !flags.some((f) => !f.except && !f.owned));
 if (JSON_OUT) fs.writeFileSync(JSON_OUT, JSON.stringify({ counts, flags }, null, 1));
 done('check_props');

@@ -125,7 +125,7 @@
       O.push(K.exam(20, 8, 'peak_altar'));
       O.push(K.chest('peak_top_c1', 30, 14, { pool: 'p_T' }));
       O.push(K.chest('peak_top_c2', 9, 16, { pool: 'p_heal' }));
-      O.push(K.sign(22, 22, R.T('map.snow_peak.sign_3')));
+      O.push(K.sign(22, 23, R.T('map.snow_peak.sign_3')));   // 看板・灯りが壁・崖・岩のマスに埋まっていたので床へ（tools/qa/check_props.js、2026-10-01）
       K.scatter(g, O, ['snow_rock', 'snow_bank'], 8, [4, 4, 32, 18], '.', 'ptdeco', { gap: 4, variant: true, roomy: '.,ni', keep: new Set(['19,18', '20,18', '21,18', '20,9', '20,10', '19,10', '21,10']) });
       K.def('peak_top', {
         name: R.T('map.snow_peak.peak_top.name'), kind: 'dungeon', region: 'r_snow', location: 'peak', theme: 'snow',

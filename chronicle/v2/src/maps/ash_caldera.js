@@ -136,7 +136,7 @@
     O.push(K.chest('caldera_c1', 35, 5, { pool: 'p_T' }), K.chest('caldera_c2', 14, 42, { item: 'i_ether', n: 2 }));
     // かがり火（崖・岩の上。道・戸口の前・出入り口には置かない）と、溶岩の堀の照り返し（光だけ）
     for (const [x, y] of [[5, 33], [48, 33], [16, 3], [37, 3], [48, 40], [5, 17]]) O.push(K.prop('iron_brazier', x, y));
-    for (const [x, y] of [[21, 16], [33, 16], [16, 16], [39, 16], [16, 21], [39, 21], [16, 33], [39, 33], [21, 39], [33, 39]]) O.push(K.prop('lava_glow', x, y));
+    for (const [x, y] of [[21, 16], [33, 16], [16, 16], [38, 16], [16, 21], [38, 21], [16, 33], [38, 33], [21, 39], [33, 39]]) O.push(K.prop('lava_glow', x, y));
     // 門の看板（門のわきの岩）
     O.push(K.sign(1, 25, R.T('map.ash_caldera.sign')), K.sign(52, 25, R.T('map.ash_caldera.sign_2')));
 

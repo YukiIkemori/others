@@ -66,7 +66,8 @@
       deco(O, [['broken_pillar', 24, 44], ['bones', 34, 44],
         ['obelisk', 19, 7], ['obelisk', 38, 12], ['tomb_urn', 17, 18], ['tomb_urn', 39, 18], ['bones', 5, 30], ['bones', 51, 31], ['sand_mound', 22, 7],
         ['clay_jars', 14, 12], ['clay_jars', 51, 12], ['sand_mound', 48, 8], ['broken_pillar', 16, 36], ['broken_pillar', 40, 36]]);
-      for (const [x, y] of [[24, 36], [32, 44], [27, 25], [29, 30], [21, 12], [35, 12], [10, 25], [46, 25], [5, 8], [50, 8], [4, 42]]) O.push(K.prop('torch', x, y));
+      // 中央の回廊（x 27〜29）の床に立てていた 2 本（27,25・29,30）はどけた: 3 マス幅の回廊の真ん中で、脇に壁の面が無く宙に浮いた炎に見えた（持ち主の試遊 2026-10-01）
+      for (const [x, y] of [[24, 36], [32, 44], [21, 12], [35, 12], [10, 25], [46, 25], [5, 8], [50, 8], [4, 42]]) O.push(K.prop('torch', x, y));
       K.def('desert_tomb_1', {
         name: R.T('map.desert_tomb.desert_tomb_1.name'), kind: 'dungeon', region: 'r_desert', location: 'tomb', theme: 'tomb',
         legend: DK.TOMB_LEGEND({ G: { mat: 'wall_sandstone', solid: true, rise: 2, name: 'seal_door' }, O: { mat: 'wall_sandstone', solid: true, rise: 2, name: 'seal_door_open' } }),

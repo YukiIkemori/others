@@ -39,6 +39,10 @@
     eb_admiral_crew: { name: R.T('bossActions.eb_admiral_crew.name'), kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_frost_sailor', n: 2, max: 4 }], fx: 'magic', msg: R.T('bossActions.eb_admiral_crew.msg') },
     eb_admiral_flag: { name: R.T('bossActions.eb_admiral_flag.name'), kind: 'enemy', target: 'enemies', effects: [{ type: 'buff', stat: 'agi', stages: -1, chance: 0.6 }, { type: 'status', status: 'freeze', chance: 0.2 }], fx: 'debuff', msg: R.T('bossActions.eb_admiral_flag.msg') },
     eb_admiral_slash: { name: R.T('bossActions.eb_admiral_slash.name'), kind: 'enemy', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.5, element: 'water', hits: 2 }], fx: 'slash2', msg: R.T('bossActions.eb_admiral_slash.msg') },
+    // 2026-10-01（ボスの組み直し）: 決まった順の「予告 → 大技」をやめて、手の幅を足す
+    eb_bw_frostfang: { name: R.T('bossActions.eb_bw_frostfang.name'), kind: 'enemy', target: 'enemy', aim: 'low', effects: [{ type: 'damage', formula: 'phys', power: 1.15, element: 'water' }, { type: 'status', status: 'freeze', chance: 0.15 }], fx: 'bite2', msg: R.T('bossActions.eb_bw_frostfang.msg') },
+    eb_giant_grab: { name: R.T('bossActions.eb_giant_grab.name'), kind: 'enemy', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.2, element: 'water' }, { type: 'buff', stat: 'agi', stages: -1, chance: 0.5 }], fx: 'ice2', msg: R.T('bossActions.eb_giant_grab.msg') },
+    eb_admiral_parry: { name: R.T('bossActions.eb_admiral_parry.name'), kind: 'enemy', target: 'self', effects: [{ type: 'status', status: 'counter', power: 0.9 }], fx: 'buff', msg: R.T('bossActions.eb_admiral_parry.msg') },
   });
 
   // ---------------------------------------------------------------- ボス
@@ -47,12 +51,14 @@
     name: R.T('data.bosses_snow.base.name'), sprite: 'boss_wolflord', bossType: 'mid', lv: 9, actsPerTurn: 1, size: 'l',
     race: 'beast', affinity: 'water', flags: ['boss'], eva: 10,
     elem: { fire: 1.5, water: 0.25, earth: 1.25 }, phys: {}, statusRes: { sleep: 0.25, freeze: 1 },
-    s: { hp: 1.15, atk: 0.9, mag: 0.9 },
+    s: { hp: 1.6, atk: 1.4, mag: 1.4 },   // 2026-10-01（組み直し）: hp 1.15 → 1.6・atk 0.9 → 1.4（毎手番攻める型。sim_bosses の台本 90%・8 ラウンド）
     leader: { msg: R.T('data.bosses_snow.base.leader.msg') },
     drops: MID('i_ether'),
     desc: R.T('data.bosses_snow.base.desc'),
   };
-  const bwActs = (call) => A([['attack', 3], ['eb_bw_bite', 2], ['eb_bw_howl', 200, { every: [3, 1] }]].concat(call ? [[call, 200, { every: [3, 0], countBelow: call === 'eb_bw_call_2' ? 5 : call === 'eb_bw_call_1' ? 4 : 3 }]] : []));
+  // 2026-10-01（ボスの組み直し）: 前は 呼ぶ → 遠吠え（予告）→ 吹雪 の 3 手番の決まった繰り返しで、攻めるのは 3 回に 1 度だった。
+  //   いまは噛みつく・凍て牙（弱った人をねらう）が主で、手下を呼ぶのは群れが減ったときだけ。吹雪の牙（守らないと倒れる大技）の遠吠えはたまに（2 ラウンド目から）
+  const bwActs = (call) => A([['attack', 2], ['eb_bw_bite', 3], ['eb_bw_frostfang', 2], ['eb_bw_howl', 1, { round: 2 }]].concat(call ? [[call, 2, { countBelow: call === 'eb_bw_call_2' ? 5 : call === 'eb_bw_call_1' ? 4 : 3 }]] : []));
   def('b_blizzardwolf', Object.assign({}, base, { actions: bwActs('eb_bw_call_0') }));
   def('b_blizzardwolf_1', Object.assign({}, base, { actions: bwActs('eb_bw_call_1') }));
   def('b_blizzardwolf_2', Object.assign({}, base, { actions: bwActs('eb_bw_call_2') }));
@@ -66,17 +72,23 @@
   // 氷壁の巨人（今の数値と行動に予告と融ける氷を足す）
   const G = L.b_icegiant;
   if (G) {
-    G.actions = A([['attack', 3], ['eb_ice_hammer', 2], ['eb_avalanche_drop', 2], ['eb_frost_glow', 200, { every: [2, 1] }], ['eb_frost_exhale', 1]]);
+    // 2026-10-01（ボスの組み直し）: 前は 2 手番ごとに 光る（予告）→ 氷の鎧 の繰り返しで、ダメージのある手番が 2〜3 割しかなかった。
+    //   いまは大槌・つかみ・雪崩で毎回攻め、光るのは HP が 8 割を切ってから、たまに（火で消す・張っても火でとける は前のまま）
+    G.actions = A([['attack', 2], ['eb_ice_hammer', 3], ['eb_giant_grab', 2], ['eb_avalanche_drop', 2], ['eb_frost_exhale', 1], ['eb_frost_glow', 1, { hpBelow: 0.8 }]]);
     G.melt = { element: 'fire', to: -2, clear: 'regen', reset: ['atk'], msg: R.T('data.bosses_snow.melt.msg') };
-    G.s = { hp: 1.0, atk: 1.6, mag: 1.6 };
+    G.s = { hp: 1.0, atk: 2.7, mag: 2.7 };   // 2026-10-01（組み直し）: atk 1.6 → 2.7（前は 2 手番に 1 度しか攻めなかった。中ボスの目安 台本 85〜95%・7 ラウンド）
     G.desc = R.T('data.bosses_snow.desc');
   }
   // 白竜ネーヴェ（予告の大吹雪・昔話の一節）
   const D = L.b_whitedragon;
   if (D) {
-    D.s = { hp: 1.05, atk: 0.6, mag: 0.6 };
-    D.actions = A([['attack', 2], ['eb_ice_claw', 2], ['eb_dragon_tail', 2], ['eb_dragon_inhale', 200, { every: [4, 1] }],
-      ['eb_frozen_roar', 1, { every: [4, 3] }], ['eb_glacier_fall', 2, { hpBelow: 0.5 }], ['eb_dragon_remember', 400, { hpBelow: 0.5, once: true }]]);
+    D.s = { hp: 1.0, atk: 0.7, mag: 0.7 };   // 2026-10-01（組み直し）: 毎ラウンド 2 回とも攻める型に。atk 0.6 → 0.7（台本 90〜96%・11 ラウンド）
+    // 2026-10-01（ボスの組み直し）: 1 ラウンドに 2 回（重い手 1 つ＋軽い手 1 つ）。息を吸う予告（大吹雪）は軽い手の中からたまに、2 ラウンド目から。
+    //   前は 2 ラウンドごとに必ず 予告 → 大吹雪 だった。HP 6 割で氷の壁、半分で氷河落とし・思い出す間（祭のご褒美）は前のまま
+    const HV = { every: [2, 0] }, LT = { every: [2, 1] };
+    D.actions = A([['eb_ice_claw', 3, HV], ['eb_dragon_tail', 2, HV], ['attack', 1, HV], ['eb_glacier_fall', 3, { every: [2, 0], hpBelow: 0.5 }],
+      ['attack', 1, LT], ['eb_white_blizzard', 2, LT], ['eb_frozen_roar', 1, LT], ['eb_ice_wall', 3, { every: [2, 1], hpBelow: 0.6, once: true }],
+      ['eb_dragon_inhale', 2, { every: [4, 3], round: 2 }], ['eb_dragon_remember', 400, { hpBelow: 0.5, once: true }]]);
   }
 
   // 氷の船団長（隠しボス。強さ固定）と凍った水兵
@@ -84,10 +96,12 @@
     name: R.T('data.bosses_snow.b_frost_admiral.name'), sprite: 'frostling_5', artKind: 'mon', bossType: 'fmid', lv: 9, actsPerTurn: 2, size: 'l',
     race: 'undead', affinity: 'water', flags: ['boss'], eva: 10,
     elem: { fire: 1.5, water: 0, light: 1.25 }, phys: {}, statusRes: { death: 1, freeze: 1, sleep: 0.5 },
-    actions: A([['attack', 2], ['eb_admiral_slash', 2], ['eb_admiral_flag', 1, { every: [4, 3] }], ['eb_admiral_order', 200, { every: [3, 1] }],
-      ['eb_admiral_crew', 200, { every: [4, 2], countBelow: 3 }]]),
+    // 2026-10-01（ボスの組み直し）: 重い手（二段斬り）＋軽い手（旗・水兵を呼ぶ・受け流しの構え・号令の予告はたまに）。前は 3 手番ごとに必ず号令（予告）
+    actions: A([['eb_admiral_slash', 3, { every: [2, 0] }], ['attack', 2, { every: [2, 0] }],
+      ['attack', 1, { every: [2, 1] }], ['eb_admiral_flag', 1, { every: [2, 1] }], ['eb_admiral_parry', 1, { every: [2, 1] }], ['eb_admiral_slash', 1, { every: [2, 1] }],
+      ['eb_admiral_order', 2, { every: [4, 3], round: 2 }], ['eb_admiral_crew', 2, { every: [2, 1], countBelow: 3 }]]),
     phases: [{ hpBelow: 0.4, msg: R.T('data.bosses_snow.b_frost_admiral.phases.0.msg'), set: { buffs: { atk: 1 } } }],
-    s: { hp: 0.6, atk: 0.5, mag: 0.5 },
+    s: { hp: 0.5, atk: 0.7, mag: 0.7 },   // 2026-10-01（組み直し）: hp 0.6 → 0.5・atk 0.5 → 0.7（台本 90%・12 ラウンド）
     drops: { normal: { pool: 'p_boss', rate: 1 }, bonus: { pool: 'p_heal', rate: 1 } },   // 確定の 2 つ目: 終盤の前は癒やしの水（pools.js p_heal）
     desc: R.T('data.bosses_snow.b_frost_admiral.desc'),
   });
@@ -96,5 +110,14 @@
     race: 'undead', flags: ['boss'], eva: 5, elem: { fire: 1.5, water: 0 }, phys: {}, statusRes: { death: 1 },
     actions: A([['attack', 3], ['e_icicle', 1]]), s: { atk: 0.6, mag: 0.6 }, drops: {},
     desc: R.T('data.bosses_snow.b_frost_sailor.desc'),
+  });
+  // ---------------------------------------------------------------- 合体技（2026-10-01 ボスの組み直し。決まりは w_combo の R.DB.enemyCombos）
+  R.defs('enemyCombos', {
+    // 群れの挟み撃ち: 手下の狼が弱った人へ飛びかかり、大狼が同じ人へ凍て牙
+    c_b_siege_hunt: { name: R.T('enemyCombos.c_b_siege_hunt.name'), members: [{ mon: ['b_blizzardwolf', 'b_blizzardwolf_1', 'b_blizzardwolf_2'] }, { mon: 'b_siegewolf' }],
+      steps: [{ by: 1, act: 'ec_pack_fang', aim: 'low', seq: 'sq:ec_pack_fang' }, { by: 0, act: 'eb_bw_frostfang', same: true, seq: 'sq:ec_ice_fang' }], round: 2, chance: 0.35, cd: 3 },
+    // 氷の一斉射: 水兵 2 人がつららを放ち、船団長が弱った人へ二段斬り
+    c_b_admiral_volley: { name: R.T('enemyCombos.c_b_admiral_volley.name'), members: [{ mon: 'b_frost_admiral' }, { mon: 'b_frost_sailor', n: 2 }],
+      steps: [{ by: 1, act: 'e_icicle' }, { by: 2, act: 'e_icicle' }, { by: 0, act: 'eb_admiral_slash', aim: 'low', seq: 'sq:ec_cross_slash' }], round: 2, chance: 0.35, cd: 3 },
   });
 })(window.RPG);

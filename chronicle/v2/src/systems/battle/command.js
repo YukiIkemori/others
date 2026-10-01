@@ -1,7 +1,7 @@
 // BSCENE: コマンド（MODERN_UI §6.17・§2.3）。ラウンドの初めの一行の命令（戦う／リピート／逃げる）→ 1 人ずつ行動の一覧
 // （持っている武器の系統の名前・術・防御・道具）→ 技・術・道具の一覧（見出し「アルン › 剣」、M n、MP 0 は青緑、足りない物は灰色、NEW）
-// → ねらい（targeting.js）。技・術は MP の少ない順（同じなら覚えた順）。術は属性のタブ（R.SkillTabs。←→ と L/R と札のクリック。
-//   タブが 2 つ以上の間は L/R が速さ・リピートでなくタブになる。scene.js が w.tabLR を見て止める）。技は今の武器の系統だけなのでタブは出ない。
+// → ねらい（targeting.js）。技・術は MP の少ない順（同じなら覚えた順）。術は属性のタブ（R.SkillTabs。←→ と札のクリック。
+//   L/R はタブに使わない: 一覧の中でもリピート・速さのまま。持ち主 2026-10-01）。技は今の武器の系統だけなのでタブは出ない。
 // カーソル記憶は R.Game.battle.cursor[人の id]（設定 cursorMemory）。NEW は一覧を見せたら R.Game.seenSkill に書く。
 // 縦持ちは親指の届く横一列の大きな札と説明の帯（battle_tall.png）。
 (function (R) {
@@ -35,7 +35,7 @@
     return new Promise((resolve) => {
       const n = o.rows.length;
       const w = { sel: Math.max(0, Math.min(n - 1, o.sel || 0)), rects: [], prompts: o.prompts, tallPrompts: o.tallPrompts, top: 0, o };
-      w.tabLR = !!(o.tabs && o.tabs.groups.length > 1 && R.SkillTabs);
+      w.tabbed = !!(o.tabs && o.tabs.groups.length > 1 && R.SkillTabs);
       w.tabRects = [];
       let last = -1;
       const done = (v) => { if (st.ui === w) st.ui = null; if (o.onClose) o.onClose(w); resolve(v); };
@@ -48,8 +48,8 @@
         const I = R.Input;
         if (st.chipTap && o.onChip) { const c = st.chipTap; st.chipTap = null; const r = o.onChip(c); if (r !== undefined) { done(r); return; } }
         st.chipTap = null;
-        // 種類のタブ（o.tabs = {groups, index}）: ←→・L/R・札のクリックで {tab: i} を返す（呼んだ側が一覧を替えて開き直す）
-        if (w.tabLR) { const j = R.SkillTabs.input(o.tabs.groups.length, o.tabs.index, w.tabRects, { arrows: !o.horizontal, lr: true }); if (j >= 0) { done({ tab: j, sel: w.sel }); return; } }
+        // 種類のタブ（o.tabs = {groups, index}）: ←→・札のクリックで {tab: i} を返す（呼んだ側が一覧を替えて開き直す）
+        if (w.tabbed) { const j = R.SkillTabs.input(o.tabs.groups.length, o.tabs.index, w.tabRects, { arrows: !o.horizontal }); if (j >= 0) { done({ tab: j, sel: w.sel }); return; } }
         if (!n) { if (I.pressed('b')) done('back'); return; }
         const fwd = o.horizontal ? 'right' : 'down', back = o.horizontal ? 'left' : 'up';
         if (I.repeat(fwd)) { w.sel = (w.sel + 1) % n; sfx('cursor'); }
@@ -82,7 +82,7 @@
   const K = () => _.K;
   function listPanel(g, w, geo) {
     const k = R.uiScale || 1, Kt = K(), t = R.Engine.time;
-    const rows = w.o.rows, rowH = geo.rowH * k, barH = w.tabLR ? (R.SkillTabs.BAR_H + 4) * k : 0, head = (geo.title ? 28 * k : 6 * k) + barH;
+    const rows = w.o.rows, rowH = geo.rowH * k, barH = w.tabbed ? (R.SkillTabs.BAR_H + 4) * k : 0, head = (geo.title ? 28 * k : 6 * k) + barH;
     const vis = Math.min(rows.length, geo.maxRows || 7);
     if (w.sel < w.top) w.top = w.sel;
     if (w.sel >= w.top + vis) w.top = w.sel - vis + 1;
@@ -97,7 +97,7 @@
       Kt.text(g, geo.title, r.x + 12 * k, r.y + 8 * k, { size: 11 * k, weight: 700, color: Kt.COL.gold, raw: true });
       Kt.hline(g, r.x + 8 * k, r.x + r.w - 8 * k, r.y + 25 * k, 0.2);
     }
-    if (w.tabLR) w.tabRects = R.SkillTabs.drawBar(g, { x: r.x + 8 * k, y: r.y + (geo.title ? 28 : 4) * k, w: r.w - 16 * k, h: R.SkillTabs.BAR_H * k }, w.o.tabs.groups, w.o.tabs.index, { glyphs: ['l', 'r'], size: 12 });
+    if (w.tabbed) w.tabRects = R.SkillTabs.drawBar(g, { x: r.x + 8 * k, y: r.y + (geo.title ? 28 : 4) * k, w: r.w - 16 * k, h: R.SkillTabs.BAR_H * k }, w.o.tabs.groups, w.o.tabs.index, { glyphs: ['left', 'right'], size: 12 });
     w.rects = [];
     for (let j = 0; j < vis; j++) {
       const i = w.top + j, row = rows[i];
@@ -181,7 +181,7 @@
     const k = R.uiScale || 1, Kt = K(), L = st.L, t = R.Engine.time;
     const rows = w.o.rows, pad = 12 * k;
     const top = L.cmdY - 8 * k, rowH = 34 * k;
-    const barH = w.tabLR ? (R.SkillTabs.BAR_H + 4) * k : 0;
+    const barH = w.tabbed ? (R.SkillTabs.BAR_H + 4) * k : 0;
     const maxRows = Math.max(2, Math.floor((L.chipsY - top - 100 * k - barH) / rowH));
     const vis = Math.min(rows.length, maxRows);
     if (w.sel < w.top) w.top = w.sel;
@@ -200,7 +200,7 @@
       const hh = Math.max(bh, R.minTouch || 0);
       w.backRect = { x: br.x - 6 * k, y: br.y + bh - hh, w: bw + 12 * k, h: hh };   // 上へ広げる（下の行に掛からない）
     }
-    if (w.tabLR) w.tabRects = R.SkillTabs.drawBar(g, { x: r.x + 10 * k, y: r.y + 30 * k, w: r.w - 20 * k, h: R.SkillTabs.BAR_H * k }, w.o.tabs.groups, w.o.tabs.index, { glyphs: ['l', 'r'], size: 13 });
+    if (w.tabbed) w.tabRects = R.SkillTabs.drawBar(g, { x: r.x + 10 * k, y: r.y + 30 * k, w: r.w - 20 * k, h: R.SkillTabs.BAR_H * k }, w.o.tabs.groups, w.o.tabs.index, { glyphs: ['left', 'right'], size: 13 });
     w.rects = [];
     for (let j = 0; j < vis; j++) {
       const i = w.top + j, row = rows[i], ry = r.y + 30 * k + barH + j * rowH, f = i === w.sel;
@@ -441,9 +441,9 @@
         },
         draw(g, w) {
           if (st.L.tall) { tallList(g, w, st, title); return; }
-          const h = (28 + (w.tabLR ? R.SkillTabs.BAR_H + 4 : 0) + Math.min(rows.length, 7) * 26 + 8) * k;
-          // タブの帯があるときは、どのタブでも同じ幅（切り替えで窓が揺れない）。帯が入る幅（240）以上
-          const pw = groups ? Math.max(240, ...groups.map((gr) => C.subListWidth(gr.items, title))) : C.subListWidth(rows, title);
+          const h = (28 + (w.tabbed ? R.SkillTabs.BAR_H + 4 : 0) + Math.min(rows.length, 7) * 26 + 8) * k;
+          // タブの帯があるときは、どのタブでも同じ幅（切り替えで窓が揺れない）。帯が入る幅（256）以上
+          const pw = groups ? Math.max(256, ...groups.map((gr) => C.subListWidth(gr.items, title))) : C.subListWidth(rows, title);
           const p = anchorFor(st, u.uid, pw * k, h, -200, -228);
           const r = listPanel(g, w, { x: p.x, y: p.y, w: pw, rowH: 26, title, size: 14, maxRows: 7 });
           // 説明は右隣（右上の一覧に重ねない。入らなければ一覧の下）
