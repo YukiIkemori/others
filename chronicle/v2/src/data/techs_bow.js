@@ -12,7 +12,7 @@
     target: 'enemy',
     reach: true,
     quick: true,
-    effects: [{ type: 'damage', power: 1.5 }],
+    effects: [{ type: 'damage', power: 1.45 }],
     fx: 'arrow',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },

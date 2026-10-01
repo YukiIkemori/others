@@ -11,7 +11,7 @@
     mp: 2,
     target: 'enemy',
     reach: false,
-    effects: [{ type: 'damage', power: 1.7 }],
+    effects: [{ type: 'damage', power: 1.6 }],
     fx: 'slash',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },

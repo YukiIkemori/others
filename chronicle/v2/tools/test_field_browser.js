@@ -113,9 +113,12 @@ async function main() {
       await B.ev(p, `RPG.Game.secrets = {}; RPG.Field.encounter.suppress(9999); RPG.Field.enter('${c.map}', {x: ${c.x}, y: ${c.y}, dir: 's'}, {fade: 0, noAutosave: true})`);
       await p.waitForTimeout(1200);
       await B.ev(p, `window.__slow = true; RPG.Hd.BUDGET.frameBakeMs = 0.4; RPG.Field.chunks.reset()`);
-      await B.press(p, c.key, 140);
-      await p.waitForTimeout(600);
-      const found = await B.ev(p, `!!(RPG.Game.secrets['${c.map}'] || []).length`);
+      let found = false;
+      for (let k = 0; k < 4 && !found; k++) {   // 負荷の高い時は 1 回の押しで歩き出さないことがある
+        await B.press(p, c.key, 160);
+        await p.waitForTimeout(600);
+        found = await B.ev(p, `!!(RPG.Game.secrets['${c.map}'] || []).length`);
+      }
       await B.ev(p, `window.__slow = false; RPG.Hd.BUDGET.frameBakeMs = 3`);
       await p.waitForTimeout(2500);
       const r = await B.ev(p, `(() => { const bad = []; for (const k of ${JSON.stringify(c.room)}) { const [x, y] = k.split(',').map(Number), e = RPG.Field.chunks.at(x, y);

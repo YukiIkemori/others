@@ -4,7 +4,7 @@
 // 数字の効果は出さない（A17）。回数（2回）は説明の文と同じく出す。狙い（単体・全体）は別に出しているので、ここには入れない。
 (function (R) {
   'use strict';
-  const T = (k, p) => String(R.T('sys.techTags.' + k, p));
+  const T = (k, p) => String(R.T(`sys.techTags.${k}`, p));
   // 相手を動けなくする状態（寝首かき の vs）
   const DISABLE = ['sleep', 'paralyze', 'freeze', 'stun'];
 

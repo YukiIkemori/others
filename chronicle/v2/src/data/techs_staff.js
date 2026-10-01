@@ -12,7 +12,7 @@
     target: 'enemy',
     reach: true,
     magic: true,
-    effects: [{ type: 'damage', power: 1.3, formula: 'magic' }],
+    effects: [{ type: 'damage', formula: 'magic', power: 1.2 }],
     fx: 'magic',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },

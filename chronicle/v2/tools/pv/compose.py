@@ -402,6 +402,8 @@ def render(edit, clips, out, t_from=None, t_to=None, stills=None, stills_dir=Non
         t = fi / FPS
         frame = np.zeros((H, W, 3), np.float32)
         active = [s for s in segs if s.f0 <= fi < s.f0 + s.n]
+        if not active and prev_base is not None:   # 秒を丸めてできた 1 コマのすき間は、黒ではなく直前のコマで埋める
+            frame = prev_base.copy()
         for j, s in enumerate(active):
             x = s.d.get('xin', 0)
             img = s.frame(fi)

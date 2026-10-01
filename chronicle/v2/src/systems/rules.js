@@ -204,7 +204,11 @@
       gold: C.gold[0] + C.gold[1] * L + C.gold[2] * L * L,
     };
   };
-  K.hpBoss = (L) => K.curve(L).hp * (0.65 + 0.025 * (clamp(L, 18, 51) - 18));
+  // BOSS_HP: 技を強くした分（持ち主 2026-10-01「技が別段強くない」→ 技の威力を 1〜2 割上げた）、ボスの HP をそろえて上げる。
+  // 技で押す一行のラウンド数と「リピートだけ」の勝ち率を前と同じ帯に戻す（sim_bosses）。通常攻撃だけの戦いは前より長くなる
+  // 1.05 倍（Lv で変える案は終盤の台本が長くなりすぎた）
+  K.BOSS_HP = 1.05;
+  K.hpBoss = (L) => K.curve(L).hp * (0.65 + 0.025 * (clamp(L, 18, 51) - 18)) * K.BOSS_HP;
 
   const LIST_MODS = { statusImmune: 1 };
   const MAP_MODS = { elemResist: 1, elemBoost: 1, statusResist: 1, glimPct: 1, profPct: 1, startBuffs: 1 };

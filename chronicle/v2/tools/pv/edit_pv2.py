@@ -108,13 +108,15 @@ def cut(clip, at, dur, src=0.0, ev=False, ev_voice=True, ev_jingle=True, vgain=0
                     SFX.append(dict(id='jingle_' + e['id'], at=at + tc, gain=jgain))
 
 
-def cap(kicker, text, t0, t1, band=260, ja=False, size=None):
-    """機能の見出し（左下）: 小さい金（英字。ja=True で地名などの日本語）＋ 大きい白"""
+def cap(kicker, text, t0, t1, band=260, ja=False, size=None, top=False):
+    """機能の見出し（左下）: 小さい金（英字。ja=True で地名などの日本語）＋ 大きい白。
+    top=True は左上（画面の下に本物の窓が出るカット）"""
     ks = dict(font=FONT_JA_PATH, size=42, track=8) if ja else dict(font=FONT_EN_PATH)
-    T.append(dict(kind='cap_k', text=kicker, style=ks, t0=t0, t1=t1, x=110, y=838, anchor=(0, 0.5), anim='slide', fin=0.3, fout=0.3, band=band, band_k=0.75))
+    yk, yt = (128, 205) if top else (838, 915)
+    T.append(dict(kind='cap_k', text=kicker, style=ks, t0=t0, t1=t1, x=110, y=yk, anchor=(0, 0.5), anim='slide', fin=0.3, fout=0.3, band=band, band_k=0.75))
     if text:
         st = dict(size=size) if size else {}
-        T.append(dict(kind='cap', text=text, style=st, t0=t0 + 0.08, t1=t1, x=104, y=915, anchor=(0, 0.5), anim='slide', fin=0.3, fout=0.3))
+        T.append(dict(kind='cap', text=text, style=st, t0=t0 + 0.08, t1=t1, x=104, y=yt, anchor=(0, 0.5), anim='slide', fin=0.3, fout=0.3))
 
 
 def tag(text, t0, t1, y=540, size=None, dark=False):
@@ -265,7 +267,7 @@ while k < len(spans) - 1:
     while j + 1 < len(spans) - 1 and spans[j + 1][2] == spans[k][2]:
         j += 1
     lines = [s[3] for s in spans[k:j + 1] if s[3]]
-    cap(spans[k][2], lines[0] if lines else '', spans[k][0] + 0.45, spans[j][1] - 0.1, ja=True)
+    cap(spans[k][2], lines[0] if lines else '', spans[k][0] + 0.45, spans[j][1] - 0.1, ja=True, top=True)   # 地方のカットは窓が下に出るので左上
     k = j + 1
 cap('LEADS', 'うわさを追えば、次の行き先が見える', T_LEADS + 0.4, t - 0.15)
 
@@ -273,11 +275,11 @@ cap('LEADS', 'うわさを追えば、次の行き先が見える', T_LEADS + 0.
 T5 = t
 MUSIC[-1]['dur'] = T5 - MUSIC[-1]['at'] + 0.4
 MUSIC[-1]['fout'] = 0.5
-cut('s5_enc', T5, 1.75, src=0.3, page=0.5)
+cut('s5_enc', T5, 1.3, src=0.3, page=0.5)   # 1.6 秒あたりは黒いので使わない
 T_SH = T5 + 0.68          # カットの 0.98 秒で画面が砕ける
 SFX.append(dict(id='crit', at=T_SH - 0.03, gain=-4))
 MUSIC.append(dict(file='battle', at=T_SH, src=DB_BT, dur=0, gain=-3))
-t = T5 + 1.75
+t = T5 + 1.3
 # 閃き: リーネの頭に電球 → 止めて大きく「閃き」→ その技（抜き打ち）で一撃
 cut('s5_glimmer', t, 1.85, src=5.9, gamesfx=-7)
 T_FRZ = t + 1.85
@@ -331,7 +333,7 @@ MUSIC.append(dict(file='title', at=T6, src=48.9, dur=0, fin=0.4, gain=-4))
 cut('s6_write', T6, 3.3, src=1.6, page=0.55, gamesfx=-10)
 SFX.append(dict(id='page', at=T6 - 0.05, gain=-6))
 cut('s6_write', T6 + 3.3, 2.4, src=6.3, xin=0.25, gamesfx=-8)
-cap('CHRONICLE', 'あなたの選んだことが、年代記に残る', T6 + 0.4, T6 + 5.6)
+cap('CHRONICLE', 'あなたの選んだことが、年代記に残る', T6 + 0.4, T6 + 5.6, top=True)
 t = T6 + 5.7
 cut('s6_chapter', t, 4.8, src=1.6, xin=0.3, gamesfx=-8, ev=True, ev_voice=False, jgain=-6)
 cap('CHRONICLE', '8つの地方 × あなたの選択', t + 2.5, t + 4.7)
@@ -349,7 +351,7 @@ STORY7 = [  # (カット, src, 長さ)
     # ('s7_glen_clean', 8.25, 8.9),   # 幽霊船のグレン: 尺のため外した（岬の夜明けの 2 人の声で伝わる）
     ('s7_marina_clean', 5.65, 9.2),
     ('s7_hazal_clean', 20.45, 7.9),
-    ('s7_fine_ash_clean', 2.65, 5.2),
+    ('s7_fine_ash_clean', 2.65, 4.95),   # 7.7 秒から暗くなるので、その前で切る
 ]
 for i, (c, src, d) in enumerate(STORY7):
     cut(c, t, d, src=src, xin=0.6 if i else None, ev=True, gamesfx=-12, zoom=(1.0, 1.06) if i % 2 == 0 else (1.06, 1.0))
@@ -388,7 +390,10 @@ for c, src, d, hit in BOSS:
 # 黒い影が覆い、白くなる（名前は出さない）
 T_SH8 = t
 cut('s8_shadow', t, 3.0, src=2.6, gamesfx=-8, zoom=(1.0, 1.08), center=(0.35, 0.55))
-vo('v_king_altar_02', t + 0.3, y=1000)
+vo('v_king_altar_02', t + 0.3, y=1000, nosub=True)
+# 字幕は白くなる所で墨の色に替える
+sub(SUBS['v_king_altar_02'], t + 0.25, t + 4.55, y=1000)
+T.append(dict(kind='sub', text=SUBS['v_king_altar_02'], style=dict(color=(40, 30, 24), stroke=0, shadow=False), t0=t + 4.5, t1=t + 6.5, x=960, y=1000, fin=0.05, fout=0.3))
 cut('s8_shadow', t + 3.0, 1.5, src=12.6, gamesfx=-6, wash=(0.0, 0.7))
 cut(None, t + 4.5, 1.8, color=(1.0, 1.0, 1.0))
 FLASH.append((t + 4.5, 0.4, 0.01, 1.0, (1.0, 1.0, 1.0)))

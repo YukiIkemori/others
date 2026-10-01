@@ -149,7 +149,7 @@
     'techs.t_greatsword_thunder.name': '神鳴り打ち',
     'techs.t_greatsword_thunder.desc': '雷のごとき一撃。気絶させやすい。',
     'techs.t_greatsword_skyfall.name': '天崩し',
-    'techs.t_greatsword_skyfall.desc': '天をも崩す渾身の一撃。少し当たりにくい。',
+    'techs.t_greatsword_skyfall.desc': '天をも崩す全力の一撃。少し当たりにくい。',
     'techs.t_greatsword_rivers.name': '山河断ち',
     'techs.t_greatsword_rivers.desc': '敵全体を斬り、気絶させることがある。',
     'techs.t_greatsword_bigmow.name': '大なぎ倒し',
