@@ -3,7 +3,7 @@
 //   node v2/tools/pv/shots_pv2_story.js --site <dist の写し（製品版: slice:false）> --out <clips のディレクトリ> [--still] [カットの id ...]
 //   出力: <out>/<id>.mp4（1920×1080・60fps・音なし）、<id>.audio.json（鳴った音・声の記録）、<id>.jpg（頭・中・終わりの 3 コマ）
 //   --still: 撮らずに、準備のあと n フレームのあいだ 1 秒ごとに JPEG を <out>/still/<id>_NN.jpg に置く（下見用）
-//   主人公はリーネ（女・術剣士・得意は剣）、仲間はシグレ・ザフィラ・ロウガ。歩くカットは仲間を一列に並べる（PV2.party。ゲームの設定は変えない）。
+//   主人公はリーネ（女・術剣士・得意は剣）、仲間はシグレ・ザフィラ・ロウガ。フィールドに出るのは主人公だけ（持ち主の決まり、trail.js。仲間を並べる差し込み口は使わない）。
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -13,13 +13,11 @@ const PVLIB = require('./pvlib');
 
 const sec = (s) => Math.round(s * 60);
 // ---------------------------------------------------------------- ページに足す小道具（pvlib の上に足すだけ。ゲームのファイルは変えない）
-//   PV2.party()   歩くときに仲間を後ろに一列で並べる（フィールドのテスト用の差し込み口 _trailForce）
 //   PV2.quiet()   「新しい手がかり」の札とはじめての説明の札を出さない
 //   PV2.say(lines) 本物の会話の窓で、ゲームの台詞（文の鍵・声・顔）をそのまま言わせる（序章の町で言う台詞を、ほかの場所で撮るとき）
 const PV2LIB = `(() => {
   const R = window.RPG;
   const PV2 = (window.PV2 = {
-    party() { R.Field._trailForce = true; if (R.Field._resetTrail) R.Field._resetTrail(false); return true; },
     quiet() {
       const E = R.Engine;
       if (!E.__pv2ov) { E.__pv2ov = true; const ov = E.overlay; E.overlay = function (id, draw, z) { if (id === 'leads') draw = () => {}; return ov.call(this, id, draw, z); }; ov.call(E, 'leads', () => {}, 45); }
@@ -117,7 +115,7 @@ const RINE = (o) => {
   return JSON.stringify(out);
 };
 // フィールドに入る（HUD なし・歩いて出る戦闘なし・手がかりの札なし）
-const FIELD = (st, map, spawn) => `PV.clean(); PV.noEnc(); PV.state(${RINE(st)}); PV2.quiet(); PV.enter('${map}', ${JSON.stringify(spawn)}).then(() => PV2.party())`;
+const FIELD = (st, map, spawn) => `PV.clean(); PV.noEnc(); PV.state(${RINE(st)}); PV2.quiet(); PV.enter('${map}', ${JSON.stringify(spawn)})`;
 const at = (tbl) => (i) => tbl[i] || null;
 const STEER = () => 'PV.steer()';
 // 道に沿って歩く（行き先 pts を順に。撮る前に道のりを決め、毎フレーム PV.steer() で次のマスへ）
