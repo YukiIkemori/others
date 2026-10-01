@@ -172,11 +172,30 @@ function rectOf(m, o) {
   if (!key) return null;
   const sp = spriteOf(m, key, o.variant || 0);
   if (!sp || !sp.box) return null;
-  const fx = (o.x + 0.5) * 32, fy = (o.y + 0.84) * 32 - (o.lift || 0);
-  const x0 = fx - sp.feet[0], y0 = fy - sp.feet[1];
-  const flip = !!o.flip;
-  const bx0 = flip ? sp.cell[0] - sp.box[2] : sp.box[0], bx1 = flip ? sp.cell[0] - sp.box[0] : sp.box[2];
-  return { r: [x0 + bx0, y0 + sp.box[1], x0 + bx1, y0 + sp.box[3]], sp };
+  const fy = (o.y + 0.84) * 32 - (o.lift || 0);
+  let fx = (o.x + 0.5) * 32;
+  // 不透明な横の範囲（足もとからの px）。flip は左右を返す
+  let a = sp.box[0] - sp.feet[0], b = sp.box[2] - sp.feet[0];
+  if (o.flip) { const t = a; a = -b; b = -t; }
+  // 横の壁から押し戻す（chunks.js の planOf → props.js T._sideNudge と同じ: 足もとの行の左右の壁に SIDE_MAX px まで食い込む絵は内へ）
+  let nudge = 0;
+  if (o.type === 'prop' && !o.lv) {
+    const w = o.w || 1;
+    const L = sideWall(m, o.x - 1, o.y) ? Math.max(0, o.x * 32 - (fx + a)) : 0;
+    const Rr = sideWall(m, o.x + w, o.y) ? Math.max(0, fx + b - (o.x + w) * 32) : 0;
+    if (!(L && Rr) && Math.max(L, Rr) <= SIDE_MAX) nudge = L ? Math.ceil(L) : -Math.ceil(Rr);
+    fx += nudge;
+  }
+  const y0 = fy - sp.feet[1];
+  return { r: [fx + a, y0 + sp.box[1], fx + b, y0 + sp.box[3]], sp, nudge };
+}
+const SIDE_MAX = 10;
+function sideWall(m, x, y) {
+  if (x < 0 || y < 0 || x >= m.w || y >= m.h) return m.kind === 'interior';
+  const e = cellAt(m, x, y);
+  if (!e || !e.solid || e.secret) return false;
+  const mi = (T._matInfo && T._matInfo(e.mat)) || {};
+  return !mi.tall && !mi.water;
 }
 function ovl(a0, a1, b0, b1) { return Math.max(0, Math.min(a1, b1) - Math.max(a0, b0)); }
 

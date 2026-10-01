@@ -70,7 +70,7 @@
     // ---------------------------------------------------------------- 酒場「白紙亭」（白紙になりかけの人々の最後のうわさ。WORLD §5.13）
     interior('biblia_tavern', R.T('map.final_biblia_interiors.biblia_tavern'), 16, 12, {
       back: 'tavern', carpet: [6, 6, 6, 3], bgm: 'tavern', meta: { sub: R.T('map.final_biblia_interiors.biblia_tavern.meta.sub') },
-      objects: [K.prop('bar_counter', 3, 3), K.prop('bar_counter', 4, 3), K.prop('bar_counter', 5, 3), K.prop('bar_counter', 6, 3), K.prop('keg_rack', 1, 2), K.prop('keg_rack', 14, 2),
+      objects: [K.prop('bar_counter', 3, 3), K.prop('bar_counter', 4, 3), K.prop('bar_counter', 5, 3), K.prop('bar_counter', 6, 3), K.prop('keg_rack', 1, 2), K.prop('keg_rack', 13, 2, { w: 2 }),
         K.prop('table', 11, 5), K.prop('chair', 10, 5), K.prop('chair', 12, 5), K.prop('table', 11, 8), K.prop('chair', 10, 8), K.prop('chair', 12, 8),
         K.prop('table', 5, 8), K.prop('chair', 6, 8), K.prop('lantern', 8, 3), K.prop('lantern', 14, 6)],
       npcs: [

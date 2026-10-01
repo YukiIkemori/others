@@ -183,7 +183,7 @@
   /** マップ全体の「焼いて置く物」と「FIELD が描く物」を作る（地図と状態が同じ間は使い回す） */
   const planCache = new WeakMap();
   function planOf(map, st, theme, tile, amb) {
-    const sig = tile + '|' + st.chests.join(',') + '|' + st.lit.join(',') + '|' + JSON.stringify(st.lamps) + '|' + (R.Game && R.Game.flags ? Object.keys(R.Game.flags).length : 0) + '|' + amb.ambient + '|' + st.secrets.join(';');
+    const sig = tile + '|' + st.chests.join(',') + '|' + st.lit.join(',') + '|' + JSON.stringify(st.lamps) + '|' + (R.Game && R.Game.flags ? Object.keys(R.Game.flags).length : 0) + '|' + amb.ambient + '|' + st.secrets.join(';') + '|' + (T.Env && T.Env.ready ? 1 : 0);
     let c = planCache.get(map);
     if (c && c.sig === sig) return c.plan;
     const s = tile / 32, items = [], dyn = [], occ = new Set();
@@ -210,7 +210,8 @@
           if (o.id === 'firefly') break;
           occ.add(o.x + ',' + o.y);
           const layer = lay || (meta.overChars ? 'over' : meta.soft ? 'base' : 'split');
-          items.push({ key: 'hd:prop:' + o.id, opts, frame: /^(torch|brazier|waylamp)$/.test(o.id) ? 'on' : o.frame, x: fx, y: fy, ft: o.y * tile, layer, shadow: meta.soft || meta.overChars ? null : meta.shadow === 'long' || /tree|pine|lamp_post/.test(o.id) ? 'tall' : 'blob', sortY: fy, flip: !!o.flip });
+          const nx = T._sideNudge ? T._sideNudge(map, o, tile) : 0;   // 幅の広い絵を横の壁から押し戻す（props.js）
+          items.push({ key: 'hd:prop:' + o.id, opts, frame: /^(torch|brazier|waylamp)$/.test(o.id) ? 'on' : o.frame, x: fx + nx, y: fy, ft: o.y * tile, layer, shadow: meta.soft || meta.overChars ? null : meta.shadow === 'long' || /tree|pine|lamp_post/.test(o.id) ? 'tall' : 'blob', sortY: fy, flip: !!o.flip });
           break;
         }
         case 'sign':

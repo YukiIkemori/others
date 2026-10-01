@@ -58,7 +58,7 @@
     // ---------------------------------------------------------------- 酒場「いかり亭」（A17 の酒場の直し: 左の通路をふさがない）
     interior('coral_tavern', R.T('map.isles_coral_interiors.coral_tavern'), 16, 12, {
       back: 'tavern', carpet: [6, 6, 6, 3], bgm: 'tavern',
-      objects: [K.prop('bar_counter', 3, 3), K.prop('bar_counter', 4, 3), K.prop('bar_counter', 5, 3), K.prop('bar_counter', 6, 3), K.prop('keg_rack', 1, 2), K.prop('keg_rack', 14, 2),
+      objects: [K.prop('bar_counter', 3, 3), K.prop('bar_counter', 4, 3), K.prop('bar_counter', 5, 3), K.prop('bar_counter', 6, 3), K.prop('keg_rack', 1, 2), K.prop('keg_rack', 13, 2, { w: 2 }),
         K.prop('table', 11, 5), K.prop('chair', 10, 5), K.prop('chair', 12, 5), K.prop('table', 11, 8), K.prop('chair', 10, 8), K.prop('chair', 12, 8),
         K.prop('table', 5, 8), K.prop('chair', 6, 8), K.prop('anchor', 14, 9), K.prop('lantern', 8, 3), K.prop('lantern', 14, 6)],
       npcs: [
@@ -89,7 +89,7 @@
     });
     interior('coral_arms', R.T('map.isles_coral_interiors.coral_arms'), 12, 10, {
       back: 'arms', meta: { sub: R.T('map.isles_coral_interiors.coral_arms.meta.sub') },
-      objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('counter', 6, 3), K.prop('armor_stand', 9, 2), K.prop('shield_rack', 10, 5),
+      objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('counter', 6, 3), K.prop('armor_stand', 9, 2), K.prop('shield_rack', 9, 5, { w: 2 }),
         K.prop('crate', 1, 6), K.prop('lantern', 8, 3)],
       npcs: [K.npc('smith', 'npc_isles_man', 5, 2, { name: R.T('map.isles_coral_interiors.coral_arms.npcs.0.smith.name'), dir: 's', talk: 'coral_smith', pushable: false })],
     });

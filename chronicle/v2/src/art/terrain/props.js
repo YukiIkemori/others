@@ -404,6 +404,54 @@
     const ev = T.Env.prop(id + '__' + set, 0, {});
     return !!(ev && ev.j && ev.j.fire);
   };
+  // 横の壁から押し戻す（持ち主の試遊 2026-10-01「武器屋の飾りが壁に埋まってる」「武器屋だけじゃないから、他も全部みてみて」）:
+  //   1 マスより幅の広い絵（かまど・薬の棚・武器の棚・丸太…）を壁ぎわのマスに置くと、絵の端が横の壁（上から見た壁の頭）に数 px 食い込む。
+  //   足もとの行の左右のマスが壁なら、不透明な画素（α > 128）の端が床に収まるまで内へずらす（32 の論理 px で SIDE_MAX まで）。
+  //   それより大きく食い込む物（2 マス幅の物の置き違いなど）はずらさない（データを直す。tools/qa/check_props.js が数える）。
+  //   当たり・光の芯は今までどおりマス（ずらすのは絵だけ。props_light.js は見ない）。
+  const SIDE_MAX = 10;
+  const spanCache = {};
+  /** 描いた物の絵（32）のコマ 0 の不透明な横の範囲 → [x0, x1)（絵の左端からの px）| null */
+  function opaqueSpan(ev) {
+    if (ev.id in spanCache) return spanCache[ev.id];
+    const j = ev.j || {}, names = j.frames || ['default'];
+    const cw = Math.round(((j.cell && j.cell['32']) || [ev.im.width / names.length])[0]), h = ev.im.height;
+    let r = null;
+    try {
+      const c = T._u && T._u.canvas ? T._u.canvas(cw, h) : R.Hd.RZ.canvas(cw, h), g = c.getContext('2d');
+      g.drawImage(ev.im, 0, 0, cw, h, 0, 0, cw, h);
+      const d = g.getImageData(0, 0, cw, h).data;
+      let x0 = cw, x1 = -1;
+      for (let y = 0; y < h; y++) for (let x = 0; x < cw; x++) if (d[(y * cw + x) * 4 + 3] > 128) { if (x < x0) x0 = x; if (x > x1) x1 = x; }
+      r = x1 >= 0 ? [x0, x1 + 1] : null;
+    } catch (e) { return null; }   // 読めない（node・汚れた絵）: ずらさない。覚えない
+    return (spanCache[ev.id] = r);
+  }
+  function sideWall(map, x, y) {
+    if (x < 0 || y < 0 || x >= map.w || y >= map.h) return map.kind === 'interior';
+    const e = R.MapUtil.cell(map, x, y);
+    if (!e || !e.solid || e.secret) return false;
+    const m = T._matInfo ? T._matInfo(e.mat) : {};
+    return !m.tall && !m.water;
+  }
+  /** 物（prop）の絵を横の壁から離すずれ（このマスの大きさの px。+ = 右）。ずらさないなら 0 */
+  T._sideNudge = function (map, o, tile) {
+    if (!map || !o || o.lv || !(T.Env && T.Env.ready && T.Env.prop)) return 0;
+    const set = T._propSetOf(map), ids = set && setIds(set), base = map.propSetBase, bids = base && setIds(base);
+    const id = ids && ids.has(o.id) ? o.id + '__' + set : bids && bids.has(o.id) ? o.id + '__' + base : o.id;
+    const ev = T.Env.prop(id, o.variant || 0, {});
+    if (!ev || !ev.im || ev.tile !== 32 || ev.k !== 1) return 0;
+    const sp = opaqueSpan(ev), j = ev.j || {};
+    if (!sp) return 0;
+    const fx = (j.feet && j.feet['32'] && j.feet['32'][0]) != null ? j.feet['32'][0] : sp[1] / 2;
+    let a = sp[0] - fx, b = sp[1] - fx;
+    if (o.flip) { const t = a; a = -b; b = -t; }
+    const w = o.w || 1, cx = (o.x + 0.5) * 32;
+    const L = sideWall(map, o.x - 1, o.y) ? Math.max(0, o.x * 32 - (cx + a)) : 0;
+    const Rr = sideWall(map, o.x + w, o.y) ? Math.max(0, cx + b - (o.x + w) * 32) : 0;
+    if ((L && Rr) || Math.max(L, Rr) > SIDE_MAX) return 0;
+    return (L ? Math.ceil(L) : -Math.ceil(Rr)) * tile / 32;
+  };
   function bakeProp(id, o) {
     const ev = T.Env && T.Env.prop ? ((o.set && T.Env.prop(id + '__' + o.set, o.v, o)) || T.Env.prop(id, o.v, o)) : null;
     if (ev) return envProp(id, ev, o);

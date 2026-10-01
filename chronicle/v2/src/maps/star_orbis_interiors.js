@@ -39,7 +39,7 @@
     // ---------------------------------------------------------------- 酒場「星見の杯亭」（夜番の年寄り・旅人・亭主）
     interior('orbis_tavern', R.T('map.star_orbis_interiors.orbis_tavern'), 16, 12, {
       back: 'tavern', carpet: [6, 6, 6, 3], bgm: 'tavern', meta: { sub: R.T('map.star_orbis_interiors.orbis_tavern.meta.sub') },
-      objects: [K.prop('bar_counter', 3, 3), K.prop('bar_counter', 4, 3), K.prop('bar_counter', 5, 3), K.prop('bar_counter', 6, 3), K.prop('keg_rack', 1, 2), K.prop('keg_rack', 14, 2),
+      objects: [K.prop('bar_counter', 3, 3), K.prop('bar_counter', 4, 3), K.prop('bar_counter', 5, 3), K.prop('bar_counter', 6, 3), K.prop('keg_rack', 1, 2), K.prop('keg_rack', 13, 2, { w: 2 }),
         K.prop('table', 11, 5), K.prop('chair', 10, 5), K.prop('chair', 12, 5), K.prop('table', 11, 8), K.prop('chair', 10, 8), K.prop('chair', 12, 8),
         K.prop('table', 5, 8), K.prop('chair', 6, 8), K.prop('wall_chart', 9, 1), K.prop('lantern', 8, 3), K.prop('lantern', 14, 6)],
       npcs: [
@@ -57,7 +57,7 @@
     });
     interior('orbis_arms', R.T('map.star_orbis_interiors.orbis_arms'), 12, 10, {
       back: 'arms', meta: { sub: R.T('map.star_orbis_interiors.orbis_arms.meta.sub') },
-      objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('counter', 6, 3), K.prop('armor_stand', 9, 2), K.prop('shield_rack', 10, 5),
+      objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('counter', 6, 3), K.prop('armor_stand', 9, 2), K.prop('shield_rack', 9, 5, { w: 2 }),
         K.prop('weapon_rack', 1, 2), K.prop('lantern', 8, 3)],
       npcs: [K.npc('smith', 'npc_star_man', 5, 2, { name: R.T('map.star_orbis_interiors.orbis_arms.npcs.0.smith.name'), dir: 's', talk: 'orbis_smith', pushable: false })],
     });

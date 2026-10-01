@@ -5,6 +5,7 @@ usage: python3 caldera.py guide | job | fit <gen.png> | process <gen.png>
             縦横の拡大と平行移動だけで切り貼りする（回さない・曲げない）。
   job     : caldera/genN.job.json（gen.sh で 1 枚）。
   fit     : 描いた絵から段の縁の 1 マスのずれを読み、ash_caldera.js の FIT（' ' = そのまま）を caldera/fit.txt に書く。
+  align   : python3 caldera.py align <gen.png> <out.png>: 描いた絵の段の縦・横のずれを、縦横別々の引きのばしだけで地図へ戻す（caldera/align.json）。
   process : 下絵 caldera@24/@32、溶岩と窓の emit、caldera.json（戸口 doors32 は前のまま＝建物は動かさない）を v2/assets/env/ash/under/ へ。
 地図のデータは caldera/map_dump.json（node で R.DB.maps.caldera を書き出した物。FIT を空にして書き出す）。"""
 import sys, json, os, numpy as np
@@ -189,6 +190,71 @@ def fit(src):
     for y, r in enumerate(rows): print('%2d %s' % (y, ''.join(r)))
 
 
+def align(src, out):
+    """描いた絵の縦・横のずれ（描く道具が段をすこし上下にずらして描く）を、行と列ごとの 1 次元の対応（DTW）で地図へ戻す。
+    out(y, x) = 絵(fy(y), fx(x)) の縦横別々の引きのばしだけ（縦の線は縦、横の線は横のまま = 建物は傾かない）。
+    行の対応は「その行の地図の字」と「絵の画素の種類」の一致で決める（建物の所は数えない）"""
+    t = 16; N = W * t
+    A = np.asarray(Image.open(src).convert('RGB').resize((N, N), Image.BOX)).astype(np.float32)
+    Q = (A // 16).astype(int); qi = Q[..., 0] * 256 + Q[..., 1] * 16 + Q[..., 2]
+    G = np.array([list(r) for r in BASE]); G[G == 'e'] = 'F'; G[G == 'b'] = '%'
+    bm = np.zeros((H, W), bool)
+    for b in blds: bm[max(0, b['y'] - 2):b['y'] + b['h'], max(0, b['x'] - 1):b['x'] + b['w'] + 1] = True
+    bm[5:14, 18:36] = True                       # 大卵殻の頭
+    CLS = ['M', 'a', 'F', '%', 'c', 'X', 'h']
+    kr = lambda m: np.kron(m, np.ones((t, t), bool))
+    lab = np.zeros((N, N), int) - 1
+    ll = []
+    for i, c in enumerate(CLS):
+        m = (G == c) & ~bm
+        mi = ndimage.binary_erosion(m, iterations=2) if c not in 'F' else m
+        h = np.bincount(qi[kr(mi)], minlength=4096).astype(float) + 0.5
+        ll.append(np.log(h / h.sum())[qi])
+        lab[kr(m)] = i
+    P = np.argmax(np.stack(ll), 0)                # 絵の画素の種類
+    valid = lab >= 0
+    def dtw(gl, pl, vm):
+        # gl[i] = 地図の i 行目の字の並び、pl[j] = 絵の j 行目の種類の並び。i → j の単調な対応（傾き 0.6..1.6）
+        n = gl.shape[0]
+        C = np.zeros((n, n), np.float32)
+        for i in range(n):
+            v = vm[i]
+            C[i] = (pl[:, v] != gl[i, v][None, :]).mean(1) if v.any() else 0.5
+        D = np.full((n, n), np.inf, np.float32); Bk = np.zeros((n, n), np.int8)
+        D[0, 0] = C[0, 0]
+        for i in range(n):
+            for j in range(max(0, i - 4 * t), min(n, i + 4 * t)):   # ずれは 4 マスまで
+                if i == 0 and j == 0: continue
+                c = [D[i - 1, j - 1] if i and j else np.inf, D[i - 1, j] + 0.05 if i else np.inf, D[i, j - 1] + 0.05 if j else np.inf]
+                k = int(np.argmin(c)); D[i, j] = C[i, j] + c[k]; Bk[i, j] = k
+        i, j = n - 1, n - 1; path = [(i, j)]
+        while i or j:
+            k = Bk[i, j]
+            if k == 0: i, j = i - 1, j - 1
+            elif k == 1: i -= 1
+            else: j -= 1
+            path.append((i, j))
+        f = np.zeros(n, np.float32); cnt = np.zeros(n, np.float32)
+        for i, j in path: f[i] += j; cnt[i] += 1
+        f = f / cnt
+        f = ndimage.gaussian_filter1d(f, 1.5 * t)       # なめらかに（1 マス半）
+        f = np.maximum.accumulate(f)
+        return f
+    fy = dtw(lab, P, valid)
+    fx = dtw(lab.T, P.T, valid.T)
+    for k in range(0, W + 1, 3): print('y %2d -> %.2f   x %2d -> %.2f' % (k, fy[min(N - 1, k * t)] / t, k, fx[min(N - 1, k * t)] / t))
+    json.dump(dict(fy=(fy / t).tolist(), fx=(fx / t).tolist(), t=t), open(os.path.join(D, 'align.json'), 'w'))
+    B = np.asarray(Image.open(src).convert('RGB')).astype(np.float32); S = B.shape[0] / W
+    M = B.shape[0]
+    ty = np.interp((np.arange(M) + 0.5) / S * t - 0.5, np.arange(N), fy) / t * S
+    tx = np.interp((np.arange(M) + 0.5) / S * t - 0.5, np.arange(N), fx) / t * S
+    # 縦横別々の引きのばし（行を選んでから列を選ぶ。最近傍 = 画素の角を保つ）
+    iy = np.clip(np.rint(ty).astype(int), 0, M - 1); ix = np.clip(np.rint(tx).astype(int), 0, M - 1)
+    R = B[iy][:, ix]
+    Image.fromarray(np.clip(R, 0, 255).astype(np.uint8)).save(out)
+    print('aligned ->', out)
+
+
 def process(src):
     """下絵（1 マス 48 px の絵）→ caldera@24/@32 ＋ emit（溶岩・窓）＋ caldera.json。明るさは前の下絵の歩ける地面に合わせる（町の夜の調子を保つ）"""
     T = 32
@@ -252,4 +318,5 @@ if __name__ == '__main__':
     if cmd == 'guide': guide()
     elif cmd == 'job': job(sys.argv[2] if len(sys.argv) > 2 else 'gen1')
     elif cmd == 'fit': fit(sys.argv[2])
+    elif cmd == 'align': align(sys.argv[2], sys.argv[3])
     elif cmd == 'process': process(sys.argv[2])
