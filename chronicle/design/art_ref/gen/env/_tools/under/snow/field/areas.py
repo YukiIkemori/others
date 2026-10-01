@@ -144,7 +144,7 @@ def f_lake():
     a.exit('n', 26, 27, {'map': 'f_floe', 'spawn': 'south'}, 'north')['cond'] = 'cleared_r_snow'
     a.spawns['icicle'] = dict(x=8, y=32, dir='s')
     a.objects += [
-        dict(type='door', x=7, y=30, w=2, look='none', to={'map': 'icicle_1', 'spawn': 'entrance'}),
+        dict(type='door', x=8, y=30, w=1, look='none', to={'map': 'icicle_1', 'spawn': 'entrance'}),  # 2026-10-01: centred on the cave mouth (marker fix)
         dict(type='sign', x=11, y=33, text='つららの回廊\n氷の中に、何かが閉じこめられている。'),
         dict(type='sign', x=32, y=36, text='凍った湖\n今年は氷が薄い。渡るべからず。'),
         dict(type='examine', x=31, y=34, event='world_snow_lake'),
@@ -274,7 +274,7 @@ def f_eastroad():
     a.tidy()
     a.exit('w', 16, 17, {'map': 'yule', 'spawn': 'gate_e'}, 'yule')
     a.exit('e', 22, 23, {'map': 'f_passinn', 'spawn': 'west'}, 'east')
-    a.exit('s', 30, 31, {'map': 'snow_woods', 'spawn': 'south'}, 'woods')
+    a.exit('s', 30, 31, {'map': 'snow_woods', 'spawn': 'north'}, 'woods')  # 2026-10-01: arrive at the woods' north mouth (hand-fixed in snow_field_eastroad.js; keep in sync)
     a.objects += [
         dict(type='sign', x=23, y=17, text='← ユール　　峠の宿 →\n↓ 雪の林'),
         dict(type='sign', x=28, y=33, text='雪の林\n薪になる倒木が多い。'),
