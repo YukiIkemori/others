@@ -118,7 +118,7 @@ const pool = (id) => !!(D.pools && D.pools[id]);
       if (t && !D.events[t]) bad.push(`${id} npc ${n.id}: event ${t}`);
       if (n.x != null && (n.x < 0 || n.y < 0 || n.x >= m.w || n.y >= m.h)) bad.push(`${id} npc ${n.id} outside the map`);
     }
-    for (const t of m.triggers || []) if (!D.events[t.event]) bad.push(`${id} trigger ${t.id}: event ${t.event}`);
+    for (const t of m.triggers || []) if (!(t.gate && !t.event) && !D.events[t.event]) bad.push(`${id} trigger ${t.id}: event ${t.event}`);
     for (const p of M.portals(m, { all: true })) {
       const t = D.maps[p.to.map];
       if (!t) bad.push(`${id} ${p.kind} → map ${p.to.map}`);

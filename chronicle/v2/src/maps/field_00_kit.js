@@ -34,6 +34,11 @@
     ['f_roa', 'f_lookout', R.T('map.field_00_kit.SOLO_GATES.1.2')],
     ['f_cape', 'lighthouse_1', R.T('map.field_00_kit.SOLO_GATES.2')],
   ];
+  // 分かれ道の通せんぼ（持ち主 2026-10-01「まだ行けないにしておいて」。テスター 2026-09-30 の 1-12: ロアを出た所の道が 2 本に見えるのに
+  //   北の道は見張り台の手前の端まで行かないと閉じていると分からなかった）。[エリア, 四角 {x, y, w, h}, 文]: 道の入口で SOLO_GATES と同じく止める
+  const SOLO_ROADS = [
+    ['f_roa', { x: 20, y: 14, w: 4, h: 2 }, R.T('map.field_00_kit.SOLO_GATES.1.2')],
+  ];
   const CONFIRM = {
     well: R.T('map.field_00_kit.CONFIRM.well'),
     lighthouse_1: R.T('map.field_00_kit.CONFIRM.lighthouse_1'),
@@ -46,6 +51,7 @@
   FA.LINKS = LINKS;
   FA.CONFIRM = CONFIRM;
   FA.SOLO_GATES = SOLO_GATES;
+  FA.SOLO_ROADS = SOLO_ROADS;
   FA.def = function (id, spec) {
     const m = Object.assign({
       id, kind: 'field', theme: 'field', legend: LEGEND, outside: 'forest_dark',
@@ -95,6 +101,13 @@
       const put = (o, t) => { if (o && t && t.map === to && o.gate === undefined) o.gate = { solo: true, when: SOLO_WHEN, text }; };
       for (const e of m.exits || []) put(e, e.to);
       for (const o of m.objects || []) { if (o.type === 'building') put(o.door, o.door && o.door.to); else put(o, o.to); }
+    }
+    for (const [mid, rect, text] of SOLO_ROADS) {
+      const m = M[mid];
+      if (!m) continue;
+      m.triggers = m.triggers || [];
+      const id = 'solo_road_' + rect.x + '_' + rect.y;
+      if (!m.triggers.some((t) => t.id === id)) m.triggers.push(Object.assign({ id, on: 'step', gate: { solo: true, when: SOLO_WHEN, text } }, rect));
     }
     const into = (to) => to && M[to.map] && M[to.map].kind === 'interior' && (M[to.map].exits || []).some((e) => e.to && M[e.to.map] && M[e.to.map].kind === 'field');
     if (w && w.objects) for (const o of w.objects) if (o.type === 'building' && o.door && into(o.door.to)) delete o.door;

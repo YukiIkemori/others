@@ -467,6 +467,13 @@ async function main() {
     await step('up');
     await settle(600);
     ok('solo: the north edge (見晴らし台) refuses and steps back', asked.length === 1 && R.Field.pos.map === 'f_roa' && R.Field.pos.y === lookEx.y + 1, R.Field.pos);
+    // 分かれ道の北の道の入口でも止める（持ち主 2026-10-01「まだ行けないにしておいて」、テスター 1-12）
+    await enter('f_roa', 22, 16, 'n');
+    R.Field.encounter.suppress(50);
+    asked = [];
+    await step('up');
+    await settle(600);
+    ok('solo: the fork (north road at ロアの丘) refuses and steps back', asked.length === 1 && /ファロス/.test(asked[0].text) && same(at(), [22, 16]), { asked, pos: R.Field.pos });
     R.Game.party = [R.Game.party[0], 'x']; ok('two in the party → the gate lifts', !R.Field._gateShut(wellSt.gate));
     R.Game.party = [party0[0]]; R.Game.flags.prologue_party = true; ok('prologue_party → the gate lifts', !R.Field._gateShut(wellSt.gate));
     R.Game.party = party0; if (pf0 === undefined) delete R.Game.flags.prologue_party; else R.Game.flags.prologue_party = pf0;

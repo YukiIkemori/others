@@ -107,7 +107,7 @@
     id: 'string', name: 'string', kind: '"town"|"interior"|"dungeon"|"world"|"field"', 'optional?': 'bool', region: 'string', 'location?': 'string',
     w: 'int', h: 'int', legend: 'object', rows: 'string[]', 'outside?': 'string', 'objects?': [K.mapObject], 'npcs?': [K.npc], spawns: 'object',
     'exits?': [{ x: 'int', y: 'int', w: 'int', h: 'int', to: { map: 'string', spawn: 'string' }, 'cond?': 'any' }],
-    'triggers?': [{ id: 'string', 'x?': 'int', 'y?': 'int', 'w?': 'int', 'h?': 'int', on: '"step"|"enter"', event: 'string', 'cond?': 'any', 'once?': 'bool' }],   // 'enter' は範囲なし（マップに入るたび。once で 1 回）
+    'triggers?': [{ id: 'string', 'x?': 'int', 'y?': 'int', 'w?': 'int', 'h?': 'int', on: '"step"|"enter"', 'event?': 'string', 'gate?': 'any', 'cond?': 'any', 'once?': 'bool' }],   // 'enter' は範囲なし（マップに入るたび。once で 1 回）
     'tilePatches?': 'array', 'zones?': [{ rect: 'array|null', zone: 'string', 'cond?': 'any' }], 'light?': { ambient: 'string', k: 'number', mood: 'string' },
     'dark?': 'bool|array', 'bgm?': 'string', 'bbg?': 'string', 'oneway?': 'array', 'meta?': 'object',
     'theme?': 'string', 'name_ruby?': 'string',   // 版 2: theme = TERRAIN のテーマ（THEMES）。無ければ kind と素材から TERRAIN が決める
@@ -358,6 +358,7 @@
       }
       for (const tr of m.triggers || []) {
         if (tr.on === 'step' && !(Number.isInteger(tr.x) && Number.isInteger(tr.y))) errs.push(`map ${m.id}: step trigger ${tr.id} needs x, y (w, h default 1)`);
+        if (!tr.event && !tr.gate) errs.push(`map ${m.id}: trigger ${tr.id} needs event (or gate)`);
       }
       for (const ch of Object.keys(m.legend || {})) {
         const le = checkLegend(m.legend[ch]);

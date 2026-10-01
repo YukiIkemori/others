@@ -75,7 +75,7 @@ for (const id of MY_MAPS) {
   for (const [k, to] of tos) ok(`${id}: ${k} → ${to.map}.${to.spawn}`, hasSpawn(to.map, to.spawn));
   const evs = [];
   for (const n of m.npcs || []) if (typeof n.talk === 'string') evs.push(n.talk);
-  for (const t of m.triggers || []) evs.push(t.event);
+  for (const t of m.triggers || []) if (t.event) evs.push(t.event);
   for (const o of m.objects || []) if (o.event) evs.push(o.event);
   for (const e of evs) ok(`${id}: イベント ${e} がある`, !!R.DB.events[e] || (id === 'world' && /^forest_/.test(e)), e);
 }

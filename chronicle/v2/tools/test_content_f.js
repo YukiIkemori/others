@@ -70,7 +70,7 @@ for (const id of MY_MAPS) {
   const evs = [];
   for (const o of m.objects || []) if (o.event) evs.push(o.event);
   for (const n of m.npcs || []) if (typeof n.talk === 'string') evs.push(n.talk);
-  for (const t of m.triggers || []) evs.push(t.event);
+  for (const t of m.triggers || []) if (t.event) evs.push(t.event);
   const noEv = evs.filter((e) => !R.DB.events[e]);
   ok(`${id}: イベントの参照がすべてある`, noEv.length === 0, [...new Set(noEv)]);
   const outs = [];

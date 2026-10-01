@@ -297,6 +297,8 @@
       if (tr.on !== 'step' || !inRect(S.x, S.y, tr)) continue;
       if ((tr.lv || 0) !== S.lv) continue;
       if (tr.cond && !R.State.check(tr.cond)) continue;
+      // 通せんぼだけのトリガー（event なし・gate あり）: 閉じている間は文を出して 1 歩下がる（field_00_kit.js の SOLO_ROADS）
+      if (tr.gate) { if (gateShut(tr.gate)) return confirmGo(null, () => null, tr.gate); if (!tr.event) continue; }
       const k = 'tr_' + m.id + '_' + tr.id;
       if (tr.once && G && G.flags[k]) continue;
       if (tr.once && G) G.flags[k] = true;

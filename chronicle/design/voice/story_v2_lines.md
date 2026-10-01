@@ -47,11 +47,6 @@
 | `v_otto_pharos_04` | story | `pharos_otto` with party say 2 | 灯台の守り歌が、<br>どうしても思い出せんのじゃ。<br>あの歌がなけりゃ、火はつかん。 | quietly distressed, ashamed that his memory fails him; slow |
 | `v_otto_pharos_05` | story | `pharos_otto` with party say 3 | ……頼む。<br>これが灯台の鍵じゃ。 | a heartfelt plea after a pause, handing over something precious; low and sincere |
 | `v_otto_pharos_06` | story | `pharos_otto` after the key say 1 | 灯台は、町を出て南の<br>岬の先じゃ。行く前に、<br>戦いの心得を教えておこう。 | practical and steady, an old hand giving directions, a little proud to teach |
-| `v_otto_tower_01` | story | `lighthouse_1_tutorial` say 1 | 中から、ネズミの鳴き声が……<br>気をつけるんじゃ！ | hushed alarm, listening at the door, then a sharp warning |
-| `v_otto_tower_02` | story | `lighthouse_1_tutorial` after a lost tutorial battle | ……危なかったのう。<br>ひと息ついて、もう一度じゃ。 | relieved and encouraging, gentle |
-| `v_otto_tower_03` | story | `lighthouse_1_tutorial` glimmer explained (technique; spell=false) | 今のは……『閃き』じゃな。<br>戦いの中で、ふいに<br>新しい技を思いつくことがある。 | impressed and delighted, an old man recognising something he has seen before |
-| `v_otto_tower_04` | story | `lighthouse_1_tutorial` glimmer explained (spell; spell=true) | 今のは……『閃き』じゃな。<br>戦いの中で、ふいに<br>新しい術を思いつくことがある。 | impressed and delighted, an old man recognising something he has seen before |
-| `v_otto_tower_05` | story | `lighthouse_1_tutorial` last say before leaving | わしは港へ戻っておる。<br>上の灯室を、頼んだぞ。 | trusting, entrusting the task; warm and firm |
 | `v_otto_reward_01` | story | `pharos_otto_reward` first time say 2 (the song) | ♪　海の果てまで、灯よ届け<br>帰る舟に、道を照らせ……。 | he half-sings, half-hums the old lighthouse song he just got back, slow and a little shaky, full of emotion; a plain folk melody, not performed |
 | `v_otto_reward_02` | story | `pharos_otto_reward` first time say 3 | これは、わしが若いころから<br>使ってきたランタンじゃ。<br>持っていっておくれ。 | tender and grateful, giving a treasured keepsake |
 | `v_otto_reward_03` | story | `pharos_otto_reward` first time say 4 | 若いころ、灯台には<br>『朝番』というのがあってな。<br>火が戻ったら、また立てるつもりじゃ。 | fond reminiscence, smiling, looking forward |
