@@ -194,7 +194,7 @@ MUSIC[-1]['dur'] = T2 - T_CLIFF + 0.4
 MUSIC[-1]['fout'] = 0.8
 MUSIC.append(dict(file='home', at=T2, src=DB_HOME, dur=0, fin=0.2, gain=-3))
 DIP.append((T2, 0.4))
-cut('s2_berna', T2, 8.9, src=8.6, ev=True, nosub=True)   # v_berna_lute_05「どこから回ってもいい。…」（本物の会話の窓）
+cut('s2_berna', T2, 8.9, src=9.0, ev=True, nosub=True)   # v_berna_lute_05「どこから回ってもいい。…」（本物の会話の窓）
 tag('白紙になりかけた八つの伝承を、\n語り直す旅へ。', T2 + 1.0, T2 + 8.7, y=420, size=66)
 t = T2 + 8.9
 SFX.append(dict(id='page', at=t - 0.05, gain=-6))
@@ -233,7 +233,7 @@ cap('VOICE', '全員ボイス。いつでも入れ替え', t + 4.0, T_TAV_END - 
 t = T_TAV_END
 bars(t, LB, 0.3)
 cut('s3_coral', t, 3.6, src=1.0, xin=0.3)
-tag('どの4人でも、クリアできる。', t + 0.6, t + 3.5, size=62)
+tag('選んだ4人が、あなただけの旅になる。', t + 0.6, t + 3.5, size=62)
 t += 3.6
 
 # ================================================================== 4 世界（legend・ページめくり・拍で切る・6 つの地方）
@@ -278,14 +278,14 @@ cut('s5_glimmer', T_FRZ, 1.5, src=7.78, freeze=True, grade=dict(sat=0.75, bright
 FLASH.append((T_FRZ, 0.06, 0.35, 0.5))
 SFX.append(dict(id='glimmer', at=T_FRZ, gain=-4))
 vo('v_hero_f_glimmer_1', T_FRZ + 0.05, y=1000, until=T_FRZ + 5.8)   # 止め絵から同じ戦闘が続くので、場面の終わりは戦闘の終わり
-big('閃き', T_FRZ + 0.02, T_FRZ + 2.7, y=480, subtext='技128・術79が、戦いの中でひらめく', band=440)
+big('閃き', T_FRZ + 0.02, T_FRZ + 2.7, y=480, subtext='128の技と79の術を、戦いの中でひらめく', band=440)
 cut('s5_glimmer', T_FRZ + 1.5, 4.3, src=7.78, gamesfx=-6, ev=True, ev_jingle=False)   # 日の出の剣: 11.0–11.6 で日輪、11.93 で一撃（新エフェクト）
 FLASH.append((T_FRZ + 1.5 + 11.3 - 7.78, 0.05, 0.35, 0.4, (1.0, 0.9, 0.7)))
 t = T_FRZ + 5.8
 # 合成術
 cut('s5_combo', t, 3.2, src=7.0, gamesfx=-6, ev=True, ev_jingle=False, suby=1000)   # 7.57 唱える → 8.27 当たる
 FLASH.append((t + 1.65, 0.06, 0.4, 0.3, (0.7, 0.85, 1.0)))   # 荒れ狂う海: 8.65 で大波の山
-cap('COMBO', '属性を重ねて、合成術。50種', t + 0.2, t + 3.1)
+cap('COMBO', '属性を重ねて生まれる、50の合成術', t + 0.2, t + 3.1)
 t += 3.2
 # 敵の合体技（炎の竜巻: 5.80 唱える → 6.0 札 → 6.5–7.6 竜巻、7.17 当たる）
 cut('s5_ecombo', t, 2.6, src=5.5, gamesfx=-6, ev=True, ev_jingle=False, suby=1000)
@@ -302,7 +302,7 @@ cut('s5_gold', t, 2.2, src=0.4, gamesfx=-7, ev=True, jgain=-6)
 cut('s5_gold', t + 2.2, 1.4, src=8.85, gamesfx=-6)   # 光紋剣 8.9 魔法陣 → 9.75 当たる
 cut('s5_gold', t + 3.6, 2.4, src=15.8, gamesfx=-8, ev=True, jgain=-5)   # 16.22 レアのドロップ
 cap('RARE', '金色の魔物。レア・超レアのドロップ', t + 0.3, t + 3.3, size=64)
-cap('EQUIP', '武器301・防具とアクセサリ745', t + 3.65, t + 5.9)
+cap('EQUIP', '1000種を超える武器と防具が、あなたを待つ', t + 3.65, t + 5.9)
 t += 6.0
 
 # ================================================================== 6 年代記（sorrow の頭に 1 つだけ）

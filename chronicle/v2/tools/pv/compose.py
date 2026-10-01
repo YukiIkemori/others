@@ -396,6 +396,7 @@ def render(edit, clips, out, t_from=None, t_to=None, stills=None, stills_dir=Non
                                 '-c:v', 'libx264', '-preset', 'medium', '-crf', '14', '-pix_fmt', 'yuv420p', out], stdin=subprocess.PIPE)
     still_frames = set(int(round(s * FPS)) for s in (stills or []))
     prev_base = None
+    _PBASE = {}   # ページめくりのカット → めくられる紙（始まる直前のコマ）
     for fi in range(f_from, f_to):
         if not enc and fi not in still_frames:
             continue
@@ -416,9 +417,13 @@ def render(edit, clips, out, t_from=None, t_to=None, stills=None, stills_dir=Non
                 a = min(1.0, (fi - s.f0) / (x * FPS)) if x else 1.0
                 frame[by:by + bh, bx:bx + bw] = frame[by:by + bh, bx:bx + bw] * (1 - a) + small * a
                 continue
-            if s.d.get('page') and prev_base is not None and j == 0 and fi - s.f0 < s.d['page'] * FPS:
-                frame = page_turn(prev_base, img, (fi - s.f0) / (s.d['page'] * FPS))
-                continue
+            if s.d.get('page') and fi - s.f0 < s.d['page'] * FPS:
+                # めくられる紙は「このカットが始まる直前のコマ」で固定する（前のカットが数コマ重なっていても、新しい絵が先に見えない）
+                if id(s) not in _PBASE and prev_base is not None:
+                    _PBASE[id(s)] = prev_base.copy()
+                if id(s) in _PBASE:
+                    frame = page_turn(_PBASE[id(s)], img, (fi - s.f0) / (s.d['page'] * FPS))
+                    continue
             if x and fi - s.f0 < x * FPS:
                 a = ease((fi - s.f0) / (x * FPS))
                 frame = frame * (1 - a) + img * a
