@@ -165,5 +165,59 @@ function battle() {
   R.State.newGame({ seed: 8 });
   const b = fake(0.3, true);
   ok('名を呼ぶ（第 2 の姿の後）: 王が倒れ、desert_named', !b.king.alive && R.Game.flags.desert_named === true);
+  // 砂もぐり（2026-10-01 オーナー「3 ターンに 1 回しか攻撃してこない」）: 攻めの手番の割合・続けて休まない・土で予告を消す／引きずり出す
+  {
+    const BC = R.BattleCore, AI = R.BattleAI, A = D.bossActions;
+    const { buildParty, STD } = require('./sim_zones');
+    const inv = { i_salve: 6, i_revive: 2, i_waker: 4, i_antidote: 3, i_clear: 2 };
+    const party = buildParty(R, { tier: 1, kind: 'mid', members: STD, items: inv, seed: 5 });
+    const offensive = (id) => id === 'attack' || !!(A[id] && (A[id].target !== 'self' || (A[id].effects || []).some((e) => e.type === 'damage')));
+    const E = BC.Engine.prototype, exec0 = E.execute;
+    let log = null;
+    E.execute = function* (u, cmd) { if (log && !u.isParty && u.id === 'b_sandworm') log.push({ id: cmd.type === 'attack' ? 'attack' : cmd.id, round: this.round }); yield* exec0.call(this, u, cmd); };
+    let acts = 0, off = 0, streak = 0, maxIdle = 0;
+    try {
+      for (let i = 0; i < 40; i++) {
+        log = [];
+        BC.simulate({ party, troop: 'tr_b_sandworm', tier: 1, seed: 'worm-reg:' + i, inv, maxRounds: 30, ai: AI.styleAI('script') });
+        let s = 0;
+        for (const x of log) { acts++; if (offensive(x.id)) { off++; s = 0; } else { s++; maxIdle = Math.max(maxIdle, s); } }
+      }
+    } finally { E.execute = exec0; log = null; }
+    ok(`砂もぐり: 攻めの手番が 6 割以上（台本 40 戦 ${acts} 手番で ${Math.round((100 * off) / acts)}%）`, off / acts >= 0.6, { acts, off });
+    ok('砂もぐり: 攻めない手番は続かない（身を沈める予告の 1 手番だけ）', maxIdle <= 1, maxIdle);
+    ok('砂もぐり: もぐりざまの一撃（eb_worm_sink）はダメージがあり、予告の次は砂中の一撃', A.eb_worm_sink.effects.some((e) => e.type === 'damage') && A.eb_worm_sink.telegraph.next === 'eb_worm_burst');
+    // 土で打つ: 予告（身を沈める）の間 → もぐれない／もぐっている間 → すぐ引きずり出す（battle_core の cancel・cancel.special）
+    const isEarth = (a) => !!(a && ((a.elements || []).includes('earth') || (a.effects || []).some((e) => e.type === 'damage' && e.element === 'earth')));
+    const earthAI = (want) => (eng) => {
+      const w = eng.living('mon')[0];
+      return eng.party.map((u) => {
+        if (!u.commandable()) return null;
+        if (w && w.reserved && w.reserved.id === want) {
+          const o = AI.abilityOptions(eng, u).find((x) => isEarth(x.ab) && x.ab.target === 'enemy' && x.mp <= u.mp);
+          if (o) return { type: o.type, id: o.id, target: w };
+        }
+        return { type: 'defend' };
+      });
+    };
+    // 墓荒らしの土の石で 術の使える 3 人が『石つぶて』を覚えた一行（1 人が倒れても試せる）
+    const earthParty = party.map((c, i) => (i >= 1 ? Object.assign({}, c, { spells: (c.spells || []).concat(['s_earth_1']) }) : c));
+    const probe = (want) => {
+      const seen = [];
+      const ex1 = E.execute;
+      E.execute = function* (u, cmd) {
+        const before = { sunk: !!this.flags.worm_sunk };
+        yield* ex1.call(this, u, cmd);
+        if (u.isParty && cmd.target && cmd.target.id === 'b_sandworm' && isEarth(BC.ACT(cmd.id))) seen.push({ before, after: { sunk: !!this.flags.worm_sunk, reserved: cmd.target.reserved && cmd.target.reserved.id, slash: (cmd.target.ownDef().phys || {}).slash } });
+      };
+      // 術の人が砂もぐりより遅いと先に大技が来るので、いくつかの種で試す
+      try { for (let i = 0; i < 12 && seen.length < 3; i++) BC.simulate({ party: earthParty, troop: 'tr_b_sandworm', tier: 1, seed: 'worm-earth:' + i, inv, maxRounds: 8, ai: earthAI(want) }); } finally { E.execute = ex1; }
+      return seen;
+    };
+    const r1 = probe('eb_worm_sink');
+    ok('土で打つ（身を沈める予告の間）: 予告が消えてもぐらない', r1.length > 0 && r1.every((x) => !x.after.reserved && !x.after.sunk), r1);
+    const r2 = probe('eb_worm_burst');
+    ok('土で打つ（もぐっている間）: 砂中の一撃が消え、すぐに顔を出す（刃が通る）', r2.length > 0 && r2.some((x) => x.before.sunk) && r2.every((x) => !x.after.sunk && !x.after.reserved && !(x.after.slash < 1)), r2);
+  }
   done('test_content_desert');
 }
