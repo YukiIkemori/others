@@ -74,6 +74,19 @@
     if (cond == null) return false;
     try { return !(R.State && R.Game && R.State.check(cond)); } catch (e) { return true; }
   }
+  /** 変わるマスの今の開け閉め（FIELD が前と比べて焼き直す。tilePatches が当たりを変えない絵だけの変化も拾う）。
+   *  → {sig: '0110…'}（live の組ごとに閉じた絵を置くなら 1）。下絵が無い・live が無ければ null */
+  T._liveState = function (map) {
+    const a = map && map.art;
+    if (!a || !a.closed || !T.Env || !T.Env.under) return null;
+    let b = null;
+    for (const t of [32, 24, 40]) if ((b = T.Env.under(a.image, t, true))) break;   // meta は大きさによらず同じ。読めている絵のどれか（読み始めない）
+    const live = b && b.j && b.j.live;
+    if (!live) return null;
+    let st;
+    try { st = stateOf(map); } catch (e) { return null; }
+    return { sig: live.map((L) => (liveClosed(map, L, st) ? '1' : '0')).join('') };
+  };
   /** 変わるマスを n マス広げた一覧（liveSoft。一度作って L に覚える） */
   function softCells(L, n) {
     if (!n) return L.cells;

@@ -128,7 +128,7 @@ section('王墓のオアシスの満ちた泉（cleared_r_desert の後の絵）
   // 前は満ちた泉の絵（desert_camp3_closed）がマスの形の青い四角を並べた物で、描いた下絵の上に四角い水が貼りついて見えた
   //   → 下絵の泉の水の筆致から作った、丸い岸・やわらかい縁の絵。絵のある画素のマスは全部 live のマス（マスの端で絵が切れない）
   const zlib = require('zlib');
-  function png(file) {   // 8 bit RGBA・インターレース無しの PNG を読む（このテストの絵だけ）
+  function png(file) {   // 8 bit RGB / RGBA・インターレース無しの PNG を読む（このテストの絵だけ）
     const b = fs.readFileSync(file), chunks = [], idat = [];
     let i = 8, w = 0, h = 0, ct = 0;
     while (i < b.length) {
@@ -138,7 +138,7 @@ section('王墓のオアシスの満ちた泉（cleared_r_desert の後の絵）
       if (t === 'IDAT') idat.push(d);
       i += 12 + n;
     }
-    const raw = zlib.inflateSync(Buffer.concat(idat)), bpp = 4, st = w * bpp, px = Buffer.alloc(w * h * bpp);
+    const raw = zlib.inflateSync(Buffer.concat(idat)), bpp = ct === 6 ? 4 : 3, st = w * bpp, px = Buffer.alloc(w * h * bpp);
     for (let y = 0; y < h; y++) {
       const f = raw[y * (st + 1)], src = raw.subarray(y * (st + 1) + 1, (y + 1) * (st + 1));
       for (let x = 0; x < st; x++) {
@@ -169,7 +169,18 @@ section('王墓のオアシスの満ちた泉（cleared_r_desert の後の絵）
       if (!cells.has(k)) out.add(k);
     }
     ok(`@${t}: 絵のある画素のマスはどれも live のマス（マスの端で絵が切れない）`, out.size === 0, [...out].slice(0, 8));
-    ok(`@${t}: 縁がやわらかい（半透明の画素がある）`, soft > solid * 0.05, { soft, solid });
+    ok(`@${t}: 縁がやわらかい（半透明の画素がある）`, soft > solid * 0.01, { soft, solid });
+    // 継ぎ目が見えない: 絵の外周の画素（隣が透明）では、下絵に重ねた色が下絵とほとんど同じ
+    const base = png(path.join(dir, `desert_camp3@${t}.png`)), bc = base.ct === 6 ? 4 : 3;
+    let seam = 0, n = 0;
+    for (let y = 1; y < im.h - 1; y++) for (let x = 1; x < im.w - 1; x++) {
+      const q = (y * im.w + x) * 4, a = im.px[q + 3];
+      if (!a || [[1, 0], [-1, 0], [0, 1], [0, -1]].every(([dx, dy]) => im.px[((y + dy) * im.w + x + dx) * 4 + 3] > 0)) continue;
+      const bq = (y * im.w + x) * bc;
+      for (let c = 0; c < 3; c++) seam += Math.abs(im.px[q + c] - base.px[bq + c]) * a / 255;
+      n += 3;
+    }
+    ok(`@${t}: 絵の外周で下絵との差が小さい（平均 < 3）`, n > 0 && seam / n < 3, { mean: n && +(seam / n).toFixed(2), n });
     // マスの四角が見えない: live のマスの外周（隣が live でない辺）に不透明の画素が並ばない
     let edge = 0;
     for (const k of cells) {

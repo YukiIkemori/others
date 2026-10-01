@@ -34,6 +34,7 @@
     S.chGen = (S.chGen || 0) + 1;
     S.chTile = F._tile();
     S.lastGrid = S.map ? R.MapUtil.grid(S.map) : null;
+    S.lastLive = S.map ? liveOf(S.map) : null;
     S.stat.adopted = 0;
     const P = S.pre;
     S.pre = null;
@@ -47,7 +48,8 @@
     e.dead = true;
     if (e.bytes) R.Hd.track('chunk', e.tid, null);
   }
-  function gridSig(m) { return R.MapUtil.grid(m).join('\n'); }
+  function liveOf(m) { try { return (R.Terrain._liveState && R.Terrain._liveState(m)) || null; } catch (e) { return null; } }
+  function gridSig(m) { const lv = liveOf(m); return R.MapUtil.grid(m).join('\n') + (lv ? '|' + lv.sig : ''); }   // 先に焼いた物は、変わるマスの開け閉めも同じときだけ使う
 
   function entry(m, cx, cy) {
     const e = { m, tile: S.chTile, cx, cy, key: cy * KEYW + cx, ready: false, base: null, over: null, lights: null, glows: null, props: null, fb: false, bytes: 0, used: R.Engine.frame, dead: false, job: null, next: null };
@@ -337,6 +339,11 @@
   }
   /** tilePatches の結果が変わったか（フラグ・変数・品の後）。変わったマスのチャンクだけ焼き直す */
   CK.checkGrid = function () {
+    // 描いた下絵の変わるマス（meta.live）: 当たりが変わらなくても絵が変わる（王墓のオアシスの泉が満ちる）。開け閉めが変わったら全部焼き直す
+    //   （変わったマスのチャンクだけだと、同じフラグで出る灯り（日輪の火）の光だまりがチャンクの四角で切れる。めったに無いので全部で良い）
+    const lv = liveOf(S.map), lo = S.lastLive;
+    S.lastLive = lv;
+    if (lv && lo && lv.sig !== lo.sig) { S.lastGrid = R.MapUtil.grid(S.map); CK.dirtyAll(); return; }
     const g = R.MapUtil.grid(S.map), old = S.lastGrid;
     if (g === old) return;
     S.lastGrid = g;
