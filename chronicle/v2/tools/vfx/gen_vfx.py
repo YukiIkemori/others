@@ -208,7 +208,7 @@ def process(style, p):
         r, c = divmod(k, cols)
         x0, y0, x1, y1 = int(round(c * cw)), int(round(r * ch)), int(round((c + 1) * cw)), int(round((r + 1) * ch))
         rgb, a = cell_alpha(im[y0:y1, x0:x1], p)
-        a = a * edge_fade(a.shape[0], a.shape[1], p.get('edge', 0.03 if cols * rows > 1 else 0.015))
+        a = a * edge_fade(a.shape[0], a.shape[1], p.get('edge', 0.045 if cols * rows > 1 else 0.015))
         a = np.where(a < p.get('alpha_floor', 0.02), 0, a)
         cells.append((rgb, a))
     # 全部のコマで同じずらし（コマごとに合わせるとがたつく）: 基準の点 = 重心の平均（anchor で軸を決める）
@@ -268,7 +268,10 @@ def process(style, p):
     os.makedirs(OUT, exist_ok=True)
     dst = os.path.join(OUT, p['id'] + '.webp')
     Image.fromarray(np.clip(np.rint(strip), 0, 255).astype(np.uint8), 'RGBA').save(dst, 'WEBP', quality=p.get('q', 86), alpha_quality=90, method=6)
-    meta = {'n': len(frames), 'w': ow, 'h': oh, 'fps': p.get('fps', 24), 'loop': bool(p.get('loop')), 'tint': bool(p.get('tint')),
+    # 山（一番濃いコマ）: 実行時は山まで速く進めて、山を保ってから消す（fx_seq_img.js の DEFSEG）
+    energy = [float((f[..., 3] / 255.0 * (lum(f[..., :3]) / 255.0 + 0.3)).sum()) for f in frames]
+    peak = int(np.argmax(energy)) if p.get('peak') is None else int(p['peak'])
+    meta = {'n': len(frames), 'peak': peak, 'w': ow, 'h': oh, 'fps': p.get('fps', 24), 'loop': bool(p.get('loop')), 'tint': bool(p.get('tint')),
             'blend': p.get('blend') or ('lighter' if p.get('bg', 'black') == 'black' else 'source-over'),
             'anchor': [round(tx, 1), round(ty, 1)], 'scale': p.get('scale', 0.5), 'group': p.get('group', '')}
     json.dump(meta, open(os.path.join(OUT, p['id'] + '.json'), 'w'), ensure_ascii=False, separators=(',', ':'))

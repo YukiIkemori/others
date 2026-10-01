@@ -2,6 +2,7 @@
 //   RPG.FxGallery.open({demo:'normal'})   見本の戦闘を開き、命令の窓の代わりに見本の操作にする（←→ で選ぶ・A で流す・↑↓ で 10 飛ばし・Y で閃きつき）
 //   RPG.FxGallery.list()                  流せる id（'t_sword_first' など。技・術の id）
 //   RPG.FxGallery.play(id, {glimmer})     その技・術の出来事の列を作って流す（Promise）
+//   RPG.FxGallery.parts(true)            画像の効果の部品（assets/fx）を全部動かして並べる（tools/fx_gallery.js --parts）
 //   RPG.FxGallery.begin(id) / step(ms)    書き出し用: 流し始め → 戦闘の時計を手で進めて 1 コマ描く（tools/fx_gallery.js）
 (function (R) {
   'use strict';
@@ -108,4 +109,40 @@
     return { done: !!G.done, clock: st ? st.clock : 0, seqT, hitT };
   };
   G.state = () => st;
+
+  // ---------------------------------------------------------------- 画像の効果の部品の一覧（assets/fx。どの部品も動かして並べる）
+  //   RPG.FxGallery.parts(true|false)   一覧の重ね絵を出す・消す（時間は R.Engine.time。白黒の部品は技・術の色を順に塗る）
+  G.parts = function (on) {
+    const I = R.BFX.img;
+    if (!on) { R.Engine.overlay('fxparts', null); return false; }
+    const ids = Object.keys((window.RPG_MEDIA && window.RPG_MEDIA.fx) || {}).sort();
+    I.preload(ids);
+    const pals = ['sword', 'fire', 'water', 'wind', 'earth', 'light', 'dark', 'thunder', 'heal', 'gold'];
+    R.Engine.overlay('fxparts', (g) => {
+      const W = R.W, H = R.H, cols = Math.ceil(Math.sqrt(ids.length * W / H)), rows = Math.ceil(ids.length / cols);
+      const cw = W / cols, ch = H / rows, t = R.Engine.time;
+      g.save();
+      g.fillStyle = '#0b0c16'; g.fillRect(0, 0, W, H);
+      ids.forEach((id, i) => {
+        const m = I.meta(id);
+        if (!m) return;
+        const x = (i % cols) * cw, y = Math.floor(i / cols) * ch;
+        g.fillStyle = i % 2 ? '#141626' : '#181a2c'; g.fillRect(x, y, cw, ch);
+        // 1 周 = コマの長さ（1 コマの部品は 1.2 秒で回る・脈打つ）＋休み 0.3 秒
+        const dur = m.n > 1 ? m.n / m.fps * 1000 : 1200, per = dur + 300, tt = t % per;
+        const fi = m.loop ? (t * m.fps / 1000) % m.n : Math.min(m.n - 1, (tt / dur) * m.n);
+        const s = Math.min((cw * 0.86) / (m.w * m.scale), (ch * 0.72) / (m.h * m.scale));
+        g.save();
+        g.translate(x + cw / 2 + (m.anchor[0] - m.w / 2) * m.scale * s, y + ch * 0.46 + (m.anchor[1] - m.h / 2) * m.scale * s);
+        g.globalCompositeOperation = m.blend || 'lighter';
+        const pal = m.tint ? R.BFX.seq.PAL[pals[Math.floor(t / per) % pals.length]] : null;
+        I.drawFrame(g, id, fi, { s, rot: m.n <= 1 && /circle|rays/.test(id) ? t / 1000 * 0.6 : 0, pal });
+        g.restore();
+        g.fillStyle = '#cfd6ea'; g.font = R.Gfx.font(Math.max(7, Math.min(10, cw / 12)), 600); g.textBaseline = 'bottom';
+        g.fillText(id + (m.tint ? ' *' : ''), x + 4, y + ch - 3);
+      });
+      g.restore();
+    }, 3000);
+    return ids.length;
+  };
 })(window.RPG);

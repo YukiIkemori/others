@@ -109,6 +109,797 @@
    "loop": false,
    "prompt": "A healing magic animation: soft emerald-green and mint light rising upward from the bottom of each cell: gentle glowing motes, small four-pointed twinkling stars and a few translucent leaf-shaped light petals spiralling upward around a soft vertical glow. Frame 1 faint, frames 2-5 growing and rising, frames 6-8 drifting higher and fading. Warm white sparkle cores, green and aqua glow.",
    "anchor": "bottom"
+  },
+  {
+   "id": "slash_heavy",
+   "group": "slash",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    384
+   ],
+   "fps": 24,
+   "tint": true,
+   "prompt": "A heavy greatsword cleave animation: a very thick, wide crescent blade trail smashing diagonally downward from upper-left to lower-right, with a heavy weighty leading edge, a blast of short spark streaks and a burst of shock lines at the end of the swing. Frames 1-3 the swing building fast, frame 4 the full thick crescent with an impact flare, frames 5-8 the trail breaking into fragments and fading."
+  },
+  {
+   "id": "slash_line",
+   "group": "slash",
+   "grid": [
+    2,
+    4
+   ],
+   "cell": "wide horizontal rectangular",
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    448,
+    128
+   ],
+   "fps": 30,
+   "tint": true,
+   "prompt": "A straight sword slash line animation: a perfectly straight, horizontal, razor-thin cut line of light across the cell, tapered sharply at both ends. Frame 1 a tiny spark at the left, frames 2-3 the line racing to the right, frame 4 the full brilliant line with a bright flare in the middle, frames 5-8 the line splitting into a thin afterimage gap and dissolving into tiny glints."
+  },
+  {
+   "id": "slash_x",
+   "group": "slash",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 26,
+   "tint": true,
+   "prompt": "A cross slash animation: two sharp crescent blade trails crossing in an X shape. Frames 1-2 the first diagonal slash, frames 3-4 the second diagonal slash crossing it with a bright star flare at the crossing point, frames 5-8 the X glowing then fracturing into glinting shards and fading."
+  },
+  {
+   "id": "slash_multi",
+   "group": "slash",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 28,
+   "tint": true,
+   "prompt": "A rapid multi-slash flurry animation: many thin quick crescent cuts appearing one after another at different angles around the centre, criss-crossing, with small glints at each cut. Frames 1-6 more and more cuts piling up, frames 7-8 the cuts flashing and fading."
+  },
+  {
+   "id": "slash_spin",
+   "group": "slash",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    384
+   ],
+   "fps": 24,
+   "loop": true,
+   "tint": true,
+   "prompt": "A spinning whirlwind blade ring animation seen at a slight top-down angle: an elliptical ring of sharp crescent blade trails rotating around the centre, with motion-blur streaks and sparks flung outward. Each frame is the ring rotated a little further; seamless loop."
+  },
+  {
+   "id": "thrust_streak",
+   "group": "slash",
+   "grid": [
+    2,
+    4
+   ],
+   "cell": "wide horizontal rectangular",
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    448,
+    128
+   ],
+   "fps": 30,
+   "tint": true,
+   "prompt": "A piercing thrust animation pointing to the right: a sharp spear-tip shaped streak of light shooting from left to right, a long tapered tail behind it and a bright pointed tip with a small cone-shaped shock flare at the front. Frames 1-3 the streak shooting forward, frame 4 full length with a burst at the tip, frames 5-8 the streak thinning and fading to sparkles."
+  },
+  {
+   "id": "arrow_streak",
+   "group": "slash",
+   "grid": [
+    1,
+    1
+   ],
+   "n": 1,
+   "size": "1536x512",
+   "out": [
+    384,
+    96
+   ],
+   "fps": 24,
+   "tint": true,
+   "prompt": "A single glowing magic arrow of light flying to the right: a sharp arrowhead at the right end, a slim shaft and a long fading comet-like light trail with tiny sparkles trailing to the left. Horizontal, centred."
+  },
+  {
+   "id": "impact_flash",
+   "group": "hit",
+   "grid": [
+    3,
+    2
+   ],
+   "n": 6,
+   "size": "1536x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 26,
+   "tint": true,
+   "prompt": "A critical hit impact flash animation: frame 1 a bright compact flash, frame 2 a huge eight-pointed star burst with long thin light rays and a round shock ring, frame 3 the ring expanding with broken spark fragments, frames 4-6 rays shrinking, ring fading into scattered glints."
+  },
+  {
+   "id": "hit_spark_b",
+   "group": "hit",
+   "grid": [
+    3,
+    2
+   ],
+   "n": 6,
+   "size": "1536x1024",
+   "out": [
+    224,
+    224
+   ],
+   "fps": 30,
+   "tint": true,
+   "prompt": "A sharp slashing hit spark animation: frame 1 a small hot point, frame 2 a burst of jagged sharp splinter-like spark spikes radiating unevenly, frame 3 the largest burst with flying spark streaks curving outward, frames 4-6 streaks scattering and fading."
+  },
+  {
+   "id": "hit_spark_c",
+   "group": "hit",
+   "grid": [
+    3,
+    2
+   ],
+   "n": 6,
+   "size": "1536x1024",
+   "out": [
+    256,
+    256
+   ],
+   "fps": 28,
+   "tint": true,
+   "prompt": "A blunt heavy impact animation: frame 1 a white flash, frame 2 a round bursting shock puff with a thick bright ring and a stubby star in the middle, frame 3 the ring widening with heavy chunky debris sparks flying out, frames 4-6 ring breaking into fragments and fading."
+  },
+  {
+   "id": "shockwave_ring",
+   "group": "ring",
+   "grid": [
+    1,
+    1
+   ],
+   "n": 1,
+   "size": "1024x1024",
+   "out": [
+    384,
+    384
+   ],
+   "tint": true,
+   "prompt": "A single circular shockwave ring of energy, front view: a thin very bright crisp ring line with a soft glow halo inside and outside, a few small spark flecks along the ring and faint wispy distortion streaks. Perfect circle, empty centre."
+  },
+  {
+   "id": "magic_circle",
+   "group": "circle",
+   "grid": [
+    1,
+    1
+   ],
+   "n": 1,
+   "size": "1024x1024",
+   "out": [
+    512,
+    512
+   ],
+   "tint": true,
+   "prompt": "A single ornate glowing magic circle seen straight from above: concentric glowing rings, an outer band of mysterious runic glyph symbols (invented, not real letters), an inner seven-pointed star polygon, small orbiting dots, delicate geometric lines, all glowing light lines. Perfect circle, symmetric, flat."
+  },
+  {
+   "id": "magic_circle_b",
+   "group": "circle",
+   "grid": [
+    1,
+    1
+   ],
+   "n": 1,
+   "size": "1024x1024",
+   "out": [
+    512,
+    512
+   ],
+   "tint": true,
+   "prompt": "A single glowing summoning magic circle seen straight from above: a hexagram of two interlocking triangles inside double rings, crescent moon motifs and small circles at the six points, a ring of abstract rune marks (invented, not real letters), fine filigree lines, all glowing light lines. Perfect circle, symmetric, flat."
+  },
+  {
+   "id": "light_pillar",
+   "group": "light",
+   "grid": [
+    1,
+    1
+   ],
+   "n": 1,
+   "size": "1024x1536",
+   "out": [
+    192,
+    512
+   ],
+   "anchor": "bottom",
+   "tint": true,
+   "prompt": "A single tall vertical pillar of holy light rising from a small bright elliptical glowing spot at the bottom to the top of the image: a brilliant white core column, soft glowing edges, faint vertical light streaks and small rising sparkles, fading out softly at the very top."
+  },
+  {
+   "id": "rays_burst",
+   "group": "light",
+   "grid": [
+    1,
+    1
+   ],
+   "n": 1,
+   "size": "1024x1024",
+   "out": [
+    512,
+    512
+   ],
+   "tint": true,
+   "prompt": "A single radial burst of light rays seen front-on: many long sharp tapering god-ray beams of varied lengths radiating from a bright small central sun point, soft glow at the centre, rays fading to nothing at the tips."
+  },
+  {
+   "id": "energy_orb",
+   "group": "orb",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    256,
+    256
+   ],
+   "fps": 18,
+   "loop": true,
+   "tint": true,
+   "prompt": "A charging energy orb animation: a glowing sphere of crackling magical energy with a bright core, swirling inner wisps and small particles being drawn inward from around it, a soft outer glow. The orb pulses and the wisps rotate from frame to frame; seamless loop."
+  },
+  {
+   "id": "sparkle_twinkle",
+   "group": "light",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    256,
+    256
+   ],
+   "fps": 16,
+   "tint": true,
+   "prompt": "A twinkling sparkle cluster animation: a loose cluster of crisp four-pointed star glints and tiny glowing dots of varied sizes; frame 1 a few faint dots, frames 2-5 more stars blooming and twinkling with cross flares, frames 6-8 stars shrinking and fading one by one."
+  },
+  {
+   "id": "aura_rise",
+   "group": "aura",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    256,
+    320
+   ],
+   "anchor": "bottom",
+   "fps": 16,
+   "loop": true,
+   "tint": true,
+   "prompt": "A rising battle aura animation: a flickering column of upward-flowing aura flames and light streaks rising from a glowing ellipse at the bottom of each cell, with small particles floating upward, flame tongues licking up and wavering; seamless loop."
+  },
+  {
+   "id": "fireball",
+   "group": "fire",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 20,
+   "loop": true,
+   "prompt": "A fireball projectile flying to the right animation: a blazing round fireball with a white-yellow hot head at the right and a long swirling tail of orange and red flame and embers streaming to the left; the flames flicker and swirl differently each frame; seamless loop. Horizontal, centred in each cell."
+  },
+  {
+   "id": "flame_pillar",
+   "group": "fire",
+   "grid": [
+    6,
+    1
+   ],
+   "cell": "tall narrow",
+   "n": 6,
+   "size": "2304x1024",
+   "out": [
+    224,
+    448
+   ],
+   "anchor": "bottom",
+   "fps": 14,
+   "prompt": "An erupting pillar of fire animation: a tall column of roaring flame bursting up from the bottom of each cell. Frame 1 a small flame burst at the bottom, frames 2-4 a towering pillar of swirling orange and yellow flame with a white-hot base and flying embers, frames 5-6 the pillar breaking into licking flames and smoke-red embers fading upward."
+  },
+  {
+   "id": "fire_ground",
+   "group": "fire",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    256
+   ],
+   "anchor": "bottom",
+   "fps": 16,
+   "loop": true,
+   "prompt": "A wide patch of burning ground flames animation: a low wide row of flickering flame tongues of different heights burning along the bottom of each cell, bright yellow at the base, orange and red tips, small embers rising; the flames dance differently each frame; seamless loop."
+  },
+  {
+   "id": "water_splash",
+   "group": "water",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "anchor": "bottom",
+   "fps": 20,
+   "prompt": "A big water splash animation: frame 1 a small droplet impact at the bottom, frames 2-4 a crown-shaped burst of clear blue water erupting upward and outward with droplets and white foam highlights, frames 5-7 the water falling back in arcs of droplets, frame 8 small fading droplets. Glossy translucent water with bright specular highlights."
+  },
+  {
+   "id": "water_spiral",
+   "group": "water",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    384
+   ],
+   "fps": 18,
+   "loop": true,
+   "prompt": "A swirling water vortex animation seen at a slight top-down angle: a spiral whirlpool of rushing blue water currents and white foam spinning around a dark centre, with droplets flung out; each frame rotated further; seamless loop."
+  },
+  {
+   "id": "ice_crystal",
+   "group": "ice",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "anchor": "bottom",
+   "fps": 16,
+   "prompt": "An ice crystal eruption animation: frames 1-3 a cluster of large sharp ice crystal spikes growing up out of the bottom of each cell with frost mist, frame 4 the full tall glittering crystal cluster with bright rim light, frames 5-6 cracks spreading through it, frames 7-8 the crystals shattering into flying ice shards and fading frost. Pale cyan and white, deep blue facets."
+  },
+  {
+   "id": "wind_slash",
+   "group": "wind",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 24,
+   "prompt": "A wind blade animation: several sharp crescent-shaped blades of swirling green-and-mint wind cutting across from right to left, with thin airflow streaks and a few torn leaves. Frames 1-3 blades forming and flying, frame 4 brightest, frames 5-8 blades dispersing into curling wisps."
+  },
+  {
+   "id": "tornado",
+   "group": "wind",
+   "grid": [
+    6,
+    1
+   ],
+   "cell": "tall narrow",
+   "n": 6,
+   "size": "2304x1024",
+   "out": [
+    256,
+    512
+   ],
+   "anchor": "bottom",
+   "fps": 16,
+   "loop": true,
+   "prompt": "A swirling tornado animation: a tall funnel of spiralling mint-green and white wind bands, narrow at the bottom of each cell and wide at the top, with debris specks and leaves caught in the spiral; the spiral bands rotate from frame to frame; seamless loop."
+  },
+  {
+   "id": "wind_swirl",
+   "group": "wind",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 18,
+   "loop": true,
+   "tint": true,
+   "prompt": "A circular gust of wind animation: curved streamlines of air spiralling around the centre in a loose ring, with motion streaks and small particles; each frame rotated a little further; seamless loop."
+  },
+  {
+   "id": "rock_eruption",
+   "group": "earth",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "anchor": "bottom",
+   "fps": 18,
+   "bg": "clear",
+   "prompt": "A rock eruption animation: chunks of brown and grey stone and dirt bursting up out of the ground at the bottom of each cell. Frame 1 the ground cracking, frames 2-4 jagged rock chunks and gravel blasting upward with dust, frames 5-7 rocks falling back, frame 8 a little settling dust. Painterly shaded rocks with warm highlights."
+  },
+  {
+   "id": "earth_spikes",
+   "group": "earth",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "anchor": "bottom",
+   "fps": 16,
+   "bg": "clear",
+   "prompt": "A stone spike attack animation: a row of sharp jagged stone spikes thrusting up out of the ground at the bottom of each cell. Frames 1-3 the spikes shooting up with rubble, frame 4 tallest with flying pebbles, frames 5-8 the spikes crumbling and sinking back into dust. Earthy brown and grey rock, warm highlights."
+  },
+  {
+   "id": "rock_chunk",
+   "group": "earth",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    128,
+    128
+   ],
+   "fps": 16,
+   "loop": true,
+   "bg": "clear",
+   "prompt": "A tumbling boulder animation: one jagged chunk of brown-grey rock rotating in place, each frame rotated further; seamless loop. Painterly shading, warm highlights."
+  },
+  {
+   "id": "dust_cloud",
+   "group": "earth",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    256
+   ],
+   "anchor": "bottom",
+   "fps": 16,
+   "bg": "clear",
+   "prompt": "A ground dust burst animation: a low wide cloud of tan and grey dust billowing outward along the ground at the bottom of each cell, frames 1-3 bursting out, frames 4-6 rolling wider and softer, frames 7-8 thinning away. Soft painterly puffs."
+  },
+  {
+   "id": "electric_burst",
+   "group": "thunder",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 22,
+   "prompt": "An electric burst animation: frame 1 a bright spark, frames 2-4 a crackling sphere of electricity with jagged lightning arcs shooting outward in all directions, frames 5-7 arcs flickering in new shapes and shrinking, frame 8 small fading sparks. White-hot core, electric yellow and violet-blue glow."
+  },
+  {
+   "id": "holy_burst",
+   "group": "light",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    384
+   ],
+   "fps": 18,
+   "prompt": "A holy light burst animation: frame 1 a small radiant point, frames 2-4 a blinding cross-shaped burst of golden-white light with a radiant ring and soft feather-like light particles, frames 5-7 the cross fading and the ring widening with sparkles, frame 8 faint glints. Warm white and gold."
+  },
+  {
+   "id": "dark_orb",
+   "group": "dark",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    256,
+    256
+   ],
+   "fps": 16,
+   "loop": true,
+   "prompt": "A pulsing dark magic orb animation: a sphere of swirling black-violet shadow energy with a deep purple glowing rim, wisps of shadow smoke curling around it and small violet sparks orbiting; seamless loop."
+  },
+  {
+   "id": "void_swirl",
+   "group": "dark",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    384
+   ],
+   "fps": 16,
+   "loop": true,
+   "prompt": "A void vortex animation: a spiral black hole of dark purple energy with glowing magenta-violet spiral arms, particles being pulled into its dark centre; each frame rotated further; seamless loop."
+  },
+  {
+   "id": "dark_spikes",
+   "group": "dark",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "anchor": "bottom",
+   "fps": 18,
+   "prompt": "A shadow spikes animation: sharp black-violet thorns of shadow energy with glowing purple edges stabbing up out of a dark pool at the bottom of each cell. Frames 1-3 rising, frame 4 tallest with violet sparks, frames 5-8 dissolving into dark smoke wisps."
+  },
+  {
+   "id": "poison_bubbles",
+   "group": "dark",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    256,
+    256
+   ],
+   "anchor": "bottom",
+   "fps": 14,
+   "loop": true,
+   "prompt": "A poison bubbles animation: sickly purple and toxic-green glowing bubbles rising and popping from a small bubbling puddle at the bottom of each cell, with faint toxic vapour; seamless loop."
+  },
+  {
+   "id": "debuff_smoke",
+   "group": "dark",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 14,
+   "bg": "clear",
+   "prompt": "A curse smoke animation: swirling dark purple and grey-violet smoke wisps coiling around the centre and sinking downward, with a few dim violet sparkles. Frame 1 faint, frames 2-5 thickest, frames 6-8 dissipating. Soft painterly smoke."
+  },
+  {
+   "id": "smoke_puff",
+   "group": "misc",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 14,
+   "bg": "clear",
+   "prompt": "A smoke puff animation: a round cloud of soft light-grey smoke bursting outward from the centre: frame 1 small, frames 2-4 billowing round puffs expanding, frames 5-8 thinning, drifting and fading. Soft painterly shading."
+  },
+  {
+   "id": "leaf_swirl",
+   "group": "heal",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 16,
+   "loop": true,
+   "bg": "clear",
+   "prompt": "A swirling leaves animation: a ring of bright green leaves and a few pale blossom petals spiralling around the centre in a loose elliptical orbit seen at a slight angle; each frame the leaves move further around; seamless loop."
+  },
+  {
+   "id": "meteor",
+   "group": "fire",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    384
+   ],
+   "fps": 18,
+   "loop": true,
+   "prompt": "A falling meteor animation, flying toward the lower-right: a glowing molten rock head at the lower-right with a long blazing tail of fire, smoke and sparks streaking back to the upper-left; the fire flickers each frame; seamless loop."
+  },
+  {
+   "id": "claw_slash",
+   "group": "hit",
+   "grid": [
+    3,
+    2
+   ],
+   "n": 6,
+   "size": "1536x1024",
+   "out": [
+    288,
+    288
+   ],
+   "fps": 26,
+   "tint": true,
+   "prompt": "A monster claw strike animation: three parallel jagged claw-scratch slashes tearing diagonally from upper-left to lower-right. Frame 1 tips appearing, frames 2-3 the three slashes ripping through with a sharp bright edge and spark tears, frames 4-6 the gashes fading."
+  },
+  {
+   "id": "bite_fangs",
+   "group": "hit",
+   "grid": [
+    3,
+    2
+   ],
+   "n": 6,
+   "size": "1536x1024",
+   "out": [
+    288,
+    288
+   ],
+   "fps": 24,
+   "tint": true,
+   "prompt": "A bite attack animation: two curved rows of sharp glowing fang shapes, an upper jaw and a lower jaw, snapping shut toward the centre. Frames 1-2 jaws open wide, frame 3 jaws clamping shut with an impact flash, frames 4-6 the flash and fang marks fading."
+  },
+  {
+   "id": "spectral_sword",
+   "group": "giant",
+   "grid": [
+    1,
+    1
+   ],
+   "n": 1,
+   "size": "1024x1536",
+   "out": [
+    192,
+    512
+   ],
+   "anchor": "bottom",
+   "tint": true,
+   "prompt": "A single giant spectral sword made of solid glowing light, pointing straight down: an ornate crossguard near the top, a long broad blade tapering to a sharp point at the bottom, engraved rune lines on the blade, bright glowing edges and a soft aura. Vertical, centred."
+  },
+  {
+   "id": "spectral_hammer",
+   "group": "giant",
+   "grid": [
+    1,
+    1
+   ],
+   "n": 1,
+   "size": "1024x1536",
+   "out": [
+    256,
+    512
+   ],
+   "anchor": "bottom",
+   "tint": true,
+   "prompt": "A single giant spectral war hammer made of solid glowing light, head pointing straight down: a long handle at the top, a massive ornate rectangular hammer head at the bottom with engraved rune lines, bright glowing edges, crackling energy and a soft aura. Vertical, centred."
+  },
+  {
+   "id": "ground_crack",
+   "group": "earth",
+   "grid": [
+    1,
+    1
+   ],
+   "n": 1,
+   "size": "1536x1024",
+   "out": [
+    448,
+    224
+   ],
+   "tint": true,
+   "prompt": "A single glowing ground fissure seen from a low three-quarter angle: jagged branching cracks radiating outward from a centre point across flat ground, the cracks glowing brightly from inside with light seeping up, small floating particles. Only the glowing cracks, no visible ground texture."
   }
  ]
 }

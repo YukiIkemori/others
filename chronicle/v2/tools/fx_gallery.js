@@ -5,6 +5,7 @@
 //   node v2/tools/fx_gallery.js --out <dir> --clip <名前> id id …                  mp4（30 fps、1280×720。ffmpeg に直接流す）
 //   node v2/tools/fx_gallery.js --out <dir> --plan <FX_PLAN.md>                    表の考え（c）を FX_PLAN.md の「技・術ごとの表」に書き出す
 //   選び方: id の代わりに @tech:sword（剣の技を段の順に）・@tier:6・@spell:single・@spell:combo・@spell:triple も書ける
+//   node v2/tools/fx_gallery.js --out <dir> --parts <名前>                         画像の効果の部品（assets/fx）を全部動かした一覧を 4 枚（時間をずらして）
 //   node v2/tools/fx_gallery.js --out <dir> --strip <名前> id id …                 技・術ごとに 1 行・時間の順に 6 コマ（演出の流れの見本）
 //   --speed 1|2|3|5（戦闘の速さ）、--glimmer（閃きの帯つき）、--seen（2 回目の短い版）
 //   --noimg（画像の効果の部品を使わない＝手続きの効果だけ。前後の比べ用）、--mons goblin_1,wolf_1,imp_1（見本の敵の絵）、--crop x,y,w,h（--strip の切り出し。1920×1080 の px）
@@ -53,6 +54,22 @@ async function main() {
   await B.waitFor(p, `${B.TOP}==='field'`, 20000);
   await B.ev(p, `RPG.Settings.set('battleSpeed', ${+opt('--speed', 1)})`);
   await B.ev(p, "RPG.Settings.set('fx', 'high')");
+  if (has('--parts')) {
+    // 画像の効果の部品の一覧（RPG.FxGallery.parts）: 読み終わるまで待って、時間をずらして 4 枚（1920×1080）
+    const name = opt('--parts');
+    await p.evaluate(() => RPG.BFX.img.preload(Object.keys(RPG_MEDIA.fx || {})).then(() => RPG.FxGallery.parts(true)));
+    await p.waitForTimeout(400);
+    for (let i = 0; i < 4; i++) {
+      const d = await p.evaluate(() => RPG.Gfx.canvas.toDataURL('image/jpeg', 0.9));
+      const f = path.join(OUT, `${name}_${i}.jpg`);
+      fs.writeFileSync(f, Buffer.from(d.split(',')[1], 'base64'));
+      console.log(f);
+      await p.waitForTimeout(190);
+    }
+    if (P.errors.length) console.log('page errors:', P.errors.slice(0, 5));
+    await B.stop(S);
+    return;
+  }
   await B.ev(p, 'RPG.FxGallery.open({ demo: "normal" })');
   await B.waitFor(p, "RPG.Battle.debug() && RPG.Battle.debug().phase === 'gallery'", 30000);
   await p.waitForTimeout(1500);

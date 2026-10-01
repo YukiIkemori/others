@@ -13,7 +13,7 @@
   const SCHED = 200;
   // 数値（sim_bosses の 3 本立てで合わせる）
   const DS = {
-    b_sandking: { hp: 0.55, atk: 0.42, mag: 0.42 },
+    b_sandking: { hp: 0.52, atk: 0.6, mag: 0.6 },
     b_sandworm: { hp: 1.35 },
   };
   const A = (list) => list.map(([id, w, cond]) => (cond ? { id, w, cond } : { id, w }));
@@ -94,10 +94,10 @@
       W.desc = R.T('data.bosses_desert.desc');
     }
     if (K) {
-      K.actions = A([['attack', 2], ['eb_steal_name', 2], ['eb_king_sand', 2],
+      K.actions = A([['attack', 3], ['eb_steal_name', 1], ['eb_king_sand', 2],
         ['eb_king_sun', SCHED, { every: [12, 1], countBelow: 5, noFlag: 'orb_out' }], ['eb_king_moon', SCHED, { every: [12, 7], countBelow: 5, noFlag: 'orb_out' }],
         ['eb_raise_guard', 1, { every: [5, 2], countBelow: 3 }], ['eb_withering', 2],
-        ['eb_king_raise', SCHED, { hpBelow: 0.65, every: [6, 5] }]]);
+        ['eb_king_raise', SCHED, { every: [6, 5] }]]);
       K.phases = [{ hpBelow: 0.4, msg: R.T('data.bosses_desert.phases.0.msg'), set: { buffs: { atk: 1, mag: 1 } } }];
       K.orbHost = true;
       K.desc = R.T('data.bosses_desert.desc_2');

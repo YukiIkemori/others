@@ -436,7 +436,15 @@
     const y = -e.y - H + (e.y + H * 0.35) * drop;
     g.save(); g.translate(0, u < land ? y : -H * 0.65 + (L.sink || 0)); g.rotate(L.tilt || 0);
     const w = L.w || 26;
-    if (kind === 'hammer') {
+    // 描いた部品（spectral_sword・spectral_hammer。fx_seq_img.js）があればそれを描く（先が下。原点 = 柄の上、先 = H）
+    const IMG = R.BFX.img, pid = kind === 'hammer' ? 'spectral_hammer' : 'spectral_sword';
+    if (IMG && IMG.on && IMG.ready(pid)) {
+      const m = IMG.meta(pid);
+      g.save();
+      g.translate(0, H * 1.02);
+      IMG.drawFrame(g, pid, 0, { s: (H * 1.15) / (m.h * (m.scale || 0.5) * 0.9), a: k, pal: IMG.palOf(c, L.col) });
+      g.restore();
+    } else if (kind === 'hammer') {
       g.fillStyle = `rgba(${c0},${0.6 * k})`; g.fillRect(-w * 0.12, -H * 0.2, w * 0.24, H * 0.7);
       g.fillStyle = `rgba(${c1},${0.85 * k})`; g.fillRect(-w * 1.4, H * 0.45, w * 2.8, w * 1.4);
       S.dot(g, 0, H * 0.5, w * 3, c0, 0.7 * k);
