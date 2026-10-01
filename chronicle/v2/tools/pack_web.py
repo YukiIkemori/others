@@ -22,6 +22,7 @@ dist（node v2/tools/build.js の外置きの版）から、次の形の写し�
 import argparse
 import hashlib
 import json
+import io
 import os
 import re
 import shutil
@@ -115,6 +116,16 @@ def env_group(key):
     return f'{parts[0]}_{t.group(1) if t else "x"}'
 
 
+def lossy_ok(im, q):
+    """その画像だけを q の非可逆 WebP にして PSNR が MIN_PSNR 以上か（細かい絵は可逆のまま地図帳に入れる）"""
+    buf = io.BytesIO()
+    im.convert('RGB').save(buf, 'WEBP', quality=q, method=6)
+    buf.seek(0)
+    b = Image.open(buf)
+    b.load()
+    return psnr(im.convert('RGB'), b.convert('RGB')) >= MIN_PSNR
+
+
 def pack_images(kind, table, dist, out, page, group=None, lossy=None):
     """table: {id: {url, meta}} → 新しい table（{url, rect, meta}）。group(key) を渡すと組ごとに別の地図帳（名前に組の名前）。
     lossy(key, im) → quality | None: その画像を非可逆の WebP の地図帳に入れる（組の名前に _q。切り出しは PSNR で確かめる）"""
@@ -127,6 +138,9 @@ def pack_images(kind, table, dist, out, page, group=None, lossy=None):
     groups, gq = {}, {}
     for k in imgs:
         q = lossy(k, imgs[k]) if lossy else None
+        if q and not lossy_ok(imgs[k], q):
+            print(f'[pack_web] {kind} {k}: lossy q{q} below {MIN_PSNR} dB, kept lossless')
+            q = None
         g = (group(k) if group else 'atlas') + ('_q' if q else '')
         groups.setdefault(g, []).append(k)
         if q:
