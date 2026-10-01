@@ -49,6 +49,8 @@ const PV2LIB = `(() => {
       return ids.length;
     },
     /** 閃きの技を決める（glimmerForce の閃きで出す技。R.Glimmer.roll を包むだけ） */
+    /** 敵に当たる攻撃を空振りにしない（速い戦い・大技が外れて間延びしないように） */
+    sureHit() { const Tt = R.Tester; if (!Tt) return false; Tt.enabled = true; if (!PV.dmgMul) PV.dmgMul = 1; Tt.hitFix = (t, r) => { if (t && !t.isParty) r.miss = false; return r; }; return true; },
     glimTo(id) { const G = R.Glimmer, rl = G.__pvRoll || (G.__pvRoll = G.roll); G.roll = function (c, ctx) { if (ctx && ctx.force) return { id, kind: 'tech' }; return rl.apply(this, arguments); }; return true; },
     /** 敵の合体技を必ず出す（その技の確率を 1 に・間を 0 に。表の写しの上で） */
     comboOn(id) { const c = R.DB.enemyCombos && R.DB.enemyCombos[id]; if (!c) return false; c.chance = 1; c.cd = 0; c.round = null; c.tierMin = 0; return true; },
@@ -126,11 +128,11 @@ const SHOTS = {
     },
     n: sec(16),
   },
-  // ボスの予告 → 全員で守る → しのぐ（砂の王墓の 砂もぐり tr_b_sandworm、背景はゲームのまま pyramid）
+  // ボスの予告（不意打ちの 1 手番目に必ず「身を沈める」。組み直しで予告はたまにになったので撮りでは最初に出す）→ 全員で守る → しのぐ（砂の王墓の 砂もぐり tr_b_sandworm、背景はゲームのまま pyramid）
   s5_tell: {
     prep: async (T) => {
-      await T.js(BATTLE({}, 'kasim', 'warp', { troop: 'tr_b_sandworm', boss: true, seed: 'pv2-tell' },
-        `(st, u, r) => st.enemyUnits().some((e) => e && e.telegraph) || r >= 2 ? {cmd: 'defend', id: 'defend', self: true} : {cmd: 'attack', id: 'attack'}`, `RPG.Party.restoreAll(); PV2.noGlim(); PV2.autoWin(60)`));
+      await T.js(BATTLE({}, 'kasim', 'warp', { troop: 'tr_b_sandworm', boss: true, seed: 'pv2-tell', surprise: 'ambush' },
+        DEF, `RPG.Party.restoreAll(); PV2.noGlim(); PV2.autoWin(60); PV2.firstAct('b_sandworm', 'eb_worm_rear')`));
       await INTRO(T);
     },
     n: sec(44),
@@ -140,7 +142,7 @@ const SHOTS = {
   s5_gold: {
     prep: async (T) => {
       await T.js(BATTLE({}, 'kasim', 'warp', { zone: 'z_r_isles_cave', mons: [['@merman', 1], ['@crab', 1]], bg: 'watercave', seed: 'pv2-gold', golden: 0, rare: false, surprise: 'pre' },
-        `(st, u, r) => (u.id === 'hero' ? {cmd: 'skill', id: 't_sword_crest'} : {cmd: 'attack', id: 'attack'})`, `PV.teach('hero', ['t_sword_crest']); PV2.rareDrop(); PV2.noGlim(); PV2.autoWin(300); PV.boost(1); PV.kill = true`));
+        FOCUS('hero', 'skill', 't_sword_crest'), `PV.teach('hero', ['t_sword_crest']); PV2.rareDrop(); PV2.noGlim(); PV2.autoWin(300); PV.boost(1); PV.kill = true; PV2.sureHit()`));
       await INTRO(T);
     },
     n: sec(16),
@@ -177,7 +179,7 @@ const SHOTS = {
   s5_speed: {
     prep: async (T) => {
       await T.js(BATTLE({}, 'i_cape', 'west', { zone: 'zw_isles', mons: [['@crab', 2], ['@seabird', 2]], bg: 'isles', seed: 'pv2-speed', golden: false, rare: false },
-        `(st, u, r) => ({cmd: 'attack', id: 'attack'})`, `RPG.Settings.set('battleSpeed', 1); PV2.noGlim(); PV2.autoWin(40); PV.boost(1); PV.kill = true; RPG.Battle.repeatMemory().on = false`));
+        `(st, u, r) => ({cmd: 'attack', id: 'attack'})`, `RPG.Settings.set('battleSpeed', 1); PV2.noGlim(); PV2.autoWin(40); PV.boost(1); PV.kill = true; PV2.sureHit(); RPG.Battle.repeatMemory().on = false`));
       await INTRO(T);
     },
     n: sec(26),
