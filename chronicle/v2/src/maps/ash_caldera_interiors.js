@@ -2,6 +2,7 @@
 //   大卵殻の 3 つ（道具屋・酒場「殻の中」・武具屋）・宿「湯けむり亭」・火の神殿（巫女カヤ。火の鳥の巡りの記録 = lo_time_ash の半分）・
 //   族長ドルガの家（ドルガの記憶 = lo_war_ash）・闘士の家（元の代理闘士の家族）
 //   どれも R.ContentF.kit.room（上 2 行が壁の立ち上がり、下の中ほどに 1 マスの戸口）。戸口のマスが出口（カルデラの戸の前へ）。
+//   物の絵は壁へはみ出さない所に置く（横に 2 マスの物 = 樽の棚・盾の棚は { w: 2 } で右のマスまで。かまど・壺の棚は壁の 1 つ内側。2026-10-01）
 (function (R) {
   'use strict';
   R.onData(function () {
@@ -27,13 +28,13 @@
     // ---------------------------------------------------------------- 大卵殻: 道具屋・酒場・武具屋（白金色の殻の内側。丸い壁）
     interior('caldera_items', R.T('map.ash_caldera_interiors.caldera_items'), 12, 10, {
       back: 'items', wall: 'wall_stone', floor: 'basalt_floor', meta: { sub: R.T('map.ash_caldera_interiors.caldera_items.meta.sub') },
-      objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('counter', 6, 3), K.prop('shelf_jars', 1, 2), K.prop('potion_shelf', 9, 2),
+      objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('counter', 6, 3), K.prop('shelf_jars', 2, 2), K.prop('potion_shelf', 9, 2),
         K.prop('water_urn', 10, 5), K.prop('crate', 1, 6), K.prop('sulphur', 10, 7), K.prop('lantern', 8, 3)],
       npcs: [K.npc('item_keeper', 'npc_ash_woman', 5, 2, { name: R.T('map.ash_caldera_interiors.caldera_items.npcs.0.item_keeper.name'), dir: 's', talk: 'caldera_item_keeper', pushable: false })],
     });
     interior('caldera_tavern', R.T('map.ash_caldera_interiors.caldera_tavern'), 16, 12, {
       back: 'tavern', carpet: [5, 6, 6, 3], wall: 'wall_stone', floor: 'basalt_floor', meta: { sub: R.T('map.ash_caldera_interiors.caldera_tavern.meta.sub') },
-      objects: [K.prop('bar_counter', 3, 3), K.prop('bar_counter', 4, 3), K.prop('bar_counter', 5, 3), K.prop('bar_counter', 6, 3), K.prop('keg_rack', 1, 2), K.prop('keg_rack', 14, 2),
+      objects: [K.prop('bar_counter', 3, 3), K.prop('bar_counter', 4, 3), K.prop('bar_counter', 5, 3), K.prop('bar_counter', 6, 3), K.prop('keg_rack', 1, 2, { w: 2 }), K.prop('keg_rack', 13, 2, { w: 2 }),
         K.prop('table', 11, 5), K.prop('chair', 10, 5), K.prop('chair', 12, 5), K.prop('table', 11, 8), K.prop('chair', 10, 8), K.prop('chair', 12, 8),
         K.prop('table', 3, 8), K.prop('chair', 2, 8), K.prop('lantern', 8, 3), K.prop('lantern', 14, 8), K.prop('arena_banner', 10, 1)],
       npcs: [
@@ -46,7 +47,7 @@
     interior('caldera_arms', R.T('map.ash_caldera_interiors.caldera_arms'), 12, 10, {
       back: 'arms', wall: 'wall_stone', floor: 'basalt_floor', meta: { sub: R.T('map.ash_caldera_interiors.caldera_arms.meta.sub') },
       objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('counter', 6, 3), K.prop('ash_weapon_rack', 1, 2), K.prop('armor_stand', 9, 2),
-        K.prop('shield_rack', 10, 5), K.prop('crate', 1, 6), K.prop('lantern', 8, 3)],
+        K.prop('shield_rack', 9, 5, { w: 2 }), K.prop('crate', 1, 6), K.prop('lantern', 8, 3)],
       npcs: [K.npc('smith', 'npc_ash_man', 5, 2, { name: R.T('map.ash_caldera_interiors.caldera_arms.npcs.0.smith.name'), dir: 's', talk: 'caldera_smith', pushable: false })],
     });
 
@@ -55,7 +56,7 @@
       back: 'inn', carpet: [5, 6, 6, 3], wall: 'wall_stone', floor: 'basalt_floor',
       objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('bookshelf', 1, 2),
         K.prop('bed', 11, 2), K.prop('bed', 13, 2), K.prop('bed', 11, 5), K.prop('bed', 13, 5),
-        K.prop('table', 6, 7), K.prop('chair', 5, 7), K.prop('chair', 7, 7), K.prop('stove', 1, 6),
+        K.prop('table', 6, 7), K.prop('chair', 5, 7), K.prop('chair', 7, 7), K.prop('stove', 2, 6),
         K.prop('water_urn', 1, 9), K.prop('lantern', 8, 3), K.prop('lantern', 14, 8)],
       npcs: [
         K.npc('inn_keeper', 'npc_ash_woman', 4, 2, { name: R.T('map.ash_caldera_interiors.caldera_inn.npcs.0.inn_keeper.name'), dir: 's', talk: 'caldera_inn_keeper', pushable: false }),
@@ -113,7 +114,7 @@
     });
     interior('caldera_toto', R.T('map.ash_caldera_interiors.caldera_toto'), 12, 10, {
       back: 'hut', wall: 'wall_stone', floor: 'basalt_floor', meta: { sub: R.T('map.ash_caldera_interiors.caldera_toto.meta.sub') },
-      objects: [K.prop('bed', 1, 2), K.prop('bed', 9, 2), K.prop('table', 5, 6), K.prop('chair', 4, 6), K.prop('stove', 10, 6), K.prop('lantern', 7, 3)],
+      objects: [K.prop('bed', 1, 2), K.prop('bed', 9, 2), K.prop('table', 5, 6), K.prop('chair', 4, 6), K.prop('stove', 9, 6), K.prop('lantern', 7, 3)],
       npcs: [K.npc('toto_mother', 'npc_ash_woman', 6, 4, { name: R.T('map.ash_caldera_interiors.caldera_toto.npcs.0.toto_mother.name'), dir: 's', talk: 'caldera_toto_mother', reward: 'hint' })],
     });
 

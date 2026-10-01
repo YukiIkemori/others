@@ -1,12 +1,13 @@
 // CONTENT（灰の荒野）: 炎の町カルデラ（caldera、町 54×54）。WORLD_REDESIGN §5.11・§4.7、STORY_BIBLE §7.7・§8.8。
-//   四角い家の並ぶ町ではない。冷えた古い火口の内側に、輪の段々が底へ下りていく町（2026-09-28）:
-//   外の輪  : 火口の縁の道（西の門・東の門）。いちばん上の北の岩に、火の神殿を彫りこむ（巫女カヤ。戸は縁の道に）。
-//   段の崖  : 縁の道と下の段の間は、灰色の崖。石段が 3 か所（西・東・北東）。
-//   中の輪  : 家の段。北に「大卵殻」= 百年前にかえった火の鳥の卵の殻。家ほどの大きさの白金色の殻が割れたまま段に座り、
+//   冷えた古い火口の内側に、段々が底へ下りていく町。段は四角い（縦横の道・まっすぐな崖。2026-10-01 に丸い輪から直した:
+//   丸い輪を絵に合わせて引きのばした下絵が、全体に歪んで建物が斜めに見えた。持ち主の報告）:
+//   縁の道  : 火口の縁をひと回りする四角い道（西の門・東の門）。いちばん上の北の岩に、火の神殿を彫りこむ（巫女カヤ。戸は縁の道に）。
+//   段の崖  : 縁の道と下の段の間は、灰色のまっすぐな崖。石段が 3 か所（西・東・北の東より）。
+//   家の段  : 北に「大卵殻」= 百年前にかえった火の鳥の卵の殻。家ほどの大きさの白金色の殻が割れたまま段に座り、
 //             殻の割れ目をふさいで戸が 3 つ: 西 = 道具屋、まん中 = 酒場「殻の中」、東 = 武具屋（1 つの建物に店が 3 つ、戸はそれぞれ）。
-//             西に宿「湯けむり亭」（段に食いこむ石の湯屋）、東に族長ドルガの家（黒い石の塔の家）、南西に闘士の家、南に湯（温泉）。
-//   溶岩の堀: 中の輪の内側を、光る溶岩の堀が輪になって回る。石の橋が 4 本（北・西・東・南）。
-//   底の輪  : 堀の内側の敷石の輪。まん中に闘技場（丸い石の闘技場。戸は南）。
+//             西に宿「湯けむり亭」（石の湯屋）、東に族長ドルガの家（黒い石の塔の家）、南西に闘士の家、南に湯（温泉）。
+//   溶岩の堀: 家の段の内側を、光る溶岩の四角い堀が回る。石の橋が 4 本（北・西・東・南。まっすぐ）。
+//   底の広場: 堀の内側の敷石の広場。まん中に闘技場（丸い石の闘技場。戸は南）。
 //   灯り: 溶岩の堀の照り返し（lava_glow、光だけ）と、崖・岩の上の鉄のかがり火（iron_brazier）。道・戸口の前・出入り口には置かない。
 //   小物は道に置かない（持ち主の決まり）。宝箱は見える物 2 つ。隠し通路なし（A27）。
 //   町の絵は 1 枚の下絵（v2/assets/env/ash/under/caldera*、design/ENV_ASSETS.md §7）。当たり・戸口・人・灯り・物は下のデータ。
@@ -14,36 +15,26 @@
   'use strict';
   R.onData(function () {
     const K = R.ContentF.kit, AK = R.Ash.kit, L = K.L;
-    const W = 54, H = 54, CX = 27, CY = 27, RAD = 26;
+    const W = 54, H = 54;
     const g = K.grid(W, H, 'M');
-    const rr = (x, y) => Math.hypot(x + 0.5 - (CX + 0.5), y + 0.5 - (CY + 0.5)) / RAD;
-    // ---------------------------------------------------------------- 輪（外から: 縁の道・崖・家の段・溶岩の堀・底の輪・闘技場）
+    // ---------------------------------------------------------------- 段（外から: 縁の道・崖・家の段・溶岩の堀・敷石の広場・闘技場）。どれも縦横にまっすぐ
+    const inR = (x, y, x0, y0, x1, y1) => x >= x0 && x <= x1 && y >= y0 && y <= y1;
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-      const r = rr(x, y);
       let ch = 'M';
-      if (r <= 0.3) ch = 'X';
-      else if (r <= 0.43) ch = 'c';
-      else if (r <= 0.5) ch = '%';
-      else if (r <= 0.78) ch = 'a';
-      else if (r <= 0.84) ch = 'F';
-      else if (r <= 0.96) ch = 'a';
+      if (inR(x, y, 2, 4, 51, 50)) ch = 'a';                                   // 縁の道（四角くひと回り）
+      if (inR(x, y, 5, 6, 48, 48)) ch = 'F';                                   // 段の崖（縁の道の内側の 1 マスの帯）
+      if (inR(x, y, 6, 7, 47, 47)) ch = 'a';                                   // 家の段
+      if (inR(x, y, 16, 16, 39, 39)) ch = '%';                                 // 溶岩の堀（2 マス幅）
+      if (inR(x, y, 18, 18, 37, 37)) ch = 'c';                                 // 敷石の広場
+      if (Math.hypot(x + 0.5 - 27.5, y + 0.5 - 27.5) <= 7.8) ch = 'X';         // 闘技場の丸い壁（描いた物）
       g[y][x] = ch;
     }
     // 西の門・東の門（縁の道から外へ）
-    K.rect(g, 0, 26, 4, 2, 'c'); K.rect(g, 50, 26, 4, 2, 'c');
-    // 石段（縁の道 ↔ 家の段）: 西・東・北東（崖の輪を、その向きで 2 マス幅に切る）
-    const ang = (x, y) => Math.atan2(y + 0.5 - (CY + 0.5), x + 0.5 - (CX + 0.5));
-    const near = (a, b, w) => Math.abs(Math.atan2(Math.sin(a - b), Math.cos(a - b))) <= w;
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-      if (g[y][x] !== 'F') continue;
-      const a = ang(x, y);
-      if (near(a, Math.PI, 0.05) || near(a, 0, 0.05) || near(a, -Math.PI / 4, 0.05)) g[y][x] = 'e';
-    }
-    // 石の橋（溶岩の堀）: 北・西・東・南（2 マス幅）
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-      if (g[y][x] !== '%') continue;
-      if ((x === 26 || x === 27) || (y === 26 || y === 27)) g[y][x] = 'b';
-    }
+    K.rect(g, 0, 26, 2, 2, 'c'); K.rect(g, 52, 26, 2, 2, 'c');
+    // 石段（縁の道 ↔ 家の段）: 西・東（門と同じ行）・北（東より。2 マス幅）
+    K.rect(g, 5, 26, 1, 2, 'e'); K.rect(g, 48, 26, 1, 2, 'e'); K.rect(g, 40, 6, 2, 1, 'e');
+    // 石の橋（溶岩の堀）: 北・西・東・南（2 マス幅、まっすぐ）
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (g[y][x] === '%' && (x === 26 || x === 27 || y === 26 || y === 27)) g[y][x] = 'b';
     // 湯（温泉）: 家の段の南
     for (let y = 43; y <= 47; y++) for (let x = 20; x <= 34; x++) { const d = ((x - 27) / 6.4) ** 2 + ((y - 45) / 2.3) ** 2; if (d < 1 && K.at(g, x, y) === 'a') K.put(g, x, y, 'h'); }
 
@@ -74,63 +65,10 @@
     // 戸の前（出て着く所）
     for (const b of [bItems, bTav, bArms, bTemple, bInn, bDorga, bHouse, bArena, bForge, bStore, bHut]) if ('FMX%h'.includes(g[b.door.y + 1][b.door.x])) g[b.door.y + 1][b.door.x] = 'a';
 
-    // ---------------------------------------------------------------- 下絵に合わせた当たり（design/ENV_ASSETS.md §7 の 6）: 描いた輪（2026-09-29 に丸い輪で描き直し）の
-    //   縁の道・段の崖・外の岩・溶岩の堀・湯のマスを絵に合わせる（' ' = そのまま。design/art_ref/gen/env/_tools/under/field_ash/caldera.py fit が絵から作った）
+    // ---------------------------------------------------------------- 下絵に合わせた当たり（design/ENV_ASSETS.md §7 の 6）: 描いた絵の崖・岩・溶岩・湯の縁のずれを直すマス
+    //   （' ' = そのまま。design/art_ref/gen/env/_tools/under/field_ash/caldera.py fit が絵から作った）
     const FIT = [
-      "                                                      ",
-      "                                                      ",
-      "                 aaa            a aaa                 ",
-      "              aaa  aaM            a  aaa              ",
-      "            aaa  a       F             aa             ",
-      "           aaa a        FMM MM          aaa           ",
-      "          aa a        aa MMMMMaaa       M aa          ",
-      "         aa a     Maaaaa       aaaaMF      a          ",
-      "        aa      MMM                MMM      a         ",
-      "       aa      MMa                   aMM   M aa       ",
-      "      aa      Ma                       MM   M a       ",
-      "     aa M   FMM                         M    M a      ",
-      "     aa     Ma                                Maa     ",
-      "    aa     Ma                              a  M a     ",
-      "    aaM   M                               FMa  M a    ",
-      "    a    aM           a         a          Maa  Ma    ",
-      "   aaM   M              cc                  Ma  M a   ",
-      "   a    a          M  c            a    M  FFMa  Ma   ",
-      "   aMF  a         M              %  a            M a a",
-      "  a  F           a       XXXX        a  M      a  Ma a",
-      "  a  F                 X                M      a  Maaa",
-      "  a  F            %   X             % a M      a   Maa",
-      "aa   F         a     X                 a       aa  M a",
-      "a    F           %                   % a        a  M a",
-      "a a  F                            c           MMa    a",
-      "a a  FMM        c                              Fa     ",
-      "                                   M                  ",
-      "                   M               M                  ",
-      "     F             M               M    M          M  ",
-      "  a  MM         c                  M    %%%     M     ",
-      "  a  FM                                         M     ",
-      "  a  FMa            M             M             M     ",
-      "  a   MM       a     M                 a       MM     ",
-      "      MM              M                      M MM     ",
-      "   a  MM                                MM MMMMM      ",
-      "   a   MM     M  a                            MM      ",
-      "       MM     M   a  %                        MF      ",
-      "    a   MMM        a   %        c            MM   a   ",
-      "        MM           a     a%     %          MF       ",
-      "     a   MM           aaa           %%      MM   a    ",
-      "          MM                                MM        ",
-      "      a    MM                             aMM   a     ",
-      "       a    MM          hhhhh            aMMF  a      ",
-      "             MMM      hh                a MM   a      ",
-      "        a     aMMM   h         aa      aMMM   a       ",
-      "         a     aaMMM             a    aMMM   a        ",
-      "                 aaMM              aaaMMM   aa        ",
-      "            a      aaaaM       hhaaaMMMM  aaa         ",
-      "                      aaaaaahhhhhFMMMM   aaa          ",
-      "                               M  M    aaaa           ",
-      "                  M                  aaaaa            ",
-      "                     M            aaaaaa              ",
-      "                        aaaaaaaaaaaaaa                ",
-      "                            aaaaaaa                   ",
+@@FIT@@
     ];
     FIT.forEach((r, y) => [...r].forEach((ch, x) => { if (ch !== ' ') g[y][x] = ch; }));
 
