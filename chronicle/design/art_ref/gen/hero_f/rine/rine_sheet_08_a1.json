@@ -1,0 +1,43 @@
+{
+ "raw": "raw/s8_a1.png",
+ "pitch": 8.0,
+ "frames": {
+  "flee": {
+   "row": 1,
+   "column": 1,
+   "logical_bbox": [
+    56,
+    65
+   ],
+   "air": 2
+  },
+  "sleep": {
+   "row": 1,
+   "column": 2,
+   "logical_bbox": [
+    43,
+    67
+   ],
+   "air": 0
+  },
+  "cover": {
+   "row": 1,
+   "column": 4,
+   "logical_bbox": [
+    86,
+    66
+   ],
+   "air": 0
+  },
+  "confuse": {
+   "row": 1,
+   "column": 3,
+   "logical_bbox": [
+    57,
+    64
+   ],
+   "air": 0
+  }
+ },
+ "notes": []
+}

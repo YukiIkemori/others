@@ -1,0 +1,261 @@
+{
+ "character": "rine",
+ "set": "face",
+ "image": "rine_face.png",
+ "cell": [
+  76,
+  84
+ ],
+ "anchor": [
+  38,
+  81
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "face_neutral": {
+   "x": 0,
+   "y": 0,
+   "w": 76,
+   "h": 84,
+   "anchor": [
+    38,
+    81
+   ],
+   "points": {
+    "head": [
+     28,
+     2
+    ],
+    "center": [
+     37,
+     47
+    ],
+    "front": [
+     2,
+     75
+    ]
+   }
+  },
+  "face_serious": {
+   "x": 76,
+   "y": 0,
+   "w": 76,
+   "h": 84,
+   "anchor": [
+    38,
+    81
+   ],
+   "points": {
+    "head": [
+     28,
+     2
+    ],
+    "center": [
+     37,
+     47
+    ],
+    "front": [
+     2,
+     75
+    ]
+   }
+  },
+  "face_smile": {
+   "x": 152,
+   "y": 0,
+   "w": 76,
+   "h": 84,
+   "anchor": [
+    38,
+    81
+   ],
+   "points": {
+    "head": [
+     27,
+     2
+    ],
+    "center": [
+     37,
+     47
+    ],
+    "front": [
+     2,
+     75
+    ]
+   }
+  },
+  "face_laugh": {
+   "x": 228,
+   "y": 0,
+   "w": 76,
+   "h": 84,
+   "anchor": [
+    38,
+    81
+   ],
+   "points": {
+    "head": [
+     28,
+     2
+    ],
+    "center": [
+     38,
+     47
+    ],
+    "front": [
+     3,
+     75
+    ]
+   }
+  },
+  "face_surprise": {
+   "x": 0,
+   "y": 84,
+   "w": 76,
+   "h": 84,
+   "anchor": [
+    38,
+    81
+   ],
+   "points": {
+    "head": [
+     27,
+     2
+    ],
+    "center": [
+     37,
+     47
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  "face_sad": {
+   "x": 76,
+   "y": 84,
+   "w": 76,
+   "h": 84,
+   "anchor": [
+    38,
+    81
+   ],
+   "points": {
+    "head": [
+     27,
+     2
+    ],
+    "center": [
+     37,
+     47
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  "face_angry": {
+   "x": 152,
+   "y": 84,
+   "w": 76,
+   "h": 84,
+   "anchor": [
+    38,
+    81
+   ],
+   "points": {
+    "head": [
+     28,
+     2
+    ],
+    "center": [
+     37,
+     47
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  "face_tired": {
+   "x": 228,
+   "y": 84,
+   "w": 76,
+   "h": 84,
+   "anchor": [
+    38,
+    81
+   ],
+   "points": {
+    "head": [
+     28,
+     2
+    ],
+    "center": [
+     38,
+     47
+    ],
+    "front": [
+     3,
+     74
+    ]
+   }
+  }
+ },
+ "anims": {},
+ "palette": [
+  "#150e0d",
+  "#221612",
+  "#7e726a",
+  "#e1d4c9",
+  "#311413",
+  "#431816",
+  "#3d2426",
+  "#551b18",
+  "#68201b",
+  "#7e2620",
+  "#952e26",
+  "#ac382e",
+  "#c4483a",
+  "#302019",
+  "#3d2419",
+  "#3f2c23",
+  "#4d2c1c",
+  "#4f3529",
+  "#5d3521",
+  "#5f3f30",
+  "#6c3d25",
+  "#704b38",
+  "#7c4629",
+  "#884526",
+  "#805640",
+  "#8e502d",
+  "#8b5638",
+  "#a55a32",
+  "#9c5f3c",
+  "#91644a",
+  "#a17053",
+  "#ab6e48",
+  "#bf6f40",
+  "#b07d5c",
+  "#be7f55",
+  "#c08c68",
+  "#b59479",
+  "#d78e57",
+  "#cf9a74",
+  "#d89a6b",
+  "#dca980",
+  "#eaaf78",
+  "#e8ba91",
+  "#f2c38e",
+  "#efcaa5",
+  "#f9d7a6",
+  "#f6dec0",
+  "#24131a"
+ ],
+ "facing": "slightly right",
+ "target_height": 80
+}

@@ -1,0 +1,18 @@
+12:31:40 hero_f_warrior attack attempt 1: repaint of Arun's battle8 3264x1952 (pitch 8, quality high)
+12:33:13 calibrated pitch 8.00 / 7.99 px (requested 8), offset 0.4, 1.8
+12:33:13 drawn pitch of the key cells 8.00
+12:33:14   frame 2 size: guide 0.975 idle 0.975 idle/corr 0.975 pitch 1.000 -> 1.000
+12:33:15   frame 4 size: guide 0.838 idle 0.838 idle/corr 0.944 pitch 1.000 -> 1.000
+12:33:16   frame 5 size: guide 0.938 idle 0.975 idle/corr 0.897 pitch 1.000 -> 1.000
+12:33:17   frame 7 size: guide 0.887 idle 1.000 idle/corr 0.920 pitch 1.000 -> 1.000
+12:33:18   frame 8 size: guide 0.887 idle 0.887 idle/corr 0.887 pitch 1.000 -> 1.000
+12:33:18   attack frame 1 keep  {"ok": true, "why": "", "head_scale": 1.0, "head": [83.5, 48.0], "height": 67, "rescaled": null, "copy": null, "shift": [0, 0], "err": 0.0}
+12:33:18   attack frame 2 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [82.1, 50.7], "height": 70, "rescaled": null, "copy": 0.06, "shift": [2, 0], "err": 29.0}
+12:33:18   attack frame 3 keep  {"ok": false, "why": "head scale 0.887", "head_scale": 0.887, "head": [83.9, 59.6], "height": 64, "rescaled": null, "copy": null, "shift": [0, 0], "err": 36.9}
+12:33:18   attack frame 4 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [82.1, 54.0], "height": 69, "rescaled": null, "copy": 0.04, "shift": [1, 0], "err": 47.3}
+12:33:18   attack frame 5 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [82.1, 50.7], "height": 64, "rescaled": null, "copy": 0.08, "shift": [0, 0], "err": 32.3}
+12:33:18   attack frame 6 keep  {"ok": false, "why": "head scale 1.087", "head_scale": 1.087, "head": [83.8, 50.1], "height": 67, "rescaled": null, "copy": null, "shift": [0, 0], "err": 30.2}
+12:33:18   attack frame 7 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [82.5, 54.0], "height": 61, "rescaled": null, "copy": 0.05, "shift": [4, 0], "err": 29.9}
+12:33:18   attack frame 8 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [81.9, 49.6], "height": 64, "rescaled": null, "copy": 0.19, "shift": [0, 2], "err": 26.6}
+12:33:18   attack frame 9 keep  {"ok": true, "why": "", "head_scale": 1.0, "head": [83.5, 48.0], "height": 67, "rescaled": null, "copy": null, "shift": [0, 0], "err": 0.0}
+12:33:49 hero_f_warrior cast attempt 1: repaint of Arun's battle8 3264x1952 (pitch 8, quality high)

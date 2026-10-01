@@ -1,0 +1,1018 @@
+{
+ "char": "rine",
+ "companion": null,
+ "npc": null,
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/hero_f/rine/sheets",
+ "sheets": {
+  "5": {
+   "file": "../art_ref/gen/hero_f/rine/sheets/rine_sheet_05.png",
+   "size": [
+    4160,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x5",
+    "logical_cell": [
+     104,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 520.0,
+   "native_height_at_period": 65.0,
+   "scale_note": "描かれた格子のまま（65.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "idle_a": {
+     "size": [
+      60,
+      67
+     ],
+     "box": [
+      160,
+      152,
+      672,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.68,
+     "facing_cues": {
+      "head": 0.13,
+      "upper": 1.98,
+      "scarf": 1.56
+     }
+    },
+    "idle_b": {
+     "size": [
+      60,
+      65
+     ],
+     "box": [
+      992,
+      168,
+      1504,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.89,
+     "facing_cues": {
+      "head": 0.29,
+      "upper": 2.0,
+      "scarf": 1.59
+     },
+     "scale": 1.01
+    },
+    "step": {
+     "size": [
+      70,
+      65
+     ],
+     "box": [
+      1784,
+      168,
+      2376,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 4.19,
+     "facing_cues": {
+      "head": 0.19,
+      "upper": 2.0,
+      "scarf": 2.0
+     }
+    },
+    "guard": {
+     "size": [
+      74,
+      65
+     ],
+     "box": [
+      2600,
+      168,
+      3224,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.42,
+     "facing_cues": {
+      "head": 0.12,
+      "upper": -0.7,
+      "scarf": 2.0
+     },
+     "scale": 0.997
+    },
+    "hit": {
+     "size": [
+      60,
+      61
+     ],
+     "box": [
+      3488,
+      200,
+      4000,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.76,
+     "facing_cues": {
+      "head": 0.18,
+      "upper": 1.58,
+      "scarf": 2.0
+     },
+     "scale": 1.048
+    },
+    "weak": {
+     "size": [
+      57,
+      55
+     ],
+     "box": [
+      168,
+      1016,
+      656,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.81,
+     "facing_cues": {
+      "head": -0.06,
+      "upper": 1.13,
+      "scarf": 1.73
+     },
+     "scale": 0.978
+    },
+    "ko": {
+     "size": [
+      96,
+      34
+     ],
+     "box": [
+      848,
+      1184,
+      1648,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "victory_a": {
+     "size": [
+      52,
+      78
+     ],
+     "box": [
+      1856,
+      832,
+      2304,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.39,
+     "facing_cues": {
+      "head": -0.43,
+      "upper": 0.1,
+      "scarf": 0.72
+     },
+     "scale": 0.958
+    },
+    "victory_b": {
+     "size": [
+      57,
+      67
+     ],
+     "box": [
+      2664,
+      920,
+      3152,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 0.997
+    },
+    "glimmer": {
+     "size": [
+      59,
+      63
+     ],
+     "box": [
+      3488,
+      952,
+      3992,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.34,
+     "facing_cues": {
+      "head": -0.04,
+      "upper": 1.25,
+      "scarf": 1.13
+     },
+     "scale": 1.048
+    }
+   }
+  },
+  "6": {
+   "file": "../art_ref/gen/hero_f/rine/sheets/rine_sheet_06.png",
+   "size": [
+    4160,
+    1280
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x5",
+    "logical_cell": [
+     104,
+     80
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 520.0,
+   "native_height_at_period": 65.0,
+   "scale_note": "描かれた格子のまま（65.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "windup": {
+     "size": [
+      51,
+      64
+     ],
+     "box": [
+      192,
+      80,
+      632,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.61,
+     "facing_cues": {
+      "head": -0.24,
+      "upper": 0.82,
+      "scarf": 1.04
+     },
+     "scale": 0.952
+    },
+    "slash": {
+     "size": [
+      74,
+      67
+     ],
+     "box": [
+      936,
+      56,
+      1560,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.21,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.66,
+      "scarf": 0.65
+     },
+     "scale": 1.15
+    },
+    "thrust_ready": {
+     "size": [
+      72,
+      65
+     ],
+     "box": [
+      1776,
+      72,
+      2384,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.34,
+     "facing_cues": {
+      "head": 0.29,
+      "upper": -1.27,
+      "scarf": 1.32
+     }
+    },
+    "thrust": {
+     "size": [
+      93,
+      65
+     ],
+     "box": [
+      2520,
+      72,
+      3296,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.12,
+     "facing_cues": {
+      "head": 0.31,
+      "upper": -1.19,
+      "scarf": 2.0
+     },
+     "scale": 1.112
+    },
+    "charge": {
+     "size": [
+      64,
+      48
+     ],
+     "box": [
+      3472,
+      208,
+      4016,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.27,
+     "facing_cues": {
+      "head": 0.78,
+      "upper": 0.95,
+      "scarf": 0.54
+     },
+     "scale": 1.08
+    },
+    "smash": {
+     "size": [
+      54,
+      75
+     ],
+     "box": [
+      184,
+      632,
+      648,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.91,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.35,
+      "scarf": 0.66
+     },
+     "scale": 1.003
+    },
+    "cast_a": {
+     "size": [
+      65,
+      65
+     ],
+     "box": [
+      968,
+      712,
+      1520,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.4,
+     "facing_cues": {
+      "head": 0.06,
+      "upper": -0.31,
+      "scarf": 1.65
+     },
+     "scale": 1.048
+    },
+    "cast_b": {
+     "size": [
+      54,
+      64
+     ],
+     "box": [
+      1848,
+      720,
+      2312,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.05,
+     "facing_cues": {
+      "head": -0.38,
+      "upper": -0.07,
+      "scarf": 1.5
+     },
+     "scale": 1.048
+    },
+    "item": {
+     "size": [
+      56,
+      68
+     ],
+     "box": [
+      2672,
+      688,
+      3152,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.17,
+     "facing_cues": {
+      "head": 0.0,
+      "upper": -0.5,
+      "scarf": 0.67
+     },
+     "scale": 1.099
+    },
+    "evade": {
+     "size": [
+      55,
+      66
+     ],
+     "box": [
+      3504,
+      704,
+      3976,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.81,
+     "facing_cues": {
+      "head": 0.63,
+      "upper": 1.73,
+      "scarf": -0.54
+     },
+     "scale": 1.022
+    }
+   }
+  },
+  "7": {
+   "file": "../art_ref/gen/hero_f/rine/sheets/rine_sheet_07.png",
+   "size": [
+    4480,
+    1280
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x5",
+    "logical_cell": [
+     112,
+     80
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 532.0,
+   "native_height_at_period": 66.5,
+   "scale_note": "描かれた格子のまま（66.5 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "bare_idle": {
+     "size": [
+      50,
+      67
+     ],
+     "box": [
+      232,
+      56,
+      664,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.46,
+     "facing_cues": {
+      "head": 0.06,
+      "upper": 2.0,
+      "scarf": 1.4
+     }
+    },
+    "bare_windup": {
+     "size": [
+      55,
+      65
+     ],
+     "box": [
+      1104,
+      72,
+      1576,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.87,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 2.0,
+      "scarf": 0.97
+     },
+     "scale": 0.997
+    },
+    "bare_slash": {
+     "size": [
+      59,
+      64
+     ],
+     "box": [
+      1984,
+      80,
+      2488,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.75,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 2.0,
+      "scarf": 0.85
+     },
+     "scale": 0.958
+    },
+    "bare_thrust": {
+     "size": [
+      59,
+      66
+     ],
+     "box": [
+      2880,
+      64,
+      3384,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.33,
+     "facing_cues": {
+      "head": 0.34,
+      "upper": 0.99,
+      "scarf": 2.0
+     },
+     "scale": 0.978
+    },
+    "bare_cast": {
+     "size": [
+      64,
+      66
+     ],
+     "box": [
+      3760,
+      64,
+      4304,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.96,
+     "facing_cues": {
+      "head": 0.11,
+      "upper": 0.07,
+      "scarf": 1.78
+     },
+     "scale": 0.997
+    },
+    "wpn_sword": {
+     "size": [
+      60,
+      21
+     ],
+     "box": [
+      192,
+      856,
+      704,
+      1056
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "wpn_greatsword": {
+     "size": [
+      95,
+      24
+     ],
+     "box": [
+      944,
+      848,
+      1736,
+      1072
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "wpn_dagger": {
+     "size": [
+      45,
+      16
+     ],
+     "box": [
+      2040,
+      880,
+      2432,
+      1040
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "wpn_bow": {
+     "size": [
+      58,
+      33
+     ],
+     "box": [
+      2888,
+      808,
+      3384,
+      1104
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "wpn_staff": {
+     "size": [
+      95,
+      18
+     ],
+     "box": [
+      3632,
+      872,
+      4424,
+      1048
+     ],
+     "air": 0,
+     "blur": 0.0
+    }
+   }
+  },
+  "9": {
+   "file": "../art_ref/gen/hero_f/rine/sheets/rine_sheet_09.png",
+   "size": [
+    3072,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x4",
+    "logical_cell": [
+     96,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 640.0,
+   "native_height_at_period": 80.0,
+   "scale_note": "描かれた格子のまま（80.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "face_neutral": {
+     "size": [
+      72,
+      80
+     ],
+     "box": [
+      80,
+      48,
+      688,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.03,
+     "facing_cues": {
+      "head": 0.06,
+      "upper": -0.04
+     }
+    },
+    "face_serious": {
+     "size": [
+      71,
+      80
+     ],
+     "box": [
+      848,
+      48,
+      1448,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.18,
+     "facing_cues": {
+      "head": 0.04,
+      "upper": -0.21
+     }
+    },
+    "face_smile": {
+     "size": [
+      71,
+      80
+     ],
+     "box": [
+      1616,
+      48,
+      2216,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.13,
+     "facing_cues": {
+      "head": -0.04,
+      "upper": -0.09
+     }
+    },
+    "face_laugh": {
+     "size": [
+      70,
+      80
+     ],
+     "box": [
+      2392,
+      48,
+      2984,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.21,
+     "facing_cues": {
+      "head": 0.25,
+      "upper": -0.03
+     }
+    },
+    "face_surprise": {
+     "size": [
+      71,
+      80
+     ],
+     "box": [
+      80,
+      816,
+      680,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.06,
+     "facing_cues": {
+      "head": 0.04,
+      "upper": -0.1
+     }
+    },
+    "face_sad": {
+     "size": [
+      71,
+      80
+     ],
+     "box": [
+      848,
+      816,
+      1448,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.06,
+     "facing_cues": {
+      "head": 0.07,
+      "upper": -0.13
+     }
+    },
+    "face_angry": {
+     "size": [
+      71,
+      80
+     ],
+     "box": [
+      1616,
+      816,
+      2216,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.06,
+     "facing_cues": {
+      "head": -0.03,
+      "upper": -0.03
+     }
+    },
+    "face_tired": {
+     "size": [
+      70,
+      80
+     ],
+     "box": [
+      2392,
+      816,
+      2984,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.01,
+     "facing_cues": {
+      "head": -0.07,
+      "upper": 0.07
+     }
+    }
+   }
+  },
+  "8": {
+   "file": "../art_ref/gen/hero_f/rine/sheets/rine_sheet_08.png",
+   "size": [
+    3584,
+    640
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "1x4",
+    "logical_cell": [
+     112,
+     80
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 528.0,
+   "native_height_at_period": 66.0,
+   "scale_note": "描かれた格子のまま（66.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "flee": {
+     "size": [
+      56,
+      65
+     ],
+     "box": [
+      208,
+      56,
+      688,
+      608
+     ],
+     "air": 2,
+     "blur": 0.0,
+     "scale": 0.888
+    },
+    "sleep": {
+     "size": [
+      43,
+      67
+     ],
+     "box": [
+      1152,
+      56,
+      1528,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 1.048
+    },
+    "confuse": {
+     "size": [
+      57,
+      64
+     ],
+     "box": [
+      1992,
+      80,
+      2480,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.07,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": -0.47,
+      "scarf": 1.64
+     },
+     "scale": 0.958
+    },
+    "cover": {
+     "size": [
+      86,
+      66
+     ],
+     "box": [
+      2776,
+      64,
+      3496,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.02,
+     "facing_cues": {
+      "head": 0.6,
+      "upper": 0.42,
+      "scarf": 2.0
+     },
+     "scale": 0.997
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 6,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート6 の 2 番（振り抜き） の縮尺が少し違う（頭の大きさで約 115%）。並べて見て気になるなら描き直し",
+   "slot": "slash",
+   "ask": null,
+   "data": {
+    "scale": 1.150159744408946,
+    "per_ref": [
+     1.0875000000000004,
+     1.1625000000000003,
+     1.1625000000000005,
+     1.0250000000000001
+    ],
+    "group_median": 0.9781250000000001
+   }
+  },
+  {
+   "sheet": 8,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート8 の 1 番（逃げる） の縮尺が少し違う（頭の大きさで約 89%）。並べて見て気になるなら描き直し",
+   "slot": "flee",
+   "ask": null,
+   "data": {
+    "scale": 0.8881789137380193,
+    "per_ref": [
+     0.8500000000000003,
+     0.9750000000000001,
+     0.8500000000000003,
+     0.8875000000000002
+    ],
+    "group_median": 0.9781250000000001
+   }
+  }
+ ]
+}

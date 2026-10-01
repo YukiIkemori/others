@@ -1,0 +1,97 @@
+{
+ "raw": "raw/s6_a1.png",
+ "pitch": 8.0,
+ "frames": {
+  "slash": {
+   "row": 1,
+   "column": 2,
+   "logical_bbox": [
+    74,
+    67
+   ],
+   "air": 0
+  },
+  "thrust_ready": {
+   "row": 1,
+   "column": 3,
+   "logical_bbox": [
+    72,
+    65
+   ],
+   "air": 0
+  },
+  "thrust": {
+   "row": 1,
+   "column": 4,
+   "logical_bbox": [
+    93,
+    65
+   ],
+   "air": 0
+  },
+  "windup": {
+   "row": 1,
+   "column": 1,
+   "logical_bbox": [
+    51,
+    64
+   ],
+   "air": 0
+  },
+  "smash": {
+   "row": 2,
+   "column": 1,
+   "logical_bbox": [
+    54,
+    75
+   ],
+   "air": 0
+  },
+  "cast_a": {
+   "row": 2,
+   "column": 2,
+   "logical_bbox": [
+    65,
+    65
+   ],
+   "air": 0
+  },
+  "cast_b": {
+   "row": 2,
+   "column": 3,
+   "logical_bbox": [
+    54,
+    64
+   ],
+   "air": 0
+  },
+  "charge": {
+   "row": 1,
+   "column": 5,
+   "logical_bbox": [
+    64,
+    48
+   ],
+   "air": 0
+  },
+  "item": {
+   "row": 2,
+   "column": 4,
+   "logical_bbox": [
+    56,
+    68
+   ],
+   "air": 0
+  },
+  "evade": {
+   "row": 2,
+   "column": 5,
+   "logical_bbox": [
+    55,
+    66
+   ],
+   "air": 0
+  }
+ },
+ "notes": []
+}

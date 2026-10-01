@@ -1,0 +1,97 @@
+{
+ "raw": "raw/s7_a1.png",
+ "pitch": 8.4,
+ "frames": {
+  "bare_idle": {
+   "row": 1,
+   "column": 1,
+   "logical_bbox": [
+    50,
+    67
+   ],
+   "air": 0
+  },
+  "bare_windup": {
+   "row": 1,
+   "column": 2,
+   "logical_bbox": [
+    55,
+    65
+   ],
+   "air": 0
+  },
+  "bare_slash": {
+   "row": 1,
+   "column": 3,
+   "logical_bbox": [
+    59,
+    64
+   ],
+   "air": 0
+  },
+  "bare_thrust": {
+   "row": 1,
+   "column": 4,
+   "logical_bbox": [
+    59,
+    66
+   ],
+   "air": 0
+  },
+  "bare_cast": {
+   "row": 1,
+   "column": 5,
+   "logical_bbox": [
+    64,
+    66
+   ],
+   "air": 0
+  },
+  "wpn_sword": {
+   "row": 2,
+   "column": 1,
+   "logical_bbox": [
+    60,
+    37
+   ],
+   "air": 0
+  },
+  "wpn_greatsword": {
+   "row": 2,
+   "column": 2,
+   "logical_bbox": [
+    95,
+    26
+   ],
+   "air": 0
+  },
+  "wpn_dagger": {
+   "row": 2,
+   "column": 3,
+   "logical_bbox": [
+    45,
+    37
+   ],
+   "air": 0
+  },
+  "wpn_bow": {
+   "row": 2,
+   "column": 4,
+   "logical_bbox": [
+    58,
+    59
+   ],
+   "air": 0
+  },
+  "wpn_staff": {
+   "row": 2,
+   "column": 5,
+   "logical_bbox": [
+    95,
+    19
+   ],
+   "air": 0
+  }
+ },
+ "notes": []
+}

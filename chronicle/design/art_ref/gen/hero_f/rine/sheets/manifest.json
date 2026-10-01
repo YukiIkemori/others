@@ -103,5 +103,353 @@
     ]
    }
   ]
+ },
+ {
+  "sheet": 6,
+  "file": "rine_sheet_06.png",
+  "layout": "2x5",
+  "logical_cell": [
+   104,
+   80
+  ],
+  "image_px": [
+   4160,
+   1280
+  ],
+  "frames": [
+   {
+    "id": "windup",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     51,
+     64
+    ]
+   },
+   {
+    "id": "slash",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     74,
+     67
+    ]
+   },
+   {
+    "id": "thrust_ready",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     72,
+     65
+    ]
+   },
+   {
+    "id": "thrust",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     93,
+     65
+    ]
+   },
+   {
+    "id": "charge",
+    "row": 1,
+    "column": 5,
+    "logical_bbox": [
+     64,
+     48
+    ]
+   },
+   {
+    "id": "smash",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     54,
+     75
+    ]
+   },
+   {
+    "id": "cast_a",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     65,
+     65
+    ]
+   },
+   {
+    "id": "cast_b",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     54,
+     64
+    ]
+   },
+   {
+    "id": "item",
+    "row": 2,
+    "column": 4,
+    "logical_bbox": [
+     56,
+     68
+    ]
+   },
+   {
+    "id": "evade",
+    "row": 2,
+    "column": 5,
+    "logical_bbox": [
+     55,
+     66
+    ]
+   }
+  ]
+ },
+ {
+  "sheet": 7,
+  "file": "rine_sheet_07.png",
+  "layout": "2x5",
+  "logical_cell": [
+   112,
+   80
+  ],
+  "image_px": [
+   4480,
+   1280
+  ],
+  "frames": [
+   {
+    "id": "bare_idle",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     50,
+     67
+    ]
+   },
+   {
+    "id": "bare_windup",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     55,
+     65
+    ]
+   },
+   {
+    "id": "bare_slash",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     59,
+     64
+    ]
+   },
+   {
+    "id": "bare_thrust",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     59,
+     66
+    ]
+   },
+   {
+    "id": "bare_cast",
+    "row": 1,
+    "column": 5,
+    "logical_bbox": [
+     64,
+     66
+    ]
+   },
+   {
+    "id": "wpn_sword",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     60,
+     37
+    ]
+   },
+   {
+    "id": "wpn_greatsword",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     95,
+     26
+    ]
+   },
+   {
+    "id": "wpn_dagger",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     45,
+     37
+    ]
+   },
+   {
+    "id": "wpn_bow",
+    "row": 2,
+    "column": 4,
+    "logical_bbox": [
+     58,
+     59
+    ]
+   },
+   {
+    "id": "wpn_staff",
+    "row": 2,
+    "column": 5,
+    "logical_bbox": [
+     95,
+     19
+    ]
+   }
+  ]
+ },
+ {
+  "sheet": 8,
+  "file": "rine_sheet_08.png",
+  "layout": "1x4",
+  "logical_cell": [
+   112,
+   80
+  ],
+  "image_px": [
+   3584,
+   640
+  ],
+  "frames": [
+   {
+    "id": "flee",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     56,
+     65
+    ]
+   },
+   {
+    "id": "sleep",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     43,
+     67
+    ]
+   },
+   {
+    "id": "confuse",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     57,
+     64
+    ]
+   },
+   {
+    "id": "cover",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     86,
+     66
+    ]
+   }
+  ]
+ },
+ {
+  "sheet": 9,
+  "file": "rine_sheet_09.png",
+  "layout": "2x4",
+  "logical_cell": [
+   96,
+   96
+  ],
+  "image_px": [
+   3072,
+   1536
+  ],
+  "frames": [
+   {
+    "id": "face_neutral",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     69,
+     80
+    ]
+   },
+   {
+    "id": "face_serious",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     70,
+     80
+    ]
+   },
+   {
+    "id": "face_smile",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     70,
+     80
+    ]
+   },
+   {
+    "id": "face_laugh",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     70,
+     80
+    ]
+   },
+   {
+    "id": "face_surprise",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     69,
+     80
+    ]
+   },
+   {
+    "id": "face_sad",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     70,
+     80
+    ]
+   },
+   {
+    "id": "face_angry",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     70,
+     80
+    ]
+   },
+   {
+    "id": "face_tired",
+    "row": 2,
+    "column": 4,
+    "logical_bbox": [
+     70,
+     80
+    ]
+   }
+  ]
  }
 ]

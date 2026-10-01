@@ -170,7 +170,11 @@ def char_info(look):
         return dict(id='arun', name='Arun', look=look, weaponType='sword', weaponDrawn='plain one-handed sword',
                     brief='the hero: a young swordsman with ash-brown messy hair, a long red scarf, a dark leather coat '
                           'over cream cloth, brown leather boots')
-    cs = json.load(open(os.path.join(ART, 'companion_sheets.json')))['companions']
+    if look == 'hero_f_warrior':     # リーネ（女の主人公）。戦闘シートはアルンのシートを塗り替えたもの
+        return dict(id='rine', name='Rine', look=look, weaponType='sword', weaponDrawn='plain one-handed sword',
+                    brief='the heroine: a young swordswoman with an ash-brown high ponytail tied with a dark-red cord, a red '
+                          'scarf, a brown leather jacket with a shoulder guard over a cream tunic, brown leather boots')
+    cs =json.load(open(os.path.join(ART, 'companion_sheets.json')))['companions']
     for c in cs:
         if c['look'] == look:
             return dict(id=c['id'], name=c['id'].capitalize(), look=look, weaponType=c['weaponType'],

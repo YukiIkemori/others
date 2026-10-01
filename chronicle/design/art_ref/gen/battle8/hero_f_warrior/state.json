@@ -1,0 +1,228 @@
+{
+ "attack": {
+  "attempts": [
+   {
+    "raw": "raw/attack_a1.png",
+    "pitch": 8,
+    "lay": {
+     "HX": 68,
+     "G": 78,
+     "W": 136,
+     "H": 81
+    },
+    "quality": "high",
+    "extra": "",
+    "t": "2026-10-01T12:33:12",
+    "secs": 91.5,
+    "route": "repaint hero_m_warrior battle8"
+   }
+  ],
+  "frames": [
+   {
+    "slot": 1,
+    "kind": "keep",
+    "src": "idle_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      83.5,
+      48.0
+     ],
+     "height": 67,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 0.0
+    }
+   },
+   {
+    "slot": 2,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      82.1,
+      50.7
+     ],
+     "height": 70,
+     "rescaled": null,
+     "copy": 0.06,
+     "shift": [
+      2,
+      0
+     ],
+     "err": 29.0
+    }
+   },
+   {
+    "slot": 3,
+    "kind": "keep",
+    "src": "windup",
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.887",
+     "head_scale": 0.887,
+     "head": [
+      83.9,
+      59.6
+     ],
+     "height": 64,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 36.9
+    }
+   },
+   {
+    "slot": 4,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      82.1,
+      54.0
+     ],
+     "height": 69,
+     "rescaled": null,
+     "copy": 0.04,
+     "shift": [
+      1,
+      0
+     ],
+     "err": 47.3
+    }
+   },
+   {
+    "slot": 5,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      82.1,
+      50.7
+     ],
+     "height": 64,
+     "rescaled": null,
+     "copy": 0.08,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 32.3
+    }
+   },
+   {
+    "slot": 6,
+    "kind": "keep",
+    "src": "slash",
+    "checks": {
+     "ok": false,
+     "why": "head scale 1.087",
+     "head_scale": 1.087,
+     "head": [
+      83.8,
+      50.1
+     ],
+     "height": 67,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 30.2
+    }
+   },
+   {
+    "slot": 7,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      82.5,
+      54.0
+     ],
+     "height": 61,
+     "rescaled": null,
+     "copy": 0.05,
+     "shift": [
+      4,
+      0
+     ],
+     "err": 29.9
+    }
+   },
+   {
+    "slot": 8,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      81.9,
+      49.6
+     ],
+     "height": 64,
+     "rescaled": null,
+     "copy": 0.19,
+     "shift": [
+      0,
+      2
+     ],
+     "err": 26.6
+    }
+   },
+   {
+    "slot": 9,
+    "kind": "keep",
+    "src": "idle_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      83.5,
+      48.0
+     ],
+     "height": 67,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 0.0
+    }
+   }
+  ],
+  "lay": {
+   "HX": 84,
+   "G": 102,
+   "W": 168,
+   "H": 105
+  },
+  "from_raw": "raw/attack_a1.png"
+ }
+}
