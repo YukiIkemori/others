@@ -123,4 +123,75 @@ section('砂の王墓の壁にめり込んだ物（1〜3 階）');
   ok('1 階の看板は入口の広間の床（26,35）で、前の床から読める', !!sg && sg.x === 26 && sg.y === 35 && pass(m, 26, 36), sg);
 }
 
+section('王墓のオアシスの満ちた泉（cleared_r_desert の後の絵）');
+{
+  // 前は満ちた泉の絵（desert_camp3_closed）がマスの形の青い四角を並べた物で、描いた下絵の上に四角い水が貼りついて見えた
+  //   → 下絵の泉の水の筆致から作った、丸い岸・やわらかい縁の絵。絵のある画素のマスは全部 live のマス（マスの端で絵が切れない）
+  const zlib = require('zlib');
+  function png(file) {   // 8 bit RGBA・インターレース無しの PNG を読む（このテストの絵だけ）
+    const b = fs.readFileSync(file), chunks = [], idat = [];
+    let i = 8, w = 0, h = 0, ct = 0;
+    while (i < b.length) {
+      const n = b.readUInt32BE(i), t = b.toString('latin1', i + 4, i + 8), d = b.subarray(i + 8, i + 8 + n);
+      chunks.push(t);
+      if (t === 'IHDR') { w = d.readUInt32BE(0); h = d.readUInt32BE(4); ct = d[9]; }
+      if (t === 'IDAT') idat.push(d);
+      i += 12 + n;
+    }
+    const raw = zlib.inflateSync(Buffer.concat(idat)), bpp = 4, st = w * bpp, px = Buffer.alloc(w * h * bpp);
+    for (let y = 0; y < h; y++) {
+      const f = raw[y * (st + 1)], src = raw.subarray(y * (st + 1) + 1, (y + 1) * (st + 1));
+      for (let x = 0; x < st; x++) {
+        const a = x >= bpp ? px[y * st + x - bpp] : 0, up = y ? px[(y - 1) * st + x] : 0, c = x >= bpp && y ? px[(y - 1) * st + x - bpp] : 0;
+        const p = a + up - c, pa = Math.abs(p - a), pb = Math.abs(p - up), pc = Math.abs(p - c);
+        const pr = f === 0 ? 0 : f === 1 ? a : f === 2 ? up : f === 3 ? (a + up) >> 1 : (pa <= pb && pa <= pc ? a : pb <= pc ? up : c);
+        px[y * st + x] = (src[x] + pr) & 255;
+      }
+    }
+    return { w, h, ct, px, chunks };
+  }
+  const m = M.desert_camp3, dir = path.join(V2, 'assets/env/desert/under');
+  const meta = JSON.parse(fs.readFileSync(path.join(dir, 'desert_camp3.json'), 'utf8'));
+  ok('desert_camp3 は満ちた泉の層（art.closed）を持つ', m.art && m.art.closed === 'desert/under/desert_camp3_closed', m.art);
+  const L = (meta.live || [])[0] || {};
+  ok('live は 1 つで、cleared_r_desert の後に出る（cond = not cleared_r_desert）', meta.live.length === 1 && JSON.stringify(L.cond) === JSON.stringify({ not: 'cleared_r_desert' }), L.cond);
+  const cells = new Set((L.cells || []).map((c) => c.join(',')));
+  for (const t of [24, 32, 40]) {
+    const im = png(path.join(dir, `desert_camp3_closed@${t}.png`));
+    ok(`@${t}: RGBA で、付きの chunk が無い`, im.ct === 6 && im.chunks.every((c) => ['IHDR', 'IDAT', 'IEND'].includes(c)), im.chunks);
+    const out = new Set();
+    let soft = 0, solid = 0;
+    for (let y = 0; y < im.h; y++) for (let x = 0; x < im.w; x++) {
+      const a = im.px[(y * im.w + x) * 4 + 3];
+      if (!a) continue;
+      if (a < 255) soft++; else solid++;
+      const k = Math.floor(x / t) + ',' + Math.floor(y / t);
+      if (!cells.has(k)) out.add(k);
+    }
+    ok(`@${t}: 絵のある画素のマスはどれも live のマス（マスの端で絵が切れない）`, out.size === 0, [...out].slice(0, 8));
+    ok(`@${t}: 縁がやわらかい（半透明の画素がある）`, soft > solid * 0.05, { soft, solid });
+    // マスの四角が見えない: live のマスの外周（隣が live でない辺）に不透明の画素が並ばない
+    let edge = 0;
+    for (const k of cells) {
+      const [cx, cy] = k.split(',').map(Number);
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        if (cells.has((cx + dx) + ',' + (cy + dy))) continue;
+        for (let s = 0; s < t; s++) {
+          const x = dx > 0 ? cx * t + t - 1 : dx < 0 ? cx * t : cx * t + s, y = dy > 0 ? cy * t + t - 1 : dy < 0 ? cy * t : cy * t + s;
+          if (im.px[(y * im.w + x) * 4 + 3] > 0) edge++;
+        }
+      }
+    }
+    ok(`@${t}: live の外周の辺に絵の画素が無い`, edge === 0, edge);
+  }
+  // 当たり: 泉の水のマスは解決の前も後も歩けない（tilePatches は描いた当たりと同じ水）
+  const wcells = [];
+  m.rows.forEach((r, y) => [...r].forEach((ch, x) => { if (ch === 'w') wcells.push([x, y]); }));
+  const before = wcells.filter(([x, y]) => pass(m, x, y));
+  R.Game.flags.cleared_r_desert = true; R.MapUtil.invalidate && R.MapUtil.invalidate(m);
+  const after = wcells.filter(([x, y]) => pass(m, x, y));
+  delete R.Game.flags.cleared_r_desert; R.MapUtil.invalidate && R.MapUtil.invalidate(m);
+  ok(`泉の水のマス（${wcells.length}）は解決の前も後も歩けない`, wcells.length >= 20 && !before.length && !after.length, { before, after });
+}
+
 done('test_desert_fixes_1001');
