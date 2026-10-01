@@ -76,6 +76,27 @@ const PV2LIB = `(() => {
       if (++c.f >= (gap || 40) && c.i < keys.length) { PV.tap(keys[c.i++], 3); c.f = 0; }
       return true;
     },
+    /** 会話の自動送り（声の長さを待つ）: 窓の字が出そろってから min フレーム、かつ鳴っている声が終わって 0.5 秒たったら送る。
+     *  声の長さは PV2.voiceDur（id → 秒。撮影の道具が声のファイルから測って入れる） */
+    voiceDur: {},
+    autoVoice(min) {
+      PV.autoMsg(0);
+      PV2._av = min || 90; PV2._ff = 0;
+      if (PV2._avOn) return true;
+      PV2._avOn = true;
+      const A = R.Audio;
+      for (const n of ['playVoice', 'voice']) { const f = A[n]; A[n] = function (id) { PV2._vt = { t: R.Engine.time, id: String(id) }; return f.apply(this, arguments); }; }
+      R.Engine.addTick(() => {
+        if (!PV2._av) return;
+        const st = R.UIK.Message.state();
+        if (!st || !st.full || (st.choiceRect != null && !PV.autoChoose)) { PV2._ff = 0; return; }
+        PV2._ff++;
+        const v = PV2._vt;
+        if (v) { const ms = v.id.split(',').reduce((a, k) => a + (PV2.voiceDur[k] || 0), 0) * 1000; if (R.Engine.time < v.t + ms + 500) return; }
+        if (PV2._ff >= PV2._av) { PV2._ff = 0; PV2._vt = null; PV.tap('a', 2); }
+      });
+      return true;
+    },
     /** 戦闘は勝ったことにする（演出のある出来事を、戦いを撮らずに先へ進める） */
     winAll() { R.Battle.start = async () => ({ result: 'win' }); return true; },
   });
@@ -108,7 +129,7 @@ const STEER_LEAD = (dx, dy) => () => `PV.steer(); ${LEAD(dx, dy)}`;
 // 砂の王墓の出来事の旗（2 階の砂もぐりは倒した後）
 const DESERT = { desert_arrived: true, desert_camp3_done: true, desert_worm: true, desert_robber_gone: true };
 // 歩き終えたら出来事を始める（毎フレーム）。始まった後はカメラを出来事に任せる
-const THEN_EVENT = (ev, map, auto, lead) => () => `if (!PV.route && !window.__pvEv) { window.__pvEv = 1; PV.btn({}); PV.autoMsg(${auto || 90}); RPG.Events.run('${ev}', {map: '${map}'}); } else if (!window.__pvEv) { PV.steer(); ${lead || ''} }`;
+const THEN_EVENT = (ev, map, auto, lead) => () => `if (!PV.route && !window.__pvEv) { window.__pvEv = 1; PV.btn({}); PV2.autoVoice(${auto || 90}); RPG.Events.run('${ev}', {map: '${map}'}); } else if (!window.__pvEv) { PV.steer(); ${lead || ''} }`;
 
 const SHOTS = {
   // ================================================================ §1 つかみ
@@ -120,7 +141,7 @@ const SHOTS = {
       await T.js('PV2.winAll()');
       await WALK([[27, 11]], { run: false })(T);
     },
-    n: sec(12), walk: true,
+    n: sec(15), walk: true,
     each: THEN_EVENT('desert_tomb_king', 'desert_tomb_3', 150, LEAD(0, -3)),
   },
 };
@@ -151,11 +172,27 @@ async function rec(P, file, n, each, o) {
   return log;
 }
 
+// 声のファイル（chronicle/assets/voice/v_*.ogg）の長さ（秒）。会話の自動送りが声の終わりを待つのに使う
+let VDUR = null;
+function voiceDur() {
+  if (VDUR) return VDUR;
+  VDUR = {};
+  const dir = path.resolve(__dirname, '..', '..', '..', 'assets', 'voice');
+  for (const f of fs.readdirSync(dir).filter((n) => /^v_.*\.ogg$/.test(n))) {
+    let e = '';
+    try { execFileSync(C.FF, ['-i', path.join(dir, f)], { stdio: ['ignore', 'ignore', 'pipe'] }); } catch (err) { e = String(err.stderr || ''); }
+    const m = /Duration: (\d+):(\d+):([\d.]+)/.exec(e);
+    if (m) VDUR[f.slice(0, -4)] = +m[1] * 3600 + +m[2] * 60 + +m[3];
+  }
+  return VDUR;
+}
+
 async function shoot(S, id, out, still) {
   const sh = SHOTS[id];
   const P = await C.open(S, sh.url || 'dev.html?fixture=content_p_roa');
   await C.run(P, PVLIB);
   await C.run(P, PV2LIB);
+  await C.run(P, `PV2.voiceDur = ${JSON.stringify(voiceDur())}; true`);
   const T = {
     js: (code) => C.run(P, code),
     idle: (n, each) => C.idle(P, n, each),
@@ -265,11 +302,11 @@ SHOTS.s2_berna = {
     await T.js(FIELD({}, 'roa_dawn', 'gate'));
     await T.idle(150); await T.settle();
     await T.js(`RPG.Field.camera.focus(21, 16, {ms: 0})`); await T.idle(30);
-    await T.js(`PV.autoMsg(200); PV2.say([
-      {who: 'e_berna', key: 'ev.pharos_story.pharos_departure.run.say_7', voice: 'v_berna_lute_04', face: 'berna:neutral'},
-      {who: 'e_berna', key: 'ev.pharos_story.pharos_departure.run.say_9', voice: 'v_berna_lute_05', face: 'berna:smile'}])`);
   },
-  n: sec(14),
+  n: sec(20),
+  each: (i) => (i === 20 ? `PV2.autoVoice(100); PV2.say([
+      {who: 'e_berna', key: 'ev.pharos_story.pharos_departure.run.say_7', voice: 'v_berna_lute_04', face: 'berna:neutral'},
+      {who: 'e_berna', key: 'ev.pharos_story.pharos_departure.run.say_9', voice: 'v_berna_lute_05', face: 'berna:smile'}])` : null),
 };
 // 年代記の画面: まだ何も書かれていない白いページ（章なし・手がかりなし）
 SHOTS.s2_chronicle = {
@@ -288,9 +325,9 @@ SHOTS.s2_rowell = {
     await T.js(FIELD({ flags: { final_sailed: true, final_arrived: true } }, 'biblia', { x: 27, y: 17, dir: 'e' }));
     await T.idle(150); await T.settle();
     await T.js(`RPG.Field.camera.focus(28.5, 15, {ms: 0})`); await T.idle(30);
-    await T.js(`PV.autoMsg(200); PV2.say([{who: 'rowell', key: 'ev.pharos_story.pharos_rowell.run.say_2', voice: 'v_rowell_prologue_02', face: 'rowell:angry'}])`);
   },
   n: sec(7),
+  each: (i) => (i === 20 ? `PV2.autoVoice(100); PV2.say([{who: 'rowell', key: 'ev.pharos_story.pharos_rowell.run.say_2', voice: 'v_rowell_prologue_02', face: 'rowell:angry'}])` : null),
 };
 // 灰色のマントの少女フィーネの後ろ姿（岬の村ネレイの岬の先で海を見ている。会話の前）。声は v_fine_t1_02 を重ねる
 SHOTS.s2_fine = {
@@ -567,7 +604,7 @@ BEACONS.forEach(([rid, map, spawn], k) => {
 // ================================================================ §7 想い（本物の出来事。戦いは勝ったことにして飛ばし、戦いの後の場面から撮る。声と窓は本物）
 //   どれも *_clean（窓・地の文を描かない写し）も撮る。台本は「文字は出さない」なので、編集で選ぶ
 // 事前に早送り（autoMsg 8）して cond が真になったら、ふつうの速さ（autoMsg 110）に戻して撮る
-const FF_UNTIL = (cond) => async (T) => { await T.until(cond, 9000); await T.js(`PV.autoMsg(110)`); };
+const FF_UNTIL = (cond) => async (T) => { await T.until(cond, 9000); await T.js(`PV2.autoVoice(100)`); };
 // 白竜の峰の頂: 白竜が膝を折る → ネーヴェ「……あたたかい。人の子らは、わたしを忘れてはいなかったのか。」（v_neve_peak_02）
 SHOTS.s7_neve = {
   prep: async (T) => {
@@ -576,7 +613,7 @@ SHOTS.s7_neve = {
     await T.js(`PV2.winAll(); PV.autoMsg(8); RPG.Events.run('peak_neve', {map: 'peak_top'})`);
     await FF_UNTIL(`PV.lastLine().includes('膝を折り')`)(T);
   },
-  n: sec(11),
+  n: sec(16),
 };
 // 幽霊船の船長室: 亡霊船長グレン（戦いの後）→ 舟歌 → グレン「……マリナ。そうだ、おれは帰ると約束したんだ。」（v_glen_ship_03）
 const ISLES = { isles_arrived: true, isles_marina_met: true, isles_fog_open: true, isles_song_done: true, isles_fine_seen: true };
@@ -587,16 +624,16 @@ SHOTS.s7_glen = {
     await T.js(`PV2.winAll(); PV.autoMsg(8); RPG.Events.run('isles_captain', {map: 'ghost_ship_3'})`);
     await FF_UNTIL(`RPG.Game.flags.isles_captain`)(T);
   },
-  n: sec(17),
+  n: sec(22),
 };
 // 岬の村ネレイの桟橋、地平が白むころ: マリナ「おかえりなさい、グレン。」（v_marina_dawn_01）→ グレン「ただいま、マリナ。」（v_glen_dawn_01）
 SHOTS.s7_marina = {
   prep: async (T) => {
     await T.js(FIELD({ flags: Object.assign({ isles_captain: true, isles_log_white: true }, ISLES) }, 'nerei', 'pier_end'));
     await T.idle(150); await T.settle();
-    await T.js(`PV.autoMsg(110); RPG.Events.run('isles_dawn', {map: 'nerei'})`);
+    await T.js(`PV2.autoVoice(100); RPG.Events.run('isles_dawn', {map: 'nerei'})`);
   },
-  n: sec(17),
+  n: sec(22),
 };
 // 砂の王墓: 王の霊が浮かび上がり、名を取り戻す → ハザル「民は、約束を覚えていてくれたのだな……。」（v_hazal_tomb_04）
 SHOTS.s7_hazal = {
@@ -606,7 +643,7 @@ SHOTS.s7_hazal = {
     await T.js(`PV2.winAll(); PV.autoMsg(8); RPG.Events.run('desert_tomb_king', {map: 'desert_tomb_3'})`);
     await FF_UNTIL(`RPG.Game.flags.desert_king`)(T);
   },
-  n: sec(20),
+  n: sec(30),
 };
 // 火山の火口の縁: フィーネ「燃え尽きることと、忘れられることは、違うわ。」（v_fine_ash_01）
 const ASH = { ash_arrived: true, ash_lavabeast: true };
@@ -614,9 +651,9 @@ SHOTS.s7_fine_ash = {
   prep: async (T) => {
     await T.js(FIELD({ flags: ASH }, 'ash_volcano_2', { x: 24, y: 6, dir: 'e' }));
     await T.idle(150); await T.settle();
-    await T.js(`PV.autoMsg(110); RPG.Events.run('ash_crater_fine', {map: 'ash_volcano_2'})`);
+    await T.js(`PV2.autoVoice(100); RPG.Events.run('ash_crater_fine', {map: 'ash_volcano_2'})`);
   },
-  n: sec(11),
+  n: sec(12),
 };
 // 火口: 卵に壁画の物語を語る → 火の鳥がかえる → 火の鳥の灯（大灯火の光の柱・章の札）。語りの字幕は出さない（窓なしで撮る）
 SHOTS.s7_firebird = {
@@ -647,3 +684,8 @@ SHOTS.s9_page = {
 SHOTS.s9_title = Object.assign({}, SHOTS.s1_title, { n: sec(9) });
 // 題字の出だしをゆっくり（1/5 の速さ）: 一枚絵の大陸に八つの灯火が左の灯台から奥へ 1 つずつともる（§9 の「八つの灯がともる」の別の元）
 SHOTS.s9_title_slow = Object.assign({}, SHOTS.s1_title, { n: sec(12), dt: 1000 / 60 / 5 });
+// 出だしを最初から（ページを開いてから時計を止めるまでに出だしが進んでしまうので、題字の画面の出だしの時刻 t0 を今に戻す）
+SHOTS.s9_title_slow.prep = async (T) => {
+  await SHOTS.s1_title.prep(T);
+  await T.js(`(() => { for (const sc of RPG.Engine.stack) for (const o of [sc, sc.view]) if (o && o.introT) { o.intro = true; o.skipped = false; o.t0 = RPG.Engine.time; } return true; })()`);
+};
