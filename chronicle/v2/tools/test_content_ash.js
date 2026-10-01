@@ -142,7 +142,7 @@ section('2. 置き場所（泉・宝箱・戸口・灯り）');
     const m = D.maps[id];
     const wallAt = (x, y) => { const c = R.MapUtil.cell(m, x, y); return !c || !!(c.solid && !c.water && !c.lava); };
     for (const o of (m.objects || []).filter((q) => q.type === 'prop')) {
-      if (m.kind === 'interior' && !m.art && wallAt(o.x, o.y)) sunk.push(`${id} ${o.id}@${o.x},${o.y} は壁のマスの上`);   // 屋内（四角い部屋）の物は床に置く。闘技場の観客席の上のかがり火（描いた下絵）は別
+      if (m.kind === 'interior' && wallAt(o.x, o.y) && (R.MapUtil.cell(m, o.x, o.y) || {}).name !== 'stands') sunk.push(`${id} ${o.id}@${o.x},${o.y} は壁のマスの上`);   // 屋内の物は床に置く（壁の立ち上がりの中に立てない）。闘技場の観客席（stands）の上のかがり火は別
       const j = envMeta(o.id), cell = j && j.cell && j.cell['32'];
       if (!cell) continue;
       const feet = (j.feet && j.feet['32']) || [cell[0] / 2, cell[1] - 1];

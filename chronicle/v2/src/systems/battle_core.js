@@ -985,6 +985,8 @@
           if (n > 0) { u.hp -= n; this.stats.taken += n; yield { t: 'dmg', u, n, kind: 'cost' }; }
         }
       }
+      // ボスの場の効果・時間差の呪い（BC.upkeep = [function* (eng, u)]。データ（bosses_actions.js）が R.onData で足す）
+      if (BC.upkeep) for (const f of BC.upkeep) { yield* f(this, u); if (!u.alive) return; }
       for (const s of Object.keys(u.status)) {
         if (!u.status[s] || isDisabling(s)) continue;
         if (typeof u.turns[s] !== 'number') continue;
