@@ -1,6 +1,6 @@
 // UIK: 顔の枠（MODERN_UI §6.3・§2.5.16）。中身は R.Portrait（CAST。描いた顔 → hd:face → 無し）
 //   portraitFrame(g, rect, key, o)   key = 'look' | 'look:expr' | {look, expr}。rect は掛けた後の論理 px
-//   o = {dim（暗く）, r, ring:true, bg:[上, 下], fit:'bust'（胸から上を枠いっぱいに）|'circle'（丸を顔でほぼ埋める。R.Portrait.draw）, zoom, headroom}
+//   o = {dim（暗く）, r, ring:true, bg:[上, 下], fit:既定（顔の枠: 誰でも同じ大きさ・頭を枠の上に。R.Portrait.draw の faceLayout）|'bust'（胸から上を枠いっぱいに）|'circle'（丸を顔でほぼ埋める。R.Portrait.draw）, zoom, headroom}
 //   UIK.hasFace(key) → bool   顔があるか（無い人は枠ごと出さない、MODERN_UI §6.3）
 (function (R) {
   'use strict';

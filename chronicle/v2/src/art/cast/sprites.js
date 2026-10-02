@@ -563,6 +563,6 @@
     for (const e of (R.Contract && R.Contract.EXPRS) || ['neutral', 'smile', 'sad', 'angry', 'surprise']) poses[e] = [E[e] != null ? E[e] : E.neutral != null ? E.neutral : 0];
     let w = 0, h = 0;
     for (const f of frames_) { w = Math.max(w, f.c.width); h = Math.max(h, f.c.height); }
-    return { frames: frames_, poses, fps: {}, anchors: { feet: [0, 0] }, w, h, meta: { look, source: 'sprite', pixel: true } };
+    return { frames: frames_, poses, fps: {}, anchors: { feet: [0, 0] }, w, h, meta: { look, source: 'sprite', pixel: true, refH: m.target_height || null } };   // refH: 取り込みで揃えた顔の高さ（顔の枠の倍率をみんな同じにする、portrait.js の faceLayout）
   };
 })(window.RPG);

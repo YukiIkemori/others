@@ -1,7 +1,9 @@
 // CAST: 顔絵の口 R.Portrait（V2_PLAN §2.5.16・§6.2）。仮の stub_art.js の Portrait と同じ順: 描いた顔 → hd:face → 無し。
 //   R.Portrait.key(look, expr) → 'portrait:<look>:<expr>'
 //   R.Portrait.has(look, expr) → 'painted'|'placeholder'|null      （顔の無い人は null。呼ぶ側は枠ごと出さない）
-//   R.Portrait.draw(g, look, rect, {expr, dim, now})               枠（rect）の下の中央に合わせて描く。描いた顔は枠いっぱい
+//   R.Portrait.draw(g, look, rect, {expr, dim, now})               既定は「顔の枠」の配置（faceLayout）: 頭のてっぺんを枠の上の少し下に、
+//     顔の大きさは誰でも同じ（取り込みで揃えた顔の高さ refH に対する倍率）。描いた顔は枠いっぱい
+//     fit:'contain'（コマ全体を 0.5 刻みの倍率で下の中央に。前の既定。上に空きが出る）
 //     fit:'bust'（胸から上を枠いっぱい）・fit:'fill'（絵のある範囲を枠に収める、整数倍）・fit:'circle'（rect に内接する丸を顔でほぼ埋める。髪のてっぺん〜顎・首。丸で切り抜く。zoom・headroom）
 //   R.Portrait.parse('berna:smile') → {look, expr}                  （無い表情は neutral）
 // 描いた顔の画像は初めて使うときに読み込む（decode の間は仮の顔）。仮の顔・原画の顔はぼかさずに拡大（0.5 刻みの倍率）。
@@ -160,6 +162,56 @@
     return true;
   }
 
+  // ------------------------------------------------------------------ 顔の枠（既定）
+  // 会話の窓・店・メニューの四角い顔の枠。前はコマ全体を枠に収める倍率を 0.5 刻みに切り下げ、下の中央に置いていたので、
+  // 84 px のコマが 118 の枠に 1 倍で入り、頭の上に枠の 3 割ほどの空きができた（オーナー 2026-10-01「NPC の顔、上部に空白ができちゃってる」）。
+  // ここでは誰でも同じ枠どり: 倍率は「取り込みで揃えた顔の高さ（meta.refH、無ければ平常の顔の絵の高さ）× FACE_Z が枠の高さ」、
+  // 頭のてっぺん（平常の顔の絵の上端）を枠の上から FACE_TOP の所に、横は頭の中心を枠の中央に。表情はコマの足元（ox, oy）で揃えるので、
+  // 表情を変えても頭が動かない。肩・胸の下は切れてよい。倍率は画面の画素の整数倍に寄せる（近い整数が 15% 以内で、枠が埋まるなら）。
+  const FACE_Z = 1.12, FACE_TOP = 0.04;
+  P.FACE_Z = FACE_Z; P.FACE_TOP = FACE_TOP;
+  function faceLayout(sh, fr, rect, o) {
+    o = o || {};
+    const nf = sh.frames[(sh.poses.neutral || [0])[0]] || fr;
+    const nb = opaqueBox(nf.c), hb = headBox(nf, sh.meta);
+    const refH = (sh.meta && sh.meta.refH) || nb.h;
+    const px = R.SCALE || 2;
+    const z = o.zoom || FACE_Z, head = o.headroom != null ? o.headroom : FACE_TOP;
+    let s = (rect.h * z) / refH;
+    const sp = s * px, k = Math.round(sp);
+    let crisp = sp >= 3;
+    if (k >= 2 && Math.abs(k / sp - 1) <= 0.15 && (k / px) * refH >= rect.h * 0.98) { s = k / px; crisp = true; }
+    const nox = nf.ox != null ? nf.ox : nf.c.width >> 1, noy = nf.oy != null ? nf.oy : nf.c.height - 1;
+    const fox = fr.ox != null ? fr.ox : fr.c.width >> 1, foy = fr.oy != null ? fr.oy : fr.c.height - 1;
+    // 足元からの相対（平常の顔で測る）
+    const cxRel = hb.cx - nox, topRel = nb.y - noy, botRel = nb.y + nb.h - noy;
+    let ay = rect.y + rect.h * head - topRel * s;           // 足元（anchor）の y
+    const gap = rect.y + rect.h - (ay + botRel * s);         // 絵が枠の下まで届かないなら下に寄せる
+    if (gap > 0) ay += gap;
+    const ax = rect.x + rect.w / 2 - cxRel * s;
+    return { s, crisp, x: Math.round((ax - fox * s) * px) / px, y: Math.round((ay - foy * s) * px) / px, w: fr.c.width * s, h: fr.c.height * s,
+      top: ay + topRel * s - rect.y, scale: (refH * s) / rect.h };
+  }
+  /** 顔の枠の配置（テスト・確認用）: {s, x, y, w, h, top（枠の上から頭のてっぺんまで、論理 px）, scale（顔の高さ ÷ 枠の高さ）} | null */
+  P.faceLayout = function (look, rect, o) {
+    o = o || {};
+    const sh = R.Hd && R.Hd.has && R.Hd.has('hd:face:' + look) ? R.Hd.get('hd:face:' + look) || R.Hd.now('hd:face:' + look) : null;
+    if (!sh || !sh.poses) return null;
+    const expr = EXPRS.includes(o.expr) ? o.expr : 'neutral';
+    const fr = sh.frames[(sh.poses[expr] || sh.poses.neutral || [0])[0]];
+    return fr && fr.c ? faceLayout(sh, fr, rect, o) : null;
+  };
+  function drawFaceBox(g, sh, fr, rect, alpha, o) {
+    const L = faceLayout(sh, fr, rect, o);
+    g.save();
+    g.globalAlpha = alpha;
+    g.imageSmoothingEnabled = !L.crisp;
+    g.beginPath(); g.rect(rect.x, rect.y, rect.w, rect.h); g.clip();
+    g.drawImage(fr.c, L.x, L.y, L.w, L.h);
+    g.restore();
+    return true;
+  }
+
   P.draw = function (g, look, rect, o) {
     o = o || {};
     const expr = EXPRS.includes(o.expr) ? o.expr : 'neutral';
@@ -197,6 +249,7 @@
     if (o.fit === 'bust') return drawBust(g, fr.c, rect, a0 * alpha, o);
     if (o.fit === 'circle') return drawCircle(g, fr, sh.meta, rect, a0 * alpha, o);
     if (o.fit === 'fill') return drawFill(g, fr.c, rect, a0 * alpha);
+    if (o.fit !== 'contain') return drawFaceBox(g, sh, fr, rect, a0 * alpha, o);
     let s = Math.min(rect.w / w, rect.h / h);
     s = s >= 1 ? Math.max(1, Math.floor(s * 2) / 2) : Math.max(0.25, Math.floor(s * 4) / 4);
     const dw = Math.round(w * s), dh = Math.round(h * s);
