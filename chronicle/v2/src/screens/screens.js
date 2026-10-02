@@ -340,7 +340,8 @@
   };
 
   // ---------------------------------------------------------------- 品
-  S.item = (id) => (R.DB.items && R.DB.items[id]) || null;
+  // 伸びる品（一品物・魔物から取る ★ の装備）は手に入れたティアの値（R.Rules.itemOf）を見せる
+  S.item = (id) => (R.Rules && R.Rules.itemOf ? R.Rules.itemOf(id) : (R.DB.items && R.DB.items[id])) || null;
   S.gradeColor = function (it) {
     const C = T().color;
     if (!it) return C.text;

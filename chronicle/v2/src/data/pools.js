@@ -50,6 +50,17 @@
       for (const k of ['normal', 'rare', 'super']) if (d[k] && d[k].item) dropped.add(d[k].item);
     }
     const free = (id) => !dropped.has(id);
+    // 魔物から取る ★ の装備（レア・スーパーレアの枠と盗み専用。ボス・レア魔物も）は手に入れたティアで値が決まる（grow 'drop'。
+    //   R.Rules.fillItem・R.State.gain・R.Rules.itemOf）。持ち主 2026-10-02「店の装備は最低限。レア・盗みの装備はその時の店の品より少し上
+    //   （早く来ても強すぎず、遅く来ても弱すぎず）」。アクセサリ（効き目が % の品）・一品物・報酬・遺物はそのまま
+    const GEAR = ['weapon', 'shield', 'head', 'body', 'hands', 'feet'];
+    for (const m of Object.values(R.DB.monsters || {})) {
+      const d = (m && m.drops) || {};
+      for (const k of ['rare', 'super', 'steal']) {
+        const it = d[k] && d[k].item && R.DB.items[d[k].item];
+        if (it && GEAR.includes(it.slot) && (it.grade === 'rare' || it.grade === 'super') && !it.grow && !['unique', 'reward', 'relic'].includes(it.src)) it.grow = 'drop';
+      }
+    }
     const band = (it, T) => (it.slot === 'weapon' ? WB[T] : RB[T]);
     const rare = (T) => ids((it) => it.src === 'drop' && it.grade === 'rare' && EQ.includes(it.slot) && it.tier === band(it, T));
     const mrare = (T) => ids((it) => it.src === 'mdrop' && it.grade === 'rare' && EQ.includes(it.slot) && (it.slot === 'weapon' ? it.tier === WB[T] : it.tier === T || it.tier === RB[T])).filter(free);

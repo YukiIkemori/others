@@ -15,7 +15,7 @@
       let kind = p.kind, id = p.id;
       if (!kind || kind === 'attack' || kind === 'skill') kind = R.DB.items[id] ? 'item' : R.DB.techs[id] ? 'tech' : R.DB.spells[id] ? 'spell' : R.DB.monsters[id] ? 'mon' : 'item';
       this.kind = kind;
-      this.d = kind === 'item' ? R.DB.items[id] : kind === 'tech' ? R.DB.techs[id] : kind === 'spell' ? R.DB.spells[id] : R.DB.monsters[id];
+      this.d = kind === 'item' ? ((R.Rules && R.Rules.itemOf && R.Rules.itemOf(id)) || R.DB.items[id]) : kind === 'tech' ? R.DB.techs[id] : kind === 'spell' ? R.DB.spells[id] : R.DB.monsters[id];
       this.from = kind === 'tech' && p.c && S.derivedFromName ? S.derivedFromName(p.c, id) : null;   // 派生技（技・術の画面から）
     },
     update() {

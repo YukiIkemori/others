@@ -424,6 +424,31 @@ section('growing uniques (V2_PLAN §2.6.6)');
   ok('the four forest rewards are of one grade (same strength rule)', ['u_hans_axe', 'u_ben_whistle', 'u_roy_charm', 'u_pim_cap'].every((id) => DB.items[id].grade === 'rare' && DB.items[id].grow === 'tier'));
 }
 
+section('monster ★ gear scales with the tier it was obtained at (grow drop, owner 2026-10-02)');
+{
+  const mk = ['hn_st_ironwarden', 'w_bow_r1', 'w_dagger_st_frostfang', 'w_sword_tide', 'bd_sr_starry'];
+  ok('monster rare/super/steal gear is grow drop; accessories, uniques and chest-only items are not',
+    mk.every((id) => DB.items[id].grow === 'drop') && DB.items.ac_st_rat_pouch.grow !== 'drop' && DB.items.u_hans_axe.grow === 'tier' && DB.items.w_bow_snakeskin.grow !== 'drop');
+  const d0 = DB.items.hn_st_ironwarden.def;
+  const a1 = Ru.fillItem(DB.items.hn_st_ironwarden, { tier: 1 }), a7 = Ru.fillItem(DB.items.hn_st_ironwarden, { tier: 7 });
+  ok('armor: lower at T1, higher at T7, base item unchanged', a1.def < d0 && a7.def > d0 && a1.tier === 1 && DB.items.hn_st_ironwarden.def === d0, [a1.def, d0, a7.def]);
+  const w = Ru.fillItem(DB.items.w_bow_r1, { tier: 1 });
+  ok('weapon at T is above the best T+1 shop bow (P29)', w.atk > DB.items.w_bow_2.atk && w.element === DB.items.w_bow_r1.element, [w.atk, DB.items.w_bow_2.atk]);
+  ok('identity kept: def 0 stays 0 (quirk)', Ru.fillItem(DB.items.bd_sr_starry, { tier: 5 }).def === 0);
+  R.State.newGame({ hero: { type: 'warrior', sex: 'm', name: 'アルン', fav: 'greatsword' }, seed: 1 });
+  const G = R.Game;
+  G.tier = 2; R.State.gain('w_sword_tide');
+  const u2 = G.uniques.w_sword_tide;
+  ok('State.gain copies the obtain-tier values; itemOf reads them', u2 && u2.tier === 2 && Ru.itemOf('w_sword_tide').atk === Ru.fillItem(DB.items.w_sword_tide, { tier: 2 }).atk, u2);
+  G.tier = 1; R.State.gain('w_sword_tide');
+  ok('a later gain at a lower tier keeps the higher values', G.uniques.w_sword_tide.tier === 2);
+  G.tier = 5; R.State.gain('w_sword_tide');
+  ok('a gain at a higher tier raises them', G.uniques.w_sword_tide.tier === 5 && Ru.itemOf('w_sword_tide').atk > u2.atk);
+  delete G.uniques.w_sword_tide;
+  ok('old saves (no record) read the item definition', Ru.itemOf('w_sword_tide').atk === DB.items.w_sword_tide.atk);
+  ok('tools/check_rare_vs_shop: no ★ gear below the shop or far above it', require('./check_rare_vs_shop').check(R).every((r) => r.ok));
+}
+
 section('glimmer');
 {
   R.State.newGame({ hero: { type: 'warrior', sex: 'm', name: 'アルン', fav: 'sword' }, seed: 2 });

@@ -234,7 +234,8 @@
     if (!DB.items[id] && DB.itemAlias && DB.itemAlias[id]) id = DB.itemAlias[id];
     const it = DB.items[id];
     if (!it) return null;
-    const u = it.grow === 'tier' && R.Game && R.Game.uniques && R.Game.uniques[id];
+    // grow 'drop'（魔物から取る ★ の装備）も同じ表 R.Game.uniques に「手に入れたティアの値」を持つ（無ければ定義の値＝古いセーブ）
+    const u = (it.grow === 'tier' || it.grow === 'drop') && R.Game && R.Game.uniques && R.Game.uniques[id];
     if (!u) return it;
     const c = uniqCache[id];
     if (c && c.u === u && c.it === it && c.t === u.tier) return c.v;
@@ -980,6 +981,19 @@
      */
     fillItem(it, o) {
       if (!it) return it;
+      // 魔物から取る ★ の装備（grow 'drop'。pools.js が印を付ける）: 定義の値を土台の曲線の比で、手に入れたティアへ伸ばす・縮める
+      //   武器 × WA[Tv]/WA[元のティア]、防具 × D(Tv)/D(元のティア)、値段 × PRICE の比。Tv = 武器は T+1（店の武器の天井）、ほかは T。
+      //   品の個性（mult・属性・mods・クセ・守備 0 など）は比なのでそのまま残る（持ち主 2026-10-02「店の品よりいつも少し上」）
+      if (o && o.tier != null && it.grow === 'drop') {
+        const base = it.atk === undefined && it.def === undefined ? Rules.fillItem(Object.assign({}, it)) : it;
+        const B = clamp(base.tier | 0, 0, 9), T0 = clamp(o.tier | 0, 0, 9), Tv = base.slot === 'weapon' ? Math.min(9, T0 + 1) : T0;
+        const out = Object.assign({}, base, { tier: T0 });
+        const rw = K.WA[Tv] / K.WA[B], ra = K.D(Tv) / K.D(B), rp = K.PRICE[Tv] / K.PRICE[B];
+        const sc = (v, r) => (typeof v === 'number' ? Math.round(v * r) : v);
+        if (base.slot === 'weapon') { out.atk = sc(base.atk, rw); out.mag = sc(base.mag, rw); } else { out.def = sc(base.def, ra); out.mdef = sc(base.mdef, ra); }
+        if (base.price > 0) out.price = Math.max(10, Math.round(base.price * rp / 10) * 10);
+        return out;
+      }
       if (o && o.tier != null && it.grow === 'tier') {
         // 武器は店の武器の天井（カシムの屋台・フェルンの行商などは T+1 の段を並べる）に合わせて 1 段上の値（持ち主 2026-10-02「レアは店の品よりはっきり強く」）。
         //   tier は もらったティアのまま（図鑑・並びの目安）

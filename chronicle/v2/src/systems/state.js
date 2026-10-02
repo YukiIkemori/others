@@ -267,6 +267,20 @@
       if (filled.stats && typeof filled.stats === 'object') u.stats = clone(filled.stats);
       G.uniques[id] = u;
     }
+    // 魔物から取る ★ の装備（grow 'drop'）: 手に入れたティアの値を写す。もっと上のティアでまた手に入れたら、その値に上げる
+    //   （同じ品は 1 つの値。持ち主 2026-10-02「レア・盗みの装備はその時の店の品より少し上」）
+    if (n > 0 && it && it.grow === 'drop') {
+      G.uniques = G.uniques || {};
+      const tier = (R.Tier && R.Tier.effective ? R.Tier.effective() : G.tier) || 0;
+      const old = G.uniques[id];
+      if (!old || tier > (old.tier | 0)) {
+        let filled = {};
+        try { filled = (R.Rules && R.Rules.fillItem ? R.Rules.fillItem(it, { tier }) : null) || {}; } catch (e) { R.warn('R.State.gain: fillItem ' + id + ' ' + (e && e.message)); }
+        const u = { tier };
+        for (const k of ['atk', 'mag', 'def', 'mdef', 'price']) if (typeof filled[k] === 'number') u[k] = filled[k];
+        G.uniques[id] = u;
+      }
+    }
     if (n > 0) R.emit('item:gain', { id, n });
     return { item: id, n, grade: (it && it.grade) || 'normal', name: (it && it.name) || id };
   };

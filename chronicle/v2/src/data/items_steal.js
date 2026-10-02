@@ -408,7 +408,7 @@
   ac_st_royal_jelly: { name: R.T('items.ac_st_royal_jelly.name'), slot: 'acc', grade: 'super', tier: 2, src: 'steal', stealOnly: true, mods: { regen: 1 }, abil: { mnd: 1 }, icon: 'ring' },
   ac_st_spore_sachet: { name: R.T('items.ac_st_spore_sachet.name'), slot: 'acc', grade: 'super', tier: 2, src: 'steal', stealOnly: true, mods: { statusResist: { sleep: 0.5, poison: 0.5 } }, abil: { vit: 1 }, icon: 'ring' },   // レア率アップは中盤以降（持ち主 2026-09-27）
   w_staff_st_petal: { name: R.T('items.w_staff_st_petal.name'), slot: 'weapon', grade: 'super', tier: 2, src: 'steal', stealOnly: true, wtype: 'staff', mods: { healPct: 20, mpRegen: 1 }, abil: { mnd: 1 }, icon: 'staff' },
-  w_dagger_st_frostfang: { name: R.T('items.w_dagger_st_frostfang.name'), slot: 'weapon', grade: 'super', tier: 2, src: 'steal', stealOnly: true, wtype: 'dagger', element: 'water', crit: 10, mult: 1.0, abil: { dex: 1 }, icon: 'dagger' },   // mult 1.0（短剣の 0.75 → 1.0）: 雪原（T2）で店の銀の短剣（T3）より弱かった（持ち主 2026-10-02）
+  w_dagger_st_frostfang: { name: R.T('items.w_dagger_st_frostfang.name'), slot: 'weapon', grade: 'super', tier: 2, src: 'steal', stealOnly: true, wtype: 'dagger', element: 'water', crit: 10, abil: { dex: 1 }, icon: 'dagger' },
 });
   R.DB.stealSources = {
   ac_st_rooteater: { mon: 'b_rooteater', rate: 16 },
