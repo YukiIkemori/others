@@ -393,7 +393,14 @@
       if (reduce) { _.play.tween(st, v, 'appear', 0, 400); return; }
       st.pwait(i * 60).then(() => { _.play.tween(st, v, 'dx', 300, 620); st.pwait(260).then(() => _.play.tween(st, v, 'appear', 0, 360)); });
     });
-    await st.pwait(reduce ? 420 : 760 + party.length * 60);
+    // 倒れた仲間も一緒に連れて行く（テスター 2026-10-01 P15: 逃げきった後も倒れた絵が戦場に残っていた）
+    const fallen = st.partyUnits().filter((u) => st.vis[u.uid] && !st.vis[u.uid].alive);
+    fallen.forEach((u, i) => {
+      const v = st.vis[u.uid];
+      if (reduce) { _.play.tween(st, v, 'appear', 0, 400); return; }
+      st.pwait(120 + i * 60).then(() => { _.play.tween(st, v, 'dx', 200, 560); _.play.tween(st, v, 'appear', 0, 420); });
+    });
+    await st.pwait(reduce ? 420 : 760 + (party.length + fallen.length) * 60);
     await headConfirm(st);
   };
   Rs.lose = async function (st) {

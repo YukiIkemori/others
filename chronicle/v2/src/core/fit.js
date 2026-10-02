@@ -7,6 +7,7 @@
 // 縦持ち（縦/横 ≥ TALL_MIN）: 幅 540、高さ = 540 × 縦/横 を丸めて 1260 まで（layout 'tall'）
 //   縦が横より少しだけ長い窓（PC のブラウザの 800×885 など。縦/横 < TALL_MIN）は縦持ちにしない: 縦持ちの画面は高さ 700 前後から下では
 //   札どうしが重なる（テスト報告 2026-10-01 P5・P30・P32・P40）。横持ちの 4:3（720×540）を上下に帯で置く
+//   縦持ちの uiScale の既定は高さに合わせて 1.0〜1.3（スマホの高さ 1170 で 1.3、900 で 1.0）。低い縦長の窓で縦に積んだ札が下にはみ出さない
 // SCALE（論理 1 px ＝ 実キャンバスの px。PC 版で決め直した、ぼけない拡大）:
 //   実画面の px／論理 px（= dev）が 2 以下 → 2（大きく描いて縮める。1280×720 など）
 //   2 より大きく 4 まで → dev そのもの（実キャンバス＝実画面の画素に 1:1。2560×1440 は 2.667、3840×2160 は 4）。帯の位置も実画面の画素に揃える
@@ -18,7 +19,7 @@
 (function (R) {
   'use strict';
   const even = (v) => 2 * Math.round(v / 2);
-  const TALL_MIN = 1.3;   // 縦/横 がこれ以上で縦持ち（高さ 702 以上）
+  const TALL_MIN = 1.5;   // 縦/横 がこれ以上で縦持ち（高さ 810 以上）
 
   /** o = {cssW, cssH, dpr, safe:{l,t,r,b} (CSS px), uiSize, coarse} → 画面の決め方（DOM に触れない） */
   R.fitCalc = function (o) {
@@ -47,7 +48,7 @@
     let cw = W * scale, ch = H * scale;
     if (crisp) { cw = bw / dpr; ch = bh / dpr; scale = ch / H; }
     let base = 1;
-    if (layout === 'tall') base = 1.3;
+    if (layout === 'tall') base = Math.max(1, Math.min(1.3, Math.round(H / 900 * 20) / 20));
     else if (o.coarse && a > 1.9) base = 1.25;
     else if (o.coarse && a < 1.5) base = 1.1;
     const need = 12 / (15 * scale);

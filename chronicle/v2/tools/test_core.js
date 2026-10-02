@@ -64,6 +64,9 @@ function ok(name, cond, info) {
     ['phone land 19.5:9', 844, 390, 3, true, 1168, 540, 2.167, 1.25],
     ['phone portrait', 390, 844, 3, true, 540, 1169, 2.166, 1.3],
     ['tablet 4:3', 1024, 768, 2, true, 720, 540, 2.844, 1.1],
+    // PC の縦長の窓（テスト報告 2026-10-01）: 縦/横 < 1.5 は横持ちの 4:3 を帯で、縦持ちは高さに合わせた uiScale
+    ['PC window 800x885', 800, 885, 1, false, 720, 540, 2, 1.0],
+    ['PC window 600x1000', 600, 1000, 1, false, 540, 900, 2, 1.0],
   ];
   for (const [name, w, h, dpr, coarse, W, H, S, ui] of rows) {
     const f = R.fitCalc({ cssW: w, cssH: h, dpr, coarse, uiSize: 1 });

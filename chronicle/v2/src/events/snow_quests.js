@@ -36,7 +36,7 @@
     if (i >= FISH.length || i < 0) return;
     if (i > 0 && !ev.flag('snow_fish_' + i)) { await ev.say('fisher', R.T('events.yule_fish_hole.say_2'), { name: R.T('events.yule_fish_hole.say.name') }); return; }
     const f = FISH[i];
-    const r = (await ev.mini.timing({ title: R.T('events.yule_fish_hole.r.title', { label: f.label }), speed: f.speed, zones: f.zones, tries: 3, theme: 'night' })) || {};
+    const r = (await ev.mini.timing({ title: R.T('events.yule_fish_hole.r.title', { label: f.label }), sub: R.T('events.yule_fish_hole.r.sub'), speed: f.speed, zones: f.zones, tries: 3, theme: 'night' })) || {};
     if ((RANK[r.rank] || 0) < RANK[f.need]) { await ev.say('fisher', R.T('events.yule_fish_hole.say_3'), { name: R.T('events.yule_fish_hole.say.name') }); return; }
     const key = 'snow_fish_' + (i + 1);
     if (ev.flag(key)) { await ev.caption(R.T('events.yule_fish_hole.caption'), { ms: 1400 }); return; }
@@ -204,6 +204,9 @@
     if (n === 2 && !ev.flag('snow_woods_yeti')) { await ev.call('snow_woods_yeti'); if (!ev.flag('snow_woods_yeti')) return; }
     await ev.say(null, R.T('events.snow_woods_log.say_2'));
     ev.setFlag(f);
+    // 倒木の絵（cond '!snow_log_<n>'。地図の焼いた絵の中）を、すぐ焼き直して消す（テスター 2026-10-02 P13）
+    //   倒木の絵は隣のチャンクにはみ出して焼かれることがあるので、左右のマスからも知らせる
+    if (o) { try { for (let dx = -2; dx <= 2; dx++) R.Field.chunks.dirtyAt(o.x + dx, o.y - 1, 2); } catch (e) { /* node */ } }
     ev.sfx('item');
     const k = ev.addVar('snow_logs', 1);
     await ev.caption(R.T('events.snow_woods_log.caption', { k }), { ms: 1800 });

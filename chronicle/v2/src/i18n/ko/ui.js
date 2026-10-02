@@ -235,6 +235,7 @@
     'ui.inn.draw.text': '여관',
     'ui.inn.draw.text_2': '소지금 {UIK} G',
     'ui.inn.draw.text_3': '하룻밤 {price} G. 푹 쉬었다 가겠나?',
+    'ui.inn.draw.text_4': '하룻밤 {price} G. 언제까지 쉬겠나?',
     'ui.inn.draw.0.label': '결정',
     'ui.inn.draw.1.label': '뒤로',
     // ---- src/screens/items.js
@@ -316,7 +317,7 @@
     'ui.passphrase.act.msg': '복사했다.',
     'ui.passphrase.act.msg_2': '글자 칸에서 선택해 복사해 주세요.',
     'ui.passphrase.act.msg_3': '붙여 넣었다.',
-    'ui.passphrase.act.msg_4': '글자 칸에 붙여 넣어 주세요.',
+    'ui.passphrase.act.msg_4': '글자 칸에서 Ctrl+V를 눌러 붙여 넣어 주세요.',
     'ui.passphrase.act.msg_5': '불러올 수 없는 암호다.',
     'ui.passphrase.draw.heading': '모험의 암호',
     'ui.passphrase.draw.info': '지금의 여행을 한 줄의 글자로 만들었다. 다른 기기의 ‘모험의 암호’에서 여기서부터 이어 갈 수 있다.',

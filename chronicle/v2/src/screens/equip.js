@@ -73,7 +73,7 @@
    *   mem（既定は一行）の一人ずつ → [{c, can（付けられる）, slot（付ける枠。無ければ null）, swap（外れる品の id か null）, wearing（もう同じ物を付けている）, gain（S.equipScore の増え）}]。
    *   枠は 空いた枠 → 同じ物の入っていない枠のうち付けたときにいちばん強くなる枠。
    *   best = 付けられて、まだ同じ物を付けていない人のうち、いちばん強くなる人（同じくらいなら 重い防具は前で戦う人・布は術の人、それも同じなら上の人）。
-   *   誰も強くならないときは -1（勝手に誰かへ付けない。前は 1 人目＝術師に籠手が付いた）
+   *   誰も強くならないときは -1（勝手に誰かへ付けない。前は 1 人目＝術師に籠手が付いた）。ただし値に出ない効き目のアクセサリは空いた枠のある最初の人
    */
   S.wearPlan = function (id, mem) {
     mem = mem || S.party();
@@ -107,6 +107,8 @@
       const b = rows[best];
       if (r.gain > b.gain + 0.5 || (Math.abs(r.gain - b.gain) <= 0.5 && fit(r.c) > fit(b.c))) best = i;
     });
+    // 値に出ない効き目だけのアクセサリ（灯台守のランタンの閃き・眠りよけなど）は、空いた枠のある最初の人（何も外さない）
+    if (best < 0 && it.slot === 'acc') best = rows.findIndex((r) => r.slot && !r.wearing && !r.swap && r.gain >= 0);
     return { rows, best };
   };
   /** S.delta で描く「▲+n」の幅（論理 px） */
@@ -306,7 +308,7 @@
       // 候補
       const midX = tall ? b.x : sp.x + sp.w + u(16);
       const rightX0 = b.x + b.w;
-      const mw = tall ? b.w : Math.min(u(290), (rightX0 - midX) * 0.44);
+      const mw = tall ? b.w : Math.min(u(290), (rightX0 - midX) * (R.W < 800 ? 0.5 : 0.44));   // 4:3（720 幅）は候補を少し広く（「鉄…」にしない）
       // 縦持ちの候補は、下の「ほかの仲間」に 1 人 u(36) の行が残る分だけ（2〜6 行）。小さな画面は比べる行を 3 つにして詳しい所を低く
       const nOthers = Math.max(1, S.party().length - 1);
       const candRows = (dpH) => Math.floor((b.y + b.h - sp.y - u(56) - u(12) - dpH - u(12) - (u(46) + nOthers * u(36))) / this.clist.rowPx());
@@ -350,7 +352,8 @@
       const it = S.item(focusId);
       // 説明は 2 行まで（入らなければ字を少し小さく）。比べる行はその分を残して決める（説明を途中で切らない。テスト報告 P7）
       const descW = dp.w - u(44), descOf = (n) => R.UIK.wrapFit(R.I18n.unwrap(it.desc || ''), descW, n, { size: u(14.5), min: Math.max(u(12), R.minFont || 0) });
-      const desc = it && it.desc ? descOf(2) : null;
+      let desc = it && it.desc ? descOf(2) : null;
+      for (let n = 3; n <= 4 && desc && desc.lines[desc.lines.length - 1].endsWith('…'); n++) desc = descOf(n);   // 狭い画面（720 幅）の長い説明は 3〜4 行に（比べる行をその分減らす）
       const descH = desc ? desc.lines.length * desc.lh + u(2) : 0;
       let y = dp.y + u(18);
       if (it) {

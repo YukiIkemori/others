@@ -113,6 +113,34 @@ function mk(p) {
     } finally { S.ask = ask0; }
   }
 
+  // テスター 2026-10-02 Q15: 「今すぐ装備する？」で決定を続けて押したら 1 人目（術師のリーネ）に籠手が付いた
+  section('今すぐ装備する？ のカーソルは付けていちばん強くなる人（Q15）');
+  {
+    R.Dev.applyState('menus_party');
+    R.State.setHero({ type: 'mage', sex: 'f', name: 'リーネ' });
+    const va = mk({ id: 'shop_pharos_arms' });
+    R.Game.gold = 1e5;
+    const mem = S.party();
+    const ask0 = S.ask, seen = [];
+    S.ask = async (view, o) => { seen.push(o); return o.index; };
+    try {
+      ok('the hero (1st member) is a mage', R.Rules.loadoutMode(mem[0]) === 'magic');
+      await va.doBuy('hn_gauntlet_1', 1);
+      const o = seen[0], plan = S.wearPlan('hn_gauntlet_1', mem);
+      ok('gauntlets: cursor is NOT on the mage hero', o && o.index !== 0 && o.index < mem.length, o && o.index);
+      ok('… it is on the member with the biggest gain (S.wearPlan)', o && o.index === plan.best || mem[o.index].equip.hands === 'hn_gauntlet_1', { index: o && o.index, plan: plan.rows.map((r) => [r.c.id, r.gain]) });
+      ok('… the ask has the input guard (no instant confirm)', o && o.guard === true);
+      ok('… never on someone who cannot wear it', o && !(o.choices[o.index] || {}).disabled);
+      seen.length = 0;
+      // 誰も強くならない（全員がもっと良い物を付けている）→ カーソルは「装備しない」
+      for (const c of mem) if (R.Rules.canEquip(c, 'hn_gauntlet_5', 'hands')) c.equip.hands = 'hn_gauntlet_5';
+      await va.doBuy('hn_glove_0', 1);
+      ok('no one gains → cursor on 装備しない (index = party size)', seen[0] && seen[0].index === mem.length, seen[0] && seen[0].index);
+    } finally { S.ask = ask0; }
+    const lan = S.wearPlan('ac_keeper_lantern', mem);
+    ok('effect-only accessory (lantern): default is the first member with a free slot', lan.best >= 0 && !lan.rows[lan.best].swap, lan.best);
+  }
+
   section('まとめ売り');
   {
     R.Dev.applyState('menus_party');

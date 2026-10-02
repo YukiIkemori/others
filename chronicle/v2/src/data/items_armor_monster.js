@@ -273,7 +273,7 @@
     name: R.T('items.hd_blackgold_helm.name'),
     weight: 'heavy',
     grade: 'rare',
-    tier: 7,
+    tier: 8,   // 7 → 8（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     units: 'v1',
     src: 'mdrop',
     mods: { statusResist: { stun: 0.5 } },

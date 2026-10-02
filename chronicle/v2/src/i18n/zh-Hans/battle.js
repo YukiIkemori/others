@@ -52,6 +52,7 @@
     'battle.command.member.attack.label': '攻击',
     'battle.command.member.res.subList': '{name} › 术',
     'battle.command.member.res.subList_2': '{name} › 道具',
+    'battle.command.member.spellAll': '全部',
     'battle.command.subList.head.name': '{name}的回合',
     'battle.command.subList.head.sub': '选择{p0}的技（会记住上次的目标）',
     'battle.command.subList.head.sub_2': '武器',
@@ -66,6 +67,7 @@
     'battle.command.subList.i.desc.text_3': '没有倒下的同伴。',
     'battle.command.subList.i.desc.text_4': '用武器进行普通攻击。',
     'battle.command.subList.i.desc.sub': '　・　目标：{tn}',
+    'battle.command.subList.tabHint': '{l}{r} 切换类别',
     // ---- src/systems/battle/demo.js
     'battle.demo.names.dg_frost_fang': '霜牙短剑',
     'battle.demo.names.mt_wolf_pelt': '冰狼毛皮',
@@ -170,6 +172,7 @@
     'battle.hud.chips.w1.speedChip': '速度：',
     'battle.hud.chips.w2.chip': '重复中：点击停止',
     'battle.hud.chips.w2.chip_2': '重复',
+    'battle.hud.chips.w2.chip_armed': '重复：从下一回合开始',
     'battle.hud.chips.w3.chip': '逃跑',
     // ---- src/systems/battle/result.js
     'battle.result.PROF_JA.sword': '剑',
@@ -220,6 +223,7 @@
     'battle.scene.intro.sub': '难得一见的魔物！',
     'battle.scene.prompts.list.0.label': '停止',
     'battle.scene.prompts.list.0.label_2': '重复',
+    'battle.scene.prompts.armed': '重复：从下一回合开始',
     'battle.scene.prompts.list.0.label_3': '速度：{speedLabel}',
     'battle.scene.drawRepeatTag.label': '重复中：',
     'battle.scene.makeScene.battle.update.toast': '重复：OFF',

@@ -6,7 +6,7 @@
   w_staff_sr_cosmos: {
     name: R.T('items.w_staff_sr_cosmos.name'),
     grade: 'super',
-    tier: 8,
+    tier: 9,   // 8 → 9（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     wtype: 'staff',
     units: 'i2',
     mods: { mag: 33 },
@@ -65,7 +65,7 @@
   w_dagger_sr_moonfang: {
     name: R.T('items.w_dagger_sr_moonfang.name'),
     grade: 'super',
-    tier: 8,
+    tier: 9,   // 8 → 9（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     wtype: 'dagger',
     units: 'd2',
     crit: 20,

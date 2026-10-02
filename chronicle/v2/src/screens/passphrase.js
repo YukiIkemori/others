@@ -26,24 +26,53 @@
       this.code = '';
       if (this.mode === 'show') { try { this.code = R.Save.passphrase(); } catch (e) { this.code = ''; } }
       this.ta = makeArea(this.mode === 'show', this.code);
+      // 貼り付けの手立て: 欄の外（ゲームの画面）で Ctrl+V を押しても、写し取りの文字を欄に入れる（navigator.clipboard を許していないブラウザでも効く）
+      if (this.mode === 'enter' && this.ta && typeof document !== 'undefined') {
+        this.onPaste = (e) => {
+          if (!this.ta) return;
+          const s = e.clipboardData && e.clipboardData.getData('text');
+          if (e.target !== this.ta && s) { this.ta.value = s.trim(); e.preventDefault(); }
+          this.msg = R.T('ui.passphrase.act.msg_3');
+        };
+        document.addEventListener('paste', this.onPaste);
+      }
       const rows = this.mode === 'show' ? [{ label: R.T('ui.passphrase.copy.label'), value: 'copy' }, { label: R.T('ui.passphrase.close.label'), value: 'close' }] : [{ label: R.T('ui.passphrase.load.label'), value: 'load' }, { label: R.T('ui.passphrase.paste.label'), value: 'paste' }, { label: R.T('ui.passphrase.close.label_2'), value: 'close' }];
       this.list = new R.UIK.List({ rows, rowH: 40 });
       this.list.onSelect = (row) => this.act(row.value);
       this.list.onCancel = () => this.close(false);
       this.msg = '';
     },
-    exit() { if (this.ta && this.ta.parentNode) this.ta.parentNode.removeChild(this.ta); this.ta = null; },
+    exit() {
+      if (this.ta && this.ta.parentNode) this.ta.parentNode.removeChild(this.ta);
+      this.ta = null;
+      if (this.onPaste && typeof document !== 'undefined') document.removeEventListener('paste', this.onPaste);
+      this.onPaste = null;
+    },
+    /** 写し取りを読む: デスクトップ版の橋 → navigator.clipboard。読めなければ null */
+    async readClip() {
+      const D = typeof window !== 'undefined' ? window.chronicleDesktop : null;
+      try { if (D && D.readClipboard) { const s = await D.readClipboard(); if (typeof s === 'string') return s; } } catch (e) { /* 次へ */ }
+      try { if (navigator.clipboard && navigator.clipboard.readText) return await navigator.clipboard.readText(); } catch (e) { /* 許されていない */ }
+      return null;
+    },
     async act(v) {
       if (v === 'close') { this.close(false); return; }
       if (v === 'copy') {
         let ok = false;
-        try { if (navigator.clipboard && navigator.clipboard.writeText) { await navigator.clipboard.writeText(this.code); ok = true; } } catch (e) { ok = false; }
+        const D = typeof window !== 'undefined' ? window.chronicleDesktop : null;
+        try { if (D && D.writeClipboard) ok = !!(await D.writeClipboard(this.code)); } catch (e) { ok = false; }
+        try { if (!ok && navigator.clipboard && navigator.clipboard.writeText) { await navigator.clipboard.writeText(this.code); ok = true; } } catch (e) { ok = false; }
         if (!ok && this.ta) { try { this.ta.select(); ok = document.execCommand && document.execCommand('copy'); } catch (e) { ok = false; } }
         this.msg = ok ? R.T('ui.passphrase.act.msg') : R.T('ui.passphrase.act.msg_2');
         return;
       }
       if (v === 'paste') {
-        try { if (navigator.clipboard && navigator.clipboard.readText) { const s = await navigator.clipboard.readText(); if (this.ta) this.ta.value = s; this.msg = R.T('ui.passphrase.act.msg_3'); } } catch (e) { this.msg = R.T('ui.passphrase.act.msg_4'); }
+        // 前は navigator.clipboard だけで、許されていない（デスクトップ版は許可をすべて断る・ブラウザの設定）と貼れなかった（テスター 2026-10-02 P2）。
+        //   デスクトップ版は橋（preload の readClipboard）で読む。読めなければ欄を選んだ状態にして Ctrl+V を案内する（document の paste で入る）
+        const s = await this.readClip();
+        if (s != null && s.trim() && this.ta) { this.ta.value = s.trim(); this.msg = R.T('ui.passphrase.act.msg_3'); return; }
+        if (this.ta) { try { this.ta.focus(); this.ta.select(); } catch (e) { /* */ } }
+        this.msg = R.T('ui.passphrase.act.msg_4');
         return;
       }
       if (v === 'load') {

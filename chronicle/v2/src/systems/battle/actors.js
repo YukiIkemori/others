@@ -29,11 +29,14 @@
   // 焼いた絵がこれより大きいときは縮めて置く（R.Hd.draw の scale は縮小だけ）
   const CAP = { s: 52, m: 84, l: 116, boss: 168 };
   A.scaleOf = function (a, sh) {
-    if (!sh || a.side === 'party') return 1;
+    // 縦長の PC の窓で戦場を縮めたとき（layout.js の spriteK・partyK）は人と敵の絵も縮める
+    const L = _.layout && _.layout.last;
+    if (!sh) return 1;
+    if (a.side === 'party') return L && L.partyK < 1 ? L.partyK : 1;
     const vis = (sh.meta && sh.meta.visH) || sh.h || 0;
     // BEAST の原画（meta.img）は MONSTER_REQUEST §2.4 の大きさ（ボス 230 まで）で描いてあるので、その段まで縮めない
     const img = sh.meta && sh.meta.img;
-    const cap = (a.boss ? (img ? 236 : CAP.boss) : img ? 140 : CAP[a.size] || CAP.m) * (R.layout === 'tall' ? 0.85 : 1);
+    const cap = (a.boss ? (img ? 236 : CAP.boss) : img ? 140 : CAP[a.size] || CAP.m) * (L && L.spriteK != null ? L.spriteK : R.layout === 'tall' ? 0.85 : 1);
     return vis > cap ? cap / vis : 1;
   };
   /**
@@ -67,8 +70,9 @@
   A.height = function (a) {
     const sh = a.sheetRef;
     if (sh && a.side !== 'party') return Math.max(24, ((sh.meta && sh.meta.visH) || sh.h || 60) * A.scaleOf(a, sh) * 0.95);
-    if (sh && sh.anchors && sh.anchors.head) return Math.max(24, -sh.anchors.head[1] || 0) || 70;
-    if (sh && sh.h) return sh.h * 0.9;
+    const pk = A.scaleOf(a, sh);
+    if (sh && sh.anchors && sh.anchors.head) return Math.max(24, (-sh.anchors.head[1] || 0) * pk) || 70;
+    if (sh && sh.h) return sh.h * 0.9 * pk;
     if (a.side === 'party') return 70;
     return a.boss ? 120 : a.size === 'l' ? 78 : a.size === 'm' ? 52 : 36;
   };

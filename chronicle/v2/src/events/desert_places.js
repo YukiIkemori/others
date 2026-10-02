@@ -227,7 +227,9 @@
       await ev.caption(R.T('events.desert_wellroom_keeper.caption'), { ms: 1600 });
       return;
     }
-    await ev.say('wellkeeper', R.T('events.desert_wellroom_keeper.say_2'));
+    // 王の名（ハ・ザ・ル）は王墓の墓守の像の文字を 3 つそろえて知る謎。そろえる前は名を言わず、像をほのめかすだけ（テスター 2026-10-02 P28）
+    const named = X().glyphs(ev) >= 3 || ev.flag('desert_king') || ev.flag('cleared_r_desert');
+    await ev.say('wellkeeper', named ? R.T('events.desert_wellroom_keeper.say_2') : R.T('events.desert_wellroom_keeper.say_3'));
   });
   E('desert_wellroom_journal', async (ev) => {
     await ev.say(null, R.T('events.desert_wellroom_journal.say'));

@@ -179,7 +179,7 @@
     if (!R.Hd) return;
     try {
       const bk = bgKey(st);
-      if (bk && R.Hd.has && R.Hd.has(bk) && !R.Hd.ready(bk, bgOpts())) R.Hd.now(bk, bgOpts());
+      if (bk && R.Hd.has && R.Hd.has(bk) && !R.Hd.ready(bk, bgOpts(st))) R.Hd.now(bk, bgOpts(st));
       for (const a of st.actors) {
         if (!R.Hd.has || !R.Hd.has(a.key)) continue;
         if (!R.Hd.ready || !R.Hd.ready(a.key, a.opts)) R.Hd.now(a.key, a.opts);
@@ -188,7 +188,8 @@
     } catch (e) { console.error('[battle prebake]', e); }
   }
   function bgKey(st) { const id = st.setup.bg || (st.info.troop && st.info.troop.bg); return id ? 'hd:bbg:' + id : null; }
-  function bgOpts() { return { w: R.W, h: R.H }; }
+  /** 戦闘背景を焼く大きさ。縦長の PC の窓は戦場の高さで（layout.js の bgH） */
+  function bgOpts(st) { return { w: R.W, h: (st && st.L && st.L.bgH) || R.H }; }
 
   // ---------------------------------------------------------------- 流れ
   /**
@@ -255,9 +256,13 @@
     const base = st.ui && st.ui.prompts ? st.ui.prompts : [];
     let list = base.filter((p) => p.btn !== 'r');
     const live = st.phase === 'input' || st.phase === 'play' || st.phase === 'intro';
-    const repeatOn = !!(live && st.B && st.B.repeatOn);
+    // 命令の窓の間に ON にしたリピート（まだ繰り返す命令が無い）は「リピート中」と出さない（テスター 2026-10-02 Q9:
+    //   金色の魔物でリピートが止まった戦闘で、手で命令している間も「リピート中」の帯が出ていた）。次のラウンドから、と出す
+    const armed = !!(live && st.B && st.B.repeatOn && st.phase === 'input');
+    const repeatOn = !!(live && st.B && st.B.repeatOn) && !armed;
     if (live && !st.L.tall) {
-      if (repeatOn) list = [{ btn: 'l', label: R.T('battle.scene.prompts.list.0.label'), repeat: true }].concat(list.filter((p) => p.btn !== 'b' && p.btn !== 'l'));
+      if (armed) list = list.filter((p) => p.btn !== 'l').concat([{ btn: 'l', label: R.T('battle.scene.prompts.armed') }]);
+      else if (repeatOn) list = [{ btn: 'l', label: R.T('battle.scene.prompts.list.0.label'), repeat: true }].concat(list.filter((p) => p.btn !== 'b' && p.btn !== 'l'));
       else list = list.concat([{ btn: 'l', label: R.T('battle.scene.prompts.list.0.label_2') }]);
       list = list.concat([{ btn: 'r', label: R.T('battle.scene.prompts.list.0.label_3', { speedLabel: Bt.speedLabel(speed()) }) }]);
     }
@@ -422,6 +427,16 @@
   }
 
   // ---------------------------------------------------------------- 場面
+  /**
+   * 縦長の PC の窓（800×885 など）は戦闘の部品を少し小さく描く（layout.js の L.k。下の部品が画面に収まるように）。
+   * 戦闘の場面を動かす・描く間だけ R.uiScale をそれにする（部品の当たりも同じ大きさで決まる）。ほかの窓は L.k = R.uiScale で何もしない
+   */
+  function withK(st, fn) {
+    const k0 = R.uiScale, k = st.L && st.L.k;
+    if (!k || k === k0) return fn();
+    R.uiScale = k;
+    try { return fn(); } finally { R.uiScale = k0; }
+  }
   function makeScene(st) {
     return {
       id: 'battle',
@@ -429,7 +444,10 @@
       enter() { R.Input.touchLayout('battle'); },
       exit() {},
       onLayout() { place(st); },
-      update(dt) {
+      update(dt) { withK(st, () => update(dt)); },
+      draw(g) { withK(st, () => draw(g, st)); },
+    };
+    function update(dt) {
         // ヒットストップ（当たった瞬間、実時間で 35〜55 ms だけ戦闘の時計を止める。playback.js の P.hitstop）
         if (!(st.hitstopUntil && R.Engine.time < st.hitstopUntil)) st.clock += dt * st.mul();
         const I = R.Input;
@@ -466,9 +484,7 @@
         _.play.tick(st, dt);
         _.glimmer.tick(st);
         if (st.ui && st.ui.update) st.ui.update(dt);
-      },
-      draw(g) { draw(g, st); },
-    };
+    }
   }
 
   // ---------------------------------------------------------------- 戦闘背景の層と光（BEAST の依頼 22: R.Beast.stage が見本）
@@ -616,7 +632,7 @@
     }
     // 背景（BEAST の R.Beast.stage と同じ順: back → [層: ground → 影と人と敵 → front → 層にだけ光を multiply] → post（lighter）→ R.Post.frame）
     const bk = bgKey(st);
-    const sh = bk && R.Hd && R.Hd.has && R.Hd.has(bk) ? R.Hd.get(bk, bgOpts()) : null;
+    const sh = bk && R.Hd && R.Hd.has && R.Hd.has(bk) ? R.Hd.get(bk, bgOpts(st)) : null;
     let lantern = L.lantern;
     const baked = !!(sh && sh.frames && sh.poses);
     if (baked && sh.meta && sh.meta.lantern) lantern = [sh.meta.lantern.x, sh.meta.lantern.y];
@@ -750,14 +766,22 @@
           st.finish({ result: st.B && st.B.over === 'win' ? 'win' : 'escape', rewards: null });
         });
       };
-      let covered = null;
-      try { covered = _.trans.cover({ boss: heavy }); } catch (e) { console.error('[battle trans]', e); covered = null; }
+      // 地の文（キャプション）が出ている間は待ってから砕く（テスター 2026-10-01 P20: 「門へ走った」の字が入る移りと重なって読めなかった）。
+      //   上限 4 秒。写しは trans.cover が描き直してから取る（閉じかけの字が写らない）
+      const capOn = () => R.Engine.stack.some((sc) => sc && sc.id === 'caption');
+      const capT0 = R.Engine.time;
+      const capWait = capOn() ? R.until(() => !capOn() || R.Engine.time - capT0 > 4000) : null;
+      const startCover = () => {
+        if (fin) return null;
+        try { return _.trans.cover({ boss: heavy }); } catch (e) { console.error('[battle trans]', e); return null; }
+      };
+      let covered = capWait ? capWait.then(startCover) : startCover();
       // 描いた戦闘背景は使う時に読む（TERRAIN Env）: 移りの間に読み終えるのを待ち（上限 2.5 秒）、読めたら描いた絵で焼き直す
       let bgWait = null;
       try {
         const E = R.Terrain && R.Terrain.Env, bk = bgKey(st);
         if (bk && E && E.awaitBbg && E.bbg && !E.bbg(bk.slice(7))) {
-          bgWait = E.awaitBbg(bk.slice(7), 2500).then(() => { try { if (R.Hd.has(bk) && !R.Hd.ready(bk, bgOpts())) R.Hd.now(bk, bgOpts()); } catch (e) { console.error('[battle bg]', e); } });
+          bgWait = E.awaitBbg(bk.slice(7), 2500).then(() => { try { if (R.Hd.has(bk) && !R.Hd.ready(bk, bgOpts(st))) R.Hd.now(bk, bgOpts(st)); } catch (e) { console.error('[battle bg]', e); } });
         }
       } catch (e) { bgWait = null; }
       if (covered || bgWait) Promise.all([covered, bgWait]).then(go, go); else go();

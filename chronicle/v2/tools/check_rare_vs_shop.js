@@ -3,7 +3,7 @@
 //   持ち主 2026-10-02「店の装備は最低限（ティアの進みについていける分だけ。店は強くしない）。足りない分はレアのドロップと盗みで埋める」→
 //   宝箱・レアのドロップ・盗みの ★ の装備は、同じ時点（同じ地方・ティア）で店に並ぶ品より強くないといけない（P29: 砂の王の墓の ★朝露の弓 < カシムの弓）。
 //
-//   node tools/check_rare_vs_shop.js [--verbose]     違反があれば終了コード 1
+//   node tools/check_rare_vs_shop.js [--warn] [--verbose]     違反（FAIL）があれば終了コード 1。--warn で参考の行も出す
 //
 // 比べ方:
 //   店の天井: ティア T で、どこかの店（R.Rules.shopItems(id, T)）に並ぶ同じ種類の品のいちばん強い物。終章の都の店（shop_biblia*）は T8 だけ。
@@ -15,6 +15,9 @@
 //       … 地方のボス（bossTroop）とレア魔物（rareEncounters）も同じ地方のティア
 //     決まった宝箱の伸びる一品物（u_*。開けたティアの値。R.Rules.fillItem(it, {tier})）
 //   合格: レアの値 ≥ 店の天井 × MARGIN（1.05）
+//   FAIL（終了コード 1）: 宝箱のプール（全ティア）・一品物（全ティア）・魔物は地方の番号どおりのティア（n − 1。序章・森 0、終章 8、クリア後 9）。
+//   warn（参考）: 魔物の品で、地方を番号より後（や先）に回ったときだけ下回る物。決まった値の品はどのティアにも合わせることはできない
+//     （地方は好きな順に回れる。レア魔物・ボスの盗み専用、縦切りの魔物が系統の段 2 として別の地方に出る時など）
 'use strict';
 
 const MARGIN = 1.05;
@@ -49,7 +52,7 @@ function check(R) {
     ceil.push(row);
   }
 
-  // ---- 地方 → そのティアの幅
+  // ---- 地方 → そのティアの幅（reach）と、地方の番号どおりに回ったときのティア（nominal = n − 1。序章・森は 0）
   const reach = (rid, z) => {
     if (z && typeof z.tier === 'number') return [z.tier];
     if (rid === 'prologue' || rid === 'r_forest') return [0];
@@ -57,19 +60,29 @@ function check(R) {
     if (rid === 'postgame') return [9];
     return [1, 2, 3, 4, 5, 6, 7];
   };
+  const nominal = (rid, z) => {
+    if (z && typeof z.tier === 'number') return z.tier;
+    const reg = DB.regions[rid];
+    if (rid === 'finale') return 8;
+    if (rid === 'postgame') return 9;
+    return reg && typeof reg.n === 'number' ? Math.max(0, Math.min(7, reg.n - 1)) : 0;
+  };
 
   const rows = [];   // {src, where, T, item, v, shop, sv}
   const seen = new Set();
+  // level: 'hard'（違反。終了コード 1）| 'warn'（参考: 地方を番号より後に回ったとき。決まった値の品はどのティアにも合わせられない）
+  let level = 'hard';
   const test = (src, where, T, id, it) => {
     it = it || DB.items[id];
-    if (!isGear(it) || !['rare', 'super'].includes(it.grade)) return;
+    // クセのある品（quirk: 守備 0 の星空の衣・技を封じる狂い咲きの大剣など）は わざと弱い所があるので比べない
+    if (!isGear(it) || !['rare', 'super'].includes(it.grade) || it.quirk) return;
     const c = ceil[Math.min(9, T)][keyOf(it)];
     if (!c) return;
     const v = power(it);
     const key = `${src}|${where}|${id}|${T}`;
     if (seen.has(key)) return;
     seen.add(key);
-    rows.push({ src, where, T, item: id, name: it.name, v, shop: c.id, shopName: (DB.items[c.id] || {}).name, sv: c.v, ok: v >= c.v * MARGIN });
+    rows.push({ level, src, where, T, item: id, name: it.name, v, shop: c.id, shopName: (DB.items[c.id] || {}).name, sv: c.v, ok: v >= c.v * MARGIN });
   };
 
   // ---- 宝箱のプール
@@ -87,6 +100,7 @@ function check(R) {
   for (const [zid, z] of Object.entries(DB.encounters)) {
     if (!z || !z.groups || !z.region) continue;
     for (const T of reach(z.region, z)) {
+      level = T === nominal(z.region, z) ? 'hard' : 'warn';
       for (const g of z.groups) {
         if ((g.tierMin != null && T < g.tierMin) || (g.tierMax != null && T > g.tierMax)) continue;
         for (const e of g.mons || []) {
@@ -100,15 +114,17 @@ function check(R) {
   for (const [zid, list0] of Object.entries(DB.rareEncounters || {})) {
     const z = DB.encounters[zid];
     if (!z || !z.region) continue;
-    for (const r of [].concat(list0)) for (const T of reach(z.region, z)) for (const x of monItems(DB.monsters[r && r.mon])) test(x.s === 'steal' ? 'steal' : 'drop', `${zid}:${r.mon}`, T, x.item);
+    for (const r of [].concat(list0)) for (const T of reach(z.region, z)) for (const x of monItems(DB.monsters[r && r.mon])) if ((level = T === nominal(z.region, z) ? 'hard' : 'warn')) test(x.s === 'steal' ? 'steal' : 'drop', `${zid}:${r.mon}`, T, x.item);
   }
   for (const [rid, reg] of Object.entries(DB.regions)) {
     const tr = reg.bossTroop && DB.troops[reg.bossTroop];
     if (!tr) continue;
     const mons = (tr.mons || tr.members || []).map((x) => (typeof x === 'string' ? x : Array.isArray(x) ? x[0] : x && (x.id || x.mon)));
-    for (const m0 of mons) for (const T of reach(rid)) { const m = typeof m0 === 'string' && m0[0] === '@' ? R.Mon.resolve(m0, T) : m0; for (const x of monItems(DB.monsters[m])) test(x.s === 'steal' ? 'steal' : 'drop', `${reg.bossTroop}:${m}`, T, x.item); }
+    for (const m0 of mons) for (const T of reach(rid)) {
+      level = T === nominal(rid) ? 'hard' : 'warn'; const m = typeof m0 === 'string' && m0[0] === '@' ? R.Mon.resolve(m0, T) : m0; for (const x of monItems(DB.monsters[m])) test(x.s === 'steal' ? 'steal' : 'drop', `${reg.bossTroop}:${m}`, T, x.item); }
   }
 
+  level = 'hard';
   // ---- 決まった宝箱（伸びる一品物は開けたティアの値。決まった数値の ★ はその品のまま）
   for (const [mid, m] of Object.entries(DB.maps || {})) {
     for (const o of m.objects || []) {
@@ -123,13 +139,17 @@ function check(R) {
 
 function main() {
   const verbose = process.argv.includes('--verbose');
+  const argvWarn = process.argv.includes('--warn');
   const R = loadR();
   const rows = check(R);
-  const bad = rows.filter((r) => !r.ok);
-  console.log(`check_rare_vs_shop: ★ の装備の出どころ ${rows.length} 件（品 ${new Set(rows.map((r) => r.item)).size}）、店の天井 × ${MARGIN} 未満 ${bad.length} 件`);
-  const show = verbose ? rows : bad;
+  const bad = rows.filter((r) => !r.ok && r.level === 'hard');
+  const warn = rows.filter((r) => !r.ok && r.level === 'warn');
+  console.log(`check_rare_vs_shop: ★ の装備の出どころ ${rows.length} 件（品 ${new Set(rows.map((r) => r.item)).size}）、店の天井 × ${MARGIN} 未満 ${bad.length} 件` +
+    `（参考: 地方を番号より後に回ったときだけ下回る ${warn.length} 件・品 ${new Set(warn.map((r) => r.item)).size}）`);
+  const show = verbose ? rows : argvWarn ? bad.concat(warn) : bad;
   for (const r of show) {
-    console.log(`  ${r.ok ? 'ok  ' : 'FAIL'} T${r.T} ${r.src.padEnd(5)} ${r.where.padEnd(34)} ${r.item}（${r.name}）${r.v}  vs 店 ${r.shop}（${r.shopName}）${r.sv}`);
+    const tag = r.ok ? 'ok  ' : r.level === 'hard' ? 'FAIL' : 'warn';
+    console.log(`  ${tag} T${r.T} ${r.src.padEnd(5)} ${r.where.padEnd(34)} ${r.item}（${r.name}）${r.v}  vs 店 ${r.shop}（${r.shopName}）${r.sv}`);
   }
   if (bad.length) process.exitCode = 1;
 }

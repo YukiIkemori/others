@@ -291,7 +291,7 @@
   E('yule_smith', async (ev) => {
     const low = ev.flag('snow_gate_e_broken');
     await ev.say('smith', low ? R.T('events.yule_smith.say') : R.T('events.yule_smith.say_2'));
-    await ev.shop(low ? 'shop_yule_arms_low' : 'shop_yule_arms');
+    await ev.shop(low ? 'shop_yule_arms_low' : 'shop_yule_arms', low ? { line: R.T('events.yule_smith.line') } : undefined);
   });
   E('yule_fur', async (ev) => {
     await ev.say('fur_peddler', R.T('events.yule_fur.say'));

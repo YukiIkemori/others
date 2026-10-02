@@ -49,11 +49,13 @@
         if (st.chipTap && o.onChip) { const c = st.chipTap; st.chipTap = null; const r = o.onChip(c); if (r !== undefined) { done(r); return; } }
         st.chipTap = null;
         // 種類のタブ（o.tabs = {groups, index}）: ←→・札のクリックで {tab: i} を返す（呼んだ側が一覧を替えて開き直す）
-        if (w.tabbed) { const j = R.SkillTabs.input(o.tabs.groups.length, o.tabs.index, w.tabRects, { arrows: !o.horizontal }); if (j >= 0) { done({ tab: j, sel: w.sel }); return; } }
+        // 横一列の札（縦持ちの行動の札。o.horizontal は真偽か関数）: 見た目どおり ←→ で動く（↑↓ でも動く。テスター 2026-10-01 P39）
+        const hz = typeof o.horizontal === 'function' ? !!o.horizontal() : !!o.horizontal;
+        if (w.tabbed) { const j = R.SkillTabs.input(o.tabs.groups.length, o.tabs.index, w.tabRects, { arrows: !hz }); if (j >= 0) { done({ tab: j, sel: w.sel }); return; } }
         if (!n) { if (I.pressed('b')) done('back'); return; }
-        const fwd = o.horizontal ? 'right' : 'down', back = o.horizontal ? 'left' : 'up';
-        if (I.repeat(fwd)) { w.sel = (w.sel + 1) % n; sfx('cursor'); }
-        if (I.repeat(back)) { w.sel = (w.sel + n - 1) % n; sfx('cursor'); }
+        const fwd = hz ? I.repeat('right') || I.repeat('down') : I.repeat('down'), back = hz ? I.repeat('left') || I.repeat('up') : I.repeat('up');
+        if (fwd) { w.sel = (w.sel + 1) % n; sfx('cursor'); }
+        if (back) { w.sel = (w.sel + n - 1) % n; sfx('cursor'); }
         if (w.sel !== last) { last = w.sel; if (o.onFocus) o.onFocus(w.sel, w); }
         const p = I.pointer;
         // 縦持ちの札の「戻る」（タップ）
@@ -80,6 +82,10 @@
 
   // ---------------------------------------------------------------- 描き方（16:9 の小さな窓）
   const K = () => _.K;
+  /** 一覧・説明の窓の地の濃さ（MODERN_UI §6.17 の 0.6 では、明るい戦闘背景の上で字が読みにくかった。テスター 2026-10-01 P16） */
+  const LIST_A = 0.9;
+  /** 種類のタブの切り替えの案内（「←→ で種類を切り替え」。今の入力のボタンの字） */
+  function tabHint() { return R.T('battle.command.subList.tabHint', { l: glyphLabel('left'), r: glyphLabel('right') }); }
   function listPanel(g, w, geo) {
     const k = R.uiScale || 1, Kt = K(), t = R.Engine.time;
     const rows = w.o.rows, rowH = geo.rowH * k, barH = w.tabbed ? (R.SkillTabs.BAR_H + 4) * k : 0, head = (geo.title ? 28 * k : 6 * k) + barH;
@@ -92,9 +98,12 @@
     g.save();
     g.globalAlpha = open;
     g.translate(0, (1 - open) * 6);
-    Kt.box(g, r, { a: 0.6, r: 6 });
+    // 窓の地は濃く（テスター 2026-10-01 P16: 半透明だとオーロラの背景の上で字が読みにくい）
+    Kt.box(g, r, { a: LIST_A, r: 6 });
     if (geo.title) {
       Kt.text(g, geo.title, r.x + 12 * k, r.y + 8 * k, { size: 11 * k, weight: 700, color: Kt.COL.gold, raw: true });
+      // 種類のタブがあるときは、切り替えの案内を見出しの行の右に（テスター 2026-10-02 Q11: キーだと切り替えに気づきにくい）
+      if (w.tabbed) Kt.text(g, tabHint(), r.x + r.w - 10 * k, r.y + 8.5 * k, { size: 10 * k, weight: 500, color: Kt.COL.text3, align: 'right', raw: true });
       Kt.hline(g, r.x + 8 * k, r.x + r.w - 8 * k, r.y + 25 * k, 0.2);
     }
     if (w.tabbed) w.tabRects = R.SkillTabs.drawBar(g, { x: r.x + 8 * k, y: r.y + (geo.title ? 28 : 4) * k, w: r.w - 16 * k, h: R.SkillTabs.BAR_H * k }, w.o.tabs.groups, w.o.tabs.index, { glyphs: ['left', 'right'], size: 12 });
@@ -136,7 +145,7 @@
     // 技の特徴の行（金色。説明の文の下、狙いの行の上）
     const tags = d.tags ? (R.UIK && R.UIK.wrap ? R.UIK.wrap(d.tags, w - 24 * k, { size: 11.5 * k }) : [d.tags]).slice(0, 1) : [];
     const h = (lines.length * 18 + tags.length * 18 + (d.sub ? 20 : 0) + 18) * k;
-    Kt.box(g, { x, y, w, h }, { a: 0.6, r: 8 });
+    Kt.box(g, { x, y, w, h }, { a: LIST_A, r: 8 });
     lines.forEach((l, i) => Kt.text(g, l, x + 12 * k, y + 9 * k + i * 18 * k, { size: 12 * k, color: Kt.COL.text2, raw: true }));
     if (tags.length) Kt.text(g, tags[0], x + 12 * k, y + 10 * k + lines.length * 18 * k, { size: 11.5 * k, weight: 700, color: Kt.COL.gold || '#e8c87a', raw: true });
     if (d.sub) Kt.text(g, d.sub, x + 12 * k, y + 11 * k + (lines.length + tags.length) * 18 * k, { size: 10.5 * k, color: Kt.COL.text3, raw: true });
@@ -173,21 +182,26 @@
     });
     const d = w.o.desc ? w.o.desc(w.sel) : null;
     const by = y + h + 10 * k;
-    Kt.box(g, { x: pad, y: by, w: R.W - pad * 2, h: 46 * k }, { a: 0.6, r: 12 * k, edge: 'rgba(240,228,200,0.16)' });
+    Kt.box(g, { x: pad, y: by, w: R.W - pad * 2, h: 46 * k }, { a: LIST_A, r: 12 * k, edge: 'rgba(240,228,200,0.16)' });
     if (d && d.text) Kt.text(g, Kt.fit(d.text + (d.sub ? '　' + d.sub : ''), R.W - pad * 2 - 32 * k, { size: 13 * k }), pad + 16 * k, by + 15 * k, { size: 13 * k, color: Kt.COL.text2, raw: true });
     tallHint(g, st);
   }
   function tallList(g, w, st, title) {
     const k = R.uiScale || 1, Kt = K(), L = st.L, t = R.Engine.time;
-    const rows = w.o.rows, pad = 12 * k;
-    const top = L.cmdY - 8 * k, rowH = 34 * k;
+    const rows = w.o.rows, pad = 12 * k, rowH = 34 * k;
     const barH = w.tabbed ? (R.SkillTabs.BAR_H + 4) * k : 0;
-    const maxRows = Math.max(2, Math.floor((L.chipsY - top - 100 * k - barH) / rowH));
-    const vis = Math.min(rows.length, maxRows);
+    // 一覧＋説明の帯が下の札（L.chipsY）の上に収まるように: 行が多いときは人の札の上へ伸ばす（人の札の上端まで）。
+    //   それでも入らない分はスクロール（テスター 2026-10-01 P26・P33: 縦長の窓で一覧が下で切れていた）
+    const fixed = 30 * k + barH + 8 * k + 8 * k + 46 * k;   // 見出し・タブ・下の余白・説明の帯
+    const bottom = L.chipsY - 6 * k, ceil = L.cardsY - 4 * k;
+    const want = Math.min(rows.length, 7);
+    const maxRows = Math.max(2, Math.floor((bottom - ceil - fixed) / rowH));
+    const vis = Math.min(want, maxRows);
+    const top = Math.max(ceil, Math.min(L.cmdY - 8 * k, bottom - fixed - vis * rowH));
     if (w.sel < w.top) w.top = w.sel;
     if (w.sel >= w.top + vis) w.top = w.sel - vis + 1;
     const r = { x: pad, y: top, w: R.W - pad * 2, h: 30 * k + barH + vis * rowH + 8 * k };
-    Kt.box(g, r, { a: 0.72, r: 12 * k, edge: 'rgba(240,228,200,0.2)' });
+    Kt.box(g, r, { a: 0.97, r: 12 * k, edge: 'rgba(240,228,200,0.2)' });   // 人の札の上に重なることがあるので不透明に近く
     Kt.text(g, title, r.x + 14 * k, r.y + 9 * k, { size: 13 * k, weight: 700, color: Kt.COL.gold, raw: true });
     // 右上に「戻る」（縦持ちはボタン表示を出さないので、押せる札で）
     w.backRect = null;
@@ -200,7 +214,12 @@
       const hh = Math.max(bh, R.minTouch || 0);
       w.backRect = { x: br.x - 6 * k, y: br.y + bh - hh, w: bw + 12 * k, h: hh };   // 上へ広げる（下の行に掛からない）
     }
-    if (w.tabbed) w.tabRects = R.SkillTabs.drawBar(g, { x: r.x + 10 * k, y: r.y + 30 * k, w: r.w - 20 * k, h: R.SkillTabs.BAR_H * k }, w.o.tabs.groups, w.o.tabs.index, { glyphs: ['left', 'right'], size: 13 });
+    if (w.tabbed) {
+      w.tabRects = R.SkillTabs.drawBar(g, { x: r.x + 10 * k, y: r.y + 30 * k, w: r.w - 20 * k, h: R.SkillTabs.BAR_H * k }, w.o.tabs.groups, w.o.tabs.index, { glyphs: ['left', 'right'], size: 13 });
+      const tx = r.x + 14 * k + Kt.measure(title, { size: 13 * k, weight: 700 }) + 12 * k, bx = w.backRect ? w.backRect.x : r.x + r.w;
+      const hint = Kt.fit(tabHint(), bx - tx - 4 * k, { size: 11 * k });
+      if (hint && hint !== '…') Kt.text(g, hint, tx, r.y + 10.5 * k, { size: 11 * k, color: Kt.COL.text3, raw: true });
+    }
     w.rects = [];
     for (let j = 0; j < vis; j++) {
       const i = w.top + j, row = rows[i], ry = r.y + 30 * k + barH + j * rowH, f = i === w.sel;
@@ -212,9 +231,14 @@
       if (row.isNew) Kt.chip(g, rr.x + 22 * k + Kt.measure(row.label, { size, weight: f ? 700 : 500 }), ry + rowH / 2 - 9 * k, 'NEW', { size: 9.5 * k, color: '#241a08', bg: Kt.COL.gold });
       if (row.right) Kt.text(g, row.right, rr.x + rr.w - 12 * k, ry + (rowH - 13 * k) / 2, { size: 13 * k, weight: 700, align: 'right', color: row.free ? Kt.COL.teal : row.disabled ? Kt.COL.disabled : Kt.COL.text2, raw: true });
     }
+    // スクロールのつまみ（入りきらない行があるとき）
+    if (rows.length > vis) {
+      const y0 = r.y + 30 * k + barH, th = (vis / rows.length) * (vis * rowH), ty = y0 + (w.top / rows.length) * (vis * rowH);
+      g.fillStyle = 'rgba(240,228,200,0.35)'; g.fillRect(r.x + r.w - 4 * k, ty, 2 * k, th);
+    }
     const d = w.o.desc ? w.o.desc(w.sel) : null;
     const by = r.y + r.h + 8 * k;
-    Kt.box(g, { x: pad, y: by, w: R.W - pad * 2, h: 46 * k }, { a: 0.6, r: 12 * k, edge: 'rgba(240,228,200,0.16)' });
+    Kt.box(g, { x: pad, y: by, w: R.W - pad * 2, h: 46 * k }, { a: LIST_A, r: 12 * k, edge: 'rgba(240,228,200,0.16)' });
     if (d && d.text) Kt.text(g, Kt.fit(d.text + (d.sub ? '　' + d.sub : ''), R.W - pad * 2 - 32 * k, { size: 13 * k }), pad + 16 * k, by + 15 * k, { size: 13 * k, color: Kt.COL.text2, raw: true });
     tallHint(g, st);
   }
@@ -312,7 +336,9 @@
     const wname = WNAME[u.wtype] || R.T('battle.command.member.wname');
     const top = [];
     if (atk || sk) top.push({ key: 'weapon', label: wname, icon: u.wtype || 'sword' });
-    if (sp) top.push({ key: 'spell', label: R.T('battle.command.member.spell.label'), icon: 'arts', disabled: !(sp.list && sp.list.length) });
+    // 沈黙（術が全部 reason 'silence'）: 術の札は灰色で入れない。わけは説明の行に（テスター 2026-10-01 P34: 灰色の一覧に入って何も選べなかった）
+    const silenced = !!(sp && sp.list && sp.list.length && sp.list.every((s) => s.reason === 'silence'));
+    if (sp) top.push({ key: 'spell', label: R.T('battle.command.member.spell.label'), icon: 'arts', disabled: !(sp.list && sp.list.length) || silenced, why: silenced ? R.T('sys.battle_core.UNUSABLE_TEXT.silence') : null });
     if (df) top.push({ key: 'defend', label: R.T('battle.command.member.defend.label'), icon: 'shield' });
     if (it) top.push({ key: 'item', label: R.T('battle.command.member.item.label'), icon: 'bag', disabled: !(it.list && it.list.length) });
     for (const o of opts) if (!['attack', 'skill', 'spell', 'defend', 'item'].includes(o.cmd)) top.push({ key: o.cmd, label: o.name || o.cmd, icon: 'star', opt: o });
@@ -329,8 +355,9 @@
         rows: top, sel: top[topSel] && !top[topSel].disabled ? topSel : 0, t0: R.Engine.time, onChip,
         prompts: [{ btn: 'a', label: R.T('battle.command.member.ti.prompts.0.label') }, { btn: 'b', label: R.T('battle.command.member.ti.prompts.1.label') }, { btn: 'r', label: R.T('battle.command.member.ti.prompts.2.label') }],
         tallPrompts: false,
-        onFocus(i) { st.head.sub = (DESC[top[i].key] || '') + (top[i].key === 'weapon' ? R.T('battle.command.member.ti.onFocus.sub') : ''); },
-        desc: (i) => ({ text: (DESC[top[i].key] || '') + (top[i].key === 'weapon' ? R.T('battle.command.member.ti.desc.text') : '') }),
+        horizontal: () => !!st.L.tall,   // 縦持ちは横一列の札（←→ で動く）
+        onFocus(i) { st.head.sub = top[i].why || (DESC[top[i].key] || '') + (top[i].key === 'weapon' ? R.T('battle.command.member.ti.onFocus.sub') : ''); },
+        desc: (i) => ({ text: top[i].why || (DESC[top[i].key] || '') + (top[i].key === 'weapon' ? R.T('battle.command.member.ti.desc.text') : '') }),
         draw(g, w) {
           if (st.L.tall) { tallCards(g, w, st, u.name); return; }
           const h = (28 + top.length * 26 + 8) * k;
@@ -354,7 +381,14 @@
       } else if (sel.key === 'spell') {
         // 術は属性のタブに分ける（火・水 … 合成）。中は MP の少ない順
         const srows = sp.list.map((s) => Object.assign(skillRow(s, 'spell', sp.target), { kind: 'spell', mp: s.mp }));
-        const groups = R.SkillTabs ? R.SkillTabs.group({ spells: srows.map((r) => r.id) }, srows, { cost: (id) => (srows.find((r) => r.id === id) || {}).mp || 0 }) : [{ id: 'all', items: srows }];
+        const cost = (id) => (srows.find((r) => r.id === id) || {}).mp || 0;
+        let groups = R.SkillTabs ? R.SkillTabs.group({ spells: srows.map((r) => r.id) }, srows, { cost }) : [{ id: 'all', items: srows }];
+        // 先頭に「すべて」（MP の少ない順の全部）。開くといつもここから、カーソルは前に使った術（テスター 2026-10-02 Q11:
+        //   前に使った属性のタブが開き、火の矢を使いたいのに水のタブのままだった）。属性のタブは ←→ で絞り込み
+        if (R.SkillTabs && groups.length > 1) {
+          const ids = R.SkillTabs.sortIds({ spells: srows.map((r) => r.id) }, srows.map((r) => r.id), cost);
+          groups = [{ id: 'spell:all', key: 'all', kind: 'spell', label: R.T('battle.command.member.spellAll'), icon: 'arts', items: ids.map((id) => srows.find((r) => r.id === id)) }].concat(groups);
+        }
         res = await subList(st, u, groups.length === 1 ? groups[0].items : srows, R.T('battle.command.member.res.subList', { name: u.name }), 'spell', M, groups.length > 1 ? groups : null);
       }
       else if (sel.key === 'item') res = await subList(st, u, it.list.map((s) => skillRow(s, 'item', it.target)), R.T('battle.command.member.res.subList_2', { name: u.name }), 'item', M);
@@ -419,7 +453,9 @@
     const k = R.uiScale || 1;
     const shown = new Set();
     const cid = (u && (u.id || (u.c && u.c.id))) || (u && u.uid);
-    let tab = groups ? R.SkillTabs.startIndex(groups, cid, 'battle_' + memKey) : 0, anim = true;
+    // 「すべて」のタブがあれば毎回そこから（Q11）。無ければ人ごとに覚えたタブ
+    const allTab = !!(groups && groups[0].key === 'all');
+    let tab = groups && !allTab ? R.SkillTabs.startIndex(groups, cid, 'battle_' + memKey) : 0, anim = true;
     const ckey = () => (groups ? memKey + ':' + groups[tab].id : memKey);
     for (;;) {
       if (groups) rows = groups[tab].items;
@@ -443,7 +479,8 @@
           if (st.L.tall) { tallList(g, w, st, title); return; }
           const h = (28 + (w.tabbed ? R.SkillTabs.BAR_H + 4 : 0) + Math.min(rows.length, 7) * 26 + 8) * k;
           // タブの帯があるときは、どのタブでも同じ幅（切り替えで窓が揺れない）。帯が入る幅（256）以上
-          const pw = groups ? Math.max(256, ...groups.map((gr) => C.subListWidth(gr.items, title))) : C.subListWidth(rows, title);
+          // 種類が多い（「すべて」と 6 属性と合成など 8 つ以上）ときは 300（タブの印が小さくなりすぎない）
+          const pw = groups ? Math.max(groups.length >= 8 ? 300 : 256, ...groups.map((gr) => C.subListWidth(gr.items, title))) : C.subListWidth(rows, title);
           const p = anchorFor(st, u.uid, pw * k, h, -200, -228);
           const r = listPanel(g, w, { x: p.x, y: p.y, w: pw, rowH: 26, title, size: 14, maxRows: 7 });
           // 説明は右隣（右上の一覧に重ねない。入らなければ一覧の下）
@@ -470,6 +507,8 @@
       anim = true;
       if (i === 'back') return 'back';
       M[ckey()] = i;
+      // 絞り込んだタブで選んだ術も、次に開く「すべて」のカーソルに
+      if (allTab && tab !== 0) { const j = groups[0].items.findIndex((r) => r.id === rows[i].id); if (j >= 0) M[memKey + ':' + groups[0].id] = j; }
       const res = await targetFor(st, u, rows[i], M);
       if (res !== 'back') return res;
     }

@@ -6,7 +6,7 @@
 'use strict';
 const path = require('path');
 const fs = require('fs');
-const { app, BrowserWindow, ipcMain, protocol, session, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, protocol, session, Menu, clipboard } = require('electron');
 const { makeStore } = require('./store');
 
 const DIST = path.resolve(process.env.CHRONICLE_DIST || path.join(__dirname, '..', 'dist'));
@@ -64,6 +64,9 @@ app.whenReady().then(() => {
   ipcMain.handle('store:remove', (_e, n) => store.remove(n));
   ipcMain.handle('win:fullscreen', (_e, v) => { if (win) win.setFullScreen(!!v); return !!v; });
   ipcMain.handle('win:isFullscreen', () => !!(win && win.isFullScreen()));
+  // 写し取り（冒険の合言葉の「写す」「貼り付ける」）: 許可の要る navigator.clipboard は上で断っているので、ここで読む・書く
+  ipcMain.handle('clip:read', () => clipboard.readText());
+  ipcMain.handle('clip:write', (_e, t) => { clipboard.writeText(String(t)); return true; });
   createWindow();
 });
 

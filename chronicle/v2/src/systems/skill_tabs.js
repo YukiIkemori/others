@@ -136,10 +136,17 @@
     const fits = full.reduce((s, v) => s + v, 0) + gap * (n - 1) <= avail;
     const ws = groups.map((gr, i) => (fits || i === index ? full[i] : iconOnly));
     const total = ws.reduce((s, v) => s + v, 0) + gap * (n - 1);
-    const sc = total > avail ? avail / total : 1;   // それでも入らなければ詰める
-    let cx = x0 + Math.max(0, (avail - total * sc) / 2);
+    let sc = total > avail ? avail / total : 1;   // それでも入らなければ詰める
+    // 詰めるときは今の札の名前を切らない（ほかの印だけ詰める。詰めすぎるときは全部を同じに）。「すべて」のような長い名前が「す…」になった
+    let scCur = sc;
+    if (sc < 1 && !fits) {
+      const so = (avail - ws[index] - gap * (n - 1)) / Math.max(1, total - ws[index] - gap * (n - 1));
+      if (so >= 0.5) { sc = Math.min(1, so); scCur = 1; }
+    }
+    const tw = ws.reduce((s, v, i) => s + v * (i === index ? scCur : sc), 0) + gap * sc * (n - 1);
+    let cx = x0 + Math.max(0, (avail - tw) / 2);
     groups.forEach((gr, i) => {
-      const w = ws[i] * sc, on = i === index;
+      const on = i === index, k1 = on ? scCur : sc, w = ws[i] * k1;
       const r = { x: cx, y: rect.y + 2 * k, w, h: h - 4 * k, i };
       if (on) {
         g.save(); U.rr(g, r.x, r.y, r.w, r.h, r.h / 2);
@@ -148,10 +155,10 @@
       }
       const col = on ? C.goldHi : C.text3;
       const showLabel = fits || on;
-      const iw = isz * Math.min(1, sc + 0.2);
-      const ix = showLabel ? r.x + pad * sc : r.x + (r.w - iw) / 2;
+      const iw = isz * Math.min(1, k1 + 0.2);
+      const ix = showLabel ? r.x + pad * k1 : r.x + (r.w - iw) / 2;
       U.icon(g, gr.icon, ix, cy - iw / 2, iw, on ? C.gold : C.text3);
-      if (showLabel) U.text(g, gr.label, ix + iw + 5 * k * sc, cy - sz / 2 - 0.5 * k, { size: sz, weight: 700, color: col, maxW: r.w - (ix + iw - r.x) - pad * sc });
+      if (showLabel) U.text(g, gr.label, ix + iw + 5 * k * k1, cy - sz / 2 - 0.5 * k, { size: sz, weight: 700, color: col, maxW: r.w - (ix + iw - r.x) - pad * k1 });
       rects.push(r);
       cx += w + gap * sc;
     });

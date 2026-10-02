@@ -235,6 +235,7 @@
     'ui.inn.draw.text': '旅店',
     'ui.inn.draw.text_2': '持有金币 {UIK} G',
     'ui.inn.draw.text_3': '一晚 {price} G。要好好休息一下吗？',
+    'ui.inn.draw.text_4': '一晚 {price} G。要休息到什么时候？',
     'ui.inn.draw.0.label': '决定',
     'ui.inn.draw.1.label': '返回',
     // ---- src/screens/items.js
@@ -316,7 +317,7 @@
     'ui.passphrase.act.msg': '已复制。',
     'ui.passphrase.act.msg_2': '请从文字栏中选中并复制。',
     'ui.passphrase.act.msg_3': '已粘贴。',
-    'ui.passphrase.act.msg_4': '请粘贴到文字栏中。',
+    'ui.passphrase.act.msg_4': '请在文字栏中按 Ctrl+V 粘贴。',
     'ui.passphrase.act.msg_5': '这个口令无法读取。',
     'ui.passphrase.draw.heading': '冒险口令',
     'ui.passphrase.draw.info': '已将当前的旅程变成一行文字。在其他设备的「冒险口令」中，可以从这里继续。',

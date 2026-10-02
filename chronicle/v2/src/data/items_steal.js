@@ -153,7 +153,7 @@
     name: R.T('items.sh_st_treasure_crab.name'),
     slot: 'shield',
     grade: 'super',
-    tier: 3,
+    tier: 4,   // 3 → 4（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     src: 'steal',
     stealOnly: true,
     weight: 'heavy',
@@ -164,7 +164,7 @@
     name: R.T('items.bd_st_star_whale.name'),
     slot: 'body',
     grade: 'super',
-    tier: 3,
+    tier: 4,   // 3 → 4（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     src: 'steal',
     stealOnly: true,
     weight: 'cloth',
@@ -176,7 +176,7 @@
     name: R.T('items.ft_st_clock_bird.name'),
     slot: 'feet',
     grade: 'super',
-    tier: 3,
+    tier: 7,   // 3 → 7（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     src: 'steal',
     stealOnly: true,
     weight: 'light',
@@ -198,7 +198,7 @@
     name: R.T('items.sh_st_volcano_turtle.name'),
     slot: 'shield',
     grade: 'super',
-    tier: 3,
+    tier: 6,   // 3 → 6（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     src: 'steal',
     stealOnly: true,
     weight: 'heavy',
@@ -209,7 +209,7 @@
     name: R.T('items.w_staff_st_prisma.name'),
     slot: 'weapon',
     grade: 'super',
-    tier: 3,
+    tier: 6,   // 3 → 6（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     src: 'steal',
     stealOnly: true,
     wtype: 'staff',
@@ -298,7 +298,7 @@
     name: R.T('items.w_greatsword_st_stoneaxe.name'),
     slot: 'weapon',
     grade: 'super',
-    tier: 6,
+    tier: 8,   // 6 → 8（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     src: 'steal',
     stealOnly: true,
     wtype: 'greatsword',
@@ -324,7 +324,7 @@
     name: R.T('items.w_dagger_st_wolfking.name'),
     slot: 'weapon',
     grade: 'super',
-    tier: 8,
+    tier: 9,   // 8 → 9（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     src: 'steal',
     stealOnly: true,
     wtype: 'dagger',
@@ -359,7 +359,7 @@
     name: R.T('items.w_staff_st_strategist.name'),
     slot: 'weapon',
     grade: 'super',
-    tier: 8,
+    tier: 9,   // 8 → 9（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     src: 'steal',
     stealOnly: true,
     wtype: 'staff',
@@ -408,7 +408,7 @@
   ac_st_royal_jelly: { name: R.T('items.ac_st_royal_jelly.name'), slot: 'acc', grade: 'super', tier: 2, src: 'steal', stealOnly: true, mods: { regen: 1 }, abil: { mnd: 1 }, icon: 'ring' },
   ac_st_spore_sachet: { name: R.T('items.ac_st_spore_sachet.name'), slot: 'acc', grade: 'super', tier: 2, src: 'steal', stealOnly: true, mods: { statusResist: { sleep: 0.5, poison: 0.5 } }, abil: { vit: 1 }, icon: 'ring' },   // レア率アップは中盤以降（持ち主 2026-09-27）
   w_staff_st_petal: { name: R.T('items.w_staff_st_petal.name'), slot: 'weapon', grade: 'super', tier: 2, src: 'steal', stealOnly: true, wtype: 'staff', mods: { healPct: 20, mpRegen: 1 }, abil: { mnd: 1 }, icon: 'staff' },
-  w_dagger_st_frostfang: { name: R.T('items.w_dagger_st_frostfang.name'), slot: 'weapon', grade: 'super', tier: 2, src: 'steal', stealOnly: true, wtype: 'dagger', element: 'water', crit: 10, abil: { dex: 1 }, icon: 'dagger' },
+  w_dagger_st_frostfang: { name: R.T('items.w_dagger_st_frostfang.name'), slot: 'weapon', grade: 'super', tier: 2, src: 'steal', stealOnly: true, wtype: 'dagger', element: 'water', crit: 10, mult: 1.0, abil: { dex: 1 }, icon: 'dagger' },   // mult 1.0（短剣の 0.75 → 1.0）: 雪原（T2）で店の銀の短剣（T3）より弱かった（持ち主 2026-10-02）
 });
   R.DB.stealSources = {
   ac_st_rooteater: { mon: 'b_rooteater', rate: 16 },

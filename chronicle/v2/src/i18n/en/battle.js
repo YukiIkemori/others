@@ -53,6 +53,7 @@
     'battle.command.member.attack.label': 'Attack',
     'battle.command.member.res.subList': '{name} › Spells',
     'battle.command.member.res.subList_2': '{name} › Items',
+    'battle.command.member.spellAll': 'All',
     'battle.command.subList.head.name': '{name}\'s Turn',
     'battle.command.subList.head.sub': 'Choose a {p0} Art (remembers your last target).',
     'battle.command.subList.head.sub_2': 'weapon',
@@ -67,6 +68,7 @@
     'battle.command.subList.i.desc.text_3': 'No one has fallen.',
     'battle.command.subList.i.desc.text_4': 'A normal attack with your weapon.',
     'battle.command.subList.i.desc.sub': '  ·  Target: {tn}',
+    'battle.command.subList.tabHint': '{l}{r} switch type',
     // ---- src/systems/battle/demo.js
     'battle.demo.names.dg_frost_fang': 'Frostfang Dagger',
     'battle.demo.names.mt_wolf_pelt': 'Ice Wolf Pelt',
@@ -171,6 +173,7 @@
     'battle.hud.chips.w1.speedChip': 'Speed: ',
     'battle.hud.chips.w2.chip': 'Repeating: tap to stop',
     'battle.hud.chips.w2.chip_2': 'Repeat',
+    'battle.hud.chips.w2.chip_armed': 'Repeat: from next round',
     'battle.hud.chips.w3.chip': 'Escape',
     // ---- src/systems/battle/result.js
     'battle.result.PROF_JA.sword': 'Sword',
@@ -221,6 +224,7 @@
     'battle.scene.intro.sub': 'A monster you rarely meet!',
     'battle.scene.prompts.list.0.label': 'to stop',
     'battle.scene.prompts.list.0.label_2': 'Repeat',
+    'battle.scene.prompts.armed': 'Repeat: from next round',
     'battle.scene.prompts.list.0.label_3': 'Speed: {speedLabel}',
     'battle.scene.drawRepeatTag.label': 'Repeating:',
     'battle.scene.makeScene.battle.update.toast': 'Repeat: OFF',

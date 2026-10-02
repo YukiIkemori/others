@@ -76,12 +76,12 @@ section('データ（K.monster・K.boss・K.troop、出現表、盗み専用）'
   ok('slice troops use the 5 backdrops', ['tr_tutorial', 'tr_b_pageeater', 'tr_a21_forest_wolves', 'tr_b_moth', 'tr_b_rooteater'].every((t) => ['coast', 'tower', 'forest', 'tree', 'cave'].includes(DB.troops[t].bg)));
   ok('slice zone backdrops are the 5 (or the map’s)', zones.every((z) => DB.encounters[z].bg == null || ['coast', 'tower', 'forest', 'tree', 'cave'].includes(DB.encounters[z].bg)));
   ok('forest road rate 0.3 (WORLD_REDESIGN §2.2)', DB.encounters.zw_forest_road.rate === 0.3);
-  // 盗み専用（STATS_REWORK §7.2、率は V2_PLAN §2.6.6: 通常 32・レア 16・ボス 16）
+  // 盗み専用（STATS_REWORK §7.2、率は V2_PLAN §2.6.6: 通常 32・レア 16・ボス 16 → 持ち主 2026-10-02「盗みのレアを少し上げる」で 通常 16・レア 12・ボス 16）
   const st = mons.filter((id) => DB.monsters[id].drops && DB.monsters[id].drops.steal);
   // 36 + 7 slice monsters (owner 2026-09-27: 「レアがめっきり減ったねえ……。楽しみがちょっとないかも」)
   ok('steal-only slots: 30–45 monsters', st.length >= 30 && st.length <= 45, st.length);
-  const rateOk = st.every((id) => { const d = DB.monsters[id]; const want = (d.flags || []).includes('boss') ? 16 : (d.flags || []).includes('rare') ? 16 : 32; return d.drops.steal.rate === want; });
-  ok('steal-only rates 32 / 16 / 16', rateOk);
+  const rateOk = st.every((id) => { const d = DB.monsters[id]; const want = (d.flags || []).includes('boss') ? 16 : (d.flags || []).includes('rare') ? 12 : 16; return d.drops.steal.rate === want; });
+  ok('steal-only rates 16 / 12 / 16', rateOk);
   ok('each steal-only item belongs to one monster', new Set(st.map((id) => DB.monsters[id].drops.steal.item)).size === st.length);
   ok('steal-only items are in no other slot', st.every((id) => { const it = DB.monsters[id].drops.steal.item; return mons.every((m) => ['normal', 'rare', 'super'].every((g) => !(DB.monsters[m].drops && DB.monsters[m].drops[g] && DB.monsters[m].drops[g].item === it))); }));
   ok('b_rooteater steals ac_st_rooteater, rm_jewel_hare ft_st_jewel_hare (§3.7)', DB.monsters.b_rooteater.drops.steal.item === 'ac_st_rooteater' && DB.monsters.rm_jewel_hare.drops.steal.item === 'ft_st_jewel_hare');
@@ -369,12 +369,12 @@ section('盗み専用（§7.3 の 1〜6）');
   eng = mk(['rm_jewel_hare'], seqRng([0, 0], 0.5));
   drainAll(eng.steal(eng.party[0], eng.mons[0]));
   ok('rare monster: steal-only taken → used up', eng.mons[0].stolen && eng.mons[0].stolenSt && !eng.canSteal(eng.mons[0]));
-  // 2. 率: min(0.5, 1/rate × (1 + stealPct/100))、ついでに × 0.5、金色 × 2（STATS_REWORK §7.3 の 2・6）
+  // 2. 率: min(0.5, 1/rate × (1 + stealPct/100))、ついでに × 0.6（持ち主 2026-10-02。旧 0.5）、金色 × 2（STATS_REWORK §7.3 の 2・6）。レア魔物の率は 12
   eng = mk(['rm_jewel_hare', 'seabird_3']);
   u = eng.party[0];
   const sp = (u.mods.stealPct || 0) / 100;
-  ok('steal-only chance = 1/16 × (1 + stealPct)', Math.abs(eng.stealOnlyChance(u, eng.mons[0], false) - Math.min(0.5, (1 / 16) * (1 + sp))) < 1e-9);
-  ok('autoSteal path × 0.5', Math.abs(eng.stealOnlyChance(u, eng.mons[0], true) - eng.stealOnlyChance(u, eng.mons[0], false) / 2) < 1e-9);
+  ok('steal-only chance = 1/12 × (1 + stealPct)', Math.abs(eng.stealOnlyChance(u, eng.mons[0], false) - Math.min(0.5, (1 / 12) * (1 + sp))) < 1e-9);
+  ok('autoSteal path × 0.6', Math.abs(eng.stealOnlyChance(u, eng.mons[0], true) - eng.stealOnlyChance(u, eng.mons[0], false) * 0.6) < 1e-9);
   const gm = new BC.MonUnit({ id: 'seabird_3', golden: true }, 5, eng);
   ok('golden × 2', gm.golden && Math.abs(eng.stealOnlyChance(u, gm, false) - 2 * eng.stealOnlyChance(u, eng.mons[1], false)) < 1e-9);
   const sm = new BC.MonUnit({ id: 'seabird_3', summoned: true }, 6, eng);

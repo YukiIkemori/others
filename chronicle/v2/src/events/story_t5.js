@@ -22,7 +22,7 @@
       if (ev.flag('story_rowell_won1')) await ev.say('rowell', R.T('events.story_t5.run.say'), Object.assign({ voice: 'v_rowell_t5_01' }, rw));
       await ev.say('rowell', R.T('events.story_t5.run.say_2'), Object.assign({ voice: 'v_rowell_t5_02' }, rw, { face: 'rowell:angry' }));
       await ev.say('rowell', R.T('events.story_t5.run.say_3'), Object.assign({ voice: 'v_rowell_t5_03' }, rw, { face: 'rowell:angry' }));
-      const r = await ev.battle({ troop: 'tr_b_rowell2', canLose: true, noEscape: true });
+      const r = await ev.battle({ troop: 'tr_b_rowell2', canLose: true, noEscape: true, bg: St.duelBg(map) });
       ev.setFlag('story_rowell_duel2');
       const won = r === 'win';
       if (won) {

@@ -10,7 +10,7 @@
 // 5. 文の長さ: 手がかり 3 行 × 22 字・品の説明 3 行 × 20 字・品の名前 12 字・手紙の 1 行 20 字。
 // 6. 置き場所（§2.6.1）: ワールドに宝箱・隠し通路なし、隠し通路はダンジョンだけ、宝箱は床の上で重なる物の下でない、泉は床の上の 2×2、物はマップの中。
 // 7. ドロップの枠（STATS_REWORK §10.1）: 通常の魔物は normal を持つ、rare は系統の最後の段だけ（約 25%）、super は 5 段の系統の最後など（約 9%）。
-// 8. 盗み専用（STATS_REWORK §7.6・V2_PLAN §2.6.6）: 30〜40 品、grade super・src steal・quirk なし、1 品 1 体、ほかの枠・表・店・宝箱に無い、率 通常 32・レア 16・ボス 16。
+// 8. 盗み専用（STATS_REWORK §7.6・V2_PLAN §2.6.6）: 30〜40 品、grade super・src steal・quirk なし、1 品 1 体、ほかの枠・表・店・宝箱に無い、率 通常 16・レア 12・ボス 16（持ち主 2026-10-02 に 32・16 から上げた）。
 'use strict';
 const fs = require('fs');
 const { inline: i18nInline } = require('../lib/i18n_src');   // R.T('key') を日本語の文に戻して文面を確かめる（i18n）
@@ -361,10 +361,10 @@ section('8. 盗み専用（STATS_REWORK §7.6、V2_PLAN §2.6.6）');
     const s = m.drops && m.drops.steal;
     if (!s) continue;
     const kind = ((m.flags || []).includes('boss') || /^b_/.test(mid)) ? 'boss' : /^rm_/.test(mid) ? 'rare' : 'normal';
-    const want = { boss: 16, rare: 16, normal: 32 }[kind];
+    const want = { boss: 16, rare: 12, normal: 16 }[kind];
     if (s.rate !== want) rateBad.push(`${mid} (${kind}) rate ${s.rate} ≠ ${want}`);
   }
-  ok('率: 通常 32・レア 16・ボス 16（A31 ⑥・リードの決定 5）', rateBad.length === 0, rateBad);
+  ok('率: 通常 16・レア 12・ボス 16（A31 ⑥・リードの決定 5、持ち主 2026-10-02 に上げた）', rateBad.length === 0, rateBad);
   if (D.stealSources) {
     const ss = Object.entries(D.stealSources).filter(([id, s]) => !owners[id] || owners[id][0] !== s.mon);
     ok('R.DB.stealSources が魔物の drops.steal と同じ', ss.length === 0, ss.map((x) => x[0]));

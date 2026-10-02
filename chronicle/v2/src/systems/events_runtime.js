@@ -283,10 +283,12 @@
       async warp(map, spawn) { guard(); await R.Field.enter(map, spawn); guard(); },
       heal() { guard(); R.Party.heal(true); },
       rest() { guard(); R.Party.restoreAll(); },
-      async inn(price) {
+      /** 宿。o.choices = 泊まり方の名の配列（「朝の鐘まで泊まる」「消灯の刻まで休む」）、o.text = 問いの文。
+       *  泊まらなければ false、泊まれば true（choices があれば {pick: 選んだ番号}） */
+      async inn(price, o) {
         guard();
         if (price == null) price = R.Tier.innPrice();
-        const r = await R.Screens.open('inn', { price });
+        const r = await R.Screens.open('inn', Object.assign({ price }, o && o.choices ? { choices: o.choices } : {}, o && o.text ? { text: o.text } : {}));
         guard();
         if (!r || !r.stay) return false;
         if ((G().gold || 0) < price) return false;
@@ -299,9 +301,12 @@
         guard();
         try { R.Save.autosave('inn'); } catch (e) { R.warn('autosave inn', e && e.message); }
         R.emit('inn', { map: p.map });
-        return true;
+        // 夜の間に別のマップへ移っていたら、宿の人の朝の言葉を続けない（ワープ先で前の宿のおかみの「おはよう」が出た。テスター 2026-10-02 P36）
+        if (p.map && R.Field.pos && R.Field.pos.map !== p.map) return false;
+        return o && o.choices ? { pick: r.pick | 0 } : true;
       },
-      async shop(id) { guard(); const r = await R.Screens.open('shop', { id }); guard(); return r; },
+      /** 店。o.line = 見出しの店主のひと言（無ければ店の種類の決まり文句。店主の台詞と合わせる: テスター 2026-10-02 P31） */
+      async shop(id, o) { guard(); const r = await R.Screens.open('shop', Object.assign({ id }, o && o.line ? { line: o.line } : {})); guard(); return r; },
       async tavern(o) { guard(); const r = await R.Screens.open('tavern', o || {}); guard(); return r; },
       async chooseCompanions(o) {
         guard();

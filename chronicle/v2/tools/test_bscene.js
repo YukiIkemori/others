@@ -61,7 +61,22 @@ ok('tall: party inside the stage', Object.values(tp).every((p) => p.x > 0 && p.x
   const sp = _.layout.enemySpots(L, us);
   ok('tall: boss + 6 adds inside the stage, no overlap', !clashOf(sp, us).length && Object.values(sp).every((p) => p.x > 0 && p.x < R.W * 0.6 && p.y < L.stageH), sp);
 }
+// 縦長の PC の窓（テスター 2026-10-01 P3・P26・P33）: 4:3 の横持ち（720×540）と、低めの縦持ち（540×810〜1000）でも
+//   敵と味方が画面の中・人の札より上、下の部品が画面に収まる
+for (const [w, h, lay, k] of [[720, 540, 'wide', 1], [540, 812, 'tall', 1], [540, 900, 'tall', 1.1], [540, 1000, 'tall', 1.2], [540, 1169, 'tall', 1.3]]) {
+  R.W = w; R.H = h; R.layout = lay; R.uiScale = k;
+  const LL = _.layout.compute();
+  const five = Array.from({ length: 5 }, (x, i) => ({ uid: 'f' + i, size: 'm' }));
+  const fs = _.layout.enemySpots(LL, five), pss = _.layout.partySpots(LL, party);
+  const bossy = [{ uid: 'b', boss: true, size: 'l' }].concat(Array.from({ length: 4 }, (x, i) => ({ uid: 'w' + i, size: 's' })));
+  const bs = _.layout.enemySpots(LL, bossy);
+  const floor = lay === 'tall' ? LL.cardsY - 4 : h - 40;
+  const inside = (p) => p.x >= 20 && p.x <= w - 20 && p.y > 60 && p.y <= floor;
+  ok(`${w}×${h}: 5 foes, boss + 4, and the party stand inside the screen above the cards`, [fs, bs, pss].every((o) => Object.values(o).every(inside)), { floor, fs, bs, pss });
+  if (lay === 'tall') ok(`${w}×${h}: cards → commands → chips fit on the screen (k ${LL.k})`, LL.cardsY < LL.cmdY && LL.cmdY + 184 * LL.k <= LL.chipsY && LL.chipsY + 22 * LL.k <= h, LL);
+}
 R.W = 960; R.H = 540; R.layout = 'wide'; R.uiScale = 1;
+{ const L0 = _.layout.compute(); ok('1920×1080 (960×540) layout unchanged: no squeeze, k = uiScale', L0.sx === 1 && L0.k === 1 && L0.map(300, 395)[0] === 300 && L0.bgH === 540, L0); }
 
 section('見本の戦闘（demo）の形');
 R.Dev = R.Dev || null;
@@ -192,7 +207,17 @@ section('人の札は隊列の順（前列・後列で分けない。2026-09-27 
   ok('one card rect per member, top to bottom in that order', st && _.hud.partyRects(st).every((r, i, a) => i === 0 || r.y > a[i - 1].y) && _.hud.partyRects(st).length === cards.length);
   const pp = st && R.Battle.prompts(st);
   ok('bottom-right prompts carry the speed 「速さ：通常」 (no separate chip)', pp && pp.list.some((p) => p.btn === 'r' && p.label === '速さ：' + R.Battle.speedLabel(R.Settings.get('battleSpeed'))), pp && pp.list);
-  if (st) { st.B.setRepeat(true); const p2 = R.Battle.prompts(st); ok('repeat running → 「リピート中：[L]でやめる」 in the prompts', p2.repeatOn && p2.list[0].btn === 'l' && p2.list[0].label === 'でやめる', p2.list); st.B.setRepeat(false); }
+  if (st) {
+    const ph = st.phase;
+    st.B.setRepeat(true); st.phase = 'play';
+    const p2 = R.Battle.prompts(st);
+    ok('repeat running → 「リピート中：[L]でやめる」 in the prompts', p2.repeatOn && p2.list[0].btn === 'l' && p2.list[0].label === 'でやめる', p2.list);
+    // 命令の窓の間に ON にした（まだ繰り返していない）: 「リピート中」と出さない（テスター 2026-10-02 Q9）
+    st.phase = 'input';
+    const p3 = R.Battle.prompts(st);
+    ok('repeat armed during input → no 「リピート中」 tag, 「リピート：次のラウンドから」', !p3.repeatOn && p3.list.some((p) => p.btn === 'l' && p.label === R.T('battle.scene.prompts.armed')), p3.list);
+    st.B.setRepeat(false); st.phase = ph;
+  }
 
   // 派生技の帯（design/BACKLOG「派生技の閃き」。持ち主「何かの技を使ってたらその上位版を覚えるの」）:
   // 閃きの帯を使い「〇〇から、」「△△を編み出した！」。行動の後に出て、速さ 1 / 2 / 3 / 5 で短くなる
@@ -218,7 +243,7 @@ section('人の札は隊列の順（前列・後列で分けない。2026-09-27 
   section('ねらい: ally_dead は倒れた味方だけ');
   {
     const acts = [{ uid: 'p0', side: 'party', name: 'A', x: 800, y: 300 }, { uid: 'p1', side: 'party', name: 'B', x: 800, y: 340 }, { uid: 'p2', side: 'party', name: 'C', x: 800, y: 380 }, { uid: 'e0', side: 'enemy', name: 'E', x: 200, y: 300 }];
-    const mk = (dead) => ({ actors: acts, vis: { p0: { alive: true }, p1: { alive: !dead.includes('p1') }, p2: { alive: !dead.includes('p2') }, e0: { alive: true } }, aliveEnemies: () => [acts[3]], head: null, L: {} });
+    const mk = (dead) => ({ actors: acts, vis: { p0: { alive: true }, p1: { alive: !dead.includes('p1') }, p2: { alive: !dead.includes('p2') }, e0: { alive: true } }, aliveEnemies: () => [acts[3]], partyUnits: () => acts.filter((a) => a.side === 'party'), head: null, L: {} });
     const u = acts[0];
     const s1 = mk(['p2']);
     _.target.pick(s1, u, 'ally_dead', { row: { cmd: 'item', id: 'i_phoenix', label: 'よみがえりの花' }, mem: { ally: 'p0', target: 'e0' } });

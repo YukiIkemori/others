@@ -235,6 +235,7 @@
     'ui.inn.draw.text': '宿屋',
     'ui.inn.draw.text_2': '所持金 {UIK} G',
     'ui.inn.draw.text_3': '一晩 {price} G。ゆっくり休んでいくかい？',
+    'ui.inn.draw.text_4': '一晩 {price} G。いつまで休んでいくかい？',
     'ui.inn.draw.0.label': '決定',
     'ui.inn.draw.1.label': '戻る',
     // ---- src/screens/items.js
@@ -316,7 +317,7 @@
     'ui.passphrase.act.msg': '写し取った。',
     'ui.passphrase.act.msg_2': '文字の欄から選んで写してください。',
     'ui.passphrase.act.msg_3': '貼り付けた。',
-    'ui.passphrase.act.msg_4': '文字の欄に貼り付けてください。',
+    'ui.passphrase.act.msg_4': '文字の欄で Ctrl+V を押して貼り付けてください。',
     'ui.passphrase.act.msg_5': '読み込めない合言葉だ。',
     'ui.passphrase.draw.heading': '冒険の合言葉',
     'ui.passphrase.draw.info': '今の旅を 1 行の文字にした。ほかの端末の「冒険の合言葉」で、ここから続けられる。',

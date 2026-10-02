@@ -136,6 +136,9 @@
         continue;
       }
       if (now < n.nextAt) continue;
+      // 歩く人（wander・route）は、一行がすぐそば（2 マス以内）に来たら立ち止まる（話しかけようとすると歩き去って、
+      //   「新しい話」が残るのに話せない人がいた: ファロスの井戸の子・船の水夫。テスター 2026-10-02 P17）
+      if (d.move && d.move !== 'still' && Math.max(Math.abs(n.x - S.x), Math.abs(n.y - S.y)) <= 2) { n.nextAt = now + 500; continue; }
       if (d.move === 'wander') {
         n.nextAt = now + 1400 + n.rng.int(0, 2600);
         const dir = ORTHO[n.rng.int(0, 3)];

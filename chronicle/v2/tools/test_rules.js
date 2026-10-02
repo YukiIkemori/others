@@ -115,7 +115,8 @@ section('§3.2 normal ability accessories (60)');
 }
 
 section('§3.3 grade multipliers and fixed atk/mag');
-ok('rare weapon atk = round(WA × mult × 1.06)', DB.items.w_sword_r1.atk === Math.round(K.WA[1] * 1 * 1.06));
+// 武器の等級 rare 1.06 → 1.10（持ち主 2026-10-02「レアは店の品よりはっきり強く」。防具の GRADE_DEF と同じ）
+ok('rare weapon atk = round(WA × mult × 1.10)', DB.items.w_sword_r1.atk === Math.round(K.WA[1] * 1 * 1.10) && K.GRADE_ATK.rare === 1.10 && K.GRADE_ATK.super === 1.20);
 ok('super armor def ×1.20', (() => { const it = Object.values(DB.items).find((x) => x.slot === 'body' && x.grade === 'super' && !x.quirk && x.weight === 'heavy'); return it && it.def === Math.round(0.4 * K.D(it.tier) * 1 * 1.2); })());
 ok('fixed mag rescaled (w_staff_sr_cosmos 33, hd_sr_demon_general atk 26)', DB.items.w_staff_sr_cosmos.mods.mag === 33 && DB.items.hd_sr_demon_general.mods.atk === 26);
 
@@ -451,7 +452,7 @@ section('§10.1 drop slots and chest pools (A30)');
   const demoGear = demoRare.filter((id) => id && DB.items[id] && DB.items[id].slot !== 'use');
   ok('slice stage 1–2 monsters (22) all have a rare slot: ≥ 15 consumables, 5–7 distinct gear', demoRare.every(Boolean) && demoRare.length - demoGear.length >= 15 && demoGear.length >= 5 && demoGear.length <= 7 && new Set(demoGear).size === demoGear.length, { gear: demoGear });
   const inPool = new Set(); for (const p of Object.values(DB.pools)) for (const t of p.tiers) for (const e of t) if (e.item) inPool.add(e.item);
-  ok('gear rares no slice monster drops any more are back in p_rare', ['ft_rat_sandal', 'ac_bat_fang', 'hd_mushroom_cap', 'w_bow_leaf', 'bd_marsh_coat', 'hd_star_hood', 'hn_mole_claw'].every((id) => DB.pools.p_rare.tiers[1].some((e) => e.item === id)));
+  ok('gear rares no slice monster drops any more are back in p_rare', ['ft_rat_sandal', 'ac_bat_fang', 'hd_mushroom_cap', 'w_bow_leaf', 'bd_marsh_coat', 'hd_star_hood', 'hn_mole_claw'].every((id) => [0, 1].some((T) => DB.pools.p_rare.tiers[T].some((e) => e.item === id))));   // 武器は T+1 の帯（pools.js の WB）なので T1 の箱には出ず T0 の箱
   const rs = mobs.filter(([, m]) => m.drops && m.drops.rare).length / mobs.length, ss = mobs.filter(([, m]) => m.drops && m.drops.super).length / mobs.length;
   ok('rare slots on about 25% of normal monsters, super about 9%', rs >= 0.2 && rs <= 0.3 && ss >= 0.06 && ss <= 0.12, { rs, ss });
   const T = require('./port/trim_10_1.json');

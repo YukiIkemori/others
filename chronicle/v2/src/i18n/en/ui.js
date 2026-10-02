@@ -235,6 +235,7 @@
     'ui.inn.draw.text': 'Inn',
     'ui.inn.draw.text_2': 'Gold {UIK} G',
     'ui.inn.draw.text_3': '{price} G a night. Care to rest a while?',
+    'ui.inn.draw.text_4': '{price} G a night. How long will you rest?',
     'ui.inn.draw.0.label': 'Select',
     'ui.inn.draw.1.label': 'Back',
     // ---- src/screens/items.js
@@ -316,7 +317,7 @@
     'ui.passphrase.act.msg': 'Copied.',
     'ui.passphrase.act.msg_2': 'Please select the text field and copy it.',
     'ui.passphrase.act.msg_3': 'Pasted.',
-    'ui.passphrase.act.msg_4': 'Please paste into the text field.',
+    'ui.passphrase.act.msg_4': 'Press Ctrl+V in the text field to paste.',
     'ui.passphrase.act.msg_5': 'That passphrase can\'t be read.',
     'ui.passphrase.draw.heading': 'Adventure Passphrase',
     'ui.passphrase.draw.info': 'Your journey, written as one line of text. Enter it under "Adventure Passphrase" on another device to continue from here.',

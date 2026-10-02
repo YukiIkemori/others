@@ -169,7 +169,7 @@
   // ---------------------------------------------------------------- 市場
   E('kasim_arms', async (ev) => {
     await ev.say('arms_vendor', cleared(ev) ? R.T('events.kasim_arms.say') : R.T('events.kasim_arms.say_2'));
-    await ev.shop('shop_kasim_arms');
+    await ev.shop('shop_kasim_arms', { line: cleared(ev) ? R.T('events.kasim_arms.line_2') : R.T('events.kasim_arms.line') });
   });
   E('kasim_shop_keeper', async (ev) => {
     await ev.say('shop_keeper', cleared(ev) ? R.T('events.kasim_shop_keeper.say') : R.T('events.kasim_shop_keeper.say_2'));
@@ -180,10 +180,10 @@
   E('kasim_inn_keeper', async (ev) => {
     const price = R.Tier && R.Tier.innPrice ? R.Tier.innPrice() : 20;
     await ev.say('inn_keeper', R.T('events.kasim_inn_keeper.say'));
-    const i = await ev.choose([R.T('events.kasim_inn_keeper.i.choose.0', { price }), R.T('events.kasim_inn_keeper.i.choose.1', { price }), R.T('events.kasim_inn_keeper.i.choose.2')], { cancel: 2 });
-    if (i === 2) return;
-    const ok = await ev.inn(price);
+    // 「朝の鐘まで？ 消灯の刻まで？」の問いに、宿の画面がそのまま答える（前は選択肢の後に「泊まる」だけの画面が重なった。テスター 2026-10-02 P37）
+    const ok = await ev.inn(price, { choices: R.T('events.kasim_inn_keeper.inn') });
     if (!ok) return;
+    const i = ok.pick;
     if (i === 1) {
       ev.setFlag('desert_night');
       const n = ev.addVar('desert_nights', 1);

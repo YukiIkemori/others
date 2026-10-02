@@ -53,6 +53,7 @@
     'battle.command.member.attack.label': '攻撃',
     'battle.command.member.res.subList': '{name} › 術',
     'battle.command.member.res.subList_2': '{name} › 道具',
+    'battle.command.member.spellAll': 'すべて',
     'battle.command.subList.head.name': '{name}の番',
     'battle.command.subList.head.sub': '{p0}の技を選ぶ（ねらいは前回の相手を覚えている）',
     'battle.command.subList.head.sub_2': '武器',
@@ -67,6 +68,7 @@
     'battle.command.subList.i.desc.text_3': '倒れた仲間がいない。',
     'battle.command.subList.i.desc.text_4': '武器でふつうに攻撃する。',
     'battle.command.subList.i.desc.sub': '　・　ねらい：{tn}',
+    'battle.command.subList.tabHint': '{l}{r} で種類を切り替え',
     // ---- src/systems/battle/demo.js
     'battle.demo.names.dg_frost_fang': '霜の牙の短剣',
     'battle.demo.names.mt_wolf_pelt': '氷狼の毛皮',
@@ -171,6 +173,7 @@
     'battle.hud.chips.w1.speedChip': '速さ：',
     'battle.hud.chips.w2.chip': 'リピート中：タップでやめる',
     'battle.hud.chips.w2.chip_2': 'リピート',
+    'battle.hud.chips.w2.chip_armed': 'リピート：次のラウンドから',
     'battle.hud.chips.w3.chip': '逃げる',
     // ---- src/systems/battle/result.js
     'battle.result.PROF_JA.sword': '剣',
@@ -221,6 +224,7 @@
     'battle.scene.intro.sub': 'めったに出会えない魔物だ！',
     'battle.scene.prompts.list.0.label': 'でやめる',
     'battle.scene.prompts.list.0.label_2': 'リピート',
+    'battle.scene.prompts.armed': 'リピート：次のラウンドから',
     'battle.scene.prompts.list.0.label_3': '速さ：{speedLabel}',
     'battle.scene.drawRepeatTag.label': 'リピート中：',
     'battle.scene.makeScene.battle.update.toast': 'リピート：OFF',

@@ -132,7 +132,9 @@
       this.list.render = (gg, row, rect, f) => {
         const sz = u(17.5);
         R.UIK.icon(gg, row.icon, rect.x + u(14), rect.y + (rect.h - sz) / 2, sz, f ? C.gold : C.text2);
-        R.UIK.text(gg, row.label, rect.x + u(46), rect.y + (rect.h - sz) / 2 - u(1), { size: sz, weight: f ? 700 : 500, color: f ? C.goldHi : C.text, maxW: rect.w - u(52) });
+        // 狭い横持ち（4:3 の 720 幅）で入らない名前は短い名前（縦持ちの札と同じ「年代記」など）に
+        const lab = row.short && R.UIK.measure(row.label, { size: sz, weight: 700 }) > rect.w - u(52) ? row.short : row.label;
+        R.UIK.text(gg, lab, rect.x + u(46), rect.y + (rect.h - sz) / 2 - u(1), { size: sz, weight: f ? 700 : 500, color: f ? C.goldHi : C.text, maxW: rect.w - u(52) });
       };
       this.list.draw(g, lr);
       const cur = this.rows[this.list.index];
@@ -169,8 +171,9 @@
       rowsR.forEach(([ic, lab, val, col], i) => {
         const yy = pr.y + u(18) + i * u(36);
         R.UIK.icon(g, ic, pr.x + u(18), yy, u(17), C.text2);
-        R.UIK.text(g, lab, pr.x + u(46), yy, { size: u(14), color: C.text2 });
-        R.UIK.text(g, val, pr.x + pr.w - u(18), yy - u(2), { size: u(i === 2 ? 16 : 17), weight: 700, color: col, align: 'right', maxW: pr.w - u(150) });
+        const lw2 = R.UIK.text(g, lab, pr.x + u(46), yy, { size: u(14), color: C.text2 });
+        // 値の幅は見出しの右から（狭い画面で「12,345…」にしない。それでも入らなければ字を縮める）
+        R.UIK.text(g, val, pr.x + pr.w - u(18), yy - u(2), { size: u(i === 2 ? 16 : 17), weight: 700, color: col, align: 'right', maxW: Math.max(pr.w - u(150), pr.w - u(46) - lw2 - u(30)) });
       });
       S.leadCard(g, { x: rx, y: pr.y + pr.h + u(14), w: rw, h: u(110) });
       const pp = [{ btn: 'a', label: R.T('ui.hub.menu.drawWide.pp.0.label') }, { btn: 'b', label: R.T('ui.hub.menu.drawWide.pp.1.label') }, { btn: 'x', label: R.T('ui.hub.menu.drawWide.pp.2.label') }];

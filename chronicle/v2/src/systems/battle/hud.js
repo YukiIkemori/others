@@ -347,7 +347,8 @@
       st.chipRects.speed = { x, y, w: w1, h: 22 * k }; x += w1 + 10 * k;
       const po = st.partyOpts || [];
       const on = !!(st.B && st.B.repeatOn);
-      const w2 = K.chip(g, x, y, on ? R.T('battle.hud.chips.w2.chip') : R.T('battle.hud.chips.w2.chip_2'), { icon: 'repeat', size: 12 * k, color: on ? COL.gold : po.includes('repeat') && st.phase === 'input' ? COL.text2 : COL.disabled, line: on ? 'rgba(236,201,124,0.7)' : undefined });
+      const armed = on && st.phase === 'input';   // 命令の窓の間に ON にした（次のラウンドから。Q9: 「リピート中」と出さない）
+      const w2 = K.chip(g, x, y, armed ? R.T('battle.hud.chips.w2.chip_armed') : on ? R.T('battle.hud.chips.w2.chip') : R.T('battle.hud.chips.w2.chip_2'), { icon: 'repeat', size: 12 * k, color: on ? COL.gold : po.includes('repeat') && st.phase === 'input' ? COL.text2 : COL.disabled, line: on ? 'rgba(236,201,124,0.7)' : undefined });
       st.chipRects.repeat = { x, y, w: w2, h: 22 * k }; x += w2 + 10 * k;
       if (!st.setup.noEscape && !(st.info && st.info.boss)) {   // ボス戦は逃げられない（BATTLE 34-11）: 札を出さない
         const w3 = K.chip(g, x, y, R.T('battle.hud.chips.w3.chip'), { icon: 'exit', size: 12 * k, color: po.includes('escape') ? COL.text2 : COL.disabled });

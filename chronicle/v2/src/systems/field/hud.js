@@ -231,7 +231,9 @@
       ry += U(62);
     }
     const mode = H.mapMode();
-    if (mode === 'mini') F.minimap.draw(g, tall ? cx0 : right - U(138), ry + U(2), U(138), U(150));
+    // 会話の窓・選択肢が出ている間は小地図を描かない（低い窓・縦持ちで窓や選択肢の札に重なった。テスト報告 P30）
+    const talking = !!(R.UIK.Message && R.UIK.Message.busy && R.UIK.Message.busy());
+    if (mode === 'mini' && !talking) F.minimap.draw(g, tall ? cx0 : right - U(138), ry + U(2), U(138), U(150));
     else if (mode === 'big') {
       // 大きな地図: 画面の中ほど（上の場所の札・下のボタン表示と重ならない高さ）。歩きながら見られる
       const ah = R.H - s.t - s.b - U(tall ? 260 : 150), aw = R.W - s.l - s.r - U(tall ? 24 : 120);

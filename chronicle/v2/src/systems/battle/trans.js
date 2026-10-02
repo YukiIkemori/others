@@ -50,6 +50,8 @@
   function snapshot() {
     const cv = R.Gfx && R.Gfx.canvas;
     if (!cv || typeof document === 'undefined' || !cv.width) return null;
+    // 今の場面を描き直してから写す（前のフレームには閉じたばかりのキャプションが残っていることがある。テスター 2026-10-01 P20）
+    try { if (R.Engine && R.Engine.render) R.Engine.render(); } catch (e) { /* 写しは前のフレームのまま */ }
     try {
       const c = document.createElement('canvas');
       c.width = cv.width; c.height = cv.height;

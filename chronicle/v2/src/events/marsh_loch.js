@@ -96,10 +96,10 @@
   // ---------------------------------------------------------------- 宿「霧笛亭」: 灯りの刻と消灯の刻（E9）
   E('loch_inn_keeper', async (ev) => {
     await ev.say('inn_keeper', cleared(ev) ? R.T('events.loch_inn_keeper.say') : R.T('events.loch_inn_keeper.say_2'));
-    const i = await ev.choose(R.T('events.loch_inn_keeper.i.choose'), { who: 'inn_keeper', text: R.T('events.loch_inn_keeper.i.choose.text') });
-    if (i === 2) return;
-    const ok = await ev.inn();
+    // いつまで休むかは宿の画面で選ぶ（選択肢の後に「泊まる」だけの画面を重ねない。テスター 2026-10-02 P37 と同じ）
+    const ok = await ev.inn(undefined, { choices: R.T('events.loch_inn_keeper.i.choose').slice(0, 2), text: R.T('events.loch_inn_keeper.i.choose.text') });
     if (!ok) return;
+    const i = ok.pick;
     ev.setFlag('marsh_night', i === 0);
     await ev.caption(i === 0 ? R.T('events.loch_inn_keeper.caption') : R.T('events.loch_inn_keeper.caption_2'), { ms: 2200 });
   }, { meta: { needs: [], gives: ['flag:marsh_night'] } });

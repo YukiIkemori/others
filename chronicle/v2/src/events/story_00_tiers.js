@@ -184,6 +184,15 @@
     return !!(rid && m && m.region && m.region !== rid);
   };
   S.mapId = (ctx) => (R.Field && R.Field.pos && R.Field.pos.map) || (ctx && ctx.map) || null;
+  /**
+   * ロウェルとの戦いの背景: 場面の町の地方に合う戦闘背景（町の門の外）。無い地方は街道（road）。
+   * テスター 2026-10-01 P38: 砂漠のカシムの広場でも、草地と石の城の背景（road）だった
+   */
+  const DUEL_BG = { r_desert: 'desert', r_snow: 'snow', r_marsh: 'marsh', r_isles: 'isles', r_mine: 'mine', r_ash: 'ash', r_star: 'star', r_forest: 'forest' };
+  S.duelBg = function (mapId) {
+    const m = mapId && R.DB.maps[mapId];
+    return (m && DUEL_BG[m.region]) || 'road';
+  };
 
   // ================================================================ 余白（§4.1-3・§4.3）
   S.margin = async function (ev, n) {

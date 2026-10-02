@@ -57,6 +57,11 @@
       await ev.say('fisher', R.T('events.yule_fisher.say'));
       ev.item('k_ice_saw', 1);
       ev.setFlag('snow_saw');
+    } else if (ev.flag('snow_ice_done') && ev.has('k_ice_saw')) {
+      // 切り終えたのこぎりは、トーレに話すと返る（前はその場で消えて「返しておこう」と合わなかった。テスター 2026-10-02 P11）
+      ev.take('k_ice_saw', 1);
+      await ev.say('fisher', R.T('events.yule_fisher.say_2'));
+      return;
     }
     await ev.call('snow_fishing_talk');
   }, { meta: { needs: [], gives: ['item:k_ice_saw', 'flag:snow_saw'], calls: ['snow_fishing_talk'] } });
@@ -65,7 +70,7 @@
     if (ev.flag('snow_ice_done')) { await ev.say(null, R.T('events.yule_pond_ice.say')); return; }
     if (!ev.flag('snow_saw')) { await ev.say(null, R.T('events.yule_pond_ice.say_2')); return; }
     await ev.say(null, R.T('events.yule_pond_ice.say_3'));
-    const r = (await ev.mini.timing({ title: R.T('events.yule_pond_ice.r.title'), speed: 1500, zones: [[0.38, 0.62]], tries: 3, theme: 'night' })) || { hits: 3 };
+    const r = (await ev.mini.timing({ title: R.T('events.yule_pond_ice.r.title'), sub: R.T('events.yule_pond_ice.r.sub'), speed: 1500, zones: [[0.38, 0.62]], tries: 3, theme: 'night' })) || { hits: 3 };
     if (r.hits >= 2) {
       ev.sfx('item');
       ev.addVar('snow_ice_blocks', r.hits);
@@ -74,8 +79,7 @@
       await ev.caption(R.T('events.yule_pond_ice.caption_2'), { ms: 1600 });
     }
     if (ev.var('snow_ice_blocks') >= 3) {
-      ev.take('k_ice_saw', 1);
-      ev.item('k_ice_blocks', 1);
+      ev.item('k_ice_blocks', 1);   // のこぎりは持ったまま（トーレに話して返す。yule_fisher）
       ev.setFlag('snow_ice_done');
       await ev.caption(R.T('events.yule_pond_ice.caption_3'), { ms: 2400 });
     }
@@ -111,7 +115,9 @@
     ev.sfx('roar');
     try { R.Field.shake(4, 600); } catch (e) { /* */ }
     await ev.caption(R.T('events.snow_festival.caption_6'), { ms: 2600 });
+    await ev.npc('hald').face('n');   // 見張りのハルドは大かまどの西にいる（画面の中で叫ぶ。テスター 2026-10-02 P19）
     await ev.caption(R.T('events.snow_festival.caption_7'), { ms: 2400 });
+    await ev.npc('hald').face('hero');
     await ev.say('hald', R.T('events.snow_festival.say_5'), { voice: ['v_hald_snow_01', 'v_hald_snow_02'] });
     await ev.say('jorn', R.T('events.snow_festival.say_6'), { voice: ['v_jorn_snow_07', 'v_jorn_snow_08'] });   // 2 つ目は名前を読まない
     ev.leadDone('l_snow_prep');
@@ -134,6 +140,15 @@
   };
   const PICKS = R.T('ev.snow_festival.PICKS');
   const G_OF = ['n', 'e', 'w'];
+  // 吹雪の大狼の姿（地図の NPC bwolf。ふだんは隠れていて、3 波目の場面でだけ出す。テスター 2026-10-02 P21「姿を現したのにマップにいない」）
+  //   門で迎え撃つ: その門の外から一行の前へ。破られた: 破られた門の側の道から大かまどの前へ
+  const WOLF_GATE = { n: { at: [27, 2], from: [27, 0], dir: 's' }, w: { at: [2, 29], from: [0, 29], dir: 'e' }, e: { at: [53, 28], from: [55, 28], dir: 'w' } };
+  const WOLF_HEARTH = { n: { at: [34, 27], from: [40, 27], dir: 'w' }, w: { at: [21, 27], from: [16, 27], dir: 'e' }, e: { at: [34, 27], from: [40, 27], dir: 'w' } };
+  async function bwolfShow(ev, p) {
+    await ev.npc('bwolf').setPos(p.at[0], p.at[1]);
+    ev.sfx('roar');
+    await ev.appear('bwolf', { from: p.from, dir: p.dir, speed: 0.8 });
+  }
   E('snow_siege_wave', async (ev) => {
     const x = X();
     if (ev.flag('snow_siege_done')) return;
@@ -186,6 +201,11 @@
     const bossGate = und[0];
     let k;
     if (g === bossGate) {
+      // 読み当てた: 前の 3 波目で外して破られた印が残っていれば消す（1・2 波で破られた門はそのまま。テスター 2026-10-02 Q12
+      //   「西の門を読み当てて守ったのに、朝に『西の門は、ひどくやられた』」）
+      const early = (bossGate === 'n' && ev.choiceOf('ch_snow_gate_1') !== 'n') || (bossGate === 'e' && ev.choiceOf('ch_snow_gate_2') !== 'e');
+      if (!early) ev.setFlag('snow_gate_' + bossGate + '_broken', false);
+      await bwolfShow(ev, WOLF_GATE[g]);
       await ev.caption(R.T('events.snow_siege_wave.caption_5'), { ms: 2200 });
       k = Math.max(0, und.length - 1);
     } else {
@@ -197,11 +217,14 @@
       await ev.fade('out', 300);
       await ev.warp('yule_night', 'hearth');
       k = Math.min(2, und.length);
+      ev.bgm('omen');
+      await bwolfShow(ev, WOLF_HEARTH[bossGate]);
     }
     ev.bgm('omen');
     await ev.say(null, R.T('events.snow_siege_wave.say_5'));
     if (k > 0) await ev.say(null, k > 1 ? R.T('events.snow_siege_wave.say_6') : R.T('events.snow_siege_wave.say_7'));
     const r = await ev.battle(['tr_b_blizzardwolf_0', 'tr_b_blizzardwolf_1', 'tr_b_blizzardwolf_2'][k], { boss: true });
+    await ev.npc('bwolf').hide();   // 戦いの後は地図の大狼を消す（勝てば群れは散る。負け・逃げはまた村長に話して始める）
     if (r !== 'win') return;
     ev.setFlag('snow_bwolf');
     ev.addVar('snow_wave', 1);
@@ -262,9 +285,18 @@
       ev.setFlag('snow_ice_1');
       await ev.say('sonja', R.T('events.snow_dawn.say_4'));
     }
+    // 村長の言葉: 3 波目の大狼を読み当てたか（その門で迎え撃った）、外したか（その門が破られた）で分ける（テスター 2026-10-02 Q12）。
+    //   読み当てたときは、その門のことを「破られた」とは言わない（1・2 波で破られていれば「その前の波で」と言う）
+    const bossGate = X().undefended(ev)[0];
+    const read = !!bossGate && ev.choiceOf('ch_snow_gate_3') === bossGate;
     const broken = ['n', 'e', 'w'].filter((g) => ev.flag('snow_gate_' + g + '_broken'));
-    if (broken.length) await ev.say('jorn', [R.T('events.snow_dawn.say.0', { join: broken.map((g) => X().GATES[g]).join(R.T('events.snow_dawn.say.0.join')) }), R.T('events.snow_dawn.say.1')], { name: R.T('events.snow_dawn.say.name_2') });
-    else await ev.say('jorn', R.T('events.snow_dawn.say_5'), { name: R.T('events.snow_dawn.say.name_2') });
+    const join = broken.map((g) => X().GATES[g]).join(R.T('events.snow_dawn.say.0.join'));
+    const lines = [];
+    if (read) lines.push(R.T('events.snow_dawn.read', { gate: X().GATES[bossGate] }));
+    else if (bossGate && ev.flag('snow_gate_' + bossGate + '_broken')) lines.push(R.T('events.snow_dawn.miss', { gate: X().GATES[bossGate] }));
+    if (broken.length) lines.push(R.T(read ? 'events.snow_dawn.say.0_read' : 'events.snow_dawn.say.0', { join }), R.T('events.snow_dawn.say.1'));
+    else lines.push(...[].concat(R.T('events.snow_dawn.say_5')));
+    await ev.say('jorn', lines, { name: R.T('events.snow_dawn.say.name_2') });
     // 見張り台の上（watch）は高台で、下りる段が無い。場面が終わったら大かまどの前へ戻す
     // （持ち主 2026-10-01「狼のボスを倒すと村の北のどこからも出られない所から再開して詰む」）
     await ev.fade('out', 500);

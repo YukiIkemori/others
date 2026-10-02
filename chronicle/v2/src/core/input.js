@@ -318,6 +318,8 @@
       };
       const target = document;
       target.addEventListener('pointerdown', (e) => {
+        // 文字の欄（合言葉の textarea など）の上の押しはゲームに流さない（右クリックが B＝戻るになり、貼り付けようとして画面が閉じた。テスター 2026-10-02 P1）
+        if (isField(e.target)) return;
         fireAny();
         setDevice(e.pointerType === 'touch' || e.pointerType === 'pen' ? 'touch' : 'mouse');
         const p = toLogical(e);
@@ -340,7 +342,7 @@
       };
       target.addEventListener('pointerup', up);
       target.addEventListener('pointercancel', up);
-      target.addEventListener('contextmenu', (e) => e.preventDefault());
+      target.addEventListener('contextmenu', (e) => { if (!isField(e.target)) e.preventDefault(); });   // 文字の欄では右クリックの「貼り付け」を使える
       target.addEventListener('wheel', (e) => { pev.wheel += e.deltaY; }, { passive: true });
       if (R.Engine && R.Engine.overlay) R.Engine.overlay('touchpad', drawTouch, 90);
     },

@@ -6,7 +6,7 @@
   w_greatsword_sr_eraser: {
     name: R.T('items.w_greatsword_sr_eraser.name'),
     grade: 'super',
-    tier: 8,
+    tier: 9,   // 8 → 9（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     wtype: 'greatsword',
     units: 's2',
     onHit: { status: 'silence', chance: 0.3 },
@@ -145,7 +145,7 @@
   w_sword_sr_admiral: {
     name: R.T('items.w_sword_sr_admiral.name'),
     grade: 'super',
-    tier: 8,
+    tier: 9,   // 8 → 9（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     wtype: 'sword',
     units: 's2',
     crit: 10,
@@ -384,7 +384,7 @@
   w_greatsword_blank: {
     name: R.T('items.w_greatsword_blank.name'),
     grade: 'rare',
-    tier: 7,
+    tier: 9,   // 7 → 9（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     wtype: 'greatsword',
     units: 's2',
     onHit: { status: 'silence', chance: 0.2 },
@@ -414,7 +414,7 @@
   w_sword_sand: {
     name: R.T('items.w_sword_sand.name'),
     grade: 'rare',
-    tier: 7,
+    tier: 8,   // 7 → 8（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     wtype: 'sword',
     units: 's1d1',
     element: 'earth',
@@ -430,7 +430,7 @@
   w_greatsword_dune: {
     name: R.T('items.w_greatsword_dune.name'),
     grade: 'rare',
-    tier: 7,
+    tier: 8,   // 7 → 8（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     wtype: 'greatsword',
     units: 's2',
     element: 'earth',
@@ -446,7 +446,7 @@
   w_sword_moon: {
     name: R.T('items.w_sword_moon.name'),
     grade: 'rare',
-    tier: 7,
+    tier: 8,   // 7 → 8（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     wtype: 'sword',
     units: 's1d1',
     element: 'dark',
@@ -462,7 +462,7 @@
   w_dagger_wolfking: {
     name: R.T('items.w_dagger_wolfking.name'),
     grade: 'rare',
-    tier: 7,
+    tier: 9,   // 7 → 9（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     wtype: 'dagger',
     units: 's1a1',
     crit: 10,
@@ -476,7 +476,7 @@
   w_sword_bellringer: {
     name: R.T('items.w_sword_bellringer.name'),
     grade: 'rare',
-    tier: 7,
+    tier: 8,   // 7 → 8（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     wtype: 'sword',
     units: 's2',
     onHit: { status: 'stun', chance: 0.15 },
@@ -489,7 +489,7 @@
   w_sword_tide: {
     name: R.T('items.w_sword_tide.name'),
     grade: 'rare',
-    tier: 7,
+    tier: 8,   // 7 → 8（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     wtype: 'sword',
     units: 's1d1',
     element: 'water',
@@ -505,7 +505,7 @@
   w_greatsword_forgehammer: {
     name: R.T('items.w_greatsword_forgehammer.name'),
     grade: 'rare',
-    tier: 7,
+    tier: 8,   // 7 → 8（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     wtype: 'greatsword',
     units: 's1v1',
     mods: { physPct: 8 },
@@ -522,7 +522,7 @@
   w_sword_ash: {
     name: R.T('items.w_sword_ash.name'),
     grade: 'rare',
-    tier: 7,
+    tier: 8,   // 7 → 8（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     wtype: 'sword',
     units: 's1d1',
     element: 'fire',
@@ -538,7 +538,7 @@
   w_greatsword_brimstone: {
     name: R.T('items.w_greatsword_brimstone.name'),
     grade: 'rare',
-    tier: 7,
+    tier: 8,   // 7 → 8（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     wtype: 'greatsword',
     units: 's1a1',
     element: 'fire',
@@ -555,7 +555,7 @@
   w_sword_starblade: {
     name: R.T('items.w_sword_starblade.name'),
     grade: 'rare',
-    tier: 7,
+    tier: 8,   // 7 → 8（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     wtype: 'sword',
     units: 's2',
     element: 'light',
@@ -581,7 +581,7 @@
   w_staff_sr_goldquill: {
     name: R.T('items.w_staff_sr_goldquill.name'),
     grade: 'super',
-    tier: 8,
+    tier: 9,   // 8 → 9（持ち主 2026-10-02「レアは同じ時点の店の品よりはっきり強く」。tools/check_rare_vs_shop.js）
     wtype: 'staff',
     units: 'i2',
     mods: { mag: 31, glimPct: { spell: 20 }, mpCostPct: -15 },

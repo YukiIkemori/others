@@ -42,9 +42,15 @@
     O.push({ type: 'brazier', id: 'snow_woods_camp', x: 27, y: 24, on: true });
     O.push(K.prop('tent', 29, 21), K.prop('firewood', 21, 26), K.prop('sled', 28, 26), K.prop('log', 22, 24));
     // 倒木
-    O.push(K.prop('log', 8, 23), K.prop('log', 9, 23), K.exam(8, 24, 'snow_woods_log', { log: 1 }));
-    O.push(K.prop('log', 26, 7), K.prop('log', 27, 7), K.exam(27, 8, 'snow_woods_log', { log: 2 }));
-    O.push(K.prop('log', 43, 21), K.prop('log', 44, 21), K.exam(43, 22, 'snow_woods_log', { log: 3 }));
+    //   切って運んだ倒木（旗 snow_log_<n>）は絵も「調べる」も消える（前は切った後も残った。テスター 2026-10-02 P13）
+    const fallen = (n, pts, ex) => {
+      const c = '!snow_log_' + n;
+      for (const [x, y] of pts) O.push(K.prop('log', x, y, { cond: c }));
+      O.push(K.exam(ex[0], ex[1], 'snow_woods_log', { log: n, cond: c }));
+    };
+    fallen(1, [[8, 23], [9, 23]], [8, 24]);
+    fallen(2, [[26, 7], [27, 7]], [27, 8]);
+    fallen(3, [[43, 21], [44, 21]], [43, 22]);
     O.push(K.prop('stump', 10, 26), K.prop('stump', 23, 9), K.prop('stump', 40, 24));
     O.push(K.prop('bush', 37, 22, { variant: 2 }), K.exam(37, 23, 'snow_mat', { mat: 'snow_mat_berry' }));   // 雪像の飾り: 赤い実（西の木ぎわ。木との間にすきまを残さない）
     // 宝箱

@@ -52,6 +52,7 @@
     'battle.command.member.attack.label': '공격',
     'battle.command.member.res.subList': '{name} › 술법',
     'battle.command.member.res.subList_2': '{name} › 도구',
+    'battle.command.member.spellAll': '전체',
     'battle.command.subList.head.name': '{name}의 차례',
     'battle.command.subList.head.sub': '{p0} 기술을 고른다(대상은 지난번 상대를 기억한다)',
     'battle.command.subList.head.sub_2': '무기',
@@ -66,6 +67,7 @@
     'battle.command.subList.i.desc.text_3': '쓰러진 동료가 없다.',
     'battle.command.subList.i.desc.text_4': '무기로 평범하게 공격한다.',
     'battle.command.subList.i.desc.sub': '　·　대상: {tn}',
+    'battle.command.subList.tabHint': '{l}{r} 종류 전환',
     // ---- src/systems/battle/demo.js
     'battle.demo.names.dg_frost_fang': '서리송곳니 단검',
     'battle.demo.names.mt_wolf_pelt': '얼음늑대 모피',
@@ -170,6 +172,7 @@
     'battle.hud.chips.w1.speedChip': '속도:',
     'battle.hud.chips.w2.chip': '반복 중: 탭하면 멈춤',
     'battle.hud.chips.w2.chip_2': '반복',
+    'battle.hud.chips.w2.chip_armed': '반복: 다음 라운드부터',
     'battle.hud.chips.w3.chip': '도망친다',
     // ---- src/systems/battle/result.js
     'battle.result.PROF_JA.sword': '검',
@@ -220,6 +223,7 @@
     'battle.scene.intro.sub': '좀처럼 만날 수 없는 마물이다!',
     'battle.scene.prompts.list.0.label': '로 멈춤',
     'battle.scene.prompts.list.0.label_2': '반복',
+    'battle.scene.prompts.armed': '반복: 다음 라운드부터',
     'battle.scene.prompts.list.0.label_3': '속도: {speedLabel}',
     'battle.scene.drawRepeatTag.label': '반복 중:',
     'battle.scene.makeScene.battle.update.toast': '반복: OFF',

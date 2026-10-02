@@ -5,7 +5,7 @@
 //       symbols 3〜5（既定 4）・rounds 節の数（既定 3）・start 最初の節の音の数（既定 3、節ごとに +1）・tempo 1 音の ms（既定 560）・
 //       theme 'forest'|'harbor'|'night'（色）。まちがえたらその節は終わり（次の節へ）。B で途中でやめる（残りは 0）。
 //       score = 正しくくり返した音の数 ÷ 全部の音の数 × 100（整数）。rank S（100）・A（80 以上）・B（50 以上）・C
-//   R.Mini.timing({title, speed, zones, tries}) → Promise<{hits, rank, tries}>   動く印が帯の「当たり」にある間に A（縦切りでは部品だけ）
+//   R.Mini.timing({title, sub, speed, zones, tries, theme}) → Promise<{hits, rank, tries}>   動く印が帯の「当たり」にある間に A（縦切りでは部品だけ）
 //       zones = [[a, b]…]（帯の 0〜1 の範囲。既定 [[0.42, 0.58]]）・speed 1 往復の ms（既定 1400）・tries（既定 3）
 //   場面の id は 'mini:sequence'・'mini:timing'（フィールドの上に重ねる。opaque ではない）。R.Mini.state() はテスト用
 (function (R) {
@@ -308,7 +308,7 @@
     const speed = Math.max(500, o.speed || 1400);
     const th = THEMES[o.theme] || THEMES.harbor;
     return new Promise((resolve) => {
-      const st = { kind: 'timing', title: o.title || R.T('sys.minigame.timing.st.title'), th, zones, tries, speed, phase: 'input', t0: 0, phaseT: 0, hits: 0, n: 0, marks: [], lit: -1 };
+      const st = { kind: 'timing', title: o.title || R.T('sys.minigame.timing.st.title'), sub: o.sub || null, th, zones, tries, speed, phase: 'input', t0: 0, phaseT: 0, hits: 0, n: 0, marks: [], lit: -1 };
       live = st;
       const scene = {
         id: 'mini:timing', opaque: false,
@@ -347,7 +347,8 @@
   }
   function drawTiming(g, st) {
     const U = R.UIK.u, C = R.UIK.T.color;
-    const P = frame(g, st, st.title, R.T('sys.minigame.drawTiming.P.frame', { sub: st.th.sub }));
+    // 副題: o.sub（場面の名）があれば「〇〇 · 間合い」、無ければ「間合い」だけ（前は色の型の「夜の歌」が付き、氷の切り出しに合わなかった。テスター 2026-10-02 P10）
+    const P = frame(g, st, st.title, st.sub ? R.T('sys.minigame.drawTiming.P.frame', { sub: st.sub }) : R.T('sys.minigame.timing.st.title'));
     const { x, y, w, h } = P;
     g.save(); g.globalAlpha = P.a;
     const bx = x + U(40), bw = w - U(80), by = y + h / 2 - U(10), bh = U(20);
