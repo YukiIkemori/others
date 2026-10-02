@@ -32,7 +32,7 @@ python3 - "$WORK/public/index.html" "$BUILD_ID" <<'PY2'
 import sys
 p, b = sys.argv[1], sys.argv[2]
 s = open(p, encoding='utf8').read()
-if 'window.RPG_BUILD' not in s:
+if '<script>window.RPG_BUILD=' not in s:
     s = s.replace('<head>', '<head><script>window.RPG_BUILD="%s";</script>' % b, 1)
 open(p, 'w', encoding='utf8').write(s)
 PY2
