@@ -349,6 +349,8 @@
     'sys.battle_core.restore.m': '{name}の{L}が{got}回復した！',
     'sys.battle_core.restore.m_2': 'しかし効き目がなかった。',
     'sys.battle_core.defendRest.both': '{name}のHPが{hp}、MPが{mp}回復した！',
+    'sys.battle_core.defendRest.all': '{names}の{L}が少し回復した！',
+    'sys.battle_core.defendRest.hpmp': 'HPとMP',
     'sys.battle_core.enrage': '{name}が怒り狂った！',
     'sys.battle_core.enrage.serious': '{name}が本気になった！',
     'sys.battle_core.inflict.fail.m': '{name}には効き目がなかった。',

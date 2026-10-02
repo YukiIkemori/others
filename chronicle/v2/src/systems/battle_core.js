@@ -630,14 +630,20 @@
       order.sort((a, b) => b.v - a.v);
       this.pending = order.filter((s) => s.u.isParty && s.cmd);
       this.slots = order;   // 合体技: まだ動いていない手番（done）と、合体技に使われた手番（spent）
-      for (const s of order) {
+      this.restQ = [];      // 防御の回復: 続けて守った人をまとめて 1 拍で（持ち主 2026-10-02）
+      const guards = (s) => !!(s && s.u.isParty && s.u.alive && s.cmd && s.cmd.type === 'defend' && s.u.commandable());
+      for (let i = 0; i < order.length; i++) {
+        const s = order[i];
         if (this.checkEnd()) break;
         if (s.u.isParty) this.pending = this.pending.filter((x) => x !== s);
         s.done = true;
-        if (!s.u.alive) continue;
+        if (!s.u.alive) { if (!guards(order[i + 1])) yield* this.flushRest(); continue; }
         if (s.spent) { yield* this.spentTurn(s.u); continue; }
         yield* this.turn(s.u, s.cmd);
+        if (!guards(order[i + 1])) yield* this.flushRest();
       }
+      if (!this.checkEnd()) yield* this.flushRest();
+      this.restQ = null;
       this.pending = null;
       this.slots = null;
       this.guardedLast = this.party.some((p) => p.alive && p.defending);   // 行動の cond.partyGuarded（このラウンドに味方の誰かが守った）
@@ -824,7 +830,7 @@
           if (u.isParty && !cmd.confused && !this.canReach(u)) {
             u.defending = true;
             yield this.m(R.T('sys.battle_core.execute.m', { name: u.name }));
-            yield* this.defendRest(u);   // 届かずに守った時も、防御と同じ小さな回復
+            if (u.isParty) yield* this.queueRest(u);   // 届かずに守った時も、防御と同じ小さな回復
             return;
           }
           const r = yield* this.attack(u, cmd.target, { confused: cmd.confused });
@@ -835,7 +841,7 @@
           u.defending = true;
           yield { t: 'fx', fx: 'defend', user: u, targets: [u], kind: 'defend', cmd: 'defend', id: 'defend', name: R.T('sys.battle_core.execute.defend.name') };
           yield this.m(R.T('sys.battle_core.execute.m', { name: u.name }));
-          if (u.isParty) yield* this.defendRest(u);
+          if (u.isParty) yield* this.queueRest(u);
           return;
         case 'wait':
           yield this.m(R.T('sys.battle_core.execute.m_2', { name: u.name }));
@@ -1465,15 +1471,43 @@
       }
     }
 
-    /** 防御の小さな回復（持ち主 2026-10-02）: 最大 HP・最大 MP の DEFEND_REST ずつ（最大が 0 より大きければ最低 1）。味方だけ・倒れていれば無し */
-    *defendRest(u) {
-      if (!u || !u.isParty || !u.alive) return;
+    /**
+     * 防御の小さな回復（持ち主 2026-10-02）: 最大 HP・最大 MP の DEFEND_REST ずつ（最大が 0 より大きければ最低 1）。味方だけ・倒れていれば無し。
+     * us = 1 人か配列。ラウンドの中では守った人をまとめて 1 拍で（heal の group。演出は同時に出し、文は 1 行）
+     */
+    *defendRest(us) {
+      const list = (Array.isArray(us) ? us : [us]).filter((u) => u && u.isParty && u.alive);
+      if (!list.length) return;
       const D = K('DEFEND_REST') || {};
       const amt = (max, r) => (max > 0 ? Math.max(1, Math.floor(max * (+r || 0))) : 0);
-      const hp = u.mhp > 0 && u.hp < u.mhp ? yield* this.restore(u, amt(u.mhp, D.hp), 'hp', 'quiet') : 0;
-      const mp = u.mmp > 0 && u.mp < u.mmp ? yield* this.restore(u, amt(u.mmp, D.mp), 'mp', 'quiet') : 0;
-      if (hp > 0 && mp > 0) yield this.m(R.T('sys.battle_core.defendRest.both', { name: u.name, hp, mp }));
-      else if (hp > 0 || mp > 0) yield this.m(R.T('sys.battle_core.restore.m', { name: u.name, L: hp > 0 ? 'HP' : 'MP', got: hp > 0 ? hp : mp }));
+      const got = [];
+      for (const u of list) {
+        let hp = 0, mp = 0;
+        if (u.mhp > 0 && u.hp < u.mhp) { hp = Math.min(u.mhp - u.hp, amt(u.mhp, D.hp)); u.hp += hp; }
+        if (u.mmp > 0 && u.mp < u.mmp) { mp = Math.min(u.mmp - u.mp, amt(u.mmp, D.mp)); u.mp += mp; }
+        if (hp > 0) yield { t: 'heal', u, n: hp, mp: false, group: true };
+        if (mp > 0) yield { t: 'heal', u, n: mp, mp: true, group: true };
+        if (hp > 0 || mp > 0) got.push({ u, hp, mp });
+      }
+      if (got.length > 1) {
+        const anyH = got.some((g) => g.hp > 0), anyM = got.some((g) => g.mp > 0);
+        const L = anyH && anyM ? R.T('sys.battle_core.defendRest.hpmp') : anyH ? 'HP' : 'MP';
+        yield this.m(R.T('sys.battle_core.defendRest.all', { names: got.map((g) => g.u.name).join(R.T('sys.battle_core.combo.join')), L }));
+      } else if (got.length === 1) {
+        const { u, hp, mp } = got[0];
+        if (hp > 0 && mp > 0) yield this.m(R.T('sys.battle_core.defendRest.both', { name: u.name, hp, mp }));
+        else yield this.m(R.T('sys.battle_core.restore.m', { name: u.name, L: hp > 0 ? 'HP' : 'MP', got: hp > 0 ? hp : mp }));
+      }
+    }
+    /** ラウンドの中: 守った人の回復をためておく（restQ。続けて守る人の手番が終わったら flushRest でまとめて） */
+    *queueRest(u) {
+      if (this.slots && this.restQ) { if (!this.restQ.includes(u)) this.restQ.push(u); return; }
+      yield* this.defendRest(u);
+    }
+    *flushRest() {
+      if (!this.restQ || !this.restQ.length) return;
+      const l = this.restQ.splice(0);
+      yield* this.defendRest(l);
     }
 
     *restore(t, n, kind, how) {
@@ -2177,7 +2211,7 @@
         out.push(e);
         break;
       }
-      case 'heal': out.push({ t: 'heal', uid: uidOf(ev.u), n: ev.n, mp: !!ev.mp }); break;
+      case 'heal': out.push(ev.group ? { t: 'heal', uid: uidOf(ev.u), n: ev.n, mp: !!ev.mp, group: true } : { t: 'heal', uid: uidOf(ev.u), n: ev.n, mp: !!ev.mp }); break;   // group: 同じ拍の回復（防御）
       case 'miss': out.push(ev.parry ? { t: 'miss', uid: uidOf(ev.u), parry: true } : { t: 'miss', uid: uidOf(ev.u) }); break;
       case 'die': out.push({ t: 'ko', uid: uidOf(ev.u) }); break;
       case 'revive': out.push({ t: 'revive', uid: uidOf(ev.u), hp: ev.u ? ev.u.hp : 0 }); break;   // 起き上がった後の HP（演出の HP を 0 のままにしない）

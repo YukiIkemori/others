@@ -348,6 +348,8 @@
     'sys.battle_core.restore.m': '{name}的{L}恢復了{got}！',
     'sys.battle_core.restore.m_2': '但是沒有效果。',
     'sys.battle_core.defendRest.both': '{name}的HP恢復了{hp}，MP恢復了{mp}！',
+    'sys.battle_core.defendRest.all': '{names}的{L}恢復了一些！',
+    'sys.battle_core.defendRest.hpmp': 'HP和MP',
     'sys.battle_core.enrage': '{name}陷入了狂怒！',
     'sys.battle_core.enrage.serious': '{name}認真起來了！',
     'sys.battle_core.inflict.fail.m': '對{name}沒有效果。',

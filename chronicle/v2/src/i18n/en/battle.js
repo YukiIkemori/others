@@ -349,6 +349,8 @@
     'sys.battle_core.restore.m': '{name} recovered {got} {L}!',
     'sys.battle_core.restore.m_2': 'But it had no effect.',
     'sys.battle_core.defendRest.both': '{name} recovered {hp} HP and {mp} MP!',
+    'sys.battle_core.defendRest.all': '{names} recovered a little {L}!',
+    'sys.battle_core.defendRest.hpmp': 'HP and MP',
     'sys.battle_core.enrage': '{name} flies into a rage!',
     'sys.battle_core.enrage.serious': '{name} is getting serious!',
     'sys.battle_core.inflict.fail.m': 'It had no effect on {name}.',

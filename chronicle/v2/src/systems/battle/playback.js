@@ -586,8 +586,12 @@
     const a = st.actor(e.uid);
     if (a && !seqHitOnce(st, ctx, e.uid)) P.fx(st, e.mp ? 'mp' : 'heal', a.x, a.y - 40, {});
     P.pop(st, e.uid, '+' + (e.n | 0).toLocaleString('en-US'), e.mp ? 'mp' : 'heal');
-    sfx('heal');
-    await st.pwait(220);
+    // group（防御の回復）: 続く group の回復と同じ拍に出す（音は 1 回、待つのは最後だけ）
+    const nx = e.group && st._evs ? st._evs[st._evi + 1] : null;
+    const more = !!(nx && nx.t === 'heal' && nx.group);
+    if (!ctx.healBeat) sfx('heal');
+    ctx.healBeat = more;
+    if (!more) await st.pwait(220);
   };
   H.miss = async (st, e) => {
     const v = st.vis[e.uid], u = st.unit(e.uid);
