@@ -95,5 +95,6 @@
     'sys.wayfind.KIND.records.ja': '记录院',
     'sys.wayfind.KIND.hall.ja': '集会所',
     'sys.wayfind.KIND.map.ja': '地图店',
+    'sys.update.available': '新版本已发布。请在方便时存档，然后重新载入页面。',
   });
 })(window.RPG);

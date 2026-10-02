@@ -95,5 +95,6 @@
     'sys.wayfind.KIND.records.ja': '기록원',
     'sys.wayfind.KIND.hall.ja': '집회소',
     'sys.wayfind.KIND.map.ja': '지도 가게',
+    'sys.update.available': '새 버전이 공개되었습니다. 적당한 때에 저장하고 페이지를 다시 불러와 주세요.',
   });
 })(window.RPG);

@@ -96,5 +96,6 @@
     'sys.wayfind.KIND.records.ja': '記録院',
     'sys.wayfind.KIND.hall.ja': '集会所',
     'sys.wayfind.KIND.map.ja': '地図屋',
+    'sys.update.available': '新しい版が公開されました。きりのいいところでセーブして、ページを読み込み直してください',
   });
 })(window.RPG);

@@ -96,5 +96,6 @@
     'sys.wayfind.KIND.records.ja': 'Archive',
     'sys.wayfind.KIND.hall.ja': 'Meeting Hall',
     'sys.wayfind.KIND.map.ja': 'Map shop',
+    'sys.update.available': 'A new version is out. Save when convenient, then reload the page.',
   });
 })(window.RPG);

@@ -25,6 +25,17 @@ if [ -n "$FULL" ]; then
 fi
 node tools/build.js > /dev/null
 python3 tools/pack_web.py --dist dist --out "$WORK/public" --scope "$SCOPE" --no-size-limits > "$WORK/pack.log" 2>&1 || { tail -20 "$WORK/pack.log"; exit 1; }
+# 版の札: 遊んでいる途中の人に「新しい版が出た」と知らせるため（src/systems/update_check.js が version.json と比べる）
+BUILD_ID="$(git -C "$ROOT" rev-parse --short HEAD)-$(date -u +%Y%m%d%H%M)"
+printf '{"build":"%s"}\n' "$BUILD_ID" > "$WORK/public/version.json"
+python3 - "$WORK/public/index.html" "$BUILD_ID" <<'PY2'
+import sys
+p, b = sys.argv[1], sys.argv[2]
+s = open(p, encoding='utf8').read()
+if 'window.RPG_BUILD' not in s:
+    s = s.replace('<head>', '<head><script>window.RPG_BUILD="%s";</script>' % b, 1)
+open(p, 'w', encoding='utf8').write(s)
+PY2
 GA4_ID=${GA4_ID:-G-GKKGJ8PJR8}   # GA4 の測定 ID（Firebase のウェブアプリ Luminous Chronicle）
 if [ -n "${GA4_ID:-}" ] && [ -z "$FULL" ]; then
   python3 - "$WORK/public/index.html" "$GA4_ID" <<'PY'
