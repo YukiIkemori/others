@@ -2193,7 +2193,12 @@
       case 'summon': for (const i of ev.units || []) out.push({ t: 'summon', uid: 'e_' + i, mon: eng && eng.mons[i] ? eng.mons[i].id : null, by: uidOf(ev.by) }); break;
       case 'flee': out.push({ t: 'flee', uid: uidOf(ev.u) }); break;
       case 'phase': if (ev.text) out.push({ t: 'msg', text: ev.text, phase: true, uid: uidOf(ev.u) }); break;
-      case 'enrage': out.push({ t: 'msg', text: R.T('sys.battle_core.enrage', { name: ev.u ? ev.u.name : '' }), enrage: true, uid: uidOf(ev.u) }); break;   // 暴走（赤い光・揺れ・BGM の速さは BSCENE）
+      case 'enrage': {
+        // 暴走（赤い光・揺れ・BGM の速さは BSCENE）。人・会話のある相手（d.enrageText 'serious'）は「本気になった！」で、光は軽く唸りなし
+        const serious = !!(ev.u && ev.u.d && ev.u.d.enrageText === 'serious');
+        out.push({ t: 'msg', text: R.T(serious ? 'sys.battle_core.enrage.serious' : 'sys.battle_core.enrage', { name: ev.u ? ev.u.name : '' }), enrage: serious ? 'serious' : true, uid: uidOf(ev.u) });
+        break;
+      }
       case 'steal': out.push({ t: 'steal', uid: uidOf(ev.u), target: uidOf(ev.target), item: null }); break;
       case 'gain':
         out.push({ t: 'steal', uid: uidOf(ev.u), target: uidOf(ev.target), item: ev.item, grade: ev.grade, stealOnly: !!ev.stealOnly });

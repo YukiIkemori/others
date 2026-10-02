@@ -733,16 +733,17 @@
   };
   /** 暴走モード（持ち主 2026-10-02）: 赤い光・揺れ・唸り・赤い見出し「〜が怒り狂った！」、BGM をこの戦闘の終わりまで速く（高さはそのまま） */
   P.ENRAGE_TEMPO = 1.13;
+  //   e.enrage 'serious'（人・会話のある相手）: 「本気になった！」。光は軽く、揺れは小さく、唸りなし（BGM の速さは同じ）
   P.enrage = async (st, e) => {
-    const rm = reduce();
-    st.rage = { t0: R.Engine.time, ms: (rm ? 500 : 900) / Math.max(1, st.speed ? st.speed() : 1), r: rm };
+    const rm = reduce(), soft = e.enrage === 'serious';
+    st.rage = { t0: R.Engine.time, ms: (rm ? 500 : soft ? 650 : 900) / Math.max(1, st.speed ? st.speed() : 1), r: rm, soft };
     st.enraged = (st.enraged || 0) + 1;
     const v = e.uid != null && st.vis[e.uid];
-    if (v) { v.flash = 1; v.flashHold = R.Engine.time + 120; }
-    if (!rm && R.Settings.get('shake') !== 'off') st.shake = { t0: R.Engine.time, ms: 560, amp: 7 };
-    sfx('roar');
+    if (v) { v.flash = soft ? 0.7 : 1; v.flashHold = R.Engine.time + (soft ? 60 : 120); }
+    if (!rm && R.Settings.get('shake') !== 'off') st.shake = { t0: R.Engine.time, ms: soft ? 300 : 560, amp: soft ? 3 : 7 };
+    if (!soft) sfx('roar');
     try { if (R.Audio.setTempo) R.Audio.setTempo(P.ENRAGE_TEMPO); } catch (err) { /* ignore */ }
-    st.head = { name: e.text, t0: R.Engine.time, tint: '#ff6a52', color: '#ffc2b2' };
+    st.head = soft ? { name: e.text, t0: R.Engine.time, tint: '#ffb070', color: '#ffe0c0' } : { name: e.text, t0: R.Engine.time, tint: '#ff6a52', color: '#ffc2b2' };
     await st.pwait(1100);
   };
   /** 暴走の赤い光（画面の縁から。reduceMotion は弱く短く） */
@@ -751,7 +752,7 @@
     if (!r) return;
     const k = (R.Engine.time - r.t0) / Math.max(1, r.ms);
     if (k >= 1 || k < 0) { if (k >= 1) st.rage = null; return; }
-    const a = (r.r ? 0.22 : 0.5) * (k < 0.12 ? k / 0.12 : Math.pow(1 - (k - 0.12) / 0.88, 1.6));
+    const a = (r.r ? 0.22 : r.soft ? 0.26 : 0.5) * (k < 0.12 ? k / 0.12 : Math.pow(1 - (k - 0.12) / 0.88, 1.6));
     const cx = R.W / 2, cy = R.H / 2, rad = Math.hypot(cx, cy);
     const gr = g.createRadialGradient(cx, cy, rad * 0.18, cx, cy, rad);
     gr.addColorStop(0, `rgba(255,40,24,${a * 0.18})`);

@@ -349,6 +349,7 @@
     'sys.battle_core.restore.m_2': '但是没有效果。',
     'sys.battle_core.defendRest.both': '{name}的HP恢复了{hp}，MP恢复了{mp}！',
     'sys.battle_core.enrage': '{name}陷入了狂怒！',
+    'sys.battle_core.enrage.serious': '{name}认真起来了！',
     'sys.battle_core.inflict.fail.m': '对{name}没有效果。',
     'sys.battle_core.inflict.fail.m_2': '但是没有效果。',
     'sys.battle_core.announce.ret': '{name}使用了{name2}！',
