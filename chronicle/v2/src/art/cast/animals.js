@@ -11,6 +11,8 @@
     ani_dog: base(R.T('looks.ani_dog.base'), 'dog', '#8a6038', '#e0d0b0', 30),
     ani_hen: base(R.T('looks.ani_hen.base'), 'hen', '#e8e0d4', '#c83a2c', 40),
     ani_fawn: base(R.T('looks.ani_fawn.base'), 'fawn', '#a86a3c', '#f0e4d0', 25),
+    // 籠城の 3 波目の吹雪の大狼（フィールドの姿）。絵は戦闘の原画 v2/assets/monsters/boss_wolflord.png を縮めて使う（下の monField）
+    ani_bwolf: Object.assign(base(R.T('looks.ani_bwolf.base'), 'dog', '#8a8c96', '#e4e6ee', 220), { mon: 'boss_wolflord', monScale: 0.5 }),
   });
 
   // 形: [胴の半径 rx, ry, 胴の高さ, 頭の半径, 頭の前の位置, 脚の長さ, しっぽ]
@@ -64,8 +66,46 @@
     }
   }
 
+  /**
+   * 魔物の原画（R.Beast.IMG）から作るフィールドの姿（looks の mon = 原画の sprite、monScale = 縮める倍率）。
+   *   原画は右向きの 1 枚: 立ち・待ち・歩きとも同じ絵（待ちと歩きは 1 画素ちぢめた呼吸のコマと交互）。左は FIELD が反転する（stand_w を作らない）。
+   *   原画がまだ読めていなければ null（焼く列があとでまた呼ぶ）、原画が無ければ（node など）仮の動物の絵
+   */
+  function monField(look, lk, o) {
+    const IMG = R.Beast && R.Beast.IMG;
+    if (!IMG || !IMG.has || !IMG.has(lk.mon)) return undefined;
+    const rec = IMG.rec(lk.mon);
+    if (!rec || rec.failed) return undefined;
+    if (!rec.ready) return null;
+    const m = IMG.meta(lk.mon) || {};
+    const k = (((o && o.scale) || 1.15) / 1.15) * (lk.monScale || 0.5);
+    const W0 = m.w || rec.img.width, H0 = m.h || rec.img.height;
+    const a = m.anchor || [W0 >> 1, H0 - 1];
+    const w = Math.max(1, Math.round(W0 * k)), h = Math.max(1, Math.round(H0 * k));
+    const frames = [0, 1].map((i) => {
+      const c = R.Hd.RZ.canvas(w, h), x = c.getContext('2d');
+      x.imageSmoothingEnabled = true;
+      if ('imageSmoothingQuality' in x) x.imageSmoothingQuality = 'high';
+      const sq = i ? 1 : 0;   // 呼吸: 胴を 1 画素ちぢめる（足もとは動かさない）
+      x.drawImage(rec.img, 0, 0, W0, H0, 0, sq, w, h - sq);
+      return { c, ox: Math.round(a[0] * k), oy: Math.round(a[1] * k) };
+    });
+    const poses = {}, fps = {};
+    for (const d of ['s', 'n', 'e']) {
+      poses['stand_' + d] = [0];
+      poses['idle_' + d] = [0, 0, 1, 1];
+      poses['walk_' + d] = [0, 1];
+      fps['idle_' + d] = 2; fps['walk_' + d] = 6;
+    }
+    const P = m.points || {};
+    const rel = (p, dflt) => (p ? [Math.round((p[0] - a[0]) * k), Math.round((p[1] - a[1]) * k)] : dflt);
+    const anchors = { feet: [0, 0], head: rel(P.head, [0, -h]), center: rel(P.center, [0, -Math.round(h / 2)]) };
+    return { frames, poses, fps, anchors, w, h, meta: { look, source: 'mon', placeholder: false, skinCheck: 'skip: monster art', headR: Math.round(12 * k), lantern: {}, scale: (o && o.scale) || 1.15 } };
+  }
+
   cast.animalField = function (look, o) {
     const lk = R.DB.looks[look];
+    if (lk && lk.mon) { const r = monField(look, lk, o); if (r !== undefined) return r; }
     if (!lk || !SHAPE[lk.animal]) return null;
     const RZ = R.Hd.RZ, rig = R.Art.rig;
     const sc = ((o && o.scale) || 1.15) * 1.6;   // 人の背（約 50）に対して猫・犬は膝より上くらい

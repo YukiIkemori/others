@@ -30,14 +30,27 @@
    * 以前は並びの最初に当たった物を選んだので、ボスの大きな絵の上の雑魚（呼ばれた根・狼）を押すと奥のボスに決まることがあった
    */
   Tg.hitAt = function (st, list, p, rects) {
-    let best = null;
-    for (const a of list) if (inActor(st, a, p) && (!best || a.y > best.y || (a.y === best.y && _.actors.height(a) < _.actors.height(best)))) best = a;
-    if (best || !rects) return best;
-    for (const a of list) {
-      const pi = st.partyUnits().findIndex((x) => x.uid === a.uid); const r = rects[pi];
-      if (r && p.x >= r.x && p.x <= r.x + r.w && p.y >= r.y && p.y <= r.y + r.h) return a;
+    // 右上の一覧の行（味方）がいちばん確か: 先に見る（絵の当たりの箱が行に掛かっていても、押した行の人に決める）
+    if (rects) {
+      for (const a of list) {
+        const pi = st.partyUnits().findIndex((x) => x.uid === a.uid); const r = rects[pi];
+        if (r && p.x >= r.x && p.x <= r.x + r.w && p.y >= r.y && p.y <= r.y + r.h) return a;
+      }
     }
-    return null;
+    let best = null;
+    if (list.length && list[0].side === 'party') {
+      // 味方の絵は前列・後列が斜めに重なる。手前の人を選ぶと、後ろの人の頭や体を押しても手前の人に入った
+      //   （テスター 2026-10-02 Q5: せせらぎがねらった人ではなく HP 満タンのセルマへ）。押した点にいちばん近い体の中ほどの人
+      let bd = Infinity;
+      for (const a of list) {
+        if (!inActor(st, a, p)) continue;
+        const h = _.actors.height(a), d = Math.hypot(p.x - a.x, p.y - (a.y - h * 0.45));
+        if (d < bd) { bd = d; best = a; }
+      }
+      return best;
+    }
+    for (const a of list) if (inActor(st, a, p) && (!best || a.y > best.y || (a.y === best.y && _.actors.height(a) < _.actors.height(best)))) best = a;
+    return best;
   };
 
   Tg.pick = function (st, u, type, o) {
@@ -58,6 +71,9 @@
       // 倒れた人がいない蘇生（ふつうは選ぶ前に灰色）: ブザーで一覧へ戻る
       if (!list.length && type === 'ally_dead') { sfx('buzzer'); return Promise.resolve('back'); }
       if (!list.length) list = mine.length ? mine : st.actors.filter((a) => a.side === 'party');
+      // ↑↓ の順は右上の一覧（隊列の順 st.partyUnits）と同じに
+      const ord = st.partyUnits().map((x) => x.uid);
+      list = list.slice().sort((a, b) => ord.indexOf(a.uid) - ord.indexOf(b.uid));
     } else {
       list = st.aliveEnemies().slice().sort((a, b) => (b.x - a.x) || (a.y - b.y));
     }

@@ -5,6 +5,7 @@
     // ---- src/art/cast/animals.js
     'looks.ani_cat.base': '고양이',
     'looks.ani_dog.base': '개',
+    'looks.ani_bwolf.base': '눈보라의 큰 늑대',
     'looks.ani_hen.base': '닭',
     'looks.ani_fawn.base': '아기 사슴',
     // ---- src/art/cast/looks_hero.js

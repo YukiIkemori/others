@@ -25,11 +25,12 @@
     try { return c && c.fieldLook ? c.fieldLook(look, m) : look; } catch (e) { return look; }
   }
   F._artLook = artLook;
+  // d.hidden: 地図に入った時は出さない人（イベントが ev.appear で出す。籠城の大狼など）
   F._initNpcs = function () {
     const m = S.map;
     S.npcs = (m.npcs || []).map((d) => ({
       def: d, id: d.id, look: artLook(d.look, m), x: d.x, y: d.y, lv: d.lv || 0, dir: d.dir || 's', home: { x: d.x, y: d.y, dir: d.dir || 's' },
-      mv: null, vis: true, hidden: false, script: 0, talking: false, nextAt: R.Engine.time + 600 + (R.U.hash(d.id) % 1800), returnAt: 0,
+      mv: null, vis: true, hidden: !!d.hidden, script: 0, talking: false, nextAt: R.Engine.time + 600 + (R.U.hash(d.id) % 1800), returnAt: 0,
       route: 0, stuck: 0, pose: null, rng: R.rng(m.id + ':' + d.id), isNew: false, waiters: [],
     }));
     S.npcById = {};

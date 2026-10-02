@@ -6,6 +6,7 @@
     // ---- src/art/cast/animals.js
     'looks.ani_cat.base': 'ねこ',
     'looks.ani_dog.base': 'いぬ',
+    'looks.ani_bwolf.base': '吹雪の大狼',
     'looks.ani_hen.base': 'にわとり',
     'looks.ani_fawn.base': '子じか',
     // ---- src/art/cast/looks_hero.js

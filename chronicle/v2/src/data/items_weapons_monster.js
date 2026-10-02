@@ -360,7 +360,7 @@
     wtype: 'bow',
     units: 'd1a1',
     onHit: { status: 'poison', chance: 0.25 },
-    mult: 0.95,
+    mult: 1.05,   // 0.95 → 1.05: レアの箱（ティア 2）で店の鋼弦の弓（T3）より弱かった（持ち主 2026-10-02。tools/check_rare_vs_shop.js）
     src: 'mdrop',
     desc: R.T('items.w_bow_snakeskin.desc'),
     sort: 356,

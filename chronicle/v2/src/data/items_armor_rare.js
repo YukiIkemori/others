@@ -43,6 +43,7 @@
   hn_r1_dex: {
     name: R.T('items.hn_r1_dex.name'),
     weight: 'light',
+    def: 8,   // 丸めで店の硬革の手袋（T1）と同じ 7 → 8（持ち主 2026-10-02「レアは店の品よりはっきり強く」）
     grade: 'rare',
     tier: 1,
     units: 'd1',

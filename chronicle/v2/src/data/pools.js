@@ -13,6 +13,9 @@
 (function (R) {
   'use strict';
   const RB = [1, 1, 3, 3, 5, 5, 7, 7, 9, 9];                                   // ティア → レアの帯
+  // 武器のレアの帯（持ち主 2026-10-02「レアの箱の品は同じ時点の店の品よりはっきり強く」。P29: 砂の王の墓の ★朝露の弓 < カシムの弓）。
+  //   カシムの屋台・フェルンの行商・鷹団の店は T+1 の武器を並べるので、武器は T+1 以上の帯（奇数のティア T は次の帯）。防具・アクセサリは RB のまま
+  const WB = [1, 3, 3, 5, 5, 7, 7, 9, 9, 9];
   const GOLD = [60, 130, 230, 360, 530, 720, 960, 1200, 1520, 2080];            // 1 つの宝箱のお金
   const S0 = [['i_salve', 6, 2], ['i_revive', 3], ['i_antidote', 2], ['i_clear', 1], ['i_waker', 2], ['i_repel', 1], ['i_firepot', 2], ['i_smoke', 1], ['i_torch', 1]];
   const S1 = [...S0, ['i_potion', 4], ['i_ether', 3], ['i_numb', 1], ['i_throat', 1], ['i_lure', 1], ['i_lens', 1]];
@@ -34,7 +37,7 @@
   // ティア宝箱 p_T の混ぜ方（重みの合計）: 道具 55・装備 25・お金 20
   const MIX = { supply: 55, gear: 25, gold: 20 };
 
-  R.Pools = { RB: RB.slice(), GOLD: GOLD.slice(), MIX: Object.assign({}, MIX), LATE, MID };
+  R.Pools = { RB: RB.slice(), WB: WB.slice(), GOLD: GOLD.slice(), MIX: Object.assign({}, MIX), LATE, MID };
 
   R.onData(function buildPools() {
     const all = Object.entries(R.DB.items);
@@ -47,9 +50,11 @@
       for (const k of ['normal', 'rare', 'super']) if (d[k] && d[k].item) dropped.add(d[k].item);
     }
     const free = (id) => !dropped.has(id);
-    const rare = (T) => ids((it) => it.src === 'drop' && it.grade === 'rare' && EQ.includes(it.slot) && it.tier === RB[T]);
-    const mrare = (T) => ids((it) => it.src === 'mdrop' && it.grade === 'rare' && EQ.includes(it.slot) && (it.tier === T || it.tier === RB[T])).filter(free);
-    const sup = (T) => ids((it) => (it.src === 'mdrop' || it.src === 'super') && it.grade === 'super' && EQ.includes(it.slot) && it.tier === T).filter(free);
+    const band = (it, T) => (it.slot === 'weapon' ? WB[T] : RB[T]);
+    const rare = (T) => ids((it) => it.src === 'drop' && it.grade === 'rare' && EQ.includes(it.slot) && it.tier === band(it, T));
+    const mrare = (T) => ids((it) => it.src === 'mdrop' && it.grade === 'rare' && EQ.includes(it.slot) && (it.slot === 'weapon' ? it.tier === WB[T] : it.tier === T || it.tier === RB[T])).filter(free);
+    // 超レアの武器も T+1 の段（無ければ T。ティア 9 の上は無い）
+    const sup = (T) => ids((it) => (it.src === 'mdrop' || it.src === 'super') && it.grade === 'super' && EQ.includes(it.slot) && it.tier === (it.slot === 'weapon' ? Math.min(9, T + 1) : T)).filter(free);
     const P = (fn) => ({ tiers: TIERS.map(fn) });
     const W1 = (list, w) => list.map((item) => ({ item, w: w || 1 }));
     // 表の中の重みを合計 total にならす（p_T の混ぜ方）

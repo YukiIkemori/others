@@ -58,7 +58,9 @@
     // §2.1 能力値の効き目: abilMul(a, k) = max(minMul, 1 + k × (a − mid))
     ABIL: { mid: 16, cap: 40, minMul: 0.5, atk: 0.045, mag: 0.045, heal: 0.04, tech: 0.01, vit: 0.025, mdef: 0.03, sf: 0.04, gf: 0.04, healStat: 'mnd' },
     WA: [11, 22, 35, 52, 71, 96, 122, 156, 193, 246],                 // 武器の攻撃力・術力の土台（§2.3）
-    GRADE_ATK: { normal: 1, rare: 1.06, super: 1.12 },
+    // 武器の等級の倍率 1.06・1.12 → 1.10・1.20（防具の GRADE_DEF と同じ。持ち主 2026-10-02「レア・盗みの品は同じ時点の店の品よりはっきり強く」。
+    //   同じティアのレア武器が丸めで店の品と同じ値になっていた（蜂の針 17 = 鋼の短剣 17）。tools/check_rare_vs_shop.js が確かめる）
+    GRADE_ATK: { normal: 1, rare: 1.10, super: 1.20 },
     GRADE_DEF: { normal: 1, rare: 1.10, super: 1.20 },
     ACC_W: [1, 1, 1, 2, 3, 4, 5, 7, 8, 10],                            // 通常の腕輪・耳飾り（§3.2）
     ABIL_GEAR: {                                                        // 能力値を上げる装備（§3.1）
@@ -979,10 +981,15 @@
     fillItem(it, o) {
       if (!it) return it;
       if (o && o.tier != null && it.grow === 'tier') {
-        const copy = Object.assign({}, it, { tier: clamp(o.tier | 0, 0, 9) });
+        // 武器は店の武器の天井（カシムの屋台・フェルンの行商などは T+1 の段を並べる）に合わせて 1 段上の値（持ち主 2026-10-02「レアは店の品よりはっきり強く」）。
+        //   tier は もらったティアのまま（図鑑・並びの目安）
+        const T0 = clamp(o.tier | 0, 0, 9), Tv = it.slot === 'weapon' ? Math.min(9, T0 + 1) : T0;
+        const copy = Object.assign({}, it, { tier: Tv });
         for (const k of ['atk', 'mag', 'def', 'mdef', 'eva', 'stats', 'twoHanded', 'sort']) delete copy[k];
         Object.defineProperty(copy, '_filled', { value: false, enumerable: false, writable: true });
-        return Rules.fillItem(copy);
+        const out = Rules.fillItem(copy);
+        out.tier = T0;
+        return out;
       }
       const T = clamp(it.tier | 0, 0, 9), g = it.grade || 'normal';
       if (it.stats === undefined && EQUIP_GROUPS.includes(it.slot)) {

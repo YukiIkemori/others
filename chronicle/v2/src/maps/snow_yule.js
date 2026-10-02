@@ -195,10 +195,13 @@
     const NIGHT = [
       K.npc('jorn', 'npc_jorn', 30, 28, { name: R.T('map.snow_yule.NIGHT.0.jorn.name'), title: R.T('map.snow_yule.NIGHT.0.jorn.title'), dir: 'w', talk: 'yule_siege_jorn', pushable: false }),
       K.npc('sonja', 'npc_sonja', 26, 27, { name: R.T('map.snow_yule.NIGHT.1.sonja.name'), title: R.T('map.snow_yule.NIGHT.1.sonja.title'), dir: 'e', talk: 'yule_siege_sonja', pushable: false }),
-      K.npc('hald', 'npc_hald', 28, 5, { name: R.T('map.snow_yule.NIGHT.2.hald.name'), title: R.T('map.snow_yule.NIGHT.2.hald.title'), dir: 'n', talk: 'yule_siege_hald', pushable: false }),
+      // 見張りのハルドは籠城の夜は大かまどの西で遠吠えの方角を知らせる（前は北の門の下 28,5 で、「門を閉めろ！」が画面の外の声だけになった。テスター 2026-10-02 P19）
+      K.npc('hald', 'npc_hald', 24, 27, { name: R.T('map.snow_yule.NIGHT.2.hald.name'), title: R.T('map.snow_yule.NIGHT.2.hald.title'), dir: 'e', talk: 'yule_siege_hald', pushable: false }),
       K.npc('guard_w', 'npc_snow_man', 3, 30, { name: R.T('map.snow_yule.NIGHT.3.guard_w.name'), dir: 'w', talk: 'yule_siege_guard', pushable: false }),
       K.npc('guard_e', 'npc_snow_watch', 52, 29, { name: R.T('map.snow_yule.NIGHT.4.guard_e.name'), dir: 'e', talk: 'yule_siege_guard', pushable: false }),
       K.npc('olaf_n', 'npc_snow_old_m', 26, 5, { name: R.T('map.snow_yule.NIGHT.5.olaf_n.name'), title: R.T('map.snow_yule.NIGHT.5.olaf_n.title'), dir: 'n', talk: 'yule_siege_guard', pushable: false, cond: { choice: 'ch_snow_tale', is: 'hunter' } }),
+      // 吹雪の大狼（3 波目の場面でだけ ev.appear で出す。snow_festival.js の bwolfShow。話せない）
+      K.npc('bwolf', 'ani_bwolf', 34, 27, { dir: 'w', hidden: true, pushable: false }),
     ];
 
     const common = (night) => ({

@@ -6,6 +6,7 @@
     // ---- src/art/cast/animals.js
     'looks.ani_cat.base': 'Cat',
     'looks.ani_dog.base': 'Dog',
+    'looks.ani_bwolf.base': 'Blizzard Great Wolf',
     'looks.ani_hen.base': 'Hen',
     'looks.ani_fawn.base': 'Fawn',
     // ---- src/art/cast/looks_hero.js

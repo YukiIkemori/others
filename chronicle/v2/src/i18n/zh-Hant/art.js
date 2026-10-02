@@ -5,6 +5,7 @@
     // ---- src/art/cast/animals.js
     'looks.ani_cat.base': '貓',
     'looks.ani_dog.base': '狗',
+    'looks.ani_bwolf.base': '暴風雪大狼',
     'looks.ani_hen.base': '母雞',
     'looks.ani_fawn.base': '小鹿',
     // ---- src/art/cast/looks_hero.js
