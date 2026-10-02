@@ -52,7 +52,13 @@
     async readClip() {
       const D = typeof window !== 'undefined' ? window.chronicleDesktop : null;
       try { if (D && D.readClipboard) { const s = await D.readClipboard(); if (typeof s === 'string') return s; } } catch (e) { /* 次へ */ }
-      try { if (navigator.clipboard && navigator.clipboard.readText) return await navigator.clipboard.readText(); } catch (e) { /* 許されていない */ }
+      // 許可を聞く窓が出ないまま待ち続けることがある（ヘッドレス・設定で止めたブラウザ）。1.5 秒で見切って案内に切り替える
+      try {
+        if (navigator.clipboard && navigator.clipboard.readText) {
+          const t = await Promise.race([navigator.clipboard.readText(), R.wait(1500).then(() => null)]);
+          if (typeof t === 'string') return t;
+        }
+      } catch (e) { /* 許されていない */ }
       return null;
     },
     async act(v) {

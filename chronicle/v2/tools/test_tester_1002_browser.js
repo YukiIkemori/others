@@ -28,7 +28,7 @@ async function main() {
   async function advance(p, cond, max) {
     for (let i = 0; i < (max || 200); i++) {
       if (await p.evaluate(cond)) return true;
-      const st = await p.evaluate(`(() => { const s = ${MS}; return s && s.choiceRect ? 'choice' : ''; })()`);
+      const st = await p.evaluate(`(() => { const s = ${MS}; return s && s.choiceRect && s.full && s.page === s.pages - 1 ? 'choice' : ''; })()`);
       if (st === 'choice') return 'choice';
       await B.press(p, 'a');
     }
@@ -36,7 +36,7 @@ async function main() {
   }
   /** 選択肢の i 番を選ぶ（カーソルを動かし、決定を受けるようになってから A） */
   async function choose(p, i) {
-    await B.waitFor(p, `${MS} && ${MS}.choiceRect`, 8000);
+    await B.waitFor(p, `${MS} && ${MS}.choiceRect && ${MS}.full && ${MS}.page === ${MS}.pages - 1`, 8000);
     const cur = await p.evaluate(`${MS}.choice`);
     for (let k = cur; k < i; k++) await B.press(p, 'down');
     for (let k = cur; k > i; k--) await B.press(p, 'up');
@@ -119,8 +119,9 @@ async function main() {
     const start0 = await p.evaluate(`({ troop: ${D}.setup.troop, foes: ${D}.B.units.filter((u) => u.side === 'enemy').map((u) => u.id), hp: ${D}.B.units.filter((u) => u.side === 'party').map((u) => [u.id, u.hp]) })`);
     ok('the boss battle begins with the party weakened by the gate battle (chained fight)', start0.hp.every(([, hp]) => hp > 0) && start0.hp.some(([id, hp]) => hp < 100000), start0);
     // 大狼が狼を呼ぶ・一行が削られる → 全滅
-    await p.evaluate(`(() => { const e = ${D}.B.engine; for (const u of e.party) u.hp = 0; e.result = 'lose'; })()`);
-    ok('party wiped (3 choices)', await B.waitFor(p, `${D} && ${D}.go && ${D}.ui && ${D}.ui.o.rows.length === 3`, 30000));
+    const WIPED = `${D} && ${D}.go && ${D}.ui && ${D}.ui.o.rows.length === 3`;
+    await p.evaluate(`(() => { const e = ${D}.B.engine; for (const u of e.party) u.hp = 1; e.result = 'lose'; })()`);
+    ok('party wiped (3 choices)', (await advance(p, `${D} && !!${D}.go`, 80)) === true && await B.waitFor(p, WIPED, 15000));
     const rows = await p.evaluate(`${D}.ui.o.rows.map((r) => r.label)`);
     ok('in the siege the 2nd row is 「ひと息ついて立て直す」 (no gold loss)', rows[1] === 'ひと息ついて立て直す', rows);
     await B.shot(p, path.join(SHOTS, 'siege_wipe_menu_1920.png'));
@@ -129,8 +130,8 @@ async function main() {
     const start1 = await p.evaluate(`({ troop: ${D}.setup.troop, foes: ${D}.B.units.filter((u) => u.side === 'enemy').map((u) => u.id), hp: ${D}.B.units.filter((u) => u.side === 'party').map((u) => [u.id, u.hp]) })`);
     ok('retry: same troop and the same enemies as at the start (no extra summoned wolf)', start1.troop === start0.troop && JSON.stringify(start1.foes) === JSON.stringify(start0.foes), { start0, start1 });
     ok('retry: party HP equals the HP at the START of the boss battle (not the wiped end state)', JSON.stringify(start1.hp) === JSON.stringify(start0.hp), { start0: start0.hp, start1: start1.hp });
-    await p.evaluate(`(() => { const e = ${D}.B.engine; for (const u of e.party) u.hp = 0; e.result = 'lose'; })()`);
-    ok('wipes again', await B.waitFor(p, `${D} && ${D}.go && ${D}.ui && ${D}.ui.o.rows.length === 3`, 30000));
+    await p.evaluate(`(() => { const e = ${D}.B.engine; for (const u of e.party) u.hp = 1; e.result = 'lose'; })()`);
+    ok('wipes again', (await advance(p, `${D} && !!${D}.go`, 80)) === true && await B.waitFor(p, WIPED, 15000));
     await B.press(p, 'down'); await B.press(p, 'a');   // ひと息ついて立て直す
     ok('back on the siege night map', await B.waitFor(p, `${B.TOP}==='field' && RPG.Field._s.map.id === 'yule_night' && !RPG.Events.busy() && RPG.Engine.fade.a < 0.01`, 15000), await p.evaluate(() => [RPG.Engine.top().id, RPG.Field._s && RPG.Field._s.map && RPG.Field._s.map.id]));
     const after = await p.evaluate(() => ({ gold: RPG.Game.gold, full: RPG.Party.members().every((c) => c.hp > 0 && c.hp === RPG.Rules.stats(c).maxHp), wave: RPG.Game.vars.snow_wave, done: !!RPG.Game.flags.snow_siege_done }));
@@ -227,8 +228,8 @@ async function main() {
     ok('right-click on the text field does not close the screen (was B = back)', await p.evaluate(`${B.TOP}==='screen:passphrase'`));
     await p.keyboard.press('Escape');   // 文字の欄の外へ（ゲームの画面は Esc では戻らない: 欄に入っているので）
     // 「貼り付ける」: ヘッドレスは写し取りの許可が無い → 欄を選んで Ctrl+V の案内
-    await p.evaluate(() => RPG.Engine.top().view.act('paste'));
-    await sleep(200);
+    await p.evaluate(() => { RPG.Engine.top().view.act('paste'); });
+    await B.waitFor(p, '/Ctrl/.test(RPG.Engine.top().view.msg || "")', 5000);
     const m = await p.evaluate(() => ({ msg: RPG.Engine.top().view.msg, focus: document.activeElement && document.activeElement.tagName }));
     ok('paste without clipboard permission → the field is focused and Ctrl+V is explained', /Ctrl\+V/.test(m.msg) && m.focus === 'TEXTAREA', m);
     await B.shot(p, path.join(SHOTS, 'passphrase_paste_1920.png'));
