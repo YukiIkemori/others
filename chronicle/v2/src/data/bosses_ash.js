@@ -52,7 +52,7 @@
       desc: R.T('data.bosses_ash.LIST.b_rockbeast.desc'),
     },
     b_tamer: {
-      name: R.T('data.bosses_ash.LIST.b_tamer.name'), sprite: 'b_ash_tamer', bossType: 'mid', lv: 8, hpShare: 9, actsPerTurn: 1, size: 'm',
+      name: R.T('data.bosses_ash.LIST.b_tamer.name'), enrageText: 'serious', sprite: 'b_ash_tamer', bossType: 'mid', lv: 8, hpShare: 9, actsPerTurn: 1, size: 'm',
       race: 'humanoid', flags: ['boss'], eva: 5, elem: {}, phys: {}, statusRes: {},
       // 2026-10-01（ボスの組み直し）: 口笛（予告）→ 突進 の決まりはやめた。鞭・投げ縄（後列をまひ）・けしかけ（獣の攻めを上げる）と、岩の獣との合体技「鞭と突進」
       actions: A([['attack', 2], ['eb_tamer_whip', 3], ['eb_tamer_snare', 2], ['e_howl', 1]]),
@@ -61,7 +61,7 @@
       desc: R.T('data.bosses_ash.LIST.b_tamer.desc'),
     },
     b_sister_elder: {
-      name: R.T('data.bosses_ash.LIST.b_sister_elder.name'), sprite: 'b_ash_hinoe', bossType: 'mid', lv: 8, hpShare: 9, actsPerTurn: 1, size: 'm',
+      name: R.T('data.bosses_ash.LIST.b_sister_elder.name'), enrageText: 'serious', sprite: 'b_ash_hinoe', bossType: 'mid', lv: 8, hpShare: 9, actsPerTurn: 1, size: 'm',
       race: 'humanoid', flags: ['boss'], eva: 5, elem: { water: 1.25 }, phys: {}, statusRes: {},
       actions: A([['e_fire_bolt', 2], ['eb_hinoe_mend', 2], ['e_veil_ally', 1], ['eb_hinoe_raise', SCHED, { allyDown: true }]]),   // 2026-10-01: 守りの火（加護）を足した
       leader: { msg: R.T('data.bosses_ash.LIST.b_sister_elder.leader.msg') },
@@ -77,7 +77,7 @@
       desc: R.T('data.bosses_ash.LIST.b_sister_younger.desc'),
     },
     b_armorman: {
-      name: R.T('data.bosses_ash.LIST.b_armorman.name'), sprite: 'b_ash_barga', bossType: 'mid', lv: 8, actsPerTurn: 1, size: 'm',
+      name: R.T('data.bosses_ash.LIST.b_armorman.name'), enrageText: 'serious', sprite: 'b_ash_barga', bossType: 'mid', lv: 8, actsPerTurn: 1, size: 'm',
       race: 'humanoid', flags: ['boss'], eva: 0,
       elem: { water: 1.25, wind: 1.25 }, phys: { slash: 0.6, pierce: 0.75, blunt: 1.4 }, statusRes: { stun: 0.5 },
       // 2026-10-01（ボスの組み直し）: 振りかぶる（予告）→ 大なぎ の決まりはやめた。鎧砕き（守りを下げる）・盾打ち（気絶）・固くなる・返しの構え（打ちこむと殴り返す）
@@ -86,7 +86,7 @@
       desc: R.T('data.bosses_ash.LIST.b_armorman.desc'),
     },
     b_zakuro: {
-      name: R.T('data.bosses_ash.LIST.b_zakuro.name'), sprite: 'b_ash_zakuro', bossType: 'mid', lv: 9, actsPerTurn: 1, size: 'm',
+      name: R.T('data.bosses_ash.LIST.b_zakuro.name'), enrageText: 'serious', sprite: 'b_ash_zakuro', bossType: 'mid', lv: 9, actsPerTurn: 1, size: 'm',
       race: 'humanoid', flags: ['boss'], eva: 10, elem: {}, phys: {}, statusRes: { sleep: 0.5, confuse: 0.5 },
       // 2026-10-01（ボスの組み直し）: 居合の構え（予告）→ 一閃 の決まりはやめた。斬りつけ・居合（回復役をねらう）・払い（前列、素早さを下げる）・
       //   後の先（打ちこむと斬り返す）。半分を切ると二本目の刀を抜き、1 ラウンドに 2 回動く

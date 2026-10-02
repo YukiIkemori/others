@@ -239,7 +239,7 @@
       desc: R.T('data.bosses.LIST.b_tentacle.desc'),
     },
     b_captain: {
-      name: R.T('data.bosses.LIST.b_captain.name'), sprite: 'b_captain', bossType: 'region', lv: 9, hpShare: 16, actsPerTurn: 2,
+      name: R.T('data.bosses.LIST.b_captain.name'), enrageText: 'serious', sprite: 'b_captain', bossType: 'region', lv: 9, hpShare: 16, actsPerTurn: 2,
       race: 'undead', flags: ['boss'], eva: 5,
       elem: { fire: 1.5, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: UNDEAD_RES,
       actions: A([['attack', 2], ['eb_cutlass', 2], ['eb_fire_volley', 2], ['eb_ghost_shanty', 1, { every: [4, 2] }],
@@ -318,7 +318,7 @@
 
     // ------------------------------------------------------------ ライバル（負けても続く）
     b_rowell1: {
-      name: R.T('data.bosses.LIST.b_rowell1.name'), sprite: 'boss_rowell', bossType: 'rival', lv: 20, actsPerTurn: 1,
+      name: R.T('data.bosses.LIST.b_rowell1.name'), enrageText: 'serious', sprite: 'boss_rowell', bossType: 'rival', lv: 20, actsPerTurn: 1,
       race: 'humanoid', affinity: 'light', flags: ['boss'], eva: 5,
       elem: { light: 0.25, dark: 1.5 },
       actions: A([['attack', 3], ['eb_silver_thrust', 2], ['eb_copy_power', 2], ['eb_ink_guard', 1, { once: true }], ['eb_record_light', 2]]),
@@ -326,7 +326,7 @@
       desc: R.T('data.bosses.LIST.b_rowell1.desc'),
     },
     b_rowell2: {
-      name: R.T('data.bosses.LIST.b_rowell2.name'), sprite: 'b_rowell2', bossType: 'rival', lv: 38, actsPerTurn: 2,
+      name: R.T('data.bosses.LIST.b_rowell2.name'), enrageText: 'serious', sprite: 'b_rowell2', bossType: 'rival', lv: 38, actsPerTurn: 2,
       race: 'humanoid', affinity: 'light', flags: ['boss'], eva: 5,
       elem: { light: 0.25, dark: 1.5 },
       actions: A([['attack', 2], ['eb_silver_thrust', 2], ['eb_pen_flurry', 2], ['eb_copy_power', 1],
@@ -346,7 +346,7 @@
       desc: R.T('data.bosses.LIST.b_bookgolem.desc'),
     },
     b_shade_sword: {
-      name: R.T('data.bosses.LIST.b_shade_sword.name'), sprite: 'boss_shade_sword', bossType: 'fmid', lv: 56, hpShare: 8, actsPerTurn: 1,
+      name: R.T('data.bosses.LIST.b_shade_sword.name'), enrageText: 'serious', sprite: 'boss_shade_sword', bossType: 'fmid', lv: 56, hpShare: 8, actsPerTurn: 1,
       race: 'spirit', affinity: 'light', flags: ['boss'], eva: 5,
       elem: { light: 0.25, dark: 1.5 }, statusRes: SPIRIT_RES,
       actions: A([['attack', 2], ['eb_shade_blade', 2], ['eb_shade_crest', 2], ['eb_shade_sweep', 1]]),
@@ -354,7 +354,7 @@
       desc: R.T('data.bosses.LIST.b_shade_sword.desc'),
     },
     b_shade_prayer: {
-      name: R.T('data.bosses.LIST.b_shade_prayer.name'), sprite: 'boss_shade_prayer', bossType: 'fmid', lv: 56, hpShare: 6, actsPerTurn: 1,
+      name: R.T('data.bosses.LIST.b_shade_prayer.name'), enrageText: 'serious', sprite: 'boss_shade_prayer', bossType: 'fmid', lv: 56, hpShare: 6, actsPerTurn: 1,
       race: 'spirit', affinity: 'light', flags: ['boss'], eva: 5,
       elem: { light: 0.25, dark: 1.5 }, statusRes: SPIRIT_RES,
       actions: A([['attack', 1], ['eb_shade_heal', 2, { hpBelow: 0.8 }], ['eb_shade_raise', 3, { once: true, allyDown: true }],
@@ -363,7 +363,7 @@
       desc: R.T('data.bosses.LIST.b_shade_prayer.desc'),
     },
     b_shade_star: {
-      name: R.T('data.bosses.LIST.b_shade_star.name'), sprite: 'boss_shade_star', bossType: 'fmid', lv: 56, hpShare: 6, actsPerTurn: 1,
+      name: R.T('data.bosses.LIST.b_shade_star.name'), enrageText: 'serious', sprite: 'boss_shade_star', bossType: 'fmid', lv: 56, hpShare: 6, actsPerTurn: 1,
       race: 'spirit', affinity: 'light', flags: ['boss'], eva: 5,
       elem: { light: 0.25, dark: 1.5 }, statusRes: SPIRIT_RES,
       actions: A([['attack', 1], ['eb_shade_meteor', 2], ['eb_shade_frost', 2], ['eb_shade_fire', 2]]),
@@ -371,7 +371,7 @@
       desc: R.T('data.bosses.LIST.b_shade_star.desc'),
     },
     b_lazaro: {
-      name: R.T('data.bosses.LIST.b_lazaro.name'), sprite: 'boss_lazaro', bossType: 'fmid', lv: 56, actsPerTurn: 1,
+      name: R.T('data.bosses.LIST.b_lazaro.name'), enrageText: 'serious', sprite: 'boss_lazaro', bossType: 'fmid', lv: 56, actsPerTurn: 1,
       race: 'humanoid', affinity: 'light', flags: ['boss'], eva: 5,
       elem: { light: 0.25, dark: 1.5 },
       actions: A([['attack', 1], ['eb_white_book', 2], ['eb_erase_memory', 2], ['eb_silver_quill', 3],
@@ -381,7 +381,7 @@
       desc: R.T('data.bosses.LIST.b_lazaro.desc'),
     },
     b_nemrea1: {
-      name: R.T('data.bosses.LIST.b_nemrea1.name'), sprite: 'boss_nemrea1', bossType: 'last1', lv: 58, actsPerTurn: 2,
+      name: R.T('data.bosses.LIST.b_nemrea1.name'), enrageText: 'serious', sprite: 'boss_nemrea1', bossType: 'last1', lv: 58, actsPerTurn: 2,
       race: 'spirit', flags: ['boss'], eva: 5,
       elem: { fire: 1.25, light: 0.5, dark: 1.25 }, statusRes: SPIRIT_RES,
       actions: A([['attack', 1], ['eb_whiteout', 2, { every: [3, 0] }], ['eb_oblivion_wave', 2], ['eb_paper_hand', 3],
@@ -390,7 +390,7 @@
       desc: R.T('data.bosses.LIST.b_nemrea1.desc'),
     },
     b_nemrea2: {
-      name: R.T('data.bosses.LIST.b_nemrea2.name'), sprite: 'boss_nemrea2', bossType: 'last2', lv: 58, actsPerTurn: 3,
+      name: R.T('data.bosses.LIST.b_nemrea2.name'), enrageText: 'serious', sprite: 'boss_nemrea2', bossType: 'last2', lv: 58, actsPerTurn: 3,
       race: 'spirit', flags: ['boss'], eva: 5,
       elem: { light: 1.5 }, statusRes: SPIRIT_RES,
       actions: A([['attack', 1], ['eb_eight_legends', 2, { every: [3, 1] }], ['eb_oblivion_breath', 2], ['eb_unwrite', 3],
@@ -402,7 +402,7 @@
 
     // ------------------------------------------------------------ クリア後 忘却の底（ティア 9）
     b_valzard_echo: {
-      name: R.T('data.bosses.LIST.b_valzard_echo.name'), sprite: 'b_valzard_echo', bossType: 'echo', lv: 64, actsPerTurn: 2,
+      name: R.T('data.bosses.LIST.b_valzard_echo.name'), enrageText: 'serious', sprite: 'b_valzard_echo', bossType: 'echo', lv: 64, actsPerTurn: 2,
       race: 'demon', affinity: 'dark', flags: ['boss'], eva: 5,
       elem: { light: 1.5, dark: 0.25 }, statusRes: { death: 0.8 },
       actions: A([['attack', 1], ['eb_echo_despair', 2], ['eb_echo_claw', 2], ['eb_echo_flame', 2],

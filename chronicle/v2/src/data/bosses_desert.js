@@ -42,7 +42,7 @@
   // ------------------------------------------------------------ ボス
   const LIST = {
     b_hawk_chief: {
-      name: R.T('data.bosses_desert.LIST.b_hawk_chief.name'), sprite: 'b_hawk_chief', bossType: 'mid', lv: 8, actsPerTurn: 1, size: 'l',
+      name: R.T('data.bosses_desert.LIST.b_hawk_chief.name'), enrageText: 'serious', sprite: 'b_hawk_chief', bossType: 'mid', lv: 8, actsPerTurn: 1, size: 'l',
       race: 'humanoid', flags: ['boss'], eva: 10,
       // 弓兵に守られている間の倍率（desert_guard_down で elemBase・physBase＝ふだんの値に戻す）
       elem: ALL(0.2), phys: { slash: 0.2, blunt: 0.2, pierce: 0.2 }, elemBase: {}, physBase: {}, guarded: true, statusRes: { sleep: 0.5 },
