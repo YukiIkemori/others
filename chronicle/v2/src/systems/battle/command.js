@@ -39,13 +39,17 @@
       w.tabRects = [];
       let last = -1;
       const done = (v) => { if (st.ui === w) st.ui = null; if (o.onClose) o.onClose(w); resolve(v); };
+      // o.guard: 出てすぐの決定は受けない（全滅の札など、急に出る選択。R.UIK.choiceGuard。テスター 2026-10-02 P22）
+      w.guard = o.guard && R.UIK && R.UIK.choiceGuard ? { t0: R.Engine.time } : null;
       const choose = (i) => {
+        if (w.guard && !R.UIK.choiceGuard(w.guard)) return;
         if (!o.rows[i] || o.rows[i].disabled) { sfx('buzzer'); return; }
         sfx('confirm');
         done(i);
       };
       w.update = function () {
         const I = R.Input;
+        if (w.guard) R.UIK.choiceGuard(w.guard);   // 押しっぱなし・連打を毎フレーム見る
         if (st.chipTap && o.onChip) { const c = st.chipTap; st.chipTap = null; const r = o.onChip(c); if (r !== undefined) { done(r); return; } }
         st.chipTap = null;
         // 種類のタブ（o.tabs = {groups, index}）: ←→・札のクリックで {tab: i} を返す（呼んだ側が一覧を替えて開き直す）

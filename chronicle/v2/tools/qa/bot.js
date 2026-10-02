@@ -72,7 +72,7 @@
     if (!list || !list.rows) return false;
     const i = list.rows.findIndex(pred);
     if (i < 0) return false;
-    if (list.index === i) { tap('a'); return true; }
+    if (list.index === i) { if (!list.hold) tap('a'); return true; }   // hold: 出てすぐの決定よけ（R.UIK.choiceGuard）が解けるまで押さない
     const c = list.cols || 1, cur = list.index;
     const li = Math.floor(i / c), lc = Math.floor(cur / c);
     if (li !== lc) tap(li > lc ? 'down' : 'up');
@@ -328,7 +328,7 @@
   }
   function menuPick(w, i) {
     if (i < 0) i = 0;
-    if (w.sel === i) { tap('a'); return; }
+    if (w.sel === i) { if (!(w.guard && !w.guard.armed)) tap('a'); return; }
     const hz = w.o && w.o.horizontal;
     tap(w.sel < i ? (hz ? 'right' : 'down') : (hz ? 'left' : 'up'));
   }

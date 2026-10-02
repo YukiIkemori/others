@@ -217,7 +217,7 @@
       });
       left = Math.min(left, S.count(id));
       const title = left > 1 ? R.T('ui.shop.offerEquip.title', { left }) : R.T('ui.shop.offerEquip.title_2');
-      const k = await S.ask(this, { title, text: S.item(id).name, choices: choices.concat([{ label: R.T('ui.shop.offerEquip.choices.0.label') }]), cancel: mem.length, index: best, guard: true });
+      const k = await S.ask(this, { title, text: S.item(id).name, choices: choices.concat([{ label: R.T('ui.shop.offerEquip.choices.0.label') }]), cancel: mem.length, index: best });
       if (k < 0 || k >= mem.length || !room[k]) return false;
       const c = mem[k];
       const r = R.Rules.equip(c, plan.rows[k].slot || slotFor(c), id);
