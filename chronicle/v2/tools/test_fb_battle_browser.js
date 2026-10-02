@@ -35,7 +35,7 @@ async function main() {
   await B.ev(p, 'RPG.Game.flags.tip_speed = true; 0');   // 戦闘の中で初めての説明を読んだ（R.Screens.tip が書く印）
   ok('the hero glimmers in battle', await B.waitFor(p, `${D} && ${D}.B && ${D}.B.engine.glimmers.length > 0`, 60000));
   await B.ev(p, `${D}.B.engine.result = 'lose'; 0`);   // その戦闘で全滅した
-  ok('party wiped (wipe screen with 3 choices)', await B.waitFor(p, `${D} && ${D}.go && ${D}.ui && ${D}.ui.o.rows.length === 3`, 30000));
+  ok('party wiped (wipe screen with 3 choices)', await B.waitFor(p, `${D} && ${D}.go && ${D}.ui && ${D}.ui.o.rows.length === 3 && (!${D}.ui.guard || ${D}.ui.guard.armed)`, 30000));
   const learned = await B.ev(p, `RPG.Game.chars.hero.techs.filter((t) => !${JSON.stringify(before)}.includes(t))`);
   ok('the hero glimmered a technique in the lost battle', learned.length > 0, learned);
   await B.press(p, 'a');   // 直前の戦闘から
@@ -45,7 +45,7 @@ async function main() {
   ok('tutorial-seen flag kept after retry (1-6)', await B.ev(p, 'RPG.Game.flags.tip_speed === true'));
   await B.waitFor(p, `${D}.phase === 'input' || ${D}.phase === 'play'`, 20000);
   await B.ev(p, `${D}.B.engine.result = 'lose'; 0`);
-  ok('wipes again', await B.waitFor(p, `${D} && ${D}.go && ${D}.ui && ${D}.ui.o.rows.length === 3`, 30000));
+  ok('wipes again', await B.waitFor(p, `${D} && ${D}.go && ${D}.ui && ${D}.ui.o.rows.length === 3 && (!${D}.ui.guard || ${D}.ui.guard.armed)`, 30000));
   await B.press(p, 'down'); await B.press(p, 'a');   // 宿から
   ok('leaves the battle', await B.waitFor(p, 'window.__r', 8000));
   await B.waitFor(p, `${B.TOP}==='field' && RPG.Engine.fade.a < 0.01`, 5000);

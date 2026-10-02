@@ -905,6 +905,10 @@
       this.stopped = false;
       const at = o.at, pos = Math.max(0, Math.min(o.pos || 0, song.endSec));
       this.t0 = at - pos;
+      // 速さの倍率（setTempo。音の高さは変えない: 合成なので、音を置く時刻と長さだけを縮める）
+      // 曲の時間 u（ループで巻き戻さない通しの秒）と context の時刻: ctx = aT + (u − aU) / rate
+      this.rate = o.rate > 0 ? +o.rate : 1;
+      this.aT = at; this.aU = pos; this.until = at;
       this.out = c.createGain();
       const G = this.out.gain;
       G.value = o.fadeIn ? 0 : song.gain; // also the value if stopped before `at`
@@ -939,7 +943,7 @@
       const ev = this.song.events;
       for (let k = 0; k < this.idx; k++) {
         const e = ev[k];
-        const left = e.time + e.dur - pos;
+        const left = (e.time + e.dur - pos) / this.rate;
         if (e.drum || left < 0.15) continue;
         this.play(e, at, left);
       }
@@ -949,10 +953,22 @@
       const dest = this.chans[e.ch], vel = e.vel / 12, mx = this.mx;
       if (e.drum) { for (const k of e.notes) if (DRUMS[k]) DRUMS[k](mx, dest, t, vel); return; }
       const inst = INST[e.inst] || INST.pulse;
-      for (const m of e.notes) mx.voice(inst, dest, m, t, dur != null ? dur : e.dur, vel);
+      for (const m of e.notes) mx.voice(inst, dest, m, t, dur != null ? dur : e.dur / this.rate, vel);
+    }
+    /** 曲の通しの時間 u → context の時刻 */
+    ctxAt(u) { return this.aT + (u - this.aU) / this.rate; }
+    /** context の時刻 → 曲の通しの時間 u */
+    songAt(now) { return this.aU + (now - this.aT) * this.rate; }
+    /** 速さの倍率を変える（高さはそのまま）。もう置いた音（先読みの until まで）はそのまま、その先から新しい速さ */
+    setRate(r, now) {
+      r = r > 0 ? +r : 1;
+      if (r === this.rate) return;
+      const a = Math.max(now, this.until || now);
+      this.aU = this.songAt(a); this.aT = a; this.rate = r;
     }
     schedule(until, now) {
       const S = this.song, ev = S.events;
+      if (until > this.until) this.until = until;
       while (!this.stopped) {
         if (this.idx >= ev.length) {
           if (this.loop && this.pass < this.passes && S.endSec - S.loopSec > 0.1) {
@@ -961,7 +977,7 @@
             this.idx = S.loopIdx;
           } else { this.done = true; break; }
         }
-        const e = ev[this.idx], t = this.t0 + this.offset + e.time;
+        const e = ev[this.idx], t = this.ctxAt(this.offset + e.time);
         if (t >= until) break;
         this.idx++;
         if (t < now - 0.08) continue; // hopelessly late (tab stalled): skip
@@ -970,14 +986,14 @@
     }
     /** song-relative position (s) at context time `now` */
     position(now) {
-      const S = this.song, raw = now - this.t0;
+      const S = this.song, raw = this.songAt(now);
       if (raw < 0) return 0;
       if (!this.loop || raw < S.endSec) return Math.min(raw, S.endSec);
       const L = S.endSec - S.loopSec;
       return L > 0.1 ? S.loopSec + ((raw - S.loopSec) % L) : S.endSec;
     }
     /** context time at which the (non-looping) song ends */
-    get endTime() { return this.t0 + this.song.endSec; }
+    get endTime() { return this.ctxAt(this.song.endSec); }
     stop(fade) {
       if (this.stopped) return;
       this.stopped = true;
@@ -1053,6 +1069,87 @@
     dispose() { for (const n of this.nodes) { try { n.disconnect(); } catch (e) { /* ignore */ } } }
   }
 
+  // ============================================================ 録音の BGM を高さを保って速める（暴走など。setTempo）
+  // AudioBufferSourceNode の playbackRate は高さも変わるので、<audio> の preservesPitch（ブラウザの時間の伸び縮み）で鳴らす。
+  // 使えない所（preservesPitch が無い・埋め込みの束の一部）では作らない（canStretch）→ 速さは変えない。
+  // ループは pump（25 ms ごと）が loopEnd を越えたら loopStart へ戻す。Playback と同じ口（id serial file position endTime stop schedule dispose setRate）
+  function canStretch(id) {
+    try {
+      const e = mediaEntry('bgm', id);
+      if (!e || typeof e.len === 'number' || !ctx || !ctx.createMediaElementSource || typeof Audio === 'undefined') return false;
+      if (window.location && window.location.protocol === 'file:') return false;   // file:// は別の生まれ扱いで <audio> の音が 0 になることがある
+      const P = window.HTMLMediaElement && window.HTMLMediaElement.prototype;
+      return !!P && ('preservesPitch' in P || 'webkitPreservesPitch' in P || 'mozPreservesPitch' in P);
+    } catch (e) { return false; }
+  }
+  class StretchPlayback {
+    constructor(mx, id, meta, o) {
+      const c = mx.ctx;
+      meta = meta || {};
+      this.mx = mx; this.id = id; this.file = true; this.stretch = true; this.serial = ++Playback.count; this.stopped = false;
+      this.rate = o.rate > 0 ? +o.rate : 1;
+      this.loop = meta.loop !== false && o.loop !== false;
+      this.loopStart = Math.max(0, +meta.loopStart || 0); this.loopEnd = +meta.loopEnd || 0;
+      this.pos0 = Math.max(0, o.pos || 0);
+      const el = (this.el = new Audio());
+      el.preload = 'auto';
+      el.preservesPitch = true; el.webkitPreservesPitch = true; el.mozPreservesPitch = true;
+      el.src = R.Media.url('bgm', id);
+      this.gain = meta.gain != null ? +meta.gain : FILE_GAIN;
+      this.out = c.createGain();
+      this.out.gain.value = 0;
+      this.out.connect(o.dest);
+      this.node = c.createMediaElementSource(el);
+      this.node.connect(this.out);
+      this.nodes = [this.node, this.out];
+      this.ready = new Promise((res) => {
+        const go = () => {
+          if (this.stopped) return res(false);
+          const d = el.duration || 0;
+          if (!(this.loopEnd > this.loopStart + 0.1) || this.loopEnd > d) { this.loopStart = Math.min(this.loopStart, Math.max(0, d - 0.2)); this.loopEnd = d; }
+          let p = typeof o.posAt === 'function' ? o.posAt() : this.pos0;
+          if (this.loop && this.loopEnd > this.loopStart + 0.1 && p >= this.loopEnd) p = this.loopStart + ((p - this.loopStart) % (this.loopEnd - this.loopStart));
+          try { el.currentTime = Math.min(p, Math.max(0, d - 0.05)); } catch (e) { /* ignore */ }
+          el.playbackRate = this.rate;
+          const pr = el.play();
+          const on = () => {
+            if (this.stopped) return res(false);
+            const now = c.currentTime, G = this.out.gain, f = o.fadeIn || 0.05;
+            holdParam(G, now); G.setValueAtTime(0, now); G.linearRampToValueAtTime(this.gain, now + f);
+            res(true);
+          };
+          if (pr && pr.then) pr.then(on, () => res(false)); else on();
+        };
+        if (el.readyState >= 1) go(); else { el.addEventListener('loadedmetadata', go, { once: true }); el.addEventListener('error', () => res(false), { once: true }); }
+      });
+    }
+    schedule() {
+      // ループ: loopEnd を越えたら loopStart へ（越えた分を足して戻す）
+      const el = this.el;
+      if (this.stopped || !el || !this.loop || !(this.loopEnd > this.loopStart + 0.1)) return;
+      if (el.ended || el.currentTime >= this.loopEnd - 0.01) {
+        try { el.currentTime = this.loopStart + Math.max(0, el.currentTime - this.loopEnd); if (el.paused) el.play(); } catch (e) { /* ignore */ }
+      }
+    }
+    position() { return this.el ? this.el.currentTime || this.pos0 : this.pos0; }
+    get endTime() { return this.mx.ctx.currentTime + Math.max(0, ((this.el && this.el.duration) || 0) - this.position()) / this.rate; }
+    setRate(r) { this.rate = r > 0 ? +r : 1; if (this.el) this.el.playbackRate = this.rate; }
+    pause(on) { try { if (on) this.el.pause(); else if (!this.stopped) this.el.play(); } catch (e) { /* ignore */ } }
+    stop(fade) {
+      if (this.stopped) return;
+      this.stopped = true;
+      const now = this.mx.ctx.currentTime, G = this.out.gain;
+      fade = Math.max(0.02, fade || 0);
+      holdParam(G, now);
+      G.linearRampToValueAtTime(0, now + fade);
+      setTimeout(() => this.dispose(), (fade + 0.2) * 1000);
+    }
+    dispose() {
+      try { this.el.pause(); this.el.removeAttribute('src'); this.el.load(); } catch (e) { /* ignore */ }
+      for (const n of this.nodes) { try { n.disconnect(); } catch (e) { /* ignore */ } }
+    }
+  }
+
   // ============================================================ SFX kit
   // R.DB.sfx.id = function (S) { S.tone({...}); S.noise({...}); } — times in seconds from now.
   class Kit {
@@ -1121,6 +1218,7 @@
     return (id && R.Media && R.Media.entry(kind, id)) || null;
   }
   let oneShotPrev = null;   // 1 回だけ鳴る曲の前に鳴っていた曲
+  let tempo = null;         // BGM の速さの倍率 {id, mul}（setTempo。その id の曲にだけ効く。戦闘の暴走など）
   function oneShot(id) { const e = mediaEntry('bgm', id); return !!(e && e.loop === false); }
   function decodeBuf(ab) {
     return new Promise((res, rej) => {
@@ -1189,6 +1287,11 @@
     const fe = mediaEntry('bgm', cur.id);
     if (fe) {
       const c = loadBuffer('bgm', cur.id);
+      // 速めている曲（setTempo）: 高さを保って速められるなら <audio> で（ジングルの後に戻るときなど）
+      if (tempo && tempo.id === cur.id && canStretch(cur.id)) {
+        pb = new StretchPlayback(mx, cur.id, fe, { dest: mx.music, pos: cur.pos || 0, fadeIn: Math.max(0.05, o.fadeIn || 0), rate: tempo.mul });
+        return;
+      }
       if (c && c.state === 'ok') {
         pb = new FilePlayback(mx, cur.id, c.buf, fe, { dest: mx.music, at: ctx.currentTime + (o.delay || 0.03), pos: cur.pos || 0, fadeIn: o.fadeIn });
         return;
@@ -1203,7 +1306,7 @@
     }
     const song = compile(cur.id);
     if (!song) { warnOnce('bgm:' + cur.id, `audio: unknown BGM '${cur.id}'`); return; }
-    pb = new Playback(mx, song, { dest: mx.music, at: ctx.currentTime + (o.delay || 0.03), pos: cur.pos || 0, fadeIn: o.fadeIn });
+    pb = new Playback(mx, song, { dest: mx.music, at: ctx.currentTime + (o.delay || 0.03), pos: cur.pos || 0, fadeIn: o.fadeIn, rate: tempo && tempo.id === cur.id ? tempo.mul : 1 });
     pump();
   }
   function stopPb(fade) { if (pb) { pb.stop(fade); pb = null; } }
@@ -1268,6 +1371,7 @@
         document.addEventListener('visibilitychange', () => {
           if (!ctx) return;
           try { if (document.hidden) ctx.suspend(); else ctx.resume(); } catch (e) { /* ignore */ }
+          if (pb && pb.stretch) pb.pause(document.hidden);   // <audio> は context を止めても進むので一緒に止める
         });
         for (const ev of ['pointerdown', 'pointerup', 'touchend', 'keydown', 'click']) window.addEventListener(ev, unlock, { passive: true });
       } catch (e) { /* no DOM (tests) */ }
@@ -1297,6 +1401,33 @@
       cur = null;
       stopPb((fadeFrames || 0) / 60 || 0.04);
     },
+    /**
+     * 今の BGM の速さの倍率（1 = もと。高さは変えない）。合成の曲だけ: 録音の曲（ogg 等）は高さを保って速められないので何もしない。
+     * 倍率はその曲の id に付く（ジングルの後に戻る・同じ曲を鳴らし直すときも続く。別の曲には効かない）。戻すのは setTempo(1)
+     * → 合成の曲に効いた（または効く）なら true
+     */
+    setTempo(mul) {
+      mul = mul > 0 ? +mul : 1;
+      const id = cur ? cur.id : null;
+      const file = !!id && !!mediaEntry('bgm', id), stretch = file && canStretch(id);
+      tempo = mul === 1 || !id || (file && !stretch && !!ctx) ? null : { id, mul };
+      if (!pb || pb.id !== id || !ctx) return !!tempo || mul === 1;
+      if (!pb.file || pb.stretch) { pb.setRate(mul, ctx.currentTime); return true; }
+      // 録音の曲: <audio> で高さを保って速め、鳴りだしたら元の音を消す（同じ位置から。間は短い重ね）
+      if (mul === 1 || !stretch) return mul === 1;
+      const old = pb, fe = mediaEntry('bgm', id);
+      const np = new StretchPlayback(mx, id, fe, { dest: mx.music, posAt: () => old.position(ctx.currentTime), fadeIn: 0.3, rate: mul });
+      np.ready.then((ok) => {
+        if (pb !== old || !ok) { if (!ok && !np.stopped) np.stop(0.05); return; }
+        pb = np;
+        old.stop(0.3);
+      });
+      return true;
+    },
+    /** 今の BGM に効いている速さの倍率（無ければ 1） */
+    get tempo() { return tempo && cur && tempo.id === cur.id ? tempo.mul : 1; },
+    /** 鳴っている BGM の種類（'synth' | 'file' | 'stretch'（録音を <audio> で速めている）| null）。テスト用 */
+    get bgmKind() { return !pb ? null : pb.stretch ? 'stretch' : pb.file ? 'file' : 'synth'; },
     /** pause the current track (remembering its position) and play another (battle) */
     pushBGM(id) {
       if (jin) finishJingle(jin, false);

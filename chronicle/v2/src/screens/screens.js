@@ -210,8 +210,13 @@
   S.box = function (o) {
     const s = R.safe || { l: 0, t: 0, r: 0, b: 0 }, m = R.UIK.margin();
     const foot = o && o.noFoot ? 0 : u(30);
-    return { x: s.l + m, y: s.t + m, w: R.W - s.l - s.r - m * 2, h: R.H - s.t - s.b - m * 2 - foot, tall: R.layout === 'tall', m };
+    const off = S.boxOff();
+    return { x: s.l + m, y: s.t + m + off, w: R.W - s.l - s.r - m * 2, h: R.H - s.t - s.b - m * 2 - foot - off * 2, tall: R.layout === 'tall', m };
   };
+  // 横持ちで高さが伸びた窓（正方形に近い PC の窓。core/fit.js、R.H 540〜1080）: 画面の札は高さ BOX_MAX_H までにして上下の真ん中に置く
+  //   （後ろの絵は窓いっぱい。札を縦に引き伸ばすと下が大きく空くので、まとまりを真ん中に。ボタン表示も札のすぐ下に付いてくる）
+  const BOX_MAX_H = 640;
+  S.boxOff = function () { return R.layout !== 'tall' && R.H > BOX_MAX_H ? Math.floor((R.H - BOX_MAX_H) / 2) : 0; };
   S.tall = () => R.layout === 'tall';
   S.hit = (r, x, y) => R.UIK.hit(r, x, y);
   /** 今のフレームでポインタが rect を押したか */
@@ -229,6 +234,9 @@
     if (S.tall()) {
       const s = R.safe || { b: 0 };
       R.UIK.prompts(g, list, { x: R.W / 2 + u(24), y: R.H - s.b - R.UIK.margin() - u(8), align: 'center' });
+    } else if (S.boxOff()) {
+      const s = R.safe || { r: 0, b: 0 }, m = R.UIK.margin(), size = Math.max(u(12), (R.minFont || 0) / 0.8);
+      R.UIK.prompts(g, list, { x: R.W - s.r - m, y: R.H - s.b - m - size / 2 - S.boxOff(), align: 'right' });
     } else R.UIK.prompts(g, list, 'br');
   };
 

@@ -76,6 +76,7 @@ function ok(name, cond, info) {
     // ぼけない: 実キャンバスが実画面の画素に 1:1（2 以下の実画面は大きく描いて縮める）、帯の位置も実画面の画素に揃う
     const dev = Math.min(w / W, h / H) * dpr;
     if (dev >= 2 - 1e-6) ok(`fit ${name}: backing = device px (1:1)`, f.crisp && Math.abs(f.css.w * dpr - f.backing.w) < 0.01 && Math.abs(f.css.h * dpr - f.backing.h) < 0.01, f);
+    ok(`fit ${name}: fills the window (no bands)`, Math.abs(f.css.w - w) <= 1 && Math.abs(f.css.h - h) <= 1, f.css);
     ok(`fit ${name}: bars on device px`, Math.abs(f.css.left * dpr - Math.round(f.css.left * dpr)) < 1e-6 && Math.abs(f.css.top * dpr - Math.round(f.css.top * dpr)) < 1e-6, f.css);
     ok(`fit ${name}: body 15 px ≥ 12 CSS px`, 15 * f.uiScale * f.cssScale >= 12 - 1e-6, { css: 15 * f.uiScale * f.cssScale });
   }

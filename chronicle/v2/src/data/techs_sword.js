@@ -157,7 +157,7 @@
     target: 'self',
     reach: false,
     quick: true,
-    effects: [{ type: 'cover', mul: 0.6 }],
+    effects: [{ type: 'cover', mul: 0.6 }, { type: 'taunt', mul: 1.2, turns: 3 }],   // taunt: 説明には書かない（隠し。持ち主 2026-10-02）
     fx: 'stance',
     rank: 5,
     glim: { lv: 5, from: ['t_sword_guard'] },

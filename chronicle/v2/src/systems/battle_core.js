@@ -31,7 +31,7 @@
     DK: (L) => 40 + 5 * L,
     LZ: (T) => 6 + 6 * T,
     W: [8, 14, 21, 30, 40, 51, 64, 78, 94, 112],
-    ROW: { middleTaken: 0.7, weight: { front: 2, middle: 1 }, aimMiddle: { front: 1, middle: 3 } },
+    ROW: { middleTaken: 0.7, weight: { front: 3, middle: 1 }, aimMiddle: { front: 1, middle: 3 } },
     AFTER: { mpPct: 0.12 },
     ESCAPE: { base: 0.55, step: 0.12, agi: 0.5, min: 0.25, max: 0.95 },
     PREEMPT: 1 / 16,
@@ -39,6 +39,8 @@
     RARE_ENC: 80,
     RARE_MON: { lvOff: 2 },
     DEFEND: 0.5,
+    DEFEND_REST: { hp: 0.03, mp: 0.03 },
+    TAUNT: { mul: 1.2, turns: 3 },
     DMG: { physRand: [0.9, 1.1], magRand: [0.95, 1.05], breathRand: [0.9, 1.1], fixedRand: [0.95, 1.05], max: 9999 },
     HIT: { min: 20, max: 100, blind: 0.5 },
     CRIT: { mult: 1.5 },
@@ -174,8 +176,23 @@
   }
   function weaponItem(W) { return (W && ((W.id && DB.items[W.id]) || W)) || EMPTY; }
   const FOE_T = { enemy: 1, enemies: 1, group: 1, random: 1, front: 1 };
-  const BATTLE_EFFECT = { damage: 1, heal: 1, healMp: 1, revive: 1, cure: 1, status: 1, regen: 1, buff: 1, dispel: 1, steal: 1, scan: 1, escape: 1, cover: 1, summon: 1, special: 1 };
+  const BATTLE_EFFECT = { damage: 1, heal: 1, healMp: 1, revive: 1, cure: 1, status: 1, regen: 1, buff: 1, dispel: 1, steal: 1, scan: 1, escape: 1, cover: 1, taunt: 1, summon: 1, special: 1 };
   const GATED = { status: 1, steal: 1, dispel: 1 };
+  /**
+   * 暴走のしきい（HP の割合。null = 暴走しない）。d.enrage が数ならそれ、false なら無し。
+   * 無ければボス（子分 bossType 'add' を除く）だけ: 段階（phases）と行動の条件（cond.hpBelow）のしきいのうち 0.5 以下で一番高い物、どれも無ければ 0.5。
+   * （0.5 より上のしきいは「少し削れたら守りを固める・回復する」の類なので、暴走には数えない）
+   */
+  function enrageAt(d, boss) {
+    if (!d || d.enrage === false) return null;
+    if (typeof d.enrage === 'number') return d.enrage > 0 ? d.enrage : null;
+    if (!boss || d.bossType === 'add') return null;
+    const v = [];
+    for (const p of d.phases || []) v.push(p && p.hpBelow != null ? +p.hpBelow : 0.5);
+    for (const a of d.actions || []) if (a && a.cond && a.cond.hpBelow != null) v.push(+a.cond.hpBelow);
+    const low = v.filter((x) => x > 0 && x <= 0.5);
+    return low.length ? Math.max.apply(null, low) : 0.5;
+  }
   const hasBattleEffect = (a) => !!(a && ((a.effects && a.effects.some((e) => BATTLE_EFFECT[e.type])) || a.telegraph));
   const isMagicAct = (a) => !!(a && (a.magic || a.kind === 'spell' || (a.effects || []).some((e) => e.type === 'damage' && e.formula === 'magic')));
   const isPhysSingle = (a) => !!(a && a.target === 'enemy' && (a.effects || []).some((e) => e.type === 'damage' && (e.formula || 'phys') === 'phys'));
@@ -467,6 +484,8 @@
       return wtypeInfo(W.wtype).reach;
     }
     canReach(u) { return this.effRow(u) !== 'back' || this.slotReaches(u); }
+    /** 敵に狙われる重みに掛ける数（見えない挑発 u.taunt。切れていれば 1） */
+    tauntMul(u) { const t = u && u.taunt; return t && u.alive && this.round <= t.until ? t.mul : 1; }
     attackIssue(u) { return u.isParty && !this.canReach(u) ? 'reach' : null; }
     /** 技・術の MP（R.Rules.mpCost が techCostPct・mpCostPct・熟練の割引を持つ） */
     mpCost(u, id) {
@@ -805,6 +824,7 @@
           if (u.isParty && !cmd.confused && !this.canReach(u)) {
             u.defending = true;
             yield this.m(R.T('sys.battle_core.execute.m', { name: u.name }));
+            yield* this.defendRest(u);   // 届かずに守った時も、防御と同じ小さな回復
             return;
           }
           const r = yield* this.attack(u, cmd.target, { confused: cmd.confused });
@@ -815,6 +835,7 @@
           u.defending = true;
           yield { t: 'fx', fx: 'defend', user: u, targets: [u], kind: 'defend', cmd: 'defend', id: 'defend', name: R.T('sys.battle_core.execute.defend.name') };
           yield this.m(R.T('sys.battle_core.execute.m', { name: u.name }));
+          if (u.isParty) yield* this.defendRest(u);
           return;
         case 'wait':
           yield this.m(R.T('sys.battle_core.execute.m_2', { name: u.name }));
@@ -1010,8 +1031,23 @@
       if (!quiet && off) yield this.m(fmtName(off, u.name));
       return true;
     }
-    /** ボスの段階（§9.11.1）: 行動の終わりに、越えたしきいごとに 1 回 */
+    /** ボスの段階（§9.11.1）: 行動の終わりに、越えたしきいごとに 1 回。そのあと暴走（enrageCheck） */
     *afterAction() {
+      yield* this.phaseStep();
+      yield* this.enrageCheck();
+    }
+    /** 暴走モード（持ち主 2026-10-02）: ボスが HP の低い段階に入った最初の 1 回だけ「〜が怒り狂った！」（演出は BSCENE） */
+    *enrageCheck() {
+      if (this.checkEnd()) return;
+      for (const m of this.mons) {
+        if (m.enraged || !m.alive) continue;
+        if (m.enrageAt === undefined) m.enrageAt = enrageAt(m.d, m.boss);
+        if (m.enrageAt == null || !(m.hpRate() < m.enrageAt)) continue;
+        m.enraged = true;
+        yield { t: 'enrage', u: m };
+      }
+    }
+    *phaseStep() {
       if (!this.phaseQ.size) return;
       const list = [...this.phaseQ];
       this.phaseQ.clear();
@@ -1429,6 +1465,17 @@
       }
     }
 
+    /** 防御の小さな回復（持ち主 2026-10-02）: 最大 HP・最大 MP の DEFEND_REST ずつ（最大が 0 より大きければ最低 1）。味方だけ・倒れていれば無し */
+    *defendRest(u) {
+      if (!u || !u.isParty || !u.alive) return;
+      const D = K('DEFEND_REST') || {};
+      const amt = (max, r) => (max > 0 ? Math.max(1, Math.floor(max * (+r || 0))) : 0);
+      const hp = u.mhp > 0 && u.hp < u.mhp ? yield* this.restore(u, amt(u.mhp, D.hp), 'hp', 'quiet') : 0;
+      const mp = u.mmp > 0 && u.mp < u.mmp ? yield* this.restore(u, amt(u.mmp, D.mp), 'mp', 'quiet') : 0;
+      if (hp > 0 && mp > 0) yield this.m(R.T('sys.battle_core.defendRest.both', { name: u.name, hp, mp }));
+      else if (hp > 0 || mp > 0) yield this.m(R.T('sys.battle_core.restore.m', { name: u.name, L: hp > 0 ? 'HP' : 'MP', got: hp > 0 ? hp : mp }));
+    }
+
     *restore(t, n, kind, how) {
       n = Math.max(0, Math.round(n));
       const cur = kind === 'mp' ? t.mp : t.hp;
@@ -1685,6 +1732,14 @@
           t.turns.cover = 'next';
           yield { t: 'status', u: t, s: 'cover', on: true };
           if (def.on) yield this.m(fmtName(def.on, t.name));
+          return;
+        }
+        case 'taunt': {
+          // 見えない挑発（城壁の構え 等）: turns ラウンドの間、敵に狙われる重みを mul 倍（状態ではない。札・文・出来事を出さない）
+          if (!t.alive) return;
+          const T = K('TAUNT') || {};
+          const turns = Math.max(1, (eff.turns != null ? eff.turns : T.turns || 3) | 0);
+          t.taunt = { mul: +(eff.mul != null ? eff.mul : T.mul || 1.2), until: this.round + turns - 1 };
           return;
         }
         case 'buff': return yield* this.buff(u, t, eff, ctx);
@@ -2138,6 +2193,7 @@
       case 'summon': for (const i of ev.units || []) out.push({ t: 'summon', uid: 'e_' + i, mon: eng && eng.mons[i] ? eng.mons[i].id : null, by: uidOf(ev.by) }); break;
       case 'flee': out.push({ t: 'flee', uid: uidOf(ev.u) }); break;
       case 'phase': if (ev.text) out.push({ t: 'msg', text: ev.text, phase: true, uid: uidOf(ev.u) }); break;
+      case 'enrage': out.push({ t: 'msg', text: R.T('sys.battle_core.enrage', { name: ev.u ? ev.u.name : '' }), enrage: true, uid: uidOf(ev.u) }); break;   // 暴走（赤い光・揺れ・BGM の速さは BSCENE）
       case 'steal': out.push({ t: 'steal', uid: uidOf(ev.u), target: uidOf(ev.target), item: null }); break;
       case 'gain':
         out.push({ t: 'steal', uid: uidOf(ev.u), target: uidOf(ev.target), item: ev.item, grade: ev.grade, stealOnly: !!ev.stealOnly });
@@ -2529,7 +2585,7 @@
     create,
     Engine, Unit, PartyUnit, MonUnit, NAMES, BUFF_STATS, STATUS_DEFAULTS: ST, UNUSABLE_TEXT,
     stageMult, stDef, badStatuses, isDisabling, wtypeInfo, weaponItem, hasBattleEffect, isMagicAct, isEscape, ACT, normStats, rowOf,
-    MON_ATTACK_FX, WEAPON_FX, BATTLE_EFFECT, K, KF,
+    MON_ATTACK_FX, WEAPON_FX, BATTLE_EFFECT, K, KF, enrageAt,
     resolveMonsters, simulate, drain, charsMods, toEvents,
     reasonText(why) { return UNUSABLE_TEXT[why] || ''; },
     specials: BC.specials || {},

@@ -25,6 +25,7 @@
   out [w, h]          1 コマの大きさ（px。戦闘の論理 1 px = 2 px で見る）
   anchor 'center' | 'bottom' | 'left'   コマの中の基準の点（center = 真ん中、bottom = 下の真ん中、left = 左の真ん中）
   fit                 全部のコマを合わせた外形が、基準から見てコマの何割に収まるか（既定 0.92）
+  q, aq               WebP の品質（色・α。既定 86・90。ボスの部品は α を 60 に下げて軽く）
   fps, loop, blend    実行時の再生（blend は既定 black → 'lighter'、clear → 'source-over'）
 """
 import base64
@@ -283,7 +284,7 @@ def process(style, p):
     strip[strip[..., 3] == 0, :3] = 0
     os.makedirs(OUT, exist_ok=True)
     dst = os.path.join(OUT, p['id'] + '.webp')
-    Image.fromarray(np.clip(np.rint(strip), 0, 255).astype(np.uint8), 'RGBA').save(dst, 'WEBP', quality=p.get('q', 86), alpha_quality=90, method=6)
+    Image.fromarray(np.clip(np.rint(strip), 0, 255).astype(np.uint8), 'RGBA').save(dst, 'WEBP', quality=p.get('q', 86), alpha_quality=p.get('aq', 90), method=6)
     # 山（一番濃いコマ）: 実行時は山まで速く進めて、山を保ってから消す（fx_seq_img.js の DEFSEG）
     energy = [float((f[..., 3] / 255.0 * (lum(f[..., :3]) / 255.0 + 0.3)).sum()) for f in frames]
     peak = int(np.argmax(energy)) if p.get('peak') is None else int(p['peak'])

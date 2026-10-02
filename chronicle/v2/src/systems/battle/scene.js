@@ -393,7 +393,8 @@
       initCore(st);
       st.cover = 1; st.go = null;
       R.Engine.fade.a = 0;
-      try { R.Audio.bgm(st.info.bgm, { fade: 300 }); } catch (e) { /* ignore */ }
+      try { if (R.Audio.setTempo) R.Audio.setTempo(1); R.Audio.bgm(st.info.bgm, { fade: 300 }); } catch (e) { /* ignore */ }   // やり直しは暴走の前の速さから
+      st.rage = null; st.enraged = 0;
       await intro(st);
       return null;
     }
@@ -677,6 +678,7 @@
     // 仕上げ（世界の最後・HUD の前。RENDER の依頼: mood は背景の meta.mood）
     if (R.Post && R.Post.frame) { try { R.Post.frame(g, { mood: (sh && sh.meta && sh.meta.mood) || 'night' }); } catch (e) { /* 仕上げは無くてもよい */ } }
     if (st.dim > 0) { g.fillStyle = `rgba(6,6,14,${st.dim})`; g.fillRect(0, 0, R.W, R.H); }
+    if (st.rage) _.play.drawRage(g, st);   // 暴走の赤い光
     _.glimmer.drawWorld(g, st);
     // HUD
     _.hud.enemyTags(g, st);
@@ -719,6 +721,7 @@
       R.Save.checkpoint('battle', { setup, seed: R.Game ? R.Game.seed : 0 });
       R.emit('battle:start', { setup });
       const bgm = setup.bgm || (troop && troop.bgm) || (boss ? 'boss' : 'battle');
+      try { if (R.Audio.setTempo) R.Audio.setTempo(1); } catch (e) { /* ignore */ }   // 前の戦闘の暴走の速さを持ち越さない
       R.Audio.pushBgm(bgm);
       const prevLayout = R.Input.layoutName;
       const st = newState(setup, { boss, heavy, bgm, troop });
@@ -739,6 +742,7 @@
         _.voice.stop();
         R.Engine.remove(st.scene, res);
         _.trans.drop();
+        try { if (R.Audio.setTempo) R.Audio.setTempo(1); } catch (e) { /* ignore */ }   // 暴走で速めた BGM を戻す
         R.Audio.popBgm();
         R.Input.touchLayout(prevLayout);
         for (const k of st.pinned || []) { try { R.Hd.unpin(k); } catch (e) { /* ignore */ } }

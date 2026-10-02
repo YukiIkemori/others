@@ -825,4 +825,105 @@ section('魔石: 戦闘の道具・自動の戦い・リピートは使わない
   ok('battle_core has no stone glimmer / proficiency path left', !/\.stone\b/.test(src));
 }
 
+// ================================================================ 防御の回復・隊列の重み・見えない挑発（持ち主 2026-10-02）
+section('防御: ダメージ半分のまま、最大 HP・MP の 3% 回復（最低 1・味方だけ・倒れていれば無し）');
+{
+  newGame(['bartolo', 'marta']);
+  const Kr = R.Rules.K;
+  ok('K.DEFEND stays 0.5, K.DEFEND_REST = 3% / 3%', Kr.DEFEND === 0.5 && Kr.DEFEND_REST.hp === 0.03 && Kr.DEFEND_REST.mp === 0.03, [Kr.DEFEND, Kr.DEFEND_REST]);
+  const eng = engine({ mons: ['rat_1'] });
+  eng.use();
+  const u = eng.party[0];
+  u.hp = 1; u.mp = 0;
+  const want = (max) => (max > 0 ? Math.max(1, Math.floor(max * 0.03)) : 0);
+  const evs = drainAll(eng.execute(u, { type: 'defend' }));
+  const heals = evs.filter((e) => e.t === 'heal' && e.u === u);
+  ok('defend: HP +max(1, floor(3% maxHP))', u.hp === 1 + want(u.mhp), [u.hp, u.mhp]);
+  ok('defend: MP +max(1, floor(3% maxMP)) when maxMP > 0', u.mp === Math.min(u.mmp, want(u.mmp)), [u.mp, u.mmp]);
+  ok('defend: heal events for HP and MP (numbers pop like other heals)', heals.some((e) => !e.mp) && (u.mmp === 0 || heals.some((e) => e.mp)), heals.map((e) => [e.n, !!e.mp]));
+  const out = []; for (const e of evs) BC.toEvents(e, 'A', out, eng);
+  ok('defend: one log line with both amounts after the guard line', out.some((e) => e.t === 'msg' && e.text === R.T('sys.battle_core.defendRest.both', { name: u.name, hp: want(u.mhp), mp: want(u.mmp) })) || u.mmp === 0, out.filter((e) => e.t === 'msg').map((e) => e.text));
+  ok('defend still sets defending (damage cut kept)', u.defending === true);
+  u.hp = u.mhp; u.mp = u.mmp;
+  const full = drainAll(eng.execute(u, { type: 'defend' }));
+  ok('defend at full HP/MP: no heal, no extra line', !full.some((e) => e.t === 'heal') && full.filter((e) => e.t === 'msg').length === 1);
+  const big = eng.party[1];
+  big.mhp0 = big.mhp; big.hp = 10; const mh = big.mhp;
+  drainAll(eng.execute(big, { type: 'defend' }));
+  ok('defend: 3% of a large max HP (floor)', big.hp === Math.min(mh, 10 + want(mh)), [big.hp, mh]);
+  const dead = eng.party[2] || eng.party[1];
+  dead.hp = 0;
+  const de = drainAll(eng.defendRest(dead));
+  ok('defend: a KO\'d member recovers nothing', dead.hp === 0 && !de.length);
+  const m = eng.mons[0];
+  m.hp = 1;
+  const me = drainAll(eng.execute(m, { type: 'defend' }));
+  ok('enemy defend: no recovery (party only)', m.hp === 1 && !me.some((e) => e.t === 'heal'));
+  // 1 ラウンドを通して（防御は先に動く）: 守った人は回復の出来事を持つ
+  const eng2 = engine({ mons: ['rat_1'] });
+  const p0 = eng2.party[0];
+  p0.hp = Math.max(1, Math.floor(p0.mhp / 2));
+  const rev = drainAll(eng2.playRound(eng2.party.map((p) => (p === p0 ? { type: 'defend' } : { type: 'defend' }))));
+  ok('round: the defender gets a heal event', rev.some((e) => e.t === 'heal' && e.u === p0 && !e.mp));
+}
+
+section('隊列: 狙われる重み 前列 3 : 後列 1（K.ROW）、後列の受けるダメージ 0.7 はそのまま');
+{
+  newGame(['bartolo', 'marta', 'fen']);
+  const Kr = R.Rules.K.ROW;
+  ok('K.ROW.weight front 3 / back 1 / middle 1', Kr.weight.front === 3 && Kr.weight.back === 1 && Kr.weight.middle === 1, Kr.weight);
+  ok('K.ROW.backTaken / middleTaken stay 0.7', Kr.backTaken === 0.7 && Kr.middleTaken === 0.7);
+  ok('aimMiddle 1 : 3 and aimBack 1 : 3 still favour the back row', Kr.aimMiddle.middle > Kr.aimMiddle.front && Kr.aimBack.back > Kr.aimBack.front);
+  const pc = partyCopy();
+  pc.forEach((c, i) => { c.row = i === 0 ? 'front' : i === 1 ? 'back' : c.row; });
+  const eng = engine({ party: pc.slice(0, 2), mons: ['rat_1'], rng: R.Mon.mkRng('rowsim') });
+  eng.use();
+  const [F, Bk] = eng.party;
+  ok('rows as set (front / back)', eng.effRow(F) === 'front' && eng.effRow(Bk) === 'back');
+  let nf = 0; const N = 6000;
+  for (let i = 0; i < N; i++) if (R.BattleAI.pickPartyTarget(eng) === F) nf++;
+  ok('plain aim: front picked ≈ 3/4 (6000 draws, ±0.03)', Math.abs(nf / N - 0.75) < 0.03, nf / N);
+  let nm = 0;
+  for (let i = 0; i < N; i++) if (R.BattleAI.pickPartyTarget(eng, 'middle') === Bk) nm++;
+  ok('aim middle: back picked ≈ 3/4', Math.abs(nm / N - 0.75) < 0.03, nm / N);
+  ok('aim back: always the back row', Array.from({ length: 50 }, () => R.BattleAI.pickPartyTarget(eng, 'back')).every((p) => p === Bk));
+}
+
+section('見えない挑発: 城壁の構え（3 ラウンド、狙われる重み ×1.2。説明・画面には出さない）');
+{
+  newGame(['bartolo', 'marta']);
+  const tech = DB.techs.t_sword_bulwark;
+  const tt = (tech.effects || []).find((e) => e.type === 'taunt');
+  ok('bulwark keeps cover ×0.6 and has a taunt ×1.2 for 3 turns', tech.effects.some((e) => e.type === 'cover' && e.mul === 0.6) && tt && tt.mul === 1.2 && tt.turns === 3, tech.effects);
+  const fsx = require('fs'), px = require('path');
+  const descs = ['ja', 'en', 'ko', 'zh-Hans', 'zh-Hant'].map((l) => { const m = fsx.readFileSync(px.join(__dirname, '..', 'src', 'i18n', l, 'techs.js'), 'utf8').match(/'techs\.t_sword_bulwark\.desc':\s*'([^']*)'/); return m ? m[1] : ''; });
+  ok('description says nothing about being targeted more (hidden)', descs.every((d) => d && !/狙|挑発|taunt|targeted|노리|도발|嘲|挑衅|挑釁|瞄/i.test(d)), descs);
+  const line = R.Rules.techTagLine(tech);
+  ok('tech tags do not show the taunt', !/taunt|挑発|狙/.test(line), line);
+  const pc = partyCopy();
+  pc.forEach((c) => { c.row = 'front'; });
+  const eng = engine({ party: pc.slice(0, 2), mons: ['rat_1'], rng: R.Mon.mkRng('taunt') });
+  eng.use();
+  const [U, O] = eng.party;
+  eng.round = 1;
+  const evs = drainAll(eng.applyEffects(U, U, [tt], { act: tech, kind: 'tech', onHit: new Set() }, {}));
+  ok('taunt: no event, no status, no message', !evs.length && !U.status.taunt, evs.map((e) => e.t));
+  ok('taunt: ×1.2 for rounds 1–3, gone at round 4', eng.tauntMul(U) === 1.2 && (eng.round = 3, eng.tauntMul(U) === 1.2) && (eng.round = 4, eng.tauntMul(U) === 1));
+  eng.round = 2;
+  let nu = 0; const N = 8000;
+  for (let i = 0; i < N; i++) if (R.BattleAI.pickPartyTarget(eng) === U) nu++;
+  ok('taunt: user picked ≈ 1.2 / 2.2 among two front-row members', Math.abs(nu / N - 1.2 / 2.2) < 0.025, nu / N);
+  O.c.row = 'back';
+  nu = 0;
+  for (let i = 0; i < N; i++) if (R.BattleAI.pickPartyTarget(eng) === U) nu++;
+  ok('taunt stacks with rows: front taunter vs back ≈ 3.6 / 4.6', Math.abs(nu / N - 3.6 / 4.6) < 0.025, nu / N);
+  // 技として使う: 状態の札は cover だけ
+  const eng2 = engine({ mons: ['rat_1'] });
+  eng2.use(); eng2.round = 1;
+  const u2 = eng2.party[0];
+  u2.mp = 99;
+  const ev2 = drainAll(eng2.useAction(u2, 't_sword_bulwark', tech, u2, {}));
+  ok('using the tech: cover status shown, taunt set silently', ev2.some((e) => e.t === 'status' && e.s === 'cover') && !ev2.some((e) => e.t === 'status' && e.s === 'taunt') && u2.taunt && u2.taunt.until === 3, ev2.map((e) => e.t + (e.s ? ':' + e.s : '')));
+}
+
 done('test_battle');

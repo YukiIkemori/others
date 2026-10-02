@@ -347,6 +347,8 @@
     'sys.battle_core.die.m_3': '남은 무리는 뿔뿔이 흩어져 달아났다!',
     'sys.battle_core.restore.m': '{name}의 {L}이(가) {got} 회복되었다!',
     'sys.battle_core.restore.m_2': '그러나 효과가 없었다.',
+    'sys.battle_core.defendRest.both': '{name}의 HP가 {hp}, MP가 {mp} 회복되었다!',
+    'sys.battle_core.enrage': '{name}이(가) 분노로 날뛰기 시작했다!',
     'sys.battle_core.inflict.fail.m': '{name}에게는 효과가 없었다.',
     'sys.battle_core.inflict.fail.m_2': '그러나 효과가 없었다.',
     'sys.battle_core.announce.ret': '{name}은(는) {name2}을(를) 사용했다!',

@@ -24,7 +24,7 @@
   const dmgOf = (act) => act && act.effects && act.effects.find((e) => e.type === 'damage' && !e.on);
   const rowK = () => {
     const k = R.Rules && R.Rules.K && R.Rules.K.ROW;
-    const w = (k && k.weight) || { front: 2, middle: 1 };
+    const w = (k && k.weight) || { front: 3, middle: 1 };
     const a = (k && k.aimMiddle) || { front: 1, middle: 3 };
     return { weight: { front: w.front, back: w.back != null ? w.back : w.middle }, aimMiddle: { front: a.front, back: a.back != null ? a.back : a.middle } };
   };
@@ -58,9 +58,10 @@
     if (isMagicAct(a) && u.status.silence) return false;
     return true;
   }
-  /** 味方の誰をねらうか（§4.5.3）: 前列 2 : 後列 1、aim 'middle' は 1 : 3、aim 'low' は HP の割合が低い人 */
+  /** 味方の誰をねらうか（§4.5.3）: 前列 3 : 後列 1（持ち主 2026-10-02）、aim 'middle' は 1 : 3、aim 'low' は HP の割合が低い人 */
   // aim: 'low'（HP の割合が低い人）・'healer'（回復の術を持つ人）・'caster'（魔力の高い人）・'back'（後列の人）・'strong'（攻撃力の高い人）
-  //   当てはまる人がいなければ、ふつうの重み（前列 2 : 後列 1）
+  //   当てはまる人がいなければ、ふつうの重み（前列 3 : 後列 1）
+  //   重みで選ぶときは、見えない挑発（eng.tauntMul。城壁の構え 等）を列の重みに掛ける
   const healerOf = (p) => !!(p.c && (p.c.spells || []).some((id) => { const a = ACT(id); return a && a.kind === 'spell' && has(a, 'heal'); }));
   function pickPartyTarget(eng, aim) {
     const l = eng.living('party');
@@ -68,7 +69,7 @@
     if (aim === 'low') return l.slice().sort((a, b) => a.hpRate() - b.hpRate() || a.idx - b.idx)[0];
     if (aim === 'healer' || aim === 'back') {
       const c = l.filter((p) => (aim === 'healer' ? healerOf(p) : eng.effRow(p) === 'back'));
-      if (c.length) return c[R.Mon.rng().ri(0, c.length - 1)];
+      if (c.length) return c.length > 1 && c.some((p) => tauntOf(eng, p) !== 1) ? R.Mon.weighted(c.map((p) => ({ p, w: tauntOf(eng, p) }))).p : c[R.Mon.rng().ri(0, c.length - 1)];
     }
     if (aim === 'caster' || aim === 'strong') {
       const k = aim === 'caster' ? 'mag' : 'atk';
@@ -76,8 +77,9 @@
     }
     const K = rowK();
     const W = aim === 'middle' ? K.aimMiddle : K.weight;
-    return R.Mon.weighted(l.map((p) => ({ p, w: W[eng.effRow(p)] || 1 }))).p;
+    return R.Mon.weighted(l.map((p) => ({ p, w: (W[eng.effRow(p)] || 1) * tauntOf(eng, p) }))).p;
   }
+  const tauntOf = (eng, p) => (eng.tauntMul ? eng.tauntMul(p) : 1);
   function monCommand(eng, u, id) {
     if (id === 'attack') return { type: 'attack', target: pickPartyTarget(eng) };
     if (id === 'defend' || id === 'wait') return { type: id };

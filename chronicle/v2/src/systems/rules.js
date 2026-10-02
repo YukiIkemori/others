@@ -92,8 +92,8 @@
     // §9.3 戦闘のあとの伸び（R.Growth）。reserve: 控えは出撃した人の伸びの平均 × 0.7（持ち主 2026-10-02）。slope 0.07 → 0.08（sim_growth E1: T0 の地方ボスで LZ+5.2 → +4.9。伸びなくなるのは d ≤ −3.75）
     GROW: { p0: 0.30, slope: 0.08, pmax: 0.90, add: { boss: 4, rare: 2, golden: 1, metal: 6 }, mul: { boss: 2, metal: 2 },
       reserve: 0.7, fallen: 0.5, join: 0.9, capOff: 6, bplMax: 16, bplAmp: 12, bplTau: 12, rf: [0.8, 1.2], glMin: 1, glMax: 99 },
-    // §4.5.3 隊列（back = 後列。旧の middle と同じ）
-    ROW: { middleTaken: 0.7, backTaken: 0.7, weight: { front: 2, middle: 1, back: 1 }, aimMiddle: { front: 1, middle: 3 }, aimBack: { front: 1, back: 3 } },
+    // §4.5.3 隊列（back = 後列。旧の middle と同じ）。狙われる重み 前列 3 : 後列 1（持ち主 2026-10-02。2 : 1 から）
+    ROW: { middleTaken: 0.7, backTaken: 0.7, weight: { front: 3, middle: 1, back: 1 }, aimMiddle: { front: 1, middle: 3 }, aimBack: { front: 1, back: 3 } },
     STAGE: [0.63, 0.77, 1, 1.3, 1.6],
     MOB: { atk: 0.6, mag: 0.6 },
     // §4.9.1 熟練度（SYSTEMS_REWORK §1。点を保存し、段階 1〜100 は計算）
@@ -169,6 +169,10 @@
     MDEF: { flat: 16 },
     MON_EVA: { base: 5, flying: 12, fast: 15, fastAgi: 1.3, metal: 30, rare: 15, rareFlying: 20, boss: 5, bossFlying: 10 },
     DEFEND: 0.5,
+    // 防御した味方は最大 HP・最大 MP の 3% ずつ回復（最大が 0 より大きければ最低 1。持ち主 2026-10-02）
+    DEFEND_REST: { hp: 0.03, mp: 0.03 },
+    // 見えない挑発（城壁の構え）: 狙われる重みに掛ける数と続くラウンド数の既定
+    TAUNT: { mul: 1.2, turns: 3 },
     DMG: { physRand: [0.90, 1.10], magRand: [0.95, 1.05], breathRand: [0.9, 1.1], fixedRand: [0.95, 1.05], max: 9999 },
     SF: { min: 0.6, max: 1.8 },
     HEALF: { min: 0.6, max: 2.0 },

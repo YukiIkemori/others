@@ -348,6 +348,8 @@
     'sys.battle_core.die.m_3': 'The rest of the pack scattered and fled!',
     'sys.battle_core.restore.m': '{name} recovered {got} {L}!',
     'sys.battle_core.restore.m_2': 'But it had no effect.',
+    'sys.battle_core.defendRest.both': '{name} recovered {hp} HP and {mp} MP!',
+    'sys.battle_core.enrage': '{name} flies into a rage!',
     'sys.battle_core.inflict.fail.m': 'It had no effect on {name}.',
     'sys.battle_core.inflict.fail.m_2': 'But it had no effect.',
     'sys.battle_core.announce.ret': '{name} used {name2}!',

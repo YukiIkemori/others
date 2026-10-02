@@ -466,6 +466,7 @@
     ctx.seq = seqOf(e); ctx.seqC = null; ctx.seqEnd = 0;
     const an = u.name;
     if (e.combo && e.combo.first) await comboIntro(st, e);
+    else if (!e.combo && u.side !== 'party' && ctx.seq && _.ult && _.ult.is(ctx.seq)) await _.ult.play(st, e, ctx);   // ボスの必殺技の差し込み（ult_fx.js）
     st.head = e.combo ? { name: e.combo.name || e.name || '', sub: comboSub(st, e), t0: R.Engine.time, color: '#ffd68a', tint: 'rgba(255,190,90,0.9)' } : e.cmd === 'attack' ? { name: R.T('battle.playback.act.head.name', { an }), t0: R.Engine.time } : { name: e.name || '', sub: an, t0: R.Engine.time };
     if (st.tele && st.tele.uid === e.uid) { st.tele = null; }
     const v = st.vis[e.uid];
@@ -725,9 +726,38 @@
   H.grow = async (st, e) => { st.collected.grow.push(e); };
   H.prof = async (st, e) => { st.collected.prof.push(e); if (_.profUI) _.profUI.pop(st, e); };   // 頭の上に「剣+1」（止めない。result_prof.js）
   H.msg = async (st, e) => {
+    if (e.enrage) return P.enrage(st, e);
     // ボスの段階の切り替え（BEAST の原画に第 2 の姿 idle_p2… があれば actors.js がそれを使う）
     if (e.phase && e.uid != null && st.vis[e.uid]) { const v = st.vis[e.uid]; v.phase = (v.phase || 1) + 1; v.flash = 1; }
     st.head = { name: e.text, t0: R.Engine.time }; await st.pwait(900);
+  };
+  /** 暴走モード（持ち主 2026-10-02）: 赤い光・揺れ・唸り・赤い見出し「〜が怒り狂った！」、BGM をこの戦闘の終わりまで速く（高さはそのまま） */
+  P.ENRAGE_TEMPO = 1.13;
+  P.enrage = async (st, e) => {
+    const rm = reduce();
+    st.rage = { t0: R.Engine.time, ms: (rm ? 500 : 900) / Math.max(1, st.speed ? st.speed() : 1), r: rm };
+    st.enraged = (st.enraged || 0) + 1;
+    const v = e.uid != null && st.vis[e.uid];
+    if (v) { v.flash = 1; v.flashHold = R.Engine.time + 120; }
+    if (!rm && R.Settings.get('shake') !== 'off') st.shake = { t0: R.Engine.time, ms: 560, amp: 7 };
+    sfx('roar');
+    try { if (R.Audio.setTempo) R.Audio.setTempo(P.ENRAGE_TEMPO); } catch (err) { /* ignore */ }
+    st.head = { name: e.text, t0: R.Engine.time, tint: '#ff6a52', color: '#ffc2b2' };
+    await st.pwait(1100);
+  };
+  /** 暴走の赤い光（画面の縁から。reduceMotion は弱く短く） */
+  P.drawRage = function (g, st) {
+    const r = st.rage;
+    if (!r) return;
+    const k = (R.Engine.time - r.t0) / Math.max(1, r.ms);
+    if (k >= 1 || k < 0) { if (k >= 1) st.rage = null; return; }
+    const a = (r.r ? 0.22 : 0.5) * (k < 0.12 ? k / 0.12 : Math.pow(1 - (k - 0.12) / 0.88, 1.6));
+    const cx = R.W / 2, cy = R.H / 2, rad = Math.hypot(cx, cy);
+    const gr = g.createRadialGradient(cx, cy, rad * 0.18, cx, cy, rad);
+    gr.addColorStop(0, `rgba(255,40,24,${a * 0.18})`);
+    gr.addColorStop(0.6, `rgba(220,20,16,${a * 0.55})`);
+    gr.addColorStop(1, `rgba(150,0,0,${a})`);
+    g.save(); g.fillStyle = gr; g.fillRect(0, 0, R.W, R.H); g.restore();
   };
   H.end = async () => {};
   P.handlers = H;

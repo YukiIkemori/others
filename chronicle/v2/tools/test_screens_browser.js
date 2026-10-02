@@ -64,6 +64,8 @@ async function openScreen(p, id, params) {
   return B.waitFor(p, `${TOP}==='screen:${id}'`, 3000);
 }
 const result = (p) => B.ev(p, 'window.__r');
+// 急に出る選択の札（S.ask・宿）は出てすぐの決定を受けない（R.UIK.choiceGuard、テスター 2026-10-02 P22）: 受けるようになるまで待つ
+const armed = (p) => B.waitFor(p, `(() => { const v = RPG.Engine.top().view || {}; const m = v.modal; if (m && m.guard) return m.guard.armed; if (v.guard) return v.guard.armed; return true; })()`, 3000);
 // 一番上の画面が閉じる動きの途中でない（札も閉じかけでない）
 const SETTLED = `(() => { const v = (RPG.Engine.top() || {}).view; return !v || (!v.closing && !(v.modal && v.modal.ending)); })()`;
 /** B で id の画面まで戻る。閉じる動き（140 ms、ゲームの時間）の間は B を押し足さない。
@@ -139,7 +141,7 @@ async function backTo(p, id, max) {
     await B.press(p, 'x');
     ok('hub: X → 満タン card', await B.waitFor(p, `!!RPG.Engine.top().view.modal`, 1500));
     const needAsk = await B.ev(p, `RPG.Engine.top().view.modal.kind==='ask'`);
-    if (needAsk) { await B.press(p, 'a'); await p.waitForTimeout(300); await B.waitFor(p, `!!RPG.Engine.top().view.modal`, 1500); }
+    if (needAsk) { await armed(p); await B.press(p, 'a'); await p.waitForTimeout(300); await B.waitFor(p, `!!RPG.Engine.top().view.modal`, 1500); }
     await p.waitForTimeout(300);
     ok('満タン healed viola', (await B.ev(p, 'RPG.Game.chars.viola.hp')) > hp0, { hp0, hp1: await B.ev(p, 'RPG.Game.chars.viola.hp') });
     if (!noShots) await B.shot(p, path.join(OUT, 'menu_fullheal_1920.png'));
@@ -149,11 +151,11 @@ async function backTo(p, id, max) {
 
     // 宿
     await openScreen(p, 'inn', { price: 30 });
-    await B.press(p, 'a'); await p.waitForTimeout(300);
+    await armed(p); await B.press(p, 'a'); await p.waitForTimeout(300);
     { const r = await result(p); ok('inn: A → {stay:true, pick:0}', r && r.stay === true && (r.pick === 0 || r.pick == null), r); }
     await B.ev(p, `(() => { RPG.Game.gold = 5; return true; })()`);
     await openScreen(p, 'inn', { price: 30 });
-    await B.press(p, 'a'); await p.waitForTimeout(300);
+    await armed(p); await B.press(p, 'a'); await p.waitForTimeout(300);
     ok('inn: too poor → cursor on やめておく → {stay:false}', JSON.stringify(await result(p)) === '{"stay":false}', await result(p));
     await B.ev(p, `(() => { RPG.Game.gold = 12345; return true; })()`);
 
@@ -185,7 +187,7 @@ async function backTo(p, id, max) {
     await openScreen(p, 'partySelect', { count: 3 });
     await B.press(p, 'a'); await B.press(p, 'right'); await B.press(p, 'a'); await B.press(p, 'down'); await B.press(p, 'a');
     ok('partySelect: 3 picks → confirm', await B.waitFor(p, `!!RPG.Engine.top().view.modal`, 1500));
-    await B.press(p, 'a');
+    await armed(p); await B.press(p, 'a');
     ok('partySelect → 3 companion ids', await B.waitFor(p, `Array.isArray(window.__r) && window.__r.length === 3 && window.__r.every((x) => typeof x === 'string')`, 3000), await result(p));
 
     // 店: タブ（武器・防具・道具は並ぶ種類だけ＋売る）・数を選ぶ札・売る（2026-09 の作り直し: 道具は ←→ の数ではなく A で数を選ぶ札を開く）
@@ -328,7 +330,7 @@ async function backTo(p, id, max) {
     await B.waitFor(p, `${TOP}==='screen:save'`, 1500);
     await B.pressUntil(p, 'down', `RPG.Engine.top().list.current().value==='suspend'`, 5);
     await B.press(p, 'a'); await B.waitFor(p, `!!RPG.Engine.top().view.modal`, 1500);
-    await B.press(p, 'a');
+    await armed(p); await B.press(p, 'a');
     ok('suspend → hub closes with {title:true}', await B.waitFor(p, `window.__r && window.__r.title===true`, 2500), await result(p));
     ok('suspend slot written', await B.ev(p, `!!(RPG.Save.cards().find(e=>e.slot==='suspend')||{}).card`));
     ok('0 console errors (keyboard run)', P.errors.length === 0, P.errors.slice(0, 5));

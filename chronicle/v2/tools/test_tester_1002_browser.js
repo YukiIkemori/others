@@ -68,12 +68,21 @@ async function main() {
     await p.evaluate(`(async () => { window.__sv = null; RPG.Screens.open('shop', { id: 'shop_pharos_arms' }); })()`);
     await B.waitFor(p, `${B.TOP}==='screen:shop'`, 5000);
     await sleep(300);
-    await p.evaluate(`(() => { const v = RPG.Engine.top().view; window.__ask = 'none'; RPG.Screens.ask(v, { title: '今すぐ装備する？', choices: ['甲', '乙', '装備しない'], index: 1, guard: true }).then((k) => { __ask = k; }); })()`);
+    await p.evaluate(`(() => { const v = RPG.Engine.top().view; window.__ask = 'none'; RPG.Screens.ask(v, { title: '今すぐ装備する？', choices: ['甲', '乙', '装備しない'], index: 1 }).then((k) => { __ask = k; }); })()`);
     await B.press(p, 'a'); await sleep(80); await B.press(p, 'a'); await sleep(80);
-    ok('S.ask {guard}: A right after it opens is ignored', (await B.ev(p, '__ask')) === 'none');
+    ok('S.ask (guarded by default): A right after it opens is ignored', (await B.ev(p, '__ask')) === 'none');
     await sleep(500);
     await B.press(p, 'a'); await sleep(250);
-    ok('S.ask {guard}: a deliberate A picks the default row (1)', (await B.ev(p, '__ask')) === 1, await B.ev(p, '__ask'));
+    ok('S.ask (guarded by default): a deliberate A picks the default row (1)', (await B.ev(p, '__ask')) === 1, await B.ev(p, '__ask'));
+    await B.press(p, 'b'); await B.waitFor(p, `${B.TOP}==='field'`, 5000);
+    // 宿の「泊まる？」も同じ（連打で泊まらない）
+    await p.evaluate(() => { RPG.Game.gold = 999; window.__inn = 'none'; RPG.Screens.open('inn', { price: 10 }).then((r) => { __inn = r; }); });
+    await B.waitFor(p, `${B.TOP}==='screen:inn'`, 5000);
+    await B.press(p, 'a'); await B.press(p, 'a');
+    ok('inn: A right after it opens is ignored', (await B.ev(p, '__inn')) === 'none');
+    await sleep(500);
+    await B.press(p, 'a'); await sleep(300);
+    ok('inn: a deliberate A stays', (await B.ev(p, '__inn && __inn.stay')) === true, await B.ev(p, '__inn'));
     ok('no console errors', P.errors.length === 0, P.errors);
     await P.close();
   }
@@ -125,6 +134,10 @@ async function main() {
     const rows = await p.evaluate(`${D}.ui.o.rows.map((r) => r.label)`);
     ok('in the siege the 2nd row is 「ひと息ついて立て直す」 (no gold loss)', rows[1] === 'ひと息ついて立て直す', rows);
     await B.shot(p, path.join(SHOTS, 'siege_wipe_menu_1920.png'));
+    // 全滅の札も出てすぐの決定を受けない（連打で「やり直す」に決まらない）
+    await B.press(p, 'a'); await sleep(100);
+    ok('wipe menu: A right after it appears is ignored', await p.evaluate(`!!(${D}.go && ${D}.ui)`));
+    ok('… armed after a short pause', await B.waitFor(p, `${D}.ui && ${D}.ui.guard && ${D}.ui.guard.armed`, 3000));
     await B.press(p, 'a');   // 直前の戦闘から
     ok('retry restarts the boss battle', await B.waitFor(p, `${D} && ${D}.retry === 1 && ${D}.B && ${D}.phase === 'input'`, 20000));
     const start1 = await p.evaluate(`({ troop: ${D}.setup.troop, foes: ${D}.B.units.filter((u) => u.side === 'enemy').map((u) => u.id), hp: ${D}.B.units.filter((u) => u.side === 'party').map((u) => [u.id, u.hp]) })`);
@@ -132,6 +145,7 @@ async function main() {
     ok('retry: party HP equals the HP at the START of the boss battle (not the wiped end state)', JSON.stringify(start1.hp) === JSON.stringify(start0.hp), { start0: start0.hp, start1: start1.hp });
     await p.evaluate(`(() => { const e = ${D}.B.engine; for (const u of e.party) u.hp = 1; e.result = 'lose'; })()`);
     ok('wipes again', (await advance(p, `${D} && !!${D}.go`, 80)) === true && await B.waitFor(p, WIPED, 15000));
+    await B.waitFor(p, `${D}.ui && ${D}.ui.guard && ${D}.ui.guard.armed`, 3000);
     await B.press(p, 'down'); await B.press(p, 'a');   // ひと息ついて立て直す
     ok('wakes at the hearth with a caption (talk to the chief to try again)', await B.waitFor(p, `${B.TOP}==='caption' || (RPG.Engine.has('caption') && RPG.Field._s.map.id === 'yule_night')`, 15000));
     await sleep(1200);

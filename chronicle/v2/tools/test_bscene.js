@@ -327,5 +327,45 @@ section('人の札は隊列の順（前列・後列で分けない。2026-09-27 
     ok('roots: targets = the living enemies in the core', m.alive && m.alive === m.engAlive, [m.alive, m.engAlive]);
     ok('roots: all down → result screen, every tentacle removed', t.over === 'win' && t.left && !t.left.length && t.res === 'win', t);
   }
+  section('暴走の BGM: 速さの倍率（高さは変えない）・戦闘の後に戻す');
+  {
+    const A = R.Audio;
+    ok('R.Audio.setTempo / tempo exist', typeof A.setTempo === 'function' && 'tempo' in A);
+    A.playBGM('boss');
+    const synth = A.setTempo(1.13);
+    ok('setTempo(1.13) on the synth boss track → tempo 1.13 (synth: true)', A.tempo === 1.13 && synth === true, [A.tempo, synth]);
+    A.pushBGM('battle');
+    ok('the multiplier belongs to its track (another track plays at 1)', A.tempo === 1);
+    A.popBGM();
+    ok('back on the same track: the multiplier is still there', A.tempo === 1.13);
+    A.setTempo(1);
+    ok('setTempo(1) resets', A.tempo === 1);
+    A.stopBGM();
+    ok('the scene resets the tempo at battle start, retry and finish', ['setTempo(1)'].every((x) => (require('fs').readFileSync(path.join(__dirname, '..', 'src', 'systems', 'battle', 'scene.js'), 'utf8').match(/setTempo\(1\)/g) || []).length >= 3));
+    ok('enrage multiplier is +12〜15%', _.play.ENRAGE_TEMPO >= 1.12 && _.play.ENRAGE_TEMPO <= 1.15, _.play.ENRAGE_TEMPO);
+    // 合成の 1 曲を偽の AudioContext で並べる: 速くすると時刻と長さだけが 1/倍率、音の高さ（midi）は同じ
+    const param = () => ({ value: 0, setValueAtTime() {}, linearRampToValueAtTime() {}, cancelScheduledValues() {}, exponentialRampToValueAtTime() {}, setTargetAtTime() {} });
+    const node = () => ({ gain: param(), pan: param(), connect() {}, disconnect() {} });
+    const ctx = { currentTime: 0, createGain: node, createStereoPanner: node };
+    const mk = () => { const notes = []; return { notes, mx: { ctx, live: false, voice: (inst, d, midi, t, dur) => notes.push([midi, t, dur]), tone() { return 0; }, noise() { return 0; }, fm() { return 0; } } }; };
+    const song = Object.assign({}, A.compile('boss'), { echo: null });
+    const a = mk(), b = mk();
+    const p1 = new A.Playback(a.mx, song, { dest: node(), at: 0, pos: 0 });
+    const p2 = new A.Playback(b.mx, song, { dest: node(), at: 0, pos: 0, rate: 1.13 });
+    p1.schedule(6 * 1.13, 0); p2.schedule(6, 0);
+    const n = Math.min(a.notes.length, b.notes.length);
+    ok('rate 1.13: same notes (pitch), times ÷1.13, lengths ÷1.13', n > 10 && a.notes.slice(0, n).every((x, i) => x[0] === b.notes[i][0] && Math.abs(x[1] / 1.13 - b.notes[i][1]) < 1e-6 && Math.abs(x[2] / 1.13 - b.notes[i][2]) < 1e-6), [n, a.notes.slice(0, 3), b.notes.slice(0, 3)]);
+    const c = mk();
+    const p3 = new A.Playback(c.mx, song, { dest: node(), at: 0, pos: 0 });
+    p3.schedule(2, 1.9);
+    const before = c.notes.length, pos0 = p3.position(2);
+    p3.setRate(1.13, 1.9);
+    ok('setRate mid-song: the position is continuous at the scheduled edge', Math.abs(p3.position(2) - pos0) < 1e-9 && Math.abs(p3.position(3) - (pos0 + 1.13)) < 1e-9, [pos0, p3.position(2), p3.position(3)]);
+    p3.schedule(5, 2);
+    const after = c.notes.slice(before);
+    ok('setRate mid-song: later notes start at or after the edge, in order', after.length > 0 && after.every((x, i) => x[1] >= 2 - 1e-9 && (i === 0 || x[1] >= after[i - 1][1] - 1e-9)), after.slice(0, 4));
+    p3.setRate(1, 5);
+    ok('setRate(1) back: continuous again', Math.abs(p3.position(5) - (pos0 + 3 * 1.13)) < 1e-9);
+  }
   done('test_bscene');
 })();

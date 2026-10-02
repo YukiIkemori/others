@@ -41,6 +41,8 @@ const MAP = 'pharos_inn';
     const toNight = async () => {
       await start();
       await B.pressUntil(p, 'a', "(RPG.Engine.top()||{}).id==='screen:inn'", 20);
+      // 宿の札は出てすぐの決定を受けない（R.UIK.choiceGuard、テスター 2026-10-02 P22）
+      await B.waitFor(p, "(() => { const v = (RPG.Engine.top() || {}).view || {}; return !v.guard || v.guard.armed; })()", 3000);
       await B.press(p, 'a');
       await B.waitFor(p, "RPG.Audio.debug().jingle === 'inn'", 20000);
       return p.evaluate(() => RPG.Engine.time);

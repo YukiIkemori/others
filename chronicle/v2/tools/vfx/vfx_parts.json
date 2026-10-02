@@ -958,6 +958,1307 @@
    "fps": 18,
    "tint": true,
    "prompt": "A huge combination energy explosion animation: frame 1 a bright core point, frames 2-4 a massive spherical blast with a jagged star-shaped shock front, a thick bright shockwave ring and radiating light spikes, frames 5-7 the blast breaking into swirling energy flames and flying fragments, frame 8 fading embers."
+  },
+  {
+   "id": "pe_paper_storm",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    352,
+    352
+   ],
+   "fps": 18,
+   "blend": "source-over",
+   "q": 80,
+   "prompt": "A whirling storm of torn old book pages animation: dozens of yellowed parchment pages and paper scraps with faint ink smudges spiral in a tight cyclone, the pages edged with a warm golden glow and sharp as blades, tiny ink droplets flung outward. Frames 1-2 the pages lifting into a spiral, frames 3-6 a dense spinning paper cyclone, frames 7-8 pages scattering and fluttering away.",
+   "aq": 60
+  },
+  {
+   "id": "pe_ink_maw",
+   "group": "boss",
+   "grid": [
+    3,
+    2
+   ],
+   "n": 6,
+   "size": "1536x1024",
+   "out": [
+    288,
+    288
+   ],
+   "fps": 24,
+   "q": 80,
+   "prompt": "A snapping ink jaw animation: two great curved crescents of glossy black-violet ink lined with jagged ink-drop teeth close together like a biting maw from top and bottom, with ink splashes and a purple glow on the edges. Frame 1 open crescents appearing, frames 2-3 snapping shut with a splash of ink droplets, frames 4-6 ink splatter dissolving into wisps.",
+   "aq": 60
+  },
+  {
+   "id": "wl_moon_fang",
+   "group": "boss",
+   "grid": [
+    3,
+    2
+   ],
+   "n": 6,
+   "size": "1536x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 24,
+   "q": 80,
+   "prompt": "A spectral moonlight wolf fang strike animation: a pair of huge curved fang-shaped crescents of pale blue-white moonlight snapping shut diagonally, trailing silver mist and small cold sparks, with a faint full-moon halo glow behind. Frame 1 faint crescents, frames 2-3 the fangs clamp together with a bright flash, frames 4-6 the light breaking into drifting silver motes.",
+   "aq": 60
+  },
+  {
+   "id": "mo_sleep_dust",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    320
+   ],
+   "fps": 14,
+   "q": 80,
+   "prompt": "A cloud of glittering sleep-inducing moth scale dust animation: soft swirling veils of pale lilac and powder-blue luminous dust with countless tiny shimmering scale flakes and a few drifting translucent moth-wing shaped glimmers, dreamy and hazy. Frames 1-2 dust spreading from the centre, frames 3-6 a large rolling sparkling cloud, frames 7-8 the glitter drifting down and fading.",
+   "aq": 60
+  },
+  {
+   "id": "re_root_quake",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    352,
+    352
+   ],
+   "anchor": "bottom",
+   "fps": 18,
+   "bg": "key",
+   "q": 80,
+   "prompt": "A massive root eruption animation: thick gnarled dark-brown tree roots with mossy green patches and sharp thorny tips burst up out of the ground at the bottom of each cell, spraying soil clods and stones. Frame 1 the ground splitting, frames 2-4 the roots lashing upward tall and twisting, frames 5-7 roots shuddering with falling dirt, frame 8 roots sinking back with dust. Painterly shaded wood with warm highlights.",
+   "aq": 60
+  },
+  {
+   "id": "re_rot_breath",
+   "group": "boss",
+   "grid": [
+    2,
+    4
+   ],
+   "cell": "wide",
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    448,
+    224
+   ],
+   "anchor": "left",
+   "fps": 16,
+   "q": 80,
+   "prompt": "A rotting spore breath stream animation: a gush of sickly yellow-green and murky violet toxic spores and rot gas streaming from the right edge of each wide cell to the left, narrow at the right and billowing wide at the left, with glowing spore specks and small bubbles. Frames 1-2 the stream starting, frames 3-6 full billowing breath, frames 7-8 thinning into drifting spores.",
+   "aq": 60
+  },
+  {
+   "id": "re_thorn_coil",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 18,
+   "bg": "key",
+   "q": 80,
+   "prompt": "A coiling thorn vine bind animation: dark green thorny vines with sharp pale thorns spiral around an empty centre and tighten, glowing with drained green life-energy wisps flowing along them. Frames 1-2 vines snaking in, frames 3-5 a tight thorny coil squeezing with green glowing sap sparks, frames 6-8 the vines loosening and withering to brown. Painterly shading.",
+   "aq": 60
+  },
+  {
+   "id": "hk_sand_gale",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    352,
+    352
+   ],
+   "fps": 20,
+   "q": 80,
+   "prompt": "A desert sand-blade cyclone animation: a fierce cyclone of golden sand and dust with many sharp crescent wind-blades of bright amber light slicing around it, sand grains and small pebbles whipping outward. Frames 1-2 sand gathering, frames 3-6 the blade cyclone at full fury spinning, frames 7-8 sand dispersing.",
+   "aq": 60
+  },
+  {
+   "id": "sw_sand_maw",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    352,
+    352
+   ],
+   "anchor": "bottom",
+   "fps": 18,
+   "bg": "key",
+   "q": 80,
+   "prompt": "A giant sand geyser eruption animation: a tall fountain of tan and golden sand and rocks bursts up from a swirling sinkhole at the bottom of each cell, a ring of sand spray and dust, a dark funnel-shaped pit at the base. Frame 1 sand caving into a pit, frames 2-4 a violent sand geyser rising high, frames 5-7 sand raining back down, frame 8 a settling dusty pit. Painterly sand with warm highlights.",
+   "aq": 60
+  },
+  {
+   "id": "sk_sand_judgment",
+   "group": "boss",
+   "grid": [
+    6,
+    1
+   ],
+   "cell": "tall narrow",
+   "n": 6,
+   "size": "2304x1024",
+   "anchor": "bottom",
+   "out": [
+    224,
+    448
+   ],
+   "fps": 16,
+   "q": 80,
+   "prompt": "A pillar of divine judgment made of golden sand animation: a towering vertical column of cascading golden sand and blazing amber light crashes down from the top of each cell onto the bottom, ancient sun-disc glow at the top, sand exploding sideways at the impact point. Frame 1 a thin falling stream, frames 2-3 the full blazing sand column, frame 4 impact with a wide golden sand burst, frames 5-6 sand settling into a glowing heap.",
+   "aq": 60
+  },
+  {
+   "id": "sk_name_glyphs",
+   "group": "boss",
+   "grid": [
+    1,
+    1
+   ],
+   "n": 1,
+   "size": "1024x1024",
+   "out": [
+    448,
+    448
+   ],
+   "q": 80,
+   "prompt": "A single circular ancient curse seal: concentric rings of glowing violet and dark-gold abstract hieroglyph-like carved symbols (not real letters), ornate sun-and-eye shaped motifs at the cardinal points, thin radiating lines, mystical and sinister, perfectly round, flat top-down view.",
+   "aq": 60
+  },
+  {
+   "id": "sk_sand_wave",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    256
+   ],
+   "anchor": "bottom",
+   "fps": 16,
+   "blend": "source-over",
+   "q": 80,
+   "prompt": "A rolling golden sandstorm wave animation: a wide low wall of billowing golden-tan sand and dust rolling along the bottom of each cell from right to left, glittering sand grains, a darker brown underside and bright sunlit crest. Frames 1-2 the wave rising, frames 3-6 a towering rolling sand wave, frames 7-8 dust settling.",
+   "aq": 60
+  },
+  {
+   "id": "rw_verdict_quill",
+   "group": "boss",
+   "grid": [
+    1,
+    1
+   ],
+   "n": 1,
+   "size": "1024x1536",
+   "out": [
+    192,
+    512
+   ],
+   "anchor": "bottom",
+   "q": 80,
+   "prompt": "A single giant quill pen made of solid silver-white light pointing straight down: a long elegant feather vane with glowing barbs at the top, a sharp shining metal nib at the bottom dripping luminous blue ink light, soft halo glow around it. Vertical, centred.",
+   "aq": 60
+  },
+  {
+   "id": "rw_redact",
+   "group": "boss",
+   "grid": [
+    3,
+    2
+   ],
+   "n": 6,
+   "size": "1536x1024",
+   "out": [
+    384,
+    288
+   ],
+   "fps": 22,
+   "q": 80,
+   "prompt": "An erasing strike-through animation: three bold horizontal bars of blinding silver-white light with soft blue edges slash across from right to left one after another, each leaving a bright erased band and fine ink flecks scattering. Frame 1 a thin line, frames 2-4 the three wide bars sweeping across, frames 5-6 the bars fading into drifting flecks.",
+   "aq": 60
+  },
+  {
+   "id": "bw_frost_fang",
+   "group": "boss",
+   "grid": [
+    3,
+    2
+   ],
+   "n": 6,
+   "size": "1536x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 24,
+   "q": 80,
+   "prompt": "A frost wolf jaw bite animation: two huge curved rows of jagged ice-crystal fangs, translucent pale cyan with white frost edges, clamp shut from top and bottom, with a burst of snowflakes and cold mist. Frame 1 open icy jaws, frames 2-3 the fangs snapping together with a frost flash, frames 4-6 ice shards and snow scattering.",
+   "aq": 60
+  },
+  {
+   "id": "ig_glacier_hammer",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    320
+   ],
+   "anchor": "bottom",
+   "fps": 18,
+   "q": 80,
+   "prompt": "A colossal ice hammer impact animation at ground level: a blinding cyan-white impact flash at the bottom of each cell, a ring shockwave of frost and snow spreading wide, huge jagged ice shards spiking up and outward. Frame 1 impact flash, frames 2-4 a crater of ice spikes and a frost shockwave, frames 5-7 ice spikes cracking and shattering, frame 8 drifting snow sparkles.",
+   "aq": 60
+  },
+  {
+   "id": "ig_avalanche",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    352
+   ],
+   "fps": 16,
+   "blend": "source-over",
+   "q": 80,
+   "prompt": "An avalanche animation: a massive tumbling wave of white snow and chunks of blue ice rolling down and crashing from the upper right toward the lower left of each cell, billowing powder snow clouds. Frames 1-2 snow breaking loose at the top right, frames 3-6 the full crashing avalanche, frames 7-8 settling powder snow.",
+   "aq": 60
+  },
+  {
+   "id": "wd_blizzard_breath",
+   "group": "boss",
+   "grid": [
+    2,
+    4
+   ],
+   "cell": "wide",
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    512,
+    256
+   ],
+   "anchor": "left",
+   "fps": 16,
+   "q": 80,
+   "prompt": "A dragon blizzard breath stream animation: a roaring stream of white-blue freezing wind, swirling snowflakes and sparkling ice crystals blasting from the right edge of each wide cell to the left, narrow at the right and exploding wide at the left into a frost burst. Frames 1-2 the breath starting, frames 3-6 the full raging blizzard stream, frames 7-8 fading frost mist.",
+   "aq": 60
+  },
+  {
+   "id": "wd_glacier_fall",
+   "group": "boss",
+   "grid": [
+    6,
+    1
+   ],
+   "cell": "tall narrow",
+   "n": 6,
+   "size": "2304x1024",
+   "anchor": "bottom",
+   "out": [
+    224,
+    448
+   ],
+   "fps": 16,
+   "q": 80,
+   "prompt": "A falling glacier spire animation: a gigantic jagged spear of glacial ice, translucent blue with bright white facets and frost mist, plunges from the top of each cell down onto the bottom and shatters. Frame 1 the spire tip appearing at the top, frames 2-3 the spire falling full length, frame 4 impact with an explosion of ice shards, frames 5-6 shards and snow dust settling.",
+   "aq": 60
+  },
+  {
+   "id": "wd_ice_claw",
+   "group": "boss",
+   "grid": [
+    3,
+    2
+   ],
+   "n": 6,
+   "size": "1536x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 24,
+   "q": 80,
+   "prompt": "A dragon ice claw rake animation: three huge parallel curved claw slashes of glittering ice and frost tearing diagonally from upper-right to lower-left, edges of bright white with pale cyan glow, frozen shards spraying. Frame 1 tips appearing, frames 2-3 the three icy slashes ripping through, frames 4-6 slashes freezing into fading ice dust.",
+   "aq": 60
+  },
+  {
+   "id": "fa_ice_cannon",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 20,
+   "q": 80,
+   "prompt": "A frost cannonball explosion animation: a heavy iron cannonball wrapped in ice bursts into a blast of freezing blue-white mist, sharp icicle shrapnel and a cold shockwave ring. Frame 1 a bright cold flash, frames 2-4 the expanding frost explosion with icicles flying, frames 5-7 frozen mist billowing, frame 8 drifting ice sparkles.",
+   "aq": 60
+  },
+  {
+   "id": "dl_waltz_ribbons",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    352,
+    352
+   ],
+   "fps": 16,
+   "loop": true,
+   "q": 80,
+   "prompt": "A spinning waltz of blade ribbons animation: several long silky ribbons of crimson-rose and gold light whirl in an elegant spiral like a dancing circle, their edges sharp as blades, with glittering golden dust and small rose petals. Each frame rotated further; seamless loop.",
+   "aq": 60
+  },
+  {
+   "id": "mb_mist_vortex",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    352,
+    352
+   ],
+   "fps": 14,
+   "blend": "source-over",
+   "q": 80,
+   "prompt": "An engulfing fog vortex animation: thick pale grey-white swamp mist curls into a smothering vortex with ghostly teal glowing wisps inside and a faint eerie light at its heart. Frames 1-2 mist rolling in, frames 3-6 a dense churning fog vortex, frames 7-8 mist thinning out.",
+   "aq": 60
+  },
+  {
+   "id": "mb_witch_curse",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 18,
+   "q": 80,
+   "prompt": "A witch hex curse animation: a crooked glowing sickly green and violet hex sigil appears and erupts with ghostly green witch-fire flames, curling smoke and swirling cursed sparks. Frame 1 a small sigil glint, frames 2-4 the hex flaring with eerie flames, frames 5-7 flames twisting into curling violet smoke, frame 8 fading sparks.",
+   "aq": 60
+  },
+  {
+   "id": "mb_mist_breath",
+   "group": "boss",
+   "grid": [
+    2,
+    4
+   ],
+   "cell": "wide",
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    448,
+    224
+   ],
+   "anchor": "left",
+   "fps": 14,
+   "blend": "source-over",
+   "q": 80,
+   "prompt": "A drifting fog breath stream animation: a heavy bank of pale white-grey mist breath pours from the right edge of each wide cell to the left, narrow at the right and rolling wide and billowy at the left, with faint cold teal shimmer. Frames 1-2 starting, frames 3-6 full rolling fog, frames 7-8 thinning.",
+   "aq": 60
+  },
+  {
+   "id": "oc_whirlpool_ink",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    384
+   ],
+   "fps": 16,
+   "loop": true,
+   "q": 80,
+   "prompt": "A deep sea whirlpool with ink animation, seen at a slight top-down angle: dark teal and navy water spinning into a vortex streaked with swirling black-violet octopus ink and white foam, droplets flung out. Each frame rotated further; seamless loop.",
+   "aq": 60
+  },
+  {
+   "id": "cp_ghost_cannon",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 20,
+   "q": 80,
+   "prompt": "A ghostly cannon blast explosion animation: a burst of spectral sea-green ghost fire and pale smoke with ember sparks and shrapnel, an eerie cyan-green glow. Frame 1 a small green flash, frames 2-4 a roaring ghost-fire explosion, frames 5-7 green flames breaking into curling ghostly smoke, frame 8 faint dying wisps.",
+   "aq": 60
+  },
+  {
+   "id": "cp_anchor",
+   "group": "boss",
+   "grid": [
+    1,
+    1
+   ],
+   "n": 1,
+   "size": "1024x1536",
+   "out": [
+    224,
+    448
+   ],
+   "anchor": "bottom",
+   "q": 80,
+   "prompt": "A single giant spectral ship anchor made of glowing ghostly sea-green light hanging vertically, the ring at the top with a short trailing broken chain, the curved flukes with sharp points at the bottom, barnacle details, a soft eerie glow and faint seaweed wisps. Vertical, centred.",
+   "aq": 60
+  },
+  {
+   "id": "cp_cutlass",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    352,
+    352
+   ],
+   "fps": 24,
+   "q": 80,
+   "prompt": "A ghost cutlass double slash animation: two wide curved crescent sword slashes of spectral sea-green and pale cyan light cross in an X, trailing ghostly wisps and seawater droplets. Frames 1-2 the first crescent sweeping, frames 3-4 the second crescent crossing, frames 5-8 the X dissolving into green ghost mist.",
+   "aq": 60
+  },
+  {
+   "id": "cp_ghost_wisps",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    352,
+    288
+   ],
+   "fps": 12,
+   "loop": true,
+   "q": 80,
+   "prompt": "A ghostly sea shanty wisps animation: a ring of pale green and blue will-o-wisp flames drifting and circling slowly, with faint swirling mist trails, eerie and dreamy. Each frame the wisps move further around; seamless loop.",
+   "aq": 60
+  },
+  {
+   "id": "rk_cave_in",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    352,
+    352
+   ],
+   "fps": 16,
+   "bg": "key",
+   "q": 80,
+   "prompt": "A cave-in rockfall animation: large grey-brown boulders, rock slabs and gravel falling from the top of each cell and crashing onto the bottom with dust. Frames 1-2 cracks and first rocks falling, frames 3-5 a heavy rain of boulders, frames 6-8 rubble piling with dust. Painterly shaded rocks with warm highlights.",
+   "aq": 60
+  },
+  {
+   "id": "iw_anvil",
+   "group": "boss",
+   "grid": [
+    1,
+    1
+   ],
+   "n": 1,
+   "size": "1024x1024",
+   "out": [
+    320,
+    288
+   ],
+   "bg": "key",
+   "q": 80,
+   "prompt": "A single huge heavy blacksmith iron anvil glowing red-orange hot along its edges and base, dark iron body with molten cracks and sparks flicking off, seen from the side, centred.",
+   "aq": 60
+  },
+  {
+   "id": "iw_forge_breath",
+   "group": "boss",
+   "grid": [
+    2,
+    4
+   ],
+   "cell": "wide",
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    512,
+    256
+   ],
+   "anchor": "left",
+   "fps": 16,
+   "q": 80,
+   "prompt": "A forge fire breath stream animation: a roaring blast of white-hot and orange forge flame with molten metal sparks streaming from the right edge of each wide cell to the left, narrow at the right and erupting wide at the left. Frames 1-2 starting, frames 3-6 the full roaring flame, frames 7-8 fading embers.",
+   "aq": 60
+  },
+  {
+   "id": "iw_slag_burst",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 20,
+   "q": 80,
+   "prompt": "A molten slag splash animation: a burst of glowing orange-yellow molten metal globs and droplets splashing outward with dark cooling crusts, sparks and heat glow. Frame 1 a hot flash, frames 2-4 molten globs flying outward, frames 5-7 droplets cooling to dark red, frame 8 smouldering bits.",
+   "aq": 60
+  },
+  {
+   "id": "vl_crystal_storm",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    352,
+    352
+   ],
+   "fps": 18,
+   "q": 80,
+   "prompt": "A crystal shard storm animation: dozens of sharp glowing teal and amethyst-violet crystal shards whirl in a spiral storm with bright refraction glints and fine crystal dust. Frames 1-2 shards forming, frames 3-6 a dense spinning crystal storm, frames 7-8 shards scattering and fading glints.",
+   "aq": 60
+  },
+  {
+   "id": "at_whip_crack",
+   "group": "boss",
+   "grid": [
+    3,
+    2
+   ],
+   "n": 6,
+   "size": "1536x1024",
+   "out": [
+    352,
+    288
+   ],
+   "fps": 24,
+   "q": 80,
+   "prompt": "A fiery whip crack animation: a long sinuous whip lash of orange flame curls through the air and snaps at the left with a sharp bright crack flash and sparks. Frame 1 the lash curving in, frames 2-3 the snapping crack with a starburst, frames 4-6 the fiery trail fading into embers.",
+   "aq": 60
+  },
+  {
+   "id": "as_twin_flame",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    352
+   ],
+   "fps": 18,
+   "q": 80,
+   "prompt": "A twin flame serpent spiral animation: two intertwined spiralling streams of fire, one crimson-red and one golden-orange, twist around each other in a rising double helix with ember sparks. Frames 1-2 the streams forming, frames 3-6 a blazing double spiral, frames 7-8 breaking into embers.",
+   "aq": 60
+  },
+  {
+   "id": "ab_shield_bash",
+   "group": "boss",
+   "grid": [
+    3,
+    2
+   ],
+   "n": 6,
+   "size": "1536x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 24,
+   "q": 80,
+   "prompt": "A heavy iron shield bash impact animation: a broad flat burst of steel-grey and white impact force with a large round shockwave ring, metallic sparks and small spinning stars. Frame 1 contact flash, frames 2-3 the wide impact burst and ring, frames 4-6 sparks and stars fading.",
+   "aq": 60
+  },
+  {
+   "id": "zk_iai_flash",
+   "group": "boss",
+   "grid": [
+    2,
+    4
+   ],
+   "cell": "wide",
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    512,
+    192
+   ],
+   "fps": 24,
+   "q": 80,
+   "prompt": "A lightning-fast iai sword draw slash animation: a single razor-thin perfectly horizontal line of brilliant white light with deep crimson edges cuts across the full width of each wide cell, then pomegranate-red petals and sparks burst along the line. Frame 1 a tiny glint, frames 2-3 the line slicing across, frames 4-6 the line flaring with scattering crimson petals, frames 7-8 fading.",
+   "aq": 60
+  },
+  {
+   "id": "hh_lava_breath",
+   "group": "boss",
+   "grid": [
+    2,
+    4
+   ],
+   "cell": "wide",
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    512,
+    256
+   ],
+   "anchor": "left",
+   "fps": 16,
+   "q": 80,
+   "prompt": "A lava breath stream animation: a gushing torrent of molten lava and hellfire, bright yellow-orange core, dark red crust and black smoke edges, streaming from the right edge of each wide cell to the left, narrow at the right and splashing wide at the left with lava droplets. Frames 1-2 starting, frames 3-6 full torrent, frames 7-8 fading embers.",
+   "aq": 60
+  },
+  {
+   "id": "lb_eruption",
+   "group": "boss",
+   "grid": [
+    6,
+    1
+   ],
+   "cell": "tall narrow",
+   "n": 6,
+   "size": "2304x1024",
+   "anchor": "bottom",
+   "out": [
+    256,
+    512
+   ],
+   "fps": 14,
+   "q": 80,
+   "prompt": "A volcanic eruption column animation: a towering blast of lava fountain, fire and black-grey ash erupting upward from a glowing crater at the bottom of each cell, lava bombs flying. Frame 1 the crater glowing, frames 2-3 the eruption column shooting up, frame 4 at full height with lava bombs, frames 5-6 ash cloud and falling embers.",
+   "aq": 60
+  },
+  {
+   "id": "lb_lava_wave",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    288
+   ],
+   "anchor": "bottom",
+   "fps": 16,
+   "q": 80,
+   "prompt": "A rolling lava wave animation: a wide tall wave of molten glowing lava with a dark cooling crust, splashing fiery droplets and smoke, rolling along the bottom of each cell from right to left. Frames 1-2 rising, frames 3-6 the full crashing lava wave, frames 7-8 settling into glowing pools.",
+   "aq": 60
+  },
+  {
+   "id": "lb_obsidian_burst",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 20,
+   "bg": "key",
+   "q": 80,
+   "prompt": "An obsidian shard explosion animation: jagged glossy black volcanic glass shards with glowing orange magma cracks burst outward from a fiery impact centre, with hot sparks. Frame 1 a cracking glow, frames 2-4 obsidian shards exploding outward, frames 5-7 shards spinning away, frame 8 smouldering fragments. Painterly glossy shards with orange rim light.",
+   "aq": 60
+  },
+  {
+   "id": "lb_ash_storm",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    320
+   ],
+   "fps": 14,
+   "blend": "source-over",
+   "q": 80,
+   "prompt": "A volcanic ash storm animation: a swirling dark grey ash cloud with glowing orange embers and cinders churning in a wide vortex. Frames 1-2 ash gathering, frames 3-6 a dense churning ash storm, frames 7-8 thinning. Lit softly so the ash reads light grey against the black.",
+   "aq": 60
+  },
+  {
+   "id": "or_eclipse",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    352,
+    352
+   ],
+   "fps": 14,
+   "q": 80,
+   "prompt": "A solar eclipse animation: a black disc slides over a blazing golden sun until a total eclipse forms with a brilliant white corona ring and long flaring streamers, then the corona flashes. Frame 1 a golden sun, frames 2-3 the dark disc covering it, frames 4-6 total eclipse with a dazzling corona, frames 7-8 the corona fading.",
+   "aq": 60
+  },
+  {
+   "id": "or_orbit_rings",
+   "group": "boss",
+   "grid": [
+    1,
+    1
+   ],
+   "n": 1,
+   "size": "1024x1024",
+   "out": [
+    448,
+    448
+   ],
+   "q": 80,
+   "prompt": "A single golden armillary sphere of orbit rings: several thin glowing gold and silver elliptical orbit rings crossing at different angles around a bright centre, small glowing planet orbs (a red sun, a pale moon, a blue star) placed on the rings, fine engraved tick marks, flat and elegant.",
+   "aq": 60
+  },
+  {
+   "id": "se_dark_nova",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    384
+   ],
+   "fps": 18,
+   "q": 80,
+   "prompt": "A dark nova explosion animation: frame 1 a tiny point of violet light, frame 2 dark energy collapsing inward, frames 3-5 a huge violent explosion of black-violet and deep blue cosmic energy with a bright magenta-white rim and scattered star sparks, frames 6-8 the nova dispersing into drifting starry dust.",
+   "aq": 60
+  },
+  {
+   "id": "se_star_devour",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    384
+   ],
+   "fps": 16,
+   "loop": true,
+   "q": 80,
+   "prompt": "A star-devouring black hole animation: a deep black void core ringed by a bright accretion disc of violet and gold, streams of tiny glittering stars spiralling inward and being swallowed. Each frame rotated further; seamless loop.",
+   "aq": 60
+  },
+  {
+   "id": "se_starfall",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    352,
+    352
+   ],
+   "fps": 18,
+   "q": 80,
+   "prompt": "A shower of falling stars animation: many bright golden-white shooting stars with long glowing tails streak diagonally from the upper right to the lower left of each cell, small sparkle bursts where they land. Frames 1-2 the first stars, frames 3-6 a dense meteor shower, frames 7-8 the last tails fading.",
+   "aq": 60
+  },
+  {
+   "id": "se_void_fang",
+   "group": "boss",
+   "grid": [
+    3,
+    2
+   ],
+   "n": 6,
+   "size": "1536x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 24,
+   "q": 80,
+   "prompt": "A void fang bite animation: two huge curved crescent fangs made of deep black cosmic void with glowing violet edges and tiny stars inside clamp shut from top and bottom, a burst of starlight at the bite. Frame 1 open crescents, frames 2-3 snapping shut with a violet flash, frames 4-6 dissolving into star dust.",
+   "aq": 60
+  },
+  {
+   "id": "bg_tome_slam",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    320
+   ],
+   "anchor": "bottom",
+   "fps": 18,
+   "q": 80,
+   "prompt": "A giant book slam impact animation at ground level: a blinding golden-white impact flash at the bottom centre of each cell, a wide ring shockwave of glowing dust, and many loose pages and paper scraps blasted outward. Frame 1 flash, frames 2-4 the shockwave with pages flying, frames 5-7 pages fluttering, frame 8 settling dust.",
+   "aq": 60
+  },
+  {
+   "id": "hs_shade_sword",
+   "group": "boss",
+   "grid": [
+    1,
+    1
+   ],
+   "n": 1,
+   "size": "1024x1536",
+   "out": [
+    192,
+    512
+   ],
+   "anchor": "bottom",
+   "q": 80,
+   "prompt": "A single giant shadow sword pointing straight down: a broad blade of swirling black-violet shadow smoke with a glowing golden crest emblem on the crossguard and thin golden light along its edges, wisps of darkness trailing, soft dark aura. Vertical, centred.",
+   "aq": 60
+  },
+  {
+   "id": "hs_trinity_burst",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    384
+   ],
+   "fps": 18,
+   "q": 80,
+   "prompt": "A trinity convergence burst animation: three beams of light, one golden, one pure white and one deep violet, spiral in from three directions and collide into a radiant three-coloured starburst explosion with a triangular sigil flare. Frames 1-2 three beams converging, frames 3-5 the brilliant tri-colour explosion, frames 6-8 fading sparkles.",
+   "aq": 60
+  },
+  {
+   "id": "lz_quill_strokes",
+   "group": "boss",
+   "grid": [
+    3,
+    2
+   ],
+   "n": 6,
+   "size": "1536x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 24,
+   "q": 80,
+   "prompt": "A silver ink quill strike animation: several swift bold calligraphy brush strokes of luminous silver-white ink with deep blue shadows slash across from upper right to lower left, ink droplets spraying. Frame 1 the first stroke, frames 2-4 the strokes crossing in a fierce pattern, frames 5-6 the ink fading into glowing droplets.",
+   "aq": 60
+  },
+  {
+   "id": "lz_erasure",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    352
+   ],
+   "fps": 16,
+   "q": 80,
+   "prompt": "An erasure wave animation: a vast flat wave of blank white light with torn paper-like edges sweeps outward, erasing everything, faint grey ink flecks and dissolving lines flaking away at its rim. Frame 1 a white point, frames 2-5 the white blank wave expanding into a wide glowing disc with paper-edge rim, frames 6-8 the whiteness fading leaving flecks.",
+   "aq": 60
+  },
+  {
+   "id": "n1_blank_storm",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    384
+   ],
+   "fps": 18,
+   "q": 80,
+   "prompt": "A blank page storm animation: a violent whirlwind of perfectly blank white pages and pale silver light streaks, the pages sharp and glowing at the edges, swirling in a wide spiral with white sparkles. Frames 1-2 forming, frames 3-6 a raging white page whirlwind, frames 7-8 pages scattering into light.",
+   "aq": 60
+  },
+  {
+   "id": "n1_whiteout",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    384
+   ],
+   "fps": 14,
+   "q": 80,
+   "prompt": "A whiteout implosion and burst animation: soft pale lavender-white light gathers into a sphere of pure blinding whiteness, then bursts outward into a huge soft glowing white dome with faint silver ripples, dissolving everything into light. Frame 1 a faint glow, frames 2-3 gathering, frames 4-6 the blinding white dome, frames 7-8 fading haze.",
+   "aq": 60
+  },
+  {
+   "id": "n1_oblivion_wave",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    448,
+    256
+   ],
+   "fps": 14,
+   "q": 80,
+   "prompt": "An oblivion ripple wave animation, seen at a slight top-down angle: concentric rings of pale silver and lavender light ripple outward like a wave on still water, dissolving tiny glowing fragments that drift up. Frames 1-2 the first ring, frames 3-6 several rings spreading wide, frames 7-8 fading.",
+   "aq": 60
+  },
+  {
+   "id": "n2_eight_ring",
+   "group": "boss",
+   "grid": [
+    1,
+    1
+   ],
+   "n": 1,
+   "size": "1024x1024",
+   "out": [
+    448,
+    448
+   ],
+   "q": 80,
+   "prompt": "A single ring of eight glowing elemental orbs arranged evenly in a circle: a red fire orb, a blue water orb, a green wind orb, a brown-amber earth orb, a golden light orb, a violet dark orb, a white star orb and a silver moon orb, linked by a thin luminous golden circle with fine ornate engravings, flat top-down view.",
+   "aq": 60
+  },
+  {
+   "id": "n2_story_close",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    448,
+    384
+   ],
+   "fps": 14,
+   "q": 80,
+   "prompt": "A colossal glowing book closing animation: two enormous radiant pages of golden-white light, with faint lines of glowing script-like patterns (not readable letters), swing in from the left and right and slam shut together in the centre with a blinding flash and a burst of paper light motes. Frames 1-2 two pages opening wide, frames 3-4 the pages closing, frame 5 the shut flash, frames 6-8 light motes scattering.",
+   "aq": 60
+  },
+  {
+   "id": "n2_unwrite",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    384
+   ],
+   "fps": 18,
+   "q": 80,
+   "prompt": "An unwriting void slash animation: a huge diagonal tear of pitch-black void with glowing iridescent prismatic edges rips across from upper right to lower left, faint pale fragments of glowing script patterns peel away and dissolve into it. Frame 1 a thin rift, frames 2-4 the void tear opening wide, frames 5-7 fragments being sucked in, frame 8 the rift sealing.",
+   "aq": 60
+  },
+  {
+   "id": "n2_dream_breath",
+   "group": "boss",
+   "grid": [
+    2,
+    4
+   ],
+   "cell": "wide",
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    512,
+    256
+   ],
+   "anchor": "left",
+   "fps": 14,
+   "q": 80,
+   "prompt": "A dream oblivion breath stream animation: a flowing stream of soft prismatic pastel light, pale rose, lavender and aqua, with sleepy glittering motes and fading memory-like glimmers, flowing from the right edge of each wide cell to the left, narrow at the right and spreading into a dreamy cloud at the left. Frames 1-2 starting, frames 3-6 the full stream, frames 7-8 fading.",
+   "aq": 60
+  },
+  {
+   "id": "n2_end_sigil",
+   "group": "boss",
+   "grid": [
+    1,
+    1
+   ],
+   "n": 1,
+   "size": "1024x1024",
+   "out": [
+    512,
+    512
+   ],
+   "q": 80,
+   "prompt": "A single enormous ornate magic circle of the end of a story: intricate concentric rings of gold and iridescent rainbow light, an open-book motif at the centre, eight small elemental emblems around the rim, fine geometric lines and stars, perfectly round, flat top-down view.",
+   "aq": 60
+  },
+  {
+   "id": "vz_despair",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    352
+   ],
+   "fps": 16,
+   "q": 80,
+   "prompt": "A wave of despair animation: a dark shockwave of black and deep crimson energy spreads outward with ghostly screaming-shaped smoke wisps (no faces), crimson embers and dark lightning crackles. Frame 1 a dark pulse, frames 2-5 the black-crimson wave expanding, frames 6-8 dissipating into crimson embers.",
+   "aq": 60
+  },
+  {
+   "id": "vz_demon_flame",
+   "group": "boss",
+   "grid": [
+    6,
+    1
+   ],
+   "cell": "tall narrow",
+   "n": 6,
+   "size": "2304x1024",
+   "anchor": "bottom",
+   "out": [
+    224,
+    448
+   ],
+   "fps": 14,
+   "q": 80,
+   "prompt": "A demonic flame pillar animation: a tall column of crimson and black hellfire rising from the bottom of each cell, with a dark core, bright red-orange edges and black smoke, swirling crimson embers. Frame 1 flames igniting, frames 2-4 a raging black-crimson fire pillar, frames 5-6 the flames collapsing into embers.",
+   "aq": 60
+  },
+  {
+   "id": "vz_shadow_claw",
+   "group": "boss",
+   "grid": [
+    3,
+    2
+   ],
+   "n": 6,
+   "size": "1536x1024",
+   "out": [
+    320,
+    320
+   ],
+   "fps": 24,
+   "q": 80,
+   "prompt": "A demon shadow claw rake animation: four huge curved claw slashes of black shadow with burning crimson edges tear diagonally from upper right to lower left, trailing dark smoke and red sparks. Frame 1 tips appearing, frames 2-3 the claws ripping through, frames 4-6 the gashes smouldering away.",
+   "aq": 60
+  },
+  {
+   "id": "ou_ring_end",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    448,
+    448
+   ],
+   "fps": 14,
+   "q": 80,
+   "prompt": "A cosmic ouroboros ring finale animation: a huge glowing circle made of overlapping golden-green dragon scales and emerald light, shaped like a ring with a tapering end biting into itself, contracts tight and then bursts outward in a brilliant golden-emerald explosion of scales and light. Frames 1-3 the scale ring glowing and contracting, frame 4 the burst, frames 5-8 scales and light scattering.",
+   "aq": 60
+  },
+  {
+   "id": "ou_time_rewind",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    384
+   ],
+   "fps": 16,
+   "loop": true,
+   "q": 80,
+   "prompt": "A time rewind animation: concentric rings of glowing teal and gold light with tick marks like a clock face (no numbers) spin rapidly in reverse, with afterimage streaks and floating shards of broken time light. Each frame rotated further backwards; seamless loop.",
+   "aq": 60
+  },
+  {
+   "id": "ou_scale_storm",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    384
+   ],
+   "fps": 18,
+   "q": 80,
+   "prompt": "A dragon scale storm animation: a fierce whirlwind of sharp iridescent emerald, gold and teal dragon scales spinning like blades, with glinting light flashes. Frames 1-2 scales lifting, frames 3-6 a dense slicing scale whirlwind, frames 7-8 scales scattering.",
+   "aq": 60
+  },
+  {
+   "id": "ou_eternal_breath",
+   "group": "boss",
+   "grid": [
+    2,
+    4
+   ],
+   "cell": "wide",
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    512,
+    256
+   ],
+   "anchor": "left",
+   "fps": 16,
+   "q": 80,
+   "prompt": "An eternal breath stream animation: a spiralling stream of deep teal, emerald and gold cosmic energy with twisting infinite-loop shaped swirls and star glints, flowing from the right edge of each wide cell to the left, narrow at the right and blooming wide at the left. Frames 1-2 starting, frames 3-6 the full spiralling stream, frames 7-8 fading.",
+   "aq": 60
   }
  ]
 }

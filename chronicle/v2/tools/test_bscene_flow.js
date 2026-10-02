@@ -106,7 +106,7 @@ async function main() {
   section('全滅: 直前の戦闘から（既定・失う物なし）');
   await B.ev(p, 'RPG.Game.gold = 101');
   await B.ev(p, start({ demo: 'wipe', autoInput: true, mons: [['x', 1]], bg: 'cave' }));
-  ok('wipe screen (灯が消えた) with 3 choices', await B.waitFor(p, `${D} && ${D}.go && ${D}.ui && ${D}.ui.o.rows.length === 3`, 30000));
+  ok('wipe screen (灯が消えた) with 3 choices', await B.waitFor(p, `${D} && ${D}.go && ${D}.ui && ${D}.ui.o.rows.length === 3 && (!${D}.ui.guard || ${D}.ui.guard.armed)`, 30000));
   ok('default row follows setting wipe (retry = 0)', (await B.ev(p, `${D}.ui.sel`)) === 0);
   ok('promise not resolved yet', !(await B.ev(p, 'window.__r')));
   await B.press(p, 'a');
@@ -117,7 +117,7 @@ async function main() {
   section('全滅: 最後に泊まった宿から（所持金半分）');
   await B.ev(p, "RPG.Game.gold = 101; RPG.Game.lastInn = {map: 'stub_road', x: 10, y: 5, dir: 's'}");
   await B.ev(p, start({ demo: 'wipe', autoInput: true, mons: [['x', 1]] }));
-  ok('wipe screen', await B.waitFor(p, `${D} && ${D}.go && ${D}.ui`, 30000));
+  ok('wipe screen', await B.waitFor(p, `${D} && ${D}.go && ${D}.ui && (!${D}.ui.guard || ${D}.ui.guard.armed)`, 30000));
   await B.press(p, 'down'); await B.press(p, 'a');
   ok("resolves {result:'abort', to:'inn'}", await B.waitFor(p, "window.__r && window.__r.result === 'abort' && window.__r.to === 'inn'", 5000), await B.ev(p, 'window.__r'));
   const f0 = await B.ev(p, 'RPG.Engine.frame');
@@ -256,9 +256,32 @@ async function main() {
     await B.ev(p, "RPG.Settings.set('battleSpeed', 1); 0");
   }
 
+  section('暴走モード: 赤い光・見出し・BGM が速くなり、戦闘の後に戻る（持ち主 2026-10-02）');
+  {
+    await B.ev(p, "RPG.Settings.set('battleSpeed', 3); 0");
+    await B.ev(p, start({ troop: 'tr_b_moth', autoInput: true, seed: 7 }));
+    ok('boss battle opens at tempo 1', await B.waitFor(p, `${D} && ${D}.B && ${D}.phase==='input'`, 30000) && (await B.ev(p, 'RPG.Audio.tempo')) === 1);
+    await B.ev(p, `(() => { const E = ${D}.B.engine; E.party.forEach((x) => { x.hp = x.mhp = 99999; }); const m = E.mons[0]; m.hp = Math.floor(m.mhp * 0.505); m.reserved = null; return 0; })()`);
+    ok('crossing the threshold: red flash + caption (fast-forward too)', await B.waitFor(p, `${D} && ${D}.rage && ${D}.head && /怒り狂った/.test(${D}.head.name)`, 40000));
+    ok('BGM tempo up for the rest of the fight (+12〜15%)', await B.waitFor(p, 'RPG.Audio.tempo >= 1.12 && RPG.Audio.tempo <= 1.15', 3000), await B.ev(p, 'RPG.Audio.tempo'));
+    await p.waitForTimeout(1500);
+    ok('enrage played once', (await B.ev(p, `${D}.log.filter((l) => l.t === 'msg').length >= 1 && ${D}.enraged`)) === 1);
+    await B.ev(p, `(() => { const E = ${D}.B.engine; E.mons.forEach((m) => { m.hp = 1; }); return 0; })()`);
+    ok('victory', await B.waitFor(p, `${D} && ${D}.result`, 60000));
+    ok('closes as a win', await B.pressUntil(p, 'a', 'window.__r', 40) && (await B.ev(p, 'window.__r.result')) === 'win');
+    ok('after the battle the tempo is back to 1', await B.waitFor(p, 'RPG.Audio.tempo === 1', 5000), await B.ev(p, '[RPG.Audio.current, RPG.Audio.tempo]'));
+    // ふつうの戦闘は暴走しない
+    await B.ev(p, start({ mons: [['rat_1', 2]], autoInput: true, seed: 3 }));
+    ok('mob battle opens', await B.waitFor(p, `${D} && ${D}.B && ${D}.phase==='input'`, 30000));
+    await B.ev(p, `(() => { const E = ${D}.B.engine; E.mons.forEach((m) => { m.hp = 1; }); return 0; })()`);
+    ok('mob battle: no enrage', await B.waitFor(p, `${D} && ${D}.result`, 60000) && !(await B.ev(p, `${D}.enraged || 0`)) && (await B.ev(p, 'RPG.Audio.tempo')) === 1);
+    await B.pressUntil(p, 'a', 'window.__r', 40);
+    await B.ev(p, "RPG.Settings.set('battleSpeed', 1); 0");
+  }
+
   section('全滅: タイトルへ');
   await B.ev(p, start({ demo: 'wipe', autoInput: true, mons: [['x', 1]] }));
-  ok('wipe screen', await B.waitFor(p, `${D} && ${D}.go && ${D}.ui`, 30000));
+  ok('wipe screen', await B.waitFor(p, `${D} && ${D}.go && ${D}.ui && (!${D}.ui.guard || ${D}.ui.guard.armed)`, 30000));
   await B.press(p, 'down'); await B.press(p, 'down'); await B.press(p, 'a');
   ok('"title" opens the title screen', await B.waitFor(p, `${B.TOP}==='screen:title'`, 5000));
   ok('0 console errors / outside requests', P.errors.length === 0, P.errors.slice(0, 5));

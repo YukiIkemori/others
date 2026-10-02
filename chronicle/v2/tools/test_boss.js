@@ -152,4 +152,45 @@ section('4・5. sim（台本）: ダメージのある手番・1 ラウンドの
   ok('予告 → 大技 の 2 手番の繰り返しが 3 回続かない', !loops.length, loops);
 }
 
+// ================================================================ 暴走モード（持ち主 2026-10-02）
+section('暴走モード: ボスが HP の低い段階に入った最初の 1 回だけ「〜が怒り狂った！」');
+{
+  const bosses = Object.keys(D.monsters).filter((id) => (D.monsters[id].flags || []).includes('boss'));
+  const main = bosses.filter((id) => D.monsters[id].bossType !== 'add');
+  const adds = bosses.filter((id) => D.monsters[id].bossType === 'add');
+  ok('every boss (not adds) has a threshold in (0, 0.5]', main.every((id) => { const v = BC.enrageAt(D.monsters[id], true); return v > 0 && v <= 0.5; }), main.map((id) => [id, BC.enrageAt(D.monsters[id], true)]).filter((x) => !(x[1] > 0 && x[1] <= 0.5)));
+  ok('adds (お供・籠城の狼) never enrage', adds.every((id) => BC.enrageAt(D.monsters[id], true) == null), adds.filter((id) => BC.enrageAt(D.monsters[id], true) != null));
+  ok('ordinary monsters never enrage', Object.keys(D.monsters).filter((id) => !(D.monsters[id].flags || []).includes('boss')).every((id) => BC.enrageAt(D.monsters[id], false) == null));
+  ok('derived from hpBelow: 鉄の番人 0.3（0.75・0.7 は数えない）, 砂の王 0.4, ふつうは 0.5', BC.enrageAt(D.monsters.b_ironwarden, true) === 0.3 && BC.enrageAt(D.monsters.b_sandking, true) === 0.4 && BC.enrageAt(D.monsters.b_moth, true) === 0.5);
+  ok('explicit field: enrage number (also on a mob) / enrage false', BC.enrageAt({ enrage: 0.35 }, false) === 0.35 && BC.enrageAt({ enrage: false, phases: [{ hpBelow: 0.5 }] }, true) == null);
+  R.State.newGame({ hero: { type: 'warrior', sex: 'm', name: 'アルン' }, seed: 11 });
+  const pc = () => R.Party.members().map((c) => JSON.parse(JSON.stringify(c)));
+  const eng = new BC.Engine({ party: pc(), mons: ['b_moth'], tier: 0, lv: 8, inv: {}, rng: R.Mon.mkRng('enr') });
+  eng.use();
+  const m = eng.mons[0];
+  m.hp = Math.ceil(m.mhp * 0.6);
+  const e0 = [...eng.afterAction()];
+  ok('above the threshold: nothing', !e0.some((e) => e.t === 'enrage'));
+  m.hp = Math.floor(m.mhp * 0.45);
+  const e1 = [...eng.afterAction()];
+  const out = []; for (const e of e1) BC.toEvents(e, 'A', out, eng);
+  const msg = out.find((e) => e.t === 'msg' && e.enrage);
+  ok('crossing: one enrage event → contract msg {enrage, uid} with the caption', e1.filter((e) => e.t === 'enrage').length === 1 && msg && msg.uid === m.uid && msg.text === R.T('sys.battle_core.enrage', { name: m.name }) && R.Contract.check('battleEvent', msg).ok, msg);
+  m.hp = Math.floor(m.mhp * 0.1);
+  const e2 = [...eng.afterAction()];
+  ok('only once per battle', !e2.some((e) => e.t === 'enrage') && m.enraged === true);
+  const mob = new BC.Engine({ party: pc(), mons: ['rat_1'], tier: 0, lv: 8, inv: {}, rng: R.Mon.mkRng('enr2') });
+  mob.use(); mob.mons[0].hp = 1;
+  ok('a mob at 1 HP does not enrage', ![...mob.afterAction()].some((e) => e.t === 'enrage'));
+  // 本物の流れ: 台本で最後まで戦っても、暴走は 1 回だけ（ボスが 1 体の戦闘）
+  const B = BC.create({ troop: 'tr_b_moth', seed: 'enr3' });
+  let evs = B.intro(), n = 0;
+  for (let r = 0; r < 40 && !B.over; r++) {
+    for (const u of B.units.filter((x) => x.side === 'party' && x.alive)) B.submit(u.uid, { cmd: 'attack', target: (B.units.find((x) => x.side === 'enemy' && x.alive) || {}).uid });
+    evs = evs.concat(B.round());
+  }
+  n = evs.filter((e) => e.t === 'msg' && e.enrage).length;
+  ok('a whole fight: at most one enrage line (and one if the boss fell below 0.5)', n <= 1 && (!B.engine.mons[0].alive || B.engine.mons[0].hpRate() >= 0.5 ? n === (B.engine.mons[0].enraged ? 1 : 0) : n === 1), n);
+}
+
 done('test_boss');
