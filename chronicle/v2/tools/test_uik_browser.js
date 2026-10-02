@@ -267,6 +267,7 @@ async function main() {
     ok('縦持ち: タップで全部出す → 次のページ', (await ev(q, 'RPG.UIK.Message.state().page')) === 1, await ev(q, 'RPG.UIK.Message.state()'));
     await B.waitFor(q, 'RPG.UIK.Message.state().full', 3000);
     const cr2 = await ev(q, 'RPG.UIK.Message.state().choiceRect');
+    await B.waitFor(q, 'RPG.UIK.Message.state().armed', 3000);   // 出てすぐの決定は受けない（CHOICE_GUARD）
     await q.touchscreen.tap(...Object.values(await ev(q, client(cr2.x + cr2.w / 2, cr2.y + 8 * 1.3 + cr2.rh * 1.5))));
     await sleep(200);
     ok('縦持ち: 選択肢をタップ → 1', (await ev(q, '__r')) === 1, await ev(q, '__r'));

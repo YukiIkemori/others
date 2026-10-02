@@ -125,6 +125,8 @@ async function padTap(p, id, i) {
       await p.keyboard.down('KeyJ'); await p.waitForTimeout(60); await p.keyboard.up('KeyJ'); await p.waitForTimeout(200);   // 今の決定は J
       await B.waitFor(p, '!!RPG.Engine.top().view.modal', 1000);
       await B.press(p, 'up');
+      // 確かめの札は出てすぐの決定を受けない（R.UIK.choiceGuard、テスター 2026-10-02 P22）: 受けるようになってから
+      await B.waitFor(p, '(() => { const m = RPG.Engine.top().view.modal; return !m || !m.guard || m.guard.armed; })()', 3000);
       await p.keyboard.down('KeyJ'); await p.waitForTimeout(60); await p.keyboard.up('KeyJ'); await p.waitForTimeout(300);
       ok('reset pad binds', (await B.ev(p, 'RPG.Input.bindings().pad.dash')) === -1);
       await B.ev(p, `(() => { RPG.Input.resetBinds(); return true; })()`);
