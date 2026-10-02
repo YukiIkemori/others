@@ -71,6 +71,8 @@
     const pal = u.pal || ['255,220,150', '255,250,230', '200,120,40'];
     const env = (1 - outK) * Math.min(1, k / 0.12);
     g.save();
+    // 縦の画面では戦場の中だけ（下の札の所に集中線・暗さを出さない）
+    if (st.L && st.L.tall) { g.beginPath(); g.rect(0, 0, W, Hs); g.clip(); }
     // 1) ボスの周りを明るく残した暗さ（集中）。暗さの残り（out の間）
     if (a) {
       const h = _.actors && _.actors.height ? _.actors.height(a) : 100;

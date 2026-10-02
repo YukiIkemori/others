@@ -17,7 +17,8 @@
   // 不透明な部品（マゼンタの地を抜いた岩・根…）と、煙のようにふつうに重ねる部品
   const OVER = /^(re_root_quake|re_thorn_coil|sw_sand_maw|rk_cave_in|iw_anvil|lb_obsidian_burst|pe_paper_storm|sk_sand_wave|ig_avalanche|mb_mist_vortex|mb_mist_breath|lb_ash_storm)$/;
   /** 画像の層（p 'img' | 'span' | 'drop'） */
-  const I = (id, t0, t1, at, o, p) => L(p || 'img', t0, t1, at, Object.assign({ id, blend: OVER.test(id) ? 'source-over' : 'lighter' }, o || {}));
+  // 平たく回る円（地面の紋・渦）は disc（平たくしてから回す。img は回してから平たくする）
+  const I = (id, t0, t1, at, o, p) => L(p || (o && o.flat && o.spin ? 'disc' : 'img'), t0, t1, at, Object.assign({ id, blend: OVER.test(id) ? 'source-over' : 'lighter' }, o || {}));
   const IH = (id, t1, o) => I(id, 0, t1, (o && o.at) || 'tgt', o);
   const SPAN = (id, t0, t1, at, o) => I(id, t0, t1, at, o, 'span');
   const DROP = (id, t0, t1, at, o) => I(id, t0, t1, at, o, 'drop');
@@ -30,6 +31,15 @@
     if (!(d > 20)) return;
     const img = S.prims.img;
     if (img) img(g, u, Object.assign({}, L0, { p: 'img', pxw: Math.max(120, d * (L0.k || 0.92)), rot: (L0.rot || 0) + Math.atan2(e.sy, e.sx) }), c, e);
+  });
+  S.prim('disc', (g, u, L0, c, e) => {
+    const img = S.prims.img;
+    if (!img) return;
+    // 置き場所のずらし（足もと・dy2）は平たくする前に
+    const y = (L0.foot ? ((c.tc.fy - c.tc.y) || 0) / (L0.s || 1) : 0) + (L0.dy2 || 0);
+    if (y) g.translate(0, y);
+    g.scale(1, L0.flat || 1);
+    img(g, u, Object.assign({}, L0, { p: 'img', flat: 1, foot: 0, dy2: 0 }), c, e);
   });
   S.prim('drop', (g, u, L0, c, e) => {
     const I0 = R.BFX.img;
@@ -65,12 +75,12 @@
   ], hit: [IH('mo_sleep_dust', 640, { th: 1.6, a: 0.7 }), H('sparks', 300, { n: 6, v: 16, len: 0, star: 1, size: 4, col: 1 })], shakes: [[0, 2, 200]] });
   def('eb_root_quake', rgb('150,200,110', '230,245,200', '90,60,30'), { ult: 1, tier: 5, lead: 560, c: '【根の大地震】もぐった根が前の列の足もとから一斉に突き上げる', main: [
     L('crack', -320, 520, 'tfoot', { n: 8, len: 90, col: '120,90,50' }),
-    I('re_root_quake', -120, 700, 'eachfoot', { px: 210 }),
+    I('re_root_quake', -120, 700, 'eachfoot', { px: 210, tint: '125,95,60' }),
     L('debris', -80, 600, 'tfoot', { n: 14, v: 90, size: 5 }),
   ], hit: [H('sparks', 300, { n: 10, v: 40, len: 6, col: 0 })], shakes: [[-120, 4, 200], [0, 7, 420]] });
   def('eb_rot_breath', rgb('170,220,90', '235,255,200', '110,60,150'), { tier: 4, lead: 420, c: '腐れの息: 黄緑と紫の胞子の息が、根食らいから全員へ流れる', main: [SPAN('re_rot_breath', -340, 520, 'tgt', { env: 1, fi: 0.15, fo: 0.3 })], hit: [IH('poison_bubbles', 600, { th: 1.4, a: 0.8 })] });
   def('eb_root_drain', rgb('130,230,120', '230,255,220', '60,120,40'), { tier: 3, c: '根で吸う: いばらの根が巻きつき、緑の命の光を吸い上げる', hit: [IH('re_thorn_coil', 700, { th: 2.5 }), H('motes', 600, { n: 12, w: 40, h: 60, col: 0 })] });
-  def('ec_b_root_bind', rgb('140,200,100', '235,250,210', '100,60,30'), { tier: 4, lead: 360, c: '合体: 根の締めつけ。突き上がる根といばらが的を締め上げる', main: [I('re_root_quake', -260, 520, 'tfoot', { px: 230 })], hit: [IH('re_thorn_coil', 700, { th: 2.7 }), H('ring', 320, { r: 40, w: 3, col: 2 })] });
+  def('ec_b_root_bind', rgb('140,200,100', '235,250,210', '100,60,30'), { tier: 4, lead: 360, c: '合体: 根の締めつけ。突き上がる根といばらが的を締め上げる', main: [I('re_root_quake', -260, 520, 'tfoot', { px: 230, tint: '125,95,60' })], hit: [IH('re_thorn_coil', 700, { th: 2.7 }), H('ring', 320, { r: 40, w: 3, col: 2 })] });
   def('ec_b_lord_pack', rgb('190,215,255', '250,252,255', '120,40,60'), { tier: 4, lead: 320, c: '合体: 群れ頭の号令。月の牙と赤い牙が同じ的へ重なる', main: [L('dash', -260, 60, 'tgt', { n: 8, len: 90, col: 0 })], hit: [IH('wl_moon_fang', 620, { th: 3.4 }), IH('bite_fangs', 420, { th: 1.8, tint: '255,90,100' })] });
 
   // ================================================================ 砂漠
@@ -176,7 +186,7 @@
   // ================================================================ 灰の地方
   def('eb_tamer_whip', rgb('255,160,70', '255,235,190', '200,70,30'), { tier: 3, c: '獣使いの鞭: 炎の鞭がしなって鳴る', hit: [IH('at_whip_crack', 520, { th: 2.9 }), H('sparks', 300, { n: 8, v: 36, len: 6, col: 1 })] });
   def('ec_b_tamer_charge', rgb('255,160,70', '255,235,190', '150,100,60'), { tier: 4, lead: 320, c: '合体: 鞭と突進。炎の鞭の合図で岩の獣がぶつかる', hit: [IH('at_whip_crack', 520, { th: 2.6 }), IH('rock_eruption', 600, { th: 2.6, foot: 1 }), H('ring', 340, { r: 50, flat: 0.4, w: 3, col: 0 })] });
-  def('eb_sumi_ember', rgb('255,120,60', '255,235,170', '200,40,30'), { tier: 3, c: '火の粉: 紅と金の二筋の火が全員の上でより合う', hit: [IH('as_twin_flame', 600, { th: 1.7 })] });
+  def('eb_sumi_ember', rgb('255,120,60', '255,235,170', '200,40,30'), { tier: 3, c: '火の粉: 紅と金の二筋の火が全員の上でより合う', hit: [IH('as_twin_flame', 600, { th: 2.5 })] });
   def('ec_b_sister_flames', rgb('255,110,60', '255,235,170', '230,150,40'), { tier: 4, lead: 360, c: '合体: 姉妹の連なる火。紅と金の二筋の火柱が螺旋になって的を焼く', main: [L('flames', -260, 400, 'tfoot', { n: 12, w: 40, h: 60, size: 8 })], hit: [IH('as_twin_flame', 680, { th: 3.4 }), IH('fire_burst', 480, { th: 1.6 })] });
   def('eb_barga_bash', rgb('210,215,230', '255,255,255', '120,130,160'), { ult: 1, tier: 5, lead: 520, c: '【鉄壁崩し】鉄鎧のバルガが大盾ごと突っこみ、鉄の衝撃の輪と気絶の星', main: [L('dash', -420, 40, 'tgt', { n: 10, len: 120, col: 0 }), L('glow', -480, -60, 'src', { r: 70, col: 1, a: 0.5 })], shakes: [[0, 6, 360]], hit: [IH('ab_shield_bash', 620, { th: 3.4 }), H('ring', 400, { r: 60, w: 4, n: 2, col: 0 }), H('sparks', 520, { n: 5, v: 22, star: 1, size: 5, len: 0, ang: -1.57, spread: 2.5, grav: -20, col: 1 })] });
   def('eb_zakuro_iai', rgb('255,90,100', '255,235,235', '150,20,40'), { ult: 1, tier: 5, lead: 620, c: '【居合・柘榴】静けさの後、画面を横に割る白い一線と、紅の花びらが散る', dimCol: '20,0,6', main: [
@@ -312,6 +322,17 @@
   S.isUlt = (sid) => { const r = sid && T[String(sid).replace(/^sq:/, '')]; return !!(r && r.ult); };
   /** 行が使う画像の部品の id（先に読む用） */
   S.partsOf = (sid) => { const r = T[String(sid).replace(/^sq:/, '')]; return r ? [...new Set([...(r.main || []), ...(r.hit || [])].filter((x) => x.id).map((x) => x.id))] : []; };
+  // 使い手の溜めの気（fx_seq_img.js の extras: 使い手の背の 1.5 倍ほどの aura_rise）は、大きなボスでは絵より大きな白い炎になる:
+  // ボスの行では小さく・行の色で（ボスの体の中ほどまで）
+  const get1 = S.get;
+  S.get = function (sid) {
+    const sp = get1(sid);
+    if (sp && !sp._bossAura && /^(eb_|ec_b_)/.test(sp.key || '')) {
+      sp._bossAura = true;
+      for (const L0 of sp.main) if (L0.p === 'img' && L0.id === 'aura_rise' && L0.at === 'srcfoot' && L0.t0 === 0) { L0.th = 0.75; L0.tint = 0; L0.a = 0.6; }
+    }
+    return sp;
+  };
   if (R.onData) R.onData(function () {
     const BA = R.DB.bossActions || {}, EC = R.DB.enemyCombos || {};
     for (const k of Object.keys(T)) if (/^eb_/.test(k) && BA[k] && !BA[k].seq) BA[k].seq = 'sq:' + k;
