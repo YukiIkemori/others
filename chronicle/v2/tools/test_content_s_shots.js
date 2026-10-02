@@ -182,7 +182,8 @@ async function bosses(S) {
         }
         if (tele) { await p.waitForTimeout(250); await B.shot(p, path.join(OUT, 'boss_' + tag + '_tele.png')); }
       }
-      ok(`${fx}${phone ? '（縦）' : ''}: 開く・${/siege/.test(fx) ? '' : '予告が出る・'}エラーなし`, !!up && (tele || /siege/.test(fx)) && P.errors.length === 0, P.errors.slice(0, 3));
+      // 2026-10-02 のボスの作り直しで「予告 → 致命の全体技」は無くなった。予告は出れば撮るだけ（無くてよい）
+      ok(`${fx}${phone ? '（縦）' : ''}: 開く・エラーなし`, !!up && P.errors.length === 0, P.errors.slice(0, 3));
       await P.close();
     }
   }

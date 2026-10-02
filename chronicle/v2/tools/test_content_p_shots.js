@@ -44,7 +44,7 @@ const EVENTS = [
   ['pharos_innkeeper', 'pharos_inn', {}, {}, []], ['pharos_shopkeeper', 'pharos_shop', {}, {}, []], ['pharos_smithy', 'pharos_smith', {}, {}, []],
   ['pharos_rowell', 'pharos_record', {}, {}, ['prologue_rowell']], ['pharos_record_notice', 'pharos_record', {}, {}, []], ['pharos_record_papers', 'pharos_record', {}, {}, []],
   ['pharos_clerk', 'pharos_record', {}, {}, []], ['pharos_shipwright', 'pharos_shipyard', {}, {}, []], ['pharos_apprentice', 'pharos_shipyard', {}, DONE, []],
-  ['lighthouse_1_door', 'lighthouse_1', {}, {}, []], ['lighthouse_1_tutorial', 'lighthouse_1', {}, {}, ['prologue_tutorial']],
+  ['lighthouse_1_door', 'lighthouse_1', {}, {}, ['prologue_tutorial', 'prologue_lh_door']], ['lighthouse_1_tutorial', 'lighthouse_1', {}, {}, ['prologue_tutorial']],
   ['lighthouse_3_fine', 'lighthouse_3', {}, {}, ['prologue_fine']], ['lighthouse_3_boss', 'lighthouse_3', {}, {}, []], ['lighthouse_3_lamp', 'lighthouse_3', {}, {}, []],
   ['story_t1', 'pharos', {}, DONE, []], ['well_nest', 'well', {}, {}, []], ['well_grave', 'well', {}, {}, []],
 ];
