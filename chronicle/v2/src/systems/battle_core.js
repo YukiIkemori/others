@@ -47,7 +47,7 @@
     SF: { min: 0.6, max: 1.8 },
     METAL: { dmg: 1, critDmg: 2, hitMul: 3 },
     STATUS: { mndPer: 0.005, resistCap: 0.9, pCap: 0.95, bossDebuff: 0.5 },
-    STEAL: { base: 0.35, agiDiv: 200, min: 0.1, max: 0.8, boss: 0.5, rareMul: 1.5, rareCap: 0.15, autoRare: 0.5, only: { cap: 0.5, autoMul: 0.5, golden: 2 } },
+    STEAL: { base: 0.35, agiDiv: 200, min: 0.1, max: 0.8, boss: 0.5, rareMul: 1.5, rareCap: 0.15, autoRare: 0.6, only: { cap: 0.5, autoMul: 0.6, golden: 2 } },
     BOSS_RES: { death: 1, sleep: 0.75, paralyze: 0.75, freeze: 0.75, confuse: 0.75, stun: 0.5, silence: 0.5, blind: 0.5, poison: 0.25, burn: 0.25 },
     GROW: { add: { boss: 4, rare: 2, golden: 1, metal: 6 } },
     DARK: { ambush: 0.08, stat: 1.1 },
@@ -1765,11 +1765,11 @@
       if (!s || !s.item || t.summoned || t.stolenSt) return false;
       return t.boss ? true : !t.stolen;
     }
-    /** 盗み専用の当たりの率: min(cap, (1/rate) × (1 + stealPct/100)) × (ついでに 0.5) × (金色 2) */
+    /** 盗み専用の当たりの率: min(cap, (1/rate) × (1 + stealPct/100)) × (ついでに 0.6) × (金色 2) */
     stealOnlyChance(u, t, auto) {
       const s = t.d.drops.steal;
-      const O = K('STEAL').only || { cap: 0.5, autoMul: 0.5, golden: 2 };
-      let p = (1 / Math.max(1, s.rate || 32)) * (1 + this.pct(u, 'stealPct') / 100);
+      const O = K('STEAL').only || { cap: 0.5, autoMul: 0.6, golden: 2 };
+      let p = (1 / Math.max(1, s.rate || 16)) * (1 + this.pct(u, 'stealPct') / 100);
       if (auto) p *= O.autoMul;
       if (t.golden) p *= O.golden;
       return Math.min(O.cap, p);
@@ -1825,7 +1825,7 @@
       if (!r || !this.canCarry(r.pick.item, r.pick.n)) { yield* fail(this); return; }
       yield* this.takeStolen(u, t, r.pick, r.only);
     }
-    /** ついでに盗む（autoSteal）: 当たった攻撃で 盗みの率 × autoSteal/100 × autoMul、1 人 1 戦闘 autoPerBattle 回まで。レア枠と盗み専用は率が半分。何も取れなければ黙る */
+    /** ついでに盗む（autoSteal）: 当たった攻撃で 盗みの率 × autoSteal/100 × autoMul、1 人 1 戦闘 autoPerBattle 回まで。レア枠と盗み専用は率が 6 割（K.STEAL の autoRare・only.autoMul）。何も取れなければ黙る */
     *autoSteal(u, t) {
       if (!this.canSteal(t)) return;
       const S = K('STEAL'), cap = S.autoPerBattle == null ? Infinity : S.autoPerBattle;

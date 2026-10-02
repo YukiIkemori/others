@@ -1,5 +1,5 @@
 // UIK: 会話（R.UIK.Message、MODERN_UI §6.3・§5.4、V2_PLAN §2.5.6・§2.11）
-//   say({name, title, face, text, voice（id か、元のページごとの id の配列）, choices, cancel}) → Promise<選んだ番号 | undefined>   場面 id 'message'（K.say）
+//   say({name, title, face, text, voice（id か、元のページごとの id の配列）, choices, cancel, index（最初のカーソル）}) → Promise<選んだ番号 | undefined>   場面 id 'message'（K.say）
 //     - 羊皮紙の札（下の中央、幅 760・高さ 150）。左に顔の枠 118（顔の無い人は枠ごと出さず文を左に寄せる）、上に話者名（琥珀）と肩書き
 //     - text は文字列か配列（1 つが 1 ページ）。幅で折り返し、3 行ごとに次のページへ（'\f' があればそこでも次のページへ）。{漢字|かんじ} はふりがな（設定 ruby のときだけ出す）
 //     - 送り: A・B・下キー・タップ（A3）。送ったら R.Audio.stopVoice()（A9）。途中なら全部を出す
@@ -19,7 +19,23 @@
   let cur = null;        // {scene, resolve}
   let cap = null;        // {scene, resolve}
   let autoOn = false;
-  const CHOICE_GUARD = { min: 450, idle: 300, max: 1500 };   // 選択肢が出てから決定を受けるまでの ms（min 以上、連打が止んで idle、長くても max）
+  // 選択肢が出てから決定を受けるまでの ms（出てから min 以上、かつ決定・取り消し・クリックを離して idle ms 何も押さない）。
+  //   前は「長くても max ms で受ける」があり、連打で会話を送り続けると 1.5 秒で 1 つ目に決まった（テスター 2026-10-02 P22「第3の波。どの門を守る？」）。
+  //   押しっぱなし・連打の間は受けない（離して一息おけば選べる）
+  const CHOICE_GUARD = { min: 450, idle: 300 };
+  /**
+   * 出てすぐの選択の決定よけ（会話の選択肢・画面の S.ask の guard・店の「今すぐ装備する？」で同じ決まり）。
+   *   g = {t0: 出た時刻}。毎フレーム呼ぶ → 決定を受けてよければ true（一度 true になったら以後ずっと true）
+   */
+  UIK.choiceGuard = function (g) {
+    if (g.armed) return true;
+    const I = R.Input, now = R.Engine.time;
+    if ((I.down && (I.down('a') || I.down('b'))) || (I.pointer && I.pointer.down)) g.at = now;
+    // 連打・押しっぱなしが続いている間は待つ（離して CHOICE_GUARD.idle ms）
+    if (now - g.t0 < CHOICE_GUARD.min || now - Math.max(g.t0, g.at || 0) < CHOICE_GUARD.idle) return false;
+    g.armed = true;
+    return true;
+  };
   let lastShown = null;  // {name, title, face, page, t}
   const logs = [];       // [{name, text}]
   const readSet = new Set();
@@ -120,7 +136,7 @@
     if (context) src = [context.page];
     const parsed = src.map(parseRuby);
     const st = {
-      page: 0, shown: 0, choice: 0, full: false, fullAt: 0, pages: null, key: '', log: null,
+      page: 0, shown: 0, choice: Math.max(0, Math.min(choices.length - 1, o.index | 0)), full: false, fullAt: 0, pages: null, key: '', log: null,
       voiceDone: !voiceFor(0), voiceSrc: -1, voiceTok: 0, press: null, t0: 0, ffHold: false, logged: {}, hover: -1,
     };
     if (context) { st.shown = 1e9; st.logged[0] = true; }
@@ -273,12 +289,10 @@
       // 選択肢が出てすぐの決定・取り消しは受けない（会話を連打で送っていて、選んだと気づかずに決まるのを防ぐ。テスター 2026-09-30）。
       //   カーソルは動かせる。受けるようになったら（st.armed）以後は素通り
       if (!st.armed) {
-        const now = R.Engine.time;
-        if (I.down && (I.down('a') || I.down('b'))) st.guardAt = now;
-        // 連打が続いている間は待つ（離して CHOICE_GUARD.idle ms）。ただし出てから CHOICE_GUARD.max ms で必ず受ける（押しっぱなし・自動の連打でも止まらない）
-        const quiet = now - Math.max(st.fullAt, st.guardAt || 0) >= CHOICE_GUARD.idle;
-        if (now - st.fullAt < CHOICE_GUARD.min || (!quiet && now - st.fullAt < CHOICE_GUARD.max)) return;
+        st.guard = st.guard || { t0: st.fullAt };
+        if (!UIK.choiceGuard(st.guard)) return;
         st.armed = true;
+        st.press = null;   // 受ける前に押したクリックは数えない
       }
       const p = I.pointer, C = L.choice;
       let hit = -1;
@@ -531,11 +545,11 @@
   };
   M.log = function () { return logs.slice(); };
   M.auto = function (v) { if (v != null) autoOn = !!v; return autoOn; };
-  /** 今の会話の中の状態（テスト用）: {page, pages, shown, full, choice, log, rect, face, choiceRect, name（描く名前）, textY（本文 1 行目の上）} | null */
+  /** 今の会話の中の状態（テスト用）: {page, pages, shown, full, choice, armed（選択肢が決定を受けるか）, log, rect, face, choiceRect, name（描く名前）, textY（本文 1 行目の上）} | null */
   M.state = function () {
     if (!cur) return null;
     const st = cur.scene.state;
-    return { page: st.page, pages: st.pages ? st.pages.length : 0, shown: st.shown, full: st.pages ? st.shown >= st.pages[st.page].n : false, choice: st.choice, log: !!st.log,
+    return { page: st.page, pages: st.pages ? st.pages.length : 0, shown: st.shown, full: st.pages ? st.shown >= st.pages[st.page].n : false, choice: st.choice, armed: !!st.armed, log: !!st.log,
       rect: st.L ? { x: st.L.x, y: st.L.y, w: st.L.w, h: st.L.h } : null, face: st.L ? st.L.face : null, name: cur.scene.name, textY: st.L ? st.L.textY : null, choiceRect: st.L && st.L.choice ? { x: st.L.choice.x, y: st.L.choice.y, w: st.L.choice.w, h: st.L.choice.h, rh: st.L.choice.rh } : null };
   };
 })(window.RPG);

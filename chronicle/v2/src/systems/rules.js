@@ -87,9 +87,9 @@
       hp: { S: 1.25, A: 1.12, B: 1.00, C: 0.90, D: 0.80 },
       mp: { S: 1.30, A: 1.15, B: 1.00, C: 0.85, D: 0.70 },
     },
-    // §9.3 戦闘のあとの伸び（R.Growth）。slope 0.07 → 0.08（sim_growth E1: T0 の地方ボスで LZ+5.2 → +4.9。伸びなくなるのは d ≤ −3.75）
+    // §9.3 戦闘のあとの伸び（R.Growth）。reserve: 控えは出撃した人の伸びの平均 × 0.7（持ち主 2026-10-02）。slope 0.07 → 0.08（sim_growth E1: T0 の地方ボスで LZ+5.2 → +4.9。伸びなくなるのは d ≤ −3.75）
     GROW: { p0: 0.30, slope: 0.08, pmax: 0.90, add: { boss: 4, rare: 2, golden: 1, metal: 6 }, mul: { boss: 2, metal: 2 },
-      reserve: 0.6, fallen: 0.5, join: 0.9, capOff: 6, bplMax: 16, bplAmp: 12, bplTau: 12, rf: [0.8, 1.2], glMin: 1, glMax: 99 },
+      reserve: 0.7, fallen: 0.5, join: 0.9, capOff: 6, bplMax: 16, bplAmp: 12, bplTau: 12, rf: [0.8, 1.2], glMin: 1, glMax: 99 },
     // §4.5.3 隊列（back = 後列。旧の middle と同じ）
     ROW: { middleTaken: 0.7, backTaken: 0.7, weight: { front: 2, middle: 1, back: 1 }, aimMiddle: { front: 1, middle: 3 }, aimBack: { front: 1, back: 3 } },
     STAGE: [0.63, 0.77, 1, 1.3, 1.6],
@@ -134,11 +134,14 @@
     DERIVE: { minUses: 3, base: [0, 0.002, 0.0006], cap: [0, 0.006, 0.0009], rankSlope: 0.3, rankMin: 0.3, rankMax: 2.5,
       profSlope: 0.01, profMin: 0.7, profMax: 1.25, useSlope: 0.02, useMax: 2.5, maxCount: 9999 },
     // §4.10 落とし物・盗み（§7.3 盗み専用の枠）
-    DROP: { rate: { normal: 8, rare: 32, super: 256 }, cap: { normal: 0.75, rare: 0.5, super: 0.125 }, modCap: 150, golden: { normal: 2, rare: 8, super: 8 } },
+    // レアの既定 32 → 16（持ち主 2026-10-02「店の装備は最低限。足りない分はレアのドロップと盗みで埋める。盗みに気づかない人が困らないよう、レアと盗みのレアを少し上げる」）。
+    //   段 2 の魔物の枠（旧 16）は 12、盗み専用は 雑魚 32 → 16・レア魔物 16 → 12（ボス 16 はそのまま）。スーパーレアは据え置き。見込みは tools/sim_loot.js の H7・H9
+    DROP: { rate: { normal: 8, rare: 16, super: 256 }, cap: { normal: 0.75, rare: 0.5, super: 0.125 }, modCap: 150, golden: { normal: 2, rare: 8, super: 8 } },
     // 盗みのレア枠: min(rareCap, レアの落ちる率 × rareMul)。4・0.5 → 1.5・0.15（オーナー 2026-09-28「ティッタのレアを盗む確率が高すぎる。レアばかり持つ」）。
-    //   成功 1 回あたり 縦切りの雑魚 段 1（率 32）4.7%・段 2（率 16）9.4%、ついでに（autoRare 0.5）はその半分。めずらしい魔物（率 6）は 15%
-    STEAL: { base: 0.35, agiDiv: 200, min: 0.1, max: 0.8, boss: 0.5, rareMul: 1.5, rareCap: 0.15, autoRare: 0.5, autoMul: 0.4, autoPerBattle: 1,
-      only: { cap: 0.5, autoMul: 0.5, golden: 2 }, rate: { mob: 32, rare: 16, boss: 16 } },
+    //   成功 1 回あたり 雑魚 段 1（率 16）9.4%・段 2（率 12）12.5%、ついでに（autoRare 0.6）はその 6 割。めずらしい魔物（率 6）は 15%
+    //   盗み専用のついでの率 only.autoMul 0.5 → 0.6（持ち主 2026-10-02。盗み上手で盗んでいても普通の品ばかり、の声）
+    STEAL: { base: 0.35, agiDiv: 200, min: 0.1, max: 0.8, boss: 0.5, rareMul: 1.5, rareCap: 0.15, autoRare: 0.6, autoMul: 0.4, autoPerBattle: 1,
+      only: { cap: 0.5, autoMul: 0.6, golden: 2 }, rate: { mob: 16, rare: 12, boss: 16 } },
     // §3.3.16 効果の合計の上限（exp → grow。§9.4）
     MODCAP: { party: 150, partyMin: -100, preempt: 30, grow: 30, growMin: -100, glim: 40, glimMin: -100, prof: 50, profMin: -100, cost: -50, encounter: 50, autoSteal: 100 },
     PARTY_KEYS: ['goldPct', 'dropPct', 'rarePct', 'superPct', 'rareEncPct', 'goldenPct', 'preemptPct', 'escapePct'],

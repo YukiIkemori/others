@@ -185,7 +185,7 @@ section('§9 growth (A30)');
   ok('p = 0.30 at d = 0', near(R.Growth.chance(h, E, {}), 0.30));
   ok('p = 0 for weak foes (d ≤ −3.75 with slope 0.08)', R.Growth.chance(h, 6, {}) === 0 && R.Growth.chance(h, 7, {}) > 0);
   ok('p capped 0.90', near(R.Growth.chance(h, 30, {}), 0.9));
-  ok('reserve × 0.6, fallen × 0.5', near(R.Growth.chance(h, E, { reserve: true }), 0.18) && near(R.Growth.chance(h, E, { fallen: true }), 0.15));
+  ok('reserve × 0.7, fallen × 0.5', near(R.Growth.chance(h, E, { reserve: true }), 0.21) && near(R.Growth.chance(h, E, { fallen: true }), 0.15));
   ok('boss battle → 1', R.Growth.chance(h, E, { boss: true }) === 1);
   ok('step(L) = 1 / (0.3 bpl(L)): L6 ≈ 0.38, L30 ≈ 0.22', near(R.Growth.step(6), 0.38, 0.01) && near(R.Growth.step(30), 0.22, 0.01), [R.Growth.step(6), R.Growth.step(30)]);
   // afterBattle with a fixed rng: always roll 0 → grows, amount factor 0.8
@@ -194,6 +194,19 @@ section('§9 growth (A30)');
   const res = R.Growth.afterBattle(['hero'], [], { Lb: 8, rng: () => 0, tier: 0 });
   ok('afterBattle → [{c, hp, mp}] (K.growRow), gl grew by step×0.8', res.length === 1 && chk('growRow', res[0]).ok && near(h.gl, 8 + R.Growth.step(8) * 0.8, 1e-3), [res.map((x) => [x.hp, x.mp]), h.gl]);
   ok('current HP rises with the max', h.hp === 5 + (R.Rules.stats(h).maxHp - hp0));
+  // 控え: 出撃した人の gl の増えの平均 × 0.7 を必ずもらう（自分では振らない）
+  {
+    R.Game.chars.zz_res = Object.assign(JSON.parse(JSON.stringify(h)), { id: 'zz_res', gl: 6, hp: 1 });
+    const rch = R.Game.chars.zz_res;
+    h.gl = 8;
+    R.Growth.afterBattle(['hero'], ['zz_res'], { Lb: 8, rng: () => 0, tier: 0 });
+    const want = 6 + (h.gl - 8) * 0.7;
+    ok('reserve gets 0.7 × the active average gl gain', near(rch.gl, want, 1e-3), [rch.gl, want]);
+    h.gl = 8; rch.gl = 6;
+    R.Growth.afterBattle(['hero'], ['zz_res'], { Lb: 3, rng: () => 0.001, tier: 0 });
+    ok('reserve gets nothing when the active members did not grow', rch.gl === 6);
+    delete R.Game.chars.zz_res;
+  }
   h.gl = 12;
   ok('no growth past cap(T)', R.Growth.afterBattle(['hero'], [], { Lb: 30, rng: () => 0, tier: 0 }).length === 0 && h.gl === 12);
   h.gl = 8;
@@ -287,7 +300,8 @@ section('data: steal-only (§7.2, V2_PLAN §2.6.6)');
   // 36 + 7 for the slice's stage 1–2 monsters (owner 2026-09-27: 「レアがめっきり減ったねえ……。楽しみがちょっとないかも」)
   ok('43 steal-only items, super, stealOnly, no quirk', st.length === 43 && st.every((id) => DB.items[id].grade === 'super' && DB.items[id].stealOnly && !DB.items[id].quirk));
   ok('ids <slot>_st_<name>', st.every((id) => /^(w_\w+|ac|hn|ft|sh|bd|hd)_st_/.test(id) || /^w_\w+_st_/.test(id)));
-  ok('rates: bosses 16, rare 16, mobs 32', Object.values(DB.stealSources).every((s) => [16, 32].includes(s.rate)) && DB.stealSources.ac_st_rooteater.rate === 16 && DB.stealSources.ft_st_jewel_hare.rate === 16);
+  // 持ち主 2026-10-02「盗みのレアを少し上げる」: 雑魚 32 → 16、レア魔物 16 → 12、ボスは 16 のまま
+  ok('rates: bosses 16, rare 12, mobs 16', Object.entries(DB.stealSources).every(([, s]) => s.rate === (/^rm_/.test(s.mon) ? 12 : 16)) && DB.stealSources.ac_st_rooteater.rate === 16 && DB.stealSources.ft_st_jewel_hare.rate === 12, DB.stealSources);
   const pooled = new Set();
   for (const p of Object.values(DB.pools)) for (const t of p.tiers) for (const e of t) if (e.item) pooled.add(e.item);
   for (const s of Object.values(DB.shops)) for (const id of s.items.concat(...Object.values(s.tier || {}))) pooled.add(id);
@@ -547,8 +561,10 @@ section('full-recovery items only from the late tier (owner 2026-09-28)');
   ok('slice stage 1–2 rare consumables heal ≤ 40 HP / ≤ 15 MP', !strong.length, strong);
   ok('i_tonic: rare, HP 30・MP 10', DB.items.i_tonic && DB.items.i_tonic.grade === 'rare' && amt('i_tonic', 'heal') === 30 && amt('i_tonic', 'healMp') === 10);
   ok('early rare-monster items heal ≤ 40 HP / ≤ 15 MP (jewel carrot, bloom nectar)', ['i_jewel_carrot', 'i_bloom_nectar'].every((id) => amt(id, 'heal') <= 40 && amt(id, 'healMp') <= 15));
-  // 盗みのレア枠（オーナー 2026-09-28「ティッタのレアを盗む確率が高すぎる」）: 成功 1 回あたり 段 1 の率 32 で 5% 前後、率 16 で 10% まで
-  ok('steal rare: rate 32 → ≤ 5 %, rate 16 → ≤ 10 %, cap ≤ 15 %', K.STEAL.rareMul / 32 <= 0.05 && K.STEAL.rareMul / 16 <= 0.1 && K.STEAL.rareCap <= 0.15, K.STEAL);
+  // 盗みのレア枠（オーナー 2026-09-28「ティッタのレアを盗む確率が高すぎる」）: 成功 1 回あたり 段 1 の率 16 で 10% まで、段 2 の率 12 で 13% まで
+  //   （持ち主 2026-10-02 にレアの率を 32・16 → 16・12 に上げた。上限 15% は据え置き）
+  ok('steal rare: rate 16 → ≤ 10 %, rate 12 → ≤ 13 %, cap ≤ 15 %', K.STEAL.rareMul / 16 <= 0.1 && K.STEAL.rareMul / 12 <= 0.13 && K.STEAL.rareCap <= 0.15, K.STEAL);
+  ok('drop rare default 16 (1/16), super 256', K.DROP.rate.rare === 16 && K.DROP.rate.super === 256, K.DROP.rate);
 }
 
 section('fieldUse・new items (MENUS 50, CONTENT-F 64)');

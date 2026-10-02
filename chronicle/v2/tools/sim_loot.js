@@ -3,11 +3,12 @@
 //
 //   node v2/tools/sim_loot.js [--n 100000] [--seed 20260926]
 //
-// H4: 「盗みの成功」n 回で、盗み専用の当たりが式（1/rate × (1 + stealPct/100)、ついでに × 0.5、金色 × 2、上限 0.5）の ±10%。
+// H4: 「盗みの成功」n 回で、盗み専用の当たりが式（1/rate × (1 + stealPct/100)、ついでに × K.STEAL.only.autoMul（0.6）、金色 × 2、上限 0.5）の ±10%。
 // H5: n 体を倒して R.Mon.rollDrops に盗み専用の品が 1 度も出ない（倒しても落ちない）。
-// H6（参考）: stealPct +50 の盗み手が毎戦 1 回盗むとき、通常の魔物の盗み専用を取るまでの戦闘数の中央値（目安 30〜60）と、
+// H6（参考）: stealPct +50 の盗み手が毎戦 1 回盗むとき、通常の魔物の盗み専用を取るまでの戦闘数の中央値（目安 10〜30。率 16、持ち主 2026-10-02 で 32 から上げた）と、
 //             ボス（根食らい）で 1 戦（10 回の盗み）のうちに取れる率（目安 35〜55%、V2_PLAN の率 16 で読み替え）。
-// H7: 縦切り 1 周で見るレアのドロップの回数の見込み（目安 3〜6。オーナー 2026-09-27「レアがめっきり減ったねえ……」）。
+// H7: 縦切り 1 周で見るレアのドロップの回数の見込み（最短の道で 3 以上。オーナー 2026-09-27「レアがめっきり減ったねえ……」。
+//     持ち主 2026-10-02 の率 32 → 16 で 最短の道 約 4.4 回・R1 の通し 約 19 回）。
 // H8: 縦切り 1 周（R1 の通し）で出会うレア魔物の回数の見込み（目安 0.3〜0.8）。持ち主 2026-10-01「レア敵が多すぎるのは駄目なので下げる」:
 //     前の 1/80（R1 で約 1.0 回 = ほぼ毎回 1 体）を R.Mon.K RARE_SCALE で半分にした。体験版を 2 回遊んで 1 度会うくらいが「たまに」の
 //     感じ。下は 0.3（巣の z_well に寄れば上がる。3 回に 1 度は会える）、上は 0.8（それより多いと毎回の顔なじみになる）。
@@ -38,7 +39,7 @@ function h4(R, n, seed) {
   for (const c of cases) {
     const { eng, u, t } = mkEngine(R, c.mon, { stealPct: c.stealPct, golden: c.golden, seed: `${seed}:${c.mon}:${c.stealPct}:${c.auto}:${c.golden}` });
     const rate = t.d.drops.steal.rate;
-    const O = { cap: 0.5, autoMul: 0.5, golden: 2 };
+    const O = Object.assign({ cap: 0.5, autoMul: 0.6, golden: 2 }, R.Rules.K.STEAL.only);
     const want = Math.min(O.cap, (1 / rate) * (1 + c.stealPct / 100) * (c.auto ? O.autoMul : 1) * (c.golden && t.golden ? O.golden : 1));
     let hit = 0;
     eng.use();
@@ -48,7 +49,8 @@ function h4(R, n, seed) {
       if (r && r.only) hit++;
     }
     const got = hit / n;
-    const ok = Math.abs(got - want) <= want * 0.1 && got <= O.cap + 1e-9;
+    // 上限に張り付く場合は振れで少し超えるので、上限も ±10% の幅で見る
+    const ok = Math.abs(got - want) <= want * 0.1 && got <= O.cap * 1.1;
     rows.push({ case: `${c.mon} stealPct ${c.stealPct}${c.auto ? ' auto' : ''}${c.golden ? ' golden' : ''}`, want, got, ok });
   }
   return rows;
@@ -97,7 +99,7 @@ function h6(R, trials, seed) {
 /** H7: 縦切り 1 周で見るレアのドロップの見込み（オーナー 2026-09-27「レアがめっきり減ったねえ……。楽しみがちょっとないかも」）。
  *  出現表の組の重み（ティア 0 の組）× 数 → 1 戦で倒す魔物の見込み、R.Mon.dropChances の rare を足す。戦闘数は 2 通り:
  *  route = design/qa/sim_segments.json の縦切りのダンジョンの区間（最短の道）＋ R1 のワールドの戦闘、
- *  R1 = design/qa/playthrough/R1.json（通しの自動の 1 周。迷い・やり直しを含む）。目安 3〜6（route で 3 以上） */
+ *  R1 = design/qa/playthrough/R1.json（通しの自動の 1 周。迷い・やり直しを含む）。目安は route で 3 以上 */
 function h7(R) {
   const fs = require('fs');
   const path = require('path');
@@ -148,6 +150,27 @@ function h8(R) {
   return { battles, rare, scale };
 }
 
+/** H9（参考）: ファロスの野（zw_peninsula）の 33 戦で見るレアのドロップ（持ち主 2026-10-02 の試遊「33 戦でレア 0」）。
+ *  一人旅は雑魚 1 匹（R.Mon.soloCap）なので 1 戦 1 体、仲間ありは出現表の平均の数 */
+function h9(R, battles) {
+  const z = R.DB.encounters.zw_peninsula;
+  if (!z) return null;
+  const gs = z.groups.filter((g) => !(g.tierMin > 0));
+  let W = 0, K = 0, P = 0, P1 = 0;
+  for (const g of gs) {
+    let k = 0, p = 0, q = 0;
+    for (const [m0, a, b] of g.mons) {
+      const m = m0[0] === '@' ? R.Mon.resolve(m0, 0) : m0;
+      const d = m && R.DB.monsters[m];
+      const n = (a + (b == null ? a : b)) / 2;
+      const c = d ? R.Mon.dropChances(d, {}).rare : 0;
+      k += n; p += n * c; q += n * c;
+    }
+    W += g.w; K += g.w * k; P += g.w * p; P1 += g.w * (k ? q / k : 0);
+  }
+  return { battles, party: battles * P / W, solo: battles * P1 / W };
+}
+
 function main() {
   const argv = process.argv.slice(2);
   const arg = (k, d) => { const i = argv.indexOf(k); return i >= 0 ? argv[i + 1] : d; };
@@ -165,18 +188,20 @@ function main() {
   console.log(`H5 倒しても落ちない: ${r5.kills} 体、盗み専用のドロップ ${r5.bad}  ${r5.ok ? 'pass' : 'FAIL'}`);
   failed = failed || !r5.ok;
   const r6 = h6(R, argv.includes('--quick') ? 100 : 400, seed);
-  console.log(`H6（参考）stealPct +50: 通常の魔物（ぬすみカモメ）を取るまで 中央値 ${r6.median} 戦（目安 30〜60）、根食らい 1 戦 10 回で ${r6.bossPct.toFixed(1)}%（率 16 の読み替えで目安 35〜55）`);
+  console.log(`H6（参考）stealPct +50: 通常の魔物（ぬすみカモメ）を取るまで 中央値 ${r6.median} 戦（目安 10〜30）、根食らい 1 戦 10 回で ${r6.bossPct.toFixed(1)}%（率 16 の読み替えで目安 35〜55）`);
   const r7 = h7(R);
   const line = (k, x) => `${k} ${x.battles.toFixed(0)} 戦・${x.kills.toFixed(0)} 体 → レア ${x.rare.toFixed(1)} 回（1 度も出ない ${(100 * Math.exp(-x.rare)).toFixed(0)}%）`;
   const ok7 = r7.route.rare >= 3;
-  console.log(`H7 縦切り 1 周のレアのドロップ（目安 3〜6）: ${line('最短の道', r7.route)}、${line('R1 の通し', r7.r1)}  ${ok7 ? 'pass' : 'FAIL'}`);
+  console.log(`H7 縦切り 1 周のレアのドロップ（目安 最短の道で 3 以上）: ${line('最短の道', r7.route)}、${line('R1 の通し', r7.r1)}  ${ok7 ? 'pass' : 'FAIL'}`);
   failed = failed || !ok7;
   const r8 = h8(R);
   const ok8 = r8.battles === 0 || (r8.rare >= 0.3 && r8.rare <= 0.8);
   console.log(`H8 縦切り 1 周で出会うレア魔物（目安 0.3〜0.8、率 ×1/${r8.scale}）: R1 の通し ${r8.battles} 戦 → ${r8.rare.toFixed(2)} 回（1 度も会わない ${(100 * Math.exp(-r8.rare)).toFixed(0)}%）  ${ok8 ? 'pass' : 'FAIL'}`);
   failed = failed || !ok8;
+  const r9 = h9(R, 33);
+  if (r9) console.log(`H9（参考）ファロスの野 ${r9.battles} 戦のレア: 一人旅 ${r9.solo.toFixed(1)} 回（0 回 ${(100 * Math.exp(-r9.solo)).toFixed(0)}%）、仲間あり ${r9.party.toFixed(1)} 回（0 回 ${(100 * Math.exp(-r9.party)).toFixed(0)}%）`);
   if (failed) process.exitCode = 1;
 }
 
-module.exports = { h4, h5, h6, h7, h8 };
+module.exports = { h4, h5, h6, h7, h8, h9 };
 if (require.main === module) main();

@@ -8,6 +8,10 @@
     'sys.demo_carry.offer.i.say.choices': ['이어받는다', '새로 시작한다'],
     // ---- src/systems/events_runtime.js
     'sys.events_runtime.toastGain.txt': '{p0}{p1}을(를) 손에 넣었다',
+    'sys.events_runtime.offerWear.text': '{name}을(를) 누군가에게 장착할까요?',
+    'sys.events_runtime.offerWear.later': '나중에',
+    'sys.events_runtime.offerWear.free': '빈 칸에 장착',
+    'sys.events_runtime.offerWear.swap': '{name}와(과) 교체',
     'sys.events_runtime.makeEv.ev.gold.toast': '{n} G를 손에 넣었다',
     'sys.events_runtime.makeEv.ev.createHero.h.name': '아룬',
     'sys.events_runtime.makeEv.ev.lore.txt': '서고에 베껴 적었다{p0}',

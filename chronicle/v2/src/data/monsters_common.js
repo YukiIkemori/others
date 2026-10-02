@@ -45,7 +45,7 @@
       flags: [], s: { hp: 4.25, atk: 0.31, mag: 0.37, mdef: 1.2 }, eva: 5,
       elem: { fire: 0.75, water: 0.75, wind: 0.75, earth: 0.75, light: 0.75, dark: 0.75 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_prism_ray', w: 3 }, { id: 'e_split', w: 1, cond: { hpAbove: 0.5, countBelow: 6 } }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_rainbow_drop', rate: 32 }, super: { item: 'sh_sr_phantom', rate: 128 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_rainbow_drop', rate: 16 }, super: { item: 'sh_sr_phantom', rate: 128 } },
       desc: R.T('monsters.jelly_5.desc'),
     },
     // ---- rat ネズミ（獣・s）: 人里と坑道と船にすみつくネズミ。歯と数で押してくる。
@@ -78,7 +78,7 @@
       flags: [], s: { hp: 3.01, atk: 0.76, mag: 0.69 }, eva: 5,
       elem: { fire: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_call_lesser', w: 2, cond: { countBelow: 6 } }, { id: 'e_double', w: 2 }, { id: 'e_howl', w: 1 }, { id: 'e_finish', w: 1 }],
-      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'hd_rat_bandana', rate: 32 }, steal: { item: 'ac_st_rat_boss', rate: 32 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'hd_rat_bandana', rate: 16 }, steal: { item: 'ac_st_rat_boss', rate: 16 } },
       desc: R.T('monsters.rat_4.desc'),
     },
     // ---- bat コウモリ（獣・s・飛ぶ）: 暗い所ならどこにでも。血を吸い、音で惑わせ、最後は闇の貴族になる。
@@ -119,7 +119,7 @@
       flags: ['flying'], s: { hp: 4.74, atk: 0.29, mag: 0.35, agi: 1.25 }, eva: 12,
       elem: { fire: 1.25, wind: 1.5, earth: 0.5, light: 1.5, dark: 0.25 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_life_suck', w: 3 }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }, { id: 'e_dark_mist', w: 2 }],
-      drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'ac_count_brooch', rate: 32 }, super: { item: 'w_dagger_sr_moonfang', rate: 128 } },
+      drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'ac_count_brooch', rate: 16 }, super: { item: 'w_dagger_sr_moonfang', rate: 128 } },
       desc: R.T('monsters.bat_5.desc'),
     },
     // ---- paper 虚ろの使い（霊体・大きさは段ごと）: 伝承が忘れられた場所に生まれる、白い紙のような魔物。記憶と力を「白紙」にする。
@@ -152,7 +152,7 @@
       flags: ['flying'], s: { hp: 2.78, atk: 0.63, mag: 0.63 }, eva: 12,
       elem: { fire: 1.5, wind: 1.5, earth: 0.5, light: 0.25, dark: 1.5 }, phys: { slash: 1.25, blunt: 0.75 }, statusRes: { poison: 1, death: 1, confuse: 0.5, sleep: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_blank_breath', w: 3 }, { id: 'e_forget', w: 2 }, { id: 'e_tail', w: 1 }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_greatsword_blank', rate: 32 }, super: { item: 'w_greatsword_sr_eraser', rate: 256 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_greatsword_blank', rate: 16 }, super: { item: 'w_greatsword_sr_eraser', rate: 256 } },
       desc: R.T('monsters.paper_4.desc'),
     },
     // ---- crab カニ（水生・m）: 浜から洞窟まで。甲羅はだんだん城のように大きくなる。
@@ -185,7 +185,7 @@
       flags: [], s: { hp: 2.47, atk: 0.95, mag: 0.95, def: 1.6, agi: 0.6 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_pincer', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }, { id: 'e_crush', w: 2 }, { id: 'e_guard_stance', w: 1 }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'sh_castle_shell', rate: 32 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'sh_castle_shell', rate: 16 } },
       desc: R.T('monsters.crab_4.desc'),
     },
     // ---- seabird カモメ（鳥・m・飛ぶ）: 海辺と船の上を飛ぶカモメ。嵐を呼び、光り物を盗む。
@@ -210,7 +210,7 @@
       flags: ['flying'], s: { hp: 2.74, atk: 0.62, mag: 0.59, agi: 1.35 }, rw: { gold: 2 }, eva: 15,
       elem: { wind: 1.5, earth: 0.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_peck_eyes', w: 2 }, { id: 'e_dive', w: 2 }, { id: 'e_ambush', w: 1 }],
-      drops: { normal: { item: 'i_clear', rate: 8 }, steal: { item: 'ac_st_thief_gull', rate: 32 } },
+      drops: { normal: { item: 'i_clear', rate: 8 }, steal: { item: 'ac_st_thief_gull', rate: 16 } },
       desc: R.T('monsters.seabird_3.desc'),
     },
     seabird_4: {
@@ -218,7 +218,7 @@
       flags: ['flying'], s: { hp: 2.96, atk: 0.48, mag: 0.55, agi: 1.2 }, eva: 12,
       elem: { fire: 1.5, wind: 0.25, earth: 0.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_dive', w: 2 }, { id: 'e_gust', w: 2 }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'bd_gull_robe', rate: 32 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'bd_gull_robe', rate: 16 } },
       desc: R.T('monsters.seabird_4.desc'),
     },
     // ---- mimic 宝箱（魔造・s）: 宝箱に化けた魔物。お金をたくさん持ち、レアを落としやすい。
@@ -251,7 +251,7 @@
       flags: [], s: { hp: 2.54, atk: 0.49, mag: 0.47, def: 1.25, agi: 0.9 }, rw: { gold: 3 }, eva: 5,
       elem: { water: 1.25, wind: 0.75, light: 1.5, dark: 0.25 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_abyss_fang', w: 2 }, { id: 'e_dark_mist', w: 2 }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_abyss_key', rate: 16 }, steal: { item: 'ac_st_abyss_gem', rate: 32 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_abyss_key', rate: 12 }, steal: { item: 'ac_st_abyss_gem', rate: 16 } },
       desc: R.T('monsters.mimic_4.desc'),
     },
     // ---- quicksilver 白銀ゼリー（軟体・s・鋼・jelly の分岐）: 水銀のようなゼリー。硬く、すぐ逃げるが、経験値とお金が多い。
@@ -312,8 +312,8 @@
   if (R.DB.monsters.jelly_1 && R.DB.monsters.jelly_1.phys) R.DB.monsters.jelly_1.phys.blunt = 0.75;
   // 縦切りのレア枠を戻す（オーナー 2026-09-27「レアがめっきり減ったねえ……。楽しみがちょっとないかも」）。
   // STATS_REWORK §10.1 の「レア枠は系統の最後の段だけ」で縦切りの 11 系統の段 1〜2 がレア 0 になっていた → 段 1〜2 の全部に
-  // レアは店の T0〜T1 より強いか、店に無い品（装備は T1 の帯のレア）。率は段 1 が K.DROP の既定 32、たまに混ざる段 2 は 16（枠ごと。既定は変えない）。
-  // 盗み専用は約 3 分の 1 の 7 体（率 32、items_steal.js の T2 の 7 品）。
+  // レアは店の T0〜T1 より強いか、店に無い品（装備は T1 の帯のレア）。率は段 1 が K.DROP の既定 16、たまに混ざる段 2 は 12（枠ごと。旧は 32・16。持ち主 2026-10-02「レアと盗みのレアを少し上げる」）。
+  // 盗み専用は約 3 分の 1 の 7 体（率 16。旧 32。items_steal.js の T2 の 7 品）。
   // 見込み（sim_loot の H7）: 縦切り 1 周でレアのドロップ 最短の道 約 3 回〜自動の通し（R1、迷い・やり直し込み）約 12 回、ふつうの 1 周で 5〜7 回。
   // 森の系統は monsters_forest.js、オオカミは monsters_snow.js
   // 2 回目（オーナー 2026-09-27「普通の敵さ、全員が装備じゃなくていいからね、装備溢れちゃうし。普通の雑魚は多くはレアっつっても消耗品でいいよ」）:
@@ -327,7 +327,7 @@
     crab_1: 'sh_crab_shell', crab_2: 'w_sword_coral', bat_1: 'i_incense', bat_2: 'i_incense',
   };
   const DEMO_STEAL = { rat_1: 'ac_st_rat_pouch', crab_1: 'hd_st_beach_crab', seabird_2: 'ft_st_storm_gull' };
-  for (const [id, item] of Object.entries(DEMO_RARE)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { rare: { item, rate: /_2$/.test(id) ? 16 : 32 } });
-  for (const [id, item] of Object.entries(DEMO_STEAL)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { steal: { item, rate: 32 } });
+  for (const [id, item] of Object.entries(DEMO_RARE)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { rare: { item, rate: /_2$/.test(id) ? 12 : 16 } });
+  for (const [id, item] of Object.entries(DEMO_STEAL)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { steal: { item, rate: 16 } });
   // @@V2-END
 })(window.RPG);

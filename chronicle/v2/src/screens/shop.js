@@ -192,7 +192,7 @@
       } finally { this.busy = false; }
     },
     /** 買った装備を「今すぐ装備する？」: 一行の全員（付けられない人は選べない）。
-     *  カーソルは上から見て最初の「付けられて、同じ物をまだ付けていない人」（持ち主 2026-09-28）。いなければ付けられる最初の人。
+     *  カーソルは付けていちばん強くなる人（S.wearPlan。テスター 2026-10-02 Q15）。誰も強くならなければ「装備しない」。
      *  left = まだ聞く数（2 つ以上なら題に「あと n 個」）。→ 誰かが付けたら true */
     async offerEquip(id, left) {
       const mem = S.party();
@@ -205,21 +205,22 @@
       const wear = mem.map((c) => canWear(c, id));
       const room = mem.map((c, i) => wear[i] && !!slotFor(c));
       if (!room.some(Boolean) || S.count(id) < 1) return false;
-      const wearing = (c) => Object.values(c.equip || {}).includes(id);
-      let best = mem.findIndex((c, i) => room[i] && !wearing(c));
-      if (best < 0) best = room.indexOf(true);
+      // カーソルは付けていちばん強くなる人（S.wearPlan）。誰も強くならなければ「装備しない」に置く（テスター 2026-10-02 Q15:
+      //   決定を続けて押したら 1 人目の術師に籠手が付いた）。出てすぐの決定は受けない（guard、会話の選択肢と同じ）
+      const plan = S.wearPlan(id, mem);
+      const best = plan.best >= 0 && room[plan.best] ? plan.best : mem.length;
       const choices = mem.map((c, i) => {
         if (!wear[i]) return { label: c.name, right: R.T('ui.shop.offerEquip.choices.right'), disabled: true };
         if (!room[i]) return { label: c.name, right: R.T('ui.shop.drawStrip.text_4'), disabled: true };
-        const d = S.bestDelta(S.statDiff(c, slotFor(c), id));
+        const d = S.bestDelta(S.statDiff(c, plan.rows[i].slot || slotFor(c), id));
         return { label: c.name, right: d ? `${d.name} ${d.d > 0 ? '+' : '−'}${Math.abs(d.d)}` : '±0' };
       });
       left = Math.min(left, S.count(id));
       const title = left > 1 ? R.T('ui.shop.offerEquip.title', { left }) : R.T('ui.shop.offerEquip.title_2');
-      const k = await S.ask(this, { title, text: S.item(id).name, choices: choices.concat([{ label: R.T('ui.shop.offerEquip.choices.0.label') }]), cancel: mem.length, index: best });
+      const k = await S.ask(this, { title, text: S.item(id).name, choices: choices.concat([{ label: R.T('ui.shop.offerEquip.choices.0.label') }]), cancel: mem.length, index: best, guard: true });
       if (k < 0 || k >= mem.length || !room[k]) return false;
       const c = mem[k];
-      const r = R.Rules.equip(c, slotFor(c), id);
+      const r = R.Rules.equip(c, plan.rows[k].slot || slotFor(c), id);
       if (r.ok) { R.UIK.sfx('equip'); R.UIK.toast(R.T('ui.shop.offerEquip.toast', { name: c.name, name2: S.item(id).name }), { anchor: 'bl', icon: 'equip' }); return true; }
       R.UIK.toast(r.reason || R.T('ui.shop.offerEquip.toast_2'), { anchor: 'bl' });
       return false;

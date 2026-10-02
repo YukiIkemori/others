@@ -8,6 +8,10 @@
     'sys.demo_carry.offer.i.say.choices': ['继承', '重新开始'],
     // ---- src/systems/events_runtime.js
     'sys.events_runtime.toastGain.txt': '获得了{p0}{p1}',
+    'sys.events_runtime.offerWear.text': '要把{name}给谁装备上吗？',
+    'sys.events_runtime.offerWear.later': '以后再说',
+    'sys.events_runtime.offerWear.free': '装在空位',
+    'sys.events_runtime.offerWear.swap': '替换{name}',
     'sys.events_runtime.makeEv.ev.gold.toast': '获得了 {n} G',
     'sys.events_runtime.makeEv.ev.createHero.h.name': '阿伦',
     'sys.events_runtime.makeEv.ev.lore.txt': '已抄录进书库{p0}',

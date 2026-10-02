@@ -9,6 +9,10 @@
     'sys.demo_carry.offer.i.say.choices': ['Carry Over', 'Start Fresh'],
     // ---- src/systems/events_runtime.js
     'sys.events_runtime.toastGain.txt': 'Got {p0}{p1}',
+    'sys.events_runtime.offerWear.text': 'Equip the {name} on someone?',
+    'sys.events_runtime.offerWear.later': 'Later',
+    'sys.events_runtime.offerWear.free': 'Free slot',
+    'sys.events_runtime.offerWear.swap': 'Replaces {name}',
     'sys.events_runtime.makeEv.ev.gold.toast': 'Got {n} G',
     'sys.events_runtime.makeEv.ev.createHero.h.name': 'Arun',
     'sys.events_runtime.makeEv.ev.lore.txt': 'Copied into the library{p0}',

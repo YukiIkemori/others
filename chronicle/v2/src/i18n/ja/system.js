@@ -9,6 +9,10 @@
     'sys.demo_carry.offer.i.say.choices': ['引き継ぐ', '新しく始める'],
     // ---- src/systems/events_runtime.js
     'sys.events_runtime.toastGain.txt': '{p0}{p1}を手に入れた',
+    'sys.events_runtime.offerWear.text': '{name}を、だれかに付けますか？',
+    'sys.events_runtime.offerWear.later': 'あとで',
+    'sys.events_runtime.offerWear.free': '空きに付ける',
+    'sys.events_runtime.offerWear.swap': '{name}と入れ替え',
     'sys.events_runtime.makeEv.ev.gold.toast': '{n} Gを手に入れた',
     'sys.events_runtime.makeEv.ev.createHero.h.name': 'アルン',
     'sys.events_runtime.makeEv.ev.lore.txt': '書庫に書き写した{p0}',

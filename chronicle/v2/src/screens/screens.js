@@ -484,11 +484,12 @@
     m.ending = true;
     m.layer.close().then(() => { if (v.modal === m) v.modal = null; m.resolve(value); });
   }
-  /** 選択の札。o = {title, text, choices:[label | {label, disabled, right}], cancel: index（B の値、既定 -1）, index} → Promise<index|-1> */
+  /** 選択の札。o = {title, text, choices:[label | {label, disabled, right}], cancel: index（B の値、既定 -1）, index,
+   *    guard（true: 出てすぐの決定は受けない。R.UIK.choiceGuard）} → Promise<index|-1> */
   S.ask = function (v, o) {
     const rows = (o.choices || R.T('ui.screens.ask.rows')).map((c, i) => (typeof c === 'string' ? { label: c, value: i } : Object.assign({ value: i }, c)));
     const list = new R.UIK.List({ rows, rowH: 36, index: o.index || 0 });
-    const m = { kind: 'ask', o, list };
+    const m = { kind: 'ask', o, list, guard: o.guard && R.UIK.choiceGuard ? { t0: R.Engine.time } : null };
     list.onSelect = (row) => modalEnd(v, row.value);
     list.onCancel = () => modalEnd(v, o.cancel != null ? o.cancel : -1);
     return modalBase(v, m);
@@ -501,7 +502,11 @@
   S._modalUpdate = function (v) {
     const m = v.modal;
     if (m.ending) return;
-    if (m.kind === 'ask') { m.list.update(); return; }
+    if (m.kind === 'ask') {
+      if (m.guard) m.list.hold = !R.UIK.choiceGuard(m.guard);   // 出てすぐの決定は受けない（カーソルは動かせる）
+      m.list.update();
+      return;
+    }
     const I = R.Input;
     if (I.pressed('a') || I.pressed('b') || (I.pointer.pressed && I.lastDevice !== 'mouse') || (I.pointer.pressed && m.rect && S.hit(m.rect, I.pointer.x, I.pointer.y))) {
       R.UIK.sfx('confirm'); modalEnd(v, undefined);

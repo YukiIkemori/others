@@ -45,7 +45,7 @@
       flags: [], s: { hp: 2.09, atk: 0.41, mag: 0.35, agi: 1.2 }, eva: 5,
       elem: { fire: 1.25, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_frost_breath', w: 2 }, { id: 'e_frost_bite', w: 2 }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }, { id: 'e_howl', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_dagger_wolfking', rate: 32 }, super: { item: 'ac_sr_beastheart', rate: 128 }, steal: { item: 'w_dagger_st_wolfking', rate: 32 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_dagger_wolfking', rate: 16 }, super: { item: 'ac_sr_beastheart', rate: 128 }, steal: { item: 'w_dagger_st_wolfking', rate: 16 } },
       desc: R.T('monsters.wolf_5.desc'),
     },
     // ---- yeti 雪男（獣・l）: 雪山の大男。雪玉、氷の拳、雪崩。
@@ -70,7 +70,7 @@
       flags: [], s: { hp: 1.87, atk: 0.77, mag: 0.64, agi: 0.8 }, eva: 5,
       elem: { fire: 1.5, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_crush', w: 2 }, { id: 'e_avalanche', w: 2 }, { id: 'e_roar', w: 1, cond: { every: [4, 1] } }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'hd_yeti_fur', rate: 32 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'hd_yeti_fur', rate: 16 } },
       desc: R.T('monsters.yeti_3.desc'),
     },
     // ---- frostling 氷の小鬼（妖精・m）: 雪の子どもの小鬼。こおり・つらら・ふぶき小僧から雪の大将、冬将軍へ。
@@ -111,7 +111,7 @@
       flags: [], s: { hp: 2.76, atk: 0.38, mag: 0.42, agi: 1.05 }, eva: 5,
       elem: { fire: 1.25, water: -1, earth: 1.5, light: 0.5, dark: 1.5 }, phys: {}, statusRes: { confuse: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_frost', w: 2 }, { id: 'e_icicle', w: 2 }, { id: 'e_freeze_gaze', w: 1 }, { id: 'e_haste', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_dagger_wolfking', rate: 32 }, super: { item: 'ft_sr_cloud', rate: 128 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_dagger_wolfking', rate: 16 }, super: { item: 'ft_sr_cloud', rate: 128 } },
       desc: R.T('monsters.frostling_5.desc'),
     },
     // ---- owl フクロウ（鳥・m・飛ぶ）: 雪の夜のフクロウ。眠りの歌、惑わしの目、そして術を使う賢者。
@@ -144,7 +144,7 @@
       flags: ['flying'], s: { hp: 3.36, atk: 0.39, mag: 0.5, mdef: 1.25, agi: 1.1 }, eva: 12,
       elem: { wind: 1.5, earth: 0.5, light: 0.25, dark: 1.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 1 }, { id: 'e_light_ray', w: 2 }, { id: 'e_gust', w: 2 }, { id: 'e_ward', w: 1, cond: { once: true } }, { id: 'e_heal_all', w: 1, cond: { hpBelow: 0.6 } }],
-      drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'w_sword_moon', rate: 32 } },
+      drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'w_sword_moon', rate: 16 } },
       desc: R.T('monsters.owl_4.desc'),
     },
     // ---- mammoth マンモス（獣・l）: 雪原の巨獣。突進と踏み鳴らし。鉄の牙、そして大王。
@@ -169,7 +169,7 @@
       flags: [], s: { hp: 1.58, atk: 0.91, mag: 0.76, def: 1.25, agi: 0.65 }, eva: 5,
       elem: { fire: 1.25, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_charge', w: 2 }, { id: 'e_avalanche', w: 2 }, { id: 'e_roar', w: 1, cond: { every: [4, 2] } }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'hd_yeti_fur', rate: 32 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'hd_yeti_fur', rate: 16 } },
       desc: R.T('monsters.mammoth_3.desc'),
     },
   });
@@ -178,7 +178,7 @@
   // 消耗品（オーナー「普通の雑魚は多くはレアっつっても消耗品でいいよ」）。よみがえりの花（全回復で起こす）は終盤から → 癒やしの香炉（2026-09-28）
   const DEMO_RARE = { wolf_1: 'i_horn', wolf_2: 'i_incense' };
   const DEMO_STEAL = { wolf_2: 'w_dagger_st_frostfang' };
-  for (const [id, item] of Object.entries(DEMO_RARE)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { rare: { item, rate: /_2$/.test(id) ? 16 : 32 } });
-  for (const [id, item] of Object.entries(DEMO_STEAL)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { steal: { item, rate: 32 } });
+  for (const [id, item] of Object.entries(DEMO_RARE)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { rare: { item, rate: /_2$/.test(id) ? 12 : 16 } });
+  for (const [id, item] of Object.entries(DEMO_STEAL)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { steal: { item, rate: 16 } });
   // @@V2-END
 })(window.RPG);

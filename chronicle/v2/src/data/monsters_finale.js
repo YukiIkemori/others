@@ -29,7 +29,7 @@
       flags: [], s: { hp: 2.06, atk: 1.35, mag: 1.75, mdef: 1.3 }, eva: 5,
       elem: { light: 0.25, dark: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 1 }, { id: 'e_forget', w: 2 }, { id: 'e_erase_all', w: 1, cond: { every: [3, 1] } }, { id: 'e_light_ray', w: 2 }, { id: 'e_heal_all', w: 1, cond: { hpBelow: 0.6 } }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_archive_key', rate: 32 }, steal: { item: 'ac_st_librarian', rate: 32 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_archive_key', rate: 16 }, steal: { item: 'ac_st_librarian', rate: 16 } },
       desc: R.T('monsters.scribe_3.desc'),
     },
     // ---- book 魔書（魔造・s）: 大書庫の本が魔物になったもの。紙なので火に弱い。
@@ -54,7 +54,7 @@
       flags: [], s: { hp: 2.68, atk: 0.58, mag: 0.75, mdef: 1.3 }, eva: 5,
       elem: { fire: 1.5, water: 1.25, wind: 0.75, light: 0.25, dark: 1.5 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 1 }, { id: 'e_forget', w: 3 }, { id: 'e_erase_all', w: 1, cond: { every: [3, 0] } }, { id: 'e_light_ray', w: 2 }],
-      drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'ac_archive_key', rate: 32 }, super: { item: 'w_staff_sr_cosmos', rate: 128 } },
+      drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'ac_archive_key', rate: 16 }, super: { item: 'w_staff_sr_cosmos', rate: 128 } },
       desc: R.T('monsters.book_3.desc'),
     },
     // ---- demon 魔神（魔族・l）: 海の向こうの伝説に語られた魔王の軍勢の、忘れられた影。
@@ -79,7 +79,7 @@
       flags: [], s: { hp: 2.22, atk: 0.71, mag: 0.71 }, eva: 5,
       elem: { light: 1.5, dark: 0.25 }, phys: {}, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_dark_mist', w: 2 }, { id: 'e_inferno_breath', w: 1 }, { id: 'e_death_word', w: 1 }, { id: 'e_gloom', w: 1 }, { id: 'e_dispel', w: 1, cond: { every: [4, 3] } }],
-      drops: { normal: { item: 'i_phoenix', rate: 8 }, rare: { item: 'w_greatsword_chaoshorn', rate: 32 }, super: { item: 'ac_sr_demon_eye', rate: 256 }, steal: { item: 'ac_st_demon_heart', rate: 32 } },
+      drops: { normal: { item: 'i_phoenix', rate: 8 }, rare: { item: 'w_greatsword_chaoshorn', rate: 16 }, super: { item: 'ac_sr_demon_eye', rate: 256 }, steal: { item: 'ac_st_demon_heart', rate: 16 } },
       desc: R.T('monsters.demon_3.desc'),
     },
   });

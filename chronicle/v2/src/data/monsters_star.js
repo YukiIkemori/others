@@ -45,7 +45,7 @@
       flags: [], s: { hp: 3.22, atk: 0.23, mag: 0.3, mdef: 1.25, agi: 1.05 }, eva: 5,
       elem: { light: 0.25, dark: 1.5 }, phys: {}, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 1 }, { id: 'e_holy_beam', w: 2 }, { id: 'e_light_ray', w: 2 }, { id: 'e_gaze', w: 1 }, { id: 'e_dispel', w: 1, cond: { every: [4, 2] } }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_heaven_feather', rate: 32 }, super: { item: 'hd_sr_heaveneye', rate: 128 }, steal: { item: 'ac_st_heaven_eye', rate: 32 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_heaven_feather', rate: 16 }, super: { item: 'hd_sr_heaveneye', rate: 128 }, steal: { item: 'ac_st_heaven_eye', rate: 16 } },
       desc: R.T('monsters.eyeball_5.desc'),
     },
     // ---- darkmage 魔術師（人型・m）: 星読みの塔に集まったはぐれ術師。見習い・炎・風・闇。
@@ -78,7 +78,7 @@
       flags: [], s: { hp: 3.07, atk: 0.27, mag: 0.51, def: 0.85, mdef: 1.3 }, eva: 5,
       elem: { light: 1.5, dark: 0.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 1 }, { id: 'e_dark_bolt', w: 2 }, { id: 'e_dark_mist', w: 2 }, { id: 'e_gloom', w: 1 }, { id: 'e_mind_suck', w: 1 }, { id: 'e_elem_shift', w: 1, cond: { every: [4, 0] } }],
-      drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'w_sword_starblade', rate: 32 } },
+      drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'w_sword_starblade', rate: 16 } },
       desc: R.T('monsters.darkmage_4.desc'),
     },
     // ---- automaton からくり（魔造・m）: 賢者カペラが残したからくり兵。兵・弓兵・術兵・大将。
@@ -111,7 +111,7 @@
       flags: [], s: { hp: 1.9, atk: 0.82, mag: 0.71, def: 1.25 }, eva: 5,
       elem: { water: 1.5, wind: 0.75, light: 0.25, dark: 1.5 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_double', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }, { id: 'e_howl', w: 1, cond: { once: true } }, { id: 'e_zap', w: 1 }],
-      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'w_sword_starblade', rate: 32 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'w_sword_starblade', rate: 16 } },
       desc: R.T('monsters.automaton_4.desc'),
     },
     // ---- armor 鎧（魔造・m）: 中身のない鎧。番兵、騎士、そして闇の黒金。
@@ -145,7 +145,7 @@
       eva: 5,
       elem: { water: 1.25, wind: 0.75, light: 1.5, dark: 0.25 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_dark_slash', w: 2 }, { id: 'e_slash', w: 1 }, { id: 'e_harden', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_revive', rate: 8 }, rare: { item: 'hd_blackgold_helm', rate: 32 } },
+      drops: { normal: { item: 'i_revive', rate: 8 }, rare: { item: 'hd_blackgold_helm', rate: 16 } },
       desc: R.T('monsters.armor_4.desc'),
     },
     // ---- wyvern 飛竜（竜・l・飛ぶ）: 高原の空を飛ぶ竜。風を起こし、嵐の息を吐く。
@@ -171,7 +171,7 @@
       eva: 12,
       elem: { fire: 1.5, water: 0.75, wind: 0.25, earth: 0.5, light: 0.75, dark: 0.75 }, phys: { slash: 0.75, pierce: 1.25 }, statusRes: { death: 1, sleep: 0.5, confuse: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_storm_breath', w: 2 }, { id: 'e_dive', w: 2 }, { id: 'e_tail', w: 1 }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'hd_blackgold_helm', rate: 32 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'hd_blackgold_helm', rate: 16 } },
       desc: R.T('monsters.wyvern_3.desc'),
     },
   });

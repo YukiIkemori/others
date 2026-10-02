@@ -45,7 +45,7 @@
       flags: [], s: { hp: 1.32, atk: 0.38, mag: 0.49, mdef: 1.25 }, eva: 5,
       elem: { light: 1.5, dark: 0.25 }, phys: { slash: 0.5, blunt: 0.5, pierce: 0.5 }, statusRes: { poison: 1, death: 1, stun: 1 },
       actions: [{ id: 'attack', w: 1 }, { id: 'e_death_word', w: 1 }, { id: 'e_dark_mist', w: 2 }, { id: 'e_life_suck', w: 2 }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }, { id: 'e_curse', w: 1 }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_underworld_bell', rate: 32 }, super: { item: 'bd_sr_starry', rate: 128 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_underworld_bell', rate: 16 }, super: { item: 'bd_sr_starry', rate: 128 } },
       desc: R.T('monsters.ghost_5.desc'),
     },
     // ---- wisp 鬼火（霊体・s）: 沼に灯る火。鬼火・化け火は火、人魂・黄泉の火は闇。
@@ -78,7 +78,7 @@
       flags: [], s: { hp: 1.91, atk: 0.24, mag: 0.32, agi: 1.2 }, eva: 5,
       elem: { light: 1.5, dark: 0.25 }, phys: { slash: 0.5, blunt: 0.5, pierce: 0.5 }, statusRes: { poison: 1, death: 1, stun: 1 },
       actions: [{ id: 'attack', w: 1 }, { id: 'e_dark_mist', w: 2 }, { id: 'e_life_suck', w: 2 }, { id: 'e_yomi_fire', w: 2 }],
-      drops: { normal: { item: 'i_stone_dark', rate: 8 }, rare: { item: 'w_sword_bellringer', rate: 32 } },
+      drops: { normal: { item: 'i_stone_dark', rate: 8 }, rare: { item: 'w_sword_bellringer', rate: 16 } },
       desc: R.T('monsters.wisp_4.desc'),
     },
     // ---- frog カエル（水生・m）: 沼のカエル。舌、毒、丸のみ、そして鐘のように鳴く大ガエル。
@@ -111,7 +111,7 @@
       flags: [], s: { hp: 2.67, atk: 0.41, mag: 0.45, agi: 0.9 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_bell_croak', w: 3 }, { id: 'e_tongue', w: 1 }, { id: 'e_finish', w: 1 }],
-      drops: { normal: { item: 'i_panacea', rate: 8 }, rare: { item: 'w_sword_bellringer', rate: 32 } },
+      drops: { normal: { item: 'i_panacea', rate: 8 }, rare: { item: 'w_sword_bellringer', rate: 16 } },
       desc: R.T('monsters.frog_4.desc'),
     },
     // ---- doll 人形（魔造・m）: 霧の館の古い陶器人形。針、踊り、呪い、そして貴婦人。
@@ -144,7 +144,7 @@
       flags: [], s: { hp: 1.58, atk: 0.63, mag: 0.79, mdef: 1.2, agi: 1.05 }, eva: 5,
       elem: { water: 1.25, wind: 0.75, light: 0.25, dark: 1.5 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_haste', w: 1, cond: { once: true } }, { id: 'e_charm', w: 2 }, { id: 'e_dark_bolt', w: 1 }, { id: 'e_heal_ally', w: 1, cond: { hpBelow: 0.5 } }],
-      drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'ac_soul_candle', rate: 32 }, steal: { item: 'ac_st_lady_fan', rate: 32 } },
+      drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'ac_soul_candle', rate: 16 }, steal: { item: 'ac_st_lady_fan', rate: 16 } },
       desc: R.T('monsters.doll_4.desc'),
     },
     // ---- lizardman トカゲ兵（人型・m）: 沼に暮らすトカゲの戦士たち。兵・槍兵・呪術師・族長。
@@ -177,7 +177,7 @@
       flags: [], s: { hp: 2.87, atk: 0.6, mag: 0.5, def: 1.1 }, eva: 5,
       elem: { water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_heavy', w: 2 }, { id: 'e_howl', w: 2, cond: { once: true } }, { id: 'e_tide', w: 1 }, { id: 'e_war_dance', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'ac_soul_candle', rate: 32 }, steal: { item: 'w_greatsword_st_stoneaxe', rate: 32 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'ac_soul_candle', rate: 16 }, steal: { item: 'w_greatsword_st_stoneaxe', rate: 16 } },
       desc: R.T('monsters.lizardman_4.desc'),
     },
     // ---- spider クモ（虫・m）: 古い館と森の奥の大グモ。糸、毒、影、そして女郎グモ。
@@ -210,7 +210,7 @@
       flags: [], s: { hp: 2.37, atk: 0.88, mag: 0.88, agi: 1.1 }, eva: 5,
       elem: { fire: 1.5 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_bind', w: 2 }, { id: 'e_poison_bite', w: 2 }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }, { id: 'e_web', w: 1 }],
-      drops: { normal: { item: 'i_panacea', rate: 8 }, rare: { item: 'ac_soul_candle', rate: 32 } },
+      drops: { normal: { item: 'i_panacea', rate: 8 }, rare: { item: 'ac_soul_candle', rate: 16 } },
       desc: R.T('monsters.spider_4.desc'),
     },
   });

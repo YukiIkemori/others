@@ -163,7 +163,11 @@
       const w = Math.min(R.W - u(40), u(600));
       const text = S.tipText(t);
       const lines = R.UIK.wrap(text, w - u(56), { size: u(15) });
-      const h = u(78) + lines.length * u(27) + u(52);
+      // 下の「設定から読み直せる」とボタン表示: 1 行に並ばない幅（狭い窓）なら、注を本文の下に折り返して置き、ボタン表示は最下段に一人で（重ならない）
+      const note = R.T('ui.tips.tip.draw.text_2'), pp = [{ btn: 'a', label: R.T('ui.tips.tip.draw.0.label') }];
+      const split = R.UIK.measure(note, { size: u(11.5) }) + R.UIK.promptsWidth(pp) + u(26 + 22 + 16) > w;
+      const noteLines = split ? R.UIK.wrap(note, w - u(52), { size: u(11.5) }) : [note];
+      const h = u(78) + lines.length * u(27) + u(52) + (split ? noteLines.length * u(19) + u(4) : 0);
       const x = (R.W - w) / 2, y = (R.H - h) / 2;
       this.rect = { x, y, w, h };
       R.UIK.panel(g, this.rect, { dense: true, frost: true });
@@ -173,8 +177,11 @@
       R.UIK.rule(g, x + u(26), x + w - u(26), y + u(80), 0.16);
       let cy = y + u(92);
       for (const l of lines) { R.UIK.text(g, l, x + u(28), cy, { size: u(15), color: C.text }); cy += u(27); }
-      R.UIK.text(g, R.T('ui.tips.tip.draw.text_2'), x + u(26), y + h - u(30), { size: u(11.5), color: C.text3 });
-      R.UIK.prompts(g, [{ btn: 'a', label: R.T('ui.tips.tip.draw.0.label') }], { x: x + w - u(22), y: y + h - u(24), align: 'right' });
+      if (split) {
+        let ny = y + h - u(38) - noteLines.length * u(19);
+        for (const l of noteLines) { R.UIK.text(g, l, x + u(26), ny, { size: u(11.5), color: C.text3 }); ny += u(19); }
+      } else R.UIK.text(g, note, x + u(26), y + h - u(30), { size: u(11.5), color: C.text3 });
+      R.UIK.prompts(g, pp, { x: x + w - u(22), y: y + h - u(24), align: 'right' });
     },
   });
 

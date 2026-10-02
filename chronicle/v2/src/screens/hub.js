@@ -125,6 +125,8 @@
       const lw = Math.min(u(230), b.w * 0.24);
       const lx = b.x + u(8);
       let y = S.heading(g, R.T('ui.hub.menu.drawWide.y.heading'), lx + u(10), b.y + u(14), lw - u(20));
+      // 縦持ちの drawTall は同じ一覧を 3 列・行 76 にする。窓の大きさを変えて横に戻ったら 1 列・行 36 に戻す（戻さないと 3 列のままで名前が「…」）
+      this.list.cols = 1; this.list.rowH = 36; this.list.tall = false;
       const lr = { x: lx, y: y + u(4), w: lw, h: this.rows.length * this.list.rowPx() };
       this.list.active = this.focus === 'cmd';
       this.list.render = (gg, row, rect, f) => {

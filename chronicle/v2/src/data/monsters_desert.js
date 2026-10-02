@@ -45,7 +45,7 @@
       flags: [], s: { hp: 2.89, atk: 0.58, mag: 0.53, def: 1.4, agi: 0.9 }, eva: 5,
       elem: { wind: 1.5, earth: 0.25 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_death_sting', w: 1 }, { id: 'e_pincer', w: 2 }, { id: 'e_quake', w: 1 }, { id: 'e_harden', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_royal_ankh', rate: 32 }, super: { item: 'hn_sr_hundred', rate: 128 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_royal_ankh', rate: 16 }, super: { item: 'hn_sr_hundred', rate: 128 } },
       desc: R.T('monsters.scorpion_5.desc'),
     },
     // ---- snake ヘビ（獣・m）: 砂漠の蛇。毒、鈴の音のおどし、にらみ、丸のみの大蛇へ。
@@ -78,7 +78,7 @@
       flags: [], s: { hp: 3.52, atk: 0.67, mag: 0.58, agi: 0.95 }, eva: 5,
       elem: { fire: 1.25, wind: 1.5, earth: 0.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_bind', w: 2 }, { id: 'e_poison_bite', w: 2 }, { id: 'e_swallow', w: 1 }],
-      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'w_sword_sand', rate: 32 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'w_sword_sand', rate: 16 } },
       desc: R.T('monsters.snake_4.desc'),
     },
     // ---- mummy ミイラ（不死・m）: 王墓を守る死者たち。兵、呪い、神官、将軍、そして王家の者。
@@ -119,7 +119,7 @@
       flags: [], s: { hp: 2.47, atk: 0.51, mag: 0.64, mdef: 1.2, agi: 0.85 }, eva: 5,
       elem: { fire: 1.5, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: { poison: 1, death: 1, sleep: 1, confuse: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_death_word', w: 1 }, { id: 'e_dark_mist', w: 2 }, { id: 'e_revive_ally', w: 1, cond: { allyDown: true } }, { id: 'e_curse', w: 1 }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_royal_ankh', rate: 32 }, super: { item: 'bd_sr_shadow', rate: 128 }, steal: { item: 'bd_st_royal_linen', rate: 32 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_royal_ankh', rate: 16 }, super: { item: 'bd_sr_shadow', rate: 128 }, steal: { item: 'bd_st_royal_linen', rate: 16 } },
       desc: R.T('monsters.mummy_5.desc'),
     },
     // ---- cactus サボテン（植物・m）: 砂漠をうろつくサボテン。針を飛ばし、花を咲かせ、大将になる。
@@ -152,7 +152,7 @@
       flags: [], s: { hp: 3.48, atk: 0.62, mag: 0.54, def: 1.2, agi: 0.85 }, eva: 5,
       elem: { fire: 1.25, water: 0.5, wind: 1.5, earth: 0.25 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_needles', w: 3 }, { id: 'e_focus', w: 1, cond: { once: true } }, { id: 'e_heavy', w: 1 }, { id: 'e_guard_stance', w: 1 }],
-      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'w_sword_sand', rate: 32 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'w_sword_sand', rate: 16 } },
       desc: R.T('monsters.cactus_4.desc'),
     },
     // ---- sandworm ミミズ（虫・l）: 砂の下を泳ぐ巨大なミミズ。砂ぼこり、岩の体、大地の揺れ。
@@ -177,7 +177,7 @@
       flags: [], s: { hp: 2.17, atk: 0.73, mag: 0.64, def: 1.2, agi: 0.65 }, eva: 5,
       elem: { wind: 1.5, earth: 0.25 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_swallow', w: 2 }, { id: 'e_quake', w: 2 }, { id: 'e_dust', w: 1 }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_greatsword_dune', rate: 32 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_greatsword_dune', rate: 16 } },
       desc: R.T('monsters.sandworm_3.desc'),
     },
   });

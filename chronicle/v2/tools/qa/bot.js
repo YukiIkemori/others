@@ -97,6 +97,7 @@
     const o = lastSay || {};
     const ch = o.choices || [];
     if (ch.length && st.full) {
+      if (st.armed === false && st.choice === pickChoice(o.text, ch.map(String))) return;   // 選択肢の出てすぐの決定よけ（uik/message.js の CHOICE_GUARD）が解けるまで押さない
       const want = pickChoice(o.text, ch.map(String));
       if (st.choice !== want) { tap(st.choice < want ? 'down' : 'up'); return; }
       if (B.lastChoiceNote !== o) { B.lastChoiceNote = o; note('choose ' + JSON.stringify(ch[want]) + ' for ' + JSON.stringify(String(o.text || '').slice(0, 30))); }

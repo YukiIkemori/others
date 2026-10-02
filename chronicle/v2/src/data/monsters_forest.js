@@ -45,7 +45,7 @@
       flags: ['flying'], s: { hp: 3.64, atk: 0.47, mag: 0.49, agi: 1.2 }, eva: 12,
       elem: { fire: 1.5, wind: 1.5, earth: 0.5 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_call_lesser', w: 2, cond: { countBelow: 6 } }, { id: 'e_heal_all', w: 2, cond: { hpBelow: 0.7 } }, { id: 'e_poison_sting', w: 2 }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_millennium_seed', rate: 32 }, super: { item: 'ft_sr_whirl', rate: 128 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_millennium_seed', rate: 16 }, super: { item: 'ft_sr_whirl', rate: 128 } },
       desc: R.T('monsters.bee_5.desc'),
     },
     // ---- mushroom キノコ（植物・s）: 胞子で眠らせ、毒にし、惑わせる。長老は森を癒やす。
@@ -78,7 +78,7 @@
       flags: [], s: { hp: 1.97, atk: 1.15, mag: 1.38, mdef: 1.2, agi: 0.6 }, eva: 5,
       elem: { fire: 1.5, water: 0.5, wind: 1.5, earth: 0.25 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_spore_storm', w: 2 }, { id: 'e_heal_all', w: 2, cond: { hpBelow: 0.7 } }, { id: 'e_confuse_spore', w: 1 }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'hd_fairy_circlet', rate: 32 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'hd_fairy_circlet', rate: 16 } },
       desc: R.T('monsters.mushroom_4.desc'),
     },
     // ---- plant 人食い花（植物・m）: かみつく花。いばら、毒の息、夜咲き、そして千年咲き続ける光の花へ。
@@ -119,7 +119,7 @@
       flags: [], s: { hp: 1.92, atk: 0.59, mag: 0.7, mdef: 1.2, agi: 0.8 }, eva: 5,
       elem: { fire: 1.5, water: 0.5, earth: 0.75, light: 0.25, dark: 1.5 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_heal_all', w: 2, cond: { hpBelow: 0.8 } }, { id: 'e_flash', w: 2 }, { id: 'e_spore_storm', w: 1 }, { id: 'e_regen_self', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_millennium_seed', rate: 32 }, super: { item: 'bd_sr_thousand_petal', rate: 256 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_millennium_seed', rate: 16 }, super: { item: 'bd_sr_thousand_petal', rate: 256 } },
       desc: R.T('monsters.plant_5.desc'),
     },
     // ---- fairy 妖精（妖精・s・飛ぶ）: 森の小さな住人。いたずら、花の癒やし、霧の歌、そして妖精の姫。
@@ -152,7 +152,7 @@
       flags: ['flying'], s: { hp: 2.18, atk: 0.46, mag: 0.6, mdef: 1.2, agi: 1.3 }, eva: 15,
       elem: { wind: 1.5, earth: 0.5, light: 0.25, dark: 1.5 }, phys: { pierce: 1.25 }, statusRes: { confuse: 0.5 },
       actions: [{ id: 'attack', w: 1 }, { id: 'e_heal_all', w: 2, cond: { hpBelow: 0.8 } }, { id: 'e_charm', w: 2 }, { id: 'e_light_ray', w: 2 }, { id: 'e_veil_ally', w: 1, cond: { every: [4, 0] } }],
-      drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'hd_fairy_circlet', rate: 32 }, steal: { item: 'hd_st_fairy_queen', rate: 32 } },
+      drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'hd_fairy_circlet', rate: 16 }, steal: { item: 'hd_st_fairy_queen', rate: 16 } },
       desc: R.T('monsters.fairy_4.desc'),
     },
     // ---- treant 魔木（植物・l）: 森を歩き回る木。根で縛り、いばらで打ち、最後は森の古老になる。
@@ -185,7 +185,7 @@
       flags: [], s: { hp: 1.8, atk: 0.92, mag: 1.06, def: 1.25, agi: 0.6 }, eva: 5,
       elem: { fire: 1.5, water: 0.5, wind: 1.5, earth: 0.25 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_quake', w: 2 }, { id: 'e_heal_all', w: 1, cond: { hpBelow: 0.6 } }, { id: 'e_root_bind', w: 2 }, { id: 'e_guard_stance', w: 1 }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_sword_hornet', rate: 32 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_sword_hornet', rate: 16 } },
       desc: R.T('monsters.treant_4.desc'),
     },
   });
@@ -196,7 +196,7 @@
   const DEMO_RARE = { bee_1: 'i_incense', bee_2: 'w_dagger_r1', mushroom_1: 'i_panacea', mushroom_2: 'i_tonic', plant_1: 'i_tonic', plant_2: 'i_bomb',
     fairy_1: 'i_tonic', fairy_2: 'w_staff_r1', treant_1: 'i_censer', treant_2: 'w_greatsword_r1' };
   const DEMO_STEAL = { bee_1: 'ac_st_royal_jelly', mushroom_1: 'ac_st_spore_sachet', fairy_2: 'w_staff_st_petal' };
-  for (const [id, item] of Object.entries(DEMO_RARE)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { rare: { item, rate: /_2$/.test(id) ? 16 : 32 } });
-  for (const [id, item] of Object.entries(DEMO_STEAL)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { steal: { item, rate: 32 } });
+  for (const [id, item] of Object.entries(DEMO_RARE)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { rare: { item, rate: /_2$/.test(id) ? 12 : 16 } });
+  for (const [id, item] of Object.entries(DEMO_STEAL)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { steal: { item, rate: 16 } });
   // @@V2-END
 })(window.RPG);

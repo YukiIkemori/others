@@ -29,7 +29,7 @@
       flags: [], s: { hp: 2.27, atk: 0.59, mag: 0.57 }, eva: 5,
       elem: { light: 1.5, dark: 0.25 }, phys: { slash: 0.75, blunt: 0.75, pierce: 0.75 }, statusRes: { poison: 1, death: 1, stun: 1 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_dark_slash', w: 2 }, { id: 'e_void_wave', w: 2 }, { id: 'e_death_word', w: 1 }, { id: 'e_dispel', w: 1, cond: { every: [3, 1] } }],
-      drops: { normal: { item: 'i_phoenix', rate: 8 }, rare: { item: 'hd_void_helm', rate: 32 }, super: { item: 'sh_sr_void_aegis', rate: 256 } },
+      drops: { normal: { item: 'i_phoenix', rate: 8 }, rare: { item: 'hd_void_helm', rate: 16 }, super: { item: 'sh_sr_void_aegis', rate: 256 } },
       desc: R.T('monsters.void_3.desc'),
     },
     // ---- chaos 混沌獣（獣・l）: 忘れられた恐れが寄り集まった獣。3 段目の祖獣は大地を揺らし、気合いをこめて暴れる。
@@ -55,7 +55,7 @@
       eva: 5,
       elem: { fire: 1.25, light: 1.5, dark: 0.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_rampage', w: 2 }, { id: 'e_chaos_breath', w: 2 }, { id: 'e_quake', w: 1 }, { id: 'e_roar', w: 1, cond: { every: [4, 1] } }, { id: 'e_focus', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_phoenix', rate: 8 }, rare: { item: 'ac_chaos_eye', rate: 32 }, super: { item: 'hn_sr_chaos_claw', rate: 256 } },
+      drops: { normal: { item: 'i_phoenix', rate: 8 }, rare: { item: 'ac_chaos_eye', rate: 16 }, super: { item: 'hn_sr_chaos_claw', rate: 256 } },
       desc: R.T('monsters.chaos_3.desc'),
     },
   });

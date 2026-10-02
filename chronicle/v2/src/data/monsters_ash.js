@@ -45,7 +45,7 @@
       flags: [], s: { hp: 3.28, atk: 0.23, mag: 0.22 }, eva: 5,
       elem: { fire: -1, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_inferno_breath', w: 2 }, { id: 'e_fire_bite', w: 2 }, { id: 'e_roar', w: 1, cond: { every: [4, 1] } }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_phoenix_ash', rate: 32 }, super: { item: 'bd_sr_dragonhide', rate: 128 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_phoenix_ash', rate: 16 }, super: { item: 'bd_sr_dragonhide', rate: 128 } },
       desc: R.T('monsters.salamander_5.desc'),
     },
     // ---- imp 悪魔（魔族・s）: 灰の荒野の小悪魔。すす・火の粉・灰・業火、そして軍師。
@@ -86,7 +86,7 @@
       flags: [], s: { hp: 3.63, atk: 0.3, mag: 0.39, mdef: 1.25, agi: 1.15 }, eva: 5,
       elem: { light: 1.5, dark: 0.25 }, phys: {}, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 1 }, { id: 'e_dark_bolt', w: 2 }, { id: 'e_dispel', w: 1, cond: { every: [3, 1] } }, { id: 'e_haste', w: 1, cond: { once: true } }, { id: 'e_ward', w: 1, cond: { once: true } }, { id: 'e_gloom', w: 1 }],
-      drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'ac_phoenix_ash', rate: 32 }, super: { item: 'hd_sr_dusk', rate: 128 }, steal: { item: 'w_staff_st_strategist', rate: 32 } },
+      drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'ac_phoenix_ash', rate: 16 }, super: { item: 'hd_sr_dusk', rate: 128 }, steal: { item: 'w_staff_st_strategist', rate: 16 } },
       desc: R.T('monsters.imp_5.desc'),
     },
     // ---- gargoyle 石像鬼（魔族・m・飛ぶ）: 古い神殿や塔の屋根に止まる石の鬼。
@@ -119,7 +119,7 @@
       flags: ['flying'], s: { hp: 2.04, atk: 0.86, mag: 0.75, def: 1.35 }, eva: 12,
       elem: { wind: 1.5, earth: 0.5, light: 1.5, dark: 0.5 }, phys: { slash: 0.75, blunt: 1.25, pierce: 0.75 }, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_gaze', w: 2 }, { id: 'e_dive', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'w_sword_ash', rate: 32 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'w_sword_ash', rate: 16 } },
       desc: R.T('monsters.gargoyle_4.desc'),
     },
     // ---- orc 大鬼（人型・l）: 荒野をのし歩く大鬼。力まかせと鉄棒。
@@ -144,7 +144,7 @@
       flags: [], s: { hp: 1.9, atk: 0.89, mag: 0.71, def: 1.05, agi: 0.8 }, eva: 5,
       elem: { fire: 0.25, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_rampage', w: 2 }, { id: 'e_focus', w: 1, cond: { once: true } }, { id: 'e_sweep', w: 2 }, { id: 'e_roar', w: 1, cond: { every: [4, 2] } }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_greatsword_brimstone', rate: 32 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_greatsword_brimstone', rate: 16 } },
       desc: R.T('monsters.orc_3.desc'),
     },
     // ---- chimera 三頭獣（獣・l）: シシ・ヤギ・ヘビの頭をもつ獣。火の息が強くなっていく。
@@ -170,7 +170,7 @@
       eva: 5,
       elem: { fire: -1, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_inferno_breath', w: 2 }, { id: 'e_bite', w: 2 }, { id: 'e_roar', w: 1, cond: { every: [4, 0] } }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_greatsword_brimstone', rate: 32 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_greatsword_brimstone', rate: 16 } },
       desc: R.T('monsters.chimera_3.desc'),
     },
   });

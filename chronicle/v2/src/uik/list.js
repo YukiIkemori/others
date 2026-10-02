@@ -95,7 +95,7 @@
     }
     _select(i) {
       const row = this.rows[i];
-      if (!row) return;
+      if (!row || this.hold) return;   // hold: 決定を受けない間（R.UIK.choiceGuard）
       if (row.disabled && !this.selectDisabled) { if (this.sound) UIK.sfx('buzzer'); return; }
       if (this.sound) UIK.sfx('confirm');
       if (this.onSelect) this.onSelect(row, i);

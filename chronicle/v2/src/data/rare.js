@@ -255,14 +255,14 @@
   };
   Object.assign(R.DB.monsters, LIST);
   // port_mons.js: 盗み専用（STATS_REWORK §7.2、率は V2_PLAN §2.6.6）。倒しても落ちない（R.Mon.rollDrops は steal を見ない）
-  LIST.rm_jewel_hare.drops = Object.assign({}, LIST.rm_jewel_hare.drops, { steal: { item: 'ft_st_jewel_hare', rate: 16 } });
-  LIST.rm_gold_idol.drops = Object.assign({}, LIST.rm_gold_idol.drops, { steal: { item: 'hn_st_gold_idol', rate: 16 } });
-  LIST.rm_ghost_teapot.drops = Object.assign({}, LIST.rm_ghost_teapot.drops, { steal: { item: 'ac_st_ghost_teapot', rate: 16 } });
-  LIST.rm_star_whale.drops = Object.assign({}, LIST.rm_star_whale.drops, { steal: { item: 'bd_st_star_whale', rate: 16 } });
-  LIST.rm_treasure_crab.drops = Object.assign({}, LIST.rm_treasure_crab.drops, { steal: { item: 'sh_st_treasure_crab', rate: 16 } });
-  LIST.rm_prisma.drops = Object.assign({}, LIST.rm_prisma.drops, { steal: { item: 'w_staff_st_prisma', rate: 16 } });
-  LIST.rm_volcano_turtle.drops = Object.assign({}, LIST.rm_volcano_turtle.drops, { steal: { item: 'sh_st_volcano_turtle', rate: 16 } });
-  LIST.rm_clock_bird.drops = Object.assign({}, LIST.rm_clock_bird.drops, { steal: { item: 'ft_st_clock_bird', rate: 16 } });
-  LIST.rm_bookworm.drops = Object.assign({}, LIST.rm_bookworm.drops, { steal: { item: 'sh_st_bookworm', rate: 16 } });
-  LIST.rm_dream_tapir.drops = Object.assign({}, LIST.rm_dream_tapir.drops, { steal: { item: 'ac_st_dream_tapir', rate: 16 } });
+  LIST.rm_jewel_hare.drops = Object.assign({}, LIST.rm_jewel_hare.drops, { steal: { item: 'ft_st_jewel_hare', rate: 12 } });
+  LIST.rm_gold_idol.drops = Object.assign({}, LIST.rm_gold_idol.drops, { steal: { item: 'hn_st_gold_idol', rate: 12 } });
+  LIST.rm_ghost_teapot.drops = Object.assign({}, LIST.rm_ghost_teapot.drops, { steal: { item: 'ac_st_ghost_teapot', rate: 12 } });
+  LIST.rm_star_whale.drops = Object.assign({}, LIST.rm_star_whale.drops, { steal: { item: 'bd_st_star_whale', rate: 12 } });
+  LIST.rm_treasure_crab.drops = Object.assign({}, LIST.rm_treasure_crab.drops, { steal: { item: 'sh_st_treasure_crab', rate: 12 } });
+  LIST.rm_prisma.drops = Object.assign({}, LIST.rm_prisma.drops, { steal: { item: 'w_staff_st_prisma', rate: 12 } });
+  LIST.rm_volcano_turtle.drops = Object.assign({}, LIST.rm_volcano_turtle.drops, { steal: { item: 'sh_st_volcano_turtle', rate: 12 } });
+  LIST.rm_clock_bird.drops = Object.assign({}, LIST.rm_clock_bird.drops, { steal: { item: 'ft_st_clock_bird', rate: 12 } });
+  LIST.rm_bookworm.drops = Object.assign({}, LIST.rm_bookworm.drops, { steal: { item: 'sh_st_bookworm', rate: 12 } });
+  LIST.rm_dream_tapir.drops = Object.assign({}, LIST.rm_dream_tapir.drops, { steal: { item: 'ac_st_dream_tapir', rate: 12 } });
 })(window.RPG);

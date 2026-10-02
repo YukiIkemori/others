@@ -29,7 +29,7 @@
       flags: [], s: { hp: 1.5, atk: 1.29, mag: 1.35, def: 1.35, agi: 0.6 }, eva: 5,
       elem: { water: 1.25, wind: 1.5, earth: 0.25 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_crush', w: 2 }, { id: 'e_gem_beam', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_gem_core', rate: 32 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_gem_core', rate: 16 } },
       desc: R.T('monsters.golem_3.desc'),
     },
     // ---- mole モグラ（獣・m）: 坑道を掘るモグラ。爪、火薬、そして鉱夫の親方。
@@ -62,7 +62,7 @@
       flags: [], s: { hp: 2.43, atk: 0.53, mag: 0.46, def: 1.1, agi: 0.85 }, eva: 5,
       elem: { fire: 1.25, wind: 1.5, earth: 0.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_quake', w: 2 }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }, { id: 'e_claw', w: 2 }],
-      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'w_greatsword_forgehammer', rate: 32 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'w_greatsword_forgehammer', rate: 16 } },
       desc: R.T('monsters.mole_4.desc'),
     },
     // ---- beetle カブト（虫・s）: 岩山の甲虫。石・鉄・火花・金剛と殻が硬くなる。
@@ -95,7 +95,7 @@
       flags: [], s: { hp: 3.39, atk: 0.74, mag: 0.74, def: 1.8, agi: 0.8 }, eva: 5,
       elem: { fire: 1.25, wind: 1.5, earth: 0.25 }, phys: { slash: 0.75, blunt: 1.25 }, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_horn', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }, { id: 'e_charge', w: 2 }],
-      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'w_greatsword_forgehammer', rate: 32 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'w_greatsword_forgehammer', rate: 16 } },
       desc: R.T('monsters.beetle_4.desc'),
     },
     // ---- crystal 水晶（魔造・s）: 坑道の奥で生まれる、浮かぶ水晶。色で属性が変わる。
@@ -128,7 +128,7 @@
       flags: [], s: { hp: 2.68, atk: 0.54, mag: 0.7, def: 1.2, mdef: 1.2 }, eva: 5,
       elem: { water: 1.25, wind: 0.75, light: 1.5, dark: 0.25 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 1 }, { id: 'e_dark_bolt', w: 2 }, { id: 'e_mind_suck', w: 2 }, { id: 'e_ward', w: 1, cond: { once: true } }, { id: 'e_elem_shift', w: 1, cond: { every: [3, 0] } }],
-      drops: { normal: { item: 'i_stone_dark', rate: 8 }, rare: { item: 'ac_gem_core', rate: 32 } },
+      drops: { normal: { item: 'i_stone_dark', rate: 8 }, rare: { item: 'ac_gem_core', rate: 16 } },
       desc: R.T('monsters.crystal_4.desc'),
     },
     // ---- goblin 小鬼（人型・m）: 山の坑道にすむ小鬼の一族。斧兵、火薬師、隊長、王。
@@ -169,7 +169,7 @@
       flags: [], s: { hp: 2.25, atk: 0.57, mag: 0.47, def: 1.1 }, rw: { gold: 2 }, eva: 5,
       elem: {}, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_call_lesser', w: 2, cond: { countBelow: 5 } }, { id: 'e_howl', w: 1, cond: { once: true } }, { id: 'e_heavy', w: 2 }, { id: 'e_bomb', w: 1 }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_goblin_hoard', rate: 32 }, super: { item: 'w_sword_sr_hegemon', rate: 128 }, steal: { item: 'hd_st_goblin_king', rate: 32 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_goblin_hoard', rate: 16 }, super: { item: 'w_sword_sr_hegemon', rate: 128 }, steal: { item: 'hd_st_goblin_king', rate: 16 } },
       desc: R.T('monsters.goblin_5.desc'),
     },
   });

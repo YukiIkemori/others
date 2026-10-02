@@ -68,6 +68,47 @@
     if (!nz.length) return null;
     return nz.sort((a, b) => Math.abs(b.d) - Math.abs(a.d))[0];
   };
+  /**
+   * 手に入れた装備を「誰に付けるか」の見立て（店の「今すぐ装備する？」・地方の報酬のアクセサリ。テスター 2026-10-02 Q15・Q10）:
+   *   mem（既定は一行）の一人ずつ → [{c, can（付けられる）, slot（付ける枠。無ければ null）, swap（外れる品の id か null）, wearing（もう同じ物を付けている）, gain（S.equipScore の増え）}]。
+   *   枠は 空いた枠 → 同じ物の入っていない枠のうち付けたときにいちばん強くなる枠。
+   *   best = 付けられて、まだ同じ物を付けていない人のうち、いちばん強くなる人（同じくらいなら 重い防具は前で戦う人・布は術の人、それも同じなら上の人）。
+   *   誰も強くならないときは -1（勝手に誰かへ付けない。前は 1 人目＝術師に籠手が付いた）
+   */
+  S.wearPlan = function (id, mem) {
+    mem = mem || S.party();
+    const it = S.item(id) || {};
+    const rows = mem.map((c) => {
+      const list = R.Rules.slotsFor(id), eq = c.equip || {};
+      const o = { c, can: false, slot: null, swap: null, wearing: Object.values(eq).includes(id), gain: 0 };
+      o.can = list.some((s) => R.Rules.canEquip(c, id, s));
+      if (!o.can) return o;
+      const cand = list.filter((s) => eq[s] !== id && R.Rules.canEquip(c, id, s));
+      const free = cand.filter((s) => !eq[s]);
+      let best = null, bg = -Infinity;
+      for (const s of free.length ? free.slice(0, 1) : cand) {
+        let g;
+        try { g = S.equipScore(c, s, id) - S.equipScore(c, s, eq[s] || null); } catch (e) { g = 0; }
+        if (g > bg) { bg = g; best = s; }
+      }
+      if (best) { o.slot = best; o.swap = eq[best] || null; o.gain = Math.round(bg * 10) / 10; }
+      return o;
+    });
+    const fit = (c) => {
+      const magic = loadoutMode(c) === 'magic';
+      if (it.weight === 'heavy') return magic ? 0 : 1;
+      if (it.weight === 'cloth') return magic ? 1 : 0;
+      return 0;
+    };
+    let best = -1;
+    rows.forEach((r, i) => {
+      if (!r.slot || r.wearing || !(r.gain > 0)) return;
+      if (best < 0) { best = i; return; }
+      const b = rows[best];
+      if (r.gain > b.gain + 0.5 || (Math.abs(r.gain - b.gain) <= 0.5 && fit(r.c) > fit(b.c))) best = i;
+    });
+    return { rows, best };
+  };
   /** S.delta で描く「▲+n」の幅（論理 px） */
   /**
    * 「仲間が付けると」の行の値（店の仲間の帯・装備画面のほかの仲間で同じ。オーナー 2026-10-01「守備と術防が入れ替わる。上と下の表示は固定で」）:

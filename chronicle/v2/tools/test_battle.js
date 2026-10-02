@@ -95,7 +95,7 @@ section('データ（K.monster・K.boss・K.troop、出現表、盗み専用）'
   // ドロップの枠（STATS_REWORK §10.1）
   // the slice's 22 stage 1–2 monsters have rare slots again (owner 2026-09-27: 「レアがめっきり減ったねえ……」); the ~25 % is counted over the rest
   const DEMO = new Set(['jelly', 'rat', 'seabird', 'crab', 'bat', 'bee', 'mushroom', 'plant', 'fairy', 'wolf', 'treant'].flatMap((l) => [l + '_1', l + '_2']));
-  ok('slice stage 1–2: every monster has a rare slot (stage 1 rate 32, stage 2 rate 16)', [...DEMO].every((id) => DB.monsters[id].drops.rare && DB.monsters[id].drops.rare.rate === (/_2$/.test(id) ? 16 : 32)));
+  ok('slice stage 1–2: every monster has a rare slot (stage 1 rate 16, stage 2 rate 12)', [...DEMO].every((id) => DB.monsters[id].drops.rare && DB.monsters[id].drops.rare.rate === (/_2$/.test(id) ? 12 : 16)));
   const mobs = mons.filter((id) => { const d = DB.monsters[id]; return !(d.flags || []).includes('boss') && !(d.flags || []).includes('rare') && d.lineage && !DEMO.has(id); });
   const rareN = mobs.filter((id) => DB.monsters[id].drops && DB.monsters[id].drops.rare).length;
   const superN = mobs.filter((id) => DB.monsters[id].drops && DB.monsters[id].drops.super).length;

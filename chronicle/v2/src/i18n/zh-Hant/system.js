@@ -8,6 +8,10 @@
     'sys.demo_carry.offer.i.say.choices': ['繼承', '重新開始'],
     // ---- src/systems/events_runtime.js
     'sys.events_runtime.toastGain.txt': '獲得了{p0}{p1}',
+    'sys.events_runtime.offerWear.text': '要把{name}給誰裝備上嗎？',
+    'sys.events_runtime.offerWear.later': '以後再說',
+    'sys.events_runtime.offerWear.free': '裝在空位',
+    'sys.events_runtime.offerWear.swap': '替換{name}',
     'sys.events_runtime.makeEv.ev.gold.toast': '獲得了 {n} G',
     'sys.events_runtime.makeEv.ev.createHero.h.name': '阿倫',
     'sys.events_runtime.makeEv.ev.lore.txt': '已抄錄進書庫{p0}',

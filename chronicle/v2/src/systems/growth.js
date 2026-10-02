@@ -80,7 +80,7 @@
       if (info.boss) best = Math.max(best, add.boss);
       return (info.Lb || 0) + best;
     },
-    /** 1 人が伸びる確率（ボス戦は 1）: clamp(0.30 + 0.07 d, 0, 0.90) × (1 + growPct/100) × (控え 0.6 / 倒れた人 0.5) */
+    /** 1 人が伸びる確率（ボス戦は 1）: clamp(0.30 + 0.07 d, 0, 0.90) × (1 + growPct/100) × (控え 0.7 / 倒れた人 0.5) */
     chance(c, E, o) {
       o = o || {};
       const G = K().GROW;
@@ -91,7 +91,7 @@
       p *= Math.max(0, 1 + (m.growPct || 0) / 100);
       if (o.reserve) p *= G.reserve;
       else if (o.fallen) p *= G.fallen;
-      if (o.boss) p = Math.max(p, o.reserve ? G.reserve : G.fallen);   // ボス戦は控え・倒れた人も必ず（× 0.6 / 0.5）
+      if (o.boss) p = Math.max(p, o.reserve ? G.reserve : G.fallen);   // ボス戦は控え・倒れた人も必ず（× 0.7 / 0.5）
       return clamp(p, 0, 1);
     },
     /**
@@ -107,6 +107,7 @@
       const capT = Growth.cap(info.tier);
       const metal = !!(info.metal || (info.killed || []).some((k) => k.metal));
       const out = [];
+      const gain = new Map();   // 出撃した人の gl の増え（控えの取り分に使う）
       const one = (c, o) => {
         if (!c) return;
         let p = Growth.chance(c, E, { boss: !!info.boss, reserve: o.reserve, fallen: o.fallen });
@@ -121,6 +122,7 @@
         const d = Growth.step(gl0) * (G.rf[0] + (G.rf[1] - G.rf[0]) * rnd()) * mul * tk;
         const before = R.Rules.stats(c);
         c.gl = Math.round(Math.min(capT, gl0 + d) * 1000) / 1000;
+        gain.set(c, c.gl - gl0);
         const after = R.Rules.stats(c);
         const hp = Math.max(0, after.maxHp - before.maxHp), mp = Math.max(0, after.maxMp - before.maxMp);
         if (c.hp > 0) c.hp = Math.min(after.maxHp, c.hp + hp);
@@ -132,7 +134,22 @@
         const fought = !info.members || info.members.includes(c.id);
         one(c, { fallen: !(c.hp > 0) || !fought || fallenIds.has(c.id) });
       }
-      for (const c of charsOf(reserve)) one(c, { reserve: true });
+      // 控え（酒場で待つ仲間）: 自分では振らず、出撃した人の伸び（gl の増え）の平均 × reserve を必ずもらう。持ち主 2026-10-02「アクティブ仲間の7割」
+      const act = charsOf(party);
+      const avg = act.length ? act.reduce((s, c) => s + (gain.get(c) || 0), 0) / act.length : 0;
+      if (avg > 0) {
+        for (const c of charsOf(reserve)) {
+          const gl0 = Growth.gl(c);
+          if (gl0 >= capT) continue;
+          const before = R.Rules.stats(c);
+          c.gl = Math.round(Math.min(capT, gl0 + avg * G.reserve) * 1000) / 1000;
+          const after = R.Rules.stats(c);
+          const hp = Math.max(0, after.maxHp - before.maxHp), mp = Math.max(0, after.maxMp - before.maxMp);
+          if (c.hp > 0) c.hp = Math.min(after.maxHp, c.hp + hp);
+          c.mp = Math.min(after.maxMp, (c.mp || 0) + mp);
+          if (hp || mp) out.push({ c, hp, mp, reserve: true });
+        }
+      }
       return out;
     },
   });

@@ -16,7 +16,7 @@
 //   say(who, text, {voice, face, name, title})   who = 今のマップの NPC の id か、一行の人の id（'hero' など）か look か null（地の文）。
 //        名前は npc.name → 人の名前 → looks[look].name。face を書かなければ look に顔があれば（R.Portrait.has）出す。false で出さない。
 //        face に表情だけ（'smile'）を書いたら話者の look に付ける。文の中の {hero} は主人公の名前
-//   choose(labels, {cancel, text, who, face})  → 選んだ番号（B は cancel の番号）。who（NPC の id か true = 話しかけた NPC）を書くと
+//   choose(labels, {cancel, text, who, face, index（最初のカーソル）})  → 選んだ番号（B は cancel の番号）。who（NPC の id か true = 話しかけた NPC）を書くと
 //        問いの窓に say と同じ名前・顔を付ける
 //   caption(text, {ms}) → R.UIK.Message.caption / fade('out'|'in', ms) / wait(ms)
 //   item(id, n, {silent}) → K.gain。右上に「〜を 手に入れた」/ take(id, n) → bool / gold(n, {silent}) / has(id)（袋＋装備）
@@ -109,6 +109,40 @@
     try { if (R.Field && R.Field.hud && R.Field.hud.toast && R.Engine.has('field')) R.Field.hud.toast(txt, { icon }); else R.UIK.toast(txt, { icon, anchor: 'tr' }); } catch (e) { /* */ }
     try { (it && it.slot === 'key' ? R.Audio.jingle('keyitem') : R.Audio.sfx('item')); } catch (e) { /* */ }
   }
+
+  // ---------------------------------------------------------------- 報酬のアクセサリを付けるか聞く
+  // 地方の報酬（src: 'reward' のアクセサリ。木霊の首飾り・砂王の印章・灯台守のランタン…）は袋に入るだけで、付けずに先へ進んでいた（テスター 2026-10-02 Q10）。
+  //   イベントの中で手に入れたら覚えておき、イベントの終わりに「〇〇を誰かに付けますか？」。カーソルは付けていちばん強くなる人（R.Screens.wearPlan）、
+  //   誰も強くならなければ「あとで」。空いた枠が無い人は外れる品を右に出す。出てすぐの決定は受けない（会話の選択肢と同じ）
+  const wearQ = [];
+  const isRewardAcc = (id) => { const it = R.DB && R.DB.items && R.DB.items[id]; return !!it && it.slot === 'acc' && it.src === 'reward'; };
+  if (R.on) R.on('item:gain', (e) => { if (busy && e && e.n > 0 && isRewardAcc(e.id) && !wearQ.includes(e.id)) wearQ.push(e.id); });
+  async function offerWear(ev, id) {
+    const S = R.Screens, it = R.DB.items[id];
+    if (!S || !S.wearPlan || !it || R.State.owned(id) < 1 || (R.Game.items[id] || 0) < 1) return;
+    const plan = S.wearPlan(id);
+    const rows = plan.rows.map((r, i) => Object.assign({ i }, r)).filter((r) => r.can && r.slot && !r.wearing);
+    if (!rows.length) return;
+    const labels = rows.map((r) => {
+      const d = S.bestDelta ? S.bestDelta(S.statDiff(r.c, r.slot, id)) : null;
+      const right = r.swap ? R.T('sys.events_runtime.offerWear.swap', { name: (R.DB.items[r.swap] || {}).name || r.swap })
+        : d ? `${d.name} ${d.d > 0 ? '+' : '−'}${Math.abs(d.d)}` : R.T('sys.events_runtime.offerWear.free');
+      return r.c.name + '\t' + right;
+    });
+    const later = labels.length;
+    const bi = rows.findIndex((r) => r.i === plan.best);
+    if (R.Engine.fade && R.Engine.fade.a > 0.01) await ev.fade('in', 200);
+    const k = await ev.choose(labels.concat([R.T('sys.events_runtime.offerWear.later')]), { text: R.T('sys.events_runtime.offerWear.text', { name: it.name }), cancel: later, index: bi >= 0 ? bi : later });
+    if (k < 0 || k >= later) return;
+    const r = rows[k];
+    const res = R.Rules.equip(r.c, r.slot, id);
+    if (res && res.ok) {
+      try { R.UIK.sfx('equip'); } catch (e) { /* */ }
+      const txt = R.T('ui.shop.offerEquip.toast', { name: r.c.name, name2: it.name });
+      try { if (R.Field && R.Field.hud && R.Field.hud.toast && R.Engine.has('field')) R.Field.hud.toast(txt, { icon: 'equip' }); else R.UIK.toast(txt, { icon: 'equip', anchor: 'tr' }); } catch (e) { /* */ }
+    }
+  }
+  Events._offerWear = offerWear;
 
   // ---------------------------------------------------------------- 仲間を出す（主人公だけのフィールド）
   function fieldOn() {
@@ -206,6 +240,7 @@
           msg.face = faceOf(sp, o.face);
         }
         if (o.cancel != null) msg.cancel = o.cancel;
+        if (o.index != null) msg.index = o.index;
         const r = await R.UIK.Message.say(msg);
         guard();
         return r == null ? (o.cancel != null ? o.cancel : -1) : r;
@@ -412,9 +447,12 @@
     const token = aborted;
     try { R.Field.lock('event'); } catch (err) { /* node */ }
     let result;
+    wearQ.length = 0;
     try {
-      result = await e.run(makeEv(ctx), ctx);
+      const ev = makeEv(ctx);
+      result = await e.run(ev, ctx);
       if (e.once && token === aborted) R.Game.flags['ev_' + id] = true;
+      while (wearQ.length && token === aborted) await offerWear(ev, wearQ.shift());
     } catch (err) {
       if (!(err && err.aborted)) { console.error('[event ' + id + ']', err); }
       result = undefined;

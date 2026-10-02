@@ -37,7 +37,7 @@
       flags: [], s: { hp: 2.47, atk: 0.62, mag: 0.54, def: 1.25 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_thrust', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }, { id: 'e_tide', w: 1 }, { id: 'e_guard_stance', w: 1 }],
-      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'w_sword_tide', rate: 32 } },
+      drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'w_sword_tide', rate: 16 } },
       desc: R.T('monsters.merman_4.desc'),
     },
     // ---- kraken タコ（水生・l）: 洞窟と船底の大ダコ。墨、八本の腕、渦潮。
@@ -62,7 +62,7 @@
       flags: [], s: { hp: 1.78, atk: 0.67, mag: 0.7, agi: 0.85 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_tentacles', w: 2 }, { id: 'e_tide', w: 2 }, { id: 'e_ink', w: 1 }, { id: 'e_weaken', w: 1 }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_sword_tide', rate: 32 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_sword_tide', rate: 16 } },
       desc: R.T('monsters.kraken_3.desc'),
     },
     // ---- skeleton 骸骨（不死・m）: 幽霊船の骸骨の船乗り。水夫・海賊・砲手・航海士・提督。
@@ -103,7 +103,7 @@
       flags: [], s: { hp: 2.66, atk: 0.48, mag: 0.46 }, eva: 5,
       elem: { fire: 1.5, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: { poison: 1, death: 1, sleep: 1, confuse: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_cannon', w: 2 }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }, { id: 'e_howl', w: 1, cond: { once: true } }, { id: 'e_slash', w: 2 }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_admiral_medal', rate: 32 }, super: { item: 'w_sword_sr_admiral', rate: 256 }, steal: { item: 'ac_st_admiral', rate: 32 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_admiral_medal', rate: 16 }, super: { item: 'w_sword_sr_admiral', rate: 256 }, steal: { item: 'ac_st_admiral', rate: 16 } },
       desc: R.T('monsters.skeleton_5.desc'),
     },
   });
