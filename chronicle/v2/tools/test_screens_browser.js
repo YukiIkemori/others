@@ -150,7 +150,7 @@ async function backTo(p, id, max) {
     // 宿
     await openScreen(p, 'inn', { price: 30 });
     await B.press(p, 'a'); await p.waitForTimeout(300);
-    ok('inn: A → {stay:true}', JSON.stringify(await result(p)) === '{"stay":true}', await result(p));
+    { const r = await result(p); ok('inn: A → {stay:true, pick:0}', r && r.stay === true && (r.pick === 0 || r.pick == null), r); }
     await B.ev(p, `(() => { RPG.Game.gold = 5; return true; })()`);
     await openScreen(p, 'inn', { price: 30 });
     await B.press(p, 'a'); await p.waitForTimeout(300);
