@@ -150,7 +150,8 @@
         const sub = row.kind === 'tech' ? R.T('ui.skills.draw.sub', { wname: S.wname(a.wtype) }) : R.T('ui.skills.draw.sub_2', { join: (a.elements || []).map(S.ename).join(R.T('ui.skills.draw.sub.join')) });
         R.UIK.text(g, sub, dp.x + dp.w - u(20), dp.y + u(20), { size: u(12.5), color: C.text3, align: 'right' });
         let yy = dp.y + u(50);
-        for (const l of R.UIK.wrap(R.I18n.unwrap(a.desc), dp.w - u(40), { size: u(14.5) }).slice(0, 2)) { R.UIK.text(g, l, dp.x + u(20), yy, { size: u(14.5), color: C.text }); yy += u(24); }
+        const df = R.UIK.wrapFit(R.I18n.unwrap(a.desc), dp.w - u(40), 2, { size: u(14.5), min: Math.max(u(12), R.minFont || 0) });   // 2 行に収める（途中で黙って切らない）
+        for (const l of df.lines) { R.UIK.text(g, l, dp.x + u(20), yy, { size: df.size, color: C.text }); yy += u(24); }
         let cx = dp.x + u(20);
         cx += R.UIK.chip(g, cx, yy + u(4), S.rangeName(a) || '―', { kind: 'plain', size: 11 }) + u(8);
         // 技の特徴（先制・2回・火・守備無視 …）を金の札で。入りきらない分は出さない（持ち主 2026-10-01「違いも分からん」）

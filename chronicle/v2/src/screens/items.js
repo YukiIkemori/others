@@ -131,7 +131,10 @@
         const kind = it.slot === 'use' ? (it.use && it.use.field ? (S.fieldUsable(it) ? R.T('ui.items.draw.kind') : R.T('ui.items.draw.kind_2')) : R.T('ui.items.draw.kind_2')) : it.slot === 'key' ? R.T('ui.items.draw.kind_3') : S.kindLine(it);
         R.UIK.text(g, kind, dp.x + dp.w - u(20), dp.y + u(20), { size: u(12.5), color: C.text3, align: 'right' });
         let yy = dp.y + u(50);
-        for (const l of R.UIK.wrap(R.I18n.unwrap(it.desc), dp.w - u(40), { size: u(14.5) }).slice(0, 3)) { R.UIK.text(g, l, dp.x + u(20), yy, { size: u(14.5), color: C.text }); yy += u(24); }
+        // 説明は札に入る行の数まで（入らなければ字を少し小さく、それでも余れば末尾を…。途中で黙って切らない）
+        const dn = Math.max(1, Math.floor((dp.y + dp.h - u(8) - yy) / u(24) + 0.3));
+        const df = R.UIK.wrapFit(R.I18n.unwrap(it.desc), dp.w - u(40), dn, { size: u(14.5), min: Math.max(u(12), R.minFont || 0) });
+        for (const l of df.lines) { R.UIK.text(g, l, dp.x + u(20), yy, { size: df.size, color: C.text }); yy += df.lh; }
       }
       const cp = { x: rx, y: dp.y + dp.h + u(12), w: rw, h: b.y + b.h - (dp.y + dp.h + u(12)) };
       if (this.tgt) R.UIK.text(g, this.tgt.kind === 'all' ? R.T('ui.items.draw.text_2') : R.T('ui.items.draw.text_3'), cp.x + u(4), cp.y - u(2), { size: u(13), weight: 700, color: C.gold });

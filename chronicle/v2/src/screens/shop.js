@@ -455,8 +455,8 @@
       const plw = R.UIK.text(g, pLine, px + pw, y, { size: u(14), weight: 700, color: sell ? C.gold : pr > S.gold() ? C.down : C.gold, align: 'right' });
       R.UIK.text(g, it.slot === 'use' ? R.T('ui.shop.drawDetail.text') : S.kindLine(it), px, y, { size: u(13), color: C.text2, maxW: pw - plw - u(16) });
       y += u(26);
-      const dl = R.UIK.wrap(R.I18n.unwrap(it.desc), pw, { size: u(14) }).slice(0, 2);
-      for (const l of dl) { R.UIK.text(g, l, px, y, { size: u(14), color: C.text }); y += u(22); }
+      const df = R.UIK.wrapFit(R.I18n.unwrap(it.desc), pw, 2, { size: u(14), min: Math.max(u(11.5), R.minFont || 0), lh: 22 / 14 });   // 2 行に収める（途中で黙って切らない）
+      for (const l of df.lines) { R.UIK.text(g, l, px, y, { size: df.size, color: C.text }); y += u(22); }
       y += u(6); R.UIK.rule(g, px, px + pw, y, 0.14); y += u(12);
       const bagN = S.count(id), eqN = equipped(id);
       const own = (bagN ? R.T('ui.shop.drawDetail.own', { bagN }) : R.T('ui.shop.drawDetail.own_2')) + (eqN ? R.T('ui.shop.drawDetail.own_3', { eqN }) : '');
