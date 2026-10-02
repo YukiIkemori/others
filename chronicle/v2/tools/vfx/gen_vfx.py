@@ -25,6 +25,7 @@
   out [w, h]          1 コマの大きさ（px。戦闘の論理 1 px = 2 px で見る）
   anchor 'center' | 'bottom' | 'left'   コマの中の基準の点（center = 真ん中、bottom = 下の真ん中、left = 左の真ん中）
   fit                 全部のコマを合わせた外形が、基準から見てコマの何割に収まるか（既定 0.92）
+  opaque              加算（lighter）の部品を α の無い帯にする（色に α を掛けて黒地のまま。ボスの部品）
   q, aq               WebP の品質（色・α。既定 86・90。ボスの部品は α を 60 に下げて軽く）
   fps, loop, blend    実行時の再生（blend は既定 black → 'lighter'、clear → 'source-over'）
 """
@@ -175,6 +176,10 @@ def cell_alpha(c, p):
         out = rgb.copy()
         out[..., 0] = r - spill * (1 - a) * 0.9 - spill * 0.35
         out[..., 2] = b - spill * (1 - a) * 0.9 - spill * 0.35
+        if p.get('nomag'):
+            # 柔らかい土ぼこりに残ったマゼンタの色（桃色）を落とす: 青を緑より上にしない（茶・灰の物だけに使う）
+            out[..., 2] = np.minimum(out[..., 2], out[..., 1])
+            out[..., 0] = np.minimum(out[..., 0], out[..., 1] * 1.45 + 10)
         from scipy import ndimage
         a = ndimage.grey_erosion(a, size=(2, 2)) * 0.5 + a * 0.5   # 縁を 1 px 締める
         a = np.where(a < 0.06, 0, a)
@@ -284,7 +289,13 @@ def process(style, p):
     strip[strip[..., 3] == 0, :3] = 0
     os.makedirs(OUT, exist_ok=True)
     dst = os.path.join(OUT, p['id'] + '.webp')
-    Image.fromarray(np.clip(np.rint(strip), 0, 255).astype(np.uint8), 'RGBA').save(dst, 'WEBP', quality=p.get('q', 86), alpha_quality=p.get('aq', 90), method=6)
+    blend = p.get('blend') or ('lighter' if p.get('bg', 'black') == 'black' else 'source-over')
+    if p.get('opaque') and blend == 'lighter' and not p.get('tint'):
+        # 加算で描く光の物は α が要らない: 色に α を掛けて（黒地のまま）α の無い帯にする（約 4 割軽い。黒は足しても変わらない）
+        pre = strip[..., :3] * (strip[..., 3:4] / 255.0)
+        Image.fromarray(np.clip(np.rint(pre), 0, 255).astype(np.uint8), 'RGB').save(dst, 'WEBP', quality=p.get('q', 86), method=6)
+    else:
+        Image.fromarray(np.clip(np.rint(strip), 0, 255).astype(np.uint8), 'RGBA').save(dst, 'WEBP', quality=p.get('q', 86), alpha_quality=p.get('aq', 90), method=6)
     # 山（一番濃いコマ）: 実行時は山まで速く進めて、山を保ってから消す（fx_seq_img.js の DEFSEG）
     energy = [float((f[..., 3] / 255.0 * (lum(f[..., :3]) / 255.0 + 0.3)).sum()) for f in frames]
     peak = int(np.argmax(energy)) if p.get('peak') is None else int(p['peak'])
@@ -296,6 +307,8 @@ def process(style, p):
     meta = {'n': len(frames), 'peak': peak, 'bb': bb, 'w': ow, 'h': oh, 'fps': p.get('fps', 24), 'loop': bool(p.get('loop')), 'tint': bool(p.get('tint')),
             'blend': p.get('blend') or ('lighter' if p.get('bg', 'black') == 'black' else 'source-over'),
             'anchor': [round(tx, 1), round(ty, 1)], 'scale': p.get('scale', 0.5), 'group': p.get('group', '')}
+    if p.get('opaque') and meta['blend'] == 'lighter' and not p.get('tint'):
+        meta['opaque'] = True
     json.dump(meta, open(os.path.join(OUT, p['id'] + '.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
     print('->', dst, f'{len(frames)}x{ow}x{oh}', os.path.getsize(dst) // 1024, 'KB')
     return dst

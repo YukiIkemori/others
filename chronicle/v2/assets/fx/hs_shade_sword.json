@@ -1,1 +1,1 @@
-{"n":1,"peak":0,"bb":[[19,39,154,453]],"w":192,"h":512,"fps":24,"loop":false,"tint":false,"blend":"lighter","anchor":[96.0,491.5],"scale":0.5,"group":"boss"}
+{"n":1,"peak":0,"bb":[[19,39,154,453]],"w":192,"h":512,"fps":24,"loop":false,"tint":false,"blend":"lighter","anchor":[96.0,491.5],"scale":0.5,"group":"boss","opaque":true}
