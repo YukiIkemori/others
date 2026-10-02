@@ -37,6 +37,9 @@ if 'googletagmanager' not in s:
 open(p, 'w', encoding='utf8').write(s)
 PY
 fi
+# 遊んでいる途中の人の画面が壊れないように、今公開中の版の地図帳・声のまとめ（名前に hash）を新しい版にも残す
+LIVE=https://luminous-chronicle.web.app; [ -n "$FULL" ] && LIVE=https://luminous-chronicle--full-yujb89bg.web.app
+python3 "$WORK/chronicle/v2/tools/keep_prev_assets.py" "$WORK/public" "$LIVE" || echo "[keep_prev] skipped (live site not readable)"
 cp "$ROOT/chronicle/v2/deploy/firebase.json" "$ROOT/chronicle/v2/deploy/.firebaserc" "$WORK/"
 du -sh "$WORK/public"
 [ "$DRY" = "--dry" ] && { echo "dry run: $WORK/public"; exit 0; }
