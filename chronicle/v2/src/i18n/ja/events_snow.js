@@ -191,6 +191,7 @@
     'events.snow_dawn.say.name_2': 'ヨルン',
     'events.snow_dawn.say_5': ['門は、ひとつも破られなかった。\n信じられん……。', '守りきった門の家の者が、\n礼をしたいと言っておったぞ。'],
     'events.yule_siege_resume.caption': '村はまだ、狼に囲まれている。\n大かまどへ急いだ。',
+    'events.yule_siege_regroup.caption': '大かまどの火のそばで、目を覚ました。\n村長に話せば、もう一度門へ向かえる。',
     // ---- src/events/snow_optional.js
     'events.icicle_arrive.caption': 'つららの回廊。\n天井から、青い氷の刃が\n無数に垂れ下がっている。',
     'events.icicle_2_arrive.caption': '暗い。\n火皿に火をともせば、\nあたりが見えるはずだ。',

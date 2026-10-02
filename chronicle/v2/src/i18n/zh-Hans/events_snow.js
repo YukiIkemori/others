@@ -189,6 +189,7 @@
     'events.snow_dawn.say.name_2': '约恩',
     'events.snow_dawn.say_5': ['一道门都没被攻破。\n真不敢相信……。', '守住的那几道门边的人家，\n说想要谢谢你们。'],
     'events.yule_siege_resume.caption': '村子仍被狼群包围着。\n赶往了大灶。',
+    'events.yule_siege_regroup.caption': '在大灶的火旁醒了过来。\n和村长说话，就能再次前往城门。',
     'events.icicle_arrive.caption': '冰柱回廊。\n无数青色的冰刃\n从天花板垂下。',
     'events.icicle_2_arrive.caption': '好暗。\n点亮火盘的话，\n应该就能看清四周。',
     'events.icicle_frozen.say': '融化的冰后面，\n能看到宝箱。',

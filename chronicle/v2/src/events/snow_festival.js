@@ -306,7 +306,10 @@
 
   // 籠城の夜に全滅したら: 宿ではなく大かまどの前で全快して起きる。所持金は減らさない（R.State.wipeSafe。テスター 2026-10-02 P23・P24）。
   //   波の数は進まないので、村長に話せば同じ波（3 波目なら門の読み）からやり直せる
-  { const St = (R.State = R.State || {}); (St._safe = St._safe || []).push((G) => (G.flags.snow_festival_lit && !G.flags.snow_siege_done ? { map: 'yule_night', spawn: 'hearth' } : null)); }
+  { const St = (R.State = R.State || {}); (St._safe = St._safe || []).push((G) => (G.flags.snow_festival_lit && !G.flags.snow_siege_done ? { map: 'yule_night', spawn: 'hearth', event: 'yule_siege_regroup' } : null)); }
+  E('yule_siege_regroup', async (ev) => {
+    await ev.caption(R.T('events.yule_siege_regroup.caption'), { ms: 2600 });
+  }, { meta: { needs: ['flag:snow_festival_lit'], gives: [] } });
 
   // 籠城の途中で町を出た（全滅して宿へ・ワープ）: 昼のユールに入ったら夜へ戻す
   E('yule_siege_resume', async (ev) => {

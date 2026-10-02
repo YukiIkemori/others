@@ -189,6 +189,7 @@
     'events.snow_dawn.say.name_2': '요른',
     'events.snow_dawn.say_5': ['문은 하나도 뚫리지 않았네.\n믿을 수가 없군…….', '지켜 낸 문 쪽 집 사람들이\n답례를 하고 싶다더군.'],
     'events.yule_siege_resume.caption': '마을은 아직 늑대에게 포위되어 있다.\n큰 화덕으로 서둘렀다.',
+    'events.yule_siege_regroup.caption': '큰 화덕의 불 곁에서 눈을 떴다.\n촌장에게 말하면 다시 문으로 향할 수 있다.',
     'events.icicle_arrive.caption': '고드름 회랑.\n천장에서 푸른 얼음 칼날이\n무수히 늘어져 있다.',
     'events.icicle_2_arrive.caption': '어둡다.\n불접시에 불을 붙이면\n주위가 보일 것이다.',
     'events.icicle_frozen.say': '녹은 얼음 너머로\n보물 상자가 보인다.',

@@ -133,10 +133,14 @@ async function main() {
     await p.evaluate(`(() => { const e = ${D}.B.engine; for (const u of e.party) u.hp = 1; e.result = 'lose'; })()`);
     ok('wipes again', (await advance(p, `${D} && !!${D}.go`, 80)) === true && await B.waitFor(p, WIPED, 15000));
     await B.press(p, 'down'); await B.press(p, 'a');   // ひと息ついて立て直す
+    ok('wakes at the hearth with a caption (talk to the chief to try again)', await B.waitFor(p, `${B.TOP}==='caption' || (RPG.Engine.has('caption') && RPG.Field._s.map.id === 'yule_night')`, 15000));
+    await sleep(1200);
+    await B.shot(p, path.join(SHOTS, 'siege_regroup_1920.png'));
     ok('back on the siege night map', await B.waitFor(p, `${B.TOP}==='field' && RPG.Field._s.map.id === 'yule_night' && !RPG.Events.busy() && RPG.Engine.fade.a < 0.01`, 15000), await p.evaluate(() => [RPG.Engine.top().id, RPG.Field._s && RPG.Field._s.map && RPG.Field._s.map.id]));
     const after = await p.evaluate(() => ({ gold: RPG.Game.gold, full: RPG.Party.members().every((c) => c.hp > 0 && c.hp === RPG.Rules.stats(c).maxHp), wave: RPG.Game.vars.snow_wave, done: !!RPG.Game.flags.snow_siege_done }));
     ok('gold is NOT halved, everyone fully healed, still wave 3 (can try again via Jorn)', after.gold === 777 && after.full && after.wave === 2 && !after.done, after);
-    await B.shot(p, path.join(SHOTS, 'siege_regroup_1920.png'));
+    await p.evaluate(() => { RPG.Events.run('yule_siege_jorn', { map: 'yule_night', npc: 'jorn' }); });
+    ok('talking to Jorn starts wave 3 again (gate choice)', (await advance(p, 'false', 20)) === 'choice' && /第3の波/.test(await p.evaluate(() => RPG.UIK.Message.log().slice(-1)[0].text)));
     ok('no console errors', P.errors.length === 0, P.errors);
     await P.close();
   }
@@ -178,8 +182,9 @@ async function main() {
 
   // ------------------------------------------------------------------ Q5 味方をねらう
   section('Q5: 味方をねらうクリックは押した人に決まる');
-  {
-    const P = await B.open(S, 'dev.html?fixture=content_s_yule_plaza');
+  // 幅の狭い窓（900×1080）では前列・後列の絵の当たりが重なり、前は後ろの人の胸から下を押すと手前の人に入った
+  for (const size of [[1920, 1080], [900, 1080]]) {
+    const P = await B.open(S, 'dev.html?fixture=content_s_yule_plaza', { size });
     const p = P.page;
     await B.waitFor(p, `${B.TOP}==='field' && !RPG.Events.busy()`, 15000);
     await p.evaluate(`(() => { window.__r = null; RPG.Battle.start({ mons: [['stub_slime', 2]], bg: 'snow' }).then((r) => { window.__r = r; }); return true; })()`);
@@ -201,8 +206,8 @@ async function main() {
       return { out, rowHits };
     })()`);
     const miss = res.out.filter(([u, , h]) => u !== h);
-    ok('clicking the body of each ally (head/chest/legs) picks that ally', miss.length === 0, miss);
-    ok('clicking each ally row in the party list picks that ally', res.rowHits.every(([u, h]) => u === h), res.rowHits);
+    ok(`${size.join('x')}: clicking the body of each ally (head/chest/legs) picks that ally`, miss.length === 0, miss);
+    ok(`${size.join('x')}: clicking each ally row in the party list picks that ally`, res.rowHits.every(([u, h]) => u === h), res.rowHits);
     ok('no console errors', P.errors.length === 0, P.errors);
     await P.close();
   }
@@ -219,7 +224,7 @@ async function main() {
     // 起動の先読みを待たない（タイトルが出たらすぐ）
     await p.waitForFunction(`${B.TOP}==='screen:title'`, null, { timeout: 60000 });
     const code = await p.evaluate(() => { RPG.State.newGame({ hero: { type: 'mage', sex: 'f', name: 'リーネ' } }); const s = RPG.DB.config.start; RPG.Game.pos = { map: s.map, x: 5, y: 5, dir: 's' }; const c = RPG.Save.passphrase(); RPG.Game = null; return c; });
-    await p.evaluate(() => RPG.Engine.top().view.pick({ value: 'passphrase' }));
+    await p.evaluate(() => { RPG.Engine.top().view.pick({ value: 'passphrase' }); });
     ok('passphrase screen opens', await B.waitFor(p, `${B.TOP}==='screen:passphrase'`, 5000));
     await sleep(400);
     const box = await p.evaluate(() => { const r = document.querySelector('textarea').getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; });
@@ -237,7 +242,7 @@ async function main() {
     await p.evaluate(() => document.activeElement && document.activeElement.blur());
     await p.evaluate((c) => { const dt = new DataTransfer(); dt.setData('text/plain', c + '\n'); document.body.dispatchEvent(new ClipboardEvent('paste', { clipboardData: dt, bubbles: true })); }, code);
     ok('a paste event outside the field fills the field', (await p.evaluate(() => document.querySelector('textarea').value)) === code);
-    await p.evaluate(() => RPG.Engine.top().view.act('load'));
+    await p.evaluate(() => { RPG.Engine.top().view.act('load'); });
     ok('the first load goes on to the field (not back to the title)', await B.waitFor(p, `${B.TOP}==='field' && !!RPG.Game`, 30000), await p.evaluate(() => RPG.Engine.stack.map((s) => s.id)));
     ok('no console errors', errors.length === 0, errors);
     await ctx.close();

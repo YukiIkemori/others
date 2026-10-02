@@ -191,6 +191,7 @@
     'events.snow_dawn.say.name_2': 'Jorn',
     'events.snow_dawn.say_5': ['Not one gate was broken.\nI can\'t believe it...', 'The families by the gates you held\nsaid they want to thank you.'],
     'events.yule_siege_resume.caption': 'The village is still surrounded by wolves.\nYou hurry to the great hearth.',
+    'events.yule_siege_regroup.caption': 'You wake beside the great hearth\'s fire.\nTalk to the chief to head for the gates again.',
     // ---- src/events/snow_optional.js
     'events.icicle_arrive.caption': 'The Icicle Corridor.\nCountless blue blades of ice\nhang from the ceiling.',
     'events.icicle_2_arrive.caption': 'It\'s dark.\nLight the fire dish, and\nyou should be able to see.',

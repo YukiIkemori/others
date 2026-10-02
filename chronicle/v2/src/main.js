@@ -76,7 +76,11 @@
       const s = (R.DB.config && R.DB.config.start) || {};
       // 出られない場面（籠城の夜など。R.State.wipeSafe）では、宿ではなくその場面の決まった所で起きる
       const safe = R.State && R.State.wipeSafe ? R.State.wipeSafe() : null;
-      if (safe) { await R.Field.enter(safe.map, safe.spawn, { fade: 260, noAutosave: true }); return; }
+      if (safe) {
+        await R.Field.enter(safe.map, safe.spawn, { fade: 260, noAutosave: true });
+        if (safe.event && R.Events && R.Events.run) R.Events.run(safe.event, { map: safe.map });   // 起きたところの一言（待たない）
+        return;
+      }
       const p = G.lastInn || G.lastTown || null;
       if (p && p.map) await R.Field.enter(p.map, p.x != null ? { x: p.x, y: p.y, dir: p.dir || 's' } : p.spawn, { fade: 260, noAutosave: true });
       else await R.Field.enter(s.map, s.spawn, { fade: 260, noAutosave: true });

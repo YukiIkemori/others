@@ -108,7 +108,9 @@
       if (r.gain > b.gain + 0.5 || (Math.abs(r.gain - b.gain) <= 0.5 && fit(r.c) > fit(b.c))) best = i;
     });
     // 値に出ない効き目だけのアクセサリ（灯台守のランタンの閃き・眠りよけなど）は、空いた枠のある最初の人（何も外さない）
+    //   まだ付けていない人がいなければ、もう 1 つ付けている人のアクセサリ 2 の空き（まとめ買いで A を押していけば 2 つ目の枠も埋まる。テスター 2026-09-30 1-9）
     if (best < 0 && it.slot === 'acc') best = rows.findIndex((r) => r.slot && !r.wearing && !r.swap && r.gain >= 0);
+    if (best < 0 && it.slot === 'acc') best = rows.findIndex((r) => r.slot && !r.swap && r.gain >= 0);
     return { rows, best };
   };
   /** S.delta で描く「▲+n」の幅（論理 px） */
