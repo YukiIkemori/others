@@ -444,7 +444,7 @@
       opaque: true,
       enter() { R.Input.touchLayout('battle'); },
       exit() {},
-      onLayout() { place(st); },
+      onLayout() { keepBg(st); place(st); st.bgRebake = R.Engine.time + 250; },
       update(dt) { withK(st, () => update(dt)); },
       draw(g) { withK(st, () => draw(g, st)); },
     };
@@ -484,6 +484,7 @@
         repeatWatch(st);
         _.play.tick(st, dt);
         _.glimmer.tick(st);
+        rebakeBg(st);
         if (st.ui && st.ui.update) st.ui.update(dt);
     }
   }
@@ -558,10 +559,12 @@
     }
     return out;
   }
-  function maskedFront(st, sh, g, src, tf) {
+  /** dy: 背景を下へずらして置く量（論理 px。layout.js の bgDy）。src（焼いた前の層）は呼んだ側がずらして置くので穴を上へ、src の無いときは層をずらす */
+  function maskedFront(st, sh, g, src, tf, dy) {
+    dy = dy || 0;
     const cw = g.canvas.width, ch = g.canvas.height;
     const hs = holes(st);
-    const key = [cw, ch, tf.a, tf.d, tf.e, tf.f, src ? (st.litCache && st.litCache.front && st.litCache.front.key) : 'flat', JSON.stringify(hs)].join('|');
+    const key = [cw, ch, tf.a, tf.d, tf.e, tf.f, dy, src ? (st.litCache && st.litCache.front && st.litCache.front.key) : 'flat', JSON.stringify(hs)].join('|');
     st.frontMask = st.frontMask || {};
     if (st.frontMask.key === key && st.frontMask.c) return st.frontMask.c;
     const c = (st.frontMask.c && st.frontMask.c.width === cw && st.frontMask.c.height === ch) ? st.frontMask.c : R.Hd.RZ.canvas(cw, ch);
@@ -569,8 +572,9 @@
     x.setTransform(1, 0, 0, 1, 0, 0); x.globalCompositeOperation = 'source-over'; x.globalAlpha = 1;
     x.clearRect(0, 0, cw, ch);
     if (src) x.drawImage(src, 0, 0);
-    else { x.setTransform(tf); x.imageSmoothingEnabled = false; layer(x, sh, 'front'); }
+    else { x.setTransform(tf); x.translate(0, dy); x.imageSmoothingEnabled = false; layer(x, sh, 'front'); }
     x.setTransform(tf);
+    if (src && dy) x.translate(0, -dy);
     x.globalCompositeOperation = 'destination-out';
     for (const [ax, ay, h] of hs) {
       const cx = ax, cy = ay - h * 0.45, r = Math.max(26, h * 0.62);
@@ -611,14 +615,47 @@
     const gTf = new DOMMatrix([bt.a, 0, 0, bt.d, bt.e, bt.f]);
     const ground = litStatic(st, sh, { canvas: g.canvas, getTransform: () => gTf }, 'ground');
     const front = litStatic(st, sh, { canvas: g.canvas, getTransform: () => gTf }, 'front');
-    const off = [tf.e - bt.e, tf.f - bt.f];
+    const dy = parts.dy || 0;
+    const off = [tf.e - bt.e, tf.f - bt.f + dy * bt.d];
     const put = (c) => { if (!c) return; g.save(); g.setTransform(1, 0, 0, 1, off[0], off[1]); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.drawImage(c, 0, 0); g.restore(); };
     put(ground);
     parts.under(g);                                   // ランタンのゆらぎ・影（地面の上、光の後）
-    st.lightAt = lightSampler(st, sh, map);           // 人と敵は体の中ほどの光の色を掛けたコマで描く（actors.js の litFrame）
+    const at = lightSampler(st, sh, map);           // 人と敵は体の中ほどの光の色を掛けたコマで描く（actors.js の litFrame）
+    st.lightAt = at && dy ? (px, py) => at(px, py - dy) : at;
     try { for (const a of parts.order) _.actors.draw(g, st, a); } finally { st.lightAt = null; }
-    put(front ? maskedFront(st, sh, g, front, gTf) : null);
+    put(front ? maskedFront(st, sh, g, front, gTf, dy) : null);
     return true;
+  }
+
+  /**
+   * 画面の大きさが変わった（戦闘の途中で窓を変えた）: 新しい大きさの背景が焼けるまで、前の背景（光を掛けた地面ごと 1 枚に写した物）を
+   * 新しい戦場に合わせて拡げて描く（コードの仮の夜の野原を数秒見せない）。焼き直しは 0.25 秒置いて同期で（窓を引きずる間は焼かない）
+   */
+  function keepBg(st) {
+    try {
+      const bk = bgKey(st), sh = st.lastSh, bt = st.baseTf;
+      if (!bk || !sh || !sh.frames || !bt || !(R.Hd.RZ && R.Hd.RZ.canvas)) return;
+      const S = bt.a || R.SCALE || 2, cw = Math.max(1, Math.round((sh.w || R.W) * S)), ch = Math.max(1, Math.round((sh.h || R.H) * S));
+      const c = R.Hd.RZ.canvas(cw, ch), x = c.getContext('2d');
+      x.setTransform(S, 0, 0, S, 0, 0); x.imageSmoothingEnabled = false;
+      layer(x, sh, 'back');
+      const lg = st.litCache && st.litCache.ground && st.litCache.ground.c;
+      if (lg) { x.setTransform(1, 0, 0, 1, -(bt.e || 0), -(bt.f || 0)); x.drawImage(lg, 0, 0); x.setTransform(S, 0, 0, S, 0, 0); } else layer(x, sh, 'ground');
+      layer(x, sh, 'post', (sh.meta && sh.meta.postMode) || 'lighter');
+      st.prevBg = { c, w: sh.w || R.W, h: sh.h || R.H, mood: sh.meta && sh.meta.mood };
+    } catch (e) { st.prevBg = null; }
+  }
+  function rebakeBg(st) {
+    if (!st.bgRebake || R.Engine.time < st.bgRebake) return;
+    st.bgRebake = 0;
+    try { const bk = bgKey(st); if (bk && R.Hd.has(bk) && !R.Hd.ready(bk, bgOpts(st))) R.Hd.now(bk, bgOpts(st)); } catch (e) { console.error('[battle bg rebake]', e); }
+  }
+  function drawPrevBg(g, st) {
+    const P = st.prevBg, L = st.L;
+    const H = L.tall ? L.stageH : R.H, k = Math.max(R.W / P.w, H / P.h), dw = P.w * k, dh = P.h * k;
+    g.save(); g.imageSmoothingEnabled = true;
+    g.drawImage(P.c, (R.W - dw) / 2, L.tall ? 0 : (R.H - dh) / 2, dw, dh);
+    g.restore();
   }
 
   function draw(g, st) {
@@ -636,30 +673,46 @@
     const sh = bk && R.Hd && R.Hd.has && R.Hd.has(bk) ? R.Hd.get(bk, bgOpts(st)) : null;
     let lantern = L.lantern;
     const baked = !!(sh && sh.frames && sh.poses);
-    if (baked && sh.meta && sh.meta.lantern) lantern = [sh.meta.lantern.x, sh.meta.lantern.y];
+    if (baked) { st.lastSh = sh; st.prevBg = null; }
+    const dy = baked ? L.bgDy || 0 : 0;   // 背景を真ん中へ下げて置く（16:9 より縦の長い横持ち。layout.js の bgDy）
+    if (baked && sh.meta && sh.meta.lantern) lantern = [sh.meta.lantern.x, sh.meta.lantern.y + dy];
     const order = st.actors.slice().sort((a, b) => a.y - b.y);
     const under = (c) => {
       _.actors.lanternPool(c, { lantern, tall: L.tall, baked }, t);
       for (const a of order) _.actors.shadow(c, st, a);
     };
+    const shifted = (c, fn) => { if (!dy) { fn(); return; } c.save(); c.translate(0, dy); fn(); c.restore(); };
     const mid = (c) => {
-      if (baked) layer(c, sh, 'ground');
+      if (baked) shifted(c, () => layer(c, sh, 'ground'));
       under(c);
       for (const a of order) _.actors.draw(c, st, a);
       if (baked) {
         // 手前の層は体の所を薄くして置く（maskedFront）。変換の無い所（テストの 2D の口など）はそのまま
         if (c.getTransform && c.canvas && R.Hd.RZ && R.Hd.RZ.canvas) {
           const tf = c.getTransform();
-          const m = maskedFront(st, sh, c, null, tf);
+          const m = maskedFront(st, sh, c, null, tf, dy);
           c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 1; c.globalCompositeOperation = 'source-over'; c.drawImage(m, 0, 0); c.restore();
-        } else layer(c, sh, 'front');
+        } else shifted(c, () => layer(c, sh, 'front'));
       }
     };
     if (baked) {
-      layer(g, sh, 'back');
-      const lit = litStage(g, st, sh, { under, order });
+      if (dy) {
+        // 上下のあまり: 上は空の一番上の行を伸ばし、下は暗く（縦持ちの戦場の下と同じ色）
+        const b0 = sh.frames[(sh.poses.back || [0])[0]];
+        if (b0 && b0.c) { const S = b0.c.width / (sh.w || R.W); g.drawImage(b0.c, 0, 0, b0.c.width, Math.max(1, Math.round(S)), 0, 0, R.W, dy + 1); }
+        g.fillStyle = '#0c0c14'; g.fillRect(0, dy + (sh.h || 540) - 1, R.W, R.H);
+      }
+      shifted(g, () => layer(g, sh, 'back'));
+      const lit = litStage(g, st, sh, { under, order, dy });
       if (!lit) mid(g);
-      layer(g, sh, 'post', (sh.meta && sh.meta.postMode) || 'lighter');
+      shifted(g, () => layer(g, sh, 'post', (sh.meta && sh.meta.postMode) || 'lighter'));
+      if (dy) {
+        const y1 = dy + (sh.h || 540), gr = g.createLinearGradient(0, y1 - 60, 0, y1);
+        gr.addColorStop(0, 'rgba(12,12,20,0)'); gr.addColorStop(1, 'rgba(12,12,20,1)');
+        g.fillStyle = gr; g.fillRect(0, y1 - 60, R.W, 60);
+      }
+    } else if (st.prevBg) {
+      drawPrevBg(g, st);   // 窓を変えた直後: 焼き直すまで前の背景を拡げて
     } else {
       const c = _.actors.fallbackBg(L, st.setup.bg || (st.info.troop && st.info.troop.bg) || 'night');
       if (c) g.drawImage(c, 0, 0, R.W, L.stageH);

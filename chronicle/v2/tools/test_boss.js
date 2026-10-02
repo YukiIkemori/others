@@ -176,6 +176,14 @@ section('暴走モード: ボスが HP の低い段階に入った最初の 1 �
   const out = []; for (const e of e1) BC.toEvents(e, 'A', out, eng);
   const msg = out.find((e) => e.t === 'msg' && e.enrage);
   ok('crossing: one enrage event → contract msg {enrage, uid} with the caption', e1.filter((e) => e.t === 'enrage').length === 1 && msg && msg.uid === m.uid && msg.text === R.T('sys.battle_core.enrage', { name: m.name }) && R.Contract.check('battleEvent', msg).ok, msg);
+  // 人・会話のある相手は「本気になった！」（光は軽く、唸りなし）。獣・魔物は「怒り狂った！」
+  const serious = Object.keys(D.monsters).filter((id) => D.monsters[id].enrageText === 'serious');
+  ok('character bosses use the serious caption (ロウェル・ネムレア・ラザロ・勇者の影・魔王の残影・名のある人)', ['b_rowell1', 'b_rowell2', 'b_nemrea1', 'b_nemrea2', 'b_lazaro', 'b_shade_sword', 'b_valzard_echo', 'b_captain', 'b_zakuro', 'b_hawk_chief', 'b_tamer', 'b_sister_elder', 'b_armorman'].every((id) => serious.includes(id)) && !['b_moth', 'b_whitedragon', 'b_icegiant', 'b_wolflord', 'b_ouroboros'].some((id) => serious.includes(id)), serious);
+  const eR = new BC.Engine({ party: pc(), mons: ['b_rowell1'], tier: 2, lv: 20, inv: {}, rng: R.Mon.mkRng('enr4') });
+  eR.use(); eR.mons[0].hp = 1;
+  const oR = []; for (const e of eR.afterAction()) BC.toEvents(e, 'A', oR, eR);
+  ok('ロウェル: 「本気になった！」 with enrage "serious"', oR.length === 1 && oR[0].enrage === 'serious' && oR[0].text === R.T('sys.battle_core.enrage.serious', { name: eR.mons[0].name }) && /本気になった/.test(oR[0].text), oR);
+  ok('serious caption in 5 languages', ['ja', 'en', 'ko', 'zh-Hans', 'zh-Hant'].every((l) => /'sys\.battle_core\.enrage\.serious': '\{name\}/.test(require('fs').readFileSync(require('path').join(__dirname, '..', 'src', 'i18n', l, 'battle.js'), 'utf8'))));
   m.hp = Math.floor(m.mhp * 0.1);
   const e2 = [...eng.afterAction()];
   ok('only once per battle', !e2.some((e) => e.t === 'enrage') && m.enraged === true);

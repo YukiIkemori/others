@@ -78,7 +78,10 @@
       //   （テスター 2026-10-01 P3: 攻撃の相手が画面に見えなかった）。背景の絵も真ん中に置かれるので、真ん中から縮める
       const sx = R.W < 960 ? R.W / 960 : 1;
       const map = sx < 1 ? (x, y) => [Math.round(R.W / 2 + (x - 480) * sx), y + oy] : (x, y) => [x + ox, y + oy];
-      L = { tall, ox, oy, stageH: R.H, k: k0, T: WIDE, P: PARTY.wide, sx, map, bgH: R.H, spriteK: 1, partyK: 1 };
+      // 16:9 より縦の長い横持ち（fit.js が 720×797 のような高さを出す）: 背景は 540 の高さ（横長の絵）で焼き、真ん中へ下げて置く（bgDy）。
+      //   その高さで焼くと縦持ちの絵になり、地平線とランタンの光が人と敵の位置と合わなかった
+      const tallBg = R.H > 540 && R.W / R.H < 1.2;
+      L = { tall, ox, oy, stageH: R.H, k: k0, T: WIDE, P: PARTY.wide, sx, map, bgH: tallBg ? 540 : R.H, bgDy: tallBg ? oy : 0, spriteK: 1, partyK: 1 };
     }
     L.lantern = L.map(L.T.lantern[0], L.T.lantern[1]);
     L.horizon = L.map(0, L.T.horizon)[1];

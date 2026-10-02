@@ -865,6 +865,17 @@ section('防御: ダメージ半分のまま、最大 HP・MP の 3% 回復（�
   p0.hp = Math.max(1, Math.floor(p0.mhp / 2));
   const rev = drainAll(eng2.playRound(eng2.party.map((p) => (p === p0 ? { type: 'defend' } : { type: 'defend' }))));
   ok('round: the defender gets a heal event', rev.some((e) => e.t === 'heal' && e.u === p0 && !e.mp));
+  // 何人も守ったら、回復は 1 拍（間に手番・行動が挟まらない）で、文は 1 行
+  const eng3 = engine({ mons: ['rat_1'] });
+  eng3.party.forEach((p) => { p.hp = Math.max(1, Math.floor(p.mhp / 2)); p.mp = 0; });
+  const r3 = drainAll(eng3.playRound(eng3.party.map(() => ({ type: 'defend' }))));
+  const hi = r3.map((e, i) => (e.t === 'heal' ? i : -1)).filter((i) => i >= 0);
+  const span = r3.slice(hi[0], hi[hi.length - 1] + 1);
+  ok('several defenders: all heal events in one block, marked group', hi.length >= 2 * eng3.party.length - 1 && span.every((e) => e.t === 'heal' && e.group), r3.map((e) => e.t));
+  const o3 = []; for (const e of r3) BC.toEvents(e, 'A', o3, eng3);
+  const lines = o3.filter((e) => e.t === 'msg' && /回復/.test(e.text));
+  ok('several defenders: one combined log line', lines.length === 1 && eng3.party.every((p) => lines[0].text.includes(p.name)) && lines[0].text.includes(R.T('sys.battle_core.defendRest.hpmp')), lines.map((e) => e.text));
+  ok('contract heal carries group', o3.some((e) => e.t === 'heal' && e.group === true));
 }
 
 section('隊列: 狙われる重み 前列 3 : 後列 1（K.ROW）、後列の受けるダメージ 0.7 はそのまま');
