@@ -399,6 +399,11 @@
     'ui.ending.creditRows.1_10': '旅の仲間たち',
     'ui.ending.creditRows.1_11': 'ともに灯りを運んでくれた人々',
     'ui.ending.creditRows.1_12': '企画・制作',
+    'ui.ending.staff.role': '企画・シナリオ・ゲームデザイン・ディレクション',
+    'ui.ending.staff.name': '池森　裕毅',
+    'ui.ending.staff.thanks1': '宮崎　翼',
+    'ui.ending.staff.testers': 'テストプレイにご協力いただいた皆さま',
+    'ui.ending.staff.testersThanks': 'ありがとうございました',
     'ui.ending.fin.L.fin.text': '――おしまい',
     // ---- src/data/shops_finale.js
     'shops.shop_biblia.name': '白紙堂',

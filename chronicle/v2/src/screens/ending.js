@@ -293,6 +293,10 @@
     rows.push(['gap', 1.2], ['head', R.T('ui.ending.creditRows.1_6')], ['name', R.T('ui.ending.creditRows.1_7')], ['gap', 1.2]);
     rows.push(['head', R.T('ui.ending.creditRows.1_8')], ['name', R.T('ui.ending.creditRows.1_9')], ['gap', 1.4]);
     rows.push(['head', R.T('ui.ending.creditRows.1_10')], ['small', R.T('ui.ending.creditRows.1_11')], ['gap', 2]);
+    // 制作スタッフ・Special Thanks（持ち主 2026-10-02。名前の書き方は言語ごと: 日本語・中国語は漢字、ほかはローマ字）
+    rows.push(['head', R.T('ui.ending.staff.role')], ['name', R.T('ui.ending.staff.name')], ['gap', 1.4]);
+    rows.push(['head', 'Special Thanks'], ['name', R.T('ui.ending.staff.thanks1')], ['gap', 0.8]);
+    rows.push(['small', R.T('ui.ending.staff.testers')], ['small', R.T('ui.ending.staff.testersThanks')], ['gap', 2]);
     rows.push(['head', R.T('ui.ending.creditRows.1_12')], ['name', 'Studio Metem'], ['gap', 3]);
     rows.push(['name', R.COPYRIGHT || '© Studio Metem'], ['gap', 2]);
     if (o.extra) rows.push(...o.extra);

@@ -31,6 +31,11 @@
     'ui.ending.creditRows.1_10': 'Companions on the Road',
     'ui.ending.creditRows.1_11': 'Everyone who carried the light with us',
     'ui.ending.creditRows.1_12': 'Created by',
+    'ui.ending.staff.role': 'Planning, Scenario, Game Design & Direction',
+    'ui.ending.staff.name': 'Yuki Ikemori',
+    'ui.ending.staff.thanks1': 'Tsubasa Miyazaki',
+    'ui.ending.staff.testers': 'To everyone who helped us playtest',
+    'ui.ending.staff.testersThanks': 'Thank you so much',
     'ui.ending.fin.L.fin.text': '―― The End',
     'ui.saveload.saveCard.clear': 'Cleared',
   });

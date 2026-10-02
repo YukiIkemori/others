@@ -60,7 +60,7 @@ function run() {
   const jf = path.join(CHRON, 'tools', 'lib', 'joyo.txt');
   const joyo = fs.existsSync(jf) ? new Set([...fs.readFileSync(jf, 'utf8').replace(/\s+/g, '')]) : null;
   if (!joyo) W('T3', 'joyo.txt not found; kanji check skipped');
-  const allowed = new Set([...style.allowedKanji]);
+  const allowed = new Set([...style.allowedKanji, '毅']);   // 毅: クレジットの人名（持ち主 2026-10-02）
   const JP = /[぀-ヿ㐀-鿿豈-﫿ｦ-ﾟ]/, KANJI = /[㐀-䶿一-鿿豈-﫿]/;
   const STATUS = ['眠り', 'まひ', '凍結', '気絶', '混乱', '沈黙', '暗闇', 'やけど'];
   const heroNames = [...new Set([(DB.config.defaultHero || {}).name || 'アルン', 'アルン'])];
@@ -77,7 +77,7 @@ function run() {
     // 素材の name（src/art/terrain/materials.js）は一覧表の見出しだけで画面に出ない（地名・物の名は maps の方）
     if (/^src\/art\/terrain\/materials\.js$/.test(rel)) continue;
     // 演出の表（src/art/fx/fx_seq_table.js）の c は演出の設計のメモ（開発用の fx_gallery だけが出す。画面の文ではない）
-    if (/^src\/art\/fx\/fx_seq_table\.js$/.test(rel)) continue;
+    if (/^src\/art\/fx\/fx_seq_table(_boss)?\.js$/.test(rel)) continue;   // _boss はボスの技の演出の表（同じ設計のメモ）
     // 会話・キャプション・看板（20 字の窓）。文の表に移した物は src/i18n/ja/events_*・maps_*
     const talk = /^src\/(events|maps)\//.test(rel) || /^src\/i18n\/ja\/(events|maps)_/.test(rel);
     for (const { s, line } of OLD.strings(src)) {
