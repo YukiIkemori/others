@@ -12,6 +12,7 @@
     { key: 'inn', label: R.T('battle.gameover.CHOICES.inn.label'), sub: R.T('battle.gameover.CHOICES.inn.sub') },
     { key: 'title', label: R.T('battle.gameover.CHOICES.title.label'), sub: '' },
   ];
+  Go.SAFE = { label: R.T('battle.gameover.CHOICES.safe.label'), sub: R.T('battle.gameover.CHOICES.safe.sub') };
 
   Go.run = async function (st) {
     st.phase = 'gameover';
@@ -31,14 +32,17 @@
     try { R.Audio.jingle('gameover'); } catch (e) { /* ignore */ }
     const def = R.Settings.get('wipe') === 'inn' ? 1 : 0;
     const t1 = R.Engine.time;
+    // 出られない場面（籠城の夜など。R.State.wipeSafe）: 「宿から」の代わりに、その場で全快して立て直す（所持金はそのまま）
+    const safe = R.State && R.State.wipeSafe ? R.State.wipeSafe() : null;
+    const rows = safe ? Go.CHOICES.map((c) => (c.key === 'inn' ? Object.assign({}, c, Go.SAFE) : c)) : Go.CHOICES;
     const i = await _.cmd.menu(st, {
-      rows: Go.CHOICES, sel: def, cancel: false, t0: R.Engine.time,
+      rows, sel: def, cancel: false, t0: R.Engine.time,
       prompts: [{ btn: 'a', label: R.T('battle.gameover.run.i.prompts.0.label') }],
-      desc: (j) => ({ text: Go.CHOICES[j].sub }),
+      desc: (j) => ({ text: rows[j].sub }),
       draw(g, w) { go.menu = Math.min(1, (R.Engine.time - t1) / 200); Go.drawMenu(g, st, w); },
     });
     st.go = null;
-    return Go.CHOICES[typeof i === 'number' ? i : def].key;
+    return rows[typeof i === 'number' ? i : def].key;
   };
 
   /** 画面の暗さとランタン（場面の draw の HUD の前に scene.js が呼ぶ） */

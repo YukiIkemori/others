@@ -155,6 +155,8 @@
     'battle.gameover.CHOICES.retry.sub': 'Nothing is lost',
     'battle.gameover.CHOICES.inn.label': 'Return to the last inn',
     'battle.gameover.CHOICES.inn.sub': 'You lose half your gold',
+    'battle.gameover.CHOICES.safe.label': 'Catch your breath and regroup',
+    'battle.gameover.CHOICES.safe.sub': 'Keep your gold. Everyone is fully healed',
     'battle.gameover.CHOICES.title.label': 'Return to Title',
     'battle.gameover.run.i.prompts.0.label': 'Select',
     'battle.gameover.draw.text': 'The light has gone out...',

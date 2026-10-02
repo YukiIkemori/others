@@ -333,6 +333,8 @@
   }
   Leads._cardRect = cardRect;
   Leads._current = function () { return cur ? { id: cur.id, pinned: !!cur.pinned } : null; };
+  /** 手がかりの札が今出ていればその矩形（無ければ null）。入手の通知（uik/toast.js）がこの下に積む（重ねて名前を隠さない。テスト報告 P9） */
+  Leads._shownRect = function () { return cur && R.Game && fieldTop() && R.Engine.time - cur.t0 <= SHOW_MS ? cardRect() : null; };
 
   function draw(g) {
     if (!cur || !R.Game || !fieldTop()) return;

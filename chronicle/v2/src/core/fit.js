@@ -4,7 +4,9 @@
 //   横/縦 ≥ 16:9        → 幅 = 540 × 横/縦 を偶数に丸め、1260 まで（それより横長は左右に帯）
 //   1.6 ≤ 横/縦 < 16:9   → 幅 960（上下に帯。MODERN_UI §1.2 の「PC 16:10」の行）
 //   横/縦 < 1.6          → 幅 = 540 × 横/縦（偶数）、720 まで（それより細いと上下に帯。「タブレット 4:3」の行）
-// 縦持ち（縦 > 横）: 幅 540、高さ = 540 × 縦/横 を丸めて 1260 まで（layout 'tall'）
+// 縦持ち（縦/横 ≥ TALL_MIN）: 幅 540、高さ = 540 × 縦/横 を丸めて 1260 まで（layout 'tall'）
+//   縦が横より少しだけ長い窓（PC のブラウザの 800×885 など。縦/横 < TALL_MIN）は縦持ちにしない: 縦持ちの画面は高さ 700 前後から下では
+//   札どうしが重なる（テスト報告 2026-10-01 P5・P30・P32・P40）。横持ちの 4:3（720×540）を上下に帯で置く
 // SCALE（論理 1 px ＝ 実キャンバスの px。PC 版で決め直した、ぼけない拡大）:
 //   実画面の px／論理 px（= dev）が 2 以下 → 2（大きく描いて縮める。1280×720 など）
 //   2 より大きく 4 まで → dev そのもの（実キャンバス＝実画面の画素に 1:1。2560×1440 は 2.667、3840×2160 は 4）。帯の位置も実画面の画素に揃える
@@ -16,13 +18,14 @@
 (function (R) {
   'use strict';
   const even = (v) => 2 * Math.round(v / 2);
+  const TALL_MIN = 1.3;   // 縦/横 がこれ以上で縦持ち（高さ 702 以上）
 
   /** o = {cssW, cssH, dpr, safe:{l,t,r,b} (CSS px), uiSize, coarse} → 画面の決め方（DOM に触れない） */
   R.fitCalc = function (o) {
     const cssW = Math.max(1, o.cssW), cssH = Math.max(1, o.cssH), dpr = o.dpr || 1;
     const a = cssW / cssH;
     let W, H, layout;
-    if (cssH > cssW) {
+    if (cssH >= cssW * TALL_MIN) {
       layout = 'tall';
       W = 540;
       H = Math.min(1260, Math.max(540, Math.round(540 * cssH / cssW)));
@@ -85,6 +88,7 @@
     cv.style.height = f.css.h + 'px';
     cv.style.left = f.css.left + 'px';
     cv.style.top = f.css.top + 'px';
+    f.inW = window.innerWidth; f.inH = window.innerHeight; f.dpr = window.devicePixelRatio || 1;   // R.fitPoll が比べる
     R.fitInfo = f;
     if (key === lastKey && !force) return f;
     lastKey = key;
@@ -94,5 +98,18 @@
     R.emit('layout', f);
     if (R.Engine && R.Engine.layoutChanged) R.Engine.layoutChanged();
     return f;
+  };
+
+  R.fitCalc.TALL_MIN = TALL_MIN;
+
+  /**
+   * 毎フレーム（main.js の tick）: 窓の大きさ・画素比が前に合わせた時と違えば合わせ直す。
+   * resize が来ない・遅れる変わり方（ブラウザの表示の拡大縮小・開発ツールの画面の切り替え・全画面の出入りの途中で読んだ大きさ）でも、
+   * キャンバスが古い大きさのまま左上に縮んで描かれない（テスト報告 2026-10-01 P26・P33 の 195）
+   */
+  R.fitPoll = function () {
+    if (typeof window === 'undefined' || !R.fitInfo) return;
+    const f = R.fitInfo;
+    if (window.innerWidth !== f.inW || window.innerHeight !== f.inH || (window.devicePixelRatio || 1) !== f.dpr) R.fit();
   };
 })(window.RPG);

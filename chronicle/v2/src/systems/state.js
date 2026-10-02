@@ -5,7 +5,7 @@
 //   R.State.blankChar(id, o)               空の CharState（K.char。R.Party.makeChar が土台に使う）
 //   R.State.serialize() → obj              保存する物（R.Game の写し。JSON にできる物だけ）
 //   R.State.deserialize(obj) → bool        版 2 でなければ false（読まない・壊れない）。足りない項目は既定で埋める
-//   R.State.wipeRecover() → K.place|null   全滅して「宿から」: 所持金半分・全員全快（R.Party.restoreAll）
+//   R.State.wipeRecover() → K.place|null   全滅して「宿から」: 所持金半分・全員全快（R.Party.restoreAll）。出られない場面（wipeSafe）では所持金はそのまま
 //   R.State.check(cond) → bool             条件（下の文法）。R.State.checkIn(G, cond, env) は同じ物を任意の状態で（tools/lib/cond.js も使う）
 //   R.State.gain(id, n) → K.gain           品を入れる 1 か所（ev.item・宝箱・店・戦闘の報酬）。u_* はその時のティアの個体を R.Game.uniques に
 //   足した物: take(id, n) → bool / owned(id) → 袋＋装備の数 / hero() → CharState / heroName() / gold(n)
@@ -207,9 +207,21 @@
   State.wipeRecover = function () {
     const G = R.Game;
     if (!G) return null;
-    G.gold = Math.floor((G.gold || 0) / 2);
+    const safe = State.wipeSafe();
+    if (!safe) G.gold = Math.floor((G.gold || 0) / 2);
     R.Party.restoreAll();
-    return G.lastInn || null;
+    return safe || G.lastInn || null;
+  };
+  /**
+   * 出られない場面（雪の籠城の夜など）で全滅したときの戻り先: {map, spawn} | null。
+   *   中身の側が State._safe に関数を足す（() → {map, spawn} | null）。どれかが返せば、「宿から」は所持金を減らさず、その場所で全快して起きる
+   *   （テスター 2026-10-02 P23・P24: 籠城の夜は出口もワープも無く、負けると宿へ飛ばされ所持金が半分、村に入り直すとまた夜へ）
+   */
+  State._safe = State._safe || [];
+  State.wipeSafe = function () {
+    if (!R.Game) return null;
+    for (const fn of State._safe) { try { const r = fn(R.Game); if (r && r.map) return r; } catch (e) { /* */ } }
+    return null;
   };
 
   // ---------------------------------------------------------------- 品とお金

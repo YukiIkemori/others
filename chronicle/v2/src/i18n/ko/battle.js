@@ -154,6 +154,8 @@
     'battle.gameover.CHOICES.retry.sub': '잃는 것은 없다',
     'battle.gameover.CHOICES.inn.label': '마지막으로 묵은 여관부터',
     'battle.gameover.CHOICES.inn.sub': '소지금이 절반이 된다',
+    'battle.gameover.CHOICES.safe.label': '한숨 돌리고 다시 정비한다',
+    'battle.gameover.CHOICES.safe.sub': '소지금은 그대로. 모두 완전히 회복한다',
     'battle.gameover.CHOICES.title.label': '타이틀로',
     'battle.gameover.run.i.prompts.0.label': '결정',
     'battle.gameover.draw.text': '등불이 꺼졌다…….',

@@ -272,6 +272,10 @@
     ev.mapBgm();
   }, { meta: { needs: ['flag:snow_siege_done'], gives: ['flag:snow_dawn', 'item:k_winter_flame', 'lead:l_snow_peak', 'flag:snow_fine_seen'], warp: { to: 'yule', spawn: 'hearth' } } });
 
+  // 籠城の夜に全滅したら: 宿ではなく大かまどの前で全快して起きる。所持金は減らさない（R.State.wipeSafe。テスター 2026-10-02 P23・P24）。
+  //   波の数は進まないので、村長に話せば同じ波（3 波目なら門の読み）からやり直せる
+  { const St = (R.State = R.State || {}); (St._safe = St._safe || []).push((G) => (G.flags.snow_festival_lit && !G.flags.snow_siege_done ? { map: 'yule_night', spawn: 'hearth' } : null)); }
+
   // 籠城の途中で町を出た（全滅して宿へ・ワープ）: 昼のユールに入ったら夜へ戻す
   E('yule_siege_resume', async (ev) => {
     if (!ev.flag('snow_festival_lit') || ev.flag('snow_siege_done')) return;

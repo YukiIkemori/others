@@ -154,6 +154,8 @@
     'battle.gameover.CHOICES.retry.sub': '不会失去任何东西',
     'battle.gameover.CHOICES.inn.label': '从最后住宿的旅店开始',
     'battle.gameover.CHOICES.inn.sub': '持有金币减半',
+    'battle.gameover.CHOICES.safe.label': '喘口气，重整旗鼓',
+    'battle.gameover.CHOICES.safe.sub': '金币不变。全员完全恢复',
     'battle.gameover.CHOICES.title.label': '返回标题',
     'battle.gameover.run.i.prompts.0.label': '决定',
     'battle.gameover.draw.text': '灯火熄灭了……。',

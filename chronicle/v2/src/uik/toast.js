@@ -17,6 +17,11 @@
     const size = UIK.u(T.size.label), h = UIK.u(30), gap = UIK.u(8);
     const still = UIK.reduceMotion();
     let yt = s.t + m + (UIK.toastOffset.tr || 0);
+    // 手がかりの札（systems/leads.js、右上・縦持ちは左上）が出ている間は、その下から積む（3 つ同時に出ても重ならない。テスト報告 P9）
+    try {
+      const lr = R.Leads && R.Leads._shownRect && R.Leads._shownRect();
+      if (lr) yt = Math.max(yt, lr.y + lr.h + gap);
+    } catch (e) { /* 手がかりが無い場面 */ }
     // システムの通知（'bl' = オートセーブ・セーブなど）は、会話の窓（下の中央。縦持ちは幅いっぱい）と重ならないよう右上の
     // 入手の札（'tr'）の下に積む（オーナーの所見 2026-09-27: オートセーブの札が NPC の台詞を隠す）。
     // 会話・キャプションが開いている間は出さない（時間は進む。長い会話なら出ないまま消える）

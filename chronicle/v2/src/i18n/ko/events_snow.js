@@ -389,6 +389,8 @@
     'events.yule_jorn.i.choose_2': ['축제를 시작한다', '조금 더 기다린다'],
     'events.yule_jorn.i.choose.text_2': '준비는 다 됐네. 축제를 시작할까?',
     'events.yule_jorn.say_9': '준비가 되면\n언제든 말을 걸게.',
+    'events.yule_jorn.confirm': ['시작한다', '아직 준비한다'],
+    'events.yule_jorn.confirm.text': ['축제가 시작되면, 농성의 밤이\n밝을 때까지 마을을 나갈 수 없네.\n워프도, 여관도 못 쓰지.', '늑대 우두머리와도 싸우게 될 거야.\n약과 장비 준비는 끝났나?'],
     'events.yule_jorn': '눈 덮인 숲의 장작({var}/3)',
     'events.yule_jorn_2': '얼어붙은 연못의 얼음',
     'events.yule_jorn_3': '옛이야기({length}/3)',

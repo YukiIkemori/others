@@ -102,6 +102,23 @@
     return out;
   }
 
+  /**
+   * 説明文を n 行の箱に収める: → {lines, size, lh}。o = {size（既定の字）, min（縮める下限、既定 size × 0.82）, lh（行の高さ ÷ 字、既定 1.66）}
+   *   既定の大きさで n 行に入らなければ 0.25 ずつ小さくして折り返し直す。下限でも入らなければ n 行目の末尾を「…」（途中で黙って切らない。テスト報告 P7）
+   */
+  UIK.wrapFit = function (s, w, n, o) {
+    o = o || {};
+    const base = size(o), lo = Math.min(base, o.min || base * 0.82), k = o.lh || 1.66;
+    n = Math.max(1, n | 0);
+    let sz = base, lines = UIK.wrap(s, w, Object.assign({}, o, { size: sz }));
+    while (lines.length > n && sz - 0.25 >= lo - 1e-6) { sz -= 0.25; lines = UIK.wrap(s, w, Object.assign({}, o, { size: sz })); }
+    if (lines.length > n) {
+      const rest = lines.slice(n - 1).join('');
+      lines = lines.slice(0, n - 1).concat([UIK.fit(rest, w, Object.assign({}, o, { size: sz }))]);
+    }
+    return { lines, size: sz, lh: sz * k };
+  };
+
   /** 文字を描く。→ 描いた幅 */
   UIK.text = function (g, s, x, y, o) {
     o = o || {};

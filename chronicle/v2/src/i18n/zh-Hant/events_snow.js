@@ -389,6 +389,8 @@
     'events.yule_jorn.i.choose_2': ['開始祭典', '再等一等'],
     'events.yule_jorn.i.choose.text_2': '準備齊了。要開始祭典嗎？',
     'events.yule_jorn.say_9': '準備好了，\n隨時來叫我。',
+    'events.yule_jorn.confirm': ['開始', '再準備一下'],
+    'events.yule_jorn.confirm.text': ['祭典一開始，在守城之夜結束前\n誰都出不了村子。\n傳送和旅店都用不了。', '還得和狼群的頭領交手。\n藥和裝備都準備好了嗎？'],
     'events.yule_jorn': '雪林的柴火（{var}/3）',
     'events.yule_jorn_2': '冰凍池塘的冰',
     'events.yule_jorn_3': '老故事（{length}/3）',

@@ -348,6 +348,10 @@
       if (tall && dp.y + dp.h > b.y + b.h + u(4)) return;
       R.UIK.panel(g, dp, { frost: true });
       const it = S.item(focusId);
+      // 説明は 2 行まで（入らなければ字を少し小さく）。比べる行はその分を残して決める（説明を途中で切らない。テスト報告 P7）
+      const descW = dp.w - u(44), descOf = (n) => R.UIK.wrapFit(R.I18n.unwrap(it.desc || ''), descW, n, { size: u(14.5), min: Math.max(u(12), R.minFont || 0) });
+      const desc = it && it.desc ? descOf(2) : null;
+      const descH = desc ? desc.lines.length * desc.lh + u(2) : 0;
       let y = dp.y + u(18);
       if (it) {
         const nw = R.UIK.text(g, it.name, dp.x + u(22), y, { size: u(21), weight: 700, color: S.gradeColor(it) || C.goldHi, maxW: dp.w - u(70) });
@@ -373,7 +377,7 @@
         S.label(g, R.T('ui.equip.draw.label_2'), dp.x + u(22), y); y += u(28);
         // 行の数は詳しい所の高さに入るだけ（説明 1 行の分を残す）
         const all = S.statDiff(c, s, focusId || null), same = !all.some((r) => r.d);
-        const fit = Math.floor((dp.y + dp.h - u(12) - u(28) - (same ? u(30) : 0) - y) / u(30));
+        const fit = Math.floor((dp.y + dp.h - u(12) - Math.max(u(28), descH) - (same ? u(30) : 0) - y) / u(30));
         const rows = all.slice(0, Math.max(1, Math.min(tall ? tier[1] : 5, fit)));
         if (same) { R.UIK.text(g, R.T('ui.equip.draw.text_5'), dp.x + u(22), y, { size: u(15), color: C.same }); y += u(30); }
         // 列は右から測って置く: 増減（いちばん広い物の幅）→ 後の値 → → → 前の値。狭い画面でも数字が重ならない
@@ -393,7 +397,13 @@
         R.UIK.rule(g, dp.x + u(22), dp.x + dp.w - u(22), y, 0.14); y += u(12);
       }
       if (it) {
-        for (const l of R.UIK.wrap(R.I18n.unwrap(it.desc), dp.w - u(44), { size: u(14.5) }).slice(0, 2)) { if (y + u(20) > dp.y + dp.h - u(6)) break; R.UIK.text(g, l, dp.x + u(22), y, { size: u(14.5), color: C.text }); y += u(24); }   // 詳しい所からはみ出さない
+        // 詳しい所からはみ出さない: 残りの高さに入る行の数で収め直す（1 行しか入らなければ 1 行に縮めて末尾を…）
+        let d = desc;
+        if (d) {
+          const room = Math.max(1, Math.floor((dp.y + dp.h - u(6) - y - d.size) / d.lh) + 1);
+          if (room < d.lines.length) d = descOf(room);
+          for (const l of d.lines) { if (y + d.size > dp.y + dp.h - u(4)) break; R.UIK.text(g, l, dp.x + u(22), y, { size: d.size, color: C.text }); y += d.lh; }
+        }
         if (it.element && y + u(28) <= dp.y + dp.h - u(6)) { y += u(4); R.UIK.chip(g, dp.x + u(22), y, R.T('ui.equip.draw.chip_2', { ename: S.ename(it.element) }), { kind: 'teal', size: 11 }); }
       }
       // ほかの仲間

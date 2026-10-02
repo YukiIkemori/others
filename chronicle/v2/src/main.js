@@ -74,6 +74,9 @@
       if (R.UIK && R.UIK.Message && R.UIK.Message.busy()) R.UIK.Message.close();
       const G = R.Game || {};
       const s = (R.DB.config && R.DB.config.start) || {};
+      // 出られない場面（籠城の夜など。R.State.wipeSafe）では、宿ではなくその場面の決まった所で起きる
+      const safe = R.State && R.State.wipeSafe ? R.State.wipeSafe() : null;
+      if (safe) { await R.Field.enter(safe.map, safe.spawn, { fade: 260, noAutosave: true }); return; }
       const p = G.lastInn || G.lastTown || null;
       if (p && p.map) await R.Field.enter(p.map, p.x != null ? { x: p.x, y: p.y, dir: p.dir || 's' } : p.spawn, { fade: 260, noAutosave: true });
       else await R.Field.enter(s.map, s.spawn, { fade: 260, noAutosave: true });
@@ -132,12 +135,14 @@
     R.fit(true);
     window.addEventListener('resize', () => R.fit());
     window.addEventListener('orientationchange', () => R.fit());
+    if (window.visualViewport && window.visualViewport.addEventListener) window.visualViewport.addEventListener('resize', () => R.fit());
     R.Input.init(canvas);
     if (R.Display && R.Display.init) R.Display.init();   // ウィンドウ／全画面（F11・Alt+Enter）
     R.Input.onAnyPress(() => { try { R.Audio.init(); } catch (e) { console.error(e); } });
     // 読み込みの画面（主人公が進みの棒の上を走る。core/loading.js）: 書体と起動の仕事（原画・素材の先読み）の間
     if (R.Loading) R.Loading.boot();
     await waitFonts();
+    R.Engine.addTick(() => { if (R.fitPoll) R.fitPoll(); });   // resize が来なかった大きさの変化も拾う（core/fit.js）
     R.Engine.addTick((dt, real) => { if (R.Game && R.Engine.has('field')) R.Game.playMs = (R.Game.playMs || 0) + real; });
     // 焼く列（版 2）: 毎フレーム R.Hd.pump(予算 3 ms) を CORE が 1 回だけ呼ぶ。ほかの担当は pump を呼ばない（暗転中の同期の焼きは R.Hd.now）
     // 更新の速い画面（120・144 Hz）は 1 フレームが短いので、予算も間隔の 2 割までに（1 秒あたりの焼きの量は 60 Hz と同じくらい）

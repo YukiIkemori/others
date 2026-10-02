@@ -155,6 +155,8 @@
     'battle.gameover.CHOICES.retry.sub': '失う物はない',
     'battle.gameover.CHOICES.inn.label': '最後に泊まった宿から',
     'battle.gameover.CHOICES.inn.sub': '所持金が半分になる',
+    'battle.gameover.CHOICES.safe.label': 'ひと息ついて立て直す',
+    'battle.gameover.CHOICES.safe.sub': '所持金はそのまま。全員が全快する',
     'battle.gameover.CHOICES.title.label': 'タイトルへ',
     'battle.gameover.run.i.prompts.0.label': '決定',
     'battle.gameover.draw.text': '灯が消えた……。',
