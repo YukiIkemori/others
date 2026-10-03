@@ -167,7 +167,7 @@
       const EPS = 0.5;
       const hit = (b) => placed.some((o) => b.x0 < o.x1 - EPS && b.x1 > o.x0 + EPS && b.y0 < o.y1 - EPS && b.y1 > o.y0 + EPS);
       // 前のフレームで選んだ置き場を先に試す（拡大・縮小の途中で候補が行ったり来たりしない）。名前の札の id は 名前#同じ名前の何番目
-      const prev = this.labelPick || new Map(), pick = new Map(), seenN = {};
+      const prev = this.labelPick || new Map(), pick = new Map(), seenN = {}, prevFit = this.labelFit || new Map(), fits = new Map();
       labels.sort((a, b) => b.prio - a.prio);
       // 見え方が前のフレームと同じ（止まっている）なら、前の置き場をそのまま使う（同じ物を毎フレーム置き直さない）
       const sig = [P.z, P.cx, P.cy, area.x, area.y, area.w, area.h, R.SCALE, R.uiScale, labels.map((L) => L.text).join('|')].join(',');
@@ -177,6 +177,7 @@
         labels.forEach((L, i) => { L.drawnAt = this.labelBoxes[i]; });
       }
       const done = [];
+      let deferred = false;
       for (const L of same ? [] : labels) {
         const w = R.UIK.measure(L.text, { size: L.sz, weight: L.strong ? 700 : 500 }) + u(6), h = L.sz + u(6);
         let ok = null;
@@ -195,13 +196,17 @@
           const b = { x0, y0, x1: x0 + w, y1: y0 + h };
           if (!hit(b)) { ok = { b, tx, ty, align }; pick.set(key, ci); break; }
         }
+        // 前のフレームで出ていなかった名前は、2 フレーム続けて置けたときに出す（拡大・縮小の途中で 1 フレームだけ出て消えるのを防ぐ）
+        const fitN = ok ? (prevFit.get(key) || 0) + 1 : 0;
+        fits.set(key, fitN);
+        if (ok && prev.size && !prev.has(key) && fitN < 2) { pick.delete(key); deferred = true; continue; }
         if (!ok) continue;
         placed.push(ok.b);
         L.drawnAt = ok.b;
         done.push({ text: L.text, tx: ok.tx, ty: ok.ty, sz: L.sz, strong: L.strong, align: ok.align });
         R.UIK.text(g, L.text, ok.tx, ok.ty, { size: L.sz, weight: L.strong ? 700 : 500, color: ink, align: ok.align, stroke: [paper, u(3.2)] });
       }
-      if (!same) { this.labelPick = pick; this.labelSig = sig; this.labelDone = done; this.labelBoxes = labels.map((L) => L.drawnAt || null); }
+      if (!same) { this.labelFit = fits; this.labelPick = pick; this.labelSig = deferred ? null : sig; this.labelDone = done; this.labelBoxes = labels.map((L) => L.drawnAt || null); }
       WM.labels = labels.map((L) => ({ text: L.text, box: L.drawnAt || null }));   // 検査用
       // 目印の手がかり
       const pinned = R.Leads && R.Leads.pinned ? R.Leads.pinned() : null, pinL = pinned && R.DB.leads ? R.DB.leads[pinned] : null;
