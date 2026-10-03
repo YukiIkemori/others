@@ -4,7 +4,7 @@
 //   'mist'      内海の白い霧（少なく大きい粒がゆっくり流れる。うすい白い幕）
 //   ── 地方の天気（持ち主 2026-10-04）
 //   'sandstorm' 砂嵐（横に走る砂の筋・黄色い幕・ときどき強まる風の帯）            砂漠の開けた野
-//   'heat'      陽炎（地面の上の細い横の帯をわずかに揺らす・暖かい幕・立ちのぼるもや） 砂漠の野。空が明るいほど出やすい
+//   'heat'      陽炎（下ほど濃い細い波の帯がゆらぎながら上る・暖かい幕・立ちのぼるもや） 砂漠の野。空が明るいほど出やすい
 //   'fog'       濃い霧（大きくやわらかい霧の塊がゆっくり流れる。先頭のまわりは薄く）   沼地
 //   'drizzle'   海の霧雨（細い斜めの雨脚・岸の波しぶき）                          群島
 //   'ash'       灰（灰色の欠片が舞い落ちる・ときどき火の粉が立ちのぼる）            灰の荒野
@@ -14,7 +14,7 @@
 //   map.weather があればそれ（map.weatherCond があればその条件（R.State.check）が真の間だけ、偽なら map.weatherElse）。
 //   map.weather が無い地図は下の AUTO（地図 id → 候補）から、入るたびに決まった乱数（地図・セーブの種・来た回数・歩数）で 1 つ選ぶ（晴れもある）。
 //   候補 {k, p（選ばれる率）, i（強さ 0〜1、既定 1）, c（条件。R.State.check）, sky（'night' = 夜空の星の量・'day' = 空の明るさを率に掛ける）}
-//   設定の reduceMotion か効果 off なら描かない。効果 low は粒を半分・陽炎の揺れなし。
+//   設定の reduceMotion か効果 off なら描かない。効果 low は粒・帯を半分。
 //   F.weatherNow() → {kind, i}|null（いまの天気。テスト用）、F._wxForce = {kind, i}（撮影・テストで上書き。null で戻す）
 (function (R) {
   'use strict';
@@ -248,12 +248,12 @@
         const f = (y - H * 0.2) / span;   // 下ほど濃い
         const w = 180 + h(k, 47) * 220;
         const x = wrap(h(k, 48) * (W + w) - cx * 0.95 + Math.sin(tm * (1.6 + h(k, 49)) + k) * 10, W + w) - w * 0.5;
-        g.globalAlpha = Math.max(0, f) * 0.22 * I * (0.6 + 0.4 * Math.sin(tm * 2.3 + k * 1.3));
+        g.globalAlpha = Math.max(0, f) * 0.45 * I * (0.6 + 0.4 * Math.sin(tm * 2.3 + k * 1.3));
         g.drawImage(rp, x - w / 2, y, w, 10 + h(k, 50) * 6);
       }
     }
     // 立ちのぼるもや（大きく薄い暖かい塊がゆっくり上へ）
-    const b = blob('255,214,160');
+    const b = blob('255,232,200');
     if (b) {
       g.imageSmoothingEnabled = true;
       const nb = low ? 3 : 6;
@@ -261,7 +261,7 @@
         const bw = 220 + h(k, 41) * 200, bh = bw * 0.45;
         const x = wrap(h(k, 42) * W - cx * 0.95 + Math.sin(tm * 0.3 + k) * 30, W + bw) - bw * 0.5;
         const y = wrap(h(k, 43) * H - tm * (10 + h(k, 44) * 8) - cy * 0.95, H + bh) - bh * 0.5;
-        g.globalAlpha = 0.12 * I;
+        g.globalAlpha = 0.09 * I;
         g.drawImage(b, x - bw / 2, y - bh / 2, bw, bh);
       }
     }
@@ -270,21 +270,21 @@
   // ================================================================ 濃い霧（沼）
   DRAW.fog = function (g, m, cx, cy, t, I, low) {
     const W = R.W, H = R.H, tm = R.Engine.time / 1000;
-    g.fillStyle = `rgba(190,206,196,${0.12 * I})`;
+    g.fillStyle = `rgba(196,212,202,${0.16 * I})`;
     g.fillRect(0, 0, W, H);
     const b = blob('206,222,210');
     if (!b) return;
     g.imageSmoothingEnabled = true;
     const L = leadAt(t, cx, cy);
     // 霧の塊は地面に付いて（カメラとほぼ一緒に）流れる。ワールドの座標で並べ、画面に入る物だけ描く
-    const nb = count(12, low, I), span = W + 700, spanY = H + 400;
+    const nb = count(16, low, I), span = W + 700, spanY = H + 400;
     for (let k = 0; k < nb; k++) {
-      const bw = 340 + h(k, 51) * 380, bh = bw * (0.38 + h(k, 52) * 0.18);
+      const bw = 420 + h(k, 51) * 420, bh = bw * (0.4 + h(k, 52) * 0.2);
       const x = wrap(h(k, 53) * span + tm * (6 + h(k, 54) * 10) - cx * 0.85, span) - 350;
       const y = wrap(h(k, 55) * spanY + Math.sin(tm * 0.12 + k) * 18 - cy * 0.85, spanY) - 200;
       // 先頭のまわり（半径 150 px）は薄く: 人と足もとが読める
       const d = Math.hypot(x - L.x, y - L.y), near = Math.min(1, Math.max(0.3, (d - 60) / 240));
-      g.globalAlpha = (0.32 + 0.18 * h(k, 56)) * I * near * (0.8 + 0.2 * Math.sin(tm * 0.25 + k * 1.7));
+      g.globalAlpha = (0.45 + 0.25 * h(k, 56)) * I * near * (0.8 + 0.2 * Math.sin(tm * 0.25 + k * 1.7));
       g.drawImage(b, x - bw / 2, y - bh / 2, bw, bh);
     }
   };
@@ -353,11 +353,11 @@
   // ================================================================ 灰と火の粉
   DRAW.ash = function (g, m, cx, cy, t, I, low) {
     const W = R.W, H = R.H, tm = R.Engine.time / 1000;
-    g.fillStyle = `rgba(130,118,110,${0.1 * I})`;
+    g.fillStyle = `rgba(136,122,114,${0.13 * I})`;
     g.fillRect(0, 0, W, H);
-    const n = count(80, low, I), ox = cx * 0.7, oy = cy * 0.7;
+    const n = count(110, low, I), ox = cx * 0.7, oy = cy * 0.7;
     for (let i = 0; i < n; i++) {
-      const sp = 0.5 + h(i, 1) * 0.8, r = 1.6 + h(i, 2) * 2.2;
+      const sp = 0.5 + h(i, 1) * 0.8, r = 2.2 + h(i, 2) * 2.6;
       let x = h(i, 3) * (W + 40) + 14 * sp * tm + Math.sin(tm * 0.9 + i) * 14 - ox;
       let y = h(i, 4) * (H + 40) + 22 * sp * tm - oy;
       x = wrap(x, W + 40) - 20; y = wrap(y, H + 40) - 20;
@@ -368,13 +368,15 @@
     }
     // 火の粉: いくつかが時々、下から揺れながら上り、消える
     g.globalCompositeOperation = 'lighter';
-    const ne = low ? 6 : 14;
+    const ne = low ? 6 : 14, glow = blob('255,120,40');
+    g.imageSmoothingEnabled = true;
     for (let i = 0; i < ne; i++) {
       const per = 4 + h(i, 71) * 4, ph = h(i, 72) * per, slot = Math.floor((tm + ph) / per), f = (tm + ph) / per - slot;
-      if (h(i * 13 + slot, 73) > 0.55 + 0.25 * I) continue;   // 出ない回もある（ときどき）
+      if (h(i * 13 + slot, 73) > 0.5 + 0.35 * I) continue;   // 出ない回もある（ときどき）
       const x = wrap(h(i * 7 + slot, 74) * W + Math.sin(f * 9 + i) * 10 - cx * 0.2, W);
       const y = H * (0.7 + h(i, 75) * 0.4) - f * H * (0.45 + h(i, 76) * 0.3);
       const fl = (1 - f) * (0.6 + 0.4 * Math.sin(tm * 20 + i * 3));
+      if (glow) { g.globalAlpha = 0.5 * fl * Math.min(1, I + 0.3); g.drawImage(glow, x - 9, y - 9, 18, 18); }
       g.globalAlpha = 0.6 * fl * Math.min(1, I + 0.3);
       g.fillStyle = '#ff7a2a';
       g.fillRect(x - 2, y - 2, 4, 4);
