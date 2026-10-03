@@ -53,7 +53,7 @@
       tilePatches: [{ cond: '!mine_volk_open', rect: [6, 3, 1, 1], rows: ['X'] }],
       triggers: [{ id: 'arrive', on: 'enter', event: 'volk_arrive' }],
       zones: [],
-      light: MK.LIGHT_VILLAGE, dark: false, bgm: 'village', bbg: 'mine', propSet: 'mine',
+      light: MK.LIGHT_VILLAGE, dark: false, bgm: 'mine', bbg: 'mine', propSet: 'mine',
       meta: { sub: R.T('map.mine_volk.volk.meta.sub'), chestsInfo: true },
       art: P.art,
     });
@@ -70,7 +70,7 @@
         exits: [{ x: door.x, y: h - 1, w: 1, h: 1, to: { map: 'volk', spawn: o.back } }],
         triggers: o.triggers || [],
         light: Object.assign({}, MK.LIGHT_ROOM, o.light || {}),
-        bgm: o.bgm || 'village', propSet: 'mine',
+        bgm: o.bgm || 'mine', propSet: 'mine',
         meta: Object.assign({ minimap: false }, o.meta || {}),
       });
     }

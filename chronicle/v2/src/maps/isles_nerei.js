@@ -55,7 +55,7 @@
         { id: 'fine', x: 18, y: 4, w: 6, h: 2, on: 'step', event: 'isles_fine_cape', cond: ['isles_marina_met', '!isles_fine_seen', '!isles_song_done'] },
       ],
       zones: [],
-      light: IK.LIGHT_VILLAGE, dark: false, bgm: 'village', bbg: 'isles',
+      light: IK.LIGHT_VILLAGE, dark: false, bgm: 'isles', bbg: 'isles',
       meta: { sub: R.T('map.isles_nerei.nerei.meta.sub'), chestsInfo: false },
       art: P.art,
     });
@@ -72,7 +72,7 @@
         exits: [{ x: door.x, y: h - 1, w: 1, h: 1, to: { map: o.backMap || 'nerei', spawn: o.back } }],
         triggers: o.triggers || [],
         light: Object.assign({}, IK.LIGHT_ROOM, o.light || {}),
-        bgm: o.bgm || 'village',
+        bgm: o.bgm || 'isles',
         meta: Object.assign({ minimap: false }, o.meta || {}),
       });
     }
@@ -112,7 +112,7 @@
 
     // ---------------------------------------------------------------- 灯台島の灯室（i_light の灯台の戸口から）
     interior('isles_lamproom', R.T('map.isles_nerei.isles_lamproom'), 10, 10, {
-      back: 'lamproom', backMap: 'i_light', location: 'lighthouse_isle', bgm: 'overworld', meta: { sub: R.T('map.isles_nerei.isles_lamproom.meta.sub') },
+      back: 'lamproom', backMap: 'i_light', location: 'lighthouse_isle', bgm: 'sea', meta: { sub: R.T('map.isles_nerei.isles_lamproom.meta.sub') },
       objects: [K.prop('lantern', 4, 2), K.exam(4, 2, 'isles_lamp'), K.prop('beacon_glow', 4, 2, { cond: { any: ['isles_light_lit', 'cleared_r_isles'] } }),
         K.prop('writing_desk', 1, 5), K.exam(1, 5, 'isles_lamproom_letter'), K.prop('bookshelf', 8, 2), K.exam(8, 2, 'isles_keeper_log'), K.prop('barrel', 8, 6)],
       light: { ambient: '#7a7a92', k: 0.72 },

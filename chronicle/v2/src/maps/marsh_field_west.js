@@ -6,7 +6,7 @@
   'use strict';
   R.FieldArea.def("m_west", {
     name: R.T('map.marsh_field_west.m_west.name'), region: "r_marsh", outside: "marsh_water",
-    legend: R.FieldArea.MARSH_LEGEND, theme: 'moss_village', propSet: 'marsh', bbg: 'marsh',
+    legend: R.FieldArea.MARSH_LEGEND, theme: 'moss_village', propSet: 'marsh', bbg: 'marsh', bgm: 'marsh',
     light: { ambient: '#667aa6', k: 0.64, mood: 'night' },   // 湿原: 泥炭と葦の絵は砂より暗いので、夜の明るさを少し上げる（霧の青み）
     rows: [
       "ww,,,,;;;\";,,,,,,,,,..,;;;;wbw~~~~~~~~~~~~~~~~~~~~~~~bbb",

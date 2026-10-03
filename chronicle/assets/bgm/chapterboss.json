@@ -1,0 +1,31 @@
+{
+  "loopStart": 26.982,
+  "loopEnd": 82.515,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. Battle at the dramatic turning point of a chapter of the story, against a person or creature the heroes have come to know: dramatic, emotional and urgent; the battle matters to the story. A sweeping, passionate melody with both heartbreak and resolve; faster and more theatrical than an ordinary boss battle, but not dark or monstrous. Tempo 164 BPM, 4/4 time, key of G minor. Instrumentation: unison strings and french horns lead, rolling piano ostinato, staccato brass stabs, snare-driven drums, electric bass, timpani, glockenspiel accents. Form: piano and string intro; driving section with brass stabs; section A sweeping string and horn melody; section B emotional bridge where the piano leads and the harmony lifts; section A returns; the last bar leads back to the driving section. Duration: 95 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+    "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]\n[[B4]]\n[[E5]]",
+    "generated": "2026-10-03T00:23:48.594Z",
+    "rawSeconds": 117.6,
+    "takes": 1
+  },
+  "analysis": {
+    "loudnessLUFS": -18,
+    "truePeakDb": -4.8,
+    "gainDb": -5.8,
+    "peakLimited": false,
+    "loopScore": 0.792,
+    "seamListen": {
+      "seam_smooth": 10,
+      "problem": "none"
+    },
+    "seamCorr": 0.588,
+    "xfade": 0.6,
+    "medianDb": -22.6,
+    "longestSilence": 0.1,
+    "seamLevelDiffDb": 1.2,
+    "seamJump": 0.0228,
+    "maxStep": 0.0794
+  }
+}

@@ -6,7 +6,7 @@
   'use strict';
   R.FieldArea.def("a_foot", {
     name: R.T('map.field_ash_foot.a_foot.name'), region: "r_ash", outside: "rock",
-    legend: R.FieldArea.ASH_LEGEND, theme: 'ash', bgm: 'overworld', bbg: 'ash', propSet: 'ash', propSetBase: 'village',
+    legend: R.FieldArea.ASH_LEGEND, theme: 'ash', bgm: 'ash', bbg: 'ash', propSet: 'ash', propSetBase: 'village',
     light: R.FieldArea.ASH_LIGHT,
     rows: [
       "RRkssssuuuuruuukkkks.ssrsssssuuuuuruuRRRRRRRRRRRRRRRRRRR",

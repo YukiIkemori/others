@@ -6,7 +6,7 @@
   'use strict';
   R.FieldArea.def("s_plateau", {
     name: R.T('map.field_star_plateau.s_plateau.name'), region: "r_star", outside: "rock",
-    legend: R.FieldArea.STAR_LEGEND, theme: 'field', bgm: 'overworld', bbg: 'star', propSet: 'star', propSetBase: 'village',
+    legend: R.FieldArea.STAR_LEGEND, theme: 'field', bgm: 'star', bbg: 'star', propSet: 'star', propSetBase: 'village',
     light: R.FieldArea.STAR_LIGHT,
     rows: [
       "XXXXXXXXXXXXXXXXXXXXXXXXXXXccXXXXXXXXXXXXXXXXXXXXXXXXXXX",

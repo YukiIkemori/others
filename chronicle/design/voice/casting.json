@@ -549,7 +549,22 @@
   "v_zaid_song_01": "きたのくぎぼし、うごかぬほしよ。まようたいしょうの、くいとなれ。",
   "v_zaid_song_02": "ななつのいずみぼし、ひしゃくをかたむけ。よるのしずくを、すなにまけ。",
   "v_zaid_song_03": "ちのはての、しらむほしよ。……そぼは、「よあけのほし」とよんだ。",
-  "v_melda_song_01": "なれよ、ななつのかね。きりはぬまのそこへ、あさはまちのまどへ。"
+  "v_melda_song_01": "なれよ、ななつのかね。きりはぬまのそこへ、あさはまちのまどへ。",
+  "bv_sandking_start_1": "名を持つ者よ……砂にかえれ。",
+  "bv_whitedragon_start_1": "いてつくがよい。何もかも。",
+  "bv_ironwarden_enrage_1": "ろよ、燃え上がれ。",
+  "bv_ironwarden_defeat_1": "かじしんよ……約束は……。",
+  "bv_rowell1_ult_1": "このいちぎょうで、終わりだ！",
+  "bv_rowell2_start_1": "行くぞ、かたりべ！",
+  "bv_rowell2_ult_1": "まっしょうする！",
+  "bv_lazaro_ult_1": "このぎょうは、いらない。",
+  "bv_nemrea1_start_1": "あらがうな。忘れれば、楽になる。",
+  "bv_nemrea1_ult_1": "はくしにかえれ。",
+  "bv_nemrea1_defeat_1": "このうつわは……もう、いらぬ。",
+  "bv_nemrea2_ult_2": "やっつのでんしょうも、はくしに……。",
+  "bv_ouroboros_ult_3": "わがおよ、ちからとなれ。",
+  "bv_zakuro_ult_1": "まずは、いやしてからだ。",
+  "bv_frost_admiral_defeat_1": "とうじには……まにあわなんだか……。"
  },
  "battle": {
   "_readme": [
@@ -741,6 +756,146 @@
     "profile": "Noela, an 18-year-old apprentice shrine maiden; earnest, polite, a bit clumsy.",
     "style": "bright, sweet young female voice, earnest and a little flustered",
     "pitch": 1
+   }
+  }
+ },
+ "boss": {
+  "_readme": [
+   "Boss voices in battle (owner 2026-10-03): battle start, enrage, ultimate (one per ultimate move) and defeat. Lines: design/voice/boss_lines.csv (id bv_<boss>_<kind>_<n>, kind start/enrage/ult/defeat; ult rows name the boss action in move). Checked by tools/boss_voice.js; in game src/data/boss_voice.js + src/i18n/<lang>/boss_voice.js (v2).",
+   "cast[<monster id>]: speaker = reuse the story speaker of speakers[] (same voice, profile and fx, so the boss sounds as in its story scenes; style may be overridden for battle), or an own voice (prebuilt, not used by any story, hero or companion voice) with name/direction (Japanese, for people), profile/style (English prompt), fx (FX key or {p, af}) / pitch.",
+   "Beasts without speech (page eater, moths, worms, wolves, octopus, rock eater, hellhound, lava beast, star eater, dolls, book golem, vein lord) are not voiced: the TTS does not make convincing roars.",
+   "Generated with node tools/voice_tts.js --boss (Batch API)."
+  ],
+  "cast": {
+   "b_sandking": {
+    "speaker": "hazal",
+    "style": "regal male voice, hoarse and dry; in battle a mad, hollow menace"
+   },
+   "b_icegiant": {
+    "speaker": "giant",
+    "style": "deep booming male voice, heavy and threatening"
+   },
+   "b_whitedragon": {
+    "speaker": "neve",
+    "style": "low, majestic mature female voice, cold and commanding in battle"
+   },
+   "b_mistbeast": {
+    "speaker": "mistwitch"
+   },
+   "b_captain": {
+    "speaker": "glen",
+    "style": "rough male voice of a seaman; in battle confused fury"
+   },
+   "b_ironwarden": {
+    "speaker": "guardian",
+    "style": "deep stern male voice, heavy, mechanical weight"
+   },
+   "b_orrery": {
+    "speaker": "sentinel"
+   },
+   "b_rowell1": {
+    "speaker": "rowell",
+    "style": "young male voice, crisp and cool, clipped battle lines"
+   },
+   "b_rowell2": {
+    "speaker": "rowell",
+    "style": "young male voice, crisp, strained with doubt, fierce in battle"
+   },
+   "b_lazaro": {
+    "speaker": "lazaro"
+   },
+   "b_nemrea1": {
+    "speaker": "king",
+    "style": "deep, inhuman male voice full of contempt; heavy and resonant, unhurried but never slow"
+   },
+   "b_nemrea2": {
+    "speaker": "nemrea",
+    "style": "soft androgynous voice, breathy, sleepy and childlike, unsettling"
+   },
+   "b_valzard_echo": {
+    "speaker": "valzard",
+    "style": "deep gravelly male voice, heavy, weary dread"
+   },
+   "b_zakuro": {
+    "speaker": "zakuro"
+   },
+   "b_hawk_chief": {
+    "speaker": "rashid"
+   },
+   "b_shade_sword": {
+    "name": "剣の勇者の影",
+    "voice": "ja-jp-storyteller-5",
+    "type": "prebuilt",
+    "direction": "遠くから響く若い勇者。夢の中のように",
+    "profile": "The white shadow of the sword hero who defeated the demon lord three hundred years ago; a young man in his twenties, now only a memory searching for his old enemy.",
+    "style": "young heroic male voice, distant and dreamlike, earnest",
+    "fx": "ghost"
+   },
+   "b_shade_prayer": {
+    "name": "祈りの勇者の影",
+    "voice": "ja-jp-csagent-11",
+    "type": "prebuilt",
+    "direction": "やさしい神殿の娘。祈るように",
+    "profile": "The white shadow of the prayer hero, a temple maiden of the legend; gentle and devout.",
+    "style": "soft, kind young female voice, prayerful and calm",
+    "fx": "spirit"
+   },
+   "b_shade_star": {
+    "name": "杖の勇者の影",
+    "voice": "ja-jp-techagent-7",
+    "type": "prebuilt",
+    "direction": "気の強い術師の娘。最後は泣きそうに",
+    "profile": "The white shadow of the staff hero, a gifted young mage girl of the legend; proud, then pleading to be remembered.",
+    "style": "clear young female voice, spirited, emotional",
+    "fx": "spirit"
+   },
+   "b_ouroboros": {
+    "name": "円環竜オウロボラ",
+    "voice": "ja-jp-storyteller-9",
+    "type": "prebuilt",
+    "direction": "太古の竜。ゆったりと、楽しむように",
+    "profile": "Ouroboros, an ancient ring dragon holding its own tail, that lives by eating the endings of stories; vast, unhurried, amused and hungry.",
+    "style": "deep ancient male voice, amused and menacing, measured but not slow",
+    "fx": {
+     "p": 0.8,
+     "af": "aecho=0.8:0.75:60|150|260:0.3|0.22|0.12"
+    }
+   },
+   "b_tamer": {
+    "name": "獣使いのガロ",
+    "voice": "ja-jp-csagent-1",
+    "type": "prebuilt",
+    "direction": "陽気な獣使い。威勢よく",
+    "profile": "Garo, a beast tamer of the Caldera arena in his thirties; cheerful, rough and sporting, loves his beasts.",
+    "style": "lively, rough male voice around thirty, cheerful and loud",
+    "pitch": 1
+   },
+   "b_sister_elder": {
+    "name": "術師の姉ヒノエ",
+    "voice": "ja-jp-concierge-1",
+    "type": "prebuilt",
+    "direction": "落ち着いた姉。品よく",
+    "profile": "Hinoe, the elder of the mage sisters of the Caldera arena, about twenty-five; composed, elegant and protective of her younger sister.",
+    "style": "composed, elegant young female voice, clear and firm",
+    "pitch": 1
+   },
+   "b_armorman": {
+    "name": "鉄鎧のバルガ",
+    "voice": "ja-jp-podcaster-8",
+    "type": "prebuilt",
+    "direction": "鎧の中の大男。豪快に",
+    "profile": "Barga, a huge man in full iron armour fighting in the Caldera arena; boastful, jolly and loud, laughs inside his helmet.",
+    "style": "big booming male voice, jolly and boastful, a little muffled by a helmet",
+    "pitch": 0.9
+   },
+   "b_frost_admiral": {
+    "name": "氷の船団長",
+    "voice": "ja-jp-techagent-12",
+    "type": "prebuilt",
+    "direction": "百年凍った船団長。号令は固く、最後は哀しく",
+    "profile": "The ghost of a fleet admiral frozen in his ship for a hundred years, still trying to reach his home port by midwinter; formal, stiff naval officer.",
+    "style": "stiff, formal male voice of a naval officer around fifty, cold and hollow",
+    "fx": "ghost"
    }
   }
  }

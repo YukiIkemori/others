@@ -1,27 +1,31 @@
 {
-  "loopStart": 30,
-  "loopEnd": 90,
+  "loopStart": 17.786,
+  "loopEnd": 113.787,
   "source": {
     "provider": "gemini",
     "model": "lyria-3.5",
-    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. Final battle against the primordial void king: epic and cosmic; the main theme heard in a minor key, then turning major and triumphant near the end of the loop. Tempo 160 BPM, 4/4 time, key of E minor. Instrumentation: pipe organ and wordless choir intro (no words), fast string ostinato, brass, timpani, driving drums, electric bass. Form: organ and choir intro, furious main section, heroic main-theme quote turning major, back to the furious section. Duration: 120 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. The game's world lives in an endless night lit by lanterns, lamps and great beacon fires; the score is gentle and melancholic, with warmth and a quiet, stubborn hope. The final battle, first form: the Hollow King, a vast shadow of swirling blank white pages that would erase every story ever told. Solemn, majestic and grand, like a requiem sung in a cathedral at the end of the world; awe and holy dread rather than speed. A slow, noble chorale melody carried by organ, choir and brass over a steady, inexorable battle pulse that never stops. Tempo 120 BPM, 4/4 time, key of D minor. Instrumentation: grand pipe organ, a large wordless choir (no words), low brass chorale of trombones and tuba, tolling cathedral bells, timpani, deep taiko-like drums, a steady low string ostinato, harp. Form: organ and tolling bell intro; section A grand choir and brass chorale over the low string ostinato and drums; section B a darker, quieter organ passage with the pulse still beating; section A returns fuller with timpani and bells; the last bar leads back to section A. Duration: 120 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
     "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[B3]]",
-    "generated": "2026-09-26T12:22:59.629Z",
-    "rawSeconds": 121.8,
-    "takes": 2
+    "generated": "2026-10-03T00:18:03.998Z",
+    "rawSeconds": 127.5,
+    "takes": 1
   },
   "analysis": {
     "loudnessLUFS": -18,
-    "truePeakDb": -6,
-    "gainDb": -6.4,
+    "truePeakDb": -4.3,
+    "gainDb": -6,
     "peakLimited": false,
-    "loopScore": 0.869,
-    "seamCorr": 0.857,
+    "loopScore": 0.826,
+    "seamListen": {
+      "seam_smooth": 7,
+      "problem": "beat skip"
+    },
+    "seamCorr": 0.567,
     "xfade": 0.6,
-    "medianDb": -22.1,
+    "medianDb": -22.2,
     "longestSilence": 0,
-    "seamLevelDiffDb": 0.7,
-    "seamJump": 0.0113,
-    "maxStep": 0.0697
+    "seamLevelDiffDb": 5,
+    "seamJump": 0.0022,
+    "maxStep": 0.0456
   }
 }

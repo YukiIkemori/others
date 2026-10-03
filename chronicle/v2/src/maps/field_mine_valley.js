@@ -6,7 +6,7 @@
   'use strict';
   R.FieldArea.def("g_valley", {
     name: R.T('map.field_mine_valley.g_valley.name'), region: "r_mine", outside: "rock",
-    legend: R.FieldArea.MINE_LEGEND, theme: 'field', bgm: 'overworld', bbg: 'mine', propSet: 'mine', propSetBase: 'village',
+    legend: R.FieldArea.MINE_LEGEND, theme: 'field', bgm: 'mine', bbg: 'mine', propSet: 'mine', propSetBase: 'village',
     light: R.FieldArea.MINE_LIGHT,
     rows: [
       "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",

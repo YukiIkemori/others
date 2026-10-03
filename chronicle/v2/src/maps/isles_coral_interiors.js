@@ -18,7 +18,7 @@
         exits: [{ x: door.x, y: h - 1, w: 1, h: 1, to: { map: 'coral', spawn: o.back } }],
         triggers: o.triggers || [],
         light: Object.assign({}, IK.LIGHT_ROOM, o.light || {}),
-        bgm: o.bgm || 'town',
+        bgm: o.bgm || 'isles',
         meta: Object.assign({ minimap: false }, o.meta || {}),
       });
     }

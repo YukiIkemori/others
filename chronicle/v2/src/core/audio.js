@@ -76,6 +76,8 @@
       sorrow: 'shrine', boss2: 'boss', rarebattle: 'battle', superboss: 'lastboss', postgame: 'lastdungeon',
       forest: 'cave', ghost: 'dungeon', legend: 'shrine',
       lostwood: 'forest', eldertree: 'shrine', dawn: 'title', fine_theme: 'shrine',   // 2026-09-27 の新しい録音の曲（design/bgm_changes.md）。omen は無ければ鳴らさない
+      lastboss2: 'lastboss', regionboss: 'boss2', chapterboss: 'boss',   // 2026-10-03 ボスの曲の 3 分け（最後・地方・章）
+      marsh: 'town', isles: 'town', mine: 'town', ash: 'town', star: 'town', sea: 'overworld',   // 同じ日の地方の曲（湿原・諸島・山地・灰の荒野・高原）
     },
     jingles: { superrare: 'rare', chapter: 'keyitem', recruit: 'item' },
     sfx: {
@@ -1124,11 +1126,12 @@
       });
     }
     schedule() {
-      // ループ: loopEnd を越えたら loopStart へ（越えた分を足して戻す）
+      // ループ: loopEnd の手前 10 ms を越えたら loopStart へ（ずれた分をそのまま足して戻す。手前なら loopStart の少し前＝継ぎ目の
+      // クロスフェードで loopEnd の手前と同じ音の所。loopEnd の後ろに続きの尾がある曲（lyria_bgm.js --tail）は越えても切れない）
       const el = this.el;
       if (this.stopped || !el || !this.loop || !(this.loopEnd > this.loopStart + 0.1)) return;
       if (el.ended || el.currentTime >= this.loopEnd - 0.01) {
-        try { el.currentTime = this.loopStart + Math.max(0, el.currentTime - this.loopEnd); if (el.paused) el.play(); } catch (e) { /* ignore */ }
+        try { el.currentTime = Math.max(0, this.loopStart + (el.ended ? 0 : el.currentTime - this.loopEnd)); if (el.paused) el.play(); } catch (e) { /* ignore */ }
       }
     }
     position() { return this.el ? this.el.currentTime || this.pos0 : this.pos0; }

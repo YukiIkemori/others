@@ -542,3 +542,18 @@ listening check; `--char selma`, `--only <id> --force`). Treat the set as open-e
   `--min-loop <s>` or an entry's `min_loop` forces a longer loop). Regenerated in place: forest, town, tower, tavern, tension, home
   (previous files in `design/bgm/prev/`). New: lostwood, eldertree, dawn, omen (one-shot, json `loop:false`), fine_theme.
   Where they play and the build change they need: `v2/design/bgm_changes.md`.
+
+### 13.4 Boss voices in battle (owner 2026-10-03)
+
+- **Lines**: `design/voice/boss_lines.csv` (id,boss,kind,move,text,direction; id `bv_<boss>_<kind>_<n>`, kind `start` / `enrage` /
+  `ult` (one per ultimate move of `v2/src/art/fx/fx_seq_table_boss.js`, `move` = the boss action) / `defeat`). 89 lines for 23 bosses
+  that can speak; beasts without speech are not voiced. Casting: `casting.json` `boss.cast[<monster id>]` (`speaker` reuses a story
+  voice, e.g. hazal, neve, glen, rowell, lazaro, king, nemrea, valzard, zakuro, rashid; 8 own voices for the three hero shades,
+  Ouroboros, Garo, Hinoe, Barga and the frost admiral). Check + `design/voice/boss_lines.md` + `design/boss_voice_preview.html`:
+  `node tools/boss_voice.js` (`--check`). Generate: `node tools/voice_tts.js --boss` (`--bosses b_lazaro`, `--only <id> --force`).
+- **Game (v2)**: `src/data/boss_voice.js` (R.DB.bossVoice), subtitles `src/i18n/<lang>/boss_voice.js` (`bossVoice.<id>`, ja = the CSV),
+  playback `src/systems/battle/voice_boss.js`: start at the boss name card, enrage with 「怒り狂った」/「本気になった」, ult at the cut-in,
+  defeat at the boss KO (the victory voice waits for it, ≤ 2.6 s). Same single battle-voice handle as 13.2 (a new voice stops the
+  previous one), never waits. Fast-forward / repeat: no start / enrage, an ultimate only the first time in the battle, defeat kept.
+  Setting `なし` = no voice and no subtitle; `大技だけ` keeps the boss lines. Subtitle: a short line under the boss name tag while the
+  clip plays (estimated from the text when the length is unknown).

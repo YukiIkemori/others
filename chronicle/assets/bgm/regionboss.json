@@ -1,0 +1,31 @@
+{
+  "loopStart": 25.472,
+  "loopEnd": 76.674,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. Battle with the great guardian of a region: an ancient, mythic monster that has swallowed the region's great beacon fire; winning relights the beacon. Grand, heroic and weighty, a decisive battle with a mythic beast; more epic and majestic than an ordinary boss battle, but earthly rather than cosmic. A strong, memorable brass melody with heroic defiance. Tempo 156 BPM, 4/4 time, key of D minor. Instrumentation: heroic horns and trumpets melody, driving string ostinato, timpani, war drums, low wordless choir pads (no words), electric bass, organ swells, cymbal crashes. Form: brass fanfare intro; driving riff; section A heroic brass theme; section B tense bridge with low choir and timpani; section A again bigger; the last bar leads back to the riff. Duration: 100 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+    "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]\n[[C4]]\n[[E5]]",
+    "generated": "2026-10-03T00:21:49.952Z",
+    "rawSeconds": 101.8,
+    "takes": 1
+  },
+  "analysis": {
+    "loudnessLUFS": -18,
+    "truePeakDb": -6.4,
+    "gainDb": -6.5,
+    "peakLimited": false,
+    "loopScore": 0.622,
+    "seamListen": {
+      "seam_smooth": 5.5,
+      "problem": "sudden instrument change"
+    },
+    "seamCorr": 0.375,
+    "xfade": 0.6,
+    "medianDb": -22.1,
+    "longestSilence": 0,
+    "seamLevelDiffDb": 1.2,
+    "seamJump": 0.0125,
+    "maxStep": 0.059
+  }
+}

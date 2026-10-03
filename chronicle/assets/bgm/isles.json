@@ -1,0 +1,31 @@
+{
+  "loopStart": 6.107,
+  "loopEnd": 95.402,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. The game's world lives in an endless night lit by lanterns, lamps and great beacon fires; the score is gentle and melancholic, with warmth and a quiet, stubborn hope. Warm coral islands at night: lantern-lit harbours, fishermen's boats rocking on calm water, a boat song still sung for a captain who never came home. Breezy, swaying and nostalgic, sunny warmth under the stars with a touch of longing; a singable boat-song melody, relaxed but not sleepy. Tempo 96 BPM, 4/4 time, key of F major. Instrumentation: nylon-string guitar, marimba, flute melody, soft accordion, shaker and congas, upright bass, gentle steel-string guitar strums. Form: guitar and marimba pickup; section A flute boat-song melody; section B accordion melody, a little wistful; a short marimba interlude; section A again with fuller band. Duration: 110 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+    "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]\n[[C4]]\n[[E5]]",
+    "generated": "2026-10-03T00:26:22.311Z",
+    "rawSeconds": 110.9,
+    "takes": 1
+  },
+  "analysis": {
+    "loudnessLUFS": -18,
+    "truePeakDb": -6.7,
+    "gainDb": -6.8,
+    "peakLimited": false,
+    "loopScore": 0.588,
+    "seamListen": {
+      "seam_smooth": 9.5,
+      "problem": "none"
+    },
+    "seamCorr": 0.549,
+    "xfade": 0.6,
+    "medianDb": -22.1,
+    "longestSilence": 0.1,
+    "seamLevelDiffDb": 3,
+    "seamJump": 0.0024,
+    "maxStep": 0.0046
+  }
+}

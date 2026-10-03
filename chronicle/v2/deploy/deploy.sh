@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Firebase Hosting への公開（プロジェクト luminous-chronicle）。持ち主 2026-09-28「Firebase に移行」
-#   HEAD の中身だけでビルドする（作業中の変更は入れない）→ pack_web で体験版の範囲を固める → GA4 のタグを入れる → deploy
+#   HEAD（または DEPLOY_REF の版）の中身だけでビルドする（作業中の変更は入れない）→ pack_web で体験版の範囲を固める → GA4 のタグを入れる → deploy
 #   必要な環境変数: FIREBASE_SERVICE_ACCOUNT（サービスアカウントの JSON。Firebase Hosting 管理者）、GA4_ID（G-XXXX、任意）
 #   使い方: bash chronicle/v2/deploy/deploy.sh [--dry] [--full]
 #   pack_web は --no-size-limits（成果物ページの上限は Firebase には無い。5 言語の文と字形で index.html は 16MB を超える）
@@ -13,7 +13,7 @@ ROOT=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
 WORK=${DEPLOY_WORK:-/tmp/claude-0/deploy_work}
 rm -rf "${WORK:?}" && mkdir -p "$WORK"
 # v2/design（撮影や資料 1.4GB）はビルドに要らないので入れない
-git -C "$ROOT" archive HEAD chronicle/v2/src chronicle/v2/tools chronicle/v2/assets chronicle/assets chronicle/design/portraits chronicle/design/voice chronicle/tools | tar -x -C "$WORK"
+git -C "$ROOT" archive "${DEPLOY_REF:-HEAD}" chronicle/v2/src chronicle/v2/tools chronicle/v2/assets chronicle/assets chronicle/design/portraits chronicle/design/voice chronicle/tools | tar -x -C "$WORK"
 mkdir -p "$WORK/chronicle/v2/dist"   # 文字のキャッシュ（.fontcache）は作業のツリーから写す（無ければ build が作る）
 [ -d "$ROOT/chronicle/v2/dist/.fontcache" ] && cp -r "$ROOT/chronicle/v2/dist/.fontcache" "$WORK/chronicle/v2/dist/"
 cd "$WORK/chronicle/v2"
@@ -26,7 +26,7 @@ fi
 node tools/build.js > /dev/null
 python3 tools/pack_web.py --dist dist --out "$WORK/public" --scope "$SCOPE" --no-size-limits > "$WORK/pack.log" 2>&1 || { tail -20 "$WORK/pack.log"; exit 1; }
 # 版の札: 遊んでいる途中の人に「新しい版が出た」と知らせるため（src/systems/update_check.js が version.json と比べる）
-BUILD_ID="$(git -C "$ROOT" rev-parse --short HEAD)-$(date -u +%Y%m%d%H%M)"
+BUILD_ID="$(git -C "$ROOT" rev-parse --short "${DEPLOY_REF:-HEAD}")-$(date -u +%Y%m%d%H%M)"
 printf '{"build":"%s"}\n' "$BUILD_ID" > "$WORK/public/version.json"
 python3 - "$WORK/public/index.html" "$BUILD_ID" <<'PY2'
 import sys

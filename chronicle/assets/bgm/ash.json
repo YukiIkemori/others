@@ -1,0 +1,31 @@
+{
+  "loopStart": 19.737,
+  "loopEnd": 80.773,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. The game's world lives in an endless night lit by lanterns, lamps and great beacon fires; the score is gentle and melancholic, with warmth and a quiet, stubborn hope. A town of fire-wardens on the rim of a volcano and the grey ash wastes around it: ember glow on the clouds, hot springs steaming, a tournament of fire trials, murals of a sleeping firebird. Fiery, proud and passionate but warm and welcoming, not a battle; heat haze and dancing embers, a confident singable trumpet melody. Tempo 108 BPM, 4/4 time, key of A phrygian (A minor with a flattened second). Instrumentation: flamenco-style rasgueado guitar, handclaps and cajon, a soaring trumpet melody, castanets, low strings, a warm frame drum, a little violin. Form: guitar rasgueado and handclap pickup; section A trumpet melody; section B violin melody, warmer and a little wistful; a short guitar and cajon break; section A again with full band. Duration: 90 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+    "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]\n[[B4]]\n[[E5]]",
+    "generated": "2026-10-03T00:27:56.525Z",
+    "rawSeconds": 92,
+    "takes": 1
+  },
+  "analysis": {
+    "loudnessLUFS": -18,
+    "truePeakDb": -6.5,
+    "gainDb": -6.9,
+    "peakLimited": false,
+    "loopScore": 0.729,
+    "seamListen": {
+      "seam_smooth": 10,
+      "problem": "none"
+    },
+    "seamCorr": 0.441,
+    "xfade": 0.6,
+    "medianDb": -22,
+    "longestSilence": 0,
+    "seamLevelDiffDb": 2,
+    "seamJump": 0.0063,
+    "maxStep": 0.059
+  }
+}

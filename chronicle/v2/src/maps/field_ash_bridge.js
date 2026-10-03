@@ -6,7 +6,7 @@
   'use strict';
   R.FieldArea.def("a_bridge", {
     name: R.T('map.field_ash_bridge.a_bridge.name'), region: "r_ash", outside: "sea",
-    legend: R.FieldArea.ASH_LEGEND, theme: 'ash', bgm: 'overworld', bbg: 'ash', propSet: 'ash', propSetBase: 'village',
+    legend: R.FieldArea.ASH_LEGEND, theme: 'ash', bgm: 'ash', bbg: 'ash', propSet: 'ash', propSetBase: 'village',
     light: R.FieldArea.ASH_LIGHT,
     rows: [
       "~~~~~~~~~~~~~~~~~~~~~X==X~~~~~~~~~~~~~~~~~~~~~~~",

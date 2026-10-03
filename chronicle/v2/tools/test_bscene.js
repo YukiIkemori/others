@@ -131,6 +131,49 @@ R.Settings.get = ((orig) => (k) => (k === 'battleVoice' ? 'off' : orig(k)))(R.Se
 ok('setting "off": nothing plays', V.play(selma, 'bigtech') === null && V.play(selma, 'victory', { force: true }) === null);
 ok('isBig: skill with mp ≥ 8 or data big', (() => { R.DB.techs = R.DB.techs || {}; R.DB.techs.__t1 = { name: 'x', mp: 9 }; R.DB.techs.__t2 = { name: 'y', mp: 2 }; return V.isBig('skill', '__t1') && !V.isBig('skill', '__t2') && !V.isBig('attack', 'attack'); })());
 
+section('ボスの声（2026-10-03、voice_boss.js）: 始め・暴走・必殺技・倒れた時、字幕、倍速とリピート');
+{
+  const BV = _.bossVoice, DBV = R.DB.bossVoice || {};
+  const all = [];
+  for (const e of Object.values(DBV)) all.push(...(e.start || []), ...(e.enrage || []), ...(e.defeat || []), ...Object.values(e.ult || {}));
+  ok('R.DB.bossVoice: every line has an id bv_… and a subtitle text', all.length >= 80 && all.every((l) => /^bv_[a-z0-9_]+_\d$/.test(l.id) && l.text && !/^bossVoice\./.test(l.text)), all.length);
+  ok('every voiced boss is a boss monster; ult keys are its ultimate moves', Object.entries(DBV).every(([id, e]) => {
+    const m = R.DB.monsters[id];
+    if (!m || !(m.flags || []).includes('boss')) return false;
+    return Object.keys(e.ult || {}).every((mv) => R.BFX.seq.isUlt(mv) && (m.actions || []).some((a) => a.id === mv || ((R.DB.bossActions[a.id] || {}).telegraph || {}).next === mv));
+  }));
+  all.forEach((l) => clip(l.id));
+  let mode = 'on';
+  R.Settings.get = ((orig) => (k) => (k === 'battleVoice' ? mode : orig(k)))(R.Settings.get);
+  R.Audio.battleVoiceId = (id) => { played.push(id); return { id, stopped: false, src: null }; };
+  const mk = (o) => {
+    const boss = { uid: 'e_0', side: 'enemy', id: 'b_lazaro', name: 'L', boss: true };
+    return Object.assign({ actors: [boss], vis: {}, unit: (u) => (u === 'e_0' ? boss : null), actor: (u) => (u === 'e_0' ? boss : null), speed: () => 1, B: { repeatOn: false }, vrng: fixed(0) }, o || {});
+  };
+  let st = mk();
+  ok('prepare lists the voices of the bosses in the troop', BV.prepare(st).length === 5);
+  ok('start plays the start line and sets the subtitle', BV.start(st, st.actors[0]) === 'bv_lazaro_start_1' && st.bossLine && st.bossLine.text === R.T('bossVoice.bv_lazaro_start_1'));
+  ok('enrage plays', BV.enrage(st, { uid: 'e_0' }) === 'bv_lazaro_enrage_1');
+  ok('ult: the line of that move (and not of another)', BV.ult(st, { uid: 'e_0', id: 'eb_lazaro_rewrite' }, 'sq:eb_lazaro_rewrite') === 'bv_lazaro_ult_2' && BV.ult(st, { uid: 'e_0', id: 'eb_whiteout' }, 'sq:eb_whiteout') === null);
+  ok('defeat plays', BV.defeat(st, { uid: 'e_0' }) === 'bv_lazaro_defeat_1' && st.bossLine.kind === 'defeat');
+  st = mk({ speed: () => 2 });
+  BV.prepare(st);
+  ok('×2 speed: no start / enrage voice', BV.start(st, st.actors[0]) === null && BV.enrage(st, { uid: 'e_0' }) === null);
+  ok('×2 speed: an ultimate only the first time in the battle', BV.ult(st, { uid: 'e_0', id: 'eb_lazaro_redact' }) === 'bv_lazaro_ult_1' && BV.ult(st, { uid: 'e_0', id: 'eb_lazaro_redact' }) === null);
+  ok('×2 speed: defeat still plays', BV.defeat(st, { uid: 'e_0' }) === 'bv_lazaro_defeat_1');
+  st = mk({ B: { repeatOn: true } });
+  ok('repeat: no start voice', BV.start(st, st.actors[0]) === null);
+  mode = 'big';
+  ok('setting "big": boss lines still play', BV.defeat(mk(), { uid: 'e_0' }) === 'bv_lazaro_defeat_1');
+  mode = 'off';
+  st = mk();
+  ok('setting "off": no voice and no subtitle', BV.ult(st, { uid: 'e_0', id: 'eb_lazaro_redact' }) === null && !st.bossLine);
+  mode = 'on';
+  const beast = { uid: 'e_1', side: 'enemy', id: 'b_wolflord', boss: true };
+  ok('a boss without speech stays silent', BV.start(mk({ actors: [beast], unit: () => beast, actor: () => beast }), beast) === null);
+  ok('subtitle time from the text when the length is unknown', BV.estMs('砂の審判を受けよ！') >= 1500 && BV.estMs('砂の審判を受けよ！') < 3500);
+}
+
 section('勝利の報酬の言葉（A17）');
 ok('proficiency names only (剣・火)', _.result.profName('sword') === '剣' && _.result.profName('fire') === '火');
 // 画面の文は文の表（i18n）にあるので、R.T('key') を日本語の文に戻してから確かめる

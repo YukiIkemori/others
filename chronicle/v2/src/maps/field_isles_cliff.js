@@ -6,7 +6,7 @@
   'use strict';
   R.FieldArea.def("i_cliff", {
     name: R.T('map.field_isles_cliff.i_cliff.name'), region: "r_isles", outside: "sea",
-    legend: R.FieldArea.ISLE_LEGEND, theme: 'field', bgm: 'overworld', bbg: 'isles', propSet: 'isles', propSetBase: 'harbor',
+    legend: R.FieldArea.ISLE_LEGEND, theme: 'field', bgm: 'isles', bbg: 'isles', propSet: 'isles', propSetBase: 'harbor',
     light: R.FieldArea.ISLE_LIGHT,
     rows: [
       "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",

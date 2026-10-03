@@ -12,9 +12,9 @@
     tr_siege_2a: wave([['@frostling', 2], ['@wolf', 2]]), tr_siege_2a_e: wave([['@frostling', 1], ['@wolf', 2]]),
     tr_siege_2b: wave([['@yeti', 1], ['@wolf', 2]]),
     tr_siege_3a: wave([['@owl', 2], ['@wolf', 2]]), tr_siege_3a_e: wave([['@owl', 1], ['@wolf', 2]]),
-    tr_b_blizzardwolf_0: boss([['b_siegewolf', 1], ['b_blizzardwolf', 1]], { scale: 'tier', lvOff: 2, bg: 'snow', bgm: 'boss' }),
-    tr_b_blizzardwolf_1: boss([['b_siegewolf', 1], ['b_blizzardwolf_1', 1]], { scale: 'tier', lvOff: 2, bg: 'snow', bgm: 'boss' }),
-    tr_b_blizzardwolf_2: boss([['b_siegewolf', 1], ['b_blizzardwolf_2', 1]], { scale: 'tier', lvOff: 2, bg: 'snow', bgm: 'boss' }),
+    tr_b_blizzardwolf_0: boss([['b_siegewolf', 1], ['b_blizzardwolf', 1]], { scale: 'tier', lvOff: 2, bg: 'snow', bgm: 'chapterboss' }),
+    tr_b_blizzardwolf_1: boss([['b_siegewolf', 1], ['b_blizzardwolf_1', 1]], { scale: 'tier', lvOff: 2, bg: 'snow', bgm: 'chapterboss' }),
+    tr_b_blizzardwolf_2: boss([['b_siegewolf', 1], ['b_blizzardwolf_2', 1]], { scale: 'tier', lvOff: 2, bg: 'snow', bgm: 'chapterboss' }),
     // 雪の林の倒木を守る雪男（薪集めの 1 本）
     tr_snow_woods_yeti: wave([['@yeti', 1], ['@wolf', 1]], { bgm: 'battle' }),
     // つららの回廊のつらら番（#11、暗がりの奥の中ボス）

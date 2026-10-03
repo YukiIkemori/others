@@ -87,6 +87,30 @@
     return id;
   };
 
+  /** 設定「戦闘ボイス」の今の値（'on' / 'big' / 'off'。ボスの声 voice_boss.js も見る） */
+  V.mode = setting;
+  /**
+   * 決まった id の声を同じ口で鳴らす（ボスの声。voice_boss.js）。前の戦闘ボイスを止める（同時に 2 人は話さない）。
+   * 声の札が無い・音が使えないなら null。o = {who, kind}（記録用）→ 鳴らした id か null
+   */
+  V.playClip = function (id, o) {
+    o = o || {};
+    const M = R.Media;
+    let has = false;
+    try { has = !!(M && ((typeof M.table === 'function' && M.table() && M.table().voice && M.table().voice[id]) || (typeof M.has === 'function' && M.has('voice', id)))); } catch (e) { has = false; }
+    if (!has) { note({ who: o.who, kind: o.kind, id: null, why: 'no-clip' }); return null; }
+    V.stop();
+    let h = null;
+    try {
+      const A = R.Audio;
+      if (A && typeof A.battleVoiceId === 'function') { h = A.battleVoiceId(id); if (h) h._bv = true; }
+      else if (A && typeof A.playVoice === 'function') h = A.playVoice(id);
+    } catch (e) { h = null; }
+    cur = { id, h, n: ++seq, kind: o.kind || 'clip', t0: R.Engine.time };
+    note({ who: o.who, kind: o.kind, id, why: 'play' });
+    return id;
+  };
+
   // ---------------------------------------------------------------- 場面の切り替えで声を切らない（2026-09-27 の遊びの声）
   /** 今の声がまだ鳴っている（読み込み中も含む）か */
   V.busy = function () {

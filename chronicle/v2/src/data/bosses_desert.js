@@ -239,7 +239,7 @@
   const boss = (mons, o) => Object.assign({ mons, noEscape: true }, o);
   Object.assign(R.DB.troops, {
     // 野営地 1 で「戦う」を選んだとき（中ボス）
-    tr_b_hawkchief: boss([['b_hawk_bow', 1], ['b_hawk_chief', 1], ['b_hawk_bow', 1]], { scale: 'tier', lvOff: 1, bg: 'desert', bgm: 'boss' }),
+    tr_b_hawkchief: boss([['b_hawk_bow', 1], ['b_hawk_chief', 1], ['b_hawk_bow', 1]], { scale: 'tier', lvOff: 1, bg: 'desert', bgm: 'chapterboss' }),
     // アジトが敵の砦になったときの奥の戦い（弓兵が 3 人）
     tr_b_hawkhold: boss([['b_hawk_bow', 1], ['b_hawk_chief', 1], ['b_hawk_bow', 2]], { scale: 'tier', lvOff: 2, bg: 'cave', bgm: 'boss' }),
     // 隊が襲われた（ワールドの隊商路の決まった所。雑魚の組、逃げられない）

@@ -198,6 +198,7 @@
    */
   async function intro(st) {
     st.phase = 'intro';
+    if (_.bossVoice) _.bossVoice.prepare(st);   // ボスの声を先に読む（voice_boss.js）
     const reduce = _.trans.reduce();
     const boss = !!(st.info.boss || st.info.heavy || st.actors.some((a) => a.side === 'enemy' && a.boss));
     const foes = st.actors.filter((a) => a.side === 'enemy');
@@ -235,6 +236,7 @@
       if (R.Audio.sfx) R.Audio.sfx('roar');
       if (!reduce && R.Settings.get('shake') !== 'off') st.shake = { t0: R.Engine.time, ms: 520, amp: 5 };
       st.bossCard = { name: bu ? bu.name : '', sub: (st.info.troop && st.info.troop.title) || R.T('battle.scene.intro.bossCard.sub'), t0: R.Engine.time, ms: 1700 };
+      if (_.bossVoice) _.bossVoice.start(st, bu);   // ボスの始めの一言と字幕（待たない）
       await R.until(() => st.dead || R.Engine.time - st.bossCard.t0 >= st.bossCard.ms * (st.speed() > 1 ? 0.6 : 1));
       st.bossCard = null;
     }

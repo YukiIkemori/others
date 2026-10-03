@@ -44,6 +44,7 @@
     // 見た記録（2 回目からは短く。技・術と同じ R.Game.vars.fx_seen）
     if (S.markSeen) S.markSeen(sid);
     sfx('roar');
+    if (_.bossVoice) _.bossVoice.ult(st, e, sid);   // 技の掛け声と字幕（voice_boss.js。待たない）
     if (v) {
       v.flash = 0.8;
       if (!rm && _.play && _.play.squash) _.play.squash(st, v, 1.1, 1.1, Math.round(ms * 0.22), 'out').then(() => _.play.unsquash && _.play.unsquash(st, v, Math.round(ms * 0.3)));

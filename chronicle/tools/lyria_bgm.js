@@ -16,6 +16,8 @@
 //            --listen (a Gemini model listens to the 3 best loop seams of every take and picks the smoothest)
 //            --reuse (use cached raw takes that exist, generate only the missing ones)
 //            --min-loop <s> (shortest loop the search may pick; per track: prompts entry `min_loop`)
+//            --tail <s> (keep s seconds of the loop's start after loopEnd, for tempo-stretched playback;
+//                        per track: prompts entry `tail`; default 0 = the file ends at loopEnd)
 //
 // With no credentials it prints the setup steps below and exits 0 (nothing is written).
 //
@@ -420,13 +422,18 @@ function pushCand(c, x) {
   if (c.list.length > 400) { c.list.sort((a, b) => b.score - a.score); c.list.length = 200; c.minScore = c.list[199].score; }
 }
 /** bake the seam: the X s before `end` fade into the X s before `start`; the result ends at `end` */
-function bakeLoop(chans, rate, start, end, xfadeSec) {
+function bakeLoop(chans, rate, start, end, xfadeSec, tailSec) {
   const X = Math.max(2, Math.min(Math.round(xfadeSec * rate), start, Math.floor((end - start) / 4)));
+  // tail: after e the file goes on with the music from s (what the loop plays next), so a player that
+  // overshoots e a little (an <audio> element stretched by playbackRate, polled every 25 ms) never runs
+  // off the end of the file; the loop points stay s / e
+  const T = Math.max(0, Math.min(Math.round((tailSec || 0) * rate), end - start));
   return {
     xfade: X / rate,
     channels: chans.map((a) => {
-      const out = new Float32Array(end);
+      const out = new Float32Array(end + T);
       out.set(a.subarray(0, end));
+      if (T) out.set(a.subarray(start, start + T), end);
       for (let i = 0; i < X; i++) {
         const t = (i / X) * Math.PI / 2;
         out[end - X + i] = a[end - X + i] * Math.cos(t) + a[start - X + i] * Math.sin(t);
@@ -512,7 +519,7 @@ async function processTake(t, take, o) {
     const cands = findLoop(channels, rate, { all: o.listen ? 3 : 1, minLoop: t.min_loop || o.minLoop || 0 }) || [];
     loop = null;
     for (const c of cands) {
-      const b = bakeLoop(channels, rate, c.start, c.end, o.xfade);
+      const b = bakeLoop(channels, rate, c.start, c.end, o.xfade, t.tail != null ? t.tail : o.tail);
       c.baked = b.channels; c.xf = b.xfade;
       if (!o.listen) { loop = c; break; }
       const h1 = await listenSeam(b.channels, rate, c.loopStart, c.loopEnd), h2 = await listenSeam(b.channels, rate, c.loopStart, c.loopEnd);
@@ -559,7 +566,7 @@ async function main(argv, E) {
   fs.mkdirSync(rawDir, { recursive: true });
   const takes = Math.max(1, +arg('--takes', 1));
   const log = (s) => console.log(s);
-  const o = { xfade: +arg('--xfade', 0.6), lufs: +arg('--lufs', -18), kbps: +arg('--kbps', 96), noLoop: argv.includes('--no-loop'), listen: argv.includes('--listen'), minLoop: +arg('--min-loop', 0), log };
+  const o = { xfade: +arg('--xfade', 0.6), lufs: +arg('--lufs', -18), kbps: +arg('--kbps', 96), noLoop: argv.includes('--no-loop'), listen: argv.includes('--listen'), minLoop: +arg('--min-loop', 0), tail: +arg('--tail', 0), log };
   let fails = 0;
   for (const t of tracks) {
     const exists = ['ogg', 'm4a', 'mp3', 'wav'].find((e) => fs.existsSync(path.join(outDir, t.id + '.' + e)));

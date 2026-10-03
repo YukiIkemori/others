@@ -45,6 +45,10 @@ const SLICE_BGM = ['title', 'home', 'town', 'tavern', 'overworld', 'tower', 'bat
 SLICE_BGM.push('ice', 'ghost', 'yule', 'bonfire', 'siege');
 // 砂漠（desert_*.js、design/notes/audio.md）: 王墓の曲と、新しい 3 曲（カシムの市場・砂漠のワールド・隊商の夜）
 SLICE_BGM.push('kasim', 'desert', 'caravan', 'pyramid');
+// 終盤・ボス・地方の曲（design/bgm_changes.md の 6・7 節）: 大書庫と虚ろの王の場、ボスの 3 分け（最後 2 つ・地方・章）、宿敵・残影・円環竜、
+// 湿原・諸島・山地・灰の荒野・高原の地方の曲、諸島の沖の島の海の曲、火山の中、エンディング（final_ending）
+SLICE_BGM.push('lastdungeon', 'hollowking', 'lastboss', 'lastboss2', 'regionboss', 'chapterboss', 'rival', 'valzard', 'superboss',
+  'marsh', 'isles', 'mine', 'ash', 'star', 'sea', 'volcano', 'ending');
 const EXPRS = ['neutral', 'smile', 'sad', 'angry', 'surprise'];
 const MEDIA_EXT = { bgm: ['ogg', 'm4a', 'mp3', 'wav'], voice: ['ogg', 'm4a', 'mp3', 'wav'], portraits: ['webp', 'png', 'jpg'] };
 const MIME = { ogg: 'audio/ogg', m4a: 'audio/mp4', mp3: 'audio/mpeg', wav: 'audio/wav', webp: 'image/webp', png: 'image/png', jpg: 'image/jpeg' };

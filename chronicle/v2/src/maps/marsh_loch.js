@@ -173,7 +173,7 @@
       zones: [],
       light: MK.LIGHT_TOWN,
       dark: false,
-      bgm: 'town',
+      bgm: 'marsh',
       meta: { sub: R.T('map.marsh_loch.loch.meta.sub'), chestsInfo: false },
       // 町ぜんたいを 1 枚に描いた下絵（v2/assets/env/moss_village/under/loch*、design/ENV_ASSETS.md §7）。湖・葦・板の道・小島・建物・大鐘・くいの鐘楼はこの絵、
       // 当たり・戸口・人・灯り・ほかの物は上のデータのまま。絵が無ければマスから焼く

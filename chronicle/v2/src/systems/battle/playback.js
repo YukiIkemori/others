@@ -643,6 +643,7 @@
     } else {
       v.flash = 1;
       sfx(u.boss ? 'boss_die' : 'enemy_die');
+      if (u.boss && _.bossVoice) _.bossVoice.defeat(st, e);   // ボスの倒れた時の一言（voice_boss.js。待たない）
       P.tween(st, v, 'gone', 1, u.boss ? 900 : 420);
       await st.pwait(u.boss ? 600 : 240);
     }
@@ -746,6 +747,7 @@
     if (v) { v.flash = soft ? 0.7 : 1; v.flashHold = R.Engine.time + (soft ? 60 : 120); }
     if (!rm && R.Settings.get('shake') !== 'off') st.shake = { t0: R.Engine.time, ms: soft ? 300 : 560, amp: soft ? 3 : 7 };
     if (!soft) sfx('roar');
+    if (_.bossVoice) _.bossVoice.enrage(st, e);   // ボスの暴走の一言（voice_boss.js。待たない）
     try { if (R.Audio.setTempo) R.Audio.setTempo(P.ENRAGE_TEMPO); } catch (err) { /* ignore */ }
     st.head = soft ? { name: e.text, t0: R.Engine.time, tint: '#ffb070', color: '#ffe0c0' } : { name: e.text, t0: R.Engine.time, tint: '#ff6a52', color: '#ffc2b2' };
     await st.pwait(1100);

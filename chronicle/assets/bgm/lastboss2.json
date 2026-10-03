@@ -1,0 +1,31 @@
+{
+  "loopStart": 29.977,
+  "loopEnd": 106.777,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. The game's world lives in an endless night lit by lanterns, lamps and great beacon fires; the score is gentle and melancholic, with warmth and a quiet, stubborn hope. The true final battle against the final form of the void, now given a name: majestic and grand, solemn awe that turns into resolve, the heroes' hope rising against the closing of the last page of the world's book. More driving than the first form but still cathedral-like and noble; a broad, singable heroic melody; near the climax the harmony opens into a radiant major chorale before the battle drives on. Tempo 150 BPM, 4/4 time, key of E minor. Instrumentation: pipe organ, full wordless choir (no words), full orchestra, heroic french horns and trumpets, fast string runs, timpani, cymbals, cathedral bells, harp glissandi. Form: organ and choir intro; driving main section with fast strings and brass; heroic horn melody; a radiant broad chorale climax in the relative major with choir and bells; back to the driving main section. Duration: 120 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+    "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]\n[[B4]]",
+    "generated": "2026-10-03T00:20:18.015Z",
+    "rawSeconds": 122.5,
+    "takes": 1
+  },
+  "analysis": {
+    "loudnessLUFS": -18,
+    "truePeakDb": -5.6,
+    "gainDb": -6.4,
+    "peakLimited": false,
+    "loopScore": 0.688,
+    "seamListen": {
+      "seam_smooth": 9.5,
+      "problem": "none"
+    },
+    "seamCorr": 0.511,
+    "xfade": 0.6,
+    "medianDb": -22.3,
+    "longestSilence": 0,
+    "seamLevelDiffDb": 2.3,
+    "seamJump": 0.0143,
+    "maxStep": 0.0394
+  }
+}

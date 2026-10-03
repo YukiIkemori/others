@@ -19,7 +19,7 @@
         exits: [{ x: door.x, y: h - 1, w: 1, h: 1, to: { map: 'loch', spawn: o.back } }],
         triggers: o.triggers || [],
         light: Object.assign({}, MK.LIGHT_ROOM, o.light || {}),
-        bgm: o.bgm || 'town',
+        bgm: o.bgm || 'marsh',
         meta: Object.assign({ minimap: false }, o.meta || {}),
       });
     }
@@ -32,7 +32,7 @@
       npcs: [K.npc('item_keeper', 'npc_marsh_woman', 5, 2, { name: R.T('map.marsh_loch_interiors.loch_items.npcs.0.item_keeper.name'), dir: 's', talk: 'loch_item_keeper', pushable: false })],
     });
     interior('loch_tavern', R.T('map.marsh_loch_interiors.loch_tavern'), 16, 12, {
-      back: 'tavern', carpet: [5, 6, 6, 3], meta: { sub: R.T('map.marsh_loch_interiors.loch_tavern.meta.sub') },
+      back: 'tavern', carpet: [5, 6, 6, 3], bgm: 'tavern', meta: { sub: R.T('map.marsh_loch_interiors.loch_tavern.meta.sub') },
       objects: [K.prop('bar_counter', 3, 3), K.prop('bar_counter', 4, 3), K.prop('bar_counter', 5, 3), K.prop('bar_counter', 6, 3), K.prop('keg_rack', 1, 2), K.prop('keg_rack', 13, 2, { w: 2 }),
         K.prop('table', 11, 5), K.prop('chair', 10, 5), K.prop('chair', 12, 5), K.prop('table', 11, 8), K.prop('chair', 10, 8), K.prop('chair', 12, 8),
         K.prop('table', 3, 8), K.prop('chair', 2, 8), K.prop('lantern', 8, 3), K.prop('lantern', 14, 8), K.prop('wall_painting', 10, 1)],

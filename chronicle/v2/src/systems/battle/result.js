@@ -140,7 +140,9 @@
       });
     }
     const end = (Bt.lastEnd = { result: 'win', poseAt: R.Engine.time, voice: null });
-    if (alive.length) {
+    // ボスの倒れた時の一言（voice_boss.js）が鳴っていれば、勝利の声はその後（2.6 秒まで。札は待たない）
+    const victoryVoice = () => {
+      if (st.dead) return;   // 場面を閉じた後は鳴らさない
       const rng = R.rng('victory:' + ((R.Game && R.Game.seed) || 0) + ':' + (R.Game && R.Game.steps || 0));
       const id = _.voice.play(rng.pick(alive), 'victory', { speed: 1, force: true });
       if (id) {
@@ -154,6 +156,10 @@
           return false;
         });
       }
+    };
+    if (alive.length) {
+      if (_.bossVoice && _.bossVoice.defeatBusy(st)) _.voice.settle(2600).then(victoryVoice);
+      else victoryVoice();
     }
     // ポーズを見せてから札（声はそのまま）
     await R.wait(st.speed() > 1 ? 500 : 850);

@@ -34,7 +34,9 @@ for (const m of areas) {
   for (const z of m.zones || []) if (!R.DB.encounters[z.zone]) bad.push('出現表が無い ' + z.zone);
   if (!(m.zones || []).length) bad.push('出現表が無い');
   if (!(m.meta && Array.isArray(m.meta.worldRect) && m.meta.worldRect.length === 4)) bad.push('meta.worldRect');
-  if (m.bgm !== 'overworld' && !(m.region === 'r_desert' && m.bgm === 'desert') && !(m.region === 'r_snow' && m.bgm === 'ice')) bad.push('曲 ' + m.bgm);   // 砂漠のエリアは砂漠の曲・雪原のエリアは雪原の曲
+  // 地方の曲（砂漠・雪原・湿原・諸島（沖の島は海の曲）・山地・灰の荒野・高原。2026-10-03）。ほかは overworld
+  const AREA_BGM = { r_desert: ['desert'], r_snow: ['ice'], r_marsh: ['marsh'], r_isles: ['isles', 'sea'], r_mine: ['mine'], r_ash: ['ash'], r_star: ['star'] };
+  if (m.bgm !== 'overworld' && !(AREA_BGM[m.region] || []).includes(m.bgm)) bad.push('曲 ' + m.bgm);
   ok(`${m.id}（${m.name}、${m.w}×${m.h}）: 形`, !bad.length, bad);
 }
 

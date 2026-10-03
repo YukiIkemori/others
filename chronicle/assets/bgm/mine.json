@@ -1,0 +1,31 @@
+{
+  "loopStart": 24.822,
+  "loopEnd": 70.976,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. The game's world lives in an endless night lit by lanterns, lamps and great beacon fires; the score is gentle and melancholic, with warmth and a quiet, stubborn hope. A town of smiths deep under the mountains and the mountain roads around it: forge fires glowing through the dark, hammers ringing on anvils, an old oath to the smith god, stubborn and proud people. Sturdy, proud and hard-working, a marching work song with weight and dignity, warm under its iron. Tempo 100 BPM, 4/4 time, key of D dorian. Instrumentation: low brass (tuba and horns), cellos and basses, hammered dulcimer, a bagpipe-like drone, anvil strikes on the beat, frame drums, a wordless low male hum (no words). Form: anvil and drum pickup; section A horn melody over the marching bass; section B dulcimer melody, warmer and a little wistful; a short interlude with only drone and anvils; section A again with full brass. Duration: 90 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+    "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]\n[[C4]]\n[[E5]]",
+    "generated": "2026-10-03T00:27:20.628Z",
+    "rawSeconds": 91,
+    "takes": 1
+  },
+  "analysis": {
+    "loudnessLUFS": -18,
+    "truePeakDb": -4.7,
+    "gainDb": -6.2,
+    "peakLimited": false,
+    "loopScore": 0.8,
+    "seamListen": {
+      "seam_smooth": 9.5,
+      "problem": "none"
+    },
+    "seamCorr": 0.524,
+    "xfade": 0.6,
+    "medianDb": -22.2,
+    "longestSilence": 0.9,
+    "seamLevelDiffDb": 2.7,
+    "seamJump": 0.0065,
+    "maxStep": 0.0506
+  }
+}

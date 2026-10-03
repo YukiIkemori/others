@@ -20,7 +20,7 @@
         exits: [{ x: door.x, y: h - 1, w: 1, h: 1, to: { map: o.backMap || 'dovan', spawn: o.back } }],
         triggers: o.triggers || [],
         light: Object.assign({}, MK.LIGHT_ROOM, o.light || {}),
-        bgm: o.bgm || 'town', propSet: 'mine',
+        bgm: o.bgm || 'mine', propSet: 'mine',
         meta: Object.assign({ minimap: false }, o.meta || {}),
       });
     }

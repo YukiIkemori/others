@@ -9,6 +9,8 @@
 //                                            --char selma,hagen   only these companions' battle lines
 //   node tools/voice_tts.js --story2         only the v2 slice story lines + town barks (design/voice/story_v2_lines.csv,
 //                                            tools/story_voice.js)
+//   node tools/voice_tts.js --boss           only the boss voices in battle (design/voice/boss_lines.csv, tools/boss_voice.js;
+//                                            --bosses b_lazaro,b_zakuro  only these bosses   --no-boss  skip them)
 //   node tools/voice_tts.js --force          regenerate files that exist        --dry-run   print prompts only
 //   node tools/voice_tts.js --reprocess      redo trim / effects / loudness from the cached raw WAVs (no API)
 //   options: --lufs <n> (default -16)  --raw <dir> (default $TMPDIR/voice_raw)  --report <file.json>
@@ -88,9 +90,24 @@ function allLines(C) {
       });
     }
   }
+  // boss voices in battle (start / enrage / ult / defeat; design/voice/boss_lines.csv, tools/boss_voice.js)
+  if (C.boss) {
+    const BO = require('./boss_voice');
+    for (const b of BO.loadLines()) {
+      out.push({
+        id: b.id, speaker: 'boss_' + b.boss, bossv: b.boss, kind: b.kind, text: b.text, direction: b.direction, scene: 'battle',
+        est: Math.max(0.6, BO.spokenLen(b.text) / 7 + (b.text.match(/……/g) || []).length * 0.4 + 0.3),
+      });
+    }
+  }
   return out;
 }
 function speakerOf(C, line) {
+  if (line.bossv) {
+    const b = require('./boss_voice').castOf(C, line.bossv);
+    if (!b) throw new Error('no boss casting for ' + line.bossv);
+    return b;
+  }
   if (line.battle) {
     const b = C.battle && C.battle.cast[line.battle];
     if (!b) throw new Error('no battle casting for ' + line.battle);
@@ -109,6 +126,7 @@ function buildPrompt(C, line) {
     `Style: ${sp.style}`,
     line.direction ? `This line: ${line.direction}` : '',
     line.shout && line.battle ? 'A short battle shout: one quick burst, well under one and a half seconds, no drawn-out vowels.' : '',
+    line.bossv ? `A boss's line in the middle of a battle: keep it tight, about ${Math.max(1.5, Math.round(line.est * 1.2 * 2) / 2)} seconds, no long silences (only a short pause at "……").` : '',
     'Language: natural, native Tokyo-standard Japanese, performed by a professional anime/game voice actor. Pauses at "……" and "――". Do not read these notes aloud; say only the transcript.',
   ].filter(Boolean).join('\n');
   const said = (C.readings || {})[line.id] || spoken(line.text); // kana reading for words the model misreads
@@ -236,6 +254,9 @@ async function main(argv, E) {
   if (argv.includes('--battle')) lines = lines.filter((l) => l.battle || l.hero);
   if (argv.includes('--no-battle')) lines = lines.filter((l) => !l.battle);
   if (argv.includes('--story2')) lines = lines.filter((l) => l.story2);
+  if (argv.includes('--boss')) lines = lines.filter((l) => l.bossv);
+  if (argv.includes('--no-boss')) lines = lines.filter((l) => !l.bossv);
+  if (arg('--bosses')) { const want = arg('--bosses').split(','); lines = lines.filter((l) => want.includes(l.bossv)); }
   if (arg('--char')) { const want = arg('--char').split(','); lines = lines.filter((l) => want.includes(l.battle)); }
   if (arg('--only')) { const want = arg('--only').split(','); lines = lines.filter((l) => want.includes(l.id)); }
   if (arg('--speaker')) { const want = arg('--speaker').split(','); lines = lines.filter((l) => want.includes(l.speaker)); }

@@ -176,7 +176,7 @@
       zones: [],
       light: AK.LIGHT_TOWN,
       dark: false,
-      bgm: 'town',
+      bgm: 'ash',
       meta: { sub: R.T('map.ash_caldera.caldera.meta.sub'), chestsInfo: false },
       // 町ぜんたいを 1 枚に描いた下絵（v2/assets/env/ash/under/caldera*、design/ENV_ASSETS.md §7）。崖・段・溶岩の堀・建物・闘技場・大卵殻・湯はこの絵、
       // 当たり・戸口・人・灯り・働く物は上のデータ。lava_glow は光だけ（絵を持たない）

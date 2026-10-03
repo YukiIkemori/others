@@ -1,0 +1,31 @@
+{
+  "loopStart": 9.543,
+  "loopEnd": 74.875,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. The game's world lives in an endless night lit by lanterns, lamps and great beacon fires; the score is gentle and melancholic, with warmth and a quiet, stubborn hope. A high plateau under a sky full of stars and its academy town of star-readers: an observatory dome, brass telescopes and star charts, wind over the highland grass, an old sage who counted every star. Wondering, celestial and scholarly, a gentle 3/4 waltz with a sense of quiet curiosity and wide open sky. Tempo 84 BPM, 3/4 time, key of B-flat major (lydian colour). Instrumentation: celesta and harp, glass-harmonica-like pad, solo clarinet melody, pizzicato and soft bowed strings, music box, light triangle, a soft french horn. Form: celesta and harp pickup; section A clarinet waltz melody; section B strings and horn, a little wistful; a music-box interlude; section A again with fuller strings. Duration: 90 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+    "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]\n[[C4]]\n[[E5]]",
+    "generated": "2026-10-03T00:28:50.259Z",
+    "rawSeconds": 88.7,
+    "takes": 1
+  },
+  "analysis": {
+    "loudnessLUFS": -18,
+    "truePeakDb": -7.4,
+    "gainDb": -7.5,
+    "peakLimited": false,
+    "loopScore": 0.488,
+    "seamListen": {
+      "seam_smooth": 10,
+      "problem": "none"
+    },
+    "seamCorr": 0.098,
+    "xfade": 0.6,
+    "medianDb": -22.8,
+    "longestSilence": 0,
+    "seamLevelDiffDb": 0.6,
+    "seamJump": 0.0071,
+    "maxStep": 0.0411
+  }
+}

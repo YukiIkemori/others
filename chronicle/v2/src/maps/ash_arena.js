@@ -81,7 +81,7 @@
       triggers: [{ id: 'arrive', on: 'enter', event: 'caldera_arena_arrive' }],
       zones: [],
       light: AK.LIGHT_ARENA, dark: false,
-      bgm: 'town',
+      bgm: 'ash',
       meta: { sub: R.T('map.ash_arena.caldera_arena.meta.sub'), minimap: false },
     });
   });

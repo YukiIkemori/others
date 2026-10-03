@@ -72,7 +72,7 @@
       exits: [{ x: 27, y: 51, w: 3, h: 1, to: { map: 's_plateau', spawn: 'north' } }, { x: 59, y: 30, w: 1, h: 2, to: { map: 's_ridge', spawn: 'west' } }],
       triggers: [{ id: 'arrival', on: 'enter', event: 'orbis_arrival' }],
       zones: [],
-      light: SK.LIGHT_TOWN, dark: false, bgm: 'town', bbg: 'star',
+      light: SK.LIGHT_TOWN, dark: false, bgm: 'star', bbg: 'star',
       meta: { sub: R.T('map.star_orbis.orbis.meta.sub'), chestsInfo: false },
       art: P.art,
     });

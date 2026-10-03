@@ -83,7 +83,7 @@
       exits: [{ x: 26, y: 47, w: 2, h: 1, to: { map: 'g_valley', spawn: 'gate' } }],
       triggers: [{ id: 'arrival', on: 'enter', event: 'dovan_arrival' }],
       zones: [],
-      light: MK.LIGHT_TOWN, dark: false, bgm: 'town', bbg: 'mine', propSet: 'mine',
+      light: MK.LIGHT_TOWN, dark: false, bgm: 'mine', bbg: 'mine', propSet: 'mine',
       meta: { sub: R.T('map.mine_dovan.dovan.meta.sub'), chestsInfo: false },
       art: P.art,
     });

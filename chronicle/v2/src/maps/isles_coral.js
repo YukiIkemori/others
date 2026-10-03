@@ -64,7 +64,7 @@
       exits: [{ x: 21, y: 0, w: 4, h: 1, to: { map: 'i_cliff', spawn: 'south' } }],
       triggers: [{ id: 'arrival', on: 'enter', event: 'coral_arrival' }],
       zones: [],
-      light: IK.LIGHT_TOWN, dark: false, bgm: 'town', bbg: 'isles',
+      light: IK.LIGHT_TOWN, dark: false, bgm: 'isles', bbg: 'isles',
       meta: { sub: R.T('map.isles_coral.coral.meta.sub'), chestsInfo: false },
       art: P.art,
     });

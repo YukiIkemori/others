@@ -20,7 +20,7 @@
         exits: [{ x: door.x, y: h - 1, w: 1, h: 1, to: { map: 'caldera', spawn: o.back } }],
         triggers: o.triggers || [],
         light: Object.assign({}, AK.LIGHT_ROOM, o.light || {}),
-        bgm: o.bgm || 'town',
+        bgm: o.bgm || 'ash',
         meta: Object.assign({ minimap: false }, o.meta || {}),
       });
     }
@@ -33,7 +33,7 @@
       npcs: [K.npc('item_keeper', 'npc_ash_woman', 5, 2, { name: R.T('map.ash_caldera_interiors.caldera_items.npcs.0.item_keeper.name'), dir: 's', talk: 'caldera_item_keeper', pushable: false })],
     });
     interior('caldera_tavern', R.T('map.ash_caldera_interiors.caldera_tavern'), 16, 12, {
-      back: 'tavern', carpet: [5, 6, 6, 3], wall: 'wall_stone', floor: 'basalt_floor', meta: { sub: R.T('map.ash_caldera_interiors.caldera_tavern.meta.sub') },
+      back: 'tavern', carpet: [5, 6, 6, 3], bgm: 'tavern', wall: 'wall_stone', floor: 'basalt_floor', meta: { sub: R.T('map.ash_caldera_interiors.caldera_tavern.meta.sub') },
       objects: [K.prop('bar_counter', 3, 3), K.prop('bar_counter', 4, 3), K.prop('bar_counter', 5, 3), K.prop('bar_counter', 6, 3), K.prop('keg_rack', 1, 2, { w: 2 }), K.prop('keg_rack', 13, 2, { w: 2 }),
         K.prop('table', 11, 5), K.prop('chair', 10, 5), K.prop('chair', 12, 5), K.prop('table', 11, 8), K.prop('chair', 10, 8), K.prop('chair', 12, 8),
         K.prop('table', 3, 8), K.prop('chair', 2, 8), K.prop('lantern', 8, 3), K.prop('lantern', 14, 8), K.prop('arena_banner', 10, 2)],   // 旗は壁の前の床に立てる（壁の立ち上がりの中に立てない）
@@ -137,7 +137,7 @@
         exits: [{ x: door.x, y: 11, w: 1, h: 1, to: { map: 'world', spawn: 'haimi' } }],
         triggers: [],
         light: Object.assign({}, AK.LIGHT_ROOM),
-        bgm: 'town',
+        bgm: 'ash',
         meta: { minimap: false, sub: R.T('map.ash_caldera_interiors.haimi_inn.meta.sub') },
       });
     }
