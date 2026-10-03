@@ -2,11 +2,139 @@
  "route": "R4",
  "phone": false,
  "ok": false,
- "checks": {},
- "errors": [],
- "started": "2026-09-27T17:11:01.698Z",
- "status": {
-  "fail": "harness: page.evaluate: Target page, context or browser has been closed\n    at runRoute (/home/user/others/chronicle/v2/tools/qa/playthrough.js:259:23)\n    at async /home/user/others/chronicle/v2/tools/qa/playthrough.js:432:17\n    at async main (/home/user/others/chronicle/v2/tools/qa/playthrough.js:428:3)"
+ "checks": {
+  "tavernWalked": false,
+  "recruitedInTavern": false,
+  "reachedT1": false,
+  "invariants": true,
+  "forestPinsCleared": true,
+  "choices": false,
+  "chronicleText": false,
+  "uniqueFromLast": false,
+  "hero": true,
+  "party": false,
+  "stubs0": true,
+  "loadErrors0": true,
+  "consoleErrors0": true,
+  "noEngineError": true,
+  "noDev": true,
+  "wipeRetryRooteater": false
  },
- "wallSec": 535
+ "errors": [],
+ "started": "2026-10-03T18:24:51.416Z",
+ "status": {
+  "frames": 60375,
+  "time": 3022666,
+  "goal": "farmer",
+  "done": false,
+  "fail": "goal farmer timed out",
+  "top": "field",
+  "pos": "roa 7,13",
+  "steps": 49,
+  "gold": 50,
+  "battles": 0,
+  "wipes": 0,
+  "round": null,
+  "hp": 1,
+  "engineError": null
+ },
+ "final": {
+  "inv": {
+   "top": "field",
+   "locks": [],
+   "busy": false,
+   "fade": 0,
+   "input": true,
+   "msg": false,
+   "ok": true
+  },
+  "pinned": [],
+  "chronicle": "森が歌を忘れ、道を変えた年のこと。\n語り部の見習いは、迷いの森で\n四人を探した。",
+  "uniq": [],
+  "lastWho": "hans",
+  "order": [
+   "hans",
+   "ben",
+   "roy",
+   "pim"
+  ],
+  "choices": {},
+  "cleared": false,
+  "t1": false,
+  "tier": 0,
+  "hero": {
+   "type": "spellblade",
+   "sex": "m",
+   "name": "アルン"
+  },
+  "party": [
+   "hero"
+  ],
+  "stubs": [],
+  "loadErrors": [],
+  "playMs": 3017950,
+  "steps": 49,
+  "gold": 50,
+  "stats": {
+   "tops": {
+    "screen:title": 16,
+    "cp_curtain": 119,
+    "caption": 52,
+    "message": 34,
+    "screen:charcreate": 19,
+    "field": 60135
+   },
+   "taps": 69,
+   "screenOps": 17,
+   "choices": 0,
+   "chars": 551,
+   "captions": 4,
+   "battles": [],
+   "wipes": [],
+   "talks": 18,
+   "plans": 1463,
+   "planMs": 21707.399999972433,
+   "forced": []
+  },
+  "phaseAt": {
+   "start": {
+    "f": 0,
+    "t": 3915.89562032356,
+    "steps": 0,
+    "chars": 0,
+    "ops": 0,
+    "battles": 0,
+    "playMs": 0
+   }
+  },
+  "log": [
+   {
+    "f": 289,
+    "t": 18366,
+    "msg": "goal berna"
+   },
+   {
+    "f": 348,
+    "t": 21316,
+    "msg": "act berna at roa_house 11,5"
+   },
+   {
+    "f": 373,
+    "t": 22566,
+    "msg": "goal farmer"
+   },
+   {
+    "f": 60374,
+    "t": 3022616,
+    "msg": "FAIL goal farmer timed out"
+   }
+  ],
+  "dev": false
+ },
+ "trips": {
+  "tavern": null,
+  "party": null,
+  "moves": 2
+ },
+ "wallSec": 222
 }
