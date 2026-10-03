@@ -67,9 +67,10 @@
     });
 
     // ---------------------------------------------------------------- 火の神殿 16×12（巫女カヤ。種火・火の鳥の巡りの記録・火の鳥の背）
+    // 火の鳥の像は敷物（6〜9）とかがり火（5・10）のまん中 8 に絵を置く（dx: 0.5。当たりは 7 のまま。持ち主 2026-10-03「像がまん中にない」）
     interior('caldera_temple', R.T('map.ash_caldera_interiors.caldera_temple'), 16, 12, {
       back: 'temple', carpet: [6, 3, 4, 7], wall: 'wall_stone', floor: 'basalt_floor',
-      objects: [K.prop('phoenix_statue', 7, 2), K.prop('iron_brazier', 5, 3), K.prop('iron_brazier', 10, 3), K.exam(8, 3, 'caldera_seed_fire'),
+      objects: [Object.assign(K.prop('phoenix_statue', 7, 2), { dx: 0.5 }), K.prop('iron_brazier', 5, 3), K.prop('iron_brazier', 10, 3), K.exam(8, 3, 'caldera_seed_fire'),
         K.prop('bookshelf', 1, 2), K.prop('bookshelf', 2, 2), K.exam(1, 3, 'caldera_temple_record'), K.prop('bench', 3, 7), K.prop('bench', 12, 7), K.prop('water_urn', 14, 4)],
       npcs: [
         K.npc('kaya', 'npc_kaya', 8, 5, { name: R.T('map.ash_caldera_interiors.caldera_temple.npcs.0.kaya.name'), title: R.T('map.ash_caldera_interiors.caldera_temple.npcs.0.kaya.title'), dir: 's', talk: 'caldera_kaya', reward: 'lead', pushable: false }),

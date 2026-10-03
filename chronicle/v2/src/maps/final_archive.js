@@ -98,7 +98,8 @@
         K.stairs(38, 31, { map: 'archive_3', spawn: 'from4' }, { id: 'archive_4_down', look: 'down' }), K.stairs(39, 31, { map: 'archive_3', spawn: 'from4' }, { look: 'down' }),
         K.stairs(21, 2, { map: 'archive_5', spawn: 'from4' }, { id: 'archive_4_up', look: 'up', cond: 'final_shades' }), K.stairs(22, 2, { map: 'archive_5', spawn: 'from4' }, { look: 'up', cond: 'final_shades' }),   // 三英雄の影を越えるまで上がれない
         ...PICS.map(([x, y, n]) => K.exam(x, y, 'archive_4_painting', { pic: n })),
-        K.spring('archive_4_spring', 7, 24),
+        // 女神の像は描いた部屋（左の壁〜大きな壁の塊）と頭巾の像 2 体のまん中に絵を置く（dx: -0.5。当たりは 7〜8 のまま。持ち主 2026-10-03）
+        Object.assign(K.spring('archive_4_spring', 7, 24), { dx: -0.5 }),
         K.exam(5, 9, 'archive_4_statue'), K.exam(9, 14, 'archive_4_statue'),
         K.chest('archive_4_c1', 37, 8, { pool: 'p_T' }), K.chest('archive_4_c2', 4, 30, { item: 'i_elixir', n: 1 }), K.chest('archive_4_c3', 13, 8, { pool: 'p_T' }),
         ...glow([[7, 11], [7, 16], [30, 12], [16, 29], [30, 29]]),
@@ -119,10 +120,11 @@
         K.stairs(19, 2, { map: 'archive_6', spawn: 'from5' }, { id: 'archive_5_up', look: 'up', cond: 'final_lazaro' }), K.stairs(20, 2, { map: 'archive_6', spawn: 'from5' }, { look: 'up', cond: 'final_lazaro' }),
         K.exam(19, 4, 'archive_5_seal', { cond: '!final_lazaro' }), K.exam(20, 4, 'archive_5_seal', { cond: '!final_lazaro' }),
         K.exam(18, 6, 'archive_5_desk'), K.exam(21, 6, 'archive_5_desk'),
-        K.spring('archive_5_spring', 21, 26),
+        // 女神の像は部屋の軸（階段・敷物・燭台のまん中 20）に置く（21 では 2 マス東に寄っていた。持ち主 2026-10-03）
+        K.spring('archive_5_spring', 19, 26),
         K.chest('archive_5_c1', 5, 20, { pool: 'p_T' }), K.chest('archive_5_c2', 34, 20, { item: 'i_ether2', n: 2 }),
         K.prop('candelabra', 17, 6), K.prop('candelabra', 22, 6),
-        ...glow([[9, 10], [30, 10], [19, 24]]),
+        ...glow([[9, 10], [30, 10]]),   // 像の前の白紙の光（19, 24）は像を軸へ移した時に外した（像の頭の横に光がずれて見える）
       ],
       npcs: [K.npc('lazaro', 'lazaro', 19, 8, { name: R.T('map.final_archive.archive_5.npcs.0.lazaro.name'), title: R.T('map.final_archive.archive_5.npcs.0.lazaro.title'), dir: 's', talk: 'archive_5_lazaro', reward: null, pushable: false, cond: '!final_lazaro' })],
       painted: ['stairs_up', 'stairs_down'],
