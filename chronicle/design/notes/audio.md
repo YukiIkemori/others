@@ -557,3 +557,10 @@ listening check; `--char selma`, `--only <id> --force`). Treat the set as open-e
   previous one), never waits. Fast-forward / repeat: no start / enrage, an ultimate only the first time in the battle, defeat kept.
   Setting `なし` = no voice and no subtitle; `大技だけ` keeps the boss lines. Subtitle: a short line under the boss name tag while the
   clip plays (estimated from the text when the length is unknown).
+
+### 13.5 English / Chinese / Korean voices (owner 2026-10-03: wait until just before release)
+- Not now: the Japanese script still changes. Generate all three languages in one go with the TTS API right before release,
+  after the Japanese lines (and the en / zh / ko translations) are frozen.
+- Casting: every character keeps the voice it has in Japanese (same voice id in casting.json; only the text and the language
+  of the prompt change). Order: English, then Chinese (one Mandarin set shared by zh-Hans and zh-Hant), then Korean.
+- About 570 lines × 3 ≈ 1,700 clips, ~17 MB per language; load only the selected language's voice pack.
