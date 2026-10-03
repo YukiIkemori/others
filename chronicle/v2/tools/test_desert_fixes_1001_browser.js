@@ -30,7 +30,8 @@ const { ok, section, done } = require('./lib/testkit');
     const t0 = Date.now();
     while (Date.now() - t0 < (ms || 6000)) {
       await page.waitForTimeout(100);
-      const busy = await page.evaluate(() => RPG.Events.busy() || RPG.UIK.Message.busy());
+      // 選択肢は連打よけ（choiceGuard）があるので、受け付けるようになってから（armed）押す
+      const busy = await page.evaluate(() => { const st = RPG.UIK.Message.state && RPG.UIK.Message.state(); if (st && st.armed === false) return false; return RPG.Events.busy() || RPG.UIK.Message.busy(); });
       if (busy) await Bw.press(page, 'a');
       const p = await pos();
       if (p.map === want) { got = p; break; }
