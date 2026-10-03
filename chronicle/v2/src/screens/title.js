@@ -362,38 +362,43 @@
   //   座標は絵の 0〜1。sp は横に流れる速さ（論理 px/秒、風はマフラーと同じ右向き）、par は視差（重ねる層と同じ）
   const AMBI = {
     wide: {
+      // 雲ともやは絵そのものから切り抜いて流す（cuts = 空の層の中の切り抜く所、0〜1）。B: 月のまわりの雲の帯、M: 谷の東のもや。
+      // 切り抜けないときは焼いた柔らかい絵（puff、seed・h を使う）。flip で左右を返して同じ形に見えないように
+      cuts: { B: [0, 0.407, 0.172, 0.1], M: [0.677, 0.574, 0.24, 0.074] },
       hi: [   // 空の高い所の薄い雲（題字の奥、オーロラの手前）
-        { x: 0.58, y: 0.14, w: 0.42, h: 0.15, sp: 5.0, a: 0.30, seed: 1 },
-        { x: 0.02, y: 0.27, w: 0.48, h: 0.16, sp: 3.6, a: 0.24, seed: 2 },
-        { x: 0.82, y: 0.36, w: 0.36, h: 0.12, sp: 4.4, a: 0.28, seed: 3 },
+        { cut: 'B', x: 0.36, y: 0.16, w: 0.30, h: 0.12, sp: 7.0, a: 0.85, seed: 1 },
+        { cut: 'B', flip: true, x: 0.02, y: 0.30, w: 0.36, h: 0.13, sp: 5.0, a: 0.75, seed: 2 },
+        { cut: 'M', x: 0.55, y: 0.40, w: 0.30, h: 0.10, sp: 6.0, a: 0.7, seed: 3 },
       ],
       lo: [   // 水平線の上の低い雲（月の前をときどき通る）
-        { x: 0.00, y: 0.515, w: 0.30, h: 0.09, sp: 2.4, a: 0.38, seed: 4 },
-        { x: 0.46, y: 0.475, w: 0.28, h: 0.08, sp: 2.0, a: 0.28, seed: 5 },
+        { cut: 'B', flip: true, x: 0.45, y: 0.48, w: 0.24, h: 0.08, sp: 2.4, a: 0.75, seed: 4 },
+        { cut: 'M', x: 0.0, y: 0.52, w: 0.22, h: 0.07, sp: 2.0, a: 0.7, seed: 5 },
       ],
       mist: [ // 谷のもや
-        { x: 0.28, y: 0.70, w: 0.50, h: 0.13, sp: 3.0, a: 0.24, seed: 6 },
-        { x: 0.00, y: 0.80, w: 0.46, h: 0.14, sp: 2.4, a: 0.20, seed: 7 },
-        { x: 0.60, y: 0.62, w: 0.40, h: 0.10, sp: 3.4, a: 0.18, seed: 8 },
+        { cut: 'M', x: 0.28, y: 0.70, w: 0.42, h: 0.13, sp: 3.0, a: 0.8, seed: 6 },
+        { cut: 'M', flip: true, x: 0.00, y: 0.80, w: 0.40, h: 0.14, sp: 2.4, a: 0.7, seed: 7 },
+        { cut: 'M', x: 0.60, y: 0.62, w: 0.34, h: 0.10, sp: 3.4, a: 0.6, seed: 8 },
       ],
-      beam: 0,                                          // 光の帯を出す灯火（beacons の番号 = 海辺の灯台）
+      // 光の帯を出す灯火（i = beacons の番号: 0 海辺の灯台・7 遠い星の塔）。ph 位相、len 長さ（絵の幅に対して）、hz 灯から水平線までの高さ
+      beams: [{ i: 0, ph: 0.6, len: 0.3, hz: 0.036 }, { i: 7, ph: 3.6, len: 0.22, hz: 0.03 }],
+      volcano: [0.883, 0.457],
       sea: { moon: 0.0745, y: [0.606, 0.79], x: [0, 0.145] },   // 月の道（月の真下の海）
       motes: { x: [0.33, 0.6], y: [0.58, 0.86] },   // 命令の一覧（左下）には掛けない
     },
     phone: {
       hi: [
-        { x: 0.10, y: 0.12, w: 0.70, h: 0.040, sp: 4.0, a: 0.12, seed: 1 },
-        { x: 0.55, y: 0.24, w: 0.60, h: 0.035, sp: 3.0, a: 0.11, seed: 2 },
+        { x: 0.10, y: 0.12, w: 0.70, h: 0.040, sp: 4.0, a: 0.8, seed: 1 },
+        { x: 0.55, y: 0.24, w: 0.60, h: 0.035, sp: 3.0, a: 0.7, seed: 2 },
       ],
-      lo: [{ x: 0.0, y: 0.45, w: 0.55, h: 0.030, sp: 2.2, a: 0.16, seed: 4 }],
+      lo: [{ x: 0.0, y: 0.45, w: 0.55, h: 0.030, sp: 2.2, a: 0.9, seed: 4 }],
       mist: [
-        { x: 0.2, y: 0.56, w: 0.80, h: 0.045, sp: 2.6, a: 0.10, seed: 6 },
-        { x: 0.0, y: 0.64, w: 0.70, h: 0.050, sp: 2.0, a: 0.09, seed: 7 },
+        { x: 0.2, y: 0.56, w: 0.80, h: 0.045, sp: 2.6, a: 0.65, seed: 6 },
+        { x: 0.0, y: 0.64, w: 0.70, h: 0.050, sp: 2.0, a: 0.6, seed: 7 },
       ],
-      beam: 0, sea: null, motes: { x: [0.1, 0.6], y: [0.48, 0.66] },
+      beams: [{ i: 0, ph: 0.6, len: 0.4, hz: 0.02 }], sea: null, motes: { x: [0.1, 0.6], y: [0.48, 0.66] },
     },
   };
-  const BEAM_MS = 14000;   // 灯台の光が一回りする時間
+  const BEAM_MS = 16000;   // 灯台の光が一回りする時間
 
   /** 値の雑音（2 次元、64 格子で回る） */
   function noise2(seed) {
@@ -448,6 +453,47 @@
     return c;
   }
   S._titleAmbi = { puff, AMBI };   // 確かめ用（テスト・見本の書き出し）
+  /**
+   * 絵の空の層（一枚絵だけのときは key）から雲・もやを切り抜く（明るさで抜き、2×2 に縮めて星を消し、縁をぼかす）。
+   * 1 か所 1 回だけ。読めない・画素を読めないときは null（呼ぶ側が puff に替える）
+   */
+  function plateCut(s, r) {
+    if (!r) return null;
+    const cuts = s.cuts || (s.cuts = {});
+    const key = r.join(',');
+    if (cuts[key] !== undefined) return cuts[key];
+    cuts[key] = null;
+    const img = s.mode === 'layers' ? s.layers[0].rec.img : s.key && s.key.img;
+    if (!img || !R.Gfx.canvas2d) return null;
+    try {
+      const iw = img.naturalWidth || img.width, ih = img.naturalHeight || img.height;
+      const sx = Math.round(r[0] * iw), sy = Math.round(r[1] * ih), sw = Math.round(r[2] * iw), sh = Math.round(r[3] * ih);
+      const w = Math.max(8, Math.round(sw / 2)), h = Math.max(8, Math.round(sh / 2));
+      const c = R.Gfx.canvas2d(w, h);
+      if (!c) return null;
+      const x = c.getContext('2d');
+      x.imageSmoothingEnabled = true;
+      x.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
+      const im = x.getImageData(0, 0, w, h), d = im.data, n = w * h;
+      const L = new Float32Array(n);
+      for (let i = 0; i < n; i++) L[i] = d[i * 4] * 0.3 + d[i * 4 + 1] * 0.55 + d[i * 4 + 2] * 0.15;
+      const so = Float32Array.from(L).sort();
+      const lo = so[Math.floor(n * 0.45)], hi = Math.max(lo + 1, so[Math.floor(n * 0.98)]);
+      for (let j = 0; j < h; j++) {
+        const ey = Math.pow(Math.sin(Math.PI * (j + 0.5) / h), 0.8);
+        for (let i = 0; i < w; i++) {
+          const k = j * w + i;
+          let a = clamp01((L[k] - lo) / (hi - lo));
+          a = a * a * (3 - 2 * a) * Math.pow(Math.sin(Math.PI * (i + 0.5) / w), 0.6) * ey;
+          d[k * 4] = Math.min(255, d[k * 4] * 1.15); d[k * 4 + 1] = Math.min(255, d[k * 4 + 1] * 1.15); d[k * 4 + 2] = Math.min(255, d[k * 4 + 2] * 1.15);
+          d[k * 4 + 3] = Math.round(a * 255);
+        }
+      }
+      x.putImageData(im, 0, 0);
+      cuts[key] = c;
+    } catch (e) { cuts[key] = null; }
+    return cuts[key];
+  }
   /** 動く飾りの粒の初めの状態（画面ごと） */
   function ambiState() {
     const r = R.rng('title-ambi');
@@ -461,26 +507,29 @@
     return { glints, motes };
   }
   /**
-   * 動く飾りを 1 段描く。stage = 'hi'（空の層の後、land の前）| 'lo'（land の後、岩場の前）。
+   * 動く飾りを 1 段描く。stage = 'hi'（空の高い雲）| 'lo'（低い雲・もや・光）。どちらも land の層の後、岩場とアルンの前。
    * c = {k, base, off(par), t, alpha, A, beacons, rm}
    */
   function drawAmbient(g, stage, c) {
     const D = AMBI[c.k];
-    if (!D) return;
+    if (!D || S._titleAmbi.off) return;   // off: 確かめ用（重さの比べ）
     const { base, t, alpha, rm } = c;
     const tc = rm ? 0 : t;   // 動きを減らす設定では雲を止めて置く
     const clouds = (list, kind, par, fade) => {
       if (!(fade > 0)) return;
       const d = c.off(par);
       for (const L of list) {
-        const img = puff(L.seed, kind);
+        const cut = L.cut && c.set ? plateCut(c.set, D.cuts && D.cuts[L.cut]) : null;
+        const img = cut || puff(L.seed, kind);
         if (!img) continue;
-        const w = L.w * base.w, h = L.h * base.h, span = base.w + w;
+        const w = L.w * base.w, h = cut ? w * cut.height / cut.width : L.h * base.h, span = base.w + w;
         const x0 = ((L.x * base.w + (L.sp * tc) / 1000) % span + span) % span - w;
-        // ゆっくり濃さが揺れる（雲が育ってはほどける）
-        const br = rm ? 1 : 0.85 + 0.15 * Math.sin(t / 9000 + L.seed * 1.7);
-        g.globalAlpha = L.a * br * fade * alpha;
-        g.drawImage(img, base.x + d.x + x0, base.y + d.y + L.y * base.h - h / 2, w, h);
+        // ゆっくり濃さが揺れる（雲が育ってはほどける）。puff は薄く焼いてあるので濃さを 0.35 倍に
+        const br = (rm ? 1 : 0.85 + 0.15 * Math.sin(t / 9000 + L.seed * 1.7)) * (cut ? 1 : 0.35);
+        g.globalAlpha = Math.min(1, L.a * br) * fade * alpha;
+        const X = base.x + d.x + x0, Y = base.y + d.y + L.y * base.h - h / 2;
+        if (L.flip) { g.save(); g.translate(X + w, Y); g.scale(-1, 1); g.drawImage(img, 0, 0, w, h); g.restore(); }
+        else g.drawImage(img, X, Y, w, h);
       }
       g.globalAlpha = 1;
     };
@@ -511,29 +560,46 @@
       }
       g.restore();
     }
-    // 灯台の光の帯（一回り BEAM_MS。横を向くと長く、奥・手前を向くと縮む。手前を向いた一瞬だけ灯がまたたく）
-    const bp = c.beacons && c.beacons[D.beam];
-    const lit = Math.min(1, c.A.beacon(D.beam));
-    if (bp && lit > 0) {
-      const p = { x: base.x + bp[0] * base.w + c.off(0.4).x, y: base.y + bp[1] * base.h + c.off(0.4).y };
-      const th = (t / BEAM_MS) * Math.PI * 2 + 0.6;
+    // 灯台の光の帯（一回り BEAM_MS。遠い灯台なので帯はほぼ水平: 横を向くと長く、奥を向くと縮んで水平線へ上がり、
+    // 手前を向いた一瞬だけ灯がまたたく）。命令の一覧（c.menu、前のフレームの枠）の上には掛けない（札の中で光が動くと選びの光と紛れる）
+    for (const bm of D.beams || []) {
+      const bp = c.beacons && c.beacons[bm.i];
+      const lit = Math.min(1, c.A.beacon(bm.i));
+      if (!bp || !(lit > 0)) continue;
+      const o4 = c.off(0.4);
+      const p = { x: base.x + bp[0] * base.w + o4.x, y: base.y + bp[1] * base.h + o4.y };
+      if (p.x < -40 || p.x > R.W + 40) continue;
+      const th = (t / BEAM_MS) * Math.PI * 2 + bm.ph;
       const cx = Math.cos(th), sz = Math.sin(th);          // sz > 0: 奥へ、< 0: 手前へ
-      const toward = Math.max(0, -sz);
-      const len = base.w * 0.2 * (0.22 + 0.78 * Math.abs(cx));
-      const ex = cx * len, ey = -sz * len * 0.16;          // 奥を向くと水平線へ上がり、手前を向くと下がる
+      const away = Math.max(0, sz), toward = Math.max(0, -sz);
+      const len = base.w * bm.len * (0.25 + 0.75 * Math.abs(cx));
+      const hz = bm.hz * base.h;                           // 灯から水平線までの高さ
+      const ex = cx * len, ey = -(0.15 + 0.85 * away) * hz + toward * hz * 0.5;
       const nl = Math.hypot(ex, ey) || 1, nx = -ey / nl, ny = ex / nl;
-      const a0 = (0.06 + 0.1 * toward) * lit * alpha;
-      g.save(); g.globalCompositeOperation = 'lighter';
-      for (const [wk, ak] of [[0.16, 0.5], [0.06, 1]]) {
-        const hw = 1.5 + nl * wk;
+      const a0 = (0.1 + 0.12 * toward + 0.04 * away) * lit * alpha;
+      g.save();
+      const mr = c.menu;
+      if (mr && mr.w > 0) {
+        const pd = 6;
+        g.beginPath(); g.rect(0, 0, R.W, R.H); g.rect(mr.x - pd, mr.y - pd, mr.w + pd * 2, mr.h + pd * 2); g.clip('evenodd');
+      }
+      g.globalCompositeOperation = 'lighter';
+      for (const [wk, ak] of [[0.12, 0.45], [0.045, 1]]) {
+        const hw = 1.2 + nl * wk;
         const gr = g.createLinearGradient(p.x, p.y, p.x + ex, p.y + ey);
-        gr.addColorStop(0, `rgba(255,236,196,${(a0 * ak).toFixed(3)})`); gr.addColorStop(0.6, `rgba(255,236,196,${(a0 * ak * 0.35).toFixed(3)})`); gr.addColorStop(1, 'rgba(255,236,196,0)');
+        gr.addColorStop(0, `rgba(255,236,196,${(a0 * ak).toFixed(3)})`); gr.addColorStop(0.55, `rgba(255,236,196,${(a0 * ak * 0.4).toFixed(3)})`); gr.addColorStop(1, 'rgba(255,236,196,0)');
         g.fillStyle = gr; g.beginPath(); g.moveTo(p.x, p.y);
         g.lineTo(p.x + ex + nx * hw, p.y + ey + ny * hw); g.lineTo(p.x + ex - nx * hw, p.y + ey - ny * hw); g.closePath(); g.fill();
       }
       g.restore();
       const flash = Math.pow(toward, 8);
-      if (flash > 0.01) R.UIK.glow(g, p.x, p.y, H * (0.03 + 0.03 * flash), [255, 236, 200], 0.55 * flash * lit * alpha);
+      if (flash > 0.01) R.UIK.glow(g, p.x, p.y, H * (0.025 + 0.03 * flash), [255, 236, 200], 0.5 * flash * lit * alpha);
+    }
+    // 火山の火口（ゆっくり明滅、7 秒）
+    if (D.volcano && c.A.sky > 0) {
+      const o4 = c.off(0.4);
+      const k2 = 0.5 + 0.5 * Math.sin(t / 7000 * Math.PI * 2) * (0.7 + 0.3 * Math.sin(t / 1900));
+      R.UIK.glow(g, base.x + D.volcano[0] * base.w + o4.x, base.y + D.volcano[1] * base.h + o4.y, H * 0.035, [255, 120, 60], (0.12 + 0.18 * k2) * c.A.sky * alpha);
     }
     // 谷の光の粒（灯火の熱で、ゆっくり昇っては消える）
     if (D.motes && c.A.ff > 0) {
@@ -603,15 +669,14 @@
     };
     const par = (p) => (s.mode === 'layers' ? p : 0);
     // 動く飾り（雲・もや・灯台の光の帯・きらめき・粒）。層の間に挟む（一枚絵だけのときは絵の上に全部）
-    const amb = { k, base, off: (p) => off(par(p)), t, alpha: o.alpha, A, beacons: m.beacons, rm: reduce(), amb: st.amb || (st.amb = ambiState()) };
+    const amb = { k, base, off: (p) => off(par(p)), t, alpha: o.alpha, A, beacons: m.beacons, set: s, menu: v.list && v.list.rect, rm: reduce(), amb: st.amb || (st.amb = ambiState()) };
     const ambient = (stage) => { g.save(); g.globalAlpha = 1; drawAmbient(g, stage, amb); g.restore(); };
     if (s.mode === 'layers') {
       const slow = reduce() ? 1 : 1 + 0.005 * (1 - Math.cos(t / 60000 * Math.PI * 2));   // 60 秒で 1% 寄って戻る
       const L = s.layers;
       put(L[0].rec.img, L[0].par, A.sky, A.zoom * slow);
-      ambient('hi');
-      put(L[1].rec.img, L[1].par, A.sky, 1);
-      ambient('lo');
+      put(L[1].rec.img, L[1].par, A.sky, 1);   // land の層は空の下半分まで覆うので、雲はその上に置く（アルンと岩場が雲の手前）
+      ambient('hi'); ambient('lo');
       put(L[2].rec.img, L[2].par, A.crag, 1);
       put(L[3].rec.img, L[3].par, A.crag, 1);
     } else {

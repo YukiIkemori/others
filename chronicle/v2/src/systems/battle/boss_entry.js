@@ -29,9 +29,9 @@
     sand: { rgb: '232,190,120', pal: ['225,170,95', '255,236,190', '150,100,45'], img: 'wind_swirl', p: 'grain' },
     dust: { rgb: '200,165,125', pal: ['190,150,105', '240,220,190', '110,80,55'], img: 'wind_swirl', p: 'grain' },
     snow: { rgb: '215,236,255', pal: ['170,215,255', '245,252,255', '95,150,230'], img: 'wind_swirl', p: 'flake' },
-    ember: { rgb: '255,140,60', pal: ['255,125,45', '255,225,150', '200,45,15'], img: 'aura_rise', p: 'ember' },
+    ember: { rgb: '255,140,60', pal: ['255,125,45', '255,225,150', '200,45,15'], img: null, p: 'ember' },
     mist: { rgb: '180,205,215', pal: ['160,190,205', '235,245,250', '80,110,130'], img: 'wind_swirl', p: 'mist' },
-    star: { rgb: '200,215,255', pal: ['170,190,255', '250,250,255', '110,120,230'], img: 'aura_rise', p: 'star' },
+    star: { rgb: '200,215,255', pal: ['170,190,255', '250,250,255', '110,120,230'], img: 'sparkle_twinkle', p: 'star' },
     void: { rgb: '170,120,240', pal: ['160,100,240', '236,212,255', '80,30,160'], img: 'void_swirl', p: 'void' },
     leaf: { rgb: '170,225,140', pal: ['140,215,120', '235,255,220', '60,140,70'], img: 'leaf_swirl', p: 'leaf' },
   };
@@ -185,7 +185,7 @@
           const sp = 0.18 + r1 * 0.3;
           y = Hs * (1.05 - ((r2 + t * sp) % 1.1)); x = W * r0 + Math.sin(t * 2 + i) * 14;
           const fl = 0.6 + 0.4 * Math.sin(t * 13 + i * 3);
-          if (S) S.dot(g, x, y, 2 + r3 * 4, T.rgb, a * fl); else { g.fillStyle = `rgba(${T.rgb},${a * fl})`; g.fillRect(x, y, 2, 2); }
+          if (S) S.dot(g, x, y, 3 + r3 * 6, T.rgb, a * fl); else { g.fillStyle = `rgba(${T.rgb},${a * fl})`; g.fillRect(x, y, 2, 2); }
           break;
         }
         case 'mist': {   // 霧: 大きく柔らかい塊が流れる

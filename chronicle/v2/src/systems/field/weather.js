@@ -167,6 +167,28 @@
     x.fillStyle = gy; x.fillRect(0, 0, 64, 256);
     return (shaft = c);
   }
+  // 1/4 の解像度の下書き（霧・光の筋のような大きくやわらかい物はここに描いてから 1 回で画面へ。塗る画素が 1/16 になる）
+  const LO = { c: null, x: null };
+  function lo() {
+    if (typeof document === 'undefined') return null;
+    if (!LO.c) { LO.c = document.createElement('canvas'); LO.x = LO.c.getContext('2d'); }
+    const w = Math.ceil(R.W / 4), hh = Math.ceil(R.H / 4);
+    if (LO.c.width !== w || LO.c.height !== hh) { LO.c.width = w; LO.c.height = hh; }
+    const x = LO.x;
+    x.setTransform(1, 0, 0, 1, 0, 0);
+    x.globalAlpha = 1; x.globalCompositeOperation = 'source-over';
+    x.clearRect(0, 0, w, hh);
+    x.setTransform(w / R.W, 0, 0, hh / R.H, 0, 0);
+    x.imageSmoothingEnabled = true;
+    return x;
+  }
+  function loBlit(g, op) {
+    g.imageSmoothingEnabled = true;
+    g.globalAlpha = 1;
+    g.globalCompositeOperation = op || 'source-over';
+    g.drawImage(LO.c, 0, 0, R.W, R.H);
+    g.globalCompositeOperation = 'source-over';
+  }
   // 先頭のいる所（画面の座標）。霧を薄くする・見やすさのため
   function leadAt(t, cx, cy) {
     const p = F.pos;
@@ -242,14 +264,14 @@
     const rp = rippleImg();
     if (rp) {
       g.imageSmoothingEnabled = true;
-      const n = count(26, low, I), span = H * 0.8;
+      const n = count(34, low, I), span = H * 0.8;
       for (let k = 0; k < n; k++) {
         const y = H - wrap(h(k, 45) * span + tm * (8 + h(k, 46) * 10) + cy * 0.05, span);
         const f = (y - H * 0.2) / span;   // 下ほど濃い
-        const w = 180 + h(k, 47) * 220;
+        const w = 80 + h(k, 47) * 110;
         const x = wrap(h(k, 48) * (W + w) - cx * 0.95 + Math.sin(tm * (1.6 + h(k, 49)) + k) * 10, W + w) - w * 0.5;
-        g.globalAlpha = Math.max(0, f) * 0.45 * I * (0.6 + 0.4 * Math.sin(tm * 2.3 + k * 1.3));
-        g.drawImage(rp, x - w / 2, y, w, 10 + h(k, 50) * 6);
+        g.globalAlpha = Math.max(0, f) * 0.38 * I * (0.6 + 0.4 * Math.sin(tm * 2.3 + k * 1.3));
+        g.drawImage(rp, x - w / 2, y, w, 8 + h(k, 50) * 5);
       }
     }
     // 立ちのぼるもや（大きく薄い暖かい塊がゆっくり上へ）
@@ -272,21 +294,21 @@
     const W = R.W, H = R.H, tm = R.Engine.time / 1000;
     g.fillStyle = `rgba(196,212,202,${0.16 * I})`;
     g.fillRect(0, 0, W, H);
-    const b = blob('206,222,210');
-    if (!b) return;
-    g.imageSmoothingEnabled = true;
+    const b = blob('206,222,210'), x2 = lo();
+    if (!b || !x2) return;
     const L = leadAt(t, cx, cy);
-    // 霧の塊は地面に付いて（カメラとほぼ一緒に）流れる。ワールドの座標で並べ、画面に入る物だけ描く
+    // 霧の塊は地面に付いて（カメラとほぼ一緒に）流れる
     const nb = count(16, low, I), span = W + 700, spanY = H + 400;
     for (let k = 0; k < nb; k++) {
       const bw = 420 + h(k, 51) * 420, bh = bw * (0.4 + h(k, 52) * 0.2);
       const x = wrap(h(k, 53) * span + tm * (6 + h(k, 54) * 10) - cx * 0.85, span) - 350;
       const y = wrap(h(k, 55) * spanY + Math.sin(tm * 0.12 + k) * 18 - cy * 0.85, spanY) - 200;
-      // 先頭のまわり（半径 150 px）は薄く: 人と足もとが読める
+      // 先頭のまわりは薄く: 人と足もとが読める
       const d = Math.hypot(x - L.x, y - L.y), near = Math.min(1, Math.max(0.3, (d - 60) / 240));
-      g.globalAlpha = (0.45 + 0.25 * h(k, 56)) * I * near * (0.8 + 0.2 * Math.sin(tm * 0.25 + k * 1.7));
-      g.drawImage(b, x - bw / 2, y - bh / 2, bw, bh);
+      x2.globalAlpha = (0.45 + 0.25 * h(k, 56)) * I * near * (0.8 + 0.2 * Math.sin(tm * 0.25 + k * 1.7));
+      x2.drawImage(b, x - bw / 2, y - bh / 2, bw, bh);
     }
+    loBlit(g);
   };
 
   // ================================================================ 霧雨（群島）
@@ -391,7 +413,7 @@
   function drawLeaves(g, cx, cy, I, low, nBase, wind) {
     const W = R.W, H = R.H, tm = R.Engine.time / 1000;
     const n = count(nBase, low, I), ox = cx * 0.8, oy = cy * 0.8;
-    const COL = ['#6f9a4a', '#9cb54e', '#c9a04a', '#b0703a', '#5f8a54'];
+    const COL = ['#a8c860', '#cfd070', '#e0b450', '#e08c48', '#8cbc64'];
     for (let i = 0; i < n; i++) {
       const sp = 0.6 + h(i, 1) * 0.8;
       let x = h(i, 3) * (W + 60) + wind * sp * tm + Math.sin(tm * 1.1 + i) * 18 - ox;
@@ -399,9 +421,9 @@
       x = wrap(x, W + 60) - 30; y = wrap(y, H + 60) - 30;
       const a = tm * (1.5 + h(i, 5) * 2) + i;
       g.setTransform(R.SCALE * Math.cos(a), R.SCALE * Math.sin(a) * 0.5, -R.SCALE * Math.sin(a), R.SCALE * Math.cos(a), x * R.SCALE, y * R.SCALE);
-      g.globalAlpha = 0.85 * (0.6 + 0.4 * h(i, 6)) * Math.min(1, I + 0.3);
+      g.globalAlpha = (0.7 + 0.3 * h(i, 6)) * Math.min(1, I + 0.3);
       g.fillStyle = COL[i % COL.length];
-      g.fillRect(-2.5, -1.2, 5, 2.4 * Math.abs(Math.cos(tm * 3 + i)) + 0.6);
+      g.fillRect(-3.5, -1.6, 7, 3.2 * Math.abs(Math.cos(tm * 3 + i)) + 0.8);
     }
     g.setTransform(R.SCALE, 0, 0, R.SCALE, 0, 0);
   }
@@ -409,25 +431,23 @@
     const W = R.W, H = R.H, tm = R.Engine.time / 1000, S = sky();
     // 夜は青白い月の光、空が明けるほど暖かい日の光
     const dawn = S ? 1 - S.stars : 0;
-    const img = shaftImg();
-    if (img) {
-      g.imageSmoothingEnabled = true;
-      g.globalCompositeOperation = 'lighter';
+    const img = shaftImg(), x2 = img && lo();
+    if (x2) {
       const tint = `rgb(${Math.round(150 + 105 * dawn)},${Math.round(180 + 50 * dawn)},${Math.round(230 - 80 * dawn)})`;
       // 筋の色をつけた 1 枚を作る（色が変わったときだけ）
       const ti = tinted(img, tint);
-      const ns = low ? 3 : 5, ang = -0.42;
+      const ns = low ? 3 : 5, ang = -0.42, sx = LO.c.width / W, sy = LO.c.height / H;
+      x2.globalCompositeOperation = 'lighter';
       for (let k = 0; k < ns; k++) {
         const sw = 60 + h(k, 81) * 90, sh = H * 1.5;
         // ワールドに少しだけ付いて（歩くと筋がゆっくりずれる）
         const x = wrap(h(k, 82) * (W + 400) - cx * 0.35, W + 400) - 200;
         const br = 0.5 + 0.5 * Math.sin(tm * (0.25 + h(k, 83) * 0.2) + k * 2.1);
-        g.globalAlpha = (0.12 + 0.12 * br) * I;
-        g.setTransform(R.SCALE * Math.cos(ang), R.SCALE * Math.sin(ang), -R.SCALE * Math.sin(ang), R.SCALE * Math.cos(ang), x * R.SCALE, -H * 0.15 * R.SCALE);
-        g.drawImage(ti, -sw / 2, 0, sw, sh);
+        x2.globalAlpha = (0.16 + 0.16 * br) * I;
+        x2.setTransform(sx * Math.cos(ang), sy * Math.sin(ang), -sx * Math.sin(ang), sy * Math.cos(ang), x * sx, -H * 0.15 * sy);
+        x2.drawImage(ti, -sw / 2, 0, sw, sh);
       }
-      g.setTransform(R.SCALE, 0, 0, R.SCALE, 0, 0);
-      g.globalCompositeOperation = 'source-over';
+      loBlit(g, 'lighter');
     }
     drawLeaves(g, cx, cy, I, low, 16, 26);
   };
