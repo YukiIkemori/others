@@ -352,7 +352,7 @@
   //   人が見ているのは 1 フレーム前に描いた印で、さらに画面と入力の遅れ（数十 ms）がある。速い帯（1 往復 1 秒弱・当たり 0.11）では
   //   印が当たりを抜けるのが 50 ms ほどなので、見た目どおりに押しても外れ、印も当たりの先に付いていた。
   //   いま描いている印（1 フレーム前）から JUDGE_LAG_MS さかのぼった間に、印が当たりを通っていれば当たり（印はその当たりの位置に付ける）
-  const JUDGE_LAG_MS = 60;
+  const JUDGE_LAG_MS = 80;
   function judgeAt(st, now, dt) {
     const shown = now - Math.max(0, Math.min(50, dt || 0));
     const from = Math.max(st.runT || st.t0, shown - JUDGE_LAG_MS);
