@@ -1,5 +1,5 @@
 // UIK: 会話（R.UIK.Message、MODERN_UI §6.3・§5.4、V2_PLAN §2.5.6・§2.11）
-//   say({name, title, face, text, voice（id か、元のページごとの id の配列）, choices, cancel, index（最初のカーソル）}) → Promise<選んだ番号 | undefined>   場面 id 'message'（K.say）
+//   say({name, title, face, text, voice（id か、元のページごとの id の配列）, choices, cancel, index（最初のカーソル）, guard（true: 出てすぐの決定を受けない＝物語の大事な分かれ道だけ）}) → Promise<選んだ番号 | undefined>   場面 id 'message'（K.say）
 //     - 羊皮紙の札（下の中央、幅 760・高さ 150）。左に顔の枠 118（顔の無い人は枠ごと出さず文を左に寄せる）、上に話者名（琥珀）と肩書き
 //     - text は文字列か配列（1 つが 1 ページ）。幅で折り返し、3 行ごとに次のページへ（'\f' があればそこでも次のページへ）。{漢字|かんじ} はふりがな（設定 ruby のときだけ出す）
 //     - 送り: A・B・下キー・タップ（A3）。送ったら R.Audio.stopVoice()（A9）。途中なら全部を出す
@@ -287,7 +287,9 @@
       if (I.repeat('down')) { st.choice = (st.choice + 1) % n; UIK.sfx('cursor'); }
       if (I.repeat('up')) { st.choice = (st.choice + n - 1) % n; UIK.sfx('cursor'); }
       // 選択肢が出てすぐの決定・取り消しは受けない（会話を連打で送っていて、選んだと気づかずに決まるのを防ぐ。テスター 2026-09-30）。
-      //   カーソルは動かせる。受けるようになったら（st.armed）以後は素通り
+      //   カーソルは動かせる。受けるようになったら（st.armed）以後は素通り。
+      //   持ち主 2026-10-03: 連打で送れないのは疲れる → 物語の大事な分かれ道（o.guard。ev.choose の important）だけ。ほかはすぐ受ける
+      if (!st.armed && !o.guard) st.armed = true;
       if (!st.armed) {
         st.guard = st.guard || { t0: st.fullAt };
         if (!UIK.choiceGuard(st.guard)) return;

@@ -142,7 +142,7 @@
     const resigned = x.resigned(ev);
     await ev.say('octavia_dawn', resigned ? R.T('events.star_finale.say') : R.T('events.star_finale.say_2'), OCTAVIA);
     // 年代記に書く選択
-    const i = await ev.choose(R.T('events.star_finale.i.choose'), { text: R.T('events.star_finale.i.choose.text') });
+    const i = await ev.choose(R.T('events.star_finale.i.choose'), { important: true, text: R.T('events.star_finale.i.choose.text') });
     if (i === 1) {
       ev.choice('ch_star_write', 'pain');
       ev.addVar('pain_count', 1);

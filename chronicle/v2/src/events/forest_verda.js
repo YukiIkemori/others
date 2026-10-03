@@ -172,7 +172,7 @@
     await ev.say('pim', R.T('events.verda_pim.say_2'));
     await F().rescue(ev, 'pim', { hide: false, quiet: true });
     // F6 ピムの選択（ch_forest_pim）
-    const i = await ev.choose(R.T('events.verda_pim.i.choose'), { text: R.T('events.verda_pim.i.choose.text') });
+    const i = await ev.choose(R.T('events.verda_pim.i.choose'), { important: true, text: R.T('events.verda_pim.i.choose.text') });
     if (i === 0) {
       ev.choice('ch_forest_pim', 'send');
       await ev.say('pim', R.T('events.verda_pim.say_3'));
@@ -196,7 +196,7 @@
     if (ev.flag('forest_fawn_done')) return;
     await ev.say(null, R.T('events.verda_fawn_choice.say'));
     const heal = ['i_salve', 'i_potion', 'i_elixir'].find((id) => ev.has(id));
-    const i = await ev.choose([heal ? R.T('events.verda_fawn_choice.i.choose.0', { p0: R.DB.items[heal] ? R.DB.items[heal].name : heal }) : R.T('events.verda_fawn_choice.i.choose.0_2'), R.T('events.verda_fawn_choice.i.choose.1')], { cancel: 1 });
+    const i = await ev.choose([heal ? R.T('events.verda_fawn_choice.i.choose.0', { p0: R.DB.items[heal] ? R.DB.items[heal].name : heal }) : R.T('events.verda_fawn_choice.i.choose.0_2'), R.T('events.verda_fawn_choice.i.choose.1')], { important: true, cancel: 1 });
     if (i === 0) {
       if (!heal) { await ev.say(null, R.T('events.verda_fawn_choice.say_2')); return; }
       ev.take(heal, 1);

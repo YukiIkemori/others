@@ -175,7 +175,7 @@
     await ev.say(null, R.T('events.ash_finale.say'), { face: false });
     await ev.say('dorga_plaque', [R.T('events.ash_finale.say.0')], DORGA);
     await ev.say(null, R.T('events.ash_finale.say_2'));
-    const i = await ev.choose(R.T('events.ash_finale.i.choose'), { text: R.T('events.ash_finale.i.choose.text') });
+    const i = await ev.choose(R.T('events.ash_finale.i.choose'), { important: true, text: R.T('events.ash_finale.i.choose.text') });
     if (i === 1) {
       ev.choice('ch_ash_write', 'pain');
       ev.addVar('pain_count', 1);

@@ -296,7 +296,7 @@
       await x.lore(ev, 'lo_time_mine');
     }
     // 年代記に書く選択（STORY_BIBLE §7.6 の表）
-    const i = await ev.choose(R.T('events.mine_finale.i.choose'), { text: R.T('events.mine_finale.i.choose.text') });
+    const i = await ev.choose(R.T('events.mine_finale.i.choose'), { important: true, text: R.T('events.mine_finale.i.choose.text') });
     if (i === 1) {
       ev.choice('ch_mine_write', 'pain');
       ev.addVar('pain_count', 1);

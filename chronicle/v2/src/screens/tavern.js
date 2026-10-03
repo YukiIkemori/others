@@ -34,7 +34,6 @@
       if (!this.canSwap) { R.UIK.sfx('buzzer'); return; }
       if (this.state(id) === 'party') { R.UIK.sfx('buzzer'); R.UIK.toast(R.T('ui.tavern.choose.toast'), { anchor: 'bl' }); return; }
       this.mode = 'swap'; this.pick = id;
-      this.guard = R.UIK.choiceGuard ? { t0: R.Engine.time } : null;   // 「誰と替える？」が出てすぐの決定は受けない（テスター 2026-10-02 P22）
       const mem = S.party();
       this.mi = Math.max(0, mem.findIndex((c) => c.id !== 'hero'));
     },
@@ -55,9 +54,8 @@
         const mem = S.party(), n = mem.length;
         if (I.repeat('right')) { this.mi = (this.mi + 1) % n; R.UIK.sfx('cursor'); }
         if (I.repeat('left')) { this.mi = (this.mi + n - 1) % n; R.UIK.sfx('cursor'); }
-        const armed = !this.guard || R.UIK.choiceGuard(this.guard);
-        for (let i = 0; i < this.mrects.length; i++) if (S.clicked(this.mrects[i])) { this.mi = i; if (armed) this.doSwap(mem[i]); return; }
-        if (I.pressed('a') && armed) this.doSwap(mem[this.mi]);
+        for (let i = 0; i < this.mrects.length; i++) if (S.clicked(this.mrects[i])) { this.mi = i; this.doSwap(mem[i]); return; }
+        if (I.pressed('a')) this.doSwap(mem[this.mi]);
         else if (I.pressed('b')) { this.mode = 'pick'; R.UIK.sfx('cancel'); }
         return;
       }

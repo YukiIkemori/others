@@ -168,7 +168,7 @@
     await x.narr(ev, R.T('events.star_octavia_night.narr'));
     await ev.say('octavia_night', R.T('events.star_octavia_night.say_5'), OCTAVIA);
     await ev.say('octavia_night', R.T('events.star_octavia_night.say_6'), OCTAVIA);
-    const i = await ev.choose(R.T('events.star_octavia_night.i.choose'), { text: R.T('events.star_octavia_night.i.choose.text') });
+    const i = await ev.choose(R.T('events.star_octavia_night.i.choose'), { important: true, text: R.T('events.star_octavia_night.i.choose.text') });
     ev.take('k_seal_order', 1);
     if (i === 0) {
       ev.choice('ch_star_order', 'public');

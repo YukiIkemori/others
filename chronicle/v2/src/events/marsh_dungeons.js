@@ -178,7 +178,7 @@
     await ev.say(null, R.T('events.marsh_finale.say_3'), { face: false });
     // 年代記に書く選択（ch_marsh_write。痛みの側は pain_count を足す）
     await ev.say(null, R.T('events.marsh_finale.say_4'));
-    const i = await ev.choose(R.T('events.marsh_finale.i.choose'), { text: R.T('events.marsh_finale.i.choose.text') });
+    const i = await ev.choose(R.T('events.marsh_finale.i.choose'), { important: true, text: R.T('events.marsh_finale.i.choose.text') });
     if (i === 1) {
       ev.choice('ch_marsh_write', 'pain');
       ev.addVar('pain_count', 1);

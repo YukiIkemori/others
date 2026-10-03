@@ -36,7 +36,7 @@
     const safe = R.State && R.State.wipeSafe ? R.State.wipeSafe() : null;
     const rows = safe ? Go.CHOICES.map((c) => (c.key === 'inn' ? Object.assign({}, c, Go.SAFE) : c)) : Go.CHOICES;
     const i = await _.cmd.menu(st, {
-      rows, sel: def, cancel: false, t0: R.Engine.time, guard: true,
+      rows, sel: def, cancel: false, t0: R.Engine.time,
       prompts: [{ btn: 'a', label: R.T('battle.gameover.run.i.prompts.0.label') }],
       desc: (j) => ({ text: rows[j].sub }),
       draw(g, w) { go.menu = Math.min(1, (R.Engine.time - t1) / 200); Go.drawMenu(g, st, w); },

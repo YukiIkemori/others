@@ -101,7 +101,7 @@
     if (ev.flag('snow_ice_done')) await ev.caption(R.T('events.snow_festival.caption_4'), { ms: 2800 });
     await ev.say('jorn', R.T('events.snow_festival.say'), { voice: ['v_jorn_snow_05', 'v_jorn_snow_06'] });
     const keys = ['dragon', 'hunter', 'fire_child'].filter((k) => ev.flag('snow_tale_' + k));
-    const i = await ev.choose(keys.map((k) => x.TALES[k].name), { text: R.T('events.snow_festival.i.choose.text') });
+    const i = await ev.choose(keys.map((k) => x.TALES[k].name), { important: true, text: R.T('events.snow_festival.i.choose.text') });
     const key = keys[i] || keys[0];
     ev.choice('ch_snow_tale', key);
     await ev.say(null, R.T('events.snow_festival.say_2'));
@@ -155,7 +155,7 @@
     const w = ev.var('snow_wave') + 1;
     if (w > 3) return;
     await ev.say('hald', HINT[w], { name: R.T('events.snow_siege_wave.say.name') });
-    const i = await ev.choose(PICKS, { cancel: 3, text: R.T('events.snow_siege_wave.i.choose.text', { w }) });
+    const i = await ev.choose(PICKS, { important: true, cancel: 3, text: R.T('events.snow_siege_wave.i.choose.text', { w }) });
     if (i === 3 || i == null || i < 0) {
       await ev.say('jorn', R.T('events.snow_siege_wave.say'), { name: R.T('events.snow_siege_wave.say.name_2') });
       return;

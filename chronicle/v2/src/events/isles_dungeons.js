@@ -184,7 +184,7 @@
     // 年代記に書く選択（（痛）は名札が 1 枚以上のときだけ）
     const tags = x.tags(ev);
     const labels = [R.T('events.isles_finale.labels.0')].concat(tags > 0 ? [R.T('events.isles_finale.labels.0_2')] : []);
-    const i = await ev.choose(labels, { text: R.T('events.isles_finale.i.choose.text') });
+    const i = await ev.choose(labels, { important: true, text: R.T('events.isles_finale.i.choose.text') });
     if (i === 1 && tags > 0) {
       ev.choice('ch_isles_write', 'pain');
       ev.addVar('pain_count', 1);

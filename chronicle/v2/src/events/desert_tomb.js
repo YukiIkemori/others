@@ -206,7 +206,7 @@
     await ev.say('sundial_old', R.T('events.desert_finale.say_4'), { name: R.T('events.desert_finale.say.name_4') });
     // 3. 年代記に書く選択
     await ev.say(null, R.T('events.desert_finale.say_5'));
-    const i = await ev.choose(R.T('events.desert_finale.i.choose'), { text: R.T('events.desert_finale.i.choose.text') });
+    const i = await ev.choose(R.T('events.desert_finale.i.choose'), { important: true, text: R.T('events.desert_finale.i.choose.text') });
     if (i === 1) {
       ev.choice('ch_desert_write', 'pain');
       ev.addVar('pain_count', 1);

@@ -421,7 +421,7 @@
     const j = x.jobs(ev);
     if (j.g < 2 || j.s < 2) await ev.say('hall_chair', R.T('events.dovan_assembly.say_2'));
     const labels = R.T('events.dovan_assembly.labels').concat(x.accordOk(ev) ? [R.T('events.dovan_assembly.labels.0')] : []).concat([R.T('events.dovan_assembly.labels.0_2')]);
-    const i = await ev.choose(labels, { text: R.T('events.dovan_assembly.i.choose.text') });
+    const i = await ev.choose(labels, { important: true, text: R.T('events.dovan_assembly.i.choose.text') });
     const pick = labels[i];
     if (!pick || pick === R.T('events.dovan_assembly.labels.0_2')) { await ev.say('hall_chair', R.T('events.dovan_assembly.say_3')); return; }
     const side = i === 0 ? 'guild' : i === 1 ? 'smiths' : 'accord';

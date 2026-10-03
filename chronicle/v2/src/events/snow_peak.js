@@ -75,7 +75,7 @@
     const canTalk = ev.flag('snow_logs_done') && ev.flag('snow_ice_done') && ev.flag('snow_tales_done') && ev.choiceOf('ch_snow_tale') === 'dragon';
     let how = 'fight';
     if (canTalk) {
-      const i = await ev.choose(R.T('events.peak_neve.i.choose'), { text: R.T('events.peak_neve.i.choose.text') });
+      const i = await ev.choose(R.T('events.peak_neve.i.choose'), { important: true, text: R.T('events.peak_neve.i.choose.text') });
       how = i === 0 ? 'talk' : 'fight';
     } else {
       await ev.say(null, R.T('events.peak_neve.say_2'));
@@ -138,7 +138,7 @@
     // 年代記に書く選択（ch_snow_write。痛みの側は pain_count を足す）
     const broken = ['n', 'e', 'w'].filter((g) => ev.flag('snow_gate_' + g + '_broken'));
     await ev.say(null, R.T('events.snow_finale.say_6'));
-    const i = await ev.choose([R.T('events.snow_finale.i.choose.0'), broken.length ? R.T('events.snow_finale.i.choose.1') : R.T('events.snow_finale.i.choose.1_2')], { text: R.T('events.snow_finale.i.choose.text') });
+    const i = await ev.choose([R.T('events.snow_finale.i.choose.0'), broken.length ? R.T('events.snow_finale.i.choose.1') : R.T('events.snow_finale.i.choose.1_2')], { important: true, text: R.T('events.snow_finale.i.choose.text') });
     if (i === 1) {
       ev.choice('ch_snow_write', 'pain');
       ev.addVar('pain_count', 1);

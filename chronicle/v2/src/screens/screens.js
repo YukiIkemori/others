@@ -494,12 +494,12 @@
     m.layer.close().then(() => { if (v.modal === m) v.modal = null; m.resolve(value); });
   }
   /** 選択の札。o = {title, text, choices:[label | {label, disabled, right}], cancel: index（B の値、既定 -1）, index,
-   *    guard（既定 true: 出てすぐの決定は受けない。R.UIK.choiceGuard。連打で上書き・売る・宿などが決まらないように。テスター 2026-10-02 P22。false で外す）} → Promise<index|-1>
+   *    guard（true: 出てすぐの決定は受けない。R.UIK.choiceGuard。既定は無し＝すぐ受ける。持ち主 2026-10-03「宿などは連打で進みたい」）} → Promise<index|-1>
    *  受けるようになったかは v.modal.guard.armed（テストとボットが読む） */
   S.ask = function (v, o) {
     const rows = (o.choices || R.T('ui.screens.ask.rows')).map((c, i) => (typeof c === 'string' ? { label: c, value: i } : Object.assign({ value: i }, c)));
     const list = new R.UIK.List({ rows, rowH: 36, index: o.index || 0 });
-    const m = { kind: 'ask', o, list, guard: o.guard !== false && R.UIK.choiceGuard ? { t0: R.Engine.time } : null };
+    const m = { kind: 'ask', o, list, guard: o.guard === true && R.UIK.choiceGuard ? { t0: R.Engine.time } : null };
     list.onSelect = (row) => modalEnd(v, row.value);
     list.onCancel = () => modalEnd(v, o.cancel != null ? o.cancel : -1);
     return modalBase(v, m);

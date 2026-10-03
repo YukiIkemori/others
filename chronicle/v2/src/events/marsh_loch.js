@@ -299,7 +299,7 @@
     await ev.fade('in', 400);
     await ev.say('mayor', [R.T('events.loch_assembly.say.0_2')], { voice: 'v_mayor_marsh_01' });
     for (;;) {
-      const i = await ev.choose(x.SUSPECTS.map((s) => s.name), { text: R.T('events.loch_assembly.i.choose.text') });
+      const i = await ev.choose(x.SUSPECTS.map((s) => s.name), { important: true, text: R.T('events.loch_assembly.i.choose.text') });
       const who = x.SUSPECTS[i].id;
       if (who === 'melda' && ev.flag('marsh_ev_melda') && !ev.flag('marsh_melda_warned')) {
         ev.setFlag('marsh_melda_warned');
@@ -316,7 +316,7 @@
     while (good < 3) {
       const list = x.EVIDENCE.filter((e) => x.has(ev, e.id) && !shown.has(e.id));
       if (!list.length) break;
-      const i = await ev.choose(list.map((e) => e.name).concat([R.T('events.loch_assembly.i.choose.0')]), { text: R.T('events.loch_assembly.i.choose.text_2', { p0: 3 - good }) });
+      const i = await ev.choose(list.map((e) => e.name).concat([R.T('events.loch_assembly.i.choose.0')]), { important: true, text: R.T('events.loch_assembly.i.choose.text_2', { p0: 3 - good }) });
       if (i >= list.length) break;
       const e = list[i];
       shown.add(e.id);

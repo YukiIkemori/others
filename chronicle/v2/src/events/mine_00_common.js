@@ -44,8 +44,24 @@
     const n = X.rescued(ev);
     ev.setVar('mine_rescued', n);
     if (n >= 3 && !ev.flag('mine_rescued_all')) { ev.setFlag('mine_rescued_all'); ev.leadDone('l_mine_trapped'); }
+    // (2026-10-03) 3 人そろったら次の行き先（七の層の岩戸）を手がかりに。どの順で救っても同じ（ハンマーはピップがくれる）
+    if (n >= 3 && !ev.flag('mine_door_seen')) ev.lead('l_mine_seven');
     return n;
   };
+  /** (2026-10-03) 3 人を救ったが、まだ岩戸を見ていない（ヘルガ・ボルグが「七の層へ」と言う間） */
+  X.toSeven = (ev) => X.rescued(ev) >= 3 && !ev.flag('mine_door_seen');
+  /** (2026-10-03) 古いセーブの直し（R.State.deserialize が呼ぶ）: 3 人の旗はあるのに mine_rescued_all・次の手がかりが無いもの */
+  X.fixSave = function (G) {
+    const f = G.flags || {}, v = G.vars || (G.vars = {}), L = G.leads || (G.leads = {});
+    if (f.cleared_r_mine) return;
+    const n = ['mine_miner1', 'mine_miner2', 'mine_pip'].filter((k) => f[k]).length;
+    if (n > (v.mine_rescued || 0)) v.mine_rescued = n;
+    if (n < 3) return;
+    f.mine_rescued_all = true;
+    if (L.l_mine_trapped && !L.l_mine_trapped.done) { L.l_mine_trapped.done = true; L.l_mine_trapped.pin = false; }
+    if (!f.mine_door_seen && !L.l_mine_seven) L.l_mine_seven = { got: Math.floor(G.playMs || 0), pin: false, seen: false };
+  };
+  if (R.State) (R.State.fixups = R.State.fixups || []).push(X.fixSave);
   /** STORY_BIBLE §3.5 の世代と、ティアの近況（WORLD §1.3 の表） */
   X.skyLine = function () {
     const t = X.tier();
@@ -71,6 +87,7 @@
   lead('l_mine_guild', { kind: 'region', title: R.T('leads.l_mine_guild.title'), text: R.T('leads.l_mine_guild.text'), from: R.T('leads.l_mine_guild.from'), place: 'dovan', done: 'mine_choice' });
   lead('l_mine_smiths', { kind: 'region', title: R.T('leads.l_mine_smiths.title'), text: R.T('leads.l_mine_smiths.text'), from: R.T('leads.l_mine_smiths.from'), place: 'dovan', done: 'mine_choice' });
   lead('l_mine_stone', { kind: 'region', title: R.T('leads.l_mine_stone.title'), text: R.T('leads.l_mine_stone.text'), from: R.T('leads.l_mine_stone.from'), place: 'dovan', done: 'mine_job_s1' });
+  lead('l_mine_seven', { kind: 'region', title: R.T('leads.l_mine_seven.title'), text: R.T('leads.l_mine_seven.text'), from: R.T('leads.l_mine_seven.from'), place: 'deepmine', dir: R.T('leads.l_mine_seven.dir'), done: 'mine_door_seen' });
   lead('l_mine_door', { kind: 'region', title: R.T('leads.l_mine_door.title'), text: R.T('leads.l_mine_door.text'), from: R.T('leads.l_mine_door.from'), place: 'dovan', done: 'mine_choice' });
   lead('l_mine_warden', { kind: 'region', title: R.T('leads.l_mine_warden.title'), text: R.T('leads.l_mine_warden.text'), from: R.T('leads.l_mine_warden.from'), place: 'deepmine', dir: R.T('leads.l_mine_warden.dir'), done: 'mine_warden_done' });
   lead('l_main_recorder_mine', { kind: 'main', region: 'world', title: R.T('leads.l_main_recorder_mine.title'), text: R.T('leads.l_main_recorder_mine.text'), from: R.T('leads.l_main_recorder_mine.from'), place: 'dovan' });

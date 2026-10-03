@@ -109,7 +109,7 @@
     await ev.say('e_rowell', R.T('events.final_ending.say_8'), { voice: 'v_rowell_ending_01', face: 'rowell:sad' });
     // ================================================================ E5 ラザロの章
     await x.narr(ev, R.T('events.final_ending.narr_9'));
-    const i = await ev.choose(R.T('events.final_ending.i.choose'), { text: R.T('events.final_ending.i.choose.text') });
+    const i = await ev.choose(R.T('events.final_ending.i.choose'), { important: true, text: R.T('events.final_ending.i.choose.text') });
     if (i === 0) {
       ev.choice('ch_final_lazaro', 'sin');
       ev.sfx('quill');

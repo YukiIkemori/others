@@ -75,7 +75,7 @@
     await ev.say('npc_rashid', R.T('events.desert_camp1_scene.say_3'), Object.assign({ voice: ['v_rashid_desert_01', 'v_rashid_desert_02'] }, RASHID));
     await ev.say('npc_zaid', R.T('events.desert_camp1_scene.say_4'), ZAID);
     const price = X().gold(160);
-    const i = await ev.choose([R.T('events.desert_camp1_scene.i.choose.0'), R.T('events.desert_camp1_scene.i.choose.1'), R.T('events.desert_camp1_scene.i.choose.2', { price })], { text: R.T('events.desert_camp1_scene.i.choose.text') });
+    const i = await ev.choose([R.T('events.desert_camp1_scene.i.choose.0'), R.T('events.desert_camp1_scene.i.choose.1'), R.T('events.desert_camp1_scene.i.choose.2', { price })], { important: true, text: R.T('events.desert_camp1_scene.i.choose.text') });
     if (i === 0) {
       ev.choice('ch_desert_hawk', 'fight');
       await ev.say('npc_rashid', R.T('events.desert_camp1_scene.say_5'), RASHID);
@@ -157,7 +157,7 @@
     ev.sfx('wind');
     await ev.caption(R.T('events.desert_camp2_scene.caption_2'), { ms: 2200 });
     await ev.say('npc_zaid', R.T('events.desert_camp2_scene.say_3'), ZAID);
-    const i = await ev.choose(R.T('events.desert_camp2_scene.i.choose'), { text: R.T('events.desert_camp2_scene.i.choose.text') });
+    const i = await ev.choose(R.T('events.desert_camp2_scene.i.choose'), { important: true, text: R.T('events.desert_camp2_scene.i.choose.text') });
     if (i === 0) {
       ev.choice('ch_desert_route', 'short');
       await ev.say('npc_zaid', R.T('events.desert_camp2_scene.say_4'), ZAID);

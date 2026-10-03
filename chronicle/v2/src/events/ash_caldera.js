@@ -147,7 +147,7 @@
     await ev.caption(R.T('events.ash_eve.caption'), { ms: 2000 });
     try { await ev.appear('messenger', { ms: 700 }); } catch (e) { /* */ }
     await ev.say('messenger', R.T('events.ash_eve.say'));
-    const i = await ev.choose(R.T('events.ash_eve.i.choose'), { text: R.T('events.ash_eve.i.choose.text') });
+    const i = await ev.choose(R.T('events.ash_eve.i.choose'), { important: true, text: R.T('events.ash_eve.i.choose.text') });
     if (i === 1) {
       ev.choice('ch_ash_bribe', 'accept');
       await ev.say('messenger', R.T('events.ash_eve.say_2'));

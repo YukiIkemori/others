@@ -121,7 +121,7 @@
     }
     await ev.say('wreck_captain', R.T('events.isles_wreck.say_3'));
     await ev.say(null, R.T('events.isles_wreck.say_4'));
-    const i = await ev.choose(R.T('events.isles_wreck.i.choose'), { text: R.T('events.isles_wreck.i.choose.text') });
+    const i = await ev.choose(R.T('events.isles_wreck.i.choose'), { important: true, text: R.T('events.isles_wreck.i.choose.text') });
     ev.setFlag('isles_wreck_done');
     if (i === 0) {
       ev.choice('ch_isles_wreck', 'help');

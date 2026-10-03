@@ -137,7 +137,7 @@
     await ev.say('hanna', R.T('events.forest_finale.say_5'), { name: R.T('events.forest_finale.say.name_3') });
     // 6. 年代記に書く選択（ch_forest_write。痛みの側は R.Game の数を足す）
     await ev.say(null, R.T('events.forest_finale.say_6'));
-    const i = await ev.choose(R.T('events.forest_finale.i.choose'), { text: R.T('events.forest_finale.i.choose.text') });
+    const i = await ev.choose(R.T('events.forest_finale.i.choose'), { important: true, text: R.T('events.forest_finale.i.choose.text') });
     if (i === 0) {
       ev.choice('ch_forest_write', 'pain');
       ev.addVar('pain_count', 1);

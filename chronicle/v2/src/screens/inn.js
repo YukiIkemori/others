@@ -22,12 +22,8 @@
       if (!can) this.list.focusIndex(rows.length - 1);
       this.list.onSelect = (row) => this.close(row.value ? { stay: true, pick: row.value - 1 } : { stay: false });
       this.list.onCancel = () => this.close({ stay: false });
-      this.guard = R.UIK.choiceGuard ? { t0: R.Engine.time } : null;   // 出てすぐの決定は受けない（会話の選択肢と同じ。テスター 2026-10-02 P22）
     },
-    update() {
-      if (this.guard) this.list.hold = !R.UIK.choiceGuard(this.guard);
-      this.list.update();
-    },
+    update() { this.list.update(); },
     draw(g) {
       const C = T().color, tall = S.tall();
       const w = Math.min(R.W - u(32), u(420));

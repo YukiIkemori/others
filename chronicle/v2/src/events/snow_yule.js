@@ -63,7 +63,7 @@
         if (i !== 0) { await ev.say('jorn', R.T('events.yule_jorn.say_9')); return; }
       }
       // 祭を始めると籠城の夜が明けるまで村から出られない（出口もワープも無い）。始める前に念を押す（テスター 2026-10-02 P23・P24）
-      const sure = await ev.choose(R.T('events.yule_jorn.confirm'), { cancel: 1, who: 'jorn', text: R.T('events.yule_jorn.confirm.text') });
+      const sure = await ev.choose(R.T('events.yule_jorn.confirm'), { important: true, cancel: 1, who: 'jorn', text: R.T('events.yule_jorn.confirm.text') });
       if (sure !== 0) { await ev.say('jorn', R.T('events.yule_jorn.say_9')); return; }
       await ev.call('snow_festival');
       return;
