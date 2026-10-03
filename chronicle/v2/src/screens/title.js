@@ -535,6 +535,7 @@
     };
     g.save();
     g.imageSmoothingEnabled = true;
+    try { g.imageSmoothingQuality = 'low'; } catch (e) { /* */ }   // 柔らかい雲なので双線形で足りる（high は重い）
     if (stage === 'hi') { clouds(D.hi, 'cloud', 0.15, c.A.sky); g.restore(); return; }
     clouds(D.lo, 'cloud', 0.4, c.A.sky);
     clouds(D.mist, 'mist', 0.55, c.A.sky);
