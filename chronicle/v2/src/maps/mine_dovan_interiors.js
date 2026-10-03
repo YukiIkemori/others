@@ -28,7 +28,9 @@
     // ---------------------------------------------------------------- 集会所（下の段。町の寄り合い）
     interior('dovan_hall', R.T('map.mine_dovan_interiors.dovan_hall'), 18, 12, {
       back: 'hall', carpet: [5, 4, 8, 5], meta: { sub: R.T('map.mine_dovan_interiors.dovan_hall.meta.sub') },
-      objects: [K.prop('table', 7, 5), K.prop('table', 8, 5), K.prop('table', 9, 5), K.prop('table', 10, 5), K.exam(8, 5, 'dovan_assembly'), K.exam(9, 5, 'dovan_assembly'),
+      // 寄り合いの場面（dovan_assembly）で一行が立つ所（卓の南）
+      spawns: { assembly: { x: 9, y: 6, dir: 'n' } },
+      objects: [K.prop('table', 7, 5), K.prop('table', 8, 5), K.prop('table', 9, 5), K.prop('table', 10, 5), K.exam(8, 5, 'dovan_hall_table'), K.exam(9, 5, 'dovan_hall_table'),
         K.prop('chair', 6, 5), K.prop('chair', 11, 5), K.prop('bookshelf', 1, 2), K.prop('bookshelf', 16, 2), K.prop('lantern', 4, 3), K.prop('lantern', 13, 3),
         K.prop('coal_barrel', 1, 8), K.prop('tool_crate', 16, 8)],
       npcs: [
@@ -36,6 +38,16 @@
         // 選んだあと、同じ卓に（C 仲裁・年代記の（痛）のあと）
         K.npc('hall_borg', 'npc_borg', 7, 7, { name: R.T('map.mine_dovan_interiors.dovan_hall.npcs.1.hall_borg.name'), title: R.T('map.mine_dovan_interiors.dovan_hall.npcs.1.hall_borg.title'), dir: 'n', talk: 'dovan_hall_borg', reward: null, cond: ['mine_choice', { any: [{ choice: 'ch_mine_side', is: 'accord' }, 'mine_ledger_closed'] }] }),
         K.npc('hall_helga', 'npc_helga', 10, 7, { name: R.T('map.mine_dovan_interiors.dovan_hall.npcs.2.hall_helga.name'), title: R.T('map.mine_dovan_interiors.dovan_hall.npcs.2.hall_helga.title'), dir: 'n', talk: 'dovan_hall_helga', reward: null, cond: ['mine_choice', { any: [{ choice: 'ch_mine_side', is: 'accord' }, 'mine_ledger_closed'] }] }),
+        // (2026-10-03) 寄り合いに集まる人（dovan_assembly がその場面の間だけ出す）。西に組合・東に鍛冶衆・南に町の人
+        K.npc('asm_borg', 'npc_borg', 5, 5, { name: R.T('map.mine_dovan_interiors.dovan_hall.npcs.1.hall_borg.name'), title: R.T('map.mine_dovan_interiors.dovan_hall.npcs.1.hall_borg.title'), dir: 'e', hidden: true, pushable: false }),
+        K.npc('asm_miner', 'npc_miner', 5, 4, { name: R.T('map.mine_dovan.N.1.glare_guild.name'), dir: 'e', hidden: true, pushable: false }),
+        K.npc('asm_dag', 'npc_miner', 5, 6, { name: R.T('map.mine_dovan_interiors.dovan_house.npcs.2.dag.name'), dir: 'e', hidden: true, pushable: false }),
+        K.npc('asm_rolf', 'npc_miner', 6, 7, { name: R.T('map.mine_dovan_interiors.dovan_house2.npcs.1.rolf.name'), dir: 'n', hidden: true, pushable: false }),
+        K.npc('asm_helga', 'npc_helga', 12, 5, { name: R.T('map.mine_dovan_interiors.dovan_hall.npcs.2.hall_helga.name'), title: R.T('map.mine_dovan_interiors.dovan_hall.npcs.2.hall_helga.title'), dir: 'w', hidden: true, pushable: false }),
+        K.npc('asm_smith', 'npc_smith', 12, 4, { name: R.T('map.mine_dovan.N.2.glare_smith.name'), dir: 'w', hidden: true, pushable: false }),
+        K.npc('asm_pip', 'npc_pip', 12, 6, { name: R.T('map.mine_dovan.N.12.relight_pip.name'), dir: 'w', hidden: true, pushable: false }),
+        K.npc('asm_woman', 'npc_mine_woman', 8, 8, { name: R.T('map.mine_dovan_interiors.dovan_hall.npcs.asm_woman.name'), dir: 'n', hidden: true, pushable: false }),
+        K.npc('asm_old', 'npc_mine_old_f', 11, 7, { name: R.T('map.mine_dovan_interiors.dovan_hall.npcs.asm_old.name'), dir: 'n', hidden: true, pushable: false }),
       ],
     });
     // ---------------------------------------------------------------- 鉱夫組合の事務所（中の段。ボルグ・出納帳）

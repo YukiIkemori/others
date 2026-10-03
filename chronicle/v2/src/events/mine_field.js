@@ -41,6 +41,8 @@
     if (!ev.flag('mine_cartline')) {
       await ev.say(null, R.T('events.mine_rail_tunnel.say'));
       await ev.say(null, R.T('events.mine_rail_tunnel.say_2'));
+      // (2026-10-03) 開け方の手がかり: 組合が掘り直すのは山の騒ぎ（ドヴァンの寄り合い・七の層）の後。組合につくか仲裁で開く
+      await ev.say(null, R.T(cleared(ev) ? 'events.mine_rail_tunnel.say_4' : 'events.mine_rail_tunnel.say_3'));
       return;
     }
     if (!starOpen()) {

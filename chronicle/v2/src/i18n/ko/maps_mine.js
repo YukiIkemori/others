@@ -30,6 +30,8 @@
     'map.mine_dovan_interiors.dovan_hall.npcs.1.hall_borg.title': '광산장',
     'map.mine_dovan_interiors.dovan_hall.npcs.2.hall_helga.name': '헬가',
     'map.mine_dovan_interiors.dovan_hall.npcs.2.hall_helga.title': '대장장이',
+    'map.mine_dovan_interiors.dovan_hall.npcs.asm_woman.name': '마을 여자',
+    'map.mine_dovan_interiors.dovan_hall.npcs.asm_old.name': '마을 할머니',
     'map.mine_dovan_interiors.dovan_guild': '광부 조합 사무소',
     'map.mine_dovan_interiors.dovan_guild.meta.sub': '광산장 보르그의 사무소',
     'map.mine_dovan_interiors.dovan_guild.npcs.0.borg.name': '보르그',

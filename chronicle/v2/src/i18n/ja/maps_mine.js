@@ -31,6 +31,8 @@
     'map.mine_dovan_interiors.dovan_hall.npcs.1.hall_borg.title': '鉱山長',
     'map.mine_dovan_interiors.dovan_hall.npcs.2.hall_helga.name': 'ヘルガ',
     'map.mine_dovan_interiors.dovan_hall.npcs.2.hall_helga.title': '鍛冶師',
+    'map.mine_dovan_interiors.dovan_hall.npcs.asm_woman.name': '町の女',
+    'map.mine_dovan_interiors.dovan_hall.npcs.asm_old.name': '町の老婆',
     'map.mine_dovan_interiors.dovan_guild': '鉱夫組合の事務所',
     'map.mine_dovan_interiors.dovan_guild.meta.sub': '鉱山長ボルグの事務所',
     'map.mine_dovan_interiors.dovan_guild.npcs.0.borg.name': 'ボルグ',

@@ -465,6 +465,36 @@ section('glimmer');
   ok('params: boss EF 2.5, rankB = Tb + 1 + 2', (() => { const q = R.Glimmer.params([{ side: 'enemy', boss: true }], 0); return q.ef === 2.5 && q.rankB === 3; })());
 }
 
+// 熟練度の余り（持ち主 2026-10-03「熟練度高くなれば、熟練度低いやつほど覚える確率上がってもいいと思うよ」。K.GLIM.pm）
+section('glimmer: proficiency margin (spells only)');
+{
+  const Gl = R.Glimmer, P = K.GLIM.pm, A = DB.spells.s_fire_water_a, B = DB.spells.s_fire_water_b;
+  R.State.newGame({ hero: { type: 'mage', sex: 'm', name: 'アルン', fav: 'fire' }, seed: 2 });
+  const c = R.Game.chars.hero;
+  const setP = (f, w) => { c.eprof.fire = K.PROF_PTS[f]; c.eprof.water = K.PROF_PTS[w]; };
+  for (const id of ['s_fire_1', 's_fire_2', 's_fire_3', 's_water_1', 's_water_1h', 's_water_2', 's_water_3']) if (!c.spells.includes(id)) c.spells.push(id);
+  setP(40, 31);
+  ok('profMargin: a pair uses the lower element (fire 40 / water 31 → 煮え湯の雨 31 − 14 = 17, B 31 − 25 = 6)', Gl.profMargin(c, A) === 17 && Gl.profMargin(c, B) === 6, [Gl.profMargin(c, A), Gl.profMargin(c, B)]);
+  ok('profMargin: ranks up to pm.from do not count (early game unchanged)', (() => { setP(12, 12); const z = Gl.profMargin(c, DB.spells.s_fire_2); setP(14, 14); const y = Gl.profMargin(c, DB.spells.s_fire_2); setP(40, 31); return z === 0 && y === 14 - P.from; })());
+  ok('profMargin: techs are 0 (the margin rule is spells only)', Gl.profMargin(c, DB.techs.t_sword_twin) === 0);
+  const ctx = (T, el) => ({ kind: 'spell', elements: [el], rankB: T + K.GLIM.rankBase, ef: 1, tier: T, row: 'back' });
+  const cand = (T, el) => Gl.candidates(c, ctx(T, el)).map((x) => x.id);
+  ok('casting a fire or a water single at T2 (rankB 3) offers 煮え湯の雨 (lv 4) once the margin is big', cand(2, 'fire').includes('s_fire_water_a') && cand(2, 'water').includes('s_fire_water_a'), [cand(2, 'fire'), cand(2, 'water')]);
+  ok('…but not B (lv 6, margin 6 → gate +1) until T4 normal', !cand(3, 'fire').includes('s_fire_water_b') && cand(4, 'fire').includes('s_fire_water_b'));
+  ok('without the margin (water 14) 煮え湯の雨 still needs rankB ≥ 4 at T2', (() => { setP(40, 14); const r = !cand(2, 'fire').includes('s_fire_water_a') && cand(3, 'fire').includes('s_fire_water_a'); setP(40, 31); return r; })());
+  const pAt = (w) => { setP(40, w); return Gl.chance(c, 's_fire_water_a', ctx(3, 'fire')); };
+  const p0 = pAt(14), p10 = pAt(24), p17 = pAt(31), pBig = pAt(60);
+  ok('chance ×(1 + slope × margin): margin 10 → ×' + (1 + P.slope.comboA * 10).toFixed(2), near(p10 / p0, 1 + P.slope.comboA * 10, 1e-6), [p0, p10]);
+  ok('chance multiplier is capped (pm.max)', near(pBig / p0, P.max.comboA, 1e-6) || pBig === K.GLIM.cap, [p0, pBig]);
+  ok('fire 40 / water 31 at T3: 煮え湯の雨 per pick ≥ 6%', p17 >= 0.06, p17);
+  setP(40, 31);
+  ok('higher classes gain less: comboB / triple slope and max below comboA', P.slope.comboB < P.slope.comboA && P.slope.triple < P.slope.comboB && P.max.comboB < P.max.comboA && P.max.triple < P.max.comboB);
+  const tid = Object.keys(DB.techs).find((id) => DB.techs[id].wtype === 'staff' && DB.techs[id].glim && !c.techs.includes(id));
+  const tp = (f) => { setP(f, f); return Gl.chance(c, tid, { kind: 'tech', rankB: 4, ef: 1, tier: 3, used: 'attack' }); };
+  ok('tech chances do not use the spell margin (element proficiency does not move them)', tid && tp(1) > 0 && near(tp(1), tp(60)), tid);
+  setP(40, 31);
+}
+
 section('§10.1 drop slots and chest pools (A30)');
 {
   // the slice's 22 stage 1–2 monsters all carry a rare slot again (owner 2026-09-27: 「レアがめっきり減ったねえ……。楽しみがちょっとないかも」);

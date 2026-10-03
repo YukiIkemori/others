@@ -31,6 +31,8 @@
     'map.mine_dovan_interiors.dovan_hall.npcs.1.hall_borg.title': '矿山长',
     'map.mine_dovan_interiors.dovan_hall.npcs.2.hall_helga.name': '赫尔加',
     'map.mine_dovan_interiors.dovan_hall.npcs.2.hall_helga.title': '锻冶师',
+    'map.mine_dovan_interiors.dovan_hall.npcs.asm_woman.name': '镇上的女人',
+    'map.mine_dovan_interiors.dovan_hall.npcs.asm_old.name': '镇上的老婆婆',
     'map.mine_dovan_interiors.dovan_guild': '矿工公会事务所',
     'map.mine_dovan_interiors.dovan_guild.meta.sub': '矿山长博尔格的事务所',
     'map.mine_dovan_interiors.dovan_guild.npcs.0.borg.name': '博尔格',

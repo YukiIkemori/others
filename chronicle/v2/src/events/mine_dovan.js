@@ -417,35 +417,92 @@
   E('dovan_hall_helga', async (ev) => {
     await ev.say('hall_helga', ev.flag('mine_ledger_closed') ? R.T('events.dovan_hall_helga.say') : R.T('events.dovan_hall_helga.say_2'));
   });
+  // (2026-10-03) 寄り合いの場面（オーナー: 誰もいない所であっさり決まる）: 卓のまわりに町の人が集まる。
+  //   世話役が開く → 組合（ボルグ: 七の層を開く・高原へのトロッコ線のトンネルを掘り直す）と鍛冶衆（ヘルガ: 封じる・抜け道とヴォルクの炉）が言い分を述べ →
+  //   救い出したダグ・町の人 → 選ぶ（大事な分かれ道）→ その場の声 → 人が散る → 世話役の締め。
+  //   集まる人は集会所の地図の asm_*（hidden。この場面の間だけ出す）。旗は人が散った暗転の中で立てる（選んだ後に卓に残るボルグとヘルガの出る条件が mine_choice）
+  const ASM = ['asm_borg', 'asm_miner', 'asm_dag', 'asm_rolf', 'asm_helga', 'asm_smith', 'asm_pip', 'asm_woman', 'asm_old'];
+  const ASM_IF = { asm_dag: 'mine_miner1', asm_rolf: 'mine_miner2', asm_pip: 'mine_pip' };
+  async function crowd(ev, on) {
+    for (const id of ASM) {
+      const h = ev.npc && ev.npc(id);
+      if (!h) continue;
+      if (on && (!ASM_IF[id] || ev.flag(ASM_IF[id]))) await h.show();
+      else if (!on) await h.hide();
+    }
+  }
   E('dovan_assembly', async (ev) => {
     const x = X();
     if (ev.flag('mine_choice') || !ev.flag('mine_door_seen')) return;
-    await ev.say('hall_chair', R.T('events.dovan_assembly.say'));
+    await ev.say('hall_chair', R.T('events.dovan_assembly.gather'));
+    // 人を集める（暗転の中で卓のまわりに。一行は卓の南）
+    await ev.fade('out', 500);
+    await ev.warp('dovan_hall', 'assembly');
+    await crowd(ev, true);
+    await ev.fade('in', 500);
+    await ev.caption(R.T('events.dovan_assembly.caption'), { ms: 2200 });
+    await ev.say('hall_chair', R.T('events.dovan_assembly.open'));
+    await ev.say('asm_borg', R.T('events.dovan_assembly.borg'));
+    await ev.say('asm_borg', R.T('events.dovan_assembly.borg_2'));
+    await ev.say('asm_miner', R.T('events.dovan_assembly.miner'));
+    await ev.say('asm_helga', R.T('events.dovan_assembly.helga'));
+    await ev.say('asm_helga', R.T('events.dovan_assembly.helga_2'));
+    await ev.say('asm_smith', R.T('events.dovan_assembly.smith'));
+    if (ev.flag('mine_miner1')) await ev.say('asm_dag', R.T('events.dovan_assembly.dag'));
+    await ev.say('asm_woman', R.T('events.dovan_assembly.woman'));
     const j = x.jobs(ev);
     if (j.g < 2 || j.s < 2) await ev.say('hall_chair', R.T('events.dovan_assembly.say_2'));
+    else await ev.say('hall_chair', R.T('events.dovan_assembly.accord'));
     const labels = R.T('events.dovan_assembly.labels').concat(x.accordOk(ev) ? [R.T('events.dovan_assembly.labels.0')] : []).concat([R.T('events.dovan_assembly.labels.0_2')]);
     const i = await ev.choose(labels, { important: true, text: R.T('events.dovan_assembly.i.choose.text') });
     const pick = labels[i];
-    if (!pick || pick === R.T('events.dovan_assembly.labels.0_2')) { await ev.say('hall_chair', R.T('events.dovan_assembly.say_3')); return; }
+    const disperse = async () => { await ev.fade('out', 500); await crowd(ev, false); };
+    if (!pick || pick === R.T('events.dovan_assembly.labels.0_2')) {
+      await ev.say('hall_chair', R.T('events.dovan_assembly.say_3'));
+      await disperse();
+      await ev.fade('in', 500);
+      return;
+    }
     const side = i === 0 ? 'guild' : i === 1 ? 'smiths' : 'accord';
+    if (side === 'guild') {
+      await ev.say('asm_borg', R.T('events.dovan_assembly.r_guild'));
+      await ev.say(null, R.T('events.dovan_assembly.say_4'));
+      await ev.leave(['asm_helga', 'asm_smith', 'asm_pip'], { steps: 3 });
+      await ev.say('hall_chair', R.T('events.dovan_assembly.say_5'));
+    } else if (side === 'smiths') {
+      await ev.say('asm_helga', R.T('events.dovan_assembly.r_smiths'));
+      await ev.say(null, R.T('events.dovan_assembly.say_6'));
+      await ev.leave(['asm_borg', 'asm_miner'], { steps: 3 });
+      await ev.say('hall_chair', R.T('events.dovan_assembly.say_7'));
+    } else {
+      await ev.say('asm_borg', R.T('events.dovan_assembly.r_accord'));
+      await ev.say('asm_helga', R.T('events.dovan_assembly.r_accord_2'));
+      await ev.say(null, R.T('events.dovan_assembly.say_8'));
+      await ev.say('hall_chair', R.T('events.dovan_assembly.say_9'));
+    }
+    await disperse();
     ev.choice('ch_mine_side', side);
     ev.setFlag('mine_choice');
     ev.leadDone('l_mine_guild');
     ev.leadDone('l_mine_smiths');
     ev.leadDone('l_mine_door');
     ev.lead('l_mine_warden');
-    if (side === 'guild') {
-      await ev.say(null, R.T('events.dovan_assembly.say_4'));
-      await ev.say('hall_chair', R.T('events.dovan_assembly.say_5'));
-    } else if (side === 'smiths') {
-      await ev.say(null, R.T('events.dovan_assembly.say_6'));
-      await ev.say('hall_chair', R.T('events.dovan_assembly.say_7'));
-    } else {
-      await ev.say(null, R.T('events.dovan_assembly.say_8'));
-      await ev.say('hall_chair', R.T('events.dovan_assembly.say_9'));
-    }
+    await ev.fade('in', 500);
     await ev.say('hall_chair', R.T('events.dovan_assembly.say_10'));
-  }, { meta: { needs: ['flag:mine_door_seen'], gives: ['choice:ch_mine_side', 'flag:mine_choice', 'lead:l_mine_warden'] } });
+  }, { meta: { needs: ['flag:mine_door_seen'], gives: ['choice:ch_mine_side', 'flag:mine_choice', 'lead:l_mine_warden'], warp: { to: 'dovan_hall', spawn: 'assembly' } } });
+  // (2026-10-03) 集会所の卓（調べても何も出なかった）: 坑道の図と寄り合いの帳面。寄り合いの前・選んだ後・解決の後で変わる
+  E('dovan_hall_table', async (ev) => {
+    if (cleared(ev)) { await ev.say(null, R.T('events.dovan_hall_table.say')); return; }
+    if (ev.flag('mine_choice')) {
+      const s = X().side(ev);
+      await ev.say(null, R.T(s === 'guild' ? 'events.dovan_hall_table.say_guild' : s === 'smiths' ? 'events.dovan_hall_table.say_smiths' : 'events.dovan_hall_table.say_accord'));
+      return;
+    }
+    if (!ev.flag('mine_door_seen')) { await ev.say(null, R.T('events.dovan_hall_table.say_2')); return; }
+    await ev.say(null, R.T('events.dovan_hall_table.say_3'));
+    const i = await ev.choose(R.T('events.dovan_hall_table.i.choose'), { text: R.T('events.dovan_hall_table.i.choose.text') });
+    if (i === 0) await ev.call('dovan_assembly');
+  }, { meta: { needs: [], gives: [], calls: ['dovan_assembly'] } });
 
   // ---------------------------------------------------------------- 隠者の庵（#15。碑文の古い写し・問答 3 問 → 隠者の数珠）
   const QUIZ = [

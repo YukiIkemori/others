@@ -31,6 +31,8 @@
     'map.mine_dovan_interiors.dovan_hall.npcs.1.hall_borg.title': 'Mine Chief',
     'map.mine_dovan_interiors.dovan_hall.npcs.2.hall_helga.name': 'Helga',
     'map.mine_dovan_interiors.dovan_hall.npcs.2.hall_helga.title': 'Blacksmith',
+    'map.mine_dovan_interiors.dovan_hall.npcs.asm_woman.name': 'Townswoman',
+    'map.mine_dovan_interiors.dovan_hall.npcs.asm_old.name': 'Old Woman',
     'map.mine_dovan_interiors.dovan_guild': 'Miners\' Guild Office',
     'map.mine_dovan_interiors.dovan_guild.meta.sub': 'Mine Chief Borg\'s office',
     'map.mine_dovan_interiors.dovan_guild.npcs.0.borg.name': 'Borg',

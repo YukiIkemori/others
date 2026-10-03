@@ -93,13 +93,14 @@
     return out;
   }
   // 熟練度の余り（持ち主 2026-10-03「熟練度高くなれば、熟練度低いやつほど覚える確率上がってもいいと思うよ」）:
-  //   余り PM = 術の属性のうち一番低い熟練度の段階 − glim.prof（2・3 属性は低いほう。0 未満は 0）。術だけ（技は変えない）
+  //   余り PM = min(lo − glim.prof, lo − pm.from)（lo = 術の属性のうち一番低い熟練度の段階。2・3 属性は低いほう。0 未満は 0）。術だけ（技は変えない）
   //   確率 ×min(pm.max[格], 1 + pm.slope[格] × PM)、候補の関門 lv ≤ rankB + min(pm.gateMax, floor(PM / pm.gateStep))（弱い相手でも、十分に低い術は出る）
   function profMargin(c, a) {
     if (!c || !a || a.kind !== 'spell' || !a.glim || !Array.isArray(a.elements) || !a.elements.length) return 0;
     let lo = Infinity;
     for (const e of a.elements) lo = Math.min(lo, R.Rules.profRank(c.eprof ? c.eprof[e] : 0));
-    return Math.max(0, lo - (a.glim.prof || 0));
+    const from = K().GLIM.pm ? K().GLIM.pm.from || 0 : 0;
+    return Math.max(0, Math.min(lo - (a.glim.prof || 0), lo - from));   // 段階 from 以下は数えない（序盤の釣り合いは変えない）
   }
   function pmGate(pm) { const P = K().GLIM.pm; return P ? Math.min(P.gateMax, Math.floor(pm / P.gateStep)) : 0; }
   function pmMul(a, pm) {

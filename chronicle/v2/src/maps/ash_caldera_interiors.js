@@ -34,7 +34,9 @@
     });
     interior('caldera_tavern', R.T('map.ash_caldera_interiors.caldera_tavern'), 16, 12, {
       back: 'tavern', carpet: [5, 6, 6, 3], bgm: 'tavern', wall: 'wall_stone', floor: 'basalt_floor', meta: { sub: R.T('map.ash_caldera_interiors.caldera_tavern.meta.sub') },
-      objects: [K.prop('bar_counter', 3, 3), K.prop('bar_counter', 4, 3), K.prop('bar_counter', 5, 3), K.prop('bar_counter', 6, 3), K.prop('keg_rack', 1, 2, { w: 2 }), K.prop('keg_rack', 13, 2, { w: 2 }),
+      // (2026-10-03) 売り台の絵は 1 つが 1 マスより広く、4 つで 3〜7 に見える。右端の当たりを 7 まで・左の酒樽を 2 マスに、
+      //   右の壁ぎわ（8,2）に樽を置いて、売り台の内側へ上や横から回りこめないように（ドヴァンの酒場と同じ）
+      objects: [K.prop('bar_counter', 3, 3), K.prop('bar_counter', 4, 3), K.prop('bar_counter', 5, 3), K.prop('bar_counter', 6, 3, { w: 2 }), K.prop('keg_rack', 1, 2, { w: 2 }), K.prop('keg_rack', 13, 2, { w: 2 }), K.prop('barrel', 8, 2),
         K.prop('table', 11, 5), K.prop('chair', 10, 5), K.prop('chair', 12, 5), K.prop('table', 11, 8), K.prop('chair', 10, 8), K.prop('chair', 12, 8),
         K.prop('table', 3, 8), K.prop('chair', 2, 8), K.prop('lantern', 8, 3), K.prop('lantern', 14, 8), K.prop('arena_banner', 10, 2)],   // 旗は壁の前の床に立てる（壁の立ち上がりの中に立てない）
       npcs: [

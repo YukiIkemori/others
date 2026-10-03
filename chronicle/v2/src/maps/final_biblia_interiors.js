@@ -70,7 +70,9 @@
     // ---------------------------------------------------------------- 酒場「白紙亭」（白紙になりかけの人々の最後のうわさ。WORLD §5.13）
     interior('biblia_tavern', R.T('map.final_biblia_interiors.biblia_tavern'), 16, 12, {
       back: 'tavern', carpet: [6, 6, 6, 3], bgm: 'tavern', meta: { sub: R.T('map.final_biblia_interiors.biblia_tavern.meta.sub') },
-      objects: [K.prop('bar_counter', 3, 3), K.prop('bar_counter', 4, 3), K.prop('bar_counter', 5, 3), K.prop('bar_counter', 6, 3), K.prop('keg_rack', 1, 2), K.prop('keg_rack', 13, 2, { w: 2 }),
+      // (2026-10-03) 売り台の絵は 1 つが 1 マスより広く、4 つで 3〜7 に見える。右端の当たりを 7 まで・左の酒樽を 2 マスに、
+      //   右の壁ぎわ（8,2）に樽を置いて、売り台の内側へ上や横から回りこめないように（ドヴァンの酒場と同じ）
+      objects: [K.prop('bar_counter', 3, 3), K.prop('bar_counter', 4, 3), K.prop('bar_counter', 5, 3), K.prop('bar_counter', 6, 3, { w: 2 }), K.prop('keg_rack', 1, 2, { w: 2 }), K.prop('keg_rack', 13, 2, { w: 2 }), K.prop('barrel', 8, 2),
         K.prop('table', 11, 5), K.prop('chair', 10, 5), K.prop('chair', 12, 5), K.prop('table', 11, 8), K.prop('chair', 10, 8), K.prop('chair', 12, 8),
         K.prop('table', 5, 8), K.prop('chair', 6, 8), K.prop('lantern', 8, 3), K.prop('lantern', 14, 6)],
       npcs: [

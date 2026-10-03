@@ -2,6 +2,7 @@
 // 閃きと熟練度の sim（RULES）: ゲームの R.Rules.train・R.Glimmer.roll・R.Glimmer.learn をそのまま回す模型。
 //   node v2/tools/sim_glimmer.js [--runs 40] [--seed 1]         熟練度の目安（STATS_REWORK §5.3 の P0・P1・P1b・P2）と閃き（SYSTEMS_REWORK §4.3 G）
 //   node v2/tools/sim_glimmer.js --derive [--runs 200] [--share 0.33]  派生技（レア）: 親の技を連打・ふつうの遊びで編み出す確率
+//   node v2/tools/sim_glimmer.js --margin [--runs 400]           術の熟練度の余り（K.GLIM.pm）: 火 40・水 31 で合成術を覚える早さ（前と後）
 //   node v2/tools/sim_glimmer.js --slice [--json out.json]      縦切りの範囲（V2_PLAN §3.9）: 序章 35 戦＋森 95 戦＋ボス 4 で、
 //                                                               だれか（仲間 20 人・主人公 5 型）が閃く確率が 5% 以上の技・術の一覧（QA の slice_scope が読む）
 // 模型（SYSTEMS_REWORK §4.3・STATS_REWORK §5.1）: 1 戦 3 行動。武器の人は 92% が武器の行動（そのうち覚えた技があれば 4 割が技）、
@@ -118,6 +119,63 @@ if (SLICE) {
   console.log(`\n${ok ? 'PASS' : 'FAIL'} slice scope stays within tech lv ≤ 4 (max lv ${Math.max(...lv)})`);
   console.log(`${near ? 'NOTE' : 'NOTE (above/below the estimate)'} slice scope near the V2_PLAN §3.9 estimate (glimmered techs lv1–3 ≈ 20: ${glimT.length} + starters ${techs.length - glimT.length}, max lv ${Math.max(...lv)}; spells step 1–2 ≈ 12: ${spells.length})`);
   if (!ok) process.exitCode = 1;
+  return;
+}
+
+// ================================================================== 熟練度の余り（K.GLIM.pm。持ち主 2026-10-03）
+//   node v2/tools/sim_glimmer.js --margin [--runs 400]
+// 持ち主「火 40・水 31 でも『煮え湯の雨』（合成A、glim.lv 4・熟練度 14）を覚えない」「熟練度高くなれば、熟練度低いやつほど覚える確率上がってもいいと思うよ」
+// 模型: 火 40・水 31、火と水の段 1〜3 は覚えている。ティア 2〜4 の雑魚戦（rankB = ティア + 1、EF 1）で火か水の術を 30 回唱える（熟練度は動かさない）。
+//   目安（依頼）: 煮え湯の雨を 10 回で約 5 割・30 回で約 9 割。合成B（熟練度 25）は少し遅い。比べに pm を外した値（前）も出す
+if (argv.includes('--margin')) {
+  const N = Math.max(100, +opt('--runs', 400));
+  const SP = [{ hero: 'mage', fav: 'fire', name: 'hero mage:fire' }, { id: 'teo', name: 'teo (S/C)' }, { id: 'marta', name: 'marta (C/S)' }, { id: 'viola', name: 'viola (A/C, int 16)' }];
+  const TG = ['s_fire_water_a', 's_fire_water_b', 's_fire_4'];
+  const PM0 = K.GLIM.pm;
+  const mk = (sp, T) => {
+    R.State.newGame({ seed: 1 });
+    const c = sp.hero ? R.Party.makeChar('hero', { hero: { type: sp.hero, sex: 'm', name: 'アルン', fav: sp.fav }, tier: T, joinFrom: 'start' }) : R.Party.makeChar(sp.id, { tier: T, catchUp: false });
+    c.eprof.fire = K.PROF_PTS[40]; c.eprof.water = K.PROF_PTS[31];
+    for (const id of Object.keys(DB.spells)) { const a = DB.spells[id]; if (a.elements.length === 1 && (a.elements[0] === 'fire' || a.elements[0] === 'water') && a.step <= 3 && !c.spells.includes(id)) c.spells.push(id); }
+    return c;
+  };
+  /** → {id: [10 回までに覚えた率, 30 回までに覚えた率]} */
+  const run = (sp, T) => {
+    const hit = {}; for (const t of TG) hit[t] = [0, 0];
+    for (let r = 0; r < N; r++) {
+      const g = R.rng(`pm:${SEED}:${T}:${sp.name}:${r}`); const rnd = () => g.next();
+      const c = mk(sp, T), got = {};
+      for (let i = 1; i <= 30; i++) {
+        const el = rnd() < 0.5 ? 'fire' : 'water';
+        const h = Gl.roll(c, el === 'fire' ? 's_fire_1' : 's_water_1', { kind: 'spell', elements: [el], rankB: T + K.GLIM.rankBase, ef: 1, tier: T, row: 'back', rng: rnd });
+        if (h && Gl.learn(c, h.id, { quiet: true })) got[h.id] = i;
+      }
+      for (const t of TG) { if (got[t] && got[t] <= 10) hit[t][0]++; if (got[t]) hit[t][1]++; }
+    }
+    for (const t of TG) hit[t] = hit[t].map((x) => x / N);
+    return hit;
+  };
+  const pc = (x) => (100 * x).toFixed(0).padStart(3) + '%';
+  console.log(`margin sim: fire 40 / water 31, steps 1–3 known, ${N} runs × 30 casts in normal battles  (cells: learned by cast 10 / by cast 30; before → after)`);
+  console.log('tier member               煮え湯の雨 (A, prof 14)        B (prof 25)                    火の段 4 (prof 19)');
+  const A10 = [], A30 = [], B30 = [], F30 = [];
+  for (const T of [2, 3, 4]) for (const sp of SP) {
+    K.GLIM.pm = null; const b = run(sp, T);
+    K.GLIM.pm = PM0; const a = run(sp, T);
+    console.log(`T${T}   ${sp.name.padEnd(20)} ` + TG.map((t) => `${pc(b[t][0])}/${pc(b[t][1])} → ${pc(a[t][0])}/${pc(a[t][1])}`.padEnd(30)).join(' '));
+    if (sp.id !== 'viola') { A10.push(a.s_fire_water_a[0]); A30.push(a.s_fire_water_a[1]); if (T === 4) B30.push(a.s_fire_water_b[1]); F30.push(a.s_fire_4[1]); }
+  }
+  K.GLIM.pm = PM0;
+  const res = [];
+  let bad = 0;
+  const chk = (ok, msg) => { res.push((ok ? 'PASS ' : 'FAIL ') + msg); if (!ok) bad++; };
+  chk(mean(A10) >= 0.4 && mean(A10) <= 0.75, `煮え湯の雨 by cast 10 at T2–T4 ${pc(mean(A10))} on average (40–75%; by member×tier ${A10.map((x) => (100 * x).toFixed(0)).join('/')})`);
+  chk(mean(A30) >= 0.85 && Math.min(...A30) >= 0.75, `煮え湯の雨 by cast 30 ${pc(mean(A30))} on average, min ${pc(Math.min(...A30))} (≥ 85% / ≥ 75%)`);
+  chk(Math.min(...B30) > 0.1 && Math.max(...B30) < mean(A30), `B (prof 25) at T4: learnable but slower (${B30.map(pc).join('/')} by cast 30, below A's ${pc(mean(A30))})`);
+  chk(mean(F30) >= 0.3, `fire step 4 (prof 19, lv 5) shows up at T2–T4 normal battles too: ${pc(mean(F30))} by cast 30 (≥ 30%)`);
+  console.log('\n' + res.join('\n'));
+  console.log(`\nsim_glimmer --margin: ${res.filter((x) => x.startsWith('PASS')).length}/${res.length} passed (runs ${N}, seed ${SEED})`);
+  if (bad) process.exitCode = 1;
   return;
 }
 

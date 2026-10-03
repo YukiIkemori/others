@@ -127,9 +127,9 @@
       margin: 0.1, marginMax: 5, wFrom: 3, wLowest: 2,
       gf: { min: 0.7, max: 1.8 },
       tier0: 2.15, tier0Known: 3, bossLate: { from: 4, slope: 0.4, max: 2 },
-      // 術の熟練度の余り PM（R.Glimmer.profMargin。持ち主 2026-10-03）: 確率 ×min(max[格], 1 + slope[格] × PM)、候補の関門 rankB + min(gateMax, floor(PM / gateStep))。
+      // 術の熟練度の余り PM（R.Glimmer.profMargin。持ち主 2026-10-03）: PM = min(段階 − glim.prof, 段階 − from)（段階 from までは数えない＝体験版のティア 0 はそのまま）。確率 ×min(max[格], 1 + slope[格] × PM)、候補の関門 rankB + min(gateMax, floor(PM / gateStep))。
       //   上の格（合成B・3 属性）は伸びも上限も小さい。見込みは tools/sim_glimmer.js --margin
-      pm: { slope: { single: 0.25, comboA: 0.25, comboB: 0.15, triple: 0.1 }, max: { single: 5, comboA: 5, comboB: 3.5, triple: 3 }, gateStep: 6, gateMax: 2 },
+      pm: { slope: { single: 0.25, comboA: 0.25, comboB: 0.15, triple: 0.1 }, max: { single: 5, comboA: 5, comboB: 3.5, triple: 3 }, gateStep: 6, gateMax: 2, from: 12 },
     },
     // 派生技（R.Glimmer.deriveRoll。design/BACKLOG「派生技の閃き」）: レアな技。親の技を使ったときだけ、閃きに似た確率で振る（確定は無い）:
     //   p = min(cap[段], base[段] × 相性（K.GLIM.apt）× GF（器用さ）× RANK × PROF × USE × (1 + glimPct/100))
