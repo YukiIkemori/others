@@ -169,7 +169,8 @@
       for (const [x, y] of [[18, 5], [34, 5], [18, 9], [34, 9], [22, 15], [30, 15], [22, 19], [30, 19]]) K.put(g, x, y, '#');
       const O = [];
       O.push(K.stairs(26, 40, { map: 'desert_tomb_2', spawn: 'up' }, { id: 'desert_tomb_3_up', look: 'up' }));
-      O.push(K.spring('desert_tomb_3_s1', 25, 15));        // 控えの間の泉（王の前。王墓でただ 1 つ。WORLD §6.2）
+      // 控えの間の泉（王の前。王墓でただ 1 つ。WORLD §6.2）。部屋（19〜33）と回廊（25〜27）のまん中 26.5 に絵を置く（dx: 0.5。持ち主 2026-10-03「女神像がまん中にない」）
+      O.push(Object.assign(K.spring('desert_tomb_3_s1', 25, 15), { dx: 0.5 }));
       O.push(K.prop('obelisk', 44, 19), K.exam(44, 20, 'desert_tomb_glyph', { glyph: 'ru' }));
       O.push(K.prop('broken_pillar', 20, 3), K.exam(20, 4, 'desert_tomb_rubbing'));        // 拓本の跡（lo_ev_desert）
       O.push(K.prop('obelisk', 16, 3), K.prop('obelisk', 36, 3));

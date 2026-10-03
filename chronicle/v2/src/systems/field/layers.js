@@ -105,8 +105,8 @@
       } else if (o.type === 'brazier') {
         if (lit.includes(o.id)) add(cx, cy, 104, 'rgba(255,170,96,1)', 0.85, cy - t * 0.7, '#ffd9a0', 7);
       } else if (o.type === 'spring') {
-        if (R.MapUtil.springLook(m, o) === 'goddess') add((o.x + 1) * t, (o.y + 1.2) * t, 132, 'rgba(255,226,176,1)', 0.75, (o.y - 1) * t, '#fff0c8', 9);   // 女神の像の手のランタン
-        else add((o.x + 1) * t, (o.y + 1.2) * t, 132, 'rgba(120,220,236,1)', 0.75, (o.y + 0.7) * t, '#d8fbff', 9);
+        if (R.MapUtil.springLook(m, o) === 'goddess') add((o.x + 1 + (o.dx || 0)) * t, (o.y + 1.2) * t, 132, 'rgba(255,226,176,1)', 0.75, (o.y - 1) * t, '#fff0c8', 9);   // 女神の像の手のランタン
+        else add((o.x + 1 + (o.dx || 0)) * t, (o.y + 1.2) * t, 132, 'rgba(120,220,236,1)', 0.75, (o.y + 0.7) * t, '#d8fbff', 9);
       } else if (o.type === 'waylamp') {
         if (G.lamps && G.lamps[o.id]) add(cx, cy, 112, 'rgba(255,196,120,1)', 0.8, cy - t * 1.2, '#ffe6b8', 6);
       } else if (o.type === 'building' && o.lamp && o.door) {

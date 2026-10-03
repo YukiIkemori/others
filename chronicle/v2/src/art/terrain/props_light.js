@@ -27,7 +27,8 @@
 
   /** 物の描く点（足もと、マップの論理 px） */
   T._objFeet = function (o, tile) {
-    if (o.type === 'spring') return [(o.x + 1) * tile, (o.y + 1.8) * tile];
+    // 泉の dx = 絵だけを横へずらすマス（当たりは 2×2 のまま。奇数の幅の部屋のまん中に置く時の半マス。王墓 3 階の控えの間）
+    if (o.type === 'spring') return [(o.x + 1 + (o.dx || 0)) * tile, (o.y + 1.8) * tile];
     // lift = 下絵の柱・台の上に載せる物の持ち上げ（32 の論理 px。灰の町の崖の上の灯籠の柱に載るかがり火など）
     return [(o.x + 0.5) * tile, (o.y + 0.84) * tile - (o.lift ? o.lift * tile / 32 : 0)];
   };

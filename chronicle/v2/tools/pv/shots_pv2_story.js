@@ -658,7 +658,7 @@ SHOTS.s7_hazal = {
 const ASH = { ash_arrived: true, ash_lavabeast: true };
 SHOTS.s7_fine_ash = {
   prep: async (T) => {
-    await T.js(FIELD({ flags: ASH }, 'ash_volcano_2', { x: 24, y: 6, dir: 'e' }));
+    await T.js(FIELD({ flags: ASH }, 'ash_volcano_2', { x: 24, y: 4, dir: 'e' }));   // 火口の北の縁の岩棚（溶岩の上に立たせない。持ち主 2026-10-03）
     await T.idle(150); await T.settle();
     await T.js(`PV2.autoVoice(100); RPG.Events.run('ash_crater_fine', {map: 'ash_volcano_2'})`);
   },

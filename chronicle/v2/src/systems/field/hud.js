@@ -244,7 +244,7 @@
       const f = F._front();
       if (f && f.kind !== 'npc') {
         const t = cam.t;
-        const bx = Math.round((f.x + (f.kind === 'obj' && f.obj.type === 'spring' ? 1 : 0.5)) * t - cam.cx);
+        const bx = Math.round((f.x + (f.kind === 'obj' && f.obj.type === 'spring' ? 1 + (f.obj.dx || 0) : 0.5)) * t - cam.cx);
         const by = Math.round(f.y * t - cam.cy - 6);
         B[0].label = f.label;
         R.UIK.bubble(g, bx, by, B);

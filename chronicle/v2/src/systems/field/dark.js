@@ -141,7 +141,7 @@
     const lit = (G.lit && G.lit[m.id]) || [];
     for (const o of m.objects || []) {
       if (o.type === 'brazier' && lit.includes(o.id)) punch((o.x + 0.5) * t - cx, (o.y + 0.5) * t - cy, (D.LAMP_R + 0.9) * t);
-      else if (o.type === 'spring') punch((o.x + 1) * t - cx, (o.y + 1) * t - cy, (D.SPRING_R + 1.4) * t);
+      else if (o.type === 'spring') punch((o.x + 1 + (o.dx || 0)) * t - cx, (o.y + 1) * t - cy, (D.SPRING_R + 1.4) * t);
     }
     g.save();
     g.imageSmoothingEnabled = true;
