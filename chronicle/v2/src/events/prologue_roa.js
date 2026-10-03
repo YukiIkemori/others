@@ -5,7 +5,7 @@
 //   roa_lectern      書見台: 語り部の名簿（lo_roa_register）と「手がかり帳の使い方」の短い本
 //   roa_seat         朝の席（lo_roa_seat）   roa_shelf  本棚   roa_stone  語り石（lo_roa_stone）   roa_hall  語り石の間
 //   roa_gate / roa_gatewoman / roa_children / roa_elder / roa_farmer / roa_weaver / roa_youth   里の人
-//   roa_enter        ロアの onEnter（今は何もしない。T3・T6 のロアの寄り道と終盤のロアの口）
+//   roa_enter        ロアの onEnter（ベルナの封書を持って帰ったときの知らせ・開封 R.Story.roaArrive と、終盤のロアの口）
 // 主人公は物語の中ではしゃべらない（STORY_BIBLE 冒頭）。仲間は物語に出ない（A36）。
 (function (R) {
   'use strict';
@@ -257,9 +257,11 @@
   // ------------------------------------------------------------ ロアの onEnter
   D.roa_enter = {
     meta: { needs: [], gives: [], calls: ['story_final_roa'] },
-    run: async (ev) => {
+    run: async (ev, ctx) => {
       // T3 以降のロアの寄り道・T6 のロア（封書・客として迎える）はベルナの家の roa_berna → story_roa.js。縦切り（ティア 0〜1）では何もしない。
       // 終盤のロア（T8 の後、1 回。events/final_story.js）
+      // ベルナの封書（「ロアに帰ったら開けて」）を持って帰ってきた: T6 の後は思い出す・T5〜T6 の間は門で開ける（story_roa.js）
+      if (R.Story && R.Story.roaArrive) await R.Story.roaArrive(ev, ctx);
       if (ev.flag('story_t8') && !ev.flag('final_roa') && R.DB.events.story_final_roa) await ev.call('story_final_roa');
     },
   };

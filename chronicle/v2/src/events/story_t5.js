@@ -1,5 +1,5 @@
 // CONTENT-P: ティアの場面 T5（STORY_BIBLE §4.3 の灯の数 5・§6.3・§6.4・§11.2）
-//   story_t5  E17: 5 つ目の地方を解いた後、その町で宿に泊まるか町を出るとき（ロウェルは町の出口で。寄らなければ次の町の入口で追ってくる）。
+//   story_t5  E17: 5 つ目の地方を解いた後、その町で宿に泊まるか町を出るとき（ロウェルは町の出口で。寄らなければ次の宿か町の出口で追ってくる。戦いの前に手当てと記録）。
 //             ロウェル 2 戦目（v_rowell_t5_01 は 1 戦目に勝っていたら、_02・_03、勝ち _04／負け _05。tr_b_rowell2）→
 //             ベルナの手紙が二通（同じ文面、同じ日付）→ 二通目の中に封書（k_berna_sealed。表に「ロアに帰ったら開けて」）→ 余白の 5 段目。
 //   勝てば傷だらけの手甲（hn_rival_bracer）。旗 story_rowell_duel2・story_rowell_won2。
@@ -22,6 +22,8 @@
       if (ev.flag('story_rowell_won1')) await ev.say('rowell', R.T('events.story_t5.run.say'), Object.assign({ voice: 'v_rowell_t5_01' }, rw));
       await ev.say('rowell', R.T('events.story_t5.run.say_2'), Object.assign({ voice: 'v_rowell_t5_02' }, rw, { face: 'rowell:angry' }));
       await ev.say('rowell', R.T('events.story_t5.run.say_3'), Object.assign({ voice: 'v_rowell_t5_03' }, rw, { face: 'rowell:angry' }));
+      // 戦いの前の一息（手当てと記録。R.Story.duelPrep）
+      await St.duelPrep(ev, ctx);
       const r = await ev.battle({ troop: 'tr_b_rowell2', canLose: true, noEscape: true, bg: St.duelBg(map) });
       ev.setFlag('story_rowell_duel2');
       const won = r === 'win';

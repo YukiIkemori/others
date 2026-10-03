@@ -5,7 +5,7 @@
 //
 //   roll(c, action, ctx) → {kind:'tech'|'spell', id} | null     契約（V2_PLAN §2.5.12）。action = 使った行動の id か 'attack'（ctx.used になる）
 //   roll(c, ctx)         → 同じ（今の木の形。ctx.used を使う）
-//   candidates(c, ctx) → [{id, w, p}]   chance(c, id, ctx) → p   learn(c, id) → bool   classOf(a)
+//   candidates(c, ctx) → [{id, w, p}]   chance(c, id, ctx) → p   learn(c, id) → bool   classOf(a)   profMargin(c, a) → 熟練度の余り（術）
 //   params(units, Tb) → {rankB, ef}     monRank(u, Tb)   pairsKnown(c, els)   spellId(els, step)   sideOf(a)   banner(a)
 //   派生技: countUse(c, id) → n   deriveRoll(c, usedTechId, {rankB, rng, force}) → {kind:'tech', id, from} | null   learnDerived(c, to, from)
 //           deriveChance(c, from, to, {rankB}, n?)   deriveOf(id) → [{to, lv, tier}]   deriveSources(to)   tierOf(id)   isDerived(id)
@@ -92,6 +92,22 @@
     }
     return out;
   }
+  // 熟練度の余り（持ち主 2026-10-03「熟練度高くなれば、熟練度低いやつほど覚える確率上がってもいいと思うよ」）:
+  //   余り PM = 術の属性のうち一番低い熟練度の段階 − glim.prof（2・3 属性は低いほう。0 未満は 0）。術だけ（技は変えない）
+  //   確率 ×min(pm.max[格], 1 + pm.slope[格] × PM)、候補の関門 lv ≤ rankB + min(pm.gateMax, floor(PM / pm.gateStep))（弱い相手でも、十分に低い術は出る）
+  function profMargin(c, a) {
+    if (!c || !a || a.kind !== 'spell' || !a.glim || !Array.isArray(a.elements) || !a.elements.length) return 0;
+    let lo = Infinity;
+    for (const e of a.elements) lo = Math.min(lo, R.Rules.profRank(c.eprof ? c.eprof[e] : 0));
+    return Math.max(0, lo - (a.glim.prof || 0));
+  }
+  function pmGate(pm) { const P = K().GLIM.pm; return P ? Math.min(P.gateMax, Math.floor(pm / P.gateStep)) : 0; }
+  function pmMul(a, pm) {
+    const P = K().GLIM.pm, cls = classOf(a);
+    if (!P || !pm) return 1;
+    const sl = P.slope[cls] != null ? P.slope[cls] : P.slope.single, mx = P.max[cls] != null ? P.max[cls] : P.max.single;
+    return Math.min(mx, 1 + sl * pm);
+  }
   function spellCands(c, ctx) {
     const out = [];
     const els = ctx.elements || [];
@@ -105,8 +121,8 @@
       const a = DB.spells[id];
       if (!a.elements.some((e) => els.indexOf(e) >= 0)) continue;
       const lv = a.glim.lv;
-      if (lv > rankB) continue;
       if (a.elements.some((e) => (pr[e] || 0) < a.glim.prof)) continue;
+      if (lv > rankB + pmGate(profMargin(c, a))) continue;
       if (a.elements.length === 3 && pairsKnown(c, a.elements) < 2) continue;
       out.push({ id, a, lv });
     }
@@ -167,7 +183,8 @@
     const boss = EF >= G.ef.boss, BL = G.bossLate || {};
     const T0 = (!boss && a.kind === 'tech' && T === 0 && G.tier0 && known(c) <= (G.tier0Known != null ? G.tier0Known : Infinity) ? G.tier0 : 1) *
       (boss && BL.slope ? Math.min(BL.max || Infinity, 1 + BL.slope * Math.max(0, T - (BL.from || 0))) : 1);
-    let p = base * aptM * GF * FK * EF * MARGIN * T0 * Math.max(0, 1 + gp / 100);
+    const PM = pmMul(a, profMargin(c, a));   // 熟練度の余り（術だけ。技は 1）
+    let p = base * aptM * GF * FK * EF * MARGIN * PM * T0 * Math.max(0, 1 + gp / 100);
     p = Math.min(G.cap, p);
     return R.Tester ? R.Tester.glim(p) : p;   // テスト用メニュー（src/tester/）: 閃き ×10（1 まで）。無い・無効なら同じ値
   }
@@ -433,7 +450,7 @@
 
   const Glimmer = (R.Glimmer = R.Glimmer || {});
   Object.assign(Glimmer, {
-    ELEMENTS, classOf, candidates, chance, roll, learn, firstSpell, stoneOf, stoneBlock, useStone, monRank, params, pairsKnown, spellId, sideOf, banner,
+    ELEMENTS, classOf, candidates, chance, roll, learn, profMargin, firstSpell, stoneOf, stoneBlock, useStone, monRank, params, pairsKnown, spellId, sideOf, banner,
     deriveOf, deriveSources, tierOf, isDerived, useCount, countUse, deriveChance, deriveRoll, learnDerived, derivedFrom, sanitize,
     reindex() { index = null; return idx(); },
   });

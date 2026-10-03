@@ -136,6 +136,7 @@ async function wake(reason, map, from) {
   const G = R.Game, p = G.pendingTier;
   if (p == null) return null;
   if (reason === 'enter' && !(D.maps[map] && D.maps[map].kind === 'town')) return null;
+  if (reason === 'enter' && R.Tier.holdOnEnter && R.Tier.holdOnEnter(p, map)) return null;
   if (reason === 'leave' && !(R.Tier.wakeOnLeave && R.Tier.wakeOnLeave(p, map, from))) return null;
   const id = R.Tier.sceneFor(p);
   if (id === null) { G.pendingTier = null; return null; }
@@ -167,6 +168,7 @@ async function playOrder(order, ways, o) {
     // 最後の地方の後に寄らなかった分（T8 を含む）
     T.way = 'final';
     await wake('enter', 'pharos');
+    await wake('inn', 'pharos');   // ロウェルの場面は町に入ってすぐは起きない（宿か町の出口で）
     // もう一度起こしても何も起きない（全部見た）
     const n = T.log.length;
     G.pendingTier = G.tier;
@@ -219,6 +221,37 @@ async function playOrder(order, ways, o) {
   ok('ロウェルの 2 戦（負けても続く）は、宿・出口なら解いたばかりの地方の町で', fightOk, errs.filter((e) => e.fights || e.fightAt));
   ok('町を出たとき: その町の門（spawn）へ戻って呼び止められる', exitOk, errs.filter((e) => e.exit));
   ok('よその町・次の町で起きたときは「追ってきた」の一行', chasedOk);
+  // ロウェルの場面（T2・T4・T5・T7）は町に入ってすぐは起きない（オーナー 2026-10-03）。戦いの前に一息（手当て・記録の問い）
+  {
+    let enterOk = true, prepOk = true;
+    for (let i = 0; i < 4; i++) {
+      const r = await playOrder(orders[i], WAYS[i % WAYS.length], { win: true });
+      const ROW = ['v_rowell_t2_01', 'v_rowell_t4_02', 'v_rowell_t5_02', 'v_rowell_t7_01'];
+      // その場面を走らせた束の ctx.reason
+      let reason = null;
+      for (const e of r.log) {
+        if (e.k === 'run') reason = e.ctx && e.ctx.reason;
+        if (e.k === 'say' && ROW.includes(e.voice) && reason === 'enter') enterOk = false;
+      }
+      const bi = r.log.map((e, j) => (e.k === 'battle' ? j : -1)).filter((j) => j >= 0);
+      for (const j of bi) { const prev = r.log.slice(Math.max(0, j - 4), j); if (!prev.some((e) => e.k === 'choose' && e.labels.some((l) => /記録/.test(l)))) prepOk = false; }
+    }
+    ok('ロウェルの場面は町に入ってすぐは起きない（宿か町の出口）', enterOk);
+    ok('ロウェルとの戦いの前に一息（手当てと「記録してから受けて立つ」）', prepOk);
+    // 町に入ったとき: 先頭がロウェルなら起こさない・ロウェルでなければ起こして、ロウェルの手前で止める
+    const G = setup(); const SL = D.config.slice; D.config.slice = false;
+    try {
+      G.flags.story_t1 = true; G.tier = 2; G.pendingTier = 2;
+      ok('holdOnEnter: T2 が次なら町に入っても起こさない', R.Tier.holdOnEnter(2) === true && R.Tier.wakeOnLeave(2) === true);
+      G.flags.story_t2 = true; G.flags.story_t3 = true; G.tier = 4; G.pendingTier = 4;
+      ok('holdOnEnter: T4（布告とロウェル）も同じ', R.Tier.holdOnEnter(4) === true);
+      G.flags.story_t4 = true; G.flags.story_t5 = true; G.tier = 6; G.pendingTier = 6;
+      ok('holdOnEnter: T6（フィーネ）は町に入ってすぐ', R.Tier.holdOnEnter(6) === false && R.Tier.wakeOnLeave(6) === false);
+      G.tier = 7; G.pendingTier = 7; T.log = []; T.map = 'yule';
+      await runEv('story_tiers', { map: 'yule', reason: 'enter', tier: 7 });
+      ok('束（T6・T7）を町に入って起こしたら T6 だけ、T7 は pending のまま', G.flags.story_t6 && !G.flags.story_t7 && G.pendingTier === 7, [G.flags.story_t6, G.flags.story_t7, G.pendingTier]);
+    } finally { D.config.slice = SL; }
+  }
   ok('余白の 2〜7 段目が手がかり帳に入る', margins);
   // 勝ち負けの分岐
   {
@@ -278,6 +311,38 @@ async function playOrder(order, ways, o) {
     await runEv('story_final_roa', { map: 'roa' });
     ok('c) T5〜T7 を見ていない古い記録だけ: 門のおかみが封書を渡し、ロウェルが手帳を渡す（声の行は流さない）',
       T.log.some((e) => e.who === 'gatewoman2') && G.items.k_rowell_note >= 1 && G.flags.lo_rowell_cover && !T.log.some((e) => /^v_rowell_t7/.test(e.voice || '')) && !T.log.some((e) => /身を寄せていた/.test(e.t || '')));
+  }
+
+  // ロアに着いたとき（roa_enter → R.Story.roaArrive。オーナー 2026-10-03）
+  {
+    const SL = D.config.slice; D.config.slice = false;
+    try {
+      // a) T5 の後・T6 の前にロアへ: 門で開ける（4 枚）
+      let G = setup();
+      for (let k = 1; k <= 5; k++) G.flags['story_t' + k] = true;
+      G.tier = 5; G.items.k_berna_sealed = 1;
+      T.log = []; T.map = 'roa';
+      await runEv('roa_enter', { map: 'roa', trigger: 'enter', from: 'world' });
+      const n1 = T.log.filter((e) => e.k === 'letter' && /^berna_confession/.test(e.id)).length;
+      ok('T5〜T6 の間にロアへ帰ると、門で封書を開ける（「ロアに帰ったら開けて」）', n1 === 4 && G.flags.lo_berna_confession && !(G.items.k_berna_sealed > 0), n1);
+      // その後の T6 のロアの場面は、封書なしで最後まで（読んでいる所の一行は出さない）
+      G.flags.story_t6 = true; T.log = []; T.map = 'roa_house';
+      await runEv('roa_berna', { npc: 'berna_desk', map: 'roa_house' });
+      ok('門で読んだ後の T6 のロア: 場面は最後まで・二度は読まない', G.flags.story_roa_t6 && !T.log.some((e) => e.k === 'letter') && !T.log.some((e) => /手紙を読む/.test(e.t || '')));
+      // b) T6 の後にロアへ: 着いた所で思い出す（ベルナの家で開ける）。家から出てきたときは何もしない
+      G = setup();
+      for (let k = 1; k <= 6; k++) G.flags['story_t' + k] = true;
+      G.tier = 6; G.items.k_berna_sealed = 1;
+      T.log = []; T.map = 'roa';
+      await runEv('roa_enter', { map: 'roa', trigger: 'enter', from: 'world' });
+      ok('T6 の後にロアへ帰ると、着いた所で封書を思い出す（開けるのはベルナの家）', T.log.some((e) => /封書を\n思い出した/.test(e.t || '')) && !T.log.some((e) => e.k === 'letter') && G.items.k_berna_sealed === 1);
+      T.log = [];
+      await runEv('roa_enter', { map: 'roa', trigger: 'enter', from: 'roa_house' });
+      ok('家から出てきたときは知らせない', !T.log.some((e) => e.k === 'say'));
+      T.log = []; T.map = 'roa_house';
+      await runEv('roa_berna', { npc: 'berna_desk', map: 'roa_house' });
+      ok('ベルナの家で T6 の場面が封書を開ける', T.log.filter((e) => e.k === 'letter').length === 4 && G.flags.lo_berna_confession && T.log.some((e) => /手紙を読む/.test(e.t || '')));
+    } finally { D.config.slice = SL; }
   }
 
   // ================================================================ 5

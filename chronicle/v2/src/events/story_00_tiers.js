@@ -8,7 +8,9 @@
 //     tales(ev)                  年代記の章の題を順に字幕で（ロアでベルナに旅の話をする場面）
 //     oil(t) / oilWord(t)        灯油の値の倍率（§3.1: T0 1.0 → T2 0.9 → T4 0.8 → T6 0.7 → T8 0.6）と「九割」などの言い方
 //   R.Tier.sceneFor(p)           E17 で走らせる場面: まだ見ていない T1〜Tp を順に走らせる束 story_tiers（飛ばしたティアも必ず 1 回）
-//   R.Tier.wakeOnLeave(p)        町から外へ出たときに起こすか: ロウェルの 2 戦（T2・T5）が残っているとき（§6.4「町を出るとき」）
+//   R.Tier.wakeOnLeave(p)        町から外へ出たときに起こすか: ロウェルの場面（T2・T4・T5・T7）が残っているとき（§6.4「町を出るとき」）
+//   R.Tier.holdOnEnter(p)        町に入ってすぐは起こさないか: 次の場面がロウェル（宿に泊まった後か町の出口で。オーナー 2026-10-03）
+//   R.Story.duelPrep(ev, ctx)    ロウェルとの戦いの前の一息（手当て・記録）
 //   R.Tier.oil(t)                灯油の倍率（ファロスの油の相場の札・うわさ）
 //   R.DB.letters  berna_t3（字が乱れる）・berna_t5・berna_t5_2（同じ文面、同じ日付）
 //   R.DB.leads    l_main_margin_2〜7（余白。§4.3 の推理＋古層の n 行目。任意の手がかりで 1 行ふくらむ）・l_main_roa_t3・l_main_roa_t6・l_rumor_mira
@@ -279,6 +281,22 @@
 
   // ================================================================ E17 の束（飛ばしたティアも順に）
   const sceneId = (k) => 'story_t' + k;
+  /** ロウェルが現れる場面の番号（町に入ってすぐは起こさない。Tier.holdOnEnter） */
+  S.ROWELL = [2, 4, 5, 7];
+  /**
+   * ロウェルとの戦いの前の一息（T2・T5。オーナー 2026-10-03）: 宿の後でなければ傷の手当て（全快）→ 記録するか選ぶ（大事な分かれ道）。
+   *   記録した後に読み込んでも、pendingTier が残っているので次の宿・町の出口でまた起きる
+   */
+  S.duelPrep = async function (ev, ctx) {
+    await S.narr(ev, R.T('ev.story_00_tiers.duelPrep.narr'));
+    if (!(ctx && ctx.reason === 'inn')) {
+      ev.rest();
+      ev.sfx('heal');
+      await S.narr(ev, R.T('ev.story_00_tiers.duelPrep.narr_2'));
+    }
+    const i = await ev.choose([R.T('ev.story_00_tiers.duelPrep.choose.0'), R.T('ev.story_00_tiers.duelPrep.choose.1')], { important: true, text: R.T('ev.story_00_tiers.duelPrep.choose.text') });
+    if (i === 0) { try { await R.Screens.open('save', {}); } catch (e) { R.warn('duelPrep save', e && e.message); } }
+  };
   /**
    * 場面の始まりと終わり（T2〜T7 が呼ぶ）: 走っている間は pendingTier を残す（町の移りの自動の記録で途中から再開しても、
    * 次の宿・町でまた起きる）。終わったら、まだ見ていない場面が無ければ消す
@@ -303,9 +321,16 @@
       if (!R.DB.events[first]) return first;   // 書かれていない場面（tier.js が pending のまま R.warn）
       return todo.length > 1 ? 'story_tiers' : first;   // 1 つだけならその場面（ctx.tier も同じ）
     };
+    // ロウェルの場面（T2・T4・T5・T7）は町に入ってすぐは起こさない（オーナー 2026-10-03: ボスを倒した直後で回復もできないうちに現れる）。
+    //   その町の宿に泊まった後か、町を出るとき（門へ戻って呼び止められる）に。先頭がロウェルでない束は入ってすぐ走り、ロウェルの手前で止まる
+    Tier.holdOnEnter = function (p) {
+      if (R.DB.config && R.DB.config.slice) return false;
+      const todo = S.todo(p);
+      return todo.length > 0 && S.ROWELL.includes(todo[0]);
+    };
     Tier.wakeOnLeave = function (p) {
       if (R.DB.config && R.DB.config.slice) return false;
-      return S.todo(p).some((k) => k === 2 || k === 5);
+      return S.todo(p).some((k) => S.ROWELL.includes(k));
     };
   });
 
@@ -323,6 +348,8 @@
       for (const k of todo) {
         const id = sceneId(k);
         if (R.DB.config && R.DB.config.slice && k > 1) break;
+        // 町に入って起きた束は、ロウェルの場面の手前で止める（残りは宿か町の出口で。pendingTier は残す）
+        if (ctx && ctx.reason === 'enter' && S.ROWELL.includes(k)) { if (R.Game) R.Game.pendingTier = p; return; }
         if (!R.DB.events[id]) { R.warn('story_tiers: ' + id + ' is not written yet (pendingTier stays)'); return; }
         if (!first) await ev.wait(400);
         await ev.call(id, Object.assign({}, base, { tier: k, chain: todo.length > 1 }));
