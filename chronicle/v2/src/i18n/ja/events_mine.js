@@ -395,7 +395,7 @@
     'events.mine_cliff_lift.say': '崖の昇降機。\n巻き上げの綱が切れて、\nかごは下の闇に垂れ下がっている。',
     'events.mine_rail_tunnel.say': '高原へ続く、古いトロッコ線の\nトンネル。太い角材を組んだ柵で\nふさがれている。',
     'events.mine_rail_tunnel.say_2': '「落盤のため不通。組合」\nと札がかかっている。',
-    'events.mine_rail_tunnel.say_3': '組合が掘り直すとしたら、\n山の騒ぎが片づいてから\nだろうか。',
+    'events.mine_rail_tunnel.say_3': '組合が掘り直すのは、\n山の騒ぎが片づいてからだろう。',
     'events.mine_rail_tunnel.say_4': '組合は今、上の層を掘るので\n手いっぱいらしい。',
     'events.mine_rail_tunnel.i.choose': ['乗る', 'やめる'],
     'events.mine_rail_tunnel.i.choose.text': 'トロッコで、ドヴァンの乗り場へ\n戻りますか？',

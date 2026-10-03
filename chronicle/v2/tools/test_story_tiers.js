@@ -317,18 +317,17 @@ async function playOrder(order, ways, o) {
   {
     const SL = D.config.slice; D.config.slice = false;
     try {
-      // a) T5 の後・T6 の前にロアへ: 門で開ける（4 枚）
+      // a) T5 の後・T6 の前にロアへ: 門で封書を取り出すと、封の裏に「わたしが、あなたを忘れたころに」（まだ開けない。1 回だけ）
       let G = setup();
       for (let k = 1; k <= 5; k++) G.flags['story_t' + k] = true;
       G.tier = 5; G.items.k_berna_sealed = 1;
       T.log = []; T.map = 'roa';
       await runEv('roa_enter', { map: 'roa', trigger: 'enter', from: 'world' });
-      const n1 = T.log.filter((e) => e.k === 'letter' && /^berna_confession/.test(e.id)).length;
-      ok('T5〜T6 の間にロアへ帰ると、門で封書を開ける（「ロアに帰ったら開けて」）', n1 === 4 && G.flags.lo_berna_confession && !(G.items.k_berna_sealed > 0), n1);
-      // その後の T6 のロアの場面は、封書なしで最後まで（読んでいる所の一行は出さない）
-      G.flags.story_t6 = true; T.log = []; T.map = 'roa_house';
-      await runEv('roa_berna', { npc: 'berna_desk', map: 'roa_house' });
-      ok('門で読んだ後の T6 のロア: 場面は最後まで・二度は読まない', G.flags.story_roa_t6 && !T.log.some((e) => e.k === 'letter') && !T.log.some((e) => /手紙を読む/.test(e.t || '')));
+      ok('T5〜T6 の間にロアへ帰ると、門で封の裏の一行（「忘れたころに」。まだ開けない）', T.log.some((e) => /忘れたころに/.test(e.t || '')) && !T.log.some((e) => e.k === 'letter') && G.items.k_berna_sealed === 1 && !G.flags.lo_berna_confession);
+      T.log = [];
+      await runEv('roa_enter', { map: 'roa', trigger: 'enter', from: 'world' });
+      ok('封の裏の一行は 1 回だけ', !T.log.some((e) => e.k === 'say'));
+      // その後 T6 → ロアに着くと思い出し、ベルナの家で開ける（下の b と同じ）
       // b) T6 の後にロアへ: 着いた所で思い出す（ベルナの家で開ける）。家から出てきたときは何もしない
       G = setup();
       for (let k = 1; k <= 6; k++) G.flags['story_t' + k] = true;

@@ -4,7 +4,7 @@
 //   story_roa_t6     T6 以降（終盤のロアの前）: ベルナは主人公を忘れている（「旅の方？」）。客として旅の話をする →
 //                    「いいお話だね。……その語り部さん、きっといい子だね」→ 名簿の名を指でなぞる →
 //                    ベルナの封書（k_berna_sealed）をここで開ける（lo_berna_confession。§10.4 の 4 枚）→ 客として泊める（story_roa_t6）
-//   roaArrive        ロアに着いたとき（roa_enter）: 封書を持っていれば、T6 の後は思い出す（ベルナの家へ）、T5〜T6 の間は門で開ける
+//   roaArrive        ロアに着いたとき（roa_enter）: 封書を持っていれば、T6 の後は思い出す（ベルナの家へ）、T5〜T6 の間は封の裏の一行（まだ開けない）
 //   T7 の後、ロウェルはロアに身を寄せている（maps/story_links.js の roa の人 story_rowell_roa）。
 (function (R) {
   'use strict';
@@ -62,7 +62,8 @@
    * ロアに着いたとき（roa_enter が呼ぶ。オーナー 2026-10-03: 「ロアに帰ったら開けて」の封書を持って帰っても何も起きなかった）。
    *   封書を持っていて、まだ読んでいない・終盤のロア（T8 の後。final_story.js が開ける）の前なら:
    *   T6 の後 → 着いた所で封書を思い出す（開けるのはベルナの家の T6 の場面。story_roa_t6）
-   *   T5〜T6 の間 → 門をくぐった所で開ける（ベルナはまだ主人公を覚えている）
+   *   T5〜T6 の間 → 門で封書を取り出すと、封の裏に「わたしが、あなたを忘れたころに」（中身は忘れられた後に読む文なので、
+   *                ここでは開けない。1 回だけ。旗 story_sealed_back）
    *   屋内（ベルナの家など）から出てきたときは何もしない。旗を見るだけなので、封書を持ったままの古い記録でも同じ
    */
   let lastFrom = null;
@@ -78,13 +79,17 @@
       await St.narr(ev, R.T('ev.story_roa.roaArrive.narr'));
       return false;
     }
+    if (ev.flag('story_sealed_back')) return false;
+    ev.setFlag('story_sealed_back');
     await St.narr(ev, R.T('ev.story_roa.roaArrive.narr_2'));
-    return openSealed(ev);
+    await St.narr(ev, R.T('ev.story_roa.roaArrive.narr_3'));
+    await St.narr(ev, R.T('ev.story_roa.roaArrive.narr_4'));
+    return false;
   }
   R.Story && (R.Story.roaArrive = roaArrive);
 
   R.def('events', 'story_roa_t6', {
-    meta: { needs: ['flag:story_t6'], gives: ['flag:story_roa_t6', 'lore:lo_berna_confession'] },
+    meta: { needs: ['flag:story_t6', 'item:k_berna_sealed'], gives: ['flag:story_roa_t6', 'lore:lo_berna_confession'] },
     run: async (ev, ctx) => {
       const St = S(), E = P();
       const who = (ctx && ctx.npc) || 'berna';
@@ -98,7 +103,7 @@
         await St.narr(ev, R.T('events.story_roa_t6.run.narr_3'));
         await ev.say(who, R.T('events.story_roa_t6.run.say_3'), { face: 'berna:sad' });
         await St.narr(ev, R.T('events.story_roa_t6.run.narr_4'));
-        // 門で先に開けていたら（T5〜T6 の間にロアへ寄った）、ここでは読まない
+        // 封書を持っていなければ（古い記録）読む所の一行は出さない
         if (await openSealed(ev)) await St.narr(ev, R.T('events.story_roa_t6.run.narr_5'));
         ev.setFlag('story_roa_t6');
         ev.leadDone('l_main_roa_t6');
