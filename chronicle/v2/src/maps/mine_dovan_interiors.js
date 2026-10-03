@@ -52,8 +52,9 @@
     // ---------------------------------------------------------------- 酒場「つるはし亭」（中の段。組合のたまり場）
     interior('dovan_tavern', R.T('map.mine_dovan_interiors.dovan_tavern'), 16, 12, {
       back: 'tavern', carpet: [6, 6, 6, 3], bgm: 'tavern', meta: { sub: R.T('map.mine_dovan_interiors.dovan_tavern.meta.sub') },
-      // (2026-10-03) 売り台の絵は 1 つ 2 マス幅（3〜7 に見える）。右端の当たりを 7 まで・左の酒樽を 2 マスにして、売り台の内側へ上下から入れないように
-      objects: [K.prop('bar_counter', 3, 3), K.prop('bar_counter', 4, 3), K.prop('bar_counter', 5, 3), K.prop('bar_counter', 6, 3, { w: 2 }), K.prop('keg_rack', 1, 2, { w: 2 }), K.prop('keg_rack', 13, 2, { w: 2 }),
+      // (2026-10-03) 売り台の絵は 1 つ 2 マス幅（3〜7 に見える）。右端の当たりを 7 まで・左の酒樽を 2 マスに、
+      //   右の壁ぎわ（8,2）に樽を置いて、上の段から売り台の内側へ回りこめないように
+      objects: [K.prop('bar_counter', 3, 3), K.prop('bar_counter', 4, 3), K.prop('bar_counter', 5, 3), K.prop('bar_counter', 6, 3, { w: 2 }), K.prop('keg_rack', 1, 2, { w: 2 }), K.prop('keg_rack', 13, 2, { w: 2 }), K.prop('barrel', 8, 2),
         K.prop('table', 11, 5), K.prop('chair', 10, 5), K.prop('chair', 12, 5), K.prop('table', 11, 8), K.prop('chair', 10, 8), K.prop('chair', 12, 8),
         K.prop('table', 5, 8), K.prop('chair', 6, 8), K.prop('coal_barrel', 14, 9), K.prop('lantern', 8, 3), K.prop('lantern', 14, 6)],
       npcs: [
@@ -83,7 +84,8 @@
     // ---------------------------------------------------------------- 道具屋・宿「坑灯亭」（上の段）
     interior('dovan_items', R.T('map.mine_dovan_interiors.dovan_items'), 12, 10, {
       back: 'items', meta: { sub: R.T('map.mine_dovan_interiors.dovan_items.meta.sub') },
-      objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('counter', 6, 3), K.prop('shelf_jars', 1, 2), K.prop('potion_shelf', 9, 2),
+      // (2026-10-03) 売り台の絵は 3〜7 に見える。右端の当たりを 7 まで・左の棚を 2 マスにして、売り台の内側へ入れないように（酒場と同じ）
+      objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('counter', 6, 3, { w: 2 }), K.prop('shelf_jars', 1, 2, { w: 2 }), K.prop('potion_shelf', 9, 2),
         K.prop('tool_crate', 1, 6), K.prop('coal_barrel', 10, 6), K.prop('lantern', 8, 3)],
       npcs: [K.npc('item_keeper', 'npc_mine_woman', 5, 2, { name: R.T('map.mine_dovan_interiors.dovan_items.npcs.0.item_keeper.name'), dir: 's', talk: 'dovan_item_keeper', pushable: false })],
     });
