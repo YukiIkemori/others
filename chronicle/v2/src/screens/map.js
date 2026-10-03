@@ -199,7 +199,7 @@
         // 前のフレームで出ていなかった名前は、2 フレーム続けて置けたときに出す（拡大・縮小の途中で 1 フレームだけ出て消えるのを防ぐ）
         const fitN = ok ? (prevFit.get(key) || 0) + 1 : 0;
         fits.set(key, fitN);
-        if (ok && prev.size && !prev.has(key) && fitN < 2) { pick.delete(key); deferred = true; continue; }
+        if (ok && prev.size && !prev.has(key) && fitN < 2) { pick.delete(key); deferred = true; placed.push(ok.b); continue; }   // 場所は取っておく（次のフレームで出たときに下の名前を押しのけない）
         if (!ok) continue;
         placed.push(ok.b);
         L.drawnAt = ok.b;

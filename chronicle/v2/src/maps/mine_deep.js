@@ -21,7 +21,13 @@
     {
       const P = MK.painted('mine_1');
       const O = [];
-      O.push(K.stairs(47, 2, { map: 'mine_2', spawn: 'up' }, { id: 'mine_1_down', look: 'down' }));
+      // (2026-10-03) 北東の下り階段: 絵の坑口の木枠（x 46〜50、y 2 まで）の奥は岩壁。階段は枠の口の前の床 (48,3) に置き、
+      //   枠の中（y 1〜2）を壁にする（前は 47,2 で、木枠と壁にめりこんで見えた）
+      const rows1 = P.rows.slice();
+      const put = (x, y, ch) => { rows1[y] = rows1[y].slice(0, x) + ch + rows1[y].slice(x + 1); };
+      put(46, 1, 'R');
+      for (let x = 46; x <= 50; x++) put(x, 2, 'X');
+      O.push(K.stairs(48, 3, { map: 'mine_2', spawn: 'up' }, { id: 'mine_1_down', look: 'down' }));
       // トロッコ（縦穴の架台を渡る。乗り場の縁の架台を調べる）
       O.push(K.prop('mine_cart', 40, 20), K.exam(42, 21, 'mine_cart_ride', { ride: 'cart_e' }), K.exam(46, 21, 'mine_cart_ride', { ride: 'cart_w' }), K.prop('mine_cart', 48, 20));
       O.push(K.sign(28, 36, R.T('map.mine_deep.sign')));
@@ -39,8 +45,8 @@
       ];
       K.def('mine_1', {
         name: R.T('map.mine_deep.mine_1.name'), kind: 'dungeon', region: 'r_mine', location: 'deepmine', theme: 'mine',
-        legend: MK.CAVE(), rows: P.rows, outside: 'wall_cave', objects: O, npcs: N,
-        spawns: { entrance: { x: 26, y: 42, dir: 'n' }, from2: { x: 47, y: 3, dir: 's' }, cart_w: { x: 41, y: 21, dir: 'e' }, cart_e: { x: 47, y: 21, dir: 'w' } },
+        legend: MK.CAVE(), rows: rows1, outside: 'wall_cave', objects: O, npcs: N,
+        spawns: { entrance: { x: 26, y: 42, dir: 'n' }, from2: { x: 48, y: 4, dir: 's' }, cart_w: { x: 41, y: 21, dir: 'e' }, cart_e: { x: 47, y: 21, dir: 'w' } },
         exits: [{ x: 25, y: 43, w: 3, h: 1, to: { map: 'dovan', spawn: 'mine' } }],
         // 東の坑道 → 入口の間の下り坂（一方通行: 南へ下りるときだけ）
         oneway: [{ x: 47, y: 24, dir: 's' }, { x: 48, y: 24, dir: 's' }, { x: 49, y: 24, dir: 's' }],
