@@ -1127,7 +1127,7 @@
     }
     schedule() {
       // ループ: loopEnd の手前 10 ms を越えたら loopStart へ（ずれた分をそのまま足して戻す。手前なら loopStart の少し前＝継ぎ目の
-      // クロスフェードで loopEnd の手前と同じ音の所。loopEnd の後ろに続きの尾がある曲（lyria_bgm.js --tail）は越えても切れない）
+      // クロスフェードで loopEnd の手前と同じ音の所。loopEnd の後ろに続きの尾がある曲（BGM 生成の道具の --tail）は越えても切れない）
       const el = this.el;
       if (this.stopped || !el || !this.loop || !(this.loopEnd > this.loopStart + 0.1)) return;
       if (el.ended || el.currentTime >= this.loopEnd - 0.01) {
