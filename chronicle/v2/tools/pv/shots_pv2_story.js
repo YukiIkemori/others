@@ -55,6 +55,8 @@ const PV2LIB = `(() => {
       for (const sc of R.Engine.stack) for (const v of [sc, sc.view]) if (v && v.ids && v.list && v.picks) o = v;
       if (!o) return false;
       const P = PV2._gp || (PV2._gp = { i: 0 });
+      const w = plan[P.i];
+      if (w && w.wait != null) { P.w = (P.w || 0) + 1; if (P.w >= w.wait) { P.w = 0; P.i++; } return true; }   // {wait: n} = n 回分まつ（声の間）
       if (o.busy) { PV.tap('a', 3); return true; }   // 決めるかの問い（はい）
       const st = plan[P.i];
       if (!st) return false;
@@ -359,14 +361,15 @@ SHOTS.s3_create = {
 };
 // 潮風亭の仲間選び: 20 人の顔絵の表をなめる（下へ → 右上へ）→ シグレ・ザフィラ・ロウガを選ぶ → 決める（台本 1:03 の「なめる」と 1:08 の「選ぶ」を 1 本で）
 //   一行は主人公だけから（20 人がみな表に出る）
-const GRID_PLAN = [{ to: 18 }, { to: 2 }, { to: 'shigure', pick: true }, { to: 'zafira', pick: true }, { to: 'rouga', pick: true }];
+// 持ち主 2026-10-03「選ぶ仲間とセリフが地味」: 人柄の立つ一言の 3 人（傭兵ハーゲン・下町の子ティッタ・見習い術師テオ）。声の長さの分だけ間を置く
+const GRID_PLAN = [{ to: 18 }, { to: 2 }, { to: 'hagen', pick: true }, { wait: 6 }, { to: 'titta', pick: true }, { wait: 1 }, { to: 'teo', pick: true }, { wait: 12 }];
 SHOTS.s3_tavern = {
   prep: async (T) => {
     await T.js(FIELD({ party: ['hero'] }, 'coral', 'north'));
     await T.idle(150); await T.settle();
     await T.js(`RPG.Screens.open('partySelect', {count: 3})`); await T.idle(30);
   },
-  n: sec(9.5),
+  n: sec(11),
   each: (i) => (i >= 40 && i % 13 === 0 ? `PV2.walkGrid(${JSON.stringify(GRID_PLAN)})` : null),
 };
 // 4 人で港町コーラルを出る: 町のまん中の石畳の大通りを、北の町の出口（崖の切り通し）へまっすぐ。カメラは北を少し多めに

@@ -144,6 +144,41 @@ const SHOTS = {
     },
     n: sec(30),
   },
+  // 持ち主 2026-10-03「敵の攻撃の 2 カットが古い弱い演出」→ ボスの必殺技（差し込みの帯つき。src/systems/battle/ult_fx.js）に替える。
+  // 砂の王の裁き: 名なき砂の王（王墓の王の間 tr_b_sandking、背景はゲームのまま pyramid）。1 手番目に「呪いの紋を掲げる」（予告）→ 全員で守る → 必殺技（ボスの掛け声つき）
+  s5_tell_king: {
+    prep: async (T) => {
+      await T.js(BATTLE({ tier: 3 }, 'kasim', 'warp', { troop: 'tr_b_sandking', boss: true, seed: 'pv2-king', surprise: 'ambush' },
+        DEF, `RPG.Party.restoreAll(); PV2.noGlim(); PV2.autoWin(60); PV2.firstAct('b_sandking', 'eb_king_raise')`));
+      await INTRO(T);
+    },
+    n: sec(30),
+  },
+  // ボスの必殺技の候補（1 つ選ぶ）: 天球の番人の皆既日食（tower）・白竜の氷河落とし（peak）・溶岩の巨獣の大噴火（volcano）。1 手番目に必ず出す
+  s5_ult_eclipse: {
+    prep: async (T) => {
+      await T.js(BATTLE({ tier: 6 }, 'kasim', 'warp', { troop: 'tr_b_orrery', boss: true, seed: 'pv2-ecl', surprise: 'ambush' },
+        DEF, `RPG.Party.restoreAll(); PV2.noGlim(); PV2.firstAct('b_orrery', 'eb_orrery_eclipse')`));
+      await INTRO(T);
+    },
+    n: sec(16),
+  },
+  s5_ult_glacier: {
+    prep: async (T) => {
+      await T.js(BATTLE({ tier: 4 }, 'kasim', 'warp', { troop: 'tr_b_whitedragon', boss: true, seed: 'pv2-glac', surprise: 'ambush' },
+        DEF, `RPG.Party.restoreAll(); PV2.noGlim(); PV2.firstAct('b_whitedragon', 'eb_glacier_fall')`));
+      await INTRO(T);
+    },
+    n: sec(16),
+  },
+  s5_ult_eruption: {
+    prep: async (T) => {
+      await T.js(BATTLE({ tier: 5 }, 'kasim', 'warp', { troop: 'tr_b_lavabeast', boss: true, seed: 'pv2-erup', surprise: 'ambush' },
+        DEF, `RPG.Party.restoreAll(); PV2.noGlim(); PV2.firstAct('b_lavabeast', 'eb_eruption')`));
+      await INTRO(T);
+    },
+    n: sec(16),
+  },
   // 出現表だけの戦闘は setup に出現表の bg を渡す（フィールドの遭遇 R.Mon.encounter と同じ）
   // 金色の魔物 → 倒して「レア」のジングルと演出（諸島の洞窟の出現表 z_r_isles_cave の魚人＋カニ。金色はレアの枠を持つカニ、背景はゲームのまま watercave）
   s5_gold: {

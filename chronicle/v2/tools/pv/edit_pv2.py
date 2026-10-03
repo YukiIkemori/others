@@ -38,6 +38,7 @@ LB = 130   # 帯の高さ（px）
 # 声の長さ（秒）と字幕の文
 VDUR = {
     'b_shigure_attack_2': 0.82, 'b_zafira_attack_2': 1.03, 'b_rouga_attack_1': 1.10,
+    'b_hagen_bigtech_1': 2.21, 'b_titta_bigtech_2': 1.77, 'b_teo_bigtech_2': 2.12, 'bv_sandking_ult_1': 2.74, 'bv_orrery_ult_1': 2.72,
     'v_hazal_tomb_01': 5.26, 'v_fine_lighthouse_01': 5.06, 'v_berna_lute_04': 8.10, 'v_berna_lute_05': 8.37, 'v_rowell_prologue_02': 4.76,
     'v_fine_t1_02': 4.55, 'b_shigure_victory_1': 2.04, 'b_zafira_victory_1': 2.92, 'b_rouga_victory_1': 2.99, 'v_hero_f_glimmer_1': 1.64,
     'v_hero_f_attack_3': 0.96, 'v_hero_f_spell_2': 0.75, 'v_rowell_t2_03': 3.61, 'b_shigure_bigtech_2': 1.32, 'b_zafira_bigtech_1': 2.31,
@@ -47,6 +48,7 @@ VDUR = {
 }
 SUBS = {
     'b_shigure_attack_2': 'シグレ「遅い。」', 'b_zafira_attack_2': 'ザフィラ「ステップ！」', 'b_rouga_attack_1': 'ロウガ「おりゃあ！」',
+    'b_hagen_bigtech_1': 'ハーゲン「割増料金だ、受け取れ！」', 'b_titta_bigtech_2': 'ティッタ「ちょろいちょろい！」', 'b_teo_bigtech_2': 'テオ「教科書どおり、完璧！」',
     'v_hazal_tomb_01': '……わが名を……　わが名を、返せ……！',
     'v_fine_lighthouse_01': '言葉を失った灯は、言葉で取り戻すの。',
     'v_berna_lute_05': 'どこから回ってもいい。あなたの足で、あなたの順番で語り直していけばいいのさ。',
@@ -77,8 +79,8 @@ SUBS = {
 # 曲と効果音に埋もれやすい声を少し上げる（dB。stem を測って決めた）
 VBOOST = {'v_hero_f_glimmer_1': 4, 'v_hero_f_attack_3': 2, 'v_hero_f_spell_2': 2, 'v_glen_dawn_01': 4, 'v_hazal_tomb_04': 2, 'v_rowell_t2_03': 3,
           'b_noela_bigtech_1': 2, 'b_dokka_bigtech_2': 2, 'b_rouga_bigtech_2': 2, 'b_ilse_bigtech_1': 2, 'v_fine_t1_02': 2, 'v_hazal_tomb_01': 1,
-          'b_shigure_attack_2': 2, 'v_king_altar_02': 2}
-NOSUB = {'b_rouga_hurt_1', 'b_rouga_attack_3', 'v_hero_f_attack_3'}   # 短い掛け声は字幕にしない
+          'b_shigure_attack_2': 2, 'v_king_altar_02': 2, 'b_hagen_bigtech_1': 1, 'b_titta_bigtech_2': 1, 'b_teo_bigtech_2': 1, 'bv_sandking_ult_1': 2, 'bv_orrery_ult_1': 2}
+NOSUB = {'b_rouga_hurt_1', 'b_rouga_attack_3', 'v_hero_f_attack_3', 'bv_sandking_ult_1', 'bv_orrery_ult_1'}   # ボスの掛け声は画面の吹き出しに出る   # 短い掛け声は字幕にしない
 
 
 def sub(text, t0, t1, y=1015, size=None):
@@ -218,18 +220,17 @@ cut('s3_create', T3 + 2.5, 1.6, src=15.3, xin=0.2, gamesfx=-10)   # リーネの
 cap('CREATE', '性別 × 5つのタイプ × 得意な武器・属性', T3 + 0.2, T3 + 4.0, size=64)
 t = T3 + 4.1
 SFX.append(dict(id='page', at=t - 0.05, gain=-6))
-# 潮風亭: 20人をなめる → 選ぶ所は少しゆっくりにして、カーソルが乗った瞬間に、その仲間の短い声
+# 潮風亭: カーソルが乗った瞬間に、その仲間の短い声（持ち主 2026-10-03「選ぶ仲間とセリフが地味」→ ハーゲン・ティッタ・テオの人柄の立つ一言。等速の 1 カット）
 T_TAV = t
-cut('s3_tavern', t, 1.9, src=2.7, page=0.45, gamesfx=-10)
+T_TAV_END = t + 6.1
+LAND0 = 4.33              # ハーゲンにカーソルが乗る（カットの秒）
+cut('s3_tavern', t, T_TAV_END - t, src=LAND0 - 0.42, page=0.45, gamesfx=-10)
 cap('COMPANIONS', '20人の中から、3人の仲間を', t + 0.3, t + 3.9)
-SP = 0.6
-TB = t + 1.9
-T_TAV_END = TB + (7.12 - 4.6) / SP   # 7.12 秒で酒場の画面が終わる
-cut('s3_tavern', TB, T_TAV_END - TB, src=4.6, speed=SP, gamesfx=-10)
-PICKS = (('b_shigure_attack_2', 4.98), ('b_zafira_attack_2', 5.85), ('b_rouga_attack_1', 6.50))   # カーソルがその人に乗る時刻（カットの秒）
+PICKS = (('b_hagen_bigtech_1', 4.33), ('b_titta_bigtech_2', 6.50), ('b_teo_bigtech_2', 8.02))   # カーソルがその人に乗る時刻（カットの秒）
 for k, (vid, land) in enumerate(PICKS):
-    nxt = TB + (PICKS[k + 1][1] - 4.6) / SP - 0.05 if k + 1 < len(PICKS) else T_TAV_END
-    vo(vid, TB + (land - 4.6) / SP, y=80, until=T_TAV_END, tmax=nxt)   # 字幕は次の人に乗る前に消す
+    at = t + 0.42 + land - LAND0
+    nxt = t + 0.42 + PICKS[k + 1][1] - LAND0 - 0.05 if k + 1 < len(PICKS) else T_TAV_END
+    vo(vid, at, y=80, until=T_TAV_END, tmax=nxt)   # 字幕は次の人に乗る前に消す
 cap('VOICE', '全員ボイス。いつでも入れ替え', t + 4.0, T_TAV_END - 0.1)
 t = T_TAV_END
 bars(t, LB, 0.3)
@@ -288,14 +289,15 @@ cut('s5_combo', t, 3.2, src=7.0, gamesfx=-6, ev=True, ev_jingle=False, suby=1000
 FLASH.append((t + 1.65, 0.06, 0.4, 0.3, (0.7, 0.85, 1.0)))   # 荒れ狂う海: 8.65 で大波の山
 cap('COMBO', '属性を重ねて生まれる、50の合成術', t + 0.2, t + 3.1)
 t += 3.2
-# 敵の合体技（炎の竜巻: 5.80 唱える → 6.0 札 → 6.5–7.6 竜巻、7.17 当たる）
-cut('s5_ecombo', t, 2.6, src=5.5, gamesfx=-6, ev=True, ev_jingle=False, suby=1000)
-FLASH.append((t + 7.17 - 5.5, 0.05, 0.35, 0.35, (1.0, 0.7, 0.4)))
-cap('ENEMY COMBO', '敵も、合体技で襲いかかる', t + 0.2, t + 2.5)
+# ボスの必殺技（持ち主 2026-10-03: 古い演出の敵の合体技から替えた）。天球の番人の皆既日食: 5.90 差し込みの帯「日食」＋声 → 7.3 太陽 → 7.7 黒い冠 → 8.1 白い光
+cut('s5_eclipse', t, 2.6, src=5.8, gamesfx=-6, ev=True, ev_jingle=False, suby=1000)
+FLASH.append((t + 8.1 - 5.8, 0.05, 0.35, 0.35, (1.0, 0.95, 0.8)))
+cap('BOSS FINISHER', 'ボスは、必殺技で牙をむく', t + 0.2, t + 2.5)
 t += 2.6
 # 大技の予告 → しのぐ
-cut('s5_tell', t, 2.0, src=5.7, gamesfx=-8)          # 「砂に身を沈めはじめた……」
-cut('s5_tell', t + 2.0, 2.8, src=24.4, gamesfx=-6)    # 吹き出す砂 → 全員しのぐ
+cut('s5_king', t, 2.0, src=6.9, gamesfx=-8)          # 名なき砂の王「杖を掲げる」→「王が杖を掲げた。砂が空へ昇っていく……」（予告）
+cut('s5_king', t + 2.0, 2.8, src=18.55, gamesfx=-6, ev=True, ev_jingle=False, suby=1000)    # 必殺技「砂の審判」＋声 → 20.5 金の砂の柱 → 守ってしのぐ
+FLASH.append((t + 2.0 + 20.5 - 18.55, 0.05, 0.35, 0.35, (1.0, 0.9, 0.6)))
 cap('GUARD', '予告を見抜いて、防御', t + 0.2, t + 4.7)
 t += 4.8
 # 金色の魔物 → レアのドロップ（装備の数もここで）
