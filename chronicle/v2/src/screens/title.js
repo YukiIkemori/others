@@ -1,7 +1,9 @@
 // MENUS: タイトル（MODERN_UI §6.1、V2_PLAN §2.5.15・§3.11、design/TITLE_ART.md）
 //   背景: 描いた一枚絵（assets/title/ の 4 層、cover・視差・ランタンの光・八つの灯火・火の粉・蛍・流れ星）。読み終わるまでは暗いまま待ち（最長 ART_WAIT）、読めないときは
 //   コードで描いた夜の海と灯台（下の bakeTitle）。題字は logo の画像（読めなければ文字の題字）。
-//   起動して最初は出てくる順（§4: 空と谷 → 灯火が順に → 岩場とアルン → 題字 → 命令）。どのキーでもとばせる。戻ったときは 0.6 秒のフェード。
+//   動く飾り（2026-10-04）: 流れる雲と谷のもや・灯台の光の帯・月の道のきらめき・谷の光の粒・ランタンの息づき（下の AMBI）。
+//   起動して最初は出てくる順（§4 を 2 秒に詰めた: 空と谷 → 灯火が順に → 岩場とアルン → 題字が上がり光の筋が渡る → 命令）。
+//   どのキーでもとばせる。戻ったとき・動きを減らす設定では 0.6 秒のフェードだけ（出てくる順は起動して最初の 1 回だけ。R.Flow._titled）。
 //   命令: 横は左下（x .075・y .655）、縦は下のガラスの札。「つづきから」を選んでいる間だけ最後の記録の札。
 //   結果: {cmd:'new', faded} | {cmd:'continue', slot} | {cmd:'load', slot} | {cmd:'passphrase'}
 (function (R) {
@@ -279,9 +281,10 @@
     return { x, y, w, h };
   }
 
-  // 出てくる順（TITLE_ART §4、ミリ秒）
+  // 出てくる順（TITLE_ART §4、ミリ秒）。持ち主 2026-10-04「短く 2 秒ほど」: 3.5 秒の順を同じ並びのまま 2 秒に詰め、
+  // 題字は下から上がりながら現れ、そのあと光の筋が題字の上を左から右へ一度だけ渡る（sweep）
   const ART_WAIT = 6000;   // 一枚絵を待つ上限（ms）。過ぎたらコードの背景で出す
-  const INTRO = { sky: [0, 1600], beacon0: 600, beaconGap: 120, crag: [1400, 2400], logo: [2200, 3200], flames: 2500, menu: [3000, 3500], rowGap: 60, ff: 3000, input: 3000, end: 3500 };
+  const INTRO = { sky: [0, 1000], beacon0: 300, beaconGap: 70, crag: [500, 1200], logo: [900, 1600], rise: 12, sweep: [1150, 1950], flames: 1350, flameGap: 40, menu: [1500, 1900], rowGap: 40, ff: 1400, input: 1500, end: 2000 };
   /** 時刻 t（ms、開いてから。とばしたら大きい値）の各部の強さ */
   function introAt(t) {
     const I = INTRO;
@@ -300,7 +303,8 @@
       crag: easeOut((t - I.crag[0]) / (I.crag[1] - I.crag[0])),
       embers: t >= I.crag[0],
       logo: easeOut((t - I.logo[0]) / (I.logo[1] - I.logo[0])),
-      flame: (j) => { const d = t - (I.flames + j * 50); return d < 0 ? 0 : Math.max(0, 1 - d / 450) * Math.min(1, d / 80); },
+      sweep: (t - I.sweep[0]) / (I.sweep[1] - I.sweep[0]),   // 0〜1 の間だけ題字の上を光が渡る
+      flame: (j) => { const d = t - (I.flames + j * I.flameGap); return d < 0 ? 0 : Math.max(0, 1 - d / 450) * Math.min(1, d / 80); },
       menu: (i) => easeOut((t - I.menu[0] - (i || 0) * I.rowGap) / 300),
       ff: easeOut((t - I.ff) / 800),
     };
@@ -351,6 +355,226 @@
     } else st.star = null;
   }
 
+  // ================================================================ 動く飾り（持ち主 2026-10-04「止まった絵ではなく、静かに生きているタイトルに」）
+  //   雲（空の高い所は land の層の奥、低い雲と谷のもやは land の前・岩場の奥）、灯台の光の帯、月の道のきらめき、谷の光の粒。
+  //   雲ともやは小さく焼いた柔らかい絵（1 枚 256×64）を引き伸ばして置くだけ。光の帯は三角 2 枚、きらめきは細い線 30 本ほど。
+  //   画面全体を毎フレーム塗り直す仕事は足さない。動きを減らす設定では雲ともやを止めて置き、光の帯・きらめき・粒は出さない。
+  //   座標は絵の 0〜1。sp は横に流れる速さ（論理 px/秒、風はマフラーと同じ右向き）、par は視差（重ねる層と同じ）
+  const AMBI = {
+    wide: {
+      hi: [   // 空の高い所の薄い雲（題字の奥、オーロラの手前）
+        { x: 0.58, y: 0.13, w: 0.40, h: 0.075, sp: 5.0, a: 0.14, seed: 1 },
+        { x: 0.04, y: 0.25, w: 0.50, h: 0.085, sp: 3.6, a: 0.12, seed: 2 },
+        { x: 0.80, y: 0.34, w: 0.34, h: 0.060, sp: 4.4, a: 0.13, seed: 3 },
+      ],
+      lo: [   // 水平線の上の低い雲（月の前をときどき通る）
+        { x: 0.02, y: 0.505, w: 0.30, h: 0.050, sp: 2.4, a: 0.20, seed: 4 },
+        { x: 0.46, y: 0.470, w: 0.28, h: 0.045, sp: 2.0, a: 0.14, seed: 5 },
+      ],
+      mist: [ // 谷のもや
+        { x: 0.28, y: 0.700, w: 0.50, h: 0.080, sp: 3.0, a: 0.11, seed: 6 },
+        { x: 0.00, y: 0.800, w: 0.46, h: 0.090, sp: 2.4, a: 0.10, seed: 7 },
+        { x: 0.60, y: 0.620, w: 0.40, h: 0.060, sp: 3.4, a: 0.09, seed: 8 },
+      ],
+      beam: 0,                                          // 光の帯を出す灯火（beacons の番号 = 海辺の灯台）
+      sea: { moon: 0.0745, y: [0.606, 0.79], x: [0, 0.145] },   // 月の道（月の真下の海）
+      motes: { x: [0.33, 0.6], y: [0.58, 0.86] },   // 命令の一覧（左下）には掛けない
+    },
+    phone: {
+      hi: [
+        { x: 0.10, y: 0.12, w: 0.70, h: 0.040, sp: 4.0, a: 0.12, seed: 1 },
+        { x: 0.55, y: 0.24, w: 0.60, h: 0.035, sp: 3.0, a: 0.11, seed: 2 },
+      ],
+      lo: [{ x: 0.0, y: 0.45, w: 0.55, h: 0.030, sp: 2.2, a: 0.16, seed: 4 }],
+      mist: [
+        { x: 0.2, y: 0.56, w: 0.80, h: 0.045, sp: 2.6, a: 0.10, seed: 6 },
+        { x: 0.0, y: 0.64, w: 0.70, h: 0.050, sp: 2.0, a: 0.09, seed: 7 },
+      ],
+      beam: 0, sea: null, motes: { x: [0.1, 0.6], y: [0.48, 0.66] },
+    },
+  };
+  const BEAM_MS = 14000;   // 灯台の光が一回りする時間
+
+  /** 値の雑音（2 次元、64 格子で回る） */
+  function noise2(seed) {
+    const r = R.rng('title-cloud:' + seed), p = new Float32Array(64 * 64);
+    for (let i = 0; i < p.length; i++) p[i] = r.next();
+    const at = (i, j) => p[((j & 63) << 6) | (i & 63)];
+    return (x, y) => {
+      const i = Math.floor(x), j = Math.floor(y), fx = x - i, fy = y - j;
+      const sx = fx * fx * (3 - 2 * fx), sy = fy * fy * (3 - 2 * fy);
+      const a = at(i, j), b = at(i + 1, j), c = at(i, j + 1), d = at(i + 1, j + 1);
+      return a + (b - a) * sx + (c - a) * sy + (a - b - c + d) * sx * sy;
+    };
+  }
+  /** 雲・もやの柔らかい絵を 1 回だけ焼く（256×64、引き伸ばして置くとにじんだ筆の跡に見える）。kind = 'cloud'|'mist' */
+  const puffs = {};
+  function puff(seed, kind) {
+    const key = kind + seed;
+    if (puffs[key] !== undefined) return puffs[key];
+    const TW = 256, TH = 64;
+    const c = R.Gfx.canvas2d(TW, TH);
+    puffs[key] = c || null;
+    if (!c) return null;
+    const x = c.getContext('2d');
+    const im = x.createImageData(TW, TH), d = im.data;
+    const n = noise2(seed * 7 + (kind === 'mist' ? 50 : 0));
+    const fbm = (u, v) => { let s = 0, a = 0.5, f = 1; for (let o = 0; o < 5; o++) { s += a * n(u * f + o * 17, v * f + o * 31); a *= 0.5; f *= 2.03; } return s; };
+    const sstep = (e0, e1, v) => { const q = clamp01((v - e0) / (e1 - e0)); return q * q * (3 - 2 * q); };
+    for (let j = 0; j < TH; j++) {
+      const v = j / (TH - 1);
+      for (let i = 0; i < TW; i++) {
+        const uu = i / (TW - 1);
+        const ex = Math.pow(Math.sin(Math.PI * uu), 0.7);
+        let ey, dens;
+        if (kind === 'mist') {
+          ey = Math.exp(-Math.pow((v - 0.55) / 0.26, 2));
+          dens = fbm(uu * 9, v * 2.2);
+        } else {
+          ey = sstep(0.02, 0.45, v) * (1 - sstep(0.62, 0.98, v));   // 下はやや平ら
+          dens = fbm(uu * 7, v * 2.6);
+        }
+        let a = clamp01((dens * 1.25 + ex * ey * 0.9 - 1.05) * 2.4) * ex * ey;
+        a = Math.pow(a, 1.25);
+        // 月の光: 上の縁を明るく、下を沈んだ藍に
+        const lit = clamp01(1 - v * 1.25 + (dens - 0.5) * 0.6);
+        const k = (j * TW + i) * 4;
+        if (kind === 'mist') { d[k] = 150 + lit * 30; d[k + 1] = 166 + lit * 30; d[k + 2] = 205 + lit * 25; }
+        else { d[k] = 72 + lit * 120; d[k + 1] = 86 + lit * 118; d[k + 2] = 128 + lit * 108; }
+        d[k + 3] = Math.round(a * 255);
+      }
+    }
+    x.putImageData(im, 0, 0);
+    return c;
+  }
+  /** 動く飾りの粒の初めの状態（画面ごと） */
+  function ambiState() {
+    const r = R.rng('title-ambi');
+    const glints = [];
+    for (let i = 0; i < 30; i++) {
+      const wide = i >= 22;   // 終わりの 8 本は月の道の外の海に散らす（暗め）
+      glints.push({ u: r.next(), v: Math.pow(r.next(), 1.15), wide, per: 1300 + r.next() * 2200, ph: r.next() * 6.28, len: 1.5 + r.next() * 4.5 });
+    }
+    const motes = [];
+    for (let i = 0; i < 9; i++) motes.push({ u: r.next(), v: r.next(), rise: 3 + r.next() * 4, ph: r.next() * 6.28, sw: 4 + r.next() * 6, per: 3000 + r.next() * 3000, teal: i % 3 === 0 });
+    return { glints, motes };
+  }
+  /**
+   * 動く飾りを 1 段描く。stage = 'hi'（空の層の後、land の前）| 'lo'（land の後、岩場の前）。
+   * c = {k, base, off(par), t, alpha, A, beacons, rm}
+   */
+  function drawAmbient(g, stage, c) {
+    const D = AMBI[c.k];
+    if (!D) return;
+    const { base, t, alpha, rm } = c;
+    const tc = rm ? 0 : t;   // 動きを減らす設定では雲を止めて置く
+    const clouds = (list, kind, par, fade) => {
+      if (!(fade > 0)) return;
+      const d = c.off(par);
+      for (const L of list) {
+        const img = puff(L.seed, kind);
+        if (!img) continue;
+        const w = L.w * base.w, h = L.h * base.h, span = base.w + w;
+        const x0 = ((L.x * base.w + (L.sp * tc) / 1000) % span + span) % span - w;
+        // ゆっくり濃さが揺れる（雲が育ってはほどける）
+        const br = rm ? 1 : 0.85 + 0.15 * Math.sin(t / 9000 + L.seed * 1.7);
+        g.globalAlpha = L.a * br * fade * alpha;
+        g.drawImage(img, base.x + d.x + x0, base.y + d.y + L.y * base.h - h / 2, w, h);
+      }
+      g.globalAlpha = 1;
+    };
+    g.save();
+    g.imageSmoothingEnabled = true;
+    if (stage === 'hi') { clouds(D.hi, 'cloud', 0.15, c.A.sky); g.restore(); return; }
+    clouds(D.lo, 'cloud', 0.4, c.A.sky);
+    clouds(D.mist, 'mist', 0.55, c.A.sky);
+    g.restore();
+    if (rm) return;
+    const st = c.amb;
+    const H = R.H;
+    // 月の道のきらめき（海の上の細い横線が、ばらばらに光っては消える）
+    if (D.sea && c.A.sky > 0) {
+      const d = c.off(0.4), S0 = D.sea;
+      g.save(); g.globalCompositeOperation = 'lighter';
+      for (const q of st.glints) {
+        const yy = S0.y[0] + q.v * (S0.y[1] - S0.y[0]);
+        const spread = 0.008 + q.v * 0.03;
+        const xx = q.wide ? S0.x[0] + q.u * (S0.x[1] - S0.x[0]) : S0.moon + (q.u - 0.5) * 2 * spread;
+        const tw = Math.sin(t / q.per * Math.PI * 2 + q.ph);
+        if (tw <= 0) continue;
+        const a = Math.pow(tw, 3) * (q.wide ? 0.22 : 0.5) * (1 - q.v * 0.35) * c.A.sky * alpha;
+        const px = base.x + d.x + xx * base.w + Math.sin(t / 2300 + q.ph) * 1.5, py = base.y + d.y + yy * base.h;
+        const len = q.len * (0.7 + q.v * 0.9);
+        g.fillStyle = `rgba(214,226,255,${a.toFixed(3)})`;
+        g.fillRect(px - len / 2, py, len, 0.6 + q.v * 0.5);
+      }
+      g.restore();
+    }
+    // 灯台の光の帯（一回り BEAM_MS。横を向くと長く、奥・手前を向くと縮む。手前を向いた一瞬だけ灯がまたたく）
+    const bp = c.beacons && c.beacons[D.beam];
+    const lit = Math.min(1, c.A.beacon(D.beam));
+    if (bp && lit > 0) {
+      const p = { x: base.x + bp[0] * base.w + c.off(0.4).x, y: base.y + bp[1] * base.h + c.off(0.4).y };
+      const th = (t / BEAM_MS) * Math.PI * 2 + 0.6;
+      const cx = Math.cos(th), sz = Math.sin(th);          // sz > 0: 奥へ、< 0: 手前へ
+      const toward = Math.max(0, -sz);
+      const len = base.w * 0.2 * (0.22 + 0.78 * Math.abs(cx));
+      const ex = cx * len, ey = -sz * len * 0.16;          // 奥を向くと水平線へ上がり、手前を向くと下がる
+      const nl = Math.hypot(ex, ey) || 1, nx = -ey / nl, ny = ex / nl;
+      const a0 = (0.06 + 0.1 * toward) * lit * alpha;
+      g.save(); g.globalCompositeOperation = 'lighter';
+      for (const [wk, ak] of [[0.16, 0.5], [0.06, 1]]) {
+        const hw = 1.5 + nl * wk;
+        const gr = g.createLinearGradient(p.x, p.y, p.x + ex, p.y + ey);
+        gr.addColorStop(0, `rgba(255,236,196,${(a0 * ak).toFixed(3)})`); gr.addColorStop(0.6, `rgba(255,236,196,${(a0 * ak * 0.35).toFixed(3)})`); gr.addColorStop(1, 'rgba(255,236,196,0)');
+        g.fillStyle = gr; g.beginPath(); g.moveTo(p.x, p.y);
+        g.lineTo(p.x + ex + nx * hw, p.y + ey + ny * hw); g.lineTo(p.x + ex - nx * hw, p.y + ey - ny * hw); g.closePath(); g.fill();
+      }
+      g.restore();
+      const flash = Math.pow(toward, 8);
+      if (flash > 0.01) R.UIK.glow(g, p.x, p.y, H * (0.03 + 0.03 * flash), [255, 236, 200], 0.55 * flash * lit * alpha);
+    }
+    // 谷の光の粒（灯火の熱で、ゆっくり昇っては消える）
+    if (D.motes && c.A.ff > 0) {
+      const d = c.off(0.55), M = D.motes;
+      for (const q of st.motes) {
+        const range = (M.y[1] - M.y[0]) * base.h;
+        const prog = ((q.v * range + (q.rise * t) / 1000) % range) / range;   // 0 = 下、1 = 上
+        const px = base.x + d.x + (M.x[0] + q.u * (M.x[1] - M.x[0])) * base.w + Math.sin(t / q.per * Math.PI * 2 + q.ph) * q.sw;
+        const py = base.y + d.y + M.y[1] * base.h - prog * range;
+        const a = Math.sin(prog * Math.PI) * (0.18 + 0.14 * Math.sin(t / 1300 + q.ph)) * c.A.ff * alpha;
+        if (a > 0.01) R.UIK.glow(g, px, py, 3.5, q.teal ? [170, 240, 210] : [255, 206, 140], a);
+      }
+    }
+  }
+
+  /** 題字の上を一度だけ渡る光の筋（題字の形だけに乗る）。p = 0〜1 */
+  let sweepC = null;
+  function sweepLogo(g, img, x, y, w, h, p, a) {
+    if (!(p > 0 && p < 1) || !(a > 0) || !R.Gfx.canvas2d) return;
+    const m = g.getTransform ? g.getTransform() : null;
+    const sc = (m && m.a) || 1;
+    const cw = Math.max(1, Math.round(w * sc)), ch = Math.max(1, Math.round(h * sc));
+    if (!sweepC || sweepC.width !== cw || sweepC.height !== ch) sweepC = R.Gfx.canvas2d(cw, ch);
+    if (!sweepC) return;
+    const x2 = sweepC.getContext('2d');
+    x2.setTransform(1, 0, 0, 1, 0, 0);
+    x2.globalCompositeOperation = 'source-over';
+    x2.clearRect(0, 0, cw, ch);
+    x2.drawImage(img, 0, 0, cw, ch);
+    x2.globalCompositeOperation = 'source-in';
+    const e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+    const bw = cw * 0.16, cx = -bw * 2 + (cw + bw * 4) * e;
+    const gr = x2.createLinearGradient(cx - bw, bw * 0.45, cx + bw, -bw * 0.45);   // 少し右上がりの斜めの筋
+    gr.addColorStop(0, 'rgba(255,240,205,0)'); gr.addColorStop(0.5, 'rgba(255,246,222,0.9)'); gr.addColorStop(1, 'rgba(255,240,205,0)');
+    x2.fillStyle = gr; x2.fillRect(0, 0, cw, ch);
+    g.save();
+    g.globalCompositeOperation = 'lighter';
+    g.globalAlpha = a * Math.sin(Math.PI * p) * 0.75;
+    g.drawImage(sweepC, x, y, w, h);
+    g.restore();
+  }
+
   /** 一枚絵の背景（光・粒まで）。描けたら true。o = {t: 出てきてからの ms, alpha, flare} */
   function drawArt(g, v, o) {
     const k = R.layout === 'tall' ? 'phone' : 'wide';
@@ -376,19 +600,25 @@
       g.globalAlpha = a * o.alpha;
       g.drawImage(img, base.x + d.x - (w - base.w) / 2, base.y + d.y - (h - base.h) / 2, w, h);
     };
+    const par = (p) => (s.mode === 'layers' ? p : 0);
+    // 動く飾り（雲・もや・灯台の光の帯・きらめき・粒）。層の間に挟む（一枚絵だけのときは絵の上に全部）
+    const amb = { k, base, off: (p) => off(par(p)), t, alpha: o.alpha, A, beacons: m.beacons, rm: reduce(), amb: st.amb || (st.amb = ambiState()) };
+    const ambient = (stage) => { g.save(); g.globalAlpha = 1; drawAmbient(g, stage, amb); g.restore(); };
     if (s.mode === 'layers') {
       const slow = reduce() ? 1 : 1 + 0.005 * (1 - Math.cos(t / 60000 * Math.PI * 2));   // 60 秒で 1% 寄って戻る
       const L = s.layers;
       put(L[0].rec.img, L[0].par, A.sky, A.zoom * slow);
+      ambient('hi');
       put(L[1].rec.img, L[1].par, A.sky, 1);
+      ambient('lo');
       put(L[2].rec.img, L[2].par, A.crag, 1);
       put(L[3].rec.img, L[3].par, A.crag, 1);
     } else {
       put(s.key.img, 0, A.sky, 1);
+      ambient('hi'); ambient('lo');
     }
     g.globalAlpha = 1;
     g.restore();
-    const par = (p) => (s.mode === 'layers' ? p : 0);
     const H = R.H, alpha = o.alpha;
     // 八つの灯火（左の灯台から奥へ順にともる。4〜7 秒で ±25% 瞬く）
     (m.beacons || []).forEach((b, i) => {
@@ -403,7 +633,8 @@
     const lanP = at(m.lantern || [0.5, 0.5], par(1));
     let flick = 0.9 + 0.1 * (Math.sin(t / 130) * 0.5 + Math.sin(t / 370 + 1.3) * 0.5);
     if (lessFlash() || reduce()) flick = 1 - (1 - flick) / 3;
-    const lk = A.lantern * flick * (o.flare || 1) * alpha;
+    const breath = reduce() ? 1 : 1 + 0.06 * Math.sin(t / 5200 * Math.PI * 2);   // 光の輪がゆっくり息をする（5.2 秒）
+    const lk = A.lantern * flick * breath * (o.flare || 1) * alpha;
     if (lk > 0) {
       R.UIK.glow(g, lanP.x, lanP.y, H * 0.16, [255, 170, 80], 0.35 * lk);
       R.UIK.glow(g, lanP.x, lanP.y, H * 0.035, [255, 230, 170], Math.min(1, 0.6 * lk));
@@ -482,7 +713,8 @@
     const lm = id === 'logo' ? meta('logo') : Object.assign({ size: [rec.img.naturalWidth || rec.img.width, rec.img.naturalHeight || rec.img.height], anchor: {} }, meta(id));
     const ls = m.logo_safe, sf = R.safe || { l: 0, t: 0 };
     const w = ls.w * R.W, h = w * (lm.size[1] / lm.size[0]);
-    const x = Math.max(sf.l + 4, ls.x * R.W), y = Math.max(sf.t + 4, ls.y * R.H) + 8 * (1 - A.logo);
+    const rise = reduce() ? 0 : INTRO.rise;
+    const x = Math.max(sf.l + 4, ls.x * R.W), y = Math.max(sf.t + 4, ls.y * R.H) + rise * (1 - A.logo);
     const a = A.logo * alpha;
     g.save();
     // 半透明の暗い楕円（ぼかし = 幅の 8%）
@@ -498,6 +730,7 @@
     g.globalAlpha = a;
     g.drawImage(rec.img, x, y, w, h);
     g.restore();
+    if (!reduce()) sweepLogo(g, rec.img, x, y, w, h, A.sweep, alpha);
     const fl = (lm.anchor && lm.anchor.flames) || [];
     fl.forEach((p, j) => {
       const f = A.flame(j);
@@ -522,8 +755,8 @@
       this.list = new R.UIK.List({ rows, rowH: 44, tall: true });
       this.list.onSelect = (row) => this.pick(row);
       this.busy = false;
-      // 起動して最初: 出てくる順（§4）。ほかの画面から戻ったとき: 全体を 0.6 秒のフェードだけ
-      this.intro = !!(p && p.intro);
+      // 起動して最初: 出てくる順（§4）。ほかの画面から戻ったとき・動きを減らす設定: 全体を 0.6 秒のフェードだけ
+      this.intro = !!(p && p.intro) && !reduce();
       this.skipped = false;
       this.t0 = R.Engine.time;
       this.openedAt = R.Engine.time;

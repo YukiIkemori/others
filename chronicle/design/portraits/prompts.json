@@ -1,5 +1,5 @@
 {
- "note": "顔絵の指示文の共通部分（V2_PLAN §6.3）。BRIEF A38 で画像 API の顔絵は使わないことになったので、今は --dry-run の表示と、キャラのシート（sprite_pipe のシート9）を頼むときの参考だけ。作品名・固有の名前を書かない（A16）。",
+ "note": "顔絵の指示文（V2_PLAN §6.3）。オーナーの決定（2026-10-04）: 会話の窓の顔は、描いた胸から上の一枚絵（画像 API）にする。前の BRIEF A38「画像 API の顔絵は使わない」はこれで置き換え。描く道具は v2/tools/gen_portraits.py（1 枚ずつ。原画は design/art_ref/gen/portraits/raw、ゲームの絵は assets/portraits/<look>_<expr>.webp）。描いた絵の無い人・表情は原画のシートの表情（hd:face）のまま。作品名・固有の名前を書かない（A16）。",
  "common": "夜の世界の 2.6〜2.8 頭身のキャラクターの顔。胸より上、少し右向き。暖かい灯りと月の青い縁の光。落ち着いた彩度。暗い紺の単色の背景。文字・署名なし。",
  "exprs": {
   "neutral": "ふつうの顔",
@@ -7,5 +7,23 @@
   "sad": "悲しそうに眉を下げる",
   "angry": "眉を寄せて真剣・怒り",
   "surprise": "目を見開いて驚く"
+ },
+ "painted": {
+  "style": "A hand-painted bust portrait of one fantasy RPG character for a dialogue window. Stylised proportions of a 2.6 to 2.8 heads tall character: a fairly large head, large clear expressive eyes, soft rounded youthful facial construction, small nose and mouth (older characters keep the same stylisation, shown with gentle wrinkles and posture). Framing: head and shoulders down to mid-chest, the whole head fully inside the image with a small margin above the hair, the face in the upper-middle of a square picture. Pose: body and face turned slightly to the viewer's right (a soft three-quarter view facing right), eyes looking to the right. Rendering: rich painterly digital illustration, visible soft brushwork, clean readable shapes and silhouettes, painted (not lined like a comic, not photographic, not 3D, not pixel art). Lighting: warm lamp light from the front left lighting the face, and a cool blue moonlight rim light along the right edge of the hair and shoulders. Calm, moderately saturated colours, gentle contrast. Background: plain flat dark navy (#141a2c) with only a very faint soft vignette; no scenery, no props in the background, no frame, no border, no text, no letters, no signature, no watermark.",
+  "identity": "The attached small pixel-art face sheet is this exact character as players already know them: keep the same hair style and colour, eye colour, skin tone, age, outfit, colours and accessories; reinterpret it as a high-resolution painting (do not copy the pixels or the blocky look).",
+  "styleRef": "The other attached painted portrait shows the target painting style, lighting, framing, head size and background only; do NOT copy that character's face, hair or clothes.",
+  "exprRef": "The attached painted portrait is the same character: repaint it with the new expression only. Keep everything else identical: the same face shape, hair, outfit, accessories, pose, framing, head size and position, lighting, colours, background and painting style.",
+  "exprs": {
+   "neutral": "Expression: calm, neutral, attentive; mouth closed.",
+   "smile": "Expression: a warm, soft smile; eyes slightly narrowed with kindness; cheeks lifted a little.",
+   "sad": "Expression: sad; inner ends of the eyebrows raised and drawn together, eyes lowered and slightly glistening, mouth corners turned down a little.",
+   "angry": "Expression: stern anger; eyebrows drawn down and together, a firm frown, eyes narrowed and intense, mouth pressed tight.",
+   "surprise": "Expression: surprise; eyes wide open, eyebrows raised high, mouth slightly open in a small round shape."
+  },
+  "looks": {
+   "berna": "An elderly kindly village storyteller woman of about seventy: long straight silver-white hair parted in the middle falling past the shoulders, a dark moss-green headscarf covering the top of the head and tied at the back with the knot and tails visible behind her head, warm brown eyes, a soft round face with gentle wrinkles and smile lines, fair warm skin. A dark moss-green long dress; over the shoulders a rough undyed beige wool shawl with a fringed edge; a necklace of round amber-brown wooden beads with a small brass bell pendant at the chest; a brown cloth sash at the waist (may be just out of frame). No glasses.",
+   "fine": "A slender young woman who looks about seventeen, an ancient storyteller bound into legend, quiet and slightly melancholic: pale skin, long wavy pale silver-ash blonde hair framing the face and falling over the chest, grey-blue eyes. She wears a slate blue-grey hooded travel cloak with the hood up over her head, the hood edge trimmed with a thin line of small cream beads or embroidery; a cream inner tunic; at the throat a small round bronze clasp with cords. A very faint pale luminous softness at the edges of her hair suggests she is slowly fading, kept subtle.",
+   "rowell": "A young man of about twenty, a serious and proud scholar-knight of an archive institute: untidy spiky dark charcoal-grey hair with fringe falling over the forehead and a short tied tail at the nape, dark grey eyes, fair skin, a composed slightly cool face. He wears a white high-collared uniform coat with gold trim on the collar and a diagonal placket closed with round gold buttons, a small silver quill-shaped pin on the left side of the chest, a dark leather belt with a gold buckle at the bottom edge. No glasses."
+  }
  }
 }

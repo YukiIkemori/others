@@ -286,7 +286,9 @@
       v._lastFr = fr0;
       const lit = (f, px, py) => (st.lightAt ? A.litFrame(f, st.lightAt(px, py - A.height(a) * 0.5)) : f);
       const sc = A.scaleOf(a, sh);
-      const draw1 = (f, px, py, extra) => R.Hd.draw(g, lit(f, px, py), px, py + bob, Object.assign(sc < 1 ? { scale: sc } : {}, extra || {}));
+      // ボスの登場の影（boss_entry.js の v.sil 0..1）: 暗い色を重ねる。塗った絵は覚えるので濃さは 8 段に丸める
+      const silO = v.sil > 0.01 ? { tint: '#07050e', tintAmt: Math.round(v.sil * 8) / 8 * 0.9 } : null;
+      const draw1 = (f, px, py, extra) => R.Hd.draw(g, lit(f, px, py), px, py + bob, Object.assign(sc < 1 ? { scale: sc } : {}, silO, extra || {}));
       // 残像（素早い踏み込み・振り）
       if (!rm && v.smearTo && st.clock < v.smearTo && hist.length > 3) {
         const left = Math.min(1, (v.smearTo - st.clock) / 120);

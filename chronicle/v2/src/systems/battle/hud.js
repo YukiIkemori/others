@@ -295,7 +295,7 @@
       if (a.side !== 'enemy') continue;
       const v = st.vis[a.uid];
       if (!v || v.gone >= 1) continue;
-      const alpha = Math.max(0, 1 - (v.gone || 0)) * (v.appear != null ? v.appear : 1);
+      const alpha = Math.max(0, 1 - (v.gone || 0)) * (v.appear != null ? v.appear : 1) * (1 - (v.sil || 0));   // 登場の影の間は名前を出さない
       if (alpha <= 0.02) continue;
       const y = a.y + 8;
       g.save(); g.globalAlpha = alpha;

@@ -169,7 +169,7 @@
     } catch (e) { st.partyOrder = []; }
     st.actors = []; st.vis = {}; st.extra = {}; st.pops = []; st.fxs = [];
     st.collected = { gains: [], grow: [], prof: [], glimmers: [] };
-    st.tele = null; st.card = null; st.banner = null; st.dim = 0; st.result = null; st.over = null;
+    st.tele = null; st.card = null; st.banner = null; st.dim = 0; st.result = null; st.over = null; st.entry = null; st.bossCard = null;
     for (const u of st.B.units) { st.actors.push(actorOf(u)); st.vis[u.uid] = visOf(u); }
     place(st);
     prebake(st);
@@ -203,7 +203,11 @@
     const boss = !!(st.info.boss || st.info.heavy || st.actors.some((a) => a.side === 'enemy' && a.boss));
     const foes = st.actors.filter((a) => a.side === 'enemy');
     const party = st.actors.filter((a) => a.side === 'party');
-    for (const a of foes) { const v = st.vis[a.uid]; v.appear = 0; if (!reduce) v.dy = a.boss ? 26 : 14; }
+    // ボスの登場（boss_entry.js）: 主のボスは一行が入った後に影からせり上がる。ここでは隠しておく（お供はいつも通り浮かぶ）
+    const EN = boss && _.bossEntry ? _.bossEntry : null;
+    if (EN) EN.prepare(st);
+    const held = EN ? EN.hide(st) : [];
+    for (const a of foes) { if (held.includes(a.uid)) continue; const v = st.vis[a.uid]; v.appear = 0; if (!reduce) v.dy = a.boss ? 26 : 14; }
     for (const a of party) { const v = st.vis[a.uid]; if (!reduce && v.alive) { v.dx = 240 + (a.x > 650 ? 40 : 0); v.pose = 'step'; v.poseT = R.Engine.time; } }
     st.hudIn = 0;
     if (st.cover == null) st.cover = 0;
@@ -219,19 +223,23 @@
       });
       // 敵: 浮かび上がる（ボスは遅く、重く）
       foes.forEach((a, i) => {
+        if (held.includes(a.uid)) return;
         const v = st.vis[a.uid];
         const d = a.boss ? 260 : 140 + i * 70, ms = a.boss ? 900 : 380;
         st.pwait(d).then(() => { tw(st, v, 'appear', 1, ms, 'out'); tw(st, v, 'dy', 0, ms, 'out3'); });
       });
-      await st.pwait(boss ? 1000 : 620);
+      await st.pwait(EN ? 760 : boss ? 1000 : 620);
     } else {
-      for (const a of foes) tw(st, st.vis[a.uid], 'appear', 1, 300);
+      for (const a of foes) if (!held.includes(a.uid)) tw(st, st.vis[a.uid], 'appear', 1, 300);
       await st.pwait(320);
     }
-    for (const a of foes) { const v = st.vis[a.uid]; v.appear = 1; v.dy = 0; }
+    for (const a of foes) { if (held.includes(a.uid)) continue; const v = st.vis[a.uid]; v.appear = 1; v.dy = 0; }
     for (const a of party) { const v = st.vis[a.uid]; v.dx = 0; if (v.pose === 'step') { v.pose = 'idle'; v.poseT = R.Engine.time; } }
     st.cover = 0;
-    if (boss) {
+    if (EN) {
+      await EN.run(st);   // 暗くなる → 影がせり上がる → 光って姿 → 大きな名前の札と始めの一言
+      EN.finish(st);
+    } else if (boss) {
       const bu = foes.find((a) => a.boss) || foes[0];
       if (R.Audio.sfx) R.Audio.sfx('roar');
       if (!reduce && R.Settings.get('shake') !== 'off') st.shake = { t0: R.Engine.time, ms: 520, amp: 5 };
@@ -284,34 +292,43 @@
     Kt.text(g, label, x + 16 * k, y - s / 2 - 1 * k, { size: s, weight: 700, color: Kt.COL.gold, raw: true, shadow: true });
   }
 
-  /** ボスの名前の札（戦場の上の方、真ん中） */
+  /** ボスの名前の札（戦場の上の方、真ん中）。c.big = 長い登場の大きな札、c.rgb = 場所の色（線と肩書き） */
   function drawBossCard(g, st) {
     const c = st.bossCard;
     if (!c) return;
     const t = R.Engine.time - c.t0, k = R.uiScale || 1;
-    const a = Math.min(1, t / 260) * Math.min(1, Math.max(0, (c.ms - t) / 380));
+    const fin = Math.min(260, c.ms * 0.22), fout = Math.min(380, c.ms * 0.32);
+    const a = Math.min(1, t / fin) * Math.min(1, Math.max(0, (c.ms - t) / fout));
     if (a <= 0) return;
+    const big = c.big ? 1.4 : 1;
     const cx = R.W / 2, cy = (st.L.tall ? st.L.stageH * 0.3 : R.H * 0.3);
-    const grow = 1 - Math.pow(1 - Math.min(1, t / 520), 3);
+    const grow = 1 - Math.pow(1 - Math.min(1, t / Math.min(520, c.ms * 0.45)), 3);
+    const line = c.rgb || '255,190,150';
     g.save();
     g.globalAlpha = a;
-    const bw = Math.min(R.W, 760 * k);
+    const bw = Math.min(R.W, 760 * k * (c.big ? 1.25 : 1));
     const gr = g.createLinearGradient(cx - bw / 2, 0, cx + bw / 2, 0);
-    gr.addColorStop(0, 'rgba(8,6,14,0)'); gr.addColorStop(0.5, 'rgba(8,6,14,0.72)'); gr.addColorStop(1, 'rgba(8,6,14,0)');
-    g.fillStyle = gr; g.fillRect(cx - bw / 2, cy - 44 * k, bw, 92 * k);
+    gr.addColorStop(0, 'rgba(8,6,14,0)'); gr.addColorStop(0.5, `rgba(8,6,14,${c.big ? 0.8 : 0.72})`); gr.addColorStop(1, 'rgba(8,6,14,0)');
+    g.fillStyle = gr; g.fillRect(cx - bw / 2, cy - 44 * k * big, bw, 92 * k * big);
     const lw = (bw * 0.42) * grow;
-    _.K.hline(g, cx - lw, cx + lw, cy - 30 * k, 0.6, '255,190,150');
-    _.K.hline(g, cx - lw, cx + lw, cy + 36 * k, 0.6, '255,190,150');
+    _.K.hline(g, cx - lw, cx + lw, cy - 30 * k * big, 0.6, line);
+    _.K.hline(g, cx - lw, cx + lw, cy + 36 * k * big, 0.6, line);
     g.textAlign = 'center'; g.textBaseline = 'middle';
-    g.font = R.Gfx.font(12.5 * k, 700);
+    g.font = R.Gfx.font(12.5 * k * (c.big ? 1.2 : 1), 700);
     if ('letterSpacing' in g) g.letterSpacing = 8 * k + 'px';
-    g.fillStyle = 'rgba(255,196,170,0.9)'; g.shadowColor = 'rgba(0,0,0,0.9)'; g.shadowBlur = 6;
-    g.fillText(c.sub, cx, cy - 16 * k);
-    g.font = R.Gfx.font(30 * k, 700);
-    if ('letterSpacing' in g) g.letterSpacing = 6 * k + 'px';
-    const tg = g.createLinearGradient(0, cy - 4 * k, 0, cy + 30 * k); tg.addColorStop(0, '#fff6ec'); tg.addColorStop(1, '#f0b98e');
+    g.fillStyle = c.rgb ? `rgba(${c.rgb},0.95)` : 'rgba(255,196,170,0.9)'; g.shadowColor = 'rgba(0,0,0,0.9)'; g.shadowBlur = 6;
+    g.fillText(c.sub, cx, cy - 16 * k * big);
+    // 名前（長い名前は窓の幅に収める）
+    let ns = 30 * k * big;
+    g.font = R.Gfx.font(ns, 700);
+    if ('letterSpacing' in g) g.letterSpacing = 6 * k * big + 'px';
+    const maxW = Math.min(R.W * 0.9, bw * 0.92);
+    const mw = g.measureText(c.name).width;
+    if (mw > maxW) { ns = Math.max(16 * k, ns * maxW / mw); g.font = R.Gfx.font(ns, 700); }
+    const ny = cy + 12 * k * big + (1 - grow) * 6 * k;
+    const tg = g.createLinearGradient(0, ny - ns / 2, 0, ny + ns / 2); tg.addColorStop(0, '#fff6ec'); tg.addColorStop(1, '#f0b98e');
     g.fillStyle = tg; g.shadowBlur = 10;
-    g.fillText(c.name, cx, cy + 12 * k + (1 - grow) * 6 * k);
+    g.fillText(c.name, cx, ny);
     g.restore();
   }
 
@@ -485,6 +502,7 @@
         }
         repeatWatch(st);
         _.play.tick(st, dt);
+        if (st.entry && _.bossEntry) _.bossEntry.tick(st);
         _.glimmer.tick(st);
         rebakeBg(st);
         if (st.ui && st.ui.update) st.ui.update(dt);
@@ -750,6 +768,7 @@
       if (hk > 0.5) _.hud.chips(g, st);
       _.play.drawTele(g, st);
     }
+    if (st.entry && _.bossEntry) _.bossEntry.draw(g, st);
     drawBossCard(g, st);
     _.glimmer.drawBanner(g, st);
     if (st.go) _.gameover.draw(g, st);

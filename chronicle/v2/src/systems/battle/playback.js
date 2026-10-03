@@ -465,9 +465,14 @@
     ctx.actor = e.uid; ctx.act = e; ctx.fx = fxFor(st, e); ctx.fxs = fxsFor(e); ctx.hits = 0;
     ctx.seq = seqOf(e); ctx.seqC = null; ctx.seqEnd = 0;
     const an = u.name;
+    const head = e.combo ? { name: e.combo.name || e.name || '', sub: comboSub(st, e), t0: R.Engine.time, color: '#ffd68a', tint: 'rgba(255,190,90,0.9)' } : e.cmd === 'attack' ? { name: R.T('battle.playback.act.head.name', { an }), t0: R.Engine.time } : { name: e.name || '', sub: an, t0: R.Engine.time };
     if (e.combo && e.combo.first) await comboIntro(st, e);
-    else if (!e.combo && u.side !== 'party' && ctx.seq && _.ult && _.ult.is(ctx.seq)) await _.ult.play(st, e, ctx);   // ボスの必殺技の差し込み（ult_fx.js）
-    st.head = e.combo ? { name: e.combo.name || e.name || '', sub: comboSub(st, e), t0: R.Engine.time, color: '#ffd68a', tint: 'rgba(255,190,90,0.9)' } : e.cmd === 'attack' ? { name: R.T('battle.playback.act.head.name', { an }), t0: R.Engine.time } : { name: e.name || '', sub: an, t0: R.Engine.time };
+    else if (!e.combo && u.side !== 'party' && ctx.seq && _.ult && _.ult.is(ctx.seq)) {
+      // ボスの必殺技の差し込み（ult_fx.js）。左上の見出しは差し込みの始めから必殺技の名前とボスに（前の行動の名前を残さない。持ち主 2026-10-04）
+      st.head = head;
+      await _.ult.play(st, e, ctx);
+    }
+    if (st.head !== head) st.head = head;
     if (st.tele && st.tele.uid === e.uid) { st.tele = null; }
     const v = st.vis[e.uid];
     const sp = st.speed();

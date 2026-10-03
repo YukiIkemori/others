@@ -182,8 +182,8 @@
     void list;
     // F6: 発光の描き直し（芯＋にじみ）
     glows(g, t, cx, cy, real);
-    // 天気（map.weather: 'snow' | 'blizzard'。weather.js）
-    if (m.weather && F._weather) F._weather(g, m, cx, cy, t);
+    // 天気（map.weather か、地方の天気の表から入るたびに決まる物。weather.js）
+    if (F._weather) F._weather(g, m, cx, cy, t);
     // 暗がり（E6）
     F.dark.draw(g, cam);
     // 膜の上: 宝箱・泉のきらめき（人の頭の上の「新しい話」の印は描かない。持ち主の決まり 2026-09-28: ほぼ誰とでも話せるので要らない。

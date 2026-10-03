@@ -6,6 +6,8 @@
 //     fit:'contain'（コマ全体を 0.5 刻みの倍率で下の中央に。前の既定。上に空きが出る）
 //     fit:'bust'（胸から上を枠いっぱい）・fit:'fill'（絵のある範囲を枠に収める、整数倍）・fit:'circle'（rect に内接する丸を顔でほぼ埋める。髪のてっぺん〜顎・首。丸で切り抜く。zoom・headroom）
 //   R.Portrait.parse('berna:smile') → {look, expr}                  （無い表情は neutral）
+//   描いた顔（胸から上の一枚絵、assets/portraits/<look>_<expr>.webp。2026-10-04 の決定）は四角い枠では「少し寄って上に合わせ」（PAINT）、
+//     縁を紺へ柔らかく落とす（o.soft === false で落とさない）。その人の描いた絵が無ければ原画のシートの表情、表情だけ無ければ描いた neutral。
 // 描いた顔の画像は初めて使うときに読み込む（decode の間は仮の顔）。仮の顔・原画の顔はぼかさずに拡大（0.5 刻みの倍率）。
 (function (R) {
   'use strict';
@@ -23,7 +25,8 @@
   }
   P.has = function (look, expr) {
     if (!look) return null;
-    if (painted(look, expr || 'neutral')) return 'painted';
+    const pk = painted(look, expr || 'neutral');
+    if (pk) { try { R.Media.image(pk); } catch (e) { /* 読み込みを先に始めるだけ */ } return 'painted'; }   // 会話の窓が開く前に decode を始める（はじめの数コマに原画の顔が出ない）
     if (R.Hd && R.Hd.has && R.Hd.has('hd:face:' + look)) return 'placeholder';
     return null;
   };
@@ -212,6 +215,26 @@
     return true;
   }
 
+  // ------------------------------------------------------------------ 描いた顔の枠どり
+  // zoom: 枠を覆う倍率に掛ける寄り（1 = 絵の全体）。top: 絵の上から切る割合。dx: 横のずらし（枠の幅に対する割合。少し右向きの絵の顔を中央へ）
+  const PAINT = { zoom: 1.14, top: 0.02, dx: 0.0 };
+  P.PAINT = PAINT;
+  /** 縁を紺へ柔らかく落とす（描いた絵の地と枠の地をつなぐ。四隅ほど濃い） */
+  function softEdge(g, rect) {
+    const cx = rect.x + rect.w / 2, cy = rect.y + rect.h * 0.42, r = Math.hypot(rect.w, rect.h) / 2;
+    const gr = g.createRadialGradient(cx, cy, r * 0.5, cx, cy, r * 1.02);
+    gr.addColorStop(0, 'rgba(14,17,30,0)');
+    gr.addColorStop(1, 'rgba(14,17,30,0.62)');
+    g.fillStyle = gr;
+    g.fillRect(rect.x, rect.y, rect.w, rect.h);
+    // 下の縁: 胸の切れ目を紙の窓へなじませる
+    const gb = g.createLinearGradient(0, rect.y + rect.h * 0.78, 0, rect.y + rect.h);
+    gb.addColorStop(0, 'rgba(14,17,30,0)');
+    gb.addColorStop(1, 'rgba(14,17,30,0.5)');
+    g.fillStyle = gb;
+    g.fillRect(rect.x, rect.y + rect.h * 0.78, rect.w, rect.h * 0.22);
+  }
+
   P.draw = function (g, look, rect, o) {
     o = o || {};
     const expr = EXPRS.includes(o.expr) ? o.expr : 'neutral';
@@ -232,9 +255,13 @@
         g.restore();
         return true;
       }
-      const s = Math.max(rect.w / iw, rect.h / ih);   // 枠いっぱい（はみ出しは切る）
+      // 四角い枠: 胸から上の絵に少し寄り（PAINT.zoom）、上を合わせる（頭のてっぺんの余白は絵の側で揃える。胸の下を切る）
+      const z = o.zoom || PAINT.zoom;
+      const s = Math.max(rect.w / iw, rect.h / ih) * z;
+      const dx = rect.x + (rect.w - iw * s) / 2 + rect.w * PAINT.dx, dy = rect.y - ih * s * (o.headroom != null ? o.headroom : PAINT.top);
       g.beginPath(); g.rect(rect.x, rect.y, rect.w, rect.h); g.clip();
-      g.drawImage(rec.img, rect.x + (rect.w - iw * s) / 2, rect.y + (rect.h - ih * s) / 2, iw * s, ih * s);
+      g.drawImage(rec.img, dx, dy, iw * s, ih * s);
+      if (o.soft !== false) softEdge(g, rect);
       g.restore();
       return true;
     }

@@ -7,9 +7,9 @@
 //   node v2/tools/portraits.js --dry-run --only berna [--expr neutral,smile]   指示文を表示するだけ
 //   node v2/tools/portraits.js --sheet                   描いた顔（chronicle/assets/portraits/<look>_<expr>.webp）の一覧表 design/portraits/sheet.html
 //
-// BRIEF A38（2026-09-26）で「顔絵の OpenAI は不要」になった: 顔はキャラのシート（画像 AI の原画、sprite_pipe のシート9）の表情から作る
-// （hd:face:<look>、v2/assets/sprites/<look>/face.png）。そのためこの道具は画像 API を呼ばない（描く命令は案内だけを出して終了コード 0）。
-// 描いた一枚絵を使うことになったときは、画像をオーナーが chronicle/assets/portraits/<look>_<expr>.webp に置き、一覧で approved にすればビルドが入れる（§6.2）。
+// オーナーの決定（2026-10-04）: 会話の窓の顔は描いた胸から上の一枚絵にする（前の BRIEF A38「顔絵の画像 API は不要」を置き換え）。
+// 描くのは v2/tools/gen_portraits.py（1 枚ずつ。chronicle/assets/portraits/<look>_<expr>.webp）。この道具は一覧・指示文・参考画像・一覧表だけで、画像 API を呼ばない。
+// 一覧で approved（または試しの pilot: true ＋ generated）にした人をビルドが入れる（§6.2）。描いた絵の無い人は原画のシートの表情（hd:face:<look>）のまま。
 // キー・モデルの名前はこのファイルにもリポジトリにも書かない。
 'use strict';
 const fs = require('fs');
@@ -54,8 +54,10 @@ function init() {
   const list = faceList(R).map((f) => {
     const o = old[f.look] || {};
     const hasSheet = fs.existsSync(path.join(ROOT, 'v2', 'assets', 'sprites', f.look, 'face.png'));
-    return { look: f.look, name: f.name, exprs: EXPRS.slice(), priority: f.pri, status: o.status || 'todo',
-      note: hasSheet ? '原画のシートの表情（sprite_pipe）を使用中' : o.note || '仮の顔（骨組み）。原画のシート9 待ち' };   // 原画の顔が届いたら古いメモは使わない
+    const r = { look: f.look, name: f.name, exprs: EXPRS.slice(), priority: f.pri, status: o.status || 'todo',
+      note: o.pilot ? o.note : hasSheet ? '原画のシートの表情（sprite_pipe）を使用中' : o.note || '仮の顔（骨組み）。原画のシート9 待ち' };   // 原画の顔が届いたら古いメモは使わない
+    if (o.pilot) r.pilot = true;   // 試しの人（2026-10-04）
+    return r;
   });
   fs.mkdirSync(DIR, { recursive: true });
   fs.writeFileSync(MANIFEST, JSON.stringify(list, null, 1) + '\n');
@@ -97,7 +99,7 @@ function dryRun(o) {
     if (!R.DB.looks[look]) { console.log(`知らない look: ${look}`); continue; }
     for (const e of ex) { n++; console.log(`---- ${look}:${e}\n${describe(R, look, e)}\n`); }
   }
-  console.log(`（dry-run: ${n} 枚分の指示文。画像 API は呼ばない。A38）`);
+  console.log(`（dry-run: ${n} 枚分の指示文。描くのは v2/tools/gen_portraits.py）`);
 }
 
 async function exportRefs(o) {
@@ -149,7 +151,7 @@ if (require.main === module) {
     else if (o.cmd === 'export-refs') await exportRefs(o);
     else if (o.cmd === 'sheet') sheet();
     else if (o.cmd === 'generate' || (!o.cmd && o.only)) {
-      console.log('画像 API で顔絵は描かない（BRIEF A38「顔絵の OpenAI は不要」）。顔はキャラのシートの表情から: design/sprite_pipe（シート9）→ v2/assets/sprites/<look>/face.png。');
+      console.log('描くのは python3 v2/tools/gen_portraits.py gen <look> <expr>（1 枚ずつ。2026-10-04 の決定）。この道具は画像 API を呼ばない。');
     } else console.log(fs.readFileSync(__filename, 'utf8').split('\n').slice(1, 14).join('\n'));
   })().catch((e) => { console.error(String(e && e.message || e)); process.exit(1); });
 }

@@ -11,7 +11,8 @@
   ],
   "priority": 1,
   "status": "todo",
-  "note": "原画のシートの表情（sprite_pipe）を使用中"
+  "note": "試し（2026-10-04）: 描いた胸から上の一枚絵。berna は 5 表情、fine・rowell は neutral だけ（ほかの表情は描いた neutral）。描くまでは原画のシートの表情",
+  "pilot": true
  },
  {
   "look": "fine",
@@ -25,7 +26,8 @@
   ],
   "priority": 1,
   "status": "todo",
-  "note": "原画のシートの表情（sprite_pipe）を使用中"
+  "note": "試し（2026-10-04）: 描いた胸から上の一枚絵。berna は 5 表情、fine・rowell は neutral だけ（ほかの表情は描いた neutral）。描くまでは原画のシートの表情",
+  "pilot": true
  },
  {
   "look": "lazaro",
@@ -193,7 +195,8 @@
   ],
   "priority": 1,
   "status": "todo",
-  "note": "原画のシートの表情（sprite_pipe）を使用中"
+  "note": "試し（2026-10-04）: 描いた胸から上の一枚絵。berna は 5 表情、fine・rowell は neutral だけ（ほかの表情は描いた neutral）。描くまでは原画のシートの表情",
+  "pilot": true
  },
  {
   "look": "bartolo",
