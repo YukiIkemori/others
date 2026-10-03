@@ -1,21 +1,261 @@
 {
- "date": "2026-09-30T11:35:53.072Z",
+ "date": "2026-10-03T15:00:54.481Z",
  "fixture": "content_p_pharos",
  "walked": [
   {
-   "map": "archive_1",
-   "kind": "stairs",
-   "id": "",
-   "at": "archive_2",
-   "to": "archive_2",
+   "map": "a_battle",
+   "kind": "exit",
+   "id": "25,0",
+   "at": "a_pass",
+   "to": "a_pass",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    4
+   ],
+   "ms": 3696
+  },
+  {
+   "map": "a_beach",
+   "kind": "exit",
+   "id": "48,0",
+   "at": "a_foot",
+   "to": "a_foot",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    48,
+    4
+   ],
+   "ms": 3726
+  },
+  {
+   "map": "a_beach",
+   "kind": "exit",
+   "id": "7,0",
+   "at": "a_lava",
+   "to": "a_lava",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    4
+   ],
+   "ms": 4758
+  },
+  {
+   "map": "a_bridge",
+   "kind": "exit",
+   "id": "22,0",
+   "at": "m_bog",
+   "to": "m_bog",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
     22,
-    6
+    4
    ],
-   "ms": 7987
+   "ms": 3628
+  },
+  {
+   "map": "a_bridge",
+   "kind": "exit",
+   "id": "21,39",
+   "at": "a_foot",
+   "to": "a_foot",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    21,
+    35
+   ],
+   "ms": 3802
+  },
+  {
+   "map": "a_bridge",
+   "kind": "exit",
+   "id": "15,22",
+   "at": "haimi_inn",
+   "to": "haimi_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    15,
+    26
+   ],
+   "ms": 3595
+  },
+  {
+   "map": "a_foot",
+   "kind": "exit",
+   "id": "20,0",
+   "at": "a_bridge",
+   "to": "a_bridge",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    20,
+    4
+   ],
+   "ms": 1688
+  },
+  {
+   "map": "a_foot",
+   "kind": "exit",
+   "id": "14,43",
+   "at": "a_beach",
+   "to": "a_beach",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    14,
+    39
+   ],
+   "ms": 1554
+  },
+  {
+   "map": "a_foot",
+   "kind": "exit",
+   "id": "0,21",
+   "at": "caldera",
+   "to": "caldera",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    2,
+    19
+   ],
+   "ms": 3949
+  },
+  {
+   "map": "a_lava",
+   "kind": "exit",
+   "id": "0,20",
+   "at": "a_pass",
+   "to": "a_pass",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    0,
+    16
+   ],
+   "ms": 1823
+  },
+  {
+   "map": "a_lava",
+   "kind": "exit",
+   "id": "59,20",
+   "at": "caldera",
+   "to": "caldera",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    56,
+    19
+   ],
+   "ms": 3113
+  },
+  {
+   "map": "a_lava",
+   "kind": "exit",
+   "id": "15,0",
+   "at": "a_spa",
+   "to": "a_spa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    15,
+    4
+   ],
+   "ms": 2148
+  },
+  {
+   "map": "a_lava",
+   "kind": "exit",
+   "id": "48,43",
+   "at": "a_beach",
+   "to": "a_beach",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    47,
+    40
+   ],
+   "ms": 1971
+  },
+  {
+   "map": "a_pass",
+   "kind": "exit",
+   "id": "25,39",
+   "at": "a_battle",
+   "to": "a_battle",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    35
+   ],
+   "ms": 2113
+  },
+  {
+   "map": "a_pass",
+   "kind": "exit",
+   "id": "51,18",
+   "at": "a_lava",
+   "to": "a_lava",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    51,
+    14
+   ],
+   "ms": 2255
+  },
+  {
+   "map": "a_pass",
+   "kind": "exit",
+   "id": "0,19",
+   "at": "d_east",
+   "to": "d_east",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    1,
+    16
+   ],
+   "ms": 2511
+  },
+  {
+   "map": "a_spa",
+   "kind": "exit",
+   "id": "23,39",
+   "at": "a_lava",
+   "to": "a_lava",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    23,
+    35
+   ],
+   "ms": 2376
   },
   {
    "map": "archive_1",
@@ -30,22 +270,22 @@
     21,
     6
    ],
-   "ms": 8250
+   "ms": 7414
   },
   {
-   "map": "archive_2",
+   "map": "archive_1",
    "kind": "stairs",
-   "id": "archive_2_down",
-   "at": "archive_1",
-   "to": "archive_1",
+   "id": "",
+   "at": "archive_2",
+   "to": "archive_2",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    5,
-    22
+    22,
+    6
    ],
-   "ms": 2275
+   "ms": 7411
   },
   {
    "map": "archive_1",
@@ -60,7 +300,22 @@
     21,
     30
    ],
-   "ms": 2868
+   "ms": 7210
+  },
+  {
+   "map": "archive_2",
+   "kind": "stairs",
+   "id": "archive_2_down",
+   "at": "archive_1",
+   "to": "archive_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    22
+   ],
+   "ms": 2128
   },
   {
    "map": "archive_2",
@@ -75,691 +330,5560 @@
     6,
     22
    ],
-   "ms": 2098
-  },
-  {
-   "map": "archive_2",
-   "kind": "stairs",
-   "id": "archive_2_up",
-   "at": [
-    37,
-    2
-   ],
-   "to": "archive_3",
-   "ok": false,
-   "steps": 4,
-   "why": "timeout 90 s",
-   "start": [
-    37,
-    6
-   ],
-   "ms": 92226
-  },
-  {
-   "map": "archive_2",
-   "kind": "stairs",
-   "id": "",
-   "at": [
-    38,
-    2
-   ],
-   "to": "archive_3",
-   "ok": false,
-   "steps": 4,
-   "why": "timeout 90 s",
-   "start": [
-    38,
-    6
-   ],
-   "ms": 91062
-  },
-  {
-   "map": "archive_3",
-   "kind": "stairs",
-   "id": "archive_3_down",
-   "at": [
-    9,
-    31
-   ],
-   "to": "archive_2",
-   "ok": false,
-   "steps": 2,
-   "why": "timeout 90 s",
-   "start": [
-    9,
-    27
-   ],
-   "ms": 259719
-  },
-  {
-   "map": "archive_3",
-   "kind": "stairs",
-   "id": "archive_3_up",
-   "at": [
-    21,
-    2
-   ],
-   "to": "archive_4",
-   "ok": false,
-   "steps": 2,
-   "why": "timeout 90 s",
-   "start": [
-    22,
-    4
-   ],
-   "ms": 261024
-  },
-  {
-   "map": "archive_3",
-   "kind": "stairs",
-   "id": "",
-   "at": [
-    22,
-    2
-   ],
-   "to": "archive_4",
-   "ok": false,
-   "steps": 2,
-   "why": "timeout 90 s",
-   "start": [
-    21,
-    4
-   ],
-   "ms": 266552
+   "ms": 2159
   },
   {
    "map": "archive_4",
    "kind": "stairs",
    "id": "archive_4_down",
-   "at": [
-    38,
-    31
-   ],
+   "at": "archive_3",
    "to": "archive_3",
-   "ok": false,
-   "steps": 2,
-   "why": "timeout 90 s",
+   "ok": true,
+   "steps": 4,
+   "why": null,
    "start": [
     38,
     27
    ],
-   "ms": 269464
+   "ms": 2548
+  },
+  {
+   "map": "archive_3",
+   "kind": "stairs",
+   "id": "archive_3_down",
+   "at": "archive_2",
+   "to": "archive_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    9,
+    27
+   ],
+   "ms": 2787
   },
   {
    "map": "archive_4",
    "kind": "stairs",
    "id": "",
-   "at": [
-    39,
-    31
-   ],
+   "at": "archive_3",
    "to": "archive_3",
-   "ok": false,
-   "steps": 2,
-   "why": "timeout 90 s",
+   "ok": true,
+   "steps": 4,
+   "why": null,
    "start": [
     39,
     27
    ],
-   "ms": 260104
-  },
-  {
-   "map": "archive_4",
-   "kind": "stairs",
-   "id": "archive_4_up",
-   "at": [
-    21,
-    2
-   ],
-   "to": "archive_5",
-   "ok": false,
-   "steps": 2,
-   "why": "timeout 90 s",
-   "start": [
-    21,
-    6
-   ],
-   "ms": 260067
-  },
-  {
-   "map": "archive_4",
-   "kind": "stairs",
-   "id": "",
-   "at": [
-    22,
-    2
-   ],
-   "to": "archive_5",
-   "ok": false,
-   "steps": 2,
-   "why": "timeout 90 s",
-   "start": [
-    22,
-    6
-   ],
-   "ms": 259068
+   "ms": 3640
   },
   {
    "map": "archive_5",
    "kind": "stairs",
    "id": "archive_5_down",
-   "at": [
-    19,
-    31
-   ],
+   "at": "archive_4",
    "to": "archive_4",
-   "ok": false,
-   "steps": 2,
-   "why": "timeout 90 s",
+   "ok": true,
+   "steps": 4,
+   "why": null,
    "start": [
-    19,
-    27
+    18,
+    28
    ],
-   "ms": 264997
+   "ms": 2387
   },
   {
    "map": "archive_5",
    "kind": "stairs",
    "id": "",
-   "at": [
-    20,
-    31
-   ],
+   "at": "archive_4",
    "to": "archive_4",
-   "ok": false,
-   "steps": 1,
-   "why": "timeout 90 s",
+   "ok": true,
+   "steps": 4,
+   "why": null,
    "start": [
-    20,
-    27
+    19,
+    28
    ],
-   "ms": 223662
+   "ms": 2863
   },
   {
    "map": "archive_6",
    "kind": "stairs",
    "id": "archive_6_down",
-   "at": [
-    17,
-    29
-   ],
+   "at": "archive_5",
    "to": "archive_5",
-   "ok": false,
-   "steps": 1,
-   "why": "timeout 90 s",
+   "ok": true,
+   "steps": 4,
+   "why": null,
    "start": [
     17,
     25
    ],
-   "ms": 224842
+   "ms": 2634
   },
   {
    "map": "archive_6",
    "kind": "stairs",
    "id": "",
-   "at": [
-    18,
-    29
-   ],
+   "at": "archive_5",
    "to": "archive_5",
-   "ok": false,
-   "steps": 1,
-   "why": "timeout 90 s",
+   "ok": true,
+   "steps": 4,
+   "why": null,
    "start": [
     18,
     25
    ],
-   "ms": 273826
+   "ms": 2446
   },
   {
    "map": "biblia",
    "kind": "door",
    "id": "biblia_archive",
-   "at": [
-    28,
-    9
-   ],
+   "at": "archive_1",
    "to": "archive_1",
-   "ok": false,
-   "steps": 1,
-   "why": "timeout 90 s",
+   "ok": true,
+   "steps": 4,
+   "why": null,
    "start": [
     28,
     13
    ],
-   "ms": 276777
+   "ms": 3001
   },
   {
-   "map": "biblia",
-   "kind": "door",
-   "id": "biblia_library",
-   "at": [
-    46,
-    9
+   "map": "ash_volcano_1",
+   "kind": "exit",
+   "id": "26,47",
+   "at": "a_foot",
+   "to": "a_foot",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    26,
+    43
    ],
-   "to": "biblia_library",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 16282
-  },
-  {
-   "map": "biblia",
-   "kind": "door",
-   "id": "biblia_inn",
-   "at": [
-    8,
-    26
-   ],
-   "to": "biblia_inn",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 35
+   "ms": 7015
   },
   {
    "map": "biblia",
    "kind": "door",
    "id": "biblia_records",
-   "at": [
-    9,
-    9
-   ],
+   "at": "biblia_records",
    "to": "biblia_records",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 31086
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    9,
+    13
+   ],
+   "ms": 2264
+  },
+  {
+   "map": "ash_volcano_2",
+   "kind": "stairs",
+   "id": "volcano_2_down",
+   "at": "ash_volcano_1",
+   "to": "ash_volcano_1",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    21,
+    30
+   ],
+   "ms": 6859
+  },
+  {
+   "map": "biblia",
+   "kind": "door",
+   "id": "biblia_inn",
+   "at": "biblia_inn",
+   "to": "biblia_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    8,
+    30
+   ],
+   "ms": 2509
+  },
+  {
+   "map": "biblia",
+   "kind": "door",
+   "id": "biblia_library",
+   "at": "biblia_library",
+   "to": "biblia_library",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    46,
+    13
+   ],
+   "ms": 2753
   },
   {
    "map": "biblia",
    "kind": "door",
    "id": "biblia_tavern",
-   "at": [
-    47,
-    26
-   ],
+   "at": "biblia_tavern",
    "to": "biblia_tavern",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 2
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    47,
+    30
+   ],
+   "ms": 2287
   },
   {
    "map": "biblia",
    "kind": "door",
    "id": "biblia_shop",
-   "at": [
-    8,
-    35
-   ],
+   "at": "biblia_shop",
    "to": "biblia_shop",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
-  },
-  {
-   "map": "biblia",
-   "kind": "door",
-   "id": "biblia_house3",
-   "at": [
-    18,
-    35
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    36
    ],
-   "to": "biblia_house3",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ms": 2030
   },
   {
    "map": "biblia",
    "kind": "door",
    "id": "biblia_house5",
-   "at": [
-    47,
-    35
-   ],
+   "at": "biblia_house5",
    "to": "biblia_house5",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    44,
+    36
+   ],
+   "ms": 2033
+  },
+  {
+   "map": "biblia",
+   "kind": "door",
+   "id": "biblia_house3",
+   "at": "biblia_house3",
+   "to": "biblia_house3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    15,
+    36
+   ],
+   "ms": 2391
+  },
+  {
+   "map": "biblia_dawn",
+   "kind": "door",
+   "id": "biblia_records",
+   "at": "biblia_dawn",
+   "to": "biblia_dawn",
+   "ok": true,
+   "steps": 4,
+   "start": [
+    9,
+    13
+   ],
+   "ms": 2181
   },
   {
    "map": "biblia_dawn",
    "kind": "door",
    "id": "biblia_archive",
-   "at": [
+   "at": "biblia_dawn",
+   "to": "biblia_dawn",
+   "ok": true,
+   "steps": 4,
+   "start": [
     28,
-    9
+    13
    ],
-   "to": "biblia_dawn",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
-  },
-  {
-   "map": "biblia_dawn",
-   "kind": "door",
-   "id": "biblia_records",
-   "at": [
-    9,
-    9
-   ],
-   "to": "biblia_dawn",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ms": 2554
   },
   {
    "map": "biblia_dawn",
    "kind": "door",
    "id": "biblia_library",
-   "at": [
+   "at": "biblia_dawn",
+   "to": "biblia_dawn",
+   "ok": true,
+   "steps": 4,
+   "start": [
     46,
-    9
+    13
    ],
-   "to": "biblia_dawn",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 2
-  },
-  {
-   "map": "biblia_dawn",
-   "kind": "door",
-   "id": "biblia_inn",
-   "at": [
-    8,
-    26
-   ],
-   "to": "biblia_dawn",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ms": 2344
   },
   {
    "map": "biblia_dawn",
    "kind": "door",
    "id": "biblia_tavern",
-   "at": [
-    47,
-    26
-   ],
+   "at": "biblia_dawn",
    "to": "biblia_dawn",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ok": true,
+   "steps": 4,
+   "start": [
+    47,
+    30
+   ],
+   "ms": 1986
+  },
+  {
+   "map": "biblia_dawn",
+   "kind": "door",
+   "id": "biblia_inn",
+   "at": "biblia_dawn",
+   "to": "biblia_dawn",
+   "ok": true,
+   "steps": 4,
+   "start": [
+    8,
+    30
+   ],
+   "ms": 2141
   },
   {
    "map": "biblia_dawn",
    "kind": "door",
    "id": "biblia_shop",
-   "at": [
-    8,
-    35
-   ],
+   "at": "biblia_dawn",
    "to": "biblia_dawn",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ok": true,
+   "steps": 4,
+   "start": [
+    5,
+    36
+   ],
+   "ms": 2481
   },
   {
    "map": "biblia_dawn",
    "kind": "door",
    "id": "biblia_house3",
-   "at": [
-    18,
-    35
-   ],
+   "at": "biblia_dawn",
    "to": "biblia_dawn",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ok": true,
+   "steps": 4,
+   "start": [
+    15,
+    36
+   ],
+   "ms": 1721
   },
   {
    "map": "biblia_dawn",
    "kind": "door",
    "id": "biblia_house5",
-   "at": [
-    47,
-    35
-   ],
+   "at": "biblia_dawn",
    "to": "biblia_dawn",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ok": true,
+   "steps": 4,
+   "start": [
+    44,
+    36
+   ],
+   "ms": 1852
   },
   {
    "map": "biblia_house3",
    "kind": "exit",
    "id": "5,9",
-   "at": [
-    5,
-    9
-   ],
+   "at": "biblia",
    "to": "biblia",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 2
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2205
   },
   {
    "map": "biblia_house5",
    "kind": "exit",
    "id": "5,9",
-   "at": [
-    5,
-    9
-   ],
+   "at": "biblia",
    "to": "biblia",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2415
   },
   {
    "map": "biblia_inn",
    "kind": "exit",
    "id": "7,11",
-   "at": [
-    7,
-    11
-   ],
+   "at": "biblia",
    "to": "biblia",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 2684
   },
   {
    "map": "biblia_library",
    "kind": "exit",
    "id": "8,11",
-   "at": [
-    8,
-    11
-   ],
+   "at": "biblia",
    "to": "biblia",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 2
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    8,
+    7
+   ],
+   "ms": 2588
   },
   {
    "map": "biblia_records",
    "kind": "exit",
    "id": "9,11",
-   "at": [
-    9,
-    11
-   ],
+   "at": "biblia",
    "to": "biblia",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    9,
+    7
+   ],
+   "ms": 2615
   },
   {
    "map": "biblia_records",
    "kind": "exit",
    "id": "10,1",
-   "at": [
-    10,
-    1
-   ],
+   "at": "biblia_study",
    "to": "biblia_study",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    10,
+    5
+   ],
+   "ms": 2255
   },
   {
    "map": "biblia_shop",
    "kind": "exit",
    "id": "6,9",
-   "at": [
-    6,
-    9
-   ],
+   "at": "biblia",
    "to": "biblia",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 2
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
+    5
+   ],
+   "ms": 2424
   },
   {
    "map": "biblia_study",
    "kind": "exit",
    "id": "6,9",
-   "at": [
-    6,
-    9
-   ],
+   "at": "biblia_records",
    "to": "biblia_records",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
+    5
+   ],
+   "ms": 2073
   },
   {
    "map": "biblia_tavern",
    "kind": "exit",
    "id": "7,11",
-   "at": [
+   "at": "biblia",
+   "to": "biblia",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 2595
+  },
+  {
+   "map": "caldera_dorga",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "caldera",
+   "to": "caldera",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2950
+  },
+  {
+   "map": "caldera_granary",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "caldera",
+   "to": "caldera",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 3062
+  },
+  {
+   "map": "caldera_arms",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "caldera",
+   "to": "caldera",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 5114
+  },
+  {
+   "map": "caldera_house",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "caldera",
+   "to": "caldera",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 3475
+  },
+  {
+   "map": "caldera_inn",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "caldera",
+   "to": "caldera",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 3119
+  },
+  {
+   "map": "caldera_items",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "caldera",
+   "to": "caldera",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2721
+  },
+  {
+   "map": "caldera_smithy",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "caldera",
+   "to": "caldera",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2670
+  },
+  {
+   "map": "caldera_tavern",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "caldera",
+   "to": "caldera",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 2376
+  },
+  {
+   "map": "caldera_temple",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "caldera",
+   "to": "caldera",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 2597
+  },
+  {
+   "map": "caldera_toto",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "caldera",
+   "to": "caldera",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    6
+   ],
+   "ms": 2046
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_harbormaster",
+   "at": "coral_harbormaster",
+   "to": "coral_harbormaster",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
     7,
     11
    ],
-   "to": "biblia",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ms": 5570
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_house1",
+   "at": "coral_house1",
+   "to": "coral_house1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    28,
+    11
+   ],
+   "ms": 5634
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_tavern",
+   "at": "coral_tavern",
+   "to": "coral_tavern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    14,
+    26
+   ],
+   "ms": 1486
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_inn",
+   "at": "coral_inn",
+   "to": "coral_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
+    26
+   ],
+   "ms": 5655
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_house2",
+   "at": "coral_house2",
+   "to": "coral_house2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    28,
+    26
+   ],
+   "ms": 1647
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_house3",
+   "at": "coral_house3",
+   "to": "coral_house3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    37,
+    26
+   ],
+   "ms": 1296
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_items",
+   "at": "coral_items",
+   "to": "coral_items",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    39
+   ],
+   "ms": 1503
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_arms",
+   "at": "coral_arms",
+   "to": "coral_arms",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    13,
+    39
+   ],
+   "ms": 1667
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_guild",
+   "at": "coral_guild",
+   "to": "coral_guild",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    30,
+    39
+   ],
+   "ms": 1270
+  },
+  {
+   "map": "coral",
+   "kind": "exit",
+   "id": "21,0",
+   "at": "i_cliff",
+   "to": "i_cliff",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    21,
+    4
+   ],
+   "ms": 1591
+  },
+  {
+   "map": "coral_arms",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 1861
+  },
+  {
+   "map": "coral_guild",
+   "kind": "exit",
+   "id": "8,11",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    8,
+    7
+   ],
+   "ms": 1833
+  },
+  {
+   "map": "coral_harbormaster",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 1994
+  },
+  {
+   "map": "coral_house1",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 1801
+  },
+  {
+   "map": "coral_house2",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    6
+   ],
+   "ms": 1777
+  },
+  {
+   "map": "coral_house3",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 1959
+  },
+  {
+   "map": "coral_inn",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 1818
+  },
+  {
+   "map": "coral_items",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 1856
+  },
+  {
+   "map": "coral_tavern",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 1940
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    36,
+    56
+   ],
+   "ms": 10160
+  },
+  {
+   "map": "dovan",
+   "kind": "door",
+   "id": "dovan_hall",
+   "at": "dovan_hall",
+   "to": "dovan_hall",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    11,
+    14
+   ],
+   "ms": 5653
+  },
+  {
+   "map": "dovan",
+   "kind": "door",
+   "id": "dovan_guild",
+   "at": "dovan_guild",
+   "to": "dovan_guild",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    30,
+    27
+   ],
+   "ms": 5541
+  },
+  {
+   "map": "dovan",
+   "kind": "door",
+   "id": "dovan_tavern",
+   "at": "dovan_tavern",
+   "to": "dovan_tavern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    10,
+    28
+   ],
+   "ms": 5777
+  },
+  {
+   "map": "dovan",
+   "kind": "door",
+   "id": "dovan_house",
+   "at": "dovan_house",
+   "to": "dovan_house",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    20,
+    27
+   ],
+   "ms": 1576
+  },
+  {
+   "map": "dovan",
+   "kind": "door",
+   "id": "dovan_items",
+   "at": "dovan_items",
+   "to": "dovan_items",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    9,
+    44
+   ],
+   "ms": 1563
+  },
+  {
+   "map": "dovan",
+   "kind": "door",
+   "id": "dovan_inn",
+   "at": "dovan_inn",
+   "to": "dovan_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    19,
+    45
+   ],
+   "ms": 1555
+  },
+  {
+   "map": "dovan",
+   "kind": "door",
+   "id": "dovan_forge",
+   "at": "dovan_forge",
+   "to": "dovan_forge",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    34,
+    45
+   ],
+   "ms": 1668
+  },
+  {
+   "map": "dovan",
+   "kind": "door",
+   "id": "dovan_house2",
+   "at": "dovan_house2",
+   "to": "dovan_house2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    45,
+    44
+   ],
+   "ms": 1480
+  },
+  {
+   "map": "dovan",
+   "kind": "exit",
+   "id": "26,47",
+   "at": "g_valley",
+   "to": "g_valley",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    26,
+    43
+   ],
+   "ms": 1665
+  },
+  {
+   "map": "dovan_forge",
+   "kind": "exit",
+   "id": "8,11",
+   "at": "dovan",
+   "to": "dovan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    8,
+    7
+   ],
+   "ms": 1979
+  },
+  {
+   "map": "dovan_guild",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "dovan",
+   "to": "dovan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 2025
+  },
+  {
+   "map": "dovan_hall",
+   "kind": "exit",
+   "id": "8,11",
+   "at": "dovan",
+   "to": "dovan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    8,
+    7
+   ],
+   "ms": 2370
+  },
+  {
+   "map": "dovan_house",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "dovan",
+   "to": "dovan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    6
+   ],
+   "ms": 2189
+  },
+  {
+   "map": "dovan_house2",
+   "kind": "exit",
+   "id": "4,8",
+   "at": "dovan",
+   "to": "dovan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    4
+   ],
+   "ms": 2314
+  },
+  {
+   "map": "dovan_inn",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "dovan",
+   "to": "dovan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 2239
+  },
+  {
+   "map": "dovan_items",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "dovan",
+   "to": "dovan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2564
+  },
+  {
+   "map": "dovan_tavern",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "dovan",
+   "to": "dovan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 2159
+  },
+  {
+   "map": "dovan",
+   "kind": "door",
+   "id": "",
+   "at": "mine_1",
+   "to": "mine_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    31,
+    7
+   ],
+   "ms": 12287
+  },
+  {
+   "map": "elder_1",
+   "kind": "stairs",
+   "id": "elder_1_down",
+   "at": "elder_2",
+   "to": "elder_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    26
+   ],
+   "ms": 4594
+  },
+  {
+   "map": "elder_1",
+   "kind": "exit",
+   "id": "24,47",
+   "at": "verda_2",
+   "to": "verda_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    43
+   ],
+   "ms": 5868
+  },
+  {
+   "map": "elder_2",
+   "kind": "stairs",
+   "id": "elder_2_up",
+   "at": "elder_1",
+   "to": "elder_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    24,
+    7
+   ],
+   "ms": 5418
+  },
+  {
+   "map": "f_cape",
+   "kind": "exit",
+   "id": "0,8",
+   "at": "f_roa",
+   "to": "f_roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    1,
+    5
+   ],
+   "ms": 4966
+  },
+  {
+   "map": "f_cape",
+   "kind": "exit",
+   "id": "48,6",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    48,
+    10
+   ],
+   "ms": 4518
+  },
+  {
+   "map": "f_cross",
+   "kind": "exit",
+   "id": "28,39",
+   "at": "f_lookout",
+   "to": "f_lookout",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    28,
+    35
+   ],
+   "ms": 4481
+  },
+  {
+   "map": "f_cross",
+   "kind": "exit",
+   "id": "0,22",
+   "at": "f_hut",
+   "to": "f_hut",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    1,
+    19
+   ],
+   "ms": 4719
+  },
+  {
+   "map": "f_fern",
+   "kind": "exit",
+   "id": "55,12",
+   "at": "f_hut",
+   "to": "f_hut",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    51,
+    12
+   ],
+   "ms": 4590
+  },
+  {
+   "map": "f_cape",
+   "kind": "door",
+   "id": "",
+   "at": "lighthouse_1",
+   "to": "lighthouse_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    30,
+    39
+   ],
+   "ms": 17639
+  },
+  {
+   "map": "f_fern",
+   "kind": "exit",
+   "id": "28,0",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    29,
+    4
+   ],
+   "ms": 6073
+  },
+  {
+   "map": "f_fern",
+   "kind": "exit",
+   "id": "0,16",
+   "at": "f_windhill",
+   "to": "f_windhill",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    16
+   ],
+   "ms": 2368
+  },
+  {
+   "map": "f_hut",
+   "kind": "exit",
+   "id": "51,23",
+   "at": "f_cross",
+   "to": "f_cross",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    51,
+    19
+   ],
+   "ms": 2232
+  },
+  {
+   "map": "f_hut",
+   "kind": "door",
+   "id": "",
+   "at": "hut",
+   "to": "hut",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    23,
+    23
+   ],
+   "ms": 3044
+  },
+  {
+   "map": "f_fern",
+   "kind": "exit",
+   "id": "30,43",
+   "at": "f_south",
+   "to": "f_south",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    30,
+    39
+   ],
+   "ms": 4415
+  },
+  {
+   "map": "f_hut",
+   "kind": "exit",
+   "id": "0,24",
+   "at": "f_fern",
+   "to": "f_fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    24
+   ],
+   "ms": 2263
+  },
+  {
+   "map": "f_lookout",
+   "kind": "exit",
+   "id": "24,39",
+   "at": "f_roa",
+   "to": "f_roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    24,
+    35
+   ],
+   "ms": 3089
+  },
+  {
+   "map": "f_roa",
+   "kind": "exit",
+   "id": "0,19",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    18
+   ],
+   "ms": 3854
+  },
+  {
+   "map": "f_roa",
+   "kind": "exit",
+   "id": "31,0",
+   "at": "f_lookout",
+   "to": "f_lookout",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    31,
+    4
+   ],
+   "ms": 2629
+  },
+  {
+   "map": "f_roa",
+   "kind": "exit",
+   "id": "51,29",
+   "at": "f_cape",
+   "to": "f_cape",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    51,
+    25
+   ],
+   "ms": 3147
+  },
+  {
+   "map": "f_south",
+   "kind": "exit",
+   "id": "30,0",
+   "at": "f_fern",
+   "to": "f_fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    30,
+    4
+   ],
+   "ms": 3702
+  },
+  {
+   "map": "f_windhill",
+   "kind": "exit",
+   "id": "51,30",
+   "at": "f_fern",
+   "to": "f_fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    49,
+    28
+   ],
+   "ms": 4245
+  },
+  {
+   "map": "f_roa",
+   "kind": "stairs",
+   "id": "",
+   "at": "well",
+   "to": "well",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    23,
+    20
+   ],
+   "ms": 14056
+  },
+  {
+   "map": "f_windhill",
+   "kind": "exit",
+   "id": "12,0",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    12,
+    4
+   ],
+   "ms": 6219
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_u_search",
+   "at": "fern_search",
+   "to": "fern_search",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    36
+   ],
+   "ms": 3553
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_u_inn",
+   "at": "fern_inn",
+   "to": "fern_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    15,
+    39
+   ],
+   "ms": 6619
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_u_gord",
+   "at": "fern_gord",
+   "to": "fern_gord",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    52,
+    19
+   ],
+   "ms": 1868
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_u_rita",
+   "at": "fern_rita",
+   "to": "fern_rita",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    50,
+    11
+   ],
+   "ms": 2460
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_u_shop",
+   "at": "fern_shop",
+   "to": "fern_shop",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    22,
+    37
+   ],
+   "ms": 7551
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_u_pim",
+   "at": "fern_pim_home",
+   "to": "fern_pim_home",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    16,
+    47
+   ],
+   "ms": 2310
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_u_house1",
+   "at": "fern_home1",
+   "to": "fern_home1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    40,
+    44
+   ],
+   "ms": 2398
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_u_house2",
+   "at": "fern_home2",
+   "to": "fern_home2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    22
+   ],
+   "ms": 2737
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_u_house3",
+   "at": "fern_home3",
+   "to": "fern_home3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    45,
+    31
+   ],
+   "ms": 2489
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_u_shed",
+   "at": "fern_shed",
+   "to": "fern_shed",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    22,
+    44
+   ],
+   "ms": 2241
+  },
+  {
+   "map": "fern",
+   "kind": "exit",
+   "id": "28,55",
+   "at": "f_fern",
+   "to": "f_fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    28,
+    51
+   ],
+   "ms": 2523
+  },
+  {
+   "map": "fern_gord",
+   "kind": "exit",
+   "id": "4,7",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    3
+   ],
+   "ms": 2224
+  },
+  {
+   "map": "fern",
+   "kind": "exit",
+   "id": "28,0",
+   "at": "verda_1",
+   "to": "verda_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    28,
+    4
+   ],
+   "ms": 3261
+  },
+  {
+   "map": "fern_home1",
+   "kind": "exit",
+   "id": "4,6",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    3
+   ],
+   "ms": 2889
+  },
+  {
+   "map": "fern_home2",
+   "kind": "exit",
+   "id": "3,7",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    3
+   ],
+   "ms": 2876
+  },
+  {
+   "map": "fern_home3",
+   "kind": "exit",
+   "id": "4,6",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    2
+   ],
+   "ms": 2812
+  },
+  {
+   "map": "fern_inn",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2604
+  },
+  {
+   "map": "fern_rita",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2447
+  },
+  {
+   "map": "fern_pim_home",
+   "kind": "exit",
+   "id": "4,7",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    4
+   ],
+   "ms": 2628
+  },
+  {
+   "map": "fern_search",
+   "kind": "exit",
+   "id": "5,8",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 5,
+   "why": null,
+   "start": [
+    4,
+    5
+   ],
+   "ms": 3154
+  },
+  {
+   "map": "fern_shop",
+   "kind": "exit",
+   "id": "4,8",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    4
+   ],
+   "ms": 2487
+  },
+  {
+   "map": "fern_shed",
+   "kind": "exit",
+   "id": "3,6",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    2,
+    3
+   ],
+   "ms": 3276
+  },
+  {
+   "map": "g_pass",
+   "kind": "exit",
+   "id": "0,18",
+   "at": "f_passinn",
+   "to": "f_passinn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    0,
+    14
+   ],
+   "ms": 4022
+  },
+  {
+   "map": "g_pass",
+   "kind": "exit",
+   "id": "49,19",
+   "at": "g_valley",
+   "to": "g_valley",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    49,
+    15
+   ],
+   "ms": 3738
+  },
+  {
+   "map": "g_rail",
+   "kind": "door",
+   "id": "",
+   "at": "mine_hermit",
+   "to": "mine_hermit",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    40,
+    10
+   ],
+   "ms": 3564
+  },
+  {
+   "map": "g_valley",
+   "kind": "door",
+   "id": "",
+   "at": "dovan",
+   "to": "dovan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    27,
+    12
+   ],
+   "ms": 2813
+  },
+  {
+   "map": "g_valley",
+   "kind": "exit",
+   "id": "0,20",
+   "at": "g_pass",
+   "to": "g_pass",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    0,
+    16
+   ],
+   "ms": 2790
+  },
+  {
+   "map": "g_rail",
+   "kind": "exit",
+   "id": "0,20",
+   "at": "g_valley",
+   "to": "g_valley",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    0,
+    16
+   ],
+   "ms": 3743
+  },
+  {
+   "map": "g_valley",
+   "kind": "exit",
+   "id": "53,22",
+   "at": "g_rail",
+   "to": "g_rail",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    53,
+    18
+   ],
+   "ms": 1980
+  },
+  {
+   "map": "g_valley",
+   "kind": "exit",
+   "id": "0,29",
+   "at": "volk",
+   "to": "volk",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    0,
+    25
+   ],
+   "ms": 3504
+  },
+  {
+   "map": "ghost_ship_1",
+   "kind": "stairs",
+   "id": "ghost_ship_1_down",
+   "at": "ghost_ship_2",
+   "to": "ghost_ship_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    24,
+    15
+   ],
+   "ms": 6038
+  },
+  {
+   "map": "ghost_ship_2",
+   "kind": "stairs",
+   "id": "ghost_ship_2_up",
+   "at": "ghost_ship_1",
+   "to": "ghost_ship_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    15
+   ],
+   "ms": 4165
+  },
+  {
+   "map": "ghost_ship_2",
+   "kind": "stairs",
+   "id": "ghost_ship_2_down",
+   "at": "ghost_ship_3",
+   "to": "ghost_ship_3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    41,
+    17
+   ],
+   "ms": 2613
+  },
+  {
+   "map": "haimi_inn",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "a_bridge",
+   "to": "a_bridge",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
+    8
+   ],
+   "ms": 1737
+  },
+  {
+   "map": "ghost_ship_3",
+   "kind": "stairs",
+   "id": "ghost_ship_3_up",
+   "at": "ghost_ship_2",
+   "to": "ghost_ship_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    47,
+    18
+   ],
+   "ms": 5105
+  },
+  {
+   "map": "hut",
+   "kind": "exit",
+   "id": "5,8",
+   "at": "f_hut",
+   "to": "f_hut",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    4
+   ],
+   "ms": 4348
+  },
+  {
+   "map": "i_cape",
+   "kind": "exit",
+   "id": "0,25",
+   "at": "i_cove",
+   "to": "i_cove",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    1,
+    22
+   ],
+   "ms": 3020
+  },
+  {
+   "map": "ghost_ship_1",
+   "kind": "door",
+   "id": "",
+   "at": "nerei",
+   "to": "nerei",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    28,
+    21
+   ],
+   "ms": 16656
+  },
+  {
+   "map": "i_cliff",
+   "kind": "exit",
+   "id": "12,37",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    13,
+    33
+   ],
+   "ms": 2486
+  },
+  {
+   "map": "i_cape",
+   "kind": "exit",
+   "id": "21,0",
+   "at": "nerei",
+   "to": "nerei",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    21,
+    4
+   ],
+   "ms": 4163
+  },
+  {
+   "map": "i_cliff",
+   "kind": "exit",
+   "id": "51,19",
+   "at": "i_cove",
+   "to": "i_cove",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    51,
+    15
+   ],
+   "ms": 2564
+  },
+  {
+   "map": "i_cove",
+   "kind": "exit",
+   "id": "0,10",
+   "at": "i_cliff",
+   "to": "i_cliff",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    0,
+    6
+   ],
+   "ms": 1781
+  },
+  {
+   "map": "i_cove",
+   "kind": "exit",
+   "id": "55,11",
+   "at": "i_cape",
+   "to": "i_cape",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    55,
+    7
+   ],
+   "ms": 1732
+  },
+  {
+   "map": "i_light",
+   "kind": "exit",
+   "id": "20,9",
+   "at": "isles_lamproom",
+   "to": "isles_lamproom",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    20,
+    13
+   ],
+   "ms": 4358
+  },
+  {
+   "map": "isles_cave_1",
+   "kind": "stairs",
+   "id": "isles_cave_1_up",
+   "at": "isles_cave_2",
+   "to": "isles_cave_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    23,
+    5
+   ],
+   "ms": 5929
+  },
+  {
+   "map": "isles_cave_2",
+   "kind": "stairs",
+   "id": "isles_cave_2_down",
+   "at": "isles_cave_1",
+   "to": "isles_cave_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    22,
+    30
+   ],
+   "ms": 1679
+  },
+  {
+   "map": "isles_cave_1",
+   "kind": "exit",
+   "id": "22,39",
+   "at": "i_cove",
+   "to": "i_cove",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    22,
+    35
+   ],
+   "ms": 5095
+  },
+  {
+   "map": "i_cove",
+   "kind": "stairs",
+   "id": "",
+   "at": "isles_cave_1",
+   "to": "isles_cave_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    47,
+    29
+   ],
+   "ms": 12637
+  },
+  {
+   "map": "lighthouse_1",
+   "kind": "stairs",
+   "id": "",
+   "at": "lighthouse_2",
+   "to": "lighthouse_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    28,
+    8
+   ],
+   "ms": 2503
+  },
+  {
+   "map": "isles_lamproom",
+   "kind": "exit",
+   "id": "4,9",
+   "at": "i_light",
+   "to": "i_light",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    5
+   ],
+   "ms": 2920
+  },
+  {
+   "map": "lighthouse_1",
+   "kind": "door",
+   "id": "lh1_door_out_w",
+   "at": "lighthouse_1",
+   "to": "lighthouse_1",
+   "ok": true,
+   "steps": 4,
+   "start": [
+    17,
+    17
+   ],
+   "ms": 2670
+  },
+  {
+   "map": "lighthouse_1",
+   "kind": "door",
+   "id": "lh1_door_out_e",
+   "at": "lighthouse_1",
+   "to": "lighthouse_1",
+   "ok": true,
+   "steps": 4,
+   "start": [
+    18,
+    17
+   ],
+   "ms": 2214
+  },
+  {
+   "map": "lighthouse_1",
+   "kind": "exit",
+   "id": "15,31",
+   "at": "f_cape",
+   "to": "f_cape",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    15,
+    27
+   ],
+   "ms": 2899
+  },
+  {
+   "map": "lighthouse_2",
+   "kind": "stairs",
+   "id": "",
+   "at": "lighthouse_1",
+   "to": "lighthouse_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    26,
+    27
+   ],
+   "ms": 2374
+  },
+  {
+   "map": "lighthouse_2",
+   "kind": "stairs",
+   "id": "",
+   "at": "lighthouse_3",
+   "to": "lighthouse_3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    16,
+    20
+   ],
+   "ms": 2344
+  },
+  {
+   "map": "lighthouse_3",
+   "kind": "stairs",
+   "id": "",
+   "at": "lighthouse_2",
+   "to": "lighthouse_2",
+   "ok": true,
+   "steps": 5,
+   "why": null,
+   "start": [
+    12,
+    15
+   ],
+   "ms": 6260
+  },
+  {
+   "map": "loch",
+   "kind": "door",
+   "id": "loch_bell_items",
+   "at": "loch_items",
+   "to": "loch_items",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    20,
+    15
+   ],
+   "ms": 6921
+  },
+  {
+   "map": "loch",
+   "kind": "door",
+   "id": "loch_bell_tavern",
+   "at": "loch_tavern",
+   "to": "loch_tavern",
+   "ok": true,
+   "steps": 6,
+   "why": null,
+   "start": [
+    27,
+    15
+   ],
+   "ms": 6913
+  },
+  {
+   "map": "loch",
+   "kind": "door",
+   "id": "loch_hall",
+   "at": "loch_hall",
+   "to": "loch_hall",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    21
+   ],
+   "ms": 2198
+  },
+  {
+   "map": "loch",
+   "kind": "door",
+   "id": "loch_tower",
+   "at": "loch_tower",
+   "to": "loch_tower",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    43,
+    19
+   ],
+   "ms": 1711
+  },
+  {
+   "map": "loch",
+   "kind": "door",
+   "id": "loch_inn",
+   "at": "loch_inn",
+   "to": "loch_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    41
+   ],
+   "ms": 1736
+  },
+  {
+   "map": "loch",
+   "kind": "door",
+   "id": "loch_mayor",
+   "at": "loch_mayor",
+   "to": "loch_mayor",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    32,
+    39
+   ],
+   "ms": 1953
+  },
+  {
+   "map": "loch",
+   "kind": "door",
+   "id": "loch_emma",
+   "at": "loch_emma",
+   "to": "loch_emma",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    19,
+    46
+   ],
+   "ms": 1761
+  },
+  {
+   "map": "loch",
+   "kind": "door",
+   "id": "loch_bell_arms",
+   "at": "loch_arms",
+   "to": "loch_arms",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    35,
+    15
+   ],
+   "ms": 6472
+  },
+  {
+   "map": "loch",
+   "kind": "door",
+   "id": "loch_beppo",
+   "at": "loch_beppo",
+   "to": "loch_beppo",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    47,
+    38
+   ],
+   "ms": 1840
+  },
+  {
+   "map": "loch",
+   "kind": "door",
+   "id": "loch_klaus",
+   "at": "loch_klaus",
+   "to": "loch_klaus",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    39,
+    48
+   ],
+   "ms": 1981
+  },
+  {
+   "map": "loch",
+   "kind": "exit",
+   "id": "0,21",
+   "at": "m_west",
+   "to": "m_west",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    20
+   ],
+   "ms": 2113
+  },
+  {
+   "map": "loch",
+   "kind": "exit",
+   "id": "55,20",
+   "at": "m_manor",
+   "to": "m_manor",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    53,
+    18
+   ],
+   "ms": 2130
+  },
+  {
+   "map": "loch_arms",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2384
+  },
+  {
+   "map": "loch_beppo",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2412
+  },
+  {
+   "map": "loch_emma",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2201
+  },
+  {
+   "map": "loch_hall",
+   "kind": "exit",
+   "id": "10,13",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    10,
+    9
+   ],
+   "ms": 2021
+  },
+  {
+   "map": "loch_inn",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 2259
+  },
+  {
+   "map": "loch_items",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2008
+  },
+  {
+   "map": "loch_klaus",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2102
+  },
+  {
+   "map": "loch_mayor",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 1999
+  },
+  {
+   "map": "loch_tavern",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 2090
+  },
+  {
+   "map": "loch_tower",
+   "kind": "exit",
+   "id": "5,11",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    7
+   ],
+   "ms": 2074
+  },
+  {
+   "map": "m_bog",
+   "kind": "exit",
+   "id": "25,0",
+   "at": "m_fen",
+   "to": "m_fen",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    4
+   ],
+   "ms": 2535
+  },
+  {
+   "map": "m_fen",
+   "kind": "exit",
+   "id": "20,0",
+   "at": "m_west",
+   "to": "m_west",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    20,
+    4
+   ],
+   "ms": 2546
+  },
+  {
+   "map": "m_fen",
+   "kind": "exit",
+   "id": "55,30",
+   "at": "m_lotus",
+   "to": "m_lotus",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    55,
+    26
+   ],
+   "ms": 1610
+  },
+  {
+   "map": "m_fen",
+   "kind": "exit",
+   "id": "26,43",
+   "at": "m_bog",
+   "to": "m_bog",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    26,
+    39
+   ],
+   "ms": 2958
+  },
+  {
+   "map": "m_lotus",
+   "kind": "exit",
+   "id": "0,20",
+   "at": "m_fen",
+   "to": "m_fen",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    0,
+    16
+   ],
+   "ms": 1855
+  },
+  {
+   "map": "m_lotus",
+   "kind": "exit",
+   "id": "30,0",
+   "at": "m_manor",
+   "to": "m_manor",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    30,
+    4
+   ],
+   "ms": 1687
+  },
+  {
+   "map": "m_manor",
+   "kind": "exit",
+   "id": "0,20",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    20
+   ],
+   "ms": 1587
+  },
+  {
+   "map": "m_manor",
+   "kind": "exit",
+   "id": "23,43",
+   "at": "m_lotus",
+   "to": "m_lotus",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    23,
+    39
+   ],
+   "ms": 1802
+  },
+  {
+   "map": "m_north",
+   "kind": "exit",
+   "id": "25,39",
+   "at": "m_west",
+   "to": "m_west",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    35
+   ],
+   "ms": 1862
+  },
+  {
+   "map": "m_north",
+   "kind": "exit",
+   "id": "24,0",
+   "at": "world",
+   "to": "world",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    24,
+    4
+   ],
+   "ms": 3412
+  },
+  {
+   "map": "m_west",
+   "kind": "exit",
+   "id": "19,0",
+   "at": "m_north",
+   "to": "m_north",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    19,
+    4
+   ],
+   "ms": 1648
+  },
+  {
+   "map": "m_west",
+   "kind": "exit",
+   "id": "55,20",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    51,
+    20
+   ],
+   "ms": 2267
+  },
+  {
+   "map": "m_west",
+   "kind": "exit",
+   "id": "20,43",
+   "at": "m_fen",
+   "to": "m_fen",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    20,
+    39
+   ],
+   "ms": 1539
+  },
+  {
+   "map": "m_manor",
+   "kind": "door",
+   "id": "",
+   "at": "marsh_manor_1",
+   "to": "marsh_manor_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    38,
+    13
+   ],
+   "ms": 11539
+  },
+  {
+   "map": "marsh_manor_1",
+   "kind": "stairs",
+   "id": "manor_1_up",
+   "at": "marsh_manor_2",
+   "to": "marsh_manor_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    23,
+    7
+   ],
+   "ms": 5264
+  },
+  {
+   "map": "marsh_manor_1",
+   "kind": "exit",
+   "id": "22,39",
+   "at": "m_manor",
+   "to": "m_manor",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    22,
+    35
+   ],
+   "ms": 1822
+  },
+  {
+   "map": "marsh_bog",
+   "kind": "exit",
+   "id": "28,51",
+   "at": "m_bog",
+   "to": "m_bog",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    28,
+    47
+   ],
+   "ms": 6076
+  },
+  {
+   "map": "marsh_manor_2",
+   "kind": "stairs",
+   "id": "manor_2_down",
+   "at": "marsh_manor_1",
+   "to": "marsh_manor_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    23,
+    29
+   ],
+   "ms": 1752
+  },
+  {
+   "map": "mine_1",
+   "kind": "stairs",
+   "id": "mine_1_down",
+   "at": "mine_2",
+   "to": "mine_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    48,
+    7
+   ],
+   "ms": 4000
+  },
+  {
+   "map": "mine_1",
+   "kind": "exit",
+   "id": "25,43",
+   "at": "dovan",
+   "to": "dovan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    39
+   ],
+   "ms": 5362
+  },
+  {
+   "map": "mine_2",
+   "kind": "stairs",
+   "id": "mine_2_down",
+   "at": "mine_3",
+   "to": "mine_3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    9,
+    37
+   ],
+   "ms": 2510
+  },
+  {
+   "map": "mine_2",
+   "kind": "stairs",
+   "id": "mine_2_up",
+   "at": "mine_1",
+   "to": "mine_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    48,
+    7
+   ],
+   "ms": 6065
+  },
+  {
+   "map": "mine_hermit",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "g_rail",
+   "to": "g_rail",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2026
+  },
+  {
+   "map": "nerei",
+   "kind": "door",
+   "id": "nerei_lampkeeper",
+   "at": "nerei_lampkeeper",
+   "to": "nerei_lampkeeper",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    15,
+    16
+   ],
+   "ms": 2506
+  },
+  {
+   "map": "mine_3",
+   "kind": "stairs",
+   "id": "mine_3_up",
+   "at": "mine_2",
+   "to": "mine_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    8,
+    7
+   ],
+   "ms": 5913
+  },
+  {
+   "map": "nerei",
+   "kind": "door",
+   "id": "nerei_store",
+   "at": "nerei_store",
+   "to": "nerei_store",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    16,
+    27
+   ],
+   "ms": 1621
+  },
+  {
+   "map": "nerei",
+   "kind": "door",
+   "id": "nerei_inn",
+   "at": "nerei_inn",
+   "to": "nerei_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    15,
+    39
+   ],
+   "ms": 1927
+  },
+  {
+   "map": "nerei",
+   "kind": "door",
+   "id": "nerei_marina",
+   "at": "nerei_marina",
+   "to": "nerei_marina",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    21
+   ],
+   "ms": 5595
+  },
+  {
+   "map": "nerei",
+   "kind": "door",
+   "id": "nerei_house",
+   "at": "nerei_house",
+   "to": "nerei_house",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    33
+   ],
+   "ms": 2456
+  },
+  {
+   "map": "nerei",
+   "kind": "exit",
+   "id": "20,43",
+   "at": "i_cape",
+   "to": "i_cape",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    20,
+    39
+   ],
+   "ms": 1894
+  },
+  {
+   "map": "nerei_house",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "nerei",
+   "to": "nerei",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    6
+   ],
+   "ms": 1862
+  },
+  {
+   "map": "nerei_inn",
+   "kind": "exit",
+   "id": "6,9",
+   "at": "nerei",
+   "to": "nerei",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    6
+   ],
+   "ms": 1888
+  },
+  {
+   "map": "nerei_lampkeeper",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "nerei",
+   "to": "nerei",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 1870
+  },
+  {
+   "map": "nerei_marina",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "nerei",
+   "to": "nerei",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    6
+   ],
+   "ms": 1873
+  },
+  {
+   "map": "nerei_store",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "nerei",
+   "to": "nerei",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 1961
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_library",
+   "at": "orbis_library",
+   "to": "orbis_library",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    23,
+    14
+   ],
+   "ms": 6148
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_observatory",
+   "at": "orbis_observatory",
+   "to": "orbis_observatory",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    38,
+    15
+   ],
+   "ms": 6174
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_house4",
+   "at": "orbis_house4",
+   "to": "orbis_house4",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    47,
+    15
+   ],
+   "ms": 6199
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_house5",
+   "at": "orbis_house5",
+   "to": "orbis_house5",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    46,
+    20
+   ],
+   "ms": 1802
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_guardroom",
+   "at": "orbis_guardroom",
+   "to": "orbis_guardroom",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    9,
+    20
+   ],
+   "ms": 1926
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_records",
+   "at": "orbis_records",
+   "to": "orbis_records",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    20,
+    20
+   ],
+   "ms": 1833
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_inn",
+   "at": "orbis_inn",
+   "to": "orbis_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    36
+   ],
+   "ms": 1927
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_tavern",
+   "at": "orbis_tavern",
+   "to": "orbis_tavern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    16,
+    36
+   ],
+   "ms": 1796
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_tailor",
+   "at": "orbis_tailor",
+   "to": "orbis_tailor",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
+    47
+   ],
+   "ms": 1857
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_laundry",
+   "at": "orbis_laundry",
+   "to": "orbis_laundry",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    16,
+    47
+   ],
+   "ms": 1437
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_arms",
+   "at": "orbis_arms",
+   "to": "orbis_arms",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    46,
+    31
+   ],
+   "ms": 1590
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_items",
+   "at": "orbis_items",
+   "to": "orbis_items",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    38,
+    31
+   ],
+   "ms": 1884
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_magic",
+   "at": "orbis_magic",
+   "to": "orbis_magic",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    37,
+    37
+   ],
+   "ms": 1540
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_house",
+   "at": "orbis_house",
+   "to": "orbis_house",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    46,
+    37
+   ],
+   "ms": 1429
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_house2",
+   "at": "orbis_house2",
+   "to": "orbis_house2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    39,
+    47
+   ],
+   "ms": 1608
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_house3",
+   "at": "orbis_house3",
+   "to": "orbis_house3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    49,
+    47
+   ],
+   "ms": 1296
+  },
+  {
+   "map": "orbis",
+   "kind": "exit",
+   "id": "27,51",
+   "at": "s_plateau",
+   "to": "s_plateau",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    27,
+    47
+   ],
+   "ms": 1664
+  },
+  {
+   "map": "orbis",
+   "kind": "exit",
+   "id": "59,30",
+   "at": "s_ridge",
+   "to": "s_ridge",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    55,
+    30
+   ],
+   "ms": 1726
+  },
+  {
+   "map": "orbis_arms",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2043
+  },
+  {
+   "map": "orbis_guardroom",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    6
+   ],
+   "ms": 1968
+  },
+  {
+   "map": "orbis_house",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    6
+   ],
+   "ms": 1992
+  },
+  {
+   "map": "orbis_house2",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 1776
+  },
+  {
+   "map": "orbis_house3",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2243
+  },
+  {
+   "map": "orbis_house4",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 1897
+  },
+  {
+   "map": "orbis_house5",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2119
+  },
+  {
+   "map": "orbis_items",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 1832
+  },
+  {
+   "map": "orbis_inn",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 1997
+  },
+  {
+   "map": "orbis_laundry",
+   "kind": "exit",
+   "id": "6,9",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
+    5
+   ],
+   "ms": 1817
+  },
+  {
+   "map": "orbis_library",
+   "kind": "exit",
+   "id": "9,13",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    9,
+    9
+   ],
+   "ms": 1978
+  },
+  {
+   "map": "orbis_magic",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 1889
+  },
+  {
+   "map": "orbis_observatory",
+   "kind": "exit",
+   "id": "8,13",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    8,
+    9
+   ],
+   "ms": 2033
+  },
+  {
+   "map": "orbis_tailor",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 1843
+  },
+  {
+   "map": "orbis_records",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 1973
+  },
+  {
+   "map": "orbis_tavern",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 2172
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_house2",
+   "at": "pharos_home2",
+   "to": "pharos_home2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    11,
+    12
+   ],
+   "ms": 3056
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_inn",
+   "at": "pharos_inn",
+   "to": "pharos_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
+    12
+   ],
+   "ms": 3294
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_house1",
+   "at": "pharos_home1",
+   "to": "pharos_home1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    19,
+    8
+   ],
+   "ms": 3036
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_record",
+   "at": "pharos_record",
+   "to": "pharos_record",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    8
+   ],
+   "ms": 1603
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_house3",
+   "at": "pharos_home3",
+   "to": "pharos_home3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    49,
+    12
+   ],
+   "ms": 1583
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_house5",
+   "at": "pharos_home5",
+   "to": "pharos_home5",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    15,
+    32
+   ],
+   "ms": 1695
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_tavern",
+   "at": "pharos_tavern",
+   "to": "pharos_tavern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    22,
+    18
+   ],
+   "ms": 1809
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_smith",
+   "at": "pharos_smith",
+   "to": "pharos_smith",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    30,
+    23
+   ],
+   "ms": 1698
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_shop",
+   "at": "pharos_shop",
+   "to": "pharos_shop",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    33,
+    26
+   ],
+   "ms": 1796
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_house6",
+   "at": "pharos_home6",
+   "to": "pharos_home6",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    32,
+    37
+   ],
+   "ms": 1692
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_house4",
+   "at": "pharos_home4",
+   "to": "pharos_home4",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    8,
+    25
+   ],
+   "ms": 1758
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_shipyard",
+   "at": "pharos_shipyard",
+   "to": "pharos_shipyard",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    42,
+    32
+   ],
+   "ms": 1672
+  },
+  {
+   "map": "pharos",
+   "kind": "exit",
+   "id": "0,10",
+   "at": "f_cape",
+   "to": "f_cape",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    10
+   ],
+   "ms": 1808
+  },
+  {
+   "map": "pharos_home1",
+   "kind": "exit",
+   "id": "3,7",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    2,
+    4
+   ],
+   "ms": 1827
+  },
+  {
+   "map": "pharos_home2",
+   "kind": "exit",
+   "id": "3,7",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    3
+   ],
+   "ms": 1974
+  },
+  {
+   "map": "pharos_home4",
+   "kind": "exit",
+   "id": "4,7",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    4
+   ],
+   "ms": 1959
+  },
+  {
+   "map": "pharos_home3",
+   "kind": "exit",
+   "id": "4,6",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    3
+   ],
+   "ms": 2191
+  },
+  {
+   "map": "pharos_home5",
+   "kind": "exit",
+   "id": "4,7",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    4
+   ],
+   "ms": 1974
+  },
+  {
+   "map": "pharos_home6",
+   "kind": "exit",
+   "id": "4,6",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    3
+   ],
+   "ms": 1755
+  },
+  {
+   "map": "pharos_inn",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 1929
+  },
+  {
+   "map": "pharos_record",
+   "kind": "exit",
+   "id": "5,8",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
+    5
+   ],
+   "ms": 2151
+  },
+  {
+   "map": "pharos_shop",
+   "kind": "exit",
+   "id": "4,8",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    5
+   ],
+   "ms": 1962
+  },
+  {
+   "map": "pharos_shipyard",
+   "kind": "exit",
+   "id": "5,8",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 6,
+   "why": null,
+   "start": [
+    5,
+    4
+   ],
+   "ms": 2342
+  },
+  {
+   "map": "pharos_smith",
+   "kind": "exit",
+   "id": "4,8",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    5
+   ],
+   "ms": 2165
+  },
+  {
+   "map": "pharos_tavern",
+   "kind": "exit",
+   "id": "7,10",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    6
+   ],
+   "ms": 2131
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h1",
+   "at": "roa_home1",
+   "to": "roa_home1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    11
+   ],
+   "ms": 2310
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h3",
+   "at": "roa_home3",
+   "to": "roa_home3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    31,
+    12
+   ],
+   "ms": 1712
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h2",
+   "at": "roa_home2",
+   "to": "roa_home2",
+   "ok": true,
+   "steps": 6,
+   "why": null,
+   "start": [
+    14,
+    13
+   ],
+   "ms": 2874
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_hall",
+   "at": "roa_hall_in",
+   "to": "roa_hall_in",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    21,
+    13
+   ],
+   "ms": 2510
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h4",
+   "at": "roa_home4",
+   "to": "roa_home4",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    36,
+    12
+   ],
+   "ms": 1506
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h5",
+   "at": "roa_home5",
+   "to": "roa_home5",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    25
+   ],
+   "ms": 1667
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h6",
+   "at": "roa_home6",
+   "to": "roa_home6",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    30,
+    21
+   ],
+   "ms": 1487
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_berna",
+   "at": "roa_house",
+   "to": "roa_house",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    17,
+    31
+   ],
+   "ms": 1665
+  },
+  {
+   "map": "roa",
+   "kind": "exit",
+   "id": "43,15",
+   "at": "f_roa",
+   "to": "f_roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    39,
+    15
+   ],
+   "ms": 1810
   },
   {
    "map": "roa_dawn",
    "kind": "door",
    "id": "roa_h1",
-   "at": [
-    7,
-    9
-   ],
+   "at": "roa_dawn",
    "to": "roa_dawn",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ok": true,
+   "steps": 4,
+   "start": [
+    5,
+    11
+   ],
+   "ms": 1901
   },
   {
    "map": "roa_dawn",
    "kind": "door",
    "id": "roa_h2",
-   "at": [
-    14,
-    9
-   ],
+   "at": "roa_dawn",
    "to": "roa_dawn",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ok": true,
+   "steps": 4,
+   "start": [
+    14,
+    13
+   ],
+   "ms": 1605
   },
   {
    "map": "roa_dawn",
    "kind": "door",
    "id": "roa_hall",
-   "at": [
-    21,
-    9
-   ],
+   "at": "roa_dawn",
    "to": "roa_dawn",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ok": true,
+   "steps": 4,
+   "start": [
+    21,
+    13
+   ],
+   "ms": 2118
   },
   {
    "map": "roa_dawn",
    "kind": "door",
    "id": "roa_h3",
-   "at": [
-    30,
-    9
-   ],
+   "at": "roa_dawn",
    "to": "roa_dawn",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ok": true,
+   "steps": 4,
+   "start": [
+    29,
+    12
+   ],
+   "ms": 1793
   },
   {
    "map": "roa_dawn",
    "kind": "door",
    "id": "roa_h4",
-   "at": [
+   "at": "roa_dawn",
+   "to": "roa_dawn",
+   "ok": true,
+   "steps": 4,
+   "start": [
     37,
-    9
+    13
    ],
-   "to": "roa_dawn",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
-  },
-  {
-   "map": "roa_dawn",
-   "kind": "door",
-   "id": "roa_h5",
-   "at": [
-    5,
-    21
-   ],
-   "to": "roa_dawn",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ms": 1863
   },
   {
    "map": "roa_dawn",
    "kind": "door",
    "id": "roa_h6",
-   "at": [
-    32,
-    19
-   ],
+   "at": "roa_dawn",
    "to": "roa_dawn",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ok": true,
+   "steps": 4,
+   "start": [
+    30,
+    21
+   ],
+   "ms": 1951
+  },
+  {
+   "map": "roa_dawn",
+   "kind": "door",
+   "id": "roa_h5",
+   "at": "roa_dawn",
+   "to": "roa_dawn",
+   "ok": true,
+   "steps": 3,
+   "start": [
+    5,
+    25
+   ],
+   "ms": 2000
   },
   {
    "map": "roa_dawn",
    "kind": "door",
    "id": "roa_berna",
-   "at": [
-    20,
-    30
-   ],
+   "at": "roa_dawn",
    "to": "roa_dawn",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ok": true,
+   "steps": 4,
+   "start": [
+    17,
+    31
+   ],
+   "ms": 2071
+  },
+  {
+   "map": "roa_home1",
+   "kind": "exit",
+   "id": "4,7",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    2,
+    5
+   ],
+   "ms": 2193
+  },
+  {
+   "map": "roa_hall_in",
+   "kind": "exit",
+   "id": "5,8",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    4
+   ],
+   "ms": 2244
+  },
+  {
+   "map": "roa_home2",
+   "kind": "exit",
+   "id": "3,7",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    3
+   ],
+   "ms": 2351
+  },
+  {
+   "map": "roa_home3",
+   "kind": "exit",
+   "id": "3,7",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    3
+   ],
+   "ms": 2042
+  },
+  {
+   "map": "roa_home4",
+   "kind": "exit",
+   "id": "4,7",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    3
+   ],
+   "ms": 2109
+  },
+  {
+   "map": "roa_home5",
+   "kind": "exit",
+   "id": "3,6",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    2
+   ],
+   "ms": 1915
+  },
+  {
+   "map": "roa_home6",
+   "kind": "exit",
+   "id": "3,6",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    2,
+    3
+   ],
+   "ms": 1909
+  },
+  {
+   "map": "roa_house",
+   "kind": "exit",
+   "id": "6,9",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
+    5
+   ],
+   "ms": 1994
   },
   {
    "map": "roa_house_dawn",
    "kind": "exit",
    "id": "6,9",
-   "at": [
-    6,
-    9
-   ],
+   "at": "roa_house_dawn",
    "to": "roa_house_dawn",
+   "ok": true,
+   "steps": 4,
+   "start": [
+    6,
+    5
+   ],
+   "ms": 1417
+  },
+  {
+   "map": "s_crater",
+   "kind": "exit",
+   "id": "0,20",
+   "at": "s_plateau",
+   "to": "s_plateau",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    0,
+    16
+   ],
+   "ms": 2516
+  },
+  {
+   "map": "s_crater",
+   "kind": "exit",
+   "id": "25,0",
+   "at": "s_ridge",
+   "to": "s_ridge",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    4
+   ],
+   "ms": 2510
+  },
+  {
+   "map": "s_plateau",
+   "kind": "exit",
+   "id": "0,9",
+   "at": "s_steps",
+   "to": "s_steps",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    0,
+    5
+   ],
+   "ms": 2310
+  },
+  {
+   "map": "s_plateau",
+   "kind": "exit",
+   "id": "55,22",
+   "at": "s_crater",
+   "to": "s_crater",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    55,
+    18
+   ],
+   "ms": 1422
+  },
+  {
+   "map": "s_plateau",
+   "kind": "exit",
+   "id": "27,0",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    27,
+    4
+   ],
+   "ms": 1966
+  },
+  {
+   "map": "s_ridge",
+   "kind": "exit",
+   "id": "24,37",
+   "at": "s_crater",
+   "to": "s_crater",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    24,
+    33
+   ],
+   "ms": 2199
+  },
+  {
+   "map": "s_ridge",
+   "kind": "exit",
+   "id": "0,24",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    26
+   ],
+   "ms": 1593
+  },
+  {
+   "map": "s_steps",
+   "kind": "exit",
+   "id": "51,9",
+   "at": "s_plateau",
+   "to": "s_plateau",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    51,
+    5
+   ],
+   "ms": 1362
+  },
+  {
+   "map": "s_steps",
+   "kind": "exit",
+   "id": "0,27",
+   "at": "world",
+   "to": "world",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    1,
+    24
+   ],
+   "ms": 2152
+  },
+  {
+   "map": "star_academy_1",
+   "kind": "stairs",
+   "id": "star_academy_1_up",
+   "at": "star_academy_2",
+   "to": "star_academy_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    23,
+    7
+   ],
+   "ms": 5813
+  },
+  {
+   "map": "star_academy_1",
+   "kind": "stairs",
+   "id": "",
+   "at": "star_academy_2",
+   "to": "star_academy_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    24,
+    7
+   ],
+   "ms": 6093
+  },
+  {
+   "map": "star_academy_2",
+   "kind": "stairs",
+   "id": "star_academy_2_down",
+   "at": "star_academy_1",
+   "to": "star_academy_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    23,
+    32
+   ],
+   "ms": 1346
+  },
+  {
+   "map": "star_academy_2",
+   "kind": "stairs",
+   "id": "",
+   "at": "star_academy_1",
+   "to": "star_academy_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    24,
+    32
+   ],
+   "ms": 1255
+  },
+  {
+   "map": "star_academy_1",
+   "kind": "door",
+   "id": "",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
+    32
+   ],
+   "ms": 12609
+  },
+  {
+   "map": "star_tower_1",
+   "kind": "stairs",
+   "id": "star_tower_1_up",
+   "at": "star_tower_top",
+   "to": "star_tower_top",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    6
+   ],
+   "ms": 5589
+  },
+  {
+   "map": "star_tower_1",
+   "kind": "stairs",
+   "id": "",
+   "at": "star_tower_top",
+   "to": "star_tower_top",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    26,
+    6
+   ],
+   "ms": 5845
+  },
+  {
+   "map": "star_tower_top",
+   "kind": "stairs",
+   "id": "star_tower_top_down",
+   "at": "star_tower_1",
+   "to": "star_tower_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    17,
+    29
+   ],
+   "ms": 1393
+  },
+  {
+   "map": "star_tower_top",
+   "kind": "stairs",
+   "id": "",
+   "at": "star_tower_1",
+   "to": "star_tower_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    18,
+    27
+   ],
+   "ms": 1400
+  },
+  {
+   "map": "star_tower_1",
+   "kind": "exit",
+   "id": "25,45",
+   "at": "s_ridge",
+   "to": "s_ridge",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    41
+   ],
+   "ms": 4859
+  },
+  {
+   "map": "vein_1",
+   "kind": "stairs",
+   "id": "vein_1_up",
+   "at": "mine_3",
+   "to": "mine_3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    6
+   ],
+   "ms": 5195
+  },
+  {
+   "map": "vein_1",
+   "kind": "stairs",
+   "id": "vein_1_down",
+   "at": "vein_2",
+   "to": "vein_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    40,
+    33
+   ],
+   "ms": 6034
+  },
+  {
+   "map": "vein_2",
+   "kind": "stairs",
+   "id": "vein_2_up",
+   "at": "vein_1",
+   "to": "vein_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    37,
+    7
+   ],
+   "ms": 6113
+  },
+  {
+   "map": "vein_2",
+   "kind": "stairs",
+   "id": "vein_2_down",
+   "at": "vein_3",
+   "to": "vein_3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
+    29
+   ],
+   "ms": 5378
+  },
+  {
+   "map": "vein_3",
+   "kind": "stairs",
+   "id": "vein_3_up",
+   "at": "vein_2",
+   "to": "vein_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    18,
+    23
+   ],
+   "ms": 4199
+  },
+  {
+   "map": "verda_1",
+   "kind": "exit",
+   "id": "28,0",
+   "at": "verda_2",
+   "to": "verda_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    30,
+    4
+   ],
+   "ms": 2912
+  },
+  {
+   "map": "verda_1",
+   "kind": "exit",
+   "id": "28,51",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    29,
+    47
+   ],
+   "ms": 4722
+  },
+  {
+   "map": "verda_1",
+   "kind": "exit",
+   "id": "11,20",
+   "at": "verda_1",
+   "to": "verda_1",
+   "ok": true,
+   "steps": 5,
+   "start": [
+    11,
+    24
+   ],
+   "ms": 3992
+  },
+  {
+   "map": "verda_2",
+   "kind": "exit",
+   "id": "28,51",
+   "at": "verda_1",
+   "to": "verda_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    29,
+    47
+   ],
+   "ms": 4534
+  },
+  {
+   "map": "verda_2",
+   "kind": "exit",
+   "id": "28,0",
+   "at": "elder_1",
+   "to": "elder_1",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    29,
+    3
+   ],
+   "ms": 1529
+  },
+  {
+   "map": "volk",
+   "kind": "door",
+   "id": "volk_inn",
+   "at": "volk_inn",
+   "to": "volk_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
+    15
+   ],
+   "ms": 1777
+  },
+  {
+   "map": "volk",
+   "kind": "door",
+   "id": "volk_forge",
+   "at": "volk_forge",
+   "to": "volk_forge",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    17,
+    17
+   ],
+   "ms": 1492
+  },
+  {
+   "map": "verda_2",
+   "kind": "exit",
+   "id": "20,32",
+   "at": "verda_2",
+   "to": "verda_2",
+   "ok": true,
+   "steps": 5,
+   "start": [
+    24,
+    32
+   ],
+   "ms": 4368
+  },
+  {
+   "map": "volk",
+   "kind": "door",
+   "id": "volk_house",
+   "at": "volk_house",
+   "to": "volk_house",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    24
+   ],
+   "ms": 1522
+  },
+  {
+   "map": "volk",
+   "kind": "exit",
+   "id": "9,27",
+   "at": "g_valley",
+   "to": "g_valley",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    9,
+    23
+   ],
+   "ms": 1400
+  },
+  {
+   "map": "volk_elder",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "volk",
+   "to": "volk",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    6
+   ],
+   "ms": 1761
+  },
+  {
+   "map": "volk",
+   "kind": "door",
+   "id": "volk_elder",
+   "at": "volk_elder",
+   "to": "volk_elder",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    26,
+    24
+   ],
+   "ms": 4860
+  },
+  {
+   "map": "volk_forge",
+   "kind": "exit",
+   "id": "8,11",
+   "at": "volk",
+   "to": "volk",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    8,
+    7
+   ],
+   "ms": 1818
+  },
+  {
+   "map": "volk_house",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "volk",
+   "to": "volk",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    6
+   ],
+   "ms": 1856
+  },
+  {
+   "map": "volk_inn",
+   "kind": "exit",
+   "id": "6,10",
+   "at": "volk",
+   "to": "volk",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    7
+   ],
+   "ms": 1748
+  },
+  {
+   "map": "well",
+   "kind": "stairs",
+   "id": "",
+   "at": "f_roa",
+   "to": "f_roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    18,
+    7
+   ],
+   "ms": 1839
+  },
+  {
+   "map": "world",
+   "kind": "door",
+   "id": "w_lighthouse",
+   "at": "lighthouse_1",
+   "to": "lighthouse_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    319,
+    378
+   ],
+   "ms": 3056
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": "well",
+   "to": "well",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    235,
+    262
+   ],
+   "ms": 2719
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": [
+    199,
+    117
+   ],
+   "to": "snow_woods",
+   "ok": false,
+   "steps": 15,
+   "why": "timeout 90 s",
+   "start": [
+    199,
+    121
+   ],
+   "ms": 96886
+  },
+  {
+   "map": "world",
+   "kind": "door",
+   "id": "w_sandedge",
+   "at": [
+    104,
+    372
+   ],
+   "to": "sandedge",
+   "ok": false,
+   "steps": 15,
+   "why": "timeout 90 s",
+   "start": [
+    104,
+    376
+   ],
+   "ms": 98904
+  },
+  {
+   "map": "verda_1",
+   "kind": "exit",
+   "id": "40,28",
+   "at": [
+    40,
+    28
+   ],
+   "to": "verda_1",
+   "ok": false,
+   "steps": 4,
+   "why": "timeout 90 s",
+   "start": [
+    43,
+    27
+   ],
+   "ms": 159389
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": [
+    181,
+    35
+   ],
+   "to": "peak_1",
+   "ok": false,
+   "steps": 14,
+   "why": "timeout 90 s",
+   "start": [
+    181,
+    39
+   ],
+   "ms": 91007
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": [
+    62,
+    99
+   ],
+   "to": "icicle_1",
+   "ok": false,
+   "steps": 15,
+   "why": "timeout 90 s",
+   "start": [
+    64,
+    97
+   ],
+   "ms": 96983
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": [
+    124,
+    20
+   ],
+   "to": "frost_ship_1",
+   "ok": false,
+   "why": "page.waitForTimeout: Target page, context or browser has been closed",
+   "ms": 15819
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": [
+    67,
+    20
+   ],
+   "to": "aurora",
+   "ok": false,
+   "why": "page.waitForTimeout: Target page, context or browser has been closed",
+   "ms": 67070
+  },
+  {
+   "map": "world",
+   "kind": "door",
+   "id": "w_manor",
+   "at": [
+    600,
+    204
+   ],
+   "to": "marsh_manor_1",
+   "ok": false,
+   "why": "page.waitForTimeout: Target page, context or browser has been closed",
+   "ms": 7953
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "241,271",
+   "at": [
+    241,
+    271
+   ],
+   "to": "roa",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 41
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "308,324",
+   "at": [
+    308,
+    324
+   ],
+   "to": "pharos",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 8
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "126,228",
+   "at": [
+    126,
+    228
+   ],
+   "to": "fern",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 2
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "74,176",
+   "at": [
+    74,
+    176
+   ],
+   "to": "yura",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
    "ms": 1
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "338,188",
+   "at": [
+    338,
+    188
+   ],
+   "to": "f_cross",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 0
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "115,136",
+   "at": [
+    115,
+    136
+   ],
+   "to": "f_windhill",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 0
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "98,366",
+   "at": [
+    98,
+    366
+   ],
+   "to": "f_south",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
+  },
+  {
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_hut_inn",
+   "at": [
+    6,
+    17
+   ],
+   "to": "yura_inn",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
+  },
+  {
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_hut_elder",
+   "at": [
+    13,
+    6
+   ],
+   "to": "yura_home_elder",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
+  },
+  {
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_hut_h1",
+   "at": [
+    21,
+    18
+   ],
+   "to": "yura_home1",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 0
+  },
+  {
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_hut_h2",
+   "at": [
+    26,
+    18
+   ],
+   "to": "yura_home2",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 0
+  },
+  {
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_hut_h3",
+   "at": [
+    22,
+    24
+   ],
+   "to": "yura_home3",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 0
+  },
+  {
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_hut_h4",
+   "at": [
+    5,
+    23
+   ],
+   "to": "yura_home4",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 0
+  },
+  {
+   "map": "yura",
+   "kind": "exit",
+   "id": "14,27",
+   "at": [
+    14,
+    27
+   ],
+   "to": "f_windhill",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
+  },
+  {
+   "map": "yura_home1",
+   "kind": "exit",
+   "id": "3,6",
+   "at": [
+    3,
+    6
+   ],
+   "to": "yura",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
+  },
+  {
+   "map": "yura_home2",
+   "kind": "exit",
+   "id": "3,7",
+   "at": [
+    3,
+    7
+   ],
+   "to": "yura",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 1
+  },
+  {
+   "map": "yura_home3",
+   "kind": "exit",
+   "id": "3,6",
+   "at": [
+    3,
+    6
+   ],
+   "to": "yura",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 0
+  },
+  {
+   "map": "yura_home4",
+   "kind": "exit",
+   "id": "4,7",
+   "at": [
+    4,
+    7
+   ],
+   "to": "yura",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 0
+  },
+  {
+   "map": "yura_home_elder",
+   "kind": "exit",
+   "id": "4,7",
+   "at": [
+    4,
+    7
+   ],
+   "to": "yura",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 0
+  },
+  {
+   "map": "yura_inn",
+   "kind": "exit",
+   "id": "4,8",
+   "at": [
+    4,
+    8
+   ],
+   "to": "yura",
+   "ok": false,
+   "why": "page.evaluate: Target page, context or browser has been closed",
+   "ms": 0
   }
  ],
  "looks": [
+  {
+   "map": "a_pass",
+   "npc": "ash_traveler",
+   "look": "npc_traveler",
+   "art": "npc_traveler",
+   "ok": true
+  },
   {
    "map": "archive_3",
    "npc": "seal_rowell",
@@ -798,6 +5922,27 @@
   {
    "map": "archive_6",
    "npc": "naming_fine",
+   "look": "fine",
+   "art": "fine",
+   "ok": true
+  },
+  {
+   "map": "ash_volcano_1",
+   "npc": "copyist_a",
+   "look": "npc_scribe",
+   "art": "npc_scribe",
+   "ok": true
+  },
+  {
+   "map": "ash_volcano_1",
+   "npc": "copyist_b",
+   "look": "npc_scribe",
+   "art": "npc_scribe",
+   "ok": true
+  },
+  {
+   "map": "ash_volcano_2",
+   "npc": "fine",
    "look": "fine",
    "art": "fine",
    "ok": true
@@ -1055,6 +6200,2127 @@
    "ok": true
   },
   {
+   "map": "caldera_arms",
+   "npc": "smith",
+   "look": "npc_ash_man",
+   "art": "npc_ash_man",
+   "ok": true
+  },
+  {
+   "map": "caldera_dorga",
+   "npc": "dorga",
+   "look": "npc_dorga",
+   "art": "npc_dorga",
+   "ok": true
+  },
+  {
+   "map": "caldera_dorga",
+   "npc": "dorga_after",
+   "look": "npc_dorga",
+   "art": "npc_dorga",
+   "ok": true
+  },
+  {
+   "map": "caldera_granary",
+   "npc": "granary_keeper",
+   "look": "npc_ash_old_f",
+   "art": "npc_ash_old_f",
+   "ok": true
+  },
+  {
+   "map": "caldera_house",
+   "npc": "widow",
+   "look": "npc_ash_old_f",
+   "art": "npc_ash_old_f",
+   "ok": true
+  },
+  {
+   "map": "caldera_house",
+   "npc": "house_kid",
+   "look": "npc_ash_child",
+   "art": "npc_ash_child",
+   "ok": true
+  },
+  {
+   "map": "caldera_inn",
+   "npc": "inn_keeper",
+   "look": "npc_ash_woman",
+   "art": "npc_ash_woman",
+   "ok": true
+  },
+  {
+   "map": "caldera_inn",
+   "npc": "inn_guest",
+   "look": "npc_traveler",
+   "art": "npc_traveler",
+   "ok": true
+  },
+  {
+   "map": "caldera_inn",
+   "npc": "messenger",
+   "look": "npc_hawk",
+   "art": "npc_hawk",
+   "ok": true
+  },
+  {
+   "map": "caldera_items",
+   "npc": "item_keeper",
+   "look": "npc_ash_woman",
+   "art": "npc_ash_woman",
+   "ok": true
+  },
+  {
+   "map": "caldera_smithy",
+   "npc": "blacksmith",
+   "look": "npc_smith",
+   "art": "npc_smith",
+   "ok": true
+  },
+  {
+   "map": "caldera_tavern",
+   "npc": "barkeep",
+   "look": "npc_ash_old_m",
+   "art": "npc_ash_old_m",
+   "ok": true
+  },
+  {
+   "map": "caldera_tavern",
+   "npc": "zakuro_tav",
+   "look": "npc_zakuro",
+   "art": "npc_zakuro",
+   "ok": true
+  },
+  {
+   "map": "caldera_tavern",
+   "npc": "tav_fighter",
+   "look": "npc_ash_fighter",
+   "art": "npc_ash_fighter",
+   "ok": true
+  },
+  {
+   "map": "caldera_tavern",
+   "npc": "tav_bookie",
+   "look": "npc_ash_bookie",
+   "art": "npc_ash_bookie",
+   "ok": true
+  },
+  {
+   "map": "caldera_temple",
+   "npc": "kaya",
+   "look": "npc_kaya",
+   "art": "npc_kaya",
+   "ok": true
+  },
+  {
+   "map": "caldera_temple",
+   "npc": "acolyte_in",
+   "look": "npc_ash_acolyte",
+   "art": "npc_ash_acolyte",
+   "ok": true
+  },
+  {
+   "map": "caldera_toto",
+   "npc": "toto_mother",
+   "look": "npc_ash_woman",
+   "art": "npc_ash_woman",
+   "ok": true
+  },
+  {
+   "map": "coral",
+   "npc": "drake",
+   "look": "npc_drake",
+   "art": "npc_drake",
+   "ok": true
+  },
+  {
+   "map": "coral",
+   "npc": "gate_sailor",
+   "look": "npc_isles_sailor",
+   "art": "npc_isles_sailor",
+   "ok": true
+  },
+  {
+   "map": "coral",
+   "npc": "widow",
+   "look": "npc_isles_old_f",
+   "art": "npc_isles_old_f",
+   "ok": true
+  },
+  {
+   "map": "coral",
+   "npc": "shell_kid",
+   "look": "npc_isles_child",
+   "art": "npc_isles_child",
+   "ok": true
+  },
+  {
+   "map": "coral",
+   "npc": "idle_sailor",
+   "look": "npc_isles_man",
+   "art": "npc_isles_man",
+   "ok": true
+  },
+  {
+   "map": "coral",
+   "npc": "child",
+   "look": "npc_isles_child",
+   "art": "npc_isles_child",
+   "ok": true
+  },
+  {
+   "map": "coral",
+   "npc": "ferry_hand",
+   "look": "npc_isles_sailor",
+   "art": "npc_isles_sailor",
+   "ok": true
+  },
+  {
+   "map": "coral",
+   "npc": "pier_fisher",
+   "look": "npc_isles_old_m",
+   "art": "npc_isles_old_m",
+   "ok": true
+  },
+  {
+   "map": "coral",
+   "npc": "dog",
+   "look": "ani_dog",
+   "art": "ani_dog",
+   "ok": true
+  },
+  {
+   "map": "coral",
+   "npc": "story_rumor_coral",
+   "look": "npc_isles_old_f",
+   "art": "npc_isles_old_f",
+   "ok": true
+  },
+  {
+   "map": "coral",
+   "npc": "story_scribe_coral",
+   "look": "npc_scribe",
+   "art": "npc_scribe",
+   "ok": true
+  },
+  {
+   "map": "coral",
+   "npc": "story_child_coral",
+   "look": "npc_isles_child",
+   "art": "npc_isles_child",
+   "ok": true
+  },
+  {
+   "map": "coral_arms",
+   "npc": "smith",
+   "look": "npc_isles_man",
+   "art": "npc_isles_man",
+   "ok": true
+  },
+  {
+   "map": "coral_guild",
+   "npc": "guild_master",
+   "look": "npc_isles_old_m",
+   "art": "npc_isles_old_m",
+   "ok": true
+  },
+  {
+   "map": "coral_guild",
+   "npc": "flag_officer",
+   "look": "npc_isles_sailor",
+   "art": "npc_isles_sailor",
+   "ok": true
+  },
+  {
+   "map": "coral_harbormaster",
+   "npc": "harbormaster",
+   "look": "npc_isles_old_m",
+   "art": "npc_isles_old_m",
+   "ok": true
+  },
+  {
+   "map": "coral_harbormaster",
+   "npc": "hm_wife",
+   "look": "npc_isles_old_f",
+   "art": "npc_isles_old_f",
+   "ok": true
+  },
+  {
+   "map": "coral_house1",
+   "npc": "house1_widow",
+   "look": "npc_isles_old_f",
+   "art": "npc_isles_old_f",
+   "ok": true
+  },
+  {
+   "map": "coral_house1",
+   "npc": "house1_kid",
+   "look": "npc_isles_child",
+   "art": "npc_isles_child",
+   "ok": true
+  },
+  {
+   "map": "coral_house2",
+   "npc": "sailor_wife",
+   "look": "npc_isles_woman",
+   "art": "npc_isles_woman",
+   "ok": true
+  },
+  {
+   "map": "coral_house3",
+   "npc": "fisher",
+   "look": "npc_isles_man",
+   "art": "npc_isles_man",
+   "ok": true
+  },
+  {
+   "map": "coral_inn",
+   "npc": "inn_keeper",
+   "look": "npc_isles_woman",
+   "art": "npc_isles_woman",
+   "ok": true
+  },
+  {
+   "map": "coral_inn",
+   "npc": "inn_guest",
+   "look": "npc_traveler",
+   "art": "npc_traveler",
+   "ok": true
+  },
+  {
+   "map": "coral_items",
+   "npc": "item_keeper",
+   "look": "npc_isles_woman",
+   "art": "npc_isles_woman",
+   "ok": true
+  },
+  {
+   "map": "coral_tavern",
+   "npc": "barkeep",
+   "look": "npc_isles_man",
+   "art": "npc_isles_man",
+   "ok": true
+  },
+  {
+   "map": "coral_tavern",
+   "npc": "old_sailor",
+   "look": "npc_isles_old_m",
+   "art": "npc_isles_old_m",
+   "ok": true
+  },
+  {
+   "map": "coral_tavern",
+   "npc": "tav_sailor",
+   "look": "npc_isles_sailor",
+   "art": "npc_isles_sailor",
+   "ok": true
+  },
+  {
+   "map": "coral_tavern",
+   "npc": "merchant",
+   "look": "npc_merchant_captain",
+   "art": "npc_merchant_captain",
+   "ok": true
+  },
+  {
+   "map": "dovan",
+   "npc": "mouth_watch",
+   "look": "npc_miner",
+   "art": "npc_miner",
+   "ok": true
+  },
+  {
+   "map": "dovan",
+   "npc": "glare_guild",
+   "look": "npc_miner",
+   "art": "npc_miner",
+   "ok": true
+  },
+  {
+   "map": "dovan",
+   "npc": "glare_smith",
+   "look": "npc_smith",
+   "art": "npc_smith",
+   "ok": true
+  },
+  {
+   "map": "dovan",
+   "npc": "toast_guild",
+   "look": "npc_miner",
+   "art": "npc_miner",
+   "ok": true
+  },
+  {
+   "map": "dovan",
+   "npc": "station_old",
+   "look": "npc_mine_old_m",
+   "art": "npc_mine_old_m",
+   "ok": true
+  },
+  {
+   "map": "dovan",
+   "npc": "tadeo",
+   "look": "npc_tadeo",
+   "art": "npc_tadeo",
+   "ok": true
+  },
+  {
+   "map": "dovan",
+   "npc": "cat_kid",
+   "look": "npc_mine_child",
+   "art": "npc_mine_child",
+   "ok": true
+  },
+  {
+   "map": "dovan",
+   "npc": "street_woman",
+   "look": "npc_mine_woman",
+   "art": "npc_mine_woman",
+   "ok": true
+  },
+  {
+   "map": "dovan",
+   "npc": "hall_old",
+   "look": "npc_mine_old_f",
+   "art": "npc_mine_old_f",
+   "ok": true
+  },
+  {
+   "map": "dovan",
+   "npc": "kitten",
+   "look": "ani_cat",
+   "art": "ani_cat",
+   "ok": true
+  },
+  {
+   "map": "dovan",
+   "npc": "relight_borg",
+   "look": "npc_borg",
+   "art": "npc_borg",
+   "ok": true
+  },
+  {
+   "map": "dovan",
+   "npc": "relight_helga",
+   "look": "npc_helga",
+   "art": "npc_helga",
+   "ok": true
+  },
+  {
+   "map": "dovan",
+   "npc": "relight_pip",
+   "look": "npc_pip",
+   "art": "npc_pip",
+   "ok": true
+  },
+  {
+   "map": "dovan",
+   "npc": "race_keeper",
+   "look": "npc_miner",
+   "art": "npc_miner",
+   "ok": true
+  },
+  {
+   "map": "dovan",
+   "npc": "story_rumor_dovan",
+   "look": "npc_mine_old_m",
+   "art": "npc_mine_old_m",
+   "ok": true
+  },
+  {
+   "map": "dovan",
+   "npc": "story_scribe_dovan",
+   "look": "npc_scribe",
+   "art": "npc_scribe",
+   "ok": true
+  },
+  {
+   "map": "dovan",
+   "npc": "story_child_dovan",
+   "look": "npc_mine_child",
+   "art": "npc_mine_child",
+   "ok": true
+  },
+  {
+   "map": "dovan_forge",
+   "npc": "helga",
+   "look": "npc_helga",
+   "art": "npc_helga",
+   "ok": true
+  },
+  {
+   "map": "dovan_forge",
+   "npc": "forge_seller",
+   "look": "npc_smith",
+   "art": "npc_smith",
+   "ok": true
+  },
+  {
+   "map": "dovan_forge",
+   "npc": "forge_boy",
+   "look": "npc_mine_child",
+   "art": "npc_mine_child",
+   "ok": true
+  },
+  {
+   "map": "dovan_guild",
+   "npc": "borg",
+   "look": "npc_borg",
+   "art": "npc_borg",
+   "ok": true
+  },
+  {
+   "map": "dovan_guild",
+   "npc": "guild_clerk",
+   "look": "npc_clerk",
+   "art": "npc_clerk",
+   "ok": true
+  },
+  {
+   "map": "dovan_hall",
+   "npc": "hall_chair",
+   "look": "npc_mine_old_m",
+   "art": "npc_mine_old_m",
+   "ok": true
+  },
+  {
+   "map": "dovan_hall",
+   "npc": "hall_borg",
+   "look": "npc_borg",
+   "art": "npc_borg",
+   "ok": true
+  },
+  {
+   "map": "dovan_hall",
+   "npc": "hall_helga",
+   "look": "npc_helga",
+   "art": "npc_helga",
+   "ok": true
+  },
+  {
+   "map": "dovan_house",
+   "npc": "dag_wife",
+   "look": "npc_mine_woman",
+   "art": "npc_mine_woman",
+   "ok": true
+  },
+  {
+   "map": "dovan_house",
+   "npc": "dag_kid",
+   "look": "npc_mine_child",
+   "art": "npc_mine_child",
+   "ok": true
+  },
+  {
+   "map": "dovan_house",
+   "npc": "dag",
+   "look": "npc_miner",
+   "art": "npc_miner",
+   "ok": true
+  },
+  {
+   "map": "dovan_house2",
+   "npc": "rolf_mother",
+   "look": "npc_mine_old_f",
+   "art": "npc_mine_old_f",
+   "ok": true
+  },
+  {
+   "map": "dovan_house2",
+   "npc": "rolf",
+   "look": "npc_miner",
+   "art": "npc_miner",
+   "ok": true
+  },
+  {
+   "map": "dovan_inn",
+   "npc": "inn_keeper",
+   "look": "npc_mine_old_f",
+   "art": "npc_mine_old_f",
+   "ok": true
+  },
+  {
+   "map": "dovan_inn",
+   "npc": "inn_guest",
+   "look": "npc_traveler",
+   "art": "npc_traveler",
+   "ok": true
+  },
+  {
+   "map": "dovan_items",
+   "npc": "item_keeper",
+   "look": "npc_mine_woman",
+   "art": "npc_mine_woman",
+   "ok": true
+  },
+  {
+   "map": "dovan_tavern",
+   "npc": "barkeep",
+   "look": "npc_mine_woman",
+   "art": "npc_mine_woman",
+   "ok": true
+  },
+  {
+   "map": "dovan_tavern",
+   "npc": "tav_miner",
+   "look": "npc_miner",
+   "art": "npc_miner",
+   "ok": true
+  },
+  {
+   "map": "dovan_tavern",
+   "npc": "tav_old",
+   "look": "npc_mine_old_m",
+   "art": "npc_mine_old_m",
+   "ok": true
+  },
+  {
+   "map": "elder_1",
+   "npc": "fine",
+   "look": "fine",
+   "art": "fine",
+   "ok": true
+  },
+  {
+   "map": "elder_2",
+   "npc": "elm",
+   "look": "elm",
+   "art": "elm",
+   "ok": true
+  },
+  {
+   "map": "f_cross",
+   "npc": "traveler_plains",
+   "look": "npc_merchant_2",
+   "art": "npc_traveler_2",
+   "ok": true
+  },
+  {
+   "map": "f_cross",
+   "npc": "guard_east",
+   "look": "npc_guard_1",
+   "art": "npc_forest_man_1",
+   "ok": true
+  },
+  {
+   "map": "f_lookout",
+   "npc": "bridge_guard",
+   "look": "npc_guard_2",
+   "art": "npc_pen_guard_2",
+   "ok": true
+  },
+  {
+   "map": "f_roa",
+   "npc": "shepherd",
+   "look": "npc_old_m_2",
+   "art": "npc_pen_old_m_2",
+   "ok": true
+  },
+  {
+   "map": "f_south",
+   "npc": "woodcutter_road",
+   "look": "npc_woodcutter_1",
+   "art": "npc_woodcutter",
+   "ok": true
+  },
+  {
+   "map": "f_south",
+   "npc": "guard_south",
+   "look": "npc_guard_1",
+   "art": "npc_forest_man_1",
+   "ok": true
+  },
+  {
+   "map": "f_windhill",
+   "npc": "guard_north",
+   "look": "npc_guard_1",
+   "art": "npc_forest_man_1",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "hanna",
+   "look": "npc_hanna",
+   "art": "npc_hanna",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "search_lead",
+   "look": "npc_guard_2",
+   "art": "npc_forest_man_2",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "search_a",
+   "look": "npc_woodcutter_2",
+   "art": "npc_woodcutter",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "peddler",
+   "look": "npc_merchant_2",
+   "art": "npc_traveler_2",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "herbalist",
+   "look": "npc_old_f_1",
+   "art": "npc_forest_old_f_1",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "postmaster",
+   "look": "npc_woman_3",
+   "art": "npc_forest_woman_3",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "lampkeeper",
+   "look": "npc_old_m_2",
+   "art": "npc_forest_old_m_2",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "hunter",
+   "look": "npc_woodcutter_3",
+   "art": "npc_woodcutter",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "kid",
+   "look": "npc_child_2",
+   "art": "npc_forest_child_2",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "traveler",
+   "look": "npc_merchant_1",
+   "art": "npc_traveler_1",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "acorn_boy",
+   "look": "npc_child_1",
+   "art": "npc_forest_child_1",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "elder_m",
+   "look": "npc_old_m_1",
+   "art": "npc_forest_old_m_1",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "yura_miller",
+   "look": "npc_yura_folk_2",
+   "art": "npc_yura_man_2",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "pim_after",
+   "look": "npc_pim",
+   "art": "npc_pim",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "deck_1",
+   "look": "npc_woman_1",
+   "art": "npc_forest_woman_1",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "deck_2",
+   "look": "npc_old_m_3",
+   "art": "npc_forest_old_m_3",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "deck_3",
+   "look": "npc_man_2",
+   "art": "npc_forest_man_2",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "deck_4",
+   "look": "npc_woman_2",
+   "art": "npc_forest_woman_2",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "deck_5",
+   "look": "npc_man_3",
+   "art": "npc_forest_man_3",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "dog",
+   "look": "ani_dog",
+   "art": "ani_dog",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "hen",
+   "look": "ani_hen",
+   "art": "ani_hen",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "singer",
+   "look": "npc_bard_1",
+   "art": "npc_bard",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "story_rumor_fern",
+   "look": "npc_forest_old_f",
+   "art": "npc_forest_old_f",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "story_scribe_fern",
+   "look": "npc_scribe",
+   "art": "npc_scribe",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "story_child_fern",
+   "look": "npc_forest_child",
+   "art": "npc_forest_child",
+   "ok": true
+  },
+  {
+   "map": "fern_gord",
+   "npc": "gord",
+   "look": "npc_gord",
+   "art": "npc_gord",
+   "ok": true
+  },
+  {
+   "map": "fern_home1",
+   "npc": "worrier",
+   "look": "npc_woman_2",
+   "art": "npc_forest_woman_2",
+   "ok": true
+  },
+  {
+   "map": "fern_home2",
+   "npc": "rootold",
+   "look": "npc_old_m_2",
+   "art": "npc_forest_old_m_2",
+   "ok": true
+  },
+  {
+   "map": "fern_home3",
+   "npc": "swayman",
+   "look": "npc_man_2",
+   "art": "npc_forest_man_2",
+   "ok": true
+  },
+  {
+   "map": "fern_inn",
+   "npc": "inn_keeper",
+   "look": "npc_woman_4",
+   "art": "npc_forest_woman_4",
+   "ok": true
+  },
+  {
+   "map": "fern_inn",
+   "npc": "inn_guest",
+   "look": "npc_man_4",
+   "art": "npc_forest_man_4",
+   "ok": true
+  },
+  {
+   "map": "fern_pim_home",
+   "npc": "katri",
+   "look": "npc_pim_mother",
+   "art": "npc_pim_mother",
+   "ok": true
+  },
+  {
+   "map": "fern_rita",
+   "npc": "rita",
+   "look": "npc_rita",
+   "art": "npc_rita",
+   "ok": true
+  },
+  {
+   "map": "fern_rita",
+   "npc": "rita_pupil",
+   "look": "npc_child_3",
+   "art": "npc_forest_child_3",
+   "ok": true
+  },
+  {
+   "map": "fern_search",
+   "npc": "search_chief",
+   "look": "npc_guard_1",
+   "art": "npc_forest_man_1",
+   "ok": true
+  },
+  {
+   "map": "fern_search",
+   "npc": "search_b",
+   "look": "npc_woodcutter_4",
+   "art": "npc_woodcutter",
+   "ok": true
+  },
+  {
+   "map": "fern_shed",
+   "npc": "hider",
+   "look": "npc_child_2",
+   "art": "npc_forest_child_2",
+   "ok": true
+  },
+  {
+   "map": "fern_shop",
+   "npc": "shop_keeper",
+   "look": "npc_merchant_3",
+   "art": "npc_traveler_3",
+   "ok": true
+  },
+  {
+   "map": "g_valley",
+   "npc": "gate_guard",
+   "look": "npc_miner",
+   "art": "npc_miner",
+   "ok": true
+  },
+  {
+   "map": "ghost_ship_3",
+   "npc": "glen",
+   "look": "npc_glen",
+   "art": "npc_glen",
+   "ok": true
+  },
+  {
+   "map": "haimi_inn",
+   "npc": "haimi_keeper",
+   "look": "npc_ash_old_f",
+   "art": "npc_ash_old_f",
+   "ok": true
+  },
+  {
+   "map": "haimi_inn",
+   "npc": "haimi_bridgeman",
+   "look": "npc_ash_old_m",
+   "art": "npc_ash_old_m",
+   "ok": true
+  },
+  {
+   "map": "haimi_inn",
+   "npc": "haimi_guest",
+   "look": "npc_traveler",
+   "art": "npc_traveler",
+   "ok": true
+  },
+  {
+   "map": "i_wreck",
+   "npc": "wreck_captain",
+   "look": "npc_merchant_captain",
+   "art": "npc_merchant_captain",
+   "ok": true
+  },
+  {
+   "map": "lighthouse_3",
+   "npc": "fine",
+   "look": "fine",
+   "art": "fine",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "mob_leader",
+   "look": "npc_marsh_man",
+   "art": "npc_marsh_man",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "mob_a",
+   "look": "npc_marsh_woman",
+   "art": "npc_marsh_woman",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "mob_b",
+   "look": "npc_marsh_old_m",
+   "art": "npc_marsh_old_m",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "bard",
+   "look": "npc_bard",
+   "art": "npc_bard",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "child_plaza",
+   "look": "npc_marsh_child",
+   "art": "npc_marsh_child",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "guard_w",
+   "look": "npc_marsh_man",
+   "art": "npc_marsh_man",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "guard_e",
+   "look": "npc_marsh_man",
+   "art": "npc_marsh_man",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "fisher",
+   "look": "npc_marsh_old_m",
+   "art": "npc_marsh_old_m",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "laundress",
+   "look": "npc_marsh_woman",
+   "art": "npc_marsh_woman",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "ferryman",
+   "look": "npc_marsh_old_m",
+   "art": "npc_marsh_old_m",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "boy_south",
+   "look": "npc_marsh_child",
+   "art": "npc_marsh_child",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "lamp_keeper",
+   "look": "npc_marsh_man",
+   "art": "npc_marsh_man",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "yena",
+   "look": "npc_yena",
+   "art": "npc_yena",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "klaus_out",
+   "look": "npc_klaus",
+   "art": "npc_klaus",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "night_vendor",
+   "look": "npc_marsh_woman",
+   "art": "npc_marsh_woman",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "night_owl",
+   "look": "npc_marsh_old_f",
+   "art": "npc_marsh_old_f",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "lost_cat",
+   "look": "ani_cat",
+   "art": "ani_cat",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "fine",
+   "look": "fine",
+   "art": "fine",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "heron",
+   "look": "ani_hen",
+   "art": "ani_hen",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "woman_air",
+   "look": "npc_marsh_woman",
+   "art": "npc_marsh_woman",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "story_rumor_loch",
+   "look": "npc_marsh_old_m",
+   "art": "npc_marsh_old_m",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "story_scribe_loch",
+   "look": "npc_scribe",
+   "art": "npc_scribe",
+   "ok": true
+  },
+  {
+   "map": "loch",
+   "npc": "story_child_loch",
+   "look": "npc_marsh_child",
+   "art": "npc_marsh_child",
+   "ok": true
+  },
+  {
+   "map": "loch_arms",
+   "npc": "smith",
+   "look": "npc_marsh_man",
+   "art": "npc_marsh_man",
+   "ok": true
+  },
+  {
+   "map": "loch_beppo",
+   "npc": "beppo",
+   "look": "npc_beppo",
+   "art": "npc_beppo",
+   "ok": true
+  },
+  {
+   "map": "loch_emma",
+   "npc": "emma_home",
+   "look": "npc_emma",
+   "art": "npc_emma",
+   "ok": true
+  },
+  {
+   "map": "loch_emma",
+   "npc": "lina",
+   "look": "npc_marsh_child",
+   "art": "npc_marsh_child",
+   "ok": true
+  },
+  {
+   "map": "loch_hall",
+   "npc": "mayor",
+   "look": "npc_loch_mayor",
+   "art": "npc_loch_mayor",
+   "ok": true
+  },
+  {
+   "map": "loch_hall",
+   "npc": "hall_clerk",
+   "look": "npc_marsh_old_f",
+   "art": "npc_marsh_old_f",
+   "ok": true
+  },
+  {
+   "map": "loch_inn",
+   "npc": "inn_keeper",
+   "look": "npc_marsh_woman",
+   "art": "npc_marsh_woman",
+   "ok": true
+  },
+  {
+   "map": "loch_inn",
+   "npc": "emma_inn",
+   "look": "npc_emma",
+   "art": "npc_emma",
+   "ok": true
+  },
+  {
+   "map": "loch_inn",
+   "npc": "inn_guest",
+   "look": "npc_traveler",
+   "art": "npc_traveler",
+   "ok": true
+  },
+  {
+   "map": "loch_items",
+   "npc": "item_keeper",
+   "look": "npc_marsh_woman",
+   "art": "npc_marsh_woman",
+   "ok": true
+  },
+  {
+   "map": "loch_klaus",
+   "npc": "klaus",
+   "look": "npc_klaus",
+   "art": "npc_klaus",
+   "ok": true
+  },
+  {
+   "map": "loch_mayor",
+   "npc": "mayor_wife",
+   "look": "npc_marsh_old_f",
+   "art": "npc_marsh_old_f",
+   "ok": true
+  },
+  {
+   "map": "loch_tavern",
+   "npc": "barkeep",
+   "look": "npc_marsh_old_m",
+   "art": "npc_marsh_old_m",
+   "ok": true
+  },
+  {
+   "map": "loch_tavern",
+   "npc": "tav_bard",
+   "look": "npc_bard",
+   "art": "npc_bard",
+   "ok": true
+  },
+  {
+   "map": "loch_tavern",
+   "npc": "tav_sailor",
+   "look": "npc_marsh_man",
+   "art": "npc_marsh_man",
+   "ok": true
+  },
+  {
+   "map": "loch_tavern",
+   "npc": "tav_match",
+   "look": "npc_marsh_woman",
+   "art": "npc_marsh_woman",
+   "ok": true
+  },
+  {
+   "map": "loch_tower",
+   "npc": "tobias",
+   "look": "npc_tobias",
+   "art": "npc_tobias",
+   "ok": true
+  },
+  {
+   "map": "m_north",
+   "npc": "peat_cutter",
+   "look": "npc_marsh_woman",
+   "art": "npc_marsh_woman",
+   "ok": true
+  },
+  {
+   "map": "m_west",
+   "npc": "shore_fisher",
+   "look": "npc_marsh_old_m",
+   "art": "npc_marsh_old_m",
+   "ok": true
+  },
+  {
+   "map": "marsh_bog",
+   "npc": "bog_kid_a",
+   "look": "npc_marsh_child",
+   "art": "npc_marsh_child",
+   "ok": true
+  },
+  {
+   "map": "marsh_bog",
+   "npc": "bog_kid_b",
+   "look": "npc_marsh_child",
+   "art": "npc_marsh_child",
+   "ok": true
+  },
+  {
+   "map": "marsh_manor_2",
+   "npc": "melda",
+   "look": "npc_melda",
+   "art": "npc_melda",
+   "ok": true
+  },
+  {
+   "map": "mine_1",
+   "npc": "miner1",
+   "look": "npc_miner",
+   "art": "npc_miner",
+   "ok": true
+  },
+  {
+   "map": "mine_1",
+   "npc": "kitten",
+   "look": "ani_cat",
+   "art": "ani_cat",
+   "ok": true
+  },
+  {
+   "map": "mine_2",
+   "npc": "miner2",
+   "look": "npc_miner",
+   "art": "npc_miner",
+   "ok": true
+  },
+  {
+   "map": "mine_2",
+   "npc": "pip",
+   "look": "npc_pip",
+   "art": "npc_pip",
+   "ok": true
+  },
+  {
+   "map": "mine_2",
+   "npc": "ghost",
+   "look": "npc_mine_old_m",
+   "art": "npc_mine_old_m",
+   "ok": true
+  },
+  {
+   "map": "mine_hermit",
+   "npc": "hermit",
+   "look": "npc_hermit",
+   "art": "npc_hermit",
+   "ok": true
+  },
+  {
+   "map": "nerei",
+   "npc": "nerei_fisher",
+   "look": "npc_isles_man",
+   "art": "npc_isles_man",
+   "ok": true
+  },
+  {
+   "map": "nerei",
+   "npc": "nerei_child",
+   "look": "npc_isles_child",
+   "art": "npc_isles_child",
+   "ok": true
+  },
+  {
+   "map": "nerei",
+   "npc": "nerei_oldman",
+   "look": "npc_isles_old_m",
+   "art": "npc_isles_old_m",
+   "ok": true
+  },
+  {
+   "map": "nerei",
+   "npc": "fine",
+   "look": "fine",
+   "art": "fine",
+   "ok": true
+  },
+  {
+   "map": "nerei",
+   "npc": "marina_pier",
+   "look": "npc_marina",
+   "art": "npc_marina",
+   "ok": true
+  },
+  {
+   "map": "nerei",
+   "npc": "marina_dawn",
+   "look": "npc_marina",
+   "art": "npc_marina",
+   "ok": true
+  },
+  {
+   "map": "nerei",
+   "npc": "glen_dawn",
+   "look": "npc_glen",
+   "art": "npc_glen",
+   "ok": true
+  },
+  {
+   "map": "nerei",
+   "npc": "dawn_fisher",
+   "look": "npc_isles_man",
+   "art": "npc_isles_man",
+   "ok": true
+  },
+  {
+   "map": "nerei",
+   "npc": "story_rumor_nerei",
+   "look": "npc_isles_old_f",
+   "art": "npc_isles_old_f",
+   "ok": true
+  },
+  {
+   "map": "nerei",
+   "npc": "story_scribe_nerei",
+   "look": "npc_scribe",
+   "art": "npc_scribe",
+   "ok": true
+  },
+  {
+   "map": "nerei",
+   "npc": "story_child_nerei",
+   "look": "npc_isles_child",
+   "art": "npc_isles_child",
+   "ok": true
+  },
+  {
+   "map": "nerei_house",
+   "npc": "house_wife",
+   "look": "npc_isles_woman",
+   "art": "npc_isles_woman",
+   "ok": true
+  },
+  {
+   "map": "nerei_inn",
+   "npc": "nerei_inn_keeper",
+   "look": "npc_isles_old_f",
+   "art": "npc_isles_old_f",
+   "ok": true
+  },
+  {
+   "map": "nerei_inn",
+   "npc": "nerei_inn_guest",
+   "look": "npc_isles_sailor",
+   "art": "npc_isles_sailor",
+   "ok": true
+  },
+  {
+   "map": "nerei_lampkeeper",
+   "npc": "lampkeeper",
+   "look": "npc_isles_old_m",
+   "art": "npc_isles_old_m",
+   "ok": true
+  },
+  {
+   "map": "nerei_marina",
+   "npc": "marina",
+   "look": "npc_marina",
+   "art": "npc_marina",
+   "ok": true
+  },
+  {
+   "map": "nerei_store",
+   "npc": "store_keeper",
+   "look": "npc_isles_woman",
+   "art": "npc_isles_woman",
+   "ok": true
+  },
+  {
+   "map": "orbis",
+   "npc": "gate_guard",
+   "look": "npc_pen_guard",
+   "art": "npc_pen_guard",
+   "ok": true
+  },
+  {
+   "map": "orbis",
+   "npc": "district_guard",
+   "look": "npc_pen_guard",
+   "art": "npc_pen_guard",
+   "ok": true
+  },
+  {
+   "map": "orbis",
+   "npc": "academy_guard",
+   "look": "npc_night_guard",
+   "art": "npc_night_guard",
+   "ok": true
+  },
+  {
+   "map": "orbis",
+   "npc": "clerk",
+   "look": "npc_clerk",
+   "art": "npc_clerk",
+   "ok": true
+  },
+  {
+   "map": "orbis",
+   "npc": "lamp_keeper",
+   "look": "npc_star_old_m",
+   "art": "npc_star_old_m",
+   "ok": true
+  },
+  {
+   "map": "orbis",
+   "npc": "researcher",
+   "look": "npc_star_man",
+   "art": "npc_star_man",
+   "ok": true
+  },
+  {
+   "map": "orbis",
+   "npc": "student_pen",
+   "look": "npc_student",
+   "art": "npc_student",
+   "ok": true
+  },
+  {
+   "map": "orbis",
+   "npc": "plaza_old",
+   "look": "npc_star_old_m",
+   "art": "npc_star_old_m",
+   "ok": true
+  },
+  {
+   "map": "orbis",
+   "npc": "plaza_woman",
+   "look": "npc_star_woman",
+   "art": "npc_star_woman",
+   "ok": true
+  },
+  {
+   "map": "orbis",
+   "npc": "child",
+   "look": "npc_star_child",
+   "art": "npc_star_child",
+   "ok": true
+  },
+  {
+   "map": "orbis",
+   "npc": "luca",
+   "look": "npc_luka",
+   "art": "npc_luka",
+   "ok": true
+  },
+  {
+   "map": "orbis",
+   "npc": "octavia_dawn",
+   "look": "npc_octavia",
+   "art": "npc_octavia",
+   "ok": true
+  },
+  {
+   "map": "orbis",
+   "npc": "roof_old",
+   "look": "npc_star_old_m",
+   "art": "npc_star_old_m",
+   "ok": true
+  },
+  {
+   "map": "orbis",
+   "npc": "roof_kid",
+   "look": "npc_star_child",
+   "art": "npc_star_child",
+   "ok": true
+  },
+  {
+   "map": "orbis",
+   "npc": "cat",
+   "look": "ani_cat",
+   "art": "ani_cat",
+   "ok": true
+  },
+  {
+   "map": "orbis",
+   "npc": "story_rumor_orbis",
+   "look": "npc_star_old_m",
+   "art": "npc_star_old_m",
+   "ok": true
+  },
+  {
+   "map": "orbis",
+   "npc": "story_scribe_orbis",
+   "look": "npc_scribe",
+   "art": "npc_scribe",
+   "ok": true
+  },
+  {
+   "map": "orbis",
+   "npc": "story_child_orbis",
+   "look": "npc_star_child",
+   "art": "npc_star_child",
+   "ok": true
+  },
+  {
+   "map": "orbis_arms",
+   "npc": "smith",
+   "look": "npc_star_man",
+   "art": "npc_star_man",
+   "ok": true
+  },
+  {
+   "map": "orbis_guardroom",
+   "npc": "guard_captain",
+   "look": "npc_night_guard",
+   "art": "npc_night_guard",
+   "ok": true
+  },
+  {
+   "map": "orbis_house",
+   "npc": "house_mother",
+   "look": "npc_star_woman",
+   "art": "npc_star_woman",
+   "ok": true
+  },
+  {
+   "map": "orbis_house2",
+   "npc": "house2_old",
+   "look": "npc_star_old_f",
+   "art": "npc_star_old_f",
+   "ok": true
+  },
+  {
+   "map": "orbis_house3",
+   "npc": "house3_kid",
+   "look": "npc_star_child",
+   "art": "npc_star_child",
+   "ok": true
+  },
+  {
+   "map": "orbis_house4",
+   "npc": "scholar_w",
+   "look": "npc_star_woman",
+   "art": "npc_star_woman",
+   "ok": true
+  },
+  {
+   "map": "orbis_house5",
+   "npc": "old_scholar",
+   "look": "npc_star_old_m",
+   "art": "npc_star_old_m",
+   "ok": true
+  },
+  {
+   "map": "orbis_inn",
+   "npc": "inn_keeper",
+   "look": "npc_star_woman",
+   "art": "npc_star_woman",
+   "ok": true
+  },
+  {
+   "map": "orbis_inn",
+   "npc": "student_letter",
+   "look": "npc_student",
+   "art": "npc_student",
+   "ok": true
+  },
+  {
+   "map": "orbis_items",
+   "npc": "item_keeper",
+   "look": "npc_star_woman",
+   "art": "npc_star_woman",
+   "ok": true
+  },
+  {
+   "map": "orbis_laundry",
+   "npc": "laundress",
+   "look": "npc_star_old_f",
+   "art": "npc_star_old_f",
+   "ok": true
+  },
+  {
+   "map": "orbis_laundry",
+   "npc": "ida",
+   "look": "npc_star_woman",
+   "art": "npc_star_woman",
+   "ok": true
+  },
+  {
+   "map": "orbis_library",
+   "npc": "librarian",
+   "look": "npc_star_old_f",
+   "art": "npc_star_old_f",
+   "ok": true
+  },
+  {
+   "map": "orbis_library",
+   "npc": "octavia",
+   "look": "npc_octavia",
+   "art": "npc_octavia",
+   "ok": true
+  },
+  {
+   "map": "orbis_library",
+   "npc": "octavia_head",
+   "look": "npc_octavia",
+   "art": "npc_octavia",
+   "ok": true
+  },
+  {
+   "map": "orbis_library",
+   "npc": "lib_clerk",
+   "look": "npc_clerk",
+   "art": "npc_clerk",
+   "ok": true
+  },
+  {
+   "map": "orbis_library",
+   "npc": "examiner",
+   "look": "npc_star_old_m",
+   "art": "npc_star_old_m",
+   "ok": true
+  },
+  {
+   "map": "orbis_library",
+   "npc": "student_exam",
+   "look": "npc_student",
+   "art": "npc_student",
+   "ok": true
+  },
+  {
+   "map": "orbis_magic",
+   "npc": "magic_keeper",
+   "look": "npc_star_old_f",
+   "art": "npc_star_old_f",
+   "ok": true
+  },
+  {
+   "map": "orbis_observatory",
+   "npc": "luca",
+   "look": "npc_luka",
+   "art": "npc_luka",
+   "ok": true
+  },
+  {
+   "map": "orbis_observatory",
+   "npc": "octavia_obs",
+   "look": "npc_octavia",
+   "art": "npc_octavia",
+   "ok": true
+  },
+  {
+   "map": "orbis_records",
+   "npc": "records_clerk",
+   "look": "npc_scribe",
+   "art": "npc_scribe",
+   "ok": true
+  },
+  {
+   "map": "orbis_tailor",
+   "npc": "tailor",
+   "look": "npc_star_woman",
+   "art": "npc_star_woman",
+   "ok": true
+  },
+  {
+   "map": "orbis_tavern",
+   "npc": "barkeep",
+   "look": "npc_star_man",
+   "art": "npc_star_man",
+   "ok": true
+  },
+  {
+   "map": "orbis_tavern",
+   "npc": "old_watch",
+   "look": "npc_night_guard",
+   "art": "npc_night_guard",
+   "ok": true
+  },
+  {
+   "map": "orbis_tavern",
+   "npc": "traveler",
+   "look": "npc_traveler",
+   "art": "npc_traveler",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "otto",
+   "look": "otto",
+   "art": "otto",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "gateguard",
+   "look": "npc_guard_1",
+   "art": "npc_pen_guard_1",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "well_child",
+   "look": "npc_child_2",
+   "art": "npc_pen_child_2",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "tadeo",
+   "look": "npc_tadeo",
+   "art": "npc_tadeo",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "fishwife",
+   "look": "npc_woman_3",
+   "art": "npc_pen_woman_3",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "old_sailor",
+   "look": "npc_sailor_2",
+   "art": "npc_pen_sailor_2",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "ship_sailor",
+   "look": "npc_sailor_1",
+   "art": "npc_pen_sailor_1",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "plaza_woman",
+   "look": "npc_woman_1",
+   "art": "npc_pen_woman_1",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "bench_old",
+   "look": "npc_old_m_2",
+   "art": "npc_pen_old_m_2",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "merchant",
+   "look": "npc_merchant_1",
+   "art": "npc_pen_keeper_1",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "yena",
+   "look": "npc_yena",
+   "art": "npc_yena",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "kid_pier",
+   "look": "npc_child_4",
+   "art": "npc_pen_child_4",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "dog",
+   "look": "ani_dog",
+   "art": "ani_dog",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "berna",
+   "look": "berna",
+   "art": "berna",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "cheer_a",
+   "look": "npc_man_1",
+   "art": "npc_pen_man_1",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "cheer_b",
+   "look": "npc_woman_1",
+   "art": "npc_pen_woman_1",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "ferry_hand",
+   "look": "npc_isles_sailor",
+   "art": "npc_isles_sailor",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "fin_rowell_pier",
+   "look": "rowell",
+   "art": "rowell",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "fin_ship_hand",
+   "look": "npc_sailor_1",
+   "art": "npc_pen_sailor_1",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "story_rumor_pharos",
+   "look": "npc_pen_old_f",
+   "art": "npc_pen_old_f",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "story_scribe_pharos",
+   "look": "npc_scribe",
+   "art": "npc_scribe",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "story_child_pharos",
+   "look": "npc_pen_child",
+   "art": "npc_pen_child",
+   "ok": true
+  },
+  {
+   "map": "pharos_home1",
+   "npc": "sailorwife",
+   "look": "npc_woman_2",
+   "art": "npc_pen_woman_2",
+   "ok": true
+  },
+  {
+   "map": "pharos_home2",
+   "npc": "oldnet",
+   "look": "npc_old_m_1",
+   "art": "npc_pen_old_m_1",
+   "ok": true
+  },
+  {
+   "map": "pharos_home3",
+   "npc": "landsailor",
+   "look": "npc_sailor_3",
+   "art": "npc_pen_sailor_3",
+   "ok": true
+  },
+  {
+   "map": "pharos_home4",
+   "npc": "mom",
+   "look": "npc_woman_3",
+   "art": "npc_pen_woman_3",
+   "ok": true
+  },
+  {
+   "map": "pharos_home4",
+   "npc": "kid",
+   "look": "npc_child_1",
+   "art": "npc_pen_child_1",
+   "ok": true
+  },
+  {
+   "map": "pharos_home5",
+   "npc": "clerkfriend",
+   "look": "npc_man_1",
+   "art": "npc_pen_man_1",
+   "ok": true
+  },
+  {
+   "map": "pharos_home6",
+   "npc": "fruitgran",
+   "look": "npc_old_f_3",
+   "art": "npc_pen_old_f_3",
+   "ok": true
+  },
+  {
+   "map": "pharos_inn",
+   "npc": "innkeeper",
+   "look": "npc_woman_4",
+   "art": "npc_pen_woman_4",
+   "ok": true
+  },
+  {
+   "map": "pharos_record",
+   "npc": "rowell",
+   "look": "rowell",
+   "art": "rowell",
+   "ok": true
+  },
+  {
+   "map": "pharos_record",
+   "npc": "clerk",
+   "look": "npc_man_2",
+   "art": "npc_pen_man_2",
+   "ok": true
+  },
+  {
+   "map": "pharos_shipyard",
+   "npc": "shipwright",
+   "look": "npc_old_m_3",
+   "art": "npc_pen_old_m_3",
+   "ok": true
+  },
+  {
+   "map": "pharos_shipyard",
+   "npc": "apprentice",
+   "look": "npc_man_1",
+   "art": "npc_pen_man_1",
+   "ok": true
+  },
+  {
+   "map": "pharos_shop",
+   "npc": "shopkeeper",
+   "look": "npc_merchant_1",
+   "art": "npc_pen_keeper_1",
+   "ok": true
+  },
+  {
+   "map": "pharos_smith",
+   "npc": "smith",
+   "look": "npc_man_4",
+   "art": "npc_pen_man_4",
+   "ok": true
+  },
+  {
+   "map": "pharos_tavern",
+   "npc": "master",
+   "look": "npc_merchant_2",
+   "art": "npc_pen_keeper_2",
+   "ok": true
+  },
+  {
+   "map": "pharos_tavern",
+   "npc": "gossip",
+   "look": "npc_woman_3",
+   "art": "npc_pen_woman_3",
+   "ok": true
+  },
+  {
+   "map": "pharos_tavern",
+   "npc": "bard",
+   "look": "npc_bard_1",
+   "art": "npc_bard",
+   "ok": true
+  },
+  {
+   "map": "pharos_tavern",
+   "npc": "trader",
+   "look": "npc_merchant_3",
+   "art": "npc_pen_keeper_3",
+   "ok": true
+  },
+  {
+   "map": "pharos_tavern",
+   "npc": "swordsman",
+   "look": "npc_man_3",
+   "art": "npc_pen_man_3",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "gatewoman",
+   "look": "npc_woman_2",
+   "art": "npc_pen_woman_2",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "gatewoman2",
+   "look": "npc_woman_2",
+   "art": "npc_pen_woman_2",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "child_a",
+   "look": "npc_child_1",
+   "art": "npc_pen_child_1",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "child_b",
+   "look": "npc_child_3",
+   "art": "npc_pen_child_3",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "elder",
+   "look": "npc_old_m_1",
+   "art": "npc_pen_old_m_1",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "farmer",
+   "look": "npc_man_2",
+   "art": "npc_pen_man_2",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "weaver",
+   "look": "npc_old_f_1",
+   "art": "npc_pen_old_f_1",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "youth",
+   "look": "npc_man_1",
+   "art": "npc_pen_man_1",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "stroller",
+   "look": "npc_woman_1",
+   "art": "npc_pen_woman_1",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "cat",
+   "look": "ani_cat",
+   "art": "ani_cat",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "fin_berna",
+   "look": "berna",
+   "art": "berna",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "fin_fine",
+   "look": "fine",
+   "art": "fine",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "fin_rowell",
+   "look": "rowell",
+   "art": "rowell",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "story_rowell_roa",
+   "look": "rowell",
+   "art": "rowell",
+   "ok": true
+  },
+  {
    "map": "roa_dawn",
    "npc": "e_berna",
    "look": "berna",
@@ -1074,9 +8340,576 @@
    "look": "npc_child_3",
    "art": "npc_forest_child_3",
    "ok": true
+  },
+  {
+   "map": "roa_home1",
+   "npc": "mother",
+   "look": "npc_woman_1",
+   "art": "npc_pen_woman_1",
+   "ok": true
+  },
+  {
+   "map": "roa_home2",
+   "npc": "woodman",
+   "look": "npc_man_3",
+   "art": "npc_pen_man_3",
+   "ok": true
+  },
+  {
+   "map": "roa_home3",
+   "npc": "granny",
+   "look": "npc_old_f_2",
+   "art": "npc_pen_old_f_2",
+   "ok": true
+  },
+  {
+   "map": "roa_home4",
+   "npc": "father",
+   "look": "npc_man_4",
+   "art": "npc_pen_man_4",
+   "ok": true
+  },
+  {
+   "map": "roa_home5",
+   "npc": "fieldkeeper",
+   "look": "npc_old_m_3",
+   "art": "npc_pen_old_m_3",
+   "ok": true
+  },
+  {
+   "map": "roa_home6",
+   "npc": "pondwife",
+   "look": "npc_woman_4",
+   "art": "npc_pen_woman_4",
+   "ok": true
+  },
+  {
+   "map": "roa_house",
+   "npc": "berna",
+   "look": "berna",
+   "art": "berna",
+   "ok": true
+  },
+  {
+   "map": "roa_house",
+   "npc": "berna_desk",
+   "look": "berna",
+   "art": "berna",
+   "ok": true
+  },
+  {
+   "map": "star_academy_1",
+   "npc": "guard_s",
+   "look": "npc_night_guard",
+   "art": "npc_night_guard",
+   "ok": true
+  },
+  {
+   "map": "star_academy_1",
+   "npc": "guard_e",
+   "look": "npc_night_guard",
+   "art": "npc_night_guard",
+   "ok": true
+  },
+  {
+   "map": "star_academy_1",
+   "npc": "guard_n",
+   "look": "npc_night_guard",
+   "art": "npc_night_guard",
+   "ok": true
+  },
+  {
+   "map": "star_academy_1",
+   "npc": "night_student",
+   "look": "npc_student",
+   "art": "npc_student",
+   "ok": true
+  },
+  {
+   "map": "star_academy_2",
+   "npc": "guard_g",
+   "look": "npc_night_guard",
+   "art": "npc_night_guard",
+   "ok": true
+  },
+  {
+   "map": "star_academy_2",
+   "npc": "guard_c",
+   "look": "npc_night_guard",
+   "art": "npc_night_guard",
+   "ok": true
+  },
+  {
+   "map": "star_academy_2",
+   "npc": "octavia_night",
+   "look": "npc_octavia",
+   "art": "npc_octavia",
+   "ok": true
+  },
+  {
+   "map": "verda_1",
+   "npc": "ben",
+   "look": "npc_ben",
+   "art": "npc_ben",
+   "ok": true
+  },
+  {
+   "map": "verda_1",
+   "npc": "camp_hans",
+   "look": "npc_hans",
+   "art": "npc_hans",
+   "ok": true
+  },
+  {
+   "map": "verda_1",
+   "npc": "camp_ben",
+   "look": "npc_ben",
+   "art": "npc_ben",
+   "ok": true
+  },
+  {
+   "map": "verda_1",
+   "npc": "camp_roy",
+   "look": "npc_roy",
+   "art": "npc_roy",
+   "ok": true
+  },
+  {
+   "map": "verda_1",
+   "npc": "camp_pim",
+   "look": "npc_pim",
+   "art": "npc_pim",
+   "ok": true
+  },
+  {
+   "map": "verda_1",
+   "npc": "fawn_after",
+   "look": "ani_fawn",
+   "art": "ani_fawn",
+   "ok": true
+  },
+  {
+   "map": "verda_2",
+   "npc": "pim",
+   "look": "npc_pim",
+   "art": "npc_pim",
+   "ok": true
+  },
+  {
+   "map": "verda_2",
+   "npc": "fawn",
+   "look": "ani_fawn",
+   "art": "ani_fawn",
+   "ok": true
+  },
+  {
+   "map": "verda_2",
+   "npc": "hans",
+   "look": "npc_hans",
+   "art": "npc_hans",
+   "ok": true
+  },
+  {
+   "map": "verda_2",
+   "npc": "roy",
+   "look": "npc_roy",
+   "art": "npc_roy",
+   "ok": true
+  },
+  {
+   "map": "volk",
+   "npc": "bridge_old",
+   "look": "npc_mine_old_m",
+   "art": "npc_mine_old_m",
+   "ok": true
+  },
+  {
+   "map": "volk",
+   "npc": "yard_smith",
+   "look": "npc_smith",
+   "art": "npc_smith",
+   "ok": true
+  },
+  {
+   "map": "volk",
+   "npc": "volk_child",
+   "look": "npc_mine_child",
+   "art": "npc_mine_child",
+   "ok": true
+  },
+  {
+   "map": "volk",
+   "npc": "volk_pip",
+   "look": "npc_pip",
+   "art": "npc_pip",
+   "ok": true
+  },
+  {
+   "map": "volk",
+   "npc": "volk_trader",
+   "look": "npc_miner",
+   "art": "npc_miner",
+   "ok": true
+  },
+  {
+   "map": "volk",
+   "npc": "volk_apprentice",
+   "look": "npc_mine_child",
+   "art": "npc_mine_child",
+   "ok": true
+  },
+  {
+   "map": "volk_elder",
+   "npc": "volk_gunnar",
+   "look": "npc_mine_old_m",
+   "art": "npc_mine_old_m",
+   "ok": true
+  },
+  {
+   "map": "volk_forge",
+   "npc": "volk_master",
+   "look": "npc_smith",
+   "art": "npc_smith",
+   "ok": true
+  },
+  {
+   "map": "volk_forge",
+   "npc": "volk_helga",
+   "look": "npc_helga",
+   "art": "npc_helga",
+   "ok": true
+  },
+  {
+   "map": "volk_forge",
+   "npc": "volk_dovan_seller",
+   "look": "npc_smith",
+   "art": "npc_smith",
+   "ok": true
+  },
+  {
+   "map": "volk_house",
+   "npc": "volk_wife",
+   "look": "npc_mine_woman",
+   "art": "npc_mine_woman",
+   "ok": true
+  },
+  {
+   "map": "volk_inn",
+   "npc": "volk_innkeep",
+   "look": "npc_mine_woman",
+   "art": "npc_mine_woman",
+   "ok": true
+  },
+  {
+   "map": "volk_inn",
+   "npc": "volk_guest",
+   "look": "npc_traveler",
+   "art": "npc_traveler",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "bridge_guard",
+   "look": "npc_guard_2",
+   "art": "npc_pen_guard_2",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "guard_east",
+   "look": "npc_guard_1",
+   "art": "npc_pen_guard_1",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "guard_north",
+   "look": "npc_guard_1",
+   "art": "npc_pen_guard_1",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "guard_south",
+   "look": "npc_guard_1",
+   "art": "npc_pen_guard_1",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "traveler_plains",
+   "look": "npc_merchant_2",
+   "art": "npc_pen_keeper_2",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "woodcutter_road",
+   "look": "npc_woodcutter_1",
+   "art": "npc_woodcutter",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "shepherd",
+   "look": "npc_old_m_2",
+   "art": "npc_pen_old_m_2",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "lost_camel",
+   "look": "ani_camel",
+   "art": "ani_camel",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "pilgrim",
+   "look": "npc_desert_old_f",
+   "art": "npc_desert_old_f",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "oil_caravan",
+   "look": "npc_oil_carrier",
+   "art": "npc_oil_carrier",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "oil_camel",
+   "look": "ani_camel",
+   "art": "ani_camel",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "guard_ash",
+   "look": "npc_guard_1",
+   "art": "npc_pen_guard_1",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "snow_trapper",
+   "look": "npc_snow_man",
+   "art": "npc_snow_man",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "snow_pilgrim",
+   "look": "npc_snow_old_m",
+   "art": "npc_snow_old_m",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "snow_scout",
+   "look": "npc_snow_watch",
+   "art": "npc_snow_watch",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "guard_snow_east",
+   "look": "npc_guard_1",
+   "art": "npc_pen_guard_1",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "marsh_traveler",
+   "look": "npc_traveler",
+   "art": "npc_traveler",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "guard_marsh",
+   "look": "npc_guard_1",
+   "art": "npc_pen_guard_1",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "ash_traveler",
+   "look": "npc_traveler",
+   "art": "npc_traveler",
+   "ok": true
+  },
+  {
+   "map": "world",
+   "npc": "guard_star",
+   "look": "npc_guard_1",
+   "art": "npc_pen_guard_1",
+   "ok": true
+  },
+  {
+   "map": "yura",
+   "npc": "yura_elder",
+   "look": "npc_yura_elder",
+   "art": "npc_yura_elder",
+   "ok": true
+  },
+  {
+   "map": "yura",
+   "npc": "yura_miller",
+   "look": "npc_yura_folk_2",
+   "art": "npc_yura_man_2",
+   "ok": true
+  },
+  {
+   "map": "yura",
+   "npc": "yura_nanny",
+   "look": "npc_yura_folk_1",
+   "art": "npc_yura_woman_1",
+   "ok": true
+  },
+  {
+   "map": "yura",
+   "npc": "yura_grave",
+   "look": "npc_yura_folk_3",
+   "art": "npc_yura_woman_3",
+   "ok": true
+  },
+  {
+   "map": "yura",
+   "npc": "yura_lamp",
+   "look": "npc_yura_folk_4",
+   "art": "npc_yura_man_4",
+   "ok": true
+  },
+  {
+   "map": "yura",
+   "npc": "yura_seller",
+   "look": "npc_yura_folk_1",
+   "art": "npc_yura_woman_1",
+   "ok": true
+  },
+  {
+   "map": "yura",
+   "npc": "yura_child",
+   "look": "npc_child_4",
+   "art": "npc_forest_child_4",
+   "ok": true
+  },
+  {
+   "map": "yura",
+   "npc": "yura_cat",
+   "look": "ani_cat",
+   "art": "ani_cat",
+   "ok": true
+  },
+  {
+   "map": "yura",
+   "npc": "laila_mother",
+   "look": "npc_old_f_2",
+   "art": "npc_yura_woman_2",
+   "ok": true
+  },
+  {
+   "map": "yura_home1",
+   "npc": "long",
+   "look": "npc_yura_folk_1",
+   "art": "npc_yura_woman_1",
+   "ok": true
+  },
+  {
+   "map": "yura_home2",
+   "npc": "uncalled",
+   "look": "npc_yura_folk_3",
+   "art": "npc_yura_woman_3",
+   "ok": true
+  },
+  {
+   "map": "yura_home3",
+   "npc": "dreamer",
+   "look": "npc_yura_folk_4",
+   "art": "npc_yura_man_4",
+   "ok": true
+  },
+  {
+   "map": "yura_home4",
+   "npc": "namekid",
+   "look": "npc_child_3",
+   "art": "npc_forest_child_3",
+   "ok": true
+  },
+  {
+   "map": "yura_home_elder",
+   "npc": "aide",
+   "look": "npc_yura_folk_2",
+   "art": "npc_yura_man_2",
+   "ok": true
+  },
+  {
+   "map": "yura_inn",
+   "npc": "yura_innkeeper",
+   "look": "npc_yura_folk_3",
+   "art": "npc_yura_woman_3",
+   "ok": true
+  },
+  {
+   "map": "yura_inn",
+   "npc": "yura_guest",
+   "look": "npc_yura_folk_4",
+   "art": "npc_yura_man_4",
+   "ok": true
   }
  ],
  "skipped": [
+  {
+   "map": "a_foot",
+   "kind": "stairs",
+   "id": "",
+   "to": "ash_volcano_1",
+   "cond": "ash_champion"
+  },
+  {
+   "map": "archive_2",
+   "kind": "stairs",
+   "id": "archive_2_up",
+   "to": "archive_3",
+   "cond": "final_golem"
+  },
+  {
+   "map": "archive_2",
+   "kind": "stairs",
+   "id": "",
+   "to": "archive_3",
+   "cond": "final_golem"
+  },
+  {
+   "map": "archive_3",
+   "kind": "stairs",
+   "id": "archive_3_up",
+   "to": "archive_4",
+   "cond": "final_rowell"
+  },
+  {
+   "map": "archive_3",
+   "kind": "stairs",
+   "id": "",
+   "to": "archive_4",
+   "cond": "final_rowell"
+  },
+  {
+   "map": "archive_4",
+   "kind": "stairs",
+   "id": "archive_4_up",
+   "to": "archive_5",
+   "cond": "final_shades"
+  },
+  {
+   "map": "archive_4",
+   "kind": "stairs",
+   "id": "",
+   "to": "archive_5",
+   "cond": "final_shades"
+  },
   {
    "map": "archive_5",
    "kind": "stairs",
@@ -1090,6 +8923,491 @@
    "id": "",
    "to": "archive_6",
    "cond": "final_lazaro"
+  },
+  {
+   "map": "ash_volcano_1",
+   "kind": "stairs",
+   "id": "volcano_1_up",
+   "to": "ash_volcano_2",
+   "cond": {
+    "var": "ash_murals",
+    "gte": 3
+   }
+  },
+  {
+   "map": "dovan",
+   "kind": "door",
+   "id": "",
+   "to": "volk",
+   "cond": "mine_volk_open"
+  },
+  {
+   "map": "f_cross",
+   "kind": "exit",
+   "id": "59,18",
+   "to": "world",
+   "cond": {
+    "not": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "f_cross",
+   "kind": "exit",
+   "id": "59,18",
+   "to": "world",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "f_lookout",
+   "kind": "exit",
+   "id": "22,0",
+   "to": "f_cross",
+   "cond": "prologue_done"
+  },
+  {
+   "map": "f_south",
+   "kind": "exit",
+   "id": "20,47",
+   "to": "d_pass",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "f_south",
+   "kind": "exit",
+   "id": "20,47",
+   "to": "d_pass",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "f_windhill",
+   "kind": "exit",
+   "id": "39,0",
+   "to": "f_snowpass",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "f_windhill",
+   "kind": "exit",
+   "id": "39,0",
+   "to": "f_snowpass",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "g_pass",
+   "kind": "door",
+   "id": "",
+   "to": "dovan",
+   "cond": "mine_smithpath"
+  },
+  {
+   "map": "lighthouse_1",
+   "kind": "door",
+   "id": "lh1_door_w",
+   "to": "lighthouse_1",
+   "cond": {
+    "any": [
+     "prologue_lh_door",
+     "prologue_tutorial"
+    ]
+   }
+  },
+  {
+   "map": "lighthouse_1",
+   "kind": "door",
+   "id": "lh1_door_e",
+   "to": "lighthouse_1",
+   "cond": {
+    "any": [
+     "prologue_lh_door",
+     "prologue_tutorial"
+    ]
+   }
+  },
+  {
+   "map": "m_bog",
+   "kind": "door",
+   "id": "",
+   "to": "marsh_bog",
+   "cond": "marsh_assembly_done"
+  },
+  {
+   "map": "m_bog",
+   "kind": "exit",
+   "id": "25,43",
+   "to": "a_bridge",
+   "cond": {
+    "not": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "mine_3",
+   "kind": "door",
+   "id": "",
+   "to": "mine_3",
+   "cond": "mine_door_open"
+  },
+  {
+   "map": "mine_3",
+   "kind": "door",
+   "id": "",
+   "to": "mine_3",
+   "cond": "mine_door_open"
+  },
+  {
+   "map": "mine_3",
+   "kind": "stairs",
+   "id": "mine_3_vein",
+   "to": "vein_1",
+   "cond": {
+    "any": [
+     "mine_vein_open",
+     {
+      "tier": 6
+     }
+    ]
+   }
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "",
+   "to": "coral",
+   "cond": {
+    "not": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "s_ridge",
+   "kind": "door",
+   "id": "",
+   "to": "star_tower_1",
+   "cond": "star_tower_open"
+  },
+  {
+   "map": "volk",
+   "kind": "door",
+   "id": "",
+   "to": "dovan",
+   "cond": "mine_volk_open"
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "to": "desert_temple_1",
+   "cond": {
+    "any": [
+     "cleared_r_desert",
+     {
+      "var": "desert_nights",
+      "gte": 3
+     }
+    ]
+   }
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "to": "marsh_bog",
+   "cond": "marsh_assembly_done"
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "to": "ash_volcano_1",
+   "cond": "ash_champion"
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "151,422",
+   "to": "kasim",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "163,422",
+   "to": "kasim",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "112,459",
+   "to": "desert_camp1",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "81,476",
+   "to": "desert_camp2",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "49,426",
+   "to": "desert_camp3",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "81,451",
+   "to": "desert_oldcamp",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "41,453",
+   "to": "desert_wellroom",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "85,425",
+   "to": "desert_hawks_1",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "172,377",
+   "to": "desert_rocks",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "121,428",
+   "to": "desert_mirage",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "143,76",
+   "to": "yule",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "153,76",
+   "to": "yule",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "148,70",
+   "to": "yule",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "258,92",
+   "to": "pass_inn",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "544,221",
+   "to": "loch",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "556,221",
+   "to": "loch",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "495,408",
+   "to": "caldera",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "506,408",
+   "to": "caldera",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "271,423",
+   "to": "d_east",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "476,145",
+   "to": "s_steps",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "500,173",
+   "to": "m_north",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "563,351",
+   "to": "m_bog",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "262,90",
+   "to": "f_passinn",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "476,145",
+   "to": "s_steps",
+   "cond": {
+    "demoGate": {
+     "slice": true
+    }
+   }
   }
  ],
  "errors": []
