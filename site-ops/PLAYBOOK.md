@@ -6,8 +6,18 @@
 ## 前提（2026-10 時点）
 - データ取得: `site-ops/tools/`（環境変数 `GOOGLE_SA_JSON` / `GA4_PROPERTY_IDS`。キーはリポジトリに置かない・チャットに貼らない）。
 - mononippon: リポジトリ `YukiIkemori/mononippon`。公開は `ops/firebase-release.json` を main で更新して実行（詳細は同リポジトリの `docs/CONTENT-OPERATIONS.md`）。
-- monometri / sukinobi: 旧サーバー上の静的サイト。Firebase + GitHub へ移行中（別担当が作業中）。リポジトリができるまでは「観測のみ」。
+- monometri: `YukiIkemori/monometri`（静的サイト、`assets/ content/ data/ scripts/`、`FIREBASE-MIGRATION.md` 参照）。
+- sukinobi: `YukiIkemori/sukinobi`（Next.js、`HANDOFF.md` / `docs/EDITORIAL.md` / `docs/CONTENT-COVERAGE.md` が編集基準。作業前に必ず読む）。
+- 2サイトとも 2026-10-04 時点でソースは移行済みだが、Firebase 側（プロジェクト・Hostingサイト・GitHub OIDC）が未完了で、本番は旧サーバー(Cloudflare)のまま。**Firebase公開が成功し、本番が切り替わったことを確認するまでは、これらのサイトの記事変更は公開されない**。それまでは観測と分析、ソース側の準備に留め、不要な大量編集をしない。切替の状況は毎回、実際のHTTPヘッダーとActionsの結果で確認する（READMEの記述を鵜呑みにしない）。
+- 他の自動運用（旧環境のSites上の日次/週次/月次）は停止済み。運営は本プレイブックの定期実行に一本化した。
 - Amazon API は保留。CVは各アフィリエイト管理画面の実績で判断（GA4のアウトバウンドクリックは補助指標）。
+
+## サイト別KPI
+| サイト | 主KPI | 備考 |
+|---|---|---|
+| mononippon | アフィリエイトCV（Amazon各国、Viator） | 5言語。タグ・ID・写真ルールは `docs/CONTENT-OPERATIONS.md` |
+| monometri | IMP → アフィリエイトCV | 立ち上げ前。まず検索流入の土台 |
+| sukinobi | 検索IMP | **アフィリエイト報酬なし**。個人の応援メディア。公式CTAはUTMとdataLayerのみ。個人名・架空の専門家・PR/広告契約前提の表示は追加しない。体験談を捏造しない。外部事業者への連絡はユーザーの明示指示がある時だけ。 |
 
 ## 原則
 1. トラフィックが少ない間は、反応しすぎない。同じ期間どうし（28日 vs 前28日）で比べ、1〜2週間で結論を出さない。
