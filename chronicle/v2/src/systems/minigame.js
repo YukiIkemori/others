@@ -5,7 +5,8 @@
 //       symbols 3〜5（既定 4）・rounds 節の数（既定 3）・start 最初の節の音の数（既定 3、節ごとに +1）・tempo 1 音の ms（既定 560）・
 //       theme 'forest'|'harbor'|'night'（色）。まちがえたらその節は終わり（次の節へ）。B で途中でやめる（残りは 0）。
 //       score = 正しくくり返した音の数 ÷ 全部の音の数 × 100（整数）。rank S（100）・A（80 以上）・B（50 以上）・C
-//   R.Mini.timing({title, sub, speed, zones, tries, theme}) → Promise<{hits, rank, tries}>   動く印が帯の「当たり」にある間に A（縦切りでは部品だけ）
+//   R.Mini.timing({title, sub, speed, zones, tries, theme, auto}) → Promise<{hits, rank, tries}>   動く印が帯の「当たり」にある間に A（縦切りでは部品だけ）
+//       判定は見えていた印から少しさかのぼって見る（judgeAt）。auto: 最後の判定のあと結果の札を出さずに閉じる
 //       zones = [[a, b]…]（帯の 0〜1 の範囲。既定 [[0.42, 0.58]]）・speed 1 往復の ms（既定 1400）・tries（既定 3）
 //   場面の id は 'mini:sequence'・'mini:timing'（フィールドの上に重ねる。opaque ではない）。R.Mini.state() はテスト用
 (function (R) {
@@ -314,36 +315,52 @@
         id: 'mini:timing', opaque: false,
         enter() { st.t0 = st.phaseT = st.runT = R.Engine.time; },
         exit() {},
-        update() {
+        update(dt) {
           const I = R.Input, now = R.Engine.time;
           if (st.phase === 'input') {
-            const pos = markerAt(st, now);
             if (I.pressed('a') || (I.pointer && I.pointer.pressed)) {
-              const hit = st.zones.some((z) => pos >= z[0] && pos <= z[1]);
+              const { p: pos, hit } = judgeAt(st, now, dt);
               st.marks.push({ p: pos, hit });
               if (hit) { st.hits++; sfx('confirm'); } else sfx('buzzer');
               st.n++;
               st.phase = 'judge'; st.phaseT = now;
             } else if (I.pressed('b')) { st.n = st.tries; st.phase = 'result'; st.phaseT = now; sfx('cancel'); }
           } else if (st.phase === 'judge') {
+            // o.auto（トロッコ競走など、結果を呼ぶ側の文で出す物）: 最後の判定のあとは結果の札で A を待たずに閉じる
+            if (now - st.phaseT > 700 && st.n >= st.tries && o.auto) { done(); return; }
             if (now - st.phaseT > 700) { if (st.n >= st.tries) { st.phase = 'result'; st.phaseT = now; } else { st.phase = 'input'; st.runT = now; } }
           } else if (st.phase === 'result') {
-            if (now - st.phaseT > 700 && (I.pressed('a') || I.pressed('b') || (I.pointer && I.pointer.pressed))) {
-              R.Engine.remove(scene);
-              if (live === st) live = null;
-              const score = Math.round((st.hits / st.tries) * 100);
-              resolve({ hits: st.hits, rank: rankOf(score), tries: st.tries });
-            }
+            if (now - st.phaseT > 700 && (I.pressed('a') || I.pressed('b') || (I.pointer && I.pointer.pressed))) done();
           }
         },
         draw(g) { drawTiming(g, st); },
       };
+      function done() {
+        R.Engine.remove(scene);
+        if (live === st) live = null;
+        const score = Math.round((st.hits / st.tries) * 100);
+        resolve({ hits: st.hits, rank: rankOf(score), tries: st.tries });
+      }
       R.Engine.push(scene);
     });
   };
   function markerAt(st, now) {
-    const t = ((now - (st.runT || st.t0)) % st.speed) / st.speed;
+    const t = ((Math.max(0, now - (st.runT || st.t0))) % st.speed) / st.speed;
     return t < 0.5 ? t * 2 : 2 - t * 2;
+  }
+  // (2026-10-03) 押したときの判定（トロッコ競走「ちゃんと押しているのに反応がおかしい」）: 前は押したフレームの今の印の位置だけで見ていた。
+  //   人が見ているのは 1 フレーム前に描いた印で、さらに画面と入力の遅れ（数十 ms）がある。速い帯（1 往復 1 秒弱・当たり 0.11）では
+  //   印が当たりを抜けるのが 50 ms ほどなので、見た目どおりに押しても外れ、印も当たりの先に付いていた。
+  //   いま描いている印（1 フレーム前）から JUDGE_LAG_MS さかのぼった間に、印が当たりを通っていれば当たり（印はその当たりの位置に付ける）
+  const JUDGE_LAG_MS = 60;
+  function judgeAt(st, now, dt) {
+    const shown = now - Math.max(0, Math.min(50, dt || 0));
+    const from = Math.max(st.runT || st.t0, shown - JUDGE_LAG_MS);
+    const hitIn = (p) => st.zones.some((z) => p >= z[0] && p <= z[1]);
+    let p = markerAt(st, now);
+    if (hitIn(p)) return { p, hit: true };
+    for (let t = shown; t >= from; t -= 2) { p = markerAt(st, t); if (hitIn(p)) return { p, hit: true }; }
+    return { p: markerAt(st, shown), hit: false };
   }
   function drawTiming(g, st) {
     const U = R.UIK.u, C = R.UIK.T.color;

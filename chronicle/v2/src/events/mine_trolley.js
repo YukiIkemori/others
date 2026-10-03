@@ -39,7 +39,8 @@
       const kind = c.segs[k], S = SEG[kind];
       await ev.caption(S.intro, { ms: 1100 });
       const z = kind === 'j' ? c.jz : c.cz, mid = 0.5 + (((k * 37 + i * 11) % 5) - 2) * 0.05;
-      const r = (await ev.mini.timing({ title: R.T('events.dovan_race_keeper.r.title', { title: S.title, p1: k + 1, n }), tries: 1, speed: kind === 'c' ? c.speed * 0.9 : c.speed, zones: [[mid - z / 2, mid + z / 2]], theme: 'night' })) || { hits: 1 };
+      // (2026-10-03) auto: 区間ごとの結果の札（1/1・S）で A を待たない（当たり外れは下の文で出す。前は区間ごとに余計な A が要った）
+      const r = (await ev.mini.timing({ title: R.T('events.dovan_race_keeper.r.title', { title: S.title, p1: k + 1, n }), tries: 1, speed: kind === 'c' ? c.speed * 0.9 : c.speed, zones: [[mid - z / 2, mid + z / 2]], theme: 'night', auto: true })) || { hits: 1 };
       if ((r.hits || 0) >= 1) { await ev.caption(S.ok, { ms: 1000 }); }
       else { miss++; time += LOSE[kind]; ev.sfx('earth'); await ev.caption(S.ng, { ms: 1200 }); }
     }

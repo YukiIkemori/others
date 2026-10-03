@@ -53,7 +53,9 @@ if (argv.includes('--build')) execFileSync('node', [path.join(__dirname, 'build.
       ok('潮風亭のマスター（2 回目 = 問い）に名前', st && st.name === RPG_NAME(), st);
       // 1-3 出てすぐの決定よけは、物語の大事な分かれ道（ev.choose の important）だけ（持ち主 2026-10-03「宿などは連打で進みたい」）。
       //   ふつうの問いはすぐ受ける（B = やめる）
-      ok('1-3 ふつうの問いは決定よけなし（armed）', !!(await p.evaluate(() => (RPG.UIK.Message.state() || {}).armed)));
+      await B.waitFor(p, '(RPG.UIK.Message.state() || {}).full', 5000);
+      await p.waitForTimeout(50);
+      ok('1-3 ふつうの問いは決定よけなし（出てすぐ armed）', !!(await p.evaluate(() => (RPG.UIK.Message.state() || {}).armed)));
       await B.press(p, 'b');
       await B.waitFor(p, '!RPG.UIK.Message.busy() || !(RPG.UIK.Message.state()||{}).choiceRect', 5000);
       ok('1-3 B ですぐやめられる', !(await p.evaluate(() => !!(RPG.UIK.Message.state() || {}).choiceRect)));

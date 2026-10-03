@@ -239,6 +239,60 @@ async function rescueOrder() {
   Object.assign(R.Game.flags, { mine_miner1: true });
   ok('2 人以下のセーブは触らない', R.State.deserialize(JSON.parse(JSON.stringify(R.State.serialize()))) && !R.Game.flags.mine_rescued_all && !R.Game.leads.l_mine_seven);
 }
+// (2026-10-03) トロッコ競走「ちゃんと押しているのに反応がおかしい」: 見えていた印が当たりの中で押しても、押しが届くまでの遅れ（約 50 ms）で外れていた。
+//   人の手を真似る: 描いた印が当たりの中ほどに来たフレームで押す気になり、押しは lagMs 後のフレームで届く（60 Hz・144 Hz）
+async function trolleyInput() {
+  const step = async (ms) => { R.Engine.step(ms); await new Promise((r) => setImmediate(r)); };
+  R.Engine.clear && R.Engine.clear();
+  // 当たりのまん中で押す気になる → lagMs 後に届く。当たり外の早すぎる押しは外れ
+  async function play(o, frameMs, lagMs, aim) {
+    const p = R.Mini.timing(o);
+    let fin = null; p.then((v) => { fin = v; });
+    let pressAt = -1, released = true, guard = 0;
+    while (!fin && guard++ < 4000) {
+      await step(frameMs);
+      const st = R.Mini.state();
+      if (st && st.kind === 'timing' && st.phase === 'input' && pressAt < 0 && released) {
+        if (aim(st.pos, st.zones[0])) pressAt = R.Engine.time + lagMs;   // 描いた印（この時刻）を見て押す
+      }
+      if (pressAt >= 0 && R.Engine.time + frameMs >= pressAt) { R.Input._set('a', true); pressAt = -1; released = false; }
+      else if (!released) { R.Input._set('a', false); released = true; }
+    }
+    R.Input._set('a', false);
+    return { fin, frames: guard };
+  }
+  const mid = (pos, z) => Math.abs(pos - (z[0] + z[1]) / 2) < 0.02;
+  const early = (pos, z) => pos < z[0] - 0.25 && pos > 0.05;
+  const zHard = [[0.445, 0.555]];
+  for (const [hz, fm] of [[60, 1000 / 60], [144, 1000 / 144]]) {
+    const r = await play({ tries: 1, speed: 945, zones: zHard, auto: true }, fm, 50, mid);
+    ok(`トロッコの間合い（上級のカーブ・${hz} Hz）: 当たりのまん中を見て押す → 押しの遅れ 50 ms でも当たり`, r.fin && r.fin.hits === 1, r);
+    const e = await play({ tries: 1, speed: 945, zones: zHard, auto: true }, fm, 50, early);
+    ok(`  … 当たりのずっと手前で押すと外れ（${hz} Hz）`, e.fin && e.fin.hits === 0, e);
+  }
+  {
+    const r = await play({ tries: 1, speed: 1500, zones: [[0.4, 0.6]], auto: true }, 1000 / 60, 0, mid);
+    ok('  … auto: 判定のあと結果の札で A を待たずに閉じる（1 秒ほどで返る）', r.fin && r.fin.hits === 1 && r.frames < 200, r);
+  }
+  // 競走を最後まで: 本物の R.Mini.timing で、遅れ 50 ms の手が各区間のまん中で押す → 上級でも記録やぶり
+  R.State.newGame({ seed: 8 });
+  Object.assign(R.Game.flags, { mine_race_met: true, mine_race_1: true, mine_race_2: true });
+  const f = fakeEv({ choose: [2] });
+  f.ev.mini = R.Mini;
+  let fin = false;
+  D.events.dovan_race_keeper.run(f.ev, {}).then(() => { fin = true; });
+  let pressAt = -1, held = false, g = 0;
+  while (!fin && g++ < 20000) {
+    await step(1000 / 60);
+    const st = R.Mini.state();
+    if (held) { R.Input._set('a', false); held = false; }
+    if (st && st.kind === 'timing' && st.phase === 'input' && pressAt < 0 && mid(st.pos, st.zones[0])) pressAt = R.Engine.time + 50;
+    if (pressAt >= 0 && R.Engine.time + 1000 / 60 >= pressAt) { R.Input._set('a', true); held = true; pressAt = -1; }
+  }
+  R.Input._set('a', false);
+  ok('トロッコ競走 上級（7 区間）: 遅れ 50 ms の手で全部当たり → 記録やぶり・トロッコ乗りの鈴', fin && R.Game.flags.mine_race_3 && R.Game.flags.mine_race_done && (R.Game.items.u_cart_bell || 0) > 0,
+    { fin, said: f.said.filter((q) => q[0] === 'caption').map((q) => q[1]).slice(-3) });
+}
 async function story() {
   const X = R.Mine.ev;
   // ---- A 組合: 救出 → 岩戸（_01）→ 集会所 → 番人と戦う（_02、_03 は流さない）→ 炉の火 → つるはし・トロッコ線
@@ -410,4 +464,4 @@ function battle() {
   done('test_content_mine');
 }
 
-story().then(rescueOrder).then(clearing).then(optional).then(battle).catch((e) => { console.error(e); process.exit(1); });
+story().then(rescueOrder).then(trolleyInput).then(clearing).then(optional).then(battle).catch((e) => { console.error(e); process.exit(1); });
