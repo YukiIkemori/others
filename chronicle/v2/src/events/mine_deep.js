@@ -39,7 +39,7 @@
     await ev.fade('out', 400);
     await ev.caption(R.T('events.mine_miner1.caption'), { ms: 1800 });
     await ev.fade('in', 400);
-  }, { meta: { needs: [], gives: ['flag:mine_miner1', 'var:mine_rescued+1', 'flag:mine_rescued_all'] } });
+  }, { meta: { needs: [], gives: ['flag:mine_miner1', 'var:mine_rescued+1', 'flag:mine_rescued_all', 'lead:l_mine_seven'] } });
   // 割れ目の子猫（落盤の子猫の依頼）
   E('mine_kitten', async (ev) => {
     if (!ev.flag('mine_kitten_asked') || ev.flag('mine_kitten_found')) return;
@@ -93,7 +93,7 @@
     await ev.fade('out', 400);
     await ev.caption(R.T('events.mine_miner2.caption'), { ms: 1800 });
     await ev.fade('in', 400);
-  }, { meta: { needs: [], gives: ['flag:mine_miner2', 'var:mine_rescued+1', 'flag:mine_rescued_all'] } });
+  }, { meta: { needs: [], gives: ['flag:mine_miner2', 'var:mine_rescued+1', 'flag:mine_rescued_all', 'lead:l_mine_seven'] } });
   // 坑夫の休み場: 交代表（lo_time_mine）・長いす・ラザロの手紙・幽霊
   E('mine_shift_board', async (ev) => {
     const x = X();
@@ -154,7 +154,7 @@
     await ev.fade('out', 400);
     await ev.caption(R.T('events.mine_pip.caption'), { ms: 1800 });
     await ev.fade('in', 400);
-  }, { meta: { needs: ['flag:mine_rockeater'], gives: ['flag:mine_pip', 'item:k_oath_hammer', 'var:mine_rescued+1', 'flag:mine_rescued_all'] } });
+  }, { meta: { needs: ['flag:mine_rockeater'], gives: ['flag:mine_pip', 'item:k_oath_hammer', 'var:mine_rescued+1', 'flag:mine_rescued_all', 'lead:l_mine_seven'] } });
 
   // ================================================================ 3 階（七の層）
   E('mine_f3_arrive', async (ev) => {

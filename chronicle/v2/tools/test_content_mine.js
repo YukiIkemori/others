@@ -197,6 +197,48 @@ async function rescueAll() {
   await run('mine_miner1'); await run('mine_miner2');
   await run('mine_rockeater', { battles: ['win'] }); await run('mine_pip');
 }
+// (2026-10-03) 進行の詰まり: 3 人を救ったあと、ヘルガ・ボルグが「まずは子らを」のままで先が分からなかった。
+//   どの順で救っても 3 人目で mine_rescued_all と次の手がかり（l_mine_seven = 七の層の岩戸）が付き、ヘルガ・ボルグが岩戸へ送る。古いセーブも読み込みで直る
+async function rescueOrder() {
+  const T = (k) => R.T(k);
+  const orders = [['mine_miner1', 'mine_miner2', 'pip'], ['pip', 'mine_miner2', 'mine_miner1'], ['mine_miner2', 'pip', 'mine_miner1']];
+  for (const order of orders) {
+    R.State.newGame({ seed: 5 });
+    const G = R.Game;
+    const leads = [];
+    const go = async (id, o) => { const f = fakeEv(o || {}); f.ev.lead = (l) => { leads.push(l); G.leads[l] = G.leads[l] || { got: 0, pin: false, seen: false }; }; await D.events[id].run(f.ev, {}); return f; };
+    await go('dovan_helga');   // 初めて会う
+    let f = await go('dovan_helga');
+    const before = f.said.some((q) => q[1] === T('events.dovan_helga.say_9'));
+    for (const id of order) { if (id === 'pip') { await go('mine_rockeater', { battles: ['win'] }); await go('mine_pip'); } else await go(id); }
+    f = await go('dovan_helga');
+    const helga = f.said.map((q) => q[1]);
+    await go('dovan_borg');
+    const fb = await go('dovan_borg');
+    ok(`救う順 ${order.join('→')}: 3 人で mine_rescued_all・手がかり「七の層へ」、ヘルガは「まずは子らを」と言わず岩戸へ送る（ボルグも）`,
+      before && G.flags.mine_rescued_all && G.vars.mine_rescued === 3 && leads.includes('l_mine_seven') &&
+      !helga.includes(T('events.dovan_helga.say_9')) && helga.includes(T('events.dovan_helga.say_18')) &&
+      fb.said.some((q) => q[1] === T('events.dovan_borg.say_15')), { helga, leads });
+    await go('mine_rockdoor');
+    f = await go('dovan_helga');
+    ok(`  … 岩戸を見たあとは、ヘルガの頼み（隠者の写し・石像の祈り）に進む`, G.flags.mine_door_seen && G.flags.mine_helga_jobs && f.said.some((q) => q[1] === T('events.dovan_helga.say_10')));
+  }
+  // 古いセーブ: 3 人の旗だけあって mine_rescued_all・手がかりが無い → 読み込みで直る
+  R.State.newGame({ seed: 6 });
+  Object.assign(R.Game.flags, { mine_miner1: true, mine_miner2: true, mine_pip: true, mine_rockeater: true, mine_helga_met: true });
+  R.Game.items.k_oath_hammer = 1;
+  R.Game.leads.l_mine_trapped = { got: 0, pin: true, seen: true };
+  const snap = JSON.parse(JSON.stringify(R.State.serialize()));
+  ok('古いセーブ（3 人の旗はあり、まとめの旗が無い）が読める', R.State.deserialize(snap) === true);
+  const G2 = R.Game;
+  ok('  … 読み込みで mine_rescued_all・救った数 3・「閉じ込められた鉱夫」を解決・「七の層へ」を足す', G2.flags.mine_rescued_all && G2.vars.mine_rescued === 3 && G2.leads.l_mine_trapped.done && !!G2.leads.l_mine_seven);
+  const f2 = fakeEv({});
+  await D.events.dovan_helga.run(f2.ev, {});
+  ok('  … ヘルガが岩戸へ送る', f2.said.some((q) => q[1] === T('events.dovan_helga.say_18')));
+  R.State.newGame({ seed: 7 });
+  Object.assign(R.Game.flags, { mine_miner1: true });
+  ok('2 人以下のセーブは触らない', R.State.deserialize(JSON.parse(JSON.stringify(R.State.serialize()))) && !R.Game.flags.mine_rescued_all && !R.Game.leads.l_mine_seven);
+}
 async function story() {
   const X = R.Mine.ev;
   // ---- A 組合: 救出 → 岩戸（_01）→ 集会所 → 番人と戦う（_02、_03 は流さない）→ 炉の火 → つるはし・トロッコ線
@@ -368,4 +410,4 @@ function battle() {
   done('test_content_mine');
 }
 
-story().then(clearing).then(optional).then(battle).catch((e) => { console.error(e); process.exit(1); });
+story().then(rescueOrder).then(clearing).then(optional).then(battle).catch((e) => { console.error(e); process.exit(1); });

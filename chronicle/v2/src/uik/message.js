@@ -24,7 +24,7 @@
   //   押しっぱなし・連打の間は受けない（離して一息おけば選べる）
   const CHOICE_GUARD = { min: 450, idle: 300 };
   /**
-   * 出てすぐの選択の決定よけ（会話の選択肢・画面の S.ask の guard・店の「今すぐ装備する？」で同じ決まり）。
+   * 出てすぐの選択の決定よけ（物語の大事な分かれ道だけ: 会話の say の guard＝ev.choose の important、画面の S.ask の guard: true）。
    *   g = {t0: 出た時刻}。毎フレーム呼ぶ → 決定を受けてよければ true（一度 true になったら以後ずっと true）
    */
   UIK.choiceGuard = function (g) {

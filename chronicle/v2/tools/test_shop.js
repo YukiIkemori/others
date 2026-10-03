@@ -129,7 +129,7 @@ function mk(p) {
       const o = seen[0], plan = S.wearPlan('hn_gauntlet_1', mem);
       ok('gauntlets: cursor is NOT on the mage hero', o && o.index !== 0 && o.index < mem.length, o && o.index);
       ok('… it is on the member with the biggest gain (S.wearPlan)', o && o.index === plan.best || mem[o.index].equip.hands === 'hn_gauntlet_1', { index: o && o.index, plan: plan.rows.map((r) => [r.c.id, r.gain]) });
-      ok('… the ask keeps the input guard (S.ask guards by default; not turned off)', o && o.guard !== false);
+      ok('… the ask is not guarded (owner 2026-10-03: shops confirm at once)', o && o.guard !== true);
       ok('… never on someone who cannot wear it', o && !(o.choices[o.index] || {}).disabled);
       seen.length = 0;
       // 誰も強くならない（全員がもっと良い物を付けている）→ カーソルは「装備しない」

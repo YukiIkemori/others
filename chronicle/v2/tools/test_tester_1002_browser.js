@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // テスター 2026-10-02（雪の籠城まで）の「事故・詰み」の直し（ブラウザ）:
-//   P22 選択肢が出てすぐの決定は受けない（連打・押しっぱなしでも。離して一息おけば選べる）。画面の S.ask の guard も同じ
+//   P22 物語の大事な分かれ道（ev.choose の important → say の guard）だけ、出てすぐの決定は受けない（連打・押しっぱなしでも。離して一息おけば選べる）。
+//       持ち主 2026-10-03: ほかの選択肢・宿・店・全滅の札は守らない（連打ですぐ決まる）
 //   P23・P24 祭を始める前に「夜明けまで村を出られない」の念押し。籠城の夜に全滅 →「ひと息ついて立て直す」（所持金そのまま・大かまどの前で全快）
 //   P14 「直前の戦闘からやり直す」は、その戦闘の始まりの状態（HP）と同じ編成で始まる（籠城 3 波目の大狼）
 //   Q10 報酬のアクセサリを手に入れたら「誰かに付けますか？」（いちばん強くなる人が既定・「あとで」）
@@ -46,12 +47,12 @@ async function main() {
   }
 
   // ------------------------------------------------------------------ P22
-  section('P22: 選択肢が出てすぐの決定は受けない');
+  section('P22: 大事な分かれ道だけ、選択肢が出てすぐの決定は受けない');
   {
     const P = await B.open(S, 'dev.html?fixture=core_stub_road');
     const p = P.page;
     await B.waitFor(p, `${B.TOP}==='field'`, 8000);
-    await p.evaluate(`window.__r = 'none', RPG.UIK.Message.say({ text: '第3の波。どの門を守る？', choices: ['北の門を守る', '東の門を守る', '西の門を守る'] }).then((v) => { __r = v; }), true`);
+    await p.evaluate(`window.__r = 'none', RPG.UIK.Message.say({ text: '第3の波。どの門を守る？', choices: ['北の門を守る', '東の門を守る', '西の門を守る'], guard: true }).then((v) => { __r = v; }), true`);
     // 会話を送る勢いで A を連打（2.4 秒・150 ms ごと）: 前は 1.5 秒で 1 つ目に決まった
     for (let i = 0; i < 16; i++) { await p.keyboard.down('KeyZ'); await sleep(40); await p.keyboard.up('KeyZ'); await sleep(110); }
     ok('mashing A for 2.4 s does not pick a choice', (await B.ev(p, '__r')) === 'none' && (await B.ev(p, `${MS}.armed`)) === false);
@@ -64,25 +65,30 @@ async function main() {
     ok('after letting go for a moment the choice is armed', await B.ev(p, `${MS}.armed`));
     await B.press(p, 'a'); await sleep(100);
     ok('then A picks the choice under the cursor (1)', (await B.ev(p, '__r')) === 1, await B.ev(p, '__r'));
-    // 画面の選択の札（S.ask の guard）: 店の「今すぐ装備する？」
+    // ふつうの問い（guard なし）はすぐ受ける
+    await p.evaluate(`window.__r = 'none', RPG.UIK.Message.say({ text: '桟橋へ帰りますか？', choices: ['帰る', 'やめる'] }).then((v) => { __r = v; }), true`);
+    await B.waitFor(p, `${MS} && ${MS}.full`, 3000);
+    await B.press(p, 'a'); await sleep(120);
+    ok('an ordinary question takes A at once (owner 2026-10-03)', (await B.ev(p, '__r')) === 0, await B.ev(p, '__r'));
+    // 画面の選択の札（S.ask）: 既定は守らない。guard: true のときだけ守る
     await p.evaluate(`(async () => { window.__sv = null; RPG.Screens.open('shop', { id: 'shop_pharos_arms' }); })()`);
     await B.waitFor(p, `${B.TOP}==='screen:shop'`, 5000);
     await sleep(300);
     await p.evaluate(`(() => { const v = RPG.Engine.top().view; window.__ask = 'none'; RPG.Screens.ask(v, { title: '今すぐ装備する？', choices: ['甲', '乙', '装備しない'], index: 1 }).then((k) => { __ask = k; }); })()`);
-    await B.press(p, 'a'); await sleep(80); await B.press(p, 'a'); await sleep(80);
-    ok('S.ask (guarded by default): A right after it opens is ignored', (await B.ev(p, '__ask')) === 'none');
+    await B.press(p, 'a'); await sleep(250);
+    ok('S.ask (default, no guard): A right after it opens picks the default row (1)', (await B.ev(p, '__ask')) === 1, await B.ev(p, '__ask'));
+    await p.evaluate(`(() => { const v = RPG.Engine.top().view; window.__ask = 'none'; RPG.Screens.ask(v, { title: '大事な問い', choices: ['甲', '乙'], index: 1, guard: true }).then((k) => { __ask = k; }); })()`);
+    await B.press(p, 'a'); await sleep(80);
+    ok('S.ask {guard: true}: A right after it opens is ignored', (await B.ev(p, '__ask')) === 'none');
     await sleep(500);
     await B.press(p, 'a'); await sleep(250);
-    ok('S.ask (guarded by default): a deliberate A picks the default row (1)', (await B.ev(p, '__ask')) === 1, await B.ev(p, '__ask'));
+    ok('S.ask {guard: true}: a deliberate A picks the row (1)', (await B.ev(p, '__ask')) === 1, await B.ev(p, '__ask'));
     await B.press(p, 'b'); await B.waitFor(p, `${B.TOP}==='field'`, 5000);
-    // 宿の「泊まる？」も同じ（連打で泊まらない）
+    // 宿の「泊まる？」は連打で進める（持ち主 2026-10-03）
     await p.evaluate(() => { RPG.Game.gold = 999; window.__inn = 'none'; RPG.Screens.open('inn', { price: 10 }).then((r) => { __inn = r; }); });
     await B.waitFor(p, `${B.TOP}==='screen:inn'`, 5000);
-    await B.press(p, 'a'); await B.press(p, 'a');
-    ok('inn: A right after it opens is ignored', (await B.ev(p, '__inn')) === 'none');
-    await sleep(500);
     await B.press(p, 'a'); await sleep(300);
-    ok('inn: a deliberate A stays', (await B.ev(p, '__inn && __inn.stay')) === true, await B.ev(p, '__inn'));
+    ok('inn: A right after it opens stays (no guard)', (await B.ev(p, '__inn && __inn.stay')) === true, await B.ev(p, '__inn'));
     ok('no console errors', P.errors.length === 0, P.errors);
     await P.close();
   }
@@ -120,6 +126,8 @@ async function main() {
       RPG.Events.run('snow_siege_wave', { map: 'yule_night' });
     });
     ok('wave 3 asks which gate', (await advance(p, 'false', 20)) === 'choice' && /第3の波/.test(await p.evaluate(() => RPG.UIK.Message.log().slice(-1)[0].text)));
+    await B.press(p, 'a'); await sleep(80);
+    ok('the gate choice is an important branch: A right after it appears is ignored', await p.evaluate(`!!(${MS} && ${MS}.choiceRect) && ${MS}.armed === false`));
     await choose(p, 0);   // 北の門（大狼は守らなかった西の門 → 読み外し）
     ok('wrong gate → the gate battle starts', (await advance(p, `${B.TOP}==='battle' && ${D} && ${D}.B && ${D}.phase === 'input'`, 60)) === true);
     // 門の戦いで弱った: 一行の HP を 1/3 にして勝つ
@@ -134,10 +142,7 @@ async function main() {
     const rows = await p.evaluate(`${D}.ui.o.rows.map((r) => r.label)`);
     ok('in the siege the 2nd row is 「ひと息ついて立て直す」 (no gold loss)', rows[1] === 'ひと息ついて立て直す', rows);
     await B.shot(p, path.join(SHOTS, 'siege_wipe_menu_1920.png'));
-    // 全滅の札も出てすぐの決定を受けない（連打で「やり直す」に決まらない）
-    await B.press(p, 'a'); await sleep(100);
-    ok('wipe menu: A right after it appears is ignored', await p.evaluate(`!!(${D}.go && ${D}.ui)`));
-    ok('… armed after a short pause', await B.waitFor(p, `${D}.ui && ${D}.ui.guard && ${D}.ui.guard.armed`, 3000));
+    ok('wipe menu is not guarded (owner 2026-10-03)', await p.evaluate(`!${D}.ui.guard`));
     await B.press(p, 'a');   // 直前の戦闘から
     ok('retry restarts the boss battle', await B.waitFor(p, `${D} && ${D}.retry === 1 && ${D}.B && ${D}.phase === 'input'`, 20000));
     const start1 = await p.evaluate(`({ troop: ${D}.setup.troop, foes: ${D}.B.units.filter((u) => u.side === 'enemy').map((u) => u.id), hp: ${D}.B.units.filter((u) => u.side === 'party').map((u) => [u.id, u.hp]) })`);
@@ -145,7 +150,6 @@ async function main() {
     ok('retry: party HP equals the HP at the START of the boss battle (not the wiped end state)', JSON.stringify(start1.hp) === JSON.stringify(start0.hp), { start0: start0.hp, start1: start1.hp });
     await p.evaluate(`(() => { const e = ${D}.B.engine; for (const u of e.party) u.hp = 1; e.result = 'lose'; })()`);
     ok('wipes again', (await advance(p, `${D} && !!${D}.go`, 80)) === true && await B.waitFor(p, WIPED, 15000));
-    await B.waitFor(p, `${D}.ui && ${D}.ui.guard && ${D}.ui.guard.armed`, 3000);
     await B.press(p, 'down'); await B.press(p, 'a');   // ひと息ついて立て直す
     ok('wakes at the hearth with a caption (talk to the chief to try again)', await B.waitFor(p, `${B.TOP}==='caption' || (RPG.Engine.has('caption') && RPG.Field._s.map.id === 'yule_night')`, 15000));
     await sleep(1200);

@@ -50,7 +50,7 @@
   };
   /** (2026-10-03) 3 人を救ったが、まだ岩戸を見ていない（ヘルガ・ボルグが「七の層へ」と言う間） */
   X.toSeven = (ev) => X.rescued(ev) >= 3 && !ev.flag('mine_door_seen');
-  /** (2026-10-03) 古いセーブの直し（R.State.deserialize が呼ぶ）: 3 人の旗はあるのに mine_rescued_all・次の手がかりが無いもの */
+  /** (2026-10-03) 古いセーブの直し（R.SaveFixups。R.State.deserialize が呼ぶ）: 3 人の旗はあるのに mine_rescued_all・次の手がかりが無いもの */
   X.fixSave = function (G) {
     const f = G.flags || {}, v = G.vars || (G.vars = {}), L = G.leads || (G.leads = {});
     if (f.cleared_r_mine) return;
@@ -61,7 +61,7 @@
     if (L.l_mine_trapped && !L.l_mine_trapped.done) { L.l_mine_trapped.done = true; L.l_mine_trapped.pin = false; }
     if (!f.mine_door_seen && !L.l_mine_seven) L.l_mine_seven = { got: Math.floor(G.playMs || 0), pin: false, seen: false };
   };
-  if (R.State) (R.State.fixups = R.State.fixups || []).push(X.fixSave);
+  (R.SaveFixups = R.SaveFixups || []).push(X.fixSave);
   /** STORY_BIBLE §3.5 の世代と、ティアの近況（WORLD §1.3 の表） */
   X.skyLine = function () {
     const t = X.tier();

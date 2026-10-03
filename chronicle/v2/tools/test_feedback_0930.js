@@ -51,14 +51,12 @@ if (argv.includes('--build')) execFileSync('node', [path.join(__dirname, 'build.
       await B.waitFor(p, "RPG.UIK.Message.busy() && !!(RPG.UIK.Message.state()||{}).choiceRect", 8000);
       const st = await p.evaluate(() => { const L = RPG.UIK.Message.log(); return L[L.length - 1]; });
       ok('潮風亭のマスター（2 回目 = 問い）に名前', st && st.name === RPG_NAME(), st);
-      // 1-3 選択肢の出てすぐの決定は受けない
-      await B.press(p, 'a');
-      const still = await p.evaluate(() => RPG.UIK.Message.busy());
-      ok('1-3 選択肢が出てすぐの A は受けない', still);
-      await p.waitForTimeout(600);
+      // 1-3 出てすぐの決定よけは、物語の大事な分かれ道（ev.choose の important）だけ（持ち主 2026-10-03「宿などは連打で進みたい」）。
+      //   ふつうの問いはすぐ受ける（B = やめる）
+      ok('1-3 ふつうの問いは決定よけなし（armed）', !!(await p.evaluate(() => (RPG.UIK.Message.state() || {}).armed)));
       await B.press(p, 'b');
       await B.waitFor(p, '!RPG.UIK.Message.busy() || !(RPG.UIK.Message.state()||{}).choiceRect', 5000);
-      ok('1-3 少し待てば選べる（B = やめる）', !(await p.evaluate(() => !!(RPG.UIK.Message.state() || {}).choiceRect)));
+      ok('1-3 B ですぐやめられる', !(await p.evaluate(() => !!(RPG.UIK.Message.state() || {}).choiceRect)));
       ok('エラーなし', P.errors.length === 0, P.errors);
       await P.close();
     }

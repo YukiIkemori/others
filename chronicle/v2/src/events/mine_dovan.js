@@ -189,6 +189,7 @@
       ev.lead('l_mine_guild');
       return;
     }
+    if (X().toSeven(ev)) { await ev.say('borg', R.T('events.dovan_borg.say_14')); await ev.say('borg', R.T('events.dovan_borg.say_15')); ev.lead('l_mine_seven'); return; }
     if (!ev.flag('mine_door_seen')) { await ev.say('borg', R.T('events.dovan_borg.say_8')); return; }
     // 岩戸の前から戻った: 組合の仕事
     if (!ev.flag('mine_borg_jobs')) {
@@ -200,7 +201,7 @@
     }
     const j = x.jobs(ev);
     await ev.say('borg', j.g >= 2 ? R.T('events.dovan_borg.say_12') : R.T('events.dovan_borg.say_13'));
-  }, { meta: { needs: [], gives: ['flag:mine_borg_met', 'lead:l_mine_guild', 'flag:mine_borg_jobs'] } });
+  }, { meta: { needs: [], gives: ['flag:mine_borg_met', 'lead:l_mine_guild', 'lead:l_mine_seven', 'flag:mine_borg_jobs'] } });
   E('dovan_guild_clerk', async (ev) => {
     const s = X().side(ev);
     await ev.say('guild_clerk', s === 'guild' || s === 'accord' ? R.T('events.dovan_guild_clerk.say') : R.T('events.dovan_guild_clerk.say_2'));
@@ -317,6 +318,8 @@
       ev.lead('l_mine_smiths');
       return;
     }
+    // (2026-10-03) 3 人を救ったあとは「七の層の岩戸へ」（前は岩戸を見るまで「まずは子らを」のままで、先が分からなかった）
+    if (x.toSeven(ev)) { await ev.say('helga', R.T('events.dovan_helga.say_17')); await ev.say('helga', R.T('events.dovan_helga.say_18')); ev.lead('l_mine_seven'); return; }
     if (!ev.flag('mine_door_seen')) { await ev.say('helga', R.T('events.dovan_helga.say_9')); return; }
     if (!ev.flag('mine_helga_jobs')) {
       ev.setFlag('mine_helga_jobs');
@@ -337,7 +340,7 @@
     }
     const j = x.jobs(ev);
     await ev.say('helga', j.s >= 2 ? R.T('events.dovan_helga.say_15') : R.T('events.dovan_helga.say_16'));
-  }, { meta: { needs: [], gives: ['flag:mine_helga_met', 'lead:l_mine_smiths', 'flag:mine_helga_jobs', 'flag:mine_job_s1', 'lore:lo_mine_oath'] } });
+  }, { meta: { needs: [], gives: ['flag:mine_helga_met', 'lead:l_mine_smiths', 'lead:l_mine_seven', 'flag:mine_helga_jobs', 'flag:mine_job_s1', 'lore:lo_mine_oath'] } });
   E('dovan_forge_seller', async (ev) => {
     const s = X().side(ev);
     if (s === 'guild' && cleared(ev)) { await ev.say('forge_seller', R.T('events.dovan_forge_seller.say')); return; }

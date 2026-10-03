@@ -198,6 +198,8 @@
     State.migrateItems(G);   // 消した品の id（R.DB.itemAlias）を残した品へ
     State.migrateChars(G);   // 派生技の回数（techUse・derived）: 古いセーブには無い → {}
     if (R.Tier && R.Tier.migrateLocks) R.Tier.migrateLocks(G);   // 出現の固定: 古いセーブの解決済みの地方は章の並びから
+    // (2026-10-03) 中身の側の直し（R.SaveFixups: 地方のファイルが足す f(G)。旗の付け忘れで先へ進めない古いセーブを直す）
+    for (const f of R.SaveFixups || []) { try { f(G); } catch (e) { R.warn('R.SaveFixups: ' + (e && e.message)); } }
     const chk =R.Contract && R.Contract.check ? R.Contract.check('game', G) : { ok: true };
     if (!chk.ok) { R.warn('R.State.deserialize: ' + chk.errors.slice(0, 3).join('; ')); return false; }
     R.Game = G;

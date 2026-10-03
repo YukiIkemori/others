@@ -42,6 +42,8 @@
         if (I.repeat('r') || wz < 0) P.zt = Math.min(P.zmax, P.zt * 1.25);
         if (I.repeat('l') || wz > 0) P.zt = Math.max(P.zmin, P.zt / 1.25);
         P.z += (P.zt - P.z) * Math.min(1, dt / 90);
+        // 近づいたら目標にそろえる（前は限りなく近づくだけで毎フレーム 1e-10 ずつ動き続け、名前の置き場の当たりが毎フレーム変わってちらついた。オーナー 2026-10-03）
+        if (Math.abs(P.zt - P.z) < P.zt * 0.002) P.z = P.zt;
       } else if (this.town && I.pressed('r')) { R.UIK.sfx('cursor'); this.view = 'world'; return; }
       if (I.pressed('b') || I.pressed('a') || I.pressed('x')) { R.UIK.sfx('cancel'); this.close(undefined); }
     },
@@ -161,9 +163,21 @@
         else { g.save(); g.fillStyle = '#20404a'; g.strokeStyle = 'rgba(250,236,200,0.9)'; g.lineWidth = 1.5; g.beginPath(); g.arc(q.x, q.y, u(4), 0, Math.PI * 2); g.fill(); g.stroke(); g.restore(); }
       }
       const placed = marks.map((q) => ({ x0: q.x - u(6), y0: q.y - u(6), x1: q.x + u(6), y1: q.y + u(6) }));
-      const hit = (b) => placed.some((o) => b.x0 < o.x1 && b.x1 > o.x0 && b.y0 < o.y1 && b.y1 > o.y0);
+      // 当たりは 0.5 px 以上の重なりだけ（ちょうど接する箱が小数の誤差で当たったり外れたりしない）
+      const EPS = 0.5;
+      const hit = (b) => placed.some((o) => b.x0 < o.x1 - EPS && b.x1 > o.x0 + EPS && b.y0 < o.y1 - EPS && b.y1 > o.y0 + EPS);
+      // 前のフレームで選んだ置き場を先に試す（拡大・縮小の途中で候補が行ったり来たりしない）。名前の札の id は 名前#同じ名前の何番目
+      const prev = this.labelPick || new Map(), pick = new Map(), seenN = {};
       labels.sort((a, b) => b.prio - a.prio);
-      for (const L of labels) {
+      // 見え方が前のフレームと同じ（止まっている）なら、前の置き場をそのまま使う（同じ物を毎フレーム置き直さない）
+      const sig = [P.z, P.cx, P.cy, area.x, area.y, area.w, area.h, R.SCALE, R.uiScale, labels.map((L) => L.text).join('|')].join(',');
+      const same = this.labelSig === sig && this.labelDone;
+      if (same) {
+        for (const d of this.labelDone) R.UIK.text(g, d.text, d.tx, d.ty, { size: d.sz, weight: d.strong ? 700 : 500, color: ink, align: d.align, stroke: [paper, u(3.2)] });
+        labels.forEach((L, i) => { L.drawnAt = this.labelBoxes[i]; });
+      }
+      const done = [];
+      for (const L of same ? [] : labels) {
         const w = R.UIK.measure(L.text, { size: L.sz, weight: L.strong ? 700 : 500 }) + u(6), h = L.sz + u(6);
         let ok = null;
         // 置く所の候補（印の近くから）: 既定（下か上）→ 印のすぐ上 → 印の右・左 → すぐ上で左右に少しずらす → 上下にもうひとつ離す
@@ -172,16 +186,22 @@
         const far = [[L.x, L.y + h, 'center'], [L.x, L.y - h - u(10), 'center'], [L.x, L.y + 2 * h, 'center'], [L.x, L.y - 2 * h - u(10), 'center']];
         const cands = L.mark ? [[L.x, L.y, 'center'], [L.mx, up, 'center'], [L.mx + gap, side, 'left'], [L.mx - gap, side, 'right'],
           [L.mx + w / 3, up, 'center'], [L.mx - w / 3, up, 'center']].concat(far) : [[L.x, L.y, 'center']].concat(far);   // エリアの名前（印なし）は上下だけ
-        for (const [tx, ty, align] of cands) {
+        const key = L.text + '#' + (seenN[L.text] = (seenN[L.text] || 0) + 1);
+        const pi = prev.get(key), order = cands.map((c, i) => i);
+        if (pi != null && pi > 0 && pi < cands.length) { order.splice(pi, 1); order.unshift(pi); }
+        for (const ci of order) {
+          const [tx, ty, align] = cands[ci];
           const x0 = align === 'left' ? tx - u(3) : align === 'right' ? tx - w + u(3) : tx - w / 2, y0 = ty - u(2);
           const b = { x0, y0, x1: x0 + w, y1: y0 + h };
-          if (!hit(b)) { ok = { b, tx, ty, align }; break; }
+          if (!hit(b)) { ok = { b, tx, ty, align }; pick.set(key, ci); break; }
         }
         if (!ok) continue;
         placed.push(ok.b);
         L.drawnAt = ok.b;
+        done.push({ text: L.text, tx: ok.tx, ty: ok.ty, sz: L.sz, strong: L.strong, align: ok.align });
         R.UIK.text(g, L.text, ok.tx, ok.ty, { size: L.sz, weight: L.strong ? 700 : 500, color: ink, align: ok.align, stroke: [paper, u(3.2)] });
       }
+      if (!same) { this.labelPick = pick; this.labelSig = sig; this.labelDone = done; this.labelBoxes = labels.map((L) => L.drawnAt || null); }
       WM.labels = labels.map((L) => ({ text: L.text, box: L.drawnAt || null }));   // 検査用
       // 目印の手がかり
       const pinned = R.Leads && R.Leads.pinned ? R.Leads.pinned() : null, pinL = pinned && R.DB.leads ? R.DB.leads[pinned] : null;

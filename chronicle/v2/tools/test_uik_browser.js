@@ -143,11 +143,11 @@ async function main() {
     ok('↓ で選ぶ（1）', (await ev(p, 'RPG.UIK.Message.state().choice')) === 1);
     await B.press(p, 'b'); await sleep(80);
     ok('cancel が無ければ B では閉じない', (await ev(p, 'RPG.UIK.Message.busy()')) && (await ev(p, '__r')) === 'none');
-    // 選択肢が出てすぐの決定は受けない（連打の取り違えよけ、テスター 2026-09-30。uik/message.js の CHOICE_GUARD）
+    // 選択肢が出てすぐの決定よけは guard: true（物語の大事な分かれ道）だけ（uik/message.js の CHOICE_GUARD。持ち主 2026-10-03）
     await sleep(700);
     await B.press(p, 'a'); await sleep(80);
     ok('A → 1 で解決', (await ev(p, '__r')) === 1, await ev(p, '__r'));
-    await ev(p, `window.__r = 'none', RPG.UIK.Message.say({ text: '泊まる？', choices: ['泊まる\\t30 G', 'やめておく'], cancel: 1 }).then((v) => { __r = v; }), true`);
+    await ev(p, `window.__r = 'none', RPG.UIK.Message.say({ text: '泊まる？', choices: ['泊まる\\t30 G', 'やめておく'], cancel: 1, guard: true }).then((v) => { __r = v; }), true`);
     await B.waitFor(p, 'RPG.UIK.Message.state().full', 3000);
     await B.press(p, 'a'); await sleep(80);
     ok('選択肢が出てすぐの A は受けない', (await ev(p, 'RPG.UIK.Message.busy()')) && (await ev(p, '__r')) === 'none');
