@@ -135,7 +135,8 @@
   State.retireItems = function (G) {
     if (!G) return 0;
     const DB = R.DB, slice = !!(DB.config && DB.config.slice);
-    const tooEarly = (id) => { const it = DB.items[id]; return !!(slice && it && it.mods && EARLY.some((k) => it.mods[k])); };
+    // 一品物（src 'unique'）は外さない: 森で最後に見つけた人がくれるベンの呼び笛（先制）は体験版の中で手に入る品。読み込むたびに香炉へ替わっていた（2026-10-03）
+    const tooEarly = (id) => { const it = DB.items[id]; return !!(slice && it && it.src !== 'unique' && it.mods && EARLY.some((k) => it.mods[k])); };
     let n = 0, give = 0;
     const items = G.items || {};
     const RENAMED = { ac_st_lucky_spore: 'ac_st_spore_sachet' };   // 付け替えた体験版の盗み品（2026-09-27）

@@ -224,6 +224,9 @@ async function runRoute(S, id, o) {
     await page.addScriptTag({ content: fs.readFileSync(path.join(V2, 'tools', 'lib', 'maps.js'), 'utf8') });
     await page.addScriptTag({ content: fs.readFileSync(path.join(__dirname, 'bot.js'), 'utf8') });
     if (route.fixture) await page.waitForFunction("RPG.Engine.top() && RPG.Engine.top().id === 'field' && RPG.Engine.fade.a < 0.02", null, { timeout: 180000 });
+    // フィクスチャの本（砂漠・雪原）は製品版の中身: 体験版の境（data/demo_gate.js の gate {when:{slice:true}}。カシムの門で「体験版では、ここから先へは
+    //   行けません」と 1 歩戻され、目標 kasim が時間切れになっていた）を外して遊ぶ。境の止め・判定はどれも走るときに DB.config.slice を見る
+    if (route.fixture) await page.evaluate(() => { window.RPG.DB.config.slice = false; });
     // フィクスチャの一行を、そのティアに来た人の標準（sim_zones の buildParty と同じ: gl = glAt(T,'mid')・熟練・閃いた見込みの技と術・そのティアの店の装備）に
     if (route.fixture) await page.evaluate((T) => {
       const R = window.RPG, K = R.Rules.K;

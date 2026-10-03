@@ -1,40 +1,40 @@
 {
  "route": "R1",
  "phone": false,
- "ok": false,
+ "ok": true,
  "checks": {
-  "tavernWalked": false,
-  "recruitedInTavern": false,
-  "reachedT1": false,
+  "tavernWalked": true,
+  "recruitedInTavern": true,
+  "reachedT1": true,
   "invariants": true,
   "forestPinsCleared": true,
-  "choices": false,
-  "chronicleText": false,
-  "uniqueFromLast": false,
+  "choices": true,
+  "chronicleText": true,
+  "uniqueFromLast": true,
   "hero": true,
-  "party": false,
+  "party": true,
   "stubs0": true,
   "loadErrors0": true,
   "consoleErrors0": true,
   "noEngineError": true,
   "noDev": true,
   "rescueOrder": true,
-  "wipeRetryPageeater": false
+  "wipeRetryPageeater": true
  },
  "errors": [],
- "started": "2026-10-03T18:20:53.398Z",
+ "started": "2026-10-03T20:20:56.897Z",
  "status": {
-  "frames": 60370,
-  "time": 3021915,
-  "goal": "farmer",
-  "done": false,
-  "fail": "goal farmer timed out",
+  "frames": 96454,
+  "time": 4825780,
+  "goal": "t1",
+  "done": true,
+  "fail": null,
   "top": "field",
-  "pos": "roa 7,13",
-  "steps": 49,
-  "gold": 50,
-  "battles": 0,
-  "wipes": 0,
+  "pos": "fern_inn 8,3",
+  "steps": 4528,
+  "gold": 618,
+  "battles": 110,
+  "wipes": 2,
   "round": null,
   "hp": 1,
   "engineError": null
@@ -50,92 +50,2337 @@
    "ok": true
   },
   "pinned": [],
-  "chronicle": "森が歌を忘れ、道を変えた年のこと。\n語り部の見習いは、迷いの森で\n四人を探した。",
-  "uniq": [],
-  "lastWho": "hans",
+  "chronicle": "森が歌を忘れ、道を変えた年のこと。\n語り部の見習いは、迷いの森で\n四人を探した。\n幼い子を家へ帰し、ひとり森の奥へ進んだ。\n傷ついた小鹿を手当てし、獣道を教わった。\n千年前、語り部のともした火が森を焼いた。\n森の主はその火を抱いて眠り、\n村は歌でその眠りを守ってきた。\n千年樹のこずえに、歌の灯がともった。",
+  "uniq": [
+   "u_pim_cap"
+  ],
+  "lastWho": "pim",
   "order": [
    "hans",
    "ben",
    "roy",
    "pim"
   ],
-  "choices": {},
-  "cleared": false,
-  "t1": false,
-  "tier": 0,
+  "choices": {
+   "ch_forest_pim": "send",
+   "ch_forest_fawn": "heal",
+   "ch_forest_write": "pain"
+  },
+  "cleared": true,
+  "t1": true,
+  "tier": 1,
   "hero": {
    "type": "warrior",
    "sex": "m",
    "name": "アルン"
   },
   "party": [
-   "hero"
+   "hero",
+   "bartolo",
+   "marta",
+   "sylvain"
   ],
   "stubs": [],
   "loadErrors": [],
-  "playMs": 3017700,
-  "steps": 49,
-  "gold": 50,
+  "playMs": 4590550,
+  "steps": 4528,
+  "gold": 618,
   "stats": {
    "tops": {
-    "screen:title": 16,
+    "screen:title": 20,
     "cp_curtain": 120,
-    "caption": 52,
-    "message": 34,
+    "caption": 463,
+    "message": 405,
     "screen:charcreate": 13,
-    "field": 60135
+    "field": 19105,
+    "screen:partySelect": 38,
+    "screen:tip": 35,
+    "screen:shop": 426,
+    "battle": 75633,
+    "screen:menu": 6,
+    "screen:items": 37,
+    "celebrate": 80,
+    "screen:inn": 5,
+    "screen:letter": 5,
+    "screen:save": 5,
+    "demo_end": 58
    },
-   "taps": 67,
-   "screenOps": 14,
-   "choices": 0,
-   "chars": 551,
-   "captions": 4,
-   "battles": [],
-   "wipes": [],
-   "talks": 18,
-   "plans": 1463,
-   "planMs": 21086.500000059605,
-   "forced": []
+   "taps": 10395,
+   "screenOps": 287,
+   "choices": 8,
+   "chars": 5957,
+   "captions": 37,
+   "battles": [
+    {
+     "troop": "tr_tutorial",
+     "zone": null,
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 50,
+     "rounds": 1,
+     "lose": false,
+     "f": 2073,
+     "t0": 106730.388209767,
+     "result": "win",
+     "ms": 13400
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 54,
+     "rounds": 6,
+     "lose": false,
+     "f": 2443,
+     "t0": 125280.388209767,
+     "result": "win",
+     "ms": 64050
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 79,
+     "rounds": 1,
+     "lose": false,
+     "f": 4038,
+     "t0": 205030.388209767,
+     "result": "win",
+     "ms": 14800
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 91,
+     "rounds": 4,
+     "lose": false,
+     "f": 4571,
+     "t0": 231680.388209767,
+     "result": "win",
+     "ms": 46650
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 114,
+     "rounds": 6,
+     "lose": false,
+     "f": 5601,
+     "t0": 283180.388209767,
+     "result": "win",
+     "ms": 57200
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 143,
+     "rounds": 4,
+     "lose": false,
+     "f": 6877,
+     "t0": 346980.388209767,
+     "result": "win",
+     "ms": 40050
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 163,
+     "rounds": 6,
+     "lose": false,
+     "f": 8110,
+     "t0": 408630.388209767,
+     "result": "win",
+     "ms": 65800
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 193,
+     "rounds": 5,
+     "lose": false,
+     "f": 9525,
+     "t0": 479380.388209767,
+     "result": "win",
+     "ms": 40800
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 213,
+     "rounds": 4,
+     "lose": false,
+     "f": 10371,
+     "t0": 521680.388209767,
+     "result": "win",
+     "ms": 29849.99999999994
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 225,
+     "rounds": 4,
+     "lose": false,
+     "f": 11073,
+     "t0": 556780.3882097669,
+     "result": "win",
+     "ms": 37800
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 241,
+     "rounds": 3,
+     "lose": false,
+     "f": 11950,
+     "t0": 600630.3882097669,
+     "result": "win",
+     "ms": 26850
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 253,
+     "rounds": 5,
+     "lose": false,
+     "f": 12610,
+     "t0": 633630.3882097669,
+     "result": "win",
+     "ms": 40600
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 269,
+     "rounds": 4,
+     "lose": false,
+     "f": 13495,
+     "t0": 677880.3882097669,
+     "result": "win",
+     "ms": 31150
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 281,
+     "rounds": 3,
+     "lose": false,
+     "f": 14145,
+     "t0": 710380.3882097669,
+     "result": "win",
+     "ms": 22950
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 296,
+     "rounds": 3,
+     "lose": false,
+     "f": 14869,
+     "t0": 746580.3882097669,
+     "result": "win",
+     "ms": 22450
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 308,
+     "rounds": 5,
+     "lose": false,
+     "f": 15355,
+     "t0": 770880.3882097669,
+     "result": "win",
+     "ms": 45650
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 324,
+     "rounds": 3,
+     "lose": false,
+     "f": 16768,
+     "t0": 841530.3882097669,
+     "result": "win",
+     "ms": 23200
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 339,
+     "rounds": 3,
+     "lose": false,
+     "f": 17395,
+     "t0": 872880.3882097669,
+     "result": "win",
+     "ms": 31750
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 354,
+     "rounds": 3,
+     "lose": false,
+     "f": 18098,
+     "t0": 908030.3882097669,
+     "result": "win",
+     "ms": 27500
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 369,
+     "rounds": 4,
+     "lose": false,
+     "f": 18728,
+     "t0": 939530.3882097669,
+     "result": "win",
+     "ms": 43500
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 385,
+     "rounds": 4,
+     "lose": false,
+     "f": 19743,
+     "t0": 990280.3882097669,
+     "result": "win",
+     "ms": 35500
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 405,
+     "rounds": 4,
+     "lose": false,
+     "f": 20494,
+     "t0": 1027830.3882097669,
+     "result": "win",
+     "ms": 38850
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 421,
+     "rounds": 2,
+     "lose": false,
+     "f": 21330,
+     "t0": 1069630.388209767,
+     "result": "win",
+     "ms": 14450
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_1",
+     "gold": 430,
+     "rounds": 5,
+     "lose": false,
+     "f": 21717,
+     "t0": 1088980.388209767,
+     "result": "win",
+     "ms": 40450
+    },
+    {
+     "troop": null,
+     "zone": "z_lighthouse",
+     "boss": false,
+     "map": "lighthouse_2",
+     "gold": 446,
+     "rounds": 2,
+     "lose": false,
+     "f": 22720,
+     "t0": 1139130.388209767,
+     "result": "win",
+     "ms": 17550
+    },
+    {
+     "troop": "tr_b_pageeater",
+     "zone": null,
+     "boss": true,
+     "map": "lighthouse_3",
+     "gold": 455,
+     "rounds": 12,
+     "lose": false,
+     "f": 23351,
+     "t0": 1170630.388209767,
+     "forced": true,
+     "lost": 1,
+     "wiped": true,
+     "result": "win",
+     "ms": 211150
+    },
+    {
+     "troop": null,
+     "zone": "zw_prologue",
+     "boss": false,
+     "map": "f_roa",
+     "gold": 42,
+     "rounds": 1,
+     "lose": false,
+     "f": 28582,
+     "t0": 1432230.388209767,
+     "result": "win",
+     "ms": 9300
+    },
+    {
+     "troop": null,
+     "zone": "zw_prologue",
+     "boss": false,
+     "map": "f_roa",
+     "gold": 46,
+     "rounds": 1,
+     "lose": false,
+     "f": 28837,
+     "t0": 1444980.388209767,
+     "result": "win",
+     "ms": 11300
+    },
+    {
+     "troop": null,
+     "zone": "zw_forest",
+     "boss": false,
+     "map": "f_hut",
+     "gold": 50,
+     "rounds": 3,
+     "lose": false,
+     "f": 29422,
+     "t0": 1474230.388209767,
+     "result": "win",
+     "ms": 29500
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 40,
+     "rounds": 4,
+     "lose": false,
+     "f": 31605,
+     "t0": 1583380.388209767,
+     "result": "win",
+     "ms": 47700
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 70,
+     "rounds": 2,
+     "lose": false,
+     "f": 32623,
+     "t0": 1634280.388209767,
+     "result": "win",
+     "ms": 21550
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 82,
+     "rounds": 3,
+     "lose": false,
+     "f": 33170,
+     "t0": 1661630.388209767,
+     "result": "win",
+     "ms": 29550
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 100,
+     "rounds": 2,
+     "lose": false,
+     "f": 33821,
+     "t0": 1694180.388209767,
+     "result": "win",
+     "ms": 23750
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 118,
+     "rounds": 3,
+     "lose": false,
+     "f": 34392,
+     "t0": 1722730.388209767,
+     "result": "win",
+     "ms": 26950
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 136,
+     "rounds": 3,
+     "lose": false,
+     "f": 34995,
+     "t0": 1752880.388209767,
+     "result": "win",
+     "ms": 34800
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 154,
+     "rounds": 3,
+     "lose": false,
+     "f": 35765,
+     "t0": 1791380.388209767,
+     "result": "win",
+     "ms": 29450
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 172,
+     "rounds": 4,
+     "lose": false,
+     "f": 36407,
+     "t0": 1823480.388209767,
+     "result": "win",
+     "ms": 46150
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 196,
+     "rounds": 3,
+     "lose": false,
+     "f": 37364,
+     "t0": 1871330.388209767,
+     "result": "win",
+     "ms": 34000
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 220,
+     "rounds": 3,
+     "lose": false,
+     "f": 38438,
+     "t0": 1925030.388209767,
+     "result": "win",
+     "ms": 33300
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 247,
+     "rounds": 4,
+     "lose": false,
+     "f": 39450,
+     "t0": 1975630.388209767,
+     "result": "win",
+     "ms": 44250
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 265,
+     "rounds": 4,
+     "lose": false,
+     "f": 40378,
+     "t0": 2022030.388209767,
+     "result": "win",
+     "ms": 49200
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 295,
+     "rounds": 3,
+     "lose": false,
+     "f": 41397,
+     "t0": 2072980.388209767,
+     "result": "win",
+     "ms": 31199.999999999767
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 322,
+     "rounds": 3,
+     "lose": false,
+     "f": 42120,
+     "t0": 2109130.3882097667,
+     "result": "win",
+     "ms": 26450
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 340,
+     "rounds": 3,
+     "lose": false,
+     "f": 42685,
+     "t0": 2137380.3882097667,
+     "result": "win",
+     "ms": 29650
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 367,
+     "rounds": 2,
+     "lose": false,
+     "f": 43373,
+     "t0": 2171780.3882097667,
+     "result": "win",
+     "ms": 21750
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 394,
+     "rounds": 6,
+     "lose": false,
+     "f": 44020,
+     "t0": 2204130.3882097667,
+     "result": "win",
+     "ms": 59100
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 424,
+     "rounds": 2,
+     "lose": false,
+     "f": 45444,
+     "t0": 2275330.3882097667,
+     "result": "win",
+     "ms": 18600
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 442,
+     "rounds": 1,
+     "lose": false,
+     "f": 45891,
+     "t0": 2297680.3882097667,
+     "result": "win",
+     "ms": 15050
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 460,
+     "rounds": 3,
+     "lose": false,
+     "f": 46476,
+     "t0": 2326930.3882097667,
+     "result": "win",
+     "ms": 24000
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 478,
+     "rounds": 2,
+     "lose": false,
+     "f": 47015,
+     "t0": 2353880.3882097667,
+     "result": "win",
+     "ms": 20650
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 496,
+     "rounds": 2,
+     "lose": false,
+     "f": 47466,
+     "t0": 2376430.3882097667,
+     "result": "win",
+     "ms": 23050
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 514,
+     "rounds": 3,
+     "lose": false,
+     "f": 47955,
+     "t0": 2400880.3882097667,
+     "result": "win",
+     "ms": 29100
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 541,
+     "rounds": 4,
+     "lose": false,
+     "f": 48757,
+     "t0": 2440980.3882097667,
+     "result": "win",
+     "ms": 41200
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 559,
+     "rounds": 6,
+     "lose": false,
+     "f": 50100,
+     "t0": 2508130.3882097667,
+     "result": "win",
+     "ms": 60400
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 589,
+     "rounds": 1,
+     "lose": false,
+     "f": 51343,
+     "t0": 2570280.3882097667,
+     "result": "win",
+     "ms": 14950
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 607,
+     "rounds": 4,
+     "lose": false,
+     "f": 51695,
+     "t0": 2587880.3882097667,
+     "result": "win",
+     "ms": 44350
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 631,
+     "rounds": 4,
+     "lose": false,
+     "f": 52636,
+     "t0": 2634930.3882097667,
+     "result": "win",
+     "ms": 36600
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 661,
+     "rounds": 3,
+     "lose": false,
+     "f": 53413,
+     "t0": 2673780.3882097667,
+     "result": "win",
+     "ms": 29550
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 685,
+     "rounds": 2,
+     "lose": false,
+     "f": 54123,
+     "t0": 2709280.3882097667,
+     "result": "win",
+     "ms": 14800
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 697,
+     "rounds": 2,
+     "lose": false,
+     "f": 54664,
+     "t0": 2736330.3882097667,
+     "result": "win",
+     "ms": 24150
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 718,
+     "rounds": 4,
+     "lose": false,
+     "f": 55215,
+     "t0": 2763880.3882097667,
+     "result": "win",
+     "ms": 48150
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 748,
+     "rounds": 4,
+     "lose": false,
+     "f": 56232,
+     "t0": 2814730.3882097667,
+     "result": "win",
+     "ms": 34700
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 791,
+     "rounds": 2,
+     "lose": false,
+     "f": 57163,
+     "t0": 2861280.3882097667,
+     "result": "win",
+     "ms": 22850
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 809,
+     "rounds": 3,
+     "lose": false,
+     "f": 57665,
+     "t0": 2886380.3882097667,
+     "result": "win",
+     "ms": 33500
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 839,
+     "rounds": 3,
+     "lose": false,
+     "f": 58562,
+     "t0": 2931230.3882097667,
+     "result": "win",
+     "ms": 31100
+    },
+    {
+     "troop": "tr_a21_forest_wolves",
+     "zone": null,
+     "boss": false,
+     "map": "verda_1",
+     "gold": 857,
+     "rounds": 8,
+     "lose": false,
+     "f": 59260,
+     "t0": 2966080.3882097667,
+     "result": "win",
+     "ms": 98300
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 991,
+     "rounds": 6,
+     "lose": false,
+     "f": 61387,
+     "t0": 3072480.3882097667,
+     "result": "win",
+     "ms": 48200
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 1015,
+     "rounds": 3,
+     "lose": false,
+     "f": 62661,
+     "t0": 3136180.3882097667,
+     "result": "win",
+     "ms": 22400
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 1033,
+     "rounds": 5,
+     "lose": false,
+     "f": 63173,
+     "t0": 3161780.3882097667,
+     "result": "win",
+     "ms": 39500
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 1075,
+     "rounds": 3,
+     "lose": false,
+     "f": 64019,
+     "t0": 3204080.3882097667,
+     "result": "win",
+     "ms": 29750
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 1093,
+     "rounds": 3,
+     "lose": false,
+     "f": 64658,
+     "t0": 3236030.3882097667,
+     "result": "win",
+     "ms": 24100
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 1111,
+     "rounds": 4,
+     "lose": false,
+     "f": 65185,
+     "t0": 3262380.3882097667,
+     "result": "win",
+     "ms": 32700
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 1138,
+     "rounds": 3,
+     "lose": false,
+     "f": 66035,
+     "t0": 3304880.3882097667,
+     "result": "win",
+     "ms": 22750
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 1156,
+     "rounds": 3,
+     "lose": false,
+     "f": 66530,
+     "t0": 3329630.3882097667,
+     "result": "win",
+     "ms": 26400
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 1174,
+     "rounds": 6,
+     "lose": false,
+     "f": 67088,
+     "t0": 3357530.3882097667,
+     "result": "win",
+     "ms": 51850
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 1192,
+     "rounds": 3,
+     "lose": false,
+     "f": 68216,
+     "t0": 3413930.3882097667,
+     "result": "win",
+     "ms": 26300
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 1210,
+     "rounds": 3,
+     "lose": false,
+     "f": 68805,
+     "t0": 3443380.3882097667,
+     "result": "win",
+     "ms": 25650
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 1231,
+     "rounds": 3,
+     "lose": false,
+     "f": 69376,
+     "t0": 3471930.3882097667,
+     "result": "win",
+     "ms": 20700
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 1243,
+     "rounds": 5,
+     "lose": false,
+     "f": 69832,
+     "t0": 3494730.3882097667,
+     "result": "win",
+     "ms": 46100
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 1267,
+     "rounds": 2,
+     "lose": false,
+     "f": 70854,
+     "t0": 3545830.3882097667,
+     "result": "win",
+     "ms": 19700
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 1285,
+     "rounds": 4,
+     "lose": false,
+     "f": 71439,
+     "t0": 3575080.3882097667,
+     "result": "win",
+     "ms": 33600
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 1303,
+     "rounds": 5,
+     "lose": false,
+     "f": 72216,
+     "t0": 3613930.3882097667,
+     "result": "win",
+     "ms": 39850
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 1330,
+     "rounds": 4,
+     "lose": false,
+     "f": 73047,
+     "t0": 3655480.3882097667,
+     "result": "win",
+     "ms": 32800
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 1348,
+     "rounds": 3,
+     "lose": false,
+     "f": 73755,
+     "t0": 3690880.3882097667,
+     "result": "win",
+     "ms": 26950
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 1366,
+     "rounds": 3,
+     "lose": false,
+     "f": 74336,
+     "t0": 3719930.3882097667,
+     "result": "win",
+     "ms": 22700
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 113,
+     "rounds": 4,
+     "lose": false,
+     "f": 75398,
+     "t0": 3773030.3882097667,
+     "result": "win",
+     "ms": 45550
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 137,
+     "rounds": 3,
+     "lose": false,
+     "f": 76392,
+     "t0": 3822730.3882097667,
+     "result": "win",
+     "ms": 32150
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 155,
+     "rounds": 2,
+     "lose": false,
+     "f": 77138,
+     "t0": 3860030.3882097667,
+     "result": "win",
+     "ms": 17150
+    },
+    {
+     "troop": "tr_b_moth",
+     "zone": null,
+     "boss": true,
+     "map": "verda_2",
+     "gold": 173,
+     "rounds": 12,
+     "lose": false,
+     "f": 77710,
+     "t0": 3888580.3882097667,
+     "lost": 1,
+     "wiped": true,
+     "result": "win",
+     "ms": 151700
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 330,
+     "rounds": 3,
+     "lose": false,
+     "f": 80912,
+     "t0": 4048730.3882097667,
+     "result": "win",
+     "ms": 29400
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 369,
+     "rounds": 3,
+     "lose": false,
+     "f": 81547,
+     "t0": 4080480.3882097667,
+     "result": "win",
+     "ms": 28500
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 387,
+     "rounds": 2,
+     "lose": false,
+     "f": 82161,
+     "t0": 4111180.3882097667,
+     "result": "win",
+     "ms": 17250
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 405,
+     "rounds": 2,
+     "lose": false,
+     "f": 82551,
+     "t0": 4130680.3882097667,
+     "result": "win",
+     "ms": 26700
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 423,
+     "rounds": 2,
+     "lose": false,
+     "f": 83117,
+     "t0": 4158980.3882097667,
+     "result": "win",
+     "ms": 21750
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 441,
+     "rounds": 3,
+     "lose": false,
+     "f": 83632,
+     "t0": 4184730.3882097667,
+     "result": "win",
+     "ms": 36100
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 465,
+     "rounds": 3,
+     "lose": false,
+     "f": 84446,
+     "t0": 4225430.388209767,
+     "result": "win",
+     "ms": 30300
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 123,
+     "rounds": 2,
+     "lose": false,
+     "f": 85677,
+     "t0": 4286980.388209767,
+     "result": "win",
+     "ms": 19550
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_1",
+     "gold": 141,
+     "rounds": 3,
+     "lose": false,
+     "f": 86135,
+     "t0": 4309880.388209767,
+     "result": "win",
+     "ms": 29400
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 159,
+     "rounds": 2,
+     "lose": false,
+     "f": 86809,
+     "t0": 4343580.388209767,
+     "result": "win",
+     "ms": 19650
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 177,
+     "rounds": 2,
+     "lose": false,
+     "f": 87271,
+     "t0": 4366680.388209767,
+     "result": "win",
+     "ms": 26300
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 207,
+     "rounds": 2,
+     "lose": false,
+     "f": 87859,
+     "t0": 4396080.388209767,
+     "result": "win",
+     "ms": 27600
+    },
+    {
+     "troop": null,
+     "zone": "z_verda",
+     "boss": false,
+     "map": "verda_2",
+     "gold": 234,
+     "rounds": 2,
+     "lose": false,
+     "f": 88438,
+     "t0": 4425030.388209767,
+     "result": "win",
+     "ms": 19850
+    },
+    {
+     "troop": null,
+     "zone": "z_elder",
+     "boss": false,
+     "map": "elder_1",
+     "gold": 261,
+     "rounds": 4,
+     "lose": false,
+     "f": 89007,
+     "t0": 4453480.388209767,
+     "result": "win",
+     "ms": 42950
+    },
+    {
+     "troop": null,
+     "zone": "z_elder",
+     "boss": false,
+     "map": "elder_1",
+     "gold": 297,
+     "rounds": 2,
+     "lose": false,
+     "f": 89910,
+     "t0": 4498630.388209767,
+     "result": "win",
+     "ms": 26750
+    },
+    {
+     "troop": null,
+     "zone": "z_elder",
+     "boss": false,
+     "map": "elder_1",
+     "gold": 321,
+     "rounds": 3,
+     "lose": false,
+     "f": 90478,
+     "t0": 4527030.388209767,
+     "result": "win",
+     "ms": 26350
+    },
+    {
+     "troop": null,
+     "zone": "z_elder",
+     "boss": false,
+     "map": "elder_1",
+     "gold": 345,
+     "rounds": 5,
+     "lose": false,
+     "f": 91071,
+     "t0": 4556680.388209767,
+     "result": "win",
+     "ms": 72150
+    },
+    {
+     "troop": null,
+     "zone": "z_elder",
+     "boss": false,
+     "map": "elder_1",
+     "gold": 375,
+     "rounds": 1,
+     "lose": false,
+     "f": 92552,
+     "t0": 4630730.388209767,
+     "result": "win",
+     "ms": 16750
+    },
+    {
+     "troop": null,
+     "zone": "z_elder",
+     "boss": false,
+     "map": "elder_1",
+     "gold": 393,
+     "rounds": 1,
+     "lose": false,
+     "f": 92932,
+     "t0": 4649730.388209767,
+     "result": "win",
+     "ms": 14700
+    },
+    {
+     "troop": null,
+     "zone": "z_elder",
+     "boss": false,
+     "map": "elder_2",
+     "gold": 411,
+     "rounds": 2,
+     "lose": false,
+     "f": 93369,
+     "t0": 4671580.388209767,
+     "result": "win",
+     "ms": 26650
+    },
+    {
+     "troop": "tr_b_rooteater",
+     "zone": null,
+     "boss": true,
+     "map": "elder_2",
+     "gold": 435,
+     "rounds": 8,
+     "lose": false,
+     "f": 94029,
+     "t0": 4704530.388209767,
+     "result": "win",
+     "ms": 87600
+    }
+   ],
+   "wipes": [
+    {
+     "battle": "tr_b_pageeater",
+     "map": "lighthouse_3",
+     "to": "retry",
+     "gold": 455,
+     "round": 12,
+     "f": 24607
+    },
+    {
+     "battle": "tr_b_moth",
+     "map": "verda_2",
+     "to": "retry",
+     "gold": 173,
+     "round": 12,
+     "f": 79245
+    }
+   ],
+   "talks": 163,
+   "plans": 366,
+   "planMs": 40232.19999998808,
+   "forced": [
+    {
+     "battle": "tr_b_pageeater",
+     "round": 6,
+     "f": 23921
+    }
+   ]
   },
   "phaseAt": {
    "start": {
     "f": 0,
-    "t": 3414.936498700074,
+    "t": 3080.3882097670025,
     "steps": 0,
     "chars": 0,
     "ops": 0,
     "battles": 0,
     "playMs": 0
+   },
+   "prologue_done": {
+    "f": 27810,
+    "t": 1393580.388209767,
+    "steps": 1521,
+    "chars": 2249,
+    "ops": 49,
+    "battles": 26,
+    "playMs": 1238600
+   },
+   "forest_start": {
+    "f": 30240,
+    "t": 1515080.388209767,
+    "steps": 1857,
+    "chars": 2354,
+    "ops": 132,
+    "battles": 29,
+    "playMs": 1360100
+   },
+   "cleared": {
+    "f": 95850,
+    "t": 4795580.388209767,
+    "steps": 4503,
+    "chars": 5308,
+    "ops": 283,
+    "battles": 110,
+    "playMs": 4563300
+   },
+   "t1": {
+    "f": 96360,
+    "t": 4821080.388209767,
+    "steps": 4528,
+    "chars": 5915,
+    "ops": 290,
+    "battles": 110,
+    "playMs": 4588800
    }
   },
   "log": [
    {
     "f": 284,
-    "t": 17615,
+    "t": 17280,
     "msg": "goal berna"
    },
    {
     "f": 343,
-    "t": 20565,
+    "t": 20230,
     "msg": "act berna at roa_house 11,5"
    },
    {
     "f": 368,
-    "t": 21815,
+    "t": 21480,
     "msg": "goal farmer"
    },
    {
-    "f": 60369,
-    "t": 3021865,
-    "msg": "FAIL goal farmer timed out"
+    "f": 550,
+    "t": 30580,
+    "msg": "act farmer at roa 9,15"
+   },
+   {
+    "f": 553,
+    "t": 30730,
+    "msg": "goal party"
+   },
+   {
+    "f": 1114,
+    "t": 58780,
+    "msg": "act party at pharos_tavern 3,5"
+   },
+   {
+    "f": 1165,
+    "t": 61330,
+    "msg": "goal rowell"
+   },
+   {
+    "f": 1397,
+    "t": 72930,
+    "msg": "act rowell at pharos_record 4,6"
+   },
+   {
+    "f": 1404,
+    "t": 73280,
+    "msg": "goal otto"
+   },
+   {
+    "f": 1569,
+    "t": 81530,
+    "msg": "act otto at pharos 21,29"
+   },
+   {
+    "f": 1586,
+    "t": 82380,
+    "msg": "goal shop_pharos_arms0"
+   },
+   {
+    "f": 1699,
+    "t": 88030,
+    "msg": "act shop_pharos_arms0 at pharos_smith 5,5"
+   },
+   {
+    "f": 1707,
+    "t": 88430,
+    "msg": "shop done shop_pharos_arms0 gold 50"
+   },
+   {
+    "f": 1707,
+    "t": 88430,
+    "msg": "goal lh_door"
+   },
+   {
+    "f": 1982,
+    "t": 102180,
+    "msg": "choose \"はい\" for \"重い扉の向こうは、灯台の中だ。\\n中へ入りますか？\""
+   },
+   {
+    "f": 2048,
+    "t": 105480,
+    "msg": "act lh_door at lighthouse_1 17,23"
+   },
+   {
+    "f": 2067,
+    "t": 106430,
+    "msg": "goal tutorial"
+   },
+   {
+    "f": 2353,
+    "t": 120730,
+    "msg": "goal grind_prologue"
+   },
+   {
+    "f": 2353,
+    "t": 120730,
+    "msg": "grind to 24 battles on lighthouse_1"
+   },
+   {
+    "f": 22536,
+    "t": 1129880,
+    "msg": "grind goal grind_prologue done (24 battles)"
+   },
+   {
+    "f": 22537,
+    "t": 1129930,
+    "msg": "goal fine_lh"
+   },
+   {
+    "f": 23263,
+    "t": 1166230,
+    "msg": "goal spring_lh"
+   },
+   {
+    "f": 23321,
+    "t": 1169130,
+    "msg": "act spring_lh at lighthouse_3 9,15"
+   },
+   {
+    "f": 23324,
+    "t": 1169280,
+    "msg": "goal boss_pageeater"
+   },
+   {
+    "f": 23351,
+    "t": 1170630,
+    "msg": "lose mode: tr_b_pageeater"
+   },
+   {
+    "f": 23921,
+    "t": 1199130,
+    "msg": "lose mode: party HP set to 1 at round 6"
+   },
+   {
+    "f": 24607,
+    "t": 1233430,
+    "msg": "gameover → retry"
+   },
+   {
+    "f": 27805,
+    "t": 1393330,
+    "msg": "goal shop_pharos_arms"
+   },
+   {
+    "f": 27967,
+    "t": 1401430,
+    "msg": "act shop_pharos_arms at pharos_smith 5,5"
+   },
+   {
+    "f": 27996,
+    "t": 1402880,
+    "msg": "buy ft_greave_0 (612 G)"
+   },
+   {
+    "f": 27997,
+    "t": 1402930,
+    "msg": "buy ft_greave_0 (612 G)"
+   },
+   {
+    "f": 28005,
+    "t": 1403330,
+    "msg": "buy ft_greave_0 (572 G)"
+   },
+   {
+    "f": 28013,
+    "t": 1403730,
+    "msg": "buy ft_greave_0 (532 G)"
+   },
+   {
+    "f": 28024,
+    "t": 1404280,
+    "msg": "buy ft_sandal_0 (492 G)"
+   },
+   {
+    "f": 28025,
+    "t": 1404330,
+    "msg": "buy ft_sandal_0 (492 G)"
+   },
+   {
+    "f": 28042,
+    "t": 1405180,
+    "msg": "buy hn_gauntlet_0 (452 G)"
+   },
+   {
+    "f": 28043,
+    "t": 1405230,
+    "msg": "buy hn_gauntlet_0 (452 G)"
+   },
+   {
+    "f": 28051,
+    "t": 1405630,
+    "msg": "buy hn_gauntlet_0 (412 G)"
+   },
+   {
+    "f": 28059,
+    "t": 1406030,
+    "msg": "buy hn_gauntlet_0 (372 G)"
+   },
+   {
+    "f": 28070,
+    "t": 1406580,
+    "msg": "buy hn_longglove_0 (332 G)"
+   },
+   {
+    "f": 28071,
+    "t": 1406630,
+    "msg": "buy hn_longglove_0 (332 G)"
+   },
+   {
+    "f": 28088,
+    "t": 1407480,
+    "msg": "buy bd_iron_cuirass (292 G)"
+   },
+   {
+    "f": 28089,
+    "t": 1407530,
+    "msg": "buy bd_iron_cuirass (292 G)"
+   },
+   {
+    "f": 28102,
+    "t": 1408180,
+    "msg": "buy hd_helm_0 (192 G)"
+   },
+   {
+    "f": 28103,
+    "t": 1408230,
+    "msg": "buy hd_helm_0 (192 G)"
+   },
+   {
+    "f": 28116,
+    "t": 1408880,
+    "msg": "buy sh_iron_buckler (132 G)"
+   },
+   {
+    "f": 28117,
+    "t": 1408930,
+    "msg": "buy sh_iron_buckler (132 G)"
+   },
+   {
+    "f": 28129,
+    "t": 1409530,
+    "msg": "shop done shop_pharos_arms gold 62"
+   },
+   {
+    "f": 28129,
+    "t": 1409530,
+    "msg": "goal shop_pharos_items"
+   },
+   {
+    "f": 28236,
+    "t": 1414880,
+    "msg": "act shop_pharos_items at pharos_shop 5,5"
+   },
+   {
+    "f": 28239,
+    "t": 1415030,
+    "msg": "buy i_salve (62 G)"
+   },
+   {
+    "f": 28240,
+    "t": 1415080,
+    "msg": "buy i_salve (62 G)"
+   },
+   {
+    "f": 28248,
+    "t": 1415480,
+    "msg": "shop done shop_pharos_items gold 42"
+   },
+   {
+    "f": 28248,
+    "t": 1415480,
+    "msg": "goal fern"
+   },
+   {
+    "f": 30243,
+    "t": 1515230,
+    "msg": "goal board"
+   },
+   {
+    "f": 30314,
+    "t": 1518780,
+    "msg": "act board at fern 32,27"
+   },
+   {
+    "f": 30344,
+    "t": 1520280,
+    "msg": "act board at fern 32,27"
+   },
+   {
+    "f": 30353,
+    "t": 1520730,
+    "msg": "goal gord"
+   },
+   {
+    "f": 30498,
+    "t": 1527980,
+    "msg": "act gord at fern_gord 5,5"
+   },
+   {
+    "f": 30511,
+    "t": 1528630,
+    "msg": "goal katri"
+   },
+   {
+    "f": 30740,
+    "t": 1540080,
+    "msg": "act katri at fern_pim_home 6,5"
+   },
+   {
+    "f": 30749,
+    "t": 1540530,
+    "msg": "goal rita"
+   },
+   {
+    "f": 31000,
+    "t": 1553080,
+    "msg": "act rita at fern_rita 4,6"
+   },
+   {
+    "f": 31013,
+    "t": 1553730,
+    "msg": "goal shop_fern_peddler"
+   },
+   {
+    "f": 31106,
+    "t": 1558380,
+    "msg": "act shop_fern_peddler at fern 38,28"
+   },
+   {
+    "f": 31136,
+    "t": 1559880,
+    "msg": "act shop_fern_peddler at fern 38,28"
+   },
+   {
+    "f": 31144,
+    "t": 1560280,
+    "msg": "shop done shop_fern_peddler gold 70"
+   },
+   {
+    "f": 31144,
+    "t": 1560280,
+    "msg": "goal shop_fern_items"
+   },
+   {
+    "f": 31263,
+    "t": 1566230,
+    "msg": "act shop_fern_items at fern_shop 8,5"
+   },
+   {
+    "f": 31274,
+    "t": 1566780,
+    "msg": "buy i_antidote (70 G)"
+   },
+   {
+    "f": 31275,
+    "t": 1566830,
+    "msg": "buy i_antidote (70 G)"
+   },
+   {
+    "f": 31287,
+    "t": 1567430,
+    "msg": "shop done shop_fern_items gold 40"
+   },
+   {
+    "f": 31287,
+    "t": 1567430,
+    "msg": "goal axe"
+   },
+   {
+    "f": 33123,
+    "t": 1659230,
+    "msg": "act axe at verda_1 13,10"
+   },
+   {
+    "f": 33142,
+    "t": 1660180,
+    "msg": "goal grind_forest"
+   },
+   {
+    "f": 33142,
+    "t": 1660180,
+    "msg": "grind to 60 battles on verda_1"
+   },
+   {
+    "f": 55157,
+    "t": 2760930,
+    "msg": "grind goal grind_forest done (60 battles)"
+   },
+   {
+    "f": 55158,
+    "t": 2760980,
+    "msg": "goal log"
+   },
+   {
+    "f": 57046,
+    "t": 2855380,
+    "msg": "act log at verda_2 50,40"
+   },
+   {
+    "f": 57050,
+    "t": 2855580,
+    "msg": "choose \"斧で払う\" for \"\""
+   },
+   {
+    "f": 57066,
+    "t": 2856380,
+    "msg": "goal hans"
+   },
+   {
+    "f": 57122,
+    "t": 2859180,
+    "msg": "act hans at verda_2 52,45"
+   },
+   {
+    "f": 57156,
+    "t": 2860880,
+    "msg": "goal ben"
+   },
+   {
+    "f": 59253,
+    "t": 2965730,
+    "msg": "act ben at verda_1 48,23"
+   },
+   {
+    "f": 61285,
+    "t": 3067330,
+    "msg": "goal flute"
+   },
+   {
+    "f": 61331,
+    "t": 3069630,
+    "msg": "act flute at verda_1 47,12"
+   },
+   {
+    "f": 61348,
+    "t": 3070480,
+    "msg": "goal roy"
+   },
+   {
+    "f": 62567,
+    "t": 3131430,
+    "msg": "act roy at verda_2 52,13"
+   },
+   {
+    "f": 62571,
+    "t": 3131630,
+    "msg": "choose \"ベンの呼び笛を吹く\" for \"\""
+   },
+   {
+    "f": 62638,
+    "t": 3134980,
+    "msg": "goal pim"
+   },
+   {
+    "f": 65908,
+    "t": 3298480,
+    "msg": "act pim at verda_2 15,36"
+   },
+   {
+    "f": 65939,
+    "t": 3300030,
+    "msg": "choose \"野営地へ送り届ける\" for \"ピムをどうする？\""
+   },
+   {
+    "f": 65956,
+    "t": 3300880,
+    "msg": "choose \"手当てする（傷薬を使う）\" for \"\""
+   },
+   {
+    "f": 66022,
+    "t": 3304180,
+    "msg": "goal stone_a"
+   },
+   {
+    "f": 70823,
+    "t": 3544230,
+    "msg": "act stone_a at verda_1 11,29"
+   },
+   {
+    "f": 70842,
+    "t": 3545180,
+    "msg": "goal stone_b"
+   },
+   {
+    "f": 72180,
+    "t": 3612080,
+    "msg": "act stone_b at verda_1 51,11"
+   },
+   {
+    "f": 72199,
+    "t": 3613030,
+    "msg": "goal shop_fern_items_moth"
+   },
+   {
+    "f": 74983,
+    "t": 3752230,
+    "msg": "act shop_fern_items_moth at fern_shop 8,5"
+   },
+   {
+    "f": 75008,
+    "t": 3753480,
+    "msg": "buy i_stone_wind (1393 G)"
+   },
+   {
+    "f": 75009,
+    "t": 3753530,
+    "msg": "buy i_stone_wind (1393 G)"
+   },
+   {
+    "f": 75026,
+    "t": 3754380,
+    "msg": "buy i_waker (1193 G)"
+   },
+   {
+    "f": 75027,
+    "t": 3754430,
+    "msg": "buy i_waker (1193 G)"
+   },
+   {
+    "f": 75060,
+    "t": 3756080,
+    "msg": "buy ac_mnd_0 (1103 G)"
+   },
+   {
+    "f": 75061,
+    "t": 3756130,
+    "msg": "buy ac_mnd_0 (1103 G)"
+   },
+   {
+    "f": 75069,
+    "t": 3756530,
+    "msg": "buy ac_mnd_0 (1023 G)"
+   },
+   {
+    "f": 75077,
+    "t": 3756930,
+    "msg": "buy ac_mnd_0 (943 G)"
+   },
+   {
+    "f": 75085,
+    "t": 3757330,
+    "msg": "buy ac_mnd_0 (863 G)"
+   },
+   {
+    "f": 75093,
+    "t": 3757730,
+    "msg": "buy ac_mnd_0 (783 G)"
+   },
+   {
+    "f": 75101,
+    "t": 3758130,
+    "msg": "buy ac_mnd_0 (703 G)"
+   },
+   {
+    "f": 75118,
+    "t": 3758980,
+    "msg": "buy ac_str_0 (623 G)"
+   },
+   {
+    "f": 75119,
+    "t": 3759030,
+    "msg": "buy ac_str_0 (623 G)"
+   },
+   {
+    "f": 75136,
+    "t": 3759880,
+    "msg": "buy ac_mnd_0 (543 G)"
+   },
+   {
+    "f": 75137,
+    "t": 3759930,
+    "msg": "buy ac_mnd_0 (543 G)"
+   },
+   {
+    "f": 75148,
+    "t": 3760480,
+    "msg": "buy i_revive (463 G)"
+   },
+   {
+    "f": 75149,
+    "t": 3760530,
+    "msg": "buy i_revive (463 G)"
+   },
+   {
+    "f": 75168,
+    "t": 3761480,
+    "msg": "buy i_firepot (263 G)"
+   },
+   {
+    "f": 75169,
+    "t": 3761530,
+    "msg": "buy i_firepot (263 G)"
+   },
+   {
+    "f": 75181,
+    "t": 3762130,
+    "msg": "shop done shop_fern_items_moth gold 113"
+   },
+   {
+    "f": 75181,
+    "t": 3762130,
+    "msg": "goal wind_stone"
+   },
+   {
+    "f": 75181,
+    "t": 3762130,
+    "msg": "task {\"kind\":\"use\",\"item\":\"i_stone_wind\",\"who\":[\"sylvain\",\"selma\",\"zafira\",\"ilse\"]}"
+   },
+   {
+    "f": 75222,
+    "t": 3764180,
+    "msg": "used i_stone_wind"
+   },
+   {
+    "f": 75231,
+    "t": 3764630,
+    "msg": "goal moth"
+   },
+   {
+    "f": 79245,
+    "t": 3965330,
+    "msg": "gameover → retry"
+   },
+   {
+    "f": 80758,
+    "t": 4040980,
+    "msg": "goal stone_c"
+   },
+   {
+    "f": 80812,
+    "t": 4043680,
+    "msg": "act stone_c at verda_2 12,6"
+   },
+   {
+    "f": 80867,
+    "t": 4046430,
+    "msg": "goal shop_fern_peddler2"
+   },
+   {
+    "f": 85245,
+    "t": 4265330,
+    "msg": "act shop_fern_peddler2 at fern 36,28"
+   },
+   {
+    "f": 85275,
+    "t": 4266830,
+    "msg": "act shop_fern_peddler2 at fern 36,28"
+   },
+   {
+    "f": 85294,
+    "t": 4267780,
+    "msg": "buy w_greatsword_1 (483 G)"
+   },
+   {
+    "f": 85295,
+    "t": 4267830,
+    "msg": "buy w_greatsword_1 (483 G)"
+   },
+   {
+    "f": 85307,
+    "t": 4268430,
+    "msg": "shop done shop_fern_peddler2 gold 223"
+   },
+   {
+    "f": 85307,
+    "t": 4268430,
+    "msg": "goal shop_fern_items2"
+   },
+   {
+    "f": 85418,
+    "t": 4273980,
+    "msg": "act shop_fern_items2 at fern_shop 8,5"
+   },
+   {
+    "f": 85423,
+    "t": 4274230,
+    "msg": "buy i_revive (223 G)"
+   },
+   {
+    "f": 85424,
+    "t": 4274280,
+    "msg": "buy i_revive (223 G)"
+   },
+   {
+    "f": 85432,
+    "t": 4274680,
+    "msg": "shop done shop_fern_items2 gold 123"
+   },
+   {
+    "f": 85432,
+    "t": 4274680,
+    "msg": "goal elder_fine"
+   },
+   {
+    "f": 88901,
+    "t": 4448130,
+    "msg": "goal grind_elder"
+   },
+   {
+    "f": 88901,
+    "t": 4448130,
+    "msg": "grind goal grind_elder done (102 battles)"
+   },
+   {
+    "f": 88902,
+    "t": 4448180,
+    "msg": "goal spring_elder"
+   },
+   {
+    "f": 94000,
+    "t": 4703080,
+    "msg": "act spring_elder at elder_2 29,30"
+   },
+   {
+    "f": 94001,
+    "t": 4703130,
+    "msg": "goal boss_rooteater"
+   },
+   {
+    "f": 96152,
+    "t": 4810680,
+    "msg": "choose \"語り部の火が森を焼いたことも書く\" for \"年代記に何を書く？\""
+   },
+   {
+    "f": 96159,
+    "t": 4811030,
+    "msg": "goal t1"
+   },
+   {
+    "f": 96285,
+    "t": 4817330,
+    "msg": "act t1 at fern_inn 8,3"
+   },
+   {
+    "f": 96364,
+    "t": 4821280,
+    "msg": "choose \"記録する\" for \"ここまでの冒険を、\\n記録しますか？\""
+   },
+   {
+    "f": 96388,
+    "t": 4822480,
+    "msg": "demo end screen"
    }
   ],
   "dev": false
  },
  "trips": {
-  "tavern": null,
-  "party": null,
-  "moves": 2
+  "tavern": {
+   "to": "pharos_tavern",
+   "from": {
+    "map": "pharos",
+    "x": 24,
+    "y": 16
+   },
+   "frames": 1052
+  },
+  "party": {
+   "map": "pharos_tavern"
+  },
+  "moves": 63
  },
  "estimate": {
   "K": {
@@ -145,8 +2390,29 @@
    "char": 0.08,
    "op": 1
   },
-  "prologue": null,
-  "forest": null,
+  "prologue": {
+   "steps": 1521,
+   "zako": 25,
+   "bosses": [
+    "tr_b_pageeater:12r"
+   ],
+   "chars": 2249,
+   "ops": 49,
+   "hours": 0.49,
+   "playHours": 0.34
+  },
+  "forest": {
+   "steps": 2982,
+   "zako": 82,
+   "bosses": [
+    "tr_b_moth:12r",
+    "tr_b_rooteater:8r"
+   ],
+   "chars": 3059,
+   "ops": 234,
+   "hours": 1.32,
+   "playHours": 0.92
+  },
   "target": {
    "prologue": [
     1.5,
@@ -158,5 +2424,5 @@
    ]
   }
  },
- "wallSec": 214
+ "wallSec": 466
 }

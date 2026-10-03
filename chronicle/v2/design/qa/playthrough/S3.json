@@ -1,0 +1,1285 @@
+{
+ "route": "S3",
+ "phone": false,
+ "ok": true,
+ "checks": {
+  "clearedSnow": true,
+  "tierUp": true,
+  "invariants": true,
+  "snowPinsCleared": true,
+  "choices": true,
+  "chronicleText": true,
+  "rewards": true,
+  "stubs0": true,
+  "loadErrors0": true,
+  "consoleErrors0": true,
+  "noEngineError": true
+ },
+ "errors": [],
+ "started": "2026-10-03T20:40:16.102Z",
+ "status": {
+  "frames": 51623,
+  "time": 2581967,
+  "goal": "neve",
+  "done": true,
+  "fail": null,
+  "top": "field",
+  "pos": "yule 28,28",
+  "steps": 3038,
+  "gold": 6354,
+  "battles": 50,
+  "wipes": 2,
+  "round": null,
+  "hp": 0.86,
+  "engineError": null
+ },
+ "final": {
+  "inv": {
+   "top": "field",
+   "locks": [],
+   "busy": false,
+   "fade": 0,
+   "input": true,
+   "msg": false,
+   "ok": true
+  },
+  "pinned": [],
+  "chronicle": "森が歌を忘れ、道を変えた年のこと。\n語り部の見習いは、迷いの森で\n四人を探した。\n千年樹のこずえに、歌の灯がともった。",
+  "uniq": [],
+  "lastWho": "hans",
+  "order": [
+   "hans",
+   "ben",
+   "roy",
+   "pim"
+  ],
+  "choices": {
+   "ch_snow_tale": "hunter",
+   "ch_snow_gate_1": "w",
+   "ch_snow_gate_2": "w",
+   "ch_snow_gate_3": "n",
+   "ch_snow_neve": "fight",
+   "ch_snow_write": "glory"
+  },
+  "cleared": false,
+  "t1": true,
+  "tier": 4,
+  "hero": {
+   "type": "warrior",
+   "sex": "m",
+   "name": "アルン"
+  },
+  "party": [
+   "hero",
+   "bartolo",
+   "marta",
+   "sylvain"
+  ],
+  "stubs": [],
+  "loadErrors": [],
+  "playMs": 2368166.980500236,
+  "steps": 3038,
+  "gold": 6354,
+  "stats": {
+   "tops": {
+    "field": 12013,
+    "caption": 766,
+    "message": 235,
+    "screen:shop": 177,
+    "screen:tip": 4,
+    "battle": 38348,
+    "celebrate": 80
+   },
+   "taps": 6220,
+   "screenOps": 89,
+   "choices": 8,
+   "chars": 3604,
+   "captions": 62,
+   "battles": [
+    {
+     "troop": null,
+     "zone": "z_snow_woods",
+     "boss": false,
+     "map": "snow_woods",
+     "gold": 2560,
+     "rounds": 3,
+     "lose": false,
+     "f": 1659,
+     "t0": 83816.69558587112,
+     "result": "win",
+     "ms": 31050
+    },
+    {
+     "troop": "tr_snow_woods_yeti",
+     "zone": null,
+     "boss": false,
+     "map": "snow_woods",
+     "gold": 2766,
+     "rounds": 2,
+     "lose": false,
+     "f": 2440,
+     "t0": 122816.69558587112,
+     "result": "win",
+     "ms": 23250
+    },
+    {
+     "troop": null,
+     "zone": "z_snow_woods",
+     "boss": false,
+     "map": "snow_woods",
+     "gold": 2929,
+     "rounds": 3,
+     "lose": false,
+     "f": 2962,
+     "t0": 148966.69558587112,
+     "result": "win",
+     "ms": 39250
+    },
+    {
+     "troop": null,
+     "zone": "z_snow_woods",
+     "boss": false,
+     "map": "snow_woods",
+     "gold": 3091,
+     "rounds": 1,
+     "lose": false,
+     "f": 3816,
+     "t0": 191666.69558587112,
+     "result": "win",
+     "ms": 6150
+    },
+    {
+     "troop": null,
+     "zone": "z_snow_woods",
+     "boss": false,
+     "map": "snow_woods",
+     "gold": 3091,
+     "rounds": 2,
+     "lose": false,
+     "f": 4023,
+     "t0": 202016.69558587112,
+     "result": "win",
+     "ms": 26600
+    },
+    {
+     "troop": null,
+     "zone": "z_snow_woods",
+     "boss": false,
+     "map": "snow_woods",
+     "gold": 3199,
+     "rounds": 3,
+     "lose": false,
+     "f": 4772,
+     "t0": 239466.69558587112,
+     "result": "win",
+     "ms": 33150
+    },
+    {
+     "troop": null,
+     "zone": "z_snow_woods",
+     "boss": false,
+     "map": "snow_woods",
+     "gold": 3395,
+     "rounds": 2,
+     "lose": false,
+     "f": 5521,
+     "t0": 276916.6955858711,
+     "result": "win",
+     "ms": 25150
+    },
+    {
+     "troop": null,
+     "zone": "z_snow_woods",
+     "boss": false,
+     "map": "snow_woods",
+     "gold": 3503,
+     "rounds": 2,
+     "lose": false,
+     "f": 6144,
+     "t0": 308066.6955858711,
+     "result": "win",
+     "ms": 22100
+    },
+    {
+     "troop": null,
+     "zone": "z_snow_woods",
+     "boss": false,
+     "map": "snow_woods",
+     "gold": 3883,
+     "rounds": 4,
+     "lose": false,
+     "f": 6664,
+     "t0": 334066.6955858711,
+     "result": "win",
+     "ms": 52150
+    },
+    {
+     "troop": null,
+     "zone": "z_snow_woods",
+     "boss": false,
+     "map": "snow_woods",
+     "gold": 4099,
+     "rounds": 3,
+     "lose": false,
+     "f": 7745,
+     "t0": 388116.6955858711,
+     "result": "win",
+     "ms": 34150
+    },
+    {
+     "troop": null,
+     "zone": "z_snow_woods",
+     "boss": false,
+     "map": "snow_woods",
+     "gold": 4207,
+     "rounds": 4,
+     "lose": false,
+     "f": 8608,
+     "t0": 431266.6955858711,
+     "result": "win",
+     "ms": 43600
+    },
+    {
+     "troop": null,
+     "zone": "z_snow_woods",
+     "boss": false,
+     "map": "snow_woods",
+     "gold": 4359,
+     "rounds": 2,
+     "lose": false,
+     "f": 9610,
+     "t0": 481366.6955858711,
+     "result": "win",
+     "ms": 25100
+    },
+    {
+     "troop": null,
+     "zone": "z_snow_woods",
+     "boss": false,
+     "map": "snow_woods",
+     "gold": 4511,
+     "rounds": 2,
+     "lose": false,
+     "f": 10142,
+     "t0": 507966.6955858711,
+     "result": "win",
+     "ms": 31650
+    },
+    {
+     "troop": null,
+     "zone": "z_snow_woods",
+     "boss": false,
+     "map": "snow_woods",
+     "gold": 4727,
+     "rounds": 3,
+     "lose": false,
+     "f": 10810,
+     "t0": 541366.6955858711,
+     "result": "win",
+     "ms": 36550
+    },
+    {
+     "troop": "tr_siege_1a_e",
+     "zone": null,
+     "boss": false,
+     "map": "yule_night",
+     "gold": 5051,
+     "rounds": 2,
+     "lose": false,
+     "f": 12083,
+     "t0": 604966.6955858711,
+     "result": "win",
+     "ms": 24950
+    },
+    {
+     "troop": "tr_siege_1b",
+     "zone": null,
+     "boss": false,
+     "map": "yule_night",
+     "gold": 5167,
+     "rounds": 2,
+     "lose": false,
+     "f": 12604,
+     "t0": 631016.6955858711,
+     "result": "win",
+     "ms": 38400
+    },
+    {
+     "troop": "tr_siege_2a_e",
+     "zone": null,
+     "boss": false,
+     "map": "yule_night",
+     "gold": 5399,
+     "rounds": 2,
+     "lose": false,
+     "f": 13524,
+     "t0": 677016.6955858711,
+     "result": "win",
+     "ms": 24950
+    },
+    {
+     "troop": "tr_siege_2b",
+     "zone": null,
+     "boss": false,
+     "map": "yule_night",
+     "gold": 5573,
+     "rounds": 2,
+     "lose": false,
+     "f": 14045,
+     "t0": 703066.6955858711,
+     "result": "win",
+     "ms": 27350
+    },
+    {
+     "troop": "tr_siege_3a_e",
+     "zone": null,
+     "boss": false,
+     "map": "yule_night",
+     "gold": 5794,
+     "rounds": 2,
+     "lose": false,
+     "f": 14742,
+     "t0": 737916.6955858711,
+     "result": "win",
+     "ms": 27400
+    },
+    {
+     "troop": "tr_b_blizzardwolf_2",
+     "zone": null,
+     "boss": true,
+     "map": "yule_night",
+     "gold": 5968,
+     "rounds": 9,
+     "lose": false,
+     "f": 15375,
+     "t0": 769566.6955858711,
+     "result": "win",
+     "ms": 92850
+    },
+    {
+     "troop": "tr_b_icegiant",
+     "zone": null,
+     "boss": true,
+     "map": "peak_1",
+     "gold": 6523,
+     "rounds": 4,
+     "lose": false,
+     "f": 18051,
+     "t0": 903366.6955858711,
+     "lost": 2,
+     "wiped": true,
+     "result": "abort",
+     "to": "inn",
+     "ms": 47050
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 3261,
+     "rounds": 3,
+     "lose": false,
+     "f": 19220,
+     "t0": 961866.6955858711,
+     "result": "win",
+     "ms": 33900
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow_road",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 3467,
+     "rounds": 2,
+     "lose": false,
+     "f": 19946,
+     "t0": 998166.6955858711,
+     "result": "win",
+     "ms": 23600
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow_road",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 3619,
+     "rounds": 3,
+     "lose": false,
+     "f": 21074,
+     "t0": 1054566.695585871,
+     "result": "win",
+     "ms": 30450
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 3771,
+     "rounds": 2,
+     "lose": false,
+     "f": 21789,
+     "t0": 1090316.695585871,
+     "result": "win",
+     "ms": 23850
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 3923,
+     "rounds": 2,
+     "lose": false,
+     "f": 22493,
+     "t0": 1125516.695585871,
+     "result": "win",
+     "ms": 22650
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 4021,
+     "rounds": 3,
+     "lose": false,
+     "f": 23127,
+     "t0": 1157216.695585871,
+     "result": "win",
+     "ms": 31200
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 4129,
+     "rounds": 3,
+     "lose": false,
+     "f": 24043,
+     "t0": 1203016.695585871,
+     "result": "win",
+     "ms": 50400
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 4345,
+     "rounds": 2,
+     "lose": false,
+     "f": 25134,
+     "t0": 1257566.695585871,
+     "result": "win",
+     "ms": 24800
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 4453,
+     "rounds": 2,
+     "lose": false,
+     "f": 26055,
+     "t0": 1303616.695585871,
+     "result": "win",
+     "ms": 30050
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 4615,
+     "rounds": 4,
+     "lose": false,
+     "f": 26899,
+     "t0": 1345816.695585871,
+     "result": "win",
+     "ms": 36750
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow_road",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 4939,
+     "rounds": 2,
+     "lose": false,
+     "f": 28153,
+     "t0": 1408516.695585871,
+     "result": "win",
+     "ms": 31150
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 5101,
+     "rounds": 4,
+     "lose": false,
+     "f": 28900,
+     "t0": 1445866.695585871,
+     "result": "win",
+     "ms": 56650
+    },
+    {
+     "troop": "tr_b_icegiant",
+     "zone": null,
+     "boss": true,
+     "map": "peak_1",
+     "gold": 5307,
+     "rounds": 8,
+     "lose": false,
+     "f": 30251,
+     "t0": 1513366.695585871,
+     "result": "win",
+     "ms": 72000
+    },
+    {
+     "troop": "tr_b_whitedragon",
+     "zone": null,
+     "boss": true,
+     "map": "peak_top",
+     "gold": 6305,
+     "rounds": 10,
+     "lose": false,
+     "f": 31810,
+     "t0": 1591316.695585871,
+     "lost": 2,
+     "wiped": true,
+     "result": "abort",
+     "to": "inn",
+     "ms": 223350
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 3152,
+     "rounds": 3,
+     "lose": false,
+     "f": 36679,
+     "t0": 1834816.695585871,
+     "result": "win",
+     "ms": 41150
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 3368,
+     "rounds": 4,
+     "lose": false,
+     "f": 37632,
+     "t0": 1882466.695585871,
+     "result": "win",
+     "ms": 46500
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 3574,
+     "rounds": 1,
+     "lose": false,
+     "f": 38767,
+     "t0": 1939216.695585871,
+     "result": "win",
+     "ms": 19700
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 3688,
+     "rounds": 3,
+     "lose": false,
+     "f": 39317,
+     "t0": 1966716.695585871,
+     "result": "win",
+     "ms": 30400
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 3796,
+     "rounds": 3,
+     "lose": false,
+     "f": 40401,
+     "t0": 2020916.695585871,
+     "result": "win",
+     "ms": 36350
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 3948,
+     "rounds": 3,
+     "lose": false,
+     "f": 41767,
+     "t0": 2089216.695585871,
+     "result": "win",
+     "ms": 34300
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 4154,
+     "rounds": 3,
+     "lose": false,
+     "f": 42561,
+     "t0": 2128916.695585871,
+     "result": "win",
+     "ms": 38800
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 4370,
+     "rounds": 2,
+     "lose": false,
+     "f": 43696,
+     "t0": 2185666.695585871,
+     "result": "win",
+     "ms": 26350
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 4522,
+     "rounds": 2,
+     "lose": false,
+     "f": 44730,
+     "t0": 2237366.695585871,
+     "result": "win",
+     "ms": 26500
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 4636,
+     "rounds": 2,
+     "lose": false,
+     "f": 45414,
+     "t0": 2271566.695585871,
+     "result": "win",
+     "ms": 23600
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 4744,
+     "rounds": 2,
+     "lose": false,
+     "f": 45964,
+     "t0": 2299066.695585871,
+     "result": "win",
+     "ms": 38100
+    },
+    {
+     "troop": null,
+     "zone": "zw_snow_road",
+     "boss": false,
+     "map": "f_peakfoot",
+     "gold": 4960,
+     "rounds": 2,
+     "lose": false,
+     "f": 47136,
+     "t0": 2357666.695585871,
+     "result": "win",
+     "ms": 35100
+    },
+    {
+     "troop": null,
+     "zone": "z_snow_peak",
+     "boss": false,
+     "map": "peak_1",
+     "gold": 5176,
+     "rounds": 1,
+     "lose": false,
+     "f": 47901,
+     "t0": 2395916.695585871,
+     "result": "win",
+     "ms": 26050
+    },
+    {
+     "troop": null,
+     "zone": "z_snow_peak",
+     "boss": false,
+     "map": "peak_1",
+     "gold": 5328,
+     "rounds": 4,
+     "lose": false,
+     "f": 48455,
+     "t0": 2423616.695585871,
+     "result": "win",
+     "ms": 40950
+    },
+    {
+     "troop": "tr_b_whitedragon",
+     "zone": null,
+     "boss": true,
+     "map": "peak_top",
+     "gold": 5480,
+     "rounds": 7,
+     "lose": false,
+     "f": 49483,
+     "t0": 2474966.695585871,
+     "result": "win",
+     "ms": 93400
+    }
+   ],
+   "wipes": [
+    {
+     "battle": "tr_b_icegiant",
+     "map": "peak_1",
+     "to": "retry",
+     "gold": 6523,
+     "round": 3,
+     "f": 18463,
+     "after": {
+      "gold": 3261,
+      "map": "yule"
+     }
+    },
+    {
+     "battle": "tr_b_whitedragon",
+     "map": "peak_top",
+     "to": "retry",
+     "gold": 6305,
+     "round": 10,
+     "f": 33720,
+     "after": {
+      "gold": 3152,
+      "map": "yule"
+     }
+    }
+   ],
+   "talks": 64,
+   "plans": 304,
+   "planMs": 11470.400000002235,
+   "forced": []
+  },
+  "phaseAt": {
+   "start": {
+    "f": 0,
+    "t": 816.6955858711196,
+    "steps": 0,
+    "chars": 0,
+    "ops": 0,
+    "battles": 0,
+    "playMs": 0
+   },
+   "prologue_done": {
+    "f": 30,
+    "t": 2316.69558587112,
+    "steps": 1,
+    "chars": 63,
+    "ops": 0,
+    "battles": 0,
+    "playMs": 2166.980500236411
+   },
+   "forest_start": {
+    "f": 30,
+    "t": 2316.69558587112,
+    "steps": 1,
+    "chars": 63,
+    "ops": 0,
+    "battles": 0,
+    "playMs": 2166.980500236411
+   },
+   "cleared": {
+    "f": 30,
+    "t": 2316.69558587112,
+    "steps": 1,
+    "chars": 63,
+    "ops": 0,
+    "battles": 0,
+    "playMs": 2166.980500236411
+   },
+   "t1": {
+    "f": 30,
+    "t": 2316.69558587112,
+    "steps": 1,
+    "chars": 63,
+    "ops": 0,
+    "battles": 0,
+    "playMs": 2166.980500236411
+   }
+  },
+  "log": [
+   {
+    "f": 0,
+    "t": 817,
+    "msg": "goal yule"
+   },
+   {
+    "f": 59,
+    "t": 3767,
+    "msg": "goal shop_yule_arms"
+   },
+   {
+    "f": 239,
+    "t": 12767,
+    "msg": "act shop_yule_arms at yule_arms 5,4"
+   },
+   {
+    "f": 244,
+    "t": 13017,
+    "msg": "buy w_greatsword_3 (4000 G)"
+   },
+   {
+    "f": 245,
+    "t": 13067,
+    "msg": "buy w_greatsword_3 (4000 G)"
+   },
+   {
+    "f": 257,
+    "t": 13667,
+    "msg": "shop done shop_yule_arms gold 3280"
+   },
+   {
+    "f": 257,
+    "t": 13667,
+    "msg": "goal shop_yule_items"
+   },
+   {
+    "f": 435,
+    "t": 22567,
+    "msg": "act shop_yule_items at yule_items 5,4"
+   },
+   {
+    "f": 456,
+    "t": 23617,
+    "msg": "buy ac_mnd_0 (3280 G)"
+   },
+   {
+    "f": 457,
+    "t": 23667,
+    "msg": "buy ac_mnd_0 (3280 G)"
+   },
+   {
+    "f": 465,
+    "t": 24067,
+    "msg": "buy ac_mnd_0 (3200 G)"
+   },
+   {
+    "f": 473,
+    "t": 24467,
+    "msg": "buy ac_mnd_0 (3120 G)"
+   },
+   {
+    "f": 481,
+    "t": 24867,
+    "msg": "buy ac_mnd_0 (3040 G)"
+   },
+   {
+    "f": 489,
+    "t": 25267,
+    "msg": "buy ac_mnd_0 (2960 G)"
+   },
+   {
+    "f": 497,
+    "t": 25667,
+    "msg": "buy ac_mnd_0 (2880 G)"
+   },
+   {
+    "f": 505,
+    "t": 26067,
+    "msg": "buy ac_mnd_0 (2800 G)"
+   },
+   {
+    "f": 513,
+    "t": 26467,
+    "msg": "buy ac_mnd_0 (2720 G)"
+   },
+   {
+    "f": 530,
+    "t": 27317,
+    "msg": "buy ac_str_0 (2640 G)"
+   },
+   {
+    "f": 531,
+    "t": 27367,
+    "msg": "buy ac_str_0 (2640 G)"
+   },
+   {
+    "f": 545,
+    "t": 28067,
+    "msg": "shop done shop_yule_items gold 2560"
+   },
+   {
+    "f": 545,
+    "t": 28067,
+    "msg": "goal jorn"
+   },
+   {
+    "f": 625,
+    "t": 32067,
+    "msg": "act jorn at yule 29,21"
+   },
+   {
+    "f": 655,
+    "t": 33567,
+    "msg": "act jorn at yule 29,21"
+   },
+   {
+    "f": 672,
+    "t": 34417,
+    "msg": "goal tale_dragon"
+   },
+   {
+    "f": 747,
+    "t": 38167,
+    "msg": "act tale_dragon at yule_hall 12,5"
+   },
+   {
+    "f": 812,
+    "t": 41417,
+    "msg": "goal tale_hunter"
+   },
+   {
+    "f": 986,
+    "t": 50117,
+    "msg": "act tale_hunter at yule_hunter 5,5"
+   },
+   {
+    "f": 1051,
+    "t": 53367,
+    "msg": "goal tale_fire_child"
+   },
+   {
+    "f": 1223,
+    "t": 61967,
+    "msg": "act tale_fire_child at yule_brenda 5,5"
+   },
+   {
+    "f": 1300,
+    "t": 65817,
+    "msg": "goal log1"
+   },
+   {
+    "f": 2349,
+    "t": 118267,
+    "msg": "act log1 at snow_woods 9,24"
+   },
+   {
+    "f": 2366,
+    "t": 119117,
+    "msg": "goal grind_snow"
+   },
+   {
+    "f": 2366,
+    "t": 119117,
+    "msg": "grind to 10 battles on snow_woods"
+   },
+   {
+    "f": 8438,
+    "t": 422717,
+    "msg": "grind goal grind_snow done (10 battles)"
+   },
+   {
+    "f": 8439,
+    "t": 422767,
+    "msg": "goal log2"
+   },
+   {
+    "f": 8521,
+    "t": 426867,
+    "msg": "act log2 at snow_woods 27,9"
+   },
+   {
+    "f": 8551,
+    "t": 428367,
+    "msg": "act log2 at snow_woods 27,9"
+   },
+   {
+    "f": 8568,
+    "t": 429217,
+    "msg": "goal log3"
+   },
+   {
+    "f": 9549,
+    "t": 478267,
+    "msg": "act log3 at snow_woods 42,22"
+   },
+   {
+    "f": 9578,
+    "t": 479717,
+    "msg": "goal festival"
+   },
+   {
+    "f": 11825,
+    "t": 592067,
+    "msg": "act festival at yule 30,22"
+   },
+   {
+    "f": 11855,
+    "t": 593567,
+    "msg": "act festival at yule 30,22"
+   },
+   {
+    "f": 11857,
+    "t": 593667,
+    "msg": "choose \"祭を始める\" for \"氷の灯籠がまだだが、始めるか？\""
+   },
+   {
+    "f": 11870,
+    "t": 594317,
+    "msg": "choose \"祭を始める\\t夜明けまで村を出られない\" for \"祭が始まれば、夜が明けるまで\\n村の門は閉ざす。一度始めたら、\""
+   },
+   {
+    "f": 11942,
+    "t": 597917,
+    "msg": "choose \"狼と猟師\" for \"火の前で、どの話を語る？\""
+   },
+   {
+    "f": 12053,
+    "t": 603467,
+    "msg": "choose \"西の門を守る\" for \"第1の波。どの門を守る？\""
+   },
+   {
+    "f": 13435,
+    "t": 672567,
+    "msg": "goal wave2"
+   },
+   {
+    "f": 13479,
+    "t": 674767,
+    "msg": "act wave2 at yule_night 29,28"
+   },
+   {
+    "f": 13494,
+    "t": 675517,
+    "msg": "choose \"西の門を守る\" for \"第2の波。どの門を守る？\""
+   },
+   {
+    "f": 14655,
+    "t": 733567,
+    "msg": "goal wave3"
+   },
+   {
+    "f": 14699,
+    "t": 735767,
+    "msg": "act wave3 at yule_night 29,28"
+   },
+   {
+    "f": 14714,
+    "t": 736517,
+    "msg": "choose \"北の門を守る\" for \"第3の波。どの門を守る？\""
+   },
+   {
+    "f": 17357,
+    "t": 868667,
+    "msg": "goal shop_yule_items2"
+   },
+   {
+    "f": 17495,
+    "t": 875567,
+    "msg": "act shop_yule_items2 at yule_items 5,4"
+   },
+   {
+    "f": 17532,
+    "t": 877417,
+    "msg": "buy ac_mnd_1 (6903 G)"
+   },
+   {
+    "f": 17533,
+    "t": 877467,
+    "msg": "buy ac_mnd_1 (6903 G)"
+   },
+   {
+    "f": 17541,
+    "t": 877867,
+    "msg": "buy ac_mnd_1 (6713 G)"
+   },
+   {
+    "f": 17550,
+    "t": 878317,
+    "msg": "buy ac_mnd_1 (6523 G)"
+   },
+   {
+    "f": 17551,
+    "t": 878367,
+    "msg": "buy ac_mnd_1 (6523 G)"
+   },
+   {
+    "f": 17552,
+    "t": 878417,
+    "msg": "buy ac_mnd_1 (6523 G)"
+   },
+   {
+    "f": 17553,
+    "t": 878467,
+    "msg": "shop done shop_yule_items2 gold 6523"
+   },
+   {
+    "f": 17553,
+    "t": 878467,
+    "msg": "goal wall1"
+   },
+   {
+    "f": 17876,
+    "t": 894617,
+    "msg": "act wall1 at peak_1 28,35"
+   },
+   {
+    "f": 17891,
+    "t": 895367,
+    "msg": "goal wall2"
+   },
+   {
+    "f": 17963,
+    "t": 898967,
+    "msg": "act wall2 at peak_1 44,18"
+   },
+   {
+    "f": 17993,
+    "t": 900467,
+    "msg": "act wall2 at peak_1 44,18"
+   },
+   {
+    "f": 18008,
+    "t": 901217,
+    "msg": "goal giant"
+   },
+   {
+    "f": 18463,
+    "t": 923967,
+    "msg": "gameover → retry"
+   },
+   {
+    "f": 18978,
+    "t": 949717,
+    "msg": "lost again (2) tr_b_icegiant"
+   },
+   {
+    "f": 18978,
+    "t": 949717,
+    "msg": "lost twice to tr_b_icegiant → inn and grind 12 battles"
+   },
+   {
+    "f": 18998,
+    "t": 950717,
+    "msg": "after wipe: gold 6523 → 3261 at yule"
+   },
+   {
+    "f": 30043,
+    "t": 1502967,
+    "msg": "grind done"
+   },
+   {
+    "f": 31705,
+    "t": 1586067,
+    "msg": "goal neve"
+   },
+   {
+    "f": 33720,
+    "t": 1686817,
+    "msg": "gameover → retry"
+   },
+   {
+    "f": 36263,
+    "t": 1813967,
+    "msg": "lost again (2) tr_b_whitedragon"
+   },
+   {
+    "f": 36263,
+    "t": 1813967,
+    "msg": "lost twice to tr_b_whitedragon → inn and grind 12 battles"
+   },
+   {
+    "f": 36283,
+    "t": 1814967,
+    "msg": "after wipe: gold 6305 → 3152 at yule"
+   },
+   {
+    "f": 47848,
+    "t": 2393217,
+    "msg": "grind done"
+   },
+   {
+    "f": 51581,
+    "t": 2579867,
+    "msg": "choose \"勝ったことだけを書く\" for \"年代記に何を書く？\""
+   },
+   {
+    "f": 51592,
+    "t": 2580417,
+    "msg": "choose \"アルン\\t鉄の聖印と入れ替え\" for \"冬至の火の守りを、だれかに付けますか？\""
+   }
+  ],
+  "dev": true
+ },
+ "snow": {
+  "cleared": true,
+  "tier": 4,
+  "choices": {
+   "ch_snow_tale": "hunter",
+   "ch_snow_gate_1": "w",
+   "ch_snow_gate_2": "w",
+   "ch_snow_gate_3": "n",
+   "ch_snow_neve": "fight",
+   "ch_snow_write": "glory"
+  },
+  "chronicle": "吹雪のやまない冬至に、\nユールの人々は大火祭を開いた。\n語り部の見習いは、火の前で\n「狼と猟師」を語った。\nユールの人々は大火祭の夜、\n氷の狼を退け……。\n白竜と刃を交え、\nその心の氷を砕いた。\n頂に冬至の火がともり、\n空いっぱいにオーロラが揺れた。",
+  "pins": [],
+  "reward": true,
+  "dragonItem": true,
+  "broken": [
+   "n",
+   "e"
+  ],
+  "sky": 4
+ },
+ "estimate": {
+  "K": {
+   "step": 0.25,
+   "battle": 40,
+   "bossRound": 12,
+   "char": 0.08,
+   "op": 1
+  },
+  "steps": 3038,
+  "zako": 45,
+  "bosses": [
+   "tr_b_blizzardwolf_2:9r",
+   "tr_b_icegiant:4r",
+   "tr_b_icegiant:8r",
+   "tr_b_whitedragon:10r",
+   "tr_b_whitedragon:7r"
+  ],
+  "chars": 3604,
+  "ops": 97,
+  "hours": 0.94,
+  "target": [
+   2.5,
+   3.5
+  ]
+ },
+ "wallSec": 242
+}

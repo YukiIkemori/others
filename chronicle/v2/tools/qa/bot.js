@@ -96,7 +96,8 @@
     if (!st) { tap('a'); return; }
     const o = lastSay || {};
     const ch = o.choices || [];
-    if (ch.length && st.full) {
+    // 選択肢は最後の頁で出る（頁が 2 つ以上の問い: 前の頁は A で送る。祭の前の念押しで、1 頁目のまま待ち続けていた）
+    if (ch.length && st.full && !(st.pages > 1 && st.page < st.pages - 1)) {
       if (st.armed === false && st.choice === pickChoice(o.text, ch.map(String))) return;   // 選択肢の出てすぐの決定よけ（uik/message.js の CHOICE_GUARD）が解けるまで押さない
       const want = pickChoice(o.text, ch.map(String));
       if (st.choice !== want) { tap(st.choice < want ? 'down' : 'up'); return; }
@@ -329,7 +330,7 @@
   function menuPick(w, i) {
     if (i < 0) i = 0;
     if (w.sel === i) { if (!(w.guard && !w.guard.armed)) tap('a'); return; }
-    const hz = w.o && w.o.horizontal;
+    const h0 = w.o && w.o.horizontal, hz = typeof h0 === 'function' ? !!h0() : !!h0;   // 縦持ちだけ横一列（o.horizontal は関数のことがある。command.js と同じに読む）
     tap(w.sel < i ? (hz ? 'right' : 'down') : (hz ? 'left' : 'up'));
   }
 
@@ -374,7 +375,17 @@
       for (const p of places) {
         if (p.map !== mid) continue;
         if (p.kind === 'cell') { out.push({ x: p.ref.x, y: p.ref.y, lv: p.ref.lv || 0, place: p }); continue; }
-        for (const c of M.standCells(mid, p)) out.push(Object.assign(c, { place: p }));
+        // 歩く人は地図の置き場所ではなく、いま立っているマスで探す（一行がそばに来ると立ち止まる: P17。
+        //   置き場所の横で待っていると、2 マス先で止まった人がいつまでも戻らない）
+        let q = p;
+        if (p.kind === 'npc' && mid === (S().map && S().map.id)) {
+          const n = (S().npcs || []).find((k) => k.def === p.ref);
+          if (n && n.vis) {
+            const x = n.mv ? n.mv.tx : n.x, y = n.mv ? n.mv.ty : n.y;
+            if (x !== p.ref.x || y !== p.ref.y) q = Object.assign({}, p, { ref: Object.assign({}, p.ref, { x, y, lv: n.lv || 0 }) });
+          }
+        }
+        for (const c of M.standCells(mid, q)) out.push(Object.assign(c, { place: p }));
       }
       return out;
     };
@@ -395,7 +406,8 @@
     let pl = M.plan({ map: s.map.id, x: s.x, y: s.y, lv: s.lv || 0 }, goalCells(g), {
       blocked: (m, x, y, lv) => !!blocked[m + ':' + x + ',' + y + ',' + lv] || !!avoid[m + ':' + x + ',' + y],
     });
-    if (!pl && Object.keys(avoid).length) {
+    // 腕を磨く歩き・泉へ寄る（_h）は、後の救出の範囲を通るしかない所へは行かない（別の所を探す。R2 で 腕磨きの道がベンの範囲を踏み、救出の順が崩れた）
+    if (!pl && Object.keys(avoid).length && !g._h) {
       pl = M.plan({ map: s.map.id, x: s.x, y: s.y, lv: s.lv || 0 }, goalCells(g), { blocked: (m, x, y, lv) => !!blocked[m + ':' + x + ',' + y + ',' + lv] });
       if (pl && !g._avoidNote) { g._avoidNote = true; note('goal ' + g.id + ': only reachable through the trigger of a later rescue'); }
     }
