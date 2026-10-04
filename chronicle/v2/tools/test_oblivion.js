@@ -251,7 +251,7 @@ const run = async (id, ctx, o) => { LOG.length = 0; await D.events[id].run(mkEv(
     if (F.chunks) F.chunks.dirtyAt = keep.dirty; if (F.hud) F.hud.refresh = keep.refresh; F._run = keep.run; S.map = null;
     const it = got.map((k) => D.items[k]).find((x) => x && x.grow === 'drop');
     const u = it && R.Game.uniques && R.Game.uniques[got.find((k) => D.items[k] === it)];
-    ok('地下 1 階のレアの箱: ★ の装備がティア 9 の値で手に入る（今のティア 8 でも）', !!it && !!u && u.tier >= 9, { got, u });
+    ok('地下 1 階の奥の箱（p_boss）: ★ の装備がティア 9 の値で手に入る（今のティア 8 でも）', !!it && !!u && u.tier >= 9, { got, u });
     const echo = D.monsters.b_valzard_echo, ou = D.monsters.b_ouroboros;
     ok('ボスの落とし物: 残影・円環竜とも p_boss（必ず）・レア・超レア（gear_tiers.md）', [echo, ou].every((b) => b.drops.normal.pool === 'p_boss' && b.drops.normal.rate === 1 && b.drops.rare && b.drops.super) && ou.drops.rare.item === 'ac_ouroboros_ring' && ou.drops.super.item === 'ac_sr_ouroboros');
     const AI = R.BattleAI;

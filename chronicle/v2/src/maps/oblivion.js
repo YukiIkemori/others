@@ -65,7 +65,7 @@
         down(34, 27, 'oblivion_2', 'from1', 'oblivion_1_down'), down(35, 27, 'oblivion_2', 'from1'),
         stone(10, 3, 1), stone(3, 12, 2), stone(12, 21, 3), stone(30, 23, 4),
         K.exam(22, 10, 'oblivion_graves'), K.exam(19, 11, 'oblivion_graves'), K.exam(25, 11, 'oblivion_graves'),
-        K.chest('oblivion_1_c1', 33, 5, { pool: 'p_rare' }), K.chest('oblivion_1_c2', 4, 23, { pool: 'p_T' }),
+        K.chest('oblivion_1_c1', 33, 5, { pool: 'p_boss' }), K.chest('oblivion_1_c2', 4, 23, { pool: 'p_T' }),
         K.chest('oblivion_1_c3', 22, 13, { item: 'i_elixir', n: 1 }), K.chest('oblivion_1_c4', 29, 26, { pool: 'p_T' }),
         ...glow([[22, 14], [33, 6], [6, 4]]),
       ],
@@ -96,7 +96,7 @@
         down(30, 3, 'oblivion_4', 'from3', 'oblivion_3_down'), down(31, 3, 'oblivion_4', 'from3'),
         K.exam(14, 19, 'oblivion_statue'), K.exam(21, 19, 'oblivion_statue'), K.exam(14, 24, 'oblivion_statue'), K.exam(21, 24, 'oblivion_statue'),
         K.exam(17, 3, 'oblivion_3_echo'), K.exam(18, 3, 'oblivion_3_echo'),   // 玉座（倒した後はもう一度挑める）
-        K.chest('oblivion_3_c1', 4, 20, { pool: 'p_rare' }), K.chest('oblivion_3_c2', 31, 20, { item: 'i_elixir', n: 2 }),
+        K.chest('oblivion_3_c1', 4, 20, { pool: 'p_boss' }), K.chest('oblivion_3_c2', 31, 20, { item: 'i_elixir', n: 2 }),
         K.chest('oblivion_3_c3', 21, 11, { item: 'i_ether2', n: 2 }),
         K.prop('altar_glow', 17, 4),
       ],

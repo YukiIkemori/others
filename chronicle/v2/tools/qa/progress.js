@@ -332,7 +332,9 @@ function main() {
     section('3. 全マップの到達（縦切りの錠を外した全体の筋）');
     open = closure({ variant: Object.assign({}, variants[0], { ch_snow_tale: 'dragon', ch_snow_write: 'pain', ch_desert_hawk: 'water', ch_desert_route: 'long', ch_desert_write: 'pain' }) });
     const maps = M.sliceMaps();
-    const miss = maps.filter((m) => !open.visited.has(m));
+    // 前のワールド（world）は、山あいの街道（s_road、2026-10-04）で最後の出入り口も描いたエリアに替わった。古い記録で
+    //   ワールドの上にいる人のために残すだけで、筋からは入らない（出口はどれも描いたエリアへ）
+    const miss = maps.filter((m) => !open.visited.has(m) && m !== 'world');
     ok(`マップ ${maps.length} 枚すべてに入れる`, miss.length === 0, miss);
     report.unreached = miss;
     section('4. 閉じた道（cond つきの出入り口）');

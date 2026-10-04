@@ -42,6 +42,14 @@
       for (const id of ['f_cross', 'm_north', 's_steps']) {
         for (const e of (M[id] && M[id].exits) || []) if (e.to && e.to.map === 'world' && RE[e.to.spawn]) e.to = Object.assign({}, RE[e.to.spawn]);
       }
+      // 体験版の間は、街道の南（湿原）と北（星見の坂）の出口の口を崖崩れで塞ぐ（ほかの峠と同じ表の止め。tools の到達の計算も止まる）
+      const SR = M.s_road;
+      if (!(SR.tilePatches || []).some((p) => p.demoRock)) {
+        SR.tilePatches = (SR.tilePatches || []).concat([
+          { cond: { slice: true }, rect: [50, 38, 3, 2], rows: ['RRR', 'RRR'], demoRock: true },
+          { cond: { slice: true }, rect: [47, 0, 2, 2], rows: ['RR', 'RR'], demoRock: true },
+        ]);
+      }
       // 湿原の旅人は街道のエリアへ移った（同じ id・同じ key）。前のワールドの写しは消す
       if (w.npcs) w.npcs = w.npcs.filter((n) => n.id !== 'marsh_traveler');
     }
