@@ -35,7 +35,7 @@
     'leads.l_post_oblivion.title': '망각의 밑바닥',
     'leads.l_post_oblivion.from': '책의 도시 비블리아',
     'leads.l_post_oblivion.dir': '비블리아 광장의 남동쪽',
-    'leads.l_post_oblivion.text': '책의 도시 비블리아의 광장 남동쪽에 하얀 안개의\n밑바닥으로 내려가는 하얀 계단이 있다. 이름이 불리지\n못한 채 사라진 것들이 가라앉는 곳――망각의 밑바닥.\n안개가 걷힌 지금이라면 내려갈 수 있다.',
+    'leads.l_post_oblivion.text': '비블리아 광장의 남동쪽에 하얀 안개의\n밑바닥으로 내려가는 계단이 있다. 망각의 밑바닥――\n안개가 걷힌 지금이라면 내려갈 수 있다.',
     'lore.lo_mira_portrait.title': '미라의 초상화',
     'lore.lo_mira_portrait.text': '책을 안고 웃는 소녀의 그림.\n액자 아래에 ‘미라’라고 적혀 있다.\n뒷면에 작은 글씨로 적힌 한마디.\n“내 이름을\n언제까지나 불러 줘”',
     'lore.lo_mira_dawnword.title': '백지가 된 새벽의 말',

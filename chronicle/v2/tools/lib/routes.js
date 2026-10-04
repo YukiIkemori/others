@@ -44,7 +44,7 @@ const DUNGEONS = [
     unset: ['snow_admiral'], bosses: [['frost_ship_2', 'frost_ship_boss']] },
   // クリア後の忘却の底（maps/oblivion.js）: ビブリアの広場の階段から地下 1〜5 階。中ボスは 3 階の魔王の残影、裏ボスは 5 階の円環竜（泉はその前）
   { id: 'oblivion', open: true, start: { map: 'oblivion_1', spawn: 'from_town' }, goal: { map: 'oblivion_5', ev: 'oblivion_5_ouroboros' },
-    unset: ['post_echo', 'post_ouroboros'], bosses: [['oblivion_5', 'oblivion_5_ouroboros'], ['oblivion_3', 'oblivion_3_echo']] },
+    unset: ['oblivion_echo', 'oblivion_ouroboros'], bosses: [['oblivion_5', 'oblivion_5_ouroboros'], ['oblivion_3', 'oblivion_3_echo']] },
 ];
 
 let SLICE0 = null;

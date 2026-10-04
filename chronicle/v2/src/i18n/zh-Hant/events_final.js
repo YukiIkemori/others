@@ -35,7 +35,7 @@
     'leads.l_post_oblivion.title': '遺忘之底',
     'leads.l_post_oblivion.from': '書之都比布利亞',
     'leads.l_post_oblivion.dir': '比布利亞廣場的東南',
-    'leads.l_post_oblivion.text': '書之都比布利亞的廣場東南，有一道通往\n白霧之底的白色階梯。那是未被呼喚名字就\n消失之物沉落的地方——遺忘之底。\n如今霧已散去，可以走下去了。',
+    'leads.l_post_oblivion.text': '書之都比布利亞的廣場東南，有一道通往\n白霧之底的階梯。遺忘之底——\n如今霧已散去，可以走下去了。',
     'lore.lo_mira_portrait.title': '米拉的肖像畫',
     'lore.lo_mira_portrait.text': '一幅抱著書微笑的少女畫像。\n畫框下寫著「米拉」。\n背面，有一行小字。\n「請你，永遠\n呼喚我的名字」',
     'lore.lo_mira_dawnword.title': '空白的破曉之詞',

@@ -38,6 +38,7 @@ BBG.push('mine');   // ガルド山地（mine_*.js・field_mine_*.js。BGM は�
 BBG.push('star');   // オルビス高原（star_*.js・field_star_*.js。BGM は縦切りの town・tension・tower・omen・overworld）
 SLICE_BGM.push('lastdungeon', 'hollowking'); BBG.push('library');   // 終盤（final_*.js。ビブリア島と白の大書庫。BGM はほかに縦切りの sorrow・dawn・tension）
 SLICE_BGM.push('lastboss', 'lastboss2', 'regionboss', 'chapterboss', 'rival', 'valzard', 'superboss', 'marsh', 'isles', 'mine', 'ash', 'star', 'sea', 'volcano', 'ending');   // ボスの 3 分けと地方の曲（2026-10-03、design/bgm_changes.md）
+SLICE_BGM.push('postgame');   // クリア後の忘却の底（maps/oblivion.js・events/oblivion.js、2026-10-04）
 BBG.push('ship', 'watercave', 'swamp', 'manor', 'oblivion', 'volcano', 'pyramid', 'ice', 'peak', 'road');   // ダンジョン・ボス・クリア後の描いた戦闘背景（v2/assets/env/bbg/<id>）
 const maps = M.sliceMaps();
 const EV_SRC = i18nInline(fs.readdirSync(path.join(V2, 'src', 'events')).map((f) => fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8')).join('\n'));

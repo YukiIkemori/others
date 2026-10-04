@@ -9,7 +9,7 @@
 //   地下 4 階 oblivion_4 終わらない回廊（48×26）: 同じ部屋が 3 つ。部屋から次へは北と南の 2 本の廊下で、正しいのは淡い光のある方
 //        （1 の部屋は北・2 は南・3 は北）。もう一方を進むと最初の部屋に戻る（oblivion_4_loop）。東の端の間に下り階段。
 //   地下 5 階 oblivion_5 円環の間（36×34）: 南の上り階段 → 輪の床を回って北の門 → 門のそばに泉（女神の像。このダンジョンでただ一つ）→
-//        内の円で円環竜オウロボラ（tr_b_ouroboros）→ 外伝『円環の竜』（post_ouroboros）。倒した後は渦の中ほどを調べるともう一度戦える。
+//        内の円で円環竜オウロボラ（tr_b_ouroboros）→ 外伝『円環の竜』（oblivion_ouroboros）。倒した後は渦の中ほどを調べるともう一度戦える。
 //   当たりは描いた絵に合わせた oblivion_painted_rows.js（R.Oblivion.PAINTED。design/art_ref/gen/env/_tools/under/oblivion/）。
 //   出現: 1・2 階 z_postgame_oblivion_lo、3〜5 階 _hi（5 階は輪の床だけ。内の円は出ない）。宝箱はティア 9（chestTier）。泉は 1 つ（5 階、ボスの前。check_springs）。
 (function (R) {
@@ -103,7 +103,7 @@
       spawns: { from2: { x: 17, y: 30, dir: 'n' }, from4: { x: 29, y: 3, dir: 'w' } },
       triggers: [
         enter('oblivion_3'),
-        { id: 'echo', x: 16, y: 9, w: 4, h: 1, on: 'step', event: 'oblivion_3_echo', cond: '!post_echo' },
+        { id: 'echo', x: 16, y: 9, w: 4, h: 1, on: 'step', event: 'oblivion_3_echo', cond: '!oblivion_echo' },
       ],
       zones: [{ rect: null, zone: O.ZONE_HI }],
     });
@@ -134,14 +134,14 @@
         up(17, 32, 'oblivion_4', 'from5', 'oblivion_5_up'), up(18, 32, 'oblivion_4', 'from5'),
         K.spring('oblivion_5_spring', 12, 4),
         K.exam(24, 4, 'oblivion_ring_stone'),
-        K.exam(17, 17, 'oblivion_5_ouroboros', { cond: 'post_ouroboros' }), K.exam(18, 17, 'oblivion_5_ouroboros', { cond: 'post_ouroboros' }),
+        K.exam(17, 17, 'oblivion_5_ouroboros', { cond: 'oblivion_ouroboros' }), K.exam(18, 17, 'oblivion_5_ouroboros', { cond: 'oblivion_ouroboros' }),
         K.chest('oblivion_5_c1', 32, 17, { pool: 'p_rare' }), K.chest('oblivion_5_c2', 3, 17, { pool: 'p_T' }), K.chest('oblivion_5_c3', 8, 27, { item: 'i_elixir', n: 1 }),
         K.prop('altar_glow', 17, 17),
       ],
       spawns: { from4: { x: 17, y: 31, dir: 'n' }, gate: { x: 17, y: 9, dir: 'n' } },
       triggers: [
         enter('oblivion_5'),
-        { id: 'ouroboros', x: 17, y: 7, w: 2, h: 1, on: 'step', event: 'oblivion_5_ouroboros', cond: '!post_ouroboros' },
+        { id: 'ouroboros', x: 17, y: 7, w: 2, h: 1, on: 'step', event: 'oblivion_5_ouroboros', cond: '!oblivion_ouroboros' },
       ],
       // 輪の床だけ（北・南の帯と西・東の帯）。内の円（x 9〜26・y 8〜25）は出ない
       zones: [[3, 2, 30, 6], [3, 26, 30, 7], [3, 8, 6, 18], [27, 8, 6, 18]].map((rect) => ({ rect, zone: O.ZONE_HI })),

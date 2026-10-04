@@ -52,6 +52,7 @@ SLICE_BGM.push('kasim', 'desert', 'caravan', 'pyramid');
 // 湿原・諸島・山地・灰の荒野・高原の地方の曲、諸島の沖の島の海の曲、火山の中、エンディング（final_ending）
 SLICE_BGM.push('lastdungeon', 'hollowking', 'lastboss', 'lastboss2', 'regionboss', 'chapterboss', 'rival', 'valzard', 'superboss',
   'marsh', 'isles', 'mine', 'ash', 'star', 'sea', 'volcano', 'ending');
+SLICE_BGM.push('postgame');   // クリア後の忘却の底（maps/oblivion.js、2026-10-04）
 const EXPRS = ['neutral', 'smile', 'sad', 'angry', 'surprise'];
 const MEDIA_EXT = { bgm: ['ogg', 'm4a', 'mp3', 'wav'], voice: ['ogg', 'm4a', 'mp3', 'wav'], portraits: ['webp', 'png', 'jpg'] };
 const MIME = { ogg: 'audio/ogg', m4a: 'audio/mp4', mp3: 'audio/mpeg', wav: 'audio/wav', webp: 'image/webp', png: 'image/png', jpg: 'image/jpeg' };

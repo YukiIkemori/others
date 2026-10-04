@@ -35,7 +35,7 @@
     'leads.l_post_oblivion.title': 'The Depths of Oblivion',
     'leads.l_post_oblivion.from': 'Biblia, City of Books',
     'leads.l_post_oblivion.dir': 'Southeast of Biblia\'s plaza',
-    'leads.l_post_oblivion.text': 'Southeast of the plaza in Biblia, City of Books,\na white stairway leads down into white fog,\nwhere things vanished unnamed are said to sink:\nthe Depths of Oblivion. Now that the fog has cleared,\nyou can go down.',
+    'leads.l_post_oblivion.text': 'Southeast of Biblia\'s plaza, a stairway leads\ndown into white fog: the Depths of Oblivion.\nNow that the fog has cleared, you can go down.',
     'lore.lo_mira_portrait.title': 'Portrait of Mira',
     'lore.lo_mira_portrait.text': 'A painting of a girl hugging a book, smiling.\nBelow the frame: "Mira."\nOn the back, in small letters:\n"Please keep calling\nmy name, always."',
     'lore.lo_mira_dawnword.title': 'The Blank Words of Dawn',

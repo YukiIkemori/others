@@ -3,12 +3,12 @@
 //   oblivion_stone         1 階の岸の石碑（忘れられた伝承のかけら。o.stone = 1〜4）・oblivion_graves 名のない墓の輪
 //   oblivion_torn_seam     2 階のちぎれた紙の橋の端
 //   oblivion_statue        3 階の恐れの像
-//   oblivion_3_echo        3 階 玉座の間の入口で魔王の残影（v_valzard_oblivion_01〜03 → tr_b_valzard_echo）→ post_echo。
+//   oblivion_3_echo        3 階 玉座の間の入口で魔王の残影（v_valzard_oblivion_01〜03 → tr_b_valzard_echo）→ oblivion_echo。
 //                          倒した後は玉座を調べると「もう一度挑みますか？」（レア・超レアの落とし物のため）
 //   oblivion_4_hint / oblivion_4_loop   4 階 終わらない回廊（光の無い廊下を進むと最初の部屋へ。3 回ごとに白い紙が正しい口を示す）
 //   oblivion_ring_stone    5 階 輪の石碑
 //   oblivion_5_ouroboros   5 階 フィーネの声（v_fine_oblivion_01・02）→ 円環竜オウロボラ（tr_b_ouroboros）→「円環が、ほどけた」→
-//                          外伝『円環の竜』（読み物 lo_ouroboros）→ post_ouroboros。倒した後は渦の中ほどを調べるともう一度戦える
+//                          外伝『円環の竜』（読み物 lo_ouroboros）→ oblivion_ouroboros。倒した後は渦の中ほどを調べるともう一度戦える
 // ボス戦は逃げられない（boss）。負け・全滅では何も記録しない（踏み板からまた始まる）。
 (function (R) {
   'use strict';
@@ -64,7 +64,7 @@
 
   // ================================================================ 3 階 魔王の残影
   E('oblivion_3_echo', async (ev) => {
-    if (ev.flag('post_echo')) {
+    if (ev.flag('oblivion_echo')) {
       await rematch(ev, 'tr_b_valzard_echo', R.T('events.oblivion_3_echo.again'), R.T('events.oblivion_3_echo.again_gone'));
       return;
     }
@@ -83,11 +83,11 @@
     await ev.say(null, R.T('events.oblivion_3_echo.say_3'), { voice: 'v_valzard_oblivion_03', name: R.T('ev.oblivion.who.valzard'), face: false });
     ev.sfx('light');
     fx.flash('#ffffff', 600);
-    ev.setFlag('post_echo');
+    ev.setFlag('oblivion_echo');
     await narr(ev, R.T('events.oblivion_3_echo.narr_2'));
     ev.mapBgm();
     await narr(ev, R.T('events.oblivion_3_echo.narr_3'));
-  }, { meta: { needs: [], gives: ['flag:post_echo'] } });
+  }, { meta: { needs: [], gives: ['flag:oblivion_echo'] } });
 
   // ================================================================ 4 階 終わらない回廊
   const LOOP_VAR = 'oblivion_4_loops';
@@ -110,7 +110,7 @@
 
   // ================================================================ 5 階 円環竜オウロボラ
   E('oblivion_5_ouroboros', async (ev) => {
-    if (ev.flag('post_ouroboros')) {
+    if (ev.flag('oblivion_ouroboros')) {
       await rematch(ev, 'tr_b_ouroboros', R.T('events.oblivion_5_ouroboros.again'), R.T('events.oblivion_5_ouroboros.again_gone'));
       return;
     }
@@ -132,7 +132,7 @@
     await narr(ev, R.T('events.oblivion_5_ouroboros.narr_4'));
     ev.sfx('light');
     fx.flash('#ffffff', 900);
-    ev.setFlag('post_ouroboros');
+    ev.setFlag('oblivion_ouroboros');
     await ev.wait(500);
     ev.sfx('quill');
     try { ev.jingle('chapter'); } catch (e) { /* */ }
@@ -140,7 +140,7 @@
     ev.lore('lo_ouroboros');
     ev.mapBgm();
     await narr(ev, R.T('events.oblivion_5_ouroboros.narr_5'));
-  }, { meta: { needs: ['flag:post_echo'], gives: ['flag:post_ouroboros', 'lore:lo_ouroboros'] } });
+  }, { meta: { needs: ['flag:oblivion_echo'], gives: ['flag:oblivion_ouroboros', 'lore:lo_ouroboros'] } });
 
   // ---------------------------------------------------------------- 古いセーブ（R.SaveFixups。R.State.deserialize が呼ぶ）
   // クリアした（final_clear）のに忘却の底の手がかりが無い → 手がかりを足す（入口は町の広場の階段。前は大書庫の手すりを調べたときだけ）。

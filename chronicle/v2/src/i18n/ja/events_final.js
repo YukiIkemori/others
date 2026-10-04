@@ -36,7 +36,7 @@
     'leads.l_post_oblivion.title': '忘却の底',
     'leads.l_post_oblivion.from': '書の都ビブリア',
     'leads.l_post_oblivion.dir': 'ビブリアの広場の南東',
-    'leads.l_post_oblivion.text': '書の都ビブリアの広場の南東に、白い霧の\n底へ下りる白い階段がある。名を呼ばれずに\n消えたものの沈む所――忘却の底。\n霧が晴れた今なら、下りていける。',
+    'leads.l_post_oblivion.text': '書の都ビブリアの広場の南東に、白い霧の\n底へ下りる階段がある。忘却の底――\n霧の晴れた今なら、下りていける。',
     'lore.lo_mira_portrait.title': 'ミラの肖像画',
     'lore.lo_mira_portrait.text': '本を抱えて笑う少女の絵。\n額の下に「ミラ」とある。\n裏に、小さな字の書き込み。\n「わたしの名前を、\nいつまでも呼んでね」',
     'lore.lo_mira_dawnword.title': '白紙の暁の詞',
