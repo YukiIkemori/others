@@ -564,3 +564,25 @@ listening check; `--char selma`, `--only <id> --force`). Treat the set as open-e
 - Casting: every character keeps the voice it has in Japanese (same voice id in casting.json; only the text and the language
   of the prompt change). Order: English, then Chinese (one Mandarin set shared by zh-Hans and zh-Hant), then Korean.
 - About 570 lines × 3 ≈ 1,700 clips, ~17 MB per language; load only the selected language's voice pack.
+
+### 13.6 SFX redesign — layering and per-play variation (owner 2026-10-04: 「厚み・手ざわり」)
+- **Layers**: transient (a 3–4 ms band-passed noise click: contact, latch, crystal snap) + body (a pitched tone with a falling
+  pitch — sine thump, triangle "smack" an octave or so above it — or noise whose low-pass closes, `lp → lp2`) + tail (a small
+  `S.wet()` send: 0.06–0.1 for blows, 0.2–0.5 for spells). Weight comes from a sine / triangle under the main voice, not
+  from louder noise. Blows that should feel big (crit) also dip the music briefly (`S.duck(-3, 0.12)`).
+- **Variation**: `rv(a, b)` / `st(semitones)` at the top of `src/audio/sfx.js` and `sfx_chronicle.js` move pitch (±0.5–2
+  semitones), band centres and crackle timing a little on every play, so repeated hits and footfalls are never identical.
+  The render tools seed `Math.random`, so offline renders stay reproducible. The menu cursor only moves ±8 cents.
+- **High end**: nothing broadband above 8 kHz. Hiss layers are band-passed (5–6 kHz) instead of high-passed; FM sparkles keep a
+  low index (≤ 1.6) or get `lp` (the kit's FM takes `lp/hp/bp`), because a high index on a high carrier folds back as fizz.
+- **Levels**: an added layer that lines up with the main voice raises the peak, and the per-id gain then pulls the whole sound
+  down. Keep the layer quiet (≈ ⅓ of the main voice) and re-tune `GAIN` / `S.gain()` to the old peak (header targets: UI ≈ -12,
+  spells ≈ -9…-6, impacts ≈ -3 dBFS). Keep each sound to about 25 nodes; UI under 0.15 s and without echo on swishes (the
+  90 ms echo makes a whoosh sound doubled).
+- **How it was judged**: every id rendered before and after (the offline render tool, 32 kHz), spectrograms and peak / RMS /
+  >8 kHz share compared, then blind A/B listening by an audio model with each pair played in both orders; only changes it
+  preferred in both orders, or rated equal and richer, were kept. Changed: attack hit crit miss enemy_attack hurt parry arrow
+  lash enemy_die boss_die escape debuff status poison · fire ice wind earth water thunder freeze burn breath roar · chest item
+  gold locked door jump bump step_damage cursor (miss, boss_die, water, thunder, door, jump, bump, step_damage: variation only).
+  Tried and dropped (the old one was preferred): new layers on buff heal sleep death magic dark thunder door warp steal shake
+  stairs and on confirm cancel menu_open (the plain chiptune UI sounds were rated cleaner).

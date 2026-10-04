@@ -1734,6 +1734,21 @@
     }
     return (m._ambNoise = b);
   }
+  /** 洞窟の響きの形: 2.4 秒、指数で減り、時間とともに高い所から先に消える（左右は別のノイズ） */
+  function ambVerbIR(m) {
+    if (m._ambIR) return m._ambIR;
+    const c = m.ctx, sr = c.sampleRate, n = Math.floor(sr * 2.4), b = c.createBuffer(2, n, sr), rnd = ambRng(0xc0ffee);
+    for (let ch = 0; ch < 2; ch++) {
+      const d = b.getChannelData(ch);
+      let y = 0;
+      for (let i = 0; i < n; i++) {
+        const t = i / sr, k = 0.85 - 0.75 * Math.min(1, t / 1.6);   // 1 段の低域通過: 進むほど暗く
+        y += k * ((rnd() * 2 - 1) - y);
+        d[i] = y * Math.exp(-t / 0.55) * (t < 0.012 ? t / 0.012 : 1);
+      }
+    }
+    return (m._ambIR = b);
+  }
   function ambBus(m) {
     if (!m._ambBus) { m._ambBus = m.ctx.createGain(); m._ambBus.connect(m.master); }
     return m._ambBus;
@@ -1767,6 +1782,16 @@
       const x = this.node(this.c.createStereoPanner()); x.pan.value = Math.max(-1, Math.min(1, p)); return x;
     }
     chain() { for (let k = 0; k < arguments.length - 1; k++) arguments[k].connect(arguments[k + 1]); return arguments[arguments.length - 1]; }
+    /** 洞の響き（ConvolverNode。響きの形は Mixer ごとに 1 回作る）→ 入口の gain（出口は bus） */
+    verb(wet) {
+      const c = this.c;
+      if (!c.createConvolver) return null;
+      const cv = this.node(c.createConvolver());
+      cv.buffer = ambVerbIR(this.m);
+      const inp = this.gain(1);
+      this.chain(inp, cv, this.gain(wet), this.bus);
+      return inp;
+    }
     /** 回り続けるノイズ（層ごとに位置と速さを少し違える） */
     src(rate) {
       const s = this.node(this.c.createBufferSource());
@@ -1881,7 +1906,12 @@
     const s = B.src(1), b1 = B.filt('bandpass', o.f[0], o.q || 20), b2 = B.filt('bandpass', o.f[0], o.q || 20), g = B.gain(0), p = B.pan(o.pan || 0);
     B.chain(s, b1, b2, g, p, o.to || B.bus);
     B.walk([b1.frequency, b2.frequency], o.f[0], o.f[1], o.fe || [1.5, 3.5], o.ftc || 0.9);
-    B.walk(g.gain, 0, o.lvl, o.ge || [1.5, 4], o.gtc || 1);
+    // ときどき膨らんで消える（鳴りっぱなしにしない）
+    B.every(o.swell || [3, 8], (t) => {
+      const up = B.rr(0.5, 1.4);
+      g.gain.setTargetAtTime(o.lvl * B.rr(0.35, 1), t, up / 3);
+      g.gain.setTargetAtTime(0, t + up + B.rr(0.3, 1.5), B.rr(0.5, 1.2));
+    });
   }
   /** 高い擦れ（雨・砂・葉）: ノイズを hp〜lp に。o.am で細かく粒立てる（低いノイズで音量を揺らす） */
   function lHiss(B, o) {
@@ -1923,16 +1953,16 @@
     B.chain(s, bp, B.gain(o.lvl * 0.5), B.bus);
     const d = o.dens;
     B.every([0.2 / d, 1.8 / d], (t) => {
-      const v = o.tick * (0.15 + 0.85 * Math.pow(B.r(), 2));
-      if (B.r() < 0.12) B.tone(t, { f: B.rr(1700, 3000), f2: B.rr(1200, 1900), dur: B.rr(0.025, 0.05), vol: v * 0.45, pan: B.rr(-0.8, 0.8), a: 0.001 });
-      else B.burst(t, B.rr(0.004, 0.02), { f: B.rr(1500, 4500), q: B.rr(1.5, 4), vol: v, pan: B.rr(-0.85, 0.85), a: 0.0005 });
+      const v = o.tick * (0.15 + 0.85 * Math.pow(B.r(), 2.5));
+      if (B.r() < 0.1) B.tone(t, { f: B.rr(1700, 3000), f2: B.rr(1200, 1900), dur: B.rr(0.025, 0.05), vol: v * 0.4, pan: B.rr(-0.8, 0.8), a: 0.002 });
+      else B.burst(t, B.rr(0.008, 0.03), { f: B.rr(1200, 3800), q: B.rr(1.2, 3), vol: v, pan: B.rr(-0.85, 0.85), a: 0.0015 });
     });
   }
   /** 火の粉のはぜる音: 2〜6 粒のかたまり（鋭い立ち上がり） */
   function lCrackle(B, o) {
     B.every(o.every, (t) => {
       const n = 2 + Math.floor(B.r() * 5), pan = B.rr(-0.7, 0.7), far = B.rr(0.4, 1);
-      for (let k = 0; k < n; k++) B.burst(t + B.rr(0, 0.5) * (k ? 1 : 0), B.rr(0.003, 0.012), { f: B.rr(2000, 5500), q: B.rr(0.7, 1.6), vol: o.lvl * far * B.rr(0.3, 1), pan: pan + B.rr(-0.1, 0.1), a: 0.0003 });
+      for (let k = 0; k < n; k++) B.burst(t + B.rr(0, 0.5) * (k ? 1 : 0), B.rr(0.004, 0.014), { type: 'highpass', f: B.rr(1200, 3000), q: 0.7, vol: o.lvl * far * B.rr(0.3, 1), pan: pan + B.rr(-0.1, 0.1), a: 0.0003, to: o.to });
     });
   }
   /** 煮える溶岩のごぼっ: 下がる低い正弦（火山の中） */
@@ -2017,32 +2047,31 @@
   // ---- 床（spec.bed → 組み立て）。B.i = 強さ（音量は B.bus で済んでいる。ここでは密度・揺れの幅に使う）
   const AMB = {
     wind(B, i) { lWind(B, { f: [350, 900], g: [0.3, 1], ge: [1.2, 4], body: 0.5 }); },
-    snow(B, i) { lWind(B, { f: [260, 620], lp: 900, g: [0.3, 0.85], ge: [2, 6], gtc: 1.8, body: 0.4 }); },
+    snow(B, i) { lWind(B, { f: [280, 650], lp: 1000, g: [0.3, 0.85], ge: [2, 6], gtc: 1.8, body: 0.2 }); },
     mist(B, i) {
       lWind(B, { f: [300, 700], lp: 1100, g: [0.25, 0.7], ge: [2.5, 6], gtc: 2, body: 0.35, lvl: 0.8 });
       lSurf(B, { lvl: 0.4, period: [7, 12], muffled: true });
     },
     breeze(B, i) {   // 風の木の葉: 風＋葉ずれ（突風に乗る、細かく粒立つ）、昼はまばらな鳥・夜はまばらな虫
       const G = lWind(B, { f: [420, 1100], g: [0.25, 1], ge: [0.9, 3], gtc: 0.7, body: 0.35, lvl: 0.85 });
-      lHiss(B, { hp: 2600, lp: 7500, lvl: 0.45, am: 3, amF: 30, walk: [0.1, 1], we: [0.25, 0.9], wtc: 0.15, to: G });
-      lLife(B, i, 0.3, 0.05, 1.6);
+      lHiss(B, { hp: 2600, lp: 6500, lvl: 0.25, am: 3, amF: 30, walk: [0.1, 1], we: [0.25, 0.9], wtc: 0.15, to: G });
+      lLife(B, i, 0.9, 0.06, 1.4);
     },
     highwind(B, i) {   // 高地の夜空: 高く細い風（ゆっくり）と、遠いひゅう
       const s = B.filt('highpass', 220, 0.6);
       s.connect(B.bus);
-      lWind(B, { f: [700, 1700], q: 0.6, g: [0.2, 0.85], ge: [3, 7], gtc: 2.2, to: s });
-      lWhistle(B, { f: [1200, 2600], q: 10, lvl: 3, ge: [3, 7], gtc: 2, pan: 0.3 });
+      lWind(B, { f: [600, 1400], q: 0.6, lp: 2600, g: [0.2, 0.85], ge: [3, 7], gtc: 2.2, to: s });
+      lWhistle(B, { f: [900, 1800], q: 7, lvl: 2, swell: [5, 11], pan: 0.3 });
     },
     blizzard(B, i) {   // 吹雪: 強く乱れる風＋雪の当たる粒立った擦れ（突風に乗る）＋ひゅうと鳴る 2 本＋重い胴
       const G = lWind(B, { f: [300, 1100], q: 0.7, g: [0.3, 1], ge: [0.45, 1.5], gtc: 0.3, body: 1.1, bodyF: 320, fe: [0.6, 2], ftc: 0.5 });
-      lHiss(B, { hp: 3500, lp: 7000, lvl: 0.45, am: 4, amF: 70, to: G });
-      lWhistle(B, { f: [600, 1300], q: 14, lvl: 9 * (0.5 + 0.5 * i), ge: [0.8, 2.4], gtc: 0.6, fe: [0.8, 2], ftc: 0.6, pan: -0.45 });
-      lWhistle(B, { f: [900, 2000], q: 14, lvl: 7 * (0.5 + 0.5 * i), ge: [1, 2.8], gtc: 0.7, fe: [0.8, 2.2], ftc: 0.7, pan: 0.5 });
+      lHiss(B, { hp: 3500, lp: 7000, lvl: 0.5, am: 5, amF: 70, to: G });
+      lWhistle(B, { f: [450, 1000], q: 6, lvl: 5 * (0.5 + 0.5 * i), swell: [2, 5], fe: [0.8, 2], ftc: 0.6, pan: -0.45 });
+      lWhistle(B, { f: [700, 1500], q: 6, lvl: 4 * (0.5 + 0.5 * i), swell: [2.5, 6], fe: [0.8, 2.2], ftc: 0.7, pan: 0.5 });
     },
     sandstorm(B, i) {   // 砂嵐: 風＋ざらつく砂の擦れ（どちらも突風に乗る。絵の風の帯と ambienceMod で合わせる）
-      const G = lWind(B, { f: [260, 800], q: 0.7, g: [0.35, 1], ge: [1.2, 3.5], gtc: 0.8, body: 0.6 });
-      lHiss(B, { hp: 2400, lp: 6000, lvl: 0.3, am: 3, amF: 55, to: G });
-      lWhistle(B, { f: [350, 750], q: 8, lvl: 2, ge: [1.5, 4], gtc: 1, pan: 0.2, to: G });
+      const G = lWind(B, { f: [260, 800], q: 0.7, g: [0.2, 1], ge: [1.2, 3.5], gtc: 0.8, body: 0.6 });
+      lHiss(B, { hp: 1800, lp: 4500, lvl: 0.22, am: 3, amF: 55, to: G });
     },
     heat(B, i) {   // 陽炎: ほとんど聞こえない、ゆるく揺れる暖かい空気と、薄い高い気配
       const s = B.src(0.7), bp = B.filt('bandpass', 450, 0.5), g = B.gain(0);
@@ -2051,7 +2080,7 @@
       lHiss(B, { hp: 5000, lp: 8000, lvl: 0.08, walk: [0.4, 1], we: [4, 8], wtc: 3 });
     },
     rain(B, i) {   // 霧雨（島は岸の波を足す）
-      lRain(B, { lvl: 0.4, tick: 1.6, dens: 6 + 12 * i });
+      lRain(B, { lvl: 0.4, tick: 1.4, dens: 12 + 20 * i });
       if (B.spec.surf) lSurf(B, { lvl: 1.1 * B.spec.surf, period: [6.5, 11] });
     },
     sea(B, i) {   // 海辺・船: 波（船の中はこもらせる）＋弱い風
@@ -2065,28 +2094,29 @@
       if (B.night > 0.3) lCrickets(B, { lvl: 0.04, n: 2, dens: 0.5 });
     },
     ash(B, i) {   // 灰の荒野: 地鳴り＋弱い風＋舞う灰の薄い擦れ＋はぜる火の粉
-      lRumble(B, { f: 110, rate: 0.4, lvl: 1.1, lo: 0.45, ge: [2, 5], gtc: 1.6 });
+      lRumble(B, { f: 140, rate: 0.4, lvl: 0.8, lo: 0.45, ge: [2, 5], gtc: 1.6 });
       const G = lWind(B, { f: [300, 800], g: [0.2, 0.65], ge: [2, 5], gtc: 1.4, lvl: 0.7 });
       lHiss(B, { hp: 3500, lp: 7000, lvl: 0.1, to: G });
-      lCrackle(B, { lvl: 1.6, every: [2 / (0.3 + 0.7 * i), 7 / (0.3 + 0.7 * i)] });
+      lCrackle(B, { lvl: 5, every: [1.5 / (0.3 + 0.7 * i), 5 / (0.3 + 0.7 * i)] });
     },
     forest(B, i) {   // 木漏れ日の森: そよ風＋葉ずれ、昼は鳥・夜は虫
       const G = lWind(B, { f: [500, 1300], g: [0.15, 0.6], ge: [2, 5], gtc: 1.4, lvl: 0.7, body: 0.2 });
-      lHiss(B, { hp: 2800, lp: 8000, lvl: 0.35, am: 2.5, amF: 25, walk: [0.1, 1], we: [0.4, 1.2], wtc: 0.25, to: G });
-      lLife(B, i, 0.4, 0.06, 1);
+      lHiss(B, { hp: 2800, lp: 6000, lvl: 0.15, am: 2.5, amF: 25, walk: [0.1, 1], we: [0.4, 1.2], wtc: 0.25, to: G });
+      lLife(B, i, 1.2, 0.07, 0.7);
     },
     cave(B, i) {   // 洞窟・坑道: 低い部屋の音＋よく響く雫（まばら・不規則。墓は雫なし）
-      const echo = makeEcho(B.c, B.bus, { time: 0.23, fb: 0.55, wet: 0.7, lp: 2000 });
-      for (const n of echo.nodes) B.nodes.push(n);
-      const ev = B.gain(1); ev.connect(B.bus); ev.connect(echo.input); B.ev = ev;
+      const vb = B.verb(1.6), ev = B.gain(0.7);
+      ev.connect(B.bus); if (vb) ev.connect(vb); B.ev = ev;
       lRumble(B, { f: 180, rate: 0.45, lvl: 1.2, lo: 0.6, ge: [3, 7], gtc: 2.5 });
       if (!B.spec.dry) lPlop(B, { lvl: 0.35, f: [700, 1900], every: [1.2 / (0.4 + 0.6 * i), 10 / (0.4 + 0.6 * i)], twice: 0.12, click: 0.5 });
     },
     volcano(B, i) {   // 火山の中: 深い地鳴り（ゆっくり膨らむ）＋まばらな火の粉と溶岩のごぼっ
       lRumble(B, { f: 85, rate: 0.3, lvl: 1.4, lo: 0.35, ge: [2.5, 6], gtc: 2 });
       lRumble(B, { f: 240, rate: 0.5, lvl: 0.35, lo: 0.3, ge: [3, 7], gtc: 2.5 });
-      lCrackle(B, { lvl: 1.2, every: [3, 9] });
-      lBloop(B, { lvl: 0.8, every: [5, 14] });
+      const vb = B.verb(1.2), ev = B.gain(1);
+      ev.connect(B.bus); if (vb) ev.connect(vb); B.ev = ev;
+      lCrackle(B, { lvl: 4, every: [2.5, 8] });
+      lBloop(B, { lvl: 1.2, every: [5, 14] });
     },
   };
 

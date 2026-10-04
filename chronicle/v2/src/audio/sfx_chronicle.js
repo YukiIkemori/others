@@ -59,7 +59,6 @@
     S.gain(1.46);
   };
 
-
   // burn (やけど status, fire composites) — a short flare of flame and a handful of crackles
   X.burn = (S) => {
     S.tone({ w: 'sine', f: 110 * st(1), f2: 55, sd: 0.1, d: 0.015, r: 0.1, vol: 0.15 });                  // whump
@@ -69,8 +68,6 @@
     S.wet(0.2);
     S.gain(0.9);
   };
-
-
 
   // quill — a pen scratching across paper three times, then a small bell
   X.quill = (S) => {
@@ -136,7 +133,6 @@
     S.gain(0.96);
   };
 
-
   // lash (whips) — a bending swish that snaps into a dry crack
   X.lash = (S) => {
     const k = st(1.5);
@@ -150,7 +146,6 @@
     S.gain(0.59);
   };
 
-
   // parry — steel turning steel: a bright inharmonic ring with a click
   X.parry = (S) => {
     const k = st(0.6);
@@ -162,8 +157,6 @@
     S.wet(0.3);
     S.gain(1.17);
   };
-
-
 
   // secret — a hidden passage gives way: stone shifting, a curious rising three-note figure
   // with a wobble (「ふしぎ」), a sparkle
