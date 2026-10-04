@@ -765,7 +765,7 @@
     if (!rm && R.Settings.get('shake') !== 'off') st.shake = { t0: R.Engine.time, ms: soft ? 300 : 560, amp: soft ? 3 : 7 };
     if (!soft) sfx('roar');
     if (_.bossVoice) _.bossVoice.enrage(st, e);   // ボスの暴走の一言（voice_boss.js。待たない）
-    try { if (R.Audio.setTempo) R.Audio.setTempo(P.ENRAGE_TEMPO); } catch (err) { /* ignore */ }
+    if (!soft) { try { if (R.Audio.setTempo) R.Audio.setTempo(P.ENRAGE_TEMPO); } catch (err) { /* ignore */ } }   // 'serious' は BGM の速さを変えない
     st.head = soft ? { name: e.text, t0: R.Engine.time, tint: '#ffb070', color: '#ffe0c0' } : { name: e.text, t0: R.Engine.time, tint: '#ff6a52', color: '#ffc2b2' };
     await st.pwait(1100);
   };

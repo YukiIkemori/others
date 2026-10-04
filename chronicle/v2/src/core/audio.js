@@ -1406,7 +1406,14 @@
       const c = loadBuffer('bgm', cur.id);
       // 速めている曲（setTempo）: 高さを保って速められるなら <audio> で（ジングルの後に戻るときなど）
       if (tempo && tempo.id === cur.id && canStretch(cur.id)) {
-        pb = new StretchPlayback(mx, cur.id, fe, { dest: mx.music, pos: cur.pos || 0, fadeIn: Math.max(0.05, o.fadeIn || 0), rate: tempo.mul });
+        const sp = (pb = new StretchPlayback(mx, cur.id, fe, { dest: mx.music, pos: cur.pos || 0, fadeIn: Math.max(0.05, o.fadeIn || 0), rate: tempo.mul }));
+        // <audio> が鳴らせなかったとき（スマホの自動再生の制限など）は、速さを戻して元の鳴らし方で続ける（ジングルの後に BGM が消えたまま、を防ぐ）
+        sp.ready.then((ok) => {
+          if (ok || pb !== sp || !mx) return;
+          if (cur) cur.pos = sp.pos0;
+          sp.stop(0.05); pb = null; tempo = null;
+          if (cur && !jin) startCur({ fadeIn: 0.3 });
+        });
         return;
       }
       if (c && c.state === 'ok') {
