@@ -87,5 +87,12 @@
     'map.final_archive.archive_5.meta.sub': 'The Blank Scriptorium',
     'map.final_archive.archive_6.npcs.0.naming_fine.name': 'Fina',
     'map.final_archive.archive_6.meta.sub': 'Hall of the Hollow',
+    // ---- 演出と人物の関係の作り直し（2026-10-04。notes/story_staging_rework.md）
+    'map.final_links.fin_yena.name': 'Yena',
+    'map.final_links.fin_yena.title': 'Still Night',
+    'map.final_links.fin_yena.talk': 'I\'ll wait here\nuntil the ship sails.',
+    'map.final_biblia.N.b_yena.name': 'Yena',
+    'map.final_biblia.N.b_yena.title': 'Still Night',
+    'map.final_links.shade_fine.name': 'Fina',
   });
 })(window.RPG);

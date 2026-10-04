@@ -91,5 +91,12 @@
     'map.final_archive.archive_5.meta.sub': '白紙の写字室',
     'map.final_archive.archive_6.npcs.0.naming_fine.name': 'フィーネ',
     'map.final_archive.archive_6.meta.sub': '虚ろの間',
+    // ---- 演出と人物の関係の作り直し（2026-10-04。notes/story_staging_rework.md）
+    'map.final_links.fin_yena.name': 'イェナ',
+    'map.final_links.fin_yena.title': '静夜会',
+    'map.final_links.fin_yena.talk': '船が出るまで、\nここで待っています。',
+    'map.final_biblia.N.b_yena.name': 'イェナ',
+    'map.final_biblia.N.b_yena.title': '静夜会',
+    'map.final_links.shade_fine.name': 'フィーネ',
   });
 })(window.RPG);

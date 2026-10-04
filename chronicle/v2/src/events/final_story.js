@@ -244,6 +244,7 @@
     await ev.say('fin_yena', R.T('events.final_ferry.y_1'), Y);
     await ev.say('fin_yena', R.T('events.final_ferry.y_2'), Y);
     await ev.say('fin_yena', R.T('events.final_ferry.y_3'), Y);
+    await ev.say('fin_yena', R.T('events.final_ferry.y_3b'), Y);
     await x.breath(ev, 500);
     await ev.say('fin_rowell_pier', R.T('events.final_ferry.y_rowell_1'), { face: 'rowell:sad' });
     await ev.say('fin_rowell_pier', R.T('events.final_ferry.y_rowell_2'), { face: 'rowell:neutral' });

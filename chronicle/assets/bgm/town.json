@@ -1,30 +1,31 @@
 {
-  "loopStart": 18.065,
-  "loopEnd": 87.887,
+  "loopStart": 16.974,
+  "loopEnd": 86.795,
   "source": {
     "provider": "gemini",
-    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. The game's world lives in an endless night lit by lanterns, lamps and great beacon fires; the score is gentle and melancholic, with warmth and a quiet, stubborn hope. A harbour town under lamplight: lanterns along the pier, sailors, a market that never sees the sun, the smell of the sea. Friendly and warm with a touch of nostalgia, a gently swinging melody that feels like home port at night; lively but not loud. Tempo 112 BPM, 4/4 time, key of G major. Instrumentation: accordion and clarinet melody, mandolin and fingerpicked guitar, harp, glockenspiel, walking upright bass, light brushes and tambourine. Form: 2-bar mandolin pickup; A melody on accordion; B melody on clarinet with harp, a little wistful; a short interlude with glockenspiel like harbour bells; A melody again with fuller band. Duration: 115 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
-    "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]\n[[C4]]\n[[E5]]",
-    "generated": "2026-09-27T04:46:18.351Z",
-    "rawSeconds": 120.4,
+    "model": "lyria-3.5",
+    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. The game's world lives in an endless night lit by lanterns, lamps and great beacon fires; the score is gentle and melancholic, with warmth and a quiet, stubborn hope. A harbour town under lamplight: lanterns along the pier, sailors, a market that never sees the sun, the smell of the sea. Friendly and warm with a touch of nostalgia, a gently swinging melody that feels like home port at night; lively but not loud. Tempo 112 BPM, 4/4 time, key of G major. Instrumentation: accordion and clarinet melody, mandolin and fingerpicked guitar, harp, walking upright bass, light brushes and tambourine; acoustic instruments only, no electronic sounds, no synthesizers, no drum machines, no programmed beats, no bells or chimes. Form: 2-bar mandolin pickup; A melody on accordion; B melody on clarinet with harp, a little wistful; a short interlude on mandolin and harp; A melody again with fuller band. Duration: 115 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+    "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]\n[[B4]]",
+    "generated": "2026-10-04T08:57:51.047Z",
+    "rawSeconds": 127.6,
     "takes": 2
   },
   "analysis": {
     "loudnessLUFS": -18,
-    "truePeakDb": -5.8,
-    "gainDb": -5.9,
+    "truePeakDb": -5.4,
+    "gainDb": -5.3,
     "peakLimited": false,
-    "loopScore": 0.665,
+    "loopScore": 0.763,
     "seamListen": {
-      "seam_smooth": 10,
-      "problem": "none"
+      "seam_smooth": 6.5,
+      "problem": "sudden instrument change"
     },
-    "seamCorr": 0.581,
+    "seamCorr": 0.808,
     "xfade": 0.6,
-    "medianDb": -21.3,
+    "medianDb": -21.5,
     "longestSilence": 0,
-    "seamLevelDiffDb": 1.1,
-    "seamJump": 0.0124,
-    "maxStep": 0.0471
+    "seamLevelDiffDb": 1.7,
+    "seamJump": 0.0206,
+    "maxStep": 0.0293
   }
 }

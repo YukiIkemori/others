@@ -87,5 +87,12 @@
     'map.final_archive.archive_5.meta.sub': '空白的抄写室',
     'map.final_archive.archive_6.npcs.0.naming_fine.name': '菲涅',
     'map.final_archive.archive_6.meta.sub': '虚无之间',
+    // ---- 演出と人物の関係の作り直し（2026-10-04。notes/story_staging_rework.md）
+    'map.final_links.fin_yena.name': '耶娜',
+    'map.final_links.fin_yena.title': '静夜会',
+    'map.final_links.fin_yena.talk': '在船开之前，\n我就在这里等着。',
+    'map.final_biblia.N.b_yena.name': '耶娜',
+    'map.final_biblia.N.b_yena.title': '静夜会',
+    'map.final_links.shade_fine.name': '菲涅',
   });
 })(window.RPG);

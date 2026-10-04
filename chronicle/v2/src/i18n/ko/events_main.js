@@ -296,5 +296,7 @@
     'ev.story_world.pharos_yena.run.say': '등불이 돌아올 때마다 회를 떠나는\n사람이 나옵니다. ……이름은\n짐일 텐데 말이죠.',
     'ev.story_world.pharos_yena.run.say_2': '나그네님. 제 진짜 이름은\n무엇이었을까요.\n……떠오르지 않아요.',
     'ev.story_world.pharos_yena.run.say_3': '내해의 안개가 걷혔어요.\n……저에게도 불리던\n이름이 있었겠지요.',
+    // ---- 演出と人物の関係の作り直し（2026-10-04。notes/story_staging_rework.md）
+    'ev.story_00_tiers.recover.caption': '{hero} 일행은 한동안\n일어나지 못했다……',
   });
 })(window.RPG);

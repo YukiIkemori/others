@@ -90,5 +90,12 @@
     'map.final_archive.archive_5.meta.sub': '백지의 필사실',
     'map.final_archive.archive_6.npcs.0.naming_fine.name': '피네',
     'map.final_archive.archive_6.meta.sub': '텅 빈 방',
+    // ---- 演出と人物の関係の作り直し（2026-10-04。notes/story_staging_rework.md）
+    'map.final_links.fin_yena.name': '예나',
+    'map.final_links.fin_yena.title': '정야회',
+    'map.final_links.fin_yena.talk': '배가 떠날 때까지\n여기서 기다릴게요.',
+    'map.final_biblia.N.b_yena.name': '예나',
+    'map.final_biblia.N.b_yena.title': '정야회',
+    'map.final_links.shade_fine.name': '피네',
   });
 })(window.RPG);

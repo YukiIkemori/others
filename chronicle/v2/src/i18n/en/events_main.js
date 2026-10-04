@@ -296,5 +296,7 @@
     'ev.story_world.pharos_yena.run.say': 'Each time a light returns,\nsomeone leaves the Order.\n...Though a name should be a burden.',
     'ev.story_world.pharos_yena.run.say_2': 'Traveler. What was my\ntrue name, I wonder?\n...I can\'t remember.',
     'ev.story_world.pharos_yena.run.say_3': 'The fog over the inland sea has lifted.\n...I suppose I, too, once had\na name that people called.',
+    // ---- 演出と人物の関係の作り直し（2026-10-04。notes/story_staging_rework.md）
+    'ev.story_00_tiers.recover.caption': 'For a long while, {hero} and the others\ncould not get back up...',
   });
 })(window.RPG);

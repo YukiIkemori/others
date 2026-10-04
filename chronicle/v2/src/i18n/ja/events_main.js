@@ -308,5 +308,7 @@
     'ev.story_world.pharos_yena.run.say': '灯が戻るたびに、会を抜ける\n人が出るのです。……名は、\n重荷のはずなのに。',
     'ev.story_world.pharos_yena.run.say_2': '旅の方。わたしの本当の名は、\n何だったのかしら。\n……思い出せないのです。',
     'ev.story_world.pharos_yena.run.say_3': '内海の霧が晴れました。\n……わたしにも、呼ばれていた\n名があったのでしょうね。',
+    // ---- 演出と人物の関係の作り直し（2026-10-04。notes/story_staging_rework.md）
+    'ev.story_00_tiers.recover.caption': '{hero}たちは、しばらく\n起き上がれなかった……。',
   });
 })(window.RPG);

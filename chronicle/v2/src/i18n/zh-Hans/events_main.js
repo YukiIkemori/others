@@ -296,5 +296,7 @@
     'ev.story_world.pharos_yena.run.say': '每当灯火回来，就有人\n离开本会。……名字，\n明明应该是重负才对。',
     'ev.story_world.pharos_yena.run.say_2': '旅人。我真正的名字，\n究竟是什么呢。\n……我想不起来了。',
     'ev.story_world.pharos_yena.run.say_3': '内海的雾散了。\n……我也曾有过，\n被人呼唤的名字吧。',
+    // ---- 演出と人物の関係の作り直し（2026-10-04。notes/story_staging_rework.md）
+    'ev.story_00_tiers.recover.caption': '{hero}一行，好一阵子\n都没能站起来……',
   });
 })(window.RPG);

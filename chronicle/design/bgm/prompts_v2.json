@@ -55,16 +55,17 @@
   {
    "id": "town",
    "status": "regenerated",
+   "note": "2026-10-04: regenerated again. The previous take had a foreign layer (synth bass, electronic drums, plucked synth bells) over 0:42-0:60, inside the loop, where the old form asked for a glockenspiel interlude like harbour bells. The interlude is now mandolin and harp, the glockenspiel is gone, and the instrumentation line asks for acoustic instruments only.",
    "scene": "港町ファロス（灯りの町）",
    "tempo": 112,
    "meter": "4/4",
    "key": "G",
    "key_text": "G major",
-   "instrumentation": "accordion and clarinet melody, mandolin and fingerpicked guitar, harp, glockenspiel, walking upright bass, light brushes and tambourine",
+   "instrumentation": "accordion and clarinet melody, mandolin and fingerpicked guitar, harp, walking upright bass, light brushes and tambourine; acoustic instruments only, no electronic sounds, no synthesizers, no drum machines, no programmed beats, no bells or chimes",
    "length_sec": 115,
    "loop": "seamless loop",
    "desc": "The game's world lives in an endless night lit by lanterns, lamps and great beacon fires; the score is gentle and melancholic, with warmth and a quiet, stubborn hope. A harbour town under lamplight: lanterns along the pier, sailors, a market that never sees the sun, the smell of the sea. Friendly and warm with a touch of nostalgia, a gently swinging melody that feels like home port at night; lively but not loud.",
-   "form": "2-bar mandolin pickup; A melody on accordion; B melody on clarinet with harp, a little wistful; a short interlude with glockenspiel like harbour bells; A melody again with fuller band"
+   "form": "2-bar mandolin pickup; A melody on accordion; B melody on clarinet with harp, a little wistful; a short interlude on mandolin and harp; A melody again with fuller band"
   },
   {
    "id": "tower",

@@ -180,18 +180,22 @@
 
   // ================================================================ 5 階 大書記ラザロ
   /** 二十年前の夜（ほどけた白い紙に浮かぶ、写されていた記憶）。暗い中の字幕と、地の文の二行 */
-  const NIGHT = ['n1', 'n2', 'n3', 'n4', 'n5', 'n6', 'n7', 'n8', 'n9', 'n10'];
+  //   [字幕, 鳴らす音, 出す時間]（n7 = 矢、n8 = 本のささやき、n9 = 写す羽ペン）
+  const NIGHT = () => [
+    [R.T('events.archive_5_lazaro.n1')], [R.T('events.archive_5_lazaro.n2')], [R.T('events.archive_5_lazaro.n3')],
+    [R.T('events.archive_5_lazaro.n4')], [R.T('events.archive_5_lazaro.n5')], [R.T('events.archive_5_lazaro.n6')],
+    [R.T('events.archive_5_lazaro.n7'), 'hit', 3600, 700], [R.T('events.archive_5_lazaro.n8'), 'dark'], [R.T('events.archive_5_lazaro.n9'), 'quill'],
+    [R.T('events.archive_5_lazaro.n10'), null, 3600],
+  ];
   async function nightOfSong(ev) {
     const x = X();
     await x.narr(ev, R.T('events.archive_5_lazaro.f_narr_1'));
     await ev.fade('out', 900);
     ev.bgm('legend');
-    for (const k of NIGHT) {
-      if (k === 'n7') { ev.sfx('hit'); }
-      if (k === 'n8') { ev.sfx('dark'); }
-      if (k === 'n9') { ev.sfx('quill'); }
-      await ev.caption(R.T('events.archive_5_lazaro.' + k), { ms: k === 'n7' || k === 'n10' ? 3600 : 3200 });
-      if (k === 'n7') await x.breath(ev, 700);
+    for (const [text, snd, ms, after] of NIGHT()) {
+      if (snd) ev.sfx(snd);
+      await ev.caption(text, { ms: ms || 3200 });
+      if (after) await x.breath(ev, after);
     }
     await ev.fade('in', 900);
     ev.bgm('sorrow');
