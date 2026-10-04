@@ -1,10 +1,10 @@
 // FIELD: 天気の層（map.weather）。地面と人の上・暗がりの膜の下に、画面の座標で描く（重さは粒の数の上限と 1 枚の膜だけ）。
-//   'snow'      しんしんと降る雪（ゆっくり、少し横に流れる）
-//   'blizzard'  吹雪（多く、速く、横に流れる。うすい白い幕）
-//   'mist'      内海の白い霧（少なく大きい粒がゆっくり流れる。うすい白い幕）
+//   'snow'      しんしんと降る雪（やわらかい雪片が奥行き 3 段で、ゆっくり揺れながら降る）
+//   'blizzard'  吹雪（尾を引いて横に飛ぶ雪・風の白い帯・白い幕。風はうねる）
+//   'mist'      内海の白い霧（大きな白いもやの塊がゆっくり流れる。先頭のまわりは薄く）
 //   ── 地方の天気（持ち主 2026-10-04）
-//   'sandstorm' 砂嵐（横に走る砂の筋・黄色い幕・ときどき強まる風の帯）            砂漠の開けた野
-//   'heat'      陽炎（下ほど濃い細い波の帯がゆらぎながら上る・暖かい幕・立ちのぼるもや） 砂漠の野。空が明るいほど出やすい
+//   'sandstorm' 砂嵐（黄色く霞む幕・横に流れる砂の雲・尾を引いて飛ぶ砂粒。風はうねる） 砂漠の開けた野
+//   'heat'      陽炎（描いた地面そのものが下ほど強く横にゆらぐ・暖かい幕・立ちのぼるもや） 砂漠の野。空が明るいほど出やすい
 //   'fog'       濃い霧（大きくやわらかい霧の塊がゆっくり流れる。先頭のまわりは薄く）   沼地
 //   'drizzle'   海の霧雨（細い斜めの雨脚・岸の波しぶき）                          群島
 //   'ash'       灰（灰色の欠片が舞い落ちる・ときどき火の粉が立ちのぼる）            灰の荒野
@@ -204,99 +204,106 @@
   // ================================================================ 砂嵐
   F.wxGust = function (tm) { return 0.5 + 0.5 * Math.sin(tm * 0.9) * Math.sin(tm * 0.37 + 1); };
   DRAW.sandstorm = function (g, m, cx, cy, t, I, low) {
+    // 持ち主 2026-10-04: 細い線は雨のように見え、何の天気か分からず見づらいだけだった → 線をやめ、
+    //   「黄色く霞む空気・横に流れる砂の雲・風に飛ぶ砂粒（短い尾）」で砂嵐と分かるようにする。人と足もとは読める濃さに保つ
     const W = R.W, H = R.H, tm = R.Engine.time / 1000;
     // 風の強さは 7 秒ほどの周期でうねる（0.55〜1）
     const gust = 0.55 + 0.45 * F.wxGust(tm);
-    g.fillStyle = `rgba(214,170,96,${(0.13 + 0.08 * gust) * I})`;
+    g.fillStyle = `rgba(206,160,92,${(0.12 + 0.07 * gust) * I})`;
     g.fillRect(0, 0, W, H);
-    // 風の帯（大きく横に伸ばしたやわらかい砂のもや）
-    const b = blob('214,176,112');
-    if (b) {
-      g.imageSmoothingEnabled = true;
-      const nb = low ? 2 : 4;
+    // 砂の雲（大きく横に伸ばしたやわらかい砂のもや。1/4 の下書きに描いて 1 回で重ねる）
+    const b = blob('222,180,116'), x2 = lo();
+    if (b && x2) {
+      const L = leadAt(t, cx, cy);
+      const nb = low ? 4 : 7;
       for (let k = 0; k < nb; k++) {
-        const bw = W * (0.9 + h(k, 31) * 0.6), bh = 70 + h(k, 32) * 90;
-        const x = wrap(h(k, 33) * W * 2 + tm * (260 + 120 * h(k, 34)) - cx * 0.9, W * 2 + bw) - bw;
-        const y = wrap(h(k, 35) * H + Math.sin(tm * 0.4 + k) * 20 - cy * 0.9, H + bh) - bh * 0.5;
-        g.globalAlpha = 0.3 * gust * I;
-        g.drawImage(b, x, y, bw, bh);
+        const bw = W * (0.7 + h(k, 31) * 0.7), bh = 120 + h(k, 32) * 160;
+        const x = wrap(h(k, 33) * W * 2 + tm * (300 + 160 * h(k, 34)) - cx * 0.9, W * 2 + bw) - bw;
+        const y = wrap(h(k, 35) * H + Math.sin(tm * 0.4 + k) * 24 - cy * 0.9, H + bh) - bh * 0.5;
+        const d = Math.abs(y + bh / 2 - L.y), near = Math.min(1, Math.max(0.45, (d - 40) / 220));   // 先頭の高さは少し薄く
+        x2.globalAlpha = (0.5 + 0.3 * h(k, 36)) * (0.55 + 0.45 * gust) * I * near;
+        x2.drawImage(b, x, y, bw, bh);
       }
+      loBlit(g);
     }
-    // 砂の筋（横に速く走る短い線）
-    const n = count(110, low, I), ox = cx * 0.9, oy = cy * 0.9;
-    g.fillStyle = '#f4dcaa';
+    // 風に飛ぶ砂粒（丸い粒＋進む向きと逆に薄い尾。速さは風に合わせる）
+    const n = count(150, low, I), ox = cx * 0.9, oy = cy * 0.9;
+    const run = 520 + 380 * gust;
     for (let i = 0; i < n; i++) {
-      const sp = 0.6 + h(i, 1) * 0.8, len = (14 + h(i, 2) * 34) * (0.6 + gust * 0.6);
-      let x = h(i, 3) * (W + 120) + 620 * sp * tm - ox;
-      let y = h(i, 4) * (H + 20) + Math.sin(tm * 2.1 + i) * 4 + 12 * sp * tm - oy;
-      x = wrap(x, W + 120) - 60; y = wrap(y, H + 20) - 10;
-      g.globalAlpha = (0.35 + 0.45 * h(i, 5)) * (0.6 + 0.4 * gust) * I;
-      g.fillRect(x, y, len, h(i, 6) < 0.3 ? 1.5 : 1);
-    }
-    // 砂の粒（少し大きい点）
-    g.fillStyle = '#c89a5a';
-    for (let i = 0; i < (n >> 2); i++) {
-      let x = h(i, 7) * (W + 40) + 480 * (0.7 + h(i, 8) * 0.6) * tm - ox;
-      let y = h(i, 9) * (H + 40) + Math.sin(tm * 3 + i * 2) * 6 - oy;
-      x = wrap(x, W + 40) - 20; y = wrap(y, H + 40) - 20;
-      g.globalAlpha = 0.75 * I;
-      g.fillRect(x, y, 2, 2);
+      const sp = 0.55 + h(i, 1) * 0.9, r = h(i, 6) < 0.25 ? 3.5 : h(i, 6) < 0.7 ? 2.5 : 2;
+      let x = h(i, 3) * (W + 120) + run * sp * tm - ox;
+      let y = h(i, 4) * (H + 40) + Math.sin(tm * (1.7 + h(i, 7)) + i) * 10 + 30 * sp * tm - oy;
+      x = wrap(x, W + 120) - 60; y = wrap(y, H + 40) - 20;
+      const a = (0.45 + 0.4 * h(i, 5)) * (0.65 + 0.35 * gust) * I;
+      const tail = (4 + 6 * sp) * gust;
+      g.globalAlpha = a * 0.3;
+      g.fillStyle = '#e8c98e';
+      g.fillRect(x - tail, y + r * 0.25, tail, r * 0.5);
+      g.globalAlpha = a;
+      g.fillStyle = h(i, 8) < 0.5 ? '#f2d9a6' : '#c99a5c';
+      g.fillRect(x, y, r, r);
     }
   };
 
   // ================================================================ 陽炎
-  // 画面の画素を読み返さない（キャンバス自身からの写しはソフトの描画で 1 フレーム 300 ms かかった）。
-  // 代わりに、明るい線と暗い線が対になった細い波の帯（1 回だけ焼く）を何本も、下ほど濃く、ゆっくり上へ流しながら横に揺らす
-  let ripple = null;
-  function rippleImg() {
-    if (ripple || typeof document === 'undefined') return ripple;
-    const c = document.createElement('canvas');
-    c.width = 256; c.height = 12;
-    const x = c.getContext('2d');
-    for (let i = 0; i < 256; i++) {
-      const y = 6 + Math.sin((i / 256) * Math.PI * 6) * 2.2 + Math.sin((i / 256) * Math.PI * 14) * 0.8;
-      const e = Math.min(1, i / 40, (255 - i) / 40);   // 端は消す（並べても継ぎ目が見えない）
-      x.fillStyle = `rgba(255,236,200,${0.9 * e})`; x.fillRect(i, y - 1.5, 1, 1.2);
-      x.fillStyle = `rgba(60,30,10,${0.6 * e})`; x.fillRect(i, y + 0.2, 1, 1.2);
-    }
-    return (ripple = c);
-  }
+  // 画面の画素の読み返し（キャンバス自身からの写し）は GPU の描画なら 1 ms ほど、ソフトの描画だと 1 フレーム 300 ms かかる
+  // ことがある → 測って、重い環境（平均 4 ms 超え）ではその場でゆらしをやめる（膜ともやだけになる）
   DRAW.heat = function (g, m, cx, cy, t, I, low) {
+    // 持ち主 2026-10-04: 細い波線（ちょりちょりした線）は何か分からず見づらいだけ → 線をやめ、本物の陽炎のように
+    //   描いた地面そのものを横に細かくゆらす（下ほど強い）。効果 low はゆらしを省いて暖かい膜ともやだけ
     const W = R.W, H = R.H, tm = R.Engine.time / 1000;
-    g.fillStyle = `rgba(255,190,110,${0.07 * I})`;
+    g.fillStyle = `rgba(255,190,110,${0.06 * I})`;
     g.fillRect(0, 0, W, H);
-    const rp = rippleImg();
-    if (rp) {
-      g.imageSmoothingEnabled = true;
-      const n = count(34, low, I), span = H * 0.8;
-      for (let k = 0; k < n; k++) {
-        const y = H - wrap(h(k, 45) * span + tm * (8 + h(k, 46) * 10) + cy * 0.05, span);
-        const f = (y - H * 0.2) / span;   // 下ほど濃い
-        const w = 80 + h(k, 47) * 110;
-        const x = wrap(h(k, 48) * (W + w) - cx * 0.95 + Math.sin(tm * (1.6 + h(k, 49)) + k) * 10, W + w) - w * 0.5;
-        g.globalAlpha = Math.max(0, f) * 0.38 * I * (0.6 + 0.4 * Math.sin(tm * 2.3 + k * 1.3));
-        g.drawImage(rp, x - w / 2, y, w, 8 + h(k, 50) * 5);
-      }
-    }
+    if (!low) shimmer(g, tm, I);
     // 立ちのぼるもや（大きく薄い暖かい塊がゆっくり上へ）
     const b = blob('255,232,200');
     if (b) {
       g.imageSmoothingEnabled = true;
-      const nb = low ? 3 : 6;
+      const nb = 6;
       for (let k = 0; k < nb; k++) {
         const bw = 220 + h(k, 41) * 200, bh = bw * 0.45;
         const x = wrap(h(k, 42) * W - cx * 0.95 + Math.sin(tm * 0.3 + k) * 30, W + bw) - bw * 0.5;
         const y = wrap(h(k, 43) * H - tm * (10 + h(k, 44) * 8) - cy * 0.95, H + bh) - bh * 0.5;
-        g.globalAlpha = 0.09 * I;
+        g.globalAlpha = 0.08 * I;
         g.drawImage(b, x - bw / 2, y - bh / 2, bw, bh);
       }
     }
   };
+  // 陽炎のゆらし: 画面の下 7 割を写し取り、細い横の帯ごとに少し左右へずらして描き戻す（帯の高さは実画素で 3〜4）
+  const SH = { c: null, x: null, ms: 0, n: 0, off: false };
+  function shimmer(g, tm, I) {
+    if (SH.off || typeof document === 'undefined' || !g.canvas) return;
+    const t0 = performance.now();
+    shimmerDraw(g, tm, I);
+    const dt = performance.now() - t0;
+    SH.ms = SH.n ? SH.ms * 0.8 + dt * 0.2 : dt; SH.n++;
+    if (SH.n >= 4 && SH.ms > 4) SH.off = true;
+  }
+  F._wxShimmer = SH;   // テスト・調べ用
+  function shimmerDraw(g, tm, I) {
+    const cw = g.canvas.width, ch = g.canvas.height, y0 = Math.floor(ch * 0.3), hh = ch - y0;
+    if (!SH.c) { SH.c = document.createElement('canvas'); SH.x = SH.c.getContext('2d'); }
+    if (SH.c.width !== cw || SH.c.height !== hh) { SH.c.width = cw; SH.c.height = hh; }
+    SH.x.clearRect(0, 0, cw, hh);
+    SH.x.drawImage(g.canvas, 0, y0, cw, hh, 0, 0, cw, hh);
+    const k = ch / 1080, band = Math.max(3, Math.round(2 * k)), amp = 2.4 * k * I;
+    g.save();
+    g.setTransform(1, 0, 0, 1, 0, 0);
+    g.globalAlpha = 1;
+    g.imageSmoothingEnabled = false;
+    for (let y = 0; y < hh; y += band) {
+      const f = y / hh;   // 下ほど強い
+      const wv = Math.sin((y0 + y) / k * 0.06 + tm * 3.1) * (0.65 + 0.35 * Math.sin((y0 + y) / k * 0.013 - tm * 0.9));
+      const dx = Math.round(wv * amp * (0.25 + 0.75 * f));
+      if (dx) g.drawImage(SH.c, 0, y, cw, band, dx, y0 + y, cw, band);
+    }
+    g.restore();
+  }
 
   // ================================================================ 濃い霧（沼）
   DRAW.fog = function (g, m, cx, cy, t, I, low) {
     const W = R.W, H = R.H, tm = R.Engine.time / 1000;
-    g.fillStyle = `rgba(196,212,202,${0.16 * I})`;
+    g.fillStyle = `rgba(196,212,202,${0.2 * I})`;
     g.fillRect(0, 0, W, H);
     const b = blob('206,222,210'), x2 = lo();
     if (!b || !x2) return;
@@ -309,7 +316,78 @@
       const y = wrap(h(k, 55) * spanY + Math.sin(tm * 0.12 + k) * 18 - cy * 0.85, spanY) - 200;
       // 先頭のまわりは薄く: 人と足もとが読める
       const d = Math.hypot(x - L.x, y - L.y), near = Math.min(1, Math.max(0.3, (d - 60) / 240));
-      x2.globalAlpha = (0.45 + 0.25 * h(k, 56)) * I * near * (0.8 + 0.2 * Math.sin(tm * 0.25 + k * 1.7));
+      x2.globalAlpha = (0.6 + 0.3 * h(k, 56)) * I * near * (0.8 + 0.2 * Math.sin(tm * 0.25 + k * 1.7));
+      x2.drawImage(b, x - bw / 2, y - bh / 2, bw, bh);
+    }
+    loBlit(g);
+  };
+
+  // ================================================================ 雪・吹雪・内海の霧（持ち主 2026-10-04 の見直し）
+  // 前は 1〜3 px の点を撒くだけで、ほとんど見えなかった → やわらかい丸い雪片を奥行き 3 段（遠いほど小さく遅く薄い）で降らせる。
+  // 吹雪は風に流れる白い帯と、尾を引いて横に飛ぶ雪。霧は大きな白いもやの塊がゆっくり流れる
+  function flakes(g, cx, cy, tm, I, low, o) {
+    const W = R.W, H = R.H, b = blob('245,248,255');
+    if (!b) return;
+    g.imageSmoothingEnabled = true;
+    const n = count(o.n, low, I);
+    for (let i = 0; i < n; i++) {
+      const z = h(i, 81) < 0.5 ? 0 : h(i, 81) < 0.82 ? 1 : 2;   // 0 遠い 1 中 2 近い
+      const sc = [0.55, 1, 1.7][z], r = (o.r + h(i, 82) * o.r) * sc;
+      const par = [0.5, 0.8, 1.15][z];
+      let x = h(i, 83) * (W + 80) + o.vx * sc * tm + Math.sin(tm * (0.7 + h(i, 84)) + i) * o.sway * sc - cx * par;
+      let y = h(i, 85) * (H + 80) + o.vy * sc * (0.8 + 0.4 * h(i, 86)) * tm - cy * par;
+      x = wrap(x, W + 80) - 40; y = wrap(y, H + 80) - 40;
+      g.globalAlpha = o.a * [0.45, 0.75, 0.95][z] * I;
+      if (o.tail) {   // 流れる向きに伸ばしたやわらかい尾（丸を横に引き伸ばして重ねる）
+        const tl = o.tail * sc, a0 = g.globalAlpha;
+        g.globalAlpha = a0 * 0.45;
+        g.drawImage(b, x - tl, y - r * 0.7, tl + r * 2, r * 1.4);
+        g.globalAlpha = a0;
+      }
+      g.drawImage(b, x - r, y - r, r * 2, r * 2);
+    }
+  }
+  DRAW.snow = function (g, m, cx, cy, t, I, low) {
+    const tm = R.Engine.time / 1000;
+    g.fillStyle = `rgba(220,230,248,${0.05 * I})`;
+    g.fillRect(0, 0, R.W, R.H);
+    flakes(g, cx, cy, tm, I, low, { n: 160, r: 2.2, vx: 10, vy: 34, sway: 14, a: 0.9 });
+  };
+  DRAW.blizzard = function (g, m, cx, cy, t, I, low) {
+    const W = R.W, H = R.H, tm = R.Engine.time / 1000;
+    const gust = 0.55 + 0.45 * F.wxGust(tm * 1.3);
+    g.fillStyle = `rgba(224,232,248,${(0.1 + 0.06 * gust) * I})`;
+    g.fillRect(0, 0, W, H);
+    // 風の白い帯
+    const b = blob('236,242,255'), x2 = lo();
+    if (b && x2) {
+      const L = leadAt(t, cx, cy);
+      for (let k = 0; k < (low ? 3 : 6); k++) {
+        const bw = W * (0.6 + h(k, 91) * 0.6), bh = 110 + h(k, 92) * 140;
+        const x = wrap(h(k, 93) * W * 2 + tm * (380 + 200 * h(k, 94)) - cx * 0.9, W * 2 + bw) - bw;
+        const y = wrap(h(k, 95) * H + tm * 60 - cy * 0.9, H + bh) - bh * 0.5;
+        const d = Math.abs(y + bh / 2 - L.y), near = Math.min(1, Math.max(0.45, (d - 40) / 220));
+        x2.globalAlpha = (0.55 + 0.3 * h(k, 96)) * gust * I * near;
+        x2.drawImage(b, x, y, bw, bh);
+      }
+      loBlit(g);
+    }
+    flakes(g, cx, cy, tm, I, low, { n: 240, r: 2, vx: 300 * gust, vy: 110, sway: 10, a: 0.9, tail: 22 * gust });
+  };
+  DRAW.mist = function (g, m, cx, cy, t, I, low) {
+    const W = R.W, H = R.H, tm = R.Engine.time / 1000;
+    g.fillStyle = `rgba(220,228,244,${0.1 * I})`;
+    g.fillRect(0, 0, W, H);
+    const b = blob('232,238,250'), x2 = lo();
+    if (!b || !x2) return;
+    const L = leadAt(t, cx, cy);
+    const nb = count(12, low, I), span = W + 700, spanY = H + 400;
+    for (let k = 0; k < nb; k++) {
+      const bw = 460 + h(k, 101) * 460, bh = bw * (0.35 + h(k, 102) * 0.15);
+      const x = wrap(h(k, 103) * span + tm * (10 + h(k, 104) * 12) - cx * 0.85, span) - 350;
+      const y = wrap(h(k, 105) * spanY + Math.sin(tm * 0.1 + k) * 16 - cy * 0.85, spanY) - 200;
+      const d = Math.hypot(x - L.x, y - L.y), near = Math.min(1, Math.max(0.35, (d - 60) / 260));
+      x2.globalAlpha = (0.42 + 0.2 * h(k, 106)) * I * near;
       x2.drawImage(b, x - bw / 2, y - bh / 2, bw, bh);
     }
     loBlit(g);
@@ -344,19 +422,32 @@
     g.fillStyle = `rgba(176,196,220,${0.09 * I})`;
     g.fillRect(0, 0, W, H);
     // 雨脚（細く斜めの短い線）
-    const n = count(80, low, I), ox = cx * 0.5, oy = cy * 0.5;
-    g.strokeStyle = '#cfe0f4';
-    g.lineWidth = 1;
+    // 持ち主 2026-10-04 の見直し: 前は細く短く薄すぎて雨と分からなかった → 本数・長さ・濃さを上げ、足もとに跳ねる粒
+    const n = count(130, low, I), ox = cx * 0.5, oy = cy * 0.5;
+    g.strokeStyle = '#d8e8fa';
+    g.lineWidth = 1.5;
     g.beginPath();
-    g.globalAlpha = 0.5 * I;
+    g.globalAlpha = 0.55 * I;
     for (let i = 0; i < n; i++) {
-      const sp = 0.7 + h(i, 1) * 0.6, len = 7 + h(i, 2) * 7;
+      const sp = 0.7 + h(i, 1) * 0.6, len = 12 + h(i, 2) * 12;
       let x = h(i, 3) * (W + 60) - 90 * sp * tm - ox;
       let y = h(i, 4) * (H + 60) + 300 * sp * tm - oy;
       x = wrap(x, W + 60) - 30; y = wrap(y, H + 60) - 30;
       g.moveTo(x, y); g.lineTo(x - len * 0.3, y + len);
     }
     g.stroke();
+    // 地面に跳ねる粒（決まった場所に短く現れて消える小さな横の点）
+    g.fillStyle = '#e4eefa';
+    const ns = count(40, low, I);
+    for (let i = 0; i < ns; i++) {
+      const per = 0.5 + h(i, 71) * 0.4, f = ((tm + h(i, 72) * per) % per) / per;
+      if (f > 0.35) continue;
+      const slot = Math.floor((tm + h(i, 72) * per) / per);
+      const x = wrap(h(i * 7 + slot, 73) * W - cx * 1, W), y = wrap(h(i * 11 + slot, 74) * H - cy * 1, H);
+      g.globalAlpha = (1 - f / 0.35) * 0.6 * I;
+      const w = 3 + f * 10;
+      g.fillRect(x - w / 2, y, w, 1.5);
+    }
     // 岸のしぶき: 画面に入る岸のマスのうち、時間の区切りごとに決まった少しだけが白く上がって消える
     const sc = shoreCells(m), b = blob('236,244,255');
     if (!b || !sc.length) return;
