@@ -74,12 +74,27 @@
   };
 
   // ---------------------------------------------------------------- 出口
-  function areaName(world, x, y) {
+  // 地方の範囲は重なることがある（北の野の範囲が湿原の入口まで掛かり、霧の入口の北口が「北の野」と出た。持ち主 2026-10-04）→
+  //   掛かる範囲の名前のうち、全体（同じ名前の四角の合計）が一番小さい物（今いる地方そのものの名前は、外へ出る出口の行き先にならないので除く）
+  const areaTotal = new WeakMap();
+  function totals(world) {
+    let t = areaTotal.get(world);
+    if (!t) { t = {}; for (const a of (world.meta && world.meta.areas) || []) t[a.name] = (t[a.name] || 0) + a.rect[2] * a.rect[3]; areaTotal.set(world, t); }
+    return t;
+  }
+  function areaName(world, x, y, leaving) {
+    const tot = totals(world);
+    let best = null;
     for (const a of (world.meta && world.meta.areas) || []) {
       const r = a.rect;
-      if (x >= r[0] && y >= r[1] && x < r[0] + r[2] && y < r[1] + r[3]) return a.name;
+      if (!(x >= r[0] && y >= r[1] && x < r[0] + r[2] && y < r[1] + r[3])) continue;
+      if (leaving && String(a.name) === leaving) continue;
+      if (!best || tot[a.name] < tot[best.name]) best = a;
     }
-    return world.name;
+    return best ? best.name : world.name;
+  }
+  function regionName() {
+    try { const m = F._s && F._s.map, rg = m && m.region && R.DB.regions && R.DB.regions[m.region]; return rg ? String(rg.name) : null; } catch (e) { return null; }
   }
   /** 行き先の名前 */
   W.destName = function (to) {
@@ -88,7 +103,7 @@
     if (d.kind === 'world') {
       const sp = d.spawns && d.spawns[to.spawn];
       const loc = R.DB.locations && R.DB.locations[to.spawn];
-      return sp ? areaName(d, sp.x, sp.y) : (loc && loc.name) || d.name || '';
+      return sp ? areaName(d, sp.x, sp.y, regionName()) : (loc && loc.name) || d.name || '';
     }
     return d.name || '';
   };
