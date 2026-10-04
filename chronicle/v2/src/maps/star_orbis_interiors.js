@@ -1,6 +1,6 @@
 // オルビスの屋内 16（WORLD_REDESIGN §5.12・§4.8、STORY_BIBLE §7.8・§8.9）:
 //   宿「星明かり亭」・酒場「星見の杯亭」・道具屋・武具屋・学院の術具店・仕立屋・洗濯場・図書館（司書・学長・試験官・学生セレス）・
-//   天文台（ルカ・望遠鏡・観測録）・守衛室・記録院の出張所・研究者の家 2・町の家 3。
+//   天文台（ルカ・望遠鏡・観測録）・守衛室・記録院の出張所・研究者の家 2・星図描きの家・町の家 3。
 //   どれも R.ContentF.kit.room（上 2 行が壁の立ち上がり、下の中ほどに 1 マスの戸口）。戸口のマスが出口（オルビスの戸の前へ）。
 //   白い石の壁と木の床（学術都市の家）。図書館と天文台は石の床に敷物。
 (function (R) {
@@ -132,6 +132,12 @@
       back: 'house5', meta: { sub: R.T('map.star_orbis_interiors.orbis_house5.meta.sub') },
       objects: [K.prop('bed', 9, 2), K.prop('table', 4, 5), K.prop('chair', 3, 5), K.prop('bookshelf', 1, 2), K.prop('star_dial', 10, 6), K.prop('lantern', 6, 3)],
       npcs: [K.npc('old_scholar', 'npc_star_old_m', 5, 3, { name: R.T('map.star_orbis_interiors.orbis_house5.npcs.0.old_scholar.name'), dir: 's', talk: 'orbis_old_scholar', reward: 'news' })],
+    });
+    // (2026-10-04) 北東の角の星図描きの家（前は戸の無い家だった。持ち主「右上の家の前が通れず入れない」）
+    interior('orbis_house6', R.T('map.star_orbis_interiors.orbis_house6'), 12, 10, {
+      back: 'house6', meta: { sub: R.T('map.star_orbis_interiors.orbis_house6.meta.sub') },
+      objects: [K.prop('bed', 9, 2), K.prop('writing_desk', 4, 3), K.prop('bookshelf', 1, 2), K.prop('telescope', 10, 6), K.prop('book_stack', 2, 6), K.prop('lantern', 6, 3)],
+      npcs: [K.npc('chart_maker', 'npc_star_man', 5, 5, { name: R.T('map.star_orbis_interiors.orbis_house6.npcs.0.chart_maker.name'), dir: 's', talk: [L(R.T('map.star_orbis_interiors.orbis_house6.npcs.0.chart_maker.talk'))], reward: null })],
     });
     interior('orbis_house', R.T('map.star_orbis_interiors.orbis_house'), 12, 10, {
       back: 'house', meta: { sub: R.T('map.star_orbis_interiors.orbis_house.meta.sub') },

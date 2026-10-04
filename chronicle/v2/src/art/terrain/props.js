@@ -295,6 +295,9 @@
     return { r, color, k, kind: spec.kind };
   };
 
+  // 「ここに何かある」のきらめき（glint。持ち主 2026-10-04「地面に落ちている物にヒントがゼロ」）: 絵は field の layers.js（sparkles）が毎フレーム描く
+  //   （脈打つ光の輪と 4 方の星。暗がりの膜の上でも見える）。ここでは当たり（soft = 歩ける）と灯り（暗いマップでも足もとが明るい）だけ
+  if (!DRAW.glint) { META.glint = { soft: true, glow: true, light: L('crystal', 24) }; DRAW.glint = function () { return null; }; DRAW.glint.envOnly = true; }
   // 雪原の描いた物（v2/assets/env/snow/props）: 画像にしかない物を先に登録する（node の検査でも R.DB.props・hd:prop がそろう）
   for (const id of ['firewood', 'frozen_well', 'hay_sled', 'ice_crystal', 'ice_hole', 'sled', 'snow_bank', 'snow_barrel', 'snow_fence', 'snow_fir', 'snow_lamp', 'snow_rock', 'snow_sign', 'stove_pipe']) {
     if (DRAW[id]) continue;

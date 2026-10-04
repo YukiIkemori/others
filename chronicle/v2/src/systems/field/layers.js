@@ -743,10 +743,50 @@
       R.Light.glow(g, x, y, { r: l.gr, color: l.gcolor, core: l.gcolor, halo: l.gr * 3 }, tm);
     }
   }
+  /**
+   * 「ここに何かある」のきらめき（prop 'glint'。持ち主 2026-10-04「地面に落ちている物にヒントがゼロ」）。
+   *   脈打つ光の輪（lighter）＋ゆっくり回る 4 方の星＋小さな光の粒 2 つ。草・石・砂・雪・夜のどこでも見える大きさと明るさ。
+   *   暗がりの膜の上に描く（宝箱のきらめきと同じ）。cond が偽の間（まだ頼まれていない・拾った後）は出さない
+   */
+  function glint(g, o, t, cx, cy, tm, u) {
+    const x = (o.x + 0.5) * t - cx, y = (o.y + 0.62) * t - cy;
+    if (x < -t || y < -t || x > R.W + t || y > R.H + t) return;
+    const ph = (tm + (o.x * 373 + o.y * 911)) / 1000;
+    const k = 0.5 + 0.5 * Math.sin(ph * Math.PI * 1.25);   // 1.6 秒で 1 回
+    g.save();
+    g.globalCompositeOperation = 'lighter';
+    const rh = (12 + 4 * k) * u, gr = g.createRadialGradient(x, y, 0, x, y, rh);
+    gr.addColorStop(0, `rgba(255,245,200,${0.22 + 0.18 * k})`); gr.addColorStop(0.4, `rgba(150,225,255,${0.12 + 0.1 * k})`); gr.addColorStop(1, 'rgba(120,200,255,0)');
+    g.fillStyle = gr; g.beginPath(); g.arc(x, y, rh, 0, Math.PI * 2); g.fill();
+    // 4 方の星（長い 2 本と短い 2 本。ゆっくり回る）
+    const a = ph * 0.6, L1 = (10 + 5 * k) * u, L2 = L1 * 0.55, w = (2.0 + 0.7 * k) * u;
+    g.globalCompositeOperation = 'source-over';
+    g.save(); g.translate(x, y); g.rotate(a);
+    g.fillStyle = '#fffbe0'; g.strokeStyle = 'rgba(30,50,90,0.8)'; g.lineWidth = Math.max(1.2, 1.3 * u); g.lineJoin = 'round';
+    const ray = (len, wd) => { g.beginPath(); g.moveTo(-len, 0); g.lineTo(0, -wd); g.lineTo(len, 0); g.lineTo(0, wd); g.closePath(); g.stroke(); g.fill(); };
+    ray(L1, w); g.rotate(Math.PI / 2); ray(L1, w); g.rotate(Math.PI / 4); ray(L2, w * 0.8); g.rotate(Math.PI / 2); ray(L2, w * 0.8);
+    g.restore();
+    // 中の白い芯と、まわりを回る小さな粒
+    g.fillStyle = '#ffffff'; g.beginPath(); g.arc(x, y, (1.8 + 0.8 * k) * u, 0, Math.PI * 2); g.fill();
+    for (let i = 0; i < 2; i++) {
+      const b = ph * 2.2 + i * Math.PI, rr = (9 + 2 * Math.sin(ph * 3 + i)) * u, kk = 0.5 + 0.5 * Math.sin(ph * 4 + i * 2);
+      g.fillStyle = `rgba(200,245,255,${0.4 + 0.5 * kk})`;
+      g.beginPath(); g.arc(x + Math.cos(b) * rr, y + Math.sin(b) * rr * 0.6 - 2 * u, (0.9 + 0.6 * kk) * u, 0, Math.PI * 2); g.fill();
+    }
+    g.restore();
+  }
+  F._drawGlint = glint;
   function sparkles(g, t, cx, cy) {
     const G = R.Game || {}, m = S.map, tm = R.Engine.time, u = t / 32;
     const opened = (G.chests && G.chests[m.id]) || [];
     for (const o of m.objects || []) {
+      if (o.type === 'prop' && o.id === 'glint') {
+        if ((o.lv || 0) !== (S.lv || 0) && o.lv != null) continue;
+        if (o.cond != null && !R.State.check(o.cond)) continue;
+        if (hiddenAt(m, o.x, o.y)) continue;
+        glint(g, o, t, cx, cy, tm, u);
+        continue;
+      }
       if (o.type !== 'chest' || opened.includes(o.id)) continue;
       if (o.cond != null && !R.State.check(o.cond)) continue;
       if (hiddenAt(m, o.x, o.y)) continue;

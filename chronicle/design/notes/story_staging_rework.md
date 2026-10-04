@@ -184,5 +184,11 @@
 ## 5. 確かめ
 - `node v2/tools/test_story_staging.js`（新規、37 項目）: R11（canLose の床・ev.heal・T5／T2 の負けの道）、R17（光の柱 → 選択 → 札、8 地方の選択への道）、
   終盤のロアの順と分岐（手紙の有無・墨の写しの有無）、イェナ、ビブリアのノア、5 階の夜、エンディング（E2・E4・E6・E8）、引きの台詞が残ること、ボイスの id。
-- そのほか: build、test_story_tiers、test_events、test_core、test_content_final、test_content_mine・star・ash、qa/validate、qa/progress、qa/check_text、test_i18n と i18n_audit（訳の抜け 0）。
-- スクショ: 作業の scratchpad の `story/`（終盤のロア・桟橋のイェナ・ビブリアのノア・3 階のロウェル・5 階の夜・ラザロ・E4・E6・E8 の朝の席）。
+- `tools/test_events_browser.js` の地方の解決の項を新しい順（光の柱 → イベントの続き → 章の札）に合わせた（30/30）。
+- 通ったもの: build（構文 748）、test_story_tiers 73、test_events 182、test_events_browser 30、test_core 129、test_core_contract 51、test_core_wipe 11、
+  test_content_final 49、test_content_mine 118・star 80・ash 63、qa/validate 60、qa/progress 56（筋の閉包で T8 → 終盤 → エンディングまで着く）、
+  qa/playthrough R1（序章 → 森の解決 → T1。新しい章の札の順で通る）、qa/check_text 0 エラー、test_i18n 66、i18n_audit（4 言語とも訳の抜け 0）。
+- qa/check_voice の失敗 16 件（`v_lazaro_archive_02` の文面と script.csv の「伝承戦争」、灯台の `v_otto_tower_*`）は前からのもので、この作業では触っていない。
+- スクショ（作業の scratchpad の `story/`）: 01 終盤のロア（ロウェルの生い立ち）・02 くべられなかった手紙・03 朝の席の伏線（ベルナの家へカメラ）・03a アルノ・
+  04 ファロスの桟橋のイェナ・05 ビブリアのノア・06 3 階の封印の扉・07 5 階の二十年前の夜（暗転の上の字幕）・08 ラザロ・09 E4 ラザロとロウェル・
+  10 E8 朝の席（光の帯）・11 E6 エステル・12 T7 ロウェル・13 R17 選択のあとの章の札。

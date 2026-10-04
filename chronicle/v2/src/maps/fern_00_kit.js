@@ -155,6 +155,8 @@
   K.spring = (id, x, y, o) => Object.assign({ type: 'spring', id, x, y }, o || {});
   K.sign = (x, y, text, o) => Object.assign({ type: 'sign', x, y, text }, o || {});
   K.exam = (x, y, event, o) => Object.assign({ type: 'examine', x, y, event }, o || {});
+  /** 「ここに何かある」のきらめき（prop 'glint'。歩ける・灯りつき。絵は systems/field/layers.js）。cond はまだ拾っていない間だけ真に */
+  K.glint = (x, y, cond, o) => Object.assign({ type: 'prop', id: 'glint', x, y }, cond != null ? { cond } : {}, o || {});
   K.stairs = (x, y, to, o) => Object.assign({ type: 'stairs', x, y, to }, o || {});
   /** 人: talk が文字列ならイベント、配列なら {lines} */
   K.npc = function (id, look, x, y, o) {

@@ -3,7 +3,8 @@
 set -e
 cd "$(dirname "$0")"
 python3 fit.py $1 $2 --apply | tail -2
-python3 rocks.py $1 $2 --write | tail -1
+# 見やすさの作り直し（clean、2026-10-04）の絵は岩を散らさない: 岩の拾い出しは草の暗い所を岩と読み違えて見えない壁を作るので、NOROCKS=1 で飛ばす
+[ -n "$NOROCKS" ] || python3 rocks.py $1 $2 --write | tail -1
 python3 fit.py $1 $2 --apply | tail -1
 python3 objfix.py $1 $2 --apply | cut -c1-200
 python3 check.py $1 $2 $1/check.png

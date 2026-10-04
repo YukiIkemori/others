@@ -35,7 +35,8 @@ print('gain', round(gain, 3), 'target', round(target, 1))
 
 # ---- 明るさの仕上げ（2026-09-29 の見直し: 砂漠・雪原のエリアより暗く濁って、人と道が沈んでいた）:
 #      全体を持ち上げ、平均の明るさのまわりでコントラストを広げ、道（泥・小道・板の道・敷石・泥の原）を少し明るく。霧の青みは夜の光（ambient）のまま
-LIFT, CON, PATH = float(os.environ.get('LIFT', 1.32)), float(os.environ.get('CON', 1.30)), float(os.environ.get('PATHLIFT', 1.2))
+_cl = bool((d.get('meta') or {}).get('clean'))   # 見やすさの作り直し（2026-10-04）の絵は明るく澄んでいるので、持ち上げを控える
+LIFT, CON, PATH = float(os.environ.get('LIFT', 1.12 if _cl else 1.32)), float(os.environ.get('CON', 1.12 if _cl else 1.30)), float(os.environ.get('PATHLIFT', 1.12 if _cl else 1.2))
 _m = float(lum(A).mean()) * LIFT
 A = np.clip(_m + (A * LIFT - _m) * CON, 0, 255)
 _pm = ndimage.gaussian_filter(kron(np.isin(g, list('.:=cs'))).astype(np.float32), T * 0.35)

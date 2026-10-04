@@ -6,9 +6,14 @@ there is placed here with the same events. Map ids m_* (v2/src/maps/marsh_field_
 Chars (lib.py): , peat grass   ; sedge tussocks   " marsh flowers   . mud road   : footpath   s mud flat   = boardwalk / plank bridge
 c old flagstones   ~ open lake water (teal)   w black bog pool   T willow / dead swamp tree   F drowned dead wood   b reed bed
 r boulder / stump   R grey rock ridge   X built (ruins, huts, the manor, fences)."""
-import sys
+import sys, os
 import numpy as np
 from lib import Area, fbm, WALK
+
+# 見やすさの作り直し（持ち主 2026-10-04「ギザギザ」「汚い」「花々とか細かいのいらん」）: CLEAN=1（既定）は散らす物を描かない。
+#   地面の菅・花・泥の斑、ばらまいた黒い池・柳・岩、尾根の下のがれ場を置かず、葦の縁取りは長くつながった帯にする。
+#   案内図（guide.py）は meta smooth で境をなめらかに、指示（mkjob.py）は meta clean で「大きくはっきりした形」を頼む。CLEAN=0 で前の作り
+CLEAN = os.environ.get('CLEAN', '1') != '0'
 
 STONE = (150, 150, 140)
 TIMBER = (120, 88, 58)
@@ -17,6 +22,7 @@ MANOR = (120, 122, 132)
 
 
 def marsh_ground(a, s1, s2, s3, sedge=0.6, flowers=0.72, mud=0.78):
+    if CLEAN: return
     W, H = a.W, a.H
     a.mask_fill(fbm(s1, W, H, 7) > sedge, ';', only=',')
     a.mask_fill(fbm(s2, W, H, 4) > flowers, '"', only=',')
@@ -25,9 +31,14 @@ def marsh_ground(a, s1, s2, s3, sedge=0.6, flowers=0.72, mud=0.78):
 
 def wet(a, seed, thr=0.7, reed=0.45):
     """scattered black pools with broken reed fringes over the open peat (roads and marks are kept)"""
+    if CLEAN: return
     m = (fbm(seed, a.W, a.H, 4) > thr) & np.isin(a.g, list(',;"s')) & ~a.keep
     a.mask_fill(m, 'w')
     reeds_along(a, m, 1, seed=seed + 1, thr=reed)
+
+
+def scatter(a, *k, **kw):
+    return 0 if CLEAN else a.scatter(*k, **kw)
 
 
 def door(a, x, y, w=1, text='a dark ENTRANCE'):
@@ -45,7 +56,7 @@ def reeds_along(a, m, width=1, seed=0, thr=0.35):
     """a broken fringe of reeds on the grass next to the water mask m"""
     from scipy import ndimage
     ring = ndimage.binary_dilation(m, iterations=width) & ~m
-    n = fbm(a.seed * 3 + seed, a.W, a.H, 3)
+    n = fbm(a.seed * 3 + seed, a.W, a.H, 7 if CLEAN else 3)   # clean: long unbroken stretches of reeds, not specks
     a.mask_fill(ring & (n > thr), 'b', only=',;"s')
 
 
@@ -61,7 +72,7 @@ def m_north():
     a.region([(-3, -3), (23.2, -3), (23.2, 2.5), (19, 5.5), (11, 7.5), (3, 7), (-3, 8.5)], 'R', rough=0.7, seed=1, force=True)
     a.region([(28.8, -3), (55, -3), (55, 7.5), (46, 8.5), (37, 6.5), (31, 4.5), (28.8, 2.5)], 'R', rough=0.7, seed=2, force=True)
     ys, xs = np.mgrid[0:H, 0:W]
-    a.mask_fill((fbm(9, W, H, 3) > 0.62) & (ys < 12), 'r', only=',;"s')      # scree at the foot of the ridge
+    if not CLEAN: a.mask_fill((fbm(9, W, H, 3) > 0.62) & (ys < 12), 'r', only=',;"s')      # scree at the foot of the ridge
     # the reedy channel (W -> E) and its reed banks
     ch = a.stroke([(-1, 22), (7, 20.5), (15, 21.5), (22, 20.2), (30, 18.8), (39, 20.5), (46, 19.5), (53, 20.5)], 2.4, 'w', keep=False, wobble=0.5, seed=4, force=True)
     wm = np.zeros((H, W), bool)
@@ -87,10 +98,10 @@ def m_north():
     hut = [(x, y) for x in range(9, 13) for y in range(13, 15)]
     a.mark('hut', hut, "a low PEAT-CUTTER'S HUT with a mossy turf roof and plank walls, stacks of cut dark-brown peat bricks beside it", TIMBER)
     wet(a, 51, 0.7)
-    a.scatter('T', 0.012, only=',;', seed=31, clear=1)
-    a.scatter('r', 0.006, only=',;s', seed=32, clear=1)
+    scatter(a, 'T', 0.012, only=',;', seed=31, clear=1)
+    scatter(a, 'r', 0.006, only=',;s', seed=32, clear=1)
     a.tidy()
-    a.exit('n', 24, 26, {'map': 'world', 'spawn': 'marsh_n'}, 'north')
+    a.exit('n', 24, 26, {'map': 's_road', 'spawn': 'south'}, 'north')   # 山あいの街道（field_star の s_road、2026-10-04）
     a.exit('s', 25, 27, {'map': 'm_west', 'spawn': 'north'}, 'south')
     a.objects += [
         dict(type='sign', x=27, y=6, text='グレイモア湿原\n南 → 水辺の町ロッホ'),
@@ -152,8 +163,8 @@ def m_west():
     a.mark('ruin', ruin, 'a COLLAPSED STILT HUT: broken floor boards and snapped stilts, its sagging thatched roof leaning over the water', (110, 84, 60))
     a.stroke([(21, 30), (25, 30.5), (28, 30.5)], 1.2, ':', seed=9)
     wet(a, 52, 0.72)
-    a.scatter('T', 0.008, only=',;', seed=31, clear=1)
-    a.scatter('r', 0.004, only=',;s', seed=32, clear=1)
+    scatter(a, 'T', 0.008, only=',;', seed=31, clear=1)
+    scatter(a, 'r', 0.004, only=',;s', seed=32, clear=1)
     a.tidy()
     a.exit('n', 19, 21, {'map': 'm_north', 'spawn': 'south'}, 'north')
     a.exit('e', 20, 21, {'map': 'loch', 'spawn': 'gate_w'}, 'loch')
@@ -212,8 +223,8 @@ def m_manor():
     a.stroke([(11, 20.5), (16, 20.5), (22, 19), (30, 18.5), (37.5, 18), (37.5, 16)], 2.0, ':', wobble=0.2, seed=7)
     a.stroke([(22, 19.5), (24, 26), (25, 33), (24, 38), (24, 44.5)], 2.0, ':', wobble=0.2, seed=8)
     wet(a, 53, 0.74)
-    a.scatter('T', 0.014, only=',;', seed=41, clear=1)
-    a.scatter('r', 0.004, only=',;s', seed=42, clear=1)
+    scatter(a, 'T', 0.014, only=',;', seed=41, clear=1)
+    scatter(a, 'r', 0.004, only=',;s', seed=42, clear=1)
     a.tidy()
     a.exit('w', 20, 21, {'map': 'loch', 'spawn': 'gate_e'}, 'loch')
     a.exit('s', 23, 25, {'map': 'm_lotus', 'spawn': 'north'}, 'south')
@@ -263,8 +274,8 @@ def m_fen():
     for (x, y) in [(13, 21), (14, 21), (13, 22), (14, 23), (16, 27), (17, 28), (18, 29)]:
         if a.g[y, x] == '.': a.put(x, y, 'c', True)
     wet(a, 54, 0.68)
-    a.scatter('T', 0.012, only=',;', seed=31, clear=1)
-    a.scatter('r', 0.005, only=',;s', seed=32, clear=1)
+    scatter(a, 'T', 0.012, only=',;', seed=31, clear=1)
+    scatter(a, 'r', 0.005, only=',;s', seed=32, clear=1)
     a.tidy()
     a.exit('n', 20, 22, {'map': 'm_west', 'spawn': 'south'}, 'north')
     a.exit('s', 26, 28, {'map': 'm_bog', 'spawn': 'north'}, 'south')
@@ -299,7 +310,7 @@ def m_lotus():
         a.blob(x, y, rx, ry, 'w', rough=0.3, seed=s_, force=True)
     a.stroke([(-1, 20.5), (8, 22), (15, 25), (20.5, 25.5), (26, 25), (33, 21), (36, 14), (34, 6), (31.5, -1)], 1.6, ':', wobble=0.2, seed=6)
     wet(a, 55, 0.74)
-    a.scatter('T', 0.008, only=',;', seed=41, clear=1)
+    scatter(a, 'T', 0.008, only=',;', seed=41, clear=1)
     a.tidy()
     a.exit('w', 20, 21, {'map': 'm_fen', 'spawn': 'east'}, 'west')
     a.exit('n', 30, 32, {'map': 'm_manor', 'spawn': 'south'}, 'north')
@@ -347,8 +358,8 @@ def m_bog():
     a.stroke([(26, 25), (21, 27), (18.5, 27.5)], 1.2, ':', seed=8)
     a.stroke([(27, 21), (31, 21)], 1.2, ':', seed=9)
     wet(a, 56, 0.68)
-    a.scatter('T', 0.016, only=',;', seed=31, clear=1)
-    a.scatter('r', 0.005, only=',;s', seed=32, clear=1)
+    scatter(a, 'T', 0.016, only=',;', seed=31, clear=1)
+    scatter(a, 'r', 0.005, only=',;s', seed=32, clear=1)
     a.tidy()
     a.exit('n', 25, 27, {'map': 'm_fen', 'spawn': 'south'}, 'north')
     a.exit('s', 25, 27, {'map': 'world', 'spawn': 'marsh_s'}, 'south')['cond'] = {'not': {'slice': True}}
@@ -375,6 +386,7 @@ AREAS = {k: v for k, v in globals().items() if k.startswith('m_') and callable(v
 if __name__ == '__main__':
     for aid in sys.argv[1:]:
         a = AREAS[aid]()
+        if CLEAN: a.meta.update(smooth=0.7, clean=True)
         a.save(aid)
         print(a.ascii())
         sp = list(a.spawns.values())

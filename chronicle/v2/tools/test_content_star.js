@@ -166,7 +166,10 @@ section('4. 筋（閉包・準備・潜入・見回り・命令書・塔・解�
   const w = D.maps.world;
   const ex = (w.exits || []).find((e) => e.to && e.to.map === 's_steps');
   ok('前のワールドの北の街道の東の端に、星見の坂への出口（cond {not:{slice:true}}）と戻りの spawn star_w', !!(ex && ex.cond && ex.cond.not && ex.cond.not.slice === true && w.spawns.star_w));
-  ok('星見の坂の西の端から前のワールドへ戻れる', (D.maps.s_steps.exits || []).some((e) => e.to.map === 'world' && e.to.spawn === 'star_w'));
+  // 2026-10-04: 前のワールドの街道は描いた 1 枚のエリア 山あいの街道（s_road）に替わった（field_star_00_kit.js の付け替え）。ワールドの出口は古い記録のために残る
+  ok('星見の坂の西の端から山あいの街道（s_road）の北の石段へ戻れる', (D.maps.s_steps.exits || []).some((e) => e.to.map === 's_road' && e.to.spawn === 'star'));
+  ok('山あいの街道の北の石段の出口 → 星見の坂（体験版では消える cond {not:{slice:true}}）', (D.maps.s_road.exits || []).some((e) => e.to.map === 's_steps' && e.cond && e.cond.not && e.cond.not.slice === true));
+  ok('北の野の東の端・霧の入口の北の端 → 山あいの街道', (D.maps.f_cross.exits || []).some((e) => e.to.map === 's_road') && (D.maps.m_north.exits || []).some((e) => e.to.map === 's_road'));
 }
 function fakeEv(opts) {
   const G = R.Game;

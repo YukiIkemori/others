@@ -59,9 +59,11 @@
     return { rows: ['XXX', 'XcX', 'XXX'], art: null, blds: [] };
   };
   /** 描いた建物 → 建物の物（当たりは下絵の 'X'。戸口は 1 マス、出て着くのはその真下）。dest に無い建物は入れない家 */
-  K.blds = function (id, dest) {
+  K.blds = function (id, dest) { return K.bldsFrom(K.painted(id), dest); };
+  /** K.painted の結果（rows・blds を手で直した物）から建物の物を作る */
+  K.bldsFrom = function (P, dest) {
     const out = [];
-    for (const b of K.painted(id).blds) {
+    for (const b of P.blds) {
       const o = { type: 'building', id: b.id, x: b.x, y: b.y, w: b.w, h: b.h, wall: 2, roof: 'flat', mat: 'plaster', windows: 2, lamp: false };
       const d = dest[b.id];
       if (d) {
