@@ -14,7 +14,9 @@
   const TARGET_JA = { enemy: R.T('battle.command.TARGET_JA.enemy'), group: R.T('battle.command.TARGET_JA.group'), enemies: R.T('battle.command.TARGET_JA.enemies'), random: R.T('battle.command.TARGET_JA.random'), ally: R.T('battle.command.TARGET_JA.ally'), ally_other: R.T('battle.command.TARGET_JA.ally_other'), ally_any: R.T('battle.command.TARGET_JA.ally_any'), ally_dead: R.T('battle.command.TARGET_JA.ally_dead'), allies: R.T('battle.command.TARGET_JA.allies'), party: R.T('battle.command.TARGET_JA.party'), self: R.T('battle.command.TARGET_JA.self') };
   C.WNAME = WNAME;
   C.TARGET_JA = TARGET_JA;
-  const sfx = (id) => { try { R.Audio.sfx(id); } catch (e) { /* ignore */ } };
+  // 戦闘の一覧の操作音（カーソル・戻る・ブー）は小さく（持ち主 2026-10-04「戦闘中…キンコンカンコン…うるさい」）
+  const UI_TICK = { cursor: 0.4, cancel: 0.55, buzzer: 0.6 };
+  const sfx = (id) => { try { R.Audio.sfx(id, UI_TICK[id] ? { vol: UI_TICK[id] } : undefined); } catch (e) { /* ignore */ } };
   /** 今の入力のボタンの字（キーボード Q・パッド LB など。割り当ての変更も反映。R.Input.prompt） */
   const glyphLabel = (btn) => { try { const p = R.Input.prompt(btn); return (p && p.label) || String(btn).toUpperCase(); } catch (e) { return String(btn).toUpperCase(); } };
 

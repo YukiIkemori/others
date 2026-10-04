@@ -47,6 +47,20 @@
           { type: 'chest', id: 'i_wreck_cargo3', x: 29, y: 19, pool: 'p_T', cond: CARGO });
       }
     }
+    // 島々の桟橋の外洋船（持ち主 2026-10-04「舵を取る場所がわかりづらい」）: 桟橋の板に重ならない海に船の絵、桟橋から船へ向いて調べると舵。
+    //   生成のエリアのファイルの「桟橋の先のマスを調べる isles_boat」は外し、R.Isles.kit.moor の船と舵に替える
+    const MOOR = {
+      i_light: { ship: [22, 30], helm: [[20, 29], [20, 30]], way: { x: 20, y: 29, w: 1, h: 2, dir: 'e' } },
+      i_siren: { id: 'ship_small', ship: [33, 17, 0.67], helm: [[33, 16], [34, 15]], way: { x: 33, y: 16, w: 1, h: 1, dir: 's' }, patch: { cond: 'isles_ship', rect: [32, 17, 1, 1], rows: ['~'] } },
+      i_crab: { ship: [2, 14], helm: [[3, 14], [4, 14], [5, 14]], way: { x: 3, y: 14, w: 3, h: 1, dir: 'n' } },
+      i_wreck: { ship: [26, 29], helm: [[24, 28], [24, 29]], way: { x: 24, y: 28, w: 1, h: 2, dir: 'e' } },
+    };
+    for (const id of Object.keys(MOOR)) {
+      const A = M[id], o = MOOR[id];
+      if (!A || !R.Isles || !R.Isles.kit || !R.Isles.kit.moor || (A.objects || []).some((q) => q.mooredShip)) continue;
+      A.objects = (A.objects || []).filter((q) => q.event !== 'isles_boat').concat(R.Isles.kit.moor(Object.assign({ event: 'isles_boat' }, o)));
+      if (o.patch) A.tilePatches = (A.tilePatches || []).concat([o.patch]);   // 船尾の下の浅瀬（歩けた）を船のあいだだけ海に
+    }
     if (!ph.npcs.some((n) => n.id === 'ferry_hand')) {
       ph.npcs.push({ id: 'ferry_hand', look: 'npc_isles_sailor', name: R.T('map.field_isles_00_kit.link.ferry_hand.name'), x: PH.hand.x, y: PH.hand.y, dir: 'w', move: 'still', pushable: false, talk: 'isles_ferry_hand', reward: 'lead', key: 'ferry_hand', cond: OFF });
     }

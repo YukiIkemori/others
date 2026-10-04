@@ -110,6 +110,7 @@
     // ---- src/maps/field_isles_00_kit.js
     'map.field_isles_00_kit.isles_cave_1': 'Enter Tideroar Cave?',
     'map.field_isles_00_kit.link.confirm': 'Take the ferry across\nto Port Coral?',
+    'map.isles_00_kit.moor.way': 'Ocean Ship\'s Helm',
     'map.field_isles_00_kit.link.wreck_captain.name': 'Merchant Captain',
     'map.field_isles_00_kit.link.ferry_hand.name': 'Ferry Deckhand',
     // ---- src/maps/field_isles_cliff.js

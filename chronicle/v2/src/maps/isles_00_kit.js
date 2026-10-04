@@ -62,6 +62,19 @@
   K.LIGHT_HOLD = { ambient: '#4a5482', k: 0.6, mood: 'dark' };   // (2026-09-30) 船倉: 灯りの外でも床と壁の形が読める明るさに
 
   /** 下絵に合わせた当たり（isles_painted_rows.js）。無ければ海だけの小さな四角（node の読み込みの順が崩れても落ちない） */
+  /**
+   * 外洋船の泊め場（持ち主 2026-10-04「舵を取る場所がわかりづらすぎる」「船の図が桟橋にめり込んでる」）:
+   *   外洋船（isles_ship）の後だけ、桟橋の脇の海に船の絵（prop ship／狭い所は ship_small）を泊め、桟橋から船へ向いて調べると舵（isles_helm）。
+   *   船の絵は桟橋の板に重ならない所（絵の幅: ship は足もとの左 74・右 80 px、帆柱の先は 98 px 上。ship_small は 0.72 倍。dx で半マス単位にずらす）。
+   *   道しるべ（wayfind.js の o.way）: 舵のマスに灯りの脈と「→ 外洋船の舵」の札（近いとき）。
+   *   o = {ship: [x, y, dx?], id?: 'ship'|'ship_small', helm: [[x, y], ...], way: {x, y, w, h, dir}, event?: 'isles_helm'} → 物の列
+   */
+  K.moor = function (o) {
+    const cond = 'isles_ship', ev = o.event || 'isles_helm';
+    const out = [Object.assign({ type: 'prop', id: o.id || 'ship', x: o.ship[0], y: o.ship[1], cond, mooredShip: true }, o.ship[2] ? { dx: o.ship[2] } : {})];
+    o.helm.forEach(([x, y], i) => out.push(Object.assign({ type: 'examine', x, y, event: ev, cond, helm: true }, i === 0 && o.way ? { way: Object.assign({ label: R.T('map.isles_00_kit.moor.way') }, o.way) } : {})));
+    return out;
+  };
   K.painted = function (id) {
     const p = I.PAINTED && I.PAINTED[id];
     if (p) return { rows: p.rows.slice(), art: Object.assign({}, p.art), blds: (p.blds || []).map((b) => Object.assign({}, b)) };

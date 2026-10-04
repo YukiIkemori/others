@@ -147,12 +147,12 @@ function runBosses(R, prof, n, seed) {
   return out;
 }
 
-function main() {
+function main(Rin) {   // Rin: 読み込み済みの R（比べるための差し替えに使う。ふだんは省く）
   const argv = process.argv.slice(2);
   const arg = (k, d) => { const i = argv.indexOf(k); return i >= 0 ? argv[i + 1] : d; };
   const n = +arg('--n', argv.includes('--quick') ? 16 : 40);
   const seed = arg('--seed', '20261004');
-  const R = require('./lib/load')({ quiet: true });
+  const R = Rin || require('./lib/load')({ quiet: true });
   let fails = 0;
   const S = staticChecks(R);
   console.log('sim_elements: 魔物の属性（weak > 1 / res 0〜1 / null 0 / abs < 0）');
@@ -205,5 +205,5 @@ function main() {
   return result;
 }
 
-module.exports = { staticChecks, countElems, zoneCoverage, PROFILES, applyProfile, isBoss };
+module.exports = { main, staticChecks, countElems, zoneCoverage, PROFILES, applyProfile, isBoss };
 if (require.main === module) main();

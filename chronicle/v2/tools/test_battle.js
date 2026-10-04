@@ -938,4 +938,24 @@ section('見えない挑発: 城壁の構え（3 ラウンド、狙われる重�
   ok('using the tech: cover status shown, taunt set silently', ev2.some((e) => e.t === 'status' && e.s === 'cover') && !ev2.some((e) => e.t === 'status' && e.s === 'taunt') && u2.taunt && u2.taunt.until === 3, ev2.map((e) => e.t + (e.s ? ':' + e.s : '')));
 }
 
+section('属性の釣り合い（2026-10-04 持ち主「炎魔法強すぎ」。tools/sim_elements.js の数え）');
+{
+  const { staticChecks } = require('./sim_elements');
+  const S = staticChecks(R);
+  for (const c of S.checks) ok(c.msg, c.ok);
+  // 火の魔物・火のボスは火を受けつけない（無効か吸収）。火の地方の雑魚の全部が無効ではない（ほかの手が要るが、詰まない）
+  const fp = (id) => DB.monsters[id] && DB.monsters[id].elem.fire <= 0;
+  ok('fire-proof: salamanders, fire imps, lava beast (absorb), hellhound, sun orb, will-o-wisps', ['salamander_1', 'salamander_3', 'salamander_5', 'imp_3', 'imp_4', 'b_lavabeast', 'b_hellhound', 'b_sun_orb', 'wisp_1'].every(fp));
+  ok('lava beast and the fiercest fire imp absorb fire', DB.monsters.b_lavabeast.elem.fire < 0 && DB.monsters.imp_4.elem.fire < 0 && DB.monsters.salamander_5.elem.fire < 0);
+  const ashMobs = ['orc_1', 'chimera_1', 'gargoyle_1', 'imp_1'];
+  ok('ash wastes keep targets fire still hurts (not the whole roster immune)', ashMobs.every((id) => DB.monsters[id].elem.fire == null || DB.monsters[id].elem.fire > 0));
+  ok('story hints still hold: yeti, paper eater, ice giant, roots stay weak to fire', ['yeti_1', 'b_pageeater', 'b_icegiant', 'b_root'].every((id) => DB.monsters[id].elem.fire > 1));
+  // 調べる: 無効と吸収を知らせる
+  const eng = engine({ mons: ['salamander_4', 'imp_4'] });
+  const t1 = drainAll(eng.scan(eng.mons[0])).map((e) => e.text).join('\n');
+  const t2 = drainAll(eng.scan(eng.mons[1])).map((e) => e.text).join('\n');
+  ok('scan shows fire null (無効) and absorb (吸収)', /無効：火/.test(t1) && /吸収：火/.test(t2) && !/無効/.test(t2), [t1, t2]);
+  for (const L of ['ja', 'en', 'ko', 'zh-Hans', 'zh-Hant']) ok(`scan null line exists in ${L}`, R.I18n.has('sys.battle_core.scan.m_4', L));
+}
+
 done('test_battle');

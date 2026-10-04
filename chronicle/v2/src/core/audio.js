@@ -51,6 +51,9 @@
 //   {bed: {url, loopStart, loopEnd}}. sfx(id) plays a random decoded take (never the last one) at gain 1 through the
 //   synth's per-sound path, the synth def lending only its S.duck(); not decoded yet / no takes → the synth. All takes
 //   are decoded in the background after init. ambience(spec) plays the bed's file looped when listed (else procedural).
+//   Calm limits on every sfx() (2026-10-04): SFX_GAIN × for the ringing bell / glass ids, DROP_TAKES (takes never picked),
+//   the same id at most once per SFX_GAP (0.12 s) and SFX_SAME_MAX (2) at once, SFX_VOICES (4) effects in all (oldest cut).
+//   R.Audio._sfxStats {played, skipped} / _sfxVoices() / SFX_LIMITS for QA.
 //   R.Audio.mediaInfo() → which sfx / beds are recorded vs synthesised (also in debug().media).
 //   R.Audio.battleVoiceId(id) — any battle clip by id (no duck, replaces only the previous battle voice).
 //   R.Audio.battleVoice(kind[, gender]) — the hero's battle shout v_hero_<m|f>_<kind>_<n> (random clip, no duck;
@@ -1252,8 +1255,21 @@
   let jin = null;        // active jingle {pb, resolve, end}
   const stack = [];      // pushBGM stack of {id, pos}
   const SILENT_SFX = { confirm: true };   // 鳴らさない効果音（下の sfx()）
+  // 戦闘を静かに（持ち主 2026-10-04「戦闘中、ずっとキンコンカンコン様々なエフェクトがなりっぱなしでうるさい」）。
+  //   鐘・グラスの響きの残る効果音（録音も合成も）は音量を下げる（× SFX_GAIN）。
+  //   よく鳴る物ほど下げる: magic（術を唱えるたび。敵も）、heal（回復の数字ごと）、item（道具を使うたび）、buff / debuff
+  const SFX_GAIN = {
+    heal: 0.5, magic: 0.5, item: 0.5, buff: 0.55, debuff: 0.6, status: 0.7, glimmer: 0.75, holy: 0.7, light: 0.7,
+    death: 0.6, bell: 0.6, revive: 0.75, sleep: 0.7, teleport: 0.7, golden: 0.8, menu_open: 0.5, arrow: 0.75, enemy_die: 0.8,
+  };
+  // 鳴らさない取り直し: 澄んだ音程で長く鳴り残る物（ほかの取り直しが鳴る）。enemy_die.0 は F6 の響きが 0.3 秒後も −5 dB
+  const DROP_TAKES = { 'enemy_die.0': true };
+  // 重なりの上限: 同じ id は SFX_GAP 秒の内は 1 回、同じ id は SFX_SAME_MAX まで、全部で SFX_VOICES まで（古い物から消す）
+  const SFX_GAP = 0.12, SFX_SAME_MAX = 2, SFX_VOICES = 4;
   const vols = { bgm: 0.6, sfx: 0.7, voice: 0.8, amb: 0.7 };   // amb: 環境音（下の ambience の節）
   const liveSfx = {}, lastSfx = {}, warned = {};
+  let allSfx = [];   // 鳴っている効果音（全部の id。SFX_VOICES）
+  const sfxStats = { played: {}, skipped: {} };   // QA: id ごとの鳴った・飛ばした回数（R.Audio._sfxStats）
 
   // ------------------------------------------------ recorded media (BGM files, voice lines)
   // window.RPG_MEDIA = {bgm:{id:{src,...}}, voice:{id:{src}}} is written by tools/build.js (data: URLs
@@ -1307,7 +1323,7 @@
     const n = Object.keys(t).length;
     if (t !== takeSrc || n !== takeN) {
       takeSrc = t; takeN = n; takeIdx = {};
-      for (const k of Object.keys(t).sort()) { const m = /^(.+)\.(\d+)$/.exec(k); if (m) (takeIdx[m[1]] = takeIdx[m[1]] || []).push(k); }
+      for (const k of Object.keys(t).sort()) { const m = /^(.+)\.(\d+)$/.exec(k); if (m && !DROP_TAKES[k]) (takeIdx[m[1]] = takeIdx[m[1]] || []).push(k); }
     }
     return takeIdx[id] || [];
   }
@@ -1578,20 +1594,35 @@
     sfx(id, o) {
       // 決定の音（confirm）は鳴らさない（持ち主 2026-10-04「コマンドを押す度チンコン音がするのが邪魔」）。
       //   当たりの手ごたえが要る所（ミニゲーム）は confirm_soft を使う
-      if (SILENT_SFX[id]) return;
+      const skip = () => { sfxStats.skipped[id] = (sfxStats.skipped[id] || 0) + 1; };
+      if (SILENT_SFX[id]) return skip();
       if (!mx || !(running() || Date.now() - initAt < 1500)) return;
       const def = sfxDef(id);
       const rid = recSfxId(id, def);
       if (!def && !rid) { warnOnce('sfx:' + id, `audio: unknown sfx '${id}'`); return; }
       const now = ctx.currentTime;
-      if (lastSfx[id] != null && now - lastSfx[id] < 0.03 && now >= lastSfx[id]) return;
+      // 同じ音の連打は 1 つに（数字のポップ・連続の当たり・カーソルの押しっぱなし）
+      if (lastSfx[id] != null && now - lastSfx[id] < SFX_GAP && now >= lastSfx[id]) return skip();
       const take = rid ? pickTake(rid) : null;
       if (!take && !def) return;   // a recorded-only id whose takes are still decoding
       lastSfx[id] = now;
+      const g = SFX_GAIN[id] != null ? SFX_GAIN[id] : rid && SFX_GAIN[rid] != null ? SFX_GAIN[rid] : 1;
+      if (g !== 1) o = Object.assign({}, o, { vol: (o && o.vol != null ? Math.max(0, +o.vol || 0) : 1) * g });
       const list = (liveSfx[id] = (liveSfx[id] || []).filter((x) => x.end > now));
-      if (list.length >= 3) list.shift().kill(now);
-      list.push(take ? playRecSfx(mx, take.buf, now + 0.005, o, def) : playSfx(mx, def, now + 0.005, o));
+      while (list.length >= SFX_SAME_MAX) list.shift().kill(now);
+      allSfx = allSfx.filter((x) => x.end > now && !x.killed);
+      while (allSfx.length >= SFX_VOICES) { const x = allSfx.shift(); x.killed = true; x.kill(now); }
+      const inst = take ? playRecSfx(mx, take.buf, now + 0.005, o, def) : playSfx(mx, def, now + 0.005, o);
+      list.push(inst);
+      allSfx.push(inst);
+      sfxStats.played[id] = (sfxStats.played[id] || 0) + 1;
     },
+    /** QA: {played: {id: n}, skipped: {id: n}} since the page opened (skipped = silenced, or the same id within SFX_GAP) */
+    get _sfxStats() { return { played: Object.assign({}, sfxStats.played), skipped: Object.assign({}, sfxStats.skipped) }; },
+    /** QA: effects sounding now (all ids; at most SFX_VOICES) */
+    _sfxVoices() { const now = ctx ? ctx.currentTime : 0; return allSfx.filter((x) => x.end > now && !x.killed).length; },
+    /** the calm-battle limits (tests) */
+    SFX_LIMITS: { gap: SFX_GAP, sameMax: SFX_SAME_MAX, voices: SFX_VOICES, gain: Object.assign({}, SFX_GAIN), dropTakes: Object.keys(DROP_TAKES) },
     /** tests: the take sfx(id) would play now (advances the no-repeat memory) → key | null (synth); the live instances of id */
     _sfxPick(id) { const rid = recSfxId(id, sfxDef(id)); const c = rid ? pickTake(rid) : null; return c ? c.key : null; },
     _duckGain() { return mx ? mx.duckG.gain.value : null; },

@@ -83,6 +83,28 @@
   const SW = { teal: ['#0e3a3a', '#1a6a6a', '#3aa8a0', '#8ae8d8'], red: ['#3a0e0e', '#6a1a18', '#a83a2a', '#e87a5a'], blue: ['#0e1a3a', '#1a2e6a', '#3a5ab0', '#8aa8f0'], gold: ['#3a2a08', '#7a5a14', '#c09a2c', '#f0d860'], green: ['#0e2a10', '#1e5a20', '#3a9a3a', '#8ae07a'] };
 
   // ------------------------------------------------------------------ 物の形（B = RZ.Builder、o = opts、f = コマの名前）→ {light:[x,y], cyan?, big?, small?}
+  // 外洋船（ship）の絵。k = 大きさ（1 = 帆柱の先まで約 3 マス、幅約 4.8 マス）。座標をそのまま k 倍する
+  function drawShip(B0, k) {
+    const sc = (pts) => pts.map((p) => [p[0] * k, p[1] * k]);
+    const B = k === 1 ? B0 : {
+      poly: (pts, m, z, o) => B0.poly(sc(pts), m, z, o && o.bevel ? Object.assign({}, o, { bevel: o.bevel * k }) : o),
+      cap: (x1, y1, x2, y2, r1, r2, m, z, o) => B0.cap(x1 * k, y1 * k, x2 * k, y2 * k, r1 * k, r2 * k, m, z, o),
+    };
+    const m = mats(), RZ = R.Hd.RZ;
+    const hull = RZ.mat({ keys: ['#120a06', '#26160c', '#3e2616', '#583a22', '#724e30'], n: 6, tex: 1, tsx: 0.1, tsy: 1.4 });
+    const deck = RZ.mat({ keys: ['#2c1c10', '#4a321e', '#6a4c30', '#8a6a46', '#a88660'], n: 6, tex: 1.4, tsx: 0.08, tsy: 1.2 });
+    B.poly([[-66, 0], [50, 0], [78, -12], [58, -20], [-64, -20], [-74, -10]], hull, 0, { bevel: 5, ny: 0.5 });
+    B.poly([[-66, -16], [52, -16], [80, -26], [56, -40], [-62, -40], [-74, -28]], deck, 0.1, { bevel: 3, ny: -0.8 });
+    B.poly([[-48, -22], [-20, -22], [-20, -40], [-48, -40]], hull, 0.2, { bevel: 2, ny: 0.2 });
+    B.poly([[-50, -40], [-18, -40], [-22, -48], [-46, -48]], m.stone, 0.25, { bevel: 1.5, ny: -0.8 });
+    B.poly([[-40, -30], [-30, -30], [-30, -25], [-40, -25]], m.glowW, 0.26, { bevel: 0.2 });
+    B.cap(14, -28, 14, -98, 2.2, 1.6, m.wood, 0.3); B.cap(-22, -76, 50, -80, 1.1, 1.1, m.wood, 0.31); B.cap(-18, -78, 46, -82, 3.4, 2.6, m.linen, 0.32);
+    B.cap(14, -98, 72, -24, 0.35, 0.35, m.rope, 0.29); B.cap(14, -98, -60, -26, 0.35, 0.35, m.rope, 0.29);
+    B.poly([[11, -90], [17, -90], [17, -83], [11, -83]], m.glowW, 0.34, { bevel: 0.2 });
+    for (let i = 0; i < 3; i++) B.cap(-2 + i * 10, -26, -2 + i * 10, -33, 4.5, 4.5, m.barrel, 0.22 + i * 0.01);
+    return { light: [14 * k, -86 * k] };
+  }
+
   const DRAW = {
     barrel(B) { const m = mats(), g = B.group(); B.cap(0, -3, 0, -13, 6.5, 6.5, m.barrel, 0, { g }); B.ell(0, -16, 6.2, 2.4, m.barrel, 0.05, { g: B.group(), shadeOff: -1, bulge: 0.2 }); [-5, -13].forEach((by) => B.cap(-6.6, by, 6.6, by, 0.9, 0.9, m.iron, 0.02)); },
     crate(B) { const m = mats(); B.poly([[-8, 0], [8, 0], [8, -12], [-8, -12]], m.crate, 0, { bevel: 1.5 }); B.poly([[-8, -12], [8, -12], [6, -18], [-6, -18]], m.crate, 0.01, { bevel: 1.2, ny: -0.8, g: B.group() }); B.cap(-7, -1.5, 7, -10.5, 0.8, 0.8, m.crate, 0.02, { shadeOff: 1 }); },
@@ -196,21 +218,9 @@
     stall(B) { const m = mats(); [-14, 14].forEach((x) => B.cap(x, 0, x, -26, 1, 1, m.wood, 0)); B.poly([[-17, -10], [17, -10], [17, -16], [-17, -16]], m.crate, 0.1, { bevel: 1.5 }); for (let i = 0; i < 5; i++) B.ell(-11 + i * 5.5, -18, 2.6, 1.6, i % 2 ? m.fish : m.fruit, 0.2 + i * 0.01); for (let i = 0; i < 6; i++) B.poly([[-18 + i * 6, -26], [-12 + i * 6, -26], [-12 + i * 6, -33], [-18 + i * 6, -33]], i % 2 ? m.cloth : m.linen, 0.3, { bevel: 1, ny: -0.6 }); },
     net(B) { const m = mats(); for (let i = 0; i < 6; i++) B.ell(-8 + i * 3, -2 - (i % 2), 4, 2, m.rope, 0.1 + i * 0.01, { bulge: 0.3 }); },
     rowboat(B) { const m = mats(); B.poly([[-24, -2], [22, -2], [28, -9], [20, -14], [-22, -14], [-28, -8]], m.barrel, 0, { bevel: 4, ny: -0.3 }); B.poly([[-19, -5], [18, -5], [22, -9], [17, -12], [-18, -12], [-22, -8]], m.dark, 0.1, { bevel: 2 }); [-8, 6].forEach((x) => B.rect(x, -13, 3, 9, m.crate, 0.2)); },
-    ship(B) {
-      const m = mats(), RZ = R.Hd.RZ;
-      const hull = RZ.mat({ keys: ['#120a06', '#26160c', '#3e2616', '#583a22', '#724e30'], n: 6, tex: 1, tsx: 0.1, tsy: 1.4 });
-      const deck = RZ.mat({ keys: ['#2c1c10', '#4a321e', '#6a4c30', '#8a6a46', '#a88660'], n: 6, tex: 1.4, tsx: 0.08, tsy: 1.2 });
-      B.poly([[-66, 0], [50, 0], [78, -12], [58, -20], [-64, -20], [-74, -10]], hull, 0, { bevel: 5, ny: 0.5 });
-      B.poly([[-66, -16], [52, -16], [80, -26], [56, -40], [-62, -40], [-74, -28]], deck, 0.1, { bevel: 3, ny: -0.8 });
-      B.poly([[-48, -22], [-20, -22], [-20, -40], [-48, -40]], hull, 0.2, { bevel: 2, ny: 0.2 });
-      B.poly([[-50, -40], [-18, -40], [-22, -48], [-46, -48]], m.stone, 0.25, { bevel: 1.5, ny: -0.8 });
-      B.poly([[-40, -30], [-30, -30], [-30, -25], [-40, -25]], m.glowW, 0.26, { bevel: 0.2 });
-      B.cap(14, -28, 14, -98, 2.2, 1.6, m.wood, 0.3); B.cap(-22, -76, 50, -80, 1.1, 1.1, m.wood, 0.31); B.cap(-18, -78, 46, -82, 3.4, 2.6, m.linen, 0.32);
-      B.cap(14, -98, 72, -24, 0.35, 0.35, m.rope, 0.29); B.cap(14, -98, -60, -26, 0.35, 0.35, m.rope, 0.29);
-      B.poly([[11, -90], [17, -90], [17, -83], [11, -83]], m.glowW, 0.34, { bevel: 0.2 });
-      for (let i = 0; i < 3; i++) B.cap(-2 + i * 10, -26, -2 + i * 10, -33, 4.5, 4.5, m.barrel, 0.22 + i * 0.01);
-      return { light: [14, -86] };
-    },
+    ship(B) { return drawShip(B, 1); },
+    // 小さな島の狭い桟橋に泊める外洋船（同じ船を 0.72 倍。人魚の歌う岩の桟橋は東が狭い）
+    ship_small(B) { return drawShip(B, 0.72); },
     crystal(B, o) { const m = mats(), r = R.Hd.RZ.rng((o.v || 0) + 3); for (let i = 0; i < 5; i++) { const a = (r() - 0.5) * 1.2, h = 10 + r() * 16, x = (r() - 0.5) * 12; B.poly([[x - 3, 0], [x + 3, 0], [x + 2 + Math.sin(a) * h, -h * 0.8], [x + Math.sin(a) * h, -h], [x - 2 + Math.sin(a) * h, -h * 0.8]], m.crystal, 0.1 + i * 0.01, { bevel: 2 }); } return { light: [0, -12], cyan: true }; },
     tent(B) { const m = mats(); B.poly([[-18, 0], [18, 0], [0, -26]], m.linen, 0, { bevel: 3, ny: -0.2 }); B.poly([[-4, 0], [4, 0], [0, -12]], m.dark, 0.1); },
     grave(B) { const m = mats(); B.poly([[-6, 0], [6, 0], [6, -14], [3, -18], [-3, -18], [-6, -14]], m.stone, 0, { bevel: 2 }); },
@@ -245,7 +255,7 @@
     switch: { soft: true, frames: ['off', 'on'] }, songstone: { solid: true, glow: true, light: L('crystal', 48) }, talestone: { solid: true, shadow: 'blob' }, footprint: { soft: true, glow: true },
     beacon: { light: L('fire', 220), glow: true }, stairs_up: {}, stairs_down: {}, door: {},
     // 足した物
-    board: { solid: true }, bollard: { solid: true }, stall: { solid: true }, net: { soft: true }, rowboat: { solid: true }, ship: { solid: true, light: L('lamp', 80) },
+    board: { solid: true }, bollard: { solid: true }, stall: { solid: true }, net: { soft: true }, rowboat: { solid: true }, ship: { solid: true, light: L('lamp', 80) }, ship_small: { solid: true, light: L('lamp', 60) },
     crystal: { solid: true, glow: true, light: L('crystal', 90) }, torch: { solid: true, frames: ['off', 'on'], light: L('fire', 90) }, planter: { solid: true },
     tent: { solid: true }, grave: { solid: true }, hay: { solid: true }, rock: { solid: true, shadow: 'blob' },
     tree: { solid: true, shadow: 'long' }, pine: { solid: true, shadow: 'long' }, tree_giant: { solid: true, shadow: 'long' }, bush: { solid: true }, roots: { solid: true },

@@ -109,6 +109,7 @@
     // ---- src/maps/field_isles_00_kit.js
     'map.field_isles_00_kit.isles_cave_1': '물울음 동굴에 들어갈까요?',
     'map.field_isles_00_kit.link.confirm': '정기선으로 항구 도시 코랄에\n건너갈까요?',
+    'map.isles_00_kit.moor.way': '원양선의 키',
     'map.field_isles_00_kit.link.wreck_captain.name': '상선의 선장',
     'map.field_isles_00_kit.link.ferry_hand.name': '정기선 수부',
     // ---- src/maps/field_isles_cliff.js

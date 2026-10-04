@@ -1,6 +1,8 @@
 {
   "id": "miss",
   "category": "battle",
+  "keepSynth": true,
+  "keepSynthWhy": "2026-10-04 battle calm: both takes whistle at F6/A#6 (81–85 % tonal); the synth miss is a noise whoosh",
   "files": [
     "miss.0.ogg",
     "miss.1.ogg"

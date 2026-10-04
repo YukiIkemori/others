@@ -7,7 +7,9 @@
   const Bt = (R.Battle = R.Battle || {});
   const _ = (Bt._ = Bt._ || {});
   const Tg = (_.target = {});
-  const sfx = (id) => { try { R.Audio.sfx(id); } catch (e) { /* ignore */ } };
+  // 戦闘の一覧の操作音（カーソル・戻る・ブー）は小さく（持ち主 2026-10-04「戦闘中…キンコンカンコン…うるさい」）
+  const UI_TICK = { cursor: 0.4, cancel: 0.55, buzzer: 0.6 };
+  const sfx = (id) => { try { R.Audio.sfx(id, UI_TICK[id] ? { vol: UI_TICK[id] } : undefined); } catch (e) { /* ignore */ } };
 
   // 味方を選ぶ相手の種類（ally_dead は倒れた人だけ）と、全員に当たる種類
   const PARTY = { ally: 1, ally_other: 1, ally_dead: 1, ally_any: 1, allies: 1, party: 1 };

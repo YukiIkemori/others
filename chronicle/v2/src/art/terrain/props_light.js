@@ -182,7 +182,7 @@
     return (envMeta[id] = Object.assign({}, m || {}, { light: Object.assign({}, d.light, tune) }));
   };
   // 物の灯りの芯の位置（DRAW の light の値。焼かずに知るため、よく使う物は表で持つ）
-  const ANCHOR = { lamp_post: [5, -46], lantern: [0, -7], table: [4, -12], stove: [0, -6], mushroom_glow: [0, -5], crystal: [0, -12], torch: [0, -13], beacon: [0, -50], songstone: [0, -18], ship: [14, -86], firefly: [0, -12], snow_lamp: [7, -32], ice_crystal: [0, -8],
+  const ANCHOR = { lamp_post: [5, -46], lantern: [0, -7], table: [4, -12], stove: [0, -6], mushroom_glow: [0, -5], crystal: [0, -12], torch: [0, -13], beacon: [0, -50], songstone: [0, -18], ship: [14, -86], ship_small: [10, -62], firefly: [0, -12], snow_lamp: [7, -32], ice_crystal: [0, -8],
     candelabra: [0, -35], fireplace: [16, -10], wall_sconce: [-3, -27],
     star_lamp: [0, -35], wisp_lamp: [7, -28], lamp_pillar: [0, -29], glow_plankton: [0, -4], lava_glow: [0, -4] };
   function anchorOf(id, s) { const a = ANCHOR[id] || [0, -10]; return [a[0] * s, a[1] * s]; }

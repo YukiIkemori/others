@@ -1,6 +1,8 @@
 {
   "id": "attack",
   "category": "battle",
+  "keepSynth": true,
+  "keepSynthWhy": "2026-10-04 battle calm: every take carries a pitched knock (C5–E5, 90–97 % of the energy in 3 narrow peaks) — 12–18 per battle read as コン; the synth swish is noise only",
   "files": [
     "attack.0.ogg",
     "attack.1.ogg",

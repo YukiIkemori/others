@@ -23,7 +23,7 @@
       // 渡り板の下の外洋船（乗ると、ネレイの夜の桟橋へ戻る。島々へは桟橋の舵から）
       //   渡り板は 2 マス幅（x 28〜29）。1 つの戸口を w 2 で置く（2 つ並べると入口の印 wayfind が 2 つ出る。2026-10-01 の砂の王墓と同じ）
       O.push({ type: 'door', x: 28, y: 25, w: 2, look: 'none', to: { map: 'nerei', spawn: 'pier_end' }, confirm: R.T('map.isles_ghostship.confirm') });
-      O.push(K.prop('ship', 31, 26));
+      O.push(K.prop('ship', 32, 26));   // (2026-10-04) 31 では帆綱と船尾が渡り板（x 28〜29）の先にかかっていた。1 マス東の海へ
       for (const [x, y] of [[18, 15], [32, 14], [42, 14]]) O.push(K.exam(x, y, 'isles_ghost_mast'));   // 描いた折れた帆柱（下絵 gen3 の位置）
       O.push(K.exam(10, 14, 'isles_ghost_skylight'));
       O.push(K.chest('ghost_ship_1_c1', 8, 9, { pool: 'p_T' }), K.chest('ghost_ship_1_c2', 46, 15, { pool: 'p_T' }));

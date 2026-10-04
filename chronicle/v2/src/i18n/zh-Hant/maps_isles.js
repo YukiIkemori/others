@@ -110,6 +110,7 @@
     // ---- src/maps/field_isles_00_kit.js
     'map.field_isles_00_kit.isles_cave_1': '要進入潮鳴洞窟嗎？',
     'map.field_isles_00_kit.link.confirm': '要搭班船，\n前往科拉爾港嗎？',
+    'map.isles_00_kit.moor.way': '遠洋船的舵',
     'map.field_isles_00_kit.link.wreck_captain.name': '商船船長',
     'map.field_isles_00_kit.link.ferry_hand.name': '班船的水手',
     // ---- src/maps/field_isles_cliff.js

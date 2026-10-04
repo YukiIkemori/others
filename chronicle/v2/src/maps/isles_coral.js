@@ -24,9 +24,9 @@
     O.push(K.sign(20, 3, R.T('map.isles_coral.sign')));   // 看板・灯りが壁・崖・岩のマスに埋まっていたので床へ（tools/qa/check_props.js、2026-10-01）
     // 後家の壁（いちばん下の段の擁壁。岸壁から調べる）
     for (const x of [28, 31, 34, 37]) O.push(K.exam(x, 43, 'coral_widows_wall'));
-    // 真ん中の桟橋: 外洋船の舵（船が無いうちは空の桟橋）と、つないだ船
-    for (const x of [18, 19]) O.push(K.exam(x, 58, 'isles_helm'));
-    O.push(K.prop('ship', 21, 56, { cond: 'isles_ship' }));
+    // 真ん中の桟橋（x 18〜19、y 51〜58）: 外洋船（isles_ship の後）は桟橋の東の海に泊める。桟橋の東の縁から船へ向いて調べると舵。
+    //   (2026-10-04) 前は船の絵（21,56）の左が桟橋の板にかぶり、舵は桟橋の先のマス（船と離れていた）。船が無いうちは何も無い桟橋
+    O.push(...IK.moor({ ship: [22, 56], helm: [[20, 55], [20, 56], [20, 57]], way: { x: 20, y: 55, w: 1, h: 3, dir: 'e' } }));
     // 定期船の T 字の桟橋の先: ファロスへ戻る乗り場（はい／いいえ）
     O.push({ type: 'door', x: 36, y: 60, look: 'none', to: { map: 'pharos', spawn: 'ferry' }, confirm: R.T('map.isles_coral.confirm') });
     O.push(K.prop('ship', 38, 62));

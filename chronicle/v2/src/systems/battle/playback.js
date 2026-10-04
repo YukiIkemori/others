@@ -7,7 +7,13 @@
   const Bt = (R.Battle = R.Battle || {});
   const _ = (Bt._ = Bt._ || {});
   const P = (_.play = {});
-  const sfx = (id) => { try { R.Audio.sfx(id); } catch (e) { /* ignore */ } };
+  const sfx = (id, o) => { try { R.Audio.sfx(id, o); } catch (e) { /* ignore */ } };
+  // 戦闘を静かに（持ち主 2026-10-04「戦闘中、ずっとキンコンカンコン…うるさい」）:
+  //   回復・強化・弱体の音は 1 つの行動で 1 回（全体の術で的の数だけ鳴らさない）。状態が解けた時は鳴らさない（字だけ）
+  function sfxOnce(ctx, id) {
+    if (ctx && ctx.act) { const m = (ctx.sndOnce = ctx.sndOnce && ctx.sndOnce.act === ctx.act ? ctx.sndOnce : { act: ctx.act }); if (m[id]) return; m[id] = true; }
+    sfx(id);
+  }
 
   const WFX = { sword: 'slash', greatsword: 'smash', dagger: 'thrust', bow: 'shoot', staff: 'smash' };
   const ELEMS = ['fire', 'water', 'ice', 'thunder', 'wind', 'earth', 'light', 'dark'];
@@ -578,7 +584,8 @@
       }
     }
     P.pop(st, e.uid, (e.n | 0).toLocaleString('en-US'), e.crit ? 'crit' : mpDmg ? 'mp' : 'dmg', e.crit ? { tag: R.T('battle.playback.dmg.tag') } : e.weak ? { tag: R.T('battle.playback.dmg.tag_2'), tagColor: '#f4a07c' } : {});
-    sfx(u.side === 'party' ? 'hurt' : e.crit ? 'crit' : 'hit');
+    // 1 つの行動の 2 つ目からの当たり（全体・連続の技）は少し小さく（重なってガチャガチャにしない）
+    sfx(u.side === 'party' ? 'hurt' : e.crit ? 'crit' : 'hit', ctx.hits > 0 && !e.crit ? { vol: 0.65 } : undefined);
     if (u.side === 'party' && e.n > 0) _.voice.play(u, 'hurt', { speed: st.speed(), rng: st.vrng, force: false, chance: true });
     ctx.hits++;
     await st.pwait(170);
@@ -594,7 +601,7 @@
     // group（防御の回復）: 続く group の回復と同じ拍に出す（音は 1 回、待つのは最後だけ）
     const nx = e.group && st._evs ? st._evs[st._evi + 1] : null;
     const more = !!(nx && nx.t === 'heal' && nx.group);
-    if (!ctx.healBeat) sfx('heal');
+    if (!ctx.healBeat) sfxOnce(ctx, 'heal');
     ctx.healBeat = more;
     if (!more) await st.pwait(220);
   };
@@ -621,7 +628,7 @@
       const a0 = st.actor(e.uid);
       if (a0 && e.on && stg && !seqd) P.fx(st, up ? 'buff' : 'debuff', a0.x, a0.y - 40, {});
       P.pop(st, e.uid, !e.on || !stg ? R.T('battle.playback.status.pop', { p0: BN[bm[1]] }) : `${BN[bm[1]]}${up ? '↑' : '↓'}${Math.abs(stg) > 1 ? '↑↓'[up ? 0 : 1] : ''}`, 'status');
-      sfx(e.on && stg ? (up ? 'buff' : 'debuff') : 'heal');
+      if (e.on && stg) sfxOnce(ctx, up ? 'buff' : 'debuff');
       await st.pwait(240);
       return;
     }
@@ -633,7 +640,7 @@
     const good = /haste|regen|protect|shell|guard|buff|up/.test(e.id);
     if (a && e.on && !seqd) P.fx(st, good ? 'buff' : 'status', a.x, a.y - 40, {});
     P.pop(st, e.uid, e.on ? name : R.T('battle.playback.status.pop_2', { name }), 'status');
-    sfx(e.on ? (good ? 'buff' : 'debuff') : 'heal');
+    if (e.on) sfxOnce(ctx, good ? 'buff' : 'debuff');
     await st.pwait(260);
   };
   H.ko = async (st, e) => {

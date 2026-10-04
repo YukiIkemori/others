@@ -130,6 +130,41 @@ async function browserPart() {
     ok('表に無ければ合成に戻る', pl.pickGone === null && pl.hitGone.length && !pl.hitGone[pl.hitGone.length - 1].rec && pl.infoGone === 0, pl);
     ok('表を戻せば録音', /^hit\.\d$/.test(pl.pickBack));
 
+    section('効果音: 戦闘を静かに（core/audio.js の SFX_GAIN・SFX_GAP・SFX_VOICES）');
+    const calm = await page.evaluate(async () => {
+      const A = window.RPG.Audio, out = { lim: A.SFX_LIMITS }, wait = (ms) => new Promise((r) => setTimeout(r, ms));
+      await wait(300);
+      const s0 = A._sfxStats;
+      A.sfx('hit'); A.sfx('hit'); A.sfx('hit');   // 同じ音の連打 → 1 つ
+      const s1 = A._sfxStats;
+      out.burstPlayed = (s1.played.hit || 0) - (s0.played.hit || 0);
+      out.burstSkipped = (s1.skipped.hit || 0) - (s0.skipped.hit || 0);
+      await wait(200);
+      for (const id of ['magic', 'heal', 'fire', 'thunder', 'crit', 'roar', 'boss_die']) A.sfx(id);   // 違う音が一度に 7 つ
+      out.voices = A._sfxVoices();
+      for (let i = 0; i < 4; i++) { A.sfx('thunder'); await wait(140); }   // 長い音を続けて
+      out.sameThunder = A._sfxLive('thunder').filter((x) => x.end > A.context.currentTime).length;
+      const before = A._sfxStats.skipped.confirm || 0;
+      A.sfx('confirm');
+      out.confirmSkipped = (A._sfxStats.skipped.confirm || 0) - before;
+      // 鳴り残る取り直し（enemy_die.0）は選ばない
+      out.dieTakes = []; for (let i = 0; i < 20; i++) out.dieTakes.push(A._sfxPick('enemy_die'));
+      return out;
+    });
+    ok('同じ id は 0.12 秒の内は 1 回（連打 3 → 1）', calm.burstPlayed === 1 && calm.burstSkipped === 2, calm);
+    ok(`一度に鳴るのは ${calm.lim.voices} つまで（古い物から消す）`, calm.voices <= calm.lim.voices && calm.lim.voices <= 5, calm.voices);
+    ok(`同じ id は ${calm.lim.sameMax} つまで`, calm.sameThunder <= calm.lim.sameMax, calm.sameThunder);
+    ok('決定（confirm）は鳴らない', calm.confirmSkipped === 1);
+    ok('鐘・グラスの響きの音は小さく（magic heal item buff ≤ 0.6）', ['magic', 'heal', 'item', 'buff'].every((id) => calm.lim.gain[id] > 0 && calm.lim.gain[id] <= 0.6), calm.lim.gain);
+    ok('enemy_die: 鳴り残る取り直し（.0）は使わない', calm.lim.dropTakes.includes('enemy_die.0') && calm.dieTakes.every((k) => k === 'enemy_die.1'), [...new Set(calm.dieTakes)]);
+    {
+      const src = (f) => fs.readFileSync(path.join(V2, 'src', 'systems', 'battle', f), 'utf8');
+      const pb = src('playback.js');
+      ok('戦闘: 状態が解けても回復の音（heal）を鳴らさない', !/'debuff'\) : 'heal'\)/.test(pb) && /if \(e\.on\) sfxOnce\(ctx/.test(pb));
+      ok('戦闘: 回復・強化・弱体の音は 1 つの行動で 1 回（sfxOnce）', /sfxOnce\(ctx, 'heal'\)/.test(pb) && /sfxOnce\(ctx, up \? 'buff' : 'debuff'\)/.test(pb));
+      ok('戦闘の一覧: カーソル・戻るは小さく', ['command.js', 'targeting.js'].every((f) => /UI_TICK = \{ cursor: 0\.\d+, cancel: 0\.\d+/.test(src(f))));
+    }
+
     section('環境音: 録音の床');
     const ids = await page.evaluate(() => {
       const f = window.RPG.Audio.ambienceFileId;
