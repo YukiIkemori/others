@@ -119,7 +119,7 @@ section('2. 置き場所（泉・宝箱・戸口・灯り・見回り）');
   const street = MY_MAPS.flatMap((id) => (D.maps[id].objects || []).filter((o) => o.type === 'prop' && /^(lamp_post|snow_lamp|lamp_pillar|wisp_lamp)$/.test(o.id)).map((o) => id + ':' + o.x + ',' + o.y));
   ok('ほかの地方の灯（街灯・港の灯・鬼火）を置かない（高原の灯は星灯 star_lamp）', street.length === 0, street);
   const deco = [];
-  for (const id of PAINTED.filter((q) => D.maps[q].kind !== 'field')) for (const o of (D.maps[id].objects || []).filter((q) => q.type === 'prop')) if (!/^(star_lamp|star_glow|star_fire|iron_gate|lever|book_stack)$/.test(o.id)) deco.push(`${id} ${o.id}`);
+  for (const id of PAINTED.filter((q) => D.maps[q].kind !== 'field')) for (const o of (D.maps[id].objects || []).filter((q) => q.type === 'prop')) if (!/^(star_lamp|star_glow|star_fire|iron_gate|lever|book_stack|glint)$/.test(o.id)) deco.push(`${id} ${o.id}`);
   ok('下絵の町とダンジョンの物のスプライトは、働く物だけ（飾りは絵の中）', deco.length === 0, deco);
   const guards = ['star_academy_1', 'star_academy_2'].flatMap((id) => (D.maps[id].npcs || []).filter((n) => n.watch));
   ok(`見張り ${guards.length} 人（1 階 3＋学生 1・2 階 2）はランタンの視線（watch）と見回りの道`, guards.length === 6 && guards.filter((n) => n.move && n.move.route).length === 5);

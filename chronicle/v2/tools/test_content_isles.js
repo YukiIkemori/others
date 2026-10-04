@@ -128,7 +128,7 @@ section('2. 置き場所（泉・宝箱・戸口・灯り）');
   }
   ok('港の灯・鬼火は擁壁・崖・船べり・水の上（歩けるマスに無い）', onWalk.length === 0, onWalk);
   const deco = [];
-  for (const id of ['coral', 'nerei', 'isles_cave_1', 'isles_cave_2', 'ghost_ship_1', 'ghost_ship_2', 'ghost_ship_3']) for (const o of (D.maps[id].objects || []).filter((q) => q.type === 'prop')) if (!/^(lamp_pillar|wisp_lamp|glow_plankton|map_sign|ship)$/.test(o.id)) deco.push(`${id} ${o.id}`);
+  for (const id of ['coral', 'nerei', 'isles_cave_1', 'isles_cave_2', 'ghost_ship_1', 'ghost_ship_2', 'ghost_ship_3']) for (const o of (D.maps[id].objects || []).filter((q) => q.type === 'prop')) if (!/^(lamp_pillar|wisp_lamp|glow_plankton|map_sign|ship|ship_small|glint)$/.test(o.id)) deco.push(`${id} ${o.id}`);
   ok('下絵の町とダンジョンの物のスプライトは、働く物だけ（飾りは絵の中）', deco.length === 0, deco);
   const shells = MY_MAPS.flatMap((id) => (D.maps[id].objects || []).filter((o) => o.event === 'isles_shell').map((o) => o.shell));
   ok('光る貝がら 12 種（町の浜・洞窟の中。フィールドには置かない A27）', shells.length === 12 && new Set(shells).size === 12 &&

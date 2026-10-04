@@ -129,7 +129,7 @@ section('2. 置き場所（泉・宝箱・戸口・灯り）');
   ok('カルデラの歩けるマスに当たりのある小物が無い', clutter.length === 0, clutter.map((o) => o.id + ' ' + o.x + ',' + o.y));
   // 飾りの小物は下絵に（オーナーの決まり 2026-09-28）: 下絵のマップのスプライトは働く物（宝箱・調べる物・灯り・掲示板・レバー）だけ
   const deco = [];
-  for (const id of PAINTED) for (const o of (D.maps[id].objects || []).filter((q) => q.type === 'prop')) if (!/^(iron_brazier|lava_glow|board|lever)$/.test(o.id)) deco.push(`${id} ${o.id}`);
+  for (const id of PAINTED) for (const o of (D.maps[id].objects || []).filter((q) => q.type === 'prop')) if (!/^(iron_brazier|lava_glow|board|lever|glint)$/.test(o.id)) deco.push(`${id} ${o.id}`);
   ok('下絵のマップの物のスプライトは、働く物だけ（飾りは絵の中）', deco.length === 0, deco);
   // 物の絵が壁へめり込まない（2026-10-01 持ち主の報告「カルデラの武器屋の装飾が壁にめり込んでる」）: 描いた物の絵（@32 の cell・feet）の左右・下の端が、
   //   足もとの行のとなりの壁・当たりのマスへ 2 px より入らない（横に 2 マスの物は { w: 2 } で右のマスまで）

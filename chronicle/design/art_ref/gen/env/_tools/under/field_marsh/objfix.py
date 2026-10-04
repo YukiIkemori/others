@@ -31,6 +31,9 @@ for s in d['spawns'].values(): prot.add((s['x'], s['y']))
 for o in d['objects'] + d['meta'].get('npcs', []):
     for dx, dy in ((0, 0), (1, 0), (-1, 0), (0, 1), (0, -1)): prot.add((o['x'] + dx, o['y'] + dy))
 marks = {(x, y) for m in d['marks'] for x, y in m['cells']}
+import os as _os
+_fx = json.load(open(aid + '/fix.json')) if _os.path.exists(aid + '/fix.json') else {}
+prot |= {(q[0], q[1]) for q in _fx.get('open', []) + _fx.get('solid', [])}   # hand fits (fix.json) win over objfix
 ch = []
 for y in range(H):
     for x in range(W):

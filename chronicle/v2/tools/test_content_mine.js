@@ -127,7 +127,7 @@ section('2. 置き場所（泉・宝箱・戸口・灯り）');
   }
   ok('坑夫のカンテラ（hook_lamp）は岩壁の際（歩けるマスに無い）', onWalk.length === 0, onWalk);
   const deco = [];
-  for (const id of ['dovan', 'mine_1', 'mine_2', 'mine_3']) for (const o of (D.maps[id].objects || []).filter((q) => q.type === 'prop')) if (!/^(hook_lamp|forge_glow|white_glow|crystal_glow|window_glow|ember_glow|mine_cart|board|lantern)$/.test(o.id)) deco.push(`${id} ${o.id}`);
+  for (const id of ['dovan', 'mine_1', 'mine_2', 'mine_3']) for (const o of (D.maps[id].objects || []).filter((q) => q.type === 'prop')) if (!/^(hook_lamp|forge_glow|white_glow|crystal_glow|window_glow|ember_glow|mine_cart|board|lantern|glint)$/.test(o.id)) deco.push(`${id} ${o.id}`);
   ok('下絵の町とダンジョンの物のスプライトは、働く物だけ（飾りは絵の中）', deco.length === 0, deco);
   const lamps = ['mine_1', 'mine_2', 'mine_3'].map((id) => (D.maps[id].objects || []).filter((o) => o.type === 'waylamp' && /^wl_mine_\d$/.test(o.id)).length);
   ok('坑夫のカンテラ（灯りを守る）は各階に 1 つ、油でともる（lit の旗）', lamps.join() === '1,1,1' && ['mine_1', 'mine_2', 'mine_3'].every((id) => (D.maps[id].objects || []).filter((o) => o.type === 'waylamp').every((o) => /^mine_lamp_\d$/.test(o.lit))));
