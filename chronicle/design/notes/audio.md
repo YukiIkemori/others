@@ -596,9 +596,10 @@ listening check; `--char selma`, `--only <id> --force`). Treat the set as open-e
   `F.wxGust`, the same swell as the drawn wind bands). `ambienceInfo()`, `renderAmbience(octx, spec, {dur, at, to, fade})`
   (offline, used by `tools/test_ambience.js`). Before `init()` the wanted bed is only remembered; it starts on init.
 - **Mixing**: own bus under master, setting `vol.amb` (0–10, default 7, "環境音" on the sound tab; `setVolumes(bgm, sfx,
-  voice, amb)`). Every bed has a 45 Hz high-pass. Level at i = 1, volume 10 (integrated loudness): blizzard ≈ −33, sandstorm
-  −34, rain+surf −34, sea −36, rain/ash/volcano −37…−39, wind/breeze/cave/highwind −38…−40, forest/marsh/mist/snow −40…−42,
-  heat/tomb −43 LUFS; sample peaks −19…−32 dBFS (test cap −18). With the default volumes this sits ~15 dB under the BGM.
+  voice, amb)`). Every bed has a 45 Hz high-pass. Level at i = 1, volume 10 (integrated loudness): blizzard ≈ −33.5, sandstorm
+  −34, rain+surf −35, sea −36, rain/ash/volcano −37…−39, wind/cave/breeze(day) −38.5…−40, highwind/marsh/mist/snow −40…−42,
+  forest −42.5 (night −45), heat/tomb −43 LUFS; sample peaks −19.4…−32 dBFS (test cap −18). With the default volumes this
+  sits roughly 15 dB under the BGM.
   Per-bed trims are `AMB_TRIM`; `i` scales the level (0.35 + 0.65 i) and event density.
 - **Synthesis** (no samples, low CPU): one 6 s stereo pink-noise buffer per context (seam crossfaded), looped by every layer
   from a random offset at a slightly different rate; biquads + slow random walks (`setTargetAtTime` toward random targets) for
@@ -619,4 +620,7 @@ listening check; `--char selma`, `--only <id> --force`). Treat the set as open-e
 - **How it was judged**: every bed rendered to 12 s WAVs, log-frequency spectrograms checked, and three rounds of listening
   by an audio model (match / naturalness / annoyance + concrete fixes). Changes kept from that: events (birds, crickets, drips,
   crackles) were far too quiet against the noise → raised; high-shelf the hiss beds (rain, sand) down to 4.5–6.5 kHz; whistles
-  wider (Q 6) and swelling instead of constant; cave drips through a short convolver reverb instead of a slap echo; 45 Hz cut.
+  wider (Q 6) and swelling instead of constant; cave drips through a short convolver reverb instead of a slap echo; 45 Hz cut;
+  forest/breeze: the continuous leaf hiss read as "rain / static" → almost removed, wind gust now also raises the band
+  (coupled walk), birds/crickets get a little reverb; crickets sing in short irregular bouts (1–2 voices). Still synthetic:
+  birds are clean FM-wobbled sines (rated "slightly pure-tone"), crickets are faint; the model's ratings vary between runs.

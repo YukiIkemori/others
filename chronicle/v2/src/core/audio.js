@@ -1701,7 +1701,7 @@
   const AMB_LEAD = 0.6;
   const AMB_PEAK = 0.1;   // 強さ 1・音量 10 の山の目安（−20 dBFS）。床ごとの差は AMB_TRIM で揃える（tools/test_ambience.js で測る）
   // 床ごとの音量の揃え（強さ 1・音量 10 の積分ラウドネスで 吹雪 −33・砂嵐 −34・海 −36・雨 −37・森 −41・陽炎 −43 LUFS ほど。2026-10-04 に測った）
-  const AMB_TRIM = { blizzard: 1.00, sandstorm: 1.50, rain: 1.30, ash: 1.15, volcano: 1.10, breeze: 1.40, highwind: 0.79, mist: 1.51, marsh: 1.29, forest: 1.60, cave: 0.71, heat: 0.48 };
+  const AMB_TRIM = { blizzard: 1.00, sandstorm: 1.25, rain: 1.30, ash: 1.15, volcano: 1.10, breeze: 1.00, highwind: 0.79, mist: 1.51, marsh: 1.29, forest: 1.25, cave: 0.71, heat: 0.48 };
   function ambRng(seed) {
     let a = (seed >>> 0) || 1;
     return () => {
@@ -2007,8 +2007,8 @@
       B.chain(s, g, p, B.bus);
       const v = o.lvl * B.rr(0.45, 1), pulses = 3 + Math.floor(B.r() * 3), pw = B.rr(0.018, 0.026), gap = B.rr(0.012, 0.02), period = B.rr(0.42, 0.85);
       const st = { on: false, until: B.t0 + B.rr(0, 3) };
-      B.evs.push({ range: [period, period * 1.04], next: B.t0 + B.rr(0, period), fn: (t) => {
-        if (t > st.until) { st.on = !st.on; st.until = t + (st.on ? B.rr(2.5, 7) : B.rr(2, 7) / (o.dens || 1)); }
+      B.evs.push({ range: [period * 0.9, period * 1.3], next: B.t0 + B.rr(0, period), fn: (t) => {
+        if (t > st.until) { st.on = !st.on; st.until = t + (st.on ? B.rr(1.5, 5) : B.rr(3, 10) / (o.dens || 1)); }
         if (!st.on) return;
         for (let j = 0; j < pulses; j++) {
           const a = t + j * (pw + gap);
@@ -2050,7 +2050,7 @@
   function lLife(B, i, birdLvl, cricketLvl, sparse) {
     const day = 1 - B.night;
     if (day > 0.15) lBirds(B, { lvl: birdLvl, every: [3.5 / (day * (0.4 + 0.6 * i)) * sparse, 11 / (day * (0.4 + 0.6 * i)) * sparse] });
-    if (B.night > 0.3) lCrickets(B, { lvl: cricketLvl * Math.min(1, B.night), n: B.night > 0.7 ? 3 : 2, dens: (0.4 + 0.6 * i) / sparse });
+    if (B.night > 0.3) lCrickets(B, { lvl: cricketLvl * Math.min(1, B.night), n: B.night > 0.7 ? 2 : 1, dens: (0.4 + 0.6 * i) / sparse });
   }
 
   // ---- 床（spec.bed → 組み立て）。B.i = 強さ（音量は B.bus で済んでいる。ここでは密度・揺れの幅に使う）
@@ -2064,8 +2064,8 @@
     breeze(B, i) {   // 風の木の葉: 風＋葉ずれ（突風に乗る、細かく粒立つ）、昼はまばらな鳥・夜はまばらな虫
       const vb = B.verb(0.5); if (vb) { const ev = B.gain(1); ev.connect(B.bus); ev.connect(vb); B.ev = ev; }   // 鳥・虫に野の響きを少し
       const G = lWind(B, { f: [300, 1100], g: [0.06, 1], ge: [1.4, 4.5], gtc: 0.9, body: 0.35, lvl: 0.85, couple: true });
-      lHiss(B, { hp: 2200, lp: 5000, lvl: 0.1, am: 3, amF: 30, walk: [0, 1], we: [0.25, 0.9], wtc: 0.15, to: G });
-      lLife(B, i, 1.1, 0.25, 1.4);
+      lHiss(B, { hp: 2200, lp: 4200, lvl: 0.05, am: 1.2, amF: 30, walk: [0, 1], we: [0.25, 0.9], wtc: 0.15, to: G });
+      lLife(B, i, 1.1, 0.16, 1.4);
     },
     highwind(B, i) {   // 高地の夜空: 高く細い風（ゆっくり）と、遠いひゅう
       const s = B.filt('highpass', 220, 0.6);
@@ -2081,7 +2081,7 @@
     },
     sandstorm(B, i) {   // 砂嵐: 風＋ざらつく砂の擦れ（どちらも突風に乗る。絵の風の帯と ambienceMod で合わせる）
       const G = lWind(B, { f: [220, 900], q: 0.7, g: [0.1, 1], ge: [1, 3], gtc: 0.7, body: 0.8, couple: true });
-      lHiss(B, { hp: 1500, lp: 3600, lvl: 0.16, am: 4, amF: 45, to: G });
+      lHiss(B, { hp: 1500, lp: 3400, lvl: 0.1, am: 4, amF: 45, to: G });
     },
     heat(B, i) {   // 陽炎: ほとんど聞こえない、ゆるく揺れる暖かい空気と、薄い高い気配
       const s = B.src(0.7), bp = B.filt('bandpass', 450, 0.5), g = B.gain(0);
@@ -2112,8 +2112,8 @@
     forest(B, i) {   // 木漏れ日の森: そよ風＋葉ずれ、昼は鳥・夜は虫
       const vb = B.verb(0.6); if (vb) { const ev = B.gain(1); ev.connect(B.bus); ev.connect(vb); B.ev = ev; }
       const G = lWind(B, { f: [280, 900], g: [0.06, 0.6], ge: [2, 5.5], gtc: 1.4, lvl: 0.7, body: 0.3, couple: true });
-      lHiss(B, { hp: 2200, lp: 5000, lvl: 0.06, am: 2.5, amF: 25, walk: [0, 1], we: [0.4, 1.2], wtc: 0.25, to: G });
-      lLife(B, i, 1.3, 0.25, 0.7);
+      lHiss(B, { hp: 2200, lp: 5000, lvl: 0.06, am: 1, amF: 25, walk: [0, 1], we: [0.4, 1.2], wtc: 0.25, to: G });
+      lLife(B, i, 1.3, 0.14, 0.7);
     },
     cave(B, i) {   // 洞窟・坑道: 低い部屋の音＋よく響く雫（まばら・不規則。墓は雫なし）
       const vb = B.verb(1.6), ev = B.gain(0.7);
