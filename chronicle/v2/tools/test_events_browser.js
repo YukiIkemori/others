@@ -126,8 +126,11 @@ const run = (p, id) => p.evaluate((id) => { window.__evDone = false; RPG.Events.
       await shot(P.page, 'clear_pillar' + tag);
       const s1 = await P.page.evaluate('({tier: RPG.Game.tier, pending: RPG.Game.pendingTier, cleared: !!RPG.Game.cleared.r_forest, chapter: RPG.Game.chapter, page: RPG.Game.items.k_page_forest})');
       ok('clearRegion: tier 1, pendingTier 1, cleared, chapter 1, page' + tag, s1.tier === 1 && s1.pending === 1 && s1.cleared && s1.chapter === 1 && s1.page === 1, s1);
-      await B.waitFor(P.page, "RPG.Engine.has('celebrate')", 3000);
-      await P.page.waitForTimeout(2000);
+      // 光の柱（A で閉じる）→ イベントの続き → 章の札はイベントの終わり（テスター 2026-10-04 R17: 年代記の選択の後に札）
+      await B.pressUntil(P.page, 'a', "!RPG.Engine.has('celebrate')", 12);
+      await B.pressUntil(P.page, 'a', "RPG.Engine.has('celebrate') || window.__evDone === true", 30);
+      ok('chapter card comes after the rest of the clearing event' + tag, await P.page.evaluate("RPG.Engine.has('celebrate') && window.__evDone !== true"));
+      await P.page.waitForTimeout(1600);
       await shot(P.page, 'clear_card' + tag);
       await B.pressUntil(P.page, 'a', "!RPG.Engine.has('celebrate')", 8);
       await B.waitFor(P.page, 'window.__evDone === true', 4000);

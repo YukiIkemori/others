@@ -124,5 +124,10 @@
     'map.field_star_00_kit.guard.name': '番人',
     'map.field_star_00_kit.guard.text': 'この先の高原への坂は、\n崖崩れでふさがってるんだ。',
     'map.field_star_00_kit.guard.text_2': 'オルビスへ行くのは、\n道が片づくまで待ってくれ。',
+    // ---- src/maps/field_star_road.js
+    'map.field_star_road.s_road.name': '山あいの街道',
+    'map.field_star_road.s_road.objects.0.text': '山あいの街道\n北 → 星見の坂\n南 → グレイモア湿原',
+    'map.field_star_road.s_road.marsh_traveler.name': '湿原の旅人',
+    'map.field_star_road.s_road.meta.sub': '北の野と湿原をつなぐ道',
   });
 })(window.RPG);

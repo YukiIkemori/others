@@ -214,6 +214,55 @@ def s_ridge():
     return a
 
 
+def s_road():
+    """山あいの街道 (2026-10-04, replaces the walk over the old tile world between 北の野 and the marsh): a quiet mountain valley road.
+    The road comes in from the west edge (北の野), runs east along a grassy valley floor between a band of grey rock cliffs (north,
+    the rim of the plateau) and a dark pine wood (south). At a fork in the east a branch climbs NORTH up worn stone steps cut through a
+    gap in the cliffs (星見の坂, the way to the plateau); the other branch goes SOUTH through a notch in a grey rock ridge, down to the marsh
+    (霧の入口). A traveller's camp by the fork. Clean, readable shapes (owner 2026-10-04: no fussy small details)."""
+    a = Area('s_road', 60, 40, 7501, base=',')
+    W, H = a.W, a.H
+    # the plateau rim: grey cliffs along the top, open where the steps climb (x 45-48)
+    a.region([(-3, -3), (46.6, -3), (46.6, 7.5), (36, 8.5), (24, 7.0), (12, 8.0), (-3, 6.5)], 'R', rough=0.6, seed=1, force=True)
+    a.region([(48.4, -3), (63, -3), (63, 9.5), (55, 9.0), (48.4, 8.0)], 'R', rough=0.6, seed=2, force=True)
+    # the pine wood along the bottom (west and middle) and the grey ridge (south-east) with the notch for the road to the marsh
+    a.region([(-3, 33.5), (8, 32.0), (18, 33.5), (30, 32.5), (40, 33.5), (43, 43), (-3, 43)], 'F', rough=1.0, seed=3, force=True)
+    a.region([(40, 33.5), (44, 31.5), (48.6, 31.0), (48.6, 43), (40, 43)], 'R', rough=0.5, seed=4, force=True)
+    a.region([(53.4, 31.0), (58, 30.5), (63, 31.5), (63, 43), (53.4, 43)], 'R', rough=0.5, seed=5, force=True)
+    # a few groups of pines on the valley floor (groups, not single scattered trees), one small pond
+    for (x, y, rx, ry, s_) in [(6, 12, 3.0, 2.0, 11), (22, 27, 3.4, 2.2, 12), (30, 12, 2.6, 1.8, 13), (56, 20, 2.6, 3.4, 14), (8, 28, 2.4, 1.8, 15)]:
+        a.blob(x, y, rx, ry, 'T', rough=0.25, seed=s_, only=',')
+    a.blob(15, 13, 2.6, 1.6, 'w', rough=0.15, seed=21, only=',')
+    # the road: W edge (rows 19-20) -> east -> fork (42, 21); N branch -> steps -> top edge (x 46-47); S branch -> notch -> bottom edge (x 50-52)
+    a.stroke([(-1, 20), (8, 20), (18, 20.5), (28, 21.0), (36, 20.5), (42, 20.5)], 1.9, '.', seed=6)
+    for (x, y, rx, ry, s_) in [(26, 15, 7, 3.0, 31), (12, 25, 6, 2.6, 32)]:
+        a.blob(x, y, rx, ry, ';', rough=0.2, seed=s_, only=',')
+    a.stroke([(42, 20.5), (45.5, 17), (48, 13), (48, 9.5)], 1.9, '.', seed=7)   # the painting (gen1) put the steps one tile east of gen1's guide
+    steps = a.stroke([(48, 10), (48, 4), (48, -1)], 1.9, 'c', seed=8, force=True)
+    a.mark('steps', [list(c) for c in steps if a.inb(*c)], 'worn pale STONE STEPS cut into the grey rock, climbing north through a narrow gap in the cliffs (walkable)', (190, 186, 176), solid=False)
+    a.stroke([(42, 20.5), (46, 24), (50, 27.5), (51.5, 32), (51.5, 40.5)], 2.4, '.', wobble=0.1, seed=9)
+    # a short footpath to the traveller's camp
+    a.stroke([(36, 20.5), (36.5, 17.5)], 1.2, ':', seed=10)
+    a.rect(35, 15, 4, 3, ',', force=True, keep=True)
+    a.tidy()
+    a.exit('w', 19, 20, {'map': 'f_cross', 'spawn': 'east'}, 'west')
+    a.exit('n', 47, 48, {'map': 's_steps', 'spawn': 'west'}, 'star')['cond'] = {'not': {'slice': True}}
+    a.exit('s', 50, 52, {'map': 'm_north', 'spawn': 'north'}, 'south')
+    a.objects += [
+        dict(type='sign', x=40, y=18, text='山あいの街道\n北 → 星見の坂\n南 → グレイモア湿原'),
+        dict(type='prop', id='tent', x=37, y=16),
+        dict(type='waylamp', id='wl_s_road_1', x=12, y=17, lit=True),
+        dict(type='waylamp', id='wl_s_road_2', x=44, y=24, lit=True),
+        dict(type='waylamp', id='wl_s_road_3', x=49, y=14, lit=True),
+    ]
+    a.meta = dict(name='山あいの街道', sub='北の野と湿原をつなぐ道', region='r_marsh', worldRect=[338, 128, 140, 48], outside='rock', bbg='marsh',
+                  smooth=0.6, clean=True,
+                  zones=[{'rect': None, 'zone': 'zw_marsh_road'}], links={},
+                  npcs=[{'id': 'marsh_traveler', 'look': 'npc_traveler', 'name': '湿原の旅人', 'x': 36, 'y': 18, 'dir': 's', 'move': 'still',
+                         'talk': 'marsh_world_traveler', 'reward': 'news', 'key': 'world_marsh_traveler'}])
+    return a
+
+
 AREAS = {k: v for k, v in globals().items() if k.startswith('s_') and callable(v)}
 
 if __name__ == '__main__':

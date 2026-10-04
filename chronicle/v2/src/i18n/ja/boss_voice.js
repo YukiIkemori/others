@@ -1,8 +1,9 @@
-// 日本語 の文の表（boss_voice）。ボスの声の字幕（src/data/boss_voice.js・src/systems/battle/voice_boss.js、2026-10-03）。正は ja、ほかの言語は同じ key で
-//   声の文と 1 字も違えない（chronicle/design/voice/boss_lines.csv。node chronicle/tools/boss_voice.js --check）
+// 日本語の文の表（boss_voice）。元は tools/i18n_extract.js がソースから移した。以後はここが正（訳は src/i18n/<言語>/boss_voice.js に同じ key で）
+// 文の中の {name} は R.T(key, {name}) の差し込み。{hero} など params に無い名前は、そのまま（イベントの側で入る）。
 (function (R) {
   'use strict';
   R.I18n.add('ja', {
+    // ---- ?
     'bossVoice.bv_sandking_start_1': '名を持つ者よ……砂に還れ。',
     'bossVoice.bv_sandking_enrage_1': '返せ……わが名を、返せ！',
     'bossVoice.bv_sandking_ult_1': '砂の審判を受けよ！',

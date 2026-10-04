@@ -34,6 +34,17 @@
       w.objects.push({ type: 'mark', id: 'star_steps_way', x: W.exit.x, y: W.exit.y, cond: { not: { slice: true } },
         way: { x: W.exit.x, y: W.exit.y, w: W.exit.w, h: W.exit.h, dir: 'n', label: R.T('map.field_star_steps.s_steps.name') } });
     }
+    // 山あいの街道（s_road、2026-10-04）: 前のワールドの街道（タイルの絵で、持ち主「北の野だけ明らかに壊れてる」）を描いた 1 枚のエリアに替える。
+    //   北の野（f_cross）の東の端・霧の入口（m_north）の北の端・星見の坂（s_steps）の西の端の「前のワールドへ」の出口を s_road へ付け替える
+    //   （生成したエリアのファイルは書き換えない）。前のワールドの出口・番人・印は古い記録（ワールドの街道の上で保存した人）のために残す
+    if (M.s_road) {
+      const RE = { f_cross_e: { map: 's_road', spawn: 'west' }, marsh_n: { map: 's_road', spawn: 'south' }, star_w: { map: 's_road', spawn: 'star' } };
+      for (const id of ['f_cross', 'm_north', 's_steps']) {
+        for (const e of (M[id] && M[id].exits) || []) if (e.to && e.to.map === 'world' && RE[e.to.spawn]) e.to = Object.assign({}, RE[e.to.spawn]);
+      }
+      // 湿原の旅人は街道のエリアへ移った（同じ id・同じ key）。前のワールドの写しは消す
+      if (w.npcs) w.npcs = w.npcs.filter((n) => n.id !== 'marsh_traveler');
+    }
     // 体験版のあいだの表の止め（ほかの峠と同じ）: 峠の口の崖崩れ（cond {slice:true} の tilePatch）と番人
     if (!(w.npcs || []).some((n) => n.id === 'guard_star')) {
       w.tilePatches = (w.tilePatches || []).concat([{ cond: { slice: true }, rect: [476, 146, 2, 1], rows: ['mm'] }]);

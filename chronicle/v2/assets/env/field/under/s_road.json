@@ -1,0 +1,19 @@
+{
+ "id": "s_road",
+ "kind": "under",
+ "map": "s_road",
+ "tile": 32,
+ "size32": [
+  1920,
+  1280
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.8,
+ "files": {
+  "24": "s_road@24.png",
+  "32": "s_road@32.png"
+ },
+ "src": "generated"
+}

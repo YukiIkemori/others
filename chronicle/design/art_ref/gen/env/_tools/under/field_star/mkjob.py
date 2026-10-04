@@ -70,6 +70,13 @@ Pixel art rules: crisp square pixels, no blur, no anti-aliasing, no painterly br
 Lighting: this is the ALBEDO base layer (the game darkens it into night at runtime and adds lamp light on top). Neutral, soft, even daylight-like light as in the style reference; NO darkness, NO night tint, NO long cast shadows, NO light pools, NO glow halo, NO vignette, NO fog over the map, NO clouds over the map.
 Do NOT paint any characters, people, animals, monsters, birds, boats or ships on the water (unless a landmark says so), treasure chests, lanterns, lamp posts, torches, campfires, signs, signposts, text, letters, numbers, labels, grid lines, borders, frames or UI. Those are added later as separate sprites: leave the ground open for them.
 """
+# 見やすさ優先（持ち主 2026-10-04「ギザギザ」「花々とか細かいのいらん」）: meta clean = 大きくはっきりした形、細かい物を散らさない
+CLEAN = """
+CLARITY (most important): this map must read clearly at a glance. Use LARGE, SIMPLE, CLEAN shapes with SMOOTH flowing outlines: broad calm areas of plain grass, one clear road, clear water, clear cliffs and clear tree masses. The edge of every area is a smooth natural curve, never a stair-stepped or zigzag tile edge. Do NOT scatter small details: NO flowers, NO flower dots, NO scattered pebbles or small stones, NO lone tiny bushes, NO speckled noise texture, NO grid-like rows of rocks or tufts. Grass is a calm, softly varied texture with gentle colour ramps; the road is a clean band with soft edges. Keep the level of detail like a clean, polished classic 16-bit JRPG overworld field: tidy, uncluttered and easy to read."""
+if (d.get('meta') or {}).get('clean'):
+    P = P.replace('lush natural detail', 'clean polished detail').replace(' Make it feel like a real, exciting place to explore, full of small natural detail.', ' Make it feel like a real, inviting place to explore.')
+    P = P.replace(' with tiny white and blue flowers', '').replace('\nGuide colour key:', CLEAN + '\n\nGuide colour key:', 1)
+    P = P.replace('- green with small blue/white dots = little blue STAR FLOWERS in the grass (walkable).\n', '')
 job = {"out": os.path.abspath(f'{aid}/{name}.png'), "prompt": P, "size": f"{W * T}x{H * T}", "quality": "high", "background": "opaque",
        "refs": [os.path.abspath(f'{aid}/guide_{T}.png'), os.path.abspath(STYLE)], "tag": f"{aid}_under"}
 json.dump(job, open(f'{aid}/{name}.job.json', 'w'), ensure_ascii=False, indent=1)

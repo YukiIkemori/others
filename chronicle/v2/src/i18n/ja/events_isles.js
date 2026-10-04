@@ -19,7 +19,7 @@
     'ev.isles_00_common.chart.caption': '海図の空白に「{p0}」を書きこんだ。（{n}/4）',
     'ev.isles_00_common.chart.say': '三つの空白が埋まると、\n海図のまん中に、どこにも\n属さない海が残った。',
     'ev.isles_00_common.chart.say_2': '島と島のあいだの、潮の目。\n幽霊船が出るのは、きっとここだ。',
-    'ev.isles_00_common.chart.say_nochart': "3 つの海を見てきた。\n島と島のあいだの、潮の目。\n幽霊船が出るのは、きっとここだ。",
+    'ev.isles_00_common.chart.say_nochart': '3 つの海を見てきた。\n島と島のあいだの、潮の目。\n幽霊船が出るのは、きっとここだ。',
     'ev.isles_00_common.skyLine.ret': '近ごろ、空の色が\n夜のうちから少し変わるんだ。\n……気のせいかね。',
     'ev.isles_00_common.skyLine.ret_2': '沖の霧が、前ほど重くないんだ。\n遠くの島の灯が、よく見える。',
     'ev.isles_00_common.skyLine.ret_3': '近ごろ、空がちょっと\n青くないかい？',

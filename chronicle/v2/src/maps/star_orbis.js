@@ -33,6 +33,8 @@
     BOOKS.forEach(([x, y], i) => O.push(K.prop('book_stack', x, y, { cond: `!star_book_${i + 1}` }), K.exam(x, y, 'star_book', { book: i + 1, cond: `!star_book_${i + 1}` })));
     // 学生の落とし物（天文台区の庭の草の中。頼まれてから）
     O.push(K.exam(33, 11, 'star_pen_spot', { cond: 'star_pen_asked' }));
+    // 草の間の光（頼まれてから拾うまで。持ち主 2026-10-04「天文台の庭ってどのあたり？」→ 見つけやすく）
+    O.push(K.prop('firefly', 33, 11, { cond: ['star_pen_asked', '!star_key_2', { not: { item: 'k_silver_pen' } }] }));
     // 宝箱（見える所だけ）
     O.push(K.chest('orbis_c1', 5, 11, { pool: 'p_T' }), K.chest('orbis_c2', 54, 47, { item: 'i_ether', n: 2 }));
     // 星灯（庭・広場の角）

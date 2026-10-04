@@ -1,7 +1,9 @@
-// 日本語 の文の表（enemy_combos）。敵の合体技・雑魚の手の幅（w_combo、2026-10-01）。正は ja、ほかの言語は同じ key で
+// 日本語の文の表（enemy_combos）。元は tools/i18n_extract.js がソースから移した。以後はここが正（訳は src/i18n/<言語>/enemy_combos.js に同じ key で）
+// 文の中の {name} は R.T(key, {name}) の差し込み。{hero} など params に無い名前は、そのまま（イベントの側で入る）。
 (function (R) {
   'use strict';
   R.I18n.add('ja', {
+    // ---- ?
     'sys.battle_core.combo.m': '{names}が力を合わせた！',
     'sys.battle_core.combo.join': 'と',
     'sys.battle_core.combo.merge': '{name}たちがひとつに合わさった！',
