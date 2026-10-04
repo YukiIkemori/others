@@ -26,11 +26,12 @@
     // 忘却の底への白い階段（広場の南東、描いた下絵。maps/oblivion.js の R.Oblivion.GATE）: クリアの後に「下りますか？」で下りられる。
     //   クリアの前は通せんぼ（gate: 白い霧で下りられない、の一言で 1 歩下がる。出口の印も出さない）
     const OG = R.Oblivion && R.Oblivion.GATE;
-    if (OG) for (const [x, y] of OG.stairs) {
-      O.push(K.stairs(x, y, { map: 'oblivion_1', spawn: 'from_town' }, Object.assign({
-        look: 'none', confirm: R.T('map.final_biblia.oblivion_gate.confirm'),
+    if (OG) {
+      // 2 マス幅の 1 つの階段（出口の印と札が 1 つ）
+      O.push(K.stairs(OG.stairs[0][0], OG.stairs[0][1], { map: 'oblivion_1', spawn: 'from_town' }, {
+        id: 'biblia_oblivion_down', w: OG.stairs.length, look: 'none', confirm: R.T('map.final_biblia.oblivion_gate.confirm'),
         gate: { when: '!final_clear', hide: true, text: R.T('map.final_biblia.oblivion_gate.closed') },
-      }, x === OG.stairs[0][0] ? { id: 'biblia_oblivion_down' } : {})));
+      }));
     }
 
     // ---------------------------------------------------------------- 人

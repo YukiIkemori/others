@@ -61,7 +61,7 @@
     // ================================================================ 地下 1 階 忘れられた者の岸
     def('oblivion_1', 1, {
       objects: [
-        up(6, 2, 'biblia', O.GATE.spawn, 'oblivion_1_up'), up(7, 2, 'biblia', O.GATE.spawn),
+        Object.assign(up(6, 2, 'biblia', O.GATE.spawn, 'oblivion_1_up'), { w: 2 }),   // 町へ（2 マス幅の 1 つの階段: 出口の札が 1 つ）
         down(34, 27, 'oblivion_2', 'from1', 'oblivion_1_down'), down(35, 27, 'oblivion_2', 'from1'),
         stone(10, 3, 1), stone(3, 12, 2), stone(12, 21, 3), stone(30, 23, 4),
         K.exam(22, 10, 'oblivion_graves'), K.exam(19, 11, 'oblivion_graves'), K.exam(25, 11, 'oblivion_graves'),

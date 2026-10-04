@@ -85,8 +85,8 @@ const run = async (id, ctx, o) => { LOG.length = 0; await D.events[id].run(mkEv(
   section('2. 入口（ビブリアの広場の階段・大書庫 1 階の手すり）');
   const bib = D.maps.biblia;
   const gates = (bib.objects || []).filter((o) => o.type === 'stairs' && o.to && o.to.map === 'oblivion_1');
-  ok('ビブリアの広場に忘却の底への階段（2 マス、描いた下絵の上 = look none）', gates.length === 2 && gates.every((o) => o.look === 'none' && D.maps.oblivion_1.spawns[o.to.spawn]), gates);
-  ok('階段のマスは歩ける（描いた段）・まわりの手すりは当たり', gates.every((o) => F._walkable(bib, o.x, o.y, null, 0)) && [[31, 27], [34, 27], [32, 26], [33, 27]].every(([x, y]) => !F._walkable(bib, x, y, null, 0)));
+  ok('ビブリアの広場に忘却の底への階段（2 マス幅の 1 つ、描いた下絵の上 = look none）', gates.length === 1 && gates[0].w === 2 && gates.every((o) => o.look === 'none' && D.maps.oblivion_1.spawns[o.to.spawn]), gates);
+  ok('階段のマスは歩ける（描いた段）・まわりの手すりは当たり', gates.every((o) => F._walkable(bib, o.x, o.y, null, 0) && F._walkable(bib, o.x + 1, o.y, null, 0)) && [[31, 27], [34, 27], [32, 26], [33, 27]].every(([x, y]) => !F._walkable(bib, x, y, null, 0)));
   ok('階段の前（着く所 biblia.oblivion）は歩ける広場', !!bib.spawns.oblivion && F._walkable(bib, bib.spawns.oblivion.x, bib.spawns.oblivion.y, null, 0));
   newGame({ final_arrived: true });
   ok('クリアの前: 通せんぼ（gate が閉じている）', gates.every((o) => F._gateShut(o.gate)) && gates[0].gate.text === T('map.final_biblia.oblivion_gate.closed'));
