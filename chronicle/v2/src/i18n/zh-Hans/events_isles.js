@@ -202,6 +202,7 @@
     'ev.isles_sea.DEST.fog.label': '雾之海（幽灵船）',
     'events.isles_helm.say': '这是系船用的栈桥。\n现在，什么也没系着。',
     'events.isles_helm.i.choose': '（海图的空白）',
+    'events.isles_helm.here': '（当前位置）',
     'events.isles_helm.i.choose.0': '不了',
     'events.isles_helm.i.choose.text': '掌起远洋船的舵。要驶向哪里？',
     'ev.isles_sea.isles_sail_coral.sail': '抵达了科拉尔港。',

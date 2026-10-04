@@ -202,6 +202,7 @@
     'ev.isles_sea.DEST.fog.label': '霧之海（幽靈船）',
     'events.isles_helm.say': '這是繫船用的棧橋。\n現在，什麼也沒繫著。',
     'events.isles_helm.i.choose': '（海圖的空白）',
+    'events.isles_helm.here': '（目前位置）',
     'events.isles_helm.i.choose.0': '不了',
     'events.isles_helm.i.choose.text': '掌起遠洋船的舵。要駛向哪裡？',
     'ev.isles_sea.isles_sail_coral.sail': '抵達了科拉爾港。',

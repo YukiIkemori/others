@@ -202,6 +202,7 @@
     'ev.isles_sea.DEST.fog.label': '안개 바다 (유령선)',
     'events.isles_helm.say': '배를 매어 두는 부두다.\n지금은 아무것도 매여 있지 않다.',
     'events.isles_helm.i.choose': '(해도의 빈칸)',
+    'events.isles_helm.here': ' (현재 위치)',
     'events.isles_helm.i.choose.0': '그만둔다',
     'events.isles_helm.i.choose.text': '원양선의 키를 잡는다. 어디로 향할까?',
     'ev.isles_sea.isles_sail_coral.sail': '항구 도시 코랄에 도착했다.',

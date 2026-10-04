@@ -202,6 +202,7 @@
     'ev.isles_sea.DEST.fog.label': 'Sea of Fog (Ghost Ship)',
     'events.isles_helm.say': 'A pier for mooring ships.\nNothing is tied up here now.',
     'events.isles_helm.i.choose': '(Blank on the chart)',
+    'events.isles_helm.here': ' (You are here)',
     'events.isles_helm.i.choose.0': 'Leave',
     'events.isles_helm.i.choose.text': 'You take the helm of the ocean ship. Where to?',
     'ev.isles_sea.isles_sail_coral.sail': 'You arrived at Port Coral.',

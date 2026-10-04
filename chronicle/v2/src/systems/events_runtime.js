@@ -16,7 +16,7 @@
 //   say(who, text, {voice, face, name, title})   who = 今のマップの NPC の id か、一行の人の id（'hero' など）か look か null（地の文）。
 //        名前は npc.name → 人の名前 → looks[look].name。face を書かなければ look に顔があれば（R.Portrait.has）出す。false で出さない。
 //        face に表情だけ（'smile'）を書いたら話者の look に付ける。文の中の {hero} は主人公の名前
-//   choose(labels, {cancel, text, who, face, index（最初のカーソル）, important（物語の大事な分かれ道: 出てすぐの決定を受けない）})  → 選んだ番号（B は cancel の番号）。who（NPC の id か true = 話しかけた NPC）を書くと
+//   choose(labels, {cancel, text, who, face, index（最初のカーソル）, disabled（選べない番号の配列）, important（物語の大事な分かれ道: 出てすぐの決定を受けない）})  → 選んだ番号（B は cancel の番号）。who（NPC の id か true = 話しかけた NPC）を書くと
 //        問いの窓に say と同じ名前・顔を付ける
 //   caption(text, {ms}) → R.UIK.Message.caption / fade('out'|'in', ms) / wait(ms)
 //   item(id, n, {silent}) → K.gain。右上に「〜を 手に入れた」/ take(id, n) → bool / gold(n, {silent}) / has(id)（袋＋装備）
@@ -257,6 +257,7 @@
         }
         if (o.cancel != null) msg.cancel = o.cancel;
         if (o.index != null) msg.index = o.index;
+        if (Array.isArray(o.disabled) && o.disabled.length) msg.disabled = o.disabled;   // 選べない選択肢（薄く・ブザー）
         // important: 物語を戻せない形で分ける選択（籠城の門・年代記に書くこと・祭の話・祭を始める…）だけ、出てすぐの決定を受けない
         //   （テスター 2026-10-02 P22。持ち主 2026-10-03: ほかの選択肢は連打で進めるように守らない）
         if (o.important) msg.guard = true;

@@ -202,6 +202,7 @@
     'ev.isles_sea.DEST.fog.label': '霧の海（幽霊船）',
     'events.isles_helm.say': 'ここは船をつなぐ桟橋だ。\n今は、何もつながれていない。',
     'events.isles_helm.i.choose': '（海図の空白）',
+    'events.isles_helm.here': '（いまここ）',
     'events.isles_helm.i.choose.0': 'やめる',
     'events.isles_helm.i.choose.text': '外洋船のかじを取る。どこへ向かう？',
     'ev.isles_sea.isles_sail_coral.sail': '港町コーラルに着いた。',

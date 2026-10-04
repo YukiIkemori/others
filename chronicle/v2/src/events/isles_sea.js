@@ -23,11 +23,15 @@
   ];
   E('isles_helm', async (ev, ctx) => {
     if (!ev.flag('isles_ship')) { await ev.say(null, R.T('events.isles_helm.say')); return; }
+    // 行き先の並びはどこでも同じ（テスター R14 2026-10-04: 今いる所を抜くと、同じ位置で別の島を選んでしまう）。
+    //   今いる所は消さずに「（いまここ）」を付けて薄く・選べない（ev.choose の disabled）。まだの空白には「未」の印
     const here = { coral: 'coral', nerei: 'nerei', i_light: 'light', i_siren: 'siren', i_crab: 'crab', i_wreck: 'wreck', ghost_ship_1: 'fog' }[ctx && ctx.map];
-    const list = DEST.filter((d) => d.id !== here && (!d.cond || ev.flag(d.cond)));
-    const i = await ev.choose(list.map((d) => d.label + (X().CHART.includes(d.id) && !ev.flag('isles_chart_' + d.id) ? R.T('events.isles_helm.i.choose') : '')).concat([R.T('events.isles_helm.i.choose.0')]),
-      { cancel: list.length, text: R.T('events.isles_helm.i.choose.text') });
-    if (i >= list.length) return;
+    const list = DEST.filter((d) => !d.cond || ev.flag(d.cond));
+    const labels = list.map((d) => d.label + (d.id === here ? R.T('events.isles_helm.here') : X().CHART.includes(d.id) && !ev.flag('isles_chart_' + d.id) ? R.T('events.isles_helm.i.choose') : ''));
+    const hi = list.findIndex((d) => d.id === here);
+    const i = await ev.choose(labels.concat([R.T('events.isles_helm.i.choose.0')]),
+      { cancel: list.length, text: R.T('events.isles_helm.i.choose.text'), disabled: hi >= 0 ? [hi] : [], index: hi === 0 ? 1 : 0 });
+    if (i >= list.length || i === hi) return;
     await ev.call(list[i].ev);
   }, { meta: { needs: [], gives: [], calls: DEST.map((d) => d.ev) } });
   // 島の桟橋の船（調べると舵）

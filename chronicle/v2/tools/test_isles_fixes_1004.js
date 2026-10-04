@@ -8,6 +8,7 @@
 //     どのマップ・出現表・編成の背景 id も描いた絵（assets/env/bbg/<id>/back.png）がある。
 //   4 外洋船（isles_ship）の泊め場: コーラル・ネレイ・島 4 つで、船の後だけ船の絵（ship／ship_small）が桟橋の脇の海に泊まり、
 //     絵（船体・帆柱・帆桁・帆綱）が桟橋の板（'='）にも歩けるマスにも重ならない。舵（isles_helm／isles_boat）は桟橋の歩けるマスから向いて調べる海のマス。
+//     かじの行き先の並びはどこでも同じ（今いる所は「（いまここ）」で選べない。テスター R14）。
 //     道しるべの印（wayfind の marks「→ 外洋船のかじ」）が船の後だけ出る。幽霊船の甲板の下の船は渡り板にかからない。
 'use strict';
 const fs = require('fs');
@@ -203,6 +204,26 @@ async function main() {
       const ev = { flag: (k) => !!G.flags[k], choose: async (l, o) => { log.push(['choose', o && o.text]); return l.length - 1; }, say: async () => { log.push(['say']); }, call: async () => {} };
       await D.events.isles_helm.run(ev, { map: 'coral' });
       ok('コーラルの舵: 外洋船の後は「どこへ向かう？」を聞く', log.length === 1 && log[0][0] === 'choose', log);
+    }
+    // 行き先の並びはどこでも同じ（テスター R14）: 今いる所は「（いまここ）」で薄く・選べない、「未」の印（海図の空白）は残る
+    {
+      const runAt = async (map) => {
+        let got = null; const called = [];
+        const ev = { flag: (k) => !!G.flags[k], say: async () => {}, call: async (id) => { called.push(id); },
+          choose: async (l, o) => { got = { l, o }; return o.disabled && o.disabled.length ? o.disabled[0] : l.length - 1; } };
+        await D.events.isles_helm.run(ev, { map });
+        return { got, called };
+      };
+      const order = (l) => l.slice(0, -1).map((x) => x.replace(/（いまここ）|（海図の空白）/g, ''));
+      const res = {};
+      for (const m of ['coral', 'nerei', 'i_light', 'i_siren', 'i_crab', 'i_wreck']) res[m] = await runAt(m);
+      const base = JSON.stringify(order(res.coral.got.l));
+      ok('かじの行き先: どこで開いても同じ並び・同じ数', Object.values(res).every((r) => JSON.stringify(order(r.got.l)) === base), Object.fromEntries(Object.entries(res).map(([k, r]) => [k, r.got.l])));
+      const HERE = { coral: 0, nerei: 1, i_light: 2, i_siren: 3, i_crab: 4, i_wreck: 5 };
+      ok('かじの行き先: 今いる所は「（いまここ）」付きで選べない（disabled）', Object.entries(res).every(([k, r]) => /（いまここ）/.test(r.got.l[HERE[k]]) && r.got.o.disabled.length === 1 && r.got.o.disabled[0] === HERE[k] && r.got.l.filter((x) => /（いまここ）/.test(x)).length === 1));
+      ok('かじの行き先: 今いる所を選んでも航海しない', Object.values(res).every((r) => r.called.length === 0));
+      ok('かじの行き先: まだの海図の空白に「（海図の空白）」の印', res.coral.got.l.some((x) => /（海図の空白）/.test(x)));
+      ok('i18n: 「（いまここ）」が 5 言語', ['ja', 'en', 'zh-Hans', 'zh-Hant', 'ko'].every((l) => fs.readFileSync(path.join(V2, 'src/i18n', l, 'events_isles.js'), 'utf8').includes("'events.isles_helm.here'")));
     }
     // 渡したときのドレイクの言葉と手がかりが泊め場を言う
     const ja = fs.readFileSync(path.join(V2, 'src/i18n/ja/events_isles.js'), 'utf8');

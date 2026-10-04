@@ -1,5 +1,6 @@
 // UIK: 会話（R.UIK.Message、MODERN_UI §6.3・§5.4、V2_PLAN §2.5.6・§2.11）
-//   say({name, title, face, text, voice（id か、元のページごとの id の配列）, choices, cancel, index（最初のカーソル）, guard（true: 出てすぐの決定を受けない＝物語の大事な分かれ道だけ）}) → Promise<選んだ番号 | undefined>   場面 id 'message'（K.say）
+//   say({name, title, face, text, voice（id か、元のページごとの id の配列）, choices, cancel, index（最初のカーソル）, guard（true: 出てすぐの決定を受けない＝物語の大事な分かれ道だけ）,
+//        disabled（選べない選択肢の番号の配列。薄く描き、決定はブザー。2026-10-04 外洋船のかじの「いまここ」）}) → Promise<選んだ番号 | undefined>   場面 id 'message'（K.say）
 //     - 羊皮紙の札（下の中央、幅 760・高さ 150）。左に顔の枠 118（顔の無い人は枠ごと出さず文を左に寄せる）、上に話者名（琥珀）と肩書き
 //     - text は文字列か配列（1 つが 1 ページ）。幅で折り返し、3 行ごとに次のページへ（'\f' があればそこでも次のページへ）。{漢字|かんじ} はふりがな（設定 ruby のときだけ出す）
 //     - 送り: A・B・下キー・タップ（A3）。送ったら R.Audio.stopVoice()（A9）。途中なら全部を出す
@@ -126,6 +127,8 @@
     let src = Array.isArray(o.text) ? o.text.map(String) : [String(o.text == null ? '' : o.text)];
     const choices = Array.isArray(o.choices) ? o.choices.map(String) : [];
     const hasChoices = choices.length > 0;
+    const off = new Set(Array.isArray(o.disabled) ? o.disabled : []);   // 選べない選択肢（薄く・決定はブザー）
+    const pick = (i) => { if (off.has(i)) { UIK.sfx('buzzer'); return; } UIK.sfx('confirm'); finish(i); };
     // 文が空で選択肢だけ → 直前の会話を添える
     let context = null;
     if (hasChoices && src.join('') === '' && lastShown && R.Engine.time - lastShown.t < 600) context = lastShown;
@@ -301,9 +304,9 @@
       if (C && UIK.hit(C, p.x, p.y)) { const i = Math.floor((p.y - C.y - 8 * (R.uiScale || 1)) / C.rh); if (i >= 0 && i < n) hit = i; }
       if (hit >= 0 && I.lastDevice === 'mouse' && hit !== st.hover) { st.hover = hit; if (hit !== st.choice) { st.choice = hit; UIK.sfx('cursor'); } }
       if (p.pressed && hit >= 0) st.press = { choice: hit };
-      if (p.released && st.press && st.press.choice === hit && hit >= 0) { st.choice = hit; UIK.sfx('confirm'); finish(hit); return; }
+      if (p.released && st.press && st.press.choice === hit && hit >= 0) { st.choice = hit; st.press = null; pick(hit); return; }
       if (p.released) st.press = null;
-      if (I.pressed('a')) { UIK.sfx('confirm'); finish(st.choice); return; }
+      if (I.pressed('a')) { pick(st.choice); return; }
       if (I.pressed('b') && o.cancel != null) { UIK.sfx('cancel'); finish(o.cancel); }
     }
 
@@ -447,8 +450,11 @@
         const r = { x: C.x + 8 * k, y: C.y + 8 * k + i * C.rh, w: C.w - 16 * k, h: C.rh };
         const f = i === st.choice;
         if (f) UIK.focus(g, { x: r.x, y: r.y + 2 * k, w: r.w, h: r.h - 4 * k }, R.Engine.time, { paper: true, r: 3 * k });
+        const dim = off.has(i);
+        if (dim) { g.save(); g.globalAlpha *= 0.45; }
         UIK.text(g, a, r.x + 22 * k, r.y + (r.h - size) / 2, { size, weight: f ? 700 : 500, color: f ? T.color.ink : T.color.ink2, maxW: r.w - 30 * k - (b ? UIK.measure(b, { size }) + 16 * k : 0) });
         if (b) UIK.text(g, b, r.x + r.w - 12 * k, r.y + (r.h - size) / 2, { size, color: T.color.ink2, align: 'right' });
+        if (dim) g.restore();
       });
     }
 
