@@ -53,6 +53,8 @@ const EXCEPT = {
   pharos: { 'exit-side:f_cape@0,10': J_EDGE + '（岬の門楼を北へくぐると港町の西の門）' },
   f_cape: { 'exit-side:pharos@48,6': J_EDGE + '（岬の門楼を北へくぐると港町の西の門）' },
   d_caravan: { 'exit-side:desert_camp2@16,30': J_EDGE + '（野営地の口は南の 1 つだけ）' },
+  s_road: { 'exit-side:s_steps@47,0': J_EDGE + '（街道の北の石段を上ると、星見の坂の西の端に出る）' },
+  s_steps: { 'exit-side:s_road@0,27': J_EDGE + '（星見の坂の西の端から下ると、街道の北の石段）' },
   desert_camp2: { 'exit-side:d_caravan@14,21': J_EDGE + '（野営地の口は南の 1 つだけ）' },
   d_hollow: { 'exit-side:desert_oldcamp@22,17': J_EDGE + '（岩山の洞の口を北へ入ると、古い野営地の東の口）' },
   desert_oldcamp: { 'exit-side:d_hollow@27,10': J_EDGE + '（岩山の洞の口を北へ入ると、古い野営地の東の口）' },
