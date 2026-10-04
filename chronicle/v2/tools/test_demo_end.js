@@ -141,7 +141,8 @@ const ev = Object.assign({}, R.Events.makeEv ? R.Events.makeEv({}) : {}, {
   ok('通せんぼは体験版の間だけ閉じる（文「体験版では、ここから先へは行けません」）', !!shut && shut(g1.gate) === true && /体験版では、ここから先へは\n行けません/.test(g1.gate.text));
   DB.config.slice = false; ok('製品版（slice 偽）では開く', shut(g1.gate) === false); DB.config.slice = true;
   // 峠の出口の行き先は前のワールドか、峠の先の地方のエリア（雪原 f_snowpass・砂漠のエリアなど。行き先は体験版で行けない地方）
-  for (const mid of ['f_cross', 'f_south', 'f_windhill']) {
+  // 北の野（f_cross）の東は山あいの街道（s_road、体験版でも歩ける。2026-10-04）へ。峠の口は街道の南（湿原）と北（星見の坂）
+  for (const mid of ['s_road', 'f_south', 'f_windhill']) {
     const ex = (M[mid].exits || []).filter((e) => e.to && M[e.to.map] && (e.to.map === 'world' || !DG.isOpen(e.to.map)) && e.cond);
     const mir = ex.find((e) => e.demoMirror), off = mir && ex.find((e) => !e.demoMirror && e.x === mir.x && e.y === mir.y);
     ok(`${mid}: 峠の消える出口に、体験版の間だけの写し（黙って何も起きない、を無くす）`, !!(off && mir && R.State.check(mir.cond) && !R.State.check(off.cond) && shut(mir.gate)));
