@@ -47,6 +47,11 @@
 //   R.Audio.playVoice(id) → handle|null, stopVoice(handle?) — own bus (Settings.voiceVolume), BGM −9 dB
 //   R.Audio.preloadVoice(ids) → Promise — fetch + decode voice lines ahead (the opening; packed voice/pack_NN.ogg).
 //   while a line plays. setVolumes(bgm, sfx, voice).
+//   Recorded SFX / ambience (design/notes/audio.md §15, §15.1): RPG_MEDIA.sfx {'<id>.<k>': url} and RPG_MEDIA.amb
+//   {bed: {url, loopStart, loopEnd}}. sfx(id) plays a random decoded take (never the last one) at gain 1 through the
+//   synth's per-sound path, the synth def lending only its S.duck(); not decoded yet / no takes → the synth. All takes
+//   are decoded in the background after init. ambience(spec) plays the bed's file looped when listed (else procedural).
+//   R.Audio.mediaInfo() → which sfx / beds are recorded vs synthesised (also in debug().media).
 //   R.Audio.battleVoiceId(id) — any battle clip by id (no duck, replaces only the previous battle voice).
 //   R.Audio.battleVoice(kind[, gender]) — the hero's battle shout v_hero_<m|f>_<kind>_<n> (random clip, no duck;
 //   kinds attack glimmer spell hurt ko victory; gender from R.State.hero().gender). Missing → silent.
@@ -1185,17 +1190,57 @@
     /** dip the music under this sound: S.duck(db, holdSeconds, t) */
     duck(db, hold, t) { this.mx.duck(db, hold, this.t0 + (t || 0)); return this; }
   }
-  function playSfx(mx, def, t) {
+  /** a sound's last node → (pan) → sfxBus. o = {vol, pan} of sfx(id, o). → the extra nodes (to disconnect later) */
+  function sfxOut(mx, node, o) {
+    const c = mx.ctx;
+    if (o && o.pan && c.createStereoPanner) {
+      const p = c.createStereoPanner();
+      p.pan.value = Math.max(-1, Math.min(1, +o.pan || 0));
+      node.connect(p); p.connect(mx.sfxBus);
+      return [p];
+    }
+    node.connect(mx.sfxBus);
+    return [];
+  }
+  function playSfx(mx, def, t, o) {
     const c = mx.ctx, out = c.createGain(), send = c.createGain();
     send.gain.value = 0;
-    out.connect(mx.sfxBus); out.connect(send); send.connect(mx.sfxEcho.input);
+    // vol / pan (sfx(id, {vol, pan})) after the def's own S.gain(): out → post → (pan) → sfxBus, echo send from post
+    const post = o && (o.vol != null || o.pan) ? c.createGain() : out;
+    if (post !== out) { post.gain.value = o.vol != null ? Math.max(0, +o.vol || 0) : 1; out.connect(post); }
+    const extra = sfxOut(mx, post, o);
+    post.connect(send); send.connect(mx.sfxEcho.input);
     const S = new Kit(mx, out, send, t);
     try { (typeof def === 'function' ? def : def.play)(S); } catch (e) { console.error('[audio] sfx', e); }
     const inst = {
       out, end: S.end,
       kill(now) { holdParam(out.gain, now); out.gain.linearRampToValueAtTime(0, now + 0.03); },
     };
-    if (mx.live) setTimeout(() => { try { out.disconnect(); send.disconnect(); } catch (e) { /* ignore */ } }, (S.end - c.currentTime + 1.5) * 1000);
+    if (mx.live) setTimeout(() => { try { out.disconnect(); send.disconnect(); if (post !== out) post.disconnect(); for (const n of extra) n.disconnect(); } catch (e) { /* ignore */ } }, (S.end - c.currentTime + 1.5) * 1000);
+    return inst;
+  }
+  /** run a synth def only for its S.duck() (a recorded take plays instead of the synth: glimmer, crit dip the music) */
+  const KIT_NOOP = ['tone', 'noise', 'fm', 'seq', 'bells', 'drum', 'inst', 'wet', 'gain'];
+  function sfxDuckOnly(mx, def, t) {
+    const K = { t0: t, end: t, duck(db, hold, dt) { mx.duck(db, hold, t + (dt || 0)); return K; } };
+    for (const k of KIT_NOOP) K[k] = () => K;
+    try { (typeof def === 'function' ? def : def.play)(K); } catch (e) { /* the def only lends its duck */ }
+  }
+  /** one recorded take at gain 1 (× o.vol) on the sfx bus — no echo send (the take has its own tail) */
+  function playRecSfx(mx, buf, t, o, def) {
+    const c = mx.ctx, out = c.createGain(), src = c.createBufferSource();
+    out.gain.value = o && o.vol != null ? Math.max(0, +o.vol || 0) : 1;
+    src.buffer = buf;
+    src.connect(out);
+    const extra = sfxOut(mx, out, o);
+    src.start(t);
+    if (def) sfxDuckOnly(mx, def, t);
+    const end = t + buf.duration;
+    const inst = {
+      out, end, rec: true,
+      kill(now) { holdParam(out.gain, now); out.gain.linearRampToValueAtTime(0, now + 0.03); try { src.stop(now + 0.05); } catch (e) { /* ignore */ } },
+    };
+    if (mx.live) setTimeout(() => { try { src.disconnect(); out.disconnect(); for (const n of extra) n.disconnect(); } catch (e) { /* ignore */ } }, (end - c.currentTime + 0.5) * 1000);
     return inst;
   }
 
@@ -1212,9 +1257,11 @@
   // ------------------------------------------------ recorded media (BGM files, voice lines)
   // window.RPG_MEDIA = {bgm:{id:{src,...}}, voice:{id:{src}}} is written by tools/build.js (data: URLs
   // when embedded, relative URLs with --bgm external / in debug.html). Missing → nothing changes.
-  const MEDIA_KEEP = { bgm: 6, voice: 24 }; // decoded buffers kept (PCM is ≈ 21 MB per stereo minute)
+  // decoded buffers kept (PCM is ≈ 21 MB per stereo minute): every SFX take (≈ 120 short takes, all kept); ambience beds
+  // (20–55 s stereo, ≈ 8–20 MB each): the playing / wanted one + 1 more
+  const MEDIA_KEEP = { bgm: 6, voice: 24, sfx: Infinity, amb: 1 };
   const VOICE_DUCK_DB = 20 * Math.log10(0.6); // BGM level under a voice line (×0.6, V2_PLAN §2.5.4)
-  const bufs = { bgm: new Map(), voice: new Map() };
+  const bufs = { bgm: new Map(), voice: new Map(), sfx: new Map(), amb: new Map() };
   let useSerial = 0;
   let voice = null;                         // the voice line playing {id, src, out, stopped}
   function mediaEntry(kind, id) {
@@ -1231,7 +1278,7 @@
   /** drop the least recently used decoded buffers beyond MEDIA_KEEP (never the ones in use) */
   function trimBufs(kind) {
     const cache = bufs[kind], keep = MEDIA_KEEP[kind];
-    const busy = new Set([cur && cur.id, voice && voice.id, ...stack.map((e) => e && e.id)]);
+    const busy = new Set(kind === 'amb' ? [AS.cur && AS.cur.file, AS.wantFile] : [cur && cur.id, voice && voice.id, ...stack.map((e) => e && e.id)]);
     const done = [...cache.entries()].filter(([id, c]) => c.state === 'ok' && !busy.has(id)).sort((a, b) => a[1].used - b[1].used);
     while (done.length > keep) cache.delete(done.shift()[0]);
   }
@@ -1242,12 +1289,62 @@
     const cache = bufs[kind];
     let c = cache.get(id);
     if (c) { c.used = ++useSerial; return c; }
-    c = { state: 'loading', buf: null, used: ++useSerial };
+    c = { key: id, state: 'loading', buf: null, used: ++useSerial };
     cache.set(id, c);
     c.p = R.Media.bytes(kind, id).then(decodeBuf).then(
       (buf) => { c.buf = buf; c.state = 'ok'; trimBufs(kind); return c; },
-      (err) => { c.state = 'fail'; warnOnce(kind + 'file:' + id, `audio: cannot decode ${kind} file '${id}' (${err && err.message || err})` + (kind === 'bgm' ? ' — using the synth track' : '')); return c; });
+      (err) => { c.state = 'fail'; warnOnce(kind + 'file:' + id, `audio: cannot decode ${kind} file '${id}' (${err && err.message || err})` + (kind === 'bgm' ? ' — using the synth track' : kind === 'sfx' ? ' — using the synth' : kind === 'amb' ? ' — using the procedural bed' : '')); return c; });
     return c;
+  }
+  // ------------------------------------------------ recorded SFX takes (assets/sfx, design/notes/audio.md §15.1)
+  // RPG_MEDIA.sfx = {'<id>.<k>': url}; the build leaves out keepSynth ids, so they have no takes and stay synthesised.
+  let takeIdx = null, takeSrc = null, takeN = -1;
+  /** the take keys of an id ('hit' → ['hit.0', 'hit.1', 'hit.2']) */
+  function sfxTakes(id) {
+    const t = R.Media && R.Media.table ? R.Media.table().sfx : null;
+    if (!t) return [];
+    const n = Object.keys(t).length;
+    if (t !== takeSrc || n !== takeN) {
+      takeSrc = t; takeN = n; takeIdx = {};
+      for (const k of Object.keys(t).sort()) { const m = /^(.+)\.(\d+)$/.exec(k); if (m) (takeIdx[m[1]] = takeIdx[m[1]] || []).push(k); }
+    }
+    return takeIdx[id] || [];
+  }
+  /** the id whose takes play for `id`: itself, or the target of a v2 alias forwarder (sfx_v2.js: lamp → light) */
+  function recSfxId(id, def) {
+    if (sfxTakes(id).length) return id;
+    const to = def && def._alias;
+    return to && sfxTakes(to).length ? to : null;
+  }
+  const lastTake = {};
+  /** a random decoded take of `rid`, never the one played last (a take whose siblings all failed may repeat).
+   *  Starts decoding takes that are not loaded yet. → cache entry | null (none decoded yet → the synth plays) */
+  function pickTake(rid) {
+    const keys = sfxTakes(rid);
+    if (!keys.length || !ctx) return null;
+    const cs = keys.map((k) => loadBuffer('sfx', k)).filter(Boolean);
+    let pool = cs.filter((c) => c.state === 'ok' && (cs.length < 2 || c.key !== lastTake[rid]));
+    if (!pool.length && cs.every((c) => c.state === 'fail' || c.key === lastTake[rid])) pool = cs.filter((c) => c.state === 'ok');
+    if (!pool.length) return null;
+    const c = pool[Math.floor(Math.random() * pool.length)];
+    lastTake[rid] = c.key;
+    return c;
+  }
+  let sfxPreload = 0;   // 0 not started, 1 running, 2 done
+  /** decode every take in the background (after init; two at a time in idle slices) so the first play is not the synth */
+  function preloadSfx() {
+    if (sfxPreload || !ctx) return;
+    const t = R.Media && R.Media.table ? R.Media.table().sfx : null;
+    const keys = t ? Object.keys(t).sort() : [];
+    sfxPreload = keys.length ? 1 : 2;
+    const idle = window.requestIdleCallback ? (f) => window.requestIdleCallback(f, { timeout: 500 }) : (f) => setTimeout(f, 30);
+    let i = 0, lanes = Math.min(2, keys.length);
+    const next = () => {
+      if (i >= keys.length) { if (--lanes === 0) sfxPreload = 2; return; }
+      const c = loadBuffer('sfx', keys[i++]);
+      if (c && c.state === 'loading') c.p.then(() => idle(next)); else idle(next);
+    };
+    for (let k = lanes; k > 0; k--) idle(next);
   }
   function voiceDuck(on) {
     if (!mx) return;
@@ -1381,6 +1478,7 @@
       } catch (e) { /* no DOM (tests) */ }
       if (cur && !pb && !jin) startCur({ fadeIn: 0.05 });
       ambInit();   // init の前に頼まれていた環境音を鳴らし始める
+      setTimeout(preloadSfx, 600);   // 録音の効果音を裏で全部解く（≈ 1.8 MB。解けるまでは合成の音）
       // the battle track is pushed often: decode its recorded version early (no-op without a file)
       // compile the remaining tracks in idle slices so the first battle never hitches
       const ids = Object.keys(DB.music);
@@ -1475,16 +1573,37 @@
     },
     /** 鳴っているジングルの id（無ければ null） */
     get jingleId() { return jin ? jin.pb.id : null; },
-    sfx(id) {
+    /** play an effect. o = {vol (×, default 1), pan (−1…1)}. A recorded take when one is decoded, else the synth */
+    sfx(id, o) {
       if (!mx || !(running() || Date.now() - initAt < 1500)) return;
       const def = sfxDef(id);
-      if (!def) { warnOnce('sfx:' + id, `audio: unknown sfx '${id}'`); return; }
+      const rid = recSfxId(id, def);
+      if (!def && !rid) { warnOnce('sfx:' + id, `audio: unknown sfx '${id}'`); return; }
       const now = ctx.currentTime;
       if (lastSfx[id] != null && now - lastSfx[id] < 0.03 && now >= lastSfx[id]) return;
+      const take = rid ? pickTake(rid) : null;
+      if (!take && !def) return;   // a recorded-only id whose takes are still decoding
       lastSfx[id] = now;
       const list = (liveSfx[id] = (liveSfx[id] || []).filter((x) => x.end > now));
       if (list.length >= 3) list.shift().kill(now);
-      list.push(playSfx(mx, def, now + 0.005));
+      list.push(take ? playRecSfx(mx, take.buf, now + 0.005, o, def) : playSfx(mx, def, now + 0.005, o));
+    },
+    /** tests: the take sfx(id) would play now (advances the no-repeat memory) → key | null (synth); the live instances of id */
+    _sfxPick(id) { const rid = recSfxId(id, sfxDef(id)); const c = rid ? pickTake(rid) : null; return c ? c.key : null; },
+    _duckGain() { return mx ? mx.duckG.gain.value : null; },
+    _sfxLive(id) { return (liveSfx[id] || []).map((x) => ({ rec: !!x.rec, end: x.end })); },
+    /** which effects / ambience beds are recorded (QA, debug overlay). sfx.recorded: ids with takes in RPG_MEDIA.sfx;
+     *  sfx.synth: the listed ids (IDS.sfx) without; decoded = takes ready to play; amb.playing: the file of the bed playing */
+    mediaInfo() {
+      const M = R.Media && R.Media.table ? R.Media.table() : { sfx: {}, amb: {} };
+      sfxTakes('');
+      const rec = Object.keys(takeIdx || {}).sort();
+      let decoded = 0;
+      for (const c of bufs.sfx.values()) if (c.state === 'ok') decoded++;
+      return {
+        sfx: { recorded: rec, synth: IDS.sfx.filter((id) => !rec.includes(id)), takes: Object.keys(M.sfx || {}).length, decoded, preload: ['idle', 'running', 'done'][sfxPreload] },
+        amb: { recorded: Object.keys(M.amb || {}).sort(), procedural: AMB_FILE_IDS.filter((b) => !(M.amb || {})[b]), playing: AS.cur && AS.cur.alive ? AS.cur.file || null : null, decoded: [...bufs.amb.entries()].filter(([, c]) => c.state === 'ok').map(([k]) => k) },
+      };
     },
     /** dip the BGM by `db` (e.g. -6) for `frames` (60 fps), then recover in 0.25 s. No-op when locked */
     duck(db, frames) {
@@ -1620,7 +1739,7 @@
         ctx: ctx ? ctx.state : 'none', current: cur ? cur.id : null, playing: pb ? pb.id : null, file: !!(pb && pb.file),
         voice: voice && !voice.stopped ? voice.id : null,
         serial: pb ? pb.serial : 0, pos: +(pb ? pb.position(now) : cur ? cur.pos : 0).toFixed(2),
-        jingle: jin ? jin.pb.id : null, stack: stack.map((e) => e && e.id), volumes: Object.assign({}, vols), ambience: A.ambienceInfo(),
+        jingle: jin ? jin.pb.id : null, stack: stack.map((e) => e && e.id), volumes: Object.assign({}, vols), ambience: A.ambienceInfo(), media: A.mediaInfo(),
       };
     },
     /** {duration, loopStart, loopEnd, loop} of a track (no audio needed) */
@@ -1673,7 +1792,7 @@
         if (reg[id]) continue;
         const to = standIn(table, reg, id);
         if (!to) continue;
-        if (kind === 'sfx') reg[id] = (S) => reg[to](S); else reg[id] = reg[to];
+        if (kind === 'sfx') { reg[id] = (S) => reg[to](S); reg[id]._alias = to; } else reg[id] = reg[to];
         if (!A.PENDING.includes(id)) A.PENDING.push(id);
       }
     };
@@ -1695,7 +1814,13 @@
   //   AudioContext が無い間は覚えておくだけ（init で鳴らし始める）。タブを隠すと context ごと止まる（上の visibilitychange）。
   //   粒と揺れは pump（25 ms ごと、context が動いている間だけ）が AMB_LEAD 秒先まで置く。
   // R.Audio.ambienceMod(v 0〜1 | null) — 床の突風の強さを外から合わせる（砂嵐の絵の「風の帯」と同じうねり）。null で床自身の揺れに戻す
-  // R.Audio.ambienceInfo() → {bed, i, alive, nodes, srcs} | null（テスト・QA）
+  // R.Audio.ambienceInfo() → {bed, i, alive, nodes, srcs, file} | null（テスト・QA。file = 鳴っている録音の床の id、作った床は null）
+  // 録音の床（2026-10-04、§15.1）: RPG_MEDIA.amb にその床（ambRecId: forest/breeze は night ≥ 0.5 で _night、rain＋surf は rain_surf、
+  //   cave＋dry は tomb、sea＋muffled は ship）があれば、作った床の代わりにそのファイルを回す（AmbFile: loopStart〜loopEnd、
+  //   音量 1 × (0.35 + 0.65 i)、同じ 45 Hz の低域カット、入り・抜けの fade も同じ）。粒（鳥・雫など）は録音に入っているので足さない。
+  //   初めての床は解くのを待つ: 1 秒（AMB_WAIT）までは黙って待ち（前の床が消えていく間）、それでも解けなければ作った床で始め、
+  //   解けたら AMB_SWAP 秒で録音へ入れ替える。同じファイルに当たる spec の変化（強さ・夜の 0.25 刻み）は鳴らし直さず強さだけ動かす。
+  //   ambienceMod（砂嵐の突風）は録音には効かない（録音が自分の突風を持つ）。renderAmbience は作った床だけ（テスト用）。
   // R.Audio.renderAmbience(octx, spec, {dur, volume, at, to, fade}) — オフラインで鳴らす（at 秒で to へ入れ替え。to: null は消すだけ）→ {beds}
   const AMB_FADE = 1.2;
   const AMB_LEAD = 0.6;
@@ -2131,7 +2256,60 @@
     },
   };
 
-  const AS = { cur: null, want: null, key: '', mod: null };
+  /** 録音の床 1 つ（AmbBed と同じ形: name i alive nodes srcs spec schedule mod stop。file = 録音の id） */
+  class AmbFile {
+    constructor(m, dest, spec, file, buf, meta, at, fade) {
+      const c = (this.c = m.ctx);
+      this.m = m; this.spec = spec; this.name = spec.bed; this.file = file; this.t0 = at;
+      this.i = Math.max(0, Math.min(1, spec.i == null ? 1 : +spec.i || 0));
+      this.srcs = []; this.nodes = []; this.alive = true; this.stopAt = null;
+      this.out = this.node(c.createGain());
+      this.out.gain.setValueAtTime(0, at);
+      this.out.gain.linearRampToValueAtTime(1, at + Math.max(0.02, fade || 0));
+      this.out.connect(dest);
+      this.bus = this.node(c.createGain());
+      this.bus.gain.value = 0.35 + 0.65 * this.i;   // 録音は強さ 1・音量 10 の作った床と同じ大きさ（§15）
+      const hp = this.node(c.createBiquadFilter());
+      hp.type = 'highpass'; hp.frequency.value = 45; hp.Q.value = 0.6;
+      const s = this.node(c.createBufferSource());
+      s.buffer = buf; s.loop = true;
+      const dur = buf.duration, ls = Math.max(0, Math.min(dur, +(meta && meta.loopStart) || 0));
+      let le = meta && meta.loopEnd > 0 ? Math.min(dur, +meta.loopEnd) : dur;
+      if (!(le > ls + 0.5)) le = dur;
+      s.loopStart = ls; s.loopEnd = le;
+      s.connect(this.bus); this.bus.connect(hp); hp.connect(this.out);
+      // 毎回違う所から（同じ床に戻るたびに同じ頭を聞かせない）。seed があればそれで決める（テスト）
+      const r = spec.seed != null ? ambRng(spec.seed)() : Math.random();
+      s.start(at, ls + r * (le - ls));
+      this.srcs.push(s);
+    }
+    node(n) { this.nodes.push(n); return n; }
+    schedule() { /* 粒も揺れも録音の中 */ }
+    mod() { /* 録音は自分の突風を持つ */ }
+    /** 強さだけ変える（同じファイルの spec の変化） */
+    setI(i, now) {
+      this.i = Math.max(0, Math.min(1, i == null ? 1 : +i || 0));
+      holdParam(this.bus.gain, now);
+      this.bus.gain.linearRampToValueAtTime(0.35 + 0.65 * this.i, now + 1);
+    }
+    stop(fade, now) { AmbBed.prototype.stop.call(this, fade, now); }
+  }
+  const AMB_FILE_IDS = Object.keys(AMB).concat(['forest_night', 'breeze_night', 'rain_surf', 'tomb', 'ship']).sort();   // 録音の床になれる id
+  const AMB_WAIT = 1.0;   // 初めての録音の床を黙って待つ秒数（その後は作った床で始める）
+  const AMB_SWAP = 2.5;   // 作った床 → 解けた録音の入れ替えの秒数
+  /** spec → 鳴らす録音の id（RPG_MEDIA.amb に無ければ null = 作った床） */
+  function ambRecId(spec) {
+    if (!spec || !spec.bed) return null;
+    const b = spec.bed;
+    let id = b;
+    if (b === 'forest' || b === 'breeze') id = (+spec.night || 0) >= 0.5 ? b + '_night' : b;
+    else if (b === 'rain' && spec.surf) id = 'rain_surf';
+    else if (b === 'cave' && spec.dry) id = 'tomb';
+    else if (b === 'sea' && spec.muffled) id = 'ship';
+    return mediaEntry('amb', id) ? id : null;
+  }
+
+  const AS = { cur: null, want: null, key: '', mod: null, gen: 0, wantFile: null };
   function ambSpec(spec) {
     if (!spec) return null;
     if (typeof spec === 'string') spec = { bed: spec };
@@ -2143,11 +2321,30 @@
     const n = (v) => (v == null ? '' : (+v).toFixed(2));
     return [s.bed, n(s.i == null ? 1 : s.i), n(s.night), n(s.surf), s.dry ? 1 : 0, s.muffled ? 1 : 0, s.seed == null ? '' : s.seed].join('|');
   }
-  function ambStart(fade) {
-    if (!mx || !AS.want) return;
+  function ambProc(fade) {
     AS.cur = new AmbBed(mx, ambBus(mx), AS.want, ctx.currentTime + 0.03, fade);
     if (AS.mod != null) AS.cur.mod(AS.mod);
     if (running()) AS.cur.schedule(ctx.currentTime + AMB_LEAD);
+  }
+  function ambStart(fade) {
+    if (!mx || !AS.want) return;
+    const gen = ++AS.gen, rid = ambRecId(AS.want);
+    AS.wantFile = rid;
+    const c = rid ? loadBuffer('amb', rid) : null;
+    if (c && c.state === 'ok') { AS.cur = new AmbFile(mx, ambBus(mx), AS.want, rid, c.buf, mediaEntry('amb', rid), ctx.currentTime + 0.03, fade); return; }
+    if (c && c.state === 'loading') {
+      const timer = setTimeout(() => { if (AS.gen === gen && !AS.cur && mx && AS.want) ambProc(fade); }, AMB_WAIT * 1000);
+      c.p.then(() => {
+        clearTimeout(timer);
+        if (AS.gen !== gen || !mx || !AS.want) return;
+        if (c.state !== 'ok') { if (!AS.cur) ambProc(fade); return; }
+        const xf = AS.cur ? AMB_SWAP : fade;
+        if (AS.cur) AS.cur.stop(xf, ctx.currentTime);
+        AS.cur = new AmbFile(mx, ambBus(mx), AS.want, rid, c.buf, mediaEntry('amb', rid), ctx.currentTime + 0.03, xf);
+      });
+      return;
+    }
+    ambProc(fade);
   }
   function ambPump(now) { if (AS.cur) AS.cur.schedule(now + AMB_LEAD); }
   function ambVol() {
@@ -2161,7 +2358,14 @@
     spec = ambSpec(spec);
     const key = ambKey(spec);
     if (key === AS.key) return false;
-    AS.key = key; AS.want = spec;
+    // 同じ録音に当たる変化（強さ・夜の深さが同じ側）: 鳴らし直さず強さだけ動かす
+    if (spec && mx && AS.cur && AS.cur.file && AS.cur.alive && AS.cur.name === spec.bed && ambRecId(spec) === AS.cur.file) {
+      AS.key = key; AS.want = spec; AS.cur.spec = spec;
+      AS.cur.setI(spec.i, ctx.currentTime);
+      return true;
+    }
+    AS.key = key; AS.want = spec; AS.gen++;
+    if (!spec) AS.wantFile = null;
     const fade = o && o.fade != null ? Math.max(0.02, +o.fade || 0) : AMB_FADE;
     if (!mx) return true;
     if (AS.cur) { AS.cur.stop(fade, ctx.currentTime); AS.cur = null; }
@@ -2174,10 +2378,11 @@
   };
   A.ambienceInfo = function () {
     const b = AS.cur;
-    if (!b) return AS.want ? { bed: AS.want.bed, i: AS.want.i == null ? 1 : AS.want.i, alive: false, nodes: 0, srcs: 0 } : null;
-    return { bed: b.name, i: b.i, alive: b.alive, nodes: b.nodes.length, srcs: b.srcs.length };
+    if (!b) return AS.want ? { bed: AS.want.bed, i: AS.want.i == null ? 1 : AS.want.i, alive: false, nodes: 0, srcs: 0, file: null, loading: AS.wantFile || null } : null;
+    return { bed: b.name, i: b.i, alive: b.alive, nodes: b.nodes.length, srcs: b.srcs.length, file: b.file || null, loading: !b.file && AS.wantFile ? AS.wantFile : null, since: b.t0 };
   };
   A.AMB_BEDS = Object.keys(AMB);
+  A.ambienceFileId = ambRecId;   // spec → 録音の床の id | null（テスト）
   A.AMB_TRIM = AMB_TRIM;
   A.renderAmbience = function (octx, spec, o) {
     o = o || {};

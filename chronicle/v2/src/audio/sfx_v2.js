@@ -11,6 +11,7 @@
       if (R.DB.sfx[id]) continue;
       const to = ALIAS_SFX[id];
       R.DB.sfx[id] = function (S) { const f = R.DB.sfx[to] || R.DB.sfx.confirm; if (f) f(S); };
+      R.DB.sfx[id]._alias = to;   // core/audio.js: 録音の効果音もこの付け替え先の物を鳴らす（lamp → light の録音）
     }
     for (const id of Object.keys(ALIAS_MUSIC)) {
       if (!R.DB.music[id] && R.DB.music[ALIAS_MUSIC[id]]) R.DB.music[id] = R.DB.music[ALIAS_MUSIC[id]];

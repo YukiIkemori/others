@@ -5,7 +5,7 @@
 //   node v2/tools/build.js --single        媒体（BGM・ボイス・顔絵）を全部埋め込んだ 1 枚の index.html（オーナーに渡す版）
 //   node v2/tools/build.js --check         構文だけ調べる（壊れたファイルがあれば終了コード 1）
 //   オプション:
-//     --media <dir>        bgm/・voice/・portraits/ を読む元（既定 chronicle/assets）
+//     --media <dir>        bgm/・voice/・portraits/・sfx/・amb/ を読む元（既定 chronicle/assets）
 //     --all-bgm            縦切りで使わない BGM も入れる（既定は §3.10 の 17 曲＋新しい 5 曲 = --slice）
 //     --portraits <m>      approved（既定。chronicle/design/portraits/manifest.json で approved の物だけ。顔絵は一人 neutral 1 枚）| all | none
 //     --out <dir>          出力先（既定 v2/dist。テスト用）
@@ -21,7 +21,10 @@
 // 構文の壊れたファイルは警告して外す（誰かの作業中の壊れでほかの人が止まらない）。
 // 書体: 使う字を src/** とフィクスチャから集め、Zen Maru Gothic（Medium・Bold）を pyftsubset で woff2 に切り出して埋め込む。
 //   Cinzel（英字）は latin の woff2 をそのまま埋め込む。どちらも OFL（v2/assets/fonts/OFL_*.txt）。
-// 媒体: 既定は外に置く（dist/bgm・dist/voice・dist/portraits に写す）。--single は <script type="application/octet-stream">
+// 媒体: 既定は外に置く（dist/bgm・dist/voice・dist/portraits・dist/sfx・dist/amb に写す）。
+//   録音の効果音 sfx/<id>.<k>.ogg（＋<id>.json）→ RPG_MEDIA.sfx['<id>.<k>'] = url（keepSynth: true の id は写さない＝合成のまま）。
+//   録音の環境音 amb/<床>.ogg（＋<床>.json）→ RPG_MEDIA.amb['<床>'] = {url, loopStart, loopEnd}（keepProcedural・weak は写さない）。
+//   どちらも縦切り・製品版の両方に入れる（design/notes/audio.md §15.1）。--single は <script type="application/octet-stream">
 //   の base64 として置き、起動時には解かない（初めて使うときに core/media.js が Blob にする）。
 // どの版も実行時に外へ通信しない（書体も埋め込み。外のスタイルシートを読まない）。
 'use strict';
@@ -214,9 +217,47 @@ function cjkFontCss(files, cacheDir) {
 }
 
 // ------------------------------------------------------------------ 媒体
-/** {bgm: [{id, file, ext, meta}], voice: […], portraits: [{id: 'portrait:<look>:<expr>', file, ext}]} */
+/** 録音の効果音（assets/sfx/<id>.json の files）。keepSynth: true の id は入れない（合成のまま）。→ {list: [{id: '<id>.<k>', file, ext}], skipped: [id]} */
+function scanSfx(dir) {
+  const list = [], skipped = [];
+  if (!fs.existsSync(dir)) return { list, skipped };
+  for (const f of fs.readdirSync(dir).sort()) {
+    const m = /^([a-z0-9_]+)\.json$/.exec(f);
+    if (!m) continue;
+    let j;
+    try { j = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')); } catch (e) { console.warn(`[build] sfx/${f}: bad JSON — skipped (${e.message})`); continue; }
+    if (j.keepSynth) { skipped.push(m[1]); continue; }
+    (Array.isArray(j.files) ? j.files : []).forEach((name, k) => {
+      const fm = /^([a-z0-9_]+)\.(\d+)\.(ogg|m4a|mp3|wav)$/.exec(String(name));
+      const file = path.join(dir, String(name));
+      if (!fm || fm[1] !== m[1] || !fs.existsSync(file)) { console.warn(`[build] sfx/${f}: take ${name} missing or misnamed — skipped`); return; }
+      list.push({ id: `${m[1]}.${fm[2]}`, ext: fm[3], file, meta: {} });
+    });
+  }
+  return { list, skipped };
+}
+/** 録音の環境音（assets/amb/<床>.ogg ＋ .json）。keepProcedural・weak の床は入れない（作った音のまま）。→ {list: [{id, file, ext, meta: {loopStart, loopEnd}}], skipped} */
+function scanAmb(dir) {
+  const list = [], skipped = [];
+  if (!fs.existsSync(dir)) return { list, skipped };
+  for (const f of fs.readdirSync(dir).sort()) {
+    const m = /^([a-z0-9_]+)\.json$/.exec(f);
+    if (!m) continue;
+    let j;
+    try { j = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')); } catch (e) { console.warn(`[build] amb/${f}: bad JSON — skipped (${e.message})`); continue; }
+    if (j.keepProcedural || j.weak) { skipped.push(m[1]); continue; }
+    const ext = ['ogg', 'm4a', 'mp3', 'wav'].find((x) => fs.existsSync(path.join(dir, m[1] + '.' + x)));
+    if (!ext) continue;
+    const meta = {};
+    for (const k of ['loopStart', 'loopEnd']) if (typeof j[k] === 'number' && isFinite(j[k]) && j[k] >= 0) meta[k] = j[k];
+    list.push({ id: m[1], ext, file: path.join(dir, m[1] + '.' + ext), meta });
+  }
+  return { list, skipped };
+}
+/** {bgm: [{id, file, ext, meta}], voice: […], portraits: [{id: 'portrait:<look>:<expr>', file, ext}], sfx: […], amb: […], skipped: {sfx, amb}} */
 function scanMedia(root, o) {
   const out = { bgm: [], voice: [], portraits: [] };
+  { const s = scanSfx(path.join(root, 'sfx')), a = scanAmb(path.join(root, 'amb')); out.sfx = s.list; out.amb = a.list; out.skipped = { sfx: s.skipped, amb: a.skipped }; }
   for (const kind of ['bgm', 'voice', 'portraits']) {
     const dir = path.join(root, kind);
     if (!fs.existsSync(dir)) continue;
@@ -377,7 +418,7 @@ function copyIfChanged(src, dst) {
 }
 /** → {script, embeds, bytes}。mode 'external' は outDir/<kind>/ に写して相対 URL、'embed' は埋め込み、'none' は空 */
 function mediaTable(media, mode, outDir) {
-  const table = { bgm: {}, voice: {}, portraits: {}, sprites: {}, env: {}, title: {}, monsters: {}, fx: {} };
+  const table = { bgm: {}, voice: {}, portraits: {}, sprites: {}, env: {}, title: {}, monsters: {}, fx: {}, sfx: {}, amb: {} };
   const embeds = [];
   let bytes = 0;
   media.sprites = media.sprites || [];
@@ -385,8 +426,10 @@ function mediaTable(media, mode, outDir) {
   media.title = media.title || [];
   media.monsters = media.monsters || [];
   media.fx = media.fx || [];
+  media.sfx = media.sfx || [];
+  media.amb = media.amb || [];
   const base = (e) => e.outName || path.basename(e.file);
-  for (const kind of ['bgm', 'voice', 'portraits', 'sprites', 'env', 'title', 'monsters', 'fx']) {
+  for (const kind of ['bgm', 'voice', 'portraits', 'sprites', 'env', 'title', 'monsters', 'fx', 'sfx', 'amb']) {
     const extDir = path.join(outDir, kind);
     if (mode === 'external') {
       fs.mkdirSync(extDir, { recursive: true });
@@ -410,12 +453,12 @@ function mediaTable(media, mode, outDir) {
         // タイトルの絵は webp が読めないときの png も写す（--single には入れない。TITLE_ART §2）
         if (kind === 'title' && e.png) { e.pngV = copyIfChanged(e.png, path.join(extDir, e.id + '.png')); bytes += fs.statSync(e.png).size; }
       } else continue;
-      table[kind][e.id] = kind === 'bgm' ? Object.assign({ url }, e.meta) : kind === 'sprites' || kind === 'env' || kind === 'monsters' || kind === 'fx' ? { url, meta: e.meta }
+      table[kind][e.id] = kind === 'bgm' || kind === 'amb' ? Object.assign({ url }, e.meta) : kind === 'sprites' || kind === 'env' || kind === 'monsters' || kind === 'fx' ? { url, meta: e.meta }
         : kind === 'title' ? (mode === 'external' && e.png ? { url, png: kind + '/' + e.id + '.png' + (e.pngV ? '?v=' + e.pngV : '') } : { url }) : url;
     }
   }
   if (mode !== 'none' && media.titleMeta) table.titleMeta = media.titleMeta;
-  return { script: `<script>window.RPG_MEDIA=${JSON.stringify(table)};</script>`, embeds: embeds.join('\n'), bytes, counts: { bgm: media.bgm.length, voice: media.voice.length, portraits: media.portraits.length, sprites: media.sprites.length, env: media.env.length, title: media.title.length, fx: media.fx.length } };
+  return { script: `<script>window.RPG_MEDIA=${JSON.stringify(table)};</script>`, embeds: embeds.join('\n'), bytes, counts: { bgm: media.bgm.length, voice: media.voice.length, portraits: media.portraits.length, sprites: media.sprites.length, env: media.env.length, title: media.title.length, fx: media.fx.length, sfx: media.sfx.length, amb: media.amb.length } };
 }
 
 // ------------------------------------------------------------------ HTML
@@ -569,10 +612,11 @@ function main(argv) {
     (min ? `\n[build] minified: ${(min.stats().inB / 1024).toFixed(0)} KB → ${(min.stats().outB / 1024).toFixed(0)} KB of JS${min.stats().failed ? ` (${min.stats().failed} file(s) kept as is)` : ''}` : '') +
     `\n[build] tester menu: ${has('--no-tester') ? 'EXCLUDED' + (release ? ' (release)' : '') : 'included (?tester=1 + F9)'}` +
     `\n[build] fonts: ${font.chars} chars, ${(font.bytes / 1024).toFixed(0)} KB embedded${font.ok ? '' : ' (SUBSET FAILED)'}` +
-    `\n[build] media (${single ? 'embedded' : 'external'}): ${M.counts.bgm} BGM${has('--all-bgm') ? '' : ' (slice)'}, ${M.counts.voice} voice, ${M.counts.portraits} portraits, ${M.counts.sprites} sprite sheets, ${M.counts.env} env images, ${M.counts.title} title images, ${M.counts.fx} fx parts, ${mb(M.bytes)} MB` +
+    `\n[build] media (${single ? 'embedded' : 'external'}): ${M.counts.bgm} BGM${has('--all-bgm') ? '' : ' (slice)'}, ${M.counts.voice} voice, ${M.counts.portraits} portraits, ${M.counts.sprites} sprite sheets, ${M.counts.env} env images, ${M.counts.title} title images, ${M.counts.fx} fx parts, ${M.counts.sfx} sfx takes, ${M.counts.amb} ambience beds, ${mb(M.bytes)} MB` +
+    (media.skipped && (media.skipped.sfx.length || media.skipped.amb.length) ? `\n[build] recorded audio left out (synth / procedural kept): sfx ${media.skipped.sfx.join(' ') || '-'}; amb ${media.skipped.amb.join(' ') || '-'}` : '') +
     (bad.length ? `\n[build] ${bad.length} file(s) EXCLUDED (syntax)` : '') + `  [${Date.now() - t0} ms]`);
   if (bad.length) process.exitCode = 1;
 }
 
-module.exports = { order, fixtures, syntax, scanMedia, scanSprites, SPRITES_DIR, scanEnv, ENV_DIR, scanTitle, TITLE_DIR, SLICE_BGM, DIRS, CORE_FIRST, V2 };
+module.exports = { order, fixtures, syntax, scanMedia, scanSfx, scanAmb, mediaTable, scanSprites, SPRITES_DIR, scanEnv, ENV_DIR, scanTitle, TITLE_DIR, SLICE_BGM, DIRS, CORE_FIRST, V2 };
 if (require.main === module) main(process.argv.slice(2));

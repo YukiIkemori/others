@@ -171,19 +171,26 @@ async function browserPart(beds) {
 
     section('live（AudioContext）: 入れ替えで鳴っている床は 1 つ');
     const live = await P.page.evaluate(async () => {
-      const A = window.RPG.Audio;
+      // タイトルではフィールドの tick が 0.25 秒ごとに ambience(null) を呼ぶ: その間は外して本物をここから呼ぶ
+      const A = window.RPG.Audio, real = A.ambience;
+      A.ambience = () => false;
       A.init();
-      A.ambience({ bed: 'wind' }, { fade: 0.1 });
+      const wait = async (fn, ms) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { if (fn()) return true; await new Promise((r) => setTimeout(r, 50)); } return false; };
+      real({ bed: 'wind' }, { fade: 0.1 });
       const i1 = A.ambienceInfo();
-      A.ambience({ bed: 'cave' }, { fade: 0.1 });
+      real({ bed: 'cave' }, { fade: 0.1 });
+      // 録音の床（RPG_MEDIA.amb.cave）は初めは解くのを待つ（≤ 1 秒は黙って、その後は作った床 → 録音へ。§15.1）
+      await wait(() => { const i = A.ambienceInfo(); return i && i.alive && (i.file || !window.RPG_MEDIA.amb || !window.RPG_MEDIA.amb.cave); }, 5000);
       const i2 = A.ambienceInfo();
-      const same = A.ambience({ bed: 'cave' });
+      const same = real({ bed: 'cave' });
       A.setVolumes(null, null, null, 0.5);
       const vol = A.debug().volumes.amb;
-      A.ambience(null, { fade: 0.1 });
-      return { i1, i2, same, vol, i3: A.ambienceInfo() };
+      real(null, { fade: 0.1 });
+      const i3 = A.ambienceInfo();
+      A.ambience = real;
+      return { i1, i2, same, vol, i3 };
     });
-    ok('wind → cave', live.i1 && live.i1.bed === 'wind' && live.i2 && live.i2.bed === 'cave' && live.i2.alive);
+    ok('wind → cave（録音があれば録音）', live.i1 && live.i1.bed === 'wind' && live.i2 && live.i2.bed === 'cave' && live.i2.alive, live);
     ok('同じ spec はなにもしない', live.same === false);
     ok('setVolumes の 4 つ目が環境音', live.vol === 0.5);
     ok('null で消える', live.i3 === null);

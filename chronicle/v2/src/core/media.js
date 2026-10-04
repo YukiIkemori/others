@@ -2,6 +2,8 @@
 //
 // window.RPG_MEDIA = {bgm: {id: {url, loopStart, loopEnd, gain, loop}}, voice: {id: url}, portraits: {key: url},
 //                     sprites: {'<look>:<kind>': {url, meta}}}   ← 版 2: CAST の原画の取り込み（v2/assets/sprites/<look>/<kind>.png＋.json）
+//                     sfx: {'<id>.<k>': url}   ← 録音の効果音の 1 本（k = 取り直しの番号。core/audio.js が id ごとにまとめる）
+//                     amb: {'<床>': {url, loopStart, loopEnd}}   ← 録音の環境音の床（design/notes/audio.md §15.1）
 //   url は相対パス（外に置いた版: bgm/<id>.ogg）か '#media:<kind>:<id>'（--single の埋め込み）。
 //   埋め込みは <script type="application/octet-stream" id="media:<kind>:<id>" data-type="audio/ogg">base64</script>
 //   で置かれ、起動時には解かない。初めて使うときに bytes() / url() が解く（Blob にして URL を作る）。
@@ -38,7 +40,7 @@
 
   function table() {
     const M = (typeof window !== 'undefined' && window.RPG_MEDIA) || R.MEDIA || {};
-    M.bgm = M.bgm || {}; M.voice = M.voice || {}; M.portraits = M.portraits || {}; M.sprites = M.sprites || {}; M.title = M.title || {};
+    M.bgm = M.bgm || {}; M.voice = M.voice || {}; M.portraits = M.portraits || {}; M.sprites = M.sprites || {}; M.title = M.title || {}; M.sfx = M.sfx || {}; M.amb = M.amb || {};
     return M;
   }
   function raw(kind, id) {
