@@ -123,5 +123,10 @@
     'map.field_star_00_kit.guard.name': '파수꾼',
     'map.field_star_00_kit.guard.text': '이 앞 고원으로 가는 비탈은\n낙석으로 막혀 있어.',
     'map.field_star_00_kit.guard.text_2': '오르비스로 가려면\n길을 치울 때까지 기다려 줘.',
+    // ---- src/maps/field_star_road.js
+    'map.field_star_road.s_road.name': '산간 가도',
+    'map.field_star_road.s_road.objects.0.text': '산간 가도\n북 → 별 보는 언덕\n남 → 그레이모어 습원',
+    'map.field_star_road.s_road.marsh_traveler.name': '습원의 나그네',
+    'map.field_star_road.s_road.meta.sub': '북쪽 들판과 습원을 잇는 길',
   });
 })(window.RPG);

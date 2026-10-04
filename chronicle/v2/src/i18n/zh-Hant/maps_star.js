@@ -124,5 +124,10 @@
     'map.field_star_00_kit.guard.name': '看守',
     'map.field_star_00_kit.guard.text': '前面通往高原的坡道，\n因為山崩被堵住了。',
     'map.field_star_00_kit.guard.text_2': '要去奧爾比斯的話，\n請等道路清理好。',
+    // ---- src/maps/field_star_road.js
+    'map.field_star_road.s_road.name': '山間大道',
+    'map.field_star_road.s_road.objects.0.text': '山間大道\n北 → 望星坡\n南 → 格雷摩爾濕原',
+    'map.field_star_road.s_road.marsh_traveler.name': '濕原的旅人',
+    'map.field_star_road.s_road.meta.sub': '連接北方原野與濕原的路',
   });
 })(window.RPG);

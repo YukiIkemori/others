@@ -124,5 +124,10 @@
     'map.field_star_00_kit.guard.name': 'Guard',
     'map.field_star_00_kit.guard.text': 'The slope up to the plateau\nis blocked by a landslide.',
     'map.field_star_00_kit.guard.text_2': 'If you\'re headed to Orbis, wait\nuntil the road\'s cleared.',
+    // ---- src/maps/field_star_road.js
+    'map.field_star_road.s_road.name': 'Mountain Highway',
+    'map.field_star_road.s_road.objects.0.text': 'Mountain Highway\nNorth → Stargazer\'s Slope\nSouth → Graymoor Marsh',
+    'map.field_star_road.s_road.marsh_traveler.name': 'Marsh Traveler',
+    'map.field_star_road.s_road.meta.sub': 'Road joining the North Fields and the marsh',
   });
 })(window.RPG);
