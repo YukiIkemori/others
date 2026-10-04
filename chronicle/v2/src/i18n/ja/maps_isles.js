@@ -56,6 +56,7 @@
     'map.isles_coral_interiors.coral_guild.meta.sub': '信号旗のひるがえる会館',
     'map.isles_coral_interiors.coral_guild.npcs.0.guild_master.name': '組合長',
     'map.isles_coral_interiors.coral_guild.npcs.1.flag_officer.name': '組合の旗手',
+    'map.isles_coral_interiors.coral_guild.npcs.2.guild_clerk.name': '売り台の係',
     // ---- src/maps/isles_nerei.js
     'map.isles_nerei.sign': '岬の村ネレイ\n南 → ネレイの岬道・港町コーラル',
     'map.isles_nerei.N.0.nerei_fisher.name': '網をつくろう漁師',

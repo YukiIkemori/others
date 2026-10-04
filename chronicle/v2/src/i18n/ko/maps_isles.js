@@ -55,6 +55,7 @@
     'map.isles_coral_interiors.coral_guild.meta.sub': '신호기가 펄럭이는 회관',
     'map.isles_coral_interiors.coral_guild.npcs.0.guild_master.name': '조합장',
     'map.isles_coral_interiors.coral_guild.npcs.1.flag_officer.name': '조합의 기수',
+    'map.isles_coral_interiors.coral_guild.npcs.2.guild_clerk.name': '판매대 직원',
     // ---- src/maps/isles_nerei.js
     'map.isles_nerei.sign': '곶 마을 네레이\n남 → 네레이 곶길·항구 도시 코랄',
     'map.isles_nerei.N.0.nerei_fisher.name': '그물 깁는 어부',

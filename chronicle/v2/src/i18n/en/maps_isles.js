@@ -56,6 +56,7 @@
     'map.isles_coral_interiors.coral_guild.meta.sub': 'A hall hung with signal flags',
     'map.isles_coral_interiors.coral_guild.npcs.0.guild_master.name': 'Guildmaster',
     'map.isles_coral_interiors.coral_guild.npcs.1.flag_officer.name': 'Guild Flagman',
+    'map.isles_coral_interiors.coral_guild.npcs.2.guild_clerk.name': 'Guild Clerk',
     // ---- src/maps/isles_nerei.js
     'map.isles_nerei.sign': 'Nerei, Village on the Cape\nSouth → Nerei Cape Road, Port Coral',
     'map.isles_nerei.N.0.nerei_fisher.name': 'Fisher Mending Nets',

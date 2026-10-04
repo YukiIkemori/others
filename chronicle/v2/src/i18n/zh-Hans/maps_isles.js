@@ -56,6 +56,7 @@
     'map.isles_coral_interiors.coral_guild.meta.sub': '信号旗飘扬的会馆',
     'map.isles_coral_interiors.coral_guild.npcs.0.guild_master.name': '公会会长',
     'map.isles_coral_interiors.coral_guild.npcs.1.flag_officer.name': '公会的旗手',
+    'map.isles_coral_interiors.coral_guild.npcs.2.guild_clerk.name': '柜台办事员',
     // ---- src/maps/isles_nerei.js
     'map.isles_nerei.sign': '海角村涅雷\n南 → 涅雷海角道・科拉尔港',
     'map.isles_nerei.N.0.nerei_fisher.name': '补网的渔夫',

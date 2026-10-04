@@ -25,5 +25,28 @@
 25,
 "r"
 ]
+],
+"open": [
+[
+12,
+32,
+"="
+],
+[
+12,
+33,
+"="
+],
+[
+12,
+34,
+"="
+],
+[
+12,
+35,
+"="
 ]
+],
+"_note_open": "2026-10-04: the painted stone bridge is 2 cells wide (x 12-13, y 32-37); fit.py had made x 12 rock, so walking north from the Coral spawn (12,36) hit an invisible wall"
 }

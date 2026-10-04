@@ -162,15 +162,14 @@
   });
 
   // ---------------------------------------------------------------- 船乗り組合（組合長・旗手・売り台）
+  // (2026-10-04) 組合長は話すだけ。売り台は組合の係（coral_guild_clerk）が開く（話の後に店が開く違和感の直し）
   E('coral_guild_master', async (ev) => {
     if (ev.flag('isles_delivery_done')) {
       await ev.say('guild_master', R.T('events.coral_guild_master.say'));
-      await ev.shop('shop_coral_guild');
       return;
     }
     if (ev.has('k_guild_parcel')) {
       await ev.say('guild_master', R.T('events.coral_guild_master.say_2'));
-      await ev.shop('shop_coral_guild');
       return;
     }
     if (!ev.flag('isles_delivery_on')) {
@@ -184,8 +183,13 @@
         return;
       }
     }
-    await ev.shop('shop_coral_guild');
+    await ev.say('guild_master', R.T('events.coral_guild_master.say_5'));
   }, { meta: { needs: [], gives: ['lead:q_isles_delivery', 'item:k_guild_parcel'] } });
+  // 組合の売り台の係（売り台の内側。組合の品はここで買う）
+  E('coral_guild_clerk', async (ev) => {
+    await ev.say('guild_clerk', R.T('events.coral_guild_clerk.say'));
+    await ev.shop('shop_coral_guild');
+  });
   // 旗信号の見習い試験（mini.sequence。3 段。段ごとに品。3 段目で信号旗の襟巻き）
   const FLAG_STAGES = [
     { label: R.T('ev.isles_coral.FLAG_STAGES.0.label'), rounds: 2, tempo: 640, reward: ['i_potion', 2] },

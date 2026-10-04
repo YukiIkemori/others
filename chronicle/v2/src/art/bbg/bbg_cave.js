@@ -91,5 +91,6 @@
       return { back, ground, front: yield* K.softenG(front, 4), post };
     },
   };
+  K.caveDef = def;   // 洞窟の地方の背景（bbg_regions.js の like: 'cave'）が画像の読めないあいだの控えに使う
   (K._defs = K._defs || []).push(['cave', def]);
 })(window.RPG);

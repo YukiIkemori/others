@@ -103,6 +103,8 @@
         K.prop('lantern', 9, 3), K.prop('lantern', 15, 5)],
       npcs: [
         K.npc('guild_master', 'npc_isles_old_m', 5, 2, { name: R.T('map.isles_coral_interiors.coral_guild.npcs.0.guild_master.name'), dir: 's', talk: 'coral_guild_master', reward: 'side', pushable: false }),
+        // (2026-10-04) 売り台の係（組合長は話すだけ。組合の品はこの係から買う）
+        K.npc('guild_clerk', 'npc_isles_woman', 7, 2, { name: R.T('map.isles_coral_interiors.coral_guild.npcs.2.guild_clerk.name'), dir: 's', talk: 'coral_guild_clerk', pushable: false }),
         K.npc('flag_officer', 'npc_isles_sailor', 14, 5, { name: R.T('map.isles_coral_interiors.coral_guild.npcs.1.flag_officer.name'), dir: 'w', talk: 'coral_flags', reward: 'side' }),
       ],
     });
