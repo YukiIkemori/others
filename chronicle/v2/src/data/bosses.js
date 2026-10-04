@@ -421,7 +421,8 @@
       name: R.T('data.bosses.LIST.b_ouroboros.name'), sprite: 'boss_ouroboros', bossType: 'super', lv: 68, actsPerTurn: 3,
       race: 'dragon', flags: ['boss'], eva: 5,
       elem: ALL(0.75), phys: { slash: 0.75 }, statusRes: { death: 1, sleep: 0.5, confuse: 0.5 },
-      actions: A([['attack', 1], ['eb_rewind', 2, { hpAbove: 0.25, every: [5, 4] }], ['eb_eternal_breath', 2], ['eb_ring_crush', 2],
+      // 巻き戻し（全体の打ち消し）: 4 ラウンドごとに必ず。味方の強化が合計 6 段以上たまったら 2 ラウンドあけて前倒し（持ち主 2026-10-04）
+      actions: A([['attack', 1], ['eb_rewind', 200, { hpAbove: 0.25, roundGap: 4 }], ['eb_rewind', 200, { hpAbove: 0.25, roundGap: 2, foeBuffsAtLeast: 6 }], ['eb_eternal_breath', 2], ['eb_ring_crush', 2],
         ['eb_time_loop', 1, { every: [4, 1] }], ['eb_scale_storm', 2], ['eb_tail_devour', 1, { hpBelow: 0.5, once: true }]]),
       phases: [{ hpBelow: 0.25, msg: R.T('data.bosses.LIST.b_ouroboros.phases.0.msg'), set: { buffs: { def: -1, mdef: -1 } } }],
       drops: {

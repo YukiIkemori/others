@@ -40,6 +40,14 @@
     if (c.hpAbove != null && !(u.hpRate() > c.hpAbove)) return false;
     if (c.every) { const n = Math.max(1, c.every[0] | 0); if (u.acts % n !== ((c.every[1] | 0) % n)) return false; }
     if (c.once && u.used[a.id]) return false;
+    // roundGap: 前にこの技を使ったラウンドから n ラウンド以上たった（使っていなければ戦闘の始まりから）。同じラウンドに 2 度使わない用にも
+    if (c.roundGap != null && (eng.round || 0) - ((u.usedRound && u.usedRound[a.id]) || 0) < c.roundGap) return false;
+    // foeBuffsAtLeast: 相手側（生きている人）の上げた段の合計が n 以上（打ち消しの前倒し。持ち主 2026-10-04）
+    if (c.foeBuffsAtLeast != null) {
+      let sum = 0;
+      for (const f of eng.living(u.isParty ? 'mon' : 'party')) for (const k in f.buffs) if (f.buffs[k] > 0) sum += f.buffs[k];
+      if (sum < c.foeBuffsAtLeast) return false;
+    }
     if (c.round != null && eng.round < c.round) return false;
     if (c.alone && eng.living(u.side).length > 1) return false;
     if (c.countBelow != null && !(eng.living(u.side).length < c.countBelow)) return false;

@@ -1621,6 +1621,7 @@
       }
       res.done = true;
       u.used[id] = true;
+      (u.usedRound || (u.usedRound = {}))[id] = this.round || 0;
       if (u.isParty) {
         const bag = kind === 'spell' ? this.stats.casts : kind === 'tech' ? this.stats.techs : null;
         if (bag) bag[u.c.id] = (bag[u.c.id] || 0) + 1;
