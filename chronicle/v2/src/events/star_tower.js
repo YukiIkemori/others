@@ -123,8 +123,14 @@
     ev.setFlag('star_dawn_scene');
     await ev.warp('orbis', 'plaza');
     ev.bgm('dawn');
+    // 演出（テスター 2026-10-04 §7）: 広場の人が空を見上げ、カメラが夜空へ上がる。星が戻ってから、ルカが振り向いて指さす
+    const S = R.Final && R.Final.ev;
+    if (S) { for (const id of ['luca', 'octavia_dawn', 'roof_old', 'roof_kid']) await S.face(ev, id, 'n'); S.heroFace('n'); await S.cam(ev, 25, 25, 1400); }
     await ev.caption(R.T('events.star_dawn.caption'), { ms: 3000 });
+    ev.sfx('light');
+    try { R.Field.flash && R.Field.flash('#dbe8ff', 500); } catch (e) { /* */ }
     await ev.caption(R.T('events.star_dawn.caption_2'), { ms: 2800 });
+    if (S) { await S.camBack(ev, 900); await S.act(ev, 'roof_kid', 'laugh', 700); await S.face(ev, 'luca', 'hero'); await S.act(ev, 'luca', 'point', 900); }
     await ev.say('luca', R.T('events.star_dawn.say'), LUCA);
     if (!ev.flag('lo_time_star')) await ev.call('star_obs_log');
     await x.narr(ev, R.T('events.star_dawn.narr'));
@@ -140,6 +146,8 @@
     if (ev.flag('star_finale_done')) return;
     const x = X();
     const resigned = x.resigned(ev);
+    const S = R.Final && R.Final.ev;
+    if (S) await S.face(ev, 'octavia_dawn', 'hero');
     await ev.say('octavia_dawn', resigned ? R.T('events.star_finale.say') : R.T('events.star_finale.say_2'), OCTAVIA);
     // 年代記に書く選択
     const i = await ev.choose(R.T('events.star_finale.i.choose'), { important: true, text: R.T('events.star_finale.i.choose.text') });

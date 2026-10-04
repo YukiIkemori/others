@@ -250,10 +250,17 @@
     await ev.warp('dovan', 'oath');
     ev.bgm('dawn');
     await ev.fade('in', 900);
+    // 演出（テスター 2026-10-04 §7）: みんなが誓いの碑の奥（炉の方）を見上げ、カメラが上へ。灯りがともってから向き直る
+    const S = R.Final && R.Final.ev;
+    if (S) { for (const id of ['relight_borg', 'relight_helga', 'relight_pip']) await S.face(ev, id, 'n'); S.heroFace('n'); await S.cam(ev, 22, 3, 1100); }
     await ev.caption(R.T('events.mine_relight.caption_3'), { ms: 3000 });
+    ev.sfx('fire');
     try { R.Field.flash && R.Field.flash('#ffd8a0', 600); } catch (e) { /* */ }
+    if (S) { await ev.wait(600); await S.camBack(ev, 800); await S.face(ev, 'relight_borg', 'hero'); await S.act(ev, 'relight_borg', 'surprise', 600); }
     await ev.say('relight_borg', R.T('events.mine_relight.say'), BORG);
+    if (S) await S.face(ev, 'relight_helga', 'n');
     await ev.say('relight_helga', R.T('events.mine_relight.say_2'), HELGA);
+    if (S) { await S.face(ev, 'relight_pip', 'hero'); await S.act(ev, 'relight_pip', 'laugh', 800); }
     await ev.say('relight_pip', R.T('events.mine_relight.say_3'), PIP);
     ev.setFlag('mine_relight_done');
     // 大灯火（鍛冶神の炉）: ページ・ティア・光の柱・章の札（EVENTS の共通の筋）
@@ -301,7 +308,11 @@
       ev.choice('ch_mine_write', 'pain');
       ev.addVar('pain_count', 1);
       await ev.say(null, R.T('events.mine_finale.say_10'));
+      // ボルグとヘルガが向き合う（同じ卓で帳簿を閉じる）
+      const S = R.Final && R.Final.ev;
+      if (S) { await S.face(ev, 'relight_borg', 'e'); await S.face(ev, 'relight_helga', 'w'); }
       await ev.say('relight_borg', R.T('events.mine_finale.say_11'), BORG);
+      if (S) await S.act(ev, 'relight_helga', 'nod', 800);
       await ev.fade('out', 600);
       await ev.caption(R.T('events.mine_finale.caption'), { ms: 3000 });
       ev.setFlag('mine_ledger_closed');

@@ -172,7 +172,11 @@
     await ev.fade('out', 600);
     await ev.warp('caldera_arena', 'plaque');
     ev.setFlag('ash_plaque_scene');
+    // 演出（テスター 2026-10-04 §7）: 銘板の前のドルガ。二十年前の夜の名残の板を見つめてから、こちらへ向き直る
+    const S = R.Final && R.Final.ev;
+    if (S) await S.face(ev, 'dorga_plaque', 'w');
     await ev.say(null, R.T('events.ash_finale.say'), { face: false });
+    if (S) { await ev.wait(700); await S.face(ev, 'dorga_plaque', 'hero'); }
     await ev.say('dorga_plaque', [R.T('events.ash_finale.say.0')], DORGA);
     await ev.say(null, R.T('events.ash_finale.say_2'));
     const i = await ev.choose(R.T('events.ash_finale.i.choose'), { important: true, text: R.T('events.ash_finale.i.choose.text') });
@@ -182,6 +186,10 @@
       await ev.say(null, R.T('events.ash_finale.say_3'));
       await ev.say('dorga_plaque', R.T('events.ash_finale.say_4'), Object.assign({ voice: 'v_dorga_ash_03' }, DORGA));
       ev.setFlag('ash_singer_board');
+      if (S) { await S.face(ev, 'dorga_plaque', 'w'); await S.act(ev, 'dorga_plaque', 'kneel', 500); }
+      ev.sfx('hit');
+      await ev.wait(350);
+      ev.sfx('hit');
       await ev.caption(R.T('events.ash_finale.caption_3'), { ms: 2400 });
     } else {
       ev.choice('ch_ash_write', 'rebirth');
