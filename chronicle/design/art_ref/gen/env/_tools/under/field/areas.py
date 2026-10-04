@@ -326,13 +326,13 @@ def f_cross():
         dict(type='examine', x=38, y=11, event='world_poi_stones'),
         dict(type='prop', id='tent', x=41, y=15), dict(type='prop', id='lantern', x=43, y=16),
         dict(type='waylamp', id='wl_rest_3', x=47, y=23, lit=True),
-        dict(type='prop', id='lamp_post', x=27, y=32), dict(type='prop', id='lamp_post', x=31, y=32),
+        dict(type='prop', id='lamp_post', x=26 if clean else 27, y=28 if clean else 32), dict(type='prop', id='lamp_post', x=29 if clean else 31, y=28 if clean else 32),   # clean: both by the road above the landing
         dict(type='chest', id='f_cross_c1', x=46, y=11, item='i_potion', n=2),
     ]
     a.meta = dict(name='北の野', sub='三つの道の分かれ道', region='r_forest', worldRect=[232, 124, 120, 96], outside='forest_dark',
                   zones=[{'rect': None, 'zone': 'zw_forest'}],
                   tilePatches=[{'cond': {'slice': True}, 'rect': [55, 17, 3, 4], 'rows': ['rrr'] * 4}],
-                  npcs=[{'id': 'traveler_plains', 'look': 'npc_merchant_2', 'name': '旅の行商人', 'x': 42, 'y': 17, 'dir': 's', 'move': 'still',
+                  npcs=[{'id': 'traveler_plains', 'look': 'npc_merchant_2', 'name': '旅の行商人', 'x': 43 if clean else 42, 'y': 17, 'dir': 's', 'move': 'still',
                          'talk': 'world_traveler_plains', 'reward': 'news', 'key': 'world_traveler_plains'},
                         {'id': 'guard_east', 'look': 'npc_guard_1', 'name': '番人', 'x': 54, 'y': 18, 'dir': 'w', 'move': 'still', 'pushable': False,
                          'cond': {'slice': True}, 'talk': {'lines': [{'text': ['東の峠は、ゆうべの\n崖崩れで通れないんだ。', '山地の鉱山町へ行くなら、\nしばらく待ってくれ。']}]},

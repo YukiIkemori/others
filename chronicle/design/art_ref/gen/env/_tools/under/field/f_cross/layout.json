@@ -223,14 +223,14 @@
 {
 "type": "prop",
 "id": "lamp_post",
-"x": 27,
-"y": 32
+"x": 26,
+"y": 28
 },
 {
 "type": "prop",
 "id": "lamp_post",
-"x": 31,
-"y": 32
+"x": 29,
+"y": 28
 },
 {
 "type": "chest",
@@ -340,7 +340,7 @@
 "id": "traveler_plains",
 "look": "npc_merchant_2",
 "name": "旅の行商人",
-"x": 42,
+"x": 43,
 "y": 17,
 "dir": "s",
 "move": "still",
