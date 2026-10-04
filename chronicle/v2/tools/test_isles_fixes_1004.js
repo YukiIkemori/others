@@ -8,7 +8,7 @@
 //     どのマップ・出現表・編成の背景 id も描いた絵（assets/env/bbg/<id>/back.png）がある。
 //   4 外洋船（isles_ship）の泊め場: コーラル・ネレイ・島 4 つで、船の後だけ船の絵（ship／ship_small）が桟橋の脇の海に泊まり、
 //     絵（船体・帆柱・帆桁・帆綱）が桟橋の板（'='）にも歩けるマスにも重ならない。舵（isles_helm／isles_boat）は桟橋の歩けるマスから向いて調べる海のマス。
-//     道しるべの印（wayfind の marks「→ 外洋船の舵」）が船の後だけ出る。幽霊船の甲板の下の船は渡り板にかからない。
+//     道しるべの印（wayfind の marks「→ 外洋船のかじ」）が船の後だけ出る。幽霊船の甲板の下の船は渡り板にかからない。
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -144,10 +144,10 @@ async function main() {
   {
     const G = R.Game;
     const SPOTS = { coral: 'isles_helm', nerei: 'isles_helm', i_light: 'isles_boat', i_siren: 'isles_boat', i_crab: 'isles_boat', i_wreck: 'isles_boat' };
-    // 絵の形（32 の論理 px。props.js の drawShip: 船体 −74〜+80・甲板の上 −48、帆柱 +14 の −98 まで、帆桁 −22〜+50 の −82、帆綱は帆柱の先から ±）
+    // 絵の形（32 の論理 px。props.js の drawShip: 船体 −74〜+80（両端は −28 まで）・甲板 −62〜+56 の −40・船室 −50〜−18 の −48、帆柱 +14 の −98 まで、帆桁 −22〜+50 の −82、帆綱は帆柱の先から ±）
     const shape = (o) => {
       const k = o.id === 'ship_small' ? 0.72 : 1, cx = (o.x + 0.5 + (o.dx || 0)) * 32, fy = (o.y + 0.84) * 32;
-      const boxes = [[cx - 74 * k, fy - 48 * k, cx + 80 * k, fy], [cx + 12 * k, fy - 98 * k, cx + 16 * k, fy], [cx - 22 * k, fy - 83 * k, cx + 50 * k, fy - 75 * k]];
+      const boxes = [[cx - 74 * k, fy - 28 * k, cx + 80 * k, fy], [cx - 62 * k, fy - 40 * k, cx + 56 * k, fy], [cx - 50 * k, fy - 48 * k, cx - 18 * k, fy - 40 * k], [cx + 12 * k, fy - 98 * k, cx + 16 * k, fy], [cx - 22 * k, fy - 83 * k, cx + 50 * k, fy - 75 * k]];
       const lines = [[cx + 14 * k, fy - 98 * k, cx + 72 * k, fy - 24 * k], [cx + 14 * k, fy - 98 * k, cx - 60 * k, fy - 26 * k]];
       return { boxes, lines };
     };
@@ -157,7 +157,7 @@ async function main() {
       for (const [x0, y0, x1, y1] of sh.lines) for (let i = 0; i <= 40; i++) add(x0 + (x1 - x0) * i / 40, y0 + (y1 - y0) * i / 40);
       return [...set].map((q) => q.split(',').map(Number));
     };
-    G.flags.isles_ship = false; R.MapUtil.invalidate && R.MapUtil.invalidate();
+    delete G.flags.isles_ship; R.MapUtil.invalidate && R.MapUtil.invalidate();
     for (const id of Object.keys(SPOTS)) {
       const m = D.maps[id];
       const ships = (m.objects || []).filter((o) => o.mooredShip);
@@ -185,7 +185,7 @@ async function main() {
       ok(`${id}: 舵は海のマスで、桟橋の歩けるマスから向いて調べられる（${evId}）`, hb.length === 0, hb);
       const near = helms.every((h) => Math.abs(h.x - ship.x - (ship.dx || 0)) <= 4 && Math.abs(h.y - ship.y) <= 3);
       ok(`${id}: 舵は船のすぐ脇`, near, { ship, helms: helms.map((h) => [h.x, h.y]) });
-      ok(`${id}: 道しるべの印「外洋船の舵」が船の後に出る`, F.wayfind.info(m).marks.length === 1 && /外洋船の舵/.test(F.wayfind.info(m).marks[0].label), F.wayfind.info(m).marks);
+      ok(`${id}: 道しるべの印「外洋船のかじ」が船の後に出る`, F.wayfind.info(m).marks.length === 1 && /外洋船のかじ/.test(F.wayfind.info(m).marks[0].label), F.wayfind.info(m).marks);
       ok(`${id}: 古い「桟橋の先のマスの舵」は残っていない`, !(m.objects || []).some((o) => (o.event === 'isles_helm' || o.event === 'isles_boat') && !o.helm));
     }
     // 人魚の歌う岩: 船尾の下の浅瀬は船のあいだ海
@@ -207,7 +207,7 @@ async function main() {
     // 渡したときのドレイクの言葉と手がかりが泊め場を言う
     const ja = fs.readFileSync(path.join(V2, 'src/i18n/ja/events_isles.js'), 'utf8');
     ok('ドレイク（外洋船を渡すとき）: 真ん中の桟橋の東に泊めてある・桟橋から船に向かって調べる', /'events\.isles_ship_launch\.say_2': '[^']*桟橋の東[^']*船に向かって/.test(ja));
-    ok('手がかり「海図の空白」: コーラルの港に泊めた外洋船の舵', /'leads\.l_isles_chart\.text': '[^']*コーラルの\\n港に泊めた外洋船の舵/.test(ja));
+    ok('手がかり「海図の空白」: コーラルの港に泊めた外洋船のかじ', /'leads\.l_isles_chart\.text': '[^']*コーラルの\\n港に泊めた外洋船のかじ/.test(ja));
     for (const l of ['ja', 'en', 'zh-Hans', 'zh-Hant', 'ko']) ok(`i18n ${l}: 舵の印の札`, fs.readFileSync(path.join(V2, 'src/i18n', l, 'maps_isles.js'), 'utf8').includes("'map.isles_00_kit.moor.way'"));
   }
   done();

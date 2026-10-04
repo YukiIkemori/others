@@ -6,7 +6,7 @@
 //         中の人の話（R.DB.events の run）が ev.shop('<id>') → R.DB.shops[id].kind、ev.inn → 宿、ev.tavern／仲間選び → 酒場、セーブ → セーブ。
 //         中に何も無ければ建物の sign、それも無ければ屋内の名前（「〜の道具屋」「宿」…）。ただの家（homes_slice.js）は看板なし。
 //         外に立つ売り手（町の NPC の話が店・宿）にも、頭の横に同じ看板。先頭が近い（1.5 マス）と店の名前の札。
-//   物の印: o.way（外洋船の舵。maps/isles_00_kit.js の K.moor）にも出口と同じ灯りの脈と矢印、近いと「→ 外洋船の舵」の札。
+//   物の印: o.way（外洋船のかじ。maps/isles_00_kit.js の K.moor）にも出口と同じ灯りの脈と矢印、近いと「→ 外洋船のかじ」の札。
 //   どれもマップのデータ（戸口・出口の座標）だけから作るので、町の絵を描き直しても付いていく。描くのは町の絵（チャンクの base／over）の上。
 //   F._wayfind(g, t, cx, cy)（Post の前: 光・矢印・看板）と F._wayfindLabels(g, t, cx, cy)（Post の後: 文字の札）。layers.js が呼ぶ。
 (function (R) {
@@ -139,7 +139,7 @@
     if (c && c.sig === sig) return c;
     const out = { sig, exits: [], signs: [], marks: [] };
     const ok = (cond) => cond == null || (R.State && R.State.check(cond));
-    // 物の印（o.way = {label, dir, x?, y?, w?, h?}）: 出口でない所（外洋船の舵など）に、出口と同じ灯りの脈と札。持ち主 2026-10-04「舵を取る場所がわかりづらい」
+    // 物の印（o.way = {label, dir, x?, y?, w?, h?}）: 出口でない所（外洋船のかじなど）に、出口と同じ灯りの脈と札。持ち主 2026-10-04「舵を取る場所がわかりづらい」
     for (const o of m.objects || []) {
       if (!o.way || !ok(o.cond)) continue;
       const q = o.way, dir = q.dir || 's';
@@ -365,7 +365,7 @@
       else { x = (e.x + e.w / 2 + (e.dir === 'w' ? 1.4 : -1.4)) * t - cx; y = (e.y + e.h + 0.55) * t - cy; }
       tag(g, e.label, x, y, { alpha: a, size: 12.5, left: e.dir === 'n' || e.dir === 's' });
     }
-    // 物の印の札（外洋船の舵）: 3 マス以内で。札は印の向こう（船の側）に
+    // 物の印の札（外洋船のかじ）: 3 マス以内で。札は印の向こう（船の側）に
     const marks = I.marks || [];
     for (let i = 0; i < marks.length; i++) {
       const e = marks[i];

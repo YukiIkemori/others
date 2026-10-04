@@ -66,7 +66,7 @@
    * 外洋船の泊め場（持ち主 2026-10-04「舵を取る場所がわかりづらすぎる」「船の図が桟橋にめり込んでる」）:
    *   外洋船（isles_ship）の後だけ、桟橋の脇の海に船の絵（prop ship／狭い所は ship_small）を泊め、桟橋から船へ向いて調べると舵（isles_helm）。
    *   船の絵は桟橋の板に重ならない所（絵の幅: ship は足もとの左 74・右 80 px、帆柱の先は 98 px 上。ship_small は 0.72 倍。dx で半マス単位にずらす）。
-   *   道しるべ（wayfind.js の o.way）: 舵のマスに灯りの脈と「→ 外洋船の舵」の札（近いとき）。
+   *   道しるべ（wayfind.js の o.way）: 舵のマスに灯りの脈と「→ 外洋船のかじ」の札（近いとき）。
    *   o = {ship: [x, y, dx?], id?: 'ship'|'ship_small', helm: [[x, y], ...], way: {x, y, w, h, dir}, event?: 'isles_helm'} → 物の列
    */
   K.moor = function (o) {

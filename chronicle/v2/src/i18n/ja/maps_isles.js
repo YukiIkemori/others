@@ -110,7 +110,7 @@
     // ---- src/maps/field_isles_00_kit.js
     'map.field_isles_00_kit.isles_cave_1': '潮鳴りの洞窟に入りますか？',
     'map.field_isles_00_kit.link.confirm': '定期船で、港町コーラルへ\n渡りますか？',
-    'map.isles_00_kit.moor.way': '外洋船の舵',
+    'map.isles_00_kit.moor.way': '外洋船のかじ',
     'map.field_isles_00_kit.link.wreck_captain.name': '商船の船長',
     'map.field_isles_00_kit.link.ferry_hand.name': '定期船の水夫',
     // ---- src/maps/field_isles_cliff.js
