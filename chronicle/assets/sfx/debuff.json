@@ -1,0 +1,55 @@
+{
+  "id": "debuff",
+  "category": "spell",
+  "files": [
+    "debuff.0.ogg",
+    "debuff.1.ogg"
+  ],
+  "durations": [
+    0.613,
+    0.383
+  ],
+  "peaks": [
+    -10,
+    -10
+  ],
+  "rms": [
+    -19.6,
+    -21
+  ],
+  "gainDb": [
+    -10.3,
+    -11.3
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: ten separate falling whooshes with a dull downward sagging glide, like a magical shimmer sinking in pitch, about 0.6 seconds, separated by 1.6 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+    "generated": "2026-10-04T03:51:02.264Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "debuff.0.mp3",
+      "at": 26.297,
+      "fit": 8,
+      "problem": "sharp click at start"
+    },
+    {
+      "take": "debuff.0.mp3",
+      "at": 24.046,
+      "fit": 7.5,
+      "problem": "sharp click at start"
+    }
+  ],
+  "analysis": {
+    "candidates": 55,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 7.8,
+    "peakTarget": -10,
+    "rmsMax": -17
+  }
+}

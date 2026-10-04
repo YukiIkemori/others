@@ -1,0 +1,56 @@
+{
+  "id": "earth",
+  "category": "spell",
+  "files": [
+    "earth.0.ogg",
+    "earth.1.ogg"
+  ],
+  "durations": [
+    0.864,
+    0.618
+  ],
+  "peaks": [
+    -2.5,
+    -2.6
+  ],
+  "rms": [
+    -13.8,
+    -11
+  ],
+  "gainDb": [
+    -0.8,
+    0.8
+  ],
+  "channels": 2,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A close-up field recording made in a quiet room, not music: eight separate heavy rock falls, each a large stone slab crashing onto dirt with tumbling pebbles, separated by 2.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 28 seconds.",
+    "generated": "2026-10-04T03:44:42.621Z",
+    "takes": 2,
+    "rounds": 2
+  },
+  "picks": [
+    {
+      "take": "earth.0.mp3",
+      "at": 5.845,
+      "fit": 8.5,
+      "problem": "none"
+    },
+    {
+      "take": "earth.0.mp3",
+      "at": 6.787,
+      "fit": 7,
+      "problem": "weak impact",
+      "rmsCapped": true
+    }
+  ],
+  "analysis": {
+    "candidates": 44,
+    "listened": 16,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 7.8,
+    "peakTarget": -2.5,
+    "rmsMax": -11
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "id": "boss_die",
+  "category": "battle",
+  "files": [
+    "boss_die.0.ogg"
+  ],
+  "durations": [
+    3.5
+  ],
+  "peaks": [
+    -1.5
+  ],
+  "rms": [
+    -14.1
+  ],
+  "gainDb": [
+    -2.6
+  ],
+  "channels": 2,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A close-up field recording made in a quiet room, not music: four separate collapsing stone towers, each a cascade of heavy rocks tumbling down into a long deep rumble, separated by 4 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 29 seconds.",
+    "generated": "2026-10-04T03:57:06.114Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "boss_die.0.mp3",
+      "at": 41.13,
+      "fit": 8.5,
+      "problem": "none",
+      "cut": true
+    }
+  ],
+  "analysis": {
+    "candidates": 14,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.5,
+    "peakTarget": -1.5,
+    "rmsMax": -14
+  }
+}

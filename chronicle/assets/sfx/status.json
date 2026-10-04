@@ -1,0 +1,55 @@
+{
+  "id": "status",
+  "category": "spell",
+  "files": [
+    "status.0.ogg",
+    "status.1.ogg"
+  ],
+  "durations": [
+    0.428,
+    0.433
+  ],
+  "peaks": [
+    -10,
+    -10
+  ],
+  "rms": [
+    -23.4,
+    -20.7
+  ],
+  "gainDb": [
+    -11.3,
+    -11.1
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: ten separate short eerie warbling wobbles, each a queasy wavering sound bending downward, about 0.6 seconds, separated by 1.6 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+    "generated": "2026-10-04T03:51:32.586Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "status.0.mp3",
+      "at": 14.685,
+      "fit": 8,
+      "problem": "none"
+    },
+    {
+      "take": "status.0.mp3",
+      "at": 17.607,
+      "fit": 7.5,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 20,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 7.8,
+    "peakTarget": -10,
+    "rmsMax": -12
+  }
+}

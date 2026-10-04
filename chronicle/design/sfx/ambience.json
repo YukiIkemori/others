@@ -29,18 +29,18 @@
   {
    "id": "breeze",
    "bed": "breeze",
-   "desc": "wind rustling through the leaves of trees in soft gusts on a hillside, with an occasional distant small bird chirp",
+   "desc": "wind blowing through tree leaves in gusts, leaves rustling, with an occasional distant bird chirp",
    "lufs": -39,
-   "prompt": "A dry foley recording, not music: wind rustling through the leaves of trees in soft gusts on a hillside, with an occasional distant small bird chirp. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
-   "alt": "A sound effect recording, not music: wind rustling through the leaves of trees in soft gusts on a hillside, with an occasional distant small bird chirp, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds."
+   "prompt": "A dry foley recording, not music: wind blowing through tree leaves in gusts, leaves rustling, with an occasional distant bird chirp. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+   "alt": "A sound effect recording, not music: wind blowing through tree leaves in gusts, leaves rustling, with an occasional distant bird chirp, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds."
   },
   {
    "id": "breeze_night",
    "bed": "breeze {night:1}",
-   "desc": "wind rustling through the leaves of trees in soft gusts on a hillside, with sparse distant crickets chirping",
+   "desc": "wind blowing through tree leaves in gusts, leaves rustling, with sparse distant crickets chirping",
    "lufs": -41,
-   "prompt": "A dry foley recording, not music: wind rustling through the leaves of trees in soft gusts on a hillside, with sparse distant crickets chirping. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
-   "alt": "A sound effect recording, not music: wind rustling through the leaves of trees in soft gusts on a hillside, with sparse distant crickets chirping, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds."
+   "prompt": "A dry foley recording, not music: wind blowing through tree leaves in gusts, leaves rustling, with sparse distant crickets chirping. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+   "alt": "A sound effect recording, not music: wind blowing through tree leaves in gusts, leaves rustling, with sparse distant crickets chirping, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds."
   },
   {
    "id": "highwind",

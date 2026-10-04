@@ -1,0 +1,39 @@
+{
+  "loopStart": 0,
+  "loopEnd": 22,
+  "bed": "breeze",
+  "spec": {
+    "bed": "breeze"
+  },
+  "lufsTarget": -39,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry foley recording, not music: wind rustling through the leaves of trees in soft gusts on a hillside, with an occasional distant small bird chirp. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+    "generated": "2026-10-04T03:46:00.384Z",
+    "rawSeconds": 36.1,
+    "takes": 6,
+    "excerpt": [
+      1,
+      27
+    ]
+  },
+  "analysis": {
+    "loudnessLUFS": -39,
+    "truePeakDb": -28.3,
+    "gainDb": -30.3,
+    "peakLimited": false,
+    "xfade": 4,
+    "seamLevelDiffDb": 0.3,
+    "listen": {
+      "model": "gemini-3.8-flash",
+      "fit": 5,
+      "seam": {
+        "seam_smooth": 9,
+        "problem": "none"
+      },
+      "content": "Running stream or creek with active daytime bird chirping / soft wind rustling through leaves with gentle bird chirps",
+      "problem": "Sounds like daytime running water rather than night-time wind in trees / birdsong feels more diurnal than nighttime"
+    }
+  }
+}

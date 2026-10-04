@@ -1,0 +1,55 @@
+{
+  "id": "water",
+  "category": "spell",
+  "files": [
+    "water.0.ogg",
+    "water.1.ogg"
+  ],
+  "durations": [
+    0.709,
+    0.799
+  ],
+  "peaks": [
+    -9,
+    -9
+  ],
+  "rms": [
+    -29,
+    -30
+  ],
+  "gainDb": [
+    -11.5,
+    -11.6
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry close-up foley recording, not music: eight separate water splashes, each a burst of bubbles rising and a bright splash of water, about 0.8 seconds, separated by 2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 25 seconds.",
+    "generated": "2026-10-04T03:47:18.297Z",
+    "takes": 3,
+    "rounds": 3
+  },
+  "picks": [
+    {
+      "take": "water.2.mp3",
+      "at": 6.502,
+      "fit": 8.5,
+      "problem": "none"
+    },
+    {
+      "take": "water.2.mp3",
+      "at": 11.628,
+      "fit": 8,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 105,
+    "listened": 24,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.3,
+    "peakTarget": -9,
+    "rmsMax": -13
+  }
+}

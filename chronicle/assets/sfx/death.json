@@ -1,0 +1,55 @@
+{
+  "id": "death",
+  "category": "spell",
+  "files": [
+    "death.0.ogg",
+    "death.1.ogg"
+  ],
+  "durations": [
+    1.766,
+    1.776
+  ],
+  "peaks": [
+    -7.5,
+    -7.5
+  ],
+  "rms": [
+    -17.9,
+    -18.2
+  ],
+  "gainDb": [
+    -11,
+    -11.6
+  ],
+  "channels": 2,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: six separate deep low single tolls of a large distant iron bell, each fading out with a soft dark hum, about one and a half seconds, separated by 3 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 29 seconds.",
+    "generated": "2026-10-04T03:54:49.639Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "death.0.mp3",
+      "at": 30.05,
+      "fit": 9,
+      "problem": "none"
+    },
+    {
+      "take": "death.0.mp3",
+      "at": 54.049,
+      "fit": 9,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 21,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 9,
+    "peakTarget": -7.5,
+    "rmsMax": -16
+  }
+}

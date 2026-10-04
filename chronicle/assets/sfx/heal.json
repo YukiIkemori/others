@@ -1,0 +1,59 @@
+{
+  "id": "heal",
+  "category": "spell",
+  "files": [
+    "heal.0.ogg",
+    "heal.1.ogg"
+  ],
+  "durations": [
+    1.4,
+    0.673
+  ],
+  "peaks": [
+    -8,
+    -8.4
+  ],
+  "rms": [
+    -24,
+    -18
+  ],
+  "gainDb": [
+    -11.4,
+    -8.6
+  ],
+  "channels": 2,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": [
+      "A clean studio recording of isolated magical sound effects for a fantasy story, not music: eight separate gentle healing shimmers, each a soft upward sparkle of tiny glass chimes with a warm glowing ring, about one second, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 26 seconds."
+    ],
+    "generated": "2026-10-04T03:49:25.411Z",
+    "takes": 3,
+    "rounds": 3
+  },
+  "picks": [
+    {
+      "take": "heal.0.mp3",
+      "at": 23.049,
+      "fit": 9.5,
+      "problem": "none",
+      "cut": true
+    },
+    {
+      "take": "heal.2.mp3",
+      "at": 112.582,
+      "fit": 9,
+      "problem": "none",
+      "rmsCapped": true
+    }
+  ],
+  "analysis": {
+    "candidates": 68,
+    "listened": 24,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 9.3,
+    "peakTarget": -8,
+    "rmsMax": -18
+  }
+}

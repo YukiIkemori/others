@@ -1,0 +1,55 @@
+{
+  "id": "buff",
+  "category": "spell",
+  "files": [
+    "buff.0.ogg",
+    "buff.1.ogg"
+  ],
+  "durations": [
+    0.187,
+    0.383
+  ],
+  "peaks": [
+    -10,
+    -10
+  ],
+  "rms": [
+    -18.7,
+    -20.5
+  ],
+  "gainDb": [
+    -8.1,
+    -9.8
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: ten separate quick rising whooshes with a bright shimmering upward glide, like a soft magical swell going up in pitch, about half a second, separated by 1.6 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 24 seconds.",
+    "generated": "2026-10-04T03:50:31.436Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "buff.0.mp3",
+      "at": 117.819,
+      "fit": 8.5,
+      "problem": "none"
+    },
+    {
+      "take": "buff.0.mp3",
+      "at": 25.57,
+      "fit": 8,
+      "problem": "slightly thin"
+    }
+  ],
+  "analysis": {
+    "candidates": 19,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.3,
+    "peakTarget": -10,
+    "rmsMax": -18
+  }
+}

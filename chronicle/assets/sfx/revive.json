@@ -1,0 +1,45 @@
+{
+  "id": "revive",
+  "category": "spell",
+  "files": [
+    "revive.0.ogg"
+  ],
+  "durations": [
+    2.4
+  ],
+  "peaks": [
+    -8.5
+  ],
+  "rms": [
+    -22.9
+  ],
+  "gainDb": [
+    -6.2
+  ],
+  "channels": 2,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: six separate long magical rising shimmers, each a slow upward sweep of sparkling glass chimes that blooms into a bright warm glowing ring, about two seconds, separated by 3 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 31 seconds.",
+    "generated": "2026-10-04T03:49:55.691Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "revive.0.mp3",
+      "at": 4.086,
+      "fit": 7.5,
+      "problem": "musical harp arpeggio",
+      "cut": true
+    }
+  ],
+  "analysis": {
+    "candidates": 3,
+    "listened": 3,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 7.5,
+    "peakTarget": -8.5,
+    "rmsMax": -18
+  }
+}

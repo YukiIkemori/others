@@ -1,0 +1,40 @@
+{
+  "loopStart": 0,
+  "loopEnd": 48,
+  "bed": "breeze",
+  "spec": {
+    "bed": "breeze",
+    "night": 1
+  },
+  "lufsTarget": -41,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A sound effect recording, not music: wind rustling through the leaves of trees in soft gusts on a hillside, with sparse distant crickets chirping, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+    "generated": "2026-10-04T03:47:40.146Z",
+    "rawSeconds": 62.8,
+    "takes": 6,
+    "excerpt": [
+      1,
+      53
+    ]
+  },
+  "analysis": {
+    "loudnessLUFS": -41,
+    "truePeakDb": -28.9,
+    "gainDb": -29.6,
+    "peakLimited": false,
+    "xfade": 4,
+    "seamLevelDiffDb": 0.1,
+    "listen": {
+      "model": "gemini-3.8-flash",
+      "fit": 5.5,
+      "seam": {
+        "seam_smooth": 10,
+        "problem": "none"
+      },
+      "content": "flowing stream and rushing water / soft gusts of wind with distant crickets",
+      "problem": "sounds like running water rather than wind in leaves, no crickets"
+    }
+  }
+}

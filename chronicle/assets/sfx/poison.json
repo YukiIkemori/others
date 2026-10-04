@@ -1,0 +1,55 @@
+{
+  "id": "poison",
+  "category": "spell",
+  "files": [
+    "poison.0.ogg",
+    "poison.1.ogg"
+  ],
+  "durations": [
+    0.834,
+    0.839
+  ],
+  "peaks": [
+    -10,
+    -10
+  ],
+  "rms": [
+    -22.4,
+    -22
+  ],
+  "gainDb": [
+    -12.4,
+    -12
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A close-up field recording made in a quiet room, not music: ten separate short wet blurps of thick mud bubbling, each a few gloopy bubbles popping, separated by 1.6 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 24 seconds.",
+    "generated": "2026-10-04T03:53:33.180Z",
+    "takes": 3,
+    "rounds": 3
+  },
+  "picks": [
+    {
+      "take": "poison.2.mp3",
+      "at": 48.241,
+      "fit": 8.5,
+      "problem": "none"
+    },
+    {
+      "take": "poison.2.mp3",
+      "at": 56.304,
+      "fit": 6,
+      "problem": "wrong sound: liquid splash"
+    }
+  ],
+  "analysis": {
+    "candidates": 107,
+    "listened": 24,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 7.3,
+    "peakTarget": -10,
+    "rmsMax": -19
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "id": "enemy_die",
+  "category": "battle",
+  "files": [
+    "enemy_die.0.ogg",
+    "enemy_die.1.ogg"
+  ],
+  "durations": [
+    0.673,
+    0.473
+  ],
+  "peaks": [
+    -9.5,
+    -9.5
+  ],
+  "rms": [
+    -19.8,
+    -24.8
+  ],
+  "gainDb": [
+    -9,
+    -3.2
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry close-up foley recording, not music: ten separate soft dissolving puffs, each a quick falling whoosh like a cloud of dust scattering away into the air, about half a second, separated by 1.6 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 25 seconds.",
+    "generated": "2026-10-04T03:56:06.038Z",
+    "takes": 2,
+    "rounds": 2
+  },
+  "picks": [
+    {
+      "take": "enemy_die.1.mp3",
+      "at": 61.231,
+      "fit": 8,
+      "problem": "none"
+    },
+    {
+      "take": "enemy_die.1.mp3",
+      "at": 18.404,
+      "fit": 8,
+      "problem": "slightly long"
+    }
+  ],
+  "analysis": {
+    "candidates": 51,
+    "listened": 16,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8,
+    "peakTarget": -9.5,
+    "rmsMax": -15
+  }
+}

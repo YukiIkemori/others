@@ -64,7 +64,10 @@
 //      volume 10 (blizzard −33 … heat −43 LUFS), sample peak ≤ −9 dBFS, so a file plays at unity gain on the
 //      amb bus; Ogg Vorbis 96 kbps stereo;
 //   5. --listen: the whole loop is checked for content and ANY music / tonal pad / rhythm / voice (rejected),
-//      and the seam (8 s before the end + 8 s from the start) is rated; best = fit + seam/10 of the clean takes.
+//      and the seam (8 s before the end + 8 s from the start) is rated; best = fit + min(seam, 8)/3 of the clean takes
+//      with fit ≥ 5 (none → no file: the procedural bed stays). Rounds go on until fit ≥ --min-fit and seam ≥ 6.
+//      Lyria drifts into music (piano, music box, hip-hop beats) for most ambience prompts — about 1 take in 3 is
+//      clean, quiet pastoral wordings are worst; "A dry foley recording, not music: …" worked best (2026-10-04).
 'use strict';
 const fs = require('fs');
 const os = require('os');
@@ -433,14 +436,14 @@ async function doAmb(e, o) {
         const key = path.basename(t.file) + '@' + Math.round(lp.from * 4) + '-' + Math.round(lp.to * 4);
         if (o.listen && !cache[key]) { cache[key] = await listenAmb(e, r.channels, rate, o.log); fs.writeFileSync(cacheFile, JSON.stringify(cache, null, 1)); }
         r.heard = cache[key] || null;
-        r.q = r.heard ? (r.heard.music || r.heard.voice ? -10 : r.heard.fit + (r.heard.seam ? r.heard.seam.seam_smooth / 10 : 0)) : 0;
+        r.q = r.heard ? (r.heard.music || r.heard.voice || r.heard.fit < 5 ? -10 : r.heard.fit + (r.heard.seam ? Math.min(r.heard.seam.seam_smooth, 8) / 3 : 0)) : 0;
         o.log(`  ${e.id}: ${path.basename(t.file)} loop ${lp.from.toFixed(1)}–${lp.to.toFixed(1)} s` + (r.heard ? ` → fit ${r.heard.fit}${r.heard.music ? ' MUSIC' : ''}${r.heard.voice ? ' VOICE' : ''} seam ${r.heard.seam ? r.heard.seam.seam_smooth : '-'}: ${r.heard.content.slice(0, 90)}` : ''));
         results.set(t.file, r);
       } catch (err) { if (err.daily) throw err; o.log(`  ${e.id}: ${path.basename(t.file)} unusable: ${redact(err.message || err).slice(0, 100)}`); results.set(t.file, null); }
     }
     best = [...results.values()].filter((r) => r && r.q > 0 || (r && !o.listen)).sort((a, b) => b.q - a.q)[0] || null;
     if (!o.listen && best) break;
-    if (best && best.heard && best.heard.fit >= o.minFit) break;
+    if (best && best.heard && best.heard.fit >= o.minFit && (!best.heard.seam || best.heard.seam.seam_smooth >= 6)) break;
   }
   if (!best) throw new Error('no usable take (all rejected or failed)');
   const file = path.join(o.out, e.id + '.ogg');
