@@ -188,7 +188,7 @@
     'events.snow_dawn.read': 'You met the great wolf at {gate}.\nThe pack leader never got through.',
     'events.snow_dawn.miss': 'When the great wolf broke through {gate},\nI thought we were done for.',
     'events.snow_dawn.say.0_read': 'At {join}, we took a terrible beating\nin the waves before.\n...But no one died.',
-    'events.snow_dawn.say.name_2': 'Jorn',
+    'events.snow_dawn.say.name_2': 'Hald',
     'events.snow_dawn.say_5': ['Not one gate was broken.\nI can\'t believe it...', 'The families by the gates you held\nsaid they want to thank you.'],
     'events.yule_siege_resume.caption': 'The village is still surrounded by wolves.\nYou hurry to the great hearth.',
     'events.yule_siege_regroup.caption': 'You wake beside the great hearth\'s fire.\nTalk to the chief to head for the gates again.',

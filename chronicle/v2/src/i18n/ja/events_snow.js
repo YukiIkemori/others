@@ -188,7 +188,7 @@
     'events.snow_dawn.read': '{gate}で大狼を迎え撃ってくれたな。\n群れの頭は、門をくぐれなんだ。',
     'events.snow_dawn.miss': '大狼に{gate}を破られたときは、\nもう駄目かと思った。',
     'events.snow_dawn.say.0_read': '{join}は、その前の波で\nひどくやられた。\n……だが、誰も死ななかった。',
-    'events.snow_dawn.say.name_2': 'ヨルン',
+    'events.snow_dawn.say.name_2': 'ハルド',
     'events.snow_dawn.say_5': ['門は、ひとつも破られなかった。\n信じられん……。', '守りきった門の家の者が、\n礼をしたいと言っておったぞ。'],
     'events.yule_siege_resume.caption': '村はまだ、狼に囲まれている。\n大かまどへ急いだ。',
     'events.yule_siege_regroup.caption': '大かまどの火のそばで、目を覚ました。\n村長に話せば、もう一度門へ向かえる。',

@@ -296,7 +296,10 @@
     else if (bossGate && ev.flag('snow_gate_' + bossGate + '_broken')) lines.push(R.T('events.snow_dawn.miss', { gate: X().GATES[bossGate] }));
     if (broken.length) lines.push(R.T(read ? 'events.snow_dawn.say.0_read' : 'events.snow_dawn.say.0', { join }), R.T('events.snow_dawn.say.1'));
     else lines.push(...[].concat(R.T('events.snow_dawn.say_5')));
-    await ev.say('jorn', lines, { name: R.T('events.snow_dawn.say.name_2') });
+    // 話すのは見張り台にいる見張りのハルド（朝の鐘の場面は見張り台の上。村長ヨルンは広場にいて画面にいない）。
+    //   籠城の門の読みを教えてきたのもハルドなので、門の結末もハルドが語る（テスター 2026-10-04 R1「同じ台詞がハルド／ヨルンで揺れる」）
+    try { await ev.npc('hald').face('hero'); } catch (e) { /* */ }
+    await ev.say('hald', lines, { name: R.T('events.snow_dawn.say.name_2') });
     // 見張り台の上（watch）は高台で、下りる段が無い。場面が終わったら大かまどの前へ戻す
     // （持ち主 2026-10-01「狼のボスを倒すと村の北のどこからも出られない所から再開して詰む」）
     await ev.fade('out', 500);

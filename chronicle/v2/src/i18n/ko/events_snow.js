@@ -186,7 +186,7 @@
     'events.snow_dawn.read': '{gate}에서 큰늑대를 맞아 싸워 주었군.\n무리의 우두머리는 문을 넘지 못했네.',
     'events.snow_dawn.miss': '큰늑대가 {gate}을(를) 뚫었을 때는\n이제 끝인 줄 알았네.',
     'events.snow_dawn.say.0_read': '{join}은(는) 그 전의 물결에\n크게 당했네.\n……하지만 아무도 죽지 않았어.',
-    'events.snow_dawn.say.name_2': '요른',
+    'events.snow_dawn.say.name_2': '할드',
     'events.snow_dawn.say_5': ['문은 하나도 뚫리지 않았네.\n믿을 수가 없군…….', '지켜 낸 문 쪽 집 사람들이\n답례를 하고 싶다더군.'],
     'events.yule_siege_resume.caption': '마을은 아직 늑대에게 포위되어 있다.\n큰 화덕으로 서둘렀다.',
     'events.yule_siege_regroup.caption': '큰 화덕의 불 곁에서 눈을 떴다.\n촌장에게 말하면 다시 문으로 향할 수 있다.',

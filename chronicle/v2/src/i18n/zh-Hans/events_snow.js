@@ -186,7 +186,7 @@
     'events.snow_dawn.read': '你在{gate}迎击了大狼。\n狼群的头领，没能闯进门来。',
     'events.snow_dawn.miss': '大狼攻破{gate}的时候，\n我还以为全完了。',
     'events.snow_dawn.say.0_read': '{join}在之前的几波里\n被打得很惨。\n……不过，没有人死。',
-    'events.snow_dawn.say.name_2': '约恩',
+    'events.snow_dawn.say.name_2': '哈尔德',
     'events.snow_dawn.say_5': ['一道门都没被攻破。\n真不敢相信……。', '守住的那几道门边的人家，\n说想要谢谢你们。'],
     'events.yule_siege_resume.caption': '村子仍被狼群包围着。\n赶往了大灶。',
     'events.yule_siege_regroup.caption': '在大灶的火旁醒了过来。\n和村长说话，就能再次前往城门。',
