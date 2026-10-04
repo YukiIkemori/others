@@ -105,6 +105,8 @@
     // 地図が替わったときだけ振り直す（戦闘から戻る・メニューを閉じるでは変わらない）
     if (VISIT.mapRef !== m) { VISIT.id = m.id; VISIT.mapRef = m; VISIT.pick = !m.weather && AUTO[m.id] ? roll(m) : null; }
     if (F._wxForce) return F._wxForce;
+    // 設定の「天気」が切りなら晴れ（絵も環境音の天気の床も出さない。持ち主 2026-10-04「天候エフェクト消してくれ、鬱陶しい」）
+    try { if (R.Settings && !R.Settings.get('weather')) return null; } catch (e) { /* */ }
     if (m.weather) {
       let kind = m.weather;
       if (m.weatherCond != null && !check(m.weatherCond)) kind = m.weatherElse || null;

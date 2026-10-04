@@ -494,6 +494,8 @@
     'ui.settings.TABS.shake.desc': '戰鬥等場合畫面震動的強度。',
     'ui.settings.TABS.reduceMotion.name': '減少動態',
     'ui.settings.TABS.reduceMotion.desc': '減少視窗的移動與彈跳。',
+    'ui.settings.TABS.weather.name': '天氣',
+    'ui.settings.TABS.weather.desc': '在畫面上顯示雨、雪、霧、沙暴等天氣。',
     'ui.settings.TABS.ruby.name': '注音',
     'ui.settings.TABS.ruby.desc': '在人名與地名首次出現處標註讀音（僅限日語）。',
     'ui.settings.ACT_NAMES.a': '確定・交談',

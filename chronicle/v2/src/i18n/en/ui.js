@@ -494,6 +494,8 @@
     'ui.settings.TABS.shake.desc': 'How strongly the screen shakes in battle and elsewhere.',
     'ui.settings.TABS.reduceMotion.name': 'Reduce Motion',
     'ui.settings.TABS.reduceMotion.desc': 'Reduce window movement and bounce.',
+    'ui.settings.TABS.weather.name': 'Weather',
+    'ui.settings.TABS.weather.desc': 'Show weather such as rain, snow, fog and sandstorms.',
     'ui.settings.TABS.ruby.name': 'Furigana',
     'ui.settings.TABS.ruby.desc': 'Show readings over names of people and places (Japanese only).',
     'ui.settings.ACT_NAMES.a': 'Confirm / Talk',

@@ -494,6 +494,8 @@
     'ui.settings.TABS.shake.desc': '전투 등에서 화면을 흔드는 세기.',
     'ui.settings.TABS.reduceMotion.name': '움직임 줄이기',
     'ui.settings.TABS.reduceMotion.desc': '창의 움직임이나 튀는 효과를 줄인다.',
+    'ui.settings.TABS.weather.name': '날씨',
+    'ui.settings.TABS.weather.desc': '비·눈·안개·모래폭풍 등의 날씨를 화면에 표시한다.',
     'ui.settings.TABS.ruby.name': '읽는 법 표시',
     'ui.settings.TABS.ruby.desc': '사람 이름과 지명이 처음 나올 때 읽는 법을 붙인다.',
     'ui.settings.ACT_NAMES.a': '결정·말하기',

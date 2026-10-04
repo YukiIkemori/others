@@ -26,6 +26,7 @@
     colorAssist: false,
     lessFlash: false,
     reduceMotion: false,
+    weather: false,      // 天気の絵（雨・雪・霧・砂嵐…）。持ち主 2026-10-04「天候エフェクト消してくれ」→ 既定は切る
     ruby: false,
     shake: 'on',
     battleVoice: 'on',   // 戦闘ボイス: あり／大技だけ／なし（BRIEF A37、BSCENE が読む）
@@ -53,7 +54,7 @@
     'vol.bgm': VOL, 'vol.sfx': VOL, 'vol.voice': VOL, 'vol.amb': VOL,
     confirmButton: ['right', 'down'],
     touchPad: ['auto', 'on', 'off'],
-    colorAssist: [false, true], lessFlash: [false, true], reduceMotion: [false, true], ruby: [false, true],
+    colorAssist: [false, true], lessFlash: [false, true], reduceMotion: [false, true], weather: [false, true], ruby: [false, true],
     shake: ['on', 'weak', 'off'],
     battleVoice: ['on', 'big', 'off'],
     padGlyphs: ['auto', 'xbox', 'ps', 'nintendo'],

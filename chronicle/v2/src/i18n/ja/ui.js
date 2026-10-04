@@ -494,6 +494,8 @@
     'ui.settings.TABS.shake.desc': '戦闘などで画面を揺らす強さ。',
     'ui.settings.TABS.reduceMotion.name': '動きを減らす',
     'ui.settings.TABS.reduceMotion.desc': '窓の動きや弾みを減らす。',
+    'ui.settings.TABS.weather.name': '天気',
+    'ui.settings.TABS.weather.desc': '雨・雪・霧・砂嵐などの天気を画面に出す。',
     'ui.settings.TABS.ruby.name': 'ふりがな',
     'ui.settings.TABS.ruby.desc': '人の名前と地名の初めての所に、ふりがなを付ける。',
     'ui.settings.ACT_NAMES.a': '決定・話す',

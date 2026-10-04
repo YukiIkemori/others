@@ -19,6 +19,7 @@
 //   choose(labels, {cancel, text, who, face, index（最初のカーソル）, disabled（選べない番号の配列）, important（物語の大事な分かれ道: 出てすぐの決定を受けない）})  → 選んだ番号（B は cancel の番号）。who（NPC の id か true = 話しかけた NPC）を書くと
 //        問いの窓に say と同じ名前・顔を付ける
 //   caption(text, {ms}) → R.UIK.Message.caption / fade('out'|'in', ms) / wait(ms)
+//        暗転したまま caption・say を出すときは、同じ色の幕を下に敷いて文を見せる（veiled。暗転の層は場面の上に描かれるため）
 //   item(id, n, {silent}) → K.gain。右上に「〜を 手に入れた」/ take(id, n) → bool / gold(n, {silent}) / has(id)（袋＋装備）
 //   battle(troop|setup, opts) → 'win'|'lose'|'escape'（全滅して宿・タイトルを選んだら戻らない）。'lose'（canLose）なら倒れた人を HP 1 で起こす
 //   heal()                      倒れた人を起こしてから、出撃中と控えの HP・MP を満たす（状態はそのまま。全部消すのは rest）
@@ -221,6 +222,24 @@
   }
   Events._reviveFallen = reviveFallen;
 
+  // ---------------------------------------------------------------- 暗転の上の字幕・会話
+  // 暗転（R.Engine.fade）は積んだ場面の上に描かれるので、暗転したままの ev.caption・ev.say は見えなかった
+  // （航海・地方の締め・回想の字幕が黒い画面だけになる。テスター 2026-10-04 §7「字幕と暗転」）。
+  // 暗い間に出すときは、同じ色の幕（場面）を下に敷いて暗転を外し、字幕・会話を幕の上に出す。閉じたら幕を外して暗転を戻す
+  async function veiled(show) {
+    const F = R.Engine && R.Engine.fade;
+    if (!F || !(F.a > 0.01) || F.anim || !R.Engine.push) return show();
+    const a = F.a, color = F.color || '#06070e';
+    const veil = { id: 'veil', opaque: false, enter() {}, exit() {}, update() {}, draw(g) { g.globalAlpha = Math.min(1, a); g.fillStyle = color; g.fillRect(0, 0, R.W, R.H); g.globalAlpha = 1; } };
+    R.Engine.push(veil);
+    F.a = 0;
+    try { return await show(); } finally {
+      try { R.Engine.remove(veil); } catch (e) { /* */ }
+      if (!F.anim && F.a < a) F.a = a;
+    }
+  }
+  Events._veiled = veiled;
+
   // ---------------------------------------------------------------- ev
   function makeEv(ctx) {
     ctx = ctx || {};
@@ -239,7 +258,7 @@
         if (o.title || sp.title) msg.title = o.title || sp.title;
         msg.face = face;
         if (o.voice) msg.voice = o.voice;
-        const r = await R.UIK.Message.say(msg);
+        const r = await veiled(() => R.UIK.Message.say(msg));
         guard(); return r;
       },
       async choose(labels, o) {
@@ -265,7 +284,7 @@
         guard();
         return r == null ? (o.cancel != null ? o.cancel : -1) : r;
       },
-      async caption(text, o) { guard(); await R.UIK.Message.caption(fill(Array.isArray(text) ? text.join('\n') : text), o || {}); guard(); },
+      async caption(text, o) { guard(); await veiled(() => R.UIK.Message.caption(fill(Array.isArray(text) ? text.join('\n') : text), o || {})); guard(); },
       async fade(dir, ms) { guard(); await R.Engine.fadeTo(dir === 'out' ? 1 : 0, ms == null ? 260 : ms); guard(); },
       async wait(ms) { guard(); await R.wait(ms); guard(); },
       flag(id) { return !!G().flags[id]; },

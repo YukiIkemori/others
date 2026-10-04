@@ -55,6 +55,7 @@
       { key: 'lessFlash', name: R.T('ui.settings.TABS.lessFlash.name'), names: ONOFF, desc: R.T('ui.settings.TABS.lessFlash.desc') },
       { key: 'shake', name: R.T('ui.settings.TABS.shake.name'), names: { on: R.T('ui.settings.TABS.shake.names.on'), weak: R.T('ui.settings.TABS.shake.names.weak'), off: R.T('ui.settings.TABS.shake.names.off') }, desc: R.T('ui.settings.TABS.shake.desc') },
       { key: 'reduceMotion', name: R.T('ui.settings.TABS.reduceMotion.name'), names: ONOFF, desc: R.T('ui.settings.TABS.reduceMotion.desc') },
+      { key: 'weather', name: R.T('ui.settings.TABS.weather.name'), names: ONOFF, desc: R.T('ui.settings.TABS.weather.desc') },
       { key: 'ruby', name: R.T('ui.settings.TABS.ruby.name'), names: ONOFF, desc: R.T('ui.settings.TABS.ruby.desc') },
     ] },
   ];
