@@ -11,6 +11,7 @@
 //   R.Tier.wakeOnLeave(p)        町から外へ出たときに起こすか: ロウェルの場面（T2・T4・T5・T7）が残っているとき（§6.4「町を出るとき」）
 //   R.Tier.holdOnEnter(p)        町に入ってすぐは起こさないか: 次の場面がロウェル（宿に泊まった後か町の出口で。オーナー 2026-10-03）
 //   R.Story.duelPrep(ev, ctx)    ロウェルとの戦いの前の一息（手当て・記録）
+//   R.Story.recover(ev, after)   ロウェルに負けた後: 暗転 → 起き上がれない間 → 全快（倒れた人も）→ 明ける → after の一行（R11）
 //   R.Tier.oil(t)                灯油の倍率（ファロスの油の相場の札・うわさ）
 //   R.DB.letters  berna_t3（字が乱れる）・berna_t5・berna_t5_2（同じ文面、同じ日付）
 //   R.DB.leads    l_main_margin_2〜7（余白。§4.3 の推理＋古層の n 行目。任意の手がかりで 1 行ふくらむ）・l_main_roa_t3・l_main_roa_t6・l_rumor_mira
@@ -296,6 +297,19 @@
     }
     const i = await ev.choose([R.T('ev.story_00_tiers.duelPrep.choose.0'), R.T('ev.story_00_tiers.duelPrep.choose.1')], { important: true, text: R.T('ev.story_00_tiers.duelPrep.choose.text') });
     if (i === 0) { try { await R.Screens.open('save', {}); } catch (e) { R.warn('duelPrep save', e && e.message); } }
+  };
+  /**
+   * 負けても続く戦い（ロウェルの 2 戦）に負けた後（テスター 2026-10-04 R11: 全員 HP0・MP0 のまま町を歩けた）:
+   *   ひと呼吸 → 暗転 →「しばらく起き上がれなかった」→ 全快（倒れた人も起こし、状態も消す）→ 明ける → after（町の人の手当ての一行）
+   */
+  S.recover = async function (ev, after) {
+    await ev.wait(500);
+    await ev.fade('out', 800);
+    ev.rest();
+    await ev.caption(R.T('ev.story_00_tiers.recover.caption'), { ms: 2600 });
+    ev.sfx('heal');
+    await ev.fade('in', 800);
+    if (after) await S.narr(ev, after);
   };
   /**
    * 場面の始まりと終わり（T2〜T7 が呼ぶ）: 走っている間は pendingTier を残す（町の移りの自動の記録で途中から再開しても、

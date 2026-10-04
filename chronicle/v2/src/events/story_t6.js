@@ -16,14 +16,20 @@
       await St.stage(ev, ctx);
       ev.bgm('sorrow');
       await St.narr(ev, ctx && ctx.reason === 'inn' ? R.T('events.story_t6.run.narr') : R.T('events.story_t6.run.narr_2'));
-      await St.actor(ev, 'fine', 'fine', { dist: 2, walk: 0, ms: 900, alpha: 0.72 });
+      await St.actor(ev, 'fine', 'fine', { dist: 2, walk: 0, ms: 1100, alpha: 0.72 });
+      const x = R.Final && R.Final.ev;
       const o = St.who('fine');
+      // 灯りを見上げてから、こちらへ向き直る（演出。テスター 2026-10-04 §7）
+      if (x) { await x.face(ev, 'fine', 'n'); await ev.wait(700); await x.face(ev, 'fine', 'hero'); }
       await ev.say('fine', R.T('events.story_t6.run.say'), Object.assign({ voice: 'v_fine_t6_01', face: 'fine:sad' }, o));
+      await ev.wait(500);
       await ev.say('fine', R.T('events.story_t6.run.say_2'), Object.assign({ face: 'fine:sad' }, o));
       await ev.say('fine', R.T('events.story_t6.run.say_3'), Object.assign({ voice: 'v_fine_t6_02', face: 'fine:sad' }, o));
+      await ev.wait(800);
+      if (x) await x.act(ev, 'fine', 'sad', 1000);
       await ev.caption(R.T('events.story_t6.run.caption'), { ms: 2800 });
       ev.sfx('magic');
-      await St.leave(ev, 'fine', { steps: 2, ms: 1100 });
+      await St.leave(ev, 'fine', { steps: 2, ms: 1400 });
       ev.mapBgm();
       ev.setFlag('story_t6');
       ev.lead('l_main_roa_t6');

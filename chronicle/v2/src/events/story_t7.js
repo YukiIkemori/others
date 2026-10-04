@@ -19,12 +19,18 @@
       ev.bgm('tension');
       await St.narr(ev, ctx && ctx.reason === 'inn' ? R.T('events.story_t7.run.narr') : R.T('events.story_t7.run.narr_2'));
       await St.actor(ev, 'rowell', 'rowell', { dist: 1, walk: 3, speed: 0.7 });
+      const x = R.Final && R.Final.ev;
+      // 倒れこむ（膝をつく）。演出（テスター 2026-10-04 §7）
+      ev.sfx('hit');
+      if (x) await x.act(ev, 'rowell', 'kneel', 1200);
       await ev.say('rowell', R.T('events.story_t7.run.say'), Object.assign({ voice: 'v_rowell_t7_01' }, rw, { face: 'rowell:sad' }));
       await St.narr(ev, R.T('events.story_t7.run.narr_3'));
       if (ev.flag('story_rowell_won2')) await ev.say('rowell', R.T('events.story_t7.run.say_2'), Object.assign({ voice: 'v_rowell_t7_02' }, rw));
       await ev.say('rowell', R.T('events.story_t7.run.say_3'), Object.assign({ voice: 'v_rowell_t7_03' }, rw));
       await ev.say('rowell', R.T('events.story_t7.run.say_4'), Object.assign({ voice: 'v_rowell_t7_04' }, rw, { face: 'rowell:angry' }));
       await ev.say('rowell', R.T('events.story_t7.run.say_5'), Object.assign({ voice: 'v_rowell_t7_05' }, rw, { face: 'rowell:sad' }));
+      await ev.wait(900);
+      if (x) await x.act(ev, 'rowell', 'sad', 1000);
       await St.narr(ev, R.T('events.story_t7.run.narr_4'));
       ev.lore('lo_rowell_cover');
       await ev.say('rowell', R.T('events.story_t7.run.say_6'), Object.assign({ voice: 'v_rowell_t7_06' }, rw));
@@ -32,6 +38,7 @@
       ev.setFlag('story_rowell_defect');
       await ev.say('rowell', R.T('events.story_t7.run.say_7'), Object.assign({ voice: 'v_rowell_t7_07' }, rw));
       await St.narr(ev, R.T('events.story_t7.run.narr_5'));
+      if (x) await x.act(ev, 'rowell', 'nod', 800);
       await St.leave(ev, 'rowell', { steps: 4, ms: 1400 });
       ev.mapBgm();
       ev.setFlag('story_t7');

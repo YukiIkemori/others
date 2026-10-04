@@ -38,8 +38,8 @@
         await ev.say('rowell', R.T('events.story_t2.run.say_7'), Object.assign({ voice: 'v_rowell_t2_07' }, rw));
       }
       await St.leave(ev, 'rowell', { steps: 4 });
-      ev.heal();
-      if (!won) await St.narr(ev, R.T('events.story_t2.run.narr_4'));
+      // 負けたら: 起き上がれない間と、町の人の手当て（全快。倒れた人も起こす。R11）。勝ったら傷の手当てだけ
+      if (won) ev.heal(); else await St.recover(ev, R.T('events.story_t2.run.narr_4'));
       ev.mapBgm();
       // 世界の反応（§4.3: 空が群青に。空の段は R.Sky がティアで引き直している）
       await St.narr(ev, R.T('events.story_t2.run.narr_5'));

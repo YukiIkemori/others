@@ -5,6 +5,7 @@
 //   R.Ending.credits(o)             E10 クレジット（キャストは主人公と物語の人物だけ。仲間 20 人は「旅の仲間たち」の一行。持ち主 2026-09-28「企画・制作 Studio Metem でいい」）
 //   R.Ending.fin()                  E12 「――おしまい」（A で閉じる）
 //   R.Ending.glow(o) → {to(level, ms), close()}   E6 フィールドの上にかける日の出の光（東の空が白み、金色になる）
+//   R.Ending.beam({x, y}) → {to(level, ms), close()}   E8 東の窓から朝の席（マス x, y）へ差す光の帯と光だまり（R23）
 // どの画面も R.Engine の層（opaque）。A を押し続けると早送り（クレジット）、字幕は A で次へ。node では描かずにすぐ終わる。
 (function (R) {
   'use strict';
@@ -363,6 +364,72 @@
       await R.until(() => pressA());
       await tween(L, 'a', 0, 900);
     });
+  };
+
+  // ================================================================ E8 朝の席に差す光（フィールドの上。テスター 2026-10-04 R23）
+  /** マス (tx, ty) の画面の位置（FIELD のカメラ）。フィールドが無ければ画面のまん中 */
+  function screenOf(tx, ty) {
+    const F = R.Field;
+    try {
+      if (F && F._cam && F._s && F._s.map) { const c = F._cam({}); return { x: tx * c.t + c.t / 2 - c.cx, y: ty * c.t + c.t / 2 - c.cy, t: c.t }; }
+    } catch (e) { /* */ }
+    return { x: R.W / 2, y: R.H / 2, t: 32 };
+  }
+  /**
+   * 東の窓から斜めに差しこむ光の帯と、落ちた所（マス o.x, o.y）の光だまり。→ {to(level, ms), close()}
+   *   帯は右上（窓）から落ちる所へ。ほこりの粒がゆっくり光の中を漂う（動きを減らす設定では止める）
+   */
+  Ending.beam = function (o) {
+    o = o || {};
+    const st = { k: 0, t0: T() };
+    const L = layer('beam', function (g) {
+      const k = st.k;
+      if (k <= 0.003) return;
+      const p = screenOf(o.x || 0, o.y || 0), t = p.t;
+      const fx = p.x, fy = p.y + t * 0.1;                       // 落ちる所（席の上）
+      const sx = fx + t * (o.dx != null ? o.dx : 3.2), sy = fy - t * (o.dy != null ? o.dy : 5.5);   // 窓の口
+      const w0 = t * 0.55, w1 = t * 1.25;                      // 窓での幅・床での幅
+      g.save();
+      g.globalCompositeOperation = 'lighter';
+      // 光の帯（窓から床へ、先に行くほど広く淡く）
+      const gr = g.createLinearGradient(sx, sy, fx, fy);
+      gr.addColorStop(0, `rgba(255,236,190,${(0.42 * k).toFixed(3)})`);
+      gr.addColorStop(0.7, `rgba(255,214,150,${(0.22 * k).toFixed(3)})`);
+      gr.addColorStop(1, `rgba(255,206,140,${(0.12 * k).toFixed(3)})`);
+      g.fillStyle = gr;
+      g.beginPath();
+      g.moveTo(sx - w0 / 2, sy); g.lineTo(sx + w0 / 2, sy);
+      g.lineTo(fx + w1 / 2, fy); g.lineTo(fx - w1 / 2, fy);
+      g.closePath(); g.fill();
+      // 光だまり（席と卓の上の楕円）
+      const rg = g.createRadialGradient(fx, fy, 1, fx, fy, t * 1.5);
+      rg.addColorStop(0, `rgba(255,240,200,${(0.55 * k).toFixed(3)})`);
+      rg.addColorStop(0.5, `rgba(255,214,150,${(0.22 * k).toFixed(3)})`);
+      rg.addColorStop(1, 'rgba(255,200,140,0)');
+      g.save(); g.translate(fx, fy); g.scale(1, 0.55); g.translate(-fx, -fy);
+      g.fillStyle = rg; g.beginPath(); g.arc(fx, fy, t * 1.5, 0, Math.PI * 2); g.fill();
+      g.restore();
+      // 光の中のほこり
+      const rm = R.UIK && R.UIK.reduceMotion ? R.UIK.reduceMotion() : false;
+      const tm = rm ? 0 : T() - st.t0;
+      for (let i = 0; i < 18; i++) {
+        const a = ((i * 0.618) % 1), b = ((i * 0.377 + 0.2) % 1);
+        const ph = ((tm / (5200 + i * 170)) + a) % 1;
+        const u = (b + ph * 0.35) % 1;                         // 帯の上の位置（窓 0 → 床 1）
+        const cx = sx + (fx - sx) * u + (a - 0.5) * (w0 + (w1 - w0) * u) * 0.8 + Math.sin(ph * 6.28 + i) * t * 0.08;
+        const cy = sy + (fy - sy) * u;
+        const al = Math.sin(ph * Math.PI) * 0.7 * k;
+        g.fillStyle = `rgba(255,246,220,${al.toFixed(3)})`;
+        g.fillRect(Math.round(cx), Math.round(cy), 2, 2);
+      }
+      g.restore();
+    }, { opaque: false });
+    if (!headless()) R.Engine.push(L);
+    return {
+      to(level, ms) { return headless() ? Promise.resolve() : tween(st, 'k', level, ms || 1200); },
+      close() { try { R.Engine.remove(L); } catch (e) { /* */ } },
+      st,
+    };
   };
 
   // ================================================================ E6 日の出の光（フィールドの上）

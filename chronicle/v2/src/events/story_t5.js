@@ -27,17 +27,20 @@
       const r = await ev.battle({ troop: 'tr_b_rowell2', canLose: true, noEscape: true, bg: St.duelBg(map) });
       ev.setFlag('story_rowell_duel2');
       const won = r === 'win';
+      const x = R.Final && R.Final.ev;
       if (won) {
+        if (x) await x.act(ev, 'rowell', 'kneel', 1000);
         await ev.say('rowell', R.T('events.story_t5.run.say_4'), Object.assign({ voice: 'v_rowell_t5_04' }, rw, { face: 'rowell:sad' }));
         ev.setFlag('story_rowell_won2');
         await St.narr(ev, R.T('events.story_t5.run.narr_2'));
         if (!ev.has('hn_rival_bracer')) ev.item('hn_rival_bracer', 1);
       } else {
         await ev.say('rowell', R.T('events.story_t5.run.say_5'), Object.assign({ voice: 'v_rowell_t5_05' }, rw, { face: 'rowell:sad' }));
+        if (x) await x.act(ev, 'rowell', 'shake', 900);
       }
       await St.leave(ev, 'rowell', { steps: 4 });
-      ev.heal();
-      if (!won) await St.narr(ev, R.T('events.story_t5.run.narr_3'));
+      // 負けたら: 起き上がれない間と、町の人の手当て（全快。倒れた人も起こす。R11）。勝ったら傷の手当てだけ
+      if (won) ev.heal(); else await St.recover(ev, R.T('events.story_t5.run.narr_3'));
       // ベルナの手紙が二通（§6.3）
       ev.bgm('home');
       await St.narr(ev, R.T('events.story_t5.run.narr_4'));

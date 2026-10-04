@@ -9,7 +9,11 @@
 //        「{hero}は、はじめて朝を見た。」→ イェナが「エステル」と名乗り直す
 //     E7 年代記の朗読（章の題と選んだ版の一文）→ 地方のカード 8 枚（朝日が差していく順）→ タデオのカード（ファロス）
 //     E8 ロアの丘の朝（roa_dawn）: 語り石のそばのベルナが振り返る「おはよう。今日は大事な日だよ。」（v_berna_prologue_01 の 2 度目。§11.3 の「再」）→
-//        ベルナの家の朝の席に日が差す（roa_house_dawn。序章 P1 と同じ構図で、窓の外だけが明るい）
+//        「約束の朝ごはん」→ ベルナの家（roa_house_dawn）: ベルナが朝の席の後ろへ歩き、カメラが席へ寄る → 東の窓から光が差して席に落ちる
+//        （R.Ending.beam）→ ベルナが席の布を外し、杯を置く → 間 →「いらっしゃい。……二十年、待っていたよ。」→ 字幕（テスター 2026-10-04 R23。
+//        朝の席の意味は終盤のロアでベルナが話す: final_seat_told）
+//     演出（テスター 2026-10-04 §7）: E1 は祭壇へカメラ、E2 はフィーネが歩み寄って向かい合う、E4 はラザロとロウェルの短いやりとり
+//        （育ての父と語り部の子）、E6 はファロスから一緒に渡ったイェナが名乗る
 //     E9 語り石: 子どもたちに語る（v_berna_ending_01・02）→ 終章『語り部の旅』が年代記に → 「それは、九つ目の伝承になった」
 //     E10 クレジット（R.Ending.credits）  E11 しばらくして（v_berna_ending_03）  E12 おしまい → クリアの記録（つづきはロアの里から）→ タイトル
 (function (R) {
@@ -70,28 +74,50 @@
     ev.bgm('legend');
     ev.sfx('page');
     x.flash('#ffffff', 700);
+    x.heroFace('n');
+    await x.cam(ev, 17, 8, 900);
     await x.narr(ev, R.T('events.final_ending.narr'));
+    await x.breath(ev, 600);
+    // 安らぎの声（§5.2: 恐れではなく）。ひと呼吸ずつ間を取る
     await ev.say('nemrea', R.T('events.final_ending.say'), { voice: 'v_nemrea_ending_01', face: false, name: R.T('events.final_ending.say.name') });
+    await x.breath(ev, 800);
     await ev.say('nemrea', R.T('events.final_ending.say_2'), { voice: 'v_nemrea_ending_02', face: false, name: R.T('events.final_ending.say.name') });
+    await x.breath(ev, 500);
     ev.sfx('light');
     x.flash('#fffbe0', 900);
     await x.narr(ev, R.T('events.final_ending.narr_2'));
     await ev.caption(R.T('events.final_ending.caption'), { ms: 3200 });
+    await x.camBack(ev, 700);
     // ================================================================ E2 フィーネが物語に還る
     R.Audio.pushBgm('fine_theme');
     try {
+      // フィーネは一行の方へ歩いてきて、向かい合う
+      await x.walk(ev, 'naming_fine', [[18, 13]], 0.7);
+      await x.face(ev, 'naming_fine', 'hero');
+      x.heroFace('s');
+      await x.breath(ev, 500);
       await ev.say('naming_fine', R.T('events.final_ending.say_3'), { face: 'fine:smile' });
       await ev.say('naming_fine', R.T('events.final_ending.say_4'), { voice: 'v_fine_ending_01', face: 'fine:smile' });
+      await x.breath(ev, 600);
       await ev.say('naming_fine', R.T('events.final_ending.say_5'), { voice: 'v_fine_ending_02', face: 'fine:sad' });
+      await x.narr(ev, R.T('events.final_ending.e2_narr'));
+      await x.breath(ev, 700);
       await ev.say('naming_fine', R.T('events.final_ending.say_6'), { face: 'fine:smile' });
+      await x.act(ev, 'naming_fine', 'nod', 800);
       ev.sfx('magic');
-      try { await ev.leave('naming_fine', { ms: 1600, steps: 1 }); } catch (e) { /* */ }
+      x.flash('#f4f0ff', 900);
+      await x.leave(ev, 'naming_fine', { ms: 2600, steps: 1 });
+      await x.breath(ev, 900);
       await x.narr(ev, R.T('events.final_ending.narr_3'));
     } finally { R.Audio.popBgm(); }
     ev.setFlag('final_naming_scene', false);
-    // ================================================================ E3 白紙の題のページ
+    // ================================================================ E3 白紙の題のページ（祭壇の始まりの年代記へ）
+    x.heroFace('n');
+    await x.cam(ev, 17, 5, 1000);
     await x.narr(ev, R.T('events.final_ending.narr_4'));
     await x.narr(ev, R.T('events.final_ending.narr_5'));
+    await x.breath(ev, 600);
+    ev.sfx('quill');
     await x.narr(ev, R.T('events.final_ending.narr_6'));
     await ev.fade('out', 700);
     await R.Ending.titlePage(x.TITLE_LINE);
@@ -103,10 +129,22 @@
     await ev.warp('biblia', 'e_gate');
     ev.bgm('sorrow');
     await ev.fade('in', 700);
+    await x.act(ev, 'e_lazaro', 'kneel', 1000);
     await x.narr(ev, R.T('events.final_ending.narr_7'));
+    await x.breath(ev, 600);
     await ev.say('e_lazaro', R.T('events.final_ending.say_7'), { voice: 'v_lazaro_ending_01', face: 'lazaro:sad' });
+    await x.breath(ev, 700);
+    await x.face(ev, 'e_rowell', 'w');
     await x.narr(ev, R.T('events.final_ending.narr_8'));
+    await x.face(ev, 'e_lazaro', 'e');
+    // 育ての父と、語り部の子（ロウェルはロアで母の名を聞いた。テスター 2026-10-04 §9 の 1）
+    await ev.say('e_lazaro', R.T('events.final_ending.e4_lazaro_1'), { face: 'lazaro:sad' });
+    await ev.say('e_rowell', R.T('events.final_ending.e4_rowell_1'), { face: 'rowell:neutral' });
+    await ev.say('e_lazaro', R.T('events.final_ending.e4_lazaro_2'), { face: 'lazaro:sad' });
+    await x.breath(ev, 600);
     await ev.say('e_rowell', R.T('events.final_ending.say_8'), { voice: 'v_rowell_ending_01', face: 'rowell:sad' });
+    await x.act(ev, 'e_lazaro', 'nod', 900);
+    await x.narr(ev, R.T('events.final_ending.e4_narr'));
     // ================================================================ E5 ラザロの章
     await x.narr(ev, R.T('events.final_ending.narr_9'));
     const i = await ev.choose(R.T('events.final_ending.i.choose'), { important: true, text: R.T('events.final_ending.i.choose.text') });
@@ -121,6 +159,8 @@
       await ev.caption(R.T('events.final_ending.caption_4'), { ms: 3200 });
       await ev.caption(R.T('events.final_ending.caption_5'), { ms: 3600 });
     }
+    // ふたりは、肩を並べて坂を下りていく
+    await Promise.all([x.leave(ev, 'e_lazaro', { ms: 2000, path: [[27, 11], [27, 12], [26, 12], [25, 12]] }), x.leave(ev, 'e_rowell', { ms: 2000, path: [[29, 12], [28, 12], [27, 12], [26, 12]] })]);
     await ev.caption(R.T('events.final_ending.caption_6'), { ms: 3400 });
     // ================================================================ E6 ビブリアの広場 → 日の出
     await ev.fade('out', 600);
@@ -147,7 +187,16 @@
       if (glow) { await glow.to(0, 10); await glow.white(0, 1800); } else await ev.fade('in', 1200);
     } finally { if (glow) glow.close(); }
     await ev.caption(R.T('events.final_ending.caption_8'), { ms: 3600 });
+    // 静夜会のイェナ（ファロスの桟橋で「名が戻ったら、最初に名乗る」と言った人）
+    if (ev.flag('final_yena_ferry')) {
+      await x.walk(ev, 'e_yena', [[26, 25], [26, 26]], 0.8);
+      await x.face(ev, 'e_yena', 'hero');
+      await ev.say('e_yena', R.T('events.final_ending.e6_yena'), { name: R.T('events.final_ending.say.name_2') });
+    } else {
+      await x.face(ev, 'e_yena', 'hero');
+    }
     await ev.say('e_yena', R.T('events.final_ending.say_12'), { name: R.T('events.final_ending.say.name_2') });
+    await x.narr(ev, R.T('events.final_ending.e6_narr'));
     await x.breath(ev, 600);
     // ================================================================ E7 年代記の朗読と地方のカード
     await ev.fade('out', 900);
@@ -163,11 +212,38 @@
     await x.breath(ev, 400);
     await ev.say('e_berna', R.T('events.final_ending.say_13'), { voice: FIRST_MORNING, face: 'berna:smile' });
     await x.breath(ev, 700);
+    // 朝の席（終盤のロアで話した「朝を待つ席」。テスター 2026-10-04 R23: 人のいない部屋に字幕だけ、をやめる）
+    await ev.say('e_berna', ev.flag('final_seat_told') ? R.T('events.final_ending.e8_berna_1') : R.T('events.final_ending.e8_berna_1b'), { face: 'berna:smile' });
     await ev.fade('out', 800);
-    await ev.warp('roa_house_dawn', 'bed');
-    await ev.fade('in', 1000);
-    await ev.caption(R.T('events.final_ending.caption_9'), { ms: 3400 });
-    await x.breath(ev, 600);
+    await ev.warp('roa_house_dawn', 'e_seat');
+    await ev.fade('in', 900);
+    await x.breath(ev, 400);
+    await x.walk(ev, 'e_berna_house', [[7, 5], [8, 5], [9, 5]], 0.8);
+    await x.face(ev, 'e_berna_house', 's');
+    x.heroFace('n');
+    await x.cam(ev, 9, 6, 1100);
+    await x.narr(ev, R.T('events.final_ending.e8_narr_1'));
+    // 東の窓から光が差し、朝の席に落ちる
+    const beam = inField() && R.Ending.beam ? R.Ending.beam({ x: 9, y: 6 }) : null;
+    try {
+      ev.sfx('light');
+      if (beam) await beam.to(1, 2400); else await x.breath(ev, 1200);
+      await x.breath(ev, 700);
+      await x.act(ev, 'e_berna_house', 'kneel', 900);
+      ev.sfx('page');
+      await x.narr(ev, R.T('events.final_ending.e8_narr_2'));
+      ev.sfx('item');
+      await x.narr(ev, R.T('events.final_ending.e8_narr_3'));
+      // ひと呼吸。光の中の席を見つめる
+      await x.breath(ev, 1800);
+      await x.face(ev, 'e_berna_house', 'e');
+      await ev.say('e_berna_house', R.T('events.final_ending.e8_berna_2'), { face: 'berna:smile' });
+      await x.breath(ev, 900);
+      await ev.caption(R.T('events.final_ending.caption_9'), { ms: 4200 });
+      await x.face(ev, 'e_berna_house', 'hero');
+      await ev.say('e_berna_house', R.T('events.final_ending.e8_berna_3'), { face: 'berna:smile' });
+      await x.breath(ev, 600);
+    } finally { if (beam) beam.close(); }
     // ================================================================ E9 語り石
     await ev.fade('out', 800);
     await ev.warp('roa_dawn', 'e_stone');
@@ -206,7 +282,7 @@
   }, {
     meta: {
       needs: ['flag:final_nemrea1'], gives: ['flag:final_clear', 'choice:ch_final_lazaro'],
-      warp: [{ to: 'biblia', spawn: 'e_gate' }, { to: 'biblia_dawn', spawn: 'e_plaza' }, { to: 'roa_dawn', spawn: 'e_hill' }, { to: 'roa_house_dawn', spawn: 'bed' }, { to: 'roa_dawn', spawn: 'e_stone' }],
+      warp: [{ to: 'biblia', spawn: 'e_gate' }, { to: 'biblia_dawn', spawn: 'e_plaza' }, { to: 'roa_dawn', spawn: 'e_hill' }, { to: 'roa_house_dawn', spawn: 'e_seat' }, { to: 'roa_dawn', spawn: 'e_stone' }],
     },
   });
 

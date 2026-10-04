@@ -31,6 +31,17 @@
           K.npc('fin_yena', 'npc_yena', 22, 41, { name: R.T('map.final_links.fin_yena.name'), title: R.T('map.final_links.fin_yena.title'), dir: 'e', talk: [L(R.T('map.final_links.fin_yena.talk'))], reward: null, pushable: false, cond: ['final_yena_scene', '!final_sailed'] }),
         );
       }
+      // ---------------------------------------------------------------- 大書庫（場面の間だけ立つ人。テスター 2026-10-04 §7: 声だけで済ませない）
+      const a4 = R.DB.maps.archive_4;
+      if (a4) a4.npcs = (a4.npcs || []).concat([
+        // 4 階: 三つの影を退けたあと、上り階段の前に透けて立つフィーネ
+        K.npc('shade_fine', 'fine', 21, 5, { name: R.T('map.final_links.shade_fine.name'), dir: 's', talk: [L('……。')], reward: null, pushable: false, cond: 'final_shades_scene' }),
+      ]);
+      const a6 = R.DB.maps.archive_6;
+      if (a6) a6.npcs = (a6.npcs || []).concat([
+        // 6 階: 第 1 形態のあと、紙片の渦から投げ出されたラザロ（倒れたまま。エンディングで大書庫の入口に運ばれる）
+        K.npc('thrown_lazaro', 'lazaro', 14, 9, { name: R.T('map.final_archive.archive_5.npcs.0.lazaro.name'), dir: 's', talk: [L('……。')], reward: null, pushable: false, cond: ['final_nemrea1', '!final_clear'] }),
+      ]);
       // ---------------------------------------------------------------- エンディングの朝の写し
       FK.dawnCopy('biblia', 'biblia_dawn', {
         sub: R.T('map.final_links.biblia.sub'),
