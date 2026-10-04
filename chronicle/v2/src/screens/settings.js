@@ -40,6 +40,7 @@
       { key: 'vol.bgm', name: 'BGM', vol: true, desc: R.T('ui.settings.TABS.vol_bgm.desc') },
       { key: 'vol.sfx', name: R.T('ui.settings.TABS.vol_sfx.name'), vol: true, desc: R.T('ui.settings.TABS.vol_sfx.desc') },
       { key: 'vol.voice', name: R.T('ui.settings.TABS.vol_voice.name'), vol: true, desc: R.T('ui.settings.TABS.vol_voice.desc') },
+      { key: 'vol.amb', name: R.T('ui.settings.TABS.vol_amb.name'), vol: true, desc: R.T('ui.settings.TABS.vol_amb.desc') },
       { key: 'battleVoice', name: R.T('ui.settings.TABS.battleVoice.name'), names: { on: R.T('ui.settings.TABS.battleVoice.names.on'), big: R.T('ui.settings.TABS.battleVoice.names.big'), off: R.T('ui.settings.TABS.battleVoice.names.off') }, desc: R.T('ui.settings.TABS.battleVoice.desc') },
     ] },
     { label: R.T('ui.settings.TABS.3.label'), items: [

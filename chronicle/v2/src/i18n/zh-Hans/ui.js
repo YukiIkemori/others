@@ -455,6 +455,8 @@
     'ui.settings.TABS.vol_sfx.desc': '音效音量。设为 0 即静音。',
     'ui.settings.TABS.vol_voice.name': '语音',
     'ui.settings.TABS.vol_voice.desc': '语音音量。设为 0 即静音。',
+    'ui.settings.TABS.vol_amb.name': '环境音',
+    'ui.settings.TABS.vol_amb.desc': '风声、雨声、虫鸣等天气与场所的声音音量。设为 0 即静音。',
     'ui.settings.TABS.battleVoice.name': '战斗语音',
     'ui.settings.TABS.battleVoice.names.on': '开',
     'ui.settings.TABS.battleVoice.names.big': '仅大招',

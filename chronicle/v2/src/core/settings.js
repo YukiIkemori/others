@@ -20,6 +20,7 @@
     'vol.bgm': 7,
     'vol.sfx': 7,
     'vol.voice': 8,
+    'vol.amb': 7,   // 環境音（天気・場所の音の床。core/audio.js の ambience）
     confirmButton: 'right',
     touchPad: 'auto',
     colorAssist: false,
@@ -49,7 +50,7 @@
     brightness: [0.85, 1, 1.25],
     fx: ['high', 'low', 'off'],
     prompts: ['always', 'first2h', 'never'],
-    'vol.bgm': VOL, 'vol.sfx': VOL, 'vol.voice': VOL,
+    'vol.bgm': VOL, 'vol.sfx': VOL, 'vol.voice': VOL, 'vol.amb': VOL,
     confirmButton: ['right', 'down'],
     touchPad: ['auto', 'on', 'off'],
     colorAssist: [false, true], lessFlash: [false, true], reduceMotion: [false, true], ruby: [false, true],
@@ -115,7 +116,7 @@
 
   function apply(key) {
     if (/^vol\./.test(key) && R.Audio && R.Audio.setVolumes) {
-      R.Audio.setVolumes(S.get('vol.bgm') / 10, S.get('vol.sfx') / 10, S.get('vol.voice') / 10);
+      R.Audio.setVolumes(S.get('vol.bgm') / 10, S.get('vol.sfx') / 10, S.get('vol.voice') / 10, S.get('vol.amb') / 10);
     }
     if ((key === 'uiSize' || key === 'scaleMode') && R.fit) R.fit(true);
     if (key === 'display' && R.Display && R.Display.apply) R.Display.apply();

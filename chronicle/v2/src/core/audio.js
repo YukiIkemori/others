@@ -1206,7 +1206,7 @@
   let pb = null;         // Playback of cur (null while paused by a jingle / not unlocked)
   let jin = null;        // active jingle {pb, resolve, end}
   const stack = [];      // pushBGM stack of {id, pos}
-  const vols = { bgm: 0.6, sfx: 0.7, voice: 0.8 };
+  const vols = { bgm: 0.6, sfx: 0.7, voice: 0.8, amb: 0.7 };   // amb: 環境音（下の ambience の節）
   const liveSfx = {}, lastSfx = {}, warned = {};
 
   // ------------------------------------------------ recorded media (BGM files, voice lines)
@@ -1328,6 +1328,7 @@
     if (ctx.state !== 'running') return;
     const until = now + LOOKAHEAD;
     if (pb) pb.schedule(until, now);
+    ambPump(now);   // 環境音の粒と揺れ（ambience の節）
     if (jin) {
       jin.pb.schedule(until, now);
       if (now >= jin.end) finishJingle(jin, true);
@@ -1366,8 +1367,8 @@
       initAt = Date.now();
       mx = new Mixer(ctx, ctx.destination, { live: true });
       const S = R.Settings && R.Settings.get ? R.Settings : null;
-      if (S) A.setVolumes(S.get('vol.bgm') / 10, S.get('vol.sfx') / 10, S.get('vol.voice') / 10);
-      else A.setVolumes(vols.bgm, vols.sfx, vols.voice);
+      if (S) A.setVolumes(S.get('vol.bgm') / 10, S.get('vol.sfx') / 10, S.get('vol.voice') / 10, S.get('vol.amb') / 10);
+      else A.setVolumes(vols.bgm, vols.sfx, vols.voice, vols.amb);
       unlock();
       setInterval(() => { try { pump(); } catch (e) { console.error('[audio]', e); } }, TICK_MS);
       try {
@@ -1379,6 +1380,7 @@
         for (const ev of ['pointerdown', 'pointerup', 'touchend', 'keydown', 'click']) window.addEventListener(ev, unlock, { passive: true });
       } catch (e) { /* no DOM (tests) */ }
       if (cur && !pb && !jin) startCur({ fadeIn: 0.05 });
+      ambInit();   // init の前に頼まれていた環境音を鳴らし始める
       // the battle track is pushed often: decode its recorded version early (no-op without a file)
       // compile the remaining tracks in idle slices so the first battle never hitches
       const ids = Object.keys(DB.music);
@@ -1598,8 +1600,9 @@
     VOICE_DUCK_DB, FILE_GAIN, FilePlayback,
     _mxVoiceDuck() { return mx ? mx.voiceDuck : null; }, // tests
 
-    setVolumes(bgm, sfx, vo) {
+    setVolumes(bgm, sfx, vo, am) {
       if (bgm != null) vols.bgm = +bgm;
+      if (am != null) vols.amb = +am;   // 環境音（4 つ目。無ければ変えない）
       if (sfx != null) vols.sfx = +sfx;
       if (vo != null) { vols.voice = +vo; if (!(vols.voice > 0) && voice) endVoice(voice); }
       if (!mx) return;
@@ -1608,6 +1611,7 @@
         holdParam(node.gain, now);
         node.gain.linearRampToValueAtTime(volCurve(v), now + 0.05);
       }
+      ambVol();
     },
     /** snapshot of the player state (QA / debug overlay) */
     debug() {
@@ -1616,7 +1620,7 @@
         ctx: ctx ? ctx.state : 'none', current: cur ? cur.id : null, playing: pb ? pb.id : null, file: !!(pb && pb.file),
         voice: voice && !voice.stopped ? voice.id : null,
         serial: pb ? pb.serial : 0, pos: +(pb ? pb.position(now) : cur ? cur.pos : 0).toFixed(2),
-        jingle: jin ? jin.pb.id : null, stack: stack.map((e) => e && e.id), volumes: Object.assign({}, vols),
+        jingle: jin ? jin.pb.id : null, stack: stack.map((e) => e && e.id), volumes: Object.assign({}, vols), ambience: A.ambienceInfo(),
       };
     },
     /** {duration, loopStart, loopEnd, loop} of a track (no audio needed) */
@@ -1679,4 +1683,476 @@
   }
   A.registerStandIns = registerStandIns;
   if (R.onData) R.onData(registerStandIns);
+
+  // ============================================================ ambience（環境音。2026-10-04、design/notes/audio.md §14）
+  // R.Audio.ambience(spec | null, {fade: 秒（既定 1.2）}) — 天気と場所の環境音の床を 1 つだけ鳴らす。前の床とは fade 秒で入れ替える。
+  //   spec = '床の名前' | {bed, i（強さ 0〜1、既定 1）, night（夜の深さ 0〜1。森の鳥 ↔ 虫）, surf（岸の波を足す 0〜1）,
+  //          dry（洞窟の雫なし）, muffled（船の中: 波をこもらせる）, seed（乱数の種。テスト用）}。同じ spec ならなにもしない
+  //   床: wind snow mist breeze highwind blizzard sandstorm heat rain sea marsh ash forest cave volcano（下の AMB）
+  //   作り: ステレオの桃色ノイズ 6 秒（初めて使うときに 1 回だけ作る。継ぎ目は交差）を、層ごとにずらした位置と少し違う速さで回し、
+  //         フィルタ＋ゆっくりした乱数の揺れ（突風・波）＋まばらな粒（雫・鳥・虫・蛙・火の粉）で作る。録音は使わない。
+  //   出口は自分のバス（master の下。音量は設定の vol.amb = setVolumes の 4 つ目）。強さ 1・音量 10 で山が −20 dBFS ほど（BGM が主）。
+  //   AudioContext が無い間は覚えておくだけ（init で鳴らし始める）。タブを隠すと context ごと止まる（上の visibilitychange）。
+  //   粒と揺れは pump（25 ms ごと、context が動いている間だけ）が AMB_LEAD 秒先まで置く。
+  // R.Audio.ambienceMod(v 0〜1 | null) — 床の突風の強さを外から合わせる（砂嵐の絵の「風の帯」と同じうねり）。null で床自身の揺れに戻す
+  // R.Audio.ambienceInfo() → {bed, i, alive, nodes, srcs} | null（テスト・QA）
+  // R.Audio.renderAmbience(octx, spec, {dur, volume, at, to, fade}) — オフラインで鳴らす（at 秒で to へ入れ替え。to: null は消すだけ）→ {beds}
+  const AMB_FADE = 1.2;
+  const AMB_LEAD = 0.6;
+  const AMB_PEAK = 0.1;   // 強さ 1・音量 10 の山の目安（−20 dBFS）。床ごとの差は AMB_TRIM で揃える（tools/test_ambience.js で測る）
+  // 床ごとの音量の揃え（強さ 1・音量 10 の積分ラウドネスで 吹雪 −33・砂嵐 −34・海 −36・雨 −37・森 −41・陽炎 −43 LUFS ほど。2026-10-04 に測った）
+  const AMB_TRIM = { blizzard: 0.84, sandstorm: 1.50, rain: 1.30, ash: 1.15, volcano: 1.10, breeze: 1.40, highwind: 0.79, mist: 1.51, marsh: 1.29, forest: 2.24, cave: 0.71, heat: 0.48 };
+  function ambRng(seed) {
+    let a = (seed >>> 0) || 1;
+    return () => {
+      a = (a + 0x6d2b79f5) >>> 0;
+      let t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  /** 桃色ノイズ（左右は別の乱数。RMS 0.25）。Mixer ごとに 1 回 */
+  function ambNoise(m) {
+    if (m._ambNoise) return m._ambNoise;
+    const c = m.ctx, sr = c.sampleRate, n = Math.floor(sr * 6), F = Math.floor(sr * 0.08);
+    const b = c.createBuffer(2, n, sr), rnd = ambRng(0x51f15e);
+    for (let ch = 0; ch < 2; ch++) {
+      const x = new Float32Array(n + F);
+      let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0, e = 0;
+      for (let i = 0; i < n + F; i++) {
+        const w = rnd() * 2 - 1;
+        b0 = 0.99886 * b0 + w * 0.0555179; b1 = 0.99332 * b1 + w * 0.0750759; b2 = 0.969 * b2 + w * 0.153852;
+        b3 = 0.8665 * b3 + w * 0.3104856; b4 = 0.55 * b4 + w * 0.5329522; b5 = -0.7616 * b5 - w * 0.016898;
+        x[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + w * 0.5362; b6 = w * 0.115926;
+        e += x[i] * x[i];
+      }
+      const k = 0.25 / Math.sqrt(e / (n + F)), d = b.getChannelData(ch);
+      for (let i = 0; i < n; i++) d[i] = x[i] * k;
+      // 継ぎ目: 終わりの続き（n〜n+F）を頭に重ねる（同じ力の交差）。回したとき d[n-1] → d[0] がつながる
+      for (let i = 0; i < F; i++) { const w = i / F; d[i] = (x[i] * Math.sqrt(w) + x[n + i] * Math.sqrt(1 - w)) * k; }
+    }
+    return (m._ambNoise = b);
+  }
+  function ambBus(m) {
+    if (!m._ambBus) { m._ambBus = m.ctx.createGain(); m._ambBus.connect(m.master); }
+    return m._ambBus;
+  }
+
+  /** 鳴っている床 1 つ。層は bus（強さと AMB_TRIM の音量）→ out（入り・抜けの fade）→ 環境音のバス */
+  class AmbBed {
+    constructor(m, dest, spec, at, fade) {
+      const c = (this.c = m.ctx);
+      this.m = m; this.spec = spec; this.name = spec.bed; this.t0 = at;
+      this.i = Math.max(0, Math.min(1, spec.i == null ? 1 : +spec.i || 0));
+      this.night = Math.max(0, Math.min(1, spec.night == null ? 0 : +spec.night || 0));
+      this.r = ambRng(spec.seed != null ? spec.seed : (Math.random() * 4294967296) >>> 0);
+      this.srcs = []; this.nodes = []; this.walks = []; this.evs = [];
+      this.alive = true; this.stopAt = null; this.gust = null;
+      this.out = this.node(c.createGain());
+      this.out.gain.setValueAtTime(0, at);
+      this.out.gain.linearRampToValueAtTime(1, at + Math.max(0.02, fade || 0));
+      this.out.connect(dest);
+      this.bus = this.gain(AMB_PEAK * (AMB_TRIM[this.name] || 1) * (0.35 + 0.65 * this.i));
+      this.chain(this.bus, this.filt('highpass', 45, 0.6), this.out);   // 聞こえない低い所は BGM の低音を濁すだけなので切る
+      this.ev = this.bus;   // 粒の行き先（洞窟は響きも通す）
+      AMB[this.name](this, this.i);
+    }
+    rr(a, b) { return a + (b - a) * this.r(); }
+    node(n) { this.nodes.push(n); return n; }
+    gain(v) { const g = this.node(this.c.createGain()); g.gain.value = v; return g; }
+    filt(type, f, q) { const x = this.node(this.c.createBiquadFilter()); x.type = type; x.frequency.value = f; if (q != null) x.Q.value = q; return x; }
+    pan(p) {
+      if (!this.c.createStereoPanner) return this.gain(1);
+      const x = this.node(this.c.createStereoPanner()); x.pan.value = Math.max(-1, Math.min(1, p)); return x;
+    }
+    chain() { for (let k = 0; k < arguments.length - 1; k++) arguments[k].connect(arguments[k + 1]); return arguments[arguments.length - 1]; }
+    /** 回り続けるノイズ（層ごとに位置と速さを少し違える） */
+    src(rate) {
+      const s = this.node(this.c.createBufferSource());
+      s.buffer = ambNoise(this.m); s.loop = true;
+      s.playbackRate.value = (rate || 1) * this.rr(0.93, 1.07);
+      s.start(this.t0, this.rr(0, 5.9));
+      this.srcs.push(s);
+      return s;
+    }
+    /** 回り続ける音（虫の声など） */
+    osc(type, f) {
+      const o = this.node(this.c.createOscillator());
+      o.type = type; o.frequency.value = f; o.start(this.t0);
+      this.srcs.push(o);
+      return o;
+    }
+    /** 乱数の揺れ: every [a, b] 秒ごとに lo〜hi のどこかへ tc 秒の時定数で寄る（p は 1 つか、同じ値で動かす配列） */
+    walk(p, lo, hi, every, tc) {
+      const ps = Array.isArray(p) ? p : [p];
+      const v = this.rr(lo, hi);
+      for (const q of ps) q.setValueAtTime(v, this.t0);
+      const w = { ps, lo, hi, every, tc, next: this.t0 + this.rr(0, every[0]), held: false };
+      this.walks.push(w);
+      return w;
+    }
+    /** まばらな粒: [a, b] 秒おきに fn(t) */
+    every(range, fn, first) {
+      this.evs.push({ range, fn, next: this.t0 + (first != null ? first : this.rr(0.3, 1) * range[1]) });
+    }
+    schedule(until) {
+      if (!this.alive) return;
+      const now = this.c.currentTime;
+      for (const w of this.walks) {
+        if (w.next < now) w.next = now;
+        while (w.next < until) {
+          if (!w.held) { const v = this.rr(w.lo, w.hi); for (const q of w.ps) q.setTargetAtTime(v, w.next, w.tc); }
+          w.next += this.rr(w.every[0], w.every[1]);
+        }
+      }
+      for (const e of this.evs) {
+        if (e.next < now) e.next = now + this.r() * 0.1;
+        while (e.next < until) {
+          try { e.fn(e.next); } catch (err) { console.error('[audio] ambience', err); }
+          e.next += this.rr(e.range[0], e.range[1]);
+        }
+      }
+    }
+    /** 突風の強さを外から（0〜1）。null で自分の揺れに戻す */
+    mod(v) {
+      const w = this.gust;
+      if (!w) return;
+      w.held = v != null;
+      if (v != null) { const x = w.lo + Math.max(0, Math.min(1, +v || 0)) * (w.hi - w.lo); for (const q of w.ps) q.setTargetAtTime(x, this.c.currentTime, 0.35); }
+    }
+    stop(fade, now) {
+      if (!this.alive) return;
+      this.alive = false;
+      const end = now + Math.max(0.02, fade);
+      holdParam(this.out.gain, now);
+      this.out.gain.linearRampToValueAtTime(0, end);
+      this.stopAt = end + 0.05;
+      for (const s of this.srcs) { try { s.stop(this.stopAt); s._stopAt = this.stopAt; } catch (e) { /* ignore */ } }
+      if (this.m.live) {
+        const nodes = this.nodes;
+        setTimeout(() => { for (const n of nodes) { try { n.disconnect(); } catch (e) { /* ignore */ } } }, (end - now + 0.4) * 1000);
+      }
+    }
+    // ---- 粒（1 回だけ鳴って消える。nodes に積まない）
+    /** ノイズの切れ端: {f, q, type, vol, a, pan, rate} を dur 秒 */
+    burst(t, dur, o) {
+      const c = this.c, s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+      s.buffer = ambNoise(this.m); s.playbackRate.value = o.rate || 1;
+      f.type = o.type || 'bandpass'; f.frequency.value = o.f; f.Q.value = o.q != null ? o.q : 1;
+      const a = o.a || 0.001;
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(o.vol, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + Math.max(a + 0.002, dur));
+      s.connect(f); f.connect(g);
+      if (o.pan && c.createStereoPanner) { const p = c.createStereoPanner(); p.pan.value = o.pan; g.connect(p); p.connect(o.to || this.ev); } else g.connect(o.to || this.ev);
+      s.start(t, this.rr(0, 5.9)); s.stop(t + dur + 0.02);
+    }
+    /** 正弦の短い音: {f, f2（行き先の高さ）, dur, vol, a, pan, fm（揺れの速さ）, fmd（揺れの深さ、高さの比）} */
+    tone(t, o) {
+      const c = this.c, s = c.createOscillator(), g = c.createGain();
+      s.type = o.type || 'sine';
+      s.frequency.setValueAtTime(o.f, t);
+      if (o.f2) s.frequency.exponentialRampToValueAtTime(o.f2, t + o.dur);
+      const a = o.a || Math.min(0.012, o.dur * 0.25);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(o.vol, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + o.dur);
+      s.connect(g);
+      let m = null;
+      if (o.fm) { m = c.createOscillator(); const mg = c.createGain(); m.frequency.value = o.fm; mg.gain.value = o.f * (o.fmd || 0.03); m.connect(mg); mg.connect(s.frequency); m.start(t); m.stop(t + o.dur + 0.02); }
+      if (o.pan && c.createStereoPanner) { const p = c.createStereoPanner(); p.pan.value = o.pan; g.connect(p); p.connect(o.to || this.ev); } else g.connect(o.to || this.ev);
+      s.start(t); s.stop(t + o.dur + 0.02);
+      if (o.click) this.burst(t, 0.006, { f: o.f * 2, q: 1, vol: o.click, pan: o.pan, to: o.to });   // 当たりの小さな擦れ（雫）
+    }
+  }
+
+  // ---- 層（床の部品）
+  /** 風: 帯域のノイズ（中心が揺れる）＋低い胴 → 突風の揺れ（B.gust。ambienceMod が掴む）。o = {f:[lo,hi], q, lp, g:[lo,hi], ge, gtc, body, fe, ftc} */
+  function lWind(B, o) {
+    const G = B.gain(0);
+    G.connect(o.to || B.bus);
+    const s = B.src(o.rate || 1), bp = B.filt('bandpass', o.f[0], o.q || 0.8), lp = B.filt('lowpass', o.lp || o.f[1] * 2.2, 0.5);
+    B.chain(s, bp, lp, B.gain(o.lvl != null ? o.lvl : 1), G);
+    B.walk([bp.frequency], o.f[0], o.f[1], o.fe || [1.5, 4], o.ftc || 1.2);
+    if (o.body) { const s2 = B.src(0.5), l2 = B.filt('lowpass', o.bodyF || 240, 0.6); B.chain(s2, l2, B.gain(o.body), G); }
+    const w = B.walk(G.gain, o.g[0], o.g[1], o.ge || [1.2, 4], o.gtc || 0.9);
+    if (!B.gust) B.gust = w;
+    return G;
+  }
+  /** 鳴る風（吹雪のひゅう）: 鋭い帯域を 2 段、中心がゆっくり上下 */
+  function lWhistle(B, o) {
+    const s = B.src(1), b1 = B.filt('bandpass', o.f[0], o.q || 20), b2 = B.filt('bandpass', o.f[0], o.q || 20), g = B.gain(0), p = B.pan(o.pan || 0);
+    B.chain(s, b1, b2, g, p, o.to || B.bus);
+    B.walk([b1.frequency, b2.frequency], o.f[0], o.f[1], o.fe || [1.5, 3.5], o.ftc || 0.9);
+    B.walk(g.gain, 0, o.lvl, o.ge || [1.5, 4], o.gtc || 1);
+  }
+  /** 高い擦れ（雨・砂・葉）: ノイズを hp〜lp に。o.am で細かく粒立てる（低いノイズで音量を揺らす） */
+  function lHiss(B, o) {
+    const s = B.src(o.rate || 1), hp = B.filt('highpass', o.hp, 0.5), lp = B.filt('lowpass', o.lp || 9000, 0.5), g = B.gain(o.lvl);
+    B.chain(s, hp, lp, g, o.to || B.bus);
+    if (o.am) { const a = B.src(1), l = B.filt('lowpass', o.amF || 35, 0.7); B.chain(a, l, B.gain(o.am), g.gain); }
+    if (o.walk) B.walk(g.gain, o.lvl * o.walk[0], o.lvl * o.walk[1], o.we || [0.4, 1.4], o.wtc || 0.25);
+    return g;
+  }
+  /** 低い唸り（火山・地鳴り・洞窟の部屋の音） */
+  function lRumble(B, o) {
+    const s = B.src(o.rate || 0.4), l1 = B.filt('lowpass', o.f || 110, 0.7), l2 = B.filt('lowpass', (o.f || 110) * 1.7, 0.5), g = B.gain(0);
+    B.chain(s, l1, l2, g, o.to || B.bus);
+    B.walk(g.gain, o.lvl * (o.lo != null ? o.lo : 0.5), o.lvl, o.ge || [2, 6], o.gtc || 1.8);
+  }
+  /** 岸の波: 左右に 1 つずつ、寄せる（低いノイズが開いて大きく）→ 崩れて泡（高い擦れ、細かく粒立つ）→ 引く */
+  function lSurf(B, o) {
+    for (const side of [-0.4, 0.45]) {
+      const p = B.pan(side);
+      p.connect(B.bus);
+      const s = B.src(0.8), lp = B.filt('lowpass', 350, 0.5), g = B.gain(0.0001);
+      B.chain(s, lp, g, p);
+      const s2 = B.src(1), hp = B.filt('highpass', 2800, 0.5), sh = B.filt('lowpass', 7000, 0.5), g2 = B.gain(0.0001), fz = B.gain(1);
+      B.chain(s2, hp, sh, fz, g2, p);
+      const a = B.src(1), al = B.filt('lowpass', 45, 0.7); B.chain(a, al, B.gain(2.5), fz.gain);   // 泡のはじける粒
+      const top = o.muffled ? 650 : 1800;
+      B.every(o.period, (t) => {
+        const pk = o.lvl * B.rr(0.5, 1), rise = B.rr(1.8, 3.2), fall = B.rr(2.6, 4.5);
+        g.gain.setTargetAtTime(pk, t, rise / 3); g.gain.setTargetAtTime(pk * 0.15, t + rise, fall / 3);
+        lp.frequency.setTargetAtTime(top * B.rr(0.75, 1.2), t, rise / 3); lp.frequency.setTargetAtTime(320, t + rise, fall / 3);
+        if (!o.muffled) { g2.gain.setTargetAtTime(pk * 0.5, t + rise * 0.85, 0.3); g2.gain.setTargetAtTime(0.0001, t + rise + 0.6, fall / 2.5); }
+      }, side < 0 ? 0.05 : B.rr(2.5, 4.5));
+    }
+  }
+  /** 雨: 細かい擦れ（高い所は落とす）＋地の胴＋雫（ノイズの粒、ときどき小さな「ぴちょ」） */
+  function lRain(B, o) {
+    lHiss(B, { hp: 2000, lp: 6500, lvl: o.lvl, walk: [0.7, 1.1], we: [1.5, 4], wtc: 1 });
+    const s = B.src(0.9), bp = B.filt('bandpass', 700, 0.6);
+    B.chain(s, bp, B.gain(o.lvl * 0.5), B.bus);
+    const d = o.dens;
+    B.every([0.2 / d, 1.8 / d], (t) => {
+      const v = o.tick * (0.15 + 0.85 * Math.pow(B.r(), 2));
+      if (B.r() < 0.12) B.tone(t, { f: B.rr(1700, 3000), f2: B.rr(1200, 1900), dur: B.rr(0.025, 0.05), vol: v * 0.45, pan: B.rr(-0.8, 0.8), a: 0.001 });
+      else B.burst(t, B.rr(0.004, 0.02), { f: B.rr(1500, 4500), q: B.rr(1.5, 4), vol: v, pan: B.rr(-0.85, 0.85), a: 0.0005 });
+    });
+  }
+  /** 火の粉のはぜる音: 2〜6 粒のかたまり（鋭い立ち上がり） */
+  function lCrackle(B, o) {
+    B.every(o.every, (t) => {
+      const n = 2 + Math.floor(B.r() * 5), pan = B.rr(-0.7, 0.7), far = B.rr(0.4, 1);
+      for (let k = 0; k < n; k++) B.burst(t + B.rr(0, 0.5) * (k ? 1 : 0), B.rr(0.003, 0.012), { f: B.rr(2000, 5500), q: B.rr(0.7, 1.6), vol: o.lvl * far * B.rr(0.3, 1), pan: pan + B.rr(-0.1, 0.1), a: 0.0003 });
+    });
+  }
+  /** 煮える溶岩のごぼっ: 下がる低い正弦（火山の中） */
+  function lBloop(B, o) {
+    B.every(o.every, (t) => {
+      const f = B.rr(110, 200);
+      B.tone(t, { f, f2: f * B.rr(0.45, 0.6), dur: B.rr(0.12, 0.22), vol: o.lvl * B.rr(0.5, 1), pan: B.rr(-0.5, 0.5), a: 0.01 });
+    });
+  }
+  /** 鳥（昼）: 3 つの鳴き方を遠近・左右を変えてまばらに */
+  function lBirds(B, o) {
+    B.every(o.every, (t) => {
+      const k = B.r(), pan = B.rr(-0.85, 0.85), v = o.lvl * B.rr(0.3, 1), base = B.rr(2400, 4300);
+      if (k < 0.4) {   // さえずり: 下がる短い口笛 3〜6 音
+        const n = 3 + Math.floor(B.r() * 4), step = B.rr(0.085, 0.15);
+        for (let j = 0; j < n; j++) B.tone(t + j * step, { f: base * B.rr(1, 1.08), f2: base * B.rr(0.6, 0.82), dur: step * 0.75, vol: v * (1 - j * 0.08), pan, fm: B.rr(35, 60), fmd: 0.015 });
+      } else if (k < 0.72) {   // 2 音の呼び（高い → 低い）を 1〜2 回
+        let t0 = t;
+        for (let r = 0, n = B.r() < 0.5 ? 2 : 1; r < n; r++, t0 += B.rr(0.6, 0.9)) {
+          B.tone(t0, { f: base, f2: base * 1.06, dur: 0.17, vol: v, pan });
+          B.tone(t0 + 0.24, { f: base * 0.8, f2: base * 0.75, dur: 0.22, vol: v * 0.85, pan });
+        }
+      } else {   // ふるえ声: 速く上がる短い音の連なり
+        const n = 6 + Math.floor(B.r() * 7), step = B.rr(0.045, 0.07);
+        for (let j = 0; j < n; j++) B.tone(t + j * step, { f: base * 0.9, f2: base * 1.25, dur: step * 0.6, vol: v * 0.65 * (j < 2 ? 0.6 : 1), pan });
+      }
+    });
+  }
+  /** 虫（夜）: 声ごとに 1 本の正弦を鳴らしっぱなし（音量 0）にして、パルスの組で鳴く。歌う ↔ 休むを繰り返す */
+  function lCrickets(B, o) {
+    for (let k = 0; k < o.n; k++) {
+      const s = B.osc('sine', B.rr(4200, 5400)), g = B.gain(0), p = B.pan(B.rr(-0.8, 0.8));
+      B.chain(s, g, p, B.bus);
+      const v = o.lvl * B.rr(0.45, 1), pulses = 3 + Math.floor(B.r() * 3), pw = B.rr(0.011, 0.016), gap = B.rr(0.008, 0.014), period = B.rr(0.42, 0.85);
+      const st = { on: false, until: B.t0 + B.rr(0, 3) };
+      B.evs.push({ range: [period, period * 1.04], next: B.t0 + B.rr(0, period), fn: (t) => {
+        if (t > st.until) { st.on = !st.on; st.until = t + (st.on ? B.rr(2.5, 7) : B.rr(2, 7) / (o.dens || 1)); }
+        if (!st.on) return;
+        for (let j = 0; j < pulses; j++) {
+          const a = t + j * (pw + gap);
+          g.gain.setValueAtTime(0, a); g.gain.linearRampToValueAtTime(v, a + pw * 0.3); g.gain.linearRampToValueAtTime(0, a + pw);
+        }
+      } });
+    }
+  }
+  /** 遠くの蛙: のこぎり波を 2 つの声の帯（≈450 Hz・1.2 kHz）に通し、短いパルスの連なりで（ときどき 2 回） */
+  function lFrogs(B, o) {
+    B.every(o.every, (t) => {
+      const c = B.c, f0 = B.rr(95, 150), pan = B.rr(-0.8, 0.8), v = o.lvl * B.rr(0.35, 1), n = 3 + Math.floor(B.r() * 5), rate = B.rr(11, 18);
+      const f1 = B.rr(380, 520), f2 = B.rr(1000, 1400);
+      let t0 = t;
+      for (let r = 0, reps = B.r() < 0.5 ? 2 : 1; r < reps; r++) {
+        const s = c.createOscillator(), b1 = c.createBiquadFilter(), b2 = c.createBiquadFilter(), g = c.createGain();
+        s.type = 'sawtooth';
+        s.frequency.setValueAtTime(f0, t0); s.frequency.linearRampToValueAtTime(f0 * 0.9, t0 + n / rate);
+        b1.type = 'bandpass'; b1.frequency.value = f1; b1.Q.value = 5;
+        b2.type = 'bandpass'; b2.frequency.value = f2; b2.Q.value = 6;
+        g.gain.setValueAtTime(0, t0);
+        for (let j = 0; j < n; j++) { const a = t0 + j / rate; g.gain.setValueAtTime(0, a); g.gain.linearRampToValueAtTime(v, a + 0.01); g.gain.setTargetAtTime(0, a + 0.018, 0.014); }
+        s.connect(b1); s.connect(b2); b1.connect(g); b2.connect(g);
+        if (c.createStereoPanner) { const p = c.createStereoPanner(); p.pan.value = pan; g.connect(p); p.connect(B.ev); } else g.connect(B.ev);
+        s.start(t0); s.stop(t0 + n / rate + 0.15);
+        t0 += n / rate + B.rr(0.5, 1.1);
+      }
+    });
+  }
+  /** 水の音（泡・滴り）: 上がる短い正弦（当たりに小さな擦れ） */
+  function lPlop(B, o) {
+    B.every(o.every, (t) => {
+      const f = B.rr(o.f[0], o.f[1]), pan = B.rr(-0.75, 0.75);
+      B.tone(t, { f, f2: f * B.rr(1.5, 2.3), dur: B.rr(0.035, 0.07), vol: o.lvl * B.rr(0.35, 1), pan, a: 0.002, to: o.to, click: o.click ? o.lvl * o.click : 0 });
+      if (B.r() < (o.twice || 0)) { const f2 = f * B.rr(0.8, 1.25); B.tone(t + B.rr(0.3, 1.4), { f: f2, f2: f2 * B.rr(1.4, 2), dur: 0.05, vol: o.lvl * B.rr(0.25, 0.6), pan: pan + B.rr(-0.2, 0.2), a: 0.002, to: o.to }); }
+    });
+  }
+  /** 夜の深さで昼の鳥と夜の虫を分ける（どちらも i で密度） */
+  function lLife(B, i, birdLvl, cricketLvl, sparse) {
+    const day = 1 - B.night;
+    if (day > 0.15) lBirds(B, { lvl: birdLvl, every: [3.5 / (day * (0.4 + 0.6 * i)) * sparse, 11 / (day * (0.4 + 0.6 * i)) * sparse] });
+    if (B.night > 0.3) lCrickets(B, { lvl: cricketLvl * Math.min(1, B.night), n: B.night > 0.7 ? 3 : 2, dens: (0.4 + 0.6 * i) / sparse });
+  }
+
+  // ---- 床（spec.bed → 組み立て）。B.i = 強さ（音量は B.bus で済んでいる。ここでは密度・揺れの幅に使う）
+  const AMB = {
+    wind(B, i) { lWind(B, { f: [350, 900], g: [0.3, 1], ge: [1.2, 4], body: 0.5 }); },
+    snow(B, i) { lWind(B, { f: [260, 620], lp: 900, g: [0.3, 0.85], ge: [2, 6], gtc: 1.8, body: 0.4 }); },
+    mist(B, i) {
+      lWind(B, { f: [300, 700], lp: 1100, g: [0.25, 0.7], ge: [2.5, 6], gtc: 2, body: 0.35, lvl: 0.8 });
+      lSurf(B, { lvl: 0.4, period: [7, 12], muffled: true });
+    },
+    breeze(B, i) {   // 風の木の葉: 風＋葉ずれ（突風に乗る、細かく粒立つ）、昼はまばらな鳥・夜はまばらな虫
+      const G = lWind(B, { f: [420, 1100], g: [0.25, 1], ge: [0.9, 3], gtc: 0.7, body: 0.35, lvl: 0.85 });
+      lHiss(B, { hp: 2600, lp: 7500, lvl: 0.45, am: 3, amF: 30, walk: [0.1, 1], we: [0.25, 0.9], wtc: 0.15, to: G });
+      lLife(B, i, 0.3, 0.05, 1.6);
+    },
+    highwind(B, i) {   // 高地の夜空: 高く細い風（ゆっくり）と、遠いひゅう
+      const s = B.filt('highpass', 220, 0.6);
+      s.connect(B.bus);
+      lWind(B, { f: [700, 1700], q: 0.6, g: [0.2, 0.85], ge: [3, 7], gtc: 2.2, to: s });
+      lWhistle(B, { f: [1200, 2600], q: 10, lvl: 3, ge: [3, 7], gtc: 2, pan: 0.3 });
+    },
+    blizzard(B, i) {   // 吹雪: 強く乱れる風＋雪の当たる粒立った擦れ（突風に乗る）＋ひゅうと鳴る 2 本＋重い胴
+      const G = lWind(B, { f: [300, 1100], q: 0.7, g: [0.3, 1], ge: [0.45, 1.5], gtc: 0.3, body: 1.1, bodyF: 320, fe: [0.6, 2], ftc: 0.5 });
+      lHiss(B, { hp: 3500, lp: 7000, lvl: 0.45, am: 4, amF: 70, to: G });
+      lWhistle(B, { f: [600, 1300], q: 14, lvl: 9 * (0.5 + 0.5 * i), ge: [0.8, 2.4], gtc: 0.6, fe: [0.8, 2], ftc: 0.6, pan: -0.45 });
+      lWhistle(B, { f: [900, 2000], q: 14, lvl: 7 * (0.5 + 0.5 * i), ge: [1, 2.8], gtc: 0.7, fe: [0.8, 2.2], ftc: 0.7, pan: 0.5 });
+    },
+    sandstorm(B, i) {   // 砂嵐: 風＋ざらつく砂の擦れ（どちらも突風に乗る。絵の風の帯と ambienceMod で合わせる）
+      const G = lWind(B, { f: [260, 800], q: 0.7, g: [0.35, 1], ge: [1.2, 3.5], gtc: 0.8, body: 0.6 });
+      lHiss(B, { hp: 2400, lp: 6000, lvl: 0.3, am: 3, amF: 55, to: G });
+      lWhistle(B, { f: [350, 750], q: 8, lvl: 2, ge: [1.5, 4], gtc: 1, pan: 0.2, to: G });
+    },
+    heat(B, i) {   // 陽炎: ほとんど聞こえない、ゆるく揺れる暖かい空気と、薄い高い気配
+      const s = B.src(0.7), bp = B.filt('bandpass', 450, 0.5), g = B.gain(0);
+      B.chain(s, bp, g, B.bus);
+      B.walk(g.gain, 0.7, 1, [4, 9], 3);
+      lHiss(B, { hp: 5000, lp: 8000, lvl: 0.08, walk: [0.4, 1], we: [4, 8], wtc: 3 });
+    },
+    rain(B, i) {   // 霧雨（島は岸の波を足す）
+      lRain(B, { lvl: 0.4, tick: 1.6, dens: 6 + 12 * i });
+      if (B.spec.surf) lSurf(B, { lvl: 1.1 * B.spec.surf, period: [6.5, 11] });
+    },
+    sea(B, i) {   // 海辺・船: 波（船の中はこもらせる）＋弱い風
+      lSurf(B, { lvl: 1.2, period: [5.5, 11], muffled: !!B.spec.muffled });
+      lWind(B, { f: [300, 800], g: [0.1, 0.4], ge: [2, 6], gtc: 1.6, lvl: 0.6, lp: B.spec.muffled ? 600 : null });
+    },
+    marsh(B, i) {   // 沼の霧: とても静かな低い空気＋遠い蛙・水の音、夜は虫を少し
+      lRumble(B, { f: 320, rate: 0.6, lvl: 0.5, lo: 0.5, ge: [3, 7], gtc: 2.5 });
+      lFrogs(B, { lvl: 1.4, every: [4 / (0.4 + 0.6 * i), 11 / (0.4 + 0.6 * i)] });
+      lPlop(B, { lvl: 0.5, f: [500, 750], every: [5, 13], twice: 0.25 });
+      if (B.night > 0.3) lCrickets(B, { lvl: 0.04, n: 2, dens: 0.5 });
+    },
+    ash(B, i) {   // 灰の荒野: 地鳴り＋弱い風＋舞う灰の薄い擦れ＋はぜる火の粉
+      lRumble(B, { f: 110, rate: 0.4, lvl: 1.1, lo: 0.45, ge: [2, 5], gtc: 1.6 });
+      const G = lWind(B, { f: [300, 800], g: [0.2, 0.65], ge: [2, 5], gtc: 1.4, lvl: 0.7 });
+      lHiss(B, { hp: 3500, lp: 7000, lvl: 0.1, to: G });
+      lCrackle(B, { lvl: 1.6, every: [2 / (0.3 + 0.7 * i), 7 / (0.3 + 0.7 * i)] });
+    },
+    forest(B, i) {   // 木漏れ日の森: そよ風＋葉ずれ、昼は鳥・夜は虫
+      const G = lWind(B, { f: [500, 1300], g: [0.15, 0.6], ge: [2, 5], gtc: 1.4, lvl: 0.7, body: 0.2 });
+      lHiss(B, { hp: 2800, lp: 8000, lvl: 0.35, am: 2.5, amF: 25, walk: [0.1, 1], we: [0.4, 1.2], wtc: 0.25, to: G });
+      lLife(B, i, 0.4, 0.06, 1);
+    },
+    cave(B, i) {   // 洞窟・坑道: 低い部屋の音＋よく響く雫（まばら・不規則。墓は雫なし）
+      const echo = makeEcho(B.c, B.bus, { time: 0.23, fb: 0.55, wet: 0.7, lp: 2000 });
+      for (const n of echo.nodes) B.nodes.push(n);
+      const ev = B.gain(1); ev.connect(B.bus); ev.connect(echo.input); B.ev = ev;
+      lRumble(B, { f: 180, rate: 0.45, lvl: 1.2, lo: 0.6, ge: [3, 7], gtc: 2.5 });
+      if (!B.spec.dry) lPlop(B, { lvl: 0.35, f: [700, 1900], every: [1.2 / (0.4 + 0.6 * i), 10 / (0.4 + 0.6 * i)], twice: 0.12, click: 0.5 });
+    },
+    volcano(B, i) {   // 火山の中: 深い地鳴り（ゆっくり膨らむ）＋まばらな火の粉と溶岩のごぼっ
+      lRumble(B, { f: 85, rate: 0.3, lvl: 1.4, lo: 0.35, ge: [2.5, 6], gtc: 2 });
+      lRumble(B, { f: 240, rate: 0.5, lvl: 0.35, lo: 0.3, ge: [3, 7], gtc: 2.5 });
+      lCrackle(B, { lvl: 1.2, every: [3, 9] });
+      lBloop(B, { lvl: 0.8, every: [5, 14] });
+    },
+  };
+
+  const AS = { cur: null, want: null, key: '', mod: null };
+  function ambSpec(spec) {
+    if (!spec) return null;
+    if (typeof spec === 'string') spec = { bed: spec };
+    if (!AMB[spec.bed]) { warnOnce('amb:' + spec.bed, `audio: unknown ambience '${spec.bed}'`); return null; }
+    return spec;
+  }
+  function ambKey(s) {
+    if (!s) return '';
+    const n = (v) => (v == null ? '' : (+v).toFixed(2));
+    return [s.bed, n(s.i == null ? 1 : s.i), n(s.night), n(s.surf), s.dry ? 1 : 0, s.muffled ? 1 : 0, s.seed == null ? '' : s.seed].join('|');
+  }
+  function ambStart(fade) {
+    if (!mx || !AS.want) return;
+    AS.cur = new AmbBed(mx, ambBus(mx), AS.want, ctx.currentTime + 0.03, fade);
+    if (AS.mod != null) AS.cur.mod(AS.mod);
+    if (running()) AS.cur.schedule(ctx.currentTime + AMB_LEAD);
+  }
+  function ambPump(now) { if (AS.cur) AS.cur.schedule(now + AMB_LEAD); }
+  function ambVol() {
+    if (!mx) return;
+    const g = ambBus(mx).gain, now = ctx.currentTime;
+    holdParam(g, now);
+    g.linearRampToValueAtTime(volCurve(vols.amb), now + 0.05);
+  }
+  function ambInit() { ambVol(); if (AS.want && !AS.cur) ambStart(1.5); }
+  A.ambience = function (spec, o) {
+    spec = ambSpec(spec);
+    const key = ambKey(spec);
+    if (key === AS.key) return false;
+    AS.key = key; AS.want = spec;
+    const fade = o && o.fade != null ? Math.max(0.02, +o.fade || 0) : AMB_FADE;
+    if (!mx) return true;
+    if (AS.cur) { AS.cur.stop(fade, ctx.currentTime); AS.cur = null; }
+    if (spec) ambStart(fade);
+    return true;
+  };
+  A.ambienceMod = function (v) {
+    AS.mod = v == null ? null : +v;
+    if (AS.cur) AS.cur.mod(AS.mod);
+  };
+  A.ambienceInfo = function () {
+    const b = AS.cur;
+    if (!b) return AS.want ? { bed: AS.want.bed, i: AS.want.i == null ? 1 : AS.want.i, alive: false, nodes: 0, srcs: 0 } : null;
+    return { bed: b.name, i: b.i, alive: b.alive, nodes: b.nodes.length, srcs: b.srcs.length };
+  };
+  A.AMB_BEDS = Object.keys(AMB);
+  A.AMB_TRIM = AMB_TRIM;
+  A.renderAmbience = function (octx, spec, o) {
+    o = o || {};
+    const m = new Mixer(octx, octx.destination, { limiter: !!o.limiter });
+    const bus = ambBus(m);
+    bus.gain.value = o.volume != null ? o.volume : 1;
+    const dur = o.dur || octx.length / octx.sampleRate, fade = o.fade != null ? o.fade : AMB_FADE;
+    const a = new AmbBed(m, bus, ambSpec(spec), 0.02, o.fadeIn != null ? o.fadeIn : 0.05);
+    const beds = [a];
+    if (o.mod != null) a.mod(o.mod);
+    if (o.at != null) {
+      a.schedule(o.at);
+      a.stop(fade, o.at);
+      const s2 = ambSpec(o.to);
+      if (s2) { const b = new AmbBed(m, bus, s2, o.at, fade); b.schedule(dur); beds.push(b); }
+    } else a.schedule(dur);
+    return { beds };
+  };
 })(window.RPG);

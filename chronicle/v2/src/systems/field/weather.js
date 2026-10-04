@@ -16,6 +16,9 @@
 //   候補 {k, p（選ばれる率）, i（強さ 0〜1、既定 1）, c（条件。R.State.check）, sky（'night' = 夜空の星の量・'day' = 空の明るさを率に掛ける）}
 //   設定の reduceMotion か効果 off なら描かない。効果 low は粒・帯を半分。
 //   F.weatherNow() → {kind, i}|null（いまの天気。テスト用）、F._wxForce = {kind, i}（撮影・テストで上書き。null で戻す）
+//   音: 天気は絵だけ。音（環境音）は field/ambience.js が天気と地図から床を選んで R.Audio.ambience に渡す（reduceMotion・効果 off でも鳴る）。
+//     map.ambience で地図ごとに上書きできる: null / false = 鳴らさない、'床の名前' か {bed, i, night, surf, dry, muffled}（core/audio.js の ambience）
+//   F.wxGust(秒) → 0〜1（砂嵐の風の帯のうねり。絵と環境音が同じ値を使う）
 (function (R) {
   'use strict';
   const F = (R.Field = R.Field || {});
@@ -199,10 +202,11 @@
   function count(base, low, i) { const k = Math.min(1.6, (R.W * R.H) / (960 * 540)); return Math.max(1, Math.round(base * k * (low ? 0.5 : 1) * (0.4 + 0.6 * i))); }
 
   // ================================================================ 砂嵐
+  F.wxGust = function (tm) { return 0.5 + 0.5 * Math.sin(tm * 0.9) * Math.sin(tm * 0.37 + 1); };
   DRAW.sandstorm = function (g, m, cx, cy, t, I, low) {
     const W = R.W, H = R.H, tm = R.Engine.time / 1000;
     // 風の強さは 7 秒ほどの周期でうねる（0.55〜1）
-    const gust = 0.55 + 0.45 * (0.5 + 0.5 * Math.sin(tm * 0.9) * Math.sin(tm * 0.37 + 1));
+    const gust = 0.55 + 0.45 * F.wxGust(tm);
     g.fillStyle = `rgba(214,170,96,${(0.13 + 0.08 * gust) * I})`;
     g.fillRect(0, 0, W, H);
     // 風の帯（大きく横に伸ばしたやわらかい砂のもや）

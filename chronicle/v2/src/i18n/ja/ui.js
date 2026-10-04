@@ -455,6 +455,8 @@
     'ui.settings.TABS.vol_sfx.desc': '効果音の大きさ。0 で消える。',
     'ui.settings.TABS.vol_voice.name': 'ボイス',
     'ui.settings.TABS.vol_voice.desc': '声の大きさ。0 で消える。',
+    'ui.settings.TABS.vol_amb.name': '環境音',
+    'ui.settings.TABS.vol_amb.desc': '風・雨・虫の声など、天気と場所の音の大きさ。0 で消える。',
     'ui.settings.TABS.battleVoice.name': '戦闘ボイス',
     'ui.settings.TABS.battleVoice.names.on': 'あり',
     'ui.settings.TABS.battleVoice.names.big': '大技だけ',

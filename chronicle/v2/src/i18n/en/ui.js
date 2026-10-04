@@ -455,6 +455,8 @@
     'ui.settings.TABS.vol_sfx.desc': 'Sound effect volume. 0 mutes it.',
     'ui.settings.TABS.vol_voice.name': 'Voice',
     'ui.settings.TABS.vol_voice.desc': 'Voice volume. 0 mutes it.',
+    'ui.settings.TABS.vol_amb.name': 'Ambience',
+    'ui.settings.TABS.vol_amb.desc': 'Volume of weather and place sounds (wind, rain, insects). 0 mutes it.',
     'ui.settings.TABS.battleVoice.name': 'Battle Voices',
     'ui.settings.TABS.battleVoice.names.on': 'On',
     'ui.settings.TABS.battleVoice.names.big': 'Big Moves Only',

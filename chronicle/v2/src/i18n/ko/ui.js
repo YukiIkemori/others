@@ -455,6 +455,8 @@
     'ui.settings.TABS.vol_sfx.desc': '효과음의 크기. 0이면 꺼진다.',
     'ui.settings.TABS.vol_voice.name': '보이스',
     'ui.settings.TABS.vol_voice.desc': '목소리의 크기. 0이면 꺼진다.',
+    'ui.settings.TABS.vol_amb.name': '환경음',
+    'ui.settings.TABS.vol_amb.desc': '바람·비·벌레 소리 등 날씨와 장소의 소리 크기. 0이면 꺼진다.',
     'ui.settings.TABS.battleVoice.name': '전투 보이스',
     'ui.settings.TABS.battleVoice.names.on': '켜기',
     'ui.settings.TABS.battleVoice.names.big': '큰 기술만',

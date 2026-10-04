@@ -6,6 +6,9 @@
 (function (R) {
   'use strict';
   const X = {};
+  // per-play variation (as in sfx.js): rv(a, b) a value in [a, b); st(s) up to ±s semitones
+  const rv = (a, b) => a + Math.random() * (b - a);
+  const st = (s) => Math.pow(2, rv(-s, s) / 12);
 
   // 閃き「ピコーン」— a short bright pulse (ピ, D6) and an FM bell an octave up that rings on
   // (コーン, D7, octave-ratio so it rings pure), a breath of air, a long echo. The music dips
@@ -46,23 +49,28 @@
   // click, a thin shimmer settling down
   X.freeze = (S) => {
     S.noise({ d: 0.004, r: 0.02, vol: 0.4, bp: 6500, q: 3 });                                    // ピキッ
-    S.noise({ t: 0.05, d: 0.003, r: 0.015, vol: 0.3, bp: 8000, q: 3 });
-    [[100, 0], [95, 0.03], [102, 0.07], [98, 0.11]].forEach(([n, t]) => S.fm({ n, t, ratio: 5.07, index: 2.6, md: 0.05, d: 0.004, r: 0.2, vol: 0.08 }));
+    S.noise({ t: 0.05 + rv(0, 0.01), d: 0.003, r: 0.015, vol: 0.3, bp: 7000, q: 3 });
+    [[100, 0], [95, 0.03], [102, 0.07], [98, 0.11]].forEach(([n, t]) => S.fm({ n, t, ratio: 5.07, index: 1.6, md: 0.05, d: 0.004, r: 0.2, vol: 0.09 }));
+    S.noise({ d: 0.008, r: 0.05, vol: 0.15, bp: 1500, q: 1.2 });                                 // the crust gives
     S.tone({ w: 'sine', n: 93, n2: 81, sd: 0.4, t: 0.12, a: 0.01, d: 0.3, r: 0.15, vol: 0.05, vib: [11, 25] });
-    S.noise({ t: 0.08, a: 0.05, d: 0.15, r: 0.25, vol: 0.08, hp: 7000 });
+    S.noise({ t: 0.08, a: 0.05, d: 0.15, r: 0.25, vol: 0.08, bp: 6000, q: 0.8 });
     S.tone({ w: 'triangle', f: 130, f2: 90, sd: 0.1, d: 0.02, r: 0.08, vol: 0.15 });
     S.wet(0.4);
-    S.gain(1.95);
+    S.gain(1.46);
   };
+
 
   // burn (やけど status, fire composites) — a short flare of flame and a handful of crackles
   X.burn = (S) => {
+    S.tone({ w: 'sine', f: 110 * st(1), f2: 55, sd: 0.1, d: 0.015, r: 0.1, vol: 0.15 });                  // whump
     S.noise({ a: 0.02, d: 0.1, r: 0.2, vol: 0.45, lp: 800, lp2: 3400, fd: 0.14, rate: 0.7 });
     S.tone({ w: 'sawtooth', f: 90, f2: 200, sd: 0.15, d: 0.1, r: 0.12, vol: 0.12, lp: 900 });
-    [0.08, 0.13, 0.17, 0.24, 0.29, 0.36, 0.42].forEach((t, i) => S.noise({ t, d: 0.003, r: 0.015 + (i % 3) * 0.005, vol: 0.12 - i * 0.008, hp: 2500 + (i % 2) * 1500 }));
+    [0.08, 0.13, 0.17, 0.24, 0.29, 0.36, 0.42].forEach((t, i) => S.noise({ t: t + rv(-0.01, 0.01), d: 0.003, r: 0.015 + (i % 3) * 0.005, vol: 0.12 - i * 0.008, hp: 2500 + (i % 2) * 1500 }));
     S.wet(0.2);
     S.gain(0.9);
   };
+
+
 
   // quill — a pen scratching across paper three times, then a small bell
   X.quill = (S) => {
@@ -116,33 +124,46 @@
 
   // arrow (bows) — the string's twang, air cut, the thunk of the hit
   X.arrow = (S) => {
-    S.tone({ w: 'triangle', f: 196, f2: 186, sd: 0.12, d: 0.12, r: 0.05, vol: 0.2, decay: 0.08 });  // びん
-    S.tone({ w: 'sawtooth', f: 392, d: 0.06, r: 0.03, vol: 0.05, decay: 0.05, lp: 2400 });
+    const k = st(1);
+    S.tone({ w: 'triangle', f: 196 * k, f2: 186 * k, sd: 0.12, d: 0.12, r: 0.05, vol: 0.2, decay: 0.08 });  // びん
+    S.tone({ w: 'sawtooth', f: 392 * k, d: 0.06, r: 0.03, vol: 0.05, decay: 0.05, lp: 2400 });
     S.noise({ d: 0.004, r: 0.01, vol: 0.12, bp: 3000, q: 2 });
-    S.noise({ t: 0.04, a: 0.03, d: 0.05, r: 0.03, vol: 0.2, bp: 1800, bp2: 6000, fd: 0.08, q: 1.4 }); // 風を切る
-    S.noise({ t: 0.15, d: 0.01, r: 0.07, vol: 0.4, lp: 1500 });                                     // 刺さる
-    S.tone({ w: 'sine', f: 220, f2: 90, sd: 0.07, t: 0.15, d: 0.01, r: 0.07, vol: 0.35 });
-    S.gain(0.9);
+    S.noise({ t: 0.04, a: 0.03, d: 0.05, r: 0.03, vol: 0.2, bp: 1800, bp2: 5000, fd: 0.08, q: 1.4 }); // 風を切る
+    S.noise({ t: 0.15, d: 0.01, r: 0.07, vol: 0.4, lp: 1500, lp2: 500, fd: 0.06 });                    // 刺さる
+    S.tone({ w: 'sine', f: 220 * k, f2: 90, sd: 0.07, t: 0.15, d: 0.01, r: 0.07, vol: 0.35 });
+    S.tone({ w: 'triangle', f: 520 * k, f2: 300, sd: 0.03, t: 0.15, d: 0.004, r: 0.08, vol: 0.06, decay: 0.1 }); // the shaft quivers
+    S.wet(0.08);
+    S.gain(0.96);
   };
+
 
   // lash (whips) — a bending swish that snaps into a dry crack
   X.lash = (S) => {
-    S.noise({ a: 0.06, d: 0.07, r: 0.02, vol: 0.24, bp: 500, bp2: 3200, fd: 0.13, q: 1.6 });
+    const k = st(1.5);
+    S.noise({ a: 0.06, d: 0.07, r: 0.02, vol: 0.24, bp: 500 * k, bp2: 3200 * k, fd: 0.13, q: 1.6 });
+    S.noise({ a: 0.05, d: 0.08, r: 0.02, vol: 0.12, bp: 250 * k, bp2: 900 * k, fd: 0.13, q: 1 });          // the cord's weight
     S.noise({ t: 0.14, d: 0.003, r: 0.03, vol: 0.55, hp: 1800 });                                   // 破裂
-    S.tone({ w: 'p50', f: 1400, f2: 500, sd: 0.02, t: 0.14, d: 0.004, r: 0.02, vol: 0.12 });
-    S.noise({ t: 0.145, d: 0.01, r: 0.06, vol: 0.18, bp: 2500, q: 1 });
-    S.gain(0.54);
+    S.tone({ w: 'p50', f: 1400 * k, f2: 500, sd: 0.02, t: 0.14, d: 0.004, r: 0.02, vol: 0.12 });
+    S.noise({ t: 0.145, d: 0.01, r: 0.08, vol: 0.18, bp: 2500, bp2: 1200, q: 1 });
+    S.tone({ w: 'sine', f: 260 * k, f2: 110, sd: 0.05, t: 0.14, d: 0.006, r: 0.06, vol: 0.15 });       // sting
+    S.wet(0.14);
+    S.gain(0.59);
   };
+
 
   // parry — steel turning steel: a bright inharmonic ring with a click
   X.parry = (S) => {
+    const k = st(0.6);
     S.noise({ d: 0.004, r: 0.02, vol: 0.4, hp: 3500 });
-    S.fm({ n: 91, ratio: 1.414, index: 3, md: 0.12, d: 0.005, r: 0.4, vol: 0.12 });
-    S.fm({ n: 98, t: 0.004, ratio: 2.76, index: 1.6, md: 0.08, d: 0.005, r: 0.3, vol: 0.08 });
+    S.tone({ w: 'sine', f: 190 * k, f2: 95, sd: 0.05, d: 0.006, r: 0.05, vol: 0.1 });                  // the blades meet
+    S.fm({ f: 1568 * k, ratio: 1.414, index: 3, md: 0.12, d: 0.005, r: 0.4, vol: 0.12 });              // G6
+    S.fm({ f: 2349 * k, t: 0.004, ratio: 2.76, index: 1.6, md: 0.08, d: 0.005, r: 0.3, vol: 0.08 });   // D7
     S.tone({ w: 'sine', n: 103, a: 0.002, d: 0.01, r: 0.25, vol: 0.03, vib: [30, 20] });
     S.wet(0.3);
-    S.gain(1.0);
+    S.gain(1.17);
   };
+
+
 
   // secret — a hidden passage gives way: stone shifting, a curious rising three-note figure
   // with a wobble (「ふしぎ」), a sparkle
