@@ -28,6 +28,8 @@
     { map: 'hut', x: 4, y: 3, event: 'hut_notes', cond: '!lo_ev_forest' },                            // きこりの小屋の棚の記録官の覚え書き
     { map: 'yule_hall', x: 19, y: 4, event: 'yule_blank_book', cond: '!lo_ev_snow' },                 // 集会所の書見台の白紙の本（品 k_blank_book）
     { map: 'dovan_forge', x: 9, y: 1, event: 'dovan_receipt', cond: '!lo_ev_mine' },                  // 鍛冶場の板の受け取り
+    // 潮鳴りの洞窟の奥: 光る貝（筋の品 k_glow_shell。大だこを倒してから拾うまで。光る夜光虫は洞窟じゅうにあって目印にならない）
+    { map: 'isles_cave_2', x: 22, y: 2, event: 'isles_glow_shell', cond: ['isles_octopus', '!isles_shell'] },
     // 沼の町ロッホの証拠（エマに会ってから、集会の前まで。手に入れたら消える）
     { map: 'loch_tower', x: 3, y: 4, event: 'loch_tower_book', cond: ['marsh_emma_met', '!marsh_ev_book', '!marsh_assembly_done'] },
     { map: 'loch_emma', x: 3, y: 6, event: 'loch_emma_drawing', cond: ['marsh_emma_met', '!marsh_ev_drawing', '!marsh_assembly_done'] },

@@ -53,10 +53,15 @@ const SKIP = {
   star_academy_door: '描いた学院の大扉',
 };
 
+const AMBIENT = /^(firefly|star_lamp|waylamp|lamp_post|star_glow|glow_plankton|torch|candelabra|wall_window|wall_painting|wall_herbs|chair|carpet|rug|bush|fern|grass|flowers?|tree|tree_[a-z_]+|rock_small|arena_banner)$/;
+// 2 回目の見直し（2026-10-04）で置いた物証・証拠・オルゴールの所（どれも glint が要る）
+const MUST = [['caldera_arena', 14, 25], ['desert_tomb_3', 20, 4], ['hut', 4, 3], ['yule_hall', 19, 4], ['dovan_forge', 9, 1], ['loch_tower', 3, 4], ['loch_emma', 3, 6], ['loch_beppo', 9, 3],
+  ['marsh_manor_1', 10, 18], ['marsh_manor_2', 4, 28], ['marsh_manor_2', 44, 28], ['marsh_manor_2', 4, 5], ['verda_1', 12, 10], ['verda_1', 46, 12], ['orbis', 33, 11], ['s_crater', 28, 26], ['isles_cave_2', 22, 2]];
+
 async function main() {
   section('1. きらめき（glint）');
   ok('prop glint: 歩ける・灯りつき', !!D.props.glint && D.props.glint.soft === true && !!D.props.glint.light);
-  ok('R.GLINTS（maps/glints.js）に 28 か所以上', Array.isArray(R.GLINTS) && R.GLINTS.length >= 28, R.GLINTS && R.GLINTS.length);
+  ok('R.GLINTS（maps/glints.js）に 40 か所以上', Array.isArray(R.GLINTS) && R.GLINTS.length >= 40, R.GLINTS && R.GLINTS.length);
   const miss = (R.GLINTS || []).filter((g) => { const o = glintAt(D.maps[g.map], g.x, g.y); return !o || JSON.stringify(o.cond) !== JSON.stringify(g.cond); });
   ok('R.GLINTS の所すべてに glint（同じ cond）', miss.length === 0, miss);
   const noEx = (R.GLINTS || []).filter((g) => !(D.maps[g.map].objects || []).some((o) => o.type === 'examine' && o.event === g.event && o.x === g.x && o.y === g.y));
@@ -80,6 +85,27 @@ async function main() {
     const mat = glintAt(D.maps.f_lake, 13, 21);
     ok('雪像の材料: 頼まれる前は出ず、頼まれたら出て、拾ったら消える', !shown(mat) && (G.flags.snow_statue_asked = true, shown(mat)) && (G.flags.snow_mat_ice = true, !shown(mat)));
     delete G.flags.snow_statue_asked; delete G.flags.snow_mat_ice;
+    const noG = MUST.filter(([mid, x, y]) => !glintAt(D.maps[mid], x, y));
+    ok(`筋の物証・沼の証拠・霧の館のオルゴールなど ${MUST.length} か所に glint`, noG.length === 0, noG);
+    const ros = glintAt(D.maps.caldera_arena, 14, 25);
+    ok('物証（闘技場の名簿）: 読む前は出て、読んだら消える', shown(ros) && (G.flags.lo_ev_ash = true, !shown(ros)));
+    delete G.flags.lo_ev_ash;
+    const doll = glintAt(D.maps.loch_beppo, 9, 3);
+    ok('沼の証拠（人形）: エマに会う前は出ず、会ったら出て、手に入れたら・集会の後は消える',
+      !shown(doll) && (G.flags.marsh_emma_met = true, shown(doll)) && (G.flags.marsh_ev_doll = true, !shown(doll)) && (delete G.flags.marsh_ev_doll, G.flags.marsh_assembly_done = true, !shown(doll)));
+    delete G.flags.marsh_emma_met; delete G.flags.marsh_assembly_done;
+    const box = glintAt(D.maps.marsh_manor_2, 44, 28), sheet = glintAt(D.maps.marsh_manor_1, 10, 18);
+    ok('霧の館: 楽譜は読むまで、オルゴールは楽譜を読んでから鳴らし終えるまで', shown(sheet) && !shown(box) && (G.flags.marsh_sheet_read = true, !shown(sheet) && shown(box)) && (G.flags.marsh_boxes_done = true, !shown(box)));
+    delete G.flags.marsh_sheet_read; delete G.flags.marsh_boxes_done;
+    // 実際の調べる所を動かして、旗が cond と合うか（読んだら消える）
+    for (const [mid, x, y, evid, pre] of [['desert_tomb_3', 20, 4, 'desert_tomb_rubbing', {}], ['loch_tower', 3, 4, 'loch_tower_book', { marsh_emma_met: true }], ['yule_hall', 19, 4, 'yule_blank_book', {}], ['dovan_forge', 9, 1, 'dovan_receipt', {}]]) {
+      Object.assign(G.flags, pre);
+      const gl = glintAt(D.maps[mid], x, y), before = shown(gl);
+      let fin = false;
+      R.Events.run(evid, { map: mid, x, y }).then(() => { fin = true; }, () => { fin = true; });
+      for (let i = 0; i < 600 && !fin; i++) { I._set('a', true); adv(34); await flush(); I._set('a', false); adv(34); await flush(); }
+      ok(`${mid} ${evid}: 調べる前は glint が出て、調べた後は消える`, before && !shown(gl), { before, after: shown(gl) });
+    }
   }
 
   section('2. 拾う所には目印');
@@ -94,7 +120,8 @@ async function main() {
       const c = R.MapUtil.cell(m, o.x, o.y);
       if (c && (c.solid || c.walk === false)) continue;   // 描いた物（壁・岩・水・像）を調べる
       if (SKIP[o.event]) { skipped.push(`${mid} ${o.x},${o.y} ${o.event}`); continue; }
-      const mark = (m.objects || []).some((q) => q.type !== 'examine' && q.type !== 'trigger' && Math.abs(q.x - o.x) <= 1 && Math.abs(q.y - o.y) <= 1) ||
+      // 目印に数えない物: 灯り・草木・家具の飾り（どこにでもあり「ここに何か」とは読めない）
+      const mark = (m.objects || []).some((q) => q.type !== 'examine' && q.type !== 'trigger' && !(q.type === 'prop' && AMBIENT.test(q.id)) && Math.abs(q.x - o.x) <= 1 && Math.abs(q.y - o.y) <= 1) ||
         (m.npcs || []).some((n) => Math.abs(n.x - o.x) <= 1 && Math.abs(n.y - o.y) <= 1);
       if (!mark) bad.push(`${mid} ${o.x},${o.y} ${o.event}`);
     }
