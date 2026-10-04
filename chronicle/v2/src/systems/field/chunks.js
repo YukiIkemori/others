@@ -29,6 +29,7 @@
 
   /** 全部捨てる（マップ・広さが変わった）。先に焼いてあった次のマップ（CK.preload）が今のマップなら、それを使い回す */
   CK.reset = function () {
+    S.tileFallback = false;
     for (const e of all().values()) drop(e);
     all().clear();
     S.chGen = (S.chGen || 0) + 1;
@@ -138,6 +139,14 @@
   CK.sync = function () {
     if (!S.map) return;
     if (S.chTile !== F._tile()) CK.reset();
+    // 描いた下絵の見張り（持ち主 2026-10-04: スマホで北の野がタイルの控えの絵のまま、崖・水路がちぐはぐになった）:
+    //   下絵が読めていない間に焼いた（控えの絵）なら、読めたところで焼き直す。読めていなければ読み始める（Env.under が読む）
+    if (S.map.art && R.Engine.frame % 20 === 0 && R.Terrain && R.Terrain._underOf) {
+      let u = null;
+      try { u = R.Terrain._underOf(S.map, F._tile()); } catch (e) { u = null; }
+      if (!u) S.tileFallback = true;
+      else if (S.tileFallback) { S.tileFallback = false; CK.reset(); return CK.sync(); }
+    }
     if (S.dirtyPending) takeDirty();
     const v = CK.view(view), A = all(), f = R.Engine.frame;
     // 進む向きに 2 チャンク先まで

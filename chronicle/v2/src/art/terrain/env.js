@@ -250,14 +250,20 @@
 
   /** 描いた下絵（マップ 1 枚）: 32 の絵の meta も返す（_emit・_over は meta を持たないので本体の名前で引く） */
   // 下絵は使う時に読む（E.under が null を返すあいだ、チャンクはタイルで焼く。今のマップの層が全部読めたらチャンクを焼き直す）
+  // 入る途中（F.enter の暗転）に読み終えた絵は、入り終えてから焼き直す（持ち主 2026-10-04: スマホの遅い回線で E.awaitMap の 4 秒を過ぎて
+  //   読み終えると、入る途中だったので焼き直しを飛ばし、そのマップにいる間ずっとタイルの控えの絵（崖・水路がちぐはぐ）のままだった）
+  function resetIfReady(k, tries) {
+    try {
+      const F = R.Field, m = curMap();
+      if (!m || !F.chunks || !F.chunks.reset) return;
+      if (F._s && F._s.entering) { if ((tries | 0) < 120) timeout(250).then(() => resetIfReady(k, (tries | 0) + 1)); return; }
+      const ks = mapKeys(m, curTile());
+      if (ks.indexOf(k) >= 0 && ks.every((x) => img(x))) F.chunks.reset();
+    } catch (e) { /* 焼き直せなくても次に入ったときに使う */ }
+  }
   function loadUnder(k) {
     return loadKey(k).then((ok) => {
-      try {
-        const F = R.Field, m = curMap();
-        if (!ok || !m || !F.chunks || !F.chunks.reset || (F._s && F._s.entering)) return ok;   // 入る途中は F.enter が焼く
-        const ks = mapKeys(m, curTile());
-        if (ks.indexOf(k) >= 0 && ks.every((x) => img(x))) F.chunks.reset();
-      } catch (e) { /* 焼き直せなくても次に入ったときに使う */ }
+      if (ok) resetIfReady(k, 0);
       return ok;
     });
   }
