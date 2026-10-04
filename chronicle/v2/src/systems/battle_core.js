@@ -1858,7 +1858,9 @@
     stealOnlyChance(u, t, auto) {
       const s = t.d.drops.steal;
       const O = K('STEAL').only || { cap: 0.5, autoMul: 0.6, golden: 2 };
-      let p = (1 / Math.max(1, s.rate || 16)) * (1 + this.pct(u, 'stealPct') / 100);
+      // クリア後は超レアの率を半分（K.DROP.post.mul.super。持ち主 2026-10-04）
+      const P = K('DROP').post, pm = P && this.tier >= P.tier ? (P.mul.super || 1) : 1;
+      let p = (1 / (Math.max(1, s.rate || 16) * pm)) * (1 + this.pct(u, 'stealPct') / 100);
       if (auto) p *= O.autoMul;
       if (t.golden) p *= O.golden;
       return Math.min(O.cap, p);
@@ -1866,9 +1868,11 @@
     stealPick(t, rareMul) {
       const dr = t.d && t.d.drops;
       if (!dr) return null;
-      const ch = R.Mon.dropChances(t.d, { golden: t.golden, mods: this.partyMods() });
+      const ch = R.Mon.dropChances(t.d, { golden: t.golden, mods: this.partyMods(), tier: this.tier });
       const S = K('STEAL');
-      if (dr.rare && dr.rare.item && chance(Math.min(S.rareCap, (ch.rare || 0) * S.rareMul) * (rareMul || 1))) return { item: dr.rare.item, n: 1, grade: 'rare' };
+      // 盗みのレア: レアの枠の steal（盗みだけで取れるレア。無ければ落とす品と同じ item）。持ち主 2026-10-04「盗みのレアと落とし物のレアで別の品」
+      const rid = dr.rare && (dr.rare.steal || dr.rare.item);
+      if (rid && chance(Math.min(S.rareCap, (ch.rare || 0) * S.rareMul) * (rareMul || 1))) return { item: rid, n: 1, grade: 'rare' };
       if (dr.normal) {
         if (dr.normal.item) return { item: dr.normal.item, n: 1, grade: 'normal' };
         if (dr.normal.pool) { const p = R.Mon.pickPool(dr.normal.pool, this.tier); if (p && p.item) return { item: p.item, n: p.n || 1, grade: 'normal' }; }
@@ -1879,7 +1883,7 @@
     stealable(t) {
       if (t.stolen) return false;
       const dr = t.d && t.d.drops;
-      return !!(dr && ((dr.normal && (dr.normal.item || dr.normal.pool)) || (dr.rare && dr.rare.item)));
+      return !!(dr && ((dr.normal && (dr.normal.item || dr.normal.pool)) || (dr.rare && (dr.rare.item || dr.rare.steal))));
     }
     canSteal(t) { return this.stealOnlyOpen(t) || this.stealable(t); }
     *takeStolen(u, t, pick0, stealOnly) {
@@ -2503,7 +2507,7 @@
           if (n < inv0[id]) { if (n > 0) inv0[id] = n; else delete inv0[id]; }
         }
         const gainOne = (item, n) => {
-          if (R.State && R.State.gain) { try { return R.State.gain(item, n); } catch (e) { R.warn('battle: R.State.gain failed', item, e && e.message); } }
+          if (R.State && R.State.gain) { try { return R.State.gain(item, n, { tier: eng.tier }); } catch (e) { R.warn('battle: R.State.gain failed', item, e && e.message); } }
           inv0[item] = Math.min(K('MAX_ITEM'), (inv0[item] || 0) + n);
           return null;
         };

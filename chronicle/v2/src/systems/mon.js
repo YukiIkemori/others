@@ -371,10 +371,12 @@
     if (!d || !d.drops) return out;
     const D = K('DROP');
     const golden = opts.golden != null ? opts.golden : !!d.golden;
+    // クリア後（戦闘のティア ≥ K.DROP.post.tier）は率 × post.mul（レア 1/16 → 1/24・超レア半分。持ち主 2026-10-04）。確定の枠（率 1）はそのまま
+    const post = D.post && opts.tier != null && opts.tier >= D.post.tier ? D.post.mul : null;
     for (const g of GRADES) {
       const slot = d.drops[g];
       if (!slot || (!slot.item && !slot.pool)) continue;
-      const rate = slot.rate || 1;
+      const rate = (slot.rate || 1) > 1 && post ? (slot.rate || 1) * (post[g] || 1) : slot.rate || 1;
       if (rate <= 1) { out[g] = 1; continue; }
       const mod = Math.min(D.modCap, partyModOf(opts.mods, MOD_OF[g]));
       out[g] = Math.min(D.cap[g], (1 / rate) * (golden ? D.golden[g] : 1) * (1 + mod / 100));

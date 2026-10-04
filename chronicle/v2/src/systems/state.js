@@ -250,8 +250,10 @@
     return Math.max(v, c);
   };
 
-  State.gain = function (id, n) {
+  // o.tier: 手に入れたティア（戦闘の報酬・盗みは max(全体のティア, 戦闘のティア)。クリア後の忘却の底は 9 → レア 11・超レア 12。持ち主 2026-10-04）
+  State.gain = function (id, n, o) {
     const G = R.Game;
+    const acqTier = () => { const t = (R.Tier && R.Tier.effective ? R.Tier.effective() : G.tier) || 0; return o && o.tier != null ? Math.max(t, o.tier | 0) : t; };
     n = n == null ? 1 : Math.floor(n);
     id = State.canonItem(id);
     const it = R.DB.items[id];
@@ -274,7 +276,7 @@
     //   （同じ品は 1 つの値。持ち主 2026-10-02「レア・盗みの装備はその時の店の品より少し上」）
     if (n > 0 && it && it.grow === 'drop') {
       G.uniques = G.uniques || {};
-      const tier = (R.Tier && R.Tier.effective ? R.Tier.effective() : G.tier) || 0;
+      const tier = acqTier();
       const old = G.uniques[id];
       if (!old || tier > (old.tier | 0)) {
         let filled = {};

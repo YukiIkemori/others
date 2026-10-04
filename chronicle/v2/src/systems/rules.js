@@ -45,27 +45,30 @@
     str: R.T('sys.rules.DIFF_NAMES.str'), vit: R.T('sys.rules.DIFF_NAMES.vit'), dex: R.T('sys.rules.DIFF_NAMES.dex'), agi: R.T('sys.rules.DIFF_NAMES.agi'), int: R.T('sys.rules.DIFF_NAMES.int'), mnd: R.T('sys.rules.DIFF_NAMES.mnd'), hp: R.T('sys.rules.DIFF_NAMES.hp'), mp: R.T('sys.rules.DIFF_NAMES.mp') };
 
   // ------------------------------------------------------------ 定数（DESIGN §4.18.1 ＋ STATS_REWORK §2.1・§5.2・§7.3・§9.3）
-  const Wt = [8, 14, 21, 30, 40, 51, 64, 78, 94, 112];                 // 旧の K.W: 道具の formula:'tier' と値段・sim の目安だけ
-  const PRICE = [70, 160, 290, 450, 660, 900, 1200, 1500, 1900, 2600];
+  // 品のティアの表は 0〜13（ITEM_TIER_MAX）。10〜13 はクリア後の品だけ（持ち主 2026-10-04「装備のティアの見直し」。design/notes/gear_tiers.md）:
+  //   10 = 終章（T8）の超レア、11 = クリア後のレア、12 = クリア後の超レア（専用の品は 13 の強さ）。ゲームのティア（R.Game.tier 0〜8・クリア後 9）とは別
+  const ITEM_TIER_MAX = 13;
+  const Wt = [8, 14, 21, 30, 40, 51, 64, 78, 94, 112, 132, 154, 178, 204];   // 旧の K.W: 道具の formula:'tier' と値段・sim の目安だけ
+  const PRICE = [70, 160, 290, 450, 660, 900, 1200, 1500, 1900, 2600, 3300, 4100, 5000, 6000];
   const WT = (hands, reach, kind, mult, hit, crit, stat, magMult) => ({ hands, twoHanded: hands === 2, reach, kind, mult, hit, crit, stat, magMult });
   const K = {
     // 契約の名前（V2_PLAN §2.5.12）
     SLOTS, WTYPES, ELEMENTS, ABILS, ITEM_SLOTS,
     DK: (L) => 40 + 5 * L,
-    W: Wt, PRICE,
+    W: Wt, PRICE, ITEM_TIER_MAX,
     D: (T) => 70 + 30 * T,
     LZ: (T) => 6 + 6 * T,
     // §2.1 能力値の効き目: abilMul(a, k) = max(minMul, 1 + k × (a − mid))
     ABIL: { mid: 16, cap: 40, minMul: 0.5, atk: 0.045, mag: 0.045, heal: 0.04, tech: 0.01, vit: 0.025, mdef: 0.03, sf: 0.04, gf: 0.04, healStat: 'mnd' },
-    WA: [11, 22, 35, 52, 71, 96, 122, 156, 193, 246],                 // 武器の攻撃力・術力の土台（§2.3）
+    WA: [11, 22, 35, 52, 71, 96, 122, 156, 193, 246, 300, 357, 418, 483],   // 武器の攻撃力・術力の土台（§2.3）。10〜13 は差 54・57・61・65 で滑らかに伸ばした
     // 武器の等級の倍率 1.06・1.12 → 1.10・1.20（防具の GRADE_DEF と同じ。持ち主 2026-10-02「レア・盗みの品は同じ時点の店の品よりはっきり強く」。
     //   同じティアのレア武器が丸めで店の品と同じ値になっていた（蜂の針 17 = 鋼の短剣 17）。tools/check_rare_vs_shop.js が確かめる）
     GRADE_ATK: { normal: 1, rare: 1.10, super: 1.20 },
     GRADE_DEF: { normal: 1, rare: 1.10, super: 1.20 },
-    ACC_W: [1, 1, 1, 2, 3, 4, 5, 7, 8, 10],                            // 通常の腕輪・耳飾り（§3.2）
+    ACC_W: [1, 1, 1, 2, 3, 4, 5, 7, 8, 10, 12, 14, 16, 18],            // 通常の腕輪・耳飾り（§3.2）
     ABIL_GEAR: {                                                        // 能力値を上げる装備（§3.1）
-      rare: { weapon: [0, 0, 0, 0, 0, 1, 1, 1, 1, 2], body: [0, 0, 0, 0, 0, 0, 0, 1, 1, 1], acc: [0, 0, 0, 0, 0, 0, 0, 1, 1, 1], armor: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-      super: { weapon: [1, 1, 1, 1, 1, 2, 2, 2, 3, 4], body: [1, 1, 1, 1, 1, 1, 1, 2, 2, 3], acc: [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], armor: [0, 0, 0, 0, 0, 0, 0, 0, 0, 1] },
+      rare: { weapon: [0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3], body: [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3], acc: [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3], armor: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1] },
+      super: { weapon: [1, 1, 1, 1, 1, 2, 2, 2, 3, 4, 4, 5, 5, 6], body: [1, 1, 1, 1, 1, 1, 1, 2, 2, 3, 3, 3, 4, 4], acc: [1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3], armor: [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 2] },
     },
     PRICE_GRADE: { normal: 1, rare: 3, super: 6 },
     // §8.1 系統の表。品は mult・kind・hit・crit・astat（攻撃力の能力値）を上書きできる
@@ -141,7 +144,15 @@
     // §4.10 落とし物・盗み（§7.3 盗み専用の枠）
     // レアの既定 32 → 16（持ち主 2026-10-02「店の装備は最低限。足りない分はレアのドロップと盗みで埋める。盗みに気づかない人が困らないよう、レアと盗みのレアを少し上げる」）。
     //   段 2 の魔物の枠（旧 16）は 12、盗み専用は 雑魚 32 → 16・レア魔物 16 → 12（ボス 16 はそのまま）。スーパーレアは据え置き。見込みは tools/sim_loot.js の H7・H9
-    DROP: { rate: { normal: 8, rare: 16, super: 256 }, cap: { normal: 0.75, rare: 0.5, super: 0.125 }, modCap: 150, golden: { normal: 2, rare: 8, super: 8 } },
+    DROP: { rate: { normal: 8, rare: 16, super: 256 }, cap: { normal: 0.75, rare: 0.5, super: 0.125 }, modCap: 150, golden: { normal: 2, rare: 8, super: 8 },
+      // クリア後（戦闘のティア ≥ post.tier = 9。忘却の底）だけ率を下げる（持ち主 2026-10-04）: 枠の率 rate × mul。レアの落とし物と盗みのレア 1/16 → 1/24（×1.5）、
+      //   超レアの落とし物と盗み専用（超レア）は半分（×2）。本編の率は変えない。R.Mon.dropChances と盗み（battle_core）が読む
+      post: { tier: 9, mul: { normal: 1, rare: 1.5, super: 2 } } },
+    // 手に入れたときのティア T → 品の値のティア（持ち主 2026-10-04 の表。design/notes/gear_tiers.md）:
+    //   店 武器 T+1・防具 T（どちらも 8 まで）／レア T+1／超レア T+2（T0〜8。終章 T8 はレア 9・超レア 10）／クリア後 T9 はレア 11・超レア 12。
+    //   魔物から取る ★ の装備（grow 'drop'）・レアの箱の ★ の装備はこの値で埋まる（R.Rules.valueTier・fillItem）。武器と防具で同じ（旧: 武器だけ T+1、防具は T）
+    ACQ: { rare: 1, super: 2, post: { tier: 9, rare: 11, super: 12 } },
+    SHOP_MAX_TIER: 8,   // 店の装備の天井（終章・クリア後も 8。それより上は店に並ばない）
     // 盗みのレア枠: min(rareCap, レアの落ちる率 × rareMul)。4・0.5 → 1.5・0.15（オーナー 2026-09-28「ティッタのレアを盗む確率が高すぎる。レアばかり持つ」）。
     //   成功 1 回あたり 雑魚 段 1（率 16）9.4%・段 2（率 12）12.5%、ついでに（autoRare 0.6）はその 6 割。めずらしい魔物（率 6）は 15%
     //   盗み専用のついでの率 only.autoMul 0.5 → 0.6（持ち主 2026-10-02。盗み上手で盗んでいても普通の品ばかり、の声）
@@ -278,6 +289,15 @@
     statusGuard(mnd) { return K.STATUS.mndPer * (mnd || 0); },
     /** 閃きの能力値の倍率 GF = clamp(abilMul(S, 0.04), 0.7, 1.8) */
     gfOf(a) { return clamp(Rules.abilMul(a, K.ABIL.gf), K.GLIM.gf.min, K.GLIM.gf.max); },
+    /** 手に入れたティア T（ゲームのティア 0〜9）で ★ の品が持つ値のティア（K.ACQ）: 通常 T（店の天井 8 まで）・レア T+1・超レア T+2、クリア後（T ≥ 9）はレア 11・超レア 12 */
+    valueTier(grade, T) {
+      const A = K.ACQ, t = clamp((T == null ? tierNow() : T) | 0, 0, 9);
+      if (grade !== 'rare' && grade !== 'super') return Math.min(t, K.SHOP_MAX_TIER);
+      if (t >= A.post.tier) return A.post[grade];
+      return Math.min(ITEM_TIER_MAX, t + A[grade]);
+    },
+    /** クリア後（忘却の底）の戦闘か: 戦闘のティア ≥ K.DROP.post.tier */
+    isPostTier(T) { return (T | 0) >= K.DROP.post.tier; },
     dk(L) { return K.DK(L); },
     lz(T) { return K.LZ(T); },
     /** 戦闘のティアとレベル（§4.14.1）: Tb = zone.tier か R.Game.tier（解決した地方は R.Tier.forZone の固定ティア）、Lb = LZ(Tb) + (map.lvOff ?? zone.lvOff ?? 0) */
@@ -967,7 +987,7 @@
       const t = K.ABIL_GEAR[it.grade];
       if (!t) return {};
       const g = it.slot === 'weapon' || it.slot === 'body' || it.slot === 'acc' ? it.slot : 'armor';
-      const v = t[g][clamp(it.tier | 0, 0, 9)];
+      const v = t[g][clamp(it.tier | 0, 0, ITEM_TIER_MAX)];
       const SK = { s: 'str', v: 'vit', d: 'dex', a: 'agi', i: 'int', m: 'mnd' };
       const letters = String(it.units || '').replace(/\d/g, '').split('').filter((ch) => SK[ch]);
       const out = {};
@@ -988,12 +1008,13 @@
      */
     fillItem(it, o) {
       if (!it) return it;
-      // 魔物から取る ★ の装備（grow 'drop'。pools.js が印を付ける）: 定義の値を土台の曲線の比で、手に入れたティアへ伸ばす・縮める
-      //   武器 × WA[Tv]/WA[元のティア]、防具 × D(Tv)/D(元のティア)、値段 × PRICE の比。Tv = 武器は T+1（店の武器の天井）、ほかは T。
+      // 魔物から取る ★ の装備・レアの箱の ★ の装備（grow 'drop'。pools.js が印を付ける）: 定義の値を土台の曲線の比で、手に入れたティアへ伸ばす・縮める
+      //   武器 × WA[Tv]/WA[元のティア]、防具 × D(Tv)/D(元のティア)、値段 × PRICE の比。Tv = valueTier(等級, T)（K.ACQ の表: レア T+1・超レア T+2、
+      //   クリア後 T9 はレア 11・超レア 12。武器と防具で同じ）。持ち主 2026-10-04 の表（旧: 武器だけ T+1、防具は T）。
       //   品の個性（mult・属性・mods・クセ・守備 0 など）は比なのでそのまま残る（持ち主 2026-10-02「店の品よりいつも少し上」）
       if (o && o.tier != null && it.grow === 'drop') {
         const base = it.atk === undefined && it.def === undefined ? Rules.fillItem(Object.assign({}, it)) : it;
-        const B = clamp(base.tier | 0, 0, 9), T0 = clamp(o.tier | 0, 0, 9), Tv = base.slot === 'weapon' ? Math.min(9, T0 + 1) : T0;
+        const B = clamp(base.tier | 0, 0, ITEM_TIER_MAX), T0 = clamp(o.tier | 0, 0, 9), Tv = Rules.valueTier(base.grade, T0);
         const out = Object.assign({}, base, { tier: T0 });
         const rw = K.WA[Tv] / K.WA[B], ra = K.D(Tv) / K.D(B), rp = K.PRICE[Tv] / K.PRICE[B];
         const sc = (v, r) => (typeof v === 'number' ? Math.round(v * r) : v);
@@ -1004,7 +1025,7 @@
       if (o && o.tier != null && it.grow === 'tier') {
         // 武器は店の武器の天井（カシムの屋台・フェルンの行商などは T+1 の段を並べる）に合わせて 1 段上の値（持ち主 2026-10-02「レアは店の品よりはっきり強く」）。
         //   tier は もらったティアのまま（図鑑・並びの目安）
-        const T0 = clamp(o.tier | 0, 0, 9), Tv = it.slot === 'weapon' ? Math.min(9, T0 + 1) : T0;
+        const T0 = clamp(o.tier | 0, 0, 9), Tv = it.slot === 'weapon' ? Math.min(ITEM_TIER_MAX, T0 + 1) : T0;
         const copy = Object.assign({}, it, { tier: Tv });
         for (const k of ['atk', 'mag', 'def', 'mdef', 'eva', 'stats', 'twoHanded', 'sort']) delete copy[k];
         Object.defineProperty(copy, '_filled', { value: false, enumerable: false, writable: true });
@@ -1012,7 +1033,7 @@
         out.tier = T0;
         return out;
       }
-      const T = clamp(it.tier | 0, 0, 9), g = it.grade || 'normal';
+      const T = clamp(it.tier | 0, 0, ITEM_TIER_MAX), g = it.grade || 'normal';
       if (it.stats === undefined && EQUIP_GROUPS.includes(it.slot)) {
         const st = Rules.abilOf(it);
         if (it.statsAdd) for (const k in it.statsAdd) st[k] = (st[k] || 0) + it.statsAdd[k];
@@ -1118,10 +1139,12 @@
       if (!s) return [];
       const T = tier == null ? ((R.Tier && R.Tier.get ? R.Tier.get() : (R.Game && R.Game.tier)) | 0) : tier | 0;
       const steps = Object.keys(s.tier || {}).map(Number).filter((t) => t <= T).sort((a, b) => a - b);
-      if (s.keepOld === false) return (steps.length ? s.tier[steps[steps.length - 1]] : s.items).slice();
+      // 店の装備はティア K.SHOP_MAX_TIER（8）まで（持ち主 2026-10-04。終章・クリア後も 8 が天井。9 の通常品はクリア後の魔物の落とし物）
+      const underCap = (iid) => { const it = DB.items[iid]; return !(it && EQUIP_GROUPS.includes(it.slot) && (it.tier | 0) > K.SHOP_MAX_TIER); };
+      if (s.keepOld === false) return (steps.length ? s.tier[steps[steps.length - 1]] : s.items).filter(underCap);
       let out = (s.items || []).slice();
       for (const t of steps) out = out.concat(s.tier[t]);
-      return uniq(out);
+      return uniq(out).filter(underCap);
     },
     /** 売値（半分、0 は売れない） */
     sellPrice(id) { const it = itemOf(id); return it && it.price > 0 && it.slot !== 'key' ? Math.floor(it.price / 2) : 0; },

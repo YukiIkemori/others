@@ -83,8 +83,16 @@ VBOOST = {'v_hero_f_glimmer_1': 4, 'v_hero_f_attack_3': 2, 'v_hero_f_spell_2': 2
 NOSUB = {'b_rouga_hurt_1', 'b_rouga_attack_3', 'v_hero_f_attack_3', 'bv_sandking_ult_1', 'bv_orrery_ult_1'}   # ボスの掛け声は画面の吹き出しに出る   # 短い掛け声は字幕にしない
 
 
+# 持ち主 2026-10-04「キャラ（最後のボス含む）のセリフ・ナレーションには字幕つけないで。掛け声とかもね」:
+#   声（台詞・最後の影の声・語り・掛け声）の字幕は焼き込まない。声はそのまま鳴らす。見出し・地名・題字・終わりの札（声の書き起こしでない文字）は残す。
+#   ゲームの中の本物の窓（ベルナ・ロウェルの会話の窓、戦闘の技の名の帯）は撮った絵の一部なので、そのまま
+SPEECH_SUBS = False
+
+
 def sub(text, t0, t1, y=1015, size=None):
-    """声の字幕（帯の中、または画面の下）"""
+    """声の字幕（帯の中、または画面の下）。SPEECH_SUBS が偽なら出さない"""
+    if not SPEECH_SUBS:
+        return
     st = dict(size=size) if size else {}
     T.append(dict(kind='sub', text=text, style=st, t0=t0, t1=t1, x=960, y=y, fin=0.2, fout=0.3))
 
@@ -170,7 +178,7 @@ def bars(t, h, ramp=0.5):
 DIP.append((0.0, 2.0))   # 黒から
 bars(0.0, LB, 0.01)
 MUSIC.append(dict(file='omen', at=0.0, src=0.0, dur=7.0, fout=1.6, gain=-3))
-cut('s1_tomb_clean', 0.0, 6.3, src=0.6, zoom=(1.0, 1.14), center=(0.5, 0.42))
+cut('s1_tomb_c14_clean', 0.0, 6.3, src=0.6, zoom=(1.0, 1.14), center=(0.5, 0.42))   # 持ち主 2026-10-04: リーネは王の間の口のまん中に立ったまま、カメラは軸の上（左右対称で止まる）
 vo('v_hazal_tomb_01', 0.9, until=6.3)
 # 白い紙に飲まれる → 真っ白
 SFX.append(dict(id='page', at=6.15, gain=-2))
@@ -246,12 +254,13 @@ bars(T4 - 0.25, 0, 0.25)
 B = BEAT_LEG
 WORLD = [  # (カット, src, 拍の数, 地名, 一言)
     ('s4_world', 0.6, 4, None, None),
-    ('s4_mirage', 0.3, 3.5, 'ザハラ砂漠', '消灯の刻にだけ開く、一品物の市'),
-    ('s4_yule_night', 0.3, 3, 'ノルデン雪原', None),
-    ('s4_loch_bells', 0.3, 3, 'グレイモア湿原', None),
-    ('s4_cove', 0.4, 3, 'マレア諸島', None),
-    ('s4_lava', 0.4, 3, '灰の荒野', None),
-    ('s4_crater', 0.4, 3.5, 'オルビス高原', None),
+    # 持ち主 2026-10-04「エリア紹介で、天候エフェクトつけといて」: 地方のカットは天気つきの撮り直し（*_wx。カメラ・長さは同じ）
+    ('s4_mirage_wx', 0.3, 3.5, 'ザハラ砂漠', '消灯の刻にだけ開く、一品物の市'),   # 砂嵐
+    ('s4_yule_night_wx', 0.3, 3, 'ノルデン雪原', None),                       # 吹雪
+    ('s4_loch_bells_wx', 0.3, 3, 'グレイモア湿原', None),                     # 霧
+    ('s4_cove_wx', 0.4, 3, 'マレア諸島', None),                               # 海の霧雨
+    ('s4_lava_wx', 0.4, 3, '灰の荒野', None),                                 # 灰と火の粉
+    ('s4_crater_wx', 0.4, 3.5, 'オルビス高原', None),                         # 流れ星と星くず
 ]
 MUSIC.append(dict(file='legend', at=T4 - DB_LEG, src=0.0, dur=0, fin=0.05, gain=-2))
 for i, (c, src, nb, place, line) in enumerate(WORLD):
@@ -355,7 +364,8 @@ sub(SUBS['v_king_altar_02'], t + 0.15, t + 4.25, y=1000)
 cut('s8_shadow', t + 2.8, 1.4, src=12.65, gamesfx=-6, wash=(0.0, 0.7))
 cut(None, t + 4.2, 2.3, color=(1.0, 1.0, 1.0))
 FLASH.append((t + 4.2, 0.4, 0.01, 1.0, (1.0, 1.0, 1.0)))
-T.append(dict(kind='sub', text=SUBS['v_king_altar_02'], style=dict(color=(40, 30, 24), stroke=0, shadow=False), t0=t + 4.2, t1=t + 6.45, x=960, y=1000, fin=0.05, fout=0.3))
+if SPEECH_SUBS:
+    T.append(dict(kind='sub', text=SUBS['v_king_altar_02'], style=dict(color=(40, 30, 24), stroke=0, shadow=False), t0=t + 4.2, t1=t + 6.45, x=960, y=1000, fin=0.05, fout=0.3))
 MUSIC[-1]['dur'] = t + 4.3 - MUSIC[-1]['at']
 MUSIC[-1]['fout'] = 1.4
 t += 6.5
