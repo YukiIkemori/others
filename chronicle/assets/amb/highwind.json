@@ -1,0 +1,39 @@
+{
+  "loopStart": 0,
+  "loopEnd": 45.5,
+  "bed": "highwind",
+  "spec": {
+    "bed": "highwind"
+  },
+  "lufsTarget": -40,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A sound effect recording, not music: a thin high cold wind moving slowly across a bare mountain plateau, with a faint distant whistle of wind, very sparse and empty, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+    "generated": "2026-10-04T03:49:18.858Z",
+    "rawSeconds": 60.3,
+    "takes": 8,
+    "excerpt": [
+      1,
+      50.5
+    ]
+  },
+  "analysis": {
+    "loudnessLUFS": -40,
+    "truePeakDb": -27,
+    "gainDb": -26.9,
+    "peakLimited": false,
+    "xfade": 4,
+    "seamLevelDiffDb": 2.5,
+    "listen": {
+      "model": "gemini-3.8-flash",
+      "fit": 6,
+      "seam": {
+        "seam_smooth": 9,
+        "problem": "none"
+      },
+      "content": "Cold high-altitude wind whistling and howling across a desolate plateau / deep heavy wind rumble and gusts",
+      "problem": "too boomy and bass-heavy rather than thin and high"
+    }
+  }
+}
