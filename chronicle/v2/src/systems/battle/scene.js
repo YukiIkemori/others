@@ -137,7 +137,7 @@
 
   function visOf(u) {
     return {
-      hp: u.hp, mp: u.mp, maxHp: u.maxHp, maxMp: u.maxMp, alive: !!u.alive, status: (u.status || []).slice(),
+      hp: u.hp, mp: u.mp, maxHp: u.maxHp, maxMp: u.maxMp, alive: !!u.alive, status: R.BFX && R.BFX.statusList ? R.BFX.statusList(u) : (u.status || []).slice(),
       pose: u.alive ? 'idle' : (u.side === 'party' ? 'ko' : 'idle'), poseT: 0, dx: 0, dy: 0, flash: 0,
       gone: u.side === 'enemy' && !u.alive ? 1 : 0, appear: 1,
     };

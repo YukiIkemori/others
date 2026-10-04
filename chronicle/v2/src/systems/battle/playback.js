@@ -266,7 +266,7 @@
 
   // ---------------------------------------------------------------- 同期（出来事の後の本当の値）
   P.snapshot = function (st) {
-    for (const u of st.B.units) if (!st.vis[u.uid]) { st.vis[u.uid] = { hp: u.hp, mp: u.mp, maxHp: u.maxHp, maxMp: u.maxMp, alive: u.alive, status: (u.status || []).slice(), pose: 'idle', poseT: 0, dx: 0, dy: 0, flash: 0, gone: 0, appear: 1 }; }
+    for (const u of st.B.units) if (!st.vis[u.uid]) { st.vis[u.uid] = { hp: u.hp, mp: u.mp, maxHp: u.maxHp, maxMp: u.maxMp, alive: u.alive, status: R.BFX && R.BFX.statusList ? R.BFX.statusList(u) : (u.status || []).slice(), pose: 'idle', poseT: 0, dx: 0, dy: 0, flash: 0, gone: 0, appear: 1 }; }
   };
   P.sync = function (st) {
     for (const u of st.B.units) {
@@ -274,7 +274,7 @@
       if (!v) continue;
       if (st.tweens) st.tweens = st.tweens.filter((t) => !(t.obj === v && t.key === 'mp' && (t.res(), true)));
       v.mpPaid = 0;
-      v.hp = u.hp; v.mp = u.mp; v.maxHp = u.maxHp; v.maxMp = u.maxMp; v.status = (u.status || []).slice();
+      v.hp = u.hp; v.mp = u.mp; v.maxHp = u.maxHp; v.maxMp = u.maxMp; v.status = R.BFX && R.BFX.statusList ? R.BFX.statusList(u) : (u.status || []).slice();
       if (u.alive !== v.alive) {
         v.alive = u.alive;
         if (u.side === 'enemy') v.gone = u.alive ? 0 : 1;
@@ -629,7 +629,7 @@
       const stg = e.stage | 0;
       const up = stg > 0;
       v.status = v.status.filter((x) => (x.id || x) !== e.id);
-      if (e.on && stg) v.status.push(e.id);
+      if (e.on && stg) v.status.push({ id: e.id, stage: stg });   // 印に段（▲/▼・2 段）を出す（fx_status.js）
       const a0 = st.actor(e.uid);
       if (a0 && e.on && stg && !seqd) P.fx(st, up ? 'buff' : 'debuff', a0.x, a0.y - 40, {});
       P.pop(st, e.uid, !e.on || !stg ? R.T('battle.playback.status.pop', { p0: BN[bm[1]] }) : `${BN[bm[1]]}${up ? '↑' : '↓'}${Math.abs(stg) > 1 ? '↑↓'[up ? 0 : 1] : ''}`, 'status');

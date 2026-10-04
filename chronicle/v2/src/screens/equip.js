@@ -304,7 +304,8 @@
           else if (it) S.itemLabel(gg, id, x0, cy, { focused: f, size: sz, maxW: rect.w - u(80) });
           else { R.UIK.icon(gg, { weapon1: 'sword', shield: 'shield', head: 'helm', body: 'armor', hands: 'glove', feet: 'boots' }[s] || 'ring', x0, cy, sz * 1.1, C.disabled); R.UIK.text(gg, R.T('ui.equip.draw.drawSlots.render.text_2'), x0 + sz * 1.1 + u(9), cy, { size: sz, color: C.disabled }); }
         };
-        this.slist.draw(g, { x: sp.x + u(8), y: sp.y + u(46), w: sp.w - u(16), h: this.slots.length * this.slist.rowPx() });
+        // 枠の札に入るだけの行（スマホ横持ちは 8 行が入らない → 一覧を送る。札の下にはみ出さない）
+        this.slist.draw(g, { x: sp.x + u(8), y: sp.y + u(46), w: sp.w - u(16), h: Math.min(this.slots.length * this.slist.rowPx(), sp.y + sp.h - u(8) - (sp.y + u(46))) });
       };
       const s = this.slot();
       // 候補
@@ -351,6 +352,7 @@
       // 縦持ちの小さな画面（8 枠の一覧だけで埋まる）では、詳しい所と仲間を出さない（下の操作の札に重ねない）
       if (tall && dp.y + dp.h > b.y + b.h + u(4)) return;
       R.UIK.panel(g, dp, { frost: true });
+      this._dp = dp;   // テスト（test_equip_compare_browser）が詳しい所の箱を読む
       const it = S.item(focusId);
       // 説明は 2 行まで（入らなければ字を少し小さく）。比べる行はその分を残して決める（説明を途中で切らない。テスト報告 P7）
       const descW = dp.w - u(44), descOf = (n) => R.UIK.wrapFit(R.I18n.unwrap(it.desc || ''), descW, n, { size: u(14.5), min: Math.max(u(12), R.minFont || 0) });
@@ -372,8 +374,9 @@
         const ms = S.itemDiff(c, s, focusId).filter((r) => r.after);
         ms.slice(0, 4).forEach((r, i) => {
           const xx = dp.x + u(22) + (i % 2) * ((dp.w - u(44)) / 2), yy = y + Math.floor(i / 2) * u(28);
-          R.UIK.text(g, r.name, xx, yy, { size: u(14), color: C.text2 });
-          R.UIK.text(g, String(r.after), xx + (dp.w - u(44)) / 2 - u(24), yy - u(1), { size: u(16), weight: 700, color: C.text, align: 'right' });
+          const vx = xx + (dp.w - u(44)) / 2 - u(24);
+          const vw = R.UIK.text(g, String(r.after), vx, yy - u(1), { size: u(16), weight: 700, color: C.text, align: 'right' });
+          R.UIK.text(g, r.name, xx, yy, { size: u(14), color: C.text2, maxW: Math.max(u(20), vx - vw - u(8) - xx) });   // 値に重ねない
         });
         y += Math.ceil(Math.min(4, ms.length) / 2) * u(28) + u(4);
         R.UIK.rule(g, dp.x + u(22), dp.x + dp.w - u(22), y, 0.14); y += u(12);
@@ -389,11 +392,21 @@
         const rx = dp.x + dp.w - u(22);
         const dcw = rows.reduce((m, r) => Math.max(m, S.deltaW(r.d, u(15))), 0);
         const ax = rx - (dcw ? dcw + u(14) : 0), arx = ax - Math.max(u(44), rows.reduce((m, r) => Math.max(m, R.UIK.measure(String(r.after), { size: u(16.5), weight: 700 })), 0) + u(14));
-        const bx = Math.min(dp.x + dp.w * 0.5, arx - u(32));
+        // 前の値（右寄せ）の左端が名前に重ならないように: 名前・前の値の幅を測って置く（4:3 の 1024×768・720×540 で「守備」に「89」が重なった。持ち主 2026-10-04）
+        //   入らなければ前の値を右へ寄せ、それでも入らなければ「前の値 →」を出さない（後の値と増減は残す。名前は残りの幅に縮める）
+        const nx = dp.x + u(22), gap = u(12);
+        const nameW = rows.reduce((m, r) => Math.max(m, R.UIK.measure(r.name, { size: u(15) })), 0);
+        const befW = rows.reduce((m, r) => Math.max(m, R.UIK.measure(String(r.before), { size: u(15) })), 0);
+        let bx = Math.min(dp.x + dp.w * 0.5, arx - u(32));
+        if (bx - befW - gap < nx + nameW) bx = Math.min(arx - u(26), nx + nameW + gap + befW);
+        const showBefore = bx - befW - gap >= nx + nameW * 0.85;   // 名前は少しなら字を縮めて入る（UIK.fitSize）
+        const nameMax = Math.max(u(20), (showBefore ? bx - befW - gap : arx + u(14) - gap) - nx);
         for (const r of rows) {
-          R.UIK.text(g, r.name, dp.x + u(22), y, { size: u(15), color: C.text, maxW: Math.max(u(30), bx - u(30) - (dp.x + u(22))) });
-          R.UIK.text(g, String(r.before), bx, y, { size: u(15), color: C.text2, align: 'right' });
-          R.UIK.text(g, '→', bx + (arx - bx) / 2 + u(2), y, { size: u(13), color: C.text3, align: 'center' });
+          R.UIK.text(g, r.name, nx, y, { size: u(15), color: C.text, maxW: nameMax });
+          if (showBefore) {
+            R.UIK.text(g, String(r.before), bx, y, { size: u(15), color: C.text2, align: 'right' });
+            R.UIK.text(g, '→', bx + (arx - bx) / 2 + u(2), y, { size: u(13), color: C.text3, align: 'center' });
+          }
           R.UIK.text(g, String(r.after), ax, y - u(1), { size: u(16.5), weight: 700, color: r.d > 0 ? C.up : r.d < 0 ? C.down : C.text, align: 'right' });
           S.delta(g, r.d, rx, y, { size: u(15) });
           y += u(30);

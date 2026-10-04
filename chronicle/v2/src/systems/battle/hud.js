@@ -249,7 +249,13 @@
       K.text(g, u.name, x0 + 21 * k, ty, { size: nameSize, weight: 700, color: !v.alive ? COL.disabled : low ? COL.hpLow[1] : COL.text, raw: true, shadow: true });
       // 状態の印（名前の右）
       let sx = x0 + 21 * k + K.measure(u.name, { size: nameSize, weight: 700 }) + 6 * k;
-      for (const s of (v.status || []).slice(0, 4)) { R.BFX && R.BFX.statusMark && R.BFX.statusMark(g, s, sx, ty + nameSize * 0.55, 6 * k); sx += 14 * k; }
+      // 札の右端まで入るだけ並べる（入らない分は「+n」。強化・弱体の札は 攻▲ のように少し広い）
+      const sts = v.status || [], mr = (L.tall ? 6.2 : 6) * k, sEnd = r.x + r.w - 8 * k;
+      for (let si = 0; si < sts.length && R.BFX && R.BFX.statusMark; si++) {
+        const mw = R.BFX.statusMarkW(g, sts[si], mr), rest = sts.length - si - 1;
+        if (sx + mw + (rest ? 17 * k : 0) > sEnd) { K.text(g, '+' + (sts.length - si), sx, ty + nameSize * 0.55 - 5.5 * k, { size: 10 * k, weight: 700, color: COL.text2 || COL.text, raw: true, shadow: true }); sx += 17 * k; break; }
+        R.BFX.statusMark(g, sts[si], sx, ty + nameSize * 0.55, mr); sx += mw + (L.tall ? 2 : 3) * k;
+      }
       if (!v.alive) K.text(g, R.T('battle.hud.party.text'), sx + 2 * k, ty + 2 * k, { size: 10.5 * k, weight: 700, color: COL.down, raw: true, shadow: true });
       // HP / MP
       const bw = L.tall ? (r.w - 30 * k) / 2 : (r.w - 36 * k) / 2;
