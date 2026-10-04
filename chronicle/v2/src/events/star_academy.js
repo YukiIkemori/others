@@ -86,7 +86,11 @@
 
   // ---------------------------------------------------------------- 黒板の数（鍵の組み合わせの代わり）
   E('star_board', async (ev, ctx) => {
-    const n = ctx.board || 1;
+    // どの黒板か: 調べた物の board（ctx には x・y しか来ないので、地図の物から引く。持ち主 2026-10-04「黒板 4 つとも見たのに開かない」:
+    //   前は ctx.board を読んでいて、どの黒板も 1 枚目として数えていた）
+    const m = R.DB.maps[(ctx && ctx.map) || (R.Game && R.Game.pos && R.Game.pos.map)] || R.DB.maps.star_academy_1;
+    const o = ctx && m && (m.objects || []).find((q) => q.type === 'examine' && q.event === 'star_board' && q.x === ctx.x && q.y === ctx.y);
+    const n = (o && o.board) || (ctx && ctx.board) || 1;
     const x = X();
     await x.narr(ev, R.T('events.star_board.narr'));
     await ev.caption(R.T('events.star_board.caption', { p0: x.CODE[n - 1], p1: R.T('events.star_board.caption_2')[n - 1] }), { ms: 2000 });

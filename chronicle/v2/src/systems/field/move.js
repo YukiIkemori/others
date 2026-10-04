@@ -441,7 +441,14 @@
     if (f.kind === 'npc') { F._talk(f.npc); return; }
     const o = f.obj, m = S.map;
     if (o.type === 'sign') { F._run(() => (R.Events.makeEv ? R.Events.makeEv({ map: m.id }).say(null, o.text) : R.UIK.Message.say({ text: o.text, face: false }))); return; }
-    if (o.type === 'examine' && o.event) { R.Events.run(o.event, { map: m.id, x: o.x, y: o.y }); return; }
+    // 調べた物の持ち物（board・book・pic・lamp…）も ctx に渡す（持ち主 2026-10-04「黒板 4 つとも見たのに開かない」:
+    //   イベントは ctx.board を読んでいたのに x・y しか渡しておらず、どの黒板・どの本も 1 つ目として数えていた）
+    if (o.type === 'examine' && o.event) {
+      const extra = {};
+      for (const k in o) if (!['type', 'event', 'cond', 'map', 'x', 'y', 'npc', 'trigger'].includes(k)) extra[k] = o[k];
+      R.Events.run(o.event, Object.assign(extra, { map: m.id, x: o.x, y: o.y }));
+      return;
+    }
     if (o.type === 'chest') { F._openChest(o); return; }
     if (o.type === 'spring') { F._spring(o); return; }
     if (o.type === 'brazier') { F._brazier(o); return; }
