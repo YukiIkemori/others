@@ -51,7 +51,7 @@
     //   生成のエリアのファイルの「桟橋の先のマスを調べる isles_boat」は外し、R.Isles.kit.moor の船と舵に替える
     const MOOR = {
       i_light: { ship: [22, 30], helm: [[20, 29], [20, 30]], way: { x: 20, y: 29, w: 1, h: 2, dir: 'e' } },
-      i_siren: { id: 'ship_small', ship: [33, 17, 0.67], helm: [[33, 16], [34, 15]], way: { x: 33, y: 16, w: 1, h: 1, dir: 's' }, patch: { cond: 'isles_ship', rect: [32, 17, 1, 1], rows: ['~'] } },
+      i_siren: { id: 'ship_small', ship: [33, 17, 0.67], helm: [[33, 16], [34, 15]], way: { x: 33, y: 16, w: 1, h: 1, dir: 's', labelAt: [30.2, 17.4] }, patch: { cond: 'isles_ship', rect: [32, 17, 1, 1], rows: ['~'] } },
       i_crab: { ship: [2, 14], helm: [[3, 14], [4, 14], [5, 14]], way: { x: 3, y: 14, w: 3, h: 1, dir: 'n' } },
       i_wreck: { ship: [26, 29], helm: [[24, 28], [24, 29]], way: { x: 24, y: 28, w: 1, h: 2, dir: 'e' } },
     };

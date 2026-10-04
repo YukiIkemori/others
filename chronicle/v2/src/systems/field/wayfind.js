@@ -143,7 +143,7 @@
     for (const o of m.objects || []) {
       if (!o.way || !ok(o.cond)) continue;
       const q = o.way, dir = q.dir || 's';
-      out.marks.push({ x: q.x != null ? q.x : o.x, y: q.y != null ? q.y : o.y, w: q.w || 1, h: q.h || 1, lv: o.lv || 0, dir, label: q.label ? ARROW[dir] + ' ' + q.label : '' });
+      out.marks.push({ x: q.x != null ? q.x : o.x, y: q.y != null ? q.y : o.y, w: q.w || 1, h: q.h || 1, lv: o.lv || 0, dir, label: q.label ? ARROW[dir] + ' ' + q.label : '', at: q.labelAt || null });
     }
     if (m.kind === 'town' || m.kind === 'dungeon' || m.kind === 'field') {   // field = エリア切り替えのフィールド（端の出口に行き先の札）
       for (const e of m.exits || []) {
@@ -373,7 +373,9 @@
       const a = alphaFor(m.id + ':m' + i, top && near(e, px, py, 3));
       if (a <= 0.01) continue;
       // 札は船にかぶせない: 南北向きは印の右、東西向きは印の下
+      //   （狭い所は way.labelAt = [マス x, マス y] で札のまん中を決める）
       const ns = e.dir === 'n' || e.dir === 's';
+      if (e.at) { tag(g, e.label, e.at[0] * t - cx, e.at[1] * t - cy, { alpha: a, size: 12.5 }); continue; }
       const x = ns ? (e.x + e.w + 0.3) * t - cx : (e.x + e.w / 2) * t - cx, y = ns ? (e.y + e.h / 2) * t - cy : (e.y + e.h + 0.45) * t - cy;
       tag(g, e.label, x, y, { alpha: a, size: 12.5, left: ns });
     }

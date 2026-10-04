@@ -18,7 +18,7 @@
     O.push(K.sign(16, 42, R.T('map.isles_nerei.sign')));   // 看板・灯りが壁・崖・岩のマスに埋まっていたので床へ（tools/qa/check_props.js、2026-10-01）
     // 夜の桟橋（x 34〜35、y 6〜12）の先: 外洋船（isles_ship の後）は桟橋の先の南の海に泊める。桟橋の先から船へ向いて調べると舵。
     //   (2026-10-04) 前の船（37,11）は絵の左が桟橋の板にめり込んでいた（持ち主「船の図が桟橋にめり込んでる」）
-    O.push(...IK.moor({ ship: [36, 14, 0.4], helm: [[34, 13], [35, 13], [36, 12]], way: { x: 34, y: 13, w: 2, h: 1, dir: 's' } }));
+    O.push(...IK.moor({ ship: [36, 14, 0.4], helm: [[34, 13], [35, 13], [36, 12]], way: { x: 34, y: 13, w: 2, h: 1, dir: 's', labelAt: [31.6, 13.6] } }));
     // 光る貝がら（村の浜）
     O.push(K.exam(29, 21, 'isles_shell', { shell: 3 }), K.exam(11, 26, 'isles_shell', { shell: 4 }), K.exam(12, 28, 'isles_shell', { shell: 5 }));
     // 宝箱（見える所）

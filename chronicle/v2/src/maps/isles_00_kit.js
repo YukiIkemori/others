@@ -69,7 +69,7 @@
    *   道しるべ（wayfind.js の o.way）: 舵のマスに灯りの脈と「→ 外洋船のかじ」の札（近いとき）。
    *   o = {ship: [x, y, dx?], id?: 'ship'|'ship_small', helm: [[x, y], ...], way: {x, y, w, h, dir}, event?: 'isles_helm'} → 物の列
    */
-  K.moor = function (o) {
+  K.moor = function (o) {   // way.labelAt = [x, y]: 札のまん中（船にかぶる狭い所）
     const cond = 'isles_ship', ev = o.event || 'isles_helm';
     const out = [Object.assign({ type: 'prop', id: o.id || 'ship', x: o.ship[0], y: o.ship[1], cond, mooredShip: true }, o.ship[2] ? { dx: o.ship[2] } : {})];
     o.helm.forEach(([x, y], i) => out.push(Object.assign({ type: 'examine', x, y, event: ev, cond, helm: true }, i === 0 && o.way ? { way: Object.assign({ label: R.T('map.isles_00_kit.moor.way') }, o.way) } : {})));
