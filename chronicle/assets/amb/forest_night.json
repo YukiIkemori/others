@@ -1,0 +1,40 @@
+{
+  "loopStart": 0,
+  "loopEnd": 45.75,
+  "bed": "forest",
+  "spec": {
+    "bed": "forest",
+    "night": 1
+  },
+  "lufsTarget": -45,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry foley recording, not music: steady chirping crickets and night insects in a forest with a gentle breeze in the leaves. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+    "generated": "2026-10-04T04:20:00.070Z",
+    "rawSeconds": 53.6,
+    "takes": 2,
+    "excerpt": [
+      3,
+      52.8
+    ]
+  },
+  "analysis": {
+    "loudnessLUFS": -45,
+    "truePeakDb": -32.9,
+    "gainDb": -37.2,
+    "peakLimited": false,
+    "xfade": 4,
+    "seamLevelDiffDb": 0.7,
+    "listen": {
+      "model": "gemini-3.8-flash",
+      "fit": 9.5,
+      "seam": {
+        "seam_smooth": 10,
+        "problem": "none"
+      },
+      "content": "steady crickets and night insects chirping softly / steady crickets and nocturnal insects with gentle wind in the leaves",
+      "problem": "none"
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "id": "warp",
+  "category": "field",
+  "files": [
+    "warp.0.ogg",
+    "warp.1.ogg"
+  ],
+  "durations": [
+    0.724,
+    0.724
+  ],
+  "peaks": [
+    -10,
+    -10
+  ],
+  "rms": [
+    -24.2,
+    -24.8
+  ],
+  "gainDb": [
+    -11.5,
+    -12.3
+  ],
+  "channels": 2,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: eight separate magical rising swooshes, each a shimmering airy sweep rising in pitch with a sparkling hiss, about one second, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 26 seconds.",
+    "generated": "2026-10-04T04:09:53.122Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "warp.0.mp3",
+      "at": 36.049,
+      "fit": 9,
+      "problem": "none"
+    },
+    {
+      "take": "warp.0.mp3",
+      "at": 4.051,
+      "fit": 9,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 15,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 9,
+    "peakTarget": -10,
+    "rmsMax": -16
+  }
+}

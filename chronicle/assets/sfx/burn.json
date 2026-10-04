@@ -1,0 +1,55 @@
+{
+  "id": "burn",
+  "category": "spell",
+  "files": [
+    "burn.0.ogg",
+    "burn.1.ogg"
+  ],
+  "durations": [
+    0.603,
+    0.764
+  ],
+  "peaks": [
+    -6,
+    -6
+  ],
+  "rms": [
+    -33.3,
+    -20.9
+  ],
+  "gainDb": [
+    -5.7,
+    -6.1
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A close-up field recording made in a quiet room, not music: ten separate small campfire flare-ups, each a soft whoosh of flame and a few snapping crackles, separated by 1.8 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 27 seconds.",
+    "generated": "2026-10-04T04:19:46.978Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "burn.0.mp3",
+      "at": 54.801,
+      "fit": 9,
+      "problem": "none"
+    },
+    {
+      "take": "burn.0.mp3",
+      "at": 37.858,
+      "fit": 8.5,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 26,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.8,
+    "peakTarget": -6,
+    "rmsMax": -20
+  }
+}

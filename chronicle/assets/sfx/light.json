@@ -1,0 +1,56 @@
+{
+  "id": "light",
+  "category": "spell",
+  "files": [
+    "light.0.ogg",
+    "light.1.ogg"
+  ],
+  "durations": [
+    1.2,
+    0.934
+  ],
+  "peaks": [
+    -7,
+    -7
+  ],
+  "rms": [
+    -26.2,
+    -22.7
+  ],
+  "gainDb": [
+    -10.2,
+    -9.6
+  ],
+  "channels": 2,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: eight separate quick bright flashes of magical light, each a short radiant shimmer of sparkling tiny bells with a warm glow, about 0.7 seconds, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+    "generated": "2026-10-04T04:17:49.953Z",
+    "takes": 2,
+    "rounds": 2
+  },
+  "picks": [
+    {
+      "take": "light.1.mp3",
+      "at": 7.334,
+      "fit": 9.5,
+      "problem": "none",
+      "cut": true
+    },
+    {
+      "take": "light.1.mp3",
+      "at": 53.278,
+      "fit": 9,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 23,
+    "listened": 15,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 9.3,
+    "peakTarget": -7,
+    "rmsMax": -17
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "id": "golden",
+  "category": "field",
+  "files": [
+    "golden.0.ogg"
+  ],
+  "durations": [
+    1.23
+  ],
+  "peaks": [
+    -7
+  ],
+  "rms": [
+    -22.6
+  ],
+  "gainDb": [
+    -4.7
+  ],
+  "channels": 2,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: six separate golden sparkles, each a quick upward flurry of tiny bright glass and brass chimes ending with a small jingle, about 1.2 seconds, separated by 2.5 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+    "generated": "2026-10-04T04:16:14.344Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "golden.0.mp3",
+      "at": 10.806,
+      "fit": 9,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 19,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 9,
+    "peakTarget": -7,
+    "rmsMax": -18
+  }
+}

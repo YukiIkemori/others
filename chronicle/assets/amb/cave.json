@@ -1,0 +1,39 @@
+{
+  "loopStart": 0,
+  "loopEnd": 40,
+  "bed": "cave",
+  "spec": {
+    "bed": "cave"
+  },
+  "lufsTarget": -40,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A sound effect recording, not music: slow irregular water drips echoing inside a deep cave, with a low hollow room tone, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+    "generated": "2026-10-04T04:21:45.410Z",
+    "rawSeconds": 53.7,
+    "takes": 4,
+    "excerpt": [
+      1,
+      45
+    ]
+  },
+  "analysis": {
+    "loudnessLUFS": -40,
+    "truePeakDb": -25.9,
+    "gainDb": -25.7,
+    "peakLimited": false,
+    "xfade": 4,
+    "seamLevelDiffDb": 0.2,
+    "listen": {
+      "model": "gemini-3.8-flash",
+      "fit": 10,
+      "seam": {
+        "seam_smooth": 10,
+        "problem": "none"
+      },
+      "content": "sparse water drips echoing in a hollow cave ambience / irregular water drips echoing in a deep cave with hollow rumble",
+      "problem": "none"
+    }
+  }
+}

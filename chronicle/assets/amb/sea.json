@@ -1,0 +1,39 @@
+{
+  "loopStart": 0,
+  "loopEnd": 45,
+  "bed": "sea",
+  "spec": {
+    "bed": "sea"
+  },
+  "lufsTarget": -36,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry foley recording, not music: slow ocean waves rolling onto a pebble beach and washing back over the pebbles, with a light breeze, no seagulls. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+    "generated": "2026-10-04T04:11:36.662Z",
+    "rawSeconds": 60.6,
+    "takes": 4,
+    "excerpt": [
+      1,
+      50
+    ]
+  },
+  "analysis": {
+    "loudnessLUFS": -36,
+    "truePeakDb": -24.9,
+    "gainDb": -27.8,
+    "peakLimited": false,
+    "xfade": 4,
+    "seamLevelDiffDb": 0,
+    "listen": {
+      "model": "gemini-3.8-flash",
+      "fit": 9,
+      "seam": {
+        "seam_smooth": 10,
+        "problem": "none"
+      },
+      "content": "Gentle ocean waves washing over pebbles and retreating / gentle ocean waves washing over a pebble and sand shore with light wind",
+      "problem": "none"
+    }
+  }
+}

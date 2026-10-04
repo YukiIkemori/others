@@ -1,0 +1,39 @@
+{
+  "loopStart": 0,
+  "loopEnd": 20.5,
+  "bed": "rain",
+  "spec": {
+    "bed": "rain"
+  },
+  "lufsTarget": -37,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry foley recording, not music: a light drizzle falling on rocks and leaves, a soft steady patter of fine rain, no thunder. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+    "generated": "2026-10-04T04:06:43.913Z",
+    "rawSeconds": 46,
+    "takes": 8,
+    "excerpt": [
+      8.8,
+      33.3
+    ]
+  },
+  "analysis": {
+    "loudnessLUFS": -37,
+    "truePeakDb": -26.5,
+    "gainDb": -26.4,
+    "peakLimited": false,
+    "xfade": 4,
+    "seamLevelDiffDb": 1.7,
+    "listen": {
+      "model": "gemini-3.8-flash",
+      "fit": 6,
+      "seam": {
+        "seam_smooth": 9,
+        "problem": "none"
+      },
+      "content": "soft steady light rain drizzle / loud rhythmic clock ticking or metronome clicks",
+      "problem": "mechanical clock ticking instead of natural drizzle"
+    }
+  }
+}

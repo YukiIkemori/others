@@ -1,0 +1,39 @@
+{
+  "loopStart": 0,
+  "loopEnd": 24,
+  "bed": "forest",
+  "spec": {
+    "bed": "forest"
+  },
+  "lufsTarget": -41,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A sound effect recording, not music: a light breeze in the leaves of a forest with sparse soft distant bird chirps, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+    "generated": "2026-10-04T04:19:10.381Z",
+    "rawSeconds": 33,
+    "takes": 8,
+    "excerpt": [
+      1,
+      29
+    ]
+  },
+  "analysis": {
+    "loudnessLUFS": -41,
+    "truePeakDb": -28.6,
+    "gainDb": -29.5,
+    "peakLimited": false,
+    "xfade": 4,
+    "seamLevelDiffDb": 0,
+    "listen": {
+      "model": "gemini-3.8-flash",
+      "fit": 7.5,
+      "seam": {
+        "seam_smooth": 9,
+        "problem": "none"
+      },
+      "content": "gentle forest bird calls and subtle ambient breeze / soft breeze rustling leaves and distant songbirds chirping",
+      "problem": "bird chirps are more prominent than sparse or distant"
+    }
+  }
+}

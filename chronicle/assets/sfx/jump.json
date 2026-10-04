@@ -1,0 +1,55 @@
+{
+  "id": "jump",
+  "category": "field",
+  "files": [
+    "jump.0.ogg",
+    "jump.1.ogg"
+  ],
+  "durations": [
+    0.313,
+    0.202
+  ],
+  "peaks": [
+    -10,
+    -10
+  ],
+  "rms": [
+    -29.6,
+    -28.1
+  ],
+  "gainDb": [
+    -11.1,
+    -10.3
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry close-up foley recording, not music: twelve separate quick jumps, each a light springy upward whoosh with a soft cloth rustle, about a fifth of a second, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+    "generated": "2026-10-04T04:11:23.687Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "jump.0.mp3",
+      "at": 38.043,
+      "fit": 9,
+      "problem": "none"
+    },
+    {
+      "take": "jump.0.mp3",
+      "at": 24.432,
+      "fit": 7.5,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 52,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.3,
+    "peakTarget": -10,
+    "rmsMax": -17
+  }
+}

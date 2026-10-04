@@ -1,0 +1,39 @@
+{
+  "loopStart": 0,
+  "loopEnd": 39.75,
+  "bed": "marsh",
+  "spec": {
+    "bed": "marsh"
+  },
+  "lufsTarget": -40,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A sound effect recording, not music: a still marsh: distant croaking frogs, faint chirping insects and slow water drips, very calm air, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+    "generated": "2026-10-04T04:14:27.934Z",
+    "rawSeconds": 59.1,
+    "takes": 4,
+    "excerpt": [
+      2.3,
+      46
+    ]
+  },
+  "analysis": {
+    "loudnessLUFS": -40,
+    "truePeakDb": -28.5,
+    "gainDb": -28.4,
+    "peakLimited": false,
+    "xfade": 4,
+    "seamLevelDiffDb": 2,
+    "listen": {
+      "model": "gemini-3.8-flash",
+      "fit": 8,
+      "seam": {
+        "seam_smooth": 10,
+        "problem": "none"
+      },
+      "content": "frogs croaking and night insects chirping softly in a marsh / crickets chirping, frog croaks, gentle water drips, and a deep resonant boom",
+      "problem": "disruptive low boom at 00:21"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "loopStart": 0,
+  "loopEnd": 35.5,
+  "bed": "ship",
+  "spec": {
+    "bed": "ship"
+  },
+  "lufsTarget": -38,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A sound effect recording, not music: below deck inside an old wooden sailing ship: muffled waves washing against the hull outside, slow creaking timber and ropes as the ship rocks, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+    "generated": "2026-10-04T04:12:42.420Z",
+    "rawSeconds": 62,
+    "takes": 4,
+    "excerpt": [
+      11,
+      50.5
+    ]
+  },
+  "analysis": {
+    "loudnessLUFS": -38,
+    "truePeakDb": -23.9,
+    "gainDb": -24.1,
+    "peakLimited": false,
+    "xfade": 4,
+    "seamLevelDiffDb": 0.1,
+    "listen": {
+      "model": "gemini-3.8-flash",
+      "fit": 9.5,
+      "seam": {
+        "seam_smooth": 10,
+        "problem": "none"
+      },
+      "content": "deep water washing against hull with low timber creaks and groans / gentle waves washing against the hull and slow creaking wooden ship timbers",
+      "problem": "none"
+    }
+  }
+}

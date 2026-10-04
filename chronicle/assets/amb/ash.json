@@ -1,0 +1,39 @@
+{
+  "loopStart": 0,
+  "loopEnd": 47.75,
+  "bed": "ash",
+  "spec": {
+    "bed": "ash"
+  },
+  "lufsTarget": -37,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry foley recording, not music: a low distant rumble of the earth, a hot dry wind and occasional crackling embers on a burnt plain. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+    "generated": "2026-10-04T04:15:39.581Z",
+    "rawSeconds": 59.5,
+    "takes": 2,
+    "excerpt": [
+      1.8,
+      53.5
+    ]
+  },
+  "analysis": {
+    "loudnessLUFS": -37,
+    "truePeakDb": -23.9,
+    "gainDb": -24.1,
+    "peakLimited": false,
+    "xfade": 4,
+    "seamLevelDiffDb": 0,
+    "listen": {
+      "model": "gemini-3.8-flash",
+      "fit": 9,
+      "seam": {
+        "seam_smooth": 10,
+        "problem": "none"
+      },
+      "content": "deep low earth rumble, dry blowing wind, and gentle crackling embers / low earth rumble, rushing wind, and crackling embers",
+      "problem": "none"
+    }
+  }
+}

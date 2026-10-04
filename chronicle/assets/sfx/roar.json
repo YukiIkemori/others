@@ -1,0 +1,55 @@
+{
+  "id": "roar",
+  "category": "battle",
+  "files": [
+    "roar.0.ogg",
+    "roar.1.ogg"
+  ],
+  "durations": [
+    1.225,
+    1.535
+  ],
+  "peaks": [
+    -8.5,
+    -8.5
+  ],
+  "rms": [
+    -22.3,
+    -23.2
+  ],
+  "gainDb": [
+    -11.9,
+    -11.3
+  ],
+  "channels": 2,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A close-up field recording made in a quiet room, not music: six separate deep growls of a big bear, each one long rumbling growl, separated by 3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 28 seconds.",
+    "generated": "2026-10-04T04:13:28.822Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "roar.0.mp3",
+      "at": 27.609,
+      "fit": 8.5,
+      "problem": "none"
+    },
+    {
+      "take": "roar.0.mp3",
+      "at": 17.146,
+      "fit": 8.5,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 12,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.5,
+    "peakTarget": -8.5,
+    "rmsMax": -16
+  }
+}

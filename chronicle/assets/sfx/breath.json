@@ -1,0 +1,55 @@
+{
+  "id": "breath",
+  "category": "battle",
+  "files": [
+    "breath.0.ogg",
+    "breath.1.ogg"
+  ],
+  "durations": [
+    0.854,
+    0.789
+  ],
+  "peaks": [
+    -5,
+    -5
+  ],
+  "rms": [
+    -17.5,
+    -16.8
+  ],
+  "gainDb": [
+    -8.1,
+    -6.9
+  ],
+  "channels": 2,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry close-up foley recording, not music: six separate long powerful exhales of a huge creature, each a deep roaring rush of air like a giant bellows blasting, about one second, separated by 2.5 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 24 seconds.",
+    "generated": "2026-10-04T04:11:57.705Z",
+    "takes": 2,
+    "rounds": 2
+  },
+  "picks": [
+    {
+      "take": "breath.0.mp3",
+      "at": 107.906,
+      "fit": 8,
+      "problem": "none"
+    },
+    {
+      "take": "breath.0.mp3",
+      "at": 99.898,
+      "fit": 8,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 53,
+    "listened": 16,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8,
+    "peakTarget": -5,
+    "rmsMax": -15
+  }
+}

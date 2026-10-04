@@ -1,0 +1,55 @@
+{
+  "id": "teleport",
+  "category": "field",
+  "files": [
+    "teleport.0.ogg",
+    "teleport.1.ogg"
+  ],
+  "durations": [
+    0.643,
+    0.408
+  ],
+  "peaks": [
+    -10,
+    -10
+  ],
+  "rms": [
+    -24.8,
+    -19.4
+  ],
+  "gainDb": [
+    -11.6,
+    -4.1
+  ],
+  "channels": 2,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: eight separate magical vanishing sounds, each a quick burst of sparkling chimes and an airy upward whoosh, about 0.8 seconds, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+    "generated": "2026-10-04T04:10:26.903Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "teleport.0.mp3",
+      "at": 17.827,
+      "fit": 9,
+      "problem": "none"
+    },
+    {
+      "take": "teleport.0.mp3",
+      "at": 1.586,
+      "fit": 8,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 17,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.5,
+    "peakTarget": -10,
+    "rmsMax": -17
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "id": "shake",
+  "category": "field",
+  "files": [
+    "shake.0.ogg"
+  ],
+  "durations": [
+    1.014
+  ],
+  "peaks": [
+    -6.5
+  ],
+  "rms": [
+    -19
+  ],
+  "gainDb": [
+    -4.8
+  ],
+  "channels": 2,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry close-up foley recording, not music: six separate short earthquakes, each a deep heavy rumble of shaking ground with rattling stones, about one second, separated by 3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 27 seconds.",
+    "generated": "2026-10-04T04:15:31.311Z",
+    "takes": 2,
+    "rounds": 3
+  },
+  "picks": [
+    {
+      "take": "shake.1.mp3",
+      "at": 48.923,
+      "fit": 9,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 89,
+    "listened": 24,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 9,
+    "peakTarget": -6.5,
+    "rmsMax": -8
+  }
+}

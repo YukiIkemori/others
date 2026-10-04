@@ -1,0 +1,55 @@
+{
+  "id": "freeze",
+  "category": "spell",
+  "files": [
+    "freeze.0.ogg",
+    "freeze.1.ogg"
+  ],
+  "durations": [
+    0.663,
+    0.964
+  ],
+  "peaks": [
+    -7,
+    -7
+  ],
+  "rms": [
+    -25.5,
+    -26.5
+  ],
+  "gainDb": [
+    -7.8,
+    -7.8
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A close-up field recording made in a quiet room, not music: eight separate cracking frozen puddles, each a crisp snap and a brittle crackle of ice, separated by 2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 25 seconds.",
+    "generated": "2026-10-04T04:18:43.868Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "freeze.0.mp3",
+      "at": 36.069,
+      "fit": 9,
+      "problem": "none"
+    },
+    {
+      "take": "freeze.0.mp3",
+      "at": 22.944,
+      "fit": 8.5,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 40,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.8,
+    "peakTarget": -7,
+    "rmsMax": -18
+  }
+}

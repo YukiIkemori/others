@@ -1,0 +1,44 @@
+{
+  "id": "ship",
+  "category": "field",
+  "files": [
+    "ship.0.ogg"
+  ],
+  "durations": [
+    1.41
+  ],
+  "peaks": [
+    -12.5
+  ],
+  "rms": [
+    -24.3
+  ],
+  "gainDb": [
+    -13.1
+  ],
+  "channels": 2,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A close-up field recording made in a quiet room, not music: six separate deep creaks of an old wooden boat rocking on a wave, each with a soft wash of water, separated by 3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 29 seconds.",
+    "generated": "2026-10-04T04:07:59.242Z",
+    "takes": 2,
+    "rounds": 2
+  },
+  "picks": [
+    {
+      "take": "ship.1.mp3",
+      "at": 23.751,
+      "fit": 9,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 35,
+    "listened": 16,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 9,
+    "peakTarget": -12.5,
+    "rmsMax": -22
+  }
+}

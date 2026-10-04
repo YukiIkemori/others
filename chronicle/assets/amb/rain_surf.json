@@ -1,0 +1,40 @@
+{
+  "loopStart": 0,
+  "loopEnd": 41.25,
+  "bed": "rain",
+  "spec": {
+    "bed": "rain",
+    "surf": 0.8
+  },
+  "lufsTarget": -36,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A sound effect recording, not music: light rain pattering on rocks at the shore with gentle surf washing over the rocks, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+    "generated": "2026-10-04T04:09:42.162Z",
+    "rawSeconds": 60.3,
+    "takes": 4,
+    "excerpt": [
+      10,
+      55.3
+    ]
+  },
+  "analysis": {
+    "loudnessLUFS": -36,
+    "truePeakDb": -25,
+    "gainDb": -25.6,
+    "peakLimited": false,
+    "xfade": 4,
+    "seamLevelDiffDb": 2.3,
+    "listen": {
+      "model": "gemini-3.8-flash",
+      "fit": 9.5,
+      "seam": {
+        "seam_smooth": 10,
+        "problem": "none"
+      },
+      "content": "gentle waves washing over rocks with light rain pattering / gentle surf lapping and trickling over rocks and pebbles",
+      "problem": "none"
+    }
+  }
+}

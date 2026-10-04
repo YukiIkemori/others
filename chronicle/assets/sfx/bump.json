@@ -1,0 +1,55 @@
+{
+  "id": "bump",
+  "category": "field",
+  "files": [
+    "bump.0.ogg",
+    "bump.1.ogg"
+  ],
+  "durations": [
+    0.117,
+    0.132
+  ],
+  "peaks": [
+    -15,
+    -15
+  ],
+  "rms": [
+    -23.8,
+    -23.5
+  ],
+  "gainDb": [
+    -14.7,
+    -13.9
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A close-up field recording made in a quiet room, not music: twelve separate soft muffled knocks of a padded elbow against a thick wooden door, each very short, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+    "generated": "2026-10-04T04:09:16.292Z",
+    "takes": 1,
+    "rounds": 2
+  },
+  "picks": [
+    {
+      "take": "bump.0.mp3",
+      "at": 54.074,
+      "fit": 9,
+      "problem": "none"
+    },
+    {
+      "take": "bump.0.mp3",
+      "at": 35.788,
+      "fit": 9,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 25,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 9,
+    "peakTarget": -15,
+    "rmsMax": -16
+  }
+}
