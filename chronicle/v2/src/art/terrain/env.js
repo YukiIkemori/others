@@ -238,6 +238,12 @@
     for (const k of ks) touch(k);
     return { j: E.metaOf(b.back) || {}, layer: (name) => img(b[name]) };
   };
+  /** 戦闘背景の絵を先に読み始める（マップに入ったとき。待たない）。持ち主 2026-10-04「潮鳴りの洞窟の戦闘背景がしょぼい」:
+   *  遅い回線だと戦闘の 2.5 秒の待ちに間に合わず、控えの絵で戦っていた */
+  E.prefetchBbg = function (id) {
+    if (!E.ready || typeof Image === 'undefined' || !id || !bbgKeys(id).length) return;
+    try { bbgLoad(id); } catch (e) { /* 戦闘のときにまた読む */ }
+  };
   /** 戦闘背景の絵を読み終えるまで待つ（上限 ms）→ Promise<読めたか> */
   E.awaitBbg = function (id, ms) {
     if (!E.ready || typeof Image === 'undefined' || !bbgKeys(id).length) return Promise.resolve(false);
