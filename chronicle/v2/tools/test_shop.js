@@ -127,15 +127,15 @@ function mk(p) {
       ok('the hero (1st member) is a mage', R.Rules.loadoutMode(mem[0]) === 'magic');
       await va.doBuy('hn_gauntlet_1', 1);
       const o = seen[0], plan = S.wearPlan('hn_gauntlet_1', mem);
-      ok('gauntlets: cursor is NOT on the mage hero', o && o.index !== 0 && o.index < mem.length, o && o.index);
-      ok('… it is on the member with the biggest gain (S.wearPlan)', o && o.index === plan.best || mem[o.index].equip.hands === 'hn_gauntlet_1', { index: o && o.index, plan: plan.rows.map((r) => [r.c.id, r.gain]) });
+      ok('gauntlets: cursor is on the first member who has room (owner 2026-10-04: always from the top)', o && o.index === o.choices.findIndex((c, i) => i < mem.length && !c.disabled), o && o.index);
+      void plan;
       ok('… the ask is not guarded (owner 2026-10-03: shops confirm at once)', o && o.guard !== true);
       ok('… never on someone who cannot wear it', o && !(o.choices[o.index] || {}).disabled);
       seen.length = 0;
       // 誰も強くならない（全員がもっと良い物を付けている）→ カーソルは「装備しない」
       for (const c of mem) if (R.Rules.canEquip(c, 'hn_gauntlet_5', 'hands')) c.equip.hands = 'hn_gauntlet_5';
       await va.doBuy('hn_glove_0', 1);
-      ok('no one gains → cursor on 装備しない (index = party size)', seen[0] && seen[0].index === mem.length, seen[0] && seen[0].index);
+      ok('no one gains → cursor still on the first member with room (owner 2026-10-04)', seen[0] && seen[0].index === seen[0].choices.findIndex((c, i) => i < mem.length && !c.disabled), seen[0] && seen[0].index);
     } finally { S.ask = ask0; }
     const lan = S.wearPlan('ac_keeper_lantern', mem);
     ok('effect-only accessory (lantern): default is the first member with a free slot', lan.best >= 0 && !lan.rows[lan.best].swap, lan.best);

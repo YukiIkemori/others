@@ -100,8 +100,8 @@
       R.UIK.rule(g, px, px + pw, y, 0.14); y += u(12);
       S.label(g, R.T('ui.bestiary.draw.label'), px, y); y += u(26);
       const D = m.drops || {};
-      const line = (lab, key, col) => {
-        const d = D[key];
+      const line = (lab, key, col, slot) => {
+        const d = slot || D[key];
         if (!d) return;
         const got = bk && bk[key];
         R.UIK.text(g, lab, px, y, { size: u(12.5), color: col || C.text3 });
@@ -110,6 +110,8 @@
         y += u(24);
       };
       line(R.T('ui.bestiary.draw.line'), 'normal'); line(R.T('ui.bestiary.draw.line_2'), 'rare', C.rare); line(R.T('ui.bestiary.draw.line_3'), 'super', C.superRare);
+      // 盗みのレア（レアの枠の steal。落とす品と別の品。持ち主 2026-10-04）: 盗んだら「盗み（レア）」の行に出る
+      if (D.rare && D.rare.steal && D.rare.steal !== D.rare.item) line(R.T('ui.bestiary.draw.line_5'), 'rareSteal', C.rare, { item: D.rare.steal });
       if (D.steal) line(R.T('ui.bestiary.draw.line_4'), 'steal', C.teal);
       S.prompts(g, [{ btn: 'up', label: R.T('ui.bestiary.draw.0.label_2') }, { btn: 'b', label: R.T('ui.bestiary.draw.1.label') }]);
     },

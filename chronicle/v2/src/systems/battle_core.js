@@ -2519,7 +2519,9 @@
         const book = (id) => (G.book.mon[id] = G.book.mon[id] || { seen: true, kills: 0 });
         for (const m of eng.mons) book(m.id).seen = true;
         for (const m of eng.killed) book(m.id).kills = (book(m.id).kills || 0) + 1;
-        for (const s of eng.stolen) book(s.mon)[s.stealOnly ? 'steal' : s.grade] = true;
+        // 盗みのレアがレアの枠の steal（落とす品と別）なら 'rareSteal'（図鑑の「盗み（レア）」の行）
+        const rsOf = (mon) => { const r = DB.monsters[mon] && DB.monsters[mon].drops && DB.monsters[mon].drops.rare; return r && r.steal && r.steal !== r.item ? r.steal : null; };
+        for (const s of eng.stolen) book(s.mon)[s.stealOnly ? 'steal' : s.grade === 'rare' && s.item === rsOf(s.mon) ? 'rareSteal' : s.grade] = true;
         G.battle = G.battle || { cursor: {}, lastRound: [] };
         G.battle.lastRound = lastRoundOut.slice();
         if (result === 'win') {

@@ -192,7 +192,7 @@
       } finally { this.busy = false; }
     },
     /** 買った装備を「今すぐ装備する？」: 一行の全員（付けられない人は選べない）。
-     *  カーソルは付けていちばん強くなる人（S.wearPlan。テスター 2026-10-02 Q15）。誰も強くならなければ「装備しない」。
+     *  カーソルは一番上の付けられる人（持ち主 2026-10-04。前はいちばん強くなる人 S.wearPlan）。
      *  left = まだ聞く数（2 つ以上なら題に「あと n 個」）。→ 誰かが付けたら true */
     async offerEquip(id, left) {
       const mem = S.party();
@@ -205,10 +205,11 @@
       const wear = mem.map((c) => canWear(c, id));
       const room = mem.map((c, i) => wear[i] && !!slotFor(c));
       if (!room.some(Boolean) || S.count(id) < 1) return false;
-      // カーソルは付けていちばん強くなる人（S.wearPlan）。誰も強くならなければ「装備しない」に置く（テスター 2026-10-02 Q15:
-      //   決定を続けて押したら 1 人目の術師に籠手が付いた）。出てすぐの決定は受けない（guard、会話の選択肢と同じ）
       const plan = S.wearPlan(id, mem);
-      const best = plan.best >= 0 && room[plan.best] ? plan.best : mem.length;
+      // カーソルは一番上の付けられる人から（持ち主 2026-10-04「上から 2 番目のキャラに最初にフォーカスが当たる。一番上から」。
+      //   前は付けていちばん強くなる人に置いていた。店の問いは連打で進めるので guard は付けない（持ち主 2026-10-03））
+      const first = room.findIndex(Boolean);
+      const best = first >= 0 ? first : mem.length;
       const choices = mem.map((c, i) => {
         if (!wear[i]) return { label: c.name, right: R.T('ui.shop.offerEquip.choices.right'), disabled: true };
         if (!room[i]) return { label: c.name, right: R.T('ui.shop.drawStrip.text_4'), disabled: true };

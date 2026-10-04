@@ -54,6 +54,7 @@
     'ui.bestiary.draw.line_2': '레어',
     'ui.bestiary.draw.line_3': '초레어',
     'ui.bestiary.draw.line_4': '훔치기',
+    'ui.bestiary.draw.line_5': '훔치기(레어)',
     'ui.bestiary.draw.0.label_2': '선택',
     'ui.bestiary.draw.1.label': '뒤로',
     // ---- src/screens/charcreate.js

@@ -54,6 +54,7 @@
     'ui.bestiary.draw.line_2': 'Rare',
     'ui.bestiary.draw.line_3': 'Very Rare',
     'ui.bestiary.draw.line_4': 'Steal',
+    'ui.bestiary.draw.line_5': 'Steal (rare)',
     'ui.bestiary.draw.0.label_2': 'Select',
     'ui.bestiary.draw.1.label': 'Back',
     // ---- src/screens/charcreate.js

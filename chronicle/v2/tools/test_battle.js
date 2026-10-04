@@ -79,7 +79,8 @@ section('データ（K.monster・K.boss・K.troop、出現表、盗み専用）'
   // 盗み専用（STATS_REWORK §7.2、率は V2_PLAN §2.6.6: 通常 32・レア 16・ボス 16 → 持ち主 2026-10-02「盗みのレアを少し上げる」で 通常 16・レア 12・ボス 16）
   const st = mons.filter((id) => DB.monsters[id].drops && DB.monsters[id].drops.steal);
   // 36 + 7 slice monsters (owner 2026-09-27: 「レアがめっきり減ったねえ……。楽しみがちょっとないかも」)
-  ok('steal-only slots: 30–45 monsters', st.length >= 30 && st.length <= 45, st.length);
+  // + 12 post-clear tier-12 steal-only slots (owner 2026-10-04, items_postclear.js)
+  ok('steal-only slots: 30–60 monsters', st.length >= 30 && st.length <= 60, st.length);
   const rateOk = st.every((id) => { const d = DB.monsters[id]; const want = (d.flags || []).includes('boss') ? 16 : (d.flags || []).includes('rare') ? 12 : 16; return d.drops.steal.rate === want; });
   ok('steal-only rates 16 / 12 / 16', rateOk);
   ok('each steal-only item belongs to one monster', new Set(st.map((id) => DB.monsters[id].drops.steal.item)).size === st.length);

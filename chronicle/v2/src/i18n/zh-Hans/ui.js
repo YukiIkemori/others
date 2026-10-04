@@ -54,6 +54,7 @@
     'ui.bestiary.draw.line_2': '稀有',
     'ui.bestiary.draw.line_3': '超稀有',
     'ui.bestiary.draw.line_4': '偷窃',
+    'ui.bestiary.draw.line_5': '偷窃（稀有）',
     'ui.bestiary.draw.0.label_2': '选择',
     'ui.bestiary.draw.1.label': '返回',
     // ---- src/screens/charcreate.js

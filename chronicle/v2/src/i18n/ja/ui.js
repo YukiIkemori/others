@@ -54,6 +54,7 @@
     'ui.bestiary.draw.line_2': 'レア',
     'ui.bestiary.draw.line_3': '超レア',
     'ui.bestiary.draw.line_4': '盗み',
+    'ui.bestiary.draw.line_5': '盗み（レア）',
     'ui.bestiary.draw.0.label_2': '選ぶ',
     'ui.bestiary.draw.1.label': '戻る',
     // ---- src/screens/charcreate.js
