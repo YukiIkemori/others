@@ -55,7 +55,7 @@
   const base = {
     name: R.T('data.bosses_snow.base.name'), sprite: 'boss_wolflord', bossType: 'mid', lv: 9, actsPerTurn: 1, size: 'l',
     race: 'beast', affinity: 'water', flags: ['boss'], eva: 10,
-    elem: { fire: 1.5, water: 0.25, earth: 1.25 }, phys: {}, statusRes: { sleep: 0.25, freeze: 1 },
+    elem: { fire: 1.25, water: 0.25, earth: 1.25 }, phys: {}, statusRes: { sleep: 0.25, freeze: 1 },
     s: { hp: 1.6, atk: 1.4, mag: 1.4 },   // 2026-10-01（組み直し）: hp 1.15 → 1.6・atk 0.9 → 1.4（毎手番攻める型。sim_bosses の台本 90%・8 ラウンド）
     leader: { msg: R.T('data.bosses_snow.base.leader.msg') },
     drops: MID('i_ether'),
@@ -70,7 +70,7 @@
   def('b_blizzardwolf_2', Object.assign({}, base, { actions: bwActs('eb_bw_call_2') }));
   def('b_siegewolf', {
     name: R.T('data.bosses_snow.b_siegewolf.name'), sprite: 'wolf_1', artKind: 'mon', bossType: 'add', addOf: 'b_blizzardwolf', lv: 9, hpShare: 3, actsPerTurn: 1, size: 's',
-    race: 'beast', flags: ['boss'], eva: 10, elem: { fire: 1.5, water: 0.25 }, phys: {}, statusRes: {},
+    race: 'beast', flags: ['boss'], eva: 10, elem: { water: 0.25, earth: 1.25 }, phys: {}, statusRes: {},
     actions: A([['attack', 3], ['e_bite', 1]]), s: { hp: 0.8, atk: 0.4, mag: 0.4 }, drops: {},
     desc: R.T('data.bosses_snow.b_siegewolf.desc'),
   });
@@ -102,7 +102,7 @@
   def('b_frost_admiral', {
     name: R.T('data.bosses_snow.b_frost_admiral.name'), sprite: 'frostling_5', artKind: 'mon', bossType: 'fmid', lv: 9, actsPerTurn: 2, size: 'l',
     race: 'undead', affinity: 'water', flags: ['boss'], eva: 10,
-    elem: { fire: 1.5, water: 0, light: 1.25 }, phys: {}, statusRes: { death: 1, freeze: 1, sleep: 0.5 },
+    elem: { water: 0, earth: 1.25, light: 1.25 }, phys: {}, statusRes: { death: 1, freeze: 1, sleep: 0.5 },
     // 2026-10-01（ボスの組み直し）: 重い手（二段斬り・氷の砲撃）＋軽い手（凍てつく旗・氷霧・受け流しの構え・水兵を呼ぶ）。前は 3 手番ごとに必ず号令（予告）→ 砲撃。溜めはやめた
     actions: A([['eb_admiral_slash', 3, { every: [2, 0] }], ['eb_admiral_cannon', 1, { every: [2, 0], round: 2 }], ['attack', 1, { every: [2, 0] }],
       ['eb_admiral_flag', 2, { every: [2, 1] }], ['eb_admiral_fog', 1, { every: [2, 1], noFlag: 'ice_fog' }], ['eb_admiral_parry', 1, { every: [2, 1] }],
@@ -114,7 +114,7 @@
   });
   def('b_frost_sailor', {
     name: R.T('data.bosses_snow.b_frost_sailor.name'), sprite: 'frostling_4', artKind: 'mon', bossType: 'add', addOf: 'b_frost_admiral', lv: 9, hpShare: 3, actsPerTurn: 1, size: 's',
-    race: 'undead', flags: ['boss'], eva: 5, elem: { fire: 1.5, water: 0 }, phys: {}, statusRes: { death: 1 },
+    race: 'undead', flags: ['boss'], eva: 5, elem: { water: 0, earth: 1.25 }, phys: {}, statusRes: { death: 1 },
     actions: A([['attack', 3], ['e_icicle', 1]]), s: { atk: 0.6, mag: 0.6 }, drops: {},
     desc: R.T('data.bosses_snow.b_frost_sailor.desc'),
   });

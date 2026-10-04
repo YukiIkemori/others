@@ -55,7 +55,7 @@
     jelly_big: {
       name: R.T('monsters.jelly_big.name'), sprite: 'jelly_4', size: 'l', lv: 7, race: 'slime',
       flags: [], s: { hp: 1.5, atk: 0.75, mag: 0.8, agi: 0.6 }, eva: 3, rw: { gold: 2 },
-      elem: { fire: 1.25 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: { poison: 0.5 },
+      elem: { earth: 1.25 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_crush', w: 2 }, { id: 'e_tackle', w: 2 }],
       drops: { normal: { item: 'i_potion', rate: 16 } },
       desc: R.T('monsters.jelly_big.desc'),

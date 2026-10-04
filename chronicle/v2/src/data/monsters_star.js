@@ -60,7 +60,7 @@
     darkmage_2: {
       name: R.T('monsters.darkmage_2.name'), sprite: 'darkmage_2', lineage: 'darkmage', stage: 2, lv: 19, size: 'm', race: 'humanoid', affinity: 'fire',
       flags: [], s: { hp: 1.88, atk: 0.3, mag: 0.54, def: 0.85, mdef: 1.3 }, eva: 5,
-      elem: { fire: 0.25, water: 1.5 }, phys: {}, statusRes: {},
+      elem: { fire: 0, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 1 }, { id: 'e_fire_bolt', w: 2 }, { id: 'e_fire_rain', w: 2 }, { id: 'e_ward', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_stone_fire', rate: 8 } },
       desc: R.T('monsters.darkmage_2.desc'),

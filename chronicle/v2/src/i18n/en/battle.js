@@ -392,6 +392,7 @@
     'sys.battle_core.scan.join': ', ',
     'sys.battle_core.scan.m_2': 'No weaknesses found.',
     'sys.battle_core.scan.m_3': 'Absorbs: {join}',
+    'sys.battle_core.scan.m_4': 'Immune to: {join}',
     'sys.battle_core.summon.m': 'But no one came.',
     'sys.battle_core.summon.m_2': '{name} appeared!',
     'sys.battle_core.rewards.m': 'The monsters are gone.',

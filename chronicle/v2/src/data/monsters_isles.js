@@ -69,7 +69,7 @@
     skeleton_1: {
       name: R.T('monsters.skeleton_1.name'), sprite: 'skeleton_1', lineage: 'skeleton', stage: 1, lv: 7, size: 'm', race: 'undead',
       flags: [], s: { hp: 1.33, atk: 1.03, mag: 0.98 }, eva: 5,
-      elem: { fire: 1.5, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: { poison: 1, death: 1, sleep: 1, confuse: 0.5 },
+      elem: { earth: 1.25, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: { poison: 1, death: 1, sleep: 1, confuse: 0.5 },
       actions: [{ id: 'attack', w: 4 }, { id: 'e_slash', w: 2 }],
       drops: { normal: { item: 'i_salve', rate: 8 } },
       desc: R.T('monsters.skeleton_1.desc'),
@@ -77,7 +77,7 @@
     skeleton_2: {
       name: R.T('monsters.skeleton_2.name'), sprite: 'skeleton_2', lineage: 'skeleton', stage: 2, lv: 19, size: 'm', race: 'undead',
       flags: [], s: { hp: 1.72, atk: 0.66, mag: 0.6, agi: 1.05 }, rw: { gold: 1.5 }, eva: 5,
-      elem: { fire: 1.5, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: { poison: 1, death: 1, sleep: 1, confuse: 0.5 },
+      elem: { earth: 1.25, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: { poison: 1, death: 1, sleep: 1, confuse: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_double', w: 2 }, { id: 'e_slash', w: 1 }],
       drops: { normal: { item: 'i_salve', rate: 8 } },
       desc: R.T('monsters.skeleton_2.desc'),
@@ -93,7 +93,7 @@
     skeleton_4: {
       name: R.T('monsters.skeleton_4.name'), sprite: 'skeleton_4', lineage: 'skeleton', stage: 4, lv: 43, size: 'm', race: 'undead',
       flags: [], s: { hp: 2.99, atk: 0.68, mag: 0.68 }, eva: 5,
-      elem: { fire: 1.5, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: { poison: 1, death: 1, sleep: 1, confuse: 0.5 },
+      elem: { earth: 1.25, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: { poison: 1, death: 1, sleep: 1, confuse: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_slash', w: 2 }, { id: 'e_howl', w: 1, cond: { once: true } }, { id: 'e_curse', w: 1 }, { id: 'defend', w: 1, cond: { hpBelow: 0.3 } }],
       drops: { normal: { item: 'i_revive', rate: 8 } },
       desc: R.T('monsters.skeleton_4.desc'),
@@ -101,7 +101,7 @@
     skeleton_5: {
       name: R.T('monsters.skeleton_5.name'), sprite: 'skeleton_5', lineage: 'skeleton', stage: 5, lv: 55, size: 'm', race: 'undead',
       flags: [], s: { hp: 2.66, atk: 0.48, mag: 0.46 }, eva: 5,
-      elem: { fire: 1.5, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: { poison: 1, death: 1, sleep: 1, confuse: 0.5 },
+      elem: { earth: 1.25, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: { poison: 1, death: 1, sleep: 1, confuse: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_cannon', w: 2 }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }, { id: 'e_howl', w: 1, cond: { once: true } }, { id: 'e_slash', w: 2 }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_admiral_medal', rate: 16 }, super: { item: 'w_sword_sr_admiral', rate: 256 }, steal: { item: 'ac_st_admiral', rate: 16 } },
       desc: R.T('monsters.skeleton_5.desc'),

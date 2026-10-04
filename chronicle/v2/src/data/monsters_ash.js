@@ -11,7 +11,7 @@
     salamander_1: {
       name: R.T('monsters.salamander_1.name'), sprite: 'salamander_1', lineage: 'salamander', stage: 1, lv: 7, size: 'm', race: 'beast', affinity: 'fire',
       flags: [], s: { hp: 1.29, atk: 0.7, mag: 0.67, agi: 1.05 }, eva: 5,
-      elem: { fire: 0.25, water: 1.5 }, phys: {}, statusRes: {},
+      elem: { fire: 0, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_fire_bite', w: 2 }],
       drops: { normal: { item: 'i_stone_fire', rate: 8 } },
       desc: R.T('monsters.salamander_1.desc'),
@@ -19,7 +19,7 @@
     salamander_2: {
       name: R.T('monsters.salamander_2.name'), sprite: 'salamander_2', lineage: 'salamander', stage: 2, lv: 19, size: 'm', race: 'beast', affinity: 'fire',
       flags: [], s: { hp: 1.8, atk: 0.39, mag: 0.41 }, eva: 5,
-      elem: { fire: 0.25, water: 1.5 }, phys: {}, statusRes: {},
+      elem: { fire: 0, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_fire_breath', w: 2 }, { id: 'e_fire_bite', w: 1 }],
       drops: { normal: { item: 'i_salve', rate: 8 } },
       desc: R.T('monsters.salamander_2.desc'),
@@ -35,7 +35,7 @@
     salamander_4: {
       name: R.T('monsters.salamander_4.name'), sprite: 'salamander_4', lineage: 'salamander', stage: 4, lv: 43, size: 'm', race: 'beast', affinity: 'fire',
       flags: [], s: { hp: 2.86, atk: 0.4, mag: 0.38 }, eva: 5,
-      elem: { fire: 0.25, water: 1.5 }, phys: {}, statusRes: {},
+      elem: { fire: 0, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_fire_breath', w: 2 }, { id: 'e_horn', w: 2 }, { id: 'e_focus', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_stone_fire', rate: 8 } },
       desc: R.T('monsters.salamander_4.desc'),
@@ -68,7 +68,7 @@
     imp_3: {
       name: R.T('monsters.imp_3.name'), sprite: 'imp_3', lineage: 'imp', stage: 3, lv: 31, size: 's', race: 'demon', affinity: 'fire',
       flags: [], s: { hp: 2.3, atk: 0.37, mag: 0.42, agi: 1.2 }, eva: 5,
-      elem: { fire: 0.25, water: 1.5, light: 1.5, dark: 0.5 }, phys: {}, statusRes: { death: 0.8 },
+      elem: { fire: 0, water: 1.5, light: 1.5, dark: 0.5 }, phys: {}, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_ash_cloud', w: 2 }, { id: 'e_fire_rain', w: 2 }, { id: 'e_weaken', w: 1 }],
       drops: { normal: { item: 'i_panacea', rate: 8 } },
       desc: R.T('monsters.imp_3.desc'),
@@ -76,7 +76,7 @@
     imp_4: {
       name: R.T('monsters.imp_4.name'), sprite: 'imp_4', lineage: 'imp', stage: 4, lv: 43, size: 's', race: 'demon', affinity: 'fire',
       flags: [], s: { hp: 3.9, atk: 0.26, mag: 0.33, agi: 1.2 }, eva: 5,
-      elem: { fire: 0.25, water: 1.5, light: 1.5, dark: 0.5 }, phys: {}, statusRes: { death: 0.8 },
+      elem: { fire: -1, water: 1.5, light: 1.5, dark: 0.5 }, phys: {}, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_fire_rain', w: 2 }, { id: 'e_fire_bolt', w: 2 }, { id: 'e_haste', w: 1, cond: { once: true } }, { id: 'e_snipe', w: 1 }],
       drops: { normal: { item: 'i_potion2', rate: 8 } },
       desc: R.T('monsters.imp_4.desc'),
@@ -84,7 +84,7 @@
     imp_5: {
       name: R.T('monsters.imp_5.name'), sprite: 'imp_5', lineage: 'imp', stage: 5, lv: 55, size: 's', race: 'demon', affinity: 'dark',
       flags: [], s: { hp: 3.63, atk: 0.3, mag: 0.39, mdef: 1.25, agi: 1.15 }, eva: 5,
-      elem: { light: 1.5, dark: 0.25 }, phys: {}, statusRes: { death: 0.8 },
+      elem: { fire: 0.5, light: 1.5, dark: 0.25 }, phys: {}, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 1 }, { id: 'e_dark_bolt', w: 2 }, { id: 'e_dispel', w: 1, cond: { every: [3, 1] } }, { id: 'e_haste', w: 1, cond: { once: true } }, { id: 'e_ward', w: 1, cond: { once: true } }, { id: 'e_gloom', w: 1 }],
       drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'ac_phoenix_ash', rate: 16 }, super: { item: 'hd_sr_dusk', rate: 128 }, steal: { item: 'w_staff_st_strategist', rate: 16 } },
       desc: R.T('monsters.imp_5.desc'),
@@ -109,7 +109,7 @@
     gargoyle_3: {
       name: R.T('monsters.gargoyle_3.name'), sprite: 'gargoyle_3', lineage: 'gargoyle', stage: 3, lv: 31, size: 'm', race: 'demon', affinity: 'fire',
       flags: ['flying'], s: { hp: 1.63, atk: 0.54, mag: 0.54, def: 1.3 }, eva: 12,
-      elem: { fire: 0.25, water: 1.5, wind: 1.5, earth: 0.5, light: 1.5, dark: 0.5 }, phys: { slash: 0.75, blunt: 1.25, pierce: 0.75 }, statusRes: { death: 0.8 },
+      elem: { fire: 0, water: 1.5, wind: 1.5, earth: 0.5, light: 1.5, dark: 0.5 }, phys: { slash: 0.75, blunt: 1.25, pierce: 0.75 }, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_fire_breath', w: 2 }, { id: 'e_claw', w: 2 }, { id: 'e_guard_stance', w: 1 }],
       drops: { normal: { item: 'i_stone_fire', rate: 8 } },
       desc: R.T('monsters.gargoyle_3.desc'),

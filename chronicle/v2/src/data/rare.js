@@ -35,7 +35,7 @@
     // ------------------------------------------------------------ 序章
     rm_jewel_hare: rare({
       name: R.T('data.rare.LIST.rm_jewel_hare.name'), sprite: 'rare_hare', size: 'm', lv: 5, race: 'beast',
-      elem: { fire: 1.25 },
+      elem: { earth: 1.25 },
       s: { hp: 3, atk: 0.9, def: 1.3, mdef: 1.3, agi: 1.8 },
       actions: A([['attack', 3], ['eb_hare_kick', 2], ['eb_jewel_shine', 2], ['eb_hop_rest', 1, { hpBelow: 0.5, once: true }]]),
       drops: DROPS('i_jewel_carrot', 'ac_rl_bird', 'ac_rs_bird'),
@@ -45,7 +45,7 @@
     // ------------------------------------------------------------ 地方1 ヴェルダの森
     rm_bloom_fawn: rare({
       name: R.T('data.rare.LIST.rm_bloom_fawn.name'), sprite: 'rare_fawn', size: 'm', lv: 8, race: 'beast', affinity: 'light',
-      elem: { fire: 1.25, light: 0.25, dark: 1.5 },
+      elem: { light: 0.25, dark: 1.5 },
       s: { hp: 3, atk: 0.9, mag: 1.2, mdef: 1.3, agi: 1.6 },
       actions: A([['attack', 2], ['eb_antler_thrust', 2], ['eb_petal_storm', 2], ['eb_fawn_bloom', 1, { hpBelow: 0.6, once: true }]]),
       drops: DROPS('i_bloom_nectar', 'ac_rl_bloom', 'ac_rs_bloom'),
@@ -73,7 +73,7 @@
     // ------------------------------------------------------------ 地方2 ザハラ砂漠
     rm_diamond_lizard: rare({
       name: R.T('data.rare.LIST.rm_diamond_lizard.name'), sprite: 'rare_lizard', size: 'm', lv: 8, race: 'beast', affinity: 'earth',
-      elem: { fire: 1.25, wind: 1.5, earth: 0.25 },
+      elem: { wind: 1.5, earth: 0.25 },
       s: { hp: 3, def: 1.8, mdef: 1.2, agi: 1.5 },
       actions: A([['attack', 3], ['eb_tail_whip', 2], ['eb_jewel_shine', 2], ['eb_diamond_scales', 1, once]]),
       drops: DROPS('i_diamond_dust', 'ac_rl_iron', 'ac_rs_iron'),
@@ -158,7 +158,7 @@
     // ------------------------------------------------------------ 地方6 ガルド山地
     rm_gem_hedgehog: rare({
       name: R.T('data.rare.LIST.rm_gem_hedgehog.name'), sprite: 'rare_hedgehog', size: 's', lv: 8, race: 'beast', affinity: 'earth',
-      elem: { fire: 1.25, wind: 1.5, earth: 0.25 },
+      elem: { wind: 1.5, earth: 0.25 },
       s: { hp: 3, def: 1.6, agi: 1.6 },
       actions: A([['attack', 2], ['eb_gem_quills', 3], ['eb_sparkle', 1], ['eb_curl_up', 1, once]]),
       drops: DROPS('i_gem_quill', 'ac_rl_thorn', 'ac_rs_thorn'),
@@ -177,7 +177,7 @@
     // ------------------------------------------------------------ 地方7 灰の荒野
     rm_spa_monkey: rare({
       name: R.T('data.rare.LIST.rm_spa_monkey.name'), sprite: 'rare_monkey', size: 'm', lv: 8, race: 'beast', affinity: 'water',
-      elem: { fire: 1.25, water: 0.25, earth: 1.5 },
+      elem: { water: 0.25, earth: 1.5 },
       s: { hp: 3.2, mag: 1.1, agi: 1.5 },
       actions: A([['attack', 2], ['eb_hot_splash', 2], ['eb_towel_snap', 2], ['eb_bath_heal', 1, { hpBelow: 0.6, once: true }]]),
       drops: DROPS('i_spa_egg', 'ac_rl_beast', 'ac_rs_beast'),
@@ -186,7 +186,7 @@
     }),
     rm_volcano_turtle: rare({
       name: R.T('data.rare.LIST.rm_volcano_turtle.name'), sprite: 'rare_turtle', size: 'm', lv: 9, race: 'beast', affinity: 'fire',
-      elem: { fire: 0.25, water: 1.5 },
+      elem: { fire: -1, water: 1.5 },
       s: { hp: 3.4, def: 1.8, mdef: 1.3, agi: 1.1 },
       actions: A([['attack', 2], ['eb_shell_eruption', 3], ['eb_lava_bite', 1], ['eb_shell_retreat', 1, once]]),
       drops: DROPS('i_volcano_stone', 'ac_rl_ember', 'ac_rs_ember'),
@@ -196,7 +196,7 @@
     // ------------------------------------------------------------ 地方8 オルビス高原
     rm_moon_sheep: rare({
       name: R.T('data.rare.LIST.rm_moon_sheep.name'), sprite: 'rare_sheep', size: 'm', lv: 8, race: 'beast', affinity: 'light',
-      elem: { fire: 1.25, light: 0.25, dark: 1.5 },
+      elem: { light: 0.25, dark: 1.5 },
       s: { hp: 3.2, atk: 0.8, mag: 1.3, def: 1.3, mdef: 1.3, agi: 1.4 },
       actions: A([['attack', 1], ['eb_moonbeam', 2], ['eb_moon_lullaby', 2], ['eb_wool_puff', 1, once]]),
       drops: DROPS('i_moon_wool', 'ac_rl_dream', 'ac_rs_dream'),
@@ -244,7 +244,7 @@
     // 超レアモンスター（1/200、行動 2 回、ドロップ率が高い、閃きのランク +1）
     rm_dream_tapir: rare({
       name: R.T('data.rare.LIST.rm_dream_tapir.name'), sprite: 'rare_tapir', size: 'l', lv: 64, race: 'beast', actsPerTurn: 2, rankAdd: 1,
-      elem: { fire: 1.25 },
+      elem: { dark: 1.25 },
       s: { hp: 3.6, atk: 1.1, mag: 1.4, def: 1.3, mdef: 1.4, agi: 1.4 },
       actions: A([['attack', 1], ['eb_dream_eat', 3], ['eb_sleep_mist', 2], ['eb_nightmare', 2],
         ['eb_tapir_nap', 1, { hpBelow: 0.5, once: true }]]),

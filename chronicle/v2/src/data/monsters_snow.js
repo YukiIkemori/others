@@ -35,7 +35,7 @@
     wolf_4: {
       name: R.T('monsters.wolf_4.name'), sprite: 'wolf_4', lineage: 'wolf', stage: 4, lv: 43, size: 'm', race: 'beast', affinity: 'dark',
       flags: [], s: { hp: 2.66, atk: 0.61, mag: 0.53, agi: 1.25 }, eva: 5,
-      elem: { fire: 1.25, light: 1.5, dark: 0.25 }, phys: {}, statusRes: {},
+      elem: { light: 1.5, dark: 0.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_double', w: 2 }, { id: 'e_shadow_bite', w: 2 }, { id: 'e_howl', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_stone_dark', rate: 8 } },
       desc: R.T('monsters.wolf_4.desc'),
@@ -101,7 +101,7 @@
     frostling_4: {
       name: R.T('monsters.frostling_4.name'), sprite: 'frostling_4', lineage: 'frostling', stage: 4, lv: 43, size: 'm', race: 'fairy', affinity: 'water',
       flags: [], s: { hp: 2.5, atk: 0.47, mag: 0.45, agi: 1.05 }, eva: 5,
-      elem: { fire: 1.25, water: 0.25, earth: 1.5, light: 0.5, dark: 1.5 }, phys: {}, statusRes: { confuse: 0.5 },
+      elem: { fire: 0.75, water: 0.25, earth: 1.5, light: 0.5, dark: 1.5 }, phys: {}, statusRes: { confuse: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_frost_fist', w: 2 }, { id: 'e_frost', w: 2 }, { id: 'e_howl', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_potion2', rate: 8 } },
       desc: R.T('monsters.frostling_4.desc'),
@@ -109,7 +109,7 @@
     frostling_5: {
       name: R.T('monsters.frostling_5.name'), sprite: 'frostling_5', lineage: 'frostling', stage: 5, lv: 55, size: 'm', race: 'fairy', affinity: 'water',
       flags: [], s: { hp: 2.76, atk: 0.38, mag: 0.42, agi: 1.05 }, eva: 5,
-      elem: { fire: 1.25, water: -1, earth: 1.5, light: 0.5, dark: 1.5 }, phys: {}, statusRes: { confuse: 0.5 },
+      elem: { fire: 0.75, water: -1, earth: 1.5, light: 0.5, dark: 1.5 }, phys: {}, statusRes: { confuse: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_frost', w: 2 }, { id: 'e_icicle', w: 2 }, { id: 'e_freeze_gaze', w: 1 }, { id: 'e_haste', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_dagger_wolfking', rate: 16 }, super: { item: 'ft_sr_cloud', rate: 128 } },
       desc: R.T('monsters.frostling_5.desc'),

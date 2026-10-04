@@ -97,7 +97,7 @@
     b_moth: {
       name: R.T('data.bosses.LIST.b_moth.name'), sprite: 'boss_moth', bossType: 'mid', lv: 8, actsPerTurn: 1,
       race: 'insect', flags: ['boss', 'flying'], eva: 10,
-      elem: { fire: 1.5, wind: 1.5, earth: 0.5 }, statusRes: { poison: 0.5 },
+      elem: { wind: 1.5, earth: 0.5 }, statusRes: { poison: 0.5 },
       actions: A([['attack', 3], ['eb_scale_sleep', 2, { every: [3, 0] }], ['eb_scale_poison', 2], ['eb_wing_gale', 2],
         ['eb_eye_spots', 1, { every: [4, 2] }], ['eb_moth_dive', 2]]),
       phases: [{ hpBelow: 0.5, msg: R.T('data.bosses.LIST.b_moth.phases.0.msg'), set: { actsPerTurn: 2 } }],
@@ -107,7 +107,7 @@
     b_rooteater: {
       name: R.T('data.bosses.LIST.b_rooteater.name'), sprite: 'boss_rooteater', bossType: 'region', lv: 8, hpShare: 15, actsPerTurn: 2,
       race: 'insect', affinity: 'earth', flags: ['boss'], eva: 5,
-      elem: { fire: 1.5, wind: 1.5, earth: 0.25 }, statusRes: { poison: 0.5 },
+      elem: { wind: 1.5, earth: 0.25 }, statusRes: { poison: 0.5 },
       actions: A([['attack', 3], ['eb_root_drain', 2], ['eb_rot_breath', 2, { every: [3, 1] }],
         ['eb_call_roots', 1, { every: [4, 3], countBelow: 3 }], ['eb_body_slam', 2]]),
       phases: [{ hpBelow: 0.5, msg: R.T('data.bosses.LIST.b_rooteater.phases.0.msg'), set: { buffs: { atk: 1 } } }],
@@ -128,7 +128,7 @@
     b_sandworm: {
       name: R.T('data.bosses.LIST.b_sandworm.name'), sprite: 'b_sandworm', bossType: 'mid', lv: 8, actsPerTurn: 1,
       race: 'beast', affinity: 'earth', flags: ['boss'], eva: 5,
-      elem: { fire: 1.25, wind: 1.5, earth: 0.25 },
+      elem: { wind: 1.5, earth: 0.25 },
       actions: A([['attack', 2], ['eb_sink', 2, { every: [3, 0] }], ['eb_sand_strike', 3, { every: [3, 1] }],
         ['eb_quicksand', 2], ['eb_swallow_whole', 1]]),
       drops: MID('i_ether'),
@@ -137,7 +137,7 @@
     b_sandking: {
       name: R.T('data.bosses.LIST.b_sandking.name'), sprite: 'b_sandking', bossType: 'region', lv: 7, hpShare: 16, actsPerTurn: 2,
       race: 'undead', flags: ['boss'], eva: 5,
-      elem: { fire: 1.5, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: UNDEAD_RES,
+      elem: { water: 1.25, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: UNDEAD_RES,
       actions: A([['attack', 2], ['eb_steal_name', 2], ['eb_king_sand', 2],
         ['eb_raise_guard', 1, { every: [4, 2], countBelow: 3 }], ['eb_withering', 2]]),
       phases: [{ hpBelow: 0.4, msg: R.T('data.bosses.LIST.b_sandking.phases.0.msg'), set: { buffs: { atk: 1, mag: 1 } } }],
@@ -158,7 +158,7 @@
     b_whitedragon: {
       name: R.T('data.bosses.LIST.b_whitedragon.name'), sprite: 'boss_whitedragon', bossType: 'region', lv: 7, actsPerTurn: 2,
       race: 'dragon', affinity: 'water', flags: ['boss', 'flying'], eva: 10,
-      elem: { fire: 1.25, water: -1, wind: 1.5, earth: 1.5, light: 0.75, dark: 0.75 },
+      elem: { water: -1, wind: 1.5, earth: 1.5, light: 0.75, dark: 0.75 },
       phys: { slash: 0.75, pierce: 1.25 }, statusRes: { death: 1, sleep: 0.5, confuse: 0.5 },
       actions: A([['attack', 2], ['eb_white_blizzard', 2], ['eb_ice_claw', 2], ['eb_dragon_tail', 2],
         ['eb_frozen_roar', 1, { every: [4, 1] }], ['eb_glacier_fall', 2, { hpBelow: 0.5 }]]),
@@ -243,7 +243,7 @@
     b_captain: {
       name: R.T('data.bosses.LIST.b_captain.name'), enrageText: 'serious', sprite: 'b_captain', bossType: 'region', lv: 9, hpShare: 16, actsPerTurn: 2,
       race: 'undead', flags: ['boss'], eva: 5,
-      elem: { fire: 1.5, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: UNDEAD_RES,
+      elem: { earth: 1.25, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: UNDEAD_RES,
       actions: A([['attack', 2], ['eb_cutlass', 2], ['eb_fire_volley', 2], ['eb_ghost_shanty', 1, { every: [4, 2] }],
         ['eb_call_crew', 1, { every: [4, 0], countBelow: 3 }], ['eb_anchor_throw', 1]]),
       phases: [{ hpBelow: 0.5, msg: R.T('data.bosses.LIST.b_captain.phases.0.msg'), set: { buffs: { atk: 1 } } }],
@@ -278,7 +278,7 @@
     b_hellhound: {
       name: R.T('data.bosses.LIST.b_hellhound.name'), sprite: 'boss_hellhound', bossType: 'mid', lv: 9, actsPerTurn: 2,
       race: 'beast', affinity: 'fire', flags: ['boss'], eva: 5,
-      elem: { fire: 0.25, water: 1.5 },
+      elem: { fire: 0, water: 1.5 },
       actions: A([['attack', 2], ['eb_twin_fang', 2], ['eb_flame_howl', 1, { every: [3, 1] }], ['eb_lava_breath', 2],
         ['eb_hound_fury', 1, { hpBelow: 0.5, once: true }]]),
       drops: MID('i_ether'),
@@ -385,7 +385,7 @@
     b_nemrea1: {
       name: R.T('data.bosses.LIST.b_nemrea1.name'), enrageText: 'serious', sprite: 'boss_nemrea1', bossType: 'last1', lv: 58, actsPerTurn: 2,
       race: 'spirit', flags: ['boss'], eva: 5,
-      elem: { fire: 1.25, light: 0.5, dark: 1.25 }, statusRes: SPIRIT_RES,
+      elem: { light: 0.5, dark: 1.25 }, statusRes: SPIRIT_RES,
       actions: A([['attack', 1], ['eb_whiteout', 2, { every: [3, 0] }], ['eb_oblivion_wave', 2], ['eb_paper_hand', 3],
         ['eb_erase_name', 1, { every: [4, 2] }], ['eb_blank_storm', 2]]),
       drops: {},

@@ -391,6 +391,7 @@
     'sys.battle_core.scan.join': '·',
     'sys.battle_core.scan.m_2': '약점을 찾지 못했다.',
     'sys.battle_core.scan.m_3': '흡수: {join}',
+    'sys.battle_core.scan.m_4': '무효: {join}',
     'sys.battle_core.summon.m': '그러나 아무도 오지 않았다.',
     'sys.battle_core.summon.m_2': '{name}이(가) 나타났다!',
     'sys.battle_core.rewards.m': '마물들은 사라졌다.',

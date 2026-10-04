@@ -19,7 +19,7 @@
     jelly_2: {
       name: R.T('monsters.jelly_2.name'), sprite: 'jelly_2', lineage: 'jelly', stage: 2, lv: 19, size: 's', race: 'slime', affinity: 'water',
       flags: [], s: { hp: 2.29, atk: 0.82, mag: 0.9, agi: 0.9 }, eva: 5,
-      elem: { fire: 1.25, water: 0.25, earth: 1.5 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: {},
+      elem: { water: 0.25, earth: 1.5 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_water_bolt', w: 2 }, { id: 'e_bubbles', w: 2 }],
       drops: { normal: { item: 'i_stone_water', rate: 8 } },
       desc: R.T('monsters.jelly_2.desc'),
@@ -27,7 +27,7 @@
     jelly_3: {
       name: R.T('monsters.jelly_3.name'), sprite: 'jelly_3', lineage: 'jelly', stage: 3, lv: 31, size: 's', race: 'slime',
       flags: [], s: { hp: 3.24, atk: 0.53, mag: 0.53 }, eva: 5,
-      elem: { fire: 1.25 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: { poison: 1 },
+      elem: { light: 1.25 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: { poison: 1 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_poison_spit', w: 3 }, { id: 'e_split', w: 1, cond: { hpAbove: 0.5, countBelow: 6 } }],
       drops: { normal: { item: 'i_antidote', rate: 8 } },
       desc: R.T('monsters.jelly_3.desc'),
@@ -35,7 +35,7 @@
     jelly_4: {
       name: R.T('monsters.jelly_4.name'), sprite: 'jelly_4', lineage: 'jelly', stage: 4, lv: 43, size: 's', race: 'slime',
       flags: [], s: { hp: 4.31, atk: 0.5, mag: 0.46, def: 1.1 }, eva: 5,
-      elem: { fire: 1.25 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: {},
+      elem: { earth: 1.25 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_howl', w: 2, cond: { every: [3, 0] } }, { id: 'e_crush', w: 2 }],
       drops: { normal: { item: 'i_potion2', rate: 8 } },
       desc: R.T('monsters.jelly_4.desc'),
@@ -60,7 +60,7 @@
     rat_2: {
       name: R.T('monsters.rat_2.name'), sprite: 'rat_2', lineage: 'rat', stage: 2, lv: 19, size: 's', race: 'beast',
       flags: [], s: { hp: 1.76, atk: 0.66, mag: 0.63, agi: 1.2 }, eva: 5,
-      elem: { fire: 1.25 }, phys: {}, statusRes: {},
+      elem: { earth: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_poison_bite', w: 3 }, { id: 'e_call', w: 1, cond: { countBelow: 6 } }, { id: 'flee', w: 1, cond: { hpBelow: 0.3 } }],
       drops: { normal: { item: 'i_antidote', rate: 8 } },
       desc: R.T('monsters.rat_2.desc'),
@@ -68,7 +68,7 @@
     rat_3: {
       name: R.T('monsters.rat_3.name'), sprite: 'rat_3', lineage: 'rat', stage: 3, lv: 31, size: 's', race: 'beast',
       flags: [], s: { hp: 2.94, atk: 0.59, mag: 0.53, def: 1.25 }, eva: 5,
-      elem: { fire: 1.25 }, phys: {}, statusRes: {},
+      elem: { earth: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_gnaw', w: 3 }, { id: 'e_bite', w: 1 }, { id: 'e_ambush', w: 2 }, { id: 'flee', w: 1, cond: { hpBelow: 0.3 } }],
       drops: { normal: { item: 'i_potion2', rate: 8 } },
       desc: R.T('monsters.rat_3.desc'),
@@ -76,7 +76,7 @@
     rat_4: {
       name: R.T('monsters.rat_4.name'), sprite: 'rat_4', lineage: 'rat', stage: 4, lv: 43, size: 's', race: 'beast',
       flags: [], s: { hp: 3.01, atk: 0.76, mag: 0.69 }, eva: 5,
-      elem: { fire: 1.25 }, phys: {}, statusRes: {},
+      elem: { earth: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_call_lesser', w: 2, cond: { countBelow: 6 } }, { id: 'e_double', w: 2 }, { id: 'e_howl', w: 1 }, { id: 'e_finish', w: 1 }],
       drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'hd_rat_bandana', rate: 16 }, steal: { item: 'ac_st_rat_boss', rate: 16 } },
       desc: R.T('monsters.rat_4.desc'),
@@ -85,7 +85,7 @@
     bat_1: {
       name: R.T('monsters.bat_1.name'), sprite: 'bat_1', lineage: 'bat', stage: 1, lv: 7, size: 's', race: 'beast',
       flags: ['flying'], s: { hp: 1.47, atk: 0.78, mag: 0.78, agi: 1.4 }, eva: 15,
-      elem: { fire: 1.25, wind: 1.5, earth: 0.5 }, phys: { pierce: 1.25 }, statusRes: {},
+      elem: { wind: 1.5, earth: 0.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 5 }, { id: 'e_bite', w: 1 }],
       drops: { normal: { item: 'i_clear', rate: 8 } },
       desc: R.T('monsters.bat_1.desc'),
@@ -93,7 +93,7 @@
     bat_2: {
       name: R.T('monsters.bat_2.name'), sprite: 'bat_2', lineage: 'bat', stage: 2, lv: 19, size: 's', race: 'beast',
       flags: ['flying'], s: { hp: 2.69, atk: 0.67, mag: 0.67, agi: 1.35 }, eva: 15,
-      elem: { fire: 1.25, wind: 1.5, earth: 0.5 }, phys: { pierce: 1.25 }, statusRes: {},
+      elem: { wind: 1.5, earth: 0.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_drain_bite', w: 3 }],
       drops: { normal: { item: 'i_salve', rate: 8 } },
       desc: R.T('monsters.bat_2.desc'),
@@ -101,7 +101,7 @@
     bat_3: {
       name: R.T('monsters.bat_3.name'), sprite: 'bat_3', lineage: 'bat', stage: 3, lv: 31, size: 's', race: 'beast',
       flags: ['flying'], s: { hp: 2.27, atk: 0.35, mag: 0.38, agi: 1.3 }, eva: 15,
-      elem: { fire: 1.25, wind: 1.5, earth: 0.5 }, phys: { pierce: 1.25 }, statusRes: {},
+      elem: { wind: 1.5, earth: 0.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_sonic', w: 3 }, { id: 'e_ambush', w: 2 }],
       drops: { normal: { item: 'i_clear', rate: 8 } },
       desc: R.T('monsters.bat_3.desc'),
@@ -109,7 +109,7 @@
     bat_4: {
       name: R.T('monsters.bat_4.name'), sprite: 'bat_4', lineage: 'bat', stage: 4, lv: 43, size: 's', race: 'beast', affinity: 'dark',
       flags: ['flying'], s: { hp: 4.43, atk: 0.52, mag: 0.6, agi: 1.35 }, eva: 15,
-      elem: { fire: 1.25, wind: 1.5, earth: 0.5, light: 1.5, dark: 0.25 }, phys: { pierce: 1.25 }, statusRes: {},
+      elem: { wind: 1.5, earth: 0.5, light: 1.5, dark: 0.25 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_dark_bolt', w: 2 }, { id: 'e_drain_bite', w: 2 }],
       drops: { normal: { item: 'i_stone_dark', rate: 8 } },
       desc: R.T('monsters.bat_4.desc'),
@@ -117,7 +117,7 @@
     bat_5: {
       name: R.T('monsters.bat_5.name'), sprite: 'bat_5', lineage: 'bat', stage: 5, lv: 55, size: 's', race: 'beast', affinity: 'dark',
       flags: ['flying'], s: { hp: 4.74, atk: 0.29, mag: 0.35, agi: 1.25 }, eva: 12,
-      elem: { fire: 1.25, wind: 1.5, earth: 0.5, light: 1.5, dark: 0.25 }, phys: { pierce: 1.25 }, statusRes: {},
+      elem: { wind: 1.5, earth: 0.5, light: 1.5, dark: 0.25 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_life_suck', w: 3 }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }, { id: 'e_dark_mist', w: 2 }],
       drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'ac_count_brooch', rate: 16 }, super: { item: 'w_dagger_sr_moonfang', rate: 128 } },
       desc: R.T('monsters.bat_5.desc'),
@@ -258,7 +258,7 @@
     quicksilver_1: {
       name: R.T('monsters.quicksilver_1.name'), sprite: 'quicksilver_1', lineage: 'quicksilver', stage: 1, lv: 19, size: 's', race: 'slime',
       flags: ['metal'], s: { agi: 2.5 }, hpFixed: 8, fleeRate: 0.5, eva: 30,
-      elem: { fire: 1.25 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: {},
+      elem: { earth: 1.25 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_water_bolt', w: 1 }],
       drops: { normal: { item: 'i_ether', rate: 4 } },
       desc: R.T('monsters.quicksilver_1.desc'),
@@ -266,7 +266,7 @@
     quicksilver_2: {
       name: R.T('monsters.quicksilver_2.name'), sprite: 'quicksilver_2', lineage: 'quicksilver', stage: 2, lv: 43, size: 's', race: 'slime',
       flags: ['metal'], s: { agi: 2.5 }, hpFixed: 10, fleeRate: 0.5, eva: 30,
-      elem: { fire: 1.25 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: {},
+      elem: { earth: 1.25 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_tide', w: 1 }, { id: 'e_water_bolt', w: 1 }],
       drops: { normal: { item: 'i_ether2', rate: 4 }, rare: { item: 'ac_silver_orb', rate: 16 } },
       desc: R.T('monsters.quicksilver_2.desc'),
@@ -275,7 +275,7 @@
     mirror_1: {
       name: R.T('monsters.mirror_1.name'), sprite: 'mirror_1', lineage: 'mirror', stage: 1, lv: 37, size: 's', race: 'insect',
       flags: ['metal'], s: { agi: 2.5 }, hpFixed: 8, fleeRate: 0.5, eva: 30,
-      elem: { fire: 1.5 }, phys: {}, statusRes: { poison: 0.5 },
+      elem: { dark: 1.5 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_flash', w: 1 }],
       drops: { normal: { item: 'i_ether2', rate: 4 } },
       desc: R.T('monsters.mirror_1.desc'),
@@ -283,7 +283,7 @@
     mirror_2: {
       name: R.T('monsters.mirror_2.name'), sprite: 'mirror_2', lineage: 'mirror', stage: 2, lv: 49, size: 's', race: 'insect',
       flags: ['metal'], s: { agi: 2.5 }, hpFixed: 10, fleeRate: 0.5, eva: 30,
-      elem: { fire: 1.5 }, phys: {}, statusRes: { poison: 0.5 },
+      elem: { dark: 1.5 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_flash', w: 1 }, { id: 'e_light_ray', w: 1 }],
       drops: { normal: { item: 'i_elixir', rate: 4 }, rare: { item: 'ac_mirror_crest', rate: 16 } },
       desc: R.T('monsters.mirror_2.desc'),

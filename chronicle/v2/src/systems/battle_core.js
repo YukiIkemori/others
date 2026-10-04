@@ -1942,6 +1942,8 @@
       const absorb = keys.filter((e) => el[e] < 0).map(elemName);
       yield this.m(weak.length ? R.T('sys.battle_core.scan.m', { join: weak.join(R.T('sys.battle_core.scan.join')) }) : R.T('sys.battle_core.scan.m_2'));
       if (absorb.length) yield this.m(R.T('sys.battle_core.scan.m_3', { join: absorb.join(R.T('sys.battle_core.scan.join')) }));
+      const nul = keys.filter((e) => el[e] === 0).map(elemName);   // 2026-10-04 属性の見直し: 無効も知らせる
+      if (nul.length) yield this.m(R.T('sys.battle_core.scan.m_4', { join: nul.join(R.T('sys.battle_core.scan.join')) }));
     }
     *summon(u, eff) {
       const max = Math.min(8, eff.max != null ? eff.max : 8);

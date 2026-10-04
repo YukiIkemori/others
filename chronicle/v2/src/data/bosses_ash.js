@@ -26,7 +26,7 @@
     },
     ash_pup: {
       name: R.T('data.bosses_ash.MOBS.ash_pup.name'), sprite: 'salamander_1', size: 's', lv: 8, race: 'beast', affinity: 'fire', flags: [],
-      s: { hp: 0.9, atk: 0.9 }, elem: { fire: 0.25, water: 1.5 }, phys: {}, statusRes: {},
+      s: { hp: 0.9, atk: 0.9 }, elem: { fire: 0, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_fire_bite', w: 2 }],
       drops: { normal: { item: 'i_stone_fire', rate: 8 } },
       desc: R.T('data.bosses_ash.MOBS.ash_pup.desc'),
@@ -62,7 +62,7 @@
     },
     b_sister_elder: {
       name: R.T('data.bosses_ash.LIST.b_sister_elder.name'), enrageText: 'serious', sprite: 'b_ash_hinoe', bossType: 'mid', lv: 8, hpShare: 9, actsPerTurn: 1, size: 'm',
-      race: 'humanoid', flags: ['boss'], eva: 5, elem: { water: 1.25 }, phys: {}, statusRes: {},
+      race: 'humanoid', flags: ['boss'], eva: 5, elem: { fire: 0, water: 1.25 }, phys: {}, statusRes: {},
       actions: A([['e_fire_bolt', 2], ['eb_hinoe_mend', 2], ['e_veil_ally', 1], ['eb_hinoe_raise', SCHED, { allyDown: true }]]),   // 2026-10-01: 守りの火（加護）を足した
       leader: { msg: R.T('data.bosses_ash.LIST.b_sister_elder.leader.msg') },
       drops: MID('i_ether'),

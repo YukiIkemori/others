@@ -11,7 +11,7 @@
     golem_1: {
       name: R.T('monsters.golem_1.name'), sprite: 'golem_1', lineage: 'golem', stage: 1, lv: 7, size: 'l', race: 'construct', affinity: 'earth',
       flags: [], s: { hp: 0.76, atk: 2.29, mag: 2.18, def: 1.3, agi: 0.65 }, eva: 5,
-      elem: { water: 1.25, wind: 1.5, earth: 0.25 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
+      elem: { fire: 0.75, water: 1.25, wind: 1.5, earth: 0.25 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 4 }, { id: 'e_crush', w: 1 }, { id: 'e_harden', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_stone_earth', rate: 8 } },
       desc: R.T('monsters.golem_1.desc'),
@@ -19,7 +19,7 @@
     golem_2: {
       name: R.T('monsters.golem_2.name'), sprite: 'golem_2', lineage: 'golem', stage: 2, lv: 25, size: 'l', race: 'construct', affinity: 'earth',
       flags: [], s: { hp: 0.9, atk: 1.31, mag: 1.19, def: 1.4, agi: 0.6 }, eva: 5,
-      elem: { water: 1.5, wind: 1.5, earth: 0.25 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
+      elem: { fire: 0.75, water: 1.5, wind: 1.5, earth: 0.25 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_crush', w: 2 }, { id: 'e_stomp', w: 2 }, { id: 'e_rock', w: 1 }, { id: 'e_guard_stance', w: 1 }],
       drops: { normal: { item: 'i_potion', rate: 8 } },
       desc: R.T('monsters.golem_2.desc'),
@@ -27,7 +27,7 @@
     golem_3: {
       name: R.T('monsters.golem_3.name'), sprite: 'golem_3', lineage: 'golem', stage: 3, lv: 43, size: 'l', race: 'construct', affinity: 'earth',
       flags: [], s: { hp: 1.5, atk: 1.29, mag: 1.35, def: 1.35, agi: 0.6 }, eva: 5,
-      elem: { water: 1.25, wind: 1.5, earth: 0.25 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
+      elem: { fire: 0.75, water: 1.25, wind: 1.5, earth: 0.25 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_crush', w: 2 }, { id: 'e_gem_beam', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_gem_core', rate: 16 } },
       desc: R.T('monsters.golem_3.desc'),
@@ -36,7 +36,7 @@
     mole_1: {
       name: R.T('monsters.mole_1.name'), sprite: 'mole_1', lineage: 'mole', stage: 1, lv: 7, size: 'm', race: 'beast', affinity: 'earth',
       flags: [], s: { hp: 1.26, atk: 0.89, mag: 0.85, agi: 0.9 }, eva: 5,
-      elem: { fire: 1.25, wind: 1.5, earth: 0.25 }, phys: {}, statusRes: {},
+      elem: { wind: 1.5, earth: 0.25, light: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_claw', w: 2 }],
       drops: { normal: { item: 'i_stone_earth', rate: 8 } },
       desc: R.T('monsters.mole_1.desc'),
@@ -44,7 +44,7 @@
     mole_2: {
       name: R.T('monsters.mole_2.name'), sprite: 'mole_2', lineage: 'mole', stage: 2, lv: 19, size: 'm', race: 'beast', affinity: 'earth',
       flags: [], s: { hp: 1.69, atk: 0.68, mag: 0.59, agi: 0.9 }, eva: 5,
-      elem: { fire: 1.25, wind: 1.5, earth: 0.25 }, phys: {}, statusRes: {},
+      elem: { wind: 1.5, earth: 0.25, light: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_claw', w: 2 }, { id: 'e_dust', w: 2 }],
       drops: { normal: { item: 'i_salve', rate: 8 } },
       desc: R.T('monsters.mole_2.desc'),
@@ -60,7 +60,7 @@
     mole_4: {
       name: R.T('monsters.mole_4.name'), sprite: 'mole_4', lineage: 'mole', stage: 4, lv: 43, size: 'm', race: 'beast', affinity: 'earth',
       flags: [], s: { hp: 2.43, atk: 0.53, mag: 0.46, def: 1.1, agi: 0.85 }, eva: 5,
-      elem: { fire: 1.25, wind: 1.5, earth: 0.25 }, phys: {}, statusRes: {},
+      elem: { wind: 1.5, earth: 0.25, light: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_quake', w: 2 }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }, { id: 'e_claw', w: 2 }],
       drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'w_greatsword_forgehammer', rate: 16 } },
       desc: R.T('monsters.mole_4.desc'),
@@ -69,7 +69,7 @@
     beetle_1: {
       name: R.T('monsters.beetle_1.name'), sprite: 'beetle_1', lineage: 'beetle', stage: 1, lv: 7, size: 's', race: 'insect', affinity: 'earth',
       flags: [], s: { hp: 1.44, atk: 1.21, mag: 1.21, def: 1.4, agi: 0.8 }, eva: 5,
-      elem: { fire: 1.25, wind: 1.5, earth: 0.25 }, phys: { slash: 0.75, blunt: 1.25 }, statusRes: { poison: 0.5 },
+      elem: { wind: 1.5, earth: 0.25 }, phys: { slash: 0.75, blunt: 1.25 }, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 4 }, { id: 'e_horn', w: 2 }],
       drops: { normal: { item: 'i_stone_earth', rate: 8 } },
       desc: R.T('monsters.beetle_1.desc'),
@@ -77,7 +77,7 @@
     beetle_2: {
       name: R.T('monsters.beetle_2.name'), sprite: 'beetle_2', lineage: 'beetle', stage: 2, lv: 19, size: 's', race: 'insect', affinity: 'earth',
       flags: [], s: { hp: 1.76, atk: 0.92, mag: 0.92, def: 1.6, agi: 0.8 }, eva: 5,
-      elem: { fire: 1.25, wind: 1.5, earth: 0.25 }, phys: { slash: 0.75, blunt: 1.25 }, statusRes: { poison: 0.5 },
+      elem: { wind: 1.5, earth: 0.25 }, phys: { slash: 0.75, blunt: 1.25 }, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_horn', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_salve', rate: 8 } },
       desc: R.T('monsters.beetle_2.desc'),
@@ -93,7 +93,7 @@
     beetle_4: {
       name: R.T('monsters.beetle_4.name'), goldName: R.T('monsters.beetle_4.goldName'), sprite: 'beetle_4', lineage: 'beetle', stage: 4, lv: 43, size: 's', race: 'insect', affinity: 'earth',
       flags: [], s: { hp: 3.39, atk: 0.74, mag: 0.74, def: 1.8, agi: 0.8 }, eva: 5,
-      elem: { fire: 1.25, wind: 1.5, earth: 0.25 }, phys: { slash: 0.75, blunt: 1.25 }, statusRes: { poison: 0.5 },
+      elem: { wind: 1.5, earth: 0.25 }, phys: { slash: 0.75, blunt: 1.25 }, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_horn', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }, { id: 'e_charge', w: 2 }],
       drops: { normal: { item: 'i_potion2', rate: 8 }, rare: { item: 'w_greatsword_forgehammer', rate: 16 } },
       desc: R.T('monsters.beetle_4.desc'),

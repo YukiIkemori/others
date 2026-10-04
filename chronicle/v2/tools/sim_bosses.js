@@ -67,7 +67,7 @@ for (const T of [1, 3]) {
 for (const T of [1, 3]) {
   const k = '@' + T;
   BOSSES['tr_b_octopus' + k] = { troop: 'tr_b_octopus', tier: T, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 10], note: '水面が渦を巻いたら守る。足は生えてくる' };
-  BOSSES['tr_b_captain' + k] = { troop: 'tr_b_captain', tier: T, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 13], note: '大砲に火縄を回したら守る。光と火が効く。半分で怒る' };
+  BOSSES['tr_b_captain' + k] = { troop: 'tr_b_captain', tier: T, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 13], note: '大砲に火縄を回したら守る。光と土が効く。半分で怒る' };
 }
 
 // ガルド山地（src/data/bosses_mine.js）。好きな順に遊ぶので、ティア 1・3 で測る。鉄の番人は組合につく道だけ

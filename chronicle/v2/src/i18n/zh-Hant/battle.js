@@ -391,6 +391,7 @@
     'sys.battle_core.scan.join': '・',
     'sys.battle_core.scan.m_2': '沒有找到弱點。',
     'sys.battle_core.scan.m_3': '吸收：{join}',
+    'sys.battle_core.scan.m_4': '無效：{join}',
     'sys.battle_core.summon.m': '但是，誰也沒有來。',
     'sys.battle_core.summon.m_2': '{name}出現了！',
     'sys.battle_core.rewards.m': '魔物們消失了。',

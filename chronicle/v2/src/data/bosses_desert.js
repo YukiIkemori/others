@@ -64,7 +64,7 @@
     },
     b_sun_orb: {
       name: R.T('data.bosses_desert.LIST.b_sun_orb.name'), sprite: 'desert_sun_orb', artKind: 'mon', bossType: 'add', addOf: 'b_sandking', lv: 7, hpShare: 0.8, actsPerTurn: 1, size: 's',
-      race: 'spirit', flags: ['boss'], eva: 0, elem: { water: 1.5, fire: 0.25, light: 0.25 }, phys: {}, statusRes: { poison: 1, sleep: 1, death: 1 },
+      race: 'spirit', flags: ['boss'], eva: 0, elem: { fire: 0, water: 1.5, light: 0.25 }, phys: {}, statusRes: { poison: 1, sleep: 1, death: 1 },
       actions: A([['eb_orb_flare', 3]]), orb: 'sun', onDeath: 'desert_orb_break',
       s: { atk: 0.6, mag: 0.6 },
       drops: {},

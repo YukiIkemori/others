@@ -11,7 +11,7 @@
     snow: { mood: 'night', ambient: 'rgb(120,130,190)', ground: ['#5a6070', '#8a94a8'] },
     marsh: { mood: 'forest_night', ambient: 'rgb(88,104,150)', ground: ['#2c3024', '#44482e'] },
     isles: { mood: 'coast', ambient: 'rgb(104,114,190)', ground: ['#4a4a50', '#7a766a'] },
-    mine: { mood: 'cave', ambient: 'rgb(122,106,188)', ground: ['#2a2830', '#46404a'], like: 'cave' },
+    mine: { mood: 'cave', ambient: 'rgb(122,106,188)', ground: ['#2a2830', '#46404a'] },
     ash: { mood: 'cave', ambient: 'rgb(150,96,120)', ground: ['#2c2626', '#4a3a36'] },
     star: { mood: 'tower', ambient: 'rgb(108,98,172)', ground: ['#3a3a4c', '#5a5a70'] },
     // 終盤（白の大書庫。描いた絵は v2/assets/env/bbg/library、design/art_ref/gen/env/bbg/library.png）

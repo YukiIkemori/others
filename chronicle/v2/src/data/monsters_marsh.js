@@ -52,7 +52,7 @@
     wisp_1: {
       name: R.T('monsters.wisp_1.name'), sprite: 'wisp_1', lineage: 'wisp', stage: 1, lv: 7, size: 's', race: 'spirit', affinity: 'fire',
       flags: [], s: { hp: 0.88, atk: 0.68, mag: 0.82, agi: 1.2 }, eva: 5,
-      elem: { fire: 0.25, water: 1.5, light: 1.5 }, phys: { slash: 0.5, blunt: 0.5, pierce: 0.5 }, statusRes: { poison: 1, death: 1, stun: 1 },
+      elem: { fire: 0, water: 1.5, light: 1.5 }, phys: { slash: 0.5, blunt: 0.5, pierce: 0.5 }, statusRes: { poison: 1, death: 1, stun: 1 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_fire_bolt', w: 3 }],
       drops: { normal: { item: 'i_stone_fire', rate: 8 } },
       desc: R.T('monsters.wisp_1.desc'),
@@ -60,7 +60,7 @@
     wisp_2: {
       name: R.T('monsters.wisp_2.name'), sprite: 'wisp_2', lineage: 'wisp', stage: 2, lv: 19, size: 's', race: 'spirit', affinity: 'fire',
       flags: [], s: { hp: 0.92, atk: 0.4, mag: 0.48, agi: 1.2 }, eva: 5,
-      elem: { fire: 0.25, water: 1.5, light: 1.5 }, phys: { slash: 0.5, blunt: 0.5, pierce: 0.5 }, statusRes: { poison: 1, death: 1, stun: 1 },
+      elem: { fire: 0, water: 1.5, light: 1.5 }, phys: { slash: 0.5, blunt: 0.5, pierce: 0.5 }, statusRes: { poison: 1, death: 1, stun: 1 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_fire_bolt', w: 2 }, { id: 'e_evil_eye', w: 2 }],
       drops: { normal: { item: 'i_salve', rate: 8 } },
       desc: R.T('monsters.wisp_2.desc'),
@@ -200,7 +200,7 @@
     spider_3: {
       name: R.T('monsters.spider_3.name'), sprite: 'spider_3', lineage: 'spider', stage: 3, lv: 31, size: 'm', race: 'insect', affinity: 'dark',
       flags: [], s: { hp: 1.77, atk: 1.06, mag: 0.97, agi: 1.2 }, eva: 5,
-      elem: { fire: 1.5, light: 1.5, dark: 0.25 }, phys: {}, statusRes: { poison: 0.5 },
+      elem: { light: 1.5, dark: 0.25 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_shadow_bite', w: 2 }, { id: 'e_web', w: 1 }, { id: 'e_ink', w: 1 }, { id: 'e_ambush', w: 2 }],
       drops: { normal: { item: 'i_stone_dark', rate: 8 } },
       desc: R.T('monsters.spider_3.desc'),

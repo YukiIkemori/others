@@ -11,7 +11,7 @@
     bee_1: {
       name: R.T('monsters.bee_1.name'), sprite: 'bee_1', lineage: 'bee', stage: 1, lv: 7, size: 's', race: 'insect',
       flags: ['flying'], s: { hp: 1.45, atk: 1.03, mag: 1.03, agi: 1.35 }, eva: 15,
-      elem: { fire: 1.5, wind: 1.5, earth: 0.5 }, phys: {}, statusRes: { poison: 0.5 },
+      elem: { wind: 1.5, earth: 0.5 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 4 }, { id: 'e_sting', w: 2 }],
       drops: { normal: { item: 'i_salve', rate: 8 } },
       desc: R.T('monsters.bee_1.desc'),
@@ -19,7 +19,7 @@
     bee_2: {
       name: R.T('monsters.bee_2.name'), sprite: 'bee_2', lineage: 'bee', stage: 2, lv: 19, size: 's', race: 'insect',
       flags: ['flying'], s: { hp: 2.37, atk: 0.52, mag: 0.5, agi: 1.35 }, eva: 15,
-      elem: { fire: 1.5, wind: 1.5, earth: 0.5 }, phys: {}, statusRes: { poison: 1 },
+      elem: { wind: 1.5, earth: 0.5 }, phys: {}, statusRes: { poison: 1 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_poison_sting', w: 3 }],
       drops: { normal: { item: 'i_antidote', rate: 8 } },
       desc: R.T('monsters.bee_2.desc'),
@@ -27,7 +27,7 @@
     bee_3: {
       name: R.T('monsters.bee_3.name'), sprite: 'bee_3', lineage: 'bee', stage: 3, lv: 31, size: 's', race: 'insect',
       flags: ['flying'], s: { hp: 2.54, atk: 0.63, mag: 0.63, agi: 1.35 }, eva: 15,
-      elem: { fire: 1.5, wind: 1.5, earth: 0.5 }, phys: {}, statusRes: { poison: 0.5 },
+      elem: { wind: 1.5, earth: 0.5 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_numb_sting', w: 3 }, { id: 'e_finish', w: 1 }],
       drops: { normal: { item: 'i_panacea', rate: 8 } },
       desc: R.T('monsters.bee_3.desc'),
@@ -35,7 +35,7 @@
     bee_4: {
       name: R.T('monsters.bee_4.name'), sprite: 'bee_4', lineage: 'bee', stage: 4, lv: 43, size: 's', race: 'insect',
       flags: ['flying'], s: { hp: 4.2, atk: 0.46, mag: 0.42, agi: 1.35 }, eva: 15,
-      elem: { fire: 1.5, wind: 1.5, earth: 0.5 }, phys: {}, statusRes: { poison: 0.5 },
+      elem: { wind: 1.5, earth: 0.5 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_needles', w: 3 }, { id: 'e_poison_sting', w: 1 }, { id: 'e_ambush', w: 1 }],
       drops: { normal: { item: 'i_potion2', rate: 8 } },
       desc: R.T('monsters.bee_4.desc'),
@@ -43,7 +43,7 @@
     bee_5: {
       name: R.T('monsters.bee_5.name'), sprite: 'bee_5', lineage: 'bee', stage: 5, lv: 55, size: 's', race: 'insect',
       flags: ['flying'], s: { hp: 3.64, atk: 0.47, mag: 0.49, agi: 1.2 }, eva: 12,
-      elem: { fire: 1.5, wind: 1.5, earth: 0.5 }, phys: {}, statusRes: { poison: 0.5 },
+      elem: { wind: 1.5, earth: 0.5 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_call_lesser', w: 2, cond: { countBelow: 6 } }, { id: 'e_heal_all', w: 2, cond: { hpBelow: 0.7 } }, { id: 'e_poison_sting', w: 2 }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_millennium_seed', rate: 16 }, super: { item: 'ft_sr_whirl', rate: 128 } },
       desc: R.T('monsters.bee_5.desc'),
@@ -52,7 +52,7 @@
     mushroom_1: {
       name: R.T('monsters.mushroom_1.name'), sprite: 'mushroom_1', lineage: 'mushroom', stage: 1, lv: 7, size: 's', race: 'plant',
       flags: [], s: { hp: 1.26, atk: 2.11, mag: 2.35, agi: 0.6 }, eva: 5,
-      elem: { fire: 1.5, water: 0.5, earth: 0.75 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
+      elem: { water: 0.5, earth: 0.75, light: 1.5 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
       actions: [{ id: 'attack', w: 4 }, { id: 'e_sleep_spore', w: 2 }],
       drops: { normal: { item: 'i_salve', rate: 8 } },
       desc: R.T('monsters.mushroom_1.desc'),
@@ -60,7 +60,7 @@
     mushroom_2: {
       name: R.T('monsters.mushroom_2.name'), sprite: 'mushroom_2', lineage: 'mushroom', stage: 2, lv: 19, size: 's', race: 'plant',
       flags: [], s: { hp: 2.06, atk: 1.57, mag: 1.74, agi: 0.6 }, eva: 5,
-      elem: { fire: 1.5, water: 0.5, earth: 0.75 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 1 },
+      elem: { water: 0.5, earth: 0.75, light: 1.5 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 1 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_poison_spore', w: 3 }],
       drops: { normal: { item: 'i_antidote', rate: 8 } },
       desc: R.T('monsters.mushroom_2.desc'),
@@ -68,7 +68,7 @@
     mushroom_3: {
       name: R.T('monsters.mushroom_3.name'), sprite: 'mushroom_3', lineage: 'mushroom', stage: 3, lv: 31, size: 's', race: 'plant',
       flags: [], s: { hp: 1.62, atk: 1.2, mag: 1.31, agi: 0.7 }, eva: 5,
-      elem: { fire: 1.5, water: 0.5, earth: 0.75 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
+      elem: { water: 0.5, earth: 0.75, light: 1.5 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_confuse_spore', w: 3 }, { id: 'e_sleep_spore', w: 1 }, { id: 'e_heal_all', w: 1, cond: { hpBelow: 0.5 } }],
       drops: { normal: { item: 'i_panacea', rate: 8 } },
       desc: R.T('monsters.mushroom_3.desc'),
@@ -76,7 +76,7 @@
     mushroom_4: {
       name: R.T('monsters.mushroom_4.name'), sprite: 'mushroom_4', lineage: 'mushroom', stage: 4, lv: 43, size: 's', race: 'plant', affinity: 'earth',
       flags: [], s: { hp: 1.97, atk: 1.15, mag: 1.38, mdef: 1.2, agi: 0.6 }, eva: 5,
-      elem: { fire: 1.5, water: 0.5, wind: 1.5, earth: 0.25 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
+      elem: { water: 0.5, wind: 1.5, earth: 0.25, light: 1.25 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_spore_storm', w: 2 }, { id: 'e_heal_all', w: 2, cond: { hpBelow: 0.7 } }, { id: 'e_confuse_spore', w: 1 }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'hd_fairy_circlet', rate: 16 } },
       desc: R.T('monsters.mushroom_4.desc'),

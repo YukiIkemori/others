@@ -33,20 +33,22 @@
     return r;
   }
   R.defs('spells', {
+    // 2026-10-04 属性の見直し（持ち主「炎魔法強すぎて他を覚える必要性が感じられない」）: 火の 1・2・4・5 段を少し下げる。
+    //   火だけが段 2 で全体を打てるので、段 2 は MP 5 → 6・威力 1.0 → 0.9。段 1 は 1.4 → 1.3（水と同じ）。段 4 は MP 9 → 10。段 5 は 3.4 → 3.2
     s_fire_1: sp(R.T('spells.s_fire_1.sp'), ['fire'], '1', 2, 'enemy',
-      [dmg(1.4)], 'fire1',
+      [dmg(1.3)], 'fire1',
       R.T('spells.s_fire_1.sp_2')),
-    s_fire_2: sp(R.T('spells.s_fire_2.sp'), ['fire'], '2', 5, 'enemies',
-      [dmg(1.0), st('burn', 0.2)], 'fire2',
+    s_fire_2: sp(R.T('spells.s_fire_2.sp'), ['fire'], '2', 6, 'enemies',
+      [dmg(0.9), st('burn', 0.2)], 'fire2',
       R.T('spells.s_fire_2.sp_2')),
     s_fire_3: sp(R.T('spells.s_fire_3.sp'), ['fire'], '3', 6, 'allies',
       [buff('atk', 1)], 'buff',
       R.T('spells.s_fire_3.sp_2')),
-    s_fire_4: sp(R.T('spells.s_fire_4.sp'), ['fire'], '4', 9, 'enemies',
+    s_fire_4: sp(R.T('spells.s_fire_4.sp'), ['fire'], '4', 10, 'enemies',
       [dmg(1.5), st('burn', 0.3)], 'fire2',
       R.T('spells.s_fire_4.sp_2')),
     s_fire_5: sp(R.T('spells.s_fire_5.sp'), ['fire'], '5', 12, 'enemy',
-      [dmg(3.4), st('burn', 0.5)], 'fire3',
+      [dmg(3.2), st('burn', 0.5)], 'fire3',
       R.T('spells.s_fire_5.sp_2')),
     s_water_1: sp(R.T('spells.s_water_1.sp'), ['water'], '1', 2, 'enemy',
       [dmg(1.3)], 'water1',

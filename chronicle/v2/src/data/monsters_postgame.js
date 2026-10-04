@@ -36,7 +36,7 @@
     chaos_1: {
       name: R.T('monsters.chaos_1.name'), sprite: 'chaos_1', lineage: 'chaos', stage: 1, lv: 61, size: 'l', race: 'beast', affinity: 'dark',
       flags: [], s: { hp: 2.14, atk: 0.46, mag: 0.38, agi: 0.9 }, eva: 5,
-      elem: { fire: 1.25, light: 1.5, dark: 0.25 }, phys: {}, statusRes: {},
+      elem: { light: 1.5, dark: 0.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_rampage', w: 2 }, { id: 'e_roar', w: 1, cond: { every: [4, 1] } }, { id: 'e_chaos_breath', w: 2 }],
       drops: { normal: { item: 'i_elixir', rate: 8 } },
       desc: R.T('monsters.chaos_1.desc'),
@@ -44,7 +44,7 @@
     chaos_2: {
       name: R.T('monsters.chaos_2.name'), sprite: 'chaos_2', lineage: 'chaos', stage: 2, lv: 61, size: 'l', race: 'beast', affinity: 'dark',
       flags: [], s: { hp: 2.04, atk: 0.51, mag: 0.45, agi: 0.9 }, eva: 5,
-      elem: { fire: 1.25, light: 1.5, dark: 0.25 }, phys: {}, statusRes: {},
+      elem: { light: 1.5, dark: 0.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_rampage', w: 2 }, { id: 'e_chaos_breath', w: 2 }, { id: 'e_quake', w: 1 }, { id: 'e_focus', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_phoenix', rate: 8 } },
       desc: R.T('monsters.chaos_2.desc'),
@@ -53,7 +53,7 @@
       name: R.T('monsters.chaos_3.name'), sprite: 'chaos_3', lineage: 'chaos', stage: 3, lv: 61, size: 'l', race: 'beast', affinity: 'dark',
       flags: [], s: { hp: 1.89, atk: 0.35, mag: 0.32, agi: 0.9 }, actsPerTurn: 2,   // 2 回動く精鋭（w_combo）: 1 回の強さは 0.72 倍
       eva: 5,
-      elem: { fire: 1.25, light: 1.5, dark: 0.25 }, phys: {}, statusRes: {},
+      elem: { light: 1.5, dark: 0.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_rampage', w: 2 }, { id: 'e_chaos_breath', w: 2 }, { id: 'e_quake', w: 1 }, { id: 'e_roar', w: 1, cond: { every: [4, 1] } }, { id: 'e_focus', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_phoenix', rate: 8 }, rare: { item: 'ac_chaos_eye', rate: 16 }, super: { item: 'hn_sr_chaos_claw', rate: 256 } },
       desc: R.T('monsters.chaos_3.desc'),
