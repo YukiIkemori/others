@@ -19,7 +19,9 @@
     {
       const P = IK.painted('ghost_ship_1');
       const O = [];
-      O.push(K.stairs(24, 11, { map: 'ghost_ship_2', spawn: 'up' }, { id: 'ghost_ship_1_down', look: 'down' }));
+      // 甲板の昇降口（下絵: x 24.2〜26.7、y 9.7〜11.7 の枠、はしごは x 25）。(2026-10-04 持ち主「最初の階段が絵とずれている」)
+      //   前は (24,11) = 枠の左下の角の外に、コードの階段の絵を重ねていた → はしごの下の段 (25〜26, 11) を w 2 の階段に。絵は下絵の昇降口だけ（look none）
+      O.push(K.stairs(25, 11, { map: 'ghost_ship_2', spawn: 'up' }, { id: 'ghost_ship_1_down', look: 'none', w: 2 }));
       // 渡り板の下の外洋船（乗ると、ネレイの夜の桟橋へ戻る。島々へは桟橋の舵から）
       //   渡り板は 2 マス幅（x 28〜29）。1 つの戸口を w 2 で置く（2 つ並べると入口の印 wayfind が 2 つ出る。2026-10-01 の砂の王墓と同じ）
       O.push({ type: 'door', x: 28, y: 25, w: 2, look: 'none', to: { map: 'nerei', spawn: 'pier_end' }, confirm: R.T('map.isles_ghostship.confirm') });
@@ -33,7 +35,7 @@
       K.def('ghost_ship_1', {
         name: R.T('map.isles_ghostship.ghost_ship_1.name'), kind: 'dungeon', region: 'r_isles', location: 'ghostship', theme: 'harbor', propSet: 'ship', propSetBase: 'harbor',
         legend: IK.SHIP(), rows: P.rows, outside: 'sea', objects: O, npcs: [],
-        spawns: { board: { x: 28, y: 21, dir: 'n' }, hatch: { x: 24, y: 12, dir: 's' } },
+        spawns: { board: { x: 28, y: 21, dir: 'n' }, hatch: { x: 25, y: 12, dir: 's' } },
         exits: [],
         triggers: [{ id: 'arrive', on: 'enter', event: 'isles_ghost_arrive' }],
         zones: [{ rect: null, zone: 'z_r_isles_ship', cond: WISP }],
@@ -75,7 +77,8 @@
     {
       const P = IK.painted('ghost_ship_3');
       const O = [];
-      O.push(K.stairs(47, 14, { map: 'ghost_ship_2', spawn: 'down' }, { id: 'ghost_ship_3_up', look: 'up' }));
+      // 船倉の上り階段（下絵: x 46〜47.8、y 13〜15.9）。(2026-10-04) 前は (47,14) = 右半分だけにコードの階段の絵を重ねていた → 幅 2 の階段（look none）
+      O.push(K.stairs(46, 14, { map: 'ghost_ship_2', spawn: 'down' }, { id: 'ghost_ship_3_up', look: 'none', w: 2 }));
       O.push(K.exam(7, 13, 'isles_captain_log', { cond: 'isles_captain' }));
       O.push(K.exam(14, 14, 'isles_cabin_door', { cond: '!isles_captain' }));
       // 船倉のランタン（火をともすと周りが明るいまま、E6）
@@ -88,7 +91,7 @@
         name: R.T('map.isles_ghostship.ghost_ship_3.name'), kind: 'dungeon', region: 'r_isles', location: 'ghostship', theme: 'harbor', propSet: 'ship', propSetBase: 'harbor',
         legend: IK.SHIP(), rows: P.rows, outside: 'wall_wood', objects: O,
         npcs: [K.npc('glen', 'npc_glen', 7, 12, { name: R.T('map.isles_ghostship.ghost_ship_3.npcs.0.glen.name'), dir: 's', talk: 'isles_captain', reward: null, pushable: false, cond: '!isles_captain' })],
-        spawns: { up: { x: 46, y: 15, dir: 'w' }, cabin: { x: 12, y: 15, dir: 'w' } },
+        spawns: { up: { x: 45, y: 14, dir: 'w' }, cabin: { x: 12, y: 15, dir: 'w' } },
         exits: [],
         triggers: [
           { id: 'hold', on: 'enter', event: 'isles_hold_arrive' },

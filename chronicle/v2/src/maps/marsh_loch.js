@@ -104,6 +104,8 @@
     O.push(K.exam(31, 13, 'loch_bell_tongue'));                                           // 大鐘の舌（広場に落ちた古い鐘の舌）
     O.push(K.prop('mud_boat', 4, 27), K.exam(6, 26, 'loch_ferry', { side: 'n' }), K.exam(6, 28, 'loch_ferry', { side: 's' }));   // さおの渡し舟（運河の西）
     O.push(K.exam(14, 31, 'loch_footprints', { cond: 'marsh_night' }));                    // 夜: 光るこけを踏んだ小さな足あと（証拠 1）
+    // 足あとの絵（夜だけ光る。宿の北東の運河の岸から南の沼の方へ。持ち主 2026-10-04「どこ？」→ 見つけやすく）
+    for (const [x, y] of [[14, 31], [14, 32], [13, 33], [13, 34]]) O.push(K.prop('footprint', x, y, { cond: 'marsh_night' }));
     // 湖のくいの鬼火の灯（道・戸口の前・出入り口に置かない。消灯の刻には落ちる）
     const lamps = [[17, 14], [38, 14], [9, 23], [11, 21], [42, 21], [51, 22], [29, 25], [25, 25], [23, 36], [36, 42], [44, 40], [26, 47], [37, 48], [14, 45], [53, 38]];
     for (const [x, y] of lamps) O.push(K.prop('wisp_lamp', x, y, { cond: '!marsh_night' }));

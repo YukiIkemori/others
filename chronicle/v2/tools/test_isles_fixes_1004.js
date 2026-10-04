@@ -9,6 +9,7 @@
 //   4 外洋船（isles_ship）の泊め場: コーラル・ネレイ・島 4 つで、船の後だけ船の絵（ship／ship_small）が桟橋の脇の海に泊まり、
 //     絵（船体・帆柱・帆桁・帆綱）が桟橋の板（'='）にも歩けるマスにも重ならない。舵（isles_helm／isles_boat）は桟橋の歩けるマスから向いて調べる海のマス。
 //     かじの行き先の並びはどこでも同じ（今いる所は「（いまここ）」で選べない。テスター R14）。
+//   5 幽霊船の甲板の昇降口・船倉の上り階段は描いた絵の上（前はずれた所にコードの階段の絵）。
 //     道しるべの印（wayfind の marks「→ 外洋船のかじ」）が船の後だけ出る。幽霊船の甲板の下の船は渡り板にかからない。
 'use strict';
 const fs = require('fs');
@@ -230,6 +231,26 @@ async function main() {
     ok('ドレイク（外洋船を渡すとき）: 真ん中の桟橋の東に泊めてある・桟橋から船に向かって調べる', /'events\.isles_ship_launch\.say_2': '[^']*桟橋の東[^']*船に向かって/.test(ja));
     ok('手がかり「海図の空白」: コーラルの港に泊めた外洋船のかじ', /'leads\.l_isles_chart\.text': '[^']*コーラルの\\n港に泊めた外洋船のかじ/.test(ja));
     for (const l of ['ja', 'en', 'zh-Hans', 'zh-Hant', 'ko']) ok(`i18n ${l}: 舵の印の札`, fs.readFileSync(path.join(V2, 'src/i18n', l, 'maps_isles.js'), 'utf8').includes("'map.isles_00_kit.moor.way'"));
+  }
+  // ================================================================ 5
+  section('5. 幽霊船の階段が下絵の昇降口・階段の上');
+  {
+    await settle(8000);   // 2 のコーラルに着いたときの字幕（coral_arrival）が終わるまで
+    const st = (id, sid) => (D.maps[id].objects || []).find((o) => o.type === 'stairs' && o.id === sid);
+    const a = st('ghost_ship_1', 'ghost_ship_1_down'), b = st('ghost_ship_3', 'ghost_ship_3_up');
+    ok('甲板の昇降口: 階段は はしごの下の段 (25〜26, 11)・絵は下絵だけ', a.x === 25 && a.y === 11 && a.w === 2 && a.look === 'none', a);
+    ok('船倉の上り階段: 描いた階段 (46〜47, 14)・絵は下絵だけ', b.x === 46 && b.y === 14 && b.w === 2 && b.look === 'none', b);
+    for (const [map, x, y, dir, btn, to] of [['ghost_ship_1', 25, 12, 'n', 'up', 'ghost_ship_2'], ['ghost_ship_1', 26, 12, 'n', 'up', 'ghost_ship_2'], ['ghost_ship_3', 45, 14, 'e', 'right', 'ghost_ship_2']]) {
+      // 着いたときの字幕（enter のトリガー）と歩数の出現は、ここでは止める（階段の位置だけを確かめる）
+      const keep = D.maps[map].triggers; D.maps[map].triggers = [];
+      await F.enter(map, { x, y, dir }, { fade: 0, noAutosave: true }); await settle(200);
+      F.encounter.suppress(100);
+      await hold(btn, 300); await settle(2500);
+      D.maps[map].triggers = keep;
+      ok(`${map}: (${x},${y}) から ${btn} へ歩くと階段で ${to} へ`, S.map.id === to, { map: S.map.id, x: F.pos.x, y: F.pos.y });
+    }
+    const l1 = F.stairsLanding('ghost_ship_1', 'hatch', 'ghost_ship_2'), l3 = F.stairsLanding('ghost_ship_3', 'up', 'ghost_ship_2');
+    ok('戻って着く所は階段の外の隣（甲板: 昇降口の南、船倉: 階段の脇）', l1 && l1.y === 12 && (l1.x === 25 || l1.x === 26) && l3 && !((l3.x === 46 || l3.x === 47) && l3.y === 14) && Math.abs(l3.x - 46.5) <= 1.5 && Math.abs(l3.y - 14) <= 1, { l1, l3 });
   }
   done();
 }
