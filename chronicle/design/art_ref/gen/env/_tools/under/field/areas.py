@@ -274,7 +274,8 @@ def f_cross():
     sea = a.region([(-3, 36.5), (20, 35.5), (40, 36.2), (63, 35), (63, 43), (-3, 43)], '~', rough=0.9, seed=3)
     # clean: a smooth pale beach instead of a ring of boulders along the shore
     a.mask_fill(~sea & (ndimage.distance_transform_edt(~sea) <= 1.2), 's' if clean else 'r', force=True)
-    a.rect(28, 35, 2, 5, '=', force=True, keep=True)
+    bx = 27 if clean else 28   # clean1 painted the bridge on x 27-28
+    a.rect(bx, 35, 2, 5, '=', force=True, keep=True)
     a.rect(26, 32, 6, 3, 'c', force=True, keep=True)
     # mountain foothills (N): rock and a cliff
     hill = a.region([(-3, -3), (63, -3), (63, 3.5), (48, 5), (36, 3.5), (22, 5.5), (8, 4), (-3, 5)], 'r', rough=1.2, seed=4)
@@ -315,7 +316,7 @@ def f_cross():
         a.scatter('r', 0.012, only=',;"', seed=31, clear=1)
         a.scatter('b', 0.008, only=',;"', seed=32, clear=1)
     a.tidy()
-    a.exit('s', 28, 29, {'map': 'f_lookout', 'spawn': 'bridge'}, 'bridge')
+    a.exit('s', bx, bx + 1, {'map': 'f_lookout', 'spawn': 'bridge'}, 'bridge')
     a.exit('w', 22, 23, {'map': 'f_hut', 'spawn': 'east'}, 'west')
     a.exit('e', 18, 19, {'map': 'world', 'spawn': 'f_cross_e'}, 'east')['cond'] = {'not': {'slice': True}}   # the pass: rockslide in the demo
     a.objects += [

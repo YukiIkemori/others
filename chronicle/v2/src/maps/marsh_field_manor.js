@@ -61,7 +61,7 @@
       {"type":"prop","id":"grave_moss","x":46,"y":12},
       {"type":"prop","id":"grave_moss","x":44,"y":14},
       {"type":"prop","id":"pale_mushrooms","x":33,"y":14},
-      {"type":"waylamp","id":"wl_m_manor_gate","x":34,"y":19,"lit":true},
+      {"type":"waylamp","id":"wl_m_manor_gate","x":35,"y":17,"lit":true},
       {"type":"waylamp","id":"wl_m_manor_cw","x":13,"y":19,"lit":true},
     ],
     npcs: [

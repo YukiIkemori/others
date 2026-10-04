@@ -82,5 +82,17 @@
 9,
 "c"
 ]
+],
+"objects": [
+{
+"match": {
+"id": "wl_m_manor_gate"
+},
+"set": {
+"x": 35,
+"y": 17,
+"fixed": true
+}
+}
 ]
 }

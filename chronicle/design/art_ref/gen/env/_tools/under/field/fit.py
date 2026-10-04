@@ -125,6 +125,8 @@ if APPLY:
     for r in fx.get('open_rect', []):
         for j in range(r[1], r[1] + r[3]):
             for i in range(r[0], r[0] + r[2]): fit[j][i] = r[4] if len(r) > 4 else ','
+    # clean paintings (2026-10-04): the cells read straight off the colours by clean_fix.py (open_auto / solid_auto); the hand cells below win
+    for q in fx.get('solid_auto', []) + fx.get('open_auto', []): fit[q[1]][q[0]] = q[2]
     for q in fx.get('solid', []): fit[q[1]][q[0]] = q[2] if len(q) > 2 else 'X'
     for q in fx.get('open', []): fit[q[1]][q[0]] = q[2] if len(q) > 2 else ','
     for r in fx.get('solid_rect', []):
