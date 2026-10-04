@@ -118,6 +118,10 @@ BOSSES['tr_b_rowell2@5'] = { troop: 'tr_b_rowell2', tier: 5, kind: 'mid', member
   }
 }
 
+// 持ち主 2026-10-04（装備のティアの見直し）: 最後のボス（ネムレア 2 形態）は店 8 だけの一行では勝てない（台本 ≤ 35%）。
+//   終章のレア 9・超レア 10 をそろえた一行の勝ち率は tools/sim_gear_bosses.js（F-b 30〜85%・F-c ≥ 60%）が見る
+for (const k of ['tr_b_nemrea1@8', 'tr_b_nemrea2@8']) Object.assign(BOSSES[k], { script: 0, scriptMax: 35, down: 4, rounds: [8, 22], note: BOSSES[k].note + '。店 8 だけでは負ける（レア 9 からは sim_gear_bosses）' });
+
 function loadR() { return require('./lib/load')({ quiet: true }); }
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : 0);
 

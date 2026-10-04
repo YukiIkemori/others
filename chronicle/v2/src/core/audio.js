@@ -1251,6 +1251,7 @@
   let pb = null;         // Playback of cur (null while paused by a jingle / not unlocked)
   let jin = null;        // active jingle {pb, resolve, end}
   const stack = [];      // pushBGM stack of {id, pos}
+  const SILENT_SFX = { confirm: true };   // 鳴らさない効果音（下の sfx()）
   const vols = { bgm: 0.6, sfx: 0.7, voice: 0.8, amb: 0.7 };   // amb: 環境音（下の ambience の節）
   const liveSfx = {}, lastSfx = {}, warned = {};
 
@@ -1575,6 +1576,9 @@
     get jingleId() { return jin ? jin.pb.id : null; },
     /** play an effect. o = {vol (×, default 1), pan (−1…1)}. A recorded take when one is decoded, else the synth */
     sfx(id, o) {
+      // 決定の音（confirm）は鳴らさない（持ち主 2026-10-04「コマンドを押す度チンコン音がするのが邪魔」）。
+      //   当たりの手ごたえが要る所（ミニゲーム）は confirm_soft を使う
+      if (SILENT_SFX[id]) return;
       if (!mx || !(running() || Date.now() - initAt < 1500)) return;
       const def = sfxDef(id);
       const rid = recSfxId(id, def);

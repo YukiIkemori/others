@@ -131,7 +131,7 @@
         sfx('mini_n' + v);
         st.input.push(v);
         st.hits++;
-        if (st.input.length >= st.seq.length) { st.flash = 'ok'; go(st, 'judge'); sfx('confirm'); }
+        if (st.input.length >= st.seq.length) { st.flash = 'ok'; go(st, 'judge'); sfx('confirm_soft'); }
       } else {
         st.flash = 'miss'; go(st, 'judge'); sfx('buzzer');
       }
@@ -145,7 +145,7 @@
       return;
     }
     if (st.phase === 'result') {
-      if (dt > 900 && (I.pressed('a') || I.pressed('b') || (I.pointer && I.pointer.pressed))) { sfx('confirm'); finish(); }
+      if (dt > 900 && (I.pressed('a') || I.pressed('b') || (I.pointer && I.pointer.pressed))) { sfx('confirm_soft'); finish(); }
     }
   }
   function quit(st) {
@@ -321,7 +321,7 @@
             if (I.pressed('a') || (I.pointer && I.pointer.pressed)) {
               const { p: pos, hit } = judgeAt(st, now, dt);
               st.marks.push({ p: pos, hit });
-              if (hit) { st.hits++; sfx('confirm'); } else sfx('buzzer');
+              if (hit) { st.hits++; sfx('confirm_soft'); } else sfx('buzzer');
               st.n++;
               st.phase = 'judge'; st.phaseT = now;
             } else if (I.pressed('b')) { st.n = st.tries; st.phase = 'result'; st.phaseT = now; sfx('cancel'); }

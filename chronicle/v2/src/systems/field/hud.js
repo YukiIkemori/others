@@ -138,7 +138,9 @@
       try { n.isNew = !!R.Events.isNew(m, n.def); } catch (e) { n.isNew = false; }
       if (n.isNew) nNew++;
     }
-    c.newTalk = m.kind === 'town' && nNew ? R.T('sys.hud.refresh.newTalk', { nNew }) : '';
+    // 町の名前の下の「新しい話 N人」は出さない（持ち主 2026-10-04「あれいらない」）。n.isNew は数えたまま（ほかで使う）
+    c.newTalk = '';
+    void nNew;
     // 目印の手がかり
     c.lead = null;
     try {
