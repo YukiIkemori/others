@@ -601,7 +601,7 @@
     // group（防御の回復）: 続く group の回復と同じ拍に出す（音は 1 回、待つのは最後だけ）
     const nx = e.group && st._evs ? st._evs[st._evi + 1] : null;
     const more = !!(nx && nx.t === 'heal' && nx.group);
-    if (!ctx.healBeat) sfxOnce(ctx, 'heal');
+    // 回復の数字の音は鳴らさない（持ち主 2026-10-04「戦闘速度最大だとピコピコうるさい」。術・道具を使う音は残る）
     ctx.healBeat = more;
     if (!more) await st.pwait(220);
   };

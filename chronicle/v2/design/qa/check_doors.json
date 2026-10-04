@@ -1,5 +1,5 @@
 {
- "date": "2026-10-03T15:00:54.481Z",
+ "date": "2026-10-04T09:07:16.516Z",
  "fixture": "content_p_pharos",
  "walked": [
   {
@@ -9,13 +9,13 @@
    "at": "a_pass",
    "to": "a_pass",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     25,
     4
    ],
-   "ms": 3696
+   "ms": 5474
   },
   {
    "map": "a_beach",
@@ -24,13 +24,13 @@
    "at": "a_foot",
    "to": "a_foot",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     48,
     4
    ],
-   "ms": 3726
+   "ms": 5501
   },
   {
    "map": "a_beach",
@@ -45,22 +45,7 @@
     7,
     4
    ],
-   "ms": 4758
-  },
-  {
-   "map": "a_bridge",
-   "kind": "exit",
-   "id": "22,0",
-   "at": "m_bog",
-   "to": "m_bog",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    22,
-    4
-   ],
-   "ms": 3628
+   "ms": 6286
   },
   {
    "map": "a_bridge",
@@ -75,7 +60,22 @@
     21,
     35
    ],
-   "ms": 3802
+   "ms": 4085
+  },
+  {
+   "map": "a_bridge",
+   "kind": "exit",
+   "id": "22,0",
+   "at": "m_bog",
+   "to": "m_bog",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    22,
+    4
+   ],
+   "ms": 4654
   },
   {
    "map": "a_bridge",
@@ -90,7 +90,7 @@
     15,
     26
    ],
-   "ms": 3595
+   "ms": 3563
   },
   {
    "map": "a_foot",
@@ -105,7 +105,7 @@
     20,
     4
    ],
-   "ms": 1688
+   "ms": 3026
   },
   {
    "map": "a_foot",
@@ -120,7 +120,7 @@
     14,
     39
    ],
-   "ms": 1554
+   "ms": 3074
   },
   {
    "map": "a_foot",
@@ -135,7 +135,7 @@
     2,
     19
    ],
-   "ms": 3949
+   "ms": 4893
   },
   {
    "map": "a_lava",
@@ -150,7 +150,22 @@
     0,
     16
    ],
-   "ms": 1823
+   "ms": 3890
+  },
+  {
+   "map": "a_lava",
+   "kind": "exit",
+   "id": "15,0",
+   "at": "a_spa",
+   "to": "a_spa",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    15,
+    4
+   ],
+   "ms": 2550
   },
   {
    "map": "a_lava",
@@ -165,22 +180,7 @@
     56,
     19
    ],
-   "ms": 3113
-  },
-  {
-   "map": "a_lava",
-   "kind": "exit",
-   "id": "15,0",
-   "at": "a_spa",
-   "to": "a_spa",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    15,
-    4
-   ],
-   "ms": 2148
+   "ms": 4313
   },
   {
    "map": "a_lava",
@@ -195,37 +195,7 @@
     47,
     40
    ],
-   "ms": 1971
-  },
-  {
-   "map": "a_pass",
-   "kind": "exit",
-   "id": "25,39",
-   "at": "a_battle",
-   "to": "a_battle",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    25,
-    35
-   ],
-   "ms": 2113
-  },
-  {
-   "map": "a_pass",
-   "kind": "exit",
-   "id": "51,18",
-   "at": "a_lava",
-   "to": "a_lava",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    51,
-    14
-   ],
-   "ms": 2255
+   "ms": 2351
   },
   {
    "map": "a_pass",
@@ -240,7 +210,37 @@
     1,
     16
    ],
-   "ms": 2511
+   "ms": 2500
+  },
+  {
+   "map": "a_pass",
+   "kind": "exit",
+   "id": "51,18",
+   "at": "a_lava",
+   "to": "a_lava",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    51,
+    14
+   ],
+   "ms": 2791
+  },
+  {
+   "map": "a_pass",
+   "kind": "exit",
+   "id": "25,39",
+   "at": "a_battle",
+   "to": "a_battle",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    35
+   ],
+   "ms": 2488
   },
   {
    "map": "a_spa",
@@ -255,7 +255,7 @@
     23,
     35
    ],
-   "ms": 2376
+   "ms": 3936
   },
   {
    "map": "archive_1",
@@ -270,7 +270,7 @@
     21,
     6
    ],
-   "ms": 7414
+   "ms": 8355
   },
   {
    "map": "archive_1",
@@ -285,7 +285,7 @@
     22,
     6
    ],
-   "ms": 7411
+   "ms": 8009
   },
   {
    "map": "archive_1",
@@ -294,28 +294,13 @@
    "at": "biblia",
    "to": "biblia",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     21,
     30
    ],
-   "ms": 7210
-  },
-  {
-   "map": "archive_2",
-   "kind": "stairs",
-   "id": "archive_2_down",
-   "at": "archive_1",
-   "to": "archive_1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    22
-   ],
-   "ms": 2128
+   "ms": 8590
   },
   {
    "map": "archive_2",
@@ -330,22 +315,22 @@
     6,
     22
    ],
-   "ms": 2159
+   "ms": 3041
   },
   {
-   "map": "archive_4",
+   "map": "archive_2",
    "kind": "stairs",
-   "id": "archive_4_down",
-   "at": "archive_3",
-   "to": "archive_3",
+   "id": "archive_2_down",
+   "at": "archive_1",
+   "to": "archive_1",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    38,
-    27
+    5,
+    22
    ],
-   "ms": 2548
+   "ms": 4569
   },
   {
    "map": "archive_3",
@@ -360,7 +345,22 @@
     9,
     27
    ],
-   "ms": 2787
+   "ms": 2748
+  },
+  {
+   "map": "archive_4",
+   "kind": "stairs",
+   "id": "archive_4_down",
+   "at": "archive_3",
+   "to": "archive_3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    38,
+    27
+   ],
+   "ms": 2817
   },
   {
    "map": "archive_4",
@@ -375,22 +375,7 @@
     39,
     27
    ],
-   "ms": 3640
-  },
-  {
-   "map": "archive_5",
-   "kind": "stairs",
-   "id": "archive_5_down",
-   "at": "archive_4",
-   "to": "archive_4",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    18,
-    28
-   ],
-   "ms": 2387
+   "ms": 3044
   },
   {
    "map": "archive_5",
@@ -405,7 +390,22 @@
     19,
     28
    ],
-   "ms": 2863
+   "ms": 2516
+  },
+  {
+   "map": "archive_5",
+   "kind": "stairs",
+   "id": "archive_5_down",
+   "at": "archive_4",
+   "to": "archive_4",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    18,
+    28
+   ],
+   "ms": 3539
   },
   {
    "map": "archive_6",
@@ -420,7 +420,7 @@
     17,
     25
    ],
-   "ms": 2634
+   "ms": 2429
   },
   {
    "map": "archive_6",
@@ -450,7 +450,22 @@
     28,
     13
    ],
-   "ms": 3001
+   "ms": 2103
+  },
+  {
+   "map": "biblia",
+   "kind": "door",
+   "id": "biblia_records",
+   "at": "biblia_records",
+   "to": "biblia_records",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    9,
+    13
+   ],
+   "ms": 2200
   },
   {
    "map": "ash_volcano_1",
@@ -465,22 +480,7 @@
     26,
     43
    ],
-   "ms": 7015
-  },
-  {
-   "map": "biblia",
-   "kind": "door",
-   "id": "biblia_records",
-   "at": "biblia_records",
-   "to": "biblia_records",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    9,
-    13
-   ],
-   "ms": 2264
+   "ms": 7028
   },
   {
    "map": "ash_volcano_2",
@@ -489,13 +489,28 @@
    "at": "ash_volcano_1",
    "to": "ash_volcano_1",
    "ok": true,
-   "steps": 3,
+   "steps": 4,
    "why": null,
    "start": [
     21,
     30
    ],
-   "ms": 6859
+   "ms": 7195
+  },
+  {
+   "map": "biblia",
+   "kind": "door",
+   "id": "biblia_library",
+   "at": "biblia_library",
+   "to": "biblia_library",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    46,
+    13
+   ],
+   "ms": 2357
   },
   {
    "map": "biblia",
@@ -510,22 +525,7 @@
     8,
     30
    ],
-   "ms": 2509
-  },
-  {
-   "map": "biblia",
-   "kind": "door",
-   "id": "biblia_library",
-   "at": "biblia_library",
-   "to": "biblia_library",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    46,
-    13
-   ],
-   "ms": 2753
+   "ms": 2788
   },
   {
    "map": "biblia",
@@ -540,7 +540,7 @@
     47,
     30
    ],
-   "ms": 2287
+   "ms": 2615
   },
   {
    "map": "biblia",
@@ -555,7 +555,7 @@
     5,
     36
    ],
-   "ms": 2030
+   "ms": 2088
   },
   {
    "map": "biblia",
@@ -570,7 +570,7 @@
     44,
     36
    ],
-   "ms": 2033
+   "ms": 2316
   },
   {
    "map": "biblia",
@@ -585,21 +585,7 @@
     15,
     36
    ],
-   "ms": 2391
-  },
-  {
-   "map": "biblia_dawn",
-   "kind": "door",
-   "id": "biblia_records",
-   "at": "biblia_dawn",
-   "to": "biblia_dawn",
-   "ok": true,
-   "steps": 4,
-   "start": [
-    9,
-    13
-   ],
-   "ms": 2181
+   "ms": 2405
   },
   {
    "map": "biblia_dawn",
@@ -613,7 +599,7 @@
     28,
     13
    ],
-   "ms": 2554
+   "ms": 2767
   },
   {
    "map": "biblia_dawn",
@@ -627,21 +613,21 @@
     46,
     13
    ],
-   "ms": 2344
+   "ms": 2295
   },
   {
    "map": "biblia_dawn",
    "kind": "door",
-   "id": "biblia_tavern",
+   "id": "biblia_records",
    "at": "biblia_dawn",
    "to": "biblia_dawn",
    "ok": true,
    "steps": 4,
    "start": [
-    47,
-    30
+    9,
+    13
    ],
-   "ms": 1986
+   "ms": 2776
   },
   {
    "map": "biblia_dawn",
@@ -655,7 +641,21 @@
     8,
     30
    ],
-   "ms": 2141
+   "ms": 2704
+  },
+  {
+   "map": "biblia_dawn",
+   "kind": "door",
+   "id": "biblia_tavern",
+   "at": "biblia_dawn",
+   "to": "biblia_dawn",
+   "ok": true,
+   "steps": 4,
+   "start": [
+    47,
+    30
+   ],
+   "ms": 2080
   },
   {
    "map": "biblia_dawn",
@@ -669,7 +669,7 @@
     5,
     36
    ],
-   "ms": 2481
+   "ms": 2289
   },
   {
    "map": "biblia_dawn",
@@ -683,7 +683,7 @@
     15,
     36
    ],
-   "ms": 1721
+   "ms": 2139
   },
   {
    "map": "biblia_dawn",
@@ -697,7 +697,7 @@
     44,
     36
    ],
-   "ms": 1852
+   "ms": 2043
   },
   {
    "map": "biblia_house3",
@@ -712,7 +712,7 @@
     5,
     5
    ],
-   "ms": 2205
+   "ms": 2420
   },
   {
    "map": "biblia_house5",
@@ -727,7 +727,7 @@
     5,
     5
    ],
-   "ms": 2415
+   "ms": 2175
   },
   {
    "map": "biblia_inn",
@@ -742,7 +742,7 @@
     7,
     7
    ],
-   "ms": 2684
+   "ms": 2351
   },
   {
    "map": "biblia_library",
@@ -751,13 +751,13 @@
    "at": "biblia",
    "to": "biblia",
    "ok": true,
-   "steps": 4,
+   "steps": 2,
    "why": null,
    "start": [
     8,
     7
    ],
-   "ms": 2588
+   "ms": 2172
   },
   {
    "map": "biblia_records",
@@ -772,7 +772,7 @@
     9,
     7
    ],
-   "ms": 2615
+   "ms": 1876
   },
   {
    "map": "biblia_records",
@@ -781,28 +781,13 @@
    "at": "biblia_study",
    "to": "biblia_study",
    "ok": true,
-   "steps": 3,
+   "steps": 4,
    "why": null,
    "start": [
     10,
     5
    ],
-   "ms": 2255
-  },
-  {
-   "map": "biblia_shop",
-   "kind": "exit",
-   "id": "6,9",
-   "at": "biblia",
-   "to": "biblia",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    6,
-    5
-   ],
-   "ms": 2424
+   "ms": 2439
   },
   {
    "map": "biblia_study",
@@ -817,7 +802,22 @@
     6,
     5
    ],
-   "ms": 2073
+   "ms": 1949
+  },
+  {
+   "map": "biblia_shop",
+   "kind": "exit",
+   "id": "6,9",
+   "at": "biblia",
+   "to": "biblia",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
+    5
+   ],
+   "ms": 2682
   },
   {
    "map": "biblia_tavern",
@@ -832,7 +832,7 @@
     7,
     7
    ],
-   "ms": 2595
+   "ms": 2623
   },
   {
    "map": "caldera_dorga",
@@ -841,13 +841,13 @@
    "at": "caldera",
    "to": "caldera",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     5,
     5
    ],
-   "ms": 2950
+   "ms": 3154
   },
   {
    "map": "caldera_granary",
@@ -862,7 +862,7 @@
     5,
     5
    ],
-   "ms": 3062
+   "ms": 2731
   },
   {
    "map": "caldera_arms",
@@ -871,13 +871,13 @@
    "at": "caldera",
    "to": "caldera",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     5,
     5
    ],
-   "ms": 5114
+   "ms": 4934
   },
   {
    "map": "caldera_house",
@@ -886,13 +886,13 @@
    "at": "caldera",
    "to": "caldera",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     5,
     5
    ],
-   "ms": 3475
+   "ms": 2541
   },
   {
    "map": "caldera_inn",
@@ -901,13 +901,13 @@
    "at": "caldera",
    "to": "caldera",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     7,
     7
    ],
-   "ms": 3119
+   "ms": 2169
   },
   {
    "map": "caldera_items",
@@ -916,13 +916,13 @@
    "at": "caldera",
    "to": "caldera",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     5,
     5
    ],
-   "ms": 2721
+   "ms": 2725
   },
   {
    "map": "caldera_smithy",
@@ -931,13 +931,13 @@
    "at": "caldera",
    "to": "caldera",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     5,
     5
    ],
-   "ms": 2670
+   "ms": 2259
   },
   {
    "map": "caldera_tavern",
@@ -952,22 +952,7 @@
     7,
     7
    ],
-   "ms": 2376
-  },
-  {
-   "map": "caldera_temple",
-   "kind": "exit",
-   "id": "7,11",
-   "at": "caldera",
-   "to": "caldera",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    7,
-    7
-   ],
-   "ms": 2597
+   "ms": 2726
   },
   {
    "map": "caldera_toto",
@@ -982,7 +967,22 @@
     4,
     6
    ],
-   "ms": 2046
+   "ms": 2369
+  },
+  {
+   "map": "caldera_temple",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "caldera",
+   "to": "caldera",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 3668
   },
   {
    "map": "coral",
@@ -997,7 +997,7 @@
     7,
     11
    ],
-   "ms": 5570
+   "ms": 7088
   },
   {
    "map": "coral",
@@ -1012,22 +1012,7 @@
     28,
     11
    ],
-   "ms": 5634
-  },
-  {
-   "map": "coral",
-   "kind": "door",
-   "id": "coral_tavern",
-   "at": "coral_tavern",
-   "to": "coral_tavern",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    14,
-    26
-   ],
-   "ms": 1486
+   "ms": 7223
   },
   {
    "map": "coral",
@@ -1042,7 +1027,22 @@
     6,
     26
    ],
-   "ms": 5655
+   "ms": 7175
+  },
+  {
+   "map": "coral",
+   "kind": "door",
+   "id": "coral_tavern",
+   "at": "coral_tavern",
+   "to": "coral_tavern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    14,
+    26
+   ],
+   "ms": 2365
   },
   {
    "map": "coral",
@@ -1057,7 +1057,7 @@
     28,
     26
    ],
-   "ms": 1647
+   "ms": 2016
   },
   {
    "map": "coral",
@@ -1072,7 +1072,7 @@
     37,
     26
    ],
-   "ms": 1296
+   "ms": 2116
   },
   {
    "map": "coral",
@@ -1087,7 +1087,7 @@
     7,
     39
    ],
-   "ms": 1503
+   "ms": 2568
   },
   {
    "map": "coral",
@@ -1102,7 +1102,7 @@
     13,
     39
    ],
-   "ms": 1667
+   "ms": 2503
   },
   {
    "map": "coral",
@@ -1117,7 +1117,7 @@
     30,
     39
    ],
-   "ms": 1270
+   "ms": 1800
   },
   {
    "map": "coral",
@@ -1132,7 +1132,7 @@
     21,
     4
    ],
-   "ms": 1591
+   "ms": 2436
   },
   {
    "map": "coral_arms",
@@ -1141,28 +1141,13 @@
    "at": "coral",
    "to": "coral",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     5,
     5
    ],
-   "ms": 1861
-  },
-  {
-   "map": "coral_guild",
-   "kind": "exit",
-   "id": "8,11",
-   "at": "coral",
-   "to": "coral",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    8,
-    7
-   ],
-   "ms": 1833
+   "ms": 2500
   },
   {
    "map": "coral_harbormaster",
@@ -1177,7 +1162,22 @@
     5,
     5
    ],
-   "ms": 1994
+   "ms": 3220
+  },
+  {
+   "map": "coral_guild",
+   "kind": "exit",
+   "id": "8,11",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    8,
+    7
+   ],
+   "ms": 3493
   },
   {
    "map": "coral_house1",
@@ -1192,7 +1192,7 @@
     5,
     5
    ],
-   "ms": 1801
+   "ms": 2511
   },
   {
    "map": "coral_house2",
@@ -1207,7 +1207,7 @@
     4,
     6
    ],
-   "ms": 1777
+   "ms": 2392
   },
   {
    "map": "coral_house3",
@@ -1222,7 +1222,7 @@
     5,
     5
    ],
-   "ms": 1959
+   "ms": 2537
   },
   {
    "map": "coral_inn",
@@ -1237,7 +1237,7 @@
     7,
     7
    ],
-   "ms": 1818
+   "ms": 2568
   },
   {
    "map": "coral_items",
@@ -1252,7 +1252,7 @@
     5,
     5
    ],
-   "ms": 1856
+   "ms": 2812
   },
   {
    "map": "coral_tavern",
@@ -1267,7 +1267,7 @@
     7,
     7
    ],
-   "ms": 1940
+   "ms": 3263
   },
   {
    "map": "coral",
@@ -1282,7 +1282,7 @@
     36,
     56
    ],
-   "ms": 10160
+   "ms": 16386
   },
   {
    "map": "dovan",
@@ -1297,7 +1297,7 @@
     11,
     14
    ],
-   "ms": 5653
+   "ms": 7670
   },
   {
    "map": "dovan",
@@ -1306,13 +1306,28 @@
    "at": "dovan_guild",
    "to": "dovan_guild",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     30,
     27
    ],
-   "ms": 5541
+   "ms": 7401
+  },
+  {
+   "map": "dovan",
+   "kind": "door",
+   "id": "dovan_house",
+   "at": "dovan_house",
+   "to": "dovan_house",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    20,
+    27
+   ],
+   "ms": 1929
   },
   {
    "map": "dovan",
@@ -1327,22 +1342,7 @@
     10,
     28
    ],
-   "ms": 5777
-  },
-  {
-   "map": "dovan",
-   "kind": "door",
-   "id": "dovan_house",
-   "at": "dovan_house",
-   "to": "dovan_house",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    20,
-    27
-   ],
-   "ms": 1576
+   "ms": 8200
   },
   {
    "map": "dovan",
@@ -1357,7 +1357,7 @@
     9,
     44
    ],
-   "ms": 1563
+   "ms": 2604
   },
   {
    "map": "dovan",
@@ -1372,7 +1372,7 @@
     19,
     45
    ],
-   "ms": 1555
+   "ms": 3150
   },
   {
    "map": "dovan",
@@ -1387,7 +1387,7 @@
     34,
     45
    ],
-   "ms": 1668
+   "ms": 4097
   },
   {
    "map": "dovan",
@@ -1396,13 +1396,13 @@
    "at": "dovan_house2",
    "to": "dovan_house2",
    "ok": true,
-   "steps": 4,
+   "steps": 5,
    "why": null,
    "start": [
     45,
     44
    ],
-   "ms": 1480
+   "ms": 3885
   },
   {
    "map": "dovan",
@@ -1417,7 +1417,7 @@
     26,
     43
    ],
-   "ms": 1665
+   "ms": 3116
   },
   {
    "map": "dovan_forge",
@@ -1432,22 +1432,7 @@
     8,
     7
    ],
-   "ms": 1979
-  },
-  {
-   "map": "dovan_guild",
-   "kind": "exit",
-   "id": "7,11",
-   "at": "dovan",
-   "to": "dovan",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    7,
-    7
-   ],
-   "ms": 2025
+   "ms": 2915
   },
   {
    "map": "dovan_hall",
@@ -1462,7 +1447,22 @@
     8,
     7
    ],
-   "ms": 2370
+   "ms": 2257
+  },
+  {
+   "map": "dovan_guild",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "dovan",
+   "to": "dovan",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 3284
   },
   {
    "map": "dovan_house",
@@ -1477,7 +1477,7 @@
     4,
     6
    ],
-   "ms": 2189
+   "ms": 2529
   },
   {
    "map": "dovan_house2",
@@ -1492,7 +1492,7 @@
     4,
     4
    ],
-   "ms": 2314
+   "ms": 2504
   },
   {
    "map": "dovan_inn",
@@ -1507,7 +1507,7 @@
     7,
     7
    ],
-   "ms": 2239
+   "ms": 2778
   },
   {
    "map": "dovan_items",
@@ -1522,7 +1522,7 @@
     5,
     5
    ],
-   "ms": 2564
+   "ms": 2888
   },
   {
    "map": "dovan_tavern",
@@ -1537,22 +1537,7 @@
     7,
     7
    ],
-   "ms": 2159
-  },
-  {
-   "map": "dovan",
-   "kind": "door",
-   "id": "",
-   "at": "mine_1",
-   "to": "mine_1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    31,
-    7
-   ],
-   "ms": 12287
+   "ms": 2685
   },
   {
    "map": "elder_1",
@@ -1567,22 +1552,22 @@
     25,
     26
    ],
-   "ms": 4594
+   "ms": 4505
   },
   {
-   "map": "elder_1",
-   "kind": "exit",
-   "id": "24,47",
-   "at": "verda_2",
-   "to": "verda_2",
+   "map": "dovan",
+   "kind": "door",
+   "id": "",
+   "at": "mine_1",
+   "to": "mine_1",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    25,
-    43
+    31,
+    7
    ],
-   "ms": 5868
+   "ms": 18416
   },
   {
    "map": "elder_2",
@@ -1597,7 +1582,22 @@
     24,
     7
    ],
-   "ms": 5418
+   "ms": 2198
+  },
+  {
+   "map": "elder_1",
+   "kind": "exit",
+   "id": "24,47",
+   "at": "verda_2",
+   "to": "verda_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    43
+   ],
+   "ms": 6916
   },
   {
    "map": "f_cape",
@@ -1612,7 +1612,7 @@
     1,
     5
    ],
-   "ms": 4966
+   "ms": 6268
   },
   {
    "map": "f_cape",
@@ -1627,7 +1627,7 @@
     48,
     10
    ],
-   "ms": 4518
+   "ms": 5500
   },
   {
    "map": "f_cross",
@@ -1642,7 +1642,7 @@
     28,
     35
    ],
-   "ms": 4481
+   "ms": 5924
   },
   {
    "map": "f_cross",
@@ -1651,13 +1651,13 @@
    "at": "f_hut",
    "to": "f_hut",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     1,
     19
    ],
-   "ms": 4719
+   "ms": 5762
   },
   {
    "map": "f_fern",
@@ -1672,7 +1672,7 @@
     51,
     12
    ],
-   "ms": 4590
+   "ms": 3608
   },
   {
    "map": "f_cape",
@@ -1687,7 +1687,7 @@
     30,
     39
    ],
-   "ms": 17639
+   "ms": 17900
   },
   {
    "map": "f_fern",
@@ -1702,7 +1702,7 @@
     29,
     4
    ],
-   "ms": 6073
+   "ms": 5366
   },
   {
    "map": "f_fern",
@@ -1711,43 +1711,13 @@
    "at": "f_windhill",
    "to": "f_windhill",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     4,
     16
    ],
-   "ms": 2368
-  },
-  {
-   "map": "f_hut",
-   "kind": "exit",
-   "id": "51,23",
-   "at": "f_cross",
-   "to": "f_cross",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    51,
-    19
-   ],
-   "ms": 2232
-  },
-  {
-   "map": "f_hut",
-   "kind": "door",
-   "id": "",
-   "at": "hut",
-   "to": "hut",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    23,
-    23
-   ],
-   "ms": 3044
+   "ms": 3020
   },
   {
    "map": "f_fern",
@@ -1762,7 +1732,37 @@
     30,
     39
    ],
-   "ms": 4415
+   "ms": 5044
+  },
+  {
+   "map": "f_hut",
+   "kind": "door",
+   "id": "",
+   "at": "hut",
+   "to": "hut",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    23,
+    23
+   ],
+   "ms": 3624
+  },
+  {
+   "map": "f_hut",
+   "kind": "exit",
+   "id": "51,23",
+   "at": "f_cross",
+   "to": "f_cross",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    51,
+    19
+   ],
+   "ms": 3267
   },
   {
    "map": "f_hut",
@@ -1771,13 +1771,13 @@
    "at": "f_fern",
    "to": "f_fern",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     4,
     24
    ],
-   "ms": 2263
+   "ms": 3234
   },
   {
    "map": "f_lookout",
@@ -1792,7 +1792,22 @@
     24,
     35
    ],
-   "ms": 3089
+   "ms": 3119
+  },
+  {
+   "map": "f_roa",
+   "kind": "exit",
+   "id": "31,0",
+   "at": "f_lookout",
+   "to": "f_lookout",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    31,
+    4
+   ],
+   "ms": 2950
   },
   {
    "map": "f_roa",
@@ -1807,22 +1822,7 @@
     3,
     18
    ],
-   "ms": 3854
-  },
-  {
-   "map": "f_roa",
-   "kind": "exit",
-   "id": "31,0",
-   "at": "f_lookout",
-   "to": "f_lookout",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    31,
-    4
-   ],
-   "ms": 2629
+   "ms": 5255
   },
   {
    "map": "f_roa",
@@ -1837,22 +1837,7 @@
     51,
     25
    ],
-   "ms": 3147
-  },
-  {
-   "map": "f_south",
-   "kind": "exit",
-   "id": "30,0",
-   "at": "f_fern",
-   "to": "f_fern",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    30,
-    4
-   ],
-   "ms": 3702
+   "ms": 1941
   },
   {
    "map": "f_windhill",
@@ -1867,7 +1852,22 @@
     49,
     28
    ],
-   "ms": 4245
+   "ms": 4604
+  },
+  {
+   "map": "f_south",
+   "kind": "exit",
+   "id": "30,0",
+   "at": "f_fern",
+   "to": "f_fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    30,
+    4
+   ],
+   "ms": 5183
   },
   {
    "map": "f_roa",
@@ -1876,13 +1876,13 @@
    "at": "well",
    "to": "well",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     23,
     20
    ],
-   "ms": 14056
+   "ms": 17465
   },
   {
    "map": "f_windhill",
@@ -1897,22 +1897,7 @@
     12,
     4
    ],
-   "ms": 6219
-  },
-  {
-   "map": "fern",
-   "kind": "door",
-   "id": "fern_u_search",
-   "at": "fern_search",
-   "to": "fern_search",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    7,
-    36
-   ],
-   "ms": 3553
+   "ms": 5155
   },
   {
    "map": "fern",
@@ -1927,7 +1912,22 @@
     15,
     39
    ],
-   "ms": 6619
+   "ms": 6777
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_u_search",
+   "at": "fern_search",
+   "to": "fern_search",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    36
+   ],
+   "ms": 4893
   },
   {
    "map": "fern",
@@ -1936,28 +1936,13 @@
    "at": "fern_gord",
    "to": "fern_gord",
    "ok": true,
-   "steps": 3,
+   "steps": 4,
    "why": null,
    "start": [
     52,
     19
    ],
-   "ms": 1868
-  },
-  {
-   "map": "fern",
-   "kind": "door",
-   "id": "fern_u_rita",
-   "at": "fern_rita",
-   "to": "fern_rita",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    50,
-    11
-   ],
-   "ms": 2460
+   "ms": 3766
   },
   {
    "map": "fern",
@@ -1972,7 +1957,22 @@
     22,
     37
    ],
-   "ms": 7551
+   "ms": 6991
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_u_rita",
+   "at": "fern_rita",
+   "to": "fern_rita",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    50,
+    11
+   ],
+   "ms": 2703
   },
   {
    "map": "fern",
@@ -1987,7 +1987,7 @@
     16,
     47
    ],
-   "ms": 2310
+   "ms": 2632
   },
   {
    "map": "fern",
@@ -2002,7 +2002,7 @@
     40,
     44
    ],
-   "ms": 2398
+   "ms": 3087
   },
   {
    "map": "fern",
@@ -2017,7 +2017,7 @@
     3,
     22
    ],
-   "ms": 2737
+   "ms": 2243
   },
   {
    "map": "fern",
@@ -2032,7 +2032,7 @@
     45,
     31
    ],
-   "ms": 2489
+   "ms": 2947
   },
   {
    "map": "fern",
@@ -2047,7 +2047,7 @@
     22,
     44
    ],
-   "ms": 2241
+   "ms": 2836
   },
   {
    "map": "fern",
@@ -2062,7 +2062,7 @@
     28,
     51
    ],
-   "ms": 2523
+   "ms": 3266
   },
   {
    "map": "fern_gord",
@@ -2071,13 +2071,13 @@
    "at": "fern",
    "to": "fern",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     4,
     3
    ],
-   "ms": 2224
+   "ms": 2853
   },
   {
    "map": "fern",
@@ -2092,7 +2092,7 @@
     28,
     4
    ],
-   "ms": 3261
+   "ms": 4479
   },
   {
    "map": "fern_home1",
@@ -2101,13 +2101,13 @@
    "at": "fern",
    "to": "fern",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     3,
     3
    ],
-   "ms": 2889
+   "ms": 3367
   },
   {
    "map": "fern_home2",
@@ -2122,7 +2122,7 @@
     3,
     3
    ],
-   "ms": 2876
+   "ms": 3147
   },
   {
    "map": "fern_home3",
@@ -2137,7 +2137,7 @@
     4,
     2
    ],
-   "ms": 2812
+   "ms": 2818
   },
   {
    "map": "fern_inn",
@@ -2152,22 +2152,7 @@
     5,
     5
    ],
-   "ms": 2604
-  },
-  {
-   "map": "fern_rita",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "fern",
-   "to": "fern",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    5
-   ],
-   "ms": 2447
+   "ms": 2483
   },
   {
    "map": "fern_pim_home",
@@ -2182,7 +2167,7 @@
     3,
     4
    ],
-   "ms": 2628
+   "ms": 2355
   },
   {
    "map": "fern_search",
@@ -2191,28 +2176,28 @@
    "at": "fern",
    "to": "fern",
    "ok": true,
-   "steps": 5,
+   "steps": 4,
    "why": null,
    "start": [
     4,
     5
    ],
-   "ms": 3154
+   "ms": 2605
   },
   {
-   "map": "fern_shop",
+   "map": "fern_rita",
    "kind": "exit",
-   "id": "4,8",
+   "id": "5,9",
    "at": "fern",
    "to": "fern",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    4,
-    4
+    5,
+    5
    ],
-   "ms": 2487
+   "ms": 2916
   },
   {
    "map": "fern_shed",
@@ -2227,7 +2212,22 @@
     2,
     3
    ],
-   "ms": 3276
+   "ms": 3282
+  },
+  {
+   "map": "fern_shop",
+   "kind": "exit",
+   "id": "4,8",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    4,
+    4
+   ],
+   "ms": 4396
   },
   {
    "map": "g_pass",
@@ -2236,13 +2236,13 @@
    "at": "f_passinn",
    "to": "f_passinn",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     0,
     14
    ],
-   "ms": 4022
+   "ms": 6532
   },
   {
    "map": "g_pass",
@@ -2257,7 +2257,7 @@
     49,
     15
    ],
-   "ms": 3738
+   "ms": 5070
   },
   {
    "map": "g_rail",
@@ -2272,7 +2272,7 @@
     40,
     10
    ],
-   "ms": 3564
+   "ms": 4655
   },
   {
    "map": "g_valley",
@@ -2287,7 +2287,22 @@
     27,
     12
    ],
-   "ms": 2813
+   "ms": 2579
+  },
+  {
+   "map": "g_rail",
+   "kind": "exit",
+   "id": "0,20",
+   "at": "g_valley",
+   "to": "g_valley",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    0,
+    16
+   ],
+   "ms": 4278
   },
   {
    "map": "g_valley",
@@ -2302,22 +2317,7 @@
     0,
     16
    ],
-   "ms": 2790
-  },
-  {
-   "map": "g_rail",
-   "kind": "exit",
-   "id": "0,20",
-   "at": "g_valley",
-   "to": "g_valley",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    0,
-    16
-   ],
-   "ms": 3743
+   "ms": 2210
   },
   {
    "map": "g_valley",
@@ -2332,7 +2332,7 @@
     53,
     18
    ],
-   "ms": 1980
+   "ms": 2173
   },
   {
    "map": "g_valley",
@@ -2347,7 +2347,7 @@
     0,
     25
    ],
-   "ms": 3504
+   "ms": 4966
   },
   {
    "map": "ghost_ship_1",
@@ -2356,28 +2356,13 @@
    "at": "ghost_ship_2",
    "to": "ghost_ship_2",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     24,
     15
    ],
-   "ms": 6038
-  },
-  {
-   "map": "ghost_ship_2",
-   "kind": "stairs",
-   "id": "ghost_ship_2_up",
-   "at": "ghost_ship_1",
-   "to": "ghost_ship_1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    7,
-    15
-   ],
-   "ms": 4165
+   "ms": 7679
   },
   {
    "map": "ghost_ship_2",
@@ -2392,22 +2377,22 @@
     41,
     17
    ],
-   "ms": 2613
+   "ms": 3719
   },
   {
-   "map": "haimi_inn",
-   "kind": "exit",
-   "id": "7,11",
-   "at": "a_bridge",
-   "to": "a_bridge",
+   "map": "ghost_ship_2",
+   "kind": "stairs",
+   "id": "ghost_ship_2_up",
+   "at": "ghost_ship_1",
+   "to": "ghost_ship_1",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
-    6,
-    8
+    7,
+    15
    ],
-   "ms": 1737
+   "ms": 7203
   },
   {
    "map": "ghost_ship_3",
@@ -2422,7 +2407,22 @@
     47,
     18
    ],
-   "ms": 5105
+   "ms": 2683
+  },
+  {
+   "map": "haimi_inn",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "a_bridge",
+   "to": "a_bridge",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
+    8
+   ],
+   "ms": 3371
   },
   {
    "map": "hut",
@@ -2431,13 +2431,13 @@
    "at": "f_hut",
    "to": "f_hut",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     5,
     4
    ],
-   "ms": 4348
+   "ms": 2902
   },
   {
    "map": "i_cape",
@@ -2446,13 +2446,28 @@
    "at": "i_cove",
    "to": "i_cove",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     1,
     22
    ],
-   "ms": 3020
+   "ms": 5969
+  },
+  {
+   "map": "i_cliff",
+   "kind": "exit",
+   "id": "12,37",
+   "at": "coral",
+   "to": "coral",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    12,
+    33
+   ],
+   "ms": 2902
   },
   {
    "map": "ghost_ship_1",
@@ -2467,22 +2482,7 @@
     28,
     21
    ],
-   "ms": 16656
-  },
-  {
-   "map": "i_cliff",
-   "kind": "exit",
-   "id": "12,37",
-   "at": "coral",
-   "to": "coral",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    13,
-    33
-   ],
-   "ms": 2486
+   "ms": 23259
   },
   {
    "map": "i_cape",
@@ -2497,7 +2497,7 @@
     21,
     4
    ],
-   "ms": 4163
+   "ms": 7696
   },
   {
    "map": "i_cliff",
@@ -2512,7 +2512,7 @@
     51,
     15
    ],
-   "ms": 2564
+   "ms": 2738
   },
   {
    "map": "i_cove",
@@ -2527,7 +2527,7 @@
     0,
     6
    ],
-   "ms": 1781
+   "ms": 4524
   },
   {
    "map": "i_cove",
@@ -2542,7 +2542,7 @@
     55,
     7
    ],
-   "ms": 1732
+   "ms": 2906
   },
   {
    "map": "i_light",
@@ -2557,7 +2557,7 @@
     20,
     13
    ],
-   "ms": 4358
+   "ms": 5692
   },
   {
    "map": "isles_cave_1",
@@ -2572,7 +2572,7 @@
     23,
     5
    ],
-   "ms": 5929
+   "ms": 6310
   },
   {
    "map": "isles_cave_2",
@@ -2587,52 +2587,7 @@
     22,
     30
    ],
-   "ms": 1679
-  },
-  {
-   "map": "isles_cave_1",
-   "kind": "exit",
-   "id": "22,39",
-   "at": "i_cove",
-   "to": "i_cove",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    22,
-    35
-   ],
-   "ms": 5095
-  },
-  {
-   "map": "i_cove",
-   "kind": "stairs",
-   "id": "",
-   "at": "isles_cave_1",
-   "to": "isles_cave_1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    47,
-    29
-   ],
-   "ms": 12637
-  },
-  {
-   "map": "lighthouse_1",
-   "kind": "stairs",
-   "id": "",
-   "at": "lighthouse_2",
-   "to": "lighthouse_2",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    28,
-    8
-   ],
-   "ms": 2503
+   "ms": 2047
   },
   {
    "map": "isles_lamproom",
@@ -2647,7 +2602,52 @@
     4,
     5
    ],
-   "ms": 2920
+   "ms": 2838
+  },
+  {
+   "map": "isles_cave_1",
+   "kind": "exit",
+   "id": "22,39",
+   "at": "i_cove",
+   "to": "i_cove",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    22,
+    35
+   ],
+   "ms": 6483
+  },
+  {
+   "map": "i_cove",
+   "kind": "stairs",
+   "id": "",
+   "at": "isles_cave_1",
+   "to": "isles_cave_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    47,
+    29
+   ],
+   "ms": 17655
+  },
+  {
+   "map": "lighthouse_1",
+   "kind": "stairs",
+   "id": "",
+   "at": "lighthouse_2",
+   "to": "lighthouse_2",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    28,
+    8
+   ],
+   "ms": 3575
   },
   {
    "map": "lighthouse_1",
@@ -2656,12 +2656,12 @@
    "at": "lighthouse_1",
    "to": "lighthouse_1",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "start": [
     17,
     17
    ],
-   "ms": 2670
+   "ms": 3916
   },
   {
    "map": "lighthouse_1",
@@ -2670,12 +2670,27 @@
    "at": "lighthouse_1",
    "to": "lighthouse_1",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "start": [
     18,
     17
    ],
-   "ms": 2214
+   "ms": 4496
+  },
+  {
+   "map": "lighthouse_2",
+   "kind": "stairs",
+   "id": "",
+   "at": "lighthouse_1",
+   "to": "lighthouse_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    26,
+    27
+   ],
+   "ms": 2328
   },
   {
    "map": "lighthouse_1",
@@ -2690,22 +2705,7 @@
     15,
     27
    ],
-   "ms": 2899
-  },
-  {
-   "map": "lighthouse_2",
-   "kind": "stairs",
-   "id": "",
-   "at": "lighthouse_1",
-   "to": "lighthouse_1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    26,
-    27
-   ],
-   "ms": 2374
+   "ms": 3308
   },
   {
    "map": "lighthouse_2",
@@ -2714,28 +2714,13 @@
    "at": "lighthouse_3",
    "to": "lighthouse_3",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     16,
     20
    ],
-   "ms": 2344
-  },
-  {
-   "map": "lighthouse_3",
-   "kind": "stairs",
-   "id": "",
-   "at": "lighthouse_2",
-   "to": "lighthouse_2",
-   "ok": true,
-   "steps": 5,
-   "why": null,
-   "start": [
-    12,
-    15
-   ],
-   "ms": 6260
+   "ms": 4638
   },
   {
    "map": "loch",
@@ -2750,97 +2735,22 @@
     20,
     15
    ],
-   "ms": 6921
+   "ms": 8646
   },
   {
-   "map": "loch",
-   "kind": "door",
-   "id": "loch_bell_tavern",
-   "at": "loch_tavern",
-   "to": "loch_tavern",
+   "map": "lighthouse_3",
+   "kind": "stairs",
+   "id": "",
+   "at": "lighthouse_2",
+   "to": "lighthouse_2",
    "ok": true,
-   "steps": 6,
+   "steps": 5,
    "why": null,
    "start": [
-    27,
+    12,
     15
    ],
-   "ms": 6913
-  },
-  {
-   "map": "loch",
-   "kind": "door",
-   "id": "loch_hall",
-   "at": "loch_hall",
-   "to": "loch_hall",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    7,
-    21
-   ],
-   "ms": 2198
-  },
-  {
-   "map": "loch",
-   "kind": "door",
-   "id": "loch_tower",
-   "at": "loch_tower",
-   "to": "loch_tower",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    43,
-    19
-   ],
-   "ms": 1711
-  },
-  {
-   "map": "loch",
-   "kind": "door",
-   "id": "loch_inn",
-   "at": "loch_inn",
-   "to": "loch_inn",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    41
-   ],
-   "ms": 1736
-  },
-  {
-   "map": "loch",
-   "kind": "door",
-   "id": "loch_mayor",
-   "at": "loch_mayor",
-   "to": "loch_mayor",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    32,
-    39
-   ],
-   "ms": 1953
-  },
-  {
-   "map": "loch",
-   "kind": "door",
-   "id": "loch_emma",
-   "at": "loch_emma",
-   "to": "loch_emma",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    19,
-    46
-   ],
-   "ms": 1761
+   "ms": 10268
   },
   {
    "map": "loch",
@@ -2855,7 +2765,97 @@
     35,
     15
    ],
-   "ms": 6472
+   "ms": 2741
+  },
+  {
+   "map": "loch",
+   "kind": "door",
+   "id": "loch_bell_tavern",
+   "at": "loch_tavern",
+   "to": "loch_tavern",
+   "ok": true,
+   "steps": 6,
+   "why": null,
+   "start": [
+    27,
+    15
+   ],
+   "ms": 8961
+  },
+  {
+   "map": "loch",
+   "kind": "door",
+   "id": "loch_tower",
+   "at": "loch_tower",
+   "to": "loch_tower",
+   "ok": true,
+   "steps": 6,
+   "why": null,
+   "start": [
+    43,
+    19
+   ],
+   "ms": 4001
+  },
+  {
+   "map": "loch",
+   "kind": "door",
+   "id": "loch_inn",
+   "at": "loch_inn",
+   "to": "loch_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    41
+   ],
+   "ms": 2984
+  },
+  {
+   "map": "loch",
+   "kind": "door",
+   "id": "loch_mayor",
+   "at": "loch_mayor",
+   "to": "loch_mayor",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    32,
+    39
+   ],
+   "ms": 2180
+  },
+  {
+   "map": "loch",
+   "kind": "door",
+   "id": "loch_emma",
+   "at": "loch_emma",
+   "to": "loch_emma",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    19,
+    46
+   ],
+   "ms": 2368
+  },
+  {
+   "map": "loch",
+   "kind": "door",
+   "id": "loch_hall",
+   "at": "loch_hall",
+   "to": "loch_hall",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    21
+   ],
+   "ms": 8081
   },
   {
    "map": "loch",
@@ -2870,7 +2870,7 @@
     47,
     38
    ],
-   "ms": 1840
+   "ms": 2244
   },
   {
    "map": "loch",
@@ -2885,7 +2885,7 @@
     39,
     48
    ],
-   "ms": 1981
+   "ms": 2709
   },
   {
    "map": "loch",
@@ -2894,13 +2894,13 @@
    "at": "m_west",
    "to": "m_west",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     3,
     20
    ],
-   "ms": 2113
+   "ms": 2638
   },
   {
    "map": "loch",
@@ -2909,13 +2909,13 @@
    "at": "m_manor",
    "to": "m_manor",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     53,
     18
    ],
-   "ms": 2130
+   "ms": 2423
   },
   {
    "map": "loch_arms",
@@ -2930,7 +2930,7 @@
     5,
     5
    ],
-   "ms": 2384
+   "ms": 3348
   },
   {
    "map": "loch_beppo",
@@ -2939,13 +2939,13 @@
    "at": "loch",
    "to": "loch",
    "ok": true,
-   "steps": 3,
+   "steps": 4,
    "why": null,
    "start": [
     5,
     5
    ],
-   "ms": 2412
+   "ms": 3877
   },
   {
    "map": "loch_emma",
@@ -2960,7 +2960,7 @@
     5,
     5
    ],
-   "ms": 2201
+   "ms": 2786
   },
   {
    "map": "loch_hall",
@@ -2975,22 +2975,7 @@
     10,
     9
    ],
-   "ms": 2021
-  },
-  {
-   "map": "loch_inn",
-   "kind": "exit",
-   "id": "7,11",
-   "at": "loch",
-   "to": "loch",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    7,
-    7
-   ],
-   "ms": 2259
+   "ms": 2116
   },
   {
    "map": "loch_items",
@@ -3005,7 +2990,22 @@
     5,
     5
    ],
-   "ms": 2008
+   "ms": 2208
+  },
+  {
+   "map": "loch_inn",
+   "kind": "exit",
+   "id": "7,11",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    7
+   ],
+   "ms": 2544
   },
   {
    "map": "loch_klaus",
@@ -3020,22 +3020,7 @@
     5,
     5
    ],
-   "ms": 2102
-  },
-  {
-   "map": "loch_mayor",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "loch",
-   "to": "loch",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    5
-   ],
-   "ms": 1999
+   "ms": 2365
   },
   {
    "map": "loch_tavern",
@@ -3050,7 +3035,22 @@
     7,
     7
    ],
-   "ms": 2090
+   "ms": 2291
+  },
+  {
+   "map": "loch_mayor",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2329
   },
   {
    "map": "loch_tower",
@@ -3065,7 +3065,7 @@
     5,
     7
    ],
-   "ms": 2074
+   "ms": 2451
   },
   {
    "map": "m_bog",
@@ -3080,7 +3080,7 @@
     25,
     4
    ],
-   "ms": 2535
+   "ms": 5922
   },
   {
    "map": "m_fen",
@@ -3095,22 +3095,7 @@
     20,
     4
    ],
-   "ms": 2546
-  },
-  {
-   "map": "m_fen",
-   "kind": "exit",
-   "id": "55,30",
-   "at": "m_lotus",
-   "to": "m_lotus",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    55,
-    26
-   ],
-   "ms": 1610
+   "ms": 5970
   },
   {
    "map": "m_fen",
@@ -3125,7 +3110,7 @@
     26,
     39
    ],
-   "ms": 2958
+   "ms": 5009
   },
   {
    "map": "m_lotus",
@@ -3140,7 +3125,22 @@
     0,
     16
    ],
-   "ms": 1855
+   "ms": 2786
+  },
+  {
+   "map": "m_fen",
+   "kind": "exit",
+   "id": "55,30",
+   "at": "m_lotus",
+   "to": "m_lotus",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    55,
+    26
+   ],
+   "ms": 3653
   },
   {
    "map": "m_lotus",
@@ -3155,7 +3155,7 @@
     30,
     4
    ],
-   "ms": 1687
+   "ms": 3843
   },
   {
    "map": "m_manor",
@@ -3170,7 +3170,7 @@
     4,
     20
    ],
-   "ms": 1587
+   "ms": 2506
   },
   {
    "map": "m_manor",
@@ -3185,7 +3185,7 @@
     23,
     39
    ],
-   "ms": 1802
+   "ms": 2271
   },
   {
    "map": "m_north",
@@ -3200,7 +3200,7 @@
     25,
     35
    ],
-   "ms": 1862
+   "ms": 4334
   },
   {
    "map": "m_north",
@@ -3215,7 +3215,7 @@
     24,
     4
    ],
-   "ms": 3412
+   "ms": 5859
   },
   {
    "map": "m_west",
@@ -3230,22 +3230,7 @@
     19,
     4
    ],
-   "ms": 1648
-  },
-  {
-   "map": "m_west",
-   "kind": "exit",
-   "id": "55,20",
-   "at": "loch",
-   "to": "loch",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    51,
-    20
-   ],
-   "ms": 2267
+   "ms": 2212
   },
   {
    "map": "m_west",
@@ -3260,7 +3245,22 @@
     20,
     39
    ],
-   "ms": 1539
+   "ms": 2980
+  },
+  {
+   "map": "m_west",
+   "kind": "exit",
+   "id": "55,20",
+   "at": "loch",
+   "to": "loch",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    51,
+    20
+   ],
+   "ms": 5916
   },
   {
    "map": "m_manor",
@@ -3275,22 +3275,7 @@
     38,
     13
    ],
-   "ms": 11539
-  },
-  {
-   "map": "marsh_manor_1",
-   "kind": "stairs",
-   "id": "manor_1_up",
-   "at": "marsh_manor_2",
-   "to": "marsh_manor_2",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    23,
-    7
-   ],
-   "ms": 5264
+   "ms": 15352
   },
   {
    "map": "marsh_manor_1",
@@ -3305,7 +3290,7 @@
     22,
     35
    ],
-   "ms": 1822
+   "ms": 2552
   },
   {
    "map": "marsh_bog",
@@ -3320,7 +3305,22 @@
     28,
     47
    ],
-   "ms": 6076
+   "ms": 8096
+  },
+  {
+   "map": "marsh_manor_1",
+   "kind": "stairs",
+   "id": "manor_1_up",
+   "at": "marsh_manor_2",
+   "to": "marsh_manor_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    23,
+    7
+   ],
+   "ms": 6711
   },
   {
    "map": "marsh_manor_2",
@@ -3335,22 +3335,7 @@
     23,
     29
    ],
-   "ms": 1752
-  },
-  {
-   "map": "mine_1",
-   "kind": "stairs",
-   "id": "mine_1_down",
-   "at": "mine_2",
-   "to": "mine_2",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    48,
-    7
-   ],
-   "ms": 4000
+   "ms": 4819
   },
   {
    "map": "mine_1",
@@ -3365,22 +3350,22 @@
     25,
     39
    ],
-   "ms": 5362
+   "ms": 6392
   },
   {
-   "map": "mine_2",
+   "map": "mine_1",
    "kind": "stairs",
-   "id": "mine_2_down",
-   "at": "mine_3",
-   "to": "mine_3",
+   "id": "mine_1_down",
+   "at": "mine_2",
+   "to": "mine_2",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    9,
-    37
+    48,
+    7
    ],
-   "ms": 2510
+   "ms": 7229
   },
   {
    "map": "mine_2",
@@ -3395,7 +3380,7 @@
     48,
     7
    ],
-   "ms": 6065
+   "ms": 7165
   },
   {
    "map": "mine_hermit",
@@ -3410,22 +3395,7 @@
     5,
     5
    ],
-   "ms": 2026
-  },
-  {
-   "map": "nerei",
-   "kind": "door",
-   "id": "nerei_lampkeeper",
-   "at": "nerei_lampkeeper",
-   "to": "nerei_lampkeeper",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    15,
-    16
-   ],
-   "ms": 2506
+   "ms": 2359
   },
   {
    "map": "mine_3",
@@ -3440,37 +3410,22 @@
     8,
     7
    ],
-   "ms": 5913
+   "ms": 6099
   },
   {
-   "map": "nerei",
-   "kind": "door",
-   "id": "nerei_store",
-   "at": "nerei_store",
-   "to": "nerei_store",
+   "map": "mine_2",
+   "kind": "stairs",
+   "id": "mine_2_down",
+   "at": "mine_3",
+   "to": "mine_3",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    16,
-    27
+    9,
+    37
    ],
-   "ms": 1621
-  },
-  {
-   "map": "nerei",
-   "kind": "door",
-   "id": "nerei_inn",
-   "at": "nerei_inn",
-   "to": "nerei_inn",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    15,
-    39
-   ],
-   "ms": 1927
+   "ms": 7175
   },
   {
    "map": "nerei",
@@ -3485,7 +3440,37 @@
     25,
     21
    ],
-   "ms": 5595
+   "ms": 3209
+  },
+  {
+   "map": "nerei",
+   "kind": "door",
+   "id": "nerei_lampkeeper",
+   "at": "nerei_lampkeeper",
+   "to": "nerei_lampkeeper",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    15,
+    16
+   ],
+   "ms": 6010
+  },
+  {
+   "map": "nerei",
+   "kind": "door",
+   "id": "nerei_store",
+   "at": "nerei_store",
+   "to": "nerei_store",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    16,
+    27
+   ],
+   "ms": 3045
   },
   {
    "map": "nerei",
@@ -3500,7 +3485,22 @@
     25,
     33
    ],
-   "ms": 2456
+   "ms": 1791
+  },
+  {
+   "map": "nerei",
+   "kind": "door",
+   "id": "nerei_inn",
+   "at": "nerei_inn",
+   "to": "nerei_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    15,
+    39
+   ],
+   "ms": 2240
   },
   {
    "map": "nerei",
@@ -3515,7 +3515,7 @@
     20,
     39
    ],
-   "ms": 1894
+   "ms": 2465
   },
   {
    "map": "nerei_house",
@@ -3530,7 +3530,7 @@
     4,
     6
    ],
-   "ms": 1862
+   "ms": 3014
   },
   {
    "map": "nerei_inn",
@@ -3545,7 +3545,7 @@
     5,
     6
    ],
-   "ms": 1888
+   "ms": 2483
   },
   {
    "map": "nerei_lampkeeper",
@@ -3560,7 +3560,7 @@
     5,
     5
    ],
-   "ms": 1870
+   "ms": 2244
   },
   {
    "map": "nerei_marina",
@@ -3575,7 +3575,7 @@
     4,
     6
    ],
-   "ms": 1873
+   "ms": 2757
   },
   {
    "map": "nerei_store",
@@ -3584,13 +3584,13 @@
    "at": "nerei",
    "to": "nerei",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     5,
     5
    ],
-   "ms": 1961
+   "ms": 2915
   },
   {
    "map": "orbis",
@@ -3605,37 +3605,7 @@
     23,
     14
    ],
-   "ms": 6148
-  },
-  {
-   "map": "orbis",
-   "kind": "door",
-   "id": "orbis_observatory",
-   "at": "orbis_observatory",
-   "to": "orbis_observatory",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    38,
-    15
-   ],
-   "ms": 6174
-  },
-  {
-   "map": "orbis",
-   "kind": "door",
-   "id": "orbis_house4",
-   "at": "orbis_house4",
-   "to": "orbis_house4",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    47,
-    15
-   ],
-   "ms": 6199
+   "ms": 7273
   },
   {
    "map": "orbis",
@@ -3650,7 +3620,37 @@
     46,
     20
    ],
-   "ms": 1802
+   "ms": 1827
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_observatory",
+   "at": "orbis_observatory",
+   "to": "orbis_observatory",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    38,
+    15
+   ],
+   "ms": 7367
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_house4",
+   "at": "orbis_house4",
+   "to": "orbis_house4",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    47,
+    15
+   ],
+   "ms": 7348
   },
   {
    "map": "orbis",
@@ -3665,22 +3665,7 @@
     9,
     20
    ],
-   "ms": 1926
-  },
-  {
-   "map": "orbis",
-   "kind": "door",
-   "id": "orbis_records",
-   "at": "orbis_records",
-   "to": "orbis_records",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    20,
-    20
-   ],
-   "ms": 1833
+   "ms": 2353
   },
   {
    "map": "orbis",
@@ -3695,7 +3680,22 @@
     7,
     36
    ],
-   "ms": 1927
+   "ms": 2131
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_records",
+   "at": "orbis_records",
+   "to": "orbis_records",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    20,
+    20
+   ],
+   "ms": 2957
   },
   {
    "map": "orbis",
@@ -3710,7 +3710,7 @@
     16,
     36
    ],
-   "ms": 1796
+   "ms": 2285
   },
   {
    "map": "orbis",
@@ -3725,7 +3725,7 @@
     6,
     47
    ],
-   "ms": 1857
+   "ms": 2122
   },
   {
    "map": "orbis",
@@ -3740,22 +3740,7 @@
     16,
     47
    ],
-   "ms": 1437
-  },
-  {
-   "map": "orbis",
-   "kind": "door",
-   "id": "orbis_arms",
-   "at": "orbis_arms",
-   "to": "orbis_arms",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    46,
-    31
-   ],
-   "ms": 1590
+   "ms": 2217
   },
   {
    "map": "orbis",
@@ -3770,7 +3755,7 @@
     38,
     31
    ],
-   "ms": 1884
+   "ms": 2572
   },
   {
    "map": "orbis",
@@ -3785,7 +3770,22 @@
     37,
     37
    ],
-   "ms": 1540
+   "ms": 2113
+  },
+  {
+   "map": "orbis",
+   "kind": "door",
+   "id": "orbis_arms",
+   "at": "orbis_arms",
+   "to": "orbis_arms",
+   "ok": true,
+   "steps": 5,
+   "why": null,
+   "start": [
+    46,
+    31
+   ],
+   "ms": 2880
   },
   {
    "map": "orbis",
@@ -3800,22 +3800,7 @@
     46,
     37
    ],
-   "ms": 1429
-  },
-  {
-   "map": "orbis",
-   "kind": "door",
-   "id": "orbis_house2",
-   "at": "orbis_house2",
-   "to": "orbis_house2",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    39,
-    47
-   ],
-   "ms": 1608
+   "ms": 2372
   },
   {
    "map": "orbis",
@@ -3830,22 +3815,22 @@
     49,
     47
    ],
-   "ms": 1296
+   "ms": 1564
   },
   {
    "map": "orbis",
-   "kind": "exit",
-   "id": "27,51",
-   "at": "s_plateau",
-   "to": "s_plateau",
+   "kind": "door",
+   "id": "orbis_house2",
+   "at": "orbis_house2",
+   "to": "orbis_house2",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    27,
+    39,
     47
    ],
-   "ms": 1664
+   "ms": 2500
   },
   {
    "map": "orbis",
@@ -3860,7 +3845,22 @@
     55,
     30
    ],
-   "ms": 1726
+   "ms": 2514
+  },
+  {
+   "map": "orbis",
+   "kind": "exit",
+   "id": "27,51",
+   "at": "s_plateau",
+   "to": "s_plateau",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    27,
+    47
+   ],
+   "ms": 2669
   },
   {
    "map": "orbis_arms",
@@ -3875,7 +3875,7 @@
     5,
     5
    ],
-   "ms": 2043
+   "ms": 2333
   },
   {
    "map": "orbis_guardroom",
@@ -3890,22 +3890,7 @@
     4,
     6
    ],
-   "ms": 1968
-  },
-  {
-   "map": "orbis_house",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "orbis",
-   "to": "orbis",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    4,
-    6
-   ],
-   "ms": 1992
+   "ms": 2252
   },
   {
    "map": "orbis_house2",
@@ -3920,7 +3905,22 @@
     5,
     5
    ],
-   "ms": 1776
+   "ms": 2080
+  },
+  {
+   "map": "orbis_house",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    6
+   ],
+   "ms": 2554
   },
   {
    "map": "orbis_house3",
@@ -3935,22 +3935,7 @@
     5,
     5
    ],
-   "ms": 2243
-  },
-  {
-   "map": "orbis_house4",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "orbis",
-   "to": "orbis",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    5
-   ],
-   "ms": 1897
+   "ms": 2963
   },
   {
    "map": "orbis_house5",
@@ -3965,10 +3950,10 @@
     5,
     5
    ],
-   "ms": 2119
+   "ms": 2759
   },
   {
-   "map": "orbis_items",
+   "map": "orbis_house4",
    "kind": "exit",
    "id": "5,9",
    "at": "orbis",
@@ -3980,7 +3965,7 @@
     5,
     5
    ],
-   "ms": 1832
+   "ms": 2913
   },
   {
    "map": "orbis_inn",
@@ -3995,7 +3980,22 @@
     7,
     7
    ],
-   "ms": 1997
+   "ms": 2148
+  },
+  {
+   "map": "orbis_items",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2513
   },
   {
    "map": "orbis_laundry",
@@ -4010,7 +4010,7 @@
     6,
     5
    ],
-   "ms": 1817
+   "ms": 2570
   },
   {
    "map": "orbis_library",
@@ -4025,22 +4025,7 @@
     9,
     9
    ],
-   "ms": 1978
-  },
-  {
-   "map": "orbis_magic",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "orbis",
-   "to": "orbis",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    5
-   ],
-   "ms": 1889
+   "ms": 2477
   },
   {
    "map": "orbis_observatory",
@@ -4055,10 +4040,10 @@
     8,
     9
    ],
-   "ms": 2033
+   "ms": 2012
   },
   {
-   "map": "orbis_tailor",
+   "map": "orbis_magic",
    "kind": "exit",
    "id": "5,9",
    "at": "orbis",
@@ -4070,22 +4055,7 @@
     5,
     5
    ],
-   "ms": 1843
-  },
-  {
-   "map": "orbis_records",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "orbis",
-   "to": "orbis",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    5
-   ],
-   "ms": 1973
+   "ms": 2159
   },
   {
    "map": "orbis_tavern",
@@ -4100,7 +4070,37 @@
     7,
     7
    ],
-   "ms": 2172
+   "ms": 2237
+  },
+  {
+   "map": "orbis_tailor",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2416
+  },
+  {
+   "map": "orbis_records",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2842
   },
   {
    "map": "pharos",
@@ -4115,7 +4115,7 @@
     11,
     12
    ],
-   "ms": 3056
+   "ms": 3575
   },
   {
    "map": "pharos",
@@ -4130,7 +4130,7 @@
     6,
     12
    ],
-   "ms": 3294
+   "ms": 3928
   },
   {
    "map": "pharos",
@@ -4145,22 +4145,7 @@
     19,
     8
    ],
-   "ms": 3036
-  },
-  {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_record",
-   "at": "pharos_record",
-   "to": "pharos_record",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    25,
-    8
-   ],
-   "ms": 1603
+   "ms": 4696
   },
   {
    "map": "pharos",
@@ -4175,7 +4160,22 @@
     49,
     12
    ],
-   "ms": 1583
+   "ms": 1900
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_record",
+   "at": "pharos_record",
+   "to": "pharos_record",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    8
+   ],
+   "ms": 2899
   },
   {
    "map": "pharos",
@@ -4190,7 +4190,7 @@
     15,
     32
    ],
-   "ms": 1695
+   "ms": 2638
   },
   {
    "map": "pharos",
@@ -4205,7 +4205,7 @@
     22,
     18
    ],
-   "ms": 1809
+   "ms": 2376
   },
   {
    "map": "pharos",
@@ -4220,7 +4220,7 @@
     30,
     23
    ],
-   "ms": 1698
+   "ms": 2716
   },
   {
    "map": "pharos",
@@ -4235,22 +4235,7 @@
     33,
     26
    ],
-   "ms": 1796
-  },
-  {
-   "map": "pharos",
-   "kind": "door",
-   "id": "ph_house6",
-   "at": "pharos_home6",
-   "to": "pharos_home6",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    32,
-    37
-   ],
-   "ms": 1692
+   "ms": 2047
   },
   {
    "map": "pharos",
@@ -4265,7 +4250,7 @@
     8,
     25
    ],
-   "ms": 1758
+   "ms": 2299
   },
   {
    "map": "pharos",
@@ -4280,37 +4265,22 @@
     42,
     32
    ],
-   "ms": 1672
+   "ms": 1726
   },
   {
    "map": "pharos",
-   "kind": "exit",
-   "id": "0,10",
-   "at": "f_cape",
-   "to": "f_cape",
+   "kind": "door",
+   "id": "ph_house6",
+   "at": "pharos_home6",
+   "to": "pharos_home6",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    4,
-    10
+    32,
+    37
    ],
-   "ms": 1808
-  },
-  {
-   "map": "pharos_home1",
-   "kind": "exit",
-   "id": "3,7",
-   "at": "pharos",
-   "to": "pharos",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    2,
-    4
-   ],
-   "ms": 1827
+   "ms": 2239
   },
   {
    "map": "pharos_home2",
@@ -4325,22 +4295,37 @@
     3,
     3
    ],
-   "ms": 1974
+   "ms": 2308
   },
   {
-   "map": "pharos_home4",
+   "map": "pharos",
    "kind": "exit",
-   "id": "4,7",
+   "id": "0,10",
+   "at": "f_cape",
+   "to": "f_cape",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    10
+   ],
+   "ms": 3672
+  },
+  {
+   "map": "pharos_home1",
+   "kind": "exit",
+   "id": "3,7",
    "at": "pharos",
    "to": "pharos",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    3,
+    2,
     4
    ],
-   "ms": 1959
+   "ms": 3613
   },
   {
    "map": "pharos_home3",
@@ -4349,13 +4334,13 @@
    "at": "pharos",
    "to": "pharos",
    "ok": true,
-   "steps": 4,
+   "steps": 5,
    "why": null,
    "start": [
     3,
     3
    ],
-   "ms": 2191
+   "ms": 3545
   },
   {
    "map": "pharos_home5",
@@ -4370,7 +4355,22 @@
     3,
     4
    ],
-   "ms": 1974
+   "ms": 2538
+  },
+  {
+   "map": "pharos_home4",
+   "kind": "exit",
+   "id": "4,7",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    4
+   ],
+   "ms": 3524
   },
   {
    "map": "pharos_home6",
@@ -4385,22 +4385,7 @@
     3,
     3
    ],
-   "ms": 1755
-  },
-  {
-   "map": "pharos_inn",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "pharos",
-   "to": "pharos",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    5
-   ],
-   "ms": 1929
+   "ms": 2337
   },
   {
    "map": "pharos_record",
@@ -4415,7 +4400,22 @@
     6,
     5
    ],
-   "ms": 2151
+   "ms": 2246
+  },
+  {
+   "map": "pharos_inn",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 2903
   },
   {
    "map": "pharos_shop",
@@ -4430,7 +4430,7 @@
     3,
     5
    ],
-   "ms": 1962
+   "ms": 2679
   },
   {
    "map": "pharos_shipyard",
@@ -4445,7 +4445,7 @@
     5,
     4
    ],
-   "ms": 2342
+   "ms": 3114
   },
   {
    "map": "pharos_smith",
@@ -4460,7 +4460,22 @@
     3,
     5
    ],
-   "ms": 2165
+   "ms": 2504
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h1",
+   "at": "roa_home1",
+   "to": "roa_home1",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    5,
+    11
+   ],
+   "ms": 3192
   },
   {
    "map": "pharos_tavern",
@@ -4475,37 +4490,7 @@
     7,
     6
    ],
-   "ms": 2131
-  },
-  {
-   "map": "roa",
-   "kind": "door",
-   "id": "roa_h1",
-   "at": "roa_home1",
-   "to": "roa_home1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    5,
-    11
-   ],
-   "ms": 2310
-  },
-  {
-   "map": "roa",
-   "kind": "door",
-   "id": "roa_h3",
-   "at": "roa_home3",
-   "to": "roa_home3",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    31,
-    12
-   ],
-   "ms": 1712
+   "ms": 3839
   },
   {
    "map": "roa",
@@ -4514,13 +4499,13 @@
    "at": "roa_home2",
    "to": "roa_home2",
    "ok": true,
-   "steps": 6,
+   "steps": 4,
    "why": null,
    "start": [
     14,
     13
    ],
-   "ms": 2874
+   "ms": 3894
   },
   {
    "map": "roa",
@@ -4535,7 +4520,7 @@
     21,
     13
    ],
-   "ms": 2510
+   "ms": 2190
   },
   {
    "map": "roa",
@@ -4550,7 +4535,22 @@
     36,
     12
    ],
-   "ms": 1506
+   "ms": 2462
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h3",
+   "at": "roa_home3",
+   "to": "roa_home3",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    31,
+    12
+   ],
+   "ms": 3643
   },
   {
    "map": "roa",
@@ -4565,22 +4565,7 @@
     5,
     25
    ],
-   "ms": 1667
-  },
-  {
-   "map": "roa",
-   "kind": "door",
-   "id": "roa_h6",
-   "at": "roa_home6",
-   "to": "roa_home6",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    30,
-    21
-   ],
-   "ms": 1487
+   "ms": 2251
   },
   {
    "map": "roa",
@@ -4595,7 +4580,22 @@
     17,
     31
    ],
-   "ms": 1665
+   "ms": 2008
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h6",
+   "at": "roa_home6",
+   "to": "roa_home6",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    30,
+    21
+   ],
+   "ms": 2769
   },
   {
    "map": "roa",
@@ -4610,21 +4610,7 @@
     39,
     15
    ],
-   "ms": 1810
-  },
-  {
-   "map": "roa_dawn",
-   "kind": "door",
-   "id": "roa_h1",
-   "at": "roa_dawn",
-   "to": "roa_dawn",
-   "ok": true,
-   "steps": 4,
-   "start": [
-    5,
-    11
-   ],
-   "ms": 1901
+   "ms": 2946
   },
   {
    "map": "roa_dawn",
@@ -4633,12 +4619,26 @@
    "at": "roa_dawn",
    "to": "roa_dawn",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "start": [
     14,
     13
    ],
-   "ms": 1605
+   "ms": 3485
+  },
+  {
+   "map": "roa_dawn",
+   "kind": "door",
+   "id": "roa_h1",
+   "at": "roa_dawn",
+   "to": "roa_dawn",
+   "ok": true,
+   "steps": 3,
+   "start": [
+    5,
+    11
+   ],
+   "ms": 4121
   },
   {
    "map": "roa_dawn",
@@ -4652,7 +4652,7 @@
     21,
     13
    ],
-   "ms": 2118
+   "ms": 4594
   },
   {
    "map": "roa_dawn",
@@ -4666,7 +4666,7 @@
     29,
     12
    ],
-   "ms": 1793
+   "ms": 2392
   },
   {
    "map": "roa_dawn",
@@ -4680,35 +4680,7 @@
     37,
     13
    ],
-   "ms": 1863
-  },
-  {
-   "map": "roa_dawn",
-   "kind": "door",
-   "id": "roa_h6",
-   "at": "roa_dawn",
-   "to": "roa_dawn",
-   "ok": true,
-   "steps": 4,
-   "start": [
-    30,
-    21
-   ],
-   "ms": 1951
-  },
-  {
-   "map": "roa_dawn",
-   "kind": "door",
-   "id": "roa_h5",
-   "at": "roa_dawn",
-   "to": "roa_dawn",
-   "ok": true,
-   "steps": 3,
-   "start": [
-    5,
-    25
-   ],
-   "ms": 2000
+   "ms": 2472
   },
   {
    "map": "roa_dawn",
@@ -4722,22 +4694,35 @@
     17,
     31
    ],
-   "ms": 2071
+   "ms": 1873
   },
   {
-   "map": "roa_home1",
-   "kind": "exit",
-   "id": "4,7",
-   "at": "roa",
-   "to": "roa",
+   "map": "roa_dawn",
+   "kind": "door",
+   "id": "roa_h5",
+   "at": "roa_dawn",
+   "to": "roa_dawn",
    "ok": true,
    "steps": 4,
-   "why": null,
    "start": [
-    2,
-    5
+    5,
+    25
    ],
-   "ms": 2193
+   "ms": 2594
+  },
+  {
+   "map": "roa_dawn",
+   "kind": "door",
+   "id": "roa_h6",
+   "at": "roa_dawn",
+   "to": "roa_dawn",
+   "ok": true,
+   "steps": 4,
+   "start": [
+    30,
+    21
+   ],
+   "ms": 2767
   },
   {
    "map": "roa_hall_in",
@@ -4752,7 +4737,22 @@
     5,
     4
    ],
-   "ms": 2244
+   "ms": 2010
+  },
+  {
+   "map": "roa_home1",
+   "kind": "exit",
+   "id": "4,7",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    2,
+    5
+   ],
+   "ms": 2422
   },
   {
    "map": "roa_home2",
@@ -4767,7 +4767,22 @@
     3,
     3
    ],
-   "ms": 2351
+   "ms": 2629
+  },
+  {
+   "map": "roa_home4",
+   "kind": "exit",
+   "id": "4,7",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    4,
+    3
+   ],
+   "ms": 1903
   },
   {
    "map": "roa_home3",
@@ -4782,22 +4797,7 @@
     3,
     3
    ],
-   "ms": 2042
-  },
-  {
-   "map": "roa_home4",
-   "kind": "exit",
-   "id": "4,7",
-   "at": "roa",
-   "to": "roa",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    4,
-    3
-   ],
-   "ms": 2109
+   "ms": 2599
   },
   {
    "map": "roa_home5",
@@ -4812,7 +4812,7 @@
     3,
     2
    ],
-   "ms": 1915
+   "ms": 2507
   },
   {
    "map": "roa_home6",
@@ -4827,7 +4827,7 @@
     2,
     3
    ],
-   "ms": 1909
+   "ms": 3066
   },
   {
    "map": "roa_house",
@@ -4842,7 +4842,7 @@
     6,
     5
    ],
-   "ms": 1994
+   "ms": 3191
   },
   {
    "map": "roa_house_dawn",
@@ -4856,37 +4856,7 @@
     6,
     5
    ],
-   "ms": 1417
-  },
-  {
-   "map": "s_crater",
-   "kind": "exit",
-   "id": "0,20",
-   "at": "s_plateau",
-   "to": "s_plateau",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    0,
-    16
-   ],
-   "ms": 2516
-  },
-  {
-   "map": "s_crater",
-   "kind": "exit",
-   "id": "25,0",
-   "at": "s_ridge",
-   "to": "s_ridge",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    25,
-    4
-   ],
-   "ms": 2510
+   "ms": 2540
   },
   {
    "map": "s_plateau",
@@ -4901,7 +4871,37 @@
     0,
     5
    ],
-   "ms": 2310
+   "ms": 3495
+  },
+  {
+   "map": "s_crater",
+   "kind": "exit",
+   "id": "0,20",
+   "at": "s_plateau",
+   "to": "s_plateau",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    0,
+    16
+   ],
+   "ms": 4131
+  },
+  {
+   "map": "s_crater",
+   "kind": "exit",
+   "id": "25,0",
+   "at": "s_ridge",
+   "to": "s_ridge",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    4
+   ],
+   "ms": 4780
   },
   {
    "map": "s_plateau",
@@ -4916,22 +4916,7 @@
     55,
     18
    ],
-   "ms": 1422
-  },
-  {
-   "map": "s_plateau",
-   "kind": "exit",
-   "id": "27,0",
-   "at": "orbis",
-   "to": "orbis",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    27,
-    4
-   ],
-   "ms": 1966
+   "ms": 2069
   },
   {
    "map": "s_ridge",
@@ -4946,7 +4931,22 @@
     24,
     33
    ],
-   "ms": 2199
+   "ms": 1763
+  },
+  {
+   "map": "s_plateau",
+   "kind": "exit",
+   "id": "27,0",
+   "at": "orbis",
+   "to": "orbis",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    27,
+    4
+   ],
+   "ms": 4082
   },
   {
    "map": "s_ridge",
@@ -4961,7 +4961,7 @@
     3,
     26
    ],
-   "ms": 1593
+   "ms": 2962
   },
   {
    "map": "s_steps",
@@ -4976,7 +4976,7 @@
     51,
     5
    ],
-   "ms": 1362
+   "ms": 2440
   },
   {
    "map": "s_steps",
@@ -4991,7 +4991,7 @@
     1,
     24
    ],
-   "ms": 2152
+   "ms": 3981
   },
   {
    "map": "star_academy_1",
@@ -5006,7 +5006,7 @@
     23,
     7
    ],
-   "ms": 5813
+   "ms": 8163
   },
   {
    "map": "star_academy_1",
@@ -5021,7 +5021,7 @@
     24,
     7
    ],
-   "ms": 6093
+   "ms": 8065
   },
   {
    "map": "star_academy_2",
@@ -5036,7 +5036,7 @@
     23,
     32
    ],
-   "ms": 1346
+   "ms": 2341
   },
   {
    "map": "star_academy_2",
@@ -5051,7 +5051,7 @@
     24,
     32
    ],
-   "ms": 1255
+   "ms": 2846
   },
   {
    "map": "star_academy_1",
@@ -5066,7 +5066,7 @@
     6,
     32
    ],
-   "ms": 12609
+   "ms": 18247
   },
   {
    "map": "star_tower_1",
@@ -5081,7 +5081,7 @@
     25,
     6
    ],
-   "ms": 5589
+   "ms": 8929
   },
   {
    "map": "star_tower_1",
@@ -5096,7 +5096,7 @@
     26,
     6
    ],
-   "ms": 5845
+   "ms": 9563
   },
   {
    "map": "star_tower_top",
@@ -5111,7 +5111,7 @@
     17,
     29
    ],
-   "ms": 1393
+   "ms": 2235
   },
   {
    "map": "star_tower_top",
@@ -5126,7 +5126,7 @@
     18,
     27
    ],
-   "ms": 1400
+   "ms": 2612
   },
   {
    "map": "star_tower_1",
@@ -5141,7 +5141,7 @@
     25,
     41
    ],
-   "ms": 4859
+   "ms": 7149
   },
   {
    "map": "vein_1",
@@ -5156,7 +5156,7 @@
     5,
     6
    ],
-   "ms": 5195
+   "ms": 10120
   },
   {
    "map": "vein_1",
@@ -5171,7 +5171,7 @@
     40,
     33
    ],
-   "ms": 6034
+   "ms": 10379
   },
   {
    "map": "vein_2",
@@ -5186,7 +5186,7 @@
     37,
     7
    ],
-   "ms": 6113
+   "ms": 10092
   },
   {
    "map": "vein_2",
@@ -5201,7 +5201,7 @@
     6,
     29
    ],
-   "ms": 5378
+   "ms": 7469
   },
   {
    "map": "vein_3",
@@ -5216,22 +5216,7 @@
     18,
     23
    ],
-   "ms": 4199
-  },
-  {
-   "map": "verda_1",
-   "kind": "exit",
-   "id": "28,0",
-   "at": "verda_2",
-   "to": "verda_2",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    30,
-    4
-   ],
-   "ms": 2912
+   "ms": 6589
   },
   {
    "map": "verda_1",
@@ -5246,21 +5231,22 @@
     29,
     47
    ],
-   "ms": 4722
+   "ms": 9804
   },
   {
    "map": "verda_1",
    "kind": "exit",
-   "id": "11,20",
-   "at": "verda_1",
-   "to": "verda_1",
+   "id": "28,0",
+   "at": "verda_2",
+   "to": "verda_2",
    "ok": true,
-   "steps": 5,
+   "steps": 4,
+   "why": null,
    "start": [
-    11,
-    24
+    30,
+    4
    ],
-   "ms": 3992
+   "ms": 7257
   },
   {
    "map": "verda_2",
@@ -5275,7 +5261,21 @@
     29,
     47
    ],
-   "ms": 4534
+   "ms": 3792
+  },
+  {
+   "map": "verda_1",
+   "kind": "exit",
+   "id": "11,20",
+   "at": "verda_1",
+   "to": "verda_1",
+   "ok": true,
+   "steps": 4,
+   "start": [
+    11,
+    24
+   ],
+   "ms": 6567
   },
   {
    "map": "verda_2",
@@ -5290,7 +5290,7 @@
     29,
     3
    ],
-   "ms": 1529
+   "ms": 2893
   },
   {
    "map": "volk",
@@ -5299,13 +5299,27 @@
    "at": "volk_inn",
    "to": "volk_inn",
    "ok": true,
-   "steps": 4,
+   "steps": 3,
    "why": null,
    "start": [
     6,
     15
    ],
-   "ms": 1777
+   "ms": 4883
+  },
+  {
+   "map": "verda_2",
+   "kind": "exit",
+   "id": "20,32",
+   "at": "verda_2",
+   "to": "verda_2",
+   "ok": true,
+   "steps": 4,
+   "start": [
+    24,
+    32
+   ],
+   "ms": 8363
   },
   {
    "map": "volk",
@@ -5320,66 +5334,7 @@
     17,
     17
    ],
-   "ms": 1492
-  },
-  {
-   "map": "verda_2",
-   "kind": "exit",
-   "id": "20,32",
-   "at": "verda_2",
-   "to": "verda_2",
-   "ok": true,
-   "steps": 5,
-   "start": [
-    24,
-    32
-   ],
-   "ms": 4368
-  },
-  {
-   "map": "volk",
-   "kind": "door",
-   "id": "volk_house",
-   "at": "volk_house",
-   "to": "volk_house",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    4,
-    24
-   ],
-   "ms": 1522
-  },
-  {
-   "map": "volk",
-   "kind": "exit",
-   "id": "9,27",
-   "at": "g_valley",
-   "to": "g_valley",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    9,
-    23
-   ],
-   "ms": 1400
-  },
-  {
-   "map": "volk_elder",
-   "kind": "exit",
-   "id": "5,9",
-   "at": "volk",
-   "to": "volk",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    4,
-    6
-   ],
-   "ms": 1761
+   "ms": 2645
   },
   {
    "map": "volk",
@@ -5394,7 +5349,52 @@
     26,
     24
    ],
-   "ms": 4860
+   "ms": 3060
+  },
+  {
+   "map": "volk",
+   "kind": "exit",
+   "id": "9,27",
+   "at": "g_valley",
+   "to": "g_valley",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    9,
+    23
+   ],
+   "ms": 1764
+  },
+  {
+   "map": "volk",
+   "kind": "door",
+   "id": "volk_house",
+   "at": "volk_house",
+   "to": "volk_house",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    24
+   ],
+   "ms": 7509
+  },
+  {
+   "map": "volk_elder",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "volk",
+   "to": "volk",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    6
+   ],
+   "ms": 2276
   },
   {
    "map": "volk_forge",
@@ -5409,7 +5409,7 @@
     8,
     7
    ],
-   "ms": 1818
+   "ms": 2484
   },
   {
    "map": "volk_house",
@@ -5424,7 +5424,7 @@
     4,
     6
    ],
-   "ms": 1856
+   "ms": 3159
   },
   {
    "map": "volk_inn",
@@ -5439,7 +5439,7 @@
     5,
     7
    ],
-   "ms": 1748
+   "ms": 2847
   },
   {
    "map": "well",
@@ -5454,7 +5454,7 @@
     18,
     7
    ],
-   "ms": 1839
+   "ms": 5115
   },
   {
    "map": "world",
@@ -5469,7 +5469,7 @@
     319,
     378
    ],
-   "ms": 3056
+   "ms": 7846
   },
   {
    "map": "world",
@@ -5484,43 +5484,7 @@
     235,
     262
    ],
-   "ms": 2719
-  },
-  {
-   "map": "world",
-   "kind": "stairs",
-   "id": "",
-   "at": [
-    199,
-    117
-   ],
-   "to": "snow_woods",
-   "ok": false,
-   "steps": 15,
-   "why": "timeout 90 s",
-   "start": [
-    199,
-    121
-   ],
-   "ms": 96886
-  },
-  {
-   "map": "world",
-   "kind": "door",
-   "id": "w_sandedge",
-   "at": [
-    104,
-    372
-   ],
-   "to": "sandedge",
-   "ok": false,
-   "steps": 15,
-   "why": "timeout 90 s",
-   "start": [
-    104,
-    376
-   ],
-   "ms": 98904
+   "ms": 7276
   },
   {
    "map": "verda_1",
@@ -5532,31 +5496,49 @@
    ],
    "to": "verda_1",
    "ok": false,
-   "steps": 4,
+   "steps": 2,
    "why": "timeout 90 s",
    "start": [
     43,
     27
    ],
-   "ms": 159389
+   "ms": 116352
+  },
+  {
+   "map": "world",
+   "kind": "door",
+   "id": "w_sandedge",
+   "at": [
+    104,
+    372
+   ],
+   "to": "sandedge",
+   "ok": false,
+   "steps": 10,
+   "why": "timeout 90 s",
+   "start": [
+    104,
+    376
+   ],
+   "ms": 93632
   },
   {
    "map": "world",
    "kind": "stairs",
    "id": "",
    "at": [
-    181,
-    35
+    199,
+    117
    ],
-   "to": "peak_1",
+   "to": "snow_woods",
    "ok": false,
-   "steps": 14,
+   "steps": 10,
    "why": "timeout 90 s",
    "start": [
-    181,
-    39
+    199,
+    121
    ],
-   "ms": 91007
+   "ms": 91079
   },
   {
    "map": "world",
@@ -5568,26 +5550,13 @@
    ],
    "to": "icicle_1",
    "ok": false,
-   "steps": 15,
+   "steps": 11,
    "why": "timeout 90 s",
    "start": [
     64,
     97
    ],
-   "ms": 96983
-  },
-  {
-   "map": "world",
-   "kind": "stairs",
-   "id": "",
-   "at": [
-    124,
-    20
-   ],
-   "to": "frost_ship_1",
-   "ok": false,
-   "why": "page.waitForTimeout: Target page, context or browser has been closed",
-   "ms": 15819
+   "ms": 102880
   },
   {
    "map": "world",
@@ -5599,8 +5568,49 @@
    ],
    "to": "aurora",
    "ok": false,
-   "why": "page.waitForTimeout: Target page, context or browser has been closed",
-   "ms": 67070
+   "steps": 11,
+   "why": "timeout 90 s",
+   "start": [
+    67,
+    24
+   ],
+   "ms": 104159
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": [
+    124,
+    20
+   ],
+   "to": "frost_ship_1",
+   "ok": false,
+   "steps": 9,
+   "why": "timeout 90 s",
+   "start": [
+    124,
+    24
+   ],
+   "ms": 95045
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": [
+    181,
+    35
+   ],
+   "to": "peak_1",
+   "ok": false,
+   "steps": 1,
+   "why": "timeout 90 s",
+   "start": [
+    181,
+    39
+   ],
+   "ms": 216683
   },
   {
    "map": "world",
@@ -5612,21 +5622,298 @@
    ],
    "to": "marsh_manor_1",
    "ok": false,
-   "why": "page.waitForTimeout: Target page, context or browser has been closed",
-   "ms": 7953
+   "steps": 10,
+   "why": "timeout 90 s",
+   "start": [
+    600,
+    208
+   ],
+   "ms": 95211
   },
   {
    "map": "world",
    "kind": "exit",
    "id": "241,271",
-   "at": [
-    241,
-    271
-   ],
+   "at": "roa",
    "to": "roa",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 41
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    241,
+    267
+   ],
+   "ms": 4511
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "126,228",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    130,
+    224
+   ],
+   "ms": 6632
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "74,176",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    74,
+    180
+   ],
+   "ms": 6966
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "338,188",
+   "at": "f_cross",
+   "to": "f_cross",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    341,
+    187
+   ],
+   "ms": 4508
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "115,136",
+   "at": "f_windhill",
+   "to": "f_windhill",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    115,
+    132
+   ],
+   "ms": 3726
+  },
+  {
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_hut_inn",
+   "at": "yura_inn",
+   "to": "yura_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    19
+   ],
+   "ms": 2998
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "98,366",
+   "at": "f_south",
+   "to": "f_south",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    98,
+    370
+   ],
+   "ms": 5095
+  },
+  {
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_hut_elder",
+   "at": "yura_home_elder",
+   "to": "yura_home_elder",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    13,
+    10
+   ],
+   "ms": 2205
+  },
+  {
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_hut_h2",
+   "at": "yura_home2",
+   "to": "yura_home2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    26,
+    22
+   ],
+   "ms": 2341
+  },
+  {
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_hut_h1",
+   "at": "yura_home1",
+   "to": "yura_home1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    19,
+    20
+   ],
+   "ms": 6221
+  },
+  {
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_hut_h3",
+   "at": "yura_home3",
+   "to": "yura_home3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    19,
+    25
+   ],
+   "ms": 2948
+  },
+  {
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_hut_h4",
+   "at": "yura_home4",
+   "to": "yura_home4",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    25
+   ],
+   "ms": 2524
+  },
+  {
+   "map": "yura",
+   "kind": "exit",
+   "id": "14,27",
+   "at": "f_windhill",
+   "to": "f_windhill",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    14,
+    23
+   ],
+   "ms": 2731
+  },
+  {
+   "map": "yura_home1",
+   "kind": "exit",
+   "id": "3,6",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 5,
+   "why": null,
+   "start": [
+    2,
+    3
+   ],
+   "ms": 3237
+  },
+  {
+   "map": "yura_home2",
+   "kind": "exit",
+   "id": "3,7",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    2,
+    4
+   ],
+   "ms": 2628
+  },
+  {
+   "map": "yura_home3",
+   "kind": "exit",
+   "id": "3,6",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    3
+   ],
+   "ms": 2692
+  },
+  {
+   "map": "yura_home4",
+   "kind": "exit",
+   "id": "4,7",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    3
+   ],
+   "ms": 2873
+  },
+  {
+   "map": "yura_inn",
+   "kind": "exit",
+   "id": "4,8",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    4
+   ],
+   "ms": 2754
+  },
+  {
+   "map": "yura_home_elder",
+   "kind": "exit",
+   "id": "4,7",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    4
+   ],
+   "ms": 3515
   },
   {
    "map": "world",
@@ -5638,242 +5925,13 @@
    ],
    "to": "pharos",
    "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 8
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "126,228",
-   "at": [
-    126,
-    228
+   "steps": 2,
+   "why": "timeout 90 s",
+   "start": [
+    308,
+    320
    ],
-   "to": "fern",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 2
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "74,176",
-   "at": [
-    74,
-    176
-   ],
-   "to": "yura",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "338,188",
-   "at": [
-    338,
-    188
-   ],
-   "to": "f_cross",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "115,136",
-   "at": [
-    115,
-    136
-   ],
-   "to": "f_windhill",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "98,366",
-   "at": [
-    98,
-    366
-   ],
-   "to": "f_south",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
-  },
-  {
-   "map": "yura",
-   "kind": "door",
-   "id": "yura_hut_inn",
-   "at": [
-    6,
-    17
-   ],
-   "to": "yura_inn",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
-  },
-  {
-   "map": "yura",
-   "kind": "door",
-   "id": "yura_hut_elder",
-   "at": [
-    13,
-    6
-   ],
-   "to": "yura_home_elder",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
-  },
-  {
-   "map": "yura",
-   "kind": "door",
-   "id": "yura_hut_h1",
-   "at": [
-    21,
-    18
-   ],
-   "to": "yura_home1",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "yura",
-   "kind": "door",
-   "id": "yura_hut_h2",
-   "at": [
-    26,
-    18
-   ],
-   "to": "yura_home2",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "yura",
-   "kind": "door",
-   "id": "yura_hut_h3",
-   "at": [
-    22,
-    24
-   ],
-   "to": "yura_home3",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "yura",
-   "kind": "door",
-   "id": "yura_hut_h4",
-   "at": [
-    5,
-    23
-   ],
-   "to": "yura_home4",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "yura",
-   "kind": "exit",
-   "id": "14,27",
-   "at": [
-    14,
-    27
-   ],
-   "to": "f_windhill",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
-  },
-  {
-   "map": "yura_home1",
-   "kind": "exit",
-   "id": "3,6",
-   "at": [
-    3,
-    6
-   ],
-   "to": "yura",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
-  },
-  {
-   "map": "yura_home2",
-   "kind": "exit",
-   "id": "3,7",
-   "at": [
-    3,
-    7
-   ],
-   "to": "yura",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
-  },
-  {
-   "map": "yura_home3",
-   "kind": "exit",
-   "id": "3,6",
-   "at": [
-    3,
-    6
-   ],
-   "to": "yura",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "yura_home4",
-   "kind": "exit",
-   "id": "4,7",
-   "at": [
-    4,
-    7
-   ],
-   "to": "yura",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "yura_home_elder",
-   "kind": "exit",
-   "id": "4,7",
-   "at": [
-    4,
-    7
-   ],
-   "to": "yura",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "yura_inn",
-   "kind": "exit",
-   "id": "4,8",
-   "at": [
-    4,
-    8
-   ],
-   "to": "yura",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
+   "ms": 218744
   }
  ],
  "looks": [
@@ -6425,6 +6483,13 @@
   },
   {
    "map": "coral_guild",
+   "npc": "guild_clerk",
+   "look": "npc_isles_woman",
+   "art": "npc_isles_woman",
+   "ok": true
+  },
+  {
+   "map": "coral_guild",
    "npc": "flag_officer",
    "look": "npc_isles_sailor",
    "art": "npc_isles_sailor",
@@ -6694,6 +6759,69 @@
    "npc": "hall_helga",
    "look": "npc_helga",
    "art": "npc_helga",
+   "ok": true
+  },
+  {
+   "map": "dovan_hall",
+   "npc": "asm_borg",
+   "look": "npc_borg",
+   "art": "npc_borg",
+   "ok": true
+  },
+  {
+   "map": "dovan_hall",
+   "npc": "asm_miner",
+   "look": "npc_miner",
+   "art": "npc_miner",
+   "ok": true
+  },
+  {
+   "map": "dovan_hall",
+   "npc": "asm_dag",
+   "look": "npc_miner",
+   "art": "npc_miner",
+   "ok": true
+  },
+  {
+   "map": "dovan_hall",
+   "npc": "asm_rolf",
+   "look": "npc_miner",
+   "art": "npc_miner",
+   "ok": true
+  },
+  {
+   "map": "dovan_hall",
+   "npc": "asm_helga",
+   "look": "npc_helga",
+   "art": "npc_helga",
+   "ok": true
+  },
+  {
+   "map": "dovan_hall",
+   "npc": "asm_smith",
+   "look": "npc_smith",
+   "art": "npc_smith",
+   "ok": true
+  },
+  {
+   "map": "dovan_hall",
+   "npc": "asm_pip",
+   "look": "npc_pip",
+   "art": "npc_pip",
+   "ok": true
+  },
+  {
+   "map": "dovan_hall",
+   "npc": "asm_woman",
+   "look": "npc_mine_woman",
+   "art": "npc_mine_woman",
+   "ok": true
+  },
+  {
+   "map": "dovan_hall",
+   "npc": "asm_old",
+   "look": "npc_mine_old_f",
+   "art": "npc_mine_old_f",
    "ok": true
   },
   {

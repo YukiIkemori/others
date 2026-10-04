@@ -161,7 +161,7 @@ async function browserPart() {
       const src = (f) => fs.readFileSync(path.join(V2, 'src', 'systems', 'battle', f), 'utf8');
       const pb = src('playback.js');
       ok('戦闘: 状態が解けても回復の音（heal）を鳴らさない', !/'debuff'\) : 'heal'\)/.test(pb) && /if \(e\.on\) sfxOnce\(ctx/.test(pb));
-      ok('戦闘: 回復・強化・弱体の音は 1 つの行動で 1 回（sfxOnce）', /sfxOnce\(ctx, 'heal'\)/.test(pb) && /sfxOnce\(ctx, up \? 'buff' : 'debuff'\)/.test(pb));
+      ok('戦闘: 回復の数字は無音（持ち主 2026-10-04）、強化・弱体の音は 1 つの行動で 1 回（sfxOnce）', !/sfxOnce\(ctx, 'heal'\)/.test(pb) && /sfxOnce\(ctx, up \? 'buff' : 'debuff'\)/.test(pb));
       ok('戦闘の一覧: カーソル・戻るは小さく', ['command.js', 'targeting.js'].every((f) => /UI_TICK = \{ cursor: 0\.\d+, cancel: 0\.\d+/.test(src(f))));
     }
 
