@@ -17,7 +17,7 @@
 
   P.EXPRS = EXPRS;
   P.key = function (look, expr) { return `portrait:${look}:${expr || 'neutral'}`; };
-  // 描いた顔は一人 1 枚（neutral だけ。オーナー 2026-10-04: 表情を問わず同じ絵）。原画を共有する look（spriteOf。主人公のタイプ違い）はその元の絵
+  // 描いた顔は一人 1 枚（neutral だけ。オーナー 2026-10-04: 表情を問わず同じ絵）。自分の絵が無く原画を共有する look（spriteOf）はその元の絵（主人公のタイプ違いは 2026-10-04 から自分の絵がある）
   function painted(look) {
     if (!R.Media || !R.Media.has) return null;
     const L = R.DB && R.DB.looks && R.DB.looks[look];

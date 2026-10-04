@@ -92,6 +92,12 @@ def job_of(look, expr, style=None, note=None):
         refs.append((f'painted:{look}_neutral', painted_ref(look, 'neutral')))
         s.append('Reference image 2: the pixel-art face of the same character with this expression (use it only for the expression and identity). ' + P['identity'])
         refs.append((f'pixel:{look}_{expr}', pixel_ref(look, expr)))
+    elif look in P.get('variants', {}):   # 主人公のタイプ違い: 同じ人の描いた顔（剣士）から服と道具だけ変える
+        base = P['variants'][look]
+        s.append('Reference image 1: ' + P['variantRef'])
+        refs.append((f'painted:{base}_neutral', painted_ref(base, 'neutral')))
+        s.append('Reference image 2: the pixel-art face of the same hero (identity only). ' + P['identity'])
+        refs.append((f'pixel:{base}_{expr}', pixel_ref(base, expr)))
     else:
         s.append('Reference image 1: ' + P['identity'])
         refs.append((f'pixel:{look}_{expr}', pixel_ref(look, expr)))
