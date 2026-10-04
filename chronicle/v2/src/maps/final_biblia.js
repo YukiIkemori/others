@@ -35,6 +35,8 @@
       K.npc('rowell', 'rowell', 30, 16, { name: R.T('map.final_biblia.N.3.rowell.name'), dir: 'w', talk: 'biblia_rowell', reward: 'hint', pushable: false, cond: ['final_arrived', '!final_rowell'] }),
       // 記録院の船の船乗り（ファロスへ戻る）
       K.npc('ship_hand', 'npc_sailor_1', 28, 40, { name: R.T('map.final_biblia.N.4.ship_hand.name'), dir: 'n', talk: 'final_ferry_back', reward: null, pushable: false, cond: 'final_arrived' }),
+      // 静夜会のイェナ（ファロスから一緒に渡ったとき。名もなき語り部の像の東。クリアの後はビブリアの朝の場面にいる）
+      K.npc('b_yena', 'npc_yena', 32, 24, { name: R.T('map.final_biblia.N.b_yena.name'), title: R.T('map.final_biblia.N.b_yena.title'), dir: 'w', talk: 'biblia_yena', reward: null, pushable: false, cond: ['final_yena_ferry', 'final_arrived', '!final_clear', '!final_ending_plaza'] }),
       // 白衣の書記（大書庫の前。本を集めている）
       K.npc('scribe_a', 'npc_scribe', 24, 12, { name: R.T('map.final_biblia.N.5.scribe_a.name'), dir: 's', talk: 'biblia_scribe', reward: 'news', cond: pre }),
       K.npc('scribe_b', 'npc_scribe', 33, 13, { name: R.T('map.final_biblia.N.6.scribe_b.name'), dir: 'w', talk: 'biblia_scribe', reward: 'news', cond: pre }),

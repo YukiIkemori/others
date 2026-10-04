@@ -3,6 +3,9 @@
 //                     noa_02〜04 → rowell_03・04）→ ロウェルは北の門へ、ノアは宿へ（final_arrived・l_main_final_archive）
 //   biblia_noa        ノアの宿: ミラの歌（v_noa_biblia_06、ラザロの後は _05）・ただで泊まる。はじめて話すと余白に一行（歌の節回し = 暁の詞の器）
 //   biblia_rowell     北の門のロウェル（封印の前まで）
+//   biblia_yena       名もなき語り部の像のそばのイェナ（ファロスから一緒に渡ったとき。名を探している）
+//   着いたときに足したもの（テスター 2026-10-04 §9 の 1・2）: ノアは赤子のロウェル（リオナの坊や）を覚えていて、院長が毎年ミラに手紙を書いては
+//   くべられずにしまっていることを話す（くべられなかった手紙の差出人と「あの子」）
 //   書斎（任意）      肖像画（lo_mira_portrait）・白紙の暁の詞（lo_mira_dawnword）・立会記録（lo_arena_record → 余白 l_main_margin_study）・手紙の箱（拾っていない lo_lz_*）
 //   町               掲示板（記録院の通達）・名もなき語り部の像・大図書館の伝説の本・白衣の書記・町の人（ラザロの後・クリアの後で台詞が変わる）
 (function (R) {
@@ -19,26 +22,54 @@
     if (ev.flag('final_arrived') || !ev.flag('final_sailed')) return;
     await x.preload(ARR_VOICES);
     ev.bgm('sorrow');
-    await x.breath(ev, 500);
+    await x.breath(ev, 600);
+    // 白紙になりかけた町の女（名を忘れかけている）
+    await x.face(ev, 'white_woman', 'hero');
     await ev.say('white_woman', R.T('events.biblia_arrival.say'));
-    try { await ev.leave('white_woman', { ms: 900, steps: 3 }); } catch (e) { /* */ }
+    await x.act(ev, 'white_woman', 'think', 900);
+    await x.leave(ev, 'white_woman', { ms: 1100, steps: 3 });
+    await x.face(ev, 'rowell_quay', 'n');
+    await x.cam(ev, 26, 30, 900);
+    await x.breath(ev, 400);
     await ev.say('rowell_quay', R.T('events.biblia_arrival.say_2'), { voice: 'v_rowell_biblia_01', face: 'rowell:sad' });
-    try { await ev.npc('noa_quay').move([[25, 36]]); await ev.npc('noa_quay').face('hero'); } catch (e) { /* */ }   // 歩いて来た向きのまま話さない
+    await x.camBack(ev, 600);
+    await x.walk(ev, 'noa_quay', [[25, 36]]);   // 歩いて来た向きのまま話さない
+    await x.face(ev, 'noa_quay', 'hero');
     await ev.say('noa_quay', R.T('events.biblia_arrival.say_3'), { voice: 'v_noa_biblia_01', face: 'noa:surprise' });
+    await x.face(ev, 'rowell_quay', 'w');
     await ev.say('rowell_quay', R.T('events.biblia_arrival.say_4'), { voice: 'v_rowell_biblia_02', face: 'rowell:neutral' });
     await ev.say('noa_quay', R.T('events.biblia_arrival.say_5'), { voice: 'v_noa_biblia_02', face: 'noa:neutral' });
     await ev.say('noa_quay', R.T('events.biblia_arrival.say_6'), { voice: 'v_noa_biblia_03', face: 'noa:sad' });
     await ev.say('noa_quay', R.T('events.biblia_arrival.say_7'), { voice: 'v_noa_biblia_04', face: 'noa:sad' });
+    // ノアは、ミラの家にいた赤子を覚えている（ロウェル = リオナの坊や。院長が毎年ミラに書く手紙。テスター 2026-10-04 §9 の 1・2）
+    await x.face(ev, 'noa_quay', 'e');
+    await x.breath(ev, 500);
+    await ev.say('noa_quay', R.T('events.biblia_arrival.n_noa_1'), { face: 'noa:smile' });
+    await ev.say('rowell_quay', R.T('events.biblia_arrival.n_rowell_1'), { face: 'rowell:surprise' });
+    await ev.say('noa_quay', R.T('events.biblia_arrival.n_noa_2'), { face: 'noa:sad' });
+    await ev.say('noa_quay', R.T('events.biblia_arrival.n_noa_3'), { face: 'noa:sad' });
+    await x.act(ev, 'rowell_quay', 'nod', 800);
     await ev.say('rowell_quay', R.T('events.biblia_arrival.say_8'), { voice: 'v_rowell_biblia_03', face: 'rowell:neutral' });
     await ev.say('rowell_quay', R.T('events.biblia_arrival.say_9'), { voice: 'v_rowell_biblia_04', face: 'rowell:neutral' });
-    try { await ev.leave('rowell_quay', { ms: 1100, path: [[28, 36], [28, 34], [28, 32]] }); } catch (e) { /* */ }
+    await x.leave(ev, 'rowell_quay', { ms: 1100, path: [[28, 36], [28, 34], [28, 32]] });
+    await x.face(ev, 'noa_quay', 'hero');
     await ev.say('noa_quay', R.T('events.biblia_arrival.say_10'), { face: 'noa:smile' });
-    try { await ev.leave('noa_quay', { ms: 900, path: [[23, 36], [21, 36], [19, 36]] }); } catch (e) { /* */ }
+    await x.leave(ev, 'noa_quay', { ms: 900, path: [[23, 36], [21, 36], [19, 36]] });
+    // 一緒に渡ったイェナは、名を探しに町へ（名もなき語り部の像のそばにいる）
+    if (ev.flag('final_yena_ferry')) await x.narr(ev, R.T('events.biblia_arrival.y_narr'));
     ev.setFlag('final_arrived');
     ev.leadDone('l_main_final_ferry');
     ev.lead('l_main_final_archive');
     void ctx;
   }, { meta: { needs: ['flag:final_sailed'], gives: ['flag:final_arrived', 'lead:l_main_final_archive'] } });
+
+  // ---------------------------------------------------------------- 静夜会のイェナ（ファロスから一緒に渡った。§8.10。像のそば）
+  E('biblia_yena', async (ev) => {
+    const Y = { name: R.T('events.final_ferry.y_name'), title: R.T('events.final_ferry.y_title'), face: false };
+    if (ev.flag('final_lazaro')) { await ev.say('b_yena', R.T('events.biblia_yena.say_3'), Y); return; }
+    await ev.say('b_yena', ev.flag('final_yena_talked') ? R.T('events.biblia_yena.say_2') : R.T('events.biblia_yena.say'), Y);
+    ev.setFlag('final_yena_talked');
+  });
 
   // ================================================================ ノアの宿
   async function stay(ev) {

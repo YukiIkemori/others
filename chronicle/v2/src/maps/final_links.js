@@ -2,7 +2,8 @@
 //   roa（ロアの里）: 終盤のロアの場面の人（語り石の前のベルナ・フィーネ・ロウェル）と spawn fin_stone。
 //                    エンディングの人（語り石の前で子どもに語るベルナ・子ども 2 人）は朝の写し roa_dawn に置く。
 //   pharos（ファロス）: 桟橋の記録院の船（ロウェル → のちに船乗り）と spawn fin_pier。
-//   朝の写し（K.dawnCopy。同じ当たりと下絵で、光だけ朝）: biblia_dawn（E6 ビブリアの朝）・roa_dawn（E8・E9・E11 ロアの丘）・roa_house_dawn（E8 朝の席）。
+//   朝の写し（K.dawnCopy。同じ当たりと下絵で、光だけ朝）: biblia_dawn（E6 ビブリアの朝）・roa_dawn（E8・E9・E11 ロアの丘）・roa_house_dawn（E8 朝の席。ベルナが立つ）。
+//   pharos の fin_yena: 終盤のファロスの桟橋に来る静夜会のイェナ（final_ferry の場面の間だけ。旗 final_yena_scene）。
 //   どれも region 'finale'（体験版では閉じている）。差し込みは 2 段目の onData（マップの登録の後）。
 (function (R) {
   'use strict';
@@ -26,6 +27,8 @@
         ph.npcs.push(
           K.npc('fin_rowell_pier', 'rowell', 24, 41, { name: R.T('map.final_links.fin_rowell_pier.name'), dir: 'w', talk: 'final_ferry', reward: 'lead', pushable: false, cond: ['final_open', '!final_sailed'] }),
           K.npc('fin_ship_hand', 'npc_sailor_1', 24, 41, { name: R.T('map.final_links.fin_ship_hand.name'), dir: 'w', talk: 'final_ferry', reward: null, pushable: false, cond: 'final_sailed' }),
+          // 静夜会のイェナ（船に乗る前に桟橋へ来る。final_ferry の場面の間だけ）
+          K.npc('fin_yena', 'npc_yena', 22, 41, { name: R.T('map.final_links.fin_yena.name'), title: R.T('map.final_links.fin_yena.title'), dir: 'e', talk: [L(R.T('map.final_links.fin_yena.talk'))], reward: null, pushable: false, cond: ['final_yena_scene', '!final_sailed'] }),
         );
       }
       // ---------------------------------------------------------------- エンディングの朝の写し
@@ -49,7 +52,14 @@
           K.npc('e_child_b', 'npc_child_3', 22, 18, { name: R.T('map.final_links.roa.npcs.2.e_child_b.name'), dir: 'n', talk: [L('……。')], reward: null }),
         ],
       });
-      FK.dawnCopy('roa_house', 'roa_house_dawn', { sub: R.T('map.final_links.roa_house.sub'), light: FK.LIGHT_DAWN_ROOM, npcs: [] });
+      // 朝の席（E8。テスター 2026-10-04 R23）: ベルナが席の布を外し、杯を置く。東の窓からの光は R.Ending.beam
+      FK.dawnCopy('roa_house', 'roa_house_dawn', {
+        sub: R.T('map.final_links.roa_house.sub'), light: FK.LIGHT_DAWN_ROOM,
+        spawns: { e_seat: { x: 6, y: 8, dir: 'n' } },
+        npcs: [
+          K.npc('e_berna_house', 'berna', 6, 5, { name: R.T('map.final_links.roa.npcs.0.e_berna.name'), dir: 'e', talk: [L('……。')], reward: null, pushable: false }),
+        ],
+      });
     });
   });
 })(window.RPG);

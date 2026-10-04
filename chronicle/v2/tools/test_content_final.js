@@ -131,6 +131,18 @@ section('2. 置き場所');
   ok('大書庫の階段: 1〜6 階の上りと下りがそろい、着く所が戻りの階段のそば', miss.length === 0, miss);
   const springs = PAINTED.filter((id) => (D.maps[id].objects || []).some((o) => o.type === 'spring'));
   ok('泉は大書庫の 1・3・4・5・6 階（2 階と町には無い。WORLD §6.4「1・2・4 階に足す／今の 3 か所」を今の階の並びで）', JSON.stringify(springs) === JSON.stringify(['archive_1', 'archive_3', 'archive_4', 'archive_5', 'archive_6']), springs);
+  // テスター 2026-10-04 R22（持ち主「6F回復の泉かな」）: 6 階の泉は、下りの階段（着く所 from5）から虚ろの王の踏み板を通らずに使える所
+  {
+    const Mx = require('./lib/maps').create(R);
+    const m6 = D.maps.archive_6, sp = (m6.objects || []).find((o) => o.type === 'spring'), sw = m6.spawns.from5;
+    const king = (m6.triggers || []).find((t) => t.event === 'archive_6_boss');
+    const inKing = (x, y) => king && x >= king.x && x < king.x + king.w && y >= king.y && y < king.y + king.h;
+    const res = Mx.bfs('archive_6', [{ x: sw.x, y: sw.y }], { blocked: (x, y) => inKing(x, y) });
+    const near = sp ? [[-1, 0], [2, 0], [0, -1], [1, -1], [0, 2], [1, 2], [-1, 1], [2, 1]].map(([dx, dy]) => res.get(sp.x + dx, sp.y + dy, 0)).filter((d) => d != null) : [];
+    ok('6 階の泉（R22）: 着く所から虚ろの王の踏み板を踏まずに泉の前へ行ける（ボスの前の泉）', !!sp && near.length > 0 && Math.min(...near) <= 12 && sp.y > king.y, { sp, near });
+    const spawnReach = res.get(sw.x, sw.y - 3, 0) != null || res.get(sw.x + 1, sw.y - 3, 0) != null;
+    ok('… 泉は通り道をふさがない（着く所から北の広間へ抜けられる）', spawnReach && Mx.bfs('archive_6', [{ x: sw.x, y: sw.y }]).get(17, king.y, 0) != null);
+  }
   ok('大書庫の出現表（1〜3 階 z_finale_archive_lo・4〜5 階 _hi・6 階なし）', ['archive_1', 'archive_2', 'archive_3'].every((id) => D.maps[id].zones[0].zone === 'z_finale_archive_lo') &&
     ['archive_4', 'archive_5'].every((id) => D.maps[id].zones[0].zone === 'z_finale_archive_hi') && !D.maps.archive_6.zones.length && D.encounters.z_finale_archive_lo && D.encounters.z_finale_archive_hi);
   ok('封印の扉（3 階）とラザロの後の白い紙（5 階）は tilePatch で閉じる', (D.maps.archive_3.tilePatches || []).some((p) => p.cond === '!final_rowell') && (D.maps.archive_5.tilePatches || []).some((p) => p.cond === '!final_lazaro'));
