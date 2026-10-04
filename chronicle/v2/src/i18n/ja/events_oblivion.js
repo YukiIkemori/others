@@ -1,7 +1,9 @@
-// 日本語の文の表（events_oblivion: 忘却の底 = maps/oblivion.js・events/oblivion.js・ビブリアの入口）。以後はここが正
+// 日本語の文の表（events_oblivion）。元は tools/i18n_extract.js がソースから移した。以後はここが正（訳は src/i18n/<言語>/events_oblivion.js に同じ key で）
+// 文の中の {name} は R.T(key, {name}) の差し込み。{hero} など params に無い名前は、そのまま（イベントの側で入る）。
 (function (R) {
   'use strict';
   R.I18n.add('ja', {
+    // ---- ?
     'map.oblivion.name': '忘却の底',
     'map.oblivion.floor': '地下{n}階',
     'map.oblivion.oblivion_1.sub': '忘れられた者の岸',
