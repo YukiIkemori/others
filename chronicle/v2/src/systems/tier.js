@@ -6,6 +6,8 @@
 //   R.Tier.celebrate(rid) → Promise    大灯火の演出の共通の筋（ev.clearRegion が呼ぶ）:
 //       暗転 → R.emit('tier')（R.Sky・FIELD のチャンクがここで引き直す）→ カメラを光の柱へ → 明ける → 光の柱が立つ →
 //       章の札（第 N 章・章題・ページ）→ A か 7 秒で閉じる → カメラを先頭へ戻す
+//       o.card === false は光の柱だけ（ev.clearRegion がイベントの中で使う）、o.cardOnly は章の札だけ（そのイベントの終わり、
+//       締めの「年代記に何を書こう」の後に R.Events が出す。テスター 2026-10-04 R17）
 //   足した物: MAX / pick(table, tier) / innPrice(tier?) / scene（場面 id 'celebrate'）
 //   地方ごとの出現の固定: forZone(zoneId, t?) → 出現表のティア / lockOf(rid) → 解決した地方の固定ティア|null /
 //     lockRegion(rid, t?)（ev.clearRegion）/ migrateLocks(G)（R.State.deserialize）。R.Game.regionTier = {rid: T}
@@ -204,6 +206,11 @@
       update() {
         const t = R.Engine.time - st.t0;
         const I = R.Input;
+        if (st.pillarOnly) {
+          // 光の柱だけ: 立ちきってから A で、押さなければ holdUntil で閉じる
+          if (t > st.holdUntil || (t > st.holdUntil - 900 && (I.pressed('a') || (I.pointer && I.pointer.pressed)))) st.close();
+          return;
+        }
         if (st.cardAt != null && t > st.cardAt + 900 && (I.pressed('a') || I.pressed('b') || (I.pointer && I.pointer.pressed))) { R.UIK.sfx && R.UIK.sfx('confirm'); st.close(); }
         if (st.cardAt != null && t > st.cardAt + (st.cardMs || 7000)) st.close();
       },
@@ -366,8 +373,8 @@
     const t = R.Engine.time - st.t0;
     const U = R.UIK.u, T = R.UIK.T, C = T.color;
     const rm = R.UIK.reduceMotion ? R.UIK.reduceMotion() : false;
-    // ---- 光の柱（灯す物の口から空へ。0〜1.6 秒で立ち上がる）
-    drawPillar(g, st, t, rm);
+    // ---- 光の柱（灯す物の口から空へ。0〜1.6 秒で立ち上がる）。札だけの時（cardOnly）は立てない
+    if (!st.noPillar) drawPillar(g, st, t, rm);
     // ---- 章の札
     if (st.cardAt == null) return;
     const ct = t - st.cardAt;
@@ -438,6 +445,14 @@
     try { R.Audio.sfx('lamp'); } catch (e) { /* */ }
     await R.Engine.fadeTo(0, o.fadeMs != null ? o.fadeMs : 900);
     await R.wait(o.pillarMs != null ? o.pillarMs : 1500);
+    // o.card === false: 光の柱だけ（章の札はあとで cardOnly で。R17）。柱が立ちきってひと呼吸、A で早く閉じる
+    if (o.card === false) {
+      st.pillarOnly = true;
+      st.holdUntil = R.Engine.time - st.t0 + (o.holdMs != null ? o.holdMs : 1600);
+      await closed;
+      if (hasField && R.Field.camera && R.Field.camera.follow) { try { await R.Field.camera.follow({ ms: 600 }); } catch (e) { /* */ } }
+      return true;
+    }
     // 3. 章の札（章のジングル）
     st.cardAt = R.Engine.time - st.t0;
     try { R.Audio.jingle('chapter'); } catch (e) { /* */ }
