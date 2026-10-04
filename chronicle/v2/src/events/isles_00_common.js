@@ -41,7 +41,17 @@
     ev.setFlag('isles_chart_' + key);
     const n = X.charted(ev);
     ev.setVar('isles_chart', n);
-    if (!ev.has('k_sea_chart')) return true;
+    // 海図（港の親方）が無くても 3 つ回れば霧の海域は絞れる（持ち主 2026-10-04: 海図をもらわずに船で回ると、
+    //   霧の海域の旗が立たず、マリナが「空白を埋めておいで」と言い続けて先へ進めなかった）
+    if (!ev.has('k_sea_chart')) {
+      if (n >= 3 && !ev.flag('isles_fog_found')) {
+        ev.setFlag('isles_fog_found');
+        await ev.say(null, R.T('ev.isles_00_common.chart.say_nochart'));
+        ev.leadDone('l_isles_chart');
+        ev.lead('l_isles_fog');
+      }
+      return true;
+    }
     ev.sfx('quill');
     await ev.caption(R.T('ev.isles_00_common.chart.caption', { p0: X.CHART_NAME[key], n }), { ms: 2000 });
     if (n >= 3 && !ev.flag('isles_fog_found')) {
@@ -136,5 +146,17 @@
       { cond: [{ choice: 'ch_isles_write', is: 'pain' }, 'isles_tag_6'], text: R.T('chronicle.r_isles.parts.12.text') },
       { cond: 'cleared_r_isles', text: R.T('chronicle.r_isles.parts.13.text') },
     ],
+  });
+
+  // 古いセーブの直し: 海図なしで 3 つ以上回っていたのに霧の海域の旗が無い → 立てる（手がかりも霧へ）
+  R.SaveFixups = R.SaveFixups || [];
+  R.SaveFixups.push(function (G) {
+    const f = G && G.flags; if (!f || f.isles_fog_found) return;
+    const n = ['light', 'siren', 'crab', 'wreck'].filter((k) => f['isles_chart_' + k]).length;
+    if (n < 3) return;
+    f.isles_fog_found = true;
+    G.leads = G.leads || {};
+    if (G.leads.l_isles_chart) G.leads.l_isles_chart.done = true;
+    if (!G.leads.l_isles_fog) G.leads.l_isles_fog = { got: Math.floor(G.playMs || 0), pin: false, seen: false };
   });
 })(window.RPG);
