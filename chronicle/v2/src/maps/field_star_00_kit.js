@@ -29,6 +29,11 @@
     if (!w || !M.s_steps) return;
     if (w.spawns && !w.spawns.star_w) w.spawns.star_w = Object.assign({}, W.spawn);
     if (w.exits && !w.exits.some((e) => e.to && e.to.map === 's_steps')) w.exits.push(JSON.parse(JSON.stringify(W.exit)));
+    // 出口の印（ワールドの出口には印が出ないので、物の印 way で出口と同じ灯りの脈と札を出す。持ち主 2026-10-04「地図切り替えカーソルないぞ」）
+    if (w.objects && !w.objects.some((o) => o.id === 'star_steps_way')) {
+      w.objects.push({ type: 'mark', id: 'star_steps_way', x: W.exit.x, y: W.exit.y, cond: { not: { slice: true } },
+        way: { x: W.exit.x, y: W.exit.y, w: W.exit.w, h: W.exit.h, dir: 'n', label: R.T('map.field_star_steps.s_steps.name') } });
+    }
     // 体験版のあいだの表の止め（ほかの峠と同じ）: 峠の口の崖崩れ（cond {slice:true} の tilePatch）と番人
     if (!(w.npcs || []).some((n) => n.id === 'guard_star')) {
       w.tilePatches = (w.tilePatches || []).concat([{ cond: { slice: true }, rect: [476, 146, 2, 1], rows: ['mm'] }]);
