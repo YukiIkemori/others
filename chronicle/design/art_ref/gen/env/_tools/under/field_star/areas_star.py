@@ -247,7 +247,7 @@ def s_road():
     a.tidy()
     a.exit('w', 19, 20, {'map': 'f_cross', 'spawn': 'east'}, 'west')
     a.exit('n', 47, 48, {'map': 's_steps', 'spawn': 'west'}, 'star')['cond'] = {'not': {'slice': True}}
-    a.exit('s', 50, 52, {'map': 'm_north', 'spawn': 'north'}, 'south')
+    a.exit('s', 50, 52, {'map': 'm_north', 'spawn': 'north'}, 'south')['cond'] = {'not': {'slice': True}}   # 体験版の間は湿原へ行けない
     a.objects += [
         dict(type='sign', x=40, y=18, text='山あいの街道\n北 → 星見の坂\n南 → グレイモア湿原'),
         dict(type='prop', id='tent', x=37, y=16),

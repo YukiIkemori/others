@@ -4199,8 +4199,8 @@
    "class": "B",
    "orient": "tate",
    "canvas": [
-    1024,
-    1536
+    1632,
+    2016
    ],
    "pxPerDot": 6,
    "grid": [
@@ -4208,12 +4208,12 @@
     1
    ],
    "cellDots": [
-    170,
-    256
+    272,
+    336
    ],
    "boxDots": [
-    160,
-    240
+    256,
+    320
    ],
    "cells": [
     {
@@ -4224,11 +4224,13 @@
      "kind": "boss",
      "size": "B",
      "targetDots": {
-      "w": 160,
-      "h": 230,
-      "long": 230
+      "w": 230,
+      "h": 290,
+      "long": 290
      },
-     "targetHeight": 230
+     "targetHeight": 290,
+     "maxColors": 64,
+     "battleCap": 304
     }
    ]
   },
@@ -4238,10 +4240,10 @@
    "star": false,
    "section": "finale",
    "class": "B",
-   "orient": "yoko",
+   "orient": "tate",
    "canvas": [
-    1536,
-    1024
+    1920,
+    2304
    ],
    "pxPerDot": 6,
    "grid": [
@@ -4249,12 +4251,12 @@
     1
    ],
    "cellDots": [
-    256,
-    170
+    320,
+    384
    ],
    "boxDots": [
-    240,
-    160
+    304,
+    368
    ],
    "cells": [
     {
@@ -4265,11 +4267,13 @@
      "kind": "boss",
      "size": "B",
      "targetDots": {
-      "w": 230,
-      "h": 155,
-      "long": 230
+      "w": 290,
+      "h": 340,
+      "long": 340
      },
-     "targetHeight": 155
+     "targetHeight": 340,
+     "maxColors": 64,
+     "battleCap": 372
     }
    ]
   },

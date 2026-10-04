@@ -139,7 +139,9 @@
     let up = false;
     if (y < tagBot + 4 * k) {
       const hh = _.actors && _.actors.height ? _.actors.height(a) : 100;
-      y = Math.max(8 * k, a.y + ((v && v.dy) || 0) - hh - bh - 10 * k);
+      // 背の高いボス（ネムレアは 340 px）でも左上の見出し（hud.js H.head の帯 64k）に重ねない。足りない時は絵の頭に少し重なる
+      const top = (R.safe.t || 0) + (st.head && st.head.name ? 68 * k : 8 * k);
+      y = Math.max(top, a.y + ((v && v.dy) || 0) - hh - bh - 10 * k);
       up = true;
     }
     g.save();

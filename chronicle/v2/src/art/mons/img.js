@@ -357,6 +357,8 @@
         visH: box.h, top: Math.round(box.y - f0.oy), left: Math.round(box.x - f0.ox), right: Math.round(box.x + box.w - f0.ox), facing: 'right',
         long: Math.max(box.w, box.h), band, targetPx: Math.round(T.h || box.h), bakeMs: Math.round(ms * 10) / 10, frames: frames.length,
         altPoses: posesAvail, lostParts: src.lostParts || [], focus: 'eye',
+        // 最後のボスだけ段より大きく置く（原画の JSON の battleCap = 絵の高さの上限、論理 px。actors.js scaleOf）
+        battleCap: boss && main.meta.battleCap > 0 ? main.meta.battleCap : 0,
       },
     };
   };

@@ -61,7 +61,7 @@
       {"id":"marsh_traveler","look":"npc_traveler","name":R.T('map.field_star_road.s_road.marsh_traveler.name'),"x":36,"y":18,"dir":"s","move":"still","talk":"marsh_world_traveler","reward":"news","key":"world_marsh_traveler"},
     ],
     spawns: {"west":{"x":1,"y":19,"dir":"e"},"star":{"x":47,"y":1,"dir":"s"},"south":{"x":51,"y":38,"dir":"n"}},
-    exits: [{"x":0,"y":19,"w":1,"h":2,"to":{"map":"f_cross","spawn":"east"}},{"x":47,"y":0,"w":2,"h":1,"to":{"map":"s_steps","spawn":"west"},"cond":{"not":{"slice":true}}},{"x":50,"y":39,"w":3,"h":1,"to":{"map":"m_north","spawn":"north"}}],
+    exits: [{"x":0,"y":19,"w":1,"h":2,"to":{"map":"f_cross","spawn":"east"}},{"x":47,"y":0,"w":2,"h":1,"to":{"map":"s_steps","spawn":"west"},"cond":{"not":{"slice":true}}},{"x":50,"y":39,"w":3,"h":1,"to":{"map":"m_north","spawn":"north"},"cond":{"not":{"slice":true}}}],
     triggers: [],
     tilePatches: [],
     zones: [{"rect":null,"zone":"zw_marsh_road"}],

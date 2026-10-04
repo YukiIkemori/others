@@ -1,0 +1,12 @@
+{
+ "out": "/home/user/others/chronicle/design/art_ref/gen/env/_tools/under/oblivion/biblia_gate/gen1.png",
+ "prompt": "Edit this top-down pixel-art game map crop (a white stone town plaza seen from above with a slight 3/4 tilt). The FIRST attached image is the original crop. Reproduce it EXACTLY, pixel for pixel, at the same size, same pixel-art rendering, same palette and same lighting: the fountain, the flagstones, the tree, the grass, the flowers and the building must stay exactly where and as they are.\n\nThe ONLY change: inside the area outlined in RED in the SECOND attached image (4 tiles wide and 3 tiles tall; one tile = 96 px here), add a small STAIRWAY GOING DOWN INTO THE GROUND of white marble, sunk into the plaza: a rectangular opening in the flagstones whose steps descend northwards (away from the viewer) into a soft pale grey-violet white MIST that fills the bottom of the stairwell, framed by a LOW white marble balustrade (a short railing of small round balusters with a flat white coping) along its west side, its north side and its east side; the south side is open (the top step is level with the plaza at the south edge of the red area) so people can walk in from the south. The two middle tile columns of the red area are the steps; the outer columns (west and east) and the top row are the balustrade and its corner posts. Keep it clean and simple, the same pixel scale as the flagstones around it, no glow, no fog outside the stairwell, no text, no people.\n\nDo not draw the red outline. Do not change anything outside the red area.",
+ "size": "1152x1056",
+ "quality": "high",
+ "background": "opaque",
+ "refs": [
+  "/home/user/others/chronicle/design/art_ref/gen/env/_tools/under/oblivion/biblia_gate/crop.png",
+  "/home/user/others/chronicle/design/art_ref/gen/env/_tools/under/oblivion/biblia_gate/crop_box.png"
+ ],
+ "tag": "biblia_oblivion_gate"
+}

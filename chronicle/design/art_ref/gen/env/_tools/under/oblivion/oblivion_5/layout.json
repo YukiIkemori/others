@@ -1,0 +1,208 @@
+{
+"id": "oblivion_5",
+"w": 36,
+"h": 34,
+"rows": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~cccccccc~~~~~~~~~~~~~~",
+"~~~~~~~~~~~cccccccccccccc~~~~~~~~~~~",
+"~~~~~~~~~cccccccccccccccccc~~~~~~~~~",
+"~~~~~~~~cccccccccccccccccccc~~~~~~~~",
+"~~~~~~~cccccccXXXccXXXccccccc~~~~~~~",
+"~~~~~~ccccccXXXXXccXXXXXcccccc~~~~~~",
+"~~~~~ccccccXXccccccccccXXcccccc~~~~~",
+"~~~~~cccccXXccccccccccccXXccccc~~~~~",
+"~~~~cccccXXccccccccccccccXXccccc~~~~",
+"~~~~ccccXXccccccccccccccccXXcccc~~~~",
+"~~~cccccXccccccccccccccccccXccccc~~~",
+"~~~ccccXXccccccccccccccccccXXcccc~~~",
+"~~~ccccXccccccccccccccccccccXcccc~~~",
+"~~~ccccXccccccccccccccccccccXcccc~~~",
+"~~~ccccXccccccccccccccccccccXcccc~~~",
+"~~~ccccXccccccccccccccccccccXcccc~~~",
+"~~~ccccXccccccccccccccccccccXcccc~~~",
+"~~~ccccXccccccccccccccccccccXcccc~~~",
+"~~~ccccXXccccccccccccccccccXXcccc~~~",
+"~~~cccccXccccccccccccccccccXccccc~~~",
+"~~~~ccccXXccccccccccccccccXXcccc~~~~",
+"~~~~cccccXXccccccccccccccXXccccc~~~~",
+"~~~~~cccccXXccccccccccccXXccccc~~~~~",
+"~~~~~ccccccXXccccccccccXXcccccc~~~~~",
+"~~~~~~ccccccXXXXXccXXXXXcccccc~~~~~~",
+"~~~~~~~cccccccXXXXXXXXccccccc~~~~~~~",
+"~~~~~~~~cccccccccccccccccccc~~~~~~~~",
+"~~~~~~~~~cccccccccccccccccc~~~~~~~~~",
+"~~~~~~~~~~~cccccccccccccc~~~~~~~~~~~",
+"~~~~~~~~~~~~~~cccccccc~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~cccc~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+],
+"marks": [
+{
+"kind": "whirl",
+"cells": [
+[
+17,
+17
+],
+[
+18,
+17
+],
+[
+17,
+16
+],
+[
+18,
+16
+]
+],
+"text": "the centre of a great SPIRAL of loose WHITE PAGES swirling on the floor (walkable, flat)",
+"color": [
+244,
+244,
+240
+],
+"solid": false
+},
+{
+"kind": "stairs",
+"cells": [
+[
+17,
+32
+],
+[
+18,
+32
+]
+],
+"text": "a white marble STAIRCASE going UP into soft light (walkable)",
+"color": [
+200,
+196,
+186
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 17,
+"y": 31
+},
+{
+"type": "o",
+"x": 18,
+"y": 31
+},
+{
+"type": "o",
+"x": 12,
+"y": 4
+},
+{
+"type": "o",
+"x": 13,
+"y": 4
+},
+{
+"type": "o",
+"x": 12,
+"y": 5
+},
+{
+"type": "o",
+"x": 13,
+"y": 5
+},
+{
+"type": "o",
+"x": 17,
+"y": 9
+},
+{
+"type": "o",
+"x": 18,
+"y": 9
+},
+{
+"type": "o",
+"x": 17,
+"y": 17
+},
+{
+"type": "o",
+"x": 3,
+"y": 17
+},
+{
+"type": "o",
+"x": 32,
+"y": 17
+},
+{
+"type": "o",
+"x": 8,
+"y": 27
+}
+],
+"spawns": {
+"from4": {
+"x": 17,
+"y": 31,
+"dir": "n"
+},
+"gate": {
+"x": 17,
+"y": 9,
+"dir": "n"
+}
+},
+"exits": [],
+"notes": [],
+"meta": {
+"name": "忘却の底",
+"look": "voidint",
+"smooth": 0.45
+},
+"rows_fit": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~cccccccc~~~~~~~~~~~~~~",
+"~~~~~~~~~~~cccccccccccccc~~~~~~~~~~~",
+"~~~~~~~~~cccccccccccccccccc~~~~~~~~~",
+"~~~~~~~~cccccccccccccccccccc~~~~~~~~",
+"~~~~~~~cccccccXXXccXXXccccccc~~~~~~~",
+"~~~~~~ccccccXXXXXccXXXXXcccccc~~~~~~",
+"~~~~~ccccccXXXcccccccccXXcccccc~~~~~",
+"~~~~~cccccXXXcccccccccccXXccccc~~~~~",
+"~~~~cccccXXXcccccccccccccXXccccc~~~~",
+"~~~~ccccXXXcccccccccccccccXXcccc~~~~",
+"~~~cccccXXcccccccccccccccccXccccc~~~",
+"~~~ccccXXccccccccccccccccccXXcccc~~~",
+"~~~ccccXXcccccccccccccccccccXcccc~~~",
+"~~~ccccXXcccccccccccccccccccXcccc~~~",
+"~~~ccccXXcccccccccccccccccccXcccc~~~",
+"~~~ccccXXcccccccccccccccccccXcccc~~~",
+"~~~ccccXXcccccccccccccccccccXcccc~~~",
+"~~~ccccXXccccccccccccccccccXXcccc~~~",
+"~~~ccccXXXcccccccccccccccccXXcccc~~~",
+"~~~cccccXXccccccccccccccccXXccccc~~~",
+"~~~~ccccXXXccccccccccccccXXXcccc~~~~",
+"~~~~cccccXXXccccccccccccXXXccccc~~~~",
+"~~~~~cccccXXXccccccccccXXXccccc~~~~~",
+"~~~~~XcccccXXXXXXccXXXXXXcccccX~~~~~",
+"~~~~~~XcccccXXXXXXXXXXXXcccccX~~~~~~",
+"~~~~~~~XccccccXXXXXXXXccccccX~~~~~~~",
+"~~~~~~~~XccccccccccccccccccX~~~~~~~~",
+"~~~~~~~~~XccccccccccccccccX~~~~~~~~~",
+"~~~~~~~~~~~XccccccccccccX~~~~~~~~~~~",
+"~~~~~~~~~~~~~~XccccccX~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~XccX~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+]
+}

@@ -1,0 +1,353 @@
+{
+"id": "oblivion_4",
+"w": 48,
+"h": 26,
+"rows": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXcccX~",
+"~XXcccccccccXXXXXcccccccccXXXXXcccccccccXXXcccX~",
+"~XXcccccccccccccccccccccccccccccccccccccccccccX~",
+"~XXcccccccccccccccccccccccccccccccccccccccccccX~",
+"~XXcccccccccXXXXXcccccccccXXXXXcccccccccXXXcccX~",
+"~XXcccccccccXXXXXcccccccccXXXXXcccccccccXXXcccX~",
+"~XcccccXXcccXXXXXccccXXcccXXXXXccccXXcccXXXcccX~",
+"~XccccccccccXXXXXcccccccccXXXXXcccccccccXXXcccX~",
+"~XXcccccccccXXXXXcccccccccXXXXXcccccccccXXXcccX~",
+"~XXcccccccccXXXXXcccccccccXXXXXcccccccccXXXcccX~",
+"~XXcccccccccccccccccccccccccccccccccccccccccccX~",
+"~XXcccccccccccccccccccccccccccccccccccccccccccX~",
+"~XXcccccccccXXXXXcccccccccXXXXXcccccccccXXXcccX~",
+"~XXcccccccccXXXXXcccccccccXXXXXcccccccccXXXcccX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+],
+"marks": [
+{
+"kind": "table3",
+"cells": [
+[
+7,
+12
+],
+[
+8,
+12
+]
+],
+"text": "a long low wooden READING TABLE with one open white book",
+"color": [
+96,
+66,
+44
+],
+"solid": true
+},
+{
+"kind": "table17",
+"cells": [
+[
+21,
+12
+],
+[
+22,
+12
+]
+],
+"text": "a long low wooden READING TABLE with one open white book",
+"color": [
+96,
+66,
+44
+],
+"solid": true
+},
+{
+"kind": "table31",
+"cells": [
+[
+35,
+12
+],
+[
+36,
+12
+]
+],
+"text": "a long low wooden READING TABLE with one open white book",
+"color": [
+96,
+66,
+44
+],
+"solid": true
+},
+{
+"kind": "shelves",
+"cells": [
+[
+3,
+6
+],
+[
+4,
+6
+],
+[
+5,
+6
+],
+[
+6,
+6
+],
+[
+7,
+6
+],
+[
+8,
+6
+],
+[
+9,
+6
+],
+[
+10,
+6
+],
+[
+11,
+6
+],
+[
+17,
+6
+],
+[
+18,
+6
+],
+[
+19,
+6
+],
+[
+20,
+6
+],
+[
+21,
+6
+],
+[
+22,
+6
+],
+[
+23,
+6
+],
+[
+24,
+6
+],
+[
+25,
+6
+],
+[
+31,
+6
+],
+[
+32,
+6
+],
+[
+33,
+6
+],
+[
+34,
+6
+],
+[
+35,
+6
+],
+[
+36,
+6
+],
+[
+37,
+6
+],
+[
+38,
+6
+],
+[
+39,
+6
+]
+],
+"text": "tall bookshelves of pale WHITE-PAINTED wood packed with books whose spines are blank white, against the wall",
+"color": [
+180,
+168,
+140
+],
+"solid": true
+},
+{
+"kind": "stairs",
+"cells": [
+[
+2,
+12
+],
+[
+2,
+13
+]
+],
+"text": "a white marble STAIRCASE going UP to the west (walkable)",
+"color": [
+200,
+196,
+186
+],
+"solid": false
+},
+{
+"kind": "stairsdown",
+"cells": [
+[
+44,
+19
+],
+[
+45,
+19
+]
+],
+"text": "a white marble STAIRCASE going DOWN into pale mist (walkable)",
+"color": [
+120,
+124,
+150
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 3,
+"y": 12
+},
+{
+"type": "o",
+"x": 3,
+"y": 13
+},
+{
+"type": "o",
+"x": 44,
+"y": 18
+},
+{
+"type": "o",
+"x": 45,
+"y": 18
+},
+{
+"type": "o",
+"x": 7,
+"y": 9
+},
+{
+"type": "o",
+"x": 21,
+"y": 9
+},
+{
+"type": "o",
+"x": 35,
+"y": 9
+},
+{
+"type": "o",
+"x": 44,
+"y": 7
+},
+{
+"type": "o",
+"x": 24,
+"y": 18
+}
+],
+"spawns": {
+"from3": {
+"x": 3,
+"y": 12,
+"dir": "e"
+},
+"from5": {
+"x": 44,
+"y": 17,
+"dir": "n"
+},
+"loop": {
+"x": 4,
+"y": 13,
+"dir": "e"
+}
+},
+"exits": [],
+"notes": [],
+"meta": {
+"name": "忘却の底",
+"look": "voidint"
+},
+"rows_fit": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXccX~",
+"~XXcccccccccccccccccccccccccccccccccccccccccccX~",
+"~XXccccccccccccccccccccccccccccccccccccccccXccX~",
+"~XXccccccccccXXXXXccccccccXXXXXXccccccccXXXXccX~",
+"~XXccccccccccXXXXXccccccccXXXXXXccccccccXXXXccX~",
+"~XXccccccccccXXXXXccccccccXXXXXXccccccccXXXXccX~",
+"~XXccccXXccccXXXXXcccXXcccXXXXXXcccXXcccXXXXccX~",
+"~XcccccXXccccXXXXXcccXXcccXXXXXXcccXXcccXXXXccX~",
+"~XcccccccccccXXXXXccccccccXXXXXXccccccccXXXXccX~",
+"~XXccccccccccXXXXXccccccccXXXXXXccccccccXXXXccX~",
+"~XXccccccccccXXXXXccccccccXXXXXXccccccccXXXXccX~",
+"~XXccccccccccXXXXXccccccccXXXXXXccccccccXXXXccX~",
+"~XXcccccccccccccccccccccccccccccccccccccccccccX~",
+"~XXccccccccccccccccccccccccccccccccccccccccXccX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXccX~",
+"~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+]
+}

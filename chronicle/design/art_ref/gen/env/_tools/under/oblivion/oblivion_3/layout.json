@@ -1,0 +1,278 @@
+{
+"id": "oblivion_3",
+"w": 36,
+"h": 34,
+"rows": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~~",
+"~~XXXXXccccccccccXXccccccccccXccXX~~",
+"~~XXXXXccccccccckkkkccccccccccccXX~~",
+"~~XXXXXccccccccckkkkccccccccccccXX~~",
+"~~XXXXXccccccccckkkkccccccccccccXX~~",
+"~~XXXXXccccccccckkkkccccccccccccXX~~",
+"~~XXXXXccccccccckkkkcccccccccXXXXX~~",
+"~~XXXXXccccccccckkkkcccccccccXXXXX~~",
+"~~XXXXXXXXXXXXXXccccXXXXXXXXXXXXXX~~",
+"~~XXXXXXXXXXXXccccccccXXXXXXXXXXXX~~",
+"~~XXXXXXXXXXXXccccccccXXXXXXXXXXXX~~",
+"~~XXXXXXXXXXXXccccccccXXXXXXXXXXXX~~",
+"~~XXXXXXXXXXXXXXccccXXXXXXXXXXXXXX~~",
+"~~XXXXXXXccccccccccccccccccXXXXXXX~~",
+"~~XXXXXXXccccccccccccccccccXXXXXXX~~",
+"~~XXXXXXXccXccccccccccccXccXXXXXXX~~",
+"~~XcccccXccccccccccccccccccXcccccX~~",
+"~~XcccccXcccccXccccccXcccccXcccccX~~",
+"~~XccccccccccccccccccccccccccccccX~~",
+"~~XccccccccXccccccccccccXccccccccX~~",
+"~~XccccccccccccccccccccccccccccccX~~",
+"~~XcccccXcccccXccccccXcccccXcccccX~~",
+"~~XcccccXccccccccccccccccccXcccccX~~",
+"~~XXXXXXXccXccccccccccccXccXXXXXXX~~",
+"~~XXXXXXXccccccccccccccccccXXXXXXX~~",
+"~~XXXXXXXccccccccccccccccccXXXXXXX~~",
+"~~XXXXXXXccccccccccccccccccXXXXXXX~~",
+"~~XXXXXXXXXXXXXXccccXXXXXXXXXXXXXX~~",
+"~~XXXXXXXXXXXXXXccccXXXXXXXXXXXXXX~~",
+"~~XXXXXXXXXXXXXXccccXXXXXXXXXXXXXX~~",
+"~~XXXXXXXXXXXXXXXccXXXXXXXXXXXXXXX~~",
+"~~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+],
+"marks": [
+{
+"kind": "pillars",
+"cells": [
+[
+11,
+16
+],
+[
+11,
+20
+],
+[
+11,
+24
+],
+[
+24,
+16
+],
+[
+24,
+20
+],
+[
+24,
+24
+]
+],
+"text": "a round white marble PILLAR, cracked, streaked with black ink",
+"color": [
+228,
+226,
+220
+],
+"solid": true
+},
+{
+"kind": "statues",
+"cells": [
+[
+14,
+18
+],
+[
+21,
+18
+],
+[
+14,
+22
+],
+[
+21,
+22
+]
+],
+"text": "a dreadful STATUE of a horned shadow figure on a square plinth, its eyes gouged out",
+"color": [
+70,
+66,
+80
+],
+"solid": true
+},
+{
+"kind": "throne",
+"cells": [
+[
+17,
+2
+],
+[
+18,
+2
+]
+],
+"text": "a broken black stone THRONE, cracked in two, on a low dais",
+"color": [
+40,
+34,
+48
+],
+"solid": true
+},
+{
+"kind": "stairs",
+"cells": [
+[
+17,
+31
+],
+[
+18,
+31
+]
+],
+"text": "a white marble STAIRCASE going UP into soft light (walkable)",
+"color": [
+200,
+196,
+186
+],
+"solid": false
+},
+{
+"kind": "stairsdown",
+"cells": [
+[
+30,
+2
+],
+[
+31,
+2
+]
+],
+"text": "a white marble STAIRCASE going DOWN into pale mist (walkable)",
+"color": [
+120,
+124,
+150
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 17,
+"y": 30
+},
+{
+"type": "o",
+"x": 18,
+"y": 30
+},
+{
+"type": "o",
+"x": 30,
+"y": 3
+},
+{
+"type": "o",
+"x": 31,
+"y": 3
+},
+{
+"type": "o",
+"x": 17,
+"y": 9
+},
+{
+"type": "o",
+"x": 18,
+"y": 9
+},
+{
+"type": "o",
+"x": 4,
+"y": 20
+},
+{
+"type": "o",
+"x": 31,
+"y": 20
+},
+{
+"type": "o",
+"x": 14,
+"y": 11
+},
+{
+"type": "o",
+"x": 21,
+"y": 11
+},
+{
+"type": "o",
+"x": 17,
+"y": 5
+}
+],
+"spawns": {
+"from2": {
+"x": 17,
+"y": 30,
+"dir": "n"
+},
+"from4": {
+"x": 30,
+"y": 3,
+"dir": "s"
+}
+},
+"exits": [],
+"notes": [],
+"meta": {
+"name": "忘却の底",
+"look": "voidint"
+},
+"rows_fit": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~~",
+"~~XXXXXccccccccccXXccccccccccXccXX~~",
+"~~XXXXXccccccccckXXkccccccccccccXX~~",
+"~~XXXXXccccccccckkkkccccccccccccXX~~",
+"~~XXXXXccccccccckkkkccccccccccXXXX~~",
+"~~XXXXXccccccccckkkkccccccccccXXXX~~",
+"~~XXXXXccccccccckkkkcccccccccXXXXX~~",
+"~~XXXXXccccccccckkkkcccccccccXXXXX~~",
+"~~XXXXXXXXXXXXXXccccXXXXXXXXXXXXXX~~",
+"~~XXXXXXXXXXXXXXccccXXXXXXXXXXXXXX~~",
+"~~XXXXXXXXXXXXccccccccXXXXXXXXXXXX~~",
+"~~XXXXXXXXXXXXccccccccXXXXXXXXXXXX~~",
+"~~XXXXXXXXXXXXXXccccXXXXXXXXXXXXXX~~",
+"~~XXXXXXXXccccccccccccccccXXXXXXXX~~",
+"~~XXXXXXXcccccccccccccccccXXXXXXXX~~",
+"~~XXXXXXXccXccccccccccccXcXXXXXXXX~~",
+"~~XXXXXXXccXccccccccccccXcXXXXXXXX~~",
+"~~XccccXXcccccccccccccccccXXXccccX~~",
+"~~XccccXXcccccXXccccXXccccXXXccccX~~",
+"~~XcccccccccccXXccccXXcccccccccccX~~",
+"~~XccccccccccccccccccccccccccccccX~~",
+"~~XcccccXccccccccccccccccccXcccccX~~",
+"~~XccccXXcccccXXccccXXccccXXXccccX~~",
+"~~XccccXXccXccXXccccXXccXcXXXccccX~~",
+"~~XXXXXXXccXccccccccccccXcXXXXXXXX~~",
+"~~XXXXXXXcccccccccccccccccXXXXXXXX~~",
+"~~XXXXXXXcccccccccccccccccXXXXXXXX~~",
+"~~XXXXXXXXXXXXXXccccXXXXXXXXXXXXXX~~",
+"~~XXXXXXXXXXXXXXccccXXXXXXXXXXXXXX~~",
+"~~XXXXXXXXXXXXXXccccXXXXXXXXXXXXXX~~",
+"~~XXXXXXXXXXXXXXXccXXXXXXXXXXXXXXX~~",
+"~~XXXXXXXXXXXXXXXccXXXXXXXXXXXXXXX~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+]
+}

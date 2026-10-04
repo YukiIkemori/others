@@ -108,7 +108,12 @@
     if (!a) return { x: R.W / 2, y: R.H / 2 };
     return { x: a.x + (st.vis[uid] && st.vis[uid].dx || 0), y: a.y - _.actors.height(a) * 0.5 };
   }
-  function headOf(st, uid) { const a = st.actor(uid); return a ? { x: a.x, y: a.y - _.actors.height(a) } : { x: R.W / 2, y: R.H / 3 }; }
+  // 数字の出る頭の上。背の高いボス（ネムレア 340 px）でも左上の見出し（hud.js H.head の帯 64k）と字が重ならない高さまで
+  function headOf(st, uid) {
+    const a = st.actor(uid);
+    if (!a) return { x: R.W / 2, y: R.H / 3 };
+    return { x: a.x, y: Math.max((R.safe.t || 0) + 92 * (R.uiScale || 1), a.y - _.actors.height(a)) };
+  }
 
   // ---------------------------------------------------------------- 表示物
   P.pop = function (st, uid, text, kind, o) {

@@ -5,23 +5,29 @@
    "notes": "",
    "quality": "medium",
    "secs": 44
+  },
+  {
+   "file": "mon_s64_a2.png",
+   "notes": "This is the FINAL BOSS of the game: make it the most impressive, most detailed sprite of the whole game - a tall, majestic, divine silhouette with rich detail in the page-wings, the gilded open book and the quill crown, while keeping big readable light/dark masses. The figure is slender and androgynous (NOT a muscular man), serene sleepy face turned right. The eight page-wings fan upward and outward behind it like a halo, the top wings rising above the crown; the huge open book is its base on the ground. Keep it bright (ivory/white with lavender-blue shadows) so it stands out on a dark night background.",
+   "quality": "high",
+   "secs": 122
   }
  ],
- "use": "mon_s64_a1.png",
+ "use": "mon_s64_a2.png",
  "norm": {
   "boss_nemrea2": {
-   "pitch": 5.539,
-   "how": "core 1274x945 px -> 230 art px",
-   "core_long": 230.0,
+   "pitch": 6.432,
+   "how": "core 1738x2187 px -> 340 art px",
+   "core_long": 340.0,
    "raw_box": [
-    118,
-    24,
-    1432,
-    976
+    65,
+    49,
+    1810,
+    2249
    ],
    "strays_removed": 0,
-   "colors": 48,
-   "long": 238
+   "colors": 64,
+   "long": 342
   }
  },
  "notes": [],
@@ -35,33 +41,43 @@
    "pose": "p2",
    "file": "mon_s64_p2_a1.png",
    "prompt": "her second form: the written text patterns now cover her whole body (thin dark lines), her eyes fully open and cold, the quill crown more broken. Same size, pose and position."
+  },
+  {
+   "pose": "p2",
+   "file": "mon_s64_p2_a2.png",
+   "prompt": "her SECOND FORM, when her name is carved into her: (1) her eyes are now fully OPEN, cold pale gold with a white catch-light; (2) thin glowing gold-white lines of writing (abstract script strokes, not readable letters) are carved all over her skin, robe and hair; (3) the eight page-wings have turned over to their dark side: deep ink-indigo / blue-black pages covered with thin gold writing lines, each wing keeping its own coloured edge (green, ochre, ice blue, grey violet, sea blue, iron grey, ash red, star indigo), their tips torn and jagged; (4) the dawn orb in her hands is larger and cracked, its colour now pale white-gold; (5) the open book base: its pages are now dark ink-stained and lifting. Same silhouette, pose, size and position; the overall image becomes clearly darker and more menacing (ink and gold) so the change is obvious at a glance."
+  },
+  {
+   "pose": "tele",
+   "file": "mon_s64_tele_a2.png",
+   "prompt": "the WIND-UP pose before her great spell (the eight legends' pages open backwards): she lifts her chin and raises the dawn orb high above her head with both arms stretched up; the eight page-wings swing further open and spread wider and flatter, like a book thrown fully open; the loose pages of her robe and of the book base lift upward. Eyes still half-closed. Same design, colours, size and position; the book base stays exactly where it is."
   }
  ],
  "posesUse": {
-  "tele": "mon_s64_tele_a1.png",
-  "p2": "mon_s64_p2_a1.png"
+  "tele": "mon_s64_tele_a2.png",
+  "p2": "mon_s64_p2_a2.png"
  },
  "poseNorm": {
   "tele": {
    "offset": [
-    -5,
-    -2
+    -7,
+    31
    ],
-   "overlap": 25721,
+   "overlap": 53880,
    "size": [
-    249,
-    173
+    287,
+    313
    ]
   },
   "p2": {
    "offset": [
-    1,
+    0,
     0
    ],
-   "overlap": 27343,
+   "overlap": 61491,
    "size": [
-    237,
-    173
+    271,
+    343
    ]
   }
  }

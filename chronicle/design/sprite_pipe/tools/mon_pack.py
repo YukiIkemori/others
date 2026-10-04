@@ -479,6 +479,11 @@ def measure(im, fly, size):
     return anchor, {'head': head, 'center': center, 'fx': fx, 'top': top, 'body': body}
 
 
+def max_colors(c):
+    """palette size of one monster: 32 (S) / 48, or the cell's maxColors (the final boss is larger and gets more)"""
+    return int(c.get('maxColors') or (32 if c['size'] == 'S' else 48))
+
+
 def overrides():
     return json.load(open(OVR, encoding='utf-8')) if os.path.exists(OVR) else {}
 
@@ -509,6 +514,8 @@ def export(im, c, s, info, pose=None, anchor_override=None, pts_override=None):
     meta = {'sprite': c['sprite'], 'id': c['id'], 'name': c['name'], 'sheet': s['sheet'], 'cell': c['cell'], 'size': c['size'],
             'kind': c.get('kind'), 'fly': fly, 'w': im.width, 'h': im.height, 'anchor': anchor, 'points': pts, 'facing': 'right',
             'long': max(im.width, im.height), 'core_long': info.get('core_long'), 'target': c['targetDots'], 'colors': info.get('colors'), 'pitch': info.get('pitch')}
+    if c.get('battleCap'):     # the final boss: drawn larger than the boss tier (actors.js scaleOf reads it)
+        meta['battleCap'] = c['battleCap']
     if pose:
         meta['pose'] = pose
     if variants and not pose:
@@ -570,8 +577,7 @@ def normalise_sheet(n, raw=None, only=None, export_it=True):
             dots, info = normalise_cell(img, cm, (0, 0) + img.size, c, s, notes)
         if dots is None:
             continue
-        maxc = 32 if c['size'] == 'S' else 48
-        im, ci = clean_dots(dots, maxc)
+        im, ci = clean_dots(dots, max_colors(c))
         info.update(ci)
         L = max(im.size)
         cls = spec()['classes'].get(s['class'])
@@ -713,7 +719,7 @@ def normalise_variant(sprite, pose, raw=None):
     box = (int(xs.min()), int(ys.min()), int(xs.max()) + 1, int(ys.max()) + 1)
     full = Image.fromarray((km * 255).astype(np.uint8), 'L')
     dots = majority_dots(img, full, box, pitch)
-    im, ci = clean_dots(dots, 48)
+    im, ci = clean_dots(dots, max_colors(c))
     # alignment: raw boxes in raw px -> art px offset relative to the base
     b0 = info0['raw_box']
     base_png = Image.open(os.path.join(OUT, sprite + '.png'))
@@ -779,7 +785,7 @@ def cmd_check(a):
             ov = overrides().get(c['sprite'], {})
             if ov.get('facing') == 'left':
                 probs.append('FACING LEFT (eye check)')
-            if (m.get('colors') or 0) > (32 if c['size'] == 'S' else 48):
+            if (m.get('colors') or 0) > max_colors(c):
                 probs.append('colours %s' % m.get('colors'))
             rgba = np.array(im.convert('RGBA'))
             blk = ((rgba[..., 3] > 127) & (rgba[..., :3].max(axis=2) < 8)).sum()

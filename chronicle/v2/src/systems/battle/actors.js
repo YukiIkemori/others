@@ -36,7 +36,9 @@
     const vis = (sh.meta && sh.meta.visH) || sh.h || 0;
     // BEAST の原画（meta.img）は MONSTER_REQUEST §2.4 の大きさ（ボス 230 まで）で描いてあるので、その段まで縮めない
     const img = sh.meta && sh.meta.img;
-    const cap = (a.boss ? (img ? 236 : CAP.boss) : img ? 140 : CAP[a.size] || CAP.m) * (L && L.spriteK != null ? L.spriteK : R.layout === 'tall' ? 0.85 : 1);
+    // 最後のボス（ネムレア）は原画の JSON の battleCap まで（2026-10-04 オーナー「最後のボスの絵がしょぼすぎ」: 地方ボスの約 1.5 倍）
+    const bossCap = img ? Math.max(236, (sh.meta && sh.meta.battleCap) || 0) : CAP.boss;
+    const cap = (a.boss ? bossCap : img ? 140 : CAP[a.size] || CAP.m) * (L && L.spriteK != null ? L.spriteK : R.layout === 'tall' ? 0.85 : 1);
     return vis > cap ? cap / vis : 1;
   };
   /**

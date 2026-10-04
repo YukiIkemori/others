@@ -1,0 +1,282 @@
+{
+"id": "oblivion_1",
+"w": 40,
+"h": 32,
+"rows": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~ss~~~~~~~~~~~~~~~~~~~~~",
+"~~~~ssccss~sssssssssssssss~~~~~~~~~~~~~~",
+"~~ssssssssXssssssssssssssssssssss~ss~~~~",
+"~~sssssssssssssssssssssssssssssssssss~~~",
+"~ssssssssssss~~XX~~~~~~~~~sssssssssss~~~",
+"~sssssssssss~~~~~~~~~~~~~~~~~~~~sssss~~~",
+"~~ssssssssss~~~~~~~~~~~~~~~~~~~~~ss~~~~~",
+"~~~ssssssss~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~sssss~~~~~~~~~~~~~sss~~~~~~~~~~~~~~~",
+"~~~~ssss~~~~~~~~~~ssssXsss~~~~~~~~~~~~~~",
+"~~~~ssss~~~~~~~~~ssXsssssXs~~~~~~~~~~~~~",
+"~~~Xssss~~~~~~~~~sssssssssss~~~~~~~~~~~~",
+"~~~~ssss~~~~~~~~~sXsssssssXs~~~~~~~~~~~~",
+"~~~~sssss~~~~~~~~sssssssssss~~~~~~~~~~~~",
+"~~~~ssssX~~~~~~~~ssXsssssXss~~~~~~~~~~~~",
+"~~~~~sssX~~~~~~~~~~sssssss~~~~~~~~~~~~~~",
+"~~~~~ssss~~~~~~~~~~~ssss~~~~~~~~~~~~~~~~",
+"~~~~~sssss~~~~~~~~~~sss~~~~~~~~~~~~~~~~~",
+"~~~~~~ssss~~~~~~~~~~ss~~~~~~~~~~~~~~~~~~",
+"~~~sssssssss~~~~~~~~ss~~~~~~~~~~~~~~~~~~",
+"~~ssssssssssX~~~~~~~ss~~~~~~~~~~~~~~~~~~",
+"~~ssssssssssss~~~~~~ss~~~~~~~~sssssss~~~",
+"~~sssss~sssssssssss~ss~~~sssssXsssssss~~",
+"~~~sss~~~~sssssssssssssssssssssssssssss~",
+"~~~~~~~~~~~sssssssssssssssssssssssssss~~",
+"~~~~~~~~~~~~~sssssssssssssssssssssssss~~",
+"~~~~~~~~~~~~~~~~sssssssssss~~~ssssccss~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ssssss~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+],
+"marks": [
+{
+"kind": "graves",
+"cells": [
+[
+19,
+11
+],
+[
+25,
+11
+],
+[
+18,
+13
+],
+[
+26,
+13
+],
+[
+19,
+15
+],
+[
+25,
+15
+],
+[
+22,
+10
+]
+],
+"text": "small weathered grey GRAVESTONES without names, standing in a ring",
+"color": [
+110,
+110,
+122
+],
+"solid": true
+},
+{
+"kind": "tablet",
+"cells": [
+[
+10,
+3
+],
+[
+3,
+12
+],
+[
+12,
+21
+],
+[
+30,
+23
+]
+],
+"text": "a small upright grey STONE TABLET with faded carved lines (an old memorial stone), seen from above",
+"color": [
+96,
+96,
+108
+],
+"solid": true
+},
+{
+"kind": "shelf",
+"cells": [
+[
+15,
+5
+],
+[
+16,
+5
+],
+[
+8,
+15
+],
+[
+8,
+16
+]
+],
+"text": "a toppled old WHITE BOOKSHELF half buried in the sand, white books spilling out",
+"color": [
+180,
+168,
+140
+],
+"solid": true
+},
+{
+"kind": "stairs",
+"cells": [
+[
+6,
+2
+],
+[
+7,
+2
+]
+],
+"text": "a white marble STAIRCASE going UP into soft light (walkable)",
+"color": [
+200,
+196,
+186
+],
+"solid": false
+},
+{
+"kind": "stairsdown",
+"cells": [
+[
+34,
+27
+],
+[
+35,
+27
+]
+],
+"text": "a white marble STAIRCASE going DOWN into pale mist (walkable)",
+"color": [
+120,
+124,
+150
+],
+"solid": false
+}
+],
+"objects": [
+{
+"type": "o",
+"x": 6,
+"y": 3
+},
+{
+"type": "o",
+"x": 7,
+"y": 3
+},
+{
+"type": "o",
+"x": 34,
+"y": 26
+},
+{
+"type": "o",
+"x": 35,
+"y": 26
+},
+{
+"type": "o",
+"x": 33,
+"y": 5
+},
+{
+"type": "o",
+"x": 4,
+"y": 23
+},
+{
+"type": "o",
+"x": 22,
+"y": 13
+},
+{
+"type": "o",
+"x": 17,
+"y": 25
+},
+{
+"type": "o",
+"x": 24,
+"y": 27
+},
+{
+"type": "o",
+"x": 29,
+"y": 26
+}
+],
+"spawns": {
+"from_town": {
+"x": 6,
+"y": 3,
+"dir": "s"
+},
+"from2": {
+"x": 34,
+"y": 26,
+"dir": "n"
+}
+},
+"exits": [],
+"notes": [],
+"meta": {
+"name": "忘却の底",
+"look": "void",
+"smooth": 0.5
+},
+"rows_fit": [
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~ss~~~~~~~~~~~~~~~~~~~~~",
+"~~~~ssccss~sssssssssssssss~~~~~~~~~~~~~~",
+"~~ssssssssXsssssssssssssssssssssX~sX~~~~",
+"~~ssssssssssssssssssssssssssssssssssX~~~",
+"~ssssssssssss~~XX~~~~~~~~~sssssssssss~~~",
+"~sssssssssss~~~~~~~~~~~~~~~~~~~~ssssX~~~",
+"~~ssssssssss~~~~~~~~~~~~~~~~~~~~~sX~~~~~",
+"~~~ssssssss~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~sssss~~~~~~~~~~~~~sss~~~~~~~~~~~~~~~",
+"~~~~ssss~~~~~~~~~~ssssXsss~~~~~~~~~~~~~~",
+"~~~~ssss~~~~~~~~~ssXsssssXs~~~~~~~~~~~~~",
+"~~~Xssss~~~~~~~~~sssssssssss~~~~~~~~~~~~",
+"~~~~ssss~~~~~~~~~sXsssssssXs~~~~~~~~~~~~",
+"~~~~sssss~~~~~~~~sssssssssss~~~~~~~~~~~~",
+"~~~~ssssX~~~~~~~~XsXsssssXsX~~~~~~~~~~~~",
+"~~~~~sssX~~~~~~~~~~sssssss~~~~~~~~~~~~~~",
+"~~~~~ssss~~~~~~~~~~~ssss~~~~~~~~~~~~~~~~",
+"~~~~~sssss~~~~~~~~~~sss~~~~~~~~~~~~~~~~~",
+"~~~~~~ssss~~~~~~~~~~ss~~~~~~~~~~~~~~~~~~",
+"~~~sssssssss~~~~~~~~ss~~~~~~~~~~~~~~~~~~",
+"~~ssssssssssX~~~~~~~ss~~~~~~~~~~~~~~~~~~",
+"~~ssssssssssss~~~~~~ss~~~~~~~~ssssssX~~~",
+"~~sssss~sssssssssss~ss~~~sssssXsssssss~~",
+"~~~sss~~~~ssssssssssssssssssssssssssss~~",
+"~~~~~~~~~~~sssssssssssssssssssssssssss~~",
+"~~~~~~~~~~~~~sssssssssssssssssssssssss~~",
+"~~~~~~~~~~~~~~~~sssssssssss~~~ssssccsX~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~sssXXX~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+]
+}

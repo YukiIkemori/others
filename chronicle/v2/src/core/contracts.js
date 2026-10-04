@@ -93,7 +93,8 @@
   // --- 顔絵（§2.5.16）
   K.portraitParse = { look: 'string', expr: '"neutral"|"smile"|"sad"|"angry"|"surprise"' };
   // --- データ（§2.6）
-  K.mapObject = { type: '"building"|"prop"|"chest"|"spring"|"brazier"|"waylamp"|"switch"|"trail"|"sign"|"stairs"|"door"|"examine"', 'id?': 'string', 'x?': 'int', 'y?': 'int', 'lv?': '0|1', 'cond?': 'any' };
+  K.mapObject = { type: '"building"|"prop"|"chest"|"spring"|"brazier"|"waylamp"|"switch"|"trail"|"sign"|"stairs"|"door"|"examine"|"mark"', 'id?': 'string', 'x?': 'int', 'y?': 'int', 'lv?': '0|1', 'cond?': 'any' };
+  // "mark": 見えない物。way（出口と同じ灯りの脈と札。systems/field/wayfind.js）だけを持つ（ワールドの出口の印など。2026-10-04）
   // legend の 1 字（§2.6.1）。secret のセルは「通れる壁」: 見つけるまで mat（壁）で描き、見つけたら floor で描く
   K.legendEntry = { mat: 'string', 'solid?': 'bool', 'walk?': 'bool', 'rise?': 'int', 'deck?': 'bool', 'ladder?': 'bool', 'secret?': 'bool', 'floor?': 'string', 'soft?': 'bool', 'name?': 'string' };
   K.npc = {

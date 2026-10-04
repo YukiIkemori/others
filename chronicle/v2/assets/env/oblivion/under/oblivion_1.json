@@ -1,0 +1,20 @@
+{
+ "id": "oblivion_1",
+ "kind": "under",
+ "map": "oblivion_1",
+ "tile": 32,
+ "size32": [
+  1280,
+  1024
+ ],
+ "windows32": [],
+ "painted": [],
+ "live": [],
+ "gain": 0.95,
+ "files": {
+  "24": "oblivion_1@24.png",
+  "32": "oblivion_1@32.png",
+  "40": "oblivion_1@40.png"
+ },
+ "src": "generated"
+}
