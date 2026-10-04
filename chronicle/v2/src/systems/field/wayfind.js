@@ -365,16 +365,17 @@
       else { x = (e.x + e.w / 2 + (e.dir === 'w' ? 1.4 : -1.4)) * t - cx; y = (e.y + e.h + 0.55) * t - cy; }
       tag(g, e.label, x, y, { alpha: a, size: 12.5, left: e.dir === 'n' || e.dir === 's' });
     }
-    // 物の印の札（外洋船のかじ）: 3 マス以内で。札は印の向こう（船の側）に
+    // 物の印の札（外洋船のかじ）: 3 マス以内で
     const marks = I.marks || [];
     for (let i = 0; i < marks.length; i++) {
       const e = marks[i];
       if (!e.label) continue;
       const a = alphaFor(m.id + ':m' + i, top && near(e, px, py, 3));
       if (a <= 0.01) continue;
-      const v = { n: [0, -1], s: [0, 1], e: [1, 0], w: [-1, 0] }[e.dir] || [0, 1];
-      const x = (e.x + e.w / 2 + v[0] * 1.2) * t - cx, y = (e.y + e.h / 2 + v[1] * 1.0) * t - cy;
-      tag(g, e.label, x, y, { alpha: a, size: 12.5 });
+      // 札は船にかぶせない: 南北向きは印の右、東西向きは印の下
+      const ns = e.dir === 'n' || e.dir === 's';
+      const x = ns ? (e.x + e.w + 0.3) * t - cx : (e.x + e.w / 2) * t - cx, y = ns ? (e.y + e.h / 2) * t - cy : (e.y + e.h + 0.45) * t - cy;
+      tag(g, e.label, x, y, { alpha: a, size: 12.5, left: ns });
     }
     for (let i = 0; i < I.signs.length; i++) {
       const s = I.signs[i];
