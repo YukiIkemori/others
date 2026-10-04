@@ -728,16 +728,16 @@ SHOTS.s1_tomb_c14 = {
 };
 SHOTS.s1_tomb_c14_clean = Object.assign({}, SHOTS.s1_tomb_c14, { prep: async (T) => { await SHOTS.s1_tomb_c14.prep(T); await T.js('PV.hideMsg()'); } });
 
-// 世界の 6 つの地方（§4）に天気（持ち主「8つのエリア紹介で、天候エフェクトつけといて」）。カメラ・長さは v13 の同じ id と同じ。
+// 世界の 6 つの地方（§4）に天気。強さ i は 1 を超えてもよい（粒の数・濃さが増えるだけ。撮影だけの値）（持ち主「8つのエリア紹介で、天候エフェクトつけといて」）。カメラ・長さは v13 の同じ id と同じ。
 //   天気は weather.js の AUTO の地図ごとの候補から（R.Field._wxForce で決める）。陽炎のゆらしは遅いページで自分を止める（SH.off）が、
 //   撮影は 1 フレームずつ時計を進めるので、毎フレーム戻して描かせる（絵の時刻はフレームの時刻で決まる）。
 //   同じ理由で、描画の重さからの自動の画質下げ（Hd.autoQuality = 'low'。天気の粒が半分になる）も毎フレーム外す（設定どおりの high で描く）
 const WX = {
-  s4_mirage: { kind: 'sandstorm', i: 0.85 },  // desert_mirage: 砂嵐（陽炎は止め絵でほぼ見えない・1 コマの揺れが 2 px ほどなので、砂漠の野の砂嵐を夜店が読める濃さで）
+  s4_mirage: { kind: 'sandstorm', i: 1.6 },  // desert_mirage: 砂嵐（陽炎は 1 コマの揺れが 2 px ほどで PV では読めないので砂嵐。夜は暗がりの膜の下で薄まるので強め。夜店と人は読める）
   s4_yule_night: { kind: 'blizzard', i: 1 },  // yule_night: 吹雪（地図の天気のまま）
   s4_loch_bells: { kind: 'fog', i: 0.7 },   // loch: 霧（湖の町。鐘楼が見える濃さ）
   s4_cove: { kind: 'drizzle', i: 1.1 },     // i_cove: 海の霧雨（細い雨脚が PV の大きさでも読める強さ）
-  s4_lava: { kind: 'ash', i: 1.3 },         // a_lava: 灰と火の粉（強さ 1 では欠片がまばらで読めない → 多め。溶岩の道は見える）
+  s4_lava: { kind: 'ash', i: 2 },           // a_lava: 灰と火の粉（強さ 1 では欠片がまばらで読めない → 多め。溶岩の道は見える）
   s4_crater: { kind: 'stars', i: 2 },       // s_crater: 流れ星と星くず（星くずを多く、流れ星がカットの中で必ず 1 本走る強さ）
 };
 for (const [id, w] of Object.entries(WX)) {
