@@ -1701,7 +1701,7 @@
   const AMB_LEAD = 0.6;
   const AMB_PEAK = 0.1;   // 強さ 1・音量 10 の山の目安（−20 dBFS）。床ごとの差は AMB_TRIM で揃える（tools/test_ambience.js で測る）
   // 床ごとの音量の揃え（強さ 1・音量 10 の積分ラウドネスで 吹雪 −33・砂嵐 −34・海 −36・雨 −37・森 −41・陽炎 −43 LUFS ほど。2026-10-04 に測った）
-  const AMB_TRIM = { blizzard: 0.84, sandstorm: 1.50, rain: 1.30, ash: 1.15, volcano: 1.10, breeze: 1.40, highwind: 0.79, mist: 1.51, marsh: 1.29, forest: 2.24, cave: 0.71, heat: 0.48 };
+  const AMB_TRIM = { blizzard: 1.06, sandstorm: 1.50, rain: 1.30, ash: 1.15, volcano: 1.10, breeze: 1.40, highwind: 0.79, mist: 1.51, marsh: 1.29, forest: 2.24, cave: 0.71, heat: 0.48 };
   function ambRng(seed) {
     let a = (seed >>> 0) || 1;
     return () => {
@@ -1819,7 +1819,7 @@
     }
     /** まばらな粒: [a, b] 秒おきに fn(t) */
     every(range, fn, first) {
-      this.evs.push({ range, fn, next: this.t0 + (first != null ? first : this.rr(0.3, 1) * range[1]) });
+      this.evs.push({ range, fn, next: this.t0 + (first != null ? first : this.rr(0.2, 1) * range[0]) });
     }
     schedule(until) {
       if (!this.alive) return;
@@ -2055,7 +2055,7 @@
     breeze(B, i) {   // 風の木の葉: 風＋葉ずれ（突風に乗る、細かく粒立つ）、昼はまばらな鳥・夜はまばらな虫
       const G = lWind(B, { f: [420, 1100], g: [0.25, 1], ge: [0.9, 3], gtc: 0.7, body: 0.35, lvl: 0.85 });
       lHiss(B, { hp: 2600, lp: 6500, lvl: 0.25, am: 3, amF: 30, walk: [0.1, 1], we: [0.25, 0.9], wtc: 0.15, to: G });
-      lLife(B, i, 0.9, 0.06, 1.4);
+      lLife(B, i, 0.7, 0.06, 1.4);
     },
     highwind(B, i) {   // 高地の夜空: 高く細い風（ゆっくり）と、遠いひゅう
       const s = B.filt('highpass', 220, 0.6);
@@ -2097,12 +2097,12 @@
       lRumble(B, { f: 140, rate: 0.4, lvl: 0.8, lo: 0.45, ge: [2, 5], gtc: 1.6 });
       const G = lWind(B, { f: [300, 800], g: [0.2, 0.65], ge: [2, 5], gtc: 1.4, lvl: 0.7 });
       lHiss(B, { hp: 3500, lp: 7000, lvl: 0.1, to: G });
-      lCrackle(B, { lvl: 5, every: [1.5 / (0.3 + 0.7 * i), 5 / (0.3 + 0.7 * i)] });
+      lCrackle(B, { lvl: 3.5, every: [1.5 / (0.3 + 0.7 * i), 5 / (0.3 + 0.7 * i)] });
     },
     forest(B, i) {   // 木漏れ日の森: そよ風＋葉ずれ、昼は鳥・夜は虫
       const G = lWind(B, { f: [500, 1300], g: [0.15, 0.6], ge: [2, 5], gtc: 1.4, lvl: 0.7, body: 0.2 });
       lHiss(B, { hp: 2800, lp: 6000, lvl: 0.15, am: 2.5, amF: 25, walk: [0.1, 1], we: [0.4, 1.2], wtc: 0.25, to: G });
-      lLife(B, i, 1.2, 0.07, 0.7);
+      lLife(B, i, 0.9, 0.07, 0.7);
     },
     cave(B, i) {   // 洞窟・坑道: 低い部屋の音＋よく響く雫（まばら・不規則。墓は雫なし）
       const vb = B.verb(1.6), ev = B.gain(0.7);
@@ -2115,7 +2115,7 @@
       lRumble(B, { f: 240, rate: 0.5, lvl: 0.35, lo: 0.3, ge: [3, 7], gtc: 2.5 });
       const vb = B.verb(1.2), ev = B.gain(1);
       ev.connect(B.bus); if (vb) ev.connect(vb); B.ev = ev;
-      lCrackle(B, { lvl: 4, every: [2.5, 8] });
+      lCrackle(B, { lvl: 3, every: [2.5, 8] });
       lBloop(B, { lvl: 1.2, every: [5, 14] });
     },
   };
