@@ -80,8 +80,10 @@
       if (c.length) return c.length > 1 && c.some((p) => tauntOf(eng, p) !== 1) ? R.Mon.weighted(c.map((p) => ({ p, w: tauntOf(eng, p) }))).p : c[R.Mon.rng().ri(0, c.length - 1)];
     }
     if (aim === 'caster' || aim === 'strong') {
+      // 高い人ほど狙われやすい（値の 3 乗の重み）。いつも同じ 1 人だと読み切れてしまう（持ち主 2026-10-04「一番上のキャラしか当ててこない」）
       const k = aim === 'caster' ? 'mag' : 'atk';
-      return l.slice().sort((a, b) => b.stat(k) - a.stat(k) || a.idx - b.idx)[0];
+      const top = Math.max(1, ...l.map((p) => p.stat(k)));
+      return R.Mon.weighted(l.map((p) => ({ p, w: Math.max(0.02, Math.pow(Math.max(0, p.stat(k)) / top, 3)) * tauntOf(eng, p) }))).p;
     }
     const K = rowK();
     const W = aim === 'middle' ? K.aimMiddle : K.weight;

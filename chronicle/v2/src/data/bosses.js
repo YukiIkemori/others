@@ -74,7 +74,7 @@
     b_nemrea1: { hp: 0.55, atk: 0.9, mag: 0.9 },
     // 持ち主 2026-10-04（装備のティアの見直し）: クリア後のボスは店 8・本編のレア 9〜10 では勝てず、ティア 11〜12 を集めて勝てる強さ（tools/sim_gear_bosses.js）。
     //   残響 hp 0.9 → 2.8・atk 0.7 → 1.5（P-c 23%・P-d 43%・P-e 100%）、円環竜 hp 0.6 → 1.7・atk 0.64 → 1.55（P-c 0%・P-d 0%・P-e 69%・P-f 78%）
-    b_valzard_echo: { hp: 2.1, atk: 1.38, mag: 1.38 },   // 2026-10-04 持ち主「中ボスとオウロボラの違いがない」: lv 64→61・HP 約 89k→62k（ティア 9＋レア・超レアで倒せる中ボス）
+    b_valzard_echo: { hp: 2.2, atk: 1.42, mag: 1.42 },   // 2026-10-04 持ち主「中ボスとオウロボラの違いがない」→ lv 61・HP 2.1。同日「もう少し強くていいや（レア確定の弱い敵）」→ lv 66・HP 2.2・攻 1.42
     b_ouroboros: { hp: 2.15, atk: 1.55, mag: 1.55 },   // 2026-10-04 lv 68→70・hp 1.7→2.15（HP 約 112k→150k、ティア 11〜12 が要る）。SYSTEMS_REWORK phase 3 (C3: the normal set won 25–45 %): atk/mag 0.55 → 0.64; 2026-10-04 → 1.55 (gear tiers)
   };
   // @@S-END
@@ -404,7 +404,7 @@
 
     // ------------------------------------------------------------ クリア後 忘却の底（ティア 9）
     b_valzard_echo: {
-      name: R.T('data.bosses.LIST.b_valzard_echo.name'), enrageText: 'serious', sprite: 'b_valzard_echo', bossType: 'echo', lv: 61, actsPerTurn: 2,
+      name: R.T('data.bosses.LIST.b_valzard_echo.name'), enrageText: 'serious', sprite: 'b_valzard_echo', bossType: 'echo', lv: 66, actsPerTurn: 2,
       race: 'demon', affinity: 'dark', flags: ['boss'], eva: 5,
       elem: { light: 1.5, dark: 0.25 }, statusRes: { death: 0.8 },
       actions: A([['attack', 1], ['eb_echo_despair', 2], ['eb_echo_claw', 2], ['eb_echo_flame', 2],

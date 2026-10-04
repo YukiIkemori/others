@@ -36,7 +36,7 @@ const TARGET = {
 };
 // 持ち主 2026-10-04「中ボスとオウロボラの違いがない」: 魔王の残影はティア 9＋レア・超レアで倒せる中ボス、オウロボラはティア 11〜12 が要る裏ボス
 const TARGET_BY = { tr_b_ouroboros: { 'P-c': [0, 15], 'P-d': [0, 40], 'P-e': [35, 85], 'P-f': [50, 100] },
-  tr_b_valzard_echo: { 'P-c': [30, 80], 'P-d': [50, 100], 'P-e': [80, 100], 'P-f': [90, 100] } };
+  tr_b_valzard_echo: { 'P-c': [15, 60], 'P-d': [35, 90], 'P-e': [80, 100], 'P-f': [90, 100] } };
 
 function gearPools(R) {
   const DB = R.DB, Ru = R.Rules;
