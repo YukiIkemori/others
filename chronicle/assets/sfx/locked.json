@@ -1,0 +1,55 @@
+{
+  "id": "locked",
+  "category": "field",
+  "files": [
+    "locked.0.ogg",
+    "locked.1.ogg"
+  ],
+  "durations": [
+    0.413,
+    0.423
+  ],
+  "peaks": [
+    -11,
+    -11
+  ],
+  "rms": [
+    -29.4,
+    -28.5
+  ],
+  "gainDb": [
+    -12.9,
+    -13.9
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry close-up foley recording, not music: ten separate locked door rattles, each three quick metallic rattles of an old iron latch that will not open, ending with a dull clunk, about 0.4 seconds, separated by 1.6 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 23 seconds.",
+    "generated": "2026-10-04T04:04:02.584Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "locked.0.mp3",
+      "at": 12.841,
+      "fit": 9,
+      "problem": "none"
+    },
+    {
+      "take": "locked.0.mp3",
+      "at": 8.09,
+      "fit": 9,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 62,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 9,
+    "peakTarget": -11,
+    "rmsMax": -15
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "loopStart": 0,
+  "loopEnd": 52.5,
+  "bed": "heat",
+  "spec": {
+    "bed": "heat"
+  },
+  "lufsTarget": -43,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry foley recording, not music: very faint warm air moving over hot desert sand, almost silent, a distant soft breeze. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+    "generated": "2026-10-04T04:04:14.809Z",
+    "rawSeconds": 184.4,
+    "takes": 2,
+    "excerpt": [
+      1,
+      57.5
+    ]
+  },
+  "analysis": {
+    "loudnessLUFS": -43,
+    "truePeakDb": -39,
+    "gainDb": -42.1,
+    "peakLimited": false,
+    "xfade": 4,
+    "seamLevelDiffDb": 18.9,
+    "listen": {
+      "model": "gemini-3.8-flash",
+      "fit": 7.5,
+      "seam": {
+        "seam_smooth": 10,
+        "problem": "none"
+      },
+      "content": "extremely faint steady air hiss and gentle low-level ambient room tone / very soft low air movement and subtle breeze rumble",
+      "problem": "nearly silent, resembles static noise floor"
+    }
+  }
+}

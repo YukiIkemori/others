@@ -1,0 +1,57 @@
+{
+  "id": "door",
+  "category": "field",
+  "files": [
+    "door.0.ogg",
+    "door.1.ogg"
+  ],
+  "durations": [
+    0.343,
+    0.453
+  ],
+  "peaks": [
+    -7.5,
+    -7.5
+  ],
+  "rms": [
+    -27.8,
+    -25.6
+  ],
+  "gainDb": [
+    -5.4,
+    -10.1
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": [
+      "A close-up field recording made in a quiet room, not music: eight separate old wooden doors, each a brief hinge creak and a soft wooden knock as it closes, separated by 1.8 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 21 seconds."
+    ],
+    "generated": "2026-10-04T04:02:51.863Z",
+    "takes": 3,
+    "rounds": 3
+  },
+  "picks": [
+    {
+      "take": "door.0.mp3",
+      "at": 23.756,
+      "fit": 9,
+      "problem": "none"
+    },
+    {
+      "take": "door.1.mp3",
+      "at": 21.766,
+      "fit": 6.5,
+      "problem": "weak thud, small latch sound"
+    }
+  ],
+  "analysis": {
+    "candidates": 82,
+    "listened": 24,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 7.8,
+    "peakTarget": -7.5,
+    "rmsMax": -18
+  }
+}

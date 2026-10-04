@@ -1,0 +1,55 @@
+{
+  "id": "gold",
+  "category": "field",
+  "files": [
+    "gold.0.ogg",
+    "gold.1.ogg"
+  ],
+  "durations": [
+    0.458,
+    0.513
+  ],
+  "peaks": [
+    -10.5,
+    -10.5
+  ],
+  "rms": [
+    -24.2,
+    -24.2
+  ],
+  "gainDb": [
+    -12.8,
+    -12.5
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry close-up foley recording, not music: ten separate small handfuls of gold coins clinking together, each a bright short jingle of two or three coins, about half a second, separated by 1.6 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 24 seconds.",
+    "generated": "2026-10-04T04:06:11.476Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "gold.0.mp3",
+      "at": 5.294,
+      "fit": 8.5,
+      "problem": "none"
+    },
+    {
+      "take": "gold.0.mp3",
+      "at": 21.295,
+      "fit": 7.5,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 39,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8,
+    "peakTarget": -10.5,
+    "rmsMax": -22
+  }
+}

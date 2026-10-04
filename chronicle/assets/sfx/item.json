@@ -1,0 +1,55 @@
+{
+  "id": "item",
+  "category": "field",
+  "files": [
+    "item.0.ogg",
+    "item.1.ogg"
+  ],
+  "durations": [
+    0.423,
+    0.313
+  ],
+  "peaks": [
+    -10,
+    -10
+  ],
+  "rms": [
+    -27.8,
+    -22
+  ],
+  "gainDb": [
+    -4.5,
+    -6.5
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: ten separate short bright chimes, each two quick light taps on a small brass bell, about half a second, separated by 1.6 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 24 seconds.",
+    "generated": "2026-10-04T04:05:41.647Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "item.0.mp3",
+      "at": 2.618,
+      "fit": 9,
+      "problem": "none"
+    },
+    {
+      "take": "item.0.mp3",
+      "at": 42.613,
+      "fit": 9,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 35,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 9,
+    "peakTarget": -10,
+    "rmsMax": -19
+  }
+}

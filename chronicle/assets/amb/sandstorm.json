@@ -1,0 +1,39 @@
+{
+  "loopStart": 0,
+  "loopEnd": 46,
+  "bed": "sandstorm",
+  "spec": {
+    "bed": "sandstorm"
+  },
+  "lufsTarget": -34,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A sound effect recording, not music: a gritty sandstorm: strong gusting wind with hissing, rattling blown sand hitting rock, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+    "generated": "2026-10-04T04:03:22.236Z",
+    "rawSeconds": 62.8,
+    "takes": 3,
+    "excerpt": [
+      1,
+      51
+    ]
+  },
+  "analysis": {
+    "loudnessLUFS": -34,
+    "truePeakDb": -20.5,
+    "gainDb": -20.3,
+    "peakLimited": false,
+    "xfade": 4,
+    "seamLevelDiffDb": 0.1,
+    "listen": {
+      "model": "gemini-3.8-flash",
+      "fit": 7.5,
+      "seam": {
+        "seam_smooth": 10,
+        "problem": "none"
+      },
+      "content": "howling wind gusts and gritty blowing sand / howling sandstorm wind with rattling blown sand against rock",
+      "problem": "none"
+    }
+  }
+}

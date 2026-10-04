@@ -45,18 +45,18 @@
   {
    "id": "highwind",
    "bed": "highwind",
-   "desc": "a thin high cold wind moving slowly across a bare mountain plateau, with a faint distant whistle of wind, very sparse and empty",
+   "desc": "a thin cold wind on a high bare mountain plateau heard from inside a stone shelter, slow soft gusts with a faint distant whistle",
    "lufs": -40,
-   "prompt": "A dry foley recording, not music: a thin high cold wind moving slowly across a bare mountain plateau, with a faint distant whistle of wind, very sparse and empty. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
-   "alt": "A sound effect recording, not music: a thin high cold wind moving slowly across a bare mountain plateau, with a faint distant whistle of wind, very sparse and empty, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds."
+   "prompt": "A dry foley recording, not music: a thin cold wind on a high bare mountain plateau heard from inside a stone shelter, slow soft gusts with a faint distant whistle. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+   "alt": "A sound effect recording, not music: a thin cold wind on a high bare mountain plateau heard from inside a stone shelter, slow soft gusts with a faint distant whistle, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds."
   },
   {
    "id": "blizzard",
    "bed": "blizzard",
-   "desc": "a howling blizzard: strong turbulent wind with whistling gusts and snow pelting against rock and wood",
+   "desc": "a violent blizzard heard from inside a wooden hut: strong howling wind gusts whistling around the walls and snow pelting against the shutters",
    "lufs": -33.5,
-   "prompt": "A dry foley recording, not music: a howling blizzard: strong turbulent wind with whistling gusts and snow pelting against rock and wood. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
-   "alt": "A sound effect recording, not music: a howling blizzard: strong turbulent wind with whistling gusts and snow pelting against rock and wood, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds."
+   "prompt": "A dry foley recording, not music: a violent blizzard heard from inside a wooden hut: strong howling wind gusts whistling around the walls and snow pelting against the shutters. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+   "alt": "A sound effect recording, not music: a violent blizzard heard from inside a wooden hut: strong howling wind gusts whistling around the walls and snow pelting against the shutters, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds."
   },
   {
    "id": "sandstorm",

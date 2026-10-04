@@ -1,0 +1,55 @@
+{
+  "id": "chest",
+  "category": "field",
+  "files": [
+    "chest.0.ogg",
+    "chest.1.ogg"
+  ],
+  "durations": [
+    0.749,
+    0.643
+  ],
+  "peaks": [
+    -10,
+    -10
+  ],
+  "rms": [
+    -26.5,
+    -28.6
+  ],
+  "gainDb": [
+    -11.3,
+    -10.3
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A close-up field recording made in a quiet room, not music: eight separate old wooden boxes opening, each a metal clasp click and a creaking lid falling open, separated by 2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 24 seconds.",
+    "generated": "2026-10-04T04:05:06.780Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "chest.0.mp3",
+      "at": 56.846,
+      "fit": 8,
+      "problem": "missing latch click"
+    },
+    {
+      "take": "chest.0.mp3",
+      "at": 34.545,
+      "fit": 7,
+      "problem": "only latch click"
+    }
+  ],
+  "analysis": {
+    "candidates": 28,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 7.5,
+    "peakTarget": -10,
+    "rmsMax": -22
+  }
+}

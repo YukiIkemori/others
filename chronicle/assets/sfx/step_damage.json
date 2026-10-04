@@ -1,0 +1,66 @@
+{
+  "id": "step_damage",
+  "category": "field",
+  "files": [
+    "step_damage.0.ogg",
+    "step_damage.1.ogg",
+    "step_damage.2.ogg"
+  ],
+  "durations": [
+    0.137,
+    0.112,
+    0.097
+  ],
+  "peaks": [
+    -12,
+    -12,
+    -12
+  ],
+  "rms": [
+    -25,
+    -22.8,
+    -23.2
+  ],
+  "gainDb": [
+    -11.9,
+    -12,
+    -12.1
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry close-up foley recording, not music: twelve separate short hot sizzles, each a quick hiss like a drop of water hitting a hot stone, under a fifth of a second, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+    "generated": "2026-10-04T04:06:55.477Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "step_damage.0.mp3",
+      "at": 4.051,
+      "fit": 8.5,
+      "problem": "none"
+    },
+    {
+      "take": "step_damage.0.mp3",
+      "at": 37.798,
+      "fit": 8.5,
+      "problem": "none"
+    },
+    {
+      "take": "step_damage.0.mp3",
+      "at": 43.049,
+      "fit": 8,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 59,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.3,
+    "peakTarget": -12,
+    "rmsMax": -18
+  }
+}
