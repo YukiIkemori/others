@@ -40,7 +40,9 @@ function gearPools(R) {
   const shop8 = new Set();
   for (const sid of Object.keys(DB.shops)) for (const id of Ru.shopItems(sid, 8)) { const it = DB.items[id]; if (it && (it.slot === 'weapon' || ARMOR.includes(it.slot)) && (it.grade || 'normal') === 'normal') shop8.add(id); }
   const norm9 = all.filter((id) => DB.items[id].grade === 'normal' && DB.items[id].tier === 9 && DB.items[id].src === 'shop');
-  const main = (g) => all.filter((id) => { const it = DB.items[id]; return it.grade === g && !it.fixedTier && !it.quirk && !['unique', 'reward', 'relic'].includes(it.src); });
+  // 本編の ★: レア = 帯のレアのティア 9 の系列（src 'drop'。朝焼けの剣・覇王の鎧…。終章で手に入れて値 9）、
+  //   超レア = 超レアの系列（src 'super'、ティア 8〜9。終章で手に入れて値 10）。魔物ごとの一点物（mdrop・steal）は数えない（控えめの見込み）
+  const main = (g) => all.filter((id) => { const it = DB.items[id]; return it.grade === g && !it.fixedTier && !it.quirk && (g === 'rare' ? it.src === 'drop' && it.tier === 9 : it.src === 'super' && it.tier >= 8); });
   const post = (t, pred) => all.filter((id) => { const it = DB.items[id]; return it.fixedTier && it.tier === t && (!pred || pred(it)); });
   return { shop8: [...shop8], norm9, rare: main('rare'), super: main('super'), p11: post(11), p12drop: post(12, (it) => !it.stealOnly), p12: post(12) };
 }
