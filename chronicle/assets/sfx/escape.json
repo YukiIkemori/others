@@ -52,5 +52,7 @@
     "meanFit": 6.3,
     "peakTarget": -11,
     "rmsMax": -20
-  }
+  },
+  "keepSynth": true,
+  "note": "whoosh only, no running patter (fit 6–6.5); keep the synth"
 }

@@ -41,5 +41,6 @@
     "meanFit": 9,
     "peakTarget": -9,
     "rmsMax": -19
-  }
+  },
+  "note": "only 1 of 3 variants: the takes were cut before the back-to-back splitter existed; `--only attack --force --reprocess --listen` adds the others (listener calls only)"
 }

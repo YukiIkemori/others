@@ -1,0 +1,57 @@
+{
+  "id": "page",
+  "category": "ui",
+  "files": [
+    "page.0.ogg",
+    "page.1.ogg"
+  ],
+  "durations": [
+    0.147,
+    0.343
+  ],
+  "peaks": [
+    -12.5,
+    -12.5
+  ],
+  "rms": [
+    -29.8,
+    -37.1
+  ],
+  "gainDb": [
+    -9.4,
+    -10.9
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": [
+      "A close-up field recording made in a quiet room, not music: twelve separate quick flips of a single thick parchment page, each a soft papery swish, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds."
+    ],
+    "generated": "2026-10-04T04:22:48.078Z",
+    "takes": 2,
+    "rounds": 2
+  },
+  "picks": [
+    {
+      "take": "page.1.mp3",
+      "at": 20.313,
+      "fit": 9,
+      "problem": "none"
+    },
+    {
+      "take": "page.0.mp3",
+      "at": 54.049,
+      "fit": 8.5,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 85,
+    "listened": 16,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.8,
+    "peakTarget": -12.5,
+    "rmsMax": -23
+  }
+}

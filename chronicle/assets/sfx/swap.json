@@ -1,0 +1,55 @@
+{
+  "id": "swap",
+  "category": "ui",
+  "files": [
+    "swap.0.ogg",
+    "swap.1.ogg"
+  ],
+  "durations": [
+    0.117,
+    0.197
+  ],
+  "peaks": [
+    -12,
+    -12
+  ],
+  "rms": [
+    -26.9,
+    -28.9
+  ],
+  "gainDb": [
+    -12.2,
+    -12.2
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A close-up field recording made in a quiet room, not music: twelve separate quick light swishes of a linen cloth being flipped over, each very short, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+    "generated": "2026-10-04T04:23:47.605Z",
+    "takes": 3,
+    "rounds": 3
+  },
+  "picks": [
+    {
+      "take": "swap.1.mp3",
+      "at": 5.309,
+      "fit": 9,
+      "problem": "none"
+    },
+    {
+      "take": "swap.1.mp3",
+      "at": 30.691,
+      "fit": 8.5,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 163,
+    "listened": 24,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.8,
+    "peakTarget": -12,
+    "rmsMax": -22
+  }
+}

@@ -53,5 +53,7 @@
     "meanFit": 5.5,
     "peakTarget": -10.5,
     "rmsMax": -22
-  }
+  },
+  "keepSynth": true,
+  "note": "listener heard castanets, not footsteps (fit 5.5); keep the synth until a better take"
 }

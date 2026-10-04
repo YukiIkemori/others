@@ -36,5 +36,8 @@
       "content": "flowing stream and rushing water / soft gusts of wind with distant crickets",
       "problem": "sounds like running water rather than wind in leaves, no crickets"
     }
-  }
+  },
+  "keepProcedural": true,
+  "weak": true,
+  "note": "heard as a flowing stream with crickets (fit 5.5); keep the procedural bed"
 }

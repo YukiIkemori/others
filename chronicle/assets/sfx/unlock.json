@@ -1,0 +1,59 @@
+{
+  "id": "unlock",
+  "category": "field",
+  "files": [
+    "unlock.0.ogg",
+    "unlock.1.ogg"
+  ],
+  "durations": [
+    1.8,
+    0.859
+  ],
+  "peaks": [
+    -7.5,
+    -7.5
+  ],
+  "rms": [
+    -20,
+    -19.1
+  ],
+  "gainDb": [
+    -10.2,
+    -10.7
+  ],
+  "channels": 2,
+  "weak": true,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry close-up foley recording, not music: six separate heavy stone doors grinding open, each a short low stone rumble and scrape, about one second, followed by a soft sparkle, separated by 3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 27 seconds.",
+    "generated": "2026-10-04T04:25:26.636Z",
+    "takes": 3,
+    "rounds": 3
+  },
+  "picks": [
+    {
+      "take": "unlock.0.mp3",
+      "at": 43.756,
+      "fit": 6.5,
+      "problem": "air whoosh instead of stone scrape",
+      "cut": true
+    },
+    {
+      "take": "unlock.0.mp3",
+      "at": 48.151,
+      "fit": 5.5,
+      "problem": "too sci-fi, no stone scrape"
+    }
+  ],
+  "analysis": {
+    "candidates": 38,
+    "listened": 24,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 6,
+    "peakTarget": -7.5,
+    "rmsMax": -17
+  },
+  "keepSynth": true,
+  "note": "air whoosh instead of a stone scrape (fit 5.5–6.5); keep the synth"
+}

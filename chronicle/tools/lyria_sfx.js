@@ -34,7 +34,8 @@
 // generationConfig.responseMimeType application/json.
 // Usage log: one JSON line per API call {t, tool, purpose, id, model, ok, secs, status, bytes} appended to
 // $LYRIA_USAGE_LOG (default $TMPDIR/lyria_usage.jsonl — outside the repo; never the key).
-// 429: geminiPost waits and retries; a per-day quota stops the run cleanly and prints the ids still to do (exit 2).
+// 429: geminiPost waits and retries; a per-day quota or HTTP 402 (prepaid credits depleted) stops the run cleanly and
+// prints the ids still to do (exit 2).
 //
 // ------------------------------------------------------------------ SFX processing
 //   1. decode the take (ffmpeg), mono sum for analysis, 30 Hz high-pass;
@@ -51,7 +52,7 @@
 //      at the same level: UI ≈ −12, spells −9…−6, impacts ≈ −3), lowered when the RMS over the sound would pass
 //      `rmsMax` (synth RMS + 4 dB; recorded sounds are denser than the synth);
 //   6. Ogg Vorbis q4, mono (stereo when the entry says `stereo`), 44.1 kHz → <id>.<k>.ogg, k = 0…variants−1.
-// <id>.json: {id, category, files, durations, peaks, rms, gainDb, keepSynth, source{provider, model, prompt,
+// <id>.json: {id, category, files, durations, peaks, rms, gainDb, keepSynth, weak, note, source{provider, model, prompt,
 // generated, takes, rounds}, picks[{take, at, fit, problem}], analysis{candidates, listened, meanFit}}.
 //
 // ------------------------------------------------------------------ ambience processing
@@ -103,6 +104,7 @@ async function call(model, body, purpose, id, log) {
     return json;
   } catch (e) {
     const secs = (Date.now() - t0) / 1000;
+    if (e.status === 402) e.daily = true; // prepaid credits used up: stop like a daily quota
     usage({ purpose, id, model, ok: false, secs: r1(secs), status: e.status || null, daily: !!e.daily, error: redact(e.message || e).slice(0, 160) });
     stats.failed++;
     throw e;
@@ -371,7 +373,6 @@ async function doSfx(e, o) {
   });
   const heard = pool.filter((c) => c.heard);
   const usedTakes = [...new Set(picks.map((c) => c.take))];
-  const prev = fs.existsSync(path.join(outDir, e.id + '.json')) ? JSON.parse(fs.readFileSync(path.join(outDir, e.id + '.json'), 'utf8')) : {};
   const meanFit = picks.every((c) => c.heard) ? r1(picks.reduce((s, c) => s + c.heard.fit, 0) / picks.length) : null;
   const j = {
     id: e.id, category: e.category, files, durations, peaks, rms, gainDb: gains, channels: e.stereo ? 2 : 1,
@@ -385,7 +386,7 @@ async function doSfx(e, o) {
     },
     picks: pk,
     analysis: { candidates: pool.length, listened: heard.length, listenModel: heard.length ? LISTEN_MODEL : undefined, meanFit, peakTarget: e.peak, rmsMax: e.rmsMax },
-    note: prev.note,
+    note: e.note || undefined,
   };
   fs.writeFileSync(path.join(outDir, e.id + '.json'), JSON.stringify(j, null, 2) + '\n');
   const kb = files.reduce((s, f) => s + fs.statSync(path.join(outDir, f)).size, 0) / 1024;
@@ -455,6 +456,7 @@ async function doAmb(e, o) {
   if (m && m[2]) { try { spec = Object.assign(spec, JSON.parse(m[2].replace(/(\w+):/g, '"$1":'))); } catch (err) { /* keep bed */ } }
   const j = {
     loopStart: 0, loopEnd: r3(dur), bed: spec.bed, spec, lufsTarget: e.lufs,
+    keepProcedural: e.keepProcedural || undefined, weak: best.heard && (best.heard.fit < o.minFit || (best.heard.seam && best.heard.seam.seam_smooth < 6)) ? true : undefined, note: e.note || undefined,
     source: { provider: 'gemini', model: best.take.meta.model || o.model, prompt: best.take.meta.prompt, generated: best.take.meta.generated, rawSeconds: r1(best.raw), takes: takes.length, excerpt: [r1(best.lp.from), r1(best.lp.to)] },
     analysis: {
       loudnessLUFS: r1(L.I), truePeakDb: L.TP, gainDb: r1(best.gainDb), peakLimited: best.limited, xfade: o.xfade, seamLevelDiffDb: r1(best.lp.levelDiff),
@@ -492,7 +494,7 @@ function writePreview() {
     if (j) {
       nA++; const k = kb(OUT.amb, [e.id + '.ogg']); ambKb += k;
       const L = j.analysis.listen;
-      cell = `<audio controls preload="none" src="../assets/amb/${e.id}.ogg"></audio><br><button data-seam="../assets/amb/${e.id}.ogg" data-ls="${j.loopStart}" data-le="${j.loopEnd}">loop seam</button> <small>${j.loopEnd.toFixed(1)} s loop · ${j.analysis.loudnessLUFS} LUFS · ${k.toFixed(0)} KB${L ? ` · fit ${L.fit} · seam ${L.seam ? L.seam.seam_smooth : '-'}` : ''}</small>${L ? `<br><small>聞こえたもの: ${esc(L.content)}</small>` : ''}`;
+      cell = `<audio controls preload="none" src="../assets/amb/${e.id}.ogg"></audio><br><button data-seam="../assets/amb/${e.id}.ogg" data-ls="${j.loopStart}" data-le="${j.loopEnd}">loop seam</button> <small>${j.loopEnd.toFixed(1)} s loop · ${j.analysis.loudnessLUFS} LUFS · ${k.toFixed(0)} KB${L ? ` · fit ${L.fit} · seam ${L.seam ? L.seam.seam_smooth : '-'}` : ''}</small>${L ? `<br><small>聞こえたもの: ${esc(L.content)}</small>` : ''}${j.keepProcedural ? '<br><small><b>keepProcedural</b>（手続きの環境音を使う）</small>' : ''}${j.weak ? ' <small><b>weak</b></small>' : ''}${j.note ? `<br><small>${esc(j.note)}</small>` : ''}`;
     }
     return `<tr id="amb-${e.id}"><td><b>${e.id}</b><br><small><code>${esc(e.bed)}</code> · ${e.lufs} LUFS</small></td><td>${cell}</td><td><small>${esc(e.desc)}</small></td></tr>`;
   });
@@ -586,7 +588,7 @@ async function main(argv, E) {
     const e = list[i];
     if (fs.existsSync(path.join(o.out, e.id + '.json')) && !argv.includes('--force') && !o.reprocess) { console.log(`[lyria] ${e.id}: exists — skipped (--force to redo)`); continue; }
     try { done.push(await (kind === 'amb' ? doAmb : doSfx)(e, o)); } catch (err) {
-      if (err.daily) { stopped = list.slice(i).map((x) => x.id); console.log(`[lyria] daily quota reached: ${redact(err.message).slice(0, 160)}`); break; }
+      if (err.daily) { stopped = list.slice(i).map((x) => x.id); console.log(`[lyria] quota / credits exhausted: ${redact(err.message).slice(0, 160)}`); break; }
       failed.push(e.id); console.log(`[lyria] ${e.id}: FAILED: ${redact(err.message || err)}`);
     }
   }

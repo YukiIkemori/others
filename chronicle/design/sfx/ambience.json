@@ -1,5 +1,5 @@
 {
- "about": "Recorded ambience beds for tools/lyria_sfx.js --kind amb. id = the procedural bed of R.Audio.ambience (core/audio.js, \"ambience\" section) or a flag variant of one (bed = the spec it stands for: forest_night / breeze_night = {night:1} (crickets instead of birds), rain_surf = {bed:\"rain\", surf}). tomb = the cave without drips, ship = the muffled sea below deck, wind = the desert wind of clear desert maps. prompts: \"A dry foley recording, not music: …\" — the field-recording / nature-documentary wordings drifted into piano or electronic music almost every time (2026-10-04). lufs: the integrated loudness the file is normalised to — the level of the procedural bed at strength 1 / volume 10 (measured there: about -33.5 blizzard … -45 forest at night LUFS), so a file plays at unity gain on the amb bus.",
+ "about": "Recorded ambience beds for tools/lyria_sfx.js --kind amb. id = the procedural bed of R.Audio.ambience (core/audio.js, \"ambience\" section) or a flag variant of one (bed = the spec it stands for: forest_night / breeze_night = {night:1} (crickets instead of birds), rain_surf = {bed:\"rain\", surf}). tomb = the cave without drips, ship = the muffled sea below deck, wind = the desert wind of clear desert maps. prompts: \"A dry foley recording, not music: …\" — the field-recording / nature-documentary wordings drifted into piano or electronic music almost every time (2026-10-04). lufs: the integrated loudness the file is normalised to — the level of the procedural bed at strength 1 / volume 10 (measured there: about -33.5 blizzard … -45 forest at night LUFS), so a file plays at unity gain on the amb bus. keepProcedural: true → the recorded take is a worse fit; the game should keep the procedural bed.",
  "model": "lyria-3.5",
  "entries": [
   {
@@ -16,7 +16,8 @@
    "desc": "a long continuous whoosh of cold wind with fine snow hissing, a winter storm heard from inside a wooden hut",
    "lufs": -38,
    "prompt": "A dry foley recording, not music: a long continuous whoosh of cold wind with fine snow hissing, a winter storm heard from inside a wooden hut. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
-   "alt": "A sound effect recording, not music: a long continuous whoosh of cold wind with fine snow hissing, a winter storm heard from inside a wooden hut, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds."
+   "alt": "A sound effect recording, not music: a long continuous whoosh of cold wind with fine snow hissing, a winter storm heard from inside a wooden hut, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+   "note": "fit 6 (one hearing: rushing water); audition"
   },
   {
    "id": "mist",
@@ -24,7 +25,8 @@
    "desc": "distant waves breaking on a beach and a light wind, heard muffled from inside a stone house",
    "lufs": -40,
    "prompt": "A dry foley recording, not music: distant waves breaking on a beach and a light wind, heard muffled from inside a stone house. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
-   "alt": "A sound effect recording, not music: distant waves breaking on a beach and a light wind, heard muffled from inside a stone house, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds."
+   "alt": "A sound effect recording, not music: distant waves breaking on a beach and a light wind, heard muffled from inside a stone house, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+   "note": "content fits (9) but the loop seam was rated 4/10: audition the seam before use"
   },
   {
    "id": "breeze",
@@ -32,7 +34,9 @@
    "desc": "wind blowing through tree leaves in gusts, leaves rustling, with an occasional distant bird chirp",
    "lufs": -39,
    "prompt": "A dry foley recording, not music: wind blowing through tree leaves in gusts, leaves rustling, with an occasional distant bird chirp. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
-   "alt": "A sound effect recording, not music: wind blowing through tree leaves in gusts, leaves rustling, with an occasional distant bird chirp, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds."
+   "alt": "A sound effect recording, not music: wind blowing through tree leaves in gusts, leaves rustling, with an occasional distant bird chirp, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+   "keepProcedural": true,
+   "note": "takes sound like a running stream with birds rather than wind in leaves (fit 5); keep the procedural bed"
   },
   {
    "id": "breeze_night",
@@ -40,7 +44,9 @@
    "desc": "wind blowing through tree leaves in gusts, leaves rustling, with sparse distant crickets chirping",
    "lufs": -41,
    "prompt": "A dry foley recording, not music: wind blowing through tree leaves in gusts, leaves rustling, with sparse distant crickets chirping. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
-   "alt": "A sound effect recording, not music: wind blowing through tree leaves in gusts, leaves rustling, with sparse distant crickets chirping, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds."
+   "alt": "A sound effect recording, not music: wind blowing through tree leaves in gusts, leaves rustling, with sparse distant crickets chirping, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+   "keepProcedural": true,
+   "note": "heard as a flowing stream with crickets (fit 5.5); keep the procedural bed"
   },
   {
    "id": "highwind",
@@ -48,7 +54,8 @@
    "desc": "a thin cold wind on a high bare mountain plateau heard from inside a stone shelter, slow soft gusts with a faint distant whistle",
    "lufs": -40,
    "prompt": "A dry foley recording, not music: a thin cold wind on a high bare mountain plateau heard from inside a stone shelter, slow soft gusts with a faint distant whistle. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
-   "alt": "A sound effect recording, not music: a thin cold wind on a high bare mountain plateau heard from inside a stone shelter, slow soft gusts with a faint distant whistle, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds."
+   "alt": "A sound effect recording, not music: a thin cold wind on a high bare mountain plateau heard from inside a stone shelter, slow soft gusts with a faint distant whistle, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+   "note": "fit 6 (wind is right but heavier than the thin plateau air wanted)"
   },
   {
    "id": "blizzard",
@@ -80,7 +87,9 @@
    "desc": "a light drizzle falling on rocks and leaves, a soft steady patter of fine rain, no thunder",
    "lufs": -37,
    "prompt": "A dry foley recording, not music: a light drizzle falling on rocks and leaves, a soft steady patter of fine rain, no thunder. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
-   "alt": "A sound effect recording, not music: a light drizzle falling on rocks and leaves, a soft steady patter of fine rain, no thunder, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds."
+   "alt": "A sound effect recording, not music: a light drizzle falling on rocks and leaves, a soft steady patter of fine rain, no thunder, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+   "keepProcedural": true,
+   "note": "one hearing reported a ticking pattern (fit 6); keep the procedural bed unless it passes an audition"
   },
   {
    "id": "rain_surf",

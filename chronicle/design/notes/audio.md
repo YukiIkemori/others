@@ -624,3 +624,67 @@ listening check; `--char selma`, `--only <id> --force`). Treat the set as open-e
   forest/breeze: the continuous leaf hiss read as "rain / static" → almost removed, wind gust now also raises the band
   (coupled walk), birds/crickets get a little reverb; crickets sing in short irregular bouts (1–2 voices). Still synthetic:
   birds are clean FM-wobbled sines (rated "slightly pure-tone"), crickets are faint; the model's ratings vary between runs.
+
+## 15. Recorded SFX and ambience beds (Lyria, owner 2026-10-04)
+Recorded alternatives to the synthesised SFX (§6, §13.6) and the procedural ambience (§14), made like the recorded BGM
+(§13): Google Lyria `lyria-3.5` through the Gemini API, judged by a Gemini listener model. **Not wired into the game yet** —
+the synth / procedural sounds stay the default until an integration step plays these files. Audition everything on
+`design/sfx_preview.html` (generated: `node tools/lyria_sfx.js --preview`).
+
+- **Files**
+  | what | where |
+  |---|---|
+  | SFX takes | `assets/sfx/<id>.<k>.ogg`, k = 0 … n−1 (n = `variants`: 3 for attack hit enemy_attack hurt step_damage, 1 for unique sounds such as boss_die glimmer golden revive ship shake bell secret, 2 for the rest). Ogg Vorbis q4, 44.1 kHz, mono (stereo for big spells: `channels` in the json). Play a random k per trigger (avoid repeating the last one) — this replaces the synth's per-play `rv`/`st` variation. |
+  | SFX meta | `assets/sfx/<id>.json` `{id, category, files[], durations[], peaks[], rms[], gainDb[], channels, keepSynth?, weak?, source{provider, model, prompt, generated, takes, rounds}, picks[{take, at, fit, problem}], analysis{candidates, listened, listenModel, meanFit, peakTarget, rmsMax}}` |
+  | ambience bed | `assets/amb/<id>.ogg` (Ogg Vorbis 96 kbps stereo, ≈ 20–55 s) + `<id>.json` `{loopStart: 0, loopEnd, bed, spec, lufsTarget, source{…, excerpt}, analysis{loudnessLUFS, truePeakDb, gainDb, xfade, listen{fit, seam, content}}}`. The whole file loops (end → 0, seam pre-crossfaded); the keys are the BGM json's. |
+  | prompts | `design/sfx/prompts.json` (62 SFX ids = `R.Audio.IDS.sfx`), `design/sfx/ambience.json` (beds) |
+- **Bed ids** = the procedural `spec.bed` names, plus flag variants: `forest` (day) / `forest_night`, `breeze` / `breeze_night`
+  (`night` ≥ 0.5 → the `_night` file), `rain` / `rain_surf` (`surf`), `tomb` (cave without drips), `ship` (muffled sea below
+  deck), `sea` (open shore), `mist` (muffled wind + distant surf), `wind` (desert wind of clear desert maps), `snow`, `blizzard`,
+  `sandstorm`, `heat`, `marsh`, `ash`, `highwind`, `cave`, `volcano`.
+- **Loudness standards**
+  - SFX: sample peak = the synth sound's measured peak (`render --sfx`; header targets UI ≈ −12, spells −9…−6, impacts ≈ −3 dBFS),
+    lowered when the RMS over the sound would exceed the synth's RMS + 4 dB (`rmsMax`; recorded sounds are denser — e.g. parry,
+    glimmer end up 2–5 dB under their peak target). So a file played at gain 1 on the sfx bus sits where the synth sound sat:
+    **recommended playback gain 1.0 for every category** (no per-id `GAIN` table; the synth's `S.gain()` is already baked in).
+  - Ambience: integrated loudness = the procedural bed's level at strength 1 / volume 10 (blizzard −33.5, sandstorm −34,
+    rain_surf/sea −36, rain/ash/volcano −37, wind/snow/ship −38, breeze −39, mist/highwind/marsh/cave −40, forest/breeze_night
+    −41, heat −43, tomb −44, forest_night −45 LUFS), sample peak ≤ −9 dBFS. **Play at gain 1 on the amb bus** and scale by the
+    spec's `i` the same way the procedural bed does (0.35 + 0.65 i) → no level jump when a recorded bed replaces a procedural one.
+- **Tool** `tools/lyria_sfx.js` (header = full reference): `--kind sfx|amb`, `--only a,b | --all`, `--listen`, `--takes n`,
+  `--rounds n`, `--reuse`, `--reprocess`, `--force`, `--dry-run`, `--clean-raw`, `--preview`. Raw takes are cached outside the repo
+  (`--raw`, default `$TMPDIR/lyria_sfx_raw/<kind>/<id>.<n>.mp3` + meta json + `<id>.listen.json` listener cache). Every API call is
+  appended to `$LYRIA_USAGE_LOG` (default `$TMPDIR/lyria_usage.jsonl`; never the key). A per-day 429 stops cleanly, exit 2,
+  printing the ids left.
+- **SFX method**: one Lyria take holds ~10 isolated events when asked for "A dry close-up foley recording, not music: <n>
+  separate <sounds>, separated by <g> seconds of silence. No melody, no musical instruments, no rhythm … Duration: <s>
+  seconds." (magic sounds: "A clean studio recording of isolated magical sound effects …, not music"). Events are cut by an
+  energy gate with hysteresis; back-to-back sounds are split recursively at a higher gate; 3 ms fade-in, cosine fade-out. The
+  best 8 candidates (length near `target`, clean separation) are played to the listener twice in opposite orders (1.5 s gaps,
+  start times given) and rated fit 1–10 / music / voice; the top `variants` with fit ≥ 5 are kept, rounds repeat (alt prompt)
+  while fewer than `variants` reach 7.
+- **Ambience method**: "A dry foley recording, not music: <environment>. Continuous for the whole duration. No melody …
+  Duration: 40 seconds." The level body (median ± 5 dB) is cut, the loop end chosen for a matching level, the last 4 s
+  crossfaded (equal power) into the start. The listener hears the whole loop (content, ANY music/tonal pad/rhythm/voice →
+  rejected) and the seam; best = fit + min(seam, 8)/3.
+- **Lessons (2026-10-04)**
+  - Ambience drifts into music very often: soft/pastoral words ("gentle", "night", "hillside", "birds") → piano, music box,
+    wind chimes; storms → EDM / hip-hop beats. Field-recording / documentary / long negative lists ("no piano, no synth …")
+    made it worse. "A dry foley recording, not music:" and a listening position ("heard from inside a wooden hut", "inside a
+    stone house") worked best. Expect ~1 clean take in 3; every take must be heard.
+  - ~15 % of SFX requests come back blocked (finishReason OTHER, no audio) at random, combat words more often; the alt
+    phrasing (or the same prompt again) usually goes through.
+  - Duration and count in the prompt are approximate (asked 20 s → up to 60 s). Leading rumble intros are common (events in the
+    first 0.5 s are dropped).
+  - The listener is consistent on gross errors (music, wrong object) but its 1–10 fit varies ±1 between runs; it judges a
+    pleasant chime as "single note" when two were asked for. Fit is a filter, not a final judgement — audition the preview.
+- **Result (2026-10-04 run)**: 61 of 62 SFX ids, 117 files (1.8 MB); 19 of 20 beds (8.2 MB). Listener fit of the kept SFX
+  takes: median 8.5, 96 of 117 ≥ 8, 107 ≥ 7. API: 272 Lyria requests (232 with audio, 40 blocked; ≈ 85 min of generation)
+  and 585 listener requests (≈ 35 min), then the prepaid credits ran out (HTTP 402 — the tool now stops on it like a quota).
+  - Missing: `lash` (every take heard as a hand clap; the whip wording is blocked half the time) and the `blizzard` bed (every
+    take drifted into EDM / hip-hop). New phrasings are already in the json files; run `--only lash` / `--kind amb --only blizzard`.
+  - `keepSynth: true` (recorded take clearly worse — the game keeps the synth): stairs (castanets), quill (wrong object),
+    escape (no running patter), unlock (air whoosh, no stone). Their prompts were rephrased for the next run.
+  - `keepProcedural: true`: breeze, breeze_night (heard as a stream), rain (a ticking pattern in one hearing). `weak` (audition
+    first): mist (seam 4/10), highwind, snow (fit 6). `attack` has 1 of 3 variants (`--only attack --force --reprocess --listen`
+    adds the others from the cached takes with listener calls only).

@@ -1,0 +1,59 @@
+{
+  "id": "arrow",
+  "category": "battle",
+  "files": [
+    "arrow.0.ogg",
+    "arrow.1.ogg"
+  ],
+  "durations": [
+    0.8,
+    0.8
+  ],
+  "peaks": [
+    -9,
+    -8.4
+  ],
+  "rms": [
+    -19,
+    -19
+  ],
+  "gainDb": [
+    -9.6,
+    -8.9
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry close-up foley recording, not music: ten separate archery shots, each a bowstring twang, a quick whoosh and a solid thunk of the shaft into a wooden target, about 0.4 seconds, separated by 1.8 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 25 seconds.",
+    "generated": "2026-10-04T04:27:48.708Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "arrow.0.mp3",
+      "at": 3.054,
+      "fit": 9,
+      "problem": "none",
+      "rmsCapped": true,
+      "cut": true
+    },
+    {
+      "take": "arrow.0.mp3",
+      "at": 9.047,
+      "fit": 9,
+      "problem": "none",
+      "rmsCapped": true,
+      "cut": true
+    }
+  ],
+  "analysis": {
+    "candidates": 10,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 9,
+    "peakTarget": -6.5,
+    "rmsMax": -19
+  }
+}

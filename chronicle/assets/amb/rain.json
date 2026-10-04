@@ -35,5 +35,8 @@
       "content": "soft steady light rain drizzle / loud rhythmic clock ticking or metronome clicks",
       "problem": "mechanical clock ticking instead of natural drizzle"
     }
-  }
+  },
+  "keepProcedural": true,
+  "weak": true,
+  "note": "one hearing reported a ticking pattern (fit 6); keep the procedural bed unless it passes an audition"
 }

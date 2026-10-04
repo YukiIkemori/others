@@ -52,5 +52,7 @@
     "meanFit": 5.3,
     "peakTarget": -11,
     "rmsMax": -24
-  }
+  },
+  "keepSynth": true,
+  "note": "listener: wrong sound (chime / boom), fit 5–5.5; keep the synth"
 }

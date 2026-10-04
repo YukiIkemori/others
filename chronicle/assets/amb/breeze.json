@@ -35,5 +35,8 @@
       "content": "Running stream or creek with active daytime bird chirping / soft wind rustling through leaves with gentle bird chirps",
       "problem": "Sounds like daytime running water rather than night-time wind in trees / birdsong feels more diurnal than nighttime"
     }
-  }
+  },
+  "keepProcedural": true,
+  "weak": true,
+  "note": "takes sound like a running stream with birds rather than wind in leaves (fit 5); keep the procedural bed"
 }

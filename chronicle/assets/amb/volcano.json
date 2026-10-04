@@ -1,0 +1,39 @@
+{
+  "loopStart": 0,
+  "loopEnd": 46,
+  "bed": "volcano",
+  "spec": {
+    "bed": "volcano"
+  },
+  "lufsTarget": -37,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry foley recording, not music: a deep slow rumbling of the earth inside a volcano, thick bubbling lava and hissing steam vents. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+    "generated": "2026-10-04T04:26:39.123Z",
+    "rawSeconds": 62.7,
+    "takes": 6,
+    "excerpt": [
+      1,
+      51
+    ]
+  },
+  "analysis": {
+    "loudnessLUFS": -37,
+    "truePeakDb": -24.1,
+    "gainDb": -23.1,
+    "peakLimited": false,
+    "xfade": 4,
+    "seamLevelDiffDb": 0,
+    "listen": {
+      "model": "gemini-3.8-flash",
+      "fit": 9,
+      "seam": {
+        "seam_smooth": 10,
+        "problem": "none"
+      },
+      "content": "Deep low rumble, bubbling lava, and gentle steam hissing in a cavern / Deep subterranean rumbling with bubbling lava and steam hisses",
+      "problem": "none"
+    }
+  }
+}

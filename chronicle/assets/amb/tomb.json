@@ -1,0 +1,39 @@
+{
+  "loopStart": 0,
+  "loopEnd": 44.25,
+  "bed": "tomb",
+  "spec": {
+    "bed": "tomb"
+  },
+  "lufsTarget": -44,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry foley recording, not music: the very quiet hollow room tone of an old dry stone tomb with faint moving air, no water drips. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+    "generated": "2026-10-04T04:24:38.897Z",
+    "rawSeconds": 61.5,
+    "takes": 6,
+    "excerpt": [
+      1,
+      49.3
+    ]
+  },
+  "analysis": {
+    "loudnessLUFS": -44,
+    "truePeakDb": -32.2,
+    "gainDb": -32.7,
+    "peakLimited": false,
+    "xfade": 4,
+    "seamLevelDiffDb": 0,
+    "listen": {
+      "model": "gemini-3.8-flash",
+      "fit": 9.5,
+      "seam": {
+        "seam_smooth": 10,
+        "problem": "none"
+      },
+      "content": "quiet hollow stone room tone with gentle moving air / quiet hollow room tone with faint moving air",
+      "problem": "none"
+    }
+  }
+}
