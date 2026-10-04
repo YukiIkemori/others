@@ -66,7 +66,7 @@
 //      amb bus; Ogg Vorbis 96 kbps stereo;
 //   5. --listen: the whole loop is checked for content and ANY music / tonal pad / rhythm / voice (rejected),
 //      and the seam (8 s before the end + 8 s from the start) is rated; best = fit + min(seam, 8)/3 of the clean takes
-//      with fit ≥ 5 (none → no file: the procedural bed stays). Rounds go on until fit ≥ --min-fit and seam ≥ 6.
+//      with fit ≥ 5 (none → no file: the procedural bed stays). Rounds go on until fit ≥ --min-fit and seam ≥ --min-seam (6).
 //      Lyria drifts into music (piano, music box, hip-hop beats) for most ambience prompts — about 1 take in 3 is
 //      clean, quiet pastoral wordings are worst; "A dry foley recording, not music: …" worked best (2026-10-04).
 'use strict';
@@ -444,7 +444,7 @@ async function doAmb(e, o) {
     }
     best = [...results.values()].filter((r) => r && r.q > 0 || (r && !o.listen)).sort((a, b) => b.q - a.q)[0] || null;
     if (!o.listen && best) break;
-    if (best && best.heard && best.heard.fit >= o.minFit && (!best.heard.seam || best.heard.seam.seam_smooth >= 6)) break;
+    if (best && best.heard && best.heard.fit >= o.minFit && (!best.heard.seam || best.heard.seam.seam_smooth >= o.minSeam)) break;
   }
   if (!best) throw new Error('no usable take (all rejected or failed)');
   const file = path.join(o.out, e.id + '.ogg');
@@ -555,7 +555,7 @@ async function main(argv, E) {
     model: E.LYRIA_MODEL || P.model || 'lyria-3.5',
     raw: path.resolve(arg('--raw', path.join(os.tmpdir(), 'lyria_sfx_raw'))),
     out: path.resolve(arg('--out', OUT[kind])),
-    takes: Math.max(1, +arg('--takes', kind === 'amb' ? 2 : 1)), rounds: Math.max(1, +arg('--rounds', 3)), minFit: +arg('--min-fit', 7),
+    takes: Math.max(1, +arg('--takes', kind === 'amb' ? 2 : 1)), rounds: Math.max(1, +arg('--rounds', 3)), minFit: +arg('--min-fit', 7), minSeam: +arg('--min-seam', 6),
     listen: argv.includes('--listen'), reuse: argv.includes('--reuse'), reprocess: argv.includes('--reprocess'),
     xfade: +arg('--xfade', 4), max: +arg('--amb-max', 60), log: (s) => console.log(s),
   };

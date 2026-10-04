@@ -2,19 +2,29 @@
   "id": "attack",
   "category": "battle",
   "files": [
-    "attack.0.ogg"
+    "attack.0.ogg",
+    "attack.1.ogg",
+    "attack.2.ogg"
   ],
   "durations": [
-    0.35
+    0.152,
+    0.147,
+    0.162
   ],
   "peaks": [
+    -9,
+    -9,
     -9
   ],
   "rms": [
-    -27.3
+    -20.1,
+    -19.3,
+    -21.2
   ],
   "gainDb": [
-    -9.5
+    -9.5,
+    -9.5,
+    -8.9
   ],
   "channels": 1,
   "source": {
@@ -28,19 +38,29 @@
   "picks": [
     {
       "take": "attack.0.mp3",
-      "at": 6.557,
+      "at": 48.557,
       "fit": 9,
-      "problem": "none",
-      "cut": true
+      "problem": "none"
+    },
+    {
+      "take": "attack.0.mp3",
+      "at": 37.061,
+      "fit": 9,
+      "problem": "none"
+    },
+    {
+      "take": "attack.0.mp3",
+      "at": 10.561,
+      "fit": 9,
+      "problem": "none"
     }
   ],
   "analysis": {
-    "candidates": 1,
-    "listened": 1,
+    "candidates": 107,
+    "listened": 9,
     "listenModel": "gemini-3.8-flash",
     "meanFit": 9,
     "peakTarget": -9,
     "rmsMax": -19
-  },
-  "note": "only 1 of 3 variants: the takes were cut before the back-to-back splitter existed; `--only attack --force --reprocess --listen` adds the others (listener calls only)"
+  }
 }
