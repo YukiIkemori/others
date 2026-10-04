@@ -9,7 +9,7 @@
 //
 // オーナーの決定（2026-10-04）: 会話の窓の顔は描いた胸から上の一枚絵にする（前の BRIEF A38「顔絵の画像 API は不要」を置き換え）。
 // 描くのは v2/tools/gen_portraits.py（1 枚ずつ。chronicle/assets/portraits/<look>_<expr>.webp）。この道具は一覧・指示文・参考画像・一覧表だけで、画像 API を呼ばない。
-// 一覧で approved（または試しの pilot: true ＋ generated）にした人をビルドが入れる（§6.2）。描いた絵の無い人は原画のシートの表情（hd:face:<look>）のまま。
+// 一人 neutral 1 枚（表情を問わず同じ絵。2026-10-04）。一覧で approved にした人をビルドが入れる（§6.2）。描いた絵の無い人は原画のシートの表情（hd:face:<look>）のまま。
 // キー・モデルの名前はこのファイルにもリポジトリにも書かない。
 'use strict';
 const fs = require('fs');
@@ -54,9 +54,10 @@ function init() {
   const list = faceList(R).map((f) => {
     const o = old[f.look] || {};
     const hasSheet = fs.existsSync(path.join(ROOT, 'v2', 'assets', 'sprites', f.look, 'face.png'));
-    const r = { look: f.look, name: f.name, exprs: EXPRS.slice(), priority: f.pri, status: o.status || 'todo',
-      note: o.pilot ? o.note : hasSheet ? '原画のシートの表情（sprite_pipe）を使用中' : o.note || '仮の顔（骨組み）。原画のシート9 待ち' };   // 原画の顔が届いたら古いメモは使わない
-    if (o.pilot) r.pilot = true;   // 試しの人（2026-10-04）
+    // 描いた顔は一人 neutral 1 枚（オーナー 2026-10-04）。描いた人（approved）のメモは残す
+    const r = { look: f.look, name: f.name, exprs: ['neutral'], priority: f.pri, status: o.status || 'todo',
+      note: o.status === 'approved' && o.note ? o.note : hasSheet ? '原画のシートの表情（sprite_pipe）を使用中' : o.note || '仮の顔（骨組み）。原画のシート9 待ち' };   // 原画の顔が届いたら古いメモは使わない
+    if (o.frame) r.frame = o.frame;   // 描いた絵の切り出し（gen_portraits.py process）
     return r;
   });
   fs.mkdirSync(DIR, { recursive: true });

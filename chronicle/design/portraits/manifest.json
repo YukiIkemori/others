@@ -3,41 +3,27 @@
   "look": "berna",
   "name": "ベルナ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 1,
-  "status": "generated",
-  "note": "試し（2026-10-04）: 描いた胸から上の一枚絵。berna は 5 表情、fine・rowell は neutral だけ（ほかの表情は描いた neutral）。描くまでは原画のシートの表情",
-  "pilot": true
+  "status": "todo",
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "fine",
   "name": "フィーネ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 1,
-  "status": "generated",
-  "note": "試し（2026-10-04）: 描いた胸から上の一枚絵。berna は 5 表情、fine・rowell は neutral だけ（ほかの表情は描いた neutral）。描くまでは原画のシートの表情",
-  "pilot": true
+  "status": "todo",
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "lazaro",
   "name": "ラザロ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 1,
   "status": "todo",
@@ -47,11 +33,7 @@
   "look": "noa",
   "name": "ノア",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 1,
   "status": "todo",
@@ -61,11 +43,7 @@
   "look": "npc_jorn",
   "name": "ヨルン",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 1,
   "status": "todo",
@@ -75,11 +53,7 @@
   "look": "npc_kaya",
   "name": "カヤ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 1,
   "status": "todo",
@@ -89,11 +63,7 @@
   "look": "npc_pim",
   "name": "ピム",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 1,
   "status": "todo",
@@ -103,11 +73,7 @@
   "look": "npc_rashid",
   "name": "ラシード",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 1,
   "status": "todo",
@@ -117,11 +83,7 @@
   "look": "npc_tadeo",
   "name": "タデオ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 1,
   "status": "todo",
@@ -131,11 +93,7 @@
   "look": "npc_yena",
   "name": "イェナ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 1,
   "status": "todo",
@@ -145,11 +103,7 @@
   "look": "npc_zaid",
   "name": "ザイード",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 1,
   "status": "todo",
@@ -159,11 +113,7 @@
   "look": "npc_zakuro",
   "name": "ザクロ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 1,
   "status": "todo",
@@ -173,11 +123,7 @@
   "look": "otto",
   "name": "オットー",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 1,
   "status": "todo",
@@ -187,26 +133,17 @@
   "look": "rowell",
   "name": "ロウェル",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 1,
-  "status": "generated",
-  "note": "試し（2026-10-04）: 描いた胸から上の一枚絵。berna は 5 表情、fine・rowell は neutral だけ（ほかの表情は描いた neutral）。描くまでは原画のシートの表情",
-  "pilot": true
+  "status": "todo",
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
  },
  {
   "look": "bartolo",
   "name": "バルトロ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -216,11 +153,7 @@
   "look": "basil",
   "name": "バジル",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -230,11 +163,7 @@
   "look": "belladonna",
   "name": "ベラドナ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -244,11 +173,7 @@
   "look": "boden",
   "name": "ボーデン",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -258,11 +183,7 @@
   "look": "brigitta",
   "name": "ブリギッタ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -272,11 +193,7 @@
   "look": "dokka",
   "name": "ドッカ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -286,11 +203,7 @@
   "look": "ferno",
   "name": "フェルノ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -300,11 +213,7 @@
   "look": "hagen",
   "name": "ハーゲン",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -314,11 +223,7 @@
   "look": "hero_f_mage",
   "name": "旅の術師",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -328,11 +233,7 @@
   "look": "hero_f_ranger",
   "name": "旅の狩人",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -342,11 +243,7 @@
   "look": "hero_f_spellblade",
   "name": "旅の術剣士",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -356,11 +253,7 @@
   "look": "hero_f_wanderer",
   "name": "旅人",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -370,11 +263,7 @@
   "look": "hero_f_warrior",
   "name": "旅の剣士",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -384,11 +273,7 @@
   "look": "hero_m_mage",
   "name": "旅の術師",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -398,11 +283,7 @@
   "look": "hero_m_ranger",
   "name": "旅の狩人",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -412,11 +293,7 @@
   "look": "hero_m_spellblade",
   "name": "旅の術剣士",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -426,11 +303,7 @@
   "look": "hero_m_wanderer",
   "name": "旅人",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -440,11 +313,7 @@
   "look": "hero_m_warrior",
   "name": "旅の剣士",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -454,11 +323,7 @@
   "look": "ilse",
   "name": "イルゼ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -468,11 +333,7 @@
   "look": "marta",
   "name": "マルタ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -482,11 +343,7 @@
   "look": "morga",
   "name": "モルガ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -496,11 +353,7 @@
   "look": "noela",
   "name": "ノエラ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -510,11 +363,7 @@
   "look": "rouga",
   "name": "ロウガ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -524,11 +373,7 @@
   "look": "selma",
   "name": "セルマ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -538,11 +383,7 @@
   "look": "shigure",
   "name": "シグレ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -552,11 +393,7 @@
   "look": "sylvain",
   "name": "シルヴァン",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -566,11 +403,7 @@
   "look": "teo",
   "name": "テオ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -580,11 +413,7 @@
   "look": "titta",
   "name": "ティッタ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -594,11 +423,7 @@
   "look": "viola",
   "name": "ヴィオラ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",
@@ -608,11 +433,7 @@
   "look": "zafira",
   "name": "ザフィラ",
   "exprs": [
-   "neutral",
-   "smile",
-   "sad",
-   "angry",
-   "surprise"
+   "neutral"
   ],
   "priority": 2,
   "status": "todo",

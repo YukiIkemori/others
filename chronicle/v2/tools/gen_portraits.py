@@ -7,7 +7,8 @@
                参考の画像: その人の原画のシートの表情（v2/assets/sprites/<look>/face.png を拡大）。
                表情（neutral 以外）は、その人の描いた neutral を「同じ絵の表情だけ変える」参考に付ける（同じ顔を保つ）。
                --style <look> で、ほかの人の描いた neutral を「描き方だけ」の参考に付ける（人ごとの絵柄をそろえる）。
-  2. process   原画 → assets/portraits/<look>_<expr>.webp（512×512、非可逆 WebP。ビルドが dist/portraits に写す）
+  2. process   原画（neutral だけ）→ assets/portraits/<look>_neutral.webp（512×512、非可逆 WebP。manifest の frame で切り出し。ビルドが dist/portraits に写す）
+               描いた顔は一人 1 枚（オーナー 2026-10-04）。ほかの表情の原画（試しのベルナ）は raw に残すが入れない
   3. sheet     描いた顔の一覧の画像（確かめ用。--out に書く）
 
   python3 v2/tools/gen_portraits.py gen <look> <expr> [--style <look>] [--note "<足す文>"] [--force]
@@ -19,7 +20,7 @@
   OPENAI_API_KEY, OPENAI_MODEL
 使った回数の記録はリポジトリの外: OPENAI_USAGE_LOG（無ければ /tmp/claude-0/secrets/openai_usage.jsonl）、kind 'portrait'。
 原画の横の <id>.gen.json には文と設定だけを書く（使ったモデルの名前は書かない）。
-ゲームに入れるのは manifest.json の status が approved の人（試しの人は pilot: true と generated。build.js）。
+ゲームに入れるのは manifest.json の status が approved の人（build.js）。
 """
 import base64
 import io
@@ -171,47 +172,58 @@ def gen(look, expr, style=None, note=None, force=False):
 
 
 # ---------------------------------------------------------------- 2. ゲームの絵にする（決まった手順）
+def frames():
+    """manifest.json の frame: [x, y, size]（原画の一辺に対する割合の正方形。頭の大きさを人どうしでそろえる）"""
+    try:
+        return {m['look']: m['frame'] for m in json.load(open(MANIFEST, encoding='utf-8')) if m.get('frame')}
+    except (OSError, ValueError):
+        return {}
+
+
 def process(ids=None):
+    """一人 neutral 1 枚だけをゲームの絵にする（オーナー 2026-10-04。ほかの表情の原画は raw に残すが入れない）"""
     os.makedirs(OUT, exist_ok=True)
-    names = sorted(f[:-5] for f in os.listdir(RAW) if f.endswith('.webp')) if os.path.isdir(RAW) else []
+    fr = frames()
+    names = sorted(f[:-5] for f in os.listdir(RAW) if f.endswith('_neutral.webp')) if os.path.isdir(RAW) else []
     for n in names:
-        if ids and n not in ids:
+        if ids and n not in ids and n[:-8] not in ids:
             continue
         im = Image.open(os.path.join(RAW, n + '.webp')).convert('RGB')
         w, h = im.size
-        s = min(w, h)
-        im = im.crop(((w - s) // 2, 0, (w - s) // 2 + s, s)).resize((SIZE, SIZE), Image.LANCZOS)
+        x, y, sz = fr.get(n[:-8], [0, 0, 1])
+        box = [round(x * w), round(y * h), round((x + sz) * w), round((y + sz) * h)]
+        if box[0] < 0 or box[1] < 0 or box[2] > w or box[3] > h:   # はみ出す分は地の紺で埋める
+            bg = Image.new('RGB', (box[2] - box[0], box[3] - box[1]), im.getpixel((4, 4)))
+            bg.paste(im, (-box[0], -box[1]))
+            im = bg
+        else:
+            im = im.crop(box)
+        im = im.resize((SIZE, SIZE), Image.LANCZOS)
         p = os.path.join(OUT, n + '.webp')
         im.save(p, 'WEBP', quality=86, method=6)
         print('ok', os.path.relpath(p, CHRONICLE), os.path.getsize(p), 'bytes')
 
 
 # ---------------------------------------------------------------- 3. 一覧の画像
-def sheet(out):
+def sheet(out, cols=8):
+    """描いた顔（neutral）の一覧。ゲームの枠の切り出しに近い見え方（上を合わせて少し寄る）も下に添える"""
     man = json.load(open(MANIFEST, encoding='utf-8'))
-    rows = [m for m in man if any(os.path.exists(os.path.join(OUT, f"{m['look']}_{e}.webp")) for e in EXPRS)]
-    cw, lab = 256, 28
-    W, H = cw * len(EXPRS) + 8 * (len(EXPRS) + 1), (cw + lab + 8) * len(rows) + lab + 8
+    rows = [m for m in man if os.path.exists(os.path.join(OUT, f"{m['look']}_neutral.webp"))]
+    cw, lab = 200, 22
+    n = len(rows)
+    W, H = cols * (cw + 8) + 8, ((n + cols - 1) // cols) * (cw + lab + 8) + 8
     sh = Image.new('RGB', (W, H), (12, 14, 22))
     d = ImageDraw.Draw(sh)
     try:
-        font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 16)
+        font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 14)
     except OSError:
         font = ImageFont.load_default()
-    for i, e in enumerate(EXPRS):
-        d.text((8 + i * (cw + 8), 6), e, fill=(220, 210, 190), font=font)
-    for r, m in enumerate(rows):
-        y = lab + 8 + r * (cw + lab + 8)
-        d.text((8, y), f"{m['look']}  ({m.get('status')})", fill=(200, 200, 210), font=font)
-        for i, e in enumerate(EXPRS):
-            p = os.path.join(OUT, f"{m['look']}_{e}.webp")
-            x = 8 + i * (cw + 8)
-            if os.path.exists(p):
-                sh.paste(Image.open(p).convert('RGB').resize((cw, cw), Image.LANCZOS), (x, y + lab))
-            else:
-                d.rectangle((x, y + lab, x + cw - 1, y + lab + cw - 1), outline=(60, 60, 80))
+    for i, m in enumerate(rows):
+        x, y = 8 + (i % cols) * (cw + 8), 8 + (i // cols) * (cw + lab + 8)
+        d.text((x, y), m['look'], fill=(200, 200, 210), font=font)
+        sh.paste(Image.open(os.path.join(OUT, f"{m['look']}_neutral.webp")).convert('RGB').resize((cw, cw), Image.LANCZOS), (x, y + lab))
     sh.save(out, quality=90)
-    print('sheet →', out, sh.size)
+    print('sheet →', out, sh.size, n, 'portraits')
 
 
 def opt(argv, name, default=None):

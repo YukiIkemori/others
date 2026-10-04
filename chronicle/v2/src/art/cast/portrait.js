@@ -7,7 +7,7 @@
 //     fit:'bust'（胸から上を枠いっぱい）・fit:'fill'（絵のある範囲を枠に収める、整数倍）・fit:'circle'（rect に内接する丸を顔でほぼ埋める。髪のてっぺん〜顎・首。丸で切り抜く。zoom・headroom）
 //   R.Portrait.parse('berna:smile') → {look, expr}                  （無い表情は neutral）
 //   描いた顔（胸から上の一枚絵、assets/portraits/<look>_<expr>.webp。2026-10-04 の決定）は四角い枠では「少し寄って上に合わせ」（PAINT）、
-//     縁を紺へ柔らかく落とす（o.soft === false で落とさない）。その人の描いた絵が無ければ原画のシートの表情、表情だけ無ければ描いた neutral。
+//     縁を紺へ柔らかく落とす（o.soft === false で落とさない）。描いた絵は一人 1 枚で表情を問わず同じ。描いた絵の無い人は原画のシートの表情。
 // 描いた顔の画像は初めて使うときに読み込む（decode の間は仮の顔）。仮の顔・原画の顔はぼかさずに拡大（0.5 刻みの倍率）。
 (function (R) {
   'use strict';
@@ -17,15 +17,16 @@
 
   P.EXPRS = EXPRS;
   P.key = function (look, expr) { return `portrait:${look}:${expr || 'neutral'}`; };
-  function painted(look, expr) {
+  // 描いた顔は一人 1 枚（neutral だけ。オーナー 2026-10-04: 表情を問わず同じ絵）。原画を共有する look（spriteOf。主人公のタイプ違い）はその元の絵
+  function painted(look) {
     if (!R.Media || !R.Media.has) return null;
-    if (R.Media.has('portraits', P.key(look, expr))) return P.key(look, expr);
-    if (expr !== 'neutral' && R.Media.has('portraits', P.key(look, 'neutral'))) return P.key(look, 'neutral');
+    const L = R.DB && R.DB.looks && R.DB.looks[look];
+    for (const id of L && L.spriteOf ? [look, L.spriteOf] : [look]) if (R.Media.has('portraits', P.key(id, 'neutral'))) return P.key(id, 'neutral');
     return null;
   }
   P.has = function (look, expr) {
     if (!look) return null;
-    const pk = painted(look, expr || 'neutral');
+    const pk = painted(look);
     if (pk) { try { R.Media.image(pk); } catch (e) { /* 読み込みを先に始めるだけ */ } return 'painted'; }   // 会話の窓が開く前に decode を始める（はじめの数コマに原画の顔が出ない）
     if (R.Hd && R.Hd.has && R.Hd.has('hd:face:' + look)) return 'placeholder';
     return null;
@@ -241,7 +242,7 @@
     const a0 = g.globalAlpha;
     const alpha = o.dim ? 0.5 : 1;
     // 1. 描いた顔
-    const pk = painted(look, expr);
+    const pk = painted(look);
     const rec = pk && R.Media.image(pk);
     if (rec && rec.ready) {
       g.save();

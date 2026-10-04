@@ -7,7 +7,7 @@
 //   オプション:
 //     --media <dir>        bgm/・voice/・portraits/ を読む元（既定 chronicle/assets）
 //     --all-bgm            縦切りで使わない BGM も入れる（既定は §3.10 の 17 曲＋新しい 5 曲 = --slice）
-//     --portraits <m>      approved（既定。chronicle/design/portraits/manifest.json で approved の物と、試しの人＝pilot: true の generated）| all | none
+//     --portraits <m>      approved（既定。chronicle/design/portraits/manifest.json で approved の物だけ。顔絵は一人 neutral 1 枚）| all | none
 //     --out <dir>          出力先（既定 v2/dist。テスト用）
 //     --with <dir>         フィクスチャを足した dev_<dir の名前>.html も作る（<dir>/states/*.json・scenes/*.json・*.js）
 //     --no-dev             dev.html を作らない
@@ -251,9 +251,7 @@ function scanMedia(root, o) {
         if (o.portraits === 'none') continue;
         const [, look, expr] = id.split(':');
         const rec = (o.portraitManifest || []).find((r) => r && r.look === look);
-        // 試しの人（pilot: true。オーナーが見る前の描いた顔、2026-10-04）は generated でも入れる
-        const ok = rec && (rec.status === 'approved' || (rec.pilot === true && rec.status === 'generated'));
-        if (!ok || (Array.isArray(rec.exprs) && !rec.exprs.includes(expr))) continue;
+        if (!rec || rec.status !== 'approved' || (Array.isArray(rec.exprs) && !rec.exprs.includes(expr))) continue;
       }
       out[kind].push(e);
     }
