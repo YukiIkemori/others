@@ -1,0 +1,55 @@
+{
+  "id": "menu_open",
+  "category": "ui",
+  "files": [
+    "menu_open.0.ogg",
+    "menu_open.1.ogg"
+  ],
+  "durations": [
+    0.433,
+    0.343
+  ],
+  "peaks": [
+    -12,
+    -12
+  ],
+  "rms": [
+    -25.8,
+    -32
+  ],
+  "gainDb": [
+    -6,
+    -10.1
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: ten separate quick light rising sparkles, each four very fast tiny glass chime taps going upward in pitch, about 0.4 seconds, separated by 1.6 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 23 seconds.",
+    "generated": "2026-10-04T03:32:09.973Z",
+    "takes": 2,
+    "rounds": 2
+  },
+  "picks": [
+    {
+      "take": "menu_open.1.mp3",
+      "at": 153.985,
+      "fit": 9,
+      "problem": "none"
+    },
+    {
+      "take": "menu_open.1.mp3",
+      "at": 155.023,
+      "fit": 9,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 96,
+    "listened": 16,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 9,
+    "peakTarget": -12,
+    "rmsMax": -22
+  }
+}

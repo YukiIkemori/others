@@ -1,0 +1,39 @@
+{
+  "loopStart": 0,
+  "loopEnd": 54.75,
+  "bed": "wind",
+  "spec": {
+    "bed": "wind"
+  },
+  "lufsTarget": -38,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A realistic stereo field recording of a natural environment, not music: a dry wind over an open desert at night: soft rising and falling gusts of wind over sand and rock, calm and lonely, no birds, no insects. Continuous and even from start to finish, no fade-in, no fade-out. Absolutely no music, no melody, no instruments, no tonal drones or pads, no rhythm, no voices. Duration: 75 seconds.",
+    "generated": "2026-10-04T03:26:42.924Z",
+    "rawSeconds": 61.9,
+    "takes": 2,
+    "excerpt": [
+      1,
+      59.8
+    ]
+  },
+  "analysis": {
+    "loudnessLUFS": -38,
+    "truePeakDb": -25.9,
+    "gainDb": -26.9,
+    "peakLimited": false,
+    "xfade": 4,
+    "seamLevelDiffDb": 0.3,
+    "listen": {
+      "model": "gemini-3.8-flash",
+      "fit": 9,
+      "seam": {
+        "seam_smooth": 10,
+        "problem": "none"
+      },
+      "content": "soft gusts of desert wind rising and falling / gentle desert wind gusts blowing steadily with low rumble",
+      "problem": "none"
+    }
+  }
+}

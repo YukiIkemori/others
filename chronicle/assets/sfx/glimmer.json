@@ -1,0 +1,45 @@
+{
+  "id": "glimmer",
+  "category": "spell",
+  "files": [
+    "glimmer.0.ogg"
+  ],
+  "durations": [
+    1.029
+  ],
+  "peaks": [
+    -8
+  ],
+  "rms": [
+    -21
+  ],
+  "gainDb": [
+    -8.2
+  ],
+  "channels": 2,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "Isolated sound effects recorded one at a time in a quiet studio, not music: eight separate single clear bright glass bell strikes, each a sharp sparkling ping that rings on purely and fades, separated by 3 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 35 seconds.",
+    "generated": "2026-10-04T03:25:19.269Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "glimmer.0.mp3",
+      "at": 28.772,
+      "fit": 8.5,
+      "problem": "single note only",
+      "rmsCapped": true
+    }
+  ],
+  "analysis": {
+    "candidates": 7,
+    "listened": 7,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.5,
+    "peakTarget": -6,
+    "rmsMax": -21
+  }
+}

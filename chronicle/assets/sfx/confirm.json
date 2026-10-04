@@ -1,0 +1,55 @@
+{
+  "id": "confirm",
+  "category": "ui",
+  "files": [
+    "confirm.0.ogg",
+    "confirm.1.ogg"
+  ],
+  "durations": [
+    0.548,
+    0.197
+  ],
+  "peaks": [
+    -12,
+    -12
+  ],
+  "rms": [
+    -25.2,
+    -34.2
+  ],
+  "gainDb": [
+    -12.8,
+    -12.5
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "Isolated sound effects recorded one at a time in a quiet studio, not music: ten separate short double pings, each two quick light taps on a tiny crystal glass, the second one higher, separated by 1.6 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 23 seconds.",
+    "generated": "2026-10-04T03:27:08.977Z",
+    "takes": 3,
+    "rounds": 3
+  },
+  "picks": [
+    {
+      "take": "confirm.1.mp3",
+      "at": 55.538,
+      "fit": 8.5,
+      "problem": "none"
+    },
+    {
+      "take": "confirm.1.mp3",
+      "at": 7.785,
+      "fit": 7,
+      "problem": "single note, not two-note"
+    }
+  ],
+  "analysis": {
+    "candidates": 23,
+    "listened": 16,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 7.8,
+    "peakTarget": -12,
+    "rmsMax": -18
+  }
+}

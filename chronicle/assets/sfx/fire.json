@@ -1,0 +1,58 @@
+{
+  "id": "fire",
+  "category": "spell",
+  "files": [
+    "fire.0.ogg",
+    "fire.1.ogg"
+  ],
+  "durations": [
+    1.4,
+    1.325
+  ],
+  "peaks": [
+    -5.3,
+    -4.8
+  ],
+  "rms": [
+    -15,
+    -15
+  ],
+  "gainDb": [
+    -6.4,
+    -6.6
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A close-up field recording made in a quiet room, not music: eight separate bursts of flame, each a big gas fire igniting with a roaring whoosh and crackling embers, separated by 2.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 28 seconds.",
+    "generated": "2026-10-04T03:39:07.973Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "fire.0.mp3",
+      "at": 31.002,
+      "fit": 9,
+      "problem": "none",
+      "rmsCapped": true,
+      "cut": true
+    },
+    {
+      "take": "fire.0.mp3",
+      "at": 53.653,
+      "fit": 8.5,
+      "problem": "none",
+      "rmsCapped": true
+    }
+  ],
+  "analysis": {
+    "candidates": 14,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.8,
+    "peakTarget": -3.5,
+    "rmsMax": -15
+  }
+}

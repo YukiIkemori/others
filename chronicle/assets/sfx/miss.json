@@ -1,0 +1,56 @@
+{
+  "id": "miss",
+  "category": "battle",
+  "files": [
+    "miss.0.ogg",
+    "miss.1.ogg"
+  ],
+  "durations": [
+    0.117,
+    0.35
+  ],
+  "peaks": [
+    -11.5,
+    -11.5
+  ],
+  "rms": [
+    -26.1,
+    -24.8
+  ],
+  "gainDb": [
+    -13.2,
+    -12
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry close-up foley recording, not music: twelve separate light airy whooshes of a thin cane swung quickly past the microphone, soft and high, each under a quarter second, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+    "generated": "2026-10-04T03:36:06.142Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "miss.0.mp3",
+      "at": 37.973,
+      "fit": 8.5,
+      "problem": "none"
+    },
+    {
+      "take": "miss.0.mp3",
+      "at": 21.486,
+      "fit": 8.5,
+      "problem": "none",
+      "cut": true
+    }
+  ],
+  "analysis": {
+    "candidates": 6,
+    "listened": 6,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.5,
+    "peakTarget": -11.5,
+    "rmsMax": -22
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "id": "cancel",
+  "category": "ui",
+  "files": [
+    "cancel.0.ogg",
+    "cancel.1.ogg"
+  ],
+  "durations": [
+    0.152,
+    0.147
+  ],
+  "peaks": [
+    -13,
+    -13
+  ],
+  "rms": [
+    -28.9,
+    -30
+  ],
+  "gainDb": [
+    -13.5,
+    -13.3
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A close-up field recording made in a quiet room, not music: twelve separate quick soft double clicks of a small wooden latch, the second click lower and softer, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+    "generated": "2026-10-04T03:29:30.706Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "cancel.0.mp3",
+      "at": 58.414,
+      "fit": 8.5,
+      "problem": "none"
+    },
+    {
+      "take": "cancel.0.mp3",
+      "at": 31.874,
+      "fit": 8.5,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 30,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.5,
+    "peakTarget": -13,
+    "rmsMax": -19
+  }
+}

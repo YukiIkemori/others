@@ -1,0 +1,71 @@
+{
+  "id": "hit",
+  "category": "battle",
+  "files": [
+    "hit.0.ogg",
+    "hit.1.ogg",
+    "hit.2.ogg"
+  ],
+  "durations": [
+    0.197,
+    0.273,
+    0.4
+  ],
+  "peaks": [
+    -3.6,
+    -2.5,
+    -2.5
+  ],
+  "rms": [
+    -13,
+    -26.7,
+    -14.4
+  ],
+  "gainDb": [
+    0,
+    6.3,
+    -1.7
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": [
+      "A dry close-up foley recording, not music: twelve separate solid punchy thuds of a heavy wooden club striking a thick leather sandbag, each a single sharp impact with a short low thump, separated by 1.3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+      "A close-up field recording made in a quiet room, not music: twelve separate firm thumps of a wooden mallet striking a stuffed leather cushion, each a single short punchy impact, separated by 1.3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds."
+    ],
+    "generated": "2026-10-04T03:34:13.572Z",
+    "takes": 2,
+    "rounds": 2
+  },
+  "picks": [
+    {
+      "take": "hit.0.mp3",
+      "at": 25.81,
+      "fit": 9,
+      "problem": "none",
+      "rmsCapped": true
+    },
+    {
+      "take": "hit.1.mp3",
+      "at": 30.737,
+      "fit": 8.5,
+      "problem": "none"
+    },
+    {
+      "take": "hit.1.mp3",
+      "at": 43.255,
+      "fit": 8.5,
+      "problem": "none",
+      "cut": true
+    }
+  ],
+  "analysis": {
+    "candidates": 12,
+    "listened": 9,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.7,
+    "peakTarget": -2.5,
+    "rmsMax": -13
+  }
+}

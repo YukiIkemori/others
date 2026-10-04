@@ -1,0 +1,57 @@
+{
+  "id": "holy",
+  "category": "spell",
+  "files": [
+    "holy.0.ogg",
+    "holy.1.ogg"
+  ],
+  "durations": [
+    0.739,
+    0.764
+  ],
+  "peaks": [
+    -7.3,
+    -7.3
+  ],
+  "rms": [
+    -18,
+    -18
+  ],
+  "gainDb": [
+    -7.4,
+    -7.4
+  ],
+  "channels": 2,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: eight separate radiant magical shimmers, each a soft warm swell of glowing light made of gentle glass harmonics and sparkling tiny bells, about one second long, separated by 2.2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 29 seconds.",
+    "generated": "2026-10-04T03:42:13.602Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "holy.0.mp3",
+      "at": 34.56,
+      "fit": 9.5,
+      "problem": "none",
+      "rmsCapped": true
+    },
+    {
+      "take": "holy.0.mp3",
+      "at": 18.549,
+      "fit": 8.5,
+      "problem": "none",
+      "rmsCapped": true
+    }
+  ],
+  "analysis": {
+    "candidates": 18,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 9,
+    "peakTarget": -7,
+    "rmsMax": -18
+  }
+}

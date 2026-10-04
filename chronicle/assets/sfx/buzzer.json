@@ -1,0 +1,55 @@
+{
+  "id": "buzzer",
+  "category": "ui",
+  "files": [
+    "buzzer.0.ogg",
+    "buzzer.1.ogg"
+  ],
+  "durations": [
+    0.097,
+    0.112
+  ],
+  "peaks": [
+    -11.5,
+    -11.5
+  ],
+  "rms": [
+    -28.2,
+    -29.6
+  ],
+  "gainDb": [
+    -3.7,
+    -3.1
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A close-up field recording made in a quiet room, not music: ten separate short dull double thunks of a stuck wooden drawer that will not open, about a fifth of a second, separated by one and a half seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+    "generated": "2026-10-04T03:30:33.040Z",
+    "takes": 2,
+    "rounds": 2
+  },
+  "picks": [
+    {
+      "take": "buzzer.1.mp3",
+      "at": 12.049,
+      "fit": 8.5,
+      "problem": "none"
+    },
+    {
+      "take": "buzzer.1.mp3",
+      "at": 34.034,
+      "fit": 8,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 39,
+    "listened": 16,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.3,
+    "peakTarget": -11.5,
+    "rmsMax": -14
+  }
+}

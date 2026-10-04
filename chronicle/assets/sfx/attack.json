@@ -1,0 +1,45 @@
+{
+  "id": "attack",
+  "category": "battle",
+  "files": [
+    "attack.0.ogg"
+  ],
+  "durations": [
+    0.35
+  ],
+  "peaks": [
+    -9
+  ],
+  "rms": [
+    -27.3
+  ],
+  "gainDb": [
+    -9.5
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry close-up foley recording, not music: twelve separate quick swishes of a thin wooden stick swung fast through the air, each a short sharp whoosh of about a fifth of a second, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+    "generated": "2026-10-04T03:32:36.392Z",
+    "takes": 3,
+    "rounds": 3
+  },
+  "picks": [
+    {
+      "take": "attack.0.mp3",
+      "at": 6.557,
+      "fit": 9,
+      "problem": "none",
+      "cut": true
+    }
+  ],
+  "analysis": {
+    "candidates": 1,
+    "listened": 1,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 9,
+    "peakTarget": -9,
+    "rmsMax": -19
+  }
+}

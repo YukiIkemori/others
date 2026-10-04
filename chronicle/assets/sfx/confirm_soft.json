@@ -1,0 +1,55 @@
+{
+  "id": "confirm_soft",
+  "category": "ui",
+  "files": [
+    "confirm_soft.0.ogg",
+    "confirm_soft.1.ogg"
+  ],
+  "durations": [
+    0.137,
+    0.137
+  ],
+  "peaks": [
+    -13.5,
+    -13.5
+  ],
+  "rms": [
+    -32.5,
+    -30.5
+  ],
+  "gainDb": [
+    -5.9,
+    -4.5
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A close-up field recording made in a quiet room, not music: twelve separate single soft knocks of a fingertip on a small hollow wooden box, round and very short, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+    "generated": "2026-10-04T03:28:43.028Z",
+    "takes": 2,
+    "rounds": 2
+  },
+  "picks": [
+    {
+      "take": "confirm_soft.1.mp3",
+      "at": 59.181,
+      "fit": 9,
+      "problem": "none"
+    },
+    {
+      "take": "confirm_soft.1.mp3",
+      "at": 49.584,
+      "fit": 9,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 11,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 9,
+    "peakTarget": -13.5,
+    "rmsMax": -20
+  }
+}

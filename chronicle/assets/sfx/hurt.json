@@ -1,0 +1,66 @@
+{
+  "id": "hurt",
+  "category": "battle",
+  "files": [
+    "hurt.0.ogg",
+    "hurt.1.ogg",
+    "hurt.2.ogg"
+  ],
+  "durations": [
+    0.142,
+    0.137,
+    0.137
+  ],
+  "peaks": [
+    -2.5,
+    -2.5,
+    -2.5
+  ],
+  "rms": [
+    -14,
+    -14.1,
+    -14.6
+  ],
+  "gainDb": [
+    -3.7,
+    -4.2,
+    -4.8
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A close-up field recording made in a quiet room, not music: twelve separate dull heavy thuds of a sack of grain dropped onto a wooden floor, each short and muffled, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+    "generated": "2026-10-04T03:37:38.304Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "hurt.0.mp3",
+      "at": 28.567,
+      "fit": 9,
+      "problem": "none"
+    },
+    {
+      "take": "hurt.0.mp3",
+      "at": 44.568,
+      "fit": 9,
+      "problem": "none"
+    },
+    {
+      "take": "hurt.0.mp3",
+      "at": 20.569,
+      "fit": 8,
+      "problem": "slightly hollow"
+    }
+  ],
+  "analysis": {
+    "candidates": 62,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.7,
+    "peakTarget": -2.5,
+    "rmsMax": -12
+  }
+}

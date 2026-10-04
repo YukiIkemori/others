@@ -17,6 +17,7 @@
 //            --reprocess  no Lyria call: redo detection / selection / encoding from the cached raw takes
 //                         (listener results are cached too; with --listen only unheard candidates are sent)
 //            --raw <dir>  raw take cache (default $TMPDIR/lyria_sfx_raw)   --out <dir> (default assets/sfx | assets/amb)
+//            --preview    (re)write design/sfx_preview.html from the outputs and exit
 //            --clean-raw  delete the cached raw takes of the selected ids that have a finished output, then exit
 //
 // ------------------------------------------------------------------ API (verified 2026-10-04)
@@ -136,19 +137,31 @@ function detectEvents(chans, rate, e) {
   const env = new Float32Array(nF);
   for (let f = 0; f < nF; f++) { let s = 0; for (let i = f * fr; i < (f + 1) * fr; i++) s += x[i] * x[i]; env[f] = 10 * Math.log10(s / fr + 1e-12); }
   const sorted = Array.from(env).sort((a, b) => a - b);
-  const floor = sorted[Math.floor(nF * 0.15)], top = sorted[nF - 1];
-  const on = Math.max(floor + 14, top - 38), off = Math.max(floor + 6, top - 50, -70);
+  // floor: 15th percentile, but never below −90 dB (Lyria pads with digital silence)
+  const floor = Math.max(sorted[Math.floor(nF * 0.15)], -90), top = sorted[nF - 1];
+  const on = Math.max(floor + 14, top - 38), off0 = Math.max(floor + 6, top - 50, -70);
   const mergeF = Math.max(1, Math.round((e.merge || 0.08) / 0.005));
+  const longF = Math.round(e.maxLen * 1.8 / 0.005);
+  // runs above `off` inside [a, b) that hold a frame above `trig`; a run longer than 1.8 × maxLen (sounds packed
+  // back to back) is split again with `off` 6 dB higher relative to its own maximum, up to 10 dB under it
   const evs = [];
-  let f = 0, lastEnd = -1;
-  while (f < nF) {
-    if (env[f] <= on) { f++; continue; }
-    let s = f; while (s - 1 > lastEnd && env[s - 1] > off) s--;
-    let g = f, last = f;
-    while (g < nF) { if (env[g] > off) last = g; else if (g - last > mergeF) break; g++; }
-    evs.push([s, last + 1]);
-    lastEnd = last + 1; f = last + 1;
-  }
+  const runs = (a, b, off, trig, depth) => {
+    let f = a, lastEnd = a - 1;
+    while (f < b) {
+      if (env[f] <= trig) { f++; continue; }
+      let s0 = f; while (s0 - 1 > lastEnd && s0 - 1 >= a && env[s0 - 1] > off) s0--;
+      let g = f, last = f;
+      while (g < b) { if (env[g] > off) last = g; else if (g - last > mergeF) break; g++; }
+      const en = last + 1;
+      if (en - s0 > longF && depth < 6) {
+        let mx = -200; for (let k = s0; k < en; k++) mx = Math.max(mx, env[k]);
+        const off2 = Math.max(off + 6, mx - 40);
+        if (off2 < mx - 10) runs(s0, en, off2, Math.max(trig, off2 + 6), depth + 1);
+      } else evs.push([s0, en]);
+      lastEnd = en; f = en;
+    }
+  };
+  runs(0, nF, off0, on, 0);
   const out = [];
   const maxLen = e.maxLen, minLen = e.minLen || 0.03;
   for (const [s, en] of evs) {
@@ -160,12 +173,13 @@ function detectEvents(chans, rate, e) {
     let pk = 0, pkAt = start, zc = 0, ss = 0;
     for (let i = start; i < end; i++) { const v = Math.abs(x[i]); if (v > pk) { pk = v; pkAt = i; } if (i > start && (x[i] >= 0) !== (x[i - 1] >= 0)) zc++; ss += x[i] * x[i]; }
     let envMax = -200; for (let k = s; k < en; k++) envMax = Math.max(envMax, env[k]);
-    out.push({ start, end, dur, cut, peakDb: dbOf(pk), rmsDb: 10 * Math.log10(ss / (end - start) + 1e-12), snr: envMax - floor, zcr: zc / dur, attack: (pkAt - start) / rate });
+    let pre = 200; for (let k = Math.max(0, s - 20); k < s; k++) pre = Math.min(pre, env[k]);
+    out.push({ start, end, dur, cut, peakDb: dbOf(pk), rmsDb: 10 * Math.log10(ss / (end - start) + 1e-12), snr: envMax - floor, sep: s > 0 ? envMax - pre : 60, zcr: zc / dur, attack: (pkAt - start) / rate });
   }
   return out;
 }
 function heuristic(c, e) {
-  return -1.5 * Math.abs(Math.log(c.dur / (e.target || c.dur))) + Math.min(c.snr, 45) / 15 - (c.cut ? 0.6 : 0) - (c.attack > Math.max(0.15, c.dur * 0.6) ? 0.4 : 0);
+  return -1.5 * Math.abs(Math.log(c.dur / (e.target || c.dur))) + Math.min(c.snr, 45) / 15 + Math.min(c.sep, 40) / 20 - (c.cut ? 0.6 : 0) - (c.attack > Math.max(0.15, c.dur * 0.6) ? 0.4 : 0);
 }
 /** an event → finished PCM (mono unless stereo), trimmed and faded, not yet level-adjusted */
 function cutEvent(chans, rate, c, stereo) {
@@ -449,9 +463,78 @@ async function doAmb(e, o) {
   return { id: e.id, fit: best.heard ? best.heard.fit : null };
 }
 
+
+// ------------------------------------------------------------------ design/sfx_preview.html
+const esc = (t) => String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+function writePreview() {
+  const S = JSON.parse(fs.readFileSync(FILES.sfx, 'utf8')), A = JSON.parse(fs.readFileSync(FILES.amb, 'utf8'));
+  const rd = (dir, id) => { const f = path.join(dir, id + '.json'); return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : null; };
+  const kb = (dir, files) => files.reduce((s, f) => s + (fs.existsSync(path.join(dir, f)) ? fs.statSync(path.join(dir, f)).size : 0), 0) / 1024;
+  let sfxKb = 0, ambKb = 0, nS = 0, nA = 0, nFiles = 0;
+  const cats = { ui: 'UI', battle: '戦闘', spell: '魔法・状態', field: 'フィールド' };
+  const rows = {};
+  for (const e of S.entries) {
+    const j = rd(OUT.sfx, e.id);
+    let cell = '<i>未生成（合成音のまま）</i>';
+    if (j) {
+      nS++; nFiles += j.files.length; const k = kb(OUT.sfx, j.files); sfxKb += k;
+      cell = j.files.map((f, i) => `<audio controls preload="none" src="../assets/sfx/${esc(f)}"></audio> <small>#${i} ${j.durations[i].toFixed(2)} s · peak ${j.peaks[i]} dBFS · fit ${j.picks[i].fit == null ? '-' : j.picks[i].fit}${j.picks[i].problem && j.picks[i].problem !== 'none' ? ' · ' + esc(j.picks[i].problem) : ''}</small>`).join('<br>') +
+        `<br><small>${k.toFixed(0)} KB · ${j.source.takes} take(s)${j.keepSynth ? ' · <b>keepSynth</b>（合成音を使う）' : ''}${j.weak ? ' · <b>weak</b>' : ''}${j.note ? ' · ' + esc(j.note) : ''}</small>`;
+    }
+    (rows[e.category] = rows[e.category] || []).push(`<tr id="sfx-${e.id}"><td><b>${e.id}</b><br><small>${cats[e.category]} · 合成音 ${e.synth ? e.synth.audible + ' s, peak ' + e.synth.peak : ''}</small></td><td>${cell}</td><td><small>${esc(e.role)}</small><br><details><summary><small>prompt</small></summary><small>${esc(j ? [].concat(j.source.prompt).join(' | ') : e.prompt)}</small></details></td></tr>`);
+  }
+  const ambRows = A.entries.map((e) => {
+    const j = rd(OUT.amb, e.id);
+    let cell = '<i>未生成（手続きの環境音のまま）</i>';
+    if (j) {
+      nA++; const k = kb(OUT.amb, [e.id + '.ogg']); ambKb += k;
+      const L = j.analysis.listen;
+      cell = `<audio controls preload="none" src="../assets/amb/${e.id}.ogg"></audio><br><button data-seam="../assets/amb/${e.id}.ogg" data-ls="${j.loopStart}" data-le="${j.loopEnd}">loop seam</button> <small>${j.loopEnd.toFixed(1)} s loop · ${j.analysis.loudnessLUFS} LUFS · ${k.toFixed(0)} KB${L ? ` · fit ${L.fit} · seam ${L.seam ? L.seam.seam_smooth : '-'}` : ''}</small>${L ? `<br><small>聞こえたもの: ${esc(L.content)}</small>` : ''}`;
+    }
+    return `<tr id="amb-${e.id}"><td><b>${e.id}</b><br><small><code>${esc(e.bed)}</code> · ${e.lufs} LUFS</small></td><td>${cell}</td><td><small>${esc(e.desc)}</small></td></tr>`;
+  });
+  const html = `<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SFX Preview</title>
+<style>
+:root{--bg:#fbfaf7;--fg:#222;--mute:#666;--line:#ddd;--acc:#2b5d9b}
+@media (prefers-color-scheme: dark){:root{--bg:#16171a;--fg:#e6e6e6;--mute:#9a9a9a;--line:#333;--acc:#8db4ea}}
+body{background:var(--bg);color:var(--fg);font:14px/1.5 system-ui,sans-serif;margin:0 auto;max-width:1100px;padding:16px}
+h1{font-size:20px}h2{margin-top:32px;border-bottom:2px solid var(--line)}h3{margin:24px 0 4px}
+table{border-collapse:collapse;width:100%}td{border-top:1px solid var(--line);padding:6px 8px;vertical-align:top}
+td:first-child{width:150px}small,i{color:var(--mute)}audio{height:32px;max-width:100%;vertical-align:middle}code{font-size:12px}a{color:var(--acc)}
+button{font-size:12px;margin-top:2px}details{margin-top:2px}
+</style></head><body>
+<h1>ルミナス・クロニクル — 録音の効果音・環境音の試聴</h1>
+<p>効果音 ${nS}/${S.entries.length} id（${nFiles} ファイル、${(sfxKb / 1024).toFixed(1)} MB）、環境音 ${nA}/${A.entries.length} 床（${(ambKb / 1024).toFixed(1)} MB）。ファイルは <code>assets/sfx/&lt;id&gt;.&lt;k&gt;.ogg</code> <code>assets/amb/&lt;id&gt;.ogg</code>。
+効果音の音量は合成音と同じ山（peak）に揃えてあります。fit は聞き手のモデルの評価（10 点満点）。「loop seam」は環境音のループの継ぎ目（終わり 6 秒 → 先頭）を試聴します。
+作り直し: <code>node tools/lyria_sfx.js --only &lt;id&gt; --listen --force</code> / <code>node tools/lyria_sfx.js --kind amb --only &lt;id&gt; --listen --force</code>。この表: <code>node tools/lyria_sfx.js --preview</code>。</p>
+<p>${Object.keys(cats).map((c) => `<a href="#${c}">${cats[c]}</a>`).join(' · ')} · <a href="#amb">環境音</a></p>
+${Object.keys(cats).map((c) => `<h2 id="${c}">${cats[c]}</h2>\n<table>${(rows[c] || []).join('\n')}</table>`).join('\n')}
+<h2 id="amb">環境音</h2>
+<table>${ambRows.join('\n')}</table>
+<script>
+let ac, cur;
+document.addEventListener('click', async (e) => {
+  const b = e.target.closest('button[data-seam]'); if (!b) return;
+  ac = ac || new AudioContext(); if (cur) { try { cur.stop(); } catch (x) {} }
+  const buf = await ac.decodeAudioData(await (await fetch(b.dataset.seam)).arrayBuffer());
+  const ls = +b.dataset.ls, le = +b.dataset.le || buf.duration;
+  const s = ac.createBufferSource(); s.buffer = buf; s.loop = true; s.loopStart = ls; s.loopEnd = le; s.connect(ac.destination);
+  s.start(0, Math.max(0, le - 6)); s.stop(ac.currentTime + 14); cur = s;
+});
+</script>
+</body></html>
+`;
+  const out = path.join(ROOT, 'design', 'sfx_preview.html');
+  fs.writeFileSync(out, html);
+  console.log(`[lyria] ${path.relative(ROOT, out)}: ${nS} sfx id(s), ${nA} bed(s)`);
+}
+
 // ------------------------------------------------------------------ main
 async function main(argv, E) {
   const arg = (k, d) => { const i = argv.indexOf(k); return i >= 0 && argv[i + 1] ? argv[i + 1] : d; };
+  if (argv.includes('--preview')) { writePreview(); return 0; }
   const kind = arg('--kind', 'sfx');
   if (!FILES[kind]) throw new Error('--kind sfx|amb');
   const P = JSON.parse(fs.readFileSync(arg('--prompts', FILES[kind]), 'utf8'));
@@ -512,5 +595,5 @@ async function main(argv, E) {
   return failed.length ? 1 : 0;
 }
 
-module.exports = { detectEvents, cutEvent, levelSfx, ambLoop, highpass, main };
+module.exports = { writePreview, detectEvents, cutEvent, levelSfx, ambLoop, highpass, main };
 if (require.main === module) main(process.argv.slice(2), process.env).then((c) => { process.exitCode = c; }, (e) => { console.error('[lyria] ' + redact(e.message || e)); process.exitCode = 1; });

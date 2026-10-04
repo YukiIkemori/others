@@ -1,0 +1,58 @@
+{
+  "id": "thunder",
+  "category": "spell",
+  "files": [
+    "thunder.0.ogg",
+    "thunder.1.ogg"
+  ],
+  "durations": [
+    2.5,
+    2.5
+  ],
+  "peaks": [
+    -5,
+    -4.5
+  ],
+  "rms": [
+    -19,
+    -19.4
+  ],
+  "gainDb": [
+    -9.4,
+    -9.9
+  ],
+  "channels": 2,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A close-up field recording made in a quiet room, not music: six separate close lightning strikes, each one sharp crackling snap and a brief deep rumble, separated by 3.5 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 35 seconds.",
+    "generated": "2026-10-04T03:41:17.708Z",
+    "takes": 2,
+    "rounds": 2
+  },
+  "picks": [
+    {
+      "take": "thunder.1.mp3",
+      "at": 37.848,
+      "fit": 8.5,
+      "problem": "none",
+      "rmsCapped": true,
+      "cut": true
+    },
+    {
+      "take": "thunder.1.mp3",
+      "at": 54.069,
+      "fit": 8,
+      "problem": "none",
+      "cut": true
+    }
+  ],
+  "analysis": {
+    "candidates": 18,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.3,
+    "peakTarget": -4.5,
+    "rmsMax": -19
+  }
+}

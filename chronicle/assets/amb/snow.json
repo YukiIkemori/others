@@ -1,0 +1,39 @@
+{
+  "loopStart": 0,
+  "loopEnd": 47.75,
+  "bed": "snow",
+  "spec": {
+    "bed": "snow"
+  },
+  "lufsTarget": -38,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry foley recording, not music: a long continuous whoosh of cold wind with fine snow hissing, a winter storm heard from inside a wooden hut. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+    "generated": "2026-10-04T03:40:33.178Z",
+    "rawSeconds": 58.5,
+    "takes": 6,
+    "excerpt": [
+      2,
+      53.8
+    ]
+  },
+  "analysis": {
+    "loudnessLUFS": -38,
+    "truePeakDb": -27.3,
+    "gainDb": -30,
+    "peakLimited": false,
+    "xfade": 4,
+    "seamLevelDiffDb": 0,
+    "listen": {
+      "model": "gemini-3.8-flash",
+      "fit": 6,
+      "seam": {
+        "seam_smooth": 10,
+        "problem": "none"
+      },
+      "content": "continuous cold winter wind blowing and howling softly / continuous rushing water stream or river rapids",
+      "problem": "sounds like running water rather than wind storm heard inside a hut"
+    }
+  }
+}

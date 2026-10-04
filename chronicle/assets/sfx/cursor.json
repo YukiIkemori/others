@@ -1,0 +1,55 @@
+{
+  "id": "cursor",
+  "category": "ui",
+  "files": [
+    "cursor.0.ogg",
+    "cursor.1.ogg"
+  ],
+  "durations": [
+    0.052,
+    0.057
+  ],
+  "peaks": [
+    -14,
+    -14
+  ],
+  "rms": [
+    -28.6,
+    -30.6
+  ],
+  "gainDb": [
+    8.5,
+    8.3
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry close-up foley recording, not music: twelve separate tiny soft clicks of a small wooden bead tapping a wooden board, each a single very short dry tick, gentle and quiet, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+    "generated": "2026-10-04T03:26:16.306Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "cursor.0.mp3",
+      "at": 33.678,
+      "fit": 9,
+      "problem": "none"
+    },
+    {
+      "take": "cursor.0.mp3",
+      "at": 28.877,
+      "fit": 9,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 9,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 9,
+    "peakTarget": -14,
+    "rmsMax": -22
+  }
+}

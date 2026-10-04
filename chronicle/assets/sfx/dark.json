@@ -1,0 +1,58 @@
+{
+  "id": "dark",
+  "category": "spell",
+  "files": [
+    "dark.0.ogg",
+    "dark.1.ogg"
+  ],
+  "durations": [
+    1.109,
+    0.699
+  ],
+  "peaks": [
+    -8,
+    -8
+  ],
+  "rms": [
+    -19.4,
+    -16.6
+  ],
+  "gainDb": [
+    -7,
+    -1.9
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": [
+      "A clean studio recording of isolated magical sound effects for a fantasy story, not music: eight separate dark magical pulses, each a deep low ominous whoosh that swells and sinks with an eerie wavering hum, about one second, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 26 seconds.",
+      "Isolated sound effects recorded one at a time in a quiet studio, not music: eight separate deep eerie rushes of air, each a low dark swell with a wavering hum that sinks away, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 26 seconds."
+    ],
+    "generated": "2026-10-04T03:43:58.016Z",
+    "takes": 3,
+    "rounds": 3
+  },
+  "picks": [
+    {
+      "take": "dark.2.mp3",
+      "at": 40.083,
+      "fit": 9,
+      "problem": "none"
+    },
+    {
+      "take": "dark.1.mp3",
+      "at": 14.174,
+      "fit": 8.5,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 115,
+    "listened": 24,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.8,
+    "peakTarget": -8,
+    "rmsMax": -16
+  }
+}

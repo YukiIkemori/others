@@ -1,0 +1,56 @@
+{
+  "id": "ice",
+  "category": "spell",
+  "files": [
+    "ice.0.ogg",
+    "ice.1.ogg"
+  ],
+  "durations": [
+    0.513,
+    1.3
+  ],
+  "peaks": [
+    -6,
+    -6
+  ],
+  "rms": [
+    -20.3,
+    -19.9
+  ],
+  "gainDb": [
+    -5.4,
+    -7.3
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: eight separate bursts of ice crystals forming, each a quick shower of tiny crystalline glassy tinkles and a cold crackling hiss, about 0.8 seconds, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+    "generated": "2026-10-04T03:39:47.225Z",
+    "takes": 2,
+    "rounds": 2
+  },
+  "picks": [
+    {
+      "take": "ice.0.mp3",
+      "at": 43.29,
+      "fit": 8.5,
+      "problem": "none"
+    },
+    {
+      "take": "ice.0.mp3",
+      "at": 61.521,
+      "fit": 7,
+      "problem": "slightly too long",
+      "cut": true
+    }
+  ],
+  "analysis": {
+    "candidates": 65,
+    "listened": 16,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 7.8,
+    "peakTarget": -6,
+    "rmsMax": -18
+  }
+}

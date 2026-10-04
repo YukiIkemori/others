@@ -1,0 +1,57 @@
+{
+  "id": "magic",
+  "category": "spell",
+  "files": [
+    "magic.0.ogg",
+    "magic.1.ogg"
+  ],
+  "durations": [
+    1.2,
+    0.824
+  ],
+  "peaks": [
+    -10.1,
+    -10
+  ],
+  "rms": [
+    -22,
+    -25
+  ],
+  "gainDb": [
+    -10.3,
+    -4.8
+  ],
+  "channels": 2,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: eight separate magical shimmering sparkles, each a quick upward ripple of tiny glass wind chimes ending in a soft bright ring, about 0.7 seconds, warm and organic, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+    "generated": "2026-10-04T03:38:17.356Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "magic.0.mp3",
+      "at": 6.046,
+      "fit": 9,
+      "problem": "none",
+      "rmsCapped": true,
+      "cut": true
+    },
+    {
+      "take": "magic.0.mp3",
+      "at": 34.55,
+      "fit": 7,
+      "problem": "missing rising sparkle"
+    }
+  ],
+  "analysis": {
+    "candidates": 10,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8,
+    "peakTarget": -10,
+    "rmsMax": -22
+  }
+}

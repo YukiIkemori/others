@@ -1,0 +1,56 @@
+{
+  "id": "wind",
+  "category": "spell",
+  "files": [
+    "wind.0.ogg",
+    "wind.1.ogg"
+  ],
+  "durations": [
+    0.473,
+    1.054
+  ],
+  "peaks": [
+    -11.6,
+    -8.5
+  ],
+  "rms": [
+    -21,
+    -22.2
+  ],
+  "gainDb": [
+    -13.5,
+    -5.9
+  ],
+  "channels": 2,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry close-up foley recording, not music: eight separate quick gusts of wind, each a single strong whoosh of moving air that swells and fades with a faint whistle, about one second, separated by 2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 26 seconds.",
+    "generated": "2026-10-04T03:41:41.997Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "wind.0.mp3",
+      "at": 14.806,
+      "fit": 8.5,
+      "problem": "none",
+      "rmsCapped": true
+    },
+    {
+      "take": "wind.0.mp3",
+      "at": 2.458,
+      "fit": 8,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 4,
+    "listened": 4,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.3,
+    "peakTarget": -8.5,
+    "rmsMax": -21
+  }
+}

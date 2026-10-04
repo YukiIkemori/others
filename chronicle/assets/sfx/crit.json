@@ -1,0 +1,55 @@
+{
+  "id": "crit",
+  "category": "battle",
+  "files": [
+    "crit.0.ogg",
+    "crit.1.ogg"
+  ],
+  "durations": [
+    0.503,
+    0.563
+  ],
+  "peaks": [
+    -2.5,
+    -2.5
+  ],
+  "rms": [
+    -21,
+    -22.3
+  ],
+  "gainDb": [
+    -2.5,
+    -2.6
+  ],
+  "channels": 2,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A close-up field recording made in a quiet room, not music: ten separate huge thuds of a heavy log hitting a padded leather target, with a bright ringing clang of steel layered on top, separated by 1.8 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 26 seconds.",
+    "generated": "2026-10-04T03:35:32.889Z",
+    "takes": 2,
+    "rounds": 2
+  },
+  "picks": [
+    {
+      "take": "crit.1.mp3",
+      "at": 18.434,
+      "fit": 8.5,
+      "problem": "none"
+    },
+    {
+      "take": "crit.1.mp3",
+      "at": 36.82,
+      "fit": 8,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 29,
+    "listened": 11,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.3,
+    "peakTarget": -2.5,
+    "rmsMax": -16
+  }
+}

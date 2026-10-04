@@ -1,0 +1,39 @@
+{
+  "loopStart": 0,
+  "loopEnd": 32,
+  "bed": "mist",
+  "spec": {
+    "bed": "mist"
+  },
+  "lufsTarget": -40,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A sound effect recording, not music: distant waves breaking on a beach and a light wind, heard muffled from inside a stone house, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+    "generated": "2026-10-04T03:43:13.029Z",
+    "rawSeconds": 64.1,
+    "takes": 4,
+    "excerpt": [
+      1,
+      37
+    ]
+  },
+  "analysis": {
+    "loudnessLUFS": -40,
+    "truePeakDb": -28.3,
+    "gainDb": -28.2,
+    "peakLimited": false,
+    "xfade": 4,
+    "seamLevelDiffDb": 2.4,
+    "listen": {
+      "model": "gemini-3.8-flash",
+      "fit": 9,
+      "seam": {
+        "seam_smooth": 4,
+        "problem": "click"
+      },
+      "content": "distant muffled ocean waves and gentle wind / muffled distant ocean waves and low rumbling wind",
+      "problem": "none"
+    }
+  }
+}
