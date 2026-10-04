@@ -1,0 +1,59 @@
+{
+  "id": "parry",
+  "category": "battle",
+  "files": [
+    "parry.0.ogg",
+    "parry.1.ogg"
+  ],
+  "durations": [
+    0.8,
+    0.8
+  ],
+  "peaks": [
+    -8.6,
+    -9.3
+  ],
+  "rms": [
+    -25,
+    -25
+  ],
+  "gainDb": [
+    -10.4,
+    -10.6
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A close-up field recording made in a quiet room, not music: ten separate sharp clangs of a steel rod striking a steel plate, each one bright impact with a short ring, separated by 1.8 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 25 seconds.",
+    "generated": "2026-10-04T03:24:32.688Z",
+    "takes": 2,
+    "rounds": 2
+  },
+  "picks": [
+    {
+      "take": "parry.1.mp3",
+      "at": 8.792,
+      "fit": 9,
+      "problem": "none",
+      "rmsCapped": true,
+      "cut": true
+    },
+    {
+      "take": "parry.1.mp3",
+      "at": 17.787,
+      "fit": 9,
+      "problem": "none",
+      "rmsCapped": true,
+      "cut": true
+    }
+  ],
+  "analysis": {
+    "candidates": 28,
+    "listened": 16,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 9,
+    "peakTarget": -3.5,
+    "rmsMax": -25
+  }
+}
