@@ -80,7 +80,7 @@ v_berna_ending_01,berna,ベルナ（師匠）,ending,roaTale,src/systems/ending.
 v_berna_ending_02,berna,ベルナ（師匠）,ending,roaTale,src/systems/ending.js,366,あるとも。三人の勇者が、魔王を倒したお話がね。,23,3.9,v_berna_ending_02.ogg
 v_berna_ending_03,berna,ベルナ（師匠）,ending,someDaysLater,src/systems/ending.js,381,それは、また別のお話。,11,2.1,v_berna_ending_03.ogg
 v_lazaro_archive_01,lazaro,ラザロ（大書記）,archive,archive_5_lazaro,src/events/final_archive.js,170,よく来ましたね、語り部。,12,2.2,v_lazaro_archive_01.ogg
-v_lazaro_archive_02,lazaro,ラザロ（大書記）,archive,archive_5_lazaro,src/events/final_archive.js,171,二十年前、伝承戦争で娘のミラを失いました。,21,3.4,v_lazaro_archive_02.ogg
+v_lazaro_archive_02,lazaro,ラザロ（大書記）,archive,archive_5_lazaro,src/events/final_archive.js,171,二十年前、日継ぎの戦で娘のミラを失いました。,22,3.6,v_lazaro_archive_02.ogg
 v_lazaro_archive_03,lazaro,ラザロ（大書記）,archive,archive_5_lazaro,src/events/final_archive.js,172,どちらの伝承が正しいか……そんなことのために。,23,3.9,v_lazaro_archive_03.ogg
 v_lazaro_archive_04,lazaro,ラザロ（大書記）,archive,archive_5_lazaro,src/events/final_archive.js,173,忘れてしまえば、争いも悲しみも、初めから無かったことになる。,30,4.7,v_lazaro_archive_04.ogg
 v_lazaro_archive_05,lazaro,ラザロ（大書記）,archive,archive_5_lazaro,src/events/final_archive.js,174,それが救いなのですよ。……それでも、あなたは書くのですね。,29,5,v_lazaro_archive_05.ogg

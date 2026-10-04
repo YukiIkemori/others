@@ -40,7 +40,9 @@ function loadCasting() { return JSON.parse(fs.readFileSync(path.join(ROOT, 'desi
 function lineOf(file, text) {
   const f = path.join(ROOT, file);
   if (!fs.existsSync(f)) return -1;
-  const src = fs.readFileSync(f, 'utf8');
+  let src = fs.readFileSync(f, 'utf8');
+  // v2 の台詞は R.T('key') で表（src/i18n/ja）にある: 日本語の文に戻してから探す（2026-10-04）
+  if (/^v2[\\/]/.test(file)) { try { src = require('../v2/tools/lib/i18n_src').inline(src); } catch (e) { /* i18n table unavailable */ } }
   const i = src.indexOf(text);
   return i < 0 ? 0 : src.slice(0, i).split('\n').length;
 }

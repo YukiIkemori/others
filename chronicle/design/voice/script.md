@@ -135,7 +135,7 @@
 | id | 場面 | 台詞 | 字 | 秒 | 済 |
 |---|---|---|---:|---:|:-:|
 | `v_lazaro_archive_01` | archive_5_lazaro (events/final_archive.js:170) | よく来ましたね、語り部。 | 12 | 2.2 | ✓ |
-| `v_lazaro_archive_02` | archive_5_lazaro (events/final_archive.js:171) | 二十年前、伝承戦争で<br>娘のミラを失いました。 | 21 | 3.4 | ✓ |
+| `v_lazaro_archive_02` | archive_5_lazaro (events/final_archive.js:171) | 二十年前、日継ぎの戦で<br>娘のミラを失いました。 | 22 | 3.6 | ✓ |
 | `v_lazaro_archive_03` | archive_5_lazaro (events/final_archive.js:172) | どちらの伝承が正しいか……<br>そんなことのために。 | 23 | 3.9 | ✓ |
 | `v_lazaro_archive_04` | archive_5_lazaro (events/final_archive.js:173) | 忘れてしまえば、争いも<br>悲しみも、初めから<br>無かったことになる。 | 30 | 4.7 | ✓ |
 | `v_lazaro_archive_05` | archive_5_lazaro (events/final_archive.js:174) | それが救いなのですよ。<br>……それでも、あなたは<br>書くのですね。 | 29 | 5 | ✓ |
