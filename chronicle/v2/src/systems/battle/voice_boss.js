@@ -134,14 +134,23 @@
     let y = a.y + 8 + Math.max(11 * k, R.minFont || 0) + 12 * k;
     cx = Math.max(bw / 2 + 12 * k, Math.min(R.W - bw / 2 - 12 * k, cx));
     y = Math.min(y, H - bh - 70 * k);
+    // 下に収まらず名前の札に重なる時（縦の画面で敵が下の方にいる）は、ボスの頭の上に出す（三角は下向き）
+    const tagBot = a.y + 10 + Math.max(11 * k, R.minFont || 0) + 5 * k;
+    let up = false;
+    if (y < tagBot + 4 * k) {
+      const hh = _.actors && _.actors.height ? _.actors.height(a) : 100;
+      y = Math.max(8 * k, a.y + ((v && v.dy) || 0) - hh - bh - 10 * k);
+      up = true;
+    }
     g.save();
     g.globalAlpha = al;
     g.fillStyle = 'rgba(10,8,18,0.78)';
     g.beginPath(); if (g.roundRect) g.roundRect(cx - bw / 2, y, bw, bh, 6 * k); else g.rect(cx - bw / 2, y, bw, bh); g.fill();
     g.strokeStyle = 'rgba(255,196,150,0.42)'; g.lineWidth = 1; g.stroke();
-    // 上の小さな三角（ボスの方を指す）
+    // 小さな三角（ボスの方を指す）
     g.fillStyle = 'rgba(10,8,18,0.78)';
-    g.beginPath(); g.moveTo(cx - 6 * k, y); g.lineTo(cx + 6 * k, y); g.lineTo(cx, y - 6 * k); g.closePath(); g.fill();
+    if (up) { g.beginPath(); g.moveTo(cx - 6 * k, y + bh); g.lineTo(cx + 6 * k, y + bh); g.lineTo(cx, y + bh + 6 * k); g.closePath(); g.fill(); }
+    else { g.beginPath(); g.moveTo(cx - 6 * k, y); g.lineTo(cx + 6 * k, y); g.lineTo(cx, y - 6 * k); g.closePath(); g.fill(); }
     lines.forEach((l, i) => K.text(g, l, cx, y + padY + i * lh + (lh - size) / 2, { size, align: 'center', color: '#ffe6c6', weight: 500, raw: true, shadow: true }));
     g.restore();
   };

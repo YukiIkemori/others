@@ -299,6 +299,11 @@
         });
       }
       put(() => {
+        // 登場の影の縁の光（v.rim = 場所の色。暗い背景でも形が読めるように、色を塗ったコマを四方に少しずらして下に敷く）
+        if (silO && v.rim) {
+          const ro = { tint: v.rim, tintAmt: 1, alpha: Math.min(1, v.sil) * 0.55 };
+          for (const [ox, oy] of [[-2, 0], [2, 0], [0, -2], [0, 2]]) draw1(fr0, x + ox, y + oy, ro);
+        }
         draw1(fr0, x, y);
         if (v.flash > 0) { g.globalCompositeOperation = 'lighter'; draw1(fr0, x, y, { alpha: Math.min(1, v.flash) * 0.8 }); g.globalCompositeOperation = 'source-over'; }
       }, x, y, 1);

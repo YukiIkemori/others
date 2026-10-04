@@ -124,7 +124,7 @@
     st.entry.rev = rev;
     sfx('roar');
     if (shakeOn) st.shake = { t0: rev, ms: p.mode === 'quick' ? 300 : 520, amp: p.mode === 'long' ? 6 : 5 };
-    for (const uid of st.entry.uids) { const v = st.vis[uid]; if (v) v.flash = lf ? 0.4 : 1; }
+    for (const uid of st.entry.uids) { const v = st.vis[uid]; if (v) v.flash = lf ? 0.3 : 0.7; }
     st.bossCard = { name: bu.name || '', sub: (st.info.troop && st.info.troop.title) || R.T('battle.scene.intro.bossCard.sub'), t0: rev, ms: p.card, big: p.mode === 'long', rgb: T.rgb };
     if (_.bossVoice) _.bossVoice.start(st, bu);   // 始めの一言と字幕（待たない）
     await R.until(() => st.dead || R.Engine.time - rev >= p.card);
@@ -134,7 +134,7 @@
   /** 終わり（途中で閉じても）: 影を残さない */
   E.finish = function (st) {
     const en = st.entry;
-    if (en) for (const uid of en.uids) { const v = st.vis[uid]; if (v) { v.sil = 0; v.appear = 1; v.dy = 0; v.sx = 1; v.sy = 1; } }
+    if (en) for (const uid of en.uids) { const v = st.vis[uid]; if (v) { v.sil = 0; v.rim = null; v.appear = 1; v.dy = 0; v.sx = 1; v.sy = 1; } }
     st.entry = null;
     st.bossCard = null;
   };
@@ -150,6 +150,7 @@
       const v = st.vis[uid];
       if (!v) continue;
       v.sil = sil;
+      v.rim = 'rgb(' + en.T.rgb + ')';
       v.appear = en.rev ? 1 : out3(k / (en.rm ? 0.6 : 0.45));
       if (en.rm) { v.dy = 0; continue; }
       v.dy = en.rev ? 0 : en.rise * (1 - out3(k / 0.88));
@@ -283,12 +284,12 @@
     if (en.rev) {
       const fk = 1 - cl((now - en.rev) / (en.mode === 'quick' ? 180 : 280));
       if (fk > 0) {
-        const fa = (en.lf ? 0.18 : en.mode === 'quick' ? 0.4 : 0.7) * fk * fk;
+        const fa = (en.lf ? 0.13 : en.mode === 'quick' ? 0.28 : 0.49) * fk * fk;   // 持ち主 2026-10-04: 光は 3 割弱く
         g.fillStyle = `rgba(255,250,240,${fa})`; g.fillRect(0, 0, W, Hs);
         g.globalCompositeOperation = 'lighter';
         const rr = h * (0.6 + 1.6 * (1 - fk));
         const gr = g.createRadialGradient(bx, by, 0, bx, by, rr);
-        gr.addColorStop(0, `rgba(${T.pal[1]},${(en.lf ? 0.3 : 0.8) * fk})`); gr.addColorStop(1, `rgba(${T.rgb},0)`);
+        gr.addColorStop(0, `rgba(${T.pal[1]},${(en.lf ? 0.21 : 0.56) * fk})`); gr.addColorStop(1, `rgba(${T.rgb},0)`);
         g.fillStyle = gr; g.fillRect(bx - rr, by - rr, rr * 2, rr * 2);
         g.globalCompositeOperation = 'source-over';
       }
