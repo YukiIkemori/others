@@ -1,0 +1,1246 @@
+{
+ "about": "Recorded SFX prompts for tools/lyria_sfx.js (Lyria via the Gemini API). One entry per id of R.Audio.IDS.sfx. prompt / alt: the English text sent to Lyria (alt is used when the prompt is blocked, and on the second round). role: what the sound is for (also what the listener model judges against). target/minLen/maxLen: event length in seconds. merge: events closer than this (s) are one sound. variants: how many distinct takes to keep. peak: normalisation target in dBFS (= the synthesised sound's measured peak, so files and synth sit at the same level; header targets UI ≈ -12, spells -9…-6, impacts ≈ -3). rmsMax: loudness cap (dBFS RMS over the sound) = synth RMS + 4 dB, for sounds denser than their synth version. stereo: keep stereo. synth: measured synth reference (peak, rms dBFS, audible s). keepSynth: true → the game keeps the synthesised sound (files are only for audition).",
+ "model": "lyria-3.5",
+ "entries": [
+  {
+   "id": "cursor",
+   "category": "ui",
+   "role": "menu cursor moving one row; heard hundreds of times, so it must be tiny, soft, short and never tiring",
+   "prompt": "A dry close-up foley recording, not music: twelve separate tiny soft clicks of a small wooden bead tapping a wooden board, each a single very short dry tick, gentle and quiet, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: twelve separate tiny soft ticks of a fingernail tapping a small wooden box, each a single very short quiet click, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "target": 0.05,
+   "minLen": 0.03,
+   "maxLen": 0.12,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -14,
+   "rmsMax": -22,
+   "stereo": false,
+   "synth": {
+    "peak": -14,
+    "rms": -25.9,
+    "audible": 0.05
+   }
+  },
+  {
+   "id": "confirm",
+   "category": "ui",
+   "role": "confirming a menu choice: a soft bright two-note \"pi-pin\" chime, light and pleasant, short",
+   "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: ten separate short bright double chimes, each two quick soft taps on a small glass bell, the second tap slightly higher, about a third of a second long, separated by 1.6 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 23 seconds.",
+   "alt": "Isolated sound effects recorded one at a time in a quiet studio, not music: ten separate short double pings, each two quick light taps on a tiny crystal glass, the second one higher, separated by 1.6 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 23 seconds.",
+   "target": 0.35,
+   "minLen": 0.12,
+   "maxLen": 0.6,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -12,
+   "rmsMax": -18,
+   "stereo": false,
+   "synth": {
+    "peak": -12,
+    "rms": -22,
+    "audible": 0.4
+   }
+  },
+  {
+   "id": "confirm_soft",
+   "category": "ui",
+   "role": "a smaller, softer confirmation tick: a single round soft tap, very short",
+   "prompt": "A dry close-up foley recording, not music: twelve separate single soft taps of a felt mallet on a small wooden block, round and warm, very short, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: twelve separate single soft knocks of a fingertip on a small hollow wooden box, round and very short, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "target": 0.07,
+   "minLen": 0.03,
+   "maxLen": 0.2,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -13.5,
+   "rmsMax": -20,
+   "stereo": false,
+   "synth": {
+    "peak": -13.7,
+    "rms": -23.7,
+    "audible": 0.07
+   }
+  },
+  {
+   "id": "cancel",
+   "category": "ui",
+   "role": "going back / cancelling in a menu: a soft falling two-step blip (high then low), short, not negative",
+   "prompt": "A dry close-up foley recording, not music: twelve separate soft descending double taps, each two quick light taps on a small wooden bar, the second one lower, about a sixth of a second, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: twelve separate quick soft double clicks of a small wooden latch, the second click lower and softer, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "target": 0.15,
+   "minLen": 0.05,
+   "maxLen": 0.4,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -13,
+   "rmsMax": -19,
+   "stereo": false,
+   "synth": {
+    "peak": -13,
+    "rms": -22.7,
+    "audible": 0.15
+   }
+  },
+  {
+   "id": "buzzer",
+   "category": "ui",
+   "role": "invalid action / not allowed: a low dull double buzz, short, clearly \"no\" but not harsh",
+   "prompt": "A dry close-up foley recording, not music: ten separate short low dull double buzzes, each two quick muted rattles of a small wooden ratchet, about a fifth of a second, separated by one and a half seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: ten separate short dull double thunks of a stuck wooden drawer that will not open, about a fifth of a second, separated by one and a half seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "target": 0.2,
+   "minLen": 0.07,
+   "maxLen": 0.45,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -11.5,
+   "rmsMax": -14,
+   "stereo": false,
+   "synth": {
+    "peak": -11.3,
+    "rms": -18,
+    "audible": 0.18
+   }
+  },
+  {
+   "id": "menu_open",
+   "category": "ui",
+   "role": "opening the menu window: a quick light rising sparkle of four tiny notes, short and soft",
+   "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: ten separate quick light rising sparkles, each four very fast tiny glass chime taps going upward in pitch, about 0.4 seconds, separated by 1.6 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 23 seconds.",
+   "alt": "Isolated sound effects recorded one at a time in a quiet studio, not music: ten separate quick soft upward flourishes of tiny glass wind chimes, each under half a second, separated by 1.6 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 23 seconds.",
+   "target": 0.4,
+   "minLen": 0.14,
+   "maxLen": 0.7,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -12,
+   "rmsMax": -22,
+   "stereo": false,
+   "synth": {
+    "peak": -12,
+    "rms": -25.9,
+    "audible": 0.41
+   }
+  },
+  {
+   "id": "attack",
+   "category": "battle",
+   "role": "a party member's weapon swing (slash, thrust or strike), heard on every attack: a quick sharp swoosh through the air, 0.1–0.2 s",
+   "prompt": "A dry close-up foley recording, not music: twelve separate quick swishes of a thin wooden stick swung fast through the air, each a short sharp whoosh of about a fifth of a second, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: twelve separate fast whooshes of a thin bamboo cane cutting through the air, each short and crisp, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "target": 0.15,
+   "minLen": 0.05,
+   "maxLen": 0.35,
+   "merge": 0.08,
+   "variants": 3,
+   "peak": -9,
+   "rmsMax": -19,
+   "stereo": false,
+   "synth": {
+    "peak": -9.1,
+    "rms": -22.7,
+    "audible": 0.12
+   }
+  },
+  {
+   "id": "hit",
+   "category": "battle",
+   "role": "a blow landing on a monster: a contact click, a crunchy punchy thud and a low thump, very short",
+   "prompt": "A dry close-up foley recording, not music: twelve separate solid punchy thuds of a heavy wooden club striking a thick leather sandbag, each a single sharp impact with a short low thump, separated by 1.3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: twelve separate firm thumps of a wooden mallet striking a stuffed leather cushion, each a single short punchy impact, separated by 1.3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "target": 0.15,
+   "minLen": 0.05,
+   "maxLen": 0.4,
+   "merge": 0.08,
+   "variants": 3,
+   "peak": -2.5,
+   "rmsMax": -13,
+   "stereo": false,
+   "synth": {
+    "peak": -2.7,
+    "rms": -16.7,
+    "audible": 0.11
+   }
+  },
+  {
+   "id": "crit",
+   "category": "battle",
+   "role": "a critical blow: a heavier, bigger impact with a bright metallic ping on top and a deep low tail, about 0.4 s",
+   "prompt": "A dry close-up foley recording, not music: ten separate very heavy impacts of a large wooden mallet slamming a thick leather sandbag with a bright metallic ring on top, each about half a second with a deep low boom, separated by 1.8 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 26 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: ten separate huge thuds of a heavy log hitting a padded leather target, with a bright ringing clang of steel layered on top, separated by 1.8 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 26 seconds.",
+   "target": 0.45,
+   "minLen": 0.16,
+   "maxLen": 0.8,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -2.5,
+   "rmsMax": -16,
+   "stereo": true,
+   "synth": {
+    "peak": -2.6,
+    "rms": -20,
+    "audible": 0.43
+   }
+  },
+  {
+   "id": "miss",
+   "category": "battle",
+   "role": "a swing that misses: a light airy high swoosh",
+   "prompt": "A dry close-up foley recording, not music: twelve separate light airy whooshes of a thin cane swung quickly past the microphone, soft and high, each under a quarter second, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: twelve separate soft high whiffs of air from a quickly waved thin ribbon, each very short, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "target": 0.15,
+   "minLen": 0.05,
+   "maxLen": 0.35,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -11.5,
+   "rmsMax": -22,
+   "stereo": false,
+   "synth": {
+    "peak": -11.6,
+    "rms": -26.4,
+    "audible": 0.11
+   }
+  },
+  {
+   "id": "enemy_attack",
+   "category": "battle",
+   "role": "a monster's lunge (claw, bite, charge): a lower, heavier swoosh with a rough growling undertone",
+   "prompt": "A dry close-up foley recording, not music: twelve separate heavy low whooshes of a large thick cloth swung hard through the air with a deep rough rumble underneath, each about a quarter second, separated by 1.3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 22 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: twelve separate heavy rough swooshes of a big leather coat swung hard through the air, each with a low rumbling body, separated by 1.3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 22 seconds.",
+   "target": 0.25,
+   "minLen": 0.09,
+   "maxLen": 0.45,
+   "merge": 0.08,
+   "variants": 3,
+   "peak": -10,
+   "rmsMax": -17,
+   "stereo": false,
+   "synth": {
+    "peak": -10.1,
+    "rms": -21.2,
+    "audible": 0.15
+   }
+  },
+  {
+   "id": "hurt",
+   "category": "battle",
+   "role": "a party member takes damage: a dull padded thump with a short low body",
+   "prompt": "A dry close-up foley recording, not music: twelve separate dull muffled thumps of a fist hitting a padded leather cushion, each a single soft heavy impact with a short low body, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: twelve separate dull heavy thuds of a sack of grain dropped onto a wooden floor, each short and muffled, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "target": 0.15,
+   "minLen": 0.05,
+   "maxLen": 0.35,
+   "merge": 0.08,
+   "variants": 3,
+   "peak": -2.5,
+   "rmsMax": -12,
+   "stereo": false,
+   "synth": {
+    "peak": -2.6,
+    "rms": -16.2,
+    "audible": 0.14
+   }
+  },
+  {
+   "id": "magic",
+   "category": "spell",
+   "role": "a generic spell being cast (non-elemental magic, dispel, scan, songs): a rising ripple of soft magical sparkle ending in a bright ring, about 0.6 s, organic and shimmering, not electronic",
+   "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: eight separate magical shimmering sparkles, each a quick upward ripple of tiny glass wind chimes ending in a soft bright ring, about 0.7 seconds, warm and organic, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+   "alt": "Isolated sound effects recorded one at a time in a quiet studio, not music: eight separate soft magical twinkles, each a fast rising shimmer of small crystal chimes with a gentle glowing ring, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+   "target": 0.7,
+   "minLen": 0.24,
+   "maxLen": 1.2,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -10,
+   "rmsMax": -22,
+   "stereo": true,
+   "synth": {
+    "peak": -10,
+    "rms": -26,
+    "audible": 0.61
+   }
+  },
+  {
+   "id": "fire",
+   "category": "spell",
+   "role": "a fire spell (also explosions): a roaring flame ignition whoosh with crackles, about 0.7 s",
+   "prompt": "A dry close-up foley recording, not music: eight separate fire bursts, each a single torch flaring up with a deep whoosh of flame followed by a few crackles, about one second long, separated by 2.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 28 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: eight separate bursts of flame, each a big gas fire igniting with a roaring whoosh and crackling embers, separated by 2.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 28 seconds.",
+   "target": 0.9,
+   "minLen": 0.32,
+   "maxLen": 1.4,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -3.5,
+   "rmsMax": -15,
+   "stereo": false,
+   "synth": {
+    "peak": -3.7,
+    "rms": -19.1,
+    "audible": 0.65
+   }
+  },
+  {
+   "id": "ice",
+   "category": "spell",
+   "role": "an ice spell: a shower of crystalline glassy chimes with a cold crackling hiss, about 0.7 s",
+   "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: eight separate bursts of ice crystals forming, each a quick shower of tiny crystalline glassy tinkles and a cold crackling hiss, about 0.8 seconds, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+   "alt": "Isolated sound effects recorded one at a time in a quiet studio, not music: eight separate bursts of shattering icicles, each a bright glassy tinkling crackle with a cold hiss, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+   "target": 0.8,
+   "minLen": 0.28,
+   "maxLen": 1.3,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -6,
+   "rmsMax": -18,
+   "stereo": false,
+   "synth": {
+    "peak": -6.2,
+    "rms": -22.3,
+    "audible": 0.67
+   }
+  },
+  {
+   "id": "thunder",
+   "category": "spell",
+   "role": "a lightning spell: a sharp electric crack followed by a short rolling rumble, about 1 s",
+   "prompt": "A dry close-up foley recording, not music: six separate close thunder cracks, each a sharp electric crack followed by a short rolling rumble, about two seconds, separated by 3.5 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 35 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: six separate close lightning strikes, each one sharp crackling snap and a brief deep rumble, separated by 3.5 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 35 seconds.",
+   "target": 1.8,
+   "minLen": 0.63,
+   "maxLen": 2.5,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -4.5,
+   "rmsMax": -19,
+   "stereo": true,
+   "synth": {
+    "peak": -4.6,
+    "rms": -22.9,
+    "audible": 0.7
+   }
+  },
+  {
+   "id": "wind",
+   "category": "spell",
+   "role": "a wind spell: a strong gust swelling and fading with a faint whistle, about 0.8 s",
+   "prompt": "A dry close-up foley recording, not music: eight separate quick gusts of wind, each a single strong whoosh of moving air that swells and fades with a faint whistle, about one second, separated by 2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 26 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: eight separate sudden blasts of air, each a single swirling gust that rises and dies away, separated by 2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 26 seconds.",
+   "target": 0.9,
+   "minLen": 0.32,
+   "maxLen": 1.5,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -8.5,
+   "rmsMax": -21,
+   "stereo": true,
+   "synth": {
+    "peak": -8.3,
+    "rms": -24.7,
+    "audible": 0.77
+   }
+  },
+  {
+   "id": "holy",
+   "category": "spell",
+   "role": "a holy spell: a radiant warm swell of glowing light with sparkling bells, about 0.9 s, soft and luminous",
+   "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: eight separate radiant magical shimmers, each a soft warm swell of glowing light made of gentle glass harmonics and sparkling tiny bells, about one second long, separated by 2.2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 29 seconds.",
+   "alt": "Isolated sound effects recorded one at a time in a quiet studio, not music: eight separate luminous sparkling swells, each a gentle bright shimmer of glass harmonics and tiny bells that blooms and fades, separated by 2.2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 29 seconds.",
+   "target": 1,
+   "minLen": 0.35,
+   "maxLen": 1.8,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -7,
+   "rmsMax": -18,
+   "stereo": true,
+   "synth": {
+    "peak": -7.2,
+    "rms": -22.2,
+    "audible": 0.89
+   }
+  },
+  {
+   "id": "dark",
+   "category": "spell",
+   "role": "a dark spell (also drain, gravity): a deep ominous whoosh with an eerie wavering hum, about 0.75 s",
+   "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: eight separate dark magical pulses, each a deep low ominous whoosh that swells and sinks with an eerie wavering hum, about one second, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 26 seconds.",
+   "alt": "Isolated sound effects recorded one at a time in a quiet studio, not music: eight separate deep eerie rushes of air, each a low dark swell with a wavering hum that sinks away, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 26 seconds.",
+   "target": 0.9,
+   "minLen": 0.32,
+   "maxLen": 1.6,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -8,
+   "rmsMax": -16,
+   "stereo": false,
+   "synth": {
+    "peak": -7.9,
+    "rms": -20.4,
+    "audible": 0.75
+   }
+  },
+  {
+   "id": "earth",
+   "category": "spell",
+   "role": "an earth spell: a heavy ground impact with a deep rumble and clattering stones, about 0.7 s",
+   "prompt": "A dry close-up foley recording, not music: eight separate short ground impacts, each a heavy boulder dropping onto earth with a deep rumble and a clatter of small stones, about one second, separated by 2.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 28 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: eight separate heavy rock falls, each a large stone slab crashing onto dirt with tumbling pebbles, separated by 2.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 28 seconds.",
+   "target": 0.9,
+   "minLen": 0.32,
+   "maxLen": 1.5,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -2.5,
+   "rmsMax": -11,
+   "stereo": true,
+   "synth": {
+    "peak": -2.3,
+    "rms": -15.4,
+    "audible": 0.66
+   }
+  },
+  {
+   "id": "water",
+   "category": "spell",
+   "role": "a water spell: a burst of rising bubbles and a bright splash, about 0.7 s",
+   "prompt": "A dry close-up foley recording, not music: eight separate water splashes, each a burst of bubbles rising and a bright splash of water, about 0.8 seconds, separated by 2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 25 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: eight separate splashes of a bucket of water thrown onto stone, each with a quick bubbling gurgle, separated by 2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 25 seconds.",
+   "target": 0.8,
+   "minLen": 0.28,
+   "maxLen": 1.3,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -9,
+   "rmsMax": -13,
+   "stereo": false,
+   "synth": {
+    "peak": -8.8,
+    "rms": -17.4,
+    "audible": 0.67
+   }
+  },
+  {
+   "id": "heal",
+   "category": "spell",
+   "role": "healing (heal, restore, cure, regen): a gentle rising glittering chime with a warm glowing ring, about 0.7 s, soothing",
+   "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: eight separate gentle healing shimmers, each a soft upward sparkle of tiny glass chimes with a warm glowing ring, about one second, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 26 seconds.",
+   "alt": "Isolated sound effects recorded one at a time in a quiet studio, not music: eight separate soft soothing twinkles, each a light rising shimmer of small crystal bells fading warmly, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 26 seconds.",
+   "target": 0.9,
+   "minLen": 0.32,
+   "maxLen": 1.4,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -8,
+   "rmsMax": -18,
+   "stereo": true,
+   "synth": {
+    "peak": -8.1,
+    "rms": -22.1,
+    "audible": 0.67
+   }
+  },
+  {
+   "id": "revive",
+   "category": "spell",
+   "role": "reviving a fallen companion: a longer ascending sparkle that blooms into a bright warm glowing ring, about 1.2 s",
+   "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: six separate long magical rising shimmers, each a slow upward sweep of sparkling glass chimes that blooms into a bright warm glowing ring, about two seconds, separated by 3 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 31 seconds.",
+   "alt": "Isolated sound effects recorded one at a time in a quiet studio, not music: six separate slow luminous swells, each a long rising cascade of crystal chimes opening into a bright shimmer, separated by 3 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 31 seconds.",
+   "target": 1.6,
+   "minLen": 0.56,
+   "maxLen": 2.4,
+   "merge": 0.08,
+   "variants": 1,
+   "peak": -8.5,
+   "rmsMax": -18,
+   "stereo": true,
+   "synth": {
+    "peak": -8.7,
+    "rms": -22.3,
+    "audible": 1.12
+   }
+  },
+  {
+   "id": "buff",
+   "category": "spell",
+   "role": "a stat goes up (strength, defence, speed): a quick bright rising swoosh, positive",
+   "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: ten separate quick rising whooshes with a bright shimmering upward glide, like a soft magical swell going up in pitch, about half a second, separated by 1.6 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 24 seconds.",
+   "alt": "Isolated sound effects recorded one at a time in a quiet studio, not music: ten separate short bright upward swooshes of shimmering air, each rising quickly in pitch, separated by 1.6 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 24 seconds.",
+   "target": 0.5,
+   "minLen": 0.18,
+   "maxLen": 0.9,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -10,
+   "rmsMax": -18,
+   "stereo": false,
+   "synth": {
+    "peak": -10,
+    "rms": -22.4,
+    "audible": 0.57
+   }
+  },
+  {
+   "id": "debuff",
+   "category": "spell",
+   "role": "a stat goes down: a dull falling, sagging swoosh, negative",
+   "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: ten separate falling whooshes with a dull downward sagging glide, like a magical shimmer sinking in pitch, about 0.6 seconds, separated by 1.6 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+   "alt": "Isolated sound effects recorded one at a time in a quiet studio, not music: ten separate short dull downward swooshes, each a shimmering sound sinking and fading, separated by 1.6 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+   "target": 0.6,
+   "minLen": 0.21,
+   "maxLen": 0.9,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -10,
+   "rmsMax": -17,
+   "stereo": false,
+   "synth": {
+    "peak": -10,
+    "rms": -20.9,
+    "audible": 0.61
+   }
+  },
+  {
+   "id": "status",
+   "category": "spell",
+   "role": "a status ailment strikes (paralysis, confusion, silence, blindness): a queasy warbling wobble bending downward",
+   "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: ten separate short eerie warbling wobbles, each a queasy wavering sound bending downward, about 0.6 seconds, separated by 1.6 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+   "alt": "Isolated sound effects recorded one at a time in a quiet studio, not music: ten separate short strange wobbling hums, each wavering unsteadily and bending down, separated by 1.6 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+   "target": 0.6,
+   "minLen": 0.21,
+   "maxLen": 0.9,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -10,
+   "rmsMax": -12,
+   "stereo": false,
+   "synth": {
+    "peak": -9.9,
+    "rms": -16.3,
+    "audible": 0.6
+   }
+  },
+  {
+   "id": "poison",
+   "category": "spell",
+   "role": "poisoned: a thick bubbly gurgling wobble",
+   "prompt": "A dry close-up foley recording, not music: ten separate thick bubbling gurgles of a small pot of viscous liquid, each a few quick wet bubbles popping, about half a second, separated by 1.6 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 24 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: ten separate short wet blurps of thick mud bubbling, each a few gloopy bubbles popping, separated by 1.6 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 24 seconds.",
+   "target": 0.5,
+   "minLen": 0.18,
+   "maxLen": 0.9,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -10,
+   "rmsMax": -19,
+   "stereo": false,
+   "synth": {
+    "peak": -10,
+    "rms": -23.2,
+    "audible": 0.53
+   }
+  },
+  {
+   "id": "sleep",
+   "category": "spell",
+   "role": "falling asleep: three soft drowsy falling tones with a faint airy hush",
+   "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: eight separate drowsy soft descending sparkles, each three very soft glass chime taps going down in pitch with a faint airy hush, about 0.8 seconds, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+   "alt": "Isolated sound effects recorded one at a time in a quiet studio, not music: eight separate sleepy soft twinkles, each a gentle falling shimmer of tiny bells fading into a soft breath of air, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+   "target": 0.8,
+   "minLen": 0.28,
+   "maxLen": 1.2,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -10,
+   "rmsMax": -14,
+   "stereo": false,
+   "synth": {
+    "peak": -10,
+    "rms": -17.9,
+    "audible": 0.78
+   }
+  },
+  {
+   "id": "death",
+   "category": "spell",
+   "role": "a companion falls (knock-out, instant death): a low dark toll with a falling fade, about 0.9 s, sombre",
+   "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: six separate deep low single tolls of a large distant iron bell, each fading out with a soft dark hum, about one and a half seconds, separated by 3 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 29 seconds.",
+   "alt": "Isolated sound effects recorded one at a time in a quiet studio, not music: six separate single deep dark gongs struck softly, each fading into a low hum, separated by 3 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 29 seconds.",
+   "target": 1.3,
+   "minLen": 0.45,
+   "maxLen": 2,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -7.5,
+   "rmsMax": -16,
+   "stereo": true,
+   "synth": {
+    "peak": -7.3,
+    "rms": -20.3,
+    "audible": 0.93
+   }
+  },
+  {
+   "id": "enemy_die",
+   "category": "battle",
+   "role": "a monster is defeated and dissolves: a falling whoosh as it scatters into dust, about 0.5 s",
+   "prompt": "A dry close-up foley recording, not music: ten separate soft dissolving puffs, each a quick falling whoosh like a cloud of dust scattering away into the air, about half a second, separated by 1.6 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 25 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: ten separate quick sandy whooshes, each a handful of fine sand thrown into the wind and scattering, separated by 1.6 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 25 seconds.",
+   "target": 0.55,
+   "minLen": 0.19,
+   "maxLen": 1,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -9.5,
+   "rmsMax": -15,
+   "stereo": false,
+   "synth": {
+    "peak": -9.7,
+    "rms": -19.5,
+    "audible": 0.56
+   }
+  },
+  {
+   "id": "boss_die",
+   "category": "battle",
+   "role": "a boss is defeated: a chain of heavy crumbling bursts sinking into a long low rumble, about 2 s",
+   "prompt": "A dry close-up foley recording, not music: four separate long crumbling collapses, each a series of heavy deep rumbling bursts and falling rocks fading into a long low rumble, about three seconds, separated by 4 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 29 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: four separate collapsing stone towers, each a cascade of heavy rocks tumbling down into a long deep rumble, separated by 4 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 29 seconds.",
+   "target": 2.6,
+   "minLen": 0.91,
+   "maxLen": 3.5,
+   "merge": 0.08,
+   "variants": 1,
+   "peak": -1.5,
+   "rmsMax": -14,
+   "stereo": true,
+   "synth": {
+    "peak": -1.3,
+    "rms": -18.2,
+    "audible": 1.89
+   }
+  },
+  {
+   "id": "escape",
+   "category": "battle",
+   "role": "the party runs away (also a monster fleeing, a smoke bomb): a quick patter of running steps receding with a small whoosh",
+   "prompt": "A dry close-up foley recording, not music: ten separate quick getaways, each a fast patter of light footsteps running away on dirt with a small whoosh, fading quickly, about 0.4 seconds, separated by 1.6 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 24 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: ten separate short bursts of light running footsteps on gravel, each fading away quickly, separated by 1.6 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 24 seconds.",
+   "target": 0.45,
+   "minLen": 0.16,
+   "maxLen": 0.8,
+   "merge": 0.15,
+   "variants": 2,
+   "peak": -11,
+   "rmsMax": -20,
+   "stereo": false,
+   "synth": {
+    "peak": -11.2,
+    "rms": -23.7,
+    "audible": 0.29
+   }
+  },
+  {
+   "id": "stairs",
+   "category": "field",
+   "role": "walking up or down stairs: four quick footsteps on stone",
+   "prompt": "A dry close-up foley recording, not music: ten separate short runs of four quick footsteps on stone stairs, each run under half a second, separated by 1.6 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 23 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: ten separate four quick leather boot steps on stone steps, short groups with pauses between, separated by 1.6 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 23 seconds.",
+   "target": 0.35,
+   "minLen": 0.12,
+   "maxLen": 0.8,
+   "merge": 0.25,
+   "variants": 2,
+   "peak": -10.5,
+   "rmsMax": -22,
+   "stereo": false,
+   "synth": {
+    "peak": -10.6,
+    "rms": -25.9,
+    "audible": 0.33
+   }
+  },
+  {
+   "id": "door",
+   "category": "field",
+   "role": "a door opening: a short wooden creak and a solid thud",
+   "prompt": "A dry close-up foley recording, not music: eight separate wooden doors, each a short creak followed by a solid close thud, about half a second, separated by 1.8 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 21 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: eight separate old wooden doors, each a brief hinge creak and a soft wooden knock as it closes, separated by 1.8 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 21 seconds.",
+   "target": 0.5,
+   "minLen": 0.18,
+   "maxLen": 1,
+   "merge": 0.2,
+   "variants": 2,
+   "peak": -7.5,
+   "rmsMax": -18,
+   "stereo": false,
+   "synth": {
+    "peak": -7.4,
+    "rms": -22.5,
+    "audible": 0.25
+   }
+  },
+  {
+   "id": "locked",
+   "category": "field",
+   "role": "a locked door: a few quick rattles of an iron latch and a dull clunk",
+   "prompt": "A dry close-up foley recording, not music: ten separate locked door rattles, each three quick metallic rattles of an old iron latch that will not open, ending with a dull clunk, about 0.4 seconds, separated by 1.6 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 23 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: ten separate quick jiggles of a stuck iron door handle, each a short rattle and a dull clunk, separated by 1.6 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 23 seconds.",
+   "target": 0.4,
+   "minLen": 0.14,
+   "maxLen": 0.8,
+   "merge": 0.2,
+   "variants": 2,
+   "peak": -11,
+   "rmsMax": -15,
+   "stereo": false,
+   "synth": {
+    "peak": -11.2,
+    "rms": -19.3,
+    "audible": 0.35
+   }
+  },
+  {
+   "id": "chest",
+   "category": "field",
+   "role": "a treasure chest opening: a latch click, a short lid creak and a soft wooden thud (a small sparkle after is welcome)",
+   "prompt": "A dry close-up foley recording, not music: eight separate small wooden chests opening, each a latch click, a short lid creak and a soft wooden thud, about 0.6 seconds, separated by 2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 24 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: eight separate old wooden boxes opening, each a metal clasp click and a creaking lid falling open, separated by 2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 24 seconds.",
+   "target": 0.6,
+   "minLen": 0.21,
+   "maxLen": 1.2,
+   "merge": 0.2,
+   "variants": 2,
+   "peak": -10,
+   "rmsMax": -22,
+   "stereo": false,
+   "synth": {
+    "peak": -9.8,
+    "rms": -26.2,
+    "audible": 0.66
+   }
+  },
+  {
+   "id": "item",
+   "category": "field",
+   "role": "using, buying or equipping an item: two small bright bell chimes, short and pleasant",
+   "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: ten separate short bright chimes, each two quick light taps on a small brass bell, about half a second, separated by 1.6 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 24 seconds.",
+   "alt": "Isolated sound effects recorded one at a time in a quiet studio, not music: ten separate short pleasant dings, each two quick taps on a tiny bright bell, separated by 1.6 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 24 seconds.",
+   "target": 0.45,
+   "minLen": 0.16,
+   "maxLen": 0.9,
+   "merge": 0.15,
+   "variants": 2,
+   "peak": -10,
+   "rmsMax": -19,
+   "stereo": false,
+   "synth": {
+    "peak": -10,
+    "rms": -23,
+    "audible": 0.47
+   }
+  },
+  {
+   "id": "gold",
+   "category": "field",
+   "role": "receiving coins: a bright short coin jingle",
+   "prompt": "A dry close-up foley recording, not music: ten separate small handfuls of gold coins clinking together, each a bright short jingle of two or three coins, about half a second, separated by 1.6 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 24 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: ten separate a few coins dropped onto a wooden table, each drop a short bright clink, separated by 1.6 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 24 seconds.",
+   "target": 0.45,
+   "minLen": 0.16,
+   "maxLen": 0.8,
+   "merge": 0.12,
+   "variants": 2,
+   "peak": -10.5,
+   "rmsMax": -22,
+   "stereo": false,
+   "synth": {
+    "peak": -10.3,
+    "rms": -26.2,
+    "audible": 0.49
+   }
+  },
+  {
+   "id": "step_damage",
+   "category": "field",
+   "role": "stepping on a harmful floor (poison swamp, hot coals): a short sizzling zap, very short",
+   "prompt": "A dry close-up foley recording, not music: twelve separate short hot sizzles, each a quick hiss like a drop of water hitting a hot stone, under a fifth of a second, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: twelve separate tiny quick sizzles of water drops on a hot iron pan, each very short, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "target": 0.12,
+   "minLen": 0.04,
+   "maxLen": 0.3,
+   "merge": 0.08,
+   "variants": 3,
+   "peak": -12,
+   "rmsMax": -18,
+   "stereo": false,
+   "synth": {
+    "peak": -12,
+    "rms": -22.5,
+    "audible": 0.08
+   }
+  },
+  {
+   "id": "ship",
+   "category": "field",
+   "role": "boarding or setting sail on a ship: a sea swell washing against a wooden hull with a deep creak",
+   "prompt": "A dry close-up foley recording, not music: six separate wooden ship sounds, each a slow sea swell washing against a hull with a deep wooden creak, about one and a half seconds, separated by 3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 29 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: six separate deep creaks of an old wooden boat rocking on a wave, each with a soft wash of water, separated by 3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 29 seconds.",
+   "target": 1.4,
+   "minLen": 0.49,
+   "maxLen": 2,
+   "merge": 0.08,
+   "variants": 1,
+   "peak": -12.5,
+   "rmsMax": -22,
+   "stereo": true,
+   "synth": {
+    "peak": -12.4,
+    "rms": -25.8,
+    "audible": 0.65
+   }
+  },
+  {
+   "id": "bump",
+   "category": "field",
+   "role": "walking into a wall: a single dull soft bump, very short and quiet",
+   "prompt": "A dry close-up foley recording, not music: twelve separate soft dull bumps of a shoulder against a wooden wall, each a single short muffled thud, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: twelve separate soft muffled knocks of a padded elbow against a thick wooden door, each very short, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "target": 0.08,
+   "minLen": 0.03,
+   "maxLen": 0.25,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -15,
+   "rmsMax": -16,
+   "stereo": false,
+   "synth": {
+    "peak": -15,
+    "rms": -20.1,
+    "audible": 0.08
+   }
+  },
+  {
+   "id": "warp",
+   "category": "field",
+   "role": "a warp / travel spell: a shimmering airy sweep rising in pitch, about 0.9 s",
+   "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: eight separate magical rising swooshes, each a shimmering airy sweep rising in pitch with a sparkling hiss, about one second, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 26 seconds.",
+   "alt": "Isolated sound effects recorded one at a time in a quiet studio, not music: eight separate airy whooshes that rise upward, each a sparkling gust lifting away, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 26 seconds.",
+   "target": 0.9,
+   "minLen": 0.32,
+   "maxLen": 1.5,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -10,
+   "rmsMax": -16,
+   "stereo": true,
+   "synth": {
+    "peak": -9.9,
+    "rms": -20.2,
+    "audible": 0.9
+   }
+  },
+  {
+   "id": "teleport",
+   "category": "field",
+   "role": "teleporting away: a quick burst of sparkling chimes and an airy upward whoosh, about 0.8 s",
+   "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: eight separate magical vanishing sounds, each a quick burst of sparkling chimes and an airy upward whoosh, about 0.8 seconds, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+   "alt": "Isolated sound effects recorded one at a time in a quiet studio, not music: eight separate quick sparkling disappearances, each a flurry of tiny chimes swept upward by a puff of air, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+   "target": 0.8,
+   "minLen": 0.28,
+   "maxLen": 1.4,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -10,
+   "rmsMax": -17,
+   "stereo": true,
+   "synth": {
+    "peak": -10,
+    "rms": -20.9,
+    "audible": 0.77
+   }
+  },
+  {
+   "id": "steal",
+   "category": "battle",
+   "role": "stealing from a monster: a quick light swipe and a tiny jingle of a snatched pouch",
+   "prompt": "A dry close-up foley recording, not music: twelve separate quick light swipes, each a fast cloth swish and a small jingle of a pouch being snatched, about a quarter second, separated by 1.3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 22 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: twelve separate quick grabs of a small coin purse, each a light cloth rustle and a tiny clink, separated by 1.3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 22 seconds.",
+   "target": 0.25,
+   "minLen": 0.09,
+   "maxLen": 0.5,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -13,
+   "rmsMax": -22,
+   "stereo": false,
+   "synth": {
+    "peak": -12.9,
+    "rms": -26,
+    "audible": 0.21
+   }
+  },
+  {
+   "id": "jump",
+   "category": "field",
+   "role": "jumping (also covering an ally): a light springy upward whoosh, very short",
+   "prompt": "A dry close-up foley recording, not music: twelve separate quick jumps, each a light springy upward whoosh with a soft cloth rustle, about a fifth of a second, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: twelve separate quick light leaps, each a short airy swish of a cloak and a soft spring, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "target": 0.2,
+   "minLen": 0.07,
+   "maxLen": 0.4,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -10,
+   "rmsMax": -17,
+   "stereo": false,
+   "synth": {
+    "peak": -10.2,
+    "rms": -21.5,
+    "audible": 0.19
+   }
+  },
+  {
+   "id": "breath",
+   "category": "battle",
+   "role": "a monster breath attack (fire or frost breath): a long powerful roaring rush of air, about 1 s",
+   "prompt": "A dry close-up foley recording, not music: six separate long powerful exhales of a huge creature, each a deep roaring rush of air like a giant bellows blasting, about one second, separated by 2.5 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 24 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: six separate huge blasts of a blacksmith bellows, each a long deep roaring rush of air, separated by 2.5 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 24 seconds.",
+   "target": 1,
+   "minLen": 0.35,
+   "maxLen": 2,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -5,
+   "rmsMax": -15,
+   "stereo": true,
+   "synth": {
+    "peak": -4.8,
+    "rms": -18.8,
+    "audible": 0.95
+   }
+  },
+  {
+   "id": "roar",
+   "category": "battle",
+   "role": "a boss appears and roars: a deep growling beast roar, about 1 s",
+   "prompt": "A dry close-up foley recording, not music: six separate deep beast roars of a large wild animal, each a single long growling roar about one second, separated by 3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 28 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: six separate deep growls of a big bear, each one long rumbling growl, separated by 3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 28 seconds.",
+   "target": 1.1,
+   "minLen": 0.39,
+   "maxLen": 2,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -8.5,
+   "rmsMax": -16,
+   "stereo": true,
+   "synth": {
+    "peak": -8.3,
+    "rms": -19.9,
+    "audible": 0.98
+   }
+  },
+  {
+   "id": "shake",
+   "category": "field",
+   "role": "an earthquake in a story event: a deep heavy rumble of shaking ground with rattling stones, about 0.9 s",
+   "prompt": "A dry close-up foley recording, not music: six separate short earthquakes, each a deep heavy rumble of shaking ground with rattling stones, about one second, separated by 3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 27 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: six separate brief ground tremors, each a deep low rumble with small rattling rocks, separated by 3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 27 seconds.",
+   "target": 1,
+   "minLen": 0.35,
+   "maxLen": 2,
+   "merge": 0.08,
+   "variants": 1,
+   "peak": -6.5,
+   "rmsMax": -8,
+   "stereo": true,
+   "synth": {
+    "peak": -6.4,
+    "rms": -12.2,
+    "audible": 0.86
+   }
+  },
+  {
+   "id": "glimmer",
+   "category": "spell",
+   "role": "a sudden flash of inspiration in battle, the hero learns a new technique (\"pi-koon\"): a short bright ping and a pure crystal bell ringing on — must cut through battle music, joyful, about 1 s",
+   "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: eight separate single bright magical pings, each one very clear high crystal bell struck once with a quick sparkling attack and a pure shimmering ring that fades over about one second, separated by 3 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 35 seconds.",
+   "alt": "Isolated sound effects recorded one at a time in a quiet studio, not music: eight separate single clear bright glass bell strikes, each a sharp sparkling ping that rings on purely and fades, separated by 3 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 35 seconds.",
+   "target": 1,
+   "minLen": 0.35,
+   "maxLen": 1.6,
+   "merge": 0.08,
+   "variants": 1,
+   "peak": -6,
+   "rmsMax": -21,
+   "stereo": true,
+   "synth": {
+    "peak": -6.2,
+    "rms": -24.9,
+    "audible": 0.83
+   }
+  },
+  {
+   "id": "golden",
+   "category": "field",
+   "role": "a rare golden creature appears: a quick upward flurry of tiny bright chimes ending in a small jingle, about 1.1 s",
+   "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: six separate golden sparkles, each a quick upward flurry of tiny bright glass and brass chimes ending with a small jingle, about 1.2 seconds, separated by 2.5 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+   "alt": "Isolated sound effects recorded one at a time in a quiet studio, not music: six separate bright glittering flourishes, each a fast rising run of tiny chimes and a little bell jingle, separated by 2.5 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+   "target": 1.1,
+   "minLen": 0.39,
+   "maxLen": 1.8,
+   "merge": 0.08,
+   "variants": 1,
+   "peak": -7,
+   "rmsMax": -18,
+   "stereo": true,
+   "synth": {
+    "peak": -6.8,
+    "rms": -22.1,
+    "audible": 1.09
+   }
+  },
+  {
+   "id": "light",
+   "category": "spell",
+   "role": "a light spell: a quick bright radiant shimmer of sparkling tiny bells, about 0.65 s",
+   "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: eight separate quick bright flashes of magical light, each a short radiant shimmer of sparkling tiny bells with a warm glow, about 0.7 seconds, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+   "alt": "Isolated sound effects recorded one at a time in a quiet studio, not music: eight separate short radiant twinkles, each a bright glittering burst of tiny bells, separated by 2 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 25 seconds.",
+   "target": 0.7,
+   "minLen": 0.24,
+   "maxLen": 1.2,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -7,
+   "rmsMax": -17,
+   "stereo": true,
+   "synth": {
+    "peak": -7.2,
+    "rms": -21.5,
+    "audible": 0.65
+   }
+  },
+  {
+   "id": "freeze",
+   "category": "spell",
+   "role": "freezing (frozen status): ice cracking — a sharp crisp snap, small crackles and a thin cold shimmer, about 0.7 s",
+   "prompt": "A dry close-up foley recording, not music: eight separate ice cracks, each a sharp crisp snap of a thin sheet of ice cracking with a few crackles and a thin cold shimmer, about 0.7 seconds, separated by 2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 25 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: eight separate cracking frozen puddles, each a crisp snap and a brittle crackle of ice, separated by 2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 25 seconds.",
+   "target": 0.7,
+   "minLen": 0.24,
+   "maxLen": 1.2,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -7,
+   "rmsMax": -18,
+   "stereo": false,
+   "synth": {
+    "peak": -7.1,
+    "rms": -21.6,
+    "audible": 0.73
+   }
+  },
+  {
+   "id": "burn",
+   "category": "spell",
+   "role": "burning (burn status): a short flare of flame with a few quick crackles, about 0.6 s",
+   "prompt": "A dry close-up foley recording, not music: ten separate short flame flares, each a small whoosh of a match igniting into a flame with a few quick crackles, about 0.6 seconds, separated by 1.8 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 27 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: ten separate small campfire flare-ups, each a soft whoosh of flame and a few snapping crackles, separated by 1.8 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 27 seconds.",
+   "target": 0.6,
+   "minLen": 0.21,
+   "maxLen": 1,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -6,
+   "rmsMax": -20,
+   "stereo": false,
+   "synth": {
+    "peak": -5.8,
+    "rms": -24.4,
+    "audible": 0.63
+   }
+  },
+  {
+   "id": "quill",
+   "category": "field",
+   "role": "writing in the chronicle (saving, notes): a quill pen scratching a few quick strokes on parchment",
+   "prompt": "A dry close-up foley recording, not music: eight separate short handwriting sounds, each a quill pen scratching three quick strokes on parchment, about 0.6 seconds, separated by 2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 24 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: eight separate quick scribbles of a dip pen on rough paper, each three short scratchy strokes, separated by 2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 24 seconds.",
+   "target": 0.6,
+   "minLen": 0.21,
+   "maxLen": 1.2,
+   "merge": 0.3,
+   "variants": 2,
+   "peak": -11,
+   "rmsMax": -24,
+   "stereo": false,
+   "synth": {
+    "peak": -11,
+    "rms": -28,
+    "audible": 0.89
+   }
+  },
+  {
+   "id": "page",
+   "category": "ui",
+   "role": "turning a page of the book (menus, lore): a soft quick papery flip",
+   "prompt": "A dry close-up foley recording, not music: twelve separate single pages of an old paper book being turned, each a soft quick papery flip about a fifth of a second, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: twelve separate quick flips of a single thick parchment page, each a soft papery swish, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "target": 0.15,
+   "minLen": 0.05,
+   "maxLen": 0.4,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -12.5,
+   "rmsMax": -23,
+   "stereo": false,
+   "synth": {
+    "peak": -12.7,
+    "rms": -26.9,
+    "audible": 0.13
+   }
+  },
+  {
+   "id": "swap",
+   "category": "ui",
+   "role": "changing party order or row: a short light cloth swish",
+   "prompt": "A dry close-up foley recording, not music: twelve separate quick soft cloth rustles, each a short light swish of a cloak, about a fifth of a second, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: twelve separate quick light swishes of a linen cloth being flipped over, each very short, separated by 1.2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 20 seconds.",
+   "target": 0.15,
+   "minLen": 0.05,
+   "maxLen": 0.35,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -12,
+   "rmsMax": -22,
+   "stereo": false,
+   "synth": {
+    "peak": -12.1,
+    "rms": -25.7,
+    "audible": 0.15
+   }
+  },
+  {
+   "id": "bell",
+   "category": "field",
+   "role": "the homeward bell (returning to the last town): a clear small hand bell rung twice gently",
+   "prompt": "A clean studio recording of isolated magical sound effects for a fantasy story, not music: six separate small brass hand bells, each rung twice gently, clear and ringing out for about a second, separated by 3 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 28 seconds.",
+   "alt": "Isolated sound effects recorded one at a time in a quiet studio, not music: six separate small clear handbells, each shaken twice softly and left ringing, separated by 3 seconds of silence. Each sound stands alone and is complete. No melody across the sounds, no background music, no chords, no rhythm, no drums, no voices, no background ambience. Duration: 28 seconds.",
+   "target": 1.1,
+   "minLen": 0.39,
+   "maxLen": 2,
+   "merge": 0.4,
+   "variants": 1,
+   "peak": -8.5,
+   "rmsMax": -20,
+   "stereo": false,
+   "synth": {
+    "peak": -8.3,
+    "rms": -24.5,
+    "audible": 1.13
+   }
+  },
+  {
+   "id": "unlock",
+   "category": "field",
+   "role": "a sealed way opens (a stone door grinds open, ice melts, vines wither): a short low stone rumble and scrape, a soft sparkle after",
+   "prompt": "A dry close-up foley recording, not music: six separate heavy stone doors grinding open, each a short low stone rumble and scrape, about one second, followed by a soft sparkle, separated by 3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 27 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: six separate heavy stone slabs sliding open, each a deep grinding scrape and a low rumble, separated by 3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 27 seconds.",
+   "target": 1,
+   "minLen": 0.35,
+   "maxLen": 1.8,
+   "merge": 0.25,
+   "variants": 2,
+   "peak": -7.5,
+   "rmsMax": -17,
+   "stereo": true,
+   "synth": {
+    "peak": -7.7,
+    "rms": -20.7,
+    "audible": 0.92
+   }
+  },
+  {
+   "id": "arrow",
+   "category": "battle",
+   "role": "a bow shot: a bowstring twang, a quick whoosh and a solid thunk into the target",
+   "prompt": "A dry close-up foley recording, not music: ten separate archery shots, each a bowstring twang, a quick whoosh and a solid thunk of the shaft into a wooden target, about 0.4 seconds, separated by 1.8 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 25 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: ten separate shots from a wooden longbow at a straw target, each a taut string release and a dull thud, separated by 1.8 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 25 seconds.",
+   "target": 0.4,
+   "minLen": 0.14,
+   "maxLen": 0.8,
+   "merge": 0.25,
+   "variants": 2,
+   "peak": -6.5,
+   "rmsMax": -19,
+   "stereo": false,
+   "synth": {
+    "peak": -6.4,
+    "rms": -23.3,
+    "audible": 0.23
+   }
+  },
+  {
+   "id": "lash",
+   "category": "battle",
+   "role": "a whip strike: a quick bending swish ending in a sharp dry crack",
+   "prompt": "A dry close-up foley recording, not music: twelve separate leather whip cracks, each a quick swish ending in a sharp dry crack, separated by 1.4 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 23 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: twelve separate snaps of a long leather cord, each a fast swoosh and a loud dry snap, separated by 1.4 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 23 seconds.",
+   "target": 0.25,
+   "minLen": 0.09,
+   "maxLen": 0.5,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -8,
+   "rmsMax": -28,
+   "stereo": false,
+   "synth": {
+    "peak": -7.8,
+    "rms": -31.8,
+    "audible": 0.21
+   }
+  },
+  {
+   "id": "parry",
+   "category": "battle",
+   "role": "parrying a blow: steel meeting steel — a sharp metallic impact with a short bright ring",
+   "prompt": "A dry close-up foley recording, not music: ten separate clangs of two steel blades meeting, each a single sharp metallic impact with a short bright ring, separated by 1.8 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 25 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: ten separate sharp clangs of a steel rod striking a steel plate, each one bright impact with a short ring, separated by 1.8 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 25 seconds.",
+   "target": 0.4,
+   "minLen": 0.14,
+   "maxLen": 0.8,
+   "merge": 0.08,
+   "variants": 2,
+   "peak": -3.5,
+   "rmsMax": -25,
+   "stereo": false,
+   "synth": {
+    "peak": -3.6,
+    "rms": -29,
+    "audible": 0.41
+   }
+  },
+  {
+   "id": "secret",
+   "category": "field",
+   "role": "a hidden passage gives way: a short stone scrape and soft thud followed by a curious rising magical shimmer, about 0.9 s",
+   "prompt": "A dry close-up foley recording, not music: six separate hidden stone passages opening, each a short stone scrape and a soft low thud followed by a curious rising magical shimmer, about one second, separated by 3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 27 seconds.",
+   "alt": "A close-up field recording made in a quiet room, not music: six separate secret wall panels sliding open, each a short stone scrape followed by a rising mysterious twinkle, separated by 3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 27 seconds.",
+   "target": 1,
+   "minLen": 0.35,
+   "maxLen": 1.6,
+   "merge": 0.25,
+   "variants": 1,
+   "peak": -7,
+   "rmsMax": -19,
+   "stereo": true,
+   "synth": {
+    "peak": -7.1,
+    "rms": -23.3,
+    "audible": 0.89
+   }
+  }
+ ]
+}

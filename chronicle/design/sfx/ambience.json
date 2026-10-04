@@ -1,0 +1,166 @@
+{
+ "about": "Recorded ambience beds for tools/lyria_sfx.js --kind amb. id = the procedural bed of R.Audio.ambience (core/audio.js, \"ambience\" section) or an extra variant of one (bed = the spec it stands for: breeze_night = {bed:\"breeze\", night:1}, rain_shore = {bed:\"rain\", surf}, ship = {bed:\"sea\", muffled}, forest_night = {bed:\"forest\", night:1}, cave_dry = {bed:\"cave\", dry:true}). lufs: the integrated loudness the file is normalised to — the level of the procedural bed at strength 1 / volume 10 (measured there: blizzard -33, sandstorm -34, sea -36, rain -37, forest -41, heat -43 LUFS), so a file plays at unity gain on the amb bus.",
+ "model": "lyria-3.5",
+ "entries": [
+  {
+   "id": "wind",
+   "bed": "wind",
+   "desc": "a gentle night breeze over open grassland: soft rising and falling gusts of wind, calm and lonely, no birds, no insects",
+   "lufs": -38,
+   "prompt": "A realistic stereo field recording of a natural environment, not music: a gentle night breeze over open grassland: soft rising and falling gusts of wind, calm and lonely, no birds, no insects. Continuous and even from start to finish, no fade-in, no fade-out. Absolutely no music, no melody, no instruments, no tonal drones or pads, no rhythm, no voices. Duration: 75 seconds.",
+   "alt": "Nature sound recording, environmental ambience only: a gentle night breeze over open grassland: soft rising and falling gusts of wind, calm and lonely, no birds, no insects. Steady and continuous, without any music, melody, singing or rhythm. Duration: 75 seconds."
+  },
+  {
+   "id": "snow",
+   "bed": "snow",
+   "desc": "soft snowy wind on a quiet winter night: a muffled gentle wind and the faint hiss of fine falling snow, hushed and still",
+   "lufs": -38,
+   "prompt": "A realistic stereo field recording of a natural environment, not music: soft snowy wind on a quiet winter night: a muffled gentle wind and the faint hiss of fine falling snow, hushed and still. Continuous and even from start to finish, no fade-in, no fade-out. Absolutely no music, no melody, no instruments, no tonal drones or pads, no rhythm, no voices. Duration: 75 seconds.",
+   "alt": "Nature sound recording, environmental ambience only: soft snowy wind on a quiet winter night: a muffled gentle wind and the faint hiss of fine falling snow, hushed and still. Steady and continuous, without any music, melody, singing or rhythm. Duration: 75 seconds."
+  },
+  {
+   "id": "mist",
+   "bed": "mist",
+   "desc": "a misty sea coast on a still night: muffled soft wind and distant gentle muffled waves on a shore, hazy and quiet",
+   "lufs": -40,
+   "prompt": "A realistic stereo field recording of a natural environment, not music: a misty sea coast on a still night: muffled soft wind and distant gentle muffled waves on a shore, hazy and quiet. Continuous and even from start to finish, no fade-in, no fade-out. Absolutely no music, no melody, no instruments, no tonal drones or pads, no rhythm, no voices. Duration: 75 seconds.",
+   "alt": "Nature sound recording, environmental ambience only: a misty sea coast on a still night: muffled soft wind and distant gentle muffled waves on a shore, hazy and quiet. Steady and continuous, without any music, melody, singing or rhythm. Duration: 75 seconds."
+  },
+  {
+   "id": "breeze",
+   "bed": "breeze",
+   "desc": "a breezy hillside meadow with trees by day: wind rustling through leaves in soft gusts, with an occasional distant soft bird chirp",
+   "lufs": -39,
+   "prompt": "A realistic stereo field recording of a natural environment, not music: a breezy hillside meadow with trees by day: wind rustling through leaves in soft gusts, with an occasional distant soft bird chirp. Continuous and even from start to finish, no fade-in, no fade-out. Absolutely no music, no melody, no instruments, no tonal drones or pads, no rhythm, no voices. Duration: 75 seconds.",
+   "alt": "Nature sound recording, environmental ambience only: a breezy hillside meadow with trees by day: wind rustling through leaves in soft gusts, with an occasional distant soft bird chirp. Steady and continuous, without any music, melody, singing or rhythm. Duration: 75 seconds."
+  },
+  {
+   "id": "breeze_night",
+   "bed": "breeze {night:1}",
+   "desc": "a breezy hillside meadow with trees at night: wind rustling through leaves in soft gusts, with sparse distant crickets",
+   "lufs": -39,
+   "prompt": "A realistic stereo field recording of a natural environment, not music: a breezy hillside meadow with trees at night: wind rustling through leaves in soft gusts, with sparse distant crickets. Continuous and even from start to finish, no fade-in, no fade-out. Absolutely no music, no melody, no instruments, no tonal drones or pads, no rhythm, no voices. Duration: 75 seconds.",
+   "alt": "Nature sound recording, environmental ambience only: a breezy hillside meadow with trees at night: wind rustling through leaves in soft gusts, with sparse distant crickets. Steady and continuous, without any music, melody, singing or rhythm. Duration: 75 seconds."
+  },
+  {
+   "id": "highwind",
+   "bed": "highwind",
+   "desc": "a very quiet high mountain plateau at night: thin high cold air moving slowly, a faint distant whistle of wind, vast and still",
+   "lufs": -40,
+   "prompt": "A realistic stereo field recording of a natural environment, not music: a very quiet high mountain plateau at night: thin high cold air moving slowly, a faint distant whistle of wind, vast and still. Continuous and even from start to finish, no fade-in, no fade-out. Absolutely no music, no melody, no instruments, no tonal drones or pads, no rhythm, no voices. Duration: 75 seconds.",
+   "alt": "Nature sound recording, environmental ambience only: a very quiet high mountain plateau at night: thin high cold air moving slowly, a faint distant whistle of wind, vast and still. Steady and continuous, without any music, melody, singing or rhythm. Duration: 75 seconds."
+  },
+  {
+   "id": "blizzard",
+   "bed": "blizzard",
+   "desc": "a howling blizzard on a mountain: strong turbulent wind with whistling gusts and snow pelting against rock",
+   "lufs": -33,
+   "prompt": "A realistic stereo field recording of a natural environment, not music: a howling blizzard on a mountain: strong turbulent wind with whistling gusts and snow pelting against rock. Continuous and even from start to finish, no fade-in, no fade-out. Absolutely no music, no melody, no instruments, no tonal drones or pads, no rhythm, no voices. Duration: 75 seconds.",
+   "alt": "Nature sound recording, environmental ambience only: a howling blizzard on a mountain: strong turbulent wind with whistling gusts and snow pelting against rock. Steady and continuous, without any music, melody, singing or rhythm. Duration: 75 seconds."
+  },
+  {
+   "id": "sandstorm",
+   "bed": "sandstorm",
+   "desc": "a gritty desert sandstorm: strong gusting wind with hissing, rattling blown sand",
+   "lufs": -34,
+   "prompt": "A realistic stereo field recording of a natural environment, not music: a gritty desert sandstorm: strong gusting wind with hissing, rattling blown sand. Continuous and even from start to finish, no fade-in, no fade-out. Absolutely no music, no melody, no instruments, no tonal drones or pads, no rhythm, no voices. Duration: 75 seconds.",
+   "alt": "Nature sound recording, environmental ambience only: a gritty desert sandstorm: strong gusting wind with hissing, rattling blown sand. Steady and continuous, without any music, melody, singing or rhythm. Duration: 75 seconds."
+  },
+  {
+   "id": "heat",
+   "bed": "heat",
+   "desc": "very quiet hot desert air at midday: an almost silent faint warm breeze, far away and still",
+   "lufs": -43,
+   "prompt": "A realistic stereo field recording of a natural environment, not music: very quiet hot desert air at midday: an almost silent faint warm breeze, far away and still. Continuous and even from start to finish, no fade-in, no fade-out. Absolutely no music, no melody, no instruments, no tonal drones or pads, no rhythm, no voices. Duration: 75 seconds.",
+   "alt": "Nature sound recording, environmental ambience only: very quiet hot desert air at midday: an almost silent faint warm breeze, far away and still. Steady and continuous, without any music, melody, singing or rhythm. Duration: 75 seconds."
+  },
+  {
+   "id": "rain",
+   "bed": "rain",
+   "desc": "a light drizzle falling on rocks and leaves: soft gentle patter of fine rain, steady and calm, no thunder, no wind",
+   "lufs": -37,
+   "prompt": "A realistic stereo field recording of a natural environment, not music: a light drizzle falling on rocks and leaves: soft gentle patter of fine rain, steady and calm, no thunder, no wind. Continuous and even from start to finish, no fade-in, no fade-out. Absolutely no music, no melody, no instruments, no tonal drones or pads, no rhythm, no voices. Duration: 75 seconds.",
+   "alt": "Nature sound recording, environmental ambience only: a light drizzle falling on rocks and leaves: soft gentle patter of fine rain, steady and calm, no thunder, no wind. Steady and continuous, without any music, melody, singing or rhythm. Duration: 75 seconds."
+  },
+  {
+   "id": "rain_shore",
+   "bed": "rain {surf:0.8}",
+   "desc": "light rain on a rocky island shore: soft patter of drizzle with gentle surf washing over rocks",
+   "lufs": -36,
+   "prompt": "A realistic stereo field recording of a natural environment, not music: light rain on a rocky island shore: soft patter of drizzle with gentle surf washing over rocks. Continuous and even from start to finish, no fade-in, no fade-out. Absolutely no music, no melody, no instruments, no tonal drones or pads, no rhythm, no voices. Duration: 75 seconds.",
+   "alt": "Nature sound recording, environmental ambience only: light rain on a rocky island shore: soft patter of drizzle with gentle surf washing over rocks. Steady and continuous, without any music, melody, singing or rhythm. Duration: 75 seconds."
+  },
+  {
+   "id": "sea",
+   "bed": "sea",
+   "desc": "sea waves on a pebble shore: slow waves rolling in and washing back over pebbles, with a light breeze, no rain, no seagulls",
+   "lufs": -36,
+   "prompt": "A realistic stereo field recording of a natural environment, not music: sea waves on a pebble shore: slow waves rolling in and washing back over pebbles, with a light breeze, no rain, no seagulls. Continuous and even from start to finish, no fade-in, no fade-out. Absolutely no music, no melody, no instruments, no tonal drones or pads, no rhythm, no voices. Duration: 75 seconds.",
+   "alt": "Nature sound recording, environmental ambience only: sea waves on a pebble shore: slow waves rolling in and washing back over pebbles, with a light breeze, no rain, no seagulls. Steady and continuous, without any music, melody, singing or rhythm. Duration: 75 seconds."
+  },
+  {
+   "id": "ship",
+   "bed": "sea {muffled:true}",
+   "desc": "the open sea heard from the deck of an old wooden sailing ship: waves slapping the hull, creaking timber and ropes, a light sea wind",
+   "lufs": -36,
+   "prompt": "A realistic stereo field recording of a natural environment, not music: the open sea heard from the deck of an old wooden sailing ship: waves slapping the hull, creaking timber and ropes, a light sea wind. Continuous and even from start to finish, no fade-in, no fade-out. Absolutely no music, no melody, no instruments, no tonal drones or pads, no rhythm, no voices. Duration: 75 seconds.",
+   "alt": "Nature sound recording, environmental ambience only: the open sea heard from the deck of an old wooden sailing ship: waves slapping the hull, creaking timber and ropes, a light sea wind. Steady and continuous, without any music, melody, singing or rhythm. Duration: 75 seconds."
+  },
+  {
+   "id": "marsh",
+   "bed": "marsh",
+   "desc": "a quiet misty marsh at night: still air, distant croaking frogs, faint insects and slow water drips",
+   "lufs": -40,
+   "prompt": "A realistic stereo field recording of a natural environment, not music: a quiet misty marsh at night: still air, distant croaking frogs, faint insects and slow water drips. Continuous and even from start to finish, no fade-in, no fade-out. Absolutely no music, no melody, no instruments, no tonal drones or pads, no rhythm, no voices. Duration: 75 seconds.",
+   "alt": "Nature sound recording, environmental ambience only: a quiet misty marsh at night: still air, distant croaking frogs, faint insects and slow water drips. Steady and continuous, without any music, melody, singing or rhythm. Duration: 75 seconds."
+  },
+  {
+   "id": "ash",
+   "bed": "ash",
+   "desc": "a volcanic wasteland: a low distant rumble of the earth, a hot dry wind and occasional crackling embers",
+   "lufs": -37,
+   "prompt": "A realistic stereo field recording of a natural environment, not music: a volcanic wasteland: a low distant rumble of the earth, a hot dry wind and occasional crackling embers. Continuous and even from start to finish, no fade-in, no fade-out. Absolutely no music, no melody, no instruments, no tonal drones or pads, no rhythm, no voices. Duration: 75 seconds.",
+   "alt": "Nature sound recording, environmental ambience only: a volcanic wasteland: a low distant rumble of the earth, a hot dry wind and occasional crackling embers. Steady and continuous, without any music, melody, singing or rhythm. Duration: 75 seconds."
+  },
+  {
+   "id": "forest",
+   "bed": "forest",
+   "desc": "a forest by day: a light breeze in the leaves and sparse soft distant birdsong, peaceful",
+   "lufs": -41,
+   "prompt": "A realistic stereo field recording of a natural environment, not music: a forest by day: a light breeze in the leaves and sparse soft distant birdsong, peaceful. Continuous and even from start to finish, no fade-in, no fade-out. Absolutely no music, no melody, no instruments, no tonal drones or pads, no rhythm, no voices. Duration: 75 seconds.",
+   "alt": "Nature sound recording, environmental ambience only: a forest by day: a light breeze in the leaves and sparse soft distant birdsong, peaceful. Steady and continuous, without any music, melody, singing or rhythm. Duration: 75 seconds."
+  },
+  {
+   "id": "forest_night",
+   "bed": "forest {night:1}",
+   "desc": "a forest at night: steady chirping crickets and night insects with a gentle breeze in the leaves",
+   "lufs": -41,
+   "prompt": "A realistic stereo field recording of a natural environment, not music: a forest at night: steady chirping crickets and night insects with a gentle breeze in the leaves. Continuous and even from start to finish, no fade-in, no fade-out. Absolutely no music, no melody, no instruments, no tonal drones or pads, no rhythm, no voices. Duration: 75 seconds.",
+   "alt": "Nature sound recording, environmental ambience only: a forest at night: steady chirping crickets and night insects with a gentle breeze in the leaves. Steady and continuous, without any music, melody, singing or rhythm. Duration: 75 seconds."
+  },
+  {
+   "id": "cave",
+   "bed": "cave",
+   "desc": "inside a deep cave: slow irregular water drips echoing in the dark and a low hollow room tone",
+   "lufs": -40,
+   "prompt": "A realistic stereo field recording of a natural environment, not music: inside a deep cave: slow irregular water drips echoing in the dark and a low hollow room tone. Continuous and even from start to finish, no fade-in, no fade-out. Absolutely no music, no melody, no instruments, no tonal drones or pads, no rhythm, no voices. Duration: 75 seconds.",
+   "alt": "Nature sound recording, environmental ambience only: inside a deep cave: slow irregular water drips echoing in the dark and a low hollow room tone. Steady and continuous, without any music, melody, singing or rhythm. Duration: 75 seconds."
+  },
+  {
+   "id": "cave_dry",
+   "bed": "cave {dry:true}",
+   "desc": "inside an old stone crypt: a very quiet low hollow room tone with faint moving air, no water drips",
+   "lufs": -44,
+   "prompt": "A realistic stereo field recording of a natural environment, not music: inside an old stone crypt: a very quiet low hollow room tone with faint moving air, no water drips. Continuous and even from start to finish, no fade-in, no fade-out. Absolutely no music, no melody, no instruments, no tonal drones or pads, no rhythm, no voices. Duration: 75 seconds.",
+   "alt": "Nature sound recording, environmental ambience only: inside an old stone crypt: a very quiet low hollow room tone with faint moving air, no water drips. Steady and continuous, without any music, melody, singing or rhythm. Duration: 75 seconds."
+  },
+  {
+   "id": "volcano",
+   "bed": "volcano",
+   "desc": "inside a volcano: a deep slow rumbling of the earth, thick bubbling lava and hissing vents",
+   "lufs": -37,
+   "prompt": "A realistic stereo field recording of a natural environment, not music: inside a volcano: a deep slow rumbling of the earth, thick bubbling lava and hissing vents. Continuous and even from start to finish, no fade-in, no fade-out. Absolutely no music, no melody, no instruments, no tonal drones or pads, no rhythm, no voices. Duration: 75 seconds.",
+   "alt": "Nature sound recording, environmental ambience only: inside a volcano: a deep slow rumbling of the earth, thick bubbling lava and hissing vents. Steady and continuous, without any music, melody, singing or rhythm. Duration: 75 seconds."
+  }
+ ]
+}

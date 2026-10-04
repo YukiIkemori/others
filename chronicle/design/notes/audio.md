@@ -586,3 +586,37 @@ listening check; `--char selma`, `--only <id> --force`). Treat the set as open-e
   gold locked door jump bump step_damage cursor (miss, boss_die, water, thunder, door, jump, bump, step_damage: variation only).
   Tried and dropped (the old one was preferred): new layers on buff heal sleep death magic dark thunder door warp steal shake
   stairs and on confirm cancel menu_open (the plain chiptune UI sounds were rated cleaner).
+
+## 14. Ambience — weather and place beds (環境音, owner 2026-10-04)
+- **What**: one procedural "bed" at a time under the BGM, chosen from the field weather (`src/systems/field/weather.js`) and the
+  map. Visual weather and sound are independent: `reduceMotion` / effects off hide the weather layer but never the sound.
+- **API** (`src/core/audio.js`, section `ambience`): `R.Audio.ambience(spec | null, {fade: s = 1.2})` crossfades from the
+  current bed (the same spec again is a no-op → returns false). `spec = 'name' | {bed, i (0–1), night (0–1), surf, dry,
+  muffled, seed}`. `R.Audio.ambienceMod(v | null)` drives the gust of the current bed from outside (sandstorm follows
+  `F.wxGust`, the same swell as the drawn wind bands). `ambienceInfo()`, `renderAmbience(octx, spec, {dur, at, to, fade})`
+  (offline, used by `tools/test_ambience.js`). Before `init()` the wanted bed is only remembered; it starts on init.
+- **Mixing**: own bus under master, setting `vol.amb` (0–10, default 7, "環境音" on the sound tab; `setVolumes(bgm, sfx,
+  voice, amb)`). Every bed has a 45 Hz high-pass. Level at i = 1, volume 10 (integrated loudness): blizzard ≈ −33, sandstorm
+  −34, rain+surf −34, sea −36, rain/ash/volcano −37…−39, wind/breeze/cave/highwind −38…−40, forest/marsh/mist/snow −40…−42,
+  heat/tomb −43 LUFS; sample peaks −19…−32 dBFS (test cap −18). With the default volumes this sits ~15 dB under the BGM.
+  Per-bed trims are `AMB_TRIM`; `i` scales the level (0.35 + 0.65 i) and event density.
+- **Synthesis** (no samples, low CPU): one 6 s stereo pink-noise buffer per context (seam crossfaded), looped by every layer
+  from a random offset at a slightly different rate; biquads + slow random walks (`setTargetAtTime` toward random targets) for
+  gusts and band centres; sparse one-shot events scheduled by the existing 25 ms pump 0.6 s ahead (only while the context
+  runs, so a hidden tab — context suspended — schedules nothing). Layers: wind (band + body → gust gain), whistle (narrow
+  double band-pass, swells in and out), hiss (optional fast noise AM for grit), rumble, surf (pairs of swells, foam fizz),
+  rain (hiss + soft droplet ticks), crackle, lava bloops, birds (3 call types, FM-wobbled sine sweeps), crickets (pulsed sines
+  that sing/rest), frogs (saw through two formants), plops/drips (rising sine + click, into a small convolver reverb).
+  Beds: wind snow mist breeze highwind blizzard sandstorm heat rain sea marsh ash forest cave volcano (≈ 10–25 nodes each).
+- **Which bed** (`src/systems/field/ambience.js`, `F.ambienceFor(map, weather, night)`): `map.ambience` overrides (null =
+  silent). Weather: snow→snow, blizzard→blizzard, mist→mist, sandstorm→sandstorm, heat→heat, fog→marsh, drizzle→rain (+surf
+  on coast maps: bgm isles/sea or harbor theme), ash→ash, rays→forest, leaves→breeze, stars→highwind. Without weather
+  (conservative): towns/interiors/world silent; `bgm volcano`→volcano; cave/mine/ice_cave dungeons→cave; tomb→cave without
+  drips; `_ship_` dungeons→muffled sea; maps listed in the weather AUTO table that rolled clear → that region's bed at low
+  intensity (desert wind, marsh, sea, ash, forest, breeze, highwind); ice fields → soft snow. `night` = `R.Sky` stars of the
+  current tier (birds by day, crickets by night). Stopped (0.6 s) while a battle is on the stack or its intro transition
+  runs; title clears the stack → silent. Menus and events keep the bed.
+- **How it was judged**: every bed rendered to 12 s WAVs, log-frequency spectrograms checked, and three rounds of listening
+  by an audio model (match / naturalness / annoyance + concrete fixes). Changes kept from that: events (birds, crickets, drips,
+  crackles) were far too quiet against the noise → raised; high-shelf the hiss beds (rain, sand) down to 4.5–6.5 kHz; whistles
+  wider (Q 6) and swelling instead of constant; cave drips through a short convolver reverb instead of a slap echo; 45 Hz cut.
