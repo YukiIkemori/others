@@ -146,6 +146,10 @@
     try {
       const id = G && R.Leads.pinned();
       const L = id && R.DB.leads[id];
+      // 目印の札は、目印が変わったときとマップに入ったときに 6 秒だけ出す（持ち主 2026-10-04「今のやつじゃない手がかりが
+      //   ずっと右上に出っぱなしで鬱陶しい」）。手がかりの一覧（Q）ではいつでも見られる
+      const key = (id || '') + '|' + m.id;
+      if (H._leadKey !== key) { H._leadKey = key; H._leadT0 = Date.now(); }
       if (L) c.lead = { title: L.title, where: [L.dir ? DIR_JA[L.dir] : '', L.place || ''].filter(Boolean).join(R.T('sys.hud.refresh.lead.where.join')), ang: L.dir != null && DIR_ANGLE[L.dir] != null ? DIR_ANGLE[L.dir] : null };
     } catch (e) { c.lead = null; }
     c.showMini = m.kind === 'dungeon' && meta.minimap !== false;
@@ -228,8 +232,12 @@
     if (!tall && R.Input.touchVisible()) { const sp = R.Input.touchSpots().y; if (sp) right = Math.min(right, sp.x - sp.r - U(12)); }
     const cx0 = tall ? s.l + U(16) : right - cw;
     if (tall) ry = Math.max(ly, s.t + U(96));
-    if (c.lead) {
+    const leadAge = Date.now() - (H._leadT0 || 0), LEAD_MS = 6000;
+    if (c.lead && leadAge < LEAD_MS) {
+      g.save();
+      g.globalAlpha *= Math.min(1, leadAge / 250, (LEAD_MS - leadAge) / 600);
       leadCard(g, cx0, ry, cw, c.lead);
+      g.restore();
       ry += U(62);
     }
     const mode = H.mapMode();
