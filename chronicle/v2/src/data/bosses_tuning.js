@@ -55,8 +55,10 @@
     b_shade_prayer: { hp: 1.04, atk: 1.13, mag: 1.13 },   // shades
     b_shade_star: { hp: 1.04, atk: 1.13, mag: 1.13 },   // shades
     b_lazaro: { hp: 0.68, atk: 2, mag: 2 },   // lazaro
-    b_nemrea1: { hp: 0.5, atk: 1.48, mag: 1.48 },   // nemrea1
-    b_nemrea2: { atk: 1.05, mag: 1.05, hp: 1.73 },   // nemrea2
+    // 持ち主 2026-10-04（装備のティアの見直し）: 最後のボスは店 8 だけでは勝てず（台本 ≤ 35%）、終章のレア 9 を集めると勝てる・超レア 10 があれば楽（tools/sim_gear_bosses.js の F-a・F-b・F-c）。
+    //   第 1 形態 hp 0.5 → 0.7・atk 1.48 → 1.8、第 2 形態 hp 1.73 → 2.3・atk 1.05 → 1.35
+    b_nemrea1: { hp: 0.7, atk: 1.8, mag: 1.8 },   // nemrea1
+    b_nemrea2: { atk: 1.35, mag: 1.35, hp: 2.3 },   // nemrea2
   };
   for (const id of Object.keys(S)) if (R.DB.monsters[id]) R.DB.monsters[id].s = S[id];
 })(window.RPG);

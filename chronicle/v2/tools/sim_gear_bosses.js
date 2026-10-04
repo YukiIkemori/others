@@ -12,7 +12,7 @@
 //     P-c 本編のいちばん良い物（レア 9・超レア 10 ＋ 通常 9）
 //     P-d レア 11 を全部（＋ P-c）   P-e レア 11 ＋ 超レア 12 の落とし物（盗み専用の 12 は無し）   P-f 11・12 を全部
 // ★ の伸びる品（grow 'drop'）は手に入れたティアの値（R.Game.uniques。T8 = レア 9・超レア 10）。
-// --check: 持ち主の目安で判定（F-a ≤ 35%・F-b 30〜80%・F-c ≥ 60%／P-a・P-b ≤ 15%・P-c ≤ 35%・P-e 35〜85%・P-f ≥ 55%）。外れたら終了コード 1
+// --check: 持ち主の目安（TARGET・TARGET_BY）で判定。外れたら終了コード 1
 'use strict';
 const PM = require('./lib/party_model');
 
@@ -28,11 +28,13 @@ const FIGHTS = {
   'tr_b_valzard_echo': { tier: 9, cases: ['P-a', 'P-b', 'P-c', 'P-d', 'P-e', 'P-f'] },
   'tr_b_ouroboros': { tier: 9, cases: ['P-a', 'P-b', 'P-c', 'P-d', 'P-e', 'P-f'] },
 };
-// 持ち主の目安（--check）。[下限, 上限]（台本の勝ち率 %）
+// 持ち主の目安（--check）。[下限, 上限]（台本の勝ち率 %）。最後のボス: 店 8 だけでは負ける・レア 9 で勝てる・超レア 10 で楽。
+//   残響（クリア後の門番）: 本編の品では苦しい、レア 11 で勝ち目、超レア 12 で勝てる。円環竜（裏ボス）: 11〜12 をそろえて勝てる
 const TARGET = {
-  'F-a': [0, 35], 'F-b': [30, 80], 'F-c': [60, 100],
-  'P-a': [0, 15], 'P-b': [0, 15], 'P-c': [0, 35], 'P-d': [10, 70], 'P-e': [35, 85], 'P-f': [55, 100],
+  'F-a': [0, 35], 'F-b': [30, 85], 'F-c': [60, 100],
+  'P-a': [0, 15], 'P-b': [0, 15], 'P-c': [0, 35], 'P-d': [10, 70], 'P-e': [35, 100], 'P-f': [55, 100],
 };
+const TARGET_BY = { tr_b_ouroboros: { 'P-c': [0, 15], 'P-d': [0, 40], 'P-e': [35, 85], 'P-f': [50, 100] } };
 
 function gearPools(R) {
   const DB = R.DB, Ru = R.Rules;
@@ -151,7 +153,7 @@ function main() {
     for (const k of cfg.cases) {
       if (onlyC && k !== onlyC) continue;
       const r = run(R, troop, k, n, seed);
-      const t = TARGET[k], ok = r.winPct >= t[0] && r.winPct <= t[1];
+      const t = (TARGET_BY[troop] && TARGET_BY[troop][k]) || TARGET[k], ok = r.winPct >= t[0] && r.winPct <= t[1];
       if (!ok) bad++;
       out.push({ troop, kase: k, winPct: r.winPct, rounds: r.rounds, down: r.down });
       console.log(`${troop.padEnd(18)} ${k}  win ${r.winPct.toFixed(0).padStart(3)}%  rounds ${r.rounds.toFixed(1).padStart(4)}  down ${r.down.toFixed(2)}  目安 ${t[0]}〜${t[1]}% ${ok ? 'pass' : 'FAIL'}`);
@@ -162,5 +164,5 @@ function main() {
   return out;
 }
 
-module.exports = { FIGHTS, TARGET, gearPools, setup, run };
+module.exports = { FIGHTS, TARGET, TARGET_BY, gearPools, setup, run };
 if (require.main === module) main();
