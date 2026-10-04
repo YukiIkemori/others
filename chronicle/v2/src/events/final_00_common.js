@@ -80,6 +80,27 @@
   X.flash = function (color, ms) { try { if (R.Field && R.Field.flash) R.Field.flash(color || '#ffffff', ms || 400); } catch (e) { /* */ } };
   X.shake = function (p, ms) { try { if (R.Field && R.Field.shake) R.Field.shake(p || 3, ms || 600); } catch (e) { /* */ } };
 
+  // ---------------------------------------------------------------- 場面の小道具（人を立たせる・向かせる・歩かせる・カメラ。テスター 2026-10-04 §7）
+  // どれもフィールドが無い（node のテスト）・人がいないときは何もしない（話は ev.say の name・face だけで進む）
+  const onField = () => { try { return !!(R.Field && R.Field._s && R.Field._s.map && R.Engine.has && R.Engine.has('field')); } catch (e) { return false; } };
+  const here = (id) => { try { const s = R.Field._s; return !!(s.npcById && s.npcById[id] && !s.npcById[id].hidden); } catch (e) { return false; } };
+  X.onField = onField;
+  X.here = (id) => onField() && here(id);
+  /** 向かせる（dir = 'n'|'s'|'e'|'w'|'hero'） */
+  X.face = async function (ev, id, dir) { if (!X.here(id)) return; try { await ev.npc(id).face(dir); } catch (e) { /* */ } };
+  /** 一行（主人公）を向かせる */
+  X.heroFace = function (dir) { try { if (onField() && R.Field._s && 'nsew'.includes(dir)) R.Field._s.dir = dir; } catch (e) { /* */ } };
+  /** 演技（nod・shake・surprise・laugh・sad・point・kneel・sit・bow・think。南向きの絵） */
+  X.act = async function (ev, id, pose, ms) { if (!X.here(id)) return; try { await ev.npc(id).act(pose, { ms: ms || 900 }); } catch (e) { /* */ } };
+  /** 歩かせる（path = [[x, y]…]。speed 1 がふつう） */
+  X.walk = async function (ev, id, path, speed) { if (!X.here(id)) return; try { await ev.npc(id).move(path, { speed: speed || 1 }); } catch (e) { /* */ } };
+  /** カメラを (x, y) へ寄せる（null で一行へ戻す） */
+  X.cam = async function (ev, x, y, ms) { if (!onField()) return; try { await ev.camera(x, y, ms == null ? 700 : ms); } catch (e) { /* */ } };
+  X.camBack = async function (ev, ms) { if (!onField()) return; try { await ev.camera(null, null, ms == null ? 600 : ms); } catch (e) { /* */ } };
+  /** 出す・消す（マップに置いた人。cond の旗で出る人は旗を立ててから） */
+  X.appear = async function (ev, id, o) { if (!onField()) return; try { await ev.appear(id, o || { ms: 700 }); } catch (e) { /* */ } };
+  X.leave = async function (ev, id, o) { if (!X.here(id)) return; try { await ev.leave(id, o || { steps: 3 }); } catch (e) { /* */ } };
+
   // ---------------------------------------------------------------- 手がかり帳（本筋）
   R.defs('leads', {
     l_main_margin_8: {
