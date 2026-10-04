@@ -17,7 +17,7 @@
    "lufs": -38,
    "prompt": "A dry foley recording, not music: a long continuous whoosh of cold wind with fine snow hissing, a winter storm heard from inside a wooden hut. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
    "alt": "A sound effect recording, not music: a long continuous whoosh of cold wind with fine snow hissing, a winter storm heard from inside a wooden hut, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
-   "note": "fit 6 (one hearing: rushing water); audition"
+   "note": "fit 6 (one hearing: rushing water); the 2026-10-04 retry takes all drifted into music. Audition before use"
   },
   {
    "id": "mist",
@@ -25,8 +25,7 @@
    "desc": "distant waves breaking on a beach and a light wind, heard muffled from inside a stone house",
    "lufs": -40,
    "prompt": "A dry foley recording, not music: distant waves breaking on a beach and a light wind, heard muffled from inside a stone house. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
-   "alt": "A sound effect recording, not music: distant waves breaking on a beach and a light wind, heard muffled from inside a stone house, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
-   "note": "content fits (9) but the loop seam was rated 4/10: audition the seam before use"
+   "alt": "A sound effect recording, not music: distant waves breaking on a beach and a light wind, heard muffled from inside a stone house, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds."
   },
   {
    "id": "breeze",
@@ -36,7 +35,7 @@
    "prompt": "A dry foley recording, not music: wind blowing through tree leaves in gusts, leaves rustling, with an occasional distant bird chirp. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
    "alt": "A sound effect recording, not music: wind blowing through tree leaves in gusts, leaves rustling, with an occasional distant bird chirp, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
    "keepProcedural": true,
-   "note": "takes sound like a running stream with birds rather than wind in leaves (fit 5); keep the procedural bed"
+   "note": "no take passed: running stream / loud birds / music; best new take fit 7 but seam 2. Keep the procedural bed"
   },
   {
    "id": "breeze_night",
@@ -46,7 +45,7 @@
    "prompt": "A dry foley recording, not music: wind blowing through tree leaves in gusts, leaves rustling, with sparse distant crickets chirping. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
    "alt": "A sound effect recording, not music: wind blowing through tree leaves in gusts, leaves rustling, with sparse distant crickets chirping, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
    "keepProcedural": true,
-   "note": "heard as a flowing stream with crickets (fit 5.5); keep the procedural bed"
+   "note": "no take passed: wind chimes, ticking, music; heard as a stream (fit 5.5). Keep the procedural bed"
   },
   {
    "id": "highwind",
@@ -54,8 +53,7 @@
    "desc": "a thin cold wind on a high bare mountain plateau heard from inside a stone shelter, slow soft gusts with a faint distant whistle",
    "lufs": -40,
    "prompt": "A dry foley recording, not music: a thin cold wind on a high bare mountain plateau heard from inside a stone shelter, slow soft gusts with a faint distant whistle. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
-   "alt": "A sound effect recording, not music: a thin cold wind on a high bare mountain plateau heard from inside a stone shelter, slow soft gusts with a faint distant whistle, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
-   "note": "fit 6 (wind is right but heavier than the thin plateau air wanted)"
+   "alt": "A sound effect recording, not music: a thin cold wind on a high bare mountain plateau heard from inside a stone shelter, slow soft gusts with a faint distant whistle, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds."
   },
   {
    "id": "blizzard",
@@ -63,7 +61,8 @@
    "desc": "a violent blizzard heard from inside a wooden hut: strong howling wind gusts whistling around the walls and snow pelting against the shutters",
    "lufs": -33.5,
    "prompt": "A dry foley recording, not music: a violent blizzard heard from inside a wooden hut: strong howling wind gusts whistling around the walls and snow pelting against the shutters. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
-   "alt": "A sound effect recording, not music: a violent blizzard heard from inside a wooden hut: strong howling wind gusts whistling around the walls and snow pelting against the shutters, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds."
+   "alt": "A sound effect recording, not music: a violent blizzard heard from inside a wooden hut: strong howling wind gusts whistling around the walls and snow pelting against the shutters, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+   "note": "no take passed (12 takes: EDM / hip-hop beats; the one clean wind take was later heard as music too): the procedural bed stays"
   },
   {
    "id": "sandstorm",
@@ -87,9 +86,7 @@
    "desc": "a light drizzle falling on rocks and leaves, a soft steady patter of fine rain, no thunder",
    "lufs": -37,
    "prompt": "A dry foley recording, not music: a light drizzle falling on rocks and leaves, a soft steady patter of fine rain, no thunder. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
-   "alt": "A sound effect recording, not music: a light drizzle falling on rocks and leaves, a soft steady patter of fine rain, no thunder, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
-   "keepProcedural": true,
-   "note": "one hearing reported a ticking pattern (fit 6); keep the procedural bed unless it passes an audition"
+   "alt": "A sound effect recording, not music: a light drizzle falling on rocks and leaves, a soft steady patter of fine rain, no thunder, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds."
   },
   {
    "id": "rain_surf",

@@ -6,54 +6,50 @@
     "stairs.1.ogg"
   ],
   "durations": [
-    0.212,
-    0.212
+    0.593,
+    0.588
   ],
   "peaks": [
     -10.5,
-    -13.2
+    -10.5
   ],
   "rms": [
-    -28.5,
-    -22
+    -33,
+    -33.9
   ],
   "gainDb": [
-    -10.6,
-    -13.6
+    -3.7,
+    -4.5
   ],
   "channels": 1,
-  "weak": true,
   "source": {
     "provider": "gemini",
     "model": "lyria-3.5",
-    "prompt": "A dry close-up foley recording, not music: ten separate short runs of four quick footsteps on stone stairs, each run under half a second, separated by 1.6 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 23 seconds.",
-    "generated": "2026-10-04T03:59:43.687Z",
-    "takes": 3,
-    "rounds": 3
+    "prompt": "A dry close-up foley recording, not music: ten separate short groups of four footsteps of leather boots climbing stone stairs in a quiet stone hall, each group natural and quick, under one second, separated by 2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 30 seconds.",
+    "generated": "2026-10-04T04:54:12.450Z",
+    "takes": 2,
+    "rounds": 2
   },
   "picks": [
     {
       "take": "stairs.0.mp3",
-      "at": 31.473,
-      "fit": 5.5,
-      "problem": "wrong sound: castanets"
+      "at": 59.036,
+      "fit": 8.5,
+      "problem": "none"
     },
     {
       "take": "stairs.0.mp3",
-      "at": 31.964,
-      "fit": 5.5,
-      "problem": "wrong sound: castanets",
-      "rmsCapped": true
+      "at": 5.073,
+      "fit": 8.5,
+      "problem": "none"
     }
   ],
   "analysis": {
-    "candidates": 104,
-    "listened": 22,
+    "candidates": 36,
+    "listened": 16,
     "listenModel": "gemini-3.8-flash",
-    "meanFit": 5.5,
+    "meanFit": 8.5,
     "peakTarget": -10.5,
     "rmsMax": -22
-  },
-  "keepSynth": true,
-  "note": "listener heard castanets, not footsteps (fit 5.5); keep the synth until a better take"
+  }
 }

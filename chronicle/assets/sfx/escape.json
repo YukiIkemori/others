@@ -6,53 +6,50 @@
     "escape.1.ogg"
   ],
   "durations": [
-    0.298,
-    0.293
+    0.789,
+    1.029
   ],
   "peaks": [
     -11,
     -11
   ],
   "rms": [
-    -25,
-    -29.2
+    -22.9,
+    -24.1
   ],
   "gainDb": [
-    -12.6,
-    -12.6
+    -10.2,
+    -10.3
   ],
   "channels": 1,
-  "weak": true,
   "source": {
     "provider": "gemini",
     "model": "lyria-3.5",
-    "prompt": "A dry close-up foley recording, not music: ten separate quick getaways, each a fast patter of light footsteps running away on dirt with a small whoosh, fading quickly, about 0.4 seconds, separated by 1.6 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 24 seconds.",
-    "generated": "2026-10-04T03:57:37.793Z",
+    "prompt": "A dry close-up foley recording, not music: eight separate bursts of quick light running footsteps on a dirt path, each about six fast steps running away and fading out, about one second, separated by 2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 25 seconds.",
+    "generated": "2026-10-04T04:58:51.399Z",
     "takes": 3,
     "rounds": 3
   },
   "picks": [
     {
-      "take": "escape.0.mp3",
-      "at": 12.049,
-      "fit": 6.5,
-      "problem": "missing patter, only whoosh"
+      "take": "escape.2.mp3",
+      "at": 19.862,
+      "fit": 8.5,
+      "problem": "none"
     },
     {
-      "take": "escape.0.mp3",
-      "at": 26.046,
-      "fit": 6,
-      "problem": "missing patter, only whoosh"
+      "take": "escape.2.mp3",
+      "at": 43.616,
+      "fit": 8.5,
+      "problem": "none"
     }
   ],
   "analysis": {
-    "candidates": 159,
+    "candidates": 92,
     "listened": 24,
     "listenModel": "gemini-3.8-flash",
-    "meanFit": 6.3,
+    "meanFit": 8.5,
     "peakTarget": -11,
     "rmsMax": -20
-  },
-  "keepSynth": true,
-  "note": "whoosh only, no running patter (fit 6–6.5); keep the synth"
+  }
 }

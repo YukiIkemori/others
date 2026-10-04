@@ -678,41 +678,16 @@ Recorded alternatives to the synthesised SFX (§6, §13.6) and the procedural am
     first 0.5 s are dropped).
   - The listener is consistent on gross errors (music, wrong object) but its 1–10 fit varies ±1 between runs; it judges a
     pleasant chime as "single note" when two were asked for. Fit is a filter, not a final judgement — audition the preview.
-- **Result (2026-10-04 run)**: 61 of 62 SFX ids, 117 files (1.8 MB); 19 of 20 beds (8.2 MB). Listener fit of the kept SFX
-  takes: median 8.5, 96 of 117 ≥ 8, 107 ≥ 7. API: 272 Lyria requests (232 with audio, 40 blocked; ≈ 85 min of generation)
-  and 585 listener requests (≈ 35 min), then the prepaid credits ran out (HTTP 402 — the tool now stops on it like a quota).
-  - Missing: `lash` (every take heard as a hand clap; the whip wording is blocked half the time) and the `blizzard` bed (every
-    take drifted into EDM / hip-hop). New phrasings are already in the json files; run `--only lash` / `--kind amb --only blizzard`.
-  - `keepSynth: true` (recorded take clearly worse — the game keeps the synth): stairs (castanets), quill (wrong object),
-    escape (no running patter), unlock (air whoosh, no stone). Their prompts were rephrased for the next run.
-  - `keepProcedural: true`: breeze, breeze_night (heard as a stream), rain (a ticking pattern in one hearing). `weak` (audition
-    first): mist (seam 4/10), highwind, snow (fit 6). `attack` has 1 of 3 variants (`--only attack --force --reprocess --listen`
-    adds the others from the cached takes with listener calls only).
-
-### 15.1 In the game: recorded vs synth (v2, 2026-10-04)
-- **Build** (`v2/tools/build.js`, every build — slice and full): `assets/sfx/<id>.<k>.ogg` → `dist/sfx/`, table
-  `RPG_MEDIA.sfx['<id>.<k>'] = url`; `assets/amb/<bed>.ogg` → `dist/amb/`, `RPG_MEDIA.amb[<bed>] = {url, loopStart, loopEnd}`.
-  Not shipped at all (the build prints them): SFX ids with `keepSynth: true` (stairs quill escape unlock) and beds with
-  `keepProcedural: true` or `weak: true` (breeze breeze_night rain · mist highwind snow). Clearing the flag in the json and
-  rebuilding is all it takes to switch one over. `--single` embeds both kinds like the BGM. `tools/pack_web.py` copies the beds
-  as they are and chains the SFX takes into `sfx/pack_NN.<hash>.ogg` like the voice lines (`{url, off, len}`).
-  Size: 111 takes 1.5 MB + 13 beds 5.9 MB (dist; packed: one 1.3 MB sfx pack).
-- **SFX** (`core/audio.js` `sfx(id, {vol, pan})`): an id plays a recorded take when it has takes in the table and one is decoded;
-  otherwise its synth def. The take is random among the decoded ones, never the one this id played last (a single-take id
-  repeats). All takes are decoded in the background starting 0.6 s after `init()` (two at a time in idle slices, ≈ 20 MB of
-  PCM at 48 kHz, kept), and a play of a not-yet-decoded id starts its decode — until then the synth plays. Gain 1 (× `vol`) on the sfx
-  bus, optional `pan`, no echo send (the take carries its own tail); the same `liveSfx` (3 per id) / `lastSfx` (30 ms) limits.
-  The synth def still runs for its `S.duck()` only (a no-op kit: glimmer −6 dB, crit −3 dB keep dipping the BGM).
-  v2 alias ids (`sfx_v2.js`: lamp → light, spring → heal …) and stand-ins play the target's takes (`def._alias`).
-  Ids without takes: lash (none recorded) and the keepSynth ids.
-- **Ambience** (`R.Audio.ambience`): the spec maps to a file id — `forest`/`breeze` with `night ≥ 0.5` → `<bed>_night`, `rain`
-  + `surf` → `rain_surf`, `cave` + `dry` → `tomb`, `sea` + `muffled` → `ship`, else the bed name; listed in `RPG_MEDIA.amb` → a
-  looping AudioBufferSourceNode (loopStart…loopEnd, random start offset) at gain `0.35 + 0.65 i` → the same 45 Hz high-pass →
-  the same fade in / out → amb bus. No procedural layers or one-shot events (birds, drips) run under it. First use of a bed
-  decodes it: up to 1 s of silence (the old bed is still fading), then — only if still not decoded — the procedural bed starts
-  and is crossfaded (2.5 s) to the file once ready; a decode failure keeps the procedural bed. A spec change that maps to the
-  same file (intensity, night 0.75 → 1) only ramps the gain instead of restarting. `ambienceMod` (sandstorm gust) has no
-  effect on a file. Decoded beds kept: the playing / wanted one + 1. `map.ambience`, battle (0.6 s) and title fades go
-  through the same `ambience()` call and work unchanged. `renderAmbience` (offline tests) stays procedural.
-- **Checking**: `R.Audio.mediaInfo()` (also `debug().media`) lists recorded / synth SFX ids, takes / decoded, recorded /
-  procedural beds and the file playing; `ambienceInfo().file`. Tests: `tools/test_sfx_media.js`, `tools/test_ambience.js`.
+- **Result (2026-10-04, two runs)**: all 62 SFX ids, 120 files (1.9 MB); 19 of 20 beds (8.7 MB). Listener fit of the kept SFX
+  takes: median 8.5, almost all ≥ 7.5. API in total: 318 Lyria requests (45 came back blocked without audio; ≈ 99 min) and
+  718 listener requests (≈ 42 min). The first run stopped when the prepaid credits ran out (HTTP 402, which the tool now
+  treats like a quota). After the top-up, the second run used 46 Lyria and 133 listener requests under a budget of
+  ≤ 2–3 rounds and ≈ 4 takes per id (breeze and breeze_night got 6 takes each because of a duplicated `--rounds` flag;
+  `arg()` takes the first occurrence). A redone id counted as passing only at fit ≥ 7.5, and for a bed also seam ≥ 8 with no
+  music in either hearing.
+  - Redone and now recorded: lash (8.5/8.5), stairs (8.5/8.5), escape (8.5/8.5), unlock (8.5/8.5), quill (1 variant, fit 8:
+    the other takes were pen clicks), attack (3/3 variants, 9/9/9, made from the cached takes with listener calls only); beds
+    mist (7.5, seam 9), highwind (8.5, seam 9), rain (9.5, seam 9). No `keepSynth` id is left.
+  - Still procedural: `blizzard` (no file — 12 takes, nearly all EDM / hip-hop beats), `breeze` and `breeze_night`
+    (`keepProcedural`: running stream, loud birds, wind chimes, music; the best new breeze take was fit 7 but seam 2).
+    `snow` keeps its first-run file marked `weak` (fit 6; every retry drifted into music) — audition it before use.

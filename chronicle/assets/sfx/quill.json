@@ -2,57 +2,44 @@
   "id": "quill",
   "category": "field",
   "files": [
-    "quill.0.ogg",
-    "quill.1.ogg"
+    "quill.0.ogg"
   ],
   "durations": [
-    0.739,
-    0.623
+    0.443
   ],
   "peaks": [
-    -11,
     -11
   ],
   "rms": [
-    -27,
-    -27.5
+    -30.3
   ],
   "gainDb": [
-    -12.1,
-    -13
+    -3.7
   ],
   "channels": 1,
-  "weak": true,
   "source": {
     "provider": "gemini",
     "model": "lyria-3.5",
-    "prompt": "A close-up field recording made in a quiet room, not music: eight separate quick scribbles of a dip pen on rough paper, each three short scratchy strokes, separated by 2 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 24 seconds.",
-    "generated": "2026-10-04T04:20:43.335Z",
+    "prompt": "A close-up field recording made in a quiet room, not music: ten separate short bursts of a pencil writing fast on rough paper, each a few quick scratchy strokes, separated by 1.8 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 27 seconds.",
+    "generated": "2026-10-04T04:56:24.273Z",
     "takes": 3,
     "rounds": 3
   },
   "picks": [
     {
       "take": "quill.1.mp3",
-      "at": 21.546,
-      "fit": 5.5,
-      "problem": "wrong sound: chime"
-    },
-    {
-      "take": "quill.1.mp3",
-      "at": 15.046,
-      "fit": 5,
-      "problem": "wrong sound: chime"
+      "at": 15.808,
+      "fit": 8,
+      "problem": "none"
     }
   ],
   "analysis": {
-    "candidates": 19,
-    "listened": 19,
+    "candidates": 35,
+    "listened": 24,
     "listenModel": "gemini-3.8-flash",
-    "meanFit": 5.3,
+    "meanFit": 8,
     "peakTarget": -11,
     "rmsMax": -24
   },
-  "keepSynth": true,
-  "note": "listener: wrong sound (chime / boom), fit 5–5.5; keep the synth"
+  "note": "1 of 2 variants: only one take passed (fit 8); the rest were heard as pen clicks"
 }

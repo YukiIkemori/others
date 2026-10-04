@@ -15,10 +15,14 @@ const V2 = path.resolve(__dirname, '..');
 const ASSETS = path.join(V2, '..', 'assets');
 const DIST = path.join(V2, 'dist');
 const argv = process.argv.slice(2);
-const KEEP_SYNTH = ['stairs', 'quill', 'escape', 'unlock'];
-const NOT_AMB = ['breeze', 'breeze_night', 'rain', 'mist', 'highwind', 'snow', 'blizzard'];
-
 function readJson(f) { return JSON.parse(fs.readFileSync(f, 'utf8')); }
+// 外す物は assets の json の印から読む（取り直しで印が外れても直さなくてよい）
+const jsonIds = (dir, keep) => fs.readdirSync(path.join(ASSETS, dir)).filter((f) => f.endsWith('.json')).filter((f) => keep(readJson(path.join(ASSETS, dir, f)))).map((f) => f.slice(0, -5));
+const KEEP_SYNTH = jsonIds('sfx', (j) => j.keepSynth);
+const SFX_REC = jsonIds('sfx', (j) => !j.keepSynth);
+const NOT_AMB = jsonIds('amb', (j) => j.keepProcedural || j.weak).concat(['blizzard']);
+const AMB_REC = jsonIds('amb', (j) => !(j.keepProcedural || j.weak));
+const SYNTH_ID = KEEP_SYNTH[0] || null;   // 合成のまま鳴る id（今は無い → そのテストは表を消して確かめる）
 function mediaOf(html) {
   const m = /<script>window\.RPG_MEDIA=(.*?);<\/script>/s.exec(html);
   return m ? JSON.parse(m[1]) : null;
@@ -30,14 +34,13 @@ function nodePart() {
   const s = B.scanSfx(path.join(ASSETS, 'sfx')), a = B.scanAmb(path.join(ASSETS, 'amb'));
   const sIds = new Set(s.list.map((e) => e.id.replace(/\.\d+$/, '')));
   const keepSynth = fs.readdirSync(path.join(ASSETS, 'sfx')).filter((f) => f.endsWith('.json')).filter((f) => readJson(path.join(ASSETS, 'sfx', f)).keepSynth).map((f) => f.slice(0, -5));
-  ok('keepSynth の id は assets の json と同じ（stairs quill escape unlock）', KEEP_SYNTH.every((id) => keepSynth.includes(id)), keepSynth);
+  ok('keepSynth の id は assets の json と同じ', KEEP_SYNTH.length === keepSynth.length && KEEP_SYNTH.every((id) => keepSynth.includes(id)), keepSynth);
   ok('keepSynth の id は取り込まない', keepSynth.every((id) => !sIds.has(id)) && keepSynth.every((id) => s.skipped.includes(id)), s.skipped);
-  ok('lash は録音が無い（合成のまま）', !sIds.has('lash'));
-  ok('ほかの効果音は全部入る（57 id）', sIds.size === 57, sIds.size);
+  ok(`ほかの効果音は全部入る（${SFX_REC.length} id）`, sIds.size === SFX_REC.length && SFX_REC.every((id) => sIds.has(id)), sIds.size);
   ok('取り直しのファイルは全部ある', s.list.every((e) => fs.existsSync(e.file)));
   const aIds = a.list.map((e) => e.id);
   ok('keepProcedural・weak の床は入れない', NOT_AMB.every((b) => !aIds.includes(b)), aIds);
-  ok('床は 13（ash cave forest forest_night heat marsh rain_surf sandstorm sea ship tomb volcano wind）', aIds.length === 13, aIds);
+  ok(`床は ${AMB_REC.length}（印の無い物ぜんぶ）`, aIds.length === AMB_REC.length && AMB_REC.every((b) => aIds.includes(b)), aIds);
   ok('床はループ点を持つ（loopStart 0 < loopEnd）', a.list.every((e) => e.meta.loopStart === 0 && e.meta.loopEnd > 10), a.list.map((e) => [e.id, e.meta]));
 
   section('dist（node v2/tools/build.js の後）');
@@ -77,24 +80,24 @@ async function browserPart() {
     const info = await page.evaluate(() => window.RPG.Audio.mediaInfo());
     ok('全部の取り直しが解けた', info.sfx.takes > 100 && info.sfx.decoded === info.sfx.takes, [info.sfx.takes, info.sfx.decoded]);
     ok('録音: hit glimmer crit…', ['hit', 'glimmer', 'crit', 'cursor', 'roar'].every((id) => info.sfx.recorded.includes(id)));
-    ok('合成: stairs quill escape unlock lash', KEEP_SYNTH.concat('lash').every((id) => info.sfx.synth.includes(id) && !info.sfx.recorded.includes(id)), info.sfx.synth);
+    ok('合成: keepSynth の id', KEEP_SYNTH.every((id) => info.sfx.synth.includes(id) && !info.sfx.recorded.includes(id)), info.sfx.synth);
 
     section('効果音: 取り直しの選び方');
-    const pk = await page.evaluate(() => {
+    const pk = await page.evaluate((syn) => {
       const A = window.RPG.Audio, seq = [];
       for (let i = 0; i < 300; i++) seq.push(A._sfxPick('hit'));
       const one = []; for (let i = 0; i < 5; i++) one.push(A._sfxPick('glimmer'));
-      return { seq, one, stairs: A._sfxPick('stairs'), quill: A._sfxPick('quill'), lamp: A._sfxPick('lamp'), lead: A._sfxPick('lead'), lash: A._sfxPick('lash') };
-    });
+      return { seq, one, syn: syn ? A._sfxPick(syn) : null, lamp: A._sfxPick('lamp'), lead: A._sfxPick('lead'), quill: A._sfxPick('quill') };
+    }, SYNTH_ID);
     let rep = 0; for (let i = 1; i < pk.seq.length; i++) if (pk.seq[i] === pk.seq[i - 1]) rep++;
     ok('hit: 続けて同じ取り直しにならない（300 回）', rep === 0 && pk.seq.every(Boolean), rep);
     ok('hit: 3 本とも使う', new Set(pk.seq).size === 3, [...new Set(pk.seq)]);
     ok('1 本だけの id（glimmer）はそれを鳴らす', pk.one.every((k) => k === 'glimmer.0'));
-    ok('keepSynth・録音の無い id は合成（null）', pk.stairs === null && pk.quill === null && pk.lash === null);
-    ok('付け替えの id は付け替え先の録音（lamp → light、lead → quill は合成）', /^light\.\d$/.test(pk.lamp) && pk.lead === null, [pk.lamp, pk.lead]);
+    if (SYNTH_ID) ok(`keepSynth の id（${SYNTH_ID}）は合成（null）`, pk.syn === null);
+    ok('付け替えの id は付け替え先に従う（lamp → light の録音、lead → quill と同じ）', /^light\.\d$/.test(pk.lamp) && (pk.quill === null ? pk.lead === null : /^quill\.\d$/.test(pk.lead)), [pk.lamp, pk.lead, pk.quill]);
 
     section('効果音: 鳴らす');
-    const pl = await page.evaluate(async () => {
+    const pl = await page.evaluate(async (syn) => {
       const A = window.RPG.Audio, out = {};
       await new Promise((r) => setTimeout(r, 400));   // 前の duck が戻るまで
       out.duck0 = A._duckGain();
@@ -104,8 +107,7 @@ async function browserPart() {
       out.glimmer = A._sfxLive('glimmer');
       A.sfx('hit', { vol: 0.5, pan: -0.6 });
       out.hit = A._sfxLive('hit');
-      A.sfx('stairs');
-      out.stairs = A._sfxLive('stairs');
+      if (syn) { A.sfx(syn); out.syn = A._sfxLive(syn); }
       for (let i = 0; i < 6; i++) { A.sfx('cursor'); await new Promise((r) => setTimeout(r, 40)); }
       out.cursor = A._sfxLive('cursor').length;
       // 表から消すと合成に戻る
@@ -119,11 +121,11 @@ async function browserPart() {
       window.RPG_MEDIA.sfx = keep;
       out.pickBack = A._sfxPick('hit');
       return out;
-    });
+    }, SYNTH_ID);
     ok('glimmer: 録音が鳴る', pl.glimmer.length && pl.glimmer[pl.glimmer.length - 1].rec, pl.glimmer);
     ok('glimmer: 録音でも BGM を沈める（合成の定義の S.duck だけを借りる）', pl.duck0 > 0.99 && pl.duck1 < 0.7, [pl.duck0, pl.duck1]);
     ok('hit {vol, pan}: 録音が鳴る', pl.hit.length && pl.hit[pl.hit.length - 1].rec);
-    ok('stairs: 合成', pl.stairs.length && !pl.stairs[pl.stairs.length - 1].rec);
+    if (SYNTH_ID) ok(`${SYNTH_ID}: 合成`, pl.syn.length && !pl.syn[pl.syn.length - 1].rec);
     ok('同じ id は 3 つまで（liveSfx）', pl.cursor <= 3, pl.cursor);
     ok('表に無ければ合成に戻る', pl.pickGone === null && pl.hitGone.length && !pl.hitGone[pl.hitGone.length - 1].rec && pl.infoGone === 0, pl);
     ok('表を戻せば録音', /^hit\.\d$/.test(pl.pickBack));
@@ -138,7 +140,8 @@ async function browserPart() {
       };
     });
     ok('spec → 録音の id', ids.sand === 'sandstorm' && ids.heat === 'heat' && ids.wind === 'wind' && ids.fd === 'forest' && ids.fn === 'forest_night' && ids.rs === 'rain_surf' && ids.tomb === 'tomb' && ids.cave === 'cave' && ids.ship === 'ship' && ids.sea === 'sea', ids);
-    ok('外した床・無い床は作った音（null）', [ids.rain, ids.mist, ids.snow, ids.hw, ids.br, ids.brn, ids.bl].every((x) => x === null), ids);
+    const keyOf = { rain: 'rain', mist: 'mist', snow: 'snow', highwind: 'hw', breeze: 'br', breeze_night: 'brn', blizzard: 'bl' };
+    ok('外した床・無い床は作った音（null）、印の無い床は録音', Object.entries(keyOf).every(([b, k]) => NOT_AMB.includes(b) ? ids[k] === null : ids[k] === b), ids);
     const am = await page.evaluate(async () => {
       // フィールドの環境音の tick（タイトルでは毎 0.25 秒 ambience(null)）を外し、本物の ambience をここから呼ぶ
       const A0 = window.RPG.Audio, real = A0.ambience;
@@ -157,7 +160,7 @@ async function browserPart() {
       out.sameSince = s1.since === out.same.since;
       A.ambience({ bed: 'forest', night: 0.25, i: 0.8 }, { fade: 0.1 });
       out.dayOk = await wait(() => (A.ambienceInfo() || {}).file === 'forest', 5000);
-      A.ambience({ bed: 'mist' }, { fade: 0.1 });
+      A.ambience({ bed: 'snow' }, { fade: 0.1 });
       out.mist = A.ambienceInfo();
       // 表から消した床 → 作った床
       const keep = window.RPG_MEDIA.amb.heat;
@@ -183,11 +186,11 @@ async function browserPart() {
     ok('forest night 1 → forest_night', am.fnOk);
     ok('同じファイルに当たる変化は鳴らし直さない（強さだけ）', am.sameRet === true && am.sameSince && am.same.file === 'forest_night' && am.same.i === 0.8, [am.sameRet, am.sameSince, am.same]);
     ok('forest night 0.25 → forest', am.dayOk);
-    ok('mist（weak）→ 作った床', am.mist && am.mist.alive && am.mist.file === null && am.mist.srcs > 1, am.mist);
+    ok('snow（weak）→ 作った床', am.mist && am.mist.alive && am.mist.file === null && am.mist.srcs > 1, am.mist);
     ok('表に無い床 → 作った床', am.heatProc && am.heatProc.file === null && am.heatProc.srcs > 1, am.heatProc);
     ok('解けないファイル → 作った床', am.badOk, am.bad);
     ok('表を戻せば録音', am.heatOk);
-    ok('mediaInfo().amb', am.media.recorded.includes('sandstorm') && am.media.procedural.includes('mist') && am.media.playing === 'heat', am.media);
+    ok('mediaInfo().amb', am.media.recorded.includes('sandstorm') && am.media.procedural.includes('snow') && am.media.playing === 'heat', am.media);
     ok('null で消える', am.off === null);
     ok('debug() に media', am.dbg);
     ok('ページのエラー 0', P.errors.length === 0, P.errors.slice(0, 3));

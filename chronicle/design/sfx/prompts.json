@@ -640,9 +640,7 @@
     "peak": -11.2,
     "rms": -23.7,
     "audible": 0.29
-   },
-   "keepSynth": true,
-   "note": "whoosh only, no running patter (fit 6–6.5); keep the synth"
+   }
   },
   {
    "id": "stairs",
@@ -662,9 +660,7 @@
     "peak": -10.6,
     "rms": -25.9,
     "audible": 0.33
-   },
-   "keepSynth": true,
-   "note": "listener heard castanets, not footsteps (fit 5.5); keep the synth until a better take"
+   }
   },
   {
    "id": "door",
@@ -1085,8 +1081,7 @@
     "rms": -28,
     "audible": 0.89
    },
-   "keepSynth": true,
-   "note": "listener: wrong sound (chime / boom), fit 5–5.5; keep the synth"
+   "note": "1 of 2 variants: only one take passed (fit 8); the rest were heard as pen clicks"
   },
   {
    "id": "page",
@@ -1166,9 +1161,7 @@
     "peak": -7.7,
     "rms": -20.7,
     "audible": 0.92
-   },
-   "keepSynth": true,
-   "note": "air whoosh instead of a stone scrape (fit 5.5–6.5); keep the synth"
+   }
   },
   {
    "id": "arrow",

@@ -1,6 +1,6 @@
 {
   "loopStart": 0,
-  "loopEnd": 32,
+  "loopEnd": 47.25,
   "bed": "mist",
   "spec": {
     "bed": "mist"
@@ -9,33 +9,31 @@
   "source": {
     "provider": "gemini",
     "model": "lyria-3.5",
-    "prompt": "A sound effect recording, not music: distant waves breaking on a beach and a light wind, heard muffled from inside a stone house, steady for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
-    "generated": "2026-10-04T03:43:13.029Z",
-    "rawSeconds": 64.1,
-    "takes": 4,
+    "prompt": "A dry foley recording, not music: distant waves breaking on a beach and a light wind, heard muffled from inside a stone house. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
+    "generated": "2026-10-04T04:57:10.539Z",
+    "rawSeconds": 57.2,
+    "takes": 3,
     "excerpt": [
       1,
-      37
+      52.3
     ]
   },
   "analysis": {
     "loudnessLUFS": -40,
-    "truePeakDb": -28.3,
-    "gainDb": -28.2,
+    "truePeakDb": -27.3,
+    "gainDb": -29.8,
     "peakLimited": false,
     "xfade": 4,
-    "seamLevelDiffDb": 2.4,
+    "seamLevelDiffDb": 0,
     "listen": {
       "model": "gemini-3.8-flash",
-      "fit": 9,
+      "fit": 7.5,
       "seam": {
-        "seam_smooth": 4,
-        "problem": "click"
+        "seam_smooth": 9,
+        "problem": "none"
       },
-      "content": "distant muffled ocean waves and gentle wind / muffled distant ocean waves and low rumbling wind",
-      "problem": "none"
+      "content": "continuous ocean waves and gentle wind on a beach / distant muffled ocean waves breaking and receding with soft wind",
+      "problem": "sounds outdoors rather than muffled inside"
     }
-  },
-  "weak": true,
-  "note": "content fits (9) but the loop seam was rated 4/10: audition the seam before use"
+  }
 }

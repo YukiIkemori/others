@@ -1,6 +1,6 @@
 {
   "loopStart": 0,
-  "loopEnd": 20.5,
+  "loopEnd": 50.25,
   "bed": "rain",
   "spec": {
     "bed": "rain"
@@ -10,33 +10,30 @@
     "provider": "gemini",
     "model": "lyria-3.5",
     "prompt": "A dry foley recording, not music: a light drizzle falling on rocks and leaves, a soft steady patter of fine rain, no thunder. Continuous for the whole duration. No melody, no musical instruments, no rhythm, no voices. Duration: 40 seconds.",
-    "generated": "2026-10-04T04:06:43.913Z",
-    "rawSeconds": 46,
-    "takes": 8,
+    "generated": "2026-10-04T05:07:41.457Z",
+    "rawSeconds": 184.4,
+    "takes": 2,
     "excerpt": [
-      8.8,
-      33.3
+      1,
+      55.3
     ]
   },
   "analysis": {
     "loudnessLUFS": -37,
-    "truePeakDb": -26.5,
-    "gainDb": -26.4,
+    "truePeakDb": -28.7,
+    "gainDb": -32.9,
     "peakLimited": false,
     "xfade": 4,
-    "seamLevelDiffDb": 1.7,
+    "seamLevelDiffDb": 1.9,
     "listen": {
       "model": "gemini-3.8-flash",
-      "fit": 6,
+      "fit": 9.5,
       "seam": {
         "seam_smooth": 9,
         "problem": "none"
       },
-      "content": "soft steady light rain drizzle / loud rhythmic clock ticking or metronome clicks",
-      "problem": "mechanical clock ticking instead of natural drizzle"
+      "content": "gentle steady drizzle and water droplets / soft steady rain and light drizzle patter",
+      "problem": "none"
     }
-  },
-  "keepProcedural": true,
-  "weak": true,
-  "note": "one hearing reported a ticking pattern (fit 6); keep the procedural bed unless it passes an audition"
+  }
 }

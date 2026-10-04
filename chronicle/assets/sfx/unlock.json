@@ -6,54 +6,50 @@
     "unlock.1.ogg"
   ],
   "durations": [
-    1.8,
-    0.859
+    0.658,
+    0.658
   ],
   "peaks": [
     -7.5,
     -7.5
   ],
   "rms": [
-    -20,
-    -19.1
+    -21.7,
+    -22
   ],
   "gainDb": [
-    -10.2,
-    -10.7
+    -10,
+    -10.2
   ],
   "channels": 2,
-  "weak": true,
   "source": {
     "provider": "gemini",
     "model": "lyria-3.5",
-    "prompt": "A dry close-up foley recording, not music: six separate heavy stone doors grinding open, each a short low stone rumble and scrape, about one second, followed by a soft sparkle, separated by 3 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 27 seconds.",
-    "generated": "2026-10-04T04:25:26.636Z",
-    "takes": 3,
-    "rounds": 3
+    "prompt": "A close-up field recording made in a quiet room, not music: eight separate heavy stone lids dragged across a stone floor, each a deep rough grinding scrape about one second, separated by 2.5 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 31 seconds.",
+    "generated": "2026-10-04T04:59:34.751Z",
+    "takes": 1,
+    "rounds": 1
   },
   "picks": [
     {
       "take": "unlock.0.mp3",
-      "at": 43.756,
-      "fit": 6.5,
-      "problem": "air whoosh instead of stone scrape",
-      "cut": true
+      "at": 39.962,
+      "fit": 8.5,
+      "problem": "none"
     },
     {
       "take": "unlock.0.mp3",
-      "at": 48.151,
-      "fit": 5.5,
-      "problem": "too sci-fi, no stone scrape"
+      "at": 8.892,
+      "fit": 8.5,
+      "problem": "none"
     }
   ],
   "analysis": {
-    "candidates": 38,
-    "listened": 24,
+    "candidates": 44,
+    "listened": 8,
     "listenModel": "gemini-3.8-flash",
-    "meanFit": 6,
+    "meanFit": 8.5,
     "peakTarget": -7.5,
     "rmsMax": -17
-  },
-  "keepSynth": true,
-  "note": "air whoosh instead of a stone scrape (fit 5.5–6.5); keep the synth"
+  }
 }

@@ -1,0 +1,55 @@
+{
+  "id": "lash",
+  "category": "battle",
+  "files": [
+    "lash.0.ogg",
+    "lash.1.ogg"
+  ],
+  "durations": [
+    0.303,
+    0.157
+  ],
+  "peaks": [
+    -8,
+    -8
+  ],
+  "rms": [
+    -31.5,
+    -33
+  ],
+  "gainDb": [
+    -7.6,
+    4
+  ],
+  "channels": 1,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "A dry close-up foley recording, not music: ten separate cracks of a long thin leather cord flicked hard in an open field, each a fast whistling swish of the cord followed by a loud sharp crack, about half a second, separated by 1.6 seconds of silence. Each sound is isolated and complete. No melody, no musical instruments, no rhythm, no background ambience, no voices. Duration: 23 seconds.",
+    "generated": "2026-10-04T04:53:37.635Z",
+    "takes": 1,
+    "rounds": 1
+  },
+  "picks": [
+    {
+      "take": "lash.0.mp3",
+      "at": 1.145,
+      "fit": 8.5,
+      "problem": "none"
+    },
+    {
+      "take": "lash.0.mp3",
+      "at": 3.831,
+      "fit": 8.5,
+      "problem": "none"
+    }
+  ],
+  "analysis": {
+    "candidates": 9,
+    "listened": 8,
+    "listenModel": "gemini-3.8-flash",
+    "meanFit": 8.5,
+    "peakTarget": -8,
+    "rmsMax": -28
+  }
+}
