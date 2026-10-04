@@ -1415,7 +1415,7 @@
     'items.w_sword_sr_matsuyoi.name': '待宵丸',
     'items.w_sword_sr_matsuyoi.desc': '攻撃を受けると反撃する。\nただし動きが遅くなる。',
     'items.w_sword_sr_echo.name': '残影の魔剣',
-    'items.w_sword_sr_echo.desc': '闇の属性。傷を吸う。ただし光に弱い。',
+    'items.w_sword_sr_echo.desc': '傷を吸う。ただし光に弱い。',
     // ---- src/data/items_isles.js
     'data.items_isles.KEYS.k_glow_shell.K': '光る貝がら',
     'data.items_isles.KEYS.k_glow_shell.K_2': '夜光虫の光をためた白い貝がら。\n船首に付けると、霧でも帆が張れる。',

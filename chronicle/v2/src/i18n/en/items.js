@@ -1415,7 +1415,7 @@
     'items.w_sword_sr_matsuyoi.name': 'Moonvigil',
     'items.w_sword_sr_matsuyoi.desc': 'Counterattacks when hit.\nBut you move slower.',
     'items.w_sword_sr_echo.name': 'Afterimage Blade',
-    'items.w_sword_sr_echo.desc': 'Dark element. Drains damage. But weak to light.',
+    'items.w_sword_sr_echo.desc': 'Drains damage. But weak to light.',
     // ---- 追加の訳（2026-09-30）
     'data.items_isles.KEYS.k_glow_shell.K': 'Glowing Shell',
     'data.items_isles.KEYS.k_glow_shell.K_2': 'A white shell full of sea-sparkle light.\nOn the bow, it lets you sail even in fog.',

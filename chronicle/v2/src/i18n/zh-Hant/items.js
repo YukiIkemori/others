@@ -1414,7 +1414,7 @@
     'items.w_sword_sr_matsuyoi.name': '待宵丸',
     'items.w_sword_sr_matsuyoi.desc': '受到攻擊時會反擊。\n但行動變慢。',
     'items.w_sword_sr_echo.name': '殘影魔劍',
-    'items.w_sword_sr_echo.desc': '闇屬性。吸取傷害。但怕光。',
+    'items.w_sword_sr_echo.desc': '吸取傷害。但怕光。',
     // ---- src/data/items_isles.js
     'data.items_isles.KEYS.k_glow_shell.K': '發光的貝殼',
     'data.items_isles.KEYS.k_glow_shell.K_2': '蓄滿夜光蟲光芒的白貝殼。\n掛在船首，霧中也能揚帆。',

@@ -1414,7 +1414,7 @@
     'items.w_sword_sr_matsuyoi.name': '마쓰요이마루',
     'items.w_sword_sr_matsuyoi.desc': '공격을 받으면 반격한다.\n단, 움직임이 느려진다.',
     'items.w_sword_sr_echo.name': '잔영의 마검',
-    'items.w_sword_sr_echo.desc': '어둠 속성. 상처를 흡수한다. 단, 빛에 약하다.',
+    'items.w_sword_sr_echo.desc': '상처를 흡수한다. 단, 빛에 약하다.',
     // ---- src/data/items_isles.js
     'data.items_isles.KEYS.k_glow_shell.K': '빛나는 조개껍데기',
     'data.items_isles.KEYS.k_glow_shell.K_2': '야광충의 빛을 머금은 하얀 조개껍데기.\n뱃머리에 달면 안개 속에서도 돛을 올린다.',

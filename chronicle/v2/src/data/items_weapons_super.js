@@ -147,8 +147,7 @@
     tier: 9,
     wtype: 'sword',
     units: 's2',
-    element: 'dark',
-    drain: 0.2,
+    drain: 0.2,   // 持ち主 2026-10-04: 闇の属性を外した（忘却の底の敵・ボスの多くが闇に強く、取れる所で使えなかった）
     mods: { elemResist: { light: 1.5 } },
     quirk: true,
     src: 'super',
