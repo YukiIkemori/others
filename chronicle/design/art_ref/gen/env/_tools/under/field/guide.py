@@ -32,6 +32,33 @@ def draw(T, sym=True):
                 nb = [ch(i, j) for i, j in ((x - 1, y), (x + 1, y), (x, y + 1), (x, y - 1))]
                 if nb.count('s') >= 2: base = C['s']
             g.rectangle(R(x, y), fill=markc.get((x, y), base))
+    SM = float((d.get('meta') or {}).get('smooth') or 0)
+    if SM:
+        # (2026-10-04 見やすさの作り直し、field_marsh / field_star の guide.py と同じ) 境をなめらかな曲線に: 地面の字ごとの塊をぼかして、
+        # いちばん濃い字をその画素の字にする（マスの段々を残さない）。木・岩は下の地面、目印の塊は後でそのまま重ねる
+        import numpy as np
+        from scipy import ndimage
+        from PIL import ImageFilter
+        gch = [[ch(x, y) for x in range(W)] for y in range(H)]
+        for y in range(H):
+            for x in range(W):
+                if gch[y][x] in 'rTb':
+                    nb = [ch(i, j) for i, j in ((x - 1, y), (x + 1, y), (x, y + 1), (x, y - 1))]
+                    gch[y][x] = next((gc for gc in ',;s' if nb.count(gc) >= 2), ',')
+        mkm = np.zeros((H, W), bool)
+        for (mx, my) in markc: mkm[my, mx] = True
+        if mkm.any():
+            _, (iy, ix) = ndimage.distance_transform_edt(mkm, return_indices=True)
+            gch = [[gch[iy[y, x]][ix[y, x]] for x in range(W)] for y in range(H)]
+        keys = sorted(set(c for r in gch for c in r))
+        stack = [ndimage.gaussian_filter(np.kron(np.array([[1.0 if c == kk else 0.0 for c in r] for r in gch]), np.ones((T, T))), T * SM, mode='nearest') for kk in keys]
+        am = np.argmax(np.stack(stack), 0)
+        pal = np.array([C.get(kk, (255, 0, 255)) for kk in keys], np.uint8)
+        mk = Image.new('L', im.size, 0); mkd = ImageDraw.Draw(mk)
+        for (mx, my) in markc: mkd.rectangle(R(mx, my), fill=255)
+        im = Image.composite(im, Image.fromarray(pal[am], 'RGB'), mk)
+        soft = im.filter(ImageFilter.GaussianBlur(T * 0.12))
+        im = Image.composite(im, soft, mk); g = ImageDraw.Draw(im)
     if not sym: return im
     for y in range(H):
         for x in range(W):

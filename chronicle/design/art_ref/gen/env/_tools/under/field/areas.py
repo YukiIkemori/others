@@ -2,9 +2,14 @@
 usage: python3 areas.py <id> [...]   -> <id>/layout.json + ascii on stdout (then guide.py <id>)
 Every area is a rectangle with its own character and shape; exits sit on the roads at the edges (lib.Area.exit).
 Map ids: f_roa f_cape f_lookout f_cross f_hut f_fern f_south f_windhill (v2/src/maps/field_*.js)."""
-import sys, math
+import sys, math, os
 import numpy as np
 from lib import Area, fbm, WALK
+
+# 見やすさの作り直し（持ち主 2026-10-04「ギザギザ」「汚い」「花々とか細かいのいらん」、湿原の field_marsh と同じ考え）:
+#   CLEAN_AREAS の area は散らす物（丈の高い草・花・ばらまいた岩と茂み）を置かず、境は案内図（guide.py の meta smooth）でなめらかに、
+#   指示（mkjob.py の meta clean）で「大きくはっきりした形」を頼む。CLEAN_AREAS= （空）で前の作り
+CLEAN_AREAS = set(filter(None, os.environ.get('CLEAN_AREAS', 'f_cross').split(',')))
 
 STONE = (226, 222, 204)    # standing stones / pale stone landmarks
 WOOD = (170, 92, 40)       # timber structures
@@ -260,22 +265,30 @@ def f_cross():
     from scipy import ndimage
     a = Area('f_cross', 60, 40, 41)
     W, H = a.W, a.H
-    a.mask_fill(fbm(5, W, H, 7) > 0.52, ';')
-    a.mask_fill(fbm(6, W, H, 4) > 0.72, '"', only=',;')
+    clean = 'f_cross' in CLEAN_AREAS
+    if not clean:
+        a.mask_fill(fbm(5, W, H, 7) > 0.52, ';')
+        a.mask_fill(fbm(6, W, H, 4) > 0.72, '"', only=',;')
     ys, xs = np.mgrid[0:H, 0:W]
     # the strait along the south edge, the bridge landing
     sea = a.region([(-3, 36.5), (20, 35.5), (40, 36.2), (63, 35), (63, 43), (-3, 43)], '~', rough=0.9, seed=3)
-    a.mask_fill(~sea & (ndimage.distance_transform_edt(~sea) <= 1.2), 'r', force=True)
+    # clean: a smooth pale beach instead of a ring of boulders along the shore
+    a.mask_fill(~sea & (ndimage.distance_transform_edt(~sea) <= 1.2), 's' if clean else 'r', force=True)
     a.rect(28, 35, 2, 5, '=', force=True, keep=True)
     a.rect(26, 32, 6, 3, 'c', force=True, keep=True)
     # mountain foothills (N): rock and a cliff
     hill = a.region([(-3, -3), (63, -3), (63, 3.5), (48, 5), (36, 3.5), (22, 5.5), (8, 4), (-3, 5)], 'r', rough=1.2, seed=4)
-    a.mask_fill(hill & (fbm(7, W, H, 3) > 0.55), 'F')
+    if clean:   # clean: a few broad dark-fir masses on grey crag (no boulder field, no speckle)
+        a.mask_fill(hill, 'R', force=True)
+        a.mask_fill(hill & (fbm(7, W, H, 9, oct=1) > 0.5), 'F', force=True)
+    else:
+        a.mask_fill(hill & (fbm(7, W, H, 3) > 0.55), 'F')
     a.mask_fill(~hill & ndimage.binary_dilation(hill, iterations=1) & (ys < 8), 'R', force=True)
     # the lake (NE) with reeds (bushes on its rim)
     lk = a.blob(47, 11, 5.5, 3.2, 'w', rough=0.3, seed=5)
-    a.ring(lk, 'b', 1, only=',;"')
-    a.mask_fill(ndimage.binary_dilation(lk, iterations=2) & ~lk & (fbm(8, W, H, 3) > 0.5), ',', force=True)
+    if not clean:   # clean: a plain grassy shore (no bushes on the rim)
+        a.ring(lk, 'b', 1, only=',;"')
+        a.mask_fill(ndimage.binary_dilation(lk, iterations=2) & ~lk & (fbm(8, W, H, 3) > 0.5), ',', force=True)
     # roads: from the bridge north to the crossroads; east to the pass; west
     a.stroke([(28.5, 32), (28.5, 26), (29.5, 20.5)], 2.0, '.', wobble=0.2, seed=6)
     a.stroke([(29.5, 20.5), (36, 19.5), (44, 20.5), (52, 19), (60.5, 18.5)], 2.0, '.', wobble=0.2, seed=7)
@@ -298,8 +311,9 @@ def f_cross():
     # the rockslide at the pass (demo: closed; tilePatch) — the painting shows the open road, the closed look is a layer
     for (x, y, rx, ry, s_) in [(10, 30, 2.6, 1.8, 11), (40, 29, 2.4, 1.8, 13), (8, 13, 2.0, 1.5, 15), (54, 31, 1.8, 1.3, 17)]:
         a.blob(x, y, rx, ry, 'T', rough=0.35, seed=s_, only=',;"')
-    a.scatter('r', 0.012, only=',;"', seed=31, clear=1)
-    a.scatter('b', 0.008, only=',;"', seed=32, clear=1)
+    if not clean:
+        a.scatter('r', 0.012, only=',;"', seed=31, clear=1)
+        a.scatter('b', 0.008, only=',;"', seed=32, clear=1)
     a.tidy()
     a.exit('s', 28, 29, {'map': 'f_lookout', 'spawn': 'bridge'}, 'bridge')
     a.exit('w', 22, 23, {'map': 'f_hut', 'spawn': 'east'}, 'west')
@@ -322,6 +336,7 @@ def f_cross():
                         {'id': 'guard_east', 'look': 'npc_guard_1', 'name': '番人', 'x': 54, 'y': 18, 'dir': 'w', 'move': 'still', 'pushable': False,
                          'cond': {'slice': True}, 'talk': {'lines': [{'text': ['東の峠は、ゆうべの\n崖崩れで通れないんだ。', '山地の鉱山町へ行くなら、\nしばらく待ってくれ。']}]},
                          'reward': 'news', 'key': 'world_guard_east'}], links={})
+    if clean: a.meta.update(smooth=0.7, clean=True)
     return a
 
 

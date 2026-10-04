@@ -63,7 +63,23 @@ Pixel art rules: crisp square pixels, no blur, no anti-aliasing, no painterly br
 Lighting: this is the ALBEDO base layer (the game darkens it into night at runtime and adds lamp light on top). Neutral, soft, even daylight-like light as in the style reference; NO darkness, NO night tint, NO long cast shadows, NO light pools, NO glow, NO vignette, NO fog, NO clouds over the map.
 Do NOT paint any characters, people, animals, monsters, birds, treasure chests, lanterns, lamp posts, torches, campfires, tents, signs, signposts, text, letters, numbers, labels, grid lines, borders, frames or UI. Those are added later as separate sprites: leave the ground open for them.
 """
+# 見やすさの作り直し（持ち主 2026-10-04「ギザギザ」「汚い」「花々とか細かいのいらん」）: meta clean = 大きくはっきりした形、細かい物を散らさない。
+#   絵の手本は ../field_marsh/style_clean.png（描き直した山あいの街道 s_road の切り抜き。STYLE=... で替えられる）。配置は areas.py の CLEAN_AREAS
+SCENE_CLEAN = {
+    'f_cross': """VAST OPEN PLAINS below the foothills of the northern mountains in late summer: broad calm rolling grassland of soft golden-green grass, a grand three-way crossroads of wide packed-earth roads (west, east, and south to the bridge landing), an old milestone cairn at its corner; a calm blue lake with a smooth grassy shore and a wooden fishing jetty; the grassy ruin of an old coaching inn with a flagstone floor and low broken walls; a lone rune stone; a small trodden camp ground and a caravan wagon; along the top edge a continuous band of dark fir forest and grey crags at the mountain foot; along the bottom a smooth pale beach and the deep blue strait with the drawbridge's far end and its flagstone landing. Palette: golden-green and sage grass, warm tan road, blue water, dark fir green, grey rock. Wide, open, calm and clear.""",
+}
+CLEAN = """
+CLARITY (most important): this map must read clearly at a glance. Use LARGE, SIMPLE, CLEAN shapes with SMOOTH flowing outlines: broad calm areas of plain grass, clear wide roads, clear water with smooth shores, clear tree masses and clear rock. The edge of every area is a smooth natural curve, never a stair-stepped, zigzag or ragged tile edge. Do NOT scatter small details: NO flowers, NO flower dots, NO scattered pebbles or small stones, NO lone tiny bushes or tufts on the grass, NO tiny puddles, NO speckled noise texture, NO grid-like rows of rocks or tufts. The grass is a calm, softly varied texture with gentle colour ramps; the road is a clean band of packed earth with soft edges. Keep the level of detail like a clean, polished classic 16-bit JRPG overworld field: tidy, uncluttered, calm and easy to read."""
+STYLE_REF = 'style_field.png'
+if (d.get('meta') or {}).get('clean'):
+    STYLE_REF = os.environ.get('STYLE', '../field_marsh/style_clean.png')
+    P = P.replace(SCENE[aid], SCENE_CLEAN.get(aid, SCENE[aid]))
+    P = P.replace('lush natural detail', 'clean polished detail').replace(' Make it feel like a real, exciting place to explore, full of small natural detail.', ' Make it feel like a real, quiet place to explore.')
+    P = P.replace('short grass with natural variation, clover, tiny flowers, worn patches', 'calm short grass with gentle natural variation')
+    P = P.replace(' with cart ruts, small stones, grassy edges, natural width', ' with soft grassy edges, natural width').replace(', with a few pebbles', '')
+    P = P.replace('- green with coloured dots = WILD FLOWERS in the grass (walkable, flat).\n', '').replace('- darker green with short strokes = TALL MEADOW GRASS or heather (walkable, low).\n', '')
+    P = P.replace('\nGuide colour key:', CLEAN + '\n\nGuide colour key:', 1)
 job = {"out": os.path.abspath(f'{aid}/{name}.png'), "prompt": P, "size": f"{W * T}x{H * T}", "quality": "high", "background": "opaque",
-       "refs": [os.path.abspath(f'{aid}/guide_{T}.png'), os.path.abspath('style_field.png')], "tag": f"{aid}_under"}
+       "refs": [os.path.abspath(f'{aid}/guide_{T}.png'), os.path.abspath(STYLE_REF)], "tag": f"{aid}_under"}
 json.dump(job, open(f'{aid}/{name}.job.json', 'w'), ensure_ascii=False, indent=1)
 print(job['out'], job['size'], len(P))
