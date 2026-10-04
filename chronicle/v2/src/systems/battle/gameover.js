@@ -1,5 +1,5 @@
 // BSCENE: 全滅（MODERN_UI §6.19・V2_PLAN §2.5.3）。画面がゆっくり暗くなり、一行のランタンの灯が消える →「灯が消えた……」→
-// 直前の戦闘からやり直す（既定・失う物なし）／最後に泊まった宿から（所持金が半分）／タイトルへ。既定の行は設定 wipe（retry | inn）。
+// 直前の戦闘からやり直す（既定・全快で始める・失う物なし）／最後に泊まった宿から（所持金が半分）／タイトルへ。カーソルは毎回「やり直す」（設定 wipe は見ない。2026-10-04）。
 //   _.gameover.run(st) → 'retry' | 'inn' | 'title'（片付けは scene.js の finish と R.Flow.wipe）
 (function (R) {
   'use strict';
@@ -30,7 +30,8 @@
     });
     if (go.fast) { go.dark = 1; go.flame = 0; go.text = 1; }
     try { R.Audio.jingle('gameover'); } catch (e) { /* ignore */ }
-    const def = R.Settings.get('wipe') === 'inn' ? 1 : 0;
+    // カーソルは毎回「直前の戦闘からやり直す」（持ち主 2026-10-04。テスター R12: 前の選び方を覚えていて、意図せず「宿から」〈所持金が半分〉を選んだ）
+    const def = 0;
     const t1 = R.Engine.time;
     // 出られない場面（籠城の夜など。R.State.wipeSafe）: 「宿から」の代わりに、その場で全快して立て直す（所持金はそのまま）
     const safe = R.State && R.State.wipeSafe ? R.State.wipeSafe() : null;

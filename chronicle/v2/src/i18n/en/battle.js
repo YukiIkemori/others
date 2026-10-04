@@ -154,7 +154,7 @@
     'battle.demo.PROF_GLIM.demo_dagger_x.name': 'Shadow Step',
     // ---- src/systems/battle/gameover.js
     'battle.gameover.CHOICES.retry.label': 'Retry the last battle',
-    'battle.gameover.CHOICES.retry.sub': 'Nothing is lost',
+    'battle.gameover.CHOICES.retry.sub': 'Everyone fully healed. Nothing is lost',
     'battle.gameover.CHOICES.inn.label': 'Return to the last inn',
     'battle.gameover.CHOICES.inn.sub': 'You lose half your gold',
     'battle.gameover.CHOICES.safe.label': 'Catch your breath and regroup',

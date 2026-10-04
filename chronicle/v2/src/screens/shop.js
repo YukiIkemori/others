@@ -24,6 +24,7 @@
   const T = () => R.UIK.T;
   const EQUIP = ['weapon', 'shield', 'head', 'body', 'hands', 'feet', 'acc'];
   const MAX = 99;
+  const SETTLE_MS = 250;   // 数の札の決定 → 「今すぐ装備する？」の決定よけ（ms。S.ask の settle）
   const TABS = [{ key: 'weapon', label: R.T('ui.shop.TABS.weapon.label') }, { key: 'armor', label: R.T('ui.shop.TABS.armor.label') }, { key: 'item', label: R.T('ui.shop.TABS.item.label') }, { key: 'sell', label: R.T('ui.shop.TABS.sell.label') }];
   const SORTS = R.T('ui.shop.SORTS');
   const pref = { sort: 0, onlyUsable: false };   // 並びとしぼり込みは店を出ても覚えておく（遊んでいる間だけ）
@@ -171,7 +172,9 @@
         R.UIK.sfx('coin');
         R.UIK.toast(R.T('ui.shop.doBuy.toast_3', { name: it.name, p1: n > 1 ? ' ×' + n : '' }), { anchor: 'tr', icon: S.iconOf(it) });
         // 装備は買った数だけ続けて聞く（「装備しない」・付けられる人がいない でやめる）
-        if (isEquip(id)) for (let i = 0; i < n; i++) if (!(await this.offerEquip(id, n - i))) break;
+        //   1 つ目の問いは数の札の決定から続けて出るので、その決定の連打で付かないよう短い settle を付ける（テスター 2026-10-04 R5。
+        //   guard ほど重くしない＝店は連打で進める。持ち主 2026-10-03）
+        if (isEquip(id)) for (let i = 0; i < n; i++) if (!(await this.offerEquip(id, n - i, i === 0 ? SETTLE_MS : 0))) break;
         this.refresh(true);
       } finally { this.busy = false; }
     },
@@ -194,7 +197,7 @@
     /** 買った装備を「今すぐ装備する？」: 一行の全員（付けられない人は選べない）。
      *  カーソルは一番上の付けられる人（持ち主 2026-10-04。前はいちばん強くなる人 S.wearPlan）。
      *  left = まだ聞く数（2 つ以上なら題に「あと n 個」）。→ 誰かが付けたら true */
-    async offerEquip(id, left) {
+    async offerEquip(id, left, settle) {
       const mem = S.party();
       // 付ける枠: 空いた枠 → 同じ物の入っていない枠（アクセサリは 2 つ目の枠にも）。どの枠にももう同じ物なら null（テスター 2026-09-30 1-9:
       // 全員が 1 つ付けた後、カーソルが 1 人目のアクセサリ 1（同じ物）に戻り、付けたことになって何も変わらなかった）
@@ -218,7 +221,7 @@
       });
       left = Math.min(left, S.count(id));
       const title = left > 1 ? R.T('ui.shop.offerEquip.title', { left }) : R.T('ui.shop.offerEquip.title_2');
-      const k = await S.ask(this, { title, text: S.item(id).name, choices: choices.concat([{ label: R.T('ui.shop.offerEquip.choices.0.label') }]), cancel: mem.length, index: best });
+      const k = await S.ask(this, { title, text: S.item(id).name, choices: choices.concat([{ label: R.T('ui.shop.offerEquip.choices.0.label') }]), cancel: mem.length, index: best, settle: settle || 0 });
       if (k < 0 || k >= mem.length || !room[k]) return false;
       const c = mem[k];
       const r = R.Rules.equip(c, plan.rows[k].slot || slotFor(c), id);

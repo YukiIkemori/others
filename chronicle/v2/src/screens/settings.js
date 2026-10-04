@@ -24,7 +24,7 @@
       { key: 'fieldZoom', name: R.T('ui.settings.TABS.fieldZoom.name'), names: { near: R.T('ui.settings.TABS.fieldZoom.names.near'), normal: R.T('ui.settings.TABS.fieldZoom.names.normal'), far: R.T('ui.settings.TABS.fieldZoom.names.far') }, desc: R.T('ui.settings.TABS.fieldZoom.desc') },
       // 「フィールドの仲間（後ろに並ぶ）」の設定は無くした（持ち主 2026-09-28「歩くモーションを 20 人分は作っていない」）
       { key: 'fieldMap', name: R.T('ui.settings.TABS.fieldMap.name'), names: { mini: R.T('ui.settings.TABS.fieldMap.names.mini'), big: R.T('ui.settings.TABS.fieldMap.names.big'), off: R.T('ui.settings.TABS.fieldMap.names.off') }, desc: R.T('ui.settings.TABS.fieldMap.desc') },
-      { key: 'wipe', name: R.T('ui.settings.TABS.wipe.name'), names: { retry: R.T('ui.settings.TABS.wipe.names.retry'), inn: R.T('ui.settings.TABS.wipe.names.inn') }, desc: R.T('ui.settings.TABS.wipe.desc') },
+      // 「全滅したとき」（全滅の札の既定の行）の設定は無くした: 全滅の札のカーソルは毎回「直前の戦闘からやり直す」（持ち主 2026-10-04。テスター R12）
       { act: 'tips', name: R.T('ui.settings.TABS.0.items.7.name'), desc: R.T('ui.settings.TABS.0.items.7.desc') },
     ] },
     { label: R.T('ui.settings.TABS.1.label'), items: [

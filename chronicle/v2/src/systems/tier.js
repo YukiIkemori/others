@@ -407,6 +407,18 @@
     const info = regionInfo(rid);
     if (R.UIK && R.UIK.Message && R.UIK.Message.busy()) R.UIK.Message.close();
     const hasField = !!(R.Engine.has && R.Engine.has('field'));
+    // o.cardOnly: 章の札だけ（光の柱は立てない。締めの場面の後に、今の画面の上へ。R17）
+    if (o.cardOnly) {
+      const st = { bx: 0, by: 0, src: null, seed: [], n: (G && G.chapter) || Tier.get() || 1, title: info.title, page: info.pageName, region: info.name, cardAt: 0, cardMs: o.cardMs, noPillar: true };
+      let res;
+      const closed = new Promise((r) => { res = r; });
+      const scene = stageScene(st);
+      st.close = () => { if (st.done) return; st.done = true; R.Engine.remove(scene); res(); };
+      R.Engine.push(scene);
+      try { R.Audio.jingle('chapter'); } catch (e) { /* */ }
+      await closed;
+      return true;
+    }
     // 1. 暗転。暗い間に空の段を引き直す（FIELD のチャンク・R.Sky は 'tier' で焼き直す）
     await R.Engine.fadeTo(1, o.fadeMs != null ? o.fadeMs : 700);
     R.emit('tier', { tier: G ? G.tier : Tier.get(), rid });

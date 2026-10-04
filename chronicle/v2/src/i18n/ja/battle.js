@@ -154,7 +154,7 @@
     'battle.demo.PROF_GLIM.demo_dagger_x.name': '影踏み',
     // ---- src/systems/battle/gameover.js
     'battle.gameover.CHOICES.retry.label': '直前の戦闘からやり直す',
-    'battle.gameover.CHOICES.retry.sub': '失う物はない',
+    'battle.gameover.CHOICES.retry.sub': '全員が全快して挑み直す。失う物はない',
     'battle.gameover.CHOICES.inn.label': '最後に泊まった宿から',
     'battle.gameover.CHOICES.inn.sub': '所持金が半分になる',
     'battle.gameover.CHOICES.safe.label': 'ひと息ついて立て直す',

@@ -49,7 +49,7 @@
       const O = [];
       O.push(K.stairs(5, 13, { map: 'ghost_ship_1', spawn: 'hatch' }, { id: 'ghost_ship_2_up', look: 'up' }));
       O.push(K.stairs(41, 13, { map: 'ghost_ship_3', spawn: 'up' }, { id: 'ghost_ship_2_down', look: 'down' }));
-      // 船員の名札（寝台・ハンモックの柱。任意。1 甲板長 2 帆手 3 見張り 4 かじ取り 5 船大工 6 見習いベッポ）
+      // 船員の名札（寝台・ハンモックの柱。任意。1 甲板長 2 帆手 3 見張り 4 かじ取り 5 船大工 6 見習いニコ。ロッホの人形師ベッポと別の人。テスター 2026-10-04 R15）
       for (const [n, x, y] of [[1, 29, 5], [2, 34, 5], [3, 37, 5], [4, 5, 20], [5, 11, 4], [6, 14, 19]]) O.push(K.exam(x, y, 'isles_nametag', { tag: n }));
       O.push(K.exam(13, 19, 'isles_ghost_doll'));
       // 休息の灯（水夫の水樽のそば。幽霊船でただ 1 つ）

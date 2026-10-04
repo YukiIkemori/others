@@ -105,12 +105,20 @@ async function main() {
 
   section('全滅: 直前の戦闘から（既定・失う物なし）');
   await B.ev(p, 'RPG.Game.gold = 101');
+  // 道中で削れた一行（HP 1・MP 0・毒・1 人は戦闘不能）で戦闘に入る（テスター 2026-10-04 R3・R13: やり直しが削れたまま始まった）
+  await B.ev(p, "(() => { RPG.Party.members().forEach((c, i) => { c.hp = i === 1 ? 0 : 1; c.mp = 0; c.status = i === 1 ? [] : ['poison']; }); return 0; })()");
+  // 設定がどうでも、カーソルは毎回「やり直す」（テスター R12。設定 wipe の行は無くした）
+  await B.ev(p, "RPG.Settings.set('wipe', 'inn'); 0");
   await B.ev(p, start({ demo: 'wipe', autoInput: true, mons: [['x', 1]], bg: 'cave' }));
   ok('wipe screen (灯が消えた) with 3 choices', await B.waitFor(p, `${D} && ${D}.go && ${D}.ui && ${D}.ui.o.rows.length === 3 && (!${D}.ui.guard || ${D}.ui.guard.armed)`, 30000));
-  ok('default row follows setting wipe (retry = 0)', (await B.ev(p, `${D}.ui.sel`)) === 0);
+  ok('cursor always starts on 直前の戦闘からやり直す (R12, even with an old wipe=inn setting)', (await B.ev(p, `${D}.ui.sel`)) === 0);
+  await B.ev(p, "RPG.Settings.set('wipe', 'retry'); 0");
   ok('promise not resolved yet', !(await B.ev(p, 'window.__r')));
   await B.press(p, 'a');
-  ok('retry restarts the same battle (retry = 1) and it can be won', await B.waitFor(p, `${D} && ${D}.retry === 1`, 10000) && await B.pressUntil(p, 'a', 'window.__r', 60));
+  ok('retry restarts the same battle (retry = 1)', await B.waitFor(p, `${D} && ${D}.retry === 1`, 10000));
+  ok('retry starts fully healed: HP/MP full, KO and bad status cleared (R3/R13)', await B.ev(p, "RPG.Party.members().every((c) => { const s = RPG.Rules.stats(c); return c.hp === s.maxHp && c.mp === s.maxMp && !(c.status || []).length; })"),
+    await B.ev(p, "JSON.stringify(RPG.Party.members().map((c) => [c.id, c.hp, c.mp, c.status]))"));
+  ok('… and it can be won', await B.pressUntil(p, 'a', 'window.__r', 60));
   ok('retry: win, gold unchanged (no loss)', (await B.ev(p, "window.__r.result === 'win' && RPG.Game.gold === 101")), await B.ev(p, '[window.__r, RPG.Game.gold]'));
   ok('invariants after retry + win', await B.waitFor(p, INV, 3000));
 

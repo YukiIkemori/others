@@ -153,7 +153,7 @@
     'battle.demo.PROF_GLIM.demo_dagger_x.name': '踏影',
     // ---- src/systems/battle/gameover.js
     'battle.gameover.CHOICES.retry.label': '從剛才的戰鬥重來',
-    'battle.gameover.CHOICES.retry.sub': '不會失去任何東西',
+    'battle.gameover.CHOICES.retry.sub': '全員完全恢復後重來。不會失去任何東西',
     'battle.gameover.CHOICES.inn.label': '從最後住宿的旅店開始',
     'battle.gameover.CHOICES.inn.sub': '持有金幣減半',
     'battle.gameover.CHOICES.safe.label': '喘口氣，重整旗鼓',

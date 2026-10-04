@@ -252,7 +252,7 @@ async function story() {
   G2.flags.isles_fog_open = true;
   f = fakeEv({ battles: ['win'], choose: [1] }); await D.events.isles_captain.run(f.ev, {});
   ok('名札 2 枚 → 年代記の（痛）で船員の名を読み上げ、後家の壁に名が足される', G2.choices.ch_isles_write === 'pain' && G2.flags.isles_wall_names && (G2.vars.pain_count || 0) === 1 &&
-    f.said.some((s) => s[0] === 'caption' && /帆手のルーカス/.test(String(s[1])) && /見習いのベッポ/.test(String(s[1]))));
+    f.said.some((s) => s[0] === 'caption' && /帆手のルーカス/.test(String(s[1])) && /見習いのニコ/.test(String(s[1]))));
   const chron = D.chronicle.r_isles.text;
   ok('年代記の章に、（痛）の選択と名が出る', /ともに沈んだ者たちの名/.test(chron) && /帆手のルーカス/.test(chron) && !/甲板長トビアス/.test(chron));
   f = fakeEv({}); await D.events.nerei_marina.run(f.ev, {});

@@ -153,7 +153,7 @@
     'battle.demo.PROF_GLIM.demo_dagger_x.name': '그림자 밟기',
     // ---- src/systems/battle/gameover.js
     'battle.gameover.CHOICES.retry.label': '직전 전투부터 다시 하기',
-    'battle.gameover.CHOICES.retry.sub': '잃는 것은 없다',
+    'battle.gameover.CHOICES.retry.sub': '모두 완전히 회복해 다시 도전. 잃는 것은 없다',
     'battle.gameover.CHOICES.inn.label': '마지막으로 묵은 여관부터',
     'battle.gameover.CHOICES.inn.sub': '소지금이 절반이 된다',
     'battle.gameover.CHOICES.safe.label': '한숨 돌리고 다시 정비한다',

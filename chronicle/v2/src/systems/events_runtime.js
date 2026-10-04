@@ -20,11 +20,13 @@
 //        問いの窓に say と同じ名前・顔を付ける
 //   caption(text, {ms}) → R.UIK.Message.caption / fade('out'|'in', ms) / wait(ms)
 //   item(id, n, {silent}) → K.gain。右上に「〜を 手に入れた」/ take(id, n) → bool / gold(n, {silent}) / has(id)（袋＋装備）
-//   battle(troop|setup, opts) → 'win'|'lose'|'escape'（全滅して宿・タイトルを選んだら戻らない）
+//   battle(troop|setup, opts) → 'win'|'lose'|'escape'（全滅して宿・タイトルを選んだら戻らない）。'lose'（canLose）なら倒れた人を HP 1 で起こす
+//   heal()                      倒れた人を起こしてから、出撃中と控えの HP・MP を満たす（状態はそのまま。全部消すのは rest）
 //   inn(price?) → bool          画面は {stay} だけ。お金・暗転・R.Party.restoreAll・lastInn（K.place）・autosave('inn')・emit('inn') はここ
 //                               暗転とジングルは Events.night（下）: 2.5 秒は飛ばせない → A・B・タップで飛ばす／ジングルの終わりで明ける
 //   chooseCompanions({count}) → ids（R.Party.join までここ）/ createHero() → K.hero（B で戻ったらもう一度開く）
 //   clearRegion(rid)            ページ → cleared・regionTier（出現の固定）・tier+1・pendingTier・章の数 → 地方の目印を外す → R.Tier.celebrate → 'region:clear'
+//                               イベントの中では光の柱だけ。章の札は、そのイベントの終わり（締めの「年代記に何を書こう」の後）に出す（R17）
 //   letter(id) → R.Screens.open('letter') / mini.sequence・mini.timing → R.Mini
 //   lore(id) → bool             読み物を書庫へ（旗 = id。呼ぶ側が先に旗を立てていても通知は出す）
 //   partyShow(id | ids | 'all', {near:'hero'|npcId, at:[x,y], dir, ms, wait, stay}) / partyHide(id | ids | 'all', {ms, wait})
@@ -205,6 +207,20 @@
     return { skipped };
   };
 
+  // ---------------------------------------------------------------- 倒れた人を起こす（負けても続く戦いの後・ev.heal）
+  /** 出撃中と控えの、HP 0 の人を HP 1 で立たせる（状態は消す）。起こした数 */
+  function reviveFallen() {
+    let n = 0;
+    try {
+      const P = R.Party;
+      for (const c of P.members().concat(P.reserve ? P.reserve() : [])) {
+        if (c && !(c.hp > 0)) { c.hp = 1; c.status = []; n++; }
+      }
+    } catch (e) { R.warn('reviveFallen', e && e.message); }
+    return n;
+  }
+  Events._reviveFallen = reviveFallen;
+
   // ---------------------------------------------------------------- ev
   function makeEv(ctx) {
     ctx = ctx || {};
@@ -281,10 +297,13 @@
         if (r && r.result === 'abort') { if (token === aborted) Events.abort(); throw abortErr(); }
         guard();
         ctx._battled = true;
+        // 負けても話が続く戦い（canLose）: 倒れたままの人を起こしておく（テスター 2026-10-04 R11: ロウェルの 2 戦目に負けると
+        //   全員 HP0・MP0 のまま町を歩けた。ev.heal は生きている人だけ）。HP 1 で立たせる床。場面の側が ev.rest で全快にする
+        if (r && r.result === 'lose') reviveFallen();
         return r ? r.result : 'win';
       },
       async warp(map, spawn) { guard(); await R.Field.enter(map, spawn); guard(); },
-      heal() { guard(); R.Party.heal(true); },
+      heal() { guard(); reviveFallen(); R.Party.heal(true); },
       rest() { guard(); R.Party.restoreAll(); },
       /** 宿。o.choices = 泊まり方の名の配列（「朝の鐘まで泊まる」「消灯の刻まで休む」）、o.text = 問いの文。
        *  泊まらなければ false、泊まれば true（choices があれば {pick: 選んだ番号}） */
@@ -427,10 +446,27 @@
     R.Leads.clearRegionPins(rid);
     R.emit('region:clear', { rid, tier: g.tier });
     // 4. 大灯火の演出（暗転の中で 'tier' を出し、空とチャンクを引き直す）
-    await R.Tier.celebrate(rid);
+    //   章の札（「第N章 〈題〉／〈ページ〉を年代記にとじた」）は、締めの場面（年代記に何を書くかの選択）が終わってから出す
+    //   （テスター 2026-10-04 R17: とじた後に中身を選ぶ順になっていた）。イベントの中なら、ここは光の柱だけにして、
+    //   札はそのイベントの終わり（Events.run の最後）に出す。イベントの外（テスト・道具）から呼ばれたら、今まで通り続けて出す
+    if (busy && cur) {
+      if (!cardsDue.includes(rid)) cardsDue.push(rid);
+      await R.Tier.celebrate(rid, { card: false });
+    } else {
+      await R.Tier.celebrate(rid);
+    }
     return g.tier;
   }
   Events._clearRegion = clearRegion;
+  const cardsDue = [];   // イベントの終わりに出す章の札（地方の id）
+  Events._cardsDue = () => cardsDue.slice();
+  /** 残っている章の札を出す（Events.run の最後。締めの選択の後） */
+  async function showCards(token) {
+    while (cardsDue.length && token === aborted) {
+      const rid = cardsDue.shift();
+      try { await R.Tier.celebrate(rid, { cardOnly: true }); } catch (e) { R.warn('chapter card', e && e.message); }
+    }
+  }
 
   // ---------------------------------------------------------------- 実行
   Events.runId = function () { return busy && cur ? cur.run : 0; };
@@ -460,6 +496,8 @@
       const ev = makeEv(ctx);
       result = await e.run(ev, ctx);
       if (e.once && token === aborted) R.Game.flags['ev_' + id] = true;
+      // 章の札（地方を解いたイベントの締めの後。R17）→ 報酬のアクセサリを付けるか
+      await showCards(token);
       while (wearQ.length && token === aborted) await offerWear(ev, wearQ.shift());
     } catch (err) {
       if (!(err && err.aborted)) { console.error('[event ' + id + ']', err); }
@@ -468,6 +506,7 @@
       if (cur && cur.run === run) {
         busy = false;
         cur = null;
+        cardsDue.length = 0;   // 途中で落ちたイベントの札は次のイベントへ持ち越さない
         if (token === aborted) { try { R.Field.unlock('event'); } catch (err) { /* */ } autoHide(false); }
         if (token === aborted && R.Engine.fade.a > 0.01 && !(R.Engine.fade.anim)) R.Engine.fadeTo(0, 200);
         if (ctx._battled && R.Field.encounter && R.Field.encounter.suppress) { try { R.Field.encounter.suppress(6); } catch (err) { /* */ } }
@@ -491,6 +530,7 @@
     aborted++;
     later.length = 0;
     afters.length = 0;
+    cardsDue.length = 0;
     if (R.UIK && R.UIK.Message && R.UIK.Message.busy()) R.UIK.Message.close();
     // 積まれた演出（celebrate・歌あわせ）を外す
     try {

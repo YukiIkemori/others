@@ -141,6 +141,47 @@ function mk(p) {
     ok('effect-only accessory (lantern): default is the first member with a free slot', lan.best >= 0 && !lan.rows[lan.best].swap, lan.best);
   }
 
+  // テスター 2026-10-04 R5: 数の札の決定を連打したら、続けて出た「今すぐ装備する？」で 1 人目に付いた。
+  //   1 つ目の問いだけ短い settle（決定を離して 250 ms）。取り消しは効く。2 つ目からは付けない（店は連打で進める。持ち主 2026-10-03）
+  section('数の札 → 今すぐ装備する？ の決定よけ（R5）');
+  {
+    R.Dev.applyState('menus_party');
+    const va = mk({ id: 'shop_pharos_arms' });
+    R.Game.gold = 1e5;
+    const I = R.Input, down0 = I.down, pressed0 = I.pressed, t0 = R.Engine.time;
+    let held = {}, edge = {};
+    I.down = (b) => !!held[b]; I.pressed = (b) => !!edge[b];
+    const frame = (ms, h, e) => { R.Engine.time += ms; held = h || {}; edge = e || {}; if (va.modal) S._modalUpdate(va); };
+    try {
+      const before = S.party().map((c) => c.equip.hands);
+      held = { a: true };   // 数の札の決定を押したまま問いが出る
+      const pr = va.doBuy('hn_glove_0', 2);
+      const m = va.modal;
+      ok('1st equip ask carries a settle', m && m.kind === 'ask' && m.settle && m.settle.ms > 0, m && m.settle);
+      frame(16, { a: true }, {});
+      frame(60, {}, {});
+      frame(40, { a: true }, { a: true });   // 連打の 2 回目（出てから 116 ms）
+      ok('a mashed confirm right after the quantity picker does not equip', !m.ending && S.party().every((c, i) => c.equip.hands === before[i]));
+      frame(300, {}, {});
+      frame(16, { a: true }, { a: true });
+      ok('after the short settle, A equips (still quick)', m.ending === true);
+      void pr;
+    } finally { I.down = down0; I.pressed = pressed0; R.Engine.time = t0; }
+    const v2 = mk({ id: 'shop_pharos_arms' });
+    let got = null; const ask0 = S.ask;
+    S.ask = async (view, o) => { got = o; return o.cancel; };
+    const settles = [];
+    try {
+      await v2.offerEquip('hn_glove_0', 1);
+      R.Dev.applyState('menus_party'); R.Game.gold = 1e5;
+      const v3 = mk({ id: 'shop_pharos_arms' });
+      S.ask = async (view, o) => { settles.push(o.settle || 0); return o.index; };
+      await v3.doBuy('hn_glove_0', 2);
+    } finally { S.ask = ask0; }
+    ok('offerEquip without a settle (other callers) stays immediate', got && !got.settle, got && got.settle);
+    ok('buy ×2: only the 1st ask is settled, the 2nd is immediate', settles.length === 2 && settles[0] > 0 && settles[1] === 0, settles);
+  }
+
   section('まとめ売り');
   {
     R.Dev.applyState('menus_party');

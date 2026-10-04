@@ -392,6 +392,21 @@
     } catch (e) { console.error('[battle retry keep]', e); }
   }
 
+  /**
+   * やり直しは全快で始める（持ち主 2026-10-04「直前の戦闘、HP回復してあげよう」。テスター 2026-10-04 R3・R13: 道中で削れたまま
+   * 何度もやり直していた）。戦う人（setup.members、無ければ出撃中の 4 人）の HP・MP を満たし、戦闘不能と状態異常を消す。
+   * 道具・お金・ほかの物は R.Save.restore('battle') で戻したまま（負けた戦闘で使った道具は戻る。今までどおり）
+   */
+  function retryHeal(st) {
+    const G = R.Game;
+    if (!G || !R.Rules || !R.Rules.fullRestore) return;
+    try {
+      const ids = st.setup.members && st.setup.members.length ? st.setup.members : (R.Party && R.Party.members ? R.Party.members().map((c) => c.id) : []);
+      for (const id of ids) { const c = G.chars && G.chars[id]; if (c) R.Rules.fullRestore(c); }
+    } catch (e) { console.error('[battle retry heal]', e); }
+  }
+  Bt._retryHeal = retryHeal;   // テスト用
+
   async function outcome(st) {
     const B = st.B, over = B.over;
     st.over = over;
@@ -408,6 +423,7 @@
       const keep = retryKeep();
       R.Save.restore('battle');
       retryApply(keep);
+      retryHeal(st);
       st.retry++;
       initCore(st);
       st.cover = 1; st.go = null;
