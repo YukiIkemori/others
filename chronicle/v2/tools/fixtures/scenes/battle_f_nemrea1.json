@@ -1,0 +1,10 @@
+{
+ "scene": "battle",
+ "desc": "FINALE: 最後のボス b_nemrea1（虚ろの間。絵の確かめ用）",
+ "state": "content_s_battle",
+ "setup": {
+  "troop": "tr_b_nemrea1",
+  "boss": true,
+  "seed": "shot-nemrea1"
+ }
+}
