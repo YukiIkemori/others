@@ -987,7 +987,7 @@
       const t = K.ABIL_GEAR[it.grade];
       if (!t) return {};
       const g = it.slot === 'weapon' || it.slot === 'body' || it.slot === 'acc' ? it.slot : 'armor';
-      const v = t[g][clamp(it.tier | 0, 0, ITEM_TIER_MAX)];
+      const v = t[g][clamp((it.valueTier != null ? it.valueTier : it.tier) | 0, 0, ITEM_TIER_MAX)];
       const SK = { s: 'str', v: 'vit', d: 'dex', a: 'agi', i: 'int', m: 'mnd' };
       const letters = String(it.units || '').replace(/\d/g, '').split('').filter((ch) => SK[ch]);
       const out = {};
@@ -1033,7 +1033,8 @@
         out.tier = T0;
         return out;
       }
-      const T = clamp(it.tier | 0, 0, ITEM_TIER_MAX), g = it.grade || 'normal';
+      // valueTier: 値のティア（表示・並びのティア tier と別。クリア後の超レア 12 は 13 の強さ。持ち主 2026-10-04「12 は実質 13 レベルに強くて良い」）
+      const T = clamp((it.valueTier != null ? it.valueTier : it.tier) | 0, 0, ITEM_TIER_MAX), g = it.grade || 'normal';
       if (it.stats === undefined && EQUIP_GROUPS.includes(it.slot)) {
         const st = Rules.abilOf(it);
         if (it.statsAdd) for (const k in it.statsAdd) st[k] = (st[k] || 0) + it.statsAdd[k];
@@ -1059,7 +1060,7 @@
       if (it.icon === undefined) it.icon = Rules.defaultIcon(it);
       if (it.sort === undefined && EQUIP_GROUPS.includes(it.slot)) {
         const off = it.src === 'relic' || it.src === 'reward' || it.src === 'unique' ? 90 : it.src === 'steal' ? 80 : g === 'super' ? 70 : g === 'rare' ? 50 : 0;
-        it.sort = T * 100 + (it.lineNo | 0) + off;
+        it.sort = clamp(it.tier | 0, 0, ITEM_TIER_MAX) * 100 + (it.lineNo | 0) + off;
       }
       if (!it.desc) it.desc = Rules.autoDesc(it);
       return it;

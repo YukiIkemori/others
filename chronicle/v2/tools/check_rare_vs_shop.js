@@ -15,12 +15,16 @@
 //       … 地方のボス（bossTroop）とレア魔物（rareEncounters）も同じ地方のティア
 //     決まった宝箱の伸びる一品物（u_*。開けたティアの値。R.Rules.fillItem(it, {tier})）
 //   合格: レアの値 ≥ 店の天井 × MARGIN（1.05）
-//   魔物から取る ★ の装備（grow 'drop'。pools.js が印を付ける）は手に入れたティアの値（R.Rules.fillItem(it, {tier})）で比べ、
-//     上にも抜けすぎないこと（店の天井 × MAXR 以下）も見る。全部の出どころを、そのティアの幅の全部で見る
+//   魔物から取る ★ の装備・レアの箱の ★ の装備（grow 'drop'。pools.js が印を付ける）は手に入れたティアの値（R.Rules.fillItem(it, {tier})）で比べ、
+//     上にも抜けすぎないこと（店の天井 × MAXR[等級] 以下）も見る。全部の出どころを、そのティアの幅の全部で見る
+//   持ち主 2026-10-04 の表（design/notes/gear_tiers.md）: 店 武器 T+1・防具 T（8 が天井、終章・クリア後も）／レア T+1／超レア T+2（T8 はレア 9・超レア 10）／
+//     クリア後 T9 はレア 11・超レア 12。だから天井の上限 MAXR は等級ごと（超レアの防具は店の 2 段上）。
+//     クリア後（T9）の出どころは上限を見ない（店の天井 8 よりずっと上が正しい）。専用の品（fixedTier）は「そのティアの曲線の値」以上か
+//     （ティア 12 は 13 の強さ = valueTier 13）を checkPostclear で見る
 'use strict';
 
 const MARGIN = 1.05;
-const MAXR = 1.6;   // grow 'drop' の品の上限（店の天井の何倍まで）
+const MAXR = { rare: 1.8, super: 2.5 };   // grow 'drop' の品の上限（店の天井の何倍まで。等級ごと）
 const ARMOR = ['shield', 'head', 'body', 'hands', 'feet'];
 
 function loadR() { return require('./lib/load')({ quiet: true }); }
@@ -76,7 +80,7 @@ function check(R) {
     if (seen.has(key)) return;
     seen.add(key);
     // 伸びる品は上にも抜けすぎない（早く来ても強すぎない）: 店の天井 × MAXR まで
-    const over = it.grow === 'drop' && v > c.v * MAXR;
+    const over = it.grow === 'drop' && T < 9 && v > c.v * (MAXR[it.grade] || MAXR.rare);
     rows.push({ src, where, T, item: id, name: it.name, v, shop: c.id, shopName: (DB.items[c.id] || {}).name, sv: c.v, ok: v >= c.v * MARGIN && !over, over });
   };
 
@@ -90,7 +94,8 @@ function check(R) {
   // ---- 魔物（出現表・レア魔物・地方のボス）
   const monItems = (d) => {
     const dr = (d && d.drops) || {};
-    return ['rare', 'super', 'steal'].map((s) => dr[s] && dr[s].item && { s, item: dr[s].item }).filter(Boolean);
+    // レアの枠の steal（盗みのレア。持ち主 2026-10-04）も見る
+    return ['rare', 'super', 'steal'].map((s) => dr[s] && dr[s].item && { s, item: dr[s].item }).concat(dr.rare && dr.rare.steal ? [{ s: 'steal', item: dr.rare.steal }] : []).filter(Boolean);
   };
   for (const [zid, z] of Object.entries(DB.encounters)) {
     if (!z || !z.groups || !z.region) continue;
@@ -130,6 +135,23 @@ function check(R) {
   return rows;
 }
 
+/**
+ * クリア後の専用の品（fixedTier）: 値がそのティアの土台の曲線（同じ等級・枠・重さ・系統の素の品）以上か。ティア 12 は 13 の強さ（valueTier 13）。
+ *   → [{item, tier, vt, v, base, ok}]
+ */
+function checkPostclear(R) {
+  const DB = R.DB, Ru = R.Rules, out = [];
+  for (const [id, it] of Object.entries(DB.items)) {
+    if (!it || !it.fixedTier || !['weapon', ...ARMOR].includes(it.slot)) continue;
+    const vt = it.valueTier != null ? it.valueTier : it.tier;
+    const plain = Ru.fillItem({ slot: it.slot, wtype: it.wtype, weight: it.weight, grade: it.grade, tier: vt, mult: it.mult, magMult: it.magMult, units: '' });
+    const pw = (x) => (x.slot === 'weapon' ? (x.wtype === 'staff' ? x.mag : x.atk) : x.def + x.mdef);
+    const want = { 11: 11, 12: 13 }[it.tier];
+    out.push({ item: id, name: it.name, tier: it.tier, vt, v: pw(it), base: pw(plain), ok: vt === want && pw(it) >= pw(plain) });
+  }
+  return out;
+}
+
 const DB_grow = (R, id) => !!(R.DB.items[id] && R.DB.items[id].grow === 'drop');
 
 function main() {
@@ -139,14 +161,17 @@ function main() {
   const bad = rows.filter((r) => !r.ok);
   const grow = rows.filter((r) => DB_grow(R, r.item));
   const ratio = grow.map((r) => r.v / r.sv);
-  console.log(`check_rare_vs_shop: ★ の装備の出どころ ${rows.length} 件（品 ${new Set(rows.map((r) => r.item)).size}）、店の天井 × ${MARGIN} 未満・× ${MAXR} 超 ${bad.length} 件` +
+  console.log(`check_rare_vs_shop: ★ の装備の出どころ ${rows.length} 件（品 ${new Set(rows.map((r) => r.item)).size}）、店の天井 × ${MARGIN} 未満・× ${MAXR.rare}（超レア ${MAXR.super}）超 ${bad.length} 件` +
     (ratio.length ? `（魔物から取る伸びる品 ${grow.length} 件: 店の天井の ${Math.min(...ratio).toFixed(2)}〜${Math.max(...ratio).toFixed(2)} 倍）` : ''));
   for (const r of verbose ? rows : bad) {
     const tag = r.ok ? 'ok  ' : r.over ? 'OVER' : 'FAIL';
     console.log(`  ${tag} T${r.T} ${r.src.padEnd(5)} ${r.where.padEnd(34)} ${r.item}（${r.name}）${r.v}  vs 店 ${r.shop}（${r.shopName}）${r.sv}`);
   }
-  if (bad.length) process.exitCode = 1;
+  const pc = checkPostclear(R), pcBad = pc.filter((r) => !r.ok);
+  console.log(`クリア後の専用の装備 ${pc.length} 品（ティア 11 → 値 11、ティア 12 → 値 13）: 外れ ${pcBad.length}`);
+  for (const r of verbose ? pc : pcBad) console.log(`  ${r.ok ? 'ok  ' : 'FAIL'} ${r.item}（${r.name}）ティア ${r.tier} 値 ${r.vt}: ${r.v} vs 曲線 ${r.base}`);
+  if (bad.length || pcBad.length) process.exitCode = 1;
 }
 
-module.exports = { check, MARGIN };
+module.exports = { check, checkPostclear, MARGIN, MAXR };
 if (require.main === module) main();

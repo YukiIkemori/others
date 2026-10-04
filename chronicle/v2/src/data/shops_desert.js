@@ -27,6 +27,9 @@
   const WARDS = ['ac_ward_poison', 'ac_ward_blind', 'ac_ward_sleep', 'ac_ward_paralyze', 'ac_ward_silence', 'ac_ward_confuse', 'ac_ward_stun'];
   const ACC = (t) => ['str', 'vit', 'dex', 'agi', 'int', 'mnd'].map((s) => `ac_${s}_${t}`);
   const tiers = (fn, from, to) => { const o = {}; for (let t = from; t <= to; t++) o[t] = fn(t); return o; };
+  // T+1 の武器の段は 8 まで（持ち主 2026-10-04「店の装備はティア 8 が天井。終章・クリア後も」。9 の通常品はクリア後の魔物の落とし物）
+  const up = (t) => Math.min((R.Rules && R.Rules.K && R.Rules.K.SHOP_MAX_TIER) || 8, t + 1);
+  const uniqL = (a) => Array.from(new Set(a));
 
   // 値の倍率（shop.js の priceMul）: 解決の後は隊商ギルドの口ききで 1 割安い。屋台は値切りに勝つとさらに安い。
   //   鷹団の闇市は、通行料を払った（中立）なら 5 割高い。
@@ -41,7 +44,7 @@
       shop_kasim_items: { name: R.T('shops.shop_kasim_items.name'), kind: 'item', priceMul: guild, keepOld: true, sell: true, items: f(S0.concat(S1, ['i_stone_earth', 'i_stone_wind'])), tier: { 2: f(S2), 4: f(S3), 5: f(S5) } },
       shop_kasim_arms: { name: R.T('shops.shop_kasim_arms.name'), kind: 'weapon', priceMul: guild, keepOld: false, sell: true,
         items: gear(WEAPON_LINES, 0).concat(gear(WEAPON_LINES, 1), gear(ARMOR_LINES, 0)),
-        tier: tiers((t) => gear(WEAPON_LINES, t).concat(gear(WEAPON_LINES, t + 1), gear(ARMOR_LINES, t)), 1, 8) },
+        tier: tiers((t) => uniqL(gear(WEAPON_LINES, t).concat(gear(WEAPON_LINES, up(t)), gear(ARMOR_LINES, t))), 1, 8) },
       shop_kasim_bazaar: { name: R.T('shops.shop_kasim_bazaar.name'), kind: 'special', priceMul: bazaar, keepOld: false, sell: true,
         items: f(STONES.concat(WARDS.slice(0, 4), ACC(0))), tier: tiers((t) => f(STONES.concat(WARDS, ACC(Math.min(t, 8)))), 1, 8) },
       shop_sandedge: { name: R.T('shops.shop_sandedge.name'), kind: 'item', keepOld: true, sell: true, items: f(S0.concat(['i_potion', 'i_ether'])), tier: { 2: f(['i_incense', 'i_thaw']), 5: f(S5) } },
@@ -50,7 +53,7 @@
         items: f(['ac_quiet', 'i_lure', 'i_lens']), tier: { 1: f(['ac_quiet', 'ac_ward_poison', 'ac_purse', 'i_lure', 'i_lens']), 2: f(['ac_quiet', 'ac_ward_poison', 'ac_ward_blind', 'ac_purse', 'i_lure', 'i_lens']) } },
       shop_hawks: { name: R.T('shops.shop_hawks.name'), kind: 'weapon', priceMul: hawks, keepOld: false, sell: true,
         items: f(gear(['w_dagger', 'w_bow'], 1).concat(['i_smoke', 'i_lure', 'ac_quickhand'])),
-        tier: tiers((t) => f(gear(['w_dagger', 'w_bow'], t + 1).concat(['i_smoke', 'i_lure', 'ac_quickhand', 'ac_purse'])), 1, 8) },
+        tier: tiers((t) => f(gear(['w_dagger', 'w_bow'], up(t)).concat(['i_smoke', 'i_lure', 'ac_quickhand', 'ac_purse'])), 1, 8) },
     });
   });
 })(window.RPG);

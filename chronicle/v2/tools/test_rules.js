@@ -37,7 +37,12 @@ ok('spdToAbil 28 → 14, 60 → 24', Ru.spdToAbil(28) === 14 && Ru.spdToAbil(60)
 {
   const old = [16, 30, 45, 69, 94, 127, 162, 208, 256, 326];
   const got = K.WA.map((w, T) => Math.round((w + 2 * K.ACC_W[T]) * 1.225));
-  ok('K.WA reproduces the old attack table ±1 (§2.3)', got.every((v, T) => Math.abs(v - old[T]) <= 1), got);
+  ok('K.WA reproduces the old attack table ±1 (§2.3)', old.every((v, T) => Math.abs(got[T] - v) <= 1), got);
+  // 持ち主 2026-10-04: 品のティアの表は 0〜13（クリア後のレア 11・超レア 12 = 13 の強さ）。10〜13 は滑らかに伸ばす
+  const tabs = { WA: K.WA, W: K.W, PRICE: K.PRICE, ACC_W: K.ACC_W };
+  ok('item-tier tables cover tiers 0..13 and keep rising', Object.values(tabs).every((a) => a.length === 14 && a.every((v, i) => !i || v >= a[i - 1])) && K.ITEM_TIER_MAX === 13,
+    Object.fromEntries(Object.entries(tabs).map(([k, a]) => [k, a.length])));
+  ok('ABIL_GEAR rows cover tiers 0..13', ['rare', 'super'].every((g) => Object.values(K.ABIL_GEAR[g]).every((a) => a.length === 14)));
 }
 // 合成の人で導かれる値を 4 点（16 / 21 / 25 / 10）で見る
 function fake(stats, extra) {
@@ -299,7 +304,7 @@ section('data: steal-only (§7.2, V2_PLAN §2.6.6)');
 {
   const st = Object.keys(DB.items).filter((id) => DB.items[id].src === 'steal');
   // 36 + 7 for the slice's stage 1–2 monsters (owner 2026-09-27: 「レアがめっきり減ったねえ……。楽しみがちょっとないかも」)
-  ok('43 steal-only items, super, stealOnly, no quirk', st.length === 43 && st.every((id) => DB.items[id].grade === 'super' && DB.items[id].stealOnly && !DB.items[id].quirk));
+  ok('55 steal-only items (43 + 12 post-clear tier 12), super, stealOnly, no quirk', st.length === 55 && st.every((id) => DB.items[id].grade === 'super' && DB.items[id].stealOnly && !DB.items[id].quirk));
   ok('ids <slot>_st_<name>', st.every((id) => /^(w_\w+|ac|hn|ft|sh|bd|hd)_st_/.test(id) || /^w_\w+_st_/.test(id)));
   // 持ち主 2026-10-02「盗みのレアを少し上げる」: 雑魚 32 → 16、レア魔物 16 → 12、ボスは 16 のまま
   ok('rates: bosses 16, rare 12, mobs 16', Object.entries(DB.stealSources).every(([, s]) => s.rate === (/^rm_/.test(s.mon) ? 12 : 16)) && DB.stealSources.ac_st_rooteater.rate === 16 && DB.stealSources.ft_st_jewel_hare.rate === 12, DB.stealSources);
@@ -428,7 +433,11 @@ section('monster ★ gear scales with the tier it was obtained at (grow drop, ow
 {
   const mk = ['hn_st_ironwarden', 'w_bow_r1', 'w_dagger_st_frostfang', 'w_sword_tide', 'bd_sr_starry'];
   ok('monster rare/super/steal gear is grow drop; accessories, uniques and chest-only items are not',
-    mk.every((id) => DB.items[id].grow === 'drop') && DB.items.ac_st_rat_pouch.grow !== 'drop' && DB.items.u_hans_axe.grow === 'tier' && DB.items.w_bow_snakeskin.grow !== 'drop');
+    mk.every((id) => DB.items[id].grow === 'drop') && DB.items.ac_st_rat_pouch.grow !== 'drop' && DB.items.u_hans_axe.grow === 'tier' && DB.items.w_sword_p12.grow !== 'drop' && DB.items.bd_p11_heavy.grow !== 'drop');
+  // 持ち主 2026-10-04: レアの箱（p_rare・p_boss・p_super）の ★ の装備も手に入れたティアの値（レア T+1・超レア T+2）
+  const chestGear = new Set();
+  for (const pid of ['p_rare', 'p_boss', 'p_super']) for (const l of DB.pools[pid].tiers) for (const e of l) { const it = e.item && DB.items[e.item]; if (it && ['weapon', 'shield', 'head', 'body', 'hands', 'feet'].includes(it.slot) && it.grade !== 'normal' && !['unique', 'reward', 'relic'].includes(it.src)) chestGear.add(e.item); }
+  ok('rare-chest ★ gear is grow drop too', chestGear.size > 20 && [...chestGear].every((id) => DB.items[id].grow === 'drop'), [...chestGear].filter((id) => DB.items[id].grow !== 'drop'));
   const d0 = DB.items.hn_st_ironwarden.def;
   const a1 = Ru.fillItem(DB.items.hn_st_ironwarden, { tier: 1 }), a7 = Ru.fillItem(DB.items.hn_st_ironwarden, { tier: 7 });
   ok('armor: lower at T1, higher at T7, base item unchanged', a1.def < d0 && a7.def > d0 && a1.tier === 1 && DB.items.hn_st_ironwarden.def === d0, [a1.def, d0, a7.def]);

@@ -53,19 +53,26 @@
     // 魔物から取る ★ の装備（レア・スーパーレアの枠と盗み専用。ボス・レア魔物も）は手に入れたティアで値が決まる（grow 'drop'。
     //   R.Rules.fillItem・R.State.gain・R.Rules.itemOf）。持ち主 2026-10-02「店の装備は最低限。レア・盗みの装備はその時の店の品より少し上
     //   （早く来ても強すぎず、遅く来ても弱すぎず）」。アクセサリ（効き目が % の品）・一品物・報酬・遺物はそのまま
+    //   持ち主 2026-10-04（装備のティアの見直し）: レアの箱（p_rare・p_boss・p_super）の ★ の装備も同じ（値は R.Rules.valueTier: レア T+1・超レア T+2、
+    //   クリア後 T9 はレア 11・超レア 12。武器と防具で同じ）。ティアの決まったクリア後の専用の品（fixedTier。items_postclear.js）は伸ばさない
     const GEAR = ['weapon', 'shield', 'head', 'body', 'hands', 'feet'];
+    const growable = (it) => it && GEAR.includes(it.slot) && (it.grade === 'rare' || it.grade === 'super') && !it.grow && !it.fixedTier && !['unique', 'reward', 'relic'].includes(it.src);
     for (const m of Object.values(R.DB.monsters || {})) {
       const d = (m && m.drops) || {};
       for (const k of ['rare', 'super', 'steal']) {
-        const it = d[k] && d[k].item && R.DB.items[d[k].item];
-        if (it && GEAR.includes(it.slot) && (it.grade === 'rare' || it.grade === 'super') && !it.grow && !['unique', 'reward', 'relic'].includes(it.src)) it.grow = 'drop';
+        for (const id of [d[k] && d[k].item, d[k] && d[k].steal]) {
+          const it = id && R.DB.items[id];
+          if (growable(it)) it.grow = 'drop';
+        }
       }
     }
     const band = (it, T) => (it.slot === 'weapon' ? WB[T] : RB[T]);
-    const rare = (T) => ids((it) => it.src === 'drop' && it.grade === 'rare' && EQ.includes(it.slot) && it.tier === band(it, T));
-    const mrare = (T) => ids((it) => it.src === 'mdrop' && it.grade === 'rare' && EQ.includes(it.slot) && (it.slot === 'weapon' ? it.tier === WB[T] : it.tier === T || it.tier === RB[T])).filter(free);
+    const rare = (T) => ids((it) => it.src === 'drop' && it.grade === 'rare' && !it.fixedTier && EQ.includes(it.slot) && it.tier === band(it, T));
+    const mrare = (T) => ids((it) => it.src === 'mdrop' && it.grade === 'rare' && !it.fixedTier && EQ.includes(it.slot) && (it.slot === 'weapon' ? it.tier === WB[T] : it.tier === T || it.tier === RB[T])).filter(free);
     // 超レアの武器も T+1 の段（無ければ T。ティア 9 の上は無い）
-    const sup = (T) => ids((it) => (it.src === 'mdrop' || it.src === 'super') && it.grade === 'super' && EQ.includes(it.slot) && it.tier === (it.slot === 'weapon' ? Math.min(9, T + 1) : T)).filter(free);
+    //   防具・アクセサリはティア T（終章 T8 は 9 も。魔物の枠から外れたクリア後の前の超レアの行き先）。クリア後の専用の品（fixedTier）は入れない
+    const sup = (T) => ids((it) => (it.src === 'mdrop' || it.src === 'super') && it.grade === 'super' && !it.fixedTier && EQ.includes(it.slot) &&
+      (it.slot === 'weapon' ? it.tier === Math.min(9, T + 1) : it.tier === T || (T === 8 && it.tier === 9))).filter(free);
     const P = (fn) => ({ tiers: TIERS.map(fn) });
     const W1 = (list, w) => list.map((item) => ({ item, w: w || 1 }));
     // 表の中の重みを合計 total にならす（p_T の混ぜ方）
@@ -87,6 +94,7 @@
       p_super: P((T) => { for (let d = 0; d < 10; d++) for (const t of [T - d, T + d]) { if (t < 0 || t > 9) continue; const l = sup(t); if (l.length) return W1(l); } return []; }),
     };
     pools.p_T = P((T) => [...scale(pools.p_supply.tiers[T], MIX.supply), ...scale(pools.p_gear.tiers[T], MIX.gear), ...scale(pools.p_gold.tiers[T], MIX.gold)]);
+    for (const pid of ['p_rare', 'p_boss', 'p_super']) for (const list of pools[pid].tiers) for (const e of list) if (e.item && growable(R.DB.items[e.item])) R.DB.items[e.item].grow = 'drop';
     for (const id of Object.keys(pools)) R.def('pools', id, pools[id]);
   });
 })(window.RPG);

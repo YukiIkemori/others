@@ -342,8 +342,8 @@ section('7. ドロップの枠（STATS_REWORK §10.1）');
 section('8. 盗み専用（STATS_REWORK §7.6、V2_PLAN §2.6.6）');
 {
   const st = Object.entries(D.items).filter(([, it]) => it.stealOnly);
-  // 36 ＋縦切りの 7（オーナー 2026-09-27「レアがめっきり減ったねえ……」）
-  ok(`盗み専用 30〜45 品（${st.length}）`, st.length >= 30 && st.length <= 45);
+  // 36 ＋縦切りの 7（オーナー 2026-09-27「レアがめっきり減ったねえ……」）＋クリア後の超レア 12（持ち主 2026-10-04。items_postclear.js）
+  ok(`盗み専用 30〜60 品（${st.length}）`, st.length >= 30 && st.length <= 60);
   const form = st.filter(([, it]) => it.grade !== 'super' || it.src !== 'steal' || it.quirk).map((x) => x[0]);
   ok('grade super・src steal・quirk なし', form.length === 0, form);
   const owners = {};
