@@ -50,7 +50,6 @@
     'events.oblivion_3_echo.narr_3': '王座之间东北的小房间里，\n可以看见向下的阶梯。',
     'events.oblivion_3_echo.again': '恐惧的气息，\n仍残留在这王座上……。',
     'events.oblivion_3_echo.again_gone': '魔王的残影再一次\n如雾一般消散了。',
-    'events.oblivion_4_hint.narr': '入口的石头上刻着字。',
     'events.oblivion_4_hint.narr_2': '「迷路时，就去找灯。\n白纸发光的那一边，\n就是通往前方的路。」',
     'events.oblivion_4_loop.narr': '……回过神来，又站在了\n刚才那个房间里。',
     'events.oblivion_4_loop.narr_2': '忽然看见，掉在地上的\n白纸在无风的情况下，\n飘向了某处……。',

@@ -50,7 +50,6 @@
     'events.oblivion_3_echo.narr_3': 'In the small room northeast of the\nthrone room, stairs lead down.',
     'events.oblivion_3_echo.again': 'A trace of fear still\nlingers on this throne...',
     'events.oblivion_3_echo.again_gone': 'The Echo of the Demon King\nfaded like mist once more.',
-    'events.oblivion_4_hint.narr': 'Letters are carved on a stone\nby the entrance.',
     'events.oblivion_4_hint.narr_2': '"When lost, seek the light.\nWhere the white paper glows,\nthe way goes on."',
     'events.oblivion_4_loop.narr': '...Before you know it, you\'re\nstanding in the same room again.',
     'events.oblivion_4_loop.narr_2': 'A white page on the floor drifts\noff somewhere, though\nthere is no wind...',

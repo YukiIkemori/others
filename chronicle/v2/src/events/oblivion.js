@@ -5,8 +5,7 @@
 //   oblivion_statue        3 階の恐れの像
 //   oblivion_3_echo        3 階 玉座の間の入口で魔王の残影（v_valzard_oblivion_01〜03 → tr_b_valzard_echo）→ oblivion_echo。
 //                          倒した後は玉座を調べると「もう一度挑みますか？」（レア・超レアの落とし物のため）
-//   oblivion_4_hint / oblivion_4_loop   4 階 終わらない回廊（光の無い廊下を進むと最初の部屋へ。3 回ごとに白い紙が正しい口を示す）
-//   oblivion_ring_stone    5 階 輪の石碑
+//   oblivion_4_loop       4 階 終わらない回廊（光の無い廊下を進むと最初の部屋へ。3 回ごとに白い紙が正しい口を示す。入口の立て札が手がかり）
 //   oblivion_5_ouroboros   5 階 フィーネの声（v_fine_oblivion_01・02）→ 円環竜オウロボラ（tr_b_ouroboros）→「円環が、ほどけた」→
 //                          外伝『円環の竜』（読み物 lo_ouroboros）→ oblivion_ouroboros。倒した後は渦の中ほどを調べるともう一度戦える
 // ボス戦は逃げられない（boss）。負け・全滅では何も記録しない（踏み板からまた始まる）。
@@ -20,22 +19,29 @@
   };
 
   // ================================================================ 各階に着いたとき
-  const arrive = (n, lines) => E('oblivion_' + n + '_arrive', async (ev) => {
+  const arrive = (n, keys) => E('oblivion_' + n + '_arrive', async (ev) => {
     const id = 'oblivion_' + n + '_arrive';
     if (ev.flag(id)) return;
     ev.setFlag(id);
     if (n === 1) ev.leadDone('l_post_oblivion');
     await ev.wait(200);
-    await ev.caption(R.T('events.' + id + '.caption'), { ms: 2600 });
-    for (let i = 0; i < lines; i++) await narr(ev, R.T('events.' + id + '.narr' + (i ? '_' + (i + 1) : '')));
+    await ev.caption(keys[0], { ms: 2600 });
+    for (const t of keys.slice(1)) await narr(ev, t);
   }, { meta: { needs: [], gives: ['flag:oblivion_' + n + '_arrive'] } });
-  arrive(1, 3); arrive(2, 1); arrive(3, 1); arrive(4, 1); arrive(5, 2);
+  arrive(1, [R.T('events.oblivion_1_arrive.caption'), R.T('events.oblivion_1_arrive.narr'), R.T('events.oblivion_1_arrive.narr_2'), R.T('events.oblivion_1_arrive.narr_3')]);
+  arrive(2, [R.T('events.oblivion_2_arrive.caption'), R.T('events.oblivion_2_arrive.narr')]);
+  arrive(3, [R.T('events.oblivion_3_arrive.caption'), R.T('events.oblivion_3_arrive.narr')]);
+  arrive(4, [R.T('events.oblivion_4_arrive.caption'), R.T('events.oblivion_4_arrive.narr')]);
+  arrive(5, [R.T('events.oblivion_5_arrive.caption'), R.T('events.oblivion_5_arrive.narr'), R.T('events.oblivion_5_arrive.narr_2')]);
 
   // ================================================================ 1 階 岸の石碑と墓
+  const STONES = [
+    [R.T('events.oblivion_stone.s1'), R.T('events.oblivion_stone.s1_2')], [R.T('events.oblivion_stone.s2'), R.T('events.oblivion_stone.s2_2')],
+    [R.T('events.oblivion_stone.s3'), R.T('events.oblivion_stone.s3_2')], [R.T('events.oblivion_stone.s4'), R.T('events.oblivion_stone.s4_2')],
+  ];
   E('oblivion_stone', async (ev, ctx) => {
-    const n = (ctx && ctx.stone) || 1;
-    await narr(ev, R.T('events.oblivion_stone.s' + n));
-    await narr(ev, R.T('events.oblivion_stone.s' + n + '_2'));
+    const pages = STONES[((ctx && ctx.stone) || 1) - 1] || STONES[0];
+    for (const t of pages) await narr(ev, t);
   });
   E('oblivion_graves', async (ev) => {
     await narr(ev, R.T('events.oblivion_graves.narr'));
@@ -44,7 +50,6 @@
   // ================================================================ 2 階・3 階・5 階の調べる物
   E('oblivion_torn_seam', async (ev) => { await narr(ev, R.T('events.oblivion_torn_seam.narr')); });
   E('oblivion_statue', async (ev) => { await narr(ev, R.T('events.oblivion_statue.narr')); });
-  E('oblivion_ring_stone', async (ev) => { await narr(ev, R.T('events.oblivion_ring_stone.narr')); });
 
   /** 「もう一度挑みますか？」→ 同じボスともう一度（落とし物のため）。勝てば true */
   async function rematch(ev, troop, intro, gone) {
@@ -91,10 +96,6 @@
 
   // ================================================================ 4 階 終わらない回廊
   const LOOP_VAR = 'oblivion_4_loops';
-  E('oblivion_4_hint', async (ev) => {
-    await narr(ev, R.T('events.oblivion_4_hint.narr'));
-    await narr(ev, R.T('events.oblivion_4_hint.narr_2'));
-  });
   E('oblivion_4_loop', async (ev) => {
     const n = ev.addVar(LOOP_VAR, 1);
     ev.sfx('warp');

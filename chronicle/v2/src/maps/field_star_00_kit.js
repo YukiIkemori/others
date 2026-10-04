@@ -46,8 +46,13 @@
       const SR = M.s_road;
       if (!(SR.tilePatches || []).some((p) => p.demoRock)) {
         SR.tilePatches = (SR.tilePatches || []).concat([
-          { cond: { slice: true }, rect: [50, 38, 3, 2], rows: ['RRR', 'RRR'], demoRock: true },
-          { cond: { slice: true }, rect: [47, 0, 2, 2], rows: ['RR', 'RR'], demoRock: true },
+          { cond: { slice: true }, rect: [49, 37, 5, 2], rows: ['RRRRR', 'RRRRR'], demoRock: true },
+          { cond: { slice: true }, rect: [47, 1, 2, 2], rows: ['RR', 'RR'], demoRock: true },
+        ]);
+        // 崖崩れのそばの看板（体験版の間だけ。ほかの峠の番人・看板と同じ「見える止め」）
+        SR.objects = (SR.objects || []).concat([
+          { type: 'sign', x: 53, y: 36, cond: { slice: true }, text: R.DemoGate ? R.DemoGate.TEXT : R.T('data.demo_gate.TEXT') },
+          { type: 'sign', x: 49, y: 0, cond: { slice: true }, text: R.DemoGate ? R.DemoGate.TEXT : R.T('data.demo_gate.TEXT') },
         ]);
       }
       // 湿原の旅人は街道のエリアへ移った（同じ id・同じ key）。前のワールドの写しは消す

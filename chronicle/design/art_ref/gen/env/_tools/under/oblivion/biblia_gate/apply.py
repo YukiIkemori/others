@@ -1,5 +1,5 @@
 """Paste the stairway to 忘却の底 (gen1.png, a repaint of crop.png) into the Biblia town painting: only the stairway's box (feathered),
-box-downscaled to 32 px/tile; @24 is re-made from @32 like process.py. usage: python3 apply.py  (reads biblia@32.orig.png kept here)"""
+box-downscaled to 32 px/tile; @24 is re-made from @32 like process.py. usage: python3 apply.py  (biblia@32.orig.png = the town painting before the patch: git show HEAD:v2/assets/env/finale/under/biblia@32.png > biblia@32.orig.png)"""
 import numpy as np, json
 from PIL import Image, ImageFilter
 V = '/home/user/others/chronicle/v2/assets/env/finale/under/'

@@ -49,8 +49,8 @@
           K.npc('e_noa', 'noa', 27, 26, { name: R.T('map.final_links.biblia.npcs.0.e_noa.name'), dir: 's', talk: [L('……。')], reward: null, pushable: false }),
           K.npc('e_mother', 'npc_woman_2', 24, 27, { name: R.T('map.final_links.biblia.npcs.1.e_mother.name'), dir: 'e', talk: [L('……。')], reward: null }),
           K.npc('e_boy', 'npc_child_3', 25, 27, { name: R.T('map.final_links.biblia.npcs.2.e_boy.name'), dir: 'w', talk: [L('……。')], reward: null }),
-          K.npc('e_old', 'npc_old_m_1', 31, 27, { name: R.T('map.final_links.biblia.npcs.3.e_old.name'), dir: 'n', talk: [L('……。')], reward: null }),
-          K.npc('e_woman', 'npc_woman_1', 32, 26, { name: R.T('map.final_links.biblia.npcs.4.e_woman.name'), dir: 'n', talk: [L('……。')], reward: null }),
+          K.npc('e_old', 'npc_old_m_1', 30, 27, { name: R.T('map.final_links.biblia.npcs.3.e_old.name'), dir: 'n', talk: [L('……。')], reward: null }),
+          K.npc('e_woman', 'npc_woman_1', 30, 25, { name: R.T('map.final_links.biblia.npcs.4.e_woman.name'), dir: 'n', talk: [L('……。')], reward: null }),
           K.npc('e_yena', 'npc_yena', 23, 25, { name: R.T('map.final_links.biblia.npcs.5.e_yena.name'), dir: 'e', talk: [L('……。')], reward: null }),
         ],
       });

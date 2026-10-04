@@ -43,6 +43,7 @@
   R.onData(function () {
     const K = R.ContentF.kit;
     const floor = (n) => R.T('map.oblivion.floor', { n });
+    const SUB = [R.T('map.oblivion.oblivion_1.sub'), R.T('map.oblivion.oblivion_2.sub'), R.T('map.oblivion.oblivion_3.sub'), R.T('map.oblivion.oblivion_4.sub'), R.T('map.oblivion.oblivion_5.sub')];
     const def = (id, n, o) => {
       const P = O.painted(id);
       K.def(id, Object.assign({
@@ -50,7 +51,7 @@
         legend: O.LEGEND(), rows: P.rows, outside: 'wall_stone', npcs: [], exits: [], dark: false, bgm: 'postgame', bbg: 'oblivion',
         chestTier: O.CHEST_TIER, light: O.LIGHT,
         art: Object.assign({}, P.art, { painted: ['stairs_up', 'stairs_down'] }),
-      }, o, { meta: Object.assign({ chestsInfo: true, floor: floor(n), sub: R.T('map.oblivion.' + id + '.sub') }, o.meta || {}) }));
+      }, o, { meta: Object.assign({ chestsInfo: true, floor: floor(n), sub: SUB[n - 1] }, o.meta || {}) }));
     };
     const up = (x, y, to, spawn, id) => K.stairs(x, y, { map: to, spawn }, Object.assign({ look: 'up' }, id ? { id } : {}));
     const down = (x, y, to, spawn, id) => K.stairs(x, y, { map: to, spawn }, Object.assign({ look: 'down' }, id ? { id } : {}));
@@ -113,7 +114,7 @@
       objects: [
         up(2, 12, 'oblivion_3', 'from4', 'oblivion_4_up'), up(2, 13, 'oblivion_3', 'from4'),
         down(44, 19, 'oblivion_5', 'from4', 'oblivion_4_down'), down(45, 19, 'oblivion_5', 'from4'),
-        K.exam(3, 11, 'oblivion_4_hint'),
+        K.sign(4, 10, R.T('events.oblivion_4_hint.narr_2')),   // 入口の立て札（迷ったら、灯をさがせ）
         K.chest('oblivion_4_c1', 45, 5, { pool: 'p_rare' }), K.chest('oblivion_4_c2', 25, 18, { pool: 'p_T' }), K.chest('oblivion_4_c3', 39, 6, { item: 'i_elixir', n: 1 }),
         // 正しい廊下の口の淡い光（1 の部屋は北・2 は南・3 は北）
         ...glow([[13, 6], [26, 18], [40, 6]]),
@@ -133,7 +134,7 @@
       objects: [
         up(17, 32, 'oblivion_4', 'from5', 'oblivion_5_up'), up(18, 32, 'oblivion_4', 'from5'),
         K.spring('oblivion_5_spring', 12, 4),
-        K.exam(24, 4, 'oblivion_ring_stone'),
+        K.sign(23, 4, R.T('events.oblivion_ring_stone.narr')),   // 輪の文の立て札
         K.exam(17, 17, 'oblivion_5_ouroboros', { cond: 'oblivion_ouroboros' }), K.exam(18, 17, 'oblivion_5_ouroboros', { cond: 'oblivion_ouroboros' }),
         K.chest('oblivion_5_c1', 32, 17, { pool: 'p_rare' }), K.chest('oblivion_5_c2', 3, 17, { pool: 'p_T' }), K.chest('oblivion_5_c3', 8, 27, { item: 'i_elixir', n: 1 }),
         K.prop('altar_glow', 17, 17),

@@ -50,7 +50,6 @@
     'events.oblivion_3_echo.narr_3': '玉座の間の北東の小部屋に、\n下りの階段が見える。',
     'events.oblivion_3_echo.again': '恐れの気配が、まだ\nこの玉座に残っている……。',
     'events.oblivion_3_echo.again_gone': '魔王の残影は、ふたたび\n霧のように消えていった。',
-    'events.oblivion_4_hint.narr': '入口の石に、文字が刻まれている。',
     'events.oblivion_4_hint.narr_2': '「迷ったら、灯をさがせ。\n白い紙の光るほうが、\n先へつづく道。」',
     'events.oblivion_4_loop.narr': '……気がつくと、さっきと\n同じ部屋に立っていた。',
     'events.oblivion_4_loop.narr_2': 'ふと見ると、床に落ちた\n白い紙が、風もないのに\nどこかへ舞っていく……。',

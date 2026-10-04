@@ -50,7 +50,6 @@
     'events.oblivion_3_echo.narr_3': '옥좌의 방 북동쪽 작은 방에\n내려가는 계단이 보인다.',
     'events.oblivion_3_echo.again': '두려움의 기운이 아직\n이 옥좌에 남아 있다…….',
     'events.oblivion_3_echo.again_gone': '마왕의 잔영은 다시\n안개처럼 사라져 갔다.',
-    'events.oblivion_4_hint.narr': '입구의 돌에 글자가 새겨져 있다.',
     'events.oblivion_4_hint.narr_2': '「길을 잃으면 등불을 찾아라.\n하얀 종이가 빛나는 쪽이\n앞으로 이어지는 길.」',
     'events.oblivion_4_loop.narr': '……정신을 차려 보니 아까와\n같은 방에 서 있었다.',
     'events.oblivion_4_loop.narr_2': '문득 보니 바닥에 떨어진\n하얀 종이가 바람도 없는데\n어딘가로 날아간다…….',
