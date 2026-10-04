@@ -193,6 +193,8 @@ async function shoot(S, id, out, still) {
   await C.run(P, PVLIB);
   await C.run(P, PV2LIB);
   await C.run(P, `PV2.voiceDur = ${JSON.stringify(voiceDur())}; true`);
+  // 描いた顔絵（dist/portraits）を先に読み終える（会話の窓・作成・仲間選びの頭のコマに仮の顔が出ないように。ページの時計は進めない）
+  await P.page.evaluate("RPG.Media && RPG.Media.preload ? RPG.Media.preload('portraits') : 0");
   const T = {
     js: (code) => C.run(P, code),
     idle: (n, each) => C.idle(P, n, each),
@@ -698,3 +700,50 @@ SHOTS.s9_title_slow.prep = async (T) => {
   await SHOTS.s1_title.prep(T);
   await T.js(`(() => { for (const sc of RPG.Engine.stack) for (const o of [sc, sc.view]) if (o && o.introT) { o.intro = true; o.skipped = false; o.t0 = RPG.Engine.time; } return true; })()`);
 };
+
+// ================================================================ PV2 v14（持ち主 2026-10-04）
+// 冒頭（s1_tomb_c14）:「最初から最前線中央にキャラ立たせておいて。移動させないで」→ リーネは王の間の口のまん中（26,12。泉・王の間の軸の上）に
+//   はじめから北を向いて立ったまま。カメラは v13 と同じ縦の動き（下見で s1_tomb の歩きを走らせ、毎フレームのカメラの縦の位置を写し取る）で、
+//   横は軸（x 26 = 泉と王の間のまん中）に固定。止まった絵は左右対称。出来事（ハザルの声）は v13 と同じフレームで始める
+const TOMB_AXIS = 26, TOMB_STAND = { x: 26, y: 12, dir: 'n' };
+SHOTS.s1_tomb_c14 = {
+  prep: async (T) => {
+    // 1) 下見: v13 の s1_tomb と同じ準備・同じ歩きで、撮る n フレームのカメラの縦の位置と出来事の始まりのフレームを記録
+    await SHOTS.s1_tomb.prep(T);
+    await T.js('PV2._lo = null; window.__pvCamY = []; window.__pvEvF = -1; true');
+    for (let i = 0; i < SHOTS.s1_tomb_c14.n; i++) {
+      await T.P.page.evaluate(`(() => { const S = RPG.Field._s;
+        if (PV.route) { PV.steer(); PV2.lead(0, -3); } else if (window.__pvEvF < 0) { window.__pvEvF = ${i}; PV.btn({}); }
+        const v = {px: 0, py: 0}; RPG.Field._vis(v); const c = S.cam; window.__pvCamY.push(c && c.mode === 'focus' ? c.y : v.py);
+        RPG.Engine.advance(1000 / 60); return 1; })()`);
+    }
+    // 2) 立ち位置に入り直して（歩かない）、v13 と同じ間を置く
+    await T.js(`PV.btn({}); PV.route = null; PV.enter('desert_tomb_3', ${JSON.stringify(TOMB_STAND)})`);
+    await T.idle(150); await T.settle();
+    await T.js(`RPG.Field._s.dir = 'n'; RPG.Field.camera.focus(${TOMB_AXIS}, window.__pvCamY[0], {ms: 0}); true`);
+    console.log('[pv] s1_tomb_c14 event frame', await T.js('window.__pvEvF'), 'camY', await T.js('window.__pvCamY[0].toFixed(2) + " → " + window.__pvCamY[window.__pvCamY.length - 1].toFixed(2)'));
+  },
+  n: sec(15),
+  each: (i) => `RPG.Field.camera.focus(${TOMB_AXIS}, window.__pvCamY[${i}], {ms: 0}); if (${i} === window.__pvEvF) { PV2.autoVoice(150); RPG.Events.run('desert_tomb_king', {map: 'desert_tomb_3'}); }`,
+};
+SHOTS.s1_tomb_c14_clean = Object.assign({}, SHOTS.s1_tomb_c14, { prep: async (T) => { await SHOTS.s1_tomb_c14.prep(T); await T.js('PV.hideMsg()'); } });
+
+// 世界の 6 つの地方（§4）に天気（持ち主「8つのエリア紹介で、天候エフェクトつけといて」）。カメラ・長さは v13 の同じ id と同じ。
+//   天気は weather.js の AUTO の地図ごとの候補から（R.Field._wxForce で決める）。陽炎のゆらしは遅いページで自分を止める（SH.off）が、
+//   撮影は 1 フレームずつ時計を進めるので、毎フレーム戻して描かせる（絵の時刻はフレームの時刻で決まる）
+const WX = {
+  s4_mirage: { kind: 'heat', i: 1 },        // desert_mirage: 陽炎（蜃気楼の町）
+  s4_yule_night: { kind: 'blizzard', i: 1 },  // yule_night: 吹雪（地図の天気のまま）
+  s4_loch_bells: { kind: 'fog', i: 0.7 },   // loch: 霧（湖の町。鐘楼が見える濃さ）
+  s4_cove: { kind: 'drizzle', i: 1 },       // i_cove: 海の霧雨
+  s4_lava: { kind: 'ash', i: 1 },           // a_lava: 灰と火の粉
+  s4_crater: { kind: 'stars', i: 1 },       // s_crater: 流れ星と星くず
+};
+for (const [id, w] of Object.entries(WX)) {
+  const base = SHOTS[id];
+  const wx = `RPG.Field._wxForce = ${JSON.stringify(w)}; if (RPG.Field._wxShimmer) RPG.Field._wxShimmer.off = false`;
+  SHOTS[id + '_wx'] = Object.assign({}, base, {
+    prep: async (T) => { await base.prep(T); await T.js(wx + '; true'); },
+    each: (i) => { const e = base.each ? base.each(i) : null; return e ? `${e}; ${wx}` : wx; },
+  });
+}

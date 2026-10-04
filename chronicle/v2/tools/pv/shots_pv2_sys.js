@@ -322,6 +322,8 @@ async function setupPage(S, sh) {
   const P = await C.open(S, sh.url || 'dev.html?fixture=content_d_kasim');
   await C.run(P, PVLIB);
   await C.run(P, PV2LIB);
+  // 描いた顔絵を先に読み終える（勝利の札の仲間の顔。ページの時計は進めない）
+  await P.page.evaluate("RPG.Media && RPG.Media.preload ? RPG.Media.preload('portraits') : 0");
   await C.run(P, 'PV2.fxLoad()');
   const nf = await C.until(P, 'PV2.fxOk', 1800);
   if (nf < 0) console.log('[pv] fx parts not all loaded');
