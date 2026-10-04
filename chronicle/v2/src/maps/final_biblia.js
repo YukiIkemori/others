@@ -23,6 +23,15 @@
     O.push(K.chest('biblia_c1', 3, 22, { pool: 'p_T' }), K.chest('biblia_c2', 52, 22, { item: 'i_elixir', n: 1 }), K.chest('biblia_c3', 37, 9, { item: 'i_ether2', n: 2 }));
     // 灯り（足もとの置き灯籠。当たりは無い）: 庭と広場の角
     for (const [x, y] of [[20, 22], [36, 22], [3, 17], [52, 17], [24, 36], [31, 36], [22, 12], [34, 12]]) O.push(K.prop('lantern', x, y));
+    // 忘却の底への白い階段（広場の南東、描いた下絵。maps/oblivion.js の R.Oblivion.GATE）: クリアの後に「下りますか？」で下りられる。
+    //   クリアの前は通せんぼ（gate: 白い霧で下りられない、の一言で 1 歩下がる。出口の印も出さない）
+    const OG = R.Oblivion && R.Oblivion.GATE;
+    if (OG) for (const [x, y] of OG.stairs) {
+      O.push(K.stairs(x, y, { map: 'oblivion_1', spawn: 'from_town' }, Object.assign({
+        look: 'none', confirm: R.T('map.final_biblia.oblivion_gate.confirm'),
+        gate: { when: '!final_clear', hide: true, text: R.T('map.final_biblia.oblivion_gate.closed') },
+      }, x === OG.stairs[0][0] ? { id: 'biblia_oblivion_down' } : {})));
+    }
 
     // ---------------------------------------------------------------- 人
     const pre = '!final_clear';
@@ -43,7 +52,7 @@
       // 町の人（白紙になりかけ）
       K.npc('old_man', 'npc_old_m_1', 23, 23, { name: R.T('map.final_biblia.N.7.old_man.name'), dir: 'e', talk: 'biblia_old_man', reward: 'news' }),
       K.npc('board_woman', 'npc_woman_2', 22, 19, { name: R.T('map.final_biblia.N.8.board_woman.name'), dir: 'n', talk: 'biblia_board_woman', reward: 'news' }),
-      K.npc('child', 'npc_child_1', 33, 26, { name: R.T('map.final_biblia.N.9.child.name'), dir: 's', move: 'wander', radius: 2, talk: 'biblia_child', reward: 'news' }),
+      K.npc('child', 'npc_child_1', 25, 29, { name: R.T('map.final_biblia.N.9.child.name'), dir: 's', move: 'wander', radius: 2, talk: 'biblia_child', reward: 'news' }),
       K.npc('sailor_old', 'npc_sailor_1', 42, 36, { name: R.T('map.final_biblia.N.10.sailor_old.name'), dir: 'w', talk: 'biblia_sailor', reward: 'news' }),
       K.npc('youth', 'npc_man_1', 11, 29, { name: R.T('map.final_biblia.N.11.youth.name'), dir: 'e', move: { route: [[18, 29], [6, 29], [11, 29]], wait: 2600 }, talk: 'biblia_youth', reward: 'news' }),
       // エンディング（final_ending）: E4 大書庫の入口（まだ夜）・E6 広場（日の出の前）
@@ -66,6 +75,8 @@
         shop: sp('biblia_shop'), house3: sp('biblia_house3'), house5: sp('biblia_house5'),
         // エンディング: 大書庫の入口（E4）・広場（E6）
         e_gate: { x: 28, y: 13, dir: 'n' }, e_plaza: { x: 28, y: 27, dir: 'n' },
+        // 忘却の底から上がって着く所（広場の階段の前）
+        oblivion: { x: 32, y: 29, dir: 's' },
       },
       exits: [],
       triggers: [{ id: 'arrival', on: 'enter', event: 'biblia_arrival' }],

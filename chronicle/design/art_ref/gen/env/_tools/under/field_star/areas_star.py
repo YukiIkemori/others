@@ -255,7 +255,7 @@ def s_road():
         dict(type='waylamp', id='wl_s_road_2', x=44, y=24, lit=True),
         dict(type='waylamp', id='wl_s_road_3', x=49, y=14, lit=True),
     ]
-    a.meta = dict(name='山あいの街道', sub='北の野と湿原をつなぐ道', region='r_marsh', worldRect=[338, 128, 140, 48], outside='rock', bbg='marsh',
+    a.meta = dict(name='山あいの街道', sub='北の野と湿原をつなぐ道', region='r_forest', worldRect=[338, 128, 140, 48], outside='rock', bbg='marsh',
                   smooth=0.6, clean=True,
                   zones=[{'rect': None, 'zone': 'zw_marsh_road'}], links={},
                   npcs=[{'id': 'marsh_traveler', 'look': 'npc_traveler', 'name': '湿原の旅人', 'x': 36, 'y': 18, 'dir': 's', 'move': 'still',

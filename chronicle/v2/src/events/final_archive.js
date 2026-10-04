@@ -1,7 +1,8 @@
 // CONTENT（終盤）: 白の大書庫 1〜6 階（STORY_BIBLE §9.3 の 3・§5.1・§5.2・§11.1〜§11.5）
 //   archive_1_enter     はじめて入ったとき: 題のない白い本の背・遠いフィーネの声（声なし）
 //   archive_east_letter 1 階の読書机の東の大陸の封書（lo_east_letter。開けられない）
-//   archive_oblivion    1 階の東の小部屋の白い手すりの向こうの階段（クリア後の忘却の底の口。まだ白い霧で下りられない）
+//   archive_oblivion    1 階の東の小部屋の白い手すりの向こうの階段（クリアの前: 白い霧で下りられない。クリアの後: 下りると忘却の底の地下 1 階。
+//                       入口の本筋は町の広場の白い階段 maps/final_biblia.js・maps/oblivion.js）
 //   archive_2_boss      2 階: 本の巨人（tr_b_bookgolem）→ final_golem
 //   archive_3_rowell    3 階: 封印の扉の前でロウェル（v_rowell_seal_01〜04）→ 扉が開き、書記たちを引き受ける → final_rowell
 //   archive_tale        3 階の 8 つの書見台: 語り直した伝承の章の題と、選んだ版の一文（こだま）
@@ -43,9 +44,16 @@
     }
     await x.narr(ev, R.T('events.archive_oblivion.narr_2'));
     await x.narr(ev, R.T('events.archive_oblivion.narr_3'));
-    await x.narr(ev, R.T('events.archive_oblivion.narr_4'));
-    ev.lead('l_post_oblivion');
-  }, { meta: { needs: [], gives: ['lead:l_post_oblivion'] } });
+    // クリアの後: 霧が薄れ、下りられる（忘却の底の入口は町の広場の階段。ここからも同じ地下 1 階へ）
+    await x.narr(ev, R.T('events.archive_oblivion.narr_5'));
+    if (!ev.flag('oblivion_1_arrive')) ev.lead('l_post_oblivion');
+    const i = await ev.choose(R.T('events.archive_oblivion.choose'), { cancel: 1 });
+    if (i !== 0) return;
+    ev.sfx('stairs');
+    await ev.fade('out', 300);
+    await ev.warp('oblivion_1', 'from_town');
+    await ev.fade('in', 300);
+  }, { meta: { needs: [], gives: ['lead:l_post_oblivion'], warp: { to: 'oblivion_1', spawn: 'from_town' } } });
 
   // ================================================================ 2 階 本の巨人
   E('archive_2_boss', async (ev) => {

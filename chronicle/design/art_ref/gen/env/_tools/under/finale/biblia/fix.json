@@ -1,0 +1,55 @@
+{
+ "_note": "2026-10-04 忘却の底: the stairway in the plaza (painted by ../oblivion/biblia_gate): its balustrade and the misty well are solid; the steps (32-33, 28) stay walkable (stairs to oblivion_1, closed by a tilePatch before final_clear)",
+ "solid": [
+  [
+   31,
+   26,
+   "X"
+  ],
+  [
+   32,
+   26,
+   "X"
+  ],
+  [
+   33,
+   26,
+   "X"
+  ],
+  [
+   34,
+   26,
+   "X"
+  ],
+  [
+   31,
+   27,
+   "X"
+  ],
+  [
+   32,
+   27,
+   "X"
+  ],
+  [
+   33,
+   27,
+   "X"
+  ],
+  [
+   34,
+   27,
+   "X"
+  ],
+  [
+   31,
+   28,
+   "X"
+  ],
+  [
+   34,
+   28,
+   "X"
+  ]
+ ]
+}

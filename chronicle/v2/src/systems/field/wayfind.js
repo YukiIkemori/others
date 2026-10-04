@@ -155,6 +155,7 @@
       }
       for (const o of m.objects || []) {
         if ((o.type !== 'door' && o.type !== 'stairs') || !o.to || o.to.map === m.id || !ok(o.cond)) continue;
+        if (o.gate && o.gate.hide && F._gateShut && F._gateShut(o.gate)) continue;   // 通せんぼの間は出口の印を出さない（gate.hide。ビブリアの忘却の底の階段）
         const d = R.DB.maps[o.to.map];
         if (!d || d.kind === 'interior' || (m.kind === 'dungeon' && d.kind === 'dungeon')) continue;   // 階段の上り下りは別の話
         // 幅のある入口（door の w・h。f_lake のつららの回廊の口は w 2）は四角ぜんたいの中ほどに印（前は 1 マスとして左のマスの中ほど＝半マスずれていた）

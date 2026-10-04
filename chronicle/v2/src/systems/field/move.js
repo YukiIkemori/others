@@ -466,7 +466,9 @@
     const list = (G.chests[m.id] = G.chests[m.id] || []);
     if (list.includes(o.id)) return;
     list.push(o.id);
-    const loot = R.Rules.chestLoot(o, R.Tier.get(), R.rng(G.seed + ':' + m.id + ':' + o.id)) || {};
+    // 宝箱のティア: 箱の tier ＞ マップの chestTier（クリア後の忘却の底は 9）＞ 今のティア
+    const cT = o.tier != null ? o.tier : m.chestTier != null ? Math.max(m.chestTier, R.Tier.get()) : R.Tier.get();
+    const loot = R.Rules.chestLoot(o, cT, R.rng(G.seed + ':' + m.id + ':' + o.id)) || {};
     try { R.Audio.sfx('chest'); } catch (e) { /* */ }
     // 手に入れた物は画面下の文の窓で出す（持ち主の決まり 2026-09-27: 右上の通知だと気づきにくい）
     let text = R.T('sys.move.openChest.text');
@@ -474,7 +476,7 @@
       G.gold += loot.gold;
       text = R.T('sys.move.openChest.text_2', { gold: loot.gold });
     } else if (loot.item) {
-      const r = R.State.gain(loot.item, loot.n || 1) || {};
+      const r = R.State.gain(loot.item, loot.n || 1, cT > R.Tier.get() ? { tier: cT } : undefined) || {};
       const it = R.DB.items[loot.item] || {};
       const nm = r.name || it.name || loot.item;
       const star = it.grade === 'super' ? '★★' : it.grade === 'rare' ? '★' : '';

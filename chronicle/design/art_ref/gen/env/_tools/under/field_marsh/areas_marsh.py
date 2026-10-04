@@ -180,7 +180,7 @@ def m_west():
     a.meta = dict(name='ロッホの西の岸', sub='湖の町へ渡る桟橋', region='r_marsh', worldRect=[481, 193, 51, 54], outside='marsh_water',
                   zones=[{'rect': None, 'zone': 'zw_marsh_road'}],
                   links={'loch': {'map': 'm_west', 'spawn': 'loch'}},
-                  npcs=[{'id': 'shore_fisher', 'look': 'npc_marsh_old_m', 'name': '岸の漁師', 'x': 31, 'y': 13, 'dir': 's', 'move': 'still',
+                  npcs=[{'id': 'shore_fisher', 'look': 'npc_marsh_old_m', 'name': '岸の漁師', 'x': 29, 'y': 16, 'dir': 'e', 'move': 'still',
                          'talk': {'lines': [{'text': ['湖のくいの鐘楼は、七つある。\n今は、どれも鳴らん。', '鐘が鳴らなくなってから、\n霧が町の中まで入ってくる。']},
                                             {'cond': 'cleared_r_marsh', 'text': '朝の鐘が、また鳴った。\n魚もよく跳ねるよ。'}]}, 'reward': None}])
     return a

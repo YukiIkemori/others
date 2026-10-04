@@ -133,6 +133,7 @@
     l_post_oblivion: {
       title: R.T('leads.l_post_oblivion.title'), kind: 'main', region: 'world', from: R.T('leads.l_post_oblivion.from'), place: 'biblia', dir: R.T('leads.l_post_oblivion.dir'),
       text: R.T('leads.l_post_oblivion.text'),
+      done: 'oblivion_1_arrive',   // 忘却の底の地下 1 階に着いたら（入口はビブリアの広場の白い階段。events/oblivion.js）
     },
   });
 

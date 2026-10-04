@@ -5,7 +5,7 @@
 (function (R) {
   'use strict';
   R.FieldArea.def("s_road", {
-    name: R.T('map.field_star_road.s_road.name'), region: "r_marsh", outside: "rock",
+    name: R.T('map.field_star_road.s_road.name'), region: "r_forest", outside: "rock",
     legend: R.FieldArea.STAR_LEGEND, theme: 'field', bgm: 'overworld', bbg: 'star', propSet: 'star', propSetBase: 'village',
     light: R.FieldArea.STAR_LIGHT,
     rows: [

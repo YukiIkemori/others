@@ -90,6 +90,8 @@ const TIERS = ['v_rowell_t2_01', 'v_rowell_t2_02', 'v_rowell_t2_03', 'v_rowell_t
   'v_rowell_t7_01', 'v_rowell_t7_02', 'v_rowell_t7_03', 'v_rowell_t7_04', 'v_rowell_t7_05', 'v_rowell_t7_06', 'v_rowell_t7_07',
   'v_fine_t3_01', 'v_fine_t3_02', 'v_fine_t6_01', 'v_fine_t6_02'];
 REGION.push(...TIERS);
+// 2026-10-04: クリア後の忘却の底（events/oblivion.js）の魔王の残影とフィーネ（旧版の録音済みの行のまま）
+REGION.push('v_valzard_oblivion_01', 'v_valzard_oblivion_02', 'v_valzard_oblivion_03', 'v_fine_oblivion_01', 'v_fine_oblivion_02');
 for (const id of REGION) {
   const u = used[id] || [];
   ok(`${id}: イベントで 1 回`, u.length === 1, u.map((x) => x.file));

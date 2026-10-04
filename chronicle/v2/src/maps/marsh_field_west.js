@@ -63,7 +63,7 @@
       {"type":"waylamp","id":"wl_m_west_north","x":17,"y":8,"lit":true},
     ],
     npcs: [
-      {"id":"shore_fisher","look":"npc_marsh_old_m","name":R.T('map.marsh_field_west.m_west.shore_fisher.name'),"x":31,"y":13,"dir":"s","move":"still","talk":{"lines":[{"text":R.T('map.marsh_field_west.m_west.lines.0.text')},{"cond":"cleared_r_marsh","text":R.T('map.marsh_field_west.m_west.lines.1.text')}]},"reward":null},
+      {"id":"shore_fisher","look":"npc_marsh_old_m","name":R.T('map.marsh_field_west.m_west.shore_fisher.name'),"x":29,"y":16,"dir":"e","move":"still","talk":{"lines":[{"text":R.T('map.marsh_field_west.m_west.lines.0.text')},{"cond":"cleared_r_marsh","text":R.T('map.marsh_field_west.m_west.lines.1.text')}]},"reward":null},
     ],
     spawns: {"north":{"x":20,"y":1,"dir":"s"},"loch":{"x":54,"y":20,"dir":"w"},"south":{"x":21,"y":42,"dir":"n"}},
     exits: [{"x":19,"y":0,"w":3,"h":1,"to":{"map":"m_north","spawn":"south"}},{"x":55,"y":20,"w":1,"h":2,"to":{"map":"loch","spawn":"gate_w"}},{"x":20,"y":43,"w":3,"h":1,"to":{"map":"m_fen","spawn":"north"}}],
