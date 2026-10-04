@@ -18,7 +18,7 @@
       ",,,,,,,,,,,,FFFFFFFFFFF,,,,XTTTXXXXXXXXXXXXXX,TTTX,,",
       ",,,,,,,,,,,,FFFwwwwwFFF,,,,X,TTXXXXXXXXXXXXXX,TTTX,,",
       "....,,,,,,,FFFFwwwwwFFFT,,,X,,,XXXXXXXXXXXXXX,,,,X,,",
-      "~~~~.....,,FFFFFwwwFFFF,,,,X,,,XXXXXXX:XXXXXX,,,,X,,",
+      "~~~~.....,,FFFFFwwwFFFF,,,,X,,,Xcccccc:cccccc,,,,X,,",
       "~~~~~~~~~,,FFFFFFFFFFFF,,,,X,,,,,,cccccccc,,,,,,,X,,",
       "~~~~~~~~~,,,FFFFFFFFFFT,,,,X,,,,,,cccccccc,,,,,,,X,,",
       "~~~~~~~~~~,,FFFFFFFFF,,,,,,X,,,,,,cccccccc,,,,,,,X,,",
