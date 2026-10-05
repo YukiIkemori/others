@@ -249,7 +249,7 @@
     'sys.rules.effectSentences.G_76': 'Dodges attacks more easily.',
     'sys.rules.effectSentences.G_77': 'Evasive.',
     'sys.rules.effectSentences.B_26': 'But harder to dodge.',
-    'sys.rules.effectSentences.G_78': 'Gets back up once after falling.',
+    'sys.rules.effectSentences.G_78': 'Gets back up once at full HP after falling.',
     'sys.rules.effectSentences.G_79': 'Counters when attacked.',
     'sys.rules.effectSentences.G_80': 'Counters.',
     'sys.rules.effectSentences.G_81': 'No damage from poison swamps or hot floors.',
