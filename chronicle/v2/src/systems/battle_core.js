@@ -784,6 +784,15 @@
       yield this.m(R.T('sys.battle_core.combo.merge', { name: u.base }));
       for (const m of units) { m.gone = true; m.reserved = null; yield { t: 'flee', u: m }; }
       const m = new MonUnit({ id }, this.mons.length, this);
+      // 合体した魔物は消える（落とし物の抽選も無くなる）ので、いちばん強い元の魔物の落とし物・盗みの枠を引き継ぎ、率は 2 倍（持ち主 2026-10-05
+      //   「合体ゼリーは何かレア持ってるの？」→ 合体させると損、を直す）
+      const src = units.slice().sort((a, b) => (b.d.lv || 0) - (a.d.lv || 0))[0];
+      const sd = src && src.d && src.d.drops;
+      if (sd && (sd.rare || sd.super || sd.steal)) {
+        const dr = {};
+        for (const k of ['normal', 'rare', 'super', 'steal']) if (sd[k]) dr[k] = Object.assign({}, sd[k], sd[k].rate ? { rate: Math.max(1, sd[k].rate / 2) } : {});
+        m.d = Object.assign({}, m.d, { drops: dr });
+      }
       m.hp = Math.max(1, Math.round(m.mhp * Math.min(1, Math.max(0.2, rate))));
       this.mons.push(m);
       this.relabel();

@@ -164,6 +164,18 @@ section('4. 加勢して殴る・群れ狩り・ゼリー合体');
   ok('4 匹目は残る', eng.mons.filter((m) => m.id === 'jelly_1' && m.alive).length === 1);
   undo();
 }
+{
+  // 持ち主 2026-10-05: 合体で元の魔物の落とし物が消えて損 → いちばん強い元の魔物の枠を引き継ぎ、率は 2 倍
+  const undo = force('c_jelly_merge', { round: 1 });
+  const eng = mk(['jelly_5', 'jelly_5', 'jelly_5'], { tier: 9, lv: 60 });
+  round(eng);
+  const big = eng.mons.find((m) => m.id === 'jelly_big');
+  const src = DB.monsters.jelly_5.drops, dr = big && big.d.drops;
+  ok('虹ゼリーの合体: がったいゼリーが虹ゼリーのレア・超レア・盗みを持つ', !!dr && dr.rare && dr.rare.item === src.rare.item && dr.super && dr.super.item === src.super.item && dr.steal && dr.steal.item === src.steal.item, dr);
+  ok('率は 2 倍（rate が半分）', !!dr && dr.rare.rate === src.rare.rate / 2 && dr.super.rate === src.super.rate / 2 && dr.steal.rate === src.steal.rate / 2, [dr && dr.rare.rate, src.rare.rate]);
+  ok('ほかのがったいゼリー（定義）は変えない', DB.monsters.jelly_big.drops.normal.item === 'i_potion' && !DB.monsters.jelly_big.drops.rare);
+  undo();
+}
 
 // ---------------------------------------------------------------- 5. 手の幅（構え・ねらい）
 section('5. 魔物の構え（打ち返し）・ねらい');
