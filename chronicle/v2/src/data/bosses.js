@@ -413,7 +413,7 @@
       drops: {
         normal: { pool: 'p_boss', rate: 1 },
         rare: { item: 'ac_crest_fragment', rate: 4 },
-        super: { item: 'w_sword_sr_echo', rate: 4 },
+        super: { item: 'w_sword_sr_echo', rate: 32 },   // 持ち主 2026-10-05「残影の魔剣、出すぎ」: 1/8 → 1/64（クリア後 ×2 込み）
       },
       desc: R.T('data.bosses.LIST.b_valzard_echo.desc'),
     },
