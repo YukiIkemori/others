@@ -147,8 +147,9 @@
     units: 'm1',
     src: 'super',
     exclusive: 'b_ouroboros',
-    quirk: true,
-    mods: { glimPct: { tech: 25, spell: 25 }, mpRegen: 3, growPct: -100 },
+    // 持ち主 2026-10-05「育ちきったキャラにこそ不要」→ 閃き・伸びなくなる欠点をやめ、円環（終わらない）の品に: 倒れても 1 度だけ HP 全快で起き上がる・
+    //   毎ターン HP と MP が戻る・物理と術 +10%
+    mods: { autoRevive: 1, regen: true, mpRegen: 3, physPct: 10, magicPct: 10 },
     desc: R.T('items.ac_sr_ouroboros.desc'),
     slot: 'acc',
     icon: 'ring',

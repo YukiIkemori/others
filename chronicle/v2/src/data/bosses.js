@@ -428,7 +428,7 @@
       drops: {
         normal: { pool: 'p_boss', rate: 1 },
         rare: { item: 'ac_ouroboros_ring', rate: 4 },
-        super: { item: 'ac_sr_ouroboros', rate: 4 },
+        super: { item: 'ac_sr_ouroboros', rate: 16 },   // 持ち主 2026-10-05: 1/8 → 1/32（クリア後 ×2 込み）
       },
       desc: R.T('data.bosses.LIST.b_ouroboros.desc'),
     },

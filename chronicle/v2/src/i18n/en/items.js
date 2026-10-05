@@ -458,7 +458,7 @@
     'items.ac_sr_coin.name': 'Gospel Coin',
     'items.ac_sr_coin.desc': 'Ultra-rares and rares drop more often.\nBut you take more damage.',
     'items.ac_sr_ouroboros.name': 'Ouroboros Ring',
-    'items.ac_sr_ouroboros.desc': 'Sparks come easier. Restores MP.\nBut HP and MP stop growing.',
+    'items.ac_sr_ouroboros.desc': 'Once per battle, rise again at full HP when felled.\nRestores HP and MP. Boosts physical and spell power.',
     // ---- src/data/items_armor.js
     'items.bd_iron_cuirass.name': 'Iron Cuirass',
     'items.bd_mail_1.name': 'Steel Armor',

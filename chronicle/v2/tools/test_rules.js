@@ -128,7 +128,7 @@ ok('fixed mag rescaled (w_staff_sr_cosmos 33, hd_sr_demon_general atk 26)', DB.i
 section('§4 quirks (A20)');
 {
   const q = Object.keys(DB.items).filter((id) => DB.items[id].quirk);
-  ok('quirk:true on exactly 35 items (§4.1 minus w_axe_r7)', q.length === 35, q.length);
+  ok('quirk:true on exactly 34 items (§4.1 minus w_axe_r7 and ac_sr_ouroboros, owner 2026-10-05)', q.length === 34, q.length);
   ok('kept ones include w_sword_sr_quicksilver (renamed spear) and w_greatsword_sr_chaos', q.includes('w_sword_sr_quicksilver') && q.includes('w_greatsword_sr_chaos'));
   const leak = Object.keys(DB.items).filter((id) => !DB.items[id].quirk && /ただし/.test(DB.items[id].desc || ''));
   ok('no 「ただし」 in the desc of a non-quirk item', !leak.length, leak.slice(0, 10));

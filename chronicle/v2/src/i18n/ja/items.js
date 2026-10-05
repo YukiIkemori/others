@@ -458,7 +458,7 @@
     'items.ac_sr_coin.name': '福音の金貨',
     'items.ac_sr_coin.desc': '超レアをよく落とす。レアをよく落とす。\nただし受ける傷が増える。',
     'items.ac_sr_ouroboros.name': '円環の指輪',
-    'items.ac_sr_ouroboros.desc': '閃きやすい。MPが戻る。\nただしHPとMPが伸びなくなる。',
+    'items.ac_sr_ouroboros.desc': '倒れても一度だけHP全快で起き上がる。\nHPとMPが戻る。物理と術の威力が上がる。',
     // ---- src/data/items_armor.js
     'items.bd_iron_cuirass.name': '鉄の胸当て',
     'items.bd_mail_1.name': '鋼の鎧',

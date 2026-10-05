@@ -457,7 +457,7 @@
     'items.ac_sr_coin.name': '福音金币',
     'items.ac_sr_coin.desc': '常掉超稀有道具。常掉稀有道具。\n但受到的伤害增加。',
     'items.ac_sr_ouroboros.name': '圆环戒指',
-    'items.ac_sr_ouroboros.desc': '更易灵光一闪。MP会恢复。\n但HP与MP不再成长。',
+    'items.ac_sr_ouroboros.desc': '倒下时仅一次以全满HP重新站起。\nHP与MP会恢复。物理与法术威力提升。',
     // ---- src/data/items_armor.js
     'items.bd_iron_cuirass.name': '铁胸甲',
     'items.bd_mail_1.name': '钢铠',

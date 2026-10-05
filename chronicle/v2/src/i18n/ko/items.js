@@ -457,7 +457,7 @@
     'items.ac_sr_coin.name': '복음의 금화',
     'items.ac_sr_coin.desc': '초레어를 잘 떨어뜨린다. 레어를 잘 떨어뜨린다.\n단, 받는 피해가 늘어난다.',
     'items.ac_sr_ouroboros.name': '원환의 반지',
-    'items.ac_sr_ouroboros.desc': '잘 번뜩인다. MP가 회복된다.\n단, HP와 MP가 오르지 않게 된다.',
+    'items.ac_sr_ouroboros.desc': '쓰러져도 한 번은 HP를 모두 회복하고 일어난다.\nHP와 MP가 회복된다. 물리와 주문의 위력이 오른다.',
     // ---- src/data/items_armor.js
     'items.bd_iron_cuirass.name': '철 흉갑',
     'items.bd_mail_1.name': '강철 갑옷',
