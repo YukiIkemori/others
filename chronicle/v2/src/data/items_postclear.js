@@ -72,7 +72,7 @@
     ft_st_p12_cloth: A(R.T('items.ft_st_p12_cloth.name'), 'feet', 'cloth', 'super', Object.assign({ units: 'im', mods: { mpCostPct: -20, spd: 8 } }, ST12)),
 
     // ---------------------------------------------------------------- アクセサリ レア 11・超レア 12
-    ac_p11_ember: C(R.T('items.ac_p11_ember.name'), 'rare', Object.assign({ units: 'v1', mods: { autoRevive: 1, hpPct: 10 } }, R11)),
+    ac_p11_ember: C(R.T('items.ac_p11_ember.name'), 'rare', Object.assign({ units: 'v1', mods: { autoRevive: 0.6, hpPct: 10 } }, R11)),
     ac_p11_compass: C(R.T('items.ac_p11_compass.name'), 'rare', Object.assign({ units: 'd1', mods: { hit: 10, crit: 10, preemptPct: 15 } }, R11)),
     ac_p11_lantern: C(R.T('items.ac_p11_lantern.name'), 'rare', Object.assign({ units: 'a1', mods: { rarePct: 25, superPct: 25 } }, R11)),
     ac_p11_letter: C(R.T('items.ac_p11_letter.name'), 'rare', Object.assign({ units: 'm1', mods: { glimPct: { tech: 20, spell: 20 } } }, R11)),

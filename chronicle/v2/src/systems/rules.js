@@ -1331,7 +1331,7 @@
     if (m.hit > 0 && it.slot !== 'weapon') G(R.T('sys.rules.effectSentences.G_9'));
     if (m.hit < 0) B(R.T('sys.rules.effectSentences.B'));
     if (m.crit > 0 && it.slot !== 'weapon') G(R.T('sys.rules.effectSentences.G_8'));
-    if (m.autoRevive > 0) G(R.T('sys.rules.effectSentences.G_78'));
+    if (m.autoRevive > 0) G(R.T(m.autoRevive >= 1 ? 'sys.rules.effectSentences.G_78_full' : 'sys.rules.effectSentences.G_78'));   // 全快（ティア 12。持ち主 2026-10-05）
     if (m.autoCounter > 0) G(R.T('sys.rules.effectSentences.G_79'), R.T('sys.rules.effectSentences.G_80'));
     if (m.noFloorDamage) G(R.T('sys.rules.effectSentences.G_81'));
     if (m.walkHeal > 0) G(R.T('sys.rules.effectSentences.G_82'), R.T('sys.rules.effectSentences.G_83'));
