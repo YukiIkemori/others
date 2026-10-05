@@ -46,6 +46,22 @@ ok('every boss has an ultimate (cut-in) or a boss combo row', !noUlt.length, noU
 const thin = Object.entries(IMPORTANT).filter(([k, n]) => !per[k] || per[k].n < n).map(([k, n]) => [k, per[k] && per[k].n, n]);
 ok('region / finale / final / post-game bosses have several original effects', !thin.length, thin);
 
+section('専用の演出（毎回）');
+// 持ち主（2026-10-05）「裏ボス、魔王の残影、表ボスの技は専用グラを作っていいからね。毎回。」:
+// この 4 体の行動（予告の次の行動も）は、ふつうの攻撃のほかは全部、表に専用の行がある（汎用の fx のままにしない）。技を足したら行も足す
+const DEDICATED = ['b_ouroboros', 'b_valzard_echo', 'b_nemrea1', 'b_nemrea2'];
+for (const id of DEDICATED) {
+  const M = D.monsters[id];
+  const ids = new Set();
+  for (const a of (M && M.actions) || []) { let x = a.id; for (let i = 0; x && i < 4; i++) { ids.add(x); const t = (D.bossActions[x] || {}).telegraph; x = t && t.next; } }
+  for (const ph of (M && M.phases) || []) for (const a of (ph.set && ph.set.actions) || ph.actions || []) if (a && a.id) ids.add(a.id);   // 段が変わって替わる行動も
+  ids.delete('attack');
+  const lack = [...ids].filter((k) => !(S.table[k] && rows.includes(k) && D.bossActions[k] && D.bossActions[k].seq === 'sq:' + k));
+  ok(`${id}: every action has its own dedicated row (${ids.size})`, !!M && ids.size >= 5 && !lack.length, lack);
+  const own = [...ids].filter((k) => !lack.includes(k));
+  ok(`${id}: every dedicated row uses an original boss part`, own.every((k) => S.partsOf(k).some((p) => BOSS_PARTS.has(p))), own.filter((k) => !S.partsOf(k).some((p) => BOSS_PARTS.has(p))));
+}
+
 section('描く');
 const grad = { addColorStop() {} };
 const g = new Proxy({ globalAlpha: 1, globalCompositeOperation: 'source-over', createLinearGradient: () => grad, createRadialGradient: () => grad, measureText: () => ({ width: 10 }) }, {

@@ -260,6 +260,13 @@
   def('eb_oblivion_wave', rgb('210,200,255', '255,255,255', '140,130,210'), { tier: 4, lead: 400, c: '忘却の波: 銀とすみれ色の波紋が全員の足もとに広がる', main: [I('n1_oblivion_wave', -300, 640, 'tfoot', { px: 300, flat: 0.5 })], hit: [IH('sparkle_twinkle', 480, { th: 1.3, tint: 1 })] });
   def('eb_paper_hand', rgb('235,235,250', '255,255,255', '150,150,200'), { tier: 3, c: '紙の手: 白い紙の渦がつかみ、打ちつける', hit: [IH('n1_blank_storm', 600, { th: 2.6 }), IH('impact_flash', 360, { th: 1.8, tint: 1 })] });
   def('eb_erase_name', rgb('240,240,255', '255,255,255', '130,130,190'), { tier: 3, c: '名を消す: 白い光の取り消し線が名を塗りつぶす', hit: [IH('rw_redact', 600, { pxw: 200 })] });
+  def('eb_nemrea_lull', rgb('225,220,255', '255,255,255', '150,140,210'), { tier: 4, lead: 460, lines: false, c: '白い子守歌: 白紙のページが木の葉のように揺れて舞い降り、すみれ色のかすみと三日月の光の中で全員を眠りへ誘う', dimCol: '18,14,40', dim: 0.4, main: [
+    I('n1_lullaby_pages', -460, 760, 'tgt', { px: 340, env: 1, fi: 0.2, fo: 0.35 }),
+    L('motes', -300, 760, 'tgt', { n: 30, w: 320, h: 220, col: 1 }),
+  ], hit: [IH('n1_lullaby_pages', 640, { th: 1.3, env: 1, a: 0.6 }), H('sparks', 360, { n: 6, v: 14, len: 0, star: 1, size: 4, col: 2 })] });
+  def('eb_nemrea_snatch', rgb('240,240,255', '255,255,255', '255,205,110'), { tier: 3, lead: 320, c: '名を拾う: 白紙の帯が的に巻きついて金の名札の光をさらい、虚ろの王の手もとへ引き戻す', main: [
+    L('stream', 60, 640, 'tgt', { n: 26, rev: 0, col: 2, col2: 1, curve: 70 }),
+  ], hit: [IH('n1_paper_snatch', 660, { th: 3.6 }), H('sparks', 320, { n: 8, v: 30, len: 6, col: 2 })], shakes: [[0, 3, 220]] });
 
   // ================================================================ ネムレア（ラスボス）
   def('eb_nemrea2_close', rgb('255,230,160', '255,255,245', '170,120,230'), { ult: 1, tier: 6, lead: 760, bars: true, c: '【物語を閉じる】終わりの魔法陣が空に開き、光の大きな本が全員の上で閉じる', dimCol: '6,2,16', dim: 0.66, main: [
@@ -281,6 +288,16 @@
     I('n2_story_close', -200, 500, 'src', { px: 300, a: 0.7 }),
   ], hit: [IH('heal_sparkles', 600, { th: 1.6 })] });
   def('eb_nemrea2_mark', rgb('255,230,160', '255,255,245', '170,120,230'), { tier: 3, c: '結末の予約: 的の足もとに終わりの魔法陣が刻まれる', hit: [IH('n2_end_sigil', 700, { px: 120, flat: 0.34, spin: 1.2, env: 1, foot: 1 })] });
+  def('eb_nemrea2_page', rgb('170,150,255', '235,230,255', '40,24,110'), { tier: 4, lead: 520, ally: 1, flash: 0, c: 'ページ返し（夜）: 夜空のページが大きくめくれて星くずが降り、ネムレアの体が闇の側へ傾く', dimCol: '4,2,22', dim: 0.5, main: [
+    L('sky', -520, 760, 'scr', { top: '8,4,36', bot: '70,48,140', a: 0.45 }),
+    I('n2_night_page', -460, 560, 'src', { px: 390, env: 1, fi: 0.1, fo: 0.3 }),
+    L('petals', -160, 760, 'scr', { n: 40, w: 1200, h: 700, kind: 'petal', col: '200,190,255', col2: '255,255,255', drift: 120 }),
+  ], hit: [IH('dark_orb', 520, { th: 0.5, a: 0.55 }), H('sparks', 380, { n: 10, v: 26, len: 0, star: 1, size: 4, col: 1 })] });
+  def('eb_nemrea2_page2', rgb('255,215,140', '255,252,235', '255,160,150'), { tier: 4, lead: 520, ally: 1, flash: 0, c: 'ページ返し（朝）: 朝日のページが大きくめくれて金の光がさし、ネムレアの体が光の側へ傾く', dimCol: '30,16,8', dim: 0.3, flashCol: '255,240,200', main: [
+    L('sky', -520, 760, 'scr', { top: '255,190,140', bot: '255,240,200', a: 0.3 }),
+    I('n2_dawn_page', -460, 560, 'src', { px: 390, a: 0.72, env: 1, fi: 0.1, fo: 0.3 }),
+    L('rays', -100, 600, 'src', { n: 14, len: 220, col: 1, a: 0.5 }),
+  ], hit: [IH('holy_burst', 520, { th: 0.5, a: 0.5 }), H('sparks', 420, { n: 10, v: 30, len: 0, star: 1, size: 4, col: 0 })] });
   def('eb_dream_sleep', rgb('235,210,255', '255,255,255', '140,200,230'), { tier: 4, lead: 360, c: '眠りの誘い: 夢の色のりん粉の雲が全員を包む', main: [I('mo_sleep_dust', -320, 640, 'tgt', { px: 300, env: 1, a: 0.8 })], hit: [IH('sparkle_twinkle', 480, { th: 1.3, tint: 1 })] });
 
   // ================================================================ クリア後: 魔王の残影・円環竜
@@ -291,6 +308,24 @@
   ], hit: [IH('debuff_smoke', 520, { th: 1.4, tint: '200,40,60' })], shakes: [[0, 6, 440]] });
   def('eb_echo_flame', rgb('255,70,60', '255,210,180', '40,0,10'), { tier: 4, lead: 420, c: '魔炎: 黒と紅の火柱が全員の足もとから立つ', main: [I('vz_demon_flame', -160, 620, 'eachfoot', { px: 230 })], hit: [IH('fire_burst', 480, { th: 1.4 })], shakes: [[0, 4, 300]] });
   def('eb_echo_claw', rgb('255,60,70', '255,210,210', '30,0,10'), { tier: 3, c: '残影の爪: 紅く燃える影の四本の爪', hit: [IH('vz_shadow_claw', 600, { th: 3.1 }), H('sparks', 300, { n: 8, v: 30, len: 6, col: 0 })] });
+  def('eb_echo_dread', rgb('255,70,90', '255,215,220', '30,0,12'), { tier: 4, lead: 480, c: '恐れの残響: 魔王の残影から黒と紅の残響の輪が残像を引いて幾重にも広がり、全員の心を揺さぶる', dimCol: '12,0,4', dim: 0.45, main: [
+    L('glow', -480, 0, 'src', { r: 80, col: 2, a: 0.55 }),
+    I('vz_dread_echo', -400, 140, 'src', { px: 260, env: 1, fi: 0.2, fo: 0.4, a: 0.75 }),
+    I('vz_dread_echo', -140, 660, 'tgt', { px: 340 }),
+  ], hit: [IH('vz_dread_echo', 620, { th: 1.4, a: 0.7 }), H('sparks', 420, { n: 6, v: 16, len: 0, star: 1, size: 4, col: 0 })], shakes: [[0, 3, 320]] });
+  def('eb_echo_gather', rgb('255,60,80', '255,200,210', '20,0,8'), { tier: 3, lead: 420, ally: 1, c: '闇をまとう: 四方の影と紅い火の粉が残影へ渦を巻いて集まり、傷を包んでふさぐ', main: [
+    L('tendrils', -420, 100, 'srcfoot', { n: 6, len: 80, w: 90, gy: 0, col: 2 }),
+    I('vz_shadow_gather', -420, 300, 'src', { px: 320 }),
+  ], hit: [IH('vz_shadow_gather', 600, { th: 0.7, a: 0.7 }), H('glow', 520, { r: 50, col: 0, a: 0.35 }), H('sparks', 380, { n: 8, v: 20, len: 0, star: 1, size: 4, col: 0 })] });
+  def('eb_echo_gaze', rgb('255,50,60', '255,220,200', '30,0,8'), { tier: 4, lead: 500, c: '恐れのまなざし: 残影の上に紅い眼が開いてにらみ、射すくめる光が全員の体を縛る', dimCol: '10,0,2', dim: 0.5, main: [
+    I('vz_dread_gaze', -500, 380, 'src', { px: 260 }),
+    L('rays', -60, 360, 'tgt', { n: 12, len: 170, col: 0, a: 0.5 }),
+  ], hit: [IH('vz_dread_gaze', 600, { th: 1.1, a: 0.65 }), H('chains', 600, { n: 2, r: 30, col: 0, col2: 1 })], shakes: [[0, 4, 280]] });
+  def('eb_echo_shroud', rgb('255,60,70', '255,230,200', '10,0,4'), { tier: 4, lead: 520, c: '闇の帳: 黒い帳が全員の上から降り、かかっていた力の光の紋を砕いてかき消す', dimCol: '6,0,2', dim: 0.55, main: [
+    L('glow', -520, 0, 'src', { r: 90, col: 2, a: 0.6 }),
+    I('vz_dark_shroud', -300, 640, 'tgt', { px: 380 }),
+    L('shards', -20, 520, 'tgt', { n: 12, r: 90, size: 9, col: 1 }),
+  ], hit: [IH('debuff_smoke', 520, { th: 1.3, tint: '150,20,40' }), H('sparks', 360, { n: 8, v: 30, len: 6, col: 1 })], shakes: [[0, 4, 320]] });
   def('eb_echo_soul', rgb('255,70,80', '255,210,210', '40,0,10'), { tier: 3, c: '魂吸い: 紅い光が的から吸い出される', hit: [IH('vz_despair', 600, { th: 1.6, a: 0.8 }), H('motes', 500, { n: 12, w: 40, h: 60, col: 0 })] });
   def('eb_ouro_end', rgb('140,255,190', '255,250,210', '200,160,50'), { ult: 1, tier: 6, lead: 760, bars: true, c: '【輪の終わり】空いっぱいの円環竜のうろこの輪が締まり、金と翠の光になって弾ける', dimCol: '0,10,8', dim: 0.66, main: [
     L('sky', -720, 900, 'scr', { top: '0,40,40', bot: '200,230,150', a: 0.4 }),
@@ -306,6 +341,11 @@
   def('eb_eternal_breath', rgb('120,240,200', '250,255,230', '200,160,50'), { tier: 4, lead: 420, c: '終わらない息: 無限の輪を描く翠と金の息が全員へ流れる', main: [SPAN('ou_eternal_breath', -360, 580, 'tgt', { env: 1, fi: 0.15, fo: 0.3 })], hit: [IH('sparkle_twinkle', 480, { th: 1.4, tint: 1 })] });
   def('eb_ring_crush', rgb('140,255,190', '255,250,210', '200,160,50'), { tier: 4, lead: 400, c: '円環の締めつけ: うろこの輪が的を締めつけて弾ける', hit: [IH('ou_ring_end', 720, { th: 3.4 }), H('ring', 360, { r: 40, w: 4, n: 2, col: 1 })], shakes: [[0, 6, 320]] });
   def('eb_time_loop', rgb('120,240,220', '240,255,250', '220,180,80'), { tier: 4, lead: 360, c: 'くり返しの呪い: 小さな時計の輪が全員の上で逆に回る', hit: [IH('ou_time_rewind', 640, { th: 2.4, flat: 0.6 })] });
+  def('eb_ouro_mark', rgb('140,255,190', '255,250,210', '200,160,50'), { tier: 4, lead: 420, c: '尾の刻印: 円環竜の尾の光が的へ走り、己の尾をかむ輪の印が足もとと体に焼きつく', main: [
+    L('glow', -420, 0, 'src', { r: 70, col: 0, a: 0.5 }),
+    L('dash', -260, 40, 'tgt', { n: 6, len: 120, col: 1 }),
+    I('ou_tail_mark', -160, 760, 'tfoot', { px: 180, flat: 0.34, spin: 1.4, env: 1, fi: 0.2, fo: 0.3 }),
+  ], hit: [IH('ou_tail_mark', 700, { px: 120, grow: [1.7, 1], env: 1, fi: 0.05, fo: 0.4 }), H('ring', 360, { r: 46, w: 3, n: 2, col: 1 })], shakes: [[0, 4, 260]] });
   def('eb_tail_devour', rgb('140,255,190', '255,250,210', '200,160,50'), { ult: 1, tier: 5, lead: 520, ally: 1, c: '【尾をのむ】円環竜が己の尾をのみ、うろこの輪が体を包んで力が満ちる', main: [
     I('ou_ring_end', -480, 560, 'src', { px: 310 }),
     I('aura_rise', -300, 560, 'srcfoot', { th: 1.4, env: 1, tint: 0 }),

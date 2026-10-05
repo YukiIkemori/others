@@ -2320,6 +2320,177 @@
    "prompt": "An eternal breath stream animation: a spiralling stream of deep teal, emerald and gold cosmic energy with twisting infinite-loop shaped swirls and star glints, flowing from the right edge of each wide cell to the left, narrow at the right and blooming wide at the left. Frames 1-2 starting, frames 3-6 the full spiralling stream, frames 7-8 fading.",
    "aq": 60,
    "opaque": true
+  },
+  {
+   "id": "vz_dread_echo",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    448,
+    320
+   ],
+   "fps": 14,
+   "prompt": "An echo of dread animation, seen at a slight top-down angle: warped concentric rings of black smoke and deep crimson light ripple outward like an echoing sound wave, each ring trailed by two or three faint ghostly afterimage copies of itself, with dizzy spiralling crimson wisps and small dark embers orbiting in loops. Frame 1 a dark pulse, frames 2-6 several echoing rings spreading wide with their afterimages, frames 7-8 the echoes fading into crimson haze.",
+   "q": 80,
+   "aq": 60,
+   "opaque": true
+  },
+  {
+   "id": "vz_shadow_gather",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    384
+   ],
+   "fps": 14,
+   "prompt": "A gathering darkness animation: many tendrils of black shadow smoke with glowing crimson rims and crimson embers spiral inward from all sides and converge on the centre, wrapping into a dense pitch-black core surrounded by a thin crimson halo that pulses once. Frames 1-2 wisps far out, frames 3-6 the shadows spiralling in and wrapping tight, frames 7-8 the dark core pulsing and settling into a soft crimson glow.",
+   "q": 80,
+   "aq": 60,
+   "opaque": true
+  },
+  {
+   "id": "vz_dread_gaze",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    448,
+    320
+   ],
+   "fps": 14,
+   "prompt": "A dread gaze animation: in a swirl of black smoke a single huge glowing crimson slit-pupil eye shape made of light opens, glares with sharp crimson light rays radiating outward and a burst of dark lightning, then narrows and closes into smoke. Frame 1 black smoke, frames 2-3 the crimson eye opening, frames 4-5 the full glare with rays, frames 6-8 the eye narrowing and dissolving into smoke.",
+   "q": 80,
+   "aq": 60,
+   "opaque": true
+  },
+  {
+   "id": "vz_dark_shroud",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    448,
+    384
+   ],
+   "fps": 14,
+   "prompt": "A curtain of darkness animation: a vast heavy curtain of black shadow cloth with glowing crimson edges sweeps down from the top of each cell like a falling veil, and small bright golden-white glowing rune circles and light shards caught beneath it crack and shatter into fading fragments. Frames 1-2 the black veil unfurling at the top, frames 3-5 the veil falling and covering, light runes shattering, frames 6-8 the veil dissolving into black smoke with dying sparks.",
+   "q": 80,
+   "aq": 60,
+   "opaque": true
+  },
+  {
+   "id": "ou_tail_mark",
+   "group": "boss",
+   "grid": [
+    1,
+    1
+   ],
+   "n": 1,
+   "size": "1024x1024",
+   "out": [
+    448,
+    448
+   ],
+   "prompt": "A single glowing brand sigil of an endless ring: a perfect circle formed by a sinuous band of overlapping golden-green scales whose tapering tail end is bitten by its own pointed head end, around it a thin ring of teal light with clock-like tick marks (no numbers), and at the centre a small radiant infinity-loop knot of gold light, flat top-down view, emerald, gold and teal light.",
+   "q": 80,
+   "aq": 60,
+   "opaque": true
+  },
+  {
+   "id": "n1_lullaby_pages",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    448,
+    384
+   ],
+   "fps": 10,
+   "loop": true,
+   "prompt": "A white lullaby animation: blank white paper pages glowing softly at the edges drift slowly down and sway like falling leaves in a gentle spiral, among soft pale lavender haze ripples, faint silver crescent-moon shaped glows and tiny sleepy sparkles. Calm, dreamy and slow; each frame drifts a little further; seamless loop.",
+   "q": 80,
+   "aq": 60,
+   "opaque": true
+  },
+  {
+   "id": "n1_paper_snatch",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    384,
+    384
+   ],
+   "fps": 18,
+   "prompt": "A paper snatch animation: a long ribbon of blank white paper strips with sharp glowing silver edges lashes in from the upper right in a fast curling arc, coils tightly around a small glowing golden tag of light in the centre, then whips away back to the upper right taking the golden glow with it, leaving torn white paper scraps fluttering. Frames 1-2 the paper ribbon lashing in, frames 3-4 coiling around the golden glow, frames 5-6 whipping away, frames 7-8 scraps fluttering and fading.",
+   "q": 80,
+   "aq": 60,
+   "opaque": true
+  },
+  {
+   "id": "n2_night_page",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    448,
+    384
+   ],
+   "fps": 14,
+   "prompt": "A night page turning animation: one colossal glowing book page made of deep indigo night sky, full of tiny stars and a thin silver crescent moon, with a luminous violet-silver edge, lifts from the right and turns over to the left like a page of a giant book, trailing glittering stardust. Frames 1-2 the page lifting, frames 3-5 the page turning over in an arc, frames 6-8 the page settling and stardust drifting down.",
+   "q": 80,
+   "aq": 60,
+   "opaque": true
+  },
+  {
+   "id": "n2_dawn_page",
+   "group": "boss",
+   "grid": [
+    4,
+    2
+   ],
+   "n": 8,
+   "size": "2048x1024",
+   "out": [
+    448,
+    384
+   ],
+   "fps": 14,
+   "prompt": "A dawn page turning animation: one colossal glowing book page made of warm sunrise light, pale gold, rose and white, with soft sun rays and a radiant golden edge, lifts from the left and turns over to the right like a page of a giant book, trailing golden light motes. Frames 1-2 the page lifting, frames 3-5 the page turning over in an arc with rays shining through, frames 6-8 the page settling and golden motes drifting up.",
+   "q": 80,
+   "aq": 60,
+   "opaque": true
   }
  ]
 }
