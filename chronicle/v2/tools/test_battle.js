@@ -81,7 +81,8 @@ section('データ（K.monster・K.boss・K.troop、出現表、盗み専用）'
   // 36 + 7 slice monsters (owner 2026-09-27: 「レアがめっきり減ったねえ……。楽しみがちょっとないかも」)
   // + 12 post-clear tier-12 steal-only slots (owner 2026-10-04, items_postclear.js)
   ok('steal-only slots: 30–60 monsters', st.length >= 30 && st.length <= 60, st.length);
-  const rateOk = st.every((id) => { const d = DB.monsters[id]; const want = (d.flags || []).includes('boss') ? 16 : (d.flags || []).includes('rare') ? 12 : 16; return d.drops.steal.rate === want; });
+  // platinum_2 steal-only rate 4: owner 2026-10-05 (higher)
+  const rateOk = st.every((id) => { const d = DB.monsters[id]; const want = id === 'platinum_2' ? 4 : (d.flags || []).includes('boss') ? 16 : (d.flags || []).includes('rare') ? 12 : 16; return d.drops.steal.rate === want; });
   ok('steal-only rates 16 / 12 / 16', rateOk);
   // owner exception 2026-10-05: platinum_2 (the last metal) also drops the braid as its super drop
   const EXC = (id, m, g) => id === 'ac_st_p12_braid' && m === 'platinum_2' && g === 'super';

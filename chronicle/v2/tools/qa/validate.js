@@ -366,7 +366,7 @@ section('8. 盗み専用（STATS_REWORK §7.6、V2_PLAN §2.6.6）');
     if (!s) continue;
     const kind = ((m.flags || []).includes('boss') || /^b_/.test(mid)) ? 'boss' : /^rm_/.test(mid) ? 'rare' : 'normal';
     const want = { boss: 16, rare: 12, normal: 16 }[kind];
-    if (s.rate !== want) rateBad.push(`${mid} (${kind}) rate ${s.rate} ≠ ${want}`);
+    if (s.rate !== want && !(mid === 'platinum_2' && s.rate === 4)) rateBad.push(`${mid} (${kind}) rate ${s.rate} ≠ ${want}`);
   }
   ok('率: 通常 16・レア 12・ボス 16（A31 ⑥・リードの決定 5、持ち主 2026-10-02 に上げた）', rateBad.length === 0, rateBad);
   if (D.stealSources) {

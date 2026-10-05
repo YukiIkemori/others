@@ -307,7 +307,7 @@ section('data: steal-only (§7.2, V2_PLAN §2.6.6)');
   ok('56 steal-only items (43 + 12 post-clear tier 12 + platinum embers, owner 2026-10-05), super, stealOnly, no quirk', st.length === 56 && st.every((id) => DB.items[id].grade === 'super' && DB.items[id].stealOnly && !DB.items[id].quirk));
   ok('ids <slot>_st_<name>', st.every((id) => /^(w_\w+|ac|hn|ft|sh|bd|hd)_st_/.test(id) || /^w_\w+_st_/.test(id)));
   // 持ち主 2026-10-02「盗みのレアを少し上げる」: 雑魚 32 → 16、レア魔物 16 → 12、ボスは 16 のまま
-  ok('rates: bosses 16, rare 12, mobs 16', Object.entries(DB.stealSources).every(([, s]) => s.rate === (/^rm_/.test(s.mon) ? 12 : 16)) && DB.stealSources.ac_st_rooteater.rate === 16 && DB.stealSources.ft_st_jewel_hare.rate === 12, DB.stealSources);
+  ok('rates: bosses 16, rare 12, mobs 16', Object.entries(DB.stealSources).every(([, s]) => s.rate === (s.mon === 'platinum_2' ? 4 : /^rm_/.test(s.mon) ? 12 : 16)) && DB.stealSources.ac_st_rooteater.rate === 16 && DB.stealSources.ft_st_jewel_hare.rate === 12, DB.stealSources);
   const pooled = new Set();
   for (const p of Object.values(DB.pools)) for (const t of p.tiers) for (const e of t) if (e.item) pooled.add(e.item);
   for (const s of Object.values(DB.shops)) for (const id of s.items.concat(...Object.values(s.tier || {}))) pooled.add(id);
