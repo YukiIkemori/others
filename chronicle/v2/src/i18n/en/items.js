@@ -1528,6 +1528,7 @@
     'items.ac_p11_lantern.name': 'Lost Child\'s Lantern',
     'items.ac_p11_letter.name': 'The Undelivered Letter',
     'items.ac_st_p12_braid.name': 'Starknot Cord',
+    'items.ac_st_p12_ember.name': 'Platinum Embers',
     'items.ac_st_p12_braid.desc': 'Immune to every status ailment.',
     'items.ac_st_p12_wick.name': 'Wick of a Thousand Nights',
     'items.ac_st_p12_bookmark.name': 'Bookmark of the Tale',

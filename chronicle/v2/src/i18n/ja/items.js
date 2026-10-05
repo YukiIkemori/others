@@ -1531,6 +1531,7 @@
     'items.ac_p11_lantern.name': '迷い子の角灯',
     'items.ac_p11_letter.name': '届かなかった手紙',
     'items.ac_st_p12_braid.name': '星結びの組ひも',
+    'items.ac_st_p12_ember.name': '白金の残り火',
     'items.ac_st_p12_braid.desc': 'あらゆる状態異常が効かない。',
     'items.ac_st_p12_wick.name': '千の夜の灯心',
     'items.ac_st_p12_bookmark.name': '物語のしおり',

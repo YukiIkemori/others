@@ -45,7 +45,7 @@ section('post-clear gear (items_postclear.js)');
 const post = Object.entries(DB.items).filter(([, it]) => it && it.fixedTier);
 const t11 = post.filter(([, it]) => it.tier === 11).map(([id]) => id), t12 = post.filter(([, it]) => it.tier === 12).map(([id]) => id);
 {
-  ok('24 tier-11 rare + 24 tier-12 super items', t11.length === 24 && t12.length === 24 && t11.every((id) => DB.items[id].grade === 'rare') && t12.every((id) => DB.items[id].grade === 'super'), [t11.length, t12.length]);
+  ok('24 tier-11 rare + 25 tier-12 super items (+ platinum embers, owner 2026-10-05)', t11.length === 24 && t12.length === 25 && t11.every((id) => DB.items[id].grade === 'rare') && t12.every((id) => DB.items[id].grade === 'super'), [t11.length, t12.length]);
   const wt = Object.keys(DB.weaponTypes || {}).filter((w) => w !== 'fist');
   const wtypes = wt.length ? wt : Ru.WTYPES;
   ok('every weapon type has a tier-11 and a tier-12 weapon', wtypes.every((w) => [11, 12].every((t) => post.some(([, it]) => it.slot === 'weapon' && it.wtype === w && it.tier === t))), wtypes);

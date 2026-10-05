@@ -335,7 +335,7 @@ section('7. ドロップの枠（STATS_REWORK §10.1）');
   const demoGear = demoItems.filter((id) => D.items[id] && D.items[id].slot !== 'use');
   ok(`縦切りの 22 体すべてがレア枠（消耗品 ${demoItems.length - demoGear.length}・装備 ${demoGear.length}、装備はみな違う）`,
     demoNo.length === 0 && demoItems.length - demoGear.length >= 15 && demoGear.length >= 5 && demoGear.length <= 7 && new Set(demoGear).size === demoGear.length, list(demoNo));
-  const superBad = normal.filter(([id, m]) => m.drops && m.drops.super && !last5.has(id) && !/^(book_3|paper_4)$/.test(id)).map((x) => x[0]);
+  const superBad = normal.filter(([id, m]) => m.drops && m.drops.super && !last5.has(id) && !/^(book_3|paper_4|platinum_2)$/.test(id)).map((x) => x[0]);
   ok(`super の枠は 5 段の系統の最後など（${superN} 体、${(100 * superN / normal.length).toFixed(0)}%、目安 9%）`, superBad.length === 0 && superN / normal.length <= 0.15, list(superBad));
 }
 
@@ -349,11 +349,13 @@ section('8. 盗み専用（STATS_REWORK §7.6、V2_PLAN §2.6.6）');
   ok('grade super・src steal・quirk なし', form.length === 0, form);
   const owners = {};
   for (const [mid, m] of Object.entries(D.monsters)) { const s = m.drops && m.drops.steal; if (s) (owners[s.item] = owners[s.item] || []).push(mid); }
-  const one = st.filter(([id]) => (owners[id] || []).length !== 1).map(([id]) => `${id}: ${(owners[id] || []).join(',') || 'none'}`);
+  // 持ち主の例外（2026-10-05）: 星結びの組ひもは 魔王の残影の盗み専用 ＋ 白金の大鬼火の超レアの落とし物
+  const EXC = { ac_st_p12_braid: { owners: ['b_valzard_echo'], drops: ['platinum_2.super'] } };
+  const one = st.filter(([id]) => (EXC[id] ? (owners[id] || []).slice().sort().join() !== EXC[id].owners.slice().sort().join() : (owners[id] || []).length !== 1)).map(([id]) => `${id}: ${(owners[id] || []).join(',') || 'none'}`);
   ok('1 品は 1 体の魔物の drops.steal だけ', one.length === 0, one);
   const ids = new Set(st.map((x) => x[0]));
   const leak = [];
-  for (const [mid, m] of Object.entries(D.monsters)) for (const k of ['normal', 'rare', 'super', 'bonus']) { const d = m.drops && m.drops[k]; if (d && ids.has(d.item)) leak.push(`${mid}.${k}`); }
+  for (const [mid, m] of Object.entries(D.monsters)) for (const k of ['normal', 'rare', 'super', 'bonus']) { const d = m.drops && m.drops[k]; if (d && ids.has(d.item) && !(EXC[d.item] && EXC[d.item].drops.includes(`${mid}.${k}`))) leak.push(`${mid}.${k}`); }
   const poolStr = JSON.stringify(D.pools || {}), shopStr = JSON.stringify(D.shops);
   for (const id of ids) { if (poolStr.includes('"' + id + '"')) leak.push('pools: ' + id); if (shopStr.includes('"' + id + '"')) leak.push('shops: ' + id); if (EV_SRC.includes("'" + id + "'")) leak.push('events: ' + id); }
   for (const mid of maps) for (const o of D.maps[mid].objects || []) if (o.type === 'chest' && ids.has(o.item)) leak.push(`chest ${mid}.${o.id}`);

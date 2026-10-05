@@ -1530,6 +1530,7 @@
     'items.ac_p11_lantern.name': '길 잃은 아이의 등롱',
     'items.ac_p11_letter.name': '닿지 못한 편지',
     'items.ac_st_p12_braid.name': '별매듭 끈',
+    'items.ac_st_p12_ember.name': '백금의 잔불',
     'items.ac_st_p12_braid.desc': '모든 상태 이상이 통하지 않는다.',
     'items.ac_st_p12_wick.name': '천 개의 밤의 심지',
     'items.ac_st_p12_bookmark.name': '이야기의 책갈피',

@@ -78,6 +78,8 @@
     ac_p11_letter: C(R.T('items.ac_p11_letter.name'), 'rare', Object.assign({ units: 'm1', mods: { glimPct: { tech: 20, spell: 20 } } }, R11)),
     // 星結びの組ひも: あらゆる状態異常（毒〜即死の 10）が効かない（statusImmune。戦闘の側は statusImmune を 1 として防ぐ）
     ac_st_p12_braid: C(R.T('items.ac_st_p12_braid.name'), 'super', Object.assign({ units: 'm1', mods: { statusImmune: ALL_BAD.slice() }, desc: R.T('items.ac_st_p12_braid.desc') }, ST12)),
+    // 白金の残り火（白金の大鬼火の盗み専用。星結び級）: 物理・術 +15%・速さ +10・毎ターン HP が少し戻る
+    ac_st_p12_ember: C(R.T('items.ac_st_p12_ember.name'), 'super', Object.assign({ units: 'a1', mods: { physPct: 15, magicPct: 15, spd: 10, regen: true } }, ST12)),
     ac_st_p12_wick: C(R.T('items.ac_st_p12_wick.name'), 'super', Object.assign({ units: 's1', mods: { physPct: 20, magicPct: 20 } }, ST12)),
     ac_st_p12_bookmark: C(R.T('items.ac_st_p12_bookmark.name'), 'super', Object.assign({ units: 'm1', mods: { mpRegen: 3, regen: true } }, ST12)),
     ac_p12_morning: C(R.T('items.ac_p12_morning.name'), 'super', Object.assign({ units: 'v1', mods: { autoRevive: 0.6, hpPct: 15, startBuffs: { agi: 1 } } }, S12)),
@@ -110,6 +112,9 @@
     rm_dream_tapir: [null, null, 'w_dagger_p11', null, null],
     b_valzard_echo: [null, null, 'hd_p11_heavy', null, 'ac_st_p12_braid'],
     b_ouroboros: [null, null, 'w_staff_p11', null, null],
+    // 白金の大鬼火（はぐれの締め。持ち主 2026-10-05「ロマンがなさすぎる」「星結び級のを持たせて」）: 超レアの落とし物に 星結びの組ひも
+    //   （魔王の残影の盗み専用と同じ品。ここだけの例外）、盗み専用に ここだけの 白金の残り火
+    platinum_2: [null, null, null, 'ac_st_p12_braid', 'ac_st_p12_ember'],
   };
   // 忘却の底の雑魚（出現表の魔物。鋼の魔物は除く）の強さの倍率（R.Mon.fillStats の前に s に掛ける）。持ち主 2026-10-04: 店 8 ＋通常の落とし物 9 の一行で
   //   標準の雑魚戦（2.5〜3.5 ラウンド・HP の減り 8〜12%）、レア 11・超レア 12 をそろえると 1〜1.5 ラウンド（前は店の品でも 2 ラウンド・6%）。測り方は design/notes/gear_tiers.md

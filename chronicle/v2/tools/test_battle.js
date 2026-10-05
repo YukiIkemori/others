@@ -83,8 +83,10 @@ section('データ（K.monster・K.boss・K.troop、出現表、盗み専用）'
   ok('steal-only slots: 30–60 monsters', st.length >= 30 && st.length <= 60, st.length);
   const rateOk = st.every((id) => { const d = DB.monsters[id]; const want = (d.flags || []).includes('boss') ? 16 : (d.flags || []).includes('rare') ? 12 : 16; return d.drops.steal.rate === want; });
   ok('steal-only rates 16 / 12 / 16', rateOk);
+  // owner exception 2026-10-05: platinum_2 (the last metal) also drops the braid as its super drop
+  const EXC = (id, m, g) => id === 'ac_st_p12_braid' && m === 'platinum_2' && g === 'super';
   ok('each steal-only item belongs to one monster', new Set(st.map((id) => DB.monsters[id].drops.steal.item)).size === st.length);
-  ok('steal-only items are in no other slot', st.every((id) => { const it = DB.monsters[id].drops.steal.item; return mons.every((m) => ['normal', 'rare', 'super'].every((g) => !(DB.monsters[m].drops && DB.monsters[m].drops[g] && DB.monsters[m].drops[g].item === it))); }));
+  ok('steal-only items are in no other slot', st.every((id) => { const it = DB.monsters[id].drops.steal.item; return mons.every((m) => ['normal', 'rare', 'super'].every((g) => EXC(it, m, g) || !(DB.monsters[m].drops && DB.monsters[m].drops[g] && DB.monsters[m].drops[g].item === it))); }));
   ok('b_rooteater steals ac_st_rooteater, rm_jewel_hare ft_st_jewel_hare (§3.7)', DB.monsters.b_rooteater.drops.steal.item === 'ac_st_rooteater' && DB.monsters.rm_jewel_hare.drops.steal.item === 'ft_st_jewel_hare');
   const items = Object.keys(DB.items).length;
   if (items > 100) {

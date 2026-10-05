@@ -304,7 +304,7 @@ section('data: steal-only (§7.2, V2_PLAN §2.6.6)');
 {
   const st = Object.keys(DB.items).filter((id) => DB.items[id].src === 'steal');
   // 36 + 7 for the slice's stage 1–2 monsters (owner 2026-09-27: 「レアがめっきり減ったねえ……。楽しみがちょっとないかも」)
-  ok('55 steal-only items (43 + 12 post-clear tier 12), super, stealOnly, no quirk', st.length === 55 && st.every((id) => DB.items[id].grade === 'super' && DB.items[id].stealOnly && !DB.items[id].quirk));
+  ok('56 steal-only items (43 + 12 post-clear tier 12 + platinum embers, owner 2026-10-05), super, stealOnly, no quirk', st.length === 56 && st.every((id) => DB.items[id].grade === 'super' && DB.items[id].stealOnly && !DB.items[id].quirk));
   ok('ids <slot>_st_<name>', st.every((id) => /^(w_\w+|ac|hn|ft|sh|bd|hd)_st_/.test(id) || /^w_\w+_st_/.test(id)));
   // 持ち主 2026-10-02「盗みのレアを少し上げる」: 雑魚 32 → 16、レア魔物 16 → 12、ボスは 16 のまま
   ok('rates: bosses 16, rare 12, mobs 16', Object.entries(DB.stealSources).every(([, s]) => s.rate === (/^rm_/.test(s.mon) ? 12 : 16)) && DB.stealSources.ac_st_rooteater.rate === 16 && DB.stealSources.ft_st_jewel_hare.rate === 12, DB.stealSources);

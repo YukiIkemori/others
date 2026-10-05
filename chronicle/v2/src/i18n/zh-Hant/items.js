@@ -1530,6 +1530,7 @@
     'items.ac_p11_lantern.name': '迷途孩子的提燈',
     'items.ac_p11_letter.name': '未曾寄達的信',
     'items.ac_st_p12_braid.name': '星結編繩',
+    'items.ac_st_p12_ember.name': '白金餘火',
     'items.ac_st_p12_braid.desc': '免疫所有異常狀態。',
     'items.ac_st_p12_wick.name': '千夜燈芯',
     'items.ac_st_p12_bookmark.name': '故事的書籤',
