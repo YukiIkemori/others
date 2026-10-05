@@ -133,6 +133,8 @@
     'bossActions.eb_nemrea2_page2.shift': "A page of morning opens. Light now hits {user} hard; darkness barely works.",
     'bossActions.eb_echo_dread.name': "Echo of Dread",
     'bossActions.eb_echo_dread.msg': "Three-hundred-year-old dread echoes in {user}'s voice...!",
+    'bossActions.eb_echo_shroud.name': "Veil of Darkness",
+    'bossActions.eb_echo_shroud.msg': "{user}'s darkness spreads, snuffing out every blessing...!",
     'bossActions.eb_echo_soul.name': "Soul Drain",
     'bossActions.eb_echo_soul.msg': "{user}'s shadow hand sips at a spellcaster's soul!",
     'bossActions.eb_ouro_mark.name': "Tail Brand",

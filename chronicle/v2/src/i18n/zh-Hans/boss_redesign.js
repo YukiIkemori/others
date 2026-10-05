@@ -133,6 +133,8 @@
     'bossActions.eb_nemrea2_page2.shift': "晨之页翻开了。光对{user}更容易奏效，暗则难以穿透。",
     'bossActions.eb_echo_dread.name': "恐惧残响",
     'bossActions.eb_echo_dread.msg': "三百年前的恐惧化作{user}的声音回荡开来……！",
+    'bossActions.eb_echo_shroud.name': "暗之帷幕",
+    'bossActions.eb_echo_shroud.msg': "{user}的黑暗蔓延开来，抹去了身上的所有加护……！",
     'bossActions.eb_echo_soul.name': "吸魂",
     'bossActions.eb_echo_soul.msg': "{user}的影之手吸取了施法者的灵魂！",
     'bossActions.eb_ouro_mark.name': "尾之刻印",

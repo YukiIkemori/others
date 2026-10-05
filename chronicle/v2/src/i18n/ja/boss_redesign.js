@@ -135,6 +135,8 @@
     'bossActions.eb_nemrea2_page2.shift': '朝のページが開いた。{user}に光が効きやすく、闇は通りにくい。',
     'bossActions.eb_echo_dread.name': '恐れの残響',
     'bossActions.eb_echo_dread.msg': '三百年前の恐れが、{user}の声になって響いた……！',
+    'bossActions.eb_echo_shroud.name': '闇の帳',
+    'bossActions.eb_echo_shroud.msg': '{user}の闇が広がり、かかっていた力をかき消した……！',
     'bossActions.eb_echo_soul.name': '魂吸い',
     'bossActions.eb_echo_soul.msg': '{user}の影の手が、術を使う者の魂をすすった！',
     'bossActions.eb_ouro_mark.name': '尾の刻印',
