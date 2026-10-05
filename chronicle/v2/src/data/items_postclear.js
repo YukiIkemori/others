@@ -153,9 +153,9 @@
       }
     }
     // 白金の大鬼火の超レアは高めに（持ち主 2026-10-05「どうせ出会えないし、倒せないから確率もっとあげて」）:
-    //   超レアの落とし物 1/16（クリア後 ×2 で 1/32）、盗み専用 1/4（×2 で盗みの成功 1 回あたり 1/8）
+    //   超レアの落とし物 1/8（クリア後 ×2 で 1/16）、盗み専用 1/4（×2 で盗みの成功 1 回あたり 1/8）。同日「1/16 でもいいぐらい」
     const pt = M.platinum_2 && M.platinum_2.drops;
-    if (pt && pt.super) pt.super.rate = 16;
+    if (pt && pt.super) pt.super.rate = 8;
     if (pt && pt.steal) { pt.steal.rate = 4; if (R.DB.stealSources && R.DB.stealSources[pt.steal.item]) R.DB.stealSources[pt.steal.item].rate = 4; }
   });
 })(window.RPG);
