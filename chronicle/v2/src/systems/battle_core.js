@@ -2013,6 +2013,15 @@
       } else return attack();
       let t = this.repeatTarget(u, act, p.target);
       if (t === false) return attack();
+      // 盗む技（テスター Z8: 盗むもリピートで続ける）: 相手がもう何も持っていなければ、まだ盗める相手へ（同じ種で近い順 → 並び順）。
+      //   誰からも盗めなければ、ほかの使えない命令と同じく攻撃へ
+      if (u.isParty && act.target === 'enemy' && (act.effects || []).some((e) => e.type === 'steal') && !(t && t.alive && this.canSteal(t))) {
+        const old = p.target && !p.target.isParty ? p.target : t;
+        const can = this.foes(u).filter((m) => this.canSteal(m));
+        if (!can.length) return attack();
+        const sp = old && old.species;
+        t = can.slice().sort((a, b) => (b.species === sp) - (a.species === sp) || (old ? Math.abs(a.idx - old.idx) - Math.abs(b.idx - old.idx) : 0) || a.idx - b.idx)[0];
+      }
       if (act.target === 'enemy' && t && t.alive) planAdd(t, this.expectDamage(u, act, t, { item: type === 'item' }));
       if (type === 'item') reserved[p.id] = (reserved[p.id] || 0) + 1;
       return { type, id: p.id, target: t };

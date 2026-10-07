@@ -13,7 +13,12 @@
       try { ws = R.Field.warpList() || []; } catch (e) { ws = []; }
       ws = ws.slice().sort((a, b) => (a.kind === 'town' ? 0 : 1) - (b.kind === 'town' ? 0 : 1));
       const here = (R.Field && R.Field.pos && R.DB.maps[R.Field.pos.map]) || {};
-      this.list = new R.UIK.List({ rows: ws.map((w) => ({ value: w.id, label: w.name, w, disabled: here.location === w.id })), rowH: 40 });
+      // 飛べない行は灰色に、わけ（why）を持たせる。選ぶと黙らずにわけを出す（テスター Z1）
+      const whyOf = (w) => {
+        if (here.location === w.id) return 'here';
+        try { return (R.Field.warpWhy && R.Field.warpWhy(w.id)) || null; } catch (e) { return 'failed'; }
+      };
+      this.list = new R.UIK.List({ rows: ws.map((w) => { const why = whyOf(w); return { value: w.id, label: w.name, w, why, disabled: !!why }; }), rowH: 40, selectDisabled: true });
       this.list.onSelect = (row) => this.pick(row);
       this.list.onCancel = () => this.close(null);
       this.busy = false;
@@ -21,9 +26,18 @@
     async pick(row) {
       if (this.busy) return;
       this.busy = true;
-      const k = await S.ask(this, { title: R.T('ui.warp.pick.k.ask.title'), text: R.T('ui.warp.pick.k.ask.text', { label: row.label }), choices: R.T('ui.warp.pick.k.ask.choices'), cancel: 1 });
-      this.busy = false;
-      if (k === 0) this.close({ warp: row.value });
+      // 問いが投げても busy を残さない（テスター Z1「ワープの一覧が入力を受けなくなった」）
+      try {
+        if (row.disabled) {
+          try { R.UIK.sfx('buzzer'); } catch (e) { /* */ }
+          await S.ask(this, { title: R.T('ui.warp.pick.k.ask.title'), text: R.Field.warpWhyText ? R.Field.warpWhyText(row.why) : R.T('sys.field.warp.fail.failed'), choices: [R.T('ui.warp.draw.1.label')], cancel: 0 });
+          return;
+        }
+        const k = await S.ask(this, { title: R.T('ui.warp.pick.k.ask.title'), text: R.T('ui.warp.pick.k.ask.text', { label: row.label }), choices: R.T('ui.warp.pick.k.ask.choices'), cancel: 1 });
+        if (k === 0) this.close({ warp: row.value });
+      } catch (e) {
+        console.error('[warp pick]', e);
+      } finally { this.busy = false; }
     },
     update() { if (!this.busy) this.list.update(); },
     draw(g) {
@@ -37,7 +51,7 @@
         const sz = u(16), cy = rect.y + (rect.h - sz) / 2 - u(1);
         R.UIK.icon(gg, row.w.kind === 'town' ? 'inn' : 'door', rect.x + u(16), cy, sz, row.disabled ? C.disabled : f ? C.gold : C.text2);
         R.UIK.text(gg, row.label, rect.x + u(44), cy, { size: sz, weight: f ? 700 : 500, color: row.disabled ? (f ? C.text2 : C.disabled) : f ? C.goldHi : C.text, maxW: rect.w * 0.55 });
-        R.UIK.text(gg, row.disabled ? R.T('ui.warp.draw.render.text') : S.regionName(row.w.region), rect.x + rect.w - u(14), cy + u(2), { size: u(12.5), color: C.text3, align: 'right' });
+        R.UIK.text(gg, row.why === 'here' ? R.T('ui.warp.draw.render.text') : S.regionName(row.w.region), rect.x + rect.w - u(14), cy + u(2), { size: u(12.5), color: C.text3, align: 'right' });
       };
       this.list.draw(g, { x: p.x + u(10), y: p.y + u(12), w: p.w - u(20), h: p.h - u(24) });
       if (!this.list.rows.length) R.UIK.text(g, R.T('ui.warp.draw.text'), p.x + u(24), p.y + u(20), { size: u(15), color: C.text3 });

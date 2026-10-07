@@ -41,6 +41,10 @@
     'sys.minimap.legend.2.0': 'Stairs',
     // ---- src/systems/field/move.js
     'sys.move.lockedBump.toast': 'The door is locked',
+    'sys.field.warp.fail.missing': "You can't fly there right now (no place to land).",
+    'sys.field.warp.fail.locked': "You can't fly there yet.",
+    'sys.field.warp.fail.here': "You're already there.",
+    'sys.field.warp.fail.failed': 'The warp failed. Try again.',
     'sys.move.onewayBump.say': 'The slope is too steep to climb from here.',
     'sys.move.onewayBump.snow': 'The snowy slope is too steep to climb.',
     'sys.move.confirmGo.say.text': 'You can\'t go any further yet.',

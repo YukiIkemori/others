@@ -40,6 +40,10 @@
     'sys.minimap.legend.2.0': '樓梯',
     // ---- src/systems/field/move.js
     'sys.move.lockedBump.toast': '門上了鎖',
+    'sys.field.warp.fail.missing': '現在無法飛往那裡（找不到降落的地方）。',
+    'sys.field.warp.fail.locked': '還不能飛往那裡。',
+    'sys.field.warp.fail.here': '已經在那裡了。',
+    'sys.field.warp.fail.failed': '傳送失敗了。再試一次吧。',
     'sys.move.onewayBump.say': '坡太陡了，從這邊爬不上去。',
     'sys.move.onewayBump.snow': '雪坡太陡，爬不上去。',
     'sys.move.confirmGo.say.text': '前面暫時還不能去。',

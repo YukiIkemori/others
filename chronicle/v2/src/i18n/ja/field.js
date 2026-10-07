@@ -41,6 +41,10 @@
     'sys.minimap.legend.2.0': '階段',
     // ---- src/systems/field/move.js
     'sys.move.lockedBump.toast': '戸には鍵がかかっている',
+    'sys.field.warp.fail.missing': 'その場所へは、今は飛べない（着く所が見つからない）。',
+    'sys.field.warp.fail.locked': 'その場所へは、まだ飛べない。',
+    'sys.field.warp.fail.here': 'もうその場所にいる。',
+    'sys.field.warp.fail.failed': 'ワープできなかった。もう一度ためしてみよう。',
     'sys.move.onewayBump.say': '急な斜面で、こちらからは登れそうにない。',
     'sys.move.onewayBump.snow': '雪の斜面が急で、登れそうにない。',
     'sys.move.confirmGo.say.text': 'この先へは、まだ行けない。',

@@ -75,6 +75,7 @@
       if (I.pressed('x')) { if (!F.hud.cycleMap()) F._openHub('map', S.map.kind === 'town' ? { town: S.map.id } : undefined); return; }   // ダンジョン: 小地図 → 大きな地図 → 出さない（hud.js）。町: 町の地図（Y・R で世界の地図）。世界: 世界の地図（X・B で閉じる。Y のメニューの「地図」からも）
       if (I.pressed('a')) { F._act(); return; }
       const d = I.dir8();
+      if (F._holdGuard(d)) { S.push = null; return; }
       if (d.dx || d.dy) {
         const held = I.down('b') || I.down('dash');
         F._step(d.dx, d.dy, R.Settings.get('alwaysDash') ? !held : held);
@@ -83,6 +84,28 @@
     draw(g) { F._draw(g); },
   };
   F.scene = scene;
+
+  /**
+   * マップが替わった直後の押しっぱなし（テスター Z2: 忘却の底 2 階の下り階段で↓を押したままだと、3 階に着いてそのまま
+   *   すぐ後ろの上り階段を踏み、2 階へ戻ってしまう）。F.enter が、入った時に押していた向きを S.holdGuard に覚える:
+   *   - 離した（向きが 0）→ 解く。押す向きを替えた（新しい入力）→ 解く（すぐ歩ける）
+   *   - 同じ向きを押したまま → 明けてから HOLD_GUARD_MS（250 ms）は歩かない。その後は歩けるが、出口・階段・扉・戸口のマスへは
+   *     離すまで入らない（エリアの端を押したまま越えた時は少し止まってそのまま歩き続けられる。同じマップの中の歩きは何も変わらない）
+   *   → true（この入力では歩かない）
+   */
+  F.HOLD_GUARD_MS = 250;
+  F._holdGuard = function (d) {
+    const gd = S.holdGuard;
+    if (!gd) return false;
+    if (!d.dx && !d.dy) { S.holdGuard = null; return false; }
+    if (d.dx !== gd.dx || d.dy !== gd.dy) { S.holdGuard = null; return false; }
+    if (gd.t == null) gd.t = R.Engine.time;   // 明けて最初に動ける時から数える（暗転の長さに左右されない）
+    if (R.Engine.time - gd.t < F.HOLD_GUARD_MS) return true;
+    const lv = S.lv || 0, m = S.map;
+    const exitAt = (x, y) => !!(F._warpAt && F._warpAt(m, x, y, lv));
+    if (exitAt(S.x + d.dx, S.y + d.dy) || (d.dx && d.dy && (exitAt(S.x + d.dx, S.y) || exitAt(S.x, S.y + d.dy)))) return true;
+    return false;
+  };
 
   F._openHub = function (id, params) {
     F.lock('menu');
@@ -119,6 +142,7 @@
       S.map = map; S.x = sp.x; S.y = sp.y; S.dir = sp.dir || 's'; S.lv = (spDef && spDef.lv) || 0;
       S.mv = null; S.push = null; S.arriving = false; S.cam = null; S.shakeFx = null; S.flashFx = null;
       S.enterT = R.Engine.time;
+      { const hd = R.Input.dir8 ? R.Input.dir8() : { dx: 0, dy: 0 }; S.holdGuard = hd.dx || hd.dy ? { dx: hd.dx, dy: hd.dy, t: null } : null; }   // 押したままの向き（F._holdGuard）
       R.MapUtil.invalidate(map.id);
       const G = R.Game;
       if (G) {
@@ -254,11 +278,51 @@
     }
     return out;
   };
-  F.warp = function (locId) {
+  /**
+   * ワープの行き先が使えないわけ → null（飛べる）| 'missing'（場所・マップ・着く所が無い）| 'locked'（まだ出ない）| 'here'（もう着く所にいる）。
+   *   テスター Z1「白紙堂の中でワープ → ロアの里 → 確かめた後、メニューが閉じて店の中のまま、何も出ない」: 飛べない・飛べなかったときは
+   *   黙らずにわけを出す（F._warpFail）。ワープの一覧（screens/warp.js）も同じわけで行を灰色にする
+   */
+  F.warpWhy = function (locId) {
     const l = R.DB.locations[locId];
-    if (!l) return Promise.resolve();
+    const m = l && R.DB.maps[l.map];
+    if (!m) return 'missing';
+    if (typeof l.spawn === 'string' && !(m.spawns || {})[l.spawn]) return 'missing';
+    try { if (l.warp && !R.State.check(l.warp)) return 'locked'; } catch (e) { return 'locked'; }
+    if (S.map && S.map.id === l.map) return 'here';
+    return null;
+  };
+  /** わけ（F.warpWhy の値か 'failed'）の文 */
+  F.warpWhyText = function (why) {
+    const T = { missing: () => R.T('sys.field.warp.fail.missing'), locked: () => R.T('sys.field.warp.fail.locked'), here: () => R.T('sys.field.warp.fail.here'), failed: () => R.T('sys.field.warp.fail.failed') };
+    return (T[why] || T.failed)();
+  };
+  /** ワープできなかった: わけの一言（フィールドの上に、止めずに読む札） */
+  F._warpFail = function (why) {
+    const text = F.warpWhyText(why);
+    try { if (F.hud && F.hud.toast) F.hud.toast(text, { icon: 'warp', anchor: 'bl' }); } catch (e) { /* */ }
+    return text;
+  };
+  /** ワープ（ハブの結果）→ Promise<boolean>（着いた）。入る途中で止まった・投げた時も、暗転を明けてわけを出す */
+  F.warp = function (locId) {
+    init();
+    const why = F.warpWhy(locId);
+    if (why) { F._warpFail(why); return Promise.resolve(false); }
+    const l = R.DB.locations[locId];
+    const from = S.map;
     try { R.Audio.sfx('warp'); } catch (e) { /* */ }
-    return F.enter(l.map, l.spawn);
+    let p;
+    try { p = F.enter(l.map, l.spawn); } catch (e) { p = Promise.reject(e); }
+    return Promise.resolve(p).then(() => {
+      if (S.map && S.map.id === l.map) return true;
+      if (S.map === from) F._warpFail('failed');   // 何も起きずに元のマップのまま
+      return false;
+    }, (e) => {
+      console.error('[warp]', e);
+      try { if (R.Engine.fade.a > 0) R.Engine.fadeTo(0, 200); } catch (e2) { /* */ }
+      F._warpFail('failed');
+      return false;
+    });
   };
   /**
    * 脱出の行き先（ダンジョンの中だけ）→ {map, spawn} | null。
