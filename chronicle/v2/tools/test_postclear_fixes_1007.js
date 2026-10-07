@@ -163,6 +163,15 @@ async function main() {
     for (let i = 0; i < 30 && S.mv; i++) { adv(16.67); await flush(); }
     ok('switching to ↑ right after arriving walks at once', pos().map === 'oblivion_3' && pos().y === y0 - 1, pos());
     await settle(200);
+    // ↓ を押したまま → も足す（斜め。片方の軸の先が階段だと、そちらへ寄せる歩き）: 離すまでは階段へ入らない
+    await ob(st.x, st.y - 1, 's');
+    I._set('down', true);
+    for (let i = 0; i < 200 && pos().map !== 'oblivion_3'; i++) { adv(16.67); await flush(); }
+    I._set('right', true);
+    await frames(1200);
+    I._set('right', false); I._set('down', false);
+    ok('holding ↓ and adding → does not slide onto the up stairs', pos().map === 'oblivion_3', pos());
+    await settle(400);
     // 出口の無い向きを押したまま: 少し止まって（HOLD_GUARD_MS）から歩き続ける
     await R.Field.enter('oblivion_3', { x: land.x, y: land.y, dir: 'n' }, { fade: 0, noAutosave: true });
     I._set('up', true); adv(17); await flush();   // 押した物は次のフレームで読まれる

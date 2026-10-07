@@ -88,9 +88,10 @@
   /**
    * マップが替わった直後の押しっぱなし（テスター Z2: 忘却の底 2 階の下り階段で↓を押したままだと、3 階に着いてそのまま
    *   すぐ後ろの上り階段を踏み、2 階へ戻ってしまう）。F.enter が、入った時に押していた向きを S.holdGuard に覚える:
-   *   - 離した（向きが 0）→ 解く。押す向きを替えた（新しい入力）→ 解く（すぐ歩ける）
-   *   - 同じ向きを押したまま → 明けてから HOLD_GUARD_MS（250 ms）は歩かない。その後は歩けるが、出口・階段・扉・戸口のマスへは
-   *     離すまで入らない（エリアの端を押したまま越えた時は少し止まってそのまま歩き続けられる。同じマップの中の歩きは何も変わらない）
+   *   - 離した（向きが 0）→ 解く
+   *   - 同じ向きを押したまま → 明けてから HOLD_GUARD_MS（250 ms）は歩かない。押す向きを替えた（新しい入力）→ 待たずに歩ける
+   *   - どちらでも、離すまでは出口・階段・扉・戸口のマスへは入らない（エリアの端を押したまま越えた時は少し止まってそのまま
+   *     歩き続けられる。同じマップの中の歩きは何も変わらない）
    *   → true（この入力では歩かない）
    */
   F.HOLD_GUARD_MS = 250;
@@ -98,9 +99,10 @@
     const gd = S.holdGuard;
     if (!gd) return false;
     if (!d.dx && !d.dy) { S.holdGuard = null; return false; }
-    if (d.dx !== gd.dx || d.dy !== gd.dy) { S.holdGuard = null; return false; }
+    // 向きを替えた（新しい入力）: 待たずに歩ける。ただし離すまでは出口へは入らない（↓を押したまま→も押すと、斜めの寄せで階段へ入ってしまうので）
+    if (d.dx !== gd.dx || d.dy !== gd.dy) { gd.free = true; gd.dx = d.dx; gd.dy = d.dy; }
     if (gd.t == null) gd.t = R.Engine.time;   // 明けて最初に動ける時から数える（暗転の長さに左右されない）
-    if (R.Engine.time - gd.t < F.HOLD_GUARD_MS) return true;
+    if (!gd.free && R.Engine.time - gd.t < F.HOLD_GUARD_MS) return true;
     const lv = S.lv || 0, m = S.map;
     const exitAt = (x, y) => !!(F._warpAt && F._warpAt(m, x, y, lv));
     if (exitAt(S.x + d.dx, S.y + d.dy) || (d.dx && d.dy && (exitAt(S.x + d.dx, S.y) || exitAt(S.x, S.y + d.dy)))) return true;
