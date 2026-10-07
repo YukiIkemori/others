@@ -438,5 +438,27 @@
   "priority": 2,
   "status": "approved",
   "note": "描いた胸から上の一枚絵（2026-10-04、一人 neutral 1 枚）"
+ },
+ {
+  "look": "b_valzard_echo",
+  "name": "魔王の残影",
+  "exprs": [
+   "neutral"
+  ],
+  "priority": 2,
+  "status": "approved",
+  "extra": true,
+  "note": "ボス（忘却の底）の顔。原画はモンスターの戦いの絵（v2/assets/monsters）を参考に描いた一枚絵"
+ },
+ {
+  "look": "b_ouroboros",
+  "name": "円環竜オウロボラ",
+  "exprs": [
+   "neutral"
+  ],
+  "priority": 2,
+  "status": "approved",
+  "extra": true,
+  "note": "ボス（忘却の底）の顔。原画はモンスターの戦いの絵（v2/assets/monsters）を参考に描いた一枚絵"
  }
 ]

@@ -60,6 +60,8 @@ function init() {
     if (o.frame) r.frame = o.frame;   // 描いた絵の切り出し（gen_portraits.py process）
     return r;
   });
+  // look の無い顔（extra: true。忘却の底のボスなど、戦いの絵から描いた一枚絵）は R.DB.looks から作れないのでそのまま残す
+  for (const m of Object.values(old)) if (m.extra && !list.some((r) => r.look === m.look)) list.push(m);
   fs.mkdirSync(DIR, { recursive: true });
   fs.writeFileSync(MANIFEST, JSON.stringify(list, null, 1) + '\n');
   console.log(`manifest: ${list.length} 人 → ${path.relative(ROOT, MANIFEST)}`);

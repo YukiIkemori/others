@@ -42,7 +42,7 @@ function mkEv(ctx, o) {
   o = o || {};
   const real = R.Events.makeEv(ctx || {});
   return Object.assign({}, real, {
-    say: async (who, t, op) => { LOG.push({ k: 'say', t: String(t), voice: op && op.voice }); },
+    say: async (who, t, op) => { LOG.push({ k: 'say', t: String(t), voice: op && op.voice, face: op && op.face, name: op && op.name }); },
     choose: async (labels) => { LOG.push({ k: 'choose', labels }); return o.choose == null ? 0 : o.choose; },
     caption: async (t) => { LOG.push({ k: 'caption', t: String(t) }); },
     fade: async () => {}, wait: async () => {},
@@ -219,6 +219,29 @@ const run = async (id, ctx, o) => { LOG.length = 0; await D.events[id].run(mkEv(
   log = await run('oblivion_5_ouroboros');
   ok('円環竜に勝つ → oblivion_ouroboros・外伝『円環の竜』（読み物 lo_ouroboros）・フィーネの声 2 本', R.Game.flags.oblivion_ouroboros && R.Game.flags.lo_ouroboros && D.lore.lo_ouroboros &&
     ['v_fine_oblivion_01', 'v_fine_oblivion_02'].every((v) => log.some((e) => e.voice === v)) && log.some((e) => e.k === 'caption' && e.t === T('events.oblivion_5_ouroboros.caption')));
+  {
+    // テスター 2026-10-07 Z3・Z4: ボス 2 体が顔と名前つきで話す・円環竜の締めの場面と「年代記に外伝が加わった」の字幕
+    const said = (l, k) => l.find((e) => e.k === 'say' && e.t === T(k));
+    const vz = await run('oblivion_3_echo', {}, {});   // 旗の立った後 = もう一度（下でまず最初の場面を流し直す）
+    R.Game.flags.oblivion_echo = false;
+    const v1 = await run('oblivion_3_echo');
+    const vKeys = ['say', 'say_2', 'say_4', 'say_5', 'say_3', 'say_6'].map((k) => 'events.oblivion_3_echo.' + k);
+    ok('残影の初めの場面: 声の 3 行と足した 3 行がどれも顔 b_valzard_echo・名前「魔王の残影」', vKeys.every((k) => { const e = said(v1, k); return e && e.face === 'b_valzard_echo' && e.name === T('ev.oblivion.who.valzard'); }));
+    ok('残影の別れの一言（say_6）は勝った後・「光の……紋章……」の次', v1.findIndex((e) => e.t === T('events.oblivion_3_echo.say_6')) === v1.findIndex((e) => e.t === T('events.oblivion_3_echo.say_3')) + 1 &&
+      v1.findIndex((e) => e.k === 'battle') < v1.findIndex((e) => e.t === T('events.oblivion_3_echo.say_6')));
+    ok('残影のもう一度: 顔つきの短い一言（again_say）', vz.some((e) => e.t === T('events.oblivion_3_echo.again_say') && e.face === 'b_valzard_echo'));
+    const oz = await run('oblivion_5_ouroboros', {}, { choose: 1 });
+    ok('円環竜のもう一度: 顔つきの短い一言（again_say）・やめたら戦わない', oz.some((e) => e.t === T('events.oblivion_5_ouroboros.again_say') && e.face === 'b_ouroboros') && !oz.some((e) => e.k === 'battle'));
+    R.Game.flags.oblivion_ouroboros = false;
+    const o1 = await run('oblivion_5_ouroboros');
+    const oName = T('data.bosses.LIST.b_ouroboros.name');
+    const bi = o1.findIndex((e) => e.k === 'battle');
+    ok('円環竜が戦いの前に 3 行話す（顔 b_ouroboros・名前）', ['say', 'say_2', 'say_3'].every((k) => { const e = said(o1, 'events.oblivion_5_ouroboros.' + k); return e && e.face === 'b_ouroboros' && e.name === oName && o1.indexOf(e) < bi; }));
+    const iLast = o1.findIndex((e) => e.t === T('events.oblivion_5_ouroboros.last')), iCap = o1.findIndex((e) => e.k === 'caption' && e.t === T('events.oblivion_5_ouroboros.caption'));
+    ok('勝った後: 竜の最後の言葉 2 行（顔つき）→ 字幕「年代記に外伝『円環の竜』が加わった」→ 余韻 2 行', iLast > bi && o1[iLast].face === 'b_ouroboros' && said(o1, 'events.oblivion_5_ouroboros.last_2') && iCap > iLast &&
+      o1.findIndex((e) => e.t === T('events.oblivion_5_ouroboros.narr_6')) > iCap && R.Game.flags.oblivion_ouroboros && R.Game.flags.lo_ouroboros);
+    ok('フィーネの声の行は今のまま（顔なし）', said(o1, 'events.oblivion_5_ouroboros.fine').face === false);
+  }
   log = await run('oblivion_5_ouroboros', {}, { choose: 0 });
   ok('円環竜の後に渦の中ほどを調べる → もう一度戦える', log.some((e) => e.k === 'battle' && e.troop === 'tr_b_ouroboros'));
   ok('5 階の踏み板は oblivion_ouroboros の後は消え、渦の中ほどの調べる物は後だけ', D.maps.oblivion_5.triggers.find((t) => t.event === 'oblivion_5_ouroboros').cond === '!oblivion_ouroboros' &&

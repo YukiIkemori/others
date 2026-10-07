@@ -6,13 +6,24 @@
 //   oblivion_3_echo        3 階 玉座の間の入口で魔王の残影（v_valzard_oblivion_01〜03 → tr_b_valzard_echo）→ oblivion_echo。
 //                          倒した後は玉座を調べると「もう一度挑みますか？」（レア・超レアの落とし物のため）
 //   oblivion_4_loop       4 階 終わらない回廊（光の無い廊下を進むと最初の部屋へ。3 回ごとに白い紙が正しい口を示す。入口の立て札が手がかり）
-//   oblivion_5_ouroboros   5 階 フィーネの声（v_fine_oblivion_01・02）→ 円環竜オウロボラ（tr_b_ouroboros）→「円環が、ほどけた」→
-//                          外伝『円環の竜』（読み物 lo_ouroboros）→ oblivion_ouroboros。倒した後は渦の中ほどを調べるともう一度戦える
+//   oblivion_5_ouroboros   5 階 フィーネの声（v_fine_oblivion_01・02）→ 竜が目を開けて話す（顔つき）→ 円環竜オウロボラ（tr_b_ouroboros）→「円環が、ほどけた」→
+//                          竜の最後の言葉 → 字幕「年代記に外伝『円環の竜』が加わった」→ 外伝（読み物 lo_ouroboros）→ oblivion_ouroboros。
+//                          倒した後は渦の中ほどを調べるともう一度戦える
+//   ボス 2 体は顔（描いた一枚絵 b_valzard_echo・b_ouroboros）と名前つきで話す（テスター 2026-10-07 Z3。足した文は声なし）
 // ボス戦は逃げられない（boss）。負け・全滅では何も記録しない（踏み板からまた始まる）。
 (function (R) {
   'use strict';
   const E = (id, run, o) => R.def('events', id, Object.assign({ run, meta: { needs: [], gives: [] } }, o || {}));
   const narr = (ev, text) => ev.say(null, text, { face: false });
+  // ボスの顔（描いた一枚絵 assets/portraits/<敵の id>_neutral.webp。look は無いので顔の鍵をそのまま渡す）と名前。
+  //   顔の絵が無い作り（--portraits none・テスト）では R.Portrait.has が null → 会話の窓は名前だけになる
+  const BOSS = {
+    valzard: { face: 'b_valzard_echo', name: () => R.T('ev.oblivion.who.valzard') },
+    ouroboros: { face: 'b_ouroboros', name: () => R.T('data.bosses.LIST.b_ouroboros.name') },
+  };
+  const bossSay = (ev, who, text, o) => ev.say(null, text, Object.assign({ name: BOSS[who].name(), face: BOSS[who].face }, o || {}));
+  /** 顔の絵の読み込みを先に始める（会話の窓が開いたとき、はじめの数コマに空の枠が出ないように） */
+  const warmFace = (who) => { try { if (R.Portrait && R.Portrait.has) R.Portrait.has(BOSS[who].face, 'neutral'); } catch (e) { /* */ } };
   const fx = {
     flash(c, ms) { try { if (R.Field && R.Field.flash) R.Field.flash(c || '#ffffff', ms || 400); } catch (e) { /* */ } },
     shake(p, ms) { try { if (R.Field && R.Field.shake) R.Field.shake(p || 3, ms || 600); } catch (e) { /* */ } },
@@ -52,8 +63,10 @@
   E('oblivion_statue', async (ev) => { await narr(ev, R.T('events.oblivion_statue.narr')); });
 
   /** 「もう一度挑みますか？」→ 同じボスともう一度（落とし物のため）。勝てば true */
-  async function rematch(ev, troop, intro, gone) {
+  async function rematch(ev, troop, intro, gone, who, line) {
+    warmFace(who);
     await narr(ev, intro);
+    if (who && line) await bossSay(ev, who, line);
     const i = await ev.choose(R.T('events.oblivion_rematch.choose'), { cancel: 1, text: R.T('events.oblivion_rematch.choose.text') });
     if (i !== 0) return false;
     ev.sfx('roar');
@@ -70,22 +83,26 @@
   // ================================================================ 3 階 魔王の残影
   E('oblivion_3_echo', async (ev) => {
     if (ev.flag('oblivion_echo')) {
-      await rematch(ev, 'tr_b_valzard_echo', R.T('events.oblivion_3_echo.again'), R.T('events.oblivion_3_echo.again_gone'));
+      await rematch(ev, 'tr_b_valzard_echo', R.T('events.oblivion_3_echo.again'), R.T('events.oblivion_3_echo.again_gone'), 'valzard', R.T('events.oblivion_3_echo.again_say'));
       return;
     }
+    warmFace('valzard');
     ev.bgm('omen');
     await narr(ev, R.T('events.oblivion_3_echo.narr'));
     ev.sfx('dark');
     fx.flash('#201828', 500);
     await ev.wait(300);
-    await ev.say(null, R.T('events.oblivion_3_echo.say'), { voice: 'v_valzard_oblivion_01', name: R.T('ev.oblivion.who.valzard'), face: false });
-    await ev.say(null, R.T('events.oblivion_3_echo.say_2'), { voice: 'v_valzard_oblivion_02', name: R.T('ev.oblivion.who.valzard'), face: false });
+    await bossSay(ev, 'valzard', R.T('events.oblivion_3_echo.say'), { voice: 'v_valzard_oblivion_01' });
+    await bossSay(ev, 'valzard', R.T('events.oblivion_3_echo.say_2'), { voice: 'v_valzard_oblivion_02' });
+    await bossSay(ev, 'valzard', R.T('events.oblivion_3_echo.say_4'));
+    await bossSay(ev, 'valzard', R.T('events.oblivion_3_echo.say_5'));
     ev.sfx('roar');
     fx.shake(5, 900);
     const r = await ev.battle('tr_b_valzard_echo', { boss: true });
     if (r !== 'win') { ev.mapBgm(); return; }
     await ev.wait(300);
-    await ev.say(null, R.T('events.oblivion_3_echo.say_3'), { voice: 'v_valzard_oblivion_03', name: R.T('ev.oblivion.who.valzard'), face: false });
+    await bossSay(ev, 'valzard', R.T('events.oblivion_3_echo.say_3'), { voice: 'v_valzard_oblivion_03' });
+    await bossSay(ev, 'valzard', R.T('events.oblivion_3_echo.say_6'));   // 別れの一言（声なし）
     ev.sfx('light');
     fx.flash('#ffffff', 600);
     ev.setFlag('oblivion_echo');
@@ -112,9 +129,10 @@
   // ================================================================ 5 階 円環竜オウロボラ
   E('oblivion_5_ouroboros', async (ev) => {
     if (ev.flag('oblivion_ouroboros')) {
-      await rematch(ev, 'tr_b_ouroboros', R.T('events.oblivion_5_ouroboros.again'), R.T('events.oblivion_5_ouroboros.again_gone'));
+      await rematch(ev, 'tr_b_ouroboros', R.T('events.oblivion_5_ouroboros.again'), R.T('events.oblivion_5_ouroboros.again_gone'), 'ouroboros', R.T('events.oblivion_5_ouroboros.again_say'));
       return;
     }
+    warmFace('ouroboros');
     ev.bgm('omen');
     await narr(ev, R.T('events.oblivion_5_ouroboros.narr'));
     await ev.wait(400);
@@ -127,20 +145,28 @@
     ev.sfx('roar');
     fx.shake(6, 1100);
     await narr(ev, R.T('events.oblivion_5_ouroboros.narr_3'));
+    // 竜が自分の口で（声なし。テスター: 竜が一言も話さない）
+    await bossSay(ev, 'ouroboros', R.T('events.oblivion_5_ouroboros.say'));
+    await bossSay(ev, 'ouroboros', R.T('events.oblivion_5_ouroboros.say_2'));
+    await bossSay(ev, 'ouroboros', R.T('events.oblivion_5_ouroboros.say_3'));
     const r = await ev.battle('tr_b_ouroboros', { boss: true });
     if (r !== 'win') { ev.mapBgm(); return; }
     await ev.wait(300);
     await narr(ev, R.T('events.oblivion_5_ouroboros.narr_4'));
+    // 締めの場面（テスター: 勝った後が薄い・外伝が加わったのに気づかない）: 竜の最後の言葉 → 光 → 字幕「年代記に外伝が加わった」と右上の通知 → 余韻
+    await bossSay(ev, 'ouroboros', R.T('events.oblivion_5_ouroboros.last'));
+    await bossSay(ev, 'ouroboros', R.T('events.oblivion_5_ouroboros.last_2'));
     ev.sfx('light');
     fx.flash('#ffffff', 900);
     ev.setFlag('oblivion_ouroboros');
     await ev.wait(500);
     ev.sfx('quill');
     try { ev.jingle('chapter'); } catch (e) { /* */ }
-    await ev.caption(R.T('events.oblivion_5_ouroboros.caption'), { ms: 3400 });
-    ev.lore('lo_ouroboros');
+    await ev.caption(R.T('events.oblivion_5_ouroboros.caption'), { ms: 4200 });
+    ev.lore('lo_ouroboros');   // 右上の通知「書庫に書き写した：外伝『円環の竜』」は次の文の間も出ている
     ev.mapBgm();
     await narr(ev, R.T('events.oblivion_5_ouroboros.narr_5'));
+    await narr(ev, R.T('events.oblivion_5_ouroboros.narr_6'));
   }, { meta: { needs: ['flag:oblivion_echo'], gives: ['flag:oblivion_ouroboros', 'lore:lo_ouroboros'] } });
 
   // ---------------------------------------------------------------- 古いセーブ（R.SaveFixups。R.State.deserialize が呼ぶ）

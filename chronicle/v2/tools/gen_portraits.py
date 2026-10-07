@@ -11,7 +11,8 @@
                描いた顔は一人 1 枚（オーナー 2026-10-04）。ほかの表情の原画（試しのベルナ）は raw に残すが入れない
   3. sheet     描いた顔の一覧の画像（確かめ用。--out に書く）
 
-  python3 v2/tools/gen_portraits.py gen <look> <expr> [--style <look>] [--note "<足す文>"] [--force]
+  python3 v2/tools/gen_portraits.py gen <look> <expr> [--style <look>] [--note "<足す文>"] [--force] [--once]
+               ボス（prompts.json の painted.monsters にある look）は顔のシートの代わりに戦いの絵 v2/assets/monsters/<sprite>.png を参考にする
   python3 v2/tools/gen_portraits.py process [<look>_<expr> ...]
   python3 v2/tools/gen_portraits.py sheet --out <file.jpg>
   python3 v2/tools/gen_portraits.py prompt <look> <expr> [--style <look>]      （文を見るだけ。API を呼ばない）
@@ -71,6 +72,20 @@ def pixel_ref(look, expr):
     return b.getvalue()
 
 
+MONSTERS = os.path.join(V2, 'assets', 'monsters')
+
+
+def monster_ref(sprite):
+    """顔のシートの無いボス: 戦いの絵（v2/assets/monsters/<sprite>.png）を 3 倍に拡大（ぼかさない）して紺の地に置いた PNG のバイト列"""
+    c = Image.open(os.path.join(MONSTERS, sprite + '.png')).convert('RGBA')
+    k = 3
+    bg = Image.new('RGBA', (c.width * k + 64, c.height * k + 64), NAVY + (255,))
+    bg.alpha_composite(c.resize((c.width * k, c.height * k), Image.NEAREST), (32, 32))
+    b = io.BytesIO()
+    bg.convert('RGB').save(b, 'PNG')
+    return b.getvalue()
+
+
 def painted_ref(look, expr):
     p = os.path.join(RAW, f'{look}_{expr}.webp')
     if not os.path.exists(p):
@@ -98,6 +113,12 @@ def job_of(look, expr, style=None, note=None):
         refs.append((f'painted:{base}_neutral', painted_ref(base, 'neutral')))
         s.append('Reference image 2: the pixel-art face of the same hero (identity only). ' + P['identity'])
         refs.append((f'pixel:{base}_{expr}', pixel_ref(base, expr)))
+    elif look in P.get('monsters', {}):   # ボス（忘却の底など）: 顔のシートが無いので戦いの絵を参考に。表情は neutral だけ
+        s.append('Reference image 1: ' + P['monsterRef'])
+        refs.append((f'monster:{P["monsters"][look]}', monster_ref(P['monsters'][look])))
+        if style:
+            s.append('Reference image 2: ' + P['styleRef'])
+            refs.append((f'painted:{style}_neutral', painted_ref(style, 'neutral')))
     else:
         s.append('Reference image 1: ' + P['identity'])
         refs.append((f'pixel:{look}_{expr}', pixel_ref(look, expr)))
@@ -128,7 +149,7 @@ def log(e):
         pass
 
 
-def gen(look, expr, style=None, note=None, force=False):
+def gen(look, expr, style=None, note=None, force=False, once=False):
     os.makedirs(RAW, exist_ok=True)
     out = os.path.join(RAW, f'{look}_{expr}.webp')
     if os.path.exists(out) and not force:
@@ -164,7 +185,10 @@ def gen(look, expr, style=None, note=None, force=False):
         log(dict(t=time.strftime('%Y-%m-%dT%H:%M:%S'), tag=tag, model=body['model'], images=len(outs), secs=round(time.time() - t0, 1),
                  settings=tool, n_refs=len(refs), usage=js.get('usage')))
         if not outs:
-            print('no image', [o.get('type') for o in js.get('output', [])]); time.sleep(5); continue
+            print('no image', [o.get('type') for o in js.get('output', [])])
+            if once:   # --once: 答えの返った呼び出しは 1 回で止める（描き直しの回数を数えるとき）
+                return False
+            time.sleep(5); continue
         png = strip_png(base64.b64decode(outs[0]['result']))
         im = Image.open(io.BytesIO(png)).convert('RGB')
         # 原画は可逆の WebP（付随の情報は書かない。PIL は exif・xmp を渡さなければ書かない）
@@ -247,7 +271,7 @@ if __name__ == '__main__':
             p, refs = job_of(look, expr, opt(a, '--style'), opt(a, '--note'))
             print(p, '\nrefs:', [n for n, _ in refs])
         else:
-            sys.exit(0 if gen(look, expr, opt(a, '--style'), opt(a, '--note'), '--force' in a) else 1)
+            sys.exit(0 if gen(look, expr, opt(a, '--style'), opt(a, '--note'), '--force' in a, '--once' in a) else 1)
     elif cmd == 'process':
         process([x for x in a[1:] if not x.startswith('--')] or None)
     elif cmd == 'sheet':
