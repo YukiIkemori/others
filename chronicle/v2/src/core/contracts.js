@@ -135,6 +135,7 @@
     'uniques?': 'object',   // 版 2: 伸びる一品物 u_* の個体 {id: {tier, …fillItem の値}}（items[id] は数だけ）
     'steps?': 'number',     // 版 2: 歩いた歩数の合計（FIELD が数える。出現の乱数の種にも使う）
     'regionTier?': 'object',  // 版 2: 解決した地方の出現の固定ティア {rid: T}（R.Tier.forZone。無い古いセーブは R.Tier.migrateLocks が章の並びから埋める）
+    'loreSeen?': 'object',  // 版 2: 書庫で開いて見た読み物 {loreId: true}（MENUS chronicle.js の書庫のタブ。「新」の印を消す。無い古いセーブは空から）
     'explored?': 'object',  // 版 2: ダンジョンの小地図の歩いた所 {mapId: 'w x h : 連'}（FIELD minimap.js。無い古いセーブは空から）
   };
   K.leadState = { got: 'number', pin: 'bool', seen: 'bool', 'done?': 'bool' };   // R.Game.leads[id]。got は R.Game.playMs
