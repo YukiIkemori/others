@@ -121,11 +121,15 @@ const postMons = (() => {
 
 section('post-clear rates (K.DROP.post)');
 {
-  const d = DB.monsters.void_3;
+  // the multiplier itself (a plain slot: rare 16, super 256)
+  const d = Object.assign({}, DB.monsters.void_3, { drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'i_ether', rate: 16 }, super: { item: 'i_elixir', rate: 256 } } });
   const c8 = R.Mon.dropChances(d, { tier: 8 }), c9 = R.Mon.dropChances(d, { tier: 9 });
   ok('rare 1/16 → 1/24 post-clear', Math.abs(c8.rare - 1 / 16) < 1e-9 && Math.abs(c9.rare - 1 / 24) < 1e-9, [c8.rare, c9.rare]);
   ok('super halves post-clear', Math.abs(c9.super - c8.super / 2) < 1e-9, [c8.super, c9.super]);
   ok('normal is unchanged', c8.normal === c9.normal);
+  // owner 2026-10-05: oblivion mobs offset the multiplier (rare 1/16, super ×2 back)
+  const v9 = R.Mon.dropChances(DB.monsters.void_3, { tier: 9 });
+  ok('oblivion mobs: rare 1/16, super 1/256 (void_3)', Math.abs(v9.rare - 1 / 16) < 1e-9 && Math.abs(v9.super - 1 / 256) < 1e-9, [v9.rare, v9.super]);
   const boss = R.Mon.dropChances(DB.monsters.b_ouroboros, { tier: 9 });
   ok('the boss’s sure normal slot (rate 1) stays sure', boss.normal === 1);
   // 盗み専用（超レア）の率: 本編のティアは 1/16、クリア後は 1/32

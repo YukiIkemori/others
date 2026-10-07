@@ -152,6 +152,14 @@
         if (R.DB.stealSources) R.DB.stealSources[stOnly] = { mon: mid, rate: d.steal.rate };
       }
     }
+    // 忘却の底の雑魚（ボス・レア魔物・鋼を除く）のレアと超レアを少し上げる（持ち主 2026-10-05、テストの報告「ドロップ率が低すぎる」に「雑魚のレアと超レアだけ少し」）:
+    //   レア 1/24 → 1/16（クリア後 ×1.5 を打ち消す）、超レア 1/256・1/512 → 1/128・1/256（×2 を打ち消す）
+    for (const id of mobs) {
+      const d = M[id] && M[id].drops;
+      if (!d) continue;
+      if (d.rare && d.rare.rate) d.rare = Object.assign({}, d.rare, { rate: d.rare.rate / 1.5 });
+      if (d.super && d.super.rate) d.super = Object.assign({}, d.super, { rate: d.super.rate / 2 });
+    }
     // 白金の大鬼火の超レアは高めに（持ち主 2026-10-05「どうせ出会えないし、倒せないから確率もっとあげて」）:
     //   超レアの落とし物 1/8（クリア後 ×2 で 1/16）、盗み専用 1/4（×2 で盗みの成功 1 回あたり 1/8）。同日「1/16 でもいいぐらい」
     const pt = M.platinum_2 && M.platinum_2.drops;
