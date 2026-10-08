@@ -10,6 +10,7 @@ SITES = {  # name -> Search Console property
     "mononippon": "sc-domain:mononippon.com",
     "sukinobi": "sc-domain:sukinobi.jp",
     "monometri": "sc-domain:monometri.com",
+    "asiavela": "sc-domain:asiavela.com",
 }
 
 
