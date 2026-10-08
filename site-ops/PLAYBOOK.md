@@ -1,4 +1,4 @@
-# サイト運用プレイブック（monometri / sukinobi / mononippon / asiavela）
+# サイト運用プレイブック（monometri / sukinobi / mononippon / asiavela / okurinochizu）
 
 目的は2つ。(1) 各サイトの検索表示回数（IMP）の最大化、(2) アフィリエイトのCV（最重要KPI）。
 権限: 運営判断は全面委任済み（記事の追加・修正・削除・整理、公開まで）。ただし下記ガードレールを守る。
@@ -14,12 +14,15 @@
 
 - asiavela: `asiavela.com`（旅行サイト、15言語、Viator/Stay22）。ソースは `YukiIkemori/mononippon` リポジトリ内の `asiavela/`（mononippon本体とは別ワークフロー `asiavela-hosting.yml` でデプロイ）。運用ルールは同ディレクトリの `CLAUDE.md` / `STATUS.md` に従う。ユーザーの指示で2026-10-08から日次・週次・月次の対象に追加。別のAIが記事を生成・翻訳していたが、2026-10-08にユーザーより『加筆修正はそろそろ落ち着く予定。気にせず必要なことをやってよい』との指示あり。直近14日以内に変更されたページは再編集しない原則は維持し、他者の直近コミットを確認してから編集する。
 
+- okurinochizu: `okurinochizu.jp`（長野県東信・群馬県西毛の葬儀・お墓・終活の情報メディア、24記事＋8地域案内）。リポジトリ `YukiIkemori/okurinochizu`（Astro、記事は `src/data/content.json`、出典は `src/data/sources.json`、Firebase Hosting）。GA4 は `G-YH2YL4ZMCH`、プロパティID `558127234`（環境変数 `GA4_PROPERTY_IDS` に `okurinochizu=558127234`）。2026-10-09 からユーザー指示で対象に追加。暮らしに関わる内容のため、事実確認と断定を避ける表現を最優先し、頻繁な書き換えはしない。紹介先(つばさ公益社)への案内は『記事は中立、末尾に控えめな一行』の方針。
+
 ## サイト別KPI
 | サイト | 主KPI | 備考 |
 |---|---|---|
 | mononippon | アフィリエイトCV（Amazon各国、Viator） | 5言語。タグ・ID・写真ルールは `docs/CONTENT-OPERATIONS.md` |
 | monometri | IMP → アフィリエイトCV | 立ち上げ前。まず検索流入の土台 |
 | asiavela | 検索IMP → Viator/Stay22 の送客クリック | 旅行・15言語。成長中のため母語記事の質と多言語展開が主。アフィリエイト実績はユーザーが共有するまで依頼しない |
+| okurinochizu | 検索IMP | 葬儀・お墓・終活。安全側の表現と出典の正確さが最優先。紹介先への案内は控えめに |
 | sukinobi | 検索IMP | **アフィリエイト報酬なし**。個人の応援メディア。公式CTAはUTMとdataLayerのみ。個人名・架空の専門家・PR/広告契約前提の表示は追加しない。体験談を捏造しない。外部事業者への連絡はユーザーの明示指示がある時だけ。 |
 
 ## 原則
