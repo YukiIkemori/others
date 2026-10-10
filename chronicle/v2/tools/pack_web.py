@@ -16,6 +16,8 @@ dist（node v2/tools/build.js の外置きの版）から、次の形の写し�
   sprites/atlas_NN.webp    CAST の原画も同じ
   voice/pack_NN.ogg        ボイスは Ogg をつないだ（chained Ogg）ファイルにまとめる（{url, off, len}）
   voice/en/pack_NN.ogg     英語のボイス（RPG_MEDIA.voice_en）も同じにまとめる（ゲームの言語が英語のとき core/media.js が先に引く）
+  voice/zh/pack_NN.ogg     中国語（普通話）のボイス（voice_zh。zh-Hans・zh-Hant 共用）、voice/ko/pack_NN.ogg 韓国語（voice_ko）も同じ。
+                           叫び声の使い回し {alias: 'voice'}（日本語の声を使う）はそのまま表に残す
   sfx/pack_NN.ogg          録音の効果音（1 本 0.1〜1 秒、約 120 本）もボイスと同じにまとめる（{url, off, len}。scope に関わらず全部）
   amb/<床>.ogg             録音の環境音の床はそのまま（{url, loopStart, loopEnd}。scope に関わらず全部）
   publish_batches.json     ファイルと大きさの一覧と、1 回の公開（64 MB・255 本まで）ごとの組
@@ -209,8 +211,8 @@ def pack_images(kind, table, dist, out, page, group=None, lossy=None):
 
 
 def pack_voice(table, dist, out, chunk, kind='voice', folder=None):
-    """voice（と voice_en・sfx）: {id: url} → {id: {url, off, len}}。名前の順につなぎ、chunk バイトを越えたら次のファイル。
-    folder: 置く所（既定 kind。voice_en は voice/en）"""
+    """voice（と voice_en・voice_zh・voice_ko・sfx）: {id: url} → {id: {url, off, len}}。名前の順につなぎ、chunk バイトを越えたら次のファイル。
+    folder: 置く所（既定 kind。voice_en は voice/en）。{alias: …} の項（叫び声の使い回し）は詰めずにそのまま返す"""
     folder = folder or kind
     os.makedirs(os.path.join(out, folder), exist_ok=True)
     new, n, buf = {}, 0, bytearray()
@@ -230,6 +232,9 @@ def pack_voice(table, dist, out, chunk, kind='voice', folder=None):
         buf = bytearray()
 
     for k in sorted(table):
+        if isinstance(table[k], dict) and 'alias' in table[k]:
+            new[k] = table[k]
+            continue
         url = table[k] if isinstance(table[k], str) else table[k]['url']
         data = open(os.path.join(dist, bare(url)), 'rb').read()
         if not data.startswith(b'OggS'):
@@ -289,8 +294,9 @@ def main():
                                                   under_lossy(a.under_quality) if kind == 'env' else None)
     if media.get('voice'):
         new['voice'], counts['voice'] = pack_voice(media['voice'], dist, out, int(a.voice_pack_mb * 1000 * 1000))
-    if media.get('voice_en'):
-        new['voice_en'], counts['voice_en'] = pack_voice(media['voice_en'], dist, out, int(a.voice_pack_mb * 1000 * 1000), 'voice_en', 'voice/en')
+    for lg in ('en', 'zh', 'ko'):
+        if media.get('voice_' + lg):
+            new['voice_' + lg], counts['voice_' + lg] = pack_voice(media['voice_' + lg], dist, out, int(a.voice_pack_mb * 1000 * 1000), 'voice_' + lg, 'voice/' + lg)
     if media.get('sfx'):
         new['sfx'], counts['sfx'] = pack_voice(media['sfx'], dist, out, int(a.voice_pack_mb * 1000 * 1000), 'sfx')
     table = json.dumps(new, ensure_ascii=False, separators=(',', ':'))
@@ -333,6 +339,12 @@ def main():
         folders.setdefault(d, {'files': 0, 'bytes': 0})
         folders[d]['files'] += 1
         folders[d]['bytes'] += f['bytes']
+    def aliases(kind):
+        return sum(1 for e in (media.get(kind) or {}).values() if isinstance(e, dict) and 'alias' in e)
+
+    def clips(kind):
+        return len(media.get(kind) or {}) - aliases(kind)
+
     manifest = {
         'note': 'Play-ready copy of the v2 slice. Publish the batches in order to the same artifact (batch 1 holds index.html). '
                 'Sizes are bytes; limits used: <= 64,000,000 bytes and <= 255 files per publish, <= 15 MB per binary / 16 MB per text file, '
@@ -344,7 +356,7 @@ def main():
         'total_bytes': total,
         'folders': folders,
         'packed': {'env_atlases': counts.get('env', 0), 'sprite_atlases': counts.get('sprites', 0), 'monster_atlases': counts.get('monsters', 0), 'monster_images': len(media.get('monsters') or {}), 'voice_packs': counts.get('voice', 0),
-                   'env_images': len(media.get('env') or {}), 'sprite_sheets': len(media.get('sprites') or {}), 'voice_clips': len(media.get('voice') or {}), 'voice_en_packs': counts.get('voice_en', 0), 'voice_en_clips': len(media.get('voice_en') or {}), 'fx_parts': len(media.get('fx') or {}),
+                   'env_images': len(media.get('env') or {}), 'sprite_sheets': len(media.get('sprites') or {}), 'voice_clips': len(media.get('voice') or {}), 'voice_en_packs': counts.get('voice_en', 0), 'voice_en_clips': len(media.get('voice_en') or {}), 'voice_zh_packs': counts.get('voice_zh', 0), 'voice_zh_clips': clips('voice_zh'), 'voice_zh_reused': aliases('voice_zh'), 'voice_ko_packs': counts.get('voice_ko', 0), 'voice_ko_clips': clips('voice_ko'), 'voice_ko_reused': aliases('voice_ko'), 'fx_parts': len(media.get('fx') or {}),
                    'sfx_packs': counts.get('sfx', 0), 'sfx_takes': len(media.get('sfx') or {}), 'amb_beds': len(media.get('amb') or {})},
         'files': files,
         'batches': batches,

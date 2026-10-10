@@ -10,8 +10,8 @@ import os, re, sys, urllib.request
 pub, base = sys.argv[1], sys.argv[2].rstrip('/')
 idx = urllib.request.urlopen(base + '/?keep=' + str(os.getpid()), timeout=120).read().decode('utf8', 'replace')
 # 中身の hash を名前に持つファイル（pack_web.hashed_name）だけ。?v= の付く写しは名前が変わらないので要らない
-# （英語のボイスのまとめは voice/en/pack_NN.<hash>.ogg）
-paths = sorted(set(re.findall(r'(?<![\w/.-])((?:env|sprites|monsters|voice|sfx|bgm)/(?:en/)?[\w-]+\.[0-9a-f]{10}\.(?:webp|png|ogg))', idx)))
+# （英語・中国語・韓国語のボイスのまとめは voice/en|zh|ko/pack_NN.<hash>.ogg）
+paths = sorted(set(re.findall(r'(?<![\w/.-])((?:env|sprites|monsters|voice|sfx|bgm)/(?:(?:en|zh|ko)/)?[\w-]+\.[0-9a-f]{10}\.(?:webp|png|ogg))', idx)))
 missing = [p for p in paths if not os.path.exists(os.path.join(pub, p))]
 got = 0
 for p in missing:

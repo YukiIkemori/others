@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
-"""Offline content check of the English voice files (no API, nothing paid): an open-source speech recognizer
-(faster-whisper, model base.en, ~145 MB, downloaded once into $HF_HOME) transcribes assets/voice/en/<id>.ogg and
-compares the words with en_text of design/voice/en_lines.csv.
+"""Offline content check of the dubbed voice files (no API, nothing paid): an open-source speech recognizer
+(faster-whisper, downloaded once into $HF_HOME: base.en ~145 MB for English, the multilingual small ~480 MB for Mandarin and
+Korean) transcribes assets/voice/<lang>/<id>.ogg and compares the words with <lang>_text of design/voice/<lang>_lines.csv.
 
-  HF_HOME=<cache dir> python3 tools/voice_en_stt.py --ids-file design/voice/en_scope.txt [--retry-out <file>]
+  HF_HOME=<cache dir> python3 tools/voice_en_stt.py --ids-file design/voice/voice_scope.txt [--lang en|zh|ko] [--retry-out <file>]
 
-Writes per id `stt: {heard, similarity, repeated, short, blocks}` into design/voice/en_report.json. Report-only, except
-one objective pattern that means "the length is far off the text" (the cost rule's local check): `repeated` = the actor
+Writes per id `stt: {heard, similarity, repeated, short, blocks}` into design/voice/<lang>_report.json. Report-only, except
+the objective patterns that mean "the take is far off the text" (the cost rule's local check): `repeated` = the actor
 said the line, or a phrase of it, twice (>= 4 words in the line, and either the whole line twice with >= 1.6x the words,
-or a run of >= 3 of the line's words said twice back to back with >= 1.25x the words). Those ids go
-to --retry-out (for tools/voice_tts.js --lang en --ids-file <file> --force; the tool still allows at most 2 audio
+or a run of >= 3 of the line's words said twice back to back with >= 1.25x the words), and (zh / ko only) `wrong` = under 35 %
+of the text recognized although the line is >= 6 characters (the actor said something else, or read the notes aloud). Those ids go
+to --retry-out (for tools/voice_tts.js --lang <lang> --ids-file <file> --force; the tool still allows at most 2 audio
 requests per id). `short` (under half of the words heard in one single block of speech: maybe cut off) is only flagged.
 Shouts and the recognizer's spelling (names, interjections) are not judged.
+Mandarin / Korean: the "words" are characters (hanzi after Traditional -> Simplified by OpenCC; hangul syllables), spaces and
+punctuation do not count; a recognizer is less exact there than for English, so `similarity` is a rough guide.
 """
 import argparse
 import csv
@@ -23,7 +26,18 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-def words(s):
+_T2S = None
+
+
+def words(s, lang='en'):
+    if lang == 'zh':
+        global _T2S
+        if _T2S is None:
+            import opencc
+            _T2S = opencc.OpenCC('t2s')
+        return list(re.sub(r'[^\u4e00-\u9fff0-9]', '', _T2S.convert(s)))
+    if lang == 'ko':
+        return list(re.sub(r'[^가-힣0-9]', '', s))
     return re.findall(r"[a-z0-9']+", s.lower().replace('-', ' ').replace('—', ' '))
 
 
@@ -54,12 +68,12 @@ def repeats(a, b):
     return hits
 
 
-def phrase_repeat(a, b):
-    """a run of >= 3 words of the line a said twice back to back in the transcript b"""
-    line = ' '.join(a)
-    for n in range(3, len(a) + 1):
+def phrase_repeat(a, b, nmin=3, sep=' '):
+    """a run of >= nmin words (characters: 4) of the line a said twice back to back in the transcript b"""
+    line = sep.join(a)
+    for n in range(nmin, len(a) + 1):
         for i in range(len(b) - 2 * n + 1):
-            if b[i:i + n] == b[i + n:i + 2 * n] and ' '.join(b[i:i + n]) in line:
+            if b[i:i + n] == b[i + n:i + 2 * n] and sep.join(b[i:i + n]) in line:
                 return True
     return False
 
@@ -89,41 +103,51 @@ def blocks(samples, rate):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--ids-file', required=True)
-    ap.add_argument('--report', default=os.path.join(ROOT, 'design', 'voice', 'en_report.json'))
+    ap.add_argument('--lang', default='en', choices=['en', 'zh', 'ko'])
+    ap.add_argument('--report')
     ap.add_argument('--retry-out')
-    ap.add_argument('--model', default='base.en')
+    ap.add_argument('--model')
     a = ap.parse_args()
+    lang = a.lang
+    a.report = a.report or os.path.join(ROOT, 'design', 'voice', lang + '_report.json')
+    a.model = a.model or ('base.en' if lang == 'en' else 'small')
     from faster_whisper import WhisperModel, decode_audio
-    rows = {r['id']: r for r in csv.DictReader(open(os.path.join(ROOT, 'design', 'voice', 'en_lines.csv'), encoding='utf-8'))}
+    rows = {r['id']: r for r in csv.DictReader(open(os.path.join(ROOT, 'design', 'voice', lang + '_lines.csv'), encoding='utf-8'))}
     ids = [x.split('#')[0].strip() for x in open(a.ids_file, encoding='utf-8') if x.split('#')[0].strip()]
     rep = json.load(open(a.report, encoding='utf-8')) if os.path.exists(a.report) else {}
     model = WhisperModel(a.model, device='cpu', compute_type='int8')
     retry, short, done = [], [], 0
+    cjk = lang != 'en'
+    col = lang + '_text'
     for i in ids:
-        f = os.path.join(ROOT, 'assets', 'voice', 'en', i + '.ogg')
-        if not os.path.exists(f) or i not in rows:
+        f = os.path.join(ROOT, 'assets', 'voice', lang, i + '.ogg')
+        if not os.path.exists(f) or i not in rows or not rows[i].get(col):
             continue
         audio = decode_audio(f, sampling_rate=16000)
-        segs, _ = model.transcribe(audio, beam_size=5, language='en', vad_filter=False)
-        heard = ' '.join(s.text.strip() for s in segs).strip()
-        t, h = words(rows[i]['en_text']), words(heard)
+        segs, _ = model.transcribe(audio, beam_size=5, language=lang, vad_filter=False)
+        heard = (''.join if cjk else ' '.join)(s.text.strip() for s in segs).strip()
+        t, h = words(rows[i][col], lang), words(heard, lang)
         nb = blocks(audio, 16000)
         rec = {'heard': heard, 'similarity': round(sim(t, h), 2), 'blocks': nb, 'repeated': False, 'short': False}
-        if len(t) >= 4 and ((len(h) >= 1.6 * len(t) and repeats(t, h) >= 2) or (len(h) >= 1.25 * len(t) and phrase_repeat(t, h))):
+        nmin, sep, floor = (4, '', 5) if cjk else (3, ' ', 3)
+        if len(t) >= floor + 1 and ((len(h) >= 1.6 * len(t) and repeats(t, h) >= 2) or (len(h) >= 1.25 * len(t) and phrase_repeat(t, h, nmin, sep))):
             rec['repeated'] = True
             retry.append(i)
-        if len(t) >= 4 and len(h) < 0.5 * len(t) and nb <= 1:
+        if len(t) >= floor + 1 and len(h) < 0.5 * len(t) and nb <= 1:
             rec['short'] = True
             short.append(i)
+        if cjk and len(t) >= 6 and rec['similarity'] < 0.35 and not rec['repeated']:
+            rec['wrong'] = True
+            retry.append(i)
         rep.setdefault(i, {'id': i})['stt'] = rec
         done += 1
-        flag = ' REPEATED' if rec['repeated'] else ' short?' if rec['short'] else ''
+        flag = ' REPEATED' if rec['repeated'] else ' WRONG' if rec.get('wrong') else ' short?' if rec['short'] else ''
         print(f"{i:28} {rec['similarity']:.2f}{flag}  {heard[:90]}", flush=True)
     json.dump(rep, open(a.report, 'w', encoding='utf-8'), indent=1, ensure_ascii=False)
     open(a.report, 'a', encoding='utf-8').write('\n')
     if a.retry_out:
         open(a.retry_out, 'w', encoding='utf-8').write(''.join(x + '\n' for x in retry))
-    print(f'[voice_en_stt] {done} files transcribed, {len(retry)} said twice: {" ".join(retry)}; {len(short)} maybe cut off: {" ".join(short)}')
+    print(f'[voice_en_stt {lang}] {done} files transcribed, {len(retry)} to retry (said twice / wrong text): {" ".join(retry)}; {len(short)} maybe cut off: {" ".join(short)}')
     return 0
 
 

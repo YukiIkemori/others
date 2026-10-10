@@ -1,0 +1,331 @@
+{
+ "_readme": [
+  "Korean casting for tools/voice_tts.js --lang ko (owner 2026-10-10). Lines: design/voice/ko_lines.csv (tools/voice_en_lines.js --lang ko; text of v2/src/i18n/ko). Audio: assets/voice/ko/<id>.ogg.",
+  "voice: a native Korean (ko-KR, Seoul) prebuilt persona voice from GET /v1beta/voices (117 listed), chosen by its listed gender, age, pitch and tone (note = what the listing says) to match the character in the English casting (casting_en.json): same gender and age class, similar tone. Every speaker has an own voice; melda and mistwitch share one on purpose (the fog imitates the witch's voice).",
+  "Only the voice changes: profile, style, per-line direction, fx and pitch come from design/voice/casting.json (profile / style here replace the Japanese-mode text where it talks about Japanese speech). Pure cries (design/voice/cry_reuse.txt) are not voiced: the game plays the Japanese file."
+ ],
+ "language": "ko-KR",
+ "accent": "standard Seoul Korean",
+ "speakers": {
+  "fine": {
+   "voice": "ko-kr-storyteller-6",
+   "type": "prebuilt",
+   "note": "female, 25, high; Seoul Korean; voice is textured, resonant, and soothing"
+  },
+  "rowell": {
+   "voice": "ko-kr-tutor-4",
+   "type": "prebuilt",
+   "note": "male, 23, low; Seoul Korean; currently brainstorming in a meeting. tone is professional yet approachable"
+  },
+  "berna": {
+   "voice": "ko-kr-commercial-3",
+   "type": "prebuilt",
+   "note": "female, 60, low; Seoul Korean; currently brainstorming in a meeting. tone is professional yet approachable"
+  },
+  "lazaro": {
+   "voice": "ko-kr-training-5",
+   "type": "prebuilt",
+   "note": "male, 54, low; Seoul Korean; voice is textured, resonant, and soothing"
+  },
+  "king": {
+   "voice": "ko-kr-advisor-8",
+   "type": "prebuilt",
+   "note": "male, 46, low; Seoul Korean; currently on the phone. sounds confident and clear"
+  },
+  "nemrea": {
+   "voice": "ko-kr-training-10",
+   "type": "prebuilt",
+   "note": "neutral, 31, high; Seoul Korean; currently in an oscar winning film. tone is professional yet approachable"
+  },
+  "noa": {
+   "voice": "ko-kr-commercial-6",
+   "type": "prebuilt",
+   "note": "female, 29, medium; Seoul Korean; voice is textured, resonant, and soothing"
+  },
+  "valzard": {
+   "voice": "ko-kr-techagent-5",
+   "type": "prebuilt",
+   "note": "male, 39, low; Seoul Korean; voice is cool, confident, and collaborative"
+  },
+  "elm": {
+   "voice": "ko-kr-storyteller-1",
+   "type": "prebuilt",
+   "note": "male, 59, low; Seoul Korean; voice is laid-back, encouraging, and chill"
+  },
+  "hazal": {
+   "voice": "ko-kr-storyteller-12",
+   "type": "prebuilt",
+   "note": "male, 49, low; Seoul Korean; voice is light, airy, and precise"
+  },
+  "giant": {
+   "voice": "ko-kr-techagent-11",
+   "type": "prebuilt",
+   "note": "male, 43, low; Seoul Korean; currently in an oscar winning film. tone is professional yet approachable"
+  },
+  "neve": {
+   "voice": "ko-kr-techagent-8",
+   "type": "prebuilt",
+   "note": "female, 49, medium; Seoul Korean; currently in an indie film. sounds confident and clear"
+  },
+  "melda": {
+   "voice": "ko-kr-techagent-1",
+   "type": "prebuilt",
+   "note": "female, 43, medium; Seoul Korean; voice is textured, resonant, and soothing"
+  },
+  "mistwitch": {
+   "voice": "ko-kr-techagent-1",
+   "type": "prebuilt",
+   "note": "same voice as melda (the fog imitates her)"
+  },
+  "marina": {
+   "voice": "ko-kr-storyteller-2",
+   "type": "prebuilt",
+   "note": "female, 60, high; Seoul Korean; tone is conversational, slightly dry humor, and warm"
+  },
+  "glen": {
+   "voice": "ko-kr-csagent-6",
+   "type": "prebuilt",
+   "note": "male, 43, low; Seoul Korean; tone is conversational, slightly dry humor, and warm"
+  },
+  "guardian": {
+   "voice": "ko-kr-csagent-8",
+   "type": "prebuilt",
+   "note": "male, 37, low; Seoul Korean; tone is objective, direct, and helpful"
+  },
+  "sentinel": {
+   "voice": "ko-kr-training-11",
+   "type": "prebuilt",
+   "note": "male, 44, low; Seoul Korean; voice is relaxed"
+  },
+  "otto": {
+   "voice": "ko-kr-concierge-7",
+   "type": "prebuilt",
+   "note": "male, 60, low; Seoul Korean; currently at a meditation retreat. voice is warm and engaging",
+   "profile": "Otto, the old lighthouse keeper of the harbour town Pharos, about 70: broad-shouldered, short white beard, skin weathered by the sea wind. Warm, gruff and grandfatherly; an old seaman's plain, homely way of speaking."
+  },
+  "zaid": {
+   "voice": "ko-kr-tutor-1",
+   "type": "prebuilt",
+   "note": "male, 54, low; Seoul Korean; tone is reflective, calm, and reassuring",
+   "profile": "Zaid, the caravan master of the oasis town Kasim, in his fifties: sun-dried, steady and responsible; sings the old star songs at the campfire; plain, unhurried older man's speech."
+  },
+  "rashid": {
+   "voice": "ko-kr-csagent-4",
+   "type": "prebuilt",
+   "note": "male, 41, low; Seoul Korean; currently on the phone. tone is professional yet approachable"
+  },
+  "nadia": {
+   "voice": "ko-kr-commercial-9",
+   "type": "prebuilt",
+   "note": "female, 21, high; Seoul Korean; tone is peer-to-peer and curious"
+  },
+  "jorn": {
+   "voice": "ko-kr-commercial-7",
+   "type": "prebuilt",
+   "note": "male, 55, low; Seoul Korean; voice is textured, resonant, and soothing",
+   "profile": "Jorn, the chief of the snow village Yule, about sixty; broad, weathered and dependable, carries the village through the midwinter fire festival and the siege; plain older man's speech."
+  },
+  "sonja": {
+   "voice": "ko-kr-csagent-5",
+   "type": "prebuilt",
+   "note": "female, 43, medium; Seoul Korean; voice is comforting someone who is stressed"
+  },
+  "mayor": {
+   "voice": "ko-kr-concierge-3",
+   "type": "prebuilt",
+   "note": "male, 61, low; Seoul Korean; currently on npr. tone is professional yet approachable",
+   "profile": "Oswald, the mayor of the lake town Loch, about sixty; stern and careful, presides over the town assembly.",
+   "style": "stern, measured older male voice, about sixty; the chair of a tense town assembly"
+  },
+  "zakuro": {
+   "voice": "ko-kr-techagent-3",
+   "type": "prebuilt",
+   "note": "male, 36, low; Seoul Korean; currently sitting next to you on the bus. tone is professional yet approachable",
+   "profile": "Zakuro, a hired fighter attached to the Archive, in his thirties; laconic and blunt but strictly honourable (never reads other people's letters); rough-spoken.",
+   "style": "low, dry adult male voice, about thirty-five; blunt and terse, quietly honourable"
+  },
+  "rita": {
+   "voice": "ko-kr-tutor-7",
+   "type": "prebuilt",
+   "note": "female, 26, medium; Seoul Korean; voice is clear, medium-pitch, and friendly"
+  },
+  "kaya": {
+   "voice": "ko-kr-storyteller-4",
+   "type": "prebuilt",
+   "note": "female, 27, medium; Seoul Korean; currently on npr. voice is warm and engaging",
+   "style": "clear, soft young female voice, about twenty; earnest and a little shaky"
+  },
+  "hald": {
+   "voice": "ko-kr-csagent-12",
+   "type": "prebuilt",
+   "note": "male, 59, low; Seoul Korean; voice is engaging and empathic",
+   "style": "old, gravelly male voice, about seventy; a gruff watchman, urgent when he raises the alarm"
+  },
+  "dorga": {
+   "voice": "ko-kr-training-2",
+   "type": "prebuilt",
+   "note": "male, 57, low; Seoul Korean; voice is cool, confident, and collaborative",
+   "profile": "Dorga, the chief of the crater town Caldera, about sixty; a former proxy fighter of the Firebird League, broad and scarred; grave, few words; plain gruff older-man speech.",
+   "style": "deep, weathered older male voice, about sixty; slow and grave, a veteran fighter remembering"
+  }
+ },
+ "hero": {
+  "m": {
+   "voice": "ko-kr-commercial-2",
+   "type": "prebuilt",
+   "note": "male, 21, low; Seoul Korean; voice is textured, resonant, and soothing"
+  },
+  "f": {
+   "voice": "ko-kr-commercial-12",
+   "type": "prebuilt",
+   "note": "female, 23, high; Seoul Korean; voice is laid-back, encouraging, and chill"
+  }
+ },
+ "battle": {
+  "selma": {
+   "voice": "ko-kr-csagent-10",
+   "type": "prebuilt",
+   "note": "female, 26, medium; Seoul Korean; voice is light, airy, and precise"
+  },
+  "hagen": {
+   "voice": "ko-kr-podcaster-8",
+   "type": "prebuilt",
+   "note": "male, 35, low; Seoul Korean; voice is highly approachable"
+  },
+  "dokka": {
+   "voice": "ko-kr-training-12",
+   "type": "prebuilt",
+   "note": "male, 57, low; Seoul Korean; currently sitting next to you on the bus. tone is professional yet approachable",
+   "profile": "Dokka, a 52-year-old stocky smith of the mountain folk; stubborn, loud, old-fashioned speech."
+  },
+  "basil": {
+   "voice": "ko-kr-advisor-3",
+   "type": "prebuilt",
+   "note": "male, 38, low; Seoul Korean; voice is comforting someone who is stressed"
+  },
+  "bartolo": {
+   "voice": "ko-kr-podcaster-3",
+   "type": "prebuilt",
+   "note": "male, 57, low; Seoul Korean; currently in a bookstore. voice is warm and engaging",
+   "profile": "Bartolo, a 63-year-old veteran knight; proud, old-fashioned, a bad back."
+  },
+  "viola": {
+   "voice": "ko-kr-assistant-3",
+   "type": "prebuilt",
+   "note": "female, 26, low; Seoul Korean; voice is bright, breezy, and youthful"
+  },
+  "shigure": {
+   "voice": "ko-kr-commercial-5",
+   "type": "prebuilt",
+   "note": "male, 25, low; Seoul Korean; voice is intimate talkshow"
+  },
+  "rouga": {
+   "voice": "ko-kr-csagent-2",
+   "type": "prebuilt",
+   "note": "male, 37, low; Seoul Korean; voice is fast-paced, articulate, energetic"
+  },
+  "titta": {
+   "voice": "ko-kr-tutor-10",
+   "type": "prebuilt",
+   "note": "female, 34, high; Seoul Korean; voice is bright, breezy, and youthful"
+  },
+  "brigitta": {
+   "voice": "ko-kr-advisor-2",
+   "type": "prebuilt",
+   "note": "female, 35, medium; Seoul Korean; voice is light, airy, and precise"
+  },
+  "sylvain": {
+   "voice": "ko-kr-training-4",
+   "type": "prebuilt",
+   "note": "male, 46, medium; Seoul Korean; currently on podcast. sounds confident and clear"
+  },
+  "zafira": {
+   "voice": "ko-kr-storyteller-11",
+   "type": "prebuilt",
+   "note": "female, 26, medium; Seoul Korean; voice is laid-back, encouraging, and chill"
+  },
+  "ferno": {
+   "voice": "ko-kr-assistant-10",
+   "type": "prebuilt",
+   "note": "male, 33, low; Seoul Korean; voice is resonant and witty"
+  },
+  "belladonna": {
+   "voice": "ko-kr-training-6",
+   "type": "prebuilt",
+   "note": "female, 37, low; Seoul Korean; voice is bright, breezy, and youthful"
+  },
+  "boden": {
+   "voice": "ko-kr-assistant-12",
+   "type": "prebuilt",
+   "note": "male, 59, low; Seoul Korean; currently at an appointment. tone is professional yet approachable",
+   "profile": "Boden, a 61-year-old mining engineer; spry, boastful, old-fashioned."
+  },
+  "teo": {
+   "voice": "ko-kr-tutor-6",
+   "type": "prebuilt",
+   "note": "male, 26, medium; Seoul Korean; tone is enthusiastic, engaging, and fun"
+  },
+  "ilse": {
+   "voice": "ko-kr-storyteller-7",
+   "type": "prebuilt",
+   "note": "female, 30, medium; Seoul Korean; currently at a meditation retreat. sounds confident and clear"
+  },
+  "morga": {
+   "voice": "ko-kr-techagent-10",
+   "type": "prebuilt",
+   "note": "female, 52, low; Seoul Korean; currently on the phone. voice is warm and engaging"
+  },
+  "marta": {
+   "voice": "ko-kr-advisor-6",
+   "type": "prebuilt",
+   "note": "female, 39, medium; Seoul Korean; tone is conversational, slightly dry humor, and warm"
+  },
+  "noela": {
+   "voice": "ko-kr-concierge-4",
+   "type": "prebuilt",
+   "note": "female, 25, high; Seoul Korean; voice is light, airy, and precise"
+  }
+ },
+ "boss": {
+  "b_shade_sword": {
+   "voice": "ko-kr-storyteller-3",
+   "type": "prebuilt",
+   "note": "male, 23, low; Seoul Korean; voice is clear, medium-pitch, and friendly"
+  },
+  "b_shade_prayer": {
+   "voice": "ko-kr-podcaster-6",
+   "type": "prebuilt",
+   "note": "female, 31, high; Seoul Korean; currently brainstorming in a meeting. tone is professional yet approachable"
+  },
+  "b_shade_star": {
+   "voice": "ko-kr-csagent-1",
+   "type": "prebuilt",
+   "note": "female, 29, high; Seoul Korean; currently in an oscar winning film. sounds confident and clear"
+  },
+  "b_ouroboros": {
+   "voice": "ko-kr-assistant-5",
+   "type": "prebuilt",
+   "note": "male, 31, low; Seoul Korean; currently on npr. voice is warm and engaging"
+  },
+  "b_tamer": {
+   "voice": "ko-kr-csagent-11",
+   "type": "prebuilt",
+   "note": "male, 28, low; Seoul Korean; currently in a bookstore. sounds confident and clear"
+  },
+  "b_sister_elder": {
+   "voice": "ko-kr-advisor-7",
+   "type": "prebuilt",
+   "note": "female, 44, medium; Seoul Korean; voice is clear, medium-pitch, and friendly"
+  },
+  "b_armorman": {
+   "voice": "ko-kr-tutor-9",
+   "type": "prebuilt",
+   "note": "male, 38, low; Seoul Korean; currently in an oscar winning film. sounds confident and clear"
+  },
+  "b_frost_admiral": {
+   "voice": "ko-kr-assistant-4",
+   "type": "prebuilt",
+   "note": "male, 51, low; Seoul Korean; currently brainstorming in a meeting. sounds confident and clear"
+  }
+ }
+}

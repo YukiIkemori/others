@@ -1,0 +1,331 @@
+{
+ "_readme": [
+  "Mandarin casting for tools/voice_tts.js --lang zh (owner 2026-10-10: 'the same set of voices as the Japanese version, for English, Chinese and Korean'). Lines: design/voice/zh_lines.csv (tools/voice_en_lines.js --lang zh; text of v2/src/i18n/zh-Hans). Audio: assets/voice/zh/<id>.ogg, one Mandarin set for the game languages zh-Hans and zh-Hant.",
+  "The voices listing (GET /v1beta/voices, read 2026-10-10: 2089 prebuilt voices in 30 language codes) has NO Mandarin or other Chinese voice. The TTS model speaks Mandarin with any of its voices (probe: 12 voices incl. en-US, ja-JP and ko-KR ones, all transcribed back with a character error rate of 0-3 % by a local recognizer), so each speaker keeps the voice of the English casting (casting_en.json): the same timbre / gender / age / personality per character in English and Mandarin. The accent of these voices in Mandarin cannot be judged without listening: have a Mandarin speaker listen to a few lines (a native Mandarin voice, if one is added to the listing later, goes into `voice` here).",
+  "Only the voice changes: profile, style, per-line direction, fx and pitch come from design/voice/casting.json (profile / style here replace the Japanese-mode text where it talks about Japanese speech). A boss with `speaker` in casting.json boss.cast uses that speaker's voice. Pure cries (design/voice/cry_reuse.txt) are not voiced: the game plays the Japanese file."
+ ],
+ "language": "cmn-CN",
+ "accent": "standard Mandarin (Putonghua)",
+ "speakers": {
+  "fine": {
+   "voice": "achernar",
+   "type": "prebuilt",
+   "note": "female, high; soft, calm, soothing storyteller"
+  },
+  "rowell": {
+   "voice": "en-us-tutor-4",
+   "type": "prebuilt",
+   "note": "male, 24, low; Northwest; confident and clear"
+  },
+  "berna": {
+   "voice": "en-us-advisor-1",
+   "type": "prebuilt",
+   "note": "female, 65 (oldest female listed), low; Northwest"
+  },
+  "lazaro": {
+   "voice": "en-us-podcaster-1",
+   "type": "prebuilt",
+   "note": "male, 60, low; Northwest; deep, velvety, unhurried"
+  },
+  "king": {
+   "voice": "alnilam",
+   "type": "prebuilt",
+   "note": "male, low; firm, direct, commanding (fx king lowers it)"
+  },
+  "nemrea": {
+   "voice": "en-us-training-10",
+   "type": "prebuilt",
+   "note": "neutral (androgynous), 30, high; East Coast; comforting"
+  },
+  "noa": {
+   "voice": "sulafat",
+   "type": "prebuilt",
+   "note": "female, medium; warm, inviting, comforting"
+  },
+  "valzard": {
+   "voice": "algenib",
+   "type": "prebuilt",
+   "note": "male, low; gravelly, grounded (the Japanese mode uses the same English voice)"
+  },
+  "elm": {
+   "voice": "en-us-storyteller-12",
+   "type": "prebuilt",
+   "note": "male, 65, low; West Coast; storyteller, intimate"
+  },
+  "hazal": {
+   "voice": "en-us-training-5",
+   "type": "prebuilt",
+   "note": "male, 45, low; West Coast; deep, velvety, unhurried"
+  },
+  "giant": {
+   "voice": "charon",
+   "type": "prebuilt",
+   "note": "male, low; steady (fx giant lowers it)"
+  },
+  "neve": {
+   "voice": "gacrux",
+   "type": "prebuilt",
+   "note": "female, medium; mature, authoritative"
+  },
+  "melda": {
+   "voice": "en-us-tutor-21",
+   "type": "prebuilt",
+   "note": "female, 46, high; Northwest; textured, resonant, soothing"
+  },
+  "mistwitch": {
+   "voice": "en-us-tutor-21",
+   "type": "prebuilt",
+   "note": "same voice as melda (the fog imitates her)"
+  },
+  "marina": {
+   "voice": "en-us-tutor-9",
+   "type": "prebuilt",
+   "note": "female, 65, medium; West Coast; light, airy"
+  },
+  "glen": {
+   "voice": "en-us-mako",
+   "type": "prebuilt",
+   "note": "male, 45, low; Northwest; energetic, colorful"
+  },
+  "guardian": {
+   "voice": "orus",
+   "type": "prebuilt",
+   "note": "male, low; firm, serious (fx guardian lowers it)"
+  },
+  "sentinel": {
+   "voice": "schedar",
+   "type": "prebuilt",
+   "note": "male, low; even, balanced, steady (fx sentinel)"
+  },
+  "otto": {
+   "voice": "en-us-knox",
+   "type": "prebuilt",
+   "note": "male, 61, low; East Coast; conversational, dry humor, warm",
+   "profile": "Otto, the old lighthouse keeper of the harbour town Pharos, about 70: broad-shouldered, short white beard, skin weathered by the sea wind. Warm, gruff and grandfatherly; an old seaman's plain, homely way of speaking."
+  },
+  "zaid": {
+   "voice": "en-us-tutor-25",
+   "type": "prebuilt",
+   "note": "male, 53, low; West Coast; conversational, dry humor, warm",
+   "profile": "Zaid, the caravan master of the oasis town Kasim, in his fifties: sun-dried, steady and responsible; sings the old star songs at the campfire; plain, unhurried older man's speech."
+  },
+  "rashid": {
+   "voice": "en-us-storyteller-8",
+   "type": "prebuilt",
+   "note": "male, 40, low; East Coast"
+  },
+  "nadia": {
+   "voice": "leda",
+   "type": "prebuilt",
+   "note": "female, high; youthful, vibrant, energetic"
+  },
+  "jorn": {
+   "voice": "en-us-assistant-10",
+   "type": "prebuilt",
+   "note": "male, 55, low; Northwest; warm and engaging",
+   "profile": "Jorn, the chief of the snow village Yule, about sixty; broad, weathered and dependable, carries the village through the midwinter fire festival and the siege; plain older man's speech."
+  },
+  "sonja": {
+   "voice": "vindemiatrix",
+   "type": "prebuilt",
+   "note": "female, medium; gentle, mild, calming"
+  },
+  "mayor": {
+   "voice": "en-us-tutor-19",
+   "type": "prebuilt",
+   "note": "male, 55, low; Midwest; measured",
+   "profile": "Oswald, the mayor of the lake town Loch, about sixty; stern and careful, presides over the town assembly.",
+   "style": "stern, measured older male voice, about sixty; the chair of a tense town assembly"
+  },
+  "zakuro": {
+   "voice": "en-us-cruz",
+   "type": "prebuilt",
+   "note": "male, 37, low; Northwest",
+   "profile": "Zakuro, a hired fighter attached to the Archive, in his thirties; laconic and blunt but strictly honourable (never reads other people's letters); rough-spoken.",
+   "style": "low, dry adult male voice, about thirty-five; blunt and terse, quietly honourable"
+  },
+  "rita": {
+   "voice": "en-us-tutor-10",
+   "type": "prebuilt",
+   "note": "female, 22, medium; Inland South; natural and clear (added 2026-10-10 for the minor-NPC lines)"
+  },
+  "kaya": {
+   "voice": "en-us-training-8",
+   "type": "prebuilt",
+   "note": "female, 23, medium; Gulf Coast; intimate, soft (added 2026-10-10)",
+   "style": "clear, soft young female voice, about twenty; earnest and a little shaky"
+  },
+  "hald": {
+   "voice": "en-us-csagent-15",
+   "type": "prebuilt",
+   "note": "male, 64 (oldest unused male), low; Inland South; warm (added 2026-10-10; casting.json pitch 0.9 still applies)",
+   "style": "old, gravelly male voice, about seventy; a gruff watchman, urgent when he raises the alarm"
+  },
+  "dorga": {
+   "voice": "en-us-commercial-3",
+   "type": "prebuilt",
+   "note": "male, 59, low; East Coast; confident and clear (added 2026-10-10; casting.json pitch 0.9 still applies)",
+   "profile": "Dorga, the chief of the crater town Caldera, about sixty; a former proxy fighter of the Firebird League, broad and scarred; grave, few words; plain gruff older-man speech.",
+   "style": "deep, weathered older male voice, about sixty; slow and grave, a veteran fighter remembering"
+  }
+ },
+ "hero": {
+  "m": {
+   "voice": "en-us-commercial-9",
+   "type": "prebuilt",
+   "note": "male, 20 (youngest male listed), low; Midwest"
+  },
+  "f": {
+   "voice": "zephyr",
+   "type": "prebuilt",
+   "note": "female, high; bright, positive"
+  }
+ },
+ "battle": {
+  "selma": {
+   "voice": "en-us-training-11",
+   "type": "prebuilt",
+   "note": "female, 22, high; Midwest; cool, confident"
+  },
+  "hagen": {
+   "voice": "en-us-podcaster-7",
+   "type": "prebuilt",
+   "note": "male, 36, low; East Coast"
+  },
+  "dokka": {
+   "voice": "en-us-csagent-1",
+   "type": "prebuilt",
+   "note": "male, 54, low; Midwest",
+   "profile": "Dokka, a 52-year-old stocky smith of the mountain folk; stubborn, loud, old-fashioned speech."
+  },
+  "basil": {
+   "voice": "en-us-storyteller-10",
+   "type": "prebuilt",
+   "note": "male, 43, low; Northwest; philosopher"
+  },
+  "bartolo": {
+   "voice": "en-us-enzo",
+   "type": "prebuilt",
+   "note": "male, 62, low; West Coast; storyteller, crisp",
+   "profile": "Bartolo, a 63-year-old veteran knight; proud, old-fashioned, a bad back."
+  },
+  "viola": {
+   "voice": "en-us-commercial-15",
+   "type": "prebuilt",
+   "note": "female, 25, low; East Coast; light, airy, precise (a fashion consultant: vain about clothes)"
+  },
+  "shigure": {
+   "voice": "enceladus",
+   "type": "prebuilt",
+   "note": "male, low; breathy, intimate, soft-spoken"
+  },
+  "rouga": {
+   "voice": "fenrir",
+   "type": "prebuilt",
+   "note": "male, low; excitable, high-energy, passionate"
+  },
+  "titta": {
+   "voice": "laomedeia",
+   "type": "prebuilt",
+   "note": "female, high; upbeat, energetic"
+  },
+  "brigitta": {
+   "voice": "erinome",
+   "type": "prebuilt",
+   "note": "female, medium; clear, articulate, precise"
+  },
+  "sylvain": {
+   "voice": "rasalgethi",
+   "type": "prebuilt",
+   "note": "male, medium; informative, measured"
+  },
+  "zafira": {
+   "voice": "aoede",
+   "type": "prebuilt",
+   "note": "female, medium; breezy, light, relaxed"
+  },
+  "ferno": {
+   "voice": "en-us-tutor-7",
+   "type": "prebuilt",
+   "note": "male, 42, low; Northwest; resonant and witty"
+  },
+  "belladonna": {
+   "voice": "en-us-tova",
+   "type": "prebuilt",
+   "note": "female, 36, low; Northwest; textured, resonant"
+  },
+  "boden": {
+   "voice": "en-us-arlo",
+   "type": "prebuilt",
+   "note": "male, 61, low; Northwest",
+   "profile": "Boden, a 61-year-old mining engineer; spry, boastful, old-fashioned."
+  },
+  "teo": {
+   "voice": "en-us-zeno",
+   "type": "prebuilt",
+   "note": "male, 27, high (the only high male listed); Northwest; cocky"
+  },
+  "ilse": {
+   "voice": "en-us-sola",
+   "type": "prebuilt",
+   "note": "female, 31, high; West Coast; relaxed"
+  },
+  "morga": {
+   "voice": "en-us-csagent-5",
+   "type": "prebuilt",
+   "note": "female, 40, low; East Coast; deep, velvety, unhurried"
+  },
+  "marta": {
+   "voice": "en-us-tari",
+   "type": "prebuilt",
+   "note": "female, 35, medium; Midwest; confident and clear"
+  },
+  "noela": {
+   "voice": "autonoe",
+   "type": "prebuilt",
+   "note": "female, medium; bright, positive, enthusiastic"
+  }
+ },
+ "boss": {
+  "b_shade_sword": {
+   "voice": "en-us-finn",
+   "type": "prebuilt",
+   "note": "male, 23, low; Northwest"
+  },
+  "b_shade_prayer": {
+   "voice": "en-us-commercial-7",
+   "type": "prebuilt",
+   "note": "female, 28, high; Northwest; calm"
+  },
+  "b_shade_star": {
+   "voice": "en-us-commercial-10",
+   "type": "prebuilt",
+   "note": "female, 29, high; Midwest; confident and clear"
+  },
+  "b_ouroboros": {
+   "voice": "sadachbia",
+   "type": "prebuilt",
+   "note": "male, low; lively, animated (fx lowers it)"
+  },
+  "b_tamer": {
+   "voice": "en-us-concierge-4",
+   "type": "prebuilt",
+   "note": "male, 35, low; Midwest; energetic, colorful, fast"
+  },
+  "b_sister_elder": {
+   "voice": "despina",
+   "type": "prebuilt",
+   "note": "female, medium; smooth, mellow, polished"
+  },
+  "b_armorman": {
+   "voice": "puck",
+   "type": "prebuilt",
+   "note": "male, low; upbeat, energetic, cheerful"
+  },
+  "b_frost_admiral": {
+   "voice": "en-us-tutor-24",
+   "type": "prebuilt",
+   "note": "male, 51, low; West Coast; crisp"
+  }
+ }
+}

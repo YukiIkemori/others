@@ -1,0 +1,93 @@
+# Pure cries of the voice set (tools/voice_cry_reuse.js): no recording in the Mandarin (zh) and Korean (ko) versions —
+# the game plays the Japanese file in every language (RPG_MEDIA.voice_zh / voice_ko = {alias: "voice"}). English has its own files.
+# 47 ids of 553. Rule: no kanji, at most 6 kana, only interjection kana (grunts, kiai, screams); see tools/voice_cry_reuse.js.
+b_bartolo_attack_3
+b_bartolo_hurt_1
+b_basil_attack_1
+b_basil_attack_2
+b_basil_hurt_1
+b_boden_hurt_1
+b_brigitta_attack_1
+b_brigitta_hurt_1
+b_dokka_attack_1
+b_dokka_attack_2
+b_dokka_hurt_1
+b_hagen_attack_1
+b_hagen_attack_2
+b_hagen_hurt_1
+b_hagen_hurt_2
+b_ilse_attack_1
+b_ilse_hurt_1
+b_ilse_hurt_2
+b_marta_hurt_1
+b_morga_attack_1
+b_noela_attack_1
+b_noela_attack_2
+b_noela_hurt_1
+b_noela_hurt_2
+b_rouga_attack_1
+b_rouga_attack_2
+b_rouga_attack_3
+b_rouga_hurt_1
+b_selma_attack_1
+b_selma_attack_2
+b_selma_hurt_1
+b_shigure_attack_1
+b_sylvain_hurt_1
+b_teo_attack_1
+b_teo_hurt_2
+b_titta_attack_3
+b_titta_hurt_2
+b_viola_attack_1
+b_viola_hurt_1
+v_hero_f_attack_1
+v_hero_f_attack_2
+v_hero_f_hurt_1
+v_hero_f_hurt_2
+v_hero_m_attack_1
+v_hero_m_attack_2
+v_hero_m_hurt_1
+v_hero_m_hurt_2
+
+# Not reused: 41 kana-only short lines that are real words (they are voiced in zh / ko). To reuse one, add its kana to CRY_CORES.
+# b_bartolo_attack_2  そこじゃ！  (Right there!)
+# b_belladonna_attack_1  そらっ！  (Have some!)
+# b_belladonna_attack_3  ちくっとね！  (Just a little poke!)
+# b_belladonna_hurt_1  いたっ！  (Ouch!)
+# b_boden_attack_1  ほれっ！  (Take it!)
+# b_boden_attack_2  どっこい！  (Heave-ho!)
+# b_boden_hurt_2  あいたた……  (Ow, ow, ow...)
+# b_dokka_hurt_2  なんの！  (That's nothing!)
+# b_ferno_attack_1  それっ！  (And there!)
+# b_ferno_attack_2  ほいっと！  (Easy does it!)
+# b_ferno_hurt_1  おっと！  (Whoops!)
+# b_hagen_attack_3  どけぇ！  (Out of my way!)
+# b_ilse_attack_3  そこ、かな。  (There... maybe.)
+# b_marta_attack_1  このっ！  (Why, you!)
+# b_marta_attack_2  そこよ！  (There!)
+# b_marta_attack_3  じっとして！  (Hold still!)
+# b_morga_hurt_2  ……やるわね。  (...Not bad.)
+# b_selma_hurt_2  まだっ……！  (Not yet...!)
+# b_shigure_attack_3  ……そこ。  (...There.)
+# b_shigure_hurt_1  ……ぬかった。  (...Careless.)
+# b_sylvain_attack_3  ……ここだ。  (...Here.)
+# b_teo_attack_3  いっけー！  (Gooo!)
+# b_teo_hurt_1  いてっ！  (Ow!)
+# b_titta_attack_1  もらいっ！  (Mine!)
+# b_titta_attack_2  すきあり！  (Gotcha!)
+# b_titta_hurt_1  いったぁ！  (Owww!)
+# b_titta_ko_1  ずるいよ……もう……  (No fair... seriously...)
+# b_zafira_attack_1  はいっ！  (Hup!)
+# b_zafira_attack_2  ステップ！  (Step!)
+# b_zafira_attack_3  ほらほらっ！  (Come on, come on!)
+# b_zafira_hurt_2  もうっ！  (Ugh, really!)
+# bv_lazaro_defeat_1  ミラ……わたしは……。  (Mira... I...)
+# bv_mistbeast_defeat_1  ……カネ……ノ……オト……。  (...The... bell's... sound...)
+# bv_rowell2_defeat_1  ……どうして、だ……。  (...Why...?)
+# bv_shade_prayer_defeat_1  ……ありがとう……。  (...Thank you...)
+# bv_sister_elder_defeat_1  ……ここまで、ね。  (...This is as far as we go.)
+# v_hero_f_attack_3  くらえっ！  (Take this!)
+# v_hero_f_ko_1  ここまで……か……  (Is this... where it ends...?)
+# v_hero_m_attack_3  くらえっ！  (Take this!)
+# v_hero_m_ko_1  ここまで……か……  (Is this... where it ends...?)
+# v_lazaro_ending_01  ……ミラ。ああ、ミラ……。  (...Mira. Oh, Mira...)

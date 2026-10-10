@@ -34,6 +34,17 @@
 //   (exists, duration vs. the English text, not silent, not clipped, loudness) and write the report's `_verify` (no API)
 //   --resume-batch <batches/…>  fetch the results of a batch made earlier (no new request)
 //
+// Mandarin and Korean versions (owner 2026-10-10)  node tools/voice_tts.js --lang zh|ko --ids-file design/voice/voice_scope.txt [--direct]
+//   lines   design/voice/zh_lines.csv / ko_lines.csv (zh_text / ko_text; tools/voice_en_lines.js --lang zh|ko), casting
+//           design/voice/casting_zh.json / casting_ko.json → assets/voice/zh/<id>.ogg, assets/voice/ko/<id>.ogg, reports
+//           design/voice/zh_report.json / ko_report.json. One Mandarin set serves the game languages zh-Hans and zh-Hant.
+//           Pure cries (design/voice/cry_reuse.txt, tools/voice_cry_reuse.js; csv source "reuse") are not generated: the
+//           game plays the Japanese file for them. The cost rules of English apply to all non-Japanese versions.
+//   output cap: every request carries generationConfig.maxOutputTokens (audio ≈ 25 tokens / s, verified 2026-10-10: a cap of 60
+//           gave 2.36 s with finishReason MAX_TOKENS): about 3x the expected length, 100 tokens (4 s) at least, 1500 at most;
+//           a retry gets 1.5x. A take that stops at the cap (MAX_TOKENS) counts as a failed local check. Each request's
+//           finishReason and output token count are kept in the report (`finish`, `tokens`; `_usage.capHits`).
+//
 // Casting, voice ids, per-speaker profile/style, per-line direction and the hero's battle lines live in
 // design/voice/casting.json; the lines themselves come from src/ via tools/voice_script.js.
 //
@@ -69,20 +80,31 @@ const OUT = path.join(ROOT, 'assets', 'voice');
 const TTS_MODEL = process.env.TTS_MODEL || 'gemini-3.8-flash-tts';
 const STT_MODEL = process.env.STT_MODEL || 'gemini-3.5-transcribe';
 const JUDGE_MODEL = process.env.JUDGE_MODEL || 'gemini-3.8-flash';
-const CASTING_EN = path.join(ROOT, 'design', 'voice', 'casting_en.json');
-const EN_LINES = path.join(ROOT, 'design', 'voice', 'en_lines.csv');
-const EN_REPORT = path.join(ROOT, 'design', 'voice', 'en_report.json');
-const MAX_EN_ATTEMPTS = 2;   // one take + at most one retry per line (owner's cost rule for the English version)
+const VDIR = path.join(ROOT, 'design', 'voice');
+const CASTING_EN = path.join(VDIR, 'casting_en.json');
+const EN_LINES = path.join(VDIR, 'en_lines.csv');
+const EN_REPORT = path.join(VDIR, 'en_report.json');
+const MAX_EN_ATTEMPTS = 2;   // one take + at most one retry per line (owner's cost rule for the dubbed versions)
+/** the dubbed versions: casting file, lines CSV (+ its text column), report, output folder; `name` goes into the prompt */
+const LANGS = {
+  en: { casting: CASTING_EN, lines: EN_LINES, col: 'en_text', report: EN_REPORT, out: 'en', name: 'English', badVoice: (v) => /^[a-z]{2}-[a-z]{2}-/.test(v) && !/^en-/.test(v) },
+  zh: { casting: path.join(VDIR, 'casting_zh.json'), lines: path.join(VDIR, 'zh_lines.csv'), col: 'zh_text', report: path.join(VDIR, 'zh_report.json'), out: 'zh', name: 'Mandarin Chinese', badVoice: (v) => /^(ja|ko)-/.test(v) },
+  ko: { casting: path.join(VDIR, 'casting_ko.json'), lines: path.join(VDIR, 'ko_lines.csv'), col: 'ko_text', report: path.join(VDIR, 'ko_report.json'), out: 'ko', name: 'Korean', badVoice: (v) => !/^ko-kr-/.test(v) },
+};
+const TOKENS_PER_SEC = 25;   // audio output tokens per second (measured)
+const CAP_FACTOR = 3, CAP_MIN = 100, CAP_MAX = 1500;
 
 // ------------------------------------------------------------------ the lines
 function loadCasting(file) { return JSON.parse(fs.readFileSync(file || CASTING, 'utf8')); }
-/** casting.json with the English voices of casting_en.json put in (C.lang = 'en'): profile / style / fx / pitch stay,
- *  except where casting_en.json gives an English profile / style. The Japanese per-line notes and kana readings are dropped. */
-function enCasting(C, file) {
-  const E = JSON.parse(fs.readFileSync(file || CASTING_EN, 'utf8'));
+/** casting.json with the voices of a version's casting file (casting_en / casting_zh / casting_ko.json) put in (C.lang = 'en' | 'zh' |
+ *  'ko'): profile / style / fx / pitch stay, except where the casting file gives its own profile / style (the Japanese per-line notes and
+ *  kana readings are dropped). `lang` defaults to 'en'. */
+function langCasting(C, file, lang) {
+  lang = lang || 'en';
+  const E = JSON.parse(fs.readFileSync(file || LANGS[lang].casting, 'utf8'));
   const M = JSON.parse(JSON.stringify(C));
   const put = (dst, e) => {
-    if (!e || !e.voice) { dst.voice = null; dst.noEnglish = true; return dst; }
+    if (!e || !e.voice) { dst.voice = null; dst.noVoice = true; return dst; }
     dst.voice = e.voice; dst.type = e.type || 'prebuilt';
     for (const k of ['profile', 'style']) if (e[k]) dst[k] = e[k];
     return dst;
@@ -92,9 +114,10 @@ function enCasting(C, file) {
   if (M.battle) for (const k of Object.keys(M.battle.cast)) put(M.battle.cast[k], (E.battle || {})[k]);
   if (M.boss) for (const k of Object.keys(M.boss.cast)) if (!M.boss.cast[k].speaker) put(M.boss.cast[k], (E.boss || {})[k]);
   M.lines = {}; M.readings = {};
-  M.lang = 'en'; M.accent = E.accent || 'neutral General American';
+  M.lang = lang; M.accent = E.accent || (lang === 'en' ? 'neutral General American' : lang === 'zh' ? 'standard Mandarin (Putonghua)' : 'standard Seoul Korean');
   return M;
 }
+const enCasting = (C, file) => langCasting(C, file, 'en');
 /** English: rough spoken seconds (≈ 4.2 syllables / s in game dialogue, plus pauses at "...", dashes and sentence ends) */
 function syllables(w) {
   const s = w.toLowerCase().replace(/[^a-z]/g, '');
@@ -108,22 +131,48 @@ function estimateEn(t) {
   const pauses = (t.match(/\.\.\./g) || []).length * 0.35 + (t.match(/—/g) || []).length * 0.25 + (t.match(/[^.][.!?](\s|$)/g) || []).length * 0.2 + (t.match(/,/g) || []).length * 0.1;
   return Math.round((syl / 4.2 + pauses + 0.3) * 10) / 10;
 }
-/** the English lines (en_lines.csv) on top of the Japanese line records (same id, speaker, kind, fx) */
-function enLines(C, file) {
+/** Mandarin: ≈ 3.6 hanzi / s plus pauses at "……", dashes, sentence ends and commas (pilot of 16 lines, 2026-10-10: 1.4–6 hanzi / s
+ *  depending on the voice; this value keeps the cap at 3x or more of what the slowest voices need) */
+const ZH_CPS = 3.6;
+function estimateZh(t) {
+  const chars = (String(t).match(/[一-鿿]/g) || []).length + (String(t).match(/[0-9]+/g) || []).length;
+  const pauses = (t.match(/……/g) || []).length * 0.5 + (t.match(/——/g) || []).length * 0.3 + (t.match(/[。！？]/g) || []).length * 0.15 + (t.match(/[，、；：]/g) || []).length * 0.1;
+  return Math.round((chars / ZH_CPS + pauses + 0.4) * 10) / 10;
+}
+/** Korean: ≈ 4.2 hangul syllables / s plus pauses at "...", dashes, sentence ends and commas (pilot of 16 lines, 2026-10-10) */
+const KO_SPS = 4.2;
+function estimateKo(t) {
+  const syl = (String(t).match(/[가-힣]/g) || []).length + (String(t).match(/[0-9]+/g) || []).length;
+  const pauses = (t.match(/\.\.\./g) || []).length * 0.5 + (t.match(/—|―/g) || []).length * 0.3 + (t.match(/[^.][.!?](\s|$)/g) || []).length * 0.15 + (t.match(/,/g) || []).length * 0.1;
+  return Math.round((syl / KO_SPS + pauses + 0.4) * 10) / 10;
+}
+/** speakers whose fx / delivery is slow (a broken-syllable robot or ghost, a booming giant): the voices take 1.3–2x as long as plain speech */
+const SLOW_FX = { sentinel: 1.6, mist: 1.6, giant: 1.3, guardian: 1.3, king: 1.2, valzard: 1.2, ghost: 1.2, spirit: 1.2 };
+const ESTIMATE = { en: estimateEn, zh: estimateZh, ko: estimateKo };
+/** the lines of a version (its CSV) on top of the Japanese line records (same id, speaker, kind, fx); rows with source "reuse" (pure
+ *  cries: the Japanese file is played) have no text and are left out */
+function langLines(C, file, lang) {
+  lang = lang || C.lang || 'en';
+  const L = LANGS[lang];
   const VE = require('./voice_en_lines');
-  const rows = VE.loadRows(file || EN_LINES);
+  const rows = VE.loadRows(file || L.lines);
   const base = Object.fromEntries(allLines(C).map((l) => [l.id, l]));
-  return rows.map((r) => {
+  return rows.filter((r) => r.source !== 'reuse').map((r) => {
     const b = base[r.id];
-    if (!b) throw new Error(`${r.id} (en_lines.csv) is not a voice line`);
-    if (!r.en_text) throw new Error(`${r.id}: no en_text in en_lines.csv`);
-    const est = estimateEn(r.en_text);
-    return Object.assign({}, b, { lang: 'en', text: r.en_text, ja: b.text, direction: r.direction || b.direction, est: b.hero || b.battle ? Math.max(0.5, est) : Math.max(b.bossv ? 0.6 : 0.35, est) });
+    if (!b) throw new Error(`${r.id} (${path.basename(L.lines)}) is not a voice line`);
+    const text = r[L.col];
+    if (!text) throw new Error(`${r.id}: no ${L.col} in ${path.basename(L.lines)}`);
+    let est = ESTIMATE[lang](text);
+    let sp = null;
+    try { sp = speakerOf0(C, b); } catch (e) { /* reported by the casting check */ }
+    if (sp && sp.fx && SLOW_FX[sp.fx]) est = Math.round(est * SLOW_FX[sp.fx] * 10) / 10;
+    return Object.assign({}, b, { lang, text, ja: b.text, direction: r.direction || b.direction, est: b.hero || b.battle ? Math.max(0.5, est) : Math.max(b.bossv ? 0.6 : 0.35, est) });
   });
 }
-/** the text the actor says (Japanese: no spaces or line breaks; English: single spaces) */
+const enLines = (C, file) => langLines(C, file, 'en');
+/** the text the actor says (Japanese: no spaces or line breaks; other versions: single spaces) */
 function said(C, line) {
-  if (C.lang === 'en') return String(line.text).replace(/\s+/g, ' ').trim();
+  if (C.lang && C.lang !== 'ja') return String(line.text).replace(/\s+/g, ' ').trim();
   return (C.readings || {})[line.id] || spoken(line.text);
 }
 /** every line to voice: script lines (fixed characters) + the hero's battle voices (both genders) */
@@ -174,7 +223,7 @@ function allLines(C) {
 }
 function speakerOf(C, line) {
   const sp = speakerOf0(C, line);
-  if (C.lang === 'en' && !sp.voice) throw new Error(`no English voice for ${line.speaker} (design/voice/casting_en.json)`);
+  if (C.lang && C.lang !== 'ja' && !sp.voice) throw new Error(`no ${LANGS[C.lang].name} voice for ${line.speaker} (${path.relative(ROOT, LANGS[C.lang].casting)})`);
   return sp;
 }
 function speakerOf0(C, line) {
@@ -197,27 +246,39 @@ function speakerOf0(C, line) {
 function spoken(text) { return text.replace(/♪/g, '').replace(/\s+/g, '').replace(/^「(.*)」$/, '$1').trim(); }
 function buildPrompt(C, line) {
   const sp = speakerOf(C, line);
-  const en = C.lang === 'en';
+  const lang = C.lang && C.lang !== 'ja' ? C.lang : 'ja', foreign = lang !== 'ja';
+  const pause = lang === 'zh' ? '"……" and "——"' : lang === 'ko' ? '"..." and "—"' : lang === 'en' ? '"..." and "—"' : '"……" and "――"';
   const notes = [
     `Style: ${sp.style}`,
     line.direction ? `This line: ${line.direction}` : '',
-    line.shout && line.battle ? 'A short battle shout: one quick burst, well under one and a half seconds, no drawn-out vowels.' : '',
-    line.bossv ? `A boss's line in the middle of a battle: keep it tight, about ${Math.max(1.5, Math.round(line.est * 1.2 * 2) / 2)} seconds, no long silences (only a short pause at "${en ? '...' : '……'}").` : '',
-    en ? `Language: natural, native English with a ${C.accent} accent, performed by a professional voice actor for the English dub of a fantasy RPG. Pauses at "..." and "—". Say the transcript exactly once, and nothing else. Do not read these notes aloud.`
+    line.shout && line.battle ? (foreign && lang !== 'en' ? 'A short battle shout: one quick burst, no drawn-out vowels, no long pauses.' : 'A short battle shout: one quick burst, well under one and a half seconds, no drawn-out vowels.') : '',
+    line.bossv ? `A boss's line in the middle of a battle: keep it tight, about ${Math.max(1.5, Math.round(line.est * 1.2 * 2) / 2)} seconds, no long silences (only a short pause at "${lang === 'ko' || lang === 'en' ? '...' : '……'}").` : '',
+    foreign ? `Language: natural, native ${LANGS[lang].name}${lang === 'en' ? ` with a ${C.accent} accent` : lang === 'zh' ? ' (standard Putonghua pronunciation)' : ' (standard Seoul pronunciation)'}, performed by a professional voice actor for the ${LANGS[lang].name.replace(' Chinese', '')} dub of a fantasy RPG. Pauses at ${pause}. Say the transcript exactly once, and nothing else. Do not read these notes aloud.`
       : 'Language: natural, native Tokyo-standard Japanese, performed by a professional anime/game voice actor. Pauses at "……" and "――". Do not read these notes aloud; say only the transcript.',
   ].filter(Boolean).join('\n');
   const words = said(C, line); // Japanese: kana reading for words the model misreads
   const scene = line.scene === 'battle' ? 'In the middle of a fantasy RPG battle.'
-    : line.scene === 'bark' ? `A townsperson greets the player as a conversation opens, in a ${en ? '' : 'Japanese '}fantasy RPG set in an endless lamplit night. One short natural greeting.`
-      : en ? 'A story scene of a fantasy RPG.' : 'A story scene of a Japanese fantasy RPG.';
+    : line.scene === 'bark' ? `A townsperson greets the player as a conversation opens, in a ${foreign ? '' : 'Japanese '}fantasy RPG set in an endless lamplit night. One short natural greeting.`
+      : foreign ? 'A story scene of a fantasy RPG.' : 'A story scene of a Japanese fantasy RPG.';
   const p = `# AUDIO PROFILE: ${sp.profile}\n## SCENE: ${scene}\n## DIRECTOR'S NOTES\n${notes}\n## TRANSCRIPT\n${words}`;
-  if (en && /[぀-ヿ㐀-䶿一-鿿＀-￯]|Japanese|Tokyo|anime/i.test(p)) throw new Error(`${line.id}: the English prompt still talks about Japanese (fix casting_en.json / en_lines.csv): ${p.match(/.{0,40}(?:[぀-ヿ㐀-䶿一-鿿＀-￯]|Japanese|Tokyo|anime).{0,40}/i)[0]}`);
+  // the prompt of a dubbed version must not leak the Japanese version (kana, "Japanese", "Tokyo"): the English prompt has no CJK at all
+  const leak = lang === 'en' ? /[぀-ヿ㐀-䶿一-鿿＀-￯]|Japanese|Tokyo|anime/i : /[぀-ヿ]|Japanese|Tokyo|anime/i;
+  if (foreign && leak.test(p)) throw new Error(`${line.id}: the ${LANGS[lang].name} prompt still talks about Japanese (fix ${path.basename(LANGS[lang].casting)} / ${path.basename(LANGS[lang].lines)}): ${p.match(new RegExp('.{0,40}(?:' + leak.source + ').{0,40}', 'i'))[0]}`);
   return p;
 }
-function requestBody(C, line) {
+/** the output cap of a request: audio is ≈ 25 tokens / s; about 3x the expected length (est, seconds), 100 tokens (4 s) at least,
+ *  1500 (1 min) at most; a retry (attempt >= 1) gets 1.5x */
+function capTokens(line, attempt) {
+  const t = Math.ceil(TOKENS_PER_SEC * CAP_FACTOR * Math.max(0.5, line.est || 0.5) * (attempt ? 1.5 : 1));
+  return Math.max(CAP_MIN, Math.min(CAP_MAX, t));
+}
+function requestBody(C, line, attempt) {
   const sp = speakerOf(C, line);
   const voiceConfig = sp.type === 'custom' ? { voice: sp.voice } : { prebuiltVoiceConfig: { voiceName: sp.voice } };
-  return { contents: [{ parts: [{ text: buildPrompt(C, line) }] }], generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig } } };
+  const generationConfig = { responseModalities: ['AUDIO'], speechConfig: { voiceConfig } };
+  // dubbed versions only: the Japanese tool keeps its old requests
+  if (C.lang && C.lang !== 'ja') generationConfig.maxOutputTokens = capTokens(line, attempt || 0);
+  return { contents: [{ parts: [{ text: buildPrompt(C, line) }] }], generationConfig };
 }
 
 // ------------------------------------------------------------------ checks
@@ -305,8 +366,8 @@ function processWav(wavBytes, line, sp, o) {
   ch = GA.limitTo(ch, d.rate, o.lufs, o.limitDb != null ? o.limitDb : -3); // gain to the target, limiter at −3 dBFS (Vorbis overshoots ~2 dB on decode)
   let n = GA.normalise(ch, d.rate, o.lufs, o.ceilDb != null ? o.ceilDb : -1);
   // very short shouts: ebur128 cannot gate < 0.4 s reliably → RMS-based fallback (≈ −16 dBFS RMS)
-  // (English lines: ebur128 also reports -70 LUFS = "nothing gated" for clips this short)
-  if (!isFinite(n.before.I) || (line.lang === 'en' && n.before.I <= -69)) {
+  // (dubbed lines: ebur128 also reports -70 LUFS = "nothing gated" for clips this short)
+  if (!isFinite(n.before.I) || (line.lang && line.lang !== 'ja' && n.before.I <= -69)) {
     const x = ch[0]; let e = 0; for (let i = 0; i < x.length; i++) e += x[i] * x[i];
     const rms = Math.sqrt(e / x.length), g = Math.min(Math.pow(10, (o.lufs + 2) / 20) / (rms || 1e-9), Math.pow(10, (o.ceilDb != null ? o.ceilDb : -1) / 20) / (GA.peak(ch) || 1e-9));
     n = { channels: GA.gain(ch, g), gainDb: 20 * Math.log10(g), before: n.before, limited: false };
@@ -319,10 +380,12 @@ function check(p, line) {
   const loudFrames = db.filter((v) => v > -40).length * 0.05;
   const problems = [];
   // companion battle shouts must stay short (≤ ~1.5 s, BRIEF A37: they are cut off by the next voice anyway)
-  // English (no listening check): the length is the main sign of a bad take (notes read aloud, a cut-off line), so the range is tighter
-  const en = line.lang === 'en';
+  // dubbed versions (no listening check): the length is the main sign of a bad take (notes read aloud, a cut-off line), so the range is tighter
+  const en = !!line.lang && line.lang !== 'ja';
   const lo = line.shout ? 0.2 : en ? Math.max(0.3, line.est * 0.4) : Math.max(0.35, line.est * 0.35);
-  const hi = line.shout ? (line.battle ? 1.6 : 3.5) : en ? Math.max(2.5, line.est * 2.2 + 1.2) : Math.max(3, line.est * 2.6 + 1.5);
+  // companion shouts: English 1.6 s; Mandarin / Korean shouts are short sentences, not one-syllable cries: scale with the text
+  const shoutHi = line.battle ? (en && line.lang !== 'en' ? Math.max(1.6, line.est * 1.8 + 0.7) : 1.6) : 3.5;
+  const hi = line.shout ? shoutHi : en ? Math.max(2.5, line.est * 2.2 + 1.2) : Math.max(3, line.est * 2.6 + 1.5);
   if (dur < lo || dur > hi) problems.push(`duration ${dur.toFixed(2)} s outside ${lo.toFixed(1)}–${hi.toFixed(1)} s`);
   if (loudFrames < Math.min(0.2, dur * 0.3)) problems.push('almost silent');
   if (pk > 0.9995) problems.push('clipped');
@@ -334,8 +397,8 @@ function check(p, line) {
 function readIds(file) { return fs.readFileSync(file, 'utf8').split(/\r?\n/).map((x) => x.replace(/#.*/, '').trim()).filter(Boolean); }
 async function main(argv, E) {
   const arg = (k, d) => { const i = argv.indexOf(k); return i >= 0 && argv[i + 1] ? argv[i + 1] : d; };
-  if (arg('--lang', 'ja') === 'en') return mainEn(argv, E);
-  if (arg('--lang', 'ja') !== 'ja') { console.log(`[voice] --lang ${arg('--lang')}: only ja (default) and en`); return 1; }
+  if (LANGS[arg('--lang', 'ja')]) return mainLang(arg('--lang'), argv, E);
+  if (arg('--lang', 'ja') !== 'ja') { console.log(`[voice] --lang ${arg('--lang')}: only ja (default), en, zh and ko`); return 1; }
   const C = loadCasting(arg('--casting'));
   let lines = allLines(C);
   if (arg('--ids-file')) { const want = new Set(readIds(arg('--ids-file'))); lines = lines.filter((l) => want.has(l.id)); }
@@ -477,12 +540,14 @@ async function main(argv, E) {
   return fails ? 1 : 0;
 }
 
-// ------------------------------------------------------------------ the English version (--lang en)
-/** casting problems of the English version: a voice for every line, one voice per speaker */
-function enCastProblems(C, lines, file) {
+// ------------------------------------------------------------------ the dubbed versions (--lang en | zh | ko)
+/** casting problems of a dubbed version: a voice for every line, one voice per speaker, voices of the right language */
+function langCastProblems(C, lines, file, lang) {
+  lang = lang || C.lang || 'en';
+  const L = LANGS[lang];
   const P = [];
   for (const l of lines) { try { speakerOf(C, l); buildPrompt(C, l); } catch (e) { P.push(e.message); } }
-  const E = JSON.parse(fs.readFileSync(file || CASTING_EN, 'utf8'));
+  const E = JSON.parse(fs.readFileSync(file || L.casting, 'utf8'));
   const used = {};
   const add = (v, who) => { if (v) (used[v] = used[v] || []).push(who); };
   for (const [k, s] of Object.entries(E.speakers || {})) add(s.voice, 'story:' + k);
@@ -490,51 +555,62 @@ function enCastProblems(C, lines, file) {
   for (const [k, s] of Object.entries(E.battle || {})) add(s.voice, 'battle:' + k);
   for (const [k, s] of Object.entries(E.boss || {})) add(s.voice, 'boss:' + k);
   for (const [v, who] of Object.entries(used)) {
-    if (who.length > 1 && !(who.length === 2 && who.every((w) => /^story:(melda|mistwitch)$/.test(w)))) P.push(`English voice ${v} is shared: ${who.join(', ')}`);
-    if (/^[a-z]{2}-[a-z]{2}-/.test(v) && !/^en-/.test(v)) P.push(`${who.join(', ')}: ${v} is not an English voice`);
+    if (who.length > 1 && !(who.length === 2 && who.every((w) => /^story:(melda|mistwitch)$/.test(w)))) P.push(`${L.name} voice ${v} is shared: ${who.join(', ')}`);
+    if (L.badVoice(v)) P.push(`${who.join(', ')}: ${v} is not a usable ${L.name} voice${lang === 'zh' ? ' (the Mandarin set uses the multilingual voices of the English casting: the voices listing has no Mandarin voice)' : ''}`);
   }
   return P;
 }
-/** a take, checked on this machine only (no listening): length vs. the text, silence, clipping (also in the raw take) */
-function localTake(w, l, sp, o) {
+const enCastProblems = (C, lines, file) => langCastProblems(C, lines, file, 'en');
+/** a take, checked on this machine only (no listening): length vs. the text, silence, clipping (also in the raw take), the output cap.
+ *  `meta` = {finishReason, tokens} of the answer */
+function localTake(w, l, sp, o, meta) {
   const d = GA.decode(w, { ext: 'wav' });
   const x = GA.mono(d.channels);
   let full = 0, run = 0, maxRun = 0;
   for (let i = 0; i < x.length; i++) { if (Math.abs(x[i]) >= 0.999) { full++; run++; if (run > maxRun) maxRun = run; } else run = 0; }
   const ck = check(processWav(w, l, sp, o), l);
   if (maxRun >= 4 || full > x.length * 0.0005) ck.problems.push(`clipped in the raw take (${full} samples at full scale)`);
-  return { good: !ck.problems.length, q: -ck.problems.length, heard: '', sim: 0, note: 'local checks only', why: ck.problems.join('; ') || 'ok', dur: ck.dur, rawDur: x.length / d.rate };
+  if (meta && meta.finishReason === 'MAX_TOKENS') ck.problems.push(`hit the output cap (MAX_TOKENS at ${meta.tokens || '?'} tokens): cut off or too long`);
+  return { good: !ck.problems.length, q: -ck.problems.length, heard: '', sim: 0, note: 'local checks only', why: ck.problems.join('; ') || 'ok', dur: ck.dur, rawDur: x.length / d.rate, finish: meta && meta.finishReason, tokens: meta && meta.tokens };
 }
-async function mainEn(argv, E) {
+/** the audio part of an answer + {finishReason, tokens} */
+function takeOf(json) {
+  const p = GA.partsOf(json);
+  return { p, meta: { finishReason: p.finishReason, tokens: json && json.usageMetadata ? json.usageMetadata.candidatesTokenCount : undefined } };
+}
+async function mainLang(lang, argv, E) {
+  const L = LANGS[lang], TAG = `[voice ${lang}]`;
   const arg = (k, d) => { const i = argv.indexOf(k); return i >= 0 && argv[i + 1] ? argv[i + 1] : d; };
-  const C = enCasting(loadCasting(arg('--casting')), arg('--casting-en'));
-  let lines = enLines(C, arg('--lines'));
+  const C = langCasting(loadCasting(arg('--casting')), arg('--casting-lang', arg('--casting-en')), lang);
+  let lines = langLines(C, arg('--lines'), lang);
   if (arg('--ids-file')) {
     const want = readIds(arg('--ids-file')), have = new Set(lines.map((l) => l.id));
-    const miss = want.filter((id) => !have.has(id));
-    if (miss.length) { console.log(`[voice en] ${miss.length} id(s) of ${arg('--ids-file')} have no English line: ${miss.slice(0, 10).join(', ')}`); return 1; }
+    const reuse = new Set(require('./voice_en_lines').readList(require('./voice_en_lines').CRY));
+    const miss = want.filter((id) => !have.has(id) && !(lang !== 'en' && reuse.has(id)));
+    if (miss.length) { console.log(`${TAG} ${miss.length} id(s) of ${arg('--ids-file')} have no ${L.name} line: ${miss.slice(0, 10).join(', ')}`); return 1; }
     const ws = new Set(want); lines = lines.filter((l) => ws.has(l.id));
   }
   if (arg('--only')) { const want = arg('--only').split(','); lines = lines.filter((l) => want.includes(l.id)); }
   if (arg('--speaker')) { const want = arg('--speaker').split(','); lines = lines.filter((l) => want.includes(l.speaker)); }
-  const outDir = path.resolve(arg('--out', path.join(OUT, 'en')));
-  const rawDir = path.resolve(arg('--raw', path.join(os.tmpdir(), 'voice_en_raw')));
-  const repFile = path.resolve(arg('--report', EN_REPORT));
+  const outDir = path.resolve(arg('--out', path.join(OUT, L.out)));
+  const rawDir = path.resolve(arg('--raw', path.join(os.tmpdir(), `voice_${lang}_raw`)));
+  const repFile = path.resolve(arg('--report', L.report));
   const o = { lufs: +arg('--lufs', -16) };
-  if (argv.includes('--listen')) { console.log('[voice en] the English version has no listening checks (owner\'s cost rule): --listen is not allowed'); return 1; }
-  const P = enCastProblems(C, lines, arg('--casting-en'));
+  if (argv.includes('--listen')) { console.log(`${TAG} the dubbed versions have no listening checks (owner's cost rule): --listen is not allowed`); return 1; }
+  const P = langCastProblems(C, lines, arg('--casting-lang', arg('--casting-en')), lang);
   for (const p of P) console.log('  ✗ ' + p);
-  if (P.length) { console.log(`[voice en] ${P.length} casting problem(s) — nothing generated`); return 1; }
+  if (P.length) { console.log(`${TAG} ${P.length} casting problem(s) — nothing generated`); return 1; }
   if (argv.includes('--dry-run')) {
-    for (const l of lines) { console.log(`=== ${l.id}  (est ${l.est} s)`); console.log(JSON.stringify(requestBody(C, l).generationConfig)); console.log(buildPrompt(C, l)); }
-    console.log(`[voice en] dry run: ${lines.length} line(s)`);
+    for (const l of lines) { console.log(`=== ${l.id}  (est ${l.est} s, cap ${capTokens(l, 0)} tokens)`); console.log(JSON.stringify(requestBody(C, l).generationConfig)); console.log(buildPrompt(C, l)); }
+    console.log(`${TAG} dry run: ${lines.length} line(s), output caps ${Math.min(...lines.map((l) => capTokens(l, 0)))}–${Math.max(...lines.map((l) => capTokens(l, 0)))} tokens`);
     return 0;
   }
   if (!GA.ffmpegPath()) { console.log('[voice] ffmpeg not found (PATH, $FFMPEG or `pip install imageio-ffmpeg`).'); return 1; }
   const rep = fs.existsSync(repFile) ? JSON.parse(fs.readFileSync(repFile, 'utf8')) : {};
-  const usage = rep._usage = rep._usage || { requests: 0, httpAttempts: 0, rateLimited: 0, retries: 0, batches: [], runs: [] };
+  const usage = rep._usage = rep._usage || { requests: 0, httpAttempts: 0, rateLimited: 0, retries: 0, capHits: 0, batches: [], runs: [] };
+  if (usage.capHits == null) usage.capHits = 0;
   const save = () => {
-    rep._readme = 'English voice files (tools/voice_tts.js --lang en). Per id: the take that was kept (seconds, LUFS, peak, local problems) and attempts = audio requests made for it (at most 2). _usage counts every request: requests = audio generation requests (direct calls + Batch API items, retries included), httpAttempts = HTTP requests sent (rate-limit resends included; a 429 answer makes no audio), retries = second requests after a failed local check / an empty or error answer. _verify = the last local check of all files on disk (--verify). stt = an offline open-source speech recognizer (tools/voice_en_stt.py; no API): report-only, except a line said twice (repeated), which counts as a length far off the text and may use the one retry.';
+    rep._readme = `${L.name} voice files (tools/voice_tts.js --lang ${lang}). Per id: the take that was kept (seconds, LUFS, peak, local problems) and attempts = audio requests made for it (at most 2). finish / tokens = the answer's finishReason and output token count; cap = the maxOutputTokens sent (audio is about 25 tokens per second; MAX_TOKENS = the cap was reached). _usage counts every request: requests = audio generation requests (direct calls + Batch API items, retries included), httpAttempts = HTTP requests sent (rate-limit resends included; a 429 answer makes no audio), retries = second requests after a failed local check / an empty or error answer, capHits = takes that stopped at the output cap. _verify = the last local check of all files on disk (--verify). stt = an offline open-source speech recognizer (tools/voice_en_stt.py --lang ${lang}; no API): report-only, except a line said twice (repeated), which counts as a length far off the text and may use the one retry.`;
     const ordered = { _readme: rep._readme, _usage: rep._usage, _verify: rep._verify };
     for (const k of Object.keys(rep).filter((x) => !x.startsWith('_')).sort()) ordered[k] = rep[k];
     fs.writeFileSync(repFile, JSON.stringify(ordered, null, 1) + '\n');
@@ -552,30 +628,30 @@ async function mainEn(argv, E) {
       const d = GA.decode(f, { rate: 24000, channels: 1 });
       const ck = check({ rate: d.rate, channels: d.channels }, l);
       pr.push(...ck.problems);
-      const L = GA.loudness(d.channels, d.rate);
-      const short = !isFinite(L.I) || L.I <= -69;   // < 0.4 s of speech: ebur128 gates everything out (-70)
-      const peakLimited = L.I < o.lufs && ck.peakDb > -7.5;   // a peaky shout: the peak ceiling, not the target, set the gain
-      if (!short && Math.abs(L.I - o.lufs) > 1.5 && !(peakLimited && L.I > o.lufs - 6)) pr.push(`loudness ${L.I.toFixed(1)} LUFS (target ${o.lufs})`);
-      if (!short && Math.abs(L.I - o.lufs) > 1.5 && peakLimited && L.I > o.lufs - 6) notes.push(`${l.id}: ${L.I.toFixed(1)} LUFS (held down by the peak ceiling)`);
+      const Lq = GA.loudness(d.channels, d.rate);
+      const short = !isFinite(Lq.I) || Lq.I <= -69;   // < 0.4 s of speech: ebur128 gates everything out (-70)
+      const peakLimited = Lq.I < o.lufs && ck.peakDb > -7.5;   // a peaky shout: the peak ceiling, not the target, set the gain
+      if (!short && Math.abs(Lq.I - o.lufs) > 1.5 && !(peakLimited && Lq.I > o.lufs - 6)) pr.push(`loudness ${Lq.I.toFixed(1)} LUFS (target ${o.lufs})`);
+      if (!short && Math.abs(Lq.I - o.lufs) > 1.5 && peakLimited && Lq.I > o.lufs - 6) notes.push(`${l.id}: ${Lq.I.toFixed(1)} LUFS (held down by the peak ceiling)`);
       if (short) { const x = d.channels[0]; let e = 0; for (let i = 0; i < x.length; i++) e += x[i] * x[i]; const r = 10 * Math.log10(e / x.length + 1e-12); if (r < o.lufs - 8 || r > o.lufs + 6) pr.push(`short clip RMS ${r.toFixed(1)} dBFS`); }
-      rep[l.id] = Object.assign(rep[l.id] || { id: l.id }, { verify: { seconds: Math.round(ck.dur * 100) / 100, estimate: l.est, lufs: short ? null : Math.round(L.I * 10) / 10, peakDb: Math.round(ck.peakDb * 10) / 10, problems: pr } });
+      rep[l.id] = Object.assign(rep[l.id] || { id: l.id }, { verify: { seconds: Math.round(ck.dur * 100) / 100, estimate: l.est, lufs: short ? null : Math.round(Lq.I * 10) / 10, peakDb: Math.round(ck.peakDb * 10) / 10, problems: pr } });
       if (pr.length) V.problems[l.id] = pr; else V.ok++;
     }
     rep._verify = V;
     save();
-    console.log(`[voice en] verify: ${V.ok} / ${lines.length} files ok, ${V.missing.length} missing, ${Object.keys(V.problems).length} with problems`);
+    console.log(`${TAG} verify: ${V.ok} / ${lines.length} files ok, ${V.missing.length} missing, ${Object.keys(V.problems).length} with problems`);
     for (const [id, pr] of Object.entries(V.problems)) console.log(`  ✗ ${id}: ${pr.join('; ')}`);
     if (V.missing.length) console.log('  missing: ' + V.missing.join(', '));
     return V.missing.length || Object.keys(V.problems).length ? 1 : 0;
   }
   const reproc = argv.includes('--reprocess');
-  if (!GA.apiKey(E) && !reproc) { console.log('[voice en] GOOGLE_API_KEY is not set — nothing generated (--dry-run shows the prompts).'); return 0; }
+  if (!GA.apiKey(E) && !reproc) { console.log(`${TAG} GOOGLE_API_KEY is not set — nothing generated (--dry-run shows the prompts).`); return 0; }
   fs.mkdirSync(outDir, { recursive: true });
   fs.mkdirSync(rawDir, { recursive: true });
   const usageLog = process.env.VOICE_USAGE_LOG || path.join(os.tmpdir(), 'voice_usage.jsonl');
-  const run = { t: new Date().toISOString(), mode: '', lines: 0, requests: 0, httpAttempts: 0, rateLimited: 0, retries: 0 };
+  const run = { t: new Date().toISOString(), mode: '', lines: 0, requests: 0, httpAttempts: 0, rateLimited: 0, retries: 0, capHits: 0 };
   usage.runs.push(run);
-  const logUse = (r) => { try { fs.appendFileSync(usageLog, JSON.stringify(Object.assign({ t: new Date().toISOString(), tool: 'voice_tts', lang: 'en', model: TTS_MODEL }, r)) + '\n'); } catch (e) { /* the log is optional */ } };
+  const logUse = (r) => { try { fs.appendFileSync(usageLog, JSON.stringify(Object.assign({ t: new Date().toISOString(), tool: 'voice_tts', lang, model: TTS_MODEL }, r)) + '\n'); } catch (e) { /* the log is optional */ } };
   const onAttempt = (id) => (st) => { run.httpAttempts++; usage.httpAttempts++; if (st === 429) { run.rateLimited++; usage.rateLimited++; } logUse({ purpose: 'tts-http', id, status: st }); };
   const attempts = (l) => (rep[l.id] && rep[l.id].attempts) || 0;
   const allowed = (l) => (argv.includes('--allow-more') ? MAX_EN_ATTEMPTS : MAX_EN_ATTEMPTS - attempts(l));
@@ -584,6 +660,14 @@ async function mainEn(argv, E) {
     rep[l.id].attempts = attempts(l) + 1;
     if (rep[l.id].attempts > 1) { run.retries++; usage.retries++; }
     run.requests++; usage.requests++;
+  };
+  /** remember what the answer said about the cap (per id and in _usage) */
+  const noteTake = (l, ev) => {
+    if (!ev) return;
+    rep[l.id] = rep[l.id] || { id: l.id };
+    rep[l.id].finish = ev.finish || null; rep[l.id].tokens = ev.tokens == null ? null : ev.tokens; rep[l.id].cap = capTokens(l, Math.max(0, attempts(l) - 1));
+    if (ev.finish === 'MAX_TOKENS') { run.capHits++; usage.capHits++; }
+    logUse({ purpose: 'tts-answer', id: l.id, finish: ev.finish, tokens: ev.tokens, cap: rep[l.id].cap });
   };
   let fails = 0;
   const finish = (l, sp, wav, ev) => {
@@ -600,25 +684,26 @@ async function mainEn(argv, E) {
     }
     if (filePeak > 0.999) ck.problems.push(`the Ogg file decodes above full scale (${(20 * Math.log10(filePeak)).toFixed(1)} dBFS)`);
     if (ev && ev.why && /raw take/.test(ev.why)) ck.problems.push(ev.why.match(/clipped in the raw take[^;]*/)[0]);
-    const L = GA.loudness(pr.channels, pr.rate);
-    rep[l.id] = Object.assign(rep[l.id] || { id: l.id }, { speaker: l.speaker, voice: sp.voice, text: said(C, l), seconds: Math.round(ck.dur * 100) / 100, estimate: l.est, lufs: isFinite(L.I) ? Math.round(L.I * 10) / 10 : null, peakDb: Math.round(ck.peakDb * 10) / 10, problems: ck.problems, bytes: fs.statSync(file).size, limiterDb: o2.limitDb != null ? o2.limitDb : -3, generated: reproc ? (rep[l.id] && rep[l.id].generated) : new Date().toISOString() });
+    if (ev && ev.why && /output cap/.test(ev.why)) ck.problems.push(ev.why.match(/hit the output cap[^;]*/)[0]);
+    const Lq = GA.loudness(pr.channels, pr.rate);
+    rep[l.id] = Object.assign(rep[l.id] || { id: l.id }, { speaker: l.speaker, voice: sp.voice, text: said(C, l), seconds: Math.round(ck.dur * 100) / 100, estimate: l.est, lufs: isFinite(Lq.I) ? Math.round(Lq.I * 10) / 10 : null, peakDb: Math.round(ck.peakDb * 10) / 10, problems: ck.problems, bytes: fs.statSync(file).size, limiterDb: o2.limitDb != null ? o2.limitDb : -3, generated: reproc ? (rep[l.id] && rep[l.id].generated) : new Date().toISOString() });
     delete rep[l.id].failed;
     if (ck.problems.length) fails++;
-    console.log(`[voice en] ${l.id}: ${ck.dur.toFixed(2)} s (est ${l.est}), ${isFinite(L.I) ? L.I.toFixed(1) + ' LUFS' : 'short'}, ${ck.problems.length ? '✗ ' + ck.problems.join('; ') : 'ok'}`);
+    console.log(`${TAG} ${l.id}: ${ck.dur.toFixed(2)} s (est ${l.est}), ${isFinite(Lq.I) ? Lq.I.toFixed(1) + ' LUFS' : 'short'}, ${ck.problems.length ? '✗ ' + ck.problems.join('; ') : 'ok'}`);
   };
-  const fail = (l, why) => { fails++; rep[l.id] = Object.assign(rep[l.id] || { id: l.id }, { failed: why }); console.log(`[voice en] ${l.id}: FAILED (${why})`); };
+  const fail = (l, why) => { fails++; rep[l.id] = Object.assign(rep[l.id] || { id: l.id }, { failed: why }); console.log(`${TAG} ${l.id}: FAILED (${why})`); };
   // ---------------------------------------------------------------- reprocess from the raw takes (no API)
   if (reproc) {
     run.mode = 'reprocess';
     for (const l of lines) {
       const rawFile = path.join(rawDir, l.id + '.wav');
-      if (!fs.existsSync(rawFile)) { console.log(`[voice en] ${l.id}: no raw take in ${rawDir}`); continue; }
+      if (!fs.existsSync(rawFile)) { console.log(`${TAG} ${l.id}: no raw take in ${rawDir}`); continue; }
       run.lines++;
       finish(l, speakerOf(C, l), fs.readFileSync(rawFile), null);
     }
     usage.runs.pop();
     save();
-    console.log(`[voice en] reprocessed ${run.lines} line(s), ${fails} with problems`);
+    console.log(`${TAG} reprocessed ${run.lines} line(s), ${fails} with problems`);
     return fails ? 1 : 0;
   }
   const todo = lines.filter((l) => argv.includes('--force') || !fs.existsSync(path.join(outDir, l.id + '.ogg')));
@@ -627,7 +712,7 @@ async function mainEn(argv, E) {
   run.lines = open0.length;
   const direct = argv.includes('--direct') || (open0.length <= 3 && !argv.includes('--batch')) || arg('--resume-batch');
   run.mode = arg('--resume-batch') ? 'resume' : direct ? 'direct' : 'batch';
-  console.log(`[voice en] ${lines.length} line(s) listed, ${open0.length} to make (${run.mode}); listening checks off; ${MAX_EN_ATTEMPTS} audio requests per line at most`);
+  console.log(`${TAG} ${lines.length} line(s) listed, ${open0.length} to make (${run.mode}); listening checks off; ${MAX_EN_ATTEMPTS} audio requests per line at most; output cap ${open0.length ? Math.min(...open0.map((l) => capTokens(l, 0))) + '–' + Math.max(...open0.map((l) => capTokens(l, 0))) : '-'} tokens`);
   save();
   if (arg('--resume-batch')) {
     // results of a batch made earlier (keys <id>#<attempt>): no new request
@@ -636,10 +721,12 @@ async function mainEn(argv, E) {
     for (const [key, got] of res) {
       const l = byId[String(key).split('#')[0]];
       if (!l) continue;
-      const p = got.json ? GA.partsOf(got.json) : { audio: [] };
-      if (!p.audio.length) { console.log(`  ${l.id}: no audio in the batch result`); continue; }
+      const t = got.json ? takeOf(got.json) : { p: { audio: [] }, meta: {} };
+      if (!t.p.audio.length) { console.log(`  ${l.id}: no audio in the batch result`); continue; }
       const sp = speakerOf(C, l);
-      finish(l, sp, p.audio[0].bytes, localTake(p.audio[0].bytes, l, sp, o));
+      const ev = localTake(t.p.audio[0].bytes, l, sp, o, t.meta);
+      noteTake(l, ev);
+      finish(l, sp, t.p.audio[0].bytes, ev);
     }
     save();
     return fails ? 1 : 0;
@@ -653,18 +740,20 @@ async function mainEn(argv, E) {
       let best = null;
       const n = allowed(l);
       for (let t = 0; t < n && !(best && best.ev.good); t++) {
-        let p;
+        let tk;
         try {
           await pace();
           bump(l); save();
-          p = GA.partsOf(await GA.geminiPost(TTS_MODEL, requestBody(C, l), { timeoutSec: 180, retryOn: '429', tries: 12, onAttempt: onAttempt(l.id), log: (x) => process.stdout.write(x.trim() + ' ') }));
+          tk = takeOf(await GA.geminiPost(TTS_MODEL, requestBody(C, l, attempts(l) - 1), { timeoutSec: 180, retryOn: '429', tries: 12, onAttempt: onAttempt(l.id), log: (x) => process.stdout.write(x.trim() + ' ') }));
         } catch (e) {
-          if (e.daily) { rep[l.id].attempts--; run.requests--; usage.requests--; if (rep[l.id].attempts >= 1) { run.retries--; usage.retries--; } save(); console.log(`[voice en] daily request quota reached — stopping (${GA.redact(e.message).slice(0, 160)}); run again later or use the Batch API`); return 1; }
+          if (e.daily) { rep[l.id].attempts--; run.requests--; usage.requests--; if (rep[l.id].attempts >= 1) { run.retries--; usage.retries--; } save(); console.log(`${TAG} daily request quota reached — stopping (${GA.redact(e.message).slice(0, 160)}); run again later or use the Batch API`); return 1; }
           console.log(`  ${l.id}: request failed: ${GA.redact(e.message || e).slice(0, 200)}`);
           continue;
         }
+        const p = tk.p;
         if (!p.audio.length) { console.log(`  ${l.id}: no audio (${p.finishReason || p.blocked || p.text})`); continue; }
-        const ev = localTake(p.audio[0].bytes, l, sp, o);
+        const ev = localTake(p.audio[0].bytes, l, sp, o, tk.meta);
+        noteTake(l, ev);
         if (!best || ev.q > best.ev.q) best = { w: p.audio[0].bytes, ev };
         if (!ev.good && t + 1 < n) console.log(`  ${l.id}: retry once (${ev.why})`);
       }
@@ -681,13 +770,13 @@ async function mainEn(argv, E) {
     for (let r = 0; r < MAX_EN_ATTEMPTS && open.length; r++) {
       const chunks = [];
       for (let i = 0; i < open.length; i += size) chunks.push(open.slice(i, i + size));
-      console.log(`[voice en] round ${r + 1}: ${open.length} line(s) in ${chunks.length} batch(es)`);
+      console.log(`${TAG} round ${r + 1}: ${open.length} line(s) in ${chunks.length} batch(es)`);
       const results = new Map(), lost = new Set();
       let next = 0;
       const worker = async () => {
         while (next < chunks.length) {
-          const ci = next++, chunk = chunks[ci], name = `lc-voice-en-${stamp}-r${r + 1}-c${ci + 1}`;
-          const reqs = chunk.map((l) => ({ key: `${l.id}#${attempts(l) + 1}`, request: requestBody(C, l) }));
+          const ci = next++, chunk = chunks[ci], name = `lc-voice-${lang}-${stamp}-r${r + 1}-c${ci + 1}`;
+          const reqs = chunk.map((l) => ({ key: `${l.id}#${attempts(l) + 1}`, request: requestBody(C, l, attempts(l)) }));
           const rec = { display: name, requests: reqs.length, t: new Date().toISOString(), name: null, state: 'creating' };
           try {
             const res = await GA.batchGenerate(TTS_MODEL, reqs, {
@@ -698,7 +787,7 @@ async function mainEn(argv, E) {
             for (const [k, v] of res) results.set(k, v);
           } catch (e) {
             console.log(`  [c${ci + 1}] batch failed: ${GA.redact(e.message || e).slice(0, 240)}`);
-            if (rec.name) { rec.state = 'not fetched (node tools/voice_tts.js --lang en --resume-batch ' + rec.name + ')'; for (const l of chunk) lost.add(l.id); }
+            if (rec.name) { rec.state = `not fetched (node tools/voice_tts.js --lang ${lang} --resume-batch ${rec.name})`; for (const l of chunk) lost.add(l.id); }
             else if (!e.notCreated) { rec.state = 'unknown'; usage.batches.push(rec); for (const l of chunk) { bump(l); lost.add(l.id); } }
             save();
           }
@@ -713,10 +802,11 @@ async function mainEn(argv, E) {
         let ev = null;
         if (!got || got.error) console.log(`  ${l.id}: ${got ? 'error ' + got.error.slice(0, 120) : 'no answer'}`);
         else {
-          const p = GA.partsOf(got.json);
+          const tk = takeOf(got.json), p = tk.p;
           if (!p.audio.length) console.log(`  ${l.id}: no audio (${p.finishReason || p.blocked || ''})`);
           else {
-            try { ev = localTake(p.audio[0].bytes, l, sp, o); } catch (e) { ev = { good: false, q: -9, why: 'cannot decode: ' + e.message }; }
+            try { ev = localTake(p.audio[0].bytes, l, sp, o, tk.meta); } catch (e) { ev = { good: false, q: -9, why: 'cannot decode: ' + e.message }; }
+            noteTake(l, ev);
             const b = best.get(l.id);
             if (!b || ev.q > b.ev.q) best.set(l.id, { w: p.audio[0].bytes, ev });
           }
@@ -732,10 +822,10 @@ async function mainEn(argv, E) {
     for (const l of open) { const b = best.get(l.id); if (b) finish(l, speakerOf(C, l), b.w, b.ev); else fail(l, 'no audio'); }
   }
   save();
-  console.log(`[voice en] this run: ${run.requests} audio request(s) (${run.retries} retries), ${run.httpAttempts} HTTP request(s) (${run.rateLimited} rate-limited); all runs: ${usage.requests} audio requests, ${usage.retries} retries`);
-  console.log(`[voice en] ${run.lines} line(s), ${fails} with problems → ${path.relative(ROOT, repFile)}`);
+  console.log(`${TAG} this run: ${run.requests} audio request(s) (${run.retries} retries, ${run.capHits} stopped at the output cap), ${run.httpAttempts} HTTP request(s) (${run.rateLimited} rate-limited); all runs: ${usage.requests} audio requests, ${usage.retries} retries, ${usage.capHits} cap hits`);
+  console.log(`${TAG} ${run.lines} line(s), ${fails} with problems → ${path.relative(ROOT, repFile)}`);
   return fails ? 1 : 0;
 }
 
-module.exports = { judge, transcribe, loadCasting, allLines, buildPrompt, requestBody, similarity, spoken, main, FX, enCasting, enLines, estimateEn, enCastProblems, localTake, readIds, check, processWav, speakerOf, said };
+module.exports = { judge, transcribe, loadCasting, allLines, buildPrompt, requestBody, capTokens, similarity, spoken, main, FX, LANGS, langCasting, enCasting, langLines, enLines, estimateEn, estimateZh, estimateKo, langCastProblems, enCastProblems, localTake, readIds, check, processWav, speakerOf, said };
 if (require.main === module) main(process.argv.slice(2), process.env).then((c) => { process.exitCode = c; }, (e) => { console.error('[voice] ' + GA.redact(e.message || e)); process.exitCode = 1; });

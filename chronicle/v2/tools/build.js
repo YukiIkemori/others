@@ -23,7 +23,9 @@
 //   Cinzel（英字）は latin の woff2 をそのまま埋め込む。どちらも OFL（v2/assets/fonts/OFL_*.txt）。
 // 媒体: 既定は外に置く（dist/bgm・dist/voice・dist/portraits・dist/sfx・dist/amb に写す）。
 //   英語のボイス voice/en/<id>.ogg → RPG_MEDIA.voice_en[id] = url（dist/voice/en に写す。ゲームの言語が英語のとき core/media.js が
-//   voice より先に引き、無い id は日本語の voice のまま。2026-10-10）。
+//   voice より先に引き、無い id は日本語の voice のまま。2026-10-10）。中国語（普通話。zh-Hans・zh-Hant 共用）は voice/zh → voice_zh、
+//   韓国語は voice/ko → voice_ko（dist/voice/zh・ko）。叫び声の使い回し: design/voice/cry_reuse.txt の id は中国語・韓国語で録音せず、
+//   voice_zh / voice_ko に {alias: 'voice'} の項を置く（日本語の同じ id の声を鳴らす。core/media.js）。
 //   録音の効果音 sfx/<id>.<k>.ogg（＋<id>.json）→ RPG_MEDIA.sfx['<id>.<k>'] = url（keepSynth: true の id は写さない＝合成のまま）。
 //   録音の環境音 amb/<床>.ogg（＋<床>.json）→ RPG_MEDIA.amb['<床>'] = {url, loopStart, loopEnd}（keepProcedural・weak は写さない）。
 //   どちらも縦切り・製品版の両方に入れる（design/notes/audio.md §15.1）。--single は <script type="application/octet-stream">
@@ -261,7 +263,8 @@ function scanAmb(dir) {
 function scanMedia(root, o) {
   const out = { bgm: [], voice: [], portraits: [] };
   { const s = scanSfx(path.join(root, 'sfx')), a = scanAmb(path.join(root, 'amb')); out.sfx = s.list; out.amb = a.list; out.skipped = { sfx: s.skipped, amb: a.skipped }; }
-  out.voice_en = scanVoiceLang(path.join(root, 'voice', 'en'));
+  for (const l of VOICE_LANGS) out['voice_' + l] = scanVoiceLang(path.join(root, 'voice', l));
+  out.voice_reuse = readCryReuse();
   for (const kind of ['bgm', 'voice', 'portraits']) {
     const dir = path.join(root, kind);
     if (!fs.existsSync(dir)) continue;
@@ -303,7 +306,18 @@ function scanMedia(root, o) {
   }
   return out;
 }
-/** 言語ごとのボイス（voice/<言語>/<id>.ogg|m4a|mp3|wav。今は英語だけ）→ [{id, ext, file, meta}]。同じ id は ogg → m4a → mp3 → wav の順で 1 つ */
+/** 言語ごとのボイスの言語（voice/<言語>/ → RPG_MEDIA.voice_<言語>）。en = 英語、zh = 中国語（普通話。zh-Hans・zh-Hant 共用）、ko = 韓国語 */
+const VOICE_LANGS = ['en', 'zh', 'ko'];
+/** 叫び声を日本語の声で使い回す言語（録音を持たない。core/media.js の alias）。英語は自分の録音を持つ */
+const VOICE_REUSE_LANGS = ['zh', 'ko'];
+const CRY_REUSE = path.join(V2, '..', 'design', 'voice', 'cry_reuse.txt');
+/** design/voice/cry_reuse.txt（1 行 1 id。# 以降は注釈）→ [id] */
+function readCryReuse(file) {
+  const f = file || CRY_REUSE;
+  if (!fs.existsSync(f)) return [];
+  return fs.readFileSync(f, 'utf8').split(/\r?\n/).map((x) => x.replace(/#.*/, '').trim()).filter(Boolean);
+}
+/** 言語ごとのボイス（voice/<言語>/<id>.ogg|m4a|mp3|wav。en・zh・ko）→ [{id, ext, file, meta}]。同じ id は ogg → m4a → mp3 → wav の順で 1 つ */
 function scanVoiceLang(dir) {
   const byId = {};
   if (!fs.existsSync(dir)) return [];
@@ -433,7 +447,7 @@ function copyIfChanged(src, dst) {
 }
 /** → {script, embeds, bytes}。mode 'external' は outDir/<kind>/ に写して相対 URL、'embed' は埋め込み、'none' は空 */
 function mediaTable(media, mode, outDir) {
-  const table = { bgm: {}, voice: {}, voice_en: {}, portraits: {}, sprites: {}, env: {}, title: {}, monsters: {}, fx: {}, sfx: {}, amb: {} };
+  const table = { bgm: {}, voice: {}, voice_en: {}, voice_zh: {}, voice_ko: {}, portraits: {}, sprites: {}, env: {}, title: {}, monsters: {}, fx: {}, sfx: {}, amb: {} };
   const embeds = [];
   let bytes = 0;
   media.sprites = media.sprites || [];
@@ -443,11 +457,11 @@ function mediaTable(media, mode, outDir) {
   media.fx = media.fx || [];
   media.sfx = media.sfx || [];
   media.amb = media.amb || [];
-  media.voice_en = media.voice_en || [];
+  for (const l of VOICE_LANGS) media['voice_' + l] = media['voice_' + l] || [];
   const base = (e) => e.outName || path.basename(e.file);
-  // 英語のボイスは voice/en/ に（voice の中のディレクトリ。voice の片づけはディレクトリを消さない）
-  const sub = { voice_en: 'voice/en' };
-  for (const kind of ['bgm', 'voice', 'voice_en', 'portraits', 'sprites', 'env', 'title', 'monsters', 'fx', 'sfx', 'amb']) {
+  // 言語ごとのボイスは voice/en・voice/zh・voice/ko に（voice の中のディレクトリ。voice の片づけはディレクトリを消さない）
+  const sub = { voice_en: 'voice/en', voice_zh: 'voice/zh', voice_ko: 'voice/ko' };
+  for (const kind of ['bgm', 'voice', 'voice_en', 'voice_zh', 'voice_ko', 'portraits', 'sprites', 'env', 'title', 'monsters', 'fx', 'sfx', 'amb']) {
     const extDir = path.join(outDir, ...(sub[kind] || kind).split('/'));
     if (mode === 'external') {
       fs.mkdirSync(extDir, { recursive: true });
@@ -475,8 +489,17 @@ function mediaTable(media, mode, outDir) {
         : kind === 'title' ? (mode === 'external' && e.png ? { url, png: kind + '/' + e.id + '.png' + (e.pngV ? '?v=' + e.pngV : '') } : { url }) : url;
     }
   }
+  // 叫び声の使い回し: 中国語・韓国語の表に録音が無く、日本語の声がある cry_reuse.txt の id は {alias: 'voice'}（core/media.js が日本語の声に引き直す）
+  let reused = 0;
+  if (mode !== 'none') {
+    for (const l of VOICE_REUSE_LANGS) {
+      for (const id of media.voice_reuse || []) {
+        if (!table['voice_' + l][id] && table.voice[id]) { table['voice_' + l][id] = { alias: 'voice' }; if (l === VOICE_REUSE_LANGS[0]) reused++; }
+      }
+    }
+  }
   if (mode !== 'none' && media.titleMeta) table.titleMeta = media.titleMeta;
-  return { script: `<script>window.RPG_MEDIA=${JSON.stringify(table)};</script>`, embeds: embeds.join('\n'), bytes, counts: { bgm: media.bgm.length, voice: media.voice.length, voice_en: media.voice_en.length, portraits: media.portraits.length, sprites: media.sprites.length, env: media.env.length, title: media.title.length, fx: media.fx.length, sfx: media.sfx.length, amb: media.amb.length } };
+  return { script: `<script>window.RPG_MEDIA=${JSON.stringify(table)};</script>`, embeds: embeds.join('\n'), bytes, counts: { bgm: media.bgm.length, voice: media.voice.length, voice_en: media.voice_en.length, voice_zh: media.voice_zh.length, voice_ko: media.voice_ko.length, voice_reused: reused, portraits: media.portraits.length, sprites: media.sprites.length, env: media.env.length, title: media.title.length, fx: media.fx.length, sfx: media.sfx.length, amb: media.amb.length } };
 }
 
 // ------------------------------------------------------------------ HTML
@@ -630,11 +653,11 @@ function main(argv) {
     (min ? `\n[build] minified: ${(min.stats().inB / 1024).toFixed(0)} KB → ${(min.stats().outB / 1024).toFixed(0)} KB of JS${min.stats().failed ? ` (${min.stats().failed} file(s) kept as is)` : ''}` : '') +
     `\n[build] tester menu: ${has('--no-tester') ? 'EXCLUDED' + (release ? ' (release)' : '') : 'included (?tester=1 + F9)'}` +
     `\n[build] fonts: ${font.chars} chars, ${(font.bytes / 1024).toFixed(0)} KB embedded${font.ok ? '' : ' (SUBSET FAILED)'}` +
-    `\n[build] media (${single ? 'embedded' : 'external'}): ${M.counts.bgm} BGM${has('--all-bgm') ? '' : ' (slice)'}, ${M.counts.voice} voice (+${M.counts.voice_en} English), ${M.counts.portraits} portraits, ${M.counts.sprites} sprite sheets, ${M.counts.env} env images, ${M.counts.title} title images, ${M.counts.fx} fx parts, ${M.counts.sfx} sfx takes, ${M.counts.amb} ambience beds, ${mb(M.bytes)} MB` +
+    `\n[build] media (${single ? 'embedded' : 'external'}): ${M.counts.bgm} BGM${has('--all-bgm') ? '' : ' (slice)'}, ${M.counts.voice} voice (+${M.counts.voice_en} English, +${M.counts.voice_zh} Mandarin, +${M.counts.voice_ko} Korean, ${M.counts.voice_reused} cries reused from Japanese in zh / ko), ${M.counts.portraits} portraits, ${M.counts.sprites} sprite sheets, ${M.counts.env} env images, ${M.counts.title} title images, ${M.counts.fx} fx parts, ${M.counts.sfx} sfx takes, ${M.counts.amb} ambience beds, ${mb(M.bytes)} MB` +
     (media.skipped && (media.skipped.sfx.length || media.skipped.amb.length) ? `\n[build] recorded audio left out (synth / procedural kept): sfx ${media.skipped.sfx.join(' ') || '-'}; amb ${media.skipped.amb.join(' ') || '-'}` : '') +
     (bad.length ? `\n[build] ${bad.length} file(s) EXCLUDED (syntax)` : '') + `  [${Date.now() - t0} ms]`);
   if (bad.length) process.exitCode = 1;
 }
 
-module.exports = { order, fixtures, syntax, scanMedia, scanSfx, scanAmb, scanVoiceLang, mediaTable, scanSprites, SPRITES_DIR, scanEnv, ENV_DIR, scanTitle, TITLE_DIR, SLICE_BGM, DIRS, CORE_FIRST, V2 };
+module.exports = { order, fixtures, syntax, scanMedia, scanSfx, scanAmb, scanVoiceLang, readCryReuse, VOICE_LANGS, mediaTable, scanSprites, SPRITES_DIR, scanEnv, ENV_DIR, scanTitle, TITLE_DIR, SLICE_BGM, DIRS, CORE_FIRST, V2 };
 if (require.main === module) main(process.argv.slice(2));

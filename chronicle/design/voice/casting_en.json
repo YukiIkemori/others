@@ -41,7 +41,15 @@
    "style": "stern, measured older male voice, about sixty; the chair of a tense town assembly" },
   "zakuro": { "voice": "en-us-cruz", "type": "prebuilt", "note": "male, 37, low; Northwest",
    "profile": "Zakuro, a hired fighter attached to the Archive, in his thirties; laconic and blunt but strictly honourable (never reads other people's letters); rough-spoken.",
-   "style": "low, dry adult male voice, about thirty-five; blunt and terse, quietly honourable" }
+   "style": "low, dry adult male voice, about thirty-five; blunt and terse, quietly honourable" },
+  "rita": { "voice": "en-us-tutor-10", "type": "prebuilt", "note": "female, 22, medium; Inland South; natural and clear (added 2026-10-10 for the minor-NPC lines)" },
+  "kaya": { "voice": "en-us-training-8", "type": "prebuilt", "note": "female, 23, medium; Gulf Coast; intimate, soft (added 2026-10-10)",
+   "style": "clear, soft young female voice, about twenty; earnest and a little shaky" },
+  "hald": { "voice": "en-us-csagent-15", "type": "prebuilt", "note": "male, 64 (oldest unused male), low; Inland South; warm (added 2026-10-10; casting.json pitch 0.9 still applies)",
+   "style": "old, gravelly male voice, about seventy; a gruff watchman, urgent when he raises the alarm" },
+  "dorga": { "voice": "en-us-commercial-3", "type": "prebuilt", "note": "male, 59, low; East Coast; confident and clear (added 2026-10-10; casting.json pitch 0.9 still applies)",
+   "profile": "Dorga, the chief of the crater town Caldera, about sixty; a former proxy fighter of the Firebird League, broad and scarred; grave, few words; plain gruff older-man speech.",
+   "style": "deep, weathered older male voice, about sixty; slow and grave, a veteran fighter remembering" }
  },
  "hero": {
   "m": { "voice": "en-us-commercial-9", "type": "prebuilt", "note": "male, 20 (youngest male listed), low; Midwest" },

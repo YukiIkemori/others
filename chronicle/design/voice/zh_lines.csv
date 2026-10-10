@@ -1,0 +1,554 @@
+id,speaker,kind,source,zh_text,direction,ja_text,en_text
+b_bartolo_attack_1,b_bartolo,attack,written,太天真了，小子！,"old knight, scornful and sharp",甘いわ！,"Too slow, whelp!"
+b_bartolo_attack_2,b_bartolo,attack,written,就是这儿！,"experienced eye, precise thrust",そこじゃ！,Right there!
+b_bartolo_attack_3,b_bartolo,attack,reuse,,"old-school battle cry, vigorous",せいやっ！,Have at you!
+b_bartolo_bigtech_1,b_bartolo,bigtech,written,还轮不到毛头小子赢我！,"proud veteran, spirited and loud",若造には、まだ負けんぞ！,I won't lose to a whelp just yet!
+b_bartolo_bigtech_2,b_bartolo,bigtech,written,让你们瞧瞧老骨头的骨气！,"dignified old knight, grand and resolute",老骨の意地、見せてくれよう！,Behold an old warrior's pride!
+b_bartolo_hurt_1,b_bartolo,hurt,reuse,,old man's grunt of pain,ぐぬっ！,Oof!
+b_bartolo_hurt_2,b_bartolo,hurt,written,我的腰……！,"comic pained groan, his back hurts",腰が……っ！,My back...!
+b_bartolo_ko_1,b_bartolo,ko,written,也许……是该收手的时候了……,"collapsing, calm wistful acceptance",ここらが……潮時か……,Perhaps... it's time... I retired...
+b_bartolo_spell_1,b_bartolo,spell,written,以古老的誓言之名！,knightly solemn oath,古き誓いにかけて！,By the old oath!
+b_bartolo_victory_1,b_bartolo,victory,written,嗯。……不过，腰有点吃不消啊。,"satisfied nod, then a wry groan about his back",うむ。……少し、腰に響いたわい。,"Good. ...My back felt that one, though."
+b_basil_attack_1,b_basil,attack,reuse,,"big gentle monk, earnest strike",えいっ！,Hyah!
+b_basil_attack_2,b_basil,attack,reuse,,deep powerful exhale with a blow,はあっ！,Haaah!
+b_basil_attack_3,b_basil,attack,written,我来了！,"polite, then firm as he strikes",参ります！,Here I come!
+b_basil_bigtech_1,b_basil,bigtech,written,神啊，请原谅我！,"apologetic to his god, then a mighty blow",神よ、お許しを！,Heaven forgive me!
+b_basil_bigtech_2,b_basil,bigtech,written,与祈祷同在，我来了！,"calm solemn resolve, rising to full power",祈りと共に、参ります！,With a prayer — here I come!
+b_basil_hurt_1,b_basil,hurt,reuse,,deep grunt of pain,うぐっ！,Ugh!
+b_basil_hurt_2,b_basil,hurt,written,我撑得住……！,"enduring, polite even in pain",耐えます……！,I will endure...!
+b_basil_ko_1,b_basil,ko,written,神啊……请守护大家……,"falling, a faint prayer for the others",神よ……皆を……,Heaven... watch over them...
+b_basil_spell_1,b_basil,spell,written,慈爱之光！,"warm devout prayer, clear",慈しみの光を！,Light of mercy!
+b_basil_victory_1,b_basil,victory,written,大家没受伤吧？,"kind, caring, relieved",皆さん、お怪我はありませんか。,Is everyone all right? Anyone hurt?
+b_belladonna_attack_1,b_belladonna,attack,written,给你，尝尝！,"sly peddler woman, quick",そらっ！,Have some!
+b_belladonna_attack_2,b_belladonna,attack,written,有你好受的！,knowing smirk,効くわよ！,This'll sting!
+b_belladonna_attack_3,b_belladonna,attack,written,稍微扎一下哦！,"teasing, amused",ちくっとね！,Just a little poke!
+b_belladonna_bigtech_1,b_belladonna,bigtech,written,特制的一剂，今天不收钱！,"shrewd merchant's grin, confident",特製の一服、お代は結構！,My special blend — on the house!
+b_belladonna_bigtech_2,b_belladonna,bigtech,written,毒也好，药也好，全看怎么用！,"sly, knowing",毒も薬も、使いよう！,Poison or medicine — it's all in the use!
+b_belladonna_hurt_1,b_belladonna,hurt,written,好痛！,short pained yelp,いたっ！,Ouch!
+b_belladonna_hurt_2,b_belladonna,hurt,written,这笔账可贵着呢！,"annoyed, threatening payback",高くつくわよ！,That'll cost you!
+b_belladonna_ko_1,b_belladonna,ko,written,药……再来一瓶……,"collapsing, reaching for a potion, fading",薬……もう一本……,One more... potion...
+b_belladonna_spell_1,b_belladonna,spell,written,见效的一滴！,"practical, confident",よく効く一滴を！,One potent drop!
+b_belladonna_victory_1,b_belladonna,victory,written,多谢惠顾。……开玩笑的。,"merchant's thanks, then a playful laugh",毎度あり。……なんてね。,Thanks for your business. ...Just kidding.
+b_boden_attack_1,b_boden,attack,written,喏，拿去！,"spry old miner, brisk",ほれっ！,Take it!
+b_boden_attack_2,b_boden,attack,written,嘿哟！,old man's heave,どっこい！,Heave-ho!
+b_boden_attack_3,b_boden,attack,written,开挖喽！,"gleeful, like swinging a pick",掘るぞ！,Time to dig!
+b_boden_bigtech_1,b_boden,bigtech,written,四十年的手艺，给你看看！,"proud old craftsman, loud",四十年の腕、見せてやる！,Forty years of skill — watch this!
+b_boden_bigtech_2,b_boden,bigtech,written,要是年轻那会儿，还能更猛！,"boastful old man, cheerful",若い頃なら、もっといけた！,"In my younger days, I'd have done better!"
+b_boden_hurt_1,b_boden,hurt,reuse,,old man's grunt,おうっ！,Oof!
+b_boden_hurt_2,b_boden,hurt,written,哎哟哟……,old man's groan,あいたた……,"Ow, ow, ow..."
+b_boden_ko_1,b_boden,ko,written,塌方……了吗……,"collapsing, confused, fading",落盤……か……,A cave-in...?
+b_boden_spell_1,b_boden,spell,written,岩石啊，碎裂吧！,gruff old-man command,岩よ、砕けろ！,"Rock, shatter!"
+b_boden_victory_1,b_boden,victory,written,怎么样，老头子我还是现役吧！,proud and cheerful old man,どうじゃ、まだまだ現役じゃろ！,"How's that? Still in my prime, eh!"
+b_brigitta_attack_1,b_brigitta,attack,reuse,,"disciplined soldier, clean shout",たあっ！,Hah!
+b_brigitta_attack_2,b_brigitta,attack,written,解决你！,"focused, calm determination",仕留める！,I'll finish it!
+b_brigitta_attack_3,b_brigitta,attack,written,正中目标！,cool satisfaction on a precise hit,狙い通り！,Right on target!
+b_brigitta_bigtech_1,b_brigitta,bigtech,written,一点，贯穿！,"steady aim, then a powerful thrust",一点、貫く！,Pierce right through!
+b_brigitta_bigtech_2,b_brigitta,bigtech,written,别动。……就是现在！,"quiet aiming, then a sharp release",動かないで。……今！,Hold still. ...Now!
+b_brigitta_hurt_1,b_brigitta,hurt,reuse,,short restrained cry,くうっ！,Ugh!
+b_brigitta_hurt_2,b_brigitta,hurt,written,我还站得住！,"tough, reassuring the others",まだ立てる！,I can still stand!
+b_brigitta_ko_1,b_brigitta,ko,written,撑……不住了……,"collapsing, apologetic, fading",持ちこたえ……られない……,Can't... hold...
+b_brigitta_spell_1,b_brigitta,spell,written,让愿望化为力量！,"earnest, steady",願いを、力に！,Turn hope into strength!
+b_brigitta_victory_1,b_brigitta,victory,written,周围，安全。……好想吃点甜的啊。,"crisp soldier's report, then a soft girlish wish",周囲、よし。……甘い物、食べたいな。,Area secure. ...I could really go for something sweet.
+b_dokka_attack_1,b_dokka,attack,reuse,,"stocky old dwarf-like smith, heavy grunt",ぬんっ！,Hrah!
+b_dokka_attack_2,b_dokka,attack,reuse,,"hearty swing, loud",そりゃあ！,Take that!
+b_dokka_attack_3,b_dokka,attack,written,给我碎！,"old-fashioned command, crushing blow",砕けい！,Crumble!
+b_dokka_bigtech_1,b_dokka,bigtech,written,比铁还硬？让我试试！,"gruff challenge with relish, loud",鉄より硬いか、試してやる！,"Harder than iron, are ye? We'll see!"
+b_dokka_bigtech_2,b_dokka,bigtech,written,连岩石都能劈开的一击！,"proud craftsman's boast, booming",岩をも割る一撃じゃ！,A blow that splits stone!
+b_dokka_hurt_1,b_dokka,hurt,reuse,,stubborn low grunt,ぬうっ！,Grr!
+b_dokka_hurt_2,b_dokka,hurt,written,这算什么！,"brushing off the hit, tough",なんの！,That's nothing!
+b_dokka_ko_1,b_dokka,ko,written,不甘心啊……,"collapsing, heavy regret, fading",無念……じゃ……,Blast... it all...
+b_dokka_spell_1,b_dokka,spell,written,大地啊，回应我！,rumbling old-fashioned call to the earth,大地よ、応えい！,"Earth, answer me!"
+b_dokka_victory_1,b_dokka,victory,written,嗯，出了一身好汗啊。,"satisfied old smith, chuckling",ふむ、いい汗をかいたわい。,"Hmm. Worked up a good sweat, that did."
+b_ferno_attack_1,b_ferno,attack,written,喏，这儿！,"light-hearted bard, airy",それっ！,And there!
+b_ferno_attack_2,b_ferno,attack,written,嘿，轻轻松松！,"casual, playful",ほいっと！,Easy does it!
+b_ferno_attack_3,b_ferno,attack,written,来一曲吧！,"cheerful, theatrical",一曲いこう！,Let's have a song!
+b_ferno_bigtech_1,b_ferno,bigtech,written,英雄史诗的一节，献给你！,"theatrical, grand declamation",英雄譚の一節を、君に！,"A verse from a hero's tale, just for you!"
+b_ferno_bigtech_2,b_ferno,bigtech,written,旋律啊，化作箭矢！,"lyrical, rising",旋律よ、矢となれ！,"Melody, become an arrow!"
+b_ferno_hurt_1,b_ferno,hurt,written,哎呀！,"surprised, light",おっと！,Whoops!
+b_ferno_hurt_2,b_ferno,hurt,written,好疼啊！,complaining playfully,痛いなあ！,"Ow, that hurts!"
+b_ferno_ko_1,b_ferno,ko,written,歌的……后半段……,"collapsing, wistful, fading",歌の……続きは……,The rest... of the song...
+b_ferno_spell_1,b_ferno,spell,written,古老的歌啊，回响吧！,"sonorous, melodic",古き歌よ、響け！,"Old song, resound!"
+b_ferno_victory_1,b_ferno,victory,written,打得真漂亮。可以写首歌了。,"pleased, inspired, warm",いい戦いだった。一曲書けそうだ。,A fine battle. I could write a song about it.
+b_hagen_attack_1,b_hagen,attack,reuse,,"rough heavy swing, gruff shout",おらぁ！,Raaah!
+b_hagen_attack_2,b_hagen,attack,reuse,,short heavy grunt with a big blow,ふんっ！,Hmph!
+b_hagen_attack_3,b_hagen,attack,written,给我让开！,"bellowing, barging through",どけぇ！,Out of my way!
+b_hagen_bigtech_1,b_hagen,bigtech,written,要加价了，拿好！,"wry grin, then a full-power swing, booming",割増料金だ、受け取れ！,This one costs extra — take it!
+b_hagen_bigtech_2,b_hagen,bigtech,written,一并收拾了！,"confident veteran, heavy and loud",まとめて片づける！,I'll take you all at once!
+b_hagen_hurt_1,b_hagen,hurt,reuse,,deep pained grunt,ぐおっ！,Oof!
+b_hagen_hurt_2,b_hagen,hurt,reuse,,"annoyed click of the tongue, hurt",ちっ……！,Damn...!
+b_hagen_ko_1,b_hagen,ko,written,这买卖……不划算……,"collapsing, bitter wry mutter, fading",割に……合わねえ……,Not... worth the pay...
+b_hagen_spell_1,b_hagen,spell,written,虽然不是我的风格！,"awkward about magic, gruff and a little embarrassed",柄じゃねえがな！,"Not my style, but fine!"
+b_hagen_victory_1,b_hagen,victory,written,好了，来谈谈我的那份吧。,"relaxed, smug, rubbing his hands about the pay",さて、取り分の話をしようか。,"Now then, let's talk about my cut."
+b_ilse_attack_1,b_ilse,attack,reuse,,"dreamy stargazer, soft cry",やっ。,Yah.
+b_ilse_attack_2,b_ilse,attack,written,拜托，打中吧。,"gentle, hopeful",当たって。,"Please, hit."
+b_ilse_attack_3,b_ilse,attack,written,是……那里吧。,"airy, slightly unsure",そこ、かな。,There... maybe.
+b_ilse_bigtech_1,b_ilse,bigtech,written,星辰的运行，站在我们这边。,mysterious calm smile,星の巡りは、こちらに味方。,The stars are on our side.
+b_ilse_bigtech_2,b_ilse,bigtech,written,有今晚的星星……能行。,"dreamy, then quietly sure",今夜の星なら……いける。,With tonight's stars... we can do it.
+b_ilse_hurt_1,b_ilse,hurt,reuse,,startled little cry,ひゃっ！,Eep!
+b_ilse_hurt_2,b_ilse,hurt,reuse,,soft whimper,うう……,Ooh...
+b_ilse_ko_1,b_ilse,ko,written,夜晚……明明……还没有结束……,"collapsing, sleepy and fading",まだ……夜は……明けないのに……,But the night... isn't over yet...
+b_ilse_spell_1,b_ilse,spell,written,星辰啊，请指引我。,"soft, reverent",星よ、導いて。,"Stars, guide me."
+b_ilse_victory_1,b_ilse,victory,written,是吉兆呢。……呼啊，好困。,"pleased, then a sleepy yawn",吉と出たわね。……ふわぁ、眠い。,"A good omen. ...Mm, so sleepy."
+b_marta_attack_1,b_marta,attack,written,你这家伙！,"brisk doctor, firm",このっ！,"Why, you!"
+b_marta_attack_2,b_marta,attack,written,就是那里！,decisive,そこよ！,There!
+b_marta_attack_3,b_marta,attack,written,不许乱动！,"stern, like to a patient",じっとして！,Hold still!
+b_marta_bigtech_1,b_marta,bigtech,written,我可不许你们乱来！,"strict and caring, strong",無茶はさせないわよ！,No reckless stunts on my watch!
+b_marta_bigtech_2,b_marta,bigtech,written,很快就好！,"efficient, confident",手早く済ませるわ！,I'll make this quick!
+b_marta_hurt_1,b_marta,hurt,reuse,,short hiss of pain,つっ……！,Ah...!
+b_marta_hurt_2,b_marta,hurt,written,没事，只是擦伤！,"brushing it off, professional",平気、かすり傷！,Just a scratch!
+b_marta_ko_1,b_marta,ko,written,谁……来帮我处理伤口……,"collapsing, fading",誰か……手当てを……,Someone... patch me up...
+b_marta_spell_1,b_marta,spell,written,治愈之水啊！,calm and warm,癒やしの水よ！,Waters of healing!
+b_marta_victory_1,b_marta,victory,written,好了，大家排好队。让我看看伤口。,"brisk, caring, a little bossy",はい、みんな並んで。傷を見せなさい。,"Alright, everyone line up. Show me your wounds."
+b_morga_attack_1,b_morga,attack,reuse,,"eerie graveyard witch, amused low chuckle",ふふっ。,Hehe.
+b_morga_attack_2,b_morga,attack,written,安心睡吧。,"soft, eerie, low",お眠り。,Sleep now.
+b_morga_attack_3,b_morga,attack,written,我要夺走哦。,"calm, sinister smile",奪うわよ。,I'll take it.
+b_morga_bigtech_1,b_morga,bigtech,written,你的力量，我就收下一点。,"silky, amused, eerie",その力、少しいただくわ。,I'll help myself to a little of that strength.
+b_morga_bigtech_2,b_morga,bigtech,written,黑暗，可是很温柔的哦？,"soft, teasing, slightly creepy",闇は、優しいのよ？,"The dark is kind, you know?"
+b_morga_hurt_1,b_morga,hurt,written,哎呀，好痛。,"unbothered, dry",あら、痛い。,"Oh my, ouch."
+b_morga_hurt_2,b_morga,hurt,written,……有两下子嘛。,"low, amused respect",……やるわね。,...Not bad.
+b_morga_ko_1,b_morga,ko,written,呵呵……轮到我了……吧……,"collapsing, faint wry laugh",ふふ……わたしの番……かしら……,Heh... is it my turn... then...
+b_morga_spell_1,b_morga,spell,written,黑暗的影子啊，来吧。,"low incantation, eerie",暗き影よ、おいで。,"Dark shadows, come to me."
+b_morga_victory_1,b_morga,victory,written,安静下来了呢。……需要墓地吗？,"dark humor, calm smile",静かになったわね。……お墓は要るかしら？,How quiet. ...Shall I dig a grave?
+b_noela_attack_1,b_noela,attack,reuse,,"young shrine maiden, earnest",えいやっ！,Hiyah!
+b_noela_attack_2,b_noela,attack,reuse,,"energetic, trying hard",とうっ！,Hup!
+b_noela_attack_3,b_noela,attack,written,请做好觉悟！,polite but determined,お覚悟を！,Prepare yourself!
+b_noela_bigtech_1,b_noela,bigtech,written,泉水之神啊，请赐予我力量！,"earnest prayer, rising",泉の神さま、お力を！,"Spirit of the spring, lend me your power!"
+b_noela_bigtech_2,b_noela,bigtech,written,我上了，全力以赴！,"eager, a bit flustered, loud",いきます、全力です！,"Here I go, full power!"
+b_noela_hurt_1,b_noela,hurt,reuse,,high startled cry,きゃあっ！,Eeek!
+b_noela_hurt_2,b_noela,hurt,reuse,,flustered,あわわっ！,"Eep, eep!"
+b_noela_ko_1,b_noela,ko,written,对不起……我已经……,"collapsing, apologetic",すみません……もう……,I'm sorry... I can't...
+b_noela_spell_1,b_noela,spell,written,光啊，守护大家！,"sincere, bright",光よ、みんなを！,"Light, protect everyone!"
+b_noela_victory_1,b_noela,victory,written,做到了！……咦，刚才那个是我吗？,"joyful, then surprised at herself",やりました！……あれ、今のわたしですか？,"We did it! ...Wait, was that me?"
+b_rouga_attack_1,b_rouga,attack,reuse,,"hot-blooded martial artist, energetic",おりゃあ！,Raaah!
+b_rouga_attack_2,b_rouga,attack,reuse,,sharp punch kiai,せいっ！,Hyah!
+b_rouga_attack_3,b_rouga,attack,reuse,,fast combo shout,でりゃっ！,Yaaah!
+b_rouga_bigtech_1,b_rouga,bigtech,written,热血沸腾起来了！,"fired up, thrilled, loud",燃えてきたぜ！,Now I'm fired up!
+b_rouga_bigtech_2,b_rouga,bigtech,written,把全部都押在这一拳上！,"all-out, passionate, powerful",この一撃に、全部のせる！,"Everything I've got, in this one punch!"
+b_rouga_hurt_1,b_rouga,hurt,reuse,,winded grunt,ぐはっ！,Gah!
+b_rouga_hurt_2,b_rouga,hurt,written,根本不痛！,"grinning through the pain, defiant",効かねえ！,Didn't even feel it!
+b_rouga_ko_1,b_rouga,ko,written,我明明……还能……战斗……,"collapsing, frustrated, fading",まだ……やれる……のに……,I can... still... fight...
+b_rouga_spell_1,b_rouga,spell,written,拼上气势啦！,forcing magic out with sheer spirit,気合いだぁっ！,Fighting spirit!
+b_rouga_victory_1,b_rouga,victory,written,太好了！下次要更强的对手！,"excited, pumped, eager",よっしゃあ！次はもっと強いやつだ！,Alright! Bring on someone stronger next!
+b_selma_attack_1,b_selma,attack,reuse,,crisp sharp breath-shout on a straight sword thrust,はっ！,Hah!
+b_selma_attack_2,b_selma,attack,reuse,,firm disciplined strike cry,せやっ！,Yah!
+b_selma_attack_3,b_selma,attack,written,休想通过！,"stepping forward to block the way, resolute",通さない！,You won't get through!
+b_selma_bigtech_1,b_selma,bigtech,written,这把剑，绝不弯折！,"proud and upright, full of conviction, ringing",この剣、曲げはしない！,This blade will never bend!
+b_selma_bigtech_2,b_selma,bigtech,written,正面斩断！,"steady focus then a decisive cut, strong",正面から、断つ！,Head-on — I'll cut through!
+b_selma_hurt_1,b_selma,hurt,reuse,,short clenched grunt of pain,くっ！,Ugh!
+b_selma_hurt_2,b_selma,hurt,written,还没……完！,"hurt but refusing to give ground, strained",まだっ……！,Not yet...!
+b_selma_ko_1,b_selma,ko,written,抱歉……我的岗位……,"collapsing, weak and regretful, fading",ごめん……持ち場を……,Sorry... my post...
+b_selma_spell_1,b_selma,spell,written,借我力量！,"calling on magic, earnest and clear",力を貸して！,Lend me your power!
+b_selma_victory_1,b_selma,victory,written,一切正常。继续前进吧。,"brisk report like a guard, a small satisfied smile",異常なし。先へ進みましょう。,All clear. Let's move on.
+b_shigure_attack_1,b_shigure,attack,reuse,,"quiet swordsman, sharp short exhale",ふっ！,Hah.
+b_shigure_attack_2,b_shigure,attack,written,太慢了。,"cool, low, almost bored",遅い。,Too slow.
+b_shigure_attack_3,b_shigure,attack,written,……在那。,"calm, low, precise",……そこ。,...There.
+b_shigure_bigtech_1,b_shigure,bigtech,written,……我听见了雨声。,"deep calm focus, quiet and low, then stillness",……雨の音が、聞こえる。,...I hear the rain.
+b_shigure_bigtech_2,b_shigure,bigtech,written,一刀，足矣。,"cold certainty, low and steady",一太刀で、足りる。,One stroke is enough.
+b_shigure_hurt_1,b_shigure,hurt,written,……大意了。,"low self-reproach, restrained pain",……ぬかった。,...Careless.
+b_shigure_hurt_2,b_shigure,hurt,written,太浅了。,"unshaken, dismissing the wound",浅い。,Shallow.
+b_shigure_ko_1,b_shigure,ko,written,疏忽了……,"collapsing, a single low word",不覚……,A blunder...
+b_shigure_spell_1,b_shigure,spell,written,散开。,short low command,散れ。,Scatter.
+b_shigure_victory_1,b_shigure,victory,written,……不堪一击。,"quiet, sheathing his blade, cool",……他愛ない。,...Trivial.
+b_sylvain_attack_1,b_sylvain,attack,written,射穿你。,"ageless forest archer, calm and clear",射抜く。,Pierce.
+b_sylvain_attack_2,b_sylvain,attack,written,我在读风。,"quiet, measured",風を読む。,I read the wind.
+b_sylvain_attack_3,b_sylvain,attack,written,……就是这里。,"soft, precise",……ここだ。,...Here.
+b_sylvain_bigtech_1,b_sylvain,bigtech,written,百年之弓，你且一试。,"serene pride, calm authority",百年の弓、受けてみよ。,Face a bow of a hundred years.
+b_sylvain_bigtech_2,b_sylvain,bigtech,written,森林之风啊，寄宿于箭。,"gentle incantation, clear and airy",森の風よ、矢に宿れ。,"Forest wind, dwell in my arrow."
+b_sylvain_hurt_1,b_sylvain,hurt,reuse,,restrained soft grunt,む……っ,Hm...!
+b_sylvain_hurt_2,b_sylvain,hurt,written,稍微，有点痛。,calm understatement,少し、効いた。,"That stung, a little."
+b_sylvain_ko_1,b_sylvain,ko,written,要回归……森林了吗……,"collapsing, quiet wonder, fading",森へ……還る……のか……,So I return... to the forest...
+b_sylvain_spell_1,b_sylvain,spell,written,森林啊，苏醒吧。,"calm, resonant",森よ、目覚めよ。,"Forest, awaken."
+b_sylvain_victory_1,b_sylvain,victory,written,安静下来了。……果然，这样更好。,"peaceful, relieved at the quiet",静かになったな。……やはり、この方がいい。,"It's quiet now. ...Yes, this is better."
+b_teo_attack_1,b_teo,attack,reuse,,"cocky young boy, energetic",とりゃっ！,Hiyah!
+b_teo_attack_2,b_teo,attack,written,给我中！,eager boy,当たれ！,Hit it!
+b_teo_attack_3,b_teo,attack,written,上啊！,excited boy,いっけー！,Gooo!
+b_teo_bigtech_1,b_teo,bigtech,written,看到了吗，天才的实力！,"boastful young boy, very excited",見たか、天才の実力！,See that? That's genius!
+b_teo_bigtech_2,b_teo,bigtech,written,完全照教科书，完美！,"smug, proud little genius",教科書どおり、完璧！,By the book — perfect!
+b_teo_hurt_1,b_teo,hurt,written,好痛！,boy's yelp,いてっ！,Ow!
+b_teo_hurt_2,b_teo,hurt,reuse,,boy's startled cry,うわあっ！,Waaah!
+b_teo_ko_1,b_teo,ko,written,这种东西……没学过……,"collapsing, whining, fading",こんなの……習って……ない……,They never... taught us... this...
+b_teo_spell_1,b_teo,spell,written,烧起来吧！,excited boy casting fire,燃えちゃえ！,Burn up!
+b_teo_victory_1,b_teo,victory,written,哼哼，你们能有我这个天才真是走运呢！,"smug little boy, cheerful",ふふん、ぼくが天才でよかったね！,"Heh, lucky for you I'm a genius!"
+b_titta_attack_1,b_titta,attack,written,我先拿了！,"cheeky street kid, quick and playful",もらいっ！,Mine!
+b_titta_attack_2,b_titta,attack,written,有空子！,"nimble, teasing",すきあり！,Gotcha!
+b_titta_attack_3,b_titta,attack,reuse,,light quick stab,ていっ！,Yah!
+b_titta_bigtech_1,b_titta,bigtech,written,我看见了，你的破绽！,"sly grin, confident, quick",見えてるよ、そのすき！,I see that opening!
+b_titta_bigtech_2,b_titta,bigtech,written,小菜一碟，小菜一碟！,cocky and playful,ちょろいちょろい！,Easy-peasy!
+b_titta_hurt_1,b_titta,hurt,written,疼死啦！,young girl's pained yelp,いったぁ！,Owww!
+b_titta_hurt_2,b_titta,hurt,reuse,,startled cry,うわっ！,Whoa!
+b_titta_ko_1,b_titta,ko,written,太狡猾了……真是的……,"collapsing, sulky and weak",ずるいよ……もう……,No fair... seriously...
+b_titta_spell_1,b_titta,spell,written,哎呀，快灵吧！,"not good at magic, trying anyway, energetic",えーい、なんとかなれ！,"Ugh, just work already!"
+b_titta_victory_1,b_titta,victory,written,太棒了！战利品，战利品！,"gleeful, bouncing, greedy for loot",やった！戦利品、戦利品っと！,"Yes! Loot time, loot time!"
+b_viola_attack_1,b_viola,attack,reuse,,"elegant fencer, crisp high cry",やあっ！,Yah!
+b_viola_attack_2,b_viola,attack,written,退下！,haughty noble command,下がりなさい！,Stand back!
+b_viola_attack_3,b_viola,attack,written,优雅地！,"light and graceful, confident",優雅に！,With elegance!
+b_viola_bigtech_1,b_viola,bigtech,written,火焰啊，风啊，为我起舞！,"noble lady commanding flame and wind, grand",炎よ、風よ、舞いなさい！,Flame! Wind! Dance for me!
+b_viola_bigtech_2,b_viola,bigtech,written,好好欣赏吧！,"proud, showing off, dazzling",とくとご覧なさい！,Feast your eyes!
+b_viola_hurt_1,b_viola,hurt,reuse,,short sharp startled cry,きゃっ！,Eek!
+b_viola_hurt_2,b_viola,hurt,written,无礼之徒！,"indignant, offended by the hit",無礼者っ！,How rude!
+b_viola_ko_1,b_viola,ko,written,这样……太难看了……,"collapsing, wounded pride, fading",こんな……無様な……,How... unsightly...
+b_viola_spell_1,b_viola,spell,written,风啊，听从我！,"aristocratic command, cool",風よ、従いなさい！,"Wind, obey me!"
+b_viola_victory_1,b_viola,victory,written,理所当然。衣服……没事吧。,"haughty, then checking her clothes with worry",当然ね。服は……無事かしら。,"Naturally. Now, is my dress... still intact?"
+b_zafira_attack_1,b_zafira,attack,written,嘿，来啦！,"dancer, light rhythmic cry",はいっ！,Hup!
+b_zafira_attack_2,b_zafira,attack,written,踏步！,"playful, on the beat",ステップ！,Step!
+b_zafira_attack_3,b_zafira,attack,written,来呀来呀！,"teasing, spinning",ほらほらっ！,"Come on, come on!"
+b_zafira_bigtech_1,b_zafira,bigtech,written,来吧，一起跳舞吧！,"alluring, playful invitation, lively",さあ、踊りましょ！,"Come on, let's dance!"
+b_zafira_bigtech_2,b_zafira,bigtech,written,光顾着看可以吗？,"teasing smirk, confident",見とれてる場合？,Too busy staring?
+b_zafira_hurt_1,b_zafira,hurt,written,好痛！,short sharp yelp,痛っ！,Ow!
+b_zafira_hurt_2,b_zafira,hurt,written,真是的！,annoyed pout,もうっ！,"Ugh, really!"
+b_zafira_ko_1,b_zafira,ko,written,我想……跳到最后……,"collapsing, wistful, fading",最後まで……踊りたかった……,I wanted to dance... to the end...
+b_zafira_spell_1,b_zafira,spell,written,只要起舞，就能传达！,"graceful, singing tone",舞えば、届くわ！,"If I dance, it will reach!"
+b_zafira_victory_1,b_zafira,victory,written,不用鼓掌。不过闪闪发光的东西，我很欢迎。,"playful bow, cheeky smile",拍手はいらないわ。光る物なら歓迎よ。,"No applause needed. Shiny things, though, are welcome."
+bv_armorman_defeat_1,boss_b_armorman,defeat,i18n:bossVoice.bv_armorman_defeat_1#0,铠甲……好重……。,"toppling over, a comic heavy groan",鎧が……重い……。,This armor... so heavy...
+bv_armorman_enrage_1,boss_b_armorman,enrage,i18n:bossVoice.bv_armorman_enrage_1#0,咕呜……还挺有本事嘛！,"hurt but delighted, booming",ぐぬう……やるではないか！,Grr... not bad at all!
+bv_armorman_start_1,boss_b_armorman,start,i18n:bossVoice.bv_armorman_start_1#0,咕哈哈！这身铠甲，你打得破吗？,"a huge armoured man laughing inside his helmet, boastful",ぐはは！この鎧、破れるか？,Gwahaha! Think you can break this armor?
+bv_armorman_ult_1,boss_b_armorman,ult,i18n:bossVoice.bv_armorman_ult_1#0,飞出去吧！,"charging with his shield, a huge shout",ぶっ飛べぇ！,Fly!
+bv_captain_defeat_1,boss_b_captain,defeat,i18n:bossVoice.bv_captain_defeat_1#0,我……要回到……哪里去……。,"sinking down, lost and sad, fading",おれは……どこへ、帰るんだった……。,Where was I... going home to...?
+bv_captain_enrage_1,boss_b_captain,enrage,i18n:bossVoice.bv_captain_enrage_1#0,我得回去……别挡路！,"desperate and furious, clinging to the one thing he remembers",帰るんだ……邪魔をするな！,I have to get home... out of my way!
+bv_captain_start_1,boss_b_captain,start,i18n:bossVoice.bv_captain_start_1#0,从我的船上滚出去！,a confused ghost captain roaring at intruders on his ship,おれの船から、出ていけ！,Get off my ship!
+bv_captain_ult_1,boss_b_captain,ult,i18n:bossVoice.bv_captain_ult_1#0,开炮，开炮！,"bellowing a fire order to a ghost crew, wild",撃て、撃てぇ！,Fire! Fire at will!
+bv_frost_admiral_defeat_1,boss_b_frost_admiral,defeat,i18n:bossVoice.bv_frost_admiral_defeat_1#0,终究……没赶上冬至吗……。,"thawing and fading; old-fashioned, sad and gentle",冬至には……間に合わなんだか……。,"Not in time... for the solstice, then..."
+bv_frost_admiral_enrage_1,boss_b_frost_admiral,enrage,i18n:bossVoice.bv_frost_admiral_enrage_1#0,要回去……回港口……！,the ice cracking off; desperate longing turned to fury,帰るのだ……港へ……！,We go home... to port...!
+bv_frost_admiral_start_1,boss_b_frost_admiral,start,i18n:bossVoice.bv_frost_admiral_start_1#0,全员，各就各位！,a frozen ghost admiral barking orders to a dead crew,総員、配置につけ！,"All hands, to your stations!"
+bv_frost_admiral_ult_1,boss_b_frost_admiral,ult,i18n:bossVoice.bv_frost_admiral_ult_1#0,开始炮击！,"a formal naval fire order, ringing",撃ち方、始め！,Commence firing!
+bv_hawk_chief_defeat_1,boss_b_hawk_chief,defeat,i18n:bossVoice.bv_hawk_chief_defeat_1#0,……可恶，到此为止了吗。,"beaten, bitter and tired",……くそ、ここまでか。,...Damn. So this is it.
+bv_hawk_chief_enrage_1,boss_b_hawk_chief,enrage,i18n:bossVoice.bv_hawk_chief_enrage_1#0,……有意思。还算有点骨气。,"a soldier's grim interest, tightening his grip",……面白い。少しは骨がある。,...Interesting. You've got some backbone.
+bv_hawk_chief_start_1,boss_b_hawk_chief,start,i18n:bossVoice.bv_hawk_chief_start_1#0,在沙地上，别想赢过鹰。,"masked bandit chief, low quiet menace",砂の上で、鷹に勝てると思うな。,"On the sand, don't think you can beat a hawk."
+bv_hawk_chief_ult_1,boss_b_hawk_chief,ult,i18n:bossVoice.bv_hawk_chief_ult_1#0,被沙子吞没吧！,"kicking up a sandstorm, fierce shout",砂に、のまれろ！,Be swallowed by the sand!
+bv_icegiant_defeat_1,boss_b_icegiant,defeat,i18n:bossVoice.bv_icegiant_defeat_1#0,没能……守住……山峰……。,"toppling over, a slow heavy dying groan, old-fashioned speech",峰を……守れ、なんだ……。,Could not... guard... the peak...
+bv_icegiant_enrage_1,boss_b_icegiant,enrage,i18n:bossVoice.bv_icegiant_enrage_1#0,唔唔……不可饶恕……！,deep growl swelling into fury,ぬうう……許さぬ……！,Nngh... I will not forgive...!
+bv_icegiant_start_1,boss_b_icegiant,start,i18n:bossVoice.bv_icegiant_start_1#0,践踏山峰之人，碾碎……。,"slow menacing rumble, an ice wall standing up",峰を荒らす者は、つぶす……。,Those who trample the peak... I crush...
+bv_icegiant_ult_1,boss_b_icegiant,ult,i18n:bossVoice.bv_icegiant_ult_1#0,被雪……掩埋吧……！,"tearing down the snow wall; heavy, crushing command",雪に、埋もれよ……！,Be buried... in the snow...!
+bv_ironwarden_defeat_1,boss_b_ironwarden,defeat,i18n:bossVoice.bv_ironwarden_defeat_1#0,锻冶神啊……那约定……。,"grinding to a halt, a faithful old machine's last words",鍛冶神よ……約束は……。,Smith God... our pact...
+bv_ironwarden_enrage_1,boss_b_ironwarden,enrage,i18n:bossVoice.bv_ironwarden_enrage_1#0,熔炉啊，燃起来。,"his furnace heart flaring; a low command, heat rising",炉よ、燃え上がれ。,"Forge, burn high."
+bv_ironwarden_start_1,boss_b_ironwarden,start,i18n:bossVoice.bv_ironwarden_start_1#0,无誓之人，吾必击碎。,"an ancient iron guardian pronouncing a sentence; slow, stern, metallic",誓いなき者は、打ち砕く。,"Those without an oath, I shall shatter."
+bv_ironwarden_ult_1,boss_b_ironwarden,ult,i18n:bossVoice.bv_ironwarden_ult_1#0,碎裂吧。,one heavy word as the anvil arm falls,砕けよ。,Shatter.
+bv_lazaro_defeat_1,boss_b_lazaro,defeat,i18n:bossVoice.bv_lazaro_defeat_1#0,米拉……我……。,"falling to his knees, calling his lost daughter's name, broken",ミラ……わたしは……。,Mira... I...
+bv_lazaro_enrage_1,boss_b_lazaro,enrage,i18n:bossVoice.bv_lazaro_enrage_1#0,为什么……不肯让我遗忘！,the calm breaking; grief and anger rising,なぜ……忘れさせてくれないのです！,Why... won't you let me forget!
+bv_lazaro_start_1,boss_b_lazaro,start,i18n:bossVoice.bv_lazaro_start_1#0,让我静静地为你们画上句点吧。,"polite, chillingly calm, like a kind teacher",静かに、終わらせてあげましょう。,Let me end this quietly for you.
+bv_lazaro_ult_1,boss_b_lazaro,ult,i18n:bossVoice.bv_lazaro_ult_1#0,这一行，不需要。,"cold and quiet, erasing a line with his red pen",この行は、いらない。,This line is unnecessary.
+bv_lazaro_ult_2,boss_b_lazaro,ult,i18n:bossVoice.bv_lazaro_ult_2#0,我来改写我的记录。,"calm and precise, rewriting his own page",わたしの記録を、書き直します。,I shall rewrite my record.
+bv_mistbeast_defeat_1,boss_b_mistbeast,defeat,i18n:bossVoice.bv_mistbeast_defeat_1#0,……钟……的……声音……。,"dissolving into the bog at the sound of a bell; a fading, frightened rasp",……カネ……ノ……オト……。,...The... bell's... sound...
+bv_mistbeast_enrage_1,boss_b_mistbeast,enrage,i18n:bossVoice.bv_mistbeast_enrage_1#0,……不放……不放你们回去……！,"the mask slipping; hissing, greedy, getting louder",……カエサナイ……カエサナイ……！,...Won't let you go... won't let you go...!
+bv_mistbeast_start_1,boss_b_mistbeast,start,i18n:bossVoice.bv_mistbeast_start_1#0,……一起……在雾里……玩吧……。,a broken imitation of a kind woman luring children; eerie sing-song whisper,……アソボウ……キリノ……ナカデ……。,...Let's... play... in the... mist...
+bv_nemrea1_defeat_1,boss_b_nemrea1,defeat,i18n:bossVoice.bv_nemrea1_defeat_1#0,这具躯壳……已无用处。,"discarding the body it had taken; cold, unbroken",この器は……もう、いらぬ。,This vessel... I need it no longer.
+bv_nemrea1_enrage_1,boss_b_nemrea1,enrage,i18n:bossVoice.bv_nemrea1_enrage_1#0,为何……不消失……！,the vast voice shaking with fury for the first time,なぜ……消えぬ……！,Why... do you not vanish...!
+bv_nemrea1_start_1,boss_b_nemrea1,start,i18n:bossVoice.bv_nemrea1_start_1#0,莫要抵抗。遗忘了，便能解脱。,"primordial oblivion; vast, cold, contemptuous and slow",抗うな。忘れれば、楽になる。,"Do not resist. Forget, and be at ease."
+bv_nemrea1_ult_1,boss_b_nemrea1,ult,i18n:bossVoice.bv_nemrea1_ult_1#0,归于空白。,"an absolute command, heavy and final",白紙に還れ。,Return to the Blank.
+bv_nemrea2_defeat_1,boss_b_nemrea2,defeat,i18n:bossVoice.bv_nemrea2_defeat_1#0,……名字……好温暖……。,"falling asleep in wonder, very soft",……名前……あたたかい……。,...A name... it's warm...
+bv_nemrea2_enrage_1,boss_b_nemrea2,enrage,i18n:bossVoice.bv_nemrea2_enrage_1#0,为什么……不让我合上……。,sleepy whine turning into a sad tantrum,どうして……閉じさせてくれないの……。,Why... won't you let me close it...
+bv_nemrea2_start_1,boss_b_nemrea2,start,i18n:bossVoice.bv_nemrea2_start_1#0,……好困……。合上吧……。,"sleepy and childlike, unsettlingly gentle",……眠い……。もう、閉じようよ……。,...So sleepy... Let's close it now...
+bv_nemrea2_ult_1,boss_b_nemrea2,ult,i18n:bossVoice.bv_nemrea2_ult_1#0,这个人的故事，就到这里。,closing a book like putting a child to bed; soft and terrible,この人の話は、ここでおしまい。,This one's story ends here.
+bv_nemrea2_ult_2,boss_b_nemrea2,ult,i18n:bossVoice.bv_nemrea2_ult_2#0,八个传说，也归于空白……。,"dreamy and slow, letting the legends go",八つの伝承も、白紙に……。,"The eight legends, too... to the Blank..."
+bv_nemrea2_ult_3,boss_b_nemrea2,ult,i18n:bossVoice.bv_nemrea2_ult_3#0,把我……改写……。,"murmuring, half asleep, rewriting itself",わたしを……書き直す……。,Rewriting... myself...
+bv_orrery_defeat_1,boss_b_orrery,defeat,i18n:bossVoice.bv_orrery_defeat_1#0,……星之名……想不……起来……。,"winding down, syllables slowing and dropping in pitch",……ホシノナ……オモイダセ……ナイ……。,...Star names... cannot... recall...
+bv_orrery_enrage_1,boss_b_orrery,enrage,i18n:bossVoice.bv_orrery_enrage_1#0,……警戒，最大……。,"mechanical alarm, faster and harsher syllables",……ケイカイ、サイダイ……。,"...Alert level, maximum..."
+bv_orrery_start_1,boss_b_orrery,start,i18n:bossVoice.bv_orrery_start_1#0,……入侵者，排除……。,a broken star-orrery automaton; flat mechanical syllables,……シンニュウシャ、ハイジョ……。,...Intruder. Eliminate...
+bv_orrery_ult_1,boss_b_orrery,ult,i18n:bossVoice.bv_orrery_ult_1#0,……日食，开始……。,cold mechanical announcement of an eclipse,……ニッショク、カイシ……。,"...Eclipse, commencing..."
+bv_ouroboros_defeat_1,boss_b_ouroboros,defeat,i18n:bossVoice.bv_ouroboros_defeat_1#0,没有……不终结的故事吗……。,"uncoiling and fading; quiet, almost wistful",終わらぬ物語など……ない、か……。,"No story... is without end, then..."
+bv_ouroboros_enrage_1,boss_b_ouroboros,enrage,i18n:bossVoice.bv_ouroboros_enrage_1#0,休想……解开这圆环！,"the ring loosening; furious, booming",輪を……ほどかせはせぬ！,I will not... let the ring come undone!
+bv_ouroboros_start_1,boss_b_ouroboros,start,i18n:bossVoice.bv_ouroboros_start_1#0,你们的结局，我就收下了。,"an ancient ring dragon that eats the ends of stories; vast, amused, hungry",おまえたちの結末、いただこう。,Your endings... I'll be having those.
+bv_ouroboros_ult_1,boss_b_ouroboros,ult,i18n:bossVoice.bv_ouroboros_ult_1#0,圆环的终结。,"final and heavy, savouring it",輪の終わりだ。,The ring's end.
+bv_ouroboros_ult_2,boss_b_ouroboros,ult,i18n:bossVoice.bv_ouroboros_ult_2#0,时间啊，倒流吧。,"calm, ancient command over time",時よ、戻れ。,"Time, turn back."
+bv_ouroboros_ult_3,boss_b_ouroboros,ult,i18n:bossVoice.bv_ouroboros_ult_3#0,吾之尾，化为力量吧。,"devouring its own tail, a deep satisfied rumble",わが尾よ、力となれ。,"My tail, become my strength."
+bv_rowell1_defeat_1,boss_b_rowell1,defeat,i18n:bossVoice.bv_rowell1_defeat_1#0,怎么可能……我竟然被压制……？,"stumbling back, shocked and offended",ばかな……おれが、押し負ける……？,Impossible... I'm being pushed back...?
+bv_rowell1_enrage_1,boss_b_rowell1,enrage,i18n:bossVoice.bv_rowell1_enrage_1#0,……看来，你还有两下子。,"annoyed, getting serious, a thin sarcastic edge",……少しは、やるようだな。,...So you can fight a little.
+bv_rowell1_start_1,boss_b_rowell1,start,i18n:bossVoice.bv_rowell1_start_1#0,身为记录官，我不会手下留情。,"cool and proud, drawing his silver pen like a rapier",記録官として、手加減はしない。,"As a Recorder, I won't hold back."
+bv_rowell1_ult_1,boss_b_rowell1,ult,i18n:bossVoice.bv_rowell1_ult_1#0,这一行，就此终结！,"a decisive strike, sharp and confident",この一行で、終わりだ！,This one line ends it!
+bv_rowell2_defeat_1,boss_b_rowell2,defeat,i18n:bossVoice.bv_rowell2_defeat_1#0,……为什么……。,"beaten, breathless and lost, quiet",……どうして、だ……。,...Why...?
+bv_rowell2_enrage_1,boss_b_rowell2,enrage,i18n:bossVoice.bv_rowell2_enrage_1#0,我……不能输！,"pushing away his doubt with a shout, strained",おれは……負けられないんだ！,I... can't afford to lose!
+bv_rowell2_start_1,boss_b_rowell2,start,i18n:bossVoice.bv_rowell2_start_1#0,上吧，讲述者！,"no hesitation this time, fierce and determined",行くぞ、語り部！,"Here I come, Storyteller!"
+bv_rowell2_ult_1,boss_b_rowell2,ult,i18n:bossVoice.bv_rowell2_ult_1#0,抹消！,"striking out a line with all his strength, sharp",抹消する！,Struck from the record!
+bv_sandking_defeat_1,boss_b_sandking,defeat,i18n:bossVoice.bv_sandking_defeat_1#0,我的名字……在哪里……。,"collapsing, sand pouring out; lost and pitiful, fading",わが名は……どこに……。,My name... where is it...?
+bv_sandking_enrage_1,boss_b_sandking,enrage,i18n:bossVoice.bv_sandking_enrage_1#0,还来……把我的名字还来！,"bandages coming loose, rage and anguish breaking out; hoarse shout at the end",返せ……わが名を、返せ！,Give it back... give me back my name!
+bv_sandking_start_1,boss_b_sandking,start,i18n:bossVoice.bv_sandking_start_1#0,有名之人……归于沙尘吧。,"a mad nameless king rising from his throne; hollow, hostile, slow and dry",名を持つ者よ……砂に還れ。,You who bear names... return to the sand.
+bv_sandking_ult_1,boss_b_sandking,ult,i18n:bossVoice.bv_sandking_ult_1#0,接受沙之审判吧！,"raising his sand staff, a royal judgement pronounced with terrible authority",砂の審判を受けよ！,Receive the judgment of the sands!
+bv_shade_prayer_defeat_1,boss_b_shade_prayer,defeat,i18n:bossVoice.bv_shade_prayer_defeat_1#0,……谢谢……。,"a soft grateful whisper, fading into light",……ありがとう……。,...Thank you...
+bv_shade_prayer_enrage_1,boss_b_shade_prayer,enrage,i18n:bossVoice.bv_shade_prayer_enrage_1#0,祈祷……不会断绝……！,a temple maiden's shadow; gentle but unyielding prayer,祈りは……絶えません……！,My prayers... will not end...!
+bv_shade_star_defeat_1,boss_b_shade_star,defeat,i18n:bossVoice.bv_shade_star_defeat_1#0,……你们，还记得啊……。,"surprised and happy, fading into light",……覚えていて、くれたのね……。,...You remembered us...
+bv_shade_star_enrage_1,boss_b_shade_star,enrage,i18n:bossVoice.bv_shade_star_enrage_1#0,我们的名字……请呼唤……！,"a mage girl's shadow pleading, almost crying",わたしたちの名を……呼んで……！,Our names... call them...!
+bv_shade_sword_defeat_1,boss_b_shade_sword,defeat,i18n:bossVoice.bv_shade_sword_defeat_1#0,……终于，能安眠了……。,"relieved, fading into light",……ようやく、眠れる……。,"...At last, I can sleep..."
+bv_shade_sword_enrage_1,boss_b_shade_sword,enrage,i18n:bossVoice.bv_shade_sword_enrage_1#0,我还……不能倒下……！,"a hero's stubborn will, echoing from far away",まだ……倒れるわけには……！,I can't... fall yet...!
+bv_shade_sword_start_1,boss_b_shade_sword,start,i18n:bossVoice.bv_shade_sword_start_1#0,……魔王，在哪里……。,"a white shadow of a legendary swordsman; distant, dreamlike, searching",……魔王は、どこだ……。,...Where is the Demon Lord...?
+bv_sister_elder_defeat_1,boss_b_sister_elder,defeat,i18n:bossVoice.bv_sister_elder_defeat_1#0,……到此为止了呢。,"kneeling, graceful acceptance, a small sigh",……ここまで、ね。,...This is as far as we go.
+bv_sister_elder_enrage_1,boss_b_sister_elder,enrage,i18n:bossVoice.bv_sister_elder_enrage_1#0,澄，别大意！,"sharp and focused, calling to her younger sister",スミ、気を抜かないで！,"Cinda, stay focused!"
+bv_sister_elder_start_1,boss_b_sister_elder,start,i18n:bossVoice.bv_sister_elder_start_1#0,接下姐妹之火吧。,"composed elder sister mage, elegant challenge",姉妹の火、受けてごらんなさい。,Take the fire of the sisters.
+bv_tamer_defeat_1,boss_b_tamer,defeat,i18n:bossVoice.bv_tamer_defeat_1#0,……认输了。好身手。,"good loser, out of breath, a sporting laugh",……参った。いい腕だ。,...I give. Good arm you've got.
+bv_tamer_enrage_1,boss_b_tamer,enrage,i18n:bossVoice.bv_tamer_enrage_1#0,来真的了，你们！,"grinning, getting serious, rallying his beasts",本気で行くぞ、おまえら！,"Time to get serious, you lot!"
+bv_tamer_start_1,boss_b_tamer,start,i18n:bossVoice.bv_tamer_start_1#0,上吧，伙伴们！,a cheerful arena beast tamer whistling his beasts forward,行くぜ、相棒たち！,"Let's go, partners!"
+bv_valzard_echo_defeat_1,boss_b_valzard_echo,defeat,i18n:bossVoice.bv_valzard_echo_defeat_1#0,被遗忘……恐惧，也将消散……。,"dissolving, almost relieved, fading echo",忘れられ……恐れも、消える……。,"Forgotten... the fear, too, fades..."
+bv_valzard_echo_enrage_1,boss_b_valzard_echo,enrage,i18n:bossVoice.bv_valzard_echo_enrage_1#0,光之……纹章……！,recognising the crest that once destroyed him; dread and rage,光の……紋章……！,The crest... of light...!
+bv_valzard_echo_start_1,boss_b_valzard_echo,start,i18n:bossVoice.bv_valzard_echo_start_1#0,恐惧吧。那便是吾的全部。,"the echo of a demon lord; deep, slow, weary dread",恐れよ。それが、われのすべてだ。,Fear me. That is all I am.
+bv_valzard_echo_ult_1,boss_b_valzard_echo,ult,i18n:bossVoice.bv_valzard_echo_ult_1#0,沉入绝望吧！,a crushing roar of despair,絶望に、沈め！,Sink into despair!
+bv_whitedragon_defeat_1,boss_b_whitedragon,defeat,i18n:bossVoice.bv_whitedragon_defeat_1#0,我……一直在守护什么……？,"kneeling, the frost leaving her voice; bewildered, almost gentle",わたしは……何を守っていた……？,What was I... protecting...?
+bv_whitedragon_enrage_1,boss_b_whitedragon,enrage,i18n:bossVoice.bv_whitedragon_enrage_1#0,这胸口的痛……是什么……！,the ice in her chest cracking; confused pain turning into rage,この胸の痛みは……何だ……！,This pain in my chest... what is it...!
+bv_whitedragon_start_1,boss_b_whitedragon,start,i18n:bossVoice.bv_whitedragon_start_1#0,冻结吧。一切都是。,"cold majestic dragon, contempt and grief frozen together; low and resonant",凍てつくがよい。何もかも。,Freeze. All of it.
+bv_whitedragon_ult_1,boss_b_whitedragon,ult,i18n:bossVoice.bv_whitedragon_ult_1#0,冰河啊，落下吧！,"calling down a glacier from the sky; grand, commanding",氷河よ、落ちよ！,"Glacier, fall!"
+bv_zakuro_defeat_1,boss_b_zakuro,defeat,i18n:bossVoice.bv_zakuro_defeat_1#0,……漂亮。是我输了。,"lowering his sword, honest respect, calm",……見事だ。おれの負けだ。,...Well done. I lose.
+bv_zakuro_enrage_1,boss_b_zakuro,enrage,i18n:bossVoice.bv_zakuro_enrage_1#0,……接下来，我要动真格了。,drawing his second sword; quiet and dangerous,……ここからは、本気で行く。,"...From here on, I'm serious."
+bv_zakuro_start_1,boss_b_zakuro,start,i18n:bossVoice.bv_zakuro_start_1#0,我不会手下留情。上了。,"laconic hired fighter, hand on his sword hilt; low and blunt",手は抜かねえ。行くぞ。,I don't hold back. Here I come.
+bv_zakuro_ult_1,boss_b_zakuro,ult,i18n:bossVoice.bv_zakuro_ult_1#0,先从治疗者开始。,cold professional judgement before a quick-draw strike,まずは癒やし手からだ。,Healers first.
+v_berna_depart_01,berna,story,i18n:ev.pharos_story.pharos_departure.run.say_8#0,传闻总是聚在酒馆里。先去港口的酒馆问问看吧。,"cheerful advice, a knowing smile",うわさは酒場に集まるものさ。まずは港の酒場で聞いてごらん。,Rumors gather in taverns. Start by asking around at the harbor tavern.
+v_berna_depart_02,berna,story,i18n:ev.pharos_story.pharos_departure.run.say_10#0,我回村子去了。……路上小心……,"warm farewell; after ""take care"" she starts to say the apprentice's name and cannot find it: the line trails off unfinished, a tiny stall",わたしは里へ帰るよ。……いってらっしゃい、,I'll head back to the village. ...Off you go...
+v_berna_ending_01,berna,story,i18n:events.final_ending.say_14#0,这是，一位讲述者的故事。,"Classic storytelling, nostalgic warmth, lyrical steady pace, comforting medium volume.",これは、ある語り部の物語。,This is the story of a storyteller.
+v_berna_ending_02,berna,story,i18n:events.final_ending.say_17#0,当然有啦。有一个三位勇者打倒魔王的故事呢。,"Fond reassurance, playful twinkle, relaxed melodic pace, warm gentle volume.",あるとも。三人の勇者が、魔王を倒したお話がね。,There are indeed. The tale of three heroes who defeated a Demon King.
+v_berna_ending_03,berna,story,i18n:events.final_ending.say_20#0,那是，另一个故事了。,"Fairy-tale cadence, gentle closure, trailing slow pace, soft fading volume.",それは、また別のお話。,That's another story.
+v_berna_intro_01,berna,story,i18n:ev.prologue_roa.roa_house_intro.run.say_4#0,……嗯，好名字。,"after hearing the new apprentice's name: a short, clear, affirmative ""yes"" (not a hesitant hmm), then warm fond approval like a grandmother, a small smile in the voice",……うん、いい名前だ。,"...Yes, a fine name."
+v_berna_lute_01,berna,story,i18n:ev.pharos_story.pharos_departure.run.say_3#0,这是你的编年史。每个讲述者，都会带着自己的编年史踏上旅途。,"Reverent presentation, warm encouragement, measured pace, steady supportive volume.",これは、あなたの年代記だよ。語り部はみんな、自分の年代記を持って旅に出るんだ。,This is your Chronicle. Every storyteller sets out with a Chronicle of their own.
+v_berna_lute_02,berna,story,i18n:ev.pharos_story.pharos_departure.run.say_4#0,还有，把这些也带上。讲述者的羽毛笔，和归途之铃。,"Caring provision, nurturing warmth, pleasant unhurried pace, soft bright volume.",それから、これもお持ち。語り部の羽ペンと、帰り道の鈴だよ。,"And take these, too. A storyteller's quill, and a bell for the road home."
+v_berna_lute_03,berna,story,i18n:ev.pharos_story.pharos_departure.run.say_6#0,这片大陆上，有八个伟大的传说。如今，它们全都快要变成空白了。,"Serious gravity, mentor's concern, deliberate pace, lowered solemn volume.",この大陸には八つの大きな伝承がある。その全部が、いま白紙になりかけている。,This continent has eight great tales. Every one of them is going blank.
+v_berna_lute_04,berna,story,i18n:ev.pharos_story.pharos_departure.run.say_7#0,把它们全部重新讲述，写完你的编年史。那就是你修行的最后一课。,"Inspiring charge, affectionate trust, resolute pace, clear encouraging volume.",全部を語り直して、年代記を書き上げなさい。それが、あなたの修業の仕上げだよ。,"Retell them all, and complete your Chronicle. That will be the end of your training."
+v_berna_lute_05,berna,story,i18n:ev.pharos_story.pharos_departure.run.say_9#0,从哪里开始都可以。用你的脚，按你的顺序，去重新讲述就好。,"Reassuring freedom, benevolent smile, easygoing relaxed pace, warm gentle volume.",どこから回ってもいい。あなたの足で、あなたの順番で語り直していけばいいのさ。,"Start wherever you like. Retell them on your own feet, in your own order."
+v_berna_p2_01,berna,story,i18n:ev.prologue_roa.P2#0,对了对了，有件要紧的事。,"remembering something important, gently turning serious",そうそう、大事な話があるんだ。,"Ah, yes. I have something important to tell you."
+v_berna_p2_02,berna,story,i18n:ev.prologue_roa.P2#1,最近，到处都有传说在消失呀。,"worried, lowering her voice",近ごろ、あちこちで伝承が消えていくんだよ。,"Lately, all over the land, old tales have been vanishing."
+v_berna_p2_03,berna,story,i18n:ev.prologue_roa.P2#2,歌唱不出下一段，祭典说不清来历，听到的尽是这些事。,"listing the signs with quiet sadness, unhurried",歌の続きが出てこない。祭りの由来が分からない。そんな話ばかりさ。,Songs whose next verse won't come. Festivals no one can explain. That's all I hear these days.
+v_berna_p2_04,berna,story,i18n:ev.prologue_roa.P2#3,"我们讲述者，把这叫做""空白""。","grave, naming something ominous with care",わたしたち語り部は、それを『白紙』と呼んでいる。,"We storytellers call it ""the Blank."""
+v_berna_p2_05,berna,story,i18n:ev.prologue_roa.P2#4,村里讲述石上的字，也有一半变白消失了。,"sad, looking toward the village stone",里の語り石の文字も、半分が白く抜けてしまった。,"Half the words on our village's Telling Stone have gone white, too."
+v_berna_p2_06,berna,story,i18n:ev.prologue_roa.P2#5,还有啊，港口法罗斯的灯塔之火，已经暗了三晚。听说昨天，终于熄灭了。,"telling news she has heard, concern growing to the last sentence",それにね、港町ファロスの灯台の火が、細りはじめて三晩。きのう、とうとう消えたそうだ。,"And the lighthouse in the port town of Pharos — its fire had been failing for three nights. Yesterday, they say, it finally went out."
+v_berna_p2_07,berna,story,i18n:ev.prologue_roa.P2#6,那座灯塔，有一首叫守望之歌的古老传说。它也快要变成空白了。,"a storyteller's voice, fond of the old tale, then worried",あの灯台には、守り歌という古い伝承があってね。それも、白紙になりかけている。,"That lighthouse has an old tale, the Keeper's Song. It, too, is going blank."
+v_berna_p2_08,berna,story,i18n:ev.prologue_roa.P2#8,"不过，可不能一个人去。去法罗斯的酒馆""潮风亭""找同伴吧。","a mentor's gentle warning, slightly stern then warm",ただし、ひとりで行っちゃだめだよ。ファロスの酒場「潮風亭」で、仲間を探しなさい。,But don't go alone. Find companions at the Sea Breeze Tavern in Pharos.
+v_berna_p2_09,berna,story,i18n:ev.prologue_roa.P2#9,还有，把这些带上。,"kind, handing over a small parcel",それから、これを持ってお行き。,And take these with you.
+v_berna_p2_10,berna,story,i18n:ev.prologue_roa.P2#7,去吧。这是你作为讲述者学徒的第一份工作。,"sending her apprentice off on the first real job: gentle but firm, proud and a little moved, unhurried",行っておくれ。語り部の見習いとしての、最初の仕事だよ。,Please go. It will be your first task as an apprentice storyteller.
+v_berna_prologue_01,berna,story,i18n:ev.prologue_roa.roa_house_intro.run.say#0,早安。今天是很重要的日子哦。,"Cheerful warmth, maternal kindness, brisk lively pace, inviting medium volume.",おはよう。今日は大事な日だよ。,Good morning. Today is an important day.
+v_berna_prologue_02,berna,story,i18n:ev.prologue_roa.roa_house_intro.run.say_2#0,得把你的名字，写进讲述者的名册里呢。,"Gentle pride, grandmotherly care, steady pace, soft clear volume.",語り部の名簿に、あなたのことを書いておかないとね。,I need to write you down in the storytellers' register.
+v_berna_prologue_03,berna,story,i18n:ev.prologue_roa.roa_house_intro.run.say_3#0,来吧，小学徒。你是个什么样的孩子，再讲给我听一次吧。,"Playful curiosity, fond affection, warm relaxed pace, tender medium volume.",さあ、見習いさん。あなたがどんな子だったか、もう一度聞かせておくれ。,"Now then, my apprentice. Tell me once more what sort of child you were."
+v_berna_prologue_04,berna,story,i18n:ev.prologue_roa.roa_house_intro.run.say_5#0,准备好了，就到我的书案这边来。有些话，我想跟你说。,"Guiding mentor, anticipatory warmth, gentle unhurried pace, welcoming volume.",支度ができたら、わたしの書見台までおいで。話しておきたいことがあるんだ。,"When you're ready, come to my lectern. There's something I must tell you."
+v_berna_roa_01,berna,story,i18n:events.story_final_roa.say_3#0,这位姑娘……我们在哪里……,"Confused nostalgia, fading memory stirring, slow hesitant pace, soft wondering volume.",そちらのお嬢さんは……どこかで……。,This young lady... have we met somewhere...?
+v_berna_roa_02,berna,story,i18n:events.story_final_roa.say_6#0,回来啦。……你呀，写到这里，真不容易。,"Tearful pride, emotional homecoming, trembling warm pace, rich choked volume.",おかえり。……よく、ここまで書いたね。,"Welcome home. ...You've written so much, to come this far."
+v_berna_roa_03,berna,story,i18n:events.story_final_roa.say_10#0,最初的编年史，在比布利亚大书库之巅。我的师父是这么说的。,"Sage remembrance, guiding legacy, steady reverent pace, clear medium volume.",始まりの年代記は、ビブリアの大書庫の頂にある。わたしの師匠が、そう言っていた。,The First Chronicle is at the top of Biblia's Great Archive. So my teacher told me.
+v_berna_roa_04,berna,story,i18n:events.story_final_roa.say_11#0,把这个带上吧。这是我年轻时，师父送给我的项链。,"Loving blessing, passing the torch, tender slow pace, soft affectionate volume.",これを持ってお行き。わたしが若いころ、師匠からもらった首飾りだよ。,Take this with you. It's the necklace my teacher gave me when I was young.
+v_berna_seat_01,berna,story,i18n:ev.prologue_roa.roa_seat.run.say#0,老早传下来的规矩啦。是谁的座位……我给忘了。,"light and matter-of-fact at first, then a small puzzled pause; a hint of sadness she does not notice",昔からの習わしさ。誰の席かは……忘れちまったよ。,An old custom. Whose seat it is... I've forgotten.
+v_elm_forest_01,elm,story,i18n:events.elder_boss.say_7#0,……我想起来了。我曾发誓，要守护这片森林。,"Awakening clarity, ancient remorse, measured slow pace, deep resonant volume.",……思い出した。わたしは、この森を守ると誓ったのだった。,...I remember. I swore to protect this forest.
+v_elm_forest_02,elm,story,i18n:events.elder_boss.say_8#0,千年前那个火之夜……面对燃烧的森林，我寄身于这棵树，封住了那团火。,"Solemn mythic memory, heavy sorrow, rhythmic deliberate pace, deep timbered volume.",千年前の火の夜……。燃える森を前に、わたしはこの木に宿り、火を封じた。,"The night of fire, a thousand years ago... Before the burning forest, I took this tree as my dwelling, and sealed the fire."
+v_elm_forest_03,elm,story,i18n:events.elder_boss.say_9#0,村里的人们，与我约定要用歌声守护我的睡眠。,"Nostalgic affection, ancient peace, unhurried stately pace, warm deep volume.",村の者たちは、歌でわたしの眠りを守ると約束してくれた。,The village folk promised to guard my sleep with their song.
+v_elm_forest_04,elm,story,i18n:events.elder_boss.say_10#0,歌声断绝，我便忘了约定。封闭了森林，让人们迷失了方向……,"Profound guilt, sorrowful confession, heavy dragging pace, muted rumbling volume.",歌が絶えて、わたしは約束を忘れた。森を閉ざし、人を迷わせてしまった……。,"When the song died, I forgot my promise. I closed the forest and led people astray..."
+v_elm_forest_05,elm,story,i18n:events.elder_boss.say_11#0,讲述者啊，我向你致谢。,"Sincere dignity, deep humble gratitude, slow bowing pace, resonant warm volume.",語り部よ、礼を言う。,"Storyteller, you have my thanks."
+v_elm_forest_06,elm,story,i18n:events.forest_finale.say#0,森林的路，不会再封闭了。樵夫们，不久也能回到村里了吧。,"Reassuring benevolent authority, gentle closure, steady unhurried pace, rich calm volume.",森の道は、もう閉ざさぬ。木こりたちも、じきに村へ帰れるだろう。,"The forest paths shall close no more. The woodcutters, too, will soon be home in their village."
+v_fine_ash_01,fine,story,i18n:events.ash_crater_fine.say_2#0,燃尽，和被遗忘，是不一样的。,"Profound archaic wisdom, calm conviction, measured pace, quiet volume.",燃え尽きることと、忘れられることは、違うわ。,Burning out and being forgotten are not the same thing.
+v_fine_ending_01,fine,story,i18n:events.final_ending.say_4#0,我也到了，回归故事的时候了。,"Peaceful dissolution, serene acceptance, slow drifting pace, faint whisper.",わたしも、物語に還る時間。,"It's time for me, too, to return to the story."
+v_fine_ending_02,fine,story,i18n:events.final_ending.say_5#0,……要一直讲下去哦。我的事，还有你旅途的事。,"Tender parting plea, deeply emotional, lingering slow pace, delicate whisper.",……語り継いでね。わたしのことも、あなたの旅のことも。,"...Keep telling it. About me, and about your journey."
+v_fine_forest_01,fine,story,i18n:events.elder_fine.say#0,这树根深处，有传说的核心。……有东西在啃食树根。,"Serious perception, low intensity, measured pace, hushed volume.",この根の奥に、伝承の核があるわ。……根を食べているものがいる。,The heart of the tale lies deep in these roots. ...Something is eating them.
+v_fine_forest_02,fine,story,i18n:events.elder_fine.say_2#0,……要小心。,"barely above a whisper, sincere, as she turns to go",……気をつけて。,...Be careful.
+v_fine_isles_01,fine,story,i18n:events.isles_fine_cape.say_2#0,只要还有人在等待，故事就不会结束。,"Melancholy yet hopeful, quiet conviction, slow pace, soft volume.",待っている人がいる限り、物語は終わらない。,"As long as someone is waiting, the story does not end."
+v_fine_lighthouse_01,fine,story,i18n:ev.prologue_lighthouse.lighthouse_3_fine.run.say#0,失去了言语的灯，要用言语来夺回。,"Quiet wisdom, gentle reassurance, moderate pace, soft clear volume.",言葉を失った灯は、言葉で取り戻すの。,A light that has lost its words is won back with words.
+v_fine_lighthouse_02,fine,story,i18n:ev.prologue_lighthouse.lighthouse_3_fine.run.say_2#0,……你一定做得到。,"Deep faith, tender and intimate, slow pace, gentle whisper.",……あなたなら、できるわ。,...You can do it.
+v_fine_marsh_01,fine,story,i18n:events.loch_bridge_fine.say_2#0,雾没有自己的形状，能变成任何人的样子。,"Subtle warning, quiet mystery, deliberate pace, low soft volume.",霧は形を持たないから、誰の姿にでもなれるの。,"Fog has no shape of its own, so it can become anyone."
+v_fine_naming_01,fine,story,i18n:ev.final_archive.naming.say_4#0,我最后的光，送给你们。,"Sacred finality, selfless devotion, high emotional intensity, clear radiant volume.",わたしの最後の光を、あなたたちに。,My last light — I give it to you.
+v_fine_oblivion_01,fine,story,i18n:events.oblivion_5_ouroboros.fine#0,这里，是永不结束的故事沉落的地方。,"Eerie gravity, ancient dread, solemn slow pace, hushed low volume.",ここは、終わらない物語が沈む場所。,This is where stories that never end sink.
+v_fine_oblivion_02,fine,story,i18n:events.oblivion_5_ouroboros.fine_2#0,那条龙吃掉故事的结局，让同样的故事永远重复。,"Tragic exposition, chilling clarity, deliberate pace, subdued ominous volume.",その竜は物語の終わりを食べて、同じ話を永遠にくり返させるの。,That dragon eats the endings of stories and makes the same tale repeat forever.
+v_fine_opening_01,fine,story,i18n:ev.prologue_roa.roa_house_intro.run.caption#0,……喂，听得见吗？,"the opening of the game over black: an intimate whisper to the player, a voice from very far away",……ねえ、聞こえる？,"...Hey, can you hear me?"
+v_fine_opening_02,fine,story,i18n:ev.prologue_roa.roa_house_intro.run.caption_3#0,这是一个，快要被遗忘的故事。,"soft storyteller's narration, slow",これは、忘れられかけた物語。,This is a story that was nearly forgotten.
+v_fine_opening_03,fine,story,i18n:ev.prologue_roa.roa_house_intro.run.caption_4#0,也是一位讲述者，把它重新讲述的故事。,"narration, a quiet warmth and hope on the last words",そして、それを語り直した、ひとりの語り部の物語。,And the story of the storyteller who told it anew.
+v_fine_roa_01,fine,story,i18n:events.story_final_roa.say_2#0,贝尔娜婆婆。你弟子的故事，愿意听一听吗？,"Heartfelt compassion, gentle urging, slow pace, tender soft volume.",ベルナさん。あなたの弟子の物語を、聞いてくれる？,Berna. Will you listen to the story of your apprentice?
+v_fine_roa_02,fine,story,i18n:events.story_final_roa.say_4#0,……没关系。我的事，等哪天想起来就好。,"Bittersweet acceptance, selfless resignation, lingering slow pace, quiet whisper.",……いいの。わたしのことは、いつか思い出してくれれば。,"...It's all right. Remember me someday, whenever you can."
+v_fine_roa_03,fine,story,i18n:events.story_final_roa.say_12#0,……我先去岛上等你们。,"Fading presence, ethereal farewell, slow pace, soft fading whisper.",……先に、島で待っているわ。,...I'll be waiting for you on the island.
+v_fine_shades_01,fine,story,i18n:events.archive_4_boss.say_2#0,三百年前，在东方大陆讨伐魔王的勇者们的影子……,"Awe and reverence, quiet realization, slow pace, subdued volume.",三百年前、東の大陸で魔王を討った勇者たちの影……。,"Shades of the heroes who slew the Demon King on the eastern continent, three hundred years ago..."
+v_fine_shades_02,fine,story,i18n:events.archive_4_boss.say_3#0,名字虽然被遗忘了，故事却留了下来呢。,"Wistful relief, tender marvel, gentle pace, soft whisper.",名は忘れられても、物語は残っていたのね。,"Their names were forgotten, but their story remained."
+v_fine_snow_01,fine,story,i18n:events.snow_dawn.say_2#0,冻住的不是龙的身体。是它的心。,"Poignant realization, gentle insight, slow pace, soft volume.",凍っているのは、竜の体じゃない。心のほうよ。,It isn't the dragon's body that's frozen. It's its heart.
+v_fine_song_01,fine,story,i18n:ev.prologue_roa.roa_house_intro.run.caption_2#0,灯火啊，照到大海尽头为归航的船，照亮来路,"the very start of the game, over black: she softly sings-speaks the old lighthouse lullaby like someone rocking a cradle, very slow, a gentle rise and fall on each phrase, a long tender pause between the two lines, warm and hushed; a plain chanted folk lullaby, not a performed song",海の果てまで、灯よ届け帰る舟に、道を照らせ,"Reach to the sea's end, O light, and show the homeward boats the way"
+v_fine_song_02,fine,story,i18n:ev.prologue_lighthouse.lighthouse_3_boss.run.caption#0,灯火啊，照到大海尽头为归航的船，照亮来路,"the lost words slowly reappear on a slip of paper and she reads the lighthouse song back to life as a lullaby: slow chant-like cadence, soft wonder and quiet relief, each phrase lingering and fading, hushed like singing a child to sleep; not a performed song",海の果てまで、灯よ届け帰る舟に、道を照らせ,"Reach to the sea's end, O light, and show the homeward boats the way"
+v_fine_t1_01,fine,story,i18n:ev.story_t1.run.say#0,第一盏……还剩七盏呢。,"Faint satisfaction, subtle weariness, slow pace, gentle breathy volume.",一つ目……。あと、七つね。,That's one... Seven to go.
+v_fine_t1_02,fine,story,i18n:ev.story_t1.run.say_2#0,我？ 只是个路过的人而已。,"Playful mystique, airy detachment, unhurried pace, soft whisper.",わたし？ただの、通りすがりよ。,Me? Just someone passing by.
+v_fine_t3_01,fine,story,i18n:events.story_t3.run.say#0,第三盏了。做得好。,"Warm approval, understated praise, steady pace, quiet volume.",三つ目。よくやったわ。,That's three. Well done.
+v_fine_t3_02,fine,story,i18n:events.story_t3.run.say_2#0,……我叫菲涅。至少记住我的名字吧。,"Gentle plea, tinged with quiet loneliness, slow pace, soft volume.",……わたしはフィーネ。名前くらいは、覚えておいて。,...I'm Fina. At least remember my name.
+v_fine_t6_01,fine,story,i18n:events.story_t6.run.say#0,第六盏了……,"Heavy sorrow, fading presence, very slow pace, fragile whisper.",六つ目……。,That's six...
+v_fine_t6_02,fine,story,i18n:events.story_t6.run.say_3#0,你的师父，已经……,"Deep sympathy, hesitant grief, halting pace, faint soft volume.",あなたの師匠は、もう……。,Your teacher is already...
+v_fine_t8_01,fine,story,i18n:events.story_t8.say#0,现在可以告诉你了。我是菲涅。千年前，写下最初的编年史的讲述者。,"Solemn revelation, dignified clarity, deliberate pace, clear medium volume.",今なら話せるわ。わたしはフィーネ。千年前、始まりの年代記を書いた語り部。,"I can tell you now. I am Fina — the storyteller who wrote the First Chronicle, a thousand years ago."
+v_fine_t8_02,fine,story,i18n:events.story_t8.say_2#0,世界还是一片白色黑暗的时候，我讲述了最初的故事，让那片黑暗沉睡了。,"Mythic nostalgia, poetic storytelling, steady slow pace, quiet reverence.",世界がまだ白い闇だったころ、わたしは最初の物語を語って、その闇を眠らせた。,"When the world was still a white dark, I told the first story and put that dark to sleep."
+v_fine_t8_03,fine,story,i18n:events.story_t8.say_3#0,据说在海的那边，是纹章封印了魔王。而在这片大陆，是故事成为了封印。,"Ancient exposition, reflective gravity, measured pace, calm medium volume.",海の向こうでは、紋章が魔王を封じたという。この大陸では、物語が封印になったの。,"Across the sea, they say, crests sealed away a Demon King. On this continent, a story became the seal."
+v_fine_t8_04,fine,story,i18n:events.story_t8.say_4#0,那片黑暗——虚无之王，如今就要醒来了。,"Imminent dread, solemn warning, controlled intensity, steady quiet volume.",その闇――虚ろの王が、いま目を覚ましかけている。,That dark — the Hollow King — is beginning to wake.
+v_fine_t8_05,fine,story,i18n:events.story_t8.say_7#0,八页纸都齐了，现在就能驱散内海的雾。,"Quiet hope and purpose, focused intensity, brisk pace, clear volume.",八枚がそろった今なら、内海の霧を払える。,"Now that all eight pages are here, we can clear the fog over the inland sea."
+v_fine_t8_06,fine,story,i18n:events.story_t8.say_8#0,去罗亚村吧。回到一切开始的地方。,"Gentle summons, wistful determination, measured pace, soft yet firm volume.",ロアの里へ。すべてが始まった場所へ、帰りましょう。,"To Roa. Let's go home, to the place where it all began."
+v_fine_windhill_01,fine,story,i18n:ev.optional_windhill.windhill_notes.run.say#0,……原来风，也记得歌呢。,"wistful and faintly amused, like talking to herself on a windy hill",……風も、歌を覚えているのね。,"...So the wind remembers the song, too."
+v_glen_dawn_01,glen,story,i18n:events.isles_dawn.say_3#0,我回来了，玛丽娜。,"Peaceful homecoming, immense devotion, slow tender pace, soft loving whisper.",ただいま、マリナ。,"I'm home, Marina."
+v_glen_ship_01,glen,story,i18n:events.isles_captain.say_2#0,纵是雾海……我也…………后面的，想不起来……,"Confused singing fading into agony, fragmented stumbling pace, strained raspy volume.",霧の海でも……迷い…………続きが、出てこない……。,No fog at sea... will lead me... ...The rest... it won't come...
+v_glen_ship_02,glen,story,i18n:events.isles_captain.say_3#0,我……是要回哪里去来着？是谁……在等我……？想不起来……想不起来了！,"Tormented panic, desperate identity crisis, frenzied erratic pace, screaming anguished volume.",おれは……どこへ帰るんだった？誰が、待っていた……？思い出せない……思い出せない！,Where was I... sailing home to? Who was waiting...? I can't remember... I can't remember!
+v_glen_ship_03,glen,story,i18n:events.isles_captain.say_5#0,……玛丽娜。没错，我答应过她，一定回去。,"Epiphany of love, sudden breaking dawn, stunned slow pace, tender clearing volume.",……マリナ。そうだ、おれは帰ると約束したんだ。,"...Marina. Aye, I promised her I'd come home."
+v_glen_ship_04,glen,story,i18n:events.isles_captain.say_6#0,海角的灯，原来是她啊。让她等了六十年啊。……回去吧。,"Heartfelt sorrow and resolve, tearful smile, steadying pace, warm resonant volume.",岬の灯は、あいつだったのか。六十年も、待たせちまったな。……帰ろう。,So the cape light was her. Sixty years I kept her waiting. ...Let's go home.
+v_hazal_tomb_01,hazal,story,i18n:events.desert_tomb_king.say_2#0,……我的名字……还我的名字……！,"Agonized rage of a forgotten king, dry raspy fury, jagged desperate pace, cracked shouting.",……わが名を……わが名を、返せ……！,...My name... Give me back my name...!
+v_hazal_tomb_02,hazal,story,i18n:events.desert_tomb_king.say_5#0,……我的名字……谁来……。,"Pitiful pleading, desperate fading thirst, strained gasping pace, raspy ragged whisper.",……わが名を……だれか……。,...My name... someone...
+v_hazal_tomb_03,hazal,story,i18n:events.desert_tomb_king.say_8#0,哈扎尔……没错，那是我的名字。,"Profound relief, soul-soothing recognition, slow tremulous pace, soft exhaling volume.",ハザル……そうだ、それがわたしの名だ。,Hazar... yes. That is my name.
+v_hazal_tomb_04,hazal,story,i18n:events.desert_tomb_king.say_9#0,原来我的子民，还记得那个约定啊……。,"Tearful gratitude, dignified royal peace, gentle lingering pace, warm resting volume.",民は、約束を覚えていてくれたのだな……。,So my people remembered our promise...
+v_hazal_tomb_05,hazal,story,i18n:events.desert_tomb_king.say_10#0,为了换来泉水，我把名字献给了沙之精灵。,"the king with his name back: slow, grave, confessing an old bargain",水と引き換えに、わたしは名を砂の精霊に差し出した。,"In exchange for water, I gave my name to the spirit of the sand."
+v_hazal_tomb_06,hazal,story,i18n:events.desert_tomb_king.say_10#1,只要名字仍被呼唤，日轮之火便不灭。……而那个约定，也被从石上抄走，消失了。,sorrowful: the promise was copied from the stone and lost,名を呼ぶかぎり、日輪の火は消えぬ。……その約束も、石から写されて消えてしまったのだ。,"While the name is called, the sun-fire shall not die. ...That promise, too, was copied from the stone, and vanished."
+v_hazal_tomb_07,hazal,story,i18n:events.desert_tomb_king.say_10#2,讲述者啊。请把我的名字，再一次还给泉之民吧。,"a solemn, gentle plea to the storyteller",語り部よ。わたしの名を、もう一度泉の民に返してくれ。,Storyteller. Give my name back once more to the people of the spring.
+v_hero_f_attack_1,hero_f,attack,reuse,,"sharp attack shout on a sword swing, short and powerful",はあっ！,Hah!
+v_hero_f_attack_2,hero_f,attack,reuse,,"quick crisp strike cry, energetic",せいっ！,Hyah!
+v_hero_f_attack_3,hero_f,attack,written,接招！,"fierce shout, putting full strength into the blow",くらえっ！,Take this!
+v_hero_f_bigtech_1,hero_f,bigtech,written,就用这招决胜负！,"unleashing a big special technique, decisive and powerful, ringing",これで決める！,This ends it!
+v_hero_f_bigtech_2,hero_f,bigtech,written,全力以赴，上了！,"gathering all strength for a finishing move, determined, loud",全力で、いく！,Everything I've got!
+v_hero_f_glimmer_1,hero_f,glimmer,written,……我看见了！,"a sharp inhale, then sudden inspiration: a new technique flashes into mind; excited, bright",……見えた！,...I see it!
+v_hero_f_glimmer_2,hero_f,glimmer,written,就是现在……那里！,"a flash of insight in battle, focused then decisive",今だ……そこっ！,Now... there!
+v_hero_f_hurt_1,hero_f,hurt,reuse,,"taking a hit, short pained grunt",ぐっ……！,Ugh...!
+v_hero_f_hurt_2,hero_f,hurt,reuse,,"struck hard, short pained cry",うあっ！,Agh!
+v_hero_f_ko_1,hero_f,ko,written,到此……为止了吗……,"collapsing in battle, weak, fading breath",ここまで……か……,Is this... where it ends...?
+v_hero_f_spell_1,hero_f,spell,written,言叶啊，赐我力量！,"casting a spell, calling on the power of words, confident and ringing",言の葉よ、力を！,"Words, give me strength!"
+v_hero_f_spell_2,hero_f,spell,written,传达出去吧！,"releasing a spell with conviction, strong",届けっ！,Fly true!
+v_hero_f_victory_1,hero_f,victory,written,好，赢了！,"relieved and happy after winning a battle, bright",よし、勝った！,"Yes, we won!"
+v_hero_f_victory_2,hero_f,victory,written,这个故事，还要继续。,calm confident smile after victory,この物語は、まだ続く。,This story isn't over yet.
+v_hero_m_attack_1,hero_m,attack,reuse,,"sharp attack shout on a sword swing, short and powerful",はあっ！,Hah!
+v_hero_m_attack_2,hero_m,attack,reuse,,"quick crisp strike cry, energetic",せいっ！,Hyah!
+v_hero_m_attack_3,hero_m,attack,written,接招！,"fierce shout, putting full strength into the blow",くらえっ！,Take this!
+v_hero_m_bigtech_1,hero_m,bigtech,written,就用这招决胜负！,"unleashing a big special technique, decisive and powerful, ringing",これで決める！,This ends it!
+v_hero_m_bigtech_2,hero_m,bigtech,written,全力以赴，上了！,"gathering all strength for a finishing move, determined, loud",全力で、いく！,Everything I've got!
+v_hero_m_glimmer_1,hero_m,glimmer,written,……我看见了！,"a sharp inhale, then sudden inspiration: a new technique flashes into mind; excited, bright",……見えた！,...I see it!
+v_hero_m_glimmer_2,hero_m,glimmer,written,就是现在……那里！,"a flash of insight in battle, focused then decisive",今だ……そこっ！,Now... there!
+v_hero_m_hurt_1,hero_m,hurt,reuse,,"taking a hit, short pained grunt",ぐっ……！,Ugh...!
+v_hero_m_hurt_2,hero_m,hurt,reuse,,"struck hard, short pained cry",うあっ！,Agh!
+v_hero_m_ko_1,hero_m,ko,written,到此……为止了吗……,"collapsing in battle, weak, fading breath",ここまで……か……,Is this... where it ends...?
+v_hero_m_spell_1,hero_m,spell,written,言叶啊，赐我力量！,"casting a spell, calling on the power of words, confident and ringing",言の葉よ、力を！,"Words, give me strength!"
+v_hero_m_spell_2,hero_m,spell,written,传达出去吧！,"releasing a spell with conviction, strong",届けっ！,Fly true!
+v_hero_m_victory_1,hero_m,victory,written,好，赢了！,"relieved and happy after winning a battle, bright",よし、勝った！,"Yes, we won!"
+v_hero_m_victory_2,hero_m,victory,written,这个故事，还要继续。,calm confident smile after victory,この物語は、まだ続く。,This story isn't over yet.
+v_jorn_snow_01,jorn,story,i18n:events.yule_jorn.say_4#0,愿灯火常明，旅人。我是约恩，尤尔的村长。,"first meeting; a warm, grave village chief greeting a traveller",よい灯りを、旅の人。わしはヨルン。ユールの村長だ。,"Good light to you, traveler. I'm Jorn, chief of Yule."
+v_jorn_snow_02,jorn,story,i18n:events.yule_jorn.say_4#1,今晚是冬至。大火祭之夜。在大灶里燃起冬至之火，讲老故事，再送上山峰。,explains the festival with pride and a little solemnity,今夜は冬至。大火祭の夜だ。大かまどで冬至の火を燃やし、昔話を語って、峰へ運ぶ。,"Tonight's the solstice, the festival night. We burn the solstice fire in the great hearth, tell an old tale, and carry both to the peak."
+v_jorn_snow_03,jorn,story,i18n:events.yule_jorn.say_5#0,把火与故事送给峰上的白龙，龙就会平息暴风雪。……这是村子与龙的约定。,"solemn, telling the old pact between the village and the dragon",峰の白竜に火と物語を届け、竜は吹雪を鎮める。……それが村と竜の約束だ。,"We bring fire and a story to the white dragon on the peak, and the dragon calms the blizzards. ...That's our promise."
+v_jorn_snow_04,jorn,story,i18n:events.yule_jorn.say_5#1,可是今年，从秋天起，暴风雪一天也没停过。故事没有传到龙那里。,worried and heavy; the blizzard has not stopped since autumn,ところが今年は、秋から一日も吹雪がやまん。竜に物語が届いておらんのだ。,"But this year, since autumn, the blizzard hasn't let up for a single day. Our stories aren't reaching the dragon."
+v_jorn_snow_05,jorn,story,i18n:events.snow_festival.say#0,讲述者啊。请在火前，讲出今年的故事吧。,"before the great fire, formal and hopeful, asking the storyteller",語り部よ。今年の物語を、火の前で語ってくれ。,"Storyteller. Tell us this year's story, here before the fire."
+v_jorn_snow_06,jorn,story,i18n:events.snow_festival.say#1,好让它传到峰上的龙那里。,"quiet, a wish sent toward the peak",峰の竜に届くように。,So that it reaches the dragon on the peak.
+v_jorn_snow_07,jorn,story,i18n:events.snow_festival.say_6#0,门有三道。北、东、西。光靠我们的人手，只守得住两道。,"urgent, commanding over the howling; grim about the odds",門は三つ。北、東、西。わしらの手では、二つしか守りきれん。,"Three gates. North, east, west. With our hands alone, we can only hold two."
+v_jorn_snow_08,jorn,story,i18n:events.snow_festival.say_6#1,请帮帮我们。选一道门来守吧。,"urgent, asking for help and trusting the storyteller",力を貸してくれ。守る門を、選んでくれ。,Lend us your strength. Choose which gate to defend.
+v_king_altar_01,king,story,i18n:events.archive_6_boss.say#0,无名，亦无形，吾将万物归于空白。,"Absolute cosmic nihilism, vast uncaring malice, rhythmic slow pace, deafening booming volume.",名もなく、形もなく、われはすべてを白紙に還す。,"Without name, without form, I return all things to the Blank."
+v_king_altar_02,king,story,i18n:events.archive_6_boss.say_2#0,徒劳。无名之物，不会消亡。,"Monolithic arrogance, dismissive mockery, slow crushing pace, heavy resonant volume.",無駄だ。名なきものは、消えぬ。,Futile. The nameless do not vanish.
+v_king_altar_03,king,story,i18n:events.archive_6_boss.say_3#0,又来了吗……无名之物，不会消亡。,"Annoyed persistence, immutable void, cold monotonous pace, oppressive deep volume.",また来たか……。名なきものは、消えぬ。,Back again...? The nameless do not vanish.
+v_king_archive_01,king,story,i18n:events.archive_5_lazaro.say_8#0,干得好，拉扎罗。汝的悲伤，实在是美味至极。,"Cruel mockery, sinister satisfaction, dragging sadistic pace, low rumbling volume.",よくやった、ラザロ。おまえの悲しみは、じつに美味であった。,"Well done, Lazaro. Your grief was exquisite."
+v_king_naming_01,king,story,i18n:ev.final_archive.naming.say_3#0,汝……唤了……吾之名……！,"Shocked fury, crumbling existence, sharp abrupt pace, bellowing frantic volume.",名を……呼んだな……！,You... called... my name...!
+v_king_shades_01,king,story,i18n:events.archive_4_boss.say#0,来自海那边，名字已被遗忘的勇者们啊……,"Deep ancient contempt, booming resonant echo, slow deliberate pace, thundering volume.",海の向こうの、名を忘れられた勇者たちよ……。,"O heroes from across the sea, whose names were forgotten..."
+v_lazaro_archive_01,lazaro,story,i18n:events.archive_5_lazaro.say#0,你来了啊，讲述者。,"Chilling politeness, weary greeting, smooth unhurried pace, calm medium volume.",よく来ましたね、語り部。,"So you've come, storyteller."
+v_lazaro_archive_02,lazaro,story,i18n:events.archive_5_lazaro.say_2#0,二十年前，在承日之战中，我失去了女儿米拉。,"Haunting grief, quiet suppressed sorrow, slow heavy pace, hushed low volume.",二十年前、伝承戦争で娘のミラを失いました。,"Twenty years ago, in the Sunheir War, I lost my daughter, Mira."
+v_lazaro_archive_03,lazaro,story,i18n:events.archive_5_lazaro.say_3#0,为了哪个传说才是正确的……就为了那种事。,"Bitter cynicism, hollow disgust, dragging pace, dark muttered volume.",どちらの伝承が正しいか……そんなことのために。,Over which legend was the true one... For that.
+v_lazaro_archive_04,lazaro,story,i18n:events.archive_5_lazaro.say_4#0,只要忘掉，争斗也好，悲伤也好，就都会变得从未存在过。,"Fanatical serenity, twisted philosophy, calm measured pace, persuasive quiet volume.",忘れてしまえば、争いも悲しみも、初めから無かったことになる。,"Once forgotten, the strife and the grief become as though they never were."
+v_lazaro_archive_05,lazaro,story,i18n:events.archive_5_lazaro.say_5#0,那就是救赎啊。……即便如此，你还是要写下去吗。,"Cold disappointment, pitiless resolve, slow deliberate pace, chillingly polite volume.",それが救いなのですよ。……それでも、あなたは書くのですね。,"That is salvation. ...And still, you write."
+v_lazaro_archive_06,lazaro,story,i18n:events.archive_5_lazaro.say_6#0,那么，就请允许我折断你的那支笔吧。,"Relentless execution, deadly calm conviction, firm steady pace, icy controlled volume.",ならば、その筆を折らせていただきましょう。,Then allow me to break that pen of yours.
+v_lazaro_archive_07,lazaro,story,i18n:events.archive_5_lazaro.say_7#0,……为什么。本该忘掉的那孩子的笑容……偏偏在这时候……,"Sudden emotional breakdown, piercing memory, fractured halting pace, cracking tearful volume.",……なぜだ。忘れたはずのあの子の笑顔が……今になって……。,"...Why? Her smile, which I should have forgotten... now, of all times..."
+v_lazaro_ending_01,lazaro,story,i18n:events.final_ending.say_7#0,……米拉。啊啊，米拉……,"Utter heartbreak, profound tearful longing, weeping slow pace, devastated faint whisper.",……ミラ。ああ、ミラ……。,"...Mira. Oh, Mira..."
+v_marina_dawn_01,marina,story,i18n:events.isles_dawn.say_2#0,欢迎回来，格伦。,"Pure tender love, sixty years of waiting ending, slow gentle pace, tearful soft volume.",おかえりなさい、グレン。,"Welcome home, Glen."
+v_marina_dawn_02,marina,story,i18n:events.isles_dawn.say_4#0,……谢谢你。他终于回来了。,"Deep peaceful relief, tearful gratitude, relaxed sighing pace, soft blessed whisper.",……ありがとう。あの人は、やっと帰ってきた。,...Thank you. He's finally come home.
+v_marina_nerei_01,marina,story,i18n:events.isles_marina_remember.say_2#0,……啊，就是这首歌。,"Nostalgic warmth, recognition stirring, slow tearful pace, trembling soft volume.",……ああ、この歌だよ。,"...Ah, that's the song."
+v_marina_pier_01,marina,story,i18n:events.isles_night_pier.say_4#0,是他的船……,"Breathless shock, overwhelming emotional surge, gasping quick pace, fragile cracked volume.",あの人の船だ……。,It's his ship...
+v_mayor_marsh_01,mayor,story,i18n:events.loch_assembly.say.0_2#0,那么，来听听你的指认吧。是谁掳走了孩子们？,"grave, formal, chairing a tense assembly",では、名指しを聞こう。子どもたちを、誰がさらった？,Then let us hear your accusation. Who took the children?
+v_mayor_marsh_02,mayor,story,i18n:events.loch_assembly.say_5#0,雾……？你是说，雾掳走了孩子？,"taken aback, sceptical",霧……だと？霧が、子どもをさらうというのか。,The fog...? You claim the fog takes children?
+v_mayor_marsh_03,mayor,story,i18n:events.loch_assembly.say_5#1,拿出证据来。,"stern, demanding proof",証拠を示しなさい。,Show us your evidence.
+v_mayor_marsh_04,mayor,story,i18n:events.loch_assembly_right.say#0,雾模仿魔女的样子，带走了孩子们……。,"slowly realising the truth, shaken",霧が、魔女の姿をまねて子どもを連れていった……。,The fog took the witch's shape and led the children away...
+v_mayor_marsh_05,mayor,story,i18n:events.loch_assembly_right.say#1,……我们差一点，就放火烧了无辜的馆。,ashamed and relieved; the town nearly burned an innocent house,……わしらは、あやうく無実の館に火をかけるところだった。,...We very nearly set fire to an innocent house.
+v_melda_manor_01,melda,story,i18n:events.manor_melda.say_4#0,……吓到你们了吧。我是梅尔达。是这座馆从前的主人。,"Soft polite surprise, ethereal elegance, light calm pace, gentle airy volume.",……驚かせてしまったわね。わたしはメルダ。この館の、昔の主よ。,"...I'm sorry, I've startled you. I am Melda. Once, long ago, the mistress of this house."
+v_melda_manor_02,melda,story,i18n:events.manor_melda.say_5#0,我并没有掳走孩子们。是雾，在模仿我的样子。,"Distressed innocence, earnest clarification, hurried defensive pace, soft pleading volume.",わたしは子どもたちをさらってなどいない。霧が、わたしの姿をまねているの。,I have not taken any children. The fog is imitating my shape.
+v_melda_manor_03,melda,story,i18n:events.manor_melda.say_6#0,从前，沼泽的雾里涌出魔物时，我沉下了七口钟，用钟声封住了雾。,"Solemn exposition, heroic memory, measured steady pace, melancholic clear volume.",昔、沼の霧から魔物があふれたとき、わたしは七つの鐘を沈めて、鐘の音で霧を封じたの。,"Long ago, when monsters poured out of the marsh fog, I sank seven bells and sealed the fog away with their sound."
+v_melda_manor_04,melda,story,i18n:events.manor_melda.say_7#0,可是，镇上的人们忘了钟之歌，钟也就不再响了……。,"Sorrowful lament, quiet regret, drooping slow pace, fading fragile volume.",でも、町の人たちが鐘の歌を忘れて、鐘は鳴らなくなった……。,"But the townsfolk forgot the bell song, and the bells stopped ringing..."
+v_melda_manor_05,melda,story,i18n:events.manor_melda.say_8#0,去敲响沼泽的钟吧。这是钟之钥匙。还有，这就是钟之歌。,"Hopeful entrustment, urgent prayer, focused gentle pace, earnest soft volume.",沼の鐘を鳴らして。これは鐘の鍵。そして、これが鐘の歌よ。,Ring the marsh bell for me. This is the bell key. And this is the bell song.
+v_melda_marsh_01,melda,story,i18n:events.bog_mistbeast.say_4#0,谢谢你，讲述者。这样一来，小镇的早晨又会响起钟声了。,"Radiant gratitude, peaceful release, bright gentle pace, warm joyful whisper.",ありがとう、語り部さん。これでまた、町の朝に鐘が鳴るわ。,"Thank you, storyteller. Now the bells will ring again for the town's mornings."
+v_melda_song_01,melda,story,i18n:ev.marsh_00_common.SONG#0,响起吧，七口钟雾啊，沉入沼底，晨光，照进万窗,"sings the old bell song softly, a ghostly lullaby",鳴れよ、七つの鐘霧は沼の底へ、朝は町の窓へ,"Ring out, you seven bells, fog, sink to the marsh's floor, morning, come to the town's windows"
+v_nadia_desert_01,nadia,story,i18n:events.kasim_nadia.say.0#0,我叫娜迪娅，是个舞娘。每晚都在广场上唱着王的歌跳舞。听听吧。,"bright and friendly, introduces herself and invites them to listen",わたしはナディア。踊り子よ。毎晩、広場で王さまの歌を歌って踊るの。聞いて。,I'm Nadia. A dancer. Every night I sing and dance the king's song in the square. Listen.
+v_nadia_desert_02,nadia,story,i18n:events.kasim_nadia.say_4#0,……只有名字那段，怎么也唱不出来。我妈妈、我外婆也是。,sad and a little embarrassed; the name will not come to anyone,……名前の所だけ、どうしても歌えないの。母さんも、おばあちゃんも。,"...Only the part with the name, I just can't sing. Not my mother, not my grandmother either."
+v_nadia_desert_03,nadia,story,i18n:events.kasim_nadia.say_4#1,听说王的名字，刻在王墓的石头上。可谁也没法去读。,"thoughtful, with a hint of longing",王さまの名前、王墓の石に刻まれてたって聞いたわ。誰も、読みに行けないけど。,"I heard the king's name was carved in the stones of the tomb. Nobody can go and read it, though."
+v_nadia_desert_04,nadia,story,i18n:events.desert_finale.say_2#0,你知道王的名字了吧？……告诉我。,"eager and hopeful, then quietly asking",王さまの名前、わかったんでしょう？……教えて。,"You learned the king's name, didn't you? ...Tell me."
+v_nadia_desert_05,nadia,story,i18n:events.desert_finale.say_2#1,哈扎尔……。嗯，正合适。我来唱唱看。,"tries the name, delighted, then ready to sing",ハザル……。うん、ぴったり。歌ってみるね。,"Hazar... Yes, it fits perfectly. I'll try singing it."
+v_nadia_song_01,nadia,story,i18n:ev.desert_00_common.SONG_BLANK#0,为沙海 唤来泉水的王啊你名叫—— ……在黄昏的祈祷里 永远流传,"sings a graceful dancer's song; at the missing name she falters into a silent pause, then finishes the last line",砂の海に水を招いた王よその名は――……夕べの祈りにとこしえに,"O king who called water to the sea of sand, your name is —... in evening prayers forevermore"
+v_nadia_song_02,nadia,story,i18n:ev.desert_00_common.SONG_FULL#0,为沙海 唤来泉水的王啊你名叫哈扎尔 太阳之友在黄昏的祈祷里 永远流传,"sings the whole song joyfully and clearly, the name ringing out",砂の海に水を招いた王よその名はハザル日輪の友夕べの祈りにとこしえに,"O king who called water to the sea of sand, your name is Hazar, friend of the sun, in evening prayers forevermore"
+v_nemrea_ending_01,nemrea,story,i18n:events.final_ending.say#0,名字……被呼唤……这还是……第一次……,"Gentle wonder, childlike awe, fragile slow pace, soft ethereal whisper.",名を……呼ばれたのは……はじめてだ……。,This is... the first time... my name... has been called...
+v_nemrea_ending_02,nemrea,story,i18n:events.final_ending.say_2#0,……啊啊……好困……,"Deep peaceful surrender, drifting into slumber, trailing slow pace, fading breathy whisper.",……ああ……眠い……。,...Ah... so sleepy...
+v_neve_peak_01,neve,story,i18n:events.peak_neve.say#0,……离开……人之子……。这座山峰上，已经没有可讲的故事了……！,"Piercing ferocity, frosty territorial roar, aggressive sharp pace, booming ferocious volume.",……去れ……人の子よ……。この峰に、もはや語るべき物語はない……！,"...Begone... child of man... On this peak, there are no more stories to tell...!"
+v_neve_peak_02,neve,story,i18n:events.peak_neve.say_5#0,……好温暖。人之子们，原来并没有忘记我吗。,"Soft melting awe, vulnerable warmth, hesitant tender pace, gentle breathy volume.",……あたたかい。人の子らは、わたしを忘れてはいなかったのか。,...Warm. So the children of man had not forgotten me after all.
+v_neve_peak_03,neve,story,i18n:events.peak_neve.say_6#0,暴风雪，由我来平息吧。讲述者啊，我向你道谢。,"Noble serenity, benevolent dragon majesty, calm steady pace, resonant clear volume.",吹雪は、わたしが鎮めよう。語り部よ、礼を言う。,"I shall calm the blizzards. Storyteller, you have my thanks."
+v_neve_peak_04,neve,story,i18n:events.snow_finale.say#0,……把这个带走吧。这是我的一片鳞。,"calm and gracious, the dragon giving one of her scales",……これを持っていくがよい。わたしの、うろこの一枚だ。,...Take this with you. One of my scales.
+v_noa_biblia_01,noa,story,i18n:events.biblia_arrival.say_3#0,你们，不是这座城的人吧。……罗威尔？,"Timid curiosity, sudden startled recognition, cautious pace, soft questioning volume.",あなたたち、この町の人じゃないわね。……ロウェル？,"You're not from this town, are you? ...Rowell?"
+v_noa_biblia_02,noa,story,i18n:events.biblia_arrival.say_5#0,因为我每晚都在唱米拉教我的歌……只有我，还没有忘记。,"Melancholic pride, tender sorrow, gentle rhythmic pace, fragile soft volume.",ミラに教わった歌を、毎晩歌っていたから……わたしだけ、忘れずにいるの。,I've sung the song Mira taught me every night... so I'm the only one who hasn't forgotten.
+v_noa_biblia_03,noa,story,i18n:events.biblia_arrival.say_6#0,这里是记录院之城，比布利亚。可是，大家都把重要的事忘掉了。,"Quiet despair, helpless sympathy, slow heavy pace, hushed mournful volume.",ここは記録院の町、ビブリア。でも、みんな大事なことを忘れてしまったの。,"This is Biblia, the Archive's town. But everyone has forgotten what matters most."
+v_noa_biblia_04,noa,story,i18n:events.biblia_arrival.say_7#0,院长大人的千金……米拉，是我的朋友。二十年前的战争里……,"Languishing grief, painful recollection, hesitant uneven pace, choked quiet volume.",院長さまのお嬢さん……ミラは、わたしの友だちだった。二十年前の戦争で……。,"The Director's daughter... Mira was my friend. In the war, twenty years ago..."
+v_noa_biblia_05,noa,story,i18n:events.biblia_noa.say_2#0,你们见到院长大人了……？……是吗。他终于，又想起米拉了啊。,"Breathless relief, tearful joy, gasping slow pace, tremulous soft volume.",院長さまに……会ったの？……そう。ミラのことを、思い出してくれたのね。,You met the Director...? ...I see. So he remembered Mira again.
+v_noa_biblia_06,noa,story,i18n:events.biblia_noa.say_3#0,"米拉啊，是个爱唱歌的孩子。她常说：""名字，是为了被呼唤而存在的哦。""","Fond nostalgia, smiling through tears, sweet gentle pace, warm breathy volume.",ミラはね、歌が好きな子だった。「名前は、呼ばれるためにあるのよ」って、よく言ってたわ。,"Mira loved to sing. She used to say, ""A name is meant to be called."""
+v_noa_ending_01,noa,story,i18n:events.final_ending.say_11#0,米拉。你的歌，传到大家心里了哦。,"Peaceful closure, heartfelt message to heaven, bright tender pace, clear ringing volume.",ミラ。あなたの歌、みんなに届いたよ。,Mira. Your song reached everyone.
+v_otto_pharos_01,otto,story,i18n:ev.pharos_story.pharos_otto.run.say#0,我是守灯塔的奥托。灯塔的火熄了，昨晚一夜没睡着。,"first meeting; tired and worried, a sleepless old man introducing himself with a heavy sigh",わしは灯台守のオットー。灯台の火が消えてしまって、ゆうべは眠れんかった。,"I'm Otto, the lighthouse keeper. The lighthouse fire went out, and I couldn't sleep a wink."
+v_otto_pharos_02,otto,story,i18n:ev.pharos_story.pharos_otto.run.say_2#0,"……什么，你要去灯塔？一个人？ 那可不行。去酒馆""潮风亭""找些同伴吧。","surprised, then protective and scolding like a grandfather; firm but kind at the end",……なに、灯台へ行くと？ひとりで？とんでもない。酒場「潮風亭」で仲間を見つけておいで。,"...What, you'll go to the lighthouse? Alone? Out of the question. Find companions at the Sea Breeze Tavern."
+v_otto_pharos_03,otto,story,i18n:ev.pharos_story.pharos_otto.run.say_3#0,哦，带着同伴来了啊。那就另当别论了。,"pleasantly surprised, relieved, a warm chuckle in the voice",おお、仲間を連れてきたか。それなら話は別じゃ。,"Oh, you've brought companions. That's another matter, then."
+v_otto_pharos_04,otto,story,i18n:ev.pharos_story.pharos_otto.run.say_4#0,灯塔的守望之歌，我怎么也想不起来。没有那首歌，火就点不着。,"quietly distressed, ashamed that his memory fails him; slow",灯台の守り歌が、どうしても思い出せんのじゃ。あの歌がなけりゃ、火はつかん。,"I just can't recall the lighthouse's Keeper's Song. Without it, the fire won't light."
+v_otto_pharos_05,otto,story,i18n:ev.pharos_story.pharos_otto.run.say_5#0,……拜托了。这是灯塔的钥匙。,"a heartfelt plea after a pause, handing over something precious; low and sincere",……頼む。これが灯台の鍵じゃ。,...Please. Here's the lighthouse key.
+v_otto_pharos_06,otto,story,i18n:ev.pharos_story.pharos_otto.run.say_6#0,灯塔在出了镇子往南的海岬尽头。出发前，先教你些战斗的心得吧。,"practical and steady, an old hand giving directions, a little proud to teach",灯台は、町を出て南の岬の先じゃ。行く前に、戦いの心得を教えておこう。,"The lighthouse is south of town, at the tip of the cape. Before you go, let me teach you a thing about fighting."
+v_otto_reward_01,otto,story,i18n:ev.pharos_story.pharos_otto_reward.run.say_2#0,灯火啊，照到大海尽头为归航的船，照亮来路……,"he half-sings, half-hums the old lighthouse song he just got back, slow and a little shaky, full of emotion; a plain folk melody, not performed",海の果てまで、灯よ届け帰る舟に、道を照らせ……。,"Reach to the sea's end, O light, and show the homeward boats the way..."
+v_otto_reward_02,otto,story,i18n:ev.pharos_story.pharos_otto_reward.run.say_3#0,这是我从年轻时一直用到现在的提灯。带上它吧。,"tender and grateful, giving a treasured keepsake",これは、わしが若いころから使ってきたランタンじゃ。持っていっておくれ。,"This is the lantern I've used since I was young. Please, take it with you."
+v_otto_reward_03,otto,story,i18n:ev.pharos_story.pharos_otto_reward.run.say_4#0,"年轻的时候，灯塔有个叫""晨班""的差事。火回来了，我打算再设起来。","fond reminiscence, smiling, looking forward",若いころ、灯台には『朝番』というのがあってな。火が戻ったら、また立てるつもりじゃ。,"When I was young, the lighthouse had a thing called the ""morning watch."" Now the fire's back, I'll post it again."
+v_otto_reward_04,otto,story,i18n:ev.pharos_story.pharos_otto_reward.run.say_5#0,……咦。那是看守什么的差事来着？怎么也想不起来了。,"the smile fades into puzzlement; quiet, a little lost, unsettling in its gentleness",……はて。何を見張る番じゃったかのう。どうしても思い出せん。,"...Hmm. What was it we watched for, though? I just can't remember."
+v_otto_reward_05,otto,story,i18n:ev.pharos_story.pharos_otto_reward.run.say#0,灯塔的火回来了！守望之歌，我也想起来了。,"overjoyed and moved, an old man almost laughing with relief; the lighthouse is lit again and the song came back",灯台に火が戻ったぞ！守り歌も、思い出せた。,The lighthouse is lit again! And I remember the Keeper's Song.
+v_rashid_desert_01,rashid,story,i18n:events.desert_camp1_scene.say_3#0,别动。不会要你们的命。,"a masked bandit on a rock with bows drawn: cold, low and commanding",動くな。命まではもらわん。,Don't move. We won't take your lives.
+v_rashid_desert_02,rashid,story,i18n:events.desert_camp1_scene.say_3#1,"我们是""沙鹰""。要的是水。把水罐留下一半。","names his band and makes the demand; hard, businesslike, not cruel",おれたちは「砂の鷹」。欲しいのは水だ。水がめを半分置いていけ。,"We are the ""Sand Hawks."" It's water we want. Leave half your water jars."
+v_rashid_desert_03,rashid,story,i18n:events.desert_camp1_scene.say_7#0,……好身手。我叫拉希德。从前是日轮同盟的兵。,"beaten, kneeling, breathing hard; grudging respect as he gives his name and his past",……いい腕だ。おれはラシード。昔は、日輪同盟の兵だった。,"...Good arm. I'm Rashid. I was a soldier of the Sun Alliance, once."
+v_rashid_desert_04,rashid,story,i18n:events.desert_camp1_scene.say_7#1,二十年前，代理比试之夜……我听见了歌声。无论敌我，都停下了手。,"quiet and faraway, remembering a night when a song stopped a battle",二十年前の代理試合の夜……歌が聞こえた。敵も味方も、手を止めた。,"Twenty years ago, the night of the champions' bout... I heard singing. Friend and foe alike stopped."
+v_rashid_desert_05,rashid,story,i18n:events.desert_camp1_scene.say_7#2,……那之后的事，不知为何想不起来。回过神时，已经在沙漠里当起了盗贼。,troubled and bitter; he cannot remember what came after,……そのあとのことは、なぜか思い出せん。気づけば、砂の上で盗賊をしていた。,"...What happened after, I somehow can't recall. Next thing I knew, I was a bandit on the sand."
+v_rashid_desert_06,rashid,story,i18n:events.desert_camp1_scene.say_7#3,走吧。我们回岩台的洞里去。……下次可就没这么简单了。,gets up and leaves; gruff warning with a trace of respect,行け。おれたちは台地の洞へ帰る。……次は、こうはいかんぞ。,"Go. We're heading back to the mesa caves. ...Next time, it won't go like this."
+v_rashid_hawks_01,rashid,story,i18n:events.desert_hawks_boss.say#0,……来了啊。商队的走狗。这里是我们最后的巢穴。,"in his last hideout, hostile and cornered; spits the insult",……来たか。隊商の犬め。ここは、おれたちの最後の巣だ。,...So you've come. Caravan dogs. This is our last nest.
+v_rashid_hawks_02,rashid,story,i18n:events.desert_hawks_boss.say#1,这次，我可不会手下留情！,"draws his blade, fierce battle resolve",今度は、手加減せんぞ！,"This time, I won't hold back!"
+v_rashid_hawks_03,rashid,story,i18n:events.desert_hawks_boss.say_2#0,……服了。是我们输了。,defeated and out of breath; admits it plainly,……まいった。おれたちの負けだ。,...I yield. We've lost.
+v_rashid_hawks_04,rashid,story,i18n:events.desert_hawks_boss.say_2#1,把这副手套拿去吧。……我不再偷了。我会另找条路养活洞里的人。,"hands over his gloves; tired, resolved to give up stealing, quietly decent",この手袋を持っていけ。……もう、盗みはやめる。洞の者を食わせる道を探すさ。,Take these gloves. ...I'm done with stealing. I'll find another way to feed our people.
+v_rowell_biblia_01,rowell,story,i18n:events.biblia_arrival.say_2#0,……太糟了。整座城，都快变成空白了。,"Grim dismay, witnessing tragic void, slow pace, hushed horrified volume.",……ひどいな。町じゅうが、白紙になりかけている。,...This is bad. The whole town is going blank.
+v_rowell_biblia_02,rowell,story,i18n:events.biblia_arrival.say_4#0,诺亚姐。你，还记得吗？,"Cautious hope, gentle concern, hesitant pace, soft questioning volume.",ノアさん。あんたは、覚えているのか。,Noa. You still remember?
+v_rowell_biblia_03,rowell,story,i18n:events.biblia_arrival.say_8#0,大书库里，到处都是院长的书吏。三层的封印之门，要用我手册上的话语打开。,"Tactical urgency, focused briefing, quick efficient pace, lowered sharp volume.",大書庫の中は、院長の書記たちでいっぱいだ。3階の封印の扉は、おれの手帳の言葉で開く。,The Great Archive is full of the Director's scribes. The sealed door on the third floor opens with the words in my notebook.
+v_rowell_biblia_04,rowell,story,i18n:events.biblia_arrival.say_9#0,我在城北门等你们。准备好了，就过来。,"Grounded camaraderie, resolute anticipation, steady pace, clear warm volume.",おれは、町の北の門で待つ。支度ができたら、来てくれ。,I'll wait at the town's north gate. Come when you're ready.
+v_rowell_ending_01,rowell,story,i18n:events.final_ending.say_8#0,我们回去吧，院长。……给我讲讲米拉小姐的事吧。拜托了。,"Tender empathy, healing closure, gentle slow pace, soft warm volume.",帰りましょう、院長。……ミラさんの話を、聞かせてください。,"Let's go home, Director. ...Tell me about Mira. Please."
+v_rowell_prologue_01,rowell,story,i18n:ev.pharos_story.pharos_rowell.run.say#0,……讲述者的学徒吗。灯塔的传说，昨天记录院已经抄录了。,"Cold disdain, bureaucratic arrogance, crisp brisk pace, sharp medium volume.",……語り部の見習いか。灯台の伝承なら、きのう記録院が写し取った。,"...An apprentice storyteller. If it's the lighthouse tale, the Archive copied it yesterday."
+v_rowell_prologue_02,rowell,story,i18n:ev.pharos_story.pharos_rowell.run.say_2#0,传说由记录院负责保管。用不着讲述者出面。,"Dismissive superiority, stiff authority, firm pace, projecting clear volume.",伝承は記録院が責任をもって保管する。語り部の出る幕じゃない。,The Archive takes full responsibility for tales. There's no call for storytellers here.
+v_rowell_roa_01,rowell,story,i18n:events.story_final_roa.say_8#0,去岛上的船，我让人从法罗斯港开出来。……我也去。,"Reliable determination, renewed purpose, brisk pace, steady confident volume.",島へは、ファロスの港から船を出させる。……おれも行く。,I'll have a ship sail from Pharos harbor to the island. ...I'm coming too.
+v_rowell_roa_02,rowell,story,i18n:events.story_final_roa.say_13#0,我先去港口，让人把船准备好。在法罗斯会合吧。,"Action-oriented resolve, dependable ally, brisk pace, firm clear volume.",おれは先に港へ行って、船を用意させておく。ファロスで会おう。,I'll go ahead to the harbor and get a ship ready. We'll meet in Pharos.
+v_rowell_seal_01,rowell,story,i18n:events.archive_3_rowell.say#0,久等了。……这里，就是封印之门。,"Focused determination, readying for clash, firm pace, confident medium volume.",待たせたな。……ここが、封印の扉だ。,Sorry to keep you. ...This is the sealed door.
+v_rowell_seal_02,rowell,story,i18n:events.archive_3_rowell.say_2#0,"""白之书的门扉啊，为拥有名字之人开启""","Solemn incantation, commanding authority, deliberate rhythmic pace, ringing loud volume.",白き書の扉よ、名を持つ者のために開け,"""O door of the White Book, open for those who bear a name."""
+v_rowell_seal_03,rowell,story,i18n:events.archive_3_rowell.say_3#0,院长的书吏们……,"Sudden alertness, bracing for fight, tense sharp pace, clipped medium volume.",院長の書記たちか……。,The Director's scribes...
+v_rowell_seal_04,rowell,story,i18n:events.archive_3_rowell.say_4#0,这里，交给我。快去，讲述者！,"Heroic defiance, desperate urgency, explosive pace, roaring fierce volume.",ここは、おれが引き受ける。行け、語り部！,"I'll handle this. Go, storyteller!"
+v_rowell_t2_01,rowell,story,i18n:events.story_t2.run.say#0,又见面了，讲述者。,"Irritated condescension, smug greeting, brisk pace, sharp medium volume.",また会ったな、語り部。,"We meet again, storyteller."
+v_rowell_t2_02,rowell,story,i18n:events.story_t2.run.say_2#0,别再到处宣扬那些传说了。由记录院抄录保管，就已经足够了。,"Stern reprimand, authoritarian impatience, hurried pace, raised firm volume.",伝承を言いふらして回るのは、もうやめろ。記録院が写して保管すれば、それで十分だ。,"Stop spreading tales around. If the Archive copies and keeps them, that's enough."
+v_rowell_t2_03,rowell,story,i18n:events.story_t2.run.say_3#0,既然说了也不明白，那就用武力阻止你。,"Aggressive resolve, ready to strike, rapid pace, harsh loud volume.",口で言っても分からないなら、力ずくで止める。,"If words won't make you understand, I'll stop you by force."
+v_rowell_t2_04,rowell,story,i18n:events.story_t2.run.say_4#0,……可恶。那支笔，看来不是侥幸。,"Gritted frustration, wounded pride, strained pace, clipped tense volume.",……くっ。その筆、まぐれではないようだな。,"...Tch. That pen of yours wasn't just luck, it seems."
+v_rowell_t2_05,rowell,story,i18n:events.story_t2.run.say_5#0,你给我记住。传说，也会变成束缚人的锁链。,"Bitter warning, haughty parting shot, sharp pace, biting medium volume.",覚えておけ。伝承は、人を縛る鎖にもなる。,Remember this. A tale can become a chain that binds people.
+v_rowell_t2_06,rowell,story,i18n:events.story_t2.run.say_6#0,收下吧。我不喜欢欠人情。,"Reluctant debt, stiff begrudging pride, fast clipped pace, curt volume.",受け取っておけ。借りを作るのは好かない。,Take it. I don't like owing anyone.
+v_rowell_t2_07,rowell,story,i18n:events.story_t2.run.say_7#0,这就是实力的差距。……冷静一下吧，讲述者。,"Smug satisfaction, haughty mockery, relaxed pace, commanding medium volume.",これが力の差だ。……頭を冷やせ、語り部。,"That's the difference between us. ...Cool your head, storyteller."
+v_rowell_t4_01,rowell,story,i18n:events.story_t4.run.say_4#0,……又见面了。上次欠你的人情，我还没还呢。,"Defiant tension, lingering grudge, measured pace, firm guarded volume.",……また会ったな。この前の借りは、まだ返していないぞ。,...We meet again. I still haven't repaid my debt from last time.
+v_rowell_t4_02,rowell,story,i18n:events.story_t4.run.say_5#0,……听到了吧。院长是认真的。,"Somber gravity, uneasy awe, hushed pace, low tense volume.",……聞いたか。院長は本気だ。,...You heard that? The Director means it.
+v_rowell_t4_03,rowell,story,i18n:events.story_t4.run.say_6#0,院长想要创造一个没有悲伤的世界。你是不会明白的。,"Vehement defense, masking inner doubts, intense pace, sharp defensive volume.",院長は、悲しみのない世界を作ろうとしている。おまえには分からないだろうが。,The Director is trying to build a world without grief. Not that you'd understand.
+v_rowell_t5_01,rowell,story,i18n:events.story_t5.run.say#0,这一次，可不许你说是侥幸。,"Fierce pride, determined challenge, fast pace, forceful loud volume.",今度は、まぐれとは言わせない。,"This time, you won't call it luck."
+v_rowell_t5_02,rowell,story,i18n:events.story_t5.run.say_2#0,为什么……你重新讲述的传说，又会被人们传诵。,"Conflicted bewilderment, mounting frustration, uneven pace, agitated volume.",なぜだ……。おまえが語り直した伝承は、また人の口にのぼる。,Why...? The tales you retell will be on people's lips again.
+v_rowell_t5_03,rowell,story,i18n:events.story_t5.run.say_3#0,那会变成争端的种子，你为什么就是不明白！,"Desperate fury, cracking conviction, sudden outburst, shouting high volume.",それが争いの種になると、なぜ分からない！,Why can't you see that they'll sow the seeds of war!
+v_rowell_t5_04,rowell,story,i18n:events.story_t5.run.say_4#0,……我……真的，是对的吗……,"Shaken foundation, crumbling worldview, hesitant slow pace, stunned quiet whisper.",……おれは……本当に、正しいのか……。,...Am I... really in the right...?
+v_rowell_t5_05,rowell,story,i18n:events.story_t5.run.say_5#0,……明明赢了，为什么。心里一点也不痛快。,"Hollow victory, bitter confusion, trailing slow pace, muttering low volume.",……勝ったのに、どうしてだ。少しも、すっきりしない。,...I won. So why? I don't feel any better.
+v_rowell_t7_01,rowell,story,i18n:events.story_t7.run.say#0,……等一下。我有话要说。,"Earnest urgency, dropping haughtiness, abrupt halting pace, subdued medium volume.",……待ってくれ。話がある。,...Wait. I need to talk to you.
+v_rowell_t7_02,rowell,story,i18n:events.story_t7.run.say_2#0,输给你以后，我一直在想。……我有答案了。,"Somber resolution, honest vulnerability, steady deliberate pace, quiet firm volume.",おまえに負けてから、ずっと考えていた。……答えが出た。,"Since you beat me, I've been thinking. ...I have my answer."
+v_rowell_t7_03,rowell,story,i18n:events.story_t7.run.say_3#0,院长知道，把传说抄进白之书，那个传说就会从人们心中消失。,"Cold horror, uncovering betrayal, grim deliberate pace, tense low volume.",院長は、白の書に伝承を写すと、その伝承が人の心から消えると知っていた。,"The Director knew that when a tale is copied into the White Book, it vanishes from people's hearts."
+v_rowell_t7_04,rowell,story,i18n:events.story_t7.run.say_4#0,他明知如此，还让我们去抄。,"Trembling outrage, bitter realization, sharp pace, breathy strained volume.",知っていて、おれたちに写させていたんだ。,"He knew, and he had us copy them anyway."
+v_rowell_t7_05,rowell,story,i18n:events.story_t7.run.say_5#0,我想不起自己母亲的脸了。因为我把自己的日记，抄进了白之书。,"Devastating grief, quiet anguish, halting slow pace, cracking soft volume.",おれは、自分の母の顔を思い出せない。自分の日記を、白の書に写したからだ。,I can't remember my own mother's face. Because I copied my diary into the White Book.
+v_rowell_t7_06,rowell,story,i18n:events.story_t7.run.say_6#0,拿着这个。上面写着打开大书库封印之门的话语。,"Resolute alliance, urgent trust, rapid steady pace, clear firm volume.",これを持っていけ。大書庫の封印の扉を開ける言葉が書いてある。,Take this. It has the words that open the sealed door of the Great Archive.
+v_rowell_t7_07,rowell,story,i18n:events.story_t7.run.say_7#0,我不会再回记录院了。,"Final defiance, burning bridges, decisive pace, resonant unwavering volume.",おれは、もう記録院には戻らない。,I'm not going back to the Archive.
+v_sonja_snow_01,sonja,story,i18n:events.yule_sonja.say_4#0,……火好弱。添了油脂，添了又添。,"worried, murmuring by the weak fire",……火が細いの。脂を足しても、足しても。,"...The fire's so thin. I add tallow and add tallow, but..."
+v_sonja_snow_02,sonja,story,i18n:events.yule_sonja.say_4#1,我叫索尼娅。是守火人家的女儿。守着大灶的火。,introduces herself quietly and earnestly,わたしはソーニャ。火守りの家の娘よ。大かまどの火を守ってるの。,I'm Sonja. Daughter of the firekeepers' house. I tend the fire in the great hearth.
+v_sonja_snow_03,sonja,story,i18n:events.yule_sonja.say_5#0,祭典上，要在火前念故事书。每年，都是同一本。,explains the custom gently,祭ではね、火の前で物語の本を読むの。毎年、同じ本を。,"At the festival, we read from the storybook in front of the fire. The same book, every year."
+v_sonja_snow_04,sonja,story,i18n:events.yule_sonja.say_5#1,可今年，打开书一看……一片空白。一个字都没剩下。,"shaken, almost whispering; the book was completely blank",でも今年、本を開いたら……真っ白だったの。一文字も、残ってなかった。,"But this year, when I opened it... it was blank. Not a single letter was left."
+v_sonja_snow_05,sonja,story,i18n:events.snow_finale.say_4#0,你回来啦。,relieved and happy to see them back,おかえりなさい。,Welcome back.
+v_sonja_snow_06,sonja,story,i18n:events.snow_finale.say_4#1,我正要在数夜板上刻下今晚的一道。……可是，手停住了。,"thoughtful and puzzled, her hand stopped over the board",夜数えの板に、今夜の刻みを入れようとしたの。……でも、手が止まっちゃった。,I went to cut tonight's notch into the night-counting board. ...But my hand stopped.
+v_sonja_snow_07,sonja,story,i18n:events.snow_finale.say_4#2,……今晚的天空，比平时更亮。,"soft wonder, looking up at a sky that is a little brighter",……今夜は、いつもより空が明るい。,"...Tonight, the sky is brighter than usual."
+v_valzard_oblivion_01,valzard,story,i18n:events.oblivion_3_echo.say#0,……瓦尔扎德……那就是，吾之名吗。,"Stunned realization, ancient dread awakening, slow raspy pace, hollow rumbling volume.",……ヴァルザード……それが、われの名であったか。,...Valzard... Was that my name?
+v_valzard_oblivion_02,valzard,story,i18n:events.oblivion_3_echo.say_2#0,三百年……即便被遗忘，也只剩下了恐惧……。,"Weary anguish, lingering terror of centuries, dragging heavy pace, low gravelly volume.",三百年……忘れられてなお、恐れだけが残った……。,"Three hundred years... forgotten, yet only the fear remained..."
+v_valzard_oblivion_03,valzard,story,i18n:events.oblivion_3_echo.say_3#0,光之……纹章……。,"Faint reverence, defeat and memory, dying slow pace, fading raspy whisper.",光の……紋章……。,The Crest... of Light...
+v_zaid_desert_01,zaid,story,i18n:events.kasim_zaid.say_2#0,我是商队首领扎伊德。告示你看到了吗？,"first meeting; introduces himself plainly, a caravan master sizing up the travellers",わしは隊商の長ザイード。掲示を見てくれたか。,"I'm Zaid, master of the caravans. You've seen the notice?"
+v_zaid_desert_02,zaid,story,i18n:events.kasim_zaid.say_2#1,我们要往王墓绿洲运送供品。这是老规矩了。我们泉水的源头，就是那里的古泉。,"explains the old custom calmly, with quiet respect for the tradition",王墓のオアシスへ、供え物を運ぶ。昔からの習わしでな。泉の水の源が、そこの古い泉なんだ。,We carry offerings to the Tomb Oasis. An old custom. The old spring there is the source of our spring's water.
+v_zaid_desert_03,zaid,story,i18n:events.kasim_zaid.say_2#2,沙暴加上盗贼，商队出不了门。能请你们当护卫吗？露营三晚，到绿洲为止。,worried but steady; asks for help as a serious request,砂嵐と盗賊で、隊が出せずにいる。護衛を頼めないか。野営を三晩、オアシスまでだ。,"With sandstorms and bandits, we can't send a caravan out. Would you guard us? Three nights of camp, to the oasis."
+v_zaid_desert_04,zaid,story,i18n:events.desert_camp3_scene.say#0,"天地尽头，泛白的星……祖母管那颗星叫""黎明之星""。","at the campfire, looking at a star low on the horizon; soft and nostalgic, remembering his grandmother",地の果ての、白む星……。祖母は、あれを「夜明けの星」と呼んでいた。,"The star at the world's edge, growing pale... My grandmother called that one ""the dawn star."""
+v_zaid_desert_05,zaid,story,i18n:events.desert_camp3_scene.say#1,"……黎明。真是个奇怪的词。夜会""破晓""？ 是什么破了？","puzzled and wondering, almost to himself; he does not know what the word dawn means",……夜明け。ふしぎな言葉だな。夜が、明ける？何が明けるんだ？,...Dawn. Strange word. Night... breaks? What breaks?
+v_zaid_desert_06,zaid,story,i18n:events.desert_finale.say#0,泉……泉水涨起来了！,"astonished, overjoyed, his voice rising as the water wells up",泉が……泉が満ちていく！,The spring... the spring is filling!
+v_zaid_desert_07,zaid,story,i18n:events.desert_finale.say#1,"……这光，是祖母歌里""黎明之星""的颜色。","hushed and moved, recognising the colour from his grandmother's song",……この光、祖母の歌の「夜明けの星」の色だ。,"...This light — it's the color of the ""dawn star"" in my grandmother's song."
+v_zaid_song_01,zaid,story,i18n:ev.desert_00_common.STARS#0,北方的钉星 不动的星啊请做迷途商队的 木桩,"sings a slow, simple caravan song at the campfire, low and steady, like an old folk melody",北のくぎ星動かぬ星よ迷う隊商のくいとなれ,"Nail-star of the north, star that never moves, be the stake for caravans gone astray"
+v_zaid_song_02,zaid,story,i18n:ev.desert_00_common.STARS#1,七颗泉之星 倾下你的勺把夜的露珠 洒向沙地,"sings a slow, simple caravan song at the campfire, warm and steady",七つの泉星ひしゃくを傾け夜のしずくを砂にまけ,"Seven spring-stars, tip your dipper, scatter the night's dew upon the sand"
+v_zaid_song_03,zaid,story,i18n:ev.desert_00_common.STARS#2,"在天地尽头 泛白的星啊……祖母叫它 ""黎明之星""","sings softly, the last line spoken more than sung, wistful",地の果ての白む星よ……祖母は「夜明けの星」と呼んだ,"Star at the world's edge, growing pale... Grandmother called it ""the dawn star"""
+v_zakuro_ash_01,zakuro,story,i18n:events.caldera_arena_zakuro.say_3#0,……抄写的活，不干了。心里不舒坦。,"beaten, calm and blunt; decides to quit a job that tastes bad",……写す仕事は降りる。後味が悪い。,...I'm done with copying jobs. Leaves a bad taste.
+v_zakuro_ash_02,zakuro,story,i18n:events.caldera_arena_zakuro.say_5#0,别人的信，我不看。我是按这个规矩活的。,terse and matter-of-fact about his own rule; quietly proud,人の手紙は読まねえ。そういう決まりで生きてる。,I don't read other people's letters. That's the rule I live by.
+v_giant_peak_01,giant,story,i18n:events.peak_giant.say_2#0,……自此往上，谁也不得通过……。,"Brute menace, freezing intimidation, slow stomping pace, booming guttural volume.",……ここより上へは、誰も通さぬ……。,...None shall pass... beyond this point...
+v_mistwitch_marsh_01,mistwitch,story,i18n:events.bog_mistbeast.say#0,……来吧……孩子们……被遗忘的……钟之……歌……。,"Creepy lure, broken glitched cadence, halting unnatural pace, eerie whispering falsetto volume.",……オイデ……コドモタチ……ワスレラレタ……カネノ……ウタ……。,...Come... children... forgotten... bell... song...
+v_guardian_mine_01,guardian,story,i18n:events.mine_rockdoor.say_6#0,……忘却誓约之人啊。掘至第七层之下之人啊。,"Stern mechanical judgment, stony ancient voice, rigid slow pace, booming heavy volume.",……誓いを忘れた者よ。七の層より下を掘った者よ。,...You who forgot the oath. You who dug below the Seventh Level.
+v_guardian_mine_02,guardian,story,i18n:events.mine_warden.say_2#0,依与锻冶神之约，吾守护此山。若不离去，唯有击碎。,"Relentless executioner, unwavering duty, heavy rhythmic pace, threatening loud volume.",鍛冶神との約束により、われは、この山を守る。去らぬなら、打ち砕くのみ。,"By my pact with the Smith God, I guard this mountain. Depart, or be broken."
+v_guardian_mine_03,guardian,story,i18n:events.mine_warden.say_8#0,……誓约，原来还活着吗。那么，吾便沉睡吧。,"Calm acceptance, mechanical shutdown, descending slow pace, fading low volume.",……誓いは、まだ生きていたか。ならば、われは眠ろう。,...So the oath still lives. Then I shall sleep.
+v_sentinel_star_01,sentinel,story,i18n:events.star_sentinel.say#0,……禁止，入内。没有，星之名者，不得，通过……,"Monotone synthetic warning, glitchy fragmented cadence, robotic disjointed pace, flat metallic volume.",……タチイリ、キンシ。ホシノナヲ、モタヌモノハ、トオサナイ……。,...No. Entry. None without. The names. Of stars. Shall pass...
+v_rita_forest_01,rita,story,i18n:events.fern_rita.say_5#0,安眠吧森之主，在千圈年轮……不行。后面的，怎么也想不起来。,"sings the first line softly and slowly as a melody, then breaks off; frustrated and sad that the rest will not come",眠れ森の主、千の年輪に……。だめ。この先が、どうしても出てこないの。,"Sleep, lord of the forest, in a thousand rings... No. The next part just won't come to me."
+v_rita_forest_02,rita,story,i18n:events.fern_rita.say_5#1,我叫丽塔，是这个村子的歌者。千年树之歌，我只记得第一段。,introduces herself shyly and earnestly; a little ashamed that the village singer has forgotten the song,わたしはリタ。この村の歌い手。千年樹の歌は、最初の一節しか思い出せないの。,"I'm Rita, this village's singer. Of the Millennial Tree's song, I can only remember the first verse."
+v_rita_forest_03,rita,story,i18n:events.forest_finale.say_2#0,大家，请听。这是千年树之歌。,"calls the gathered village to listen, happy and a little nervous; she can sing the whole song again",みんな、聞いて。千年樹の歌よ。,"Everyone, listen. The song of the Millennial Tree."
+v_hald_snow_01,hald,story,i18n:events.snow_festival.say_5#0,是狼群！包围村子了！,"a shouted alarm through the blizzard, urgent",狼の群れだ！村を囲んでおる！,A wolf pack! They've surrounded the village!
+v_hald_snow_02,hald,story,i18n:events.snow_festival.say_5#1,关门！男人们去守门！,"shouting orders, commanding",門を閉めろ！男たちは門へ！,"Shut the gates! Men, to the gates!"
+v_dorga_ash_01,dorga,story,i18n:events.caldera_dorga.say_5#0,比试正酣时，两个姑娘走下沙场唱起了歌。无论敌我，都停下了剑。,"quiet and faraway, an old fighter remembering the night two girls sang in the middle of the last proxy match",試合の最中に、娘が二人、砂の上に下りてきて歌った。敵も味方も、剣を止めた。,"In the middle of the bout, two young women came down onto the sand and sang. Friend and foe alike lowered their swords."
+v_dorga_ash_02,dorga,story,i18n:events.caldera_dorga.say_6#0,"……她们唱的是什么，我想不起来了。从那夜起，我就把这个大会叫作""试炼""。","troubled that he cannot remember the song; slow, grave, a vow made long ago",……何を歌っていたのか、思い出せん。あの夜から、わしはこの大会を『試練』と呼ぶことにした。,"...What they sang, I cannot recall. From that night on, I have called this tournament a ""trial."""
+v_dorga_ash_03,dorga,story,i18n:events.ash_finale.say_4#0,……把歌者的席位空出来吧。直到有一天，能刻下她们两人的名字。,"moved and resolved, standing before the old plaque; gentle and firm",……歌い手の席を、空けておこう。いつか、二人の名を彫れる日が来るまで。,...Let's keep a seat for the singers. Until the day comes that we can carve their two names.
+v_kaya_ash_01,kaya,story,i18n:events.caldera_kaya.say_2#0,蛋正在变冷。明明必须给它讲火鸟的故事……。,"worried and close to tears, a young priestess who has failed her duty",卵が、冷えていくの。火の鳥の物語を、語ってあげなきゃいけないのに……。,"The egg is growing cold. I must tell it the tale of the firebird, and yet..."
+v_kaya_ash_02,kaya,story,i18n:events.caldera_kaya.say_3#0,去年，我讲给记录院的人听后，从那以后……想说出口，却怎么也说不出来。,bewildered and afraid; the words have gone since she told them to the Archive,去年、記録院の人に語ったら、それきり……声に出そうとしても、出てこないの。,"Last year I told it to someone from the Archive, and since then... when I try to say it aloud, nothing comes."
