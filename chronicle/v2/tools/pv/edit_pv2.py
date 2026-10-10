@@ -13,12 +13,116 @@
 #   ffmpeg -i video.mp4 -i audio.wav -c:v copy -c:a aac -b:a 256k out.mp4
 import json
 import os
+import re
+import runpy
+import subprocess
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FONT_EN_PATH = os.path.join(os.environ.get('PV_FONTS', ''), 'cinzel-700.ttf')
 FONT_JA_PATH = os.path.join(HERE, '..', '..', 'assets', 'fonts', 'ZenMaruGothic-Bold.ttf')
 CLIPS = os.environ.get('PV_CLIPS', '')
 WORK = os.environ.get('PV_WORK', HERE)
+
+# ================================================================== 言語（追加。PV_LANG 未設定 = ja = v14 と同じ書き出し）
+#   PV_LANG=en|zh|ko: 声は assets/voice/<言語>/（無い id = 使い回しの叫びは日本語の声）、文字は edit_pv2_loc.py の表、
+#   見出しの書体は言語の書体（英語 Nunito・中国語 Noto Sans SC・韓国語 Noto Sans KR）。尺・入点は edit_pv2_loc.py の ext・src（dx・ds）
+LANG = {'en': 'en', 'zh': 'zh', 'zh-hans': 'zh', 'zh-cn': 'zh', 'ko': 'ko'}.get(os.environ.get('PV_LANG', 'ja').lower().replace('_', '-'), 'ja')
+LOC = runpy.run_path(os.path.join(HERE, 'edit_pv2_loc.py'))['LOC'][LANG] if LANG != 'ja' else {}
+VOICE_DIR = os.path.join(HERE, '..', '..', '..', 'assets', 'voice')
+FF = os.environ.get('FFMPEG') or os.environ.get('FF') or '/usr/local/lib/python3.11/dist-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v7.0.2'
+FITLOG = []      # 文字の大きさを縮めた物（確かめ用）: (文, 大きさ, 幅)
+VOICE_INFO = []  # 声の確かめ用: (id, 鳴らす秒, 長さ, 枠の終わり or None)
+
+
+def L(s):
+    """日本語の文 → その言語の文（ja は変えない）"""
+    return LOC['txt'].get(s, s) if LANG != 'ja' else s
+
+
+def dx(k):
+    """その言語の声が枠に入らないカットの延長（秒）"""
+    return LOC.get('ext', {}).get(k, 0.0) if LANG != 'ja' else 0.0
+
+
+def ds(k):
+    """撮り直したカットの入点のずらし（秒）"""
+    return LOC.get('src', {}).get(k, 0.0) if LANG != 'ja' else 0.0
+
+
+def vfile(vid):
+    if LANG == 'ja':
+        return vid
+    d = LOC['voice_dir']
+    return d + '/' + vid if os.path.exists(os.path.join(VOICE_DIR, d, vid + '.ogg')) else vid   # 無い id（使い回しの叫び）は日本語の声のまま
+
+
+_DUR = {}
+
+
+def real_dur(vid):
+    """その言語で鳴る声のファイルの長さ（秒）"""
+    f = vfile(vid)
+    if f not in _DUR:
+        r = subprocess.run([FF, '-i', os.path.join(VOICE_DIR, f + '.ogg')], capture_output=True, text=True).stderr
+        m = re.search(r'Duration: (\d+):(\d+):([\d.]+)', r)
+        _DUR[f] = int(m[1]) * 3600 + int(m[2]) * 60 + float(m[3]) if m else 3.0
+    return _DUR[f]
+
+
+def clip_event(clip, fn, id_=None, nth=0):
+    """撮り直したクリップの音の記録（clips/<id>.audio.json）の n 番目の（種類 fn・id）の時刻（秒）。無ければ None"""
+    p = os.path.join(CLIPS, clip + '.audio.json')
+    if not os.path.exists(p):
+        return None
+    ev = [e['f'] / 60.0 for e in json.load(open(p)) if e['fn'] == fn and (id_ is None or e['id'] == id_)]
+    return ev[nth] if len(ev) > nth else None
+
+
+CLIPS_JA = os.environ.get('PV_CLIPS_JA') or CLIPS   # 日本語（v14）のクリップの置き場（言語版の撮り直しとの時刻の差を見る）
+
+
+def _first_t(d, clip, vid):
+    p = os.path.join(d, clip + '.audio.json')
+    if not os.path.exists(p):
+        return None
+    for e in json.load(open(p)):
+        if e['fn'] in ('voice', 'battleVoiceId', 'jingle') and e['id'] == vid:
+            return e['f'] / 60.0
+    return None
+
+
+def clip_shift(clip, vid):
+    """言語版で撮り直したカットで、声（ジングル）vid が鳴る時刻が、日本語（v14）のカットよりどれだけずれたか（秒）。ja は 0。
+    戦闘の導入の声（ボスの『始まり』の声）などの長さが言語で違い、導入の後の進みが一定の秒だけずれるので、入点（src）をその分ずらして同じ絵を使う"""
+    if LANG == 'ja':
+        return 0.0
+    a, b = _first_t(CLIPS_JA, clip, vid), _first_t(CLIPS, clip, vid)
+    return (b - a) if a is not None and b is not None else 0.0
+
+
+def _fit(text, st, maxw, base):
+    """文字の幅が maxw に入る大きさ（base から 2 ずつ縮める）。compose.py の text_mask と同じ幅の数え方"""
+    from PIL import ImageFont
+    size = base
+    while size > 28:
+        f = ImageFont.truetype(st['font'], size)
+        if st.get('var'):
+            f.set_variation_by_name(st['var'])
+        tr = st.get('track', 0)
+        w = max((sum(f.getlength(c) for c in ln) + tr * max(0, len(ln) - 1)) if tr else f.getlength(ln) for ln in text.split('\n')) + 8
+        if w <= maxw:
+            break
+        size -= 2
+    FITLOG.append((text.replace('\n', ' / '), size, round(w), maxw, 'shrunk from %d' % base if size != base else 'ok'))
+    return size
+
+
+def _body(kind, text, base, maxw):
+    """その言語の本文の書体の style（大きさは幅に入るよう縮める）"""
+    B = LOC['body']
+    st = dict(font=B['font'], var=B['var'], track=LOC['track'][kind])
+    st['size'] = _fit(text, st, maxw, base)
+    return st
 
 # 曲の小節（秒）と、曲の頭から最初の小節の頭までの秒（拍の強さから測った値）
 #   title 92BPM 3/4・home 76BPM 3/4・tavern 116BPM・legend 66BPM 4/4・battle 164BPM 4/4・sorrow 66BPM 4/4・boss2 148BPM 4/4・dawn 84BPM 3/4
@@ -103,14 +207,15 @@ CLIPPED = []   # 場面の終わりで止めた声（確かめ用）
 def vo(vid, at, gain=0, y=1015, nosub=False, size=None, tmax=None, until=None):
     """声を置いて、字幕も出す。
     until: その場面の終わり（秒）。声は場面をまたがない: 越える声はそこで短く消し、字幕も切る（持ち主 2026-10-01）"""
-    d = dict(file=vid, at=at, gain=gain + VBOOST.get(vid, 0))
-    end = at + VDUR.get(vid, 3.0)
+    d = dict(file=vfile(vid), at=at, gain=gain + VBOOST.get(vid, 0) + (LOC.get('gain', {}).get(vid, 0) if LANG != 'ja' else 0))
+    end = at + (VDUR.get(vid, 3.0) if LANG == 'ja' else real_dur(vid))
+    VOICE_INFO.append((vid, at, end - at, until))
     if until is not None and end > until:
         d.update(dur=max(0.2, until - at), fout=0.12)
         CLIPPED.append((vid, round(at, 2), round(end - until, 2)))
     VOICE.append(d)
     if not nosub and vid in SUBS and vid not in NOSUB:
-        t1 = at + VDUR.get(vid, 3.0) + 0.35
+        t1 = at + (VDUR.get(vid, 3.0) if LANG == 'ja' else real_dur(vid)) + 0.35
         for lim in (tmax, until):
             if lim is not None:
                 t1 = min(t1, lim)
@@ -135,9 +240,27 @@ def cut(clip, at, dur, src=0.0, ev=False, ev_voice=True, ev_jingle=True, vgain=0
                     SFX.append(dict(id='jingle_' + e['id'], at=at + tc, gain=jgain))
 
 
+def _cap_loc(kicker, text, t0, t1, band, ja, size, top):
+    """cap の言語版: 見出しの小さい字は英語は Cinzel の金（地名も）、中国語・韓国語は言語の書体の金。本文は言語の書体で、幅に入る大きさ"""
+    B = LOC['body']
+    yk, yt = (128, 205) if top else (838, 915)
+    if LANG == 'en':
+        kt = L(kicker).upper() if ja else kicker
+        ks = dict(font=FONT_EN_PATH, size=40, track=8) if ja else dict(font=FONT_EN_PATH)   # 地名は日本語の見出し（42 px）に近い大きさで
+    else:
+        kt = L(kicker) if ja else LOC['kick'].get(kicker, kicker)
+        ks = dict(font=B['font'], var=B['var'], size=42 if ja else 38, track=8 if ja else LOC['track']['kick'])
+    T.append(dict(kind='cap_k', text=kt, style=ks, t0=t0, t1=t1, x=110, y=yk, anchor=(0, 0.5), anim='slide', fin=0.3, fout=0.3, band=band, band_k=0.75))
+    if text:
+        text = L(text)
+        T.append(dict(kind='cap', text=text, style=_body('cap', text, size or 72, 1696), t0=t0 + 0.08, t1=t1, x=104, y=yt, anchor=(0, 0.5), anim='slide', fin=0.3, fout=0.3))
+
+
 def cap(kicker, text, t0, t1, band=260, ja=False, size=None, top=False):
     """機能の見出し（左下）: 小さい金（英字。ja=True で地名などの日本語）＋ 大きい白。
     top=True は左上（画面の下に本物の窓が出るカット）"""
+    if LANG != 'ja':
+        return _cap_loc(kicker, text, t0, t1, band, ja, size, top)
     ks = dict(font=FONT_JA_PATH, size=42, track=8) if ja else dict(font=FONT_EN_PATH)
     yk, yt = (128, 205) if top else (838, 915)
     T.append(dict(kind='cap_k', text=kicker, style=ks, t0=t0, t1=t1, x=110, y=yk, anchor=(0, 0.5), anim='slide', fin=0.3, fout=0.3, band=band, band_k=0.75))
@@ -147,7 +270,11 @@ def cap(kicker, text, t0, t1, band=260, ja=False, size=None, top=False):
 
 
 def tag(text, t0, t1, y=540, size=None, dark=False):
-    st = dict(size=size) if size else {}
+    if LANG != 'ja':
+        text = L(text)
+        st = _body('tag', text, size or 76, 1700)
+    else:
+        st = dict(size=size) if size else {}
     if dark:   # 白い画面の上の字（墨の色）
         st.update(color=(52, 40, 30), glow=0, shadow=False)
     T.append(dict(kind='tag', text=text, style=st, t0=t0, t1=t1, x=960, y=y, anim='rise', fin=0.7, fout=0.5))
@@ -155,9 +282,19 @@ def tag(text, t0, t1, y=540, size=None, dark=False):
 
 def big(text, t0, t1, y=500, size=None, subtext=None, band=None):
     st = dict(size=size) if size else {}
+    sst = {}
+    if LANG != 'ja':
+        text = L(text)
+        st = _body('big', text, size or 210, 1500)
+        if subtext:
+            subtext = L(subtext)
+            sst = _body('big_sub', subtext, 58, 1640)
     T.append(dict(kind='big', text=text, style=st, t0=t0, t1=t1, x=960, y=y, anim='pop', move=0.3, fin=0.18, fout=0.3, sweep=0.8, sweep_at=0.2, band=band))
     if subtext:
-        T.append(dict(kind='big_sub', text=subtext, t0=t0 + 0.2, t1=t1, x=960, y=y + (size or 210) * 0.5 + 60, anim='rise', fin=0.25, fout=0.3))
+        d = dict(kind='big_sub', text=subtext, t0=t0 + 0.2, t1=t1, x=960, y=y + (size or 210) * 0.5 + 60, anim='rise', fin=0.25, fout=0.3)
+        if sst:
+            d['style'] = sst
+        T.append(d)
 
 
 def kick(text, t0, t1, y=150):
@@ -177,17 +314,18 @@ def bars(t, h, ramp=0.5):
 # 持ち主 2026-10-01「全体的に間延びしてる」: どの節も一番いい物だけに絞った（台本の 4 分の版は 5d69b2f）
 DIP.append((0.0, 2.0))   # 黒から
 bars(0.0, LB, 0.01)
-MUSIC.append(dict(file='omen', at=0.0, src=0.0, dur=7.0, fout=1.6, gain=-3))
-cut('s1_tomb_c14_clean', 0.0, 6.3, src=0.6, zoom=(1.0, 1.14), center=(0.5, 0.42))   # 持ち主 2026-10-04: リーネは王の間の口のまん中に立ったまま、カメラは軸の上（左右対称で止まる）
-vo('v_hazal_tomb_01', 0.9, until=6.3)
+E1 = dx('tomb')   # ja 以外: ハザルの声が日本語の枠（6.3 秒）に入らない言語は、王の間のカットを延ばす
+MUSIC.append(dict(file='omen', at=0.0, src=0.0, dur=7.0 + E1, fout=1.6, gain=-3))
+cut('s1_tomb_c14_clean', 0.0, 6.3 + E1, src=0.6, zoom=(1.0, 1.14), center=(0.5, 0.42))   # 持ち主 2026-10-04: リーネは王の間の口のまん中に立ったまま、カメラは軸の上（左右対称で止まる）
+vo('v_hazal_tomb_01', 0.9 + ds('hazal_at'), until=6.3 + E1)
 # 白い紙に飲まれる → 真っ白
-SFX.append(dict(id='page', at=6.15, gain=-2))
-cut('s1_white', 6.3, 1.4, src=0.6, xin=0.4, wash=(0.3, 1.0), zoom=(1.06, 1.14))
-cut(None, 7.7, 1.9, color=(1.0, 1.0, 1.0))
-bars(7.2, 0, 0.6)
-tag('この大陸では、物語が消えかけている。', 7.3, 9.5, dark=True, size=72)
+SFX.append(dict(id='page', at=6.15 + E1, gain=-2))
+cut('s1_white', 6.3 + E1, 1.4, src=0.6, xin=0.4, wash=(0.3, 1.0), zoom=(1.06, 1.14))
+cut(None, 7.7 + E1, 1.9, color=(1.0, 1.0, 1.0))
+bars(7.2 + E1, 0, 0.6)
+tag('この大陸では、物語が消えかけている。', 7.3 + E1, 9.5 + E1, dark=True, size=72)
 # 色が戻る: 白崖の道（左→右）＋ フィーネ
-T_CLIFF = 9.6
+T_CLIFF = 9.6 + E1
 bars(T_CLIFF, LB, 0.8)
 MUSIC.append(dict(file='title', at=T_CLIFF, src=0.0, dur=0, fin=0.8, gain=-1))
 T_TITLE = T_CLIFF + DB_TITLE + 2 * BAR_TITLE   # 題字は曲の小節の頭に
@@ -204,13 +342,18 @@ MUSIC[-1]['dur'] = T2 - T_CLIFF + 0.4
 MUSIC[-1]['fout'] = 0.8
 MUSIC.append(dict(file='home', at=T2, src=DB_HOME, dur=0, fin=0.2, gain=-3))
 DIP.append((T2, 0.4))
-cut('s2_berna', T2, 8.9, src=9.0, ev=True, nosub=True)   # v_berna_lute_05「どこから回ってもいい。…」（本物の会話の窓）
-vo('v_berna_lute_05', T2, nosub=True, until=T2 + 8.9)   # 声はクリップの 8.95 秒で始まる（src 9.0 だと ev から落ちる）ので明示で鳴らす
-tag('白紙になりかけた八つの伝承を、\n語り直す旅へ。', T2 + 1.0, T2 + 8.7, y=420, size=66)
-t = T2 + 8.9
+EB = dx('berna')
+SRC_B = 9.0
+if LANG != 'ja':   # 会話の窓は声の長さで進むので、その言語で撮ったカットの「v_berna_lute_05 が鳴る時刻」の 0.05 秒後から（ja は 8.95 → 9.0）
+    SRC_B = (clip_event('s2_berna', 'voice', 'v_berna_lute_05') or 8.95) + 0.05
+cut('s2_berna', T2, 8.9 + EB, src=SRC_B, ev=True, nosub=True)   # v_berna_lute_05「どこから回ってもいい。…」（本物の会話の窓）
+vo('v_berna_lute_05', T2, nosub=True, until=T2 + 8.9 + EB)   # 声はクリップの 8.95 秒で始まる（src 9.0 だと ev から落ちる）ので明示で鳴らす
+tag('白紙になりかけた八つの伝承を、\n語り直す旅へ。', T2 + 1.0, T2 + 8.7 + EB, y=420, size=66)
+t = T2 + 8.9 + EB
 SFX.append(dict(id='page', at=t - 0.05, gain=-6))
-cut('s2_rowell', t, 5.15, src=0.05, page=0.45, ev=True, nosub=True)   # v_rowell_prologue_02（本物の会話の窓）
-t += 5.15
+ER = dx('rowell')
+cut('s2_rowell', t, 5.15 + ER, src=0.05 + ds('rowell'), page=0.45, ev=True, nosub=True)   # v_rowell_prologue_02（本物の会話の窓）
+t += 5.15 + ER
 bars(t, LB, 0.3)
 cut('s2_fine', t, 4.9, src=0.2, zoom=(3.3, 3.5), center=(0.48, 0.13))   # 少女（灰色のマント）を真ん中に
 vo('v_fine_t1_02', t + 0.15, until=t + 4.9)
@@ -230,11 +373,18 @@ t = T3 + 4.1
 SFX.append(dict(id='page', at=t - 0.05, gain=-6))
 # 潮風亭: カーソルが乗った瞬間に、その仲間の短い声（持ち主 2026-10-03「選ぶ仲間とセリフが地味」→ ハーゲン・ティッタ・テオの人柄の立つ一言。等速の 1 カット）
 T_TAV = t
-T_TAV_END = t + 6.1
 LAND0 = 4.33              # ハーゲンにカーソルが乗る（カットの秒）
+PICKS = (('b_hagen_bigtech_1', 4.33), ('b_titta_bigtech_2', 6.50), ('b_teo_bigtech_2', 8.02))   # カーソルがその人に乗る時刻（カットの秒）
+TAV_LEN = 6.1
+if LANG != 'ja':
+    # その言語で撮り直したカットの記録（clips/s3_tavern.audio.json）から: 決定音（confirm）の 0.22 秒前がカーソルの着地。尺は最後の声が終わるまで
+    _cf = [e['f'] / 60.0 for e in json.load(open(os.path.join(CLIPS, 's3_tavern.audio.json'))) if e['fn'] == 'uisfx' and e['id'] == 'confirm'][:3]
+    PICKS = tuple((vid, cf - 0.22) for (vid, _), cf in zip(PICKS, _cf))
+    LAND0 = PICKS[0][1]
+    TAV_LEN = max(TAV_LEN, 0.42 + PICKS[2][1] - LAND0 + real_dur(PICKS[2][0]) + 0.2)
+T_TAV_END = t + TAV_LEN
 cut('s3_tavern', t, T_TAV_END - t, src=LAND0 - 0.42, page=0.45, gamesfx=-10)
 cap('COMPANIONS', '20人の中から、3人の仲間を', t + 0.3, t + 3.9)
-PICKS = (('b_hagen_bigtech_1', 4.33), ('b_titta_bigtech_2', 6.50), ('b_teo_bigtech_2', 8.02))   # カーソルがその人に乗る時刻（カットの秒）
 for k, (vid, land) in enumerate(PICKS):
     at = t + 0.42 + land - LAND0
     nxt = t + 0.42 + PICKS[k + 1][1] - LAND0 - 0.05 if k + 1 < len(PICKS) else T_TAV_END
@@ -283,36 +433,43 @@ SFX.append(dict(id='crit', at=T_SH - 0.03, gain=-4))
 MUSIC.append(dict(file='battle', at=T_SH, src=DB_BT, dur=0, gain=-3))
 t = T5 + 1.3
 # 閃き（技・術の数もここで）
-cut('s5_glimmer', t, 1.6, src=6.15, gamesfx=-7)
+SG = clip_shift('s5_glimmer', 'v_hero_f_bigtech_2')
+cut('s5_glimmer', t, 1.6, src=6.15 + SG, gamesfx=-7)
 T_FRZ = t + 1.6
-cut('s5_glimmer', T_FRZ, 1.5, src=7.78, freeze=True, grade=dict(sat=0.75, bright=0.8))
+cut('s5_glimmer', T_FRZ, 1.5, src=7.78 + SG, freeze=True, grade=dict(sat=0.75, bright=0.8))
 FLASH.append((T_FRZ, 0.06, 0.35, 0.5))
 SFX.append(dict(id='glimmer', at=T_FRZ, gain=-4))
-vo('v_hero_f_glimmer_1', T_FRZ + 0.05, y=1000, until=T_FRZ + 5.8)   # 止め絵から同じ戦闘が続くので、場面の終わりは戦闘の終わり
+EG = dx('glim')
+vo('v_hero_f_glimmer_1', T_FRZ + 0.05, y=1000, until=T_FRZ + 5.8 + EG)   # 止め絵から同じ戦闘が続くので、場面の終わりは戦闘の終わり
 big('閃き', T_FRZ + 0.02, T_FRZ + 2.7, y=480, subtext='128の技と79の術を、戦いの中でひらめく', band=440)
-cut('s5_glimmer', T_FRZ + 1.5, 4.3, src=7.78, gamesfx=-6, ev=True, ev_jingle=False)   # 日の出の剣: 11.0–11.6 で日輪、11.93 で一撃（新エフェクト）
+cut('s5_glimmer', T_FRZ + 1.5, 4.3 + EG, src=7.78 + SG, gamesfx=-6, ev=True, ev_jingle=False)   # 日の出の剣: 11.0–11.6 で日輪、11.93 で一撃（新エフェクト）
 FLASH.append((T_FRZ + 1.5 + 11.3 - 7.78, 0.05, 0.35, 0.4, (1.0, 0.9, 0.7)))
-t = T_FRZ + 5.8
+t = T_FRZ + 5.8 + EG
 # 合成術
-cut('s5_combo', t, 3.2, src=7.0, gamesfx=-6, ev=True, ev_jingle=False, suby=1000)   # 7.57 唱える → 8.27 当たる
+EC = dx('combo')
+cut('s5_combo', t, 3.2 + EC, src=7.0 + clip_shift('s5_combo', 'v_hero_f_spell_2'), gamesfx=-6, ev=True, ev_jingle=False, suby=1000)   # 7.57 唱える → 8.27 当たる
 FLASH.append((t + 1.65, 0.06, 0.4, 0.3, (0.7, 0.85, 1.0)))   # 荒れ狂う海: 8.65 で大波の山
-cap('COMBO', '属性を重ねて生まれる、50の合成術', t + 0.2, t + 3.1)
-t += 3.2
+cap('COMBO', '属性を重ねて生まれる、50の合成術', t + 0.2, t + 3.1 + EC)
+t += 3.2 + EC
 # ボスの必殺技（持ち主 2026-10-03: 古い演出の敵の合体技から替えた）。天球の番人の皆既日食: 5.90 差し込みの帯「日食」＋声 → 7.3 太陽 → 7.7 黒い冠 → 8.1 白い光
-cut('s5_eclipse', t, 2.6, src=5.8, gamesfx=-6, ev=True, ev_jingle=False, suby=1000)
+EE = dx('eclipse')
+cut('s5_eclipse', t, 2.6 + EE, src=5.8 + clip_shift('s5_eclipse', 'bv_orrery_ult_1'), gamesfx=-6, ev=True, ev_jingle=False, suby=1000)
 FLASH.append((t + 8.1 - 5.8, 0.05, 0.35, 0.35, (1.0, 0.95, 0.8)))
-cap('BOSS FINISHER', 'ボスは、必殺技で牙をむく', t + 0.2, t + 2.5)
-t += 2.6
+cap('BOSS FINISHER', 'ボスは、必殺技で牙をむく', t + 0.2, t + 2.5 + EE)
+t += 2.6 + EE
 # 大技の予告 → しのぐ
-cut('s5_king', t, 2.0, src=6.9, gamesfx=-8)          # 名なき砂の王「杖を掲げる」→「王が杖を掲げた。砂が空へ昇っていく……」（予告）
-cut('s5_king', t + 2.0, 2.8, src=18.55, gamesfx=-6, ev=True, ev_jingle=False, suby=1000)    # 必殺技「砂の審判」＋声 → 20.5 金の砂の柱 → 守ってしのぐ
+SK = clip_shift('s5_king', 'bv_sandking_ult_1')
+cut('s5_king', t, 2.0, src=6.9 + SK, gamesfx=-8)          # 名なき砂の王「杖を掲げる」→「王が杖を掲げた。砂が空へ昇っていく……」（予告）
+EK = dx('king')
+cut('s5_king', t + 2.0, 2.8 + EK, src=18.55 + SK, gamesfx=-6, ev=True, ev_jingle=False, suby=1000)    # 必殺技「砂の審判」＋声 → 20.5 金の砂の柱 → 守ってしのぐ
 FLASH.append((t + 2.0 + 20.5 - 18.55, 0.05, 0.35, 0.35, (1.0, 0.9, 0.6)))
-cap('GUARD', '予告を見抜いて、防御', t + 0.2, t + 4.7)
-t += 4.8
+cap('GUARD', '予告を見抜いて、防御', t + 0.2, t + 4.7 + EK)
+t += 4.8 + EK
 # 金色の魔物 → レアのドロップ（装備の数もここで）
+SGD = clip_shift('s5_gold', 'v_hero_f_bigtech_2')
 cut('s5_gold', t, 2.2, src=0.4, gamesfx=-7, ev=True, jgain=-6)
-cut('s5_gold', t + 2.2, 1.4, src=8.85, gamesfx=-6)   # 光紋剣 8.9 魔法陣 → 9.75 当たる
-cut('s5_gold', t + 3.6, 2.4, src=15.8, gamesfx=-8, ev=True, jgain=-5)   # 16.22 レアのドロップ
+cut('s5_gold', t + 2.2, 1.4, src=8.85 + SGD, gamesfx=-6)   # 光紋剣 8.9 魔法陣 → 9.75 当たる
+cut('s5_gold', t + 3.6, 2.4, src=15.8 + SGD, gamesfx=-8, ev=True, jgain=-5)   # 16.22 レアのドロップ
 cap('RARE', '金色の魔物。レア・超レアのドロップ', t + 0.3, t + 3.3, size=64)
 cap('EQUIP', '1000種を超える武器と防具が、あなたを待つ', t + 3.65, t + 5.9)
 t += 6.0
@@ -323,7 +480,10 @@ MUSIC[-1]['dur'] = T6 - T_SH + 0.3
 MUSIC[-1]['fout'] = 0.5
 MUSIC.append(dict(file='sorrow', at=T6 - DB_SOR, src=0.0, dur=0, fin=0.6, gain=-4))
 SFX.append(dict(id='page', at=T6 - 0.05, gain=-6))
-cut('s6_chapter', T6, 4.6, src=1.7, page=0.5, gamesfx=-8, ev=True, ev_voice=False, jgain=-6)
+SRC_CH = 1.7
+if LANG != 'ja':   # 古い泉の灯りが入る音（lamp。ja は 1.73 秒）の 0.03 秒前から。柱 → 章の札の間隔はどの言語も同じ
+    SRC_CH = (clip_event('s6_chapter', 'sfx', 'lamp') or 1.73) - 0.03
+cut('s6_chapter', T6, 4.6, src=SRC_CH, page=0.5, gamesfx=-8, ev=True, ev_voice=False, jgain=-6)
 cap('CHRONICLE', 'あなたの選んだことが、年代記に残る', T6 + 0.4, T6 + 4.5)
 t = T6 + 4.6
 
@@ -345,7 +505,10 @@ MUSIC[-1]['dur'] = T8 - MUSIC[-1]['at'] + 0.3
 MUSIC[-1]['fout'] = 0.6
 bars(T8 - 0.2, 0, 0.25)
 MUSIC.append(dict(file='boss2', at=T8 - DB_BOSS, src=0.0, dur=0, fin=0.05, gain=-3))
-cut('s8_rowell', T8, 1.5, src=4.65, gamesfx=-6)   # 戦闘の頭の名の札「ロウェル」
+SRC_RW = 4.65
+if LANG != 'ja':   # 今のゲームは名の札（強敵 ロウェル）が敵の咆哮（roar。ja の v14 は 4.95 秒に咆哮、札は 4.65〜）と同時に出る。会話の字の出る長さが言語で違うので、撮り直した記録の咆哮から
+    SRC_RW = clip_event('s8_rowell', 'sfx', 'roar') or 7.82
+cut('s8_rowell', T8, 1.5, src=SRC_RW, gamesfx=-6)   # 戦闘の頭の名の札「ロウェル」
 t = T8 + 1.5
 BOSS = [  # (カット, src, 長さ, 光の時刻（カットの秒）)
     ('s8_white', 8.0, 2.4, 9.28),      # シグレ
@@ -353,22 +516,27 @@ BOSS = [  # (カット, src, 長さ, 光の時刻（カットの秒）)
     ('s8_lava', 9.35, 3.1, 10.52),     # ロウガ（神鳴り打ち）
     ('s8_star', 9.25, 2.7, 10.52),     # イルゼ
 ]
+KEYV = {'s8_white': 'b_shigure_bigtech_2', 's8_captain': 'b_zafira_bigtech_1', 's8_lava': 'b_rouga_bigtech_2', 's8_star': 'b_ilse_bigtech_1'}
 for c, src, d, hit in BOSS:
+    src = src + clip_shift(c, KEYV[c])   # 導入の声の長さで戦闘の進みがずれる言語は、入点をずらす（光の時刻 hit はカットの秒なので同じ分ずれ、FLASH は t + hit - src のまま）
+    hit = hit + (src - [b[1] for b in BOSS if b[0] == c][0])
+    d = d + dx(c)   # ja 以外: 声が枠に入らないボスのカットだけ延ばす
     cut(c, t, d, src=src, ev=True, ev_jingle=False, suby=1000, gamesfx=-6)
     FLASH.append((t + hit - src, 0.04, 0.3, 0.35))
     t += d
 # 黒い影 → 白（名前は出さない）。王の声は白の中で終わる（同じ場面）
 cut('s8_shadow', t, 2.8, src=2.8, gamesfx=-8, zoom=(1.0, 1.08), center=(0.35, 0.55))
-vo('v_king_altar_02', t + 0.2, y=1000, nosub=True, until=t + 6.5)
+WK = dx('king_white')   # ja 以外: 王の声が白の中で終わるまで白を保つ
+vo('v_king_altar_02', t + 0.2, y=1000, nosub=True, until=t + 6.5 + WK)
 sub(SUBS['v_king_altar_02'], t + 0.15, t + 4.25, y=1000)
 cut('s8_shadow', t + 2.8, 1.4, src=12.65, gamesfx=-6, wash=(0.0, 0.7))
-cut(None, t + 4.2, 2.3, color=(1.0, 1.0, 1.0))
+cut(None, t + 4.2, 2.3 + WK, color=(1.0, 1.0, 1.0))
 FLASH.append((t + 4.2, 0.4, 0.01, 1.0, (1.0, 1.0, 1.0)))
 if SPEECH_SUBS:
     T.append(dict(kind='sub', text=SUBS['v_king_altar_02'], style=dict(color=(40, 30, 24), stroke=0, shadow=False), t0=t + 4.2, t1=t + 6.45, x=960, y=1000, fin=0.05, fout=0.3))
 MUSIC[-1]['dur'] = t + 4.3 - MUSIC[-1]['at']
 MUSIC[-1]['fout'] = 1.4
-t += 6.5
+t += 6.5 + WK
 
 # ================================================================== 9 結び（白 → 年代記の 1 ページ → 灯 4 つ → 題字 → 終わりの札）
 T9 = t
@@ -396,7 +564,7 @@ cut('s9_title_slow', E0, 6.0, src=2.0, xin=0.7, grade=dict(bright=0.7))
 
 def lang_line():
     """日本語・English・简体中文・繁體中文・한국어 を、それぞれの字が出る書体で 1 枚の絵に"""
-    out = os.path.join(WORK, 'pv2_lang.png')
+    out = os.path.join(WORK, 'pv2_lang.png' if LANG == 'ja' else 'pv2_lang_%s.png' % LANG)
     if os.path.exists(out):
         return out
     from PIL import Image, ImageDraw, ImageFont
@@ -413,6 +581,10 @@ def lang_line():
     ja = ImageFont.truetype(os.path.join(HERE, '..', '..', 'assets', 'fonts', 'ZenMaruGothic-Medium.ttf'), S)
     parts = [('日本語', ja), ('・', ja), ('English', ja), ('・', ja), ('简体中文', vf('NotoSansSC-VF.ttf', S - 2)), ('・', ja),
              ('繁體中文', vf('NotoSansTC-VF.ttf', S - 2)), ('・', ja), ('한국어', vf('NotoSansKR-VF.ttf', S - 2))]
+    if LANG != 'ja':   # 言語版: 対応言語の並びもその言語で（持ち主「日本語の文字を残さない・文字はその言語に」）。書体は言語の書体
+        f = ImageFont.truetype(LOC['body']['font'], S)
+        f.set_variation_by_name('Medium')
+        parts = [(LOC['langline'], f)]
     w = int(sum(f.getlength(s) for s, f in parts)) + 40
     h = S * 2
     im = Image.new('RGBA', (w, h), (0, 0, 0, 0))
@@ -430,7 +602,14 @@ def lang_line():
 
 
 # 持ち主 2026-10-01「最後、体験版云々はいらない。これで製品の Steam の動画にする」: 体験版・配信予定の札は出さない（言葉の一覧と会社名だけ）
-T.append(dict(kind='end_sub', image=lang_line(), width=1000, t0=E0 + 0.9, t1=E0 + 5.8, x=960, y=560, anim='rise', fin=0.6, fout=0.8))
+def _lang_w(path):
+    if LANG == 'ja':
+        return 1000
+    from PIL import Image
+    return min(1500, Image.open(path).size[0])   # 言語版は字の大きさそのまま（長い並びは 1500 px まで）
+
+
+T.append(dict(kind='end_sub', image=lang_line(), width=_lang_w(lang_line()), t0=E0 + 0.9, t1=E0 + 5.8, x=960, y=560, anim='rise', fin=0.6, fout=0.8))
 T.append(dict(kind='end_credit', text='Studio Metem', style=dict(font=FONT_EN_PATH, size=46), t0=E0 + 1.4, t1=E0 + 5.8, x=960, y=760, anim='fade', fin=0.8, fout=0.8))
 DIP.append((E0 + 6.0, 1.2))
 DURATION = E0 + 6.0

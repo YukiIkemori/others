@@ -12,6 +12,13 @@ const C = require('./cap');
 const PVLIB = require('./pvlib');
 
 const sec = (s) => Math.round(s * 60);
+// ---------------------------------------------------------------- 言語（追加。ja は v14 までと同じ撮り）
+//   --lang <ja|en|zh-Hans|ko>（または環境変数 PV_LANG）。ゲームの URL に ?lang= を付け、主人公の名前・声の長さ・画面の文字を待つ式を言語に合わせる。
+const normLang = (l) => { const s = String(l || 'ja').replace('_', '-').toLowerCase(); return s === 'zh' || s.startsWith('zh-') ? 'zh-Hans' : s === 'en' ? 'en' : s === 'ko' ? 'ko' : 'ja'; };
+let LANG = normLang(process.env.PV_LANG);
+const HERO_NAMES = { ja: 'リーネ', en: 'Lina', 'zh-Hans': '莉涅', ko: '리네' };   // ゲームの ui.charcreate.defaultName.names.0（女・術剣士の既定の名前）
+const heroName = () => HERO_NAMES[LANG] || HERO_NAMES.ja;
+const withLang = (url) => (LANG === 'ja' ? url : url + (url.indexOf('?') >= 0 ? '&' : '?') + 'lang=' + LANG);
 // ---------------------------------------------------------------- ページに足す小道具（pvlib の上に足すだけ。ゲームのファイルは変えない）
 //   PV2.quiet()   「新しい手がかり」の札とはじめての説明の札を出さない
 //   PV2.say(lines) 本物の会話の窓で、ゲームの台詞（文の鍵・声・顔）をそのまま言わせる（序章の町で言う台詞を、ほかの場所で撮るとき）
@@ -99,6 +106,22 @@ const PV2LIB = `(() => {
     },
     /** 戦闘は勝ったことにする（演出のある出来事を、戦いを撮らずに先へ進める） */
     winAll() { R.Battle.start = async () => ({ result: 'win' }); return true; },
+    /** 章の札の題（金のグラデーションの 1 行）が札の幅に入らない長い題（英語・韓国語）は、ゲームの描き方（0.85 倍まで縮めて、入らなければ「…」）ではなく、
+     *  入る大きさまで縮めて全部見せる（PV の見せ方だけ。ゲームの文・ファイルは変えない） */
+    fitCard() {
+      const U = R.UIK;
+      if (U.__pvFit) return true;
+      U.__pvFit = true;
+      const tx = U.text;
+      U.text = function (g, s, x, y, o) {
+        if (o && o.maxW && o.grad && typeof s === 'string') {
+          const w0 = U.measure(s, Object.assign({}, o));
+          if (w0 > o.maxW) o = Object.assign({}, o, { size: Math.floor(o.size * o.maxW / w0 * 0.98), maxW: undefined });
+        }
+        return tx.call(this, g, s, x, y, o);
+      };
+      return true;
+    },
   });
   return true;
 })()`;
@@ -106,7 +129,7 @@ const PV2LIB = `(() => {
 // リーネの一行の状態（PV.state に渡す）。o で上書き
 const RINE = (o) => {
   const base = {
-    hero: { type: 'spellblade', sex: 'f', name: 'リーネ', fav: 'sword' }, party: ['hero', 'shigure', 'zafira', 'rouga'], reserve: [], tier: 3, gl: 'auto', prof: 'auto', vars: {},
+    hero: { type: 'spellblade', sex: 'f', name: heroName(), fav: 'sword' }, party: ['hero', 'shigure', 'zafira', 'rouga'], reserve: [], tier: 3, gl: 'auto', prof: 'auto', vars: {},
     items: { i_potion: 4 }, gold: 2000, leads: [],
     flags: { prologue_done: true, forest_start: true, cleared_r_forest: true, story_t1: true },
     map: { id: 'coral', spawn: 'north' },
@@ -173,23 +196,29 @@ async function rec(P, file, n, each, o) {
 }
 
 // 声のファイル（chronicle/assets/voice/v_*.ogg）の長さ（秒）。会話の自動送りが声の終わりを待つのに使う
-let VDUR = null;
+//   日本語以外は assets/voice/<en|zh|ko>/ の長さ（無い id = 日本語を使い回す叫びは日本語の長さ）
+let VDUR = null, VDUR_LANG = null;
 function voiceDur() {
-  if (VDUR) return VDUR;
-  VDUR = {};
-  const dir = path.resolve(__dirname, '..', '..', '..', 'assets', 'voice');
-  for (const f of fs.readdirSync(dir).filter((n) => /^v_.*\.ogg$/.test(n))) {
-    let e = '';
-    try { execFileSync(C.FF, ['-i', path.join(dir, f)], { stdio: ['ignore', 'ignore', 'pipe'] }); } catch (err) { e = String(err.stderr || ''); }
-    const m = /Duration: (\d+):(\d+):([\d.]+)/.exec(e);
-    if (m) VDUR[f.slice(0, -4)] = +m[1] * 3600 + +m[2] * 60 + +m[3];
+  if (VDUR && VDUR_LANG === LANG) return VDUR;
+  VDUR = {}; VDUR_LANG = LANG;
+  const base = path.resolve(__dirname, '..', '..', '..', 'assets', 'voice');
+  const sub = { en: 'en', 'zh-Hans': 'zh', ko: 'ko' }[LANG];
+  const dirs = sub ? [base, path.join(base, sub)] : [base];   // 後ろが勝つ（言語の声が日本語を上書き）
+  for (const dir of dirs) {
+    if (!fs.existsSync(dir)) continue;
+    for (const f of fs.readdirSync(dir).filter((n) => /^v_.*\.ogg$/.test(n))) {
+      let e = '';
+      try { execFileSync(C.FF, ['-i', path.join(dir, f)], { stdio: ['ignore', 'ignore', 'pipe'] }); } catch (err) { e = String(err.stderr || ''); }
+      const m = /Duration: (\d+):(\d+):([\d.]+)/.exec(e);
+      if (m) VDUR[f.slice(0, -4)] = +m[1] * 3600 + +m[2] * 60 + +m[3];
+    }
   }
   return VDUR;
 }
 
 async function shoot(S, id, out, still) {
   const sh = SHOTS[id];
-  const P = await C.open(S, sh.url || 'dev.html?fixture=content_p_roa');
+  const P = await C.open(S, withLang(sh.url || 'dev.html?fixture=content_p_roa'));
   await C.run(P, PVLIB);
   await C.run(P, PV2LIB);
   await C.run(P, `PV2.voiceDur = ${JSON.stringify(voiceDur())}; true`);
@@ -239,6 +268,7 @@ async function main() {
     if (a[i] === '--site') site = a[++i];
     else if (a[i] === '--out') out = a[++i];
     else if (a[i] === '--still') still = true;
+    else if (a[i] === '--lang') LANG = normLang(a[++i]);
     else ids.push(a[i]);
   }
   fs.mkdirSync(out, { recursive: true });
@@ -251,7 +281,7 @@ async function main() {
   } finally { await C.stop(S); }
 }
 if (require.main === module) main().catch((e) => { console.error(e); process.exit(1); });
-module.exports = { SHOTS, RINE };
+module.exports = { SHOTS, RINE, setLang: (l) => { LANG = normLang(l); } };
 // 窓を出さない写し（同じ撮り。声だけ重ねる用）
 SHOTS.s1_tomb_clean = Object.assign({}, SHOTS.s1_tomb, { prep: async (T) => { await SHOTS.s1_tomb.prep(T); await T.js('PV.hideMsg()'); } });
 // 白に飲まれる元の絵: 白の大書庫（ビブリア）の広間。舞う白紙の淡い光の中を、北へゆっくり見上げる（人は映さない）
@@ -305,7 +335,7 @@ SHOTS.s2_berna = {
     await T.idle(150); await T.settle();
     await T.js(`RPG.Field.camera.focus(21, 16, {ms: 0})`); await T.idle(30);
   },
-  n: sec(20),
+  get n() { if (LANG === 'ja') return sec(20); const v = voiceDur(); return sec(Math.max(20, 0.35 + (v.v_berna_lute_04 || 8) + 0.7 + (v.v_berna_lute_05 || 8.4) + 1.5)); },   // 言語の声の長さに合わせる（ja は 20 秒のまま）
   each: (i) => (i === 20 ? `PV2.autoVoice(100); PV2.say([
       {who: 'e_berna', key: 'ev.pharos_story.pharos_departure.run.say_7', voice: 'v_berna_lute_04', face: 'berna:neutral'},
       {who: 'e_berna', key: 'ev.pharos_story.pharos_departure.run.say_9', voice: 'v_berna_lute_05', face: 'berna:smile'}])` : null),
@@ -355,6 +385,8 @@ SHOTS.s3_create = {
   },
   n: sec(17.5),
   each: (i) => {
+    // ja 以外: 名前の入力は五十音の打ち直しをしない（ラテン字の表に「リ」は無い）。入力の窓に入る（600）→ 既定の名前のまま決定（900）。カット（15.3 秒〜）の絵は同じ
+    if (LANG !== 'ja') return i === 600 || i === 900 || (KEYS_CREATE[i] && i < 650) ? `PV.tap('${KEYS_CREATE[i]}', 3)` : null;
     if (KEYS_CREATE[i]) return `PV.tap('${KEYS_CREATE[i]}', 3)`;
     if (CELLS_CREATE[i] === null) return `PV.tap('a', 3)`;
     if (CELLS_CREATE[i]) return `PV2.cell('${CELLS_CREATE[i]}')`;
@@ -365,14 +397,25 @@ SHOTS.s3_create = {
 //   一行は主人公だけから（20 人がみな表に出る）
 // 持ち主 2026-10-03「選ぶ仲間とセリフが地味」: 人柄の立つ一言の 3 人（傭兵ハーゲン・下町の子ティッタ・見習い術師テオ）。声の長さの分だけ間を置く
 const GRID_PLAN = [{ to: 18 }, { to: 2 }, { to: 'hagen', pick: true }, { wait: 6 }, { to: 'titta', pick: true }, { wait: 1 }, { to: 'teo', pick: true }, { wait: 12 }];
+// ja 以外: カーソルが次の人に乗るまでの間を、前の人の声（言語の声のファイル）が鳴り終わるまで空ける（声が重ならない）。
+//   ja の間（ハーゲン 2.17 秒・ティッタ 1.52 秒）にたりない分だけ {wait} を足す（1 つの wait = 13 フレーム）
+function tavernPlan() {
+  if (LANG === 'ja') return GRID_PLAN;
+  const sub = { en: 'en', 'zh-Hans': 'zh', ko: 'ko' }[LANG], base = path.resolve(__dirname, '..', '..', '..', 'assets', 'voice');
+  const dur = (id) => { let e = ''; try { execFileSync(C.FF, ['-i', path.join(base, sub, id + '.ogg')], { stdio: ['ignore', 'ignore', 'pipe'] }); } catch (err) { e = String(err.stderr || ''); }
+    const m = /Duration: (\d+):(\d+):([\d.]+)/.exec(e); return m ? +m[1] * 3600 + +m[2] * 60 + +m[3] : 2.2; };
+  const extra = (d, gapJa) => Math.max(0, Math.ceil((d + 0.2 - gapJa) / (13 / 60)));
+  const w1 = 6 + extra(dur('b_hagen_bigtech_1'), 2.17), w2 = 1 + extra(dur('b_titta_bigtech_2'), 1.52);
+  return [{ to: 18 }, { to: 2 }, { to: 'hagen', pick: true }, { wait: w1 }, { to: 'titta', pick: true }, { wait: w2 }, { to: 'teo', pick: true }, { wait: 14 }];
+}
 SHOTS.s3_tavern = {
   prep: async (T) => {
     await T.js(FIELD({ party: ['hero'] }, 'coral', 'north'));
     await T.idle(150); await T.settle();
     await T.js(`RPG.Screens.open('partySelect', {count: 3})`); await T.idle(30);
   },
-  n: sec(11),
-  each: (i) => (i >= 40 && i % 13 === 0 ? `PV2.walkGrid(${JSON.stringify(GRID_PLAN)})` : null),
+  get n() { return sec(LANG === 'ja' ? 11 : 15); },
+  each: (i) => (i >= 40 && i % 13 === 0 ? `PV2.walkGrid(${JSON.stringify(tavernPlan())})` : null),
 };
 // 4 人で港町コーラルを出る: 町のまん中の石畳の大通りを、北の町の出口（崖の切り通し）へまっすぐ。カメラは北を少し多めに
 SHOTS.s3_coral = {
@@ -559,7 +602,16 @@ SHOTS.s6_chapter = {
   prep: async (T) => {
     await T.js(FIELD({ flags: DESERT_KING }, 'desert_tomb_3', 'throne'));
     await T.idle(150); await T.settle();
-    await T.js(`PV.autoMsg(60); RPG.Events.run('desert_finale', {map: 'desert_tomb_3'})`);
+    // 2026-10-04 以降のゲーム（R17）は、イベントの中の clearRegion では光の柱だけにして、章の札をイベントの終わりに出す。
+    //   v14 の絵（柱のすぐ後に札）と同じに撮るため、新しい版は古い泉に入ってからイベントの外で clearRegion（柱 → 札を続けて出す）を呼ぶ。古い版（Events._cardsDue が無い）は従来どおり
+    if (LANG !== 'ja') await T.js('PV2.fitCard()');
+    if (await T.js(`typeof RPG.Events._cardsDue === 'function'`)) {
+      await T.js(`PV.enter('desert_camp3', 'spring')`);
+      await T.idle(60); await T.settle();
+      await T.js(`RPG.Events._clearRegion('r_desert')`);
+    } else {
+      await T.js(`PV.autoMsg(60); RPG.Events.run('desert_finale', {map: 'desert_tomb_3'})`);
+    }
     await T.idle(20);
   },
   n: sec(16),
@@ -605,6 +657,7 @@ BEACONS.forEach(([rid, map, spawn, more], k) => {
         const rg = RPG.DB.regions['${rid}'], b = rg.beaconAt; if (b && b.map === '${map}' && b.x != null) RPG.Field.camera.focus(b.x, b.y, {ms: 0});
         return true; })()`);
       await T.idle(30);
+      if (LANG !== 'ja') await T.js('PV2.fitCard()');
       await T.js(`RPG.Events._clearRegion('${rid}')`);
       await T.idle(40);   // 暗転の間（0.7 秒）は撮らない
     },

@@ -25,8 +25,10 @@ module.exports = `(() => {
       if (U.__pvClean) return true;
       U.__pvClean = true;
       const pr = U.prompts, ch = U.chip;
-      U.prompts = function (g, list, o) { if (Array.isArray(list) && list.some((b) => b && b.label === 'ログ')) return; return pr.apply(this, arguments); };
-      U.chip = function (g, x, y, label) { if (typeof label === 'string' && (label.startsWith('文字の速さ') || label.startsWith('自動送り'))) return; return ch.apply(this, arguments); };
+      // 言語ごとの札の文（ja は『ログ』『文字の速さ』『自動送り』。ほかの言語はゲームの文の表から引く）
+      const LOG = R.T('ui.message.msgScene.drawButtons.0.label'), SPD = String(R.T('ui.message.msgScene.drawButtons.lbl_2', { p0: '' })).trim(), AUTO = R.T('ui.message.msgScene.drawButtons.1.label_2');
+      U.prompts = function (g, list, o) { if (Array.isArray(list) && list.some((b) => b && (b.label === 'ログ' || b.label === LOG))) return; return pr.apply(this, arguments); };
+      U.chip = function (g, x, y, label) { if (typeof label === 'string' && (label.startsWith('文字の速さ') || label.startsWith('自動送り') || (SPD && label.startsWith(SPD)) || (AUTO && label.startsWith(AUTO)))) return; return ch.apply(this, arguments); };
       return true;
     },
     noEnc() { R.Mon.encounter = () => null; return true; },

@@ -10,6 +10,12 @@ const C = require('./cap');
 const PVLIB = require('./pvlib');
 
 const sec = (s) => Math.round(s * 60);
+// ---------------------------------------------------------------- 言語（追加。ja は v14 までと同じ撮り）: --lang <ja|en|zh-Hans|ko> または環境変数 PV_LANG
+const normLang = (l) => { const s = String(l || 'ja').replace('_', '-').toLowerCase(); return s === 'zh' || s.startsWith('zh-') ? 'zh-Hans' : s === 'en' ? 'en' : s === 'ko' ? 'ko' : 'ja'; };
+let LANG = normLang(process.env.PV_LANG);
+const HERO_NAMES = { ja: 'リーネ', en: 'Lina', 'zh-Hans': '莉涅', ko: '리네' };   // ゲームの ui.charcreate.defaultName.names.0
+const heroName = () => HERO_NAMES[LANG] || HERO_NAMES.ja;
+const withLang = (url) => (LANG === 'ja' ? url : url + (url.indexOf('?') >= 0 ? '&' : '?') + 'lang=' + LANG);
 
 // PV 第2弾だけの小道具（ページの中。ゲームのファイルも pvlib も変えない。PV2 に足すだけ）
 //   PV2.voice({接頭辞: 声の id})   戦闘ボイスの候補をその 1 本にする（台本の声に決める。'b_noela_spell_' → 'b_noela_bigtech_1' のように種類も替えられる）
@@ -81,7 +87,7 @@ const PV2LIB = `(() => {
 
 // リーネの一行（PV 第2弾。主人公は女・術剣士。仲間はシグレ・ザフィラ・ロウガ）
 const STATE = (o) => JSON.stringify(Object.assign({
-  hero: { type: 'spellblade', sex: 'f', name: 'リーネ', fav: 'sword' }, party: ['hero', 'shigure', 'zafira', 'rouga'], reserve: [], tier: 3, gl: 'auto', prof: 'auto', vars: {},
+  hero: { type: 'spellblade', sex: 'f', name: heroName(), fav: 'sword' }, party: ['hero', 'shigure', 'zafira', 'rouga'], reserve: [], tier: 3, gl: 'auto', prof: 'auto', vars: {},
   items: { i_potion: 4, i_ether: 2, i_revive: 2 }, gold: 3000, leads: [],
   flags: { prologue_done: true, forest_start: true, cleared_r_forest: true, story_t1: true, forest_fine: true },
   map: { id: 'kasim', spawn: 'warp' } }, o || {}));
@@ -244,8 +250,9 @@ const SHOTS = {
     prep: async (T) => {
       await T.js(`PV.clean(); PV.noEnc(); PV.state(${STATE({ tier: 2, map: { id: 'loch', spawn: 'plaza' }, flags: { prologue_done: true, forest_start: true, cleared_r_forest: true, story_t1: true, forest_fine: true, cleared_r_marsh: true } })}); PV.enter('loch', 'plaza')`);
       await T.idle(120); await T.settle();
-      await T.js(`PV.scriptBattle(${DEF}); PV.autoMsg(40); RPG.Events.run('story_t2', {map: 'loch', reason: 'leave'})`);
-      await T.until(`PV.lastLine().includes('この町へ来た')`, 4000);   // 地の文（narr_2）が出たら撮り始める（次の「力ずく」の声を撮りの中で鳴らす）
+      // 2026-10-03 以降のゲームは、「力ずく」の後に戦いの前の一息（R.Story.duelPrep: 傷の手当て・記録の選択）が入る。v14 の絵（声のすぐ後に戦い・背景は夜の街道 road）と同じに撮るため、一息は何もしない形に、戦いの背景（新しい版は町ごとの R.Story.duelBg）は road に差し替える（古い版はどちらも無いので従来どおり）
+      await T.js(`PV.scriptBattle(${DEF}); PV.autoMsg(40); if (RPG.Story && RPG.Story.duelPrep) RPG.Story.duelPrep = async () => {}; if (RPG.Story && RPG.Story.duelBg) RPG.Story.duelBg = () => 'road'; RPG.Events.run('story_t2', {map: 'loch', reason: 'leave'})`);
+      await T.until(LANG === 'ja' ? `PV.lastLine().includes('この町へ来た')` : `PV.lastLine().includes(RPG.T('events.story_t2.run.narr_2').split('\\n').pop().trim())`, 4000);   // ja 以外は同じ文（地の文）の最後の行そのまま   // 地の文（narr_2）が出たら撮り始める（次の「力ずく」の声を撮りの中で鳴らす）
     },
     n: sec(12),
     each: at({ 1: `PV.autoMsg(60)` }),
@@ -257,7 +264,7 @@ const SHOTS = {
         `PV.teach('shigure', ['t_sword_first']); RPG.Party.restoreAll(); PV2.noGlim(); PV2.voice({b_shigure_bigtech_: 'b_shigure_bigtech_2'})`));
       await INTRO(T);
     },
-    n: sec(13),
+    get n() { return sec(LANG === 'ja' ? 13 : 15.5); },   // ja 以外: 声が長い言語は大技のカットを延ばすので、撮りも長く
   },
   // 亡霊船長グレン（背景はゲームのまま ship）: ザフィラの闇夜の刃（b_zafira_bigtech_1。荒波の連撃は合成術のカットの大波と似るので月の技に）
   s8_captain: {
@@ -266,7 +273,7 @@ const SHOTS = {
         `PV.teach('zafira', ['t_dagger_nightfall']); RPG.Party.restoreAll(); PV2.noGlim(); PV2.voice({b_zafira_bigtech_: 'b_zafira_bigtech_1'})`));
       await INTRO(T);
     },
-    n: sec(13),
+    get n() { return sec(LANG === 'ja' ? 13 : 15.5); },   // ja 以外: 声が長い言語は大技のカットを延ばすので、撮りも長く
   },
   // 霧食らい（背景はゲームのまま swamp）: 分身が 2 体並んだ形で始める（霧食らいの編成に、霧食らいが呼ぶ魔女の分身 b_mist_double を足した撮り用の写し pv2_mist）→ 先手で仲間が分身を割り、ノエラの裁きの光柱（光の術。b_noela_bigtech_1）
   s8_mist: {
@@ -294,7 +301,7 @@ const SHOTS = {
         `PV.teach('rouga', ['t_greatsword_thunder']); RPG.Party.restoreAll(); PV2.noGlim(); PV2.voice({b_rouga_bigtech_: 'b_rouga_bigtech_2'})`));
       await INTRO(T);
     },
-    n: sec(13),
+    get n() { return sec(LANG === 'ja' ? 13 : 15.5); },   // ja 以外: 声が長い言語は大技のカットを延ばすので、撮りも長く
   },
   // 星食らい（背景はゲームのまま tower）: イルゼの合成術 百雷（火×水×風。b_ilse_bigtech_1）
   s8_star: {
@@ -303,7 +310,7 @@ const SHOTS = {
         `PV.teach('ilse', null, ['s_fire_water_wind']); RPG.Party.restoreAll(); PV2.noGlim(); PV2.voice({b_ilse_spell_: 'b_ilse_bigtech_1', b_ilse_bigtech_: 'b_ilse_bigtech_1'})`));
       await INTRO(T);
     },
-    n: sec(13),
+    get n() { return sec(LANG === 'ja' ? 13 : 15.5); },   // ja 以外: 声が長い言語は大技のカットを延ばすので、撮りも長く
   },
   // 最後の影: 書庫の 6 階から闇に閉じる → 黒い影（名前の札・敵の名・HUD を描かない。絵は黒い影）→ 白い闇が集まる
   s8_shadow: {
@@ -319,7 +326,7 @@ const SHOTS = {
 
 // ---------------------------------------------------------------- 撮る
 async function setupPage(S, sh) {
-  const P = await C.open(S, sh.url || 'dev.html?fixture=content_d_kasim');
+  const P = await C.open(S, withLang(sh.url || 'dev.html?fixture=content_d_kasim'));
   await C.run(P, PVLIB);
   await C.run(P, PV2LIB);
   // 描いた顔絵を先に読み終える（勝利の札の仲間の顔。ページの時計は進めない）
@@ -358,6 +365,7 @@ async function main() {
   for (let i = 0; i < a.length; i++) {
     if (a[i] === '--site') site = a[++i];
     else if (a[i] === '--out') out = a[++i];
+    else if (a[i] === '--lang') LANG = normLang(a[++i]);
     else ids.push(a[i]);
   }
   fs.mkdirSync(out, { recursive: true });
@@ -370,4 +378,7 @@ async function main() {
   } finally { await C.stop(S); }
 }
 if (require.main === module) main().catch((e) => { console.error(e); process.exit(1); });
-module.exports = { SHOTS, setupPage, PV2LIB };
+// v14 の clips の名前（s5_eclipse・s5_king は 2026-10-03 に s5_ult_eclipse・s5_tell_king の撮りを改名した物。音の記録の時刻が一致）
+SHOTS.s5_eclipse = SHOTS.s5_ult_eclipse;
+SHOTS.s5_king = SHOTS.s5_tell_king;
+module.exports = { SHOTS, setupPage, PV2LIB, setLang: (l) => { LANG = normLang(l); } };

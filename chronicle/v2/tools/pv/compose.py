@@ -38,10 +38,14 @@ def ease_out(x):
 _fonts = {}
 
 
-def font(path, size):
-    k = (path, size)
+def font(path, size, var=None):
+    """var: 可変書体（Noto Sans の VF・Nunito の VF）の太さの名前（'Bold' など）。無指定は従来どおり"""
+    k = (path, size, var)
     if k not in _fonts:
-        _fonts[k] = ImageFont.truetype(path, size)
+        f = ImageFont.truetype(path, size)
+        if var:
+            f.set_variation_by_name(var)
+        _fonts[k] = f
     return _fonts[k]
 
 
@@ -80,7 +84,7 @@ def pad(img, p):
 
 def styled(text, style):
     """→ (RGBA の numpy float32 0..1、字の形の numpy 0..1)。style: dict(size, font, color|gold, stroke, glow, track, shadow)"""
-    f = font(style.get('font', FONT_JA), style['size'])
+    f = font(style.get('font', FONT_JA), style['size'], style.get('var'))
     m = text_mask(text, f, style.get('track', 0), style.get('line_gap', 1.25))
     P = int(style.get('glow', 0) * 2.5 + style.get('stroke', 0) + 12)
     m = pad(m, P)
