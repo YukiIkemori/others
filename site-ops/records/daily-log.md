@@ -12,3 +12,4 @@
   - sukinobi/okurinochizu: 引き続き別AIが調整中。
   - GSCは10/6まで確定(3日遅れ)で、10/9の変更の影響はまだ数字に出ていない。GA4: asiavela 47セッション/3日、okurinochizu 33セッション/3日(データ入り始め)。
   - 対応: 私は編集しない(別AIが作業中)。ユーザーにasiavelaの404を報告。週次(10/12)は5サイトとも観測中心にするか確認。
+- 2026-10-11 07:48 JST: 異常なし(5サイト)。sitemap抽出URL・robotsすべて200。サイトマップ件数: monometri 109 / sukinobi 33 / mononippon 931 / asiavela 6,916(5,731から増加、公開中の言語版が増えている) / okurinochizu 37。GSC最新確定日は10/6のまま(データ遅延)で10/9以降の再構築の影響はまだ見えない。Actions失敗なし。別AIによる再構築が継続中(asiavelaは翻訳が14言語完了・一部はまだhidden、sukinobiは10/9にeスピ！リンクを各記事に再配置)。私は編集していない。
