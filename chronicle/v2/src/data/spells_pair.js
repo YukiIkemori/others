@@ -75,9 +75,11 @@
     s_water_earth_b: sp(R.T('spells.s_water_earth_b.sp'), ['water', 'earth'], 'B', 10, 'allies',
       [buff('def', 1), buff('mdef', 1)], ['water1', 'buff'],
       R.T('spells.s_water_earth_b.sp_2')),
-    s_water_light_a: sp(R.T('spells.s_water_light_a.sp'), ['water', 'light'], 'A', 8, 'allies',
-      [heal(0.25), st('regen')], ['water1', 'heal'],
-      R.T('spells.s_water_light_a.sp_2'), { field: true }),
+    // 2026-10-07 持ち主: 全体回復が多すぎるので、回復は あまねく光・天の祝福・いやしの泉 の 3 つに絞り、残りは別の働きに。
+    //   清めの雨: 敵全体に水の術（威力 1.3。段 4 の全体攻撃は MP 9 で 1.35〜1.45、こちらは MP 8 で強化消しつき）＋ 強化を消す
+    s_water_light_a: sp(R.T('spells.s_water_light_a.sp'), ['water', 'light'], 'A', 8, 'enemies',
+      [dmg(1.3, { element: 'water' }), dispel('good')], ['water2', 'holy'],
+      R.T('spells.s_water_light_a.sp_2')),
     s_water_light_b: sp(R.T('spells.s_water_light_b.sp'), ['water', 'light'], 'B', 11, 'allies',
       [heal(0.45), cure('all')], ['cure', 'heal'],
       R.T('spells.s_water_light_b.sp_2'), { field: true }),
@@ -96,9 +98,10 @@
     s_wind_light_a: sp(R.T('spells.s_wind_light_a.sp'), ['wind', 'light'], 'A', 8, 'self',
       [buff('mag', 2), st('veil')], ['wind1', 'buff'],
       R.T('spells.s_wind_light_a.sp_2')),
+    // 追い風の光（2026-10-07 持ち主）: 回復なし。全員を身軽（回避 +25・3 ターン）にし、素早さを 1 段上げる
     s_wind_light_b: sp(R.T('spells.s_wind_light_b.sp'), ['wind', 'light'], 'B', 12, 'allies',
-      [heal(0.35), st('nimble')], ['heal', 'wind1'],
-      R.T('spells.s_wind_light_b.sp_2'), { field: true }),
+      [st('nimble'), buff('agi', 1)], ['wind1', 'buff'],
+      R.T('spells.s_wind_light_b.sp_2')),
     s_wind_dark_a: sp(R.T('spells.s_wind_dark_a.sp'), ['wind', 'dark'], 'A', 8, 'allies',
       [st('nimble')], ['dark1', 'wind1'],
       R.T('spells.s_wind_dark_a.sp_2'), { field: true, fieldEffects: [enc(-100, 100, true)] }),

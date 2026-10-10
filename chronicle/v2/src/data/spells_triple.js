@@ -39,9 +39,12 @@
     s_fire_water_earth: sp(R.T('spells.s_fire_water_earth.sp'), ['fire', 'water', 'earth'], 'T', 19, 'enemies',
       [dmg(2.4), st('burn', 0.4), st('stun', 0.35)], ['earth3', 'fire3'],
       R.T('spells.s_fire_water_earth.sp_2')),
-    s_fire_water_light: sp(R.T('spells.s_fire_water_light.sp'), ['fire', 'water', 'light'], 'T', 17, 'allies',
-      [heal(0.5), st('regen'), buff('atk', 1)], ['holy', 'heal'],
-      R.T('spells.s_fire_water_light.sp_2'), { field: true }),
+    // 2026-10-07 持ち主: 全体回復を減らす（回復は あまねく光・天の祝福・いやしの泉 だけ）。
+    //   虹の矢: 敵全体に威力 2.0。属性の固定なし → 火・水・光のうち的にいちばん効く属性で当たる（battle_core の elemFactor）。
+    //   段 8 の全体攻撃（MP 18〜19 で 2.2〜2.4 ＋ 状態 2 つ）より状態が無く安い分、弱点を自分で選ぶ分を引いて 2.0
+    s_fire_water_light: sp(R.T('spells.s_fire_water_light.sp'), ['fire', 'water', 'light'], 'T', 17, 'enemies',
+      [dmg(2.0)], ['holy', 'fire3'],
+      R.T('spells.s_fire_water_light.sp_2')),
     s_fire_water_dark: sp(R.T('spells.s_fire_water_dark.sp'), ['fire', 'water', 'dark'], 'T', 18, 'enemies',
       [dmg(2.2), st('burn', 0.45), st('poison', 0.45)], ['poison', 'fire3'],
       R.T('spells.s_fire_water_dark.sp_2')),
@@ -66,15 +69,19 @@
     s_water_wind_earth: sp(R.T('spells.s_water_wind_earth.sp'), ['water', 'wind', 'earth'], 'T', 19, 'enemies',
       [dmg(1.2, { hits: 2 }), st('freeze', 0.35), buff('agi', -1, 0.5)], ['water3', 'ice2'],
       R.T('spells.s_water_wind_earth.sp_2')),
+    // 極光のしずく（2026-10-07 持ち主。名は「極光の雫」だが 雫 は常用外 → STYLE_JA のとおり かな書き。毒のしずく と同じ）: 全員の MP を 7 ずつ（決まった量）＋ 術防 1 段。フィールドでは使えない。
+    //   唱えた人が MP で得をしない: 7 < 装備の割引の上限（MODCAP.cost −50%）でも払う floor(17 × 0.5) = 8（3 属性の術に熟練の割引は無い）。
+    //   4 人なら一行で 28（払う 17 より多い）。割合（最大MP × %）にしないのは、最大MP の多い人ほど自分の分で元が取れてしまうから
     s_water_wind_light: sp(R.T('spells.s_water_wind_light.sp'), ['water', 'wind', 'light'], 'T', 17, 'allies',
-      [heal(0.4), st('nimble'), buff('mdef', 1)], ['holy', 'heal'],
-      R.T('spells.s_water_wind_light.sp_2'), { field: true }),
+      [{ type: 'healMp', amount: 7 }, buff('mdef', 1)], ['mp', 'buff'],
+      R.T('spells.s_water_wind_light.sp_2')),
     s_water_wind_dark: sp(R.T('spells.s_water_wind_dark.sp'), ['water', 'wind', 'dark'], 'T', 19, 'enemies',
       [dmg(2.2), st('freeze', 0.4), buff('mag', -1, 0.5)], ['dark3', 'ice3'],
       R.T('spells.s_water_wind_dark.sp_2')),
+    // 大樹の盾（2026-10-07 持ち主）: すぐの回復なし。全員の守備力・術防を 2 段上げ、再生の状態にする
     s_water_earth_light: sp(R.T('spells.s_water_earth_light.sp'), ['water', 'earth', 'light'], 'T', 19, 'allies',
-      [heal(0.7), st('regen'), buff('def', 1)], ['earth1', 'heal'],
-      R.T('spells.s_water_earth_light.sp_2'), { field: true }),
+      [buff('def', 2), buff('mdef', 2), st('regen')], ['earth1', 'buff'],
+      R.T('spells.s_water_earth_light.sp_2')),
     s_water_earth_dark: sp(R.T('spells.s_water_earth_dark.sp'), ['water', 'earth', 'dark'], 'T', 17, 'enemies',
       [pct(0.3), st('poison', 0.45), buff('agi', -1)], ['gravity', 'poison'],
       R.T('spells.s_water_earth_dark.sp_2')),

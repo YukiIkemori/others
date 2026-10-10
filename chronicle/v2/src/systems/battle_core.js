@@ -1845,7 +1845,8 @@
         if ((side === 'good' && t.buffs[k] > 0) || (side === 'bad' && t.buffs[k] < 0)) { t.buffs[k] = 0; changed = true; yield { t: 'buff', u: t, stat: k, d: 0, stage: 0, dispel: side }; }
       }
       if (side === 'good') for (const s of GOOD) if (t.status[s]) { yield* this.clearStatus(t, s, true); changed = true; }
-      if (!changed) { if (!(ctx && ctx.multi)) yield this.m(R.T('sys.battle_core.dispel.m')); return; }
+      // 消す物が無い: 全体に当てた時と、ダメージの後（清めの雨・陽光の嵐 等。「〜のダメージ！しかし効き目がなかった。」にしない）は黙る
+      if (!changed) { if (!(ctx && (ctx.multi || ctx.quietExtra))) yield this.m(R.T('sys.battle_core.dispel.m')); return; }
       yield this.m(side === 'good' ? R.T('sys.battle_core.dispel.m_2', { name: t.name }) : R.T('sys.battle_core.dispel.m_3', { name: t.name }));
     }
 

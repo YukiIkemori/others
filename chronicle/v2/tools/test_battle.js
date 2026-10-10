@@ -961,4 +961,148 @@ section('属性の釣り合い（2026-10-04 持ち主「炎魔法強すぎ」。
   for (const L of ['ja', 'en', 'ko', 'zh-Hans', 'zh-Hant']) ok(`scan null line exists in ${L}`, R.I18n.has('sys.battle_core.scan.m_4', L));
 }
 
+// ================================================================ 全体回復の見直し（持ち主 2026-10-07）
+section('全体回復を 3 つに絞る: 清めの雨・追い風の光・虹の矢・極光のしずく・大樹の盾（id・属性・MP・段はそのまま）');
+{
+  const SP = DB.spells;
+  const NEW = { s_water_light_a: [['water', 'light'], 8, 4, 'enemies'], s_wind_light_b: [['wind', 'light'], 12, 6, 'allies'], s_fire_water_light: [['fire', 'water', 'light'], 17, 8, 'enemies'],
+    s_water_wind_light: [['water', 'wind', 'light'], 17, 8, 'allies'], s_water_earth_light: [['water', 'earth', 'light'], 19, 8, 'allies'] };
+  const types = (id) => SP[id].effects.map((e) => e.type);
+  for (const [id, [els, mp, rank, target]] of Object.entries(NEW)) {
+    const a = SP[id];
+    ok(`${id}: elements ${els.join('+')}, MP ${mp}, rank ${rank} kept; target ${target}`, a && a.elements.join() === els.join() && a.mp === mp && a.rank === rank && a.target === target, a && [a.elements, a.mp, a.rank, a.target]);
+    ok(`${id}: no HP heal, not castable in the field`, !types(id).includes('heal') && !types(id).includes('revive') && a.field !== true, [types(id), a.field]);
+  }
+  ok('the three party heals stay: あまねく光・天の祝福・いやしの泉', ['s_light_3', 's_light_5', 's_water_light_b'].every((id) => SP[id].target === 'allies' && types(id).includes('heal') && SP[id].field === true));
+  const allHeals = Object.keys(SP).filter((id) => (SP[id].target === 'allies' || SP[id].target === 'party') && types(id).includes('heal'));
+  ok('party-wide HP heal spells: only those three (+ 冥府返し, which revives all)', allHeals.sort().join() === ['s_earth_light_dark', 's_light_3', 's_light_5', 's_water_light_b'].sort().join(), allHeals);
+  const e1 = SP.s_water_light_a.effects;
+  ok('清めの雨: water damage (fixed element) + dispel good', e1[0].type === 'damage' && e1[0].element === 'water' && e1[0].power === 1.3 && e1[1].type === 'dispel' && e1[1].side === 'good');
+  const e3 = SP.s_fire_water_light.effects;
+  ok('虹の矢: one magic damage with no fixed element (picks the best of fire/water/light)', e3.length === 1 && e3[0].type === 'damage' && e3[0].element == null && e3[0].power === 2.0);
+  ok('追い風の光: nimble + agi +1', JSON.stringify(SP.s_wind_light_b.effects) === JSON.stringify([{ type: 'status', status: 'nimble' }, { type: 'buff', stat: 'agi', stages: 1 }]));
+  ok('大樹の盾: def +2, mdef +2, regen', JSON.stringify(SP.s_water_earth_light.effects) === JSON.stringify([{ type: 'buff', stat: 'def', stages: 2 }, { type: 'buff', stat: 'mdef', stages: 2 }, { type: 'status', status: 'regen' }]));
+  const mpE = SP.s_water_wind_light.effects.find((e) => e.type === 'healMp');
+  ok('極光のしずく: healMp with a fixed amount + mdef +1', mpE && mpE.amount === 7 && mpE.pct == null && SP.s_water_wind_light.effects.some((e) => e.type === 'buff' && e.stat === 'mdef' && e.stages === 1));
+  // 唱えた人は MP で得をしない: 装備の割引の上限（MODCAP.cost）で払う MP > 戻る MP。4 人の一行には 17 より多く戻る
+  const minCost = Math.max(1, Math.floor(17 * (100 + R.Rules.K.MODCAP.cost) / 100 + 1e-9));
+  ok(`極光のしずく: amount ${mpE.amount} < the cheapest possible cost ${minCost} (mpCostPct at the cap ${R.Rules.K.MODCAP.cost}%)`, mpE.amount < minCost);
+  ok('極光のしずく: a party of 4 gets back more than the 17 MP it costs', mpE.amount * 4 > 17);
+  // フィールドの術の一覧（R.Rules.fieldSpells）と、フィールドでの自動の回復（R.Party）に出ない
+  newGame(['bartolo', 'marta']);
+  const hero = R.Game.chars.hero;
+  hero.spells = Object.keys(NEW).concat(['s_light_3']);
+  const fs = R.Rules.fieldSpells(hero);
+  ok('fieldSpells: none of the five, あまねく光 still there', Object.keys(NEW).every((id) => !fs.includes(id)) && fs.includes('s_light_3'), fs);
+
+  // ---- 戦闘の中
+  hero.spells = Object.keys(NEW).concat(['s_light_3', 's_light_5', 's_water_light_b']);
+  hero.mp = 999;
+  // 唱えた人の MP（割引の上限を当てても得をしない）
+  const realMods = R.Rules.mods;
+  R.Rules.mods = function (c) { const m = Object.assign({}, realMods.apply(this, arguments)); m.mpCostPct = -999; return m; };
+  let capCost;
+  try { capCost = R.Rules.mpCost(hero, 's_water_wind_light'); } finally { R.Rules.mods = realMods; }
+  ok(`Rules.mpCost at the discount cap: ${capCost} (> ${mpE.amount})`, capCost === minCost && capCost > mpE.amount, capCost);
+  {
+    const eng = engine({ mons: ['rat_1'] });
+    const [u, p1, p2] = eng.party;
+    for (const p of eng.party) { p.st.mp = Math.max(p.st.mp || 0, 60); p.mp = 0; p.buffs.mdef = 0; }
+    u.mp = 40;
+    const before = eng.party.map((p) => p.mp);
+    const evs = drainAll(eng.useAction(u, 's_water_wind_light', BC.ACT('s_water_wind_light'), u, {}));
+    const cost = eng.mpCost(u, 's_water_wind_light');
+    ok('極光のしずく: every living ally +7 MP (caster: −cost +7, a net loss)', p1.mp === 7 && (!p2 || p2.mp === 7) && u.mp === before[0] - cost + 7 && u.mp < before[0], [before, eng.party.map((p) => p.mp), cost]);
+    ok('極光のしずく: mdef +1 on every ally, MP heal events (mp: true)', eng.party.every((p) => p.buffs.mdef === 1) && evs.filter((e) => e.t === 'heal' && e.mp).length === eng.party.length);
+    ok('極光のしずく: no HP heal events', !evs.some((e) => e.t === 'heal' && !e.mp));
+  }
+  {
+    const eng = engine({ mons: ['rat_1'] });
+    const [u] = eng.party;
+    for (const p of eng.party) p.hp = Math.max(1, Math.floor(p.mhp / 2));
+    const hp0 = eng.party.map((p) => p.hp);
+    u.mp = 99;
+    drainAll(eng.useAction(u, 's_water_earth_light', BC.ACT('s_water_earth_light'), u, {}));
+    ok('大樹の盾: def +2 / mdef +2 / regen on all, HP unchanged', eng.party.every((p, i) => p.buffs.def === 2 && p.buffs.mdef === 2 && p.status.regen && p.hp === hp0[i]), eng.party.map((p) => [p.buffs.def, p.buffs.mdef, !!p.status.regen, p.hp]));
+    u.mp = 99;
+    drainAll(eng.useAction(u, 's_wind_light_b', BC.ACT('s_wind_light_b'), u, {}));
+    ok('追い風の光: nimble + agi +1 on all, HP unchanged', eng.party.every((p, i) => p.status.nimble && p.buffs.agi === 1 && p.hp === hp0[i]));
+  }
+  {
+    const eng = engine({ mons: ['rat_1', 'rat_1'] });
+    const [u] = eng.party;
+    u.mp = 99;
+    const [m0] = eng.mons;
+    for (const m of eng.mons) m.hp = m.mhp = 99999;
+    m0.buffs.def = 2; m0.buffs.atk = 1; m0.status.veil = true;
+    const evs = drainAll(eng.useAction(u, 's_water_light_a', BC.ACT('s_water_light_a'), m0, {}));
+    ok('清めの雨: hits every enemy with water', evs.filter((e) => e.t === 'dmg' && e.el === 'water' && !e.u.isParty).length === eng.mons.length, evs.filter((e) => e.t === 'dmg').map((e) => e.el));
+    ok('清めの雨: the buffed enemy loses its buffs (and veil)', m0.buffs.def === 0 && m0.buffs.atk === 0 && !m0.status.veil, [m0.buffs, m0.status]);
+    // 1 体だけで消す物が無い: 「〜のダメージ！」の後に「しかし効き目がなかった。」を出さない
+    const eng2 = engine({ mons: ['rat_1'] });
+    eng2.mons[0].hp = eng2.mons[0].mhp = 99999;
+    eng2.party[0].mp = 99;
+    const evs2 = drainAll(eng2.useAction(eng2.party[0], 's_water_light_a', BC.ACT('s_water_light_a'), eng2.mons[0], {}));
+    ok('清めの雨 on a lone unbuffed enemy: damage, then no "no effect" line', evs2.some((e) => e.t === 'dmg' && e.n > 0) && !evs2.some((e) => e.t === 'msg' && e.text === R.T('sys.battle_core.dispel.m')), evs2.filter((e) => e.t === 'msg').map((e) => e.text));
+  }
+  {
+    // 虹の矢: 的ごとに火・水・光のいちばん効く属性で当たる（elemFactor が act.elements の最大を選ぶ）
+    const cand = Object.keys(DB.monsters).filter((id) => { const e = DB.monsters[id].elem || {}; const v = ['fire', 'water', 'light'].map((k) => (e[k] != null ? e[k] : 1)); return !/^stub_/.test(id) && new Set(v).size > 1; }).slice(0, 12);
+    const eng = engine({ mons: cand.slice(0, 1) });
+    const u = eng.party[0];
+    const bad = [];
+    for (const id of cand) {
+      const m = new BC.Engine({ party: partyCopy(), mons: [id], tier: 0, lv: 8, inv: {}, rng: R.Mon.mkRng('rb') }).mons[0];
+      if (!m || m.metal) continue;
+      const want = ['fire', 'water', 'light'].reduce((b, k) => (m.elemMult(k) > m.elemMult(b) ? k : b), 'fire');
+      const r = eng.roll(u, m, BC.ACT('s_fire_water_light').effects[0], { act: BC.ACT('s_fire_water_light'), kind: 'spell', expect: true });
+      if (m.elemMult(r.el) !== m.elemMult(want)) bad.push([id, r.el, want]);
+    }
+    ok(`虹の矢 picks the most effective of fire / water / light (${cand.length} monsters)`, cand.length >= 5 && !bad.length, bad);
+    const r2 = eng.roll(u, eng.mons[0], BC.ACT('s_water_light_a').effects[0], { act: BC.ACT('s_water_light_a'), kind: 'spell', expect: true });
+    ok('清めの雨 always hits with water (not light)', r2.el === 'water', r2.el);
+  }
+  // ---- 味方の AI（sim・tools）
+  {
+    const AI = R.BattleAI;
+    const realRng = R.Mon.rng;
+    R.Mon.rng = () => ({ next: () => 0, r: () => 0, chance: () => true, rf: (a) => a, ri: (a) => a, pick: (x) => x[0] });
+    try {
+      // 回復は残った 3 つで: 傷ついた仲間には あまねく光 など（清めの雨・大樹の盾 で回復しようとしない）
+      const eng = engine({ mons: ['rat_1'] });
+      eng.boss = true;   // 雑魚なら「倒し切れるなら治さない」が先に効く。ここでは回復の術の選び方だけを見る
+      const u = eng.party[0];
+      u.mp = 200;
+      for (const p of eng.party) p.hp = Math.max(1, Math.floor(p.mhp * 0.2));
+      const plan = AI.newPlan(); AI.assess(eng, plan);
+      const cmd = AI.partyAction(eng, u, plan, { thrift: true, items: false });
+      ok('AI heals hurt allies with a remaining heal spell', cmd && cmd.type === 'spell' && ['s_light_3', 's_light_5', 's_water_light_b'].includes(cmd.id), cmd && cmd.id);
+      // 極光のしずく: ほかの仲間 2 人以上の MP が少ない時だけ
+      const eng2 = engine({ mons: ['rat_1'] });
+      const v = eng2.party[0];
+      for (const p of eng2.party) { p.st.mp = Math.max(p.st.mp || 0, 60); p.mp = p.mmp; }
+      const acts2 = AI.abilityOptions(eng2, v);
+      ok('AI: full MP → no 極光のしずく', AI.tryMp(eng2, v, acts2, AI.newPlan()) === null);
+      for (const p of eng2.party) if (p !== v) p.mp = 0;
+      const c2 = AI.tryMp(eng2, v, acts2, AI.newPlan());
+      ok('AI: allies out of MP → 極光のしずく', eng2.party.length < 3 || (c2 && c2.id === 's_water_wind_light'), c2);
+      // 全体の強化はかかっていれば重ねない（ボス戦の強化の番）
+      const eng3 = engine({ mons: ['rat_1'] });
+      eng3.boss = true; eng3.round = 1;
+      const w = eng3.party[0];
+      w.c.spells = ['s_wind_light_b'];
+      w.mp = 99;
+      const acts3 = AI.abilityOptions(eng3, w);
+      const plan3 = AI.newPlan();
+      const b1 = AI.tryBuff(eng3, w, acts3, plan3);
+      ok('AI: 追い風の光 when nobody has it', b1 && b1.id === 's_wind_light_b', b1);
+      ok('AI: …and the same round no one casts it again', AI.tryBuff(eng3, w, acts3, plan3) === null);
+      for (const p of eng3.party) { p.buffs.agi = 1; p.status.nimble = { turns: 3 }; }
+      ok('AI: everyone already has it → not cast', AI.tryBuff(eng3, w, acts3, AI.newPlan()) === null);
+      w.c.spells = ['s_water_wind_light'];
+      ok('AI: 極光のしずく is never spent as a plain mdef buff', AI.tryBuff(eng3, w, AI.abilityOptions(eng3, w), AI.newPlan()) === null);
+    } finally { R.Mon.rng = realRng; }
+  }
+}
+
 done('test_battle');

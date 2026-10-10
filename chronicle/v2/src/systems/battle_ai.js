@@ -22,6 +22,8 @@
   const has = (act, type) => !!(act && act.effects && act.effects.some((e) => e.type === type));
   const effOf = (act, type) => act && act.effects && act.effects.find((e) => e.type === type);
   const dmgOf = (act) => act && act.effects && act.effects.find((e) => e.type === 'damage' && !e.on);
+  /** その属性で当たるダメージか（ダメージに属性が決めてあればそれだけ。清めの雨 = 水と光の術だが水で当たる） */
+  const hitsEl = (act, el) => { const d = dmgOf(act); return !!d && (d.element ? d.element === el : (act.elements || []).includes(el)); };
   const rowK = () => {
     const k = R.Rules && R.Rules.K && R.Rules.K.ROW;
     const w = (k && k.weight) || { front: 3, middle: 1 };
@@ -395,15 +397,48 @@
     plan.dispelled.add(t);
     return cmdOf(o, t);
   }
+  /**
+   * MP を戻す術（極光のしずく: 味方全体の healMp）: ほかの仲間 2 人以上の MP が MP_LOW を切り、戻る量（満タンを超えた分は数えない）が
+   * 払う MP より 2 割以上多い時だけ。回復役は回復 1 回分の MP を残す。1 ラウンドに 1 回まで
+   */
+  const MP_LOW = 0.35;
+  function tryMp(eng, u, acts, plan) {
+    if (plan.mpDone) return null;
+    const o = acts.find((x) => x.type === 'spell' && has(x.ab, 'healMp') && (x.ab.target === 'allies' || x.ab.target === 'party'));
+    if (!o) return null;
+    const party = eng.living('party');
+    if (party.filter((p) => p !== u && p.mmp > 0 && p.mp < p.mmp * MP_LOW).length < 2) return null;
+    const e = effOf(o.ab, 'healMp');
+    const amt = (p) => (e.amount != null ? e.amount : Math.ceil(p.mmp * (e.pct || 0)));
+    const gain = party.reduce((sum, p) => sum + Math.min(amt(p), Math.max(0, p.mmp - p.mp + (p === u ? o.mp : 0))), 0);
+    if (gain <= o.mp * 1.2) return null;
+    const care = careOf(eng, u, plan);
+    if (care.healer && u.mp - o.mp < care.healCost) return null;
+    plan.mpDone = true;
+    return cmdOf(o, u);
+  }
   function tryBuff(eng, u, acts, plan) {
     if (!eng.boss) return null;
     const cover = acts.find((o) => !o.item && has(o.ab, 'cover'));
     if (cover && !plan.buffed.has('cover') && eng.living('party').some((p) => p !== u && p.hpRate() < 0.5) && u.hpRate() > 0.6) { plan.buffed.add('cover'); return cmdOf(cover, u); }
     if (eng.round > 4 || RN().next() > 0.4) return null;
     for (const o of acts) {
-      if (o.item || has(o.ab, 'damage')) continue;
+      // MP を戻す術（極光のしずく）は tryMp だけが使う（MP が足りている時に術防の強化として使わない）
+      if (o.item || has(o.ab, 'damage') || has(o.ab, 'healMp')) continue;
       const b = effOf(o.ab, 'buff');
       const st = effOf(o.ab, 'status');
+      const goodSt = st && GOOD.includes(st.status) && st.status !== 'cover';
+      if ((o.ab.target === 'allies' || o.ab.target === 'party') && ((b && b.stages > 0) || goodSt)) {
+        // 味方全体の強化（追い風の光・大樹の盾 など）: 生きている仲間の半分以上がまだ持っていない時だけ（重ねがけで手番を使わない）。
+        //   使ったら全員を済みにする（同じラウンドに別の人が同じ強化を重ねない）
+        const party = eng.living('party');
+        const lacks = (p) => (b && b.stages > 0 && p.buffs[b.stat] < 1 && !plan.buffed.has(p.key + b.stat)) || (goodSt && !p.status[st.status] && !plan.buffed.has(p.key + st.status));
+        if (party.length && party.filter(lacks).length * 2 >= party.length) {
+          for (const p of party) { if (b) plan.buffed.add(p.key + b.stat); if (goodSt) plan.buffed.add(p.key + st.status); }
+          return cmdOf(o, u);
+        }
+        continue;
+      }
       if (b && b.stages > 0 && ALLY_TARGETS[o.ab.target]) {
         const t = o.ab.target === 'self' ? u : eng.living('party').find((p) => p.buffs[b.stat] < 1 && !plan.buffed.has(p.key + b.stat) && !(o.ab.target === 'ally_other' && p === u));
         if (t && t.buffs[b.stat] < 1) { plan.buffed.add(t.key + b.stat); return cmdOf(o, t); }
@@ -614,7 +649,7 @@
     const acts = abilityOptions(eng, u);
     const items = itemOptions(eng, u, plan, opts.items, acts);
     const all = acts.concat(items);
-    return tryRevive(eng, u, all, plan) || tryHeal(eng, u, all, plan) || tryCure(eng, u, all, plan) ||
+    return tryRevive(eng, u, all, plan) || tryHeal(eng, u, all, plan) || tryCure(eng, u, all, plan) || tryMp(eng, u, acts, plan) ||
       tryDispel(eng, u, acts, plan) || tryBuff(eng, u, acts, plan) ||
       (plan.thrift && !plan.danger ? glimCast(eng, u, acts, plan) : null) || offense(eng, u, acts, plan);
   }
@@ -727,12 +762,14 @@
       if (heal) { cmds[u.idx] = heal; continue; }
       const cure = tryCure(eng, u, all, plan);
       if (cure) { cmds[u.idx] = cure; continue; }
+      const mpc = tryMp(eng, u, acts, plan);
+      if (mpc) { cmds[u.idx] = mpc; continue; }
       // 2. 予告への答え
       let done = false;
       for (const t of tele) {
         const m = /^element:(\w+)$/.exec(t.guard || '');
         if (!m || elemDone.has(t.m)) continue;
-        const o = all.find((x) => dmgOf(x.ab) && FOE_TARGETS[x.ab.target] && ((x.ab.elements || []).includes(m[1]) || dmgOf(x.ab).element === m[1]));
+        const o = all.find((x) => FOE_TARGETS[x.ab.target] && hitsEl(x.ab, m[1]));
         if (o) { reserve(plan, o); cmds[u.idx] = cmdOf(o, t.m); elemDone.add(t.m); done = true; break; }
       }
       if (done) continue;
@@ -742,14 +779,14 @@
       const iced = eng.living('mon').find((m) => m.d.melt && m.buffs.def > 0);
       if (iced) {
         const el = iced.d.melt.element;
-        const o = all.find((x) => dmgOf(x.ab) && FOE_TARGETS[x.ab.target] && ((x.ab.elements || []).includes(el) || dmgOf(x.ab).element === el) && !(x.item && plan.items[x.id] >= eng.count(x.id)));
+        const o = all.find((x) => FOE_TARGETS[x.ab.target] && hitsEl(x.ab, el) && !(x.item && plan.items[x.id] >= eng.count(x.id)));
         if (o && !elemDone.has(iced)) { reserve(plan, o); cmds[u.idx] = cmdOf(o, iced); elemDone.add(iced); continue; }
       }
       const leader = eng.living('mon').find((m) => m.d.leader);
       const burnable = eng.living('mon').find((m) => m.d.onBurn || m.d.onKilledBy);
       if (burnable && !(eng.flags[(burnable.d.onBurn || burnable.d.onKilledBy).flag])) {
         const el = (burnable.d.onBurn || burnable.d.onKilledBy).element;
-        const o = all.find((x) => dmgOf(x.ab) && FOE_TARGETS[x.ab.target] && ((x.ab.elements || []).includes(el) || dmgOf(x.ab).element === el) && !(x.item && plan.items[x.id] >= eng.count(x.id)));
+        const o = all.find((x) => FOE_TARGETS[x.ab.target] && hitsEl(x.ab, el) && !(x.item && plan.items[x.id] >= eng.count(x.id)));
         if (o) { reserve(plan, o); cmds[u.idx] = cmdOf(o, burnable); continue; }
       }
       if (leader) {
@@ -797,7 +834,7 @@
 
   R.BattleAI = Object.assign(R.BattleAI || {}, {
     AUTO_OPTS, monster, monCommand, condOk, monUsable, pickPartyTarget, comboFor, comboUnits, comboMatch, comboReady,
-    partyCommands, partyAction, abilityOptions, itemOptions, newPlan, assess, threat,
+    partyCommands, partyAction, abilityOptions, itemOptions, newPlan, assess, threat, tryBuff, tryMp, MP_LOW,
     focusOrder, focusTarget, assignTarget, bestAttack, glimCast, candidatesOpen, careOf, FOCUS_COVER, HEAL_RESERVE,
     fightOnly, repeatOnly, scripted, styleAI, pendingTelegraphs, enemyCommand, partyCommand,
   });

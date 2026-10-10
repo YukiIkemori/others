@@ -856,7 +856,7 @@
       S.dot(g, x, y, 3 + hr(s + 2) * 4, c1, 0.8 * k);
     }
   });
-  // 横に流れる帯（夜明けの風・光の薄衣）: L.n、L.w、L.h
+  // 横に流れる帯（夜明けの風・せせらぎ）: L.n、L.w、L.h
   P('ribbons', (g, u, L, c, e) => {
     const n = L.n || 4, k = E.env(u, 0.2, 0.3), W = L.w || 400, H = L.h || 80;
     for (let j = 0; j < n; j++) {
