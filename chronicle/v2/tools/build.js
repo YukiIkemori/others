@@ -22,6 +22,8 @@
 // 書体: 使う字を src/** とフィクスチャから集め、Zen Maru Gothic（Medium・Bold）を pyftsubset で woff2 に切り出して埋め込む。
 //   Cinzel（英字）は latin の woff2 をそのまま埋め込む。どちらも OFL（v2/assets/fonts/OFL_*.txt）。
 // 媒体: 既定は外に置く（dist/bgm・dist/voice・dist/portraits・dist/sfx・dist/amb に写す）。
+//   英語のボイス voice/en/<id>.ogg → RPG_MEDIA.voice_en[id] = url（dist/voice/en に写す。ゲームの言語が英語のとき core/media.js が
+//   voice より先に引き、無い id は日本語の voice のまま。2026-10-10）。
 //   録音の効果音 sfx/<id>.<k>.ogg（＋<id>.json）→ RPG_MEDIA.sfx['<id>.<k>'] = url（keepSynth: true の id は写さない＝合成のまま）。
 //   録音の環境音 amb/<床>.ogg（＋<床>.json）→ RPG_MEDIA.amb['<床>'] = {url, loopStart, loopEnd}（keepProcedural・weak は写さない）。
 //   どちらも縦切り・製品版の両方に入れる（design/notes/audio.md §15.1）。--single は <script type="application/octet-stream">
@@ -259,6 +261,7 @@ function scanAmb(dir) {
 function scanMedia(root, o) {
   const out = { bgm: [], voice: [], portraits: [] };
   { const s = scanSfx(path.join(root, 'sfx')), a = scanAmb(path.join(root, 'amb')); out.sfx = s.list; out.amb = a.list; out.skipped = { sfx: s.skipped, amb: a.skipped }; }
+  out.voice_en = scanVoiceLang(path.join(root, 'voice', 'en'));
   for (const kind of ['bgm', 'voice', 'portraits']) {
     const dir = path.join(root, kind);
     if (!fs.existsSync(dir)) continue;
@@ -299,6 +302,17 @@ function scanMedia(root, o) {
     }
   }
   return out;
+}
+/** 言語ごとのボイス（voice/<言語>/<id>.ogg|m4a|mp3|wav。今は英語だけ）→ [{id, ext, file, meta}]。同じ id は ogg → m4a → mp3 → wav の順で 1 つ */
+function scanVoiceLang(dir) {
+  const byId = {};
+  if (!fs.existsSync(dir)) return [];
+  for (const f of fs.readdirSync(dir).sort()) {
+    const m = /^([a-z0-9_]+)\.([a-z0-9]+)$/.exec(f);
+    if (!m || !MEDIA_EXT.voice.includes(m[2])) continue;
+    if (!byId[m[1]] || MEDIA_EXT.voice.indexOf(m[2]) < MEDIA_EXT.voice.indexOf(byId[m[1]].ext)) byId[m[1]] = { id: m[1], ext: m[2], file: path.join(dir, f), meta: {} };
+  }
+  return Object.keys(byId).sort().map((id) => byId[id]);
 }
 /** 版 2: CAST の原画の取り込み。v2/assets/sprites/<look>/<kind>.png（＋同じ名前の .json = meta）→ sprites['<look>:<kind>'] */
 const SPRITES_DIR = path.join(V2, 'assets', 'sprites');
@@ -419,7 +433,7 @@ function copyIfChanged(src, dst) {
 }
 /** → {script, embeds, bytes}。mode 'external' は outDir/<kind>/ に写して相対 URL、'embed' は埋め込み、'none' は空 */
 function mediaTable(media, mode, outDir) {
-  const table = { bgm: {}, voice: {}, portraits: {}, sprites: {}, env: {}, title: {}, monsters: {}, fx: {}, sfx: {}, amb: {} };
+  const table = { bgm: {}, voice: {}, voice_en: {}, portraits: {}, sprites: {}, env: {}, title: {}, monsters: {}, fx: {}, sfx: {}, amb: {} };
   const embeds = [];
   let bytes = 0;
   media.sprites = media.sprites || [];
@@ -429,14 +443,17 @@ function mediaTable(media, mode, outDir) {
   media.fx = media.fx || [];
   media.sfx = media.sfx || [];
   media.amb = media.amb || [];
+  media.voice_en = media.voice_en || [];
   const base = (e) => e.outName || path.basename(e.file);
-  for (const kind of ['bgm', 'voice', 'portraits', 'sprites', 'env', 'title', 'monsters', 'fx', 'sfx', 'amb']) {
-    const extDir = path.join(outDir, kind);
+  // 英語のボイスは voice/en/ に（voice の中のディレクトリ。voice の片づけはディレクトリを消さない）
+  const sub = { voice_en: 'voice/en' };
+  for (const kind of ['bgm', 'voice', 'voice_en', 'portraits', 'sprites', 'env', 'title', 'monsters', 'fx', 'sfx', 'amb']) {
+    const extDir = path.join(outDir, ...(sub[kind] || kind).split('/'));
     if (mode === 'external') {
       fs.mkdirSync(extDir, { recursive: true });
       const want = new Set(media[kind].map(base));
       if (kind === 'title') for (const e of media.title) if (e.png) want.add(e.id + '.png');
-      for (const f of fs.readdirSync(extDir)) if (!want.has(f)) fs.unlinkSync(path.join(extDir, f));
+      for (const f of fs.readdirSync(extDir)) if (!want.has(f) && !fs.statSync(path.join(extDir, f)).isDirectory()) fs.unlinkSync(path.join(extDir, f));
     }
     for (const e of media[kind]) {
       let url;
@@ -450,7 +467,7 @@ function mediaTable(media, mode, outDir) {
         // ?v=<中身の hash>: 名前が同じで中身が変わった絵（原画の描き直し）を、ブラウザの HTTP キャッシュの古い物で出さない
         const h = copyIfChanged(e.file, path.join(extDir, base(e)));
         bytes += fs.statSync(e.file).size;
-        url = kind + '/' + base(e) + '?v=' + h;
+        url = (sub[kind] || kind) + '/' + base(e) + '?v=' + h;
         // タイトルの絵は webp が読めないときの png も写す（--single には入れない。TITLE_ART §2）
         if (kind === 'title' && e.png) { e.pngV = copyIfChanged(e.png, path.join(extDir, e.id + '.png')); bytes += fs.statSync(e.png).size; }
       } else continue;
@@ -459,7 +476,7 @@ function mediaTable(media, mode, outDir) {
     }
   }
   if (mode !== 'none' && media.titleMeta) table.titleMeta = media.titleMeta;
-  return { script: `<script>window.RPG_MEDIA=${JSON.stringify(table)};</script>`, embeds: embeds.join('\n'), bytes, counts: { bgm: media.bgm.length, voice: media.voice.length, portraits: media.portraits.length, sprites: media.sprites.length, env: media.env.length, title: media.title.length, fx: media.fx.length, sfx: media.sfx.length, amb: media.amb.length } };
+  return { script: `<script>window.RPG_MEDIA=${JSON.stringify(table)};</script>`, embeds: embeds.join('\n'), bytes, counts: { bgm: media.bgm.length, voice: media.voice.length, voice_en: media.voice_en.length, portraits: media.portraits.length, sprites: media.sprites.length, env: media.env.length, title: media.title.length, fx: media.fx.length, sfx: media.sfx.length, amb: media.amb.length } };
 }
 
 // ------------------------------------------------------------------ HTML
@@ -613,11 +630,11 @@ function main(argv) {
     (min ? `\n[build] minified: ${(min.stats().inB / 1024).toFixed(0)} KB → ${(min.stats().outB / 1024).toFixed(0)} KB of JS${min.stats().failed ? ` (${min.stats().failed} file(s) kept as is)` : ''}` : '') +
     `\n[build] tester menu: ${has('--no-tester') ? 'EXCLUDED' + (release ? ' (release)' : '') : 'included (?tester=1 + F9)'}` +
     `\n[build] fonts: ${font.chars} chars, ${(font.bytes / 1024).toFixed(0)} KB embedded${font.ok ? '' : ' (SUBSET FAILED)'}` +
-    `\n[build] media (${single ? 'embedded' : 'external'}): ${M.counts.bgm} BGM${has('--all-bgm') ? '' : ' (slice)'}, ${M.counts.voice} voice, ${M.counts.portraits} portraits, ${M.counts.sprites} sprite sheets, ${M.counts.env} env images, ${M.counts.title} title images, ${M.counts.fx} fx parts, ${M.counts.sfx} sfx takes, ${M.counts.amb} ambience beds, ${mb(M.bytes)} MB` +
+    `\n[build] media (${single ? 'embedded' : 'external'}): ${M.counts.bgm} BGM${has('--all-bgm') ? '' : ' (slice)'}, ${M.counts.voice} voice (+${M.counts.voice_en} English), ${M.counts.portraits} portraits, ${M.counts.sprites} sprite sheets, ${M.counts.env} env images, ${M.counts.title} title images, ${M.counts.fx} fx parts, ${M.counts.sfx} sfx takes, ${M.counts.amb} ambience beds, ${mb(M.bytes)} MB` +
     (media.skipped && (media.skipped.sfx.length || media.skipped.amb.length) ? `\n[build] recorded audio left out (synth / procedural kept): sfx ${media.skipped.sfx.join(' ') || '-'}; amb ${media.skipped.amb.join(' ') || '-'}` : '') +
     (bad.length ? `\n[build] ${bad.length} file(s) EXCLUDED (syntax)` : '') + `  [${Date.now() - t0} ms]`);
   if (bad.length) process.exitCode = 1;
 }
 
-module.exports = { order, fixtures, syntax, scanMedia, scanSfx, scanAmb, mediaTable, scanSprites, SPRITES_DIR, scanEnv, ENV_DIR, scanTitle, TITLE_DIR, SLICE_BGM, DIRS, CORE_FIRST, V2 };
+module.exports = { order, fixtures, syntax, scanMedia, scanSfx, scanAmb, scanVoiceLang, mediaTable, scanSprites, SPRITES_DIR, scanEnv, ENV_DIR, scanTitle, TITLE_DIR, SLICE_BGM, DIRS, CORE_FIRST, V2 };
 if (require.main === module) main(process.argv.slice(2));

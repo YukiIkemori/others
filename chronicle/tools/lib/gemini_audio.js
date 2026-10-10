@@ -28,13 +28,17 @@ function redact(s) {
   return t;
 }
 
-/** POST <API_BASE>/models/<model>:<method> with retries. → parsed JSON. Throws Error(redacted text). */
+/** POST <API_BASE>/models/<model>:<method> with retries. → parsed JSON. Throws Error(redacted text).
+ *  o.retryOn '429' = only wait and resend after a per-minute rate limit (429); a 5xx or a network error throws at once
+ *  (the caller decides whether a new request is worth it — the paid voice runs count every request).
+ *  o.onAttempt(status) is called for every HTTP request sent (status 0 = network error). */
 async function geminiPost(model, body, o) {
   o = o || {};
   const key = o.key || apiKey();
   if (!key) throw new Error('no GOOGLE_API_KEY');
   const url = `${API_BASE}/models/${model.replace(/^models\//, '')}:${o.method || 'generateContent'}`;
   const tries = o.tries || 8;
+  const only429 = o.retryOn === '429';
   let last;
   for (let t = 0; t < tries; t++) {
     let res, text;
@@ -46,14 +50,19 @@ async function geminiPost(model, body, o) {
       clearTimeout(timer);
     } catch (e) {
       last = new Error('network: ' + redact(e.message || e));
+      last.network = true;
+      if (o.onAttempt) o.onAttempt(0);
+      if (only429) throw last;
       await sleep(5000 * (t + 1));
       continue;
     }
+    if (o.onAttempt) o.onAttempt(res.status);
     if (res.ok) return JSON.parse(text);
     last = new Error(`HTTP ${res.status}: ${redact(text).slice(0, 600)}`);
     last.status = res.status;
     // a per-day quota ("generate_requests_per_model_per_day", "retry in 11h57m…") will not clear by waiting
     if (res.status === 429 && (/per_day|PerDay/.test(text) || /retry in \d+h/i.test(text))) { last.daily = true; throw last; }
+    if (only429 && res.status !== 429) throw last;
     if (res.status === 429 || res.status >= 500) {
       const m = /retry in ([0-9.]+)s/i.exec(text);
       const wait = m ? (+m[1] + 1.5) * 1000 : Math.min(120000, 15000 * (t + 1));
@@ -87,8 +96,25 @@ async function geminiGet(name, o) {
 async function batchGenerate(model, reqs, o) {
   o = o || {};
   const log = o.log || (() => {});
-  const op = await geminiPost(model, { batch: { display_name: o.name || 'lc-batch', input_config: { requests: { requests: reqs.map((r) => ({ request: r.request, metadata: { key: r.key } })) } } } }, { method: 'batchGenerateContent', tries: 4 });
+  let op;
+  if (o.resume) op = await geminiGet(o.resume);   // a batch made earlier (its results were not fetched): no new request
+  else {
+    const body = { batch: { display_name: o.name || 'lc-batch', input_config: { requests: { requests: reqs.map((r) => ({ request: r.request, metadata: { key: r.key } })) } } } };
+    // o.safe: create the batch once (a 429 rate limit is waited out); after a 5xx / network error look for the batch by
+    // its display name before giving up, so a batch the server made anyway is not made a second time
+    if (o.safe) {
+      try { op = await geminiPost(model, body, { method: 'batchGenerateContent', retryOn: '429', tries: 6, onAttempt: o.onAttempt }); } catch (e) {
+        if (e.daily || (e.status && e.status < 500 && e.status !== 429)) { e.notCreated = true; throw e; }
+        await sleep(15000);
+        const found = await findBatch(o.name).catch(() => null);
+        if (!found) { e.notCreated = true; throw e; }
+        log(`batch create answered ${e.status || 'a network error'}, but ${found.name} exists — using it`);
+        op = found;
+      }
+    } else op = await geminiPost(model, body, { method: 'batchGenerateContent', tries: 4 });
+  }
   const name = op.name;
+  if (o.onCreate) o.onCreate(name);
   log(`batch ${name}: ${reqs.length} request(s) queued`);
   const t0 = Date.now();
   let d = op;
@@ -102,11 +128,44 @@ async function batchGenerate(model, reqs, o) {
     log(`batch ${name}: ${d.metadata && d.metadata.state} (${Math.round((Date.now() - t0) / 1000)} s; ok ${bs.successfulRequestCount || 0}, pending ${bs.pendingRequestCount || 0})`);
   }
   const outp = (d.response && d.response.inlinedResponses) || (d.metadata && d.metadata.output && d.metadata.output.inlinedResponses) || {};
-  const list = outp.inlinedResponses || [];
+  let list = outp.inlinedResponses || [];
+  // large results may come as a file (output.responsesFile): one JSON line per request ({key | metadata.key, response | error})
+  const file = (d.response && d.response.responsesFile) || (d.metadata && d.metadata.output && d.metadata.output.responsesFile);
+  if (!list.length && file) {
+    const body = await geminiDownload(file);
+    list = body.split('\n').filter((x) => x.trim()).map((x) => { const j = JSON.parse(x); return { metadata: j.metadata || { key: j.key }, response: j.response, error: j.error }; });
+  }
   const res = new Map();
   for (const r of list) res.set(r.metadata && r.metadata.key, r.error ? { error: JSON.stringify(r.error) } : { json: r.response });
   if (!list.length) throw new Error(`batch ${name} ended ${d.metadata && d.metadata.state} without results: ${redact(JSON.stringify(d.error || '')).slice(0, 300)}`);
   return res;
+}
+/** GET <download base>/<file>:download?alt=media (the results file of a batch) → text */
+async function geminiDownload(file) {
+  const key = apiKey();
+  const base = API_BASE.replace(/\/v1beta$/, '/download/v1beta');
+  for (let t = 0; ; t++) {
+    try {
+      const res = await fetch(`${base}/${file}:download?alt=media`, { headers: { 'x-goog-api-key': key } });
+      const text = await res.text();
+      if (res.ok) return text;
+      if (t >= 4 || (res.status < 500 && res.status !== 429)) throw new Error(`HTTP ${res.status}: ${redact(text).slice(0, 300)}`);
+    } catch (e) { if (t >= 4) throw new Error(redact(e.message || e)); }
+    await sleep(10000 * (t + 1));
+  }
+}
+/** the newest batch with this display name (GET /v1beta/batches, metadata only) → operation | null */
+async function findBatch(displayName) {
+  if (!displayName) return null;
+  let tok = '';
+  for (let p = 0; p < 10; p++) {
+    const j = await geminiGet('batches?pageSize=100' + (tok ? '&pageToken=' + encodeURIComponent(tok) : ''));
+    const hit = (j.operations || j.batches || []).find((b) => { const m = b.metadata || b; return (m.displayName || m.display_name) === displayName; });
+    if (hit) return hit;
+    tok = j.nextPageToken || j.next_page_token;
+    if (!tok) return null;
+  }
+  return null;
 }
 /** the parts of the first candidate → {text, audio:[{mimeType, bytes}]} */
 function partsOf(json) {
@@ -219,4 +278,4 @@ function limitTo(channels, rate, target, ceilDb) {
   return out;
 }
 
-module.exports = { limitTo, geminiGet, batchGenerate, API_BASE, apiKey, redact, geminiPost, partsOf, ffmpegPath, decode, encode, loudness, peak, gain, mono, rmsDb, normalise, sleep };
+module.exports = { limitTo, geminiGet, batchGenerate, findBatch, geminiDownload, API_BASE, apiKey, redact, geminiPost, partsOf, ffmpegPath, decode, encode, loudness, peak, gain, mono, rmsDb, normalise, sleep };

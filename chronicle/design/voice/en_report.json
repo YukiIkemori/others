@@ -1,0 +1,2201 @@
+{
+ "_readme": "English voice files (tools/voice_tts.js --lang en). Per id: the take that was kept (seconds, LUFS, peak, local problems) and attempts = audio requests made for it (at most 2). _usage counts every request: requests = audio generation requests (direct calls + Batch API items, retries included), httpAttempts = HTTP requests sent (rate-limit resends included; a 429 answer makes no audio), retries = second requests after a failed local check / an empty or error answer. _verify = the last local check of all files on disk (--verify). stt = an offline open-source speech recognizer (tools/voice_en_stt.py; no API): report-only, except a line said twice (repeated), which counts as a length far off the text and may use the one retry.",
+ "_usage": {
+  "requests": 336,
+  "httpAttempts": 39,
+  "rateLimited": 0,
+  "retries": 3,
+  "batches": [
+   {
+    "display": "lc-voice-en-202610100929-r1-c2",
+    "requests": 100,
+    "t": "2026-10-10T09:29:57.835Z",
+    "name": "batches/axugb558n9q5oav4wcfnrh8xual8g9t5kvrc",
+    "state": "created"
+   },
+   {
+    "display": "lc-voice-en-202610100929-r1-c3",
+    "requests": 100,
+    "t": "2026-10-10T09:29:57.837Z",
+    "name": "batches/svcpd39l3rj8zeli7ogajq5vhigw2e0n2zgi",
+    "state": "created"
+   },
+   {
+    "display": "lc-voice-en-202610100929-r1-c1",
+    "requests": 100,
+    "t": "2026-10-10T09:29:57.784Z",
+    "name": "batches/btjpsr1f0rctbkdr7pz67lvxld76a49ngfdk",
+    "state": "created"
+   }
+  ],
+  "runs": [
+   {
+    "t": "2026-10-10T09:19:53.955Z",
+    "mode": "direct",
+    "lines": 1,
+    "requests": 1,
+    "httpAttempts": 1,
+    "rateLimited": 0,
+    "retries": 0
+   },
+   {
+    "t": "2026-10-10T09:21:35.979Z",
+    "mode": "direct",
+    "lines": 32,
+    "requests": 34,
+    "httpAttempts": 34,
+    "rateLimited": 0,
+    "retries": 2
+   },
+   {
+    "t": "2026-10-10T09:28:01.802Z",
+    "mode": "direct",
+    "lines": 1,
+    "requests": 1,
+    "httpAttempts": 1,
+    "rateLimited": 0,
+    "retries": 1
+   },
+   {
+    "t": "2026-10-10T09:29:57.777Z",
+    "mode": "batch",
+    "lines": 504,
+    "requests": 300,
+    "httpAttempts": 3,
+    "rateLimited": 0,
+    "retries": 0
+   }
+  ]
+ },
+ "_verify": {
+  "t": "2026-10-10T09:29:21.879Z",
+  "files": 33,
+  "ok": 33,
+  "missing": [],
+  "problems": {}
+ },
+ "b_bartolo_attack_1": {
+  "id": "b_bartolo_attack_1",
+  "attempts": 1
+ },
+ "b_bartolo_attack_2": {
+  "id": "b_bartolo_attack_2",
+  "attempts": 1
+ },
+ "b_bartolo_attack_3": {
+  "id": "b_bartolo_attack_3",
+  "attempts": 1
+ },
+ "b_bartolo_bigtech_1": {
+  "id": "b_bartolo_bigtech_1",
+  "attempts": 1
+ },
+ "b_bartolo_bigtech_2": {
+  "id": "b_bartolo_bigtech_2",
+  "attempts": 1
+ },
+ "b_bartolo_hurt_1": {
+  "id": "b_bartolo_hurt_1",
+  "attempts": 1
+ },
+ "b_bartolo_hurt_2": {
+  "id": "b_bartolo_hurt_2",
+  "attempts": 1
+ },
+ "b_bartolo_ko_1": {
+  "id": "b_bartolo_ko_1",
+  "attempts": 1
+ },
+ "b_bartolo_spell_1": {
+  "id": "b_bartolo_spell_1",
+  "attempts": 1
+ },
+ "b_bartolo_victory_1": {
+  "id": "b_bartolo_victory_1",
+  "attempts": 1
+ },
+ "b_basil_attack_1": {
+  "id": "b_basil_attack_1",
+  "attempts": 1
+ },
+ "b_basil_attack_2": {
+  "id": "b_basil_attack_2",
+  "attempts": 1
+ },
+ "b_basil_attack_3": {
+  "id": "b_basil_attack_3",
+  "attempts": 1
+ },
+ "b_basil_bigtech_1": {
+  "id": "b_basil_bigtech_1",
+  "attempts": 1
+ },
+ "b_basil_bigtech_2": {
+  "id": "b_basil_bigtech_2",
+  "attempts": 1
+ },
+ "b_basil_hurt_1": {
+  "id": "b_basil_hurt_1",
+  "attempts": 1
+ },
+ "b_basil_hurt_2": {
+  "id": "b_basil_hurt_2",
+  "attempts": 1
+ },
+ "b_basil_ko_1": {
+  "id": "b_basil_ko_1",
+  "attempts": 1
+ },
+ "b_basil_spell_1": {
+  "id": "b_basil_spell_1",
+  "attempts": 1
+ },
+ "b_basil_victory_1": {
+  "id": "b_basil_victory_1",
+  "attempts": 1
+ },
+ "b_belladonna_attack_1": {
+  "id": "b_belladonna_attack_1",
+  "attempts": 1
+ },
+ "b_belladonna_attack_2": {
+  "id": "b_belladonna_attack_2",
+  "attempts": 1
+ },
+ "b_belladonna_attack_3": {
+  "id": "b_belladonna_attack_3",
+  "attempts": 1
+ },
+ "b_belladonna_bigtech_1": {
+  "id": "b_belladonna_bigtech_1",
+  "attempts": 1
+ },
+ "b_belladonna_bigtech_2": {
+  "id": "b_belladonna_bigtech_2",
+  "attempts": 1
+ },
+ "b_belladonna_hurt_1": {
+  "id": "b_belladonna_hurt_1",
+  "attempts": 1
+ },
+ "b_belladonna_hurt_2": {
+  "id": "b_belladonna_hurt_2",
+  "attempts": 1
+ },
+ "b_belladonna_ko_1": {
+  "id": "b_belladonna_ko_1",
+  "attempts": 1
+ },
+ "b_belladonna_spell_1": {
+  "id": "b_belladonna_spell_1",
+  "attempts": 1
+ },
+ "b_belladonna_victory_1": {
+  "id": "b_belladonna_victory_1",
+  "attempts": 1
+ },
+ "b_boden_attack_1": {
+  "id": "b_boden_attack_1",
+  "attempts": 1
+ },
+ "b_boden_attack_2": {
+  "id": "b_boden_attack_2",
+  "attempts": 1
+ },
+ "b_boden_attack_3": {
+  "id": "b_boden_attack_3",
+  "attempts": 1
+ },
+ "b_boden_bigtech_1": {
+  "id": "b_boden_bigtech_1",
+  "attempts": 1
+ },
+ "b_boden_bigtech_2": {
+  "id": "b_boden_bigtech_2",
+  "attempts": 1
+ },
+ "b_boden_hurt_1": {
+  "id": "b_boden_hurt_1",
+  "attempts": 1
+ },
+ "b_boden_hurt_2": {
+  "id": "b_boden_hurt_2",
+  "attempts": 1
+ },
+ "b_boden_ko_1": {
+  "id": "b_boden_ko_1",
+  "attempts": 1
+ },
+ "b_boden_spell_1": {
+  "id": "b_boden_spell_1",
+  "attempts": 1
+ },
+ "b_boden_victory_1": {
+  "id": "b_boden_victory_1",
+  "attempts": 1
+ },
+ "b_brigitta_attack_1": {
+  "id": "b_brigitta_attack_1",
+  "attempts": 1
+ },
+ "b_brigitta_attack_2": {
+  "id": "b_brigitta_attack_2",
+  "attempts": 1
+ },
+ "b_brigitta_attack_3": {
+  "id": "b_brigitta_attack_3",
+  "attempts": 1
+ },
+ "b_brigitta_bigtech_1": {
+  "id": "b_brigitta_bigtech_1",
+  "attempts": 1
+ },
+ "b_brigitta_bigtech_2": {
+  "id": "b_brigitta_bigtech_2",
+  "attempts": 1
+ },
+ "b_brigitta_hurt_1": {
+  "id": "b_brigitta_hurt_1",
+  "attempts": 1
+ },
+ "b_brigitta_hurt_2": {
+  "id": "b_brigitta_hurt_2",
+  "attempts": 1
+ },
+ "b_brigitta_ko_1": {
+  "id": "b_brigitta_ko_1",
+  "attempts": 1
+ },
+ "b_brigitta_spell_1": {
+  "id": "b_brigitta_spell_1",
+  "attempts": 1
+ },
+ "b_brigitta_victory_1": {
+  "id": "b_brigitta_victory_1",
+  "attempts": 1
+ },
+ "b_dokka_attack_1": {
+  "id": "b_dokka_attack_1",
+  "attempts": 1
+ },
+ "b_dokka_attack_2": {
+  "id": "b_dokka_attack_2",
+  "attempts": 1
+ },
+ "b_dokka_attack_3": {
+  "id": "b_dokka_attack_3",
+  "attempts": 1
+ },
+ "b_dokka_bigtech_1": {
+  "id": "b_dokka_bigtech_1",
+  "attempts": 1
+ },
+ "b_dokka_bigtech_2": {
+  "id": "b_dokka_bigtech_2",
+  "attempts": 1,
+  "speaker": "b_dokka",
+  "voice": "en-us-csagent-1",
+  "text": "A blow that splits stone!",
+  "seconds": 2.93,
+  "estimate": 1.7,
+  "lufs": -16,
+  "peakDb": -3.7,
+  "problems": [],
+  "bytes": 23509,
+  "generated": "2026-10-10T09:21:38.103Z",
+  "stt": {
+   "heard": "A blow that splits stone!",
+   "similarity": 1,
+   "blocks": 1,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 2.93,
+   "estimate": 1.7,
+   "lufs": -15.5,
+   "peakDb": -3.5,
+   "problems": []
+  }
+ },
+ "b_dokka_hurt_1": {
+  "id": "b_dokka_hurt_1",
+  "attempts": 1
+ },
+ "b_dokka_hurt_2": {
+  "id": "b_dokka_hurt_2",
+  "attempts": 1
+ },
+ "b_dokka_ko_1": {
+  "id": "b_dokka_ko_1",
+  "attempts": 1
+ },
+ "b_dokka_spell_1": {
+  "id": "b_dokka_spell_1",
+  "attempts": 1
+ },
+ "b_dokka_victory_1": {
+  "id": "b_dokka_victory_1",
+  "attempts": 1
+ },
+ "b_ferno_attack_1": {
+  "id": "b_ferno_attack_1",
+  "attempts": 1
+ },
+ "b_ferno_attack_2": {
+  "id": "b_ferno_attack_2",
+  "attempts": 1
+ },
+ "b_ferno_attack_3": {
+  "id": "b_ferno_attack_3",
+  "attempts": 1
+ },
+ "b_ferno_bigtech_1": {
+  "id": "b_ferno_bigtech_1",
+  "attempts": 1
+ },
+ "b_ferno_bigtech_2": {
+  "id": "b_ferno_bigtech_2",
+  "attempts": 1
+ },
+ "b_ferno_hurt_1": {
+  "id": "b_ferno_hurt_1",
+  "attempts": 1
+ },
+ "b_ferno_hurt_2": {
+  "id": "b_ferno_hurt_2",
+  "attempts": 1
+ },
+ "b_ferno_ko_1": {
+  "id": "b_ferno_ko_1",
+  "attempts": 1
+ },
+ "b_ferno_spell_1": {
+  "id": "b_ferno_spell_1",
+  "attempts": 1
+ },
+ "b_ferno_victory_1": {
+  "id": "b_ferno_victory_1",
+  "attempts": 1
+ },
+ "b_hagen_attack_1": {
+  "id": "b_hagen_attack_1",
+  "attempts": 1
+ },
+ "b_hagen_attack_2": {
+  "id": "b_hagen_attack_2",
+  "attempts": 1
+ },
+ "b_hagen_attack_3": {
+  "id": "b_hagen_attack_3",
+  "attempts": 1
+ },
+ "b_hagen_bigtech_1": {
+  "id": "b_hagen_bigtech_1",
+  "attempts": 1
+ },
+ "b_hagen_bigtech_2": {
+  "id": "b_hagen_bigtech_2",
+  "attempts": 1
+ },
+ "b_hagen_hurt_1": {
+  "id": "b_hagen_hurt_1",
+  "attempts": 1
+ },
+ "b_hagen_hurt_2": {
+  "id": "b_hagen_hurt_2",
+  "attempts": 1
+ },
+ "b_hagen_ko_1": {
+  "id": "b_hagen_ko_1",
+  "attempts": 1
+ },
+ "b_hagen_spell_1": {
+  "id": "b_hagen_spell_1",
+  "attempts": 1
+ },
+ "b_hagen_victory_1": {
+  "id": "b_hagen_victory_1",
+  "attempts": 1
+ },
+ "b_ilse_attack_1": {
+  "id": "b_ilse_attack_1",
+  "attempts": 1
+ },
+ "b_ilse_attack_2": {
+  "id": "b_ilse_attack_2",
+  "attempts": 1
+ },
+ "b_ilse_attack_3": {
+  "id": "b_ilse_attack_3",
+  "attempts": 1
+ },
+ "b_ilse_bigtech_1": {
+  "id": "b_ilse_bigtech_1",
+  "attempts": 1,
+  "speaker": "b_ilse",
+  "voice": "en-us-sola",
+  "text": "The stars are on our side.",
+  "seconds": 3.73,
+  "estimate": 1.9,
+  "lufs": -16,
+  "peakDb": -3.7,
+  "problems": [],
+  "bytes": 22945,
+  "generated": "2026-10-10T09:21:40.665Z",
+  "stt": {
+   "heard": "The stars are on our side.",
+   "similarity": 1,
+   "blocks": 2,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 3.73,
+   "estimate": 1.9,
+   "lufs": -15.7,
+   "peakDb": -2.3,
+   "problems": []
+  }
+ },
+ "b_ilse_bigtech_2": {
+  "id": "b_ilse_bigtech_2",
+  "attempts": 1
+ },
+ "b_ilse_hurt_1": {
+  "id": "b_ilse_hurt_1",
+  "attempts": 1
+ },
+ "b_ilse_hurt_2": {
+  "id": "b_ilse_hurt_2",
+  "attempts": 1
+ },
+ "b_ilse_ko_1": {
+  "id": "b_ilse_ko_1",
+  "attempts": 1
+ },
+ "b_ilse_spell_1": {
+  "id": "b_ilse_spell_1",
+  "attempts": 1
+ },
+ "b_ilse_victory_1": {
+  "id": "b_ilse_victory_1",
+  "attempts": 1
+ },
+ "b_marta_attack_1": {
+  "id": "b_marta_attack_1",
+  "attempts": 1
+ },
+ "b_marta_attack_2": {
+  "id": "b_marta_attack_2",
+  "attempts": 1
+ },
+ "b_marta_attack_3": {
+  "id": "b_marta_attack_3",
+  "attempts": 1
+ },
+ "b_marta_bigtech_1": {
+  "id": "b_marta_bigtech_1",
+  "attempts": 1
+ },
+ "b_marta_bigtech_2": {
+  "id": "b_marta_bigtech_2",
+  "attempts": 1
+ },
+ "b_marta_hurt_1": {
+  "id": "b_marta_hurt_1",
+  "attempts": 1
+ },
+ "b_marta_hurt_2": {
+  "id": "b_marta_hurt_2",
+  "attempts": 1
+ },
+ "b_marta_ko_1": {
+  "id": "b_marta_ko_1",
+  "attempts": 1
+ },
+ "b_marta_spell_1": {
+  "id": "b_marta_spell_1",
+  "attempts": 1
+ },
+ "b_marta_victory_1": {
+  "id": "b_marta_victory_1",
+  "attempts": 1
+ },
+ "b_morga_attack_1": {
+  "id": "b_morga_attack_1",
+  "attempts": 1
+ },
+ "b_morga_attack_2": {
+  "id": "b_morga_attack_2",
+  "attempts": 1
+ },
+ "b_morga_attack_3": {
+  "id": "b_morga_attack_3",
+  "attempts": 1
+ },
+ "b_morga_bigtech_1": {
+  "id": "b_morga_bigtech_1",
+  "attempts": 1
+ },
+ "b_morga_bigtech_2": {
+  "id": "b_morga_bigtech_2",
+  "attempts": 1
+ },
+ "b_morga_hurt_1": {
+  "id": "b_morga_hurt_1",
+  "attempts": 1
+ },
+ "b_morga_hurt_2": {
+  "id": "b_morga_hurt_2",
+  "attempts": 1
+ },
+ "b_morga_ko_1": {
+  "id": "b_morga_ko_1",
+  "attempts": 1
+ },
+ "b_morga_spell_1": {
+  "id": "b_morga_spell_1",
+  "attempts": 1
+ },
+ "b_morga_victory_1": {
+  "id": "b_morga_victory_1",
+  "attempts": 1
+ },
+ "b_noela_attack_1": {
+  "id": "b_noela_attack_1",
+  "attempts": 1
+ },
+ "b_noela_attack_2": {
+  "id": "b_noela_attack_2",
+  "attempts": 1
+ },
+ "b_noela_attack_3": {
+  "id": "b_noela_attack_3",
+  "attempts": 1
+ },
+ "b_noela_bigtech_1": {
+  "id": "b_noela_bigtech_1",
+  "attempts": 1,
+  "speaker": "b_noela",
+  "voice": "autonoe",
+  "text": "Spirit of the spring, lend me your power!",
+  "seconds": 4.05,
+  "estimate": 3,
+  "lufs": -16,
+  "peakDb": -3,
+  "problems": [],
+  "bytes": 29815,
+  "generated": "2026-10-10T09:21:43.112Z",
+  "stt": {
+   "heard": "Spirit of the spring, lend me your power.",
+   "similarity": 1,
+   "blocks": 2,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 4.05,
+   "estimate": 3,
+   "lufs": -15.9,
+   "peakDb": -2.5,
+   "problems": []
+  }
+ },
+ "b_noela_bigtech_2": {
+  "id": "b_noela_bigtech_2",
+  "attempts": 1
+ },
+ "b_noela_hurt_1": {
+  "id": "b_noela_hurt_1",
+  "attempts": 1
+ },
+ "b_noela_hurt_2": {
+  "id": "b_noela_hurt_2",
+  "attempts": 1
+ },
+ "b_noela_ko_1": {
+  "id": "b_noela_ko_1",
+  "attempts": 1
+ },
+ "b_noela_spell_1": {
+  "id": "b_noela_spell_1",
+  "attempts": 1
+ },
+ "b_noela_victory_1": {
+  "id": "b_noela_victory_1",
+  "attempts": 1
+ },
+ "b_rouga_attack_1": {
+  "id": "b_rouga_attack_1",
+  "attempts": 1,
+  "speaker": "b_rouga",
+  "voice": "fenrir",
+  "text": "Raaah!",
+  "seconds": 1.28,
+  "estimate": 0.7,
+  "lufs": -16,
+  "peakDb": -7.4,
+  "problems": [],
+  "bytes": 11487,
+  "generated": "2026-10-10T09:21:44.776Z",
+  "stt": {
+   "heard": "AHHHHH!",
+   "similarity": 0,
+   "blocks": 1,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 1.28,
+   "estimate": 0.7,
+   "lufs": -15.9,
+   "peakDb": -6.4,
+   "problems": []
+  }
+ },
+ "b_rouga_attack_2": {
+  "id": "b_rouga_attack_2",
+  "attempts": 1
+ },
+ "b_rouga_attack_3": {
+  "id": "b_rouga_attack_3",
+  "attempts": 2,
+  "speaker": "b_rouga",
+  "voice": "fenrir",
+  "text": "Yaaah!",
+  "seconds": 1.03,
+  "estimate": 0.7,
+  "lufs": -16,
+  "peakDb": -2.9,
+  "problems": [],
+  "bytes": 9979,
+  "generated": "2026-10-10T09:21:48.599Z",
+  "stt": {
+   "heard": "HUH?",
+   "similarity": 0,
+   "blocks": 1,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 1.03,
+   "estimate": 0.7,
+   "lufs": -15.4,
+   "peakDb": -2.2,
+   "problems": []
+  }
+ },
+ "b_rouga_bigtech_1": {
+  "id": "b_rouga_bigtech_1",
+  "attempts": 1
+ },
+ "b_rouga_bigtech_2": {
+  "id": "b_rouga_bigtech_2",
+  "attempts": 1,
+  "speaker": "b_rouga",
+  "voice": "fenrir",
+  "text": "Everything I've got, in this one punch!",
+  "seconds": 3.21,
+  "estimate": 3,
+  "lufs": -16,
+  "peakDb": -2.9,
+  "problems": [],
+  "bytes": 24207,
+  "generated": "2026-10-10T09:21:50.772Z",
+  "stt": {
+   "heard": "Everything I've got in this one punch.",
+   "similarity": 1,
+   "blocks": 1,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 3.21,
+   "estimate": 3,
+   "lufs": -15.8,
+   "peakDb": -2.4,
+   "problems": []
+  }
+ },
+ "b_rouga_hurt_1": {
+  "id": "b_rouga_hurt_1",
+  "attempts": 1,
+  "speaker": "b_rouga",
+  "voice": "fenrir",
+  "text": "Gah!",
+  "seconds": 0.52,
+  "estimate": 0.7,
+  "lufs": -16,
+  "peakDb": -2.9,
+  "problems": [],
+  "bytes": 7098,
+  "generated": "2026-10-10T09:21:52.289Z",
+  "stt": {
+   "heard": "Yeah!",
+   "similarity": 0,
+   "blocks": 1,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 0.51,
+   "estimate": 0.7,
+   "lufs": -15.7,
+   "peakDb": -2.8,
+   "problems": []
+  }
+ },
+ "b_rouga_hurt_2": {
+  "id": "b_rouga_hurt_2",
+  "attempts": 1
+ },
+ "b_rouga_ko_1": {
+  "id": "b_rouga_ko_1",
+  "attempts": 1
+ },
+ "b_rouga_spell_1": {
+  "id": "b_rouga_spell_1",
+  "attempts": 1
+ },
+ "b_rouga_victory_1": {
+  "id": "b_rouga_victory_1",
+  "attempts": 1,
+  "speaker": "b_rouga",
+  "voice": "fenrir",
+  "text": "Alright! Bring on someone stronger next!",
+  "seconds": 3.02,
+  "estimate": 2.8,
+  "lufs": -16,
+  "peakDb": -2.9,
+  "problems": [],
+  "bytes": 23809,
+  "generated": "2026-10-10T09:21:54.493Z",
+  "stt": {
+   "heard": "Alright, bring on someone stronger next.",
+   "similarity": 1,
+   "blocks": 1,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 3.02,
+   "estimate": 2.8,
+   "lufs": -16,
+   "peakDb": -2.4,
+   "problems": []
+  }
+ },
+ "b_selma_attack_1": {
+  "id": "b_selma_attack_1",
+  "attempts": 1
+ },
+ "b_selma_attack_2": {
+  "id": "b_selma_attack_2",
+  "attempts": 1
+ },
+ "b_selma_attack_3": {
+  "id": "b_selma_attack_3",
+  "attempts": 1
+ },
+ "b_selma_bigtech_1": {
+  "id": "b_selma_bigtech_1",
+  "attempts": 1
+ },
+ "b_selma_bigtech_2": {
+  "id": "b_selma_bigtech_2",
+  "attempts": 1
+ },
+ "b_selma_hurt_1": {
+  "id": "b_selma_hurt_1",
+  "attempts": 1
+ },
+ "b_selma_hurt_2": {
+  "id": "b_selma_hurt_2",
+  "attempts": 1
+ },
+ "b_selma_ko_1": {
+  "id": "b_selma_ko_1",
+  "attempts": 1
+ },
+ "b_selma_spell_1": {
+  "id": "b_selma_spell_1",
+  "attempts": 1
+ },
+ "b_selma_victory_1": {
+  "id": "b_selma_victory_1",
+  "attempts": 1
+ },
+ "b_shigure_attack_1": {
+  "id": "b_shigure_attack_1",
+  "attempts": 1
+ },
+ "b_shigure_attack_2": {
+  "id": "b_shigure_attack_2",
+  "attempts": 1,
+  "speaker": "b_shigure",
+  "voice": "enceladus",
+  "text": "Too slow.",
+  "seconds": 0.83,
+  "estimate": 1,
+  "lufs": -16,
+  "peakDb": -2.8,
+  "problems": [],
+  "bytes": 9323,
+  "generated": "2026-10-10T09:22:38.822Z",
+  "stt": {
+   "heard": "Too slow.",
+   "similarity": 1,
+   "blocks": 1,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 0.82,
+   "estimate": 1,
+   "lufs": -15.5,
+   "peakDb": -2.8,
+   "problems": []
+  }
+ },
+ "b_shigure_attack_3": {
+  "id": "b_shigure_attack_3",
+  "attempts": 2,
+  "speaker": "b_shigure",
+  "voice": "enceladus",
+  "text": "...There.",
+  "seconds": 1.05,
+  "estimate": 1.1,
+  "lufs": -16.3,
+  "peakDb": -1,
+  "problems": [],
+  "bytes": 10183,
+  "generated": "2026-10-10T09:22:43.497Z",
+  "stt": {
+   "heard": "There.",
+   "similarity": 1,
+   "blocks": 1,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 1.05,
+   "estimate": 1.1,
+   "lufs": -16.3,
+   "peakDb": -0.7,
+   "problems": []
+  }
+ },
+ "b_shigure_bigtech_1": {
+  "id": "b_shigure_bigtech_1",
+  "attempts": 1
+ },
+ "b_shigure_bigtech_2": {
+  "id": "b_shigure_bigtech_2",
+  "attempts": 1,
+  "speaker": "b_shigure",
+  "voice": "enceladus",
+  "text": "One stroke is enough.",
+  "seconds": 2.31,
+  "estimate": 1.7,
+  "lufs": -16,
+  "peakDb": -2.8,
+  "problems": [],
+  "bytes": 19875,
+  "generated": "2026-10-10T09:22:46.233Z",
+  "stt": {
+   "heard": "One stroke is enough.",
+   "similarity": 1,
+   "blocks": 1,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 2.31,
+   "estimate": 1.7,
+   "lufs": -15.8,
+   "peakDb": -2.4,
+   "problems": []
+  }
+ },
+ "b_shigure_hurt_1": {
+  "id": "b_shigure_hurt_1",
+  "attempts": 1
+ },
+ "b_shigure_hurt_2": {
+  "id": "b_shigure_hurt_2",
+  "attempts": 1
+ },
+ "b_shigure_ko_1": {
+  "id": "b_shigure_ko_1",
+  "attempts": 1
+ },
+ "b_shigure_spell_1": {
+  "id": "b_shigure_spell_1",
+  "attempts": 1
+ },
+ "b_shigure_victory_1": {
+  "id": "b_shigure_victory_1",
+  "attempts": 1,
+  "speaker": "b_shigure",
+  "voice": "enceladus",
+  "text": "...Trivial.",
+  "seconds": 2.34,
+  "estimate": 1.3,
+  "lufs": -16,
+  "peakDb": -1.4,
+  "problems": [],
+  "bytes": 18538,
+  "generated": "2026-10-10T09:22:48.138Z",
+  "stt": {
+   "heard": "Ugh, trivial.",
+   "similarity": 0.5,
+   "blocks": 2,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 2.34,
+   "estimate": 1.3,
+   "lufs": -15.8,
+   "peakDb": -0.8,
+   "problems": []
+  }
+ },
+ "b_sylvain_attack_1": {
+  "id": "b_sylvain_attack_1",
+  "attempts": 1
+ },
+ "b_sylvain_attack_2": {
+  "id": "b_sylvain_attack_2",
+  "attempts": 1
+ },
+ "b_sylvain_attack_3": {
+  "id": "b_sylvain_attack_3",
+  "attempts": 1
+ },
+ "b_sylvain_bigtech_1": {
+  "id": "b_sylvain_bigtech_1",
+  "attempts": 1
+ },
+ "b_sylvain_bigtech_2": {
+  "id": "b_sylvain_bigtech_2",
+  "attempts": 1
+ },
+ "b_sylvain_hurt_1": {
+  "id": "b_sylvain_hurt_1",
+  "attempts": 1
+ },
+ "b_sylvain_hurt_2": {
+  "id": "b_sylvain_hurt_2",
+  "attempts": 1
+ },
+ "b_sylvain_ko_1": {
+  "id": "b_sylvain_ko_1",
+  "attempts": 1
+ },
+ "b_sylvain_spell_1": {
+  "id": "b_sylvain_spell_1",
+  "attempts": 1
+ },
+ "b_sylvain_victory_1": {
+  "id": "b_sylvain_victory_1",
+  "attempts": 1
+ },
+ "b_teo_attack_1": {
+  "id": "b_teo_attack_1",
+  "attempts": 1
+ },
+ "b_teo_attack_2": {
+  "id": "b_teo_attack_2",
+  "attempts": 1
+ },
+ "b_teo_attack_3": {
+  "id": "b_teo_attack_3",
+  "attempts": 1
+ },
+ "b_teo_bigtech_1": {
+  "id": "b_teo_bigtech_1",
+  "attempts": 1
+ },
+ "b_teo_bigtech_2": {
+  "id": "b_teo_bigtech_2",
+  "attempts": 1
+ },
+ "b_teo_hurt_1": {
+  "id": "b_teo_hurt_1",
+  "attempts": 1
+ },
+ "b_teo_hurt_2": {
+  "id": "b_teo_hurt_2",
+  "attempts": 1
+ },
+ "b_teo_ko_1": {
+  "id": "b_teo_ko_1",
+  "attempts": 1
+ },
+ "b_teo_spell_1": {
+  "id": "b_teo_spell_1",
+  "attempts": 1
+ },
+ "b_teo_victory_1": {
+  "id": "b_teo_victory_1",
+  "attempts": 1
+ },
+ "b_titta_attack_1": {
+  "id": "b_titta_attack_1",
+  "attempts": 1
+ },
+ "b_titta_attack_2": {
+  "id": "b_titta_attack_2",
+  "attempts": 1
+ },
+ "b_titta_attack_3": {
+  "id": "b_titta_attack_3",
+  "attempts": 1
+ },
+ "b_titta_bigtech_1": {
+  "id": "b_titta_bigtech_1",
+  "attempts": 1
+ },
+ "b_titta_bigtech_2": {
+  "id": "b_titta_bigtech_2",
+  "attempts": 1
+ },
+ "b_titta_hurt_1": {
+  "id": "b_titta_hurt_1",
+  "attempts": 1
+ },
+ "b_titta_hurt_2": {
+  "id": "b_titta_hurt_2",
+  "attempts": 1
+ },
+ "b_titta_ko_1": {
+  "id": "b_titta_ko_1",
+  "attempts": 1
+ },
+ "b_titta_spell_1": {
+  "id": "b_titta_spell_1",
+  "attempts": 1
+ },
+ "b_titta_victory_1": {
+  "id": "b_titta_victory_1",
+  "attempts": 1
+ },
+ "b_viola_attack_1": {
+  "id": "b_viola_attack_1",
+  "attempts": 1
+ },
+ "b_viola_attack_2": {
+  "id": "b_viola_attack_2",
+  "attempts": 1
+ },
+ "b_viola_attack_3": {
+  "id": "b_viola_attack_3",
+  "attempts": 1
+ },
+ "b_viola_bigtech_1": {
+  "id": "b_viola_bigtech_1",
+  "attempts": 1
+ },
+ "b_viola_bigtech_2": {
+  "id": "b_viola_bigtech_2",
+  "attempts": 1
+ },
+ "b_viola_hurt_1": {
+  "id": "b_viola_hurt_1",
+  "attempts": 1
+ },
+ "b_viola_hurt_2": {
+  "id": "b_viola_hurt_2",
+  "attempts": 1
+ },
+ "b_viola_ko_1": {
+  "id": "b_viola_ko_1",
+  "attempts": 1
+ },
+ "b_viola_spell_1": {
+  "id": "b_viola_spell_1",
+  "attempts": 1
+ },
+ "b_viola_victory_1": {
+  "id": "b_viola_victory_1",
+  "attempts": 1
+ },
+ "b_zafira_attack_1": {
+  "id": "b_zafira_attack_1",
+  "attempts": 1
+ },
+ "b_zafira_attack_2": {
+  "id": "b_zafira_attack_2",
+  "attempts": 1,
+  "speaker": "b_zafira",
+  "voice": "aoede",
+  "text": "Step!",
+  "seconds": 0.6,
+  "estimate": 0.7,
+  "lufs": -16,
+  "peakDb": -2,
+  "problems": [],
+  "bytes": 7483,
+  "generated": "2026-10-10T09:22:49.490Z",
+  "stt": {
+   "heard": "Step",
+   "similarity": 1,
+   "blocks": 1,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 0.59,
+   "estimate": 0.7,
+   "lufs": -15,
+   "peakDb": -1.5,
+   "problems": []
+  }
+ },
+ "b_zafira_attack_3": {
+  "id": "b_zafira_attack_3",
+  "attempts": 1
+ },
+ "b_zafira_bigtech_1": {
+  "id": "b_zafira_bigtech_1",
+  "attempts": 1,
+  "speaker": "b_zafira",
+  "voice": "aoede",
+  "text": "Come on, let's dance!",
+  "seconds": 2.39,
+  "estimate": 1.6,
+  "lufs": -16,
+  "peakDb": -2.4,
+  "problems": [],
+  "bytes": 19140,
+  "generated": "2026-10-10T09:22:51.770Z",
+  "stt": {
+   "heard": "Come on, let's dance.",
+   "similarity": 1,
+   "blocks": 1,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 2.39,
+   "estimate": 1.6,
+   "lufs": -15.9,
+   "peakDb": -1.8,
+   "problems": []
+  }
+ },
+ "b_zafira_bigtech_2": {
+  "id": "b_zafira_bigtech_2",
+  "attempts": 1
+ },
+ "b_zafira_hurt_1": {
+  "id": "b_zafira_hurt_1",
+  "attempts": 1
+ },
+ "b_zafira_hurt_2": {
+  "id": "b_zafira_hurt_2",
+  "attempts": 1
+ },
+ "b_zafira_ko_1": {
+  "id": "b_zafira_ko_1",
+  "attempts": 1
+ },
+ "b_zafira_spell_1": {
+  "id": "b_zafira_spell_1",
+  "attempts": 1
+ },
+ "b_zafira_victory_1": {
+  "id": "b_zafira_victory_1",
+  "attempts": 1,
+  "speaker": "b_zafira",
+  "voice": "aoede",
+  "text": "No applause needed. Shiny things, though, are welcome.",
+  "seconds": 4.72,
+  "estimate": 3.8,
+  "lufs": -16,
+  "peakDb": -2.6,
+  "problems": [],
+  "bytes": 35682,
+  "generated": "2026-10-10T09:22:54.821Z",
+  "stt": {
+   "heard": "Mmm, no applause needed. Shiny things though are welcome.",
+   "similarity": 0.89,
+   "blocks": 1,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 4.72,
+   "estimate": 3.8,
+   "lufs": -15.9,
+   "peakDb": -2.1,
+   "problems": []
+  }
+ },
+ "bv_armorman_defeat_1": {
+  "id": "bv_armorman_defeat_1",
+  "attempts": 1
+ },
+ "bv_armorman_enrage_1": {
+  "id": "bv_armorman_enrage_1",
+  "attempts": 1
+ },
+ "bv_armorman_start_1": {
+  "id": "bv_armorman_start_1",
+  "attempts": 1
+ },
+ "bv_armorman_ult_1": {
+  "id": "bv_armorman_ult_1",
+  "attempts": 1
+ },
+ "bv_captain_defeat_1": {
+  "id": "bv_captain_defeat_1",
+  "attempts": 1
+ },
+ "bv_captain_enrage_1": {
+  "id": "bv_captain_enrage_1",
+  "attempts": 1
+ },
+ "bv_captain_start_1": {
+  "id": "bv_captain_start_1",
+  "attempts": 1
+ },
+ "bv_captain_ult_1": {
+  "id": "bv_captain_ult_1",
+  "attempts": 1
+ },
+ "bv_frost_admiral_defeat_1": {
+  "id": "bv_frost_admiral_defeat_1",
+  "attempts": 1
+ },
+ "bv_frost_admiral_enrage_1": {
+  "id": "bv_frost_admiral_enrage_1",
+  "attempts": 1
+ },
+ "bv_frost_admiral_start_1": {
+  "id": "bv_frost_admiral_start_1",
+  "attempts": 1
+ },
+ "bv_frost_admiral_ult_1": {
+  "id": "bv_frost_admiral_ult_1",
+  "attempts": 1
+ },
+ "bv_hawk_chief_defeat_1": {
+  "id": "bv_hawk_chief_defeat_1",
+  "attempts": 1
+ },
+ "bv_hawk_chief_enrage_1": {
+  "id": "bv_hawk_chief_enrage_1",
+  "attempts": 1
+ },
+ "bv_hawk_chief_start_1": {
+  "id": "bv_hawk_chief_start_1",
+  "attempts": 1
+ },
+ "bv_hawk_chief_ult_1": {
+  "id": "bv_hawk_chief_ult_1",
+  "attempts": 1
+ },
+ "bv_icegiant_defeat_1": {
+  "id": "bv_icegiant_defeat_1",
+  "attempts": 1
+ },
+ "bv_icegiant_enrage_1": {
+  "id": "bv_icegiant_enrage_1",
+  "attempts": 1
+ },
+ "bv_icegiant_start_1": {
+  "id": "bv_icegiant_start_1",
+  "attempts": 1
+ },
+ "bv_icegiant_ult_1": {
+  "id": "bv_icegiant_ult_1",
+  "attempts": 1
+ },
+ "bv_ironwarden_defeat_1": {
+  "id": "bv_ironwarden_defeat_1",
+  "attempts": 1
+ },
+ "bv_ironwarden_enrage_1": {
+  "id": "bv_ironwarden_enrage_1",
+  "attempts": 1
+ },
+ "bv_ironwarden_start_1": {
+  "id": "bv_ironwarden_start_1",
+  "attempts": 1
+ },
+ "bv_ironwarden_ult_1": {
+  "id": "bv_ironwarden_ult_1",
+  "attempts": 1
+ },
+ "bv_lazaro_defeat_1": {
+  "id": "bv_lazaro_defeat_1",
+  "attempts": 1
+ },
+ "bv_lazaro_enrage_1": {
+  "id": "bv_lazaro_enrage_1",
+  "attempts": 1
+ },
+ "bv_lazaro_start_1": {
+  "id": "bv_lazaro_start_1",
+  "attempts": 1
+ },
+ "bv_lazaro_ult_1": {
+  "id": "bv_lazaro_ult_1",
+  "attempts": 1
+ },
+ "bv_lazaro_ult_2": {
+  "id": "bv_lazaro_ult_2",
+  "attempts": 1
+ },
+ "bv_mistbeast_defeat_1": {
+  "id": "bv_mistbeast_defeat_1",
+  "attempts": 1
+ },
+ "bv_mistbeast_enrage_1": {
+  "id": "bv_mistbeast_enrage_1",
+  "attempts": 1
+ },
+ "bv_mistbeast_start_1": {
+  "id": "bv_mistbeast_start_1",
+  "attempts": 1
+ },
+ "bv_nemrea1_defeat_1": {
+  "id": "bv_nemrea1_defeat_1",
+  "attempts": 1
+ },
+ "bv_nemrea1_enrage_1": {
+  "id": "bv_nemrea1_enrage_1",
+  "attempts": 1
+ },
+ "bv_nemrea1_start_1": {
+  "id": "bv_nemrea1_start_1",
+  "attempts": 1
+ },
+ "bv_nemrea1_ult_1": {
+  "id": "bv_nemrea1_ult_1",
+  "attempts": 1
+ },
+ "bv_nemrea2_defeat_1": {
+  "id": "bv_nemrea2_defeat_1",
+  "attempts": 1
+ },
+ "bv_nemrea2_enrage_1": {
+  "id": "bv_nemrea2_enrage_1",
+  "attempts": 1
+ },
+ "bv_nemrea2_start_1": {
+  "id": "bv_nemrea2_start_1",
+  "attempts": 1
+ },
+ "bv_nemrea2_ult_1": {
+  "id": "bv_nemrea2_ult_1",
+  "attempts": 1
+ },
+ "bv_nemrea2_ult_2": {
+  "id": "bv_nemrea2_ult_2",
+  "attempts": 1
+ },
+ "bv_nemrea2_ult_3": {
+  "id": "bv_nemrea2_ult_3",
+  "attempts": 1
+ },
+ "bv_orrery_defeat_1": {
+  "id": "bv_orrery_defeat_1",
+  "attempts": 1
+ },
+ "bv_orrery_enrage_1": {
+  "id": "bv_orrery_enrage_1",
+  "attempts": 1
+ },
+ "bv_orrery_start_1": {
+  "id": "bv_orrery_start_1",
+  "attempts": 1
+ },
+ "bv_orrery_ult_1": {
+  "id": "bv_orrery_ult_1",
+  "attempts": 1
+ },
+ "bv_ouroboros_defeat_1": {
+  "id": "bv_ouroboros_defeat_1",
+  "attempts": 1
+ },
+ "bv_ouroboros_enrage_1": {
+  "id": "bv_ouroboros_enrage_1",
+  "attempts": 1
+ },
+ "bv_ouroboros_start_1": {
+  "id": "bv_ouroboros_start_1",
+  "attempts": 1
+ },
+ "bv_ouroboros_ult_1": {
+  "id": "bv_ouroboros_ult_1",
+  "attempts": 1
+ },
+ "bv_ouroboros_ult_2": {
+  "id": "bv_ouroboros_ult_2",
+  "attempts": 1
+ },
+ "bv_ouroboros_ult_3": {
+  "id": "bv_ouroboros_ult_3",
+  "attempts": 1
+ },
+ "bv_rowell1_defeat_1": {
+  "id": "bv_rowell1_defeat_1",
+  "attempts": 1
+ },
+ "bv_rowell1_enrage_1": {
+  "id": "bv_rowell1_enrage_1",
+  "attempts": 1
+ },
+ "bv_rowell1_start_1": {
+  "id": "bv_rowell1_start_1",
+  "attempts": 1
+ },
+ "bv_rowell1_ult_1": {
+  "id": "bv_rowell1_ult_1",
+  "attempts": 1
+ },
+ "bv_rowell2_defeat_1": {
+  "id": "bv_rowell2_defeat_1",
+  "attempts": 1
+ },
+ "bv_rowell2_enrage_1": {
+  "id": "bv_rowell2_enrage_1",
+  "attempts": 1
+ },
+ "bv_rowell2_start_1": {
+  "id": "bv_rowell2_start_1",
+  "attempts": 1
+ },
+ "bv_rowell2_ult_1": {
+  "id": "bv_rowell2_ult_1",
+  "attempts": 1
+ },
+ "bv_sandking_defeat_1": {
+  "id": "bv_sandking_defeat_1",
+  "attempts": 1
+ },
+ "bv_sandking_enrage_1": {
+  "id": "bv_sandking_enrage_1",
+  "attempts": 1
+ },
+ "bv_sandking_start_1": {
+  "id": "bv_sandking_start_1",
+  "attempts": 1
+ },
+ "bv_sandking_ult_1": {
+  "id": "bv_sandking_ult_1",
+  "attempts": 1
+ },
+ "bv_shade_prayer_defeat_1": {
+  "id": "bv_shade_prayer_defeat_1",
+  "attempts": 1
+ },
+ "bv_shade_prayer_enrage_1": {
+  "id": "bv_shade_prayer_enrage_1",
+  "attempts": 1
+ },
+ "bv_shade_star_defeat_1": {
+  "id": "bv_shade_star_defeat_1",
+  "attempts": 1
+ },
+ "bv_shade_star_enrage_1": {
+  "id": "bv_shade_star_enrage_1",
+  "attempts": 1
+ },
+ "bv_shade_sword_defeat_1": {
+  "id": "bv_shade_sword_defeat_1",
+  "attempts": 1
+ },
+ "bv_shade_sword_enrage_1": {
+  "id": "bv_shade_sword_enrage_1",
+  "attempts": 1
+ },
+ "bv_shade_sword_start_1": {
+  "id": "bv_shade_sword_start_1",
+  "attempts": 1
+ },
+ "bv_sister_elder_defeat_1": {
+  "id": "bv_sister_elder_defeat_1",
+  "attempts": 1
+ },
+ "bv_sister_elder_enrage_1": {
+  "id": "bv_sister_elder_enrage_1",
+  "attempts": 1
+ },
+ "bv_sister_elder_start_1": {
+  "id": "bv_sister_elder_start_1",
+  "attempts": 1
+ },
+ "bv_tamer_defeat_1": {
+  "id": "bv_tamer_defeat_1",
+  "attempts": 1
+ },
+ "bv_tamer_enrage_1": {
+  "id": "bv_tamer_enrage_1",
+  "attempts": 1
+ },
+ "bv_tamer_start_1": {
+  "id": "bv_tamer_start_1",
+  "attempts": 1
+ },
+ "bv_valzard_echo_defeat_1": {
+  "id": "bv_valzard_echo_defeat_1",
+  "attempts": 1
+ },
+ "bv_valzard_echo_enrage_1": {
+  "id": "bv_valzard_echo_enrage_1",
+  "attempts": 1
+ },
+ "bv_valzard_echo_start_1": {
+  "id": "bv_valzard_echo_start_1",
+  "attempts": 1
+ },
+ "bv_valzard_echo_ult_1": {
+  "id": "bv_valzard_echo_ult_1",
+  "attempts": 1
+ },
+ "bv_whitedragon_defeat_1": {
+  "id": "bv_whitedragon_defeat_1",
+  "attempts": 1
+ },
+ "bv_whitedragon_enrage_1": {
+  "id": "bv_whitedragon_enrage_1",
+  "attempts": 1
+ },
+ "bv_whitedragon_start_1": {
+  "id": "bv_whitedragon_start_1",
+  "attempts": 1
+ },
+ "bv_whitedragon_ult_1": {
+  "id": "bv_whitedragon_ult_1",
+  "attempts": 1
+ },
+ "bv_zakuro_defeat_1": {
+  "id": "bv_zakuro_defeat_1",
+  "attempts": 1
+ },
+ "bv_zakuro_enrage_1": {
+  "id": "bv_zakuro_enrage_1",
+  "attempts": 1
+ },
+ "bv_zakuro_start_1": {
+  "id": "bv_zakuro_start_1",
+  "attempts": 1
+ },
+ "bv_zakuro_ult_1": {
+  "id": "bv_zakuro_ult_1",
+  "attempts": 1
+ },
+ "v_berna_depart_01": {
+  "id": "v_berna_depart_01",
+  "attempts": 1
+ },
+ "v_berna_depart_02": {
+  "id": "v_berna_depart_02",
+  "attempts": 1
+ },
+ "v_berna_ending_01": {
+  "id": "v_berna_ending_01",
+  "attempts": 1
+ },
+ "v_berna_ending_02": {
+  "id": "v_berna_ending_02",
+  "attempts": 1
+ },
+ "v_berna_ending_03": {
+  "id": "v_berna_ending_03",
+  "attempts": 1
+ },
+ "v_berna_intro_01": {
+  "id": "v_berna_intro_01",
+  "attempts": 1
+ },
+ "v_berna_lute_01": {
+  "id": "v_berna_lute_01",
+  "attempts": 1
+ },
+ "v_berna_lute_02": {
+  "id": "v_berna_lute_02",
+  "attempts": 1
+ },
+ "v_berna_lute_03": {
+  "id": "v_berna_lute_03",
+  "attempts": 1
+ },
+ "v_berna_lute_04": {
+  "id": "v_berna_lute_04",
+  "attempts": 1,
+  "speaker": "berna",
+  "voice": "en-us-advisor-1",
+  "text": "Retell them all, and complete your Chronicle. That will be the end of your training.",
+  "seconds": 6.28,
+  "estimate": 5.3,
+  "lufs": -16,
+  "peakDb": -2.5,
+  "problems": [],
+  "bytes": 44026,
+  "generated": "2026-10-10T09:22:57.984Z",
+  "stt": {
+   "heard": "retell them all and complete your chronicle. That will be the end of your training.",
+   "similarity": 1,
+   "blocks": 2,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 6.28,
+   "estimate": 5.3,
+   "lufs": -16,
+   "peakDb": -2.1,
+   "problems": []
+  }
+ },
+ "v_berna_lute_05": {
+  "id": "v_berna_lute_05",
+  "attempts": 1,
+  "speaker": "berna",
+  "voice": "en-us-advisor-1",
+  "text": "Start wherever you like. Retell them on your own feet, in your own order.",
+  "seconds": 6.35,
+  "estimate": 5.1,
+  "lufs": -16,
+  "peakDb": -2.7,
+  "problems": [],
+  "bytes": 43944,
+  "generated": "2026-10-10T09:23:41.707Z",
+  "stt": {
+   "heard": "Start wherever you like. Retail them on your own feet in your own order.",
+   "similarity": 0.93,
+   "blocks": 3,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 6.35,
+   "estimate": 5.1,
+   "lufs": -15.9,
+   "peakDb": -2.3,
+   "problems": []
+  }
+ },
+ "v_berna_p2_01": {
+  "id": "v_berna_p2_01",
+  "attempts": 1
+ },
+ "v_berna_p2_02": {
+  "id": "v_berna_p2_02",
+  "attempts": 1
+ },
+ "v_berna_p2_03": {
+  "id": "v_berna_p2_03",
+  "attempts": 1
+ },
+ "v_berna_p2_04": {
+  "id": "v_berna_p2_04",
+  "attempts": 1
+ },
+ "v_berna_p2_05": {
+  "id": "v_berna_p2_05",
+  "attempts": 1
+ },
+ "v_berna_p2_06": {
+  "id": "v_berna_p2_06",
+  "attempts": 1
+ },
+ "v_berna_p2_07": {
+  "id": "v_berna_p2_07",
+  "attempts": 1
+ },
+ "v_berna_p2_08": {
+  "id": "v_berna_p2_08",
+  "attempts": 1
+ },
+ "v_berna_p2_09": {
+  "id": "v_berna_p2_09",
+  "attempts": 1
+ },
+ "v_berna_p2_10": {
+  "id": "v_berna_p2_10",
+  "attempts": 1
+ },
+ "v_berna_prologue_01": {
+  "id": "v_berna_prologue_01",
+  "attempts": 1
+ },
+ "v_berna_prologue_02": {
+  "id": "v_berna_prologue_02",
+  "attempts": 1
+ },
+ "v_berna_prologue_03": {
+  "id": "v_berna_prologue_03",
+  "attempts": 1
+ },
+ "v_berna_prologue_04": {
+  "id": "v_berna_prologue_04",
+  "attempts": 1
+ },
+ "v_berna_roa_01": {
+  "id": "v_berna_roa_01",
+  "attempts": 1
+ },
+ "v_berna_roa_02": {
+  "id": "v_berna_roa_02",
+  "attempts": 1
+ },
+ "v_berna_roa_03": {
+  "id": "v_berna_roa_03",
+  "attempts": 1
+ },
+ "v_fine_ash_01": {
+  "id": "v_fine_ash_01",
+  "attempts": 1,
+  "speaker": "fine",
+  "voice": "achernar",
+  "text": "Burning out and being forgotten are not the same thing.",
+  "seconds": 4.44,
+  "estimate": 3.6,
+  "lufs": -16,
+  "peakDb": -2.9,
+  "problems": [],
+  "bytes": 32929,
+  "generated": "2026-10-10T09:23:44.169Z",
+  "stt": {
+   "heard": "Burning out and being forgotten are not the same thing.",
+   "similarity": 1,
+   "blocks": 2,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 4.44,
+   "estimate": 3.6,
+   "lufs": -16,
+   "peakDb": -2.3,
+   "problems": []
+  }
+ },
+ "v_fine_isles_01": {
+  "id": "v_fine_isles_01",
+  "attempts": 1,
+  "speaker": "fine",
+  "voice": "achernar",
+  "text": "As long as someone is waiting, the story does not end.",
+  "seconds": 3.77,
+  "estimate": 3.9,
+  "lufs": -16,
+  "peakDb": -2.9,
+  "problems": [],
+  "bytes": 29406,
+  "generated": "2026-10-10T09:23:46.472Z",
+  "stt": {
+   "heard": "As long as someone is waiting, the story does not end.",
+   "similarity": 1,
+   "blocks": 2,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 3.77,
+   "estimate": 3.9,
+   "lufs": -15.8,
+   "peakDb": -2.5,
+   "problems": []
+  }
+ },
+ "v_fine_lighthouse_01": {
+  "id": "v_fine_lighthouse_01",
+  "attempts": 1,
+  "speaker": "fine",
+  "voice": "achernar",
+  "text": "A light that has lost its words is won back with words.",
+  "seconds": 4.18,
+  "estimate": 3.4,
+  "lufs": -16,
+  "peakDb": -2.7,
+  "problems": [],
+  "bytes": 32525,
+  "generated": "2026-10-10T09:23:49.247Z",
+  "stt": {
+   "heard": "A light that has lost its words is one back with words.",
+   "similarity": 0.92,
+   "blocks": 1,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 4.18,
+   "estimate": 3.4,
+   "lufs": -15.9,
+   "peakDb": -2.3,
+   "problems": []
+  }
+ },
+ "v_fine_t1_02": {
+  "id": "v_fine_t1_02",
+  "attempts": 1,
+  "speaker": "fine",
+  "voice": "achernar",
+  "text": "Me? Just someone passing by.",
+  "seconds": 3.66,
+  "estimate": 2.4,
+  "lufs": -16,
+  "peakDb": -3.9,
+  "problems": [],
+  "bytes": 26271,
+  "generated": "2026-10-10T09:19:57.019Z",
+  "stt": {
+   "heard": "Me? Just someone passing by?",
+   "similarity": 1,
+   "blocks": 2,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 3.66,
+   "estimate": 2.4,
+   "lufs": -15.9,
+   "peakDb": -3.8,
+   "problems": []
+  }
+ },
+ "v_glen_dawn_01": {
+  "id": "v_glen_dawn_01",
+  "attempts": 1,
+  "speaker": "glen",
+  "voice": "en-us-mako",
+  "text": "I'm home, Marina.",
+  "seconds": 2.95,
+  "estimate": 1.8,
+  "lufs": -16,
+  "peakDb": -1.9,
+  "problems": [],
+  "bytes": 20320,
+  "generated": "2026-10-10T09:23:51.459Z",
+  "stt": {
+   "heard": "I'm home, Berena.",
+   "similarity": 0.67,
+   "blocks": 1,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 2.95,
+   "estimate": 1.8,
+   "lufs": -15.9,
+   "peakDb": -1.5,
+   "problems": []
+  }
+ },
+ "v_glen_ship_03": {
+  "id": "v_glen_ship_03",
+  "attempts": 1,
+  "speaker": "glen",
+  "voice": "en-us-mako",
+  "text": "...Marina. Aye, I promised her I'd come home.",
+  "seconds": 7.77,
+  "estimate": 4,
+  "lufs": -16,
+  "peakDb": -1.6,
+  "problems": [],
+  "bytes": 49424,
+  "generated": "2026-10-10T09:23:55.045Z",
+  "stt": {
+   "heard": "I promise to her I'd come home.",
+   "similarity": 0.5,
+   "blocks": 3,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 7.77,
+   "estimate": 4,
+   "lufs": -15.9,
+   "peakDb": -1.1,
+   "problems": []
+  }
+ },
+ "v_hazal_tomb_01": {
+  "id": "v_hazal_tomb_01",
+  "attempts": 1,
+  "speaker": "hazal",
+  "voice": "en-us-training-5",
+  "text": "...My name... Give me back my name...!",
+  "seconds": 4.98,
+  "estimate": 3,
+  "lufs": -16,
+  "peakDb": -1.7,
+  "problems": [],
+  "bytes": 33853,
+  "generated": "2026-10-10T09:23:57.564Z",
+  "stt": {
+   "heard": "My name. Give me back my name.",
+   "similarity": 1,
+   "blocks": 1,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 4.98,
+   "estimate": 3,
+   "lufs": -15.7,
+   "peakDb": -1.1,
+   "problems": []
+  }
+ },
+ "v_hazal_tomb_04": {
+  "id": "v_hazal_tomb_04",
+  "attempts": 1,
+  "speaker": "hazal",
+  "voice": "en-us-training-5",
+  "text": "So my people remembered our promise...",
+  "seconds": 4.62,
+  "estimate": 3,
+  "lufs": -16,
+  "peakDb": -2.8,
+  "problems": [],
+  "bytes": 31629,
+  "generated": "2026-10-10T09:23:59.885Z",
+  "stt": {
+   "heard": "So, my people remembered our promise.",
+   "similarity": 1,
+   "blocks": 1,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 4.62,
+   "estimate": 3,
+   "lufs": -15.9,
+   "peakDb": -2.3,
+   "problems": []
+  }
+ },
+ "v_hero_f_attack_3": {
+  "id": "v_hero_f_attack_3",
+  "attempts": 1,
+  "speaker": "hero_f",
+  "voice": "zephyr",
+  "text": "Take this!",
+  "seconds": 1.96,
+  "estimate": 1,
+  "lufs": -16,
+  "peakDb": -2.7,
+  "problems": [],
+  "bytes": 16131,
+  "generated": "2026-10-10T09:24:01.828Z",
+  "stt": {
+   "heard": "Take this!",
+   "similarity": 1,
+   "blocks": 2,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 1.96,
+   "estimate": 1,
+   "lufs": -15.8,
+   "peakDb": -1.2,
+   "problems": []
+  }
+ },
+ "v_hero_f_glimmer_1": {
+  "id": "v_hero_f_glimmer_1",
+  "attempts": 1,
+  "speaker": "hero_f",
+  "voice": "zephyr",
+  "text": "...I see it!",
+  "seconds": 2.18,
+  "estimate": 1.6,
+  "lufs": -16,
+  "peakDb": -3.7,
+  "problems": [],
+  "bytes": 16453,
+  "generated": "2026-10-10T09:24:41.810Z",
+  "stt": {
+   "heard": "I see it!",
+   "similarity": 1,
+   "blocks": 3,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 2.18,
+   "estimate": 1.6,
+   "lufs": -15.9,
+   "peakDb": -3.6,
+   "problems": []
+  }
+ },
+ "v_hero_f_spell_2": {
+  "id": "v_hero_f_spell_2",
+  "attempts": 1,
+  "speaker": "hero_f",
+  "voice": "zephyr",
+  "text": "Fly true!",
+  "seconds": 1.22,
+  "estimate": 1,
+  "lufs": -16,
+  "peakDb": -2.7,
+  "problems": [],
+  "bytes": 11158,
+  "generated": "2026-10-10T09:24:44.606Z",
+  "stt": {
+   "heard": "Fly true",
+   "similarity": 1,
+   "blocks": 1,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 1.22,
+   "estimate": 1,
+   "lufs": -15.8,
+   "peakDb": -2.5,
+   "problems": []
+  }
+ },
+ "v_king_altar_02": {
+  "id": "v_king_altar_02",
+  "attempts": 1,
+  "speaker": "king",
+  "voice": "alnilam",
+  "text": "Futile. The nameless do not vanish.",
+  "seconds": 7.34,
+  "estimate": 3.1,
+  "lufs": -16,
+  "peakDb": -2.6,
+  "problems": [],
+  "bytes": 49288,
+  "generated": "2026-10-10T09:24:48.730Z",
+  "stt": {
+   "heard": "Future, the nameless do not vanish.",
+   "similarity": 0.83,
+   "blocks": 2,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 7.34,
+   "estimate": 3.1,
+   "lufs": -15.7,
+   "peakDb": -0.7,
+   "problems": []
+  }
+ },
+ "v_marina_dawn_01": {
+  "id": "v_marina_dawn_01",
+  "attempts": 1,
+  "speaker": "marina",
+  "voice": "en-us-tutor-9",
+  "text": "Welcome home, Glen.",
+  "seconds": 2.53,
+  "estimate": 1.6,
+  "lufs": -16,
+  "peakDb": -2.4,
+  "problems": [],
+  "bytes": 19824,
+  "generated": "2026-10-10T09:24:50.799Z",
+  "stt": {
+   "heard": "Welcome home, Glenn.",
+   "similarity": 0.67,
+   "blocks": 1,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 2.53,
+   "estimate": 1.6,
+   "lufs": -16,
+   "peakDb": -2.1,
+   "problems": []
+  }
+ },
+ "v_neve_peak_02": {
+  "id": "v_neve_peak_02",
+  "attempts": 1,
+  "speaker": "neve",
+  "voice": "gacrux",
+  "text": "...Warm. So the children of man had not forgotten me after all.",
+  "seconds": 8.01,
+  "estimate": 4.9,
+  "lufs": -16,
+  "peakDb": -2.7,
+  "problems": [],
+  "bytes": 52783,
+  "generated": "2026-10-10T09:24:54.396Z",
+  "stt": {
+   "heard": "Warm, so the children of man had not forgotten me after all.",
+   "similarity": 1,
+   "blocks": 3,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 8.01,
+   "estimate": 4.9,
+   "lufs": -15.8,
+   "peakDb": -0.8,
+   "problems": []
+  }
+ },
+ "v_rowell_prologue_02": {
+  "id": "v_rowell_prologue_02",
+  "attempts": 2,
+  "speaker": "rowell",
+  "voice": "en-us-tutor-4",
+  "text": "The Archive takes full responsibility for tales. There's no call for storytellers here.",
+  "seconds": 6.17,
+  "estimate": 6.7,
+  "lufs": -16,
+  "peakDb": -2.3,
+  "problems": [],
+  "bytes": 49148,
+  "generated": "2026-10-10T09:28:05.203Z",
+  "stt": {
+   "heard": "The archive takes full responsibility for tales. There's no call for storytellers here.",
+   "similarity": 1,
+   "blocks": 1,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 6.17,
+   "estimate": 6.7,
+   "lufs": -15.7,
+   "peakDb": -1.1,
+   "problems": []
+  }
+ },
+ "v_rowell_t2_03": {
+  "id": "v_rowell_t2_03",
+  "attempts": 1,
+  "speaker": "rowell",
+  "voice": "en-us-tutor-4",
+  "text": "If words won't make you understand, I'll stop you by force.",
+  "seconds": 3.47,
+  "estimate": 3.7,
+  "lufs": -16,
+  "peakDb": -2.5,
+  "problems": [],
+  "bytes": 29091,
+  "generated": "2026-10-10T09:25:01.895Z",
+  "stt": {
+   "heard": "If words will make you understand, I'll stop you by force.",
+   "similarity": 0.91,
+   "blocks": 1,
+   "repeated": false,
+   "short": false
+  },
+  "verify": {
+   "seconds": 3.47,
+   "estimate": 3.7,
+   "lufs": -15.7,
+   "peakDb": -2.2,
+   "problems": []
+  }
+ }
+}
