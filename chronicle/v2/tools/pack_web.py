@@ -15,6 +15,7 @@ dist（node v2/tools/build.js の外置きの版）から、次の形の写し�
                            組 = 下絵はマップ 1 枚×マスの大きさ、戦闘背景は 1 つ、ほかはテーマ×マスの大きさ（env_group。使う時に組だけ読む）
   sprites/atlas_NN.webp    CAST の原画も同じ
   voice/pack_NN.ogg        ボイスは Ogg をつないだ（chained Ogg）ファイルにまとめる（{url, off, len}）
+  voice/en/pack_NN.ogg     英語のボイス（RPG_MEDIA.voice_en）も同じにまとめる（ゲームの言語が英語のとき core/media.js が先に引く）
   sfx/pack_NN.ogg          録音の効果音（1 本 0.1〜1 秒、約 120 本）もボイスと同じにまとめる（{url, off, len}。scope に関わらず全部）
   amb/<床>.ogg             録音の環境音の床はそのまま（{url, loopStart, loopEnd}。scope に関わらず全部）
   publish_batches.json     ファイルと大きさの一覧と、1 回の公開（64 MB・255 本まで）ごとの組
@@ -207,9 +208,11 @@ def pack_images(kind, table, dist, out, page, group=None, lossy=None):
     return new, len(sheets)
 
 
-def pack_voice(table, dist, out, chunk, kind='voice'):
-    """voice（と sfx）: {id: url} → {id: {url, off, len}}。名前の順につなぎ、chunk バイトを越えたら次のファイル"""
-    os.makedirs(os.path.join(out, kind), exist_ok=True)
+def pack_voice(table, dist, out, chunk, kind='voice', folder=None):
+    """voice（と voice_en・sfx）: {id: url} → {id: {url, off, len}}。名前の順につなぎ、chunk バイトを越えたら次のファイル。
+    folder: 置く所（既定 kind。voice_en は voice/en）"""
+    folder = folder or kind
+    os.makedirs(os.path.join(out, folder), exist_ok=True)
     new, n, buf = {}, 0, bytearray()
     parts = []
 
@@ -217,7 +220,7 @@ def pack_voice(table, dist, out, chunk, kind='voice'):
         nonlocal n, buf
         if not buf:
             return
-        name = hashed_name(f'{kind}/pack_{n:02d}.ogg', bytes(buf))
+        name = hashed_name(f'{folder}/pack_{n:02d}.ogg', bytes(buf))
         with open(os.path.join(out, name), 'wb') as f:
             f.write(buf)
         for k, off, ln in parts:
@@ -286,6 +289,8 @@ def main():
                                                   under_lossy(a.under_quality) if kind == 'env' else None)
     if media.get('voice'):
         new['voice'], counts['voice'] = pack_voice(media['voice'], dist, out, int(a.voice_pack_mb * 1000 * 1000))
+    if media.get('voice_en'):
+        new['voice_en'], counts['voice_en'] = pack_voice(media['voice_en'], dist, out, int(a.voice_pack_mb * 1000 * 1000), 'voice_en', 'voice/en')
     if media.get('sfx'):
         new['sfx'], counts['sfx'] = pack_voice(media['sfx'], dist, out, int(a.voice_pack_mb * 1000 * 1000), 'sfx')
     table = json.dumps(new, ensure_ascii=False, separators=(',', ':'))
@@ -339,7 +344,7 @@ def main():
         'total_bytes': total,
         'folders': folders,
         'packed': {'env_atlases': counts.get('env', 0), 'sprite_atlases': counts.get('sprites', 0), 'monster_atlases': counts.get('monsters', 0), 'monster_images': len(media.get('monsters') or {}), 'voice_packs': counts.get('voice', 0),
-                   'env_images': len(media.get('env') or {}), 'sprite_sheets': len(media.get('sprites') or {}), 'voice_clips': len(media.get('voice') or {}), 'fx_parts': len(media.get('fx') or {}),
+                   'env_images': len(media.get('env') or {}), 'sprite_sheets': len(media.get('sprites') or {}), 'voice_clips': len(media.get('voice') or {}), 'voice_en_packs': counts.get('voice_en', 0), 'voice_en_clips': len(media.get('voice_en') or {}), 'fx_parts': len(media.get('fx') or {}),
                    'sfx_packs': counts.get('sfx', 0), 'sfx_takes': len(media.get('sfx') or {}), 'amb_beds': len(media.get('amb') or {})},
         'files': files,
         'batches': batches,

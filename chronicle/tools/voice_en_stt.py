@@ -7,7 +7,8 @@ compares the words with en_text of design/voice/en_lines.csv.
 
 Writes per id `stt: {heard, similarity, repeated, short, blocks}` into design/voice/en_report.json. Report-only, except
 one objective pattern that means "the length is far off the text" (the cost rule's local check): `repeated` = the actor
-said the whole line twice (>= 4 words; the transcript has >= 1.6x the words and the line's words twice). Those ids go
+said the line, or a phrase of it, twice (>= 4 words in the line, and either the whole line twice with >= 1.6x the words,
+or a run of >= 3 of the line's words said twice back to back with >= 1.25x the words). Those ids go
 to --retry-out (for tools/voice_tts.js --lang en --ids-file <file> --force; the tool still allows at most 2 audio
 requests per id). `short` (under half of the words heard in one single block of speech: maybe cut off) is only flagged.
 Shouts and the recognizer's spelling (names, interjections) are not judged.
@@ -51,6 +52,16 @@ def repeats(a, b):
         else:
             i += 1
     return hits
+
+
+def phrase_repeat(a, b):
+    """a run of >= 3 words of the line a said twice back to back in the transcript b"""
+    line = ' '.join(a)
+    for n in range(3, len(a) + 1):
+        for i in range(len(b) - 2 * n + 1):
+            if b[i:i + n] == b[i + n:i + 2 * n] and ' '.join(b[i:i + n]) in line:
+                return True
+    return False
 
 
 def blocks(samples, rate):
@@ -98,7 +109,7 @@ def main():
         t, h = words(rows[i]['en_text']), words(heard)
         nb = blocks(audio, 16000)
         rec = {'heard': heard, 'similarity': round(sim(t, h), 2), 'blocks': nb, 'repeated': False, 'short': False}
-        if len(t) >= 4 and len(h) >= 1.6 * len(t) and repeats(t, h) >= 2:
+        if len(t) >= 4 and ((len(h) >= 1.6 * len(t) and repeats(t, h) >= 2) or (len(h) >= 1.25 * len(t) and phrase_repeat(t, h))):
             rec['repeated'] = True
             retry.append(i)
         if len(t) >= 4 and len(h) < 0.5 * len(t) and nb <= 1:

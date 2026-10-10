@@ -4,6 +4,9 @@
 //                     sprites: {'<look>:<kind>': {url, meta}}}   ← 版 2: CAST の原画の取り込み（v2/assets/sprites/<look>/<kind>.png＋.json）
 //                     sfx: {'<id>.<k>': url}   ← 録音の効果音の 1 本（k = 取り直しの番号。core/audio.js が id ごとにまとめる）
 //                     amb: {'<床>': {url, loopStart, loopEnd}}   ← 録音の環境音の床（design/notes/audio.md §15.1）
+//                     voice_en: {id: url}   ← 英語のボイス（chronicle/assets/voice/en。2026-10-10）
+//   言語ごとのボイス: ゲームの言語（R.I18n.lang()）が en のとき、'voice' の id は voice_en を先に引き、無ければ日本語の voice。
+//   ほかの言語は今は日本語の声のまま（voice_<言語> の表が無い）。has / entry / url / bytes のどれも同じ決まり。
 //   url は相対パス（外に置いた版: bgm/<id>.ogg）か '#media:<kind>:<id>'（--single の埋め込み）。
 //   埋め込みは <script type="application/octet-stream" id="media:<kind>:<id>" data-type="audio/ogg">base64</script>
 //   で置かれ、起動時には解かない。初めて使うときに bytes() / url() が解く（Blob にして URL を作る）。
@@ -43,9 +46,20 @@
     M.bgm = M.bgm || {}; M.voice = M.voice || {}; M.portraits = M.portraits || {}; M.sprites = M.sprites || {}; M.title = M.title || {}; M.sfx = M.sfx || {}; M.amb = M.amb || {};
     return M;
   }
+  const own = (t, id) => !!t && Object.prototype.hasOwnProperty.call(t, id);
+  /** 今の言語のボイスの表の名前（'voice_en'）。日本語・表の無い言語は null */
+  function voiceLangKind() {
+    const l = R.I18n && R.I18n.lang ? R.I18n.lang() : 'ja';
+    return l && l !== 'ja' ? 'voice_' + l : null;
+  }
   function raw(kind, id) {
-    const t = table()[kind];
-    return t && Object.prototype.hasOwnProperty.call(t, id) ? t[id] : null;
+    const M = table();
+    if (kind === 'voice') {
+      const lk = voiceLangKind();
+      if (lk && own(M[lk], id)) return M[lk][id];
+    }
+    const t = M[kind];
+    return own(t, id) ? t[id] : null;
   }
   function embedded(ref) {
     if (typeof document === 'undefined' || !document.getElementById) return null;
@@ -66,6 +80,11 @@
     table,
     stat,
     has(kind, id) { return !!raw(kind, id); },
+    /** 'voice' の id がどの表から鳴るか（'voice_en' | 'voice' | null。テスト・QA 用） */
+    voiceSource(id) {
+      const lk = voiceLangKind(), M = table();
+      return lk && own(M[lk], id) ? lk : own(M.voice, id) ? 'voice' : null;
+    },
     /** bgm: {url, loopStart, loopEnd, gain, loop} / voice・portraits: {url} / 無ければ null */
     entry(kind, id) {
       const e = raw(kind, id);

@@ -7,7 +7,8 @@
   "Hero voices: the male hero uses the custom voice Signature Voice (median F0 ≈ 139 Hz). Both custom voices read as adult male, so the female hero was recast (2026-09-26) to the prebuilt ja-jp-assistant-4 (female, 22, Tokyo; auditioned against ja-jp-training-6 / ja-jp-commercial-6): median F0 of her 12 clips ≈ 309 Hz vs 216 Hz for the male set (calm lines ≈ 180–210 Hz vs ≈ 124 Hz).",
   "readings[<id>]: what the TTS is asked to say instead of the script text, for words it misreads (the check still compares with the script).",
   "v2 slice (2026-09-27): otto + town barks (tadeo, fishwife, gateguard, master, gord, hanna, rita, pim). Their lines are design/voice/story_v2_lines.csv (tools/story_voice.js), not voice_script.js; bark:true = a 1–2 s greeting played when a talk opens.",
-  "Region voices (2026-09-28): zaid, rashid, nadia (desert), jorn, sonja, hald (snow), mayor (marsh). Their lines are design/voice/story_v2_lines.csv (tools/story_voice.js). readings[] gives kana for the sung lyrics (灯・泉星・白む・夕べ are misread otherwise)."
+  "Region voices (2026-09-28): zaid, rashid, nadia (desert), jorn, sonja, hald (snow), mayor (marsh). Their lines are design/voice/story_v2_lines.csv (tools/story_voice.js). readings[] gives kana for the sung lyrics (灯・泉星・白む・夕べ are misread otherwise).",
+  "English version (2026-10-10): the English voices are in design/voice/casting_en.json (one en-US voice per speaker; profile, style, fx and pitch stay as here), the English lines in design/voice/en_lines.csv; node tools/voice_tts.js --lang en → assets/voice/en/<id>.ogg."
  ],
  "model": "gemini-3.8-flash-tts",
  "speakers": {

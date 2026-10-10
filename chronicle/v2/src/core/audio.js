@@ -1305,8 +1305,10 @@
     if (!e || !ctx) return null;
     const cache = bufs[kind];
     let c = cache.get(id);
+    // 同じ id でも表の url が変わったら読み直す（ボイスは言語で voice_en ↔ voice が替わる。core/media.js）
+    if (c && c.src !== e.url && c.state !== 'loading') { cache.delete(id); c = null; }
     if (c) { c.used = ++useSerial; return c; }
-    c = { key: id, state: 'loading', buf: null, used: ++useSerial };
+    c = { key: id, src: e.url, state: 'loading', buf: null, used: ++useSerial };
     cache.set(id, c);
     c.p = R.Media.bytes(kind, id).then(decodeBuf).then(
       (buf) => { c.buf = buf; c.state = 'ok'; trimBufs(kind); return c; },

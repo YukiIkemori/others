@@ -302,12 +302,13 @@ function processWav(wavBytes, line, sp, o) {
   ch = trim(ch, d.rate, 0.06, 0.15);
   if (sp.fx) ch = trim(applyFx(ch, d.rate, sp.fx), d.rate, 0.03, 0.5);
   else if (sp.pitch && sp.pitch !== 1) ch = trim(applyFx(ch, d.rate, { p: sp.pitch }), d.rate, 0.03, 0.15);
-  ch = GA.limitTo(ch, d.rate, o.lufs, -3); // gain to the target, limiter at −3 dBFS (Vorbis overshoots ~2 dB on decode)
-  let n = GA.normalise(ch, d.rate, o.lufs, -1);
+  ch = GA.limitTo(ch, d.rate, o.lufs, o.limitDb != null ? o.limitDb : -3); // gain to the target, limiter at −3 dBFS (Vorbis overshoots ~2 dB on decode)
+  let n = GA.normalise(ch, d.rate, o.lufs, o.ceilDb != null ? o.ceilDb : -1);
   // very short shouts: ebur128 cannot gate < 0.4 s reliably → RMS-based fallback (≈ −16 dBFS RMS)
-  if (!isFinite(n.before.I)) {
+  // (English lines: ebur128 also reports -70 LUFS = "nothing gated" for clips this short)
+  if (!isFinite(n.before.I) || (line.lang === 'en' && n.before.I <= -69)) {
     const x = ch[0]; let e = 0; for (let i = 0; i < x.length; i++) e += x[i] * x[i];
-    const rms = Math.sqrt(e / x.length), g = Math.min(Math.pow(10, (o.lufs + 2) / 20) / (rms || 1e-9), Math.pow(10, -1 / 20) / (GA.peak(ch) || 1e-9));
+    const rms = Math.sqrt(e / x.length), g = Math.min(Math.pow(10, (o.lufs + 2) / 20) / (rms || 1e-9), Math.pow(10, (o.ceilDb != null ? o.ceilDb : -1) / 20) / (GA.peak(ch) || 1e-9));
     n = { channels: GA.gain(ch, g), gainDb: 20 * Math.log10(g), before: n.before, limited: false };
   }
   return { rate: d.rate, channels: n.channels, gainDb: n.gainDb, rawDur: d.channels[0].length / d.rate };
@@ -540,7 +541,8 @@ async function mainEn(argv, E) {
   };
   // ---------------------------------------------------------------- --verify: every file of the list, on disk, no API
   if (argv.includes('--verify')) {
-    const V = { t: new Date().toISOString(), files: lines.length, ok: 0, missing: [], problems: {} };
+    const V = { t: new Date().toISOString(), files: lines.length, ok: 0, missing: [], problems: {}, notes: [] };
+    const notes = V.notes;
     for (const l of lines) {
       const f = path.join(outDir, l.id + '.ogg');
       if (!fs.existsSync(f)) { V.missing.push(l.id); continue; }
@@ -551,8 +553,10 @@ async function mainEn(argv, E) {
       const ck = check({ rate: d.rate, channels: d.channels }, l);
       pr.push(...ck.problems);
       const L = GA.loudness(d.channels, d.rate);
-      const short = !isFinite(L.I);
-      if (!short && Math.abs(L.I - o.lufs) > 1.5) pr.push(`loudness ${L.I.toFixed(1)} LUFS (target ${o.lufs})`);
+      const short = !isFinite(L.I) || L.I <= -69;   // < 0.4 s of speech: ebur128 gates everything out (-70)
+      const peakLimited = L.I < o.lufs && ck.peakDb > -7.5;   // a peaky shout: the peak ceiling, not the target, set the gain
+      if (!short && Math.abs(L.I - o.lufs) > 1.5 && !(peakLimited && L.I > o.lufs - 6)) pr.push(`loudness ${L.I.toFixed(1)} LUFS (target ${o.lufs})`);
+      if (!short && Math.abs(L.I - o.lufs) > 1.5 && peakLimited && L.I > o.lufs - 6) notes.push(`${l.id}: ${L.I.toFixed(1)} LUFS (held down by the peak ceiling)`);
       if (short) { const x = d.channels[0]; let e = 0; for (let i = 0; i < x.length; i++) e += x[i] * x[i]; const r = 10 * Math.log10(e / x.length + 1e-12); if (r < o.lufs - 8 || r > o.lufs + 6) pr.push(`short clip RMS ${r.toFixed(1)} dBFS`); }
       rep[l.id] = Object.assign(rep[l.id] || { id: l.id }, { verify: { seconds: Math.round(ck.dur * 100) / 100, estimate: l.est, lufs: short ? null : Math.round(L.I * 10) / 10, peakDb: Math.round(ck.peakDb * 10) / 10, problems: pr } });
       if (pr.length) V.problems[l.id] = pr; else V.ok++;
@@ -585,11 +589,19 @@ async function mainEn(argv, E) {
   const finish = (l, sp, wav, ev) => {
     const file = path.join(outDir, l.id + '.ogg'), rawFile = path.join(rawDir, l.id + '.wav');
     if (!reproc) fs.writeFileSync(rawFile, wav);
-    const pr = processWav(wav, l, sp, o), ck = check(pr, l);
+    // Vorbis can overshoot full scale on decode: when the written file does, encode it again with the limiter 2 dB lower
+    let pr, ck, filePeak = 0, o2 = o;
+    for (let k = 0; k < 4; k++) {
+      o2 = k ? Object.assign({}, o, { limitDb: -3 - 2 * k, ceilDb: -1 - 2 * k }) : o;
+      pr = processWav(wav, l, sp, o2); ck = check(pr, l);
+      GA.encode(pr.channels, pr.rate, file, { q: 4 });
+      filePeak = GA.peak(GA.decode(file, { rate: pr.rate, channels: 1 }).channels);
+      if (filePeak <= 0.999) break;
+    }
+    if (filePeak > 0.999) ck.problems.push(`the Ogg file decodes above full scale (${(20 * Math.log10(filePeak)).toFixed(1)} dBFS)`);
     if (ev && ev.why && /raw take/.test(ev.why)) ck.problems.push(ev.why.match(/clipped in the raw take[^;]*/)[0]);
-    GA.encode(pr.channels, pr.rate, file, { q: 4 });
     const L = GA.loudness(pr.channels, pr.rate);
-    rep[l.id] = Object.assign(rep[l.id] || { id: l.id }, { speaker: l.speaker, voice: sp.voice, text: said(C, l), seconds: Math.round(ck.dur * 100) / 100, estimate: l.est, lufs: isFinite(L.I) ? Math.round(L.I * 10) / 10 : null, peakDb: Math.round(ck.peakDb * 10) / 10, problems: ck.problems, bytes: fs.statSync(file).size, generated: reproc ? (rep[l.id] && rep[l.id].generated) : new Date().toISOString() });
+    rep[l.id] = Object.assign(rep[l.id] || { id: l.id }, { speaker: l.speaker, voice: sp.voice, text: said(C, l), seconds: Math.round(ck.dur * 100) / 100, estimate: l.est, lufs: isFinite(L.I) ? Math.round(L.I * 10) / 10 : null, peakDb: Math.round(ck.peakDb * 10) / 10, problems: ck.problems, bytes: fs.statSync(file).size, limiterDb: o2.limitDb != null ? o2.limitDb : -3, generated: reproc ? (rep[l.id] && rep[l.id].generated) : new Date().toISOString() });
     delete rep[l.id].failed;
     if (ck.problems.length) fails++;
     console.log(`[voice en] ${l.id}: ${ck.dur.toFixed(2)} s (est ${l.est}), ${isFinite(L.I) ? L.I.toFixed(1) + ' LUFS' : 'short'}, ${ck.problems.length ? '✗ ' + ck.problems.join('; ') : 'ok'}`);
@@ -725,5 +737,5 @@ async function mainEn(argv, E) {
   return fails ? 1 : 0;
 }
 
-module.exports = { judge, transcribe, loadCasting, allLines, buildPrompt, requestBody, similarity, spoken, main, FX, enCasting, enLines, estimateEn, enCastProblems, localTake, readIds, check };
+module.exports = { judge, transcribe, loadCasting, allLines, buildPrompt, requestBody, similarity, spoken, main, FX, enCasting, enLines, estimateEn, enCastProblems, localTake, readIds, check, processWav, speakerOf, said };
 if (require.main === module) main(process.argv.slice(2), process.env).then((c) => { process.exitCode = c; }, (e) => { console.error('[voice] ' + GA.redact(e.message || e)); process.exitCode = 1; });
