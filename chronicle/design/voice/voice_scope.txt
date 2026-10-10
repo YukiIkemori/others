@@ -1,3 +1,7 @@
+# The 553 voice lines of the dubbed versions (English, Mandarin, Korean) = the Japanese lines actually used in the game (2026-10-10).
+# 537 ids = en_scope.txt (story, companions' and hero's battle shouts, bosses) + 16 minor-NPC story lines (dorga, guardian, rita, hald, kaya,
+# giant, mistwitch, sentinel; the last 16 lines). Left out of the 569 Japanese files: v_berna_home_01..03, v_elm_forest_07/08,
+# v_rowell_pharos_01..03 and the 8 *_greet_01 mob barks (unused). Pure cries (cry_reuse.txt) are in this list but have no zh / ko file.
 b_bartolo_attack_1
 b_bartolo_attack_2
 b_bartolo_attack_3
