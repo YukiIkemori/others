@@ -14,3 +14,4 @@
   - 対応: 私は編集しない(別AIが作業中)。ユーザーにasiavelaの404を報告。週次(10/12)は5サイトとも観測中心にするか確認。
 - 2026-10-11 07:48 JST: 異常なし(5サイト)。sitemap抽出URL・robotsすべて200。サイトマップ件数: monometri 109 / sukinobi 33 / mononippon 931 / asiavela 6,916(5,731から増加、公開中の言語版が増えている) / okurinochizu 37。GSC最新確定日は10/6のまま(データ遅延)で10/9以降の再構築の影響はまだ見えない。Actions失敗なし。別AIによる再構築が継続中(asiavelaは翻訳が14言語完了・一部はまだhidden、sukinobiは10/9にeスピ！リンクを各記事に再配置)。私は編集していない。
 - 2026-10-11 追記: asiavela の /singapore/ /philippines/ /malaysia/ 配下の404は、3か国を「retired」にした意図的な削除。サイトマップ・内部リンクには含まれていない(確認済み)。Search Console の『見つかりませんでした(404)』の増加は想定内として扱い、日次で異常にしない。
+- 2026-10-12 07:48 JST: 異常なし(5サイト)。sitemap抽出URL・robotsすべて200。GSC(10/09確定): asiavela 2,143表示/23クリック(過去最高、増加継続)、mononippon 487/5・monometri 65/2(再構築による想定内の減少)、sukinobi 1、okurinochizu 3(初表示)。monometri のサイトマップは Google が109件で読み直し済み。asiavela は読み込み待ち(14,476件のまま)。Actions失敗なし。asiavela は10/11にマレーシアを15言語で再公開(旧URLの転送付き)、シンガポール英語版を再構築中(非公開)＝別AIの作業が継続中。前日の「マレーシアの404は想定内」は、マレーシア再公開により一部解消。
