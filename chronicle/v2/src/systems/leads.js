@@ -127,8 +127,9 @@
   Leads.locked = function (idOrDef) {
     const d = typeof idOrDef === 'string' ? def(idOrDef) : idOrDef;
     if (!d) return false;
-    if (d.slice === 'locked') return true;
     const C = R.DB.config || {};
+    // slice:'locked' は体験版でだけ閉じる（製品版で うわさの手がかりが「まだ語られていない」と薄く出ていた。2026-10-11）
+    if (d.slice === 'locked') return !!C.slice;
     return !!(C.slice && Array.isArray(C.sliceOpen) && d.region && !C.sliceOpen.includes(d.region));
   };
   /** 依頼 id を今くれるか（受けていない・解けていない・条件が真） */
@@ -166,9 +167,20 @@
     return (r && r.name) || rid;
   };
 
-  // ================================================================ 次にやること（R.DB.goals。オーナーの依頼 2026-09-28「今の目標がいつでも 1 行で見える」）
-  //   Leads.goal() → {id, text, lead} | null。表（src/data/goals.js）の、at が真の段のうち いちばん後ろの物。
-  //   メニューの上（hub.js）とフィールドの L の札（field/hud.js）が読む。'goal' は段が変わったとき（hud.js が見る）
+  // ================================================================ 次にやること（R.DB.goals と R.DB.goalstories。オーナーの依頼 2026-09-28「今の目標がいつでも 1 行で見える」）
+  //   Leads.goal() → {id, text, lead} | null。メニューの上（hub.js）とフィールドの L の札（field/hud.js）が読む。
+  //   id は段（地方の物語なら '<物語>:<一歩>'）。hud.js はこれが変わったときに札を出すので、一歩が進めば id も変わる。
+  //   決め方（持ち主 2026-10-11「余白 八枚目では何も分からない。本筋の、すぐ次の一歩を具体的に」）:
+  //     1. 表（src/data/goals.js の R.DB.goals）の、at が真の段のうち いちばん後ろの物。序章はこれだけで進む。
+  //     2. fromLeads の段（うわさを聞いた後）は、先に地方の本筋（R.DB.goalstories）を見る:
+  //          目印を付けた手がかり（その物語の今の一歩。余白などの覚え書きは下の普通の決め方、寄り道の依頼は「題（場所）」）→
+  //          次の場面を待っている（R.Tier.pending。町の宿で場面が起きる）→
+  //          今いる地方の本筋 → 終盤・ロアへの帰り（kind 'main'。後ろの物ほど先）→ ほかの地方（始めた地方 → 最後に寄った町の地方 → いちばん新しく聞いた地方。
+  //          うわさだけ聞いて着いていない地方は後ろ）。無ければ段の文。
+  //     3. 地方の物語は、その地方の手がかり（leads）のどれかを聞いて まだ解けていないか、着いた旗（arrived）が立っていて、物語が終わって（done）いなければ出る。
+  //        文は steps の「後ろの一歩」から見て when が真の最初の物（出来事の旗で一歩ずつ進む）。寄り道のうわさ・余白・記録官の物は選ぶ対象にしない。
+  //     体験版（DB.config.slice）は region が sliceOpen に無い物語（錠の地方・終盤）を出さない。手がかり自体の slice:'locked' は見ない
+  //     （製品版では全地方が作ってあるので、錠の外れた版でうわさを聞いたら「向かおう」を出す）。
   function goalRows() {
     const T = R.DB.goals || {};
     return Object.keys(T).map((id) => Object.assign({ id }, T[id])).sort((a, b) => (a.n || 0) - (b.n || 0));
@@ -190,46 +202,117 @@
     }
     return t ? fillGoal(t) : '';
   };
-  Leads.goal = function () {
+  const check = (c) => { try { return R.State.check(c); } catch (e) { return false; } };
+  const stories = () => R.DB.goalstories || {};
+  let leadIdx = null, leadIdxSrc = null;
+  /** 手がかり → その物語 {sid, s}（R.DB.goalstories の leads から。無ければ null） */
+  Leads.storyOf = function (id) {
+    const S = stories();
+    if (!leadIdx || leadIdxSrc !== S) {
+      leadIdx = {}; leadIdxSrc = S;
+      for (const sid of Object.keys(S)) for (const lid of S[sid].leads || []) if (!leadIdx[lid]) leadIdx[lid] = { sid, s: S[sid] };
+    }
+    return leadIdx[id] || null;
+  };
+  function regionOfMap(mapId) {
+    const m = mapId && (R.DB.maps || {})[mapId];
+    if (!m) return null;
+    const loc = m.location && R.DB.locations && R.DB.locations[m.location];
+    return m.region || (loc && loc.region) || null;
+  }
+  const isHidden = (id) => { const d = def(id); return !!(d && d.hideWhen != null && check(d.hideWhen)); };
+  /** 物語が今の状態で言う一歩 → {id, text, lead} | null（文が空・どの一歩にも当たらないときは null） */
+  function storyStep(sid, s, leadId) {
+    const g = G();
+    if (s.done != null && check(s.done)) return null;   // 終わった物語は一歩を言わない（目印の手がかりは題に戻る）
+    const steps = s.steps || [];
+    for (let i = 0; i < steps.length; i++) {
+      const st = steps[i];
+      if (st.when != null && !check(st.when)) continue;
+      const text = st.text ? fillGoal(st.text) : '';
+      if (!text) return null;
+      let lead = leadId || null;
+      if (!lead && g && g.leads) lead = (s.leads || []).find((id) => g.leads[id] && !Leads.isDone(id)) || null;
+      return { id: sid + ':' + (st.id != null ? st.id : i), text, lead };
+    }
+    return null;
+  }
+  /** 手がかりの今の「次にやること」（目印の札・テスト用）: 地方・終盤の物語の一歩か、覚え書きなら今の目標と同じ文。無ければ null（題を出す） */
+  Leads.goalOf = function (id) {
+    const hit = Leads.storyOf(id);
+    if (!hit) return null;
+    if (hit.s.kind === 'note') return goalImpl({ noPin: true });
+    return storyStep(hit.sid, hit.s, id);
+  };
+  /** 目印を付けた寄り道の依頼など、物語の無い手がかり: 「題（場所）」 */
+  function titleGoal(id) {
+    const d = def(id);
+    if (!d) return null;
+    const m = (R.DB.maps || {})[d.place];
+    const place = m && m.name ? m.name : '';
+    const text = place ? R.T('sys.leads.goal.withPlace', { title: d.title, place }) : d.title;
+    return { id: 'lead:' + id, text, lead: id };
+  }
+  function storyGoal(o) {
+    const g = G();
+    if (!g || !g.leads) return null;
+    const isDemo = !!(R.DB.config && R.DB.config.slice);
+    const open = isDemo && R.DB.config && Array.isArray(R.DB.config.sliceOpen) ? R.DB.config.sliceOpen : null;
+    const locked = (s) => !!(open && s.region && !open.includes(s.region));
+    // 1. 目印
+    const pid = o && o.noPin ? null : Leads.pinned();
+    if (pid) {
+      const hit = Leads.storyOf(pid);
+      if (!hit) return titleGoal(pid);
+      if (hit.s.kind !== 'note') return (locked(hit.s) ? null : storyStep(hit.sid, hit.s, pid)) || titleGoal(pid);
+      // 覚え書き（余白など）は、ふつうの決め方の今の目標をそのまま出す
+    }
+    // 2. 次の場面を待っている（地方を解いた後・町の宿か町の出口で起きる）。体験版は T1 だけなので段の文（g_rest）に任せる
+    if (!isDemo && R.Tier && R.Tier.pending && R.Tier.pending() != null) return { id: 'pending', text: R.T('goals.pending'), lead: null };
+    // 3. 物語を集める
+    const S = stories();
+    const cands = [];
+    for (const sid of Object.keys(S)) {
+      const s = S[sid];
+      if (s.kind !== 'region' && s.kind !== 'main') continue;
+      if (locked(s) || (s.done != null && check(s.done))) continue;
+      let got = 0, started = false, any = false;
+      for (const id of s.leads || []) {
+        const l = g.leads[id];
+        if (!l || Leads.isDone(id) || isHidden(id)) continue;
+        any = true;
+        got = Math.max(got, l.got || 0);
+        if (id !== s.rumor) started = true;
+      }
+      if (s.arrived != null && check(s.arrived)) { any = true; started = true; }
+      if (!any) continue;
+      const r = storyStep(sid, s);
+      if (r) cands.push({ s, r, got, started });
+    }
+    if (!cands.length) return null;
+    const here = regionOfMap(g.pos && g.pos.map);
+    const last = regionOfMap(g.lastTown && g.lastTown.map);
+    const regions = cands.filter((c) => c.s.kind === 'region').sort((a, b) =>
+      (b.started - a.started) || ((b.s.region === last) - (a.s.region === last)) || (b.got - a.got) || ((a.s.n || 0) - (b.s.n || 0)));
+    const pick = (here && cands.find((c) => c.s.kind === 'region' && c.s.region === here))
+      || cands.filter((c) => c.s.kind === 'main').sort((a, b) => (b.s.n || 0) - (a.s.n || 0))[0]
+      || regions[0];
+    return pick ? pick.r : null;
+  }
+  function goalImpl(o) {
     if (!G()) return null;
     const rows = goalRows();
     for (let i = rows.length - 1; i >= 0; i--) {
       const r = rows[i];
-      let ok = false;
-      try { ok = R.State.check(r.at); } catch (e) { ok = false; }
-      if (!ok) continue;
-      if (r.fromLeads && !(R.DB.config && R.DB.config.slice)) { const dyn = leadGoal(); if (dyn) return dyn; }
+      if (!check(r.at)) continue;
+      if (r.fromLeads) { const dyn = storyGoal(o); if (dyn) return dyn; }
       const text = Leads.goalText(r);
       if (text) return { id: r.id, text, lead: r.lead || null };
     }
     return null;
-  };
-  // 製品版の森の後（表の最後の段 fromLeads）: 手がかり帳から今の目標を選ぶ（持ち主 2026-10-01「次にやることが全然更新されない」）。
-  //   聞いていて まだ解けていない手がかりのうち: 目印を付けた物 → 今いる地方の地方の手がかり → 本筋（main）→ ほかの地方の手がかり → うわさ。
-  //   同じ組の中では いちばん新しく聞いた物。寄り道（side）は目印を付けたときだけ。文は「題（場所）」
-  const GOAL_KINDS = ['region', 'main', 'rumor'];
-  function leadGoal() {
-    const g = G();
-    if (!g || !g.leads) return null;
-    const open = Object.keys(g.leads).filter((id) => def(id) && !Leads.isDone(id) && !Leads.locked(id));
-    if (!open.length) return null;
-    const got = (id) => g.leads[id].got || 0;
-    const newest = (ids) => ids.sort((a, b) => got(b) - got(a))[0] || null;
-    const here = ((R.DB.maps || {})[g.pos && g.pos.map] || {}).region;
-    const kind = (id) => def(id).kind || 'region';
-    const pick = open.find((id) => g.leads[id].pin)
-      || newest(open.filter((id) => kind(id) === 'region' && here && def(id).region === here))
-      || newest(open.filter((id) => kind(id) === 'main'))
-      || newest(open.filter((id) => kind(id) === 'region'))
-      || newest(open.filter((id) => kind(id) === 'rumor'));
-    if (!pick || (GOAL_KINDS.indexOf(kind(pick)) < 0 && !g.leads[pick].pin)) return null;
-    const d = def(pick);
-    const m = (R.DB.maps || {})[d.place];
-    const place = m && m.name ? m.name : '';
-    const text = place ? R.T('sys.leads.goal.withPlace', { title: d.title, place }) : d.title;
-    return { id: 'lead:' + pick, text, lead: pick };
   }
-  Leads._leadGoal = leadGoal;
+  Leads.goal = function () { return goalImpl(null); };
+  Leads._storyGoal = storyGoal;
 
   Leads.list = function (o) {
     const g = G();

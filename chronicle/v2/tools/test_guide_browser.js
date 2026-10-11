@@ -75,7 +75,7 @@ const shot = (p, name) => B.shot(p, path.join(OUT, name));
 
     // 本筋の段が変わる → 札が一度
     await B.ev(p, `(RPG.Leads.add('l_rumor_forest', {silent: true}), true)`);
-    ok('goal change → banner shows the new goal once', await B.waitFor(p, `(RPG.Field.hud._goal()||{}).text === RPG.Leads.goal().text && RPG.Leads.goal().id==='g_fern'`, 3000), await B.ev(p, 'RPG.Field.hud._goal()'));
+    ok('goal change → banner shows the new goal once', await B.waitFor(p, `(RPG.Field.hud._goal()||{}).text === RPG.Leads.goal().text && RPG.Leads.goal().id==='forest:fern'`, 3000), await B.ev(p, 'RPG.Field.hud._goal()'));
 
     // 戦闘: 2 ラウンド目の命令でリピートの札
     section('戦闘のリピートの札');

@@ -191,7 +191,7 @@
       R.UIK.text(g, R.T('ui.hub.menu.drawTall.text'), this.closeRect.x + cwid / 2, this.closeRect.y + (chh - cs) / 2, { size: cs, weight: 700, color: C.text, align: 'center' });
       R.UIK.text(g, R.T('ui.hub.menu.drawTall.text_2', { UIK: R.UIK.num(G.gold || 0), playTime: R.U.playTime(G.playMs || 0) }), this.closeRect.x - u(12), y + u(1), { size: u(14), color: C.text2, align: 'right' });
       y += u(34);
-      if (S.goalBar(g, { x: b.x, y, w: b.w, h: u(40) }, { compact: true })) y += u(48);
+      if (S.goalBar(g, { x: b.x, y, w: b.w, h: u(54) }, { compact: true })) y += u(62);
       const mem = S.party();
       const gap = u(10), cw = (b.w - gap) / 2, ch = u(146);
       this.cards = [];
@@ -246,7 +246,7 @@
     if (o.note) R.UIK.text(g, o.note, r.x + r.w - pad, r.y + pad + (compact ? u(20) : u(44)), { size: u(12), color: C.text3, align: 'right', maxW: r.x + r.w - x - pad });
   };
 
-  /** 次にやること（R.Leads.goal()）の 1 行の札。無ければ描かずに false。o.compact は縦持ち（見出しの字を小さく） */
+  /** 次にやること（R.Leads.goal()）の札。無ければ描かずに false。横は 1 行、o.compact（縦持ち）は見出しの下に文の 2 段（高さ u(54)） */
   S.goalBar = function (g, r, o) {
     o = o || {};
     const goal = R.Leads && R.Leads.goal ? R.Leads.goal() : null;
@@ -256,12 +256,20 @@
     // 左の琥珀の細い帯（手がかりの通知の札と同じ印）
     g.fillStyle = 'rgba(236,201,124,0.85)';
     g.fillRect(r.x + u(1), r.y + u(10), u(2), r.h - u(20));
+    const lab = R.T('ui.hub.goalBar.lab');
+    if (o.compact) {
+      // 縦持ち: 1 行にすると幅が足りず「…」で切れる（持ち主 2026-10-11「次にやること」を具体的な文にした）。見出しの下に文を置く（高さは u(54)）
+      R.UIK.icon(g, 'star', r.x + u(16), r.y + u(9), u(14), C.gold);
+      R.UIK.text(g, lab, r.x + u(36), r.y + u(9), { size: u(11), weight: 700, color: C.gold, track: u(1.5) });
+      R.UIK.text(g, goal.text, r.x + u(16), r.y + u(28), { size: u(14.5), weight: 700, color: C.text, maxW: r.w - u(32) });
+      return true;
+    }
     const isz = u(16), my = r.y + r.h / 2;
     R.UIK.icon(g, 'star', r.x + u(16), my - isz / 2, isz, C.gold);
-    const lab = R.T('ui.hub.goalBar.lab'), ls = u(o.compact ? 11 : 12);
+    const ls = u(12);
     R.UIK.text(g, lab, r.x + u(40), my - ls / 2 - u(1), { size: ls, weight: 700, color: C.gold, track: u(1.5) });
     const lx = r.x + u(40) + R.UIK.measure(lab, { size: ls, weight: 700 }) + u(1.5) * lab.length + u(18);
-    const ts = u(o.compact ? 14 : 16.5);
+    const ts = u(16.5);
     R.UIK.text(g, goal.text, lx, my - ts / 2 - u(1), { size: ts, weight: 700, color: C.text, maxW: r.x + r.w - lx - u(16) });
     return true;
   };

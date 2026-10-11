@@ -1,6 +1,7 @@
 // MENUS の「次にやること」と「初めての説明の札」・カーソルの記憶の node のテスト（オーナーの依頼 2026-09-28）
 //   node v2/tools/test_guide.js
 //   ・序章 → 森 → 体験版の終わりまでの各段で R.Leads.goal() が空でなく、その段の目標（期待する id と言葉）になっている
+//     （森は R.DB.goalstories.forest の一歩 'forest:<id>'。地方の本筋の全部の歩きは tools/test_goals.js）
 //   ・段の条件が進むほど後ろの段になる（戻らない）・途中の旗が欠けたフィクスチャでも後ろの段を選ぶ
 //   ・説明の札は 1〜3 行・{btn:x} が埋まる・新しい札（熟練度・魔物の強さ・魔石・仲間）がある・出来事で積まれる・1 回だけ
 //   ・カーソルの記憶（S._recall / S._remember）: タブ・人・行を戻す、人を指定して開いたときは人を覚えない
@@ -18,7 +19,7 @@ function fresh(flags, vars, leads) {
 }
 
 section('次にやること（R.DB.goals と R.Leads.goal）');
-ok('R.DB.goals has ≥ 12 stages', Object.keys(R.DB.goals || {}).length >= 12, Object.keys(R.DB.goals || {}));
+ok('R.DB.goals has ≥ 10 rows (prologue 7 + rumors + rest + free); the forest steps are in R.DB.goalstories', Object.keys(R.DB.goals || {}).length >= 10 && R.DB.goalstories.forest.steps.length >= 7, Object.keys(R.DB.goals || {}));
 ok('R.Leads.goal / goalText exist', typeof R.Leads.goal === 'function' && typeof R.Leads.goalText === 'function');
 for (const [id, g] of Object.entries(R.DB.goals)) {
   const texts = Array.isArray(g.text) ? g.text.map((x) => x.text) : [g.text];
@@ -42,28 +43,32 @@ const WALK = [
   ['g_climb', { prologue_fine: true }, {}, [], '灯室'],
   ['g_return', { prologue_boss: true }, {}, [], 'ファロス'],
   ['g_rumors', { prologue_done: true }, {}, ['l_main_rumors'], 'うわさ'],
-  ['g_fern', {}, {}, ['l_rumor_forest'], 'フェルン'],
-  ['g_gord', { forest_start: true }, {}, [], '掲示板'],
-  ['g_gord', { forest_board: true }, {}, ['l_forest_board'], 'ゴード'],
-  ['g_search', { forest_gord_talked: true }, {}, ['l_forest_woodcutters'], 'カトリ'],
-  ['g_search', {}, {}, ['l_forest_pim'], '0/4'],
-  ['g_search', { forest_found_hans: true }, {}, [], '1/4'],
-  ['g_search', { forest_found_ben: true, forest_found_roy: true }, { forest_verses: 1 }, [], '3/4'],
-  ['g_song', { forest_found_pim: true }, {}, ['l_forest_song'], '1/3'],
-  ['g_song', { forest_moth: true }, { forest_verses: 2 }, [], '2/3'],
-  ['g_elder', {}, { forest_verses: 3 }, [], '千年樹'],
-  ['g_elder', { forest_fine: true, forest_boss: true }, {}, [], '千年樹'],
+  ['forest:fern', {}, {}, ['l_rumor_forest'], 'フェルン'],
+  ['forest:board', { forest_start: true }, {}, [], '掲示板'],
+  ['forest:gord', { forest_board: true }, {}, ['l_forest_board'], 'ゴード'],
+  ['forest:katri', { forest_gord_talked: true }, {}, ['l_forest_woodcutters'], 'カトリ'],
+  ['forest:search', {}, {}, ['l_forest_pim'], '0/4'],
+  ['forest:search', { forest_found_hans: true }, {}, [], '1/4'],
+  ['forest:search', { forest_found_ben: true, forest_found_roy: true }, { forest_verses: 1 }, [], '3/4'],
+  ['forest:song', { forest_found_pim: true }, {}, ['l_forest_song'], '1/3'],
+  ['forest:song', { forest_moth: true }, { forest_verses: 2 }, [], '2/3'],
+  ['forest:elder', {}, { forest_verses: 3 }, [], '千年樹'],
+  ['forest:elder', { forest_fine: true, forest_boss: true }, {}, [], '千年樹'],
   ['g_rest', { cleared_r_forest: true, forest_finale_done: true }, {}, [], 'ひと休み'],
   ['g_free', { story_t1: true, world_demo_end: true }, {}, ['l_main_margin_1'], '体験版'],
 ];
 {
   const flags = {}, vars = {}, leads = [];
   let prevN = -1, mono = true;
+  // 段の順（行の n と、森の一歩を後ろの一歩から数えた順）
+  const ORDER = Object.keys(R.DB.goals).sort((x, y) => R.DB.goals[x].n - R.DB.goals[y].n).filter((id) => R.DB.goals[id].n < 90)
+    .concat(R.DB.goalstories.forest.steps.slice().reverse().map((st) => 'forest:' + st.id))
+    .concat(Object.keys(R.DB.goals).sort((x, y) => R.DB.goals[x].n - R.DB.goals[y].n).filter((id) => R.DB.goals[id].n >= 90));
   for (const [want, f, v, l, word] of WALK) {
     Object.assign(flags, f); Object.assign(vars, v); leads.push(...l);
     fresh(flags, vars, leads);
     const g = R.Leads.goal();
-    const n = g && R.DB.goals[g.id] ? R.DB.goals[g.id].n : -1;
+    const n = g ? ORDER.indexOf(g.id) : -1;
     if (n < prevN) mono = false;
     prevN = n;
     ok(`walk ${want} (${Object.keys(f).concat(l).join(',') || 'start'}): non-empty and matches 「${word}」`, !!g && g.id === want && g.text.length > 0 && g.text.includes(word) && !/[{}]/.test(g.text), g);
@@ -71,13 +76,14 @@ const WALK = [
   ok('walk: the stage never goes back while the story advances', mono);
   // 全部の段に 1 回は来た
   const hit = new Set(WALK.map((w) => w[0]));
-  ok('walk: every stage in R.DB.goals is reached', Object.keys(R.DB.goals).every((id) => hit.has(id)), Object.keys(R.DB.goals).filter((id) => !hit.has(id)));
+  ok('walk: every row in R.DB.goals and every forest step is reached', Object.keys(R.DB.goals).concat(R.DB.goalstories.forest.steps.map((st) => 'forest:' + st.id)).every((id) => hit.has(id)),
+    Object.keys(R.DB.goals).concat(R.DB.goalstories.forest.steps.map((st) => 'forest:' + st.id)).filter((id) => !hit.has(id)));
 }
 {
   // フィクスチャのように途中の旗が欠けていても、後ろの段を選ぶ
   fresh({ forest_start: true, forest_gord_talked: true }, {}, ['l_forest_pim']);
   const g = R.Leads.goal();
-  ok('sparse flags (forest only, no prologue flags) → g_search', g && g.id === 'g_search', g);
+  ok('sparse flags (forest only, no prologue flags) → the forest step (Katri / search)', g && /^forest:(katri|search)$/.test(g.id), g);
   fresh({ prologue_done: true, prologue_boss: true }, {}, []);
   ok('menus_party-like state (prologue_done) → g_rumors', R.Leads.goal().id === 'g_rumors');
   const C = R.DB.config;
