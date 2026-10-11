@@ -8,6 +8,10 @@ Search Console data settles ~2-3 days late, so the window ends 3 days ago.
 """
 import datetime as dt, json, sys
 from googleapi import SITES, gsc_query, ga4_report, token
+import re
+
+# Pages excluded from trend comparisons: mononippon's old -travel URLs now 301 to asiavela (moved 2026-10).
+EXCLUDE = {"mononippon": re.compile(r"-travel/")}
 
 
 def window(days, offset):
@@ -31,6 +35,10 @@ def main(sites):
             rep["error"] = pages
             out["sites"][s] = rep
             continue
+        ex = EXCLUDE.get(s)
+        if ex:
+            pages = [r for r in pages if not ex.search(r["keys"][0])]
+            ppages = [r for r in ppages if not ex.search(r["keys"][0])] if isinstance(ppages, list) else ppages
         tot = lambda rows: {"impressions": int(sum(r["impressions"] for r in rows)),
                             "clicks": int(sum(r["clicks"] for r in rows))}
         rep["totals"], rep["totals_prev"] = tot(pages), tot(ppages)
