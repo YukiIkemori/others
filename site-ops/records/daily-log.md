@@ -31,3 +31,4 @@
 - 2026-10-24 07:48 JST: 異常なし(4サイト)。トップ・sitemap・robots・抽出URL 200、表示のあったページの404 0件。GSC(10/21確定): mononippon 399/8(前週同曜日480、-17%。商品系 217→184)、monometri 84/1(前週50)、sukinobi 2、okurinochizu 0(前週6。件数が小さい。トップ・地域・ガイドの抜き取り3件は URL検査で登録済み=インデックス脱落ではない)。4リポジトリとも新規コミットなし。
 - 2026-10-25 07:48 JST: 異常なし(4サイト)。トップ・sitemap・robots・抽出URL 200、表示のあったページの404 0件。GSC(10/22確定): mononippon 343/4(前週同曜日433、-21%。商品系 177→200 で増加)、monometri 82/1(前週65)、sukinobi 2、okurinochizu 2。mononippon リポジトリの新規コミットは asiavela 関連のみ(本体のデプロイなし)、他3リポジトリは新規コミットなし。
 - 2026-10-26 07:48 JST: 異常なし(4サイト)。トップ・sitemap・robots・抽出URL 200、表示のあったページの404 0件。GSC(10/23確定): mononippon 314/9(前週同曜日359、-13%。商品系 161→172)、monometri 67/1(前週76、-12%)、sukinobi 1、okurinochizu 3。4サイトとも本体の新規コミットなし(mononippon は asiavela 関連のみ)。
+- 2026-10-27 07:48 JST: 異常なし(4サイト)。トップ・sitemap・robots・抽出URL 200、表示のあったページの404 0件。GSC(10/24確定): mononippon 342/4(前週同曜日326、+5%。商品系 168→202)、monometri 84/1(前週78)、sukinobi 0、okurinochizu 5。4サイトとも本体の新規コミットなし。
