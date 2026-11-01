@@ -3,6 +3,13 @@
 目的は2つ。(1) 各サイトの検索表示回数（IMP）の最大化、(2) アフィリエイトのCV（最重要KPI）。
 権限: 運営判断は全面委任済み（記事の追加・修正・削除・整理、公開まで）。ただし下記ガードレールを守る。
 
+
+## 対象サイト(2026-11-02 更新)
+- **運用対象は sukinobi・okurinochizu の2サイト。**
+- mononippon・monometri はユーザーの判断で2026-11-02にクローズ。更新・分析・定期チェックの対象外で、触らない。下の記述は過去の記録として残している。
+- asiavela は専用セッションの担当(2026-10-19〜)。
+- okurinochizu は2026-11-01から GitHub Actions(.github/workflows/firebase-hosting.yml、リポジトリのシークレット FIREBASE_SERVICE_ACCOUNT)で、main への push のたびに自動公開される。紹介先(つばさ公益社)から紹介料は受け取っていない(ユーザー確認)ため、紹介リンクに rel=sponsored は付けない。
+
 ## 前提（2026-10 時点）
 - データ取得: `site-ops/tools/`（環境変数 `GOOGLE_SA_JSON` / `GA4_PROPERTY_IDS`。キーはリポジトリに置かない・チャットに貼らない）。
 - mononippon: リポジトリ `YukiIkemori/mononippon`。公開は `ops/firebase-release.json` を main で更新して実行（詳細は同リポジトリの `docs/CONTENT-OPERATIONS.md`）。
