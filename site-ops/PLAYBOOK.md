@@ -76,4 +76,5 @@
 mononippon は同リポジトリの `ops/mononippon-growth/` に、日付付きで残す。monometri / sukinobi は main への push が本番を更新するため、記録だけのコミットを避け、`site-ops/records/` に日付付きMDで、何を見て・何を変えて・何を次に比較するかを残す。
 
 ## 実行環境の注意
+日次のチェックは `python3 site-ops/tools/daily_check.py`(リポジトリ内に保存しているので、コンテナがリセットされても残る)。サイトのクローンが消えていたら、add_repo のあと `git clone --depth 1` で取り直す。
 定期実行は『毎回新規セッション』ではリポジトリにアクセスできないため、運用セッション（persistent）に宛てている。クローンが消えていたら add_repo で再取得し、1つずつクローンする。
