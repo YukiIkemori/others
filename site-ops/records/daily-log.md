@@ -44,3 +44,4 @@
 - 2026-11-02: ユーザー指示で mononippon・monometri をクローズ扱いにし、日次・週次・月次の対象から外した(以後は触らない)。okurinochizu に GitHub Actions の自動公開を導入(9610ca1、ユーザーがシークレット FIREBASE_SERVICE_ACCOUNT を登録)。初回の公開 fa53a75 で月次の修正(樹木葬の記事の中立化・埋葬許可証の呼び方・上田市ナビへのリンク・内部リンク2件)を本番に反映し確認済み。紹介料は受け取っていないため rel=sponsored は付けない。
 - 2026-11-02 07:48 JST: 異常なし(2サイト)。トップ・sitemap・robots・抽出URL 200、表示のあったページの404 0件。GSC: sukinobi 0〜2/日、okurinochizu 0〜5/日(いつもの水準)。Actions: 両サイトとも直近の公開(11/01)が成功、その後の新規コミットなし。
 - 2026-11-03: ユーザー決定で sukinobi・okurinochizu を「育てる運用・攻め」に切り替え(PLAYBOOK 追記、週次・月次の定期実行の指示を更新)。各サイト週2〜3本の新規記事・大きな改善を出す。初回は本日実施。
+- 2026-11-03: ユーザーがサービスアカウントの権限を sukinobi・okurinochizu でフルに変更。両サイトのサイトマップを再送信(204、保留中)。site-ops/tools/submit_sitemap.py を追加。
