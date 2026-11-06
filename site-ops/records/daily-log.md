@@ -58,3 +58,4 @@
 - 2026-11-06 07:48 JST 日次: 2サイト点検異常なし(11/03 に sukinobi 11表示・1クリック、okurinochizu 12表示=これまでで最多)。sukinobi 新記事 /articles/english-lessons-worth-it(7bf29da、途中の一文は decide 節の後)を公開、本番確認・サイトマップ再送信済み。根拠: サジェスト「子供 英会話 意味ない」「小学生 英会話 意味ある」「子供 英会話 週一回 効果/週何回」。画像は既存を流用。
 - 2026-11-06: okurinochizu 新記事 /guides/chief-mourner/(喪主の決め方、da08047、途中の一文は first-decisions 節の後)を公開、本番確認・サイトマップ再送信済み。根拠: サジェスト「喪主 決め方/やること/誰がやる」「施主 喪主 違い」。画像2枚を1回ずつ生成。
 - 2026-11-07 07:48 JST 日次: 2サイト点検異常なし。11/04: sukinobi 5表示・1クリック(fortnite-parental-controls、11/03〜05で計2クリック・約9位)、okurinochizu 11表示・1クリック(初のクリック: /regions/miyota/「北佐久郡御代田町 火葬場」16位)。/regions/annaka/ は11/03の作り直し後 22表示(「家族葬 安中市」「葬式 安中市」20位前後)。地域ページ×施設名・地域名の語が効いている。
+- 2026-11-07: sukinobi 新記事 /articles/switch-parental-controls(d4c360f)を公開、本番確認・サイトマップ再送信済み。根拠: サジェスト「switch みまもり設定 解除/暗証番号 忘れた/2人」「switch 見守り 時間制限」。画像は既存を流用。
