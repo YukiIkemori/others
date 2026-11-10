@@ -105,10 +105,10 @@ const loadImg = src => new Promise((ok, ng) => { const i = new Image(); i.onload
 const pixels = img => { const c = document.createElement('canvas'); c.width = img.width; c.height = img.height; const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(img, 0, 0); return { c, d: x.getImageData(0, 0, c.width, c.height).data }; };
 
 async function load() {
-  const [M, map, sky, geo, nrm, alb, walk, hero, front] = await Promise.all([
-    fetch('map.json').then(r => { if (!r.ok) throw new Error('map.json を読み込めませんでした'); return r.json(); }),
+  const json = f => fetch(f).then(r => { if (!r.ok) throw new Error(f + ' を読み込めませんでした'); return r.json(); });
+  const [M, HS, map, sky, geo, nrm, alb, walk, hero, front] = await Promise.all([json('map.json'), json('hero.json'),
     ...['map.png', 'sky.png', 'geo.png', 'nrm.png', 'alb.png', 'walk.png', 'hero.png', 'front.png'].map(loadImg)]);
-  return { M, map, sky, geo, nrm, alb, walk, hero, front };
+  return { M, HS, map, sky, geo, nrm, alb, walk, hero, front };
 }
 
 function start(A, saved) {
@@ -131,9 +131,8 @@ function start(A, saved) {
   const canStand = (x, y, z) => { const c = cell(x, y); return c >= 0 && WALK[c] === 1 && Math.abs(FLOOR[c] - z) <= M.step + .08; };
   const toScreen = (x, y, z) => [(x - X0) * S, SY0 - (y * SIN + z * COS) * S];
 
-  // hero frames
-  const hp = pixels(A.hero).d, FW = 32, FH = 48, FOOT = 45;
-  const LANT = { 0: [2, 18], 1: [2, 18], 2: [29, 18], 3: [29, 18] }, FPS = 6;   // lantern pixel in each facing's frame; walk speed of the sheet
+  // hero frames: size, foot anchor, speed and the lantern's pixel in every frame all come with the sheet (hero.json)
+  const hp = pixels(A.hero).d, [FW, FH] = A.HS.frame, [AX, FOOT] = A.HS.foot, LANT = A.HS.lantern, FPS = 1000 / A.HS.ms;
   const hero = { x: M.spawn[0], y: M.spawn[1], z: 0, dir: 3, t: 0, moving: false };
   if (saved && saved.hero && canStand(saved.hero.x, saved.hero.y, floorAt(saved.hero.x, saved.hero.y))) Object.assign(hero, saved.hero);
   hero.z = floorAt(hero.x, hero.y);
@@ -263,14 +262,13 @@ function start(A, saved) {
 
     // the hero's lantern
     const flick = RM ? 1 : .93 + .05 * Math.sin(time * 9.1) + .03 * Math.sin(time * 23.7);
-    const bob = 0;
-    const lp = LANT[hero.dir], lox = (lp[0] - 16) / S, lh = (FOOT - lp[1] - bob) / (S * COS);
-    const lx = hero.x + lox * .8, ly = hero.y - .25, lz = hero.z + Math.min(lh, 2.6);
+    const fr = hero.moving ? (Math.floor(hero.t * FPS) + 1) % 4 : 0, row = hero.dir;
+    const lp = LANT[row][fr], lox = (lp[0] - AX) / S, lh = (FOOT - lp[1]) / (S * COS);
+    const lx = hero.x + lox * .8, ly = hero.y - .25, lz = hero.z + Math.min(lh, 3.1);
     lanternLight(cam, lx, ly, lz, 1.55 * flick);
 
     // the hero, hidden pixel by pixel where something stands nearer the camera
-    const fr = hero.moving ? (Math.floor(hero.t * FPS) + 1) % 4 : 0, row = hero.dir;
-    const ox = Math.round(hsx) - 16, oy = Math.round(hsy) - FOOT, sd = sprI.data;
+    const ox = Math.round(hsx) - AX, oy = Math.round(hsy) - FOOT, sd = sprI.data;
     for (let v = 0; v < FH; v++) { const ds = hero.y * COS - (hero.z + (FOOT - v) / (S * COS)) * SIN - .42;
       for (let u = 0; u < FW; u++) { const s = ((row * FH + v) * (FW * 4) + fr * FW + u) * 4, q = (v * FW + u) * 4, a = hp[s + 3];
         if (!a) { sd[q + 3] = 0; continue; }
@@ -285,7 +283,7 @@ function start(A, saved) {
     for (const l of lights) { if (!l.seen) continue; const x = l.sx - cam.x, y = l.sy - cam.y; if (x < -40 || y < -40 || x > VW + 40 || y > VH + 40) continue;
       const sp = GL[l.kind], f = l.kind === 'bell' ? .35 + .25 * Math.sin(time * .9) : (RM ? .8 : .72 + .14 * Math.sin(time * 8 + l.ph) + .1 * Math.sin(time * 19.3 + l.ph * 2));
       ctx.globalAlpha = f; ctx.drawImage(sp, Math.round(x - sp.width / 2), Math.round(y - sp.height / 2)); }
-    ctx.globalAlpha = .8 * flick; ctx.drawImage(GL.hero, ox + lp[0] - 16 - cam.x, oy + lp[1] + 1 + bob - 16 - cam.y);
+    ctx.globalAlpha = .8 * flick; ctx.drawImage(GL.hero, ox + lp[0] - 16 - cam.x, oy + lp[1] - 16 - cam.y);
     // motes and leaves
     ctx.globalAlpha = 1;
     for (const m of motes) { const a = .5 + .5 * Math.sin(time * m.sp * 2 + m.ph); if (a < .35) continue; const wx = m.x + Math.sin(time * m.sp * .4 + m.ph) * 1.2, wz = m.z + Math.sin(time * m.sp * .7 + m.ph * 2) * .4;

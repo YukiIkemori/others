@@ -14,6 +14,7 @@ cd build
 SAMPLES=256 python3 scene.py        # 立体を組む、描き出す、判定を焼く  → work/beauty.png, work/bake.npz, work/meta.json
 python3 sky.py                      # 二つの月の空                      → ../site/sky.png
 python3 post.py                     # 霧、色、ドット絵化、ゲーム用データ → ../site/map.png ほか
+python3 hero_import.py シート.png シート.json   # 主人公の取り込み      → ../site/hero.png, ../site/hero.json
 ```
 
 `scene.py` は環境変数で動きを変えられます。`SAMPLES`（描き出しの丁寧さ）、`QUICK=1`（判定の焼き直しを省く）、
@@ -31,7 +32,7 @@ python3 post.py                     # 霧、色、ドット絵化、ゲーム用
 | `build/bake.py` | 同じ立体に光線を当てて、ゲーム用の情報を取り出します。画素ごとの高さ、面の向き、素の色。地面の格子ごとの「歩けるか」と床の高さ。 |
 | `build/post.py` | 霧、灯のにじみ、黄昏の色合わせ、72色への減色。ゲームが読む画像と `map.json` を書き出します。 |
 | `build/sky.py` | 崖の向こうの空。沈む白い月と昇る黒い月。 |
-| `build/hero.py` | 主人公の仮スプライト（手打ち）。いまの `site/hero.png` は別途生成したものに差し替え済みで、これは予備です。 |
+| `build/hero_import.py` | 主人公のスプライトシートを取り込みます。各コマの灯の位置を測って `site/hero.png` と `site/hero.json` を書き出します。 |
 | `site/index.html` | ゲーム本体。素の JavaScript と canvas だけで動きます。 |
 
 ### カメラの決まり
@@ -49,5 +50,6 @@ python3 post.py                     # 霧、色、ドット絵化、ゲーム用
 
 ### 主人公のスプライト
 
-`site/hero.png` は 128×192。32×48 のコマが横4（立ち、左足、通過、右足）× 縦4（下、左、右、上）。足元は各コマの (16, 45)。
-灯の位置は `index.html` の `LANT` に書いてあります。差し替えるときはここも合わせます。
+`site/hero.png` は横4コマ（立ち、左足、通過、右足）× 縦4コマ（下、左、右、上）。いまの絵は1コマ 48×64、足元は各コマの (24, 60)、1コマ 160 ミリ秒です。
+コマの大きさ、足元の位置、歩く速さ、各コマの灯の位置は `site/hero.json` に入っていて、ゲームはそこから読みます。
+差し替えるときは `python3 build/hero_import.py 新しいシート.png 新しいシート.json` を実行するだけです。
