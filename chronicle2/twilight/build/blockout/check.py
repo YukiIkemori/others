@@ -10,7 +10,9 @@ from PIL import Image
 from scipy import ndimage as ni
 from warp import fit
 STAGE, PAINT, MASK, PTS, REPORT = sys.argv[1:6]
-h = np.load(f'{STAGE}/h_paint.npy'); H, W = h.shape; st = h > 0
+MULTI = os.path.exists(f'{STAGE}/standing_paint.npy')          # multi-level maps: the bake says what stands; nothing is edited, report only
+if MULTI: st = np.load(f'{STAGE}/standing_paint.npy'); H, W = st.shape; h = st.astype(np.uint16) * 100
+else: h = np.load(f'{STAGE}/h_paint.npy'); H, W = h.shape; st = h > 0
 walk = np.array(Image.open(f'{STAGE}/walk.png').convert('L'))
 DX, DY, _ = fit(np.load(PTS), H, W)
 yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
@@ -24,9 +26,18 @@ print('3D objects that are also painted (within 4 px): %.1f %%' % (100 * a))
 print('painted objects that exist in 3D (within 4 px): %.1f %%' % (100 * b))
 lab, n = ni.label(st); idx = np.arange(1, n + 1)
 area = ni.sum(st, lab, idx); cov = ni.sum(ni.binary_dilation(mp, iterations=4) & st, lab, idx) / np.maximum(area, 1); hmax = ni.maximum(h, lab, idx)
-drop = np.zeros(n + 1, bool); drop[1:] = (area >= 120) & (cov < 0.3) & (hmax <= 60)
+drop = np.zeros(n + 1, bool); drop[1:] = (area >= 120) & (cov < 0.3) & ((hmax <= 60) | MULTI)
 dm = drop[lab]
-print('3D props the painter did not draw, removed:', int(drop.sum()), [tuple(int(v) for v in ni.center_of_mass(dm, lab, i)[::-1]) for i in np.nonzero(drop)[0]])
+print('3D props the painter did not draw (removed on single-level maps, listed only on multi-level ones):', int(drop.sum()), [tuple(int(v) for v in ni.center_of_mass(dm, lab, i)[::-1]) for i in np.nonzero(drop)[0]])
+if MULTI:
+    lab3, n3 = ni.label(mp & ~ni.binary_dilation(st, iterations=6) & near); a3 = ni.sum(np.ones_like(lab3), lab3, np.arange(1, n3 + 1))
+    big = [(int(a3[i]), tuple(int(v) for v in ni.center_of_mass(lab3 == i + 1)[::-1])) for i in np.argsort(-a3)[:8] if a3[i] >= 400]
+    print('painted as standing but flat in 3D (largest areas, px and centre):', big)
+    rgb = np.array(Image.open(PAINT).convert('RGB')).astype(float) * 0.6
+    rgb[st & mp] += (0, 70, 0); rgb[st & ~mp] += (130, 0, 0); rgb[mp & ~st] += (0, 0, 140)
+    Image.fromarray(rgb.clip(0, 255).astype('uint8')).save(REPORT, quality=88)
+    json.dump(dict(painted_of_3d=round(float(a), 4), in3d_of_painted=round(float(b), 4), unpainted=int(drop.sum())), open(f'{STAGE}/check.json', 'w'))
+    sys.exit(0)
 h[dm] = 0
 # their footprint becomes walkable only where it is enclosed by walkable ground
 opened = ni.binary_dilation(dm, iterations=2) & (walk == 0) & ni.binary_dilation(walk > 127, iterations=30)

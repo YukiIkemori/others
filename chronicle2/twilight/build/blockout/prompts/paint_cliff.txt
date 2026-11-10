@@ -1,0 +1,22 @@
+Image 1 is a rough BLOCKOUT of a 2D RPG field map, rendered from simple 3D blocks with flat placeholder colours: a ruined abbey on top of a rocky cliff island that rises out of a sea of clouds. Image 2 is a STYLE REFERENCE: a finished map of this same game.
+
+TASK: repaint image 1 as finished background art in exactly the style of image 2: premium high-resolution pixel art in JRPG 3/4 overhead view, crisp deliberate pixel clusters, deep plum-indigo outlines, rich hue-shifted shading (blue-violet shadows, warm peach-gold lights), dense hand-pixelled detail on every stone block, crack, moss patch, grass tuft, root, leaf and flower. Dusk: last warm light from the upper left, long soft shadows, cool violet shade, and every lantern lit, glowing warm amber onto the stone around it.
+
+What the placeholder colours mean:
+- green = grass (dark, lush, with wild flowers); tan = worn pale flagstone paths; light grey flat areas = stone paving (the nave floor, the walk behind the arcade, the lookout plaza)
+- striped pale grey ramps = stone staircases, one tread per stripe, with low side walls and end posts
+- mid grey = weathered masonry: retaining walls of the three terraces, low parapets along every edge, the gatehouse with battlements and its round arch, the roofless nave with its broken walls, door arch, round columns and altar, the arcade with three arches, the square bell tower
+- dark grey-brown below the grass = the natural rock cliff of the island: rugged layered rock with ledges, cracks, hanging roots and ivy
+- slate blue pyramid = the tower's slate spire; dark arch in the tower = belfry opening with a bronze bell; brown arch = its wooden door
+- amber arches in the nave's back wall = glowing stained-glass windows; red strip = a worn crimson carpet
+- small yellow cubes = lit lanterns (wall lanterns beside the gate and doors, lanterns on iron posts at the foot of the stairs and on the plaza)
+- blue oval with a grey ring = a lily pond with a stone rim; orange-red blob on a brown trunk = a red maple; dark green cones = fir trees; bare brown tree = a dead tree
+- small pale blocks and crosses on the lower lawn = headstones, stone crosses and tombs; pale figure on a block at the upper right = a hooded stone statue on a pedestal; brown bars = wooden benches; black bar on the long wall beside the gate = an iron fence
+
+THE GEOMETRY IS LOCKED. Image 1 is the game's collision map, so:
+- Every wall, parapet, arch, column, building, roof, stair, headstone, cross, tomb, bench, lantern, tree, the pond, every path and the outline of every terrace and of the cliff stays at exactly the same position, with the same size, the same outline and the same footprint. Do not move, resize, rotate, add or remove any structure. Do not add walls, terraces, steps, buildings, trees or tall bushes. Do not change the camera or the perspective. Keep every staircase exactly as wide and as long as drawn.
+- Open ground stays open ground: where image 1 shows grass, path or paving, the result shows flat walkable grass, path or paving (low flowers, grass tufts, fallen leaves, pebbles, cracks and moss are welcome, but nothing that stands up).
+- What you may change freely: materials, textures, colours, lighting, weathering, moss and ivy growing ON existing walls and cliffs, leaves of existing trees, the design of the stained glass, carving on existing stones.
+- The flat magenta #FF00FF area is a mask for the sky: keep it flat pure magenta, pixel for pixel, with a hard edge. Paint no sky, clouds, moons or mist.
+
+No characters, no text, no UI, no frame.

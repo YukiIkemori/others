@@ -72,7 +72,7 @@ const MOOD_DEFAULTS = {
 };
 const DEFAULTS = {
   title: '鐘のならない修道院', titleEn: 'The Abbey of the Silent Bell',
-  w: 1920, h: 1080, image: 'map.webp', walk: null, height: null, heightBias: 2,
+  w: 1920, h: 1080, image: 'map.webp', walk: null, height: null, floor: null, heightBias: 2,
   spawn: { x: null, y: null, dir: 'down' },
   hero: { sheet: 'hero.png', spec: 'hero.json', speed: 150, run: 250, radius: 6, shadow: .34, shadowR: null,
           light: { r: 170, color: '#ffb76a', intensity: 1 } },
@@ -96,6 +96,7 @@ let W, wx, TM, tx2, L, lx, G, gx, MI, mx;   // offscreen canvases: world, light 
 let M, HS, A = {};                  // map data, hero spec, assets
 let walkData = null, walkW = 0, walkH = 0, walkK = 1;
 let mapOpaque = true;
+let fData = null, fW = 0, fH = 0, fK = 1;    // floor map (maps with several ground levels): lift of the ground under an actor's feet
 let hData = null, hW = 0, hH = 0, hK = 1;   // height map: how far above its own ground line each map pixel stands
 let scr = null, scx = null, lanternVis = 1;
 const cam = { x: 0, y: 0, lx: 0, ly: 0 };
@@ -261,6 +262,15 @@ async function boot() {
     hW = c.width; hH = c.height; hK = M.w / hW;
     hData = new Uint16Array(hW * hH);
     for (let i = 0; i < hData.length; i++) hData[i] = d[i * 4] + 256 * d[i * 4 + 1];
+  }
+  // floor map, same packing and unit as the height map; only present when the ground has several levels (see README)
+  if (M.floor && hData) {
+    const im = await loadImg(M.floor), c = mk(im.width, im.height), x = c.getContext('2d', { willReadFrequently: true });
+    x.drawImage(im, 0, 0);
+    const d = x.getImageData(0, 0, c.width, c.height).data;
+    fW = c.width; fH = c.height; fK = M.w / fW;
+    fData = new Uint16Array(fW * fH);
+    for (let i = 0; i < fData.length; i++) fData[i] = d[i * 4] + 256 * d[i * 4 + 1];
   }
   // does the map let the sky through?
   {
@@ -652,7 +662,21 @@ function shadow(c, x, y, a, rx) {             // contact shadow in three hard st
   }
   c.globalAlpha = 1;
 }
-// Is the map pixel (x, y) part of something that stands in front of an actor whose feet are at feetY?
+// Lift of the ground at an actor's feet (0 on single-level maps). Looks a few pixels around when the exact pixel has no floor.
+let lastLift = 0;
+function lift(x, y) {
+  if (!fData) return 0;
+  const i0 = Math.floor(x / fK), j0 = Math.floor(y / fK);
+  for (const [a, b] of LIFT_SCAN) {
+    const i = i0 + a, j = j0 + b;
+    if (i < 0 || j < 0 || i >= fW || j >= fH) continue;
+    const v = fData[j * fW + i];
+    if (v) return lastLift = v * fK;
+  }
+  return lastLift;
+}
+const LIFT_SCAN = [[0, 0], [0, -2], [0, 2], [-2, 0], [2, 0], [0, -5], [0, 5], [-5, 0], [5, 0], [-4, -4], [4, -4], [-4, 4], [4, 4]];
+// Is the map pixel (x, y) part of something that stands in front of an actor whose feet are at feetY (lift already added)?
 function hides(x, y, feetY) {
   if (!hData || x < 0 || y < 0) return false;
   const i = Math.floor(x / hK), j = Math.floor(y / hK);
@@ -670,10 +694,11 @@ function drawActor(img, sxp, syp, fw, fh, x, y, foot, sh, shR, ox, oy) {
     wx.drawImage(img, sxp, syp, fw, fh, dx - ox, dy - oy, fw, fh);
     return;
   }
-  // quick look: anything tall at all under this frame?
+  // quick look: anything tall at all under this frame?  (rows below the feet count as the feet row: the ground there never hides)
+  const base = y + lift(x, y);
   let any = false;
   const i0 = Math.max(0, Math.floor(dx / hK)), i1 = Math.min(hW - 1, Math.floor((dx + fw) / hK)), j0 = Math.max(0, Math.floor(dy / hK)), j1 = Math.min(hH - 1, Math.floor((dy + fh) / hK));
-  scan: for (let j = j0; j <= j1; j += 2) for (let i = i0, o = j * hW + i0; i <= i1; i += 2, o += 2) if (hData[o] > 2 && j * hK + hData[o] * hK > y + M.heightBias) { any = true; break scan; }
+  scan: for (let j = j0; j <= j1; j += 2) for (let i = i0, o = j * hW + i0; i <= i1; i += 2, o += 2) if (hData[o] > 2 && Math.min(j * hK, y) + hData[o] * hK > base + M.heightBias) { any = true; break scan; }
   if (!any) {
     shadow(wx, x - ox, y - oy, sh, shR);
     wx.drawImage(img, sxp, syp, fw, fh, dx - ox, dy - oy, fw, fh);
@@ -683,17 +708,18 @@ function drawActor(img, sxp, syp, fw, fh, x, y, foot, sh, shR, ox, oy) {
   scx.clearRect(0, 0, scr.width, scr.height);
   shadow(scx, foot[0], foot[1], sh, shR);
   scx.drawImage(img, sxp, syp, fw, fh, 0, 0, fw, fh);
-  const im = scx.getImageData(0, 0, fw, fh), d = im.data, lim = y + M.heightBias;
+  const im = scx.getImageData(0, 0, fw, fh), d = im.data, lim = base + M.heightBias;
   let nHid = 0, nVis = 0;
   for (let j = 0; j < fh; j++) {
     const my = dy + j; if (my < 0) continue;
     const hj = Math.floor(my / hK); if (hj >= hH) break;
+    const mr = Math.min(my, y);
     for (let i = 0, o = j * fw * 4 + 3; i < fw; i++, o += 4) {
       if (!d[o]) continue;
       const mxp = dx + i; if (mxp < 0) continue;
       const hi = Math.floor(mxp / hK); if (hi >= hW) break;
       const h = hData[hj * hW + hi];
-      if (h > 2 && my + h * hK > lim) { if (d[o] === 255) { if (nHid < hidIdx.length) hidIdx[nHid++] = o; } else d[o] = 0; }
+      if (h > 2 && mr + h * hK > lim) { if (d[o] === 255) { if (nHid < hidIdx.length) hidIdx[nHid++] = o; } else d[o] = 0; }
       else if (d[o] === 255) nVis++;
     }
   }
@@ -802,7 +828,7 @@ function render() {
     ctx.globalAlpha = Math.min(1, a * (l.kind === 'window' ? .45 : .8));
     ctx.drawImage(falloff(l.color, HALO), X(l.x - hr), Y(l.y - hr), hr * 2 * SC, hr * 2 * SC);
   }
-  lanternVis += ((hides(la[0], la[1], hero.y) ? .12 : 1) - lanternVis) * .2;
+  lanternVis += ((hides(la[0], Math.min(la[1], hero.y), hero.y + lift(hero.x, hero.y)) ? .12 : 1) - lanternVis) * .2;
   if (P.heroLight > 0) {
     const col = hexRgb(M.hero.light.color), hr = 34 + 12 * P.glow;
     ctx.globalAlpha = Math.min(1, .5 * P.glow * P.heroLight * lanternVis);
