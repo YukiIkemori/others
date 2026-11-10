@@ -161,7 +161,7 @@ function start(A, saved) {
   const useSheet = k => { if (!SHEETS[k]) return; sheet = k; for (const b of pickBtns) b.setAttribute('aria-pressed', String(b.dataset.sheet === k)); };
   for (const b of pickBtns) b.addEventListener('click', () => { useSheet(b.dataset.sheet); cv.focus({ preventScroll: true }); }, on);
   useSheet(sheet);
-  const hero = { x: M.spawn[0], y: M.spawn[1], z: 0, dir: 3, t: 0, moving: false };
+  const hero = { x: M.spawn[0], y: M.spawn[1], z: 0, dir: 3, dir8: 3, t: 0, moving: false };
   if (saved && saved.hero && canStand(saved.hero.x, saved.hero.y, floorAt(saved.hero.x, saved.hero.y))) Object.assign(hero, saved.hero);
   hero.z = floorAt(hero.x, hero.y);
 
@@ -254,6 +254,8 @@ function start(A, saved) {
   dbgEl.addEventListener('change', () => { legendEl.hidden = !dbgEl.checked; if (dbgEl.checked && !overlay) buildOverlay(); }, on);
   if (dbgEl.checked) buildOverlay();
 
+  const DIR8 = [2, 5, 0, 4, 1, 6, 3, 7];           // sheet row for east, south-east, south, south-west, west, north-west, north, north-east
+  let turnT = 0;
   function step(dt) {
     let vx = 0, vy = 0;
     if (keys.has('l')) vx -= 1; if (keys.has('r')) vx += 1; if (keys.has('u')) vy -= 1; if (keys.has('d')) vy += 1;
@@ -268,8 +270,12 @@ function start(A, saved) {
       else if (dy && canStand(hero.x, hero.y + dy, hero.z)) { hero.y += dy; moved = true; }
       if (!moved && target) target = null;
       hero.dir = Math.abs(vx) > Math.abs(vy) * 1.15 ? (vx < 0 ? 1 : 2) : (vy < 0 ? 3 : 0);
+      // eight ways, for sheets that have the diagonal rows.  Letting go of two keys never happens in the same instant,
+      // so a diagonal is only given up for the straight way next to it after that has lasted a moment.
+      const d8 = DIR8[(Math.round(Math.atan2(vy, vx) / (Math.PI / 4)) + 8) % 8];
+      if (d8 === hero.dir8) turnT = 0; else if (hero.dir8 > 3 && d8 < 4 && (turnT += dt) < .09) {} else { hero.dir8 = d8; turnT = 0; }
       hero.t += dt * (keys.has('run') ? 1.45 : 1); hero.moving = moved;
-    } else hero.t = 0;
+    } else { hero.t = 0; turnT = 0; }
     const fz = floorAt(hero.x, hero.y); hero.z += (fz - hero.z) * Math.min(1, dt * 16);
   }
 
@@ -305,7 +311,7 @@ function start(A, saved) {
     // the hero's lantern
     const flick = RM ? 1 : .93 + .05 * Math.sin(time * 9.1) + .03 * Math.sin(time * 23.7);
     const { hp, FW, FH, AX, FOOT, LANT, FPS, HK, sprC, sprX, sprI, big } = SHEETS[sheet];
-    const fr = hero.moving ? (Math.floor(hero.t * FPS) + 1) % 4 : 0, row = hero.dir;
+    const fr = hero.moving ? (Math.floor(hero.t * FPS) + 1) % 4 : 0, row = LANT.length >= 8 ? hero.dir8 : hero.dir;
     const lp = LANT[row][fr], lox = (lp[0] - AX) * HK / S, lh = (FOOT - lp[1]) * HK / (S * COS);
     const lx = hero.x + lox * .8, ly = hero.y - .25, lz = hero.z + Math.min(lh, 3.1);
     lanternLight(cam, lx, ly, lz, 2.1 * flick);
@@ -370,7 +376,7 @@ function start(A, saved) {
   }
   window.__abbey = { hero, cam, canStand, floorAt, toScreen, keys, M, useSheet };
   requestAnimationFrame(t => { tPrev = t; frame(t); });
-  return { stop() { dead = true; ac.abort(); }, state: () => ({ hero: { x: hero.x, y: hero.y, dir: hero.dir }, sheet }) };
+  return { stop() { dead = true; ac.abort(); }, state: () => ({ hero: { x: hero.x, y: hero.y, dir: hero.dir, dir8: hero.dir8 }, sheet }) };
 }
 
 // ---- which finish is showing; the other one is fetched the first time it is asked for
