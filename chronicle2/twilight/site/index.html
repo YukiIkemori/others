@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>鐘のならない修道院</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Shippori+Mincho:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0b0a1c;
+  --panel: rgba(13, 12, 34, .84);
+  --gold: #d2b274;
+  --gold-soft: rgba(210, 178, 116, .62);
+  --gold-faint: rgba(210, 178, 116, .28);
+  --paper: #f4ecdc;
+  --paper-dim: rgba(244, 236, 220, .68);
+  --serif: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", "Noto Serif JP", serif;
+  --latin: "Cormorant Garamond", "Shippori Mincho", Georgia, serif;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: #07060f; color: var(--paper); font-family: var(--serif);
+  overflow: hidden; overscroll-behavior: none; touch-action: none;
+  -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent;
+}
+#wrap { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+body.portrait #wrap { align-items: flex-start; }
+#stage { position: relative; overflow: hidden; background: var(--ink); font-size: 10px; flex: none; }
+#view { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+#view.px { image-rendering: pixelated; }
+.ui { position: absolute; pointer-events: none; }
+body.noui .ui, body.noui #below { display: none !important; }
+
+/* opening fade */
+#fade { inset: 0; background: #05040c; opacity: 1; transition: opacity 1.8s ease; }
+#fade.off { opacity: 0; }
+#loading { inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.5em; letter-spacing: .5em; color: var(--paper-dim); transition: opacity .6s; }
+#loading.off { opacity: 0; }
+
+/* title card */
+#title { left: 0; right: 0; top: 27%; text-align: center; opacity: 0; transition: opacity 1.6s ease; }
+#title::before { content: ""; position: absolute; left: 12%; right: 12%; top: -70%; bottom: -70%; z-index: -1;
+  background: radial-gradient(ellipse at center, rgba(6, 5, 16, .8) 0%, rgba(6, 5, 16, .55) 40%, rgba(6, 5, 16, 0) 70%); }
+#title.on { opacity: 1; }
+#title .en { font-family: var(--latin); font-size: 1.55em; font-weight: 600; letter-spacing: .46em; margin-right: -.46em; color: #e6c98e; text-transform: uppercase; text-shadow: 0 0 .6em rgba(6, 5, 16, 1), 0 1px 2px rgba(0, 0, 0, .9); }
+#title .jp { font-size: 5.4em; font-weight: 500; letter-spacing: .34em; margin-right: -.34em; line-height: 1.5; text-shadow: 0 0 .5em rgba(10, 6, 30, .9), 0 .05em .1em rgba(0, 0, 0, .7); }
+#title .rule { height: 1px; width: 34em; margin: .9em auto 1.2em; background: linear-gradient(90deg, transparent, var(--gold) 18%, var(--gold) 82%, transparent); transform: scaleX(0); transition: transform 2.2s cubic-bezier(.2, .7, .2, 1) .4s; position: relative; }
+#title .rule::after { content: ""; position: absolute; left: 50%; top: 50%; width: .7em; height: .7em; border: 1px solid var(--gold); background: var(--ink); transform: translate(-50%, -50%) rotate(45deg); }
+#title.on .rule { transform: scaleX(1); }
+#title .sub { font-size: 1.75em; letter-spacing: .7em; margin-right: -.7em; color: rgba(244, 236, 220, .9); text-shadow: 0 0 .6em rgba(6, 5, 16, 1), 0 1px 2px rgba(0, 0, 0, .9); }
+
+/* moon indicator */
+#moon { left: 2.4em; top: 2.2em; display: flex; align-items: center; gap: 1.2em; pointer-events: auto; cursor: pointer;
+  background: none; border: 0; padding: .6em .8em; color: inherit; font: inherit; opacity: 0; transition: opacity 1.2s; }
+#moon.on { opacity: 1; }
+#moon .discs { position: relative; width: 5.6em; height: 3.4em; }
+#moon .disc { position: absolute; top: 50%; width: 2.7em; height: 2.7em; border-radius: 50%; transition: transform 2.4s ease, opacity 2.4s ease, box-shadow 2.4s ease, filter 2.4s ease; }
+#moon .g { left: 0; margin-top: -1.35em; background: radial-gradient(circle at 36% 34%, #fff6d8 0%, #f6d892 46%, #d9a04f 100%); box-shadow: 0 0 1.4em .2em rgba(255, 206, 128, .65); }
+#moon .s { left: 2.6em; margin-top: -1.35em; background: radial-gradient(circle at 60% 60%, #2a1f52 0%, #100c26 70%); box-shadow: inset 0 0 0 1px #b9a0f2, 0 0 .2em 0 rgba(170, 140, 255, .3); transform: scale(.72); opacity: .62; }
+#moon.shadow .g { transform: scale(.72); opacity: .5; box-shadow: 0 0 .3em 0 rgba(255, 206, 128, .25); filter: saturate(.6); }
+#moon.shadow .s { transform: scale(1); opacity: 1; box-shadow: inset 0 0 0 1px #d6c4ff, 0 0 1.5em .25em rgba(150, 130, 255, .7); }
+#moon .label { text-align: left; }
+#moon .name { font-size: 1.6em; letter-spacing: .42em; text-shadow: 0 0 .6em rgba(8, 6, 24, .95), 0 1px 2px rgba(0, 0, 0, .8); }
+#moon .line { height: 1px; margin-top: .5em; background: linear-gradient(90deg, var(--gold-soft), transparent); }
+
+/* controls hint */
+#hint { left: 0; right: 0; bottom: 2.2em; text-align: center; font-size: 1.3em; letter-spacing: .22em; color: var(--paper-dim); opacity: 0; transition: opacity 1.4s; text-shadow: 0 0 .5em rgba(8, 6, 24, 1), 0 1px 2px rgba(0, 0, 0, .9); }
+#hint.on { opacity: 1; }
+#hint b { font-family: var(--latin); font-weight: 600; font-size: 1.05em; letter-spacing: .1em; color: var(--gold); border: 1px solid var(--gold-faint); border-radius: .25em; padding: .05em .5em .1em; margin: 0 .35em 0 1.6em; background: rgba(13, 12, 34, .55); }
+#hint b:first-child { margin-left: 0; }
+
+/* interaction prompt */
+#prompt { left: 0; top: 0; pointer-events: auto; cursor: pointer; white-space: nowrap; opacity: 0; transition: opacity .25s;
+  transform: translate(-50%, -100%); padding: .45em 1.1em .5em; font-size: 1.45em; letter-spacing: .2em;
+  background: var(--panel); border: 1px solid var(--gold-soft); border-radius: 2em; box-shadow: 0 .2em .9em rgba(0, 0, 0, .45); }
+#prompt.on { opacity: 1; }
+#prompt i { font-style: normal; color: var(--gold); margin-right: .55em; font-size: .7em; vertical-align: .15em; }
+#prompt b { font-family: var(--latin); font-weight: 600; color: var(--gold); margin-left: .8em; letter-spacing: .05em; border: 1px solid var(--gold-faint); border-radius: .25em; padding: 0 .4em; font-size: .85em; }
+
+/* dialogue */
+.dialog { pointer-events: auto; cursor: pointer; opacity: 0; transform: translateY(.8em); transition: opacity .28s ease, transform .28s ease; visibility: hidden; }
+.dialog.on { opacity: 1; transform: none; visibility: visible; }
+#dialog { left: 50%; bottom: 3.2em; width: 66em; margin-left: -33em; }
+.dialog .box { position: relative; min-height: 13.2em; padding: 2.5em 3.4em 2.3em; background: linear-gradient(180deg, rgba(20, 17, 48, .9), rgba(10, 9, 28, .9));
+  box-shadow: 0 0 0 1px rgba(8, 7, 20, .9), inset 0 0 0 1px rgba(8, 7, 20, .6), inset 0 0 0 2px var(--gold-soft), 0 .8em 2.4em rgba(0, 0, 0, .5); border-radius: 2px; }
+.dialog .box::before, .dialog .box::after { content: ""; position: absolute; width: .9em; height: .9em; border: 1px solid var(--gold); top: .55em; }
+.dialog .box::before { left: .55em; border-right: 0; border-bottom: 0; }
+.dialog .box::after { right: .55em; border-left: 0; border-bottom: 0; }
+.dialog .who { position: absolute; left: 2.6em; top: -1.05em; padding: .25em 1.4em .35em; font-size: 1.45em; letter-spacing: .32em; color: var(--gold);
+  background: #100e2a; box-shadow: inset 0 0 0 1px var(--gold-soft); }
+.dialog .text { font-size: 2.15em; line-height: 1.85; letter-spacing: .12em; white-space: pre-wrap; text-shadow: 0 1px 0 rgba(0, 0, 0, .6); }
+.dialog .text .rest { visibility: hidden; }
+.dialog .next { position: absolute; right: 2em; bottom: 1.1em; color: var(--gold); font-size: 1.2em; opacity: 0; }
+.dialog.done .next { opacity: 1; animation: bob 1.1s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(.35em); opacity: .55; } }
+
+/* touch stick */
+#stick { left: 0; top: 0; width: 13em; height: 13em; margin: -6.5em 0 0 -6.5em; border-radius: 50%; border: 1px solid rgba(244, 236, 220, .32); background: radial-gradient(circle, rgba(244, 236, 220, .05), rgba(244, 236, 220, .0) 70%); opacity: 0; transition: opacity .2s; position: fixed; z-index: 5; pointer-events: none; }
+#stick.on { opacity: 1; }
+#stick i { position: absolute; left: 50%; top: 50%; width: 4.4em; height: 4.4em; margin: -2.2em 0 0 -2.2em; border-radius: 50%; background: rgba(244, 236, 220, .2); border: 1px solid rgba(210, 178, 116, .6); }
+
+/* portrait phone: dialogue and help live under the picture */
+#below { display: none; position: fixed; left: 0; right: 0; padding: 14px 16px; font-size: 6.6px; }
+body.portrait #below { display: block; }
+body.portrait #dialog { display: none; }
+body.portrait #hint { display: none; }
+#below .dialog { position: relative; }
+#below .tip { margin-top: 16px; font-size: 13px; line-height: 2; letter-spacing: .14em; color: var(--paper-dim); text-align: center; }
+#below .tip b { color: var(--gold); font-weight: 500; }
+#below .tip span { font-size: 11px; opacity: .7; }
+#err { position: fixed; left: 12px; right: 12px; bottom: 12px; font: 12px/1.5 monospace; color: #ffb4a8; white-space: pre-wrap; z-index: 9; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="stage">
+    <canvas id="view" width="1920" height="1080"></canvas>
+    <button class="ui" id="moon" aria-label="月を替える"><span class="discs"><span class="disc g"></span><span class="disc s"></span></span><span class="label"><span class="name" id="moonName"></span><div class="line"></div></span></button>
+    <div class="ui" id="prompt"><i>◆</i><span id="promptText">調べる</span><b id="promptKey">Z</b></div>
+    <div class="ui" id="hint"></div>
+    <div class="ui dialog" id="dialog"><div class="box"><div class="who"></div><div class="text"><span class="shown"></span><span class="rest"></span></div><div class="next">▼</div></div></div>
+    <div class="ui" id="fade"></div>
+    <div class="ui" id="title"><div class="en" id="titleEn"></div><div class="jp" id="titleJp"></div><div class="rule"></div><div class="sub" id="titleSub"></div></div>
+    <div class="ui" id="loading">・・・</div>
+  </div>
+</div>
+<div id="below">
+  <div class="dialog" id="dialogB"><div class="box"><div class="who"></div><div class="text"><span class="shown"></span><span class="rest"></span></div><div class="next">▼</div></div></div>
+  <div class="tip" id="tipB"></div>
+</div>
+<div id="stick"><i></i></div>
+<div id="err"></div>
+<script src="game.js"></script>
+</body>
+</html>

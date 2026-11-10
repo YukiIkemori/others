@@ -1,0 +1,441 @@
+{
+ "placeholder": true,
+ "title": "鐘のならない修道院",
+ "w": 1920,
+ "h": 2048,
+ "image": "map_placeholder.webp",
+ "walk": "walk_placeholder.png",
+ "height": "height_placeholder.png",
+ "spawn": {
+  "x": 960,
+  "y": 1830,
+  "dir": "up"
+ },
+ "occluders": [
+  {
+   "poly": [
+    [
+     905,
+     1560
+    ],
+    [
+     1010,
+     1560
+    ],
+    [
+     1045,
+     1620
+    ],
+    [
+     1045,
+     1700
+    ],
+    [
+     1015,
+     1700
+    ],
+    [
+     1015,
+     1650
+    ],
+    [
+     985,
+     1615
+    ],
+    [
+     935,
+     1615
+    ],
+    [
+     905,
+     1650
+    ],
+    [
+     905,
+     1700
+    ],
+    [
+     880,
+     1700
+    ],
+    [
+     880,
+     1620
+    ]
+   ],
+   "base": 1700
+  }
+ ],
+ "lights": [
+  {
+   "kind": "lantern",
+   "x": 960,
+   "y": 1626,
+   "gx": 960,
+   "gy": 1700,
+   "r": 180,
+   "color": "#ffb060",
+   "intensity": 1,
+   "flicker": 0.16
+  },
+  {
+   "kind": "lantern",
+   "x": 1106,
+   "y": 1555,
+   "r": 76,
+   "color": "#ffc070",
+   "intensity": 0.7,
+   "flicker": 0.3
+  },
+  {
+   "kind": "lantern",
+   "x": 1114,
+   "y": 1553,
+   "r": 61,
+   "color": "#ffc070",
+   "intensity": 0.7,
+   "flicker": 0.3
+  },
+  {
+   "kind": "lantern",
+   "x": 910,
+   "y": 587,
+   "r": 61,
+   "color": "#ffc070",
+   "intensity": 0.7,
+   "flicker": 0.3
+  },
+  {
+   "kind": "lantern",
+   "x": 934,
+   "y": 588,
+   "r": 101,
+   "color": "#ffc070",
+   "intensity": 0.7,
+   "flicker": 0.3
+  },
+  {
+   "kind": "lantern",
+   "x": 986,
+   "y": 586,
+   "r": 101,
+   "color": "#ffc070",
+   "intensity": 0.7,
+   "flicker": 0.3
+  },
+  {
+   "kind": "lantern",
+   "x": 1010,
+   "y": 586,
+   "r": 61,
+   "color": "#ffc070",
+   "intensity": 0.7,
+   "flicker": 0.3
+  },
+  {
+   "kind": "lantern",
+   "x": 822,
+   "y": 614,
+   "r": 61,
+   "color": "#ffc070",
+   "intensity": 0.7,
+   "flicker": 0.3
+  },
+  {
+   "kind": "lantern",
+   "x": 835,
+   "y": 612,
+   "r": 118,
+   "color": "#ffc070",
+   "intensity": 0.7,
+   "flicker": 0.3
+  },
+  {
+   "kind": "lantern",
+   "x": 848,
+   "y": 614,
+   "r": 61,
+   "color": "#ffc070",
+   "intensity": 0.7,
+   "flicker": 0.3
+  },
+  {
+   "kind": "lantern",
+   "x": 1072,
+   "y": 614,
+   "r": 61,
+   "color": "#ffc070",
+   "intensity": 0.7,
+   "flicker": 0.3
+  },
+  {
+   "kind": "lantern",
+   "x": 1085,
+   "y": 612,
+   "r": 118,
+   "color": "#ffc070",
+   "intensity": 0.7,
+   "flicker": 0.3
+  },
+  {
+   "kind": "lantern",
+   "x": 1098,
+   "y": 614,
+   "r": 61,
+   "color": "#ffc070",
+   "intensity": 0.7,
+   "flicker": 0.3
+  },
+  {
+   "kind": "lantern",
+   "x": 882,
+   "y": 1186,
+   "gx": 882,
+   "gy": 1245,
+   "r": 147,
+   "color": "#ffb060",
+   "intensity": 1,
+   "flicker": 0.16
+  },
+  {
+   "kind": "lantern",
+   "x": 1038,
+   "y": 1186,
+   "gx": 1038,
+   "gy": 1245,
+   "r": 147,
+   "color": "#ffb060",
+   "intensity": 1,
+   "flicker": 0.16
+  },
+  {
+   "kind": "window",
+   "x": 493,
+   "y": 356,
+   "r": 128,
+   "color": "#8fe6d6",
+   "intensity": 0.6,
+   "flicker": 0.04
+  },
+  {
+   "kind": "lantern",
+   "x": 557,
+   "y": 683,
+   "gx": 557,
+   "gy": 742,
+   "r": 140,
+   "color": "#ffb060",
+   "intensity": 1,
+   "flicker": 0.16
+  },
+  {
+   "kind": "lantern",
+   "x": 1757,
+   "y": 443,
+   "gx": 1757,
+   "gy": 485,
+   "r": 147,
+   "color": "#ffb060",
+   "intensity": 1,
+   "flicker": 0.16
+  },
+  {
+   "kind": "moon",
+   "layer": "sky",
+   "x": 300,
+   "y": 250,
+   "r": 260,
+   "color": "#ffd9a0",
+   "intensity": 0.7
+  },
+  {
+   "kind": "moon",
+   "layer": "sky",
+   "x": 800,
+   "y": 170,
+   "r": 150,
+   "color": "#c890ff",
+   "intensity": 0.5
+  }
+ ],
+ "water": [
+  {
+   "poly": [
+    [
+     436,
+     990
+    ],
+    [
+     430,
+     1014
+    ],
+    [
+     411,
+     1034
+    ],
+    [
+     384,
+     1047
+    ],
+    [
+     352,
+     1052
+    ],
+    [
+     320,
+     1047
+    ],
+    [
+     293,
+     1034
+    ],
+    [
+     274,
+     1014
+    ],
+    [
+     268,
+     990
+    ],
+    [
+     274,
+     966
+    ],
+    [
+     293,
+     946
+    ],
+    [
+     320,
+     933
+    ],
+    [
+     352,
+     928
+    ],
+    [
+     384,
+     933
+    ],
+    [
+     411,
+     946
+    ],
+    [
+     430,
+     966
+    ]
+   ]
+  }
+ ],
+ "triggers": [
+  {
+   "x": 493,
+   "y": 765,
+   "r": 46,
+   "title": "鐘楼の扉",
+   "label": "調べる",
+   "text": [
+    "扉は内側から閂がかけられている。",
+    "見上げると、青銅の鐘が\n音もなく夕闇に揺れていた。"
+   ]
+  },
+  {
+   "x": 1546,
+   "y": 496,
+   "r": 70,
+   "title": "見晴らし台",
+   "label": "月を眺める",
+   "pan": [
+    0,
+    -260
+   ],
+   "text": [
+    "金の月が沈み、影の月が昇る。",
+    "……鐘は、今夜も鳴らない。"
+   ],
+   "action": "mood"
+  },
+  {
+   "x": 960,
+   "y": 1971,
+   "r": 50,
+   "title": "ふもとへの石段",
+   "label": "見下ろす",
+   "text": [
+    "石段は深い森の底へ続いている。\nいまは、まだ戻れない。"
+   ]
+  }
+ ],
+ "emitters": [
+  {
+   "kind": "leaves",
+   "x": 40,
+   "y": 640,
+   "w": 300,
+   "h": 330,
+   "n": 14
+  },
+  {
+   "kind": "fireflies",
+   "x": 120,
+   "y": 1150,
+   "w": 1650,
+   "h": 520,
+   "n": 26
+  },
+  {
+   "kind": "fireflies",
+   "x": 1380,
+   "y": 560,
+   "w": 420,
+   "h": 520,
+   "n": 10
+  },
+  {
+   "kind": "mist",
+   "x": 60,
+   "y": 1100,
+   "w": 1800,
+   "h": 620,
+   "n": 9
+  },
+  {
+   "kind": "motes",
+   "x": 780,
+   "y": 560,
+   "w": 440,
+   "h": 620,
+   "n": 24
+  }
+ ],
+ "layers": {
+  "sky": {
+   "src": "sky_placeholder.webp",
+   "parallax": 0.08,
+   "x": -30,
+   "y": -10
+  },
+  "far": {
+   "src": "far_placeholder.webp",
+   "parallax": 0.2,
+   "x": -80,
+   "y": 250
+  },
+  "clouds": {
+   "src": "clouds_placeholder.webp",
+   "parallax": 0.12,
+   "y": 120,
+   "drift": 5,
+   "alpha": 0.8
+  },
+  "fg": {
+   "src": "fg_placeholder.webp",
+   "parallax": 1.25,
+   "anchorX": "center",
+   "anchorY": "bottom",
+   "y": 60,
+   "alpha": 0.92
+  }
+ }
+}
