@@ -1,0 +1,326 @@
+<title>鐘のならない修道院</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Shippori+Mincho:wght@500;600&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap">
+<style>
+/* 画面が主役。上に題、下に操作と作り方。月替わりの黄昏なので暗い一色に決め打ち。 */
+:root{
+  --ink:#14111d; --ink-2:#1d1929; --bone:#e7dfd2; --mist:#9a90a6; --line:#342c40; --amber:#ecc79a; --rose:#c98f92; --teal:#8fe6d6;
+  --f-d:'Shippori Mincho','Hiragino Mincho ProN','Yu Mincho',serif;
+  --f-b:'Zen Kaku Gothic New','Hiragino Sans','Yu Gothic',sans-serif;
+  --f-px:'DotGothic16','Zen Kaku Gothic New','Hiragino Sans',monospace;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+body{background:var(--ink);color:var(--bone);font-family:var(--f-b);font-size:15px;line-height:1.85}
+.wrap{max-width:1200px;margin:0 auto;padding-block:36px 64px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:22px}
+.top{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 22px}
+.eyebrow{margin:0;font-size:12px;letter-spacing:.2em;color:var(--mist);flex-basis:100%}
+h1{margin:0;font-family:var(--f-d);font-weight:600;font-size:clamp(26px,4vw,40px);line-height:1.25;letter-spacing:.1em;text-wrap:balance}
+.lead{margin:0;color:var(--mist);font-size:14px}
+.stage{position:relative;margin:0;background:#0c0a12;outline:1px solid var(--line);overflow:hidden;container-type:inline-size;touch-action:none;user-select:none;-webkit-user-select:none}
+.stage canvas{display:block;width:100%;height:auto;aspect-ratio:16/9;cursor:crosshair}
+.stage canvas.exact{image-rendering:pixelated}
+.stage canvas:focus-visible{outline:2px solid var(--amber);outline-offset:-2px}
+.hud{position:absolute;inset:0;pointer-events:none;font-family:var(--f-px);color:#f4ecdf;text-shadow:0 .25cqw 0 rgba(12,8,20,.85)}
+.loc{position:absolute;left:3cqw;top:2.6cqw;display:flex;flex-direction:column;gap:.5cqw;transition:opacity 1.2s}
+.place{font-size:clamp(12px,2.5cqw,30px);letter-spacing:.16em;line-height:1.2}
+.sub{font-size:clamp(9px,1.3cqw,16px);letter-spacing:.3em;color:var(--amber);display:flex;align-items:center;gap:1.2cqw}
+.moons{display:inline-flex;gap:.6cqw}
+.moons i{width:1.3cqw;height:1.3cqw;min-width:7px;min-height:7px;border-radius:50%;box-sizing:border-box}
+.moons .w{background:#f6ead0}
+.moons .b{background:#0d0a18;border:1px solid #b9a4ff}
+.prompt{position:absolute;left:50%;bottom:4cqw;transform:translateX(-50%);font-size:clamp(11px,1.7cqw,20px);letter-spacing:.1em;
+  padding:.5em 1.3em;background:rgba(16,12,26,.78);border:1px solid rgba(236,199,154,.55);white-space:nowrap;max-width:92%}
+.loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--mist);font-family:var(--f-px);font-size:14px;letter-spacing:.2em}
+.bar{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center;justify-content:space-between}
+.keys{margin:0;color:var(--mist);font-size:13px}
+.keys b{color:var(--bone);font-weight:500}
+.toggle{display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;user-select:none}
+.toggle input{width:18px;height:18px;accent-color:var(--teal);margin:0}
+.toggle input:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--mist);margin:0}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;margin-right:7px;background:var(--c);vertical-align:-1px}
+.dpad{display:none;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(2,48px);gap:6px;justify-content:center}
+@media (hover:none) and (pointer:coarse){.dpad{display:grid}}
+.dpad.on{display:grid}
+.dpad button{background:var(--ink-2);color:var(--bone);border:1px solid var(--line);font-size:18px;touch-action:none;font-family:var(--f-b)}
+.dpad button:active{background:#2a2438}
+.dpad .u{grid-column:2;grid-row:1}.dpad .l{grid-column:1;grid-row:2}.dpad .d{grid-column:2;grid-row:2}.dpad .r{grid-column:3;grid-row:2}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 36px;border-top:1px solid var(--line);padding-top:24px}
+.how > div{min-width:0}
+.how h2{margin:0 0 6px;font-family:var(--f-d);font-weight:600;font-size:18px;letter-spacing:.08em}
+.how p{margin:0;color:var(--mist);font-size:14px}
+.how b{color:var(--bone);font-weight:500}
+@media (max-width:760px){.how{grid-template-columns:minmax(0,1fr)}.wrap{padding-block:24px 48px}}
+</style>
+
+<main class="wrap">
+  <header class="top">
+    <p class="eyebrow">ルミナス・クロニクル 続編　フィールド試作</p>
+    <h1>鐘のならない修道院</h1>
+    <p class="lead">Blenderで組んだ立体を一枚の絵に描き出し、ドット絵の主人公を歩かせています。</p>
+  </header>
+
+  <figure class="stage" id="stage">
+    <canvas id="cv" width="960" height="540" tabindex="0" aria-label="丘の上の修道院のフィールド。矢印キーかタップで主人公を動かせます"></canvas>
+    <div class="hud">
+      <div class="loc" id="loc"><span class="place">鐘のならない修道院</span><span class="sub"><span class="moons"><i class="w"></i><i class="b"></i></span>月替わりの刻</span></div>
+      <div class="prompt" id="prompt" hidden></div>
+    </div>
+    <div class="loading" id="loading">読み込み中…</div>
+  </figure>
+
+  <div class="dpad" aria-label="移動ボタン">
+    <button class="u" data-k="u" aria-label="上へ">▲</button><button class="l" data-k="l" aria-label="左へ">◀</button>
+    <button class="d" data-k="d" aria-label="下へ">▼</button><button class="r" data-k="r" aria-label="右へ">▶</button>
+  </div>
+
+  <div class="bar">
+    <p class="keys"><b>矢印キー / WASD</b>で移動、<b>Shift</b>で早足。画面をクリックかタップすると、その場所へ歩きます。</p>
+    <label class="toggle" for="dbg"><input type="checkbox" id="dbg">判定を重ねて見る</label>
+  </div>
+  <p class="legend" id="legend" hidden><span style="--c:#58dcc8">歩ける床</span><span style="--c:#ffaa3c">主人公より手前に来る部分</span><span style="--c:#ff6fae">出入口と見どころ</span></p>
+
+  <section class="how">
+    <div><h2>背景は立体から</h2><p>石段、墓地、身廊、鐘楼、回廊の泉までを<b>Blenderの中で立体として組み</b>、斜め上の固定カメラから一枚に描き出しました。沈む白い月の光と、昇る黒い月の光を当てています。</p></div>
+    <div><h2>判定は自動</h2><p>歩ける床、柱やアーチの<b>後ろに回ると隠れる前後関係</b>、出入口の位置は、同じ立体から自動で取り出しています。絵と判定がずれません。</p></div>
+    <div><h2>主人公の灯</h2><p>杖の灯は、立体の向きを覚えているので、<b>近づいた壁や墓石を本当に照らします</b>。主人公だけは、設定どおり影を落としません。</p></div>
+  </section>
+</main>
+
+<script>
+(() => {
+'use strict';
+const VW = 480, VH = 270;
+const cv = document.getElementById('cv'), out = cv.getContext('2d');
+const view = document.createElement('canvas'); view.width = VW; view.height = VH;
+const ctx = view.getContext('2d');
+const promptEl = document.getElementById('prompt'), dbgEl = document.getElementById('dbg'), legendEl = document.getElementById('legend');
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map(v => (v + 0.5) / 16);
+
+const loadImg = src => new Promise((ok, ng) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ng(new Error(src + ' を読み込めませんでした')); i.src = src; });
+const pixels = img => { const c = document.createElement('canvas'); c.width = img.width; c.height = img.height; const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(img, 0, 0); return { c, d: x.getImageData(0, 0, c.width, c.height).data }; };
+
+async function load() {
+  const [M, map, sky, geo, nrm, alb, walk, hero, front] = await Promise.all([
+    fetch('map.json').then(r => { if (!r.ok) throw new Error('map.json を読み込めませんでした'); return r.json(); }),
+    ...['map.png', 'sky.png', 'geo.png', 'nrm.png', 'alb.png', 'walk.png', 'hero.png', 'front.png'].map(loadImg)]);
+  return { M, map, sky, geo, nrm, alb, walk, hero, front };
+}
+
+function start(A, saved) {
+  const M = A.M, W = M.w, H = M.h, S = M.scale, SIN = M.sin, COS = M.cos, X0 = M.x0, SY0 = M.sy0;
+  const mapP = pixels(A.map), mapPix = mapP.d, mapC = mapP.c;
+  // per pixel: height, depth along the camera, kind
+  const g = pixels(A.geo).d, N = pixels(A.nrm).d, AL = pixels(A.alb).d;
+  const Z = new Float32Array(W * H), D = new Float32Array(W * H), K = new Uint8Array(W * H);
+  for (let j = 0, p = 0; j < H; j++) for (let i = 0; i < W; i++, p++) {
+    const k = Math.round(g[p * 4 + 2] / 40); K[p] = k;
+    if (!k) { D[p] = 1e9; continue; }
+    const z = (g[p * 4] * 256 + g[p * 4 + 1]) / 65535 * (M.zmax - M.zmin) + M.zmin; Z[p] = z;
+    const y = ((SY0 - (j + .5)) / S - z * COS) / SIN; D[p] = y * COS - z * SIN;
+  }
+  // ground grid
+  const G = M.grid, wk = pixels(A.walk).d, WALK = new Uint8Array(G.nx * G.ny), FLOOR = new Float32Array(G.nx * G.ny);
+  for (let p = 0; p < G.nx * G.ny; p++) { WALK[p] = wk[p * 4] > 127 ? 1 : 0; FLOOR[p] = (wk[p * 4 + 1] * 256 + wk[p * 4 + 2]) / 65535 * (M.fmax - M.fmin) + M.fmin; }
+  const cell = (x, y) => { const i = Math.floor((x - G.x0) / G.cell), j = Math.floor((G.y1 - y) / G.cell); return (i < 0 || j < 0 || i >= G.nx || j >= G.ny) ? -1 : j * G.nx + i; };
+  const floorAt = (x, y) => { const c = cell(x, y); return c < 0 ? 0 : FLOOR[c]; };
+  const canStand = (x, y, z) => { const c = cell(x, y); return c >= 0 && WALK[c] === 1 && Math.abs(FLOOR[c] - z) <= M.step + .08; };
+  const toScreen = (x, y, z) => [(x - X0) * S, SY0 - (y * SIN + z * COS) * S];
+
+  // hero frames
+  const hp = pixels(A.hero).d, FW = 32, FH = 48, FOOT = 45;
+  const LANT = { 0: [2, 18], 1: [2, 18], 2: [29, 18], 3: [29, 18] }, FPS = 6;   // lantern pixel in each facing's frame; walk speed of the sheet
+  const hero = { x: M.spawn[0], y: M.spawn[1], z: 0, dir: 3, t: 0, moving: false };
+  if (saved && saved.hero && canStand(saved.hero.x, saved.hero.y, floorAt(saved.hero.x, saved.hero.y))) Object.assign(hero, saved.hero);
+  hero.z = floorAt(hero.x, hero.y);
+  const sprC = document.createElement('canvas'); sprC.width = FW; sprC.height = FH; const sprX = sprC.getContext('2d'); const sprI = sprX.createImageData(FW, FH);
+
+  // lights that are in plain sight get a living glow
+  const lights = M.lights.map((l, n) => { const p = Math.min(H - 1, Math.max(0, Math.round(l.sy))) * W + Math.min(W - 1, Math.max(0, Math.round(l.sx))); return { ...l, seen: D[p] > l.y * COS - l.z * SIN - 1.2, ph: n * 1.7 }; });
+  const glowSprite = (r, col) => { const c = document.createElement('canvas'); c.width = c.height = r * 2; const x = c.getContext('2d'); const gr = x.createRadialGradient(r, r, 0, r, r, r); gr.addColorStop(0, col + 'cc'); gr.addColorStop(.25, col + '55'); gr.addColorStop(1, col + '00'); x.fillStyle = gr; x.fillRect(0, 0, r * 2, r * 2); return c; };
+  const GL = { lantern: glowSprite(26, '#ffb060'), candle: glowSprite(12, '#ffc878'), bell: glowSprite(34, '#8fe6d6'), hero: glowSprite(16, '#ffc070') };
+
+  // mist: two drifting layers, kept to the low ground by a mask made from the height of every pixel
+  const noiseTile = seed => { const n = 256, c = document.createElement('canvas'); c.width = c.height = n; const x = c.getContext('2d'), im = x.createImageData(n, n);
+    const h = (a, b) => { const v = Math.sin(a * 127.1 + b * 311.7 + seed * 74.7) * 43758.5453; return v - Math.floor(v); };
+    const vn = (u, v, per) => { const xi = Math.floor(u), yi = Math.floor(v); let fx = u - xi, fy = v - yi; fx = fx * fx * (3 - 2 * fx); fy = fy * fy * (3 - 2 * fy);
+      const a = h(xi % per, yi % per), b = h((xi + 1) % per, yi % per), c2 = h(xi % per, (yi + 1) % per), d = h((xi + 1) % per, (yi + 1) % per); return a + (b - a) * fx + (c2 - a + (a - b - c2 + d) * fx) * fy; };
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const v = .6 * vn(i / 64, j / 32, 4) + .28 * vn(i / 32, j / 16, 8) + .12 * vn(i / 12, j / 8, 16); let a = (v - .42) / .3; a = a < 0 ? 0 : a > 1 ? 1 : a; a = a * a * (3 - 2 * a);
+      const q = (Math.floor(a * 5 + BAYER[(j & 3) * 4 + (i & 3)]) / 5); const p = (j * n + i) * 4; im.data[p] = 176; im.data[p + 1] = 150; im.data[p + 2] = 184; im.data[p + 3] = q * 255; }
+    x.putImageData(im, 0, 0); return c; };
+  const fogA = noiseTile(3), fogB = noiseTile(9);
+  const fogMask = document.createElement('canvas'); fogMask.width = W; fogMask.height = H;
+  { const x = fogMask.getContext('2d'), im = x.createImageData(W, H);
+    for (let p = 0; p < W * H; p++) { if (!K[p]) continue; const z = Z[p]; let a = (1.25 - z) / 1.5; a = a < 0 ? 0 : a > 1 ? 1 : a; if (z > .45 && z < .8) a *= .45; im.data[p * 4 + 3] = a * 255; }
+    x.putImageData(im, 0, 0); }
+  const fogT = document.createElement('canvas'); fogT.width = VW; fogT.height = VH; const fogX = fogT.getContext('2d');
+  const patA = fogX.createPattern(fogA, 'repeat'), patB = fogX.createPattern(fogB, 'repeat');
+
+  // motes of light and falling leaves
+  const R = (() => { let s = 7; return () => { s = s * 16807 % 2147483647; return s / 2147483647; }; })();
+  const motes = Array.from({ length: 70 }, () => ({ x: -27 + R() * 54, y: 9 + R() * 52, z: .4 + R() * 2.2, ph: R() * 6.28, sp: .3 + R() * .5, warm: R() < .25 }));
+  const leaves = Array.from({ length: 16 }, () => ({ x: -26 + R() * 9, y: 37 + R() * 9, z: R() * 7, ph: R() * 6.28 }));
+  const vig = document.createElement('canvas'); vig.width = VW; vig.height = VH;
+  { const x = vig.getContext('2d'), gr = x.createRadialGradient(VW / 2, VH * .48, VH * .42, VW / 2, VH * .5, VW * .66); gr.addColorStop(0, 'rgba(12,8,24,0)'); gr.addColorStop(1, 'rgba(12,8,24,.5)'); x.fillStyle = gr; x.fillRect(0, 0, VW, VH); }
+
+  // the lantern's light, worked out for each pixel near the hero from the baked facing and colour
+  const LR = 6.2, PW = 208, PH = 200;
+  const patC = document.createElement('canvas'); patC.width = PW; patC.height = PH; const patX = patC.getContext('2d'); const patI = patX.createImageData(PW, PH);
+  function lanternLight(cam, lx, ly, lz, power) {
+    const [sx, sy] = toScreen(lx, ly, lz);
+    const x0 = Math.round(sx - PW / 2), y0 = Math.round(sy - PH * .56), d = patI.data;
+    for (let j = 0; j < PH; j++) { const my = y0 + j;
+      for (let i = 0; i < PW; i++) { const mx = x0 + i, q = (j * PW + i) * 4;
+        if (mx < 0 || my < 0 || mx >= W || my >= H) { d[q + 3] = 0; continue; }
+        const p = my * W + mx; if (!K[p]) { d[q + 3] = 0; continue; }
+        const z = Z[p], wx = X0 + (mx + .5) / S, wy = ((SY0 - (my + .5)) / S - z * COS) / SIN;
+        const dx = lx - wx, dy = ly - wy, dz = lz - z, r2 = dx * dx + dy * dy + dz * dz;
+        if (r2 > LR * LR) { d[q + 3] = 0; continue; }
+        const r = Math.sqrt(r2) + 1e-4, p3 = p * 3 + p;
+        let nl = ((N[p3] - 128) * dx + (N[p3 + 1] - 128) * dy + (N[p3 + 2] - 128) * dz) / (127 * r);
+        nl = K[p] === 3 ? .55 + nl * .25 : nl * .78 + .22; if (nl <= 0) { d[q + 3] = 0; continue; }
+        const e = 1 - r2 / (LR * LR); let a = power * nl * e * e / (1 + r2 / 3.2);
+        a = Math.floor(a * 14 + BAYER[(my & 3) * 4 + (mx & 3)] * .7) / 14;            // stepped and dithered, to stay pixel art
+        if (a <= 0) { d[q + 3] = 0; continue; }
+        d[q] = mapPix[p3] + (AL[p3] * 1.0 + 26) * a; d[q + 1] = mapPix[p3 + 1] + (AL[p3 + 1] * .70 + 15) * a; d[q + 2] = mapPix[p3 + 2] + (AL[p3 + 2] * .40 + 5) * a; d[q + 3] = 255; } }
+    patX.putImageData(patI, 0, 0); ctx.drawImage(patC, x0 - cam.x, y0 - cam.y);
+  }
+
+  // debug overlay, built on first use
+  let overlay = null;
+  function buildOverlay() {
+    overlay = document.createElement('canvas'); overlay.width = W; overlay.height = H; const x = overlay.getContext('2d'), im = x.createImageData(W, H), fr = pixels(A.front).d;
+    for (let j = 0, p = 0; j < H; j++) for (let i = 0; i < W; i++, p++) {
+      if (fr[p * 4] > 127) { im.data[p * 4] = 255; im.data[p * 4 + 1] = 170; im.data[p * 4 + 2] = 60; im.data[p * 4 + 3] = 120; continue; }
+      if (K[p] !== 1) continue; const z = Z[p], wx = X0 + (i + .5) / S, wy = ((SY0 - (j + .5)) / S - z * COS) / SIN, c = cell(wx, wy);
+      if (c >= 0 && WALK[c] && Math.abs(FLOOR[c] - z) < .3) { im.data[p * 4] = 88; im.data[p * 4 + 1] = 220; im.data[p * 4 + 2] = 200; im.data[p * 4 + 3] = ((i + j) & 1) ? 120 : 70; } }
+    x.putImageData(im, 0, 0);
+    x.strokeStyle = '#ff6fae'; x.lineWidth = 1; x.fillStyle = 'rgba(255,111,174,.25)';
+    for (const e of M.exits) { const [sx, sy] = toScreen(e.x, e.y, e.z || 0); x.beginPath(); x.ellipse(sx, sy, e.r * S, e.r * S * SIN, 0, 0, 6.283); x.fill(); x.stroke(); }
+  }
+
+  // ---- input
+  const keys = new Set(); let target = null;
+  const KEYMAP = { ArrowUp: 'u', KeyW: 'u', ArrowDown: 'd', KeyS: 'd', ArrowLeft: 'l', KeyA: 'l', ArrowRight: 'r', KeyD: 'r', ShiftLeft: 'run', ShiftRight: 'run' };
+  addEventListener('keydown', e => { const k = KEYMAP[e.code]; if (!k) return; if (document.activeElement === cv || document.activeElement === document.body) { e.preventDefault(); } keys.add(k); target = null; });
+  addEventListener('keyup', e => { const k = KEYMAP[e.code]; if (k) keys.delete(k); });
+  addEventListener('blur', () => keys.clear());
+  const cam = { x: 0, y: 0, fx: 0, fy: 0, lift: 0 };
+  const pick = e => { const r = cv.getBoundingClientRect(); const vx = (e.clientX - r.left) / r.width * VW + cam.x, vy = (e.clientY - r.top) / r.height * VH + cam.y;
+    const p = Math.min(H - 1, Math.max(0, Math.round(vy))) * W + Math.min(W - 1, Math.max(0, Math.round(vx))); const z = K[p] ? Z[p] : 0; return { x: X0 + vx / S, y: ((SY0 - vy) / S - z * COS) / SIN }; };
+  let held = false;
+  cv.addEventListener('pointerdown', e => { if (e.pointerType === 'touch') document.querySelector('.dpad').classList.add('on'); cv.focus({ preventScroll: true }); held = true; target = pick(e); try { cv.setPointerCapture(e.pointerId); } catch (_) {} });
+  cv.addEventListener('pointermove', e => { if (held) target = pick(e); });
+  cv.addEventListener('pointerup', () => { held = false; }); cv.addEventListener('pointercancel', () => { held = false; });
+  document.querySelectorAll('.dpad button').forEach(b => { const k = b.dataset.k; const on = e => { e.preventDefault(); keys.add(k); target = null; }, off = e => { e.preventDefault(); keys.delete(k); };
+    b.addEventListener('pointerdown', on); b.addEventListener('pointerup', off); b.addEventListener('pointerleave', off); b.addEventListener('pointercancel', off); });
+  dbgEl.addEventListener('change', () => { legendEl.hidden = !dbgEl.checked; if (dbgEl.checked && !overlay) buildOverlay(); });
+
+  function step(dt) {
+    let vx = 0, vy = 0;
+    if (keys.has('l')) vx -= 1; if (keys.has('r')) vx += 1; if (keys.has('u')) vy -= 1; if (keys.has('d')) vy += 1;
+    if (!vx && !vy && target) { const [hx, hy] = toScreen(hero.x, hero.y, 0), [tx, ty] = toScreen(target.x, target.y, 0); const dx = tx - hx, dy = ty - hy, L = Math.hypot(dx, dy); if (L < 2.5) target = null; else { vx = dx / L; vy = dy / L; } }
+    const L = Math.hypot(vx, vy); hero.moving = L > 0;
+    if (L > 0) {
+      const sp = (keys.has('run') ? 112 : 68) * dt / L;                     // same speed on screen in every direction
+      const dx = vx * sp / S, dy = -vy * sp / (S * SIN);
+      let moved = false;
+      if (canStand(hero.x + dx, hero.y + dy, hero.z)) { hero.x += dx; hero.y += dy; moved = true; }
+      else if (dx && canStand(hero.x + dx, hero.y, hero.z)) { hero.x += dx; moved = true; }
+      else if (dy && canStand(hero.x, hero.y + dy, hero.z)) { hero.y += dy; moved = true; }
+      if (!moved && target) target = null;
+      hero.dir = Math.abs(vx) > Math.abs(vy) * 1.15 ? (vx < 0 ? 1 : 2) : (vy < 0 ? 3 : 0);
+      hero.t += dt * (keys.has('run') ? 1.45 : 1); hero.moving = moved;
+    } else hero.t = 0;
+    const fz = floorAt(hero.x, hero.y); hero.z += (fz - hero.z) * Math.min(1, dt * 16);
+  }
+
+  let zone = null, tPrev = performance.now(), time = 0, fade = 1;
+  function frame(now) {
+    const dt = Math.min(.05, (now - tPrev) / 1000); tPrev = now; time += dt;
+    step(dt);
+    // where the hero is standing
+    zone = null; for (const e of M.exits) if (Math.hypot(hero.x - e.x, (hero.y - e.y)) < e.r) zone = e;
+    const txt = zone ? (zone.kind === 'look' ? zone.label : zone.label + '（試作はここまで）') : '';
+    if (promptEl.dataset.t !== txt) { promptEl.dataset.t = txt; promptEl.textContent = txt; promptEl.hidden = !txt; }
+    // camera: follows, and looks up at the sky from the lookout
+    const [hsx, hsy] = toScreen(hero.x, hero.y, hero.z);
+    cam.lift += ((zone && zone.kind === 'look' ? 78 : 0) - cam.lift) * Math.min(1, dt * 1.6);
+    const tx = Math.min(W - VW, Math.max(0, hsx - VW / 2)), ty = Math.min(H - VH, Math.max(0, hsy - VH * .56 - cam.lift));
+    if (fade === 1 && time < .1) { cam.fx = tx; cam.fy = ty; }
+    cam.fx += (tx - cam.fx) * Math.min(1, dt * 7); cam.fy += (ty - cam.fy) * Math.min(1, dt * 7);
+    cam.x = Math.round(cam.fx); cam.y = Math.round(cam.fy);
+
+    // sky, far away so it slides slowly
+    ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
+    ctx.fillStyle = '#5d4a66'; ctx.fillRect(0, 0, VW, VH);
+    ctx.drawImage(A.sky, -Math.round(cam.x * .35), -Math.round(cam.y * .5));
+    ctx.drawImage(mapC, cam.x, cam.y, VW, VH, 0, 0, VW, VH);
+
+    // the hero's lantern
+    const flick = RM ? 1 : .93 + .05 * Math.sin(time * 9.1) + .03 * Math.sin(time * 23.7);
+    const bob = 0;
+    const lp = LANT[hero.dir], lox = (lp[0] - 16) / S, lh = (FOOT - lp[1] - bob) / (S * COS);
+    const lx = hero.x + lox * .8, ly = hero.y - .25, lz = hero.z + Math.min(lh, 2.6);
+    lanternLight(cam, lx, ly, lz, 1.55 * flick);
+
+    // the hero, hidden pixel by pixel where something stands nearer the camera
+    const fr = hero.moving ? (Math.floor(hero.t * FPS) + 1) % 4 : 0, row = hero.dir;
+    const ox = Math.round(hsx) - 16, oy = Math.round(hsy) - FOOT, sd = sprI.data;
+    for (let v = 0; v < FH; v++) { const ds = hero.y * COS - (hero.z + (FOOT - v) / (S * COS)) * SIN - .42;
+      for (let u = 0; u < FW; u++) { const s = ((row * FH + v) * (FW * 4) + fr * FW + u) * 4, q = (v * FW + u) * 4, a = hp[s + 3];
+        if (!a) { sd[q + 3] = 0; continue; }
+        const mx = ox + u, my = oy + v; let hid = false;
+        if (mx >= 0 && my >= 0 && mx < W && my < H) hid = D[my * W + mx] < ds;
+        if (hid) { sd[q] = 150 + hp[s] * .3; sd[q + 1] = 132 + hp[s + 1] * .3; sd[q + 2] = 205 + hp[s + 2] * .2; sd[q + 3] = ((u + v) & 1) ? 150 : 0; }   // behind something: a pale see-through shape
+        else { sd[q] = hp[s]; sd[q + 1] = hp[s + 1]; sd[q + 2] = hp[s + 2]; sd[q + 3] = a; } } }
+    sprX.putImageData(sprI, 0, 0); ctx.drawImage(sprC, ox - cam.x, oy - cam.y);
+
+    // glows
+    ctx.globalCompositeOperation = 'lighter';
+    for (const l of lights) { if (!l.seen) continue; const x = l.sx - cam.x, y = l.sy - cam.y; if (x < -40 || y < -40 || x > VW + 40 || y > VH + 40) continue;
+      const sp = GL[l.kind], f = l.kind === 'bell' ? .35 + .25 * Math.sin(time * .9) : (RM ? .8 : .72 + .14 * Math.sin(time * 8 + l.ph) + .1 * Math.sin(time * 19.3 + l.ph * 2));
+      ctx.globalAlpha = f; ctx.drawImage(sp, Math.round(x - sp.width / 2), Math.round(y - sp.height / 2)); }
+    ctx.globalAlpha = .8 * flick; ctx.drawImage(GL.hero, ox + lp[0] - 16 - cam.x, oy + lp[1] + 1 + bob - 16 - cam.y);
+    // motes and leaves
+    ctx.globalAlpha = 1;
+    for (const m of motes) { const a = .5 + .5 * Math.sin(time * m.sp * 2 + m.ph); if (a < .35) continue; const wx = m.x + Math.sin(time * m.sp * .4 + m.ph) * 1.2, wz = m.z + Math.sin(time * m.sp * .7 + m.ph * 2) * .4;
+      const [sx, sy] = toScreen(wx, m.y, wz); const x = Math.round(sx - cam.x), y = Math.round(sy - cam.y); if (x < 0 || y < 0 || x >= VW || y >= VH) continue;
+      ctx.fillStyle = m.warm ? `rgba(255,200,120,${a * .7})` : `rgba(190,235,230,${a * .6})`; ctx.fillRect(x, y, 1, 1); }
+    ctx.globalCompositeOperation = 'source-over';
+    if (!RM) for (const l of leaves) { l.z -= dt * .9; l.x += dt * (.5 + .4 * Math.sin(time + l.ph)); if (l.z < 0) { l.z = 6 + R() * 2; l.x = -26 + R() * 8; l.y = 37 + R() * 9; }
+      const [sx, sy] = toScreen(l.x + Math.sin(time * 2 + l.ph) * .4, l.y, l.z); ctx.fillStyle = (l.ph > 3) ? '#c8502c' : '#a8323c'; ctx.fillRect(Math.round(sx - cam.x), Math.round(sy - cam.y), 2, 1); }
+
+    // drifting mist
+    fogX.globalCompositeOperation = 'source-over'; fogX.clearRect(0, 0, VW, VH);
+    const t = RM ? 0 : time;
+    fogX.save(); fogX.translate(-((cam.x + t * 5) % 256), -((cam.y + t * 1.2) % 256)); fogX.fillStyle = patA; fogX.globalAlpha = .55; fogX.fillRect(0, 0, VW + 256, VH + 256); fogX.restore();
+    fogX.save(); fogX.translate(-((cam.x * 1 + 256 - (t * 3) % 256) % 256), -((cam.y + 90) % 256)); fogX.fillStyle = patB; fogX.globalAlpha = .45; fogX.fillRect(0, 0, VW + 256, VH + 256); fogX.restore();
+    fogX.globalAlpha = 1; fogX.globalCompositeOperation = 'destination-in'; fogX.drawImage(fogMask, cam.x, cam.y, VW, VH, 0, 0, VW, VH);
+    ctx.globalAlpha = .5; ctx.drawImage(fogT, 0, 0); ctx.globalAlpha = 1;
+
+    if (dbgEl.checked && overlay) ctx.drawImage(overlay, cam.x, cam.y, VW, VH, 0, 0, VW, VH);
+    ctx.drawImage(vig, 0, 0);
+    if (fade > 0) { fade = Math.max(0, fade - dt * .55); ctx.fillStyle = `rgba(12,8,20,${fade * fade})`; ctx.fillRect(0, 0, VW, VH); }
+
+    // to the screen, at a whole-number zoom so every pixel stays square
+    // (when the page width is not a whole multiple, draw one size up and let the browser shrink it evenly)
+    const want = cv.clientWidth * (devicePixelRatio || 1) / VW, k = Math.max(1, Math.min(8, Math.ceil(want - .02)));
+    if (cv.width !== VW * k) { cv.width = VW * k; cv.height = VH * k; cv.classList.toggle('exact', Math.abs(want - k) < .02); }
+    out.imageSmoothingEnabled = false; out.drawImage(view, 0, 0, cv.width, cv.height);
+    requestAnimationFrame(frame);
+  }
+  document.getElementById('loading').hidden = true;
+  window.__abbey = { hero, cam, canStand, floorAt, toScreen, keys, M };
+  window.claude?.hot?.snapshot?.(() => ({ hero: { x: hero.x, y: hero.y, dir: hero.dir } }));
+  requestAnimationFrame(t => { tPrev = t; frame(t); });
+}
+
+const boot = saved => load().then(A => start(A, saved || {})).catch(e => { const l = document.getElementById('loading'); l.hidden = false; l.textContent = '読み込みに失敗しました。ページを開き直してください。'; console.error(e); });
+if (window.claude?.hot?.ready) window.claude.hot.ready(boot); else boot(window.claude?.hot?.data ?? {});
+})();
+</script>
