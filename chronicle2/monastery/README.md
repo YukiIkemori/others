@@ -14,7 +14,7 @@ cd build
 SAMPLES=96 NOISE=0.03 python3 scene.py   # 立体を組む、描き出す、判定を焼く → work/beauty.png, work/bake.npz, work/meta.json（4コアで約11分）
 python3 sky.py                      # 二つの月の空                      → ../site/sky.jpg
 python3 post.py                     # 霧、色、筆のタッチ、ゲーム用データ → ../site/map.webp ほか
-python3 hero_import.py シート.png シート.json   # 主人公の取り込み      → ../site/hero.png, ../site/hero.json（3つ目に名前を書くとその名前で）
+python3 hero_import.py シート.png シート.json hero_hd   # 主人公の取り込み → ../site/hero_hd.png, ../site/hero_hd.json
 ```
 
 ### 背景の仕上げは2通り
@@ -72,12 +72,8 @@ WORK=$PWD/work_px SITE=$PWD/../site/px STYLE=pixel python3 post.py
 
 ### 主人公のスプライト
 
-`site/hero.png` は横4コマ（立ち、左足、通過、右足）× 縦4コマ（下、左、右、上）。いまの絵は1コマ 48×64、足元は各コマの (24, 60)、1コマ 160 ミリ秒です。
-コマの大きさ、足元の位置、体の高さ、歩く速さ、各コマの灯の位置は `site/hero.json` に入っていて、ゲームはそこから読みます。
-縦を8コマにすると斜め移動の絵も使われます。行の順は 下、左、右、上、左下、右下、左上、右上 です（4行のシートなら斜めに歩くときも上下左右の絵で表示します）。
-体は何ドットで描かれていても世界の 3 単位（画面で 144 ピクセル）の高さに表示されるので、96 ドットの絵に替えればそのまま細かくなります。
-差し替えるときは `python3 build/hero_import.py 新しいシート.png 新しいシート.json` を実行するだけです。
-
-見比べのために、同じ主人公を 96 ドットで描いた版（1コマ 96×128、足元 (48, 120)）も `site/hero_hd.png` と `site/hero_hd.json` として入っています。
-画面の下の「主人公のドット絵」のボタンで 48 ドットと 96 ドットを切り替えられます。こちらを作り直すときは最後に名前を付けて
-`python3 build/hero_import.py シート.png シート.json hero_hd` とします。
+主人公は 96 ドットで描いた絵に固定です。`site/hero_hd.png` は横4コマ（立ち、左足、通過、右足）× 縦8コマ（下、左、右、上、左下、右下、左上、右上）、
+1コマ 96×128、足元は各コマの (48, 120)、1コマ 160 ミリ秒です。ドット絵の背景では、主人公の1ドットが背景の1ドットと同じ大きさになります。
+コマの大きさ、足元の位置、体の高さ、歩く速さ、各コマの灯の位置は `site/hero_hd.json` に入っていて、ゲームはそこから読みます。
+縦が4コマのシートを入れた場合は、斜めに歩くときも上下左右の絵で表示します。
+差し替えるときは `python3 build/hero_import.py 新しいシート.png 新しいシート.json hero_hd` を実行します。元のシートは `/mnt/project-files/monastery-test/hero/` にあります。

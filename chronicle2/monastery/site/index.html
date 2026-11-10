@@ -84,7 +84,6 @@ h1{margin:0;font-family:var(--f-d);font-weight:600;font-size:clamp(26px,4vw,40px
 
   <div class="opts">
     <p class="pick" id="bgpick"><span id="bgl">背景の仕上げ</span><span class="seg" role="group" aria-labelledby="bgl"><button type="button" data-style="pixel" aria-pressed="true">ドット絵</button><button type="button" data-style="paint" aria-pressed="false">絵画調</button></span></p>
-    <p class="pick" id="pick"><span id="pickl">主人公のドット絵</span><span class="seg" role="group" aria-labelledby="pickl"><button type="button" data-sheet="48" aria-pressed="false">48ドット</button><button type="button" data-sheet="96" aria-pressed="true">96ドット</button></span></p>
   </div>
   <div class="bar">
     <p class="keys"><b>矢印キー / WASD</b>で移動、<b>Shift</b>で早足。画面をクリックかタップすると、その場所へ歩きます。</p>
@@ -116,10 +115,10 @@ const json = f => fetch(f).then(r => { if (!r.ok) throw new Error(f + ' を読�
 const fieldCache = {}; let heroCache = null;
 async function load(style) {
   const st = STYLES[style], d = st.dir;
-  heroCache = heroCache || Promise.all([json('hero.json'), json('hero_hd.json'), loadImg('hero.png'), loadImg('hero_hd.png')]);
+  heroCache = heroCache || Promise.all([json('hero_hd.json'), loadImg('hero_hd.png')]);
   fieldCache[style] = fieldCache[style] || Promise.all([json(d + 'map.json'), ...['map.webp', st.sky, 'geo.png', 'nrm.png', 'alb.png', 'walk.png', 'front.png'].map(f => loadImg(d + f))]);
-  try { const [[HS, HS2, hero, hero2], [M, map, sky, geo, nrm, alb, walk, front]] = await Promise.all([heroCache, fieldCache[style]]);
-    return { M, map, sky, geo, nrm, alb, walk, front, sheets: { 48: { img: hero, spec: HS }, 96: { img: hero2, spec: HS2 } } };
+  try { const [[HS, hero], [M, map, sky, geo, nrm, alb, walk, front]] = await Promise.all([heroCache, fieldCache[style]]);
+    return { M, map, sky, geo, nrm, alb, walk, front, sheets: { 96: { img: hero, spec: HS } } };
   } catch (e) { heroCache = null; delete fieldCache[style]; throw e; }
 }
 
@@ -151,16 +150,12 @@ function start(A, saved) {
 
   // hero frames: size, foot anchor, speed and the lantern's pixel in every frame all come with the sheet (hero.json).
   // HK is how many picture pixels one dot of the sprite covers, so that the body stands 3 world units tall.
-  // Two sheets of the same hero are loaded, drawn with 48 and with 96 dots, and the buttons under the picture switch between them.
+  // The hero is drawn with 96 dots: one dot of the sprite is one dot of the pixel-art field.
   const SHEETS = {};
   for (const k in A.sheets) { const sp = A.sheets[k].spec, [fw, fh] = sp.frame, c = canvas(fw, fh), x = c.getContext('2d');
     SHEETS[k] = { hp: pixels(A.sheets[k].img), FW: fw, FH: fh, AX: sp.foot[0], FOOT: sp.foot[1], LANT: sp.lantern, FPS: 1000 / sp.ms, HK: S * 3 / (sp.body || 48),
       sprC: c, sprX: x, sprI: x.createImageData(fw, fh), big: canvas(1, 1) }; }
-  let sheet = SHEETS[saved && saved.sheet] ? String(saved.sheet) : '96';
-  const pickBtns = [...document.querySelectorAll('#pick button')];
-  const useSheet = k => { if (!SHEETS[k]) return; sheet = k; for (const b of pickBtns) b.setAttribute('aria-pressed', String(b.dataset.sheet === k)); };
-  for (const b of pickBtns) b.addEventListener('click', () => { useSheet(b.dataset.sheet); cv.focus({ preventScroll: true }); }, on);
-  useSheet(sheet);
+  const sheet = '96';
   const hero = { x: M.spawn[0], y: M.spawn[1], z: 0, dir: 3, dir8: 3, t: 0, moving: false };
   if (saved && saved.hero && canStand(saved.hero.x, saved.hero.y, floorAt(saved.hero.x, saved.hero.y))) Object.assign(hero, saved.hero);
   hero.z = floorAt(hero.x, hero.y);
@@ -374,9 +369,9 @@ function start(A, saved) {
     }
     requestAnimationFrame(frame);
   }
-  window.__abbey = { hero, cam, canStand, floorAt, toScreen, keys, M, useSheet };
+  window.__abbey = { hero, cam, canStand, floorAt, toScreen, keys, M };
   requestAnimationFrame(t => { tPrev = t; frame(t); });
-  return { stop() { dead = true; ac.abort(); }, state: () => ({ hero: { x: hero.x, y: hero.y, dir: hero.dir, dir8: hero.dir8 }, sheet }) };
+  return { stop() { dead = true; ac.abort(); }, state: () => ({ hero: { x: hero.x, y: hero.y, dir: hero.dir, dir8: hero.dir8 } }) };
 }
 
 // ---- which finish is showing; the other one is fetched the first time it is asked for
