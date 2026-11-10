@@ -5,6 +5,10 @@ Two passes of ray casts:
      visible there.  The game uses height to decide what stands in front of the character, and facing and colour
      to let the hero's lantern light the surroundings.
   2. straight down on a grid over the ground: where is there a floor, how high is it, and is there room to stand.
+
+Pass 1 also notes what the pixel-art finish needs to colour the picture by hand instead of rendering it: for the
+first thing seen through each pixel (grass tufts and flowers included) which material it is, its colour and facing,
+whether the key light reaches it, and how hemmed in it is by its surroundings.
 """
 import os, time
 from collections import deque
@@ -17,6 +21,8 @@ GX0, GX1, GY0, GY1 = -30.0, 30.0, -4.0, 64.0
 HEAD = 2.7            # room needed above a floor
 STEP = 0.45           # tallest step that can be walked up
 KIND = {'floor': 1, 'solid': 2, 'soft': 3, 'cover': 4}
+SKIP = {'moonrefl', 'moonblack'}          # only there to be mirrored in the pool
+KEY = Vector((-0.55, -0.45, 0.70)).normalized()   # where the key light comes from: front left, above
 
 
 def run(sc, OBJ, FACECOL, meta, WORK, P):
@@ -30,25 +36,73 @@ def run(sc, OBJ, FACECOL, meta, WORK, P):
         return bpy.context.evaluated_depsgraph_get()
 
     # ---- pass 1: per pixel
-    dg = hide({'cover'})
+    dg = hide(set())
     view = Vector((0, COS, -SIN))
     zmap = np.full((H, W), np.nan, np.float32)
     nrm = np.zeros((H, W, 3), np.float32)
     alb = np.zeros((H, W, 3), np.float32)
     kind = np.zeros((H, W), np.uint8)
+    names = sorted(OBJ.keys())
+    MAT = {n: k + 1 for k, n in enumerate(names)}
+    vz = np.full((H, W), np.nan, np.float32)     # the same for the first thing seen, cover included
+    vnrm = np.zeros((H, W, 3), np.float32)
+    vcol = np.zeros((H, W, 3), np.float32)
+    vmat = np.zeros((H, W), np.uint8)
+    lit = np.zeros((H, W), np.uint8)             # 1 where the key light arrives
+    AOS = 2                                      # how hemmed in, worked out for every second pixel
+    ao = np.ones(((H + 1) // AOS, (W + 1) // AOS), np.float32)
     cast = sc.ray_cast
     back = view * 220
+    eps = view * 0.002
+    X_, Y_ = Vector((1, 0, 0)), Vector((0, 1, 0))
     for j in range(H):
         gy = (SY0 - (j + 0.5)) / S / SIN
         zr, nr, ar, kr = zmap[j], nrm[j], alb[j], kind[j]
         for i in range(W):
-            o = Vector((X0 + (i + 0.5) / S, gy, 0.0)) - back
-            hit, loc, n, idx, ob, _ = cast(dg, o, view)
-            if hit:
-                zr[i] = loc.z
-                nr[i] = n
-                ar[i] = FACECOL[ob.name][idx]
-                kr[i] = KIND[ob['kind']]
+            org = Vector((X0 + (i + 0.5) / S, gy, 0.0)) - back
+            seen = False
+            for _ in range(8):
+                hit, loc, n, idx, ob, _m = cast(dg, org, view)
+                if not hit:
+                    break
+                nm = ob.name
+                k = KIND[ob['kind']]
+                if not seen and nm not in SKIP:
+                    seen = True
+                    fn = -n if n.dot(view) > 0 else n
+                    vz[j, i] = loc.z
+                    vnrm[j, i] = fn
+                    vcol[j, i] = FACECOL[nm][idx]
+                    vmat[j, i] = MAT[nm]
+                    # does the key light reach it?  Grass and flowers throw no shadow.
+                    so = loc + fn * 0.03
+                    reach = True
+                    for _s in range(4):
+                        h2, l2, n2, i2, o2, _m2 = cast(dg, so, KEY, distance=70.0)
+                        if not h2:
+                            break
+                        if o2['kind'] != 'cover':
+                            reach = False
+                            break
+                        so = l2 + KEY * 0.01
+                    lit[j, i] = 1 if reach else 0
+                    if j % AOS == 0 and i % AOS == 0:
+                        t = fn.cross(X_ if abs(fn.x) < 0.9 else Y_).normalized()
+                        b_ = fn.cross(t)
+                        occ = 0.0
+                        for d_, w_ in ((fn, 1.0), (fn * 0.57 + t * 0.82, 0.75), (fn * 0.57 - t * 0.82, 0.75),
+                                       (fn * 0.57 + b_ * 0.82, 0.75), (fn * 0.57 - b_ * 0.82, 0.75)):
+                            h2, l2, n2, i2, o2, _m2 = cast(dg, loc + fn * 0.03, d_, distance=1.5)
+                            if h2 and o2['kind'] != 'cover':
+                                occ += w_
+                        ao[j // AOS, i // AOS] = 1.0 - occ / 4.0
+                if k != 4:
+                    zr[i] = loc.z
+                    nr[i] = n
+                    ar[i] = FACECOL[nm][idx]
+                    kr[i] = k
+                    break
+                org = loc + eps
     print('  pixel pass', round(time.time() - t0, 1), 's')
 
     # ---- pass 2: the ground grid
@@ -117,4 +171,5 @@ def run(sc, OBJ, FACECOL, meta, WORK, P):
     for o in OBJ.values():
         o.hide_viewport = False
     np.savez_compressed(os.path.join(WORK, 'bake.npz'), zmap=zmap, nrm=nrm, alb=alb, kind=kind, floor=floor, walk=reach,
-                        grid=np.array([GX0, GY0, CELL, nx, ny], np.float32))
+                        grid=np.array([GX0, GY0, CELL, nx, ny], np.float32),
+                        vz=vz, vnrm=vnrm, vcol=vcol, vmat=vmat, lit=lit, ao=ao, names=np.array(names), key=np.array(KEY[:], np.float32))

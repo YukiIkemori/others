@@ -161,7 +161,18 @@ img = np.clip(img, 0, 1)
 PIX = os.environ.get('STYLE') == 'pixel'      # pixel style: a few flat bands of colour instead of a smooth gradient
 OUT = 'sky.png' if PIX else 'sky.jpg'
 if PIX:
-    im = Image.fromarray((img * 255 + 0.5).astype(np.uint8)).quantize(40, method=Image.Quantize.MEDIANCUT, kmeans=3, dither=Image.Dither.NONE)
+    # the same sky, recoloured on the scale the sprites use: navy in the dark, through violet, to warm cream in the light
+    stops = [(0.0, '#070a16'), (0.13, '#0e1730'), (0.26, '#1a2a4f'), (0.38, '#2f4274'), (0.50, '#565a94'), (0.62, '#8a6f9c'),
+             (0.74, '#c98a8a'), (0.87, '#f2b97c'), (1.0, '#fff1c4')]
+    hx = lambda s: np.array([int(s[i:i + 2], 16) for i in (1, 3, 5)], np.float32) / 255
+    lum = np.clip(img @ np.array([0.299, 0.587, 0.114], np.float32), 0, 1)
+    lum = np.clip((lum - 0.06) / 0.80, 0, 1)
+    out = np.zeros_like(img)
+    for (t0, c0), (t1, c1) in zip(stops[:-1], stops[1:]):
+        m = (lum >= t0) & (lum <= t1)
+        out = np.where(m[..., None], hx(c0) + (hx(c1) - hx(c0)) * ((lum - t0) / (t1 - t0))[..., None], out)
+    img = out
+    im = Image.fromarray((img * 255 + 0.5).astype(np.uint8)).quantize(28, method=Image.Quantize.MEDIANCUT, kmeans=3, dither=Image.Dither.NONE)
     im.save(os.path.join(SITE, OUT), optimize=True)
     im = im.convert('RGB')
 else:

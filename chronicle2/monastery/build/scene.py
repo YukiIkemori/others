@@ -452,28 +452,42 @@ def candle(x, y, z, h=0.4, light=None):
 
 
 def column(x, y, z, h, broken=False, seed=0, r=0.46, cap=True):
+    """A clustered pier: a round core with four slender shafts against it, on a moulded eight-sided base,
+    under a capital carved with leaves."""
     rng = np.random.default_rng(abs(int(seed)) + 1000)
     c = STONE_L * rng.uniform(0.85, 1.0)
-    box(B['stone'], (x, y, z), (1.5, 1.5, 0.28), c * 0.85, pivot_bottom=True)
-    lathe(B['stone_r'], (x, y, z + 0.28), [(0.68, 0), (0.68, 0.12), (0.55, 0.26), (r, 0.36)], 12, c)
+    lathe(B['stone'], (x, y, z), [(1.02, 0), (1.02, 0.2), (0.9, 0.3)], 8, c * 0.82, rot=rotz(math.pi / 8))
+    lathe(B['stone_r'], (x, y, z + 0.3), [(0.8, 0), (0.82, 0.07), (0.7, 0.16), (0.73, 0.22), (r + 0.1, 0.34), (r + 0.02, 0.4)], 16, c)
     top = z + h
+    zb = z + 0.7
+    sh = r * 0.36
+    offs = [(r * 0.98, 0), (-r * 0.98, 0), (0, r * 0.98), (0, -r * 0.98)]
+    for (ox, oy) in offs:
+        lathe(B['stone_r'], (x + ox, y + oy, z + 0.3), [(sh * 1.6, 0), (sh * 1.6, 0.1), (sh * 1.1, 0.42)], 8, c * 0.92)
     if broken:
-        # drums, the last one sheared
-        zz = z + 0.64
-        while zz < top - 0.01:
+        zz = zb
+        while zz < top - 0.01:          # drums, the last one sheared
             dh = min(rng.uniform(0.7, 1.1), top - zz)
-            frustum(B['stone_r'], (x, y, zz), (x, y, zz + dh), r, r, 10, c * rng.uniform(0.85, 1.08))
+            frustum(B['stone_r'], (x, y, zz), (x, y, zz + dh), r, r, 14, c * rng.uniform(0.85, 1.08))
             zz += dh
+        for (ox, oy) in offs:
+            hh = rng.uniform(0.25, 1.0) * (top - zb)
+            frustum(B['stone_r'], (x + ox, y + oy, zb), (x + ox, y + oy, zb + hh), sh, sh, 8, c * 0.92)
         tilt = rotx(rng.uniform(-0.35, 0.35)) @ roty(rng.uniform(-0.35, 0.35))
         lathe(B['stone_r'], (x, y, top - 0.02), [(r, 0), (r * 0.95, 0.12), (0.02, 0.2)], 10, c * 0.8, rot=tilt)
     else:
-        frustum(B['stone_r'], (x, y, z + 0.64), (x, y, top - 0.75), r, r * 0.94, 12, c)
-        for k in range(3):   # masonry rings
-            zz = z + 0.64 + (top - 1.4 - z) * (k + 1) / 4
-            frustum(B['stone_r'], (x, y, zz), (x, y, zz + 0.06), r + 0.03, r + 0.03, 12, c * 0.8)
+        frustum(B['stone_r'], (x, y, zb), (x, y, top - 0.9), r, r * 0.96, 16, c)
+        for (ox, oy) in offs:
+            frustum(B['stone_r'], (x + ox, y + oy, zb), (x + ox, y + oy, top - 0.9), sh, sh, 8, c * 0.95)
+        for k in range(2):              # shaft rings
+            zz = zb + (top - 0.9 - zb) * (k + 1) / 3
+            lathe(B['stone_r'], (x, y, zz), [(r + sh * 1.5, 0), (r + sh * 1.85, 0.05), (r + sh * 1.5, 0.1)], 16, c * 0.8)
         if cap:
-            lathe(B['stone_r'], (x, y, top - 0.75), [(r * 0.94, 0), (r * 1.05, 0.1), (r * 0.98, 0.2), (0.78, 0.5)], 12, c * 1.05)
-            box(B['stone'], (x, y, top - 0.25), (1.6, 1.6, 0.25), c * 1.05, pivot_bottom=True)
+            lathe(B['stone_r'], (x, y, top - 0.9), [(r + 0.2, 0), (r + 0.27, 0.07), (r + 0.16, 0.14), (r + 0.24, 0.3), (0.9, 0.62)], 16, c * 1.05)
+            for a in range(8):          # leaves curling out under the abacus
+                ang = a * math.pi / 4 + math.pi / 8
+                blob(B['stone_r'], (x + math.cos(ang) * 0.76, y + math.sin(ang) * 0.76, top - 0.44), (0.17, 0.17, 0.2), c * 1.1, sub=1, rough=0.1, rng=rng)
+            lathe(B['stone'], (x, y, top - 0.28), [(1.02, 0), (1.08, 0.1), (1.08, 0.28)], 8, c * 1.05, rot=rotz(math.pi / 8))
     SOLIDS_XY.append((x, y, 1.0))
 
 
@@ -511,6 +525,171 @@ def stone_bench(x, y, rot=0.0):
     SOLIDS_XY.append((x, y, 1.3))
 
 
+# ---------------------------------------------------------------- ornament: what makes masonry read as architecture
+IRON = (0.03, 0.03, 0.035)
+
+
+class Loc:
+    """A little frame standing against a wall face: x runs along the wall, -y points out of it, z is up.
+    theta 0 faces south (toward the camera), +90 degrees faces east, -90 west, 180 north."""
+    def __init__(self, x, y, theta=0.0):
+        self.o = np.array([x, y, 0.0], np.float32)
+        self.R = rotz(theta)
+        self.theta = theta
+
+    def P(self, v):
+        return np.asarray(v, np.float32) @ self.R.T + self.o
+
+    def box(self, mb, x0, x1, y0, y1, z0, z1, col, slope=0.0):
+        """slope lowers the top along the outer edge (y0), which makes a weathering."""
+        v = [[x0, y0, z0], [x1, y0, z0], [x1, y1, z0], [x0, y1, z0], [x0, y0, z1 - slope], [x1, y0, z1 - slope], [x1, y1, z1], [x0, y1, z1]]
+        mb.add(self.P(v), quads=kit._BOXQ, col=col)
+
+    def gable(self, mb, x0, x1, y0, y1, z0, h, col):
+        """A little roof whose ridge runs in and out of the wall."""
+        xm = (x0 + x1) / 2
+        v = [[x0, y0, z0], [xm, y0, z0 + h], [x1, y0, z0], [x0, y1, z0], [xm, y1, z0 + h], [x1, y1, z0]]
+        mb.add(self.P(v), quads=[[0, 1, 4, 3], [1, 2, 5, 4], [0, 3, 5, 2]], tris=[[0, 2, 1], [3, 4, 5]], col=col)
+
+
+def courses(L, x0, x1, y0, y1, z0, z1, col, seed=0.0, h=0.78):
+    """A pier laid in courses: each course a touch different in tone and size, with the dark of the joints between."""
+    n = max(1, int(round((z1 - z0) / h)))
+    for k in range(n):
+        r = float(hash01(k * 1.0, seed, 3.3))
+        j = 0.03 * (r - 0.5)
+        L.box(B['stone'], x0 - j, x1 + j, y0 - j, y1, z0 + (z1 - z0) * k / n + 0.02, z0 + (z1 - z0) * (k + 1) / n, col * (0.86 + 0.26 * r))
+    L.box(B['stone'], x0 + 0.04, x1 - 0.04, y0 + 0.04, y1, z0, z1, col * 0.62)
+
+
+def pinnacle(x, y, z, s=0.8, h=2.6, col=None, theta=0.0):
+    """Square shaft, a gablet on each face, a spire with crockets up its edges and a knob on top."""
+    col = STONE_L * 0.9 if col is None else col
+    L = Loc(x, y, theta)
+    hs = h * 0.36
+    courses(L, -s / 2, s / 2, -s / 2, s / 2, z, z + hs, col * 0.92, seed=x + y, h=0.45)
+    L.box(B['stone'], -s / 2 - 0.07, s / 2 + 0.07, -s / 2 - 0.07, s / 2 + 0.07, z + hs, z + hs + 0.1, col)
+    zs = z + hs + 0.1
+    for a in range(4):
+        Loc(x, y, theta + a * math.pi / 2).gable(B['stone'], -s / 2, s / 2, -s / 2 - 0.06, 0.0, zs, s * 0.62, col * 1.05)
+    lathe(B['stone'], (x, y, zs), [(s * 0.6, 0), (0.05, h - hs - 0.1)], 4, col, rot=rotz(theta + math.pi / 4))
+    for k in range(1, 4):
+        f = k / 4.3
+        rr = s * 0.6 * (1 - f) + 0.03
+        for a in range(4):
+            ang = theta + math.pi / 4 + a * math.pi / 2
+            box(B['stone'], (x + math.cos(ang) * rr, y + math.sin(ang) * rr, zs + (h - hs - 0.1) * f), (0.13, 0.13, 0.13), col * 1.08, rot=rotz(ang))
+    blob(B['stone_r'], (x, y, z + h + 0.06), (0.11, 0.11, 0.13), col * 1.05, sub=1, rough=0.0)
+
+
+def buttress(L, w, stages, col=None, z0=-0.4, seed=0.0):
+    """A stepped buttress: each stage (depth, top) ends in a drip course and a sloped weathering."""
+    col = STONE * 0.93 if col is None else col
+    zb = z0
+    for i, (d, zt) in enumerate(stages):
+        dn = stages[i + 1][0] if i + 1 < len(stages) else 0.0
+        courses(L, -w / 2, w / 2, -d, 0.1, zb, zt - 0.4, col, seed=seed + i)
+        L.box(B['stone'], -w / 2 - 0.07, w / 2 + 0.07, -d - 0.08, 0.1, zt - 0.4, zt - 0.27, STONE_L * 0.85)
+        L.box(B['stone'], -w / 2, w / 2, -d, (-dn + 0.02) if dn else 0.1, zt - 0.27, zt + 0.35, STONE_L * 0.9, slope=0.6)
+        zb = zt - 0.27
+
+
+def shaft(x, y, z0, z1, r=0.11, col=None, n=8):
+    """A slender column with a moulded base and a bell capital."""
+    col = STONE_L * 0.95 if col is None else col
+    lathe(B['stone_r'], (x, y, z0), [(r * 1.9, 0), (r * 1.9, 0.08), (r * 1.25, 0.2)], n, col * 0.9)
+    frustum(B['stone_r'], (x, y, z0 + 0.2), (x, y, z1 - 0.34), r, r * 0.95, n, col)
+    lathe(B['stone_r'], (x, y, z1 - 0.34), [(r, 0), (r * 1.3, 0.05), (r * 1.1, 0.1), (r * 2.0, 0.27), (r * 2.0, 0.34)], n, col * 1.05)
+
+
+def statue(x, y, z, h=1.7, theta=0.0, col=None):
+    """A hooded figure in a long robe, hands folded."""
+    col = STONE_L * 0.82 if col is None else col
+    k = h / 1.42
+    prof = [(0.27, 0), (0.25, 0.06), (0.19, 0.5), (0.2, 0.9), (0.22, 1.0), (0.12, 1.1), (0.13, 1.16), (0.15, 1.28), (0.11, 1.38), (0.02, 1.42)]
+    lathe(B['stone_r'], (x, y, z), [(r * k, zz * k) for r, zz in prof], 10, col, rot=rotz(theta), scale=(1, 0.72, 1))
+    Loc(x, y, theta).box(B['stone'], -0.08 * k, 0.08 * k, -0.2 * k, -0.08 * k, z + 0.76 * k, z + 0.9 * k, col * 0.95)
+
+
+def niche_statue(L, z, h=1.8):
+    """A figure on a corbel under a small canopy."""
+    L.box(B['stone'], -0.42, 0.42, -0.46, 0.05, z - 0.3, z - 0.1, STONE_L * 0.85)
+    L.box(B['stone'], -0.28, 0.28, -0.32, 0.05, z - 0.55, z - 0.3, STONE_L * 0.75)
+    L.box(B['stone'], -0.16, 0.16, -0.2, 0.05, z - 0.75, z - 0.55, STONE_L * 0.7)
+    p = L.P([0, -0.22, 0])
+    statue(float(p[0]), float(p[1]), z - 0.1, h, L.theta)
+    L.box(B['stone'], -0.48, 0.48, -0.52, 0.05, z + h, z + h + 0.1, STONE_L * 0.8)
+    L.gable(B['stone'], -0.48, 0.48, -0.52, 0.05, z + h + 0.1, 0.55, STONE_L * 0.9)
+
+
+def finial_cross(x, y, z, h=1.1, theta=0.0, col=None):
+    col = STONE_L * 0.9 if col is None else col
+    L = Loc(x, y, theta)
+    L.box(B['stone'], -0.3, 0.3, -0.3, 0.3, z, z + 0.28, col * 0.9, slope=0.0)
+    L.box(B['stone'], -0.09, 0.09, -0.08, 0.08, z + 0.28, z + 0.28 + h, col)
+    L.box(B['stone'], -0.34 * h, 0.34 * h, -0.07, 0.07, z + 0.28 + h * 0.6, z + 0.28 + h * 0.76, col)
+
+
+def urn(x, y, z, k=1.0, col=None):
+    col = STONE_L * 0.85 if col is None else col
+    prof = [(0.12, 0), (0.2, 0.08), (0.1, 0.16), (0.24, 0.4), (0.2, 0.52), (0.12, 0.56), (0.17, 0.62), (0.02, 0.7)]
+    lathe(B['stone_r'], (x, y, z), [(r * k, zz * k) for r, zz in prof], 8, col)
+
+
+def drum_tower(x, y, z0, z1, r, col, n=8):
+    """A many-sided turret with its courses marked."""
+    lathe(B['stone'], (x, y, z0), [(r, 0), (r, z1 - z0)], n, col, rot=rotz(math.pi / n))
+    zz = z0 + 0.7
+    while zz < z1 - 0.2:
+        lathe(B['stone'], (x, y, zz), [(r + 0.012, 0), (r + 0.012, 0.035)], n, col * 0.5, rot=rotz(math.pi / n), caps=False)
+        zz += 0.7
+
+
+def iron_bars(p0, p1, z, h, step=0.24, spear=True):
+    """Railings: upright bars with spear heads between two rails."""
+    p0, p1 = np.array(p0, float), np.array(p1, float)
+    d = p1 - p0
+    Lg = float(np.hypot(d[0], d[1]))
+    ang = math.atan2(d[1], d[0])
+    n = max(2, int(Lg / step))
+    for k in range(n + 1):
+        q = p0 + d * k / n
+        hh = h + (0.14 if k % 2 == 0 else 0.0)
+        frustum(B['iron'], (q[0], q[1], z), (q[0], q[1], z + hh), 0.03, 0.03, 4, IRON, cap0=False)
+        if spear:
+            lathe(B['iron'], (q[0], q[1], z + hh), [(0.065, 0), (0.005, 0.17)], 4, IRON)
+    m = (p0 + p1) / 2
+    for zz in (z + 0.2, z + h - 0.22):
+        box(B['iron'], (m[0], m[1], zz), (Lg, 0.05, 0.07), IRON, rot=rotz(ang))
+
+
+def orders(p0, p1, tc, w, z_sill, z_spring, wall_t, seed, k=1.0, zmax=None, z0=-0.4, extra=None, floor_z=None, hood=True):
+    """Dress an arched opening of width w in a wall of thickness wall_t: a hood mould standing proud above it, then two
+    orders stepping back into the wall, the inner one shy of the wall face, and a slender shaft in each jamb.
+    The clear opening that is left is w - 0.8."""
+    zmax = zmax or (z_spring + w * k + 1.4)
+    ok = extra or (lambda T, Z, tcc, zc, r: True)
+    def ring(wo, wi, more=None):
+        def f(T, Z, tcc, zc, r):
+            m = lancet(T, Z, tc, wo, z_sill, z_spring, k) & ~lancet(T, Z, tc, wi, z_sill, z_spring, k) & ok(T, Z, tcc, zc, r)
+            return m & more(T, Z) if more else m
+        return f
+    if hood:
+        wall(B['stone'], p0, p1, wall_t + 0.5, ring(w + 0.78, w + 0.3, lambda T, Z: Z > z_spring - 0.25), zmax + 0.8, STONE_L * 0.95,
+             z0=z0, seed=seed, block=(0.7, 0.7), var=0.08, chip=0.04, relief=0.0, groove=0.03)
+    wall(B['stone'], p0, p1, wall_t + 0.28, ring(w + 0.02, w - 0.42), zmax, STONE_L, z0=z0, seed=seed + 1, block=(0.62, 0.62), var=0.1,
+         chip=0.05, relief=0.02, groove=0.035)
+    wall(B['stone'], p0, p1, max(0.3, wall_t - 0.3), ring(w - 0.42, w - 0.8), zmax, STONE_L * 0.86, z0=z0, seed=seed + 2, block=(0.62, 0.62),
+         var=0.1, chip=0.04, relief=0.02, groove=0.035)
+    if floor_z is not None:
+        p0a, p1a = np.array(p0, float), np.array(p1, float)
+        d = (p1a - p0a) / np.hypot(*(p1a - p0a))
+        nr = np.array([d[1], -d[0]])
+        for sg in (-1, 1):
+            q = p0a + d * (tc + sg * (w / 2 - 0.2)) + nr * (wall_t / 2 + 0.2)
+            shaft(float(q[0]), float(q[1]), floor_z, z_spring + 0.05, r=0.1)
+
+
 # ---------------------------------------------------------------- the place itself
 def build_stairs_and_gate():
     st = B['floor']
@@ -546,11 +725,19 @@ def build_stairs_and_gate():
     def gate_trim(T, Z):
         return lancet(T, Z, gate_w / 2, 3.9, -1, 2.9) & ~lancet(T, Z, gate_w / 2, 3.3, -1, 2.9)
     wall(B['stone'], (-gate_w / 2, GATE_Y), (gate_w / 2, GATE_Y), 1.3, gate_mask, 7.6, STONE * 1.02, z0=-0.4, seed=8.8, tint2=STONE_W)
-    wall(B['stone'], (-gate_w / 2, GATE_Y), (gate_w / 2, GATE_Y), 1.55, lambda T, Z, tc, zc, r: gate_trim(T, Z),
-         7.0, STONE_L, z0=-0.4, seed=2.1, block=(0.5, 0.5), var=0.12)
-    for sx in (-1, 1):   # buttresses in front of the piers
-        box2(B['stone'], sx * 2.55 - 0.5, sx * 2.55 + 0.5, GATE_Y - 1.25, GATE_Y - 0.6, -0.4, 2.6, STONE * 0.95)
-        box2(B['stone'], sx * 2.55 - 0.5, sx * 2.55 + 0.5, GATE_Y - 0.95, GATE_Y - 0.6, 2.6, 3.4, STONE * 0.9)
+    orders((-gate_w / 2, GATE_Y), (gate_w / 2, GATE_Y), gate_w / 2, 3.9, -1, 2.9, 1.3, 2.1, zmax=6.9, floor_z=0.0)
+    for sx in (-1, 1):   # buttresses in front of the piers, and the iron leaves of the gate standing open
+        buttress(Loc(sx * 2.9, GATE_Y - 0.65), 0.9, [(0.6, 2.9), (0.35, 4.3)] if sx < 0 else [(0.6, 2.7)], seed=sx)
+        iron_bars((sx * 1.55, GATE_Y + 0.75), (sx * 1.7, GATE_Y + 2.2), 0.0, 2.3)
+    finial_cross(-0.2, GATE_Y, 6.75, h=1.0)
+    for a, b_, sd in ((-27.4, -3.0, 1.7), (3.0, 27.4, 4.2)):    # piers along the boundary wall
+        prof = ruin_profile(sd, -0.9, 2.9, scale=3.5, rough=0.8)
+        t = 2.6
+        while t < b_ - a - 1.5:
+            ht = float(prof(np.array(t)))
+            if ht > 0.9 and abs(a + t) > 4.5:
+                buttress(Loc(a + t, GATE_Y - 0.45), 0.9, [(0.38, min(ht, 2.5) + 0.25)], seed=t)
+            t += 5.4
     lantern(0.0, GATE_Y - 0.35, 4.35, lit=True, power=90, hang=1.35)
     SOLIDS_XY.extend([(-2.5, GATE_Y, 1.4), (2.5, GATE_Y, 1.4)])
     ivy(-3.1, -1.8, GATE_Y - 0.67, 0.2, 5.5, 260, RNG)
@@ -619,7 +806,7 @@ def build_graveyard():
         return (Z < 3.1 + (mw / 2 - np.abs(u)) * 0.62) & ~lancet(T, Z, mw / 2, 1.9, -1, 1.7)
     wall(B['stone'], (mx0, my0), (mx1, my0), 0.6, front, 5.0, STONE * 0.95, z0=-0.3, seed=3.3, tint2=STONE_W)
     wall(B['stone'], (mx0, my0), (mx1, my0), 0.8, lambda T, Z, tc, zc, r: lancet(T, Z, mw / 2, 1.9, -1, 1.7) & ~lancet(T, Z, mw / 2, 1.4, -1, 1.7),
-         4.0, STONE_L, z0=-0.3, seed=1.0, block=(0.45, 0.45), var=0.1)
+         4.0, STONE_L, z0=-0.3, seed=1.0, block=(0.62, 0.62), var=0.1, chip=0.05, relief=0.02, groove=0.035)
     box2(B['stone'], mx0, mx0 + 0.6, my0, my1, -0.3, 3.1, STONE * 0.9)
     box2(B['stone'], mx1 - 0.6, mx1, my0, my1, -0.3, 3.1, STONE * 0.9)
     box2(B['stone'], mx0, mx1, my1 - 0.6, my1, -0.3, 3.1, STONE * 0.9)
@@ -630,6 +817,21 @@ def build_graveyard():
         v += [(mx0 - 0.35, y, 3.0), (xm, y, 3.0 + (mw / 2 + 0.35) * 0.62), (mx1 + 0.35, y, 3.0)]
     B['roof'].add(v, quads=[[0, 1, 4, 3], [1, 2, 5, 4], [0, 3, 5, 2]], tris=[[0, 2, 1], [3, 4, 5]], col=SLATE * 1.1)
     box2(B['floor'], xm - 1.3, xm + 1.3, my0 - 0.9, my0 - 0.3, -0.3, 0.14, STONE * 0.9)
+    box2(B['floor'], xm - 1.75, xm + 1.75, my0 - 1.35, my0 - 0.9, -0.3, 0.02, STONE * 0.85)
+    ML = Loc(xm, my0 - 0.3)
+    for sx in (-1, 1):                  # corner pilasters with caps, urns above them
+        courses(ML, sx * (mw / 2 - 0.3) - 0.32, sx * (mw / 2 - 0.3) + 0.32, -0.16, 0.05, -0.3, 2.85, STONE_L * 0.85, seed=sx + 5.0)
+        ML.box(B['stone'], sx * (mw / 2 - 0.3) - 0.4, sx * (mw / 2 - 0.3) + 0.4, -0.24, 0.05, 2.85, 3.02, STONE_L * 0.95)
+        urn(xm + sx * (mw / 2 + 0.05), my0 - 0.2, 3.3, k=1.1)
+    ML.box(B['stone'], -mw / 2 - 0.3, mw / 2 + 0.3, -0.34, 0.05, 3.02, 3.14, STONE_L * 0.9)          # cornice
+    ML.box(B['stone'], -mw / 2 - 0.22, mw / 2 + 0.22, -0.26, 0.05, 3.14, 3.26, STONE_L * 0.8)
+    ML.box(B['stone'], -mw / 2 - 0.12, mw / 2 + 0.12, -0.2, 0.05, -0.3, 0.42, STONE_L * 0.75, slope=0.12)   # plinth
+    q0, q1 = ML.P([0, -0.09, 4.0]), ML.P([0, 0.05, 4.0])                    # round window in the gable
+    frustum(B['stone_r'], q0 + (0, 0.03, 0), q1, 0.52, 0.52, 12, STONE_L * 0.95)
+    frustum(B['iron'], q0, q1, 0.36, 0.36, 12, (0.01, 0.01, 0.015))
+    finial_cross(xm, my0 - 0.2, 3.0 + (mw / 2 + 0.35) * 0.62 - 0.12, h=0.9)
+    iron_bars((xm - 0.68, my0 - 0.28), (xm - 0.4, my0 - 0.95), 0.14, 2.0, step=0.17)        # one leaf ajar
+    iron_bars((xm + 0.02, my0 - 0.26), (xm + 0.68, my0 - 0.26), 0.14, 2.0, step=0.17)
     SOLIDS_XY.append((xm, (my0 + my1) / 2, 4.0))
     ivy(mx0, mx0 + 1.8, my0 - 0.33, 0.0, 3.4, 200, RNG)
 
@@ -723,24 +925,55 @@ def build_church():
         ub = tc - c0
         gable = 14.6 - 0.60 * np.abs(ub)
         gable = gable - np.where(ub > 3.2, (ub - 3.2) * 0.75 + r * 1.6, 0) - np.where(ub < -7.5, r * 1.0, 0)
-        return (zc + 0.35 < gable) & ~ntrim_all(T, Z)
+        whole = (ub <= 3.2) & (ub >= -7.5)          # where the gable still stands it is cut to a clean rake under its coping
+        return np.where(whole, Z < 14.55 - 0.60 * np.abs(T - c0), zc + 0.35 < gable) & ~ntrim_all(T, Z)
     def ntrim_all(T, Z):
         return lancet(T, Z, c0, 5.8, 2.95, 8.3) | lancet(T, Z, c0 - 6.7, 1.9, 3.45, 6.6) | lancet(T, Z, c0 + 6.7, 1.9, 3.45, 6.6)
     wall(st, (CH_X0, CH_Y1), (CH_X1, CH_Y1), 1.3, north, 15.0, STONE, z0=FL - 0.1, seed=5.5, tint2=STONE_W)
     wall(st, (CH_X0, CH_Y1), (CH_X1, CH_Y1), 1.6, lambda T, Z, tc, zc, r: ntrim_all(T, Z) & ~great(T, Z) & ~sidew(T, Z),
-         14.0, STONE_L, z0=FL - 0.1, seed=6.1, block=(0.5, 0.5), var=0.1)
+         14.0, STONE_L, z0=FL - 0.1, seed=6.1, block=(0.62, 0.62), var=0.1, chip=0.05, relief=0.02, groove=0.035)
+    wall(st, (CH_X0, CH_Y1), (CH_X1, CH_Y1), 2.1,                      # hood mould over the great window
+         lambda T, Z, tc, zc, r: lancet(T, Z, c0, 6.65, 2.95, 8.3) & ~lancet(T, Z, c0, 6.15, 2.95, 8.3) & (Z > 8.0) & (tc - c0 < 3.4),
+         14.4, STONE_L * 0.95, z0=FL - 0.1, seed=6.6, block=(0.7, 0.7), var=0.08, chip=0.04, relief=0.0, groove=0.03)
+    def blind(T, Z, tc, zc, r):                                        # blind arcade behind the altar
+        pan = np.zeros_like(T, bool)
+        for i in range(-7, 7):
+            pan |= lancet(T, Z, c0 + (i + 0.5) * 1.22, 0.82, 1.62, 2.1)
+        return (Z > 1.42) & (Z < 2.92) & (np.abs(T - c0) < 8.7) & ~pan
+    wall(st, (CH_X0, CH_Y1), (CH_X1, CH_Y1), 1.62, blind, 3.0, STONE_L * 0.9, z0=1.3, seed=6.9, block=(0.6, 0.5), var=0.08, chip=0.0)
+    rk = math.atan(0.60)
+    u = -7.2
+    while u < 3.1:                                                      # coping stones up the rake, a saddle stone and a cross on top
+        if abs(u) > 0.45:
+            box(st, (u, CH_Y1, 14.58 - 0.60 * abs(u)), (1.07, 1.56, 0.2), STONE_L * (0.82 + 0.12 * float(hash01(u, 1.0, 2.0))),
+                rot=roty(-rk if u < 0 else rk))
+        u += 0.9
+    box2(st, -0.5, 0.5, CH_Y1 - 0.9, CH_Y1 + 0.9, 14.25, 14.75, STONE_L * 0.9)
+    finial_cross(0.0, CH_Y1, 14.75, h=1.5)
+    for sx in (-1, 1):
+        niche_statue(Loc(sx * 4.55, CH_Y1 - 0.65), 4.9, h=1.9)
     JEWEL = np.array([[0.70, 0.07, 0.12], [0.90, 0.42, 0.06], [0.06, 0.30, 0.42], [0.22, 0.10, 0.50], [0.85, 0.70, 0.36], [0.50, 0.05, 0.22]])
     def glass_mask(T, Z, tc, zc, r):
         n = fbm(T * 1.0, Z * 1.0, 1.6, 3.0)
         keep = (Z > 8.55) | ((n > 0.60) & (Z > 5.2)) | ((np.abs(T - c0) > 6) & (n > 0.50))
         return (great(T, Z) | sidew(T, Z)) & keep
-    wall(B['glass'], (CH_X0, CH_Y1), (CH_X1, CH_Y1), 0.08, glass_mask, 12.6, (1, 1, 1), z0=3.3, seed=7.0, block=(0.25, 0.25), joint=1.0,
+    wall(B['glass'], (CH_X0, CH_Y1), (CH_X1, CH_Y1), 0.08, glass_mask, 12.6, (1, 1, 1), z0=3.3, seed=7.0, block=(0.25, 0.25), joint=1.0, relief=0.0, groove=0.0, chip=0.0,
          col_fn=lambda r, r2, T, Z: JEWEL[(r * 5.999).astype(int)] * (0.6 + 0.6 * r2[..., None]))
-    for sx in (-1, 1):   # corner turrets
+    for sx in (-1, 1):   # eight-sided corner turrets: the west one whole under a stone cap, the east one snapped off
         x = sx * 10.0
-        box2(st, x - 0.95, x + 0.95, CH_Y1 - 0.95, CH_Y1 + 0.95, 0.0, 10.4 if sx < 0 else 8.2, STONE * 0.93)
+        zt = 10.6 if sx < 0 else 8.0
+        drum_tower(x, CH_Y1, 0.0, zt, 1.15, STONE * 0.93)
+        for zz in (3.4, 7.0):
+            lathe(st, (x, CH_Y1, zz), [(1.2, 0), (1.3, 0.08), (1.3, 0.2), (1.2, 0.28)], 8, STONE_L * 0.85, rot=rotz(math.pi / 8))
+        TL = Loc(x, CH_Y1 - 1.06)
+        for zz in (4.6, 8.2) if sx < 0 else (4.6,):
+            TL.box(B['iron'], -0.09, 0.09, -0.03, 0.05, zz, zz + 1.1, (0.01, 0.01, 0.015))
+            TL.box(st, -0.26, 0.26, -0.1, 0.05, zz - 0.14, zz, STONE_L * 0.85)
         if sx < 0:
-            lathe(st, (x, CH_Y1, 10.4), [(1.5, 0), (0.06, 2.4)], 4, STONE_L * 0.85, rot=rotz(math.pi / 4))
+            lathe(st, (x, CH_Y1, zt), [(1.2, 0), (1.42, 0.1), (1.42, 0.3), (1.25, 0.42), (0.1, 3.0)], 8, STONE_L * 0.82, rot=rotz(math.pi / 8))
+            blob(B['stone_r'], (x, CH_Y1, zt + 3.08), (0.15, 0.15, 0.18), STONE_L * 0.9, sub=1, rough=0.0)
+        else:
+            lathe(st, (x, CH_Y1, zt), [(1.15, 0), (1.0, 0.45), (0.5, 0.8)], 8, STONE * 0.8, rot=rotz(0.2) @ rotx(0.18))
     ivy(-9.2, -4.0, CH_Y1 - 0.67, FL + 0.6, 7.5, 520, RNG, patches=4)
     ivy(4.2, 9.4, CH_Y1 - 0.67, FL + 0.6, 6.0, 420, RNG, patches=3)
 
@@ -753,9 +986,13 @@ def build_church():
         prof = np.where(np.abs(ub) < 4.6, np.maximum(mid, sides), sides)
         return (zc + 0.35 < prof + FL) & ~lancet(T, Z, c0, 3.8, 0, 3.9) & ~lancet(T, Z, c0 - 8.3, 1.1, 3.0, 4.6)
     wall(st, (CH_X0, CH_Y0), (CH_X1, CH_Y0), 1.15, south, 9.6, STONE, z0=FL - 0.1, seed=9.1, tint2=STONE_W)
-    wall(st, (CH_X0, CH_Y0), (CH_X1, CH_Y0), 1.45,
-         lambda T, Z, tc, zc, r: lancet(T, Z, c0, 3.8, 0, 3.9) & ~lancet(T, Z, c0, 3.0, 0, 3.9) & (zc < 6.4 - np.where(tc - c0 > 1.2, 1.4, 0)),
-         7.2, STONE_L, z0=FL - 0.1, seed=4.2, block=(0.5, 0.5), var=0.1)
+    orders((CH_X0, CH_Y0), (CH_X1, CH_Y0), c0, 3.8, 0, 3.9, 1.15, 4.2, zmax=7.6, z0=FL - 0.1, floor_z=FL,
+           extra=lambda T, Z, tc, zc, r: zc < 6.6 - np.where(tc - c0 > 1.2, 1.5, 0))
+    SL = Loc(0.0, CH_Y0 - 0.575)
+    buttress(Loc(-4.1, CH_Y0 - 0.575), 1.1, [(0.9, 3.0), (0.55, 4.5)], z0=-0.3, seed=11.0)
+    buttress(Loc(4.1, CH_Y0 - 0.575), 1.1, [(0.9, 2.3)], z0=-0.3, seed=12.0)
+    for xa, xb in ((CH_X0 - 0.6, -4.65), (-3.55, -2.35), (2.35, 3.55), (4.65, CH_X1 + 0.6)):       # plinth course
+        SL.box(st, xa, xb, -0.17, 0.05, -0.3, FL + 0.5, STONE_L * 0.78, slope=0.13)
     for sx in (-1, 1):
         lantern(sx * 2.45, CH_Y0 - 0.85, 3.5, lit=True, power=60)
         box(B['iron'], (sx * 2.45, CH_Y0 - 0.72, 3.78), (0.06, 0.3, 0.06), (0.03, 0.03, 0.035))
@@ -777,10 +1014,10 @@ def build_church():
         win = lancet(T, Z, 17.0, 1.2, 3.2, 5.2) | lancet(T, Z, 22.5, 1.2, 3.2, 5.6)
         return (zc + 0.35 < prof + FL) & ~win
     wall(st, (CH_X0, CH_Y0), (CH_X0, CH_Y1), 1.1, west, 10.5, STONE * 0.97, z0=FL - 0.1, seed=14.9, tint2=STONE_W)
-    for y in (33.5, 44.0, 50.5):   # buttress stubs outside
-        box2(st, CH_X1 + 0.5, CH_X1 + 1.5, y - 0.5, y + 0.5, -0.3, 1.2 + (y - 30) * 0.08, STONE * 0.9)
-    box2(st, CH_X0 - 1.5, CH_X0 - 0.5, 33.0, 34.0, -0.3, 2.2, STONE * 0.9)
-    box2(st, CH_X0 - 1.5, CH_X0 - 0.5, 45.2, 46.2, -0.3, 3.2, STONE * 0.9)
+    for y in (33.5, 44.0, 50.5):   # what is left of the buttresses outside
+        buttress(Loc(CH_X1 + 0.55, y, math.pi / 2), 1.0, [(0.95, 1.9 + (y - 30) * 0.09)], z0=-0.3, seed=y)
+    buttress(Loc(CH_X0 - 0.55, 33.5, -math.pi / 2), 1.0, [(0.95, 2.6)], z0=-0.3, seed=1.0)
+    buttress(Loc(CH_X0 - 0.55, 45.7, -math.pi / 2), 1.0, [(0.95, 2.6), (0.6, 3.9)], z0=-0.3, seed=2.0)
 
     # columns
     spec = {(-1, 0): 6.6, (-1, 1): 2.3, (-1, 2): 6.6, (-1, 3): 6.6, (1, 0): 1.1, (1, 1): 6.6, (1, 2): 6.6, (1, 3): 3.6}
@@ -857,17 +1094,58 @@ def build_tower():
     wall(st, (xw, TW_Y0 + th), (xw, TW_Y1 - th), th, lambda *a: face(*a, c=Ls / 2), TOP, STONE * 0.98, z0=-0.4, seed=23.0, tint2=STONE_W)
     wall(st, (xe, TW_Y0 + th), (xe, TW_Y1 - th), th, lambda *a: face(*a, c=Ls / 2), TOP, STONE * 0.98, z0=-0.4, seed=24.0, tint2=STONE_W)
     wall(st, (TW_X0, ys), (TW_X1, ys), th + 0.3,
-         lambda T, Z, tc, zc, r: (btrim(T, Z, Wd / 2) & ~belfry(T, Z, Wd / 2)) | (lancet(T, Z, Wd / 2, 3.0, -1, 3.3) & ~lancet(T, Z, Wd / 2, 2.3, -1, 3.3)),
-         TOP, STONE_L, z0=-0.4, seed=25.0, block=(0.5, 0.5), var=0.1)
-    for z in (5.7, 9.4, 13.0 + BZ, TOP - 0.3):   # string courses
-        box2(st, TW_X0 - 0.16, TW_X1 + 0.16, TW_Y0 - 0.16, TW_Y1 + 0.16, z, z + 0.3, STONE_L * 0.88)
-    for sx in (-1, 1):                     # corner buttresses, stepped
+         lambda T, Z, tc, zc, r: btrim(T, Z, Wd / 2) & ~belfry(T, Z, Wd / 2),
+         TOP, STONE_L, z0=-0.4, seed=25.0, block=(0.62, 0.62), var=0.1, chip=0.05, relief=0.02, groove=0.035)
+    wall(st, (TW_X0, ys), (TW_X1, ys), th + 0.75,                                         # hood mould over the belfry opening
+         lambda T, Z, tc, zc, r: lancet(T, Z, Wd / 2, 5.1, 13.55 + BZ, 15.9 + BZ, k=0.75) & ~lancet(T, Z, Wd / 2, 4.62, 13.55 + BZ, 15.9 + BZ, k=0.75)
+         & (Z > 15.6 + BZ), TOP - 0.4, STONE_L * 0.95, z0=15.0 + BZ, seed=25.5, block=(0.7, 0.7), var=0.08, chip=0.04, relief=0.0, groove=0.03)
+    orders((TW_X0, ys), (TW_X1, ys), Wd / 2, 3.0, -1, 3.3, th, 26.0, zmax=6.6, floor_z=0.22)
+    for z in (5.7, 9.4, 13.0 + BZ):   # string courses, each with a chamfered drip below
+        box2(st, TW_X0 - 0.2, TW_X1 + 0.2, TW_Y0 - 0.2, TW_Y1 + 0.2, z, z + 0.24, STONE_L * 0.88)
+        box2(st, TW_X0 - 0.1, TW_X1 + 0.1, TW_Y0 - 0.1, TW_Y1 + 0.1, z - 0.14, z, STONE_L * 0.72)
+    PT = 13.6 + BZ
+    for sx in (-1, 1):                     # corner piers in courses, with stepped buttresses and a pinnacle on each
         for sy in (-1, 1):
             x, y = cx + sx * (Wd / 2 - 0.2), cy + sy * (Wd / 2 - 0.2)
-            box2(st, x - 0.8, x + 0.8, y - 0.8, y + 0.8, -0.4, 9.2, STONE * 0.92)
-            box2(st, x - 0.62, x + 0.62, y - 0.62, y + 0.62, 9.2, 13.6 + BZ, STONE * 0.92)
+            courses(Loc(x, y), -0.72, 0.72, -0.72, 0.72, -0.4, PT, STONE * 0.92, seed=sx * 3.0 + sy)
+            pinnacle(x, y, PT, s=1.15, h=3.7)
+            buttress(Loc(x + sx * 0.72, y, sx * math.pi / 2), 1.44, [(1.0, 5.7), (0.65, 9.4), (0.35, 13.3)], seed=sx + sy * 2.0)
+            if sy < 0:
+                buttress(Loc(x, y - 0.72), 1.44, [(1.0, 5.7), (0.65, 9.4), (0.35, 13.3)], seed=sx * 5.0)
+    TS = Loc(cx, TW_Y0)
+    for xa, xb in ((-Wd / 2 + 0.55, -1.95), (1.95, Wd / 2 - 0.55)):                       # plinth course
+        TS.box(st, xa, xb, -0.2, 0.05, -0.4, 0.8, STONE_L * 0.78, slope=0.15)
+    for k, z in enumerate((6.8, 10.4)):                                                    # dressings of the slit windows
+        TS.box(st, -0.56, 0.56, -0.16, 0.05, z - 0.17, z, STONE_L * 0.88, slope=0.07)
+        for sg in (-1, 1):
+            TS.box(st, sg * 0.37 - 0.1, sg * 0.37 + 0.1, -0.09, 0.05, z, z + 1.9, STONE_L * 0.92)
+        TS.gable(st, -0.6, 0.6, -0.17, 0.05, z + 1.9, 0.42, STONE_L * 0.88)
+    TS.box(st, -2.6, 2.6, -0.34, 0.05, 13.33 + BZ, 13.55 + BZ, STONE_L * 0.9)             # belfry sill on corbels
+    for u in (-2.1, -0.7, 0.7, 2.1):
+        TS.box(st, u - 0.16, u + 0.16, -0.26, 0.05, 13.0 + BZ, 13.33 + BZ, STONE_L * 0.78)
+    def pierced(T, Z, tc, zc, r):                                                          # pierced parapet across the opening
+        return ((T % 0.62 - 0.31) ** 2 + (Z - 14.22 - BZ) ** 2) > 0.2 ** 2
+    wall(st, (cx - 1.86, TW_Y0 + 0.22), (cx + 1.86, TW_Y0 + 0.22), 0.22, pierced, 14.55 + BZ, STONE_L * 0.9, z0=13.9 + BZ, seed=27.0,
+         block=(0.62, 0.7), var=0.06, chip=0.0, relief=0.0, groove=0.0)
+    for a in range(4):                                                                     # corbel table and cornice under the eaves
+        CL = Loc(cx + math.sin(a * math.pi / 2) * Wd / 2, cy - math.cos(a * math.pi / 2) * Wd / 2, a * math.pi / 2)
+        u = -Wd / 2 + 0.25
+        while u < Wd / 2 - 0.1:
+            CL.box(st, u - 0.13, u + 0.13, -0.2, 0.05, TOP - 0.86, TOP - 0.6, STONE_L * 0.74)
+            CL.box(st, u - 0.15, u + 0.15, -0.4, 0.05, TOP - 0.6, TOP - 0.3, STONE_L * 0.84)
+            u += 0.6
+    box2(st, TW_X0 - 0.5, TW_X1 + 0.5, TW_Y0 - 0.5, TW_Y1 + 0.5, TOP - 0.3, TOP - 0.06, STONE_L * 0.9)
+    for sx in (-1, 1):                                                                     # water spouts at the corners
+        for sy in (-1, 1):
+            ang = math.atan2(sy, sx)
+            gx, gy = cx + sx * (Wd / 2 + 0.75), cy + sy * (Wd / 2 + 0.75)
+            box(st, (gx, gy, TOP - 0.5), (1.3, 0.28, 0.3), STONE * 0.8, rot=rotz(ang))
+            blob(B['stone_r'], (gx + sx * 0.5, gy + sy * 0.5, TOP - 0.44), (0.24, 0.24, 0.22), STONE * 0.85, sub=1, rough=0.2)
     box2(st, TW_X0 + th, TW_X1 - th, TW_Y0 + th, TW_Y1 - th, 12.7 + BZ, 13.1 + BZ, STONE_D)       # belfry floor
-    box2(B['wood'], cx - 1.2, cx + 1.2, ys + 0.1, ys + 0.3, -0.2, 5.3, WOOD * 1.1)      # door
+    for i in range(6):                                                                     # door of six planks
+        rr = float(hash01(i * 1.0, 4.0, 9.0))
+        box2(B['wood'], cx - 1.2 + i * 0.4 + 0.015, cx - 1.2 + (i + 1) * 0.4 - 0.015, ys + 0.1 - 0.03 * (i % 2), ys + 0.3, -0.2, 5.3, WOOD * (0.95 + 0.4 * rr))
+    box(B['iron'], (cx + 0.75, ys + 0.03, 2.3), (0.16, 0.08, 0.16), IRON, rot=roty(math.pi / 4))
     for k in range(3):
         box2(B['iron'], cx - 1.2, cx + 1.2, ys + 0.02, ys + 0.12, 0.6 + k * 1.25, 0.72 + k * 1.25, (0.03, 0.03, 0.035))
     box2(B['floor'], cx - 1.6, cx + 1.6, TW_Y0 - 0.75, TW_Y0 + 0.1, -0.4, 0.22, STONE_L * 0.9)
@@ -877,6 +1155,12 @@ def build_tower():
     for k in range(n):
         ra, rb = r0 * (1 - k / n) + 0.1, r0 * (1 - (k + 1) / n) + 0.02
         lathe(B['roof'], (cx, cy, TOP + RH * k / n), [(ra, 0.0), (rb, RH / n)], 4, SLATE * (0.8 + 0.4 * hash01(k * 1.0, 2.0, 5.0)), rot=rotz(math.pi / 4))
+    for a in (0,):                                                                         # a dormer on the south slope
+        DL = Loc(cx + math.sin(a * math.pi / 2) * 3.62, cy - math.cos(a * math.pi / 2) * 3.62, a * math.pi / 2)
+        DL.box(st, -0.6, 0.6, -0.55, 0.9, TOP + 0.9, TOP + 2.0, STONE_L * 0.85)
+        DL.gable(B['roof'], -0.78, 0.78, -0.72, 1.5, TOP + 2.0, 0.72, SLATE * 1.15)
+        DL.box(B['iron'], -0.3, 0.3, -0.58, -0.5, TOP + 1.1, TOP + 1.85, (0.01, 0.01, 0.015))
+        DL.box(st, -0.42, 0.42, -0.66, -0.5, TOP + 0.96, TOP + 1.1, STONE_L * 0.95)
     frustum(B['iron'], (cx, cy, TOP + RH - 0.1), (cx, cy, TOP + RH + 1.6), 0.07, 0.04, 4, (0.03, 0.03, 0.035))
     box(B['iron'], (cx, cy, TOP + RH + 1.05), (0.9, 0.08, 0.1), (0.03, 0.03, 0.035))
     # the bell, hung in the south opening so the camera can see it
@@ -906,6 +1190,10 @@ def build_cloister():
             op |= lancet(T, Z, 1.3 + 2.33 * i, 1.75, 0.75, 2.45)
         return (zc + 0.3 < np.minimum(pa(tc), 4.5)) & ~op
     wall(st, (a0, ay), (a1, ay), 0.7, arc, 4.6, STONE_L * 0.86, z0=-0.3, seed=31.0, block=(0.9, 0.55), tint2=STONE_W)
+    for k in range(5):                    # a slender shaft in front of each pier that still stands
+        t = 0.135 + 2.33 * k
+        if float(pa(np.array(t))) > 2.7:
+            shaft(a0 + t, ay - 0.5, -0.2, 2.55, r=0.12)
     # dwarf wall and column stubs, south side
     for (xa, xb, sd) in ((-26.6, -20.3, 1.0), (-17.7, -11.6, 2.0)):
         pd_ = ruin_profile(sd + 9, 0.35, 1.0, scale=2.0)
@@ -984,7 +1272,7 @@ def build_terrace_and_cliff():
     def bal(T, Z, tc, zc, r):
         gap = (tc > 5.2) & (tc < 7.4)
         return ((Z < 0.3) | (Z > 0.95) | ((T % 0.62) < 0.26)) & ~(gap & (Z > 0.3)) & ~((tc > 7.4) & (tc < 8.0) & (Z > 0.7))
-    wall(st, (11.4, 61.75), (27.0, 61.75), 0.45, bal, 1.22, STONE_L * 0.85, z0=-0.2, seed=41.0, block=(1.2, 0.3), var=0.12)
+    wall(st, (11.4, 61.75), (27.0, 61.75), 0.45, bal, 1.22, STONE_L * 0.85, z0=-0.2, seed=41.0, block=(1.2, 0.3), var=0.12, chip=0.06, relief=0.03)
     for x in (11.6, 16.5, 19.0, 23.0, 26.8):
         box2(st, x - 0.35, x + 0.35, 61.4, 62.1, -0.3, 1.5, STONE_L * 0.8)
         lathe(st, (x, 61.75, 1.5), [(0.52, 0), (0.05, 0.35)], 4, STONE_L * 0.85, rot=rotz(math.pi / 4))
@@ -1176,7 +1464,8 @@ if os.environ.get('NORENDER') != '1':
 meta = {
     'w': W * RES, 'h': H * RES, 'scale': S * RES, 'sin': SIN, 'cos': COS, 'x0': X0, 'sy0': SY0 * RES,
     'dw': int(W * DRES), 'dh': int(H * DRES), 'dscale': S * DRES,
-    'spawn': list(SPAWN), 'exits': EXITS, 'lights': LIGHTS, 'key_dir': list(KEY_DIR),
+    'spawn': list(SPAWN), 'exits': EXITS, 'lights': LIGHTS, 'key_dir': list(KEY_DIR), 'pool': list(POOL),
+    'paths': [[[list(map(float, q)) for q in pts], w] for pts, w in PATHS],
     'name': '鐘のならない修道院', 'sub': '月替わりの刻',
 }
 json.dump(meta, open(os.path.join(WORK, 'meta.json'), 'w'), ensure_ascii=False, indent=1)

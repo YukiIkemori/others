@@ -229,12 +229,15 @@ def hash01(a, b, seed=0.0):
 
 # ---------------------------------------------------------------- masonry
 def wall(mb, p0, p1, thick, mask_fn, zmax, col, z0=0.0, res=0.125, block=(1.35, 0.7), seed=0.0,
-         var=0.22, joint=0.74, tint2=None, col_fn=None):
+         var=0.22, joint=0.74, tint2=None, col_fn=None, relief=0.07, groove=0.045, chip=0.24):
     """A wall as a 2D mask in its own plane (t along the wall, z up), extruded to `thick`.
 
     mask_fn(T, Z, tc, zc, r) -> bool array.  T, Z are cell centres; tc, zc the centre and the base of the masonry
     block a cell belongs to; r a random number per block.  Deciding from tc/zc removes whole blocks, which is
     what gives a ruined edge; deciding from T/Z cuts stone cleanly, which is what windows need.
+
+    The face is not flat: every block sits a little proud or shy of its neighbours and is slightly tilted (`relief`),
+    the joints between blocks are cut in (`groove`), and free edges are nibbled away here and there (`chip`).
     """
     p0 = np.asarray(p0, np.float64)
     p1 = np.asarray(p1, np.float64)
@@ -260,6 +263,16 @@ def wall(mb, p0, p1, thick, mask_fn, zmax, col, z0=0.0, res=0.125, block=(1.35, 
     m = np.asarray(mask_fn(T, Z, tc, zc, r), bool)
     if not m.any():
         return
+    if chip > 0:
+        # worn edges: bites out of the top and the ends, and most outer corners knocked off
+        mp = np.pad(m, 1)
+        up_, lf, rg = mp[2:, 1:-1], mp[1:-1, :-2], mp[1:-1, 2:]
+        free = m & ~(up_ & lf & rg)
+        corner = m & ~up_ & ~(lf & rg)
+        bite = hash01(np.floor(T / (rt * 2)), np.floor(Z / (rz * 2)), seed + 9.9)
+        m = m & ~(free & (bite < chip)) & ~(corner & (bite < 0.75))
+        if not m.any():
+            return
     # colour: per-block variation, darker joints
     fr_t = ((T + off) / bl) % 1.0
     fr_z = ((Z - z0) / bh) % 1.0
@@ -278,7 +291,20 @@ def wall(mb, p0, p1, thick, mask_fn, zmax, col, z0=0.0, res=0.125, block=(1.35, 
     GT, GZ = np.meshgrid(gt, gz)
     def pts(s):
         return np.stack([p0[0] + d[0] * GT + nrm[0] * s, p0[1] + d[1] * GT + nrm[1] * s, GZ], -1).reshape(-1, 3)
-    V = np.concatenate([pts(thick / 2), pts(-thick / 2)])
+    OFF = 0.0
+    if relief > 0 or groove > 0:
+        cv = np.clip(np.floor((GZ - z0) / bh - 1e-6), 0, None)
+        offv = hash01(cv, 7.0, seed) * bl
+        biv = np.floor((GT + offv) / bl)
+        rv = hash01(cv, biv, seed + 5.7)
+        ft, fz = ((GT + offv) / bl) % 1.0, ((GZ - z0) / bh) % 1.0
+        jw = max(rt, rz) * 0.55
+        inj = (np.minimum(ft, 1 - ft) * bl < jw) | (np.minimum(fz, 1 - fz) * bh < jw)
+        tilt = (hash01(biv, cv, seed + 1.3) - 0.5) * (ft - 0.5) + (hash01(biv, cv, seed + 2.9) - 0.5) * (fz - 0.5)
+        OFF = relief * (rv - 0.4) + relief * 1.1 * tilt
+        OFF = np.where(rv < 0.06, -relief * 1.5, OFF)             # here and there a stone has gone
+        OFF = np.where(inj, -groove, OFF)
+    V = np.concatenate([pts(thick / 2 + OFF), pts(-thick / 2 - OFF)])
     nb = (nz + 1) * (nt + 1)
     idx = lambda k, i: k * (nt + 1) + i
     K, I = np.nonzero(m)

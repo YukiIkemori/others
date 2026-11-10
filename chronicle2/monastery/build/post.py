@@ -33,11 +33,12 @@ assert zmap.shape == (DH, DW), (zmap.shape, DW, DH)
 GX0, GY0, CELL, NX, NY = bk['grid']
 NX, NY = int(NX), int(NY)
 
-src = Image.open(os.path.join(WORK, os.environ.get('BEAUTY', 'beauty.png')))
-assert src.size == (W, H), (src.size, W, H)
-im = np.asarray(src.convert('RGBA')).astype(np.float32) / 255.0
-rgb, a = im[..., :3].copy(), im[..., 3].copy()
-del im
+if not PIX:
+    src = Image.open(os.path.join(WORK, os.environ.get('BEAUTY', 'beauty.png')))
+    assert src.size == (W, H), (src.size, W, H)
+    im = np.asarray(src.convert('RGBA')).astype(np.float32) / 255.0
+    rgb, a = im[..., :3].copy(), im[..., 3].copy()
+    del im
 
 # ---- what every data pixel is looking at
 hit = ~np.isnan(zmap)
@@ -108,147 +109,120 @@ def hexc(s):
     return np.array([int(s[i:i + 2], 16) for i in (1, 3, 5)], np.float32) / 255
 
 
-# ---------------------------------------------------------------- 1. mist
-# Mist lies in the low ground: thin and patchy on the hilltop, thick on the slopes that fall away.
-n = fbm(wx, wy * 1.25, 7.0, 3.0)
-patch = smooth(0.38, 0.72, n)
-low = np.clip((1.0 - z) / 1.5, 0, 1) * (0.10 + 0.9 * patch) * (float(os.environ.get('MIST', '0.3')) if PIX else 1.0) * 0.30
-slope = np.clip((-0.5 - z) / 4.6, 0, 1) ** 0.75 * 0.93
-flank = smooth(27.2, 31.0, np.abs(wx)) * np.clip((4.0 - z) / 6.0, 0, 1) * 0.55
-fog = np.clip(np.maximum(low, np.maximum(slope, flank)), 0, 0.94) * hit
-FOG = hexc('#8f6f84')
-FOG_WARM = hexc('#e2ae92')
-warm = smooth(0.3, 0.9, fbm(wx, wy, 13.0, 8.0)) * 0.7
-fogU = up(fog)[..., None]
-fc = FOG + (FOG_WARM - FOG) * up(warm)[..., None]
-rgb = rgb * (1 - fogU) + fc * fogU
-del fc
-
-# ---------------------------------------------------------------- 2. glow around flames, glass and sunlit stone
-lum = rgb @ LUM
-hot = np.clip((lum - 0.78) * 4.0, 0, 1)[..., None] * rgb
-glow = blur(hot, 2.4 * K, 2) * 0.55 + blur(hot, 7.0 * K) * 0.5 + blur(hot, 22.0 * K, 8) * 0.35
-rgb = 1 - (1 - rgb) * (1 - np.clip(glow, 0, 1) * np.array([1.0, 0.80, 0.58], np.float32) * (0.45 if PIX else 1.0))
-del hot, glow
-# the low moon rakes across everything: a soft warm veil where lit surfaces gather, the way haze catches light
-lit = np.clip((lum - 0.42) * 2.2, 0, 1)
-veil = blur(lit, 30.0 * K, 8)[..., None]
-rgb = rgb + (hexc('#f0c29c') - rgb) * veil * (0.05 if PIX else 0.16)
-del lit, veil, lum
-
-# ---------------------------------------------------------------- 3. dusk grade: plum shadows, rose middles, amber lights
-lum = (rgb @ LUM)[..., None]
-SH = hexc('#2b2843') * 0.9
-HI = hexc('#f6d7ad')
-rgb = rgb + (SH - rgb) * (0.13 if PIX else 0.26) * (1 - lum) ** 2.2
-rgb = rgb + (HI - rgb) * 0.20 * lum ** 2
-# pull the greens toward the stone so the grass sits in the same evening
-g = rgb[..., 1]
-exc = np.clip(g - np.maximum(rgb[..., 0], rgb[..., 2]), 0, 1)
-GRN = 0.15 if PIX else 1.0                            # pixel style lets the grass keep more of its own green
-rgb[..., 1] = g - exc * 0.38 * GRN
-rgb[..., 0] += exc * 0.14 * GRN
-rgb[..., 2] += exc * 0.12 * GRN
-# a share of the sketch's own colour scale, so every tone belongs to the same five colours
-lum = np.clip(rgb @ LUM, 0, 1)
-stops = [(0.0, '#150f1c'), (0.16, '#2b2843'), (0.38, '#5d4a66'), (0.60, '#a9747a'), (0.84, '#ecc79a'), (1.0, '#fff3dc')]
-ramp = np.zeros_like(rgb)
-for (t0, c0), (t1, c1) in zip(stops[:-1], stops[1:]):
-    m = (lum >= t0) & (lum <= t1)
-    f = ((lum - t0) / (t1 - t0))[..., None]
-    ramp = np.where(m[..., None], hexc(c0) + (hexc(c1) - hexc(c0)) * f, ramp)
-rgb = rgb + (ramp - rgb) * float(os.environ.get('RAMP', '0.06' if PIX else '0.24'))
-del ramp
-# contrast, and a lift in the middle so the shadow side of things stays readable in play
-rgb = np.clip(rgb, 0, 1)
-rgb = rgb * rgb * (3 - 2 * rgb) * 0.5 + rgb * 0.5
-mean = rgb.mean(-1, keepdims=True)
-rgb = np.clip(mean + (rgb - mean) * (1.42 if PIX else 1.16), 0, 1)
-rgb = rgb ** float(os.environ.get('GAMMA', '0.72' if PIX else '0.79'))
-
-# ---------------------------------------------------------------- 4. a soft dark line where a nearer thing ends
-d = np.where(hit, depth, 1e3)
-far = np.zeros((DH, DW), np.float32)
-for dy, dx in ((0, 1), (0, -1), (1, 0), (-1, 0)):
-    nb = np.roll(d, (dy, dx), (0, 1))
-    far = np.maximum(far, np.clip((nb - d - 0.55) / 0.6, 0, 1))
-far[(kind == 3) | (kind == 0)] *= 0.25
-far *= (1 - fog) ** 2
 if not PIX:
-    farU = up(far)[..., None]
-    rgb = rgb * (1 - 0.22 * farU) + SH * 0.5 * 0.22 * farU
-    del farU
+    # ---------------------------------------------------------------- 1. mist
+    # Mist lies in the low ground: thin and patchy on the hilltop, thick on the slopes that fall away.
+    n = fbm(wx, wy * 1.25, 7.0, 3.0)
+    patch = smooth(0.38, 0.72, n)
+    low = np.clip((1.0 - z) / 1.5, 0, 1) * (0.10 + 0.9 * patch) * (float(os.environ.get('MIST', '0.3')) if PIX else 1.0) * 0.30
+    slope = np.clip((-0.5 - z) / 4.6, 0, 1) ** 0.75 * 0.93
+    flank = smooth(27.2, 31.0, np.abs(wx)) * np.clip((4.0 - z) / 6.0, 0, 1) * 0.55
+    fog = np.clip(np.maximum(low, np.maximum(slope, flank)), 0, 0.94) * hit
+    FOG = hexc('#8f6f84')
+    FOG_WARM = hexc('#e2ae92')
+    warm = smooth(0.3, 0.9, fbm(wx, wy, 13.0, 8.0)) * 0.7
+    fogU = up(fog)[..., None]
+    fc = FOG + (FOG_WARM - FOG) * up(warm)[..., None]
+    rgb = rgb * (1 - fogU) + fc * fogU
+    del fc
 
+    # ---------------------------------------------------------------- 2. glow around flames, glass and sunlit stone
+    lum = rgb @ LUM
+    hot = np.clip((lum - 0.78) * 4.0, 0, 1)[..., None] * rgb
+    glow = blur(hot, 2.4 * K, 2) * 0.55 + blur(hot, 7.0 * K) * 0.5 + blur(hot, 22.0 * K, 8) * 0.35
+    rgb = 1 - (1 - rgb) * (1 - np.clip(glow, 0, 1) * np.array([1.0, 0.80, 0.58], np.float32) * (0.45 if PIX else 1.0))
+    del hot, glow
+    # the low moon rakes across everything: a soft warm veil where lit surfaces gather, the way haze catches light
+    lit = np.clip((lum - 0.42) * 2.2, 0, 1)
+    veil = blur(lit, 30.0 * K, 8)[..., None]
+    rgb = rgb + (hexc('#f0c29c') - rgb) * veil * (0.05 if PIX else 0.16)
+    del lit, veil, lum
 
-# ---------------------------------------------------------------- 5. brush filter
-# In each of the four squares that meet at a pixel, take the average colour; keep the one from the calmest square.
-# Flat areas turn into strokes, edges stay sharp.  (A Kuwahara filter.)
-def box_tl(arr, n):
-    """Mean over the n x n square whose top-left corner is each pixel (edges repeat)."""
-    p = np.pad(arr.astype(np.float64), ((1, n - 1), (1, n - 1)), mode='edge')
-    p[0, :] = 0
-    p[:, 0] = 0
-    c = p.cumsum(0).cumsum(1)
-    return ((c[n:, n:] - c[:-n, n:] - c[n:, :-n] + c[:-n, :-n]) / (n * n)).astype(np.float32)
+    # ---------------------------------------------------------------- 3. dusk grade: plum shadows, rose middles, amber lights
+    lum = (rgb @ LUM)[..., None]
+    SH = hexc('#2b2843') * 0.9
+    HI = hexc('#f6d7ad')
+    rgb = rgb + (SH - rgb) * (0.13 if PIX else 0.26) * (1 - lum) ** 2.2
+    rgb = rgb + (HI - rgb) * 0.20 * lum ** 2
+    # pull the greens toward the stone so the grass sits in the same evening
+    g = rgb[..., 1]
+    exc = np.clip(g - np.maximum(rgb[..., 0], rgb[..., 2]), 0, 1)
+    GRN = 0.15 if PIX else 1.0                            # pixel style lets the grass keep more of its own green
+    rgb[..., 1] = g - exc * 0.38 * GRN
+    rgb[..., 0] += exc * 0.14 * GRN
+    rgb[..., 2] += exc * 0.12 * GRN
+    # a share of the sketch's own colour scale, so every tone belongs to the same five colours
+    lum = np.clip(rgb @ LUM, 0, 1)
+    stops = [(0.0, '#150f1c'), (0.16, '#2b2843'), (0.38, '#5d4a66'), (0.60, '#a9747a'), (0.84, '#ecc79a'), (1.0, '#fff3dc')]
+    ramp = np.zeros_like(rgb)
+    for (t0, c0), (t1, c1) in zip(stops[:-1], stops[1:]):
+        m = (lum >= t0) & (lum <= t1)
+        f = ((lum - t0) / (t1 - t0))[..., None]
+        ramp = np.where(m[..., None], hexc(c0) + (hexc(c1) - hexc(c0)) * f, ramp)
+    rgb = rgb + (ramp - rgb) * float(os.environ.get('RAMP', '0.06' if PIX else '0.24'))
+    del ramp
+    # contrast, and a lift in the middle so the shadow side of things stays readable in play
+    rgb = np.clip(rgb, 0, 1)
+    rgb = rgb * rgb * (3 - 2 * rgb) * 0.5 + rgb * 0.5
+    mean = rgb.mean(-1, keepdims=True)
+    rgb = np.clip(mean + (rgb - mean) * (1.42 if PIX else 1.16), 0, 1)
+    rgb = rgb ** float(os.environ.get('GAMMA', '0.72' if PIX else '0.79'))
 
-
-def kuwahara(img, r):
-    n = r + 1
-    L = img @ LUM
-    mL, mL2 = box_tl(L, n), box_tl(L * L, n)
-    var = mL2 - mL * mL
-    ch = [box_tl(img[..., k], n) for k in range(3)]
-    best = np.full(L.shape, np.inf, np.float32)
-    out = np.zeros_like(img)
-    for sy in (0, r):
-        for sx in (0, r):
-            sh = lambda q: np.roll(q, (sy, sx), (0, 1))       # the square that ends (or starts) at this pixel
-            v = sh(var)
-            better = v < best
-            best = np.where(better, v, best)
-            for k in range(3):
-                out[..., k] = np.where(better, sh(ch[k]), out[..., k])
-    return out
-
-
-if PAINT > 0:
-    r = max(2, int(round(1.0 * K)))
-    rgb = rgb + (kuwahara(rgb, r) - rgb) * PAINT
-
-# ---------------------------------------------------------------- 6. pixel style: outlines, edge lights, a fixed set of colours
-# Here one picture pixel is one data pixel, so the lines can follow the shapes exactly, the way a pixel artist would draw them.
-if PIX:
-    assert (DH, DW) == (H, W)
-    solid = hit & (a > 0.5)
-    d = np.where(solid, depth, 1e3)
-    nz = nrm[..., 2]
-    edge = np.zeros((H, W), np.float32)        # this pixel is the last one of a nearer thing: it carries the outline
+    # ---------------------------------------------------------------- 4. a soft dark line where a nearer thing ends
+    d = np.where(hit, depth, 1e3)
+    far = np.zeros((DH, DW), np.float32)
     for dy, dx in ((0, 1), (0, -1), (1, 0), (-1, 0)):
         nb = np.roll(d, (dy, dx), (0, 1))
-        edge = np.maximum(edge, np.clip((nb - d - 0.3) / 0.3, 0, 1))
-    wgt = np.select([kind == 2, kind == 4, kind == 1, kind == 3], [1.0, 1.0, 0.8, 0.28], 0.0).astype(np.float32)
-    edge *= wgt * (1 - fog) ** 1.5
-    crease = np.zeros((H, W), np.float32)      # a fold in the same thing (a wall meeting the ground, a step's riser)
-    lite = np.zeros((H, W), np.float32)        # the top edge of a stone, which catches the light
-    below = np.roll(d, -1, 0)
-    nzb = np.roll(nz, -1, 0)
-    same = np.abs(below - d) < 0.3
-    lite = np.where(same & (nz > 0.75) & (nzb < 0.35) & (kind != 3), 1.0, 0.0).astype(np.float32) * (1 - fog)
-    above = np.roll(d, 1, 0)
-    nza = np.roll(nz, 1, 0)
-    crease = np.where((np.abs(above - d) < 0.3) & (nz > 0.75) & (nza < 0.35) & (kind != 3), 1.0, 0.0).astype(np.float32) * (1 - fog)
-    INK = hexc('#1c1830')
-    e3 = (edge * float(os.environ.get('LINE', '0.85')))[..., None]
-    rgb = rgb * (1 - e3) + (rgb * 0.35 + INK * 0.25) * e3
-    rgb = rgb * (1 - 0.30 * crease[..., None] * (1 - edge[..., None]))
-    rgb = rgb + (np.clip(rgb * 1.22 + 0.04, 0, 1) - rgb) * (lite * (1 - edge))[..., None]
-    # colours: the whole field shares one small palette, with no dithering, so shading falls into flat patches
-    q8 = (np.clip(rgb, 0, 1) * 255 + 0.5).astype(np.uint8)
-    q8[~solid] = (INK * 255).astype(np.uint8)
-    pal = Image.fromarray(q8, 'RGB').quantize(COLORS, method=Image.Quantize.MEDIANCUT, kmeans=3, dither=Image.Dither.NONE)
-    rgb = np.asarray(pal.convert('RGB')).astype(np.float32) / 255.0
-    a = solid.astype(np.float32)
-    print('colours', len(pal.getcolors()))
+        far = np.maximum(far, np.clip((nb - d - 0.55) / 0.6, 0, 1))
+    far[(kind == 3) | (kind == 0)] *= 0.25
+    far *= (1 - fog) ** 2
+    if not PIX:
+        farU = up(far)[..., None]
+        rgb = rgb * (1 - 0.22 * farU) + SH * 0.5 * 0.22 * farU
+        del farU
+
+
+    # ---------------------------------------------------------------- 5. brush filter
+    # In each of the four squares that meet at a pixel, take the average colour; keep the one from the calmest square.
+    # Flat areas turn into strokes, edges stay sharp.  (A Kuwahara filter.)
+    def box_tl(arr, n):
+        """Mean over the n x n square whose top-left corner is each pixel (edges repeat)."""
+        p = np.pad(arr.astype(np.float64), ((1, n - 1), (1, n - 1)), mode='edge')
+        p[0, :] = 0
+        p[:, 0] = 0
+        c = p.cumsum(0).cumsum(1)
+        return ((c[n:, n:] - c[:-n, n:] - c[n:, :-n] + c[:-n, :-n]) / (n * n)).astype(np.float32)
+
+
+    def kuwahara(img, r):
+        n = r + 1
+        L = img @ LUM
+        mL, mL2 = box_tl(L, n), box_tl(L * L, n)
+        var = mL2 - mL * mL
+        ch = [box_tl(img[..., k], n) for k in range(3)]
+        best = np.full(L.shape, np.inf, np.float32)
+        out = np.zeros_like(img)
+        for sy in (0, r):
+            for sx in (0, r):
+                sh = lambda q: np.roll(q, (sy, sx), (0, 1))       # the square that ends (or starts) at this pixel
+                v = sh(var)
+                better = v < best
+                best = np.where(better, v, best)
+                for k in range(3):
+                    out[..., k] = np.where(better, sh(ch[k]), out[..., k])
+        return out
+
+
+    if PAINT > 0:
+        r = max(2, int(round(1.0 * K)))
+        rgb = rgb + (kuwahara(rgb, r) - rgb) * PAINT
+
+# ---------------------------------------------------------------- pixel style: painted from the model data, not from a render
+if PIX:
+    assert (DH, DW) == (H, W)
+    import pixel
+    rgb, a, alb_mid = pixel.paint(bk, meta, dict(S=S, SIN=SIN, COS=COS, W=W, H=H, X0=X0, SY0=SY0))
+    print('colours', len(np.unique((rgb * 255 + 0.5).astype(np.uint8).reshape(-1, 3), axis=0)))
 
 # ---------------------------------------------------------------- save the picture
 out = np.concatenate([np.clip(rgb, 0, 1), np.clip(a, 0, 1)[..., None]], -1)
@@ -273,6 +247,8 @@ Image.fromarray(nq, 'RGB').save(os.path.join(SITE, 'nrm.png'), optimize=True)
 al = np.clip(alb, 0, 1)
 al = np.where(al <= 0.0031308, al * 12.92, 1.055 * al ** (1 / 2.4) - 0.055)
 aq = (np.round(al * 255 / 8) * 8).clip(0, 255).astype(np.uint8)
+if PIX:
+    aq = alb_mid.copy()
 aq[k2 == 0] = 0
 Image.fromarray(aq, 'RGB').save(os.path.join(SITE, 'alb.png'), optimize=True)
 FMIN, FMAX = -14.0, 18.0
