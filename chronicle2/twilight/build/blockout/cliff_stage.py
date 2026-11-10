@@ -60,6 +60,6 @@ m = dict(title='鐘のならない修道院', titleEn='Blockout first, painted a
          heightBias=3, spawn=dict(x=sp[0], y=sp[1], dir='up'), occluders=[], lights=lights, water=[dict(poly=[mv(q) for q in mk['pond']['poly']])],
          triggers=triggers, emitters=emitters, layers=dict(sky=base['layers']['sky']),
          # HD-2D view (site/hd.js): the picture laid over the relief that height.png describes; raised.png comes from check.py
-         hd=dict(S=info.get('S', 32), A=info.get('A', .75), B=info.get('B', .66), depth=2, dof=1, fogTop=7.6, fogBottom=1.0, raised='raised.png'))
+         hd=dict(S=info.get('S', 32), A=info.get('A', .75), B=info.get('B', .66), depth=3, dof=2, fogTop=7.6, fogBottom=1.0, raised='raised.png'))
 json.dump(m, open(f'{STAGE}/map.json', 'w'), ensure_ascii=False, indent=1)
 print('spawn', m['spawn'], 'walkable there', bool(walk[sp[1], sp[0]]), 'lights', len(lights))

@@ -358,20 +358,26 @@
     const halfH = VH / 2 / S, halfW = VW / 2 / S;
     const ortho = new T3.OrthographicCamera(-halfW, halfW, halfH, -halfH, 1, 400), persp = new T3.PerspectiveCamera(20, 16 / 9, 1, 400);
     const tmp = new T3.Vector3(), tgt = new T3.Vector3(), v3 = c => new T3.Vector3(c[0] / 255, c[1] / 255, c[2] / 255);
-    let ghost = 0;
+    let ghost = 0, camLift = -1, tLast = 0, pxLast = 0, pyLast = 0;
 
     function render(st) {
       if (auto) { const now = performance.now(), dt = now - tPrev; tPrev = now; if (dt < 500) { ema += (dt - ema) * .08; if (++nSlow > 50 && ema > 36 && scale > .5) { scale -= .25; nSlow = 0; ema = 16; } } }
       resize();
       const { cam, hero, P } = st;
       const hx = hero.x, hy = hero.y, lf = env.lift(hx, hy), hw = world(hx - .5, hy - .5, lf);
-      // the view centre, on the plane through the hero that faces the camera
-      tgt.copy(hw).addScaledVector(right, (cam.x + VW / 2 - hx) / S).addScaledVector(up, (hy - cam.y - VH / 2) / S);
+      // The camera only ever slides the way the 2D camera does.  Its distance is taken from the ground under the middle of
+      // the view at the hero's floor height, and that height is followed softly: a stair step (the floor jumps) or a walk
+      // while the 2D camera is stopped at the map's edge must not push the camera in and out, which reads as a zoom pulse.
+      const dT = st.T - tLast; tLast = st.T;
+      if (camLift < 0 || dT < 0 || dT > .5 || Math.abs(hx - pxLast) + Math.abs(hy - pyLast) > 40) camLift = lf; else camLift += (lf - camLift) * (1 - Math.exp(-dT / .32));
+      pxLast = hx; pyLast = hy;
+      const bo = HS.body * .48;
+      tgt.copy(world(cam.x + VW / 2 - .5, cam.y + VH / 2 + bo - .5, camLift)).addScaledVector(up, bo / S);
       const D = DEPTHS[state.depth] || 0, camera = D ? persp : ortho, dist = D || 120;
       camera.position.copy(tgt).addScaledVector(dir, -dist); camera.up.copy(up); camera.lookAt(tgt);
       if (D) { persp.fov = 2 * Math.atan(halfH / D) * 180 / Math.PI; persp.near = Math.max(1, D - 70); persp.far = D + 120; } else { ortho.near = 1; ortho.far = 320; }
       camera.updateProjectionMatrix(); camera.updateMatrixWorld();
-      U.uCamPos.value.copy(camera.position); U.uCamDir.value.copy(dir); U.uFocus.value = dist; U.uRange.value = cfg.range == null ? 9.5 : cfg.range;
+      U.uCamPos.value.copy(camera.position); U.uCamDir.value.copy(dir); U.uFocus.value = tmp.copy(world(hx - .5, hy - .5, camLift)).sub(camera.position).dot(dir); U.uRange.value = cfg.range == null ? 10.5 : cfg.range;   // focus stays on the hero
       // light
       const amb = P.ambient; U.uAmb.value.set(amb[0] / 255, amb[1] / 255, amb[2] / 255); U.uGain.value = .35 + P.lightGain * .55;
       const near = L3.map(o => ({ o, d: Math.hypot(o.px - (cam.x + VW / 2), (o.py - (cam.y + VH / 2)) * 1.3) - o.l.r })).sort((a, b) => a.d - b.d);
@@ -404,7 +410,7 @@
       R.setRenderTarget(rtScene); R.render(scene, camera);
       // depth of field
       const maxR = DOFS[state.dof] || 0; let src = rtScene;
-      if (maxR > 0) { mDof.uniforms.tScene.value = rtScene.texture; mDof.uniforms.uPx.value.set(ch / 540 / cw, ch / 540 / ch); mDof.uniforms.uMax.value = maxR; mDof.uniforms.uBand.value = cfg.band == null ? .16 : cfg.band; draw(mDof, rtDof); src = rtDof; }
+      if (maxR > 0) { mDof.uniforms.tScene.value = rtScene.texture; mDof.uniforms.uPx.value.set(ch / 540 / cw, ch / 540 / ch); mDof.uniforms.uMax.value = maxR; mDof.uniforms.uBand.value = cfg.band == null ? .18 : cfg.band; draw(mDof, rtDof); src = rtDof; }
       // bloom
       mBright.uniforms.tIn.value = src.texture; draw(mBright, rtB1);
       for (let i = 0; i < 2; i++) { mBlur.uniforms.tIn.value = rtB1.texture; mBlur.uniforms.uDir.value.set((1 + i) / rtB1.width, 0); draw(mBlur, rtB2); mBlur.uniforms.tIn.value = rtB2.texture; mBlur.uniforms.uDir.value.set(0, (1 + i) / rtB1.height); draw(mBlur, rtB1); }
@@ -427,7 +433,7 @@
       get on() { return state.on; },
       toggle() { state.on = !state.on; canvas.style.display = state.on ? 'block' : 'none'; env.cv.style.display = state.on ? 'none' : ''; paint(); },
       key(k) { if (k === 'p' || k === 'P') { state.depth = (state.depth + 1) % DEPTHS.length; paint(); return true; } if (k === 'b' || k === 'B') { state.dof = (state.dof + 1) % DOFS.length; paint(); return true; } if (k === 'h' || k === 'H') { api.toggle(); return true; } return false; },
-      canvas, dbg: { hh, hb, ring },
+      canvas, dbg: { hh, hb, ring, camPos: U.uCamPos.value, dir },
     };
     env.cv.style.display = 'none'; paint();
     return api;
