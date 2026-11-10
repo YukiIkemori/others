@@ -1461,6 +1461,45 @@ if os.environ.get('NORENDER') != '1':
     bpy.ops.render.render(write_still=True)
     print('rendered in', round(time.time() - T0, 1), 's')
 
+# ---------------------------------------------------------------- light pass for the pixel-art painter
+# One more render, of the place as plain white clay, with each kind of light in its own colour channel:
+# red = the key light with its bounces, green = open sky (how hemmed in a spot is), blue = lanterns and candles.
+# pixel.py turns these into tones of each material's colour ramp, so the painted field gets soft shadows, bounce
+# light and pools of lamp light without taking any colour from a render.
+if os.environ.get('LIGHTPASS') == '1':
+    T1 = time.time()
+    for o in list(col.objects):
+        if o.type == 'LIGHT' and o.data.type == 'SUN':
+            o.hide_render = True
+        elif o.type == 'LIGHT':
+            o.data.color = (0.0, 0.0, 1.0)
+    for n in ('lampglass', 'flame', 'moonrefl', 'moonblack', 'flower'):
+        if n in OBJ:
+            OBJ[n].hide_render = True
+    lk = sun('pixel_key', (0.55, 0.45, -0.70), (1.0, 0.0, 0.0), 3.0, float(os.environ.get('KEYSOFT', '5.0')))
+    bg.inputs[0].default_value = (0.0, 1.0, 0.0, 1.0)
+    bg.inputs[1].default_value = 1.0
+    clay = bpy.data.materials.new('clay')
+    clay.use_nodes = True
+    bs = next(n for n in clay.node_tree.nodes if n.type == 'BSDF_PRINCIPLED')
+    bs.inputs['Base Color'].default_value = (0.8, 0.8, 0.8, 1.0)
+    bs.inputs['Roughness'].default_value = 1.0
+    sc.view_layers[0].material_override = clay
+    sc.cycles.samples = int(os.environ.get('LSAMPLES', '48'))
+    sc.cycles.filter_width = 0.01
+    sc.cycles.sample_clamp_indirect = 0.0
+    sc.render.image_settings.file_format = 'OPEN_EXR'
+    sc.render.image_settings.color_depth = '32'
+    sc.render.filepath = os.path.join(WORK, 'light.exr')
+    bpy.ops.render.render(write_still=True)
+    im = bpy.data.images.load(sc.render.filepath)
+    px = np.empty(im.size[0] * im.size[1] * 4, np.float32)
+    im.pixels.foreach_get(px)
+    np.save(os.path.join(WORK, 'light.npy'), px.reshape(im.size[1], im.size[0], 4)[::-1].astype(np.float16))
+    print('light pass in', round(time.time() - T1, 1), 's')
+    if os.environ.get('LIGHTONLY') == '1':
+        sys.exit(0)
+
 meta = {
     'w': W * RES, 'h': H * RES, 'scale': S * RES, 'sin': SIN, 'cos': COS, 'x0': X0, 'sy0': SY0 * RES,
     'dw': int(W * DRES), 'dh': int(H * DRES), 'dscale': S * DRES,

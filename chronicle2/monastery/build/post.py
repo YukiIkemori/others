@@ -221,7 +221,12 @@ if not PIX:
 if PIX:
     assert (DH, DW) == (H, W)
     import pixel
-    rgb, a, alb_mid = pixel.paint(bk, meta, dict(S=S, SIN=SIN, COS=COS, W=W, H=H, X0=X0, SY0=SY0))
+    PP = dict(S=S, SIN=SIN, COS=COS, W=W, H=H, X0=X0, SY0=SY0)
+    lp = os.path.join(WORK, 'light.npy')        # the clay light pass (scene.py with LIGHTPASS=1); without it the shading is plainer
+    if os.path.exists(lp) and os.environ.get('NOLIGHT') != '1':
+        PP['light'] = np.load(lp)
+    PP.update(json.loads(os.environ.get('PX', '{}')))       # try other settings: PX='{"steps":4,"haze_k":0.3}'
+    rgb, a, alb_mid = pixel.paint(bk, meta, PP)
     print('colours', len(np.unique((rgb * 255 + 0.5).astype(np.uint8).reshape(-1, 3), axis=0)))
 
 # ---------------------------------------------------------------- save the picture

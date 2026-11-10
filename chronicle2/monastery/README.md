@@ -25,14 +25,19 @@ python3 hero_import.py シート.png シート.json hero_hd   # 主人公の取�
 - **絵画調**（`site/` 直下）: 1 単位 48 ピクセルで滑らかに描き、筆のタッチをかけた版。建物は作り込みを足す前の古い絵のままです。
 
 絵画調は従来どおり `scene.py`（描き出し）→ `sky.py` → `post.py` です。
-ドット絵の版は、置き場所を分け、描き出しを省いて（`NORENDER=1`）同じスクリプトを `STYLE=pixel` で動かします。全部で 3 分ほどです。
+ドット絵の版は、置き場所を分け、描き出しを省いて（`NORENDER=1`）同じスクリプトを `STYLE=pixel` で動かします。全部で 6 分ほどです。
 
 ```
 cd build
-WORK=$PWD/work_px RES=2 DRES=2 NORENDER=1 python3 scene.py
+WORK=$PWD/work_px RES=2 DRES=2 NORENDER=1 LIGHTPASS=1 python3 scene.py
 WORK=$PWD/work_px SITE=$PWD/../site/px STYLE=pixel RES=2 python3 sky.py
 WORK=$PWD/work_px SITE=$PWD/../site/px STYLE=pixel python3 post.py
 ```
+
+`LIGHTPASS=1` は「光だけ」を計算する工程です（3 分半ほど）。修道院全体を白い粘土にして描き出し、赤に主光源と照り返し、緑に空の開け具合、
+青に灯と蝋燭の光を分けて `work_px/light.npy` に残します。色は一切ここから取らず、`pixel.py` が明るさの手がかりとしてだけ使います。
+やわらかい影、面の中の明暗、灯の届き方に奥行きが出るのはこの工程のおかげです。`light.npy` が無いときは影の有無だけの平たい塗りになります。
+`post.py` は `PX='{"steps":4,"haze_k":0.3,"bloom":5,"lamp_gain":5}'` のように塗りの設定（階調の細かさ、遠くの霞、光のにじみ、灯の強さ）を受け取ります。
 
 `bake.py` が 1 ピクセルごとに「見えている素材、面の色、面の向き、主光源（`KEY`、手前左上から）が届くか、まわりの込み具合」を調べ、
 `pixel.py` がそれを素材ごとの 8 段階の色見本（`RAMP`）に当てはめます。素材ごとの明るさは `SHIFT`、灯の輪は 3 段の帯、

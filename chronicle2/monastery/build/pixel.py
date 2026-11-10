@@ -73,6 +73,18 @@ def path_dist(x, y, paths):
     return best
 
 
+def boxblur(a, r, n=3):
+    """Mean over a (2r+1) square, n times over: close to a Gaussian, and needs nothing but numpy."""
+    a = a.astype(np.float32)
+    for _ in range(n):
+        for ax in (0, 1):
+            p = np.concatenate([np.repeat(np.take(a, [0], ax), r + 1, ax), a, np.repeat(np.take(a, [-1], ax), r, ax)], ax)
+            c = np.cumsum(p, ax, dtype=np.float64)
+            m = a.shape[ax]
+            a = ((np.take(c, range(2 * r + 1, 2 * r + 1 + m), ax) - np.take(c, range(0, m), ax)) / (2 * r + 1)).astype(np.float32)
+    return a
+
+
 def to_srgb(c):
     c = np.clip(c, 0, 1)
     return np.where(c <= 0.0031308, c * 12.92, 1.055 * c ** (1 / 2.4) - 0.055)
@@ -136,55 +148,69 @@ def paint(bk, meta, P):
     soft = fol | cov                      # leaves and blades: lit as a mass, not by each card's own facing
 
     # ---------------------------------------------------------------- how much light
+    # sun: the key light with its soft edge and bounces, sky: how open a spot is, lampl: lanterns and candles
     ndl = np.clip(vn @ KEY, 0, 1)
     nz = np.clip(vn[..., 2], 0, 1)
-    val = (0.30 + 0.12 * nz) * (0.45 + 0.55 * ao) + 0.70 * ndl * lit
+    light = P.get('light')
+    if light is not None:
+        Lf = np.nan_to_num(light[..., :3].astype(np.float32))
+        Ls = np.stack([boxblur(Lf[..., k], 2, 2) for k in range(3)], -1)        # leaves and blades are lit as a mass
+        Lf = np.where(soft[..., None], Ls, Lf)
+        sun, sky, lampl = Lf[..., 0] / 0.76, Lf[..., 1] / 0.8, Lf[..., 2]
+    else:                                   # no light pass: the plain shadow test and the lamp distances stand in for it
+        sun, sky, lampl = ndl * lit, 0.25 + 0.75 * ao, None
+    E = 0.80 * np.clip(sun, 0, 1.3) + 0.30 * np.clip(sky, 0, 1.2)
+    lv = 0.55 + 5.3 * E
     tone = np.clip(np.log2(np.maximum(lum, 1e-4) / ref), -1.2, 1.2)        # this face against its material: block to block
-    val = val + 0.10 * tone
-    val = np.where(soft, 0.50 + 0.36 * lit + 0.22 * tone + 0.35 * (ao - 0.75), val)
+    lv = lv + np.where(soft, 1.5 * tone, np.where(ter, 0.0, 0.75 * tone)) + SHIFT[cls]
+
+    # ---- the materials' own life: drifts of colour that follow the surface, so nothing is one flat tint
+    drift = fbm(wx * 1.0, wy + z * 1.4, 4.2, 11.0) - 0.5                      # broad weathering, wraps round corners
+    fine = fbm(wx, wy + z * 1.4, 0.9, 13.0) - 0.5
+    grain = hash01(ii, jj, 17.0) - 0.5
     patchy = (fbm(wx, wy, 5.0, 1.0) - 0.5) * 2.4 + (fbm(wx, wy, 1.3, 7.0) - 0.5) * 1.2      # lighter and darker drifts in the grass
-    val = np.where(ter, val - 0.10 * tone + 0.075 * np.round(patchy), val)
-    lv = (val - 0.08) / 0.15 + SHIFT[cls]
+    stonelike = (cls == CID['stone']) | (cls == CID['pale'])
+    lv = lv + np.where(stonelike, 1.5 * drift + 0.7 * fine + 0.14 * grain, 0.0)
+    lv = lv + np.where(ter, 0.55 * patchy + 0.3 * grain, 0.0)
+    lv = lv + np.where(cls == CID['wood'], 0.9 * (hash01(np.floor(ii / 2), np.floor((wy + z) * 9), 19.0) - 0.5), 0.0)
 
     # small marks drawn into flat ground: blades in the grass, grit on the paths, pits in old stone
     tick = hash01(ii, np.floor(jj / 2), 3.0)
     spk = hash01(np.floor(ii / 2), jj, 5.0)
     grass_t = ter & ~dirt
-    lv = lv + np.where(grass_t & (tick < 0.075), 1.0, 0.0) - np.where(grass_t & (tick > 0.94), 1.0, 0.0)
+    lv = lv + np.where(grass_t & (tick < 0.085), 1.0, 0.0) - np.where(grass_t & (tick > 0.93), 1.0, 0.0)
     lv = lv + np.where(dirt & (spk < 0.05), 1.0, 0.0) - np.where(dirt & (spk > 0.955), 1.0, 0.0)
     roof = is_('roof')                          # slates: a dark line under each course, and joints that break bond
     course = np.floor(z * 2.3)
     lv = lv - np.where(roof & ((z * 2.3) % 1.0 < 0.2), 1.0, 0.0) - np.where(roof & (((wx + wy) * 1.5 + course * 0.5) % 1.0 < 0.1), 1.0, 0.0)
-    lv = lv + np.where(roof, np.round((hash01(course, np.floor((wx + wy) * 1.5 + course * 0.5), 4.0) - 0.5) * 1.6), 0.0)
+    lv = lv + np.where(roof, (hash01(course, np.floor((wx + wy) * 1.5 + course * 0.5), 4.0) - 0.5) * 1.5 + 1.2 * drift, 0.0)
     flat_stone = stone & (nz > 0.9)
-    lv = lv - np.where(flat_stone & (hash01(ii, jj, 7.0) > 0.975), 1.0, 0.0)
+    lv = lv - np.where(flat_stone & (hash01(ii, jj, 7.0) > 0.993), 1.0, 0.0)
+    lv = lv + np.where(soft & (tick < 0.06), 0.8, 0.0) - np.where(soft & (tick > 0.95), 0.8, 0.0)
 
-    # ---------------------------------------------------------------- lanterns and candles: pools of warm light, in steps
-    glow = np.zeros((H, W), np.float32)
-    for l in meta['lights']:
-        if l['kind'] == 'bell':
-            continue
-        rad = float(l['r']) * 0.95
-        sx, sy = (l['x'] - X0) * S, SY0 - (l['y'] * SIN + l['z'] * COS) * S
-        x0, x1 = int(max(0, sx - rad * S)), int(min(W, sx + rad * S))
-        y0, y1 = int(max(0, sy - rad * S * 1.4)), int(min(H, sy + rad * S * 1.4))
-        if x1 <= x0 or y1 <= y0:
-            continue
-        sl = (slice(y0, y1), slice(x0, x1))
-        dx, dy, dz = l['x'] - wx[sl], l['y'] - wy[sl], l['z'] - z[sl]
-        d = np.sqrt(dx * dx + dy * dy + dz * dz) + 1e-4
-        n = vn[sl]
-        f = np.clip((n[..., 0] * dx + n[..., 1] * dy + n[..., 2] * dz) / d, 0, 1) * 0.75 + 0.25
-        f = np.where(soft[sl], 0.7, f)
-        w = np.clip(1 - d / rad, 0, 1) ** 2 * f
-        glow[sl] = np.maximum(glow[sl], w)
-    glow = glow + (BAYER[(jj.astype(int) % 4), (ii.astype(int) % 4)] - 0.5) * 0.035 * (glow > 0.03)     # a dithered rim to each step
-    lv = lv + np.where(glow > 0.09, 1.0, 0.0) + np.where(glow > 0.26, 1.0, 0.0) + np.where(glow > 0.55, 1.0, 0.0)
-    warm = np.where(glow > 0.5, 2, np.where(glow > 0.16, 1, 0))
-
-    # ---------------------------------------------------------------- the slopes fall away into the dark
-    fall = np.clip((-0.7 - z) / 1.5, 0, 6) + np.clip((np.abs(wx) - 28.3) / 0.9, 0, 6)
-    lv = lv - np.floor(fall + BAYER[(jj.astype(int) % 4), (ii.astype(int) % 4)] * 0.9)
+    # ---------------------------------------------------------------- lanterns and candles
+    if lampl is None:
+        glow = np.zeros((H, W), np.float32)
+        for l in meta['lights']:
+            if l['kind'] == 'bell':
+                continue
+            rad = float(l['r']) * 0.95
+            sx, sy = (l['x'] - X0) * S, SY0 - (l['y'] * SIN + l['z'] * COS) * S
+            x0, x1 = int(max(0, sx - rad * S)), int(min(W, sx + rad * S))
+            y0, y1 = int(max(0, sy - rad * S * 1.4)), int(min(H, sy + rad * S * 1.4))
+            if x1 <= x0 or y1 <= y0:
+                continue
+            sl = (slice(y0, y1), slice(x0, x1))
+            dx, dy, dz = l['x'] - wx[sl], l['y'] - wy[sl], l['z'] - z[sl]
+            d = np.sqrt(dx * dx + dy * dy + dz * dz) + 1e-4
+            n = vn[sl]
+            f = np.clip((n[..., 0] * dx + n[..., 1] * dy + n[..., 2] * dz) / d, 0, 1) * 0.75 + 0.25
+            f = np.where(soft[sl], 0.7, f)
+            glow[sl] = np.maximum(glow[sl], np.clip(1 - d / rad, 0, 1) ** 2 * f)
+    else:
+        glow = 1.0 - np.exp(-lampl * P.get('lamp_gain', 5.0))
+    lv = lv + 2.2 * glow
+    lv = np.where(lv > 5.6, 5.6 + (lv - 5.6) * 0.45, lv)          # the brightest tones are kept for edges and lamp light
 
     # ---------------------------------------------------------------- outlines and edge lights
     hit = ~np.isnan(zmap)
@@ -206,16 +232,42 @@ def paint(bk, meta, P):
     thr = np.where(kind == 3, 1.1, 0.3)
     inner = (jump > thr) & (jump <= 1.4) & ~vis_cover
     outer = (jump > 1.4) & ~vis_cover
-    lv = np.where(inner, np.minimum(lv - 2.5, 1.0), lv)
+    lv = np.where(inner, np.minimum(lv - 2.2, 1.6), lv)
 
     # ---------------------------------------------------------------- tones to colours
-    idx = np.clip(np.floor(lv), 0, 7).astype(np.int64)
-    rgb = TONES[cls, idx]
-    WARM1 = np.clip(TONES * np.array([1.10, 0.99, 0.80], np.float32) + np.array([0.03, 0.01, 0.0], np.float32), 0, 1)
-    WARM2 = np.clip(TONES * np.array([1.18, 1.0, 0.66], np.float32) + np.array([0.07, 0.03, 0.0], np.float32), 0, 1)
-    rgb = np.where((warm == 1)[..., None], WARM1[cls, idx], rgb)
-    rgb = np.where((warm == 2)[..., None], WARM2[cls, idx], rgb)
-    rgb = np.where(outer[..., None], TONES[cls, 0] * 0.55 + OUTLINE * 0.45, rgb)
+    Q = float(P.get('steps', 3))                    # tones are laid in thirds of a ramp step: bands, but fine ones
+    lvq = np.clip(np.floor(lv * Q + 0.5) / Q, 0, 7)
+    i0 = np.floor(lvq).astype(np.int64)
+    fr = (lvq - i0)[..., None]
+    rgb = TONES[cls, i0] * (1 - fr) + TONES[cls, np.minimum(i0 + 1, 7)] * fr
+
+    # the stones are not all one stone: some warm, some cold, some gone green where it stays damp
+    bkey = vc[..., 0] * 3.1 + vc[..., 1] * 7.3 + vc[..., 2] * 13.7
+    bt = hash01(np.round(bkey * 400), 1.0, 2.0)
+    tint = np.ones((H, W, 3), np.float32)
+    tint = np.where((stonelike & (bt > 0.80))[..., None], np.array([1.08, 1.00, 0.88], np.float32), tint)
+    tint = np.where((stonelike & (bt < 0.16))[..., None], np.array([0.90, 0.97, 1.10], np.float32), tint)
+    tint = np.where((stonelike & (bt > 0.45) & (bt < 0.55))[..., None], np.array([1.03, 0.97, 1.04], np.float32), tint)
+    wd = np.clip(drift * 2.0, -0.5, 0.5)[..., None]                           # broad drift: warm where dry, cold where not
+    tint = tint * np.where(stonelike[..., None], 1 + wd * np.array([0.10, 0.02, -0.12], np.float32), 1.0)
+    rgb = rgb * tint
+    damp = np.clip(1.15 - np.clip(sky, 0, 1.2) * 1.25, 0, 1) * np.clip(1 - sun * 2.5, 0, 1)      # hemmed in and never in the light
+    mossy = stonelike & ((0.8 * fbm(wx, wy + z, 2.6, 23.0) + 0.25 * fbm(wx, wy + z, 0.5, 29.0) + 0.5 * damp + 0.10 * nz) > 0.93)
+    moss_c = TONES[CID['grass'], np.clip(i0 - 1, 0, 7)] * 0.75 + rgb * 0.25
+    rgb = np.where(mossy[..., None], moss_c, rgb)
+    dry = (fbm(wx, wy, 3.1, 31.0) - 0.5)[..., None]                           # the grass turns a little toward straw or toward blue-green
+    rgb = np.where(grass_t[..., None], rgb * (1 + dry * np.array([0.55, 0.12, -0.5], np.float32)), rgb)
+    rgb = np.where((cls == CID['leaf'])[..., None], rgb * (1 + (fbm(wx, wy, 2.3, 37.0) - 0.5)[..., None] * np.array([0.5, 0.1, -0.3], np.float32)), rgb)
+
+    # lamp light is warm: it lifts the tone and turns the colour toward amber
+    gq = np.floor(np.clip(glow, 0, 1) * 8 + 0.5) / 8
+    warmc = rgb * np.array([1.22, 1.0, 0.62], np.float32) + np.array([0.10, 0.045, 0.0], np.float32)
+    rgb = rgb + (warmc - rgb) * np.clip(gq * 1.25, 0, 1)[..., None]
+    # shadow under an open sky is blue; shadow in a hole is nearly black violet
+    shade = np.clip(1 - sun * 1.6, 0, 1) * (1 - np.clip(glow * 2, 0, 1))
+    rgb = rgb * (1 + (shade * np.clip(sky, 0, 1))[..., None] * np.array([-0.06, 0.0, 0.10], np.float32))
+    rgb = np.clip(rgb, 0, 1)
+    rgb = np.where(outer[..., None], rgb * 0.22 + TONES[cls, 0] * 0.35 + OUTLINE * 0.43, rgb)
     # things that give light or are painted flat
     if glass.any():
         # a short list of glass colours from the same family as the sprites, with dark leading between the panes
@@ -247,6 +299,26 @@ def paint(bk, meta, P):
         m2 = disc(px_ + 0.85, py_ + 0.75, 0.60)
         rgb = np.where(m2[..., None], hexs('#8a6fe0')[0], rgb)
         rgb = np.where(disc(px_ + 0.85, py_ + 0.75, 0.47)[..., None], hexs('#05040c')[0], rgb)
+
+    # ---------------------------------------------------------------- air: distance, and the mist the hill stands in
+    glowing = lamp | flame
+    far = np.clip((wy - 14.0) / 52.0, 0, 1) ** 1.2                            # toward the north end of the hill
+    HAZE = np.array(P.get('haze', (0.50, 0.41, 0.60)), np.float32)
+    rgb = rgb + (HAZE - rgb) * (P.get('haze_k', 0.24) * far * ~glowing)[..., None]
+    low = np.clip((-0.6 - z) / 7.0, 0, 1) + np.clip((np.abs(wx) - 28.6) / 1.4, 0, 1)
+    low = np.clip(low + (fbm(wx, wy, 6.0, 41.0) - 0.5) * 0.25 * (low > 0), 0, 1)
+    MIST1, MIST2 = np.array([0.24, 0.23, 0.42], np.float32), np.array([0.06, 0.07, 0.15], np.float32)
+    mist = MIST1 + (MIST2 - MIST1) * low[..., None]
+    rgb = rgb + (mist - rgb) * (np.clip(low * 1.7, 0, 1) ** 0.8)[..., None]
+
+    # ---------------------------------------------------------------- bloom: bright things spill a little light
+    hot = np.clip(rgb.max(-1) - 0.80, 0, 1)[..., None] * rgb * 2.5
+    hot = np.where(glowing[..., None], np.array([1.0, 0.72, 0.30], np.float32), hot) * seen[..., None]
+    near = np.stack([boxblur(hot[..., k], 5, 3) for k in range(3)], -1)
+    wide = np.stack([boxblur(np.where(glowing, c, 0.0), 22, 3) for c in (1.0, 0.62, 0.25)], -1)
+    rgb = 1 - (1 - rgb) * (1 - np.clip(0.55 * near, 0, 0.8)) * (1 - np.clip(P.get('bloom', 5.0) * wide, 0, 0.5))
+    rgb = np.where(glowing[..., None], np.maximum(rgb, np.where((hash01(ii, jj, 1.0) < 0.35)[..., None], FLAME[0], FLAME[1])), rgb)
+    rgb = np.clip(rgb, 0, 1)
 
     alpha = seen.astype(np.float32)
     mid = (TONES[cls, 4] * 255 + 0.5).astype(np.uint8)

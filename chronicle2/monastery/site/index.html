@@ -330,7 +330,7 @@ function start(A, saved) {
     ctx.imageSmoothingEnabled = !PIX;
 
     // glows (faint over the pixel-art field, whose light is already painted in and must not wash the sprite out)
-    const GA = PIX ? .3 : 1;
+    const GA = PIX ? .55 : 1;
     ctx.globalCompositeOperation = 'lighter';
     for (const l of lights) { if (!l.seen) continue; const sp = GL[l.kind], x = l.sx - cam.x, y = l.sy - cam.y, m = sp.width / 2; if (x < -m || y < -m || x > VW + m || y > VH + m) continue;
       const f = l.kind === 'bell' ? .35 + .25 * Math.sin(time * .9) : (RM ? .8 : .72 + .14 * Math.sin(time * 8 + l.ph) + .1 * Math.sin(time * 19.3 + l.ph * 2));
@@ -354,10 +354,10 @@ function start(A, saved) {
     fogX.save(); fogX.translate(-((fcx + t * 5) % 256), -((fcy + t * 1.2) % 256)); fogX.fillStyle = patA; fogX.globalAlpha = .55; fogX.fillRect(0, 0, FW2 + 256, FH2 + 256); fogX.restore();
     fogX.save(); fogX.translate(-((fcx + 256 - (t * 3) % 256) % 256), -((fcy + 90) % 256)); fogX.fillStyle = patB; fogX.globalAlpha = .45; fogX.fillRect(0, 0, FW2 + 256, FH2 + 256); fogX.restore();
     fogX.globalAlpha = 1; fogX.globalCompositeOperation = 'destination-in'; fogX.drawImage(fogMask, cam.x / R, cam.y / R, VW / R, VH / R, 0, 0, FW2, FH2);
-    if (!PIX) { ctx.globalAlpha = .42; ctx.drawImage(fogT, 0, 0, VW, VH); ctx.globalAlpha = 1; }      // the pixel-art field stays clear
+    ctx.globalAlpha = PIX ? .2 : .42; ctx.drawImage(fogT, 0, 0, VW, VH); ctx.globalAlpha = 1;      // thinner over the pixel-art field
 
     if (dbgEl.checked && overlay) ctx.drawImage(overlay, cam.x / R, cam.y / R, VW / R, VH / R, 0, 0, VW, VH);
-    ctx.globalAlpha = PIX ? .3 : 1; ctx.drawImage(vig, 0, 0); ctx.globalAlpha = 1;
+    ctx.globalAlpha = PIX ? .6 : 1; ctx.drawImage(vig, 0, 0); ctx.globalAlpha = 1;
     if (!PIX) { ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = .07; ctx.fillStyle = grain; ctx.fillRect(0, 0, VW, VH); }      // canvas grain
     ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
     if (fade > 0) { fade = Math.max(0, fade - dt * .55); ctx.fillStyle = `rgba(12,8,20,${fade * fade})`; ctx.fillRect(0, 0, VW, VH); }
