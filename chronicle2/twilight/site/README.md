@@ -32,6 +32,7 @@
 | `height` | 高さの地図。マップと同じ大きさ（または整数分の 1）の PNG で、各ドットが「自分の接地線から画面上でどれだけ上にあるか」を `h = R + 256×G` で持つ（地面は 0）。足元が `y_f` の人物のドット `(x, y)` は `y + h(x,y) > y_f + heightBias` のとき隠れる。柱・壁・アーチ・木の後ろに自動で回り込める。**不透明の RGB で保存すること**（透明や色管理が入ると数値が変わる）。省くと無効 |
 | `heightBias` | 上の式のゆとり（既定 2） |
 | `floor` | 段差のあるマップ用（任意）。`height` と同じ詰め方・同じ単位の PNG で、歩ける場所の各ドットが「その地面の持ち上がり量」を持つ（歩けない場所は 0）。指定すると式が `min(y, y_f) + h(x,y) > y_f + floor(足元) + heightBias` になり、`height` は「接地線から」ではなく「基準の高さから」の値として読む（`build/blockout/vox.py` の冒頭に説明）。平らなマップでは不要 |
+| `hd` | HD-2D 表示（任意、`hd.js` と three.js を使う）。`{S, A, B, depth, dof, fogTop, fogBottom, raised}`。`S, A, B` は骨組みの投影（`vox.py` の `bake` と同じ値）、`depth` は立体感 0〜3（0 は絵そのまま）、`dof` はぼかし 0〜2、`fogTop`/`fogBottom` は崖が雲海に溶け始める高さと溶けきる高さ、`raised` は絵描きが立っていると見なした物の白黒画像（`check.py` が書く、無くても動く）。`height` と `floor` があるマップ専用。画面右上のボタンか P / B / H キーで切り替え。`?hd=0` で無効 |
 | `occluders` | 手で切る前後関係（任意）。`[{poly:[[x,y],…], base:y}]` または `{rect:[x,y,w,h], base}`。足元が `base` より上にいる人物の上に、その形でマップの絵を描き直す。`height` と併用できる |
 | `lights` | `[{kind, x, y, gx, gy, r, color, intensity, flicker}]`。`kind` は `lantern`（地面に楕円の光だまり + 光源の光輪、ゆらぐ）/ `window`（丸い光、ほぼゆらがない）/ `moon`（空の月のにじみだけ）。`x,y` は光源、`gx,gy` は光だまりの中心（省くと光源と同じ）。`r` は半径、`intensity` は強さ（既定 1）、`flicker` はゆらぎ（lantern 0.15）。`moon` に `layer:"sky"` を付けると `x,y` はその層の画像内の座標になり、層と一緒に動く |
 | `water` | `[{poly:[[x,y],…]}]` 水面。中の絵が 1〜2 ドット横にゆれ、きらめきが出る |

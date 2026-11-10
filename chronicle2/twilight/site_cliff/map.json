@@ -461,5 +461,15 @@
    ],
    "y": 0
   }
+ },
+ "hd": {
+  "S": 32,
+  "A": 0.75,
+  "B": 0.66,
+  "depth": 2,
+  "dof": 1,
+  "fogTop": 7.6,
+  "fogBottom": 1.0,
+  "raised": "raised.png"
  }
 }

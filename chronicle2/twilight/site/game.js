@@ -99,6 +99,7 @@ let mapOpaque = true;
 let fData = null, fW = 0, fH = 0, fK = 1;    // floor map (maps with several ground levels): lift of the ground under an actor's feet
 let hData = null, hW = 0, hH = 0, hK = 1;   // height map: how far above its own ground line each map pixel stands
 let scr = null, scx = null, lanternVis = 1;
+let hdr = null;                     // HD-2D renderer (hd.js), only on maps that carry an "hd" entry
 const cam = { x: 0, y: 0, lx: 0, ly: 0 };
 const hero = { x: 0, y: 0, dir: 0, t: 0, moving: false, running: false, vx: 0, vy: 0 };
 const keys = new Set();
@@ -319,6 +320,14 @@ async function boot() {
   camTarget(1e9);
 
   mistTile = buildMistTile(); grainTile = buildGrain(); raysImg = buildRays();
+  if (M.hd && hData && Q.get('hd') !== '0') {
+    try {
+      const js = src => new Promise((res, rej) => { const e = document.createElement('script'); e.src = src; e.onload = res; e.onerror = () => rej(new Error('読み込めません: ' + src)); document.head.appendChild(e); });
+      if (!window.THREE) await js(M.hd.three || 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.149.0/three.min.js');
+      if (!window.HD2D) await js('hd.js');
+      hdr = await HD2D.create({ M, A, HS, stage, cv, hData, hW, hH, fData, walkData, VW, VH, lights, sky: layers.sky, lift, hides, hexRgb, Q, UI_ON });
+    } catch (e) { console.warn('HD-2D 表示を使えないため、2D 表示で続けます', e); hdr = null; }
+  }
   setupUi();
   window.__game = api;
   last = performance.now();
@@ -400,6 +409,7 @@ function onKey(e, down) {
   if (e.key === 'z' || e.key === 'Z' || e.key === 'Enter' || e.key === ' ') { interact(); e.preventDefault(); }
   else if (e.key === 'm' || e.key === 'M') toggleMood();
   else if (e.key === 'c' || e.key === 'C') showWalk = !showWalk;   // check view: where the hero cannot go
+  else if (hdr) hdr.key(e.key);
 }
 function interact() {
   if (dlg) { advance(); return; }
@@ -756,6 +766,7 @@ function drawLayer(c, o, k) {
 
 // ------------------------------------------------------------------ draw: frame
 function render() {
+  if (hdr && hdr.on) { hdr.render({ cam, hero, frame: heroFrame(), la: lanternPos(), P, moodT, T, showWalk }); return; }
   const snap = v => Math.round(v * SC) / SC;
   const cx = snap(cam.x), cy = snap(cam.y), ox = Math.floor(cx), oy = Math.floor(cy), fx = cx - ox, fy = cy - oy;
   const savedCam = [cam.x, cam.y]; cam.x = cx; cam.y = cy;
@@ -976,6 +987,7 @@ function frame(now) {
 }
 const api = {
   get hero() { return { x: hero.x, y: hero.y, dir: DIRS[hero.dir], moving: hero.moving }; },
+  get hd() { return hdr; },
   get cam() { return { x: cam.x, y: cam.y }; },
   get mood() { return moodTo > .5 ? 'shadow' : 'gold'; }, get moodT() { return moodT; },
   get fps() { return fps; }, get frameMs() { return frameMs; }, get scale() { return SC; },

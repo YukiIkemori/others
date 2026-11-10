@@ -18,6 +18,7 @@ DX, DY, _ = fit(np.load(PTS), H, W)
 yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
 mp = cv2.remap(np.array(Image.open(MASK).convert('L')), xx + DX, yy + DY, cv2.INTER_NEAREST) > 127
 inside = np.array(Image.open(f'{STAGE}/map.webp').convert('RGBA'))[..., 3] > 0
+Image.fromarray((mp & inside).astype(np.uint8) * 255).convert('1').save(f'{STAGE}/raised.png')   # the painter's own outline of what stands up; the HD-2D view trims the relief with it
 # only the part of the map a player can get near matters
 near = ni.binary_dilation(walk > 127, iterations=40) & inside
 d_st = ni.distance_transform_edt(~st); d_m = ni.distance_transform_edt(~mp)
