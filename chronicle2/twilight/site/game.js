@@ -530,6 +530,15 @@ function update(dt) {
         const fa = free(hero.x + ax, hero.y + ay), fb = free(hero.x + bx, hero.y + by);
         if (fa !== fb) { if (fa) { hero.x += ax; hero.y += ay; } else { hero.x += bx; hero.y += by; } moved = true; break; }
       }
+      if (!moved) {                                           // corner assist: an opening a few dots to one side pulls the hero in
+        const px = -uy, py = ux;
+        for (const k of [4, 8, 12, 16, 20]) {
+          const fa = free(hero.x + px * k + ux * 3, hero.y + py * k + uy * 3) && free(hero.x + px * st, hero.y + py * st);
+          const fb = free(hero.x - px * k + ux * 3, hero.y - py * k + uy * 3) && free(hero.x - px * st, hero.y - py * st);
+          if (fa !== fb) { const s = fa ? 1 : -1; hero.x += px * st * s; hero.y += py * st * s; moved = true; break; }
+          if (fa && fb) break;
+        }
+      }
       if (!moved) break;
     }
     const mvx = hero.x - ox, mvy = hero.y - oy;
@@ -653,6 +662,7 @@ function hides(x, y, feetY) {
 }
 // One sprite frame with its contact shadow. With a height map, every pixel that lies behind taller scenery is removed,
 // so the hero passes behind columns, walls, arches and trees with no hand-made cut-outs.
+const hidIdx = new Uint32Array(96 * 128 * 2);
 function drawActor(img, sxp, syp, fw, fh, x, y, foot, sh, shR, ox, oy) {
   const dx = x - foot[0], dy = y - foot[1];
   if (!hData) {
@@ -674,6 +684,7 @@ function drawActor(img, sxp, syp, fw, fh, x, y, foot, sh, shR, ox, oy) {
   shadow(scx, foot[0], foot[1], sh, shR);
   scx.drawImage(img, sxp, syp, fw, fh, 0, 0, fw, fh);
   const im = scx.getImageData(0, 0, fw, fh), d = im.data, lim = y + M.heightBias;
+  let nHid = 0, nVis = 0;
   for (let j = 0; j < fh; j++) {
     const my = dy + j; if (my < 0) continue;
     const hj = Math.floor(my / hK); if (hj >= hH) break;
@@ -682,9 +693,13 @@ function drawActor(img, sxp, syp, fw, fh, x, y, foot, sh, shR, ox, oy) {
       const mxp = dx + i; if (mxp < 0) continue;
       const hi = Math.floor(mxp / hK); if (hi >= hW) break;
       const h = hData[hj * hW + hi];
-      if (h > 2 && my + h * hK > lim) d[o] = 0;
+      if (h > 2 && my + h * hK > lim) { if (d[o] === 255) { if (nHid < hidIdx.length) hidIdx[nHid++] = o; } else d[o] = 0; }
+      else if (d[o] === 255) nVis++;
     }
   }
+  // mostly hidden behind scenery: the hidden part stays as a faint pale shape, so the player never loses the hero
+  const frac = nHid / Math.max(1, nHid + nVis), sa = Math.round(255 * .36 * clamp((frac - .3) / .3, 0, 1));
+  for (let q = 0; q < nHid; q++) { const o = hidIdx[q]; if (sa) { d[o - 3] = 196; d[o - 2] = 204; d[o - 1] = 255; d[o] = sa; } else d[o] = 0; }
   scx.putImageData(im, 0, 0);
   wx.drawImage(scr, 0, 0, fw, fh, dx - ox, dy - oy, fw, fh);
 }

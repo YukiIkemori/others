@@ -1,0 +1,6 @@
+Edit the image into a FLOOR PLAN MASK for a 2D RPG, drawn in exactly the same view and position (same size, nothing moved). Imagine every wall, arch, column, gravestone, tree and building has become invisible glass, so the ground behind them can be seen.
+Paint flat pure WHITE #FFFFFF: all ground a person can stand on, INCLUDING the parts of the ground that are hidden behind walls, arches, gate tops, columns, gravestones and trees in the picture: stone paths, stair treads, plazas, terraces, the nave floor, grass, flower beds.
+Paint flat pure BLACK #000000:
+- the FOOTPRINT of every standing thing, only where it actually touches the ground: a thin band along the base of each wall (about as thick as the wall), a small ellipse under each column, a small patch under each gravestone, tomb, statue, bench, lantern post and tree trunk, the two jambs of every doorway and arch (the opening between the jambs stays WHITE because you can walk through it);
+- the vertical faces of terrace retaining walls and cliffs (the drop between two ground levels), the pond water, the sky, the clouds, the forest below the cliff, and everything outside the outer walls of the abbey.
+Doors that are closed wooden doors are black. Only pure white and pure black, hard edges, no grey, no outlines, no shading.

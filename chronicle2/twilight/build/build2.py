@@ -78,6 +78,28 @@ for i in range(1, n):
     sub[m] = np.maximum(sub[m], bb[m])
     nprops += 1
 print('props with walk-behind:', nprops)
+# everything else that stands up (walls, parapets, ruins, posts): the hero can tuck in behind its top edge, legs hidden.
+# In each column, a vertical run of standing pixels with ground just above it gives up its top TUCK px (never its foot).
+TUCK = 20
+propm = foot | behind
+big = raised2 & ~propm
+okabove = ~cv2.dilate(sky.astype(np.uint8), np.ones((9, 9), np.uint8)).astype(bool) & ~raised2
+tuck = np.zeros((H, W), bool)
+for x in range(W):
+    col = big[:, x]
+    if not col.any(): continue
+    d_ = np.diff(np.concatenate([[0], col.view(np.int8), [0]]))
+    tops = np.where(d_ == 1)[0]; bots = np.where(d_ == -1)[0] - 1
+    for t, b in zip(tops, bots):
+        n_ = b - t + 1
+        base[t:b + 1, x] = np.maximum(base[t:b + 1, x], b)
+        if n_ < 14 or t < 2 or not okabove[t - 1, x]: continue
+        ft = int(np.clip(round(n_ * 0.3), 6, 14))
+        e = min(t + TUCK, b - ft)
+        if e > t: tuck[t:e + 1, x] = True
+tuck = cv2.morphologyEx(tuck.astype(np.uint8), cv2.MORPH_OPEN, np.ones((1, 5), np.uint8)) > 0   # no one-column slivers
+behind |= tuck
+print('tuck-behind px:', int(tuck.sum()))
 yy = np.arange(H)[:, None].repeat(W, 1)
 height = np.where(base > 0, np.clip(base - yy, 0, 65535), 0)
 solid = (raised2 & ~behind)                                                # walls, cliffs, trees, prop feet
@@ -109,7 +131,15 @@ FORCE_OFF = [
     (544, 632, 588, 658), (532, 698, 582, 726), (742, 642, 788, 670), (762, 698, 802, 726), (782, 742, 820, 770),
 ]
 for r in FORCE_ON: rect(walk, *r, True)
+FUNNELS = [  # ground hidden behind a wall that has an opening: the full width behind the wall top, narrowing to the doorway
+    [(520, 1222), (780, 1222), (780, 1296), (694, 1360), (694, 1445), (610, 1445), (610, 1360), (520, 1296)],   # south gate
+    [(566, 722), (764, 722), (764, 768), (690, 802), (690, 905), (636, 905), (636, 802), (566, 768)],           # nave doorway
+]
+fm = np.zeros((H, W), np.uint8)
+for poly in FUNNELS: cv2.fillPoly(fm, [np.array(poly, np.int32)], 1)
+walk |= fm > 0
 for r in FORCE_OFF: rect(walk, *r, False)
+walk[1300:, :606] = False; walk[1300:, 699:] = False                       # south of the wall line only the gate passage and the entry stairs
 pm = np.zeros((H, W), np.uint8); cv2.ellipse(pm, (307, 774), (76, 37), 0, 0, 360, 1, -1); walk &= pm == 0   # the pond and its rim
 SPAWN = (650, 1572)
 n, lab, st, ce = cv2.connectedComponentsWithStats(walk.astype(np.uint8), connectivity=8)
@@ -120,6 +150,12 @@ Image.fromarray((walk * 255).astype(np.uint8)).save(f'{OUT}/walk.png')
 hp = np.zeros((H, W, 3), np.uint8); hp[..., 0] = height & 255; hp[..., 1] = height >> 8
 Image.fromarray(hp).save(f'{OUT}/height.png')
 np.save('map/walk.npy', walk); np.save('map/height.npy', height)
+# keep only what the hero's body can really reach: erode by the body radius, take the spawn's region, grow it back
+_el = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (13, 13))
+_er = cv2.erode(walk.astype(np.uint8), _el)
+_n, _lab = cv2.connectedComponents(_er, connectivity=8)
+walk &= cv2.dilate((_lab == _lab[SPAWN[1], SPAWN[0]]).astype(np.uint8), _el) > 0
+Image.fromarray((walk * 255).astype(np.uint8)).save(f'{OUT}/walk.png'); np.save('map/walk.npy', walk)
 print('walkable px', int(walk.sum()))
 er = cv2.erode(walk.astype(np.uint8), cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (13, 13)))
 n_, lab_, st_, _c = cv2.connectedComponentsWithStats(er, connectivity=8)
