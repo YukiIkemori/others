@@ -26,13 +26,24 @@ C1 = [  # nave columns: capital box + shaft box
     ((505, 1225, 790, 1446), 1440),      # gate front wall + arch
     ((596, 728, 726, 908), 903),         # nave doorway wall + arch
     ((236, 585, 446, 708), 703),         # cloister arcade
-    ((120, 505, 292, 702), 765),         # maple canopy
 ]
 base = np.zeros((H, W), np.int32)        # ground-contact y of each class-1 pixel (0 = none)
 for (x0, y0, x1, y1), b in C1:
     sub = raised0[y0:y1, x0:x1]
     cur = base[y0:y1, x0:x1]
     cur[sub] = np.maximum(cur[sub], b)
+# the nave's north gable and wall tops stand in front of the upper-terrace path
+x0, y0, x1, y1 = 590, 340, 765, 420
+n_, lab_ = cv2.connectedComponents(raised0[y0:y1, x0:x1].astype(np.uint8), connectivity=8)
+keep = np.isin(lab_, [v for v in np.unique(lab_[-1]) if v > 0])
+sub = base[y0:y1, x0:x1]; sub[keep] = np.maximum(sub[keep], 520)
+# maple canopy: only the red leaves inside its box (the arcade stones behind keep their own base)
+x0, y0, x1, y1 = 120, 505, 300, 702
+a = art[y0:y1, x0:x1].astype(int)
+red = ((a[..., 0] - a[..., 1] > 22) & (a[..., 0] > a[..., 2] + 8)).astype(np.uint8)
+red = cv2.morphologyEx(red, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
+red = cv2.morphologyEx(red, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8)) > 0
+sub = base[y0:y1, x0:x1]; sub[red & raised0[y0:y1, x0:x1]] = 765
 for (x0, y0, x1, y1) in [(314, 622, 345, 700), (366, 622, 399, 700)]: base[y0:y1, x0:x1] = 0   # plants seen through the arches are behind
 yy = np.arange(H)[:, None].repeat(W, 1)
 height = np.where(base > 0, np.clip(base - yy, 0, 65535), 0)
@@ -47,24 +58,35 @@ MX, UP, DN = 12, 3, 7
 k = np.ones((UP + DN + 1, 2 * MX + 1), np.uint8)
 blocked = cv2.dilate(raised2.astype(np.uint8), k, anchor=(MX, UP)) > 0     # raised px within dx<=MX, dy in [-UP, +DN]
 walk = walk0 & ~blocked & ~c1
+# pockets of visible floor under benches / between stacked objects: raised close above AND close below
+ka = np.ones((27, 1), np.uint8); kb = np.ones((17, 1), np.uint8)
+above = cv2.dilate(raised2.astype(np.uint8), ka, anchor=(0, 26)) > 0     # raised within 26 px above
+below = cv2.dilate(raised2.astype(np.uint8), kb, anchor=(0, 0)) > 0      # raised within 16 px below
+walk &= ~(above & below)
 def rect(m, x0, y0, x1, y1, v): m[y0:y1, x0:x1] = v
 FORCE_ON = [
-    (612, 1226, 692, 1445),   # through the gate (hidden strip behind the lintel + the opening)
+    (612, 1204, 692, 1445),   # through the gate (hidden strip behind the lintel + the opening)
     (641, 726, 684, 905),     # through the nave doorway
     (322, 578, 398, 630),     # behind the arcade top
     (484, 1198, 552, 1230),
-    (226, 706, 302, 723),     # between the arcade flowers and the pond rim   # left graveyard path joins the gate junction
+    (205, 702, 400, 730),     # between the arcade and the pond rim
+    (188, 730, 242, 780), (203, 718, 242, 762),     # round the pond's west side
+    (540, 358, 600, 386), (455, 404, 500, 428),     # north path, west of the gable
+    (745, 1196, 812, 1228),   # right graveyard path joins the gate junction
+    (585, 352, 722, 388),     # upper terrace path behind the nave's north gable   # left graveyard path joins the gate junction
     (316, 622, 343, 712), (368, 622, 397, 712),   # through two arcade arches
     # floor hidden behind the nave columns (the shaft area above each footprint)
     (548, 560, 584, 632), (536, 618, 578, 698), (746, 560, 784, 642), (766, 620, 798, 698), (786, 690, 816, 742),
 ]
 FORCE_OFF = [
     (300, 330, 400, 404),     # the tower door itself
+    (948, 346, 1040, 400),    # the overlook bench
     # column footprints
     (544, 632, 588, 658), (532, 698, 582, 726), (742, 642, 788, 670), (762, 698, 802, 726), (782, 742, 820, 770),
 ]
 for r in FORCE_ON: rect(walk, *r, True)
 for r in FORCE_OFF: rect(walk, *r, False)
+pm = np.zeros((H, W), np.uint8); cv2.ellipse(pm, (307, 774), (76, 37), 0, 0, 360, 1, -1); walk &= pm == 0   # the pond and its rim
 SPAWN = (650, 1572)
 n, lab, st, ce = cv2.connectedComponentsWithStats(walk.astype(np.uint8), connectivity=8)
 pre = walk.copy()
@@ -75,6 +97,11 @@ hp = np.zeros((H, W, 3), np.uint8); hp[..., 0] = height & 255; hp[..., 1] = heig
 Image.fromarray(hp).save(f'{OUT}/height.png')
 np.save('map/walk.npy', walk); np.save('map/height.npy', height)
 print('walkable px', int(walk.sum()))
+er = cv2.erode(walk.astype(np.uint8), cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (13, 13)))
+n_, lab_, st_, _c = cv2.connectedComponentsWithStats(er, connectivity=8)
+sp = lab_[SPAWN[1], SPAWN[0]]
+print('reachable by the hero (radius 6):', int(st_[sp, 4]), 'px; unreachable islands:', [st_[i].tolist() for i in range(1, n_) if i != sp and st_[i, 4] > 600])
+np.save('map/reach.npy', lab_ == sp)
 
 # ---------- check image
 o = art.astype(float)

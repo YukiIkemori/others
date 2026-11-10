@@ -90,7 +90,7 @@ const UI_ON = Q.get('ui') !== '0';
 const DEBUG = Q.get('debug') === '1';
 const OFF = new Set((Q.get('off') || '').split(',').filter(Boolean));   // ?off=mist,rays,grain,light,glow,fg,vignette,grade,particles for diagnosis
 if (!UI_ON) document.body.classList.add('noui');
-let SC = 2;                         // backing pixels per art pixel (2 = 1920x1080, 1 = 960x540)
+let SC = 2;                         // backing pixels per art pixel (1 = 960x540, 2 = 1920x1080, 3 = 2880x1620 on very large screens)
 let W, wx, TM, tx2, L, lx, G, gx, MI, mx;   // offscreen canvases: world, light mask scratch, lightmap, brighten map, mist
 let M, HS, A = {};                  // map data, hero spec, assets
 let walkData = null, walkW = 0, walkH = 0, walkK = 1;
@@ -199,8 +199,10 @@ function layout() {
   stage.style.fontSize = Math.max(w / 100, 4.6) + 'px';
   $('below').style.top = h + 'px';
   $('stick').style.fontSize = clamp(w / 100, 7, 11) + 'px';
-  const want = Q.get('q') === 'low' ? 1 : Q.get('q') === 'high' ? 2 : (w * (window.devicePixelRatio || 1) >= 1250 ? 2 : 1);
-  if (!W || (want !== SC && !layout.locked)) setScale(want);
+  const dp = w * (window.devicePixelRatio || 1);
+  let want = Q.get('q') === 'low' ? 1 : Q.get('q') === 'high' ? 2 : (dp >= 2700 ? 3 : dp >= 1250 ? 2 : 1);
+  if (layout.cap) want = Math.min(want, layout.cap);
+  if (!W || want !== SC) setScale(want);
 }
 
 // ------------------------------------------------------------------ loading
@@ -908,7 +910,7 @@ function frame(now) {
   const ms = performance.now() - t0;
   frameMs += (ms - frameMs) * .05; fps += (1 / dt - fps) * .05;
   // a slow device drops to the 960x540 backing store once (the picture is the same, the light is just less fine)
-  if (SC === 2 && Q.get('q') !== 'high' && frames > 90) { slowT = fps < 40 ? slowT + dt : 0; if (slowT > 3) { layout.locked = true; setScale(1); } }
+  if (SC > 1 && Q.get('q') !== 'high' && frames > 90) { slowT = fps < 40 ? slowT + dt : 0; if (slowT > 3) { slowT = 0; layout.cap = SC - 1; setScale(SC - 1); } }
   requestAnimationFrame(frame);
 }
 const api = {
