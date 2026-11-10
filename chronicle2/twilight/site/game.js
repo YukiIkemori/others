@@ -88,6 +88,7 @@ const cv = $('view'), ctx = cv.getContext('2d', { alpha: false });
 const stage = $('stage');
 const UI_ON = Q.get('ui') !== '0';
 const DEBUG = Q.get('debug') === '1';
+let showWalk = false;
 const OFF = new Set((Q.get('off') || '').split(',').filter(Boolean));   // ?off=mist,rays,grain,light,glow,fg,vignette,grade,particles for diagnosis
 if (!UI_ON) document.body.classList.add('noui');
 let SC = 2;                         // backing pixels per art pixel (1 = 960x540, 2 = 1920x1080, 3 = 2880x1620 on very large screens)
@@ -388,6 +389,7 @@ function onKey(e, down) {
   if (!down || e.repeat) return;
   if (e.key === 'z' || e.key === 'Z' || e.key === 'Enter' || e.key === ' ') { interact(); e.preventDefault(); }
   else if (e.key === 'm' || e.key === 'M') toggleMood();
+  else if (e.key === 'c' || e.key === 'C') showWalk = !showWalk;   // check view: where the hero cannot go
 }
 function interact() {
   if (dlg) { advance(); return; }
@@ -421,7 +423,10 @@ function setupInput() {
   const up = e => { if (e.pointerId === stick.id) { stick.on = false; stick.x = stick.y = 0; st.classList.remove('on'); } };
   addEventListener('pointerup', up); addEventListener('pointercancel', up);
   addEventListener('contextmenu', e => e.preventDefault());
-  $('moon').addEventListener('click', e => { toggleMood(); e.currentTarget.blur(); });
+  let moonHold = 0, moonLong = false;                       // touch: hold the moon for a second = the check view (same as the C key)
+  $('moon').addEventListener('pointerdown', () => { moonLong = false; clearTimeout(moonHold); moonHold = setTimeout(() => { moonLong = true; showWalk = !showWalk; }, 800); });
+  for (const ev of ['pointerup', 'pointerleave', 'pointercancel']) $('moon').addEventListener(ev, () => clearTimeout(moonHold));
+  $('moon').addEventListener('click', e => { if (!moonLong) toggleMood(); moonLong = false; e.currentTarget.blur(); });
   $('prompt').addEventListener('click', interact);
   for (const d of document.querySelectorAll('.dialog')) d.addEventListener('click', advance);
   addEventListener('resize', layout);
@@ -434,7 +439,7 @@ function setupUi() {
   $('titleJp').textContent = M.title; $('titleEn').textContent = M.titleEn || '';
   uiMood(moodTo);
   const touch = matchMedia('(pointer: coarse)').matches;
-  $('hint').innerHTML = touch ? 'ドラッグで移動　　月をタップで刻を替える' : '<b>← ↑ ↓ →</b>移動<b>Shift</b>走る<b>Z</b>調べる<b>M</b>月を替える';
+  $('hint').innerHTML = touch ? 'ドラッグで移動　　月をタップで刻を替える' : '<b>← ↑ ↓ →</b>移動<b>Shift</b>走る<b>Z</b>調べる<b>M</b>月を替える<b>C</b>当たり判定を表示';
   $('tipB').innerHTML = '画面を<b>ドラッグ</b>して歩く<br><b>月</b>をタップすると刻が替わる<br><span>横向きにすると大きく遊べます</span>';
   if (touch) $('promptKey').style.display = 'none';
   setupInput();
@@ -519,7 +524,7 @@ function update(dt) {
         if (free(hero.x, hero.y + dy)) { hero.y += dy; continue; }
       }
       let moved = false;                                      // straight into a slanted edge: slide if only one side is open
-      for (const ang of [.52, 1.05]) {
+      for (const ang of [.35, .7, 1.05, 1.3]) {
         const c = Math.cos(ang), s = Math.sin(ang);
         const ax = (dx * c - dy * s) * c, ay = (dx * s + dy * c) * c, bx = (dx * c + dy * s) * c, by = (-dx * s + dy * c) * c;
         const fa = free(hero.x + ax, hero.y + ay), fb = free(hero.x + bx, hero.y + by);
@@ -870,7 +875,7 @@ function render() {
     ctx.save(); ctx.translate(-gxo, -gyo); ctx.fillStyle = ctx.createPattern(grainTile, 'repeat'); ctx.fillRect(0, 0, CW + 192, CH + 192); ctx.restore();
   }
   ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
-  if (DEBUG) debugDraw(X, Y);
+  if (DEBUG) debugDraw(X, Y); else if (showWalk) walkDraw(X, Y);
 
   // ---- interaction prompt follows the hero
   const pr = $('prompt');
@@ -880,6 +885,21 @@ function render() {
     pr.classList.add('on');
   } else pr.classList.remove('on');
   cam.x = savedCam[0]; cam.y = savedCam[1];
+}
+function walkDraw(X, Y) {
+  if (!walkData) return;
+  ctx.save(); ctx.fillStyle = 'rgba(255,40,80,.34)';
+  const x0 = Math.max(0, Math.floor(cam.x / walkK)), y0 = Math.max(0, Math.floor(cam.y / walkK)), x1 = Math.min(walkW, x0 + VW / walkK + 2);
+  for (let j = y0; j < Math.min(walkH, y0 + VH / walkK + 2); j++) {
+    let run = -1;                                            // one rectangle per run of blocked cells
+    for (let i = x0; i <= x1; i++) {
+      const b = i < x1 && !walkData[j * walkW + i];
+      if (b && run < 0) run = i;
+      else if (!b && run >= 0) { ctx.fillRect(X(run * walkK), Y(j * walkK), (i - run) * walkK * SC, walkK * SC); run = -1; }
+    }
+  }
+  ctx.fillStyle = '#fff'; ctx.fillRect(X(hero.x) - 3, Y(hero.y) - 3, 6, 6);
+  ctx.restore();
 }
 function debugDraw(X, Y) {
   ctx.save(); ctx.lineWidth = 1; ctx.font = '12px monospace';

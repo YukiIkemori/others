@@ -45,24 +45,48 @@ red = cv2.morphologyEx(red, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
 red = cv2.morphologyEx(red, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8)) > 0
 sub = base[y0:y1, x0:x1]; sub[red & raised0[y0:y1, x0:x1]] = 765
 for (x0, y0, x1, y1) in [(314, 622, 345, 700), (366, 622, 399, 700)]: base[y0:y1, x0:x1] = 0   # plants seen through the arches are behind
-yy = np.arange(H)[:, None].repeat(W, 1)
-height = np.where(base > 0, np.clip(base - yy, 0, 65535), 0)
 c1 = base > 0
 
-# ---------- walkable
-raised2 = raised0 & ~walk0 & ~c1
+# ---------- walkable: every piece of flat ground you can see (paths, grass, floors, stairs); things that stand up block
+# the standing-object mask draws stair risers as thin lines: a vertical opening removes them (and nothing that really stands up)
+raisedo = cv2.morphologyEx(raised0.astype(np.uint8), cv2.MORPH_OPEN, np.ones((6, 1), np.uint8)) > 0
+nv = raisedo[440:780, 500:830]                                           # the carpet's edge lines inside the nave are not walls
+nv[:] = cv2.morphologyEx(nv.astype(np.uint8), cv2.MORPH_OPEN, np.ones((1, 6), np.uint8)) > 0
+raised2 = raisedo & ~c1
 n, lab, st, _ = cv2.connectedComponentsWithStats(raised2.astype(np.uint8), connectivity=8)
 small = np.isin(lab, [i for i in range(1, n) if st[i, 4] < 120])           # flower specks do not block
 raised2 &= ~small
-MX, UP, DN = 12, 3, 7
+# props: small free-standing things (headstones, crosses, tombs, posts). The hero can step behind them:
+# only a band at their foot blocks, the rest of the silhouette is ground hidden behind the prop (height map hides the hero there).
+n, lab, st, _ = cv2.connectedComponentsWithStats(raised2.astype(np.uint8), connectivity=8)
+foot = np.zeros((H, W), bool); behind = np.zeros((H, W), bool); nprops = 0
+for i in range(1, n):
+    x, y, w, h, a = st[i]
+    if not (w <= 110 and 26 <= h <= 125 and a <= 7000 and y > 925): continue   # graveyard props only
+    m = lab[y:y + h, x:x + w] == i
+    rows = np.arange(h)[:, None]
+    yb = np.where(m.any(0), (m * rows).max(0), -1)                         # bottom row of the prop in each column
+    ybs = yb.copy()
+    for c in range(w):                                                     # smooth: use the lowest bottom within +-4 columns
+        ybs[c] = yb[max(0, c - 4):c + 5].max()
+    d = int(round(h * 0.75)) if w > 1.15 * h else int(np.clip(round(h * 0.3), 8, 16))   # flat tombs block almost whole
+    f = m & (rows > (ybs[None, :] - d))
+    foot[y:y + h, x:x + w] |= f
+    bh = m & ~f
+    behind[y:y + h, x:x + w] |= bh
+    sub = base[y:y + h, x:x + w]; bb = (y + ybs)[None, :].repeat(h, 0)
+    sub[m] = np.maximum(sub[m], bb[m])
+    nprops += 1
+print('props with walk-behind:', nprops)
+yy = np.arange(H)[:, None].repeat(W, 1)
+height = np.where(base > 0, np.clip(base - yy, 0, 65535), 0)
+solid = (raised2 & ~behind)                                                # walls, cliffs, trees, prop feet
+MX, UP, DN = 5, 1, 3
 k = np.ones((UP + DN + 1, 2 * MX + 1), np.uint8)
-blocked = cv2.dilate(raised2.astype(np.uint8), k, anchor=(MX, UP)) > 0     # raised px within dx<=MX, dy in [-UP, +DN]
-walk = walk0 & ~blocked & ~c1
-# pockets of visible floor under benches / between stacked objects: raised close above AND close below
-ka = np.ones((27, 1), np.uint8); kb = np.ones((17, 1), np.uint8)
-above = cv2.dilate(raised2.astype(np.uint8), ka, anchor=(0, 26)) > 0     # raised within 26 px above
-below = cv2.dilate(raised2.astype(np.uint8), kb, anchor=(0, 0)) > 0      # raised within 16 px below
-walk &= ~(above & below)
+blocked = cv2.dilate(solid.astype(np.uint8), k, anchor=(MX, UP)) > 0
+void = cv2.dilate(sky.astype(np.uint8), np.ones((9, 9), np.uint8)) > 0     # sky and cloud sea, with a safety rim
+ground = (~raised2 | behind) & ~void
+walk = ground & ~blocked & ~c1
 def rect(m, x0, y0, x1, y1, v): m[y0:y1, x0:x1] = v
 FORCE_ON = [
     (612, 1204, 692, 1445),   # through the gate (hidden strip behind the lintel + the opening)
