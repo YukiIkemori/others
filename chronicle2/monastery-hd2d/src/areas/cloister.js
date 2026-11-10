@@ -2,6 +2,18 @@
 // A walled garden gone wild: the spring basin in the middle with the two moons in its water, the surviving north side
 // of the cloister walk (the hero passes behind its arches on the way to the tower), the closing wall behind it, the
 // stumps of the south arcade, and the old tree that still turns red.
+//
+//   basin          centre (-19, -40): wall r 2.6..3.04, coping r 2.53..3.14 (top y 0.76), step r 3.16..3.42, flags r 3.44..4.72;
+//                  water y 0.46; spring head astride the north rim (z -43.1), its spout drops the water at (-19, -42.3)
+//   north arcade   z -47.4, x -27.2..-16.8, 0.7 thick, top 4.6..5.2: lancets centred x -26.05, -24.3, -19.7 (1.4 wide, sill 0.82,
+//                  spring 3.05, apex 4.3), walk-through arch centred x -22 (2.3 wide, apex 4.5), a fallen bay x -18.65..-17.25
+//   closing wall   z -50.2, x -27.4..-19.7 (ends in the tower's stair turret), 0.9 thick: blind arches, blocked doorway (x -24.3),
+//                  wall tomb on the axis of the walk-through arch (x -22)
+//   south wall     z -32.2, x -26.6..-20.9 and -17.1..-11.6, gap piers at x -20.6 and -17.4; the standing pair at x -12.15
+//   tree seat      curved, east of the trunk at (-23.6, -43.6), r 1.2..1.9
+//   furniture      benches (-13.9, -36.25) and (-25.6, -38.8, broken); lantern post (-16.4, -46.5); sundial (-16.3, -33.9);
+//                  statue pedestal (-12.6, -45.6); abbot's slab (-14.5, -43.9); fallen arcade stones (-18, -46.2)
+//   the water      one ShaderMaterial ("springWater", HD.cloisterWater) on a disc + the falling thread; uniforms are listed where it is made
 (function () {
   const HD = window.HD; HD.areas = HD.areas || {};
 
@@ -322,7 +334,7 @@ void main() {
       // ivy heavy on the standing masonry, weeds at the foot
       const iv = (u, v, w, h, d, s) => ctx.plant('ivy', { x: AX0 + u, y: v, z: AZ + AT / 2 + 0.02, nx: 0, nz: 1, w, h, density: d, seed: s });
       iv(0.25, 2.3, 0.9, 4.4, 1.0, 1); iv(2.03, 4.0, 1.5, 1.4, 0.9, 2); iv(1.2, 4.7, 2.2, 0.8, 0.8, 3); iv(3.82, 2.6, 0.55, 4.6, 0.85, 4); iv(3.3, 4.55, 1.6, 0.9, 0.7, 5);
-      iv(6.58, 3.0, 0.5, 3.2, 0.7, 6); iv(7.5, 4.55, 1.5, 0.6, 0.6, 7); iv(8.4, 3.7, 0.5, 0.9, 0.6, 8); iv(10.15, 0.9, 0.5, 1.6, 0.8, 9); iv(1.6, 0.35, 2.6, 0.7, 0.6, 10); iv(7.6, 0.35, 1.8, 0.7, 0.5, 11);
+      iv(6.58, 4.5, 0.45, 0.8, 0.5, 6); iv(10.15, 0.8, 0.4, 1.3, 0.7, 9); iv(1.6, 0.35, 2.6, 0.7, 0.6, 10);        // the east bays are left almost bare: that is where the hero is seen through the arches
       ctx.plant('ivy', { x: AX0 + 2.0, y: 3.2, z: AZ - AT / 2 - 0.02, nx: 0, nz: -1, w: 3.4, h: 3.0, density: 0.6, seed: 12 });
       grassLine(AX0 + 0.3, AZ + 0.65, AX0 + AL, AZ + 0.65, 0.8, { r: 0.45, n: 4, kind: 'weed' }); grassLine(AX0 + 0.6, AZ + 1.0, AX0 + AL, AZ + 1.0, 1.7, { r: 0.6, n: 3, kind: 'tall' });
       grassLine(AX0 + 0.4, AZ - 0.55, AX0 + AL, AZ - 0.55, 1.0, { r: 0.3, n: 3, kind: 'weed' });
@@ -398,12 +410,12 @@ void main() {
       B.add(M.stone, K.rubble({ x: -23.4, z: -31.5, y: gy(-23.4, -31.5), n: 7, spread: 1.0, sx: 1.5, sz: 0.5, size: [0.15, 0.4], seed: 61 }), K.rubble({ x: -14.9, z: -32.9, y: gy(-14.9, -32.9), n: 6, spread: 0.9, sx: 1.4, sz: 0.4, size: [0.14, 0.36], seed: 62 }));
       B.add(M.sand, K.drum({ x: -22.2, y: gy(-22.2, -33.1) - 0.02, z: -33.1, r: 0.09, len: 1.1, ry: 0.4 }), K.drum({ x: -15.7, y: gy(-15.7, -31.4) - 0.02, z: -31.4, r: 0.09, len: 0.7, ry: -0.9 }));
       grassLine(-26.4, SZ + 0.5, -11.8, SZ + 0.5, 0.85, { r: 0.4, n: 4, kind: 'weed' }); grassLine(-26.4, SZ - 0.5, -11.8, SZ - 0.5, 0.9, { r: 0.4, n: 4, kind: 'tall' }); grassLine(-26.2, SZ + 0.9, -12, SZ + 0.9, 1.3, { r: 0.6, n: 3, kind: 'tuft' });
-      ctx.plant('bush', { x: -25.6, z: -33.7, r: 1.35, kind: 'bramble', seed: 5 }); ctx.plant('bush', { x: -26.2, z: -35.3, r: 0.9, kind: 'bramble', seed: 6 }); ctx.plant('bush', { x: -12.0, z: -34.6, r: 0.6, kind: 'fern', seed: 7 });
+      ctx.plant('bush', { x: -25.6, z: -33.7, r: 1.35, kind: 'bramble', seed: 5 }); ctx.plant('bush', { x: -26.2, z: -35.3, r: 0.9, kind: 'bramble', seed: 6 });
     }
 
     // ============================================================================ the old tree that still turns red
     {
-      ctx.plant('tree', { x: TX, z: TZ, kind: 'autumn', h: 8.5, seed: 7 });
+      ctx.plant('tree', { x: TX, z: TZ, kind: 'autumn', h: 8.5, seed: 7, lean: [-0.24, 0.06] });      // it leans a little west, away from the arches the hero is seen through
       ctx.block.circle(TX, TZ, 0.9);
       for (const c of [[-1.5, 0.9, 0.62], [-1.62, 0.1, 0.7], [-1.55, -0.75, 0.7], [-1.25, -1.5, 0.62]]) ctx.walkCircle(TX + c[0], TZ + c[1], c[2]);            // the path squeezes past the trunk on the west: give it room
       // a curved stone seat on the side toward the spring (the path passes close on the other side)
@@ -499,8 +511,8 @@ void main() {
 
     // ====================================================================================================== plants
     // round the basin: reeds at the rim, moonflowers, grass coming up between the flags
-    for (const a of [203, 219, 236, 304, 321, 338]) ctx.plant('grass', { x: PX + Math.cos(a * DEG) * 3.58, z: PZ + Math.sin(a * DEG) * 3.58, r: 0.16, n: 2, kind: 'reed', seed: a });      // reeds only on the far side: nothing tall between the camera and the water
-    for (const a of [249, 291]) ctx.plant('grass', { x: PX + Math.cos(a * DEG) * 3.62, z: PZ + Math.sin(a * DEG) * 3.62, r: 0.24, n: 4, kind: 'reed', seed: a });
+    for (const a of [203, 219, 236, 304, 321, 338]) ctx.plant('grass', { x: PX + Math.cos(a * DEG) * 3.58, z: PZ + Math.sin(a * DEG) * 3.58, r: 0.16, n: 2, kind: 'reed', s: 0.62, seed: a });      // reeds only on the far side: nothing tall between the camera and the water
+    for (const a of [249, 291]) ctx.plant('grass', { x: PX + Math.cos(a * DEG) * 3.62, z: PZ + Math.sin(a * DEG) * 3.62, r: 0.24, n: 3, kind: 'reed', s: 0.8, seed: a });
     for (const p of [[-15.0, -38.3, 0.7, 5], [-14.5, -41.6, 0.8, 6], [-22.9, -41.2, 0.6, 4], [-20.6, -45.0, 0.7, 5], [-17.3, -45.1, 0.6, 4], [-23.3, -36.0, 0.5, 3], [-21.2, -34.2, 0.5, 3]]) ctx.plant('grass', { x: p[0], z: p[1], r: p[2], n: p[3], kind: 'moonflower', seed: Math.round(p[0] * 7 + p[1]) });
     { const r = ctx.rng(77); for (let k = 0; k < 16; k++) { const a = r.range(0, TAU), rr = r.range(3.3, 4.75); ctx.plant('grass', { x: PX + Math.cos(a) * rr, z: PZ + Math.sin(a) * rr, r: 0.22, n: 2, kind: 'tuft', seed: 300 + k }); } }
     // the garth itself: rough grass everywhere off the paths, taller toward the walls

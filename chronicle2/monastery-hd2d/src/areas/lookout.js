@@ -1,6 +1,8 @@
 // The lookout terrace on the north-east corner (where the monks watched the two moons), the whole north cliff
-// (rock lip, rim outcrops, strata faces down into the cloud sea, spurs and detached pinnacles), the terrace's
-// retaining wall down the cliff, and the low ruined wall that closes the ledge behind the church.
+// (rock lip, rim outcrops, bedded faces down into the cloud sea, spurs and detached pinnacles), the bastion that
+// carries the terrace's bay down the cliff, and the low ruined wall that closes the ledge behind the church.
+// Plan: parapet lines x 12.5..26, z -63.5..-57.85; a bay x 17.5..23.5 projects to z -65.5 (the moon-dial stands in it);
+// floor y 0.45 with two steps up from the east path at (18.6, -57.5..-56.2). The vista camera zone is at the bottom of the terrace part.
 (function () { const HD = window.HD; HD.areas = HD.areas || {};
 HD.areas.lookout = function (ctx) {
   const K = ctx.K, M = ctx.M, L = ctx.L, B = ctx.batch(), rng = ctx.rng;
@@ -168,7 +170,7 @@ HD.areas.lookout = function (ctx) {
     ctx.glow({ x, y: F + 1.75, z: z + 0.05, color: '#ffb060', size: 3.0, strength: 1.1 }); ctx.glow({ x, y: F + 1.6, z: z + 0.3, color: '#ffd9a0', size: 0.9, strength: 1.4 });
     ctx.block.circle(x, z, 0.42); }
 
-  // ---- what holds it up: a retaining wall with stepped buttresses down the cliff, blind lancets under the bay
+  // ---- what holds it up: the terrace sits on the rock; a corbel table runs under the parapet and a bastion carries the bay down the cliff
   { const YB = -12.5, RM = [[X0 - 0.2, -62.3], [X1 + 0.2, -62.3], [X1 + 0.2, ZN - 0.2], [23.6, ZN - 0.2], [22.4, ZB - 0.2], [18.6, ZB - 0.2], [17.4, ZN - 0.2], [X0 - 0.2, ZN - 0.2]];
     const sh = m => (x, y, z) => m * clamp(1 + y * 0.03, 0.62, 1);
     B.add(M.stone, K.shade(K.poly(RM, YB, F - 0.3), sh(0.86)));
