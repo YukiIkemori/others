@@ -10,7 +10,7 @@ def _post(url, data, headers, timeout=900):
     except urllib.error.HTTPError as e:
         raise RuntimeError('HTTP %d: %s' % (e.code, e.read().decode('utf-8', 'replace')[:600]))
 
-def gen(prompt, out, size='1536x1024', quality='medium', model='gpt-image-2', images=(), background=None, tag=''):
+def gen(prompt, out, size='1536x1024', quality='medium', model='gpt-image-2', images=(), background=None, tag='', extra=None):
     key = os.environ['OPENAI_API_KEY']
     t0 = time.time()
     if not images:
@@ -25,6 +25,7 @@ def gen(prompt, out, size='1536x1024', quality='medium', model='gpt-image-2', im
             parts.append(('--%s\r\nContent-Disposition: form-data; name="%s"\r\n\r\n%s\r\n' % (b, k, v)).encode())
         field('model', model); field('prompt', prompt); field('size', size); field('quality', quality); field('n', '1')
         if background: field('background', background)
+        for k, v in (extra or {}).items(): field(k, v)
         for p in images:
             parts.append(('--%s\r\nContent-Disposition: form-data; name="image[]"; filename="%s"\r\nContent-Type: image/png\r\n\r\n' % (b, os.path.basename(p))).encode() + open(p, 'rb').read() + b'\r\n')
         parts.append(('--%s--\r\n' % b).encode())
@@ -44,6 +45,6 @@ if __name__ == '__main__':
     a = argparse.ArgumentParser()
     a.add_argument('prompt_file'); a.add_argument('out'); a.add_argument('--size', default='1536x1024')
     a.add_argument('--quality', default='medium'); a.add_argument('--model', default='gpt-image-2')
-    a.add_argument('--image', action='append', default=[]); a.add_argument('--background'); a.add_argument('--tag', default='')
+    a.add_argument('--image', action='append', default=[]); a.add_argument('--background'); a.add_argument('--tag', default=''); a.add_argument('--extra', action='append', default=[], help='k=v form field for edits')
     x = a.parse_args()
-    gen(open(x.prompt_file).read(), x.out, x.size, x.quality, x.model, x.image, x.background, x.tag)
+    gen(open(x.prompt_file).read(), x.out, x.size, x.quality, x.model, x.image, x.background, x.tag, dict(e.split('=', 1) for e in x.extra))

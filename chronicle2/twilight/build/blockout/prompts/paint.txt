@@ -1,0 +1,11 @@
+Image 1 is a rough BLOCKOUT of a 2D RPG field map (a ruined abbey with a bell tower, a roofless nave, a graveyard, a gate and stairs at the bottom), rendered from simple 3D shapes with flat placeholder colours. Image 2 is a STYLE REFERENCE: the finished look of this game's maps.
+
+TASK: repaint image 1 as finished background art in exactly the style of image 2: premium high-resolution pixel art, crisp deliberate pixel clusters, deep plum-indigo outlines, rich hue-shifted shading (blue-violet shadows, warm peach-gold lights), dense hand-pixelled detail on every stone block, crack, moss patch, grass tuft, root, leaf and flower. Dusk lighting: last warm light from the upper left, long soft shadows toward the lower right, cool violet shade, and hanging amber lanterns that glow warmly at the gate, beside the nave doorway and at the tower door.
+
+THE GEOMETRY IS LOCKED. Image 1 is the game's collision map, so:
+- Every wall, pillar, arch, building, roof, stair, gravestone, cross, tomb, bench, tree, the pond and every path stays at exactly the same position, with the same size, the same outline and the same footprint on the ground. Do not move, resize, rotate, add or remove any structure. Do not add new walls, terraces, cliffs, steps or buildings. Do not change the camera or the perspective.
+- Open ground stays open ground: where image 1 shows grass or path, the result shows walkable grass or path (you may add low flowers, grass tufts, fallen leaves, small pebbles and cracks, but nothing that stands up).
+- What you may change freely: materials, textures, colours, lighting, weathering, moss and ivy growing ON existing walls, the leaves of existing trees, stained glass in existing windows.
+- The flat magenta #FF00FF area around the map is a mask: keep it flat pure magenta, pixel for pixel, with a hard edge.
+
+Make the dirt paths into worn pale flagstone paths clearly lighter than the grass. Make the grass dark, lush and varied. Give the stone walls real masonry with chipped, weathered edges. No characters, no text, no UI, no frame.
