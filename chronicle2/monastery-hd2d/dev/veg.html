@@ -1,0 +1,178 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>veg.js test</title>
+<style>html,body{margin:0;height:100%;background:#17131f;overflow:hidden}canvas{display:block;image-rendering:pixelated}</style>
+</head>
+<body>
+<script src="../vendor/three.min.js"></script>
+<script src="../src/core/pal.js"></script>
+<script src="../src/core/light.js"></script>
+<script src="../src/core/veg.js"></script>
+<script>
+// Vegetation kit test page, seen from the game camera (looks north, 36 degrees down, fov 26).
+// Query: ?view=forest (250 pines on a slope; prints renderer.info to the console and window.VEG_INFO)
+//        ?view=atlas  (the pixel-art canvases, enlarged)
+//        ?focus=autumn|dead|grass|ivy|pine|broadleaf|cypress|bush|flowers  (camera at distance 18; &d=22 overrides)
+//        ?t=seconds   (frozen wind time)   ?shadows=0
+//        ?diff=1,2.6  (adds a 2D canvas #diff: the frame at the second time, with every pixel that moved since the first in magenta)
+// built after the load event so a slow (software-rendered, busy) machine does not time the page load out
+window.addEventListener('load', function () { setTimeout(function () {
+  const T = THREE, P = HD.P, q = new URLSearchParams(location.search);
+  const view = q.get('view') || '', focus = q.get('focus') || '';
+  const V = HD.Veg.create();
+  window.V = V;
+
+  if (view === 'atlas') {                                   // debug: show the canvases the kit draws
+    const cv = document.createElement('canvas'), S = +(q.get('s') || 2), which = q.get('tex') || 'foliage', src = V.textures[which];
+    const oy = +(q.get('oy') || 0), ox = +(q.get('ox') || 0);
+    cv.width = innerWidth; cv.height = innerHeight; document.body.appendChild(cv);
+    const g = cv.getContext('2d'); g.imageSmoothingEnabled = false;
+    g.fillStyle = '#5b5568'; g.fillRect(0, 0, cv.width, cv.height);
+    g.drawImage(src, ox, oy, cv.width / S, cv.height / S, 0, 0, cv.width, cv.height);
+    window.HD_READY = true; return;
+  }
+
+  const renderer = new T.WebGLRenderer({ antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: true });   // preserved so a slow headless frame can still be read back
+  renderer.setPixelRatio(1);
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.outputEncoding = T.sRGBEncoding;
+  renderer.setClearColor(HD.Light.FOG_COLOR, 1);
+  document.body.appendChild(renderer.domElement);
+  const scene = new T.Scene();
+  const rig = HD.Light.setup(scene, renderer);
+  if (q.get('shadows') === '0') renderer.shadowMap.enabled = false;
+
+  function canvasTex(w, h, draw, repeat) {
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    const g = c.getContext('2d'), img = g.createImageData(w, h);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const c3 = P.rgb(draw(x, y)), o = (y * w + x) * 4; img.data[o] = c3[0]; img.data[o + 1] = c3[1]; img.data[o + 2] = c3[2]; img.data[o + 3] = 255; }
+    g.putImageData(img, 0, 0);
+    const t = new T.CanvasTexture(c);
+    t.encoding = T.sRGBEncoding; t.magFilter = T.NearestFilter; t.minFilter = T.LinearMipmapLinearFilter; t.anisotropy = 4;
+    if (repeat) t.wrapS = t.wrapT = T.RepeatWrapping;
+    return t;
+  }
+  // periodic value noise so the ground texture tiles
+  const pn = (x, y, per, s) => { const xi = Math.floor(x), yi = Math.floor(y), fx = x - xi, fy = y - yi, u = fx * fx * (3 - 2 * fx), v = fy * fy * (3 - 2 * fy), h = (a, b) => HD.hash2(((a % per) + per) % per, ((b % per) + per) % per, s);
+    return h(xi, yi) * (1 - u) * (1 - v) + h(xi + 1, yi) * u * (1 - v) + h(xi, yi + 1) * (1 - u) * v + h(xi + 1, yi + 1) * u * v; };
+  const groundTex = canvasTex(256, 256, (x, y) => {
+    const big = pn(x / 32, y / 32, 8, 3) * 0.6 + pn(x / 16, y / 16, 16, 5) * 0.4, sp = HD.hash2(x, y, 7), fine = pn(x / 4, y / 4, 64, 9);
+    if (big > 0.68) { const d = (big - 0.68) * 6 + fine * 0.6 + sp * 0.5; return d > 1.1 ? P.dirt[2] : d > 0.6 ? P.dirt[1] : P.grass[2]; }
+    const g = fine * 0.75 + sp * 0.45 + (big - 0.3) * 0.5;
+    return P.grass[g > 0.92 ? 5 : g > 0.5 ? 4 : g > 0.22 ? 3 : 2];
+  }, true);
+  groundTex.repeat.set(160 / 8, 160 / 8);
+
+  const PITCH = 36 * Math.PI / 180;
+  const camera = new T.PerspectiveCamera(26, innerWidth / innerHeight, 1, 600);
+  function aim(x, y, z, dist) {
+    camera.position.set(x, y + dist * Math.sin(PITCH), z + dist * Math.cos(PITCH)); camera.lookAt(x, y, z);
+    rig.follow(x, z + 4);
+  }
+  const groundMat = new T.MeshPhongMaterial({ map: groundTex, specular: 0x000000 });
+  const added = [];
+  const add = o => { scene.add(o); added.push(o); return o; };
+
+  if (view === 'forest') {
+    // a plateau edge: flat to the south, sloping away to the north and the east, with the forest marching down it
+    const gh = (x, z) => { const d = Math.max(0, -6 - z) + Math.max(0, Math.abs(x) - 26) * 0.6; return -d * 0.36 - d * 0.1 * HD.fbm(x * 0.06, z * 0.06, 4, 3) + (d > 0 ? (HD.fbm(x * 0.15, z * 0.15, 9, 2) - 0.5) * 1.2 : 0); };
+    const geo = new T.PlaneGeometry(200, 200, 100, 100); geo.rotateX(-Math.PI / 2);
+    const pa = geo.attributes.position; for (let i = 0; i < pa.count; i++) pa.setY(i, gh(pa.getX(i), pa.getZ(i)));
+    geo.computeVertexNormals();
+    const ground = new T.Mesh(geo, groundMat); ground.receiveShadow = true; scene.add(ground);
+    const r = HD.rng(42), trees = [], grass = [];
+    while (trees.length < 250) {
+      const x = r.range(-48, 48), z = r.range(-78, -7.5);
+      if (HD.fbm(x * 0.07, z * 0.07, 2, 2) < 0.34 && z > -30) continue;       // a few clearings near the edge
+      trees.push({ x, y: gh(x, z), z, h: r.range(9, 16), kind: 'pine', seed: trees.length * 7 + 1, lean: r.range(-0.04, 0.04) });
+    }
+    for (let i = 0; i < 6; i++) { const x = -22 + i * 9 + r.range(-2, 2), z = r.range(-7, -3); trees.push({ x, y: gh(x, z), z, h: r.range(7, 10), kind: 'broadleaf', seed: 500 + i }); }
+    for (let i = 0; i < 1500; i++) { const x = r.range(-30, 30), z = r.range(-12, 9); grass.push({ x, y: gh(x, z), z, s: r.range(0.8, 1.3), kind: r() < 0.8 ? 'tuft' : 'tall' }); }
+    add(V.trees(trees)); add(V.grass(grass));
+    aim(0, 2, -9, +(q.get('d') || 36.5));
+  } else {
+    const ground = new T.Mesh(new T.PlaneGeometry(160, 160), groundMat); ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
+    // a low wall facing south, for ivy
+    const stoneTex = canvasTex(384, 128, (x, y) => {
+      const row = y >> 4, bw = 40, xo = x + (row % 2) * 20 + row * 7, bx = Math.floor(xo / bw), lx = xo % bw, ly = y & 15;
+      if (ly === 15 || lx === bw - 1) return P.stone[1];
+      const b = 3 + Math.floor(HD.hash2(bx, row, 3) * 2.4), sp = HD.hash2(x, y, 11);
+      return P.stone[(ly === 0 || lx === 0) ? b + 1 : (ly === 14 ? b - 1 : (sp > 0.9 ? b + 1 : sp < 0.12 ? b - 1 : b))];
+    });
+    const wall = new T.Mesh(new T.BoxGeometry(12, 4, 1), new T.MeshPhongMaterial({ map: stoneTex, specular: 0x000000 }));
+    wall.position.set(-8.5, 2, 3); wall.castShadow = true; wall.receiveShadow = true; scene.add(wall);
+    // the hero stand-in: a 3-unit-tall dark upright card
+    const hero = new T.Mesh(new T.PlaneGeometry(1.2, 3), new T.MeshPhongMaterial({ color: 0x1c2038, specular: 0x000000, side: T.DoubleSide }));
+    hero.position.set(1.2, 1.5, 2.2); hero.castShadow = true; scene.add(hero);
+    const lamp = new T.Mesh(new T.PlaneGeometry(0.22, 0.28), new T.MeshBasicMaterial({ color: 0xffb060 })); lamp.position.set(1.65, 1.2, 2.23); scene.add(lamp);
+
+    const AUT = [1, 0, -5.5], DEAD = [8.6, 0, -4.5];
+    add(V.trees([
+      { x: -12.6, y: 0, z: -5, h: 10.5, kind: 'pine', seed: 3 },
+      { x: -6.3, y: 0, z: -5.5, h: 8.2, kind: 'broadleaf', seed: 5 },
+      { x: AUT[0], y: 0, z: AUT[2], h: 8.5, kind: 'autumn', seed: 11 },
+      { x: DEAD[0], y: 0, z: DEAD[2], h: 6.4, kind: 'dead', seed: 4, lean: 0.06 },
+      { x: 12.8, y: 0, z: -5, h: 8, kind: 'cypress', seed: 2 },
+      { x: 14.6, y: 0, z: -2.2, h: 6.2, kind: 'cypress', seed: 9 },
+      { x: 12.2, y: 0, z: 1.5, h: 5.2, kind: 'dead', seed: 21, lean: -0.1 },
+    ]));
+    add(V.bushes([
+      { x: 4.2, y: 0, z: 1.2, r: 1.1, kind: 'shrub', seed: 1 }, { x: 6.2, y: 0, z: 0.6, r: 1.6, kind: 'shrub', seed: 2 }, { x: 5.2, y: 0, z: 2.4, r: 0.7, kind: 'shrub', seed: 3 },
+      { x: 9.2, y: 0, z: 1.2, r: 1.2, kind: 'bramble', seed: 4 }, { x: 10.6, y: 0, z: 2.2, r: 0.9, kind: 'bramble', seed: 5 }, { x: 8.2, y: 0, z: -4, r: 0.8, kind: 'bramble', seed: 8 },
+      { x: 3.4, y: 0, z: 4.6, r: 0.9, kind: 'fern', seed: 6 }, { x: 4.9, y: 0, z: 5.3, r: 1.2, kind: 'fern', seed: 7 }, { x: 6.2, y: 0, z: 4.4, r: 0.8, kind: 'fern', seed: 9 }, { x: -2.6, y: 0, z: 3.9, r: 1, kind: 'fern', seed: 12 },
+    ]));
+    const r = HD.rng(7), grass = [], patch = (kind, cx, cz, rx, rz, n, s0, s1) => { for (let i = 0; i < n; i++) { const a = r() * 6.283, d = Math.sqrt(r()); grass.push({ x: cx + Math.cos(a) * d * rx, y: 0, z: cz + Math.sin(a) * d * rz, s: r.range(s0, s1), kind }); } };
+    patch('tuft', 8.5, 4.8, 2, 1.4, 90, 0.8, 1.3); patch('tall', 12, 5, 1.6, 1.3, 50, 0.8, 1.2); patch('weed', 0.2, 4.6, 1.5, 1, 22, 0.8, 1.2);
+    patch('moonflower', 6.6, 6.2, 1.8, 0.7, 26, 0.8, 1.15); patch('reed', 13.6, 2.6, 1, 1.2, 26, 0.8, 1.1);
+    patch('tuft', 0, -1, 15, 8, 500, 0.7, 1.2); patch('tall', DEAD[0], DEAD[2] + 0.6, 1.8, 1, 16, 0.7, 1); patch('moonflower', AUT[0] + 3, AUT[2] + 3.5, 1.5, 1, 9, 0.8, 1); patch('weed', -8.5, 3.9, 6, 0.3, 14, 0.7, 1.1);
+    add(V.grass(grass));
+    add(V.ivy([
+      { x: -10.2, y: 2, z: 3.52, nx: 0, nz: 1, w: 7, h: 4, seed: 3, density: 1, top: 4 },
+      { x: -4.3, y: 1.3, z: 3.52, nx: 0, nz: 1, w: 3, h: 2.6, seed: 8, density: 0.6 },
+      { x: -2.48, y: 2, z: 3, nx: 1, nz: 0, w: 1, h: 4, seed: 5, density: 0.9, top: 4 },
+    ]));
+    const leaves = [];
+    for (let i = 0; i < 260; i++) { const a = r() * 6.283, d = Math.pow(r(), 0.7) * 6; leaves.push({ x: AUT[0] + Math.cos(a) * d + 0.6, y: 0, z: AUT[2] + Math.sin(a) * d * 0.8 + 1.5, kind: 'autumn' }); }
+    for (let i = 0; i < 70; i++) leaves.push({ x: DEAD[0] + r.range(-3, 3), y: 0, z: DEAD[2] + r.range(-1, 3.5), kind: 'dry' });
+    add(V.leaves(leaves));
+
+    const F = {
+      autumn: [AUT[0], 4.2, AUT[2], 21], dead: [DEAD[0], 2.8, DEAD[2], 18], grass: [9.5, 0.6, 5, 18], ivy: [-8.6, 2, 3.5, 18], pine: [-12.6, 5, -5, 26], broadleaf: [-6.3, 4, -5.5, 21],
+      cypress: [13.4, 3.5, -3.5, 20], bush: [6.5, 0.8, 2.5, 18], flowers: [6.6, 0.5, 6.2, 9],
+    }[focus];
+    if (F) aim(F[0], F[1], F[2], +(q.get('d') || F[3])); else aim(0, 3.5, -1, +(q.get('d') || 36.5));
+  }
+
+  const frozen = q.has('t') ? +q.get('t') : null, t0 = performance.now();
+  let frames = 0;
+  function countVeg() { let meshes = 0, tris = 0; for (const o of added) o.traverse(m => { if (!m.isMesh) return; meshes++; tris += (m.geometry.index.count / 3) * (m.isInstancedMesh ? m.count : 1); }); return { meshes, tris }; }
+  function frame() {
+    requestAnimationFrame(frame);
+    V.update(frozen != null ? frozen : (performance.now() - t0) / 1000);
+    renderer.render(scene, camera);
+    if (++frames === 2) {
+      const i = renderer.info.render, c = countVeg();
+      window.VEG_INFO = { calls: i.calls, triangles: i.triangles, vegMeshes: c.meshes, vegTriangles: c.tris, note: 'main pass only (r149 resets renderer.info after the shadow pass); the shadow pass redraws the trunk, foliage, bush and ivy meshes' };
+      console.log('VEG_INFO ' + JSON.stringify(window.VEG_INFO));
+      if (q.has('diff')) {
+        const ts = q.get('diff').split(',').map(Number), gl = renderer.getContext(), w = gl.drawingBufferWidth, h = gl.drawingBufferHeight;
+        const grab = t => { V.update(t); renderer.render(scene, camera); const b = new Uint8Array(w * h * 4); gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, b); return b; };
+        const a = grab(ts[0]), b = grab(ts[1]), cv = document.createElement('canvas'); cv.id = 'diff'; cv.width = w; cv.height = h;
+        const g = cv.getContext('2d'), img = g.createImageData(w, h); let moved = 0;
+        for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+          const i = ((h - 1 - y) * w + x) * 4, o = (y * w + x) * 4, d = Math.abs(a[i] - b[i]) + Math.abs(a[i + 1] - b[i + 1]) + Math.abs(a[i + 2] - b[i + 2]);
+          if (d > 30) { moved++; img.data[o] = 255; img.data[o + 1] = 40; img.data[o + 2] = 220; } else { img.data[o] = b[i] * 0.55; img.data[o + 1] = b[i + 1] * 0.55; img.data[o + 2] = b[i + 2] * 0.55; }
+          img.data[o + 3] = 255;
+        }
+        g.putImageData(img, 0, 0); document.body.appendChild(cv); window.VEG_INFO.movedFraction = moved / (w * h);
+      }
+      window.HD_READY = true;
+    }
+  }
+  frame();
+}, 20); });
+</script>
+</body>
+</html>

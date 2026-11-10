@@ -1,0 +1,18 @@
+(function(){ const HD = window.HD; HD.areas = HD.areas || {};
+HD.areas._example = function (ctx) { if (!ctx.query.has('probe')) return; const K = ctx.K, M = ctx.M, B = ctx.batch();
+  const W = K.wall([-9, -16], [9, -16]);
+  const top = K.ruin(W.L, { seed: 5, lo: 2, hi: 7.5, scale: 4 });
+  const a1 = K.arch(4, 1.2, 2.4, 3.2, 2.0), a2 = K.arch(13.5, 0, 2.8, 2.6, 2.3);
+  B.add(M.stone, W.solid({ t: 0.9, top: K.ruin(W.L, { seed: 5, lo: 6, hi: 8, scale: 4 }), holes: [a1, a2] }));
+  B.add(M.sand, W.archTrim(4, 1.2, 2.4, 3.2, 2.0, { band: 0.28, depth: 0.16, at: 0.45 }), W.tracery(4, 1.2, 2.4, 3.2, 2.0, { lights: 2 }), W.archTrim(13.5, 0, 2.8, 2.6, 2.3, { band: 0.3, depth: 0.2, at: 0.45 }), W.archTrim(13.5, 0, 2.8, 2.6, 2.3, { band: 0.3, inset: 0.3, depth: 0.1, at: 0.45 }));
+  B.add(M.stoneDark, W.box(0, W.L, 0, 0.5, -0.6, 0.6));
+  B.add(M.stone, W.buttress(8.5, { width: 1.0, face: 0.45, stages: [[1.3, 2.4], [0.8, 4.6], [0.4, 6]] }), W.buttress(17, { width: 1.0, face: 0.45, stages: [[1.3, 2.4], [0.8, 4.6]] }));
+  B.add(M.sand, K.column({ x: -4, z: -12, h: 5.2 }), K.column({ x: -6.5, z: -12, h: 2.2, broken: true }), K.drum({ x: -6, z: -10.5, r: 0.44, len: 1.3, ry: 0.5 }));
+  B.add(M.stone, K.rubble({ x: -7, z: -11.5, n: 9, spread: 1.6, seed: 3 }));
+  B.add(M.slate, K.gable({ x0: 10, x1: 16, z0: -15, z1: -11, y: 3.5, rise: 2.2, axis: 'x' }), K.spire({ x: 20, y: 5, z: -14, r: 2.4, h: 5 }));
+  B.add(M.rubble, K.box(10.2, 0, -14.8, 15.8, 3.5, -11.2)); B.add(M.stoneWarm, K.box(18.4, 0, -15.6, 21.6, 5, -12.4));
+  B.add(M.flag, K.box(-3, -0.2, -12, 3, 0.12, -9)); B.add(M.paver, K.box(3, -0.2, -12, 7, 0.12, -9)); B.add(M.wood, K.box(-12, 0, -13, -10, 2, -12.7));
+  B.add(M.rock, K.rock({ x: -14, y: 0.6, z: -13, sx: 2, sy: 1.6, sz: 1.5, seed: 4 }));
+  B.build(); ctx.block.seg(-9, -16, 9, -16, 0.6); ctx.walk(-12, -15, 12, -8);
+  ctx.light({ x: 4.5, y: 2.2, z: -14.6, intensity: 1.4 }); ctx.glow({ x: 4.5, y: 2.2, z: -14.9, size: 2.4 });
+}; })();

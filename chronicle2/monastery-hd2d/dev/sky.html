@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>sky test</title>
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block}</style>
+</head>
+<body>
+<script src="../vendor/three.min.js"></script>
+<script src="../src/core/pal.js"></script>
+<script src="../src/core/light.js"></script>
+<script src="../src/core/sky.js"></script>
+<script>
+// Sky test page.
+//   ?view=lookout | play | edge      camera presets (see below)      ?t=12.5   freeze time (seconds)
+//   ?hx=..&hz=..   move the hero (play / edge views)                 ?texel=2.5 ?sub=2 ?gain=1.35 ?steps=20   sky options
+//   ?pitch=deg ?yaw=deg ?fov=deg     override the camera angles      ?nosky=1   hide the sky (to see the stand-in alone)
+(function () {
+  const q = new URLSearchParams(location.search), num = (k, d) => (q.has(k) ? parseFloat(q.get(k)) : d);
+  const view = q.get('view') || 'lookout', P = HD.P, DEG = Math.PI / 180;
+  // preserveDrawingBuffer: a canvas grab (tools/shot.cjs) then never reads a cleared buffer, however slow the frame is
+  const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.setPixelRatio(1);
+  renderer.setSize(innerWidth, innerHeight);
+  document.body.appendChild(renderer.domElement);
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xff00ff);          // anything the sky fails to cover shows up as magenta
+  const rig = HD.Light.setup(scene, renderer);
+
+  // pixel-noise texture helper for the stand-in (32 texels per unit)
+  function tex(ramp, lo, hi, seed, rep) {
+    const c = document.createElement('canvas'); c.width = c.height = 64;
+    const g = c.getContext('2d'), r = HD.rng(seed);
+    for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) {
+      const n = HD.fbm(x / 9, y / 9, seed, 3) + (r() - 0.5) * 0.35;
+      g.fillStyle = ramp[Math.max(lo, Math.min(hi, lo + Math.floor(n * (hi - lo + 1))))]; g.fillRect(x, y, 1, 1);
+    }
+    const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; t.magFilter = THREE.NearestFilter;
+    t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(rep, rep); return t;
+  }
+  const phong = map => new THREE.MeshPhongMaterial({ map, specular: 0x000000 });
+
+  // stand-in plateau: slab x [-30,30], z [-62,10], ragged north edge, 30 unit rock skirt
+  const r = HD.rng(7), sh = new THREE.Shape();
+  sh.moveTo(-30, 10); sh.lineTo(30, 10); sh.lineTo(30, -58);
+  for (let x = 30; x >= -30; x -= 1.5) sh.lineTo(x + r.range(-0.4, 0.4), -62 + (x > 7 && x < 29 ? r.range(-0.3, 0.1) : r.range(-0.2, 2.6)));
+  sh.lineTo(-30, -58); sh.closePath();
+  const eg = new THREE.ExtrudeGeometry(sh, { depth: 30, bevelEnabled: false, steps: 6 });
+  eg.rotateX(Math.PI / 2);
+  { // 1 texel per 1/32 unit: world-space uvs
+    const p = eg.attributes.position, n = eg.attributes.normal, uv = eg.attributes.uv;
+    for (let i = 0; i < p.count; i++) {
+      if (Math.abs(n.getY(i)) > 0.5) uv.setXY(i, p.getX(i) / 2, p.getZ(i) / 2);
+      else uv.setXY(i, (p.getX(i) + p.getZ(i)) / 2, p.getY(i) / 2);
+    }
+  }
+  const plateau = new THREE.Mesh(eg, [phong(tex(P.grass, 2, 4, 3, 1)), phong(tex(P.stone, 1, 3, 5, 1))]);
+  plateau.receiveShadow = true; plateau.castShadow = true; scene.add(plateau);
+
+  // low parapet along the lookout edge, with posts
+  const wallMat = phong(tex(P.stone, 2, 5, 9, 1));
+  const box = (w, h, d, x, y, z) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), wallMat); m.position.set(x, y, z); m.castShadow = m.receiveShadow = true; scene.add(m); return m; };
+  box(19, 1.0, 0.7, 18, 0.5, -61.3); box(19.4, 0.22, 1.0, 18, 1.1, -61.3);
+  for (let x = 8.6; x <= 27.5; x += 4.7) box(0.9, 1.7, 0.9, x, 0.85, -61.3);
+
+  // the hero: a dark upright card, 3 units tall
+  const hero = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 3), new THREE.MeshPhongMaterial({ color: P.slate[1], specular: 0x000000, side: THREE.DoubleSide }));
+  hero.castShadow = true; scene.add(hero);
+
+  const sky = HD.Sky.create({ texel: num('texel', 2.5), rampSub: num('sub', 2), moonGain: num('gain', 1.35), cloudSteps: num('steps', 20) });
+  if (!q.has('nosky')) scene.add(sky.group);
+
+  const camera = new THREE.PerspectiveCamera(num('fov', 26), innerWidth / innerHeight, 0.5, 600);
+  camera.rotation.order = 'YXZ';
+  let hx = 18, hz = -58.5, pitch = 2;
+  if (view === 'lookout') {                                 // the level vista: 30 south of and 9 above the hero
+    camera.position.set(hx, 9, hz + 30);
+  } else {                                                  // normal play camera: 36 degrees down, 36.5 from the hero
+    if (view === 'edge') { hx = 0; hz = -61; } else { hx = 18; hz = -56; }
+    hx = num('hx', hx); hz = num('hz', hz); pitch = 36;
+    camera.position.set(hx, 1.5 + 36.5 * Math.sin(36 * DEG), hz + 36.5 * Math.cos(36 * DEG));
+  }
+  camera.rotation.set(-num('pitch', pitch) * DEG, -num('yaw', 0) * DEG, 0);
+  hero.position.set(hx, 1.5, hz);
+  rig.follow(hx, hz);
+
+  const frozen = q.has('t'), t0 = num('t', 0), clock = new THREE.Clock();
+  window.HD_SKY = sky; window.HD_CAM = camera;
+  function frame() {
+    const t = frozen ? t0 : clock.getElapsedTime();
+    sky.update(t, camera);
+    renderer.render(scene, camera);
+    window.HD_INFO = { calls: renderer.info.render.calls, tris: renderer.info.render.triangles };
+    window.HD_READY = true;
+    requestAnimationFrame(frame);
+  }
+  addEventListener('resize', () => { renderer.setSize(innerWidth, innerHeight); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); });
+  frame();
+})();
+</script>
+</body>
+</html>
