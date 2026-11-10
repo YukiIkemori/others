@@ -9,6 +9,7 @@ Objects come in three kinds, which the bake step relies on:
 import bpy, bmesh, math, random
 import numpy as np
 
+DETAIL = 1.0   # the scene raises this for a high-resolution render: leaves, grass and masonry edges get finer
 BUILDERS = {}
 FACECOL = {}   # object name -> (n_faces, 3) float32, the flat colour of every polygon
 
@@ -189,26 +190,35 @@ def blob(mb, c, radii, col, sub=2, rough=0.15, rng=None, rot=None, flat_bottom=N
     mb.add(v + np.asarray(c, np.float32), tris=t, col=col)
 
 
-def cards(mb, centers, size, cols, rng, droop=0.0):
-    """Small randomly turned quads: the building block of foliage."""
+def cards(mb, centers, size, cols, rng, droop=0.0, split=None):
+    """Small randomly turned leaves (pointed, twice as long as wide): the building block of foliage.
+
+    With DETAIL above 1 every requested leaf becomes a little spray of smaller ones around the same spot.
+    """
     centers = np.asarray(centers, np.float32).reshape(-1, 3)
-    n = len(centers)
-    if n == 0:
+    if len(centers) == 0:
         return
+    k = split if split is not None else max(1, int(round(DETAIL * DETAIL * 0.65)))
+    size = np.broadcast_to(np.asarray(size, np.float32), (len(centers),))
+    if k > 1:
+        centers = np.repeat(centers, k, 0)
+        size = np.repeat(size, k) / math.sqrt(k) * 1.2
+        centers = centers + rng.normal(0, 1, centers.shape).astype(np.float32) * size[:, None] * 1.3
+    n = len(centers)
     u = rng.normal(0, 1, (n, 3)).astype(np.float32)
     u /= np.linalg.norm(u, axis=1, keepdims=True)
     w = rng.normal(0, 1, (n, 3)).astype(np.float32)
     w -= u * (w * u).sum(1, keepdims=True)
     w /= np.linalg.norm(w, axis=1, keepdims=True)
-    s = (np.asarray(size, np.float32) * rng.uniform(0.6, 1.25, n).astype(np.float32))[:, None]
-    u = u * s
-    w = w * s
+    s = (size * rng.uniform(0.6, 1.25, n).astype(np.float32))[:, None]
+    u = u * s * 1.45
+    w = w * s * 0.7
     if droop:
         centers = centers + np.array([0, 0, -droop], np.float32) * rng.uniform(0, 1, (n, 1)).astype(np.float32)
-    v = np.stack([centers - u - w, centers + u - w, centers + u + w, centers - u + w], 1).reshape(-1, 3)
+    v = np.stack([centers - u, centers + w - u * 0.15, centers + u, centers - w - u * 0.15], 1).reshape(-1, 3)
     q = np.arange(n * 4).reshape(n, 4)
     cols = np.asarray(cols, np.float32)
-    c = cols[rng.integers(0, len(cols), n)] * rng.uniform(0.75, 1.2, (n, 1)).astype(np.float32)
+    c = cols[rng.integers(0, len(cols), n)] * rng.uniform(0.72, 1.25, (n, 1)).astype(np.float32)
     mb.add(v, quads=q, col=c)
 
 
@@ -219,7 +229,7 @@ def hash01(a, b, seed=0.0):
 
 # ---------------------------------------------------------------- masonry
 def wall(mb, p0, p1, thick, mask_fn, zmax, col, z0=0.0, res=0.125, block=(1.35, 0.7), seed=0.0,
-         var=0.22, joint=0.86, tint2=None, col_fn=None):
+         var=0.22, joint=0.74, tint2=None, col_fn=None):
     """A wall as a 2D mask in its own plane (t along the wall, z up), extruded to `thick`.
 
     mask_fn(T, Z, tc, zc, r) -> bool array.  T, Z are cell centres; tc, zc the centre and the base of the masonry
@@ -232,6 +242,8 @@ def wall(mb, p0, p1, thick, mask_fn, zmax, col, z0=0.0, res=0.125, block=(1.35, 
     L = float(np.hypot(d[0], d[1]))
     d = d / L
     nrm = np.array([d[1], -d[0]])
+    if DETAIL > 1.5:
+        res = res / 2          # arches and broken edges are cut twice as finely
     nt = max(1, int(round(L / res)))
     nz = max(1, int(round((zmax - z0) / res)))
     rt, rz = L / nt, (zmax - z0) / nz
@@ -379,19 +391,28 @@ def bush(leaf, core, c, r, seed, cols, flat=0.7):
 
 
 def tufts(mb, pts, rng, cols, h=(0.18, 0.42), w=0.07, blades=4):
-    """Grass: a few thin triangles per point."""
+    """Grass: a few thin blades per point, each bent once, darker at the root and lighter at the tip."""
     pts = np.asarray(pts, np.float32).reshape(-1, 3)
     n = len(pts)
     if n == 0:
         return
+    fine = DETAIL > 1.5
+    if fine:
+        blades, w = blades * 3, w * 0.42
     P = np.repeat(pts, blades, 0)
     m = len(P)
-    P = P + np.concatenate([rng.uniform(-0.12, 0.12, (m, 2)), np.zeros((m, 1))], 1).astype(np.float32)
+    jit = 0.22 if fine else 0.12
+    P = P + np.concatenate([rng.uniform(-jit, jit, (m, 2)), np.zeros((m, 1))], 1).astype(np.float32)
     a = rng.uniform(0, 6.283, m)
-    hh = rng.uniform(h[0], h[1], m).astype(np.float32)
+    hh = (rng.uniform(h[0], h[1], m) * (rng.uniform(0.55, 1.25, m) if fine else 1.0)).astype(np.float32)
     side = np.stack([np.cos(a), np.sin(a), np.zeros(m)], 1).astype(np.float32) * w
-    leanv = np.stack([rng.uniform(-0.12, 0.12, m), rng.uniform(-0.12, 0.12, m), hh], 1).astype(np.float32)
-    v = np.stack([P - side, P + side, P + leanv], 1).reshape(-1, 3)
+    lean = np.stack([rng.uniform(-0.16, 0.16, m), rng.uniform(-0.16, 0.16, m), np.zeros(m)], 1).astype(np.float32)
+    up = np.stack([np.zeros(m), np.zeros(m), hh], 1).astype(np.float32)
+    mid = P + up * 0.55 + lean * 0.35
+    tip = P + up + lean * (1.0 + hh[:, None] * 1.5)
+    v = np.stack([P - side, P + side, mid + side * 0.7, mid - side * 0.7, tip], 1).reshape(-1, 3)
     cols = np.asarray(cols, np.float32)
     c = cols[rng.integers(0, len(cols), m)] * rng.uniform(0.7, 1.25, (m, 1)).astype(np.float32)
-    mb.add(v, tris=np.arange(m * 3).reshape(m, 3), col=c)
+    vc = np.stack([c * 0.6, c * 0.6, c, c, c * 1.35], 1).reshape(-1, 3)
+    b = np.arange(m)[:, None] * 5
+    mb.add(v, quads=b + np.array([[0, 1, 2, 3]]), tris=b + np.array([[3, 2, 4]]), vcol=vc)

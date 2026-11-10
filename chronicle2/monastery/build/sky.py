@@ -1,6 +1,7 @@
 """The view beyond the cliff at the changing of the moons: the white moon going down, the black moon coming up.
 
-Drawn directly as pixel art (648x320).  The game slides it more slowly than the field, so it reads as far away.
+Painted directly with numpy, K times finer than the 648x320 layout it was designed on.  The game slides it more
+slowly than the field, so it reads as far away.
 """
 import os, math
 import numpy as np
@@ -10,11 +11,12 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = os.environ.get('SITE', os.path.join(HERE, '..', 'site'))
 os.makedirs(SITE, exist_ok=True)
 W, H = 648, 320
+K = int(os.environ.get('RES', '3'))
 WM = (396.0, 128.0, 31.0)     # white moon: x, y, radius
 BM = (566.0, 84.0, 23.0)      # black moon
 HORIZON = 190.0
 
-yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+yy, xx = (np.mgrid[0:H * K, 0:W * K].astype(np.float32) + 0.5) / K       # layout coordinates of every pixel
 
 
 def hx(s):
@@ -67,73 +69,83 @@ img += (hx('#f7a777') - img) * (np.exp(-(dw / 150) ** 2) * 0.36)[..., None]
 db = np.hypot(xx - BM[0], yy - BM[1])
 img += (hx('#15122a') - img) * (np.exp(-(db / 120) ** 2) * 0.55)[..., None]
 
-# ---- stars, thinning toward the light
+# ---- stars, thinning toward the light: small soft points, a few with a cross of rays
 rs = np.random.default_rng(4)
-for k in range(260):
-    x, y = rs.integers(0, W), int(rs.random() ** 1.7 * 150)
+for k in range(520):
+    x, y = rs.uniform(0, W), rs.random() ** 1.7 * 150
     b = rs.random() ** 2 * (1 - np.exp(-(np.hypot(x - WM[0], y - WM[1]) / 170) ** 2))
-    if b < 0.08:
+    if b < 0.06:
         continue
     c = hx('#e8dcff') if rs.random() < 0.7 else hx('#ffe6c0')
-    img[y, x] += (c - img[y, x]) * min(1, b * 1.3)
-    if b > 0.6:
-        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-            if 0 <= x + dx < W and 0 <= y + dy < H:
-                img[y + dy, x + dx] += (c - img[y + dy, x + dx]) * 0.35
+    r = 0.28 + 0.5 * b
+    px, py, R = int(x * K), int(y * K), int(4 * K)
+    x0, x1, y0, y1 = max(0, px - R), min(W * K, px + R + 1), max(0, py - R), min(H * K, py + R + 1)
+    dx, dy = xx[y0:y1, x0:x1] - x, yy[y0:y1, x0:x1] - y
+    a = np.exp(-(dx * dx + dy * dy) / (r * r)) * min(1, b * 1.4)
+    if b > 0.55:
+        a = a + 0.35 * b * (np.exp(-np.abs(dx) / 1.6 - (dy / 0.22) ** 2) + np.exp(-np.abs(dy) / 1.6 - (dx / 0.22) ** 2))
+    img[y0:y1, x0:x1] += (c - img[y0:y1, x0:x1]) * np.clip(a, 0, 1)[..., None]
 
 # ---- the white moon, sinking into the haze
 dm = np.hypot(xx - WM[0], yy - WM[1])
 halo = np.exp(-(dm / 78) ** 2) * 0.30 + np.exp(-(dm / 40) ** 2) * 0.22
 img += (hx('#ffe4b8') - img) * np.clip(halo, 0, 1)[..., None]
-disc = dm < WM[2]
+disc = sm(WM[2] + 0.45, WM[2] - 0.45, dm)
 mar = fbm((xx - WM[0]) / 17 + 5, (yy - WM[1]) / 17 + 3, 9.0)
 moon = ramp(mar, [(0, '#fffaec'), (0.42, '#fff4dc'), (0.55, '#f0dcba'), (0.7, '#e2c6a2'), (1, '#fff0d4')])
 limb = sm(WM[2] * 0.55, WM[2], dm)
 moon = moon * (1 - 0.08 * limb[..., None])
 sink = sm(HORIZON - 30, HORIZON + 2, yy)          # lower part dissolves into the horizon haze
 moon = moon + (img - moon) * (sink * 0.8)[..., None]
-img = np.where(disc[..., None], moon, img)
+img = img + (moon - img) * disc[..., None]
 
 # ---- the black moon: a hole in the sky with a thin lit edge and a faint crown
 ring = np.exp(-((db - BM[2] - 1.5) / 4.5) ** 2) * 0.55 + np.exp(-((db - BM[2]) / 16) ** 2) * 0.22
 img += (hx('#b9a4ff') - img) * np.clip(ring, 0, 1)[..., None]
-bdisc = db < BM[2]
-img = np.where(bdisc[..., None], hx('#0d0a18') + (hx('#1a1530') - hx('#0d0a18')) * sm(0, BM[2], db)[..., None] * 0.6, img)
+bdisc = sm(BM[2] + 0.45, BM[2] - 0.45, db)
+bcol = hx('#0d0a18') + (hx('#1a1530') - hx('#0d0a18')) * sm(0, BM[2], db)[..., None] * 0.6
+img = img + (bcol - img) * bdisc[..., None]
 ang = np.arctan2(yy - BM[1], xx - BM[0])
 toward = np.cos(ang - math.atan2(WM[1] - BM[1] + 30, WM[0] - BM[0]))     # the side facing the white moon
-edge = bdisc & (db > BM[2] - 1.6) & (toward > 0.25)
-img = np.where(edge[..., None], hx('#d9c8ff') * 0.9, img)
+edge = bdisc * sm(BM[2] - 2.0, BM[2] - 0.8, db) * sm(0.1, 0.5, toward)
+img = img + (hx('#d9c8ff') * 0.9 - img) * edge[..., None]
 
 # ---- long evening clouds
 def clouds(y0, thick, scale, seed, dens, body, lit, dark):
     global img
-    n = fbm(xx / scale + seed, (yy - y0) / (scale * 0.16) + seed * 2, seed, 4)
+    n = fbm(xx / scale + seed, (yy - y0) / (scale * 0.16) + seed * 2, seed, 6)
     band = np.exp(-((yy - y0) / thick) ** 2)
     m = n * band
-    mask = m > dens
-    under = (np.roll(m, -2, 0) < dens) & mask            # lit from below-left by the afterglow
-    top = (np.roll(m, 2, 0) < dens) & mask
+    a = sm(dens - 0.022, dens + 0.03, m)
+    below = np.roll(m, -int(2.2 * K), 0)                 # what lies a little lower: the lit underside is where that is sky
+    above = np.roll(m, int(2.2 * K), 0)
+    under = a * sm(dens + 0.03, dens - 0.02, below)
+    top = a * sm(dens + 0.035, dens - 0.02, above)
     glow = np.exp(-(np.hypot((xx - WM[0]) / 2.2, yy - WM[1]) / 150) ** 2)[..., None]
     c = hx(body) + (hx('#b98490') - hx(body)) * glow * 0.6
-    c = np.where(under[..., None], hx(lit) + (hx('#ffd9a0') - hx(lit)) * glow, c)
-    c = np.where(top[..., None], hx(dark), c)
-    img = np.where(mask[..., None], c, img)
+    c = c * (0.94 + 0.12 * fbm(xx / 9 + seed, yy / 3, seed + 40, 3)[..., None])       # brushy streaks inside the cloud
+    c = c + (hx(lit) + (hx('#ffd9a0') - hx(lit)) * glow - c) * under[..., None]
+    c = c + (hx(dark) - c) * (top * 0.8)[..., None]
+    img = img + (c - img) * a[..., None]
 
 clouds(50, 22, 95, 2.0, 0.47, '#3a3355', '#5d4a66', '#2a2742')
 clouds(100, 20, 80, 7.0, 0.44, '#6b5373', '#d59a8c', '#4a3d5e')
 clouds(152, 16, 70, 11.0, 0.42, '#8f6a7c', '#f6cc98', '#5d4a66')
 # the moons stay in front of the highest, farthest cloud only where it is thin: redraw their cores
-img = np.where((dm < WM[2] - 9)[..., None] & (yy < HORIZON - 60)[..., None], moon, img)
-img = np.where((db < BM[2] - 1.6)[..., None], hx('#0d0a18') + (hx('#1a1530') - hx('#0d0a18')) * sm(0, BM[2], db)[..., None] * 0.6, img)
+core = sm(WM[2] - 7, WM[2] - 11, dm) * sm(HORIZON - 56, HORIZON - 64, yy)
+img = img + (moon - img) * core[..., None]
+img = img + (bcol - img) * sm(BM[2] - 1.2, BM[2] - 2.0, db)[..., None]
 
 # ---- far ridges, then the sea of mist
 def ridge(base, amp, scale, seed, colr, haze):
     global img
-    prof = base - amp * fbm(xx[0] / scale + seed, np.zeros(W, np.float32), seed, 5) - amp * 0.35 * np.abs(np.sin(xx[0] / (scale * 0.9) + seed))
-    m = yy > prof[None, :]
+    x1 = xx[0]
+    prof = base - amp * fbm(x1 / scale + seed, np.zeros_like(x1), seed, 6) - amp * 0.35 * np.abs(np.sin(x1 / (scale * 0.9) + seed))
+    m = sm(-0.4, 0.4, yy - prof[None, :])
     c = hx(colr) + (hx('#e9b596') - hx(colr)) * haze
     c = c + (hx('#f0c8a0') - c) * (np.exp(-((xx - WM[0]) / 200) ** 2) * 0.25)[..., None]
-    img = np.where(m[..., None], c, img)
+    c = c + (hx('#f6d2a8') - c) * (np.exp(-np.clip(yy - prof[None, :], 0, None) / 2.5) * 0.22)[..., None]   # a lit edge along the crest
+    img = img + (c - img) * m[..., None]
 
 ridge(HORIZON + 2, 26, 120, 3.0, '#8a6a82', 0.55)
 ridge(HORIZON + 14, 30, 80, 8.0, '#6c5373', 0.32)
@@ -144,12 +156,11 @@ streak = fbm(xx / 70 + 3, yy / 7, 31.0)
 mc = mc * (0.93 + 0.14 * streak[..., None])
 img = img + (mc - img) * mist[..., None]
 
-# ---- to a small palette, with ordered dither so the gradients turn into pixels
+# ---- a little canvas grain so the wide gradients do not band, then save
 img = np.clip(img, 0, 1)
-bayer = np.array([[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]], np.float32) / 16 - 0.47
-img = np.clip(img + np.tile(bayer, (H // 4 + 1, W // 4 + 1))[:H, :W, None] * 0.05, 0, 1)
-im = Image.fromarray((img * 255).astype(np.uint8))
-q = im.quantize(colors=40, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
-q.save(os.path.join(SITE, 'sky.png'), optimize=True)
-q.convert('RGB').resize((W * 2, H * 2), Image.NEAREST).save(os.path.join(os.environ.get('WORK', os.path.join(HERE, 'work')), 'sky_preview.png'))
-print('sky ok', os.path.getsize(os.path.join(SITE, 'sky.png')) // 1024, 'KB')
+g = np.random.default_rng(2).normal(0, 1, (H * K, W * K)).astype(np.float32)
+img = np.clip(img + g[..., None] * 0.006, 0, 1)
+im = Image.fromarray((img * 255 + 0.5).astype(np.uint8))
+im.save(os.path.join(SITE, 'sky.jpg'), quality=90, optimize=True)
+im.resize((W * 2, H * 2), Image.LANCZOS).save(os.path.join(os.environ.get('WORK', os.path.join(HERE, 'work')), 'sky_preview.png'))
+print('sky ok', im.size, os.path.getsize(os.path.join(SITE, 'sky.jpg')) // 1024, 'KB')

@@ -3,7 +3,8 @@
   python3 hero_import.py /path/to/hero_sheet.png /path/to/hero_sheet.json
 
 The sheet is 4 columns (stand, left foot, passing, right foot) by 4 rows (facing down, left, right, up).
-The json next to it gives the frame size, the foot anchor and the time per frame.
+The json next to it gives the frame size, the foot anchor, the body height in dots and the time per frame.
+The game draws the body 3 world units tall whatever its height in dots, so a finer sheet simply looks finer.
 Writes site/hero.png and site/hero.json; the game reads everything it needs about the sprite from those two.
 """
 import os, sys, json
@@ -40,7 +41,7 @@ for row in range(4):
 
 os.makedirs(SITE, exist_ok=True)
 Image.fromarray(im, 'RGBA').save(os.path.join(SITE, 'hero.png'), optimize=True)
-json.dump({'frame': [FW, FH], 'foot': [AX, AY], 'ms': spec.get('walk_ms_per_frame', round(1000 / spec.get('walk_fps', 6))),
+json.dump({'frame': [FW, FH], 'foot': [AX, AY], 'body': spec.get('height_px', 48), 'ms': spec.get('walk_ms_per_frame', round(1000 / spec.get('walk_fps', 6))),
            'lantern': lantern}, open(os.path.join(SITE, 'hero.json'), 'w'))
 # a check picture: every frame enlarged, with the measured lantern point marked in green
 chk = np.zeros((FH * 4, FW * 4, 3), np.uint8) + np.array([93, 74, 102], np.uint8)

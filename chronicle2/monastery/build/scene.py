@@ -21,9 +21,13 @@ QUICK = os.environ.get('QUICK') == '1'
 T0 = time.time()
 
 # ---------------------------------------------------------------- the game camera
-# One world unit is 16 pixels across.  The camera looks north and down so that one unit of ground depth is
-# 12 pixels and one unit of height is ~10.6 pixels.  Everything on the game side uses the same three numbers.
+# The layout is measured on a base grid of 16 pixels per world unit.  The camera looks north and down so that one
+# unit of ground depth is 12 base pixels and one unit of height is ~10.6.  The picture is rendered RES times finer
+# than that grid (3 -> 48 pixels per unit), and the per-pixel game data DRES times finer (1.5 -> 24 per unit).
+RES = int(os.environ.get('RES', '3'))
+DRES = float(os.environ.get('DRES', '1.5'))
 S = 16.0
+kit.DETAIL = float(os.environ.get('DETAIL', '2.5' if RES > 1 else '1'))
 SIN = 0.75
 COS = math.sqrt(1 - SIN * SIN)
 W, H = 960, 1024
@@ -43,7 +47,7 @@ RNG = np.random.default_rng(11)
 
 # ---------------------------------------------------------------- materials
 def mk_mat(name, rough=0.92, grain=0.10, gscale=7.0, stain=0.2, sscale=0.55, bump=0.2, moss=0.0,
-           moss_col=(0.085, 0.12, 0.045), emit=0.0, metallic=0.0, spec=0.25):
+           moss_col=(0.085, 0.12, 0.045), emit=0.0, metallic=0.0, spec=0.25, dirt=0.0):
     m = bpy.data.materials.new(name)
     m.use_nodes = True
     nt = m.node_tree
@@ -94,6 +98,18 @@ def mk_mat(name, rough=0.92, grain=0.10, gscale=7.0, stain=0.2, sscale=0.55, bum
         L.new(out_col, mix.inputs[6])
         mix.inputs[7].default_value = (*moss_col, 1)
         out_col = mix.outputs[2]
+    if dirt > 0:            # grime where surfaces meet: corners, joints, the foot of a wall
+        ao = N.new('ShaderNodeAmbientOcclusion')
+        ao.samples = 6
+        ao.inputs['Distance'].default_value = 0.45
+        dk = maprange(ao.outputs['AO'], 0.35, 0.95, 1 - dirt, 1.0)
+        dm = N.new('ShaderNodeMix')
+        dm.data_type = 'RGBA'
+        dm.blend_type = 'MULTIPLY'
+        dm.inputs[0].default_value = 1.0
+        L.new(out_col, dm.inputs[6])
+        L.new(dk.outputs[0], dm.inputs[7])
+        out_col = dm.outputs[2]
     L.new(out_col, bs.inputs['Base Color'])
     bs.inputs['Roughness'].default_value = rough
     bs.inputs['Metallic'].default_value = metallic
@@ -102,7 +118,12 @@ def mk_mat(name, rough=0.92, grain=0.10, gscale=7.0, stain=0.2, sscale=0.55, bum
         bp = N.new('ShaderNodeBump')
         bp.inputs['Strength'].default_value = bump
         bp.inputs['Distance'].default_value = 0.06
-        L.new(n1.outputs[0], bp.inputs['Height'])
+        nb = noise(gscale * 3.1, 5)          # fine pitting on top of the broad grain
+        hb = N.new('ShaderNodeMath')
+        hb.operation = 'ADD'
+        L.new(n1.outputs[0], hb.inputs[0])
+        L.new(nb.outputs[0], hb.inputs[1])
+        L.new(hb.outputs[0], bp.inputs['Height'])
         L.new(bp.outputs[0], bs.inputs['Normal'])
     if emit > 0:
         L.new(at.outputs['Color'], bs.inputs['Emission Color'])
@@ -175,12 +196,12 @@ def mk_water(name):
     return m
 
 
-M_STONE = mk_mat('stone', rough=0.95, grain=0.13, gscale=9, stain=0.22, sscale=0.5, bump=0.35, moss=0.75)
-M_SLAB = mk_mat('slab', rough=0.9, grain=0.10, gscale=9, stain=0.18, sscale=0.7, bump=0.25, moss=0.35)
-M_GROUND = mk_mat('ground', rough=1.0, grain=0.16, gscale=5, stain=0.18, sscale=0.35, bump=0.4)
+M_STONE = mk_mat('stone', rough=0.95, grain=0.16, gscale=9, stain=0.26, sscale=0.5, bump=0.6, moss=0.75, dirt=0.5)
+M_SLAB = mk_mat('slab', rough=0.9, grain=0.13, gscale=9, stain=0.22, sscale=0.7, bump=0.45, moss=0.35, dirt=0.55)
+M_GROUND = mk_mat('ground', rough=1.0, grain=0.22, gscale=6, stain=0.24, sscale=0.35, bump=0.6, dirt=0.35)
 M_WOOD = mk_mat('wood', rough=0.85, grain=0.2, gscale=14, stain=0.15, bump=0.3)
 M_LEAF = mk_mat('leaf', rough=0.8, grain=0.0, stain=0.12, sscale=0.8, bump=0.0)
-M_ROOF = mk_mat('roof', rough=0.7, grain=0.2, gscale=5, stain=0.25, sscale=0.9, bump=0.4, moss=0.5)
+M_ROOF = mk_mat('roof', rough=0.7, grain=0.2, gscale=5, stain=0.25, sscale=0.9, bump=0.5, moss=0.5, dirt=0.4)
 M_METAL = mk_mat('metal', rough=0.45, grain=0.15, gscale=10, stain=0.2, bump=0.15, metallic=0.85, spec=0.5)
 M_IRON = mk_mat('iron', rough=0.6, grain=0.1, stain=0.1, bump=0.0, metallic=0.6)
 M_CLOTH = mk_mat('cloth', rough=1.0, grain=0.12, gscale=12, stain=0.2, bump=0.1)
@@ -1093,15 +1114,15 @@ def sun(name, direction, color, strength, angle_deg, shadow=True):
 # the white moon is going down in the north-north-west: low, warm, and behind everything we look at
 KEY_DIR = (0.36, -0.78, -0.50)
 TUNE = json.loads(os.environ.get('TUNE', '{}'))     # for trying other light settings without editing this file
-sun('white_moon', KEY_DIR, tuple(TUNE.get('key_col', (1.0, 0.58, 0.32))), TUNE.get('key', 5.2), 2.5)
+sun('white_moon', KEY_DIR, tuple(TUNE.get('key_col', (1.0, 0.60, 0.33))), TUNE.get('key', 5.6), 2.5)
 # the black moon is coming up in the south-east: a cold, weak light on the faces turned to the camera
-sun('black_moon', (-0.55, 0.50, -0.62), tuple(TUNE.get('fill_col', (0.60, 0.52, 1.0))), TUNE.get('fill', 1.4), 30.0)
+sun('black_moon', (-0.55, 0.50, -0.62), tuple(TUNE.get('fill_col', (0.80, 0.56, 0.86))), TUNE.get('fill', 1.5), 30.0)
 
 world = bpy.data.worlds.new('dusk')
 world.use_nodes = True
 bg = next(n for n in world.node_tree.nodes if n.type == 'BACKGROUND')
-bg.inputs[0].default_value = tuple(TUNE.get('world_col', (0.34, 0.20, 0.30))) + (1,)
-bg.inputs[1].default_value = TUNE.get('world', 0.7)
+bg.inputs[0].default_value = tuple(TUNE.get('world_col', (0.44, 0.26, 0.33))) + (1,)
+bg.inputs[1].default_value = TUNE.get('world', 0.8)
 sc.world = world
 
 # ---------------------------------------------------------------- camera and render
@@ -1124,9 +1145,17 @@ sc.cycles.max_bounces = 5
 sc.cycles.diffuse_bounces = 3
 sc.cycles.transparent_max_bounces = 8
 sc.cycles.sample_clamp_indirect = 6.0
+sc.cycles.use_adaptive_sampling = True
+sc.cycles.adaptive_threshold = float(os.environ.get('NOISE', '0.02'))
 sc.cycles.pixel_filter_type = 'BLACKMAN_HARRIS'
-sc.cycles.filter_width = 1.1
-sc.render.resolution_x, sc.render.resolution_y = W, H
+sc.cycles.filter_width = 1.5
+sc.render.resolution_x, sc.render.resolution_y = W * RES, H * RES
+if os.environ.get('CROP'):          # x0,y0,x1,y1 in base pixels from the top left: render only that part, for a quick look
+    cx0, cy0, cx1, cy1 = [float(v) for v in os.environ['CROP'].split(',')]
+    sc.render.use_border = True
+    sc.render.use_crop_to_border = True
+    sc.render.border_min_x, sc.render.border_max_x = cx0 / W, cx1 / W
+    sc.render.border_min_y, sc.render.border_max_y = 1 - cy1 / H, 1 - cy0 / H
 sc.render.resolution_percentage = 100
 sc.render.film_transparent = True
 sc.render.image_settings.file_format = 'PNG'
@@ -1140,12 +1169,13 @@ except Exception as e:
 sc.view_settings.exposure = float(os.environ.get('EXPOSURE', '0.0'))
 sc.render.threads_mode = 'AUTO'
 if os.environ.get('NORENDER') != '1':
-    sc.render.filepath = os.path.join(WORK, 'beauty.png')
+    sc.render.filepath = os.path.join(WORK, os.environ.get('BEAUTY', 'beauty.png'))
     bpy.ops.render.render(write_still=True)
     print('rendered in', round(time.time() - T0, 1), 's')
 
 meta = {
-    'w': W, 'h': H, 'scale': S, 'sin': SIN, 'cos': COS, 'x0': X0, 'sy0': SY0,
+    'w': W * RES, 'h': H * RES, 'scale': S * RES, 'sin': SIN, 'cos': COS, 'x0': X0, 'sy0': SY0 * RES,
+    'dw': int(W * DRES), 'dh': int(H * DRES), 'dscale': S * DRES,
     'spawn': list(SPAWN), 'exits': EXITS, 'lights': LIGHTS, 'key_dir': list(KEY_DIR),
     'name': '鐘のならない修道院', 'sub': '月替わりの刻',
 }
@@ -1155,5 +1185,5 @@ if QUICK:
 
 # ---------------------------------------------------------------- bake: what the game needs besides the picture
 import bake
-bake.run(sc, OBJ, kit.FACECOL, meta, WORK, dict(S=S, SIN=SIN, COS=COS, W=W, H=H, X0=X0, SY0=SY0, SPAWN=SPAWN))
+bake.run(sc, OBJ, kit.FACECOL, meta, WORK, dict(S=S * DRES, SIN=SIN, COS=COS, W=int(W * DRES), H=int(H * DRES), X0=X0, SY0=SY0 * DRES, SPAWN=SPAWN))
 print('done in', round(time.time() - T0, 1), 's')
