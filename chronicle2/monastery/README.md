@@ -14,7 +14,7 @@ cd build
 SAMPLES=96 NOISE=0.03 python3 scene.py   # 立体を組む、描き出す、判定を焼く → work/beauty.png, work/bake.npz, work/meta.json（4コアで約11分）
 python3 sky.py                      # 二つの月の空                      → ../site/sky.jpg
 python3 post.py                     # 霧、色、筆のタッチ、ゲーム用データ → ../site/map.webp ほか
-python3 hero_import.py シート.png シート.json   # 主人公の取り込み      → ../site/hero.png, ../site/hero.json
+python3 hero_import.py シート.png シート.json   # 主人公の取り込み      → ../site/hero.png, ../site/hero.json（3つ目に名前を書くとその名前で）
 ```
 
 `scene.py` は環境変数で動きを変えられます。`SAMPLES` と `NOISE`（描き出しの丁寧さ）、`RES`（絵の細かさ。既定 3 で 1 単位 48 ピクセル）、
@@ -58,3 +58,7 @@ python3 hero_import.py シート.png シート.json   # 主人公の取り込み
 コマの大きさ、足元の位置、体の高さ、歩く速さ、各コマの灯の位置は `site/hero.json` に入っていて、ゲームはそこから読みます。
 体は何ドットで描かれていても世界の 3 単位（画面で 144 ピクセル）の高さに表示されるので、96 ドットの絵に替えればそのまま細かくなります。
 差し替えるときは `python3 build/hero_import.py 新しいシート.png 新しいシート.json` を実行するだけです。
+
+見比べのために、同じ主人公を 96 ドットで描いた版（1コマ 96×128、足元 (48, 120)）も `site/hero_hd.png` と `site/hero_hd.json` として入っています。
+画面の下の「主人公のドット絵」のボタンで 48 ドットと 96 ドットを切り替えられます。こちらを作り直すときは最後に名前を付けて
+`python3 build/hero_import.py シート.png シート.json hero_hd` とします。

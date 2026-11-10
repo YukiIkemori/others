@@ -38,6 +38,12 @@ h1{margin:0;font-family:var(--f-d);font-weight:600;font-size:clamp(26px,4vw,40px
 .toggle{display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;user-select:none}
 .toggle input{width:18px;height:18px;accent-color:var(--teal);margin:0}
 .toggle input:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.pick{display:flex;align-items:center;gap:10px;font-size:14px;margin:0}
+.pick .seg{display:inline-flex;border:1px solid var(--line)}
+.pick button{background:none;color:var(--mist);border:0;font:inherit;font-size:13px;padding:5px 14px;cursor:pointer}
+.pick button + button{border-left:1px solid var(--line)}
+.pick button[aria-pressed="true"]{background:var(--ink-2);color:var(--amber)}
+.pick button:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
 .legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--mist);margin:0}
 .legend span::before{content:"";display:inline-block;width:10px;height:10px;margin-right:7px;background:var(--c);vertical-align:-1px}
 .dpad{display:none;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(2,48px);gap:6px;justify-content:center}
@@ -77,6 +83,7 @@ h1{margin:0;font-family:var(--f-d);font-weight:600;font-size:clamp(26px,4vw,40px
 
   <div class="bar">
     <p class="keys"><b>矢印キー / WASD</b>で移動、<b>Shift</b>で早足。画面をクリックかタップすると、その場所へ歩きます。</p>
+    <p class="pick" id="pick"><span id="pickl">主人公のドット絵</span><span class="seg" role="group" aria-labelledby="pickl"><button type="button" data-sheet="48" aria-pressed="false">48ドット</button><button type="button" data-sheet="96" aria-pressed="true">96ドット</button></span></p>
     <label class="toggle" for="dbg"><input type="checkbox" id="dbg">判定を重ねて見る</label>
   </div>
   <p class="legend" id="legend" hidden><span style="--c:#58dcc8">歩ける床</span><span style="--c:#ffaa3c">主人公より手前に来る部分</span><span style="--c:#ff6fae">出入口と見どころ</span></p>
@@ -101,9 +108,9 @@ const canvas = (w, h) => { const c = document.createElement('canvas'); c.width =
 
 async function load() {
   const json = f => fetch(f).then(r => { if (!r.ok) throw new Error(f + ' を読み込めませんでした'); return r.json(); });
-  const [M, HS, map, sky, geo, nrm, alb, walk, hero, front] = await Promise.all([json('map.json'), json('hero.json'),
-    ...['map.webp', 'sky.jpg', 'geo.png', 'nrm.png', 'alb.png', 'walk.png', 'hero.png', 'front.png'].map(loadImg)]);
-  return { M, HS, map, sky, geo, nrm, alb, walk, hero, front };
+  const [M, HS, HS2, map, sky, geo, nrm, alb, walk, hero, hero2, front] = await Promise.all([json('map.json'), json('hero.json'), json('hero_hd.json'),
+    ...['map.webp', 'sky.jpg', 'geo.png', 'nrm.png', 'alb.png', 'walk.png', 'hero.png', 'hero_hd.png', 'front.png'].map(loadImg)]);
+  return { M, map, sky, geo, nrm, alb, walk, front, sheets: { 48: { img: hero, spec: HS }, 96: { img: hero2, spec: HS2 } } };
 }
 
 function start(A, saved) {
@@ -130,12 +137,19 @@ function start(A, saved) {
 
   // hero frames: size, foot anchor, speed and the lantern's pixel in every frame all come with the sheet (hero.json).
   // HK is how many picture pixels one dot of the sprite covers, so that the body stands 3 world units tall.
-  const hp = pixels(A.hero), [FW, FH] = A.HS.frame, [AX, FOOT] = A.HS.foot, LANT = A.HS.lantern, FPS = 1000 / A.HS.ms;
-  const HK = S * 3 / (A.HS.body || 48);
+  // Two sheets of the same hero are loaded, drawn with 48 and with 96 dots, and the buttons under the picture switch between them.
+  const SHEETS = {};
+  for (const k in A.sheets) { const sp = A.sheets[k].spec, [fw, fh] = sp.frame, c = canvas(fw, fh), x = c.getContext('2d');
+    SHEETS[k] = { hp: pixels(A.sheets[k].img), FW: fw, FH: fh, AX: sp.foot[0], FOOT: sp.foot[1], LANT: sp.lantern, FPS: 1000 / sp.ms, HK: S * 3 / (sp.body || 48),
+      sprC: c, sprX: x, sprI: x.createImageData(fw, fh), big: canvas(1, 1) }; }
+  let sheet = SHEETS[saved && saved.sheet] ? String(saved.sheet) : '96';
+  const pickBtns = [...document.querySelectorAll('#pick button')];
+  const useSheet = k => { if (!SHEETS[k]) return; sheet = k; for (const b of pickBtns) b.setAttribute('aria-pressed', String(b.dataset.sheet === k)); };
+  for (const b of pickBtns) b.addEventListener('click', () => { useSheet(b.dataset.sheet); cv.focus({ preventScroll: true }); });
+  useSheet(sheet);
   const hero = { x: M.spawn[0], y: M.spawn[1], z: 0, dir: 3, t: 0, moving: false };
   if (saved && saved.hero && canStand(saved.hero.x, saved.hero.y, floorAt(saved.hero.x, saved.hero.y))) Object.assign(hero, saved.hero);
   hero.z = floorAt(hero.x, hero.y);
-  const sprC = canvas(FW, FH), sprX = sprC.getContext('2d'), sprI = sprX.createImageData(FW, FH);
 
   // lights that are in plain sight get a living glow
   const lights = M.lights.map((l, n) => { const p = dataAt(l.sx, l.sy); return { ...l, seen: p >= 0 && D[p] > l.y * COS - l.z * SIN - 1.2, ph: n * 1.7 }; });
@@ -274,6 +288,7 @@ function start(A, saved) {
 
     // the hero's lantern
     const flick = RM ? 1 : .93 + .05 * Math.sin(time * 9.1) + .03 * Math.sin(time * 23.7);
+    const { hp, FW, FH, AX, FOOT, LANT, FPS, HK, sprC, sprX, sprI, big } = SHEETS[sheet];
     const fr = hero.moving ? (Math.floor(hero.t * FPS) + 1) % 4 : 0, row = hero.dir;
     const lp = LANT[row][fr], lox = (lp[0] - AX) * HK / S, lh = (FOOT - lp[1]) * HK / (S * COS);
     const lx = hero.x + lox * .8, ly = hero.y - .25, lz = hero.z + Math.min(lh, 3.1);
@@ -288,8 +303,13 @@ function start(A, saved) {
         if (hid) { sd[q] = 150 + hp[s] * .3; sd[q + 1] = 132 + hp[s + 1] * .3; sd[q + 2] = 205 + hp[s + 2] * .2; sd[q + 3] = ((u + v) & 1) ? 150 : 0; }   // behind something: a pale see-through shape
         else { sd[q] = hp[s]; sd[q + 1] = hp[s + 1]; sd[q + 2] = hp[s + 2]; sd[q + 3] = a; } } }
     sprX.putImageData(sprI, 0, 0);
-    ctx.imageSmoothingEnabled = HK % 1 !== 0;                                 // a pixel-art sprite keeps its hard dots
-    ctx.drawImage(sprC, ox - cam.x, oy - cam.y, FW * HK, FH * HK);
+    // A pixel-art sprite keeps its hard dots. When one dot is a whole number of screen pixels it is drawn as it is;
+    // otherwise it is first enlarged with hard edges and then fitted, so only the very edge of each dot is softened.
+    const kd = HK * sc, kb = Math.ceil(kd - .02);
+    if (Math.abs(kd - Math.round(kd)) < .02) { ctx.imageSmoothingEnabled = false; ctx.drawImage(sprC, ox - cam.x, oy - cam.y, FW * HK, FH * HK); }
+    else { if (big.width !== FW * kb) { big.width = FW * kb; big.height = FH * kb; }
+      const bx = big.getContext('2d'); bx.imageSmoothingEnabled = false; bx.clearRect(0, 0, big.width, big.height); bx.drawImage(sprC, 0, 0, big.width, big.height);
+      ctx.drawImage(big, ox - cam.x, oy - cam.y, FW * HK, FH * HK); }
     ctx.imageSmoothingEnabled = true;
 
     // glows
@@ -325,8 +345,8 @@ function start(A, saved) {
     requestAnimationFrame(frame);
   }
   document.getElementById('loading').hidden = true;
-  window.__abbey = { hero, cam, canStand, floorAt, toScreen, keys, M };
-  window.claude?.hot?.snapshot?.(() => ({ hero: { x: hero.x, y: hero.y, dir: hero.dir } }));
+  window.__abbey = { hero, cam, canStand, floorAt, toScreen, keys, M, useSheet };
+  window.claude?.hot?.snapshot?.(() => ({ hero: { x: hero.x, y: hero.y, dir: hero.dir }, sheet }));
   requestAnimationFrame(t => { tPrev = t; frame(t); });
 }
 
