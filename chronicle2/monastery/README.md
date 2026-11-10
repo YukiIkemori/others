@@ -17,6 +17,24 @@ python3 post.py                     # 霧、色、筆のタッチ、ゲーム用
 python3 hero_import.py シート.png シート.json   # 主人公の取り込み      → ../site/hero.png, ../site/hero.json（3つ目に名前を書くとその名前で）
 ```
 
+### 背景の仕上げは2通り
+
+- **ドット絵**（`site/px/`、ページの初期表示）: 96ドットの主人公と同じ大きさのドット（1 単位 32 ピクセル、絵は 1920×2048、画面は 960×540）で、
+  輪郭線を引き、色を 96 色に絞り、霧とにじみを控えめにした版。キャラクターのドット絵と絵柄をそろえるためのものです。
+- **絵画調**（`site/` 直下）: 1 単位 48 ピクセルで滑らかに描き、筆のタッチをかけた版。
+
+ドット絵の版は、置き場所を分けて同じスクリプトを `STYLE=pixel` で動かします。
+
+```
+cd build
+WORK=$PWD/work_px RES=2 DRES=2 SAMPLES=96 NOISE=0.03 python3 scene.py
+WORK=$PWD/work_px SITE=$PWD/../site/px STYLE=pixel RES=2 python3 sky.py
+WORK=$PWD/work_px SITE=$PWD/../site/px STYLE=pixel python3 post.py
+```
+
+いま入っているドット絵の版は、描き出しの時間を省くため、絵画調の描き出し（2880×3072）を 1920×2048 に縮めたものを `work_px/beauty.png` として使い、
+判定だけ `NORENDER=1` で焼き直しています。`post.py` は `STYLE=pixel` のとき `COLORS`（色数）、`LINE`（輪郭の濃さ）、`MIST`、`GAMMA`、`RAMP` を受け取ります。
+
 `scene.py` は環境変数で動きを変えられます。`SAMPLES` と `NOISE`（描き出しの丁寧さ）、`RES`（絵の細かさ。既定 3 で 1 単位 48 ピクセル）、
 `QUICK=1`（判定の焼き直しを省く）、`NORENDER=1`（描き出しを省く）、`TUNE='{"key":5.6,...}'`（光の強さや色を試す）、
 `CROP=x0,y0,x1,y1` と `BEAUTY=名前.png`（一部分だけ素早く描き出して確かめる。座標は 960×1024 の配置図のピクセル）。

@@ -18,7 +18,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 WORK = os.environ.get('WORK', os.path.join(HERE, 'work'))
 SITE = os.environ.get('SITE', os.path.join(HERE, '..', 'site'))
 os.makedirs(SITE, exist_ok=True)
-PAINT = float(os.environ.get('PAINT', '0.62'))        # how much of the brush filter to mix in (0 = none)
+PIX = os.environ.get('STYLE') == 'pixel'              # finish as pixel art in the characters' own dot size, not as a painting
+PAINT = float(os.environ.get('PAINT', '1.0' if PIX else '0.62'))   # how much of the brush filter to mix in (0 = none)
+COLORS = int(os.environ.get('COLORS', '96'))          # pixel style: how many colours the whole field may use
 
 meta = json.load(open(os.path.join(WORK, 'meta.json')))
 S, SIN, COS, W, H, X0, SY0 = meta['scale'], meta['sin'], meta['cos'], meta['w'], meta['h'], meta['x0'], meta['sy0']
@@ -74,6 +76,8 @@ def up(arr):
     """A data-sized map stretched smoothly to the size of the picture."""
     if arr.ndim == 3:
         return np.stack([up(arr[..., k]) for k in range(arr.shape[-1])], -1)
+    if arr.shape == (H, W):
+        return arr.astype(np.float32)
     return np.asarray(Image.fromarray(arr.astype(np.float32), 'F').resize((W, H), Image.BILINEAR))
 
 
@@ -108,7 +112,7 @@ def hexc(s):
 # Mist lies in the low ground: thin and patchy on the hilltop, thick on the slopes that fall away.
 n = fbm(wx, wy * 1.25, 7.0, 3.0)
 patch = smooth(0.38, 0.72, n)
-low = np.clip((1.0 - z) / 1.5, 0, 1) * (0.10 + 0.9 * patch) * 0.30
+low = np.clip((1.0 - z) / 1.5, 0, 1) * (0.10 + 0.9 * patch) * (float(os.environ.get('MIST', '0.3')) if PIX else 1.0) * 0.30
 slope = np.clip((-0.5 - z) / 4.6, 0, 1) ** 0.75 * 0.93
 flank = smooth(27.2, 31.0, np.abs(wx)) * np.clip((4.0 - z) / 6.0, 0, 1) * 0.55
 fog = np.clip(np.maximum(low, np.maximum(slope, flank)), 0, 0.94) * hit
@@ -124,26 +128,27 @@ del fc
 lum = rgb @ LUM
 hot = np.clip((lum - 0.78) * 4.0, 0, 1)[..., None] * rgb
 glow = blur(hot, 2.4 * K, 2) * 0.55 + blur(hot, 7.0 * K) * 0.5 + blur(hot, 22.0 * K, 8) * 0.35
-rgb = 1 - (1 - rgb) * (1 - np.clip(glow, 0, 1) * np.array([1.0, 0.80, 0.58], np.float32))
+rgb = 1 - (1 - rgb) * (1 - np.clip(glow, 0, 1) * np.array([1.0, 0.80, 0.58], np.float32) * (0.45 if PIX else 1.0))
 del hot, glow
 # the low moon rakes across everything: a soft warm veil where lit surfaces gather, the way haze catches light
 lit = np.clip((lum - 0.42) * 2.2, 0, 1)
 veil = blur(lit, 30.0 * K, 8)[..., None]
-rgb = rgb + (hexc('#f0c29c') - rgb) * veil * 0.16
+rgb = rgb + (hexc('#f0c29c') - rgb) * veil * (0.05 if PIX else 0.16)
 del lit, veil, lum
 
 # ---------------------------------------------------------------- 3. dusk grade: plum shadows, rose middles, amber lights
 lum = (rgb @ LUM)[..., None]
 SH = hexc('#2b2843') * 0.9
 HI = hexc('#f6d7ad')
-rgb = rgb + (SH - rgb) * 0.26 * (1 - lum) ** 2.2
+rgb = rgb + (SH - rgb) * (0.13 if PIX else 0.26) * (1 - lum) ** 2.2
 rgb = rgb + (HI - rgb) * 0.20 * lum ** 2
 # pull the greens toward the stone so the grass sits in the same evening
 g = rgb[..., 1]
 exc = np.clip(g - np.maximum(rgb[..., 0], rgb[..., 2]), 0, 1)
-rgb[..., 1] = g - exc * 0.38
-rgb[..., 0] += exc * 0.14
-rgb[..., 2] += exc * 0.12
+GRN = 0.15 if PIX else 1.0                            # pixel style lets the grass keep more of its own green
+rgb[..., 1] = g - exc * 0.38 * GRN
+rgb[..., 0] += exc * 0.14 * GRN
+rgb[..., 2] += exc * 0.12 * GRN
 # a share of the sketch's own colour scale, so every tone belongs to the same five colours
 lum = np.clip(rgb @ LUM, 0, 1)
 stops = [(0.0, '#150f1c'), (0.16, '#2b2843'), (0.38, '#5d4a66'), (0.60, '#a9747a'), (0.84, '#ecc79a'), (1.0, '#fff3dc')]
@@ -152,14 +157,14 @@ for (t0, c0), (t1, c1) in zip(stops[:-1], stops[1:]):
     m = (lum >= t0) & (lum <= t1)
     f = ((lum - t0) / (t1 - t0))[..., None]
     ramp = np.where(m[..., None], hexc(c0) + (hexc(c1) - hexc(c0)) * f, ramp)
-rgb = rgb + (ramp - rgb) * 0.24
+rgb = rgb + (ramp - rgb) * float(os.environ.get('RAMP', '0.06' if PIX else '0.24'))
 del ramp
 # contrast, and a lift in the middle so the shadow side of things stays readable in play
 rgb = np.clip(rgb, 0, 1)
 rgb = rgb * rgb * (3 - 2 * rgb) * 0.5 + rgb * 0.5
 mean = rgb.mean(-1, keepdims=True)
-rgb = np.clip(mean + (rgb - mean) * 1.16, 0, 1)
-rgb = rgb ** 0.79
+rgb = np.clip(mean + (rgb - mean) * (1.42 if PIX else 1.16), 0, 1)
+rgb = rgb ** float(os.environ.get('GAMMA', '0.72' if PIX else '0.79'))
 
 # ---------------------------------------------------------------- 4. a soft dark line where a nearer thing ends
 d = np.where(hit, depth, 1e3)
@@ -169,9 +174,10 @@ for dy, dx in ((0, 1), (0, -1), (1, 0), (-1, 0)):
     far = np.maximum(far, np.clip((nb - d - 0.55) / 0.6, 0, 1))
 far[(kind == 3) | (kind == 0)] *= 0.25
 far *= (1 - fog) ** 2
-farU = up(far)[..., None]
-rgb = rgb * (1 - 0.22 * farU) + SH * 0.5 * 0.22 * farU
-del farU
+if not PIX:
+    farU = up(far)[..., None]
+    rgb = rgb * (1 - 0.22 * farU) + SH * 0.5 * 0.22 * farU
+    del farU
 
 
 # ---------------------------------------------------------------- 5. brush filter
@@ -209,10 +215,49 @@ if PAINT > 0:
     r = max(2, int(round(1.0 * K)))
     rgb = rgb + (kuwahara(rgb, r) - rgb) * PAINT
 
+# ---------------------------------------------------------------- 6. pixel style: outlines, edge lights, a fixed set of colours
+# Here one picture pixel is one data pixel, so the lines can follow the shapes exactly, the way a pixel artist would draw them.
+if PIX:
+    assert (DH, DW) == (H, W)
+    solid = hit & (a > 0.5)
+    d = np.where(solid, depth, 1e3)
+    nz = nrm[..., 2]
+    edge = np.zeros((H, W), np.float32)        # this pixel is the last one of a nearer thing: it carries the outline
+    for dy, dx in ((0, 1), (0, -1), (1, 0), (-1, 0)):
+        nb = np.roll(d, (dy, dx), (0, 1))
+        edge = np.maximum(edge, np.clip((nb - d - 0.3) / 0.3, 0, 1))
+    wgt = np.select([kind == 2, kind == 4, kind == 1, kind == 3], [1.0, 1.0, 0.8, 0.28], 0.0).astype(np.float32)
+    edge *= wgt * (1 - fog) ** 1.5
+    crease = np.zeros((H, W), np.float32)      # a fold in the same thing (a wall meeting the ground, a step's riser)
+    lite = np.zeros((H, W), np.float32)        # the top edge of a stone, which catches the light
+    below = np.roll(d, -1, 0)
+    nzb = np.roll(nz, -1, 0)
+    same = np.abs(below - d) < 0.3
+    lite = np.where(same & (nz > 0.75) & (nzb < 0.35) & (kind != 3), 1.0, 0.0).astype(np.float32) * (1 - fog)
+    above = np.roll(d, 1, 0)
+    nza = np.roll(nz, 1, 0)
+    crease = np.where((np.abs(above - d) < 0.3) & (nz > 0.75) & (nza < 0.35) & (kind != 3), 1.0, 0.0).astype(np.float32) * (1 - fog)
+    INK = hexc('#1c1830')
+    e3 = (edge * float(os.environ.get('LINE', '0.85')))[..., None]
+    rgb = rgb * (1 - e3) + (rgb * 0.35 + INK * 0.25) * e3
+    rgb = rgb * (1 - 0.30 * crease[..., None] * (1 - edge[..., None]))
+    rgb = rgb + (np.clip(rgb * 1.22 + 0.04, 0, 1) - rgb) * (lite * (1 - edge))[..., None]
+    # colours: the whole field shares one small palette, with no dithering, so shading falls into flat patches
+    q8 = (np.clip(rgb, 0, 1) * 255 + 0.5).astype(np.uint8)
+    q8[~solid] = (INK * 255).astype(np.uint8)
+    pal = Image.fromarray(q8, 'RGB').quantize(COLORS, method=Image.Quantize.MEDIANCUT, kmeans=3, dither=Image.Dither.NONE)
+    rgb = np.asarray(pal.convert('RGB')).astype(np.float32) / 255.0
+    a = solid.astype(np.float32)
+    print('colours', len(pal.getcolors()))
+
 # ---------------------------------------------------------------- save the picture
 out = np.concatenate([np.clip(rgb, 0, 1), np.clip(a, 0, 1)[..., None]], -1)
 big = Image.fromarray((out * 255 + 0.5).astype(np.uint8), 'RGBA')
-big.save(os.path.join(SITE, 'map.webp'), quality=int(os.environ.get('Q', '92')), method=5)
+if PIX:
+    big.save(os.path.join(SITE, 'map.webp'), lossless=True, method=6)
+    meta['style'] = 'pixel'
+else:
+    big.save(os.path.join(SITE, 'map.webp'), quality=int(os.environ.get('Q', '92')), method=5)
 del out
 
 # ---------------------------------------------------------------- data images
@@ -257,6 +302,8 @@ json.dump(meta, open(os.path.join(SITE, 'map.json'), 'w'), ensure_ascii=False)
 
 # ---------------------------------------------------------------- previews for checking
 sky_p = os.path.join(SITE, 'sky.jpg')
+if not os.path.exists(sky_p):
+    sky_p = os.path.join(SITE, 'sky.png')
 bg = Image.new('RGBA', (W, H), (93, 74, 102, 255))
 if os.path.exists(sky_p):
     sk = Image.open(sky_p).convert('RGBA')

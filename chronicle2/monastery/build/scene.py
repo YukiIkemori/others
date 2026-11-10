@@ -1148,7 +1148,7 @@ sc.cycles.sample_clamp_indirect = 6.0
 sc.cycles.use_adaptive_sampling = True
 sc.cycles.adaptive_threshold = float(os.environ.get('NOISE', '0.02'))
 sc.cycles.pixel_filter_type = 'BLACKMAN_HARRIS'
-sc.cycles.filter_width = 1.5
+sc.cycles.filter_width = float(os.environ.get('FILTER', '1.5'))
 sc.render.resolution_x, sc.render.resolution_y = W * RES, H * RES
 if os.environ.get('CROP'):          # x0,y0,x1,y1 in base pixels from the top left: render only that part, for a quick look
     cx0, cy0, cx1, cy1 = [float(v) for v in os.environ['CROP'].split(',')]

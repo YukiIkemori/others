@@ -158,9 +158,16 @@ img = img + (mc - img) * mist[..., None]
 
 # ---- a little canvas grain so the wide gradients do not band, then save
 img = np.clip(img, 0, 1)
-g = np.random.default_rng(2).normal(0, 1, (H * K, W * K)).astype(np.float32)
-img = np.clip(img + g[..., None] * 0.006, 0, 1)
-im = Image.fromarray((img * 255 + 0.5).astype(np.uint8))
-im.save(os.path.join(SITE, 'sky.jpg'), quality=90, optimize=True)
+PIX = os.environ.get('STYLE') == 'pixel'      # pixel style: a few flat bands of colour instead of a smooth gradient
+OUT = 'sky.png' if PIX else 'sky.jpg'
+if PIX:
+    im = Image.fromarray((img * 255 + 0.5).astype(np.uint8)).quantize(40, method=Image.Quantize.MEDIANCUT, kmeans=3, dither=Image.Dither.NONE)
+    im.save(os.path.join(SITE, OUT), optimize=True)
+    im = im.convert('RGB')
+else:
+    g = np.random.default_rng(2).normal(0, 1, (H * K, W * K)).astype(np.float32)
+    img = np.clip(img + g[..., None] * 0.006, 0, 1)
+    im = Image.fromarray((img * 255 + 0.5).astype(np.uint8))
+    im.save(os.path.join(SITE, OUT), quality=90, optimize=True)
 im.resize((W * 2, H * 2), Image.LANCZOS).save(os.path.join(os.environ.get('WORK', os.path.join(HERE, 'work')), 'sky_preview.png'))
-print('sky ok', im.size, os.path.getsize(os.path.join(SITE, 'sky.jpg')) // 1024, 'KB')
+print('sky ok', im.size, os.path.getsize(os.path.join(SITE, OUT)) // 1024, 'KB')

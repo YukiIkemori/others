@@ -33,6 +33,7 @@ h1{margin:0;font-family:var(--f-d);font-weight:600;font-size:clamp(26px,4vw,40px
   padding:.55em 1.5em;background:rgba(16,12,26,.72);border:1px solid rgba(236,199,154,.5);white-space:nowrap;max-width:92%}
 .loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--mist);font-family:var(--f-d);font-size:14px;letter-spacing:.3em}
 .bar{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center;justify-content:space-between}
+.opts{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center}
 .keys{margin:0;color:var(--mist);font-size:13px}
 .keys b{color:var(--bone);font-weight:500}
 .toggle{display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;user-select:none}
@@ -64,7 +65,7 @@ h1{margin:0;font-family:var(--f-d);font-weight:600;font-size:clamp(26px,4vw,40px
   <header class="top">
     <p class="eyebrow">ルミナス・クロニクル 続編　フィールド試作</p>
     <h1>鐘のならない修道院</h1>
-    <p class="lead">Blenderで組んだ立体を一枚の絵に描き出し、主人公を歩かせています。</p>
+    <p class="lead">Blenderで組んだ立体を一枚の絵に描き出し、主人公を歩かせています。背景の仕上げは下のボタンで見比べられます。</p>
   </header>
 
   <figure class="stage" id="stage">
@@ -81,15 +82,18 @@ h1{margin:0;font-family:var(--f-d);font-weight:600;font-size:clamp(26px,4vw,40px
     <button class="d" data-k="d" aria-label="下へ">▼</button><button class="r" data-k="r" aria-label="右へ">▶</button>
   </div>
 
+  <div class="opts">
+    <p class="pick" id="bgpick"><span id="bgl">背景の仕上げ</span><span class="seg" role="group" aria-labelledby="bgl"><button type="button" data-style="pixel" aria-pressed="true">ドット絵</button><button type="button" data-style="paint" aria-pressed="false">絵画調</button></span></p>
+    <p class="pick" id="pick"><span id="pickl">主人公のドット絵</span><span class="seg" role="group" aria-labelledby="pickl"><button type="button" data-sheet="48" aria-pressed="false">48ドット</button><button type="button" data-sheet="96" aria-pressed="true">96ドット</button></span></p>
+  </div>
   <div class="bar">
     <p class="keys"><b>矢印キー / WASD</b>で移動、<b>Shift</b>で早足。画面をクリックかタップすると、その場所へ歩きます。</p>
-    <p class="pick" id="pick"><span id="pickl">主人公のドット絵</span><span class="seg" role="group" aria-labelledby="pickl"><button type="button" data-sheet="48" aria-pressed="false">48ドット</button><button type="button" data-sheet="96" aria-pressed="true">96ドット</button></span></p>
     <label class="toggle" for="dbg"><input type="checkbox" id="dbg">判定を重ねて見る</label>
   </div>
   <p class="legend" id="legend" hidden><span style="--c:#58dcc8">歩ける床</span><span style="--c:#ffaa3c">主人公より手前に来る部分</span><span style="--c:#ff6fae">出入口と見どころ</span></p>
 
   <section class="how">
-    <div><h2>背景は立体から</h2><p>石段、墓地、身廊、鐘楼、回廊の泉までを<b>Blenderの中で立体として組み</b>、斜め上の固定カメラから、ゲーム画面の3倍の細かさで一枚に描き出しました。沈む白い月の光と、昇る黒い月の光を当てています。</p></div>
+    <div><h2>背景は立体から</h2><p>石段、墓地、身廊、鐘楼、回廊の泉までを<b>Blenderの中で立体として組み</b>、斜め上の固定カメラから一枚に描き出しました。「ドット絵」は96ドットの主人公と同じ大きさのドットで、輪郭と色数を絞って仕上げた版、「絵画調」は筆のタッチで滑らかに仕上げた版です。</p></div>
     <div><h2>判定は自動</h2><p>歩ける床、柱やアーチの<b>後ろに回ると隠れる前後関係</b>、出入口の位置は、同じ立体から自動で取り出しています。絵と判定がずれません。</p></div>
     <div><h2>主人公の灯</h2><p>杖の灯は、立体の向きを覚えているので、<b>近づいた壁や墓石を本当に照らします</b>。主人公だけは、設定どおり影を落としません。</p></div>
   </section>
@@ -98,7 +102,7 @@ h1{margin:0;font-family:var(--f-d);font-weight:600;font-size:clamp(26px,4vw,40px
 <script>
 (() => {
 'use strict';
-const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+const cv = document.getElementById('cv'), screenCtx = cv.getContext('2d');
 const promptEl = document.getElementById('prompt'), dbgEl = document.getElementById('dbg'), legendEl = document.getElementById('legend');
 const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -106,11 +110,17 @@ const loadImg = src => new Promise((ok, ng) => { const i = new Image(); i.onload
 const pixels = img => { const c = document.createElement('canvas'); c.width = img.width; c.height = img.height; const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(img, 0, 0); return x.getImageData(0, 0, c.width, c.height).data; };
 const canvas = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
 
-async function load() {
-  const json = f => fetch(f).then(r => { if (!r.ok) throw new Error(f + ' を読み込めませんでした'); return r.json(); });
-  const [M, HS, HS2, map, sky, geo, nrm, alb, walk, hero, hero2, front] = await Promise.all([json('map.json'), json('hero.json'), json('hero_hd.json'),
-    ...['map.webp', 'sky.jpg', 'geo.png', 'nrm.png', 'alb.png', 'walk.png', 'hero.png', 'hero_hd.png', 'front.png'].map(loadImg)]);
-  return { M, map, sky, geo, nrm, alb, walk, front, sheets: { 48: { img: hero, spec: HS }, 96: { img: hero2, spec: HS2 } } };
+// The same field is kept in two finishes, each with its own picture and data: pixel art in the characters' dot size, and a painting.
+const STYLES = { pixel: { dir: 'px/', sky: 'sky.png' }, paint: { dir: '', sky: 'sky.jpg' } };
+const json = f => fetch(f).then(r => { if (!r.ok) throw new Error(f + ' を読み込めませんでした'); return r.json(); });
+const fieldCache = {}; let heroCache = null;
+async function load(style) {
+  const st = STYLES[style], d = st.dir;
+  heroCache = heroCache || Promise.all([json('hero.json'), json('hero_hd.json'), loadImg('hero.png'), loadImg('hero_hd.png')]);
+  fieldCache[style] = fieldCache[style] || Promise.all([json(d + 'map.json'), ...['map.webp', st.sky, 'geo.png', 'nrm.png', 'alb.png', 'walk.png', 'front.png'].map(f => loadImg(d + f))]);
+  try { const [[HS, HS2, hero, hero2], [M, map, sky, geo, nrm, alb, walk, front]] = await Promise.all([heroCache, fieldCache[style]]);
+    return { M, map, sky, geo, nrm, alb, walk, front, sheets: { 48: { img: hero, spec: HS }, 96: { img: hero2, spec: HS2 } } };
+  } catch (e) { heroCache = null; delete fieldCache[style]; throw e; }
 }
 
 function start(A, saved) {
@@ -118,6 +128,10 @@ function start(A, saved) {
   // U is how many picture pixels make one pixel of the 16-per-unit grid the map was laid out on.
   const M = A.M, W = M.w, H = M.h, S = M.scale, SIN = M.sin, COS = M.cos, X0 = M.x0, SY0 = M.sy0;
   const DS = M.dscale, DW = M.dw, DH = M.dh, R = S / DS, U = S / 16, VW = M.view[0], VH = M.view[1];
+  // Pixel style: everything is drawn at the picture's own size on a small canvas, which is then enlarged with hard dots.
+  const PIX = M.style === 'pixel', low = PIX ? canvas(VW, VH) : null, pre = PIX ? canvas(1, 1) : null;
+  const ctx = PIX ? low.getContext('2d') : screenCtx;
+  const ac = new AbortController(), on = { signal: ac.signal }; let dead = false;
   const g = pixels(A.geo), N = pixels(A.nrm), AL = pixels(A.alb);
   const Z = new Float32Array(DW * DH), D = new Float32Array(DW * DH), K = new Uint8Array(DW * DH);
   for (let j = 0, p = 0; j < DH; j++) for (let i = 0; i < DW; i++, p++) {
@@ -145,7 +159,7 @@ function start(A, saved) {
   let sheet = SHEETS[saved && saved.sheet] ? String(saved.sheet) : '96';
   const pickBtns = [...document.querySelectorAll('#pick button')];
   const useSheet = k => { if (!SHEETS[k]) return; sheet = k; for (const b of pickBtns) b.setAttribute('aria-pressed', String(b.dataset.sheet === k)); };
-  for (const b of pickBtns) b.addEventListener('click', () => { useSheet(b.dataset.sheet); cv.focus({ preventScroll: true }); });
+  for (const b of pickBtns) b.addEventListener('click', () => { useSheet(b.dataset.sheet); cv.focus({ preventScroll: true }); }, on);
   useSheet(sheet);
   const hero = { x: M.spawn[0], y: M.spawn[1], z: 0, dir: 3, t: 0, moving: false };
   if (saved && saved.hero && canStand(saved.hero.x, saved.hero.y, floorAt(saved.hero.x, saved.hero.y))) Object.assign(hero, saved.hero);
@@ -225,19 +239,20 @@ function start(A, saved) {
   // ---- input
   const keys = new Set(); let target = null;
   const KEYMAP = { ArrowUp: 'u', KeyW: 'u', ArrowDown: 'd', KeyS: 'd', ArrowLeft: 'l', KeyA: 'l', ArrowRight: 'r', KeyD: 'r', ShiftLeft: 'run', ShiftRight: 'run' };
-  addEventListener('keydown', e => { const k = KEYMAP[e.code]; if (!k) return; if (document.activeElement === cv || document.activeElement === document.body) { e.preventDefault(); } keys.add(k); target = null; });
-  addEventListener('keyup', e => { const k = KEYMAP[e.code]; if (k) keys.delete(k); });
-  addEventListener('blur', () => keys.clear());
+  addEventListener('keydown', e => { const k = KEYMAP[e.code]; if (!k) return; if (document.activeElement === cv || document.activeElement === document.body) { e.preventDefault(); } keys.add(k); target = null; }, on);
+  addEventListener('keyup', e => { const k = KEYMAP[e.code]; if (k) keys.delete(k); }, on);
+  addEventListener('blur', () => keys.clear(), on);
   const cam = { x: 0, y: 0, fx: 0, fy: 0, lift: 0 };
   const pick = e => { const r = cv.getBoundingClientRect(); const vx = (e.clientX - r.left) / r.width * VW + cam.x, vy = (e.clientY - r.top) / r.height * VH + cam.y;
     const p = dataAt(vx, vy), z = p >= 0 && K[p] ? Z[p] : 0; return { x: X0 + vx / S, y: ((SY0 - vy) / S - z * COS) / SIN }; };
   let held = false;
-  cv.addEventListener('pointerdown', e => { if (e.pointerType === 'touch') document.querySelector('.dpad').classList.add('on'); cv.focus({ preventScroll: true }); held = true; target = pick(e); try { cv.setPointerCapture(e.pointerId); } catch (_) {} });
-  cv.addEventListener('pointermove', e => { if (held) target = pick(e); });
-  cv.addEventListener('pointerup', () => { held = false; }); cv.addEventListener('pointercancel', () => { held = false; });
-  document.querySelectorAll('.dpad button').forEach(b => { const k = b.dataset.k; const on = e => { e.preventDefault(); keys.add(k); target = null; }, off = e => { e.preventDefault(); keys.delete(k); };
-    b.addEventListener('pointerdown', on); b.addEventListener('pointerup', off); b.addEventListener('pointerleave', off); b.addEventListener('pointercancel', off); });
-  dbgEl.addEventListener('change', () => { legendEl.hidden = !dbgEl.checked; if (dbgEl.checked && !overlay) buildOverlay(); });
+  cv.addEventListener('pointerdown', e => { if (e.pointerType === 'touch') document.querySelector('.dpad').classList.add('on'); cv.focus({ preventScroll: true }); held = true; target = pick(e); try { cv.setPointerCapture(e.pointerId); } catch (_) {} }, on);
+  cv.addEventListener('pointermove', e => { if (held) target = pick(e); }, on);
+  cv.addEventListener('pointerup', () => { held = false; }, on); cv.addEventListener('pointercancel', () => { held = false; }, on);
+  document.querySelectorAll('.dpad button').forEach(b => { const k = b.dataset.k; const dn = e => { e.preventDefault(); keys.add(k); target = null; }, off = e => { e.preventDefault(); keys.delete(k); };
+    b.addEventListener('pointerdown', dn, on); b.addEventListener('pointerup', off, on); b.addEventListener('pointerleave', off, on); b.addEventListener('pointercancel', off, on); });
+  dbgEl.addEventListener('change', () => { legendEl.hidden = !dbgEl.checked; if (dbgEl.checked && !overlay) buildOverlay(); }, on);
+  if (dbgEl.checked) buildOverlay();
 
   function step(dt) {
     let vx = 0, vy = 0;
@@ -260,6 +275,7 @@ function start(A, saved) {
 
   let zone = null, tPrev = performance.now(), time = 0, fade = 1;
   function frame(now) {
+    if (dead) return;
     const dt = Math.min(.05, (now - tPrev) / 1000); tPrev = now; time += dt;
     step(dt);
     // where the hero is standing
@@ -275,10 +291,10 @@ function start(A, saved) {
     cam.x = Math.round(cam.fx); cam.y = Math.round(cam.fy);
 
     // the canvas follows the size it is shown at (up to twice the view), and everything below is drawn in view pixels
-    const want = Math.max(480, Math.min(VW * 2, Math.round(cv.clientWidth * (devicePixelRatio || 1))));
+    const want = Math.max(480, Math.min(2880, Math.round(cv.clientWidth * (devicePixelRatio || 1))));
     if (Math.abs(cv.width - want) > 1) { cv.width = want; cv.height = Math.round(want * VH / VW); }
-    const sc = cv.width / VW;
-    ctx.setTransform(sc, 0, 0, sc, 0, 0); ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+    const sc = PIX ? 1 : cv.width / VW;
+    ctx.setTransform(sc, 0, 0, sc, 0, 0); ctx.imageSmoothingEnabled = !PIX; ctx.imageSmoothingQuality = 'high';
 
     // sky, far away so it slides slowly
     ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
@@ -310,7 +326,7 @@ function start(A, saved) {
     else { if (big.width !== FW * kb) { big.width = FW * kb; big.height = FH * kb; }
       const bx = big.getContext('2d'); bx.imageSmoothingEnabled = false; bx.clearRect(0, 0, big.width, big.height); bx.drawImage(sprC, 0, 0, big.width, big.height);
       ctx.drawImage(big, ox - cam.x, oy - cam.y, FW * HK, FH * HK); }
-    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingEnabled = !PIX;
 
     // glows
     ctx.globalCompositeOperation = 'lighter';
@@ -327,7 +343,8 @@ function start(A, saved) {
     // leaves coming down from the red tree
     if (!RM) for (const l of leaves) { l.z -= dt * .9; l.x += dt * (.5 + .4 * Math.sin(time + l.ph)); if (l.z < 0) { l.z = 6 + Rn() * 2; l.x = -26 + Rn() * 8; l.y = 37 + Rn() * 9; }
       const [sx, sy] = toScreen(l.x + Math.sin(time * 2 + l.ph) * .4, l.y, l.z); ctx.fillStyle = (l.ph > 4) ? '#e08a3c' : (l.ph > 2) ? '#c8502c' : '#a8323c';
-      ctx.beginPath(); ctx.ellipse(sx - cam.x, sy - cam.y, U * 1.5, U * .6, time * 2.2 + l.ph, 0, 6.283); ctx.fill(); }
+      if (PIX) ctx.fillRect(Math.round(sx - cam.x) - 1, Math.round(sy - cam.y) - 1, Math.sin(time * 2.2 + l.ph) > 0 ? 3 : 2, 2);
+      else { ctx.beginPath(); ctx.ellipse(sx - cam.x, sy - cam.y, U * 1.5, U * .6, time * 2.2 + l.ph, 0, 6.283); ctx.fill(); } }
 
     // drifting mist
     fogX.globalCompositeOperation = 'source-over'; fogX.clearRect(0, 0, FW2, FH2);
@@ -335,22 +352,50 @@ function start(A, saved) {
     fogX.save(); fogX.translate(-((fcx + t * 5) % 256), -((fcy + t * 1.2) % 256)); fogX.fillStyle = patA; fogX.globalAlpha = .55; fogX.fillRect(0, 0, FW2 + 256, FH2 + 256); fogX.restore();
     fogX.save(); fogX.translate(-((fcx + 256 - (t * 3) % 256) % 256), -((fcy + 90) % 256)); fogX.fillStyle = patB; fogX.globalAlpha = .45; fogX.fillRect(0, 0, FW2 + 256, FH2 + 256); fogX.restore();
     fogX.globalAlpha = 1; fogX.globalCompositeOperation = 'destination-in'; fogX.drawImage(fogMask, cam.x / R, cam.y / R, VW / R, VH / R, 0, 0, FW2, FH2);
-    ctx.globalAlpha = .42; ctx.drawImage(fogT, 0, 0, VW, VH); ctx.globalAlpha = 1;
+    ctx.imageSmoothingEnabled = true; ctx.globalAlpha = PIX ? .2 : .42; ctx.drawImage(fogT, 0, 0, VW, VH); ctx.globalAlpha = 1; ctx.imageSmoothingEnabled = !PIX;
 
     if (dbgEl.checked && overlay) ctx.drawImage(overlay, cam.x / R, cam.y / R, VW / R, VH / R, 0, 0, VW, VH);
-    ctx.drawImage(vig, 0, 0);
-    ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = .07; ctx.fillStyle = grain; ctx.fillRect(0, 0, VW, VH);      // canvas grain
+    ctx.globalAlpha = PIX ? .55 : 1; ctx.drawImage(vig, 0, 0); ctx.globalAlpha = 1;
+    if (!PIX) { ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = .07; ctx.fillStyle = grain; ctx.fillRect(0, 0, VW, VH); }      // canvas grain
     ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
     if (fade > 0) { fade = Math.max(0, fade - dt * .55); ctx.fillStyle = `rgba(12,8,20,${fade * fade})`; ctx.fillRect(0, 0, VW, VH); }
+    if (PIX) {                                                               // enlarge by a whole number with hard dots, then fit to the screen
+      const k = Math.max(1, Math.ceil(cv.width / VW - .01));
+      if (pre.width !== VW * k) { pre.width = VW * k; pre.height = VH * k; }
+      const px = pre.getContext('2d'); px.imageSmoothingEnabled = false; px.drawImage(low, 0, 0, pre.width, pre.height);
+      screenCtx.setTransform(1, 0, 0, 1, 0, 0); screenCtx.globalAlpha = 1; screenCtx.globalCompositeOperation = 'source-over';
+      screenCtx.imageSmoothingEnabled = pre.width !== cv.width; screenCtx.imageSmoothingQuality = 'high'; screenCtx.drawImage(pre, 0, 0, cv.width, cv.height);
+    }
     requestAnimationFrame(frame);
   }
-  document.getElementById('loading').hidden = true;
   window.__abbey = { hero, cam, canStand, floorAt, toScreen, keys, M, useSheet };
-  window.claude?.hot?.snapshot?.(() => ({ hero: { x: hero.x, y: hero.y, dir: hero.dir }, sheet }));
   requestAnimationFrame(t => { tPrev = t; frame(t); });
+  return { stop() { dead = true; ac.abort(); }, state: () => ({ hero: { x: hero.x, y: hero.y, dir: hero.dir }, sheet }) };
 }
 
-const boot = saved => load().then(A => start(A, saved || {})).catch(e => { const l = document.getElementById('loading'); l.hidden = false; l.textContent = '読み込みに失敗しました。ページを開き直してください。'; console.error(e); });
+// ---- which finish is showing; the other one is fetched the first time it is asked for
+const loadingEl = document.getElementById('loading'), styleBtns = [...document.querySelectorAll('#bgpick button')];
+let game = null, style = null, turn = 0;
+async function show(want, saved) {
+  if (!STYLES[want]) want = 'pixel';
+  const my = ++turn;
+  for (const b of styleBtns) b.setAttribute('aria-pressed', String(b.dataset.style === want));
+  loadingEl.textContent = '読み込み中…'; loadingEl.hidden = false;
+  try {
+    const A = await load(want); if (my !== turn) return;
+    const keep = game ? game.state() : (saved || {});
+    if (game) game.stop();
+    style = want; game = start(A, keep); loadingEl.hidden = true;
+  } catch (e) {
+    if (my !== turn) return; console.error(e);
+    loadingEl.textContent = '読み込みに失敗しました。ページを開き直してください。';
+    for (const b of styleBtns) b.setAttribute('aria-pressed', String(b.dataset.style === style));
+  }
+}
+for (const b of styleBtns) b.addEventListener('click', () => { if (b.dataset.style !== style) show(b.dataset.style); cv.focus({ preventScroll: true }); });
+window.__abbeyShow = show;
+window.claude?.hot?.snapshot?.(() => game ? { ...game.state(), style } : {});
+const boot = saved => show((saved && saved.style) || 'pixel', saved || {});
 if (window.claude?.hot?.ready) window.claude.hot.ready(boot); else boot(window.claude?.hot?.data ?? {});
 })();
 </script>
