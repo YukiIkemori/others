@@ -195,6 +195,10 @@ w.marks['pond']['poly'] = [(8.2 + 2.6 * np.cos(a), 18.6 + 1.9 * np.sin(a), 2.75)
 w.mark('maple', 4.9, 23.2, 7.0); w.mark('nave', 20, 22, 3); w.mark('graves', 20, 7, 0)
 for nm, s_ in ST.items(): w.mark('stairs_' + nm, (s_['xa'] + s_['xb']) / 2, s_['yt'] + .5, s_['z'] + 3)
 
+# the first slice of the game: save crystal, chests, the hidden place, the broken stair down to the ledge of F01, where the party arrives
+w.mark('gate', 20, 5.6, 0); w.mark('crystal', 22.3, 7.2, 0); w.mark('hide_tomb', 8.6, 5.2, 0); w.mark('broken', 3.4, 8.2, 0, title='崩れた階段')
+w.mark('chest_nave', 24.3, 20.6, 3); w.mark('chest_plaza', 26.6, 33.0, 6)
+
 if __name__ == '__main__':
     out = sys.argv[1]; os.makedirs(out, exist_ok=True)
     info = bake(w, out, spawn=(20, ENTRY_BOTTOM - 0.8))

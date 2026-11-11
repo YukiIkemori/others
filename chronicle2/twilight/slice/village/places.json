@@ -1,0 +1,549 @@
+{
+ "w": 2048,
+ "h": 1792,
+ "S": 32,
+ "A": 0.75,
+ "B": 0.66,
+ "sy": 1.0143949547195745,
+ "spawn": [
+  193,
+  965
+ ],
+ "marks": {
+  "exit_gate": {
+   "p": [
+    35,
+    966
+   ],
+   "air": [
+    35,
+    966
+   ],
+   "on_ground": true,
+   "title": "麦の丘へ",
+   "walkable": true
+  },
+  "spawn_gate": {
+   "p": [
+    193,
+    965
+   ],
+   "air": [
+    193,
+    965
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "well": {
+   "p": [
+    1019,
+    901
+   ],
+   "air": [
+    1019,
+    901
+   ],
+   "on_ground": true,
+   "title": "井戸",
+   "walkable": true
+  },
+  "door_elder": {
+   "p": [
+    399,
+    1377
+   ],
+   "air": [
+    399,
+    1377
+   ],
+   "on_ground": true,
+   "title": "村長の家",
+   "walkable": true
+  },
+  "door_teto": {
+   "p": [
+    982,
+    1374
+   ],
+   "air": [
+    982,
+    1374
+   ],
+   "on_ground": true,
+   "title": "テトの家",
+   "walkable": true
+  },
+  "door_herb": {
+   "p": [
+    1498,
+    1376
+   ],
+   "air": [
+    1498,
+    1376
+   ],
+   "on_ground": true,
+   "title": "薬師の家",
+   "walkable": true
+  },
+  "door_shop": {
+   "p": [
+    1491,
+    1002
+   ],
+   "air": [
+    1491,
+    1002
+   ],
+   "on_ground": true,
+   "title": "よろず屋",
+   "walkable": true
+  },
+  "door_smith": {
+   "p": [
+    1196,
+    684
+   ],
+   "air": [
+    1196,
+    684
+   ],
+   "on_ground": true,
+   "title": "鍛冶屋",
+   "walkable": true
+  },
+  "door_chapel": {
+   "p": [
+    372,
+    526
+   ],
+   "air": [
+    372,
+    526
+   ],
+   "on_ground": true,
+   "title": "小さな礼拝堂",
+   "walkable": true
+  },
+  "chest_roof": {
+   "p": [
+    1335,
+    508
+   ],
+   "air": [
+    1335,
+    508
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "hide_chapel": {
+   "p": [
+    311,
+    302
+   ],
+   "air": [
+    311,
+    302
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "npc_moku": {
+   "p": [
+    1158,
+    837
+   ],
+   "air": [
+    1158,
+    837
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "npc_mother": {
+   "p": [
+    1042,
+    1372
+   ],
+   "air": [
+    1042,
+    1372
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "npc_yomo": {
+   "p": [
+    1627,
+    1409
+   ],
+   "air": [
+    1627,
+    1409
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "npc_dorgo": {
+   "p": [
+    1133,
+    720
+   ],
+   "air": [
+    1133,
+    720
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "npc_hanna": {
+   "p": [
+    1635,
+    1027
+   ],
+   "air": [
+    1635,
+    1027
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "npc_oz": {
+   "p": [
+    309,
+    1397
+   ],
+   "air": [
+    309,
+    1397
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "npc_sem": {
+   "p": [
+    432,
+    529
+   ],
+   "air": [
+    432,
+    529
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "npc_pico": {
+   "p": [
+    1887,
+    782
+   ],
+   "air": [
+    1887,
+    782
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "npc_mil": {
+   "p": [
+    956,
+    1003
+   ],
+   "air": [
+    956,
+    1003
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "npc_bart": {
+   "p": [
+    207,
+    881
+   ],
+   "air": [
+    207,
+    881
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "win0": {
+   "p": [
+    258,
+    1358
+   ],
+   "air": [
+    258,
+    1300
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 120,
+    "intensity": 0.8
+   },
+   "walkable": true
+  },
+  "win1": {
+   "p": [
+    499,
+    1357
+   ],
+   "air": [
+    498,
+    1298
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 120,
+    "intensity": 0.8
+   },
+   "walkable": true
+  },
+  "win2": {
+   "p": [
+    883,
+    1355
+   ],
+   "air": [
+    883,
+    1297
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 120,
+    "intensity": 0.8
+   },
+   "walkable": true
+  },
+  "win3": {
+   "p": [
+    1083,
+    1355
+   ],
+   "air": [
+    1083,
+    1297
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 120,
+    "intensity": 0.8
+   },
+   "walkable": true
+  },
+  "win4": {
+   "p": [
+    983,
+    1351
+   ],
+   "air": [
+    984,
+    1214
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 120,
+    "intensity": 0.8
+   },
+   "walkable": true
+  },
+  "win5": {
+   "p": [
+    1630,
+    1358
+   ],
+   "air": [
+    1630,
+    1299
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 120,
+    "intensity": 0.8
+   },
+   "walkable": true
+  },
+  "win6": {
+   "p": [
+    1617,
+    983
+   ],
+   "air": [
+    1617,
+    924
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 120,
+    "intensity": 0.8
+   },
+   "walkable": false
+  },
+  "win7": {
+   "p": [
+    1698,
+    984
+   ],
+   "air": [
+    1698,
+    924
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 120,
+    "intensity": 0.8
+   },
+   "walkable": false
+  },
+  "win8": {
+   "p": [
+    1051,
+    664
+   ],
+   "air": [
+    1052,
+    607
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 120,
+    "intensity": 0.8
+   },
+   "walkable": true
+  },
+  "win9": {
+   "p": [
+    1122,
+    666
+   ],
+   "air": [
+    1123,
+    512
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 120,
+    "intensity": 0.8
+   },
+   "walkable": true
+  },
+  "win10": {
+   "p": [
+    262,
+    506
+   ],
+   "air": [
+    263,
+    439
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 120,
+    "intensity": 0.8
+   },
+   "walkable": true
+  },
+  "win11": {
+   "p": [
+    482,
+    504
+   ],
+   "air": [
+    483,
+    438
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 120,
+    "intensity": 0.8
+   },
+   "walkable": false
+  },
+  "win12": {
+   "p": [
+    372,
+    501
+   ],
+   "air": [
+    374,
+    336
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 120,
+    "intensity": 0.8
+   },
+   "walkable": true
+  },
+  "fx_plaza": {
+   "p": [
+    1019,
+    915
+   ],
+   "air": [
+    1019,
+    915
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "fx_orchard": {
+   "p": [
+    864,
+    478
+   ],
+   "air": [
+    864,
+    478
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "fx_chapel": {
+   "p": [
+    388,
+    462
+   ],
+   "air": [
+    388,
+    462
+   ],
+   "on_ground": false,
+   "walkable": false
+  },
+  "fx_pasture": {
+   "p": [
+    1712,
+    409
+   ],
+   "air": [
+    1712,
+    409
+   ],
+   "on_ground": true,
+   "walkable": true
+  }
+ },
+ "lights": [],
+ "far": [
+  "behind",
+  "under"
+ ],
+ "sky": false
+}

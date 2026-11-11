@@ -1,0 +1,25 @@
+Image 1 is a rough BLOCKOUT of a field map for a 2D RPG, rendered from simple 3D blocks with flat placeholder colours: rolling wheat country below a rock cliff. A dirt road runs from the left edge to a small walled farming village on a low hill at the right; wheat plots with dry-stone walls lie on both sides; a side track climbs two flights of stone stairs up a rock shelf and on to the cliff top at the upper edge; one huge old cedar stands alone at the lower right. Image 2 is a STYLE REFERENCE: the finished picture of the village of this same game. Copy its pixel-art craft, its palette, its density of small detail and the size of its details exactly, so that both maps look painted by the same hand. Do not copy its layout.
+
+TASK: repaint image 1 as finished background art in the style of image 2: premium high-resolution pixel art in JRPG 3/4 overhead view (HD-2D game background), crisp deliberate pixel clusters, dark plum-brown outlines (never pure black), rich hue-shifted shading, dense hand-pixelled detail on every wheat ear, grass tuft, stone, leaf, thatch bundle and plank.
+
+LIGHT AND COLOUR: this world has one weak pale sun and is always dim, like a heavy overcast late afternoon that never ends. It is not night and there is no moon. Colours are muted, deep and earthy: dull wheat-gold, moss and olive greens, grey-brown stone, weathered dark timber. No bright saturated colours. A faint cool violet-grey haze lies in the shadows; a weak warm light comes from the upper left. The only strong warm light is the amber glow in the few windows of the village houses. No lamps, no lanterns.
+
+What the placeholder colours mean:
+- green = open grassland: short mossy grass with clover, small wild flowers, tufts, worn bare patches and a few half-buried stones (flat, open)
+- tan = packed earth road and tracks with cart ruts, pebbles and grass creeping in at the edges (flat, clear, empty)
+- the fan of thin contour lines on the grass left of the village = a gentle grassy slope that climbs to the village hill; paint it as smooth sloping grass with the road running up it, no steps and no wall
+- striped pale-grey ramps = stone stairs, one tread per stripe, with low side walls; the pale-grey paved rectangle with a low grey parapet, standing on a dark rock foot right of the lower staircase = an old stone PLATFORM raised about a man's height above the grass: keep it clearly raised, with its rock face visible along its whole south side and worn flagstones on top; the grey steps at its right end = the ruined remains of an old stair, impassable
+- yellow flat rectangles = plots of ripe wheat (dense standing wheat, flat top), each edged by low grey dry-stone walls; one wall near the upper left is broken with a gap and fallen stones
+- dark brown-grey striped masses = natural rock: the long cliff across the top, the rock shelf in front of it, and the low bank under the village hill, with ledges, cracks, roots, ivy and tufts
+- mid grey = stone: field walls, the village's surrounding wall and its two gate posts, a small wayside shrine stone, scattered boulders (grey-purple domes)
+- cream walls with ochre roofs at the right = the village houses: plastered timber-framed cottages with thick thatched roofs; orange rectangles = lit windows glowing amber; the tan ground inside the village wall = its packed-earth yard
+- green rounded masses on brown trunks = old broadleaf trees; small green domes = bushes; the very large dark green cone at the lower right = one enormous ancient cedar with heavy drooping boughs and big exposed roots; dark green cones along the top edge = fir trees on the cliff top
+- yellow cones = haystacks; brown box on wheels = a hay cart; white lumps with a black head = sheep; the brown post with a board = a wooden signpost; the small blue-grey box = an old stone water trough
+
+THE GEOMETRY IS LOCKED. Image 1 is the game's collision map, so:
+- Every wall, wheat plot, staircase, rock face, ledge, tree trunk and crown, boulder, bush, haystack, building and every road keeps exactly its position, size, outline and footprint. Do not move, resize, rotate, add or remove any wall, tree, rock, building or large object. Do not change the camera or the perspective.
+- THE ROAD, THE TRACKS AND THE OPEN GRASS STAY WIDE, FLAT AND EMPTY: nothing may stand on them.
+- Add richness in the EDGES instead, with small low things: poppies and cornflowers along the field walls, moss and lichen on stones, fallen straw, puddles in the ruts, stepping stones, mushrooms at tree roots, birds' feathers, a forgotten sickle, a broken wheel leaning on a wall.
+- Paint the picture to every edge; there is no sky in this picture.
+
+No characters, no people, no text, no readable signs, no UI, no frame.

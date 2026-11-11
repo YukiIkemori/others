@@ -1,0 +1,24 @@
+Image 1 is a rough BLOCKOUT of a field map for a 2D RPG, rendered from simple 3D blocks with flat placeholder colours: a long-abandoned ruined abbey on top of a rocky crag, in three terraces. Image 2 is a STYLE REFERENCE: the finished picture of the village of this same game. Copy its pixel-art craft, its palette, its density of small detail and the size of its details exactly, so that both maps look painted by the same hand. Do not copy its layout.
+
+TASK: repaint image 1 as finished background art in the style of image 2: premium high-resolution pixel art in JRPG 3/4 overhead view (HD-2D game background), crisp deliberate pixel clusters, dark plum-brown outlines (never pure black), rich hue-shifted shading, dense hand-pixelled detail on every stone block, crack, moss patch, grass tuft, root, leaf and flower.
+
+LIGHT AND COLOUR: this world has one weak pale sun and is always dim, like a heavy overcast late afternoon that never ends. It is not night and there is no moon. Colours are muted, deep and earthy: grey-brown and lichen-spotted stone, moss and olive greens, weathered dark timber, dull slate. No bright saturated colours, no purple night tint. A faint cool violet-grey haze lies in the shadows; a weak warm light comes from the upper left. The abbey has been empty for generations: every lantern is unlit, rusty and cold. The only warm light in the whole picture is a faint candle glow behind the three old stained-glass windows of the nave.
+
+What the placeholder colours mean:
+- green = grass (overgrown, mossy, with small pale wild flowers, tufts, fallen leaves and worn bare patches); tan = worn pale flagstone paths with weeds in the joints; light grey flat areas = stone paving (the nave floor, the walk behind the arcade, the lookout plaza)
+- striped pale grey ramps = stone staircases, one tread per stripe, with low side walls and end posts
+- mid grey = weathered masonry: retaining walls of the three terraces, low parapets along every edge, the gatehouse with battlements and its round arch, the roofless nave with its broken walls, door arch, round columns and altar, the arcade with three arches, the square bell tower
+- dark grey-brown below the grass = the natural rock of the crag: rugged layered rock with ledges, cracks, hanging roots and ivy
+- slate blue pyramid = the tower's slate spire, mossy, a few slates missing; dark arch in the tower = belfry opening with a dull bronze bell; brown arch = its heavy wooden door, shut
+- amber arches in the nave's back wall = old stained-glass windows, dusty, with a faint warm candle glow behind them; red strip = a worn, faded, dusty wine-red carpet
+- small yellow cubes = old iron lanterns, UNLIT, rusty, some with broken glass (wall lanterns beside the gate and doors, lanterns on iron posts at the foot of the stairs and on the plaza)
+- blue oval with a grey ring = a still, dark lily pond with a stone rim; orange-red blob on a brown trunk = an old maple with dull rust-brown autumn leaves; dark green cones = fir trees; bare brown tree = a dead tree
+- small pale blocks and crosses on the lower lawn = headstones, stone crosses and tombs, leaning and moss-grown; pale figure on a block at the upper right = a hooded stone statue on a pedestal; brown bars = wooden benches; black bar on the long wall beside the gate = an iron fence
+
+THE GEOMETRY IS LOCKED. Image 1 is the game's collision map, so:
+- Every wall, parapet, arch, column, building, roof, stair, headstone, cross, tomb, bench, lantern, tree, the pond, every path and the outline of every terrace and of the crag stays at exactly the same position, with the same size, the same outline and the same footprint. Do not move, resize, rotate, add or remove any structure. Do not add walls, terraces, steps, buildings, trees or tall bushes. Do not change the camera or the perspective. Keep every staircase exactly as wide and as long as drawn.
+- THE PATHS, THE PAVING AND THE OPEN GRASS STAY WIDE, FLAT AND EMPTY: where image 1 shows grass, path or paving, the result shows flat walkable grass, path or paving. Nothing may stand on them.
+- Add richness in the EDGES instead, with small low things: moss and ivy growing ON existing walls and rock, lichen, fallen leaves, cracked flagstones, weeds, mushrooms at the foot of walls, crumbled stones lying against the walls, old candle stubs, a fallen roof slate, a rusty bucket.
+- The flat magenta #FF00FF area is a mask for the sky: keep it flat pure magenta, pixel for pixel, with a hard edge. Paint no sky, clouds, sun or mist.
+
+No characters, no people, no text, no readable signs, no UI, no frame.

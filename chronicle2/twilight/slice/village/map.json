@@ -1,0 +1,522 @@
+{
+ "title": "始まりの村",
+ "titleEn": "The Village of Beginnings",
+ "subtitle": "",
+ "w": 2048,
+ "h": 1792,
+ "image": "map.webp",
+ "walk": "walk.png",
+ "height": "height.png",
+ "floor": "floor.png",
+ "heightBias": 3,
+ "occluders": [],
+ "lights": [
+  {
+   "kind": "window",
+   "x": 258,
+   "y": 1300,
+   "gx": 258,
+   "gy": 1358,
+   "r": 120,
+   "color": "#ffb26a",
+   "intensity": 0.8,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 498,
+   "y": 1298,
+   "gx": 499,
+   "gy": 1357,
+   "r": 120,
+   "color": "#ffb26a",
+   "intensity": 0.8,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 883,
+   "y": 1297,
+   "gx": 883,
+   "gy": 1355,
+   "r": 120,
+   "color": "#ffb26a",
+   "intensity": 0.8,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1083,
+   "y": 1297,
+   "gx": 1083,
+   "gy": 1355,
+   "r": 120,
+   "color": "#ffb26a",
+   "intensity": 0.8,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 984,
+   "y": 1214,
+   "gx": 983,
+   "gy": 1351,
+   "r": 120,
+   "color": "#ffb26a",
+   "intensity": 0.8,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1630,
+   "y": 1299,
+   "gx": 1630,
+   "gy": 1358,
+   "r": 120,
+   "color": "#ffb26a",
+   "intensity": 0.8,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1617,
+   "y": 924,
+   "gx": 1617,
+   "gy": 983,
+   "r": 120,
+   "color": "#ffb26a",
+   "intensity": 0.8,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1698,
+   "y": 924,
+   "gx": 1698,
+   "gy": 984,
+   "r": 120,
+   "color": "#ffb26a",
+   "intensity": 0.8,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1052,
+   "y": 607,
+   "gx": 1051,
+   "gy": 664,
+   "r": 120,
+   "color": "#ffb26a",
+   "intensity": 0.8,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1123,
+   "y": 512,
+   "gx": 1122,
+   "gy": 666,
+   "r": 120,
+   "color": "#ffb26a",
+   "intensity": 0.8,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 263,
+   "y": 439,
+   "gx": 262,
+   "gy": 506,
+   "r": 120,
+   "color": "#ffb26a",
+   "intensity": 0.8,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 483,
+   "y": 438,
+   "gx": 482,
+   "gy": 504,
+   "r": 120,
+   "color": "#ffb26a",
+   "intensity": 0.8,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 374,
+   "y": 336,
+   "gx": 372,
+   "gy": 501,
+   "r": 120,
+   "color": "#ffb26a",
+   "intensity": 0.8,
+   "flicker": 0.05
+  }
+ ],
+ "water": [],
+ "mood": "gold",
+ "moodFixed": true,
+ "moods": {
+  "gold": {
+   "name": "",
+   "ambient": "#d6d0d4",
+   "lightGain": 0.75,
+   "lightRadius": 1,
+   "brighten": 0.55,
+   "glow": 0.6,
+   "heroLight": 0,
+   "skyTint": "#ffffff",
+   "moonGlow": 0,
+   "mist": 0.3,
+   "mistColor": "#cfc8d2",
+   "fireflies": 0,
+   "wisps": 0,
+   "motes": 0.5,
+   "rays": 0,
+   "grade": "#6f6a8a",
+   "gradeAlpha": 0.07,
+   "vignette": 0.38,
+   "vignetteColor": "#120e16",
+   "sparkle": "#fff0d0"
+  },
+  "shadow": {
+   "name": "",
+   "ambient": "#d6d0d4",
+   "lightGain": 0.75,
+   "lightRadius": 1,
+   "brighten": 0.55,
+   "glow": 0.6,
+   "heroLight": 0,
+   "skyTint": "#ffffff",
+   "moonGlow": 0,
+   "mist": 0.3,
+   "mistColor": "#cfc8d2",
+   "fireflies": 0,
+   "wisps": 0,
+   "motes": 0.5,
+   "rays": 0,
+   "grade": "#6f6a8a",
+   "gradeAlpha": 0.07,
+   "vignette": 0.38,
+   "vignetteColor": "#120e16",
+   "sparkle": "#fff0d0"
+  }
+ },
+ "bgm": "bgm02",
+ "hd": {
+  "S": 32,
+  "A": 0.75,
+  "B": 0.66,
+  "depth": 3,
+  "dof": 2,
+  "fogTop": 6.4,
+  "fogBottom": 2.0,
+  "raised": "raised.png",
+  "back": "#2a2630",
+  "noBar": true,
+  "behind": "behind.png",
+  "under": "under.png"
+ },
+ "hero": {
+  "sheet": "~/party/hero.png",
+  "spec": "~/party/hero.json",
+  "light": {
+   "r": 150,
+   "color": "#ffb76a",
+   "intensity": 0
+  }
+ },
+ "party": [
+  "~/party/sword",
+  "~/party/rogue",
+  "~/party/priest"
+ ],
+ "spawn": {
+  "x": 982,
+  "y": 1408,
+  "dir": "down"
+ },
+ "spawns": {
+  "start": {
+   "x": 982,
+   "y": 1408,
+   "dir": "down"
+  },
+  "gate": {
+   "x": 193,
+   "y": 965,
+   "dir": "right"
+  }
+ },
+ "exits": [
+  {
+   "rect": [
+    0,
+    856,
+    57,
+    220
+   ],
+   "to": "f01",
+   "spawn": "village"
+  }
+ ],
+ "triggers": [
+  {
+   "x": 1158,
+   "y": 837,
+   "r": 50,
+   "kind": "npc",
+   "id": "moku",
+   "title": "モクじい",
+   "prop": {
+    "src": "~/npc/moku.png",
+    "block": 13,
+    "shadow": 1
+   }
+  },
+  {
+   "x": 1042,
+   "y": 1372,
+   "r": 50,
+   "kind": "npc",
+   "id": "mother",
+   "title": "テトの母ちゃん",
+   "prop": {
+    "src": "~/npc/mother.png",
+    "block": 13,
+    "shadow": 1
+   }
+  },
+  {
+   "x": 1627,
+   "y": 1409,
+   "r": 50,
+   "kind": "npc",
+   "id": "yomo",
+   "title": "ヨモばあ",
+   "prop": {
+    "src": "~/npc/yomo.png",
+    "block": 13,
+    "shadow": 1
+   }
+  },
+  {
+   "x": 1133,
+   "y": 720,
+   "r": 50,
+   "kind": "npc",
+   "id": "dorgo",
+   "title": "ドルゴ",
+   "prop": {
+    "src": "~/npc/dorgo.png",
+    "block": 13,
+    "shadow": 1
+   }
+  },
+  {
+   "x": 1635,
+   "y": 1027,
+   "r": 50,
+   "kind": "npc",
+   "id": "hanna",
+   "title": "ハンナ",
+   "prop": {
+    "src": "~/npc/hanna.png",
+    "block": 13,
+    "shadow": 1
+   }
+  },
+  {
+   "x": 309,
+   "y": 1397,
+   "r": 50,
+   "kind": "npc",
+   "id": "oz",
+   "title": "村長のオズ",
+   "prop": {
+    "src": "~/npc/oz.png",
+    "block": 13,
+    "shadow": 1
+   }
+  },
+  {
+   "x": 432,
+   "y": 529,
+   "r": 50,
+   "kind": "npc",
+   "id": "sem",
+   "title": "老神官のセム",
+   "prop": {
+    "src": "~/npc/sem.png",
+    "block": 13,
+    "shadow": 1
+   }
+  },
+  {
+   "x": 1887,
+   "y": 782,
+   "r": 50,
+   "kind": "npc",
+   "id": "pico",
+   "title": "羊飼いのピコ",
+   "prop": {
+    "src": "~/npc/pico.png",
+    "block": 13,
+    "shadow": 1
+   }
+  },
+  {
+   "x": 956,
+   "y": 1003,
+   "r": 50,
+   "kind": "npc",
+   "id": "mil",
+   "title": "ミル",
+   "prop": {
+    "src": "~/npc/mil.png",
+    "block": 13,
+    "shadow": 1
+   }
+  },
+  {
+   "x": 207,
+   "y": 881,
+   "r": 50,
+   "kind": "npc",
+   "id": "bart",
+   "title": "行商人のバルト",
+   "prop": {
+    "src": "~/npc/bart.png",
+    "block": 13,
+    "shadow": 1
+   }
+  },
+  {
+   "x": 982,
+   "y": 1374,
+   "r": 46,
+   "title": "テトの家",
+   "kind": "inn",
+   "prompt": "休む"
+  },
+  {
+   "x": 1491,
+   "y": 1002,
+   "r": 46,
+   "title": "よろず屋",
+   "kind": "shop",
+   "shop": "goods",
+   "prompt": "店に入る"
+  },
+  {
+   "x": 1196,
+   "y": 684,
+   "r": 46,
+   "title": "鍛冶屋",
+   "kind": "shop",
+   "shop": "smith",
+   "prompt": "店に入る"
+  },
+  {
+   "x": 399,
+   "y": 1377,
+   "r": 46,
+   "title": "村長の家",
+   "text": [
+    "かぎがかかっている"
+   ]
+  },
+  {
+   "x": 1498,
+   "y": 1376,
+   "r": 46,
+   "title": "薬師の家",
+   "text": [
+    "戸口から、薬草を煮る匂いがする。"
+   ]
+  },
+  {
+   "x": 372,
+   "y": 526,
+   "r": 46,
+   "title": "小さな礼拝堂",
+   "text": [
+    "扉の向こうに、小さな灯がひとつ、\nともっている。"
+   ]
+  },
+  {
+   "x": 1019,
+   "y": 901,
+   "r": 46,
+   "title": "井戸",
+   "text": [
+    "深い井戸。のぞきこむと、\n弱い日の光が、底でゆれている。"
+   ]
+  },
+  {
+   "x": 1335,
+   "y": 508,
+   "r": 40,
+   "kind": "chest",
+   "id": "ch002",
+   "title": "宝箱",
+   "prompt": "あける",
+   "prop": {
+    "src": "~/prop/chest.png",
+    "fw": 48,
+    "fh": 48,
+    "foot": [
+     24,
+     40
+    ],
+    "block": 14,
+    "shadow": 0
+   }
+  },
+  {
+   "x": 311,
+   "y": 302,
+   "r": 36,
+   "kind": "spot",
+   "id": "ch001",
+   "title": "物かげ"
+  }
+ ],
+ "emitters": [
+  {
+   "kind": "motes",
+   "x": 669,
+   "y": 705,
+   "w": 700,
+   "h": 420,
+   "n": 26
+  },
+  {
+   "kind": "leaves",
+   "x": 654,
+   "y": 328,
+   "w": 420,
+   "h": 300,
+   "n": 6
+  },
+  {
+   "kind": "motes",
+   "x": 1452,
+   "y": 259,
+   "w": 520,
+   "h": 300,
+   "n": 12
+  },
+  {
+   "kind": "mist",
+   "x": 0,
+   "y": 0,
+   "w": 2048,
+   "h": 1792,
+   "n": 5
+  }
+ ],
+ "save": "any"
+}

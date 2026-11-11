@@ -101,7 +101,8 @@ class World:
     def mark(s, name, x, y, z, **kw): s.marks[name] = dict(x=x, y=y, z=z, **kw)
 
 
-def bake(w, out, W=1280, H=1600, S=32, A=0.75, B=0.66, SY0=1350, clearance=2.5, step=0.45, spawn=None):
+def bake(w, out, W=1280, H=1600, S=32, A=0.75, B=0.66, SY0=1350, clearance=2.5, step=0.45, spawn=None, also=()):
+    """also = further places (x, y) that count as reachable although no walk leads there from the spawn (a ledge entered from another map)"""
     import cv2
     from PIL import Image
     V, VP = w.V, VPU
@@ -190,6 +191,8 @@ def bake(w, out, W=1280, H=1600, S=32, A=0.75, B=0.66, SY0=1350, clearance=2.5, 
     from scipy import ndimage as ndi
     can = floor_k >= 0; core = ndi.binary_erosion(can, np.ones((3, 3), bool))          # the hero is not a point: one-voxel gaps do not count
     reach = np.zeros((NX, NY), bool); reach[si, sj] = True
+    for ax_, ay_ in also:
+        ai, aj = int((ax_ - w.X0) * VP), int((ay_ - w.Y0) * VP); assert floor_k[ai, aj] >= 0, 'extra start is not on walkable ground'; reach[ai, aj] = True
     fzz = np.nan_to_num(fz, nan=-1e9)
     while True:
         add = np.zeros_like(reach)

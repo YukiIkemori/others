@@ -112,6 +112,11 @@ let moodT = 0, moodFrom = 0, moodTo = 0, moodClock = 1, P = null, moodNames = ['
 let dlg = null, nearTrig = null;
 let T = 0, last = 0, fps = 60, frameMs = 0, slowT = 0, frames = 0;
 let lights = [], occ = [], waters = [], layers = {}, props = [];
+let BASE = '', mapUrl = '', loading = true, paused = false, stepAcc = 0, exitArmed = false;
+// A map's own files are named relative to the folder of its map.json; "~/name" means a file shared by all maps, beside the page.
+const res = p => !p ? p : /^(https?:|data:|blob:|\/)/.test(p) ? p : p.startsWith('~/') ? p.slice(2) : BASE + p;
+// The game on top of the field (rpg.js) may set window.RPG = { onMap(M), onStep(dist), onTrigger(t), onExit(e), onKey(e) }.
+const hook = (name, ...a) => { const R = window.RPG; return R && typeof R[name] === 'function' ? R[name](...a) : undefined; };
 const parts = { fire: [], wisp: [], leaf: [], mote: [], puff: [], hmote: [] };
 const spriteCache = new Map();
 
@@ -204,6 +209,7 @@ function layout() {
   const w = Math.floor(Math.min(iw, ih * 16 / 9)), h = Math.floor(w * 9 / 16);
   stage.style.width = w + 'px'; stage.style.height = h + 'px';
   stage.style.fontSize = Math.max(w / 100, 4.6) + 'px';
+  stage.style.setProperty('--u', (w / 1920) + 'px');          // 1 unit = 1 px on a 1920 wide screen (the game's own UI is sized in it)
   $('below').style.top = h + 'px';
   $('stick').style.fontSize = clamp(w / 100, 7, 11) + 'px';
   const dp = w * (window.devicePixelRatio || 1);
@@ -223,14 +229,36 @@ function norm(def, v) {
 }
 async function boot() {
   layout();
-  const raw = await loadJson(Q.get('map') || 'map.json');
+  mistTile = buildMistTile(); grainTile = buildGrain(); raysImg = buildRays();
+  setupInput();
+  window.__game = api;
+  await loadMap(Q.get('map') || (window.RPG && window.RPG.startMap) || 'map.json', { x: parseFloat(Q.get('x')), y: parseFloat(Q.get('y')), dir: Q.get('dir') });
+  setupUi();
+  last = performance.now();
+  requestAnimationFrame(frame);
+}
+// Loads a map and puts the party on it.  at = { x, y, dir } or { spawn: name } (a place listed under "spawns" in map.json) or nothing
+// (the map's own "spawn").  Called again for every change of map: everything that belongs to the old map is dropped first.
+async function loadMap(url, at) {
+  loading = true; at = at || {};
+  if (hdr && hdr.dispose) hdr.dispose(); hdr = null; cv.style.display = '';
+  mapUrl = url; BASE = url.slice(0, url.lastIndexOf('/') + 1);
+  A = {}; layers = {}; props = []; party.length = 0; trail = []; dlg = null; nearTrig = null; lastLift = 0; cam.lx = cam.ly = 0; stepAcc = 0; exitArmed = false;
+  walkData = hData = fData = null; for (const k in parts) parts[k].length = 0;
+  for (const d of dialogs()) d.classList.remove('on', 'done');
+  const raw = await loadJson(url);
   M = norm(DEFAULTS, raw);
-  if (raw.view > 1) { VK = raw.view; VW = 960 * VK; VH = 540 * VK; W = null; layout(); }
+  for (const k of ['image', 'walk', 'height', 'floor']) M[k] = res(M[k]);
+  M.hero.sheet = res(M.hero.sheet); M.hero.spec = res(M.hero.spec); M.party = (M.party || []).map(res);
+  for (const k in M.layers) if (M.layers[k]) M.layers[k] = typeof M.layers[k] === 'string' ? { src: res(M.layers[k]) } : Object.assign({}, M.layers[k], { src: res(M.layers[k].src) });
+  M.props = (M.props || []).map(q => Object.assign({}, q, { src: res(q.src) }));
+  if (M.hd) { M.hd = Object.assign({}, M.hd); for (const k of ['raised', 'under', 'behind']) if (M.hd[k]) M.hd[k] = res(M.hd[k]); }
+  if (raw.view > 1 && raw.view !== VK) { VK = raw.view; VW = 960 * VK; VH = 540 * VK; W = null; layout(); }
   M.moods = { gold: norm(MOOD_DEFAULTS.gold, raw.moods && raw.moods.gold), shadow: norm(MOOD_DEFAULTS.shadow, raw.moods && raw.moods.shadow) };
   for (const k in M.moods) for (const p in M.moods[k]) if (typeof M.moods[k][p] === 'string' && M.moods[k][p][0] === '#') M.moods[k][p] = hexRgb(M.moods[k][p]);
   const want = [loadImg(M.image), loadImg(M.hero.sheet), loadJson(M.hero.spec), M.walk ? loadImg(M.walk) : null, M.height ? loadImg(M.height).catch(e => (console.warn('height map missing, occlusion by height is off'), null)) : null];
   const lk = Object.keys(M.layers).filter(k => M.layers[k]);
-  for (const k of lk) { if (typeof M.layers[k] === 'string') M.layers[k] = { src: M.layers[k] }; want.push(loadImg(M.layers[k].src)); }
+  for (const k of lk) want.push(loadImg(M.layers[k].src));
   const N0 = want.length;
   const pr = (M.props || []).map(p => loadImg(p.src));
   const got = await Promise.all(want.concat(pr));
@@ -339,28 +367,25 @@ async function boot() {
   setupEmitters();
 
   // hero start
-  const qx = parseFloat(Q.get('x')), qy = parseFloat(Q.get('y'));
-  hero.x = isFinite(qx) ? qx : (M.spawn.x == null ? M.w / 2 : M.spawn.x);
-  hero.y = isFinite(qy) ? qy : (M.spawn.y == null ? M.h / 2 : M.spawn.y);
-  hero.dir = Math.max(0, DIRS.indexOf(Q.get('dir') || M.spawn.dir || 'down'));
+  const sp = at.spawn && M.spawns && M.spawns[at.spawn] ? M.spawns[at.spawn] : M.spawn;
+  hero.x = isFinite(at.x) ? at.x : (sp.x == null ? M.w / 2 : sp.x);
+  hero.y = isFinite(at.y) ? at.y : (sp.y == null ? M.h / 2 : sp.y);
+  hero.dir = Math.max(0, DIRS.indexOf(at.dir || sp.dir || 'down')); hero.t = 0; hero.moving = false;
   if (!free(hero.x, hero.y)) nearestFree();
   const m0 = Q.get('mood') || M.mood;
-  moodT = moodFrom = moodTo = m0 === 'shadow' ? 1 : 0;
-  camTarget(1e9);
-
-  mistTile = buildMistTile(); grainTile = buildGrain(); raysImg = buildRays();
+  moodT = moodFrom = moodTo = m0 === 'shadow' ? 1 : 0; moodClock = 1;
+  camTarget(1e9); seedTrail();
   if (M.hd && hData && Q.get('hd') !== '0') {
     try {
       const js = src => new Promise((res, rej) => { const e = document.createElement('script'); e.src = src; e.onload = res; e.onerror = () => rej(new Error('読み込めません: ' + src)); document.head.appendChild(e); });
       if (!window.THREE) await js(M.hd.three || 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.149.0/three.min.js');
-      if (!window.HD2D) await js('hd.js');
+      if (!window.HD2D) await js(M.hd.js || 'hd.js');
       hdr = await HD2D.create({ M, A, HS, stage, cv, hData, hW, hH, fData, walkData, VW, VH, lights, sky: layers.sky, lift, hides, hexRgb, Q, UI_ON });
     } catch (e) { console.warn('HD-2D 表示を使えないため、2D 表示で続けます', e); hdr = null; }
   }
-  setupUi();
-  window.__game = api;
-  last = performance.now();
-  requestAnimationFrame(frame);
+  P = moodParams();
+  hook('onMap', M);
+  loading = false; last = performance.now();
 }
 
 // ------------------------------------------------------------------ world queries
@@ -375,6 +400,7 @@ function walkable(x, y) {
   return walkData[Math.floor(y / walkK) * walkW + Math.floor(x / walkK)] === 1;
 }
 function free(x, y) {
+  for (const p of props) if (p.block && (x - p.x) * (x - p.x) + (y - p.y) * (y - p.y) * 1.6 < p.block * p.block) return false;
   const r = M.hero.radius, q = r * .6;
   return walkable(x, y) && walkable(x - r, y) && walkable(x + r, y) && walkable(x, y - q) && walkable(x, y + q) &&
     walkable(x - r * .7, y - q * .7) && walkable(x + r * .7, y - q * .7) && walkable(x - r * .7, y + q * .7) && walkable(x + r * .7, y + q * .7);
@@ -432,17 +458,22 @@ const toggleMood = () => setMood(moodTo > .5 ? 'gold' : 'shadow');
 // ------------------------------------------------------------------ input
 const KEYMAP = { ArrowLeft: 'l', a: 'l', A: 'l', ArrowRight: 'r', d: 'r', D: 'r', ArrowUp: 'u', w: 'u', W: 'u', ArrowDown: 'd', s: 'd', S: 'd', Shift: 'run' };
 function onKey(e, down) {
+  if (hook('onKey', e, down)) { e.preventDefault(); return; }
+  if (paused || loading) { const k0 = KEYMAP[e.key]; if (k0 && !down) keys.delete(k0); return; }
   const k = KEYMAP[e.key];
   if (k) { down ? keys.add(k) : keys.delete(k); e.preventDefault(); return; }
   if (!down || e.repeat) return;
   if (e.key === 'z' || e.key === 'Z' || e.key === 'Enter' || e.key === ' ') { interact(); e.preventDefault(); }
-  else if (e.key === 'm' || e.key === 'M') toggleMood();
+  else if ((e.key === 'm' || e.key === 'M') && !M.moodFixed) toggleMood();
+  else if (window.RPG && !DEBUG) return;                            // a game on top: no test keys
   else if (e.key === 'c' || e.key === 'C') showWalk = !showWalk;   // check view: where the hero cannot go
   else if (hdr) hdr.key(e.key);
 }
 function interact() {
+  if (loading) return;
   if (dlg) { advance(); return; }
-  if (nearTrig) openDialog(nearTrig);
+  if (paused) return;
+  if (nearTrig && !hook('onTrigger', nearTrig)) openDialog(nearTrig);
 }
 function setupInput() {
   addEventListener('keydown', e => onKey(e, true));
@@ -451,8 +482,10 @@ function setupInput() {
   const st = $('stick'), knob = st.firstElementChild;
   addEventListener('pointerdown', e => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
-    if (e.target.closest && e.target.closest('#moon, #prompt, .dialog')) return;
+    if (e.target.closest && e.target.closest('#moon, #prompt, .dialog, .rpg')) return;
+    if (loading) return;
     if (dlg) { advance(); return; }
+    if (paused) return;
     if (e.pointerType === 'mouse' && !DEBUG) { /* mouse drag also steers, handy on desktop without keys */ }
     if (DEBUG && e.pointerType === 'mouse') { const r = stage.getBoundingClientRect(); console.log('map', Math.round(cam.x + (e.clientX - r.left) / r.width * VW), Math.round(cam.y + (e.clientY - r.top) / r.height * VH)); }
     stick.on = true; stick.id = e.pointerId; stick.ox = e.clientX; stick.oy = e.clientY; stick.x = stick.y = 0;
@@ -473,9 +506,11 @@ function setupInput() {
   addEventListener('pointerup', up); addEventListener('pointercancel', up);
   addEventListener('contextmenu', e => e.preventDefault());
   let moonHold = 0, moonLong = false;                       // touch: hold the moon for a second = the check view (same as the C key)
-  $('moon').addEventListener('pointerdown', () => { moonLong = false; clearTimeout(moonHold); moonHold = setTimeout(() => { moonLong = true; showWalk = !showWalk; }, 800); });
-  for (const ev of ['pointerup', 'pointerleave', 'pointercancel']) $('moon').addEventListener(ev, () => clearTimeout(moonHold));
-  $('moon').addEventListener('click', e => { if (!moonLong) toggleMood(); moonLong = false; e.currentTarget.blur(); });
+  if ($('moon')) {
+    $('moon').addEventListener('pointerdown', () => { moonLong = false; clearTimeout(moonHold); moonHold = setTimeout(() => { moonLong = true; showWalk = !showWalk; }, 800); });
+    for (const ev of ['pointerup', 'pointerleave', 'pointercancel']) $('moon').addEventListener(ev, () => clearTimeout(moonHold));
+    $('moon').addEventListener('click', e => { if (!moonLong) toggleMood(); moonLong = false; e.currentTarget.blur(); });
+  }
   $('prompt').addEventListener('click', interact);
   for (const d of document.querySelectorAll('.dialog')) d.addEventListener('click', advance);
   addEventListener('resize', layout);
@@ -485,32 +520,40 @@ function setupInput() {
 let hintTimer = 0;
 const dialogs = () => [...document.querySelectorAll('.dialog')];
 function setupUi() {
-  $('titleJp').textContent = M.title; $('titleEn').textContent = M.titleEn || '';
   uiMood(moodTo);
   const touch = matchMedia('(pointer: coarse)').matches;
-  $('hint').innerHTML = touch ? 'ドラッグで移動（大きく倒すと走る）　　月をタップで刻を替える' : '<b>← ↑ ↓ →</b>移動<b>Shift</b>走る<b>Z</b>調べる<b>M</b>月を替える<b>C</b>当たり判定を表示';
-  $('tipB').innerHTML = '画面を<b>ドラッグ</b>して歩く<br><b>月</b>をタップすると刻が替わる<br><span>横向きにすると大きく遊べます</span>';
-  if (touch) $('promptKey').style.display = 'none';
-  setupInput();
+  if ($('hint') && !$('hint').dataset.keep) $('hint').innerHTML = touch ? 'ドラッグで移動（大きく倒すと走る）　　月をタップで刻を替える' : '<b>← ↑ ↓ →</b>移動<b>Shift</b>走る<b>Z</b>調べる<b>M</b>月を替える<b>C</b>当たり判定を表示';
+  if ($('tipB') && !$('tipB').dataset.keep) $('tipB').innerHTML = '画面を<b>ドラッグ</b>して歩く<br><b>月</b>をタップすると刻が替わる<br><span>横向きにすると大きく遊べます</span>';
+  if (touch && $('promptKey')) $('promptKey').style.display = 'none';
   $('loading').classList.add('off');
   if (!UI_ON) { $('fade').classList.add('off'); return; }
   setTimeout(() => $('fade').classList.add('off'), 120);
-  setTimeout(() => $('title').classList.add('on'), 700);
-  setTimeout(() => { $('title').classList.remove('on'); $('moon').classList.add('on'); $('hint').classList.add('on'); hintTimer = setTimeout(hideHint, 9000); }, 5200);
+  announce(700, 5200);
+  setTimeout(() => { if ($('moon') && !M.moodFixed) $('moon').classList.add('on'); if ($('hint')) { $('hint').classList.add('on'); hintTimer = setTimeout(hideHint, 9000); } }, 5200);
 }
-function hideHint() { if (hintTimer !== -1 && $('hint').classList.contains('on')) { $('hint').classList.remove('on'); clearTimeout(hintTimer); hintTimer = -1; } }
+let annT = [0, 0];
+function announce(t0, t1) {                 // the name of the place, shown for a moment on arriving
+  if (!UI_ON || !$('title')) return;
+  $('titleJp').textContent = M.title; $('titleEn').textContent = M.titleEn || '';
+  clearTimeout(annT[0]); clearTimeout(annT[1]); $('title').classList.remove('on');
+  annT[0] = setTimeout(() => $('title').classList.add('on'), t0); annT[1] = setTimeout(() => $('title').classList.remove('on'), t1);
+}
+function hideHint() { if ($('hint') && hintTimer !== -1 && $('hint').classList.contains('on')) { $('hint').classList.remove('on'); clearTimeout(hintTimer); hintTimer = -1; } }
 function uiMood(to) {
   const name = to > .5 ? M.moods.shadow.name : M.moods.gold.name;
-  $('moon').classList.toggle('shadow', to > .5);
-  $('moonName').textContent = name; $('titleSub').textContent = name;
+  if ($('moon')) { $('moon').classList.toggle('shadow', to > .5); $('moonName').textContent = name; }
+  if ($('titleSub')) $('titleSub').textContent = M.subtitle != null ? M.subtitle : name;
 }
 function openDialog(t) {
-  dlg = { t, page: 0, n: 0, clock: 0, pages: (t.pages || t.text || ['……']).map(String) };
-  for (const d of dialogs()) { d.querySelector('.who').textContent = t.title || ''; d.querySelector('.who').style.display = t.title ? '' : 'none'; d.classList.add('on'); }
+  const src = t.pages || t.text || ['……'];
+  dlg = { t, page: 0, n: 0, clock: 0, pages: src.map(q => typeof q === 'object' ? String(q.text) : String(q)), who: src.map(q => typeof q === 'object' && q.who != null ? q.who : (t.who != null ? t.who : t.title || '')) };
+  for (const d of dialogs()) d.classList.add('on');
   showPage(); hideHint();
 }
 function showPage() {
   dlg.n = 0; dlg.clock = 0;
+  const who = dlg.who[dlg.page];
+  for (const d of dialogs()) { d.querySelector('.who').textContent = who; d.querySelector('.who').style.display = who ? '' : 'none'; }
   for (const d of dialogs()) { d.classList.remove('done'); d.querySelector('.shown').textContent = ''; d.querySelector('.rest').textContent = dlg.pages[dlg.page]; }
 }
 function advance() {
@@ -520,8 +563,9 @@ function advance() {
   if (++dlg.page < dlg.pages.length) { showPage(); return; }
   const t = dlg.t; dlg = null;
   for (const d of dialogs()) d.classList.remove('on', 'done');
-  if (t.action === 'mood') toggleMood();
+  if (t.action === 'mood' && !M.moodFixed) toggleMood();
   t.seen = true;
+  if (t.done) t.done();
 }
 function paintDialog() {
   const s = dlg.pages[dlg.page];
@@ -542,7 +586,7 @@ function update(dt) {
 
   // hero
   let ix = 0, iy = 0;
-  if (!dlg) {
+  if (!dlg && !paused) {
     ix = (keys.has('r') ? 1 : 0) - (keys.has('l') ? 1 : 0); iy = (keys.has('d') ? 1 : 0) - (keys.has('u') ? 1 : 0);
     if (stick.on && Math.hypot(stick.x, stick.y) > .18) { ix = stick.x; iy = stick.y; }
   }
@@ -592,7 +636,7 @@ function update(dt) {
     const mvx = hero.x - ox, mvy = hero.y - oy;
     hero.moving = Math.hypot(mvx, mvy) > total * .15;
     hero.vx = mvx / dt; hero.vy = mvy / dt;
-    if (hero.moving) hideHint();
+    if (hero.moving) { hideHint(); stepAcc += Math.hypot(mvx, mvy); if (stepAcc >= 16) { const d = stepAcc; stepAcc = 0; hook('onStep', d); } }
   }
   hero.t = hero.moving ? hero.t + dt * (hero.running && !hero.runImg ? 1.55 : 1) : 0;
   followTrail(dt);
@@ -606,8 +650,16 @@ function update(dt) {
 
   // triggers
   nearTrig = null;
-  if (!dlg) { let best = 1e9; for (const t of M.triggers) { const d = Math.hypot(hero.x - t.x, (hero.y - t.y) * 1.25); if (d < (t.r || 44) && d < best) { best = d; nearTrig = t; } } }
+  if (!dlg) { let best = 1e9; for (const t of M.triggers) { if (t.hidden) continue; const d = Math.hypot(hero.x - t.x, (hero.y - t.y) * 1.25); if (d < (t.r || 44) && d < best) { best = d; nearTrig = t; } } }
   else { const s = dlg.pages[dlg.page]; if (dlg.n < s.length) { dlg.clock += dt * 30; const n = Math.min(s.length, Math.floor(dlg.clock)); if (n !== dlg.n) { dlg.n = n; paintDialog(); } } }
+
+  // ways out of the map: stepping into one tells the game on top (it changes the map).  An exit only works after the party has
+  // been outside every exit once, so arriving on one does not send them straight back.
+  if (M.exits && !paused && !dlg) {
+    let inside = null;
+    for (const e of M.exits) if (e.rect ? hero.x >= e.rect[0] && hero.x < e.rect[0] + e.rect[2] && hero.y >= e.rect[1] && hero.y < e.rect[1] + e.rect[3] : Math.hypot(hero.x - e.x, (hero.y - e.y) * 1.25) < (e.r || 40)) { inside = e; break; }
+    if (!inside) exitArmed = true; else if (exitArmed) { exitArmed = false; hook('onExit', inside); }
+  }
 
   // light flicker
   for (const l of lights) l.f = l.flicker ? 1 + l.flicker * ((vnoise(T * 6.5 + l.seed) - .5) * 1.3 + (vnoise(T * 21 + l.seed * 3.1) - .5) * .7) : 1;
@@ -719,9 +771,9 @@ function drawWorld(ox, oy) {
   const hx = Math.round(hero.x), hy = Math.round(hero.y), FW = HS.frame[0], FH = HS.frame[1];
   const items = [{ y: hero.y, actor: hero }];
   for (const f of party) items.push({ y: f.y - .01, actor: f });
-  for (const p of props) items.push({ y: p.y, prop: p });
+  for (const p of props) if (!p.hidden) items.push({ y: p.y, prop: p });
   const boxes = [[hx - HS.foot[0], hy - HS.foot[1], FW, FH, hero.y]];
-  for (const p of props) boxes.push([p.x - p.foot[0], p.y - p.foot[1], p.fw, p.fh, p.y]);
+  for (const p of props) if (!p.hidden) boxes.push([p.x - p.foot[0], p.y - p.foot[1], p.fw, p.fh, p.y]);
   for (const o of occ) {
     if (o.x > ox + W.width || o.x + o.w < ox || o.y > oy + W.height || o.y + o.h < oy) continue;
     for (const b of boxes) if (b[4] < o.base && b[0] < o.x + o.w && b[0] + b[2] > o.x && b[1] < o.y + o.h && b[1] + b[3] > o.y) { items.push({ y: o.base, occ: o }); break; }
@@ -730,8 +782,8 @@ function drawWorld(ox, oy) {
   for (const it of items) {
     if (it.occ) wx.drawImage(it.occ.img, it.occ.x - ox, it.occ.y - oy);
     else if (it.prop) {
-      const p = it.prop, f = p.frames > 1 ? Math.floor(T * 1000 / p.ms) % p.frames : 0;
-      drawActor(p.img, f * p.fw, 0, p.fw, p.fh, Math.round(p.x), Math.round(p.y), p.foot, p.shadow, p.shadowR || p.fw * .28, ox, oy);
+      const p = it.prop, f = p.frames > 1 ? Math.floor(T * 1000 / p.ms) % p.frames : (p.frame || 0);
+      drawActor(p.img, f * p.fw, (p.row || 0) * p.fh, p.fw, p.fh, Math.round(p.x), Math.round(p.y), p.foot, p.shadow, p.shadowR || p.fw * .28, ox, oy);
     } else { const a = it.actor, S = a.S, f = actorFrame(a); drawActor(f[0], f[1] * S.frame[0], f[2] * S.frame[1], S.frame[0], S.frame[1], Math.round(a.x), Math.round(a.y), S.foot, M.hero.shadow, M.hero.shadowR, ox, oy); }
   }
   // leaves in the air
@@ -839,7 +891,12 @@ function drawLayer(c, o, k) {
 
 // ------------------------------------------------------------------ draw: frame
 function render() {
-  if (hdr && hdr.on) { hdr.render({ cam, hero, actors: [hero, ...party].map(a => { const f = actorFrame(a); return { img: f[0], fc: f[1], fr: f[2], x: a.x, y: a.y, S: a.S }; }), la: lanternPos(), P, moodT, T, showWalk }); return; }
+  if (hdr && hdr.on) {
+    const acts = [hero, ...party].map(a => { const f = actorFrame(a); return { img: f[0], fc: f[1], fr: f[2], x: a.x, y: a.y, S: a.S }; });
+    for (const p of props) { if (p.hidden) continue; if (!p.S) p.S = { frame: [p.fw, p.fh], foot: p.foot, body: p.body || p.fh - 8 }; acts.push({ img: p.img, fc: p.frames > 1 ? Math.floor(T * 1000 / p.ms) % p.frames : (p.frame || 0), fr: p.row || 0, x: p.x, y: p.y, S: p.S, glow: p.glow, noShadow: !p.shadow }); }
+    hdr.render({ cam, hero, actors: acts, la: lanternPos(), P, moodT, T, showWalk });
+    hudDraw(); return;
+  }
   const snap = v => Math.round(v * SC) / SC;
   const cx = snap(cam.x), cy = snap(cam.y), ox = Math.floor(cx), oy = Math.floor(cy), fx = cx - ox, fy = cy - oy;
   const savedCam = [cam.x, cam.y]; cam.x = cx; cam.y = cy;
@@ -1003,14 +1060,16 @@ function render() {
   ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   if (DEBUG) debugDraw(X, Y); else if (showWalk) walkDraw(X, Y);
 
-  // ---- interaction prompt follows the hero
-  const pr = $('prompt');
-  if (nearTrig && !dlg && UI_ON) {
-    $('promptText').textContent = nearTrig.label || '調べる';
-    pr.style.left = ((hero.x - cx) / VW * 100) + '%'; pr.style.top = ((hero.y - cy - HS.body - 16) / VH * 100) + '%';
+  hudDraw();
+  cam.x = savedCam[0]; cam.y = savedCam[1];
+}
+function hudDraw() {                        // the interaction prompt follows the hero
+  const pr = $('prompt'); if (!pr) return;
+  if (nearTrig && !dlg && !paused && UI_ON) {
+    $('promptText').textContent = nearTrig.prompt || nearTrig.label || '調べる';
+    pr.style.left = ((hero.x - cam.x) / VW * 100) + '%'; pr.style.top = ((hero.y - cam.y - HS.body - 16) / VH * 100) + '%';
     pr.classList.add('on');
   } else pr.classList.remove('on');
-  cam.x = savedCam[0]; cam.y = savedCam[1];
 }
 function walkDraw(X, Y) {
   if (!walkData) return;
@@ -1054,6 +1113,7 @@ function frame(now) {
   const dt = Math.min(.05, Math.max(.001, (now - last) / 1000)); last = now;
   const t0 = performance.now();
   T += dt; frames++;
+  if (loading || paused === 'cover') { requestAnimationFrame(frame); return; }
   update(dt); render();
   const ms = performance.now() - t0;
   frameMs += (ms - frameMs) * .05; fps += (1 / dt - fps) * .05;
@@ -1070,7 +1130,16 @@ const api = {
   get dialog() { return dlg ? { title: dlg.t.title, page: dlg.page, pages: dlg.pages.length } : null; },
   get near() { return nearTrig ? nearTrig.title || true : null; },
   get map() { return M; },
-  ready: true, setMood, toggleMood, interact, walkable, free,
+  ready: true, setMood, toggleMood, interact, walkable, free, loadMap, announce,
+  get loading() { return loading; }, get mapUrl() { return mapUrl; }, get T() { return T; },
+  get paused() { return paused; }, set paused(v) { paused = v; if (v) keys.clear(); },   // true: the party stands still; 'cover': the field is not drawn either
+  // a thing or a person on the map: { img (Image or canvas), x, y, fw, fh, foot, frames, ms, frame, row, shadow, block (radius), hidden, glow }
+  addProp(p) { const q = Object.assign({ fw: p.img.width, fh: p.img.height, frames: 1, ms: 200, shadow: 0 }, p); q.foot = q.foot || [q.fw / 2, q.fh - 4]; props.push(q); return q; },
+  removeProp(q) { const i = props.indexOf(q); if (i >= 0) props.splice(i, 1); },
+  get props() { return props; },
+  say(pages, who, done) { openDialog({ pages, who: who || '', done }); },
+  face(dir) { hero.dir = Math.max(0, DIRS.indexOf(dir)); },
+  get actors() { return [hero, ...party]; }, lift,
   teleport(x, y, dir) { hero.x = x; hero.y = y; if (dir) hero.dir = Math.max(0, DIRS.indexOf(dir)); seedTrail(); camTarget(1); },
   get party() { return party; }, keys,
   step(n = 1, dt = 1 / 60) { for (let i = 0; i < n; i++) { T += dt; update(dt); } render(); },

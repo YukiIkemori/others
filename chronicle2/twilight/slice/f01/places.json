@@ -1,0 +1,287 @@
+{
+ "w": 2176,
+ "h": 1664,
+ "S": 32,
+ "A": 0.75,
+ "B": 0.66,
+ "sy": 1.0056714218772,
+ "spawn": [
+  129,
+  805
+ ],
+ "marks": {
+  "exit_village": {
+   "p": [
+    1381,
+    744
+   ],
+   "air": [
+    1381,
+    744
+   ],
+   "on_ground": true,
+   "title": "始まりの村へ",
+   "walkable": true
+  },
+  "spawn_village": {
+   "p": [
+    1253,
+    743
+   ],
+   "air": [
+    1253,
+    743
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "exit_west": {
+   "p": [
+    33,
+    805
+   ],
+   "air": [
+    33,
+    805
+   ],
+   "on_ground": true,
+   "title": "草の高原へ",
+   "walkable": true
+  },
+  "spawn_west": {
+   "p": [
+    129,
+    805
+   ],
+   "air": [
+    129,
+    805
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "exit_abbey": {
+   "p": [
+    1722,
+    19
+   ],
+   "air": [
+    1722,
+    19
+   ],
+   "on_ground": true,
+   "title": "崖の修道院へ",
+   "walkable": true
+  },
+  "spawn_abbey": {
+   "p": [
+    1722,
+    59
+   ],
+   "air": [
+    1722,
+    59
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "spawn_ledge": {
+   "p": [
+    1240,
+    467
+   ],
+   "air": [
+    1240,
+    467
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "chest_ledge": {
+   "p": [
+    1138,
+    472
+   ],
+   "air": [
+    1138,
+    472
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "hide_wall": {
+   "p": [
+    289,
+    529
+   ],
+   "air": [
+    289,
+    529
+   ],
+   "on_ground": true,
+   "title": "崩れた石垣の裏",
+   "walkable": true
+  },
+  "cedar": {
+   "p": [
+    1910,
+    1444
+   ],
+   "air": [
+    1910,
+    1444
+   ],
+   "on_ground": true,
+   "title": "一本杉の根もと",
+   "walkable": true
+  },
+  "sign": {
+   "p": [
+    807,
+    749
+   ],
+   "air": [
+    807,
+    749
+   ],
+   "on_ground": true,
+   "title": "道しるべ",
+   "walkable": true
+  },
+  "shrine": {
+   "p": [
+    599,
+    760
+   ],
+   "air": [
+    599,
+    760
+   ],
+   "on_ground": true,
+   "title": "道ばたのほこら",
+   "walkable": true
+  },
+  "win0": {
+   "p": [
+    1578,
+    822
+   ],
+   "air": [
+    1578,
+    822
+   ],
+   "on_ground": false,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": false
+  },
+  "win1": {
+   "p": [
+    1944,
+    810
+   ],
+   "air": [
+    1944,
+    810
+   ],
+   "on_ground": false,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": false
+  },
+  "win2": {
+   "p": [
+    1611,
+    582
+   ],
+   "air": [
+    1611,
+    582
+   ],
+   "on_ground": false,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": false
+  },
+  "win3": {
+   "p": [
+    1978,
+    552
+   ],
+   "air": [
+    1978,
+    552
+   ],
+   "on_ground": false,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": false
+  },
+  "fx_cedar": {
+   "p": [
+    1929,
+    1386
+   ],
+   "air": [
+    1929,
+    1386
+   ],
+   "on_ground": false,
+   "walkable": false
+  },
+  "fx_road": {
+   "p": [
+    642,
+    808
+   ],
+   "air": [
+    642,
+    808
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "fx_shelf": {
+   "p": [
+    1285,
+    330
+   ],
+   "air": [
+    1285,
+    330
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "fx_fields": {
+   "p": [
+    386,
+    1311
+   ],
+   "air": [
+    386,
+    1311
+   ],
+   "on_ground": false,
+   "walkable": false
+  }
+ },
+ "lights": [],
+ "far": [
+  "behind",
+  "under"
+ ],
+ "sky": false
+}

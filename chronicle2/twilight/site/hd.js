@@ -428,7 +428,7 @@
     // card is 1/B taller in the world.  Each gets a pale "ghost" where scenery hides it, and a small contact shadow.
     const texOf = new Map();
     const tex = img => { let t = texOf.get(img); if (!t) { t = new T3.Texture(img); t.magFilter = t.minFilter = T3.NearestFilter; t.generateMipmaps = false; t.flipY = false; t.needsUpdate = true; texOf.set(img, t); } return t; };
-    const sg = new T3.PlaneGeometry(1.15 / K, .46 / K), cards = [];
+    const sg = new T3.PlaneGeometry(1.15 / K, .46 / K), pools = new Map();     // cards are kept per sprite size: the party, villagers, chests and crystals differ
     function card(Sp) {
       const FW = Sp.frame[0], FH = Sp.frame[1], foot = Sp.foot;
       const hg = new T3.PlaneGeometry(FW / S, FH * KB); hg.rotateX(Math.PI / 2); hg.translate((FW / 2 - foot[0]) / S, 0, (foot[1] - FH / 2) * KB);
@@ -489,6 +489,7 @@
     const ortho = new T3.OrthographicCamera(-halfW, halfW, halfH, -halfH, 1, 400), persp = new T3.PerspectiveCamera(20, 16 / 9, 1, 400);
     const tmp = new T3.Vector3(), tgt = new T3.Vector3(), v3 = c => new T3.Vector3(c[0] / 255, c[1] / 255, c[2] / 255);
     let camLift = -1, tLast = 0, pxLast = 0, pyLast = 0;
+    const bk = cfg.back ? env.hexRgb(cfg.back) : null;         // what lies beyond the picture (default: the night sky of the first maps)
 
     function render(st) {
       if (auto) { const now = performance.now(), dt = now - tPrev; tPrev = now; if (dt < 500) { ema += (dt - ema) * .08; if (++nSlow > 50 && ema > 36 && scale > .5) { scale -= .25; nSlow = 0; ema = 16; } } }
@@ -523,21 +524,25 @@
       U.uFog.value.set(cfg.fogTop == null ? 11.3 : cfg.fogTop, cfg.fogBottom == null ? 3.5 : cfg.fogBottom); U.uShowWalk.value = st.showWalk ? 1 : 0;
       // hero
       const acts = st.actors || [];
-      while (cards.length < acts.length) cards.push(card(acts[cards.length].S));
-      cards.forEach((c, n) => {
-        const a = acts[n]; c.body.visible = c.sh.visible = !!a; if (!a) { c.gh.visible = false; return; }
+      for (const pl of pools.values()) pl.n = 0;
+      for (const a of acts) {
+        const key = a.S.frame[0] + 'x' + a.S.frame[1] + ':' + a.S.foot[0] + ',' + a.S.foot[1];
+        let pl = pools.get(key); if (!pl) pools.set(key, pl = { n: 0, list: [] });
+        const c = pl.list[pl.n] || (pl.list[pl.n] = card(a.S)); pl.n++;
+        c.body.visible = true; c.sh.visible = !a.noShadow;
         const Sp = a.S, FW = Sp.frame[0], FH = Sp.frame[1], lfa = env.lift(a.x, a.y), p = world(a.x - .5, a.y - .5, lfa), t = tex(a.img);
         for (const m of [c.body, c.gh]) { m.position.set(p.x, p.y - .09, p.z); m.material.uniforms.tHero.value = t; m.material.uniforms.uFrame.value.set(a.fc * FW / a.img.width, a.fr * FH / a.img.height, FW / a.img.width, FH / a.img.height); }
         let hid = 0, tot = 0;                                 // how much of the body is behind scenery (same rule as the 2D engine)
         for (let j = 6; j < Sp.body; j += 10) for (let i = -10; i <= 10; i += 5) { tot++; if (env.hides(a.x + i, a.y - j, a.y + lfa)) hid++; }
         c.ghost += (clamp((hid / tot - .3) / .3, 0, 1) * .36 - c.ghost) * .25; c.gh.material.uniforms.uGhost.value = Math.max(c.ghost, .001); c.gh.visible = c.ghost > .01;
         c.sh.position.set(p.x, p.y, p.z + .03); c.sh.material.uniforms.uA.value = M.hero.shadow / .34;
-      });
+      }
+      for (const pl of pools.values()) for (let n = pl.n; n < pl.list.length; n++) { const c = pl.list[n]; c.body.visible = c.sh.visible = c.gh.visible = false; }
       PU.uT.value = st.T; PU.uPx.value = ch / 540 * 2.2; PU.uI.value = clamp(P.fireflies, 0, 1.2); flies.visible = P.fireflies > 0;
       // sky
       if (sky) { const maxY = Math.max(0, M.h - VH); let x = sky.x - cam.x * sky.px, y = sky.y - cam.y * sky.py; if (sky.anchorY === 'bottom') y += VH - sky.img.height * sky.scale + maxY * sky.py;
         U.uRect.value.set(x, y, sky.img.width * sky.scale, sky.img.height * sky.scale); }
-      const t = st.moodT; U.uBack.value.set((26 + (8 - 26) * t) / 255, (20 + (8 - 20) * t) / 255, (52 + (26 - 52) * t) / 255);
+      const t = st.moodT; if (bk) U.uBack.value.set(bk[0] / 255, bk[1] / 255, bk[2] / 255); else U.uBack.value.set((26 + (8 - 26) * t) / 255, (20 + (8 - 20) * t) / 255, (52 + (26 - 52) * t) / 255);
       const sk = P.skyTint; U.uTint.value.set(sk[0] / 255, sk[1] / 255, sk[2] / 255);
       // scene
       R.setRenderTarget(rtScene); R.setClearColor(0x000000, 1); R.clear(true, true, false);
@@ -562,12 +567,20 @@
     const btn = (label, fn) => { const b = document.createElement('button'); b.type = 'button'; b.style.cssText = 'font:inherit;color:#f3e7d0;background:rgba(14,10,34,.62);border:1px solid rgba(226,196,138,.55);border-radius:.4em;padding:.35em .7em;cursor:pointer'; b.onclick = e => { fn(); paint(); e.currentTarget.blur(); }; b.onpointerdown = e => e.stopPropagation(); bar.appendChild(b); b._l = label; return b; };
     const bH = btn(() => 'HD-2D ' + (state.on ? '入' : '切'), () => api.toggle()), bD = btn(() => '立体感 ' + DN[state.depth], () => { state.depth = (state.depth + 1) % DEPTHS.length; }), bB = btn(() => 'ぼかし ' + BN[state.dof], () => { state.dof = (state.dof + 1) % DOFS.length; });
     function paint() { for (const b of [bH, bD, bB]) b.textContent = b._l(); bD.style.display = bB.style.display = state.on ? '' : 'none'; }
-    if (env.UI_ON) stage.appendChild(bar);
+    if (env.UI_ON && !cfg.noBar) stage.appendChild(bar);
     const api = {
       render, state, info: { nTri, nBack, get scale() { return scale; } },
       get on() { return state.on; },
       toggle() { state.on = !state.on; canvas.style.display = state.on ? 'block' : 'none'; env.cv.style.display = state.on ? 'none' : ''; paint(); },
       key(k) { if (k === 'p' || k === 'P') { state.depth = (state.depth + 1) % DEPTHS.length; paint(); return true; } if (k === 'b' || k === 'B') { state.dof = (state.dof + 1) % DOFS.length; paint(); return true; } if (k === 'h' || k === 'H') { api.toggle(); return true; } return false; },
+      // a change of map: everything this view made is given back
+      dispose() {
+        scene.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.material) o.material.dispose(); });
+        for (const t of [rtScene, rtDof, rtB1, rtB2]) if (t) t.dispose();
+        for (const t of [tMap, tBack, tMid, tWalk, tSky, ...texOf.values()]) if (t) t.dispose();
+        R.dispose(); try { const x = gl.getExtension('WEBGL_lose_context'); if (x) x.loseContext(); } catch (e) {}
+        canvas.remove(); bar.remove(); env.cv.style.display = '';
+      },
       canvas, dbg: { hh, hb, ring, vd, bh, un, hData, mid: MID, camPos: U.uCamPos.value, dir },
     };
     env.cv.style.display = 'none'; paint();

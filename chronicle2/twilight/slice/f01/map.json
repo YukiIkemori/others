@@ -1,0 +1,306 @@
+{
+ "title": "麦の丘",
+ "titleEn": "The Wheat Hills",
+ "subtitle": "",
+ "w": 2176,
+ "h": 1664,
+ "image": "map.webp",
+ "walk": "walk.png",
+ "height": "height.png",
+ "floor": "floor.png",
+ "heightBias": 3,
+ "occluders": [],
+ "lights": [
+  {
+   "kind": "window",
+   "x": 1578,
+   "y": 822,
+   "gx": 1578,
+   "gy": 822,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1944,
+   "y": 810,
+   "gx": 1944,
+   "gy": 810,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1611,
+   "y": 582,
+   "gx": 1611,
+   "gy": 582,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1978,
+   "y": 552,
+   "gx": 1978,
+   "gy": 552,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  }
+ ],
+ "water": [],
+ "mood": "gold",
+ "moodFixed": true,
+ "moods": {
+  "gold": {
+   "name": "",
+   "ambient": "#e9e2de",
+   "lightGain": 0.75,
+   "lightRadius": 1,
+   "brighten": 0.7,
+   "glow": 0.6,
+   "heroLight": 0,
+   "skyTint": "#ffffff",
+   "moonGlow": 0,
+   "mist": 0.3,
+   "mistColor": "#cfc8d2",
+   "fireflies": 0,
+   "wisps": 0,
+   "motes": 0.5,
+   "rays": 0,
+   "grade": "#6f6a8a",
+   "gradeAlpha": 0.04,
+   "vignette": 0.34,
+   "vignetteColor": "#120e16",
+   "sparkle": "#fff0d0"
+  },
+  "shadow": {
+   "name": "",
+   "ambient": "#e9e2de",
+   "lightGain": 0.75,
+   "lightRadius": 1,
+   "brighten": 0.7,
+   "glow": 0.6,
+   "heroLight": 0,
+   "skyTint": "#ffffff",
+   "moonGlow": 0,
+   "mist": 0.3,
+   "mistColor": "#cfc8d2",
+   "fireflies": 0,
+   "wisps": 0,
+   "motes": 0.5,
+   "rays": 0,
+   "grade": "#6f6a8a",
+   "gradeAlpha": 0.04,
+   "vignette": 0.34,
+   "vignetteColor": "#120e16",
+   "sparkle": "#fff0d0"
+  }
+ },
+ "bgm": "bgm10",
+ "hd": {
+  "S": 32,
+  "A": 0.75,
+  "B": 0.66,
+  "depth": 3,
+  "dof": 2,
+  "fogTop": 5.2,
+  "fogBottom": 2.2,
+  "raised": "raised.png",
+  "back": "#2a2630",
+  "noBar": true,
+  "behind": "behind.png",
+  "under": "under.png"
+ },
+ "hero": {
+  "sheet": "~/party/hero.png",
+  "spec": "~/party/hero.json",
+  "light": {
+   "r": 150,
+   "color": "#ffb76a",
+   "intensity": 0
+  }
+ },
+ "party": [
+  "~/party/sword",
+  "~/party/rogue",
+  "~/party/priest"
+ ],
+ "spawn": {
+  "x": 1253,
+  "y": 743,
+  "dir": "left"
+ },
+ "spawns": {
+  "village": {
+   "x": 1253,
+   "y": 743,
+   "dir": "left"
+  },
+  "abbey": {
+   "x": 1722,
+   "y": 59,
+   "dir": "down"
+  },
+  "ledge": {
+   "x": 1240,
+   "y": 467,
+   "dir": "left"
+  },
+  "west": {
+   "x": 129,
+   "y": 805,
+   "dir": "right"
+  }
+ },
+ "exits": [
+  {
+   "x": 1381,
+   "y": 744,
+   "r": 46,
+   "to": "village",
+   "spawn": "gate"
+  },
+  {
+   "rect": [
+    1652,
+    0,
+    140,
+    31
+   ],
+   "to": "abbey",
+   "spawn": "gate"
+  },
+  {
+   "rect": [
+    0,
+    685,
+    57,
+    240
+   ],
+   "closed": [
+    "この先は、草の高原。\nここから先は、次の一区切りで作ります。"
+   ]
+  }
+ ],
+ "triggers": [
+  {
+   "x": 807,
+   "y": 749,
+   "r": 40,
+   "title": "道しるべ",
+   "text": [
+    "「東　始まりの村」\n「北　崖の修道院」「西　王都」"
+   ]
+  },
+  {
+   "x": 599,
+   "y": 760,
+   "r": 40,
+   "title": "道ばたのほこら",
+   "text": [
+    "旅の無事をいのる、小さなほこら。\nだれかが、麦の穂をそなえている。"
+   ]
+  },
+  {
+   "x": 1910,
+   "y": 1444,
+   "r": 46,
+   "title": "一本杉の根もと",
+   "kind": "dig",
+   "id": "cedar",
+   "prompt": "ほる"
+  },
+  {
+   "x": 289,
+   "y": 529,
+   "r": 38,
+   "kind": "spot",
+   "id": "ch014",
+   "title": "物かげ"
+  },
+  {
+   "x": 1138,
+   "y": 472,
+   "r": 40,
+   "kind": "chest",
+   "id": "ch015",
+   "title": "宝箱",
+   "prompt": "あける",
+   "prop": {
+    "src": "~/prop/chest.png",
+    "fw": 48,
+    "fh": 48,
+    "foot": [
+     24,
+     40
+    ],
+    "block": 14,
+    "shadow": 0
+   }
+  },
+  {
+   "x": 1240,
+   "y": 513,
+   "r": 34,
+   "kind": "jump",
+   "title": "台のふち",
+   "prompt": "飛び降りる",
+   "to": [
+    1240,
+    637
+   ]
+  }
+ ],
+ "emitters": [
+  {
+   "kind": "motes",
+   "x": 36,
+   "y": 1061,
+   "w": 700,
+   "h": 500,
+   "n": 18
+  },
+  {
+   "kind": "motes",
+   "x": 292,
+   "y": 658,
+   "w": 700,
+   "h": 300,
+   "n": 14
+  },
+  {
+   "kind": "leaves",
+   "x": 1719,
+   "y": 1176,
+   "w": 420,
+   "h": 420,
+   "n": 8
+  },
+  {
+   "kind": "mist",
+   "x": 0,
+   "y": 0,
+   "w": 2176,
+   "h": 1664,
+   "n": 6
+  }
+ ],
+ "encounter": {
+  "table": "f01",
+  "near": [
+   1381,
+   744,
+   620
+  ]
+ },
+ "save": "any"
+}

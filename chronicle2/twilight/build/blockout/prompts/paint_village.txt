@@ -1,0 +1,28 @@
+Image 1 is a rough BLOCKOUT of a town map for a 2D RPG, rendered from simple 3D blocks with flat placeholder colours: a small farming village on a hilltop. Thatched cottages stand around a well plaza; a stone chapel stands on a raised terrace in the upper left; a sheep pasture lies on a raised terrace in the upper right; a rock face rises behind the village; terraced wheat fields fall away at the bottom. Image 2 is a STYLE REFERENCE: a finished town picture of this same game. Copy its pixel-art craft, its density of small detail and the size of its details. Do not copy its buildings or its layout.
+
+TASK: repaint image 1 as finished background art in the style of image 2: premium high-resolution pixel art in JRPG 3/4 overhead view (HD-2D game background), crisp deliberate pixel clusters, dark plum-brown outlines (never pure black), rich hue-shifted shading, dense hand-pixelled detail on every thatch bundle, timber beam, stone, plank, grass tuft and leaf. 
+
+LIGHT AND COLOUR: this world has one weak pale sun and is always dim, like a heavy overcast late afternoon that never ends. It is not night and there is no moon. Colours are muted, deep and earthy: dull wheat-gold thatch and fields, moss and olive greens, grey-brown stone, weathered dark timber, cream plaster gone grey. No bright saturated colours, no candy colours. A faint cool violet-grey haze lies in the shadows; a weak warm light comes from the upper left. The only strong warm light is the amber glow in the windows of the houses, which spills a little onto the ground and walls beside them. There are NO street lamps and no lanterns outdoors.
+
+What the placeholder colours mean:
+- green = grass: short, mossy, with clover, small wild flowers, tufts and worn bare patches (flat)
+- tan = packed earth lanes and the plaza: dry dirt with cart ruts, pebbles, a few flat stones and grass creeping in at the edges (flat, clear, empty)
+- pale grey flat areas in front of the chapel and the small strip at each house door = flagstones (flat)
+- striped pale-grey ramps = stone stairs, one tread per stripe, with low side walls
+- mid grey = stone: the long low dry-stone wall around the village, the retaining walls of the two terraces, the stone base of each house, chimneys, the round well, the two tall gate posts at the left edge, the smithy's big forge chimney and its flat-roofed stone store on its right side (its flat roof is a walkable terrace of stone slabs)
+- cream = plastered timber-framed house walls with dark beams; dark brown posts and beams = timber
+- ochre-brown with fine stripes, and the ochre pyramids/prisms on houses = thick thatched roofs with a neat ridge, moss and patches
+- blue-grey roof = the chapel's slate roof with a small bell gable on top
+- orange rectangles = lit windows glowing amber (with shutters and wooden frames); brown arched shapes on walls = wooden doors
+- dark brown-grey striped mass at the top = a natural rock face with ledges, cracks, roots, ivy and tufts; dark green cones on top of it = fir trees
+- green rounded masses on brown trunks = old broadleaf trees with full crowns; small green domes = bushes and hedges; low green rows on brown soil = vegetable and herb beds
+- yellow cones = haystacks; flat yellow bands at the bottom = terraces of ripe wheat with low stone walls between them and a scarecrow
+- white lumps with a black head = sheep; thin brown rails = wooden fences; brown cylinders = barrels; brown boxes = crates, benches, a hay cart, a notice board, bee hives, stacked firewood; the red slab on posts = the cloth awning of the shop's market stall; dark blocks in front of the smithy = anvil, trough and coal
+
+THE GEOMETRY IS LOCKED. Image 1 is the game's collision map, so:
+- Every building, roof, wall, terrace, staircase, tree trunk and crown, fence, barrel, crate, haystack, the well and every lane keeps exactly its position, size, outline and footprint. Do not move, resize, rotate, add or remove any building, wall, tree or large object. Do not change the camera or the perspective. Doors and windows stay where they are and keep their size (a door is a little taller than a person).
+- THE LANES AND THE PLAZA STAY WIDE, FLAT AND EMPTY: nothing may stand in the tan areas. Open grass stays open flat grass.
+- Add richness in the EDGES instead, with small low things that touch a wall, a fence or a house front: flower boxes under windows, potted herbs, buckets, baskets, sacks, tools leaning on walls, a broom, stacked firewood, ivy and climbing roses on walls, moss and little flowers on roofs and stones, hanging laundry, a cat-sized detail here and there, cart ruts, fallen straw, puddles, stepping stones in the grass. Give every house its own character (different timber patterns, shutters, patched thatch).
+- Paint the picture to every edge; there is no sky in this picture.
+
+No characters, no people, no text, no readable signs, no UI, no frame.
