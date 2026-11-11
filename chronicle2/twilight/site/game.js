@@ -1035,7 +1035,9 @@ function debugDraw(X, Y) {
 }
 
 // ------------------------------------------------------------------ loop
+const REC = Q.get('rec') === '1';         // recording a video: the clock only moves through __game.sim(), one picture per __game.step()
 function frame(now) {
+  if (REC) { requestAnimationFrame(frame); return; }
   const dt = Math.min(.05, Math.max(.001, (now - last) / 1000)); last = now;
   const t0 = performance.now();
   T += dt; frames++;
@@ -1059,6 +1061,7 @@ const api = {
   teleport(x, y, dir) { hero.x = x; hero.y = y; if (dir) hero.dir = Math.max(0, DIRS.indexOf(dir)); seedTrail(); camTarget(1); },
   get party() { return party; }, keys,
   step(n = 1, dt = 1 / 60) { for (let i = 0; i < n; i++) { T += dt; update(dt); } render(); },
+  sim(n = 1, dt = 1 / 60) { for (let i = 0; i < n; i++) { T += dt; update(dt); } },
 };
 
 boot().catch(e => { console.error(e); $('err').textContent = '読み込みに失敗しました\n' + (e && e.message || e); $('loading').classList.add('off'); });
