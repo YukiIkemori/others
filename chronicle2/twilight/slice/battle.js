@@ -4,6 +4,9 @@
 window.BATTLE = (function () {
   'use strict';
   const $ = id => document.getElementById(id), TAU = Math.PI * 2, W = 960, H = 540;
+  // The stage is laid out on 960x540, but the picture shows a little more around it (the view is pulled back like the field's):
+  // the canvas is CW x CH dots and the stage sits in it at (OX, OY), with most of the extra room above and at the sides.
+  const PULL = 1.2, CW = W * PULL, CH = H * PULL, OX = (CW - W) / 2, OY = Math.round((CH - H) * .7);
   const lerp = (a, b, k) => a + (b - a) * k, eio = k => k * k * (3 - 2 * k), eout = k => 1 - (1 - k) * (1 - k);
   const C = { slash: '#D8D6CC', cream: '#F1E6CC', fire: ['#C9783C', '#9C3B2A', '#E8C27A'], water: ['#3F7C86', '#CFE0DC'], earth: ['#A88752', '#7A7468'], wind: ['#A9B8A6', '#E6EAE2'],
               light: ['#F0DFA8', '#FFF6DC'], holy: ['#D9C27A', '#F3EEDD'], steal: '#D9C98A', dust: '#8c8273', heal: '#a9c58a', bad: '#d99a80' };
@@ -81,14 +84,14 @@ window.BATTLE = (function () {
   function draw() {
     const c = B.cx; c.setTransform(1, 0, 0, 1, 0, 0); c.imageSmoothingEnabled = false;
     const sh = B.shake > 0 ? [Math.round(rnd(-1, 1) * B.shake), Math.round(rnd(-1, 1) * B.shake)] : [0, 0];
-    c.drawImage(B.bg, sh[0] - 4, sh[1] - 4, W + 8, H + 8);
-    c.fillStyle = 'rgba(18,14,22,.16)'; c.fillRect(0, 0, W, H);                                   // the weak sun: a little dimmer than the painting
-    c.translate(sh[0], sh[1]);
+    c.drawImage(B.bg, sh[0] - 4, sh[1] - 4, CW + 8, CH + 8);
+    c.fillStyle = 'rgba(18,14,22,.16)'; c.fillRect(0, 0, CW, CH);                                   // the weak sun: a little dimmer than the painting
+    c.translate(sh[0] + OX, sh[1] + OY);
     for (const a of B.all.filter(a => !a.gone).sort((a, b) => a.y - b.y)) sprite(c, a);
     c.setTransform(1, 0, 0, 1, 0, 0);
-    if (B.dark > 0) { c.fillStyle = `rgba(10,8,12,${B.dark})`; c.fillRect(0, 0, W, H); }
+    if (B.dark > 0) { c.fillStyle = `rgba(10,8,12,${B.dark})`; c.fillRect(0, 0, CW, CH); }
     // effects, on the smooth canvas (same coordinates)
-    const f = B.fx; f.setTransform(2, 0, 0, 2, 0, 0); f.clearRect(0, 0, W, H);
+    const f = B.fx; f.setTransform(1, 0, 0, 1, 0, 0); f.clearRect(0, 0, CW * 2, CH * 2); f.setTransform(2, 0, 0, 2, OX * 2, OY * 2);
     f.globalCompositeOperation = 'lighter';
     for (const l of B.lights) {
       const i = (l.t < .05 ? l.t / .05 : (1 - (l.t - .05) / (l.d - .05)) ** 2) * l.peak; if (i <= 0) continue;
@@ -392,7 +395,7 @@ window.BATTLE = (function () {
     for (const m of B.ens) {
       if (!m.el) { m.el = E.el('div', 'etag', '<span class="wk"></span><span class="nm"></span><span class="hpb"><i></i></span>'); B.ui.appendChild(m.el); }
       if (m.gone) { m.el.remove(); continue; }
-      m.el.style.left = (m.x / W * 100) + '%'; m.el.style.top = ((m.y + 8) / H * 100) + '%';
+      m.el.style.left = ((m.x + OX) / CW * 100) + '%'; m.el.style.top = ((m.y + 8 + OY) / CH * 100) + '%';
       const seen = G.seen[m.mid] && G.seen[m.mid].weak;
       const wk = m.el.querySelector('.wk'); wk.textContent = '弱点：' + (seen ? D.EL[m.d.weak] : '？') + (m.blind ? '　目くらみ' : ''); wk.classList.toggle('known', !!seen);
       m.el.querySelector('.nm').textContent = m.name; m.el.querySelector('i').style.width = 100 * m.hp / m.mhp + '%';
@@ -419,7 +422,7 @@ window.BATTLE = (function () {
         else if (k === 'ok') { S.sfx('ok'); end(es[i]); } else if (k === 'cancel') { S.sfx('cancel'); end(null); } else if (k === 'f' || k === 'F') toggleSpeed(); } });
       es.forEach(a => {
         if (a.side === 'pc') { const r = B.rows[B.pcs.indexOf(a)]; r.style.cursor = 'pointer'; r.style.pointerEvents = 'auto'; r.onclick = ev => { ev.stopPropagation(); S.sfx('ok'); end(a); }; }
-        const h = E.el('div', 'ehit'), w = a.side === 'pc' ? 60 : a.w + 16, hh = body(a) + 20; h.style.cssText = `left:${(a.x - w / 2) / W * 100}%;top:${(a.y - hh - (a.float ? 26 : 0)) / H * 100}%;width:${w / W * 100}%;height:${(hh + 10) / H * 100}%`;
+        const h = E.el('div', 'ehit'), w = a.side === 'pc' ? 60 : a.w + 16, hh = body(a) + 20; h.style.cssText = `left:${(a.x - w / 2 + OX) / CW * 100}%;top:${(a.y - hh - (a.float ? 26 : 0) + OY) / CH * 100}%;width:${w / CW * 100}%;height:${(hh + 10) / CH * 100}%`;
         h.onclick = ev => { ev.stopPropagation(); S.sfx('ok'); end(a); }; B.ui.appendChild(h); hits.push(h);
       });
       say(help); paint();
@@ -494,7 +497,7 @@ window.BATTLE = (function () {
   async function run(env, opt) {
     E = env; D = E.D; S = E.S; G = E.G;
     const root = E.el('div', ''); root.id = 'battle';
-    root.innerHTML = '<canvas id="bcv" width="960" height="540"></canvas><canvas id="bfx" width="1920" height="1080"></canvas><div id="bui"><div id="border"></div><div id="bband"></div><div id="bparty"></div>' +
+    root.innerHTML = '<canvas id="bcv" width="' + CW + '" height="' + CH + '"></canvas><canvas id="bfx" width="' + CW * 2 + '" height="' + CH * 2 + '"></canvas><div id="bui"><div id="border"></div><div id="bband"></div><div id="bparty"></div>' +
       '<div id="bkeys"><span class="btn dim" id="bkR"><b class="keycap">R</b><span>リピート</span></span><span class="btn" id="bkF"><b class="keycap">F</b><span>倍速</span></span></div></div>';
     E.root.appendChild(root);
     B = { t: 0, last: performance.now(), speed: G.set.speed === 2 ? 2 : 1, waits: [], parts: [], lights: [], nums: [], shake: 0, dark: 0, cx: $('bcv').getContext('2d'), fx: $('bfx').getContext('2d'), ui: $('bui'), orderEl: $('border'),

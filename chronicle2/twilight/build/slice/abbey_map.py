@@ -2,7 +2,7 @@
 from make_maps import load, base, at, fx
 
 def abbey():
-    p, mk = load('abbey'); m = base(p, mk, '崖の修道院', 'The Abbey on the Crag', (7.6, 1.0), 'bgm15', back='#77727e')
+    p, mk = load('abbey'); m = base(p, mk, '崖の修道院', 'The Abbey on the Crag', (7.6, 1.0), 'bgm15', back='#77727e', name='abbey')
     # the abbey is empty: the lanterns are cold.  Only the candles behind the nave windows burn.
     m['lights'] = [dict(kind='window', x=mk[n]['air'][0], y=mk[n]['air'][1], gx=mk[n]['p'][0], gy=mk[n]['p'][1] + 150, r=150, color='#ffb46a', intensity=.55, flicker=.1) for n in ('win_c', 'win_l', 'win_r')]
     cr = mk['crystal']['p']; m['lights'].append(dict(kind='crystal', x=cr[0], y=cr[1] - 26, gx=cr[0], gy=cr[1], r=120, color='#ffc27a', intensity=.7, flicker=.12))

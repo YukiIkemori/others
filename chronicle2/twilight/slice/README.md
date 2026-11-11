@@ -6,7 +6,9 @@
 - `index.html` … 画面と UI の見た目（文字の大きさはオクトパストラベラーII に合わせた。1080p で 1 単位 = 1px の `--u`）。
 - `data.js` … 人、技、道具、魔物、遭遇、村人のせりふ、店、宝箱（シナリオの表から）。
 - `rpg.js` … フィールドの上のゲーム（状態、メニュー、店、宿、宝箱、セーブ、遭遇）。`RPG.debug` に試し用の入口。
-- `battle.js` … 横から見た戦闘。絵は 960x540（フィールドと同じドットの大きさ）、エフェクトと数字は上のなめらかなキャンバス。
+- `battle.js` … 横から見た戦闘。絵は 1152x648（960x540 を 1.2 倍引いた広さ。ドットの大きさはフィールドと同じ）、エフェクトと数字は上のなめらかなキャンバス。
+- `pad.js` … コントローラー。スティック / 十字キー → 矢印キー、下ボタン → 決定、右ボタン → メニュー・もどる、R → 走る・倍速、L → リピート
+  （キー入力に変換するだけ。任天堂のパッドは決定ともどるが逆）。使っている間は画面のキー表示もボタン名になる。
 - `sound.js` … 曲（`bgm/<id>.ogg` と、ループ位置の `<id>.json`）と、合成の効果音。
 - `game.js`, `hd.js`, `party/` … `../site/` への symlink（フィールドのエンジンと HD-2D 表示、4 人の絵）。
 - `village/`, `f01/`, `abbey/` … マップ。`map.json` は `build/slice/make_maps.py` が `places.json` から書く。
@@ -18,16 +20,23 @@
    （`guide_15.png` = `guide.png` を最近傍で 1.5 倍、`styleref.png` = 村の絵）。1x へは BOX で縮小。
 3. 位置合わせと配置: `match.py <bake>/guide.png paint_1x.png pts.npy 128` → `stage.py <bake> paint_1x.png pts.npy slice/<map>`
 4. 自動チェック: `prompts/mask_<map>.txt` でマスクを作り 1x に縮小 → `match.py slice/<map>/st_paint.png m_1x.png pts_mask.npy 128`
-   → `check.py slice/<map> paint_1x.png m_1x.png pts_mask.npy report.jpg adopt` → `build/slice/fix_raised.py slice/<map>`
-5. `build/slice/make_maps.py [village] [f01] [abbey]`
-6. 絵の部品: `build/slice/gen_art.py`（魔物、村人、宝箱、結晶、戦闘の背景）→ `build/slice/make_sprites.py raw_dir slice`
+   → `check.py slice/<map> paint_1x.png m_1x.png pts_mask.npy report.jpg adopt` → `build/slice/fix_raised.py slice/<map> tops`
+   （`tops` は立っている物の上の縁を絵の輪郭まで上げ、煙突の口などの暗い欠けを閉じる。重ねがけしない。一度だけ）
+5. 横の面と屋根の裏: `build/blockout/solids.py <world_module> <bake_dir> pts.npy slice/<map>` → `slice/<map>/solid.txt`
+   （絵は南から見た面しか持たないので、家や塀の東西の面と、屋根の向こう側の斜面をブロックから起こす。これが無いと、
+   横に回ったとき家が立て看板に見える。中身は base64 のテキスト。公開先がバイナリのファイルを配らないため）
+6. `build/slice/make_maps.py [village] [f01] [abbey]`（`solid.txt` があれば `hd.solid` と `hd.grow` を書く。`PULL = 1.2` が画面の引き）
+7. 絵の部品: `build/slice/gen_art.py`（魔物、村人、宝箱、結晶、戦闘の背景）→ `build/slice/make_sprites.py raw_dir slice`
+   魔物は一度描いたあと `gen_art.py` の `flat()` で 4 人の絵を手本に描き直す（面で塗り、輪郭をはっきり。点描にしない）。
+   `make_sprites.py` は `<name>_flat.png` があればそちらを使う。
 
 ## 試し方
 
-`python3 -m http.server` を `slice/` で起動して `index.html` を開く。`?hd=0&q=low` で軽い 2D 表示、`?enc=0` で遭遇なし、`?map=f01/map.json` で始めるマップ。
+`python3 -m http.server` を `slice/` で起動して `index.html` を開く。`?hd=0&q=low` で軽い 2D 表示、`?enc=0` で遭遇なし、`?map=f01/map.json` で始めるマップ、
+`?solid=0` で横の面なし、`?hdshow=solid` で横の面だけ、`?dof=0` でぼかしなし。
 自動の通し確認は `build/slice/test/`（`node play.js <url> walkthrough.js` など。Playwright）。
 
 ## 公開
 
 `python3 build/publish.py slice/index.html <out>/index.html` のあと、`slice/` の中身（`.npy`, `st_paint.png`, `places.json`, `check.json` 以外。symlink は実体）を
-同じフォルダにコピーして、そのフォルダを root にして Artifact に出す。
+同じフォルダにコピーして、そのフォルダを root にして Artifact に出す。配られるのは画像、音、`.js`、`.json`、`.txt` などだけ（`.bin` は出せない）。

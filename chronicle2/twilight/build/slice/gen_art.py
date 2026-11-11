@@ -72,7 +72,25 @@ BGS = dict(
     bg_abbey=("worn flagstones with moss and grass in the cracks and a few fallen leaves",
               "old leaning headstones and stone crosses of a graveyard, a broken stone gate arch at one side, the roofless walls and tall pointed windows of a ruined abbey nave, a dead tree, and far behind a silent bell tower on the edge of a cliff above a sea of cloud."),
 )
+# Second pass for the monsters (ユウキ: the first ones looked stippled next to the party).  The design of the first pass is kept;
+# the drawing is redone with the heroes' own technique: big dots, flat shades in large clusters, a clean dark outline.
+FLAT = """Image 1 shows the four heroes of an HD-2D RPG as game sprites, enlarged 4 times: every dot of a hero is a clean square block. Image 2 is a monster of the same game, but drawn with the wrong technique: its surface is speckled with single light and dark dots like a pointillist painting, and its dots are too fine.
+Redraw the monster of image 2 as a game sprite in EXACTLY the technique of the heroes in image 1, so that it stands beside them as if drawn by the same pixel artist:
+- Big square dots of the same size as the heroes' dots: the monster is about %d dots tall, and each dot is a clean square block of about %d by %d pixels of this picture, on one regular grid.
+- Flat cel shading. Every material has only three or four flat shades, laid in LARGE, calm, connected areas with clean edges. Absolutely no dithering, no stippling, no speckle, no noise, no checker patterns, no single stray dots.
+- Fur, feathers, moss and bark are NOT drawn hair by hair: they are shown by the jagged shape of the outline and by a few broad tufts or bands of the darker shade.
+- One continuous outline, one dot wide, in a very dark shade of the body's own colour (dark brown, dark olive, dark slate; never pure black), exactly as around the heroes.
+- A few small highlights only where the weak light from the upper right front falls.
+Keep the monster itself as it is in image 2: the same creature, the same pose facing right, the same silhouette and proportions, the same muted earthy colours, the same size in the picture.
+Background: perfectly flat pure magenta #FF00FF everywhere. No ground, no cast shadow, no glow, no text, no frame."""
+TALL = dict(mn001=50, mn005=64, mn009=66, mn025=90, mn045=70, mn033=66, mn013=58, mn029=86, mn021=84)      # dots on screen (the heroes are 80), as in make_sprites.py
+def flat(name):
+    """raw/<name>.png (first pass) -> raw/<name>_flat.png"""
+    src = Image.open(f'{OUT}/{name}.png'); px = max(6, min(12, round(src.height * .66 / TALL[name])))
+    return gen(FLAT % (TALL[name], px, px), f'{OUT}/{name}_flat.png', '1024x1024', 'high', images=[refs()[1], f'{OUT}/{name}.png'], tag='slice_flat_' + name)
+
 def job(name):
+    if name.endswith('_flat'): return flat(name[:-5])
     out = f'{OUT}/{name}.png'
     a, b = refs()
     if name in MONSTERS: return gen(MON + MONSTERS[name], out, '1024x1024', 'high', images=[a, b], tag='slice_' + name)

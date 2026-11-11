@@ -22,29 +22,46 @@ def figures(path, n, min_px=400):
         out.append((xs.min(), rgb[ys.min():ys.max() + 1, xs.min():xs.max() + 1], m[ys.min():ys.max() + 1, xs.min():xs.max() + 1]))
     return [(a, b) for _, a, b in sorted(out, key=lambda t: t[0])]
 
-def shrink(sub, m, th, ncol=40, tw=None):
+def shrink(sub, m, th, ncol=40, tw=None, calm=False):
     """-> RGBA array th tall"""
     h, w = m.shape; tw = tw or max(1, int(round(w * th / h)))
     pal_img = Image.fromarray(sub).quantize(ncol, method=Image.MEDIANCUT, dither=Image.NONE)
     idx = np.array(pal_img); pal = np.array(pal_img.getpalette()[:ncol * 3]).reshape(-1, 3)
     ys = np.round(np.linspace(0, h, th + 1)).astype(int); xs = np.round(np.linspace(0, w, tw + 1)).astype(int)
     out = np.zeros((th, tw, 4), np.uint8)
+    lum = pal @ np.array([.3, .59, .11]); used = np.bincount(idx[m], minlength=ncol) > 0
+    dark = np.nonzero(used & (lum < .55 * np.median(lum[idx[m]])))[0] if calm else None
+    if dark is not None and not len(dark): dark = None
     for j in range(th):
         for i in range(tw):
             mm = m[ys[j]:ys[j + 1], xs[i]:xs[i + 1]]
             if mm.size == 0 or mm.mean() < .5: continue
-            c = np.bincount(idx[ys[j]:ys[j + 1], xs[i]:xs[i + 1]][mm], minlength=ncol).argmax()
+            cnt = np.bincount(idx[ys[j]:ys[j + 1], xs[i]:xs[i + 1]][mm], minlength=ncol); c = cnt.argmax()
+            if calm and dark is not None and cnt[dark].sum() >= .34 * cnt.sum(): c = dark[cnt[dark].argmax()]       # the outline survives: a line one raw dot wide never has the majority
             out[j, i, :3] = pal[c]; out[j, i, 3] = 255
-    # no near-black dots and no lonely dots
+    # no lonely dots: a figure's rim dot with no neighbour goes, and (calm=True, the monsters) a dot inside the figure that has
+    # no neighbour of its own colour takes the colour most of its neighbours have, so that shades lie in clusters as
+    # they do on the party's sprites and not as a sprinkle
     a = out[..., 3] > 0; lone = a & (nd.convolve(a.astype(int), np.ones((3, 3)), mode='constant') <= 1); out[lone] = 0
+    if calm:
+        key = out[..., 0].astype(np.int32) * 65536 + out[..., 1].astype(np.int32) * 256 + out[..., 2]; a = out[..., 3] > 0
+        for _ in range(1):
+            p = np.pad(key, 1, constant_values=-1); pa = np.pad(a, 1); new = key.copy()
+            for j, i in zip(*np.nonzero(a)):
+                nb = p[j:j + 3, i:i + 3][pa[j:j + 3, i:i + 3]]
+                if (nb == key[j, i]).sum() - 1 <= 0 and len(nb) > 4:
+                    vals, cnt = np.unique(nb[nb != key[j, i]], return_counts=True); new[j, i] = vals[cnt.argmax()]
+            key = new
+        out[..., 0], out[..., 1], out[..., 2] = key >> 16, (key >> 8) & 255, key & 255; out[~a] = 0
     return out
 
 # ---- monsters: height on screen in dots (the heroes are 80)
 MON = dict(mn001=50, mn005=64, mn009=66, mn025=90, mn045=70, mn033=66, mn013=58, mn029=86, mn021=84)
 meta = {}
 for n, th in MON.items():
-    (sub, m), = figures(f'{RAW}/{n}.png', 1)
-    im = shrink(sub, m, th, 48); Image.fromarray(im).save(f'{OUT}/mon/{n}.png'); meta[n] = [im.shape[1], im.shape[0]]
+    src = f'{RAW}/{n}_flat.png'                                           # the redraw in the party's technique (gen_art.py), when there is one
+    (sub, m), = figures(src if os.path.exists(src) else f'{RAW}/{n}.png', 1)
+    im = shrink(sub, m, th, 28, calm=True); Image.fromarray(im).save(f'{OUT}/mon/{n}.png'); meta[n] = [im.shape[1], im.shape[0]]
 json.dump(meta, open(f'{OUT}/mon/sizes.json', 'w'))
 # ---- villagers: 96x128 frames, feet at (48,120) like the party
 NPC = dict(npc_a=[('moku', 70), ('mother', 78), ('yomo', 66), ('dorgo', 82), ('hanna', 76)], npc_b=[('oz', 78), ('sem', 78), ('pico', 70), ('mil', 58), ('bart', 80)])
@@ -60,9 +77,9 @@ for k, (sub, m) in enumerate(figs[:2]):
     im = shrink(sub, m, 30 if k == 0 else 40, 32, tw=34 if k == 0 else None); h, w = im.shape[:2]; x0 = k * 48 + 24 - w // 2; sheet[42 - h:42, x0:x0 + w] = im
 Image.fromarray(sheet).save(f'{OUT}/prop/chest.png')
 im = shrink(*figs[2], 44, 24); Image.fromarray(im).save(f'{OUT}/prop/crystal.png')
-# ---- battle backgrounds: 960x540
+# ---- battle backgrounds: 1152x648 (the battle view is pulled back by 1.2, see battle.js)
 for n in ('bg_f01', 'bg_abbey'):
-    b = Image.open(f'{RAW}/{n}.png').convert('RGB').resize((960, 544), Image.BOX).crop((0, 2, 960, 542)); b.save(f'{OUT}/bg/{n}.webp', lossless=True, quality=90, method=4)
+    b = Image.open(f'{RAW}/{n}.png').convert('RGB').resize((1152, 653), Image.LANCZOS).crop((0, 2, 1152, 650)); b.save(f'{OUT}/bg/{n}.webp', lossless=True, quality=90, method=4)
 # ---- a look at everything
 c = Image.new('RGBA', (960, 300), (70, 74, 60, 255)); x = 10
 for n in MON: im = Image.open(f'{OUT}/mon/{n}.png'); c.alpha_composite(im, (x, 140 - im.height)); x += im.width + 12

@@ -252,8 +252,8 @@ async function loadMap(url, at) {
   M.hero.sheet = res(M.hero.sheet); M.hero.spec = res(M.hero.spec); M.party = (M.party || []).map(res);
   for (const k in M.layers) if (M.layers[k]) M.layers[k] = typeof M.layers[k] === 'string' ? { src: res(M.layers[k]) } : Object.assign({}, M.layers[k], { src: res(M.layers[k].src) });
   M.props = (M.props || []).map(q => Object.assign({}, q, { src: res(q.src) }));
-  if (M.hd) { M.hd = Object.assign({}, M.hd); for (const k of ['raised', 'under', 'behind']) if (M.hd[k]) M.hd[k] = res(M.hd[k]); }
-  if (raw.view > 1 && raw.view !== VK) { VK = raw.view; VW = 960 * VK; VH = 540 * VK; W = null; layout(); }
+  if (M.hd) { M.hd = Object.assign({}, M.hd); for (const k of ['raised', 'under', 'behind', 'solid']) if (M.hd[k]) M.hd[k] = res(M.hd[k]); }
+  { const v = raw.pull > 1 ? raw.pull : raw.view > 1 ? raw.view : 1; if (v !== VK) { VK = v; VW = 960 * VK; VH = 540 * VK; W = null; layout(); } }      // "pull": the same art seen from a little further away ("view" is for a map drawn finer)
   M.moods = { gold: norm(MOOD_DEFAULTS.gold, raw.moods && raw.moods.gold), shadow: norm(MOOD_DEFAULTS.shadow, raw.moods && raw.moods.shadow) };
   for (const k in M.moods) for (const p in M.moods[k]) if (typeof M.moods[k][p] === 'string' && M.moods[k][p][0] === '#') M.moods[k][p] = hexRgb(M.moods[k][p]);
   const want = [loadImg(M.image), loadImg(M.hero.sheet), loadJson(M.hero.spec), M.walk ? loadImg(M.walk) : null, M.height ? loadImg(M.height).catch(e => (console.warn('height map missing, occlusion by height is off'), null)) : null];
@@ -380,7 +380,7 @@ async function loadMap(url, at) {
       const js = src => new Promise((res, rej) => { const e = document.createElement('script'); e.src = src; e.onload = res; e.onerror = () => rej(new Error('読み込めません: ' + src)); document.head.appendChild(e); });
       if (!window.THREE) await js(M.hd.three || 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.149.0/three.min.js');
       if (!window.HD2D) await js(M.hd.js || 'hd.js');
-      hdr = await HD2D.create({ M, A, HS, stage, cv, hData, hW, hH, fData, walkData, VW, VH, lights, sky: layers.sky, lift, hides, hexRgb, Q, UI_ON });
+      hdr = await HD2D.create({ M, A, HS, stage, cv, hData, hW, hH, fData, walkData, VW, VH, K: M.pull > 1 ? 1 : VW / 960, pull: M.pull > 1 ? M.pull : 1, lights, sky: layers.sky, lift, hides, hexRgb, Q, UI_ON });
     } catch (e) { console.warn('HD-2D 表示を使えないため、2D 表示で続けます', e); hdr = null; }
   }
   P = moodParams();

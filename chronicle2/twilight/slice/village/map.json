@@ -4,6 +4,7 @@
  "subtitle": "",
  "w": 2048,
  "h": 1792,
+ "pull": 1.2,
  "image": "map.webp",
  "walk": "walk.png",
  "height": "height.png",
@@ -217,7 +218,9 @@
   "back": "#2a2630",
   "noBar": true,
   "behind": "behind.png",
-  "under": "under.png"
+  "under": "under.png",
+  "solid": "solid.txt",
+  "grow": 22
  },
  "hero": {
   "sheet": "~/party/hero.png",

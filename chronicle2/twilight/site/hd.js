@@ -12,11 +12,17 @@
   const MESH_VS = `
     uniform vec3 uK; varying vec2 vT; varying vec3 vW;
     vec3 wpos(vec3 p) { return vec3((p.x + .5) * uK.x, -(p.y + .5 + p.z) * uK.y, p.z * uK.z); }
+    #ifdef SOLID
+      attribute vec3 aT; varying float vS;
+    #endif
     void main() {
       vec3 w = wpos(position);
       vW = w;
       vec4 cn = projectionMatrix * viewMatrix * vec4(w, 1.);
       vT = position.xy + .5;
+      #ifdef SOLID
+        vT = aT.xy; vS = aT.z;                                 // a face the picture never showed: it borrows its neighbour's paint
+      #endif
       gl_Position = cn;
     }`;
   const LIGHT_FN = `
@@ -42,6 +48,9 @@
   const MESH_FS = `
     uniform sampler2D tMap, tWalk; uniform vec2 uSize, uRes, uCutB; uniform float uTS; uniform vec3 uFogC; uniform vec2 uFog; uniform float uShowWalk, uGain, uSides;
     varying vec2 vT; varying vec3 vW;
+    #ifdef SOLID
+      varying float vS;
+    #endif
     ${LIGHT_FN}
     ${SKY_FN}
     void main() {
@@ -54,6 +63,9 @@
       vec3 col = c.rgb * (uAmb + L * uGain) + c.rgb * L * L * .25;
       #ifdef BACK
         col *= .93;                                           // ground that the picture never showed: it sits in the near thing's shade
+      #endif
+      #ifdef SOLID
+        col *= vS;
       #endif
       vec4 wk = texture2D(tWalk, uv);
       // the cliff sinks into the cloud sea: low rock, and the cut lower edge of the picture, dissolve into the sky itself
@@ -89,8 +101,8 @@
   const PT_FS = `uniform float uI; varying float vA; varying vec3 vC; void main() { float d = length(gl_PointCoord - .5) * 2.; float a = clamp(1. - d, 0., 1.); gl_FragColor = vec4(vC * a * a * vA * uI, 0.); }`;
   // depth of field: gather inside the pixel's own circle of confusion; sharp neighbours do not bleed into blurred ones
   const DOF_FS = `
-    uniform sampler2D tScene; uniform vec2 uPx; uniform float uMax, uBand; varying vec2 vUv;
-    float coc(float a) { return clamp((abs(a - .5) * 2. - uBand) / (1. - uBand), 0., 1.) * uMax; }
+    uniform sampler2D tScene; uniform vec2 uPx; uniform float uMax, uBand, uNear; varying vec2 vUv;
+    float coc(float a) { return clamp((abs(a - .5) * 2. - uBand) / (1. - uBand), 0., 1.) * uMax * (a < .5 ? uNear : 1.); }      // what stands nearer than the hero (a roof beside the party) blurs less than the distance
     void main() {
       vec4 c0 = texture2D(tScene, vUv); float r0 = coc(c0.a);
       if (r0 < .35) { gl_FragColor = vec4(c0.rgb, 1.); return; }
@@ -121,7 +133,7 @@
     const T3 = window.THREE, { M, A, HS, stage, hData, hW, hH, fData, walkData, VW, VH } = env;
     // K: map dots per dot of the usual 960x540 view (2 on a map drawn twice as finely, see map.json "view"); every distance
     // below that is counted in map dots is scaled by it
-    const K = VW / 960, JUMP = Math.round(JUMP0 * K), fix = s => s.replace('vec2(960., 540.)', `vec2(${VW}., ${VH}.)`);
+    const K = env.K || VW / 960, JUMP = Math.round(JUMP0 * K), fix = s => s.replace('vec2(960., 540.)', `vec2(${VW}., ${VH}.)`);
     const cfg = Object.assign({ S: 32, A: .75, B: .66, depth: 1, dof: 1 }, M.hd);
     const S = cfg.S, KA = 1 / (cfg.A * S), KB = 1 / (cfg.B * S);
     const canvas = document.createElement('canvas');
@@ -183,16 +195,37 @@
     // the painter draws things a few dots fatter than the blocks: near things grow over flat ground (where the outline says
     // "this stands", when there is one) so their rim stays with them
     const flat = (src, i) => { const a = src[i] - src[i + W], b = src[i - W] - src[i]; return !(a >= 1 && a <= 3) && !(b >= 1 && b <= 3); };
-    for (let pass = 0; pass < (mp ? 9 : 3); pass++) {
-      const src = hh.slice();
+    // A slope that leans away about as steeply as the picture looks down (a roof's far side, the back of a crown's top) fills
+    // only a few rows of the picture, and the painter drew the near slope's last rows there.  The blocks bring the far slope
+    // themselves (cfg.solid), so here those rows carry the near slope on, a little past the ridge, as the painter drew them.
+    const PLANE = !!cfg.solid, on = (b, bb) => b + (bb ? clamp(b - bb, 0, 1) : 0);
+    if (PLANE) for (let x = 1; x < W - 1; x++) for (let y = H - 3; y > 1; y--) {
+      const i = y * W + x, v = hh[i], b = hh[i + W]; if (!v || !b) continue;
+      const dq = y + v - (y + 1 + b);
+      if (dq <= -4 && dq >= -JUMP) hh[i] = on(b, hh[i + 2 * W]);
+    }
+    // The painter's outline of a thing (and a roof's fringe) lies two or three dots outside that mask.  Left on the ground it
+    // shows as a line beside the thing once the camera looks past it, so a dot next to the thing joins it when its colour is
+    // clearly not the ground's a few dots further out.
+    const edgeDot = (src, i, o) => {
+      let r = 0, g = 0, b = 0, c = 0; const x = i % W;
+      for (let t = 4; t <= 6; t++) { const j = i + o * t; if (j < W || j >= W * (H - 1) || Math.abs(j % W - x) > 6 || !src[j] || Math.abs(src[j] - src[i]) > 6) continue; r += d[j * 4]; g += d[j * 4 + 1]; b += d[j * 4 + 2]; c++; }
+      return c > 0 && Math.abs(d[i * 4] - r / c) + Math.abs(d[i * 4 + 1] - g / c) + Math.abs(d[i * 4 + 2] - b / c) > 75;
+    };
+    for (let pass = 0; pass < (mp ? (cfg.grow || 9) : 3); pass++) {
+      const src = hh.slice(), mq = mp && PLANE && pass < 4 ? mp.slice() : mp;
       for (let y = 1; y < H - 1; y++) for (let x = 1, i = y * W + 1; x < W - 1; x++, i++) {
-        const v = src[i]; if (!v || (mp && !(mp[i] && flat(src, i)))) continue;
-        const q = y + v; let best = 0, n;
-        if ((n = src[i - 1]) && y + n - q > JUMP && y + n > best && (!mp || mp[i - 1])) best = y + n;
-        if ((n = src[i + 1]) && y + n - q > JUMP && y + n > best && (!mp || mp[i + 1])) best = y + n;
-        if ((n = src[i - W]) && y - 1 + n - q > JUMP && y - 1 + n > best && (!mp || mp[i - W])) best = y - 1 + n;
-        if ((n = src[i + W]) && y + 1 + n - q > JUMP && y + 1 + n > best && (!mp || mp[i + W])) best = y + 1 + n;
-        if (best) hh[i] = best - y;
+        const v = src[i]; if (!v) continue;
+        let soft = false;
+        if (mp && !(mp[i] && flat(src, i))) { if (mq === mp || mq[i] || !flat(src, i)) continue; soft = true; }
+        const q = y + v; let best = 0, n, below = 0, o = 0;
+        if ((n = src[i - 1]) && y + n - q > JUMP && y + n > best && (!mp || mq[i - 1])) { best = y + n; o = 1; }
+        if ((n = src[i + 1]) && y + n - q > JUMP && y + n > best && (!mp || mq[i + 1])) { best = y + n; o = -1; }
+        if ((n = src[i - W]) && y - 1 + n - q > JUMP && y - 1 + n > best && (!mp || mq[i - W])) { best = y - 1 + n; o = W; }
+        if ((n = src[i + W]) && y + 1 + n - q > JUMP && y + 1 + n > best && (!mp || mq[i + W])) { best = y + 1 + n; below = n; o = -W; }
+        if (!best) continue;
+        if (soft) { if (!edgeDot(src, i, o)) continue; mp[i] = 1; }
+        hh[i] = below && PLANE ? on(below, src[i + 2 * W]) : best - y;      // above a slope the rim carries the slope on; elsewhere it stands with the thing
       }
     }
     // ---- what lies behind near things.  The picture shows one surface per pixel; when the camera looks from a slightly
@@ -224,7 +257,7 @@
       for (let y = 1; y < H - 1; y++) for (let x = 1, i = y * W + 1; x < W - 1; x++, i++) {
         const v = hh[i]; if (!v) continue;
         const q = y + v;
-        if (gb && hData[i] && Math.abs(hData[i] - v) <= JUMP) {      // the blocks have this same near thing here: their answer is used
+        if (gb && hData[i] && (Math.abs(hData[i] - v) <= JUMP || (un && y + hData[i] < q - JUMP))) {      // the blocks have this same near thing here (or what lies behind a rim the painter added): their answer is used
           const u = gb[i], m = MID ? bh[i] : 0;
           if (u && y + u < q - JUMP) { wantH[i] = u; cur.push(i); } else vd[i] = u ? 2 : 1;
           if (m && y + m < q - JUMP && (!u || m - u > JUMP)) MID.want[i] = m;
@@ -328,7 +361,11 @@
       for (let i = 0; i < W * H; i++) if (ring[i] && mp[i]) { reach[i] = 1; fr.push(i); }
       for (let k = 0; k < TRIM + 2; k++) { const nx = []; for (const i of fr) for (let c = 0; c < 4; c++) { const j = i + N8[c]; if (ring[j] && !reach[j]) { reach[j] = 1; nx.push(j); } } fr = nx; }
       const cut = new Uint8Array(W * H), by = Array.from({ length: TRIM + 1 }, () => []);
-      for (let i = 0; i < W * H; i++) if (ring[i] && ring[i] <= TRIM && vd[i] !== 1 && !mp[i] && reach[i]) by[ring[i]].push(i);
+      const own = i => {                                    // the painter's outline or fringe: not the colour of the far side it would fall back to
+        const j = sp[i]; if (!PLANE || !(j > 0)) return false;
+        return Math.abs(d[i * 4] - d[j * 4]) + Math.abs(d[i * 4 + 1] - d[j * 4 + 1]) + Math.abs(d[i * 4 + 2] - d[j * 4 + 2]) > 75;
+      };
+      for (let i = 0; i < W * H; i++) if (ring[i] && ring[i] <= TRIM && vd[i] !== 1 && !mp[i] && reach[i] && !(ring[i] <= 4 && own(i))) by[ring[i]].push(i);
       for (let k = 1; k <= TRIM; k++) for (const i of by[k]) if (k === 1 || cut[i - 1] || cut[i + 1] || cut[i - W] || cut[i + W]) cut[i] = 1;
       for (let i = 0; i < W * H; i++) if (cut[i]) hh[i] = hb[i];
     }
@@ -351,6 +388,49 @@
       }
     };
     mirror(ring, hb, upb, sp, bd, vd); if (MID) mirror(MID.ring, MID.hb, MID.up, MID.sp, MID.bd, null);
+    // The far GROUND gets real paint.  Smeared colours are fine for a strip a few dots wide, but the camera looks under a
+    // tree's crown, past a roof's corner and (low on the screen) over a house onto the ground behind it: wide pieces, and a
+    // smear there reads as dirt on the screen.  So every flat far dot finds the nearest ground in plain view on its own level
+    // (walking only through far dots of that level) and takes the paint that lies as far beyond that edge as it lies before
+    // it: grass goes on as grass, the lane as the lane.  Where the blocks know ground that the rings never reached, it is made.
+    {
+      const isG = new Uint8Array(W * H), src = new Int32Array(W * H).fill(-1), LV = Math.round(6 * K);
+      let forced = 0;
+      for (let y = 1; y < H - 1; y++) for (let x = 1, i = y * W + 1; x < W - 1; x++, i++) {
+        if (hh[i] && d[i * 4 + 3] === 255 && !upr[i] && !ring[i] && !(mp && mp[i])) isG[i] = 1;
+        if (wantH[i] && !ring[i] && flat(wantH, i)) { ring[i] = 1; hb[i] = wantH[i]; upb[i] = 0; vd[i] = 0; sp[i] = -1; bd[i * 4 + 3] = 255; forced++; }
+      }
+      const isB = i => ring[i] && vd[i] !== 1 && hb[i] && !upb[i];
+      let cur = [];
+      for (let y = 1; y < H - 1; y++) for (let x = 1, i = y * W + 1; x < W - 1; x++, i++) {
+        if (!isB(i)) continue;
+        for (let e = 0; e < 8; e++) { const j = i + N8[e]; if (isG[j] && Math.abs(hh[j] - hb[i]) <= LV) { src[i] = j; cur.push(i); break; } }
+      }
+      while (cur.length) {
+        const next = [];
+        for (const i of cur) for (let e = 0; e < 8; e++) {
+          const j = i + N8[e], x = j % W;
+          if (x < 1 || x > W - 2 || j < W || j >= W * (H - 1) || src[j] >= 0 || !isB(j) || Math.abs(hb[j] - hb[i]) > 3) continue;
+          src[j] = src[i]; next.push(j);
+        }
+        cur = next;
+      }
+      const okG = (x, y, h) => x > 0 && y > 0 && x < W - 1 && y < H - 1 && isG[y * W + x] && Math.abs(hh[y * W + x] - h) <= LV;
+      for (let y = 1; y < H - 1; y++) for (let x = 1, i = y * W + 1; x < W - 1; x++, i++) {
+        const s0 = src[i]; if (s0 < 0) continue;
+        const sx = s0 % W, sy = (s0 / W) | 0, dx = sx - x, dy = sy - y, h = hb[i]; let m = s0;
+        if (okG(sx + dx, sy + dy, h)) m = (sy + dy) * W + sx + dx;                    // mirrored at the edge
+        else if (okG(sx - dy, sy + dx, h)) m = (sy + dx) * W + sx - dy;               // or turned along it
+        else if (okG(sx + dy, sy - dx, h)) m = (sy - dx) * W + sx + dy;
+        else {                                                                         // or a small patch of that ground, laid like tiles
+          const tx = x % 13 - 6, ty = y % 13 - 6;
+          if (okG(sx + tx, sy + ty, h)) m = (sy + ty) * W + sx + tx; else if (okG(sx - tx, sy - ty, h)) m = (sy - ty) * W + sx - tx;
+          else if (okG(sx + ty, sy + tx, h)) m = (sy + tx) * W + sx + ty; else if (okG(sx - ty, sy - tx, h)) m = (sy - tx) * W + sx - ty;
+        }
+        const o = i * 4, om = m * 4; bd[o] = d[om]; bd[o + 1] = d[om + 1]; bd[o + 2] = d[om + 2]; bd[o + 3] = 255;
+      }
+      if (env.Q.get('hdlog')) console.log('far ground: made where the rings never reached', forced);
+    }
     const mkTex = a => { const t = new T3.DataTexture(a, W, H, T3.RGBAFormat); t.magFilter = t.minFilter = T3.LinearFilter; t.needsUpdate = true; return t; };
     // the picture itself, finer than the map when the map says "imageScale" (the far sides made above stay at map size)
     let tHi = null;
@@ -423,6 +503,20 @@
       if (im.length) { add(pm, im, matMid, 0); nBack += im.length / 3; }
     }
 
+    // ---- the faces the picture cannot show (a house's side walls, a roof's far slope), taken from the blocks by
+    // build/blockout/solids.py.  Without them a house is a signboard with a lid as soon as the camera stands beside it.
+    let nSolid = 0;
+    if (cfg.solid && env.Q.get('solid') !== '0') try {
+      const buf = Uint8Array.from(atob((await (await fetch(cfg.solid)).text()).trim()), c => c.charCodeAt(0)).buffer, hd = new Uint32Array(buf, 0, 2), nv = hd[0], ni = hd[1];   // base64 text: see solids.py
+      const v = new Float32Array(buf, 8, nv * 6), ix = new Uint32Array(buf, 8 + nv * 24, ni);
+      const pos = new Float32Array(nv * 3), at = new Float32Array(nv * 3);
+      for (let i = 0; i < nv; i++) { pos[i * 3] = v[i * 6] - .5; pos[i * 3 + 1] = v[i * 6 + 1] - .5; pos[i * 3 + 2] = v[i * 6 + 2]; at[i * 3] = v[i * 6 + 3]; at[i * 3 + 1] = v[i * 6 + 4]; at[i * 3 + 2] = v[i * 6 + 5]; }
+      const g = new T3.BufferGeometry(); g.setAttribute('position', new T3.BufferAttribute(pos, 3)); g.setAttribute('aT', new T3.BufferAttribute(at, 3)); g.setIndex(new T3.BufferAttribute(ix.slice(), 1));
+      const mat = new T3.ShaderMaterial({ uniforms: U, vertexShader: MESH_VS, fragmentShader: fix(MESH_FS), defines: { SOLID: 1 }, extensions: { derivatives: true }, side: T3.DoubleSide, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 2 });
+      const m = new T3.Mesh(g, mat); m.frustumCulled = false; m.renderOrder = 0; scene.add(m); nSolid = ni / 3;
+      if (env.Q.get('hdshow') === 'solid') { matMain.visible = false; matBack.visible = false; if (matMid) matMid.visible = false; }
+    } catch (e) { console.warn('solid faces not loaded', e); }
+
     // ---- hero: an upright card (the picture is drawn with heights squeezed by B, so the card is 1/B taller in the world)
     // ---- actors (the leader and the companions): upright cards.  The picture is drawn with heights squeezed by B, so a
     // card is 1/B taller in the world.  Each gets a pale "ghost" where scenery hides it, and a small contact shadow.
@@ -466,7 +560,7 @@
     const sky = env.sky, tSky = sky ? new T3.Texture(sky.img) : null; if (tSky) { tSky.magFilter = tSky.minFilter = T3.LinearFilter; tSky.generateMipmaps = false; tSky.flipY = false; tSky.needsUpdate = true; }
     U.tSky.value = tSky; U.uHas.value = tSky ? 1 : 0;
     const mSky = pass(fix(SKY_FS), { tSky: U.tSky, uRect: U.uRect, uBack: U.uBack, uTint: U.uTint, uHas: U.uHas });
-    const mDof = pass(DOF_FS, { tScene: { value: null }, uPx: { value: new T3.Vector2() }, uMax: { value: 0 }, uBand: { value: .3 } });
+    const mDof = pass(DOF_FS, { tScene: { value: null }, uPx: { value: new T3.Vector2() }, uMax: { value: 0 }, uBand: { value: .3 }, uNear: { value: cfg.dofNear == null ? .55 : cfg.dofNear } });
     const mBright = pass(BRIGHT_FS, { tIn: { value: null }, uTh: { value: cfg.bloomTh == null ? .62 : cfg.bloomTh } }), mBlur = pass(BLUR_FS, { tIn: { value: null }, uDir: { value: new T3.Vector2() } });
     const mFinal = pass(FINAL_FS, { tIn: { value: null }, tBloom: { value: null }, uBloom: { value: .6 }, uVig: { value: .4 }, uVigC: { value: new T3.Vector3() }, uGrade: { value: new T3.Vector3() }, uGradeA: { value: 0 } });
     let rtScene, rtDof, rtB1, rtB2, cw = 0, ch = 0;
@@ -504,7 +598,7 @@
       pxLast = hx; pyLast = hy;
       const bo = HS.body * .48;
       tgt.copy(world(cam.x + VW / 2 - .5, cam.y + VH / 2 + bo - .5, camLift)).addScaledVector(up, bo / S);
-      const D = DEPTHS[state.depth] || 0, camera = D ? persp : ortho, dist = D || 120;
+      const D = (DEPTHS[state.depth] || 0) * (env.pull || 1), camera = D ? persp : ortho, dist = D || 120;
       camera.position.copy(tgt).addScaledVector(dir, -dist); camera.up.copy(up); camera.lookAt(tgt);
       if (D) { persp.fov = 2 * Math.atan(halfH / D) * 180 / Math.PI; persp.near = Math.max(1, D - 70); persp.far = D + 120; } else { ortho.near = 1; ortho.far = 320; }
       camera.updateProjectionMatrix(); camera.updateMatrixWorld();

@@ -9,20 +9,22 @@ DAY = dict(name='', ambient='#d6d0d4', lightGain=.75, lightRadius=1, brighten=.5
 PARTY = dict(hero=dict(sheet='~/party/hero.png', spec='~/party/hero.json', light=dict(r=150, color='#ffb76a', intensity=0)),
              party=['~/party/sword', '~/party/rogue', '~/party/priest'])
 
+PULL = 1.2          # the camera stands a little further back than one map dot = one 960x540 dot (ユウキ: the first cut felt too close)
 def load(name):
     p = json.load(open(f'{SL}/{name}/places.json')); return p, p['marks']
 def at(mk, nm, dx=0, dy=0): return dict(x=mk[nm]['p'][0] + dx, y=mk[nm]['p'][1] + dy)
-def base(p, mk, title, en, fog, bgm, back='#2a2630', win=1.0):
+def base(p, mk, title, en, fog, bgm, back='#2a2630', win=1.0, name=None):
     lights = [dict(kind='window', x=v['air'][0], y=v['air'][1], gx=v['p'][0], gy=v['p'][1], r=v['light']['r'], color=v['light']['color'], intensity=v['light']['intensity'] * win, flicker=.05)
               for nm, v in mk.items() if 'light' in v]
-    m = dict(title=title, titleEn=en, subtitle='', w=p['w'], h=p['h'], image='map.webp', walk='walk.png', height='height.png', floor='floor.png', heightBias=3,
+    m = dict(title=title, titleEn=en, subtitle='', w=p['w'], h=p['h'], pull=PULL, image='map.webp', walk='walk.png', height='height.png', floor='floor.png', heightBias=3,
              occluders=[], lights=lights, water=[], mood='gold', moodFixed=True, moods=dict(gold=DAY, shadow=DAY), bgm=bgm,
              hd=dict(S=p['S'], A=p['A'], B=p['B'], depth=3, dof=2, fogTop=fog[0], fogBottom=fog[1], raised='raised.png', back=back, noBar=True, **{n: n + '.png' for n in p['far']}))
+    if name and os.path.exists(f'{SL}/{name}/solid.txt'): m['hd']['solid'] = 'solid.txt'; m['hd']['grow'] = 22       # side walls and far roof slopes (build/blockout/solids.py)
     m.update(PARTY); return m
 def fx(mk, nm, w, h, kind, n, **kw): return dict(kind=kind, x=mk[nm]['p'][0] - w // 2, y=mk[nm]['p'][1] - h // 2, w=w, h=h, n=n, **kw)
 
 def village():
-    p, mk = load('village'); m = base(p, mk, '始まりの村', 'The Village of Beginnings', (6.4, 2.0), 'bgm02')
+    p, mk = load('village'); m = base(p, mk, '始まりの村', 'The Village of Beginnings', (6.4, 2.0), 'bgm02', name='village')
     d = mk['door_teto']['p']
     m['spawn'] = dict(x=d[0], y=d[1] + 34, dir='down')
     m['spawns'] = dict(start=m['spawn'], gate=dict(x=mk['spawn_gate']['p'][0], y=mk['spawn_gate']['p'][1], dir='right'))
@@ -48,7 +50,7 @@ def village():
     return m
 
 def f01():
-    p, mk = load('f01'); m = base(p, mk, '麦の丘', 'The Wheat Hills', (5.2, 2.2), 'bgm10', win=.9)
+    p, mk = load('f01'); m = base(p, mk, '麦の丘', 'The Wheat Hills', (5.2, 2.2), 'bgm10', win=.9, name='f01')
     day = dict(DAY, ambient='#e9e2de', brighten=.7, gradeAlpha=.04, vignette=.34); m['moods'] = dict(gold=day, shadow=day)
     sp = lambda nm, d: dict(x=mk[nm]['p'][0], y=mk[nm]['p'][1], dir=d)
     m['spawn'] = sp('spawn_village', 'left')
