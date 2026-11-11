@@ -40,14 +40,14 @@
       return uBack;
     }`;
   const MESH_FS = `
-    uniform sampler2D tMap, tWalk; uniform vec2 uSize, uRes, uCutB; uniform vec3 uFogC; uniform vec2 uFog; uniform float uShowWalk, uGain, uSides;
+    uniform sampler2D tMap, tWalk; uniform vec2 uSize, uRes, uCutB; uniform float uTS; uniform vec3 uFogC; uniform vec2 uFog; uniform float uShowWalk, uGain, uSides;
     varying vec2 vT; varying vec3 vW;
     ${LIGHT_FN}
     ${SKY_FN}
     void main() {
-      vec2 f = fract(vT) - .5, fw = max(fwidth(vT), vec2(1e-4));
-      vec2 uv = (floor(vT) + .5 + clamp(f / fw, -.5, .5)) / uSize;
-      vec4 c = texture2D(tMap, uv);
+      vec2 tv = vT * uTS, f = fract(tv) - .5, fw = max(fwidth(tv), vec2(1e-4));          // uTS: picture dots per map dot
+      vec4 c = texture2D(tMap, (floor(tv) + .5 + clamp(f / fw, -.5, .5)) / (uSize * uTS));
+      vec2 uv = (floor(vT) + .5) / uSize;
       if (c.a < .5) discard;
       vec3 n = normalize(cross(dFdx(vW), dFdy(vW))); if (dot(n, uCamDir) > 0.) n = -n;
       vec3 L = lightAt(vW, n, .35);
@@ -352,7 +352,10 @@
     };
     mirror(ring, hb, upb, sp, bd, vd); if (MID) mirror(MID.ring, MID.hb, MID.up, MID.sp, MID.bd, null);
     const mkTex = a => { const t = new T3.DataTexture(a, W, H, T3.RGBAFormat); t.magFilter = t.minFilter = T3.LinearFilter; t.needsUpdate = true; return t; };
-    const tMap = mkTex(new Uint8Array(d.buffer)), tBack = mkTex(bd), tMid = MID ? mkTex(MID.bd) : null;
+    // the picture itself, finer than the map when the map says "imageScale" (the far sides made above stay at map size)
+    let tHi = null;
+    if (A.mapHi) { tHi = new T3.Texture(A.mapHi); tHi.magFilter = tHi.minFilter = T3.LinearFilter; tHi.generateMipmaps = false; tHi.flipY = false; tHi.needsUpdate = true; }
+    const tMap = tHi || mkTex(new Uint8Array(d.buffer)), tBack = mkTex(bd), tMid = MID ? mkTex(MID.bd) : null;
     // walk mask (R) and, in G, "close to where one can walk": that part of the picture's lower edge must not dissolve
     const wk = new Uint8Array(W * H * 4), Y0 = Math.max(0, H - 240 * K), dist = new Float32Array(W * (H - Y0)).fill(1e3);
     for (let i = 0; i < W * H; i++) wk[i * 4] = walkData ? walkData[i] * 255 : 255;
@@ -374,9 +377,9 @@
       uAmb: { value: new T3.Vector3(1, 1, 1) }, uL: { value: Array.from({ length: NL }, () => new T3.Vector4(0, 0, 0, 1)) }, uLC: { value: Array.from({ length: NL }, () => new T3.Vector3()) },
       uCamPos: { value: new T3.Vector3() }, uCamDir: { value: new T3.Vector3() }, uFocus: { value: 50 }, uRange: { value: 15 },
       uFogC: { value: new T3.Vector3(.8, .7, .8) }, uFog: { value: new T3.Vector2(11, 3) }, uShowWalk: { value: 0 }, uGain: { value: .6 },
-      uRes: { value: new T3.Vector2(960, 540) }, uCutB: { value: new T3.Vector2(150 * K, 14 * K) }, uSides: { value: cfg.cutSides ? 1 : 0 }, tSky: { value: null }, uRect: { value: new T3.Vector4() }, uBack: { value: new T3.Vector3() }, uTint: { value: new T3.Vector3(1, 1, 1) }, uHas: { value: 0 },
+      uRes: { value: new T3.Vector2(960, 540) }, uCutB: { value: new T3.Vector2(150 * K, 14 * K) }, uSides: { value: cfg.cutSides ? 1 : 0 }, uTS: { value: A.mapHi ? A.mapHi.width / W : 1 }, tSky: { value: null }, uRect: { value: new T3.Vector4() }, uBack: { value: new T3.Vector3() }, uTint: { value: new T3.Vector3(1, 1, 1) }, uHas: { value: 0 },
     };
-    const meshMat = back => new T3.ShaderMaterial({ uniforms: back ? Object.assign({}, U, { tMap: { value: back } }) : U, vertexShader: MESH_VS, fragmentShader: fix(MESH_FS), defines: back ? { BACK: 1 } : {}, extensions: { derivatives: true }, side: T3.DoubleSide });
+    const meshMat = back => new T3.ShaderMaterial({ uniforms: back ? Object.assign({}, U, { tMap: { value: back }, uTS: { value: 1 } }) : U, vertexShader: MESH_VS, fragmentShader: fix(MESH_FS), defines: back ? { BACK: 1 } : {}, extensions: { derivatives: true }, side: T3.DoubleSide });
     const matMain = meshMat(null), matBack = meshMat(tBack), matNet = meshMat(tBack), matMid = MID ? meshMat(tMid) : null;
     matNet.depthTest = false; matNet.depthWrite = false;      // safety net under everything: the old stretched bridge between a near thing and what is behind it
     { const sh = env.Q.get('hdshow'); if (sh === 'back' || sh === 'mid') matMain.visible = false; if (sh === 'main' || sh === 'mid') matBack.visible = false; if (matMid && (sh === 'main' || sh === 'back')) matMid.visible = false; }

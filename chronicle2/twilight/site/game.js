@@ -235,7 +235,18 @@ async function boot() {
   const pr = (M.props || []).map(p => loadImg(p.src));
   const got = await Promise.all(want.concat(pr));
   A.map = got[0]; A.hero = got[1]; HS = got[2]; A.walk = got[3]; A.height = got[4];
-  if (!raw.w) M.w = A.map.width; if (!raw.h) M.h = A.map.height;
+  // a picture painted finer than the map ("imageScale": 2 = two picture dots per map dot): the HD-2D view shows it as it is;
+  // everything else (2D view, occluders, the far-side colours) works on a copy brought down to map size, with a hard alpha edge
+  const IS = raw.imageScale > 1 ? raw.imageScale : 1;
+  if (!raw.w) M.w = Math.round(A.map.width / IS); if (!raw.h) M.h = Math.round(A.map.height / IS);
+  if (IS > 1) {
+    A.mapHi = A.map;
+    const c = mk(M.w, M.h), x = c.getContext('2d', { willReadFrequently: true });
+    x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high'; x.drawImage(A.map, 0, 0, M.w, M.h);
+    const im = x.getImageData(0, 0, M.w, M.h), dd = im.data;
+    for (let i = 3; i < dd.length; i += 4) dd[i] = dd[i] > 127 ? 255 : 0;
+    x.putImageData(im, 0, 0); A.map = c;
+  }
   const LAYER_DEF = { sky: { parallax: .08 }, far: { parallax: .25 }, clouds: { parallax: .12, drift: 4, repeatX: true }, fg: { parallax: 1.2 } };
   lk.forEach((k, i) => {
     const o = Object.assign({ x: 0, y: 0, drift: 0, alpha: 1, scale: 1, anchorX: 'left', anchorY: 'top' }, LAYER_DEF[k] || {}, M.layers[k]);
