@@ -517,8 +517,7 @@ function paintDialog() {
 
 // ------------------------------------------------------------------ update
 function camTarget(k) {
-  const pan = dlg && dlg.t.pan ? dlg.t.pan : [0, 0];
-  let tx = hero.x + cam.lx + pan[0] - VW / 2, ty = hero.y - (HS ? HS.body * .48 : 46) + cam.ly + pan[1] - VH / 2;
+  let tx = hero.x + cam.lx - VW / 2, ty = hero.y - (HS ? HS.body * .48 : 46) + cam.ly - VH / 2;      // cam.lx/ly: the eased talk-spot pan
   tx = M.w <= VW ? (M.w - VW) / 2 : clamp(tx, 0, M.w - VW); ty = M.h <= VH ? (M.h - VH) / 2 : clamp(ty, 0, M.h - VH);
   cam.x = k >= 1 ? tx : cam.x + (tx - cam.x) * k; cam.y = k >= 1 ? ty : cam.y + (ty - cam.y) * k;
 }
@@ -585,11 +584,12 @@ function update(dt) {
   hero.t = hero.moving ? hero.t + dt * (hero.running && !hero.runImg ? 1.55 : 1) : 0;
   followTrail(dt);
 
-  // camera: follow with a little lead in the walking direction
-  const lead = hero.moving ? 34 : 0, sp = Math.hypot(hero.vx, hero.vy) || 1;
-  const k = 1 - Math.exp(-dt * 2.2);
-  cam.lx += ((hero.moving ? hero.vx / sp * lead : 0) - cam.lx) * k; cam.ly += ((hero.moving ? hero.vy / sp * lead * .7 : 0) - cam.ly) * k;
-  camTarget(1 - Math.exp(-dt * (dlg && dlg.t.pan ? 1.6 : 5.5)));
+  // camera: held on the hero, so it stops exactly when they stop.  The old follow had a look-ahead in the walking
+  // direction and a lag behind it: on stopping the camera ran on past the hero and drifted back for about two seconds,
+  // which in the HD-2D view reads as sway.  Only a talk spot's own view shift (pan) is eased in and out.
+  const pan = dlg && dlg.t.pan ? dlg.t.pan : [0, 0], kp = 1 - Math.exp(-dt * 1.6);
+  cam.lx += (pan[0] - cam.lx) * kp; cam.ly += (pan[1] - cam.ly) * kp;
+  camTarget(1);
 
   // triggers
   nearTrig = null;
