@@ -1,0 +1,21 @@
+You are the lead pixel artist of a 2D RPG. ONE small sheet of eight sprites: the RUN cycle of the young priestess in TWO directions, 2 rows x 4 frames.
+
+Image 1 shows her WALK frames in exactly these two directions: its top row is walking DOWN-RIGHT (a three-quarter FRONT view turned about 45 degrees toward the viewer's right: face and chest visible, both eye dots visible), its bottom row is walking UP-LEFT (a three-quarter BACK view turned about 45 degrees toward the viewer's left: back of the head, long hair and back panel, no eyes). Look where her staff is: in the top row on the LEFT side of the figure in the picture, in the bottom row on the RIGHT side of the figure. The new sheet keeps the SAME two viewing angles, the same person, the same art-pixel size, the same head size and, in each row, the SAME STAFF SIDE AND HAND as image 1, and turns the walk into a run.
+
+Image 2 is her approved run sheet for the four main directions (toward the viewer, away, left, right): it shows HOW she runs (the forward lean, the flying hair and robe hem, the lifted knees, the shoes showing, the pumping free arm) and the level of finish. Draw the same kind of run, seen from the two angles of image 1.
+
+Image 3 is the walk sheet of the game's protagonist: the style reference for the whole game. He is a different person; copy nothing of his costume.
+
+THE FOUR FRAMES of each row (left to right): 1 = the LEFT foot lands in front, the right leg trails behind; 2 = BOTH feet off the ground, knees tucked, the figure about 3 art px higher; 3 = the RIGHT foot lands in front, the left leg trails; 4 = both feet off the ground again. A light, quick, short-stride run.
+
+ROW 1, running DOWN-RIGHT (toward the lower right of the picture): the upper body leans forward that way by about 12-15 degrees, the long flaxen hair, the robe hem and the tabard panels stream back toward the upper left. THE STAFF is on the LEFT side of the figure in all four frames, exactly as in the top row of image 1: the hand on the LEFT of the picture grips it at chest height and holds it close against that shoulder, nearly upright (leaning only a few degrees), the crescent standing above her head on the LEFT. The staff never crosses her face or her chest and never appears on the right side. The arm on the RIGHT of the picture is EMPTY: only a sleeve and a small bare fist, pumping.
+
+ROW 2, running UP-LEFT (toward the upper left of the picture): the upper body leans forward that way, hair, hem and back panel stream back toward the lower right. THE STAFF is on the RIGHT side of the figure in all four frames, exactly as in the bottom row of image 1: held close against the shoulder on the RIGHT of the picture, nearly upright, the crescent standing above her head on the RIGHT, the whole upper half of the shaft visible. The arm on the LEFT of the picture is empty and pumps.
+
+Exactly ONE staff per figure, complete from butt to brass crescent.
+
+THE CHARACTER, exactly as in image 1: long straight pale flaxen-gold hair with a straight fringe and a thin white ribbon circlet; a plain small face with two tiny dark eye dots (no nose, no mouth); the long dark plum robe with wide sleeves; the cream tabard panels edged with dull gold, the thin gold cord; soft dark shoes; the slender pale wooden staff with the small brass crescent.
+
+PIXEL RULES: real pixel art with the same art-pixel size as images 1 and 2, crisp squares on a regular grid. No blur, no motion lines, no dust, no gradients, no noise, no dithering, no glow, no black outline (edges are a darker shade of the shape's own colour), hard edges against the background. Muted dusty colours exactly as in image 1; light from the upper left.
+
+CANVAS: 2576x1408 px, flat #FF00FF everywhere. 2 rows x 4 columns, each cell 644x700 px; one figure centred in each cell, the same size as the figures of image 1 (about 460 px from hair top to soles when standing), never crossing into a neighbour cell or the image edge. NO shadow on the ground, no floor, no text, no labels, no numbers, no frames.

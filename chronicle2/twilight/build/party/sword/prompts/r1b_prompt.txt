@@ -1,0 +1,41 @@
+You are the lead pixel artist of a 2D RPG. ONE new sprite sheet: the field RUN cycle of a party member.
+
+IMAGE 1 is the approved WALK sheet of this character (row 1 facing the viewer, row 2 back view, row 3 facing left, row 4 facing right). Draw the SAME character, in exactly the same art style, the same pixel size (the same chunky art pixels as image 1), the same head size, proportions (about 3.3 heads tall, small head), palette, soft shading and soft selective outline as image 1.
+IMAGE 2 is a SIZE AND PLACEMENT GUIDE for the new sheet: grey mannequins on magenta, 4 rows x 4 columns. Each mannequin marks where one figure goes, its size, its ground line, and (rows 3 and 4) the forward lean. Replace the mannequins completely; no grey may remain.
+
+THE RUN (the director's note: "a running motion, leaning a little forward"):
+- She RUNS, clearly faster than the walk of image 1: the whole body LEANS FORWARD into the run by about 12-15 degrees (head ahead of the hips), knees lift high, the stride is long, the arms are bent at the elbows about 90 degrees and pump hard (fists near the chest in front, elbows behind), hands empty.
+- The PONYTAIL STREAMS out behind her, nearly horizontal, and whips up and down a little from frame to frame. The scabbard swings back, the jacket skirt flaps back.
+- Four frames per row, a full cycle:
+  Column 1 = CONTACT: her LEFT foot has just landed in front (left leg forward and bearing weight, right leg kicked up behind with the heel high); right arm forward, left arm back.
+  Column 2 = FLIGHT: both feet OFF the ground, legs passing and spread in the air, body at its highest (about 3 art px higher than in column 1).
+  Column 3 = CONTACT: her RIGHT foot has just landed in front (right leg forward, left leg kicked up behind); left arm forward, right arm back.
+  Column 4 = FLIGHT: both feet OFF the ground again, the mirror phase of column 2, body at its highest.
+  Columns 1 and 3 must differ from each other (other leg and other arm in front), and so must columns 2 and 4.
+- Because she leans and crouches into the run, the figure is 2-4 art px lower than her standing height; the head stays the same size as in image 1.
+
+ROWS:
+- Row 1: running TOWARD the viewer (front view). The lean shows as a lowered head (chin tucked, we see more of the top of the hair), shoulders hunched forward, bent arms pumping in front of the chest, and in the contact frames one knee and boot coming big toward us while the other leg is hidden behind. The ponytail flies up and back behind the head, its end visible above one shoulder.
+- Row 2: running AWAY from the viewer (back view). Head lowered and forward, elbows pumping out at the sides, in the contact frames the trailing boot sole kicks up toward us. The ponytail flies and bounces over the round shield on her back. No eyes.
+- Row 3: running LEFT (profile). The body leans 12-15 degrees to the LEFT (forward), long stride, ponytail streaming to the RIGHT.
+- Row 4: running RIGHT (profile). The body leans 12-15 degrees to the RIGHT, long stride, ponytail streaming to the LEFT.
+
+THE CHARACTER is exactly the person of image 1, nothing added and nothing left out: a young swordswoman of about 16-17, slim and athletic, straight-backed, steady and warm. She is 2 art px shorter than the boy of the style sheet.
+- Hair: AUBURN / dark copper (a muted reddish brown, not orange, not red), tied in a HIGH PONYTAIL at the back of the crown that falls to the shoulder blades; a short plain fringe. 3-4 shades, from dusty copper down to a dark red-brown. A tiny dark tie where the tail starts.
+- Jacket: a SLATE-BLUE quilted jacket (gambeson) with long sleeves and a short skirt that ends at the top of the thighs; only 2-3 quiet vertical quilting lines, 1 px, one shade darker. Over it a plain BROWN LEATHER chest piece (a simple cuirass covering chest and upper belly) and a brown leather BELT. Plain leather BRACERS on the forearms. Bare hands, EMPTY.
+- Legs: dark charcoal leggings, plain brown leather boots to below the knee.
+- NO cape, NO cloak, NO hood, NO scarf, NO helmet, NO pauldrons, NO ornaments.
+- SWORD: one plain one-handed sword in a plain dark-brown leather SCABBARD hanging from the belt at HER OWN LEFT HIP, pointing down and a little backwards; small dull-steel crossguard and pommel, the grip wrapped in dark leather. True to scale: the scabbard is about 24 art px long and 3 wide. It stays sheathed in every frame.
+- SHIELD: a small ROUND WOODEN shield (about 17 art px across) with a DULL STEEL RIM and a small steel boss, strapped flat on the middle of HER BACK. Plain brown planks, no emblem, no paint.
+
+WHICH SIDE THINGS ARE ON (never mirror them; the sword is always at HER OWN LEFT hip, the shield always on her BACK):
+- FRONT view (she faces us): the scabbard hangs at the VIEWER'S RIGHT hip, slanting down and outward. The shield is on her back and is NOT visible (at most a 1 px sliver of rim beside the waist). The ponytail is behind the head: we see the gathered hair as a small bump on top of the back of the crown and the end of the tail beside the neck.
+- BACK view (she walks away): the round shield sits in the middle of her back, fully visible, rim and boss; the ponytail hangs from the crown down over the top of the shield. The scabbard shows at the VIEWER'S LEFT hip, its tip pointing down and outward. No eyes.
+- Facing LEFT (profile, her left side is toward us): the scabbard is fully visible on the near hip, hilt in front, tip pointing down and back (toward the viewer's right). The shield is seen edge-on as a thin slab on her back (the viewer's right side of the torso). The ponytail hangs behind the head on the viewer's right. ONE eye dot.
+- Facing RIGHT (profile, her right side is toward us): the scabbard is on the FAR hip, hidden by the body: only its tip shows behind the legs on the viewer's left. The shield is seen edge-on on her back (the viewer's left side of the torso). The ponytail hangs behind the head on the viewer's left. ONE eye dot.
+
+PIXEL RULES: real pixel art with the same art-pixel size as image 1, crisp squares on a regular grid. No blur, no gradients, no noise, no dithering, no glow, no black outline, hard edges against the background. Muted dusty colours exactly as in image 1; light from the upper left. Eyes are tiny dark dots (1 px wide, 2 px high); no nose, no mouth.
+
+CANVAS: 2576x2800 px, flat #FF00FF everywhere. 4 rows x 4 columns, each cell 644x700 px, exactly where the mannequins of image 2 stand; the ground line of each row is the mannequins' ground line (in the flight frames the feet are above it).
+All figures are the same person at the same size: identical head, hair, costume and colours in every cell. One figure centred in each cell, never crossing into a neighbour cell or the image edge.
+NO shadow on the ground, no floor, no dust, no speed lines, no text, no labels, no numbers, no frames, no grid lines.

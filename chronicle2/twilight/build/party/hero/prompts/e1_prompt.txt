@@ -1,0 +1,8 @@
+IMAGE 1 is a finished pixel-art sprite sheet for a 2D RPG: 4 rows x 5 columns of one character on flat magenta #FF00FF (column 1 standing, columns 2-5 the four frames of his run cycle; row 1 front view, row 2 back view, row 3 running left, row 4 running right).
+IMAGE 2 is the approved walk sheet of the same character, as a reference for how he looks from each side.
+
+Redraw IMAGE 1 exactly as it is: the same canvas size, every figure in the same place at the same size, in the same pose, with the same pixels, the same colours, the same pixel size, the same hard edges against the flat magenta. Change ONLY the following:
+
+ROW 4 (the bottom row, running to the RIGHT): remove the small brass lantern from all four run frames (columns 2-5). The lantern hangs at his LEFT hip, which is on the far side of the body in this view, so it cannot be seen. Where the lantern, its chain and its strap were, paint what is behind them: the charcoal-indigo tunic, the dark-teal sash and the dark trousers, shaded like the pixels around. No brass, no amber, no chain may remain anywhere in row 4 (the tiny brass dot at the throat stays). The standing figure of row 4 (column 1) already has no lantern: leave it.
+
+Everything else stays untouched. Real pixel art: crisp squares, no blur, no anti-aliasing, no gradients, no glow, no black outline, no shadow on the ground, no text.

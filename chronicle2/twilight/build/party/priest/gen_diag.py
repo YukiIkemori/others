@@ -1,0 +1,42 @@
+"""Diagonal walk rows of the priestess: a new sheet on the grid of the chosen main raw (image 1).
+usage: python3 gen_diag.py <chosen_main_raw.png> <out_raw.png> [quality] [extra notes]"""
+import sys
+from PIL import Image
+import common as C
+PROMPT = '''You are the lead pixel artist of a 2D RPG. ONE new sprite sheet: the DIAGONAL walk directions of a party member, the young priestess.
+
+Image 1 is the approved walk sheet of this priestess for the four main directions (row 1 facing the viewer, row 2 back view, row 3 facing left, row 4 facing right; three frames each: standing, one step, the other step). Draw a NEW sheet of the SAME character on the same canvas and the same 4x3 grid, in exactly the same art style, the same pixel size (the same chunky art pixels as image 1), the same figure height, the same head size, feet lines, proportions, palette, soft shading and soft selective outline as image 1, but with these four rows:
+
+- Row 1: walking DOWN-LEFT. A three-quarter FRONT view: we see the face and chest, the whole body turned about 45 degrees toward the viewer's left. Both eye dots visible, the far one (viewer's left) closer to the edge of the face.
+- Row 2: walking DOWN-RIGHT. A three-quarter FRONT view turned about 45 degrees toward the viewer's right (the mirror situation of row 1, drawn on its own).
+- Row 3: walking UP-LEFT. A three-quarter BACK view: we see the back of the head, the long hair down the back and the back panel of the tabard, the body turned about 45 degrees toward the viewer's left; only a sliver of cheek, NO eyes.
+- Row 4: walking UP-RIGHT. A three-quarter BACK view turned about 45 degrees toward the viewer's right; only a sliver of cheek, NO eyes.
+
+Image 2 is a PLACEMENT GUIDE for the new sheet: grey mannequins on magenta, one per cell, with a thin pale stick that marks on WHICH SIDE OF THE FIGURE IN THE PICTURE the staff stands in that row. Follow the stick's side exactly; replace the crude mannequins completely.
+Image 3 is the walk sheet of the game's protagonist (main directions) and image 4 is his DIAGONAL sheet with exactly these four rows: use image 4 as the reference for the four viewing angles and how far the head and body turn, and images 3 and 4 as the style to match. He is a different person: copy nothing of his costume, hair or lantern.
+
+Columns in every row: column 1 = standing still in that direction (feet together); column 2 = LEFT foot stepping forward; column 3 = RIGHT foot stepping forward. The walk is as gentle as in image 1: small steps, the robe hem swaying a little, a shoe tip showing under the hem, the free arm swinging a little, the hair ends swaying 1 px.
+
+THE CHARACTER is exactly the person of image 1, nothing added and nothing left out: the long straight pale flaxen-gold hair reaching the middle of the back, with the straight fringe and the thin white ribbon circlet; the plain small face with two small dark eye dots (no nose, no mouth); the long dark plum robe to the ankles with wide sleeves; the cream tabard panel in front and in back, edged with dull gold, tied with the thin gold cord; soft dark shoes; and the slender pale wooden staff topped with the small brass crescent, as tall as in image 1.
+
+STAFF (always held upright in the character's own RIGHT hand, the same in all three frames of a row, complete from butt to crescent, never cut off, never hidden behind the head):
+THE SIMPLE RULE: in rows 1 and 2 (the two rows where we see her face) the staff is drawn on the LEFT side of the picture cell, to the LEFT of her head. In rows 3 and 4 (the two rows where we see her back) the staff is drawn on the RIGHT side of the cell, to the RIGHT of her head. This is true whichever way she is turned.
+- Row 1 (down-left): the staff stands at the LEFT edge of the figure, ahead of her (her right hand is the far hand, leading the way).
+- Row 2 (down-right): she is turned toward the viewer's right, but the staff is still on the LEFT of the figure in the picture: it trails on her near side, BEHIND her direction of travel, held by the near arm (the arm on the picture's left), the whole shaft visible in front of the left part of the robe. The staff is NOT in front of her face and NOT on the right side of the picture.
+- Row 3 (up-left): she is turned toward the viewer's left, but the staff is on the RIGHT of the figure in the picture, behind her direction of travel (the far hand).
+- Row 4 (up-right): the staff stands at the RIGHT edge of the figure, ahead of her, held by the near hand, fully visible.
+Her left hand is empty in every frame. There is exactly ONE staff per figure.
+
+Within a row the three frames are the same person from the same angle: identical head, hair, face, costume and colours; only the hem, the shoe tips, the free arm and the hair ends move. The head turn and body angle of each row must be clearly different from the pure front, back and side views of image 1 (a true three-quarter view: the shoulders are foreshortened, the face points diagonally).
+
+PIXEL RULES: real pixel art with the same art-pixel size as image 1, crisp squares on a regular grid. No blur, no gradients, no noise, no dithering, no glow, no black outline, hard edges against the background. Muted dusty colours exactly as in image 1; light from the upper left.
+
+CANVAS: %dx%d px, flat #FF00FF everywhere. 4 rows x 3 columns, each cell 644x700 px, the figures standing exactly where the figures of image 1 stand, the same figure height as image 1. One figure centred in each cell, never crossing into a neighbour cell or the image edge. NO shadow on the ground, no floor, no text, no labels, no frames.
+'''
+src, out = sys.argv[1], sys.argv[2]
+GUIDE = '/home/user/tw/party/priest/guide_walk_diag.png'
+quality = sys.argv[3] if len(sys.argv) > 3 else 'high'
+extra = sys.argv[4] if len(sys.argv) > 4 else ''
+W, H = Image.open(src).size
+pr = PROMPT % (W, H) + (('\nEXTRA INSTRUCTIONS FOR THIS ATTEMPT:\n' + extra) if extra else '')
+C.gen(pr, out, [src, GUIDE, C.HERO_RAW, C.HERO_DIAG], '%dx%d' % (W, H), quality)

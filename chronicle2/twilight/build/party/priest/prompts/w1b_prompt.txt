@@ -1,0 +1,34 @@
+You are the lead pixel artist of a 2D RPG. ONE sprite sheet: the field walk cycle of a new party member, drawn fresh.
+
+IMAGE 1 is a SIZE AND PLACEMENT GUIDE: grey mannequins on magenta, one per cell. Each mannequin marks exactly where one figure stands, how tall it is (76 art px = 532 image px), how small the head is, where the feet line is, and (the thin pale stick) on which side of the body the staff is held and how tall it is. Draw every figure over its mannequin with the same height, the same head size, the same centre and the same feet line. The mannequins themselves are crude: replace them completely with a properly drawn character; no grey mannequin may remain.
+
+IMAGE 2 is the STYLE REFERENCE: the approved walk sheet of the game's protagonist (a silver-haired traveller in an ivory cape), drawn on the same canvas and grid. The new character must match it in every respect of craft: the same art-pixel size, the same head size and proportions, the same level of detail, the same muted dusk palette family, the same soft shading and soft selective outline, the same slightly-from-above camera. She is a DIFFERENT person: do not copy his hair, cape, tunic, boots or lantern.
+
+STYLE: the restrained, grown-up pixel art of modern "HD-2D" console RPG field sprites: small figures that sit quietly inside a richly lit pixel diorama. NOT a 16-bit / SNES-style chibi sprite. It must look drawn by the same hand as the silver-haired traveller of the style reference image: the same size of art pixel, the same head size, the same amount of detail, the same soft shading and the same soft own-colour edges.
+- PROPORTIONS AND PIXEL DENSITY: about 3.2 heads tall. The whole figure is 76 art pixels tall from the top of the hair to the shoe soles (she is slightly shorter than the traveller, who is 80). The head with hair is about 24 art px high and 21 wide, exactly the traveller's head size (a SMALL head, drawn with FINE pixels); narrow natural shoulders; a real torso; the robe falls straight and slim, widening only a little toward the hem (about 24 art px wide at the hem in front view). Not chibi, not super-deformed, no oversized hands.
+- FACE: a small plain skin plane. Eyes are tiny dots: 1 px wide, 2 px high, dark brown, about 5 px apart. NO eyelashes, NO iris, NO eye highlight, NO eyebrows, NO nose, NO mouth, NO blush. A soft shadow under the fringe is the only modelling.
+- NO BLACK OUTLINE. There is no dark or blackish line around the figure, the arms, the robe or the staff. The edge of every shape is simply a darker, slightly cooler shade of that shape's own colour (selective outline), 1 px. No near-black pixels anywhere except the two eye dots. The plum robe is dark but clearly violet, never black.
+- COLOURS: muted, dusty, slightly desaturated, like cloth seen at dusk. About 18-26 colours in the whole sheet, 3-4 shades per material (flaxen hair 4, skin 3, plum robe 4, cream tabard 3, dull gold 2, pale wood 2, brass 2, white ribbon 1, shoes 2). No saturated highlights, no pure white, no shiny specular dots, no gloss bands on the hair.
+- SHADING: soft and simple, in big calm planes: light from the upper left, a broad shadow side on the right, shadows drifting toward blue-violet. Low contrast inside each material. No dithering, no texture noise, no fold spaghetti: 2-3 quiet vertical folds on the robe are enough.
+- PIXELS: real pixel art. One art pixel = exactly 7x7 image px on a regular grid over the whole image (the same grid the mannequins of the guide image are built on). Crisp squares: no blur, no anti-aliasing against the background, no gradients, no glow.
+
+THE CHARACTER: a young priestess of about 17, slender, gentle and composed, a healer.
+- Hair: long, straight, pale flaxen gold, with a plain straight fringe, falling loose down the back to the middle of the back; shaded pale straw to dusty ochre-brown. A thin white ribbon circlet (a 1 px pale line) runs around the head just above the fringe.
+- A LONG robe of deep plum-indigo (a dark, dusty violet) that reaches the ankles, with wide sleeves that cover the wrists. Over it a cream TABARD: one long narrow panel hanging down the front from the collar to the shins and one down the back, each edged with a 1 px line of dull gold; tied at the waist with a thin dull-gold cord. Only the tips of soft dark shoes show under the hem. NO hood, NO cape, NO jewellery, NO bag.
+- ONE prop only: a slender holy STAFF of pale wood, 2 art px thick, perfectly straight, about as tall as she is (its top stands a little above the top of her head), topped with a small open brass crescent ring about 6 art px across. She carries it upright in her own RIGHT hand, the butt just above the ground. No glow, no rays, no gem, no ribbons on the staff.
+
+MOTION: a gentle, modest walk with small steps: the body bobs 1 px, the robe hem sways a little and the tip of the stepping shoe shows under it, the free (left) arm swings a little, the hair ends sway 1 px. The staff stays upright and moves with the hand.
+
+CANVAS: 1936x2800 px, flat #FF00FF everywhere. 4 rows x 3 columns, each cell 644x700 px (92x100 art px), exactly where the mannequins of image 1 stand.
+Row 1: facing the viewer (walking toward us). Row 2: back view (walking away). Row 3: facing LEFT (profile). Row 4: facing RIGHT (profile).
+Columns in every row: 1 = standing still; 2 = LEFT foot stepping forward; 3 = RIGHT foot stepping forward.
+The camera looks slightly down on the figure (top-down RPG field view), the same angle in every cell.
+STAFF SIDE (always in the character's own RIGHT hand, upright, the same in all three frames of a row):
+- Row 1 (front view): the staff stands on the VIEWER'S LEFT side of the body, held by the hand at the viewer's left.
+- Row 2 (back view): the staff stands on the VIEWER'S RIGHT side of the body.
+- Row 3 (facing left): she holds the staff upright a little in FRONT of her body (toward the viewer's left), the forearm slightly raised; the staff shaft is not hidden behind the head.
+- Row 4 (facing right): she holds the staff upright a little in FRONT of her body (toward the viewer's right), the near hand gripping it; the whole staff is visible.
+BACK VIEW: the long flaxen hair hangs straight down to the middle of the back over the cream back panel of the tabard; no face, no eyes.
+
+All figures are the same person at the same size: identical head, hair, costume, staff and colours in every cell; within a row only the hem, the shoe tips, the free arm and the hair ends move. One figure centred in each cell, never crossing into a neighbour cell or the image edge.
+NO shadow on the ground, no floor, no text, no labels, no numbers, no frames, no grid lines.

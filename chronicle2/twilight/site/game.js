@@ -76,6 +76,7 @@ const DEFAULTS = {
   spawn: { x: null, y: null, dir: 'down' },
   hero: { sheet: 'hero.png', spec: 'hero.json', speed: 150, run: 250, radius: 6, shadow: .34, shadowR: null,
           light: { r: 170, color: '#ffb76a', intensity: 1 } },
+  party: [], partyGap: 40,                 // companions who walk the leader's trail: ['party/sword', …] (name.png, name.json)
   occluders: [], lights: [], water: [], triggers: [], emitters: [], props: [],
   layers: {},
   post: { grain: .035, mistScale: 1 },
@@ -102,6 +103,9 @@ let scr = null, scx = null, lanternVis = 1;
 let hdr = null;                     // HD-2D renderer (hd.js), only on maps that carry an "hd" entry
 const cam = { x: 0, y: 0, lx: 0, ly: 0 };
 const hero = { x: 0, y: 0, dir: 0, t: 0, moving: false, running: false, vx: 0, vy: 0 };
+const lead = hero;                  // the leader is an actor like the companions: { S, img, runImg, x, y, dir, t, moving, running }
+const party = [];                   // companions, in marching order
+let trail = [];                     // where the leader has walked: [x, y, dir], oldest first, a point every 2 px or so
 const keys = new Set();
 const stick = { on: false, id: null, ox: 0, oy: 0, x: 0, y: 0 };
 let moodT = 0, moodFrom = 0, moodTo = 0, moodClock = 1, P = null, moodNames = ['gold', 'shadow'];
@@ -245,6 +249,18 @@ async function boot() {
   HS.rows = Math.max(1, Math.floor(A.hero.height / HS.frame[1])); HS.cols = Math.max(1, Math.floor(A.hero.width / HS.frame[0]));
   HS.body = HS.body || Math.round(HS.frame[1] * .75);
   if (M.hero.shadowR == null) M.hero.shadowR = Math.round(HS.body * .2);
+  // run sheets and companions (all optional)
+  const folder = p => p.slice(0, p.lastIndexOf('/') + 1);
+  const runOf = async (S, base) => (S.run && S.run.src ? loadImg(base + S.run.src).catch(() => null) : null);
+  lead.S = HS; lead.img = A.hero; lead.runImg = await runOf(HS, folder(M.hero.spec));
+  for (const name of M.party || []) {
+    try {
+      const [img, S] = await Promise.all([loadImg(name + '.png'), loadJson(name + '.json')]);
+      S.frame = S.frame || [96, 128]; S.foot = S.foot || [48, 120]; S.ms = S.ms || 160; S.body = S.body || 80;
+      S.rows = Math.max(1, Math.floor(img.height / S.frame[1])); S.cols = Math.max(1, Math.floor(img.width / S.frame[0]));
+      party.push({ S, img, runImg: await runOf(S, folder(name)), x: 0, y: 0, dir: 0, t: party.length * .21 + .1, moving: false, running: false });
+    } catch (e) { console.warn('仲間の絵を読み込めません: ' + name, e); }
+  }
 
   // walk mask
   if (A.walk) {
@@ -566,7 +582,8 @@ function update(dt) {
     hero.vx = mvx / dt; hero.vy = mvy / dt;
     if (hero.moving) hideHint();
   }
-  hero.t = hero.moving ? hero.t + dt * (hero.running ? 1.55 : 1) : 0;
+  hero.t = hero.moving ? hero.t + dt * (hero.running && !hero.runImg ? 1.55 : 1) : 0;
+  followTrail(dt);
 
   // camera: follow with a little lead in the walking direction
   const lead = hero.moving ? 34 : 0, sp = Math.hypot(hero.vx, hero.vy) || 1;
@@ -608,12 +625,48 @@ function update(dt) {
     p.x += p.vx * dt; p.y += p.vy * dt;
   }
 }
-function heroFrame() {
-  const col = hero.moving ? [1, 2, 3, 0][Math.floor(hero.t * 1000 / HS.ms) % 4] : 0;
-  return [Math.min(col, HS.cols - 1), Math.min(hero.dir, HS.rows - 1)];
+// Companions keep to the path the leader actually walked, a fixed distance apart, so they never get stuck on anything.
+const DV = [[0, 1], [-1, 0], [1, 0], [0, -1], [-.7, .7], [.7, .7], [-.7, -.7], [.7, -.7]];
+function seedTrail() {
+  trail = []; if (!party.length) return;
+  const a = DV[hero.dir] || DV[0], pts = [[hero.x, hero.y, hero.dir]]; let x = hero.x, y = hero.y;
+  for (let d = 0; d < party.length * M.partyGap; d += 2) { const nx = x - a[0] * 2, ny = y - a[1] * 2; if (!free(nx, ny)) break; x = nx; y = ny; pts.push([x, y, hero.dir]); }
+  trail = pts.reverse(); followTrail(0);
 }
+function followTrail(dt) {
+  if (!party.length) return;
+  if (!trail.length) { seedTrail(); return; }
+  const last = trail[trail.length - 1], dl = Math.hypot(hero.x - last[0], hero.y - last[1]);
+  if (dl > 60) { seedTrail(); return; }                       // the leader was moved by hand
+  if (dl >= 2) trail.push([hero.x, hero.y, hero.dir]);
+  const gap = M.partyGap;
+  let px = hero.x, py = hero.y, acc = 0, i = trail.length - 1, k = 0;
+  for (const f of party) {
+    const want = ++k * gap; let nx = px, ny = py, nd = f.dir, found = false;
+    while (i >= 0) {
+      const q = trail[i], seg = Math.hypot(px - q[0], py - q[1]);
+      if (acc + seg >= want) { const u = seg ? (want - acc) / seg : 0; nx = px + (q[0] - px) * u; ny = py + (q[1] - py) * u; nd = q[2]; found = true; break; }
+      acc += seg; px = q[0]; py = q[1]; nd = q[2]; i--;
+    }
+    if (!found) { nx = px; ny = py; }                         // the trail is still short: wait at its far end
+    else { px = nx; py = ny; acc = want; }
+    f.moving = dt > 0 && Math.hypot(nx - f.x, ny - f.y) > dt * 20; f.running = hero.running && f.moving;
+    if (f.moving || !dt) { f.dir = Math.min(nd, f.S.rows - 1); f.t += dt; }
+    f.x = nx; f.y = ny;
+  }
+  let len = 0;
+  for (let j = trail.length - 1; j > 0; j--) { len += Math.hypot(trail[j][0] - trail[j - 1][0], trail[j][1] - trail[j - 1][1]); if (len > party.length * gap + 12) { trail.splice(0, j - 1); break; } }
+}
+// which picture an actor shows now: [sheet image, column, row, running?]
+function actorFrame(a) {
+  const S = a.S, row = Math.min(a.dir, S.rows - 1);
+  if (a.moving && a.running && a.runImg) return [a.runImg, Math.floor(a.t * 1000 / (S.run.ms || 105)) % (S.run.cols || 4), row, true];
+  const col = a.moving ? [1, 2, 3, 0][Math.floor(a.t * 1000 / S.ms) % 4] : 0;
+  return [a.img, Math.min(col, S.cols - 1), row, false];
+}
+function heroFrame() { const f = actorFrame(hero); return [f[1], f[2], f[3]]; }
 function lanternPos() {
-  const [c, r] = heroFrame(), a = HS.lantern && HS.lantern[r] && HS.lantern[r][c];
+  const [c, r, run] = heroFrame(), tab = run && HS.runLantern ? HS.runLantern : HS.lantern, a = tab && tab[r] && tab[r][c];
   const hx = Math.round(hero.x), hy = Math.round(hero.y);
   return a ? [hx - HS.foot[0] + a[0], hy - HS.foot[1] + a[1]] : [hx, hy - Math.round(HS.body * .5)];
 }
@@ -644,8 +697,9 @@ function drawWorld(ox, oy) {
   for (const l of parts.leaf) if (l.rest >= 0) drawLeaf(l, ox, oy, clamp((l.stay + 1.5 - l.rest) / 1.5, 0, 1), 0);
 
   // actors and occluders, back to front
-  const hx = Math.round(hero.x), hy = Math.round(hero.y), [fc, fr] = heroFrame(), FW = HS.frame[0], FH = HS.frame[1];
-  const items = [{ y: hero.y, hero: true }];
+  const hx = Math.round(hero.x), hy = Math.round(hero.y), FW = HS.frame[0], FH = HS.frame[1];
+  const items = [{ y: hero.y, actor: hero }];
+  for (const f of party) items.push({ y: f.y - .01, actor: f });
   for (const p of props) items.push({ y: p.y, prop: p });
   const boxes = [[hx - HS.foot[0], hy - HS.foot[1], FW, FH, hero.y]];
   for (const p of props) boxes.push([p.x - p.foot[0], p.y - p.foot[1], p.fw, p.fh, p.y]);
@@ -659,7 +713,7 @@ function drawWorld(ox, oy) {
     else if (it.prop) {
       const p = it.prop, f = p.frames > 1 ? Math.floor(T * 1000 / p.ms) % p.frames : 0;
       drawActor(p.img, f * p.fw, 0, p.fw, p.fh, Math.round(p.x), Math.round(p.y), p.foot, p.shadow, p.shadowR || p.fw * .28, ox, oy);
-    } else drawActor(A.hero, fc * FW, fr * FH, FW, FH, hx, hy, HS.foot, M.hero.shadow, M.hero.shadowR, ox, oy);
+    } else { const a = it.actor, S = a.S, f = actorFrame(a); drawActor(f[0], f[1] * S.frame[0], f[2] * S.frame[1], S.frame[0], S.frame[1], Math.round(a.x), Math.round(a.y), S.foot, M.hero.shadow, M.hero.shadowR, ox, oy); }
   }
   // leaves in the air
   for (const l of parts.leaf) if (l.rest < 0) drawLeaf(l, ox, oy, 1, 1);
@@ -766,7 +820,7 @@ function drawLayer(c, o, k) {
 
 // ------------------------------------------------------------------ draw: frame
 function render() {
-  if (hdr && hdr.on) { hdr.render({ cam, hero, frame: heroFrame(), la: lanternPos(), P, moodT, T, showWalk }); return; }
+  if (hdr && hdr.on) { hdr.render({ cam, hero, actors: [hero, ...party].map(a => { const f = actorFrame(a); return { img: f[0], fc: f[1], fr: f[2], x: a.x, y: a.y, S: a.S }; }), la: lanternPos(), P, moodT, T, showWalk }); return; }
   const snap = v => Math.round(v * SC) / SC;
   const cx = snap(cam.x), cy = snap(cam.y), ox = Math.floor(cx), oy = Math.floor(cy), fx = cx - ox, fy = cy - oy;
   const savedCam = [cam.x, cam.y]; cam.x = cx; cam.y = cy;
@@ -883,8 +937,9 @@ function render() {
     const b = Math.max(0, Math.sin(T * p.rate + p.ph)); const k = b * b * b;
     if (k < .02) continue;
     const r = 8 + 5 * k;
-    ctx.globalAlpha = .5 * k; ctx.drawImage(p.hue < .6 ? FF : FF2, X(p.x - r), Y(p.y - r), r * 2 * SC, r * 2 * SC);
-    ctx.globalAlpha = Math.min(1, k * 1.6); ctx.fillStyle = p.hue < .6 ? '#f4ffd0' : '#fff2c8';
+    const ec = p.e.color;                                              // an emitter may carry its own colour (crystal blue, moon white …)
+    ctx.globalAlpha = .5 * k; ctx.drawImage(ec ? falloff(hexRgb(ec), SOFT) : p.hue < .6 ? FF : FF2, X(p.x - r), Y(p.y - r), r * 2 * SC, r * 2 * SC);
+    ctx.globalAlpha = Math.min(1, k * 1.6); ctx.fillStyle = ec ? '#f2fbff' : p.hue < .6 ? '#f4ffd0' : '#fff2c8';
     ctx.fillRect(Math.round(X(Math.round(p.x))), Math.round(Y(Math.round(p.y))), SC, SC);
   }
   if (P.wisps > .01) {
@@ -995,7 +1050,8 @@ const api = {
   get near() { return nearTrig ? nearTrig.title || true : null; },
   get map() { return M; },
   ready: true, setMood, toggleMood, interact, walkable, free,
-  teleport(x, y, dir) { hero.x = x; hero.y = y; if (dir) hero.dir = Math.max(0, DIRS.indexOf(dir)); camTarget(1); },
+  teleport(x, y, dir) { hero.x = x; hero.y = y; if (dir) hero.dir = Math.max(0, DIRS.indexOf(dir)); seedTrail(); camTarget(1); },
+  get party() { return party; }, keys,
   step(n = 1, dt = 1 / 60) { for (let i = 0; i < n; i++) { T += dt; update(dt); } render(); },
 };
 

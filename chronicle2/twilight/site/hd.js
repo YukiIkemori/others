@@ -82,10 +82,10 @@
     ${SKY_FN}
     void main() { gl_FragColor = vec4(skyAt(vUv), .86); }`;
   const SHADOW_FS = `varying vec2 vUv; uniform float uA; void main() { float d = length(vUv - .5) * 2.; float a = d < .46 ? .32 : d < .74 ? .3 : d < 1. ? .3 * .5 : 0.; gl_FragColor = vec4(.05, .03, .12, a * uA); }`;
-  const PT_VS = `attribute vec4 aSeed; uniform float uT, uPx; varying float vA;
+  const PT_VS = `attribute vec4 aSeed; attribute vec3 aCol; uniform float uT, uPx; varying float vA; varying vec3 vC;
     void main() { vec3 p = position + vec3(sin(uT * aSeed.x + aSeed.w * 6.3) * .7, cos(uT * aSeed.y * .8 + aSeed.w * 3.1) * .5, sin(uT * aSeed.z + aSeed.w) * .35);
-      vA = .55 + .45 * sin(uT * (1.2 + aSeed.x) + aSeed.w * 20.); gl_Position = projectionMatrix * viewMatrix * vec4(p, 1.); gl_PointSize = uPx * (1.6 + aSeed.z); }`;
-  const PT_FS = `uniform vec3 uC; uniform float uI; varying float vA; void main() { float d = length(gl_PointCoord - .5) * 2.; float a = clamp(1. - d, 0., 1.); gl_FragColor = vec4(uC * a * a * vA * uI, 0.); }`;
+      vA = .55 + .45 * sin(uT * (1.2 + aSeed.x) + aSeed.w * 20.); vC = aCol; gl_Position = projectionMatrix * viewMatrix * vec4(p, 1.); gl_PointSize = uPx * (1.6 + aSeed.z); }`;
+  const PT_FS = `uniform float uI; varying float vA; varying vec3 vC; void main() { float d = length(gl_PointCoord - .5) * 2.; float a = clamp(1. - d, 0., 1.); gl_FragColor = vec4(vC * a * a * vA * uI, 0.); }`;
   // depth of field: gather inside the pixel's own circle of confusion; sharp neighbours do not bleed into blurred ones
   const DOF_FS = `
     uniform sampler2D tScene; uniform vec2 uPx; uniform float uMax, uBand; varying vec2 vUv;
@@ -135,6 +135,10 @@
     const px = pc.getContext('2d', { willReadFrequently: true }); px.drawImage(A.map, 0, 0);
     const img = px.getImageData(0, 0, W, H), d = img.data;
     const hh = new Uint16Array(hData);                         // heights, with painted-but-flat pixels filled from neighbours
+    // where the painter left sky there is no surface, whatever the blocks say (their rims are a few dots fatter than the painted ones);
+    // one dot of rim is kept so the painted edge does not shrink
+    for (let y = 1; y < H - 1; y++) for (let x = 1, i = y * W + 1; x < W - 1; x++, i++)
+      if (!d[i * 4 + 3] && !d[i * 4 - 1] && !d[i * 4 + 7] && !d[(i - W) * 4 + 3] && !d[(i + W) * 4 + 3]) hh[i] = 0;
     for (let pass = 0; pass < 6; pass++) {
       const todo = [];
       for (let y = 1; y < H - 1; y++) for (let x = 1, i = y * W + 1; x < W - 1; x++, i++) {
@@ -142,7 +146,7 @@
         if (d[o + 3] === 0 || (d[o + 3] && !hh[i])) {
           for (const j of [i - 1, i + 1, i - W, i + W]) {
             if (d[o + 3] === 0 && d[j * 4 + 3] === 255) { todo.push(i, j, 0); break; }
-            if (d[o + 3] && !hh[i] && hh[j]) { todo.push(i, j, 1); break; }
+            if (d[o + 3] === 255 && !hh[i] && hh[j]) { todo.push(i, j, 1); break; }
           }
         }
       }
@@ -159,6 +163,14 @@
       const c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d', { willReadFrequently: true }); g.drawImage(im, 0, 0, W, H);
       const md = g.getImageData(0, 0, W, H).data; mp = new Uint8Array(W * H); for (let i = 0; i < W * H; i++) mp[i] = md[i * 4] > 127 ? 1 : 0;
     } catch (e) { mp = null; }
+    // what really lies behind each near thing, baked from the blocks (optional, behind.png from vox.py): the height of the second surface
+    // on the same line of sight, 0 = nothing but sky.  Without it the far side is only guessed from the thing's surroundings.
+    let bh = null;
+    if (cfg.behind) try {
+      const im = new Image(); im.src = cfg.behind; await im.decode();
+      const c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d', { willReadFrequently: true }); g.imageSmoothingEnabled = false; g.drawImage(im, 0, 0, W, H);
+      const md = g.getImageData(0, 0, W, H).data; bh = new Uint16Array(W * H); for (let i = 0; i < W * H; i++) bh[i] = md[i * 4] + 256 * md[i * 4 + 1];
+    } catch (e) { bh = null; }
     // the painter draws things a few dots fatter than the blocks: near things grow over flat ground (where the outline says
     // "this stands", when there is one) so their rim stays with them
     const flat = (src, i) => { const a = src[i] - src[i + W], b = src[i - W] - src[i]; return !(a >= 1 && a <= 3) && !(b >= 1 && b <= 3); };
@@ -178,28 +190,36 @@
     // different place, a strip beside every near thing comes into view that was never painted.  That strip is made here:
     // the far surface is continued in under the near thing, ring by ring, with the colours of the far side diffused inwards.
     const RINGS = 60, hb = new Uint16Array(W * H), ring = new Uint8Array(W * H), bd = new Uint8Array(d.length), seen = new Uint8Array(W * H), upr = new Uint8Array(W * H);
+    const vd = new Uint8Array(W * H);            // ring cells with nothing but sky behind them (a stone that tops the island's far rim): no far surface is made there
     const N8 = [-1, 1, -W, W, -W - 1, -W + 1, W - 1, W + 1], DY = [0, 0, -1, 1, -1, -1, 1, 1];
     function fill(rings) {
-      hb.fill(0); ring.fill(0); seen.fill(0); bd.set(d);
+      hb.fill(0); ring.fill(0); seen.fill(0); vd.fill(0); bd.set(d);
       for (let y = 1; y < H - 1; y++) for (let x = 1, i = y * W + 1; x < W - 1; x++, i++) upr[i] = hh[i] && !flat(hh, i) ? 1 : 0;
       let cur = [];
       for (let y = 1; y < H - 1; y++) for (let x = 1, i = y * W + 1; x < W - 1; x++, i++) {
         const v = hh[i]; if (!v) continue;
         const q = y + v;
-        for (let k = 0; k < 4; k++) { const n = hh[i + N8[k]]; if (n && y + DY[k] + n < q - JUMP) { cur.push(i); break; } }
+        for (let k = 0; k < 4; k++) { const n = hh[i + N8[k]]; if (!n || y + DY[k] + n < q - JUMP) { cur.push(i); break; } }
       }
       const sv = new Int32Array(8);
       for (let k = 1; k <= rings && cur.length; k++) {
         const done = [];
         for (const i of cur) {
           const y = (i / W) | 0, q = y + hh[i];
-          let lo = 1e9;
+          let lo = 1e9, sk = 0;
           for (let e = 0; e < 8; e++) {                          // what the far side would be here: an upright face keeps its foot line, flat ground keeps its height
-            const j = i + N8[e]; let v = ring[j] ? hb[j] : (hh[j] && y + DY[e] + hh[j] < q - JUMP ? hh[j] : 0);
+            const j = i + N8[e];
+            if (ring[j] ? vd[j] : !hh[j]) { sv[e] = 0; sk += e < 4 ? 2 : 1; continue; }      // sky on that side
+            let v = ring[j] ? hb[j] : (y + DY[e] + hh[j] < q - JUMP ? hh[j] : 0);
             if (v && upr[j]) v = Math.max(1, v + DY[e]);
             sv[e] = v; if (v && v < lo) lo = v;
           }
-          if (lo > 1e8) continue;
+          const sure = bh && hData[i] && Math.abs(hData[i] - hh[i]) <= JUMP;      // the blocks have this same near thing here: their answer is used
+          if (sure && !bh[i]) {                                     // nothing behind: either the thing's own foot (the sight line runs into the ground under it) or open sky
+            if (!(lo < 1e8 && y + lo >= q - JUMP - 8)) done.push(i, 0, 0, 0, 0, 0);
+            continue;
+          }
+          if (lo > 1e8) { if (sk && !sure) done.push(i, 0, 0, 0, 0, 0); continue; }      // (a sure cell waits until a neighbour brings a colour)
           let sh = 0, r = 0, g = 0, b = 0, n = 0, nu = 0;
           for (let e = 0; e < 8; e++) {
             const v = sv[e]; if (!v || v > lo + 6) continue;
@@ -210,12 +230,13 @@
             }
             sh += v * wgt; r += bd[o] * wgt; g += bd[o + 1] * wgt; b += bd[o + 2] * wgt; n += wgt; if (upr[j]) nu += wgt;
           }
-          const hv = Math.round(sh / n);
+          if (!sure && sk > n) { done.push(i, 0, 0, 0, 0, 0); continue; }      // more sky than ground around: the sky wins
+          const hv = sure ? bh[i] : Math.round(sh / n);
           if (y + hv >= q - JUMP) continue;                         // the far surface has reached the near thing's foot
           done.push(i, hv, r / n, g / n, b / n, nu * 2 > n ? 1 : 0);
         }
         const next = [];
-        for (let e = 0; e < done.length; e += 6) { const i = done[e], o = i * 4; hb[i] = done[e + 1]; ring[i] = k; upr[i] = done[e + 5]; bd[o] = done[e + 2]; bd[o + 1] = done[e + 3]; bd[o + 2] = done[e + 4]; bd[o + 3] = 255; }
+        for (let e = 0; e < done.length; e += 6) { const i = done[e], o = i * 4; hb[i] = done[e + 1]; ring[i] = k; if (!done[e + 1]) { vd[i] = 1; continue; } upr[i] = done[e + 5]; bd[o] = done[e + 2]; bd[o + 1] = done[e + 3]; bd[o + 2] = done[e + 4]; bd[o + 3] = 255; }
         for (let e = 0; e < done.length; e += 6) for (let c = 0; c < 4; c++) {
           const j = done[e] + N8[c], x = j % W;
           if (!ring[j] && hh[j] && seen[j] !== k && x > 0 && x < W - 1 && j > W && j < W * (H - 1)) { seen[j] = k; next.push(j); }
@@ -231,7 +252,7 @@
       for (let i = 0; i < W * H; i++) if (ring[i] && mp[i]) { reach[i] = 1; fr.push(i); }
       for (let k = 0; k < TRIM + 2; k++) { const nx = []; for (const i of fr) for (let c = 0; c < 4; c++) { const j = i + N8[c]; if (ring[j] && !reach[j]) { reach[j] = 1; nx.push(j); } } fr = nx; }
       const cut = new Uint8Array(W * H), by = Array.from({ length: TRIM + 1 }, () => []);
-      for (let i = 0; i < W * H; i++) if (ring[i] && ring[i] <= TRIM && !mp[i] && reach[i]) by[ring[i]].push(i);
+      for (let i = 0; i < W * H; i++) if (ring[i] && ring[i] <= TRIM && !vd[i] && !mp[i] && reach[i]) by[ring[i]].push(i);
       for (let k = 1; k <= TRIM; k++) for (const i of by[k]) if (k === 1 || cut[i - 1] || cut[i + 1] || cut[i - W] || cut[i + W]) cut[i] = 1;
       for (let i = 0; i < W * H; i++) if (cut[i]) hh[i] = hb[i];
     }
@@ -249,7 +270,6 @@
       for (let y = 0; y < hgt; y++) for (let x = 0; x < W; x++) wk[((Y0 + y) * W + x) * 4 + 1] = 255 * clamp((70 - at(x, y)) / 40, 0, 1);
     }
     const tWalk = new T3.DataTexture(wk, W, H, T3.RGBAFormat); tWalk.magFilter = tWalk.minFilter = T3.LinearFilter; tWalk.needsUpdate = true;
-    const tHero = new T3.Texture(A.hero); tHero.magFilter = tHero.minFilter = T3.NearestFilter; tHero.generateMipmaps = false; tHero.flipY = false; tHero.needsUpdate = true;
 
     const world = (x, y, h) => new T3.Vector3((x + .5) / S, -(y + .5 + h) * KA, h * KB);
     const hAt = (x, y) => hh[clamp(Math.round(y), 0, H - 1) * W + clamp(Math.round(x), 0, W - 1)];
@@ -281,7 +301,7 @@
       if (!any) continue;
       const idx = [], ib = [], inet = [];
       for (let y = 0; y < h - 1; y++) for (let x = 0; x < w - 1; x++) {
-        const a = y * w + x, b = a + 1, c = a + w, e = c + 1, Y = ty + y;
+        const a = y * w + x, b = a + 1, c = a + w, e = c + 1, Y = ty + y, G = Y * W + tx + x;
         for (let layer = 0; layer < 2; layer++) {
           const P = layer ? pb : pos;
           if (layer && !(fl[a] || fl[b] || fl[c] || fl[e])) break;
@@ -289,7 +309,10 @@
           if (!ha || !hb2 || !hc || !he) continue;
           const qa = Y + ha, qb = Y + hb2, qc = Y + 1 + hc, qe = Y + 1 + he;
           if (Math.max(qa, qb, qc, qe) - Math.min(qa, qb, qc, qe) <= JUMP) (layer ? ib : idx).push(a, c, b, b, c, e);   // a jump in depth is left open
-          else if (!layer) inet.push(a, c, b, b, c, e);
+          else if (!layer && !(vd[G] || vd[G + 1] || vd[G + W] || vd[G + W + 1])) {      // no bridge where only sky lies behind,
+            const lim = Math.min(qa, qb, qc, qe) + JUMP;                                 // and none where the far side was made for every near corner
+            if ((qa > lim && !ring[G]) || (qb > lim && !ring[G + 1]) || (qc > lim && !ring[G + W]) || (qe > lim && !ring[G + W + 1])) inet.push(a, c, b, b, c, e);
+          }
         }
       }
       const c0 = world(tx, ty + h, zmin), c1 = world(tx + w, ty, zmax), bs = new T3.Sphere(c0.clone().add(c1).multiplyScalar(.5), c0.distanceTo(c1) * .5 + 3);
@@ -300,27 +323,33 @@
     }
 
     // ---- hero: an upright card (the picture is drawn with heights squeezed by B, so the card is 1/B taller in the world)
-    const FW = HS.frame[0], FH = HS.frame[1], foot = HS.foot;
-    const hg = new T3.PlaneGeometry(FW / S, FH * KB); hg.rotateX(Math.PI / 2); hg.translate((FW / 2 - foot[0]) / S, 0, (foot[1] - FH / 2) * KB);
-    const HU = { tHero: { value: tHero }, uFrame: { value: new T3.Vector4() }, uCut: { value: (FH - foot[1] - 1.5) / FH }, uGhost: { value: 0 } };
-    const heroMat = g => new T3.ShaderMaterial({ uniforms: Object.assign({}, U, HU, { uGhost: { value: g } }), vertexShader: HERO_VS, fragmentShader: HERO_FS, side: T3.DoubleSide });
-    const heroM = new T3.Mesh(hg, heroMat(0)); heroM.frustumCulled = false; heroM.renderOrder = 2;
-    const ghostM = new T3.Mesh(hg, heroMat(.3)); ghostM.frustumCulled = false; ghostM.renderOrder = 3;
-    Object.assign(ghostM.material, { depthFunc: T3.GreaterDepth, depthWrite: false, transparent: true, blending: T3.CustomBlending, blendSrc: T3.SrcAlphaFactor, blendDst: T3.OneMinusSrcAlphaFactor, blendSrcAlpha: T3.ZeroFactor, blendDstAlpha: T3.OneFactor });
-    const sg = new T3.PlaneGeometry(1.15, .46);
-    const shadowM = new T3.Mesh(sg, new T3.ShaderMaterial({ uniforms: { uA: { value: 1 } }, vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.); }`, fragmentShader: SHADOW_FS,
+    // ---- actors (the leader and the companions): upright cards.  The picture is drawn with heights squeezed by B, so a
+    // card is 1/B taller in the world.  Each gets a pale "ghost" where scenery hides it, and a small contact shadow.
+    const texOf = new Map();
+    const tex = img => { let t = texOf.get(img); if (!t) { t = new T3.Texture(img); t.magFilter = t.minFilter = T3.NearestFilter; t.generateMipmaps = false; t.flipY = false; t.needsUpdate = true; texOf.set(img, t); } return t; };
+    const sg = new T3.PlaneGeometry(1.15, .46), cards = [];
+    function card(Sp) {
+      const FW = Sp.frame[0], FH = Sp.frame[1], foot = Sp.foot;
+      const hg = new T3.PlaneGeometry(FW / S, FH * KB); hg.rotateX(Math.PI / 2); hg.translate((FW / 2 - foot[0]) / S, 0, (foot[1] - FH / 2) * KB);
+      const mat = g => new T3.ShaderMaterial({ uniforms: Object.assign({}, U, { tHero: { value: null }, uFrame: { value: new T3.Vector4() }, uCut: { value: (FH - foot[1] - 1.5) / FH }, uGhost: { value: g } }), vertexShader: HERO_VS, fragmentShader: HERO_FS, side: T3.DoubleSide });
+      const body = new T3.Mesh(hg, mat(0)); body.frustumCulled = false; body.renderOrder = 2;
+      const gh = new T3.Mesh(hg, mat(.3)); gh.frustumCulled = false; gh.renderOrder = 3;
+      Object.assign(gh.material, { depthFunc: T3.GreaterDepth, depthWrite: false, transparent: true, blending: T3.CustomBlending, blendSrc: T3.SrcAlphaFactor, blendDst: T3.OneMinusSrcAlphaFactor, blendSrcAlpha: T3.ZeroFactor, blendDstAlpha: T3.OneFactor });
+      const sh = new T3.Mesh(sg, new T3.ShaderMaterial({ uniforms: { uA: { value: 1 } }, vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.); }`, fragmentShader: SHADOW_FS,
       transparent: true, depthWrite: false, blending: T3.CustomBlending, blendSrc: T3.SrcAlphaFactor, blendDst: T3.OneMinusSrcAlphaFactor, blendSrcAlpha: T3.ZeroFactor, blendDstAlpha: T3.OneFactor, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -8 }));
-    shadowM.frustumCulled = false; shadowM.renderOrder = 1;
-    scene.add(heroM, ghostM, shadowM);
+      sh.frustumCulled = false; sh.renderOrder = 1;
+      scene.add(body, gh, sh);
+      return { body, gh, sh, ghost: 0 };
+    }
 
     // ---- fireflies
-    const fp = [], fs = []; let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-    for (const e of M.emitters || []) if (e.kind === 'fireflies') for (let i = 0; i < e.n * 2; i++) {
+    const fp = [], fs = [], fc = []; let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    for (const e of M.emitters || []) if (e.kind === 'fireflies') for (let i = 0, ec = e.color ? env.hexRgb(e.color).map(v => v / 255) : [1, .86, .45]; i < e.n * 2; i++) {   // an emitter may carry its own colour
       const x = e.x + rnd() * e.w, y = e.y + rnd() * e.h, v = hAt(x, y); if (!v) continue;
-      const p = world(x, y, v); fp.push(p.x, p.y, p.z + .4 + rnd() * 1.8); fs.push(.4 + rnd(), .4 + rnd(), .3 + rnd(), rnd());
+      const p = world(x, y, v); fp.push(p.x, p.y, p.z + .4 + rnd() * 1.8); fs.push(.4 + rnd(), .4 + rnd(), .3 + rnd(), rnd()); fc.push(ec[0], ec[1], ec[2]);
     }
-    const pg = new T3.BufferGeometry(); pg.setAttribute('position', new T3.Float32BufferAttribute(fp, 3)); pg.setAttribute('aSeed', new T3.Float32BufferAttribute(fs, 4));
-    const PU = { uT: { value: 0 }, uPx: { value: 4 }, uC: { value: new T3.Vector3(1, .86, .45) }, uI: { value: 1 } };
+    const pg = new T3.BufferGeometry(); pg.setAttribute('position', new T3.Float32BufferAttribute(fp, 3)); pg.setAttribute('aSeed', new T3.Float32BufferAttribute(fs, 4)); pg.setAttribute('aCol', new T3.Float32BufferAttribute(fc, 3));
+    const PU = { uT: { value: 0 }, uPx: { value: 4 }, uI: { value: 1 } };
     const flies = new T3.Points(pg, new T3.ShaderMaterial({ uniforms: PU, vertexShader: PT_VS, fragmentShader: PT_FS, transparent: true, depthWrite: false, blending: T3.CustomBlending, blendSrc: T3.OneFactor, blendDst: T3.OneFactor, blendSrcAlpha: T3.ZeroFactor, blendDstAlpha: T3.OneFactor }));
     flies.frustumCulled = false; flies.renderOrder = 4; scene.add(flies);
 
@@ -358,7 +387,7 @@
     const halfH = VH / 2 / S, halfW = VW / 2 / S;
     const ortho = new T3.OrthographicCamera(-halfW, halfW, halfH, -halfH, 1, 400), persp = new T3.PerspectiveCamera(20, 16 / 9, 1, 400);
     const tmp = new T3.Vector3(), tgt = new T3.Vector3(), v3 = c => new T3.Vector3(c[0] / 255, c[1] / 255, c[2] / 255);
-    let ghost = 0, camLift = -1, tLast = 0, pxLast = 0, pyLast = 0;
+    let camLift = -1, tLast = 0, pxLast = 0, pyLast = 0;
 
     function render(st) {
       if (auto) { const now = performance.now(), dt = now - tPrev; tPrev = now; if (dt < 500) { ema += (dt - ema) * .08; if (++nSlow > 50 && ema > 36 && scale > .5) { scale -= .25; nSlow = 0; ema = 16; } } }
@@ -392,12 +421,17 @@
       const mc = P.mistColor; U.uFogC.value.set(mc[0] / 255 * (.3 + amb[0] / 640), mc[1] / 255 * (.3 + amb[1] / 640), mc[2] / 255 * (.36 + amb[2] / 640));
       U.uFog.value.set(cfg.fogTop == null ? 11.3 : cfg.fogTop, cfg.fogBottom == null ? 3.5 : cfg.fogBottom); U.uShowWalk.value = st.showWalk ? 1 : 0;
       // hero
-      const [fc, fr] = st.frame, tw = HS.cols * FW, th = HS.rows * FH;
-      for (const m of [heroM, ghostM]) { m.position.set(hw.x, hw.y - .09, hw.z); m.material.uniforms.uFrame.value.set(fc * FW / tw, fr * FH / th, FW / tw, FH / th); }
-      let hid = 0, tot = 0;                                   // how much of the body is behind scenery (same rule as the 2D engine)
-      for (let j = 6; j < HS.body; j += 10) for (let i = -10; i <= 10; i += 5) { tot++; if (env.hides(hx + i, hy - j, hy + lf)) hid++; }
-      ghost += (clamp((hid / tot - .3) / .3, 0, 1) * .36 - ghost) * .25; ghostM.material.uniforms.uGhost.value = Math.max(ghost, .001); ghostM.visible = ghost > .01;
-      shadowM.position.set(hw.x, hw.y, hw.z + .03); shadowM.material.uniforms.uA.value = M.hero.shadow / .34;
+      const acts = st.actors || [];
+      while (cards.length < acts.length) cards.push(card(acts[cards.length].S));
+      cards.forEach((c, n) => {
+        const a = acts[n]; c.body.visible = c.sh.visible = !!a; if (!a) { c.gh.visible = false; return; }
+        const Sp = a.S, FW = Sp.frame[0], FH = Sp.frame[1], lfa = env.lift(a.x, a.y), p = world(a.x - .5, a.y - .5, lfa), t = tex(a.img);
+        for (const m of [c.body, c.gh]) { m.position.set(p.x, p.y - .09, p.z); m.material.uniforms.tHero.value = t; m.material.uniforms.uFrame.value.set(a.fc * FW / a.img.width, a.fr * FH / a.img.height, FW / a.img.width, FH / a.img.height); }
+        let hid = 0, tot = 0;                                 // how much of the body is behind scenery (same rule as the 2D engine)
+        for (let j = 6; j < Sp.body; j += 10) for (let i = -10; i <= 10; i += 5) { tot++; if (env.hides(a.x + i, a.y - j, a.y + lfa)) hid++; }
+        c.ghost += (clamp((hid / tot - .3) / .3, 0, 1) * .36 - c.ghost) * .25; c.gh.material.uniforms.uGhost.value = Math.max(c.ghost, .001); c.gh.visible = c.ghost > .01;
+        c.sh.position.set(p.x, p.y, p.z + .03); c.sh.material.uniforms.uA.value = M.hero.shadow / .34;
+      });
       PU.uT.value = st.T; PU.uPx.value = ch / 540 * 2.2; PU.uI.value = clamp(P.fireflies, 0, 1.2); flies.visible = P.fireflies > 0;
       // sky
       if (sky) { const maxY = Math.max(0, M.h - VH); let x = sky.x - cam.x * sky.px, y = sky.y - cam.y * sky.py; if (sky.anchorY === 'bottom') y += VH - sky.img.height * sky.scale + maxY * sky.py;

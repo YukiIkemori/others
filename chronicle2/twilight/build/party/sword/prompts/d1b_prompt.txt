@@ -1,0 +1,32 @@
+You are the lead pixel artist of a 2D RPG. ONE new sprite sheet: the DIAGONAL walk directions of a party member.
+
+IMAGE 1 is the approved walk sheet of this character for the four main directions (row 1 facing the viewer, row 2 back view, row 3 facing left, row 4 facing right; three frames each: standing, one step, the other step). Draw a NEW sheet of the SAME character on the same canvas and the same 4x3 grid, in exactly the same art style, the same pixel size (the same chunky art pixels as image 1), the same figure height, feet lines, proportions (about 3.3 heads tall, small head), palette, soft shading and soft selective outline as image 1, but with these four rows:
+
+- Row 1: walking DOWN-LEFT. A three-quarter FRONT view: we see the face and chest, the whole body turned about 45 degrees toward the viewer's left. Both eye dots visible, the far one (viewer's left) closer to the edge of the face.
+- Row 2: walking DOWN-RIGHT. A three-quarter FRONT view turned about 45 degrees toward the viewer's right (the mirror situation of row 1, drawn on its own).
+- Row 3: walking UP-LEFT. A three-quarter BACK view: we see the back of the head, the ponytail and the shield on the back, the body turned about 45 degrees toward the viewer's left; only a sliver of cheek and ear, NO eyes.
+- Row 4: walking UP-RIGHT. A three-quarter BACK view turned about 45 degrees toward the viewer's right; only a sliver of cheek and ear, NO eyes.
+
+Columns in every row: column 1 = standing still in that direction (feet together); column 2 = LEFT foot stepping forward; column 3 = RIGHT foot stepping forward. The walk is as modest and natural as in image 1: small steps, arms swinging a little, the ponytail swaying a little.
+
+THE CHARACTER is exactly the person of image 1, nothing added and nothing left out: a young swordswoman of about 16-17, slim and athletic, straight-backed, steady and warm. She is 2 art px shorter than the boy of the style sheet.
+- Hair: AUBURN / dark copper (a muted reddish brown, not orange, not red), tied in a HIGH PONYTAIL at the back of the crown that falls to the shoulder blades; a short plain fringe. 3-4 shades, from dusty copper down to a dark red-brown. A tiny dark tie where the tail starts.
+- Jacket: a SLATE-BLUE quilted jacket (gambeson) with long sleeves and a short skirt that ends at the top of the thighs; only 2-3 quiet vertical quilting lines, 1 px, one shade darker. Over it a plain BROWN LEATHER chest piece (a simple cuirass covering chest and upper belly) and a brown leather BELT. Plain leather BRACERS on the forearms. Bare hands, EMPTY.
+- Legs: dark charcoal leggings, plain brown leather boots to below the knee.
+- NO cape, NO cloak, NO hood, NO scarf, NO helmet, NO pauldrons, NO ornaments.
+- SWORD: one plain one-handed sword in a plain dark-brown leather SCABBARD hanging from the belt at HER OWN LEFT HIP, pointing down and a little backwards; small dull-steel crossguard and pommel, the grip wrapped in dark leather. True to scale: the scabbard is about 24 art px long and 3 wide. It stays sheathed in every frame.
+- SHIELD: a small ROUND WOODEN shield (about 17 art px across) with a DULL STEEL RIM and a small steel boss, strapped flat on the middle of HER BACK. Plain brown planks, no emblem, no paint.
+
+WHICH SIDE THINGS ARE ON (never mirror them; the sword is always at HER OWN LEFT hip, the shield always on her BACK):
+- Row 1 (DOWN-LEFT, three-quarter front): her left hip is the near side: the scabbard hangs clearly visible on the viewer's right half of the body, tip pointing down and to the viewer's right. Of the shield only a narrow crescent of rim shows behind her on the viewer's right. The ponytail shows behind the head on the viewer's right. Both eye dots.
+- Row 2 (DOWN-RIGHT, three-quarter front): her left hip is the far side: only the sword hilt peeks out at the viewer's right of the waist, the scabbard is hidden behind the body. A narrow crescent of the shield rim shows behind her on the viewer's left. The ponytail shows behind the head on the viewer's left. Both eye dots.
+- Row 3 (UP-LEFT, three-quarter back): the shield on her back is seen as a foreshortened oval on the viewer's right part of the back; the ponytail hangs over it. The scabbard hangs visible at the near hip on the viewer's left edge of the body, tip pointing down and to the viewer's right. Only a sliver of cheek, NO eyes.
+- Row 4 (UP-RIGHT, three-quarter back): the shield is a foreshortened oval on the viewer's left part of the back; the ponytail hangs over it. The scabbard is on the far hip: only its tip shows below the jacket on the viewer's left. Only a sliver of cheek, NO eyes.
+
+Within a row the three frames are the same person from the same angle: identical head, hair, face, costume and colours; only the legs, arms, ponytail and scabbard move. The head turn and body angle of each row must be clearly different from the pure front, back and side views of image 1 (a true three-quarter view: the shoulders are foreshortened).
+
+PIXEL RULES: real pixel art with the same art-pixel size as image 1, crisp squares on a regular grid. No blur, no gradients, no noise, no dithering, no glow, no black outline, hard edges against the background. Muted dusty colours exactly as in image 1; light from the upper left. Eyes are tiny dark dots (1 px wide, 2 px high); no nose, no mouth.
+
+CANVAS: 1936x2800 px, flat #FF00FF everywhere. 4 rows x 3 columns, each cell 644x700 px, the figures standing exactly where the figures of image 1 stand, the same figure height as image 1.
+All figures are the same person at the same size: identical head, hair, costume and colours in every cell. One figure centred in each cell, never crossing into a neighbour cell or the image edge.
+NO shadow on the ground, no floor, no dust, no speed lines, no text, no labels, no numbers, no frames, no grid lines.

@@ -12,12 +12,14 @@ import json, numpy as np
 
 VPU = 8                      # voxels per unit
 MAT = dict(grass=1, path=2, floor=3, stair=4, wall=5, rock=6, roof=7, trunk=8, conifer=9, maple=10, water=11, wood=12,
-           tomb=13, lantern=14, carpet=15, statue=16, iron=17, glass=18, bell=19, dark=20)
-WALKABLE = (1, 2, 3, 4, 15)
+           tomb=13, lantern=14, carpet=15, statue=16, iron=17, glass=18, bell=19, dark=20,
+           crystal=21, glowleaf=22, rune=23, whitebark=24, fall=25)
+WALKABLE = (1, 2, 3, 4, 15, 23)
 COLOR = {1: (96, 150, 70), 2: (200, 178, 140), 3: (176, 172, 186), 4: (214, 208, 214), 5: (148, 140, 156), 6: (112, 98, 104),
          7: (74, 86, 128), 8: (110, 76, 52), 9: (38, 92, 60), 10: (196, 70, 48), 11: (70, 120, 200), 12: (150, 100, 60),
          13: (206, 204, 210), 14: (255, 214, 96), 15: (170, 44, 52), 16: (226, 224, 232), 17: (60, 60, 76), 18: (255, 176, 80),
-         19: (220, 180, 70), 20: (44, 38, 56)}
+         19: (220, 180, 70), 20: (44, 38, 56),
+         21: (70, 225, 240), 22: (196, 230, 255), 23: (110, 150, 255), 24: (232, 220, 204), 25: (170, 215, 255)}
 
 
 class World:
@@ -107,6 +109,8 @@ def bake(w, out, W=1280, H=1600, S=32, A=0.75, B=0.66, SY0=1350, clearance=2.5, 
     px = np.arange(W) + .5; py = np.arange(H) + .5
     ixs = np.clip((px / S * VP).astype(int), 0, w.NX - 1)[None, :].repeat(H, 0)
     hit = np.zeros((H, W), np.uint8); hk = np.zeros((H, W), np.int32); hj = np.zeros((H, W), np.int32)
+    # the second surface on the same line of sight (after the first thing has been passed and air was crossed): what lies BEHIND a near thing
+    stt = np.zeros((H, W), np.uint8); hit2 = np.zeros((H, W), np.uint8); hk2 = np.zeros((H, W), np.int32); hj2 = np.zeros((H, W), np.int32)
     sub = 6
     for q in range(w.NZ * sub - 1, -1, -1):
         zc = w.Z0 + (q + .5) / (VP * sub); k = q // sub
@@ -115,21 +119,31 @@ def bake(w, out, W=1280, H=1600, S=32, A=0.75, B=0.66, SY0=1350, clearance=2.5, 
         if not ok.any(): continue
         m = V[ixs[ok], iy[ok][:, None], k]
         new = (m > 0) & (hit[ok] == 0)
+        ss = stt[ok]; jrow = np.broadcast_to(iy[ok][:, None], m.shape)
         if new.any():
             hh = hit[ok]; kk = hk[ok]; jj = hj[ok]
-            hh[new] = m[new]; kk[new] = k; jj[new] = np.broadcast_to(iy[ok][:, None], m.shape)[new]
+            hh[new] = m[new]; kk[new] = k; jj[new] = jrow[new]
             hit[ok] = hh; hk[ok] = kk; hj[ok] = jj
-    solid = hit > 0
-    ztop = w.Z0 + (hk + 1) / VP; ysouth = w.Y0 + hj / VP
-    y_at_top = ((SY0 - py[:, None]) / S - ztop * B) / A            # where this line of sight crosses the voxel's top plane
-    # top face when the sight line crosses the top plane over a solid voxel with air above it (that voxel is the one really hit)
-    jt = np.clip(np.floor((y_at_top - w.Y0) * VP).astype(int), 0, w.NY - 1); ka = np.clip(hk + 1, 0, w.NZ - 1)
-    mt = V[ixs, jt, hk]
-    top = solid & (mt > 0) & ((V[ixs, jt, ka] == 0) | (hk + 1 >= w.NZ))
-    hit = np.where(top, mt, hit)
-    # H = Yb - sy ; for a top face Yb - sy = (z - ZD)*B*S exactly, for a south face y is the face plane
-    Hh = np.where(top, (ztop - ZD) * B * S, SY0 - ysouth * A * S - py[:, None] - ZD * B * S)
-    Hh = np.where(solid, np.clip(np.round(Hh), 1, 65535), 0).astype(np.uint16)
+        sec = (m > 0) & (ss == 2)
+        if sec.any():
+            hh = hit2[ok]; kk = hk2[ok]; jj = hj2[ok]
+            hh[sec] = m[sec]; kk[sec] = k; jj[sec] = jrow[sec]
+            hit2[ok] = hh; hk2[ok] = kk; hj2[ok] = jj
+        ss = np.where(new, 1, np.where((ss == 1) & (m == 0), 2, np.where(sec, 3, ss))).astype(np.uint8); stt[ok] = ss
+    def surface(hit, hk, hj):
+        solid = hit > 0
+        ztop = w.Z0 + (hk + 1) / VP; ysouth = w.Y0 + hj / VP
+        y_at_top = ((SY0 - py[:, None]) / S - ztop * B) / A            # where this line of sight crosses the voxel's top plane
+        # top face when the sight line crosses the top plane over a solid voxel with air above it (that voxel is the one really hit)
+        jt = np.clip(np.floor((y_at_top - w.Y0) * VP).astype(int), 0, w.NY - 1); ka = np.clip(hk + 1, 0, w.NZ - 1)
+        mt = V[ixs, jt, hk]
+        top = solid & (mt > 0) & ((V[ixs, jt, ka] == 0) | (hk + 1 >= w.NZ))
+        hit = np.where(top, mt, hit)
+        # H = Yb - sy ; for a top face Yb - sy = (z - ZD)*B*S exactly, for a south face y is the face plane
+        Hh = np.where(top, (ztop - ZD) * B * S, SY0 - ysouth * A * S - py[:, None] - ZD * B * S)
+        return solid, top, hit, np.where(solid, np.clip(np.round(Hh), 1, 65535), 0).astype(np.uint16)
+    solid, top, hit, Hh = surface(hit, hk, hj)
+    Hb = surface(hit2, hk2, hj2)[3]
     standing = solid & ~(top & np.isin(hit, WALKABLE + (MAT['water'],)))
     # ---- guide picture
     lut = np.zeros((256, 3), np.float32)
@@ -202,7 +216,7 @@ def bake(w, out, W=1280, H=1600, S=32, A=0.75, B=0.66, SY0=1350, clearance=2.5, 
     F = np.where(walk > 0, np.clip(np.round((Fz - ZD) * B * S), 0, 65535), 0).astype(np.uint16)
     def pack(a):
         p = np.zeros((H, W, 3), np.uint8); p[..., 0] = a & 255; p[..., 1] = a >> 8; return p
-    Image.fromarray(walk).save(f'{out}/walk.png'); Image.fromarray(pack(Hh)).save(f'{out}/height.png'); Image.fromarray(pack(F)).save(f'{out}/floor.png')
+    Image.fromarray(walk).save(f'{out}/walk.png'); Image.fromarray(pack(Hh)).save(f'{out}/height.png'); Image.fromarray(pack(F)).save(f'{out}/floor.png'); Image.fromarray(pack(Hb)).save(f'{out}/behind.png')
     np.save(f'{out}/h.npy', Hh); np.save(f'{out}/standing.npy', standing); np.save(f'{out}/hit.npy', hit)
     def scr(x, y, z): return [round((x - w.X0) * S), round(SY0 - (y * A + z * B) * S)]
     def ground(x, y):
@@ -214,7 +228,8 @@ def bake(w, out, W=1280, H=1600, S=32, A=0.75, B=0.66, SY0=1350, clearance=2.5, 
     for k_, m_ in w.marks.items():
         gz = ground(m_['x'], m_['y']); e_ = dict(p=scr(m_['x'], m_['y'], m_['z'] if gz is None else gz), air=scr(m_['x'], m_['y'], m_['z']), on_ground=gz is not None)
         if 'poly' in m_: e_['poly'] = [scr(*q) for q in m_['poly']]
-        if 'title' in m_: e_['title'] = m_['title']
+        for k2 in m_:
+            if k2 not in ('x', 'y', 'z', 'poly'): e_[k2] = m_[k2]
         info['marks'][k_] = e_
     json.dump(info, open(f'{out}/info.json', 'w'), ensure_ascii=False, indent=1)
     print('solid px %d, walk px %d, standing px %d, reachable cells %d' % (solid.sum(), (walk > 0).sum(), standing.sum(), reach.sum()))

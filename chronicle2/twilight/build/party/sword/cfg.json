@@ -1,0 +1,139 @@
+{
+ "id": "sword",
+ "target": 77,
+ "body": 78,
+ "ncol": 28,
+ "walk_main": "raw/w1a.png",
+ "walk_diag": "raw/d1b.png",
+ "run_main": "raw/r2b.png",
+ "run_diag": "raw/s1b.png",
+ "run_rows": {
+  "down": [
+   "raw/r1b.png",
+   0
+  ],
+  "up": [
+   "raw/r1b.png",
+   1
+  ]
+ },
+ "run_order": {
+  "down": [
+   2,
+   3,
+   0,
+   1
+  ]
+ },
+ "run_cell": {
+  "up": 6.5,
+  "down_left": 6.22,
+  "down_right": 6.2,
+  "up_left": 5.8,
+  "up_right": 5.8
+ },
+ "repairs": [
+  {
+   "sheet": "run",
+   "row": "up_right",
+   "col": 0,
+   "mode": "erase",
+   "poly": [
+    [
+     54,
+     91
+    ],
+    [
+     63,
+     91
+    ],
+    [
+     63,
+     100
+    ],
+    [
+     57,
+     104
+    ],
+    [
+     53,
+     110
+    ],
+    [
+     50,
+     115
+    ],
+    [
+     44,
+     115
+    ],
+    [
+     44,
+     110
+    ],
+    [
+     49,
+     104
+    ],
+    [
+     53,
+     98
+    ]
+   ]
+  },
+  {
+   "sheet": "run",
+   "row": "down_right",
+   "col": 3,
+   "mode": "erase",
+   "poly": [
+    [
+     28,
+     87
+    ],
+    [
+     33,
+     87
+    ],
+    [
+     33,
+     91
+    ],
+    [
+     35,
+     91
+    ],
+    [
+     35,
+     93
+    ],
+    [
+     28,
+     93
+    ]
+   ]
+  }
+ ],
+ "row_target": {
+  "left": 76,
+  "right": 76,
+  "down_left": 76,
+  "down_right": 76,
+  "up_left": 76,
+  "up_right": 76
+ },
+ "lift": {
+  "down": [
+   0,
+   1,
+   0,
+   3
+  ],
+  "up": [
+   0,
+   2,
+   0,
+   1
+  ]
+ }
+}

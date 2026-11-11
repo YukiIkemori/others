@@ -1,0 +1,37 @@
+You are the lead pixel artist of a 2D RPG. ONE sprite sheet: the field walk cycle of a party member, drawn fresh.
+
+IMAGE 1 is a SIZE AND PLACEMENT GUIDE: grey mannequins on magenta, one per cell. Each mannequin marks exactly where one figure stands, how tall it is, how small the head is, and where the feet line is. Draw every figure over its mannequin with the same height, the same head size, the same centre and the same feet line. The mannequins themselves are crude: replace them completely with a properly drawn character; no grey mannequin may remain.
+
+IMAGE 2 is the STYLE SHEET: the approved walk sheet of the game's protagonist (a silver-haired boy in an ivory cape), in the same grid. It is given ONLY for the art style, the pixel size, the proportions, the head size, the palette mood and the walk motion. The new character is a DIFFERENT PERSON: do not copy his hair, his cape, his hood or his lantern.
+
+STYLE: the restrained, grown-up pixel art of modern "HD-2D" console RPG field sprites: small figures that sit quietly inside a richly lit pixel diorama. NOT a 16-bit / SNES-style chibi sprite. It must look drawn by the same hand as the boy of the STYLE SHEET: the same dot size, the same head size, the same level of detail, the same soft selective outline, the same dusty dusk palette.
+- PROPORTIONS AND PIXEL DENSITY: about 3.3 heads tall. The whole figure is 78 art pixels tall from the top of the hair to the boot soles. The head with hair is about 24 art px high and 21 wide (a SMALL head, drawn with FINE pixels: one eye is only 1/21 of the head width), exactly the head size of the boy; natural shoulders about as wide as the head; a real torso; legs about 30 art px long. Not chibi, not super-deformed, no oversized hands or boots.
+- FACE: a small plain skin plane. Eyes are tiny dots: 1 px wide, 2 px high, dark brown, about 5 px apart. NO eyelashes, NO iris, NO eye highlight, NO eyebrows, NO nose, NO mouth, NO blush. A soft shadow under the fringe is the only modelling.
+- NO BLACK OUTLINE. There is no dark or blackish line around the figure, around the arms, the legs, the shield or the scabbard. The edge of every shape is simply a darker, slightly cooler shade of that shape's own colour (selective outline), 1 px, so the figure sits softly in a dusk scene. No near-black pixels anywhere except the two eye dots.
+- COLOURS: muted, dusty, slightly desaturated, like cloth and leather seen at dusk. About 18-28 colours in the whole sheet, 3-4 shades per material (auburn hair, skin, slate-blue jacket, brown leather, charcoal leggings, wood, dull steel 2). No saturated highlights, no pure white, no shiny specular dots on the steel, no gloss bands on the hair.
+- SHADING: soft and simple, in big calm planes: light from the upper left, a broad shadow side on the right, shadows drifting toward blue-violet. Low contrast inside each material. No dithering, no texture noise.
+- PIXELS: real pixel art, the same chunky art pixels as the style sheet, on a regular grid over the whole image. Crisp squares: no blur, no anti-aliasing against the background, no gradients, no glow.
+- MOTION: a modest, natural walk exactly like the boy's: small steps, the body bobs 1 px, arms swing a little, the ponytail sways a little, the scabbard swings 1 px. No dramatic strides.
+
+THE CHARACTER: a young swordswoman of about 16-17, slim and athletic, straight-backed, steady and warm. She is 2 art px shorter than the boy of the style sheet.
+- Hair: AUBURN / dark copper (a muted reddish brown, not orange, not red), tied in a HIGH PONYTAIL at the back of the crown that falls to the shoulder blades; a short plain fringe. 3-4 shades, from dusty copper down to a dark red-brown. A tiny dark tie where the tail starts.
+- Jacket: a SLATE-BLUE quilted jacket (gambeson) with long sleeves and a short skirt that ends at the top of the thighs; only 2-3 quiet vertical quilting lines, 1 px, one shade darker. Over it a plain BROWN LEATHER chest piece (a simple cuirass covering chest and upper belly) and a brown leather BELT. Plain leather BRACERS on the forearms. Bare hands, EMPTY.
+- Legs: dark charcoal leggings, plain brown leather boots to below the knee.
+- NO cape, NO cloak, NO hood, NO scarf, NO helmet, NO pauldrons, NO ornaments.
+- SWORD: one plain one-handed sword in a plain dark-brown leather SCABBARD hanging from the belt at HER OWN LEFT HIP, pointing down and a little backwards; small dull-steel crossguard and pommel, the grip wrapped in dark leather. True to scale: the scabbard is about 24 art px long and 3 wide. It stays sheathed in every frame.
+- SHIELD: a small ROUND WOODEN shield (about 17 art px across) with a DULL STEEL RIM and a small steel boss, strapped flat on the middle of HER BACK. Plain brown planks, no emblem, no paint.
+
+CANVAS: 1936x2800 px, flat #FF00FF everywhere. 4 rows x 3 columns, each cell 644x700 px, exactly where the mannequins of image 1 stand.
+Row 1: facing the viewer (walking toward us). Row 2: back view (walking away). Row 3: facing LEFT (profile). Row 4: facing RIGHT (profile).
+Columns in every row: 1 = standing still; 2 = LEFT foot stepping forward; 3 = RIGHT foot stepping forward.
+The camera looks slightly down on the figure (top-down RPG field view), the same angle in every cell.
+
+WHICH SIDE THINGS ARE ON (never mirror them; the sword is always at HER OWN LEFT hip, the shield always on her BACK):
+- FRONT view (she faces us): the scabbard hangs at the VIEWER'S RIGHT hip, slanting down and outward. The shield is on her back and is NOT visible (at most a 1 px sliver of rim beside the waist). The ponytail is behind the head: we see the gathered hair as a small bump on top of the back of the crown and the end of the tail beside the neck.
+- BACK view (she walks away): the round shield sits in the middle of her back, fully visible, rim and boss; the ponytail hangs from the crown down over the top of the shield. The scabbard shows at the VIEWER'S LEFT hip, its tip pointing down and outward. No eyes.
+- Facing LEFT (profile, her left side is toward us): the scabbard is fully visible on the near hip, hilt in front, tip pointing down and back (toward the viewer's right). The shield is seen edge-on as a thin slab on her back (the viewer's right side of the torso). The ponytail hangs behind the head on the viewer's right. ONE eye dot.
+- Facing RIGHT (profile, her right side is toward us): the scabbard is on the FAR hip, hidden by the body: only its tip shows behind the legs on the viewer's left. The shield is seen edge-on on her back (the viewer's left side of the torso). The ponytail hangs behind the head on the viewer's left. ONE eye dot.
+
+Within a row only the legs, arms, ponytail and scabbard move.
+All figures are the same person at the same size: identical head, hair, costume and colours in every cell. One figure centred in each cell, never crossing into a neighbour cell or the image edge.
+NO shadow on the ground, no floor, no dust, no speed lines, no text, no labels, no numbers, no frames, no grid lines.
