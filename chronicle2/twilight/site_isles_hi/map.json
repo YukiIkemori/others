@@ -1,0 +1,333 @@
+{
+ "title": "月光樹の浮き島（描き込み2倍の見本）",
+ "titleEn": "Isles of the Moonlit Tree",
+ "w": 2176,
+ "h": 1600,
+ "image": "map.webp",
+ "walk": "walk.png",
+ "height": "height.png",
+ "floor": "floor.png",
+ "heightBias": 6,
+ "spawn": {
+  "x": 1083,
+  "y": 1240,
+  "dir": "up"
+ },
+ "occluders": [],
+ "lights": [
+  {
+   "kind": "lantern",
+   "x": 932,
+   "y": 1072,
+   "gx": 932,
+   "gy": 1172,
+   "r": 240,
+   "color": "#ffb060",
+   "intensity": 0.9,
+   "flicker": 0.16
+  },
+  {
+   "kind": "lantern",
+   "x": 1237,
+   "y": 1072,
+   "gx": 1237,
+   "gy": 1172,
+   "r": 240,
+   "color": "#ffb060",
+   "intensity": 0.9,
+   "flicker": 0.16
+  },
+  {
+   "kind": "lantern",
+   "x": 918,
+   "y": 173,
+   "gx": 918,
+   "gy": 275,
+   "r": 240,
+   "color": "#ffb060",
+   "intensity": 0.9,
+   "flicker": 0.16
+  },
+  {
+   "kind": "lantern",
+   "x": 1248,
+   "y": 173,
+   "gx": 1249,
+   "gy": 275,
+   "r": 240,
+   "color": "#ffb060",
+   "intensity": 0.9,
+   "flicker": 0.16
+  },
+  {
+   "kind": "lantern",
+   "x": 2055,
+   "y": 531,
+   "gx": 2055,
+   "gy": 631,
+   "r": 240,
+   "color": "#ffb060",
+   "intensity": 0.9,
+   "flicker": 0.16
+  },
+  {
+   "kind": "lantern",
+   "x": 154,
+   "y": 541,
+   "gx": 154,
+   "gy": 642,
+   "r": 240,
+   "color": "#ffb060",
+   "intensity": 0.9,
+   "flicker": 0.16
+  },
+  {
+   "kind": "glow",
+   "x": 1084,
+   "y": 512,
+   "gx": 1084,
+   "gy": 512,
+   "r": 300,
+   "color": "#a8dcff",
+   "intensity": 0.55,
+   "flicker": 0.04
+  },
+  {
+   "kind": "glow",
+   "x": 2208,
+   "y": 292,
+   "gx": 2208,
+   "gy": 342,
+   "r": 200,
+   "color": "#6fe6ff",
+   "intensity": 0.75,
+   "flicker": 0.04
+  },
+  {
+   "kind": "glow",
+   "x": 102,
+   "y": 371,
+   "gx": 102,
+   "gy": 371,
+   "r": 200,
+   "color": "#6fe6ff",
+   "intensity": 0.75,
+   "flicker": 0.04
+  },
+  {
+   "kind": "glow",
+   "x": 1983,
+   "y": -88,
+   "gx": 1983,
+   "gy": -88,
+   "r": 200,
+   "color": "#6fe6ff",
+   "intensity": 0.75,
+   "flicker": 0.04
+  },
+  {
+   "kind": "glow",
+   "x": 290,
+   "y": -107,
+   "gx": 290,
+   "gy": -107,
+   "r": 200,
+   "color": "#6fe6ff",
+   "intensity": 0.75,
+   "flicker": 0.04
+  },
+  {
+   "kind": "moon",
+   "layer": "sky",
+   "x": 460,
+   "y": 100,
+   "r": 210,
+   "color": "#ffd9a0",
+   "intensity": 0.45
+  },
+  {
+   "kind": "moon",
+   "layer": "sky",
+   "x": 900,
+   "y": 111,
+   "r": 120,
+   "color": "#b99cff",
+   "intensity": 0.55
+  }
+ ],
+ "water": [],
+ "triggers": [
+  {
+   "x": 1084,
+   "y": 1346,
+   "r": 66,
+   "title": "この版について",
+   "text": [
+    "描き込みを2倍にした見本です。月光樹の浮き島のうち、石の環の島と船着きだけを切り出しています。",
+    "背景の絵を2倍の細かさで描き直し、キャラの大きさはそのままでカメラを引きました。\nキャラは画面の高さの7%ほどになります。",
+    "ぼかし、光のにじみ、舞う光の粒も強めています。\nShiftキーを押しながら動くと走ります。"
+   ]
+  },
+  {
+   "x": 1084,
+   "y": 512,
+   "r": 69,
+   "title": "石の環",
+   "text": [
+    "足もとの紋が、歩くたびにかすかに脈を打つ。",
+    "石柱の文字は、どれも月の満ち欠けを数えているらしい。"
+   ]
+  }
+ ],
+ "emitters": [
+  {
+   "kind": "fireflies",
+   "x": 666,
+   "y": 210,
+   "w": 840,
+   "h": 600,
+   "n": 45,
+   "color": "#cfeaff"
+  },
+  {
+   "kind": "fireflies",
+   "x": 0,
+   "y": 264,
+   "w": 198,
+   "h": 600,
+   "n": 11,
+   "color": "#7fe9ff"
+  },
+  {
+   "kind": "fireflies",
+   "x": 1980,
+   "y": 260,
+   "w": 196,
+   "h": 560,
+   "n": 9,
+   "color": "#cfeaff"
+  },
+  {
+   "kind": "fireflies",
+   "x": 726,
+   "y": 1124,
+   "w": 720,
+   "h": 440,
+   "n": 26,
+   "color": "#cfeaff"
+  },
+  {
+   "kind": "mist",
+   "x": 0,
+   "y": 0,
+   "w": 2176,
+   "h": 1600,
+   "n": 7
+  },
+  {
+   "kind": "fireflies",
+   "x": 140,
+   "y": 40,
+   "w": 1896,
+   "h": 1480,
+   "n": 150,
+   "color": "#bcd8ff"
+  },
+  {
+   "kind": "fireflies",
+   "x": 872,
+   "y": 992,
+   "w": 120,
+   "h": 120,
+   "n": 5,
+   "color": "#ffc27a"
+  },
+  {
+   "kind": "fireflies",
+   "x": 1177,
+   "y": 992,
+   "w": 120,
+   "h": 120,
+   "n": 5,
+   "color": "#ffc27a"
+  },
+  {
+   "kind": "fireflies",
+   "x": 858,
+   "y": 93,
+   "w": 120,
+   "h": 120,
+   "n": 5,
+   "color": "#ffc27a"
+  },
+  {
+   "kind": "fireflies",
+   "x": 1188,
+   "y": 93,
+   "w": 120,
+   "h": 120,
+   "n": 5,
+   "color": "#ffc27a"
+  },
+  {
+   "kind": "fireflies",
+   "x": 1995,
+   "y": 451,
+   "w": 120,
+   "h": 120,
+   "n": 5,
+   "color": "#ffc27a"
+  },
+  {
+   "kind": "fireflies",
+   "x": 94,
+   "y": 461,
+   "w": 120,
+   "h": 120,
+   "n": 5,
+   "color": "#ffc27a"
+  }
+ ],
+ "layers": {
+  "sky": {
+   "src": "sky.webp",
+   "parallax": [
+    0.2,
+    0.42
+   ],
+   "y": 0,
+   "scale": 2
+  }
+ },
+ "hero": {
+  "sheet": "party/hero.png",
+  "spec": "party/hero.json",
+  "speed": 210,
+  "run": 360
+ },
+ "party": [
+  "party/sword",
+  "party/rogue",
+  "party/priest"
+ ],
+ "hd": {
+  "S": 64,
+  "A": 0.75,
+  "B": 0.66,
+  "depth": 3,
+  "dof": 2,
+  "fogTop": 8.0,
+  "fogBottom": 1.0,
+  "raised": "raised.png",
+  "behind": "behind.png",
+  "under": "under.png",
+  "cutSides": 1,
+  "dofScale": 1.3,
+  "range": 10,
+  "band": 0.2,
+  "bloom": 1.25,
+  "bloomTh": 0.55,
+  "bloomWide": 1
+ },
+ "view": 2
+}

@@ -5,7 +5,7 @@
 'use strict';
 
 // ------------------------------------------------------------------ helpers
-const VW = 960, VH = 540;
+let VW = 960, VH = 540, VK = 1;     // view in map dots; a map drawn twice as finely says "view": 2 in map.json (1920x1080 map dots, the actors keep their size)
 const Q = new URLSearchParams(location.search);
 const $ = id => document.getElementById(id);
 const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
@@ -208,6 +208,7 @@ function layout() {
   $('stick').style.fontSize = clamp(w / 100, 7, 11) + 'px';
   const dp = w * (window.devicePixelRatio || 1);
   let want = Q.get('q') === 'low' ? 1 : Q.get('q') === 'high' ? 2 : (dp >= 2700 ? 3 : dp >= 1250 ? 2 : 1);
+  want = Math.max(1, Math.floor(want / VK));
   if (layout.cap) want = Math.min(want, layout.cap);
   if (!W || want !== SC) setScale(want);
 }
@@ -224,6 +225,7 @@ async function boot() {
   layout();
   const raw = await loadJson(Q.get('map') || 'map.json');
   M = norm(DEFAULTS, raw);
+  if (raw.view > 1) { VK = raw.view; VW = 960 * VK; VH = 540 * VK; W = null; layout(); }
   M.moods = { gold: norm(MOOD_DEFAULTS.gold, raw.moods && raw.moods.gold), shadow: norm(MOOD_DEFAULTS.shadow, raw.moods && raw.moods.shadow) };
   for (const k in M.moods) for (const p in M.moods[k]) if (typeof M.moods[k][p] === 'string' && M.moods[k][p][0] === '#') M.moods[k][p] = hexRgb(M.moods[k][p]);
   const want = [loadImg(M.image), loadImg(M.hero.sheet), loadJson(M.hero.spec), M.walk ? loadImg(M.walk) : null, M.height ? loadImg(M.height).catch(e => (console.warn('height map missing, occlusion by height is off'), null)) : null];
