@@ -836,6 +836,7 @@
   "fogTop": 8.0,
   "fogBottom": 1.0,
   "raised": "raised.png",
-  "behind": "behind.png"
+  "behind": "behind.png",
+  "under": "under.png"
  }
 }

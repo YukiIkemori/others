@@ -17,8 +17,8 @@ walk = cv2.remap(np.array(Image.open(f'{OUT}/walk.png').convert('L')), px, py, c
 hh = np.round(cv2.remap(unpack(f'{OUT}/height.png').astype(np.float32), px, py, cv2.INTER_NEAREST, borderValue=0) * sy).astype(np.uint16)
 ff = np.round(cv2.remap(unpack(f'{OUT}/floor.png').astype(np.float32), px, py, cv2.INTER_NEAREST, borderValue=0) * sy).astype(np.uint16)
 ff[walk == 0] = 0
-bb = np.round(cv2.remap(unpack(f'{OUT}/behind.png').astype(np.float32), px, py, cv2.INTER_NEAREST, borderValue=0) * sy).astype(np.uint16) if os.path.exists(f'{OUT}/behind.png') else None
-if bb is not None: Image.fromarray(pack(bb)).save(f'{STAGE}/behind.png')
+far = [n for n in ('behind', 'under') if os.path.exists(f'{OUT}/{n}.png')]          # what lies behind near things (HD-2D view), see vox.py
+for n in far: Image.fromarray(pack(np.round(cv2.remap(unpack(f'{OUT}/{n}.png').astype(np.float32), px, py, cv2.INTER_NEAREST, borderValue=0) * sy).astype(np.uint16))).save(f'{STAGE}/{n}.png')
 standing = cv2.remap(np.load(f'{OUT}/standing.npy').astype(np.uint8), px, py, cv2.INTER_NEAREST, borderValue=0) > 0
 solid3d = hh > 0
 Image.fromarray(walk).save(f'{STAGE}/walk.png'); Image.fromarray(pack(hh)).save(f'{STAGE}/height.png'); Image.fromarray(pack(ff)).save(f'{STAGE}/floor.png')
@@ -80,7 +80,7 @@ m = dict(title='月光樹の浮き島', titleEn='Isles of the Moonlit Tree', w=W
          triggers=triggers, emitters=emitters, layers=dict(sky=skyL),
          hero=dict(sheet='party/hero.png', spec='party/hero.json'), party=['party/sword', 'party/rogue', 'party/priest'],
          # HD-2D view (site/hd.js): the picture laid over the relief that height.png describes; raised.png comes from check.py
-         hd=dict(S=info.get('S', 32), A=info.get('A', .75), B=info.get('B', .66), depth=3, dof=2, fogTop=8.0, fogBottom=1.0, raised='raised.png', **(dict(behind='behind.png') if bb is not None else {})))
+         hd=dict(S=info.get('S', 32), A=info.get('A', .75), B=info.get('B', .66), depth=3, dof=2, fogTop=8.0, fogBottom=1.0, raised='raised.png', **{n: n + '.png' for n in far}))
 json.dump(m, open(f'{STAGE}/map.json', 'w'), ensure_ascii=False, indent=1)
 print('spawn', m['spawn'], 'walkable there', bool(walk[sp[1], sp[0]]), 'lights', len(lights))
 for t in triggers: print(' ', t['title'], (t['x'], t['y']), 'on walkable', bool(walk[t['y'], t['x']]))

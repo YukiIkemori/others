@@ -159,11 +159,15 @@ w.box(29.0, 31.0, 40.3, 41.0, 9, 10.0, 'tomb')                                  
 w.cone(TX, TY, 2.5, 9, 13, 'whitebark', r1=1.7); w.cone(TX, TY, 1.7, 13, 18.5, 'whitebark', r1=1.2)
 for a, ln in ((-2.5, 4.2), (-.6, 4.6), (.5, 3.4), (2.3, 3.8), (3.4, 3.2), (-1.5, 3.0)):                              # roots
     w.limb((TX + 1.6 * np.cos(a), TY + 1.4 * np.sin(a), 9.9), (TX + ln * np.cos(a), TY + ln * np.sin(a) * .8, 9.05), .62, .28, 'whitebark')
+# The crown is slid back along the line of sight (the picture of it stays the same) until its lower edge sits at the depth of
+# the trunk it grows from.  A crown that hangs out in front of its trunk tears away from it in the HD-2D view, where the
+# camera looks from a slightly different place: the painter draws trunk, boughs and leaves as one thing.
+CS = 3.3; SL = lambda x, y, z: (x, y + CS, z - CS * .75 / .66)
 for p1 in ((24.0, 42.6, 21.0), (36.0, 42.8, 21.2), (27.2, 44.6, 23.2), (33.0, 44.2, 23.4), (30.0, 41.4, 22.4)):      # boughs
-    w.limb((TX, TY, 17.2), p1, .8, .42, 'whitebark')
+    w.limb((TX, TY, 17.2), SL(*p1), .8, .42, 'whitebark')
 for cx, cy, cz, r in ((30, 43.2, 24.4, 5.2), (24.0, 42.8, 22.6, 4.0), (36.0, 43.0, 22.8, 4.0), (27.0, 45.4, 24.6, 3.6), (33.4, 45.0, 24.8, 3.6), (30, 41.2, 22.6, 3.2),
                       (21.6, 43.6, 21.4, 2.6), (38.4, 43.6, 21.4, 2.6)):
-    w.ball(cx, cy, cz, r, 'glowleaf', squash=.72)
+    w.ball(*SL(cx, cy, cz), r, 'glowleaf', squash=.72)
 # the sanctuary gate at the head of the long stairs
 w.box(27.3, 32.7, 31.0, 31.7, 9, 13.4, 'wall'); w.box(26.9, 28.2, 30.9, 31.8, 9, 14.0, 'wall'); w.box(31.8, 33.1, 30.9, 31.8, 9, 14.0, 'wall')
 w.arch_y(30, 2.9, 30.9, 31.8, 9, 2.4)

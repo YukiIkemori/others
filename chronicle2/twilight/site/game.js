@@ -76,7 +76,7 @@ const DEFAULTS = {
   spawn: { x: null, y: null, dir: 'down' },
   hero: { sheet: 'hero.png', spec: 'hero.json', speed: 150, run: 250, radius: 6, shadow: .34, shadowR: null,
           light: { r: 170, color: '#ffb76a', intensity: 1 } },
-  party: [], partyGap: 40,                 // companions who walk the leader's trail: ['party/sword', …] (name.png, name.json)
+  party: [], partyGap: 52, partyGapRun: 64,   // companions who walk the leader's trail: ['party/sword', …] (name.png, name.json); how far apart, walking and running
   occluders: [], lights: [], water: [], triggers: [], emitters: [], props: [],
   layers: {},
   post: { grain: .035, mistScale: 1 },
@@ -626,11 +626,16 @@ function update(dt) {
   }
 }
 // Companions keep to the path the leader actually walked, a fixed distance apart, so they never get stuck on anything.
+// The distance is wider while running (the run poses lean forward), and a step up or down the picture counts for less
+// than a step sideways: the figures are tall, so one behind the other needs more room than side by side.
 const DV = [[0, 1], [-1, 0], [1, 0], [0, -1], [-.7, .7], [.7, .7], [-.7, -.7], [.7, -.7]];
+const GAPY = .88, tlen = (ax, ay, bx, by) => Math.hypot(ax - bx, (ay - by) * GAPY);
+let gapNow = 0;
 function seedTrail() {
   trail = []; if (!party.length) return;
-  const a = DV[hero.dir] || DV[0], pts = [[hero.x, hero.y, hero.dir]]; let x = hero.x, y = hero.y;
-  for (let d = 0; d < party.length * M.partyGap; d += 2) { const nx = x - a[0] * 2, ny = y - a[1] * 2; if (!free(nx, ny)) break; x = nx; y = ny; pts.push([x, y, hero.dir]); }
+  const a = DV[hero.dir] || DV[0], pts = [[hero.x, hero.y, hero.dir]]; let x = hero.x, y = hero.y, len = 0;
+  while (len < party.length * M.partyGap) { const nx = x - a[0] * 2, ny = y - a[1] * 2; if (!free(nx, ny)) break; len += tlen(x, y, nx, ny); x = nx; y = ny; pts.push([x, y, hero.dir]); }
+  gapNow = Math.min(M.partyGap, len / party.length);            // little room behind the leader (a ledge): they stand closer until the walk begins
   trail = pts.reverse(); followTrail(0);
 }
 function followTrail(dt) {
@@ -639,12 +644,13 @@ function followTrail(dt) {
   const last = trail[trail.length - 1], dl = Math.hypot(hero.x - last[0], hero.y - last[1]);
   if (dl > 60) { seedTrail(); return; }                       // the leader was moved by hand
   if (dl >= 2) trail.push([hero.x, hero.y, hero.dir]);
-  const gap = M.partyGap;
+  if (dt && hero.moving) { const goal = hero.running ? Math.max(M.partyGap, M.partyGapRun || 0) : M.partyGap; gapNow += clamp(goal - gapNow, -dt * 16, dt * 16); }
+  const gap = gapNow;
   let px = hero.x, py = hero.y, acc = 0, i = trail.length - 1, k = 0;
   for (const f of party) {
     const want = ++k * gap; let nx = px, ny = py, nd = f.dir, found = false;
     while (i >= 0) {
-      const q = trail[i], seg = Math.hypot(px - q[0], py - q[1]);
+      const q = trail[i], seg = tlen(px, py, q[0], q[1]);
       if (acc + seg >= want) { const u = seg ? (want - acc) / seg : 0; nx = px + (q[0] - px) * u; ny = py + (q[1] - py) * u; nd = q[2]; found = true; break; }
       acc += seg; px = q[0]; py = q[1]; nd = q[2]; i--;
     }
@@ -654,8 +660,8 @@ function followTrail(dt) {
     if (f.moving || !dt) { f.dir = Math.min(nd, f.S.rows - 1); f.t += dt; }
     f.x = nx; f.y = ny;
   }
-  let len = 0;
-  for (let j = trail.length - 1; j > 0; j--) { len += Math.hypot(trail[j][0] - trail[j - 1][0], trail[j][1] - trail[j - 1][1]); if (len > party.length * gap + 12) { trail.splice(0, j - 1); break; } }
+  let len = 0; const keep = party.length * Math.max(M.partyGap, M.partyGapRun || 0) + 12;
+  for (let j = trail.length - 1; j > 0; j--) { len += tlen(trail[j][0], trail[j][1], trail[j - 1][0], trail[j - 1][1]); if (len > keep) { trail.splice(0, j - 1); break; } }
 }
 // which picture an actor shows now: [sheet image, column, row, running?]
 function actorFrame(a) {

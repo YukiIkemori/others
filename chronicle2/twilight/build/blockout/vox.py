@@ -109,7 +109,15 @@ def bake(w, out, W=1280, H=1600, S=32, A=0.75, B=0.66, SY0=1350, clearance=2.5, 
     px = np.arange(W) + .5; py = np.arange(H) + .5
     ixs = np.clip((px / S * VP).astype(int), 0, w.NX - 1)[None, :].repeat(H, 0)
     hit = np.zeros((H, W), np.uint8); hk = np.zeros((H, W), np.int32); hj = np.zeros((H, W), np.int32)
-    # the second surface on the same line of sight (after the first thing has been passed and air was crossed): what lies BEHIND a near thing
+    # the second surface on the same line of sight: what lies BEHIND a near thing.  It begins where the sight line, after the
+    # first thing, enters something again: after crossing air, or straight from the thing into another material (a trunk into
+    # the ground it stands on, a wall into its floor).  So 0 means: nothing but sky behind.
+    # and the ground behind a near thing: the first walkable ground, rock or water the sight line enters at or after its first
+    # hit ("under"; the same as the first surface when that is the ground itself, 0 = none).  A thing can hide another thing
+    # AND the ground behind both; the HD-2D view needs the two.
+    mat0 = np.zeros((H, W), np.uint8)
+    TERR = np.zeros(256, bool); TERR[list(WALKABLE) + [MAT['rock'], MAT['water'], MAT['fall']]] = True
+    pm = np.zeros((H, W), np.uint8); hit3 = np.zeros((H, W), np.uint8); hk3 = np.zeros((H, W), np.int32); hj3 = np.zeros((H, W), np.int32)
     stt = np.zeros((H, W), np.uint8); hit2 = np.zeros((H, W), np.uint8); hk2 = np.zeros((H, W), np.int32); hj2 = np.zeros((H, W), np.int32)
     sub = 6
     for q in range(w.NZ * sub - 1, -1, -1):
@@ -124,12 +132,19 @@ def bake(w, out, W=1280, H=1600, S=32, A=0.75, B=0.66, SY0=1350, clearance=2.5, 
             hh = hit[ok]; kk = hk[ok]; jj = hj[ok]
             hh[new] = m[new]; kk[new] = k; jj[new] = jrow[new]
             hit[ok] = hh; hk[ok] = kk; hj[ok] = jj
-        sec = (m > 0) & (ss == 2)
+            mm = mat0[ok]; mm[new] = m[new]; mat0[ok] = mm
+        sec = (m > 0) & ((ss == 2) | ((ss == 1) & (m != mat0[ok])))
         if sec.any():
             hh = hit2[ok]; kk = hk2[ok]; jj = hj2[ok]
             hh[sec] = m[sec]; kk[sec] = k; jj[sec] = jrow[sec]
             hit2[ok] = hh; hk2[ok] = kk; hj2[ok] = jj
         ss = np.where(new, 1, np.where((ss == 1) & (m == 0), 2, np.where(sec, 3, ss))).astype(np.uint8); stt[ok] = ss
+        ter = TERR[m] & ~TERR[pm[ok]] & (hit3[ok] == 0)
+        if ter.any():
+            hh = hit3[ok]; kk = hk3[ok]; jj = hj3[ok]
+            hh[ter] = m[ter]; kk[ter] = k; jj[ter] = jrow[ter]
+            hit3[ok] = hh; hk3[ok] = kk; hj3[ok] = jj
+        pm[ok] = m; pm[~ok] = 0
     def surface(hit, hk, hj):
         solid = hit > 0
         ztop = w.Z0 + (hk + 1) / VP; ysouth = w.Y0 + hj / VP
@@ -144,6 +159,7 @@ def bake(w, out, W=1280, H=1600, S=32, A=0.75, B=0.66, SY0=1350, clearance=2.5, 
         return solid, top, hit, np.where(solid, np.clip(np.round(Hh), 1, 65535), 0).astype(np.uint16)
     solid, top, hit, Hh = surface(hit, hk, hj)
     Hb = surface(hit2, hk2, hj2)[3]
+    Hu = surface(hit3, hk3, hj3)[3]
     standing = solid & ~(top & np.isin(hit, WALKABLE + (MAT['water'],)))
     # ---- guide picture
     lut = np.zeros((256, 3), np.float32)
@@ -216,7 +232,7 @@ def bake(w, out, W=1280, H=1600, S=32, A=0.75, B=0.66, SY0=1350, clearance=2.5, 
     F = np.where(walk > 0, np.clip(np.round((Fz - ZD) * B * S), 0, 65535), 0).astype(np.uint16)
     def pack(a):
         p = np.zeros((H, W, 3), np.uint8); p[..., 0] = a & 255; p[..., 1] = a >> 8; return p
-    Image.fromarray(walk).save(f'{out}/walk.png'); Image.fromarray(pack(Hh)).save(f'{out}/height.png'); Image.fromarray(pack(F)).save(f'{out}/floor.png'); Image.fromarray(pack(Hb)).save(f'{out}/behind.png')
+    Image.fromarray(walk).save(f'{out}/walk.png'); Image.fromarray(pack(Hh)).save(f'{out}/height.png'); Image.fromarray(pack(F)).save(f'{out}/floor.png'); Image.fromarray(pack(Hb)).save(f'{out}/behind.png'); Image.fromarray(pack(Hu)).save(f'{out}/under.png')
     np.save(f'{out}/h.npy', Hh); np.save(f'{out}/standing.npy', standing); np.save(f'{out}/hit.npy', hit)
     def scr(x, y, z): return [round((x - w.X0) * S), round(SY0 - (y * A + z * B) * S)]
     def ground(x, y):

@@ -163,14 +163,19 @@
       const c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d', { willReadFrequently: true }); g.drawImage(im, 0, 0, W, H);
       const md = g.getImageData(0, 0, W, H).data; mp = new Uint8Array(W * H); for (let i = 0; i < W * H; i++) mp[i] = md[i * 4] > 127 ? 1 : 0;
     } catch (e) { mp = null; }
-    // what really lies behind each near thing, baked from the blocks (optional, behind.png from vox.py): the height of the second surface
-    // on the same line of sight, 0 = nothing but sky.  Without it the far side is only guessed from the thing's surroundings.
-    let bh = null;
-    if (cfg.behind) try {
-      const im = new Image(); im.src = cfg.behind; await im.decode();
-      const c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d', { willReadFrequently: true }); g.imageSmoothingEnabled = false; g.drawImage(im, 0, 0, W, H);
-      const md = g.getImageData(0, 0, W, H).data; bh = new Uint16Array(W * H); for (let i = 0; i < W * H; i++) bh[i] = md[i * 4] + 256 * md[i * 4 + 1];
-    } catch (e) { bh = null; }
+    // what really lies behind each near thing, baked from the blocks (optional, from vox.py; without them the far side is only
+    // guessed from the thing's surroundings).  under.png: the ground behind it (0 = nothing but sky).  behind.png: the first
+    // surface behind it, which is another thing where one stands between (a pillar behind a gate tower, a bough behind leaves).
+    const load16 = async src => {
+      if (!src) return null;
+      try {
+        const im = new Image(); im.src = src; await im.decode();
+        const c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d', { willReadFrequently: true }); g.imageSmoothingEnabled = false; g.drawImage(im, 0, 0, W, H);
+        const md = g.getImageData(0, 0, W, H).data, a = new Uint16Array(W * H); for (let i = 0; i < W * H; i++) a[i] = md[i * 4] + 256 * md[i * 4 + 1];
+        return a;
+      } catch (e) { return null; }
+    };
+    const bh = await load16(cfg.behind), un = await load16(cfg.under), gb = un || bh;
     // the painter draws things a few dots fatter than the blocks: near things grow over flat ground (where the outline says
     // "this stands", when there is one) so their rim stays with them
     const flat = (src, i) => { const a = src[i] - src[i + W], b = src[i - W] - src[i]; return !(a >= 1 && a <= 3) && !(b >= 1 && b <= 3); };
@@ -189,57 +194,124 @@
     // ---- what lies behind near things.  The picture shows one surface per pixel; when the camera looks from a slightly
     // different place, a strip beside every near thing comes into view that was never painted.  That strip is made here:
     // the far surface is continued in under the near thing, ring by ring, with the colours of the far side diffused inwards.
-    const RINGS = 60, hb = new Uint16Array(W * H), ring = new Uint8Array(W * H), bd = new Uint8Array(d.length), seen = new Uint8Array(W * H), upr = new Uint8Array(W * H);
-    const vd = new Uint8Array(W * H);            // ring cells with nothing but sky behind them (a stone that tops the island's far rim): no far surface is made there
+    // Where the blocks know what is behind, the far surface is made as deep as it goes (a gatehouse hides 100 dots of floor, a
+    // tree crown hides its trunk); where it is only guessed, no more than RINGS dots in from the edge.
+    const RINGS = 60, FAR = 400, hb = new Uint16Array(W * H), ring = new Uint16Array(W * H), bd = new Uint8Array(d.length), seen = new Uint16Array(W * H);
+    const upr = new Uint8Array(W * H), upb = new Uint8Array(W * H);      // upright face? (the painted surface / the far side made behind it)
+    const vd = new Uint8Array(W * H);            // 1: a near thing with nothing but sky behind it (a stone that tops the island's far rim), no far surface is made; 2: the ground itself, or a thing's own foot
+    const wantH = new Uint16Array(W * H);        // the far ground's height where the blocks know it
+    const sp = new Int32Array(W * H);            // the visible dot of the far side that each made cell's colour came from (for the mirrored texture below)
+    // a second far layer for the thing that stands between a near thing and the ground behind both
+    const MID = un && bh ? { want: new Uint16Array(W * H), hb: new Uint16Array(W * H), ring: new Uint16Array(W * H), bd: new Uint8Array(d.length), up: new Uint8Array(W * H), sp: new Int32Array(W * H) } : null;
     const N8 = [-1, 1, -W, W, -W - 1, -W + 1, W - 1, W + 1], DY = [0, 0, -1, 1, -1, -1, 1, 1];
+    const sv = new Int32Array(8), su = new Uint8Array(8);
+    // the far side's colour is taken some dots further out: painted things carry a dark outline and a rim the mask misses
+    const outer = (j, e, y, taken) => {
+      for (let t = 10; t > 0; t--) {
+        const jj = j + N8[e] * t;
+        if (jj > W && jj < W * (H - 1) && hh[jj] && !taken[jj] && Math.abs(((jj / W) | 0) + hh[jj] - (y + DY[e] + hh[j]) - DY[e] * t * (upr[j] ? 0 : 1)) <= JUMP && Math.abs((jj % W) - (j % W)) <= t) return jj;
+      }
+      return j;
+    };
     function fill(rings) {
-      hb.fill(0); ring.fill(0); seen.fill(0); vd.fill(0); bd.set(d);
+      hb.fill(0); ring.fill(0); seen.fill(0); vd.fill(0); wantH.fill(0); bd.set(d); if (MID) MID.want.fill(0);
       for (let y = 1; y < H - 1; y++) for (let x = 1, i = y * W + 1; x < W - 1; x++, i++) upr[i] = hh[i] && !flat(hh, i) ? 1 : 0;
       let cur = [];
       for (let y = 1; y < H - 1; y++) for (let x = 1, i = y * W + 1; x < W - 1; x++, i++) {
         const v = hh[i]; if (!v) continue;
         const q = y + v;
+        if (gb && hData[i] && Math.abs(hData[i] - v) <= JUMP) {      // the blocks have this same near thing here: their answer is used
+          const u = gb[i], m = MID ? bh[i] : 0;
+          if (u && y + u < q - JUMP) { wantH[i] = u; cur.push(i); } else vd[i] = u ? 2 : 1;
+          if (m && y + m < q - JUMP && (!u || m - u > JUMP)) MID.want[i] = m;
+          continue;
+        }
         for (let k = 0; k < 4; k++) { const n = hh[i + N8[k]]; if (!n || y + DY[k] + n < q - JUMP) { cur.push(i); break; } }
       }
-      const sv = new Int32Array(8);
+      // loose: second round for what the first left over.  A dot whose known far surface has no visible continuation takes the
+      // surface that does continue behind it; small holes are closed.
+      const round = (kmax, loose) => {
+       for (let k = 1; k <= kmax && cur.length; k++) {
+        const done = [];
+        for (const i of cur) {
+          if (ring[i]) continue;
+          const y = (i / W) | 0, q = y + hh[i], want = wantH[i], known = vd[i] || want;
+          if (known && !want && !loose) continue;
+          if (!known && (k > RINGS || loose)) continue;
+          let lo = 1e9, sk = 0, made = 0;
+          for (let e = 0; e < 8; e++) {                          // what the far side would be here: an upright face keeps its foot line, flat ground keeps its height
+            const j = i + N8[e]; sv[e] = 0;
+            if (!hh[j]) { sk += e < 4 ? 2 : 1; continue; }       // sky on that side
+            let v;
+            if (ring[j] && vd[j] !== 1) { v = hb[j]; su[e] = upb[j]; made++; }      // a far side already made
+            else if (y + DY[e] + hh[j] < q - JUMP) { v = hh[j]; su[e] = upr[j]; }   // the far side itself, in plain view
+            else { if (vd[j] === 1) sk += e < 4 ? 2 : 1; continue; } // the same near thing; where it stands against the sky, that counts as sky
+            if (su[e]) v = Math.max(1, v + DY[e]);
+            if (want && (loose ? v > want + JUMP : Math.abs(v - want) > JUMP)) continue;     // not the surface the blocks say is behind this dot
+            sv[e] = v; if (v < lo) lo = v;
+          }
+          if (known && !want && (vd[i] === 1 || made < 5)) continue;
+          if (lo > 1e8) { if (sk && !known) done.push(i, 0, 0, 0, 0, 0, 0); continue; }      // (a known cell waits until a neighbour brings a colour)
+          let sh = 0, r = 0, g = 0, b = 0, n = 0, nu = 0, src = -1, sw = 0;
+          for (let e = 0; e < 8; e++) {
+            const v = sv[e]; if (!v || v > lo + 6) continue;
+            const j = i + N8[e], wgt = e < 4 ? 2 : 1; let from = sp[j];
+            if (!ring[j] || vd[j] === 1) from = outer(j, e, y, ring);
+            const o = (ring[j] && vd[j] !== 1 ? j : from) * 4;
+            sh += v * wgt; r += bd[o] * wgt; g += bd[o + 1] * wgt; b += bd[o + 2] * wgt; n += wgt; if (su[e]) nu += wgt;
+            if (wgt > sw) { sw = wgt; src = from; }
+          }
+          if (!known && sk > n) { done.push(i, 0, 0, 0, 0, 0, 0); continue; }      // more sky than ground around: the sky wins
+          const hv = want && lo >= want - JUMP ? want : Math.round(sh / n);
+          if (y + hv >= q - JUMP) continue;                         // the far surface has reached the near thing's foot
+          done.push(i, hv, r / n, g / n, b / n, nu * 2 > n ? 1 : 0, src);
+        }
+        const next = [];
+        for (let e = 0; e < done.length; e += 7) { const i = done[e], o = i * 4; hb[i] = done[e + 1]; ring[i] = k; if (!done[e + 1]) { vd[i] = 1; continue; } upb[i] = done[e + 5]; sp[i] = done[e + 6]; bd[o] = done[e + 2]; bd[o + 1] = done[e + 3]; bd[o + 2] = done[e + 4]; bd[o + 3] = 255; }
+        for (let e = 0; e < done.length; e += 7) for (let c = 0; c < 4; c++) {
+          const j = done[e] + N8[c], x = j % W;
+          if (!ring[j] && hh[j] && seen[j] !== k && x > 0 && x < W - 1 && j > W && j < W * (H - 1)) { seen[j] = k; next.push(j); }
+        }
+        cur = next;
+       }
+      };
+      round(rings, false);
+      if (gb && rings > RINGS) {
+        cur = []; seen.fill(0);
+        for (let y = 1; y < H - 1; y++) for (let x = 1, i = y * W + 1; x < W - 1; x++, i++) if (!ring[i] && (wantH[i] || vd[i] === 2)) cur.push(i);
+        round(rings, true);
+      }
+    }
+    // the thing between: it is continued from its part in plain view (same height as the blocks say), never guessed
+    function fillMid(rings) {
+      const L = MID; L.hb.fill(0); L.ring.fill(0); L.bd.set(d); seen.fill(0);
+      let cur = [];
+      for (let i = W; i < W * (H - 1); i++) if (L.want[i]) cur.push(i);
       for (let k = 1; k <= rings && cur.length; k++) {
         const done = [];
         for (const i of cur) {
-          const y = (i / W) | 0, q = y + hh[i];
-          let lo = 1e9, sk = 0;
-          for (let e = 0; e < 8; e++) {                          // what the far side would be here: an upright face keeps its foot line, flat ground keeps its height
-            const j = i + N8[e];
-            if (ring[j] ? vd[j] : !hh[j]) { sv[e] = 0; sk += e < 4 ? 2 : 1; continue; }      // sky on that side
-            let v = ring[j] ? hb[j] : (y + DY[e] + hh[j] < q - JUMP ? hh[j] : 0);
-            if (v && upr[j]) v = Math.max(1, v + DY[e]);
-            sv[e] = v; if (v && v < lo) lo = v;
-          }
-          const sure = bh && hData[i] && Math.abs(hData[i] - hh[i]) <= JUMP;      // the blocks have this same near thing here: their answer is used
-          if (sure && !bh[i]) {                                     // nothing behind: either the thing's own foot (the sight line runs into the ground under it) or open sky
-            if (!(lo < 1e8 && y + lo >= q - JUMP - 8)) done.push(i, 0, 0, 0, 0, 0);
-            continue;
-          }
-          if (lo > 1e8) { if (sk && !sure) done.push(i, 0, 0, 0, 0, 0); continue; }      // (a sure cell waits until a neighbour brings a colour)
-          let sh = 0, r = 0, g = 0, b = 0, n = 0, nu = 0;
+          if (L.ring[i]) continue;
+          const y = (i / W) | 0, q = y + hh[i], want = L.want[i];
+          let r = 0, g = 0, b = 0, n = 0, nu = 0, src = -1, sw = 0;
           for (let e = 0; e < 8; e++) {
-            const v = sv[e]; if (!v || v > lo + 6) continue;
-            const j = i + N8[e], wgt = e < 4 ? 2 : 1; let o = j * 4;
-            if (!ring[j]) for (let t = 10; t > 0; t--) {             // painted things carry a dark outline and a rim the mask misses: take the far side's colour from some dots further out
-              const jj = j + N8[e] * t;
-              if (jj > W && jj < W * (H - 1) && hh[jj] && !ring[jj] && Math.abs(((jj / W) | 0) + hh[jj] - (y + DY[e] + hh[j]) - DY[e] * t * (upr[j] ? 0 : 1)) <= JUMP && Math.abs((jj % W) - (j % W)) <= t) { o = jj * 4; break; }
-            }
-            sh += v * wgt; r += bd[o] * wgt; g += bd[o + 1] * wgt; b += bd[o + 2] * wgt; n += wgt; if (upr[j]) nu += wgt;
+            const j = i + N8[e]; if (!hh[j]) continue;
+            let v, u, from;
+            if (L.ring[j]) { v = L.hb[j]; u = L.up[j]; from = L.sp[j]; }
+            else if (y + DY[e] + hh[j] < q - JUMP) { v = hh[j]; u = upr[j]; from = outer(j, e, y, L.ring); }
+            else continue;
+            if (u) v += DY[e];
+            if (Math.abs(v - want) > JUMP) continue;
+            const o = (L.ring[j] ? j : from) * 4, wgt = e < 4 ? 2 : 1;
+            r += L.bd[o] * wgt; g += L.bd[o + 1] * wgt; b += L.bd[o + 2] * wgt; n += wgt; if (u) nu += wgt;
+            if (wgt > sw) { sw = wgt; src = from; }
           }
-          if (!sure && sk > n) { done.push(i, 0, 0, 0, 0, 0); continue; }      // more sky than ground around: the sky wins
-          const hv = sure ? bh[i] : Math.round(sh / n);
-          if (y + hv >= q - JUMP) continue;                         // the far surface has reached the near thing's foot
-          done.push(i, hv, r / n, g / n, b / n, nu * 2 > n ? 1 : 0);
+          if (n) done.push(i, want, r / n, g / n, b / n, nu * 2 > n ? 1 : 0, src);
         }
         const next = [];
-        for (let e = 0; e < done.length; e += 6) { const i = done[e], o = i * 4; hb[i] = done[e + 1]; ring[i] = k; if (!done[e + 1]) { vd[i] = 1; continue; } upr[i] = done[e + 5]; bd[o] = done[e + 2]; bd[o + 1] = done[e + 3]; bd[o + 2] = done[e + 4]; bd[o + 3] = 255; }
-        for (let e = 0; e < done.length; e += 6) for (let c = 0; c < 4; c++) {
-          const j = done[e] + N8[c], x = j % W;
-          if (!ring[j] && hh[j] && seen[j] !== k && x > 0 && x < W - 1 && j > W && j < W * (H - 1)) { seen[j] = k; next.push(j); }
+        for (let e = 0; e < done.length; e += 7) { const i = done[e], o = i * 4; L.hb[i] = done[e + 1]; L.ring[i] = k; L.up[i] = done[e + 5]; L.sp[i] = done[e + 6]; L.bd[o] = done[e + 2]; L.bd[o + 1] = done[e + 3]; L.bd[o + 2] = done[e + 4]; L.bd[o + 3] = 255; }
+        for (let e = 0; e < done.length; e += 7) for (let c = 0; c < 4; c++) {
+          const j = done[e] + N8[c];
+          if (!L.ring[j] && L.want[j] && seen[j] !== k) { seen[j] = k; next.push(j); }
         }
         cur = next;
       }
@@ -252,13 +324,31 @@
       for (let i = 0; i < W * H; i++) if (ring[i] && mp[i]) { reach[i] = 1; fr.push(i); }
       for (let k = 0; k < TRIM + 2; k++) { const nx = []; for (const i of fr) for (let c = 0; c < 4; c++) { const j = i + N8[c]; if (ring[j] && !reach[j]) { reach[j] = 1; nx.push(j); } } fr = nx; }
       const cut = new Uint8Array(W * H), by = Array.from({ length: TRIM + 1 }, () => []);
-      for (let i = 0; i < W * H; i++) if (ring[i] && ring[i] <= TRIM && !vd[i] && !mp[i] && reach[i]) by[ring[i]].push(i);
+      for (let i = 0; i < W * H; i++) if (ring[i] && ring[i] <= TRIM && vd[i] !== 1 && !mp[i] && reach[i]) by[ring[i]].push(i);
       for (let k = 1; k <= TRIM; k++) for (const i of by[k]) if (k === 1 || cut[i - 1] || cut[i + 1] || cut[i - W] || cut[i + W]) cut[i] = 1;
       for (let i = 0; i < W * H; i++) if (cut[i]) hh[i] = hb[i];
     }
-    fill(RINGS);
+    fill(gb ? FAR : RINGS);
+    if (MID) fillMid(FAR);
+    // The colours above are the far side's colours smeared inwards: right for a narrow strip, a blur for a wide one.  So each
+    // made dot also looks at the far side's own picture, mirrored at the edge it was continued from (paving goes on as paving,
+    // bark as bark), wherever that mirrored dot really is the same surface.
+    const mirror = (ring, hb, up, sp, bd, skip) => {
+      for (let y = 1; y < H - 1; y++) for (let x = 1, i = y * W + 1; x < W - 1; x++, i++) {
+        if (!ring[i] || (skip && skip[i] === 1) || sp[i] < 0) continue;
+        const s0 = sp[i], mx = 2 * (s0 % W) - x, my = 2 * ((s0 / W) | 0) - y;
+        if (mx < 1 || my < 1 || mx > W - 2 || my > H - 2) continue;
+        const m = my * W + mx, hm = hh[m];
+        if (!hm || d[m * 4 + 3] !== 255) continue;
+        const same = up[i] ? Math.abs(my + hm - (y + hb[i])) <= JUMP * 2 : Math.abs(hm - hb[i]) <= 6 && !upr[m];
+        if (!same) continue;
+        const o = i * 4, om = m * 4, w = .8;
+        bd[o] += (d[om] - bd[o]) * w; bd[o + 1] += (d[om + 1] - bd[o + 1]) * w; bd[o + 2] += (d[om + 2] - bd[o + 2]) * w;
+      }
+    };
+    mirror(ring, hb, upb, sp, bd, vd); if (MID) mirror(MID.ring, MID.hb, MID.up, MID.sp, MID.bd, null);
     const mkTex = a => { const t = new T3.DataTexture(a, W, H, T3.RGBAFormat); t.magFilter = t.minFilter = T3.LinearFilter; t.needsUpdate = true; return t; };
-    const tMap = mkTex(new Uint8Array(d.buffer)), tBack = mkTex(bd);
+    const tMap = mkTex(new Uint8Array(d.buffer)), tBack = mkTex(bd), tMid = MID ? mkTex(MID.bd) : null;
     // walk mask (R) and, in G, "close to where one can walk": that part of the picture's lower edge must not dissolve
     const wk = new Uint8Array(W * H * 4), Y0 = Math.max(0, H - 240), dist = new Float32Array(W * (H - Y0)).fill(1e3);
     for (let i = 0; i < W * H; i++) wk[i * 4] = walkData ? walkData[i] * 255 : 255;
@@ -282,36 +372,39 @@
       uFogC: { value: new T3.Vector3(.8, .7, .8) }, uFog: { value: new T3.Vector2(11, 3) }, uShowWalk: { value: 0 }, uGain: { value: .6 },
       uRes: { value: new T3.Vector2(960, 540) }, tSky: { value: null }, uRect: { value: new T3.Vector4() }, uBack: { value: new T3.Vector3() }, uTint: { value: new T3.Vector3(1, 1, 1) }, uHas: { value: 0 },
     };
-    const meshMat = back => new T3.ShaderMaterial({ uniforms: back ? Object.assign({}, U, { tMap: { value: tBack } }) : U, vertexShader: MESH_VS, fragmentShader: MESH_FS, defines: back ? { BACK: 1 } : {}, extensions: { derivatives: true }, side: T3.DoubleSide });
-    const matMain = meshMat(false), matBack = meshMat(true), matNet = meshMat(true);
+    const meshMat = back => new T3.ShaderMaterial({ uniforms: back ? Object.assign({}, U, { tMap: { value: back } }) : U, vertexShader: MESH_VS, fragmentShader: MESH_FS, defines: back ? { BACK: 1 } : {}, extensions: { derivatives: true }, side: T3.DoubleSide });
+    const matMain = meshMat(null), matBack = meshMat(tBack), matNet = meshMat(tBack), matMid = MID ? meshMat(tMid) : null;
     matNet.depthTest = false; matNet.depthWrite = false;      // safety net under everything: the old stretched bridge between a near thing and what is behind it
-    if (env.Q.get('hdshow') === 'back') matMain.visible = false; if (env.Q.get('hdshow') === 'main') matBack.visible = false;
+    { const sh = env.Q.get('hdshow'); if (sh === 'back' || sh === 'mid') matMain.visible = false; if (sh === 'main' || sh === 'mid') matBack.visible = false; if (matMid && (sh === 'main' || sh === 'back')) matMid.visible = false; }
 
     // ---- relief mesh, one vertex per painted pixel, in tiles
     const scene = new T3.Scene();
     let nTri = 0, nBack = 0;
     for (let ty = 0; ty < H - 1; ty += TILE) for (let tx = 0; tx < W - 1; tx += TILE) {
       const w = Math.min(TILE, W - 1 - tx) + 1, h = Math.min(TILE, H - 1 - ty) + 1;
-      const pos = new Uint16Array(w * h * 3), pb = new Uint16Array(w * h * 3), fl = new Uint8Array(w * h); let any = false, zmin = 1e9, zmax = 0;
+      const pos = new Uint16Array(w * h * 3), pb = new Uint16Array(w * h * 3), fl = new Uint8Array(w * h); let any = false, anyM = false, zmin = 1e9, zmax = 0;
+      const pm = MID ? new Uint16Array(w * h * 3) : null, fm = MID ? new Uint8Array(w * h) : null;
       for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-        const i = (ty + y) * W + tx + x, v = hh[i], o = (y * w + x) * 3;
-        pos[o] = pb[o] = tx + x; pos[o + 1] = pb[o + 1] = ty + y; pos[o + 2] = v; pb[o + 2] = ring[i] ? hb[i] : v; fl[y * w + x] = ring[i] ? 1 : 0;
+        const i = (ty + y) * W + tx + x, v = hh[i], o = (y * w + x) * 3, far = ring[i] && vd[i] !== 1;
+        pos[o] = pb[o] = tx + x; pos[o + 1] = pb[o + 1] = ty + y; pos[o + 2] = v; pb[o + 2] = far ? hb[i] : v; fl[y * w + x] = far ? 1 : 0;
+        if (MID) { pm[o] = tx + x; pm[o + 1] = ty + y; pm[o + 2] = MID.ring[i] ? MID.hb[i] : v; if (MID.ring[i]) fm[y * w + x] = 1, anyM = true; }
         if (v) { any = true; if (v < zmin) zmin = v; if (v > zmax) zmax = v; }
       }
       if (!any) continue;
-      const idx = [], ib = [], inet = [];
+      const idx = [], ib = [], im = [], inet = [];
       for (let y = 0; y < h - 1; y++) for (let x = 0; x < w - 1; x++) {
         const a = y * w + x, b = a + 1, c = a + w, e = c + 1, Y = ty + y, G = Y * W + tx + x;
-        for (let layer = 0; layer < 2; layer++) {
-          const P = layer ? pb : pos;
-          if (layer && !(fl[a] || fl[b] || fl[c] || fl[e])) break;
+        for (let layer = 0; layer < (anyM ? 3 : 2); layer++) {
+          const P = layer === 2 ? pm : layer ? pb : pos, F = layer === 2 ? fm : fl;
+          if (layer && !(F[a] || F[b] || F[c] || F[e])) continue;
           const ha = P[a * 3 + 2], hb2 = P[b * 3 + 2], hc = P[c * 3 + 2], he = P[e * 3 + 2];
           if (!ha || !hb2 || !hc || !he) continue;
           const qa = Y + ha, qb = Y + hb2, qc = Y + 1 + hc, qe = Y + 1 + he;
-          if (Math.max(qa, qb, qc, qe) - Math.min(qa, qb, qc, qe) <= JUMP) (layer ? ib : idx).push(a, c, b, b, c, e);   // a jump in depth is left open
-          else if (!layer && !(vd[G] || vd[G + 1] || vd[G + W] || vd[G + W + 1])) {      // no bridge where only sky lies behind,
-            const lim = Math.min(qa, qb, qc, qe) + JUMP;                                 // and none where the far side was made for every near corner
-            if ((qa > lim && !ring[G]) || (qb > lim && !ring[G + 1]) || (qc > lim && !ring[G + W]) || (qe > lim && !ring[G + W + 1])) inet.push(a, c, b, b, c, e);
+          if (Math.max(qa, qb, qc, qe) - Math.min(qa, qb, qc, qe) <= JUMP) (layer === 2 ? im : layer ? ib : idx).push(a, c, b, b, c, e);   // a jump in depth is left open
+          else if (!layer) {                                                             // the safety net: a stretched bridge from a near thing to what is beside it,
+            const lim = Math.min(qa, qb, qc, qe) + JUMP, na = qa > lim, nb = qb > lim, nc = qc > lim, ne = qe > lim;      // where no far side was made for a near corner,
+            if (!((na && vd[G] === 1) || (nb && vd[G + 1] === 1) || (nc && vd[G + W] === 1) || (ne && vd[G + W + 1] === 1))      // but none where only sky lies behind
+              && ((na && !ring[G]) || (nb && !ring[G + 1]) || (nc && !ring[G + W]) || (ne && !ring[G + W + 1]))) inet.push(a, c, b, b, c, e);
           }
         }
       }
@@ -320,6 +413,7 @@
       if (inet.length) add(pos, inet, matNet, -1);
       if (idx.length) { add(pos, idx, matMain, 0); nTri += idx.length / 3; }
       if (ib.length) { add(pb, ib, matBack, 0); nBack += ib.length / 3; }
+      if (im.length) { add(pm, im, matMid, 0); nBack += im.length / 3; }
     }
 
     // ---- hero: an upright card (the picture is drawn with heights squeezed by B, so the card is 1/B taller in the world)
@@ -467,7 +561,7 @@
       get on() { return state.on; },
       toggle() { state.on = !state.on; canvas.style.display = state.on ? 'block' : 'none'; env.cv.style.display = state.on ? 'none' : ''; paint(); },
       key(k) { if (k === 'p' || k === 'P') { state.depth = (state.depth + 1) % DEPTHS.length; paint(); return true; } if (k === 'b' || k === 'B') { state.dof = (state.dof + 1) % DOFS.length; paint(); return true; } if (k === 'h' || k === 'H') { api.toggle(); return true; } return false; },
-      canvas, dbg: { hh, hb, ring, camPos: U.uCamPos.value, dir },
+      canvas, dbg: { hh, hb, ring, vd, bh, un, hData, mid: MID, camPos: U.uCamPos.value, dir },
     };
     env.cv.style.display = 'none'; paint();
     return api;

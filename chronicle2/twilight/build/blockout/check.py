@@ -42,7 +42,9 @@ if MULTI:
         st0 = st.copy(); raised = mp & inside
         unpack = lambda p: (lambda q: q[..., 0] + 256 * q[..., 1])(np.array(Image.open(p).convert('RGB')).astype(np.uint16))
         hh = unpack(f'{STAGE}/height.png'); ff = unpack(f'{STAGE}/floor.png'); wk = walk > 127
-        bb = unpack(f'{STAGE}/behind.png') if os.path.exists(f'{STAGE}/behind.png') else None      # what lies behind a near thing (HD-2D view)
+        # what lies behind a near thing (HD-2D view): the first surface behind it, and the ground behind it
+        bb = unpack(f'{STAGE}/behind.png') if os.path.exists(f'{STAGE}/behind.png') else None
+        uu = unpack(f'{STAGE}/under.png') if os.path.exists(f'{STAGE}/under.png') else None
         lab4, n4 = ni.label(ni.binary_dilation(ni.binary_erosion(lab3 > 0, iterations=5), iterations=5) & (lab3 > 0))   # opening: rim lines and root tips fall away
         a4 = ni.sum(np.ones_like(lab4), lab4, np.arange(1, n4 + 1))
         for i, sl in enumerate(ni.find_objects(lab4)):
@@ -58,7 +60,8 @@ if MULTI:
             fat = np.zeros((big[0].stop - big[0].start, big[1].stop - big[1].start), bool); fat[sl[0].start - big[0].start:, sl[1].start - big[1].start:][:bh, :bw] = blob
             rows_b = np.arange(big[0].start, big[0].stop)[:, None]
             card = ni.binary_dilation(fat, iterations=5) & (rows_b <= foot) & ~st0[big]
-            if bb is not None: bb[big][card] = hh[big][card]                      # behind an adopted thing lies the ground it was painted on
+            for far in (bb, uu):                                                    # behind an adopted thing lies the ground it was painted on
+                if far is not None: far[big][card] = hh[big][card]
             hh[big][card] = np.broadcast_to(np.clip(foot + F0 - rows_b, 0, 65535), card.shape)[card].astype(np.uint16)
             raised[big] |= card
             fp = blob & (rows > foot - max(8, int(.34 * bw)))                       # footprint: the lowest part of the shape
@@ -69,6 +72,7 @@ if MULTI:
         Image.fromarray(pk(hh)).save(f'{STAGE}/height.png'); Image.fromarray(pk(ff)).save(f'{STAGE}/floor.png'); Image.fromarray(walk).save(f'{STAGE}/walk.png')
         np.save(f'{STAGE}/standing_paint.npy', st)
         if bb is not None: Image.fromarray(pk(bb)).save(f'{STAGE}/behind.png')
+        if uu is not None: Image.fromarray(pk(uu)).save(f'{STAGE}/under.png')
         Image.fromarray(raised.astype(np.uint8) * 255).convert('1').save(f'{STAGE}/raised.png')
         print('painter additions adopted (x, foot y, px):', adopted)
     rgb = np.array(Image.open(PAINT).convert('RGB')).astype(float) * 0.6
