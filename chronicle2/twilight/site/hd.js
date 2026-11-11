@@ -224,7 +224,7 @@
           for (let e = 0; e < 8; e++) {
             const v = sv[e]; if (!v || v > lo + 6) continue;
             const j = i + N8[e], wgt = e < 4 ? 2 : 1; let o = j * 4;
-            if (!ring[j]) for (let t = 6; t > 0; t--) {              // painted things carry a dark outline: take the far side's colour from a few dots further out
+            if (!ring[j]) for (let t = 10; t > 0; t--) {             // painted things carry a dark outline and a rim the mask misses: take the far side's colour from some dots further out
               const jj = j + N8[e] * t;
               if (jj > W && jj < W * (H - 1) && hh[jj] && !ring[jj] && Math.abs(((jj / W) | 0) + hh[jj] - (y + DY[e] + hh[j]) - DY[e] * t * (upr[j] ? 0 : 1)) <= JUMP && Math.abs((jj % W) - (j % W)) <= t) { o = jj * 4; break; }
             }

@@ -475,7 +475,7 @@ function setupUi() {
   $('titleJp').textContent = M.title; $('titleEn').textContent = M.titleEn || '';
   uiMood(moodTo);
   const touch = matchMedia('(pointer: coarse)').matches;
-  $('hint').innerHTML = touch ? 'ドラッグで移動　　月をタップで刻を替える' : '<b>← ↑ ↓ →</b>移動<b>Shift</b>走る<b>Z</b>調べる<b>M</b>月を替える<b>C</b>当たり判定を表示';
+  $('hint').innerHTML = touch ? 'ドラッグで移動（大きく倒すと走る）　　月をタップで刻を替える' : '<b>← ↑ ↓ →</b>移動<b>Shift</b>走る<b>Z</b>調べる<b>M</b>月を替える<b>C</b>当たり判定を表示';
   $('tipB').innerHTML = '画面を<b>ドラッグ</b>して歩く<br><b>月</b>をタップすると刻が替わる<br><span>横向きにすると大きく遊べます</span>';
   if (touch) $('promptKey').style.display = 'none';
   setupInput();

@@ -1,0 +1,31 @@
+You are the lead pixel artist of a 2D RPG. ONE new sprite sheet: the DIAGONAL walk directions of a party member.
+
+IMAGE 1 is the approved walk sheet of this character for the four main directions (row 1 facing the viewer, row 2 back view, row 3 facing left, row 4 facing right; three frames each: standing, one step, the other step). Draw a NEW sheet of the SAME character on the same canvas and the same 4x3 grid, in exactly the same art style, the same pixel size (the same chunky art pixels as image 1), the same figure height, feet lines, proportions (about 3.4 heads tall, small head), palette, soft shading and soft selective outline as image 1, but with the four diagonal rows described below.
+
+IMAGE 2 is only a POSE REFERENCE: the diagonal walk sheet of ANOTHER character of the same game (the silver-haired protagonist) in the same grid: it shows how far the body is turned in each row and how the three frames differ. Copy the body angles and the step poses, NOT that character's looks.
+
+- Row 1: walking DOWN-LEFT. A three-quarter FRONT view: we see the face and chest, the whole body turned about 45 degrees toward the viewer's left. Both eye dots visible, the far one (viewer's left) closer to the edge of the face.
+- Row 2: walking DOWN-RIGHT. A three-quarter FRONT view turned about 45 degrees toward the viewer's right (the mirror situation of row 1, drawn on its own).
+- Row 3: walking UP-LEFT. A three-quarter BACK view: we see the back of the head, the hood and the back of the cloak with the bow and quiver on it, the body turned about 45 degrees toward the viewer's left; only a sliver of cheek and ear, NO eyes.
+- Row 4: walking UP-RIGHT. A three-quarter BACK view turned about 45 degrees toward the viewer's right; only a sliver of cheek and ear, NO eyes.
+
+Columns in every row: column 1 = standing still in that direction (feet together); column 2 = LEFT foot stepping forward; column 3 = RIGHT foot stepping forward. The walk is as modest and natural as in image 1: small steps, arms swinging a little, the cloak hem and scarf end swaying a little.
+
+THE CHARACTER is exactly the person of image 1, nothing added and nothing left out: a young man of about 17, the protagonist's best friend: lean, nimble, quick and clever, light on his feet. He is a touch taller and leaner than the protagonist of the style reference (82 art px against 80) with exactly the same head size.
+- Hair: short, tousled, DARK BROWN (warm umber / dark chestnut shades with a slightly lighter brown on the upper left; clearly brown, NOT black), a few simple soft locks. A narrow faded-ochre HEADBAND (1-2 px high) runs across the forehead under the fringe and around the head.
+- A SHORT MOSS-GREEN hooded cloak (dusty, greyish moss green) that ends at the WAIST, hood down lying on the shoulders. No trim, no clasp.
+- A faded RUST-RED scarf wound once around the neck; its one short end (about 6 px) hangs behind the shoulder over the back of the cloak.
+- Under the cloak a dark olive-brown sleeveless jerkin over a grey-beige long-sleeved shirt (the grey-beige sleeves show on the arms), a plain narrow belt, dark trousers, soft brown ankle boots. Bare hands, EMPTY. No gloves, no piping, no ornaments, no bag.
+- GEAR, all carried on his BACK, small and true to scale: a SHORT plain wooden bow (about 34 art px long, 1-2 px thick, a gentle curve, a 1 px pale string) slung DIAGONALLY across the back over the cloak: its UPPER tip rises over the character's own LEFT shoulder, its lower tip ends near his own right hip. Beside it a SMALL brown leather quiver whose 2-3 pale arrow fletchings peek over the character's own RIGHT shoulder. A small dagger in a dark sheath lies horizontally at the BACK of the belt. Nothing in the hands, nothing on the hips.
+
+GEAR SIDES (the bow's upper tip is ALWAYS at the character's own LEFT shoulder, the quiver's fletchings at his own RIGHT shoulder; the same in all frames of a row):
+- Down-left (three-quarter front, facing the viewer's left): his back points to the upper right. The upper bow tip peeks above the shoulder on the VIEWER'S RIGHT, the lower bow tip shows below the cloak behind the hip; the fletchings are just visible behind the far shoulder. No dagger.
+- Down-right (three-quarter front, facing the viewer's right): his back points to the upper left. The fletchings of the quiver peek over the shoulder on the VIEWER'S LEFT, the upper bow tip only just shows behind the head / far shoulder (viewer's right of the head). No dagger.
+- Up-left (three-quarter back, facing the viewer's left): we see his back and his left side. The bow lies diagonally over the cloak with its upper tip at the shoulder on the VIEWER'S LEFT (his left shoulder, the near one), running down to the right hip on the viewer's right; the quiver beside it with fletchings toward the VIEWER'S RIGHT shoulder; the dagger across the back of the belt.
+- Up-right (three-quarter back, facing the viewer's right): we see his back and his right side. The same arrangement seen from the other side: the upper bow tip is still at his own LEFT shoulder, which is now the far shoulder on the VIEWER'S LEFT; the quiver with its fletchings is at the near shoulder on the VIEWER'S RIGHT; the dagger across the back of the belt.
+
+Within a row the three frames are the same person from the same angle: identical head, hair, face, costume and colours; only the legs, arms, cloak hem and scarf end move. The head turn and body angle of each row must be clearly different from the pure front, back and side views of image 1 (a true three-quarter view: the shoulders are foreshortened).
+
+PIXEL RULES: real pixel art with the same art-pixel size as image 1, crisp squares on a regular grid. No blur, no gradients, no noise, no dithering, no glow, no black outline (edges are a darker shade of the shape's own colour), hard edges against the background. Eyes are tiny dark dots 1 px wide and 2 px high; no nose, no mouth. Muted dusty colours exactly as in image 1; light from the upper left.
+
+CANVAS: 1936x2800 px, flat #FF00FF everywhere. 4 rows x 3 columns, each cell 644x700 px, the figures standing exactly where the figures of image 1 stand, the same figure height as image 1. One figure centred in each cell, never crossing into a neighbour cell or the image edge. NO shadow on the ground, no floor, no text, no labels, no frames.
