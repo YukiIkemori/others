@@ -111,6 +111,7 @@ table.pages td.small { white-space: nowrap; }
 .c-pass { color: var(--pass); } .c-warn { color: var(--warn); } .c-fail { color: var(--fail); } .c-na { color: var(--sub); }
 .bg-pass { background: var(--pass); } .bg-warn { background: var(--warn); } .bg-fail { background: var(--fail); }
 
+.advice { margin: 0 0 8px; font-size: .97rem; }
 .todo { list-style: none; margin: 0; padding: 0; counter-reset: t; }
 .todo li { counter-increment: t; display: grid; grid-template-columns: 28px 1fr; gap: 0 10px; padding: 12px 0; border-top: 1px solid var(--line); }
 .todo li:first-child { border-top: 0; padding-top: 0; }

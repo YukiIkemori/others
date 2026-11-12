@@ -396,7 +396,7 @@ function renderSite() {
   document.body.classList.add('has-result');
   const root = $('#result');
   root.hidden = false;
-  root.replaceChildren(siteSummary(), siteChecks(), siteCommon(), sitePages());
+  root.replaceChildren(siteSummary(), siteAdvice(), siteChecks(), siteCommon(), sitePages());
 }
 function ring(overall, grade) {
   const R = 64;
@@ -428,6 +428,38 @@ function siteSummary() {
     h('div', { class: 'lh', style: 'margin:20px 0 0' },
       stat(site.avg ?? '–', 'ページ平均点', tone(site.avg)), stat(site.cross ?? '–', 'サイト横断チェック', tone(site.cross)),
       stat(s.audited, '診断ページ数'), stat(s.errors, 'エラーページ', s.errors ? 'fail' : ''), stat(s.sitemapFound ? s.sitemapUrls.toLocaleString() : 'なし', 'サイトマップ掲載 URL')));
+}
+// 診断結果を文章でまとめる（何が起きていて、何から直せばよいか）
+function sitePoints() {
+  const s = site.stats;
+  const order = { fail: 0, warn: 1 };
+  const cross = site.checks.filter((c) => (c.status === 'fail' || c.status === 'warn') && c.fix).sort((a, b) => order[a.status] - order[b.status] || b.weight - a.weight);
+  const f = site.checks.filter((c) => c.status === 'fail').length;
+  const w = site.checks.filter((c) => c.status === 'warn').length;
+  const pageLevel = site.avg >= 85 ? '個々のページの作りは良好です' : site.avg >= 70 ? '個々のページはおおむね整っています' : '個々のページで基本的な項目の不足が目立ちます';
+  let lead = `${s.audited} ページを診断した結果、総合 ${site.overall} 点（評価 ${site.grade}）でした。ページ単体の平均は ${site.avg} 点で、${pageLevel}。`;
+  lead += f + w ? `一方、複数のページにまたがる問題が ${f + w} 件（問題あり ${f}・要改善 ${w}）見つかりました。` : '複数のページにまたがる問題は見つかりませんでした。';
+  const focus = !cross.length && !site.common.length ? '大きな改善点はありません。この状態を保ちながら、コンテンツの追加と更新を続けてください。'
+    : site.cross != null && site.cross < site.avg ? '点数を下げている主な原因はサイト全体にまたがる問題です。1ページずつ直すより、下の順番で仕組み（テンプレートやサイトマップの出力）を直すのが近道です。'
+      : 'サイト全体の構造は整っています。多くのページに共通する指摘を直すと、効率よく点数が上がります。';
+  const items = cross.slice(0, 4).map((c) => ({ title: c.title, status: c.status, text: c.msg, fix: c.fix }));
+  for (const c of site.common.slice(0, Math.max(2, 6 - items.length))) {
+    const pct = Math.round((c.pages.length / s.audited) * 100);
+    items.push({ title: c.title, status: c.fails ? 'fail' : 'warn', text: `${c.pages.length} ページ（診断したページの ${pct}%）で指摘されています。${pct >= 60 ? '大半のページに共通しているので、共通テンプレートを1か所直せばまとめて解消できる可能性が高いです。' : ''}`, fix: c.fix });
+  }
+  const good = site.checks.filter((c) => c.status === 'pass').map((c) => c.title);
+  const projected = site.cross != null && site.cross < 100 && cross.length ? Math.round(site.avg * 0.6 + 40) : null;
+  return { lead, focus, items, good, projected };
+}
+function siteAdvice() {
+  const p = sitePoints();
+  return h('div', { class: 'card' }, h('h2', null, '改善ポイントのまとめ'),
+    h('p', { class: 'advice' }, p.lead), h('p', { class: 'advice' }, p.focus),
+    p.items.length ? h('ol', { class: 'todo', style: 'margin-top:16px' }, p.items.map((c) => h('li', null, h('div', null,
+      h('h3', null, c.title, h('span', { class: 'pill ' + c.status }, STATUS_JA[c.status])),
+      h('p', null, c.text), h('p', { class: 'fix' }, '→ ' + c.fix))))) : null,
+    p.projected ? h('p', { class: 'advice', style: 'margin-top:16px' }, `複数ページにまたがる問題をすべて解消すると、総合点は約 ${p.projected} 点になる見込みです（現在 ${site.overall} 点）。`) : null,
+    p.good.length ? h('p', { class: 'sum-text', style: 'margin:8px 0 0' }, `合格した項目: ${p.good.join('、')}`) : null);
 }
 function siteChecks() {
   const order = { fail: 0, warn: 1, info: 2, pass: 3 };
@@ -473,7 +505,12 @@ function sitePages() {
       })))));
 }
 function siteMarkdown() {
-  const L = ['# サイト全体 SEO 診断レポート', '', `- サイト: ${site.host}`, `- 総合スコア: **${site.overall ?? '-'} / 100**（評価 ${site.grade}）`, `- ページ平均: ${site.avg ?? '-'} ／ サイト横断チェック: ${site.cross ?? '-'}`, `- 診断ページ数: ${site.stats.audited}`, `- 診断日: ${new Date().toLocaleDateString('ja-JP')}`, '', '## サイト全体の問題', ''];
+  const L = ['# サイト全体 SEO 診断レポート', '', `- サイト: ${site.host}`, `- 総合スコア: **${site.overall ?? '-'} / 100**（評価 ${site.grade}）`, `- ページ平均: ${site.avg ?? '-'} ／ サイト横断チェック: ${site.cross ?? '-'}`, `- 診断ページ数: ${site.stats.audited}`, `- 診断日: ${new Date().toLocaleDateString('ja-JP')}`, ''];
+  const pt = sitePoints();
+  L.push('## 改善ポイントのまとめ', '', pt.lead, '', pt.focus, '');
+  pt.items.forEach((c, i) => L.push(`${i + 1}. **${c.title}**（${STATUS_JA[c.status]}）— ${c.text}`, `   - 改善方法: ${c.fix}`));
+  if (pt.projected) L.push('', `複数ページにまたがる問題をすべて解消すると、総合点は約 ${pt.projected} 点になる見込みです。`);
+  L.push('', '## サイト全体の問題', '');
   for (const c of site.checks) {
     L.push(`- [${STATUS_JA[c.status]}] **${c.title}**: ${c.msg}${c.fix ? `\n  - 改善方法: ${c.fix}` : ''}`);
     (c.items || []).slice(0, 10).forEach((i) => L.push(`  - ${i}`));
