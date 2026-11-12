@@ -49,7 +49,8 @@ $('#psikey').value = store.get('psikey', '');
 $('#proxy').value = store.get('proxy', '');
 const savedStrategy = store.get('strategy', 'mobile');
 document.querySelectorAll('input[name=strategy]').forEach((r) => { r.checked = r.value === savedStrategy; });
-$('#limit').value = String(store.get('limit', 50));
+const MAX_PAGES = 50; // サイト全体診断の上限（無料枠の消費を抑えるため）
+$('#limit').value = String(Math.min(store.get('limit', 50), MAX_PAGES) === 25 ? 25 : 50);
 
 $('#form').addEventListener('submit', (e) => {
   e.preventDefault();
@@ -60,7 +61,7 @@ $('#form').addEventListener('submit', (e) => {
   const strategy = document.querySelector('input[name=strategy]:checked').value;
   store.set('strategy', strategy);
   const mode = document.querySelector('input[name=mode]:checked').value;
-  const limit = Number($('#limit').value) || 50;
+  const limit = Math.min(Number($('#limit').value) || 50, MAX_PAGES);
   store.set('limit', limit);
   history.replaceState(null, '', '?url=' + encodeURIComponent(u.href) + (mode === 'site' ? '&mode=site' : ''));
   if (mode === 'site') runSite(u, limit);
