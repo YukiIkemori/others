@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SEOチェッカー | URLを入れるだけの無料SEO診断</title>
+<meta name="description" content="URLを入力するだけで、タイトル・メタ情報・見出し・構造化データ・robots.txt・サイトマップ・表示速度まで約70項目を診断し、100点満点のスコアと優先度付きの改善点を表示する無料のSEOチェックツールです。">
+<meta name="theme-color" content="#0f766e">
+<meta property="og:title" content="SEOチェッカー | URLを入れるだけの無料SEO診断">
+<meta property="og:description" content="約70項目を多角的に診断し、スコアと優先度付きの改善点を表示します。登録不要・無料。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f766e'/%3E%3Ccircle cx='14' cy='14' r='6.5' fill='none' stroke='%23fff' stroke-width='3'/%3E%3Cpath d='M19 19l6 6' stroke='%23fff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><rect width="32" height="32" rx="7" fill="currentColor"/><circle cx="14" cy="14" r="6.5" fill="none" stroke="#fff" stroke-width="3"/><path d="M19 19l6 6" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
+      <span>SEOチェッカー</span>
+    </a>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" id="hero">
+    <h1>URLを入れるだけ。<br>SEOを約70項目で採点します。</h1>
+    <p class="lead">メタ情報・見出し・コンテンツ・クロール設定・構造化データ・表示速度まで多角的に診断し、<strong>100点満点のスコア</strong>と<strong>優先度順の改善点</strong>を表示します。登録不要・無料。</p>
+
+    <form id="form" class="search" autocomplete="off">
+      <label class="sr" for="url">診断するページのURL</label>
+      <input id="url" name="url" type="text" inputmode="url" placeholder="https://example.com/page" required spellcheck="false" autocapitalize="off">
+      <button id="go" type="submit">診断する</button>
+    </form>
+
+    <details class="opts" id="opts">
+      <summary>設定・うまく取得できないとき</summary>
+      <div class="opts-body">
+        <div class="field">
+          <span class="field-label">速度計測の対象</span>
+          <label class="radio"><input type="radio" name="strategy" value="mobile" checked> モバイル</label>
+          <label class="radio"><input type="radio" name="strategy" value="desktop"> PC</label>
+          <label class="radio"><input type="radio" name="strategy" value="off"> 計測しない（速い）</label>
+        </div>
+        <div class="field">
+          <label class="field-label" for="psikey">PageSpeed API キー（任意）</label>
+          <input id="psikey" type="text" placeholder="AIza…" spellcheck="false">
+          <p class="hint">速度計測が混雑で失敗するときに。<a href="https://developers.google.com/speed/docs/insights/v5/get-started?hl=ja" target="_blank" rel="noopener">Google で無料発行</a>でき、このブラウザ内にだけ保存されます。</p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="proxy">独自の取得プロキシ URL（任意）</label>
+          <input id="proxy" type="text" placeholder="https://your-worker.workers.dev/" spellcheck="false">
+          <p class="hint">同梱の Cloudflare Worker を置いた場合に指定すると、レスポンスヘッダーやリダイレクトも診断できます。</p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="paste">HTML を貼り付けて診断</label>
+          <textarea id="paste" rows="4" placeholder="ページを取得できない場合（ログインが必要・アクセス制限など）は、ブラウザの「ページのソースを表示」の内容をここに貼り付けて、上の URL 欄にそのページの URL を入れてください。" spellcheck="false"></textarea>
+        </div>
+      </div>
+    </details>
+
+    <div id="history" class="history" hidden></div>
+  </section>
+
+  <section id="progress" class="progress" hidden aria-live="polite"></section>
+  <section id="notice" class="notice" hidden role="alert"></section>
+  <section id="result" hidden></section>
+
+  <section class="about" id="about">
+    <h2>診断する内容</h2>
+    <ul class="features">
+      <li><b>基本メタ情報</b>タイトルと説明文の長さ・重複、canonical、viewport、言語、文字コード</li>
+      <li><b>コンテンツ</b>H1 と見出しの階層、文章量、頻出語とタイトルの一致、運営者情報への導線</li>
+      <li><b>クロール・インデックス</b>noindex、robots.txt、XML サイトマップ、URL 構造、リダイレクト、hreflang</li>
+      <li><b>リンク・画像</b>内部リンク、アンカーテキスト、alt 属性、画像サイズ指定、遅延読み込み</li>
+      <li><b>SNS・構造化データ</b>OGP、X カード、JSON-LD の構文と必須項目</li>
+      <li><b>技術・セキュリティ</b>HTTPS、混在コンテンツ、描画ブロック、DOM サイズ、ヘッダー、DNS</li>
+      <li><b>表示速度</b>Google PageSpeed Insights による Core Web Vitals と Lighthouse 評価</li>
+    </ul>
+    <p class="small">診断はすべてお使いのブラウザ内で実行され、入力した URL や結果がこのサイトのサーバーに保存されることはありません。ページの取得には取得用プロキシを、速度計測には Google PageSpeed Insights を、DNS の確認には Google Public DNS を利用します。スコアは一般的な SEO のベストプラクティスに基づく目安であり、検索順位を保証するものではありません。</p>
+  </section>
+</main>
+
+<footer class="foot"><div class="wrap">SEOチェッカー — ブラウザだけで動く静的ツール</div></footer>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
