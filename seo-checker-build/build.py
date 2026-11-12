@@ -14,8 +14,8 @@ SITE = "https://seo-checker-bs4.pages.dev"
 NAME = "SEOチェッカー"
 TODAY = "2026-11-13"
 # 運営者の表示。空なら「© SEOチェッカー」だけになる。変更したら index.html のフッターも同じ内容にする。
-OPERATOR_NAME = ""
-OPERATOR_X_URL = ""  # 例: https://x.com/xxxx
+OPERATOR_NAME = "池森 裕毅"
+OPERATOR_X_URL = "https://x.com/yuki_ikemori"
 OUT = pathlib.Path(__file__).resolve().parent.parent / "seo-checker"
 
 LOGO = ('<svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><rect width="32" height="32" rx="7" fill="currentColor"/>'
@@ -33,6 +33,11 @@ if OPERATOR_NAME:
     OPERATOR = "　運営: " + html.escape(OPERATOR_NAME)
     if OPERATOR_X_URL:
         OPERATOR += f'（<a href="{html.escape(OPERATOR_X_URL, quote=True)}" target="_blank" rel="noopener me">X</a>）'
+
+OPERATOR_SECTION = ""
+if OPERATOR_NAME:
+    x = f'<a href="{html.escape(OPERATOR_X_URL, quote=True)}" target="_blank" rel="noopener me">X（@{html.escape(OPERATOR_X_URL.rstrip("/").split("/")[-1])}）</a>' if OPERATOR_X_URL else ""
+    OPERATOR_SECTION = f"<h2>運営者</h2>\n<p>{html.escape(OPERATOR_NAME)}{'　連絡先: ' + x if x else ''}</p>\n"
 
 FOOTER = f'''<footer class="foot">
   <div class="wrap foot-in">
@@ -724,6 +729,7 @@ def build():
 <h2>仕組みと利用しているサービス</h2>
 <p>診断の処理は、お使いのブラウザの中で実行されます。診断結果がこのサイトのサーバーに保存されることはありません。ページの取得には当サイトの中継機能を、表示速度の計測には Google PageSpeed Insights を、DNS の確認には Google Public DNS を利用しています。詳しくは<a href="/privacy">プライバシーポリシー</a>をご覧ください。</p>
 
+{OPERATOR_SECTION}
 <h2>ご利用にあたって</h2>
 <p>診断のために、対象のサイトへ自動でアクセスします。サイト全体診断では最大50ページと、そのリンク先を取得します。ご自身が管理するサイト、または診断の許可を得ているサイトでご利用ください。</p>
 {CTA}'''
