@@ -10,8 +10,9 @@ const MAX_HOPS = 8;
 function gate(request, env, methods) {
   const origin = request.headers.get('Origin') || '';
   const self = new URL(request.url).origin;
-  const allow = String(env.ALLOWED_ORIGINS || '').split(',').map((s) => s.trim()).filter(Boolean);
-  // 既定では同一オリジンからの利用のみ許可（第三者に踏み台として使われないようにする）
+  // ツール本体は off-notes.com/seo-checker/ に置いてある（Firebase Hosting には Functions が無いので、ここが取得専用の裏方）。
+  // それ以外のオリジンは環境変数 ALLOWED_ORIGINS で足す。第三者のサイトから踏み台として使われないようにするための絞り込み。
+  const allow = ['https://off-notes.com'].concat(String(env.ALLOWED_ORIGINS || '').split(',').map((s) => s.trim()).filter(Boolean));
   const permitted = !origin || origin === self || allow.includes('*') || allow.includes(origin);
   const cors = {
     'Access-Control-Allow-Origin': permitted && origin ? origin : self,
