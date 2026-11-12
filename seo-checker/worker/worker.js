@@ -6,8 +6,9 @@
 //   3. 環境変数 ALLOWED_ORIGINS に SEOチェッカーを置いたオリジンを設定
 //      例: https://yourname.github.io
 //   4. js/config.js の PROXY_URL に Worker の URL を書く
-import { handle } from '../functions/api/fetch.js';
+import { handle, handleCheck } from '../functions/api/fetch.js';
 
 export default {
-  fetch: (request, env) => handle(request, env),
+  // <Worker の URL>/check がリンク切れ確認、それ以外がページ取得
+  fetch: (request, env) => (new URL(request.url).pathname.endsWith('/check') ? handleCheck(request, env) : handle(request, env)),
 };

@@ -128,6 +128,48 @@ export async function fetchResource(target, opts = {}) {
   return { ok: false, notFound, errors };
 }
 
+/**
+ * リンク先の HTTP ステータスをまとめて確認する。正確なステータスが必要なので
+ * 同梱 Function か独自プロキシがある場合のみ動く（無ければ null を返す）。
+ * @returns {Promise<null|Array<{url:string,status:number,finalUrl?:string,redirected?:boolean,error?:string}>>}
+ */
+export async function checkLinks(urls, { proxy = '', onProgress = () => {}, alive = () => true } = {}) {
+  const eps = [];
+  if (sameOriginState !== 'absent' && location.protocol.startsWith('http')) eps.push(new URL('api/check', location.href).href);
+  if (proxy && !proxy.includes('{url}')) { try { eps.push(new URL('check', proxy.split('?')[0].replace(/\/?$/, '/')).href); } catch { /* ignore */ } }
+  const call = async (ep, batch) => {
+    const { res, buf } = await fetchBytes(ep, 45000, { method: 'POST', body: JSON.stringify(batch) }); // text/plain なのでプリフライト不要
+    const j = JSON.parse(new TextDecoder().decode(buf));
+    if (!res.ok || !Array.isArray(j)) throw new Error('bad response');
+    return j;
+  };
+  let ep = null;
+  for (const e of eps) { try { await call(e, []); ep = e; break; } catch { /* 次を試す */ } }
+  if (!ep) return null;
+  const batches = [];
+  for (let i = 0; i < urls.length; i += 12) batches.push(urls.slice(i, i + 12));
+  const out = [];
+  let next = 0;
+  let done = 0;
+  await Promise.all(Array.from({ length: Math.min(3, batches.length) }, async () => {
+    while (next < batches.length && alive()) {
+      const b = batches[next++];
+      try { out.push(...await call(ep, b)); } catch { out.push(...b.map((url) => ({ url, status: -1, error: 'check failed' }))); }
+      done += b.length;
+      onProgress(done, urls.length);
+    }
+  }));
+  return out;
+}
+
+// リンク確認結果の分類: broken=確実に切れている / unknown=相手に拒否されて判定不能 / ok
+export function linkState(r) {
+  if (r.status === 404 || r.status === 410 || r.status >= 500) return 'broken';
+  if (r.status === 0) return r.error === 'unreachable' ? 'broken' : 'unknown';
+  if (r.status < 0 || r.status >= 400) return 'unknown';
+  return 'ok';
+}
+
 export const looksLikeHtml = (t) => /<(html|head|body|title|meta|div|!doctype)\b/i.test(t);
 export const looksLikeRobots = (t) => !/<(html|body|!doctype)\b/i.test(t.slice(0, 2000)) && /^\s*(user-agent|disallow|allow|sitemap)\s*:/im.test(t);
 export const looksLikeSitemap = (t) => /<(urlset|sitemapindex)\b/i.test(t.slice(0, 5000));

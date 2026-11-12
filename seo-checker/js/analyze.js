@@ -156,6 +156,7 @@ export function analyze(ctx) {
 
   if (ctx.doc) htmlChecks(ctx, add, data, page);
   crawlChecks(ctx, add, data, page);
+  linkChecks(ctx, add, data);
   headerChecks(ctx, add);
   dnsChecks(ctx, add);
   psiChecks(ctx, add, data);
@@ -323,6 +324,8 @@ function htmlChecks(ctx, add, data, page) {
   const unit = isJa ? '文字' : '語';
   const [lo, mid] = isJa ? [300, 1000] : [120, 300];
   data.textAmount = `${amount.toLocaleString()}${unit}`;
+  data.textCount = amount;
+  data.h1 = h1s.length ? h1s[0].text : '';
   const scripts = q('script[src]').length;
   const spaRoot = doc.querySelector('#root,#app,#__next,#__nuxt,[data-reactroot],app-root');
   if (amount < (isJa ? 150 : 60) && spaRoot && scripts > 0) {
@@ -364,6 +367,7 @@ function htmlChecks(ctx, add, data, page) {
   // ----- リンク -----
   const stat = { internal: 0, external: 0, nofollow: 0, bad: [], empty: [], generic: [], blank: 0 };
   const seenInternal = new Set();
+  const linkMap = new Map();
   for (const a of anchors) {
     const href = (a.getAttribute('href') || '').trim();
     if (!href || href === '#' || /^javascript:/i.test(href)) { stat.bad.push(cut(clean(a.textContent) || href || '(空の href)', 50)); continue; }
@@ -373,12 +377,15 @@ function htmlChecks(ctx, add, data, page) {
     const label = clean(a.textContent) || clean((a.querySelector('img[alt]') || { getAttribute: () => '' }).getAttribute('alt')) || clean(a.getAttribute('aria-label')) || clean(a.getAttribute('title'));
     const internal = u.hostname.replace(/^www\./, '') === url.hostname.replace(/^www\./, '');
     if (internal) { stat.internal++; seenInternal.add(normUrl(u.href)); } else stat.external++;
+    u.hash = '';
+    if (!linkMap.has(u.href)) linkMap.set(u.href, { url: u.href, internal, label: cut(label || '(テキストなし)', 40) });
     const rel = (a.getAttribute('rel') || '').toLowerCase();
     if (/nofollow/.test(rel)) stat.nofollow++;
     if (!label) stat.empty.push(u.pathname + u.search);
     else if (GENERIC_ANCHOR.test(label)) stat.generic.push(`「${label}」→ ${cut(u.pathname, 40)}`);
     if (a.getAttribute('target') === '_blank' && !internal && !/noopener|noreferrer/.test(rel)) stat.blank++;
   }
+  data.linkList = [...linkMap.values()];
   data.links = { total: anchors.length, internal: stat.internal, uniqueInternal: seenInternal.size, external: stat.external, nofollow: stat.nofollow };
   add('links', 'internal', '内部リンク', stat.internal === 0 ? 'fail' : seenInternal.size < 3 ? 'warn' : 'pass', 3,
     `内部リンク ${stat.internal} 本（ユニーク ${seenInternal.size} URL）／外部リンク ${stat.external} 本`,
@@ -565,6 +572,32 @@ function crawlChecks(ctx, add, data, page) {
       }
     }
   }
+}
+
+// =====================================================================
+function linkChecks(ctx, add, data) {
+  const lc = ctx.linkCheck;
+  if (!lc) return;
+  if (lc.state === 'pending') { add('links', 'broken', 'リンク切れ', 'pending', 0, `リンク先を確認中…${lc.total ? `（${lc.done || 0} / ${lc.total}）` : ''}`); return; }
+  if (lc.state === 'na') { add('links', 'broken', 'リンク切れ', 'na', 0, 'この取得経路ではリンク先のステータスを確認できません（Cloudflare Pages へのデプロイ、または独自プロキシ設定で有効になります）。'); return; }
+  if (lc.state !== 'ok') return;
+  const label = new Map((data.linkList || []).map((l) => [l.url, l]));
+  const row = (r) => `${r.status > 0 ? r.status : r.error === 'timeout' ? 'タイムアウト' : '接続不可'}　${r.url}　←「${(label.get(r.url) || {}).label || ''}」`;
+  const isInt = (r) => (label.get(r.url) || {}).internal;
+  const broken = lc.results.filter((r) => r.state === 'broken');
+  const bi = broken.filter(isInt);
+  const unknown = lc.results.filter((r) => r.state === 'unknown');
+  const scope = `${lc.results.length} 本を確認${lc.skipped ? `（上限のため ${lc.skipped} 本は未確認）` : ''}`;
+  data.linkResults = lc.results;
+  add('links', 'broken', 'リンク切れ', bi.length ? 'fail' : broken.length ? 'warn' : 'pass', 5,
+    broken.length ? `リンク切れが ${broken.length} 本あります（内部 ${bi.length}・外部 ${broken.length - bi.length}）。${scope}` : `リンク切れはありません。${scope}${unknown.length ? `・うち ${unknown.length} 本は相手サーバーが自動アクセスを拒否したため判定不能` : ''}`,
+    broken.length ? 'リンク先を正しい URL に直すか、リンクを削除する。自サイトのページを消した場合は、後継ページへ 301 リダイレクトを設定する。' : '',
+    [...bi, ...broken.filter((r) => !isInt(r))].slice(0, 20).map(row));
+  const redir = lc.results.filter((r) => r.state === 'ok' && r.redirected && isInt(r) && normUrl(r.finalUrl || '') !== normUrl(r.url));
+  if (lc.results.some(isInt)) add('links', 'link-redirect', 'リダイレクトを経由する内部リンク', redir.length ? 'warn' : 'pass', 1,
+    redir.length ? `内部リンク ${redir.length} 本がリダイレクトを経由しています。` : '内部リンクはすべて最終 URL を直接指しています。',
+    redir.length ? 'リンクの href をリダイレクト後の最終 URL に書き換える。表示が速くなり、クロールの無駄も減ります。' : '',
+    redir.slice(0, 10).map((r) => `${r.url} → ${r.finalUrl}`));
 }
 
 // =====================================================================

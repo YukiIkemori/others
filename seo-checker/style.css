@@ -13,6 +13,7 @@
   }
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.7 system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", "Yu Gothic UI", Meiryo, sans-serif; }
 .wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
@@ -39,6 +40,23 @@ button { font: inherit; cursor: pointer; }
 .search button { padding: 0 24px; border: 0; border-radius: var(--radius); background: var(--brand); color: var(--brand-ink); font-weight: 700; white-space: nowrap; }
 .search button:disabled { opacity: .6; cursor: progress; }
 
+.mode { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 10px; font-size: .88rem; }
+.mode label { display: inline-flex; align-items: center; cursor: pointer; }
+.mode input[type=radio] { position: absolute; opacity: 0; pointer-events: none; }
+.mode input[type=radio] + span { border: 1px solid var(--line); background: var(--card); color: var(--sub); border-radius: 99px; padding: 4px 14px; }
+.mode input[type=radio]:checked + span { background: var(--ink); color: var(--card); border-color: var(--ink); font-weight: 600; }
+.mode input[type=radio]:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 2px; }
+.mode .limit { color: var(--sub); gap: 6px; cursor: default; }
+.mode select { font: inherit; padding: 3px 6px; border: 1px solid var(--line); border-radius: 6px; background: var(--card); color: var(--ink); }
+.mode:not(:has(input[value=site]:checked)) .limit { display: none; }
+.crawl { width: 100%; display: grid; gap: 10px; }
+.crawl-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.crawl-head .btn { margin-left: auto; }
+.crawl .bar { height: 6px; border-radius: 3px; background: var(--soft); overflow: hidden; display: block; }
+.crawl .bar i { display: block; height: 100%; background: var(--brand); transition: width .3s; }
+table.pages td.u { min-width: 180px; max-width: 320px; overflow-wrap: anywhere; }
+table.pages td.t { min-width: 180px; overflow-wrap: anywhere; color: var(--sub); }
+table.pages td.small { white-space: nowrap; }
 .opts { margin-top: 12px; }
 .opts summary { cursor: pointer; color: var(--sub); font-size: .9rem; width: fit-content; }
 .opts-body { margin-top: 12px; padding: 16px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); display: grid; gap: 16px; }

@@ -33,6 +33,11 @@
       <input id="url" name="url" type="text" inputmode="url" placeholder="https://example.com/page" required spellcheck="false" autocapitalize="off">
       <button id="go" type="submit">診断する</button>
     </form>
+    <div class="mode">
+      <label><input type="radio" name="mode" value="page" checked><span>このページだけ</span></label>
+      <label><input type="radio" name="mode" value="site"><span>サイト全体</span></label>
+      <label class="limit">最大 <select id="limit"><option>25</option><option selected>50</option><option>100</option><option>200</option></select> ページ</label>
+    </div>
 
     <details class="opts" id="opts">
       <summary>設定・うまく取得できないとき</summary>
@@ -73,10 +78,11 @@
       <li><b>基本メタ情報</b>タイトルと説明文の長さ・重複、canonical、viewport、言語、文字コード</li>
       <li><b>コンテンツ</b>H1 と見出しの階層、文章量、頻出語とタイトルの一致、運営者情報への導線</li>
       <li><b>クロール・インデックス</b>noindex、robots.txt、XML サイトマップ、URL 構造、リダイレクト、hreflang</li>
-      <li><b>リンク・画像</b>内部リンク、アンカーテキスト、alt 属性、画像サイズ指定、遅延読み込み</li>
+      <li><b>リンク・画像</b>リンク切れ、内部リンク、アンカーテキスト、alt 属性、画像サイズ指定、遅延読み込み</li>
       <li><b>SNS・構造化データ</b>OGP、X カード、JSON-LD の構文と必須項目</li>
       <li><b>技術・セキュリティ</b>HTTPS、混在コンテンツ、描画ブロック、DOM サイズ、ヘッダー、DNS</li>
       <li><b>表示速度</b>Google PageSpeed Insights による Core Web Vitals と Lighthouse 評価</li>
+      <li><b>サイト全体診断</b>最大200ページを巡回し、タイトル・説明文の重複、リンク切れ、エラーページ、サイトマップの不整合を横断チェック</li>
     </ul>
     <p class="small">診断はすべてお使いのブラウザ内で実行され、入力した URL や結果がこのサイトのサーバーに保存されることはありません。ページの取得には取得用プロキシを、速度計測には Google PageSpeed Insights を、DNS の確認には Google Public DNS を利用します。スコアは一般的な SEO のベストプラクティスに基づく目安であり、検索順位を保証するものではありません。</p>
   </section>
