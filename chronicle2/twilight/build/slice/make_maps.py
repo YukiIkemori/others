@@ -21,7 +21,7 @@ def base(p, mk, title, en, fog, bgm, back='#2a2630', win=1.0, name=None):
     m = dict(title=title, titleEn=en, subtitle='', w=p['w'], h=p['h'], pull=PULL, image='map.webp', walk='walk.png', height='height.png', floor='floor.png', heightBias=3,
              occluders=[], lights=lights, water=[], mood='gold', moodFixed=True, moods=dict(gold=DAY, shadow=DAY), bgm=bgm,
              hd=dict(S=p['S'], A=p['A'], B=p['B'], depth=3, dof=2, fogTop=fog[0], fogBottom=fog[1], raised='raised.png', back=back, noBar=True, **{n: n + '.png' for n in p['far']}))
-    if name and os.path.exists(f'{SL}/{name}/solid.txt'): m['hd']['solid'] = 'solid.txt'; m['hd']['grow'] = 22       # side walls and far roof slopes (build/blockout/solids.py)
+    if name and os.path.exists(f'{SL}/{name}/solid.txt'): m['hd']['solid'] = 'solid.txt'; m['hd']['grow'] = 32       # side walls and far roof slopes (build/blockout/solids.py)
     m.update(PARTY); return m
 def fx(mk, nm, w, h, kind, n, **kw): return dict(kind=kind, x=mk[nm]['p'][0] - w // 2, y=mk[nm]['p'][1] - h // 2, w=w, h=h, n=n, **kw)
 
@@ -40,10 +40,10 @@ def village():
         npc('mil', 'ミル', 'ミル'), npc('bart', '行商人のバルト', '行商人のバルト'),
         T('door_teto', 46, 'テトの家', kind='inn', prompt='休む'), T('door_shop', 46, 'よろず屋', kind='shop', shop='goods', prompt='店に入る'),
         T('door_smith', 46, '鍛冶屋', kind='shop', shop='smith', prompt='店に入る'),
-        T('door_elder', 46, '村長の家', text=['かぎがかかっている']), T('door_herb', 46, '薬師の家', text=['戸口から、薬草を煮る匂いがする。']),
-        T('door_chapel', 46, '小さな礼拝堂', text=['扉の向こうに、小さな灯がひとつ、\nともっている。']),
-        T('well', 46, '井戸', text=['深い井戸。のぞきこむと、\n弱い日の光が、底でゆれている。']),
-        dict(at(mk, 'chest_roof'), r=40, kind='chest', id='ch002', title='宝箱', prompt='あける', prop=CHEST),
+        T('door_elder', 46, '村長の家', text=['鍵が掛かっている']), T('door_herb', 46, '薬師の家', text=['戸口から、薬草を煮る匂いがする。']),
+        T('door_chapel', 46, '小さな礼拝堂', text=['扉の向こうに、小さな灯が一つ、\n灯っている。']),
+        T('well', 46, '井戸', text=['深い井戸。覗き込むと、\n弱い日の光が、底で揺れている。']),
+        dict(x=1600, y=424, r=40, kind='chest', id='ch002', title='宝箱', prompt='開ける', prop=CHEST),      # on the pasture's grass (it stood on the smithy's store roof: nobody saw a way up)
         dict(at(mk, 'hide_chapel'), r=36, kind='spot', id='ch001', title='物かげ'),
     ]
     m['emitters'] = [fx(mk, 'fx_plaza', 700, 420, 'motes', 26), fx(mk, 'fx_orchard', 420, 300, 'leaves', 6), fx(mk, 'fx_pasture', 520, 300, 'motes', 12),
@@ -63,14 +63,14 @@ def f01():
     T = lambda nm, r, title, **kw: dict(at(mk, nm), r=r, title=title, **kw)
     m['triggers'] = [
         T('sign', 40, '道しるべ', text=['「東　始まりの村」\n「北　崖の修道院」「西　王都」']),
-        T('shrine', 40, '道ばたのほこら', text=['旅の無事をいのる、小さなほこら。\nだれかが、麦の穂をそなえている。']),
-        T('cedar', 46, '一本杉の根もと', kind='dig', id='cedar', prompt='ほる'),
+        T('shrine', 40, '道ばたのほこら', text=['旅の無事を祈る、小さなほこら。\n誰かが、麦の穂を供えている。']),
+        T('cedar', 46, '一本杉の根もと', kind='dig', id='cedar', prompt='掘る'),
         dict(at(mk, 'hide_wall'), r=38, kind='spot', id='ch014', title='物かげ'),
-        dict(at(mk, 'chest_ledge'), r=40, kind='chest', id='ch015', title='宝箱', prompt='あける', prop=CHEST),
+        dict(at(mk, 'chest_ledge'), r=40, kind='chest', id='ch015', title='宝箱', prompt='開ける', prop=CHEST),
     ]
     c = at(mk, 'chest_ledge')      # the chest nobody reaches from below (chests.csv ch015): say where the way is
     m['triggers'].append(dict(x=c['x'], y=c['y'] + 143, r=44, title='岩棚の下', prompt='見上げる',
-                              text=['岩棚の上に、宝箱が見える。\nここからは、登れそうにない。', '崖の上の修道院から、\n降りてくる道があるのかもしれない。']))
+                              text=['岩棚の上に、宝箱が見える。\nここからは、登れそうにない。', '崖の修道院の西の端にある\n「崩れた階段」から、ここへ降りられる。']))
     l = mk['spawn_ledge']['p']
     m['triggers'].append(dict(x=l[0], y=l[1] + 46, r=34, kind='jump', title='台のふち', prompt='飛び降りる', to=[l[0], l[1] + 170]))
     m['emitters'] = [fx(mk, 'fx_fields', 700, 500, 'motes', 18), fx(mk, 'fx_road', 700, 300, 'motes', 14), fx(mk, 'fx_cedar', 420, 420, 'leaves', 8),

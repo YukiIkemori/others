@@ -13,7 +13,10 @@ window.RPG = (function () {
   const ui = [];                       // open widgets; the last one has the keys
 
   // ------------------------------------------------------------------ state
-  const expNext = lv => Math.round((.5 * lv * lv + 5 * lv + 5) * (5 + .5 * lv));
+  // Experience for the next level: the scenario table's monster value (.5Lv² + 5Lv + 5) times the number of monsters of one's own
+  // level it takes.  That number is the knob for the pace: 5 + .5Lv was "レベル上がるの早すぎる" (ユウキ, 2026-11-12), now 12 + 2Lv.
+  const expNext = lv => Math.round((.5 * lv * lv + 5 * lv + 5) * (12 + 2 * lv));
+  const ord = () => (G && G.order) || D.order;        // the party from the top (隊列): the top one is hit most often
   function stats(id) {
     const c = D.chars[id], p = G.party[id], f = k => Math.floor(c[k][0] + c[k][1] * p.lv);
     const s = { mhp: f('hp'), mmp: f('mp'), str: f('str'), def: f('def'), int: f('int'), spd: f('spd'), dex: f('dex'), atk: 0, mag: 0, healp: 0, arm: D.BODY_DEF, steal: 0, wtype: null };
@@ -24,14 +27,14 @@ window.RPG = (function () {
   const hasPassive = k => { const p = D.passives[k]; return G.party[p.user].lv >= p.lv && G.party[p.user].hp > 0; };
   function newGame() {
     G = { v: 1, gold: D.start.gold, items: Object.assign({}, D.start.items), party: {}, flags: {}, talk: {}, seen: {}, map: D.start.map, x: null, y: null, dir: 'down',
-          steps: 0, next: 60, time: 0, wins: 0, set: { speed: 1, dash: false, bgm: S.vol.bgm, sfx: S.vol.sfx } };
-    for (const id of D.order) { const c = D.chars[id]; G.party[id] = { lv: 1, exp: 0, row: c.row, equip: Object.assign({}, c.equip), hp: 1, mp: 0 }; const s = stats(id); G.party[id].hp = s.mhp; G.party[id].mp = s.mmp; }
+          steps: 0, next: 60, time: 0, wins: 0, order: D.order.slice(), explored: {}, set: { speed: 1, dash: false, bgm: S.vol.bgm, sfx: S.vol.sfx, map: 'small' } };
+    for (const id of ord()) { const c = D.chars[id]; G.party[id] = { lv: 1, exp: 0, row: c.row, equip: Object.assign({}, c.equip), hp: 1, mp: 0 }; const s = stats(id); G.party[id].hp = s.mhp; G.party[id].mp = s.mmp; }
   }
   const count = it => G.items[it] || 0;
   const MAX = 99;                                     // of one kind in the bag (the old game's number)
   function give(it, n) { const have = count(it), add = Math.min(n, MAX - have); if (add > 0) G.items[it] = have + add; return add; }
   function take(it, n) { G.items[it] = Math.max(0, count(it) - (n || 1)); if (!G.items[it]) delete G.items[it]; }
-  function healAll() { for (const id of D.order) { const s = stats(id); G.party[id].hp = s.mhp; G.party[id].mp = s.mmp; } }
+  function healAll() { for (const id of ord()) { const s = stats(id); G.party[id].hp = s.mhp; G.party[id].mp = s.mmp; } }
   function gainExp(id, n) {             // -> list of messages (level ups, new skills)
     const p = G.party[id], out = []; p.exp += n;
     while (p.exp >= expNext(p.lv)) {
@@ -44,7 +47,7 @@ window.RPG = (function () {
     return out;
   }
   // ------------------------------------------------------------------ gear (the old game's rules: screens/equip.js itemDiff, shop.js)
-  const VALS = [['atk', 'こうげき'], ['mag', '術'], ['healp', '回復'], ['def', '守り'], ['steal', 'ぬすみ']];
+  const VALS = [['atk', '攻撃'], ['mag', '術'], ['healp', '回復'], ['def', '守り'], ['steal', '盗み']];
   const KIND = { sword: '片手剣', great: '大剣', staff: '杖', book: '本', dagger: '短剣', bow: '弓', holy: '聖杖', mace: 'メイス' };
   const slotName = sl => (D.SLOTS.find(q => q[0] === sl) || [0, sl])[1];
   const isGear = it => !!D.items[it] && D.items[it].kind === 'gear';
@@ -52,7 +55,7 @@ window.RPG = (function () {
   const twoHand = it => !!it && !!D.items[it] && D.items[it].wtype === 'great';
   const gearText = d => VALS.filter(([k]) => d[k]).map(([k, n]) => n + ' ' + d[k]).join('　');
   const power = it => { const d = D.items[it]; return d ? (d.atk || 0) + (d.mag || 0) + (d.healp || 0) + (d.def || 0) : 0; };
-  const wornBy = it => D.order.filter(c => Object.values(G.party[c].equip).includes(it));
+  const wornBy = it => ord().filter(c => Object.values(G.party[c].equip).includes(it));
   // the item's own numbers against what is worn in that slot now -> [{ k, name, before, after, d }]
   // (a two-handed weapon also takes the shield off, so the shield's numbers go too)
   function itemDiff(id, sl, it) {
@@ -76,12 +79,12 @@ window.RPG = (function () {
   // -> { used: [{ who (member id or 'bag'), what, n }], healed: [id], short }
   function fullHeal(dry) {
     const P = dry ? JSON.parse(JSON.stringify(G.party)) : G.party, inv = dry ? Object.assign({}, G.items) : G.items;
-    const st = {}; for (const id of D.order) st[id] = stats(id);
-    const miss = id => P[id].hp > 0 ? st[id].mhp - P[id].hp : 0, hurt = () => D.order.filter(id => miss(id) > 0), worst = h => h.reduce((a, b) => miss(b) > miss(a) ? b : a);
+    const st = {}; for (const id of ord()) st[id] = stats(id);
+    const miss = id => P[id].hp > 0 ? st[id].mhp - P[id].hp : 0, hurt = () => ord().filter(id => miss(id) > 0), worst = h => h.reduce((a, b) => miss(b) > miss(a) ? b : a);
     const healed = hurt(), used = {}, note = (who, what) => { const k = who + '|' + what; (used[k] = used[k] || { who, what, n: 0 }).n++; };
     for (let g = 0; g < 200; g++) {
       const h = hurt(); if (!h.length) break; let best = null; const t = worst(h);
-      for (const c of D.order) { if (P[c].hp <= 0) continue;
+      for (const c of ord()) { if (P[c].hp <= 0) continue;
         for (const sk of skillsOf(c)) { if (sk.kind !== 'heal' || sk.target !== 'ally' || sk.mp > P[c].mp) continue;
           const gain = Math.min(miss(t), Math.floor((st[c].int + st[c].healp) * sk.power)), eff = gain / Math.max(.5, sk.mp);
           if (gain > 0 && (!best || eff > best.eff + 1e-9)) best = { c, sk, gain, eff }; } }
@@ -101,7 +104,11 @@ window.RPG = (function () {
     memSave = JSON.stringify(G);
     try { localStorage.setItem(SAVE_KEY, memSave); } catch (e) {}
   }
-  function loadSave() { let s = memSave; try { s = localStorage.getItem(SAVE_KEY) || s; } catch (e) {} if (!s) return null; try { const o = JSON.parse(s); return o && o.v === 1 ? o : null; } catch (e) { return null; } }
+  function loadSave() { let s = memSave; try { s = localStorage.getItem(SAVE_KEY) || s; } catch (e) {} if (!s) return null; try { const o = JSON.parse(s); if (!o || o.v !== 1) return null;
+      // saves from before the 隊列 and the map
+      if (!Array.isArray(o.order) || o.order.length !== D.order.length || D.order.some(id => !o.order.includes(id))) o.order = D.order.slice();
+      o.explored = o.explored || {}; if (!MAPMODES.includes(o.set.map)) o.set.map = 'small';
+      return o; } catch (e) { return null; } }
 
   // ------------------------------------------------------------------ pictures
   const imgs = new Map();
@@ -173,7 +180,7 @@ window.RPG = (function () {
   }
   function helpbar(parent, keys) {
     const b = el('div', 'helpbar', '<span class="t"></span><span class="keys"></span>'); parent.appendChild(b);
-    b.querySelector('.keys').innerHTML = keys || '<span><b class="keycap">Z</b>決める</span><span class="hit back"><b class="keycap">X</b>もどる</span>';
+    b.querySelector('.keys').innerHTML = keys || '<span><b class="keycap">Z</b>決める</span><span class="hit back"><b class="keycap">X</b>戻る</span>';
     const back = b.querySelector('.back'); if (back) back.onclick = ev => { ev.stopPropagation(); const t = top(); if (t) t.key({ key: 'Escape' }); };
     return { el: b, set(t) { b.querySelector('.t').textContent = t || ''; } };
   }
@@ -231,10 +238,10 @@ window.RPG = (function () {
       h += `<div class="dh">${d.help || ''}</div><div class="own">${count(it) ? '持っている ×' + count(it) : '持っていない'}${worn ? '（装備中 ' + worn + '）' : ''}</div>`;
       if (gear && o.who) {
         const rows = itemDiff(o.who, d.slot, o.remove ? null : it), same = !o.remove && G.party[o.who].equip[d.slot] === it;
-        h += '<div class="lab">いまの装備と比べる</div>' + (same || !rows.some(r => r.d) ? '<div class="same">変わらない</div>' : '<table class="cmp">' + rows.map(r => `<tr><td>${r.name}</td><td class="n">${r.before} → ${r.after}</td><td>${diffHtml(r)}</td></tr>`).join('') + '</table>');
+        h += '<div class="lab">今の装備と比べる</div>' + (same || !rows.some(r => r.d) ? '<div class="same">変わらない</div>' : '<table class="cmp">' + rows.map(r => `<tr><td>${r.name}</td><td class="n">${r.before} → ${r.after}</td><td>${diffHtml(r)}</td></tr>`).join('') + '</table>');
       }
       if (gear && o.party !== false && !o.remove) {
-        h += `<div class="lab">${o.sell ? '仲間が付けると（売る前に）' : o.who ? 'ほかの仲間が付けると' : '仲間が付けると'}</div><div class="strip">` + D.order.filter(c => c !== o.who).map(c => {
+        h += `<div class="lab">${o.sell ? '仲間が付けると（売る前に）' : o.who ? '他の仲間が付けると' : '仲間が付けると'}</div><div class="strip">` + ord().filter(c => c !== o.who).map(c => {
           const can = canWear(c, it), rows = can ? itemDiff(c, d.slot, it).filter(r => r.d) : [];
           const t = !can ? '<span class="no">装備できない</span>' : G.party[c].equip[d.slot] === it ? '<span class="no">装備中</span>' : rows.length ? rows.map(r => `<span>${r.name} ${diffHtml(r)}</span>`).join('') : '<span><b class="eq">±0</b></span>';
           return `<div class="pc${can ? '' : ' off'}"><canvas width="48" height="48" data-c="${c}"></canvas><span class="nm">${D.chars[c].name}</span>${t}</div>`; }).join('') + '</div>';
@@ -246,32 +253,33 @@ window.RPG = (function () {
   // "今すぐ装備する？" after buying gear (the old shop's offerEquip): everyone is listed, who cannot wear it cannot be chosen,
   // the cursor starts on the first who can.  -> true when somebody put it on
   async function offerEquip(k, left, say) {
-    const d = D.items[k], sl = d.slot, wear = D.order.map(c => canWear(c, k)), room = D.order.map((c, i) => wear[i] && G.party[c].equip[sl] !== k);
+    const d = D.items[k], sl = d.slot, wear = ord().map(c => canWear(c, k)), room = ord().map((c, i) => wear[i] && G.party[c].equip[sl] !== k);
     if (!room.some(Boolean) || count(k) < 1) return false;
-    const rows = D.order.map((c, i) => { const nm = D.chars[c].name; if (!wear[i]) return { label: nm, r: '装備できない', dim: true }; if (!room[i]) return { label: nm, r: '装備中', dim: true };
+    const rows = ord().map((c, i) => { const nm = D.chars[c].name; if (!wear[i]) return { label: nm, r: '装備できない', dim: true }; if (!room[i]) return { label: nm, r: '装備中', dim: true };
       const ds = itemDiff(c, sl, k).filter(r => r.d); return { label: nm, r: ds.length ? ds.map(r => `${r.name} ${diffHtml(r)}`).join('　') : '<b class="eq">±0</b>' }; }).concat([{ label: '装備しない' }]);
     left = Math.min(left, count(k));
-    const i = await ask(left > 1 ? `今すぐ装備する？（あと ${left} 個）` : '今すぐ装備する？', d.name, rows, { index: room.findIndex(Boolean), cancel: D.order.length });
-    if (i < 0 || i >= D.order.length || !room[i]) return false;
-    const r = putOn(D.order[i], sl, k);
+    const i = await ask(left > 1 ? `今すぐ装備する？（あと ${left} 個）` : '今すぐ装備する？', d.name, rows, { index: room.findIndex(Boolean), cancel: ord().length });
+    if (i < 0 || i >= ord().length || !room[i]) return false;
+    const r = putOn(ord()[i], sl, k);
     if (!r.ok) { S.sfx('buzz'); say(r.note || '付けられない'); return false; }
-    S.sfx('ok'); say(`${D.chars[D.order[i]].name} が ${d.name} を付けた` + (r.note ? '（' + r.note + '）' : '')); return true;
+    S.sfx('ok'); say(`${D.chars[ord()[i]].name} が ${d.name} を付けた` + (r.note ? '（' + r.note + '）' : '')); return true;
   }
   // the four party members as cards (menus)
   function cards(parent) {
     const box = el('div', 'cards hit'); parent.appendChild(box); let sel = -1, onClick = null;
     const o = { el: box, render() {
       box.innerHTML = '';
-      D.order.forEach((id, i) => {
-        const p = G.party[id], s = stats(id), c = el('div', 'card' + (i === sel ? ' sel' : ''));
-        c.innerHTML = `<canvas width="96" height="128"></canvas><span class="nm">${D.chars[id].name}</span><span class="lv">Lv ${p.lv}</span><span class="row">${p.row === 'front' ? '前の列' : '後ろの列'}</span>
+      ord().forEach((id, i) => {
+        const p = G.party[id], s = stats(id), c = el('div', 'card ' + p.row + (i === sel ? ' sel' : '') + (i === o.held ? ' held' : ''));
+        c.innerHTML = `<canvas width="96" height="128"></canvas><span class="nm">${D.chars[id].name}</span><span class="lv">Lv ${p.lv}</span><span class="row">${p.row === 'front' ? '前列' : '後列'}</span>
           <div class="bars"><div><span class="k">HP</span>${p.hp}<span class="max"> / ${s.mhp}</span><span class="bar${p.hp < s.mhp * .3 ? ' low' : ''}"><i style="width:${100 * p.hp / s.mhp}%"></i></span></div>
           <div><span class="k">MP</span>${p.mp}<span class="max"> / ${s.mmp}</span><span class="bar mp"><i style="width:${s.mmp ? 100 * p.mp / s.mmp : 0}%"></i></span></div></div>`;
         img(D.chars[id].sprite + '.png').then(im => { const x = c.querySelector('canvas').getContext('2d'); x.imageSmoothingEnabled = false; x.drawImage(im, 0, 0, 96, 128, 0, 0, 96, 128); });
         c.onclick = ev => { ev.stopPropagation(); if (onClick) onClick(i); };
+        if (o.tools) o.tools(i, c);
         box.appendChild(c);
       });
-    }, set sel(v) { sel = v; o.render(); }, get sel() { return sel; }, set onClick(f) { onClick = f; } };
+    }, held: -1, tools: null, set sel(v) { sel = v; o.render(); }, get sel() { return sel; }, set onClick(f) { onClick = f; } };
     o.render(); return o;
   }
   // choose one of the four on the cards -> index or -1
@@ -353,7 +361,7 @@ window.RPG = (function () {
     const c = D.chests[id]; G.flags[id] = 1;
     for (const [it, n] of c.give || []) {
       const got = give(it, n), nm = D.items[it].name + (n > 1 ? '×' + n : '');
-      S.sfx('get'); await notice(got ? (opened ? `${nm}を\n手に入れた！` : `物かげに、何かある。\n${nm}を手に入れた`) : `${D.items[it].name}は、\nこれ以上持てない`);
+      S.sfx('get'); await notice(got ? (opened ? `${nm}を\n手に入れた！` : `物陰に、何かある。\n${nm}を手に入れた`) : `${D.items[it].name}は、\nこれ以上持てない`);
     }
     if (c.gold) { G.gold += c.gold; S.sfx('coin'); await notice(`お金を${c.gold}枚、\n手に入れた！`); }
   }
@@ -370,7 +378,7 @@ window.RPG = (function () {
     if (t.kind === 'inn') { run(inn); return true; }
     if (t.kind === 'chest') { run(async () => { S.sfx('chest'); if (t.propObj) { t.propObj.frame = 1; t.propObj.glow = null; } t.hidden = true; await wait(450); await getChest(t.id, true); }); return true; }
     if (t.kind === 'spot') { run(async () => { S.sfx('glint'); t.hidden = true; await wait(200); await getChest(t.id, false); }); return true; }
-    if (t.kind === 'dig') { run(async () => { await notice('一本杉の根もとを、\nほってみた…'); S.sfx('get'); G.flags[t.id] = 1; give('spoon', 1); await notice('さびたスプーンを\n手に入れた'); t.kind = null; t.text = ['もう、何もない']; t.prompt = null; }); return true; }
+    if (t.kind === 'dig') { run(async () => { await notice('一本杉の根もとを、\n掘ってみた…'); S.sfx('get'); G.flags[t.id] = 1; give('spoon', 1); await notice('さびたスプーンを\n手に入れた'); t.kind = null; t.text = ['もう、何もない']; t.prompt = null; }); return true; }
     if (t.kind === 'crystal') { run(() => crystal(t)); return true; }
     if (t.kind === 'jump') { run(async () => { await fadeOut(200); S.sfx('thud'); g.teleport(t.to[0], t.to[1], 'down'); await fadeIn(); }); return true; }
     if (t.kind === 'warp') { (async () => { busy = true; g.paused = true; const a = await choose(t.ask, [t.prompt, 'やめる']); g.paused = false; busy = false; if (a === 0) { S.sfx('step'); changeMap(t.to, { spawn: t.spawn }); } })(); return true; }
@@ -379,13 +387,13 @@ window.RPG = (function () {
   async function inn() {
     const a = await choose('休んでいく？', ['休む', 'やめる']); if (a !== 0) return;
     await fadeOut(600); S.sfx('rest'); healAll(); await wait(1500); await fadeIn();
-    await notice('4人は、ぐっすり休んだ。\nHPとMPが全部もどった');
+    await notice('4人は、ぐっすり休んだ。\nHPとMPが全部戻った');
   }
   async function crystal(t) {
-    const opts = ['書きとめる']; if (count('tent')) opts.push('テントで休む'); opts.push('やめる');
-    const a = await choose('セーブ結晶だ。\n旅を書きとめる？', opts);
-    if (opts[a] === '書きとめる') { save(); S.sfx('save'); await notice('ここまでの旅を、\n書きとめた'); }
-    else if (opts[a] === 'テントで休む') { take('tent'); await fadeOut(600); S.sfx('rest'); healAll(); await wait(1500); await fadeIn(); await notice('4人は、テントで休んだ。\nHPとMPが全部もどった'); }
+    const opts = ['書き留める']; if (count('tent')) opts.push('テントで休む'); opts.push('やめる');
+    const a = await choose('セーブ結晶だ。\n旅を書き留める？', opts);
+    if (opts[a] === '書き留める') { save(); S.sfx('save'); await notice('ここまでの旅を、\n書き留めた'); }
+    else if (opts[a] === 'テントで休む') { take('tent'); await fadeOut(600); S.sfx('rest'); healAll(); await wait(1500); await fadeIn(); await notice('4人は、テントで休んだ。\nHPとMPが全部戻った'); }
   }
   function onExit(e) {
     if (!G || busy) return;
@@ -399,31 +407,102 @@ window.RPG = (function () {
     if (busy) return true;
     const g = game(); if (!g || g.loading || !started) return !started;
     if (!g.dialog && KEY(e) === 'menu') { if (!e.repeat) menu(); return true; }
+    if (!g.dialog && KEY(e) === 'X') { if (!e.repeat) mapCycle(); return true; }
     if (e.key === 'Escape') return true;
     return false;
   }
 
   // ------------------------------------------------------------------ start screen
   function startScreen() {
-    const g = game(); g.paused = true;
+    const g = game(); g.paused = true; if ($('title')) $('title').style.visibility = 'hidden';      // the place's name waits until the game has begun
     const sc = el('div', 'hit'); sc.id = 'start';
     sc.innerHTML = '<div class="t1">The first slice</div><div class="t2">麦の丘の一区切り</div><div class="t3">始まりの村から、崖の修道院の入口まで</div>';
     root.appendChild(sc);
     const has = !!loadSave();
-    const l = list(sc, [{ label: 'はじめから' }, { label: 'つづきから', dim: !has }], { onPick: async (it, i) => {
-      l.close(); S.bgm(null);
+    const l = list(sc, [{ label: '最初から' }, { label: '続きから', dim: !has }], { onPick: async (it, i) => {
+      l.close(); S.bgm(null); if ($('title')) $('title').style.visibility = '';
       if (i === 1) { G = loadSave(); S.volume('bgm', G.set.bgm); S.volume('sfx', G.set.sfx); started = true; sc.remove(); await changeMap(G.map, { x: G.x, y: G.y, dir: G.dir }); }
       else { newGame(); started = true; await fadeOut(350); sc.remove(); S.bgm(g.map.bgm); g.paused = false; g.announce(300, 3600); await fadeIn(); }
       hud();
     } });
-    sc.appendChild(el('div', 'note', '<b class="keycap">← ↑ ↓ →</b>歩く　<b class="keycap">Z</b>決める・話す　<b class="keycap">X</b>もどる・押しながら走る　<b class="keycap">C</b>メニュー<br>戦いの中：<b class="keycap">Q</b>リピート　<b class="keycap">E</b>戦闘の速さ'));
+    sc.appendChild(el('div', 'note', '<b class="keycap">← ↑ ↓ →</b>歩く　<b class="keycap">Z</b>決める・話す　<b class="keycap">X</b>戻る・押しながら走る　<b class="keycap">C</b>メニュー　<b class="keycap">V</b>地図<br>戦いの中：<b class="keycap">Q</b>リピート　<b class="keycap">E</b>戦闘の速さ'));
     S.bgm('bgm01');
   }
-  const hintHtml = () => '<span><b class="keycap">C</b>メニュー</span><span><b class="keycap">Z</b>調べる・話す</span><span><b class="keycap">X</b>' + (G && G.set.dash ? '押しながら歩く' : '押しながら走る') + '</span>';
+  const hintHtml = () => '<span><b class="keycap">V</b>地図</span><span><b class="keycap">C</b>メニュー</span><span><b class="keycap">Z</b>調べる・話す</span><span><b class="keycap">X</b>' + (G && G.set.dash ? '押しながら歩く' : '押しながら走る') + '</span>';
   function hud() {
     if ($('fieldhint')) { $('fieldhint').innerHTML = hintHtml(); return; }
-    const h = el('div', '', hintHtml()); h.id = 'fieldhint'; root.appendChild(h);
+    const h = el('div', '', hintHtml()); h.id = 'fieldhint'; root.appendChild(h); mapStart();
     if (matchMedia('(pointer: coarse)').matches) { const b = el('button', 'hit', 'メニュー'); b.id = 'menubtn'; b.onclick = ev => { ev.stopPropagation(); if (!ui.length && !busy && !game().dialog) menu(); }; root.appendChild(b); h.style.display = 'none'; }
+  }
+
+  // ------------------------------------------------------------------ the small map (the old game's systems/field/minimap.js)
+  // Top right.  The X button (V on the keyboard, or a tap on the map) goes 小地図 -> 大きな地図 -> 出さない, kept in the settings.
+  // What the party has seen (about what the screen shows around them) is filled in and stays, per map, in the save
+  // (G.explored, the old game's run-length form); a town, where nothing attacks, is known from the start.  Marks: unopened chests gold, ways out white, the save crystal blue, the party an arrow.  The picture is the
+  // map's own painting made small, so houses and roads can be told apart.
+  const MAPMODES = ['small', 'big', 'off'], MAPNAME = { small: '小地図', big: '大きな地図', off: '出さない' };
+  const MM = { cell: 32, rx: 16, ry: 9, k: .25, rec: null, box: null, cv: null, timer: 0, toastT: 0 };
+  function mmEnc(r) { const out = []; let v = 0, n = 0; for (let i = 0; i < r.bits.length; i++) { const b = r.bits[i] ? 1 : 0; if (b === v) { n++; continue; } out.push(n.toString(36)); v = b; n = 1; } if (v === 1) out.push(n.toString(36)); return r.w + 'x' + r.h + ':' + out.join('.'); }
+  function mmDec(s, w, h) {
+    const m = typeof s === 'string' && /^(\d+)x(\d+):([0-9a-z.]*)$/.exec(s); if (!m || +m[1] !== w || +m[2] !== h) return null;
+    const bits = new Uint8Array(w * h); if (!m[3]) return bits; let i = 0, v = 0;
+    for (const t of m[3].split('.')) { const n = parseInt(t, 36); if (!(n >= 0) || i + n > bits.length) return null; if (v) bits.fill(1, i, i + n); i += n; v ^= 1; }
+    return bits;
+  }
+  const mk2d = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
+  function mmRec() {
+    const g = game(), M = g.map; if (MM.rec && MM.rec.M === M && MM.rec.G === G) return MM.rec;
+    const w = Math.ceil(M.w / MM.cell), h = Math.ceil(M.h / MM.cell), W = Math.round(M.w * MM.k), H = Math.round(M.h * MM.k);
+    const r = MM.rec = { M, G, id: curMap, w, h, W, H, bits: (M.encounter ? mmDec(G.explored && G.explored[curMap], w, h) : null) || new Uint8Array(w * h).fill(M.encounter ? 0 : 1), mask: mk2d(w, h), base: mk2d(W, H), view: mk2d(W, H), dirty: true };
+    const b = r.base.getContext('2d'); b.imageSmoothingEnabled = true; b.imageSmoothingQuality = 'high'; if (g.image) b.drawImage(g.image, 0, 0, W, H);
+    b.fillStyle = 'rgba(52, 42, 30, .3)'; b.fillRect(0, 0, W, H);                                   // an old map: a little browner and dimmer than the field
+    const x = r.mask.getContext('2d'); x.fillStyle = '#fff'; for (let i = 0; i < r.bits.length; i++) if (r.bits[i]) x.fillRect(i % w, (i / w) | 0, 1, 1);
+    return r;
+  }
+  function mmReveal(r) {
+    if (!r.M.encounter) return;
+    const hr = game().hero, cx = Math.floor(hr.x / MM.cell), cy = Math.floor(hr.y / MM.cell); if (r.at === cx + ',' + cy) return; r.at = cx + ',' + cy;
+    const x = r.mask.getContext('2d'); x.fillStyle = '#fff'; let added = 0;
+    for (let j = -MM.ry; j <= MM.ry; j++) for (let i = -MM.rx; i <= MM.rx; i++) {
+      const px = cx + i, py = cy + j; if (px < 0 || py < 0 || px >= r.w || py >= r.h || (i * i) / (MM.rx * MM.rx) + (j * j) / (MM.ry * MM.ry) > 1.04) continue;
+      const q = py * r.w + px; if (!r.bits[q]) { r.bits[q] = 1; x.fillRect(px, py, 1, 1); added++; }
+    }
+    if (added) { (G.explored = G.explored || {})[r.id] = mmEnc(r); r.dirty = true; }
+  }
+  const mmSeen = (r, x, y) => { const cx = Math.floor(x / MM.cell), cy = Math.floor(y / MM.cell); return cx >= 0 && cy >= 0 && cx < r.w && cy < r.h && !!r.bits[cy * r.w + cx]; };
+  const ANG = { up: 0, up_right: 45, right: 90, down_right: 135, down: 180, down_left: 225, left: 270, up_left: 315 };
+  function mmDraw() {
+    const g = game(), box = MM.box; if (!box) return;
+    const show = !!(G && started && g && g.map && !g.loading && G.set.map !== 'off' && g.paused !== 'cover' && !$('menu') && !$('shop') && !$('battle') && !$('start'));
+    box.style.display = show ? '' : 'none'; if (!show) return;
+    const r = mmRec(), M = r.M, cv = MM.cv, big = G.set.map === 'big'; mmReveal(r);
+    box.classList.toggle('big', big); if (cv.width !== r.W || cv.height !== r.H) { cv.width = r.W; cv.height = r.H; }
+    const tt = box.querySelector('.mt'); if (tt.textContent !== M.title) tt.textContent = M.title;
+    if (r.dirty) { const v = r.view.getContext('2d'); v.globalCompositeOperation = 'source-over'; v.clearRect(0, 0, r.W, r.H); v.imageSmoothingEnabled = true; v.drawImage(r.mask, 0, 0, r.W, r.H); v.globalCompositeOperation = 'source-in'; v.drawImage(r.base, 0, 0); r.dirty = false; }
+    const x = cv.getContext('2d'), k = MM.k, s = big ? 1 : 2.1;                                          // the small map's marks are drawn bigger: it is shown at less than half the size
+    x.clearRect(0, 0, r.W, r.H); x.drawImage(r.view, 0, 0);
+    const mark = (px, py, col, sz, dia) => { x.save(); x.translate(Math.round(px * k), Math.round(py * k)); if (dia) x.rotate(Math.PI / 4); x.fillStyle = 'rgba(13,11,12,.9)'; x.fillRect(-sz / 2 - 1.5, -sz / 2 - 1.5, sz + 3, sz + 3); x.fillStyle = col; x.fillRect(-sz / 2, -sz / 2, sz, sz); x.restore(); };
+    for (const e of M.exits || []) { if (e.closed) continue; const ex = clamp(e.rect ? e.rect[0] + e.rect[2] / 2 : e.x, 14, M.w - 14), ey = clamp(e.rect ? e.rect[1] + e.rect[3] / 2 : e.y, 14, M.h - 14); if (mmSeen(r, ex, ey)) mark(ex, ey, '#f4eedd', 5 * s, true); }
+    for (const t of M.triggers || []) {
+      if (!mmSeen(r, t.x, t.y)) continue;
+      if (t.kind === 'chest' && !G.flags[t.id]) mark(t.x, t.y - 10, '#e3b84e', 5 * s);
+      else if (t.kind === 'crystal') mark(t.x, t.y - 20, '#8fd0e6', 5 * s, true);
+      else if (t.kind === 'warp') mark(t.x, t.y, '#f4eedd', 5 * s, true);
+    }
+    const hr = g.hero, a = (ANG[hr.dir] || 0) * Math.PI / 180, z = 5.5 * s;
+    x.save(); x.translate(hr.x * k, (hr.y - 16) * k); x.rotate(a); x.beginPath(); x.moveTo(0, -z * 1.25); x.lineTo(z * .85, z * .9); x.lineTo(0, z * .45); x.lineTo(-z * .85, z * .9); x.closePath();
+    x.lineJoin = 'round'; x.lineWidth = 3; x.strokeStyle = 'rgba(13,11,12,.95)'; x.stroke(); x.fillStyle = '#f0d27a'; x.fill(); x.restore();
+  }
+  function mapStart() {
+    if (MM.box) return;
+    const b = MM.box = el('div', 'hit', '<div class="mt"></div><canvas></canvas><div class="lg"><i class="a"></i>4人<i class="c"></i>宝箱<i class="e"></i>出口<i class="s"></i>セーブ結晶</div>'); b.id = 'mm'; b.style.display = 'none'; root.appendChild(b);
+    MM.cv = b.querySelector('canvas'); b.onclick = ev => { ev.stopPropagation(); if (!ui.length && !busy) mapCycle(true); };
+    MM.timer = setInterval(mmDraw, 80); mmDraw();
+  }
+  function mapCycle(tap) {              // tap: the map itself was touched, so it must not go away (there would be nothing left to touch)
+    if (!G) return; const i = MAPMODES.indexOf(G.set.map); G.set.map = tap ? (G.set.map === 'small' ? 'big' : 'small') : MAPMODES[(i + 1) % 3]; S.sfx('cursor'); mmDraw();
+    let t = $('mmtoast'); if (!t) { t = el('div', ''); t.id = 'mmtoast'; root.appendChild(t); }
+    t.textContent = '地図：' + MAPNAME[G.set.map]; t.classList.add('on'); clearTimeout(MM.toastT); MM.toastT = setTimeout(() => t.classList.remove('on'), 1300);
   }
 
   // ------------------------------------------------------------------ main menu
@@ -432,14 +511,14 @@ window.RPG = (function () {
     const m = el('div', 'hit'); m.id = 'menu'; root.appendChild(m);
     const where = el('div', 'where'); m.appendChild(where);
     const paintWhere = () => where.innerHTML = `<b>${g.map.title}</b>お金<span class="g">${G.gold}</span>枚`;
-    const hb = helpbar(m, '<span><b class="keycap">Z</b>決める</span><span class="hit back"><b class="keycap">X</b>もどる</span><span class="hit full"><b class="keycap">V</b>満タン</span>'), cd = cards(m); paintWhere();
+    const hb = helpbar(m, '<span><b class="keycap">Z</b>決める</span><span class="hit back"><b class="keycap">X</b>戻る</span><span class="hit full"><b class="keycap">V</b>満タン</span>'), cd = cards(m); paintWhere();
     hb.el.querySelector('.full').onclick = ev => { ev.stopPropagation(); if (top() === main) doFull(); };
     const close = () => { main.close(); m.remove(); g.paused = false; };
     const canSave = g.map.save === 'any';
     const main = list(m, [
-      { label: 'どうぐ', help: '持っている物を見る・使う', f: items }, { label: 'そうび', help: '武器やよろいをつけかえる', f: equip }, { label: 'つよさ', help: '4人の今の力と、覚えた技を見る', f: status },
-      { label: 'ならび', help: '前の列と後ろの列を入れかえる', f: rows }, { label: 'せってい', help: '音の大きさと、戦いの速さを変える', f: settings },
-      { label: 'セーブ', help: canSave ? 'ここまでの旅を書きとめる' : 'ダンジョンの中では、セーブ結晶でだけ書きとめられる', dim: !canSave, f: doSave },
+      { label: '道具', help: '持っている物を見る・使う', f: items }, { label: '装備', help: '武器・防具・飾りを付け替える', f: equip }, { label: '強さ', help: '4人の今の力と、覚えた技を見る', f: status },
+      { label: '隊列', help: '並ぶ順番と、前列・後列を決める', f: rows }, { label: '設定', help: '音の大きさ、戦闘の速さ、地図の出し方を変える', f: settings },
+      { label: 'セーブ', help: canSave ? 'ここまでの旅を書き留める' : 'ダンジョンの中では、セーブ結晶でだけ書き留められる', dim: !canSave, f: doSave },
     ], { cls: 'cmds', onMove: it => hb.set(it.help), onPick: it => it.f(), onCancel: close, onKey: k => { if (k === 'X') doFull(); else if (k === 'menu') { S.sfx('cancel'); close(); } } });
     let fullBusy = false;
     async function doFull() {              // 満タン: one button fills everybody's HP (texts and steps as in the old game's menu)
@@ -459,27 +538,27 @@ window.RPG = (function () {
 
     async function items() {
       const mk = () => Object.keys(G.items).filter(k => count(k) > 0).map(k => ({ label: D.items[k].name, r: '×' + count(k), id: k, help: D.items[k].help, dim: D.items[k].kind !== 'use' }));
-      const l = list(m, mk(), { cls: 'sub', title: 'どうぐ', scroll: 700, onMove: it => hb.set(it ? it.help : ''), onCancel: () => { l.close(); main.focus(); },
-        onDim: it => hb.set(D.items[it.id].kind === 'gear' ? '「そうび」で付ける' : 'ここでは使えない'),
+      const l = list(m, mk(), { cls: 'sub', title: '道具', scroll: 700, onMove: it => hb.set(it ? it.help : ''), onCancel: () => { l.close(); main.focus(); },
+        onDim: it => hb.set(D.items[it.id].kind === 'gear' ? '「装備」で付ける' : 'ここでは使えない'),
         onPick: async it => {                 // the choice of the person stays open after a use: decide again uses another, back returns
           const d = D.items[it.id];
           for (let i = 0; count(it.id) > 0;) {
             i = await pickChar(cd, i); if (i < 0) break;
-            const id = D.order[i], p = G.party[id], st = stats(id);
-            if (d.heal && p.hp > 0 && p.hp < st.mhp) { const n = Math.min(d.heal, st.mhp - p.hp); p.hp += n; take(it.id); S.sfx('heal'); cd.render(); cd.sel = i; hb.set(`${D.chars[id].name}のHPが、${n}回復した（のこり ×${count(it.id)}）`); }
+            const id = ord()[i], p = G.party[id], st = stats(id);
+            if (d.heal && p.hp > 0 && p.hp < st.mhp) { const n = Math.min(d.heal, st.mhp - p.hp); p.hp += n; take(it.id); S.sfx('heal'); cd.render(); cd.sel = i; hb.set(`${D.chars[id].name}のHPが、${n}回復した（残り ×${count(it.id)}）`); }
             else { S.sfx('buzz'); hb.set('使っても、何も起きない'); }
           }
           cd.sel = -1; l.set(mk(), true);
         } });
     }
-    // そうび (the old game's equip screen): the slots, the candidates strongest first, the comparison with what is worn,
+    // 装備 (the old game's equip screen): the slots, the candidates strongest first, the comparison with what is worn,
     // what it would do for the others; L / R the next member, the X button "いちばん強く"
     async function equip() {
       let i = await pickChar(cd, 0); if (i < 0) return;
       const dt = detail(m); cd.el.style.display = 'none';
       const keys0 = hb.el.querySelector('.keys').innerHTML;
-      hb.el.querySelector('.keys').innerHTML = '<span><b class="keycap">Z</b>選ぶ</span><span><b class="keycap">X</b>もどる</span><span><b class="keycap">V</b>いちばん強く</span><span><b class="keycap">Q</b><b class="keycap">E</b>次の仲間</span>';
-      const who = () => D.order[i], P = () => G.party[who()];
+      hb.el.querySelector('.keys').innerHTML = '<span><b class="keycap">Z</b>選ぶ</span><span><b class="keycap">X</b>戻る</span><span><b class="keycap">V</b>いちばん強く</span><span><b class="keycap">Q</b><b class="keycap">E</b>次の仲間</span>';
+      const who = () => ord()[i], P = () => G.party[who()];
       const slotRows = () => D.SLOTS.filter(([sl]) => sl !== 'shield' || who() === 'teto').map(([sl, nm]) => { const two = sl === 'shield' && twoHand(P().equip.weapon);
         return { slot: sl, dim: two, label: `<span class="sl">${nm}</span>${two ? '両手持ち' : P().equip[sl] ? D.items[P().equip[sl]].name : 'なし'}` }; });
       const title = () => { l.pane.querySelector('h4').textContent = D.chars[who()].name + ' の装備'; };
@@ -520,40 +599,69 @@ window.RPG = (function () {
       let i = await pickChar(cd, 0); if (i < 0) return;
       const pane = el('div', 'pane info'); m.appendChild(pane);
       const paint = () => {
-        const id = D.order[i], p = G.party[id], s = stats(id), sk = skillsOf(id);
+        const id = ord()[i], p = G.party[id], s = stats(id), sk = skillsOf(id);
         pane.innerHTML = `<div class="big">${D.chars[id].name}　<span style="font-family:var(--latin);color:var(--gold)">Lv ${p.lv}</span></div>
           <table><tr><td>HP</td><td class="n">${p.hp} / ${s.mhp}</td><td>MP</td><td class="n">${p.mp} / ${s.mmp}</td></tr>
-          <tr><td>こうげき</td><td class="n">${s.str + s.atk}</td><td>守り</td><td class="n">${s.def + s.arm}</td></tr>
-          <tr><td>術の力</td><td class="n">${s.int + s.mag}</td><td>すばやさ</td><td class="n">${s.spd}</td></tr>
+          <tr><td>攻撃</td><td class="n">${s.str + s.atk}</td><td>守り</td><td class="n">${s.def + s.arm}</td></tr>
+          <tr><td>術の力</td><td class="n">${s.int + s.mag}</td><td>素早さ</td><td class="n">${s.spd}</td></tr>
           <tr><td>器用さ</td><td class="n">${s.dex}</td><td>次のLvまで</td><td class="n">${expNext(p.lv) - p.exp}</td></tr></table>
           <div class="lab">覚えた技と術</div>${sk.length ? sk.map(q => `${q.name}　<span style="color:var(--paper-dim);font-size:.8em">MP ${q.mp}　${q.help}</span>`).join('<br>') : '<span style="color:var(--paper-dim)">まだ、何も覚えていない</span>'}
-          ${id === 'pamp' ? '<br>ぬすむ　<span style="color:var(--paper-dim);font-size:.8em">魔物の持ち物をぬすむ。前の列のほうが成功しやすい</span>' : ''}`;
-        cd.sel = i; hb.set('↑ ↓ で、人を切りかえる');
+          ${id === 'pamp' ? '<br>盗む　<span style="color:var(--paper-dim);font-size:.8em">魔物の持ち物を盗む。前列のほうが成功しやすい</span>' : ''}`;
+        cd.sel = i; hb.set('↑ ↓ で、人を切り替える');
       };
       paint();
       const o = push({ key(e) { const k = KEY(e); if (k === 'up' || k === 'down') { i = (i + (k === 'up' ? 3 : 1)) % 4; S.sfx('cursor'); paint(); } else if (k === 'cancel' || k === 'ok') { S.sfx('cancel'); drop(o); pane.remove(); cd.sel = -1; cd.onClick = null; main.focus(); } } });
       cd.onClick = n => { i = n; paint(); };
     }
-    async function rows() {
-      hb.set('列を入れかえる人をえらぶ。前の列は、殴りが強く、ねらわれやすい');
-      for (let i = 0; ;) { i = await pickChar(cd, i); if (i < 0) break; const p = G.party[D.order[i]]; p.row = p.row === 'front' ? 'back' : 'front'; cd.render(); }
-      main.focus();
+    // 隊列 (the old game's screens/order.js "並びと隊列"): who stands where from the top, and each one's row.  Z lifts a member and
+    // sets them down in another place; ← → (or V, or a click on the card) changes the row, and the card stands on the left
+    // in the front row and on the right in the back row.  ▲ ▼ on a card move it for those who play by touch.
+    function rows() {
+      const NOTE = '上の人ほど狙われやすい。後列は狙われにくく、受けるダメージも半分。ただし武器の攻撃も半分になる（弓と術は変わらない）';
+      const keys = hb.el.querySelector('.keys'), keys0 = keys.innerHTML, head = el('div', 'ordh', '並びと隊列<span>左が前列、右が後列</span>'); m.appendChild(head);
+      const wire = () => { const bk = hb.el.querySelector('.back'); if (bk) bk.onclick = ev => { ev.stopPropagation(); const t = top(); if (t) t.key({ key: 'Escape' }); }; const fl = hb.el.querySelector('.full'); if (fl) fl.onclick = ev => { ev.stopPropagation(); if (top() === main) doFull(); }; };
+      keys.innerHTML = '<span><b class="keycap">Z</b>持ち上げる・置く</span><span><b class="keycap">←</b><b class="keycap">→</b>前列・後列</span><span class="hit back"><b class="keycap">X</b>戻る</span>'; wire();
+      let i = 0, held = -1;
+      const paint = () => { cd.held = held; cd.sel = i; hb.set(held >= 0 ? `${D.chars[G.order[i]].name}を、どこに置く？　↑ ↓ で動かして、もう一度決める` : NOTE); };
+      const swap = (a, b) => { const o = G.order; [o[a], o[b]] = [o[b], o[a]]; };
+      const setRow = (n, r) => { const p = G.party[G.order[n]], nr = r || (p.row === 'front' ? 'back' : 'front'); if (p.row !== nr) { p.row = nr; S.sfx('cursor'); } };
+      const done = () => { drop(o); head.remove(); keys.innerHTML = keys0; wire(); cd.tools = null; cd.held = -1; cd.onClick = null; cd.sel = -1; main.focus(); };
+      const o = push({ key(e) {
+        const k = KEY(e);
+        if (k === 'up' || k === 'down') {
+          let j = i + (k === 'up' ? -1 : 1);
+          if (held >= 0) { if (j < 0 || j > 3) { S.sfx('buzz'); return; } swap(i, j); held = j; } else j = (j + 4) % 4;
+          i = j; S.sfx('cursor');
+        } else if (k === 'left') setRow(i, 'front'); else if (k === 'right') setRow(i, 'back'); else if (k === 'X') setRow(i);
+        else if (k === 'ok') { held = held >= 0 ? -1 : i; S.sfx('ok'); }
+        else if (k === 'cancel') { S.sfx('cancel'); if (held >= 0) held = -1; else { done(); return; } }
+        else return;
+        paint();
+      } });
+      cd.onClick = n => { if (held >= 0) { if (n !== i) swap(i, n); held = -1; i = n; S.sfx('ok'); } else { i = n; setRow(n); } paint(); };
+      cd.tools = (n, c) => {
+        const t = el('span', 'mv', `<i data-d="-1"${n === 0 ? ' class="off"' : ''}>▲</i><i data-d="1"${n === 3 ? ' class="off"' : ''}>▼</i>`); c.appendChild(t);
+        t.querySelectorAll('i').forEach(b => b.onclick = ev => { ev.stopPropagation(); const j = n + (+b.dataset.d); if (j < 0 || j > 3) return; swap(n, j); held = -1; i = j; S.sfx('cursor'); paint(); });
+      };
+      paint();
     }
     function settings() {            // the rows and their wording follow the old game
       const pct = v => Math.round(v * 10), SP = window.BATTLE.SPEEDS, SPN = window.BATTLE.SPEED_LABEL, pad = window.PAD;
       const mk = () => [{ label: '音楽の大きさ', r: '◀ ' + pct(G.set.bgm) + ' ▶', k: 'bgm', help: '← → で変える' }, { label: '効果音の大きさ', r: '◀ ' + pct(G.set.sfx) + ' ▶', k: 'sfx', help: '← → で変える' },
         { label: '戦闘の速さ', r: '◀ ' + SPN[window.BATTLE.speedOf(G.set.speed)] + ' ▶', k: 'speed', help: '戦闘の演出の速さ。戦闘中もRボタンで「通常→＋1→＋2→＋4」と切り替えられ、次の戦闘も同じ速さで始まる' },
-        { label: '常にダッシュ', r: G.set.dash ? 'オン' : 'オフ', k: 'dash', help: 'オンにすると、Bを押している間だけ歩く' }]
+        { label: '常にダッシュ', r: G.set.dash ? 'オン' : 'オフ', k: 'dash', help: 'オンにすると、Bを押している間だけ歩く' },
+        { label: '地図', r: '◀ ' + MAPNAME[G.set.map] + ' ▶', k: 'map', help: '右上の地図の出し方。歩いている時に X ボタン（キーボードは V）でも切り替えられる' }]
         .concat(pad ? [{ label: '決定ボタンの位置', r: pad.confirm === 'down' ? '下' : '右', k: 'confirm', help: 'パッドで決定に使うボタンの位置' }] : []);
       const ch = (it, dir) => {
         if (it.k === 'speed') G.set.speed = SP[(SP.indexOf(window.BATTLE.speedOf(G.set.speed)) + (dir < 0 ? SP.length - 1 : 1)) % SP.length];
         else if (it.k === 'dash') { G.set.dash = !G.set.dash; hud(); }
+        else if (it.k === 'map') G.set.map = MAPMODES[(MAPMODES.indexOf(G.set.map) + (dir < 0 ? 2 : 1)) % 3];
         else if (it.k === 'confirm') pad.confirm = pad.confirm === 'down' ? 'right' : 'down';
         else { G.set[it.k] = clamp(Math.round((G.set[it.k] + dir * .1) * 10) / 10, 0, 1); S.volume(it.k, G.set[it.k]); }
         S.sfx('cursor'); l.set(mk(), true); };
-      const l = list(m, mk(), { cls: 'sub', title: 'せってい', quiet: true, onMove: it => hb.set(it.help), onCancel: () => { l.close(); main.focus(); }, onPick: it => ch(it, 1), onKey: (k, it) => { if (k === 'left') ch(it, -1); if (k === 'right') ch(it, 1); } });
+      const l = list(m, mk(), { cls: 'sub', title: '設定', quiet: true, onMove: it => hb.set(it.help), onCancel: () => { l.close(); main.focus(); }, onPick: it => ch(it, 1), onKey: (k, it) => { if (k === 'left') ch(it, -1); if (k === 'right') ch(it, 1); } });
     }
-    async function doSave() { save(); S.sfx('quill'); await notice('ここまでの旅を、\n書きとめた', { ms: 1400 }); }
+    async function doSave() { save(); S.sfx('quill'); await notice('ここまでの旅を、\n書き留めた', { ms: 1400 }); }
   }
 
   // ------------------------------------------------------------------ shop (the old game's shop: screens/shop.js)
@@ -570,11 +678,11 @@ window.RPG = (function () {
       const TABS = [['weapon', '武器'], ['armor', '防具'], ['item', '道具']].filter(([k]) => sh.items.some(q => catOf(q) === k)).concat([['sell', '売る']]);
       const tabs = el('div', 'tabs hit'); m.appendChild(tabs); let tab = 0, busy2 = false;
       const selling = () => TABS[tab][0] === 'sell';
-      const hb = helpbar(m, '<span><b class="keycap">Z</b><i class="act">買う</i></span><span class="hit back"><b class="keycap">X</b>もどる</span><span><b class="keycap">Q</b><b class="keycap">E</b>切りかえ</span>'), dt = detail(m);
+      const hb = helpbar(m, '<span><b class="keycap">Z</b><i class="act">買う</i></span><span class="hit back"><b class="keycap">X</b>戻る</span><span><b class="keycap">Q</b><b class="keycap">E</b>切り替え</span>'), dt = detail(m);
       const sellP = k => { const d = D.items[k]; return d.sell != null ? d.sell : Math.floor((d.price || 0) / 2); };
       const rows = () => selling()
         ? Object.keys(G.items).filter(k => count(k) > 0).map(k => ({ id: k, label: D.items[k].name, r: `<span class="n">×${count(k)}</span>${sellP(k)}枚` }))
-        : sh.items.filter(k => catOf(k) === TABS[tab][0]).map(k => ({ id: k, label: `<span class="${isGear(k) && !D.order.some(c => canWear(c, k)) ? 'cant' : ''}">${D.items[k].name}</span>` + (wornBy(k).length ? '<span class="worn">装備中</span>' : ''),
+        : sh.items.filter(k => catOf(k) === TABS[tab][0]).map(k => ({ id: k, label: `<span class="${isGear(k) && !ord().some(c => canWear(c, k)) ? 'cant' : ''}">${D.items[k].name}</span>` + (wornBy(k).length ? '<span class="worn">装備中</span>' : ''),
             r: (count(k) ? `<span class="n">×${count(k)}</span>` : '') + `<span class="${G.gold < D.items[k].price ? 'poor' : ''}">${D.items[k].price}枚</span>` }));
       const paintTabs = () => { tabs.innerHTML = TABS.map(([k, n], i) => `<span class="${i === tab ? 'on' : ''}" data-i="${i}">${n}</span>`).join(''); tabs.querySelectorAll('span').forEach(q => q.onclick = ev => { ev.stopPropagation(); if (top() === l && !busy2) setTab(+q.dataset.i); });
         hb.el.querySelector('.act').textContent = selling() ? '売る' : '買う'; };
@@ -599,18 +707,18 @@ window.RPG = (function () {
       async function doSell(k) {
         const d = D.items[k], sp = sellP(k), n = count(k) >= 2 ? await pickQty({ name: d.name, unit: sp, max: count(k), sell: true, cap: 'have' }) : 1;
         if (!n) return;
-        if (isGear(k) && d.price == null && (await ask(d.name, `めずらしい品だ。${sp * n}枚で売る？`, ['売る', 'やめる'], { index: 1, cancel: 1 })) !== 0) return;
+        if (isGear(k) && d.price == null && (await ask(d.name, `珍しい品だ。${sp * n}枚で売る？`, ['売る', 'やめる'], { index: 1, cancel: 1 })) !== 0) return;
         take(k, n); G.gold += sp * n; S.sfx('coin'); refresh(); hb.set(`${d.name}${n > 1 ? ' ×' + n : ''} を ${sp * n}枚で売った`);
       }
     });
   }
 
   // what battle.js needs from here
-  const env = { get G() { return G; }, D, S, el, root, ui, push, drop, top, list, notice, hideNotice, helpbar, KEY, MAX, stats, skillsOf, hasPassive, give, take, count, gainExp, img, rnd, ri, clamp, wait };
+  const env = { get G() { return G; }, D, order: ord, S, el, root, ui, push, drop, top, list, notice, hideNotice, helpbar, KEY, MAX, stats, skillsOf, hasPassive, give, take, count, gainExp, img, rnd, ri, clamp, wait };
   const api = { startMap: Q.get('map') || 'village/map.json', onMap, onStep, onTrigger, onExit, onKey, alwaysDash: () => !!(G && G.set.dash), env,
     get G() { return G; }, get busy() { return busy; }, get ui() { return ui; }, get started() { return started; },
     // for tests and for trying things out: RPG.debug.battle(['mn001','mn005'])
-    debug: { battle: (g, table) => battle(g, D.encounters[table || 'f01']), newGame, healAll, give, fullHeal, go: (name, at) => changeMap(name, at), save, menu, shop,
-             lv(n) { for (const id of D.order) { G.party[id].lv = n; } healAll(); } } };
+    debug: { battle: (g, table) => battle(g, D.encounters[table || 'f01']), expNext, mapCycle, mmDraw, get mm() { return MM; }, newGame, healAll, give, fullHeal, go: (name, at) => changeMap(name, at), save, menu, shop,
+             lv(n) { for (const id of ord()) { G.party[id].lv = n; } healAll(); } } };
   return api;
 })();

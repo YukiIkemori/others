@@ -17,7 +17,7 @@ module.exports = async (p, shot) => {
   await press(3); await p.waitForTimeout(600); await st('top button: menu'); await shot('fix/' + tag + '_menu');
   // settings: the last row of the menu's list is found by label
   const rows = await J(p, () => [...document.querySelectorAll('.pane .li span:first-child')].map(e => e.textContent)); console.log('menu rows', rows.join(' / '));
-  const si = rows.indexOf('せってい'); for (let i = 0; i < si; i++) { await J(p, () => { __pad.buttons[13].pressed = true; }); await p.waitForTimeout(90); await J(p, () => { __pad.buttons[13].pressed = false; }); await p.waitForTimeout(140); }
+  const si = rows.indexOf('設定'); for (let i = 0; i < si; i++) { await J(p, () => { __pad.buttons[13].pressed = true; }); await p.waitForTimeout(90); await J(p, () => { __pad.buttons[13].pressed = false; }); await p.waitForTimeout(140); }
   await press(1); await p.waitForTimeout(400);
   for (let i = 0; i < 3; i++) { await J(p, () => { __pad.buttons[13].pressed = true; }); await p.waitForTimeout(90); await J(p, () => { __pad.buttons[13].pressed = false; }); await p.waitForTimeout(140); }
   await press(1); await p.waitForTimeout(300); await shot('fix/' + tag + '_set');

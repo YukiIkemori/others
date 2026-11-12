@@ -23,7 +23,7 @@ module.exports = async (p, shot) => {
   await key('e'); await p.waitForTimeout(300); await SH('goods2'); await goto('薬草'); await key('z'); await key('ArrowUp'); await SH('herbq'); await key('z'); await p.waitForTimeout(300); await st('bought 11 herbs');
   await closeAll();
   // menu: equip
-  await key('c'); await p.waitForTimeout(400); await goto('そうび'); await key('z'); await SH('eqwho'); await key('z'); await p.waitForTimeout(300); await SH('eq1');
+  await key('c'); await p.waitForTimeout(400); await goto('装備'); await key('z'); await SH('eqwho'); await key('z'); await p.waitForTimeout(300); await SH('eq1');
   await key('z'); await p.waitForTimeout(300); await SH('eq2'); await goto('古い片手剣'); await p.waitForTimeout(200); await SH('eq3'); await key('z'); await p.waitForTimeout(300); await st('teto back to the sword');
   await key('v'); await p.waitForTimeout(400); await SH('best'); await key('z'); await p.waitForTimeout(300); await st('best'); await SH('eq4');
   await key('v'); await p.waitForTimeout(400); await SH('best2'); await key('z');
@@ -35,6 +35,6 @@ module.exports = async (p, shot) => {
   await key('v'); await p.waitForTimeout(300); await SH('full3'); await key('z');
   // items: use stays open
   await J(p, () => { const P = RPG.G.party; P.teto.hp = 5; P.metem.hp = 9; });
-  await goto('どうぐ'); await key('z'); await p.waitForTimeout(300); await goto('薬草'); await key('z'); await p.waitForTimeout(300); await SH('use1'); await key('z', 1, 400); await key('ArrowDown'); await key('z', 1, 400); await SH('use2'); await st('used two herbs');
+  await goto('道具'); await key('z'); await p.waitForTimeout(300); await goto('薬草'); await key('z'); await p.waitForTimeout(300); await SH('use1'); await key('z', 1, 400); await key('ArrowDown'); await key('z', 1, 400); await SH('use2'); await st('used two herbs');
   await closeAll(); await st('menu closed');
 };

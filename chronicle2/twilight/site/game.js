@@ -380,7 +380,7 @@ async function loadMap(url, at) {
       const js = src => new Promise((res, rej) => { const e = document.createElement('script'); e.src = src; e.onload = res; e.onerror = () => rej(new Error('読み込めません: ' + src)); document.head.appendChild(e); });
       if (!window.THREE) await js(M.hd.three || 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.149.0/three.min.js');
       if (!window.HD2D) await js(M.hd.js || 'hd.js');
-      hdr = await HD2D.create({ M, A, HS, stage, cv, hData, hW, hH, fData, walkData, VW, VH, K: M.pull > 1 ? 1 : VW / 960, pull: M.pull > 1 ? M.pull : 1, lights, sky: layers.sky, lift, hides, hexRgb, Q, UI_ON });
+      hdr = await HD2D.create({ M, A, HS, stage, cv, hData, hW, hH, fData, walkData, VW, VH, K: M.pull > 1 ? 1 : VW / 960, pull: M.pull > 1 ? M.pull : 1, lights, sky: layers.sky, lift, walkable, hides, hexRgb, Q, UI_ON });
     } catch (e) { console.warn('HD-2D 表示を使えないため、2D 表示で続けます', e); hdr = null; }
   }
   P = moodParams();
@@ -1135,7 +1135,7 @@ const api = {
   get fps() { return fps; }, get frameMs() { return frameMs; }, get scale() { return SC; },
   get dialog() { return dlg ? { title: dlg.t.title, page: dlg.page, pages: dlg.pages.length } : null; },
   get near() { return nearTrig ? nearTrig.title || true : null; },
-  get map() { return M; },
+  get map() { return M; }, get image() { return A.map; },
   ready: true, setMood, toggleMood, interact, walkable, free, loadMap, announce,
   get loading() { return loading; }, get mapUrl() { return mapUrl; }, get T() { return T; },
   get paused() { return paused; }, set paused(v) { paused = v; if (v) keys.clear(); },   // true: the party stands still; 'cover': the field is not drawn either

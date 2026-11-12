@@ -598,7 +598,27 @@
     const halfH = VH / 2 / S, halfW = VW / 2 / S;
     const ortho = new T3.OrthographicCamera(-halfW, halfW, halfH, -halfH, 1, 400), persp = new T3.PerspectiveCamera(20, 16 / 9, 1, 400);
     const tmp = new T3.Vector3(), tgt = new T3.Vector3(), v3 = c => new T3.Vector3(c[0] / 255, c[1] / 255, c[2] / 255);
-    let camLift = -1, tLast = 0, pxLast = 0, pyLast = 0;
+    let camLift = -1, tLast = 0, pxLast = 0, pyLast = 0, focLift = -1;
+    // The height the camera keeps its distance from is the height of the walkable ground averaged over a wide area around
+    // the middle of the view, not the height under the hero's feet.  Following the hero's own floor pushed the camera in and
+    // out along its line of sight on every stair step and whenever the 2D camera stood still at the map's edge (walking up
+    // to an exit on high ground): the whole picture shrank and grew, which reads as a zoom.  The wide average only changes
+    // while the view itself slides, and slowly, so the camera glides over the land; a hero on a rise is a little nearer.
+    const RG = 32 * K, rW = Math.ceil(W / RG) + 1, rH = Math.ceil(H / RG) + 1, region = new Float32Array(rW * rH);
+    {
+      let v = new Float32Array(rW * rH), m = new Float32Array(rW * rH);
+      for (let j = 0; j < rH; j++) for (let i = 0; i < rW; i++) { const x = Math.min(W - 1, i * RG), y = Math.min(H - 1, j * RG); if (env.walkable ? env.walkable(x, y) : true) { v[j * rW + i] = env.lift(x, y); m[j * rW + i] = 1; } }
+      const box = (src, r) => { const t = new Float32Array(rW * rH), o = new Float32Array(rW * rH);
+        for (let j = 0; j < rH; j++) for (let i = 0; i < rW; i++) { let a = 0; for (let k = -r; k <= r; k++) a += src[j * rW + clamp(i + k, 0, rW - 1)]; t[j * rW + i] = a; }
+        for (let j = 0; j < rH; j++) for (let i = 0; i < rW; i++) { let a = 0; for (let k = -r; k <= r; k++) a += t[clamp(j + k, 0, rH - 1) * rW + i]; o[j * rW + i] = a; }
+        return o; };
+      const R0 = cfg.camArea == null ? 9 : cfg.camArea;
+      for (let n = 0; n < 2; n++) { v = box(v, R0); m = box(m, R0); }
+      let all = 0, an = 0; for (let i = 0; i < v.length; i++) if (m[i] > 0) { all += v[i] / m[i]; an++; }
+      for (let i = 0; i < v.length; i++) region[i] = m[i] > 1e-6 ? v[i] / m[i] : an ? all / an : 0;
+    }
+    const regionAt = (x, y) => { const fx = clamp(x / RG, 0, rW - 1.001), fy = clamp(y / RG, 0, rH - 1.001), i = Math.floor(fx), j = Math.floor(fy), u = fx - i, w = fy - j, q = j * rW + i;
+      return (region[q] * (1 - u) + region[q + 1] * u) * (1 - w) + (region[q + rW] * (1 - u) + region[q + rW + 1] * u) * w; };
     const bk = cfg.back ? env.hexRgb(cfg.back) : null;         // what lies beyond the picture (default: the night sky of the first maps)
 
     function render(st) {
@@ -610,15 +630,15 @@
       // the view at the hero's floor height, and that height is followed softly: a stair step (the floor jumps) or a walk
       // while the 2D camera is stopped at the map's edge must not push the camera in and out, which reads as a zoom pulse.
       const dT = st.T - tLast; tLast = st.T;
-      if (camLift < 0 || dT < 0 || dT > .5 || Math.abs(hx - pxLast) + Math.abs(hy - pyLast) > 40 * K) camLift = lf; else camLift += (lf - camLift) * (1 - Math.exp(-dT / .32));
+      const bo = HS.body * .48, rl = regionAt(cam.x + VW / 2, cam.y + VH / 2 + bo);
+      if (camLift < 0 || dT < 0 || dT > .5 || Math.abs(hx - pxLast) + Math.abs(hy - pyLast) > 40 * K) { camLift = rl; focLift = lf; } else { camLift += (rl - camLift) * (1 - Math.exp(-dT / .4)); focLift += (lf - focLift) * (1 - Math.exp(-dT / .32)); }
       pxLast = hx; pyLast = hy;
-      const bo = HS.body * .48;
       tgt.copy(world(cam.x + VW / 2 - .5, cam.y + VH / 2 + bo - .5, camLift)).addScaledVector(up, bo / S);
       const D = (DEPTHS[state.depth] || 0) * (env.pull || 1), camera = D ? persp : ortho, dist = D || 120;
       camera.position.copy(tgt).addScaledVector(dir, -dist); camera.up.copy(up); camera.lookAt(tgt);
       if (D) { persp.fov = 2 * Math.atan(halfH / D) * 180 / Math.PI; persp.near = Math.max(1, D - 70); persp.far = D + 120; } else { ortho.near = 1; ortho.far = 320; }
       camera.updateProjectionMatrix(); camera.updateMatrixWorld();
-      U.uCamPos.value.copy(camera.position); U.uCamDir.value.copy(dir); U.uFocus.value = tmp.copy(world(hx - .5, hy - .5, camLift)).sub(camera.position).dot(dir); U.uRange.value = cfg.range == null ? 10.5 : cfg.range;   // focus stays on the hero
+      U.uCamPos.value.copy(camera.position); U.uCamDir.value.copy(dir); U.uFocus.value = tmp.copy(world(hx - .5, hy - .5, focLift)).sub(camera.position).dot(dir); U.uRange.value = cfg.range == null ? 10.5 : cfg.range;   // focus stays on the hero
       // light
       const amb = P.ambient; U.uAmb.value.set(amb[0] / 255, amb[1] / 255, amb[2] / 255); U.uGain.value = .35 + P.lightGain * .55;
       const near = L3.map(o => ({ o, d: Math.hypot(o.px - (cam.x + VW / 2), (o.py - (cam.y + VH / 2)) * 1.3) - o.l.r })).sort((a, b) => a.d - b.d);

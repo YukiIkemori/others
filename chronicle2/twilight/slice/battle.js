@@ -11,7 +11,7 @@ window.BATTLE = (function () {
   const C = { slash: '#D8D6CC', cream: '#F1E6CC', fire: ['#C9783C', '#9C3B2A', '#E8C27A'], water: ['#3F7C86', '#CFE0DC'], earth: ['#A88752', '#7A7468'], wind: ['#A9B8A6', '#E6EAE2'],
               light: ['#F0DFA8', '#FFF6DC'], holy: ['#D9C27A', '#F3EEDD'], steal: '#D9C98A', dust: '#8c8273', heal: '#a9c58a', bad: '#d99a80' };
   const SLOTS = { 1: [[280, 430]], 2: [[320, 385], [215, 470]], 3: [[330, 360], [205, 425], [315, 495]], 4: [[340, 350], [220, 395], [335, 455], [205, 505]] };
-  const WORD = { teto: 'わざ', metem: '術', pamp: 'わざ', bani: '祈り' };
+  const WORD = { teto: '技', metem: '術', pamp: '技', bani: '祈り' };
   let E, D, S, G, B = null, lastCmds = null;
   const rnd = (a, b) => a + Math.random() * (b - a), clamp = (v, a, b) => v < a ? a : v > b ? b : v;
 
@@ -158,13 +158,13 @@ window.BATTLE = (function () {
   async function hurt(t, dmg, o) {            // -> true when it fell
     o = o || {};
     setHp(t, t.hp - dmg);
-    num(t, dmg, o.crit ? '#e8c27a' : t.side === 'pc' ? '#f0d9c8' : C.cream, { size: o.crit ? 23 : o.weak ? 20 : 17, sub: o.weak ? '弱点！' : o.crit ? 'かいしん！' : '' });
+    num(t, dmg, o.crit ? '#e8c27a' : t.side === 'pc' ? '#f0d9c8' : C.cream, { size: o.crit ? 23 : o.weak ? 20 : 17, sub: o.weak ? '弱点！' : o.crit ? '会心！' : '' });
     if (o.crit) shakeBy(5);
     recoil(t, t.side === 'pc' ? 1 : -1);
     if (t.hp > 0) return false;
     await sleep(.22);
     if (t.side === 'en') { S.sfx('edie'); dust(t.x, t.y - 4, 7); t.tint = '#2a2228'; t.flash = .0; await tw(.42, k => { t.alpha = 1 - k; t.flash = k * .8; }); t.gone = true; B.killed.push(t); tags(); chips(); }
-    else { S.sfx('down'); t.guard = false; t.slow = 0; for (const q of B.pcs) if (q.cover === t) q.cover = null; await tw(.3, k => { t.lie = eio(k); }); dust(t.x + 20, t.y, 4); hud(); chips(); say(`${t.name}は、たおれた`); await sleep(.5); }
+    else { S.sfx('down'); t.guard = false; t.slow = 0; for (const q of B.pcs) if (q.cover === t) q.cover = null; await tw(.3, k => { t.lie = eio(k); }); dust(t.x + 20, t.y, 4); hud(); chips(); say(`${t.name}は、倒れた`); await sleep(.5); }
     return true;
   }
   const miss = t => { S.sfx('miss'); num(t, 'ミス', '#cfc8c0', { jp: true, size: 13 }); return tw(.18, k => { t.ox = (t.side === 'pc' ? 1 : -1) * 10 * Math.sin(k * Math.PI); }).then(() => { t.ox = 0; }); };
@@ -274,17 +274,17 @@ window.BATTLE = (function () {
   async function pcAct(a, c) {
     const need = () => { let t = c.t; if (!t || !alive(t)) t = foes()[0]; return t; };
     if (c.k === 'guard') { say(`${a.name}は、身を守っている`); await sleep(.3); return; }
-    if (c.k === 'atk') { const t = need(); if (!t) return; say(`${a.name}のこうげき`); await strike(a, t, 1); return; }
+    if (c.k === 'atk') { const t = need(); if (!t) return; say(`${a.name}の攻撃`); await strike(a, t, 1); return; }
     if (c.k === 'steal') {
-      const t = need(); if (!t) return; band('ぬすむ'); say(`${a.name}は、${t.name}の持ち物をねらった`);
+      const t = need(); if (!t) return; band('盗む'); say(`${a.name}は、${t.name}の持ち物を狙った`);
       const x0 = a.x, y0 = a.y, tx = t.x + t.w / 2 + 22, ty = t.y + 2;
       a.dash = true; S.sfx('flee'); await tw(.2, k => { a.ox = (tx - x0) * eout(k); a.oy = (ty - y0) * eout(k); });
       a.dash = false; let ch = 30 + (a.st.dex - t.d.spd) * .5 + a.st.steal; ch = clamp(ch, 5, 90); if (a.row === 'back') ch /= 2;
       crescent(cx(t) + 6, cy(t), 30, -2.6, .16, C.steal, 2, undefined, 0, true); await sleep(.1);
       let msg;
       if (t.stolen || !t.d.steal) msg = 'もう、何も持っていない';
-      else if (Math.random() * 100 < ch) { t.stolen = true; const it = t.d.steal, got = E.give(it, 1); S.sfx('steal'); star(cx(t) + 14, cy(t) - 8, 13, C.steal, .45); star(cx(t) + 2, cy(t) + 4, 7, '#fff6dc', .35, .12); L(cx(t), cy(t), 90, C.steal, .4, .35, t.y); msg = got ? `${D.items[it].name}をぬすんだ！` : `${D.items[it].name}は、これ以上持てない`; }
-      else { S.sfx('miss'); msg = 'ぬすめなかった'; }
+      else if (Math.random() * 100 < ch) { t.stolen = true; const it = t.d.steal, got = E.give(it, 1); S.sfx('steal'); star(cx(t) + 14, cy(t) - 8, 13, C.steal, .45); star(cx(t) + 2, cy(t) + 4, 7, '#fff6dc', .35, .12); L(cx(t), cy(t), 90, C.steal, .4, .35, t.y); msg = got ? `${D.items[it].name}を盗んだ！` : `${D.items[it].name}は、これ以上持てない`; }
+      else { S.sfx('miss'); msg = '盗めなかった'; }
       say(msg); await sleep(.25);
       a.dash = true; await tw(.22, k => { a.ox = (tx - x0) * (1 - eio(k)); a.oy = (ty - y0) * (1 - eio(k)); }); a.dash = false; a.ox = a.oy = 0; await sleep(.35);
       return;
@@ -324,16 +324,18 @@ window.BATTLE = (function () {
     peck(t) { S.sfx('thrust'); sparks(cx(t) - 4, cy(t) - 14, 4, C.cream, 140); ring(cx(t) - 4, cy(t) - 14, 2, 12, C.cream, .14, 1.6, 1, true); S.sfx('thrust', .1); },
   };
   function pickTarget() {
-    const fs = friends(); let tot = 0; for (const f of fs) tot += f.row === 'front' ? 3 : 1;
-    let r = Math.random() * tot, t = fs[0]; for (const f of fs) { r -= f.row === 'front' ? 3 : 1; if (r <= 0) { t = f; break; } }
+    // Who a monster goes for (ユウキ, 2026-11-12): the higher somebody stands in the party's order the more often (4 : 3 : 2 : 1 from
+    // the top), and half as often in the back row (where the hit is halved too, see enAct).
+    const fs = friends(), wt = f => (B.pcs.length - f.i) * (f.row === 'front' ? 1 : .5); let tot = 0; for (const f of fs) tot += wt(f);
+    let r = Math.random() * tot, t = fs[0]; for (const f of fs) { r -= wt(f); if (r <= 0) { t = f; break; } }
     const cov = B.pcs.find(q => q.cover === t && alive(q) && q !== t);
     return cov ? { t: cov, covered: t } : { t };
   }
   async function enAct(m) {
     const d = m.d, r = Math.random();
-    if (d.ai === 'runs' && m.hp < m.mhp * .35 && r < .5) { say(`${m.name}は、にげだした！`); S.sfx('flee'); await tw(.45, k => { m.ox = -260 * k * k; m.alpha = 1 - k; }); m.gone = true; m.fled = true; tags(); chips(); await sleep(.3); return; }
+    if (d.ai === 'runs' && m.hp < m.mhp * .35 && r < .5) { say(`${m.name}は、逃げ出した！`); S.sfx('flee'); await tw(.45, k => { m.ox = -260 * k * k; m.alpha = 1 - k; }); m.gone = true; m.fled = true; tags(); chips(); await sleep(.3); return; }
     if (d.ai === 'split' && r < .15 && foes().length < 4) {
-      say(`${m.name}は、ふたつに分かれた！`); S.sfx('split'); await tw(.25, k => { m.flash = Math.sin(k * Math.PI) * .7; });
+      say(`${m.name}は、二つに分かれた！`); S.sfx('split'); await tw(.25, k => { m.flash = Math.sin(k * Math.PI) * .7; });
       const n = mkEn(m.mid); n.x = m.x; n.y = m.y; n.hp = Math.max(1, Math.ceil(m.hp / 2)); setHp(m, Math.max(1, Math.ceil(m.hp / 2))); n.img = m.img; n.w = m.w; n.h = m.h; B.ens.push(n); B.all.push(n); rename(); B.order.push(n); n.acted = true;
       const fs = foes(), sl = SLOTS[fs.length], from = fs.map(q => [q.x, q.y]); ring(m.x, m.y - m.h / 2, 6, 40, '#b8c7a0', .3, 2, 1, true);
       await tw(.3, k => fs.forEach((q, i) => { q.x = lerp(from[i][0], sl[i][0], eio(k)); q.y = lerp(from[i][1], sl[i][1], eio(k)); tags(); }));
@@ -342,17 +344,17 @@ window.BATTLE = (function () {
     const pk = pickTarget(), t = pk.t;
     if (d.ai === 'pickpocket' && r < .25 && G.gold > 0) {
       const n = Math.min(G.gold, Math.round(rnd(8, 20)));
-      await lunge(m, t, .2, async () => { S.sfx('steal'); star(cx(t) - 14, cy(t), 10, C.steal, .4); G.gold -= n; m.took += n; say(`${m.name}は、お金を${n}枚ぬすんだ！`); await sleep(.25); });
+      await lunge(m, t, .2, async () => { S.sfx('steal'); star(cx(t) - 14, cy(t), 10, C.steal, .4); G.gold -= n; m.took += n; say(`${m.name}は、お金を${n}枚盗んだ！`); await sleep(.25); });
       await sleep(.45); return;
     }
     if (d.ai === 'web' && r < .3 && !t.slow) {
-      say(`${m.name}は、糸をはいた！`); S.sfx('web'); const x0 = cx(m) + 20, y0 = cy(m);
+      say(`${m.name}は、糸を吐いた！`); S.sfx('web'); const x0 = cx(m) + 20, y0 = cy(m);
       P({ d: .7, draw(c, p, k) { const e = Math.min(1, k / .3); c.globalAlpha = k < .6 ? .85 : .85 * (1 - (k - .6) / .4); c.strokeStyle = '#e6e2d6'; c.lineWidth = 1;
         for (let i = -2; i <= 2; i++) { c.beginPath(); c.moveTo(x0, y0); c.quadraticCurveTo(lerp(x0, cx(t), .5), lerp(y0, cy(t), .5) - 30 + i * 6, lerp(x0, cx(t) + i * 5, e), lerp(y0, cy(t) + i * 12, e)); c.stroke(); } } });
       await sleep(.35); S.sfx('debuff'); t.slow = 3; t.flash = .6; t.tint = '#e6e2d6'; tw(.4, k => { t.flash = .6 * (1 - k); }).then(() => { t.tint = null; });
-      say(`${t.name}に、糸がからみついた！　すばやさが下がった`); hud(); await sleep(.7); return;
+      say(`${t.name}に、糸が絡みついた！　素早さが下がった`); hud(); await sleep(.7); return;
     }
-    say(pk.covered ? `${m.name}のこうげき！　${t.name}が、${pk.covered.name}をかばった` : `${m.name}のこうげき`);
+    say(pk.covered ? `${m.name}の攻撃！　${t.name}が、${pk.covered.name}をかばった` : `${m.name}の攻撃`);
     const hit = Math.random() < (m.blind ? .6 : .9);
     await lunge(m, t, d.act === 'thrust' || d.act === 'peck' ? .14 : .2, async () => {
       if (pk.covered) shieldFx(t);
@@ -387,7 +389,7 @@ window.BATTLE = (function () {
       const r = B.rows[i]; r.classList.toggle('down', a.hp <= 0); r.classList.toggle('act', B.active === a);
       r.querySelector('.hpv').textContent = a.hp; r.querySelector('.mpv').textContent = a.mp;
       const hb2 = r.querySelector('.bar'); hb2.classList.toggle('low', a.hp < a.mhp * .3); hb2.firstChild.style.width = 100 * a.hp / a.mhp + '%'; r.querySelector('.bar.mp').firstChild.style.width = (a.mmp ? 100 * a.mp / a.mmp : 0) + '%';
-      r.querySelector('.st').textContent = a.hp <= 0 ? 'たおれた' : [a.guard ? 'まもる' : '', a.cover ? 'かばう' : '', a.slow ? 'おそい' : ''].filter(Boolean).join(' ');
+      r.querySelector('.st').textContent = a.hp <= 0 ? '倒れた' : [a.guard ? '防御' : '', a.cover ? 'かばう' : '', a.slow ? '鈍足' : ''].filter(Boolean).join(' ');
     });
   }
   function tags() {
@@ -404,8 +406,20 @@ window.BATTLE = (function () {
   }
   function chips() {
     if (!B || !B.orderEl) return;
-    B.orderEl.innerHTML = '<span class="lab">じゅんばん</span>';
-    for (const a of B.order) { if (a.gone && a.side === 'en' && !a.shown) continue; B.orderEl.appendChild(E.el('span', 'chip ' + (a.side === 'pc' ? 'pc' : 'en') + (B.now === a ? ' now' : '') + (a.acted || !alive(a) ? ' gone' : ''), a.tag)); }
+    B.orderEl.innerHTML = '<span class="lab">順番</span>';
+    for (const a of B.order) {
+      if (a.gone && a.side === 'en' && !a.shown) continue;
+      const c = E.el('span', 'chip ' + (a.side === 'pc' ? 'pc' : 'en') + (B.now === a ? ' now' : '') + (a.acted || !alive(a) ? ' gone' : ''), a.img ? '' : a.tag); c.title = a.name;
+      if (a.img) { c.appendChild(face(a)); if (a.side === 'en' && a.name !== a.d.name) c.appendChild(E.el('b', '', a.name.slice(-1))); }
+      B.orderEl.appendChild(c);
+    }
+  }
+  // a face for the order of the round: the head of a party member, the whole of a monster made small
+  function face(a) {
+    const c = document.createElement('canvas'), pc = a.side === 'pc'; c.width = c.height = pc ? 36 : 72; const x = c.getContext('2d');
+    if (pc) { x.imageSmoothingEnabled = false; x.drawImage(a.img, 30, 122 - Math.min(86, a.tall || 80), 36, 36, 0, 0, 36, 36); }
+    else { const s = Math.min(1.5, 66 / a.img.width, 66 / a.img.height), w = Math.round(a.img.width * s), h = Math.round(a.img.height * s); x.imageSmoothingEnabled = s < 1; x.imageSmoothingQuality = 'high'; x.drawImage(a.img, (72 - w) >> 1, (72 - h) >> 1, w, h); }
+    return c;
   }
   function setActive(a) { if (B.active && B.active !== a && alive(B.active)) { const q = B.active; tw(.12, k => { q.ox = -22 * (1 - k); }).then(() => { if (B && B.active !== q) q.ox = 0; }); } B.active = a; if (a) tw(.12, k => { a.ox = -22 * eout(k); }); hud(); }
   // The battle's speed and the repeat follow the old game: one button (R) goes normal -> +1 -> +2 -> +4 -> normal and the next
@@ -439,11 +453,11 @@ window.BATTLE = (function () {
   function askCommand(a, first) {                       // -> command | 'back' | 'repeat'
     return new Promise(res => {
       const ask = `${a.name}は、どうする？`, sk = E.skillsOf(a.id), usable = () => Object.keys(G.items).filter(k => D.items[k].heal && E.count(k) > 0);
-      const items = [{ label: 'たたかう', k: 'atk' }, { label: WORD[a.id], k: 'skill', dim: !sk.length }];
-      if (a.id === 'pamp') items.push({ label: 'ぬすむ', k: 'steal' });
-      items.push({ label: 'まもる', k: 'guard' }, { label: 'どうぐ', k: 'item', dim: !usable().length }, { label: 'にげる', k: 'flee' });
+      const items = [{ label: '攻撃', k: 'atk' }, { label: WORD[a.id], k: 'skill', dim: !sk.length }];
+      if (a.id === 'pamp') items.push({ label: '盗む', k: 'steal' });
+      items.push({ label: '防御', k: 'guard' }, { label: '道具', k: 'item', dim: !usable().length }, { label: '逃げる', k: 'flee' });
       let l = null, moved = false; const done = v => { l.close(); res(v); };
-      const HELP = { atk: '武器でこうげきする', skill: sk.length ? '覚えた' + WORD[a.id] + 'を使う' : 'まだ、何も覚えていない', steal: '魔物の持ち物をぬすむ。前の列のほうが成功しやすい', guard: 'このターン、受けるダメージを半分にする', item: '持っている物を使う', flee: '4人で、戦いからにげる' };
+      const HELP = { atk: '武器で攻撃する', skill: sk.length ? '覚えた' + WORD[a.id] + 'を使う' : 'まだ、何も覚えていない', steal: '魔物の持ち物を盗む。前列のほうが成功しやすい', guard: 'このターン、受けるダメージを半分にする', item: '持っている物を使う', flee: '4人で、戦いから逃げる' };
       l = E.list(B.ui, items, { id: 'bcmd', index: Math.min(a.ci || 0, items.length - 1), onMove: it => say(moved ? HELP[it.k] : ask),
         onDim: it => say(it.k === 'skill' ? 'まだ、何も覚えていない' : '使える物を、持っていない'),
         onCancel: () => { if (first) say(ask); else done('back'); },
@@ -451,17 +465,17 @@ window.BATTLE = (function () {
           else if (k === 'L') { if (B.repeat) setRepeat(false, 'リピート：OFF'); else if (lastCmds) { setRepeat(true, 'リピート：ON'); done('repeat'); } else setRepeat(true, 'リピート：ON（このラウンドの命令を次から繰り返す）'); } },
         onPick: async (it, i) => {
           a.ci = i;
-          if (it.k === 'atk' || it.k === 'steal') { const t = await pickFrom(foes(), 'どの魔物をねらう？', B.lastT); if (t) { B.lastT = t; done({ k: it.k, t }); } }
+          if (it.k === 'atk' || it.k === 'steal') { const t = await pickFrom(foes(), 'どの魔物を狙う？', B.lastT); if (t) { B.lastT = t; done({ k: it.k, t }); } }
           else if (it.k === 'guard' || it.k === 'flee') done({ k: it.k });
           else if (it.k === 'skill') {
             const shield = !!a.p.equip.shield;
             const l2 = E.list(B.ui, sk.map(s => ({ label: s.name, r: 'MP ' + s.mp, s, dim: a.mp < s.mp || (s.need === 'shield' && !shield) })), { id: 'bsub', title: WORD[a.id], index: a.si || 0, onMove: s => say(s.s.help),
               onDim: s => say(a.mp < s.s.mp ? 'MPが足りない' : '盾を持っていないと、使えない'), onCancel: () => { l2.close(); say(ask); }, onKey: k => { if (k === 'R') cycleSpeed(); },
-              onPick: async (s, j) => { a.si = j; const en = s.s.target === 'enemy', t = await pickFrom(en ? foes() : friends().filter(q => s.s.kind !== 'cover' || q !== a), en ? 'どの魔物をねらう？' : s.s.kind === 'cover' ? 'だれをかばう？' : 'だれに使う？', en ? B.lastT : a);
+              onPick: async (s, j) => { a.si = j; const en = s.s.target === 'enemy', t = await pickFrom(en ? foes() : friends().filter(q => s.s.kind !== 'cover' || q !== a), en ? 'どの魔物を狙う？' : s.s.kind === 'cover' ? '誰をかばう？' : '誰に使う？', en ? B.lastT : a);
                 if (t) { if (en) B.lastT = t; l2.close(); done({ k: 'skill', s: s.s.id, t }); } } });
           } else if (it.k === 'item') {
-            const l2 = E.list(B.ui, usable().map(k => ({ label: D.items[k].name, r: '×' + E.count(k), id: k })), { id: 'bsub', title: 'どうぐ', onMove: s => say(D.items[s.id].help), onCancel: () => { l2.close(); say(ask); }, onKey: k => { if (k === 'R') cycleSpeed(); },
-              onPick: async s => { const t = await pickFrom(friends(), 'だれに使う？', a); if (t) { l2.close(); done({ k: 'item', item: s.id, t }); } } });
+            const l2 = E.list(B.ui, usable().map(k => ({ label: D.items[k].name, r: '×' + E.count(k), id: k })), { id: 'bsub', title: '道具', onMove: s => say(D.items[s.id].help), onCancel: () => { l2.close(); say(ask); }, onKey: k => { if (k === 'R') cycleSpeed(); },
+              onPick: async s => { const t = await pickFrom(friends(), '誰に使う？', a); if (t) { l2.close(); done({ k: 'item', item: s.id, t }); } } });
           }
         } });
       say(ask); moved = true;
@@ -511,10 +525,10 @@ window.BATTLE = (function () {
       '<div id="btoast"></div><div id="bkeys"><span class="btn" id="bkR"><b class="keycap">Q</b><span>リピート</span></span><span class="btn" id="bkF"><b class="keycap">E</b><span>速さ</span></span></div></div>';
     E.root.appendChild(root);
     B = { t: 0, last: performance.now(), speed: speedOf(G.set.speed), repeat: false, waits: [], parts: [], lights: [], nums: [], shake: 0, dark: 0, cx: $('bcv').getContext('2d'), fx: $('bfx').getContext('2d'), ui: $('bui'), orderEl: $('border'),
-          pcs: E.D.order.map(mkPc), ens: opt.group.map(mkEn), order: [], killed: [], fails: 0, active: null, cursor: null, now: null };
+          pcs: E.order().map(mkPc), ens: opt.group.map(mkEn), order: [], killed: [], fails: 0, active: null, cursor: null, now: null };
     B.all = B.pcs.concat(B.ens); rename();
     const sl = SLOTS[B.ens.length]; B.ens.forEach((m, i) => { m.x = sl[i][0]; m.y = sl[i][1]; });
-    hb = E.helpbar(B.ui, '<span><b class="keycap">Z</b>決める</span><span><b class="keycap">X</b>もどる</span>');
+    hb = E.helpbar(B.ui, '<span><b class="keycap">Z</b>決める</span><span><b class="keycap">X</b>戻る</span>');
     B.rows = B.pcs.map(a => { const r = E.el('div', 'brow', `<span class="st"></span><span class="nm">${a.name}</span><span class="k">HP</span><span class="v hpv"></span><span class="bar"><i></i></span><span class="k">MP</span><span class="v mpv"></span><span class="bar mp"><i></i></span>`); $('bparty').appendChild(r); return r; });
     $('bkF').onclick = ev => { ev.stopPropagation(); cycleSpeed(); }; $('bkR').onclick = ev => { ev.stopPropagation(); const t = E.top(); if (t) t.key({ key: 'q' }); };
     const base = E.push({ key(e) { const k = E.KEY(e); if (k === 'R') cycleSpeed(); else if (k === 'L') repeatKey(); } });
@@ -531,7 +545,7 @@ window.BATTLE = (function () {
     for (const a of B.all) a.ox = 0;
     tags();
     const names = [...new Set(B.ens.map(m => m.d.name))];
-    say(names.join('と、') + 'が、あらわれた！'); await sleep(.8);
+    say(names.join('と、') + 'が、現れた！'); await sleep(.8);
 
     let result = null;
     const over = () => !foes().length ? 'win' : !friends().length ? 'lose' : null;
@@ -544,10 +558,10 @@ window.BATTLE = (function () {
       if (cmds === 'flee') {
         const ch = clamp(50 + Math.max(...friends().map(a => a.st.spd)) - Math.max(...foes().map(m => m.d.spd)) + 10 * B.fails + (E.hasPassive('nigeashi') ? 15 : 0), 10, 95);
         if (Math.random() * 100 < ch) {
-          say('4人は、にげだした！'); S.sfx('flee'); for (const a of friends()) { a.dash = true; dust(a.x, a.y, 3); }
+          say('4人は、逃げ出した！'); S.sfx('flee'); for (const a of friends()) { a.dash = true; dust(a.x, a.y, 3); }
           await tw(.5, k => { for (const a of friends()) a.ox = 320 * k * k; }); result = 'flee'; break;
         }
-        B.fails++; say('にげられなかった！'); S.sfx('buzz'); await sleep(.7); partyActs = false;
+        B.fails++; say('逃げられなかった！'); S.sfx('buzz'); await sleep(.7); partyActs = false;
       } else {
         for (const a of friends()) {             // まもる and かばう hold from the start of the round
           const c = cmds[a.id]; if (!c) continue;
@@ -577,7 +591,7 @@ window.BATTLE = (function () {
       for (const a of B.pcs) if (a.hp <= 0) { a.hp = a.p.hp = 1; tw(.4, k => { a.lie = 1 - eio(k); }); }      // those who fell get up with 1 HP
       hud();
       const out = [B.killed.length ? '戦いに勝った！' : '魔物は、いなくなった'];
-      if (exp || gold) out.push(`けいけん値　${exp}\nお金　${gold}枚`);
+      if (exp || gold) out.push(`経験値　${exp}\nお金　${gold}枚`);
       G.gold += gold; G.wins++;
       for (const m of B.killed) if (m.d.drop && Math.random() < .25) { const got = E.give(m.d.drop, 1); out.push({ text: got ? `${D.items[m.d.drop].name}を\n手に入れた` : `${D.items[m.d.drop].name}は、\nこれ以上持てない`, sfx: 'get' }); }
       if (exp) for (const a of B.pcs) for (const msg of E.gainExp(a.id, exp)) out.push({ text: msg.text, sfx: msg.lv ? 'levelup' : 'get', fx: () => { if (msg.lv) { const s = E.stats(a.id); a.mhp = s.mhp; a.mmp = s.mmp; a.hp = a.p.hp; a.mp = a.p.mp; hud();
@@ -585,7 +599,7 @@ window.BATTLE = (function () {
       await sleep(.5); await pages(out);
     } else if (result === 'lose') {
       S.bgm(null, { fade: 1.2 }); S.sfx('lose'); say(''); await tw(1.2, k => { B.dark = .55 * k; });
-      await pages(['4人は、力つきた…', '最後に書きとめた所から、\nやりなおします']);
+      await pages(['4人は、力尽きた…', '最後に書き留めた所から、\nやり直します']);
     }
     for (const a of B.pcs) { a.p.hp = a.hp; a.p.mp = a.mp; }
     await cut(300, false);

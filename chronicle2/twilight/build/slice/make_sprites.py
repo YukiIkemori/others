@@ -107,13 +107,41 @@ def crisp(sub, m, th, ncol=20, P=None):
     out[pr, :3] = oc; out[pr, 3] = 255
     ys_, xs_ = np.nonzero(out[..., 3]); return out[ys_.min():ys_.max() + 1, xs_.min():xs_.max() + 1]
 
+def dots(sub, m, th, ncol=16):
+    """-> RGBA array about th + 2 tall, for a monster redrawn flat (mon_flat.py, raw/<name>_flat2.png).  That drawing is
+    already made of big flat dots, so each screen dot simply takes the colour most of its cell has (a cell counts as body
+    when half of it is covered).  The outline is closed: drawn dark rim dots are kept in one colour, and where the dark
+    line was lost a dot is added outside."""
+    h, w = m.shape; tw = max(1, int(round(w * th / h)))
+    fill = np.median(sub[m], 0).astype(np.uint8); s2 = sub.copy(); s2[~m] = fill
+    q = Image.fromarray(s2).quantize(ncol, method=Image.MEDIANCUT, dither=Image.NONE); idx = np.array(q); pal = np.array(q.getpalette()[:ncol * 3]).reshape(-1, 3)
+    ys = np.round(np.linspace(0, h, th + 1)).astype(int); xs = np.round(np.linspace(0, w, tw + 1)).astype(int)
+    key = np.full((th, tw), -1)
+    for j in range(th):
+        for i in range(tw):
+            mm = m[ys[j]:ys[j + 1], xs[i]:xs[i + 1]]
+            if mm.size and mm.mean() >= .5: key[j, i] = np.bincount(idx[ys[j]:ys[j + 1], xs[i]:xs[i + 1]][mm], minlength=ncol).argmax()
+    core = key >= 0
+    core &= nd.convolve(core.astype(int), np.ones((3, 3)), mode='constant') > 1; key[~core] = -1
+    # one closed outline: where the drawn dark line is there it is kept (in one colour); where it was lost a dot is added outside
+    lum = pal @ np.array([.3, .59, .11]); med = np.median(lum[key[core]]); dark = core & (lum[np.clip(key, 0, None)] < .46 * med)
+    four = nd.generate_binary_structure(2, 1); rim = core & ~nd.binary_erosion(core, structure=four, border_value=0)
+    painted = rim & dark; oc = np.median(pal[key[painted]], 0) * .9 if painted.sum() > 8 else np.median(pal[key[core]], 0) * .3
+    out = np.zeros((th + 2, tw + 2, 4), np.uint8); pc = np.pad(core, 1); pk = np.pad(key, 1, constant_values=-1)
+    out[pc, :3] = pal[pk[pc]]; out[pc, 3] = 255
+    pp = np.pad(painted, 1); out[pp, :3] = oc
+    lost = np.pad(rim & ~dark, 1); ring = nd.binary_dilation(lost, structure=four) & ~pc
+    out[ring, :3] = oc; out[ring, 3] = 255
+    ys_, xs_ = np.nonzero(out[..., 3]); return out[ys_.min():ys_.max() + 1, xs_.min():xs_.max() + 1]
+
 # ---- monsters: height on screen in dots (the heroes are 80)
 MON = dict(mn001=50, mn005=64, mn009=66, mn025=90, mn045=70, mn033=66, mn013=58, mn029=86, mn021=84)
 meta = {}
 for n, th in MON.items():
-    src = f'{RAW}/{n}_flat.png'                                           # the redraw in the party's technique (gen_art.py), when there is one
-    (sub, m), = figures(src if os.path.exists(src) else f'{RAW}/{n}.png', 1)
-    im = crisp(sub, m, th); Image.fromarray(im).save(f'{OUT}/mon/{n}.png'); meta[n] = [im.shape[1], im.shape[0]]
+    f2, src = f'{RAW}/{n}_flat2.png', f'{RAW}/{n}_flat.png'               # the flat redraw (mon_flat.py), else the redraw in the party's technique (gen_art.py), else the first pass
+    if os.path.exists(f2): (sub, m), = figures(f2, 1); im = dots(sub, m, th + 2)
+    else: (sub, m), = figures(src if os.path.exists(src) else f'{RAW}/{n}.png', 1); im = crisp(sub, m, th)
+    Image.fromarray(im).save(f'{OUT}/mon/{n}.png'); meta[n] = [im.shape[1], im.shape[0]]
 json.dump(meta, open(f'{OUT}/mon/sizes.json', 'w'))
 # ---- villagers: 96x128 frames, feet at (48,120) like the party
 NPC = dict(npc_a=[('moku', 70), ('mother', 78), ('yomo', 66), ('dorgo', 82), ('hanna', 76)], npc_b=[('oz', 78), ('sem', 78), ('pico', 70), ('mil', 58), ('bart', 80)])

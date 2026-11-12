@@ -10,15 +10,15 @@ window.RPGDATA = (function () {
     bani:  { name: 'バニ',   sprite: 'party/priest', row: 'back',  hp: [24, 8],   mp: [12, 3.5], str: [5, 1.3], def: [4, 1.2], int: [7, 1.7], spd: [4, .9],  dex: [5, 1],  equip: { weapon: 'hs01' } },
   };
   const order = ['teto', 'metem', 'pamp', 'bani'];
-  // power: x of the formula; el: element; fx: effect name in battle.js
+  // power: x of the formula; el: element; fx: effect name in battle.js.  メテム knows the four basic element spells from the start (ユウキ, 2026-11-12)
   const skills = {
     tsuyogiri: { name: '強斬り',     user: 'teto',  lv: 3, mp: 3, kind: 'phys',  power: 1.5, target: 'enemy', fx: 'heavy',  help: '力をこめて斬る' },
     kabau:     { name: 'かばう',     user: 'teto',  lv: 6, mp: 2, kind: 'cover', target: 'ally',  fx: 'cover', help: 'このターン、仲間1人の代わりに受ける', need: 'shield' },
     hinotama:  { name: '火の玉',     user: 'metem', lv: 1, mp: 3, kind: 'spell', power: 1, el: 'fire',  target: 'enemy', fx: 'fire',  help: '炎の術。小さなダメージ' },
-    mizu:      { name: '水つぶて',   user: 'metem', lv: 2, mp: 3, kind: 'spell', power: 1, el: 'water', target: 'enemy', fx: 'water', help: '水の術。小さなダメージ' },
-    ishi:      { name: '石つぶて',   user: 'metem', lv: 4, mp: 3, kind: 'spell', power: 1, el: 'earth', target: 'enemy', fx: 'earth', help: '土の術。小さなダメージ' },
-    kamaitachi:{ name: 'かまいたち', user: 'metem', lv: 6, mp: 3, kind: 'spell', power: 1, el: 'wind',  target: 'enemy', fx: 'wind',  help: '風の術。小さなダメージ' },
-    metsubushi:{ name: '目つぶし',   user: 'pamp',  lv: 6, mp: 3, kind: 'blind', target: 'enemy', fx: 'blind', help: '魔物のこうげきを当たりにくくする' },
+    mizu:      { name: '水つぶて',   user: 'metem', lv: 1, mp: 3, kind: 'spell', power: 1, el: 'water', target: 'enemy', fx: 'water', help: '水の術。小さなダメージ' },
+    ishi:      { name: '石つぶて',   user: 'metem', lv: 1, mp: 3, kind: 'spell', power: 1, el: 'earth', target: 'enemy', fx: 'earth', help: '土の術。小さなダメージ' },
+    kamaitachi:{ name: 'かまいたち', user: 'metem', lv: 1, mp: 3, kind: 'spell', power: 1, el: 'wind',  target: 'enemy', fx: 'wind',  help: '風の術。小さなダメージ' },
+    metsubushi:{ name: '目つぶし',   user: 'pamp',  lv: 6, mp: 3, kind: 'blind', target: 'enemy', fx: 'blind', help: '魔物の攻撃を当たりにくくする' },
     iyashi:    { name: 'いやしの祈り', user: 'bani', lv: 1, mp: 4, kind: 'heal', power: 1, target: 'ally', fx: 'heal', help: '仲間1人のHPを回復する' },
     tomoshibi: { name: 'ともしび',   user: 'bani',  lv: 3, mp: 3, kind: 'spell', power: 1, el: 'light', target: 'enemy', fx: 'light', help: '光の術。小さなダメージ' },
     kiyome:    { name: '清めの祈り', user: 'bani',  lv: 7, mp: 4, kind: 'cure',  target: 'ally', fx: 'heal', help: '仲間1人の悪い状態を治す' },
@@ -44,17 +44,17 @@ window.RPGDATA = (function () {
     gs01: { name: '薪割りの大剣', kind: 'gear', slot: 'weapon', wtype: 'great', user: 'teto', atk: 10, price: 40, help: 'テトの大剣。盾は持てない' },
     st01: { name: '樫の杖', kind: 'gear', slot: 'weapon', wtype: 'staff', user: 'metem', atk: 6, mag: 4, price: 40, help: 'メテムの杖' },
     bk01: { name: '手書きの覚え書き', kind: 'gear', slot: 'weapon', wtype: 'book', user: 'metem', atk: 2, mag: 7, price: 40, help: 'メテムの本。術が強い' },
-    dg01: { name: '皮はぎナイフ', kind: 'gear', slot: 'weapon', wtype: 'dagger', user: 'pamp', atk: 7, steal: 5, price: 40, help: 'パンプの短剣。少しぬすみやすい' },
-    dg02: { name: '墓掘りの短剣', kind: 'gear', slot: 'weapon', wtype: 'dagger', user: 'pamp', atk: 17, steal: 5, sell: 200, help: 'パンプの短剣。少しぬすみやすい' },
-    bw01: { name: '狩りの小弓', kind: 'gear', slot: 'weapon', wtype: 'bow', user: 'pamp', atk: 7, price: 40, help: 'パンプの弓。後ろの列でも弱くならない' },
+    dg01: { name: '皮はぎナイフ', kind: 'gear', slot: 'weapon', wtype: 'dagger', user: 'pamp', atk: 7, steal: 5, price: 40, help: 'パンプの短剣。少し盗みやすい' },
+    dg02: { name: '墓掘りの短剣', kind: 'gear', slot: 'weapon', wtype: 'dagger', user: 'pamp', atk: 17, steal: 5, sell: 200, help: 'パンプの短剣。少し盗みやすい' },
+    bw01: { name: '狩りの小弓', kind: 'gear', slot: 'weapon', wtype: 'bow', user: 'pamp', atk: 7, price: 40, help: 'パンプの弓。後列でも弱くならない' },
     hs01: { name: '祈りの杖', kind: 'gear', slot: 'weapon', wtype: 'holy', user: 'bani', atk: 4, mag: 4, healp: 7, price: 40, help: 'バニの聖杖。回復が強い' },
     mc01: { name: '木槌', kind: 'gear', slot: 'weapon', wtype: 'mace', user: 'bani', atk: 8, mag: 2, healp: 4, price: 40, help: 'バニのメイス。殴りが強い' },
     sh01: { name: '木の丸盾', kind: 'gear', slot: 'shield', user: 'teto', def: 2, price: 20, help: 'テトの盾。剣の時だけ持てる' },
-    hd01: { name: '革の帽子', kind: 'gear', slot: 'head', def: 1, price: 20, help: 'だれでもかぶれる' },
+    hd01: { name: '革の帽子', kind: 'gear', slot: 'head', def: 1, price: 20, help: '誰でもかぶれる' },
     hn03: { name: '鉄の小手', kind: 'gear', slot: 'hand', user: 'teto', def: 2, sell: 60, help: 'テトの小手' },
-    ac02: { name: '鈴の首飾り', kind: 'gear', slot: 'acc', sell: 125, help: 'ねむりを防ぐ' },
+    ac02: { name: '鈴の首飾り', kind: 'gear', slot: 'acc', sell: 125, help: '眠りを防ぐ' },
   };
-  const SLOTS = [['weapon', '武器'], ['shield', '盾'], ['head', '頭'], ['hand', '手'], ['acc', 'かざり']];
+  const SLOTS = [['weapon', '武器'], ['shield', '盾'], ['head', '頭'], ['hand', '手'], ['acc', '飾り']];
   const BODY_DEF = 3;            // the clothes everyone starts in
   // art: file in mon/, h = height in dots on screen, float = hovers; act: attack style (effect), ai: special behaviour
   const monsters = {
