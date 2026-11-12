@@ -102,6 +102,11 @@ window.RPGDATA = (function () {
     ch045: { give: [['hn03', 1]] }, ch046: { give: [['dg02', 1]] }, ch047: { give: [['yakusou', 3]], gold: 50 },
     cedar: { give: [['spoon', 1]] },
   };
+  // ワープ (the old game's menu row): places the party has been to.  A town, or the entrance of a dungeon; `map` + `spawn` = where one lands
+  const warps = {
+    village: { name: '始まりの村', kind: 'town', map: 'village', spawn: 'start' },
+    abbey:   { name: '崖の修道院', kind: 'dungeon', map: 'abbey', spawn: 'gate' },
+  };
   const start = { gold: 60, items: { yakusou: 3 }, map: 'village', spawn: 'start' };
-  return { chars, order, skills, passives, EL, items, SLOTS, BODY_DEF, monsters, encounters, npcs, shops, chests, start };
+  return { chars, order, skills, passives, EL, items, SLOTS, BODY_DEF, monsters, encounters, npcs, shops, chests, warps, start };
 })();

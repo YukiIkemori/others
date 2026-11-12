@@ -94,6 +94,7 @@ window.SND = (function () {
     get: () => { [784, 988, 1175].forEach((f, i) => tone('triangle', f, f, .16, .14, i * .08)); },
     rare: () => { [659, 784, 988, 1319, 1568].forEach((f, i) => tone('triangle', f, f, .3, .14, i * .09, .01)); noise(.8, .08, 6000, 9000, 6, .3); },
     levelup: () => { [523, 659, 784, 1047, 1319].forEach((f, i) => tone('triangle', f, f, .22, .15, i * .09)); },
+    warp: () => { [392, 587, 880, 1175].forEach((f, i) => tone('sine', f, f * 1.5, .45, .1, i * .07, .02)); },
     save: () => { [587, 740, 880].forEach((f, i) => tone('sine', f, f, .5, .14, i * .16, .02)); },
     quill: () => { noise(.06, .14, 5000, 3000, 4); noise(.08, .14, 4500, 2500, 4, .09); },
     rest: () => { [392, 494, 587, 784].forEach((f, i) => tone('sine', f, f, .9, .1, i * .32, .05)); },

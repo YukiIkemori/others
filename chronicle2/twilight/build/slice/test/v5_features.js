@@ -27,7 +27,7 @@ module.exports = async (p, shot) => {
   console.log('after ▼', await J(p, () => JSON.stringify(RPG.G.order)));
   await key('x', 1, 300); console.log('ui after back', await J(p, () => RPG.ui.length + ' keys=' + document.querySelector('#menu .helpbar .keys').textContent));
   await key('ArrowUp', 1); await key('z', 1, 300); await key('z', 1, 400); await SH('status');       // 強さ
-  await key('x', 1, 300); await key('ArrowDown', 2); await key('z', 1, 400); await SH('settings'); await key('x', 2, 300);
+  await key('x', 1, 300); await key('ArrowDown', 3); await key('z', 1, 400); await SH('settings'); await key('x', 2, 300);
   // battle
   J(p, () => { RPG.debug.battle(['mn001', 'mn001', 'mn005', 'mn009'], 'f01'); }); await p.waitForTimeout(4800); await SH('battle1');
   console.log('battle', await J(p, () => JSON.stringify({ pcs: BATTLE.state.pcs.map(a => a.name + ':' + a.row + '@' + a.x + ',' + a.y), chips: [...document.querySelectorAll('#border .chip')].map(c => c.title + (c.querySelector('canvas') ? '*' : '')) })));

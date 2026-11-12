@@ -157,14 +157,14 @@ body.noui .ui, body.noui #below { display: none !important; }
 #menu .info .lab { color: var(--gold); font-size: calc(15 * var(--u)); letter-spacing: .28em; margin: calc(14 * var(--u)) 0 calc(4 * var(--u)); border-bottom: 1px solid rgba(201, 173, 115, .28); }
 .cards { position: absolute; right: calc(70 * var(--u)); top: calc(96 * var(--u)); width: calc(660 * var(--u)); display: flex; flex-direction: column; gap: calc(12 * var(--u)); }
 .card { position: relative; background: var(--panel); box-shadow: inset 0 0 0 1px var(--line); border-radius: calc(4 * var(--u)); padding: calc(14 * var(--u)) calc(24 * var(--u)) calc(14 * var(--u)) calc(118 * var(--u)); min-height: calc(112 * var(--u)); cursor: pointer; }
-/* the row shows as a place: the front row stands on the left, the back row on the right (as in the battle) */
-.card.front { margin-right: calc(60 * var(--u)); } .card.back { margin-left: calc(60 * var(--u)); }
-.card { transition: margin .16s; }
+/* The cards stay in one column; the row shows by where the person stands inside the card: a step forward (to the left, towards
+   the monsters, as in the battle) in the front row, back at the right in the back row (ユウキ, 2026-11-12 21:43 JST) */
+.card { padding-left: calc(162 * var(--u)); }
+.card canvas { transition: left .16s; } .card.front canvas { left: calc(6 * var(--u)); } .card.back canvas { left: calc(54 * var(--u)); }
 .card .bar { width: calc(200 * var(--u)); }
 .card.back .row { color: #a9c4cf; border-color: rgba(169, 196, 207, .5); } .card.front .row { color: #e3c98c; border-color: rgba(227, 201, 140, .5); }
-.card.held { transform: translateX(calc(-14 * var(--u))); box-shadow: inset 0 0 0 calc(2 * var(--u)) #f0d27a, 0 calc(6 * var(--u)) calc(22 * var(--u)) rgba(0, 0, 0, .6); background: rgba(70, 56, 34, .96); }
+.card.held { box-shadow: inset 0 0 0 calc(2 * var(--u)) #f0d27a, 0 calc(6 * var(--u)) calc(22 * var(--u)) rgba(0, 0, 0, .6); background: rgba(70, 56, 34, .96); }
 .card .mv { position: absolute; right: calc(-40 * var(--u)); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: calc(6 * var(--u)); }
-.card.back .mv { right: calc(-40 * var(--u)); } .card.front .mv { right: calc(-100 * var(--u)); }
 .card .mv i { font-style: normal; font-size: calc(15 * var(--u)); line-height: 1; color: var(--gold); border: 1px solid var(--line); border-radius: calc(4 * var(--u)); padding: calc(7 * var(--u)) calc(9 * var(--u)); background: var(--panel); cursor: pointer; }
 .card .mv i.off { opacity: .25; }
 .ordh { position: absolute; right: calc(70 * var(--u)); top: calc(56 * var(--u)); width: calc(660 * var(--u)); font-size: calc(21 * var(--u)); letter-spacing: .24em; color: var(--paper); }

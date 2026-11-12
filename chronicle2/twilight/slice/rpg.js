@@ -27,7 +27,7 @@ window.RPG = (function () {
   const hasPassive = k => { const p = D.passives[k]; return G.party[p.user].lv >= p.lv && G.party[p.user].hp > 0; };
   function newGame() {
     G = { v: 1, gold: D.start.gold, items: Object.assign({}, D.start.items), party: {}, flags: {}, talk: {}, seen: {}, map: D.start.map, x: null, y: null, dir: 'down',
-          steps: 0, next: 60, time: 0, wins: 0, order: D.order.slice(), explored: {}, set: { speed: 1, dash: false, bgm: S.vol.bgm, sfx: S.vol.sfx, map: 'small' } };
+          steps: 0, next: 60, time: 0, wins: 0, order: D.order.slice(), explored: {}, warps: {}, set: { speed: 1, dash: false, bgm: S.vol.bgm, sfx: S.vol.sfx, map: 'small' } };
     for (const id of ord()) { const c = D.chars[id]; G.party[id] = { lv: 1, exp: 0, row: c.row, equip: Object.assign({}, c.equip), hp: 1, mp: 0 }; const s = stats(id); G.party[id].hp = s.mhp; G.party[id].mp = s.mmp; }
   }
   const count = it => G.items[it] || 0;
@@ -108,6 +108,7 @@ window.RPG = (function () {
       // saves from before the 隊列 and the map
       if (!Array.isArray(o.order) || o.order.length !== D.order.length || D.order.some(id => !o.order.includes(id))) o.order = D.order.slice();
       o.explored = o.explored || {}; if (!MAPMODES.includes(o.set.map)) o.set.map = 'small';
+      if (!o.warps) { o.warps = { village: 1 }; if (o.map === 'abbey' || o.explored.abbey || ['ch045', 'ch046', 'ch047'].some(k => o.flags[k])) o.warps.abbey = 1; }      // saves from before the warp
       return o; } catch (e) { return null; } }
 
   // ------------------------------------------------------------------ pictures
@@ -308,7 +309,7 @@ window.RPG = (function () {
   // ------------------------------------------------------------------ the field
   async function onMap(M) {
     const g = game(); curMap = g.mapUrl.split('/')[0]; mapProps = [];
-    if (G) G.map = curMap;
+    if (G) { G.map = curMap; markWarp(); }
     if (G && M.encounter) { G.steps = 0; G.next = encGap(M); }
     for (const t of M.triggers) {
       if (t.kind === 'chest' && G && G.flags[t.id]) t.hidden = true;
@@ -327,6 +328,8 @@ window.RPG = (function () {
     if (started) S.bgm(M.bgm);
     if (!started) startScreen();
   }
+  // a place is added to the warp list when the party stands on its map (the old game: on entering the entrance map)
+  function markWarp() { if (!G || !started) return; G.warps = G.warps || {}; for (const id in D.warps) if (D.warps[id].map === curMap) G.warps[id] = 1; }
   const encGap = M => Math.round((M.encounter.steps || 60) * rnd(.6, 1.4));
   function near(M) { const g = game(), n = M.encounter.near; return n && Math.hypot(g.hero.x - n[0], g.hero.y - n[1]) < n[2]; }
   function onStep(d) {
@@ -421,8 +424,8 @@ window.RPG = (function () {
     const has = !!loadSave();
     const l = list(sc, [{ label: '最初から' }, { label: '続きから', dim: !has }], { onPick: async (it, i) => {
       l.close(); S.bgm(null); if ($('title')) $('title').style.visibility = '';
-      if (i === 1) { G = loadSave(); S.volume('bgm', G.set.bgm); S.volume('sfx', G.set.sfx); started = true; sc.remove(); await changeMap(G.map, { x: G.x, y: G.y, dir: G.dir }); }
-      else { newGame(); started = true; await fadeOut(350); sc.remove(); S.bgm(g.map.bgm); g.paused = false; g.announce(300, 3600); await fadeIn(); }
+      if (i === 1) { G = loadSave(); S.volume('bgm', G.set.bgm); S.volume('sfx', G.set.sfx); started = true; markWarp(); sc.remove(); await changeMap(G.map, { x: G.x, y: G.y, dir: G.dir }); }
+      else { newGame(); started = true; markWarp(); await fadeOut(350); sc.remove(); S.bgm(g.map.bgm); g.paused = false; g.announce(300, 3600); await fadeIn(); }
       hud();
     } });
     sc.appendChild(el('div', 'note', '<b class="keycap">← ↑ ↓ →</b>歩く　<b class="keycap">Z</b>決める・話す　<b class="keycap">X</b>戻る・押しながら走る　<b class="keycap">C</b>メニュー　<b class="keycap">V</b>地図<br>戦いの中：<b class="keycap">Q</b>リピート　<b class="keycap">E</b>戦闘の速さ'));
@@ -514,12 +517,14 @@ window.RPG = (function () {
     const hb = helpbar(m, '<span><b class="keycap">Z</b>決める</span><span class="hit back"><b class="keycap">X</b>戻る</span><span class="hit full"><b class="keycap">V</b>満タン</span>'), cd = cards(m); paintWhere();
     hb.el.querySelector('.full').onclick = ev => { ev.stopPropagation(); if (top() === main) doFull(); };
     const close = () => { main.close(); m.remove(); g.paused = false; };
-    const canSave = g.map.save === 'any';
+    const canSave = g.map.save === 'any', inDungeon = g.map.save === 'crystal';
     const main = list(m, [
       { label: '道具', help: '持っている物を見る・使う', f: items }, { label: '装備', help: '武器・防具・飾りを付け替える', f: equip }, { label: '強さ', help: '4人の今の力と、覚えた技を見る', f: status },
-      { label: '隊列', help: '並ぶ順番と、前列・後列を決める', f: rows }, { label: '設定', help: '音の大きさ、戦闘の速さ、地図の出し方を変える', f: settings },
+      { label: '隊列', help: '並ぶ順番と、前列・後列を決める', f: rows },
+      { label: 'ワープ', help: inDungeon ? 'ダンジョンの中からは、ワープできない。歩いて外へ出よう。' : '行ったことのある町やダンジョンの入口へ飛ぶ。', dim: inDungeon, f: warp },
+      { label: '設定', help: '音の大きさ、戦闘の速さ、地図の出し方を変える', f: settings },
       { label: 'セーブ', help: canSave ? 'ここまでの旅を書き留める' : 'ダンジョンの中では、セーブ結晶でだけ書き留められる', dim: !canSave, f: doSave },
-    ], { cls: 'cmds', onMove: it => hb.set(it.help), onPick: it => it.f(), onCancel: close, onKey: k => { if (k === 'X') doFull(); else if (k === 'menu') { S.sfx('cancel'); close(); } } });
+    ], { cls: 'cmds', onMove: it => hb.set(it.help), onDim: it => hb.set(it.help), onPick: it => it.f(), onCancel: close, onKey: k => { if (k === 'X') doFull(); else if (k === 'menu') { S.sfx('cancel'); close(); } } });
     let fullBusy = false;
     async function doFull() {              // 満タン: one button fills everybody's HP (texts and steps as in the old game's menu)
       if (fullBusy) return; fullBusy = true;
@@ -614,11 +619,11 @@ window.RPG = (function () {
       cd.onClick = n => { i = n; paint(); };
     }
     // 隊列 (the old game's screens/order.js "並びと隊列"): who stands where from the top, and each one's row.  Z lifts a member and
-    // sets them down in another place; ← → (or V, or a click on the card) changes the row, and the card stands on the left
-    // in the front row and on the right in the back row.  ▲ ▼ on a card move it for those who play by touch.
+    // sets them down in another place; ← → (or V, or a click on the card) changes the row.  The cards stay in one column:
+    // only the person in the card stands a step forward (left) in the front row and back (right) in the back row.  ▲ ▼ on a card move it for those who play by touch.
     function rows() {
       const NOTE = '上の人ほど狙われやすい。後列は狙われにくく、受けるダメージも半分。ただし武器の攻撃も半分になる（弓と術は変わらない）';
-      const keys = hb.el.querySelector('.keys'), keys0 = keys.innerHTML, head = el('div', 'ordh', '並びと隊列<span>左が前列、右が後列</span>'); m.appendChild(head);
+      const keys = hb.el.querySelector('.keys'), keys0 = keys.innerHTML, head = el('div', 'ordh', '並びと隊列<span>前列の人は、一歩前（左）に立つ</span>'); m.appendChild(head);
       const wire = () => { const bk = hb.el.querySelector('.back'); if (bk) bk.onclick = ev => { ev.stopPropagation(); const t = top(); if (t) t.key({ key: 'Escape' }); }; const fl = hb.el.querySelector('.full'); if (fl) fl.onclick = ev => { ev.stopPropagation(); if (top() === main) doFull(); }; };
       keys.innerHTML = '<span><b class="keycap">Z</b>持ち上げる・置く</span><span><b class="keycap">←</b><b class="keycap">→</b>前列・後列</span><span class="hit back"><b class="keycap">X</b>戻る</span>'; wire();
       let i = 0, held = -1;
@@ -644,6 +649,20 @@ window.RPG = (function () {
         t.querySelectorAll('i').forEach(b => b.onclick = ev => { ev.stopPropagation(); const j = n + (+b.dataset.d); if (j < 0 || j > 3) return; swap(n, j); held = -1; i = j; S.sfx('cursor'); paint(); });
       };
       paint();
+    }
+    // ワープ (the old game's screens/warp.js): the towns first, then the dungeon entrances; where the party is now is grey
+    // ("いまいる所"); asks before flying.  Not from inside a dungeon (decided 2026-11-11: no way out of a dungeon but on foot).
+    function warp() {
+      const here = id => D.warps[id].map === curMap;
+      const ws = Object.keys(D.warps).filter(id => G.warps && G.warps[id]).sort((a, b) => (D.warps[a].kind === 'town' ? 0 : 1) - (D.warps[b].kind === 'town' ? 0 : 1));
+      const l = list(m, ws.map(id => ({ id, label: D.warps[id].name, r: here(id) ? 'いまいる所' : D.warps[id].kind === 'town' ? '町' : 'ダンジョンの入口', dim: here(id) })), { cls: 'sub', title: 'ワープ', quiet: true,
+        onMove: it => hb.set(!it ? 'まだ飛べる所がない。' : it.dim ? 'もうその場所にいる。' : D.warps[it.id].kind === 'town' ? '町へ飛ぶ。' : 'ダンジョンの入口へ飛ぶ。'),
+        onDim: () => hb.set('もうその場所にいる。'), onCancel: () => { l.close(); main.focus(); },
+        onPick: async it => {
+          S.sfx('ok'); const w = D.warps[it.id];
+          if ((await ask('ワープ', `${w.name} へ飛ぶ？`, ['飛ぶ', 'やめる'], { cancel: 1 })) !== 0) return;
+          l.close(); close(); S.sfx('warp'); changeMap(w.map, { spawn: w.spawn });
+        } });
     }
     function settings() {            // the rows and their wording follow the old game
       const pct = v => Math.round(v * 10), SP = window.BATTLE.SPEEDS, SPN = window.BATTLE.SPEED_LABEL, pad = window.PAD;
