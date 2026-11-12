@@ -51,10 +51,10 @@
    "y": 1151,
    "gx": 712,
    "gy": 1177,
-   "r": 120,
-   "color": "#ffc27a",
-   "intensity": 0.7,
-   "flicker": 0.12
+   "r": 240,
+   "color": "#ffd08a",
+   "intensity": 1.7,
+   "flicker": 0.14
   }
  ],
  "water": [
@@ -303,14 +303,22 @@
    "prompt": "ふれる",
    "prop": {
     "src": "~/prop/crystal.png",
-    "fw": 14,
-    "fh": 44,
+    "fw": 22,
+    "fh": 68,
     "foot": [
-     7,
-     42
+     11,
+     74
     ],
-    "block": 10,
-    "shadow": 1
+    "block": 12,
+    "shadow": 1,
+    "bob": 3,
+    "glow": {
+     "c": "#ffdc96",
+     "r": 130,
+     "a": 1.0,
+     "sparks": 1,
+     "up": 4
+    }
    }
   },
   {
@@ -365,14 +373,21 @@
    "prompt": "あける",
    "prop": {
     "src": "~/prop/chest.png",
-    "fw": 48,
-    "fh": 48,
+    "fw": 64,
+    "fh": 64,
     "foot": [
-     24,
-     40
+     32,
+     54
     ],
-    "block": 14,
-    "shadow": 0
+    "block": 16,
+    "shadow": 0,
+    "glow": {
+     "c": "#ffd27a",
+     "r": 60,
+     "a": 0.8,
+     "sparks": 2,
+     "up": 2
+    }
    }
   },
   {
@@ -385,14 +400,21 @@
    "prompt": "あける",
    "prop": {
     "src": "~/prop/chest.png",
-    "fw": 48,
-    "fh": 48,
+    "fw": 64,
+    "fh": 64,
     "foot": [
-     24,
-     40
+     32,
+     54
     ],
-    "block": 14,
-    "shadow": 0
+    "block": 16,
+    "shadow": 0,
+    "glow": {
+     "c": "#ffd27a",
+     "r": 60,
+     "a": 0.8,
+     "sparks": 2,
+     "up": 2
+    }
    }
   },
   {
@@ -439,7 +461,8 @@
   }
  ],
  "encounter": {
-  "table": "abbey"
+  "table": "abbey",
+  "steps": 46
  },
  "save": "crystal"
 }

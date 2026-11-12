@@ -12,6 +12,8 @@ PARTY = dict(hero=dict(sheet='~/party/hero.png', spec='~/party/hero.json', light
 PULL = 1.2          # the camera stands a little further back than one map dot = one 960x540 dot (ユウキ: the first cut felt too close)
 def load(name):
     p = json.load(open(f'{SL}/{name}/places.json')); return p, p['marks']
+# a chest still shut glints, a save crystal glows and hovers (hd.js / game.js "glow": colour, radius in dots, strength, sparks 1 rising 2 glint)
+CHEST = dict(src='~/prop/chest.png', fw=64, fh=64, foot=[32, 54], block=16, shadow=0, glow=dict(c='#ffd27a', r=60, a=.8, sparks=2, up=2))
 def at(mk, nm, dx=0, dy=0): return dict(x=mk[nm]['p'][0] + dx, y=mk[nm]['p'][1] + dy)
 def base(p, mk, title, en, fog, bgm, back='#2a2630', win=1.0, name=None):
     lights = [dict(kind='window', x=v['air'][0], y=v['air'][1], gx=v['p'][0], gy=v['p'][1], r=v['light']['r'], color=v['light']['color'], intensity=v['light']['intensity'] * win, flicker=.05)
@@ -41,7 +43,7 @@ def village():
         T('door_elder', 46, '村長の家', text=['かぎがかかっている']), T('door_herb', 46, '薬師の家', text=['戸口から、薬草を煮る匂いがする。']),
         T('door_chapel', 46, '小さな礼拝堂', text=['扉の向こうに、小さな灯がひとつ、\nともっている。']),
         T('well', 46, '井戸', text=['深い井戸。のぞきこむと、\n弱い日の光が、底でゆれている。']),
-        dict(at(mk, 'chest_roof'), r=40, kind='chest', id='ch002', title='宝箱', prompt='あける', prop=dict(src='~/prop/chest.png', fw=48, fh=48, foot=[24, 40], block=14, shadow=0)),
+        dict(at(mk, 'chest_roof'), r=40, kind='chest', id='ch002', title='宝箱', prompt='あける', prop=CHEST),
         dict(at(mk, 'hide_chapel'), r=36, kind='spot', id='ch001', title='物かげ'),
     ]
     m['emitters'] = [fx(mk, 'fx_plaza', 700, 420, 'motes', 26), fx(mk, 'fx_orchard', 420, 300, 'leaves', 6), fx(mk, 'fx_pasture', 520, 300, 'motes', 12),
@@ -64,13 +66,16 @@ def f01():
         T('shrine', 40, '道ばたのほこら', text=['旅の無事をいのる、小さなほこら。\nだれかが、麦の穂をそなえている。']),
         T('cedar', 46, '一本杉の根もと', kind='dig', id='cedar', prompt='ほる'),
         dict(at(mk, 'hide_wall'), r=38, kind='spot', id='ch014', title='物かげ'),
-        dict(at(mk, 'chest_ledge'), r=40, kind='chest', id='ch015', title='宝箱', prompt='あける', prop=dict(src='~/prop/chest.png', fw=48, fh=48, foot=[24, 40], block=14, shadow=0)),
+        dict(at(mk, 'chest_ledge'), r=40, kind='chest', id='ch015', title='宝箱', prompt='あける', prop=CHEST),
     ]
+    c = at(mk, 'chest_ledge')      # the chest nobody reaches from below (chests.csv ch015): say where the way is
+    m['triggers'].append(dict(x=c['x'], y=c['y'] + 143, r=44, title='岩棚の下', prompt='見上げる',
+                              text=['岩棚の上に、宝箱が見える。\nここからは、登れそうにない。', '崖の上の修道院から、\n降りてくる道があるのかもしれない。']))
     l = mk['spawn_ledge']['p']
     m['triggers'].append(dict(x=l[0], y=l[1] + 46, r=34, kind='jump', title='台のふち', prompt='飛び降りる', to=[l[0], l[1] + 170]))
     m['emitters'] = [fx(mk, 'fx_fields', 700, 500, 'motes', 18), fx(mk, 'fx_road', 700, 300, 'motes', 14), fx(mk, 'fx_cedar', 420, 420, 'leaves', 8),
                      dict(kind='mist', x=0, y=0, w=p['w'], h=p['h'], n=6)]
-    m['encounter'] = dict(table='f01', near=[v[0], v[1], 620])     # near the village gate only the weakest monsters come out
+    m['encounter'] = dict(table='f01', steps=60, near=[v[0], v[1], 620])     # near the village gate only the weakest monsters come out
     m['save'] = 'any'
     return m
 

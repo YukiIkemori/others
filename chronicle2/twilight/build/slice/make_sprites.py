@@ -55,13 +55,65 @@ def shrink(sub, m, th, ncol=40, tw=None, calm=False):
         out[..., 0], out[..., 1], out[..., 2] = key >> 16, (key >> 8) & 255, key & 255; out[~a] = 0
     return out
 
+def crisp(sub, m, th, ncol=20, P=None):
+    """-> RGBA array about th + 2 tall, for the monsters.  The image model draws them about twice as fine as a dot of the screen,
+    so a painted outline is half a dot wide and comes out of any resampling as a dotted line ("点描っぽい").  Here the body is
+    taken first (cells mostly filled with body colours, shades gathered in clusters), then ONE closed outline, one dot
+    wide, is drawn around it in the dark the painter used; painted lines inside the body stay only as runs."""
+    P = dict(dark=.6, core=.5, thin=.3, line=.38, minline=2, modes=2, lone=0, **(P or {}))
+    h, w = m.shape; tw = max(1, int(round(w * th / h)))
+    fill = sub[m].mean(axis=0).astype(np.uint8); s2 = sub.copy(); s2[~m] = fill
+    pal_img = Image.fromarray(s2).quantize(ncol, method=Image.MEDIANCUT, dither=Image.NONE)
+    idx = np.array(pal_img); pal = np.array(pal_img.getpalette()[:ncol * 3]).reshape(-1, 3).astype(float)
+    lum = pal @ np.array([.3, .59, .11]); med = np.median(lum[idx[m]])
+    isdark = lum < P['dark'] * med
+    ys = np.round(np.linspace(0, h, th + 1)).astype(int); xs = np.round(np.linspace(0, w, tw + 1)).astype(int)
+    cov = np.zeros((th, tw)); body = np.zeros((th, tw)); dk = np.zeros((th, tw)); col = np.zeros((th, tw), int); dcol = np.zeros((th, tw), int)
+    for j in range(th):
+        for i in range(tw):
+            mm = m[ys[j]:ys[j + 1], xs[i]:xs[i + 1]]; n = mm.size
+            if not n or not mm.any(): continue
+            cnt = np.bincount(idx[ys[j]:ys[j + 1], xs[i]:xs[i + 1]][mm], minlength=ncol).astype(float)
+            cov[j, i] = mm.mean(); dk[j, i] = cnt[isdark].sum() / n; body[j, i] = cnt[~isdark].sum() / n
+            cb = cnt.copy(); cb[isdark] = 0; col[j, i] = cb.argmax() if cb.sum() > 0 else cnt.argmax()
+            cd = cnt.copy(); cd[~isdark] = 0; dcol[j, i] = cd.argmax() if cd.sum() > 0 else cnt.argmax()
+    # the body: cells mostly filled with body colours; thin limbs (thinner than a dot) are kept where the figure covers the cell
+    core = (body >= P['core']) | ((cov >= .5) & (body >= P['thin']))
+    core &= nd.convolve(core.astype(int), np.ones((3, 3)), mode='constant') > 1                 # no lonely dots
+    core |= (~core) & (nd.convolve(core.astype(int), np.ones((3, 3)), mode='constant') >= 7)   # no pinholes
+    # shades in clusters
+    key = col.copy()
+    for _ in range(P['modes']):
+        p = np.pad(key, 1, constant_values=-1); pc = np.pad(core, 1); new = key.copy()
+        for j, i in zip(*np.nonzero(core)):
+            nb = p[j:j + 3, i:i + 3][pc[j:j + 3, i:i + 3]]
+            if (nb == key[j, i]).sum() - 1 <= P['lone'] and len(nb) > 4:
+                vals, c = np.unique(nb, return_counts=True); new[j, i] = vals[c.argmax()]
+        key = new
+    # drawn lines inside the body (between the legs, a mouth): only runs, never single dots
+    inner = core & nd.binary_erosion(core, structure=np.ones((3, 3)), border_value=0)
+    line = inner & (dk >= P['line'])
+    lab, k = nd.label(line, structure=np.ones((3, 3)))
+    if k: sz = nd.sum(line, lab, range(1, k + 1)); line &= np.isin(lab, np.nonzero(sz >= P['minline'])[0] + 1)
+    # one outline colour for the figure: the dark the painter used most
+    dpix = idx[m & ~nd.binary_erosion(m, iterations=4)]; dc = np.bincount(dpix[isdark[dpix]], minlength=ncol) if isdark[dpix].any() else None
+    oc = pal[dc.argmax()] if dc is not None else pal[lum.argmin()]
+    oc = oc * .8
+    out = np.zeros((th + 2, tw + 2, 4), np.uint8)
+    pc = np.pad(core, 1); pl = np.pad(line, 1)
+    pr = nd.binary_dilation(pc, structure=nd.generate_binary_structure(2, 1)) & ~pc
+    out[pc, :3] = pal[np.pad(key, 1)[pc]]; out[pc, 3] = 255
+    out[pl, :3] = pal[np.pad(dcol, 1)[pl]]
+    out[pr, :3] = oc; out[pr, 3] = 255
+    ys_, xs_ = np.nonzero(out[..., 3]); return out[ys_.min():ys_.max() + 1, xs_.min():xs_.max() + 1]
+
 # ---- monsters: height on screen in dots (the heroes are 80)
 MON = dict(mn001=50, mn005=64, mn009=66, mn025=90, mn045=70, mn033=66, mn013=58, mn029=86, mn021=84)
 meta = {}
 for n, th in MON.items():
     src = f'{RAW}/{n}_flat.png'                                           # the redraw in the party's technique (gen_art.py), when there is one
     (sub, m), = figures(src if os.path.exists(src) else f'{RAW}/{n}.png', 1)
-    im = shrink(sub, m, th, 28, calm=True); Image.fromarray(im).save(f'{OUT}/mon/{n}.png'); meta[n] = [im.shape[1], im.shape[0]]
+    im = crisp(sub, m, th); Image.fromarray(im).save(f'{OUT}/mon/{n}.png'); meta[n] = [im.shape[1], im.shape[0]]
 json.dump(meta, open(f'{OUT}/mon/sizes.json', 'w'))
 # ---- villagers: 96x128 frames, feet at (48,120) like the party
 NPC = dict(npc_a=[('moku', 70), ('mother', 78), ('yomo', 66), ('dorgo', 82), ('hanna', 76)], npc_b=[('oz', 78), ('sem', 78), ('pico', 70), ('mil', 58), ('bart', 80)])
@@ -70,13 +122,14 @@ for sheet, people in NPC.items():
     for (name, th), (sub, m) in zip(people, figs):
         im = shrink(sub, m, th, 30); fr = np.zeros((128, 96, 4), np.uint8); h, w = im.shape[:2]
         x0 = 48 - w // 2; fr[120 - h:120, x0:x0 + w] = im; Image.fromarray(fr).save(f'{OUT}/npc/{name}.png')
-# ---- chest (two frames of 48x48, foot (24,40)) and the save crystal
+# ---- chest (two frames of 64x64, foot (32,54)) and the save crystal.  Both are things the player must not walk past:
+# the chest is about half a person tall, the crystal nearly a whole one (and the game lights them, see hd.js "glow")
 figs = figures(f'{RAW}/props.png', 3); assert len(figs) == 3
-sheet = np.zeros((48, 96, 4), np.uint8)
+sheet = np.zeros((64, 128, 4), np.uint8)
 for k, (sub, m) in enumerate(figs[:2]):
-    im = shrink(sub, m, 30 if k == 0 else 40, 32, tw=34 if k == 0 else None); h, w = im.shape[:2]; x0 = k * 48 + 24 - w // 2; sheet[42 - h:42, x0:x0 + w] = im
+    im = shrink(sub, m, 38 if k == 0 else 50, 32, tw=43 if k == 0 else None); h, w = im.shape[:2]; x0 = k * 64 + 32 - w // 2; sheet[56 - h:56, x0:x0 + w] = im
 Image.fromarray(sheet).save(f'{OUT}/prop/chest.png')
-im = shrink(*figs[2], 44, 24); Image.fromarray(im).save(f'{OUT}/prop/crystal.png')
+im = shrink(*figs[2], 68, 24); Image.fromarray(im).save(f'{OUT}/prop/crystal.png')
 # ---- battle backgrounds: 1152x648 (the battle view is pulled back by 1.2, see battle.js)
 for n in ('bg_f01', 'bg_abbey'):
     b = Image.open(f'{RAW}/{n}.png').convert('RGB').resize((1152, 653), Image.LANCZOS).crop((0, 2, 1152, 650)); b.save(f'{OUT}/bg/{n}.webp', lossless=True, quality=90, method=4)
@@ -87,6 +140,6 @@ x = 10
 for sheet in NPC.values():
     for name, _ in sheet: im = Image.open(f'{OUT}/npc/{name}.png'); c.alpha_composite(im, (x - 20, 160)); x += 62
 hero = Image.open(os.path.join(OUT, '../site/party/hero.png')).convert('RGBA').crop((0, 0, 96, 128)); c.alpha_composite(hero, (x - 10, 160)); x += 70
-c.alpha_composite(Image.open(f'{OUT}/prop/chest.png'), (x, 230)); c.alpha_composite(Image.open(f'{OUT}/prop/crystal.png'), (x + 110, 220))
+c.alpha_composite(Image.open(f'{OUT}/prop/chest.png'), (x, 226)); c.alpha_composite(Image.open(f'{OUT}/prop/crystal.png'), (x + 140, 216))
 c.resize((1920, 600), Image.NEAREST).save(sys.argv[3] if len(sys.argv) > 3 else f'{OUT}/sprites_preview.png')
 print('ok', meta)

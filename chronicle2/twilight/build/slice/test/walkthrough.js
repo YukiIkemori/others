@@ -12,7 +12,7 @@ module.exports = async (p, shot) => {
   await key('z'); await p.waitForTimeout(4200); await key('z'); await p.waitForTimeout(500); await st('rested');
   // shop door
   await J(p, () => { const t = __game.map.triggers.find(t => t.shop === 'goods' && t.kind === 'shop'); __game.teleport(t.x, t.y + 30, 'up'); __game.sim(3); });
-  await p.waitForTimeout(300); await key('z'); await p.waitForTimeout(500); await key('z'); await p.waitForTimeout(300); await key('z'); await p.waitForTimeout(300); await shot('m_shop'); await st('bought');
+  await p.waitForTimeout(300); await key('z'); await p.waitForTimeout(500); await key('e'); await p.waitForTimeout(300); await key('z'); await p.waitForTimeout(300); await key('z'); await p.waitForTimeout(300); await shot('m_shop'); await st('bought');   // 道具 tab, 薬草, one piece
   await key('x'); await key('x'); await p.waitForTimeout(300); await st('shop closed');
   // hidden spot
   await J(p, () => { const t = __game.map.triggers.find(t => t.id === 'ch001'); __game.teleport(t.x, t.y + 10, 'up'); __game.sim(3); });

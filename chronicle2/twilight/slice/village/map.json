@@ -468,14 +468,21 @@
    "prompt": "あける",
    "prop": {
     "src": "~/prop/chest.png",
-    "fw": 48,
-    "fh": 48,
+    "fw": 64,
+    "fh": 64,
     "foot": [
-     24,
-     40
+     32,
+     54
     ],
-    "block": 14,
-    "shadow": 0
+    "block": 16,
+    "shadow": 0,
+    "glow": {
+     "c": "#ffd27a",
+     "r": 60,
+     "a": 0.8,
+     "sparks": 2,
+     "up": 2
+    }
    }
   },
   {

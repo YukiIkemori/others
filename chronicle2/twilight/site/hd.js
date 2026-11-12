@@ -537,6 +537,22 @@
       return { body, gh, sh, ghost: 0 };
     }
 
+    // ---- glow of the things a player must not walk past (a save crystal, a chest still shut): a soft halo that is added
+    // to the picture, with sparks (1: motes that rise, 2: a glint now and then).  The bloom pass spreads it further.
+    const GLOW_FS = `uniform vec3 uC; uniform vec4 uP; varying vec2 vUv;
+      void main() { vec2 q = vUv * 2. - 1.; float d = length(q), t = uP.x, s = uP.z;
+        float v = (pow(max(0., 1. - d), 2.2) * .58 + pow(max(0., 1. - d * 2.6), 2.) * .22) * (.8 + .2 * sin(t * 2.2 + s));
+        if (uP.w > .5 && uP.w < 1.5) for (int i = 0; i < 7; i++) { float f = float(i), ph = fract(t * (.16 + .03 * f) + f * .37 + s); vec2 c = vec2(sin(f * 2.4 + s + ph * 2.) * (.14 + .1 * fract(f * .61)), -.4 + ph * 1.2);
+          v += smoothstep(.045, 0., length(q - c)) * sin(ph * 3.1416) * 1.4; }
+        if (uP.w > 1.5) { float e = pow(max(0., sin(t * 1.5 + s)), 14.); vec2 c = q - vec2(.2, .22); v += (exp(-abs(c.x) * 55.) * exp(-abs(c.y) * 6.) + exp(-abs(c.y) * 55.) * exp(-abs(c.x) * 6.)) * e * 2.4; }
+        gl_FragColor = vec4(uC * v * uP.y, 1.); }`;
+    const gg = new T3.PlaneGeometry(1, 1); gg.rotateX(Math.PI / 2); const glows = [];
+    function glowCard() {
+      const m = new T3.Mesh(gg, new T3.ShaderMaterial({ uniforms: { uC: { value: new T3.Vector3() }, uP: { value: new T3.Vector4() } }, vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.); }`, fragmentShader: GLOW_FS,
+        side: T3.DoubleSide, transparent: true, depthWrite: false, blending: T3.CustomBlending, blendSrc: T3.OneFactor, blendDst: T3.OneFactor, blendSrcAlpha: T3.ZeroFactor, blendDstAlpha: T3.OneFactor }));
+      m.frustumCulled = false; m.renderOrder = 4; scene.add(m); return m;
+    }
+
     // ---- fireflies
     const fp = [], fs = [], fc = []; let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
     for (const e of M.emitters || []) if (e.kind === 'fireflies') for (let i = 0, ec = e.color ? env.hexRgb(e.color).map(v => v / 255) : [1, .86, .45]; i < e.n * 2; i++) {   // an emitter may carry its own colour
@@ -619,19 +635,27 @@
       // hero
       const acts = st.actors || [];
       for (const pl of pools.values()) pl.n = 0;
+      let ng = 0;
       for (const a of acts) {
         const key = a.S.frame[0] + 'x' + a.S.frame[1] + ':' + a.S.foot[0] + ',' + a.S.foot[1];
         let pl = pools.get(key); if (!pl) pools.set(key, pl = { n: 0, list: [] });
         const c = pl.list[pl.n] || (pl.list[pl.n] = card(a.S)); pl.n++;
         c.body.visible = true; c.sh.visible = !a.noShadow;
         const Sp = a.S, FW = Sp.frame[0], FH = Sp.frame[1], lfa = env.lift(a.x, a.y), p = world(a.x - .5, a.y - .5, lfa), t = tex(a.img);
-        for (const m of [c.body, c.gh]) { m.position.set(p.x, p.y - .09, p.z); m.material.uniforms.tHero.value = t; m.material.uniforms.uFrame.value.set(a.fc * FW / a.img.width, a.fr * FH / a.img.height, FW / a.img.width, FH / a.img.height); }
+        const bob = a.bob ? (Math.sin(st.T * 1.7 + a.x) * .5 + .5) * a.bob * KB : 0;
+        if (a.glow) {
+          const g = glows[ng] || (glows[ng] = glowCard()), G = a.glow, c = G.rgb || (G.rgb = env.hexRgb(G.c || '#ffd27a').map(v => v / 255)); ng++;
+          g.visible = true; g.scale.set(2 * G.r / S, 1, 2 * G.r * KB); g.position.set(p.x, p.y - .14, p.z + bob + (Sp.body * .5 + (G.up || 0)) * KB);
+          g.material.uniforms.uC.value.set(c[0], c[1], c[2]); g.material.uniforms.uP.value.set(st.T, G.a == null ? 1 : G.a, a.x * .37 + a.y * .11, G.sparks || 0);
+        }
+        for (const m of [c.body, c.gh]) { m.position.set(p.x, p.y - .09, p.z + bob); m.material.uniforms.tHero.value = t; m.material.uniforms.uFrame.value.set(a.fc * FW / a.img.width, a.fr * FH / a.img.height, FW / a.img.width, FH / a.img.height); }
         let hid = 0, tot = 0;                                 // how much of the body is behind scenery (same rule as the 2D engine)
         for (let j = 6; j < Sp.body; j += 10) for (let i = -10; i <= 10; i += 5) { tot++; if (env.hides(a.x + i, a.y - j, a.y + lfa)) hid++; }
         c.ghost += (clamp((hid / tot - .3) / .3, 0, 1) * .36 - c.ghost) * .25; c.gh.material.uniforms.uGhost.value = Math.max(c.ghost, .001); c.gh.visible = c.ghost > .01;
         c.sh.position.set(p.x, p.y, p.z + .03); c.sh.material.uniforms.uA.value = M.hero.shadow / .34;
       }
       for (const pl of pools.values()) for (let n = pl.n; n < pl.list.length; n++) { const c = pl.list[n]; c.body.visible = c.sh.visible = c.gh.visible = false; }
+      for (let n = ng; n < glows.length; n++) glows[n].visible = false;
       PU.uT.value = st.T; PU.uPx.value = ch / 540 * 2.2; PU.uI.value = clamp(P.fireflies, 0, 1.2); flies.visible = P.fireflies > 0;
       // sky
       if (sky) { const maxY = Math.max(0, M.h - VH); let x = sky.x - cam.x * sky.px, y = sky.y - cam.y * sky.py; if (sky.anchorY === 'bottom') y += VH - sky.img.height * sky.scale + maxY * sky.py;

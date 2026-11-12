@@ -783,7 +783,13 @@ function drawWorld(ox, oy) {
     if (it.occ) wx.drawImage(it.occ.img, it.occ.x - ox, it.occ.y - oy);
     else if (it.prop) {
       const p = it.prop, f = p.frames > 1 ? Math.floor(T * 1000 / p.ms) % p.frames : (p.frame || 0);
-      drawActor(p.img, f * p.fw, (p.row || 0) * p.fh, p.fw, p.fh, Math.round(p.x), Math.round(p.y), p.foot, p.shadow, p.shadowR || p.fw * .28, ox, oy);
+      const bob = p.bob ? Math.round((Math.sin(T * 1.7 + p.x) * .5 + .5) * p.bob) : 0;
+      drawActor(p.img, f * p.fw, (p.row || 0) * p.fh, p.fw, p.fh, Math.round(p.x), Math.round(p.y) - bob, p.foot, p.shadow, p.shadowR || p.fw * .28, ox, oy);
+      if (p.glow) {                                          // (the plain view of hd.js "glow": a halo added to the picture)
+        const G = p.glow, c = G.rgb255 || (G.rgb255 = hexRgb(G.c || '#ffd27a')), gx = Math.round(p.x) - ox, gy = Math.round(p.y) - oy - bob - (p.body || p.fh - 10) * .5 - (G.up || 0), k = (G.a == null ? 1 : G.a) * (.8 + .2 * Math.sin(T * 2.2 + p.x));
+        const gr = wx.createRadialGradient(gx, gy, 0, gx, gy, G.r); gr.addColorStop(0, `rgba(${c[0]},${c[1]},${c[2]},${Math.min(1, .75 * k)})`); gr.addColorStop(.35, `rgba(${c[0]},${c[1]},${c[2]},${Math.min(1, .28 * k)})`); gr.addColorStop(1, `rgba(${c[0]},${c[1]},${c[2]},0)`);
+        wx.save(); wx.globalCompositeOperation = 'lighter'; wx.fillStyle = gr; wx.fillRect(gx - G.r, gy - G.r, G.r * 2, G.r * 2); wx.restore();
+      }
     } else { const a = it.actor, S = a.S, f = actorFrame(a); drawActor(f[0], f[1] * S.frame[0], f[2] * S.frame[1], S.frame[0], S.frame[1], Math.round(a.x), Math.round(a.y), S.foot, M.hero.shadow, M.hero.shadowR, ox, oy); }
   }
   // leaves in the air
@@ -893,7 +899,7 @@ function drawLayer(c, o, k) {
 function render() {
   if (hdr && hdr.on) {
     const acts = [hero, ...party].map(a => { const f = actorFrame(a); return { img: f[0], fc: f[1], fr: f[2], x: a.x, y: a.y, S: a.S }; });
-    for (const p of props) { if (p.hidden) continue; if (!p.S) p.S = { frame: [p.fw, p.fh], foot: p.foot, body: p.body || p.fh - 8 }; acts.push({ img: p.img, fc: p.frames > 1 ? Math.floor(T * 1000 / p.ms) % p.frames : (p.frame || 0), fr: p.row || 0, x: p.x, y: p.y, S: p.S, glow: p.glow, noShadow: !p.shadow }); }
+    for (const p of props) { if (p.hidden) continue; if (!p.S) p.S = { frame: [p.fw, p.fh], foot: p.foot, body: p.body || p.fh - 8 }; acts.push({ img: p.img, fc: p.frames > 1 ? Math.floor(T * 1000 / p.ms) % p.frames : (p.frame || 0), fr: p.row || 0, x: p.x, y: p.y, S: p.S, glow: p.glow, bob: p.bob, noShadow: !p.shadow }); }
     hdr.render({ cam, hero, actors: acts, la: lanternPos(), P, moodT, T, showWalk });
     hudDraw(); return;
   }
