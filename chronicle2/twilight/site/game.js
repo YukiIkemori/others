@@ -456,7 +456,7 @@ function setMood(name, instant) {
 const toggleMood = () => setMood(moodTo > .5 ? 'gold' : 'shadow');
 
 // ------------------------------------------------------------------ input
-const KEYMAP = { ArrowLeft: 'l', a: 'l', A: 'l', ArrowRight: 'r', d: 'r', D: 'r', ArrowUp: 'u', w: 'u', W: 'u', ArrowDown: 'd', s: 'd', S: 'd', Shift: 'run' };
+const KEYMAP = { ArrowLeft: 'l', a: 'l', A: 'l', ArrowRight: 'r', d: 'r', D: 'r', ArrowUp: 'u', w: 'u', W: 'u', ArrowDown: 'd', s: 'd', S: 'd', Shift: 'run', x: 'run', X: 'run', Backspace: 'run' };   // run: Shift, or the back key held while walking
 function onKey(e, down) {
   if (hook('onKey', e, down)) { e.preventDefault(); return; }
   if (paused || loading) { const k0 = KEYMAP[e.key]; if (k0 && !down) keys.delete(k0); return; }
@@ -595,7 +595,7 @@ function update(dt) {
   if (mag > 0) {
     let ux = ix / mag, uy = iy / mag;
     const analog = stick.on ? clamp(mag, .45, 1) : 1;
-    hero.running = keys.has('run') || (stick.on && mag > .92);
+    hero.running = (hook('alwaysDash') ? !keys.has('run') : keys.has('run')) || (stick.on && mag > .92);   // "always dash": the key walks instead
     // snap the facing to 8 directions; analogue input is snapped for movement too so the sprite and the path agree
     const oct = Math.round(Math.atan2(uy, ux) / (Math.PI / 4));
     if (stick.on) { ux = Math.cos(oct * Math.PI / 4); uy = Math.sin(oct * Math.PI / 4); }

@@ -37,7 +37,7 @@ window.BATTLE = (function () {
   }
   const transition = () => cut(760, false, true);
 
-  // ------------------------------------------------------------------ scene clock (F = double speed: everything in the scene runs on it)
+  // ------------------------------------------------------------------ scene clock (R = the battle's speed: everything in the scene runs on it)
   function loop(now) {
     if (!B) return;
     const dt = Math.min(.05, Math.max(0, (now - B.last) / 1000)) * B.speed; B.last = now; B.t += dt;
@@ -408,8 +408,16 @@ window.BATTLE = (function () {
     for (const a of B.order) { if (a.gone && a.side === 'en' && !a.shown) continue; B.orderEl.appendChild(E.el('span', 'chip ' + (a.side === 'pc' ? 'pc' : 'en') + (B.now === a ? ' now' : '') + (a.acted || !alive(a) ? ' gone' : ''), a.tag)); }
   }
   function setActive(a) { if (B.active && B.active !== a && alive(B.active)) { const q = B.active; tw(.12, k => { q.ox = -22 * (1 - k); }).then(() => { if (B && B.active !== q) q.ox = 0; }); } B.active = a; if (a) tw(.12, k => { a.ox = -22 * eout(k); }); hud(); }
-  function speedBtn() { const b = $('bkF'); if (b) { b.classList.toggle('on', B.speed === 2); b.querySelector('span').textContent = B.speed === 2 ? '倍速中' : '倍速'; } }
-  function toggleSpeed() { B.speed = B.speed === 2 ? 1 : 2; G.set.speed = B.speed; S.sfx('cursor'); speedBtn(); }
+  // The battle's speed and the repeat follow the old game: one button (R) goes normal -> +1 -> +2 -> +4 -> normal and the next
+  // battle starts as fast; L turns the repeat on and off (on: every round runs the last commands again until it is turned off).
+  const SPEEDS = [1, 2, 3, 5], SPEED_LABEL = { 1: '通常', 2: '＋1', 3: '＋2', 5: '＋4' }, speedOf = v => (SPEEDS.includes(+v) ? +v : 1);
+  let toastT = 0;
+  function toast(t) { const b = $('btoast'); if (!b) return; b.textContent = t; b.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => b.classList.remove('on'), 1600); }
+  function speedBtn() { const b = $('bkF'); if (b) { b.classList.toggle('on', B.speed > 1); b.querySelector('span').textContent = '速さ ' + '▶'.repeat(SPEEDS.indexOf(B.speed) + 1); } }
+  function cycleSpeed() { B.speed = SPEEDS[(SPEEDS.indexOf(B.speed) + 1) % SPEEDS.length]; G.set.speed = B.speed; S.sfx('cursor'); speedBtn(); toast('戦闘の速さ：' + SPEED_LABEL[B.speed]); }
+  function repeatBtn() { const b = $('bkR'); if (b) { b.classList.toggle('on', !!B.repeat); b.classList.remove('dim'); b.querySelector('span').textContent = B.repeat ? 'リピート中' : 'リピート'; } }
+  function setRepeat(on, text) { B.repeat = on; S.sfx('cursor'); repeatBtn(); toast(text); }
+  function repeatKey() { if (B.repeat) setRepeat(false, 'リピート：OFF'); else setRepeat(true, 'リピート：ON（次のラウンドから）'); }      // while the round plays
 
   // ------------------------------------------------------------------ choosing
   function pickFrom(listOf, help, startAt) {          // -> actor or null
@@ -419,7 +427,7 @@ window.BATTLE = (function () {
       const end = v => { E.drop(o); B.cursor = null; tags(); B.rows.forEach(r => { r.style.boxShadow = ''; r.onclick = null; r.style.cursor = ''; r.style.pointerEvents = ''; }); hits.forEach(h => h.remove()); say(prev); res(v); };
       const o = E.push({ key(e) { const k = E.KEY(e), n = es.length;
         if (k === 'up' || k === 'left') { i = (i + n - 1) % n; S.sfx('cursor'); paint(); } else if (k === 'down' || k === 'right') { i = (i + 1) % n; S.sfx('cursor'); paint(); }
-        else if (k === 'ok') { S.sfx('ok'); end(es[i]); } else if (k === 'cancel') { S.sfx('cancel'); end(null); } else if (k === 'f' || k === 'F') toggleSpeed(); } });
+        else if (k === 'ok') { S.sfx('ok'); end(es[i]); } else if (k === 'cancel') { S.sfx('cancel'); end(null); } else if (k === 'R') cycleSpeed(); } });
       es.forEach(a => {
         if (a.side === 'pc') { const r = B.rows[B.pcs.indexOf(a)]; r.style.cursor = 'pointer'; r.style.pointerEvents = 'auto'; r.onclick = ev => { ev.stopPropagation(); S.sfx('ok'); end(a); }; }
         const h = E.el('div', 'ehit'), w = a.side === 'pc' ? 60 : a.w + 16, hh = body(a) + 20; h.style.cssText = `left:${(a.x - w / 2 + OX) / CW * 100}%;top:${(a.y - hh - (a.float ? 26 : 0) + OY) / CH * 100}%;width:${w / CW * 100}%;height:${(hh + 10) / CH * 100}%`;
@@ -439,7 +447,8 @@ window.BATTLE = (function () {
       l = E.list(B.ui, items, { id: 'bcmd', index: Math.min(a.ci || 0, items.length - 1), onMove: it => say(moved ? HELP[it.k] : ask),
         onDim: it => say(it.k === 'skill' ? 'まだ、何も覚えていない' : '使える物を、持っていない'),
         onCancel: () => { if (first) say(ask); else done('back'); },
-        onKey: k => { if (k === 'f' || k === 'F') toggleSpeed(); else if (k === 'r' || k === 'R') { if (lastCmds) { S.sfx('ok'); done('repeat'); } else S.sfx('buzz'); } },
+        onKey: k => { if (k === 'R') cycleSpeed();
+          else if (k === 'L') { if (B.repeat) setRepeat(false, 'リピート：OFF'); else if (lastCmds) { setRepeat(true, 'リピート：ON'); done('repeat'); } else setRepeat(true, 'リピート：ON（このラウンドの命令を次から繰り返す）'); } },
         onPick: async (it, i) => {
           a.ci = i;
           if (it.k === 'atk' || it.k === 'steal') { const t = await pickFrom(foes(), 'どの魔物をねらう？', B.lastT); if (t) { B.lastT = t; done({ k: it.k, t }); } }
@@ -447,11 +456,11 @@ window.BATTLE = (function () {
           else if (it.k === 'skill') {
             const shield = !!a.p.equip.shield;
             const l2 = E.list(B.ui, sk.map(s => ({ label: s.name, r: 'MP ' + s.mp, s, dim: a.mp < s.mp || (s.need === 'shield' && !shield) })), { id: 'bsub', title: WORD[a.id], index: a.si || 0, onMove: s => say(s.s.help),
-              onDim: s => say(a.mp < s.s.mp ? 'MPが足りない' : '盾を持っていないと、使えない'), onCancel: () => { l2.close(); say(ask); }, onKey: k => { if (k === 'f' || k === 'F') toggleSpeed(); },
+              onDim: s => say(a.mp < s.s.mp ? 'MPが足りない' : '盾を持っていないと、使えない'), onCancel: () => { l2.close(); say(ask); }, onKey: k => { if (k === 'R') cycleSpeed(); },
               onPick: async (s, j) => { a.si = j; const en = s.s.target === 'enemy', t = await pickFrom(en ? foes() : friends().filter(q => s.s.kind !== 'cover' || q !== a), en ? 'どの魔物をねらう？' : s.s.kind === 'cover' ? 'だれをかばう？' : 'だれに使う？', en ? B.lastT : a);
                 if (t) { if (en) B.lastT = t; l2.close(); done({ k: 'skill', s: s.s.id, t }); } } });
           } else if (it.k === 'item') {
-            const l2 = E.list(B.ui, usable().map(k => ({ label: D.items[k].name, r: '×' + E.count(k), id: k })), { id: 'bsub', title: 'どうぐ', onMove: s => say(D.items[s.id].help), onCancel: () => { l2.close(); say(ask); }, onKey: k => { if (k === 'f' || k === 'F') toggleSpeed(); },
+            const l2 = E.list(B.ui, usable().map(k => ({ label: D.items[k].name, r: '×' + E.count(k), id: k })), { id: 'bsub', title: 'どうぐ', onMove: s => say(D.items[s.id].help), onCancel: () => { l2.close(); say(ask); }, onKey: k => { if (k === 'R') cycleSpeed(); },
               onPick: async s => { const t = await pickFrom(friends(), 'だれに使う？', a); if (t) { l2.close(); done({ k: 'item', item: s.id, t }); } } });
           }
         } });
@@ -469,9 +478,10 @@ window.BATTLE = (function () {
     }
     return out;
   }
-  function remember(cmds) { lastCmds = {}; for (const id in cmds) { const c = cmds[id]; lastCmds[id] = { k: c.k, s: c.s, item: c.item, ti: c.t && c.t.side === 'en' ? B.ens.indexOf(c.t) : -1, tid: c.t && c.t.side === 'pc' ? c.t.id : null }; } $('bkR').classList.remove('dim'); }
+  function remember(cmds) { lastCmds = {}; for (const id in cmds) { const c = cmds[id]; lastCmds[id] = { k: c.k, s: c.s, item: c.item, ti: c.t && c.t.side === 'en' ? B.ens.indexOf(c.t) : -1, tid: c.t && c.t.side === 'pc' ? c.t.id : null }; } }
   async function inputPhase() {      // -> { id: command } | 'flee'
     const fs = friends(), cmds = {}; let i = 0;
+    if (B.repeat && lastCmds) { await sleep(.25); if (B.repeat) return repeatCmds(); }          // (L in that moment stops it)
     while (i < fs.length) {
       const a = fs[i]; setActive(a);
       const c = await askCommand(a, i === 0);
@@ -498,17 +508,16 @@ window.BATTLE = (function () {
     E = env; D = E.D; S = E.S; G = E.G;
     const root = E.el('div', ''); root.id = 'battle';
     root.innerHTML = '<canvas id="bcv" width="' + CW + '" height="' + CH + '"></canvas><canvas id="bfx" width="' + CW * 2 + '" height="' + CH * 2 + '"></canvas><div id="bui"><div id="border"></div><div id="bband"></div><div id="bparty"></div>' +
-      '<div id="bkeys"><span class="btn dim" id="bkR"><b class="keycap">R</b><span>リピート</span></span><span class="btn" id="bkF"><b class="keycap">F</b><span>倍速</span></span></div></div>';
+      '<div id="btoast"></div><div id="bkeys"><span class="btn" id="bkR"><b class="keycap">Q</b><span>リピート</span></span><span class="btn" id="bkF"><b class="keycap">E</b><span>速さ</span></span></div></div>';
     E.root.appendChild(root);
-    B = { t: 0, last: performance.now(), speed: G.set.speed === 2 ? 2 : 1, waits: [], parts: [], lights: [], nums: [], shake: 0, dark: 0, cx: $('bcv').getContext('2d'), fx: $('bfx').getContext('2d'), ui: $('bui'), orderEl: $('border'),
+    B = { t: 0, last: performance.now(), speed: speedOf(G.set.speed), repeat: false, waits: [], parts: [], lights: [], nums: [], shake: 0, dark: 0, cx: $('bcv').getContext('2d'), fx: $('bfx').getContext('2d'), ui: $('bui'), orderEl: $('border'),
           pcs: E.D.order.map(mkPc), ens: opt.group.map(mkEn), order: [], killed: [], fails: 0, active: null, cursor: null, now: null };
     B.all = B.pcs.concat(B.ens); rename();
     const sl = SLOTS[B.ens.length]; B.ens.forEach((m, i) => { m.x = sl[i][0]; m.y = sl[i][1]; });
     hb = E.helpbar(B.ui, '<span><b class="keycap">Z</b>決める</span><span><b class="keycap">X</b>もどる</span>');
     B.rows = B.pcs.map(a => { const r = E.el('div', 'brow', `<span class="st"></span><span class="nm">${a.name}</span><span class="k">HP</span><span class="v hpv"></span><span class="bar"><i></i></span><span class="k">MP</span><span class="v mpv"></span><span class="bar mp"><i></i></span>`); $('bparty').appendChild(r); return r; });
-    if (lastCmds) $('bkR').classList.remove('dim');
-    $('bkF').onclick = ev => { ev.stopPropagation(); toggleSpeed(); }; $('bkR').onclick = ev => { ev.stopPropagation(); const t = E.top(); if (t) t.key({ key: 'r' }); };
-    const base = E.push({ key(e) { const k = E.KEY(e); if (k === 'f' || k === 'F') toggleSpeed(); } });
+    $('bkF').onclick = ev => { ev.stopPropagation(); cycleSpeed(); }; $('bkR').onclick = ev => { ev.stopPropagation(); const t = E.top(); if (t) t.key({ key: 'q' }); };
+    const base = E.push({ key(e) { const k = E.KEY(e); if (k === 'R') cycleSpeed(); else if (k === 'L') repeatKey(); } });
     // pictures
     const [bg] = await Promise.all([E.img('bg/' + opt.bg + '.webp'),
       ...B.pcs.map(a => E.img(D.chars[a.id].sprite + '.png').then(im => { a.img = im; })), ...B.pcs.map(a => E.img(D.chars[a.id].sprite + '_run.png').then(im => { a.run = im; }).catch(() => {})),
@@ -585,5 +594,5 @@ window.BATTLE = (function () {
     else setTimeout(() => cut(380, true), 80);
     return result;
   }
-  return { transition, run, get state() { return B; }, _t: { SPELL, STYLE, strike, castSpell, healFx, shieldFx, pcAct, enAct } };
+  return { transition, run, SPEEDS, SPEED_LABEL, speedOf, get state() { return B; }, _t: { SPELL, STYLE, strike, castSpell, healFx, shieldFx, pcAct, enAct } };
 })();

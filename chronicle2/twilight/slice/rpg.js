@@ -24,7 +24,7 @@ window.RPG = (function () {
   const hasPassive = k => { const p = D.passives[k]; return G.party[p.user].lv >= p.lv && G.party[p.user].hp > 0; };
   function newGame() {
     G = { v: 1, gold: D.start.gold, items: Object.assign({}, D.start.items), party: {}, flags: {}, talk: {}, seen: {}, map: D.start.map, x: null, y: null, dir: 'down',
-          steps: 0, next: ri(15, 35), time: 0, wins: 0, set: { speed: 1, bgm: S.vol.bgm, sfx: S.vol.sfx } };
+          steps: 0, next: ri(15, 35), time: 0, wins: 0, set: { speed: 1, dash: false, bgm: S.vol.bgm, sfx: S.vol.sfx } };
     for (const id of D.order) { const c = D.chars[id]; G.party[id] = { lv: 1, exp: 0, row: c.row, equip: Object.assign({}, c.equip), hp: 1, mp: 0 }; const s = stats(id); G.party[id].hp = s.mhp; G.party[id].mp = s.mmp; }
   }
   const count = it => G.items[it] || 0;
@@ -56,7 +56,8 @@ window.RPG = (function () {
 
   // ------------------------------------------------------------------ widgets
   const KEY = e => ({ ArrowUp: 'up', w: 'up', W: 'up', ArrowDown: 'down', s: 'down', S: 'down', ArrowLeft: 'left', a: 'left', A: 'left', ArrowRight: 'right', d: 'right', D: 'right',
-                      z: 'ok', Z: 'ok', Enter: 'ok', ' ': 'ok', x: 'cancel', X: 'cancel', Escape: 'cancel', Backspace: 'cancel' })[e.key] || e.key;
+                      z: 'ok', Z: 'ok', Enter: 'ok', ' ': 'ok', x: 'cancel', X: 'cancel', Escape: 'cancel', Backspace: 'cancel',
+                      c: 'menu', C: 'menu', Tab: 'menu', q: 'L', Q: 'L', e: 'R', E: 'R' })[e.key] || e.key;      // the keys of the old game: Z A, X B, C menu, Q / E for L / R
   const top = () => ui[ui.length - 1];
   function push(o) { ui.push(o); return o; }
   function drop(o) { const i = ui.indexOf(o); if (i >= 0) ui.splice(i, 1); }
@@ -259,7 +260,8 @@ window.RPG = (function () {
     if (ui.length) { if (!e.repeat || /^Arrow/.test(e.key)) top().key(e); return true; }
     if (busy) return true;
     const g = game(); if (!g || g.loading || !started) return !started;
-    if (!g.dialog && (e.key === 'x' || e.key === 'X' || e.key === 'Escape')) { if (!e.repeat) menu(); return true; }
+    if (!g.dialog && KEY(e) === 'menu') { if (!e.repeat) menu(); return true; }
+    if (e.key === 'Escape') return true;
     return false;
   }
 
@@ -276,12 +278,13 @@ window.RPG = (function () {
       else { newGame(); started = true; await fadeOut(350); sc.remove(); S.bgm(g.map.bgm); g.paused = false; g.announce(300, 3600); await fadeIn(); }
       hud();
     } });
-    sc.appendChild(el('div', 'note', '<b class="keycap">← ↑ ↓ →</b>歩く　<b class="keycap">Shift</b>走る　<b class="keycap">Z</b>決める・話す　<b class="keycap">X</b>メニュー・もどる<br>戦いの中：<b class="keycap">R</b>リピート　<b class="keycap">F</b>倍速'));
+    sc.appendChild(el('div', 'note', '<b class="keycap">← ↑ ↓ →</b>歩く　<b class="keycap">Z</b>決める・話す　<b class="keycap">X</b>もどる・押しながら走る　<b class="keycap">C</b>メニュー<br>戦いの中：<b class="keycap">Q</b>リピート　<b class="keycap">E</b>戦闘の速さ'));
     S.bgm('bgm01');
   }
+  const hintHtml = () => '<span><b class="keycap">C</b>メニュー</span><span><b class="keycap">Z</b>調べる・話す</span><span><b class="keycap">X</b>' + (G && G.set.dash ? '押しながら歩く' : '押しながら走る') + '</span>';
   function hud() {
-    if ($('fieldhint')) return;
-    const h = el('div', '', '<span><b class="keycap">X</b>メニュー</span><span><b class="keycap">Z</b>調べる・話す</span><span><b class="keycap">Shift</b>走る</span>'); h.id = 'fieldhint'; root.appendChild(h);
+    if ($('fieldhint')) { $('fieldhint').innerHTML = hintHtml(); return; }
+    const h = el('div', '', hintHtml()); h.id = 'fieldhint'; root.appendChild(h);
     if (matchMedia('(pointer: coarse)').matches) { const b = el('button', 'hit', 'メニュー'); b.id = 'menubtn'; b.onclick = ev => { ev.stopPropagation(); if (!ui.length && !busy && !game().dialog) menu(); }; root.appendChild(b); h.style.display = 'none'; }
   }
 
@@ -356,10 +359,18 @@ window.RPG = (function () {
       for (let i = 0; ;) { i = await pickChar(cd, i); if (i < 0) break; const p = G.party[D.order[i]]; p.row = p.row === 'front' ? 'back' : 'front'; cd.render(); }
       main.focus();
     }
-    function settings() {
-      const pct = v => Math.round(v * 10), mk = () => [{ label: '音楽の大きさ', r: '◀ ' + pct(G.set.bgm) + ' ▶', k: 'bgm', help: '← → で変える' }, { label: '効果音の大きさ', r: '◀ ' + pct(G.set.sfx) + ' ▶', k: 'sfx', help: '← → で変える' },
-        { label: '戦いの速さ', r: G.set.speed === 2 ? '倍速' : 'ふつう', k: 'speed', help: '戦いの動きを2倍の速さにする' }];
-      const ch = (it, dir) => { if (it.k === 'speed') G.set.speed = G.set.speed === 2 ? 1 : 2; else { G.set[it.k] = clamp(Math.round((G.set[it.k] + dir * .1) * 10) / 10, 0, 1); S.volume(it.k, G.set[it.k]); } S.sfx('cursor'); l.set(mk(), true); };
+    function settings() {            // the rows and their wording follow the old game
+      const pct = v => Math.round(v * 10), SP = window.BATTLE.SPEEDS, SPN = window.BATTLE.SPEED_LABEL, pad = window.PAD;
+      const mk = () => [{ label: '音楽の大きさ', r: '◀ ' + pct(G.set.bgm) + ' ▶', k: 'bgm', help: '← → で変える' }, { label: '効果音の大きさ', r: '◀ ' + pct(G.set.sfx) + ' ▶', k: 'sfx', help: '← → で変える' },
+        { label: '戦闘の速さ', r: '◀ ' + SPN[window.BATTLE.speedOf(G.set.speed)] + ' ▶', k: 'speed', help: '戦闘の演出の速さ。戦闘中もRボタンで「通常→＋1→＋2→＋4」と切り替えられ、次の戦闘も同じ速さで始まる' },
+        { label: '常にダッシュ', r: G.set.dash ? 'オン' : 'オフ', k: 'dash', help: 'オンにすると、Bを押している間だけ歩く' }]
+        .concat(pad ? [{ label: '決定ボタンの位置', r: pad.confirm === 'down' ? '下' : '右', k: 'confirm', help: 'パッドで決定に使うボタンの位置' }] : []);
+      const ch = (it, dir) => {
+        if (it.k === 'speed') G.set.speed = SP[(SP.indexOf(window.BATTLE.speedOf(G.set.speed)) + (dir < 0 ? SP.length - 1 : 1)) % SP.length];
+        else if (it.k === 'dash') { G.set.dash = !G.set.dash; hud(); }
+        else if (it.k === 'confirm') pad.confirm = pad.confirm === 'down' ? 'right' : 'down';
+        else { G.set[it.k] = clamp(Math.round((G.set[it.k] + dir * .1) * 10) / 10, 0, 1); S.volume(it.k, G.set[it.k]); }
+        S.sfx('cursor'); l.set(mk(), true); };
       const l = list(m, mk(), { cls: 'sub', title: 'せってい', quiet: true, onMove: it => hb.set(it.help), onCancel: () => { l.close(); main.focus(); }, onPick: it => ch(it, 1), onKey: (k, it) => { if (k === 'left') ch(it, -1); if (k === 'right') ch(it, 1); } });
     }
     async function doSave() { save(); S.sfx('quill'); await notice('ここまでの旅を、\n書きとめた', { ms: 1400 }); }
@@ -394,7 +405,7 @@ window.RPG = (function () {
 
   // what battle.js needs from here
   const env = { get G() { return G; }, D, S, el, root, ui, push, drop, top, list, notice, hideNotice, helpbar, KEY, stats, skillsOf, hasPassive, give, take, count, gainExp, img, rnd, ri, clamp, wait };
-  const api = { startMap: Q.get('map') || 'village/map.json', onMap, onStep, onTrigger, onExit, onKey, env,
+  const api = { startMap: Q.get('map') || 'village/map.json', onMap, onStep, onTrigger, onExit, onKey, alwaysDash: () => !!(G && G.set.dash), env,
     get G() { return G; }, get busy() { return busy; }, get ui() { return ui; }, get started() { return started; },
     // for tests and for trying things out: RPG.debug.battle(['mn001','mn005'])
     debug: { battle: (g, table) => battle(g, D.encounters[table || 'f01']), newGame, healAll, give, go: (name, at) => changeMap(name, at), save, menu, shop,

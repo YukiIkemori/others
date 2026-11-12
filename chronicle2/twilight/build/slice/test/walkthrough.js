@@ -4,7 +4,7 @@ module.exports = async (p, shot) => {
   const key = async (k, n = 1, ms = 140) => { for (let i = 0; i < n; i++) { await p.keyboard.press(k); await p.waitForTimeout(ms); } };
   await key('z'); await p.waitForTimeout(2500); await st('start');
   // menu
-  await key('x'); await p.waitForTimeout(300); await shot('m_menu'); await key('z'); await p.waitForTimeout(200); await shot('m_items'); await key('x'); await key('ArrowDown', 2); await key('z'); await key('z'); await p.waitForTimeout(200); await shot('m_status');
+  await key('c'); await p.waitForTimeout(300); await shot('m_menu'); await key('z'); await p.waitForTimeout(200); await shot('m_items'); await key('x'); await key('ArrowDown', 2); await key('z'); await key('z'); await p.waitForTimeout(200); await shot('m_status');
   await key('x'); await key('x'); await p.waitForTimeout(300); await st('menu closed');
   // mother -> inn
   await J(p, () => { const t = __game.map.triggers.find(t => t.id === 'mother'); __game.teleport(t.x - 30, t.y + 34, 'right'); __game.sim(3); });
@@ -21,7 +21,7 @@ module.exports = async (p, shot) => {
   await J(p, () => { const t = __game.map.triggers.find(t => t.id === 'ch002'); __game.teleport(t.x - 30, t.y + 20, 'right'); __game.sim(3); });
   await p.waitForTimeout(300); await st('near chest'); await key('z'); await p.waitForTimeout(1200); await shot('m_chest'); await key('z', 2, 600); await st('chest done');
   // save, then out of the gate
-  await key('x'); await key('ArrowUp'); await key('z'); await p.waitForTimeout(1800); await key('x'); await p.waitForTimeout(300); await st('saved');
+  await key('c'); await key('ArrowUp'); await key('z'); await p.waitForTimeout(1800); await key('x'); await p.waitForTimeout(300); await st('saved');
   await J(p, () => { const s = __game.map.spawns.gate; __game.teleport(s.x, s.y, 'left'); __game.keys.add('l'); });
   await p.waitForTimeout(6000); await J(p, () => __game.keys.delete('l')); await p.waitForTimeout(3000); await st('f01?'); await shot('m_f01');
   // an encounter by walking
