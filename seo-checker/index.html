@@ -3,30 +3,40 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SEOチェッカー | URLを入れるだけの無料SEO診断</title>
-<meta name="description" content="URLを入力するだけで、タイトル・メタ情報・見出し・構造化データ・robots.txt・サイトマップ・表示速度まで約70項目を診断し、100点満点のスコアと優先度付きの改善点を表示する無料のSEOチェックツールです。">
+<title>SEOチェッカー｜無料のSEOチェックツール（URLを入れるだけで70項目を採点）</title>
+<meta name="description" content="URLを入力するだけで、タイトル・見出し・noindex・リンク切れ・構造化データ・表示速度など約70項目を診断し、100点満点の点数と優先度順の改善点を表示する無料のSEOチェックツールです。登録不要。サイト全体の診断にも対応。">
+<link rel="canonical" href="https://seo-checker-bs4.pages.dev/">
 <meta name="theme-color" content="#0f766e">
-<meta property="og:title" content="SEOチェッカー | URLを入れるだけの無料SEO診断">
-<meta property="og:description" content="約70項目を多角的に診断し、スコアと優先度付きの改善点を表示します。登録不要・無料。">
+<meta property="og:title" content="SEOチェッカー｜無料のSEOチェックツール（URLを入れるだけで70項目を採点）">
+<meta property="og:description" content="URLを入力するだけで、タイトル・見出し・noindex・リンク切れ・構造化データ・表示速度など約70項目を診断し、100点満点の点数と優先度順の改善点を表示する無料のSEOチェックツールです。登録不要。サイト全体の診断にも対応。">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f766e'/%3E%3Ccircle cx='14' cy='14' r='6.5' fill='none' stroke='%23fff' stroke-width='3'/%3E%3Cpath d='M19 19l6 6' stroke='%23fff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta property="og:url" content="https://seo-checker-bs4.pages.dev/">
+<meta property="og:image" content="https://seo-checker-bs4.pages.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="SEOチェッカー">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="style.css">
+<link rel="modulepreload" href="js/app.js">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"SEOチェッカー","url":"https://seo-checker-bs4.pages.dev/","description":"URLを入力するだけで、タイトル・見出し・noindex・リンク切れ・構造化データ・表示速度など約70項目を診断し、100点満点の点数と優先度順の改善点を表示する無料のSEOチェックツールです。登録不要。サイト全体の診断にも対応。","applicationCategory":"BusinessApplication","operatingSystem":"Web","browserRequirements":"JavaScript が有効な最新のブラウザ","inLanguage":"ja","isAccessibleForFree":true,"image":"https://seo-checker-bs4.pages.dev/og.png","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"featureList":["SEOスコアの採点（約70項目）","リンク切れチェック","サイト全体診断（最大50ページ）","Core Web Vitals の計測","構造化データの検証","診断レポートの書き出し"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"SEOチェッカー","url":"https://seo-checker-bs4.pages.dev/","inLanguage":"ja"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"無料で使えますか？回数の制限はありますか？","acceptedAnswer":{"@type":"Answer","text":"すべての機能を無料で使えます。会員登録は不要で、診断回数の制限もありません。"}},{"@type":"Question","name":"自分のサイト以外も診断できますか？","acceptedAnswer":{"@type":"Answer","text":"公開されているページであれば診断できます。ただし診断のために対象サイトへ自動でアクセスするため、ご自身が管理するサイトか、診断の許可を得ているサイトでご利用ください。ログインが必要なページは取得できません。"}},{"@type":"Question","name":"点数が高ければ検索順位は上がりますか？","acceptedAnswer":{"@type":"Answer","text":"点数は、検索エンジンに正しく読まれるための技術的な土台が整っているかを示す目安です。検索順位は、内容が検索した人の役に立つかどうかや、ほかのサイトからの評価にも左右されるため、点数だけで順位が決まるわけではありません。まず土台の問題をなくし、そのうえで内容を充実させるのが近道です。"}},{"@type":"Question","name":"1ページ診断とサイト全体診断の違いは何ですか？","acceptedAnswer":{"@type":"Answer","text":"1ページ診断は、指定したページを約70項目で詳しく調べ、表示速度も計測します。サイト全体診断は、サイトマップと内部リンクから最大50ページを巡回し、タイトルの重複や内部リンク切れなど、複数のページを見比べないと分からない問題を検出します。"}},{"@type":"Question","name":"表示速度が「対象外」と表示されるのはなぜですか？","acceptedAnswer":{"@type":"Answer","text":"表示速度の計測には Google PageSpeed Insights を利用しています。無料の共有枠が混雑していると計測できないことがあります。時間をおいて再度お試しいただくか、「設定」に Google で無料発行できる API キーを入力すると安定して計測できます。"}},{"@type":"Question","name":"入力した URL や診断結果は保存されますか？","acceptedAnswer":{"@type":"Answer","text":"診断はお使いのブラウザの中で実行され、URL や結果が当サイトに保存されることはありません。ページの取得と速度計測のために、URL が当サイトの中継機能と Google のサービスに送信されます。詳しくはプライバシーポリシーをご覧ください。"}},{"@type":"Question","name":"ページを取得できないと表示されます。","acceptedAnswer":{"@type":"Answer","text":"対象サイトが自動アクセスを拒否している、ログインが必要、アクセスが集中している、などの原因が考えられます。「設定」を開き、ブラウザで表示したページのソースを貼り付けると、取得できないページも診断できます。"}}]}</script>
 </head>
 <body>
 <header class="top">
-  <div class="wrap">
-    <a class="brand" href="./">
-      <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><rect width="32" height="32" rx="7" fill="currentColor"/><circle cx="14" cy="14" r="6.5" fill="none" stroke="#fff" stroke-width="3"/><path d="M19 19l6 6" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
-      <span>SEOチェッカー</span>
-    </a>
+  <div class="wrap top-in">
+    <a class="brand" href="/"><svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><rect width="32" height="32" rx="7" fill="currentColor"/><circle cx="14" cy="14" r="6.5" fill="none" stroke="#fff" stroke-width="3"/><path d="M19 19l6 6" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg><span>SEOチェッカー</span></a>
+    <nav class="nav" aria-label="サイト内メニュー"><a href="/">SEO診断ツール</a><a href="/guide/">SEOガイド</a><a href="/about">このサイトについて</a></nav>
   </div>
 </header>
 
 <main class="wrap">
   <section class="hero" id="hero">
-    <h1>URLを入れるだけ。<br>SEOを約70項目で採点します。</h1>
-    <p class="lead">メタ情報・見出し・コンテンツ・クロール設定・構造化データ・表示速度まで多角的に診断し、<strong>100点満点のスコア</strong>と<strong>優先度順の改善点</strong>を表示します。登録不要・無料。</p>
+    <h1>無料のSEOチェックツール<br><span class="h1-sub">URLを入れるだけで約70項目を採点</span></h1>
+    <p class="lead">SEOチェッカーは、ページの SEO を多角的に診断する無料ツールです。メタ情報・見出し・クロール設定・リンク切れ・構造化データ・表示速度までを確認し、<strong>100点満点の点数</strong>と<strong>優先度順の改善点</strong>を表示します。登録不要で、サイト全体の診断にも対応しています。</p>
 
     <form id="form" class="search" autocomplete="off">
       <label class="sr" for="url">診断するページのURL</label>
@@ -71,23 +81,82 @@
   <section id="notice" class="notice" hidden role="alert"></section>
   <section id="result" hidden></section>
 
-  <section class="about" id="about">
-    <h2>診断する内容</h2>
+  <section class="about prose" id="about">
+    <h2>SEOチェッカーの使い方</h2>
+    <ol class="steps">
+      <li><b>URL を入力する</b>診断したいページの URL を入力欄に貼り付けます。「https://」は省略できます。</li>
+      <li><b>診断範囲を選ぶ</b>1ページを詳しく調べるなら「このページだけ」、サイト全体の問題を探すなら「サイト全体」を選びます。</li>
+      <li><b>結果を見て直す</b>点数と、優先度順に並んだ改善点が表示されます。上から順に対応すると、効果の大きい問題から解消できます。</li>
+    </ol>
+
+    <h2>SEOチェックで診断する内容</h2>
+    <p>検索エンジンに正しく読まれ、検索結果で選ばれるために必要な項目を、7つの分野から確認します。項目の一覧は「<a href="/guide/seo-checklist">SEOチェックリスト70項目</a>」に掲載しています。</p>
     <ul class="features">
-      <li><b>基本メタ情報</b>タイトルと説明文の長さ・重複、canonical、viewport、言語、文字コード</li>
+      <li><b>基本メタ情報</b><a href="/guide/title-tag">タイトル</a>と<a href="/guide/meta-description">メタディスクリプション</a>の長さ・重複、canonical、viewport、言語、文字コード</li>
       <li><b>コンテンツ</b>H1 と見出しの階層、文章量、頻出語とタイトルの一致、運営者情報への導線</li>
-      <li><b>クロール・インデックス</b>noindex、robots.txt、XML サイトマップ、URL 構造、リダイレクト、hreflang</li>
-      <li><b>リンク・画像</b>リンク切れ、内部リンク、アンカーテキスト、alt 属性、画像サイズ指定、遅延読み込み</li>
-      <li><b>SNS・構造化データ</b>OGP、X カード、JSON-LD の構文と必須項目</li>
-      <li><b>技術・セキュリティ</b>HTTPS、混在コンテンツ、描画ブロック、DOM サイズ、ヘッダー、DNS</li>
-      <li><b>表示速度</b>Google PageSpeed Insights による Core Web Vitals と Lighthouse 評価</li>
-      <li><b>サイト全体診断</b>最大50ページを巡回し、タイトル・説明文の重複、リンク切れ、エラーページ、サイトマップの不整合を横断チェック</li>
+      <li><b>クロール・インデックス</b><a href="/guide/noindex-robots-txt">noindex と robots.txt</a>、XML サイトマップ、URL 構造、リダイレクト、hreflang</li>
+      <li><b>リンク・画像</b><a href="/guide/broken-links">リンク切れ</a>、内部リンク、アンカーテキスト、alt 属性、画像サイズ指定、遅延読み込み</li>
+      <li><b>SNS・構造化データ</b>OGP、X カード、<a href="/guide/structured-data">JSON-LD</a> の構文と必須項目</li>
+      <li><b>技術・セキュリティ</b>HTTPS、混在コンテンツ、描画ブロック、DOM サイズ、セキュリティヘッダー、DNS</li>
+      <li><b>表示速度</b>Google PageSpeed Insights による <a href="/guide/core-web-vitals">Core Web Vitals</a> と Lighthouse 評価</li>
+      <li><b>サイト全体診断</b>最大50ページを巡回し、タイトル・説明文の重複、内部リンク切れ、エラーページ、サイトマップの不整合を横断チェック</li>
     </ul>
-    <p class="small">診断はすべてお使いのブラウザ内で実行され、入力した URL や結果がこのサイトのサーバーに保存されることはありません。ページの取得には取得用プロキシを、速度計測には Google PageSpeed Insights を、DNS の確認には Google Public DNS を利用します。スコアは一般的な SEO のベストプラクティスに基づく目安であり、検索順位を保証するものではありません。</p>
+
+    <h2>点数と評価の見方</h2>
+    <p>分野ごとに100点満点で採点し、重要度に応じて重み付けした総合点を表示します。noindex など検索結果に表示されなくなる問題がある場合は、総合点を45点までに制限します。</p>
+    <div class="scroll"><table>
+      <thead><tr><th>評価</th><th>点数</th><th>状態の目安</th></tr></thead>
+      <tbody>
+        <tr><td>S</td><td>95点以上</td><td>ほぼ万全。細かな改善点だけが残っている</td></tr>
+        <tr><td>A</td><td>85〜94点</td><td>良好。いくつかの項目を直せば万全になる</td></tr>
+        <tr><td>B</td><td>70〜84点</td><td>基本はできている。改善すると効果が出やすい</td></tr>
+        <tr><td>C</td><td>55〜69点</td><td>重要な項目に不足がある</td></tr>
+        <tr><td>D</td><td>40〜54点</td><td>基本的な対策が不足している</td></tr>
+        <tr><td>E</td><td>39点以下</td><td>検索エンジンに正しく読まれていない可能性が高い</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>こんなときに使えます</h2>
+    <ul>
+      <li><b>ページを公開する前の最終確認。</b>noindex の消し忘れや、タイトル・OGP の設定漏れを見つけられます。</li>
+      <li><b>サイトをリニューアルした後の確認。</b>リンク切れ、リダイレクトの連鎖、サイトマップの不整合をまとめて調べられます。</li>
+      <li><b>検索に出てこない原因の調査。</b>インデックスを妨げている設定がないかを確認できます。</li>
+      <li><b>制作会社や社内への報告。</b>診断結果をテキストや PDF で書き出し、そのまま共有できます。</li>
+    </ul>
+
+    <h2>よくある質問</h2>
+    <div class="faq">
+      <details><summary>無料で使えますか？回数の制限はありますか？</summary><p>すべての機能を無料で使えます。会員登録は不要で、診断回数の制限もありません。</p></details>
+      <details><summary>自分のサイト以外も診断できますか？</summary><p>公開されているページであれば診断できます。ただし診断のために対象サイトへ自動でアクセスするため、ご自身が管理するサイトか、診断の許可を得ているサイトでご利用ください。ログインが必要なページは取得できません。</p></details>
+      <details><summary>点数が高ければ検索順位は上がりますか？</summary><p>点数は、検索エンジンに正しく読まれるための技術的な土台が整っているかを示す目安です。検索順位は、内容が検索した人の役に立つかどうかや、ほかのサイトからの評価にも左右されるため、点数だけで順位が決まるわけではありません。まず土台の問題をなくし、そのうえで内容を充実させるのが近道です。</p></details>
+      <details><summary>1ページ診断とサイト全体診断の違いは何ですか？</summary><p>1ページ診断は、指定したページを約70項目で詳しく調べ、表示速度も計測します。サイト全体診断は、サイトマップと内部リンクから最大50ページを巡回し、タイトルの重複や内部リンク切れなど、複数のページを見比べないと分からない問題を検出します。</p></details>
+      <details><summary>表示速度が「対象外」と表示されるのはなぜですか？</summary><p>表示速度の計測には Google PageSpeed Insights を利用しています。無料の共有枠が混雑していると計測できないことがあります。時間をおいて再度お試しいただくか、「設定」に Google で無料発行できる API キーを入力すると安定して計測できます。</p></details>
+      <details><summary>入力した URL や診断結果は保存されますか？</summary><p>診断はお使いのブラウザの中で実行され、URL や結果が当サイトに保存されることはありません。ページの取得と速度計測のために、URL が当サイトの中継機能と Google のサービスに送信されます。詳しくは<a href="/privacy">プライバシーポリシー</a>をご覧ください。</p></details>
+      <details><summary>ページを取得できないと表示されます。</summary><p>対象サイトが自動アクセスを拒否している、ログインが必要、アクセスが集中している、などの原因が考えられます。「設定」を開き、ブラウザで表示したページのソースを貼り付けると、取得できないページも診断できます。</p></details>
+    </div>
+
+    <h2>SEOガイド</h2>
+    <p>診断項目の意味と直し方を、項目別に解説しています。</p>
+    <ul class="links">
+      <li><a href="/guide/seo-checklist">SEOチェックリスト：公開前に確認したい70項目</a></li>
+      <li><a href="/guide/title-tag">タイトルタグの最適な文字数と書き方</a></li>
+      <li><a href="/guide/meta-description">メタディスクリプションの書き方と文字数の目安</a></li>
+      <li><a href="/guide/noindex-robots-txt">noindex と robots.txt の違いと使い分け</a></li>
+      <li><a href="/guide/broken-links">リンク切れの調べ方と直し方</a></li>
+      <li><a href="/guide/core-web-vitals">Core Web Vitals（LCP・INP・CLS）の基準と改善方法</a></li>
+      <li><a href="/guide/structured-data">構造化データ（JSON-LD）の基本と書き方</a></li>
+    </ul>
+
+    <p class="small">診断はすべてお使いのブラウザ内で実行され、入力した URL や結果がこのサイトに保存されることはありません。点数は一般的な SEO の推奨事項にもとづく目安であり、検索順位を保証するものではありません。詳しくは「<a href="/about">このサイトについて</a>」をご覧ください。</p>
   </section>
 </main>
 
-<footer class="foot"><div class="wrap">SEOチェッカー — ブラウザだけで動く静的ツール</div></footer>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span>© 2026 SEOチェッカー</span>
+    <nav aria-label="フッターメニュー"><a href="/">SEO診断ツール</a><a href="/guide/">SEOガイド</a><a href="/guide/seo-checklist">SEOチェックリスト</a><a href="/about">このサイトについて</a><a href="/privacy">プライバシーポリシー</a></nav>
+  </div>
+</footer>
 
 <script type="module" src="js/app.js"></script>
 </body>

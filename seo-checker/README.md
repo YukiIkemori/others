@@ -63,6 +63,15 @@ HTML を取得できなかった場合は総合点を出さず、robots.txt・DN
 
 総合点は「ページ平均 60% ＋ サイト横断チェック 40%」。表示速度はページ数ぶん Google に計測させると数十分かかるため、サイト全体診断では測りません（ページ一覧から個別に詳細診断を開けます）。
 
+## このサイト自身の SEO
+
+- トップページ: canonical・OGP（`og.png`）・構造化データ（WebApplication / WebSite / FAQPage）・使い方や FAQ などの説明文
+- ガイド記事 7 本（`guide/`）と「このサイトについて」「プライバシーポリシー」: Article / BreadcrumbList の構造化データつき
+- `sitemap.xml`・`robots.txt`・`404.html`（無いと Cloudflare Pages は存在しない URL にもトップページを 200 で返す）・`_headers`（セキュリティヘッダー）
+- ガイド記事などは `../seo-checker-build/build.py` で生成している。文章を直すときはスクリプト内の本文を編集して再実行する
+- **ドメインを変えるとき**は `build.py` の `SITE` を書き換えて再実行し、`index.html` 内の `https://seo-checker-bs4.pages.dev` も同じ値に置換する（canonical・OGP・サイトマップに絶対 URL で入っているため）
+- 公開後にやること: Google Search Console と Bing Webmaster Tools にサイトを登録し、`sitemap.xml` を送信する
+
 ## 制限事項
 
 - リンク切れチェックとサイト全体診断の未巡回リンク確認は、同梱 Function か独自 Worker がある場合のみ動きます（公開プロキシでは正確なステータスが取れないため「対象外」と表示）
@@ -75,7 +84,9 @@ HTML を取得できなかった場合は総合点を出さず、robots.txt・DN
 ## 構成
 
 ```
-index.html / style.css      画面
+index.html / style.css      ツール本体の画面と共通スタイル
+guide/ about.html privacy.html 404.html sitemap.xml robots.txt   生成された静的ページ（build.py の出力）
+_headers                    Cloudflare Pages のレスポンスヘッダー設定
 js/app.js                   実行制御と描画
 js/analyze.js               診断ロジックと採点（副作用なし）
 js/fetcher.js               ページ取得・DNS・PageSpeed 呼び出し

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>リンク切れ（404）の調べ方と直し方｜SEOへの影響も解説</title>
+<meta name="description" content="リンク切れ（404エラー）はユーザーの離脱とクロールの無駄につながります。リンク切れが起きる原因、無料ツールでの調べ方、内部リンク・外部リンクそれぞれの直し方、301リダイレクトの使い方を解説します。">
+<link rel="canonical" href="https://seo-checker-bs4.pages.dev/guide/broken-links">
+<meta name="theme-color" content="#0f766e">
+<meta property="og:title" content="リンク切れ（404）の調べ方と直し方｜SEOへの影響も解説">
+<meta property="og:description" content="リンク切れ（404エラー）はユーザーの離脱とクロールの無駄につながります。リンク切れが起きる原因、無料ツールでの調べ方、内部リンク・外部リンクそれぞれの直し方、301リダイレクトの使い方を解説します。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://seo-checker-bs4.pages.dev/guide/broken-links">
+<meta property="og:image" content="https://seo-checker-bs4.pages.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="SEOチェッカー">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"リンク切れの調べ方と直し方","description":"リンク切れ（404エラー）はユーザーの離脱とクロールの無駄につながります。リンク切れが起きる原因、無料ツールでの調べ方、内部リンク・外部リンクそれぞれの直し方、301リダイレクトの使い方を解説します。","image":"https://seo-checker-bs4.pages.dev/og.png","datePublished":"2026-11-13","dateModified":"2026-11-13","inLanguage":"ja","mainEntityOfPage":"https://seo-checker-bs4.pages.dev/guide/broken-links","author":{"@type":"Organization","name":"SEOチェッカー","url":"https://seo-checker-bs4.pages.dev/"},"publisher":{"@type":"Organization","name":"SEOチェッカー","url":"https://seo-checker-bs4.pages.dev/"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"SEOチェッカー","item":"https://seo-checker-bs4.pages.dev/"},{"@type":"ListItem","position":2,"name":"SEOガイド","item":"https://seo-checker-bs4.pages.dev/guide/"},{"@type":"ListItem","position":3,"name":"リンク切れの調べ方と直し方"}]}</script>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="/"><svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><rect width="32" height="32" rx="7" fill="currentColor"/><circle cx="14" cy="14" r="6.5" fill="none" stroke="#fff" stroke-width="3"/><path d="M19 19l6 6" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg><span>SEOチェッカー</span></a>
+    <nav class="nav" aria-label="サイト内メニュー"><a href="/">SEO診断ツール</a><a href="/guide/">SEOガイド</a><a href="/about">このサイトについて</a></nav>
+  </div>
+</header>
+
+<main class="wrap prose">
+<nav class="crumbs" aria-label="パンくずリスト"><a href="/">SEOチェッカー</a> › <a href="/guide/">SEOガイド</a> › <span aria-current="page">リンク切れの調べ方と直し方</span></nav>
+<article>
+<h1>リンク切れの調べ方と直し方</h1>
+<p class="meta">公開日: <time datetime="2026-11-13">2026/11/13</time>　SEOチェッカー 編集部</p>
+<p class="lead">リンク切れとは、リンクをクリックしても「ページが見つかりません（404）」と表示される状態のことです。サイトを長く運営していると必ず発生します。このページでは、リンク切れが SEO に与える影響と、調べ方・直し方を解説します。</p>
+<h2>リンク切れが SEO に与える影響</h2>
+<p>Google は、404 のページがあること自体はサイトの評価を下げる理由にならないと説明しています。存在しないページが 404 を返すのは正常な動作だからです。問題になるのは、<b>自分のサイト内にリンク切れを放置している場合</b>です。</p>
+<ul>
+  <li><b>訪問者が離脱する。</b>読みたかったページにたどり着けず、サイトへの信頼も下がります。</li>
+  <li><b>評価が受け渡されない。</b>内部リンクは、ページの評価を別のページに伝える経路です。リンク先が存在しなければ、そこで途切れます。</li>
+  <li><b>クロールの無駄になる。</b>クローラーが存在しないページの取得に時間を使うことになります。</li>
+  <li><b>削除したページへの被リンクが無駄になる。</b>外部サイトからリンクされていたページを消すと、その評価を失います。</li>
+</ul>
+
+<h2>リンク切れが起きる原因</h2>
+<ul>
+  <li>ページを削除した、または URL を変更した</li>
+  <li>リンクの URL を書き間違えた</li>
+  <li>サイトのリニューアルでディレクトリ構成が変わった</li>
+  <li>リンク先の外部サイトがページを削除した、またはサイトを閉鎖した</li>
+  <li>相対パスの指定を誤り、意図しない URL になっている</li>
+</ul>
+<p>最後の例は気づきにくいので注意が必要です。たとえば <code>/docs/security/</code> のページに <code>docs/pages/team.md</code> という相対リンクがあると、リンク先は <code>/docs/security/docs/pages/team.md</code> になり、404 になります。</p>
+
+<h2>リンク切れの調べ方</h2>
+<h3>1ページだけ調べる</h3>
+<p>SEOチェッカーの1ページ診断では、ページ内のリンクを最大60本まで実際に開いて、リンク切れを検出します。切れているリンクの URL とリンクテキストが一覧で表示されるので、該当箇所をすぐに見つけられます。</p>
+<h3>サイト全体を調べる</h3>
+<p>サイト全体診断では、最大50ページを巡回して内部リンクを確認します。切れているリンク先と、そのリンクを張っているページが分かります。</p>
+<h3>Google Search Console で調べる</h3>
+<p>Search Console の「ページ」レポートで、「見つかりませんでした（404）」に分類された URL を確認できます。Google が実際に取得しようとした URL なので、外部サイトからリンクされている削除済みページを見つけるのに向いています。</p>
+
+<h2>ステータスコードの見方</h2>
+<div class="scroll"><table>
+  <thead><tr><th>コード</th><th>意味</th><th>対応</th></tr></thead>
+  <tbody>
+    <tr><td>200</td><td>正常</td><td>対応不要</td></tr>
+    <tr><td>301 / 308</td><td>恒久的な転送</td><td>内部リンクなら、転送先の URL に書き換える</td></tr>
+    <tr><td>302 / 307</td><td>一時的な転送</td><td>恒久的な移転なら 301 に変更する</td></tr>
+    <tr><td>404 / 410</td><td>ページが存在しない</td><td>リンクを直すか、転送を設定する</td></tr>
+    <tr><td>500 番台</td><td>サーバーエラー</td><td>サーバー側の不具合を調べる</td></tr>
+    <tr><td>403 / 429</td><td>アクセス拒否・回数制限</td><td>自動アクセスが拒否されただけの場合がある。ブラウザで開いて確認する</td></tr>
+  </tbody>
+</table></div>
+<p>SNS など一部のサイトは、ツールからの自動アクセスを拒否します。この場合はリンク切れとは限らないため、SEOチェッカーでは「判定不能」として、リンク切れには数えていません。</p>
+
+<h2>リンク切れの直し方</h2>
+<h3>内部リンクの場合</h3>
+<ol>
+  <li><b>リンク先の URL が間違っているなら、正しい URL に書き換える。</b></li>
+  <li><b>ページを移動したなら、新しい URL に書き換える。</b>あわせて、古い URL から新しい URL へ 301 リダイレクトを設定します。</li>
+  <li><b>ページを削除したなら、リンクを外す。</b>内容の近いページがあれば、そちらにリンクを張り替えます。</li>
+</ol>
+<h3>外部リンクの場合</h3>
+<p>リンク先のサイトが移転していれば、新しい URL に書き換えます。ページがなくなっていれば、同じ内容を扱う別の信頼できるページにリンクを張り替えるか、リンクを削除します。</p>
+
+<h2>削除したページには 301 リダイレクトを設定する</h2>
+<p>ほかのサイトからリンクされていたページや、検索から訪問があったページを削除・移動するときは、内容の近いページへ 301 リダイレクトを設定します。訪問者を迷わせず、ページが得ていた評価も引き継げます。</p>
+<p>注意点は、関係のないページへ転送しないことです。削除したすべてのページをトップページに転送すると、Google は「ページが存在しない」のと同じ扱いをすることがあります。内容が対応するページがない場合は、404 のままにしておくのが適切です。</p>
+
+<h2>リダイレクトを経由する内部リンクも直す</h2>
+<p>リンク切れではありませんが、内部リンクが転送を経由している状態も改善の対象です。http から https へ、末尾のスラッシュの有無などで、クリックのたびに余計な転送が発生します。リンクの href を転送後の最終 URL に書き換えると、表示が速くなり、クロールの無駄も減ります。</p>
+<aside class="cta">
+  <p><b>あなたのページはどうなっていますか？</b>URL を入れるだけで、この記事の内容を含む約70項目を無料で採点できます。</p>
+  <a class="cta-btn" href="/">SEOチェッカーで診断する</a>
+</aside>
+</article>
+<section class="related">
+<h2>関連するガイド</h2>
+<ul><li><a href="/guide/noindex-robots-txt">noindex と robots.txt の違いと使い分け</a></li><li><a href="/guide/seo-checklist">SEOチェックリスト：公開前に確認したい70項目</a></li><li><a href="/guide/core-web-vitals">Core Web Vitals（LCP・INP・CLS）の基準と改善方法</a></li></ul>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span>© 2026 SEOチェッカー</span>
+    <nav aria-label="フッターメニュー"><a href="/">SEO診断ツール</a><a href="/guide/">SEOガイド</a><a href="/guide/seo-checklist">SEOチェックリスト</a><a href="/about">このサイトについて</a><a href="/privacy">プライバシーポリシー</a></nav>
+  </div>
+</footer>
+</body>
+</html>

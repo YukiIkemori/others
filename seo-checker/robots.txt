@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://seo-checker-bs4.pages.dev/sitemap.xml

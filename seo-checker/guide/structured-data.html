@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>構造化データ（JSON-LD）の書き方入門｜種類と確認方法</title>
+<meta name="description" content="構造化データは、ページの内容を検索エンジンに正確に伝えるための記述です。JSON-LDの書き方、よく使うスキーマ（パンくず・記事・商品・組織）の例、必須項目、よくあるエラーと確認方法を解説します。">
+<link rel="canonical" href="https://seo-checker-bs4.pages.dev/guide/structured-data">
+<meta name="theme-color" content="#0f766e">
+<meta property="og:title" content="構造化データ（JSON-LD）の書き方入門｜種類と確認方法">
+<meta property="og:description" content="構造化データは、ページの内容を検索エンジンに正確に伝えるための記述です。JSON-LDの書き方、よく使うスキーマ（パンくず・記事・商品・組織）の例、必須項目、よくあるエラーと確認方法を解説します。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://seo-checker-bs4.pages.dev/guide/structured-data">
+<meta property="og:image" content="https://seo-checker-bs4.pages.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="SEOチェッカー">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"構造化データ（JSON-LD）の基本と書き方","description":"構造化データは、ページの内容を検索エンジンに正確に伝えるための記述です。JSON-LDの書き方、よく使うスキーマ（パンくず・記事・商品・組織）の例、必須項目、よくあるエラーと確認方法を解説します。","image":"https://seo-checker-bs4.pages.dev/og.png","datePublished":"2026-11-13","dateModified":"2026-11-13","inLanguage":"ja","mainEntityOfPage":"https://seo-checker-bs4.pages.dev/guide/structured-data","author":{"@type":"Organization","name":"SEOチェッカー","url":"https://seo-checker-bs4.pages.dev/"},"publisher":{"@type":"Organization","name":"SEOチェッカー","url":"https://seo-checker-bs4.pages.dev/"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"SEOチェッカー","item":"https://seo-checker-bs4.pages.dev/"},{"@type":"ListItem","position":2,"name":"SEOガイド","item":"https://seo-checker-bs4.pages.dev/guide/"},{"@type":"ListItem","position":3,"name":"構造化データ（JSON-LD）の基本"}]}</script>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="/"><svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><rect width="32" height="32" rx="7" fill="currentColor"/><circle cx="14" cy="14" r="6.5" fill="none" stroke="#fff" stroke-width="3"/><path d="M19 19l6 6" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg><span>SEOチェッカー</span></a>
+    <nav class="nav" aria-label="サイト内メニュー"><a href="/">SEO診断ツール</a><a href="/guide/">SEOガイド</a><a href="/about">このサイトについて</a></nav>
+  </div>
+</header>
+
+<main class="wrap prose">
+<nav class="crumbs" aria-label="パンくずリスト"><a href="/">SEOチェッカー</a> › <a href="/guide/">SEOガイド</a> › <span aria-current="page">構造化データ（JSON-LD）の基本</span></nav>
+<article>
+<h1>構造化データ（JSON-LD）の基本と書き方</h1>
+<p class="meta">公開日: <time datetime="2026-11-13">2026/11/13</time>　SEOチェッカー 編集部</p>
+<p class="lead">構造化データとは、「このページは記事で、著者は誰で、公開日はいつか」といった情報を、検索エンジンが確実に読み取れる形式で書いたものです。設定すると、検索結果にパンくずや評価の星などが表示される「リッチリザルト」の対象になります。</p>
+<h2>構造化データで得られる効果</h2>
+<ul>
+  <li><b>検索結果の表示が豊かになる。</b>パンくずリスト、レビューの星、商品の価格、イベントの日時などが表示され、目に留まりやすくなります。</li>
+  <li><b>内容が正確に伝わる。</b>ページの種類や、運営者・著者・公開日などの情報を、検索エンジンが推測ではなく明示された情報として読み取れます。</li>
+</ul>
+<p>構造化データを入れただけで検索順位が上がるわけではありません。また、設定してもリッチリザルトが必ず表示されるとは限らず、表示するかどうかは Google が判断します。</p>
+
+<h2>JSON-LD の書き方</h2>
+<p>構造化データにはいくつかの書式がありますが、Google が推奨しているのは JSON-LD です。HTML の中に script タグで書くため、ページの見た目に影響しません。</p>
+<pre><code>&lt;script type="application/ld+json"&gt;
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "株式会社サンプル",
+  "url": "https://example.com/",
+  "logo": "https://example.com/logo.png"
+}
+&lt;/script&gt;</code></pre>
+<p><code>@type</code> が情報の種類（スキーマ）で、その下に種類ごとに決められた項目を書きます。head 内でも body 内でも構いません。</p>
+
+<h2>よく使うスキーマ</h2>
+<div class="scroll"><table>
+  <thead><tr><th>スキーマ</th><th>使うページ</th><th>主な必須・推奨項目</th></tr></thead>
+  <tbody>
+    <tr><td>BreadcrumbList</td><td>下層ページ全般</td><td>itemListElement（各階層の名前と URL）</td></tr>
+    <tr><td>Article / BlogPosting</td><td>記事、ブログ</td><td>headline、image、datePublished、author</td></tr>
+    <tr><td>Product</td><td>商品ページ</td><td>name と、offers・review・aggregateRating のいずれか</td></tr>
+    <tr><td>Organization</td><td>トップページ、会社概要</td><td>name、url、logo</td></tr>
+    <tr><td>LocalBusiness</td><td>店舗、医院</td><td>name、address、営業時間、電話番号</td></tr>
+    <tr><td>WebSite</td><td>トップページ</td><td>name、url</td></tr>
+    <tr><td>Event</td><td>イベント告知</td><td>name、startDate、location</td></tr>
+    <tr><td>JobPosting</td><td>求人</td><td>title、description、datePosted、hiringOrganization</td></tr>
+  </tbody>
+</table></div>
+<p>最初に入れるなら、ほぼすべてのサイトで使える BreadcrumbList と、トップページの Organization・WebSite がおすすめです。</p>
+
+<h2>パンくずリストの例</h2>
+<pre><code>&lt;script type="application/ld+json"&gt;
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://example.com/" },
+    { "@type": "ListItem", "position": 2, "name": "ブログ", "item": "https://example.com/blog/" },
+    { "@type": "ListItem", "position": 3, "name": "記事のタイトル" }
+  ]
+}
+&lt;/script&gt;</code></pre>
+<p>設定すると、検索結果の URL 表示が「example.com › ブログ」のような階層の表示になります。</p>
+
+<h2>FAQ と HowTo の現状</h2>
+<p>以前は FAQPage を設定すると、検索結果に質問と回答が展開して表示されました。現在この表示は、政府機関や医療機関など一部の権威あるサイトに限定されています。HowTo のリッチリザルトも廃止されました。これらを設定しても害はありませんが、検索結果の見た目が変わることは期待できません。</p>
+
+<h2>よくあるエラー</h2>
+<ul>
+  <li><b>JSON の構文エラー。</b>末尾の余分なカンマ、引用符の閉じ忘れ、全角の引用符が原因の大半です。1か所でも誤りがあると、そのブロック全体が読み取られません。</li>
+  <li><b>必須項目の不足。</b>Article に image や datePublished がない、Product に価格や評価がない、といった例です。</li>
+  <li><b>ページに表示されていない内容を書く。</b>画面にない評価や価格を構造化データだけに書くことは、Google のガイドライン違反です。</li>
+  <li><b>テンプレートの変数が展開されていない。</b>出力された HTML を必ず確認します。</li>
+</ul>
+
+<h2>確認方法</h2>
+<ol>
+  <li><b>SEOチェッカーで確認する。</b>JSON-LD の構文エラーと、主要なスキーマの必須項目の不足を検出します。検出されたスキーマの種類も一覧で表示します。</li>
+  <li><b>Google のリッチリザルト テストで確認する。</b>Google がリッチリザルトの対象として認識できるかを判定します。</li>
+  <li><b>Search Console の拡張レポートで確認する。</b>公開後に、サイト全体でエラーが出ていないかを継続して確認できます。</li>
+</ol>
+<aside class="cta">
+  <p><b>あなたのページはどうなっていますか？</b>URL を入れるだけで、この記事の内容を含む約70項目を無料で採点できます。</p>
+  <a class="cta-btn" href="/">SEOチェッカーで診断する</a>
+</aside>
+</article>
+<section class="related">
+<h2>関連するガイド</h2>
+<ul><li><a href="/guide/seo-checklist">SEOチェックリスト：公開前に確認したい70項目</a></li><li><a href="/guide/title-tag">タイトルタグの最適な文字数と書き方</a></li><li><a href="/guide/meta-description">メタディスクリプションの書き方と文字数の目安</a></li></ul>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span>© 2026 SEOチェッカー</span>
+    <nav aria-label="フッターメニュー"><a href="/">SEO診断ツール</a><a href="/guide/">SEOガイド</a><a href="/guide/seo-checklist">SEOチェックリスト</a><a href="/about">このサイトについて</a><a href="/privacy">プライバシーポリシー</a></nav>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>このサイトについて｜SEOチェッカーの仕組みと採点方法</title>
+<meta name="description" content="SEOチェッカーは、URLを入力するだけでSEOを約70項目で採点する無料ツールです。診断できる内容、分野ごとの配点、採点の考え方、診断の限界、利用している外部サービスについて説明します。">
+<link rel="canonical" href="https://seo-checker-bs4.pages.dev/about">
+<meta name="theme-color" content="#0f766e">
+<meta property="og:title" content="このサイトについて｜SEOチェッカーの仕組みと採点方法">
+<meta property="og:description" content="SEOチェッカーは、URLを入力するだけでSEOを約70項目で採点する無料ツールです。診断できる内容、分野ごとの配点、採点の考え方、診断の限界、利用している外部サービスについて説明します。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://seo-checker-bs4.pages.dev/about">
+<meta property="og:image" content="https://seo-checker-bs4.pages.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="SEOチェッカー">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"SEOチェッカー","item":"https://seo-checker-bs4.pages.dev/"},{"@type":"ListItem","position":2,"name":"このサイトについて"}]}</script>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="/"><svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><rect width="32" height="32" rx="7" fill="currentColor"/><circle cx="14" cy="14" r="6.5" fill="none" stroke="#fff" stroke-width="3"/><path d="M19 19l6 6" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg><span>SEOチェッカー</span></a>
+    <nav class="nav" aria-label="サイト内メニュー"><a href="/">SEO診断ツール</a><a href="/guide/">SEOガイド</a><a href="/about">このサイトについて</a></nav>
+  </div>
+</header>
+
+<main class="wrap prose">
+<nav class="crumbs" aria-label="パンくずリスト"><a href="/">SEOチェッカー</a> › <span aria-current="page">このサイトについて</span></nav>
+<h1>このサイトについて</h1>
+<p class="lead">SEOチェッカーは、URL を入力するだけでページの SEO を約70項目で採点し、優先度順の改善点を表示する無料のツールです。会員登録は不要で、回数の制限もありません。</p>
+
+<h2>SEOチェッカーでできること</h2>
+<ul>
+  <li><b>1ページ診断。</b>タイトルやメタ情報、見出し、クロール設定、リンク切れ、構造化データ、表示速度までを確認し、100点満点で採点します。</li>
+  <li><b>サイト全体診断。</b>最大50ページを巡回し、タイトルの重複や内部リンク切れなど、ページをまたぐ問題を検出します。</li>
+  <li><b>改善点の提示。</b>問題の重さと影響の大きさから優先順位を付け、直し方とあわせて表示します。</li>
+  <li><b>レポートの書き出し。</b>診断結果をテキストや CSV、PDF として保存できます。</li>
+</ul>
+
+<h2>採点の考え方</h2>
+<p>診断項目を7つの分野に分け、分野ごとに100点満点で採点したうえで、重み付けして総合点を出しています。</p>
+<div class="scroll"><table>
+  <thead><tr><th>分野</th><th>配点の重み</th></tr></thead>
+  <tbody>
+    <tr><td>基本メタ情報</td><td>20%</td></tr>
+    <tr><td>クロール・インデックス</td><td>20%</td></tr>
+    <tr><td>コンテンツ</td><td>15%</td></tr>
+    <tr><td>表示速度・Lighthouse</td><td>15%</td></tr>
+    <tr><td>リンク・画像</td><td>10%</td></tr>
+    <tr><td>SNS・構造化データ</td><td>10%</td></tr>
+    <tr><td>技術・セキュリティ</td><td>10%</td></tr>
+  </tbody>
+</table></div>
+<p>noindex や robots.txt によるブロックなど、検索結果に表示されなくなる問題がある場合は、総合点を45点までに制限します。項目の一覧は「<a href="/guide/seo-checklist">SEOチェックリスト</a>」に掲載しています。</p>
+
+<h2>診断の限界</h2>
+<p>このツールが確認できるのは、ページの技術的な状態です。次の点は診断の対象外です。</p>
+<ul>
+  <li>内容が検索した人の役に立つかどうか</li>
+  <li>ほかのサイトからのリンク（被リンク）の状況</li>
+  <li>実際の検索順位やクリック数</li>
+  <li>JavaScript を実行した後に表示される内容</li>
+</ul>
+<p>点数は一般的な SEO の推奨事項にもとづく目安であり、検索順位を保証するものではありません。実際の検索での状況は、Google Search Console とあわせて確認してください。</p>
+
+<h2>仕組みと利用しているサービス</h2>
+<p>診断の処理は、お使いのブラウザの中で実行されます。診断結果がこのサイトのサーバーに保存されることはありません。ページの取得には当サイトの中継機能を、表示速度の計測には Google PageSpeed Insights を、DNS の確認には Google Public DNS を利用しています。詳しくは<a href="/privacy">プライバシーポリシー</a>をご覧ください。</p>
+
+<h2>ご利用にあたって</h2>
+<p>診断のために、対象のサイトへ自動でアクセスします。サイト全体診断では最大50ページと、そのリンク先を取得します。ご自身が管理するサイト、または診断の許可を得ているサイトでご利用ください。</p>
+<aside class="cta">
+  <p><b>あなたのページはどうなっていますか？</b>URL を入れるだけで、この記事の内容を含む約70項目を無料で採点できます。</p>
+  <a class="cta-btn" href="/">SEOチェッカーで診断する</a>
+</aside>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span>© 2026 SEOチェッカー</span>
+    <nav aria-label="フッターメニュー"><a href="/">SEO診断ツール</a><a href="/guide/">SEOガイド</a><a href="/guide/seo-checklist">SEOチェックリスト</a><a href="/about">このサイトについて</a><a href="/privacy">プライバシーポリシー</a></nav>
+  </div>
+</footer>
+</body>
+</html>

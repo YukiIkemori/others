@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Core Web Vitalsとは？LCP・INP・CLSの基準値と改善方法</title>
+<meta name="description" content="Core Web VitalsはGoogleがページ体験の評価に使う3つの指標です。LCPは2.5秒以内、INPは200ミリ秒以内、CLSは0.1以下が合格ライン。各指標の意味、実測値とラボ値の違い、原因別の改善方法を解説します。">
+<link rel="canonical" href="https://seo-checker-bs4.pages.dev/guide/core-web-vitals">
+<meta name="theme-color" content="#0f766e">
+<meta property="og:title" content="Core Web Vitalsとは？LCP・INP・CLSの基準値と改善方法">
+<meta property="og:description" content="Core Web VitalsはGoogleがページ体験の評価に使う3つの指標です。LCPは2.5秒以内、INPは200ミリ秒以内、CLSは0.1以下が合格ライン。各指標の意味、実測値とラボ値の違い、原因別の改善方法を解説します。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://seo-checker-bs4.pages.dev/guide/core-web-vitals">
+<meta property="og:image" content="https://seo-checker-bs4.pages.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="SEOチェッカー">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Core Web Vitals（LCP・INP・CLS）の基準と改善方法","description":"Core Web VitalsはGoogleがページ体験の評価に使う3つの指標です。LCPは2.5秒以内、INPは200ミリ秒以内、CLSは0.1以下が合格ライン。各指標の意味、実測値とラボ値の違い、原因別の改善方法を解説します。","image":"https://seo-checker-bs4.pages.dev/og.png","datePublished":"2026-11-13","dateModified":"2026-11-13","inLanguage":"ja","mainEntityOfPage":"https://seo-checker-bs4.pages.dev/guide/core-web-vitals","author":{"@type":"Organization","name":"SEOチェッカー","url":"https://seo-checker-bs4.pages.dev/"},"publisher":{"@type":"Organization","name":"SEOチェッカー","url":"https://seo-checker-bs4.pages.dev/"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"SEOチェッカー","item":"https://seo-checker-bs4.pages.dev/"},{"@type":"ListItem","position":2,"name":"SEOガイド","item":"https://seo-checker-bs4.pages.dev/guide/"},{"@type":"ListItem","position":3,"name":"Core Web Vitals の基準と改善方法"}]}</script>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="/"><svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><rect width="32" height="32" rx="7" fill="currentColor"/><circle cx="14" cy="14" r="6.5" fill="none" stroke="#fff" stroke-width="3"/><path d="M19 19l6 6" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg><span>SEOチェッカー</span></a>
+    <nav class="nav" aria-label="サイト内メニュー"><a href="/">SEO診断ツール</a><a href="/guide/">SEOガイド</a><a href="/about">このサイトについて</a></nav>
+  </div>
+</header>
+
+<main class="wrap prose">
+<nav class="crumbs" aria-label="パンくずリスト"><a href="/">SEOチェッカー</a> › <a href="/guide/">SEOガイド</a> › <span aria-current="page">Core Web Vitals の基準と改善方法</span></nav>
+<article>
+<h1>Core Web Vitals（LCP・INP・CLS）の基準と改善方法</h1>
+<p class="meta">公開日: <time datetime="2026-11-13">2026/11/13</time>　SEOチェッカー 編集部</p>
+<p class="lead">Core Web Vitals（コアウェブバイタル）は、ページの表示速度や操作のしやすさを数値で表した、Google の3つの指標です。検索順位を決める要素のひとつとして使われています。このページでは、各指標の意味と合格ライン、改善方法を解説します。</p>
+<h2>3つの指標と合格ライン</h2>
+<div class="scroll"><table>
+  <thead><tr><th>指標</th><th>測るもの</th><th>良好</th><th>改善が必要</th><th>不良</th></tr></thead>
+  <tbody>
+    <tr><th>LCP</th><td>メインの内容が表示されるまでの時間</td><td>2.5秒以内</td><td>4.0秒以内</td><td>4.0秒超</td></tr>
+    <tr><th>INP</th><td>操作してから画面が反応するまでの時間</td><td>200ミリ秒以内</td><td>500ミリ秒以内</td><td>500ミリ秒超</td></tr>
+    <tr><th>CLS</th><td>読み込み中に起きるレイアウトのずれ</td><td>0.1以下</td><td>0.25以下</td><td>0.25超</td></tr>
+  </tbody>
+</table></div>
+<p>判定には、訪問者の75%が体験した値（75パーセンタイル）が使われます。平均値ではないので、一部の遅い環境での体験も結果に影響します。</p>
+
+<h2>実測値とラボ値の違い</h2>
+<p>Core Web Vitals には2種類のデータがあります。</p>
+<ul>
+  <li><b>実測値（フィールドデータ）。</b>Chrome を使う実際の訪問者から集めた過去28日間のデータです。Google が検索の評価に使うのはこちらです。</li>
+  <li><b>ラボ値。</b>決まった条件でページを1回読み込んで測った値です。Lighthouse や PageSpeed Insights の「パフォーマンスの問題を診断する」がこれにあたります。</li>
+</ul>
+<p>アクセス数の少ないページには実測値がありません。その場合はラボ値を参考にします。また、INP は実際の操作がないと測れないため、ラボでは代わりに TBT（Total Blocking Time）を見ます。TBT が大きいページは、INP も悪くなりやすい傾向があります。</p>
+<p>SEOチェッカーは、PageSpeed Insights から実測値とラボ値の両方を取得し、実測値がある場合はそちらを重く評価しています。</p>
+
+<h2>LCP の改善方法</h2>
+<p>LCP は、多くのページで最上部の大きな画像か、見出しのテキストが対象になります。</p>
+<ul>
+  <li><b>メイン画像を軽くする。</b>表示サイズに合わせて縮小し、WebP や AVIF に変換します。</li>
+  <li><b>メイン画像を遅延読み込みしない。</b>最上部の画像に <code>loading="lazy"</code> を付けると、かえって遅くなります。<code>fetchpriority="high"</code> を付けて優先的に読み込ませます。</li>
+  <li><b>サーバーの応答を速くする。</b>キャッシュや CDN を使い、HTML が届くまでの時間を短縮します。</li>
+  <li><b>描画を止めるファイルを減らす。</b>head 内のスクリプトには defer か async を付け、使っていない CSS を削除します。</li>
+  <li><b>ウェブフォントの読み込みを見直す。</b><code>font-display: swap</code> を指定し、フォントが届く前でも文字が表示されるようにします。</li>
+</ul>
+
+<h2>INP の改善方法</h2>
+<p>INP は、クリックやタップ、キー入力に対する反応の遅さを測ります。原因のほとんどは JavaScript です。</p>
+<ul>
+  <li><b>使っていない JavaScript を削除する。</b>読み込むだけで処理時間がかかります。</li>
+  <li><b>外部のタグを減らす。</b>広告、計測、チャット、SNS の埋め込みは、積み重なると大きな負荷になります。必要なものだけを残します。</li>
+  <li><b>長い処理を分割する。</b>50ミリ秒を超える処理は、途中で画面の更新を挟めるように分けます。</li>
+  <li><b>DOM を小さくする。</b>要素数が多いと、操作のたびに再計算に時間がかかります。</li>
+</ul>
+
+<h2>CLS の改善方法</h2>
+<p>CLS は、読んでいる途中で内容が下にずれたり、押そうとしたボタンが動いたりする現象を数値にしたものです。</p>
+<ul>
+  <li><b>画像と動画に width と height を書く。</b>読み込み前から表示領域が確保され、後からずれなくなります。</li>
+  <li><b>広告や埋め込みの領域を先に確保する。</b>CSS で高さを指定しておきます。</li>
+  <li><b>ページの上部に後から要素を挿入しない。</b>お知らせのバナーなどは、領域を確保しておくか、内容に重ねて表示します。</li>
+  <li><b>ウェブフォントによるずれを抑える。</b>代替フォントとの大きさの差が小さくなるように調整します。</li>
+</ul>
+
+<h2>どこから手を付けるか</h2>
+<ol>
+  <li><b>実測値で「不良」の指標から直す。</b>検索の評価に使われているのは実測値です。</li>
+  <li><b>テンプレート単位で直す。</b>同じ作りのページは同じ問題を抱えています。1か所の修正が全ページに効きます。</li>
+  <li><b>スマートフォンを優先する。</b>Google はスマートフォン向けのページを基準に評価します。回線も処理能力もパソコンより厳しい条件です。</li>
+</ol>
+<p>なお、Core Web Vitals は検索順位を決める多くの要素のひとつです。内容が検索意図に合っているかどうかのほうが影響は大きく、速度だけを改善しても順位が大きく上がるとは限りません。内容が同程度のページ同士で差がつく要素、と考えるのが実態に近いでしょう。</p>
+<aside class="cta">
+  <p><b>あなたのページはどうなっていますか？</b>URL を入れるだけで、この記事の内容を含む約70項目を無料で採点できます。</p>
+  <a class="cta-btn" href="/">SEOチェッカーで診断する</a>
+</aside>
+</article>
+<section class="related">
+<h2>関連するガイド</h2>
+<ul><li><a href="/guide/seo-checklist">SEOチェックリスト：公開前に確認したい70項目</a></li><li><a href="/guide/broken-links">リンク切れの調べ方と直し方</a></li><li><a href="/guide/structured-data">構造化データ（JSON-LD）の基本と書き方</a></li></ul>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span>© 2026 SEOチェッカー</span>
+    <nav aria-label="フッターメニュー"><a href="/">SEO診断ツール</a><a href="/guide/">SEOガイド</a><a href="/guide/seo-checklist">SEOチェックリスト</a><a href="/about">このサイトについて</a><a href="/privacy">プライバシーポリシー</a></nav>
+  </div>
+</footer>
+</body>
+</html>
