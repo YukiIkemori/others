@@ -1,100 +1,40 @@
-# SEOチェッカー
+# SEOチェッカーの取得プロキシ
 
-URL を入れると約70項目を診断し、100点満点のスコアと優先度順の改善点を出す静的サイトです。
-1ページの詳細診断（リンク切れチェック込み）と、最大50ページを巡回するサイト全体診断の2モードがあります。
-ビルド不要・依存ライブラリなし。診断はすべて利用者のブラウザ内で実行されます。
+SEOチェッカー本体は **https://off-notes.com/seo-checker/** にある
+（リポジトリ `YukiIkemori/off-notes-yuki-site` の `_drafts/seo-checker/` と `tools-seochecker-publish.py`）。
 
-## ランニングコスト
+このフォルダは、その道具が使う**取得専用の裏方**。Cloudflare Pages のプロジェクト
+`seo-checker-bs4`（ルートディレクトリ `seo-checker`、ビルドなし）としてデプロイされている。
 
-**0円**です。有料 API は一切使っておらず、どれだけ使われても請求は発生しません。
+## なぜ別にあるか
 
-| 用途 | 使うもの | 費用 |
-|---|---|---|
-| サイト配信 | Cloudflare Pages（静的ファイル） | 無料・転送量無制限 |
-| 診断対象ページの取得 | 同梱の Pages Function `functions/api/fetch.js` | 無料枠 1日10万リクエスト。超えるとその日はエラーになるだけで課金されない |
-| 表示速度の計測 | Google PageSpeed Insights API（利用者のブラウザから直接） | 無料 |
-| DNS 確認 | Google Public DNS（DoH） | 無料 |
+ブラウザは他サイトの HTML を直接読めない（CORS）ので、診断対象のページを代わりに取ってくる中継が要る。
+OFF NOTES は Firebase Hosting でサーバー側の処理を置けないため、中継だけをここに残した。
+はじめはツール本体もここ（`seo-checker-bs4.pages.dev`）で公開していたが、2026-11-13 に OFF NOTES へ移した。
 
-1回あたりの Function 呼び出し回数の目安:
+## 中身
 
-| 診断 | 呼び出し回数 | 無料枠で1日にできる回数 |
-|---|---|---|
-| 1ページ診断（リンク切れ確認 最大60本を含む） | 4〜10 回 | 約1万〜2万回 |
-| サイト全体診断（50ページ） | 約 60〜70 回 | 約1,500回 |
+| パス | 役割 |
+|---|---|
+| `functions/api/fetch.js` | `GET /api/fetch?url=…` ページを取得し、ステータス・リダイレクト経路・レスポンスヘッダーを付けて返す |
+| `functions/api/check.js` | `POST /api/check` リンク先の HTTP ステータスをまとめて返す（1回12件まで） |
+| `worker/worker.js` | 同じ処理を単体の Cloudflare Worker として動かす場合のエントリ（いまは未使用） |
+| `_redirects` | 以前ここにあった画面の URL を off-notes.com へ 301 する |
+| `_headers` | 残っている応答を検索に出さない（noindex） |
 
-無料枠を使い切るほど使われるようになったら、Workers 有料プラン（月5ドル）に切り替えると上限が外れます。
+## 呼び出せる相手
 
-## デプロイ（Cloudflare Pages 推奨）
+`https://off-notes.com` と、このプロジェクト自身のオリジンだけ。ほかのオリジンから使う場合は
+Cloudflare の環境変数 `ALLOWED_ORIGINS`（カンマ区切り）に足す。Origin ヘッダーの無い呼び出し
+（curl など）は通るので、完全な制限ではなく「第三者のサイトに踏み台として組み込まれない」ための絞り込み。
 
-1. Cloudflare ダッシュボード → Workers & Pages → Pages → Git リポジトリを接続
-2. ビルドコマンド: なし ／ 出力ディレクトリ: `seo-checker`（ルートディレクトリを `seo-checker` にしても可）
-3. デプロイ完了。`/api/fetch` が自動で有効になり、追加設定は不要
+## 費用
 
-### GitHub Pages など Functions の無い場所に置く場合
+Cloudflare の無料枠で動いている（1日10万リクエストまでという理解。超えるとその日はエラーになるだけで課金されない。
+公開前に公式の料金ページで確認すること）。1ページ診断で 4〜10 回、サイト全体診断（50ページ）で 60〜70 回呼ぶ。
 
-静的ファイルだけでも動きますが、ページ取得が無料の公開 CORS プロキシ頼みになり、**取得に失敗することが珍しくありません**
-（公開プロキシは頻繁に落ちたり制限されたりします）。安定させるには `worker/worker.js` を Cloudflare Workers（無料）に置き、
-環境変数 `ALLOWED_ORIGINS` にサイトのオリジンを設定し、`js/config.js` の `PROXY_URL` に Worker の URL を書いてください。
+## 変更するとき
 
-## 速度計測を安定させる（任意・無料）
-
-PageSpeed Insights API はキー無しだと全世界共有の枠を使うため、混雑時は 429 エラーで計測できません。
-[Google Cloud Console](https://developers.google.com/speed/docs/insights/v5/get-started?hl=ja) で API キーを無料発行し、
-**HTTP リファラー制限を自サイトのドメインに掛けたうえで** `js/config.js` の `PSI_API_KEY` に入れてください（1日25,000回まで無料、超過しても課金なし）。
-利用者が自分のキーを画面の「設定」に入れることもできます。
-
-## 取得経路と診断できる範囲
-
-| 取得経路 | HTML 診断 | ヘッダー・ステータス・リダイレクト |
-|---|---|---|
-| 同梱 Function / 独自 Worker | ○ | ○ |
-| 直接取得（相手が CORS 許可している場合）・公開プロキシ | ○ | ×（「対象外」と表示。HTTP ステータスは速度計測から補完） |
-| HTML 貼り付け | ○ | × |
-
-HTML を取得できなかった場合は総合点を出さず、robots.txt・DNS・速度など取得できた項目だけを表示します。
-
-## サイト全体診断の仕組み
-
-1. robots.txt とサイトマップ（インデックスの場合は子サイトマップ5件まで）を読む
-2. 開始ページ → サイトマップの URL（浅い階層から）→ 見つけた内部リンク、の順に上限ページ数まで巡回して1ページずつ採点
-3. 巡回しなかった内部リンク先（最大180件）のステータスをまとめて確認
-4. ページをまたぐ問題を検出: タイトル・説明文・H1 の重複と未設定、エラーページ、内部リンク切れ、サイトマップの不整合と未掲載、内容の薄いページ、内部リンクされていないページ
-5. 多くのページに共通する指摘を該当ページ数順に集計
-
-総合点は「ページ平均 60% ＋ サイト横断チェック 40%」。表示速度はページ数ぶん Google に計測させると数十分かかるため、サイト全体診断では測りません（ページ一覧から個別に詳細診断を開けます）。
-
-## このサイト自身の SEO
-
-- トップページ: canonical・OGP（`og.png`）・構造化データ（WebApplication / WebSite / FAQPage）・使い方や FAQ などの説明文
-- ガイド記事 7 本（`guide/`）と「このサイトについて」「プライバシーポリシー」: Article / BreadcrumbList の構造化データつき
-- `sitemap.xml`・`robots.txt`・`404.html`（無いと Cloudflare Pages は存在しない URL にもトップページを 200 で返す）・`_headers`（セキュリティヘッダー）
-- ガイド記事などは `../seo-checker-build/build.py` で生成している。文章を直すときはスクリプト内の本文を編集して再実行する
-- **ドメインを変えるとき**は `build.py` の `SITE` を書き換えて再実行し、`index.html` 内の `https://seo-checker-bs4.pages.dev` も同じ値に置換する（canonical・OGP・サイトマップに絶対 URL で入っているため）
-- 公開後にやること: Google Search Console と Bing Webmaster Tools にサイトを登録し、`sitemap.xml` を送信する
-
-## 制限事項
-
-- リンク切れチェックとサイト全体診断の未巡回リンク確認は、同梱 Function か独自 Worker がある場合のみ動きます（公開プロキシでは正確なステータスが取れないため「対象外」と表示）
-- 自動アクセスを拒否するサイト（一部の SNS など）へのリンクは「判定不能」として扱い、リンク切れには数えません
-
-- JavaScript で描画されるページ（SPA）は初期 HTML だけを見ます（本文が空の場合はその旨を指摘します）
-- 被リンク、検索順位は対象外です
-- スコアは一般的なベストプラクティスに基づく目安で、検索順位を保証するものではありません
-
-## 構成
-
-```
-index.html / style.css      ツール本体の画面と共通スタイル
-guide/ about.html privacy.html 404.html sitemap.xml robots.txt   生成された静的ページ（build.py の出力）
-_headers                    Cloudflare Pages のレスポンスヘッダー設定
-js/app.js                   実行制御と描画
-js/analyze.js               診断ロジックと採点（副作用なし）
-js/fetcher.js               ページ取得・DNS・PageSpeed 呼び出し
-js/site.js                  サイト全体診断（巡回と横断チェック）
-js/config.js                運営者向けの任意設定
-functions/api/fetch.js      取得プロキシ（Cloudflare Pages Function）
-functions/api/check.js      リンク先ステータスの一括確認
-worker/worker.js            同じプロキシを単体 Worker として使う場合のエントリ
-```
-
-ローカル確認: `python3 -m http.server -d seo-checker 8000`（この場合は公開プロキシ経由になります）
+このブランチに push すると Cloudflare Pages が自動でデプロイする（反映まで10分前後かかることがある）。
+応答の形式（`x-seo-*` ヘッダー、`/api/check` の JSON）を変えたら、OFF NOTES 側の
+`_drafts/seo-checker/js/fetcher.js` も合わせて直すこと。
