@@ -11,14 +11,15 @@ def abbey():
     m['layers'] = dict(sky=dict(src='sky.webp', parallax=[.2, .5], y=0))
     g = mk['gate']['p']
     m['spawn'] = dict(x=g[0], y=g[1] + 320, dir='up')
-    m['spawns'] = dict(gate=m['spawn'], crystal=dict(x=g[0], y=g[1], dir='up'))
+    al = mk['altar']['p']
+    m['spawns'] = dict(gate=m['spawn'], crystal=dict(x=g[0], y=g[1], dir='up'), altar=dict(x=al[0], y=al[1] + 26, dir='down'))
     m['exits'] = [dict(rect=[g[0] - 90, p['h'] - 34, 180, 40], to='f01', spawn='abbey')]
     T = lambda nm, r, title, **kw: dict(at(mk, nm), r=r, title=title, **kw)
     chest = lambda nm, cid: dict(at(mk, nm), r=40, kind='chest', id=cid, title='宝箱', prompt='開ける', prop=CHEST)
     m['triggers'] = [
         dict(at(mk, 'crystal'), r=46, kind='crystal', title='セーブ結晶', prompt='触れる', prop=dict(src='~/prop/crystal.png', fw=CW, fh=CHh, foot=[CW // 2, CHh + 6], block=12, shadow=1, bob=3, glow=dict(c='#ffdc96', r=130, a=1.0, sparks=1, up=4))),
-        T('altar', 40, '祭壇', text=['埃をかぶった祭壇。', '燭台のろうだけが、まだ新しい。\n……誰かが、ここへ通っている。']),
-        T('tower', 38, '鐘楼の扉', text=['扉は、内側から閉ざされている。', '見上げると、大きな鐘が、\n黙ったまま、ぶら下がっている。', '横の壁が、崩れている。\n……ここから先は、次の一区切りで作ります。']),
+        T('altar', 44, '祭壇', kind='warp', prompt='奥へ進む', ask='埃をかぶった祭壇。燭台のろうだけが、まだ新しい。\n裏に、奥の身廊へ続く小さな扉がある。', to='abbey2', spawn='south'),
+        T('tower', 38, '鐘楼の扉', text=['扉は、内側から閉ざされている。', '見上げると、大きな鐘が、\n黙ったまま、ぶら下がっている。']),
         T('lookout', 60, '見晴らし台', text=['麦の丘が、ずっと下に小さく見える。', '弱い日の光が、雲の向こうで、\nにじんでいる。']),
         T('broken', 42, '崩れた階段', kind='warp', prompt='降りる', ask='崩れた階段が、麦の丘の岩棚まで続いている。\n降りたら、ここへは登れない。', to='f01', spawn='ledge'),
         chest('chest_nave', 'ch045'), chest('chest_plaza', 'ch047'),

@@ -1,0 +1,450 @@
+{
+ "w": 1536,
+ "h": 1552,
+ "S": 32,
+ "A": 0.75,
+ "B": 0.66,
+ "sy": 1.0429556426163409,
+ "spawn": [
+  486,
+  1443
+ ],
+ "marks": {
+  "exit_south": {
+   "p": [
+    485,
+    1544
+   ],
+   "air": [
+    485,
+    1544
+   ],
+   "on_ground": true,
+   "title": "礼拝堂へ",
+   "walkable": true
+  },
+  "spawn_south": {
+   "p": [
+    486,
+    1443
+   ],
+   "air": [
+    486,
+    1443
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "boss": {
+   "p": [
+    489,
+    470
+   ],
+   "air": [
+    489,
+    470
+   ],
+   "on_ground": true,
+   "title": "鐘守りの大烏",
+   "walkable": true
+  },
+  "boss_line": {
+   "p": [
+    488,
+    626
+   ],
+   "air": [
+    488,
+    626
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "altar": {
+   "p": [
+    490,
+    380
+   ],
+   "air": [
+    490,
+    380
+   ],
+   "on_ground": true,
+   "title": "祭壇",
+   "walkable": true
+  },
+  "chest_boss": {
+   "p": [
+    303,
+    345
+   ],
+   "air": [
+    303,
+    345
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "crystal": {
+   "p": [
+    626,
+    426
+   ],
+   "air": [
+    626,
+    426
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "tower_door": {
+   "p": [
+    695,
+    312
+   ],
+   "air": [
+    695,
+    312
+   ],
+   "on_ground": true,
+   "title": "鐘楼への扉",
+   "walkable": true
+  },
+  "journal": {
+   "p": [
+    1297,
+    932
+   ],
+   "air": [
+    1297,
+    932
+   ],
+   "on_ground": true,
+   "title": "見張りの日誌",
+   "walkable": true
+  },
+  "spring": {
+   "p": [
+    1172,
+    1021
+   ],
+   "air": [
+    1172,
+    1021
+   ],
+   "on_ground": true,
+   "poly": [
+    [
+     1230,
+     938
+    ],
+    [
+     1228,
+     926
+    ],
+    [
+     1222,
+     915
+    ],
+    [
+     1213,
+     905
+    ],
+    [
+     1202,
+     898
+    ],
+    [
+     1188,
+     894
+    ],
+    [
+     1173,
+     893
+    ],
+    [
+     1158,
+     894
+    ],
+    [
+     1144,
+     898
+    ],
+    [
+     1132,
+     905
+    ],
+    [
+     1123,
+     915
+    ],
+    [
+     1117,
+     926
+    ],
+    [
+     1115,
+     938
+    ],
+    [
+     1117,
+     949
+    ],
+    [
+     1123,
+     960
+    ],
+    [
+     1132,
+     969
+    ],
+    [
+     1143,
+     976
+    ],
+    [
+     1157,
+     981
+    ],
+    [
+     1172,
+     983
+    ],
+    [
+     1187,
+     981
+    ],
+    [
+     1201,
+     976
+    ],
+    [
+     1213,
+     969
+    ],
+    [
+     1222,
+     960
+    ],
+    [
+     1228,
+     949
+    ]
+   ],
+   "title": "回廊の泉",
+   "walkable": true
+  },
+  "chest_gallery": {
+   "p": [
+    1269,
+    542
+   ],
+   "air": [
+    1269,
+    542
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "gallery_below": {
+   "p": [
+    1269,
+    712
+   ],
+   "air": [
+    1269,
+    712
+   ],
+   "on_ground": true,
+   "title": "回廊の2階",
+   "walkable": true
+  },
+  "stair_ruin": {
+   "p": [
+    1414,
+    797
+   ],
+   "air": [
+    1414,
+    797
+   ],
+   "on_ground": true,
+   "title": "崩れた階段",
+   "walkable": true
+  },
+  "chest_cloister": {
+   "p": [
+    1414,
+    1179
+   ],
+   "air": [
+    1414,
+    1179
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "hide_pew": {
+   "p": [
+    256,
+    674
+   ],
+   "air": [
+    256,
+    674
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "win_n": {
+   "p": [
+    490,
+    291
+   ],
+   "air": [
+    490,
+    154
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb46a",
+    "r": 150,
+    "intensity": 0.6
+   },
+   "walkable": true
+  },
+  "win_l": {
+   "p": [
+    303,
+    290
+   ],
+   "air": [
+    303,
+    210
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb46a",
+    "r": 150,
+    "intensity": 0.6
+   },
+   "walkable": true
+  },
+  "win_r": {
+   "p": [
+    677,
+    292
+   ],
+   "air": [
+    677,
+    212
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb46a",
+    "r": 150,
+    "intensity": 0.6
+   },
+   "walkable": true
+  },
+  "fx_nave": {
+   "p": [
+    487,
+    901
+   ],
+   "air": [
+    487,
+    901
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "fx_chancel": {
+   "p": [
+    490,
+    435
+   ],
+   "air": [
+    490,
+    435
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "fx_garden": {
+   "p": [
+    1172,
+    951
+   ],
+   "air": [
+    1172,
+    951
+   ],
+   "on_ground": false,
+   "walkable": false
+  },
+  "fx_court": {
+   "p": [
+    486,
+    1458
+   ],
+   "air": [
+    486,
+    1458
+   ],
+   "on_ground": true,
+   "walkable": true
+  }
+ },
+ "lights": [
+  {
+   "p": [
+    234,
+    1278
+   ],
+   "g": [
+    232,
+    1342
+   ],
+   "r": 150
+  },
+  {
+   "p": [
+    734,
+    1279
+   ],
+   "g": [
+    735,
+    1343
+   ],
+   "r": 150
+  },
+  {
+   "p": [
+    239,
+    524
+   ],
+   "g": [
+    238,
+    587
+   ],
+   "r": 150
+  },
+  {
+   "p": [
+    736,
+    527
+   ],
+   "g": [
+    735,
+    590
+   ],
+   "r": 150
+  }
+ ],
+ "far": [
+  "behind",
+  "under"
+ ],
+ "sky": false
+}

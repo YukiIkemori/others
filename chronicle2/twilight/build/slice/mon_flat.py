@@ -11,7 +11,8 @@ from PIL import Image
 from scipy import ndimage as nd
 from scipy.cluster.vq import kmeans2
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, os.path.join(HERE, '..'))
-MON = dict(mn001=50, mn005=64, mn009=66, mn025=90, mn045=70, mn033=66, mn013=58, mn029=86, mn021=84)
+MON = dict(mn001=50, mn005=64, mn009=66, mn025=90, mn045=70, mn033=66, mn013=58, mn029=86, mn021=84,
+           mn006=74, mn017=62, mn037=44, mn046=70, mn049=88, mn053=88, mn097=40, mn101=40, bs01=124)
 
 def figures(path, n, min_px=400):
     rgb = np.array(Image.open(path).convert('RGB')); r, g, b = [rgb[..., i].astype(int) for i in range(3)]
@@ -87,7 +88,10 @@ def cel(sub, m, th, k=7, modes=3, seed=3):
     ys_, xs_ = np.nonzero(out[..., 3]); return out[ys_.min():ys_.max() + 1, xs_.min():xs_.max() + 1]
 
 WHAT = dict(mn001='a green slime with leaves and pebbles inside', mn005='a horned hare', mn009='a lean wild dog', mn025='a walking mushroom', mn045='a small goblin with a club',
-            mn033='a grey crow', mn013='a bat with torn reddish wings', mn029='a man-eating flower bud on a root foot', mn021='a long-legged spider')
+            mn033='a grey crow', mn013='a bat with torn reddish wings', mn029='a man-eating flower bud on a root foot', mn021='a long-legged spider',
+            mn006='a reddish-brown horned hare standing on thick hind legs', mn017='a big dark green armour beetle with a short horn', mn037='a coiled green and ochre snake with its head raised',
+            mn046='a small goblin with a short bow and a quiver', mn049='a skeleton soldier in rusted armour with a chipped sword and a split helmet', mn053='a pale legless ghost with arms stretched forward',
+            mn097='a small pale ball of flame with a short tail', mn101='a heap of copper coins on six thin black insect legs with two tiny eyes', bs01='a huge black and indigo crow swooping with spread wings, a red-brown bell rope tangled on one wing')
 P = """Image 1 shows the four heroes of an HD-2D RPG as game sprites, enlarged: every dot of a hero is a clean square block, shaded with only a few FLAT colours in large calm areas, with a firm dark outline.
 Image 2 is a rough block-in of a monster for the same game (%s), facing right, already on the right grid of big square dots and already in flat colours, but mushy: its face is unreadable and its edges are ragged.
 Finish image 2 as a clean game sprite in EXACTLY the technique of the heroes:

@@ -1,0 +1,488 @@
+{
+ "title": "崖の修道院",
+ "titleEn": "The Abbey on the Crag",
+ "subtitle": "身廊と回廊の泉",
+ "w": 1536,
+ "h": 1552,
+ "pull": 1.2,
+ "image": "map.webp",
+ "walk": "walk.png",
+ "height": "height.png",
+ "floor": "floor.png",
+ "heightBias": 3,
+ "occluders": [],
+ "lights": [
+  {
+   "kind": "window",
+   "x": 490,
+   "y": 154,
+   "gx": 490,
+   "gy": 291,
+   "r": 150,
+   "color": "#ffb46a",
+   "intensity": 0.6,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 303,
+   "y": 210,
+   "gx": 303,
+   "gy": 290,
+   "r": 150,
+   "color": "#ffb46a",
+   "intensity": 0.6,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 677,
+   "y": 212,
+   "gx": 677,
+   "gy": 292,
+   "r": 150,
+   "color": "#ffb46a",
+   "intensity": 0.6,
+   "flicker": 0.05
+  },
+  {
+   "kind": "lamp",
+   "x": 234,
+   "y": 1278,
+   "gx": 232,
+   "gy": 1342,
+   "r": 150,
+   "color": "#ffb46a",
+   "intensity": 0.6,
+   "flicker": 0.12
+  },
+  {
+   "kind": "lamp",
+   "x": 734,
+   "y": 1279,
+   "gx": 735,
+   "gy": 1343,
+   "r": 150,
+   "color": "#ffb46a",
+   "intensity": 0.6,
+   "flicker": 0.12
+  },
+  {
+   "kind": "lamp",
+   "x": 239,
+   "y": 524,
+   "gx": 238,
+   "gy": 587,
+   "r": 150,
+   "color": "#ffb46a",
+   "intensity": 0.6,
+   "flicker": 0.12
+  },
+  {
+   "kind": "lamp",
+   "x": 736,
+   "y": 527,
+   "gx": 735,
+   "gy": 590,
+   "r": 150,
+   "color": "#ffb46a",
+   "intensity": 0.6,
+   "flicker": 0.12
+  },
+  {
+   "kind": "crystal",
+   "x": 405,
+   "y": 1224,
+   "gx": 405,
+   "gy": 1250,
+   "r": 240,
+   "color": "#ffd08a",
+   "intensity": 1.7,
+   "flicker": 0.14
+  }
+ ],
+ "water": [
+  {
+   "poly": [
+    [
+     1230,
+     938
+    ],
+    [
+     1228,
+     926
+    ],
+    [
+     1222,
+     915
+    ],
+    [
+     1213,
+     905
+    ],
+    [
+     1202,
+     898
+    ],
+    [
+     1188,
+     894
+    ],
+    [
+     1173,
+     893
+    ],
+    [
+     1158,
+     894
+    ],
+    [
+     1144,
+     898
+    ],
+    [
+     1132,
+     905
+    ],
+    [
+     1123,
+     915
+    ],
+    [
+     1117,
+     926
+    ],
+    [
+     1115,
+     938
+    ],
+    [
+     1117,
+     949
+    ],
+    [
+     1123,
+     960
+    ],
+    [
+     1132,
+     969
+    ],
+    [
+     1143,
+     976
+    ],
+    [
+     1157,
+     981
+    ],
+    [
+     1172,
+     983
+    ],
+    [
+     1187,
+     981
+    ],
+    [
+     1201,
+     976
+    ],
+    [
+     1213,
+     969
+    ],
+    [
+     1222,
+     960
+    ],
+    [
+     1228,
+     949
+    ]
+   ]
+  }
+ ],
+ "mood": "gold",
+ "moodFixed": true,
+ "moods": {
+  "gold": {
+   "name": "",
+   "ambient": "#d6d0d4",
+   "lightGain": 0.75,
+   "lightRadius": 1,
+   "brighten": 0.55,
+   "glow": 0.6,
+   "heroLight": 0,
+   "skyTint": "#ffffff",
+   "moonGlow": 0,
+   "mist": 0.3,
+   "mistColor": "#cfc8d2",
+   "fireflies": 0,
+   "wisps": 0,
+   "motes": 0.5,
+   "rays": 0,
+   "grade": "#6f6a8a",
+   "gradeAlpha": 0.07,
+   "vignette": 0.38,
+   "vignetteColor": "#120e16",
+   "sparkle": "#fff0d0"
+  },
+  "shadow": {
+   "name": "",
+   "ambient": "#d6d0d4",
+   "lightGain": 0.75,
+   "lightRadius": 1,
+   "brighten": 0.55,
+   "glow": 0.6,
+   "heroLight": 0,
+   "skyTint": "#ffffff",
+   "moonGlow": 0,
+   "mist": 0.3,
+   "mistColor": "#cfc8d2",
+   "fireflies": 0,
+   "wisps": 0,
+   "motes": 0.5,
+   "rays": 0,
+   "grade": "#6f6a8a",
+   "gradeAlpha": 0.07,
+   "vignette": 0.38,
+   "vignetteColor": "#120e16",
+   "sparkle": "#fff0d0"
+  }
+ },
+ "bgm": "bgm15",
+ "hd": {
+  "S": 32,
+  "A": 0.75,
+  "B": 0.66,
+  "depth": 3,
+  "dof": 2,
+  "fogTop": 6.4,
+  "fogBottom": 2.6,
+  "raised": "raised.png",
+  "back": "#2a2630",
+  "noBar": true,
+  "behind": "behind.png",
+  "under": "under.png",
+  "solid": "solid.txt",
+  "grow": 6
+ },
+ "hero": {
+  "sheet": "~/party/hero.png",
+  "spec": "~/party/hero.json",
+  "light": {
+   "r": 150,
+   "color": "#ffb76a",
+   "intensity": 0
+  }
+ },
+ "party": [
+  "~/party/sword",
+  "~/party/rogue",
+  "~/party/priest"
+ ],
+ "spawn": {
+  "x": 486,
+  "y": 1443,
+  "dir": "up"
+ },
+ "spawns": {
+  "south": {
+   "x": 486,
+   "y": 1443,
+   "dir": "up"
+  }
+ },
+ "exits": [
+  {
+   "rect": [
+    415,
+    1522,
+    140,
+    30
+   ],
+   "to": "abbey",
+   "spawn": "altar"
+  }
+ ],
+ "boss": {
+  "id": "bs01",
+  "rect": [
+   190,
+   566,
+   590,
+   76
+  ],
+  "intro": [
+   "祭壇の上で、何かが、羽を広げた。",
+   "鐘守りの大烏だ！"
+  ]
+ },
+ "triggers": [
+  {
+   "x": 405,
+   "y": 1250,
+   "r": 46,
+   "kind": "crystal",
+   "title": "セーブ結晶",
+   "prompt": "触れる",
+   "prop": {
+    "src": "~/prop/crystal.png",
+    "fw": 22,
+    "fh": 68,
+    "foot": [
+     11,
+     74
+    ],
+    "block": 12,
+    "shadow": 1,
+    "bob": 3,
+    "glow": {
+     "c": "#ffdc96",
+     "r": 130,
+     "a": 1.0,
+     "sparks": 1,
+     "up": 4
+    }
+   }
+  },
+  {
+   "x": 489,
+   "y": 470,
+   "r": 1,
+   "kind": "boss",
+   "id": "bs01",
+   "title": "鐘守りの大烏",
+   "prop": {
+    "src": "~/mon/bs01.png",
+    "fw": 139,
+    "fh": 128,
+    "foot": [
+     70,
+     122
+    ],
+    "body": 118,
+    "block": 34,
+    "shadow": 1,
+    "bob": 2
+   }
+  },
+  {
+   "x": 490,
+   "y": 380,
+   "r": 44,
+   "title": "祭壇",
+   "text": [
+    "祭壇の上に、黒い羽が、何枚も落ちている。",
+    "燭台のろうは、ここも新しい。"
+   ]
+  },
+  {
+   "x": 303,
+   "y": 345,
+   "r": 40,
+   "kind": "chest",
+   "id": "ch049",
+   "title": "宝箱",
+   "prompt": "開ける",
+   "prop": {
+    "src": "~/prop/chest.png",
+    "fw": 64,
+    "fh": 64,
+    "foot": [
+     32,
+     54
+    ],
+    "block": 16,
+    "shadow": 0,
+    "glow": {
+     "c": "#ffd27a",
+     "r": 60,
+     "a": 0.8,
+     "sparks": 2,
+     "up": 2
+    }
+   }
+  },
+  {
+   "x": 695,
+   "y": 312,
+   "r": 40,
+   "title": "鐘楼への扉",
+   "text": [
+    "鐘楼へ上がる扉。\n向こうで、風が鳴っている。",
+    "ここから先は、次の一区切りで作ります。"
+   ]
+  },
+  {
+   "x": 1297,
+   "y": 932,
+   "r": 40,
+   "title": "見張りの日誌",
+   "prompt": "読む",
+   "text": [
+    "読み台に、古い日誌が、\n開いたままになっている。",
+    "「鐘は、引くな。\nあれは、見張りが終わる日にだけ鳴る鐘だ。」"
+   ]
+  },
+  {
+   "x": 1172,
+   "y": 1021,
+   "r": 54,
+   "title": "回廊の泉",
+   "text": [
+    "泉の水は、澄んでいる。\n底の石まで、はっきり見える。"
+   ]
+  },
+  {
+   "x": 1414,
+   "y": 797,
+   "r": 42,
+   "title": "崩れた階段",
+   "text": [
+    "2階へ上がる階段は、途中で崩れている。",
+    "鐘楼の中から、回って行けそうだ。"
+   ]
+  }
+ ],
+ "emitters": [
+  {
+   "kind": "motes",
+   "x": 277,
+   "y": 551,
+   "w": 420,
+   "h": 700,
+   "n": 18
+  },
+  {
+   "kind": "motes",
+   "x": 230,
+   "y": 305,
+   "w": 520,
+   "h": 260,
+   "n": 10
+  },
+  {
+   "kind": "motes",
+   "x": 962,
+   "y": 761,
+   "w": 420,
+   "h": 380,
+   "n": 12
+  },
+  {
+   "kind": "mist",
+   "x": 0,
+   "y": 0,
+   "w": 1536,
+   "h": 1552,
+   "n": 3
+  }
+ ],
+ "encounter": {
+  "table": "abbey2",
+  "steps": 46
+ },
+ "save": "crystal"
+}

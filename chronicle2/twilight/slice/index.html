@@ -54,7 +54,8 @@ body.noui .ui, body.noui #below { display: none !important; }
 #title .jp { font-size: calc(58 * var(--u)); font-weight: 500; letter-spacing: .3em; margin-right: -.3em; line-height: 1.5; text-shadow: 0 0 .5em rgba(8, 6, 8, .9), 0 .05em .1em rgba(0, 0, 0, .7); }
 #title .rule { height: 1px; width: calc(420 * var(--u)); margin: calc(8 * var(--u)) auto; background: linear-gradient(90deg, transparent, var(--gold) 18%, var(--gold) 82%, transparent); transform: scaleX(0); transition: transform 1.6s cubic-bezier(.2, .7, .2, 1) .3s; }
 #title.on .rule { transform: scaleX(1); }
-#title .sub { display: none; }
+#title .sub { font-size: calc(24 * var(--u)); letter-spacing: .34em; margin-right: -.34em; color: var(--paper, #e9dfc8); opacity: .9; text-shadow: 0 0 .5em rgba(8, 6, 8, .9), 0 .05em .1em rgba(0, 0, 0, .8); }
+#title .sub:empty { display: none; }
 
 /* interaction prompt */
 #prompt { left: 0; top: 0; pointer-events: auto; cursor: pointer; white-space: nowrap; opacity: 0; transition: opacity .2s; z-index: 7;

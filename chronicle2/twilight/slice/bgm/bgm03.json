@@ -1,0 +1,31 @@
+{
+  "loopStart": 14.211,
+  "loopEnd": 89.517,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "Instrumental background music for an original fantasy role-playing game with a warm, slightly melancholic storybook world of wheat hills, stone abbeys and lantern light. Celtic folk music at its heart, played on real acoustic instruments: fiddle, tin whistle, low whistle, Celtic harp, bodhran frame drum, bouzouki, concertina. Intimate, natural, high-quality recording with a little room reverb; a memorable, singable, completely original melody. Theme of a big old capital city: a cobbled high street full of people, shop signs, carts and street lamps. Lively, busy and friendly, a market-day reel played by a small Celtic folk band (a folk band only: no brass, no snare drum, no orchestra, no crowd noise). Bright but with a little old-stone dignity, pleasant to hear for a long time while shopping. In the middle, the concertina alone plays once the heroes' motto: four notes that hop upward from low to high. Tempo 104 BPM, 4/4 time, key of A major. Instrumentation: two fiddles in unison and harmony, concertina, bouzouki rhythm, bodhran frame drum. Form: bouzouki and bodhran 2-bar intro; section A two fiddles play the reel melody in unison; section A again with the concertina joining; section B a broader, statelier phrase where the fiddles split into harmony; a short bridge where the concertina alone plays the four rising notes of the heroes' motto; section A returns with everyone; the last bar leads back to section A. Duration: 110 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+    "sections": "[[A0]]\n[[B1]]\n[[B2]]\n[[C3]]\n[[D4]]\n[[B5]]\n[[B6]]",
+    "generated": "2026-11-12T13:42:29.667Z",
+    "rawSeconds": 111.6,
+    "takes": 2
+  },
+  "analysis": {
+    "loudnessLUFS": -18,
+    "truePeakDb": -6.1,
+    "gainDb": -6.4,
+    "peakLimited": false,
+    "loopScore": 0.709,
+    "seamListen": {
+      "seam_smooth": 10,
+      "problem": "none"
+    },
+    "seamCorr": 0.484,
+    "xfade": 0.6,
+    "medianDb": -21.3,
+    "longestSilence": 0.1,
+    "seamLevelDiffDb": 2.9,
+    "seamJump": 0.0025,
+    "maxStep": 0.0247
+  }
+}

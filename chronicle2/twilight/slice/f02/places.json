@@ -1,0 +1,384 @@
+{
+ "w": 2304,
+ "h": 1728,
+ "S": 32,
+ "A": 0.75,
+ "B": 0.66,
+ "sy": 1.0034597674035328,
+ "spawn": [
+  2179,
+  678
+ ],
+ "marks": {
+  "exit_east": {
+   "p": [
+    2274,
+    679
+   ],
+   "air": [
+    2274,
+    679
+   ],
+   "on_ground": true,
+   "title": "麦の丘へ",
+   "walkable": true
+  },
+  "spawn_east": {
+   "p": [
+    2179,
+    678
+   ],
+   "air": [
+    2179,
+    678
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "exit_capital": {
+   "p": [
+    360,
+    380
+   ],
+   "air": [
+    360,
+    380
+   ],
+   "on_ground": false,
+   "title": "王都へ",
+   "walkable": false
+  },
+  "spawn_capital": {
+   "p": [
+    360,
+    457
+   ],
+   "air": [
+    360,
+    457
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "exit_south": {
+   "p": [
+    1681,
+    1706
+   ],
+   "air": [
+    1681,
+    1706
+   ],
+   "on_ground": true,
+   "title": "大樹の森へ",
+   "walkable": true
+  },
+  "spawn_south": {
+   "p": [
+    1681,
+    1629
+   ],
+   "air": [
+    1681,
+    1629
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "ruin": {
+   "p": [
+    1159,
+    315
+   ],
+   "air": [
+    1159,
+    315
+   ],
+   "on_ground": true,
+   "title": "白い門",
+   "walkable": true
+  },
+  "remains": {
+   "p": [
+    1056,
+    534
+   ],
+   "air": [
+    1056,
+    534
+   ],
+   "on_ground": true,
+   "title": "倒れた冒険者の荷物",
+   "walkable": true
+  },
+  "hide_rock": {
+   "p": [
+    1780,
+    166
+   ],
+   "air": [
+    1780,
+    166
+   ],
+   "on_ground": true,
+   "title": "大岩の裏",
+   "walkable": true
+  },
+  "rock_front": {
+   "p": [
+    1831,
+    394
+   ],
+   "air": [
+    1831,
+    394
+   ],
+   "on_ground": true,
+   "title": "大岩",
+   "walkable": true
+  },
+  "lookout": {
+   "p": [
+    630,
+    1101
+   ],
+   "air": [
+    630,
+    1101
+   ],
+   "on_ground": true,
+   "title": "崖のふち",
+   "walkable": true
+  },
+  "milestone": {
+   "p": [
+    1254,
+    622
+   ],
+   "air": [
+    1254,
+    622
+   ],
+   "on_ground": true,
+   "title": "道しるべ",
+   "walkable": true
+  },
+  "ramp_top": {
+   "p": [
+    1684,
+    1062
+   ],
+   "air": [
+    1684,
+    1062
+   ],
+   "on_ground": true,
+   "title": "森への下り坂",
+   "walkable": true
+  },
+  "shelf": {
+   "p": [
+    546,
+    1311
+   ],
+   "air": [
+    546,
+    1311
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "pond": {
+   "p": [
+    2051,
+    942
+   ],
+   "air": [
+    2051,
+    942
+   ],
+   "on_ground": false,
+   "poly": [
+    [
+     2184,
+     948
+    ],
+    [
+     2181,
+     935
+    ],
+    [
+     2171,
+     922
+    ],
+    [
+     2155,
+     911
+    ],
+    [
+     2135,
+     901
+    ],
+    [
+     2109,
+     894
+    ],
+    [
+     2081,
+     889
+    ],
+    [
+     2052,
+     887
+    ],
+    [
+     2022,
+     889
+    ],
+    [
+     1994,
+     893
+    ],
+    [
+     1968,
+     900
+    ],
+    [
+     1948,
+     910
+    ],
+    [
+     1932,
+     921
+    ],
+    [
+     1921,
+     934
+    ],
+    [
+     1918,
+     947
+    ],
+    [
+     1921,
+     961
+    ],
+    [
+     1931,
+     973
+    ],
+    [
+     1947,
+     985
+    ],
+    [
+     1967,
+     994
+    ],
+    [
+     1993,
+     1001
+    ],
+    [
+     2021,
+     1006
+    ],
+    [
+     2051,
+     1007
+    ],
+    [
+     2080,
+     1006
+    ],
+    [
+     2108,
+     1001
+    ],
+    [
+     2134,
+     994
+    ],
+    [
+     2155,
+     985
+    ],
+    [
+     2171,
+     973
+    ],
+    [
+     2181,
+     962
+    ]
+   ],
+   "walkable": false
+  },
+  "fx_ruin": {
+   "p": [
+    1159,
+    392
+   ],
+   "air": [
+    1159,
+    392
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "fx_road": {
+   "p": [
+    966,
+    675
+   ],
+   "air": [
+    966,
+    675
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "fx_east": {
+   "p": [
+    1926,
+    678
+   ],
+   "air": [
+    1926,
+    678
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "fx_rim": {
+   "p": [
+    965,
+    1060
+   ],
+   "air": [
+    965,
+    1060
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "fx_gate": {
+   "p": [
+    360,
+    481
+   ],
+   "air": [
+    360,
+    481
+   ],
+   "on_ground": true,
+   "walkable": true
+  }
+ },
+ "lights": [],
+ "far": [
+  "behind",
+  "under"
+ ],
+ "sky": false
+}

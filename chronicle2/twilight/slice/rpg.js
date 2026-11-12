@@ -23,18 +23,18 @@ window.RPG = (function () {
     for (const slot in p.equip) { const it = D.items[p.equip[slot]]; if (!it) continue; s.atk += it.atk || 0; s.mag += it.mag || 0; s.healp += it.healp || 0; s.arm += it.def || 0; s.steal += it.steal || 0; if (slot === 'weapon') s.wtype = it.wtype; }
     return s;
   }
-  const skillsOf = id => Object.entries(D.skills).filter(([k, s]) => s.user === id && s.lv <= G.party[id].lv).map(([k, s]) => Object.assign({ id: k }, s));
+  const skillsOf = id => Object.entries(D.skills).filter(([k, s]) => s.user === id && (s.book ? !!(G.learned && G.learned[k]) : s.lv <= G.party[id].lv)).map(([k, s]) => Object.assign({ id: k }, s));
   const hasPassive = k => { const p = D.passives[k]; return G.party[p.user].lv >= p.lv && G.party[p.user].hp > 0; };
   function newGame() {
     G = { v: 1, gold: D.start.gold, items: Object.assign({}, D.start.items), party: {}, flags: {}, talk: {}, seen: {}, map: D.start.map, x: null, y: null, dir: 'down',
-          steps: 0, next: 60, time: 0, wins: 0, order: D.order.slice(), explored: {}, warps: {}, set: { speed: 1, dash: false, bgm: S.vol.bgm, sfx: S.vol.sfx, map: 'small' } };
+          steps: 0, next: 60, time: 0, wins: 0, order: D.order.slice(), explored: {}, warps: {}, learned: {}, gear2: 1, set: { speed: 1, dash: false, bgm: S.vol.bgm, sfx: S.vol.sfx, map: 'small' } };
     for (const id of ord()) { const c = D.chars[id]; G.party[id] = { lv: 1, exp: 0, row: c.row, equip: Object.assign({}, c.equip), hp: 1, mp: 0 }; const s = stats(id); G.party[id].hp = s.mhp; G.party[id].mp = s.mmp; }
   }
   const count = it => G.items[it] || 0;
   const MAX = 99;                                     // of one kind in the bag (the old game's number)
   function give(it, n) { const have = count(it), add = Math.min(n, MAX - have); if (add > 0) G.items[it] = have + add; return add; }
   function take(it, n) { G.items[it] = Math.max(0, count(it) - (n || 1)); if (!G.items[it]) delete G.items[it]; }
-  function healAll() { for (const id of ord()) { const s = stats(id); G.party[id].hp = s.mhp; G.party[id].mp = s.mmp; } }
+  function healAll() { for (const id of ord()) { const s = stats(id); G.party[id].hp = s.mhp; G.party[id].mp = s.mmp; G.party[id].poison = false; } }
   function gainExp(id, n) {             // -> list of messages (level ups, new skills)
     const p = G.party[id], out = []; p.exp += n;
     while (p.exp >= expNext(p.lv)) {
@@ -51,7 +51,7 @@ window.RPG = (function () {
   const KIND = { sword: '片手剣', great: '大剣', staff: '杖', book: '本', dagger: '短剣', bow: '弓', holy: '聖杖', mace: 'メイス' };
   const slotName = sl => (D.SLOTS.find(q => q[0] === sl) || [0, sl])[1];
   const isGear = it => !!D.items[it] && D.items[it].kind === 'gear';
-  const canWear = (id, it) => { const d = D.items[it]; return isGear(it) && (!d.user || d.user === id) && (d.slot !== 'shield' || id === 'teto'); };
+  const canWear = (id, it) => { const d = D.items[it]; return isGear(it) && (!d.user || d.user === id) && (!d.users || d.users.includes(id)) && (d.slot !== 'shield' || id === 'teto'); };
   const twoHand = it => !!it && !!D.items[it] && D.items[it].wtype === 'great';
   const gearText = d => VALS.filter(([k]) => d[k]).map(([k, n]) => n + ' ' + d[k]).join('　');
   const power = it => { const d = D.items[it]; return d ? (d.atk || 0) + (d.mag || 0) + (d.healp || 0) + (d.def || 0) : 0; };
@@ -109,6 +109,8 @@ window.RPG = (function () {
       if (!Array.isArray(o.order) || o.order.length !== D.order.length || D.order.some(id => !o.order.includes(id))) o.order = D.order.slice();
       o.explored = o.explored || {}; if (!MAPMODES.includes(o.set.map)) o.set.map = 'small';
       if (!o.warps) { o.warps = { village: 1 }; if (o.map === 'abbey' || o.explored.abbey || ['ch045', 'ch046', 'ch047'].some(k => o.flags[k])) o.warps.abbey = 1; }      // saves from before the warp
+      o.learned = o.learned || {};
+      if (!o.gear2) { o.gear2 = 1; for (const id of D.order) if (o.party[id] && !o.party[id].equip.body) o.party[id].equip.body = 'bd01'; }      // saves from before the clothes were an item
       return o; } catch (e) { return null; } }
 
   // ------------------------------------------------------------------ pictures
@@ -272,7 +274,7 @@ window.RPG = (function () {
       box.innerHTML = '';
       ord().forEach((id, i) => {
         const p = G.party[id], s = stats(id), c = el('div', 'card ' + p.row + (i === sel ? ' sel' : '') + (i === o.held ? ' held' : ''));
-        c.innerHTML = `<canvas width="96" height="128"></canvas><span class="nm">${D.chars[id].name}</span><span class="lv">Lv ${p.lv}</span><span class="row">${p.row === 'front' ? '前列' : '後列'}</span>
+        c.innerHTML = `<canvas width="96" height="128"></canvas><span class="nm">${D.chars[id].name}</span><span class="lv">Lv ${p.lv}</span><span class="row">${p.row === 'front' ? '前列' : '後列'}${p.poison ? '　<b style="color:#b79ad8;font-weight:500">毒</b>' : ''}</span>
           <div class="bars"><div><span class="k">HP</span>${p.hp}<span class="max"> / ${s.mhp}</span><span class="bar${p.hp < s.mhp * .3 ? ' low' : ''}"><i style="width:${100 * p.hp / s.mhp}%"></i></span></div>
           <div><span class="k">MP</span>${p.mp}<span class="max"> / ${s.mmp}</span><span class="bar mp"><i style="width:${s.mmp ? 100 * p.mp / s.mmp : 0}%"></i></span></div></div>`;
         img(D.chars[id].sprite + '.png').then(im => { const x = c.querySelector('canvas').getContext('2d'); x.imageSmoothingEnabled = false; x.drawImage(im, 0, 0, 96, 128, 0, 0, 96, 128); });
@@ -316,6 +318,7 @@ window.RPG = (function () {
       if (t.kind === 'spot' && G && G.flags[t.id]) t.hidden = true;
       if (t.kind === 'dig' && G && G.flags[t.id]) { t.kind = null; t.text = ['もう、何もない']; t.prompt = null; }
       if (t.kind === 'npc' && !t.prompt) t.prompt = '話す';
+      if (t.kind === 'boss') { t.hidden = true; if (G && G.flags[t.id]) continue; }      // (hidden: nothing to examine; the fight starts on the map's boss line)
       if (!t.prop) continue;
       const pr = t.prop;
       img(pr.src.replace(/^~\//, '')).then(im => {
@@ -333,7 +336,9 @@ window.RPG = (function () {
   const encGap = M => Math.round((M.encounter.steps || 60) * rnd(.6, 1.4));
   function near(M) { const g = game(), n = M.encounter.near; return n && Math.hypot(g.hero.x - n[0], g.hero.y - n[1]) < n[2]; }
   function onStep(d) {
-    const g = game(), M = g.map; if (!G || busy || !M.encounter || Q.get('enc') === '0') return;
+    const g = game(), M = g.map; if (!G || busy) return;
+    const bz = M.boss; if (bz && !G.flags[bz.id] && g.hero.x >= bz.rect[0] && g.hero.x < bz.rect[0] + bz.rect[2] && g.hero.y >= bz.rect[1] && g.hero.y < bz.rect[1] + bz.rect[3]) { bossFight(M, bz); return; }
+    if (!M.encounter || Q.get('enc') === '0') return;
     // How often: as in the old game, an average number of steps per place (a step = 36 dots; 60 in the open, fewer in a
     // dungeon), each gap drawn from 0.6 to 1.4 of it, and steps walked instead of run count 0.8.
     G.steps += d / 36 * (g.hero.running ? 1 : .8);
@@ -344,15 +349,25 @@ window.RPG = (function () {
     for (const q of pool) { r -= q.w; if (r <= 0) { pickG = q; break; } }
     battle(pickG.m, T);
   }
-  async function battle(group, T) {
+  async function battle(group, T, opt) {          // -> 'win' | 'flee' | 'lose'
     if (busy) return; busy = true; const g = game(); g.paused = true;
     S.sfx('encounter'); S.bgm(T.bgm, { fade: .15, in: .05, restart: true });
     await window.BATTLE.transition();
     g.paused = 'cover';
-    const r = await window.BATTLE.run(env, { group, bg: T.bg });
-    if (r === 'lose') { await gameOver(); return; }
+    const r = await window.BATTLE.run(env, { group, bg: T.bg, boss: !!(opt && opt.boss) });
+    if (r === 'lose') { await gameOver(); return r; }
     S.bgm(g.map.bgm, { fade: .4 });
-    g.paused = false; busy = false;
+    g.paused = false; busy = false; return r;
+  }
+  // a boss that waits in one place: a few words, the fight (no fleeing), and it is gone for good
+  async function bossFight(M, bz) {
+    if (busy) return; const g = game(); busy = true; g.paused = true;
+    for (const t of bz.intro || []) await notice(t);
+    busy = false;
+    const T = D.bosses[bz.id], r = await battle(T.group, T, { boss: true });
+    if (r !== 'win') return;
+    G.flags[bz.id] = 1;
+    for (const t of M.triggers) if (t.kind === 'boss' && t.id === bz.id && t.propObj) { g.removeProp(t.propObj); t.propObj = null; }
   }
   async function gameOver() {
     const g = game();
@@ -364,7 +379,8 @@ window.RPG = (function () {
     const c = D.chests[id]; G.flags[id] = 1;
     for (const [it, n] of c.give || []) {
       const got = give(it, n), nm = D.items[it].name + (n > 1 ? '×' + n : '');
-      S.sfx('get'); await notice(got ? (opened ? `${nm}を\n手に入れた！` : `物陰に、何かある。\n${nm}を手に入れた`) : `${D.items[it].name}は、\nこれ以上持てない`);
+      if (!opened && c.found) await notice(c.found);
+      S.sfx('get'); await notice(got ? (opened || c.found ? `${nm}を\n手に入れた！` : `物陰に、何かある。\n${nm}を手に入れた`) : `${D.items[it].name}は、\nこれ以上持てない`);
     }
     if (c.gold) { G.gold += c.gold; S.sfx('coin'); await notice(`お金を${c.gold}枚、\n手に入れた！`); }
   }
@@ -373,22 +389,33 @@ window.RPG = (function () {
     const g = game();
     const run = async f => { busy = true; g.paused = true; try { await f(); } finally { g.paused = false; busy = false; } };
     if (t.kind === 'npc') {
-      const n = D.npcs[t.id], k = G.talk[t.id] || 0, lines = n.lines[Math.min(k, n.lines.length - 1)]; G.talk[t.id] = k + 1;
-      g.say(lines, n.name, () => { if (n.shop) run(() => shop(n.shop)); else if (n.inn) run(inn); });
+      const n = D.npcs[t.id]; let set = n.lines, key = t.id;
+      for (const a of n.alt || []) if ([].concat(a.flag).every(f => G.flags[f])) { set = a.lines; key = t.id + ':' + a.flag; }
+      const k = G.talk[key] || 0, lines = set[Math.min(k, set.length - 1)]; G.talk[key] = k + 1;
+      g.say(lines, n.name, () => { if (n.offer && !G.flags[n.offer.flag]) run(() => offer(n.offer)); else if (n.shop) run(() => shop(n.shop)); else if (n.inn) run(() => inn(n.inn)); });
       return true;
     }
     if (t.kind === 'shop') { S.sfx('door'); run(() => shop(t.shop)); return true; }
-    if (t.kind === 'inn') { run(inn); return true; }
+    if (t.kind === 'inn') { run(() => inn(t.price)); return true; }
     if (t.kind === 'chest') { run(async () => { S.sfx('chest'); if (t.propObj) { t.propObj.frame = 1; t.propObj.glow = null; } t.hidden = true; await wait(450); await getChest(t.id, true); }); return true; }
     if (t.kind === 'spot') { run(async () => { S.sfx('glint'); t.hidden = true; await wait(200); await getChest(t.id, false); }); return true; }
     if (t.kind === 'dig') { run(async () => { await notice('一本杉の根もとを、\n掘ってみた…'); S.sfx('get'); G.flags[t.id] = 1; give('spoon', 1); await notice('さびたスプーンを\n手に入れた'); t.kind = null; t.text = ['もう、何もない']; t.prompt = null; }); return true; }
     if (t.kind === 'crystal') { run(() => crystal(t)); return true; }
     if (t.kind === 'jump') { run(async () => { await fadeOut(200); S.sfx('thud'); g.teleport(t.to[0], t.to[1], 'down'); await fadeIn(); }); return true; }
     if (t.kind === 'warp') { (async () => { busy = true; g.paused = true; const a = await choose(t.ask, [t.prompt, 'やめる']); g.paused = false; busy = false; if (a === 0) { S.sfx('step'); changeMap(t.to, { spawn: t.spawn }); } })(); return true; }
+    if (t.flag) G.flags[t.flag] = 1;          // a plain sign or sight that is remembered (the pigeons' nest)
     return false;
   }
-  async function inn() {
-    const a = await choose('休んでいく？', ['休む', 'やめる']); if (a !== 0) return;
+  async function offer(o) {                 // somebody sells one thing once (the map seller)
+    const a = await choose(o.ask, [o.yes, 'やめる']); if (a !== 0) return;
+    if (G.gold < o.price) { S.sfx('buzz'); await notice('お金が足りない'); return; }
+    G.gold -= o.price; G.flags[o.flag] = 1; S.sfx('coin'); await notice(o.got);
+  }
+  async function inn(price) {               // price: true or nothing = free (home), a number = that many coins
+    price = price === true ? 0 : price | 0;
+    const a = await choose(price ? `一晩、${price}枚。\n休んでいく？` : '休んでいく？', ['休む', 'やめる']); if (a !== 0) return;
+    if (G.gold < price) { S.sfx('buzz'); await notice('お金が足りない'); return; }
+    G.gold -= price;
     await fadeOut(600); S.sfx('rest'); healAll(); await wait(1500); await fadeIn();
     await notice('4人は、ぐっすり休んだ。\nHPとMPが全部戻った');
   }
@@ -419,7 +446,7 @@ window.RPG = (function () {
   function startScreen() {
     const g = game(); g.paused = true; if ($('title')) $('title').style.visibility = 'hidden';      // the place's name waits until the game has begun
     const sc = el('div', 'hit'); sc.id = 'start';
-    sc.innerHTML = '<div class="t1">The first slice</div><div class="t2">麦の丘の一区切り</div><div class="t3">始まりの村から、崖の修道院の入口まで</div>';
+    sc.innerHTML = '<div class="t1">The first slice</div><div class="t2">麦の丘の一区切り</div><div class="t3">始まりの村から、王都と、崖の修道院の奥まで</div>';
     root.appendChild(sc);
     const has = !!loadSave();
     const l = list(sc, [{ label: '最初から' }, { label: '続きから', dim: !has }], { onPick: async (it, i) => {
@@ -550,7 +577,16 @@ window.RPG = (function () {
           for (let i = 0; count(it.id) > 0;) {
             i = await pickChar(cd, i); if (i < 0) break;
             const id = ord()[i], p = G.party[id], st = stats(id);
-            if (d.heal && p.hp > 0 && p.hp < st.mhp) { const n = Math.min(d.heal, st.mhp - p.hp); p.hp += n; take(it.id); S.sfx('heal'); cd.render(); cd.sel = i; hb.set(`${D.chars[id].name}のHPが、${n}回復した（残り ×${count(it.id)}）`); }
+            const nm = D.chars[id].name, used = t => { take(it.id); S.sfx('heal'); cd.render(); cd.sel = i; hb.set(`${t}（残り ×${count(it.id)}）`); };
+            if (d.heal && p.hp > 0 && p.hp < st.mhp) { const n = Math.min(d.heal, st.mhp - p.hp); p.hp += n; used(`${nm}のHPが、${n}回復した`); }
+            else if (d.mp && p.hp > 0 && p.mp < st.mmp) { const n = Math.min(d.mp, st.mmp - p.mp); p.mp += n; used(`${nm}のMPが、${n}回復した`); }
+            else if (d.revive && p.hp <= 0) { p.hp = Math.max(1, Math.floor(st.mhp * d.revive)); used(`${nm}は、起き上がった`); }
+            else if (d.cure === 'poison' && p.poison) { p.poison = false; used(`${nm}の毒が、消えた`); }
+            else if (d.teach) { const sk = D.skills[d.teach];
+              if (sk.user !== id) { S.sfx('buzz'); hb.set(`${D.chars[sk.user].name}にしか、読めない`); }
+              else if (G.learned[d.teach]) { S.sfx('buzz'); hb.set('もう、覚えている'); }
+              else { G.learned[d.teach] = 1; take(it.id); S.sfx('levelup'); await notice(`${nm}は、\n${sk.name}を覚えた！`); break; } }
+            else if (d.haste) { S.sfx('buzz'); hb.set('戦闘の間だけ使える'); }
             else { S.sfx('buzz'); hb.set('使っても、何も起きない'); }
           }
           cd.sel = -1; l.set(mk(), true);
@@ -737,7 +773,7 @@ window.RPG = (function () {
   const api = { startMap: Q.get('map') || 'village/map.json', onMap, onStep, onTrigger, onExit, onKey, alwaysDash: () => !!(G && G.set.dash), env,
     get G() { return G; }, get busy() { return busy; }, get ui() { return ui; }, get started() { return started; },
     // for tests and for trying things out: RPG.debug.battle(['mn001','mn005'])
-    debug: { battle: (g, table) => battle(g, D.encounters[table || 'f01']), expNext, mapCycle, mmDraw, get mm() { return MM; }, newGame, healAll, give, fullHeal, go: (name, at) => changeMap(name, at), save, menu, shop,
+    debug: { battle: (g, table, opt) => battle(g, D.encounters[table] || D.bosses[table] || D.encounters.f01, opt), expNext, mapCycle, mmDraw, get mm() { return MM; }, newGame, healAll, give, fullHeal, go: (name, at) => changeMap(name, at), save, menu, shop,
              lv(n) { for (const id of ord()) { G.party[id].lv = n; } healAll(); } } };
   return api;
 })();

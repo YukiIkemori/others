@@ -1,0 +1,837 @@
+{
+ "title": "王都",
+ "titleEn": "The Capital",
+ "subtitle": "城門前の広場",
+ "w": 2048,
+ "h": 1600,
+ "pull": 1.2,
+ "image": "map.webp",
+ "walk": "walk.png",
+ "height": "height.png",
+ "floor": "floor.png",
+ "heightBias": 3,
+ "occluders": [],
+ "lights": [
+  {
+   "kind": "window",
+   "x": 586,
+   "y": 389,
+   "gx": 585,
+   "gy": 448,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 794,
+   "y": 390,
+   "gx": 794,
+   "gy": 449,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 190,
+   "y": 776,
+   "gx": 190,
+   "gy": 835,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 284,
+   "y": 776,
+   "gx": 284,
+   "gy": 834,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 190,
+   "y": 705,
+   "gx": 190,
+   "gy": 835,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 284,
+   "y": 705,
+   "gx": 284,
+   "gy": 834,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 171,
+   "y": 1112,
+   "gx": 171,
+   "gy": 1171,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 305,
+   "y": 1110,
+   "gx": 305,
+   "gy": 1168,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 171,
+   "y": 1040,
+   "gx": 171,
+   "gy": 1171,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 235,
+   "y": 1039,
+   "gx": 235,
+   "gy": 1165,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 304,
+   "y": 1038,
+   "gx": 305,
+   "gy": 1168,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1769,
+   "y": 784,
+   "gx": 1770,
+   "gy": 842,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1919,
+   "y": 783,
+   "gx": 1920,
+   "gy": 842,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1774,
+   "y": 712,
+   "gx": 1776,
+   "gy": 842,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1911,
+   "y": 711,
+   "gx": 1914,
+   "gy": 842,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1778,
+   "y": 1116,
+   "gx": 1778,
+   "gy": 1175,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1916,
+   "y": 1117,
+   "gx": 1916,
+   "gy": 1175,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1778,
+   "y": 1045,
+   "gx": 1778,
+   "gy": 1175,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1847,
+   "y": 1045,
+   "gx": 1847,
+   "gy": 1175,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1916,
+   "y": 1046,
+   "gx": 1916,
+   "gy": 1175,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 191,
+   "y": 1466,
+   "gx": 191,
+   "gy": 1524,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 357,
+   "y": 1463,
+   "gx": 357,
+   "gy": 1520,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1294,
+   "y": 1468,
+   "gx": 1294,
+   "gy": 1524,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1498,
+   "y": 1473,
+   "gx": 1497,
+   "gy": 1531,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1714,
+   "y": 1472,
+   "gx": 1712,
+   "gy": 1531,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1910,
+   "y": 1472,
+   "gx": 1905,
+   "gy": 1526,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "lamp",
+   "x": 426,
+   "y": 1114,
+   "gx": 426,
+   "gy": 1197,
+   "r": 160,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 422,
+   "y": 450,
+   "gx": 422,
+   "gy": 535,
+   "r": 160,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1626,
+   "y": 1122,
+   "gx": 1625,
+   "gy": 1205,
+   "r": 160,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1617,
+   "y": 454,
+   "gx": 1618,
+   "gy": 538,
+   "r": 160,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 423,
+   "y": 782,
+   "gx": 423,
+   "gy": 865,
+   "r": 160,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1624,
+   "y": 789,
+   "gx": 1625,
+   "gy": 873,
+   "r": 160,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 862,
+   "y": 439,
+   "gx": 863,
+   "gy": 524,
+   "r": 160,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1175,
+   "y": 437,
+   "gx": 1174,
+   "gy": 521,
+   "r": 160,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 859,
+   "y": 1127,
+   "gx": 860,
+   "gy": 1210,
+   "r": 160,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1174,
+   "y": 1132,
+   "gx": 1174,
+   "gy": 1215,
+   "r": 160,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 848,
+   "y": 1325,
+   "gx": 848,
+   "gy": 1408,
+   "r": 160,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1187,
+   "y": 1330,
+   "gx": 1187,
+   "gy": 1411,
+   "r": 160,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1494,
+   "y": 429,
+   "gx": 1494,
+   "gy": 524,
+   "r": 170,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1772,
+   "y": 427,
+   "gx": 1772,
+   "gy": 523,
+   "r": 170,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  }
+ ],
+ "water": [
+  {
+   "poly": [
+    [
+     1112,
+     841
+    ],
+    [
+     1110,
+     825
+    ],
+    [
+     1102,
+     810
+    ],
+    [
+     1091,
+     797
+    ],
+    [
+     1076,
+     785
+    ],
+    [
+     1059,
+     778
+    ],
+    [
+     1038,
+     772
+    ],
+    [
+     1018,
+     770
+    ],
+    [
+     997,
+     772
+    ],
+    [
+     977,
+     778
+    ],
+    [
+     959,
+     786
+    ],
+    [
+     944,
+     798
+    ],
+    [
+     933,
+     811
+    ],
+    [
+     925,
+     825
+    ],
+    [
+     923,
+     841
+    ],
+    [
+     925,
+     858
+    ],
+    [
+     933,
+     872
+    ],
+    [
+     943,
+     885
+    ],
+    [
+     958,
+     897
+    ],
+    [
+     976,
+     905
+    ],
+    [
+     996,
+     911
+    ],
+    [
+     1017,
+     912
+    ],
+    [
+     1038,
+     911
+    ],
+    [
+     1058,
+     905
+    ],
+    [
+     1076,
+     897
+    ],
+    [
+     1091,
+     885
+    ],
+    [
+     1102,
+     872
+    ],
+    [
+     1110,
+     857
+    ]
+   ]
+  }
+ ],
+ "mood": "gold",
+ "moodFixed": true,
+ "moods": {
+  "gold": {
+   "name": "",
+   "ambient": "#cfc8cf",
+   "lightGain": 0.9,
+   "lightRadius": 1,
+   "brighten": 0.5,
+   "glow": 0.75,
+   "heroLight": 0,
+   "skyTint": "#ffffff",
+   "moonGlow": 0,
+   "mist": 0.3,
+   "mistColor": "#cfc8d2",
+   "fireflies": 0,
+   "wisps": 0,
+   "motes": 0.5,
+   "rays": 0,
+   "grade": "#6f6a8a",
+   "gradeAlpha": 0.07,
+   "vignette": 0.38,
+   "vignetteColor": "#120e16",
+   "sparkle": "#fff0d0"
+  },
+  "shadow": {
+   "name": "",
+   "ambient": "#cfc8cf",
+   "lightGain": 0.9,
+   "lightRadius": 1,
+   "brighten": 0.5,
+   "glow": 0.75,
+   "heroLight": 0,
+   "skyTint": "#ffffff",
+   "moonGlow": 0,
+   "mist": 0.3,
+   "mistColor": "#cfc8d2",
+   "fireflies": 0,
+   "wisps": 0,
+   "motes": 0.5,
+   "rays": 0,
+   "grade": "#6f6a8a",
+   "gradeAlpha": 0.07,
+   "vignette": 0.38,
+   "vignetteColor": "#120e16",
+   "sparkle": "#fff0d0"
+  }
+ },
+ "bgm": "bgm03",
+ "hd": {
+  "S": 32,
+  "A": 0.75,
+  "B": 0.66,
+  "depth": 3,
+  "dof": 2,
+  "fogTop": 6.4,
+  "fogBottom": 2.0,
+  "raised": "raised.png",
+  "back": "#2a2630",
+  "noBar": true,
+  "behind": "behind.png",
+  "under": "under.png",
+  "solid": "solid.txt",
+  "grow": 32
+ },
+ "hero": {
+  "sheet": "~/party/hero.png",
+  "spec": "~/party/hero.json",
+  "light": {
+   "r": 150,
+   "color": "#ffb76a",
+   "intensity": 0
+  }
+ },
+ "party": [
+  "~/party/sword",
+  "~/party/rogue",
+  "~/party/priest"
+ ],
+ "spawn": {
+  "x": 1017,
+  "y": 1481,
+  "dir": "up"
+ },
+ "spawns": {
+  "south": {
+   "x": 1017,
+   "y": 1481,
+   "dir": "up"
+  },
+  "north": {
+   "x": 1019,
+   "y": 334,
+   "dir": "down"
+  }
+ },
+ "exits": [
+  {
+   "rect": [
+    874,
+    1560,
+    288,
+    40
+   ],
+   "to": "capital",
+   "spawn": "north"
+  },
+  {
+   "x": 1019,
+   "y": 260,
+   "r": 54,
+   "closed": [
+    "北門の先は、北の街道の丘。\n丘をこえると、雪の山道になる。",
+    "ここから先は、次の一区切りで作ります。"
+   ]
+  }
+ ],
+ "triggers": [
+  {
+   "x": 1520,
+   "y": 536,
+   "r": 50,
+   "kind": "npc",
+   "id": "guard",
+   "title": "門番の衛兵",
+   "prop": {
+    "src": "~/npc/guard.png",
+    "block": 13,
+    "shadow": 1
+   }
+  },
+  {
+   "x": 743,
+   "y": 1410,
+   "r": 50,
+   "kind": "npc",
+   "id": "toto",
+   "title": "水路番のじいさんトト",
+   "prop": {
+    "src": "~/npc/toto.png",
+    "block": 13,
+    "shadow": 1
+   }
+  },
+  {
+   "x": 1099,
+   "y": 952,
+   "r": 50,
+   "kind": "npc",
+   "id": "elma",
+   "title": "城の書記エルマ",
+   "prop": {
+    "src": "~/npc/elma.png",
+    "block": 13,
+    "shadow": 1
+   }
+  },
+  {
+   "x": 1633,
+   "y": 516,
+   "r": 50,
+   "title": "お城の門",
+   "text": [
+    "かたく閉じている。"
+   ]
+  },
+  {
+   "x": 619,
+   "y": 1420,
+   "r": 44,
+   "title": "水路の降り口",
+   "text": [
+    "石段が、暗い水路へ降りている。\n下から、水の音がする。",
+    "ここから先は、次の一区切りで作ります。"
+   ]
+  },
+  {
+   "x": 1017,
+   "y": 956,
+   "r": 50,
+   "title": "噴水",
+   "text": [
+    "水の底に、小銭がたくさん沈んでいる。\n……拾うのは、やめておこう。"
+   ]
+  },
+  {
+   "x": 390,
+   "y": 85,
+   "r": 40,
+   "title": "時計塔のてっぺん",
+   "prompt": "のぞく",
+   "flag": "nest",
+   "text": [
+    "塔の窓から、中をのぞいた。",
+    "……鳩の巣が、あるだけだ。"
+   ]
+  },
+  {
+   "x": 768,
+   "y": 291,
+   "r": 44,
+   "title": "城壁の下",
+   "prompt": "見上げる",
+   "text": [
+    "城壁の上に、宝箱が見える。",
+    "時計塔の横の外階段から、\n城壁の上へ登れる。"
+   ]
+  },
+  {
+   "x": 768,
+   "y": 89,
+   "r": 40,
+   "kind": "chest",
+   "id": "ch004",
+   "title": "宝箱",
+   "prompt": "開ける",
+   "prop": {
+    "src": "~/prop/chest.png",
+    "fw": 64,
+    "fh": 64,
+    "foot": [
+     32,
+     54
+    ],
+    "block": 16,
+    "shadow": 0,
+    "glow": {
+     "c": "#ffd27a",
+     "r": 60,
+     "a": 0.8,
+     "sparks": 2,
+     "up": 2
+    }
+   }
+  }
+ ],
+ "emitters": [
+  {
+   "kind": "motes",
+   "x": 567,
+   "y": 590,
+   "w": 900,
+   "h": 520,
+   "n": 20
+  },
+  {
+   "kind": "motes",
+   "x": 816,
+   "y": 1230,
+   "w": 400,
+   "h": 240,
+   "n": 8
+  },
+  {
+   "kind": "mist",
+   "x": 0,
+   "y": 0,
+   "w": 2048,
+   "h": 1600,
+   "n": 4
+  }
+ ],
+ "save": "any"
+}

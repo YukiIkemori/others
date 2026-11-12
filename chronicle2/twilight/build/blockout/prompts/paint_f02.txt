@@ -1,0 +1,28 @@
+Image 1 is a rough BLOCKOUT of a field map for a 2D RPG, rendered from simple 3D blocks with flat placeholder colours: a bare, wind-blown grass plateau. A dirt highway crosses it from the right edge and bends up to the gate of a walled stone city in the upper left corner; in the upper middle an ancient white stone gate stands on a small paved forecourt, set into a grassy burial mound; a very large boulder lies at the upper right; along the bottom the plateau breaks off in a rock cliff, and below the cliff the crowns of a great forest fill the bottom edge; one long worn stair-ramp goes down the cliff into the forest. Image 2 is a STYLE REFERENCE: the finished picture of the neighbouring field of this same game. Copy its pixel-art craft, its palette, its density of small detail and the size of its details exactly, so that both maps look painted by the same hand. Do not copy its layout.
+
+TASK: repaint image 1 as finished background art in the style of image 2: premium high-resolution pixel art in JRPG 3/4 overhead view (HD-2D game background), crisp deliberate pixel clusters, dark plum-brown outlines (never pure black), rich hue-shifted shading, dense hand-pixelled detail on every grass tuft, stone, leaf, roof tile and crack.
+
+LIGHT AND COLOUR: this world has one weak pale sun and is always dim, like a heavy overcast late afternoon that never ends. It is not night and there is no moon. Colours are muted, deep and earthy: grey-green and olive wind-combed grass, faded bone-white stone, grey-brown rock, dull brick-red roof tiles, dark blue-green forest. No bright saturated colours. A faint cool violet-grey haze lies in the shadows; a weak warm light comes from the upper left. No lamps, no lanterns, no glowing things.
+
+What the placeholder colours mean:
+- green = open highland grass: short, wind-combed, greyish, with heather, thistles, small pale flowers, worn bare patches and half-buried stones (flat, open)
+- tan = the packed earth highway and tracks with cart ruts, pebbles and grass creeping in at the edges (flat, clear, empty)
+- the long striped tan ramp between two dark rock banks at the lower right = an old stair-ramp of worn earth and stone steps going down the cliff, one low tread per stripe, with rough rock banks on both sides
+- white and pale grey blocks in the upper middle = the RUIN: a massive ancient gate of weathered bone-white stone (two heavy pylons, a lintel, a pediment stone) with a pitch-dark doorway, standing at the back of a low paved forecourt of pale flagstones reached by three wide steps; white cylinders = stone columns, some whole with a capital, most broken off short; white lumps = fallen column drums. Old, plain, severe, older than the city; fine cracks, lichen, no ornaments, no glow
+- the big green dome behind the gate = a grassy burial mound that the gate is built into
+- the small red lump and the thin dark cross beside the steps = a traveller's abandoned pack and a sword stuck upright in the ground
+- mid grey with battlements, upper left = the city wall of grey ashlar with a dark arched gateway between two gate towers and a corner tower; cream blocks with brick-red tops behind it = tall town houses with dull red-brown tiled roofs, and one tall clock tower, seen over the wall
+- dark brown-grey rounded masses = natural boulders and rock outcrops: one huge boulder at the upper right with smaller ones around it, a line of outcrops along the top edge, scattered small boulders
+- the dark brown-grey striped band across the lower part = the rock cliff where the plateau breaks off, with ledges, cracks, roots and tufts; the small green rectangle half-way down it at the left = a grassy rock shelf (flat)
+- thin grey slabs at the lower left = four weathered standing stones; the small grey block by the road = a milestone; the small pale cone by the stair = a cairn of piled stones
+- green rounded masses on leaning brown trunks = lone wind-bent trees, crowns blown to the right; small green domes = low gorse and heather bushes
+- blue oval = a small still highland pond with reeds and stones at its rim
+- dark green rounded masses filling the bottom = the canopy of a great old forest far below the cliff, crown beside crown; the dull dark green between them = undergrowth in deep shade
+
+THE GEOMETRY IS LOCKED. Image 1 is the game's collision map, so:
+- Every wall, tower, building, column, step, rock, boulder, standing stone, tree trunk and crown, bush, the pond, the cliff and every road keeps exactly its position, size, outline and footprint. Do not move, resize, rotate, add or remove any wall, tree, rock, building or large object. Do not change the camera or the perspective.
+- THE ROAD, THE TRACKS AND THE OPEN GRASS STAY WIDE, FLAT AND EMPTY: nothing may stand on them.
+- Add richness in the EDGES instead, with small low things: lichen and moss on stones, thistles and heather at the foot of rocks, pebbles, wheel ruts, puddles, bleached bones of a sheep, a broken cart wheel by the milestone, feathers, small flowers along the cliff rim.
+- Paint the picture to every edge; there is no sky in this picture.
+
+No characters, no people, no animals, no text, no readable signs, no UI, no frame.

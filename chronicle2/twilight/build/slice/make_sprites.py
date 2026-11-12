@@ -135,17 +135,30 @@ def dots(sub, m, th, ncol=16):
     ys_, xs_ = np.nonzero(out[..., 3]); return out[ys_.min():ys_.max() + 1, xs_.min():xs_.max() + 1]
 
 # ---- monsters: height on screen in dots (the heroes are 80)
-MON = dict(mn001=50, mn005=64, mn009=66, mn025=90, mn045=70, mn033=66, mn013=58, mn029=86, mn021=84)
+MON = dict(mn001=50, mn005=64, mn009=66, mn025=90, mn045=70, mn033=66, mn013=58, mn029=86, mn021=84,
+           mn006=74, mn017=62, mn037=44, mn046=70, mn049=88, mn053=88, mn097=40, mn101=40, bs01=124)
 meta = {}
 for n, th in MON.items():
     f2, src = f'{RAW}/{n}_flat2.png', f'{RAW}/{n}_flat.png'               # the flat redraw (mon_flat.py), else the redraw in the party's technique (gen_art.py), else the first pass
     if os.path.exists(f2): (sub, m), = figures(f2, 1); im = dots(sub, m, th + 2)
     else: (sub, m), = figures(src if os.path.exists(src) else f'{RAW}/{n}.png', 1); im = crisp(sub, m, th)
     Image.fromarray(im).save(f'{OUT}/mon/{n}.png'); meta[n] = [im.shape[1], im.shape[0]]
+# 灯り玉 comes in two colours (its weakness depends on the colour): the milk-white flame is tinted by code
+def tint(src, dst, col):
+    a = np.array(Image.open(src).convert('RGBA')).astype(float); lum = a[..., :3] @ np.array([.3, .59, .11]) / 255
+    c = np.array(col, float); out = a.copy()
+    out[..., :3] = np.clip(c * (lum[..., None] ** 1.5) * 1.15 + 255 * np.clip(lum[..., None] - .82, 0, 1) * 3, 0, 255); Image.fromarray(out.astype(np.uint8)).save(dst)
+if os.path.exists(f'{OUT}/mon/mn097.png'):
+    tint(f'{OUT}/mon/mn097.png', f'{OUT}/mon/mn097r.png', (214, 104, 70)); tint(f'{OUT}/mon/mn097.png', f'{OUT}/mon/mn097b.png', (96, 140, 210))
+    for k in ('mn097r', 'mn097b'): meta[k] = meta['mn097']
 json.dump(meta, open(f'{OUT}/mon/sizes.json', 'w'))
 # ---- villagers: 96x128 frames, feet at (48,120) like the party
-NPC = dict(npc_a=[('moku', 70), ('mother', 78), ('yomo', 66), ('dorgo', 82), ('hanna', 76)], npc_b=[('oz', 78), ('sem', 78), ('pico', 70), ('mil', 58), ('bart', 80)])
+NPC = dict(npc_a=[('moku', 70), ('mother', 78), ('yomo', 66), ('dorgo', 82), ('hanna', 76)], npc_b=[('oz', 78), ('sem', 78), ('pico', 70), ('mil', 58), ('bart', 80)],
+           npc_c=[('garam', 84), ('ryuka', 78), ('nezu', 80), ('hash', 80), ('bren', 78)], npc_d=[('sara', 76), ('marg', 80), ('jino', 78), ('guard', 100), ('toto', 68)],
+           npc_e=[('elma', 76), ('armorer', 80), ('itemman', 78), ('townwoman', 76), ('merchant', 80)])
+# heights include what a figure holds above its head (ジノ's lighting pole, the guard's spear)
 for sheet, people in NPC.items():
+    if not os.path.exists(f'{RAW}/{sheet}.png'): continue
     figs = figures(f'{RAW}/{sheet}.png', 5); assert len(figs) == 5, len(figs)
     for (name, th), (sub, m) in zip(people, figs):
         im = shrink(sub, m, th, 30); fr = np.zeros((128, 96, 4), np.uint8); h, w = im.shape[:2]
@@ -159,15 +172,17 @@ for k, (sub, m) in enumerate(figs[:2]):
 Image.fromarray(sheet).save(f'{OUT}/prop/chest.png')
 im = shrink(*figs[2], 68, 24); Image.fromarray(im).save(f'{OUT}/prop/crystal.png')
 # ---- battle backgrounds: 1152x648 (the battle view is pulled back by 1.2, see battle.js)
-for n in ('bg_f01', 'bg_abbey'):
+for n in ('bg_f01', 'bg_abbey', 'bg_f02', 'bg_abbey2'):
+    if not os.path.exists(f'{RAW}/{n}.png'): continue
     b = Image.open(f'{RAW}/{n}.png').convert('RGB').resize((1152, 653), Image.LANCZOS).crop((0, 2, 1152, 650)); b.save(f'{OUT}/bg/{n}.webp', lossless=True, quality=90, method=4)
 # ---- a look at everything
-c = Image.new('RGBA', (960, 300), (70, 74, 60, 255)); x = 10
+c = Image.new('RGBA', (1700, 300), (70, 74, 60, 255)); x = 10
 for n in MON: im = Image.open(f'{OUT}/mon/{n}.png'); c.alpha_composite(im, (x, 140 - im.height)); x += im.width + 12
 x = 10
-for sheet in NPC.values():
+for sk, sheet in NPC.items():
+    if not os.path.exists(f'{RAW}/{sk}.png'): continue
     for name, _ in sheet: im = Image.open(f'{OUT}/npc/{name}.png'); c.alpha_composite(im, (x - 20, 160)); x += 62
 hero = Image.open(os.path.join(OUT, '../site/party/hero.png')).convert('RGBA').crop((0, 0, 96, 128)); c.alpha_composite(hero, (x - 10, 160)); x += 70
 c.alpha_composite(Image.open(f'{OUT}/prop/chest.png'), (x, 226)); c.alpha_composite(Image.open(f'{OUT}/prop/crystal.png'), (x + 140, 216))
-c.resize((1920, 600), Image.NEAREST).save(sys.argv[3] if len(sys.argv) > 3 else f'{OUT}/sprites_preview.png')
+c.resize((3400, 600), Image.NEAREST).save(sys.argv[3] if len(sys.argv) > 3 else f'{OUT}/sprites_preview.png')
 print('ok', meta)

@@ -1,5 +1,5 @@
 """Writes slice/<map>/map.json from the staged places (build/blockout/stage.py) and the content below.
-usage: make_maps.py [village] [f01] [abbey]        (no names = all that are staged)"""
+usage: make_maps.py [village] [f01] [abbey] [f02] [capital] [plaza] [abbey2]        (no names = all that are staged)"""
 import sys, os, json
 HERE = os.path.dirname(os.path.abspath(__file__)); SL = os.path.join(HERE, '../../slice')
 
@@ -59,7 +59,7 @@ def f01():
     m['spawns'] = dict(village=sp('spawn_village', 'left'), abbey=sp('spawn_abbey', 'down'), ledge=sp('spawn_ledge', 'left'), west=sp('spawn_west', 'right'))
     v, a, w_ = mk['exit_village']['p'], mk['exit_abbey']['p'], mk['exit_west']['p']
     m['exits'] = [dict(x=v[0], y=v[1], r=46, to='village', spawn='gate'), dict(rect=[a[0] - 70, 0, 140, a[1] + 12], to='abbey', spawn='gate'),
-                  dict(rect=[0, w_[1] - 120, w_[0] + 24, 240], closed=['この先は、草の高原。\nここから先は、次の一区切りで作ります。'])]
+                  dict(rect=[0, w_[1] - 120, w_[0] + 24, 240], to='f02', spawn='east')]
     T = lambda nm, r, title, **kw: dict(at(mk, nm), r=r, title=title, **kw)
     m['triggers'] = [
         T('sign', 40, '道しるべ', text=['「東　始まりの村」\n「北　崖の修道院」「西　王都」']),
@@ -83,6 +83,9 @@ if __name__ == '__main__':
     MAPS = dict(village=village, f01=f01)
     try:
         from abbey_map import abbey; MAPS['abbey'] = abbey
+    except ImportError: pass
+    try:
+        import more_maps; MAPS.update(more_maps.MAPS)
     except ImportError: pass
     for name in sys.argv[1:] or [n for n in MAPS if os.path.exists(f'{SL}/{n}/places.json')]:
         m = MAPS[name](); json.dump(m, open(f'{SL}/{name}/map.json', 'w'), ensure_ascii=False, indent=1)

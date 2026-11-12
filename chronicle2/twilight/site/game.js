@@ -535,6 +535,7 @@ let annT = [0, 0];
 function announce(t0, t1) {                 // the name of the place, shown for a moment on arriving
   if (!UI_ON || !$('title')) return;
   $('titleJp').textContent = M.title; $('titleEn').textContent = M.titleEn || '';
+  if ($('titleSub') && M.subtitle != null) $('titleSub').textContent = M.subtitle;      // the part of the place (王都: 南の大通り)
   clearTimeout(annT[0]); clearTimeout(annT[1]); $('title').classList.remove('on');
   annT[0] = setTimeout(() => $('title').classList.add('on'), t0); annT[1] = setTimeout(() => $('title').classList.remove('on'), t1);
 }

@@ -163,8 +163,13 @@ window.BATTLE = (function () {
     recoil(t, t.side === 'pc' ? 1 : -1);
     if (t.hp > 0) return false;
     await sleep(.22);
+    if (t.side === 'en' && t.d.ai === 'rise' && !t.rose) {      // 骨兵: falls apart, and puts itself together again, once
+      t.rose = true; S.sfx('edie'); dust(t.x, t.y - 4, 6); await tw(.35, k => { t.alpha = 1 - .65 * k; }); say(`${t.name}は、崩れ落ちた…`); await sleep(.5);
+      S.sfx('split'); ring(t.x, t.y - 4, 30, 6, '#d9d2bd', .35, 2, .32, true); await tw(.4, k => { t.alpha = .35 + .65 * k; t.flash = .7 * (1 - k); });
+      setHp(t, Math.ceil(t.mhp / 2)); say(`${t.name}は、もう一度、立ち上がった！`); await sleep(.45); return false;
+    }
     if (t.side === 'en') { S.sfx('edie'); dust(t.x, t.y - 4, 7); t.tint = '#2a2228'; t.flash = .0; await tw(.42, k => { t.alpha = 1 - k; t.flash = k * .8; }); t.gone = true; B.killed.push(t); tags(); chips(); }
-    else { S.sfx('down'); t.guard = false; t.slow = 0; for (const q of B.pcs) if (q.cover === t) q.cover = null; await tw(.3, k => { t.lie = eio(k); }); dust(t.x + 20, t.y, 4); hud(); chips(); say(`${t.name}は、倒れた`); await sleep(.5); }
+    else { S.sfx('down'); t.guard = false; t.slow = 0; t.fast = false; for (const q of B.pcs) if (q.cover === t) q.cover = null; await tw(.3, k => { t.lie = eio(k); }); dust(t.x + 20, t.y, 4); hud(); chips(); say(`${t.name}は、倒れた`); await sleep(.5); }
     return true;
   }
   const miss = t => { S.sfx('miss'); num(t, 'ミス', '#cfc8c0', { jp: true, size: 13 }); return tw(.18, k => { t.ox = (t.side === 'pc' ? 1 : -1) * 10 * Math.sin(k * Math.PI); }).then(() => { t.ox = 0; }); };
@@ -178,6 +183,7 @@ window.BATTLE = (function () {
     const s = a.st; let d = (s.str + s.atk) * mult - t.d.def / 2;
     if (a.row === 'back' && s.wtype !== 'bow') d *= .5;
     const crit = Math.random() * 100 < 5 + s.dex / 20; if (crit) d *= 2;
+    if (t.d.fixed) return { dmg: crit ? 2 : 1, crit };          // 小銭虫: whatever hits it does 1
     return { dmg: Math.max(1, Math.floor(d * rnd(.9, 1.1))), crit };
   }
   const dodged = t => Math.random() >= .95 || Math.random() < (t.d.evade || 0);
@@ -254,9 +260,18 @@ window.BATTLE = (function () {
   async function castSpell(a, s, t) {
     await stepIn(a, 14); await raise(a, { fire: C.fire[0], water: C.water[1], earth: C.earth[0], wind: C.wind[1], light: C.light[0] }[s.el]);
     await SPELL[s.fx](a, t);
-    const weak = t.d.weak === s.el; let d = (a.st.int + a.st.mag) * s.power - t.d.def / 4; if (weak) d *= 1.5;
+    await spellHit(a, s, t);
+    await stepOut(a);
+  }
+  function spellHit(a, s, t) {
+    const weak = t.d.weak === s.el || t.d.weak2 === s.el; let d = (a.st.int + a.st.mag) * s.power - t.d.def / 4; if (weak) d *= t.d.weak === s.el ? t.d.weakMul || 1.5 : 1.5;
     if (weak) { (G.seen[t.mid] = G.seen[t.mid] || {}).weak = 1; tags(); }
-    await Promise.all([hurt(t, Math.max(1, Math.floor(d * rnd(.9, 1.1))), { weak }), sleep(.6)]);
+    return Promise.all([hurt(t, t.d.fixed ? 1 : Math.max(1, Math.floor(d * rnd(.9, 1.1))), { weak }), sleep(.6)]);
+  }
+  async function castAll(a, s) {              // a spell on every monster at once
+    await stepIn(a, 14); await raise(a, { fire: C.fire[0], water: C.water[1], earth: C.earth[0], wind: C.wind[1], light: C.light[0] }[s.el]);
+    const ts = foes(); await Promise.all(ts.map(t => SPELL[s.fx](a, t)));
+    await Promise.all(ts.filter(alive).map(t => spellHit(a, s, t)));
     await stepOut(a);
   }
   async function healFx(t, n) {
@@ -290,17 +305,26 @@ window.BATTLE = (function () {
       return;
     }
     if (c.k === 'item') {
-      const d = D.items[c.item]; let t = c.t; if (!alive(t)) t = a;
+      const d = D.items[c.item]; let t = c.t;
       if (!E.count(c.item)) { say(`${d.name}は、もう持っていない`); await sleep(.6); return; }
-      band(d.name); say(`${a.name}は、${d.name}を使った`); E.take(c.item); await stepIn(a, 14); await healFx(t, Math.min(d.heal, t.mhp - t.hp)); await stepOut(a); return;
+      if (d.revive) { if (!t || t.hp > 0) t = B.pcs.find(q => q.hp <= 0); if (!t) { say('倒れている仲間は、いない'); await sleep(.6); return; } }
+      else if (!alive(t)) t = a;
+      band(d.name); say(`${a.name}は、${d.name}を使った`); E.take(c.item); await stepIn(a, 14);
+      const glow = col => { S.sfx('heal'); ring(cx(t), t.y - 1, 6, 34, col, .6, 2, .32, true); L(cx(t), cy(t), 150, col, .7, .4, t.y); };
+      if (d.heal) await healFx(t, Math.min(d.heal, t.mhp - t.hp));
+      else if (d.mp) { glow(C.water[1]); const n = Math.min(d.mp, t.mmp - t.mp); t.mp += n; t.p.mp = t.mp; hud(); num(t, n, '#a9cfe6', { sub: 'MP' }); await sleep(.6); }
+      else if (d.revive) { await tw(.4, k => { t.lie = 1 - eio(k); }); t.lie = 0; await healFx(t, Math.max(1, Math.floor(t.mhp * d.revive))); say(`${t.name}は、起き上がった`); chips(); await sleep(.3); }
+      else if (d.cure) { glow(C.holy[1]); say(t.p.poison ? `${t.name}の毒が、消えた` : '何も起きなかった'); t.p.poison = false; hud(); await sleep(.6); }
+      else if (d.haste) { S.sfx('buff'); glow(C.wind[1]); t.fast = true; say(`${t.name}の足が、軽くなった！　素早さが上がった`); hud(); await sleep(.6); }
+      await stepOut(a); return;
     }
     const s = D.skills[c.s];
     if (a.mp < s.mp) { say('MPが足りない！'); S.sfx('buzz'); await sleep(.6); return; }
     a.mp -= s.mp; a.p.mp = a.mp; hud(); band(s.name); say(`${a.name}の${s.name}`);
     if (s.kind === 'phys') { const t = need(); if (t) await strike(a, t, s.power, true); }
-    else if (s.kind === 'spell') { const t = need(); if (t) await castSpell(a, s, t); }
+    else if (s.kind === 'spell') { if (s.target === 'enemies') await castAll(a, s); else { const t = need(); if (t) await castSpell(a, s, t); } }
     else if (s.kind === 'heal') { let t = c.t; if (!alive(t)) t = a; await stepIn(a, 14); await raise(a, C.holy[0]); await healFx(t, Math.min(Math.floor((a.st.int + a.st.healp) * s.power * rnd(.95, 1.05)), t.mhp - t.hp)); await stepOut(a); }
-    else if (s.kind === 'cure') { let t = c.t; if (!alive(t)) t = a; await stepIn(a, 14); await raise(a, C.holy[0]); S.sfx('heal'); ring(cx(t), t.y - 1, 6, 34, C.holy[1], .6, 2, .32, true); L(cx(t), cy(t), 150, C.holy[1], .7, .4, t.y); say(t.slow ? `${t.name}の体が、軽くなった` : '何も起きなかった'); t.slow = 0; hud(); await sleep(.6); await stepOut(a); }
+    else if (s.kind === 'cure') { let t = c.t; if (!alive(t)) t = a; await stepIn(a, 14); await raise(a, C.holy[0]); S.sfx('heal'); ring(cx(t), t.y - 1, 6, 34, C.holy[1], .6, 2, .32, true); L(cx(t), cy(t), 150, C.holy[1], .7, .4, t.y); say(t.p.poison ? `${t.name}の毒が、消えた` : t.slow ? `${t.name}の体が、軽くなった` : '何も起きなかった'); t.slow = 0; t.p.poison = false; hud(); await sleep(.6); await stepOut(a); }
     else if (s.kind === 'blind') {
       const t = need(); if (!t) return; await stepIn(a, 30); S.sfx('quill');
       const x0 = cx(a) - 20, y0 = cy(a), x = cx(t), y = top(t) + t.h * .3;
@@ -322,18 +346,43 @@ window.BATTLE = (function () {
     thrust(t) { S.sfx('thrust'); P({ shape: 'spark', x: cx(t) + 14, y: cy(t) + 6, vx: 300, vy: 0, len: 46, w: 2.4, col: C.cream, add: true, d: .14 }); ring(cx(t), cy(t) + 6, 3, 18, C.cream, .18, 2, 1, true); },
     club(t) { S.sfx('heavy'); crescent(cx(t) - 6, cy(t) - 6, 70, 1.35, .22, '#cbbf9f', 5, 20, 0, true); dust(t.x, t.y, 6); shakeBy(5); },
     peck(t) { S.sfx('thrust'); sparks(cx(t) - 4, cy(t) - 14, 4, C.cream, 140); ring(cx(t) - 4, cy(t) - 14, 2, 12, C.cream, .14, 1.6, 1, true); S.sfx('thrust', .1); },
+    arrow(t) { S.sfx('hit'); sparks(cx(t) - 6, cy(t), 5, C.cream, 150); ring(cx(t) - 6, cy(t), 3, 16, C.cream, .18, 2, 1, true); },
+    ember(t, m) { const c = m.d.el === 'water' ? C.water : C.fire, x = cx(t) - 4, y = cy(t); P({ x, y, r: 5, r1: 22, col: c[c.length - 1], add: true, d: .18 }); ring(x, y, 6, 34, c[0], .3, 2.6, 1, true);
+      for (let i = 0; i < 14; i++) { const an = rnd(0, TAU), v = rnd(20, 120); P({ x, y, vx: Math.cos(an) * v, vy: Math.sin(an) * v * .6 - rnd(20, 70), g: m.d.el === 'water' ? 300 : -60, drag: 2, r: rnd(2.5, 6), r1: .6, col: c[i % 2], add: m.d.el !== 'water', d: rnd(.3, .5), a: .95 }); }
+      L(x, y, 150, c[0], .45, .5, t.y); shakeBy(2); },
   };
-  function pickTarget() {
+  // what flies from a monster that does not come close (-> when it arrives)
+  const FLY = {
+    async arrow(m, t) { S.sfx('thrust'); const x0 = cx(m) + 16, y0 = cy(m) - 6, x = cx(t) - 6, y = cy(t);
+      P({ d: .2, draw(c, p, k) { const px = lerp(x0, x, k), py = lerp(y0, y, k) - Math.sin(k * Math.PI) * 22, an = Math.atan2(y - y0 + (k - .5) * 44, x - x0); c.save(); c.translate(px, py); c.rotate(an); c.strokeStyle = '#cdbf9c'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(-12, 0); c.lineTo(4, 0); c.stroke(); c.restore(); } });
+      await sleep(.2); },
+    async ember(m, t) { const c = m.d.el === 'water' ? C.water : C.fire, x0 = cx(m) + 10, y0 = cy(m), x = cx(t) - 4, y = cy(t); S.sfx(m.d.el === 'water' ? 'water' : 'fire');
+      await tw(.3, k => { const px = lerp(x0, x, k), py = lerp(y0, y, k) - Math.sin(k * Math.PI) * 18; P({ x: px + rnd(-2, 2), y: py + rnd(-2, 2), vx: rnd(-16, 16), vy: rnd(-20, 6), r: rnd(2.5, 4.5), r1: .5, col: c[0], add: true, d: rnd(.16, .26) }); P({ x: px, y: py, r: 3.6, r1: 2.4, col: c[c.length - 1], add: true, d: .06 }); }); },
+  };
+  async function shoot(m, f) { await tw(.12, k => { m.ox = 14 * eout(k); }); await f(); await tw(.16, k => { m.ox = 14 * (1 - eio(k)); }); m.ox = 0; }
+  async function runAway(m) { say(`${m.name}は、逃げ出した！`); S.sfx('flee'); await tw(.45, k => { m.ox = -260 * k * k; m.alpha = 1 - k; }); m.gone = true; m.fled = true; tags(); chips(); await sleep(.3); }
+  function pickTarget(back) {
     // Who a monster goes for (ユウキ, 2026-11-12): the higher somebody stands in the party's order the more often (4 : 3 : 2 : 1 from
     // the top), and half as often in the back row (where the hit is halved too, see enAct).
-    const fs = friends(), wt = f => (B.pcs.length - f.i) * (f.row === 'front' ? 1 : .5); let tot = 0; for (const f of fs) tot += wt(f);
+    // back: this monster goes for the back row (it jumps over the front, or shoots): three times as often as for anybody in front.
+    const fs = friends(), wt = back ? f => (f.row === 'back' ? 3 : 1) : f => (B.pcs.length - f.i) * (f.row === 'front' ? 1 : .5); let tot = 0; for (const f of fs) tot += wt(f);
     let r = Math.random() * tot, t = fs[0]; for (const f of fs) { r -= wt(f); if (r <= 0) { t = f; break; } }
     const cov = B.pcs.find(q => q.cover === t && alive(q) && q !== t);
     return cov ? { t: cov, covered: t } : { t };
   }
   async function enAct(m) {
-    const d = m.d, r = Math.random();
-    if (d.ai === 'runs' && m.hp < m.mhp * .35 && r < .5) { say(`${m.name}は、逃げ出した！`); S.sfx('flee'); await tw(.45, k => { m.ox = -260 * k * k; m.alpha = 1 - k; }); m.gone = true; m.fled = true; tags(); chips(); await sleep(.3); return; }
+    const d = m.d, r = Math.random(); m.turns++;
+    if (d.ai === 'runs' && m.hp < m.mhp * .35 && r < .5) { await runAway(m); return; }
+    if (d.ai === 'coin') { if (m.turns > m.fleeAt) { await runAway(m); return; } if (r < .5) { say(`${m.name}は、きょろきょろしている`); await sleep(.7); return; } }      // 小銭虫: gone after a turn or two
+    if (d.ai === 'dive' && m.hp < m.mhp * .6 && r > .72) {                                  // the great crow beats its wings: everybody is hit, rows do not matter
+      say(`${m.name}は、大きく羽ばたいた！`); S.sfx('wind'); const fs = friends();
+      await tw(.3, k => { m.oy = -14 * Math.sin(k * Math.PI); });
+      for (const t of fs) { [[-.4, 0, 70], [-2.6, .12, 64]].forEach(([an, dl, len]) => crescent(cx(t) + rnd(-6, 6), cy(t) + rnd(-8, 8), len, an, .28, C.wind[0], 5, len * .3, dl, true));
+        for (let i = 0; i < 6; i++) P({ shape: 'spark', x: cx(t) + rnd(-70, -20), y: cy(t) + rnd(-26, 26), vx: rnd(180, 320), vy: rnd(-20, 20), len: rnd(10, 20), w: 1, col: C.wind[1], d: rnd(.2, .35), delay: rnd(0, .25), a: .7 }); }
+      await sleep(.3); shakeBy(4);
+      await Promise.all(fs.map(t => { let dm = d.atk * .75 - (t.st.def + t.st.arm) / 2; if (t.guard) dm *= .5; return hurt(t, Math.max(1, Math.floor(dm * rnd(.9, 1.1)))); }).concat([sleep(.5)]));
+      await sleep(.3); return;
+    }
     if (d.ai === 'split' && r < .15 && foes().length < 4) {
       say(`${m.name}は、二つに分かれた！`); S.sfx('split'); await tw(.25, k => { m.flash = Math.sin(k * Math.PI) * .7; });
       const n = mkEn(m.mid); n.x = m.x; n.y = m.y; n.hp = Math.max(1, Math.ceil(m.hp / 2)); setHp(m, Math.max(1, Math.ceil(m.hp / 2))); n.img = m.img; n.w = m.w; n.h = m.h; B.ens.push(n); B.all.push(n); rename(); B.order.push(n); n.acted = true;
@@ -341,7 +390,13 @@ window.BATTLE = (function () {
       await tw(.3, k => fs.forEach((q, i) => { q.x = lerp(from[i][0], sl[i][0], eio(k)); q.y = lerp(from[i][1], sl[i][1], eio(k)); tags(); }));
       tags(); chips(); await sleep(.3); return;
     }
-    const pk = pickTarget(), t = pk.t;
+    const back = d.ai === 'leap' || d.ai === 'snipe' || (d.ai === 'dive' && r < .45);
+    const pk = pickTarget(back), t = pk.t, pierce = back && t.row === 'back' && !pk.covered;      // (reached in the back row: the hit is not halved)
+    if (d.ai === 'drain' && r < .35 && t.mp > 0) {
+      const n = Math.min(t.mp, E.ri(4, 8)), x0 = cx(t), y0 = cy(t), x1 = cx(m), y1 = cy(m); say(`${m.name}は、${t.name}の魔力を吸った！`); S.sfx('debuff');
+      for (let i = 0; i < 10; i++) P({ d: .5, delay: i * .04, add: true, draw(c, p, k) { const e = eio(k); c.globalAlpha = 1 - k * .4; c.fillStyle = i % 2 ? '#b7a6e0' : '#e4dcf6'; c.beginPath(); c.arc(lerp(x0, x1, e) + Math.sin(k * 9 + i) * 5, lerp(y0, y1, e) - Math.sin(k * Math.PI) * (14 + i * 2), 2.4, 0, TAU); c.fill(); } });
+      L(x0, y0, 90, '#b7a6e0', .5, .35, t.y); await sleep(.7); t.mp -= n; t.p.mp = t.mp; hud(); num(t, n, '#b7a6e0', { sub: 'MP' }); await sleep(.6); return;
+    }
     if (d.ai === 'pickpocket' && r < .25 && G.gold > 0) {
       const n = Math.min(G.gold, Math.round(rnd(8, 20)));
       await lunge(m, t, .2, async () => { S.sfx('steal'); star(cx(t) - 14, cy(t), 10, C.steal, .4); G.gold -= n; m.took += n; say(`${m.name}は、お金を${n}枚盗んだ！`); await sleep(.25); });
@@ -354,24 +409,31 @@ window.BATTLE = (function () {
       await sleep(.35); S.sfx('debuff'); t.slow = 3; t.flash = .6; t.tint = '#e6e2d6'; tw(.4, k => { t.flash = .6 * (1 - k); }).then(() => { t.tint = null; });
       say(`${t.name}に、糸が絡みついた！　素早さが下がった`); hud(); await sleep(.7); return;
     }
-    say(pk.covered ? `${m.name}の攻撃！　${t.name}が、${pk.covered.name}をかばった` : `${m.name}の攻撃`);
-    const hit = Math.random() < (m.blind ? .6 : .9);
-    await lunge(m, t, d.act === 'thrust' || d.act === 'peck' ? .14 : .2, async () => {
+    const what = pierce && d.ai === 'leap' ? `${m.name}は、頭の上を跳び越えた！` : pierce && d.ai === 'snipe' ? `${m.name}は、後ろを狙って矢を放った` : pierce ? `${m.name}は、急降下してきた！`
+      : d.act === 'ember' ? `${m.name}は、${d.el === 'water' ? '水' : '火'}を吹きつけた` : `${m.name}の攻撃`;
+    say(pk.covered ? `${m.name}の攻撃！　${t.name}が、${pk.covered.name}をかばった` : what);
+    const hit = Math.random() < (m.blind ? .6 : .9), far = !!FLY[d.act];
+    const land = async () => {
       if (pk.covered) shieldFx(t);
+      if (far) await FLY[d.act](m, t);
       if (!hit) { await miss(t); return; }
-      STYLE[d.act](t);
-      let dm = d.atk - (t.st.def + t.st.arm) / 2; if (t.row === 'back') dm *= .5; if (t.guard) dm *= .5;
+      STYLE[d.act](t, m);
+      let dm = d.atk * (pierce && d.ai === 'dive' ? 1.15 : 1) - (t.st.def + t.st.arm) / 2; if (t.row === 'back' && !pierce) dm *= .5; if (t.guard) dm *= .5;
       if (t.guard && !pk.covered) shieldFx(t);
       L(cx(t), cy(t), 90, C.cream, .22, .25, t.y);
       await Promise.all([hurt(t, Math.max(1, Math.floor(dm * rnd(.9, 1.1)))), sleep(.3)]);
-    });
+      if (d.ai === 'poison' && t.hp > 0 && !t.p.poison && Math.random() < .35) {
+        t.p.poison = true; S.sfx('debuff'); t.tint = '#9a7bc0'; t.flash = .6; tw(.4, k => { t.flash = .6 * (1 - k); }).then(() => { t.tint = null; }); say(`${t.name}は、毒を受けた！`); hud(); await sleep(.6);
+      }
+    };
+    if (far) await shoot(m, land); else await lunge(m, t, d.act === 'thrust' || d.act === 'peck' ? .14 : .2, land);
     await sleep(.3);
   }
 
   // ------------------------------------------------------------------ actors
   const letter = i => 'ABCD'[i] || '';
-  function mkEn(mid) { const d = D.monsters[mid]; return { side: 'en', mid, d, name: d.name, tag: d.name[0], x: 0, y: 0, ox: 0, oy: 0, hp: d.hp, mhp: d.hp, w: 64, h: 64, float: d.float, ph: rnd(0, TAU), flash: 0, alpha: 1, blind: 0, stolen: false, took: 0, img: null }; }
-  function rename() { const by = {}; for (const m of B.ens) (by[m.mid] = by[m.mid] || []).push(m); for (const k in by) by[k].forEach((m, i) => { m.name = m.d.name + (by[k].length > 1 ? letter(i) : ''); m.tag = m.d.name[0] + (by[k].length > 1 ? letter(i) : ''); }); }
+  function mkEn(mid) { const d = D.monsters[mid]; return { side: 'en', mid, d, name: d.name, tag: d.name[0], x: 0, y: 0, ox: 0, oy: 0, hp: d.hp, mhp: d.hp, w: 64, h: 64, float: d.float, ph: rnd(0, TAU), flash: 0, alpha: 1, blind: 0, stolen: false, took: 0, img: null, turns: 0, fleeAt: 1 + (Math.random() < .5 ? 1 : 0), rose: false }; }
+  function rename() { const by = {}; for (const m of B.ens) (by[m.d.name] = by[m.d.name] || []).push(m); for (const k in by) by[k].forEach((m, i) => { m.name = m.d.name + (by[k].length > 1 ? letter(i) : ''); m.tag = m.d.name[0] + (by[k].length > 1 ? letter(i) : ''); }); }
   function mkPc(id, i) {
     const p = G.party[id], s = E.stats(id), c = D.chars[id];
     return { side: 'pc', id, i, p, st: s, name: c.name, tag: c.name[0], row: p.row, x: 690 + 22 * i + (p.row === 'back' ? 64 : 0), y: 318 + 52 * i, ox: 0, oy: 0, hp: p.hp, mp: p.mp, mhp: s.mhp, mmp: s.mmp,
@@ -389,7 +451,7 @@ window.BATTLE = (function () {
       const r = B.rows[i]; r.classList.toggle('down', a.hp <= 0); r.classList.toggle('act', B.active === a);
       r.querySelector('.hpv').textContent = a.hp; r.querySelector('.mpv').textContent = a.mp;
       const hb2 = r.querySelector('.bar'); hb2.classList.toggle('low', a.hp < a.mhp * .3); hb2.firstChild.style.width = 100 * a.hp / a.mhp + '%'; r.querySelector('.bar.mp').firstChild.style.width = (a.mmp ? 100 * a.mp / a.mmp : 0) + '%';
-      r.querySelector('.st').textContent = a.hp <= 0 ? '倒れた' : [a.guard ? '防御' : '', a.cover ? 'かばう' : '', a.slow ? '鈍足' : ''].filter(Boolean).join(' ');
+      r.querySelector('.st').textContent = a.hp <= 0 ? '倒れた' : [a.guard ? '防御' : '', a.cover ? 'かばう' : '', a.p.poison ? '毒' : '', a.slow ? '鈍足' : '', a.fast ? '俊足' : ''].filter(Boolean).join(' ');
     });
   }
   function tags() {
@@ -399,7 +461,7 @@ window.BATTLE = (function () {
       if (m.gone) { m.el.remove(); continue; }
       m.el.style.left = ((m.x + OX) / CW * 100) + '%'; m.el.style.top = ((m.y + 8 + OY) / CH * 100) + '%';
       const seen = G.seen[m.mid] && G.seen[m.mid].weak;
-      const wk = m.el.querySelector('.wk'); wk.textContent = '弱点：' + (seen ? D.EL[m.d.weak] : '？') + (m.blind ? '　目くらみ' : ''); wk.classList.toggle('known', !!seen);
+      const wk = m.el.querySelector('.wk'); wk.textContent = '弱点：' + (seen ? [m.d.weak, m.d.weak2].filter(Boolean).map(k => D.EL[k]).join('・') : '？') + (m.blind ? '　目くらみ' : ''); wk.classList.toggle('known', !!seen);
       m.el.querySelector('.nm').textContent = m.name; m.el.querySelector('i').style.width = 100 * m.hp / m.mhp + '%';
       m.el.classList.toggle('sel', B.cursor === m);
     }
@@ -452,14 +514,14 @@ window.BATTLE = (function () {
   }
   function askCommand(a, first) {                       // -> command | 'back' | 'repeat'
     return new Promise(res => {
-      const ask = `${a.name}は、どうする？`, sk = E.skillsOf(a.id), usable = () => Object.keys(G.items).filter(k => D.items[k].heal && E.count(k) > 0);
+      const ask = `${a.name}は、どうする？`, sk = E.skillsOf(a.id), usable = () => Object.keys(G.items).filter(k => { const d = D.items[k]; return d.kind === 'use' && (d.heal || d.mp || d.revive || d.cure || d.haste) && E.count(k) > 0; });
       const items = [{ label: '攻撃', k: 'atk' }, { label: WORD[a.id], k: 'skill', dim: !sk.length }];
       if (a.id === 'pamp') items.push({ label: '盗む', k: 'steal' });
-      items.push({ label: '防御', k: 'guard' }, { label: '道具', k: 'item', dim: !usable().length }, { label: '逃げる', k: 'flee' });
+      items.push({ label: '防御', k: 'guard' }, { label: '道具', k: 'item', dim: !usable().length }, { label: '逃げる', k: 'flee', dim: !!B.boss });
       let l = null, moved = false; const done = v => { l.close(); res(v); };
       const HELP = { atk: '武器で攻撃する', skill: sk.length ? '覚えた' + WORD[a.id] + 'を使う' : 'まだ、何も覚えていない', steal: '魔物の持ち物を盗む。前列のほうが成功しやすい', guard: 'このターン、受けるダメージを半分にする', item: '持っている物を使う', flee: '4人で、戦いから逃げる' };
       l = E.list(B.ui, items, { id: 'bcmd', index: Math.min(a.ci || 0, items.length - 1), onMove: it => say(moved ? HELP[it.k] : ask),
-        onDim: it => say(it.k === 'skill' ? 'まだ、何も覚えていない' : '使える物を、持っていない'),
+        onDim: it => say(it.k === 'skill' ? 'まだ、何も覚えていない' : it.k === 'flee' ? 'この戦いからは、逃げられない' : '使える物を、持っていない'),
         onCancel: () => { if (first) say(ask); else done('back'); },
         onKey: k => { if (k === 'R') cycleSpeed();
           else if (k === 'L') { if (B.repeat) setRepeat(false, 'リピート：OFF'); else if (lastCmds) { setRepeat(true, 'リピート：ON'); done('repeat'); } else setRepeat(true, 'リピート：ON（このラウンドの命令を次から繰り返す）'); } },
@@ -471,11 +533,13 @@ window.BATTLE = (function () {
             const shield = !!a.p.equip.shield;
             const l2 = E.list(B.ui, sk.map(s => ({ label: s.name, r: 'MP ' + s.mp, s, dim: a.mp < s.mp || (s.need === 'shield' && !shield) })), { id: 'bsub', title: WORD[a.id], index: a.si || 0, onMove: s => say(s.s.help),
               onDim: s => say(a.mp < s.s.mp ? 'MPが足りない' : '盾を持っていないと、使えない'), onCancel: () => { l2.close(); say(ask); }, onKey: k => { if (k === 'R') cycleSpeed(); },
-              onPick: async (s, j) => { a.si = j; const en = s.s.target === 'enemy', t = await pickFrom(en ? foes() : friends().filter(q => s.s.kind !== 'cover' || q !== a), en ? 'どの魔物を狙う？' : s.s.kind === 'cover' ? '誰をかばう？' : '誰に使う？', en ? B.lastT : a);
+              onPick: async (s, j) => { a.si = j; if (s.s.target === 'enemies') { l2.close(); done({ k: 'skill', s: s.s.id }); return; }
+                const en = s.s.target === 'enemy', t = await pickFrom(en ? foes() : friends().filter(q => s.s.kind !== 'cover' || q !== a), en ? 'どの魔物を狙う？' : s.s.kind === 'cover' ? '誰をかばう？' : '誰に使う？', en ? B.lastT : a);
                 if (t) { if (en) B.lastT = t; l2.close(); done({ k: 'skill', s: s.s.id, t }); } } });
           } else if (it.k === 'item') {
             const l2 = E.list(B.ui, usable().map(k => ({ label: D.items[k].name, r: '×' + E.count(k), id: k })), { id: 'bsub', title: '道具', onMove: s => say(D.items[s.id].help), onCancel: () => { l2.close(); say(ask); }, onKey: k => { if (k === 'R') cycleSpeed(); },
-              onPick: async s => { const t = await pickFrom(friends(), '誰に使う？', a); if (t) { l2.close(); done({ k: 'item', item: s.id, t }); } } });
+              onPick: async s => { const pool = D.items[s.id].revive ? B.pcs.filter(q => q.hp <= 0) : friends(); if (!pool.length) { S.sfx('buzz'); say('倒れている仲間は、いない'); return; }
+                const t = await pickFrom(pool, '誰に使う？', a); if (t) { l2.close(); done({ k: 'item', item: s.id, t }); } } });
           }
         } });
       say(ask); moved = true;
@@ -525,7 +589,7 @@ window.BATTLE = (function () {
       '<div id="btoast"></div><div id="bkeys"><span class="btn" id="bkR"><b class="keycap">Q</b><span>リピート</span></span><span class="btn" id="bkF"><b class="keycap">E</b><span>速さ</span></span></div></div>';
     E.root.appendChild(root);
     B = { t: 0, last: performance.now(), speed: speedOf(G.set.speed), repeat: false, waits: [], parts: [], lights: [], nums: [], shake: 0, dark: 0, cx: $('bcv').getContext('2d'), fx: $('bfx').getContext('2d'), ui: $('bui'), orderEl: $('border'),
-          pcs: E.order().map(mkPc), ens: opt.group.map(mkEn), order: [], killed: [], fails: 0, active: null, cursor: null, now: null };
+          pcs: E.order().map(mkPc), ens: opt.group.map(mkEn), order: [], killed: [], fails: 0, active: null, cursor: null, now: null, boss: !!opt.boss };
     B.all = B.pcs.concat(B.ens); rename();
     const sl = SLOTS[B.ens.length]; B.ens.forEach((m, i) => { m.x = sl[i][0]; m.y = sl[i][1]; });
     hb = E.helpbar(B.ui, '<span><b class="keycap">Z</b>決める</span><span><b class="keycap">X</b>戻る</span>');
@@ -551,7 +615,7 @@ window.BATTLE = (function () {
     const over = () => !foes().length ? 'win' : !friends().length ? 'lose' : null;
     while (!result) {
       // the order of this round (rolled before the choices, so it can be read)
-      for (const a of B.all) { a.acted = false; a.roll = (a.side === 'pc' ? a.st.spd * (a.slow ? .5 : 1) : a.d.spd) * rnd(.8, 1.2); }
+      for (const a of B.all) { a.acted = false; a.roll = (a.side === 'pc' ? a.st.spd * (a.slow ? .5 : 1) * (a.fast ? 1.5 : 1) : a.d.spd) * rnd(.8, 1.2); }
       B.order = B.all.filter(alive).sort((a, b) => b.roll - a.roll); B.now = null; chips();
       const cmds = await inputPhase();
       let partyActs = true;
@@ -578,6 +642,12 @@ window.BATTLE = (function () {
         await sleep(.12);
       }
       B.now = null;
+      if (!result) {                             // poison bites at the end of the round (it never takes the last point)
+        let any = false;
+        for (const a of friends()) if (a.p.poison) { const n = Math.min(a.hp - 1, Math.max(1, Math.floor(a.mhp / 16))); if (n <= 0) continue; any = true;
+          setHp(a, a.hp - n); num(a, n, '#b79ad8', { sub: '毒' }); a.tint = '#8a6ab8'; a.flash = .5; tw(.35, k => { a.flash = .5 * (1 - k); }).then(() => { a.tint = null; }); }
+        if (any) { S.sfx('debuff'); await sleep(.55); }
+      }
       for (const a of B.pcs) { a.guard = false; a.cover = null; if (a.slow) a.slow--; }
       for (const m of B.ens) if (m.blind) m.blind--;
       hud(); tags();
@@ -585,7 +655,8 @@ window.BATTLE = (function () {
     E.drop(base); $('border').style.display = 'none'; $('bkeys').style.display = 'none';
 
     if (result === 'win') {
-      const exp = B.killed.reduce((s, m) => s + m.d.exp, 0), gold = B.killed.reduce((s, m) => s + m.d.gold + m.took, 0);
+      const ring2 = B.pcs.reduce((v, a) => Math.max(v, ...Object.values(a.p.equip).map(k => (D.items[k] && D.items[k].goldup) || 0)), 0);      // 銀貨の指輪
+      const exp = B.killed.reduce((s, m) => s + m.d.exp, 0), gold = Math.round(B.killed.reduce((s, m) => s + m.d.gold + m.took, 0) * (1 + ring2));
       say(''); S.bgm('jg01', { fade: .15, in: .02, once: true, restart: true });
       const ps = friends(); tw(.9, k => { for (const a of ps) a.hop = Math.abs(Math.sin(k * Math.PI * 2 + a.i * .5)) * 9; }).then(() => { for (const a of ps) a.hop = 0; });
       for (const a of B.pcs) if (a.hp <= 0) { a.hp = a.p.hp = 1; tw(.4, k => { a.lie = 1 - eio(k); }); }      // those who fell get up with 1 HP
@@ -593,7 +664,8 @@ window.BATTLE = (function () {
       const out = [B.killed.length ? '戦いに勝った！' : '魔物は、いなくなった'];
       if (exp || gold) out.push(`経験値　${exp}\nお金　${gold}枚`);
       G.gold += gold; G.wins++;
-      for (const m of B.killed) if (m.d.drop && Math.random() < .25) { const got = E.give(m.d.drop, 1); out.push({ text: got ? `${D.items[m.d.drop].name}を\n手に入れた` : `${D.items[m.d.drop].name}は、\nこれ以上持てない`, sfx: 'get' }); }
+      for (const m of B.killed) if (m.d.rare && Math.random() < m.d.rare[1]) { const it = m.d.rare[0]; E.give(it, 1); out.push({ text: `${m.d.name}は、珍しい物を落とした。\n${D.items[it].name}を手に入れた！`, sfx: 'get' }); }
+      for (const m of B.killed) if (m.d.drop && (m.d.dropSure || Math.random() < .25)) { const got = E.give(m.d.drop, 1); out.push({ text: got ? `${D.items[m.d.drop].name}を\n手に入れた` : `${D.items[m.d.drop].name}は、\nこれ以上持てない`, sfx: 'get' }); }
       if (exp) for (const a of B.pcs) for (const msg of E.gainExp(a.id, exp)) out.push({ text: msg.text, sfx: msg.lv ? 'levelup' : 'get', fx: () => { if (msg.lv) { const s = E.stats(a.id); a.mhp = s.mhp; a.mmp = s.mmp; a.hp = a.p.hp; a.mp = a.p.mp; hud();
         L(cx(a), cy(a), 150, C.light[0], .9, .55, a.y); ring(cx(a), a.y - 1, 6, 40, C.light[0], .7, 2, .32, true); for (let i = 0; i < 16; i++) P({ x: cx(a) + rnd(-16, 16), y: a.y - rnd(0, 20), vy: rnd(-90, -40), r: rnd(1, 2.2), col: C.light[i % 2], add: true, d: rnd(.5, .9), delay: rnd(0, .25) }); } } });
       await sleep(.5); await pages(out);
@@ -608,5 +680,5 @@ window.BATTLE = (function () {
     else setTimeout(() => cut(380, true), 80);
     return result;
   }
-  return { transition, run, SPEEDS, SPEED_LABEL, speedOf, get state() { return B; }, _t: { SPELL, STYLE, strike, castSpell, healFx, shieldFx, pcAct, enAct } };
+  return { transition, run, SPEEDS, SPEED_LABEL, speedOf, get state() { return B; }, _t: { SPELL, STYLE, FLY, strike, castSpell, castAll, healFx, shieldFx, pcAct, enAct } };
 })();

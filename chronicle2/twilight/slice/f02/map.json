@@ -1,0 +1,374 @@
+{
+ "title": "草の高原",
+ "titleEn": "The Grass Plateau",
+ "subtitle": "",
+ "w": 2304,
+ "h": 1728,
+ "pull": 1.2,
+ "image": "map.webp",
+ "walk": "walk.png",
+ "height": "height.png",
+ "floor": "floor.png",
+ "heightBias": 3,
+ "occluders": [],
+ "lights": [],
+ "water": [
+  {
+   "poly": [
+    [
+     2184,
+     948
+    ],
+    [
+     2181,
+     935
+    ],
+    [
+     2171,
+     922
+    ],
+    [
+     2155,
+     911
+    ],
+    [
+     2135,
+     901
+    ],
+    [
+     2109,
+     894
+    ],
+    [
+     2081,
+     889
+    ],
+    [
+     2052,
+     887
+    ],
+    [
+     2022,
+     889
+    ],
+    [
+     1994,
+     893
+    ],
+    [
+     1968,
+     900
+    ],
+    [
+     1948,
+     910
+    ],
+    [
+     1932,
+     921
+    ],
+    [
+     1921,
+     934
+    ],
+    [
+     1918,
+     947
+    ],
+    [
+     1921,
+     961
+    ],
+    [
+     1931,
+     973
+    ],
+    [
+     1947,
+     985
+    ],
+    [
+     1967,
+     994
+    ],
+    [
+     1993,
+     1001
+    ],
+    [
+     2021,
+     1006
+    ],
+    [
+     2051,
+     1007
+    ],
+    [
+     2080,
+     1006
+    ],
+    [
+     2108,
+     1001
+    ],
+    [
+     2134,
+     994
+    ],
+    [
+     2155,
+     985
+    ],
+    [
+     2171,
+     973
+    ],
+    [
+     2181,
+     962
+    ]
+   ]
+  }
+ ],
+ "mood": "gold",
+ "moodFixed": true,
+ "moods": {
+  "gold": {
+   "name": "",
+   "ambient": "#e6e2e0",
+   "lightGain": 0.75,
+   "lightRadius": 1,
+   "brighten": 0.68,
+   "glow": 0.6,
+   "heroLight": 0,
+   "skyTint": "#ffffff",
+   "moonGlow": 0,
+   "mist": 0.36,
+   "mistColor": "#cfc8d2",
+   "fireflies": 0,
+   "wisps": 0,
+   "motes": 0.5,
+   "rays": 0,
+   "grade": "#6f6a8a",
+   "gradeAlpha": 0.05,
+   "vignette": 0.34,
+   "vignetteColor": "#120e16",
+   "sparkle": "#fff0d0"
+  },
+  "shadow": {
+   "name": "",
+   "ambient": "#e6e2e0",
+   "lightGain": 0.75,
+   "lightRadius": 1,
+   "brighten": 0.68,
+   "glow": 0.6,
+   "heroLight": 0,
+   "skyTint": "#ffffff",
+   "moonGlow": 0,
+   "mist": 0.36,
+   "mistColor": "#cfc8d2",
+   "fireflies": 0,
+   "wisps": 0,
+   "motes": 0.5,
+   "rays": 0,
+   "grade": "#6f6a8a",
+   "gradeAlpha": 0.05,
+   "vignette": 0.34,
+   "vignetteColor": "#120e16",
+   "sparkle": "#fff0d0"
+  }
+ },
+ "bgm": "bgm10",
+ "hd": {
+  "S": 32,
+  "A": 0.75,
+  "B": 0.66,
+  "depth": 3,
+  "dof": 2,
+  "fogTop": 5.2,
+  "fogBottom": 2.2,
+  "raised": "raised.png",
+  "back": "#2a2630",
+  "noBar": true,
+  "behind": "behind.png",
+  "under": "under.png",
+  "solid": "solid.txt",
+  "grow": 32
+ },
+ "hero": {
+  "sheet": "~/party/hero.png",
+  "spec": "~/party/hero.json",
+  "light": {
+   "r": 150,
+   "color": "#ffb76a",
+   "intensity": 0
+  }
+ },
+ "party": [
+  "~/party/sword",
+  "~/party/rogue",
+  "~/party/priest"
+ ],
+ "spawn": {
+  "x": 2179,
+  "y": 678,
+  "dir": "left"
+ },
+ "spawns": {
+  "east": {
+   "x": 2179,
+   "y": 678,
+   "dir": "left"
+  },
+  "capital": {
+   "x": 360,
+   "y": 457,
+   "dir": "down"
+  },
+  "south": {
+   "x": 1681,
+   "y": 1629,
+   "dir": "up"
+  }
+ },
+ "exits": [
+  {
+   "rect": [
+    2264,
+    559,
+    40,
+    240
+   ],
+   "to": "f01",
+   "spawn": "west"
+  },
+  {
+   "x": 360,
+   "y": 386,
+   "r": 50,
+   "to": "capital",
+   "spawn": "east"
+  },
+  {
+   "rect": [
+    1591,
+    1696,
+    180,
+    60
+   ],
+   "closed": [
+    "この坂の下は、大樹の森。\n森の魔物は、高原よりずっと強い。",
+    "ここから先は、次の一区切りで作ります。"
+   ]
+  }
+ ],
+ "triggers": [
+  {
+   "x": 1159,
+   "y": 315,
+   "r": 46,
+   "title": "白い門",
+   "text": [
+    "白い石の門。奥は真っ暗で、\n冷たい風が、下から吹き上げてくる。",
+    "お城よりも古い遺跡だという。\n……中の魔物は、外よりずっと強い。",
+    "ここから先は、次の一区切りで作ります。"
+   ]
+  },
+  {
+   "x": 1056,
+   "y": 534,
+   "r": 40,
+   "kind": "spot",
+   "id": "ch018",
+   "title": "冒険者の荷物"
+  },
+  {
+   "x": 1780,
+   "y": 166,
+   "r": 38,
+   "kind": "spot",
+   "id": "ch016",
+   "title": "物かげ"
+  },
+  {
+   "x": 1831,
+   "y": 394,
+   "r": 44,
+   "title": "大岩",
+   "text": [
+    "見上げるほどの大岩。\n裏へ回りこめそうだ。"
+   ]
+  },
+  {
+   "x": 630,
+   "y": 1101,
+   "r": 46,
+   "title": "崖のふち",
+   "text": [
+    "崖の下に、森が、ずっと南まで\n広がっている。",
+    "森の真ん中に、ひときわ大きな木が\n一本、かすんで見える。"
+   ]
+  },
+  {
+   "x": 1254,
+   "y": 622,
+   "r": 38,
+   "title": "道しるべ",
+   "text": [
+    "「東　麦の丘・始まりの村」\n「西　王都」「南　大樹の森」"
+   ]
+  }
+ ],
+ "emitters": [
+  {
+   "kind": "motes",
+   "x": 516,
+   "y": 465,
+   "w": 900,
+   "h": 420,
+   "n": 16
+  },
+  {
+   "kind": "motes",
+   "x": 1576,
+   "y": 468,
+   "w": 700,
+   "h": 420,
+   "n": 12
+  },
+  {
+   "kind": "motes",
+   "x": 365,
+   "y": 910,
+   "w": 1200,
+   "h": 300,
+   "n": 12
+  },
+  {
+   "kind": "motes",
+   "x": 949,
+   "y": 242,
+   "w": 420,
+   "h": 300,
+   "n": 10
+  },
+  {
+   "kind": "mist",
+   "x": 0,
+   "y": 0,
+   "w": 2304,
+   "h": 1728,
+   "n": 7
+  }
+ ],
+ "encounter": {
+  "table": "f02",
+  "steps": 60,
+  "near": [
+   2179,
+   678,
+   760
+  ]
+ },
+ "save": "any"
+}

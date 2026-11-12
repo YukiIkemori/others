@@ -1,0 +1,25 @@
+Image 1 is a rough BLOCKOUT of a dungeon map for a 2D RPG, rendered from simple 3D blocks with flat placeholder colours: the inner part of an abandoned stone abbey on a crag. On the left, a long church NAVE whose roof has fallen in long ago, so that one looks into it from above: pillars, rows of pews, a carpet up the aisle, a raised chancel with an altar under a great round window. On the right, a CLOISTER: a square garden with a spring in its middle, a paved walk around it behind rows of pillars, and along its upper side a stone gallery on pillars. A rock face rises behind everything. Image 2 is a STYLE REFERENCE: the finished picture of the outer part of this same abbey. Copy its pixel-art craft, its palette, its density of small detail and the size of its details exactly, so that both maps look painted by the same hand. Do not copy its layout.
+
+TASK: repaint image 1 as finished background art in the style of image 2: premium high-resolution pixel art in JRPG 3/4 overhead view (HD-2D game background), crisp deliberate pixel clusters, dark plum-brown outlines (never pure black), rich hue-shifted shading, dense hand-pixelled detail on every stone block, crack, floor slab, plank, leaf and tuft of moss.
+
+LIGHT AND COLOUR: this world has one weak pale sun and is always dim, like a heavy overcast late afternoon that never ends. It is not night and there is no moon. The abbey is open to this dim sky. Colours are muted, deep and earthy: grey and grey-violet stone, moss green, dark old wood, a faded wine-red carpet. No bright saturated colours. A faint cool violet-grey haze lies in the shadows. The only warm light: the dull amber glow of the stained-glass windows, and a few candles (each small yellow cube on a thin dark post is an iron candle stand with burning candles and a small pool of warm light under it).
+
+What the placeholder colours mean:
+- pale blue-grey flat areas = old stone floor slabs, worn and cracked, with moss and grass in the joints, dead leaves, fallen roof slates and small rubble at the edges (flat, clear)
+- dark red band up the middle of the nave = a long faded wine-red carpet runner, frayed and stained (flat)
+- mid grey walls = thick abbey walls of grey ashlar, their tops broken and overgrown with ivy and moss; the wall at the top of the nave is the tallest, with a gable, a great ROUND stained-glass window and two tall narrow ones (orange = glass glowing dull amber) and a small dark arched door at its right end; the wall at the bottom of the nave is broken down to a low stump with a doorway between two stone posts
+- the two white steps across the nave and the slightly higher floor behind them = the raised chancel; the white block on it = a stone ALTAR with a cloth and cold candlesticks
+- pale grey cylinders on square bases in the nave = heavy stone pillars, some whole with a capital, some broken off short; pale lumps on the floor = fallen stone blocks
+- brown bars in rows = old wooden church pews with backs, some rotten or broken
+- in the cloister: the green square = an overgrown garden lawn with wild flowers; the low grey wall around it with thin pale columns = the arcade of the cloister (its roof is gone; some columns are broken); tan strips = worn earth paths; the grey ring with blue inside and a white pillar = a round stone SPRING basin with clear still water and a small carved spout; the bare brown tree = a dead tree; small green domes = bushes; the brown box with a white top = a small writing desk with an open book; short brown bars = stone-and-wood benches
+- the long pale slab on a row of columns along the top of the cloister, with a low parapet = a stone GALLERY (an upper floor) one storey above the walk; the windows (orange) are in the wall behind it; the grey steps at its right end = the ruined stump of the stair that once led up to it, impassable
+- green outside the walls = rough grass; small grey slabs = old headstones; dark green cones = fir trees; grey-brown domes = boulders; tan area at the bottom = the earth forecourt and path; grey band at the very bottom and the thin grey strips at the left and right edges = the low precinct wall
+- dark brown-grey striped mass across the top = a natural rock face with ledges, cracks, roots and tufts
+
+THE GEOMETRY IS LOCKED. Image 1 is the game's collision map, so:
+- Every wall, pillar, column, pew, step, the altar, the spring, the gallery, tree, rock and every floor area keeps exactly its position, size, outline and footprint. Do not move, resize, rotate, add or remove any wall, pillar, pew or large object. Do not change the camera or the perspective. Do not add a roof.
+- THE AISLE, THE CARPET, THE CHANCEL FLOOR AND THE CLOISTER WALKS STAY WIDE, FLAT AND EMPTY: nothing may stand on them.
+- Add richness in the EDGES instead, with small low things: ivy and moss on wall tops, fallen slates and rubble along the walls, cobwebs, a broken candle stand, scattered pages, prayer books left on pews, dead leaves in corners, weeds between slabs, puddles.
+- Paint the picture to every edge; there is no sky in this picture.
+
+No characters, no people, no animals, no text, no readable signs, no UI, no frame.

@@ -1,0 +1,1322 @@
+{
+ "title": "王都",
+ "titleEn": "The Capital",
+ "subtitle": "南の大通り",
+ "w": 2304,
+ "h": 1904,
+ "pull": 1.2,
+ "image": "map.webp",
+ "walk": "walk.png",
+ "height": "height.png",
+ "floor": "floor.png",
+ "heightBias": 3,
+ "occluders": [],
+ "lights": [
+  {
+   "kind": "window",
+   "x": 240,
+   "y": 819,
+   "gx": 240,
+   "gy": 879,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 452,
+   "y": 818,
+   "gx": 451,
+   "gy": 879,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 240,
+   "y": 745,
+   "gx": 240,
+   "gy": 879,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 346,
+   "y": 744,
+   "gx": 345,
+   "gy": 874,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 453,
+   "y": 744,
+   "gx": 451,
+   "gy": 879,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 675,
+   "y": 820,
+   "gx": 675,
+   "gy": 882,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 890,
+   "y": 821,
+   "gx": 890,
+   "gy": 882,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 682,
+   "y": 745,
+   "gx": 681,
+   "gy": 882,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 884,
+   "y": 746,
+   "gx": 884,
+   "gy": 882,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1450,
+   "y": 796,
+   "gx": 1450,
+   "gy": 857,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1539,
+   "y": 797,
+   "gx": 1539,
+   "gy": 858,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1750,
+   "y": 797,
+   "gx": 1750,
+   "gy": 858,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1838,
+   "y": 797,
+   "gx": 1838,
+   "gy": 858,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1451,
+   "y": 721,
+   "gx": 1450,
+   "gy": 857,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1546,
+   "y": 722,
+   "gx": 1546,
+   "gy": 858,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1645,
+   "y": 722,
+   "gx": 1645,
+   "gy": 853,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1743,
+   "y": 722,
+   "gx": 1743,
+   "gy": 858,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1838,
+   "y": 722,
+   "gx": 1838,
+   "gy": 858,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 2072,
+   "y": 755,
+   "gx": 2073,
+   "gy": 816,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 2072,
+   "y": 680,
+   "gx": 2073,
+   "gy": 816,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 310,
+   "y": 1443,
+   "gx": 310,
+   "gy": 1504,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 550,
+   "y": 1444,
+   "gx": 550,
+   "gy": 1505,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 310,
+   "y": 1368,
+   "gx": 310,
+   "gy": 1504,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 430,
+   "y": 1369,
+   "gx": 429,
+   "gy": 1500,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 551,
+   "y": 1369,
+   "gx": 550,
+   "gy": 1505,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 786,
+   "y": 1443,
+   "gx": 786,
+   "gy": 1504,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 906,
+   "y": 1442,
+   "gx": 906,
+   "gy": 1503,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 792,
+   "y": 1368,
+   "gx": 792,
+   "gy": 1504,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 901,
+   "y": 1367,
+   "gx": 900,
+   "gy": 1503,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1394,
+   "y": 1440,
+   "gx": 1394,
+   "gy": 1501,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1497,
+   "y": 1440,
+   "gx": 1498,
+   "gy": 1501,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1401,
+   "y": 1366,
+   "gx": 1401,
+   "gy": 1501,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1490,
+   "y": 1366,
+   "gx": 1490,
+   "gy": 1501,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1708,
+   "y": 1440,
+   "gx": 1708,
+   "gy": 1500,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1784,
+   "y": 1440,
+   "gx": 1784,
+   "gy": 1500,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1929,
+   "y": 1440,
+   "gx": 1929,
+   "gy": 1501,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 2004,
+   "y": 1441,
+   "gx": 2004,
+   "gy": 1502,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1707,
+   "y": 1366,
+   "gx": 1708,
+   "gy": 1500,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1802,
+   "y": 1366,
+   "gx": 1803,
+   "gy": 1495,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1903,
+   "y": 1366,
+   "gx": 1903,
+   "gy": 1496,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 2004,
+   "y": 1366,
+   "gx": 2004,
+   "gy": 1502,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 271,
+   "y": 266,
+   "gx": 271,
+   "gy": 326,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 461,
+   "y": 264,
+   "gx": 461,
+   "gy": 325,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 271,
+   "y": 191,
+   "gx": 271,
+   "gy": 326,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 366,
+   "y": 191,
+   "gx": 366,
+   "gy": 321,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 461,
+   "y": 190,
+   "gx": 461,
+   "gy": 325,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 714,
+   "y": 255,
+   "gx": 714,
+   "gy": 315,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 853,
+   "y": 256,
+   "gx": 853,
+   "gy": 317,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 714,
+   "y": 181,
+   "gx": 714,
+   "gy": 315,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 853,
+   "y": 183,
+   "gx": 853,
+   "gy": 317,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1457,
+   "y": 256,
+   "gx": 1457,
+   "gy": 317,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1596,
+   "y": 256,
+   "gx": 1596,
+   "gy": 317,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1456,
+   "y": 182,
+   "gx": 1457,
+   "gy": 317,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1596,
+   "y": 182,
+   "gx": 1596,
+   "gy": 317,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1849,
+   "y": 266,
+   "gx": 1849,
+   "gy": 327,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 2038,
+   "y": 265,
+   "gx": 2038,
+   "gy": 326,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1848,
+   "y": 192,
+   "gx": 1849,
+   "gy": 327,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 1943,
+   "y": 191,
+   "gx": 1944,
+   "gy": 321,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "window",
+   "x": 2038,
+   "y": 191,
+   "gx": 2038,
+   "gy": 326,
+   "r": 110,
+   "color": "#ffb26a",
+   "intensity": 0.63,
+   "flicker": 0.05
+  },
+  {
+   "kind": "lamp",
+   "x": 266,
+   "y": 910,
+   "gx": 266,
+   "gy": 992,
+   "r": 150,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 521,
+   "y": 911,
+   "gx": 520,
+   "gy": 994,
+   "r": 150,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 871,
+   "y": 913,
+   "gx": 871,
+   "gy": 996,
+   "r": 150,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1437,
+   "y": 913,
+   "gx": 1438,
+   "gy": 996,
+   "r": 150,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1724,
+   "y": 914,
+   "gx": 1724,
+   "gy": 997,
+   "r": 150,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 2124,
+   "y": 913,
+   "gx": 2124,
+   "gy": 995,
+   "r": 150,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1037,
+   "y": 1376,
+   "gx": 1037,
+   "gy": 1459,
+   "r": 150,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1269,
+   "y": 1376,
+   "gx": 1270,
+   "gy": 1459,
+   "r": 150,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1038,
+   "y": 1227,
+   "gx": 1037,
+   "gy": 1310,
+   "r": 150,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1269,
+   "y": 1227,
+   "gx": 1269,
+   "gy": 1310,
+   "r": 150,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1039,
+   "y": 756,
+   "gx": 1039,
+   "gy": 839,
+   "r": 150,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1270,
+   "y": 755,
+   "gx": 1270,
+   "gy": 838,
+   "r": 150,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1038,
+   "y": 606,
+   "gx": 1038,
+   "gy": 689,
+   "r": 150,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1271,
+   "y": 605,
+   "gx": 1270,
+   "gy": 688,
+   "r": 150,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 985,
+   "y": 1062,
+   "gx": 984,
+   "gy": 1154,
+   "r": 170,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1324,
+   "y": 1062,
+   "gx": 1324,
+   "gy": 1154,
+   "r": 170,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 985,
+   "y": 897,
+   "gx": 985,
+   "gy": 988,
+   "r": 170,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1323,
+   "y": 897,
+   "gx": 1324,
+   "gy": 988,
+   "r": 170,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 190,
+   "y": 1461,
+   "gx": 190,
+   "gy": 1543,
+   "r": 140,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 672,
+   "y": 1461,
+   "gx": 672,
+   "gy": 1544,
+   "r": 140,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1014,
+   "y": 1458,
+   "gx": 1014,
+   "gy": 1540,
+   "r": 140,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1292,
+   "y": 1458,
+   "gx": 1293,
+   "gy": 1540,
+   "r": 140,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1599,
+   "y": 1458,
+   "gx": 1600,
+   "gy": 1539,
+   "r": 140,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 2105,
+   "y": 1460,
+   "gx": 2105,
+   "gy": 1542,
+   "r": 140,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 998,
+   "y": 333,
+   "gx": 997,
+   "gy": 355,
+   "r": 150,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  },
+  {
+   "kind": "lamp",
+   "x": 1312,
+   "y": 332,
+   "gx": 1312,
+   "gy": 355,
+   "r": 150,
+   "color": "#ffc27a",
+   "intensity": 0.75,
+   "flicker": 0.06
+  }
+ ],
+ "water": [],
+ "mood": "gold",
+ "moodFixed": true,
+ "moods": {
+  "gold": {
+   "name": "",
+   "ambient": "#cfc8cf",
+   "lightGain": 0.9,
+   "lightRadius": 1,
+   "brighten": 0.5,
+   "glow": 0.75,
+   "heroLight": 0,
+   "skyTint": "#ffffff",
+   "moonGlow": 0,
+   "mist": 0.3,
+   "mistColor": "#cfc8d2",
+   "fireflies": 0,
+   "wisps": 0,
+   "motes": 0.5,
+   "rays": 0,
+   "grade": "#6f6a8a",
+   "gradeAlpha": 0.07,
+   "vignette": 0.38,
+   "vignetteColor": "#120e16",
+   "sparkle": "#fff0d0"
+  },
+  "shadow": {
+   "name": "",
+   "ambient": "#cfc8cf",
+   "lightGain": 0.9,
+   "lightRadius": 1,
+   "brighten": 0.5,
+   "glow": 0.75,
+   "heroLight": 0,
+   "skyTint": "#ffffff",
+   "moonGlow": 0,
+   "mist": 0.3,
+   "mistColor": "#cfc8d2",
+   "fireflies": 0,
+   "wisps": 0,
+   "motes": 0.5,
+   "rays": 0,
+   "grade": "#6f6a8a",
+   "gradeAlpha": 0.07,
+   "vignette": 0.38,
+   "vignetteColor": "#120e16",
+   "sparkle": "#fff0d0"
+  }
+ },
+ "bgm": "bgm03",
+ "hd": {
+  "S": 32,
+  "A": 0.75,
+  "B": 0.66,
+  "depth": 3,
+  "dof": 2,
+  "fogTop": 6.4,
+  "fogBottom": 2.0,
+  "raised": "raised.png",
+  "back": "#2a2630",
+  "noBar": true,
+  "behind": "behind.png",
+  "under": "under.png",
+  "solid": "solid.txt",
+  "grow": 32
+ },
+ "hero": {
+  "sheet": "~/party/hero.png",
+  "spec": "~/party/hero.json",
+  "light": {
+   "r": 150,
+   "color": "#ffb76a",
+   "intensity": 0
+  }
+ },
+ "party": [
+  "~/party/sword",
+  "~/party/rogue",
+  "~/party/priest"
+ ],
+ "spawn": {
+  "x": 2105,
+  "y": 1075,
+  "dir": "left"
+ },
+ "spawns": {
+  "start": {
+   "x": 2105,
+   "y": 1075,
+   "dir": "left"
+  },
+  "east": {
+   "x": 2105,
+   "y": 1075,
+   "dir": "left"
+  },
+  "west": {
+   "x": 202,
+   "y": 1072,
+   "dir": "right"
+  },
+  "south": {
+   "x": 1153,
+   "y": 1751,
+   "dir": "up"
+  },
+  "north": {
+   "x": 1155,
+   "y": 303,
+   "dir": "down"
+  }
+ },
+ "exits": [
+  {
+   "rect": [
+    2260,
+    979,
+    44,
+    192
+   ],
+   "to": "f02",
+   "spawn": "capital"
+  },
+  {
+   "rect": [
+    0,
+    977,
+    44,
+    192
+   ],
+   "closed": [
+    "西門の先は、西の街道。\n霧の港町へ続いている。",
+    "ここから先は、次の一区切りで作ります。"
+   ]
+  },
+  {
+   "rect": [
+    1057,
+    1864,
+    192,
+    40
+   ],
+   "closed": [
+    "南門の先は、南の街道。\n大きな湖へ続いている。",
+    "ここから先は、次の一区切りで作ります。"
+   ]
+  },
+  {
+   "rect": [
+    1011,
+    0,
+    288,
+    229
+   ],
+   "to": "plaza",
+   "spawn": "south"
+  }
+ ],
+ "triggers": [
+  {
+   "x": 1965,
+   "y": 937,
+   "r": 50,
+   "kind": "npc",
+   "id": "garam",
+   "title": "酒場の主人ガラム",
+   "prop": {
+    "src": "~/npc/garam.png",
+    "block": 13,
+    "shadow": 1
+   }
+  },
+  {
+   "x": 1501,
+   "y": 971,
+   "r": 50,
+   "kind": "npc",
+   "id": "ryuka",
+   "title": "吟遊詩人のリュカ",
+   "prop": {
+    "src": "~/npc/ryuka.png",
+    "block": 13,
+    "shadow": 1
+   }
+  },
+  {
+   "x": 1661,
+   "y": 933,
+   "r": 50,
+   "kind": "npc",
+   "id": "nezu",
+   "title": "古地図売りのネズ",
+   "prop": {
+    "src": "~/npc/nezu.png",
+    "block": 13,
+    "shadow": 1
+   }
+  },
+  {
+   "x": 1909,
+   "y": 951,
+   "r": 50,
+   "kind": "npc",
+   "id": "hash",
+   "title": "冒険者くずれのハッシュ",
+   "prop": {
+    "src": "~/npc/hash.png",
+    "block": 13,
+    "shadow": 1
+   }
+  },
+  {
+   "x": 399,
+   "y": 923,
+   "r": 50,
+   "kind": "npc",
+   "id": "bren",
+   "title": "武器屋のブレン",
+   "prop": {
+    "src": "~/npc/bren.png",
+    "block": 13,
+    "shadow": 1
+   }
+  },
+  {
+   "x": 1913,
+   "y": 1538,
+   "r": 50,
+   "kind": "npc",
+   "id": "sara",
+   "title": "宿の女将サラ",
+   "prop": {
+    "src": "~/npc/sara.png",
+    "block": 13,
+    "shadow": 1
+   }
+  },
+  {
+   "x": 826,
+   "y": 1036,
+   "r": 50,
+   "kind": "npc",
+   "id": "marg",
+   "title": "貴婦人マルグリット",
+   "prop": {
+    "src": "~/npc/marg.png",
+    "block": 13,
+    "shadow": 1
+   }
+  },
+  {
+   "x": 1010,
+   "y": 1006,
+   "r": 50,
+   "kind": "npc",
+   "id": "jino",
+   "title": "街灯番の少年ジノ",
+   "prop": {
+    "src": "~/npc/jino.png",
+    "block": 13,
+    "shadow": 1
+   }
+  },
+  {
+   "x": 345,
+   "y": 901,
+   "r": 46,
+   "title": "武器屋",
+   "kind": "shop",
+   "shop": "c_weapon",
+   "prompt": "店に入る"
+  },
+  {
+   "x": 782,
+   "y": 904,
+   "r": 46,
+   "title": "防具屋",
+   "kind": "shop",
+   "shop": "c_armor",
+   "prompt": "店に入る"
+  },
+  {
+   "x": 429,
+   "y": 1527,
+   "r": 46,
+   "title": "道具屋",
+   "kind": "shop",
+   "shop": "c_item",
+   "prompt": "店に入る"
+  },
+  {
+   "x": 1853,
+   "y": 1522,
+   "r": 46,
+   "title": "宿「灯守り亭」",
+   "kind": "inn",
+   "price": 30,
+   "prompt": "泊まる"
+  },
+  {
+   "x": 1645,
+   "y": 880,
+   "r": 46,
+   "title": "大酒場「三つ樽」",
+   "text": [
+    "中は、冒険者でいっぱいだ。\n主人は、外の樽のそばにいる。"
+   ]
+  },
+  {
+   "x": 931,
+   "y": 966,
+   "r": 40,
+   "title": "立て札",
+   "text": [
+    "「東門　草の高原・始まりの村」\n「西門　霧の港町」「南門　湖」",
+    "「北の石段　城門前の広場」"
+   ]
+  },
+  {
+   "x": 2016,
+   "y": 961,
+   "r": 44,
+   "title": "三つの大樽",
+   "text": [
+    "人の背より高い樽が、三つ。\n大酒場「三つ樽」の、看板代わりだ。"
+   ]
+  },
+  {
+   "x": 675,
+   "y": 1388,
+   "r": 36,
+   "kind": "spot",
+   "id": "ch003",
+   "title": "物かげ"
+  }
+ ],
+ "emitters": [
+  {
+   "kind": "motes",
+   "x": 804,
+   "y": 864,
+   "w": 700,
+   "h": 420,
+   "n": 16
+  },
+  {
+   "kind": "motes",
+   "x": 1401,
+   "y": 832,
+   "w": 520,
+   "h": 240,
+   "n": 12
+  },
+  {
+   "kind": "motes",
+   "x": 703,
+   "y": 1506,
+   "w": 900,
+   "h": 200,
+   "n": 10
+  },
+  {
+   "kind": "mist",
+   "x": 0,
+   "y": 0,
+   "w": 2304,
+   "h": 1904,
+   "n": 4
+  }
+ ],
+ "save": "any"
+}

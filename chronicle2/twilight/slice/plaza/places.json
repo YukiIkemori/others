@@ -1,0 +1,942 @@
+{
+ "w": 2048,
+ "h": 1600,
+ "S": 32,
+ "A": 0.75,
+ "B": 0.66,
+ "sy": 0.986931362197565,
+ "spawn": [
+  1017,
+  1481
+ ],
+ "marks": {
+  "exit_south": {
+   "p": [
+    1018,
+    1567
+   ],
+   "air": [
+    1018,
+    1567
+   ],
+   "on_ground": true,
+   "title": "南の大通りへ",
+   "walkable": true
+  },
+  "spawn_south": {
+   "p": [
+    1017,
+    1481
+   ],
+   "air": [
+    1017,
+    1481
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "exit_north": {
+   "p": [
+    1019,
+    252
+   ],
+   "air": [
+    1019,
+    252
+   ],
+   "on_ground": false,
+   "title": "北の街道へ",
+   "walkable": false
+  },
+  "spawn_north": {
+   "p": [
+    1019,
+    334
+   ],
+   "air": [
+    1019,
+    334
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "castle": {
+   "p": [
+    1633,
+    516
+   ],
+   "air": [
+    1633,
+    516
+   ],
+   "on_ground": true,
+   "title": "お城の門",
+   "walkable": true
+  },
+  "sewer": {
+   "p": [
+    619,
+    1420
+   ],
+   "air": [
+    619,
+    1420
+   ],
+   "on_ground": true,
+   "title": "水路の降り口",
+   "walkable": true
+  },
+  "fountain": {
+   "p": [
+    1017,
+    956
+   ],
+   "air": [
+    1017,
+    956
+   ],
+   "on_ground": true,
+   "poly": [
+    [
+     1112,
+     841
+    ],
+    [
+     1110,
+     825
+    ],
+    [
+     1102,
+     810
+    ],
+    [
+     1091,
+     797
+    ],
+    [
+     1076,
+     785
+    ],
+    [
+     1059,
+     778
+    ],
+    [
+     1038,
+     772
+    ],
+    [
+     1018,
+     770
+    ],
+    [
+     997,
+     772
+    ],
+    [
+     977,
+     778
+    ],
+    [
+     959,
+     786
+    ],
+    [
+     944,
+     798
+    ],
+    [
+     933,
+     811
+    ],
+    [
+     925,
+     825
+    ],
+    [
+     923,
+     841
+    ],
+    [
+     925,
+     858
+    ],
+    [
+     933,
+     872
+    ],
+    [
+     943,
+     885
+    ],
+    [
+     958,
+     897
+    ],
+    [
+     976,
+     905
+    ],
+    [
+     996,
+     911
+    ],
+    [
+     1017,
+     912
+    ],
+    [
+     1038,
+     911
+    ],
+    [
+     1058,
+     905
+    ],
+    [
+     1076,
+     897
+    ],
+    [
+     1091,
+     885
+    ],
+    [
+     1102,
+     872
+    ],
+    [
+     1110,
+     857
+    ]
+   ],
+   "title": "噴水",
+   "walkable": true
+  },
+  "nest": {
+   "p": [
+    390,
+    85
+   ],
+   "air": [
+    390,
+    85
+   ],
+   "on_ground": true,
+   "title": "時計塔のてっぺん",
+   "walkable": true
+  },
+  "chest_wall": {
+   "p": [
+    768,
+    89
+   ],
+   "air": [
+    768,
+    89
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "wall_below": {
+   "p": [
+    768,
+    291
+   ],
+   "air": [
+    768,
+    291
+   ],
+   "on_ground": true,
+   "title": "城壁の下",
+   "walkable": true
+  },
+  "npc_guard": {
+   "p": [
+    1520,
+    536
+   ],
+   "air": [
+    1520,
+    536
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "npc_toto": {
+   "p": [
+    743,
+    1410
+   ],
+   "air": [
+    743,
+    1410
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "npc_elma": {
+   "p": [
+    1099,
+    952
+   ],
+   "air": [
+    1099,
+    952
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "win0": {
+   "p": [
+    585,
+    448
+   ],
+   "air": [
+    586,
+    389
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win1": {
+   "p": [
+    794,
+    449
+   ],
+   "air": [
+    794,
+    390
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win2": {
+   "p": [
+    190,
+    835
+   ],
+   "air": [
+    190,
+    776
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win3": {
+   "p": [
+    284,
+    834
+   ],
+   "air": [
+    284,
+    776
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win4": {
+   "p": [
+    190,
+    835
+   ],
+   "air": [
+    190,
+    705
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win5": {
+   "p": [
+    284,
+    834
+   ],
+   "air": [
+    284,
+    705
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win6": {
+   "p": [
+    171,
+    1171
+   ],
+   "air": [
+    171,
+    1112
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win7": {
+   "p": [
+    305,
+    1168
+   ],
+   "air": [
+    305,
+    1110
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win8": {
+   "p": [
+    171,
+    1171
+   ],
+   "air": [
+    171,
+    1040
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win9": {
+   "p": [
+    235,
+    1165
+   ],
+   "air": [
+    235,
+    1039
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win10": {
+   "p": [
+    305,
+    1168
+   ],
+   "air": [
+    304,
+    1038
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win11": {
+   "p": [
+    1770,
+    842
+   ],
+   "air": [
+    1769,
+    784
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win12": {
+   "p": [
+    1920,
+    842
+   ],
+   "air": [
+    1919,
+    783
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win13": {
+   "p": [
+    1776,
+    842
+   ],
+   "air": [
+    1774,
+    712
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win14": {
+   "p": [
+    1914,
+    842
+   ],
+   "air": [
+    1911,
+    711
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win15": {
+   "p": [
+    1778,
+    1175
+   ],
+   "air": [
+    1778,
+    1116
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win16": {
+   "p": [
+    1916,
+    1175
+   ],
+   "air": [
+    1916,
+    1117
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win17": {
+   "p": [
+    1778,
+    1175
+   ],
+   "air": [
+    1778,
+    1045
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win18": {
+   "p": [
+    1847,
+    1175
+   ],
+   "air": [
+    1847,
+    1045
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win19": {
+   "p": [
+    1916,
+    1175
+   ],
+   "air": [
+    1916,
+    1046
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win20": {
+   "p": [
+    191,
+    1524
+   ],
+   "air": [
+    191,
+    1466
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win21": {
+   "p": [
+    357,
+    1520
+   ],
+   "air": [
+    357,
+    1463
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win22": {
+   "p": [
+    1294,
+    1524
+   ],
+   "air": [
+    1294,
+    1468
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win23": {
+   "p": [
+    1497,
+    1531
+   ],
+   "air": [
+    1498,
+    1473
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win24": {
+   "p": [
+    1712,
+    1531
+   ],
+   "air": [
+    1714,
+    1472
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "win25": {
+   "p": [
+    1905,
+    1526
+   ],
+   "air": [
+    1910,
+    1472
+   ],
+   "on_ground": true,
+   "light": {
+    "color": "#ffb26a",
+    "r": 110,
+    "intensity": 0.7
+   },
+   "walkable": true
+  },
+  "fx_square": {
+   "p": [
+    1017,
+    850
+   ],
+   "air": [
+    1017,
+    850
+   ],
+   "on_ground": false,
+   "walkable": false
+  },
+  "fx_gate": {
+   "p": [
+    1619,
+    598
+   ],
+   "air": [
+    1619,
+    598
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "fx_south": {
+   "p": [
+    1016,
+    1350
+   ],
+   "air": [
+    1016,
+    1350
+   ],
+   "on_ground": true,
+   "walkable": true
+  },
+  "fx_wall": {
+   "p": [
+    956,
+    98
+   ],
+   "air": [
+    956,
+    98
+   ],
+   "on_ground": false,
+   "walkable": false
+  }
+ },
+ "lights": [
+  {
+   "p": [
+    426,
+    1114
+   ],
+   "g": [
+    426,
+    1197
+   ],
+   "r": 160
+  },
+  {
+   "p": [
+    422,
+    450
+   ],
+   "g": [
+    422,
+    535
+   ],
+   "r": 160
+  },
+  {
+   "p": [
+    1626,
+    1122
+   ],
+   "g": [
+    1625,
+    1205
+   ],
+   "r": 160
+  },
+  {
+   "p": [
+    1617,
+    454
+   ],
+   "g": [
+    1618,
+    538
+   ],
+   "r": 160
+  },
+  {
+   "p": [
+    423,
+    782
+   ],
+   "g": [
+    423,
+    865
+   ],
+   "r": 160
+  },
+  {
+   "p": [
+    1624,
+    789
+   ],
+   "g": [
+    1625,
+    873
+   ],
+   "r": 160
+  },
+  {
+   "p": [
+    862,
+    439
+   ],
+   "g": [
+    863,
+    524
+   ],
+   "r": 160
+  },
+  {
+   "p": [
+    1175,
+    437
+   ],
+   "g": [
+    1174,
+    521
+   ],
+   "r": 160
+  },
+  {
+   "p": [
+    859,
+    1127
+   ],
+   "g": [
+    860,
+    1210
+   ],
+   "r": 160
+  },
+  {
+   "p": [
+    1174,
+    1132
+   ],
+   "g": [
+    1174,
+    1215
+   ],
+   "r": 160
+  },
+  {
+   "p": [
+    848,
+    1325
+   ],
+   "g": [
+    848,
+    1408
+   ],
+   "r": 160
+  },
+  {
+   "p": [
+    1187,
+    1330
+   ],
+   "g": [
+    1187,
+    1411
+   ],
+   "r": 160
+  },
+  {
+   "p": [
+    1494,
+    429
+   ],
+   "g": [
+    1494,
+    524
+   ],
+   "r": 170
+  },
+  {
+   "p": [
+    1772,
+    427
+   ],
+   "g": [
+    1772,
+    523
+   ],
+   "r": 170
+  }
+ ],
+ "far": [
+  "behind",
+  "under"
+ ],
+ "sky": false
+}
