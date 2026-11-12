@@ -66,9 +66,6 @@ table.pages td.small { white-space: nowrap; }
 .radio { margin-right: 16px; font-size: .9rem; white-space: nowrap; }
 .hint, .small { color: var(--sub); font-size: .8rem; margin: 4px 0 0; }
 
-.history { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: .82rem; color: var(--sub); }
-.chip { border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 99px; padding: 3px 12px; font-size: .82rem; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.chip b { margin-left: 6px; }
 
 .progress { margin: 20px 0 0; padding: 14px 16px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: .88rem; }
 .step { display: inline-flex; align-items: center; gap: 6px; color: var(--sub); }

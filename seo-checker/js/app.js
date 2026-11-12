@@ -180,7 +180,6 @@ async function run(url, { strategy, paste }) {
   await pHtml;
   if (alive()) $('#go').disabled = false;
   await Promise.allSettled([pCrawl, pDns, pPsi, pLinks]);
-  if (alive() && report && report.overall != null) saveHistory(ctx.url.href, report.overall);
 }
 
 // ---------- 描画 ----------
@@ -389,7 +388,6 @@ async function runSite(url, limit) {
     return;
   }
   render();
-  if (res.overall != null) saveHistory(res.start, res.overall, 'site');
 }
 
 function renderSite() {
@@ -561,22 +559,8 @@ function downloadJson() {
   saveBlob(blob, `seo-${ctx.url.hostname}.json`);
 }
 
-// ---------- 履歴 ----------
-function saveHistory(url, sc, mode = 'page') {
-  const list = store.get('history', []).filter((x) => !(x.url === url && (x.mode || 'page') === mode));
-  list.unshift({ url, score: sc, mode, at: Date.now() });
-  store.set('history', list.slice(0, 8));
-  renderHistory();
-}
-function renderHistory() {
-  const list = store.get('history', []);
-  const box = $('#history');
-  box.hidden = !list.length;
-  if (!list.length) return;
-  box.replaceChildren('最近の診断:', ...list.map((x) => h('button', { class: 'chip', type: 'button', title: x.url, onclick: () => { $('#url').value = x.url; document.querySelector(`input[name=mode][value=${x.mode === 'site' ? 'site' : 'page'}]`).checked = true; $('#form').requestSubmit(); } },
-    (x.mode === 'site' ? '【全体】' : '') + x.url.replace(/^https?:\/\//, '').replace(/\/$/, ''), h('b', { class: 'c-' + tone(x.score) }, x.score))));
-}
-renderHistory();
+// 以前の版が保存していた診断履歴を消す（履歴機能は廃止）
+try { localStorage.removeItem('seo.history'); } catch { /* ignore */ }
 
 // ?url= 付きで開かれたら自動で診断する
 const params = new URLSearchParams(location.search);
