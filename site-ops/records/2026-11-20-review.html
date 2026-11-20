@@ -1,0 +1,373 @@
+<title>すきのび・おくりの地図 運用レビュー</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@500;700&display=swap">
+<style>
+/* Layout: one reading column (max 780px); verdict first, then evidence, then decisions. Tables scroll inside their own frame. */
+:root{
+  --bg:#f6f8fa; --panel:#ffffff; --fg:#17212b; --muted:#566371; --line:#d6dde4; --accent:#0d5f80; --accent-soft:#e3f0f5;
+  --good:#17703f; --warn:#8a5a00; --bad:#a33030; --good-bg:#e4f3ea; --warn-bg:#fbf0d9; --bad-bg:#f8e4e2;
+  --s1:#2a78d6; --s2:#eb6834; --grid:#e3e8ee;
+  --display:"Zen Kaku Gothic New","Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --body:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#11161b; --panel:#182028; --fg:#e7ecf1; --muted:#9ba8b5; --line:#2c3742; --accent:#72c3e0; --accent-soft:#17303a;
+  --good:#6fd49a; --warn:#e8b95a; --bad:#f09088; --good-bg:#16301f; --warn-bg:#33290f; --bad-bg:#3a1c1a;
+  --s1:#3987e5; --s2:#d95926; --grid:#27313b; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#11161b; --panel:#182028; --fg:#e7ecf1; --muted:#9ba8b5; --line:#2c3742; --accent:#72c3e0; --accent-soft:#17303a;
+  --good:#6fd49a; --warn:#e8b95a; --bad:#f09088; --good-bg:#16301f; --warn-bg:#33290f; --bad-bg:#3a1c1a;
+  --s1:#3987e5; --s2:#d95926; --grid:#27313b; color-scheme:dark }
+body{background:var(--bg);color:var(--fg);font:400 16px/1.85 var(--body);padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+h1{font:700 30px/1.35 var(--display);margin:0;text-wrap:balance}
+h2{font:700 22px/1.45 var(--display);margin:0;padding-bottom:8px;border-bottom:2px solid var(--fg);text-wrap:balance}
+h3{font:700 17px/1.6 var(--display);margin:0}
+p{margin:0}
+section{display:flex;flex-direction:column;gap:16px;min-width:0}
+.meta{color:var(--muted);font-size:14px}
+.lead{font-size:17px}
+.verdict{background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--accent);padding:20px 22px;display:flex;flex-direction:column;gap:12px}
+.verdict ol{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:10px}
+ul{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+li>ul{margin-top:6px}
+strong{font-weight:700}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;line-height:1.6;font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-weight:700;background:var(--accent-soft);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right;white-space:nowrap}
+.chip{display:inline-block;font-size:12.5px;font-weight:700;padding:1px 8px;border-radius:3px;white-space:nowrap}
+.chip.good{color:var(--good);background:var(--good-bg)} .chip.warn{color:var(--warn);background:var(--warn-bg)} .chip.bad{color:var(--bad);background:var(--bad-bg)}
+.figure{background:var(--panel);border:1px solid var(--line);padding:16px 16px 10px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.figure h3{font-size:15px}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:13.5px;color:var(--muted)}
+.legend i{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:6px}
+.chart{position:relative;width:100%}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.tip{position:absolute;pointer-events:none;background:var(--fg);color:var(--bg);font-size:12.5px;line-height:1.5;padding:6px 9px;border-radius:3px;white-space:nowrap;transform:translate(-50%,-110%)}
+.note{font-size:13.5px;color:var(--muted)}
+.bars{display:flex;flex-direction:column;gap:8px}
+.bar{display:grid;grid-template-columns:minmax(120px,38%) 1fr auto;gap:10px;align-items:center;font-size:14px}
+.bar .track{height:14px;background:var(--grid)}
+.bar .fill{height:100%;background:var(--s1);border-radius:0 3px 3px 0;min-width:2px}
+.bar.o .fill{background:var(--s2)}
+.bar b{font-variant-numeric:tabular-nums;font-weight:700}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.ask{background:var(--panel);border:1px solid var(--line);padding:14px 18px;display:flex;flex-direction:column;gap:6px}
+.ask h3{font-size:16px}
+.ask .who{font-size:13px;color:var(--muted)}
+a{color:var(--accent)}
+@media (max-width:520px){ h1{font-size:25px} h2{font-size:20px} body{font-size:15.5px} }
+</style>
+
+<div class="wrap">
+
+<header style="display:flex;flex-direction:column;gap:10px">
+  <p class="meta">2026年11月20日 作成 ／ Search Console は11月18日分まで、アクセス解析は11月20日まで</p>
+  <h1>すきのび・おくりの地図 運用レビュー</h1>
+  <p class="lead">11月3日に「攻めの運用」へ切り替えてから約3週間。検索の表示回数、Google への登録状況、送客の計測、競合、技術面をまとめて調べ直しました。厳しめに書いています。</p>
+</header>
+
+<section>
+  <div class="verdict">
+    <h3>結論</h3>
+    <ol>
+      <li><strong>検索での露出を作ることには成功しました。</strong>4週間の表示回数は、どちらのサイトも約10倍です（すきのび 49→523、おくりの地図 46→472）。Google への登録も、ほぼ全ページで済みました。</li>
+      <li><strong>ただし、目標である送客はまだ0件で、今の進め方のままでは3か月後も月0〜3件にとどまる見込みです。</strong>計測の故障ではありません。読者がまだほとんどいないことに加えて、サイトごとに構造的な理由があります。
+        <ul>
+          <li>すきのび：来ている読者の95%は「ゲームを制限したい保護者」で、英会話を探している人ではありません。</li>
+          <li>おくりの地図：出資先のつばさ公益社のサイト自身が、同じ検索語を狙う地域ページを138本持っています。</li>
+        </ul>
+      </li>
+      <li><strong>毎日1本の公開は、いったんやめることをおすすめします。</strong>Google が読み直すより速く書き直していて、何が効いたのか判定できなくなっています。量産と見られるおそれも出てきました。これからは「Google に読ませる」「計測を整える」「送客に近いテーマに絞る」の3つに力を移します。</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <h2>数字で見る現状</h2>
+
+  <div class="figure">
+    <h3>Google 検索での1日の表示回数（10月1日〜11月18日）</h3>
+    <div class="legend"><span><i style="background:var(--s1)"></i>すきのび</span><span><i style="background:var(--s2)"></i>おくりの地図</span></div>
+    <div class="chart" id="chart"></div>
+    <p class="note">縦の点線は、11月3日の攻めの運用の開始と、11月10日のデザイン改修です。出典：Search Console。</p>
+  </div>
+
+  <div class="tablewrap"><table>
+    <tr><th>4週間の比較</th><th class="num">9/25〜10/22</th><th class="num">10/23〜11/19</th><th>変化</th></tr>
+    <tr><td>すきのび 表示回数</td><td class="num">49</td><td class="num">523</td><td>約10.7倍</td></tr>
+    <tr><td>すきのび クリック</td><td class="num">0</td><td class="num">7</td><td>クリック率 1.3%</td></tr>
+    <tr><td>すきのび 平均順位</td><td class="num">26.2位</td><td class="num">11.6位</td><td>上昇</td></tr>
+    <tr><td>おくりの地図 表示回数</td><td class="num">46</td><td class="num">472</td><td>約10.3倍</td></tr>
+    <tr><td>おくりの地図 クリック</td><td class="num">0</td><td class="num">1</td><td>クリック率 0.2%</td></tr>
+    <tr><td>おくりの地図 平均順位</td><td class="num">32.8位</td><td class="num">23.3位</td><td>上昇（まだ3ページ目）</td></tr>
+    <tr><td>送客クリック（両サイト）</td><td class="num">0</td><td class="num">0</td><td>計測開始から0件</td></tr>
+  </table></div>
+
+  <div class="two">
+    <div class="figure">
+      <h3>すきのび：表示がどのテーマから来ているか（11月3日以降）</h3>
+      <div class="bars">
+        <div class="bar"><span>保護者設定</span><span class="track"><span class="fill" style="width:100%;display:block"></span></span><b>489</b></div>
+        <div class="bar"><span>英語への橋渡し</span><span class="track"><span class="fill" style="width:2%;display:block"></span></span><b>10</b></div>
+        <div class="bar"><span>ゲーム×英語</span><span class="track"><span class="fill" style="width:0.6%;display:block"></span></span><b>3</b></div>
+        <div class="bar"><span>英語・習い事</span><span class="track"><span class="fill" style="width:0.6%;display:block"></span></span><b>3</b></div>
+      </div>
+      <p class="note">送客に近いテーマの表示は全体の3%です。出典：Search Console。</p>
+    </div>
+    <div class="figure">
+      <h3>おくりの地図：アクセス解析の訪問92件の中身（10月15日以降）</h3>
+      <div class="bars">
+        <div class="bar o"><span>公開前の自動テスト</span><span class="track"><span class="fill" style="width:100%;display:block"></span></span><b>55</b></div>
+        <div class="bar o"><span>ボット・不明</span><span class="track"><span class="fill" style="width:38%;display:block"></span></span><b>21</b></div>
+        <div class="bar o"><span>運営者と関係者</span><span class="track"><span class="fill" style="width:25%;display:block"></span></span><b>14</b></div>
+        <div class="bar o"><span>実際の読者</span><span class="track"><span class="fill" style="width:3.6%;display:block"></span></span><b>2</b></div>
+      </div>
+      <p class="note">分類は訪問元の地域・端末・ホスト名からの推定です。出典：GA4。</p>
+    </div>
+  </div>
+
+  <h3>表示がどの順位で出ているか</h3>
+  <p>クリックは上位5位までにほとんど集まります。すきのびは1ページ目の後半まで来ました。おくりの地図は、まだ2〜3ページ目が中心です。</p>
+  <div class="tablewrap"><table>
+    <tr><th>週</th><th class="num">1〜3位</th><th class="num">4〜10位</th><th class="num">11〜20位</th><th class="num">21〜50位</th><th class="num">51位以下</th></tr>
+    <tr><td>すきのび 11/2〜</td><td class="num">3</td><td class="num">63</td><td class="num">2</td><td class="num">0</td><td class="num">2</td></tr>
+    <tr><td>すきのび 11/9〜</td><td class="num">5</td><td class="num">58</td><td class="num">109</td><td class="num">31</td><td class="num">1</td></tr>
+    <tr><td>すきのび 11/16〜（4日）</td><td class="num">2</td><td class="num">177</td><td class="num">53</td><td class="num">12</td><td class="num">0</td></tr>
+    <tr><td>おくりの地図 11/2〜</td><td class="num">0</td><td class="num">0</td><td class="num">16</td><td class="num">25</td><td class="num">4</td></tr>
+    <tr><td>おくりの地図 11/9〜</td><td class="num">2</td><td class="num">4</td><td class="num">33</td><td class="num">30</td><td class="num">26</td></tr>
+    <tr><td>おくりの地図 11/16〜（4日）</td><td class="num">5</td><td class="num">12</td><td class="num">62</td><td class="num">21</td><td class="num">28</td></tr>
+  </table></div>
+  <p class="note">すきのびはページ単位、おくりの地図は検索語が分かる分だけの集計で、数え方が違います。サイト同士の比較ではなく、それぞれの週ごとの変化を見てください。</p>
+</section>
+
+<section>
+  <h2>ここまでの評価</h2>
+  <div class="tablewrap"><table>
+    <tr><th>取り組み</th><th>評価</th><th>根拠</th></tr>
+    <tr><td>具体的で狭い検索語を狙った新しいページ（ゲーム名×保護者の困りごと、地名×施設名）</td><td><span class="chip good">効いた</span></td><td>表示の伸びのほぼすべてがここから。新しいページは1〜2日で登録され、7〜15位に入った。クリック8件もすべてこの種類</td></tr>
+    <tr><td>サイトマップの再送信と登録の働きかけ</td><td><span class="chip good">効いた</span></td><td>おくりの地図の登録は 24/37 → 49/50、すきのびは 48/49</td></tr>
+    <tr><td>送客クリックの計測の修理（すきのび 11/8）</td><td><span class="chip good">効いた</span></td><td>本番でリンクを押す試験をして、計測が送られることを確認。おくりの地図は6か所すべて正常</td></tr>
+    <tr><td>デザインの全面改修、要点まとめ、目次、早見表、出典の表示、運営者情報</td><td><span class="chip warn">まだ判定できない</span></td><td>改修後の版を Google がまだ読んでいないページが多い。順位に差は見えず、読者も少なすぎる</td></tr>
+    <tr><td>地域ページへの家族葬の加筆とタイトル変更（11/17〜20）、主力記事の加筆（11/18〜20）</td><td><span class="chip warn">まだ判定できない</span></td><td>Google は安中市のページを11/1の版のまま持っている。加筆はまだ1つも評価されていない</td></tr>
+    <tr><td>記事の途中に置いた送客の一文</td><td><span class="chip warn">まだ判定できない</span></td><td>すきのびでは、置いた13本のうち10本が表示0。読まれていない</td></tr>
+    <tr><td>全国向けの一般的な記事（四十九日、喪主の挨拶、ゲームの時間、英語の始め方など）</td><td><span class="chip bad">効いていない</span></td><td>40〜90位で表示されるだけ。大手メディアや公式と正面からぶつかっている</td></tr>
+    <tr><td>送客に近い既存の記事（病院からの搬送、直葬、ゲーム英会話の選び方など）</td><td><span class="chip bad">効いていない</span></td><td>10月以降、表示がほぼ0。すきのびの英語系は表示が 42 → 11 に減った</td></tr>
+  </table></div>
+
+  <h3>運用の反省（私の側の問題です）</h3>
+  <ul>
+    <li><strong>Google が読むより速く書き直していました。</strong>安中市のページは、Google の最後の読み込みの後に4回編集しています。「14日あける」決まりを、事実の修正の例外として何度も越えました。効果を測れない状態を自分で作っていました。</li>
+    <li><strong>公開した本数を成果のように報告していました。</strong>本来見るべきは「Google がいつ読んだか」と「順位」です。</li>
+    <li><strong>アクセス解析の数字を、読者の数として報告していました。</strong>おくりの地図の「ページビュー79」は、ほとんどが自動テストと私たち自身の確認でした。11月17日に「家族葬の内容を足したので順位の動きを見ます」とお伝えしましたが、その加筆はまだ Google に届いていません。</li>
+    <li><strong>見落としが3つありました。</strong>
+      <ul>
+        <li>おくりの地図で最も大事な「病院からの搬送」の記事が、10月9日から Google に登録されていません。</li>
+        <li>すきのびの YouTube の記事が、公開から11日たっても登録されていません。</li>
+        <li>すきのびに、アクセス解析を使っていることの説明（プライバシーの表示）がどこにもありません。</li>
+      </ul>
+    </li>
+  </ul>
+</section>
+
+<section>
+  <h2>おくりの地図：詳しい現状</h2>
+  <div class="two">
+    <div class="card">
+      <h3>伸びているところ</h3>
+      <ul>
+        <li>地域ページが表示の55%を占め、平均16.9位（記事は32.3位）。</li>
+        <li>施設名で10位前後まで来た語：佐久平斎場、大星斎場、依田窪斎場。</li>
+        <li>「軽井沢町 家族葬」17.8位、「上田市 家族葬」18.7位、「家族葬 安中市」は直近で9〜17位。</li>
+        <li>スマホでは平均13.4位。PC の31.9位よりずっと良い。</li>
+        <li>表示速度は良好（スマホで0.3〜0.8秒）。</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>弱いところ</h3>
+      <ul>
+        <li>「佐久市 家族葬」「佐久市 葬儀」は表示が0。つばさの式場が5つある最大の市で、まだ土俵に上がれていない。</li>
+        <li>実際の読者は5週間で2人（安中市と軽井沢町から、どちらも1〜2分半読んで離脱）。</li>
+        <li>地域ページは画面10〜13枚分と長く、文末の相談枠にはほぼ誰も届かない。目に入るのは冒頭の1行だけ。</li>
+        <li>小さな町村のページ同士が似ている（佐久穂町と小海町は文の28%が一致）。</li>
+        <li>「このメディアについて」とプライバシーのページに、どこからもリンクがない。</li>
+      </ul>
+    </div>
+  </div>
+  <h3>いちばん大きな論点：つばさ公益社のサイトとの関係</h3>
+  <p>つばさ公益社のサイト（so-gi.com）には、「〇〇市の葬儀」「斎場・火葬場ガイド」「葬儀費用と補助金」といった地域ページが138本あります。富岡22本、佐久19本、上田16本などです。おくりの地図の地域ページは、同じ検索語で同じ枠を取り合っています。</p>
+  <ul>
+    <li>おくりの地図が上位に入っても、つばさのページを押し下げるだけなら、読者にとっては相談までのクリックが1回増えるだけです。</li>
+    <li>送客が純粋に増えるのは、つばさのサイトが上位にいない語です。公的な手続きの細かい話、安中市、施設の細部、そして比較サイトが取っている「中立な情報」の枠がこれにあたります。</li>
+    <li>「〇〇市 葬儀場」のような検索では、ふつう地図の枠（3件）と広告が一番上に出ます。ここで効くのは、情報サイトよりも、つばさホール各館の Google ビジネスプロフィール（地図に出る店舗情報）です。</li>
+  </ul>
+  <p class="note">つばさのページ数は so-gi.com のサイトマップから数えたものです。Google 日本の実際の検索結果と地図枠は、自動取得が規約に触れるため確認していません。上位の顔ぶれは10月8日の記録と、各サイトの現在の内容から判断しています。</p>
+</section>
+
+<section>
+  <h2>すきのび：詳しい現状</h2>
+  <div class="two">
+    <div class="card">
+      <h3>伸びているところ</h3>
+      <ul>
+        <li>フォートナイトの保護者の許可：約8位、2週間で164表示。クリックの過半がここ。</li>
+        <li>Switch 2 のみまもり設定：公開3日で75表示、8〜9位。</li>
+        <li>PS5：4日間で114表示（ただし下の注意を参照）。</li>
+        <li>Yahoo からの訪問もあり、Google の約4割が上乗せされている。</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>弱いところ</h3>
+      <ul>
+        <li>検索から来た13人は、全員が1ページだけ読んで離脱。保護者設定の記事から英語の記事へ進んだ人は0人。</li>
+        <li>記事の最後まで読む人は4〜5人に1人。末尾の「eスピ」の一行は、ほとんど目に入っていない。</li>
+        <li>40本のうち24本は、11月3日以降の表示が0。</li>
+        <li>PS5 の記事は11月17日から表示が0に戻った。新しいページによくある一時的な露出だった可能性が高い。</li>
+        <li>PS5・Switch・YouTube などの大きな語は、公式ヘルプが1〜3位を固めていて取れない。</li>
+      </ul>
+    </div>
+  </div>
+  <h3>いちばん大きな論点：来ている読者と目標のずれ</h3>
+  <p>いま集まっているのは「子どものゲームを制限したい・許可のやり方が分からない」保護者です。この人たちが英会話のサービスへ進む割合は、1,000人に0.5〜3人ほどと見ています。保護者設定の記事をいくら増やしても、送客はほとんど増えません。</p>
+  <ul>
+    <li><strong>送客に近いのは「ゲーム英会話」の検索です。</strong>「ゲーム英会話 子供」「マイクラ 英会話 小学生」「フォートナイト 英会話 小学生」「ゲーミング英会話」などは検索の候補に出ていて、上位にいるのは比較サイト数件と各スクールだけです。新しいサイトでも勝ち目がいちばんある領域です。</li>
+    <li>ところが、この領域の既存記事は10月に作ったままで、手を入れていません。</li>
+    <li>eスピのサイトは現在「応募多数のため事前登録」の案内になっています。送客しても、すぐの申込にはなりません。</li>
+    <li>eスピは通話に Discord を使いますが、Discord の規約は13歳以上です。すきのびの記事にも「小学生は使えない」と書きました。小学生がどう参加するのかをゲシピに確認しないと、関連する記事が書けません。</li>
+  </ul>
+  <h3>送客の計測について</h3>
+  <p>本番で52回の試験クリックをしたところ、49回は送客イベントが送られ、3回は別の種類の記録（外部リンクのクリック）だけになりました。当面は両方を足して数えます。取りこぼしはコードで直せます。</p>
+</section>
+
+<section>
+  <h2>これからの戦略</h2>
+  <h3>1. 量から質へ：毎日1本をやめる</h3>
+  <ul>
+    <li>公開は週2〜3本まで（おくりの地図は週1本）。</li>
+    <li>「14日あける」決まりの起点を、公開日ではなく「Google が読んだ日」に変える。</li>
+    <li>成果は公開本数ではなく、Google の読み込み日、順位、実際の読者数、送客で見る。</li>
+  </ul>
+  <h3>2. すきのび：送客に近いテーマへ重心を移す</h3>
+  <ul>
+    <li>力の配分は、保護者設定の維持に3割、ゲーム英会話まわりに5割、導線と技術に2割。</li>
+    <li>「ゲーム英会話の選び方」「マイクラ英会話」「フォートナイト英会話」の記事を、実際の検索語に合わせて作り直す。</li>
+    <li>保護者設定の記事から英語の記事へ進む道を作る。たとえば Switch 2 や PS5 の記事に「表示言語を英語にする設定」の短い節を足す。設定の説明として自然で、本文の中立も崩れない。</li>
+    <li>保護者設定は、新しい機器の記事を増やすのをやめ、表示のある4本を上位5位に上げることに絞る。年末はゲーム機の贈り物で検索が増える。</li>
+  </ul>
+  <h3>3. おくりの地図：つばさのサイトと役割を分ける</h3>
+  <ul>
+    <li>つばさが持っていない領域に寄せる：公的な手続きの細部、施設の細部、安中市、年末年始の火葬場の休み、前火葬など地域の慣習。</li>
+    <li>斎場の説明は、佐久平斎場は佐久市のページ、大星・依田窪斎場は上田市のページを本体にして、小さな町村のページからはリンクで案内する。似たページを減らせる。</li>
+    <li>地域ページの導線を、決まりの範囲で直す（下の「ご判断いただきたいこと」）。</li>
+  </ul>
+  <h3>4. 検索だけに頼らない</h3>
+  <p>検索からの送客は、早くても半年から1年かけて週1件に届くかどうかです。出資先を応援するという目的に対しては、次のほうが早く効く可能性があります。</p>
+  <ul>
+    <li>つばさホール各館の Google ビジネスプロフィールの整備（写真、営業時間、投稿、口コミへの返信）。</li>
+    <li>つばさ公益社・ゲシピ・tsam のサイトから、両サイトへのリンク。新しいサイトの信用の土台になる。</li>
+    <li>ゲシピ・つばさ側のアクセス解析で、すきのび・おくりの地図から来た人数を数えてもらう。こちらの計測の裏取りになる。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>ご判断いただきたいこと</h2>
+  <div class="ask"><h3>A. 毎日1本の公開をやめて、週2〜3本にしてよいか</h3><p>おすすめは「やめる」です。日次の定期実行は点検と計測に絞り、公開は週次の計画に沿って行います。</p></div>
+  <div class="ask"><h3>B. おくりの地図は、つばさのサイトと役割を分けるか、重なりを受け入れるか</h3><p>おすすめは「役割を分ける」です。検索結果で2枠を取りにいく考え方もありますが、今の順位では共倒れのほうが心配です。</p></div>
+  <div class="ask"><h3>C. おくりの地図の地域ページの導線を直してよいか</h3><p>冒頭のリンク文を「佐久市の式場と費用を見る（つばさ公益社）」のように具体的にします。式場のある5市（佐久・上田・小諸・東御・富岡）では、家族葬の会場の節の後に相談の一文を1つ足します。電話番号、ボタン、追いかけてくる表示は使いません。</p></div>
+  <div class="ask"><h3>D. すきのびで、ゲーム英会話のサービスを複数並べて比べる記事を書いてよいか</h3><p>「ゲーム英会話 比較・口コミ」の検索に答えるには、eスピ以外のサービスにも触れる必要があります。書く場合は、そのページの中に出資関係の開示を置くことをおすすめします。</p></div>
+  <div class="ask"><h3>E. ゲシピに確認していただきたいこと</h3><p>小学生（12歳以下）は Discord をどう使って参加するのか。事前登録はいつまで続くのか。すきのびから来た人数を数えてもらえるか。</p></div>
+  <div class="ask"><h3>F. フッターに「このメディアについて」と「プライバシー」へのリンクを足してよいか（両サイト）</h3><p>以前「フッターは運営者情報だけ」と決めましたが、アクセス解析の説明に誰も行けない状態です。すきのびにはプライバシーの表示そのものを新しく作ります。</p></div>
+  <div class="ask"><h3>G. 管理画面での作業をお願いしたいもの</h3>
+    <ul>
+      <li>Search Console の URL 検査で登録をリクエスト（1日10件ほどの上限があります）。
+        <ul>
+          <li>おくりの地図：病院からの搬送の記事、安中市、軽井沢町、御代田町、立科町、佐久市、上田市、富岡市のページ</li>
+          <li>すきのび：YouTube、フォートナイト、マイクラ、家庭のゲームのルールの記事</li>
+        </ul>
+      </li>
+      <li>GA4 の管理画面で、送客クリックを「キーイベント」に登録し、押された位置などを集計できるようにする設定と、社内からのアクセスを除外する設定。手順は別途お送りします。</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>次の4週間でやること</h2>
+  <div class="tablewrap"><table>
+    <tr><th>順</th><th>やること</th><th>ねらい</th><th>必要なもの</th></tr>
+    <tr><td>1</td><td>計測をきれいにする：自動テストがアクセス解析に記録を残さないよう直す。送客クリックの取りこぼしを直す</td><td>読者と送客を正しく数える</td><td>こちらで実施</td></tr>
+    <tr><td>2</td><td>重要なページを Google に読ませる（URL 検査）。読まれるまで、そのページは触らない</td><td>3週間分の作業を評価できるようにする</td><td>G のご協力</td></tr>
+    <tr><td>3</td><td>すきのびにプライバシーの表示を作る。おくりの地図の孤立したページにリンクを張る</td><td>信頼と決まりごとへの対応</td><td>F のご判断</td></tr>
+    <tr><td>4</td><td>すきのび：保護者設定の記事から英語の記事への道を作る。「ゲームから探す」に PS5・Switch 2 を足す</td><td>2ページ目へ進む人を0から数%へ</td><td>こちらで実施</td></tr>
+    <tr><td>5</td><td>すきのび：ゲーム英会話まわりの4本を作り直す</td><td>送客に近い表示を月0〜10から100〜300へ</td><td>D・E のご判断</td></tr>
+    <tr><td>6</td><td>おくりの地図：年末年始の火葬場の休みを公式発表で確かめ、12月10日ごろまでに反映</td><td>冬の「亡くなった直後」の検索に答える</td><td>こちらで実施</td></tr>
+    <tr><td>7</td><td>おくりの地図：地域ページの導線を直す。斎場の説明を1か所に寄せる</td><td>送客率を上げ、似たページを減らす</td><td>B・C のご判断</td></tr>
+    <tr><td>8</td><td>すきのび：PS5（11/27以降）と Switch 2（12/1以降）に、不具合やエラーの対処の節を足す</td><td>年末の需要に向けて5〜8位へ</td><td>こちらで実施</td></tr>
+    <tr><td>9</td><td>長すぎるタイトルを詰める。すきのびの不要な画像の先読みを止める</td><td>クリック率と表示速度</td><td>こちらで実施</td></tr>
+    <tr><td>10</td><td>表示上位のページの事実を、月に1回確かめ直す枠を作る</td><td>ゲーム機やアプリの仕様変更に追随する</td><td>こちらで実施</td></tr>
+  </table></div>
+</section>
+
+<section>
+  <h2>3か月の見通し（2027年2月中旬の4週間）</h2>
+  <div class="tablewrap"><table>
+    <tr><th></th><th>今</th><th>低い場合</th><th>中間</th><th>高い場合</th></tr>
+    <tr><td>すきのび 表示</td><td class="num">523</td><td class="num">800〜1,500</td><td class="num">2,000〜4,000</td><td class="num">5,000〜8,000</td></tr>
+    <tr><td>すきのび クリック</td><td class="num">7</td><td class="num">8〜15</td><td class="num">30〜80</td><td class="num">100〜200</td></tr>
+    <tr><td>すきのび 送客</td><td class="num">0</td><td class="num">0</td><td class="num">0〜3</td><td class="num">3〜10</td></tr>
+    <tr><td>おくりの地図 表示</td><td class="num">472</td><td class="num">1,000</td><td class="num">2,000</td><td class="num">3,500</td></tr>
+    <tr><td>おくりの地図 クリック</td><td class="num">1</td><td class="num">5</td><td class="num">15〜20</td><td class="num">50</td></tr>
+    <tr><td>おくりの地図 送客</td><td class="num">0</td><td class="num">0</td><td class="num">0〜1</td><td class="num">3</td></tr>
+  </table></div>
+  <p>どれも推定です。前提は、手直ししたページが2〜4週間で Google に読み直されること、大きな順位変動に巻き込まれないこと、年末年始にゲーム機と葬儀の検索が増えることです。検索だけで送客が月10件を超える見込みは、3か月以内では低いと見ています。</p>
+</section>
+
+<section>
+  <h2>確かめられなかったこと</h2>
+  <ul>
+    <li>Google 日本の実際の検索結果と地図の枠（自動で取得することは規約上していません）。</li>
+    <li>検索語ごとの検索回数、外部サイトからのリンクの数（確かめる手段がありません）。</li>
+    <li>つばさ公益社・ゲシピ側のアクセス解析（権限がありません）。</li>
+    <li>GA4 の管理画面の設定内容（こちらの権限では見られません）。</li>
+    <li>実際のブラウザから押した送客クリックが、GA4 の集計画面に載るところまで。お手元のブラウザで1回押して確かめていただくのが確実です。</li>
+  </ul>
+</section>
+
+</div>
+
+<script>
+(function(){
+  var s1=[0,0,1,6,10,5,3,3,1,5,0,3,2,2,0,2,0,1,0,1,2,2,1,0,0,0,1,2,0,0,1,0,1,11,5,4,19,14,13,12,10,1,2,22,89,68,64,72,60];
+  var s2=[0,0,0,0,0,0,0,0,3,1,3,2,10,6,10,4,1,1,2,1,0,2,3,5,3,2,4,1,2,2,4,3,5,12,11,10,16,7,11,12,17,19,25,46,16,27,47,60,56];
+  var n=s1.length, W=720,H=300,L=36,R=14,T=14,B=30, max=100;
+  var host=document.getElementById('chart');
+  function x(i){return L+(W-L-R)*i/(n-1)} function y(v){return T+(H-T-B)*(1-v/max)}
+  function label(i){var d=new Date(Date.UTC(2026,9,1+i));return (d.getUTCMonth()+1)+'/'+d.getUTCDate()}
+  function path(a){return a.map(function(v,i){return (i?'L':'M')+x(i).toFixed(1)+' '+y(v).toFixed(1)}).join(' ')}
+  var g='';
+  [0,25,50,75,100].forEach(function(v){g+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="var(--grid)" stroke-width="1"/><text x="'+(L-6)+'" y="'+(y(v)+4)+'" text-anchor="end" font-size="11" fill="var(--muted)">'+v+'</text>'});
+  [0,10,20,33,40,48].forEach(function(i){g+='<text x="'+x(i)+'" y="'+(H-8)+'" text-anchor="middle" font-size="11" fill="var(--muted)">'+label(i)+'</text>'});
+  [[33,'攻めの運用の開始'],[40,'デザイン改修']].forEach(function(m,k){g+='<line x1="'+x(m[0])+'" x2="'+x(m[0])+'" y1="'+T+'" y2="'+(H-B)+'" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 4"/><text x="'+(x(m[0])-5)+'" y="'+(T+12+k*16)+'" text-anchor="end" font-size="11" fill="var(--muted)">'+m[1]+'</text>'});
+  g+='<path d="'+path(s2)+'" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linejoin="round"/>';
+  g+='<path d="'+path(s1)+'" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round"/>';
+  g+='<line id="xh" x1="0" x2="0" y1="'+T+'" y2="'+(H-B)+'" stroke="var(--fg)" stroke-width="1" opacity="0"/>';
+  g+='<circle id="d1" r="4" fill="var(--s1)" stroke="var(--panel)" stroke-width="2" opacity="0"/><circle id="d2" r="4" fill="var(--s2)" stroke="var(--panel)" stroke-width="2" opacity="0"/>';
+  host.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="1日の表示回数の折れ線グラフ。11月3日以降に両サイトとも増え、すきのびは11月14日に89、おくりの地図は11月17日に60。">'+g+'<rect x="'+L+'" y="'+T+'" width="'+(W-L-R)+'" height="'+(H-T-B)+'" fill="transparent"/></svg><div class="tip" hidden></div>';
+  var svg=host.querySelector('svg'), tip=host.querySelector('.tip'), xh=svg.querySelector('#xh'), d1=svg.querySelector('#d1'), d2=svg.querySelector('#d2');
+  function move(e){
+    var r=svg.getBoundingClientRect(), px=((e.touches?e.touches[0].clientX:e.clientX)-r.left)/r.width*W;
+    var i=Math.max(0,Math.min(n-1,Math.round((px-L)/(W-L-R)*(n-1))));
+    xh.setAttribute('x1',x(i));xh.setAttribute('x2',x(i));xh.setAttribute('opacity','.35');
+    d1.setAttribute('cx',x(i));d1.setAttribute('cy',y(s1[i]));d1.setAttribute('opacity','1');
+    d2.setAttribute('cx',x(i));d2.setAttribute('cy',y(s2[i]));d2.setAttribute('opacity','1');
+    tip.hidden=false;tip.textContent=label(i)+'　すきのび '+s1[i]+' ／ おくりの地図 '+s2[i];
+    var left=x(i)/W*r.width; left=Math.max(110,Math.min(r.width-110,left));
+    tip.style.left=left+'px';tip.style.top=(Math.min(y(s1[i]),y(s2[i]))/H*r.height)+'px';
+  }
+  function leave(){tip.hidden=true;[xh,d1,d2].forEach(function(el){el.setAttribute('opacity','0')})}
+  svg.addEventListener('mousemove',move);svg.addEventListener('touchstart',move,{passive:true});svg.addEventListener('touchmove',move,{passive:true});svg.addEventListener('mouseleave',leave);
+})();
+</script>
