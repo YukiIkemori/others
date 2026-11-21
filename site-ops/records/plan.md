@@ -4,11 +4,12 @@
 同じページは「Google が最後に読んだ日」から14日あける（事実の誤りの修正は例外）。Google に読まれる前のページをさらに書き直さない。
 
 ## 触らないページ（Google の再取得待ち。URL検査で取得日が編集日より後になったら解除）
-- okurinochizu: /regions/miyota/（最終取得 11/03） /regions/tateshina/（10/14） /guides/funeral-benefit/（10/13）
+- okurinochizu: /regions/miyota/（最終取得 11/03） /regions/tateshina/（10/14）
 - sukinobi: fortnite-parental-controls（11/14） minecraft-parental-controls（11/04） family-game-rules（11/10） ps5-parental-controls（11/13） switch2-parental-controls（11/16）※いずれも 11/18〜11/20 の変更後は未取得
 
 ## Google が変更後の版を読んだページ（この日から14日は効果を見る。次に触れるのは下の日付以降）
 - 11/21 朝(JST)取得 → 12/05 以降: okurinochizu /guides/hospital-transport/（未登録→登録済みに変わった） /regions/annaka/ /regions/saku/ /regions/ueda/ /regions/tomioka/ /regions/karuizawa/、sukinobi youtube-parental-controls（未登録→登録済み）
+- 11/21 夕(JST)取得 → 12/05 以降: okurinochizu /guides/funeral-benefit/
 
 ## 予定（日付は JST の朝の日次で実行。該当が無い日は点検と計測だけ）
 - 11/24(火) sukinobi: game-english-guide を「ゲーム英会話の選び方・比較（子供）」として作り直す（複数サービスを中立に並べる。ページ内に出資関係の開示。Discord の年齢の扱いはゲシピの回答が無ければ「各サービスに確認」と書く）
