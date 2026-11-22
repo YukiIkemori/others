@@ -98,3 +98,10 @@
 - 2026-11-20 レビュー後の対応(ユーザー承認): 運用を切り替え(毎日1本を廃止、plan.md と日次・週次の定期実行を更新)。okurinochizu a35859b・db93c96・83a044b・c900314 ほか: 解析は okurinochizu.jp でだけ動かしテストから Google へ一切送らない、フッターに「このメディアについて」「プライバシー」、地域ページ冒頭のリンク文を行き先に合わせて具体化(13地域)、saku・ueda・tomioka の家族葬の会場の節の後に相談の一文、リンク検査は障害(5xx・通信エラー)を警告扱いに。初回の自動公開はテスト2本が CI でだけ失敗→https の模擬ホストに直して再公開。本番で provider_referral_click が冒頭・本文中・末尾の3か所で積まれることを確認。sukinobi 9c2f785・8c5ab81・cb77afa・201cbaa ほか: 送客クリックの取りこぼし修正(試験40/40)、/privacy 新設とフッター、保護者設定→英語記事の導線(ps5・switch2 に言語設定の節、fortnite・minecraft・roblox に一文、related 入れ替え、ゲームから探すに Switch 2・PS5)、内部リンクの先読み停止(記事1本の転送量 1,550KB→384KB)、sitemap の日付、404 の robots。本番確認・サイトマップ再送信済み。これ以後、plan.md の「触らないページ」は Google の再取得まで凍結。
 - 2026-11-21 07:48 JST 日次: 点検異常なし(直近7日 sukinobi 377・okurinochizu 277表示)。公開なし(予定なし)。Dots が URL検査の登録リクエストを7件実施→ 11/21 朝に Google が再取得: okurinochizu hospital-transport(未登録→登録済み)・annaka・saku・ueda・tomioka・karuizawa、sukinobi youtube(未登録→登録済み)。いずれも 11/20 の変更後の版。残り3件は 11/22 に再試行予定(Dots)。GA4 の追加設定とゲシピへの確認はユーザーが見送りと Dots から報告。plan.md を更新。
 - 2026-11-22 07:48 JST 日次: 点検異常なし(直近7日 sukinobi 433・okurinochizu 299表示、11/19 は 58/47)。公開なし(予定なし)。Google が okurinochizu /guides/funeral-benefit/ を再取得(11/21)。sukinobi の fortnite・minecraft・ps5・switch2・family-game-rules は変更後まだ未取得(Dots が 11/22 に残り3件をリクエスト予定、返事はまだ)。
+
+## 2026-11-23（月）週次（ユーザーの指示で早朝に実行）
+- 計測と判断は 2026-11-23-weekly.md。
+- sukinobi: ps5・switch2 のタイトルを短縮（35f0919）。公開を確認、サイトマップ再送信。
+- okurinochizu: karuizawa に「家族葬」の節2つとタイトル変更（4809728）。公式ページで事実を確認。公開を確認、サイトマップ再送信。
+- Dots に登録リクエスト6件を依頼（relay b36fadf3）。
+- 今日の新規（sukinobi フォートナイトの子供アカウント）は、朝の日次で実行する。
