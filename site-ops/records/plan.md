@@ -49,13 +49,14 @@
 - komoro・miyota・tateshina・tomi への「家族葬」の節(12/05 に annaka・saku・ueda・tomioka の結果を見てから)
 
 ## 触らないページ（Google の再取得待ち。URL検査で取得日が編集日より後になったら解除）
-- okurinochizu: /regions/miyota/（最終取得 11/03） /regions/tateshina/（10/14） /regions/komoro/ /regions/tomi/ /regions/sakuho/（11/09） /regions/koumi/（11/10） /regions/nagawa/（11/11） /regions/aoki/（11/13）
+- okurinochizu: /regions/tateshina/（10/14） /regions/komoro/ /regions/tomi/ /regions/sakuho/（11/09） /regions/koumi/（11/10） /regions/nagawa/（11/11） /regions/aoki/（11/13）
 - sukinobi: minecraft-parental-controls（11/04） smartphone-parental-controls（11/14）
 
 ## Google が変更後の版を読んだページ（この日から14日は効果を見る。次に触れるのは下の日付以降）
 - 11/20〜21 取得 → 12/05 以降: okurinochizu /guides/hospital-transport/（未登録→登録済み） /regions/annaka/ /regions/saku/ /regions/ueda/ /regions/tomioka/ /guides/funeral-benefit/ /guides/chief-mourner/、sukinobi youtube-parental-controls（未登録→登録済み） roblox-parental-controls switch-parental-controls
 - 11/22 取得 → 12/06 以降: sukinobi fortnite-parental-controls family-game-rules
 - 11/23 取得 → 12/07 以降: sukinobi ps5-parental-controls switch2-parental-controls（11/23 のタイトル短縮後の版）
+- 11/23 取得 → 12/07 以降: okurinochizu /regions/miyota/（11/11 の版）。/facilities/sakudaira-saijo/ は公開当日の 11/23 に取得・登録済み
 - /regions/karuizawa/ は 11/20 取得。11/23 に「家族葬」の節を追加したので、次の取得日から14日
 
 ## タイトル・見出しの調整の記録（1ページ1回。同じページは14日あける）
