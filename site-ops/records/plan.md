@@ -31,7 +31,6 @@
 
 ## okurinochizu の候補(平日毎日1本。上から。出したら消す)
 軸は斎場の名前と「市名＋手続き」。全国向けの広い語は増やさない。候補が尽きたら既存ページの加筆・修正に切り替える。
-- 佐久平斎場(/facilities/sakudaira-saijo/) ← 11/23。GSC 10.8位、サジェスト アクセス・予約・予約システム
 - 大星斎場 ← 11/24。GSC 12.7位、サジェスト 料金・上田市(ペット火葬は公式の記載だけ)
 - 依田窪斎場 ← 11/25。GSC 14.5位、サジェスト アクセス
 - かぶら聖苑 ← 11/26。サジェスト 富岡・ペット火葬
@@ -65,7 +64,7 @@
 
 ## 予定（日付は JST の朝の日次で実行。該当が無い日は点検と計測だけ）
 - 11/23(月) sukinobi: フォートナイトの子供アカウント(新規) → 公開済み /articles/fortnite-child-account（7e5ed8b）
-- 11/23(月) okurinochizu: 佐久平斎場の専用ページ(新規。/facilities/ の型も作る)
+- 11/23(月) okurinochizu: 佐久平斎場の専用ページ(新規。/facilities/ の型も作る) → 公開済み /facilities/sakudaira-saijo/（a843356）。次の斎場は content.json の facilities に1件足す（手順は okurinochizu の README）。佐久平斎場を使う7地域のページには、本文の外に斎場ページへのリンク欄が付いた
 - 11/24(火) sukinobi: game-english-guide を「ゲーム英会話の選び方・比較（子供）」として作り直す（複数サービスを中立に並べる。ページ内に出資関係の開示。Discord の年齢の扱いは「各サービスに確認」と書く）／okurinochizu: 大星斎場
 - 11/25(水) sukinobi: ロブロックスの時間制限(新規)／okurinochizu: 依田窪斎場
 - 11/26(木) sukinobi: minecraft-english-vs-coding を「マイクラ英会話（小学生・オンライン）の選び方」に作り直す／okurinochizu: かぶら聖苑
