@@ -118,3 +118,9 @@
 - Google の取得: /facilities/sakudaira-saijo/ は公開当日に登録、/regions/miyota/ が 11/23 に取得。fortnite-child-account は未登録。
 - 公開: sukinobi「ゲーム英会話（子供）の比較と選び方｜マイクラ・フォートナイト対応と料金」/articles/game-english-guide（作り直し。9サービスを公式サイトの情報だけで比較、表の直前に出資関係の開示）。根拠: サジェスト ゲーム英会話 子供・比較・マイクラ・料金。
 - 公開: okurinochizu「大星斎場（上田市）の火葬料金と予約｜所在地・休業日・ペット火葬の窓口」/facilities/oboshi-saijo/。根拠: GSC「上田市 大星斎場」12.2位、サジェスト 料金・上田市・ペット。広域連合のサイトに接続できず、開始時刻・道順・ペット火葬の料金は書いていない。
+
+## 2026-11-25（水）日次
+- 点検: 異常なし。11/22 の表示 sukinobi 222（過去最多）・クリック1、okurinochizu 48・0。直近7日 731 / 313。youtube-parental-controls が登録直後から表示48（10.1位）。fortnite-parental-controls は平均6.7位。
+- Google の取得: fortnite-child-account が 11/24 に登録。oboshi-saijo は未登録。Dots の残り4件は上限で停止 → 3件を依頼し直し。
+- 公開: sukinobi「ロブロックスの時間制限のやり方は？できないとき・解除と時間帯の決め方」/articles/roblox-time-limit。根拠: GSC「ロブロックス 時間制限」11〜49位、サジェスト できない・やり方・何時から・解除。Roblox のヘルプセンターは今日は読めず、画面の項目名は 11/03 に確認した内容を日付つきで載せた。
+- 公開: okurinochizu「すみれケ丘聖苑（安中市斎場）の火葬料・式場・予約｜休業日・アクセス」/facilities/sumiregaoka-seien/（依田窪斎場と入れ替え）。根拠: サジェスト 安中市斎場 すみれケ丘聖苑。あわせて welfare-funeral の出典（厚労省の手引）が 404 になっていたので、最新版の URL に直した。
