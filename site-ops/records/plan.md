@@ -8,7 +8,6 @@
 
 ## sukinobi の候補(上から。出したら消す)
 軸は「ゲーム名＋困りごと」の狭い語(検索語の実績とサジェストの両方がある語)。週2本は英語に近い語。
-- マイクラ英会話(小学生・オンライン)の選び方 ← 11/26
 - iPhone とファミリーリンク(親が Android で子が iPhone、親子とも iPhone、位置情報、アプリ承認) ← 11/27。GSC 24〜30位
 - fortnite-child-account の補強: Epic の表示名の変更手順と回数、紐付けの解除の条件は、Epic のヘルプセンターが自動取得を拒否するため未確認のまま公開した。公式の記載を確かめられたら加筆する。12/06 以降に fortnite-parental-controls から新記事へリンクを足す
 - フォートナイト 保護者のメールアドレス(変更・入力できない) ※fortnite-parental-controls と重なるため、12/06 以降に独立させるか加筆かを決める
@@ -32,7 +31,6 @@
 - 依田窪斎場 ← 11/27。GSC 14.5位、サジェスト アクセス
   - 注意: 上田地域広域連合のサイト(www.area.ueda.nagano.jp)は 11/24 に接続できなかった(https は切断、http は 503)。朝に接続を確かめ、読めなければ先にすみれケ丘聖苑を出す。富岡市のサイトも 503 が続いているので、かぶら聖苑も同じ確認をする
 - 大星斎場の補強: 広域連合のサイトが読めたら、火葬の開始時刻・友引の扱い・待合室・道順・ペット火葬の料金を公式の記載で足す(事実の追加なので14日ルールの例外)
-- かぶら聖苑 ← 11/26。サジェスト 富岡・ペット火葬
 - 上田市の葬祭費(サジェスト「上田市 葬祭費の支給」) ← 11/30
 - 佐久市の葬祭費 ← 12/01
 - 上田市の死亡届(届け先・時間外・必要なもの) ← 12/02
@@ -66,14 +64,14 @@
 - 11/23(月) okurinochizu: 佐久平斎場の専用ページ(新規。/facilities/ の型も作る) → 公開済み /facilities/sakudaira-saijo/（a843356）。次の斎場は content.json の facilities に1件足す（手順は okurinochizu の README）。佐久平斎場を使う7地域のページには、本文の外に斎場ページへのリンク欄が付いた
 - 11/24(火) sukinobi: game-english-guide を「ゲーム英会話の選び方・比較（子供）」として作り直す（複数サービスを中立に並べる。ページ内に出資関係の開示。Discord の年齢の扱いは「各サービスに確認」と書く）／okurinochizu: 大星斎場 → 両方とも公開済み（sukinobi e205f76・9057dae、okurinochizu 006b86c）
 - 11/25(水) sukinobi: ロブロックスの時間制限(新規) → 公開済み /articles/roblox-time-limit（4d4924b・5d4963f）／okurinochizu: すみれケ丘聖苑に入れ替え → 公開済み /facilities/sumiregaoka-seien/（ac4781c）
-- 11/26(木) sukinobi: minecraft-english-vs-coding を「マイクラ英会話（小学生・オンライン）の選び方」に作り直す／okurinochizu: かぶら聖苑
+- 11/26(木) sukinobi: minecraft-english-vs-coding を「マイクラ英会話（小学生・オンライン）の選び方」に作り直す／okurinochizu: かぶら聖苑 → 両方とも公開済み（sukinobi 0f6510f・7491173、okurinochizu c4a87ec）
 - 11/27(金) sukinobi: iPhone とファミリーリンク(新規)／okurinochizu: 依田窪斎場（広域連合のサイトが読めなければ、長和町・上田市などの市町村の資料だけで書く。大星斎場と同じ扱い）
 - 11/30(月) 週次: タイトル・見出しの調整（switch・roblox）。新規は両サイトとも候補リストの上から（okurinochizu: 上田市の葬祭費）
 - 12/01(火) 月次。新規は候補リストの上から（okurinochizu: 佐久市の葬祭費）
 - 12/04(金) okurinochizu: 年末年始の火葬場の休み（2026/27）を公式発表で確かめる（発表が無ければ 12/08 へ）
 - 12/05(土)〜12/07(月) 判定: annaka・saku・ueda・tomioka の「家族葬」の節、fortnite の加筆、hospital-transport と youtube の登録後の動き。結果で komoro・miyota・tateshina・tomi への展開を決める
 - 12/07(月) 週次: ps5・switch2 のタイトル調整を判定（11/23 取得）
-- 毎月1日: 表示上位5ページの事実を出典で確かめ直す（両サイト）。sukinobi の game-english-guide の比較表（9サービスの料金・体験）も毎月公式サイトで確かめ直す
+- 毎月1日: 表示上位5ページの事実を出典で確かめ直す（両サイト）。sukinobi の game-english-guide と minecraft-english-vs-coding の比較表（各9サービスの料金・体験）も毎月公式サイトで確かめ直す
 
 ## ユーザーにお願いしていること
 - （見送り）GA4 のキーイベント・カスタム定義・内部トラフィック除外、ゲシピへの確認と流入数の共有依頼: Dots 経由の報告（11/21）ではユーザーが見送りと指示。送客は GA4 のイベント名での集計だけで数える。Discord の年齢の扱いは未確認のまま、記事では「各サービスに確認」と書く。
@@ -85,5 +83,6 @@
 - 2026-11-23 の依頼（週次の調整後）: 登録リクエスト6件（sukinobi ps5・switch2・minecraft、okurinochizu karuizawa・miyota・tateshina）。relay のイベント id: b36fadf3-6944-47ea-987d-c93e2db6c8e2。返事は `node scripts/claude-relay.mjs thread b36fadf3-6944-47ea-987d-c93e2db6c8e2` で確かめる。
   - 11/23 朝の返事: ps5・switch2 受理、minecraft は上限で拒否、okurinochizu の3件は未実施（翌日に再試行と報告あり）。日次で続きを確かめる。
   - 11/24 の返事: Search Console の1日の上限で残り4件は未実施のまま停止。miyota は 11/23 に Google が取得したので外し、11/25 に3件（karuizawa・tateshina・sukinobi minecraft）を依頼し直した（relay 098d5a60）。
+- 富岡市のサイト(www.city.tomioka.lg.jp)は、okurinochizu のリンク検査(Node の fetch)にだけ 503 を返し、curl には 200 を返す。停止ではないので、警告のままでよい。本文の確認は curl で行う
 - 自動取得できない公式サイト（11/25 時点）: 上田地域広域連合 www.area.ueda.nagano.jp（接続を切られる）、安中市の例規集 www1.g-reiki.net/annaka（403）、Roblox と Epic のヘルプセンター（Cloudflare の確認画面）。回避はしない。読めた公式ページの範囲で書き、読めなかった点は本文に書かない
   - 11/25 の返事: 3件とも受理。同日中に3件とも Google が取得した。依頼は完了。

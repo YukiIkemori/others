@@ -124,3 +124,9 @@
 - Google の取得: fortnite-child-account が 11/24 に登録。oboshi-saijo は未登録。Dots の残り4件は上限で停止 → 3件を依頼し直し。
 - 公開: sukinobi「ロブロックスの時間制限のやり方は？できないとき・解除と時間帯の決め方」/articles/roblox-time-limit。根拠: GSC「ロブロックス 時間制限」11〜49位、サジェスト できない・やり方・何時から・解除。Roblox のヘルプセンターは今日は読めず、画面の項目名は 11/03 に確認した内容を日付つきで載せた。
 - 公開: okurinochizu「すみれケ丘聖苑（安中市斎場）の火葬料・式場・予約｜休業日・アクセス」/facilities/sumiregaoka-seien/（依田窪斎場と入れ替え）。根拠: サジェスト 安中市斎場 すみれケ丘聖苑。あわせて welfare-funeral の出典（厚労省の手引）が 404 になっていたので、最新版の URL に直した。
+
+## 2026-11-26（木）日次
+- 点検: 異常なし。11/23 の表示 sukinobi 217・クリック1、okurinochizu 62・0（okurinochizu は最近で最多）。直近7日 884 / 328。
+- Google の取得: Dots への依頼3件（karuizawa・tateshina・minecraft-parental-controls）は 11/25 に受理され、同日に取得。roblox-time-limit は公開当日、oboshi-saijo は翌日に登録。sumiregaoka-seien は未登録。
+- 公開: sukinobi「マイクラ英会話（小学生・オンライン）の選び方｜使う版・人数・料金を比較」/articles/minecraft-english-vs-coding（作り直し。9サービスを公式サイトの情報で比較、表の直前に出資関係の開示、記事途中の eスピの一文は外した）。根拠: サジェスト マイクラ 英会話 小学生・オンライン・比較、マイクラ 英語 オンライン 料金。
+- 公開: okurinochizu「かぶら聖苑（富岡市斎場）の式場・火葬料・予約｜ペット火葬・アクセス」/facilities/kabura-seien/。根拠: サジェスト かぶら聖苑 富岡・ペット火葬。富岡市の条例・規則と聖苑の公式サイトで確認。
