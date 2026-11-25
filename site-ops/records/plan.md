@@ -47,15 +47,15 @@
 - komoro・miyota・tateshina・tomi への「家族葬」の節(12/05 に annaka・saku・ueda・tomioka の結果を見てから)
 
 ## 触らないページ（Google の再取得待ち。URL検査で取得日が編集日より後になったら解除）
-- okurinochizu: /regions/tateshina/（10/14） /regions/komoro/ /regions/tomi/ /regions/sakuho/（11/09） /regions/koumi/（11/10） /regions/nagawa/（11/11） /regions/aoki/（11/13）
-- sukinobi: minecraft-parental-controls（11/04） smartphone-parental-controls（11/14）
+- okurinochizu: /regions/komoro/ /regions/tomi/ /regions/sakuho/（11/09） /regions/koumi/（11/10） /regions/nagawa/（11/11） /regions/aoki/（11/13）
+- sukinobi: smartphone-parental-controls（11/14）
 
 ## Google が変更後の版を読んだページ（この日から14日は効果を見る。次に触れるのは下の日付以降）
 - 11/20〜21 取得 → 12/05 以降: okurinochizu /guides/hospital-transport/（未登録→登録済み） /regions/annaka/ /regions/saku/ /regions/ueda/ /regions/tomioka/ /guides/funeral-benefit/ /guides/chief-mourner/、sukinobi youtube-parental-controls（未登録→登録済み） roblox-parental-controls switch-parental-controls
 - 11/22 取得 → 12/06 以降: sukinobi fortnite-parental-controls family-game-rules
 - 11/23 取得 → 12/07 以降: sukinobi ps5-parental-controls switch2-parental-controls（11/23 のタイトル短縮後の版）
 - 11/23 取得 → 12/07 以降: okurinochizu /regions/miyota/（11/11 の版）。/facilities/sakudaira-saijo/ は公開当日の 11/23 に取得・登録済み
-- /regions/karuizawa/ は 11/20 取得。11/23 に「家族葬」の節を追加したので、次の取得日から14日
+- 11/25 取得 → 12/09 以降: okurinochizu /regions/karuizawa/（11/23 に家族葬の節を追加した版） /regions/tateshina/（10/14 以来の取得）、sukinobi minecraft-parental-controls（11/04 以来の取得）。いずれも Dots の登録リクエスト（11/25 受理）の直後
 
 ## タイトル・見出しの調整の記録（1ページ1回。同じページは14日あける）
 - 11/23: sukinobi ps5-parental-controls、switch2-parental-controls（タイトル短縮）／okurinochizu karuizawa（家族葬の節とタイトル）
@@ -86,3 +86,4 @@
   - 11/23 朝の返事: ps5・switch2 受理、minecraft は上限で拒否、okurinochizu の3件は未実施（翌日に再試行と報告あり）。日次で続きを確かめる。
   - 11/24 の返事: Search Console の1日の上限で残り4件は未実施のまま停止。miyota は 11/23 に Google が取得したので外し、11/25 に3件（karuizawa・tateshina・sukinobi minecraft）を依頼し直した（relay 098d5a60）。
 - 自動取得できない公式サイト（11/25 時点）: 上田地域広域連合 www.area.ueda.nagano.jp（接続を切られる）、安中市の例規集 www1.g-reiki.net/annaka（403）、Roblox と Epic のヘルプセンター（Cloudflare の確認画面）。回避はしない。読めた公式ページの範囲で書き、読めなかった点は本文に書かない
+  - 11/25 の返事: 3件とも受理。同日中に3件とも Google が取得した。依頼は完了。
