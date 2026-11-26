@@ -130,3 +130,10 @@
 - Google の取得: Dots への依頼3件（karuizawa・tateshina・minecraft-parental-controls）は 11/25 に受理され、同日に取得。roblox-time-limit は公開当日、oboshi-saijo は翌日に登録。sumiregaoka-seien は未登録。
 - 公開: sukinobi「マイクラ英会話（小学生・オンライン）の選び方｜使う版・人数・料金を比較」/articles/minecraft-english-vs-coding（作り直し。9サービスを公式サイトの情報で比較、表の直前に出資関係の開示、記事途中の eスピの一文は外した）。根拠: サジェスト マイクラ 英会話 小学生・オンライン・比較、マイクラ 英語 オンライン 料金。
 - 公開: okurinochizu「かぶら聖苑（富岡市斎場）の式場・火葬料・予約｜ペット火葬・アクセス」/facilities/kabura-seien/。根拠: サジェスト かぶら聖苑 富岡・ペット火葬。富岡市の条例・規則と聖苑の公式サイトで確認。
+
+## 2026-11-27（金）日次
+- 点検: 異常なし（朝の点検スクリプトは通信エラーで1回やり直し）。11/24 の表示 sukinobi 211・クリック2、okurinochizu 60・0。直近7日 1,023 / 328（sukinobi は初めて1,000超）。
+- 動き: /facilities/sakudaira-saijo/ が3日で表示17・平均6.3位（okurinochizu で最多）。sukinobi ps5-parental-controls はタイトル短縮後の3日間が平均13.8位（判定は 12/07）。
+- Google の取得: sumiregaoka-seien と kabura-seien は公開の翌日までに登録。game-english-guide と minecraft-english-vs-coding は作り直し前の版のまま → Dots に登録リクエストを依頼。
+- 公開: sukinobi「iPhoneでファミリーリンクは使える？親がAndroid・子がiPhoneの設定」/articles/iphone-family-link。根拠: GSC「iphone ファミリーリンク」24〜30位、サジェスト 親が android 子供が iphone・設定できない・位置情報・使える。
+- 公開: okurinochizu「依田窪斎場（上田市上丸子）の火葬料金と予約｜所在地・休業日・ペット火葬」/facilities/yodakubo-saijo/。根拠: GSC「依田窪斎場」11〜16位。広域連合のサイトは接続できず、市町村と県の資料で作成。所在地は上田市上丸子（長和町ではない）。
