@@ -137,3 +137,9 @@
 - Google の取得: sumiregaoka-seien と kabura-seien は公開の翌日までに登録。game-english-guide と minecraft-english-vs-coding は作り直し前の版のまま → Dots に登録リクエストを依頼。
 - 公開: sukinobi「iPhoneでファミリーリンクは使える？親がAndroid・子がiPhoneの設定」/articles/iphone-family-link。根拠: GSC「iphone ファミリーリンク」24〜30位、サジェスト 親が android 子供が iphone・設定できない・位置情報・使える。
 - 公開: okurinochizu「依田窪斎場（上田市上丸子）の火葬料金と予約｜所在地・休業日・ペット火葬」/facilities/yodakubo-saijo/。根拠: GSC「依田窪斎場」11〜16位。広域連合のサイトは接続できず、市町村と県の資料で作成。所在地は上田市上丸子（長和町ではない）。
+
+## 2026-11-28（土）日次（点検と計測のみ）
+- 点検: 異常なし。11/25 の表示 sukinobi 231（過去最多）・クリック1、okurinochizu 71（過去最多）・0。直近7日 1,194 / 343。
+- 新しいページ: sukinobi fortnite-child-account が3日で表示23・クリック1・平均6.8位。okurinochizu の読者に /facilities/sumiregaoka-seien/ への検索流入（安中市から、2ページ・140秒）。
+- Google の取得: game-english-guide と minecraft-english-vs-coding は Dots の依頼が受理され 11/27 に取得。yodakubo-saijo は公開当日に登録。iphone-family-link は「取得済み・未登録」。
+- 実際の読者（11/26 以降）: sukinobi 検索4人（うち3人が fortnite-child-account）、okurinochizu 検索4人（上田市2・すみれケ丘聖苑1・立科町1）。送客は0。

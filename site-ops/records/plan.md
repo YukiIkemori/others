@@ -53,6 +53,7 @@
 - 11/23 取得 → 12/07 以降: sukinobi ps5-parental-controls switch2-parental-controls（11/23 のタイトル短縮後の版）
 - 11/23 取得 → 12/07 以降: okurinochizu /regions/miyota/（11/11 の版）。/facilities/sakudaira-saijo/ は公開当日の 11/23 に取得・登録済み
 - 11/25 取得 → 12/09 以降: okurinochizu /regions/karuizawa/（11/23 に家族葬の節を追加した版） /regions/tateshina/（10/14 以来の取得）、sukinobi minecraft-parental-controls（11/04 以来の取得）。いずれも Dots の登録リクエスト（11/25 受理）の直後
+- 11/27 取得 → 12/11 以降: sukinobi game-english-guide（11/24 の作り直し後） minecraft-english-vs-coding（11/26 の作り直し後）
 
 ## タイトル・見出しの調整の記録（1ページ1回。同じページは14日あける）
 - 11/23: sukinobi ps5-parental-controls、switch2-parental-controls（タイトル短縮）／okurinochizu karuizawa（家族葬の節とタイトル）
@@ -86,3 +87,4 @@
 - 自動取得できない公式サイト（11/25 時点）: 上田地域広域連合 www.area.ueda.nagano.jp（接続を切られる）、安中市の例規集 www1.g-reiki.net/annaka（403）、Roblox と Epic のヘルプセンター（Cloudflare の確認画面）。回避はしない。読めた公式ページの範囲で書き、読めなかった点は本文に書かない
   - 11/25 の返事: 3件とも受理。同日中に3件とも Google が取得した。依頼は完了。
 - 2026-11-27 の依頼: 作り直した2ページ（sukinobi game-english-guide、minecraft-english-vs-coding）の登録リクエスト。relay のイベント id: 2046fb35-5cb6-4c2e-afb1-096abb7c04d5
+  - 11/27 の返事: 2件とも受理。同日（11/27 朝 JST）に2件とも Google が取得した。依頼は完了。
